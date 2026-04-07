@@ -401,53 +401,79 @@ def process_league(league_key: str, league_name: str) -> dict:
 #  CLUB ELO
 # ════════════════════════════════════════════════════════════════════════════════
 
-def fetch_elo_snapshot(date_str: str) -> dict[str, float]:
+def fetch_elo_snapshot(date_str: str) -> dict[str, tuple]:
     """
     Fetch Elo ratings for all clubs from clubelo.com for a given date.
-    Returns {club_elo_name: elo_float}.
+    Returns {club_elo_name: (elo_float, country_code)}.
     CSV format: Rank,Club,Country,Level,Elo,From,To
     """
     url = f"http://api.clubelo.com/{date_str}"
     resp = requests.get(url, headers=HEADERS, timeout=20)
     resp.raise_for_status()
 
-    elo_map: dict[str, float] = {}
+    elo_map: dict[str, tuple] = {}
     for line in resp.text.strip().splitlines()[1:]:   # skip header
         parts = line.split(",")
         if len(parts) >= 5:
-            club = parts[1].strip()
+            club    = parts[1].strip()
+            country = parts[2].strip().upper()
             try:
-                elo_map[club] = round(float(parts[4].strip()), 1)
+                elo_map[club] = (round(float(parts[4].strip()), 1), country)
             except ValueError:
                 pass
     return elo_map
 
 
-def merge_elo_into_stats(all_stats: dict, elo_raw: dict[str, float]) -> int:
+# Supported league keys (must match all_stats keys)
+SUPPORTED_LEAGUES = {"ENG", "GER", "ITA", "ESP", "FRA", "AUT", "NED", "SCO", "TUR", "SUI", "POR"}
+
+
+def merge_elo_into_stats(all_stats: dict, elo_raw: dict[str, tuple]) -> int:
     """
     Merge Elo ratings into all_stats[league_key][team_name].
-    Returns number of teams matched.
+    Creates stub entries {elo: value} for teams not yet in all_stats
+    (e.g. when Understat failed and all leagues are empty).
+    Returns number of teams matched/created.
     """
-    # Build reverse lookup: our_name → elo value
-    # First try: exact match on our HTML name
-    # Second try: go through ELO_NAME_MAP (elo_name → our_name)
-    our_to_elo: dict[str, float] = {}
-    for elo_name, elo_val in elo_raw.items():
+    # Build lookup: our_name → (elo_value, country_code)
+    our_to_elo: dict[str, tuple] = {}
+    for elo_name, (elo_val, country) in elo_raw.items():
         our_name = ELO_NAME_MAP.get(elo_name)
         if our_name:
-            our_to_elo[our_name] = elo_val
+            our_to_elo[our_name] = (elo_val, country)
         else:
             # Direct match: maybe our HTML name == ClubElo name
-            our_to_elo[elo_name] = elo_val
+            our_to_elo[elo_name] = (elo_val, country)
+
+    # Ensure all supported league keys exist
+    for key in SUPPORTED_LEAGUES:
+        all_stats.setdefault(key, {})
 
     matched = 0
+
+    # Pass 1: update existing team entries
     for league_key, teams in all_stats.items():
         for team_name, entry in teams.items():
             if team_name in our_to_elo:
-                entry["elo"] = our_to_elo[team_name]
+                entry["elo"] = our_to_elo[team_name][0]
                 matched += 1
             else:
-                entry["elo"] = None
+                entry.setdefault("elo", None)
+
+    # Pass 2: create stub entries for teams not yet present
+    # (happens when Understat failed — ensures Elo is always populated)
+    for our_name, (elo_val, country) in our_to_elo.items():
+        if country not in SUPPORTED_LEAGUES:
+            continue
+        league_teams = all_stats.get(country, {})
+        if our_name not in league_teams:
+            # Only add to the correct league bucket
+            all_stats[country][our_name] = {
+                "xG_home": None, "xGA_home": None, "homeWinRate": None, "home_games": 0,
+                "xG_away": None, "xGA_away": None, "awayWinRate": None, "away_games": 0,
+                "elo": elo_val,
+            }
+            matched += 1
 
     return matched
 
@@ -504,18 +530,7 @@ def main():
             for entry in teams.values():
                 entry.setdefault("elo", None)
 
-    # ── Step 3: Also add Elo for non-Understat leagues (they have no xG entry yet) ──
-    # ClubElo covers AUT, NED, SCO, TUR, SUI, POR — create stub entries if needed
-    if elo_ok:
-        extra_leagues = {
-            "AUT": "AUT", "NED": "NED", "SCO": "SCO",
-            "TUR": "TUR", "SUI": "SUI", "POR": "POR",
-        }
-        for key in extra_leagues:
-            if key not in all_stats:
-                all_stats[key] = {}
-        # Re-merge Elo to include the extra leagues
-        merge_elo_into_stats(all_stats, elo_raw)
+    # ── Step 3: (handled inside merge_elo_into_stats — stubs auto-created) ──────
 
     # ── Step 4: Write output ──────────────────────────────────────────────────
     with open(out, "w", encoding="utf-8") as f:
