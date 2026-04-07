@@ -1,0 +1,55 @@
+name: 🔄 Dashboard aktualisieren
+
+on:
+  # Automatisch: täglich um 06:00 und 14:00 Uhr (UTC = 08:00 / 16:00 MEZ)
+  schedule:
+    - cron: '0 6 * * *'
+    - cron: '0 14 * * *'
+
+  # Manuell: jederzeit per Knopfdruck auf GitHub ausführbar
+  workflow_dispatch:
+
+# Berechtigung zum Zurückschreiben ins Repo
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Repository auschecken
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      # 2. Python einrichten
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3. Dashboard-Daten aktualisieren (Sofascore → season-finish.html)
+      - name: 📊 Dashboard aktualisieren
+        run: python update_dashboard.py
+        continue-on-error: true  # Wenn Sofascore kurz down ist, trotzdem weitermachen
+
+      # 4. Statistiken aktualisieren (Understat xG, Elo etc. → stats_cache.json)
+      - name: 📈 Statistiken aktualisieren
+        run: python refresh_stats.py
+        continue-on-error: true
+
+      # 5. Geänderte Dateien zurück ins Repo committen
+      - name: 💾 Änderungen speichern
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add season-finish.html stats_cache.json
+          # Nur committen wenn wirklich etwas geändert wurde
+          git diff --staged --quiet || git commit -m "🔄 Auto-Update $(date +'%d.%m.%Y %H:%M') UTC"
+
+      # 6. Zurück zu GitHub pushen
+      - name: 🚀 Push zu GitHub
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main

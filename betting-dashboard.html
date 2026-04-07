@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BetEdge – Daily Picks</title>
+<style>
+:root {
+  --bg: #0d1117; --card: #161b22; --card2: #1c2128; --border: #30363d;
+  --accent: #00d4a1; --red: #f85149; --yellow: #e3b341;
+  --text: #e6edf3; --muted: #8b949e;
+  --green: #3fb950; --blue: #58a6ff; --purple: #a78bfa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon { font-size: 24px; }
+.logo-text { font-size: 19px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
+.logo-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.updated { font-size: 11px; color: var(--muted); text-align: right; }
+.updated span { color: var(--accent); font-weight: 600; }
+
+/* LEAGUE NAV */
+.league-nav {
+  background: var(--card); border-bottom: 2px solid var(--border);
+  padding: 0 16px; display: flex; align-items: stretch;
+  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.league-nav::-webkit-scrollbar { display: none; }
+.league-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 11px 16px; background: none; border: none;
+  border-bottom: 3px solid transparent; margin-bottom: -2px;
+  color: var(--muted); font-size: 13px; font-weight: 600;
+  cursor: pointer; white-space: nowrap; transition: color .15s, border-color .15s;
+  font-family: inherit;
+}
+.league-btn:hover { color: var(--text); }
+.league-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+.league-btn .lf { font-size: 17px; line-height: 1; }
+
+/* MAIN */
+.container { max-width: 960px; margin: 0 auto; padding: 24px 20px; }
+
+/* NOTICES */
+.intl-break-notice {
+  background: linear-gradient(135deg, #0d1f3a 0%, #0d1117 100%);
+  border: 1px solid #1d4ed855; border-radius: 10px; padding: 14px 20px;
+  text-align: center; margin-bottom: 20px; font-size: 13px; color: var(--muted); line-height: 1.7;
+}
+.intl-break-notice strong { color: var(--blue); }
+.data-notice {
+  background: #0d2010; border: 1px solid #1a4020; border-radius: 8px;
+  padding: 10px 14px; font-size: 11px; color: #5fb870; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.coverage-notice {
+  background: #1a1500; border: 1px solid #3d3000; border-radius: 10px;
+  padding: 13px 18px; font-size: 12px; color: var(--yellow); line-height: 1.6; margin-bottom: 20px;
+}
+
+/* SECTION LABEL */
+.section-label {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--muted); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* PICK GRID */
+.picks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+@media (max-width: 640px) { .picks-grid { grid-template-columns: 1fr; } }
+
+/* PICK CARD */
+.pick-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px; display: flex; flex-direction: column; gap: 10px;
+  position: relative; overflow: hidden; transition: transform .1s, border-color .2s;
+}
+.pick-card:hover { transform: translateY(-2px); }
+.pick-card.shots   { border-left: 3px solid var(--blue); }
+.pick-card.shots:hover { border-color: var(--blue); }
+.pick-card.scorer  { border-left: 3px solid var(--purple); }
+.pick-card.scorer:hover { border-color: var(--purple); }
+.pick-card.xgval   { border-left: 3px solid var(--green); }
+.pick-card.xgval:hover { border-color: var(--green); }
+.pick-card.hot     { border-left: 3px solid var(--yellow); }
+.pick-card.hot:hover { border-color: var(--yellow); }
+
+.pick-card::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+}
+.pick-card.shots::before  { background: linear-gradient(90deg, var(--blue), transparent); }
+.pick-card.scorer::before { background: linear-gradient(90deg, var(--purple), transparent); }
+.pick-card.xgval::before  { background: linear-gradient(90deg, var(--green), transparent); }
+.pick-card.hot::before    { background: linear-gradient(90deg, var(--yellow), transparent); }
+
+.pick-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+
+.pick-type-badge {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+  padding: 3px 8px; border-radius: 4px; white-space: nowrap;
+}
+.badge-shots  { background: #0d1f2d; color: var(--blue); }
+.badge-scorer { background: #1a0d30; color: var(--purple); }
+.badge-xgval  { background: #0d2818; color: var(--green); }
+.badge-hot    { background: #2d1b00; color: var(--yellow); }
+
+.pick-odds {
+  font-size: 20px; font-weight: 700; color: var(--accent);
+  background: #0d201a; border: 1px solid #1a3d30;
+  border-radius: 6px; padding: 4px 10px; white-space: nowrap;
+  line-height: 1.2; text-align: center; min-width: 60px;
+}
+.pick-odds.purple { color: var(--purple); background: #140d24; border-color: #2d1a4d; }
+.pick-odds.yellow { color: var(--yellow); background: #1e1500; border-color: #3d3000; }
+
+.pick-match { font-size: 12px; color: var(--muted); }
+.pick-bet   { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.3; }
+
+/* STATS BAR – the key new element */
+.pick-stats {
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+.stat-chip {
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 10px; min-width: 56px;
+}
+.stat-chip .sv { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.1; }
+.stat-chip .sk { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+.stat-chip.highlight .sv { color: var(--accent); }
+.stat-chip.warn .sv { color: var(--yellow); }
+.stat-chip.good .sv { color: var(--green); }
+.stat-chip.bad .sv  { color: var(--red); }
+
+.pick-reason {
+  font-size: 12px; color: var(--muted); line-height: 1.65;
+  border-top: 1px solid var(--border); padding-top: 9px;
+}
+.pick-reason strong { color: var(--text); }
+
+.pick-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+
+.confidence-wrap { display: flex; align-items: center; gap: 5px; }
+.confidence-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.confidence-dots { display: flex; gap: 3px; }
+.conf-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); }
+.conf-dot.green  { background: var(--green); }
+.conf-dot.yellow { background: var(--yellow); }
+.conf-dot.blue   { background: var(--blue); }
+.conf-dot.purple { background: var(--purple); }
+
+.stake-tag {
+  font-size: 10px; color: var(--muted); background: var(--card2);
+  padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border);
+  font-family: 'SF Mono', Consolas, monospace;
+}
+
+/* SHOT LEADERS REFERENCE */
+.leaders-ref {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; margin-bottom: 24px;
+}
+.leaders-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.leader-pill {
+  display: flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  border: 1px solid; background: #0d1f2d; border-color: #1d3f5d; color: var(--blue);
+  cursor: default;
+}
+.leader-pill .lp-name { color: #c0d8f0; }
+.leader-pill .lp-team { font-size: 10px; color: var(--muted); font-weight: 400; }
+.leader-pill .lp-stat { font-weight: 700; }
+.leader-pill.xgr { background: #0d2818; border-color: #1a5030; color: var(--green); }
+.leader-pill.xgr .lp-name { color: #c0f0d0; }
+
+/* POLYMARKET */
+.pm-picks-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
+@media (max-width: 640px) { .pm-picks-grid { grid-template-columns: 1fr; } }
+.pm-pick-card {
+  background: var(--card2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; text-align: center;
+}
+.pm-pick-league { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+.pm-pick-team  { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.pm-pick-prob  { font-size: 28px; font-weight: 700; color: var(--accent); line-height: 1; margin-bottom: 4px; }
+.pm-pick-prob.ucl  { color: var(--blue); }
+.pm-pick-prob.wc   { color: var(--purple); }
+.pm-pick-vol   { font-size: 10px; color: var(--muted); margin-bottom: 8px; }
+.pm-pick-label { font-size: 11px; font-weight: 600; color: var(--green); line-height: 1.5; }
+.pm-pick-label.blue   { color: var(--blue); }
+.pm-pick-label.purple { color: var(--purple); }
+.pm-pick-label.yellow { color: var(--yellow); }
+
+/* FOOTER */
+.footer {
+  text-align: center; padding: 20px; color: var(--muted); font-size: 11px;
+  border-top: 1px solid var(--border); margin-top: 8px;
+}
+.footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div style="background:var(--bg);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:stretch;gap:0;position:sticky;top:0;z-index:200;">
+  <div style="display:flex;align-items:center;gap:8px;padding:0 16px 0 0;margin-right:8px;border-right:1px solid var(--border);">
+    <span style="font-size:20px">⚽</span>
+    <span style="font-size:16px;font-weight:700;color:var(--accent)">BetEdge</span>
+  </div>
+  <a href="betting-dashboard.html" style="display:flex;align-items:center;gap:6px;padding:14px 18px;background:none;border:none;border-bottom:3px solid var(--accent);margin-bottom:-1px;color:var(--accent);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;">⚡ Daily Picks</a>
+  <a href="season-finish.html" style="display:flex;align-items:center;gap:6px;padding:14px 18px;background:none;border:none;border-bottom:3px solid transparent;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none;">🏁 Season Finish</a>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:12px;padding:0 4px">
+    <div style="font-size:11px;color:var(--muted);text-align:right">
+      <div>Stand: <span style="color:var(--accent);font-weight:600">31.03.2026 – Live</span></div>
+      <div style="margin-top:2px">Understat · Polymarket · Saison 2025/26</div>
+    </div>
+  </div>
+</div>
+
+<div class="league-nav" id="leagueNav">
+  <button class="league-btn active" data-league="epl"><span class="lf">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span>Premier League</span></button>
+  <button class="league-btn" data-league="bundesliga"><span class="lf">🇩🇪</span><span>Bundesliga</span></button>
+  <button class="league-btn" data-league="seriea"><span class="lf">🇮🇹</span><span>Serie A</span></button>
+  <button class="league-btn" data-league="ligue1"><span class="lf">🇫🇷</span><span>Ligue 1</span></button>
+  <button class="league-btn" data-league="austria"><span class="lf">🇦🇹</span><span>Österreich</span></button>
+  <button class="league-btn" data-league="laliga"><span class="lf">🇪🇸</span><span>La Liga</span></button>
+</div>
+
+<div class="container" id="mainContent"></div>
+
+<div class="footer">
+  Daten: <a href="https://understat.com" target="_blank">Understat.com</a> (live, Saison 2025/26) &nbsp;·&nbsp;
+  <a href="https://polymarket.com" target="_blank">Polymarket</a> &nbsp;·&nbsp; Stand 31.03.2026<br><br>
+  ⚠️ Wette verantwortungsbewusst. Nur für Personen ab 18 Jahren. Picks = statistische Analyse, keine Garantie.
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  LIVE UNDERSTAT DATA — fetched 31.03.2026
+// ═══════════════════════════════════════════════════
+
+const LEAGUE_DATA = {
+
+  // ── 🏴󠁧󠁢󠁥󠁮󠁧󠁿 EPL ────────────────────────────────────────
+  epl: {
+    flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', name: 'Premier League', short: 'EPL',
+    matchday: 'Spieltag 32 · 4./5. Apr 2026',
+    coverageNote: null,
+    // Leakiest defenses (highest xGA) — best opponents for shot picks
+    weakestDefs: [
+      { name: 'Burnley',    xGA: 68.7, games: 31 },
+      { name: 'West Ham',   xGA: 57.9, games: 31 },
+      { name: 'Wolves',     xGA: 55.2, games: 31 },
+      { name: 'Nott\'m Forest', xGA: 52.7, games: 31 },
+      { name: 'Sunderland', xGA: 49.1, games: 31 },
+    ],
+    // Real Understat data, extracted 31.03.2026
+    picks: [
+      {
+        type: 'shots', badge: '🎯 Shots Over', badgeClass: 'badge-shots',
+        odds: '~1.55', oddsClass: '',
+        match: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Man City vs Burnley · Sa 4. Apr',
+        bet: 'Haaland – Over 3.5 Shots Total',
+        stats: [
+          { v: '3.76', k: 'Sh/90', cls: 'highlight' },
+          { v: '102',  k: 'Shots', cls: '' },
+          { v: '0.85', k: 'xG/90', cls: 'highlight' },
+          { v: '22G',  k: 'Goals', cls: 'good' },
+        ],
+        reason: '<strong>3.76 Schüsse/90 über 29 Spiele</strong> — Haaland ÜBERTRIFFT die Marktlinie 3.5 in fast jedem Spiel. Burnley hat <strong>xGA 68.7</strong> — lückenhafteste Abwehr der Liga. Automatisch.',
+        conf: 5, confClass: 'blue',
+        stakeTag: 'Haaland · Over 3.5 Shots'
+      },
+      {
+        type: 'scorer', badge: '⚽ Anytime Scorer', badgeClass: 'badge-scorer',
+        odds: '~2.00', oddsClass: 'purple',
+        match: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Man Utd vs West Ham · Sa 4. Apr',
+        bet: 'Benjamin Sesko – Anytime Scorer',
+        stats: [
+          { v: '3.61', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.68', k: 'xG/90', cls: 'highlight' },
+          { v: '9G',   k: 'Goals', cls: '' },
+          { v: '57.9', k: 'opp xGA', cls: 'warn' },
+        ],
+        reason: '<strong>3.61 Sh/90 + xG/90 0.68</strong> — Sesko ist Man Utds klarster Abschluss-Spieler. West Ham erlaubt <strong>xGA 57.9</strong> (zweitschlechteste Abwehr). Kurs ~2.00 unterschätzt seinen xG-Output.',
+        conf: 4, confClass: 'purple',
+        stakeTag: 'Sesko · Anytime Scorer'
+      },
+      {
+        type: 'xgval', badge: '📈 xG Regression', badgeClass: 'badge-xgval',
+        odds: '~3.50', oddsClass: '',
+        match: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Bournemouth vs Everton · So 5. Apr',
+        bet: 'David Brooks – Anytime Scorer',
+        stats: [
+          { v: '3.65', k: 'Sh/90', cls: 'highlight' },
+          { v: '5.55', k: 'Saison xG', cls: 'warn' },
+          { v: '1',    k: 'Goals', cls: 'bad' },
+          { v: '2.3%', k: 'Conv', cls: 'bad' },
+        ],
+        reason: '<strong>⚠️ Extremer xG-Value:</strong> Brooks hat 5.55 xG angesammelt aber NUR 1 TOR erzielt (2.3% Conversion). Das ist statistisch ein Ausreißer — die Regression kommt. Bookies lassen Kurs hoch, weil er kaum trifft. Das ist genau der Edge.',
+        conf: 4, confClass: 'green',
+        stakeTag: 'Brooks · Anytime Scorer'
+      },
+      {
+        type: 'shots', badge: '🎯 Shots Over', badgeClass: 'badge-shots',
+        odds: '~1.70', oddsClass: '',
+        match: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Liverpool vs Arsenal · So 5. Apr',
+        bet: 'Hugo Ekitike – Over 2.5 Shots Total',
+        stats: [
+          { v: '3.19', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.59', k: 'xG/90', cls: '' },
+          { v: '11G',  k: 'Goals', cls: 'good' },
+          { v: '1835', k: 'Mins', cls: '' },
+        ],
+        reason: '<strong>3.19 Sh/90 über 28 Spiele, 1835 Minuten</strong> — Ekitike ist Liverpools Hauptabschlussspieler. Stabiler Shot-Output über die gesamte Saison, Marktlinie 2.5 ist klar unterbewertet.',
+        conf: 3, confClass: 'blue',
+        stakeTag: 'Ekitike · Over 2.5 Shots'
+      },
+    ],
+    // Top shot-takers — real Understat data
+    leaders: [
+      { name: 'Haaland',   team: 'Man City', sh90: '3.76', xG90: '0.85', conv: '21.6', type: 'shots' },
+      { name: 'Brooks',    team: 'Bournemouth', sh90: '3.65', xG90: '0.47', conv: '2.3', type: 'xgr' },
+      { name: 'Sesko',     team: 'Man Utd', sh90: '3.61', xG90: '0.68', conv: '17.0', type: 'shots' },
+      { name: 'Isidor',    team: 'Sunderland', sh90: '3.21', xG90: '0.40', conv: '10.5', type: 'shots' },
+      { name: 'Ekitike',   team: 'Liverpool', sh90: '3.19', xG90: '0.59', conv: '16.9', type: 'shots' },
+      { name: 'Cunha',     team: 'Man Utd', sh90: '3.13', xG90: '0.24', conv: '9.7', type: 'xgr' },
+    ],
+    pmCards: [
+      { league: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 EPL Winner', team: 'Arsenal', prob: '87.5%', probClass: '', vol: '$313M · Kurs ~1.14', label: '✓ Meister fast sicher', labelClass: '' },
+      { league: '🏆 UCL Winner', team: 'Arsenal', prob: '26.5%', probClass: 'ucl', vol: '$221M · Kurs ~3.77', label: '⚡ Halbfinale · Value Pick', labelClass: 'blue' },
+      { league: '🌍 WC 2026', team: 'Spain', prob: '15.7%', probClass: 'wc', vol: '$432M · Kurs ~6.37', label: '📈 Titelverteidiger · Favorit', labelClass: 'purple' }
+    ]
+  },
+
+  // ── 🇩🇪 BUNDESLIGA ──────────────────────────────
+  bundesliga: {
+    flag: '🇩🇪', name: 'Bundesliga', short: 'BL',
+    matchday: 'Spieltag 28 · 5./6. Apr 2026',
+    coverageNote: null,
+    weakestDefs: [
+      { name: 'Heidenheim', xGA: 58.8, games: 27 },
+      { name: 'Augsburg',   xGA: 53.7, games: 27 },
+      { name: 'Wolfsburg',  xGA: 51.4, games: 27 },
+      { name: 'Hamburger SV', xGA: 50.9, games: 27 },
+      { name: 'Mainz 05',   xGA: 49.3, games: 27 },
+    ],
+    picks: [
+      {
+        type: 'shots', badge: '🎯 Shots Over', badgeClass: 'badge-shots',
+        odds: '~1.50', oddsClass: '',
+        match: '🇩🇪 Bayern München vs Heidenheim · Sa 5. Apr',
+        bet: 'Harry Kane – Over 3.5 Shots Total',
+        stats: [
+          { v: '4.67', k: 'Sh/90', cls: 'highlight' },
+          { v: '1.15', k: 'xG/90', cls: 'highlight' },
+          { v: '31G',  k: 'Goals', cls: 'good' },
+          { v: '58.8', k: 'opp xGA', cls: 'warn' },
+        ],
+        reason: '<strong>Kane: 4.67 Sh/90 · 31 Tore · xG/90 1.15</strong> — bester Stürmer Europas diese Saison. Heidenheim hat <strong>xGA 58.8</strong> (lückenhafteste Abwehr der Bundesliga). Kurs ~1.50 ist für das Setup fast ein Geschenk.',
+        conf: 5, confClass: 'blue',
+        stakeTag: 'Kane · Over 3.5 Shots'
+      },
+      {
+        type: 'scorer', badge: '⚽ Anytime Scorer', badgeClass: 'badge-scorer',
+        odds: '~1.65', oddsClass: 'purple',
+        match: '🇩🇪 VfB Stuttgart vs Wolfsburg · Sa 5. Apr',
+        bet: 'Deniz Undav – Anytime Scorer',
+        stats: [
+          { v: '5.18', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.84', k: 'xG/90', cls: 'highlight' },
+          { v: '18G',  k: 'Goals', cls: 'good' },
+          { v: '51.4', k: 'opp xGA', cls: 'warn' },
+        ],
+        reason: '<strong>5.18 Sh/90 — höchster Wert der gesamten Bundesliga.</strong> Undav schießt in jedem Spiel. 18 Tore aus 100 Schüssen. Wolfsburg hat xGA 51.4. Kurs ~1.65 für einen Spieler mit dieser Shot-Frequenz ist klar Value.',
+        conf: 5, confClass: 'purple',
+        stakeTag: 'Undav · Anytime Scorer'
+      },
+      {
+        type: 'shots', badge: '🎯 Shots Over', badgeClass: 'badge-shots',
+        odds: '~1.65', oddsClass: '',
+        match: '🇩🇪 Bayern München vs Heidenheim · Sa 5. Apr',
+        bet: 'Michael Olise – Over 2.5 Shots Total',
+        stats: [
+          { v: '3.82', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.45', k: 'xG/90', cls: '' },
+          { v: '11G',  k: 'Goals', cls: '' },
+          { v: '84',   k: 'Shots', cls: '' },
+        ],
+        reason: '<strong>3.82 Sh/90 über 25 Spiele</strong> — Olise ist Bayern\'s zweiter Hauptabschlussspieler. Gegen Heidenheim auf eigenem Platz wird Bayern dominieren. Olise übertrifft Linie 2.5 zuverlässig.',
+        conf: 4, confClass: 'blue',
+        stakeTag: 'Olise · Over 2.5 Shots'
+      },
+      {
+        type: 'xgval', badge: '📈 xG Regression', badgeClass: 'badge-xgval',
+        odds: '~2.20', oddsClass: '',
+        match: '🇩🇪 Mainz 05 vs Dortmund · So 6. Apr',
+        bet: 'Mainz – Over 1.5 Tore (Team)',
+        stats: [
+          { v: '46.1', k: 'Team xG', cls: 'highlight' },
+          { v: '33',   k: 'Tore', cls: 'bad' },
+          { v: '-13.1',k: 'xG-Diff', cls: 'bad' },
+          { v: '27',   k: 'Spiele', cls: '' },
+        ],
+        reason: '<strong>Mainz xG-Diff −13.1</strong> — die schlechteste xG-Differenz der gesamten Bundesliga. Mainz hätte 46 Tore erzielt, hat aber nur 33. <strong>13 Tore fehlen statistisch.</strong> Die Regression wird kommen, besonders gegen Dortmund (hohe xGA).',
+        conf: 4, confClass: 'green',
+        stakeTag: 'Mainz · Over 1.5 Goals'
+      },
+    ],
+    leaders: [
+      { name: 'Undav',     team: 'Stuttgart', sh90: '5.18', xG90: '0.84', conv: '18.0', type: 'shots' },
+      { name: 'Kane',      team: 'Bayern',    sh90: '4.67', xG90: '1.15', conv: '28.7', type: 'shots' },
+      { name: 'Olise',     team: 'Bayern',    sh90: '3.82', xG90: '0.45', conv: '13.1', type: 'shots' },
+      { name: 'Matanovic', team: 'Freiburg',  sh90: '3.48', xG90: '0.65', conv: '19.0', type: 'shots' },
+      { name: 'El Mala',   team: 'Köln',      sh90: '3.45', xG90: '0.55', conv: '18.9', type: 'shots' },
+      { name: 'Gnabry',    team: 'Bayern',    sh90: '3.49', xG90: '0.46', conv: '17.0', type: 'shots' },
+    ],
+    pmCards: [
+      { league: '🇩🇪 Bundesliga Winner', team: 'Bayern München', prob: '99.1%', probClass: '', vol: '$3.1M · Kurs ~1.01', label: '✓ Meisterschaft sicher', labelClass: '' },
+      { league: '🏆 UCL Winner', team: 'Bayern München', prob: '22.5%', probClass: 'ucl', vol: '$221M · Kurs ~4.44', label: '⚡ Halbfinale · Value', labelClass: 'blue' },
+      { league: '🌍 WC 2026', team: 'Germany', prob: '8.2%', probClass: 'wc', vol: '$432M · Kurs ~12.2', label: '📈 Gastgeber · Longshot', labelClass: 'purple' }
+    ]
+  },
+
+  // ── 🇮🇹 SERIE A ─────────────────────────────────
+  seriea: {
+    flag: '🇮🇹', name: 'Serie A', short: 'SA',
+    matchday: 'Giornata 30 · 5./6. Apr 2026',
+    coverageNote: null,
+    weakestDefs: [
+      { name: 'Cremonese', xGA: 56.1, games: 30 },
+      { name: 'Pisa',      xGA: 54.7, games: 30 },
+      { name: 'Lecce',     xGA: 50.0, games: 30 },
+      { name: 'Cagliari',  xGA: 49.4, games: 30 },
+      { name: 'Parma',     xGA: 48.5, games: 30 },
+    ],
+    picks: [
+      {
+        type: 'xgval', badge: '📈 xG Regression', badgeClass: 'badge-xgval',
+        odds: '~2.50', oddsClass: '',
+        match: '🇮🇹 Fiorentina vs Cagliari · Sa 5. Apr',
+        bet: 'Moise Kean – Anytime Scorer',
+        stats: [
+          { v: '4.44', k: 'Sh/90', cls: 'highlight' },
+          { v: '15.36',k: 'Saison xG', cls: 'warn' },
+          { v: '8G',   k: 'Goals', cls: 'bad' },
+          { v: '-7.4', k: 'xG-Diff', cls: 'bad' },
+        ],
+        reason: '<strong>⚠️ Stärkster Regression-Pick der Serie A:</strong> Kean hat 97 Schüsse abgegeben, xG 15.36 angesammelt — aber nur 8 Tore erzielt. Das ist ein xG-Rückstand von <strong>−7.4 Toren</strong>. Gegen Cagliari (xGA 49.4) ist Regression sehr wahrscheinlich.',
+        conf: 5, confClass: 'green',
+        stakeTag: 'Kean · Anytime Scorer'
+      },
+      {
+        type: 'scorer', badge: '⚽ Anytime Scorer', badgeClass: 'badge-scorer',
+        odds: '~1.80', oddsClass: 'purple',
+        match: '🇮🇹 Inter vs Cremonese · So 6. Apr',
+        bet: 'Lautaro Martínez – Anytime Scorer',
+        stats: [
+          { v: '3.87', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.68', k: 'xG/90', cls: 'highlight' },
+          { v: '14G',  k: 'Goals', cls: 'good' },
+          { v: '56.1', k: 'opp xGA', cls: 'warn' },
+        ],
+        reason: '<strong>3.87 Sh/90 · xG/90 0.68</strong> — Lautaro ist der konstanteste Stürmer der Serie A. Inter spielt gegen Cremonese, die schwächste Abwehr der Liga (<strong>xGA 56.1</strong>). Kurs ~1.80 für dieses Matchup ist knapper Value.',
+        conf: 4, confClass: 'purple',
+        stakeTag: 'Lautaro · Anytime Scorer'
+      },
+      {
+        type: 'shots', badge: '🎯 Shots Over', badgeClass: 'badge-shots',
+        odds: '~1.60', oddsClass: '',
+        match: '🇮🇹 Atalanta vs Parma · Sa 5. Apr',
+        bet: 'Gianluca Scamacca – Over 2.5 Shots',
+        stats: [
+          { v: '4.01', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.65', k: 'xG/90', cls: '' },
+          { v: '8G',   k: 'Goals', cls: '' },
+          { v: '48.5', k: 'opp xGA', cls: 'warn' },
+        ],
+        reason: '<strong>4.01 Sh/90</strong> — Scamacca ist Atalanta\'s Hauptabschlussspieler. Parma hat <strong>xGA 48.5</strong>. Atalanta\'s intensives Pressing-System produziert konstant hohe Shot-Zahlen für die Stürmer.',
+        conf: 4, confClass: 'blue',
+        stakeTag: 'Scamacca · Over 2.5 Shots'
+      },
+      {
+        type: 'shots', badge: '🎯 Shots Over', badgeClass: 'badge-shots',
+        odds: '~1.65', oddsClass: '',
+        match: '🇮🇹 Atalanta vs Parma · Sa 5. Apr',
+        bet: 'Nikola Krstovic – Over 3.5 Shots',
+        stats: [
+          { v: '5.39', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.86', k: 'xG/90', cls: 'highlight' },
+          { v: '8G',   k: 'Goals', cls: '' },
+          { v: '74',   k: 'Shots', cls: '' },
+        ],
+        reason: '<strong>5.39 Sh/90 — höchster Wert in der gesamten Serie A.</strong> Krstovic schießt extrem oft, aber Conversion ist niedrig (10.8%). Gutes Anzeichen für SHOTS-Wetten, da die Marktlinie 3.5 weit unter seinem Durchschnitt liegt.',
+        conf: 4, confClass: 'blue',
+        stakeTag: 'Krstovic · Over 3.5 Shots'
+      },
+    ],
+    leaders: [
+      { name: 'Krstovic',  team: 'Atalanta',     sh90: '5.39', xG90: '0.86', conv: '10.8', type: 'shots' },
+      { name: 'Malen',     team: 'Roma',          sh90: '4.75', xG90: '0.85', conv: '16.3', type: 'shots' },
+      { name: 'Kean',      team: 'Fiorentina',    sh90: '4.44', xG90: '0.70', conv: '8.2',  type: 'xgr' },
+      { name: 'Scamacca',  team: 'Atalanta',      sh90: '4.01', xG90: '0.65', conv: '15.7', type: 'shots' },
+      { name: 'Lautaro',   team: 'Inter',         sh90: '3.87', xG90: '0.68', conv: '16.9', type: 'shots' },
+      { name: 'Nico Paz',  team: 'Como',          sh90: '3.85', xG90: '0.30', conv: '9.7',  type: 'xgr' },
+    ],
+    pmCards: [
+      { league: '🇮🇹 Serie A Winner', team: 'Inter Milan', prob: '82.5%', probClass: '', vol: '$2.8M · Kurs ~1.21', label: '✓ Titelrennen fast entschieden', labelClass: '' },
+      { league: '🏆 UCL Winner', team: 'Inter Milan', prob: '9.5%', probClass: 'ucl', vol: '$221M · Kurs ~10.5', label: '⚡ VF · Longshot Value', labelClass: 'blue' },
+      { league: '🌍 WC 2026', team: 'Italy', prob: '6.4%', probClass: 'wc', vol: '$432M · Kurs ~15.6', label: '📈 Azzurri Longshot', labelClass: 'purple' }
+    ]
+  },
+
+  // ── 🇫🇷 LIGUE 1 ────────────────────────────────
+  ligue1: {
+    flag: '🇫🇷', name: 'Ligue 1', short: 'L1',
+    matchday: 'Journée 29 · 4./5. Apr 2026',
+    coverageNote: null,
+    weakestDefs: [
+      { name: 'Metz',     xGA: 52.1, games: 27 },
+      { name: 'Nice',     xGA: 49.4, games: 27 },
+      { name: 'Angers',   xGA: 47.3, games: 27 },
+      { name: 'Paris FC', xGA: 47.3, games: 27 },
+      { name: 'Rennes',   xGA: 45.5, games: 27 },
+    ],
+    picks: [
+      {
+        type: 'shots', badge: '🎯 Shots Over', badgeClass: 'badge-shots',
+        odds: '~1.60', oddsClass: '',
+        match: '🇫🇷 Marseille vs Angers · Sa 4. Apr',
+        bet: 'Mason Greenwood – Over 2.5 Shots',
+        stats: [
+          { v: '4.25', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.56', k: 'xG/90', cls: '' },
+          { v: '15G',  k: 'Goals', cls: 'good' },
+          { v: '47.3', k: 'opp xGA', cls: 'warn' },
+        ],
+        reason: '<strong>4.25 Sh/90 über 26 Spiele</strong> — Greenwood ist der konstanteste Shot-Produzent der Ligue 1 mit der besten Conversion (15.6%). Gegen Angers (<strong>xGA 47.3</strong>) ist Over 2.5 Shots fast garantiert.',
+        conf: 5, confClass: 'blue',
+        stakeTag: 'Greenwood · Over 2.5 Shots'
+      },
+      {
+        type: 'scorer', badge: '⚽ Anytime Scorer', badgeClass: 'badge-scorer',
+        odds: '~1.70', oddsClass: 'purple',
+        match: '🇫🇷 PSG vs Metz · So 5. Apr',
+        bet: 'Bradley Barcola – Anytime Scorer',
+        stats: [
+          { v: '3.69', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.66', k: 'xG/90', cls: 'highlight' },
+          { v: '10G',  k: 'Goals', cls: 'good' },
+          { v: '18.2%',k: 'Conv', cls: 'good' },
+        ],
+        reason: '<strong>3.69 Sh/90 · 18.2% Conversion</strong> — Barcola ist PSGs effizientester Torschütze. Gegen Metz (<strong>xGA 52.1</strong>, schlechteste Abwehr der Ligue 1) ist ein Tor sehr wahrscheinlich. Kurs ~1.70 knapper aber echter Value.',
+        conf: 5, confClass: 'purple',
+        stakeTag: 'Barcola · Anytime Scorer'
+      },
+      {
+        type: 'xgval', badge: '📈 xG Regression', badgeClass: 'badge-xgval',
+        odds: '~3.00', oddsClass: '',
+        match: '🇫🇷 PSG vs Metz · So 5. Apr',
+        bet: 'Gonçalo Ramos – Anytime Scorer',
+        stats: [
+          { v: '4.22', k: 'Sh/90', cls: 'highlight' },
+          { v: '7.20', k: 'Saison xG', cls: 'warn' },
+          { v: '5G',   k: 'Goals', cls: 'bad' },
+          { v: '10.6%',k: 'Conv', cls: 'bad' },
+        ],
+        reason: '<strong>4.22 Sh/90, xG 7.20 aber nur 5 Tore</strong> — Ramos hat massiv unter seinem Expected Goals abgeschlossen. Gegen Metz auf großem PSG-Platz: die Regression ist fällig. Bookies sehen nur die 5 Tore — der Kurs ~3.00 ist zu hoch.',
+        conf: 3, confClass: 'green',
+        stakeTag: 'Ramos · Anytime Scorer'
+      },
+      {
+        type: 'shots', badge: '🎯 Shots Over', badgeClass: 'badge-shots',
+        odds: '~1.65', oddsClass: '',
+        match: '🇫🇷 PSG vs Metz · So 5. Apr',
+        bet: 'Kvaratskhelia – Over 2.5 Shots',
+        stats: [
+          { v: '3.88', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.42', k: 'xG/90', cls: '' },
+          { v: '4G',   k: 'Goals', cls: '' },
+          { v: '50',   k: 'Shots', cls: '' },
+        ],
+        reason: '<strong>3.88 Sh/90</strong> — Kvaratskhelia schiesst konstant viel, auch wenn die Conversion niedrig ist. PSG gegen Metz = totale Dominanz, Kvara wird mit Schussversuchen versorgt.',
+        conf: 4, confClass: 'blue',
+        stakeTag: 'Kvaratskhelia · Over 2.5 Shots'
+      },
+    ],
+    leaders: [
+      { name: 'Greenwood', team: 'Marseille',  sh90: '4.25', xG90: '0.56', conv: '15.6', type: 'shots' },
+      { name: 'G. Ramos',  team: 'PSG',        sh90: '4.22', xG90: '0.65', conv: '10.6', type: 'xgr' },
+      { name: 'Kvaratskhelia',team:'PSG',       sh90: '3.88', xG90: '0.42', conv: '8.0',  type: 'shots' },
+      { name: 'Doué',      team: 'PSG',        sh90: '3.86', xG90: '0.71', conv: '12.5', type: 'shots' },
+      { name: 'Barcola',   team: 'PSG',        sh90: '3.69', xG90: '0.66', conv: '18.2', type: 'shots' },
+      { name: 'Balogun',   team: 'Monaco',     sh90: '3.18', xG90: '0.52', conv: '15.3', type: 'shots' },
+    ],
+    pmCards: [
+      { league: '🇫🇷 Ligue 1 Winner', team: 'PSG', prob: '92.0%', probClass: '', vol: '$15.7M · Kurs ~1.09', label: '✓ PSG Dominanz total', labelClass: '' },
+      { league: '🏆 UCL Winner', team: 'PSG', prob: '7.5%', probClass: 'ucl', vol: '$221M · Kurs ~13.3', label: '⚡ VF · UCL Longshot', labelClass: 'blue' },
+      { league: '🌍 WC 2026', team: 'France', prob: '11.8%', probClass: 'wc', vol: '$432M · Kurs ~8.47', label: '📈 Top 3 Favorit', labelClass: 'purple' }
+    ]
+  },
+
+  // ── 🇦🇹 ÖSTERREICH ──────────────────────────────
+  austria: {
+    flag: '🇦🇹', name: 'Österreich BL', short: 'ÖBL',
+    matchday: 'Runde 26 · 5. Apr 2026',
+    coverageNote: 'Kein Understat-Coverage für die ÖBL. Picks basieren auf Spielstil-Analyse und verfügbaren Ligadaten. Geringere Konfidenz.',
+    weakestDefs: [
+      { name: 'WSG Tirol',  xGA: '(est.)', games: 25 },
+      { name: 'BW Linz',    xGA: '(est.)', games: 25 },
+      { name: 'Altach',     xGA: '(est.)', games: 25 },
+    ],
+    picks: [
+      {
+        type: 'shots', badge: '🎯 Shots Over', badgeClass: 'badge-shots',
+        odds: '~1.75', oddsClass: '',
+        match: '🇦🇹 Red Bull Salzburg vs Rapid Wien · Sa 5. Apr',
+        bet: 'Salzburg Stürmer – Over 2.5 Shots',
+        stats: [
+          { v: '~67%', k: 'SzW-Rate', cls: 'highlight' },
+          { v: 'Liga#1', k: 'Angriff', cls: 'good' },
+          { v: 'Derby', k: 'Kontext', cls: 'warn' },
+          { v: 'Schätzw.', k: 'Daten', cls: '' },
+        ],
+        reason: '<strong>Red Bull Salzburg dominiert die ÖBL offensiv total</strong> — hohe Pressing-Intensität erzeugt konstant viele Schüsse. Rapid Wien Derby erhöht Intensität. Kurs ~1.75 für Salzburg-Stürmer ist attraktiv.',
+        conf: 3, confClass: 'blue',
+        stakeTag: 'Salzburg Stürmer · Over 2.5 Shots'
+      },
+      {
+        type: 'scorer', badge: '⚽ Anytime Scorer', badgeClass: 'badge-scorer',
+        odds: '~1.60', oddsClass: 'purple',
+        match: '🇦🇹 Sturm Graz vs LASK · Sa 5. Apr',
+        bet: 'Sturm Graz Stürmer – Anytime Scorer',
+        stats: [
+          { v: '~61%', k: 'SzW-Rate', cls: 'highlight' },
+          { v: 'Heim', k: 'Vorteil', cls: 'good' },
+          { v: '#2 Liga', k: 'Angriff', cls: '' },
+          { v: 'Schätzw.', k: 'Daten', cls: '' },
+        ],
+        reason: '<strong>Sturm Graz im Heimspiel fast unbesiegbar</strong> — im Merkur Stadion starke Heimform. LASK auswärts schwächer. Keine Understat-Daten verfügbar, aber der Spielstil von Sturm spricht für hohes Shot-Volumen.',
+        conf: 2, confClass: 'purple',
+        stakeTag: 'Sturm Stürmer · Anytime Scorer'
+      },
+    ],
+    leaders: [],
+    pmCards: [
+      { league: '🇦🇹 ÖBL Winner', team: 'RB Salzburg', prob: '–', probClass: '', vol: 'Kein Polymarket-Markt', label: 'ÖBL nicht gelistet', labelClass: 'yellow' },
+      { league: '🏆 UCL', team: 'kein ÖBL-Team', prob: '–', probClass: 'ucl', vol: 'Nicht qualifiziert', label: 'ÖBL außerhalb UCL', labelClass: 'blue' },
+      { league: '🌍 WC 2026', team: 'Austria', prob: '1.2%', probClass: 'wc', vol: '$432M · Kurs ~83', label: '📈 Außenseiter Longshot', labelClass: 'purple' }
+    ]
+  },
+
+  // ── 🇪🇸 LA LIGA ────────────────────────────────
+  laliga: {
+    flag: '🇪🇸', name: 'La Liga', short: 'LL',
+    matchday: 'Jornada 30 · 5./6. Apr 2026',
+    coverageNote: null,
+    weakestDefs: [
+      { name: 'Elche',       xGA: 56.4, games: 29 },
+      { name: 'Levante',     xGA: 54.9, games: 29 },
+      { name: 'Girona',      xGA: 53.0, games: 29 },
+      { name: 'Mallorca',    xGA: 52.3, games: 29 },
+      { name: 'Real Oviedo', xGA: 52.1, games: 29 },
+    ],
+    picks: [
+      {
+        type: 'shots', badge: '🎯 Shots Over', badgeClass: 'badge-shots',
+        odds: '~1.50', oddsClass: '',
+        match: '🇪🇸 Real Madrid vs Elche · Sa 5. Apr',
+        bet: 'Mbappé – Over 3.5 Shots Total',
+        stats: [
+          { v: '4.84', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.94', k: 'xG/90', cls: 'highlight' },
+          { v: '23G',  k: 'Goals', cls: 'good' },
+          { v: '56.4', k: 'opp xGA', cls: 'warn' },
+        ],
+        reason: '<strong>Mbappé: 4.84 Sh/90 · höchster Wert der La Liga.</strong> Real Madrid vs Elche (<strong>xGA 56.4</strong> — schlechteste Abwehr). Mbappé übertrifft Linie 3.5 nahezu in jedem Heimspiel. Kurs ~1.50 ist fast free money.',
+        conf: 5, confClass: 'blue',
+        stakeTag: 'Mbappé · Over 3.5 Shots'
+      },
+      {
+        type: 'scorer', badge: '⚽ Anytime Scorer', badgeClass: 'badge-scorer',
+        odds: '~1.65', oddsClass: 'purple',
+        match: '🇪🇸 Barcelona vs Levante · Sa 5. Apr',
+        bet: 'Lamine Yamal – Anytime Scorer',
+        stats: [
+          { v: '4.33', k: 'Sh/90', cls: 'highlight' },
+          { v: '0.52', k: 'xG/90', cls: '' },
+          { v: '14G',  k: 'Goals', cls: 'good' },
+          { v: '54.9', k: 'opp xGA', cls: 'warn' },
+        ],
+        reason: '<strong>4.33 Sh/90 · 14 Tore</strong> — Yamal ist Barças zweiter Top-Torschütze. Gegen Levante (<strong>xGA 54.9</strong>) wird Barcelona dominieren. Kurs ~1.65 für einen Spieler der schon 14x getroffen hat ist Value.',
+        conf: 4, confClass: 'purple',
+        stakeTag: 'Yamal · Anytime Scorer'
+      },
+      {
+        type: 'scorer', badge: '⚽ Anytime Scorer', badgeClass: 'badge-scorer',
+        odds: '~1.75', oddsClass: 'purple',
+        match: '🇪🇸 Barcelona vs Levante · Sa 5. Apr',
+        bet: 'Lewandowski – Anytime Scorer',
+        stats: [
+          { v: '4.16', k: 'Sh/90', cls: 'highlight' },
+          { v: '1.07', k: 'xG/90', cls: 'highlight' },
+          { v: '11G',  k: 'Goals', cls: '' },
+          { v: '20.4%',k: 'Conv', cls: 'good' },
+        ],
+        reason: '<strong>xG/90 1.07 — bester Wert der La Liga.</strong> Lewandowski erzeugt hochwertige Schüsse in jedem Spiel. 11 Tore aus 54 Schüssen (20.4% Conv) zeigt Klinikalität. Gegen Levante fast sicher ein Tor.',
+        conf: 4, confClass: 'purple',
+        stakeTag: 'Lewandowski · Anytime Scorer'
+      },
+      {
+        type: 'xgval', badge: '📈 xG Regression', badgeClass: 'badge-xgval',
+        odds: '~3.20', oddsClass: '',
+        match: '🇪🇸 Barcelona vs Levante · Sa 5. Apr',
+        bet: 'Marcus Rashford – Anytime Scorer',
+        stats: [
+          { v: '4.41', k: 'Sh/90', cls: 'highlight' },
+          { v: '7.01', k: 'Saison xG', cls: 'warn' },
+          { v: '4G',   k: 'Goals', cls: 'bad' },
+          { v: '6.2%', k: 'Conv', cls: 'bad' },
+        ],
+        reason: '<strong>4.41 Sh/90, xG 7.01 — aber nur 4 Tore (6.2% Conversion).</strong> Rashford schießt SEHR viel aber trifft kaum. Die Bookies preisen ihn billig weil er selten trifft — genau wie bei Brooks im EPL ist das ein klassischer Value-Regression-Pick.',
+        conf: 3, confClass: 'green',
+        stakeTag: 'Rashford · Anytime Scorer'
+      },
+    ],
+    leaders: [
+      { name: 'Mbappé',      team: 'Real Madrid', sh90: '4.84', xG90: '0.94', conv: '20.7', type: 'shots' },
+      { name: 'Rashford',    team: 'Barcelona',   sh90: '4.41', xG90: '0.48', conv: '6.2',  type: 'xgr' },
+      { name: 'L. Yamal',    team: 'Barcelona',   sh90: '4.33', xG90: '0.52', conv: '14.1', type: 'shots' },
+      { name: 'Lewandowski', team: 'Barcelona',   sh90: '4.16', xG90: '1.07', conv: '20.4', type: 'shots' },
+      { name: 'Raphinha',    team: 'Barcelona',   sh90: '3.91', xG90: '0.67', conv: '19.0', type: 'shots' },
+      { name: 'Dani Olmo',   team: 'Barcelona',   sh90: '3.48', xG90: '0.44', conv: '11.9', type: 'shots' },
+    ],
+    pmCards: [
+      { league: '🇪🇸 La Liga Winner', team: 'Barcelona', prob: '76.0%', probClass: '', vol: '$103M · Kurs ~1.32', label: '✓ Barça dominiert klar', labelClass: '' },
+      { league: '🏆 UCL Winner', team: 'Barcelona', prob: '16.5%', probClass: 'ucl', vol: '$221M · Kurs ~6.06', label: '⚡ Halbfinale · Value', labelClass: 'blue' },
+      { league: '🌍 WC 2026', team: 'Spain', prob: '15.7%', probClass: 'wc', vol: '$432M · Kurs ~6.37', label: '📈 Titelverteidiger', labelClass: 'purple' }
+    ]
+  }
+
+};
+
+// ═══════════════════════════════════════════════════
+//  RENDER ENGINE
+// ═══════════════════════════════════════════════════
+
+function dots(n, cls) {
+  return Array.from({length:5},(_,i)=>`<span class="conf-dot${i<n?' '+cls:''}"></span>`).join('');
+}
+
+function renderStatChips(stats) {
+  return stats.map(s =>
+    `<div class="stat-chip${s.cls?' '+s.cls:''}"><div class="sv">${s.v}</div><div class="sk">${s.k}</div></div>`
+  ).join('');
+}
+
+function renderPickCard(p) {
+  return `
+    <div class="pick-card ${p.type}">
+      <div class="pick-header">
+        <span class="pick-type-badge ${p.badgeClass}">${p.badge}</span>
+        <div class="pick-odds${p.oddsClass?' '+p.oddsClass:''}">${p.odds}</div>
+      </div>
+      <div class="pick-match">${p.match}</div>
+      <div class="pick-bet">${p.bet}</div>
+      <div class="pick-stats">${renderStatChips(p.stats)}</div>
+      <div class="pick-reason">${p.reason}</div>
+      <div class="pick-footer">
+        <div class="confidence-wrap">
+          <span class="confidence-label">Conf</span>
+          <div class="confidence-dots">${dots(p.conf, p.confClass)}</div>
+        </div>
+        <span class="stake-tag">${p.stakeTag}</span>
+      </div>
+    </div>`;
+}
+
+function renderLeaders(leaders, flag) {
+  if (!leaders || leaders.length === 0) return '';
+  const pills = leaders.map(l => `
+    <div class="leader-pill${l.type==='xgr'?' xgr':''}">
+      <span class="lp-name">${l.name}</span>
+      <span class="lp-team">${l.team}</span>
+      <span class="lp-stat">${l.sh90} sh/90</span>
+      <span class="lp-stat" style="color:var(--muted);font-size:10px">xG ${l.xG90}</span>
+    </div>`).join('');
+  return `
+    <div class="section-label">📊 Shot Leaders · ${flag} Saison 2025/26 <span style="font-weight:400;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0">&nbsp;(Understat live) · 🔵 Normal · 🟢 xG-Regression</span></div>
+    <div class="leaders-ref">
+      <div style="font-size:11px;color:var(--muted)">Sh/90 Min. 800 Spielminuten · xG/90 = Schussqualität · Grün = xG deutlich über Goals (Regression fällig)</div>
+      <div class="leaders-pills">${pills}</div>
+    </div>`;
+}
+
+function renderWeakDefs(defs, flag) {
+  const items = defs.map(d =>
+    `<span style="background:var(--card2);border:1px solid #4d1010;border-radius:6px;padding:4px 10px;font-size:11px;color:#f0b0b0">
+      ${d.name} <strong style="color:var(--red)">${d.xGA} xGA</strong>
+    </span>`
+  ).join('');
+  return `
+    <div class="section-label">🎯 Schwächste Abwehren · ${flag} (beste Gegner für Shots-Picks)</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px">${items}</div>`;
+}
+
+function renderLeague(key) {
+  const L = LEAGUE_DATA[key];
+  if (!L) return;
+
+  const shotsPicks  = L.picks.filter(p => p.type === 'shots' || p.type === 'hot');
+  const valuePicks  = L.picks.filter(p => p.type === 'scorer' || p.type === 'xgval');
+
+  const coverageHtml = L.coverageNote
+    ? `<div class="coverage-notice">⚠️ ${L.coverageNote}</div>` : '';
+
+  const html = `
+    <div class="intl-break-notice">
+      🌍 <strong>Länderspielpause endet heute · 31. März 2026</strong><br>
+      Ligen starten wieder am <strong>Wochenende 4./5./6. April</strong> — ${L.matchday}. Picks jetzt auf Stake vormerken.
+    </div>
+    <div class="data-notice">
+      ✅ <strong>Live-Daten:</strong> Alle Player- und Team-Stats direkt von <strong>Understat.com</strong> gezogen · Stand 31.03.2026 · Saison 2025/26
+    </div>
+    ${coverageHtml}
+
+    <div class="section-label">🎯 Shots Over Picks · ${L.matchday}</div>
+    <div class="picks-grid">${shotsPicks.map(renderPickCard).join('')}</div>
+
+    <div class="section-label">⚽ Scorer &amp; xG Value · ${L.matchday}</div>
+    <div class="picks-grid">${valuePicks.map(renderPickCard).join('')}</div>
+
+    ${renderWeakDefs(L.weakestDefs, L.flag)}
+    ${renderLeaders(L.leaders, L.flag)}
+
+    <div class="section-label">🏆 Polymarket Value · ${L.flag} ${L.name}</div>
+    <div class="pm-picks-grid">
+      ${L.pmCards.map(c => `
+        <div class="pm-pick-card">
+          <div class="pm-pick-league">${c.league}</div>
+          <div class="pm-pick-team">${c.team}</div>
+          <div class="pm-pick-prob${c.probClass?' '+c.probClass:''}">${c.prob}</div>
+          <div class="pm-pick-vol">${c.vol}</div>
+          <div class="pm-pick-label${c.labelClass?' '+c.labelClass:''}">${c.label}</div>
+        </div>`).join('')}
+    </div>`;
+
+  document.getElementById('mainContent').innerHTML = html;
+}
+
+document.querySelectorAll('.league-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.league-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderLeague(btn.dataset.league);
+  });
+});
+
+renderLeague('epl');
+</script>
+</body>
+</html>

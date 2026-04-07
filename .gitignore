@@ -1,0 +1,31 @@
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Logs (werden lokal generiert, nicht ins Repo)
+*.log
+dashboard_update.log
+update.log
+
+# macOS Systemmüll
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# macOS Shell-Scripts (nur für lokale Nutzung)
+*.command
+
+# Temporäre Dateien
+*.tmp
+*.bak
+*.swp
+
+# Nur diese Dateien sollen ins Repo:
+# season-finish.html   ✅
+# update_dashboard.py  ✅
+# refresh_stats.py     ✅
+# stats_cache.json     ✅
+# .github/             ✅
