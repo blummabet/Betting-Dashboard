@@ -472,7 +472,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <button id="ig-copy-btn" class="ig-btn ig-btn-secondary" onclick="copyInfographic(this)">📋 Bild kopieren</button>
       <button id="ig-share-btn" class="ig-btn ig-btn-secondary" onclick="shareInfographic()" style="display:none">📤 Teilen</button>
     </div>
-    <div class="ig-tip">1080×1350px · Bild kopieren → in Telegram einfügen (⌘V)</div>
+    <div class="ig-tip">1080×1920px (9:16) · Ideal für TikTok, Reels &amp; Stories · Bild kopieren → in Telegram einfügen (⌘V)</div>
   </div>
 </div>
 
@@ -1509,12 +1509,11 @@ function _pillColor(c) {
   })[c] || {bg:'rgba(28,33,40,0.92)', text:'#8b949e', border:'rgba(48,54,61,0.85)'};
 }
 
-// ── Infographic generator — 1080×1350px modern redesign ──
+// ── Infographic generator — 1080×1920px Social Media (9:16) ──
 function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   const match  = JSON.parse(decodeURIComponent(matchJson));
   const score  = computeMatchScore(match, leagueKey);
   const angle  = getBettingAngle(match);
-  const angleTxt = angle.text.replace(/<strong>/g,'').replace(/<\/strong>/g,'').replace(/<[^>]+>/g,'').replace(/&amp;/g,'&');
   const odds   = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
   const picks  = getBettingPicks(match, odds, leagueKey).slice(0, 3);
   const hLabels = match.homeStake?.labels || [];
@@ -1532,227 +1531,270 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   const hC = teamColor(hLabels), aC = teamColor(aLabels);
   const scoreColor = score>=9?'#f85149':score>=7?'#3fb950':'#e3b341';
 
-  const W=1080, H=1350;
+  const W=1080, H=1920;
   const canvas=document.createElement('canvas');
   canvas.width=W; canvas.height=H;
   const ctx=canvas.getContext('2d');
 
   // ── Background ──────────────────────────────────────────
-  // Deep dark base
   const bgG=ctx.createLinearGradient(0,0,0,H);
-  bgG.addColorStop(0,'#0d1117'); bgG.addColorStop(1,'#090c10');
+  bgG.addColorStop(0,'#0d1117'); bgG.addColorStop(0.5,'#0d1a14'); bgG.addColorStop(1,'#090c10');
   ctx.fillStyle=bgG; ctx.fillRect(0,0,W,H);
 
-  // Home side glow
-  const gH=ctx.createRadialGradient(0,H*0.3,0, 0,H*0.3,W*0.9);
-  gH.addColorStop(0,hC.soft+'0.18)'); gH.addColorStop(1,'transparent');
+  // Team color glows — bigger & more dramatic for 9:16
+  const gH=ctx.createRadialGradient(0,H*0.25,0, 0,H*0.25,W*1.1);
+  gH.addColorStop(0,hC.soft+'0.22)'); gH.addColorStop(1,'transparent');
   ctx.fillStyle=gH; ctx.fillRect(0,0,W,H);
-
-  // Away side glow
-  const gA=ctx.createRadialGradient(W,H*0.3,0, W,H*0.3,W*0.9);
-  gA.addColorStop(0,aC.soft+'0.18)'); gA.addColorStop(1,'transparent');
+  const gA=ctx.createRadialGradient(W,H*0.25,0, W,H*0.25,W*1.1);
+  gA.addColorStop(0,aC.soft+'0.22)'); gA.addColorStop(1,'transparent');
   ctx.fillStyle=gA; ctx.fillRect(0,0,W,H);
 
-  // Subtle pitch grid lines (decorative)
-  ctx.strokeStyle='rgba(255,255,255,0.025)'; ctx.lineWidth=1;
-  for (let lx=60; lx<W; lx+=90) {
+  // Subtle vertical grid lines
+  ctx.strokeStyle='rgba(255,255,255,0.022)'; ctx.lineWidth=1;
+  for (let lx=80; lx<W; lx+=90) {
     ctx.beginPath(); ctx.moveTo(lx,0); ctx.lineTo(lx,H); ctx.stroke();
   }
-  // Outer border
+  // Border
   ctx.strokeStyle='#21262d'; ctx.lineWidth=2;
-  igRoundRect(ctx,16,16,W-32,H-32,20,false,true);
+  igRoundRect(ctx,20,20,W-40,H-40,24,false,true);
 
-  // Top accent bars
-  const b1=ctx.createLinearGradient(16,0,W*0.6,0);
+  // Top accent bars (home | away color)
+  const b1=ctx.createLinearGradient(20,0,W*0.6,0);
   b1.addColorStop(0,hC.main); b1.addColorStop(1,'transparent');
-  ctx.fillStyle=b1; igRoundRect(ctx,16,16,W/2-8,5,[4,0,0,0],true,false);
+  ctx.fillStyle=b1; igRoundRect(ctx,20,20,W/2-10,6,[4,0,0,0],true,false);
   const b2=ctx.createLinearGradient(W,0,W*0.4,0);
   b2.addColorStop(0,aC.main); b2.addColorStop(1,'transparent');
-  ctx.fillStyle=b2; igRoundRect(ctx,W/2+8,16,W/2-24,5,[0,4,0,0],true,false);
+  ctx.fillStyle=b2; igRoundRect(ctx,W/2+10,20,W/2-30,6,[0,4,0,0],true,false);
 
-  // ── Header ──────────────────────────────────────────────
-  ctx.font='bold 24px system-ui,sans-serif'; ctx.textAlign='center';
+  // ── Zone 1: HEADER (top 160px) ──────────────────────────
+  ctx.font='bold 32px system-ui,sans-serif'; ctx.textAlign='center';
   ctx.textBaseline='middle'; ctx.fillStyle='#e6edf3';
-  ctx.fillText(`${leagueFlag}  ${leagueName}`, W/2, 56);
-  ctx.font='16px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
-  ctx.fillText(`📅 ${match.date}`, W/2, 84);
+  ctx.fillText(`${leagueFlag}  ${leagueName}`, W/2, 72);
+  ctx.font='22px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
+  ctx.fillText(`📅 ${match.date}`, W/2, 116);
 
-  // Separator
   ctx.strokeStyle='#21262d'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(44,106); ctx.lineTo(W-44,106); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(48,148); ctx.lineTo(W-48,148); ctx.stroke();
 
-  // ── Teams section ───────────────────────────────────────
-  // Home team name
-  ctx.font='bold 38px system-ui,sans-serif'; ctx.fillStyle='#ffffff';
+  // ── Zone 2: TEAMS (148–450px) ───────────────────────────
+  ctx.font='bold 68px system-ui,sans-serif'; ctx.fillStyle='#ffffff';
   ctx.textBaseline='alphabetic'; ctx.textAlign='center';
-  ctx.fillText(igTrunc(ctx,match.home,480), W*0.25, 162);
-  // Away team name
-  ctx.fillText(igTrunc(ctx,match.away,480), W*0.75, 162);
+  ctx.fillText(igTrunc(ctx,match.home,460), W*0.25, 232);
+  ctx.fillText(igTrunc(ctx,match.away,460), W*0.75, 232);
 
-  // VS divider (center)
-  ctx.font='bold 20px system-ui,sans-serif'; ctx.fillStyle='#30363d';
-  ctx.fillText('VS', W/2, 160);
+  // VS circle
+  ctx.fillStyle='rgba(255,255,255,0.06)';
+  ctx.beginPath(); ctx.arc(W/2,218,36,0,Math.PI*2); ctx.fill();
+  ctx.strokeStyle='#30363d'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.arc(W/2,218,36,0,Math.PI*2); ctx.stroke();
+  ctx.font='bold 26px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
+  ctx.textBaseline='middle'; ctx.textAlign='center';
+  ctx.fillText('VS', W/2, 218); ctx.textBaseline='alphabetic';
 
-  // Labels
-  ctx.font='bold 13px system-ui,sans-serif';
-  let hPY=172, aPY=172;
+  // Team labels (status pills)
+  ctx.font='bold 20px system-ui,sans-serif';
+  let hPY=248, aPY=248;
   const drawLabel=(lb, cx, y) => {
     const pc=_pillColor(lb.c);
-    const tw=ctx.measureText(lb.l).width, pw=tw+22, ph=28, px=cx-pw/2;
-    ctx.fillStyle=pc.bg; igRoundRect(ctx,px,y,pw,ph,14,true,false);
-    ctx.strokeStyle=pc.border; ctx.lineWidth=1; igRoundRect(ctx,px,y,pw,ph,14,false,true);
+    const tw=ctx.measureText(lb.l).width, pw=tw+28, ph=38, px=cx-pw/2;
+    ctx.fillStyle=pc.bg; igRoundRect(ctx,px,y,pw,ph,19,true,false);
+    ctx.strokeStyle=pc.border; ctx.lineWidth=1; igRoundRect(ctx,px,y,pw,ph,19,false,true);
     ctx.fillStyle=pc.text; ctx.textBaseline='middle'; ctx.textAlign='center';
     ctx.fillText(lb.l, cx, y+ph/2); ctx.textBaseline='alphabetic';
-    return ph+8;
+    return ph+10;
   };
   for (const lb of hLabels.slice(0,2)) hPY+=drawLabel(lb,W*0.25,hPY);
   for (const lb of aLabels.slice(0,2)) aPY+=drawLabel(lb,W*0.75,aPY);
 
   // Form sparklines
-  const spY=Math.max(hPY,aPY)+12;
-  ctx.font='bold 11px system-ui,sans-serif'; ctx.fillStyle='#8b949eaa';
+  const spY=Math.max(hPY,aPY)+16;
+  ctx.font='bold 16px system-ui,sans-serif'; ctx.fillStyle='#8b949eaa';
   ctx.textAlign='left'; ctx.textBaseline='alphabetic';
-  ctx.fillText('FORM', 44, spY+12);
+  ctx.fillText('FORM', 48, spY+16);
   ctx.textAlign='right';
-  ctx.fillText('FORM', W-44, spY+12);
-  const spH=56, spW=W*0.42;
-  _drawFormSparklineCanvas(ctx, match.homeForm?.form, 44, spY+18, spW, spH, hC.main);
-  _drawFormSparklineCanvas(ctx, match.awayForm?.form, W*0.58-4, spY+18, spW, spH, aC.main);
+  ctx.fillText('FORM', W-48, spY+16);
+  const spH=64, spW=W*0.41;
+  _drawFormSparklineCanvas(ctx, match.homeForm?.form, 48, spY+22, spW, spH, hC.main);
+  _drawFormSparklineCanvas(ctx, match.awayForm?.form, W*0.59-4, spY+22, spW, spH, aC.main);
 
-  const teamSectionBottom = spY+18+spH+16;
+  const teamSectionBottom = spY+22+spH+20;
 
-  // ── Central Score section ───────────────────────────────
-  const sepY1 = teamSectionBottom+2;
+  // ── Zone 3: SCORE (teamBottom–teamBottom+280) ────────────
   ctx.strokeStyle='#21262d'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(44,sepY1); ctx.lineTo(W-44,sepY1); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(48,teamSectionBottom); ctx.lineTo(W-48,teamSectionBottom); ctx.stroke();
 
-  const cX=W/2, cY=sepY1+130, cR=92;
-  // Outer atmospheric glow
-  const vsGl=ctx.createRadialGradient(cX,cY,cR*0.4,cX,cY,cR*2.2);
-  vsGl.addColorStop(0,'rgba(255,255,255,0.06)'); vsGl.addColorStop(1,'transparent');
-  ctx.fillStyle=vsGl; ctx.beginPath(); ctx.arc(cX,cY,cR*2.2,0,Math.PI*2); ctx.fill();
-  // Team color arcs behind circle
-  ctx.strokeStyle=hC.main+'30'; ctx.lineWidth=2;
-  ctx.beginPath(); ctx.arc(cX,cY,cR+18,-Math.PI*0.72,-Math.PI*0.28,false); ctx.stroke();
-  ctx.strokeStyle=aC.main+'30'; ctx.lineWidth=2;
-  ctx.beginPath(); ctx.arc(cX,cY,cR+18,Math.PI*0.28,Math.PI*0.72,false); ctx.stroke();
+  const cX=W/2, cY=teamSectionBottom+148, cR=118;
+  // Atmospheric glow
+  const vsGl=ctx.createRadialGradient(cX,cY,cR*0.3,cX,cY,cR*2.4);
+  vsGl.addColorStop(0,'rgba(255,255,255,0.07)'); vsGl.addColorStop(1,'transparent');
+  ctx.fillStyle=vsGl; ctx.beginPath(); ctx.arc(cX,cY,cR*2.4,0,Math.PI*2); ctx.fill();
+  // Arc decorations
+  ctx.strokeStyle=hC.main+'35'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.arc(cX,cY,cR+22,-Math.PI*0.72,-Math.PI*0.28,false); ctx.stroke();
+  ctx.strokeStyle=aC.main+'35'; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.arc(cX,cY,cR+22,Math.PI*0.28,Math.PI*0.72,false); ctx.stroke();
   // Glass circle
-  const cFill=ctx.createRadialGradient(cX-20,cY-20,10,cX,cY,cR);
+  const cFill=ctx.createRadialGradient(cX-26,cY-26,12,cX,cY,cR);
   cFill.addColorStop(0,'rgba(28,34,42,0.96)'); cFill.addColorStop(1,'rgba(14,18,23,0.98)');
   ctx.fillStyle=cFill; ctx.beginPath(); ctx.arc(cX,cY,cR,0,Math.PI*2); ctx.fill();
-  ctx.strokeStyle=scoreColor+'66'; ctx.lineWidth=2.5;
+  ctx.strokeStyle=scoreColor+'70'; ctx.lineWidth=3;
   ctx.beginPath(); ctx.arc(cX,cY,cR,0,Math.PI*2); ctx.stroke();
-  // Score
-  ctx.font='bold 62px system-ui,sans-serif'; ctx.fillStyle=scoreColor;
+  // Score number
+  ctx.font='bold 86px system-ui,sans-serif'; ctx.fillStyle=scoreColor;
   ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText(score,cX,cY-10);
-  ctx.font='18px system-ui,sans-serif'; ctx.fillStyle=scoreColor+'99';
-  ctx.fillText('/12',cX,cY+32); ctx.textBaseline='alphabetic';
-  ctx.font='bold 11px system-ui,sans-serif'; ctx.fillStyle='#8b949e88';
-  ctx.textBaseline='bottom'; ctx.fillText('MATCH SCORE',cX,cY-cR-12);
+  ctx.fillText(score, cX, cY-12);
+  ctx.font='24px system-ui,sans-serif'; ctx.fillStyle=scoreColor+'88';
+  ctx.fillText('/12', cX, cY+46); ctx.textBaseline='alphabetic';
+  ctx.font='bold 15px system-ui,sans-serif'; ctx.fillStyle='#8b949e88';
+  ctx.textBaseline='bottom'; ctx.fillText('MATCH SCORE', cX, cY-cR-16);
   ctx.textBaseline='alphabetic';
 
   // H2H bar
   if (match.h2h && match.h2h.games>=3) {
-    const h2h=match.h2h,n=h2h.games;
-    const bY=cY+cR+22, bW=220, bH=10, bx=cX-bW/2;
-    const hw=Math.max(6,(h2h.homeWins/n)*bW);
-    const dw=Math.max(6,(h2h.draws/n)*bW);
-    const aw=Math.max(6,bW-hw-dw);
-    ctx.font='11px system-ui,sans-serif'; ctx.fillStyle='#8b949e99';
+    const h2h=match.h2h, n=h2h.games;
+    const bY=cY+cR+28, bW=260, bH=12, bx=cX-bW/2;
+    const hw=Math.max(8,(h2h.homeWins/n)*bW);
+    const dw=Math.max(8,(h2h.draws/n)*bW);
+    const aw=Math.max(8,bW-hw-dw);
+    ctx.font='14px system-ui,sans-serif'; ctx.fillStyle='#8b949e99';
     ctx.textAlign='center'; ctx.textBaseline='bottom';
-    ctx.fillText('HEAD 2 HEAD',cX,bY-4); ctx.textBaseline='alphabetic';
-    ctx.fillStyle=hC.main+'88'; igRoundRect(ctx,bx,bY,hw,bH,[5,0,0,5],true,false);
+    ctx.fillText('HEAD 2 HEAD',cX,bY-6); ctx.textBaseline='alphabetic';
+    ctx.fillStyle=hC.main+'88'; igRoundRect(ctx,bx,bY,hw,bH,[6,0,0,6],true,false);
     ctx.fillStyle='#8b949e44'; igRoundRect(ctx,bx+hw+1,bY,dw,bH,0,true,false);
-    ctx.fillStyle=aC.main+'88'; igRoundRect(ctx,bx+hw+dw+2,bY,aw,bH,[0,5,5,0],true,false);
-    ctx.font='12px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
+    ctx.fillStyle=aC.main+'88'; igRoundRect(ctx,bx+hw+dw+2,bY,aw,bH,[0,6,6,0],true,false);
+    ctx.font='15px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
     ctx.textBaseline='top';
-    ctx.fillText(`${h2h.homeWins}W · ${h2h.draws}X · ${h2h.awayWins}A  (${n} Spiele)`,cX,bY+bH+6);
+    ctx.fillText(`${h2h.homeWins}W · ${h2h.draws}X · ${h2h.awayWins}A  (${n} Spiele)`,cX,bY+bH+8);
     ctx.textBaseline='alphabetic';
   }
 
-  const scoreSectionBottom = cY + cR + (match.h2h&&match.h2h.games>=3?80:16);
+  const scoreSectionBottom = cY + cR + (match.h2h&&match.h2h.games>=3 ? 90 : 20);
 
-  // ── Angle section ───────────────────────────────────────
-  const sepY2=scoreSectionBottom+8;
+  // ── Zone 4: PICKS (hero layout) ─────────────────────────
   ctx.strokeStyle='#21262d'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(44,sepY2); ctx.lineTo(W-44,sepY2); ctx.stroke();
-  let curY=sepY2+20;
+  ctx.beginPath(); ctx.moveTo(48,scoreSectionBottom+10); ctx.lineTo(W-48,scoreSectionBottom+10); ctx.stroke();
 
-  // Angle badge
-  ctx.font='bold 13px system-ui,sans-serif'; ctx.textAlign='left';
-  const bbW=ctx.measureText(angle.badge).width+22;
-  ctx.fillStyle='rgba(24,30,38,0.95)'; igRoundRect(ctx,44,curY,bbW,30,7,true,false);
-  ctx.strokeStyle=hC.main+'50'; ctx.lineWidth=1; igRoundRect(ctx,44,curY,bbW,30,7,false,true);
-  ctx.fillStyle=hC.main; ctx.textBaseline='middle';
-  ctx.fillText(angle.badge,55,curY+15); ctx.textBaseline='alphabetic';
-  curY+=38;
+  let curY = scoreSectionBottom+32;
 
-  // Angle text
-  ctx.font='15px system-ui,sans-serif'; ctx.fillStyle='#8b949e'; ctx.textAlign='left';
-  const lw=igWrapText(ctx,angleTxt,44,curY,W-88,24,2);
-  curY+=lw*24+18;
+  // Section label
+  ctx.font='bold 18px system-ui,sans-serif'; ctx.fillStyle='#8b949e77';
+  ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+  ctx.fillText('🎲  TOP WETTEN', 48, curY); curY+=36;
 
-  // ── Picks section ───────────────────────────────────────
-  ctx.strokeStyle='#21262d'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(44,curY); ctx.lineTo(W-44,curY); ctx.stroke();
-  curY+=18;
+  for (let i=0; i<picks.length; i++) {
+    const p   = picks[i];
+    const isHero = i===0;
+    const confCol = {high:'#3fb950', medium:'#e3b341', low:'#8b949e'}[p.conf]||'#8b949e';
+    const confPct = Math.round((p.sc||0.5)*100);
+    const oddsStr = p.odds ? ` @ ${p.odds.toFixed(2)}` : '';
+    const reasonRaw = (p.reason||'').replace(/<br>/gi,' · ').replace(/<[^>]+>/g,'');
 
-  ctx.font='bold 12px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
-  ctx.textAlign='left'; ctx.fillText('🎲  TOP WETTEN', 44, curY); curY+=18;
+    if (isHero) {
+      // ── HERO PICK — dominant card ──────────────────────
+      const cardH = 320;
+      // Background
+      const heroG = ctx.createLinearGradient(48, curY, W-48, curY+cardH);
+      heroG.addColorStop(0,'rgba(22,28,36,0.97)');
+      heroG.addColorStop(1,'rgba(18,24,30,0.97)');
+      ctx.fillStyle=heroG; igRoundRect(ctx,48,curY,W-96,cardH,18,true,false);
+      ctx.strokeStyle=confCol+'55'; ctx.lineWidth=1.5;
+      igRoundRect(ctx,48,curY,W-96,cardH,18,false,true);
+      // Left accent bar (thick)
+      ctx.fillStyle=confCol;
+      igRoundRect(ctx,48,curY,6,cardH,[18,0,0,18],true,false);
 
-  for (const p of picks) {
-    const conf={high:'★★★',medium:'★★☆',low:'★☆☆'}[p.conf]||'★★☆';
-    const confCol={high:'#3fb950',medium:'#e3b341',low:'#8b949e'}[p.conf]||'#8b949e';
-    const oddsStr=p.odds?` @ ${p.odds.toFixed(2)}`:'';
-    // Clean reason text (strip HTML br tags → space)
-    const reasonRaw=(p.reason||'').replace(/<br>/gi,' · ').replace(/<[^>]+>/g,'');
-    // Card background
-    const cardH=110;
-    ctx.fillStyle='rgba(22,28,36,0.92)'; igRoundRect(ctx,44,curY,W-88,cardH,10,true,false);
-    ctx.strokeStyle='#2d333b'; ctx.lineWidth=1; igRoundRect(ctx,44,curY,W-88,cardH,10,false,true);
-    // Left color accent bar
-    ctx.fillStyle=confCol+'55';
-    igRoundRect(ctx,44,curY,4,cardH,[10,0,0,10],true,false);
-    // Icon + market + odds
-    ctx.font='bold 20px system-ui,sans-serif'; ctx.fillStyle='#e6edf3';
-    ctx.textBaseline='middle'; ctx.textAlign='left';
-    ctx.fillText(`${p.icon}  ${p.market}${oddsStr}`, 62, curY+30);
-    // Confidence stars (right)
-    ctx.font='bold 14px system-ui,sans-serif'; ctx.fillStyle=confCol;
-    ctx.textAlign='right'; ctx.textBaseline='middle';
-    ctx.fillText(conf, W-58, curY+30); ctx.textBaseline='alphabetic';
-    // Reason text (2 lines)
-    ctx.font='14px system-ui,sans-serif'; ctx.fillStyle='#8b949e'; ctx.textAlign='left';
-    igWrapText(ctx, reasonRaw, 62, curY+56, W-120, 22, 2);
-    curY+=cardH+10;
+      // "#1 PICK" badge top-left
+      ctx.font='bold 16px system-ui,sans-serif'; ctx.fillStyle=confCol+'cc';
+      ctx.textAlign='left'; ctx.textBaseline='middle';
+      const rankTxt='#1 PICK';
+      const rtW=ctx.measureText(rankTxt).width+20;
+      ctx.fillStyle=confCol+'18'; igRoundRect(ctx,70,curY+18,rtW,30,8,true,false);
+      ctx.fillStyle=confCol+'bb'; ctx.fillText(rankTxt,80,curY+33);
+
+      // Odds badge top-right
+      if (p.odds) {
+        ctx.font='bold 22px system-ui,sans-serif'; ctx.fillStyle='#e6edf3';
+        ctx.textAlign='right'; ctx.textBaseline='middle';
+        ctx.fillText(`${p.odds.toFixed(2)}`, W-70, curY+33);
+        ctx.font='14px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
+        ctx.fillText('QUOTE', W-70, curY+54);
+      }
+
+      // Icon + Market — HERO SIZE
+      ctx.font='bold 52px system-ui,sans-serif'; ctx.fillStyle='#ffffff';
+      ctx.textAlign='left'; ctx.textBaseline='middle';
+      ctx.fillText(`${p.icon}  ${p.market}`, 70, curY+128);
+
+      // Confidence % — large right side
+      ctx.font='bold 88px system-ui,sans-serif'; ctx.fillStyle=confCol;
+      ctx.textAlign='right'; ctx.textBaseline='middle';
+      ctx.fillText(`${confPct}%`, W-70, curY+178);
+      ctx.font='bold 18px system-ui,sans-serif'; ctx.fillStyle=confCol+'88';
+      ctx.fillText('CONFIDENCE', W-70, curY+228);
+
+      // Reason text — 2 lines
+      ctx.font='20px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
+      ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+      igWrapText(ctx, reasonRaw, 70, curY+240, W-180, 28, 2);
+
+      curY += cardH + 16;
+
+    } else {
+      // ── SECONDARY PICKS — compact cards ────────────────
+      const cardH = 150;
+      ctx.fillStyle='rgba(22,28,36,0.88)'; igRoundRect(ctx,48,curY,W-96,cardH,14,true,false);
+      ctx.strokeStyle='#2d333b'; ctx.lineWidth=1; igRoundRect(ctx,48,curY,W-96,cardH,14,false,true);
+      ctx.fillStyle=confCol+'55'; igRoundRect(ctx,48,curY,5,cardH,[14,0,0,14],true,false);
+
+      // Rank badge
+      ctx.font='bold 15px system-ui,sans-serif'; ctx.fillStyle=confCol+'99';
+      ctx.textAlign='left'; ctx.textBaseline='middle';
+      ctx.fillText(`#${i+1}`, 68, curY+30);
+
+      // Market
+      ctx.font='bold 32px system-ui,sans-serif'; ctx.fillStyle='#e6edf3';
+      ctx.textAlign='left'; ctx.textBaseline='middle';
+      ctx.fillText(`${p.icon}  ${p.market}${oddsStr}`, 68, curY+66);
+
+      // Confidence %
+      ctx.font='bold 44px system-ui,sans-serif'; ctx.fillStyle=confCol;
+      ctx.textAlign='right'; ctx.textBaseline='middle';
+      ctx.fillText(`${confPct}%`, W-68, curY+66);
+
+      // Reason (1 line)
+      ctx.font='18px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
+      ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+      igWrapText(ctx, reasonRaw, 68, curY+118, W-200, 22, 1);
+
+      curY += cardH + 12;
+    }
   }
 
   // ── Odds strip ──────────────────────────────────────────
   if (odds && odds.hw) {
-    curY+=6;
+    curY+=8;
     const oi=[];
     if(odds.hw)  oi.push(`H ${odds.hw.toFixed(2)}`);
     if(odds.dr)  oi.push(`X ${odds.dr.toFixed(2)}`);
     if(odds.aw)  oi.push(`A ${odds.aw.toFixed(2)}`);
     if(odds.o25) oi.push(`O2.5 ${odds.o25.toFixed(2)}`);
     if(odds.u25) oi.push(`U2.5 ${odds.u25.toFixed(2)}`);
-    ctx.font='12px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
+    ctx.font='18px system-ui,sans-serif'; ctx.fillStyle='#8b949e77';
     ctx.textAlign='left'; ctx.textBaseline='alphabetic';
-    ctx.fillText('📊 Pinnacle:  '+oi.join('  ·  '), 44, curY+14);
-    curY+=28;
+    ctx.fillText('📊 Pinnacle:  '+oi.join('  ·  '), 48, curY+18);
+    curY+=34;
   }
 
   // ── Footer ───────────────────────────────────────────────
-  const fY=H-52;
+  const fY=H-80;
   ctx.strokeStyle='#21262d'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(44,fY); ctx.lineTo(W-44,fY); ctx.stroke();
-  ctx.font='13px system-ui,sans-serif'; ctx.fillStyle='#8b949e99';
+  ctx.beginPath(); ctx.moveTo(48,fY); ctx.lineTo(W-48,fY); ctx.stroke();
+  ctx.font='18px system-ui,sans-serif'; ctx.fillStyle='#8b949e66';
   ctx.textAlign='left'; ctx.textBaseline='middle';
-  ctx.fillText('Nur ab 18 Jahren · Keine Gewinngarantie', 44, fY+22);
-  ctx.font='bold 15px system-ui,sans-serif'; ctx.fillStyle=hC.main;
+  ctx.fillText('Nur ab 18 · Keine Gewinngarantie', 48, fY+28);
+  ctx.font='bold 26px system-ui,sans-serif'; ctx.fillStyle=hC.main;
   ctx.textAlign='right';
-  ctx.fillText('⚽ BetEdge', W-44, fY+22);
+  ctx.fillText('⚽ BetEdge', W-48, fY+28);
   ctx.textBaseline='alphabetic';
 
   // ── Show modal ───────────────────────────────────────────

@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Card Mockups — TikTok/Reels 9:16</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1a2e;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    display: flex;
+    gap: 48px;
+    padding: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+  }
+
+  .variant-label {
+    text-align: center;
+    color: #aaa;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  /* ─── CARD DIMENSIONS: 9:16 scaled to 360×640 ─── */
+  .card {
+    width: 360px;
+    height: 640px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  /* ════════════════════════════════
+     VARIANT A — DARK & PREMIUM
+  ════════════════════════════════ */
+  .dark {
+    background: linear-gradient(160deg, #0d0d1a 0%, #141428 50%, #0d1a0f 100%);
+    border: 1px solid rgba(251, 191, 36, 0.15);
+    box-shadow: 0 0 60px rgba(251, 191, 36, 0.08), 0 20px 60px rgba(0,0,0,0.6);
+  }
+
+  .dark .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .dark .brand {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #FBBF24;
+  }
+
+  .dark .date-badge {
+    background: rgba(251,191,36,0.12);
+    color: #FBBF24;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(251,191,36,0.25);
+  }
+
+  .dark .headline {
+    text-align: center;
+    padding: 16px 20px 8px;
+  }
+
+  .dark .headline h1 {
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+  }
+
+  .dark .headline span {
+    color: #FBBF24;
+  }
+
+  .dark .headline p {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .dark .picks-list {
+    padding: 8px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .dark .pick-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 13px 15px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dark .pick-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+  }
+
+  .dark .pick-card.hot::before  { background: #10B981; }
+  .dark .pick-card.mid::before  { background: #FBBF24; }
+  .dark .pick-card.low::before  { background: #6366F1; }
+
+  .dark .pick-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 7px;
+  }
+
+  .dark .league-tag {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .dark .score-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .dark .score-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+
+  .dark .score-dot.hot { background: #10B981; box-shadow: 0 0 6px #10B981; }
+  .dark .score-dot.mid { background: #FBBF24; box-shadow: 0 0 6px #FBBF24; }
+  .dark .score-dot.low { background: #6366F1; box-shadow: 0 0 6px #6366F1; }
+
+  .dark .score-num {
+    font-size: 10px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .dark .matchup {
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .dark .matchup .vs {
+    color: rgba(255,255,255,0.25);
+    font-weight: 400;
+    font-size: 11px;
+    margin: 0 4px;
+  }
+
+  .dark .bet-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .dark .bet-type {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+  }
+
+  .dark .confidence {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dark .conf-bar {
+    width: 60px;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .dark .conf-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  .dark .conf-fill.hot { background: linear-gradient(90deg, #10B981, #34D399); }
+  .dark .conf-fill.mid { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
+  .dark .conf-fill.low { background: linear-gradient(90deg, #6366F1, #818CF8); }
+
+  .dark .conf-pct {
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .dark .conf-pct.hot { color: #10B981; }
+  .dark .conf-pct.mid { color: #FBBF24; }
+  .dark .conf-pct.low { color: #818CF8; }
+
+  .dark .divider {
+    margin: 4px 16px;
+    height: 1px;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .dark .bottom-strip {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 14px 20px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .dark .disclaimer {
+    font-size: 8px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+  }
+
+  .dark .follow-cta {
+    font-size: 10px;
+    font-weight: 800;
+    color: #FBBF24;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+
+  /* ════════════════════════════════
+     VARIANT B — CLEAN & MINIMAL
+  ════════════════════════════════ */
+  .clean {
+    background: #F8F9FA;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+
+  .clean .top-bar {
+    background: #111827;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .clean .brand {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .clean .brand span { color: #10B981; }
+
+  .clean .date-badge {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .clean .headline {
+    padding: 20px 20px 12px;
+    border-bottom: 2px solid #111827;
+  }
+
+  .clean .headline h1 {
+    font-size: 28px;
+    font-weight: 900;
+    color: #111827;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+
+  .clean .headline h1 span { color: #10B981; }
+
+  .clean .headline p {
+    font-size: 11px;
+    color: #9CA3AF;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+
+  .clean .picks-list {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .clean .pick-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    border: 1px solid #E5E7EB;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .clean .pick-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .clean .pick-card.hot::after { background: #10B981; }
+  .clean .pick-card.mid::after { background: #F59E0B; }
+  .clean .pick-card.low::after { background: #6366F1; }
+
+  .clean .pick-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .clean .league-tag {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #9CA3AF;
+  }
+
+  .clean .score-badge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #F3F4F6;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+
+  .clean .score-label {
+    font-size: 9px;
+    color: #6B7280;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .clean .score-num {
+    font-size: 11px;
+    font-weight: 900;
+    color: #111827;
+  }
+
+  .clean .matchup {
+    font-size: 14px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 9px;
+    line-height: 1.2;
+  }
+
+  .clean .matchup .vs {
+    color: #D1D5DB;
+    font-weight: 400;
+    font-size: 11px;
+    margin: 0 4px;
+  }
+
+  .clean .bet-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .clean .bet-chip {
+    background: #111827;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+  }
+
+  .clean .confidence {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .clean .conf-pct {
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .clean .conf-pct.hot { color: #10B981; }
+  .clean .conf-pct.mid { color: #F59E0B; }
+  .clean .conf-pct.low { color: #6366F1; }
+
+  .clean .conf-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .clean .conf-label.hot { color: #10B981; }
+  .clean .conf-label.mid { color: #F59E0B; }
+  .clean .conf-label.low { color: #6366F1; }
+
+  .clean .bottom-strip {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 12px 20px;
+    background: #111827;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .clean .disclaimer {
+    font-size: 8px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.3px;
+    line-height: 1.5;
+  }
+
+  .clean .follow-cta {
+    font-size: 10px;
+    font-weight: 900;
+    color: #10B981;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- ──────────────────────────────────────────
+     VARIANT A: DARK & PREMIUM
+────────────────────────────────────────── -->
+<div>
+  <p class="variant-label">Variante A — Dark & Premium</p>
+  <div class="card dark">
+
+    <div class="top-bar">
+      <div class="brand">⚽ BetEdge</div>
+      <div class="date-badge">Di. 8. April 2026</div>
+    </div>
+
+    <div class="headline">
+      <h1>TOP <span>3</span> PICKS</h1>
+      <p>AI-analysiert · Heute</p>
+    </div>
+
+    <div class="picks-list">
+
+      <!-- Pick 1 -->
+      <div class="pick-card hot">
+        <div class="pick-meta">
+          <span class="league-tag">🇩🇪 Bundesliga</span>
+          <div class="score-badge">
+            <div class="score-dot hot"></div>
+            <span class="score-num">Score 8.4</span>
+          </div>
+        </div>
+        <div class="matchup">
+          Bayern München <span class="vs">vs</span> Dortmund
+        </div>
+        <div class="bet-row">
+          <span class="bet-type">Über 2.5 Tore</span>
+          <div class="confidence">
+            <div class="conf-bar"><div class="conf-fill hot" style="width:82%"></div></div>
+            <span class="conf-pct hot">82%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pick 2 -->
+      <div class="pick-card mid">
+        <div class="pick-meta">
+          <span class="league-tag">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</span>
+          <div class="score-badge">
+            <div class="score-dot mid"></div>
+            <span class="score-num">Score 7.1</span>
+          </div>
+        </div>
+        <div class="matchup">
+          Arsenal <span class="vs">vs</span> Liverpool
+        </div>
+        <div class="bet-row">
+          <span class="bet-type">Heimsieg Arsenal</span>
+          <div class="confidence">
+            <div class="conf-bar"><div class="conf-fill mid" style="width:68%"></div></div>
+            <span class="conf-pct mid">68%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pick 3 -->
+      <div class="pick-card low">
+        <div class="pick-meta">
+          <span class="league-tag">🇪🇸 La Liga</span>
+          <div class="score-badge">
+            <div class="score-dot low"></div>
+            <span class="score-num">Score 6.5</span>
+          </div>
+        </div>
+        <div class="matchup">
+          Real Madrid <span class="vs">vs</span> Atlético
+        </div>
+        <div class="bet-row">
+          <span class="bet-type">Beide Teams treffen</span>
+          <div class="confidence">
+            <div class="conf-bar"><div class="conf-fill low" style="width:61%"></div></div>
+            <span class="conf-pct low">61%</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bottom-strip">
+      <div class="disclaimer">Nur zur Unterhaltung.<br>Kein Finanzberatung.</div>
+      <div class="follow-cta">@blummabet</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ──────────────────────────────────────────
+     VARIANT B: CLEAN & MINIMAL
+────────────────────────────────────────── -->
+<div>
+  <p class="variant-label">Variante B — Clean & Minimal</p>
+  <div class="card clean">
+
+    <div class="top-bar">
+      <div class="brand">BET<span>EDGE</span></div>
+      <div class="date-badge">Di. 8. April 2026</div>
+    </div>
+
+    <div class="headline">
+      <h1>TOP <span>3</span><br>PICKS</h1>
+      <p>KI-Analyse · Heute</p>
+    </div>
+
+    <div class="picks-list">
+
+      <!-- Pick 1 -->
+      <div class="pick-card hot">
+        <div class="pick-meta">
+          <span class="league-tag">🇩🇪 Bundesliga</span>
+          <div class="score-badge">
+            <span class="score-label">Score</span>
+            <span class="score-num">8.4</span>
+          </div>
+        </div>
+        <div class="matchup">
+          Bayern München <span class="vs">vs</span> Dortmund
+        </div>
+        <div class="bet-row">
+          <span class="bet-chip">Über 2.5 Tore</span>
+          <div class="confidence">
+            <div>
+              <div class="conf-pct hot">82%</div>
+              <div class="conf-label hot">🔥 Hot</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pick 2 -->
+      <div class="pick-card mid">
+        <div class="pick-meta">
+          <span class="league-tag">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</span>
+          <div class="score-badge">
+            <span class="score-label">Score</span>
+            <span class="score-num">7.1</span>
+          </div>
+        </div>
+        <div class="matchup">
+          Arsenal <span class="vs">vs</span> Liverpool
+        </div>
+        <div class="bet-row">
+          <span class="bet-chip">Heimsieg Arsenal</span>
+          <div class="confidence">
+            <div>
+              <div class="conf-pct mid">68%</div>
+              <div class="conf-label mid">Gut</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pick 3 -->
+      <div class="pick-card low">
+        <div class="pick-meta">
+          <span class="league-tag">🇪🇸 La Liga</span>
+          <div class="score-badge">
+            <span class="score-label">Score</span>
+            <span class="score-num">6.5</span>
+          </div>
+        </div>
+        <div class="matchup">
+          Real Madrid <span class="vs">vs</span> Atlético
+        </div>
+        <div class="bet-row">
+          <span class="bet-chip">Beide treffen</span>
+          <div class="confidence">
+            <div>
+              <div class="conf-pct low">61%</div>
+              <div class="conf-label low">Solide</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bottom-strip">
+      <div class="disclaimer">Nur zur Unterhaltung.<br>Kein Finanzberatung.</div>
+      <div class="follow-cta">@blummabet</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
