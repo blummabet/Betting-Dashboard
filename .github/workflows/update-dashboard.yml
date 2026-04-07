@@ -35,25 +35,25 @@ jobs:
       # 4. Dashboard-Daten aktualisieren (Sofascore → season-finish.html)
       - name: 📊 Dashboard aktualisieren
         run: python update_dashboard.py
-        continue-on-error: true  # Wenn Sofascore kurz down ist, trotzdem weitermachen
+        continue-on-error: true
 
       # 5. Statistiken aktualisieren (Understat xG, Elo etc. → stats_cache.json)
       - name: 📈 Statistiken aktualisieren
         run: python refresh_stats.py
         continue-on-error: true
 
-      # 6. Geänderte Dateien zurück ins Repo committen
-      - name: 💾 Änderungen speichern
+      # 6. Geänderte Dateien zurück ins Repo committen und pushen
+      - name: 💾 Änderungen speichern & pushen
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
           git add season-finish.html stats_cache.json
           # Nur committen wenn wirklich etwas geändert wurde
-          git diff --staged --quiet || git commit -m "🔄 Auto-Update $(date +'%d.%m.%Y %H:%M') UTC"
-
-      # 7. Zurück zu GitHub pushen
-      - name: 🚀 Push zu GitHub
-        uses: ad-m/github-push-action@v0.8.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — kein Commit nötig."
+          else
+            git commit -m "🔄 Auto-Update $(date +'%d.%m.%Y %H:%M') UTC"
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
