@@ -416,6 +416,7 @@ def fetch_league(key, cfg):
             continue
         stake_fixtures.append({
             "date": f["date"], "home": f["home"], "away": f["away"],
+            "eventId": f.get("eventId"),
             "matchScore": ms, "bothStakes": bool(home_stake and away_stake),
             "homeStake": home_stake, "awayStake": away_stake,
             "homeForm": h_form, "awayForm": a_form,
@@ -508,6 +509,35 @@ def main():
     new_js  = build_leagues_js(results)
     today_s = german_date()
     update_html(new_js, today_s)
+
+    # ── Export matches_today.json for picks tracking ──────────────────────────
+    matches_out = Path(__file__).parent / "matches_today.json"
+    today_iso = datetime.now().strftime("%Y-%m-%d")
+    export = []
+    for key, data in results.items():
+        for f in data["fixtures"]:
+            if not f.get("eventId"):
+                continue
+            export.append({
+                "league":      key,
+                "leagueName":  data["name"],
+                "leagueFlag":  data["flag"],
+                "roundsLeft":  data["roundsLeft"],
+                "date":        f["date"],
+                "dateIso":     today_iso,
+                "home":        f["home"],
+                "away":        f["away"],
+                "eventId":     f["eventId"],
+                "matchScore":  f["matchScore"],
+                "homeStake":   f.get("homeStake"),
+                "awayStake":   f.get("awayStake"),
+                "homeForm":    f.get("homeForm"),
+                "awayForm":    f.get("awayForm"),
+                "h2h":         f.get("h2h"),
+            })
+    with open(matches_out, "w", encoding="utf-8") as mf:
+        json.dump(export, mf, ensure_ascii=False, indent=2)
+    print(f"✓ matches_today.json geschrieben ({len(export)} Spiele)")
 
     # Summary
     all_fx = [(k, f) for k, d in results.items() for f in d["fixtures"] if within_7_days(f["date"])]

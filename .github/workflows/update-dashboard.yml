@@ -42,12 +42,22 @@ jobs:
         run: python refresh_stats.py
         continue-on-error: true
 
-      # 6. Geänderte Dateien zurück ins Repo committen und pushen
+      # 6. Heutige Picks speichern (matches_today.json → picks_history.json)
+      - name: 📝 Picks speichern
+        run: python save_picks.py
+        continue-on-error: true
+
+      # 7. Vergangene Picks auswerten (Sofascore Ergebnisse → picks_history.json)
+      - name: ✅ Picks auswerten
+        run: python resolve_picks.py
+        continue-on-error: true
+
+      # 8. Geänderte Dateien zurück ins Repo committen und pushen
       - name: 💾 Änderungen speichern & pushen
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add season-finish.html stats_cache.json
+          git add season-finish.html stats_cache.json picks_history.json
           # Nur committen wenn wirklich etwas geändert wurde
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."

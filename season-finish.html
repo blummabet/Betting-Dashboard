@@ -15,6 +15,24 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;}
 
+/* RESULTS TAB */
+.res-stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+.res-stat-val{font-size:28px;font-weight:900;line-height:1;}
+.res-stat-lbl{font-size:11px;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
+.res-filter-btn{background:none;border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:11px;font-weight:600;padding:5px 12px;cursor:pointer;font-family:inherit;transition:all .15s;}
+.res-filter-btn.active{background:var(--accent);border-color:var(--accent);color:#000;}
+.res-filter-btn:hover:not(.active){border-color:var(--accent);color:var(--accent);}
+.res-table{width:100%;border-collapse:collapse;font-size:13px;}
+.res-table th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);background:var(--card2);}
+.res-table td{padding:11px 16px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle;}
+.res-table tr:last-child td{border-bottom:none;}
+.res-table tr:hover td{background:rgba(255,255,255,.025);}
+.res-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:10px;}
+.res-badge.win{background:rgba(63,185,80,.15);color:#3fb950;border:1px solid rgba(63,185,80,.3);}
+.res-badge.loss{background:rgba(248,81,73,.12);color:#f85149;border:1px solid rgba(248,81,73,.3);}
+.res-badge.pending{background:rgba(139,148,158,.1);color:#8b949e;border:1px solid rgba(139,148,158,.2);}
+.res-badge.void{background:rgba(227,179,65,.1);color:#e3b341;border:1px solid rgba(227,179,65,.25);}
+
 /* TOP NAV */
 .top-nav{
   background:var(--bg); border-bottom:1px solid var(--border);
@@ -453,6 +471,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .legend-desc{color:var(--muted);line-height:1.4;}
 .legend-desc strong{color:var(--text);}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -480,7 +499,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div class="top-nav">
   <div class="top-nav-logo"><span class="li">⚽</span><span class="lt">BetEdge</span></div>
   <a href="betting-dashboard.html" class="top-nav-btn">⚡ Daily Picks</a>
-  <button class="top-nav-btn active">🏁 Season Finish</button>
+  <button class="top-nav-btn active" id="navSeason" onclick="showView('season')">🏁 Season Finish</button>
+  <button class="top-nav-btn" id="navResults" onclick="showView('results')">📊 Results</button>
 </div>
 
 <!-- LEAGUE NAV -->
@@ -500,6 +520,46 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 </div>
 
 <div class="container" id="mainContent"></div>
+
+<!-- RESULTS PANEL -->
+<div id="resultsPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 60px;">
+
+  <!-- Stats overview -->
+  <div id="resultsStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px;"></div>
+
+  <!-- Charts row -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;" id="chartsRow">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;">
+      <div style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:14px;letter-spacing:.5px;text-transform:uppercase;">Win Rate nach Liga</div>
+      <canvas id="chartLeague" height="220"></canvas>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;">
+      <div style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:14px;letter-spacing:.5px;text-transform:uppercase;">Win Rate nach Wettart</div>
+      <canvas id="chartMarket" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- ROI chart -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:24px;">
+    <div style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:14px;letter-spacing:.5px;text-transform:uppercase;">💰 ROI Simulation (10€ pro Wette)</div>
+    <canvas id="chartRoi" height="130"></canvas>
+  </div>
+
+  <!-- Pick history table -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:14px;font-weight:700;">Alle Picks</span>
+      <div style="display:flex;gap:8px;" id="resultsFilter">
+        <button class="res-filter-btn active" data-filter="all">Alle</button>
+        <button class="res-filter-btn" data-filter="win">✅ Gewonnen</button>
+        <button class="res-filter-btn" data-filter="loss">❌ Verloren</button>
+        <button class="res-filter-btn" data-filter="pending">⏳ Offen</button>
+      </div>
+    </div>
+    <div id="resultsTable" style="overflow-x:auto;"></div>
+  </div>
+
+</div>
 
 <!-- LEGEND -->
 <div class="legend-section">
@@ -2470,6 +2530,233 @@ fetch('./stats_cache.json')
 loadAllOdds().then(() => {
   renderLeague(window._currentLeague);
 });
+
+// ═══════════════════════════════════════════════════════
+//  VIEW SWITCHER
+// ═══════════════════════════════════════════════════════
+function showView(view) {
+  const isSeason  = view === 'season';
+  document.getElementById('mainContent').style.display   = isSeason ? '' : 'none';
+  document.getElementById('resultsPanel').style.display  = isSeason ? 'none' : '';
+  document.querySelector('.league-nav').style.display    = isSeason ? '' : 'none';
+  const legend = document.querySelector('.legend-section');
+  if (legend) legend.style.display = isSeason ? '' : 'none';
+  document.getElementById('navSeason').classList.toggle('active',  isSeason);
+  document.getElementById('navResults').classList.toggle('active', !isSeason);
+  if (!isSeason) initResults();
+}
+
+// ═══════════════════════════════════════════════════════
+//  RESULTS TAB
+// ═══════════════════════════════════════════════════════
+let _resultsLoaded = false;
+let _resultsData   = [];
+let _charts        = {};
+let _activeFilter  = 'all';
+
+function initResults() {
+  if (_resultsLoaded) { renderResultsTable(_activeFilter); return; }
+  fetch('./picks_history.json')
+    .then(r => r.ok ? r.json() : [])
+    .catch(() => [])
+    .then(data => {
+      _resultsData   = data || [];
+      _resultsLoaded = true;
+      renderResultsAll();
+    });
+}
+
+function renderResultsAll() {
+  renderResultsStats();
+  renderResultsCharts();
+  renderResultsTable('all');
+  // Filter buttons
+  document.querySelectorAll('.res-filter-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('.res-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      _activeFilter = btn.dataset.filter;
+      renderResultsTable(_activeFilter);
+    };
+  });
+}
+
+// ── Stats overview ──────────────────────────────────────
+function renderResultsStats() {
+  const allPicks = _resultsData.flatMap(e => e.picks.map(p => ({...p, league: e.league, leagueFlag: e.leagueFlag})));
+  const total    = allPicks.length;
+  const won      = allPicks.filter(p => p.result === 'win').length;
+  const lost     = allPicks.filter(p => p.result === 'loss').length;
+  const pending  = allPicks.filter(p => !p.result).length;
+  const wr       = (won + lost) > 0 ? Math.round(won / (won + lost) * 100) : null;
+
+  // ROI simulation: 10€ per pick, odds used if available else 1.85
+  let bankroll = 0;
+  allPicks.filter(p => p.result && p.result !== 'void').forEach(p => {
+    const odds = p.odds || 1.85;
+    bankroll += p.result === 'win' ? (odds - 1) * 10 : -10;
+  });
+
+  const stats = [
+    { val: total,              lbl: 'Picks gesamt',    color: 'var(--accent)' },
+    { val: won,                lbl: '✅ Gewonnen',      color: '#3fb950' },
+    { val: lost,               lbl: '❌ Verloren',      color: '#f85149' },
+    { val: wr !== null ? wr + '%' : '—', lbl: 'Win Rate', color: wr >= 55 ? '#3fb950' : wr >= 45 ? '#e3b341' : '#f85149' },
+    { val: pending,            lbl: '⏳ Ausstehend',   color: '#8b949e' },
+    { val: (bankroll >= 0 ? '+' : '') + bankroll.toFixed(0) + '€', lbl: 'Simulierter ROI', color: bankroll >= 0 ? '#3fb950' : '#f85149' },
+  ];
+
+  document.getElementById('resultsStats').innerHTML = stats.map(s => `
+    <div class="res-stat-card">
+      <div class="res-stat-val" style="color:${s.color}">${s.val}</div>
+      <div class="res-stat-lbl">${s.lbl}</div>
+    </div>`).join('');
+}
+
+// ── Charts ──────────────────────────────────────────────
+function renderResultsCharts() {
+  // Destroy old charts
+  Object.values(_charts).forEach(c => c.destroy());
+  _charts = {};
+
+  const chartDefaults = {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, max: 100, ticks: { color: '#8b949e', callback: v => v + '%' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+      x: { ticks: { color: '#8b949e' }, grid: { display: false } }
+    }
+  };
+
+  // Win rate by league
+  const leagueMap = {};
+  _resultsData.forEach(e => {
+    if (!leagueMap[e.league]) leagueMap[e.league] = { flag: e.leagueFlag, won: 0, lost: 0 };
+    e.picks.forEach(p => {
+      if (p.result === 'win')  leagueMap[e.league].won++;
+      if (p.result === 'loss') leagueMap[e.league].lost++;
+    });
+  });
+  const leagueLabels = Object.entries(leagueMap)
+    .filter(([,v]) => v.won + v.lost > 0)
+    .map(([k, v]) => `${v.flag} ${k}`);
+  const leagueWR = Object.entries(leagueMap)
+    .filter(([,v]) => v.won + v.lost > 0)
+    .map(([,v]) => Math.round(v.won / (v.won + v.lost) * 100));
+
+  const ctxL = document.getElementById('chartLeague').getContext('2d');
+  _charts.league = new Chart(ctxL, {
+    type: 'bar',
+    data: {
+      labels: leagueLabels,
+      datasets: [{ data: leagueWR, backgroundColor: leagueWR.map(v => v >= 55 ? 'rgba(63,185,80,.7)' : v >= 45 ? 'rgba(227,179,65,.7)' : 'rgba(248,81,73,.7)'), borderRadius: 6 }]
+    },
+    options: chartDefaults
+  });
+
+  // Win rate by market
+  const marketMap = {};
+  const marketLabels = { homeWin:'Heimsieg', awayWin:'Auswärtssieg', draw:'Unentschieden', over25:'Über 2.5', under25:'Unter 2.5', over35:'Über 3.5', btts:'Beide treffen', noBtts:'Keine btts' };
+  _resultsData.forEach(e => {
+    e.picks.forEach(p => {
+      const k = p.marketKey || 'other';
+      if (!marketMap[k]) marketMap[k] = { won: 0, lost: 0 };
+      if (p.result === 'win')  marketMap[k].won++;
+      if (p.result === 'loss') marketMap[k].lost++;
+    });
+  });
+  const mLabels = Object.entries(marketMap).filter(([,v]) => v.won + v.lost > 0).map(([k]) => marketLabels[k] || k);
+  const mWR     = Object.entries(marketMap).filter(([,v]) => v.won + v.lost > 0).map(([,v]) => Math.round(v.won / (v.won + v.lost) * 100));
+
+  const ctxM = document.getElementById('chartMarket').getContext('2d');
+  _charts.market = new Chart(ctxM, {
+    type: 'bar',
+    data: {
+      labels: mLabels,
+      datasets: [{ data: mWR, backgroundColor: mWR.map(v => v >= 55 ? 'rgba(63,185,80,.7)' : v >= 45 ? 'rgba(227,179,65,.7)' : 'rgba(248,81,73,.7)'), borderRadius: 6 }]
+    },
+    options: chartDefaults
+  });
+
+  // ROI timeline
+  const resolvedPicks = _resultsData
+    .flatMap(e => e.picks
+      .filter(p => p.result && p.result !== 'void')
+      .map(p => ({ date: e.dateIso, result: p.result, odds: p.odds || 1.85 }))
+    )
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  let cumulative = 0;
+  const roiPoints = [0];
+  resolvedPicks.forEach(p => {
+    cumulative += p.result === 'win' ? (p.odds - 1) * 10 : -10;
+    roiPoints.push(Math.round(cumulative * 10) / 10);
+  });
+
+  const ctxR = document.getElementById('chartRoi').getContext('2d');
+  const roiColor = cumulative >= 0 ? '#3fb950' : '#f85149';
+  _charts.roi = new Chart(ctxR, {
+    type: 'line',
+    data: {
+      labels: ['Start', ...resolvedPicks.map((p, i) => `#${i+1}`)],
+      datasets: [{
+        data: roiPoints, borderColor: roiColor, backgroundColor: roiColor + '15',
+        fill: true, tension: 0.3, pointRadius: 2, borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { ticks: { color: '#8b949e', callback: v => v + '€' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color: '#8b949e', maxTicksLimit: 10 }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ── Pick history table ──────────────────────────────────
+function renderResultsTable(filter) {
+  let rows = _resultsData.flatMap(e =>
+    e.picks.map(p => ({ ...e, pick: p }))
+  );
+  if (filter === 'win')     rows = rows.filter(r => r.pick.result === 'win');
+  if (filter === 'loss')    rows = rows.filter(r => r.pick.result === 'loss');
+  if (filter === 'pending') rows = rows.filter(r => !r.pick.result);
+  rows.sort((a, b) => b.dateIso.localeCompare(a.dateIso));
+
+  if (!rows.length) {
+    document.getElementById('resultsTable').innerHTML =
+      '<div style="padding:40px;text-align:center;color:var(--muted);">Keine Einträge vorhanden.</div>';
+    return;
+  }
+
+  const badgeHtml = r => {
+    if (!r.pick.result) return '<span class="res-badge pending">⏳ Offen</span>';
+    if (r.pick.result === 'win')  return '<span class="res-badge win">✅ Gewonnen</span>';
+    if (r.pick.result === 'loss') return '<span class="res-badge loss">❌ Verloren</span>';
+    return '<span class="res-badge void">— Void</span>';
+  };
+
+  const html = `<table class="res-table">
+    <thead><tr>
+      <th>Datum</th><th>Spiel</th><th>Liga</th>
+      <th>Wette</th><th>Conf</th><th>Ergebnis</th><th>Resultat</th>
+    </tr></thead>
+    <tbody>${rows.map(r => `
+      <tr>
+        <td style="color:var(--muted);white-space:nowrap">${r.date}</td>
+        <td style="font-weight:600">${r.home} <span style="color:var(--muted)">vs</span> ${r.away}</td>
+        <td>${r.leagueFlag} ${r.league}</td>
+        <td>${r.pick.icon || ''} ${r.pick.market}</td>
+        <td><span style="color:${r.pick.conf==='high'?'#3fb950':r.pick.conf==='medium'?'#e3b341':'#8b949e'};font-weight:700;font-size:12px">${r.pick.conf==='high'?'★★★':r.pick.conf==='medium'?'★★☆':'★☆☆'}</span></td>
+        <td style="font-weight:700;color:var(--accent)">${r.finalScore || '—'}</td>
+        <td>${badgeHtml(r)}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>`;
+  document.getElementById('resultsTable').innerHTML = html;
+}
 </script>
 </body>
 </html>
