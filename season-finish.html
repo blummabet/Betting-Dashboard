@@ -951,6 +951,26 @@ function getBettingPicks(match, odds, leagueKey) {
                       : urgencyMed ? `📍 ${_rl} Runden verbleibend — entscheidende Phase`
                       : null;
 
+  // ── Pressure context helpers — used across PICK 1, 2 and 3 ──────────────
+  // Defined here so all pick blocks can reference them without re-calculation.
+  const _anyNeedsWin = homeNeedsWin || awayNeedsWin;
+  // Human-readable team labels (color-aware)
+  const _pHLabel = homeNeedsWin
+    ? (hc.includes('gold') ? `${match.home} im Titelkampf` : hc.includes('red') ? `${match.home} im Abstiegskampf` : `${match.home} unter Druck`)
+    : '';
+  const _pALabel = awayNeedsWin
+    ? (ac.includes('gold') ? `${match.away} im Titelkampf` : ac.includes('red') ? `${match.away} im Abstiegskampf` : `${match.away} unter Druck`)
+    : '';
+  const _rlSfx = _rl < 99 ? `, noch ${_rl} Spieltag${_rl === 1 ? '' : 'e'}` : '';
+  // Generic pressure note for goals/specialist reason texts — appended to explain WHY the market fires
+  const _pressNote = bothNeedWin
+    ? `<br><strong>⚡ Beide Teams müssen gewinnen${_rlSfx} — maximaler Angriffsdruck, taktische Sicherung Nebensache.</strong>`
+    : homeNeedsWin
+    ? `<br><strong>⚡ ${_pHLabel}${_rlSfx} — Heimteam geht volles Risiko, öffnet Räume für Konter.</strong>`
+    : awayNeedsWin
+    ? `<br><strong>⚡ ${_pALabel}${_rlSfx} — Auswärtsteam agiert mit Vollgas-Mentalität.</strong>`
+    : '';
+
   // ── Derived ───────────────────────────────────────────
   // Expected goals: prefer real xG model (home xG + away xGA, away xG + home xGA)
   const expGoals = xGBased
@@ -1190,43 +1210,56 @@ function getBettingPicks(match, odds, leagueKey) {
     // Over 3.5
     { let sc = expGoals>3.8?0.82:expGoals>3.4?0.65:expGoals>3.1?0.44:expGoals>2.7?0.20:0.06;
       if (_eBothRed) sc = Math.min(0.88, sc + 0.12);
-      if (_favWeak1) sc = Math.max(0, sc - 0.40 * _favWeak); // graduated suppression
+      if (_favWeak1) sc = Math.max(0, sc - 0.40 * _favWeak);
+      // 🔑 PRESSURE/RUNDEN: Abstiegsteam geht all-in → Angriffsdruck → mehr Tore
+      if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 1.20);
+      else if (_anyNeedsWin) sc = Math.min(0.88, sc + _pressureBoost * 0.70);
       gC.push({sc, p:{icon:'🔥', market:'Over 3.5 Tore', odds:o.o35,
         conf: sc>0.68?'high':sc>0.44?'medium':'low',
-        reason:`${egPfx} — Heim-Angriff ${homeAttStr.toFixed(1)} / Ausw.-Angriff ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp.<br>Beide Abwehren permissiv (kassieren ${homeDefStr.toFixed(1)} / ${awayDefStr.toFixed(1)}/Sp) — strukturell torreiches Spiel, Over 3.5 klar angesteuert.`}}); }
+        reason:`${egPfx} — Heim-Angriff ${homeAttStr.toFixed(1)} / Ausw.-Angriff ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp.<br>Beide Abwehren permissiv (kassieren ${homeDefStr.toFixed(1)} / ${awayDefStr.toFixed(1)}/Sp) — strukturell torreiches Spiel, Over 3.5 klar angesteuert.${_pressNote}`}}); }
 
     // Over 2.5
     { let sc = expGoals>3.2?0.78:expGoals>2.8?0.66:expGoals>2.5?0.52:expGoals>2.2?0.30:0.10;
       if (_eBothRed) sc = Math.min(0.88, sc + 0.16);
       if (bothGold && !anyRed) sc = Math.max(0, sc - 0.10);
-      if (_favWeak1) sc = Math.max(0, sc - 0.40 * _favWeak); // graduated suppression
+      if (_favWeak1) sc = Math.max(0, sc - 0.40 * _favWeak);
+      // 🔑 PRESSURE/RUNDEN: verzweifelte Teams lassen taktische Disziplin fallen → Over profitiert
+      if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 1.30);
+      else if (_anyNeedsWin) sc = Math.min(0.88, sc + _pressureBoost * 0.85);
+      // Titelduell in Crunch-Zeit: kontrolliertes Spiel → leichte Over-Suppression
+      if (anyGold && !anyRed && urgencyHigh) sc = Math.max(0, sc - 0.07);
       gC.push({sc, p:{icon:'⚽', market:'Over 2.5 Tore', odds:o.o25,
         conf: sc>0.66?'high':sc>0.46?'medium':'low',
-        reason:`${egPfx} — Heim trifft Ø ${homeAttStr.toFixed(1)}, Auswärts Ø ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp.<br>Torerwartung deutlich über der 2.5er-Schwelle — mindestens 3 Treffer auf Basis der Offensivdaten.`}}); }
+        reason:`${egPfx} — Heim trifft Ø ${homeAttStr.toFixed(1)}, Auswärts Ø ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp.<br>Torerwartung deutlich über der 2.5er-Schwelle — mindestens 3 Treffer auf Basis der Offensivdaten.${_pressNote}`}}); }
 
-    // Under 2.5 — FIX: gold boost only when expGoals actually low; clamp to 0
+    // Under 2.5
     { let sc = expGoals<1.7?0.85:expGoals<2.0?0.72:expGoals<2.3?0.57:expGoals<2.6?0.34:0.12;
-      if (bothGold && !anyRed && expGoals < 2.5) sc = Math.min(0.90, sc + 0.12); // only for truly tight title games
-      if (_eBothRed) sc = Math.max(0, sc - 0.28); // relegation = open game; clamp prevents negative
-      if (_favWeak1) sc = Math.min(0.90, sc + 0.40 * _favWeak); // graduated boost when winner is defensive
-      // Contradiction fix: if BOTH teams must win (desperate, attacking), the defensive-winner
-      // boost loses its basis — both sides will press forward regardless of style rating.
-      if (bothNeedWin && _favWeak1) sc = Math.max(0, sc - 0.18);
+      if (bothGold && !anyRed && expGoals < 2.5) sc = Math.min(0.90, sc + 0.12);
+      if (_eBothRed) sc = Math.max(0, sc - 0.28);
+      if (_favWeak1) sc = Math.min(0.90, sc + 0.40 * _favWeak);
+      if (bothNeedWin && _favWeak1) sc = Math.max(0, sc - 0.18); // existing defensive-winner contradiction fix
+      // 🔑 PRESSURE/RUNDEN: Muss-gewinnen → Angriffsdrang killt Under-Signal
+      if (bothNeedWin)       sc = Math.max(0, sc - _pressureBoost * 1.10);
+      else if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 0.65);
       const _u25DefTeam = _topResultMkt==='Heimsieg'?match.home:_topResultMkt==='Auswärtssieg'?match.away:null;
+      const _pressWarn = _anyNeedsWin
+        ? `<br><strong>⚠️ ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — Angriffsdrang erhöht Torrisiko, Under-Signal geschwächt.</strong>` : '';
       const _u25Reason = _favWeak > 0.4 && _u25DefTeam
-        ? `${_u25DefTeam} gewinnt mit defensiver Ausrichtung — Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} ${xGBased?'xG':'Tore'}/Sp des erwarteten Siegers.<br>Knappes Ergebnis erwartet — strukturell passt Under 2.5 besser als Over-Märkte.`
-        : `${egPfx} — schwache Offensiven (Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp).<br>Torerwartung klar unter der 2.5er-Grenze — defensiv kompakte Partie mit knappem Ergebnis erwartet.`;
+        ? `${_u25DefTeam} gewinnt mit defensiver Ausrichtung — Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} ${xGBased?'xG':'Tore'}/Sp des erwarteten Siegers.<br>Knappes Ergebnis erwartet — strukturell passt Under 2.5 besser als Over-Märkte.${_pressWarn}`
+        : `${egPfx} — schwache Offensiven (Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp).<br>Torerwartung klar unter der 2.5er-Grenze — defensiv kompakte Partie mit knappem Ergebnis erwartet.${_pressWarn}`;
       gC.push({sc, p:{icon:'🛡️', market:'Under 2.5 Tore', odds:o.u25,
         conf: sc>0.68?'high':sc>0.48?'medium':'low',
         reason: _u25Reason}}); }
 
     // Under 1.5
     { let sc = expGoals<1.4?0.76:expGoals<1.7?0.54:0.08;
+      // 🔑 PRESSURE/RUNDEN: jedes Muss-gewinnen zerstört Under 1.5 komplett
+      if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 1.50);
       gC.push({sc, p:{icon:'🔒', market:'Under 1.5 Tore', odds:null,
         conf: sc>0.65?'medium':'low',
         reason:`${egPfx} — extrem schwache Angriffsreihen (Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp).<br>Maximale Defensivausrichtung beider Teams — maximal 1 Treffer als Hauptszenario.`}}); }
 
-    // BTTS Ja — FIX: continuous scoring instead of binary tiers; more granular
+    // BTTS Ja
     { let sc = 0.14;
       sc += Math.min(0.22, Math.max(0, (homeAttStr - 0.95) * 0.38));
       sc += Math.min(0.20, Math.max(0, (awayAttStr - 0.80) * 0.44));
@@ -1234,48 +1267,64 @@ function getBettingPicks(match, odds, leagueKey) {
       sc += Math.min(0.12, Math.max(0, (awayDefStr - 0.80) * 0.30));
       if (_eBothRed) sc = Math.min(0.88, sc + 0.22);
       if (anyGold && !anyRed) sc = Math.max(0, sc - 0.08);
-      if (bttsBad) sc *= 0.35;  // kill signal if either team barely scores
-      if (_favWeak1) sc *= (1 - _favWeak * 0.65); // graduated suppress BTTS Ja
-      sc = Math.min(0.82, sc);
+      if (bttsBad) sc *= 0.35;
+      if (_favWeak1) sc *= (1 - _favWeak * 0.65);
+      // 🔑 PRESSURE/RUNDEN: verzweifeltes Team greift an → Gegner nutzt Räume → BTTS sehr wahrscheinlich
+      if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 1.10);
+      else if (_anyNeedsWin) sc = Math.min(0.86, sc + _pressureBoost * 0.55);
+      sc = Math.min(0.90, sc);
+      const _bttsPressNote = bothNeedWin
+        ? `<br><strong>⚡ Beide Teams müssen gewinnen${_rlSfx} — beide greifen an, beide riskieren Kontertore.</strong>`
+        : _anyNeedsWin ? `<br><strong>⚡ ${homeNeedsWin ? _pHLabel : _pALabel}${_rlSfx} — öffnet hinten Räume, Kontertreffer für Gegner wahrscheinlich.</strong>` : '';
       gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:null,
         conf: sc>0.65?'high':sc>0.44?'medium':'low',
-        reason:`Beide Offensiven treffsicher: Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp.<br>Beide Defensiven löchrig (kassieren Ø ${homeDefStr.toFixed(1)} / ${awayDefStr.toFixed(1)}/Sp) — Tore auf beiden Seiten sehr wahrscheinlich.`}}); }
+        reason:`Beide Offensiven treffsicher: Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp.<br>Beide Defensiven löchrig (kassieren Ø ${homeDefStr.toFixed(1)} / ${awayDefStr.toFixed(1)}/Sp) — Tore auf beiden Seiten sehr wahrscheinlich.${_bttsPressNote}`}}); }
 
-    // BTTS Nein — FIX: only strong signal when BOTH attacks weak, not just one-sided
+    // BTTS Nein
     { const bothAttWeak = homeAttStr < 0.88 && awayAttStr < 0.82;
       const oneAttWeak  = !bothAttWeak && bttsBad;
       let sc = bothAttWeak ? 0.70 : oneAttWeak ? 0.38 : bttsNoSignal ? 0.22 : 0.08;
       if (anyGold && anyRed) sc = Math.min(0.80, sc + 0.15);
       if (_eBothRed) sc = Math.max(0, sc - 0.35);
       if (_favWeak1) sc = Math.min(0.80, sc + 0.20 * _favWeak);
+      // 🔑 PRESSURE/RUNDEN: Druck-Team greift an → Kontertore entstehen → BTTS Nein sehr unwahrscheinlich
+      if (bothNeedWin)       sc = Math.max(0, sc - _pressureBoost * 1.20);
+      else if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 0.70);
       const weakAtt = homeAttStr<awayAttStr?match.home:match.away;
       gC.push({sc, p:{icon:'🔒', market:'Beide Teams treffen: Nein', odds:null,
         conf: sc>0.58?'medium':'low',
         reason:`${weakAtt} trifft selten (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} ${xGBased?'xG':'Tore'}/Sp) — Zu-Null-Szenario strukturell realistisch.<br>Schwache Offensive auf mindestens einer Seite macht Tore für dieses Team unwahrscheinlich.`}}); }
 
     // ── Heimteam Over 1.5 Tore — BACKTEST VALIDATED: 69% bei expHome > 1.85 ──────
-    // More specific than Over 2.5 — isolates home team's attack quality vs away defence.
     { const expH = (homeAttStr + awayDefStr) / 2;
-      const sc   = expH > 2.10 ? 0.78 : expH > 1.95 ? 0.66 : expH > 1.85 ? 0.56 : 0;
+      let sc     = expH > 2.10 ? 0.78 : expH > 1.95 ? 0.66 : expH > 1.85 ? 0.56 : 0;
+      // 🔑 PRESSURE: Heimteam muss gewinnen → All-in-Angriff → Over 1.5 noch wahrscheinlicher
+      if (sc > 0 && homeNeedsWin) sc = Math.min(0.88, sc + _pressureBoost * 0.90);
       if (sc > 0) {
         const _xL = xGBased ? 'xG' : 'Tore';
+        const _hPN = homeNeedsWin ? `<br><strong>⚡ ${_pHLabel}${_rlSfx} — Heimteam greift voll an, Over 1.5 durch Druckspiel klar verstärkt.</strong>` : '';
         gC.push({sc, p:{icon:'🏠', market:`${match.home} über 1.5 Tore`, odds: null,
           conf: sc > 0.68 ? 'high' : 'medium',
-          reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} ${_xL}/Sp${xGBased?' (Understat)':''}, Gegner lässt Ø ${awayDefStr.toFixed(1)} zu.<br>Erwartete Heim-Tore: <strong>${expH.toFixed(2)}</strong> — mindestens 2 Treffer klar angesteuert. Backtested: 69% Trefferquote.`}}); }
+          reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} ${_xL}/Sp${xGBased?' (Understat)':''}, Gegner lässt Ø ${awayDefStr.toFixed(1)} zu.<br>Erwartete Heim-Tore: <strong>${expH.toFixed(2)}</strong> — mindestens 2 Treffer klar angesteuert. Backtested: 69% Trefferquote.${_hPN}`}}); }
     }
 
     // ── Auswärtsteam Over 1.5 Tore — BACKTEST VALIDATED: 65%+ bei expAway > 1.90 ─
     { const expA = (awayAttStr + homeDefStr) / 2;
-      const sc   = expA > 2.10 ? 0.68 : expA > 1.95 ? 0.56 : 0;
+      let sc     = expA > 2.10 ? 0.68 : expA > 1.95 ? 0.56 : 0;
+      // 🔑 PRESSURE: Auswärtsteam muss gewinnen → volles Risiko → mehr Auswärtstore
+      if (sc > 0 && awayNeedsWin) sc = Math.min(0.82, sc + _pressureBoost * 0.85);
       if (sc > 0) {
         const _xL = xGBased ? 'xG' : 'Tore';
+        const _aPN = awayNeedsWin ? `<br><strong>⚡ ${_pALabel}${_rlSfx} — Auswärtsteam geht volles Risiko, Over 1.5 durch Druckspiel verstärkt.</strong>` : '';
         gC.push({sc, p:{icon:'✈️', market:`${match.away} über 1.5 Tore`, odds: null,
           conf: sc > 0.65 ? 'medium' : 'low',
-          reason:`${match.away} erzielt Ø ${awayAttStr.toFixed(1)} ${_xL}/Sp, Heimteam lässt Ø ${homeDefStr.toFixed(1)} zu.<br>Erwartete Auswärts-Tore: <strong>${expA.toFixed(2)}</strong> — Auswärtsteam mit echter Torchance auf >1.5. Backtested: 65% Trefferquote.`}}); }
+          reason:`${match.away} erzielt Ø ${awayAttStr.toFixed(1)} ${_xL}/Sp, Heimteam lässt Ø ${homeDefStr.toFixed(1)} zu.<br>Erwartete Auswärts-Tore: <strong>${expA.toFixed(2)}</strong> — Auswärtsteam mit echter Torchance auf >1.5. Backtested: 65% Trefferquote.${_aPN}`}}); }
     }
 
-    // 1HZ Under 0.5 (tactical opener signal — kept as low-priority fallback)
+    // 1HZ Under 0.5 (tactical opener — suppressed when any team is under pressure)
     { let sc = (bothGold && expGoals < 2.5) ? 0.55 : firstHalfTight ? 0.44 : 0.12;
+      // 🔑 PRESSURE/RUNDEN: Druckteam presst von Minute 1 → kein langsamer Start
+      if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 1.20);
       gC.push({sc, p:{icon:'⏱️', market:'1. HZ: Under 0.5 Tore', odds:null,
         conf: sc>0.50?'medium':'low',
         reason:`${egPfx} — taktisches Abtasten in Halbzeit 1 erwartet.<br>Beide Teams setzen zu Spielbeginn auf Absicherung — torloser Start historisch sehr häufig in dieser Konstellation.`}}); }
@@ -1291,45 +1340,74 @@ function getBettingPicks(match, odds, leagueKey) {
   {
     const sC = [];
 
-    // Corners
-    { const cMkt = cornersOver11 ? 'Über 11.5 Ecken' : cornersOver9 ? 'Über 9.5 Ecken' : 'Über 8.5 Ecken';
-      const sc   = cornersOver11 ? 0.74 : cornersOver9 ? 0.58 : cornersOver8 ? 0.40 : 0.18;
-      sC.push({sc: sc + (bothBlue?0.06:0), p:{icon:'🚩', market:cMkt, odds:null,
+    // ── Corners ───────────────────────────────────────────────────────────────
+    { let sc = cornersOver11 ? 0.74 : cornersOver9 ? 0.58 : cornersOver8 ? 0.40 : 0.18;
+      if (bothBlue) sc = Math.min(sc + 0.06, 0.82);
+      // 🔑 PRESSURE/RUNDEN: Druckteam presst aggressiv → erzwingt mehr Ecken
+      if (bothNeedWin)       sc = Math.min(0.88, sc + _pressureBoost * 1.00);
+      else if (_anyNeedsWin) sc = Math.min(0.82, sc + _pressureBoost * 0.55);
+      const cMkt = sc >= 0.65 || cornersOver11 ? 'Über 11.5 Ecken'
+                 : sc >= 0.46 || cornersOver9  ? 'Über 9.5 Ecken'  : 'Über 8.5 Ecken';
+      const _cornPressNote = _anyNeedsWin
+        ? ` ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — intensives Pressing treibt Eckenzahl über Modellbasis.` : '';
+      sC.push({sc, p:{icon:'🚩', market:cMkt, odds:null,
         conf: sc>0.65?'high':sc>0.50?'medium':'low',
-        reason:`${egPfx} → Ecken-Modell: ca. ${cornersEst.toFixed(0)} Ecken erwartet (Heim ${homeAttStr.toFixed(1)} + Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'xG-Est.'}/Sp).<br>${_defBonus > 0.5 ? 'Beide Abwehren permissiv — hoher Angriffsdruck auf beiden Seiten treibt Eckenzahl.' : 'Offensiv ausgerichtete Teams — viele Hereingaben und Standardsituationen aus dem Spiel heraus.'}`}}); }
+        reason:`${egPfx} → Ecken-Modell: ca. ${cornersEst.toFixed(0)} Ecken erwartet (Heim ${homeAttStr.toFixed(1)} + Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'xG-Est.'}/Sp).<br>${_defBonus > 0.5 ? 'Beide Abwehren permissiv — hoher Angriffsdruck auf beiden Seiten treibt Eckenzahl.' : 'Offensiv ausgerichtete Teams — viele Hereingaben und Standardsituationen aus dem Spiel heraus.'}${_cornPressNote}`}}); }
 
-    // Cards — tiered
-    if (cardsVeryHigh)
-      sC.push({sc:0.90, p:{icon:'🟥', market:'Über 4.5 Karten', odds:null, conf:'high',
-        reason:'Abstiegsduell beider Teams unter maximalem Druck — Verzweiflung auf beiden Seiten.<br>Taktische Fouls, emotionale Zweikämpfe und Abstiegskampf-Mentalität: historisch >4.5 Karten in solchen Partien.'}});
-    else if (cardsHigh)
-      sC.push({sc:0.66, p:{icon:'🟨', market:'Über 3.5 Karten', odds:null, conf:'medium',
-        reason:'Drucksituation im Abstiegskampf — jeder Ballverlust wird per Foul gestoppt.<br>Erhöhte Intensität und physischer Spielstil führen zu vielen taktischen Unterbrechungen — Karten-Markt attraktiv.'}});
-    else if (cardsMed)
-      sC.push({sc:0.40, p:{icon:'🟨', market:'Über 3.5 Karten', odds:null, conf:'low',
-        reason:'Erhöhte Motivation durch Druck — mindestens ein Team kämpft direkt gegen den Abstieg.<br>Taktische Fouls und verbale Auseinandersetzungen bei engen Spielständen treiben Kartenzahl nach oben.'}});
-
-    // Handicap — base score raised so it competes with corners/cards
-    if (homeHandicap) {
-      const hcSc = Math.min(0.82, 0.56 + hFS_home*0.30 + Math.max(0,hStreak)*0.04 + Math.max(0,((_hHWR??homeWinRate)-0.54)*0.60));
-      sC.push({sc: hcSc, p:{icon:'🏠', market:'Handicap Heim -0.5', odds:null, conf: hcSc>0.70?'high':'medium',
-        reason:`${match.home} dominiert zu Hause: Formquote ${Math.round(hFS_home*100)}%, Heim-Siegquote ${Math.round((_hHWR??homeWinRate)*100)}% (H2H).<br>Ø ${hGoals.toFixed(1)} Tore/Sp bei ${hConc.toFixed(1)} Gegentoren/Sp — Sieg ohne Zittern, Remis-Puffer nicht nötig.`}});
-    } else if (awayHandicap) {
-      const hcSc = Math.min(0.78, 0.50 + aFS_away*0.30 + Math.max(0,aStreak)*0.04 + Math.max(0,((_aAWR??awayWinRate)-0.46)*0.60));
-      sC.push({sc: hcSc, p:{icon:'✈️', market:'Handicap Auswärts -0.5', odds:null, conf: hcSc>0.65?'high':'medium',
-        reason:`${match.away} dominant auf Reisen: Formquote ${Math.round(aFS_away*100)}%, Auswärts-Siegquote ${Math.round((_aAWR??awayWinRate)*100)}% (H2H).<br>Ø ${aGoals.toFixed(1)} Tore/Sp bei ${aConc.toFixed(1)} Gegentoren/Sp — klare Kaderüberlegenheit auch auswärts.`}});
+    // ── Cards — granular mit Runden-Faktor ────────────────────────────────────
+    // 🔑 PRESSURE/RUNDEN: Karten-Signal ist Druck × Intensität — beide Faktoren eingerechnet
+    { let cardSc = 0;
+      let cardMkt = 'Über 3.5 Karten';
+      let cardReason = '';
+      if (cardsVeryHigh) {
+        // Beide im Abstieg + schlechte Form: 4.5er realistisch
+        cardSc  = Math.min(0.94, 0.90 + _pressureBoost * 0.30);
+        cardMkt = 'Über 4.5 Karten';
+        cardReason = `Abstiegsduell beider Teams unter maximalem Druck${_rlSfx} — Verzweiflung auf beiden Seiten.<br>Taktische Fouls, emotionale Zweikämpfe und Abstiegskampf-Mentalität: historisch >4.5 Karten in solchen Partien.`;
+      } else if (cardsHigh) {
+        cardSc  = Math.min(0.82, 0.66 + _pressureBoost * 0.50);
+        cardMkt = urgencyHigh ? 'Über 4.5 Karten' : 'Über 3.5 Karten';
+        cardReason = `Drucksituation im Abstiegskampf${_rlSfx} — jeder Ballverlust wird per Foul gestoppt.<br>Erhöhte Intensität und physischer Spielstil führen zu vielen taktischen Unterbrechungen — Karten-Markt attraktiv.`;
+      } else if (cardsMed) {
+        cardSc  = Math.min(0.65, 0.40 + _pressureBoost * 0.40);
+        cardReason = `Erhöhte Motivation durch Druck — mindestens ein Team kämpft direkt gegen den Abstieg.<br>Taktische Fouls und verbale Auseinandersetzungen bei engen Spielständen treiben Kartenzahl nach oben.`;
+      }
+      if (cardSc > 0) sC.push({sc: cardSc, p:{icon: cardMkt.includes('4.5') ? '🟥' : '🟨',
+        market: cardMkt, odds: null, conf: cardSc>0.65?'high':cardSc>0.45?'medium':'low',
+        reason: cardReason}});
     }
 
-    // ── 1. HZ: Over 0.5 Tore — BACKTEST VALIDATED ────────────────────────────
-    // Threshold raised to expGoals > 3.4 only (was: > 2.8).
-    // Reason: expGoals 2.8–3.4 range has ~58–72% hit rate → implied odds ~1.39–1.72,
-    // but market odds for HZ Over 0.5 are typically 1.20–1.35 in these ranges → no value.
-    // Only fire at expGoals > 3.4 (85% model prob) where market is more likely to be > 1.30.
-    { const htSc = expGoals > 3.4 ? 0.85 : 0;
+    // ── Handicap — mit Druck-Boost ────────────────────────────────────────────
+    if (homeHandicap) {
+      let hcSc = Math.min(0.82, 0.56 + hFS_home*0.30 + Math.max(0,hStreak)*0.04 + Math.max(0,((_hHWR??homeWinRate)-0.54)*0.60));
+      // 🔑 PRESSURE: Heimteam muss gewinnen → Vollgas-Angriff → Handicap noch stärker
+      if (homeNeedsWin) hcSc = Math.min(0.90, hcSc + _pressureBoost * 0.70);
+      const _hcPN = homeNeedsWin ? `<br><strong>⚡ ${_pHLabel}${_rlSfx} — Vollgas-Einsatz zu Hause, Handicap-Signal durch Druck verstärkt.</strong>` : '';
+      sC.push({sc: hcSc, p:{icon:'🏠', market:'Handicap Heim -0.5', odds:null, conf: hcSc>0.70?'high':'medium',
+        reason:`${match.home} dominiert zu Hause: Formquote ${Math.round(hFS_home*100)}%, Heim-Siegquote ${Math.round((_hHWR??homeWinRate)*100)}% (H2H).<br>Ø ${hGoals.toFixed(1)} Tore/Sp bei ${hConc.toFixed(1)} Gegentoren/Sp — Sieg ohne Zittern, Remis-Puffer nicht nötig.${_hcPN}`}});
+    } else if (awayHandicap) {
+      let hcSc = Math.min(0.78, 0.50 + aFS_away*0.30 + Math.max(0,aStreak)*0.04 + Math.max(0,((_aAWR??awayWinRate)-0.46)*0.60));
+      // 🔑 PRESSURE: Auswärtsteam muss gewinnen → All-in auch auswärts
+      if (awayNeedsWin) hcSc = Math.min(0.86, hcSc + _pressureBoost * 0.65);
+      const _acPN = awayNeedsWin ? `<br><strong>⚡ ${_pALabel}${_rlSfx} — Auswärtsteam geht kein Risiko, Handicap durch Druck verstärkt.</strong>` : '';
+      sC.push({sc: hcSc, p:{icon:'✈️', market:'Handicap Auswärts -0.5', odds:null, conf: hcSc>0.65?'high':'medium',
+        reason:`${match.away} dominant auf Reisen: Formquote ${Math.round(aFS_away*100)}%, Auswärts-Siegquote ${Math.round((_aAWR??awayWinRate)*100)}% (H2H).<br>Ø ${aGoals.toFixed(1)} Tore/Sp bei ${aConc.toFixed(1)} Gegentoren/Sp — klare Kaderüberlegenheit auch auswärts.${_acPN}`}});
+    }
+
+    // ── 1. HZ: Over 0.5 Tore ────────────────────────────────────────────────
+    // Base threshold: expGoals > 3.4 (85% model prob, odds likely ≥ 1.30).
+    // 🔑 PRESSURE EXCEPTION: when any team must win, they press hard from kickoff →
+    //   lower threshold to 3.1 (still value range) because early goal probability spikes.
+    { const _htThresh = _anyNeedsWin ? 3.1 : 3.4;
+      const htSc = expGoals > 3.4 ? 0.85
+                 : expGoals > _htThresh && _anyNeedsWin ? 0.74
+                 : 0;
       if (htSc > 0) {
+        const _htPN = _anyNeedsWin && expGoals <= 3.4
+          ? `<br><strong>⚡ ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? _pHLabel : _pALabel}${_rlSfx} — presst von Minute 1, erhöht früh-Tor-Wahrscheinlichkeit deutlich.</strong>` : '';
         sC.push({sc: htSc, p:{icon:'⏱️', market:'1. HZ: Over 0.5 Tore', odds: null,
-          conf: 'high',
-          reason:`${egPfx} — außergewöhnlich hohe Torerwartung (>3.4) deutet auf frühen Torabschluss hin.<br>Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp — 1. Halbzeit-Tor in dieser Konstellation nahezu sicher. Backtested: 85% Trefferquote.`}});
+          conf: htSc > 0.78 ? 'high' : 'medium',
+          reason:`${egPfx} — hohe Torerwartung deutet auf frühen Torabschluss hin.<br>Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp — 1. Halbzeit-Tor klar wahrscheinlich. Backtested: ${htSc>0.80?'85':'74'}% Trefferquote.${_htPN}`}});
       }
     }
 
@@ -1337,15 +1415,23 @@ function getBettingPicks(match, odds, leagueKey) {
     // Backtest: 92%/84% probability → implied market odds ~1.08/~1.19 → below minimum 1.30 threshold.
     // No value for punter even with high hit-rate. Omitted entirely.
 
-    // 1HZ Beide Teams treffen (open fast game — kept as secondary signal)
-    if (firstHalfOpen && expGoals > 3.2 && !_used.has('1. HZ: Over 0.5 Tore'))
-      sC.push({sc:0.54, p:{icon:'⏱️', market:'1. HZ: Beide Teams treffen', odds:null, conf:'medium',
-        reason:`Hohes Spieltempo von Beginn an — ${egPfx} deutet auf frühe Tore hin.<br>Beide Angriffe explosiv (Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?"xG":"Tore"}/Sp) — Treffer auf beiden Seiten schon in Halbzeit 1 wahrscheinlich.`}});
+    // 1HZ Beide Teams treffen — boosted when any team is under pressure
+    { let btts1sc = (firstHalfOpen && expGoals > 3.2 && !_used.has('1. HZ: Over 0.5 Tore')) ? 0.54 : 0;
+      // 🔑 PRESSURE: Druckteam presst → Gegner kontert → Tore auf beiden Seiten bereits in HZ1
+      if (btts1sc > 0 && _anyNeedsWin) btts1sc = Math.min(0.70, btts1sc + _pressureBoost * 0.80);
+      if (btts1sc > 0) {
+        const _b1PN = _anyNeedsWin ? `<br><strong>⚡ ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? _pHLabel : _pALabel}${_rlSfx} — Pressingspiel von Beginn an erhöht frühe BTTS-Wahrscheinlichkeit.</strong>` : '';
+        sC.push({sc: btts1sc, p:{icon:'⏱️', market:'1. HZ: Beide Teams treffen', odds:null, conf: btts1sc>0.60?'medium':'low',
+          reason:`Hohes Spieltempo von Beginn an — ${egPfx} deutet auf frühe Tore hin.<br>Beide Angriffe explosiv (Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?"xG":"Tore"}/Sp) — Treffer auf beiden Seiten schon in Halbzeit 1 wahrscheinlich.${_b1PN}`}});
+      }
+    }
 
-    // 1HZ Under 1.5 (slow tight opener)
-    if (firstHalfTight)
-      sC.push({sc:0.50, p:{icon:'⏱️', market:'1. HZ: Under 1.5 Tore', odds:null, conf:'medium',
+    // 1HZ Under 1.5 (slow tight opener — suppressed when any team under pressure)
+    { let u15sc = firstHalfTight ? 0.50 : 0;
+      if (u15sc > 0 && _anyNeedsWin) u15sc = Math.max(0, u15sc - _pressureBoost * 1.10);
+      if (u15sc > 0) sC.push({sc: u15sc, p:{icon:'⏱️', market:'1. HZ: Under 1.5 Tore', odds:null, conf:'medium',
         reason:`${egPfx} — taktisches Abtasten, vorsichtiger Spielbeginn erwartet.<br>Beide Offensiven gedämpft in der ersten Hälfte — maximal 1 Treffer bis zur Pause sehr wahrscheinlich.`}});
+    }
 
     // Fallback DC (always an option but lowest priority)
     { const fbDC = hFS_home >= aFS_away ? 'Doppelte Chance: 1X' : 'Doppelte Chance: X2';
@@ -1387,12 +1473,20 @@ function getBettingPicks(match, odds, leagueKey) {
         break;
       case 'Over 2.5 Tore':
         mp = expGoals > 3.2 ? 0.72 : expGoals > 2.8 ? 0.60 : expGoals > 2.4 ? 0.48 : 0.36;
+        // Pressure genuinely raises Over probability (teams go forward regardless of stats)
+        if (bothNeedWin)       mp = Math.min(0.88, mp + _pressureBoost * 0.55);
+        else if (_anyNeedsWin) mp = Math.min(0.82, mp + _pressureBoost * 0.30);
         break;
       case 'Under 2.5 Tore':
         mp = expGoals < 1.8 ? 0.72 : expGoals < 2.2 ? 0.60 : expGoals < 2.6 ? 0.49 : 0.37;
+        // Pressure reduces Under probability — teams must attack
+        if (bothNeedWin)       mp = Math.max(0.10, mp - _pressureBoost * 0.55);
+        else if (_anyNeedsWin) mp = Math.max(0.15, mp - _pressureBoost * 0.30);
         break;
       case 'Over 3.5 Tore':
         mp = expGoals > 3.6 ? 0.60 : expGoals > 3.1 ? 0.42 : expGoals > 2.7 ? 0.28 : 0.18;
+        if (bothNeedWin)       mp = Math.min(0.78, mp + _pressureBoost * 0.50);
+        else if (_anyNeedsWin) mp = Math.min(0.70, mp + _pressureBoost * 0.28);
         break;
     }
     if (mp === null) { p.value = null; return; }
