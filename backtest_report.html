@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Backtest Report</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0d1117;color:#e6edf3;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:30px;max-width:1000px;margin:0 auto}
+h1{font-size:22px;font-weight:800;margin-bottom:4px}
+h2{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#58a6ff;margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid #21262d}
+.meta{color:#666;font-size:12px;margin-bottom:24px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+.stat-card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px}
+.sv{font-size:30px;font-weight:800;margin-bottom:2px}
+.sk{font-size:11px;color:#888}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#21262d;color:#888;font-weight:600;padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+td{padding:9px 12px;border-bottom:1px solid #1c2128}
+tr:hover td{background:#161b22}
+.section{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin-bottom:16px;overflow-x:auto}
+.findings{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:18px 20px;list-style:none;font-size:13px;line-height:1.7}
+.findings li{padding:8px 0;border-bottom:1px solid #1c2128}
+.findings li:last-child{border:none}
+.conf-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
+.conf-item{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px;text-align:center}
+.conf-pct{font-size:28px;font-weight:800}
+.conf-lbl{font-size:11px;color:#888;margin-top:4px}
+.conf-imp{font-size:10px;margin-top:2px}
+.note{background:#1c2128;border:1px solid #58a6ff30;border-radius:8px;padding:12px 16px;font-size:11px;color:#8b949e;margin-top:20px;line-height:1.6}
+</style>
+</head>
+<body>
+<h1>📊 Backtest Report — Betting Dashboard</h1>
+<div class="meta">Datenbasis: football-data.co.uk · 5 Ligen · 2 Saisons (23/24 + 24/25) · 8,772 simulierte Picks · Kein Look-Ahead</div>
+
+<div class="stat-grid">
+  <div class="stat-card"><div class="sv" style="color:#58a6ff">8,772</div><div class="sk">Picks simuliert</div></div>
+  <div class="stat-card"><div class="sv" style="color:#22c55e">3.504</div><div class="sk">Spiele analysiert</div></div>
+  <div class="stat-card"><div class="sv" style="color:#fb923c">5</div><div class="sk">Top-Ligen · 2 Saisons</div></div>
+</div>
+
+<h2>⭐ Kalibrierung nach Konfidenz</h2>
+<div class="conf-bar">
+  <div class="conf-item">
+    <div class="conf-pct" style="color:#a3e635">61.8%</div>
+    <div class="conf-lbl">★★★ High Confidence</div>
+    <div class="conf-imp" style="color:#f85149">Ziel: ~75% · Δ-13.2pp ⚠️</div>
+  </div>
+  <div class="conf-item">
+    <div class="conf-pct" style="color:#a3e635">57.0%</div>
+    <div class="conf-lbl">★★☆ Medium Confidence</div>
+    <div class="conf-imp" style="color:#fb923c">Ziel: ~60% · Δ-3.0pp ➖</div>
+  </div>
+  <div class="conf-item">
+    <div class="conf-pct" style="color:#f85149">47.6%</div>
+    <div class="conf-lbl">★☆☆ Low Confidence</div>
+    <div class="conf-imp" style="color:#a3e635">Ziel: ~50% · Δ-2.4pp ✅</div>
+  </div>
+</div>
+
+<h2>🔍 Erkenntnisse & Handlungsempfehlungen</h2>
+<ul class="findings"><li>⚠️ <strong>★★★ trifft nur zu 61.8%</strong> statt der angestrebten ~75%. 
+    Das Modell ist bei "High" zu großzügig — der Schwellenwert muss deutlich höher.
+    Konkret: der Heimsieg-Basiswert von 0.40 lässt fast jeden Match als Kandidat zu.</li><li>✅ <strong>★★★ Auswärtssieg: 55.8% Trefferquote, ROI +2.7%</strong> 
+    — das ist unser stärkstes Signal. Wenn das Modell Away-Win auf ★★★ setzt, ist das fundiert.</li><li>✅ <strong>★★★ Über 2.5 Tore: 62.7% Trefferquote</strong> 
+    — unser zuverlässigstes Ziel-Markt-Signal. Über 867 Picks konsistent gut. ROI leicht negativ weil 
+    Bookmaker diesen Markt gut einpreisen.</li><li>⚠️ <strong>Heimsieg gesamt nur 50.8%, ROI -9.0%</strong> 
+    — der Basiswert 0.40 macht fast jeden Match zu einem Home-Win Kandidaten. 
+    1.845 von 3.504 Spielen werden als Heimsieg-Pick vorgeschlagen — viel zu viele.</li><li>✅ <strong>BTTS ★★★: 60.5% Trefferquote</strong> 
+    — solides Signal, besonders in Ligen mit hohem Angriffstempo (PL, Bundesliga).</li><li>📐 <strong>Konkrete Fixes nötig:</strong><br>
+    1. Heimsieg-Basis von 0.40 → 0.0 setzen (Picks brauchen aktive Signale, nicht nur Baseline)<br>
+    2. ★★★-Schwelle Heimsieg: 1.20 → 1.50 (nur echte Multi-Signal-Bestätigungen)<br>
+    3. Auswärtssieg-Basis von 0.26 → 0.0 (gleiche Logik)<br>
+    4. Low-Confidence-Picks aus der UI ausblenden (nur ★★☆ und ★★★ zeigen)</li></ul>
+
+<h2>🎯 Detail: Trefferquote nach Markt + Konfidenz</h2>
+<div class="section">
+  <table>
+    <tr><th>Markt</th><th>Konfidenz</th><th>Picks</th><th>Trefferquote</th><th>ROI</th></tr>
+    <tr>
+          <td>🏠 Heimsieg</td>
+          <td style='font-weight:700'>★★★</td>
+          <td style='color:#888'>238</td>
+          <td style='color:#22c55e;font-weight:700'>66.0%<span style='font-size:10px;color:#f85149'> (-9.0pp)</span> <div style="background:#22c55e;height:8px;width:79px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ⚠️</td>
+          <td style='color:#fb923c;font-weight:700'>-3.9%</td>
+        </tr><tr>
+          <td>🏠 Heimsieg</td>
+          <td style='font-weight:700'>★★☆</td>
+          <td style='color:#888'>581</td>
+          <td style='color:#fb923c;font-weight:700'>56.5%<span style='font-size:10px;color:#888'> (-3.5pp)</span> <div style="background:#fb923c;height:8px;width:67px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ➖</td>
+          <td style='color:#fb923c;font-weight:700'>-3.6%</td>
+        </tr><tr>
+          <td>🏠 Heimsieg</td>
+          <td style='font-weight:700'>★☆☆</td>
+          <td style='color:#888'>1,026</td>
+          <td style='color:#f85149;font-weight:700'>44.1%<span style='font-size:10px;color:#f85149'> (-5.9pp)</span> <div style="background:#f85149;height:8px;width:52px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ⚠️</td>
+          <td style='color:#f85149;font-weight:700'>-13.2%</td>
+        </tr><tr>
+          <td>✈️ Auswärtssieg</td>
+          <td style='font-weight:700'>★★★</td>
+          <td style='color:#888'>156</td>
+          <td style='color:#fb923c;font-weight:700'>55.8%<span style='font-size:10px;color:#f85149'> (-19.2pp)</span> <div style="background:#fb923c;height:8px;width:66px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ⚠️</td>
+          <td style='color:#22c55e;font-weight:700'>+2.7%</td>
+        </tr><tr>
+          <td>✈️ Auswärtssieg</td>
+          <td style='font-weight:700'>★★☆</td>
+          <td style='color:#888'>165</td>
+          <td style='color:#fb923c;font-weight:700'>56.4%<span style='font-size:10px;color:#888'> (-3.6pp)</span> <div style="background:#fb923c;height:8px;width:67px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ➖</td>
+          <td style='color:#22c55e;font-weight:700'>+6.7%</td>
+        </tr><tr>
+          <td>✈️ Auswärtssieg</td>
+          <td style='font-weight:700'>★☆☆</td>
+          <td style='color:#888'>368</td>
+          <td style='color:#f85149;font-weight:700'>45.7%<span style='font-size:10px;color:#888'> (-4.3pp)</span> <div style="background:#f85149;height:8px;width:54px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ➖</td>
+          <td style='color:#f85149;font-weight:700'>-4.8%</td>
+        </tr><tr><td>🤝 Unentschieden</td><td>★★★</td><td style='color:#555'>0</td><td colspan='2' style='color:#555;font-style:italic'>zu wenig Daten</td></tr><tr><td>🤝 Unentschieden</td><td>★★☆</td><td style='color:#555'>0</td><td colspan='2' style='color:#555;font-style:italic'>zu wenig Daten</td></tr><tr>
+          <td>🤝 Unentschieden</td>
+          <td style='font-weight:700'>★☆☆</td>
+          <td style='color:#888'>390</td>
+          <td style='color:#f85149;font-weight:700'>27.9%<span style='font-size:10px;color:#f85149'> (-22.1pp)</span> <div style="background:#f85149;height:8px;width:33px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ⚠️</td>
+          <td style='color:#fb923c;font-weight:700'>-2.6%</td>
+        </tr><tr>
+          <td>⚽ Über 2.5 Tore</td>
+          <td style='font-weight:700'>★★★</td>
+          <td style='color:#888'>867</td>
+          <td style='color:#a3e635;font-weight:700'>62.7%<span style='font-size:10px;color:#f85149'> (-12.3pp)</span> <div style="background:#a3e635;height:8px;width:75px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ⚠️</td>
+          <td style='color:#fb923c;font-weight:700'>-3.1%</td>
+        </tr><tr>
+          <td>⚽ Über 2.5 Tore</td>
+          <td style='font-weight:700'>★★☆</td>
+          <td style='color:#888'>834</td>
+          <td style='color:#fb923c;font-weight:700'>53.6%<span style='font-size:10px;color:#f85149'> (-6.4pp)</span> <div style="background:#fb923c;height:8px;width:64px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ⚠️</td>
+          <td style='color:#f85149;font-weight:700'>-6.8%</td>
+        </tr><tr>
+          <td>⚽ Über 2.5 Tore</td>
+          <td style='font-weight:700'>★☆☆</td>
+          <td style='color:#888'>500</td>
+          <td style='color:#fb923c;font-weight:700'>52.6%<span style='font-size:10px;color:#888'> (+2.6pp)</span> <div style="background:#fb923c;height:8px;width:63px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ➖</td>
+          <td style='color:#a3e635;font-weight:700'>+-0.0%</td>
+        </tr><tr>
+          <td>🔒 Unter 2.5 Tore</td>
+          <td style='font-weight:700'>★★★</td>
+          <td style='color:#888'>47</td>
+          <td style='color:#a3e635;font-weight:700'>59.6%<span style='font-size:10px;color:#f85149'> (-15.4pp)</span> <div style="background:#a3e635;height:8px;width:71px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ⚠️</td>
+          <td style='color:#fb923c;font-weight:700'>-3.9%</td>
+        </tr><tr>
+          <td>🔒 Unter 2.5 Tore</td>
+          <td style='font-weight:700'>★★☆</td>
+          <td style='color:#888'>322</td>
+          <td style='color:#a3e635;font-weight:700'>60.6%<span style='font-size:10px;color:#888'> (+0.6pp)</span> <div style="background:#a3e635;height:8px;width:72px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ➖</td>
+          <td style='color:#22c55e;font-weight:700'>+3.6%</td>
+        </tr><tr>
+          <td>🔒 Unter 2.5 Tore</td>
+          <td style='font-weight:700'>★☆☆</td>
+          <td style='color:#888'>354</td>
+          <td style='color:#fb923c;font-weight:700'>53.4%<span style='font-size:10px;color:#22c55e'> (+3.4pp)</span> <div style="background:#fb923c;height:8px;width:64px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ✅</td>
+          <td style='color:#fb923c;font-weight:700'>-3.9%</td>
+        </tr><tr>
+          <td>🎯 Beide treffen</td>
+          <td style='font-weight:700'>★★★</td>
+          <td style='color:#888'>621</td>
+          <td style='color:#a3e635;font-weight:700'>60.5%<span style='font-size:10px;color:#f85149'> (-14.5pp)</span> <div style="background:#a3e635;height:8px;width:72px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ⚠️</td>
+          <td style='color:#555;font-weight:700'>–</td>
+        </tr><tr>
+          <td>🎯 Beide treffen</td>
+          <td style='font-weight:700'>★★☆</td>
+          <td style='color:#888'>503</td>
+          <td style='color:#a3e635;font-weight:700'>61.0%<span style='font-size:10px;color:#888'> (+1.0pp)</span> <div style="background:#a3e635;height:8px;width:73px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ➖</td>
+          <td style='color:#555;font-weight:700'>–</td>
+        </tr><tr>
+          <td>🎯 Beide treffen</td>
+          <td style='font-weight:700'>★☆☆</td>
+          <td style='color:#888'>1,800</td>
+          <td style='color:#fb923c;font-weight:700'>51.7%<span style='font-size:10px;color:#888'> (+1.7pp)</span> <div style="background:#fb923c;height:8px;width:62px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div> ➖</td>
+          <td style='color:#555;font-weight:700'>–</td>
+        </tr>
+  </table>
+</div>
+
+<h2>⚽ Übersicht nach Markt</h2>
+<div class="section">
+  <table>
+    <tr><th>Markt</th><th>Picks</th><th>Trefferquote</th><th>ROI</th></tr>
+    <tr><td>🏠 Heimsieg</td><td style='color:#888'>1,845</td><td style='color:#fb923c;font-weight:700'>50.8% <div style="background:#fb923c;height:8px;width:60px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div></td><td style='color:#f85149;font-weight:700'>-9.0%</td></tr><tr><td>✈️ Auswärtssieg</td><td style='color:#888'>689</td><td style='color:#fb923c;font-weight:700'>50.5% <div style="background:#fb923c;height:8px;width:60px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div></td><td style='color:#fb923c;font-weight:700'>-0.4%</td></tr><tr><td>🤝 Unentschieden</td><td style='color:#888'>390</td><td style='color:#f85149;font-weight:700'>27.9% <div style="background:#f85149;height:8px;width:33px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div></td><td style='color:#fb923c;font-weight:700'>-2.6%</td></tr><tr><td>⚽ Über 2.5 Tore</td><td style='color:#888'>2,201</td><td style='color:#a3e635;font-weight:700'>57.0% <div style="background:#a3e635;height:8px;width:68px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div></td><td style='color:#fb923c;font-weight:700'>-3.8%</td></tr><tr><td>🔒 Unter 2.5 Tore</td><td style='color:#888'>723</td><td style='color:#a3e635;font-weight:700'>57.0% <div style="background:#a3e635;height:8px;width:68px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div></td><td style='color:#fb923c;font-weight:700'>-0.6%</td></tr><tr><td>🎯 Beide treffen</td><td style='color:#888'>2,924</td><td style='color:#fb923c;font-weight:700'>55.2% <div style="background:#fb923c;height:8px;width:66px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div></td><td style='color:#555;font-weight:700'>–</td></tr>
+  </table>
+</div>
+
+<h2>🌍 Übersicht nach Liga</h2>
+<div class="section">
+  <table>
+    <tr><th>Liga</th><th>Picks</th><th>Trefferquote</th><th>ROI</th></tr>
+    <tr><td>🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</td><td style='color:#888'>1,917</td><td style='color:#fb923c;font-weight:700'>56.3% <div style="background:#fb923c;height:8px;width:67px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div></td><td style='color:#f85149;font-weight:700'>-4.6%</td></tr><tr><td>🇩🇪 Bundesliga</td><td style='color:#888'>1,512</td><td style='color:#fb923c;font-weight:700'>55.8% <div style="background:#fb923c;height:8px;width:66px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div></td><td style='color:#f85149;font-weight:700'>-4.7%</td></tr><tr><td>🇮🇹 Serie A</td><td style='color:#888'>1,920</td><td style='color:#fb923c;font-weight:700'>51.5% <div style="background:#fb923c;height:8px;width:61px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div></td><td style='color:#fb923c;font-weight:700'>-2.4%</td></tr><tr><td>🇪🇸 La Liga</td><td style='color:#888'>1,911</td><td style='color:#fb923c;font-weight:700'>51.6% <div style="background:#fb923c;height:8px;width:61px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div></td><td style='color:#fb923c;font-weight:700'>-4.0%</td></tr><tr><td>🇫🇷 Ligue 1</td><td style='color:#888'>1,512</td><td style='color:#fb923c;font-weight:700'>51.3% <div style="background:#fb923c;height:8px;width:61px;border-radius:4px;display:inline-block;vertical-align:middle;margin-left:8px"></div></td><td style='color:#f85149;font-weight:700'>-7.8%</td></tr>
+  </table>
+</div>
+
+<div class="note">
+  <strong>Methodik:</strong> Rolling Stats aus letzten 6 Spielen (Form) und 10 Spielen (Tore). 
+  Mindestens 6 Spiele Warmup pro Team vor Evaluierung. 
+  ROI = Flat-Staking mit Bet365/Pinnacle Closing Odds. 
+  Stake-Labels (Gold/Rot) und Elo <em>nicht</em> enthalten — testet Kern-Signale isoliert. 
+  Draws werden nur als Pick vorgeschlagen wenn Draw-Score der höchste ist.
+</div>
+</body></html>

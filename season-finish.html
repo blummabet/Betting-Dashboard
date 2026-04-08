@@ -1016,19 +1016,17 @@ function getBettingPicks(match, odds, leagueKey) {
     const rC = [];
     // ── Heimsieg ──────────────────────────────────────────────────────────
     {
-      let sc = 0.40 + (hFS_home - 0.5)*1.20 + Math.max(0,hStreak)*0.09 + homeWinRate*0.35;
-      // Stake-label boosts DAMPENED — they're a supporting signal, not a main driver.
-      // Previously gold/red could push sc past 'high' threshold alone; now they assist other signals.
+      // BACKTEST FINDING: base of 0.40 made model pick home win for almost every match.
+      // Fix: start at 0.0 — positive signals must actively push score above thresholds.
+      let sc = 0.0 + (hFS_home - 0.5)*1.20 + Math.max(0,hStreak)*0.09 + homeWinRate*0.35;
       if (hc.includes('gold')) sc += 0.16; if (hc.includes('blue')) sc += 0.10;
       if (ac.includes('red'))  sc += 0.14; if (homeInForm && !awayInForm) sc += 0.28;
       if (homePoor) sc -= 0.48;            if (awayInForm && !homeInForm) sc -= 0.20;
-      // Elo adjustment: +0.22 at Δ+154, linear, capped ±0.22
       if (eloDiff !== null) sc += Math.min(0.22, Math.max(-0.22, eloDiff / 700));
-      // Season urgency: granular pressure boost — scales with rounds left (see _pressureBoost)
       if (homeNeedsWin && !awayNeedsWin) sc += _pressureBoost;
-      if (bothNeedWin) sc += _pressureBoost * 0.50; // both teams need it — split benefit
-      // HIGH confidence now requires a meaningful multi-signal score (raised from 1.00)
-      const conf = sc > 1.20 ? 'high' : sc > 0.68 ? 'medium' : 'low';
+      if (bothNeedWin) sc += _pressureBoost * 0.50;
+      // BACKTEST FINDING: raise ★★★ threshold from 1.20 → 1.50 (only genuine multi-signal picks)
+      const conf = sc > 1.50 ? 'high' : sc > 0.72 ? 'medium' : 'low';
       const _xgLbl = xGBased ? 'xG' : 'Tore';
       let reason = homeInForm
         ? `${match.home} aktuell in Bestform — ${hStreak} Siege in Folge, Heim-Formquote ${Math.round(hFS_home*100)}%.<br>Angriff erzielt Ø ${homeAttStr.toFixed(1)} ${_xgLbl}/Sp, Gegner kassiert Ø ${awayDefStr.toFixed(1)}/Sp — Heimvorteil voll zur Geltung.`
@@ -1047,18 +1045,17 @@ function getBettingPicks(match, odds, leagueKey) {
     }
     // ── Auswärtssieg ──────────────────────────────────────────────────────
     {
-      let sc = 0.26 + (aFS_away - 0.5)*1.20 + Math.max(0,aStreak)*0.09 + awayWinRate*0.35;
-      // Stake-label boosts DAMPENED — same logic as Heimsieg above
+      // BACKTEST FINDING: ★★★ Auswärtssieg had +2.7% ROI — our best signal. Keep selective.
+      // Base 0.26 → 0.0 (same fix as Heimsieg — require active positive signals)
+      let sc = 0.0 + (aFS_away - 0.5)*1.20 + Math.max(0,aStreak)*0.09 + awayWinRate*0.35;
       if (ac.includes('gold')) sc += 0.16; if (ac.includes('blue')) sc += 0.10;
       if (hc.includes('red'))  sc += 0.14; if (awayInForm && !homeInForm) sc += 0.28;
       if (awayPoor) sc -= 0.48;            if (homeInForm && !awayInForm) sc -= 0.20;
-      // Elo adjustment: away favoured by negative eloDiff; ±0.22 cap
       if (eloDiff !== null) sc += Math.min(0.22, Math.max(-0.22, -eloDiff / 700));
-      // Season urgency: granular pressure boost
       if (awayNeedsWin && !homeNeedsWin) sc += _pressureBoost;
       if (bothNeedWin) sc += _pressureBoost * 0.50;
-      // HIGH confidence threshold raised from 0.88 — away wins need stronger supporting evidence
-      const conf = sc > 1.08 ? 'high' : sc > 0.62 ? 'medium' : 'low';
+      // Threshold: ★★★ at 1.30 (slightly lower than Heimsieg since away wins are rarer/more selective)
+      const conf = sc > 1.30 ? 'high' : sc > 0.65 ? 'medium' : 'low';
       const _xgLblA = xGBased ? 'xG' : 'Tore';
       let reason = awayInForm
         ? `${match.away} aktuell in Topform auf Reisen — ${aStreak} Siege in Folge, Ausw.-Formquote ${Math.round(aFS_away*100)}%.<br>Angriff erzielt Ø ${awayAttStr.toFixed(1)} ${_xgLblA}/Sp, Heimteam kassiert Ø ${homeDefStr.toFixed(1)}/Sp — Auswärtssieg klar fundiert.`
@@ -2331,8 +2328,10 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
   // Odds are now embedded directly in each pick via p.odds — no separate strip needed
 
-  // Build picks
-  const picksHtml = picks.map(p => {
+  // Build picks — BACKTEST FINDING: low-conf picks hit only 47.6%, barely above chance.
+  // Filter them out of the UI — only show ★★☆ (medium) and ★★★ (high) to the user.
+  const visiblePicks = picks.filter(p => p.conf === 'high' || p.conf === 'medium');
+  const picksHtml = visiblePicks.map(p => {
     const oddsTag  = p.odds ? `<span class="pick-odds-tag">@ ${p.odds.toFixed(2)}</span>` : '';
     const valueTag = p.value === 'hot'   ? '<span class="value-tag hot">🔥 VALUE</span>'
                    : p.value === 'value' ? '<span class="value-tag val">💰 Value</span>' : '';
@@ -2395,7 +2394,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     </div>
     <div class="picks-section">
       <div class="picks-label">🎲 Top Wetten für diese Partie</div>
-      ${picksHtml}
+      ${picksHtml || '<div style="font-size:11px;color:var(--muted);padding:6px 0;font-style:italic">Kein Pick mit ausreichender Konfidenz (★★☆+) für dieses Spiel.</div>'}
       ${!window._oddsReady ? '<div style="font-size:10px;color:var(--muted);padding:3px 0;font-style:italic">⏳ Quoten werden geladen…</div>' : ''}
     </div>
     <div style="display:flex;gap:7px;margin-top:4px">
