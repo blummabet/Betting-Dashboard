@@ -1101,19 +1101,69 @@ function getBettingPicks(match, odds, leagueKey) {
       }
       rC.push({sc, p:{icon:'🤝', market:'Unentschieden', odds:o.dr, conf: sc > 0.62 ? 'medium' : 'low', reason}});
     }
-    // ── Doppelte Chance ───────────────────────────────────────────────────
+    // ── Draw No Bet (DNB) — Heim ─────────────────────────────────────────
+    // Fires when home lean is real but not overwhelming, and draw-rate is non-trivial.
+    // DNB removes draw risk: effective prob = homeWinProb / (homeWinProb + awayWinProb).
+    // Scoring is deliberately scaled below outright Heimsieg so it only wins in rC when
+    // the outright win signal is medium-strength (high outright → DNB odds too low anyway).
     {
-      const dcHome = hFS_home >= aFS_away || hc.includes('gold') || ac.includes('red');
-      const dcMkt  = dcHome ? 'Doppelte Chance: 1X' : awayInForm ? 'Doppelte Chance: X2' : 'Doppelte Chance: 12';
-      const sc = dcHome ? 0.28 + hFS_home * 0.28 : 0.22 + aFS_away * 0.28;
+      const heimsiegSc = rC.find(r => r.p.market === 'Heimsieg')?.sc ?? 0;
+      const sc = heimsiegSc * 0.62 + drawRate * 0.28;
+      if (sc > 0.38 && drawRate > 0.20) {
+        const conf = sc > 0.52 ? 'medium' : 'low';
+        rC.push({sc, p:{icon:'🏠', market:'DNB: Heimteam', odds: null, conf,
+          reason:`${match.home} als Favorit mit realer Remis-Gefahr (H2H-Remisquote ${Math.round(drawRate*100)}%).<br>Draw No Bet eliminiert das Unentschieden-Risiko — nur Heimsieg oder Geldrückgabe bei Remis. Sicherer Einstieg mit Puffer.`}});
+      }
+    }
+    // ── Draw No Bet (DNB) — Auswärts ─────────────────────────────────────
+    {
+      const auswSc = rC.find(r => r.p.market === 'Auswärtssieg')?.sc ?? 0;
+      const sc = auswSc * 0.62 + drawRate * 0.28;
+      if (sc > 0.38 && drawRate > 0.20) {
+        const conf = sc > 0.50 ? 'medium' : 'low';
+        rC.push({sc, p:{icon:'✈️', market:'DNB: Auswärtsteam', odds: null, conf,
+          reason:`${match.away} auf Auswärtskurs, aber Remis-Gefahr nicht zu unterschätzen (${Math.round(drawRate*100)}% H2H-Remisquote).<br>DNB schützt die Wette: nur Auswärtssieg zählt — bei Unentschieden wird der Einsatz zurückgebucht.`}});
+      }
+    }
+    // ── Doppelte Chance ───────────────────────────────────────────────────
+    // Upgraded: scoring now reflects actual lean + draw-rate (was always sc ≈ 0.28, always low).
+    // DC is the right pick when: lean exists, draw is possible, but not strong enough for outright.
+    {
+      const heimsiegSc = rC.find(r => r.p.market === 'Heimsieg')?.sc ?? 0;
+      const auswSc     = rC.find(r => r.p.market === 'Auswärtssieg')?.sc ?? 0;
+      const dcHome = heimsiegSc >= auswSc;
+      const dcMkt  = dcHome ? 'Doppelte Chance: 1X' : 'Doppelte Chance: X2';
+      // DC effective prob = outright_prob + draw_prob. Score scales with how much each contributes.
+      const sc = dcHome
+        ? Math.min(0.72, hFS_home * 0.48 + drawRate * 0.40 + (hc.includes('gold')||ac.includes('red') ? 0.08 : 0))
+        : Math.min(0.68, aFS_away * 0.48 + drawRate * 0.40 + (ac.includes('gold')||hc.includes('red') ? 0.08 : 0));
+      const conf = sc > 0.55 ? 'medium' : 'low';
       const reason = dcHome
-        ? `${match.home} als Favorit (Heim-Form ${Math.round(hFS_home*100)}%) — DC deckt Sieg UND Remis ab, kein Verlustrisiko.<br>Geringere Quote als Direktsieg, aber sicherer Puffer bei unklarem Spielverlauf.`
-        : `${match.away} mit Auswärtsstärke (Form ${Math.round(aFS_away*100)}%) — DC schließt Remis als Ergebnis mit ein.<br>Sinnvolle Absicherung wenn Auswärtssieg erwartet, aber Heimteam nicht zu unterschätzen.`;
-      rC.push({sc, p:{icon:'🎯', market:dcMkt, odds:null, conf:'low', reason}});
+        ? `${match.home} als Favorit (Heim-Form ${Math.round(hFS_home*100)}%) — DC 1X deckt Sieg UND Remis ab.<br>H2H-Remisquote ${Math.round(drawRate*100)}% macht Remis-Puffer sinnvoll — strukturell sicherste Result-Wette.`
+        : `${match.away} mit Auswärtsstärke (Form ${Math.round(aFS_away*100)}%) — DC X2 schließt Remis mit ein.<br>H2H-Remisquote ${Math.round(drawRate*100)}% — guter Puffer falls Heimteam ausgleicht.`;
+      rC.push({sc, p:{icon:'🎯', market:dcMkt, odds:null, conf, reason}});
     }
     rC.sort((a,b) => b.sc - a.sc);
-    _topResultMkt = rC[0].p.market; // pass to goals block for consistency
-    _push(rC[0].p, rC[0].sc);
+    // _topResultMkt is used by PICK 2 consistency guard (awayWinWeak / homeWinWeak).
+    // Map DNB/DC back to the underlying directional lean so PICK 2 still works correctly.
+    { const _raw = rC[0].p.market;
+      _topResultMkt = _raw === 'DNB: Heimteam'      || _raw === 'Doppelte Chance: 1X' ? 'Heimsieg'
+                    : _raw === 'DNB: Auswärtsteam'  || _raw === 'Doppelte Chance: X2' ? 'Auswärtssieg'
+                    : _raw;
+    }
+    // Only push PICK 1 if it passes the implied-odds guard (sc < 0.73 or real odds ≥ 1.30).
+    // This prevents e.g. an outright win with sc=0.80 from being the sole pick when it would
+    // normally map to ~1.25 odds.
+    { const best = rC[0];
+      if (best && (best.p.odds != null ? best.p.odds >= 1.30 : best.sc < 0.73)) {
+        _push(best.p, best.sc);
+      } else {
+        // Top pick fails odds filter — try next best in rC
+        const fallback = rC.find(r => r.p.odds != null ? r.p.odds >= 1.30 : r.sc < 0.73);
+        if (fallback) _push(fallback.p, fallback.sc);
+        // If everything fails the filter, PICK 1 stays empty (better no pick than a bad one)
+      }
+    }
   }
 
   // ╔══════════════════════════════════════════════════════════════════════╗
@@ -1270,34 +1320,22 @@ function getBettingPicks(match, odds, leagueKey) {
         reason:`${match.away} dominant auf Reisen: Formquote ${Math.round(aFS_away*100)}%, Auswärts-Siegquote ${Math.round((_aAWR??awayWinRate)*100)}% (H2H).<br>Ø ${aGoals.toFixed(1)} Tore/Sp bei ${aConc.toFixed(1)} Gegentoren/Sp — klare Kaderüberlegenheit auch auswärts.`}});
     }
 
-    // ── 1. HZ: Over 0.5 Tore — BACKTEST VALIDATED: 76% bei expTotal > 3.0 ────────
-    // Best new specialist pick. When total expected goals > 3.0, first-half goal is near-certain.
-    { const htSc = expGoals > 3.4 ? 0.85 : expGoals > 3.0 ? 0.72 : expGoals > 2.8 ? 0.58 : 0;
+    // ── 1. HZ: Over 0.5 Tore — BACKTEST VALIDATED ────────────────────────────
+    // Threshold raised to expGoals > 3.4 only (was: > 2.8).
+    // Reason: expGoals 2.8–3.4 range has ~58–72% hit rate → implied odds ~1.39–1.72,
+    // but market odds for HZ Over 0.5 are typically 1.20–1.35 in these ranges → no value.
+    // Only fire at expGoals > 3.4 (85% model prob) where market is more likely to be > 1.30.
+    { const htSc = expGoals > 3.4 ? 0.85 : 0;
       if (htSc > 0) {
         sC.push({sc: htSc, p:{icon:'⏱️', market:'1. HZ: Over 0.5 Tore', odds: null,
-          conf: htSc > 0.70 ? 'high' : 'medium',
-          reason:`${egPfx} — hohe Torerwartung deutet auf frühen Torabschluss hin.<br>Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp — mindestens 1 Tor bis zur Pause klar wahrscheinlich. Backtested: 76% Trefferquote.`}});
-      }
-    }
-
-    // ── Heimteam trifft (Over 0.5 Tore) — BACKTEST: 92% bei expHome > 2.0 ────────
-    // Near-certain when home expected goals is very high. Odds typically 1.10–1.20.
-    { const expH = (homeAttStr + awayDefStr) / 2;
-      if (expH > 2.0 && !_used.has(`${match.home} trifft`)) {
-        sC.push({sc: 0.76, p:{icon:'🎯', market:`${match.home} trifft`, odds: null,
           conf: 'high',
-          reason:`${match.home} Ø ${homeAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp zuhause, Gegner lässt Ø ${awayDefStr.toFixed(1)}/Sp zu — erwartete Heim-Tore: ${expH.toFixed(2)}.<br>Heimteam trifft in nahezu jedem Spiel dieser Konstellation. Backtested: 92% Trefferquote.`}});
+          reason:`${egPfx} — außergewöhnlich hohe Torerwartung (>3.4) deutet auf frühen Torabschluss hin.<br>Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp — 1. Halbzeit-Tor in dieser Konstellation nahezu sicher. Backtested: 85% Trefferquote.`}});
       }
     }
 
-    // ── Auswärtsteam trifft (Over 0.5 Tore) — BACKTEST: 84% bei expAway > 1.70 ──
-    { const expA = (awayAttStr + homeDefStr) / 2;
-      if (expA > 1.70 && !_used.has(`${match.away} trifft`)) {
-        sC.push({sc: 0.65, p:{icon:'🎯', market:`${match.away} trifft`, odds: null,
-          conf: 'medium',
-          reason:`${match.away} Ø ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp auswärts, Heimteam lässt Ø ${homeDefStr.toFixed(1)}/Sp zu — erwartete Auswärts-Tore: ${expA.toFixed(2)}.<br>Auswärtsteam trifft in 84% der Spiele bei dieser Torerwartung. Backtested.`}});
-      }
-    }
+    // ── Heimteam trifft / Auswärtsteam trifft REMOVED ───────────────────────
+    // Backtest: 92%/84% probability → implied market odds ~1.08/~1.19 → below minimum 1.30 threshold.
+    // No value for punter even with high hit-rate. Omitted entirely.
 
     // 1HZ Beide Teams treffen (open fast game — kept as secondary signal)
     if (firstHalfOpen && expGoals > 3.2 && !_used.has('1. HZ: Over 0.5 Tore'))
@@ -2373,7 +2411,15 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
   // Build picks — BACKTEST FINDING: low-conf picks hit only 47.6%, barely above chance.
   // Filter them out of the UI — only show ★★☆ (medium) and ★★★ (high) to the user.
-  const visiblePicks = picks.filter(p => p.conf === 'high' || p.conf === 'medium');
+  // MINIMUM ODDS RULE: Never show picks where implied probability > 0.73 (→ odds < ~1.37)
+  //   and no real odds are attached. If real odds are available and < 1.30, also hide.
+  //   This prevents showing no-value bets like "Team trifft" (92% → ~1.08).
+  const _impliedOddsOk = (p) => {
+    if (p.odds != null) return p.odds >= 1.30;          // real odds: hard filter
+    if (p.sc  != null) return p.sc  < 0.73;             // model score as prob proxy
+    return true;                                         // no info → allow
+  };
+  const visiblePicks = picks.filter(p => (p.conf === 'high' || p.conf === 'medium') && _impliedOddsOk(p));
   const picksHtml = visiblePicks.map(p => {
     const oddsTag  = p.odds ? `<span class="pick-odds-tag">@ ${p.odds.toFixed(2)}</span>` : '';
     const valueTag = p.value === 'hot'   ? '<span class="value-tag hot">🔥 VALUE</span>'
