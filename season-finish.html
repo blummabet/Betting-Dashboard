@@ -975,7 +975,8 @@ function getBettingPicks(match, odds, leagueKey) {
   // 3 picks selected: 1 result, 1 goals/tempo, 1 specialist
   const picks = [];
   const _used  = new Set();
-  const _push = p => { if (!p || _used.has(p.market)) return false; _used.add(p.market); picks.push(p); return true; };
+  // _push(p, sc) — attach sc to pick so infographic & results tracking can use it
+  const _push = (p, sc) => { if (!p || _used.has(p.market)) return false; _used.add(p.market); if (sc !== undefined) p.sc = sc; picks.push(p); return true; };
   let _topResultMkt = ''; // hoisted: set by PICK 1, read by PICK 2 for consistency guard
 
   // ╔══════════════════════════════════════════════════════════════════════╗
@@ -1081,7 +1082,7 @@ function getBettingPicks(match, odds, leagueKey) {
     }
     rC.sort((a,b) => b.sc - a.sc);
     _topResultMkt = rC[0].p.market; // pass to goals block for consistency
-    _push(rC[0].p);
+    _push(rC[0].p, rC[0].sc);
   }
 
   // ╔══════════════════════════════════════════════════════════════════════╗
@@ -1178,7 +1179,7 @@ function getBettingPicks(match, odds, leagueKey) {
         reason:`${egPfx} — taktisches Abtasten in Halbzeit 1 erwartet.<br>Beide Teams setzen zu Spielbeginn auf Absicherung — torloser Start historisch sehr häufig in dieser Konstellation.`}}); }
 
     gC.sort((a,b) => b.sc - a.sc);
-    for (const c of gC) { if (_push(c.p)) break; }
+    for (const c of gC) { if (_push(c.p, c.sc)) break; }
   }
 
   // ╔══════════════════════════════════════════════════════════════════════╗
@@ -1240,7 +1241,7 @@ function getBettingPicks(match, odds, leagueKey) {
         reason:'Taktische Absicherung für den Favoriten — DC deckt Sieg UND Remis ab.<br>Sinnvolle Option bei unklaren Ergebnis-Tendenzen — Risikominimierung ohne großen Quotenverlust.'}}); }
 
     sC.sort((a,b) => b.sc - a.sc);
-    for (const c of sC) { if (_push(c.p)) break; }
+    for (const c of sC) { if (_push(c.p, c.sc)) break; }
   }
   // ── Value estimation ─────────────────────────────────────────────────────
   // Compare our model probability (derived from signals) vs Pinnacle implied prob.
@@ -1575,7 +1576,10 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   const score  = computeMatchScore(match, leagueKey);
   const angle  = getBettingAngle(match);
   const odds   = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
-  const picks  = getBettingPicks(match, odds, leagueKey).slice(0, 3);
+  // Only show high/medium confidence picks in the infographic — low conf = not worth sharing
+  const picks  = getBettingPicks(match, odds, leagueKey)
+    .filter(p => p.conf === 'high' || p.conf === 'medium')
+    .slice(0, 3);
   const hLabels = match.homeStake?.labels || [];
   const aLabels = match.awayStake?.labels || [];
 
@@ -1745,7 +1749,15 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
     const p   = picks[i];
     const isHero = i===0;
     const confCol = {high:'#3fb950', medium:'#e3b341', low:'#8b949e'}[p.conf]||'#8b949e';
-    const confPct = Math.round((p.sc||0.5)*100);
+    // sc is now attached to picks; normalize to a meaningful 0–100% display
+    // Heimsieg sc range: ~0.6–1.8, goals/special sc range: ~0.3–0.95
+    // Map conf label to realistic display % rather than raw sc
+    const _scRaw = p.sc;
+    const confPct = p.conf === 'high'
+      ? (_scRaw ? Math.min(92, Math.round(55 + (_scRaw / 2.0) * 40)) : 78)
+      : p.conf === 'medium'
+      ? (_scRaw ? Math.min(74, Math.round(48 + (_scRaw / 1.2) * 22)) : 63)
+      : 52;
     const oddsStr = p.odds ? ` @ ${p.odds.toFixed(2)}` : '';
     const reasonRaw = (p.reason||'').replace(/<br>/gi,' · ').replace(/<[^>]+>/g,'');
 
