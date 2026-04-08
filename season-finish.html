@@ -396,6 +396,17 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .conf-medium{background:#1a1500;color:var(--yellow);}
 .conf-low{background:#0a1220;color:var(--blue);}
 
+/* PRESSURE STRIP — shown when a team NEEDS a win in the final rounds */
+.pressure-strip{display:flex;align-items:flex-start;gap:9px;padding:9px 12px;border-radius:8px;margin-bottom:10px;}
+.pressure-strip.extreme{background:rgba(248,81,73,.18);border:1px solid rgba(248,81,73,.50);}
+.pressure-strip.critical{background:rgba(248,81,73,.12);border:1px solid rgba(248,81,73,.35);}
+.pressure-strip.high{background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.35);}
+.pressure-strip.medium{background:rgba(240,192,64,.10);border:1px solid rgba(240,192,64,.25);}
+.ps-icon{font-size:18px;flex-shrink:0;line-height:1;}
+.ps-content{display:flex;flex-direction:column;gap:3px;}
+.ps-rounds{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text);}
+.ps-team{font-size:11px;color:var(--muted);font-weight:500;}
+
 /* VALUE BADGE */
 .value-tag{display:inline-block;font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle;letter-spacing:.3px;}
 .value-tag.hot{background:#2d1200;color:#ff8c00;border:1px solid #7d3800;}
@@ -913,13 +924,23 @@ function getBettingPicks(match, odds, leagueKey) {
   const _rl           = match.roundsLeft ?? 99;
   const urgencyHigh   = _rl <= 3;   // 3 or fewer rounds: critical, no margin left
   const urgencyMed    = _rl <= 6;   // 6 or fewer: decisive phase, pressure elevated
-  // "Must-win" flag: team has a stake AND urgency is present → a draw is a bad result for them
-  const homeNeedsWin  = urgencyMed && (hc.includes('red') || hc.includes('gold'));
-  const awayNeedsWin  = urgencyMed && (ac.includes('red') || ac.includes('gold'));
+  // Granular pressure boost — scales continuously with rounds left.
+  // A team needing a win at round 1 faces catastrophically higher stakes than at round 6.
+  // 1 round → +0.28, 2 → +0.22, 3 → +0.16, 4 → +0.11, 5 → +0.08, 6 → +0.06, 7+ → 0
+  const _pressureBoost = _rl <= 1 ? 0.28 : _rl <= 2 ? 0.22 : _rl <= 3 ? 0.16
+                       : _rl <= 4 ? 0.11 : _rl <= 5 ? 0.08 : _rl <= 6 ? 0.06 : 0;
+  // "Must-win" flag: ANY team with a stake (gold/red/blue/orange/yellow/purple) has pressure
+  // in the decisive phase — not just relegation or title teams.
+  const homeHasStake  = !!(hc && hc.trim());
+  const awayHasStake  = !!(ac && ac.trim());
+  const homeNeedsWin  = urgencyMed && homeHasStake;
+  const awayNeedsWin  = urgencyMed && awayHasStake;
   const bothNeedWin   = homeNeedsWin && awayNeedsWin;
-  // Urgency label for reason texts
-  const urgencyLabel  = urgencyHigh ? `⚠️ Nur noch ${_rl} Runde${_rl === 1 ? '' : 'n'} — jeder Punkt zählt`
-                      : urgencyMed  ? `🔥 ${_rl} Runden verbleibend — entscheidende Phase`
+  // Urgency label for pick reason texts — graduated language based on severity
+  const urgencyLabel  = _rl <= 1 ? `🚨 LETZTE RUNDE — dieser Sieg kann alles entscheiden`
+                      : _rl <= 2 ? `🔥 Nur noch ${_rl} Runden — kein Spielraum mehr`
+                      : _rl <= 3 ? `⚠️ Noch ${_rl} Runden — jetzt wird Meister und Absteiger entschieden`
+                      : urgencyMed ? `📍 ${_rl} Runden verbleibend — entscheidende Phase`
                       : null;
 
   // ── Derived ───────────────────────────────────────────
@@ -988,15 +1009,18 @@ function getBettingPicks(match, odds, leagueKey) {
     // ── Heimsieg ──────────────────────────────────────────────────────────
     {
       let sc = 0.40 + (hFS_home - 0.5)*1.20 + Math.max(0,hStreak)*0.09 + homeWinRate*0.35;
-      if (hc.includes('gold')) sc += 0.42; if (hc.includes('blue')) sc += 0.18;
-      if (ac.includes('red'))  sc += 0.40; if (homeInForm && !awayInForm) sc += 0.28;
+      // Stake-label boosts DAMPENED — they're a supporting signal, not a main driver.
+      // Previously gold/red could push sc past 'high' threshold alone; now they assist other signals.
+      if (hc.includes('gold')) sc += 0.16; if (hc.includes('blue')) sc += 0.10;
+      if (ac.includes('red'))  sc += 0.14; if (homeInForm && !awayInForm) sc += 0.28;
       if (homePoor) sc -= 0.48;            if (awayInForm && !homeInForm) sc -= 0.20;
       // Elo adjustment: +0.22 at Δ+154, linear, capped ±0.22
       if (eloDiff !== null) sc += Math.min(0.22, Math.max(-0.22, eloDiff / 700));
-      // Season urgency: home team must win → result pick gets confidence boost
-      if (homeNeedsWin && !awayNeedsWin) sc += urgencyHigh ? 0.20 : 0.11;
-      if (bothNeedWin) sc += urgencyHigh ? 0.10 : 0.06; // both need it — split benefit
-      const conf = sc > 1.00 ? 'high' : sc > 0.62 ? 'medium' : 'low';
+      // Season urgency: granular pressure boost — scales with rounds left (see _pressureBoost)
+      if (homeNeedsWin && !awayNeedsWin) sc += _pressureBoost;
+      if (bothNeedWin) sc += _pressureBoost * 0.50; // both teams need it — split benefit
+      // HIGH confidence now requires a meaningful multi-signal score (raised from 1.00)
+      const conf = sc > 1.20 ? 'high' : sc > 0.68 ? 'medium' : 'low';
       const _xgLbl = xGBased ? 'xG' : 'Tore';
       let reason = homeInForm
         ? `${match.home} aktuell in Bestform — ${hStreak} Siege in Folge, Heim-Formquote ${Math.round(hFS_home*100)}%.<br>Angriff erzielt Ø ${homeAttStr.toFixed(1)} ${_xgLbl}/Sp, Gegner kassiert Ø ${awayDefStr.toFixed(1)}/Sp — Heimvorteil voll zur Geltung.`
@@ -1016,15 +1040,17 @@ function getBettingPicks(match, odds, leagueKey) {
     // ── Auswärtssieg ──────────────────────────────────────────────────────
     {
       let sc = 0.26 + (aFS_away - 0.5)*1.20 + Math.max(0,aStreak)*0.09 + awayWinRate*0.35;
-      if (ac.includes('gold')) sc += 0.42; if (ac.includes('blue')) sc += 0.18;
-      if (hc.includes('red'))  sc += 0.40; if (awayInForm && !homeInForm) sc += 0.28;
+      // Stake-label boosts DAMPENED — same logic as Heimsieg above
+      if (ac.includes('gold')) sc += 0.16; if (ac.includes('blue')) sc += 0.10;
+      if (hc.includes('red'))  sc += 0.14; if (awayInForm && !homeInForm) sc += 0.28;
       if (awayPoor) sc -= 0.48;            if (homeInForm && !awayInForm) sc -= 0.20;
       // Elo adjustment: away favoured by negative eloDiff; ±0.22 cap
       if (eloDiff !== null) sc += Math.min(0.22, Math.max(-0.22, -eloDiff / 700));
-      // Season urgency: away team must win → boost away pick
-      if (awayNeedsWin && !homeNeedsWin) sc += urgencyHigh ? 0.20 : 0.11;
-      if (bothNeedWin) sc += urgencyHigh ? 0.10 : 0.06;
-      const conf = sc > 0.88 ? 'high' : sc > 0.55 ? 'medium' : 'low';
+      // Season urgency: granular pressure boost
+      if (awayNeedsWin && !homeNeedsWin) sc += _pressureBoost;
+      if (bothNeedWin) sc += _pressureBoost * 0.50;
+      // HIGH confidence threshold raised from 0.88 — away wins need stronger supporting evidence
+      const conf = sc > 1.08 ? 'high' : sc > 0.62 ? 'medium' : 'low';
       const _xgLblA = xGBased ? 'xG' : 'Tore';
       let reason = awayInForm
         ? `${match.away} aktuell in Topform auf Reisen — ${aStreak} Siege in Folge, Ausw.-Formquote ${Math.round(aFS_away*100)}%.<br>Angriff erzielt Ø ${awayAttStr.toFixed(1)} ${_xgLblA}/Sp, Heimteam kassiert Ø ${homeDefStr.toFixed(1)}/Sp — Auswärtssieg klar fundiert.`
@@ -1052,8 +1078,8 @@ function getBettingPicks(match, odds, leagueKey) {
       // Exception: bothGold in a true Titelduell where a draw might still suit the leader.
       if (homeNeedsWin || awayNeedsWin) {
         const drawSuppress = bothNeedWin
-          ? (urgencyHigh ? 0.30 : 0.18)   // both teams must win: Remis hilft keinem
-          : (urgencyHigh ? 0.20 : 0.12);  // one team must win: still bad for them
+          ? _pressureBoost * 1.10   // both teams must win: Remis hilft keinem
+          : _pressureBoost * 0.75;  // one team must win: still bad for them
         // Exception: title leader might accept a draw to protect lead → only partially suppress
         const bothGoldLeader = bothGold && !urgencyHigh;
         if (!bothGoldLeader) sc = Math.max(0, sc - drawSuppress);
@@ -1259,19 +1285,19 @@ function getBettingPicks(match, odds, leagueKey) {
         if (xGBased) mp = Math.min(0.82, mp + Math.max(0, homeAttStr - 1.2) * 0.08 - Math.max(0, awayAttStr - 1.4) * 0.06);
         // Elo boost: clear home advantage confirmed by rating gap
         if (eloHomeFav) mp = Math.min(0.82, mp + 0.04);
-        // Urgency: home team must win → increased effort/risk-taking raises win probability slightly
-        if (homeNeedsWin) mp = Math.min(0.82, mp + (urgencyHigh ? 0.05 : 0.03));
+        // Urgency: home team must win → increased effort/risk-taking raises win probability
+        if (homeNeedsWin) mp = Math.min(0.82, mp + _pressureBoost * 0.18);
         break;
       case 'Auswärtssieg':
         mp = Math.min(0.76, 0.26 + (aFS_away - 0.5) * 0.65 + Math.max(0, aStreak) * 0.03 + awayWinRate * 0.16);
         if (xGBased) mp = Math.min(0.76, mp + Math.max(0, awayAttStr - 1.1) * 0.08 - Math.max(0, homeAttStr - 1.4) * 0.06);
         if (eloAwayFav) mp = Math.min(0.76, mp + 0.04);
-        if (awayNeedsWin) mp = Math.min(0.76, mp + (urgencyHigh ? 0.05 : 0.03));
+        if (awayNeedsWin) mp = Math.min(0.76, mp + _pressureBoost * 0.18);
         break;
       case 'Unentschieden':
         mp = Math.min(0.40, drawRate * 0.72 + 0.10);
-        // Draw probability down when teams must win
-        if (homeNeedsWin || awayNeedsWin) mp = Math.max(0.05, mp - (urgencyHigh ? 0.08 : 0.05));
+        // Draw probability down when teams must win — scaled by pressure
+        if (homeNeedsWin || awayNeedsWin) mp = Math.max(0.05, mp - _pressureBoost * 0.30);
         break;
       case 'Over 2.5 Tore':
         mp = expGoals > 3.2 ? 0.72 : expGoals > 2.8 ? 0.60 : expGoals > 2.4 ? 0.48 : 0.36;
@@ -2273,6 +2299,18 @@ function buildKombiHtml(matchList) {
   </div>`;
 }
 
+// Returns a short "why under pressure" label for a team based on their stake class
+function getPressureLabel(stakeClass, teamName) {
+  if (!stakeClass) return '';
+  if (stakeClass.includes('red'))    return `${teamName} kämpft gegen den Abstieg`;
+  if (stakeClass.includes('gold'))   return `${teamName} kämpft um den Titel`;
+  if (stakeClass.includes('blue'))   return `${teamName} kämpft um die Champions League`;
+  if (stakeClass.includes('orange')) return `${teamName} kämpft um die Europa League`;
+  if (stakeClass.includes('yellow')) return `${teamName} kämpft um Europa`;
+  if (stakeClass.includes('purple')) return `${teamName} kämpft um die Conference League`;
+  return '';
+}
+
 function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   const angle = getBettingAngle(match);
   const ct = cardType(match);
@@ -2303,6 +2341,30 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   // Telegram share payload (JSON-encoded match data)
   const shareData = encodeURIComponent(JSON.stringify(match)).replace(/'/g,'%27');
 
+  // ── Pressure banner ───────────────────────────────────────────────────
+  // Shown when ≥1 team has a stake AND there are ≤6 rounds left.
+  // Intensity and language scale with how close to the end of season we are.
+  const _rlC = match.roundsLeft ?? 99;
+  const _hSC = match.homeStake || '';
+  const _aSC = match.awayStake || '';
+  const _anyStake = _hSC || _aSC;
+  let pressureHtml = '';
+  if (_rlC <= 6 && _anyStake) {
+    const _pInt   = _rlC <= 1 ? 'extreme' : _rlC <= 2 ? 'critical' : _rlC <= 3 ? 'high' : 'medium';
+    const _pIcon  = _rlC <= 1 ? '🚨' : _rlC <= 2 ? '🔥' : _rlC <= 3 ? '⚠️' : '📍';
+    const _pRounds = _rlC <= 1 ? 'LETZTE RUNDE DER SAISON' : `NOCH ${_rlC} RUNDEN`;
+    const _hLabel = getPressureLabel(_hSC, match.home);
+    const _aLabel = getPressureLabel(_aSC, match.away);
+    pressureHtml = `<div class="pressure-strip ${_pInt}">
+      <span class="ps-icon">${_pIcon}</span>
+      <div class="ps-content">
+        <span class="ps-rounds">${_pRounds}</span>
+        ${_hLabel ? `<span class="ps-team">${_hLabel}</span>` : ''}
+        ${_aLabel ? `<span class="ps-team">${_aLabel}</span>` : ''}
+      </div>
+    </div>`;
+  }
+
   return `
   <div class="stake-card ${ct}">
     <div class="score-badge ${scoreClass(sc)}"><span class="sb-val">${sc}</span><span class="sb-sub">/12</span></div>
@@ -2311,6 +2373,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       <div class="card-date">📅 ${match.date}${match.time ? ' · ' + match.time : ''}</div>
       <div class="card-match">${match.home} vs ${match.away}</div>
     </div>
+    ${pressureHtml}
     <div class="teams-stakes">
       ${renderStakeRow(match.home, match.homeStake, match.homeForm, leagueKey)}
       ${renderStakeRow(match.away, match.awayStake, match.awayForm, leagueKey)}
