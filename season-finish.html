@@ -632,7 +632,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <h4>🃏 Kartenfarben &amp; Wettvertrauen</h4>
       <div class="legend-row">
         <div class="legend-badge" style="border-left:3px solid var(--red);background:#200a0a;color:var(--red)">🔴 Rot</div>
-        <div class="legend-desc"><strong>Abstiegskampf</strong> — beide Relegationszone. Empfehlung: Over 2.5, beide treffen, viele Karten</div>
+        <div class="legend-desc"><strong>Abstiegskampf</strong> — beide in Relegationszone. Empfehlung: Over 2.5, beide treffen, viele Karten</div>
       </div>
       <div class="legend-row">
         <div class="legend-badge" style="border-left:3px solid var(--gold);background:#1a1200;color:var(--gold)">🏆 Gold</div>
@@ -656,7 +656,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <span class="pick-conf conf-medium">★★☆</span>
           <span class="pick-conf conf-low">★☆☆</span>
         </div>
-        <div class="legend-desc" style="margin-left:8px">Wettvertrauen: Hoch / Mittel / Niedrig — basierend auf Situations-Klarheit &amp; historischen Mustern</div>
+        <div class="legend-desc" style="margin-left:8px"><strong>★★★ Hoch</strong> — mehrere Signale gleichzeitig bestätigt: Form + Elo + H2H + Druck. Selten, aber aussagekräftig.<br><strong>★★☆ Mittel</strong> — 1–2 klare Signale, Kontext stützt.<br><strong>★☆☆ Niedrig</strong> — schwaches Signal, nur zur Info.</div>
+      </div>
+      <div class="legend-row" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+        <div style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">
+          <div class="pressure-strip extreme" style="padding:3px 7px;margin:0;font-size:10px">🚨</div>
+          <div class="pressure-strip high" style="padding:3px 7px;margin:0;font-size:10px">⚠️</div>
+        </div>
+        <div class="legend-desc" style="margin-left:8px"><strong>Saison-Druck Banner</strong> — erscheint wenn ≤6 Runden verbleiben &amp; Team hat einen Stake.<br>🚨 Letzte Runde · 🔥 2 Runden · ⚠️ 3 Runden · 📍 4–6 Runden. Druck-Boost skaliert mit Runden — je weniger, desto stärker die Gewichtung.</div>
       </div>
     </div>
 
@@ -931,8 +938,9 @@ function getBettingPicks(match, odds, leagueKey) {
                        : _rl <= 4 ? 0.11 : _rl <= 5 ? 0.08 : _rl <= 6 ? 0.06 : 0;
   // "Must-win" flag: ANY team with a stake (gold/red/blue/orange/yellow/purple) has pressure
   // in the decisive phase — not just relegation or title teams.
-  const homeHasStake  = !!(hc && hc.trim());
-  const awayHasStake  = !!(ac && ac.trim());
+  // hc/ac are arrays like ['red'] or ['gold','blue'] — use .length
+  const homeHasStake  = hc.length > 0;
+  const awayHasStake  = ac.length > 0;
   const homeNeedsWin  = urgencyMed && homeHasStake;
   const awayNeedsWin  = urgencyMed && awayHasStake;
   const bothNeedWin   = homeNeedsWin && awayNeedsWin;
@@ -2299,15 +2307,17 @@ function buildKombiHtml(matchList) {
   </div>`;
 }
 
-// Returns a short "why under pressure" label for a team based on their stake class
-function getPressureLabel(stakeClass, teamName) {
-  if (!stakeClass) return '';
-  if (stakeClass.includes('red'))    return `${teamName} kämpft gegen den Abstieg`;
-  if (stakeClass.includes('gold'))   return `${teamName} kämpft um den Titel`;
-  if (stakeClass.includes('blue'))   return `${teamName} kämpft um die Champions League`;
-  if (stakeClass.includes('orange')) return `${teamName} kämpft um die Europa League`;
-  if (stakeClass.includes('yellow')) return `${teamName} kämpft um Europa`;
-  if (stakeClass.includes('purple')) return `${teamName} kämpft um die Conference League`;
+// Returns a short "why under pressure" label for a team.
+// stakeObj is the full stake object: {score, labels:[{l, c}]} or null.
+function getPressureLabel(stakeObj, teamName) {
+  if (!stakeObj || !stakeObj.labels || !stakeObj.labels.length) return '';
+  const colors = stakeObj.labels.map(l => l.c);
+  if (colors.includes('red'))    return `${teamName} kämpft gegen den Abstieg`;
+  if (colors.includes('gold'))   return `${teamName} kämpft um den Titel`;
+  if (colors.includes('blue'))   return `${teamName} kämpft um die Champions League`;
+  if (colors.includes('orange')) return `${teamName} kämpft um die Europa League`;
+  if (colors.includes('yellow')) return `${teamName} kämpft um Europa`;
+  if (colors.includes('purple')) return `${teamName} kämpft um die Conference League`;
   return '';
 }
 
@@ -2345,9 +2355,9 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   // Shown when ≥1 team has a stake AND there are ≤6 rounds left.
   // Intensity and language scale with how close to the end of season we are.
   const _rlC = match.roundsLeft ?? 99;
-  const _hSC = match.homeStake || '';
-  const _aSC = match.awayStake || '';
-  const _anyStake = _hSC || _aSC;
+  const _hSC = match.homeStake || null;   // full stake object {score, labels:[]} or null
+  const _aSC = match.awayStake || null;
+  const _anyStake = (_hSC?.labels?.length > 0) || (_aSC?.labels?.length > 0);
   let pressureHtml = '';
   if (_rlC <= 6 && _anyStake) {
     const _pInt   = _rlC <= 1 ? 'extreme' : _rlC <= 2 ? 'critical' : _rlC <= 3 ? 'high' : 'medium';
