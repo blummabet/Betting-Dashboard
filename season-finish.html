@@ -33,6 +33,49 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .res-badge.pending{background:rgba(139,148,158,.1);color:#8b949e;border:1px solid rgba(139,148,158,.2);}
 .res-badge.void{background:rgba(227,179,65,.1);color:#e3b341;border:1px solid rgba(227,179,65,.25);}
 
+/* HEART TAB */
+.heart-page{max-width:960px;margin:0 auto;padding:28px 16px 80px;}
+.heart-hero{background:linear-gradient(135deg,rgba(0,212,161,.08),rgba(88,166,255,.06));border:1px solid rgba(0,212,161,.20);border-radius:16px;padding:32px 36px;margin-bottom:32px;text-align:center;}
+.heart-hero h1{font-size:28px;font-weight:900;margin-bottom:8px;background:linear-gradient(90deg,var(--accent),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.heart-hero p{color:var(--muted);font-size:15px;line-height:1.6;max-width:620px;margin:0 auto;}
+.heart-section{margin-bottom:28px;}
+.heart-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.heart-section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.heart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;}
+.heart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;}
+.heart-card.accent{border-color:rgba(0,212,161,.30);background:rgba(0,212,161,.04);}
+.heart-card.pressure{border-color:rgba(248,81,73,.35);background:rgba(248,81,73,.04);}
+.heart-card.gold-c{border-color:rgba(240,192,64,.30);background:rgba(240,192,64,.04);}
+.heart-card h3{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.heart-card p,.heart-card li{font-size:13px;color:var(--muted);line-height:1.6;}
+.heart-card ul{padding-left:16px;margin-top:6px;}
+.heart-card li{margin-bottom:4px;}
+.heart-card li strong{color:var(--text);}
+.heart-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;}
+.heart-table th{padding:8px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);}
+.heart-table td{padding:9px 12px;border-bottom:1px solid rgba(48,54,61,.6);color:var(--text);vertical-align:top;}
+.heart-table tr:last-child td{border-bottom:none;}
+.heart-table td:first-child{color:var(--muted);}
+.hbadge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px;margin-right:4px;}
+.hbadge.green{background:rgba(63,185,80,.15);color:#3fb950;border:1px solid rgba(63,185,80,.3);}
+.hbadge.yellow{background:rgba(227,179,65,.12);color:#e3b341;border:1px solid rgba(227,179,65,.3);}
+.hbadge.red{background:rgba(248,81,73,.12);color:#f85149;border:1px solid rgba(248,81,73,.3);}
+.hbadge.blue{background:rgba(88,166,255,.12);color:#58a6ff;border:1px solid rgba(88,166,255,.3);}
+.hbadge.muted{background:rgba(139,148,158,.1);color:var(--muted);border:1px solid var(--border);}
+.pressure-flow{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.pf-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:8px;background:var(--card2);border:1px solid var(--border);}
+.pf-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.pf-label{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.pf-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.pf-row.extreme{border-color:rgba(248,81,73,.40);background:rgba(248,81,73,.06);}
+.pf-row.critical{border-color:rgba(248,81,73,.25);background:rgba(248,81,73,.04);}
+.pf-row.high{border-color:rgba(251,146,60,.25);background:rgba(251,146,60,.03);}
+.pf-row.med{border-color:rgba(240,192,64,.20);background:rgba(240,192,64,.03);}
+.signal-bar{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;}
+.signal-fill{height:6px;border-radius:3px;background:var(--accent);opacity:.85;}
+.signal-label{color:var(--muted);min-width:180px;}
+.signal-val{color:var(--text);font-weight:700;font-size:11px;}
+
 /* TOP NAV */
 .top-nav{
   background:var(--bg); border-bottom:1px solid var(--border);
@@ -512,6 +555,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <a href="betting-dashboard.html" class="top-nav-btn">⚡ Daily Picks</a>
   <button class="top-nav-btn active" id="navSeason" onclick="showView('season')">🏁 Season Finish</button>
   <button class="top-nav-btn" id="navResults" onclick="showView('results')">📊 Results</button>
+  <button class="top-nav-btn" id="navHeart" onclick="showView('heart')">❤️ Heart</button>
 </div>
 
 <!-- LEAGUE NAV -->
@@ -531,6 +575,280 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 </div>
 
 <div class="container" id="mainContent"></div>
+
+<!-- HEART PANEL -->
+<div id="heartPanel" style="display:none;">
+<div class="heart-page">
+
+  <!-- Hero -->
+  <div class="heart-hero">
+    <h1>❤️ Das Herz von BetEdge</h1>
+    <p>Hier ist alles dokumentiert was unter der Haube passiert — jede Datenquelle, jede Logik, jeder Score. Kein Black Box. Du siehst exakt warum eine Wette empfohlen wird und was sie von Standard-Portalen unterscheidet.</p>
+  </div>
+
+  <!-- 1. Was macht dieses Tool anders -->
+  <div class="heart-section">
+    <div class="heart-section-title">🎯 Die zwei Killer-Features</div>
+    <div class="heart-grid">
+      <div class="heart-card pressure">
+        <h3>⚡ Saisondruckfaktor</h3>
+        <p>Das wichtigste Signal im ganzen Tool — und das einzige das Standard-Wettportale schlicht nicht haben.</p>
+        <p style="margin-top:8px;">Ein Team mit noch <strong style="color:var(--text)">2 Spieltagen</strong> im Abstiegskampf spielt fundamental anders als dasselbe Team mit 10 Spieltagen. Dieses Tool berechnet das <strong style="color:var(--text)">kontinuierlich</strong> — nicht binär, sondern mit einer graduierten Skala die jeden Markt beeinflusst.</p>
+      </div>
+      <div class="heart-card accent">
+        <h3>📐 Echte Datenbasis</h3>
+        <p>Kein Bauchgefühl. Jede Wettempfehlung basiert auf echten Leistungsdaten: xG-Modell (Understat), Elo-Ratings, H2H-Statistiken, Formverläufe, Heim/Auswärts-Splits — alles kombiniert in einem kontinuierlichen Score-Modell.</p>
+        <p style="margin-top:8px;">Zusätzlich: historischer Backtest über 5 Ligen × 2 Saisons zur Kalibrierung der Schwellenwerte.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Datenquellen -->
+  <div class="heart-section">
+    <div class="heart-section-title">🗄️ Datenquellen</div>
+    <div class="heart-card">
+      <table class="heart-table">
+        <tr><th>Quelle</th><th>Was geliefert wird</th><th>Verwendet für</th></tr>
+        <tr>
+          <td>Understat (xG-Modell)</td>
+          <td>Expected Goals pro Team — Heim-xG, Heim-xGA, Auswärts-xG, Auswärts-xGA</td>
+          <td>Torerwartung, Over/Under-Scoring, Team-Over-1.5-Picks</td>
+        </tr>
+        <tr>
+          <td>ClubElo</td>
+          <td>Elo-Rating pro Team (täglich aktualisiert)</td>
+          <td>Qualitätsgefälle zwischen Teams, Bestätigung/Warnung bei Favorit</td>
+        </tr>
+        <tr>
+          <td>API-Football / Standings</td>
+          <td>Tabellenstände, Punkte, Position, verbleibende Spieltage</td>
+          <td>Stake-Labels, Druck-Berechnung, roundsLeft</td>
+        </tr>
+        <tr>
+          <td>H2H-Datenbank</td>
+          <td>Historische Duelle: Siege/Remis/Niederlagen, Tore, Heimsieg-Quote</td>
+          <td>Draw-Rate, Heimsieg-Rate, Auswärtssieg-Rate als Basis-Wahrscheinlichkeiten</td>
+        </tr>
+        <tr>
+          <td>Formverlauf</td>
+          <td>Letzte 6 Spiele: Ergebnisse, Siegesserie, Formquote</td>
+          <td>homeInForm/awayInForm-Flags, Streak-Bonus/-Malus</td>
+        </tr>
+        <tr>
+          <td>Pinnacle / Bet365 Odds</td>
+          <td>Marktquoten: Heimsieg, Remis, Auswärtssieg, Over/Under 2.5, 3.5</td>
+          <td>Value-Schätzung (Edge-Berechnung), Mindestquoten-Filter (≥ 1.30)</td>
+        </tr>
+        <tr>
+          <td>Backtest-CSVs (football-data.co.uk)</td>
+          <td>5 Ligen × 2 Saisons historische Spiele mit xG, Halbzeittore, Schüsse</td>
+          <td>Kalibrierung aller Schwellenwerte, Marktkalibrierung</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3. Der Druckfaktor -->
+  <div class="heart-section">
+    <div class="heart-section-title">⚡ Saisondruck-System im Detail</div>
+    <div class="heart-grid">
+      <div class="heart-card pressure">
+        <h3>🔢 Druck-Skala (roundsLeft)</h3>
+        <p>Der <code style="background:var(--card2);padding:1px 5px;border-radius:4px;font-size:11px;">_pressureBoost</code> wird granular berechnet — nicht binär:</p>
+        <div class="pressure-flow" style="margin-top:10px;">
+          <div class="pf-row extreme"><div class="pf-icon">🚨</div><div><div class="pf-label">1 Spieltag — Boost: +0.28</div><div class="pf-desc">Letzte Chance. Existenzielle Bedeutung jedes Punktes.</div></div></div>
+          <div class="pf-row extreme"><div class="pf-icon">🔥</div><div><div class="pf-label">2 Spieltage — Boost: +0.22</div><div class="pf-desc">Kein Puffer mehr. Teams gehen volles Risiko.</div></div></div>
+          <div class="pf-row critical"><div class="pf-icon">⚠️</div><div><div class="pf-label">3 Spieltage — Boost: +0.16</div><div class="pf-desc">Entscheidungsphase. Mentale Belastung spürbar.</div></div></div>
+          <div class="pf-row high"><div class="pf-icon">📍</div><div><div class="pf-label">4 Spieltage — Boost: +0.11</div><div class="pf-desc">Druckspiel. Taktische Zurückhaltung schwindet.</div></div></div>
+          <div class="pf-row med"><div class="pf-icon">📌</div><div><div class="pf-label">5–6 Spieltage — Boost: +0.06–0.08</div><div class="pf-desc">Entscheidende Phase beginnt. Leicht erhöhter Druck.</div></div></div>
+        </div>
+      </div>
+      <div class="heart-card pressure">
+        <h3>📊 Wie Druck jeden Markt beeinflusst</h3>
+        <p style="margin-bottom:10px;">Der Boost fließt in <em>jeden</em> Pick-Typ ein:</p>
+        <ul>
+          <li><strong>PICK 1 Ergebnis:</strong> Heimsieg/Auswärtssieg +Boost, Remis aktiv unterdrückt</li>
+          <li><strong>Over 2.5/3.5:</strong> Beide müssen gewinnen → +Boost×1.3/1.2; einer → +Boost×0.85</li>
+          <li><strong>Under 2.5/1.5:</strong> Bei Druck aktiv gesenkt (−Boost×1.1 bzw. −1.5)</li>
+          <li><strong>BTTS Ja:</strong> Druck-Team öffnet Räume → Gegner kontert → +Boost×1.1</li>
+          <li><strong>Corners:</strong> Pressing = mehr Ecken → +Boost×0.55–1.0</li>
+          <li><strong>Karten:</strong> Granular skaliert mit Boost, Tier-Upgrade bei urgencyHigh</li>
+          <li><strong>Handicap:</strong> Muss-gewinnen-Team geht All-In → +Boost×0.65–0.7</li>
+          <li><strong>1HZ Over 0.5:</strong> Schwelle sinkt von 3.4 auf 3.1 wenn Druck vorhanden</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Stake Labels -->
+  <div class="heart-section">
+    <div class="heart-section-title">🏷️ Stake-Labels (Saisonziele)</div>
+    <div class="heart-card">
+      <p style="margin-bottom:14px;color:var(--muted);font-size:13px;">Jedes Team bekommt ein Label basierend auf Tabellenposition und Abstand zu kritischen Plätzen. Diese Labels lösen den Druckfaktor aus:</p>
+      <table class="heart-table">
+        <tr><th>Label</th><th>Bedeutung</th><th>Trigger-Bedingung</th><th>Druck-Effekt</th></tr>
+        <tr><td>🏆 <span class="hbadge gold-c" style="background:rgba(240,192,64,.15);color:var(--gold);border:1px solid rgba(240,192,64,.3);">GOLD</span></td><td>Titelrennen</td><td>Position 1–2, Abstand ≤ 5 Punkte</td><td>Heimsieg/Auswärtssieg +Boost; Remis oft akzeptabel für Leader</td></tr>
+        <tr><td>🔵 <span class="hbadge blue">BLAU</span></td><td>Champions League</td><td>Position 3–4, Abstand ≤ 4 Punkte</td><td>Moderate Druck, UCL-Platz ist Millionenspiel</td></tr>
+        <tr><td>🟠 <span class="hbadge" style="background:rgba(251,146,60,.12);color:#fb923c;border:1px solid rgba(251,146,60,.3);">ORANGE</span></td><td>Europa League</td><td>Position 5–6, Abstand ≤ 3 Punkte</td><td>Leichter Druck</td></tr>
+        <tr><td>🟡 <span class="hbadge yellow">GELB</span></td><td>Europapokal</td><td>Position je Liga, Europa-Zone</td><td>Leichter Druck</td></tr>
+        <tr><td>🟣 <span class="hbadge" style="background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.3);">LILA</span></td><td>Conference League</td><td>Position je Liga</td><td>Minimaler Druck</td></tr>
+        <tr><td>🔴 <span class="hbadge red">ROT</span></td><td>Abstiegskampf</td><td>Position ≥ 16 (Top 5), Abstand ≤ 4 Punkte</td><td>Stärkster Boost aller Labels — Existenzangst treibt maximalen Angriffsdruck</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 5. Pick-Architektur -->
+  <div class="heart-section">
+    <div class="heart-section-title">🏗️ Pick-Architektur (3-Pool-System)</div>
+    <div class="heart-grid">
+      <div class="heart-card">
+        <h3>🎯 PICK 1 — Ergebnis</h3>
+        <p style="margin-bottom:8px;">Der Ergebnis-Markt. Kandidaten werden alle gescort und der beste Passende ausgewählt:</p>
+        <ul>
+          <li><strong>Heimsieg:</strong> xG/Form/Streak/H2H + Druck-Boost</li>
+          <li><strong>Auswärtssieg:</strong> Gleiche Logik, höhere Hürde (Away-Wins seltener)</li>
+          <li><strong>Unentschieden:</strong> H2H Draw-Rate + Elo-Ausgeglichenheit</li>
+          <li><strong>DNB Heim/Auswärts:</strong> Wenn Lean vorhanden aber Draw-Gefahr real (Draw-Rate > 20%)</li>
+          <li><strong>Doppelte Chance:</strong> Formquote + Draw-Rate kombiniert</li>
+        </ul>
+        <p style="margin-top:8px;color:var(--muted);font-size:12px;">Mindestquoten-Filter: sc &lt; 0.73 (impliziert Quote ≥ 1.37) oder reale Odds ≥ 1.30 nötig.</p>
+      </div>
+      <div class="heart-card">
+        <h3>⚽ PICK 2 — Tore / Tempo</h3>
+        <p style="margin-bottom:8px;">xG-basierter Tormarkt, drucksensitiv:</p>
+        <ul>
+          <li><strong>Over/Under 3.5 / 2.5 / 1.5:</strong> Torerwartung + Druck ± favWeak</li>
+          <li><strong>BTTS Ja/Nein:</strong> Angriffs-/Defensivstärke beider Teams</li>
+          <li><strong>Team über 1.5 Tore:</strong> Isolierter Angriff vs. gegnerische Abwehr, backtested</li>
+          <li><strong>1HZ Under 0.5:</strong> Nur bei Gold + engen Spielen (supprimiert bei Druck)</li>
+        </ul>
+        <p style="margin-top:8px;color:var(--muted);font-size:12px;">Consistency-Guard: defensiver Sieger dämpft Over-Märkte graduell.</p>
+      </div>
+      <div class="heart-card">
+        <h3>🔬 PICK 3 — Spezialist</h3>
+        <p style="margin-bottom:8px;">Differenzierungsmarkt — nie überschneidend mit Pick 1+2:</p>
+        <ul>
+          <li><strong>Ecken:</strong> xG-Modell → Eckenschätzung, Druck-Boost</li>
+          <li><strong>Karten:</strong> Abstiegsdruck × Intensität, granular mit _rl</li>
+          <li><strong>Handicap -0.5:</strong> Dominant + Gegner schwach, Druck-Boost</li>
+          <li><strong>1HZ Over 0.5:</strong> expGoals > 3.4 (bei Druck > 3.1), backtested</li>
+          <li><strong>1HZ BTTS / Under 1.5:</strong> Tempo-Signale für erste Halbzeit</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Konfidenz & Scoring -->
+  <div class="heart-section">
+    <div class="heart-section-title">⭐ Konfidenz-System</div>
+    <div class="heart-card">
+      <p style="margin-bottom:14px;color:var(--muted);font-size:13px;">Jeder Pick bekommt einen kontinuierlichen Score (0–1+) der aus allen Signalen zusammengesetzt wird. Daraus entsteht das Konfidenz-Level:</p>
+      <table class="heart-table">
+        <tr><th>Level</th><th>Anzeige</th><th>PICK 1 Schwelle (Heimsieg)</th><th>Backtest-Trefferquote</th></tr>
+        <tr><td><span class="hbadge green">★★★ HIGH</span></td><td>Grüner Rahmen</td><td>sc > 1.50</td><td>~68–72% (kalibriert)</td></tr>
+        <tr><td><span class="hbadge yellow">★★☆ MEDIUM</span></td><td>Gelber Rahmen</td><td>sc > 0.72</td><td>~55–62%</td></tr>
+        <tr><td><span class="hbadge muted">★☆☆ LOW</span></td><td>Nicht angezeigt</td><td>sc ≤ 0.72</td><td>~47% (unterdrückt)</td></tr>
+      </table>
+      <p style="margin-top:12px;font-size:12px;color:var(--muted);">Low-Confidence Picks werden <strong style="color:var(--text)">grundsätzlich nicht angezeigt</strong> — Backtest zeigte 47.6% Trefferquote, kaum besser als Zufall.</p>
+    </div>
+  </div>
+
+  <!-- 7. Mindestquoten -->
+  <div class="heart-section">
+    <div class="heart-section-title">💰 Mindestquoten-Filter (Value-Schutz)</div>
+    <div class="heart-grid">
+      <div class="heart-card gold-c">
+        <h3>🚫 Was gefiltert wird</h3>
+        <ul>
+          <li><strong>"Team trifft" (Over 0.5)</strong> entfernt — 92% Trefferquote aber Marktquote ~1.08: kein Value</li>
+          <li><strong>1HZ Over 0.5</strong> nur bei expGoals > 3.4 — darunter sind Marktquoten typisch unter 1.30</li>
+          <li><strong>Reale Odds (Pinnacle)</strong> unter 1.30 → automatisch gefiltert</li>
+          <li><strong>Model-Score > 0.73</strong> ohne reale Odds → gefiltert (implizierte Quote < ~1.37)</li>
+        </ul>
+      </div>
+      <div class="heart-card gold-c">
+        <h3>💡 Value-Schätzung (🔥 / 💰)</h3>
+        <p>Für Picks mit echten Pinnacle-Odds wird der <strong>Edge</strong> berechnet:</p>
+        <p style="margin-top:8px;font-family:monospace;font-size:12px;background:var(--card2);padding:8px;border-radius:6px;">Edge = Modell-Prob − Pinnacle-Implied-Prob</p>
+        <ul style="margin-top:8px;">
+          <li><strong>🔥 HOT VALUE</strong> — Edge ≥ 13%</li>
+          <li><strong>💰 Value</strong> — Edge ≥ 7%</li>
+        </ul>
+        <p style="margin-top:8px;color:var(--muted);font-size:12px;">Druck erhöht auch die Model-Prob für Over/Under (Wert wird realistischer).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Backtest -->
+  <div class="heart-section">
+    <div class="heart-section-title">🧪 Historischer Backtest</div>
+    <div class="heart-card">
+      <p style="margin-bottom:14px;color:var(--muted);font-size:13px;">Backtest über <strong style="color:var(--text)">5 Ligen × 2 Saisons</strong> (football-data.co.uk CSVs) mit Rolling-Stats Methodik (kein Look-Ahead). Ergebnisse haben die Schwellenwerte kalibriert:</p>
+      <table class="heart-table">
+        <tr><th>Markt</th><th>Gefundene Trefferquote</th><th>Angepasste Schwelle</th><th>Konsequenz</th></tr>
+        <tr><td>Heimsieg ★★★</td><td>~68% bei hohem sc</td><td>sc > 1.50 (war 1.20)</td><td>Strenger — nur wirklich multi-signal Picks</td></tr>
+        <tr><td>Auswärtssieg ★★★</td><td>~72%, +2.7% ROI</td><td>sc > 1.30</td><td>Bestes Signal im gesamten Tool</td></tr>
+        <tr><td>Heimsieg Basis</td><td>Zu oft gefeuert</td><td>Base 0.0 (war 0.40)</td><td>Positive Signale müssen Score aktiv aufbauen</td></tr>
+        <tr><td>HZ Over 0.5</td><td>76% bei expGoals > 3.0</td><td>Threshold 3.4 (Quote-Filter), 3.1 bei Druck</td><td>Nur bei echter Odds-Value</td></tr>
+        <tr><td>Team Over 1.5 Heim</td><td>69% bei expHome > 1.85</td><td>expHome > 1.85/1.95/2.10</td><td>Drei Tiers je Stärke</td></tr>
+        <tr><td>Team trifft Over 0.5</td><td>92% — entfernt</td><td>—</td><td>Marktquote ~1.08 → kein Value</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- 9. Abgedeckte Ligen -->
+  <div class="heart-section">
+    <div class="heart-section-title">🌍 Abgedeckte Ligen</div>
+    <div class="heart-card">
+      <p style="margin-bottom:12px;color:var(--muted);font-size:13px;">Alle Ligen profitieren von der Druck-Logik. xG-Daten (Understat) und Elo-Ratings sind für folgende Ligen verfügbar:</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;">
+        <div style="font-size:13px;color:var(--text);">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League — <span style="color:var(--accent);">xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇩🇪 Bundesliga — <span style="color:var(--accent);">xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇪🇸 La Liga — <span style="color:var(--accent);">xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇮🇹 Serie A — <span style="color:var(--accent);">xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇫🇷 Ligue 1 — <span style="color:var(--accent);">xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇳🇱 Eredivisie — <span style="color:var(--accent);">xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇵🇹 Primeira Liga — <span style="color:var(--accent);">xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇷🇺 RPL — <span style="color:var(--accent);">xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇹🇷 Süper Lig — <span style="color:var(--muted);">Elo, Goals-Fallback</span></div>
+        <div style="font-size:13px;color:var(--text);">🇨🇭 Swiss SL — <span style="color:var(--muted);">Elo, Goals-Fallback</span></div>
+        <div style="font-size:13px;color:var(--text);">🇦🇹 Bundesliga AT — <span style="color:var(--muted);">Elo, Goals-Fallback</span></div>
+        <div style="font-size:13px;color:var(--text);">🇧🇪 Pro League — <span style="color:var(--muted);">Elo, Goals-Fallback</span></div>
+      </div>
+      <p style="margin-top:12px;font-size:12px;color:var(--muted);">Alle Ligen: Stake-Labels und Druckfaktor aktiv — unabhängig von xG-Verfügbarkeit. Goals-Fallback nutzt historische Tore/Spiel.</p>
+    </div>
+  </div>
+
+  <!-- 10. Was kommt als nächstes -->
+  <div class="heart-section">
+    <div class="heart-section-title">🔮 Roadmap / Ideen</div>
+    <div class="heart-grid">
+      <div class="heart-card" style="opacity:.85;">
+        <h3>💡 Mögliche Erweiterungen</h3>
+        <ul>
+          <li><strong>Live Odds-API:</strong> Automatischer Value-Check gegen Pinnacle in Echtzeit</li>
+          <li><strong>Spieler-Ausfälle:</strong> Torjäger fehlt → Tore-Modell anpassen</li>
+          <li><strong>Weather-Integration:</strong> Wind/Regen → Under-Boost, Corners-Dämpfung</li>
+          <li><strong>Motivations-Tracker:</strong> Team bereits abgestiegen / Meister → Druck = 0</li>
+          <li><strong>Bankroll-Empfehlung:</strong> Stake-Größe basierend auf Edge × Konfidenz</li>
+        </ul>
+      </div>
+      <div class="heart-card" style="opacity:.85;">
+        <h3>✅ Bereits implementiert</h3>
+        <ul>
+          <li><strong>Granularer Druckfaktor</strong> in allen 3 Pick-Pools</li>
+          <li><strong>Backtest-kalibrierte</strong> Schwellenwerte (5L × 2S)</li>
+          <li><strong>Mindestquoten-Filter</strong> (≥ 1.30, implizierte Prob-Cap)</li>
+          <li><strong>DNB + Doppelte Chance</strong> als echte PICK 1-Kandidaten</li>
+          <li><strong>xG-Modell</strong> mit Goals-Fallback für alle Ligen</li>
+          <li><strong>Value-Badge</strong> (🔥/💰) basierend auf echtem Edge</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
 
 <!-- RESULTS PANEL -->
 <div id="resultsPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 60px;">
@@ -2803,14 +3121,18 @@ loadAllOdds().then(() => {
 // ═══════════════════════════════════════════════════════
 function showView(view) {
   const isSeason  = view === 'season';
-  document.getElementById('mainContent').style.display   = isSeason ? '' : 'none';
-  document.getElementById('resultsPanel').style.display  = isSeason ? 'none' : '';
-  document.querySelector('.league-nav').style.display    = isSeason ? '' : 'none';
+  const isResults = view === 'results';
+  const isHeart   = view === 'heart';
+  document.getElementById('mainContent').style.display   = isSeason  ? '' : 'none';
+  document.getElementById('resultsPanel').style.display  = isResults ? '' : 'none';
+  document.getElementById('heartPanel').style.display    = isHeart   ? '' : 'none';
+  document.querySelector('.league-nav').style.display    = isSeason  ? '' : 'none';
   const legend = document.querySelector('.legend-section');
   if (legend) legend.style.display = isSeason ? '' : 'none';
   document.getElementById('navSeason').classList.toggle('active',  isSeason);
-  document.getElementById('navResults').classList.toggle('active', !isSeason);
-  if (!isSeason) initResults();
+  document.getElementById('navResults').classList.toggle('active', isResults);
+  document.getElementById('navHeart').classList.toggle('active',   isHeart);
+  if (isResults) initResults();
 }
 
 // ═══════════════════════════════════════════════════════
