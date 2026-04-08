@@ -2823,13 +2823,14 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
   // Build picks — BACKTEST FINDING: low-conf picks hit only 47.6%, barely above chance.
   // Filter them out of the UI — only show ★★☆ (medium) and ★★★ (high) to the user.
-  // MINIMUM ODDS RULE: Never show picks where implied probability > 0.73 (→ odds < ~1.37)
-  //   and no real odds are attached. If real odds are available and < 1.30, also hide.
-  //   This prevents showing no-value bets like "Team trifft" (92% → ~1.08).
+  // MINIMUM ODDS RULE (real odds only): if Pinnacle/Bet365 odds attached, hide if < 1.30.
+  // NOTE: sc-based proxy filter (sc < 0.73) removed — sc for goals/specialist picks is a
+  // signal-strength score, NOT a probability. Pressure boosts legitimately push sc above 0.73
+  // (e.g. Over 2.5 + bothNeedWin = sc 0.88). Problematic low-odds picks (Team trifft 92%)
+  // have been removed at source. Real odds filter still protects where actual prices are known.
   const _impliedOddsOk = (p) => {
-    if (p.odds != null) return p.odds >= 1.30;          // real odds: hard filter
-    if (p.sc  != null) return p.sc  < 0.73;             // model score as prob proxy
-    return true;                                         // no info → allow
+    if (p.odds != null) return p.odds >= 1.30; // real odds present: hard filter ≥ 1.30
+    return true;                               // no real odds: sc ≠ probability, don't filter
   };
   const visiblePicks = picks.filter(p => (p.conf === 'high' || p.conf === 'medium') && _impliedOddsOk(p));
   const picksHtml = visiblePicks.map(p => {
