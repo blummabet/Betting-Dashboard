@@ -529,6 +529,33 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 </head>
 <body>
 
+<!-- SCRIPT MODAL -->
+<div id="script-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;">
+  <div onclick="closeScriptModal()" style="position:absolute;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);"></div>
+  <div style="position:relative;background:#0d1117;border:1px solid #30363d;border-radius:16px;width:min(680px,96vw);max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.7);">
+    <!-- Header -->
+    <div style="padding:18px 22px 14px;border-bottom:1px solid #21262d;display:flex;align-items:center;gap:12px;">
+      <span style="font-size:22px;">🎙</span>
+      <div style="flex:1;">
+        <div style="font-weight:700;font-size:15px;" id="scriptModalTitle">Sportschau-Skript</div>
+        <div style="font-size:12px;color:#8b949e;margin-top:2px;">TTS-optimiert · direkt in CapCut einfügen</div>
+      </div>
+      <button onclick="closeScriptModal()" style="background:none;border:none;color:#8b949e;font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;">✕</button>
+    </div>
+    <!-- Script text area -->
+    <div style="padding:18px 22px;flex:1;overflow-y:auto;">
+      <textarea id="scriptText" readonly style="width:100%;min-height:320px;background:#010409;border:1px solid #21262d;border-radius:10px;color:#e6edf3;font-size:14px;line-height:1.75;padding:16px;resize:vertical;font-family:system-ui,sans-serif;box-sizing:border-box;"></textarea>
+      <div style="margin-top:10px;font-size:12px;color:#8b949e;" id="scriptTip">💡 Tipp: In CapCut unter <strong style="color:#e6edf3">Text → KI-Stimme</strong> einfügen · Stimme "German" oder "Deutsch" wählen</div>
+    </div>
+    <!-- Actions -->
+    <div style="padding:14px 22px 18px;border-top:1px solid #21262d;display:flex;gap:10px;">
+      <button onclick="copyScriptText(this)" style="flex:1;background:#1c2c1c;border:1px solid #3fb950;color:#3fb950;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;">📋 Skript kopieren</button>
+      <button onclick="copyScriptText(this,'elevenlabs')" style="flex:1;background:#1a1a30;border:1px solid #58a6ff;color:#58a6ff;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;">🔊 Für ElevenLabs</button>
+      <button onclick="closeScriptModal()" style="background:#161b22;border:1px solid #30363d;color:#8b949e;border-radius:8px;padding:10px 14px;font-size:13px;cursor:pointer;">Schließen</button>
+    </div>
+  </div>
+</div>
+
 <!-- INFOGRAPHIC MODAL -->
 <div id="ig-modal">
   <div class="ig-overlay" onclick="closeIgModal()"></div>
@@ -3071,6 +3098,9 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       <button class="infographic-btn" title="Infografik erstellen" onclick="generateInfographic('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}')">
         📸 Infografik
       </button>
+      <button class="infographic-btn" title="Sportschau-Skript für CapCut/ElevenLabs" onclick="generateScript('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}')" style="color:#a78bfa;border-color:#a78bfa55;">
+        🎙 Skript
+      </button>
       <button class="share-btn" style="flex:1" onclick="shareTelegram('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}')">
         📤 Telegram
       </button>
@@ -3475,6 +3505,203 @@ function renderResultsCharts() {
 }
 
 // ── Pick history table ──────────────────────────────────
+// ═══════════════════════════════════════════════════════
+//  SPORTSCHAU SCRIPT GENERATOR
+// ═══════════════════════════════════════════════════════
+
+function generateScript(matchJson, leagueName, leagueFlag, leagueKey) {
+  const match = JSON.parse(decodeURIComponent(matchJson));
+  const score = computeMatchScore(match, leagueKey);
+  const odds  = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
+  const picks = getBettingPicks(match, odds, leagueKey)
+    .filter(p => p.conf === 'high' || p.conf === 'medium')
+    .slice(0, 3);
+
+  const hLabels = match.homeStake?.labels || [];
+  const aLabels = match.awayStake?.labels || [];
+  const rl      = match.roundsLeft ?? null;
+
+  // ── Helpers ──────────────────────────────────────────
+  const _num = n => {
+    if (n == null) return '';
+    // Spell out small integers for natural TTS
+    const words = ['null','eins','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn',
+                   'elf','zwölf','dreizehn','vierzehn','fünfzehn','sechzehn','siebzehn','achtzehn','neunzehn','zwanzig'];
+    return n <= 20 ? words[n] : String(n);
+  };
+
+  const _oddsSpeak = o => {
+    if (!o) return '';
+    // "1.85" → "eins Komma fünfundachtzig" is complex; just say the number clearly
+    const s = o.toFixed(2).replace('.', ' Komma ');
+    return `Quote ${s}`;
+  };
+
+  const _stakeContext = (labels, team) => {
+    if (!labels.length) return '';
+    const lbl = labels[0];
+    if (lbl.c === 'red')    return `${team} kämpft gegen den Abstieg`;
+    if (lbl.c === 'gold')   return `${team} ist im Titelkampf`;
+    if (lbl.c === 'blue')   return `${team} jagt die Champions League`;
+    if (lbl.c === 'orange') return `${team} kämpft um Europa`;
+    if (lbl.c === 'purple') return `${team} ist in einem wichtigen Saisonabschnitt`;
+    return `${team} steht unter Druck`;
+  };
+
+  const _marketSpeak = market => {
+    const m = (market || '').toLowerCase();
+    if (m.includes('über 2.5'))             return 'Über zwei Komma fünf Tore';
+    if (m.includes('über 1.5'))             return 'Über ein Komma fünf Tore';
+    if (m.includes('über 3.5'))             return 'Über drei Komma fünf Tore';
+    if (m.includes('unter 2.5'))            return 'Unter zwei Komma fünf Tore';
+    if (m.includes('unter 1.5'))            return 'Unter ein Komma fünf Tore';
+    if (m.includes('beide teams treffen: nein')) return 'Kein Treffer beider Teams';
+    if (m.includes('beide teams treffen'))  return 'Beide Teams treffen';
+    if (m.includes('heimsieg'))             return `Sieg für ${match.home}`;
+    if (m.includes('auswärtssieg'))         return `Sieg für ${match.away}`;
+    if (m.includes('unentschieden'))        return 'Unentschieden';
+    if (m.includes('dnb: heim'))            return `Draw No Bet auf ${match.home}`;
+    if (m.includes('dnb: auswärts'))        return `Draw No Bet auf ${match.away}`;
+    if (m.includes('doppelte chance: 1x'))  return `Doppelte Chance — ${match.home} oder Unentschieden`;
+    if (m.includes('doppelte chance: x2'))  return `Doppelte Chance — ${match.away} oder Unentschieden`;
+    if (m.includes('1. hz') || m.includes('halbzeit')) return 'Treffer in der ersten Halbzeit';
+    if (m.includes('ecken') || m.includes('corner'))   return 'Viele Ecken in diesem Spiel';
+    if (m.includes('karten') || m.includes('card'))    return 'Karten-Wette';
+    if (m.includes('handicap'))             return 'Handicap-Wette';
+    return market;
+  };
+
+  const _confSpeak = conf => {
+    if (conf === 'high')   return 'Hohe Konfidenz — drei Sterne';
+    if (conf === 'medium') return 'Mittlere Konfidenz — zwei Sterne';
+    return 'Konfidenz niedrig';
+  };
+
+  const _scoreComment = s => {
+    if (s >= 11) return 'ein absolutes Highlight-Spiel dieser Woche';
+    if (s >= 9)  return 'eine hoch brisante Partie';
+    if (s >= 7)  return 'ein wichtiges Spiel mit echtem Mehrwert';
+    return 'ein interessantes Spiel';
+  };
+
+  const _ordinal = i => ['Erstens','Zweitens','Drittens'][i] || `Pick ${i+1}`;
+
+  // ── Kontext-Sätze ─────────────────────────────────────
+  const contextLines = [];
+  const hCtx = _stakeContext(hLabels, match.home);
+  const aCtx = _stakeContext(aLabels, match.away);
+  if (hCtx && aCtx) {
+    contextLines.push(`${hCtx} — und auf der anderen Seite ${aCtx}. Dieses Spiel hat maximalen Druck auf beiden Seiten.`);
+  } else if (hCtx) {
+    contextLines.push(`${hCtx}. Das Heimteam wird alles geben.`);
+  } else if (aCtx) {
+    contextLines.push(`${aCtx}. Die Gäste kommen mit Vollgas-Mentalität nach ${match.home}.`);
+  }
+  if (rl && rl <= 6) {
+    contextLines.push(`Noch ${_num(rl)} Spieltag${rl === 1 ? '' : 'e'} verbleiben in der Saison. Jeder Punkt zählt.`);
+  }
+
+  // ── xG / Goals Kontext ────────────────────────────────
+  const expG = match.expGoals;
+  let goalsLine = '';
+  if (expG) {
+    goalsLine = `Unsere Modelle erwarten rund ${expG.toFixed(1).replace('.',',')} Tore in diesem Spiel. `;
+  }
+
+  // ── Picks Text ────────────────────────────────────────
+  const pickLines = [];
+  picks.forEach((p, i) => {
+    const marketTxt = _marketSpeak(p.market);
+    const confTxt   = _confSpeak(p.conf);
+    const oddsTxt   = p.odds ? ` — ${_oddsSpeak(p.odds)}` : '';
+    const reasonClean = (p.reason || '')
+      .replace(/<br\s*\/?>/gi, '. ')
+      .replace(/<strong>/gi, '').replace(/<\/strong>/gi, '')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    const reasonShort = reasonClean.length > 120 ? reasonClean.slice(0, 120) + '...' : reasonClean;
+
+    let line = `${_ordinal(i)}: ${marketTxt}${oddsTxt}. ${confTxt}.`;
+    if (reasonShort) line += ` ${reasonShort}`;
+    pickLines.push(line);
+  });
+
+  // ── Zusammenbauen ─────────────────────────────────────
+  const intros = [
+    `Guten Abend und herzlich willkommen zur BetEdge Sportschau!`,
+    `Willkommen bei der BetEdge Sportschau — hier kommen eure Wett-Empfehlungen!`,
+    `Hallo und willkommen! Das ist die BetEdge Sportschau mit den besten Picks der Woche.`,
+  ];
+  const intro = intros[Math.floor(Math.random() * intros.length)];
+
+  const outros = [
+    `Das war euer BetEdge Tipp für heute. Viel Erfolg — und mögen die Quoten mit euch sein!`,
+    `Das war die BetEdge Sportschau. Spielt verantwortungsvoll, und bis zum nächsten Spieltag!`,
+    `Bleibt dabei, trefft gute Entscheidungen — und bis zum nächsten BetEdge Update!`,
+  ];
+  const outro = outros[Math.floor(Math.random() * outros.length)];
+
+  const lines = [
+    intro,
+    '',
+    `Heute präsentiere ich euch: ${match.home} gegen ${match.away} — ${leagueName}, ${match.date}.`,
+    `Dieser Match hat einen Score von ${score} von zwölf Punkten — das ist ${_scoreComment(score)}.`,
+    '',
+  ];
+
+  if (contextLines.length) {
+    lines.push(...contextLines);
+    lines.push('');
+  }
+
+  if (goalsLine) {
+    lines.push(goalsLine);
+  }
+
+  if (picks.length) {
+    lines.push(`Und jetzt zu den Wettempfehlungen für diese Partie:`);
+    lines.push('');
+    lines.push(...pickLines.map(l => l));
+    lines.push('');
+  } else {
+    lines.push(`Für dieses Spiel haben wir aktuell keine Empfehlung mit ausreichender Konfidenz.`);
+    lines.push('');
+  }
+
+  lines.push(outro);
+
+  const fullScript = lines.join('\n');
+
+  // ── Show modal ────────────────────────────────────────
+  document.getElementById('scriptText').value = fullScript;
+  document.getElementById('scriptModalTitle').textContent =
+    `${match.home} vs ${match.away} — Sportschau-Skript`;
+  const modal = document.getElementById('script-modal');
+  modal.style.display = 'flex';
+}
+
+function closeScriptModal() {
+  document.getElementById('script-modal').style.display = 'none';
+}
+
+function copyScriptText(btn, mode) {
+  const raw = document.getElementById('scriptText').value;
+  // ElevenLabs mode: strip double newlines for cleaner paste
+  const text = mode === 'elevenlabs'
+    ? raw.replace(/\n\n+/g, ' ').replace(/\n/g, ' ').trim()
+    : raw;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✅ Kopiert!';
+    setTimeout(() => { btn.textContent = orig; }, 2500);
+  }).catch(() => {
+    // Fallback
+    document.getElementById('scriptText').select();
+    document.execCommand('copy');
+  });
+}
+
 // ═══════════════════════════════════════════════════════
 //  PICK TRACKER — Save & Resolve via SofaScore
 // ═══════════════════════════════════════════════════════
