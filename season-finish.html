@@ -556,6 +556,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="top-nav-btn active" id="navSeason" onclick="showView('season')">🏁 Season Finish</button>
   <button class="top-nav-btn" id="navResults" onclick="showView('results')">📊 Results</button>
   <button class="top-nav-btn" id="navHeart" onclick="showView('heart')">❤️ Heart</button>
+  <button class="top-nav-btn" id="navSavePicks" onclick="savePicksToday(this)" title="Heutige Picks in localStorage sichern" style="margin-left:auto;color:#3fb950;border-color:#3fb950;">💾 <span id="navSaveLabel">Picks speichern</span></button>
 </div>
 
 <!-- LEAGUE NAV -->
@@ -852,6 +853,17 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <!-- RESULTS PANEL -->
 <div id="resultsPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 60px;">
+
+  <!-- SofaScore Toolbar -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:180px;">
+      <div style="font-size:14px;font-weight:700;margin-bottom:2px;">📌 Pick Tracker</div>
+      <div style="font-size:12px;color:var(--muted)" id="sfTrackerInfo">Picks speichern → nächsten Tag Ergebnisse holen</div>
+    </div>
+    <button onclick="savePicksToday(this)" style="background:#1c2c1c;border:1px solid var(--green);color:var(--green);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">💾 Picks speichern</button>
+    <button id="sfFetchBtn" onclick="fetchSofaResults(this)" style="background:#1a2030;border:1px solid #58a6ff;color:#58a6ff;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">🔄 SofaScore-Ergebnisse holen</button>
+    <button onclick="exportPicksJson()" style="background:#1a1a2e;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">📥 JSON</button>
+  </div>
 
   <!-- Stats overview -->
   <div id="resultsStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px;"></div>
@@ -3307,6 +3319,7 @@ function initResults() {
     .catch(() => [])
     .then(data => {
       _resultsData   = data || [];
+      _mergeLocalPicks();
       _resultsLoaded = true;
       renderResultsAll();
     });
@@ -3462,6 +3475,216 @@ function renderResultsCharts() {
 }
 
 // ── Pick history table ──────────────────────────────────
+// ═══════════════════════════════════════════════════════
+//  PICK TRACKER — Save & Resolve via SofaScore
+// ═══════════════════════════════════════════════════════
+
+const PICKS_KEY = 'betedge_picks_v1';
+
+function _loadStoredPicks() {
+  try { return JSON.parse(localStorage.getItem(PICKS_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function _storedSave(arr) {
+  localStorage.setItem(PICKS_KEY, JSON.stringify(arr));
+}
+
+// ── Save all current week picks ──────────────────────
+function savePicksToday(btn) {
+  const all = [];
+  for (const [key, L] of Object.entries(LEAGUES)) {
+    for (const f of L.fixtures) {
+      if (!isWithin7Days(f.date)) continue;
+      const odds = findOdds(key, f.home, f.away);
+      const picks = getBettingPicks(f, odds, key)
+        .filter(p => p.conf === 'high' || p.conf === 'medium');
+      if (!picks.length) continue;
+      const d = parseGermanDate(f.date);
+      const dateIso = d.toISOString().slice(0, 10);
+      all.push({
+        dateIso, date: f.date,
+        league: L.name, leagueFlag: L.flag, leagueKey: key,
+        home: f.home, away: f.away,
+        finalScore: null,
+        picks: picks.map(p => ({
+          icon: p.icon, market: p.market, conf: p.conf,
+          sc: p.sc || null, odds: p.odds || null,
+          result: null, finalScore: null
+        }))
+      });
+    }
+  }
+  const existing = _loadStoredPicks();
+  const existingKeys = new Set(existing.map(e => `${e.dateIso}|${e.home}|${e.away}`));
+  const newEntries = all.filter(e => !existingKeys.has(`${e.dateIso}|${e.home}|${e.away}`));
+  _storedSave([...existing, ...newEntries]);
+  const total = all.length;
+  const label = `✅ ${total} Spiele gespeichert`;
+  if (btn) { btn.textContent = label; setTimeout(()=>{ btn.textContent = '💾 Picks speichern'; }, 3000); }
+  const navLbl = document.getElementById('navSaveLabel');
+  if (navLbl) { navLbl.textContent = `${total} ✓`; setTimeout(()=>{ navLbl.textContent='Picks speichern'; }, 3000); }
+  const info = document.getElementById('sfTrackerInfo');
+  if (info) info.textContent = `${total} Spiele gespeichert (${newEntries.length} neu) · jetzt Ergebnisse holen`;
+}
+
+// ── Outcome determination ────────────────────────────
+function _determineOutcome(market, h, a) {
+  const goals = h + a;
+  const m = (market || '').toLowerCase();
+  if (m.includes('über 3.5') || m.includes('over 3.5'))   return goals > 3 ? 'win' : 'loss';
+  if (m.includes('über 2.5') || m.includes('over 2.5'))   return goals > 2 ? 'win' : 'loss';
+  if (m.includes('über 1.5') || m.includes('over 1.5'))   return goals > 1 ? 'win' : 'loss';
+  if (m.includes('unter 2.5') || m.includes('under 2.5')) return goals < 3 ? 'win' : 'loss';
+  if (m.includes('unter 1.5') || m.includes('under 1.5')) return goals < 2 ? 'win' : 'loss';
+  if (m.includes('beide teams treffen: nein'))             return (h===0||a===0) ? 'win' : 'loss';
+  if (m.includes('beide teams treffen') || m.includes('btts')) return (h>0&&a>0) ? 'win' : 'loss';
+  if (m.includes('dnb: heim') || m.includes('draw no bet: heim')) {
+    if (h > a) return 'win'; if (h===a) return 'void'; return 'loss';
+  }
+  if (m.includes('dnb: auswärts') || m.includes('draw no bet: auswärts')) {
+    if (a > h) return 'win'; if (h===a) return 'void'; return 'loss';
+  }
+  if (m.includes('doppelte chance: 1x') || m.includes('double chance: 1x')) return h >= a ? 'win' : 'loss';
+  if (m.includes('doppelte chance: x2') || m.includes('double chance: x2')) return a >= h ? 'win' : 'loss';
+  if (m.includes('doppelte chance: 12'))                   return h !== a ? 'win' : 'loss';
+  if (m.includes('heimsieg') || m.includes('home win'))    return h > a ? 'win' : 'loss';
+  if (m.includes('auswärtssieg') || m.includes('away win')) return a > h ? 'win' : 'loss';
+  if (m.includes('unentschieden') || (m.includes('draw') && !m.includes('no bet'))) return h===a ? 'win' : 'loss';
+  if (m.includes('handicap')) {
+    if (m.includes('heim') || m.includes('home')) return h > a ? 'win' : 'loss';
+    if (m.includes('auswärts') || m.includes('away')) return a > h ? 'win' : 'loss';
+  }
+  // HZ, Corners, Cards — can't auto-determine from final score alone
+  return null;
+}
+
+// ── Fuzzy team name match ─────────────────────────────
+function _fuzzyTeam(a, b) {
+  const clean = s => s.toLowerCase().replace(/fc |sc |sv |bv |1\. |vfb |vfL |rb /gi,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+  const ca = clean(a), cb = clean(b);
+  if (ca === cb) return true;
+  if (ca.includes(cb) || cb.includes(ca)) return true;
+  const wa = new Set(ca.split(' ').filter(w=>w.length>2));
+  const wb = new Set(cb.split(' ').filter(w=>w.length>2));
+  let overlap = 0;
+  for (const w of wa) if (wb.has(w)) overlap++;
+  return overlap >= 1 && overlap / Math.max(wa.size, wb.size, 1) >= 0.5;
+}
+
+// ── SofaScore fetch for one date ─────────────────────
+async function _sfFetchDate(dateIso) {
+  try {
+    const resp = await fetch(`https://api.sofascore.com/api/v1/sport/football/scheduled-events/${dateIso}`,
+      { headers: { 'Accept': 'application/json' } });
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data.events || [];
+  } catch(e) { return null; }
+}
+
+// ── Main fetch handler ────────────────────────────────
+async function fetchSofaResults(btn) {
+  btn.disabled = true;
+  btn.textContent = '⏳ Lade…';
+
+  const picks = _loadStoredPicks();
+  const pending = picks.filter(e => e.picks.some(p => p.result === null));
+
+  if (!pending.length) {
+    btn.textContent = '✅ Alle aufgelöst';
+    btn.disabled = false;
+    document.getElementById('sfTrackerInfo').textContent = 'Keine offenen Picks — alles erledigt!';
+    return;
+  }
+
+  const dates = [...new Set(pending.map(e => e.dateIso))].sort();
+  let resolved = 0, manual = 0, notFound = 0, corsError = false;
+
+  for (const date of dates) {
+    btn.textContent = `⏳ ${date}…`;
+    const events = await _sfFetchDate(date);
+    if (events === null) { corsError = true; notFound++; continue; }
+
+    for (const entry of picks) {
+      if (entry.dateIso !== date) continue;
+      if (!entry.picks.some(p => p.result === null)) continue;
+
+      const ev = events.find(e =>
+        (e.status?.type === 'finished' || e.status?.type === 'postponed') &&
+        _fuzzyTeam(e.homeTeam?.name || '', entry.home) &&
+        _fuzzyTeam(e.awayTeam?.name || '', entry.away)
+      );
+      if (!ev) { notFound++; continue; }
+
+      const h = ev.homeScore?.current ?? null;
+      const a = ev.awayScore?.current ?? null;
+      if (h === null) continue;
+
+      entry.finalScore = `${h}:${a}`;
+
+      for (const p of entry.picks) {
+        if (p.result !== null) continue;
+        const outcome = _determineOutcome(p.market, h, a);
+        if (outcome !== null) { p.result = outcome; p.finalScore = `${h}:${a}`; resolved++; }
+        else { p.result = null; manual++; } // HZ/Corners/Cards — stay pending
+      }
+    }
+  }
+
+  _storedSave(picks);
+  _resultsLoaded = false;
+  initResults();
+
+  let msg = `✅ ${resolved} aufgelöst`;
+  if (manual)   msg += `, ${manual} manuell nötig (HZ/Ecken/Karten)`;
+  if (notFound) msg += `, ${notFound} nicht gefunden`;
+  if (corsError) msg += ' · SofaScore CORS-Fehler — direkt im Browser öffnen';
+  document.getElementById('sfTrackerInfo').textContent = msg;
+  btn.textContent = '🔄 Erneut holen';
+  btn.disabled = false;
+}
+
+// ── Export picks_history.json ─────────────────────────
+function exportPicksJson() {
+  const local = _loadStoredPicks();
+  // Merge with loaded file data
+  const existing = _resultsData || [];
+  const existingKeys = new Set(existing.map(e => `${e.dateIso}|${e.home}|${e.away}`));
+  const merged = [...existing,
+    ...local.filter(e => !existingKeys.has(`${e.dateIso}|${e.home}|${e.away}`))
+  ];
+  const blob = new Blob([JSON.stringify(merged, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'picks_history.json';
+  a.click();
+}
+
+// ── Merge localStorage into _resultsData ─────────────
+function _mergeLocalPicks() {
+  const local = _loadStoredPicks();
+  if (!local.length) return;
+  const existingKeys = new Set(_resultsData.map(e => `${e.dateIso}|${e.home}|${e.away}`));
+  const toAdd = local.filter(e => !existingKeys.has(`${e.dateIso}|${e.home}|${e.away}`))
+    .map(e => ({
+      dateIso: e.dateIso, date: e.date,
+      league: e.league, leagueFlag: e.leagueFlag,
+      home: e.home, away: e.away,
+      finalScore: e.finalScore,
+      picks: e.picks.map(p => ({
+        icon: p.icon, market: p.market, conf: p.conf,
+        odds: p.odds, result: p.result, finalScore: p.finalScore
+      }))
+    }));
+  _resultsData = [..._resultsData, ...toAdd];
+
+  // Update tracker info
+  const total   = local.length;
+  const pending = local.filter(e => e.picks.some(p => p.result === null)).length;
+  const info = document.getElementById('sfTrackerInfo');
+  if (info && total) info.textContent = `${total} Spiele gespeichert · ${pending} mit offenen Picks`;
+}
+
 function renderResultsTable(filter) {
   let rows = _resultsData.flatMap(e =>
     e.picks.map(p => ({ ...e, pick: p }))
