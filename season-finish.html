@@ -1572,18 +1572,13 @@ function getBettingPicks(match, odds, leagueKey) {
                     : _raw === 'DNB: Auswärtsteam'  || _raw === 'Doppelte Chance: X2' ? 'Auswärtssieg'
                     : _raw;
     }
-    // Only push PICK 1 if it passes the implied-odds guard (sc < 0.73 or real odds ≥ 1.30).
-    // This prevents e.g. an outright win with sc=0.80 from being the sole pick when it would
-    // normally map to ~1.25 odds.
-    { const best = rC[0];
-      if (best && (best.p.odds != null ? best.p.odds >= 1.30 : best.sc < 0.73)) {
-        _push(best.p, best.sc);
-      } else {
-        // Top pick fails odds filter — try next best in rC
-        const fallback = rC.find(r => r.p.odds != null ? r.p.odds >= 1.30 : r.sc < 0.73);
-        if (fallback) _push(fallback.p, fallback.sc);
-        // If everything fails the filter, PICK 1 stays empty (better no pick than a bad one)
-      }
+    // Push PICK 1: take the best medium/high result pick.
+    // NOTE: sc for result picks is a composite ranking score (0–2+), NOT a probability.
+    // The old sc < 0.73 implied-odds guard was wrong — it blocked all good picks without
+    // real odds (since medium Heimsieg starts at sc > 0.72). Real-odds filter (≥ 1.30)
+    // is handled downstream in visiblePicks via _impliedOddsOk.
+    { const best = rC.find(r => r.p.conf !== 'low');
+      if (best) _push(best.p, best.sc);
     }
   }
 
@@ -1598,11 +1593,13 @@ function getBettingPicks(match, odds, leagueKey) {
     // for a defensive away team that only scores 0.8/Sp.
     // Graduated dampening: how defensive is the predicted winner?
     // 0 = no dampening; 1 = full suppression of Over / boost of Under
-    // Formula: 0 if attStr ≥ 1.15, linear ramp to 1.0 at attStr ≤ 0.65
+    // Formula: 0 if attStr ≥ 1.05 (softened from 1.15), linear ramp to 1.0 at attStr ≤ 0.55
+    // Rationale: guard was too aggressive — teams scoring 0.9/Sp still produce goals
+    // via opponent attack. Only truly defensive teams (≤ 0.55) get full suppression.
     const _awayWinWeak = _topResultMkt === 'Auswärtssieg'
-      ? Math.max(0, Math.min(1, (1.15 - awayAttStr) / 0.50)) : 0;
+      ? Math.max(0, Math.min(1, (1.05 - awayAttStr) / 0.50)) : 0;
     const _homeWinWeak = _topResultMkt === 'Heimsieg'
-      ? Math.max(0, Math.min(1, (1.15 - homeAttStr) / 0.50)) : 0;
+      ? Math.max(0, Math.min(1, (1.05 - homeAttStr) / 0.50)) : 0;
     const _favWeak  = Math.max(_awayWinWeak, _homeWinWeak); // 0–1 gradient
     const _favWeak1 = _favWeak > 0;                          // any dampening at all
     // When _favWeak, bothRed boosts/penalties in goals market are bypassed
@@ -1752,7 +1749,7 @@ function getBettingPicks(match, odds, leagueKey) {
       const _cornPressNote = _anyNeedsWin
         ? ` ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — intensives Pressing treibt Eckenzahl über Modellbasis.` : '';
       sC.push({sc, p:{icon:'🚩', market:cMkt, odds:null,
-        conf: sc>0.65?'high':sc>0.50?'medium':'low',
+        conf: sc>0.65?'high':sc>0.38?'medium':'low',
         reason:`${egPfx} → Ecken-Modell: ca. ${cornersEst.toFixed(0)} Ecken erwartet (Heim ${homeAttStr.toFixed(1)} + Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'xG-Est.'}/Sp).<br>${_defBonus > 0.5 ? 'Beide Abwehren permissiv — hoher Angriffsdruck auf beiden Seiten treibt Eckenzahl.' : 'Offensiv ausgerichtete Teams — viele Hereingaben und Standardsituationen aus dem Spiel heraus.'}${_cornPressNote}`}}); }
 
     // ── Cards — granular mit Runden-Faktor ────────────────────────────────────
@@ -1822,7 +1819,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if (btts1sc > 0 && _anyNeedsWin) btts1sc = Math.min(0.70, btts1sc + _pressureBoost * 0.80);
       if (btts1sc > 0) {
         const _b1PN = _anyNeedsWin ? `<br><strong>⚡ ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? _pHLabel : _pALabel}${_rlSfx} — Pressingspiel von Beginn an erhöht frühe BTTS-Wahrscheinlichkeit.</strong>` : '';
-        sC.push({sc: btts1sc, p:{icon:'⏱️', market:'1. HZ: Beide Teams treffen', odds:null, conf: btts1sc>0.60?'medium':'low',
+        sC.push({sc: btts1sc, p:{icon:'⏱️', market:'1. HZ: Beide Teams treffen', odds:null, conf: btts1sc>0.50?'medium':'low',
           reason:`Hohes Spieltempo von Beginn an — ${egPfx} deutet auf frühe Tore hin.<br>Beide Angriffe explosiv (Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?"xG":"Tore"}/Sp) — Treffer auf beiden Seiten schon in Halbzeit 1 wahrscheinlich.${_b1PN}`}});
       }
     }
@@ -1834,10 +1831,12 @@ function getBettingPicks(match, odds, leagueKey) {
         reason:`${egPfx} — taktisches Abtasten, vorsichtiger Spielbeginn erwartet.<br>Beide Offensiven gedämpft in der ersten Hälfte — maximal 1 Treffer bis zur Pause sehr wahrscheinlich.`}});
     }
 
-    // Fallback DC (always an option but lowest priority)
+    // Fallback DC — guaranteed PICK 3 slot when no specialist qualifies.
+    // conf:'medium' so it survives visiblePicks; lowest sc so it sorts last.
     { const fbDC = hFS_home >= aFS_away ? 'Doppelte Chance: 1X' : 'Doppelte Chance: X2';
-      sC.push({sc:0.28, p:{icon:'🎯', market:fbDC, odds:null, conf:'low',
-        reason:'Taktische Absicherung für den Favoriten — DC deckt Sieg UND Remis ab.<br>Sinnvolle Option bei unklaren Ergebnis-Tendenzen — Risikominimierung ohne großen Quotenverlust.'}}); }
+      const fbTeam = hFS_home >= aFS_away ? match.home : match.away;
+      sC.push({sc:0.35, p:{icon:'🎯', market:fbDC, odds:null, conf:'medium',
+        reason:`Taktische Absicherung für ${fbTeam} — Doppelte Chance deckt Sieg <em>und</em> Remis ab.<br>Sinnvolle Option bei ausgeglichenen Ergebnis-Tendenzen — Risikominimierung ohne großen Quotenverlust.`}}); }
 
     sC.sort((a,b) => b.sc - a.sc);
     for (const c of sC) { if (_push(c.p, c.sc)) break; }
