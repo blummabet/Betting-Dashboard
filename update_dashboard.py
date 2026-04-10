@@ -41,11 +41,15 @@ HEADERS = {
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
-def fetch(url):
+def fetch(url, silent_404=False):
     req = urllib.request.Request(url, headers=HEADERS)
     try:
         with urllib.request.urlopen(req, timeout=10) as resp:
             return json.loads(resp.read().decode())
+    except urllib.error.HTTPError as e:
+        if not (silent_404 and e.code == 404):
+            print(f"  ⚠ Fetch error {url}: {e}")
+        return None
     except Exception as e:
         print(f"  ⚠ Fetch error {url}: {e}")
         return None
@@ -125,42 +129,53 @@ def fetch_team_form(team_id):
 
 def fetch_team_injuries(team_id):
     """Fetch current injury/suspension list for a team from SofaScore.
-    Returns dict with attack/defense counts and player notes, or None on failure.
-    Long-term absences (returnDate in future) are included.
-    Short-term match-day decisions are NOT available via this endpoint.
+    Tries multiple known endpoint variants (SofaScore API changes frequently).
+    Returns dict with attack/defense counts and player notes, or None if unavailable.
+    Note: only long-term absences are available; match-day decisions are not.
     """
-    from datetime import datetime
-    data = fetch(f"https://api.sofascore.com/api/v1/team/{team_id}/injuries")
-    if not data or not data.get("injuries"):
+    now_ts = datetime.now().timestamp()
+
+    # Try known SofaScore injury endpoints (silent 404 — expected when endpoint unavailable)
+    candidates = [
+        f"https://api.sofascore.com/api/v1/team/{team_id}/injuries",
+        f"https://api.sofascore.com/api/v1/team/{team_id}/players/missing",
+    ]
+    raw_injuries = None
+    for url in candidates:
+        data = fetch(url, silent_404=True)
+        if data:
+            # Normalise: endpoint may return {"injuries":[...]} or {"missingPlayers":[...]}
+            raw_injuries = data.get("injuries") or data.get("missingPlayers") or []
+            if raw_injuries:
+                break
+
+    if not raw_injuries:
         return None
 
-    now_ts = datetime.now().timestamp()
     attack_count, defense_count = 0, 0
     notes = []
 
-    for inj in data.get("injuries", []):
+    for inj in raw_injuries:
         player   = inj.get("player") or {}
-        pos      = player.get("position", "")         # F / M / D / G
+        pos      = player.get("position", "")          # F / M / D / G
         name     = player.get("name", "?")
         inj_info = (inj.get("playerTeamInjury") or inj.get("injury") or {})
         ret_ts   = inj_info.get("returnTimestamp") or inj_info.get("returnDate")
 
-        # Skip if already recovered (return date in the past)
+        # Skip already-recovered players
         if ret_ts and isinstance(ret_ts, (int, float)) and ret_ts < now_ts:
             continue
 
-        # Position categories
         if pos in ("F", "M"):
             attack_count += 1
         elif pos in ("D", "G"):
             defense_count += 1
         else:
-            continue  # ignore unknown positions
+            continue
 
-        # Build human-readable note
         if ret_ts and isinstance(ret_ts, (int, float)):
             weeks_left = max(0, int((ret_ts - now_ts) / 604800))
-            suffix = f"bald zurück" if weeks_left == 0 else f"ca. {weeks_left} Wo."
+            suffix = "bald zurück" if weeks_left == 0 else f"ca. {weeks_left} Wo."
         else:
             suffix = "unbekannte Dauer"
         notes.append(f"{name} ({suffix})")
@@ -171,7 +186,7 @@ def fetch_team_injuries(team_id):
     return {
         "attack":  attack_count,
         "defense": defense_count,
-        "notes":   notes[:4],  # cap at 4 entries for UI display
+        "notes":   notes[:4],
     }
 
 
