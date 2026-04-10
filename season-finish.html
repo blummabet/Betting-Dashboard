@@ -1894,13 +1894,19 @@ function getBettingPicks(match, odds, leagueKey) {
         reason:`${egPfx} — taktisches Abtasten, vorsichtiger Spielbeginn erwartet.<br>Beide Offensiven gedämpft in der ersten Hälfte — maximal 1 Treffer bis zur Pause sehr wahrscheinlich.`}});
     }
 
-    // Fallback DC — guaranteed PICK 3 slot when no specialist qualifies.
-    // conf:'medium' so it survives visiblePicks; lowest sc so it sorts last.
-    { const fbDC = hFS_home >= aFS_away ? 'Doppelte Chance: 1X' : 'Doppelte Chance: X2';
-      const fbTeam = hFS_home >= aFS_away ? match.home : match.away;
-      const fbOdds = hFS_home >= aFS_away ? (o.dc1X||null) : (o.dcX2||null);
-      sC.push({sc:0.35, p:{icon:'🎯', market:fbDC, odds:fbOdds, conf:'medium',
-        reason:`Taktische Absicherung für ${fbTeam} — Doppelte Chance deckt Sieg <em>und</em> Remis ab.<br>Sinnvolle Option bei ausgeglichenen Ergebnis-Tendenzen — Risikominimierung ohne großen Quotenverlust.`}}); }
+    // Fallback DC — BOTH directions pushed so dedup-safe.
+    // If PICK 1 already used the primary DC direction, the alternative is still free.
+    { const homeFav  = hFS_home >= aFS_away;
+      const prim     = homeFav ? 'Doppelte Chance: 1X' : 'Doppelte Chance: X2';
+      const alt      = homeFav ? 'Doppelte Chance: X2' : 'Doppelte Chance: 1X';
+      const primOdds = homeFav ? (o.dc1X||null) : (o.dcX2||null);
+      const altOdds  = homeFav ? (o.dcX2||null) : (o.dc1X||null);
+      const primTeam = homeFav ? match.home : match.away;
+      const altTeam  = homeFav ? match.away : match.home;
+      sC.push({sc:0.35, p:{icon:'🎯', market:prim, odds:primOdds, conf:'medium',
+        reason:`Taktische Absicherung für ${primTeam} — Doppelte Chance deckt Sieg <em>und</em> Remis ab.<br>Risikominimierung ohne großen Quotenverlust — strukturell sicherste Wette für den Favoriten.`}});
+      sC.push({sc:0.27, p:{icon:'🎯', market:alt,  odds:altOdds,  conf:'medium',
+        reason:`Doppelte Chance ${altTeam} als Absicherung — deckt Sieg <em>und</em> Unentschieden ab.<br>Sinnvoll wenn beide Teams ausgeglichen sind — reduziert Risiko bei engen Partien.`}}); }
 
     sC.sort((a,b) => b.sc - a.sc);
     for (const c of sC) { if (_push(c.p, c.sc)) break; }
