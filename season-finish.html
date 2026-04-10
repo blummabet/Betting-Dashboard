@@ -1498,8 +1498,9 @@ function getBettingPicks(match, odds, leagueKey) {
       // unlucky away team → regression risk → further softens home win case
       sc += _hFairMod;   // home overperforming xG at home → reduce confidence
       sc -= _aFairMod;   // away underperforming → they're due, hurts home win case
-      // BACKTEST FINDING: raise ★★★ threshold from 1.20 → 1.50 (only genuine multi-signal picks)
-      const conf = sc > 1.50 ? 'high' : sc > 0.72 ? 'medium' : 'low';
+      // ★★★ threshold 1.50 (multi-signal). ★★☆ lowered 0.72→0.50 so normal home favorites
+      // without pressure still show (backtest showed too many good picks hidden at 0.72).
+      const conf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
       const _xgLbl = xGBased ? 'xG' : 'Tore';
       let reason = homeInForm
         ? `${match.home} aktuell in Bestform — ${hStreak} Siege in Folge, Heim-Formquote ${Math.round(hFS_home*100)}%.<br>Angriff erzielt Ø ${homeAttStr.toFixed(1)} ${_xgLbl}/Sp, Gegner kassiert Ø ${awayDefStr.toFixed(1)}/Sp — Heimvorteil voll zur Geltung.`
@@ -1535,7 +1536,7 @@ function getBettingPicks(match, odds, leagueKey) {
       sc += _aFairMod;   // away overperforming → reduce confidence
       sc -= _hFairMod;   // home underperforming → they'll improve, hurts away win
       // Threshold: ★★★ at 1.30 (slightly lower than Heimsieg since away wins are rarer/more selective)
-      const conf = sc > 1.30 ? 'high' : sc > 0.65 ? 'medium' : 'low';
+      const conf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
       const _xgLblA = xGBased ? 'xG' : 'Tore';
       let reason = awayInForm
         ? `${match.away} aktuell in Topform auf Reisen — ${aStreak} Siege in Folge, Ausw.-Formquote ${Math.round(aFS_away*100)}%.<br>Angriff erzielt Ø ${awayAttStr.toFixed(1)} ${_xgLblA}/Sp, Heimteam kassiert Ø ${homeDefStr.toFixed(1)}/Sp — Auswärtssieg klar fundiert.`
@@ -1635,13 +1636,23 @@ function getBettingPicks(match, odds, leagueKey) {
                     : _raw === 'DNB: Auswärtsteam'  || _raw === 'Doppelte Chance: X2' ? 'Auswärtssieg'
                     : _raw;
     }
-    // Push PICK 1: take the best medium/high result pick.
-    // NOTE: sc for result picks is a composite ranking score (0–2+), NOT a probability.
-    // The old sc < 0.73 implied-odds guard was wrong — it blocked all good picks without
-    // real odds (since medium Heimsieg starts at sc > 0.72). Real-odds filter (≥ 1.30)
-    // is handled downstream in visiblePicks via _impliedOddsOk.
+    // Push PICK 1: prefer medium/high result pick.
+    // Fallback: if all result picks are low-conf (e.g. both-red evenly matched games),
+    // promote the best DC/DNB to medium — these are inherently safer than a raw outright
+    // and give the user something actionable when no clear winner exists.
     { const best = rC.find(r => r.p.conf !== 'low');
-      if (best) _push(best.p, best.sc);
+      if (best) {
+        _push(best.p, best.sc);
+      } else {
+        // No confident result — take safest available (DC preferred, then DNB, then best)
+        const fallback = rC.find(r => r.p.market.startsWith('Doppelte Chance'))
+                      || rC.find(r => r.p.market.startsWith('DNB'))
+                      || rC[0];
+        if (fallback) {
+          fallback.p.conf = 'medium'; // promote: DC/DNB always safer than a raw outright
+          _push(fallback.p, fallback.sc);
+        }
+      }
     }
   }
 
