@@ -123,6 +123,58 @@ def fetch_team_form(team_id):
     }
 
 
+def fetch_team_injuries(team_id):
+    """Fetch current injury/suspension list for a team from SofaScore.
+    Returns dict with attack/defense counts and player notes, or None on failure.
+    Long-term absences (returnDate in future) are included.
+    Short-term match-day decisions are NOT available via this endpoint.
+    """
+    from datetime import datetime
+    data = fetch(f"https://api.sofascore.com/api/v1/team/{team_id}/injuries")
+    if not data or not data.get("injuries"):
+        return None
+
+    now_ts = datetime.now().timestamp()
+    attack_count, defense_count = 0, 0
+    notes = []
+
+    for inj in data.get("injuries", []):
+        player   = inj.get("player") or {}
+        pos      = player.get("position", "")         # F / M / D / G
+        name     = player.get("name", "?")
+        inj_info = (inj.get("playerTeamInjury") or inj.get("injury") or {})
+        ret_ts   = inj_info.get("returnTimestamp") or inj_info.get("returnDate")
+
+        # Skip if already recovered (return date in the past)
+        if ret_ts and isinstance(ret_ts, (int, float)) and ret_ts < now_ts:
+            continue
+
+        # Position categories
+        if pos in ("F", "M"):
+            attack_count += 1
+        elif pos in ("D", "G"):
+            defense_count += 1
+        else:
+            continue  # ignore unknown positions
+
+        # Build human-readable note
+        if ret_ts and isinstance(ret_ts, (int, float)):
+            weeks_left = max(0, int((ret_ts - now_ts) / 604800))
+            suffix = f"bald zurück" if weeks_left == 0 else f"ca. {weeks_left} Wo."
+        else:
+            suffix = "unbekannte Dauer"
+        notes.append(f"{name} ({suffix})")
+
+    if attack_count == 0 and defense_count == 0:
+        return None
+
+    return {
+        "attack":  attack_count,
+        "defense": defense_count,
+        "notes":   notes[:4],  # cap at 4 entries for UI display
+    }
+
+
 def fetch_h2h(event_id):
     """Fetch H2H stats for a given upcoming event.
     Sofascore returns aggregate wins/draws/losses in teamDuel — no per-match data.
@@ -347,15 +399,20 @@ def fetch_league(key, cfg):
     max_played  = max(t["played"] for t in standings) if standings else 0
     rounds_left = max(0, cfg["rounds"] - max_played)
 
-    # ── Pre-fetch form for teams that have stakes ─────────────────────────────
-    print(f"    Fetching form data...")
-    form_cache = {}   # team_name → form dict
+    # ── Pre-fetch form + injuries for teams that have stakes ─────────────────
+    print(f"    Fetching form + injury data...")
+    form_cache = {}   # team_name → form dict (includes injuries when available)
     for t in standings:
         labels = calc_labels(t, standings, cfg)
         if not labels:
             continue
         fd = fetch_team_form(t["teamId"])
         if fd:
+            # Attach current injury data to form dict
+            inj = fetch_team_injuries(t["teamId"])
+            if inj:
+                fd["injuries"] = inj
+                print(f"      {t['team']}: 🏥 {inj['attack']} Angriff / {inj['defense']} Abwehr Ausfälle")
             form_cache[t["team"]] = fd
             streak_str = f"+{fd['streak']}" if fd["streak"] > 0 else str(fd["streak"])
             print(f"      {t['team']}: {fd['form']}  streak={streak_str}  fs={fd['formScore']}")

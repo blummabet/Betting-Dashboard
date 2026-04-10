@@ -450,6 +450,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .ps-rounds{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text);}
 .ps-team{font-size:11px;color:var(--muted);font-weight:500;}
 
+/* FATIGUE + INJURY STRIP */
+.context-strip{display:flex;flex-wrap:wrap;gap:6px;padding:7px 10px;border-radius:7px;margin-bottom:9px;background:#0d1117;border:1px solid #21262d;font-size:11px;}
+.ctx-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-weight:600;font-size:10.5px;}
+.ctx-fatigue-high{background:#2a1000;color:#f85149;border:1px solid #6b1d1d;}
+.ctx-fatigue-med {background:#1a1500;color:#e3b341;border:1px solid #5a4700;}
+.ctx-injury-atk  {background:#1a001a;color:#d2a8ff;border:1px solid #5a2d82;}
+.ctx-injury-def  {background:#001a2a;color:#79c0ff;border:1px solid #1d4e7a;}
+
 /* VALUE BADGE */
 .value-tag{display:inline-block;font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle;letter-spacing:.3px;}
 .value-tag.hot{background:#2d1200;color:#ff8c00;border:1px solid #7d3800;}
@@ -1408,11 +1416,36 @@ function getBettingPicks(match, odds, leagueKey) {
   const awayPoor   = aStreak <= -3 || aFS_away < 0.22;
   const drawLikely = drawRate > 0.36;
 
+  // ── Rest-Tage / Fixture Congestion ──────────────────────────────────────────
+  // getRestDays looks up previous fixture in the league calendar → days between games.
+  // Away travel amplifies fatigue → slightly stronger penalty on awayAttStr.
+  const _allFix    = leagueKey ? (LEAGUES[leagueKey]?.fixtures || []) : [];
+  const _hRest     = getRestDays(match.home, match.date, _allFix);
+  const _aRest     = getRestDays(match.away, match.date, _allFix);
+  // Attack mult: tired team creates fewer chances (≤3d: -18%, ≤4d: -10%, ≤5d: -4%)
+  const _hFatigAtt = _hRest == null ? 1.0 : _hRest <= 3 ? 0.82 : _hRest <= 4 ? 0.90 : _hRest <= 5 ? 0.96 : 1.0;
+  const _aFatigAtt = _aRest == null ? 1.0 : _aRest <= 3 ? 0.78 : _aRest <= 4 ? 0.87 : _aRest <= 5 ? 0.94 : 1.0;
+  // Defense mult: tired team concedes more (≤3d: +10%, ≤4d: +6%, ≤5d: +2%)
+  const _hFatigDef = _hRest == null ? 1.0 : _hRest <= 3 ? 1.10 : _hRest <= 4 ? 1.06 : _hRest <= 5 ? 1.02 : 1.0;
+  const _aFatigDef = _aRest == null ? 1.0 : _aRest <= 3 ? 1.12 : _aRest <= 4 ? 1.07 : _aRest <= 5 ? 1.02 : 1.0;
+
+  // ── Injuries (injected by update_dashboard.py via SofaScore) ────────────────
+  // form.injuries = { attack: N, defense: N, notes: ["Player (ca. 2 Wo.)", ...] }
+  const _hInj      = hF.injuries || null;
+  const _aInj      = aF.injuries || null;
+  // Attack injury: each missing attacker/midfielder damps scoring by ~8% (max -25%)
+  const _hInjAtt   = _hInj ? Math.max(0.75, 1 - (_hInj.attack  || 0) * 0.08) : 1.0;
+  const _aInjAtt   = _aInj ? Math.max(0.75, 1 - (_aInj.attack  || 0) * 0.08) : 1.0;
+  // Defense injury: each missing defender/keeper increases concede rate by ~7% (max +25%)
+  const _hInjDef   = _hInj ? Math.min(1.25, 1 + (_hInj.defense || 0) * 0.07) : 1.0;
+  const _aInjDef   = _aInj ? Math.min(1.25, 1 + (_aInj.defense || 0) * 0.07) : 1.0;
+
   // ── xG-based profiles (xG preferred, goals as fallback) ─────────────────
-  const homeAttStr   = xGBased ? _hXG  : hGoals;  // home attacking strength
-  const homeDefStr   = xGBased ? _hXGA : hConc;   // home def weakness (higher = leakier)
-  const awayAttStr   = xGBased ? _aXG  : aGoals;  // away attacking strength
-  const awayDefStr   = xGBased ? _aXGA : aConc;   // away def weakness
+  // Fatigue + injury multipliers applied at source → flow through ALL pick computations.
+  let homeAttStr = (xGBased ? _hXG  : hGoals) * _hFatigAtt * _hInjAtt;
+  let homeDefStr = (xGBased ? _hXGA : hConc)  * _hFatigDef * _hInjDef;
+  let awayAttStr = (xGBased ? _aXG  : aGoals) * _aFatigAtt * _aInjAtt;
+  let awayDefStr = (xGBased ? _aXGA : aConc)  * _aFatigDef * _aInjDef;
   // BTTS signals (refined by xG)
   const bttsXGStrong = homeAttStr > 1.30 && awayAttStr > 1.10 && homeDefStr > 0.90 && awayDefStr > 0.90;
   const bttsLikely   = homeAttStr > 1.15 && awayAttStr > 0.95 && homeDefStr > 0.85 && awayDefStr > 0.85;
@@ -1923,6 +1956,30 @@ function getBettingPicks(match, odds, leagueKey) {
     if (mp === null) { p.value = null; return; }
     const edge = mp - ip;
     p.value = edge >= 0.13 ? 'hot' : edge >= 0.07 ? 'value' : null;
+  });
+
+  // ── Context notes: fatigue + injuries appended to pick reasons ──────────────
+  const _hFatigNote = _hFatigAtt < 1.0
+    ? `<strong>😴 ${match.home}: nur ${_hRest}T Pause — Ermüdungseffekt (${Math.round((1-_hFatigAtt)*100)}% Angriffsdämpfung) eingerechnet.</strong>`
+    : '';
+  const _aFatigNote = _aFatigAtt < 1.0
+    ? `<strong>😴 ${match.away}: nur ${_aRest}T Pause — Ermüdungseffekt (${Math.round((1-_aFatigAtt)*100)}% Angriffsdämpfung) eingerechnet.</strong>`
+    : '';
+  const _hInjNote = (_hInj && (_hInj.attack > 0 || _hInj.defense > 0))
+    ? `<strong>🏥 ${match.home} Verletzte: ${(_hInj.notes||[]).slice(0,2).join(', ')||'Ausfälle im Kader'}.</strong>`
+    : '';
+  const _aInjNote = (_aInj && (_aInj.attack > 0 || _aInj.defense > 0))
+    ? `<strong>🏥 ${match.away} Verletzte: ${(_aInj.notes||[]).slice(0,2).join(', ')||'Ausfälle im Kader'}.</strong>`
+    : '';
+
+  picks.forEach(p => {
+    const hHome = ['Heimsieg','DNB: Heimteam','Doppelte Chance: 1X','Handicap Heim -0.5'].includes(p.market);
+    const hAway = ['Auswärtssieg','DNB: Auswärtsteam','Doppelte Chance: X2','Handicap Auswärts -0.5'].includes(p.market);
+    const hGoal = ['Over 2.5 Tore','Over 3.5 Tore','Under 2.5 Tore','Beide Teams treffen','Beide Teams treffen: Nein'].includes(p.market);
+    const extras = [];
+    if (hHome || hGoal) { if (_hFatigNote) extras.push(_hFatigNote); if (_hInjNote) extras.push(_hInjNote); }
+    if (hAway || hGoal) { if (_aFatigNote) extras.push(_aFatigNote); if (_aInjNote) extras.push(_aInjNote); }
+    if (extras.length) p.reason += '<br>' + extras.join('<br>');
   });
 
   return picks;
@@ -3177,6 +3234,35 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     </div>`;
   }
 
+  // ── Context strip: rest days + injuries ─────────────────────────────────
+  const _ctxFix  = leagueKey ? (LEAGUES[leagueKey]?.fixtures || []) : [];
+  const _ctxHRest = getRestDays(match.home, match.date, _ctxFix);
+  const _ctxARest = getRestDays(match.away, match.date, _ctxFix);
+  const _ctxHInj  = match.homeForm?.injuries || null;
+  const _ctxAInj  = match.awayForm?.injuries || null;
+  const ctxBadges = [];
+  if (_ctxHRest != null && _ctxHRest <= 5) {
+    const cls = _ctxHRest <= 3 ? 'ctx-fatigue-high' : 'ctx-fatigue-med';
+    ctxBadges.push(`<span class="ctx-badge ${cls}">😴 ${match.home}: ${_ctxHRest}T Pause</span>`);
+  }
+  if (_ctxARest != null && _ctxARest <= 5) {
+    const cls = _ctxARest <= 3 ? 'ctx-fatigue-high' : 'ctx-fatigue-med';
+    ctxBadges.push(`<span class="ctx-badge ${cls}">😴 ${match.away}: ${_ctxARest}T Pause</span>`);
+  }
+  if (_ctxHInj && (_ctxHInj.attack > 0 || _ctxHInj.defense > 0)) {
+    const n = (_ctxHInj.attack||0) + (_ctxHInj.defense||0);
+    const cls = _ctxHInj.attack > 0 ? 'ctx-injury-atk' : 'ctx-injury-def';
+    ctxBadges.push(`<span class="ctx-badge ${cls}">🏥 ${match.home}: ${n} Ausfall${n>1?'s':''}</span>`);
+  }
+  if (_ctxAInj && (_ctxAInj.attack > 0 || _ctxAInj.defense > 0)) {
+    const n = (_ctxAInj.attack||0) + (_ctxAInj.defense||0);
+    const cls = _ctxAInj.attack > 0 ? 'ctx-injury-atk' : 'ctx-injury-def';
+    ctxBadges.push(`<span class="ctx-badge ${cls}">🏥 ${match.away}: ${n} Ausfall${n>1?'s':''}</span>`);
+  }
+  const contextHtml = ctxBadges.length
+    ? `<div class="context-strip">${ctxBadges.join('')}</div>`
+    : '';
+
   return `
   <div class="stake-card ${ct}">
     <div class="score-badge ${scoreClass(sc)}"><span class="sb-val">${sc}</span><span class="sb-sub">/12</span></div>
@@ -3185,7 +3271,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       <div class="card-date">📅 ${match.date}${match.time ? ' · ' + match.time : ''}</div>
       <div class="card-match">${match.home} vs ${match.away}</div>
     </div>
-    ${pressureHtml}
+    ${pressureHtml}${contextHtml}
     <div class="teams-stakes">
       ${renderStakeRow(match.home, match.homeStake, match.homeForm, leagueKey)}
       ${renderStakeRow(match.away, match.awayStake, match.awayForm, leagueKey)}
@@ -3328,6 +3414,20 @@ function renderOverview() {
 function parseGermanDate(str) {
   const [d, m, y] = (str||'').split('.');
   return new Date(+y, +m - 1, +d);
+}
+
+// Returns days of rest a team had before matchDate, based on their previous fixture in allFixtures.
+// null = no previous fixture found in our data (e.g. first game of tracked window).
+function getRestDays(teamName, matchDate, allFixtures) {
+  if (!allFixtures || !allFixtures.length || !matchDate) return null;
+  const matchDt = parseGermanDate(matchDate);
+  const prev = allFixtures
+    .filter(f => f.home === teamName || f.away === teamName)
+    .map(f => parseGermanDate(f.date))
+    .filter(d => d.getTime() < matchDt.getTime());
+  if (!prev.length) return null;
+  prev.sort((a, b) => b - a);
+  return Math.round((matchDt.getTime() - prev[0].getTime()) / 864e5);
 }
 
 function isWithin7Days(dateStr) {
