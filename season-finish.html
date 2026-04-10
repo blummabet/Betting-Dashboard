@@ -1206,6 +1206,13 @@ function findOdds(leagueKey, home, away) {
           if (o.name==='Over'  && Math.abs(o.point-3.5)<0.01) r.o35=o.price;
         }
       }
+      const btts = (book.markets||[]).find(m=>m.key==='btts');
+      if (btts) {
+        for (const o of (btts.outcomes||[])) {
+          if (o.name==='Yes') r.bttsY=o.price;
+          if (o.name==='No')  r.bttsN=o.price;
+        }
+      }
       return Object.keys(r).length ? r : null;
     }
   }
@@ -1215,12 +1222,34 @@ function findOdds(leagueKey, home, away) {
 async function loadAllOdds() {
   await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
     try {
-      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,totals&oddsFormat=decimal&bookmakers=pinnacle`;
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,totals,btts&oddsFormat=decimal&bookmakers=pinnacle`;
       const resp = await fetch(url);
       if (resp.ok) window._oddsData[lk] = await resp.json();
     } catch(e) { /* silent fail */ }
   }));
   window._oddsReady = true;
+}
+
+// ═══════════════════════════════════════════════════════
+//  DERIVED ODDS HELPER (DNB + Doppelte Chance from 1X2)
+// ═══════════════════════════════════════════════════════
+// DNB Home fair odds: neutral on draw → 1 + P(away)/P(home)  [de-vigged, ~3% Pinnacle margin applied]
+// DC 1X fair odds: covers home win + draw → 1 / (P(home) + P(draw))
+function deriveOdds(raw) {
+  if (!raw || !raw.hw || !raw.dr || !raw.aw) return raw || {};
+  const tot = 1/raw.hw + 1/raw.dr + 1/raw.aw;  // total implied (>1 = overround)
+  const ph = (1/raw.hw) / tot;                  // de-vigged home win probability
+  const pd = (1/raw.dr) / tot;                  // de-vigged draw probability
+  const pa = (1/raw.aw) / tot;                  // de-vigged away win probability
+  const m  = 0.97;                              // ~3% Pinnacle-style margin applied to derived markets
+  const r  = (x) => Math.round(x * 100) / 100;
+  return {
+    ...raw,
+    dnbH: r((1 + pa/ph) * m),   // DNB Heimteam
+    dnbA: r((1 + ph/pa) * m),   // DNB Auswärtsteam
+    dc1X: r((1/(ph+pd)) * m),   // Doppelte Chance 1X
+    dcX2: r((1/(pd+pa)) * m),   // Doppelte Chance X2
+  };
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1235,7 +1264,7 @@ function getBettingPicks(match, odds, leagueKey) {
   const anyRed   = hc.includes('red')  || ac.includes('red');
   const anyGold  = hc.includes('gold') || ac.includes('gold');
   const anyBlue  = hc.includes('blue') || ac.includes('blue');
-  const o = odds || {};
+  const o = deriveOdds(odds || {});
 
   // ── Form signals ──────────────────────────────────────
   const hF = match.homeForm || {}, aF = match.awayForm || {};
@@ -1532,7 +1561,7 @@ function getBettingPicks(match, odds, leagueKey) {
       const sc = heimsiegSc * 0.62 + drawRate * 0.28;
       if (sc > 0.38 && drawRate > 0.20) {
         const conf = sc > 0.52 ? 'medium' : 'low';
-        rC.push({sc, p:{icon:'🏠', market:'DNB: Heimteam', odds: null, conf,
+        rC.push({sc, p:{icon:'🏠', market:'DNB: Heimteam', odds: o.dnbH||null, conf,
           reason:`${match.home} als Favorit mit realer Remis-Gefahr (H2H-Remisquote ${Math.round(drawRate*100)}%).<br>Draw No Bet eliminiert das Unentschieden-Risiko — nur Heimsieg oder Geldrückgabe bei Remis. Sicherer Einstieg mit Puffer.`}});
       }
     }
@@ -1542,7 +1571,7 @@ function getBettingPicks(match, odds, leagueKey) {
       const sc = auswSc * 0.62 + drawRate * 0.28;
       if (sc > 0.38 && drawRate > 0.20) {
         const conf = sc > 0.50 ? 'medium' : 'low';
-        rC.push({sc, p:{icon:'✈️', market:'DNB: Auswärtsteam', odds: null, conf,
+        rC.push({sc, p:{icon:'✈️', market:'DNB: Auswärtsteam', odds: o.dnbA||null, conf,
           reason:`${match.away} auf Auswärtskurs, aber Remis-Gefahr nicht zu unterschätzen (${Math.round(drawRate*100)}% H2H-Remisquote).<br>DNB schützt die Wette: nur Auswärtssieg zählt — bei Unentschieden wird der Einsatz zurückgebucht.`}});
       }
     }
@@ -1562,7 +1591,8 @@ function getBettingPicks(match, odds, leagueKey) {
       const reason = dcHome
         ? `${match.home} als Favorit (Heim-Form ${Math.round(hFS_home*100)}%) — DC 1X deckt Sieg UND Remis ab.<br>H2H-Remisquote ${Math.round(drawRate*100)}% macht Remis-Puffer sinnvoll — strukturell sicherste Result-Wette.`
         : `${match.away} mit Auswärtsstärke (Form ${Math.round(aFS_away*100)}%) — DC X2 schließt Remis mit ein.<br>H2H-Remisquote ${Math.round(drawRate*100)}% — guter Puffer falls Heimteam ausgleicht.`;
-      rC.push({sc, p:{icon:'🎯', market:dcMkt, odds:null, conf, reason}});
+      const dcOdds = dcHome ? (o.dc1X||null) : (o.dcX2||null);
+      rC.push({sc, p:{icon:'🎯', market:dcMkt, odds:dcOdds, conf, reason}});
     }
     rC.sort((a,b) => b.sc - a.sc);
     // _topResultMkt is used by PICK 2 consistency guard (awayWinWeak / homeWinWeak).
@@ -1674,7 +1704,7 @@ function getBettingPicks(match, odds, leagueKey) {
       const _bttsPressNote = bothNeedWin
         ? `<br><strong>⚡ Beide Teams müssen gewinnen${_rlSfx} — beide greifen an, beide riskieren Kontertore.</strong>`
         : _anyNeedsWin ? `<br><strong>⚡ ${homeNeedsWin ? _pHLabel : _pALabel}${_rlSfx} — öffnet hinten Räume, Kontertreffer für Gegner wahrscheinlich.</strong>` : '';
-      gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:null,
+      gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:o.bttsY||null,
         conf: sc>0.65?'high':sc>0.44?'medium':'low',
         reason:`Beide Offensiven treffsicher: Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp.<br>Beide Defensiven löchrig (kassieren Ø ${homeDefStr.toFixed(1)} / ${awayDefStr.toFixed(1)}/Sp) — Tore auf beiden Seiten sehr wahrscheinlich.${_bttsPressNote}`}}); }
 
@@ -1689,7 +1719,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if (bothNeedWin)       sc = Math.max(0, sc - _pressureBoost * 1.20);
       else if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 0.70);
       const weakAtt = homeAttStr<awayAttStr?match.home:match.away;
-      gC.push({sc, p:{icon:'🔒', market:'Beide Teams treffen: Nein', odds:null,
+      gC.push({sc, p:{icon:'🔒', market:'Beide Teams treffen: Nein', odds:o.bttsN||null,
         conf: sc>0.58?'medium':'low',
         reason:`${weakAtt} trifft selten (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} ${xGBased?'xG':'Tore'}/Sp) — Zu-Null-Szenario strukturell realistisch.<br>Schwache Offensive auf mindestens einer Seite macht Tore für dieses Team unwahrscheinlich.`}}); }
 
@@ -1835,7 +1865,8 @@ function getBettingPicks(match, odds, leagueKey) {
     // conf:'medium' so it survives visiblePicks; lowest sc so it sorts last.
     { const fbDC = hFS_home >= aFS_away ? 'Doppelte Chance: 1X' : 'Doppelte Chance: X2';
       const fbTeam = hFS_home >= aFS_away ? match.home : match.away;
-      sC.push({sc:0.35, p:{icon:'🎯', market:fbDC, odds:null, conf:'medium',
+      const fbOdds = hFS_home >= aFS_away ? (o.dc1X||null) : (o.dcX2||null);
+      sC.push({sc:0.35, p:{icon:'🎯', market:fbDC, odds:fbOdds, conf:'medium',
         reason:`Taktische Absicherung für ${fbTeam} — Doppelte Chance deckt Sieg <em>und</em> Remis ab.<br>Sinnvolle Option bei ausgeglichenen Ergebnis-Tendenzen — Risikominimierung ohne großen Quotenverlust.`}}); }
 
     sC.sort((a,b) => b.sc - a.sc);
