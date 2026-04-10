@@ -1943,6 +1943,32 @@ function computeMatchScore(match, leagueKey) {
   if (match.homeForm) score += _formMod(match.homeForm, hc.includes('red')) * 0.35;
   if (match.awayForm) score += _formMod(match.awayForm, ac.includes('red')) * 0.35;
 
+  // ── Goals-per-game bonus (betting signal: high-scoring teams = more markets) ──
+  // goalsPerGame & concededPerGame are in form data for every staked team.
+  // We reward matches where the combined attacking output suggests a lively game.
+  {
+    const hGpg = match.homeForm?.goalsPerGame   ?? null;
+    const aCpg = match.awayForm?.concededPerGame ?? null;
+    const aGpg = match.awayForm?.goalsPerGame   ?? null;
+    const hCpg = match.homeForm?.concededPerGame ?? null;
+
+    // Expected goals proxy: (home attack + away attack + home def leak + away def leak) / 4
+    // This gives a rough match goal expectancy from form data alone
+    const attacking = [hGpg, aGpg].filter(v => v != null);
+    const defending = [hCpg, aCpg].filter(v => v != null);
+    if (attacking.length && defending.length) {
+      const avgAtk = attacking.reduce((a,b) => a+b, 0) / attacking.length;
+      const avgDef = defending.reduce((a,b) => a+b, 0) / defending.length;
+      const goalProxy = (avgAtk + avgDef) / 2;
+      // goalProxy > 2.2 → rich goal environment → more betting markets active → higher interest
+      if      (goalProxy >= 2.8) score += 0.35;
+      else if (goalProxy >= 2.2) score += 0.20;
+      else if (goalProxy >= 1.8) score += 0.10;
+      // Inverse: very low-scoring games are less interesting for betting
+      else if (goalProxy <  1.0) score -= 0.10;
+    }
+  }
+
   // ── Season urgency multiplier ──────────────────────────────────────────────
   // The Python calc_score() already bakes urgency into stake scores (1–10),
   // but those are clamped at 10, compressing differentiation in the final stretch.
@@ -1951,10 +1977,16 @@ function computeMatchScore(match, leagueKey) {
   // Only applied when at least one staked team is involved.
   {
     const _rl = match.roundsLeft ?? 99;
-    if (_rl <= 8 && (anyRed || anyGold || bothBlue)) {
+    const anyOrange = hc.includes('orange') || ac.includes('orange');
+    const anyPurple = hc.includes('purple') || ac.includes('purple');
+    if (_rl <= 8 && (anyRed || anyGold || bothBlue || anyOrange || anyPurple)) {
       const _urgency = Math.max(0, Math.min(1.5, (10 - _rl) / 7));
-      // Scale: rl=8 → +0.24, rl=5 → +0.43, rl=3 → +0.60, rl=1 → +0.77
-      score += _urgency * 0.51;
+      // Red/Gold/Blue: full urgency. Orange (EL-Jagd, Relegation-Gefahr): 70%. Purple: 55%.
+      const _urgWeight = (anyRed || anyGold || bothBlue) ? 1.0
+                       : anyOrange ? 0.70
+                       : 0.55;
+      // Scale (full): rl=8→+0.24, rl=5→+0.43, rl=3→+0.60, rl=1→+0.77
+      score += _urgency * 0.51 * _urgWeight;
     }
   }
 
