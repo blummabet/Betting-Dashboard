@@ -1282,6 +1282,36 @@ function getBettingPicks(match, odds, leagueKey) {
     : null;
   const xGBased = !!(_hXG && _hXGA && _aXG && _aXGA);
 
+  // ── xG Fairness (from refresh_stats.py — actual goals ÷ expected goals) ──
+  // > 1.15 = overperforming xG → likely to regress downward (lucky)
+  // < 0.85 = underperforming xG → likely to regress upward (unlucky)
+  const _hFair  = hStat.xg_fairness_home ?? null;  // home team at home
+  const _aFair  = aStat.xg_fairness_away ?? null;  // away team away
+  // How much to nudge result pick confidence based on fairness
+  // Overperforming home team → expect fewer goals → home win less likely → mild penalty
+  // Underperforming home team → regression due → mild boost
+  const _hFairMod = _hFair == null ? 0
+                  : _hFair > 1.25  ? -0.07   // home is very lucky, regression likely
+                  : _hFair > 1.12  ? -0.04
+                  : _hFair < 0.75  ?  0.07   // home badly unlucky, positive regression due
+                  : _hFair < 0.88  ?  0.04
+                  : 0;
+  const _aFairMod = _aFair == null ? 0
+                  : _aFair > 1.25  ? -0.07   // away is very lucky
+                  : _aFair > 1.12  ? -0.04
+                  : _aFair < 0.75  ?  0.07   // away badly unlucky
+                  : _aFair < 0.88  ?  0.04
+                  : 0;
+  // Human-readable fairness note for pick reasons (only shown when meaningful)
+  const _hFairNote = _hFair == null ? ''
+    : _hFair > 1.12 ? ` (Achtung: ${match.home} überperformt xG um ${Math.round((_hFair-1)*100)}% — Regression möglich)`
+    : _hFair < 0.88 ? ` (${match.home} unterperformt xG um ${Math.round((1-_hFair)*100)}% — positiver Trend erwartet)`
+    : '';
+  const _aFairNote = _aFair == null ? ''
+    : _aFair > 1.12 ? ` (Achtung: ${match.away} überperformt xG um ${Math.round((_aFair-1)*100)}% — Regression möglich)`
+    : _aFair < 0.88 ? ` (${match.away} unterperformt xG um ${Math.round((1-_aFair)*100)}% — positiver Trend erwartet)`
+    : '';
+
   // ── Season urgency ────────────────────────────────────
   // roundsLeft is auto-calculated by update_dashboard.py from real standings.
   // The closer to season end, the more every point matters — teams can't afford draws.
@@ -1402,6 +1432,10 @@ function getBettingPicks(match, odds, leagueKey) {
       if (eloDiff !== null) sc += Math.min(0.22, Math.max(-0.22, eloDiff / 700));
       if (homeNeedsWin && !awayNeedsWin) sc += _pressureBoost;
       if (bothNeedWin) sc += _pressureBoost * 0.50;
+      // xG Fairness adjustment: lucky home team → regression risk → mild penalty
+      // unlucky away team → regression risk → further softens home win case
+      sc += _hFairMod;   // home overperforming xG at home → reduce confidence
+      sc -= _aFairMod;   // away underperforming → they're due, hurts home win case
       // BACKTEST FINDING: raise ★★★ threshold from 1.20 → 1.50 (only genuine multi-signal picks)
       const conf = sc > 1.50 ? 'high' : sc > 0.72 ? 'medium' : 'low';
       const _xgLbl = xGBased ? 'xG' : 'Tore';
@@ -1410,6 +1444,9 @@ function getBettingPicks(match, odds, leagueKey) {
         : hc.includes('gold') ? `Titelanwärter ${match.home} unter maximalem Punktdruck — Pflichtaufgabe vor eigenem Publikum.<br>Heim-Angriff erzielt Ø ${homeAttStr.toFixed(1)} ${_xgLbl}/Sp, Gegner kassiert Ø ${awayDefStr.toFixed(1)}/Sp — Kaderqualität sollte sich durchsetzen.`
         : ac.includes('red')  ? `Klares Qualitätsgefälle — ${match.away} im Abstiegskampf, lässt Ø ${awayDefStr.toFixed(1)} ${_xgLbl}/Sp zu.<br>${match.home} erzielt Ø ${homeAttStr.toFixed(1)} ${_xgLbl}/Sp, Formquote ${Math.round(hFS_home*100)}% — Heimsieg strukturell erwartet.`
         : `${match.home} gewinnt ${Math.round(homeWinRate*100)}% der Heimduelle${h2hN>=3?` (${h2hN} H2H-Spiele)`:''} — Heim schießt Ø ${homeAttStr.toFixed(1)} ${_xgLbl}/Sp, Gegner kassiert Ø ${awayDefStr.toFixed(1)}/Sp.<br>Formquote ${Math.round(hFS_home*100)}%${xGBased?' (Understat xG-Modell)':''} — Zahlen stützen Heimfavorit.`;
+      // xG Fairness note (when significant)
+      if (_hFairNote) reason += _hFairNote;
+      if (_aFairNote) reason += _aFairNote;
       // Elo context append (only when significant and data available)
       if (eloLabel && Math.abs(eloDiff) > 40) {
         if (eloHomeFav) reason += ` 📊 ${eloLabel} — Elo bestätigt Heimfavorit.`;
@@ -1431,6 +1468,10 @@ function getBettingPicks(match, odds, leagueKey) {
       if (eloDiff !== null) sc += Math.min(0.22, Math.max(-0.22, -eloDiff / 700));
       if (awayNeedsWin && !homeNeedsWin) sc += _pressureBoost;
       if (bothNeedWin) sc += _pressureBoost * 0.50;
+      // xG Fairness adjustment: lucky away team → regression risk → mild penalty
+      // unlucky home team → they're due → hurts away win case
+      sc += _aFairMod;   // away overperforming → reduce confidence
+      sc -= _hFairMod;   // home underperforming → they'll improve, hurts away win
       // Threshold: ★★★ at 1.30 (slightly lower than Heimsieg since away wins are rarer/more selective)
       const conf = sc > 1.30 ? 'high' : sc > 0.65 ? 'medium' : 'low';
       const _xgLblA = xGBased ? 'xG' : 'Tore';
@@ -1439,6 +1480,9 @@ function getBettingPicks(match, odds, leagueKey) {
         : ac.includes('gold') ? `Titelanwärter ${match.away} auch auswärts auf Volldampf — Kaderklasse schlägt Heimrecht.<br>Ausw.-Angriff erzielt Ø ${awayAttStr.toFixed(1)} ${_xgLblA}/Sp, Heimteam kassiert Ø ${homeDefStr.toFixed(1)}/Sp.`
         : hc.includes('red')  ? `${match.home} im Abstiegskampf, lässt Ø ${homeDefStr.toFixed(1)} ${_xgLblA}/Sp zu — Heimvorteil nur auf dem Papier.<br>${match.away} mit klarem Kadervorsprung: Ausw.-Form ${Math.round(aFS_away*100)}%, H2H-Auswärtssieg ${Math.round(awayWinRate*100)}%.`
         : `${match.away} siegt ${Math.round(awayWinRate*100)}% der Auswärtsbegegnungen${h2hN>=3?` gegen ${match.home} (${h2hN} Duelle)`:''} — Ausw.-Angriff Ø ${awayAttStr.toFixed(1)} ${_xgLblA}/Sp, Heimteam kassiert Ø ${homeDefStr.toFixed(1)}/Sp.<br>Formquote ${Math.round(aFS_away*100)}%${xGBased?' (Understat xG-Modell)':''} — H2H-Auswärtsdominanz strukturell belegt.`;
+      // xG Fairness note
+      if (_aFairNote) reason += _aFairNote;
+      if (_hFairNote) reason += _hFairNote;
       if (eloLabel && Math.abs(eloDiff) > 40) {
         if (eloAwayFav) reason += ` 📊 ${eloLabel} — Elo bestätigt Auswärtsfavorit.`;
         else if (eloHomeFav) reason += ` 📊 ${eloLabel} — Elo-Warnung: Heimteam qualitativ stärker.`;

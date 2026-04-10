@@ -375,23 +375,37 @@ def process_league(league_key: str, league_name: str) -> dict:
         home_g = [g for g in hist if g.get("h_a") == "h"]
         away_g = [g for g in hist if g.get("h_a") == "a"]
 
+        # ── xG Fairness: actual goals scored ÷ expected goals ────────────────
+        # > 1.0 = overperforming xG (lucky, regression likely)
+        # < 1.0 = underperforming xG (unlucky, positive regression likely)
+        def _fairness(games: list) -> Optional[float]:
+            scored = sum(float(g.get("scored") or 0) for g in games)
+            xg     = sum(float(g.get("xG")     or 0) for g in games)
+            return round(scored / xg, 3) if xg > 1.0 else None
+
         entry = {
-            "xG_home":     safe_avg(home_g, "xG"),
-            "xGA_home":    safe_avg(home_g, "xGA"),
-            "homeWinRate": win_rate(home_g),
-            "home_games":  len(home_g),
-            "xG_away":     safe_avg(away_g, "xG"),
-            "xGA_away":    safe_avg(away_g, "xGA"),
-            "awayWinRate": win_rate(away_g),
-            "away_games":  len(away_g),
+            "xG_home":          safe_avg(home_g, "xG"),
+            "xGA_home":         safe_avg(home_g, "xGA"),
+            "homeWinRate":      win_rate(home_g),
+            "home_games":       len(home_g),
+            "xG_away":          safe_avg(away_g, "xG"),
+            "xGA_away":         safe_avg(away_g, "xGA"),
+            "awayWinRate":      win_rate(away_g),
+            "away_games":       len(away_g),
+            # xG Fairness — overall + split by venue
+            "xg_fairness":      _fairness(hist),
+            "xg_fairness_home": _fairness(home_g),
+            "xg_fairness_away": _fairness(away_g),
         }
         stats[our] = entry
 
+        fair_str = f"{entry['xg_fairness']:.2f}" if entry['xg_fairness'] else "-"
         print(f"       {our:<32}  "
               f"xG_h={str(entry['xG_home'] or '-'):>5}  "
               f"xG_a={str(entry['xG_away'] or '-'):>5}  "
               f"WR_h={str(entry['homeWinRate'] or '-'):>4}  "
-              f"WR_a={str(entry['awayWinRate'] or '-'):>4}")
+              f"WR_a={str(entry['awayWinRate'] or '-'):>4}  "
+              f"Fair={fair_str:>5}")
 
     print(f"       → {len(stats)} teams\n")
     return stats
@@ -548,13 +562,19 @@ def main():
 
     print("━" * 58)
     print(f"✅  stats_cache.json written")
+    fair_populated = sum(
+        1 for teams in all_stats.values()
+        for e in teams.values() if e.get("xg_fairness") is not None
+    )
+
     print(f"   Teams total : {total_teams}")
     print(f"   xG data     : {xg_populated} teams  (Big-5 leagues)")
+    print(f"   xG Fairness : {fair_populated} teams  (Big-5 leagues)")
     print(f"   Elo data    : {elo_populated} teams  (all covered leagues)")
     print(f"   File        : {out}")
     print()
     print("ℹ️  Reload season-finish.html to apply new stats.")
-    print("   ENG/GER/ITA/ESP/FRA → real Understat xG + Elo")
+    print("   ENG/GER/ITA/ESP/FRA → real Understat xG + xG Fairness + Elo")
     print("   AUT/NED/SCO/TUR/SUI/POR → Elo only (no xG)")
 
 
