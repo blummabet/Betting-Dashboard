@@ -4085,7 +4085,8 @@ function savePicksToday(btn) {
         .filter(p => p.conf === 'high' || p.conf === 'medium');
       if (!picks.length) continue;
       const d = parseGermanDate(f.date);
-      const dateIso = d.toISOString().slice(0, 10);
+      // Use local date components — toISOString() shifts to UTC and can give the wrong day (e.g. CET midnight = prev day in UTC)
+      const dateIso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
       all.push({
         dateIso, date: f.date,
         league: L.name, leagueFlag: L.flag, leagueKey: key,
@@ -4233,9 +4234,14 @@ async function fetchSofaResults(btn) {
   if (oddsScores.length > 0) {
     for (const entry of picks) {
       if (!entry.picks.some(p => p.result === null)) continue;
+      // Also check ±1 day — old picks may have been saved with UTC-shifted dateIso
+      const nearbyDates = new Set([entry.dateIso]);
+      const dBase = new Date(entry.dateIso);
+      nearbyDates.add(new Date(dBase.getTime() + 864e5).toISOString().slice(0,10));
+      nearbyDates.add(new Date(dBase.getTime() - 864e5).toISOString().slice(0,10));
       const score = oddsScores.find(s =>
         _fuzzyTeam(s.home, entry.home) && _fuzzyTeam(s.away, entry.away) &&
-        s.dateIso === entry.dateIso
+        nearbyDates.has(s.dateIso)
       );
       if (!score) { notFound++; continue; }
       entry.finalScore = `${score.h}:${score.a}`;
@@ -4248,32 +4254,42 @@ async function fetchSofaResults(btn) {
     }
   }
 
-  // ── 2. Fallback: SofaScore (direkt + CORS-Proxy) für noch offene Picks ───
+  // ── 2. Fallback: SofaScore für noch offene Picks ─────────────────────────
   const stillPending = picks.filter(e => e.picks.some(p => p.result === null));
   if (stillPending.length) {
-    const dates = [...new Set(stillPending.map(e => e.dateIso))].sort();
-    for (const date of dates) {
+    // Collect unique dates + each +1 day variant (covers UTC-shifted stored dateIso)
+    const sfDates = [...new Set(stillPending.flatMap(e => {
+      const d1 = e.dateIso;
+      const d2 = new Date(new Date(d1).getTime() + 864e5).toISOString().slice(0,10);
+      return [d1, d2];
+    }))].sort();
+    const sfEvents = {};  // date → events[]
+    for (const date of sfDates) {
       btn.textContent = `⏳ SofaScore ${date}…`;
-      const events = await _sfFetchDate(date);
-      if (!events) continue;
-      for (const entry of picks) {
-        if (entry.dateIso !== date) continue;
-        if (!entry.picks.some(p => p.result === null)) continue;
-        const ev = events.find(e =>
-          _fuzzyTeam(e.homeTeam?.name || '', entry.home) &&
-          _fuzzyTeam(e.awayTeam?.name || '', entry.away)
-        );
-        if (!ev) continue;
-        const h = ev.homeScore?.current ?? null;
-        const a = ev.awayScore?.current ?? null;
-        if (h === null) continue;
-        entry.finalScore = `${h}:${a}`;
-        for (const p of entry.picks) {
-          if (p.result !== null) continue;
-          const outcome = _determineOutcome(p.market, h, a);
-          if (outcome !== null) { p.result = outcome; p.finalScore = `${h}:${a}`; resolved++; notFound = Math.max(0, notFound-1); }
-          else manual++;
-        }
+      const ev = await _sfFetchDate(date);
+      if (ev?.length) sfEvents[date] = ev;
+    }
+    for (const entry of picks) {
+      if (!entry.picks.some(p => p.result === null)) continue;
+      // Gather events from stored date and +1 day
+      const d1 = entry.dateIso;
+      const d2 = new Date(new Date(d1).getTime() + 864e5).toISOString().slice(0,10);
+      const events = [...(sfEvents[d1]||[]), ...(sfEvents[d2]||[])];
+      if (!events.length) continue;
+      const ev = events.find(e =>
+        _fuzzyTeam(e.homeTeam?.name || '', entry.home) &&
+        _fuzzyTeam(e.awayTeam?.name || '', entry.away)
+      );
+      if (!ev) continue;
+      const h = ev.homeScore?.current ?? null;
+      const a = ev.awayScore?.current ?? null;
+      if (h === null) continue;
+      entry.finalScore = `${h}:${a}`;
+      for (const p of entry.picks) {
+        if (p.result !== null) continue;
+        const outcome = _determineOutcome(p.market, h, a);
+        if (outcome !== null) { p.result = outcome; p.finalScore = `${h}:${a}`; resolved++; notFound = Math.max(0, notFound-1); }
+        else manual++;
       }
     }
   }
