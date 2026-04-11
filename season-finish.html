@@ -3741,11 +3741,14 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       }
     }
 
+    const modsHtml = (p._modChips && p._modChips.length)
+      ? `<div class="pick-mods">${p._modChips.join('')}</div>` : '';
     return `<div class="pick-item">
       <span class="pick-icon">${p.icon}</span>
       <div class="pick-body">
         <div class="pick-market">${p.market}${oddsTag}${lowWarn}${valueTag}</div>
         ${fairOddsHtml}
+        ${modsHtml}
         <div class="pick-reason">${p.reason}</div>
       </div>
       <span class="pick-conf ${confClass}">${confLabel}</span>
@@ -5152,12 +5155,15 @@ function _injectPreMatchAndRerender() {
     renderLeague(window._currentLeague || 'overview');
   }
 
-  // Show a brief "✅ Pre-Match geladen" toast
+  // Show a brief "✅ Pre-Match geladen" toast with detail
   const toast = document.createElement('div');
   const loaded = Object.keys(window._preMatchData).length;
+  const _withRef = Object.values(window._preMatchData).filter(d => d.refereeStats?.avgCards != null).length;
+  const _withInj = Object.values(window._preMatchData).filter(d => d.injuries?.home?.length || d.injuries?.away?.length).length;
+  const _withH2h = Object.values(window._preMatchData).filter(d => d.h2h?.avgGoals != null).length;
   toast.textContent = loaded
-    ? `✅ Pre-Match: ${loaded} Spiele angereichert (Schiedsrichter · Verletzungen · H2H)`
-    : '⚠️ Pre-Match: Keine Spieldaten für diese Woche gefunden';
+    ? `✅ Pre-Match: ${loaded} Spiele — 👨‍⚖️ ${_withRef} SR · 🏥 ${_withInj} Verletzte · 📊 ${_withH2h} H2H`
+    : '⚠️ Pre-Match: Keine Spieldaten für diese Woche — Klick auf 🔃 Pre-Match zum Reload';
   Object.assign(toast.style, {
     position:'fixed', bottom:'80px', left:'50%', transform:'translateX(-50%)',
     background: loaded ? '#0d2a1a' : '#2a1500',
@@ -5167,7 +5173,7 @@ function _injectPreMatchAndRerender() {
     zIndex:'9999', whiteSpace:'nowrap', boxShadow:'0 4px 20px rgba(0,0,0,0.5)'
   });
   document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 4000);
+  setTimeout(() => toast.remove(), 7000);
 }
 
 // ── SofaScore fallback (direct + CORS proxies) ────────────────────────────────
