@@ -457,6 +457,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .ctx-fatigue-med {background:#1a1500;color:#e3b341;border:1px solid #5a4700;}
 .ctx-injury-atk  {background:#1a001a;color:#d2a8ff;border:1px solid #5a2d82;}
 .ctx-injury-def  {background:#001a2a;color:#79c0ff;border:1px solid #1d4e7a;}
+.ctx-ref-high    {background:#1a0800;color:#ff8c00;border:1px solid #7d3500;}
+.ctx-ref-med     {background:#1a1200;color:#e3b341;border:1px solid #5a4700;}
+.ctx-ref-low     {background:#001a0d;color:#3fb950;border:1px solid #1a4d25;}
+.ctx-ref-neutral {background:#161b22;color:#8b949e;border:1px solid #30363d;}
+.ref-strip{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:7px;
+  margin-bottom:8px;background:#0d1117;border:1px solid #21262d;font-size:11px;}
+.inj-names{font-size:10px;color:var(--muted);margin-left:2px;}
 
 /* VALUE BADGE */
 .value-tag{display:inline-block;font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle;letter-spacing:.3px;}
@@ -1493,6 +1500,25 @@ function getBettingPicks(match, odds, leagueKey) {
   const cardsVeryHigh = bothRed && hStreak <= -2 && aStreak <= -2;
   const cardsHigh     = bothRed || (anyRed && anyBlue);
   const cardsMed      = (anyRed && (hStreak <= -2 || aStreak <= -2)) || (!anyRed && hStreak <= -2 && aStreak <= -2);
+
+  // ── Referee card influence (Pro plan) ───────────────────────────────────────
+  // avgCards from real referee history shifts base confidence for card picks.
+  // High-card referee: meaningful boost. Lenient ref: suppresses card picks.
+  const _refStats    = match.refereeStats || null;
+  const _refAvg      = _refStats?.avgCards ?? null;
+  const _refCardMod  = _refAvg == null  ? 0        // no data — neutral
+                     : _refAvg >= 5.5   ?  0.18    // very card-heavy ref
+                     : _refAvg >= 4.5   ?  0.10    // above average
+                     : _refAvg >= 3.5   ?  0.04    // slightly above
+                     : _refAvg < 2.0    ? -0.20    // very lenient — suppress strongly
+                     : _refAvg < 2.8    ? -0.12    // lenient
+                     : _refAvg < 3.2    ? -0.05    // slightly below
+                     : 0;
+  // Human-readable note for pick reasons
+  const _refCardNote = _refAvg == null ? ''
+    : _refAvg >= 4.5 ? `<br>👨‍⚖️ Schiedsrichter ${_refStats.name}: Ø ${_refAvg} Karten/Spiel — hohe Kartentendenz bestätigt.`
+    : _refAvg < 3.0  ? `<br>👨‍⚖️ Schiedsrichter ${_refStats.name}: Ø ${_refAvg} Karten/Spiel — ruhiger Pfeifer, Markt kritisch prüfen.`
+    : `<br>👨‍⚖️ Schiedsrichter ${_refStats.name}: Ø ${_refAvg} Karten/Spiel.`;
   // Handicap: dominant team vs clearly inferior opposition
   const homeHandicap  = hFS_home > 0.66 && (_hHWR ?? homeWinRate) > 0.54 && (awayPoor || aFS_away < 0.35);
   const awayHandicap  = aFS_away > 0.60 && (_aAWR ?? awayWinRate) > 0.46 && (homePoor || hFS_home < 0.35);
@@ -1867,17 +1893,24 @@ function getBettingPicks(match, odds, leagueKey) {
       let cardReason = '';
       if (cardsVeryHigh) {
         // Beide im Abstieg + schlechte Form: 4.5er realistisch
-        cardSc  = Math.min(0.94, 0.90 + _pressureBoost * 0.30);
+        cardSc  = Math.min(0.96, 0.90 + _pressureBoost * 0.30 + _refCardMod);
         cardMkt = 'Über 4.5 Karten';
-        cardReason = `Abstiegsduell beider Teams unter maximalem Druck${_rlSfx} — Verzweiflung auf beiden Seiten.<br>Taktische Fouls, emotionale Zweikämpfe und Abstiegskampf-Mentalität: historisch >4.5 Karten in solchen Partien.`;
+        cardReason = `Abstiegsduell beider Teams unter maximalem Druck${_rlSfx} — Verzweiflung auf beiden Seiten.<br>Taktische Fouls, emotionale Zweikämpfe und Abstiegskampf-Mentalität: historisch >4.5 Karten in solchen Partien.${_refCardNote}`;
       } else if (cardsHigh) {
-        cardSc  = Math.min(0.82, 0.66 + _pressureBoost * 0.50);
+        cardSc  = Math.min(0.88, 0.66 + _pressureBoost * 0.50 + _refCardMod);
         cardMkt = urgencyHigh ? 'Über 4.5 Karten' : 'Über 3.5 Karten';
-        cardReason = `Drucksituation im Abstiegskampf${_rlSfx} — jeder Ballverlust wird per Foul gestoppt.<br>Erhöhte Intensität und physischer Spielstil führen zu vielen taktischen Unterbrechungen — Karten-Markt attraktiv.`;
+        cardReason = `Drucksituation im Abstiegskampf${_rlSfx} — jeder Ballverlust wird per Foul gestoppt.<br>Erhöhte Intensität und physischer Spielstil führen zu vielen taktischen Unterbrechungen — Karten-Markt attraktiv.${_refCardNote}`;
       } else if (cardsMed) {
-        cardSc  = Math.min(0.65, 0.40 + _pressureBoost * 0.40);
-        cardReason = `Erhöhte Motivation durch Druck — mindestens ein Team kämpft direkt gegen den Abstieg.<br>Taktische Fouls und verbale Auseinandersetzungen bei engen Spielständen treiben Kartenzahl nach oben.`;
+        cardSc  = Math.min(0.72, 0.40 + _pressureBoost * 0.40 + _refCardMod);
+        cardReason = `Erhöhte Motivation durch Druck — mindestens ein Team kämpft direkt gegen den Abstieg.<br>Taktische Fouls und verbale Auseinandersetzungen bei engen Spielständen treiben Kartenzahl nach oben.${_refCardNote}`;
+      } else if (_refAvg != null && _refAvg >= 5.0 && _anyNeedsWin) {
+        // Even without red-zone teams: very card-heavy ref + pressure → still a pick
+        cardSc  = Math.min(0.60, 0.35 + _pressureBoost * 0.30 + _refCardMod);
+        cardMkt = 'Über 3.5 Karten';
+        cardReason = `Druckspiel kombiniert mit bekannt kartenlastigem Schiedsrichter — erhöhte Wahrscheinlichkeit für viele Verwarnungen.${_refCardNote}`;
       }
+      // Suppress card pick if referee is very lenient and situation isn't extreme
+      if (cardSc > 0 && _refAvg != null && _refAvg < 2.5 && !cardsVeryHigh) cardSc = 0;
       if (cardSc > 0) sC.push({sc: cardSc, p:{icon: cardMkt.includes('4.5') ? '🟥' : '🟨',
         market: cardMkt, odds: null, conf: cardSc>0.65?'high':cardSc>0.45?'medium':'low',
         reason: cardReason}});
@@ -3447,19 +3480,50 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     const cls = _ctxARest <= 3 ? 'ctx-fatigue-high' : 'ctx-fatigue-med';
     ctxBadges.push(`<span class="ctx-badge ${cls}">😴 ${match.away}: ${_ctxARest}T Pause</span>`);
   }
-  if (_ctxHInj && (_ctxHInj.attack > 0 || _ctxHInj.defense > 0)) {
-    const n = (_ctxHInj.attack||0) + (_ctxHInj.defense||0);
-    const cls = _ctxHInj.attack > 0 ? 'ctx-injury-atk' : 'ctx-injury-def';
-    ctxBadges.push(`<span class="ctx-badge ${cls}">🏥 ${match.home}: ${n} Ausfall${n>1?'s':''}</span>`);
-  }
-  if (_ctxAInj && (_ctxAInj.attack > 0 || _ctxAInj.defense > 0)) {
-    const n = (_ctxAInj.attack||0) + (_ctxAInj.defense||0);
-    const cls = _ctxAInj.attack > 0 ? 'ctx-injury-atk' : 'ctx-injury-def';
-    ctxBadges.push(`<span class="ctx-badge ${cls}">🏥 ${match.away}: ${n} Ausfall${n>1?'s':''}</span>`);
-  }
+  const _buildInjBadge = (inj, teamName) => {
+    if (!inj || (inj.attack === 0 && inj.defense === 0)) return '';
+    const n   = (inj.attack||0) + (inj.defense||0);
+    const cls = inj.attack > 0 ? 'ctx-injury-atk' : 'ctx-injury-def';
+    // Show up to 3 player names if available from API (_raw), else just count
+    const names = (inj._raw || []).slice(0, 3).map(p => {
+      const tag = p.type === 'Missing Fixture' ? '🔴 gesperrt' : '🟡 verletzt';
+      return `${p.player}${p.reason ? ' ('+p.reason+')' : ''} ${tag}`;
+    });
+    const nameStr = names.length
+      ? `<span class="inj-names">${names.join(' · ')}</span>` : '';
+    return `<span class="ctx-badge ${cls}">🏥 ${teamName}: ${n} Ausfall${n>1?'s':''}</span>${nameStr}`;
+  };
+  const hInjHtml = _buildInjBadge(_ctxHInj, match.home);
+  const aInjHtml = _buildInjBadge(_ctxAInj, match.away);
+  if (hInjHtml) ctxBadges.push(hInjHtml);
+  if (aInjHtml) ctxBadges.push(aInjHtml);
+
   const contextHtml = ctxBadges.length
     ? `<div class="context-strip">${ctxBadges.join('')}</div>`
     : '';
+
+  // ── Referee strip (from Pro plan pre-match data) ─────────────────────────
+  const _ref = match.refereeStats || null;
+  let refereeHtml = '';
+  if (_ref?.name) {
+    const avg = _ref.avgCards;
+    const refCls  = avg == null    ? 'ctx-ref-neutral'
+                  : avg >= 4.5    ? 'ctx-ref-high'
+                  : avg >= 3.5    ? 'ctx-ref-med'
+                  : avg >= 0      ? 'ctx-ref-low'
+                  : 'ctx-ref-neutral';
+    const refNote = avg == null
+      ? '– keine historischen Daten'
+      : avg >= 5.0 ? `⚠️ Ø <strong>${avg}</strong> Karten/Sp — sehr kartenlastig`
+      : avg >= 4.5 ? `Ø <strong>${avg}</strong> Karten/Sp — hohe Tendenz`
+      : avg >= 3.5 ? `Ø <strong>${avg}</strong> Karten/Sp — mittlere Tendenz`
+      : `Ø <strong>${avg}</strong> Karten/Sp — ruhiger Pfeifer`;
+    const gamesNote = _ref.games ? ` <span style="color:var(--muted);font-size:9px">(${_ref.games} Sp.)</span>` : '';
+    refereeHtml = `<div class="ref-strip">
+      <span class="ctx-badge ${refCls}">👨‍⚖️ ${_ref.name}</span>
+      <span style="font-size:11px;color:var(--muted)">${refNote}${gamesNote}</span>
+    </div>`;
+  }
 
   return `
   <div class="stake-card ${ct}">
@@ -3469,7 +3533,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       <div class="card-date">📅 ${match.date}${match.time ? ' · ' + match.time : ''}</div>
       <div class="card-match">${match.home} vs ${match.away}</div>
     </div>
-    ${pressureHtml}${contextHtml}
+    ${pressureHtml}${contextHtml}${refereeHtml}
     <div class="teams-stakes">
       ${renderStakeRow(match.home, match.homeStake, match.homeForm, leagueKey)}
       ${renderStakeRow(match.away, match.awayStake, match.awayForm, leagueKey)}
@@ -3718,6 +3782,10 @@ fetch('./stats_cache.json')
 loadAllOdds().then(() => {
   renderLeague(window._currentLeague);
 });
+
+// Load Pro plan pre-match data in background — re-renders cards when ready
+// Small delay to let the initial render finish first
+setTimeout(() => loadPreMatchData(), 1500);
 
 // ═══════════════════════════════════════════════════════
 //  VIEW SWITCHER
@@ -4394,6 +4462,250 @@ async function _apifbFetchStats(fixtureId) {
     const data = await resp.json();
     return data.response || null; // [{team:{name}, statistics:[{type,value}]}, ...]
   } catch(e) { return null; }
+}
+
+// ═══════════════════════════════════════════════════════
+//  PRO PLAN — INJURIES · REFEREE · PRE-MATCH ENRICHMENT
+// ═══════════════════════════════════════════════════════
+
+// ── Fetch injuries for a specific fixture ───────────────────────────────────
+async function _apifbFetchInjuries(fixtureId) {
+  try {
+    const resp = await fetch(
+      `${APISPORTS_BASE}/injuries?fixture=${fixtureId}`,
+      { headers: { 'x-apisports-key': APISPORTS_KEY } }
+    );
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data.response || null;
+    // Each entry: { player:{id,name,photo,type,reason}, team:{id,name} }
+  } catch(e) { return null; }
+}
+
+// ── Fetch card events for a fixture (lightweight card counting) ─────────────
+async function _apifbFetchCardEvents(fixtureId) {
+  try {
+    const resp = await fetch(
+      `${APISPORTS_BASE}/fixtures/events?fixture=${fixtureId}&type=Card`,
+      { headers: { 'x-apisports-key': APISPORTS_KEY } }
+    );
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data.response || null;
+  } catch(e) { return null; }
+}
+
+// ── Compute referee card stats — cached 48h ─────────────────────────────────
+async function _apifbGetRefereeStats(refereeName) {
+  if (!refereeName) return null;
+  const REF_CACHE_KEY = 'refStats_v3';
+  const REF_CACHE_TTL = 48 * 3600 * 1000;
+
+  // Return cached if fresh
+  try {
+    const cache = JSON.parse(localStorage.getItem(REF_CACHE_KEY) || '{}');
+    if (cache[refereeName] && Date.now() - cache[refereeName].ts < REF_CACHE_TTL)
+      return cache[refereeName].data;
+  } catch(e) {}
+
+  try {
+    // 1 — Find referee ID by name
+    const searchResp = await fetch(
+      `${APISPORTS_BASE}/referees?name=${encodeURIComponent(refereeName)}`,
+      { headers: { 'x-apisports-key': APISPORTS_KEY } }
+    );
+    if (!searchResp.ok) return { name: refereeName, avgCards: null };
+    const searchData = await searchResp.json();
+    const refId = (searchData.response || [])[0]?.id;
+    if (!refId) return { name: refereeName, avgCards: null };
+
+    // 2 — Get last 10 finished fixtures with this referee (current season)
+    const fxResp = await fetch(
+      `${APISPORTS_BASE}/fixtures?referee=${refId}&season=2024&last=10`,
+      { headers: { 'x-apisports-key': APISPORTS_KEY } }
+    );
+    if (!fxResp.ok) return { name: refereeName, avgCards: null };
+    const fxData   = await fxResp.json();
+    const fxIds    = (fxData.response || [])
+      .filter(f => ['FT','AET','PEN'].includes(f.fixture?.status?.short))
+      .slice(0, 8)
+      .map(f => f.fixture.id);
+
+    if (!fxIds.length) return { name: refereeName, avgCards: null };
+
+    // 3 — Fetch card events for each (parallel, max 8 requests)
+    let totalYellow = 0, totalRed = 0, games = 0;
+    const eventResults = await Promise.allSettled(fxIds.map(id => _apifbFetchCardEvents(id)));
+    for (const r of eventResults) {
+      if (r.status !== 'fulfilled' || !r.value) continue;
+      let y = 0, red = 0;
+      for (const ev of r.value) {
+        if (ev.detail === 'Yellow Card') y++;
+        else if (ev.detail === 'Red Card' || ev.detail === 'Second Yellow card') red++;
+      }
+      totalYellow += y; totalRed += red; games++;
+    }
+
+    const stats = games > 0
+      ? { name: refereeName, id: refId,
+          avgYellow: Math.round(totalYellow / games * 10) / 10,
+          avgRed:    Math.round(totalRed    / games * 10) / 10,
+          avgCards:  Math.round((totalYellow + totalRed) / games * 10) / 10,
+          games }
+      : { name: refereeName, avgCards: null };
+
+    // Persist to cache
+    try {
+      const cache = JSON.parse(localStorage.getItem(REF_CACHE_KEY) || '{}');
+      cache[refereeName] = { ts: Date.now(), data: stats };
+      localStorage.setItem(REF_CACHE_KEY, JSON.stringify(cache));
+    } catch(e) {}
+
+    return stats;
+  } catch(e) { return { name: refereeName, avgCards: null }; }
+}
+
+// ═══════════════════════════════════════════════════════
+//  PRE-MATCH LOADER — runs on page load, enriches cards
+// ═══════════════════════════════════════════════════════
+window._preMatchData   = {};
+window._preMatchLoaded = false;
+
+async function loadPreMatchData() {
+  // Build date range: today + next 2 days
+  const today = new Date();
+  const dates  = [0, 1, 2].map(i => {
+    const d = new Date(today.getTime() + i * 864e5);
+    return d.toISOString().slice(0, 10);
+  });
+
+  // Serve from cache (key = today's date, TTL 3h)
+  const cacheKey = `pmData_v3_${dates[0]}`;
+  const PM_TTL   = 3 * 3600 * 1000;
+  try {
+    const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+    if (cached && Date.now() - cached.ts < PM_TTL && Object.keys(cached.data).length > 0) {
+      window._preMatchData   = cached.data;
+      window._preMatchLoaded = true;
+      _injectPreMatchAndRerender();
+      return;
+    }
+  } catch(e) {}
+
+  const result = {};
+
+  // ── Step 1: fetch API fixtures for each date, map to LEAGUES entries ────────
+  for (const date of dates) {
+    const { fixtures, error } = await _apifbFetchDate(date);
+    if (error || !fixtures.length) continue;
+
+    for (const [, L] of Object.entries(LEAGUES)) {
+      for (const match of (L.fixtures || [])) {
+        // Resolve German date to ISO
+        let matchDateIso = null;
+        try {
+          const md = parseGermanDate(match.date);
+          matchDateIso = md.toISOString().slice(0, 10);
+        } catch(e) { continue; }
+        if (matchDateIso !== date) continue;
+
+        const apiFx = fixtures.find(f =>
+          _fuzzyTeam(f.teams?.home?.name || '', match.home) &&
+          _fuzzyTeam(f.teams?.away?.name || '', match.away)
+        );
+        if (!apiFx) continue;
+
+        const key = `${match.home}|${match.away}`;
+        result[key] = {
+          fixtureId:    apiFx.fixture.id,
+          referee:      apiFx.fixture.referee || null,
+          refereeStats: null,
+          homeTeamId:   apiFx.teams?.home?.id,
+          awayTeamId:   apiFx.teams?.away?.id,
+          injuries:     { home: [], away: [] }
+        };
+      }
+    }
+  }
+
+  if (!Object.keys(result).length) {
+    window._preMatchLoaded = true;
+    return; // nothing matched (games not yet in API for today)
+  }
+
+  // ── Step 2: fetch injuries per fixture (parallel) ───────────────────────────
+  await Promise.allSettled(Object.entries(result).map(async ([key, d]) => {
+    if (!d.fixtureId) return;
+    const injuries = await _apifbFetchInjuries(d.fixtureId);
+    if (!injuries?.length) return;
+    const homeName = key.split('|')[0];
+    for (const inj of injuries) {
+      const entry = {
+        player: inj.player?.name  || '?',
+        type:   inj.player?.type  || 'Injured',
+        reason: inj.player?.reason || null
+      };
+      // Match team by fuzzy name
+      if (_fuzzyTeam(inj.team?.name || '', homeName)) d.injuries.home.push(entry);
+      else                                             d.injuries.away.push(entry);
+    }
+  }));
+
+  // ── Step 3: fetch referee stats for all unique referees (parallel) ──────────
+  const uniqueRefs = [...new Set(
+    Object.values(result).map(d => d.referee).filter(Boolean)
+  )];
+  const refMap = {};
+  await Promise.allSettled(uniqueRefs.map(async name => {
+    refMap[name] = await _apifbGetRefereeStats(name);
+  }));
+  for (const d of Object.values(result)) {
+    if (d.referee && refMap[d.referee]) d.refereeStats = refMap[d.referee];
+  }
+
+  // ── Persist + activate ──────────────────────────────────────────────────────
+  window._preMatchData   = result;
+  window._preMatchLoaded = true;
+  try {
+    localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: result }));
+  } catch(e) {}
+
+  _injectPreMatchAndRerender();
+}
+
+// Inject enrichment into LEAGUES match objects + re-render current view
+function _injectPreMatchAndRerender() {
+  for (const [, L] of Object.entries(LEAGUES)) {
+    for (const match of (L.fixtures || [])) {
+      const pm = window._preMatchData[`${match.home}|${match.away}`];
+      if (!pm) continue;
+
+      // Referee
+      if (pm.refereeStats) match.refereeStats = pm.refereeStats;
+
+      // Injuries from API (overrides static config when API has data)
+      const _buildInj = (list) => ({
+        attack:  list.length,  // conservative: count all as attack impact
+        defense: 0,
+        notes:   list.map(i =>
+          `${i.player} (${i.type === 'Missing Fixture' ? 'Gesperrt' : 'Verletzt'}${i.reason ? ' — ' + i.reason : ''})`
+        ),
+        _raw: list
+      });
+      if (pm.injuries.home.length) {
+        if (!match.homeForm) match.homeForm = {};
+        match.homeForm.injuries = _buildInj(pm.injuries.home);
+      }
+      if (pm.injuries.away.length) {
+        if (!match.awayForm) match.awayForm = {};
+        match.awayForm.injuries = _buildInj(pm.injuries.away);
+      }
+    }
+  }
+
+  // Re-render the active tab
+  const active = document.querySelector('.nav-btn.active');
+  if (active) active.click();
 }
 
 // ── SofaScore fallback (direct + CORS proxies) ────────────────────────────────
