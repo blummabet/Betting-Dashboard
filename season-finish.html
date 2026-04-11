@@ -4433,9 +4433,22 @@ async function fetchSofaResults(btn) {
     apifbByDate[date] = fixtures;
     const done = fixtures.filter(f => ['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short));
     dbg.push(`📅 ${date}: ${done.length} abgeschlossene Spiele von ${fixtures.length} geladen`);
-    // Show sample of API team names for debugging
-    const sample = done.slice(0,8).map(f => `  ${f.teams?.home?.name} vs ${f.teams?.away?.name}`);
-    if (sample.length) dbg.push(`  Beispiele: \n${sample.join('\n')}`);
+    // Show leagues present in API response (critical for free plan debugging)
+    const leagueSet = {};
+    for (const f of done) {
+      const lg = f.league?.name || '?';
+      const country = f.league?.country || '?';
+      leagueSet[country + ' – ' + lg] = (leagueSet[country + ' – ' + lg] || 0) + 1;
+    }
+    const euKeywords = ['England','Germany','Italy','Spain','France','Netherlands','Austria','Portugal','Scotland','Turkey'];
+    const euLeagues = Object.entries(leagueSet).filter(([k]) => euKeywords.some(c => k.startsWith(c)));
+    const otherLeagues = Object.entries(leagueSet).filter(([k]) => !euKeywords.some(c => k.startsWith(c)));
+    if (euLeagues.length) {
+      dbg.push(`  ✅ Europäische Ligen (${euLeagues.length}):`);
+      euLeagues.forEach(([k,v]) => dbg.push(`    ${k}: ${v} Spiele`));
+    } else {
+      dbg.push(`  ❌ KEINE europäischen Ligen! Nur: ${otherLeagues.slice(0,5).map(([k,v])=>k+'('+v+')').join(', ')}`);
+    }
   }
   // ── Direkttest: Suche nach bekannten Teams ───────────────────────────────────
   const _testTeams = ['Arsenal','Liverpool','Dortmund','Barcelona','Bayern','Celtic','Ajax','Feyenoord'];
