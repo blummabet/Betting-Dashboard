@@ -4437,6 +4437,18 @@ async function fetchSofaResults(btn) {
     const sample = done.slice(0,8).map(f => `  ${f.teams?.home?.name} vs ${f.teams?.away?.name}`);
     if (sample.length) dbg.push(`  Beispiele: \n${sample.join('\n')}`);
   }
+  // ── Direkttest: Suche nach bekannten Teams ───────────────────────────────────
+  const _testTeams = ['Arsenal','Liverpool','Dortmund','Barcelona','Bayern','Celtic','Ajax','Feyenoord'];
+  for (const [date, fxList] of Object.entries(apifbByDate)) {
+    const found = _testTeams.flatMap(t =>
+      fxList.filter(f =>
+        (f.teams?.home?.name||'').toLowerCase().includes(t.toLowerCase()) ||
+        (f.teams?.away?.name||'').toLowerCase().includes(t.toLowerCase())
+      ).map(f => `${t}→${f.teams?.home?.name} vs ${f.teams?.away?.name} [${f.fixture?.status?.short}]`)
+    );
+    if (found.length) dbg.push(`🔍 ${date}: ${found.join(', ')}`);
+    else dbg.push(`🔍 ${date}: KEINER der Testteams gefunden in ${fxList.length} Spielen!`);
+  }
   _showDebug(dbg);
 
   for (const entry of picks) {
