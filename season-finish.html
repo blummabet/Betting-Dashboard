@@ -1921,6 +1921,8 @@ function getBettingPicks(match, odds, leagueKey) {
       // 🔑 PRESSURE/RUNDEN: Druck-Team greift an → Kontertore entstehen → BTTS Nein sehr unwahrscheinlich
       if (bothNeedWin)       sc = Math.max(0, sc - _pressureBoost * 1.20);
       else if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 0.70);
+      // 🔑 H2H BTTS HISTORY: inverse of BTTS Ja modifier — high historical BTTS rate suppresses Nein
+      sc = Math.min(0.80, Math.max(0, sc - _h2hBttsMod));
       const weakAtt = homeAttStr<awayAttStr?match.home:match.away;
       gC.push({sc, p:{icon:'🔒', market:'Beide Teams treffen: Nein', odds:o.bttsN||null,
         conf: sc>0.58?'medium':'low',
@@ -4420,6 +4422,9 @@ function _determineOutcome(market, h, a, stats = null, isHalfTime = false) {
   if (m.includes('über 3.5') || m.includes('over 3.5'))   return goals > 3 ? 'win' : 'loss';
   if (m.includes('über 2.5') || m.includes('over 2.5'))   return goals > 2 ? 'win' : 'loss';
   if (m.includes('über 1.5') || m.includes('over 1.5'))   return goals > 1 ? 'win' : 'loss';
+  // NOTE: 0.5 lines must be checked BEFORE 1.5/2.5 to prevent substring false-matches
+  if (m.includes('über 0.5') || m.includes('over 0.5'))   return goals > 0 ? 'win' : 'loss';
+  if (m.includes('unter 0.5') || m.includes('under 0.5')) return goals === 0 ? 'win' : 'loss';
   if (m.includes('unter 2.5') || m.includes('under 2.5')) return goals < 3 ? 'win' : 'loss';
   if (m.includes('unter 1.5') || m.includes('under 1.5')) return goals < 2 ? 'win' : 'loss';
   if (m.includes('beide teams treffen: nein'))             return (h===0||a===0) ? 'win' : 'loss';
@@ -5111,7 +5116,12 @@ async function fetchSofaResults(btn) {
     const a = fx.goals?.away ?? null;
     if (h === null) continue;
     entry.finalScore = `${h}:${a}`;
-    dbg.push(`✓ ${entry.home} vs ${entry.away} → ${h}:${a}`);
+
+    // Pull HT scores from API-Football (included in /fixtures?date= response)
+    const hHT = fx.score?.halftime?.home ?? null;
+    const aHT = fx.score?.halftime?.away ?? null;
+    if (hHT !== null) entry.htScore = `${hHT}:${aHT}`;
+    dbg.push(`✓ ${entry.home} vs ${entry.away} → FT ${h}:${a}${hHT !== null ? ` · HZ ${hHT}:${aHT}` : ' · HZ n/v'}`);
 
     // Check if any pending picks need statistics (corners/cards)
     const needsStats = entry.picks.some(p =>
@@ -5127,9 +5137,19 @@ async function fetchSofaResults(btn) {
 
     for (const p of entry.picks) {
       if (p.result !== null) continue;
-      const outcome = _determineOutcome(p.market, h, a, stats);
-      if (outcome !== null) { p.result = outcome; p.finalScore = `${h}:${a}`; resolved++; }
-      else { dbg.push(`  ⚠ Kein Outcome für: ${p.market}`); manual++; }
+      // HZ picks: try with HT score first (isHalfTime=true bypasses the HZ guard)
+      const _isHZPick = !!(p.market || '').toLowerCase().match(/1\. hz|halbzeit|first half|halftime| hz /);
+      let outcome = null;
+      if (_isHZPick && hHT !== null) {
+        outcome = _determineOutcome(p.market, hHT, aHT, null, true);
+        if (outcome !== null) p.finalScore = `${hHT}:${aHT} (HZ)`;
+      }
+      if (outcome === null) outcome = _determineOutcome(p.market, h, a, stats);
+      if (outcome !== null) {
+        p.result = outcome;
+        if (!p.finalScore) p.finalScore = `${h}:${a}`;
+        resolved++;
+      } else { dbg.push(`  ⚠ Kein Outcome für: ${p.market}`); manual++; }
     }
     _showDebug(dbg); // live update while running
   }
