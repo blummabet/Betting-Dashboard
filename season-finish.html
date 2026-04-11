@@ -464,6 +464,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .ref-strip{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:7px;
   margin-bottom:8px;background:#0d1117;border:1px solid #21262d;font-size:11px;}
 .inj-names{font-size:10px;color:var(--muted);margin-left:2px;}
+/* ── Fair Odds comparison row ───────────────────────────────────── */
+.pick-fair-odds{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px;
+  color:var(--muted);margin:2px 0 5px 0;padding:3px 7px;background:rgba(255,255,255,0.03);
+  border-radius:5px;border-left:2px solid #21262d;}
+.fov-label{color:#8b949e;font-size:10px;letter-spacing:.3px;text-transform:uppercase;}
+.fov-our{color:#58a6ff;font-weight:700;font-size:12px;}
+.fov-bookie-val{font-weight:700;font-size:12px;}
+.fov-bookie-val.fov-value{color:#3fb950;}
+.fov-bookie-val.fov-hot{color:#ff7b00;}
+.fov-bookie-val.fov-fair{color:#8b949e;}
+.fov-bookie-val.fov-below{color:#f85149;}
+.fov-edge{font-size:10px;font-weight:600;}
+.fov-edge.fov-value{color:#3fb950;}
+.fov-edge.fov-hot{color:#ff7b00;}
+.fov-edge.fov-below{color:#f85149;}
 
 /* VALUE BADGE */
 .value-tag{display:inline-block;font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle;letter-spacing:.3px;}
@@ -2086,51 +2101,87 @@ function getBettingPicks(match, odds, leagueKey) {
   // Only applies to picks with Pinnacle odds (hw/dr/aw/o25/u25/o35).
   // Specialty markets (BTTS, cards, corners, DC, 1st half) stay untagged — no odds to compare.
   picks.forEach(p => {
-    if (!p.odds) { p.value = null; return; }
-    const ip = 1 / p.odds;  // raw Pinnacle implied probability (includes ~2-3% margin)
+    const ip = p.odds ? 1 / p.odds : null;
     let mp = null;           // our model probability estimate
     switch (p.market) {
       case 'Heimsieg':
+      case 'DNB: Heimteam':
+      case 'Doppelte Chance: 1X':
         mp = Math.min(0.82, 0.34 + (hFS_home - 0.5) * 0.65 + Math.max(0, hStreak) * 0.03 + homeWinRate * 0.16);
-        // xG boost: strong home attack + weak away defence tilts probability further
         if (xGBased) mp = Math.min(0.82, mp + Math.max(0, homeAttStr - 1.2) * 0.08 - Math.max(0, awayAttStr - 1.4) * 0.06);
-        // Elo boost: clear home advantage confirmed by rating gap
         if (eloHomeFav) mp = Math.min(0.82, mp + 0.04);
-        // Urgency: home team must win → increased effort/risk-taking raises win probability
         if (homeNeedsWin) mp = Math.min(0.82, mp + _pressureBoost * 0.18);
+        if (p.market === 'DNB: Heimteam')      mp = Math.min(0.90, mp / (mp + awayWinRate * (1 - drawRate)));
+        if (p.market === 'Doppelte Chance: 1X') mp = Math.min(0.93, mp + Math.min(0.40, drawRate * 0.72 + 0.10));
         break;
       case 'Auswärtssieg':
+      case 'DNB: Auswärtsteam':
+      case 'Doppelte Chance: X2':
         mp = Math.min(0.76, 0.26 + (aFS_away - 0.5) * 0.65 + Math.max(0, aStreak) * 0.03 + awayWinRate * 0.16);
         if (xGBased) mp = Math.min(0.76, mp + Math.max(0, awayAttStr - 1.1) * 0.08 - Math.max(0, homeAttStr - 1.4) * 0.06);
         if (eloAwayFav) mp = Math.min(0.76, mp + 0.04);
         if (awayNeedsWin) mp = Math.min(0.76, mp + _pressureBoost * 0.18);
+        if (p.market === 'DNB: Auswärtsteam')   mp = Math.min(0.90, mp / (mp + homeWinRate * (1 - drawRate)));
+        if (p.market === 'Doppelte Chance: X2') mp = Math.min(0.93, mp + Math.min(0.40, drawRate * 0.72 + 0.10));
         break;
       case 'Unentschieden':
         mp = Math.min(0.40, drawRate * 0.72 + 0.10);
-        // Draw probability down when teams must win — scaled by pressure
         if (homeNeedsWin || awayNeedsWin) mp = Math.max(0.05, mp - _pressureBoost * 0.30);
         break;
       case 'Over 2.5 Tore':
         mp = expGoals > 3.2 ? 0.72 : expGoals > 2.8 ? 0.60 : expGoals > 2.4 ? 0.48 : 0.36;
-        // Pressure genuinely raises Over probability (teams go forward regardless of stats)
         if (bothNeedWin)       mp = Math.min(0.88, mp + _pressureBoost * 0.55);
         else if (_anyNeedsWin) mp = Math.min(0.82, mp + _pressureBoost * 0.30);
+        if (_h2hSample && _h2hOver25 != null) mp = Math.min(0.90, mp + _h2hO25Mod * 0.7);
         break;
       case 'Under 2.5 Tore':
         mp = expGoals < 1.8 ? 0.72 : expGoals < 2.2 ? 0.60 : expGoals < 2.6 ? 0.49 : 0.37;
-        // Pressure reduces Under probability — teams must attack
         if (bothNeedWin)       mp = Math.max(0.10, mp - _pressureBoost * 0.55);
         else if (_anyNeedsWin) mp = Math.max(0.15, mp - _pressureBoost * 0.30);
+        if (_h2hSample && _h2hOver25 != null) mp = Math.min(0.90, Math.max(0.05, mp - _h2hO25Mod * 0.7));
         break;
       case 'Over 3.5 Tore':
         mp = expGoals > 3.6 ? 0.60 : expGoals > 3.1 ? 0.42 : expGoals > 2.7 ? 0.28 : 0.18;
         if (bothNeedWin)       mp = Math.min(0.78, mp + _pressureBoost * 0.50);
         else if (_anyNeedsWin) mp = Math.min(0.70, mp + _pressureBoost * 0.28);
         break;
+      case 'Beide Teams treffen':
+        // sc-derived: BTTS Ja base prob from attack strengths, scaled to plausible range
+        { const _bttsMp = Math.min(0.86, Math.max(0.14,
+            (homeAttStr > 1.30 && awayAttStr > 1.10 ? 0.68 : homeAttStr > 1.15 && awayAttStr > 0.95 ? 0.56 : 0.38)
+            + (bothNeedWin ? _pressureBoost * 0.45 : _anyNeedsWin ? _pressureBoost * 0.22 : 0)
+            + (_h2hSample && _h2hBtts != null ? _h2hBttsMod * 0.7 : 0)
+          ));
+          mp = _bttsMp;
+        } break;
+      case 'Beide Teams treffen: Nein':
+        { const _bttsNMp = Math.min(0.82, Math.max(0.08,
+            (homeAttStr < 0.88 && awayAttStr < 0.82 ? 0.62 : bttsBad ? 0.42 : 0.24)
+            - (bothNeedWin ? _pressureBoost * 0.45 : _anyNeedsWin ? _pressureBoost * 0.22 : 0)
+            - (_h2hSample && _h2hBtts != null ? _h2hBttsMod * 0.7 : 0)
+          ));
+          mp = _bttsNMp;
+        } break;
     }
-    if (mp === null) { p.value = null; return; }
-    const edge = mp - ip;
-    p.value = edge >= 0.13 ? 'hot' : edge >= 0.07 ? 'value' : null;
+    // For markets with a proper mp, compute model odds + edge
+    if (mp !== null) {
+      p.modelOdds = Math.round((1 / mp) * 100) / 100;
+      if (ip !== null) {
+        const edge = mp - ip;
+        p.value = edge >= 0.13 ? 'hot' : edge >= 0.07 ? 'value' : null;
+      } else {
+        p.value = null;
+      }
+    } else {
+      p.value = null;
+      // Specialty markets (corners, cards, HZ, team-over-1.5, handicap): sc-based model odds
+      // sc is a raw signal score, not a calibrated prob. Scaling factor 0.86 converts it
+      // to a plausible probability range: sc=0.85→p≈0.73, sc=0.65→p≈0.56, sc=0.45→p≈0.39
+      if (p.sc != null) {
+        const scProb = Math.min(0.88, Math.max(0.12, p.sc < 1 ? p.sc * 0.86 : 0.88));
+        p.modelOdds = Math.round((1 / scProb) * 100) / 100;
+      }
+    }
   });
 
   // ── Context notes: fatigue + injuries appended to pick reasons ──────────────
@@ -3559,10 +3610,61 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
                    : p.value === 'value' ? '<span class="value-tag val">💰 Value</span>' : '';
     const confClass = {high:'conf-high',medium:'conf-medium',low:'conf-low'}[p.conf]||'conf-medium';
     const confLabel = {high:'★★★',medium:'★★☆',low:'★☆☆'}[p.conf]||'★★☆';
+
+    // ── Fair Odds comparison row ──────────────────────────────────────────────
+    // modelOdds = 1/mp for main markets (calibrated probability model)
+    //           = sc-based proxy for specialty markets (corners, cards, HZ etc.)
+    // When bookie > modelOdds: their price exceeds our fair value → VALUE territory
+    let fairOddsHtml = '';
+    if (p.modelOdds != null) {
+      const mo = p.modelOdds.toFixed(2);
+      const isScBased = ['Über 8.5 Ecken','Über 9.5 Ecken','Über 11.5 Ecken',
+        'Über 3.5 Karten','Über 4.5 Karten','Handicap Heim -0.5','Handicap Auswärts -0.5',
+        '1. HZ: Over 0.5 Tore','1. HZ: Under 0.5 Tore','1. HZ: Under 1.5 Tore',
+        '1. HZ: Beide Teams treffen','1. HZ: Under 0.5 Tore'].includes(p.market)
+        || p.market.includes(' über 1.5 Tore') || p.market.includes('Karten');
+      const srcLabel = isScBased
+        ? '<span style="font-size:9px;color:#444d56;font-style:italic"> (Modell-Näherung)</span>'
+        : '';
+      if (oddsNum != null) {
+        // Compare bookie vs our model odds
+        const pctDiff = Math.round((oddsNum - p.modelOdds) / p.modelOdds * 100);
+        let edgeCls, edgeTxt, bookieCls;
+        if (pctDiff >= 10) {
+          edgeCls = 'fov-hot'; bookieCls = 'fov-hot';
+          edgeTxt = `↑ +${pctDiff}% über Fair Value`;
+        } else if (pctDiff >= 3) {
+          edgeCls = 'fov-value'; bookieCls = 'fov-value';
+          edgeTxt = `↑ +${pctDiff}% über Fair Value`;
+        } else if (pctDiff >= -3) {
+          edgeCls = ''; bookieCls = 'fov-fair';
+          edgeTxt = '≈ Fair';
+        } else {
+          edgeCls = 'fov-below'; bookieCls = 'fov-below';
+          edgeTxt = `↓ ${pctDiff}% unter Fair Value`;
+        }
+        fairOddsHtml = `<div class="pick-fair-odds">
+          <span class="fov-label">Fair Value</span>
+          <span class="fov-our">${mo}</span>
+          <span style="color:#444d56">→</span>
+          <span>Bookie: <span class="fov-bookie-val ${bookieCls}">${oddsNum.toFixed(2)}</span></span>
+          <span class="fov-edge ${edgeCls}">${edgeTxt}</span>${srcLabel}
+        </div>`;
+      } else {
+        // No bookie odds — show our fair odds as reference only
+        fairOddsHtml = `<div class="pick-fair-odds">
+          <span class="fov-label">Fair Value</span>
+          <span class="fov-our">${mo}</span>
+          <span style="color:#444d56;font-size:10px">— kein Bookie-Vergleich verfügbar</span>${srcLabel}
+        </div>`;
+      }
+    }
+
     return `<div class="pick-item">
       <span class="pick-icon">${p.icon}</span>
       <div class="pick-body">
         <div class="pick-market">${p.market}${oddsTag}${lowWarn}${valueTag}</div>
+        ${fairOddsHtml}
         <div class="pick-reason">${p.reason}</div>
       </div>
       <span class="pick-conf ${confClass}">${confLabel}</span>
