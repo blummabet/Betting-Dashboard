@@ -1657,7 +1657,10 @@ function getBettingPicks(match, odds, leagueKey) {
         ? `${match.home} als Favorit (Heim-Form ${Math.round(hFS_home*100)}%) — DC 1X deckt Sieg UND Remis ab.<br>H2H-Remisquote ${Math.round(drawRate*100)}% macht Remis-Puffer sinnvoll — strukturell sicherste Result-Wette.`
         : `${match.away} mit Auswärtsstärke (Form ${Math.round(aFS_away*100)}%) — DC X2 schließt Remis mit ein.<br>H2H-Remisquote ${Math.round(drawRate*100)}% — guter Puffer falls Heimteam ausgleicht.`;
       const dcOdds = dcHome ? (o.dc1X||null) : (o.dcX2||null);
-      rC.push({sc, p:{icon:'🎯', market:dcMkt, odds:dcOdds, conf, reason}});
+      // Skip DC if odds known and < 1.25 — heavy favourite, DC adds no value
+      if (!(dcOdds !== null && dcOdds < 1.25)) {
+        rC.push({sc, p:{icon:'🎯', market:dcMkt, odds:dcOdds, conf, reason}});
+      }
     }
     rC.sort((a,b) => b.sc - a.sc);
     // _topResultMkt is used by PICK 2 consistency guard (awayWinWeak / homeWinWeak).
@@ -1936,19 +1939,9 @@ function getBettingPicks(match, odds, leagueKey) {
         reason:`${egPfx} — taktisches Abtasten, vorsichtiger Spielbeginn erwartet.<br>Beide Offensiven gedämpft in der ersten Hälfte — maximal 1 Treffer bis zur Pause sehr wahrscheinlich.`}});
     }
 
-    // Fallback DC — BOTH directions pushed so dedup-safe.
-    // If PICK 1 already used the primary DC direction, the alternative is still free.
-    { const homeFav  = hFS_home >= aFS_away;
-      const prim     = homeFav ? 'Doppelte Chance: 1X' : 'Doppelte Chance: X2';
-      const alt      = homeFav ? 'Doppelte Chance: X2' : 'Doppelte Chance: 1X';
-      const primOdds = homeFav ? (o.dc1X||null) : (o.dcX2||null);
-      const altOdds  = homeFav ? (o.dcX2||null) : (o.dc1X||null);
-      const primTeam = homeFav ? match.home : match.away;
-      const altTeam  = homeFav ? match.away : match.home;
-      sC.push({sc:0.35, p:{icon:'🎯', market:prim, odds:primOdds, conf:'medium',
-        reason:`Taktische Absicherung für ${primTeam} — Doppelte Chance deckt Sieg <em>und</em> Remis ab.<br>Risikominimierung ohne großen Quotenverlust — strukturell sicherste Wette für den Favoriten.`}});
-      sC.push({sc:0.27, p:{icon:'🎯', market:alt,  odds:altOdds,  conf:'medium',
-        reason:`Doppelte Chance ${altTeam} als Absicherung — deckt Sieg <em>und</em> Unentschieden ab.<br>Sinnvoll wenn beide Teams ausgeglichen sind — reduziert Risiko bei engen Partien.`}}); }
+    // DC fallback removed from PICK 3 — DC is already handled in PICK 1.
+    // Having DC in both PICK 1 + PICK 3 creates contradictory picks (DC X2 + DC 1X same game).
+    // If no PICK 3 specialty market qualifies, the card simply shows no third pick.
 
     sC.sort((a,b) => b.sc - a.sc);
     for (const c of sC) { if (_push(c.p, c.sc)) break; }
