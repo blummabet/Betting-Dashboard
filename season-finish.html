@@ -2105,25 +2105,48 @@ function getBettingPicks(match, odds, leagueKey) {
     let mp = null;           // our model probability estimate
     switch (p.market) {
       case 'Heimsieg':
-      case 'DNB: Heimteam':
-      case 'Doppelte Chance: 1X':
         mp = Math.min(0.82, 0.34 + (hFS_home - 0.5) * 0.65 + Math.max(0, hStreak) * 0.03 + homeWinRate * 0.16);
         if (xGBased) mp = Math.min(0.82, mp + Math.max(0, homeAttStr - 1.2) * 0.08 - Math.max(0, awayAttStr - 1.4) * 0.06);
         if (eloHomeFav) mp = Math.min(0.82, mp + 0.04);
         if (homeNeedsWin) mp = Math.min(0.82, mp + _pressureBoost * 0.18);
-        if (p.market === 'DNB: Heimteam')      mp = Math.min(0.90, mp / (mp + awayWinRate * (1 - drawRate)));
-        if (p.market === 'Doppelte Chance: 1X') mp = Math.min(0.93, mp + Math.min(0.40, drawRate * 0.72 + 0.10));
         break;
       case 'Auswärtssieg':
-      case 'DNB: Auswärtsteam':
-      case 'Doppelte Chance: X2':
         mp = Math.min(0.76, 0.26 + (aFS_away - 0.5) * 0.65 + Math.max(0, aStreak) * 0.03 + awayWinRate * 0.16);
         if (xGBased) mp = Math.min(0.76, mp + Math.max(0, awayAttStr - 1.1) * 0.08 - Math.max(0, homeAttStr - 1.4) * 0.06);
         if (eloAwayFav) mp = Math.min(0.76, mp + 0.04);
         if (awayNeedsWin) mp = Math.min(0.76, mp + _pressureBoost * 0.18);
-        if (p.market === 'DNB: Auswärtsteam')   mp = Math.min(0.90, mp / (mp + homeWinRate * (1 - drawRate)));
-        if (p.market === 'Doppelte Chance: X2') mp = Math.min(0.93, mp + Math.min(0.40, drawRate * 0.72 + 0.10));
         break;
+      // ── DC / DNB: derived markets — computed from de-vigged 1X2 probs ─────────
+      // DC/DNB fair value = sum of underlying outcome probabilities.
+      // Using bookmaker's own 1X2 odds (most liquid, most efficient market) to de-vig
+      // gives the most accurate fair price. Comparing THAT against the DC/DNB quote
+      // reveals whether the bookmaker has priced those markets with extra margin.
+      // If no 1X2 odds available, fall back to normalized 3-way model probs.
+      case 'DNB: Heimteam':
+      case 'DNB: Auswärtsteam':
+      case 'Doppelte Chance: 1X':
+      case 'Doppelte Chance: X2': {
+        let _pH, _pD, _pA;
+        if (o.hw && o.dr && o.aw) {
+          // De-vig Pinnacle 1X2 odds → true probabilities
+          const _tot = 1/o.hw + 1/o.dr + 1/o.aw;
+          _pH = (1/o.hw) / _tot;
+          _pD = (1/o.dr) / _tot;
+          _pA = (1/o.aw) / _tot;
+        } else {
+          // No 1X2 odds — use normalized 3-way model estimate
+          const _mH = Math.min(0.82, 0.34+(hFS_home-0.5)*0.65+Math.max(0,hStreak)*0.03+homeWinRate*0.16+(xGBased?Math.max(0,homeAttStr-1.2)*0.08-Math.max(0,awayAttStr-1.4)*0.06:0)+(eloHomeFav?0.04:0)+(homeNeedsWin?_pressureBoost*0.18:0));
+          const _mA = Math.min(0.76, 0.26+(aFS_away-0.5)*0.65+Math.max(0,aStreak)*0.03+awayWinRate*0.16+(xGBased?Math.max(0,awayAttStr-1.1)*0.08-Math.max(0,homeAttStr-1.4)*0.06:0)+(eloAwayFav?0.04:0)+(awayNeedsWin?_pressureBoost*0.18:0));
+          const _mD = Math.min(0.40, Math.max(0.05, drawRate*0.72+0.10-((homeNeedsWin||awayNeedsWin)?_pressureBoost*0.30:0)));
+          const _mTot = _mH + _mA + _mD;
+          _pH = _mH/_mTot; _pA = _mA/_mTot; _pD = _mD/_mTot;
+        }
+        if      (p.market === 'Doppelte Chance: 1X') mp = Math.min(0.97, _pH + _pD);
+        else if (p.market === 'Doppelte Chance: X2') mp = Math.min(0.97, _pA + _pD);
+        else if (p.market === 'DNB: Heimteam')       mp = Math.min(0.95, _pH / (_pH + _pA));
+        else if (p.market === 'DNB: Auswärtsteam')   mp = Math.min(0.95, _pA / (_pH + _pA));
+        break;
+      }
       case 'Unentschieden':
         mp = Math.min(0.40, drawRate * 0.72 + 0.10);
         if (homeNeedsWin || awayNeedsWin) mp = Math.max(0.05, mp - _pressureBoost * 0.30);
