@@ -4162,6 +4162,22 @@ function _fuzzyTeam(a, b) {
 // daysFrom: 1–3 (how many days back to include; 3 is max on free plan)
 async function _fetchOddsApiScores(daysFrom = 3) {
   const results = [];
+  const errors  = [];
+  // Only try first sport key to detect plan error cheaply
+  const firstKey = Object.values(LEAGUE_SPORT_KEYS)[0];
+  try {
+    const testUrl = `https://api.the-odds-api.com/v4/sports/${firstKey}/scores/?apiKey=${ODDS_API_KEY}&daysFrom=${daysFrom}`;
+    const testResp = await fetch(testUrl);
+    const testData = await testResp.json();
+    if (!testResp.ok || testData.message) {
+      errors.push(`The Odds API Scores: ${testData.message || testResp.status}`);
+      return { results, errors };
+    }
+  } catch(e) {
+    errors.push(`The Odds API Scores: ${e.message}`);
+    return { results, errors };
+  }
+  // Full fetch across all leagues
   await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([, sk]) => {
     try {
       const url = `https://api.the-odds-api.com/v4/sports/${sk}/scores/?apiKey=${ODDS_API_KEY}&daysFrom=${daysFrom}`;
@@ -4182,7 +4198,7 @@ async function _fetchOddsApiScores(daysFrom = 3) {
       }
     } catch(e) { /* silent */ }
   }));
-  return results;
+  return { results, errors };
 }
 
 // ── SofaScore fallback (direct + CORS proxies) ────────────────────────────────
@@ -4244,14 +4260,15 @@ async function fetchSofaResults(btn) {
 
   // ── 1. Primär: The Odds API Scores (kein CORS-Problem) ───────────────────
   btn.textContent = '⏳ The Odds API…';
-  const oddsScores = await _fetchOddsApiScores(3);
+  const { results: oddsScores, errors: oddsErrors } = await _fetchOddsApiScores(3);
   let resolved = 0, manual = 0, notFound = 0;
 
   const dbg = [];
   dbg.push(`📦 Gespeicherte Picks: ${pending.length} Spiele`);
   pending.forEach(e => dbg.push(`  · ${e.dateIso}  ${e.home} vs ${e.away}`));
   dbg.push(`\n🌐 The Odds API: ${oddsScores.length} Ergebnisse geladen`);
-  if (oddsScores.length) oddsScores.slice(0,10).forEach(s => dbg.push(`  · ${s.dateIso}  ${s.home} ${s.h}:${s.a} ${s.away}`));
+  if (oddsErrors.length) oddsErrors.forEach(e => dbg.push(`  ⚠ ${e}`));
+  if (oddsScores.length) oddsScores.slice(0,12).forEach(s => dbg.push(`  · ${s.dateIso}  ${s.home} ${s.h}:${s.a} ${s.away}`));
   _showDebug(dbg);
 
   if (oddsScores.length > 0) {
