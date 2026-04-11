@@ -4156,74 +4156,124 @@ function _fuzzyTeam(a, b) {
   return overlap >= 1 && overlap / Math.max(wa.size, wb.size, 1) >= 0.5;
 }
 
-// ── SofaScore fetch for one date ─────────────────────
-// Tries direct first, then falls back to corsproxy.io if CORS blocks
+// ── Scores via The Odds API (proper CORS, API key already in use) ────────────
+// Fetches completed scores for all leagues, returns flat list of {home,away,dateIso,h,a}
+// daysFrom: 1–3 (how many days back to include; 3 is max on free plan)
+async function _fetchOddsApiScores(daysFrom = 3) {
+  const results = [];
+  await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([, sk]) => {
+    try {
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/scores/?apiKey=${ODDS_API_KEY}&daysFrom=${daysFrom}`;
+      const resp = await fetch(url);
+      if (!resp.ok) return;
+      const games = await resp.json();
+      for (const g of games) {
+        if (!g.completed || !g.scores?.length) continue;
+        const hScoreObj = g.scores.find(s => s.name === g.home_team);
+        const aScoreObj = g.scores.find(s => s.name === g.away_team);
+        if (!hScoreObj || !aScoreObj) continue;
+        results.push({
+          home: g.home_team, away: g.away_team,
+          dateIso: (g.commence_time || '').slice(0, 10),
+          h: parseInt(hScoreObj.score, 10),
+          a: parseInt(aScoreObj.score, 10),
+        });
+      }
+    } catch(e) { /* silent */ }
+  }));
+  return results;
+}
+
+// ── SofaScore fallback (direct + CORS proxies) ────────────────────────────────
 async function _sfFetchDate(dateIso) {
   const SF_URL = `https://api.sofascore.com/api/v1/sport/football/scheduled-events/${dateIso}`;
-  const PROXY  = `https://corsproxy.io/?url=${encodeURIComponent(SF_URL)}`;
-
-  for (const url of [SF_URL, PROXY]) {
+  for (const url of [
+    SF_URL,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(SF_URL)}`,
+    `https://corsproxy.io/?url=${encodeURIComponent(SF_URL)}`,
+  ]) {
     try {
-      const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      const resp = await fetch(url, { headers:{'Accept':'application/json'} });
       if (!resp.ok) continue;
       const data = await resp.json();
-      const events = data.events || data; // proxy may unwrap one layer
-      if (Array.isArray(events)) return events;
+      const events = Array.isArray(data) ? data : (data.events || []);
+      if (events.length) return events.filter(e =>
+        e.status?.type === 'finished' || e.status?.type === 'postponed');
     } catch(e) { /* try next */ }
   }
-  return null; // both failed
+  return null;
 }
 
 // ── Main fetch handler ────────────────────────────────
 async function fetchSofaResults(btn) {
   btn.disabled = true;
   btn.textContent = '⏳ Lade…';
+  const infoEl = document.getElementById('sfTrackerInfo');
 
   const picks = _loadStoredPicks();
   const pending = picks.filter(e => e.picks.some(p => p.result === null));
 
-  const infoEl = document.getElementById('sfTrackerInfo');
   if (!pending.length) {
-    btn.textContent = '✅ Alle aufgelöst';
     btn.disabled = false;
+    btn.textContent = '🔄 Ergebnisse holen';
     const total = picks.reduce((s,e)=>s+e.picks.length, 0);
     infoEl.textContent = total
       ? `Alle ${total} Picks bereits aufgelöst ✅`
-      : 'Keine gespeicherten Picks — erst "💾 Picks speichern" klicken!';
+      : '⚠️ Keine gespeicherten Picks — erst "💾 Picks speichern" klicken!';
     return;
   }
-  infoEl.textContent = `${pending.length} Spiele mit offenen Picks → hole Ergebnisse…`;
 
-  const dates = [...new Set(pending.map(e => e.dateIso))].sort();
-  let resolved = 0, manual = 0, notFound = 0, corsError = false;
+  infoEl.textContent = `${pending.length} Spiele mit offenen Picks — hole Ergebnisse…`;
 
-  for (const date of dates) {
-    btn.textContent = `⏳ ${date}…`;
-    const events = await _sfFetchDate(date);
-    if (events === null) { corsError = true; notFound++; continue; }
+  // ── 1. Primär: The Odds API Scores (kein CORS-Problem) ───────────────────
+  btn.textContent = '⏳ The Odds API…';
+  const oddsScores = await _fetchOddsApiScores(3);
+  let resolved = 0, manual = 0, notFound = 0;
 
+  if (oddsScores.length > 0) {
     for (const entry of picks) {
-      if (entry.dateIso !== date) continue;
       if (!entry.picks.some(p => p.result === null)) continue;
-
-      const ev = events.find(e =>
-        (e.status?.type === 'finished' || e.status?.type === 'postponed') &&
-        _fuzzyTeam(e.homeTeam?.name || '', entry.home) &&
-        _fuzzyTeam(e.awayTeam?.name || '', entry.away)
+      const score = oddsScores.find(s =>
+        _fuzzyTeam(s.home, entry.home) && _fuzzyTeam(s.away, entry.away) &&
+        s.dateIso === entry.dateIso
       );
-      if (!ev) { notFound++; continue; }
-
-      const h = ev.homeScore?.current ?? null;
-      const a = ev.awayScore?.current ?? null;
-      if (h === null) continue;
-
-      entry.finalScore = `${h}:${a}`;
-
+      if (!score) { notFound++; continue; }
+      entry.finalScore = `${score.h}:${score.a}`;
       for (const p of entry.picks) {
         if (p.result !== null) continue;
-        const outcome = _determineOutcome(p.market, h, a);
-        if (outcome !== null) { p.result = outcome; p.finalScore = `${h}:${a}`; resolved++; }
-        else { p.result = null; manual++; } // HZ/Corners/Cards — stay pending
+        const outcome = _determineOutcome(p.market, score.h, score.a);
+        if (outcome !== null) { p.result = outcome; p.finalScore = `${score.h}:${score.a}`; resolved++; }
+        else manual++;
+      }
+    }
+  }
+
+  // ── 2. Fallback: SofaScore (direkt + CORS-Proxy) für noch offene Picks ───
+  const stillPending = picks.filter(e => e.picks.some(p => p.result === null));
+  if (stillPending.length) {
+    const dates = [...new Set(stillPending.map(e => e.dateIso))].sort();
+    for (const date of dates) {
+      btn.textContent = `⏳ SofaScore ${date}…`;
+      const events = await _sfFetchDate(date);
+      if (!events) continue;
+      for (const entry of picks) {
+        if (entry.dateIso !== date) continue;
+        if (!entry.picks.some(p => p.result === null)) continue;
+        const ev = events.find(e =>
+          _fuzzyTeam(e.homeTeam?.name || '', entry.home) &&
+          _fuzzyTeam(e.awayTeam?.name || '', entry.away)
+        );
+        if (!ev) continue;
+        const h = ev.homeScore?.current ?? null;
+        const a = ev.awayScore?.current ?? null;
+        if (h === null) continue;
+        entry.finalScore = `${h}:${a}`;
+        for (const p of entry.picks) {
+          if (p.result !== null) continue;
+          const outcome = _determineOutcome(p.market, h, a);
+          if (outcome !== null) { p.result = outcome; p.finalScore = `${h}:${a}`; resolved++; notFound = Math.max(0, notFound-1); }
+          else manual++;
+        }
       }
     }
   }
@@ -4232,13 +4282,14 @@ async function fetchSofaResults(btn) {
   _resultsLoaded = false;
   initResults();
 
-  let msg = `✅ ${resolved} aufgelöst`;
-  if (manual)   msg += ` · ${manual} manuell nötig (HZ/Ecken/Karten)`;
-  if (notFound) msg += ` · ${notFound} Spiele nicht gefunden`;
-  if (corsError) msg += ' · CORS-Fehler: update_dashboard.py ausführen (löst Picks via Python)';
-  if (!resolved && !manual && corsError) msg = '⚠️ SofaScore nicht erreichbar — bitte update_dashboard.py ausführen (Python hat kein CORS-Problem)';
-  document.getElementById('sfTrackerInfo').textContent = msg;
-  btn.textContent = '🔄 Erneut holen';
+  const stillOpen = picks.filter(e => e.picks.some(p => p.result === null)).length;
+  let msg = resolved
+    ? `✅ ${resolved} Pick${resolved>1?'s':''} aufgelöst`
+    : '⚠️ Keine neuen Ergebnisse — Spiele noch nicht abgeschlossen?';
+  if (manual)    msg += ` · ${manual} manuell nötig (HZ/Ecken)`;
+  if (stillOpen) msg += ` · ${stillOpen} Spiele noch offen`;
+  infoEl.textContent = msg;
+  btn.textContent = '🔄 Ergebnisse holen';
   btn.disabled = false;
 }
 
