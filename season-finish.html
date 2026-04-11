@@ -4205,6 +4205,22 @@ async function _sfFetchDate(dateIso) {
   return null;
 }
 
+// ── Debug helper — shows what API returned vs what picks expect ───────────────
+function _showDebug(lines) {
+  let el = document.getElementById('sfDebugPanel');
+  if (!el) {
+    el = document.createElement('pre');
+    el.id = 'sfDebugPanel';
+    Object.assign(el.style, {
+      background:'#0d1117', border:'1px solid #30363d', borderRadius:'8px',
+      padding:'12px 14px', fontSize:'11px', color:'#8b949e', marginTop:'12px',
+      whiteSpace:'pre-wrap', wordBreak:'break-word', maxHeight:'260px', overflowY:'auto'
+    });
+    document.getElementById('resultsPanel').insertBefore(el, document.getElementById('resultsStats'));
+  }
+  el.textContent = lines.join('\n');
+}
+
 // ── Main fetch handler ────────────────────────────────
 async function fetchSofaResults(btn) {
   btn.disabled = true;
@@ -4230,6 +4246,13 @@ async function fetchSofaResults(btn) {
   btn.textContent = '⏳ The Odds API…';
   const oddsScores = await _fetchOddsApiScores(3);
   let resolved = 0, manual = 0, notFound = 0;
+
+  const dbg = [];
+  dbg.push(`📦 Gespeicherte Picks: ${pending.length} Spiele`);
+  pending.forEach(e => dbg.push(`  · ${e.dateIso}  ${e.home} vs ${e.away}`));
+  dbg.push(`\n🌐 The Odds API: ${oddsScores.length} Ergebnisse geladen`);
+  if (oddsScores.length) oddsScores.slice(0,10).forEach(s => dbg.push(`  · ${s.dateIso}  ${s.home} ${s.h}:${s.a} ${s.away}`));
+  _showDebug(dbg);
 
   if (oddsScores.length > 0) {
     for (const entry of picks) {
@@ -4293,6 +4316,9 @@ async function fetchSofaResults(btn) {
       }
     }
   }
+
+  dbg.push(`\n✅ Aufgelöst: ${resolved}  |  manuell: ${manual}  |  nicht gefunden: ${notFound}`);
+  _showDebug(dbg);
 
   _storedSave(picks);
   _resultsLoaded = false;
