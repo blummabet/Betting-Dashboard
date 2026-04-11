@@ -4192,16 +4192,96 @@ function _determineOutcome(market, h, a, stats = null) {
 }
 
 // ── Fuzzy team name match ─────────────────────────────
+// Handles: local names vs English API names, accents, prefixes (FC/SC/etc.)
+const _TEAM_ALIASES = {
+  // German → English (API-Football uses English)
+  'fc bayern münchen': 'bayern munich',
+  'fc bayern munchen': 'bayern munich',
+  'borussia mönchengladbach': 'borussia monchengladbach',
+  'borussia m\'gladbach': 'borussia monchengladbach',
+  'bayer 04 leverkusen': 'bayer leverkusen',
+  'tsg hoffenheim': 'hoffenheim',
+  'tsg 1899 hoffenheim': 'hoffenheim',
+  'vfb stuttgart': 'stuttgart',
+  'vfl wolfsburg': 'wolfsburg',
+  'eintracht frankfurt': 'eintracht frankfurt',
+  'rb leipzig': 'rb leipzig',
+  '1. fc köln': 'cologne',
+  '1. fc koln': 'cologne',
+  '1. fc heidenheim': 'heidenheim',
+  '1. fc union berlin': 'union berlin',
+  'hamburger sv': 'hamburg',
+  'sv werder bremen': 'werder bremen',
+  'fc st. pauli': 'st. pauli',
+  'fc augsburg': 'augsburg',
+  // French
+  'olympique de marseille': 'marseille',
+  'olympique lyonnais': 'lyon',
+  'paris saint-germain': 'paris saint germain',
+  'paris fc': 'paris fc',
+  'stade rennais': 'rennes',
+  // Spanish
+  'deportivo alavés': 'alaves',
+  'deportivo alaves': 'alaves',
+  'atlético madrid': 'atletico madrid',
+  'atletico madrid': 'atletico madrid',
+  // Austrian
+  'red bull salzburg': 'salzburg',
+  'rb salzburg': 'salzburg',
+  'sk sturm graz': 'sturm graz',
+  'fk austria wien': 'austria wien',
+  'sk rapid wien': 'rapid wien',
+  // Portuguese
+  'famalicão': 'famalicao',
+  'cf estrela amadora': 'estrela amadora',
+  // Scottish
+  'heart of midlothian': 'hearts',
+  'dundee fc': 'dundee',
+  // Turkish
+  'beşiktaş jk': 'besiktas',
+  'besiktas jk': 'besiktas',
+  'başakşehir fk': 'istanbul basaksehir',
+  'basaksehir fk': 'istanbul basaksehir',
+  'fatih karagümrük': 'fatih karagumruk',
+  'göztepe': 'goztepe',
+  'kasımpaşa': 'kasimpasa',
+  'kocaelispor': 'kocaelispor',
+  'eyüpspor': 'eyupspor',
+};
+
 function _fuzzyTeam(a, b) {
-  const clean = s => s.toLowerCase().replace(/fc |sc |sv |bv |1\. |vfb |vfL |rb /gi,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
-  const ca = clean(a), cb = clean(b);
-  if (ca === cb) return true;
-  if (ca.includes(cb) || cb.includes(ca)) return true;
-  const wa = new Set(ca.split(' ').filter(w=>w.length>2));
-  const wb = new Set(cb.split(' ').filter(w=>w.length>2));
+  const normalize = s => s.toLowerCase()
+    .replace(/[àáâãäå]/g,'a').replace(/[èéêë]/g,'e').replace(/[ìíîï]/g,'i')
+    .replace(/[òóôõöø]/g,'o').replace(/[ùúûü]/g,'u').replace(/[ýÿ]/g,'y')
+    .replace(/[ñ]/g,'n').replace(/[ç]/g,'c').replace(/[ß]/g,'ss')
+    .replace(/[şș]/g,'s').replace(/[ğ]/g,'g').replace(/[ı]/g,'i')
+    .replace(/\b(fc|sc|sv|bv|rb|vfb|vfl|sk|fk|cf|afc|asc)\b/gi,' ')
+    .replace(/[^a-z0-9 ']/g,' ').replace(/\s+/g,' ').trim();
+
+  const na = normalize(a), nb = normalize(b);
+
+  // Direct match after normalization
+  if (na === nb) return true;
+  if (na.includes(nb) || nb.includes(na)) return true;
+
+  // Check alias table
+  const ra = _TEAM_ALIASES[na] || na;
+  const rb = _TEAM_ALIASES[nb] || nb;
+  if (ra === rb) return true;
+  if (ra.includes(rb) || rb.includes(ra)) return true;
+
+  // Word overlap (ignore short words)
+  const words = s => new Set(s.split(' ').filter(w => w.length > 2));
+  const wa = words(ra), wb2 = words(rb);
   let overlap = 0;
-  for (const w of wa) if (wb.has(w)) overlap++;
-  return overlap >= 1 && overlap / Math.max(wa.size, wb.size, 1) >= 0.5;
+  for (const w of wa) if (wb2.has(w)) overlap++;
+  if (overlap >= 1 && overlap / Math.max(wa.size, wb2.size, 1) >= 0.4) return true;
+
+  // Also try cross-alias comparison
+  const wra = words(ra), wrb = words(rb);
+  let overlap2 = 0;
+  for (const w of wra) if (wrb.has(w)) overlap2++;
+  return overlap2 >= 1 && overlap2 / Math.max(wra.size, wrb.size, 1) >= 0.4;
 }
 
 // ── Scores via The Odds API (proper CORS, API key already in use) ────────────
@@ -4353,6 +4433,9 @@ async function fetchSofaResults(btn) {
     apifbByDate[date] = fixtures;
     const done = fixtures.filter(f => ['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short));
     dbg.push(`📅 ${date}: ${done.length} abgeschlossene Spiele von ${fixtures.length} geladen`);
+    // Show sample of API team names for debugging
+    const sample = done.slice(0,8).map(f => `  ${f.teams?.home?.name} vs ${f.teams?.away?.name}`);
+    if (sample.length) dbg.push(`  Beispiele: \n${sample.join('\n')}`);
   }
   _showDebug(dbg);
 
