@@ -624,5 +624,129 @@ def main():
     print(f"\n✅ Update abgeschlossen — {today_s}")
     print("   Öffne season-finish.html im Browser um die Änderungen zu sehen.\n")
 
+# ─────────────────────────────────────────────────────────────────────────────
+#  PICK RESOLVER — reads picks_history.json, fetches SofaScore results (no CORS
+#  since Python runs locally), resolves outcomes, writes picks_history.json back
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _fuzzy_team(a, b):
+    """Fuzzy team name match — mirrors JS _fuzzyTeam()."""
+    import re
+    def clean(s):
+        s = s.lower()
+        for pfx in ["fc ", "sc ", "sv ", "bv ", "1. ", "vfb ", "vfl ", "rb "]:
+            s = s.replace(pfx, " ")
+        return re.sub(r"[^a-z0-9 ]", " ", s).strip()
+    ca, cb = clean(a), clean(b)
+    if ca == cb: return True
+    if ca in cb or cb in ca: return True
+    wa = set(w for w in ca.split() if len(w) > 2)
+    wb = set(w for w in cb.split() if len(w) > 2)
+    overlap = len(wa & wb)
+    return overlap >= 1 and overlap / max(len(wa), len(wb), 1) >= 0.5
+
+def _determine_outcome(market, h, a):
+    """Resolve a pick outcome from final score — mirrors JS _determineOutcome()."""
+    goals = h + a
+    m = (market or "").lower()
+    if "über 3.5"  in m or "over 3.5"  in m: return "win" if goals > 3 else "loss"
+    if "über 2.5"  in m or "over 2.5"  in m: return "win" if goals > 2 else "loss"
+    if "über 1.5"  in m or "over 1.5"  in m: return "win" if goals > 1 else "loss"
+    if "unter 2.5" in m or "under 2.5" in m: return "win" if goals < 3 else "loss"
+    if "unter 1.5" in m or "under 1.5" in m: return "win" if goals < 2 else "loss"
+    if "beide teams treffen: nein" in m:      return "win" if (h == 0 or a == 0) else "loss"
+    if "beide teams treffen" in m or "btts" in m: return "win" if (h > 0 and a > 0) else "loss"
+    if "dnb: heim"      in m: return "win" if h > a else ("void" if h == a else "loss")
+    if "dnb: auswärts"  in m: return "win" if a > h else ("void" if h == a else "loss")
+    if "doppelte chance: 1x" in m: return "win" if h >= a else "loss"
+    if "doppelte chance: x2" in m: return "win" if a >= h else "loss"
+    if "doppelte chance: 12" in m: return "win" if h != a else "loss"
+    if "heimsieg"    in m or "home win"  in m: return "win" if h > a else "loss"
+    if "auswärtssieg" in m or "away win" in m: return "win" if a > h else "loss"
+    if "unentschieden" in m or ("draw" in m and "no bet" not in m): return "win" if h == a else "loss"
+    if "handicap" in m:
+        if "heim" in m or "home" in m: return "win" if h > a else "loss"
+        if "auswärts" in m or "away" in m: return "win" if a > h else "loss"
+    return None  # HZ / Ecken / Karten — can't auto-determine
+
+def _sf_fetch_results(date_iso):
+    """Fetch SofaScore finished events for a date (ISO: YYYY-MM-DD)."""
+    url = f"https://api.sofascore.com/api/v1/sport/football/scheduled-events/{date_iso}"
+    data = fetch(url)
+    if not data:
+        return []
+    events = data.get("events", [])
+    return [e for e in events if e.get("status", {}).get("type") in ("finished", "postponed")]
+
+def resolve_pending_picks():
+    """Read picks_history.json, resolve pending picks via SofaScore, write back."""
+    picks_file = os.path.join(SCRIPT_DIR, "picks_history.json")
+    if not os.path.exists(picks_file):
+        print("  ℹ  picks_history.json nicht gefunden — überspringe Pick-Auflösung")
+        return
+
+    with open(picks_file, "r", encoding="utf-8") as f:
+        picks = json.load(f)
+
+    pending_entries = [e for e in picks if any(p.get("result") is None for p in e.get("picks", []))]
+    if not pending_entries:
+        print("  ✓ Alle Picks bereits aufgelöst")
+        return
+
+    print(f"\n🎲 Löse {len(pending_entries)} Einträge mit offenen Picks auf…")
+    dates = sorted(set(e["dateIso"] for e in pending_entries))
+    resolved_total = 0
+
+    for date_iso in dates:
+        print(f"  📅 {date_iso} wird von SofaScore geladen…", end=" ", flush=True)
+        events = _sf_fetch_results(date_iso)
+        if not events:
+            print("keine Daten")
+            continue
+        print(f"{len(events)} Spiele")
+
+        for entry in picks:
+            if entry["dateIso"] != date_iso:
+                continue
+            if not any(p.get("result") is None for p in entry.get("picks", [])):
+                continue
+
+            # Find matching SofaScore event
+            ev = next((
+                e for e in events
+                if _fuzzy_team(e.get("homeTeam", {}).get("name", ""), entry["home"])
+                and _fuzzy_team(e.get("awayTeam", {}).get("name", ""), entry["away"])
+            ), None)
+
+            if not ev:
+                print(f"    ⚠  {entry['home']} vs {entry['away']} — nicht gefunden")
+                continue
+
+            h = ev.get("homeScore", {}).get("current")
+            a = ev.get("awayScore", {}).get("current")
+            if h is None or a is None:
+                continue
+
+            entry["finalScore"] = f"{h}:{a}"
+
+            for p in entry["picks"]:
+                if p.get("result") is not None:
+                    continue
+                outcome = _determine_outcome(p["market"], h, a)
+                if outcome is not None:
+                    p["result"] = outcome
+                    p["finalScore"] = f"{h}:{a}"
+                    resolved_total += 1
+                    icon = "✅" if outcome == "win" else ("↩️" if outcome == "void" else "❌")
+                    print(f"    {icon} {entry['home']} {h}:{a} {entry['away']}  →  {p['market']} = {outcome}")
+
+    with open(picks_file, "w", encoding="utf-8") as f:
+        json.dump(picks, f, ensure_ascii=False, indent=2)
+
+    print(f"\n  ✓ {resolved_total} Picks aufgelöst → picks_history.json aktualisiert")
+
+
 if __name__ == "__main__":
     main()
+    print("\n" + "─" * 60)
+    resolve_pending_picks()

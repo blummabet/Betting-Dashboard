@@ -893,11 +893,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
     <div style="flex:1;min-width:180px;">
       <div style="font-size:14px;font-weight:700;margin-bottom:2px;">📌 Pick Tracker</div>
-      <div style="font-size:12px;color:var(--muted)" id="sfTrackerInfo">Picks speichern → nächsten Tag Ergebnisse holen</div>
+      <div style="font-size:12px;color:var(--muted)" id="sfTrackerInfo">Picks speichern → JSON exportieren → update_dashboard.py ausführen → Ergebnisse holen</div>
     </div>
     <button onclick="savePicksToday(this)" style="background:#1c2c1c;border:1px solid var(--green);color:var(--green);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">💾 Picks speichern</button>
-    <button id="sfFetchBtn" onclick="fetchSofaResults(this)" style="background:#1a2030;border:1px solid #58a6ff;color:#58a6ff;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">🔄 SofaScore-Ergebnisse holen</button>
-    <button onclick="exportPicksJson()" style="background:#1a1a2e;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">📥 JSON</button>
+    <button id="sfFetchBtn" onclick="fetchSofaResults(this)" style="background:#1a2030;border:1px solid #58a6ff;color:#58a6ff;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">🔄 Ergebnisse holen</button>
+    <button onclick="exportPicksJson()" title="Als picks_history.json speichern → dann update_dashboard.py ausführen" style="background:#1a1a2e;border:1px solid #e3b341;color:#e3b341;border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">📥 Export JSON</button>
   </div>
 
   <!-- Stats overview -->
@@ -4157,14 +4157,21 @@ function _fuzzyTeam(a, b) {
 }
 
 // ── SofaScore fetch for one date ─────────────────────
+// Tries direct first, then falls back to corsproxy.io if CORS blocks
 async function _sfFetchDate(dateIso) {
-  try {
-    const resp = await fetch(`https://api.sofascore.com/api/v1/sport/football/scheduled-events/${dateIso}`,
-      { headers: { 'Accept': 'application/json' } });
-    if (!resp.ok) return null;
-    const data = await resp.json();
-    return data.events || [];
-  } catch(e) { return null; }
+  const SF_URL = `https://api.sofascore.com/api/v1/sport/football/scheduled-events/${dateIso}`;
+  const PROXY  = `https://corsproxy.io/?url=${encodeURIComponent(SF_URL)}`;
+
+  for (const url of [SF_URL, PROXY]) {
+    try {
+      const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      if (!resp.ok) continue;
+      const data = await resp.json();
+      const events = data.events || data; // proxy may unwrap one layer
+      if (Array.isArray(events)) return events;
+    } catch(e) { /* try next */ }
+  }
+  return null; // both failed
 }
 
 // ── Main fetch handler ────────────────────────────────
@@ -4175,12 +4182,17 @@ async function fetchSofaResults(btn) {
   const picks = _loadStoredPicks();
   const pending = picks.filter(e => e.picks.some(p => p.result === null));
 
+  const infoEl = document.getElementById('sfTrackerInfo');
   if (!pending.length) {
     btn.textContent = '✅ Alle aufgelöst';
     btn.disabled = false;
-    document.getElementById('sfTrackerInfo').textContent = 'Keine offenen Picks — alles erledigt!';
+    const total = picks.reduce((s,e)=>s+e.picks.length, 0);
+    infoEl.textContent = total
+      ? `Alle ${total} Picks bereits aufgelöst ✅`
+      : 'Keine gespeicherten Picks — erst "💾 Picks speichern" klicken!';
     return;
   }
+  infoEl.textContent = `${pending.length} Spiele mit offenen Picks → hole Ergebnisse…`;
 
   const dates = [...new Set(pending.map(e => e.dateIso))].sort();
   let resolved = 0, manual = 0, notFound = 0, corsError = false;
@@ -4221,9 +4233,10 @@ async function fetchSofaResults(btn) {
   initResults();
 
   let msg = `✅ ${resolved} aufgelöst`;
-  if (manual)   msg += `, ${manual} manuell nötig (HZ/Ecken/Karten)`;
-  if (notFound) msg += `, ${notFound} nicht gefunden`;
-  if (corsError) msg += ' · SofaScore CORS-Fehler — direkt im Browser öffnen';
+  if (manual)   msg += ` · ${manual} manuell nötig (HZ/Ecken/Karten)`;
+  if (notFound) msg += ` · ${notFound} Spiele nicht gefunden`;
+  if (corsError) msg += ' · CORS-Fehler: update_dashboard.py ausführen (löst Picks via Python)';
+  if (!resolved && !manual && corsError) msg = '⚠️ SofaScore nicht erreichbar — bitte update_dashboard.py ausführen (Python hat kein CORS-Problem)';
   document.getElementById('sfTrackerInfo').textContent = msg;
   btn.textContent = '🔄 Erneut holen';
   btn.disabled = false;
