@@ -904,6 +904,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
     <button onclick="savePicksToday(this)" style="background:#1c2c1c;border:1px solid var(--green);color:var(--green);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">💾 Picks speichern</button>
     <button id="sfFetchBtn" onclick="fetchSofaResults(this)" style="background:#1a2030;border:1px solid #58a6ff;color:#58a6ff;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">🔄 Ergebnisse holen</button>
+    <button onclick="reloadPreMatchData(this)" style="background:#1a1a0d;border:1px solid var(--gold);color:var(--gold);border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;" title="Schiedsrichter, Verletzungen & H2H neu laden">🔃 Pre-Match</button>
     <button onclick="toggleManualEntry()" style="background:#1a1a2e;border:1px solid #a78bfa;color:#a78bfa;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">✏️ Manuell</button>
     <button onclick="exportPicksJson()" style="background:#1a1a2e;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">📥 JSON</button>
   </div>
@@ -3852,6 +3853,28 @@ loadAllOdds().then(() => {
 // Small delay to let the initial render finish first
 setTimeout(() => loadPreMatchData(), 1500);
 
+// ── Manual Pre-Match reload (clears cache first) ───────────────────────────
+async function reloadPreMatchData(btn) {
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Lädt…'; }
+  // Clear all pre-match + referee caches so everything is re-fetched
+  try {
+    Object.keys(localStorage)
+      .filter(k => k.startsWith('pmData_') || k === 'refStats_v3' || k === 'h2hData_v2')
+      .forEach(k => localStorage.removeItem(k));
+  } catch(e) {}
+  window._preMatchData   = {};
+  window._preMatchLoaded = false;
+  await loadPreMatchData();
+  if (btn) { btn.disabled = false; btn.textContent = '🔃 Pre-Match'; }
+}
+
+// ── Clear stale pre-match caches from old versions ─────────────────────────
+try {
+  Object.keys(localStorage)
+    .filter(k => k.startsWith('pmData_v1_') || k.startsWith('pmData_v2_'))
+    .forEach(k => localStorage.removeItem(k));
+} catch(e) {}
+
 // ═══════════════════════════════════════════════════════
 //  VIEW SWITCHER
 // ═══════════════════════════════════════════════════════
@@ -4728,9 +4751,10 @@ window._preMatchData   = {};
 window._preMatchLoaded = false;
 
 async function loadPreMatchData() {
-  // Build date range: today + next 2 days
+  // Build date range: today − 1 day through today + 6 days (full week window)
+  // Negative offset catches yesterday's late games still in config
   const today = new Date();
-  const dates  = [0, 1, 2].map(i => {
+  const dates  = [-1, 0, 1, 2, 3, 4, 5, 6].map(i => {
     const d = new Date(today.getTime() + i * 864e5);
     return d.toISOString().slice(0, 10);
   });
@@ -4868,9 +4892,31 @@ function _injectPreMatchAndRerender() {
     }
   }
 
-  // Re-render the active tab
-  const active = document.querySelector('.nav-btn.active');
-  if (active) active.click();
+  // Re-render the active league tab
+  const active = document.querySelector('.league-btn.active');
+  if (active) {
+    active.click();
+  } else {
+    // Fallback: directly re-render current league
+    renderLeague(window._currentLeague || 'overview');
+  }
+
+  // Show a brief "✅ Pre-Match geladen" toast
+  const toast = document.createElement('div');
+  const loaded = Object.keys(window._preMatchData).length;
+  toast.textContent = loaded
+    ? `✅ Pre-Match: ${loaded} Spiele angereichert (Schiedsrichter · Verletzungen · H2H)`
+    : '⚠️ Pre-Match: Keine Spieldaten für diese Woche gefunden';
+  Object.assign(toast.style, {
+    position:'fixed', bottom:'80px', left:'50%', transform:'translateX(-50%)',
+    background: loaded ? '#0d2a1a' : '#2a1500',
+    border: `1px solid ${loaded ? '#3fb950' : '#f85149'}`,
+    color: loaded ? '#3fb950' : '#f85149',
+    borderRadius:'8px', padding:'8px 16px', fontSize:'12px', fontWeight:'700',
+    zIndex:'9999', whiteSpace:'nowrap', boxShadow:'0 4px 20px rgba(0,0,0,0.5)'
+  });
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
 }
 
 // ── SofaScore fallback (direct + CORS proxies) ────────────────────────────────
