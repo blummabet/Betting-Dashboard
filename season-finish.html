@@ -4135,7 +4135,7 @@ function savePicksToday(btn) {
 }
 
 // ── Outcome determination ────────────────────────────
-function _determineOutcome(market, h, a, stats = null) {
+function _determineOutcome(market, h, a, stats = null, isHalfTime = false) {
   const goals = h + a;
   const m = (market || '').toLowerCase();
 
@@ -4170,7 +4170,7 @@ function _determineOutcome(market, h, a, stats = null) {
                       m.includes('halftime') || m.includes('half time') ||
                       (m.includes(' hz') && (m.includes('über') || m.includes('unter') ||
                        m.includes('heim') || m.includes('auswärts') || m.includes('unentschieden')));
-  if (_isHZMarket) return null; // HT score not available — mark as manual
+  if (_isHZMarket && !isHalfTime) return null; // HT score not available — mark as manual
 
   // ── Goals / Result markets (from score alone) ────────────────────────────
   if (m.includes('über 3.5') || m.includes('over 3.5'))   return goals > 3 ? 'win' : 'loss';
@@ -4639,15 +4639,15 @@ function applyManualScores() {
     if (htValid) entry.htScore = `${hHT}:${aHT}`;
 
     for (const p of entry.picks) {
-      if (p.result !== null) continue;
       // Try with HT score first for HZ markets
-      const isHZ = (p.market || '').toLowerCase().match(/1\. hz|halbzeit|first half|halftime| hz /);
+      const isHZ = !!(p.market || '').toLowerCase().match(/1\. hz|halbzeit|first half|halftime| hz /);
       let outcome = null;
       if (isHZ && htValid) {
-        // For HZ markets use HT goals
-        outcome = _determineOutcome(p.market, hHT, aHT);
+        // For HZ markets pass isHalfTime=true so the HZ guard is bypassed
+        outcome = _determineOutcome(p.market, hHT, aHT, null, true);
       }
       if (outcome === null) outcome = _determineOutcome(p.market, h, a);
+      // Always update — this ensures previously wrong results (e.g. card picks) get corrected
       if (outcome !== null) { p.result = outcome; p.finalScore = isHZ && htValid ? `${hHT}:${aHT} (HZ)` : `${h}:${a}`; resolved++; }
     }
   });
