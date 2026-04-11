@@ -1238,14 +1238,35 @@ function findOdds(leagueKey, home, away) {
 }
 
 async function loadAllOdds() {
+  // ── Cache: refresh once every 6h, don't waste monthly quota ─────────────
+  const CACHE_KEY = 'sfOddsCache_v3';
+  const CACHE_TTL = 6 * 3600 * 1000;
+  try {
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+    if (cached && Date.now() - cached.ts < CACHE_TTL && Object.keys(cached.data).length > 0) {
+      window._oddsData = cached.data;
+      window._oddsReady = true;
+      return;
+    }
+  } catch(e) {}
+
+  // ── Fetch: no bookmaker restriction → uses best available (bet365, unibet, etc.) ──
   await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
     try {
-      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,totals,btts&oddsFormat=decimal&bookmakers=pinnacle`;
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,totals,btts&oddsFormat=decimal`;
       const resp = await fetch(url);
-      if (resp.ok) window._oddsData[lk] = await resp.json();
+      if (resp.ok) {
+        const data = await resp.json();
+        if (Array.isArray(data) && data.length > 0) window._oddsData[lk] = data;
+      }
     } catch(e) { /* silent fail */ }
   }));
   window._oddsReady = true;
+
+  // ── Save to cache ─────────────────────────────────────────────────────────
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: window._oddsData }));
+  } catch(e) {}
 }
 
 // ═══════════════════════════════════════════════════════
@@ -3336,25 +3357,22 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   const ct = cardType(match);
   // Use precision computed score, fall back to hardcoded while odds load
   const sc = computeMatchScore(match, leagueKey);
-  const odds = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
-  const picks = getBettingPicks(match, odds, leagueKey);
+  const odds  = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
+  const oddsD = deriveOdds(odds || {});
+  const picks = getBettingPicks(match, oddsD, leagueKey);
 
   // Odds are now embedded directly in each pick via p.odds — no separate strip needed
 
-  // Build picks — BACKTEST FINDING: low-conf picks hit only 47.6%, barely above chance.
-  // Filter them out of the UI — only show ★★☆ (medium) and ★★★ (high) to the user.
-  // MINIMUM ODDS RULE (real odds only): if Pinnacle/Bet365 odds attached, hide if < 1.30.
-  // NOTE: sc-based proxy filter (sc < 0.73) removed — sc for goals/specialist picks is a
-  // signal-strength score, NOT a probability. Pressure boosts legitimately push sc above 0.73
-  // (e.g. Over 2.5 + bothNeedWin = sc 0.88). Problematic low-odds picks (Team trifft 92%)
-  // have been removed at source. Real odds filter still protects where actual prices are known.
-  const _impliedOddsOk = (p) => {
-    if (p.odds != null) return p.odds >= 1.30; // real odds present: hard filter ≥ 1.30
-    return true;                               // no real odds: sc ≠ probability, don't filter
-  };
-  const visiblePicks = picks.filter(p => (p.conf === 'high' || p.conf === 'medium') && _impliedOddsOk(p));
+  // Show all high/medium confidence picks — user decides what's worth betting.
+  // Low-odds picks get ⚠ label instead of being hidden.
+  const visiblePicks = picks.filter(p => p.conf === 'high' || p.conf === 'medium');
   const picksHtml = visiblePicks.map(p => {
-    const oddsTag  = p.odds ? `<span class="pick-odds-tag">@ ${p.odds.toFixed(2)}</span>` : '';
+    const oddsNum  = p.odds ?? null;
+    const oddsTag  = oddsNum != null
+      ? `<span class="pick-odds-tag" style="${oddsNum < 1.40 ? 'opacity:.6' : ''}">@ ${oddsNum.toFixed(2)}</span>`
+      : `<span style="font-size:10px;color:var(--muted);margin-left:4px;font-style:italic">keine Quote</span>`;
+    const lowWarn  = oddsNum != null && oddsNum < 1.40
+      ? `<span style="font-size:10px;color:#e3b341;margin-left:5px;font-weight:600" title="Quote unter 1.40 — wenig Wert">⚠ niedrig</span>` : '';
     const valueTag = p.value === 'hot'   ? '<span class="value-tag hot">🔥 VALUE</span>'
                    : p.value === 'value' ? '<span class="value-tag val">💰 Value</span>' : '';
     const confClass = {high:'conf-high',medium:'conf-medium',low:'conf-low'}[p.conf]||'conf-medium';
@@ -3362,7 +3380,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     return `<div class="pick-item">
       <span class="pick-icon">${p.icon}</span>
       <div class="pick-body">
-        <div class="pick-market">${p.market}${oddsTag}${valueTag}</div>
+        <div class="pick-market">${p.market}${oddsTag}${lowWarn}${valueTag}</div>
         <div class="pick-reason">${p.reason}</div>
       </div>
       <span class="pick-conf ${confClass}">${confLabel}</span>
