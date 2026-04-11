@@ -2208,7 +2208,32 @@ function computeMatchScore(match, leagueKey) {
     }
   }
 
-  return Math.round(Math.min(12.0, Math.max(1.0, score)) * 10) / 10;
+  // ── Dynamic score ceiling — reserves 12/12 for genuine end-of-season games ──
+  // The table-based stake scores (1–10 from Python) already encode HOW dire a team's
+  // situation is. roundsLeft controls HOW MUCH TIME remains to fix it.
+  // A relegation battle with 6 rounds left is serious — but not yet "no way out".
+  // The ceiling rises as rounds dwindle, so 12/12 is truly reserved for the crunch.
+  //
+  //  rl=1 → 12.0   rl=2 → 11.5   rl=3 → 11.0   rl=4 → 10.5
+  //  rl=5 → 10.0   rl=6 → 9.5    rl=7 → 9.0    rl=8 → 8.5
+  //  rl=9 → 8.0    rl≥10 → 7.5
+  //
+  // Example: bothRed (raw 12.5) with rl=6 → capped at 9.5 ✓
+  //          bothRed (raw 12.5) with rl=2 → capped at 11.5 ✓
+  //          singleRed stake=9, rl=3 → ~9 (under 11.0 cap) ✓
+  const _rlCeil   = match.roundsLeft ?? 99;
+  const _maxScore = _rlCeil <= 1 ? 12.0
+                  : _rlCeil <= 2 ? 11.5
+                  : _rlCeil <= 3 ? 11.0
+                  : _rlCeil <= 4 ? 10.5
+                  : _rlCeil <= 5 ? 10.0
+                  : _rlCeil <= 6 ?  9.5
+                  : _rlCeil <= 7 ?  9.0
+                  : _rlCeil <= 8 ?  8.5
+                  : _rlCeil <= 9 ?  8.0
+                  :                 7.5;
+
+  return Math.round(Math.min(_maxScore, Math.max(1.0, score)) * 10) / 10;
 }
 
 // ═══════════════════════════════════════════════════════
