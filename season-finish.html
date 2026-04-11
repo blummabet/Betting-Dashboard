@@ -2366,7 +2366,8 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   if (picks.length >= 1) _estH += 256;           // hero pick
   if (picks.length >= 2) _estH += 122;           // pick 2
   if (picks.length >= 3) _estH += 122;           // pick 3
-  if (odds?.hw)  _estH += 44;                    // odds strip
+  if (_igHasCtx) _estH += 54;                    // context strip (fatigue/injury)
+  if (odds?.hw)  _estH += 66;                    // odds strip (potentially 2 lines)
   _estH += 88;                                   // footer
   _estH = Math.max(1080, _estH);
 
@@ -2648,6 +2649,24 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
     curY+=pressH+14;
   }
 
+  // ── ZONE 6b: CONTEXT STRIP (fatigue / injuries) ──────────
+  if (_igHasCtx) {
+    ctx.strokeStyle='rgba(48,54,61,0.5)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(48,curY); ctx.lineTo(W-48,curY); ctx.stroke();
+    curY+=10;
+    let bX=48;
+    ctx.font='13px system-ui,sans-serif'; ctx.textBaseline='middle';
+    for(const badge of _igCtxBadges){
+      const tw=ctx.measureText(badge.text).width;
+      const bW=tw+24, bH=30;
+      ctx.fillStyle=badge.col+'22'; igRoundRect(ctx,bX,curY,bW,bH,8,true,false);
+      ctx.strokeStyle=badge.col+'66'; ctx.lineWidth=1; igRoundRect(ctx,bX,curY,bW,bH,8,false,true);
+      ctx.fillStyle=badge.col; ctx.textAlign='left'; ctx.fillText(badge.text,bX+12,curY+bH/2);
+      bX+=bW+8;
+    }
+    curY+=40;
+  }
+
   // ── ZONE 7: PICKS ────────────────────────────────────────
   ctx.strokeStyle='rgba(48,54,61,0.5)'; ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(48,curY); ctx.lineTo(W-48,curY); ctx.stroke();
@@ -2749,18 +2768,25 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   }
 
   // ── Odds strip ──────────────────────────────────────────
-  if(odds&&odds.hw){
+  if(oddsD&&oddsD.hw){
     curY+=6;
-    const oi=[];
-    if(odds.hw) oi.push(`H ${odds.hw.toFixed(2)}`);
-    if(odds.dr) oi.push(`X ${odds.dr.toFixed(2)}`);
-    if(odds.aw) oi.push(`A ${odds.aw.toFixed(2)}`);
-    if(odds.o25) oi.push(`O2.5 ${odds.o25.toFixed(2)}`);
-    if(odds.u25) oi.push(`U2.5 ${odds.u25.toFixed(2)}`);
-    ctx.font='15px system-ui,sans-serif'; ctx.fillStyle='#8b949e66';
+    const oi1=[], oi2=[];
+    if(oddsD.hw)    oi1.push(`H ${oddsD.hw.toFixed(2)}`);
+    if(oddsD.dr)    oi1.push(`X ${oddsD.dr.toFixed(2)}`);
+    if(oddsD.aw)    oi1.push(`A ${oddsD.aw.toFixed(2)}`);
+    if(oddsD.o25)   oi1.push(`O2.5 ${oddsD.o25.toFixed(2)}`);
+    if(oddsD.u25)   oi1.push(`U2.5 ${oddsD.u25.toFixed(2)}`);
+    if(oddsD.dnbH)  oi2.push(`DNB H ${oddsD.dnbH.toFixed(2)}`);
+    if(oddsD.dnbA)  oi2.push(`DNB A ${oddsD.dnbA.toFixed(2)}`);
+    if(oddsD.dc1X)  oi2.push(`1X ${oddsD.dc1X.toFixed(2)}`);
+    if(oddsD.dcX2)  oi2.push(`X2 ${oddsD.dcX2.toFixed(2)}`);
+    if(oddsD.bttsY) oi2.push(`BTTS Ja ${oddsD.bttsY.toFixed(2)}`);
+    if(oddsD.bttsN) oi2.push(`BTTS Nein ${oddsD.bttsN.toFixed(2)}`);
+    ctx.font='14px system-ui,sans-serif'; ctx.fillStyle='#8b949e66';
     ctx.textAlign='left'; ctx.textBaseline='alphabetic';
-    ctx.fillText('📊 Pinnacle: '+oi.join(' · '),48,curY+16);
-    curY+=32;
+    ctx.fillText('📊 Pinnacle: '+oi1.join(' · '),48,curY+16);
+    if(oi2.length){ ctx.fillText(oi2.join(' · '),48,curY+34); curY+=50; }
+    else { curY+=28; }
   }
 
   // ── FOOTER ───────────────────────────────────────────────
@@ -2834,8 +2860,29 @@ function shareTelegram(matchJson, leagueName, leagueFlag, leagueKey) {
   const score = computeMatchScore(match, leagueKey);
   const angle = getBettingAngle(match);
   const angleTxt = angle.text.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<');
-  const odds = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
-  const picks = getBettingPicks(match, odds, leagueKey);
+  const odds  = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
+  const oddsD = deriveOdds(odds || {});
+  const picks = getBettingPicks(match, oddsD, leagueKey);
+  const _ok   = p => p.odds == null ? true : p.odds >= 1.30;
+  const visiblePicks = picks.filter(p => (p.conf==='high'||p.conf==='medium') && _ok(p));
+
+  // Context: rest days + injuries
+  const _tgFix   = leagueKey ? (LEAGUES[leagueKey]?.fixtures||[]) : [];
+  const _tgHRest = getRestDays(match.home, match.date, _tgFix);
+  const _tgARest = getRestDays(match.away, match.date, _tgFix);
+  const _tgHInj  = match.homeForm?.injuries || null;
+  const _tgAInj  = match.awayForm?.injuries || null;
+  const ctxLines = [];
+  if (_tgHRest != null && _tgHRest <= 5) ctxLines.push(`😴 ${match.home}: nur ${_tgHRest} Tage Pause`);
+  if (_tgARest != null && _tgARest <= 5) ctxLines.push(`😴 ${match.away}: nur ${_tgARest} Tage Pause`);
+  if (_tgHInj && (_tgHInj.attack>0||_tgHInj.defense>0)) {
+    const _n=(_tgHInj.attack||0)+(_tgHInj.defense||0);
+    ctxLines.push(`🏥 ${match.home}: ${_n} Verletzte/r`);
+  }
+  if (_tgAInj && (_tgAInj.attack>0||_tgAInj.defense>0)) {
+    const _n=(_tgAInj.attack||0)+(_tgAInj.defense||0);
+    ctxLines.push(`🏥 ${match.away}: ${_n} Verletzte/r`);
+  }
 
   const hLabels = (match.homeStake?.labels||[]).map(l=>l.l).join(' · ') || '—';
   const aLabels = (match.awayStake?.labels||[]).map(l=>l.l).join(' · ') || '—';
@@ -2848,19 +2895,32 @@ function shareTelegram(matchJson, leagueName, leagueFlag, leagueKey) {
   msg += `✈️ ${match.away}: ${aLabels}\n\n`;
   msg += `${angle.badge}\n${angleTxt}\n\n`;
 
-  if (odds && (odds.hw || odds.o25)) {
+  if (ctxLines.length) {
+    msg += `⚠️ Kontext\n${ctxLines.join('\n')}\n\n`;
+  }
+
+  if (oddsD && oddsD.hw) {
     msg += `📊 Pinnacle Quoten\n`;
-    if (odds.hw) msg += `H ${odds.hw.toFixed(2)}  ·  X ${(odds.dr||0).toFixed(2)}  ·  A ${odds.aw.toFixed(2)}\n`;
-    if (odds.o25) msg += `O2.5 ${odds.o25.toFixed(2)}  ·  U2.5 ${(odds.u25||0).toFixed(2)}\n`;
+    msg += `H ${oddsD.hw.toFixed(2)}  ·  X ${(oddsD.dr||0).toFixed(2)}  ·  A ${oddsD.aw.toFixed(2)}\n`;
+    if (oddsD.o25) msg += `O2.5 ${oddsD.o25.toFixed(2)}  ·  U2.5 ${(oddsD.u25||0).toFixed(2)}\n`;
+    const derived=[];
+    if (oddsD.dnbH) derived.push(`DNB H ${oddsD.dnbH.toFixed(2)}`);
+    if (oddsD.dnbA) derived.push(`DNB A ${oddsD.dnbA.toFixed(2)}`);
+    if (oddsD.dc1X) derived.push(`1X ${oddsD.dc1X.toFixed(2)}`);
+    if (oddsD.dcX2) derived.push(`X2 ${oddsD.dcX2.toFixed(2)}`);
+    if (oddsD.bttsY) derived.push(`BTTS Ja ${oddsD.bttsY.toFixed(2)}`);
+    if (oddsD.bttsN) derived.push(`BTTS Nein ${oddsD.bttsN.toFixed(2)}`);
+    if (derived.length) msg += derived.join('  ·  ') + '\n';
     msg += `\n`;
   }
 
-  msg += `🎲 Top Wetten\n`;
-  for (const p of picks) {
+  msg += `🎲 Top Wetten (★★☆+)\n`;
+  for (const p of visiblePicks) {
     const oddsStr = p.odds ? ` @ ${p.odds.toFixed(2)}` : '';
     const confStr = {high:'★★★',medium:'★★☆',low:'★☆☆'}[p.conf]||'★★☆';
     msg += `${p.icon} ${p.market}${oddsStr}  ${confStr}\n`;
   }
+  if (!visiblePicks.length) msg += `(Kein Pick mit ausreichender Konfidenz)\n`;
 
   msg += `${'─'.repeat(32)}\n`;
   msg += `via BetEdge · Nur ab 18 Jahren`;
@@ -2889,8 +2949,30 @@ function copyCard(matchJson, leagueName, leagueFlag, leagueKey, btn) {
   const score = computeMatchScore(match, leagueKey);
   const angle = getBettingAngle(match);
   const angleTxt = angle.text.replace(/<[^>]+>/g,'').replace(/&amp;/g,'&');
-  const odds = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
-  const picks = getBettingPicks(match, odds, leagueKey);
+  const odds  = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
+  const oddsD = deriveOdds(odds || {});
+  const picks = getBettingPicks(match, oddsD, leagueKey);
+  const _ok   = p => p.odds == null ? true : p.odds >= 1.30;
+  const visiblePicks = picks.filter(p => (p.conf==='high'||p.conf==='medium') && _ok(p));
+
+  // Context: rest days + injuries
+  const _cpFix   = leagueKey ? (LEAGUES[leagueKey]?.fixtures||[]) : [];
+  const _cpHRest = getRestDays(match.home, match.date, _cpFix);
+  const _cpARest = getRestDays(match.away, match.date, _cpFix);
+  const _cpHInj  = match.homeForm?.injuries || null;
+  const _cpAInj  = match.awayForm?.injuries || null;
+  const ctxLines = [];
+  if (_cpHRest != null && _cpHRest <= 5) ctxLines.push(`😴 ${match.home}: nur ${_cpHRest} Tage Pause`);
+  if (_cpARest != null && _cpARest <= 5) ctxLines.push(`😴 ${match.away}: nur ${_cpARest} Tage Pause`);
+  if (_cpHInj && (_cpHInj.attack>0||_cpHInj.defense>0)) {
+    const _n=(_cpHInj.attack||0)+(_cpHInj.defense||0);
+    ctxLines.push(`🏥 ${match.home}: ${_n} Verletzte/r`);
+  }
+  if (_cpAInj && (_cpAInj.attack>0||_cpAInj.defense>0)) {
+    const _n=(_cpAInj.attack||0)+(_cpAInj.defense||0);
+    ctxLines.push(`🏥 ${match.away}: ${_n} Verletzte/r`);
+  }
+
   const hLabels = (match.homeStake?.labels||[]).map(l=>l.l).join(' · ') || '—';
   const aLabels = (match.awayStake?.labels||[]).map(l=>l.l).join(' · ') || '—';
 
@@ -2901,18 +2983,33 @@ function copyCard(matchJson, leagueName, leagueFlag, leagueKey, btn) {
   msg += `🏠 ${match.home}: ${hLabels}\n`;
   msg += `✈️ ${match.away}: ${aLabels}\n\n`;
   msg += `${angle.badge}\n${angleTxt}\n\n`;
-  if (odds && (odds.hw || odds.o25)) {
+
+  if (ctxLines.length) {
+    msg += `⚠️ Kontext\n${ctxLines.join('\n')}\n\n`;
+  }
+
+  if (oddsD && oddsD.hw) {
     msg += `📊 Pinnacle Quoten\n`;
-    if (odds.hw) msg += `H ${odds.hw.toFixed(2)}  ·  X ${(odds.dr||0).toFixed(2)}  ·  A ${odds.aw.toFixed(2)}\n`;
-    if (odds.o25) msg += `O2.5 ${odds.o25.toFixed(2)}  ·  U2.5 ${(odds.u25||0).toFixed(2)}\n`;
+    msg += `H ${oddsD.hw.toFixed(2)}  ·  X ${(oddsD.dr||0).toFixed(2)}  ·  A ${oddsD.aw.toFixed(2)}\n`;
+    if (oddsD.o25) msg += `O2.5 ${oddsD.o25.toFixed(2)}  ·  U2.5 ${(oddsD.u25||0).toFixed(2)}\n`;
+    const derived=[];
+    if (oddsD.dnbH) derived.push(`DNB H ${oddsD.dnbH.toFixed(2)}`);
+    if (oddsD.dnbA) derived.push(`DNB A ${oddsD.dnbA.toFixed(2)}`);
+    if (oddsD.dc1X) derived.push(`1X ${oddsD.dc1X.toFixed(2)}`);
+    if (oddsD.dcX2) derived.push(`X2 ${oddsD.dcX2.toFixed(2)}`);
+    if (oddsD.bttsY) derived.push(`BTTS Ja ${oddsD.bttsY.toFixed(2)}`);
+    if (oddsD.bttsN) derived.push(`BTTS Nein ${oddsD.bttsN.toFixed(2)}`);
+    if (derived.length) msg += derived.join('  ·  ') + '\n';
     msg += '\n';
   }
-  msg += `🎲 Top Wetten\n`;
-  for (const p of picks) {
+
+  msg += `🎲 Top Wetten (★★☆+)\n`;
+  for (const p of visiblePicks) {
     const oddsStr = p.odds ? ` @ ${p.odds.toFixed(2)}` : '';
     const confStr = {high:'★★★',medium:'★★☆',low:'★☆☆'}[p.conf]||'★★☆';
     msg += `${p.icon} ${p.market}${oddsStr}  ${confStr}\n`;
   }
+  if (!visiblePicks.length) msg += `(Kein Pick mit ausreichender Konfidenz)\n`;
   msg += `${'─'.repeat(32)}\nvia BetEdge · Nur ab 18 Jahren`;
 
   navigator.clipboard.writeText(msg).then(() => {
@@ -3071,10 +3168,15 @@ function renderStakeRow(name, stakeInfo, formData, leagueKey) {
   const posClass = pos <= 3 ? 'pos-top' : pos >= totalTeams - 2 ? 'pos-bot' : '';
   const posTag = pos ? `<span class="pos-tag ${posClass}">#${pos}</span>` : '';
 
+  // Mini goal-rate stat: "⚽ 1.6 | 🥅 1.2"
+  const goalStat = (formData?.goalsPerGame != null && formData?.concededPerGame != null)
+    ? `<span class="h2h-stat" style="font-size:9.5px;white-space:nowrap;opacity:.75">⚽ ${Number(formData.goalsPerGame).toFixed(1)} | 🥅 ${Number(formData.concededPerGame).toFixed(1)}</span>`
+    : '';
+
   if (!stakeInfo) {
     return `<div class="team-row">
       <div class="tr-main"><span class="team-name">${name}</span>${posTag}<span class="sp-none">kein direkter Stake</span></div>
-      <div class="tr-form"><div class="tr-form-meta">${diffTag}</div>${sparkline}</div>
+      <div class="tr-form"><div class="tr-form-meta">${diffTag}${goalStat}</div>${sparkline}</div>
     </div>`;
   }
 
@@ -3084,27 +3186,47 @@ function renderStakeRow(name, stakeInfo, formData, leagueKey) {
 
   return `<div class="team-row">
     <div class="tr-main"><span class="team-name">${name}</span>${posTag}${pills}</div>
-    <div class="tr-form"><div class="tr-form-meta">${diffTag}</div>${sparkline}</div>
+    <div class="tr-form"><div class="tr-form-meta">${diffTag}${goalStat}</div>${sparkline}</div>
   </div>`;
 }
 
 function renderH2H(h2h) {
   if (!h2h || h2h.games < 3) return '';
   const n  = h2h.games;
-  const hw = Math.round((h2h.homeWins / n) * 100);
-  const dw = Math.round((h2h.draws    / n) * 100);
-  const aw = 100 - hw - dw;
-  const BAR = 80;
+  const hw = h2h.homeWins, dw = h2h.draws, aw = h2h.awayWins;
+  const hwP = hw/n, dwP = dw/n, awP = aw/n;
+  const BAR = 78;
+  const hwW = Math.max(4,Math.round(hwP*BAR));
+  const dwW = Math.max(4,Math.round(dwP*BAR));
+  const awW = Math.max(4,Math.round(awP*BAR));
+
+  // SVG mini-donut (28×28, r=9)
+  const r=9, cxD=14, cyD=14, circ=2*Math.PI*r;
+  const hwA=hwP*circ, dwA=dwP*circ, awA=awP*circ;
+  // Start from top (−90°) → dashoffset = circ/4 − accumulated arcs
+  const hwOff = circ/4;
+  const dwOff = circ/4 - hwA;
+  const awOff = circ/4 - hwA - dwA;
+  const seg = (col, arc, off) => arc < 0.4 ? '' :
+    `<circle cx="${cxD}" cy="${cyD}" r="${r}" fill="none" stroke="${col}" stroke-width="5"
+      stroke-dasharray="${arc.toFixed(2)} ${(circ-arc).toFixed(2)}"
+      stroke-dashoffset="${off.toFixed(2)}" stroke-linecap="butt"/>`;
+  const donut = `<svg width="28" height="28" viewBox="0 0 28 28" style="flex-shrink:0;transform:rotate(-90deg)">
+    <circle cx="${cxD}" cy="${cyD}" r="${r}" fill="none" stroke="rgba(48,54,61,0.6)" stroke-width="5"/>
+    ${seg('#3fb950',hwA,hwOff)}${seg('#8b949e',dwA,dwOff)}${seg('#f85149',awA,awOff)}
+  </svg>`;
+
   return `
   <div class="h2h-strip">
     <span class="h2h-label">H2H</span>
-    <div class="h2h-bar" title="${h2h.homeWins} Heim · ${h2h.draws} Unent. · ${h2h.awayWins} Auswärts">
-      <div class="h2h-seg h2h-home" style="width:${Math.max(4,hw*BAR/100)}px"></div>
-      <div class="h2h-seg h2h-draw" style="width:${Math.max(4,dw*BAR/100)}px"></div>
-      <div class="h2h-seg h2h-away" style="width:${Math.max(4,aw*BAR/100)}px"></div>
+    ${donut}
+    <div class="h2h-bar" title="${hw} Heim · ${dw} Unent. · ${aw} Auswärts">
+      <div class="h2h-seg h2h-home" style="width:${hwW}px"></div>
+      <div class="h2h-seg h2h-draw" style="width:${dwW}px"></div>
+      <div class="h2h-seg h2h-away" style="width:${awW}px"></div>
     </div>
-    <span class="h2h-stat"><strong>${h2h.homeWins}</strong>H <strong>${h2h.draws}</strong>X <strong>${h2h.awayWins}</strong>A</span>
-    <span class="h2h-stat" style="margin-left:auto;font-size:9px;opacity:.6">${n} Duelle gesamt</span>
+    <span class="h2h-stat"><strong>${hw}</strong>H <strong>${dw}</strong>X <strong>${aw}</strong>A</span>
+    <span class="h2h-stat" style="margin-left:auto;font-size:9px;opacity:.6">${n} Duelle</span>
   </div>`;
 }
 
