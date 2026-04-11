@@ -1334,6 +1334,35 @@ function getBettingPicks(match, odds, leagueKey) {
   const homeWinRate = h2hN >= 3 ? (h2h.homeWins||0)/h2hN * h2hW + 0.46*(1-h2hW) : 0.45;
   const awayWinRate = h2hN >= 3 ? (h2h.awayWins||0)/h2hN * h2hW + 0.30*(1-h2hW) : 0.30;
 
+  // ── H2H goals patterns (from API, Pro plan) ───────────────────────────────
+  // over25Rate / bttsRate from real historical goals data — weighted by recency
+  // If API H2H not available, these modifiers are neutral (0).
+  const _h2hOver25  = h2h.over25Rate ?? null;   // 0.0–1.0 or null
+  const _h2hBtts    = h2h.bttsRate   ?? null;
+  const _h2hAvgG    = h2h.avgGoals   ?? null;
+  const _h2hSample  = h2hN >= 5;  // only apply when ≥5 games for reliability
+
+  // Over 2.5 H2H modifier: +0.12 if ≥70%, +0.06 if ≥60%, -0.08 if ≤30%, -0.14 if ≤20%
+  const _h2hO25Mod  = (!_h2hSample || _h2hOver25 == null) ? 0
+    : _h2hOver25 >= 0.70 ?  0.12
+    : _h2hOver25 >= 0.60 ?  0.06
+    : _h2hOver25 <= 0.20 ? -0.14
+    : _h2hOver25 <= 0.30 ? -0.08
+    : 0;
+
+  // BTTS H2H modifier: +0.10 if ≥70%, +0.05 if ≥60%, -0.10 if ≤25%, -0.16 if ≤15%
+  const _h2hBttsMod = (!_h2hSample || _h2hBtts == null) ? 0
+    : _h2hBtts >= 0.70 ?  0.10
+    : _h2hBtts >= 0.60 ?  0.05
+    : _h2hBtts <= 0.15 ? -0.16
+    : _h2hBtts <= 0.25 ? -0.10
+    : 0;
+
+  // Avg goals H2H note for pick reasons
+  const _h2hGoalNote = (_h2hSample && _h2hAvgG != null)
+    ? `<br>📊 H2H (${h2hN} Duelle): Ø ${_h2hAvgG} Tore/Sp · ${Math.round((_h2hOver25||0)*100)}% Über 2.5 · ${Math.round((_h2hBtts||0)*100)}% BTTS`
+    : '';
+
   // ── Real xG & venue stats from understat cache (injected by refresh_stats.py) ───
   const _ts    = window._teamStats || {};
   const hStat  = _ts[leagueKey]?.[match.home] || {};
@@ -1760,9 +1789,11 @@ function getBettingPicks(match, odds, leagueKey) {
       else if (_anyNeedsWin) sc = Math.min(0.88, sc + _pressureBoost * 0.85);
       // Titelduell in Crunch-Zeit: kontrolliertes Spiel → leichte Over-Suppression
       if (anyGold && !anyRed && urgencyHigh) sc = Math.max(0, sc - 0.07);
+      // 🔑 H2H GOALS HISTORY: real historical Over 2.5 rate confirms or contradicts model
+      sc = Math.min(0.92, Math.max(0, sc + _h2hO25Mod));
       gC.push({sc, p:{icon:'⚽', market:'Over 2.5 Tore', odds:o.o25,
         conf: sc>0.66?'high':sc>0.46?'medium':'low',
-        reason:`${egPfx} — Heim trifft Ø ${homeAttStr.toFixed(1)}, Auswärts Ø ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp.<br>Torerwartung deutlich über der 2.5er-Schwelle — mindestens 3 Treffer auf Basis der Offensivdaten.${_pressNote}`}}); }
+        reason:`${egPfx} — Heim trifft Ø ${homeAttStr.toFixed(1)}, Auswärts Ø ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp.<br>Torerwartung deutlich über der 2.5er-Schwelle — mindestens 3 Treffer auf Basis der Offensivdaten.${_pressNote}${_h2hGoalNote}`}}); }
 
     // Under 2.5
     { let sc = expGoals<1.7?0.85:expGoals<2.0?0.72:expGoals<2.3?0.57:expGoals<2.6?0.34:0.12;
@@ -1773,12 +1804,14 @@ function getBettingPicks(match, odds, leagueKey) {
       // 🔑 PRESSURE/RUNDEN: Muss-gewinnen → Angriffsdrang killt Under-Signal
       if (bothNeedWin)       sc = Math.max(0, sc - _pressureBoost * 1.10);
       else if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 0.65);
+      // 🔑 H2H: under 2.5 is inverse of over 2.5 modifier
+      sc = Math.min(0.92, Math.max(0, sc - _h2hO25Mod));
       const _u25DefTeam = _topResultMkt==='Heimsieg'?match.home:_topResultMkt==='Auswärtssieg'?match.away:null;
       const _pressWarn = _anyNeedsWin
         ? `<br><strong>⚠️ ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — Angriffsdrang erhöht Torrisiko, Under-Signal geschwächt.</strong>` : '';
       const _u25Reason = _favWeak > 0.4 && _u25DefTeam
-        ? `${_u25DefTeam} gewinnt mit defensiver Ausrichtung — Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} ${xGBased?'xG':'Tore'}/Sp des erwarteten Siegers.<br>Knappes Ergebnis erwartet — strukturell passt Under 2.5 besser als Over-Märkte.${_pressWarn}`
-        : `${egPfx} — schwache Offensiven (Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp).<br>Torerwartung klar unter der 2.5er-Grenze — defensiv kompakte Partie mit knappem Ergebnis erwartet.${_pressWarn}`;
+        ? `${_u25DefTeam} gewinnt mit defensiver Ausrichtung — Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} ${xGBased?'xG':'Tore'}/Sp des erwarteten Siegers.<br>Knappes Ergebnis erwartet — strukturell passt Under 2.5 besser als Over-Märkte.${_pressWarn}${_h2hGoalNote}`
+        : `${egPfx} — schwache Offensiven (Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp).<br>Torerwartung klar unter der 2.5er-Grenze — defensiv kompakte Partie mit knappem Ergebnis erwartet.${_pressWarn}${_h2hGoalNote}`;
       gC.push({sc, p:{icon:'🛡️', market:'Under 2.5 Tore', odds:o.u25,
         conf: sc>0.68?'high':sc>0.48?'medium':'low',
         reason: _u25Reason}}); }
@@ -1804,13 +1837,15 @@ function getBettingPicks(match, odds, leagueKey) {
       // 🔑 PRESSURE/RUNDEN: verzweifeltes Team greift an → Gegner nutzt Räume → BTTS sehr wahrscheinlich
       if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 1.10);
       else if (_anyNeedsWin) sc = Math.min(0.86, sc + _pressureBoost * 0.55);
-      sc = Math.min(0.90, sc);
+      // 🔑 H2H BTTS HISTORY: real historical BTTS rate from direct meetings
+      sc = Math.min(0.92, Math.max(0, sc + _h2hBttsMod));
+      sc = Math.min(0.92, sc);
       const _bttsPressNote = bothNeedWin
         ? `<br><strong>⚡ Beide Teams müssen gewinnen${_rlSfx} — beide greifen an, beide riskieren Kontertore.</strong>`
         : _anyNeedsWin ? `<br><strong>⚡ ${homeNeedsWin ? _pHLabel : _pALabel}${_rlSfx} — öffnet hinten Räume, Kontertreffer für Gegner wahrscheinlich.</strong>` : '';
       gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:o.bttsY||null,
         conf: sc>0.65?'high':sc>0.44?'medium':'low',
-        reason:`Beide Offensiven treffsicher: Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp.<br>Beide Defensiven löchrig (kassieren Ø ${homeDefStr.toFixed(1)} / ${awayDefStr.toFixed(1)}/Sp) — Tore auf beiden Seiten sehr wahrscheinlich.${_bttsPressNote}`}}); }
+        reason:`Beide Offensiven treffsicher: Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp.<br>Beide Defensiven löchrig (kassieren Ø ${homeDefStr.toFixed(1)} / ${awayDefStr.toFixed(1)}/Sp) — Tore auf beiden Seiten sehr wahrscheinlich.${_bttsPressNote}${_h2hGoalNote}`}}); }
 
     // BTTS Nein
     { const bothAttWeak = homeAttStr < 0.88 && awayAttStr < 0.82;
@@ -3298,8 +3333,37 @@ function renderH2H(h2h) {
     ${seg('#3fb950',hwA,hwOff)}${seg('#8b949e',dwA,dwOff)}${seg('#f85149',awA,awOff)}
   </svg>`;
 
+  // ── Extra stats from API H2H (over25Rate, bttsRate, avgGoals, lastResults) ──
+  const hasApiStats = h2h.over25Rate != null;
+  let statsRow = '';
+  if (hasApiStats) {
+    const o25Pct  = Math.round(h2h.over25Rate * 100);
+    const bttsPct = Math.round(h2h.bttsRate   * 100);
+    const avgG    = h2h.avgGoals;
+    const o25Col  = o25Pct >= 60 ? '#3fb950' : o25Pct >= 40 ? '#e3b341' : '#8b949e';
+    const bttsCol = bttsPct >= 60 ? '#3fb950' : bttsPct >= 40 ? '#e3b341' : '#8b949e';
+
+    // Mini result chips for last 5 games (H=home win, X=draw, A=away win)
+    const chips = (h2h.lastResults || []).map(r => {
+      const lbl  = r.homeWon ? 'H' : r.awayWon ? 'A' : 'X';
+      const col  = r.homeWon ? '#3fb950' : r.awayWon ? '#f85149' : '#8b949e';
+      const tip  = `${r.homeGoals}:${r.awayGoals} (${r.year})`;
+      return `<span title="${tip}" style="display:inline-flex;align-items:center;justify-content:center;
+        width:16px;height:16px;border-radius:3px;font-size:9px;font-weight:800;
+        background:${col}22;color:${col};border:1px solid ${col}55">${lbl}</span>`;
+    }).join('');
+
+    statsRow = `<div style="display:flex;align-items:center;gap:10px;padding:5px 10px 6px;
+      border-top:1px solid #21262d;font-size:10px;color:var(--muted);flex-wrap:wrap;">
+      <span>Ø <strong style="color:var(--text)">${avgG}</strong> Tore/Sp</span>
+      <span>Über 2.5: <strong style="color:${o25Col}">${o25Pct}%</strong></span>
+      <span>BTTS: <strong style="color:${bttsCol}">${bttsPct}%</strong></span>
+      ${chips ? `<span style="display:flex;gap:3px;margin-left:auto">${chips}</span>` : ''}
+    </div>`;
+  }
+
   return `
-  <div class="h2h-strip">
+  <div class="h2h-strip" style="${hasApiStats ? 'padding-bottom:0;border-bottom:none' : ''}">
     <span class="h2h-label">H2H</span>
     ${donut}
     <div class="h2h-bar" title="${hw} Heim · ${dw} Unent. · ${aw} Auswärts">
@@ -3309,7 +3373,8 @@ function renderH2H(h2h) {
     </div>
     <span class="h2h-stat"><strong>${hw}</strong>H <strong>${dw}</strong>X <strong>${aw}</strong>A</span>
     <span class="h2h-stat" style="margin-left:auto;font-size:9px;opacity:.6">${n} Duelle</span>
-  </div>`;
+  </div>
+  ${statsRow ? `<div style="background:#0d1117;border:1px solid #21262d;border-top:none;border-radius:0 0 7px 7px;margin-bottom:9px;">${statsRow}</div>` : ''}`;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -4495,6 +4560,97 @@ async function _apifbFetchCardEvents(fixtureId) {
   } catch(e) { return null; }
 }
 
+// ── Fetch H2H fixtures and compute enriched stats ───────────────────────────
+async function _apifbFetchH2H(homeTeamId, awayTeamId) {
+  if (!homeTeamId || !awayTeamId) return null;
+  const H2H_CACHE_KEY = 'h2hData_v2';
+  const H2H_CACHE_TTL = 24 * 3600 * 1000;
+  const cacheKey = `${homeTeamId}_${awayTeamId}`;
+
+  try {
+    const cache = JSON.parse(localStorage.getItem(H2H_CACHE_KEY) || '{}');
+    if (cache[cacheKey] && Date.now() - cache[cacheKey].ts < H2H_CACHE_TTL)
+      return cache[cacheKey].data;
+  } catch(e) {}
+
+  try {
+    const resp = await fetch(
+      `${APISPORTS_BASE}/fixtures/headtohead?h2h=${homeTeamId}-${awayTeamId}&last=10`,
+      { headers: { 'x-apisports-key': APISPORTS_KEY } }
+    );
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    const fixtures = (data.response || [])
+      .filter(f => ['FT','AET','PEN'].includes(f.fixture?.status?.short));
+
+    if (!fixtures.length) return null;
+
+    let homeWins = 0, draws = 0, awayWins = 0;
+    let totalGoals = 0, over25 = 0, over35 = 0, btts = 0;
+    let lastYear = null;
+    const lastResults = [];
+
+    for (const fx of fixtures) {
+      const hG = fx.goals?.home ?? 0;
+      const aG = fx.goals?.away ?? 0;
+      const tot = hG + aG;
+      totalGoals += tot;
+      if (tot > 2.5) over25++;
+      if (tot > 3.5) over35++;
+      if (hG > 0 && aG > 0) btts++;
+
+      // Map historical result to upcoming match perspective
+      // homeTeamId = upcoming home team; check who actually won in this historical game
+      const histHomeId  = fx.teams?.home?.id;
+      const histHomeWon = fx.teams?.home?.winner === true;
+      const histAwayWon = fx.teams?.away?.winner === true;
+
+      const upcomingHomeWon = (histHomeId === homeTeamId && histHomeWon) ||
+                              (histHomeId === awayTeamId && histAwayWon);
+      const upcomingAwayWon = (histHomeId === awayTeamId && histHomeWon) ||
+                              (histHomeId === homeTeamId && histAwayWon);
+
+      if (upcomingHomeWon)       homeWins++;
+      else if (upcomingAwayWon)  awayWins++;
+      else                       draws++;
+
+      const year = fx.fixture?.date ? new Date(fx.fixture.date).getFullYear() : null;
+      if (year && (!lastYear || year > lastYear)) lastYear = year;
+
+      if (lastResults.length < 5) {
+        lastResults.push({
+          homeGoals: hG, awayGoals: aG,
+          year: year || '?',
+          homeWon: upcomingHomeWon,
+          awayWon: upcomingAwayWon
+        });
+      }
+    }
+
+    const n = fixtures.length;
+    const result = {
+      games:           n,
+      homeWins,
+      draws,
+      awayWins,
+      lastMeetingYear: lastYear,
+      avgGoals:        Math.round(totalGoals / n * 10) / 10,
+      over25Rate:      Math.round(over25 / n * 100) / 100,   // 0.0–1.0
+      over35Rate:      Math.round(over35 / n * 100) / 100,
+      bttsRate:        Math.round(btts   / n * 100) / 100,
+      lastResults
+    };
+
+    try {
+      const cache = JSON.parse(localStorage.getItem(H2H_CACHE_KEY) || '{}');
+      cache[cacheKey] = { ts: Date.now(), data: result };
+      localStorage.setItem(H2H_CACHE_KEY, JSON.stringify(cache));
+    } catch(e) {}
+
+    return result;
+  } catch(e) { return null; }
+}
+
 // ── Compute referee card stats — cached 48h ─────────────────────────────────
 async function _apifbGetRefereeStats(refereeName) {
   if (!refereeName) return null;
@@ -4651,7 +4807,13 @@ async function loadPreMatchData() {
     }
   }));
 
-  // ── Step 3: fetch referee stats for all unique referees (parallel) ──────────
+  // ── Step 3: fetch H2H for each matched fixture (parallel) ──────────────────
+  await Promise.allSettled(Object.values(result).map(async d => {
+    if (!d.homeTeamId || !d.awayTeamId) return;
+    d.h2h = await _apifbFetchH2H(d.homeTeamId, d.awayTeamId);
+  }));
+
+  // ── Step 4: fetch referee stats for all unique referees (parallel) ──────────
   const uniqueRefs = [...new Set(
     Object.values(result).map(d => d.referee).filter(Boolean)
   )];
@@ -4682,6 +4844,9 @@ function _injectPreMatchAndRerender() {
 
       // Referee
       if (pm.refereeStats) match.refereeStats = pm.refereeStats;
+
+      // H2H — replace static config data with fresh API data (richer + auto-updated)
+      if (pm.h2h && pm.h2h.games >= 3) match.h2h = pm.h2h;
 
       // Injuries from API (overrides static config when API has data)
       const _buildInj = (list) => ({
