@@ -4364,12 +4364,23 @@ async function fetchSofaResults(btn) {
       _fuzzyTeam(f.teams?.home?.name || '', entry.home) &&
       _fuzzyTeam(f.teams?.away?.name || '', entry.away)
     );
-    if (!fx) { notFound++; continue; }
+    if (!fx) {
+      // Show which API name was closest for debugging
+      const candidates = (apifbByDate[entry.dateIso] || [])
+        .filter(f => ['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short))
+        .map(f => `${f.teams?.home?.name} vs ${f.teams?.away?.name}`);
+      const hint = candidates.length
+        ? ` (${candidates.length} FT Spiele am ${entry.dateIso})`
+        : ` (keine FT Spiele am ${entry.dateIso})`;
+      dbg.push(`❌ Nicht gefunden: ${entry.home} vs ${entry.away}${hint}`);
+      notFound++; continue;
+    }
 
     const h = fx.goals?.home ?? null;
     const a = fx.goals?.away ?? null;
     if (h === null) continue;
     entry.finalScore = `${h}:${a}`;
+    dbg.push(`✓ ${entry.home} vs ${entry.away} → ${h}:${a}`);
 
     // Check if any pending picks need statistics (corners/cards)
     const needsStats = entry.picks.some(p =>
@@ -4387,8 +4398,9 @@ async function fetchSofaResults(btn) {
       if (p.result !== null) continue;
       const outcome = _determineOutcome(p.market, h, a, stats);
       if (outcome !== null) { p.result = outcome; p.finalScore = `${h}:${a}`; resolved++; }
-      else manual++;
+      else { dbg.push(`  ⚠ Kein Outcome für: ${p.market}`); manual++; }
     }
+    _showDebug(dbg); // live update while running
   }
 
   // ── 2. Fallback: SofaScore für noch offene Picks ─────────────────────────
