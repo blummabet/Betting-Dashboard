@@ -5154,6 +5154,11 @@ async function fetchSofaResults(btn) {
   btn.textContent = '⏳ Lade…';
   const infoEl = document.getElementById('sfTrackerInfo');
 
+  // Show debug panel immediately so the user can see what's happening
+  const _dbgImm = [`🕐 ${new Date().toLocaleTimeString('de-AT')} — Starte Ergebnis-Fetch…`];
+  _showDebug(_dbgImm);
+
+  try {
   const picks = _loadStoredPicks();
   const pending = picks.filter(e => e.picks.some(p => p.result === null));
 
@@ -5164,6 +5169,9 @@ async function fetchSofaResults(btn) {
     infoEl.textContent = total
       ? `Alle ${total} Picks bereits aufgelöst ✅`
       : '⚠️ Keine gespeicherten Picks — erst "💾 Picks speichern" klicken!';
+    _showDebug([...(_dbgImm), total
+      ? `ℹ️ Alle ${total} Picks schon aufgelöst — nichts zu tun.`
+      : '⚠️ Keine gespeicherten Picks gefunden (localStorage leer).']);
     return;
   }
 
@@ -5335,6 +5343,16 @@ async function fetchSofaResults(btn) {
   infoEl.textContent = msg;
   btn.textContent = '🔄 Ergebnisse holen';
   btn.disabled = false;
+
+  } catch(err) {
+    // Catch-all: show the error visibly so the user knows what went wrong
+    const errMsg = `❌ Fehler: ${err.message || err}\n${err.stack ? err.stack.slice(0, 300) : ''}`;
+    _showDebug([..._dbgImm, '', errMsg]);
+    infoEl.textContent = `❌ Fehler beim Laden — Details im Debug-Panel unten`;
+    btn.textContent = '🔄 Ergebnisse holen';
+    btn.disabled = false;
+    console.error('[fetchSofaResults]', err);
+  }
 }
 
 // ── Manual score entry ────────────────────────────────
