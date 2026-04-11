@@ -662,15 +662,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <td>Elo-Rating pro Team (täglich aktualisiert)</td>
           <td>Qualitätsgefälle zwischen Teams, Bestätigung/Warnung bei Favorit</td>
         </tr>
-        <tr>
-          <td>API-Football / Standings</td>
-          <td>Tabellenstände, Punkte, Position, verbleibende Spieltage</td>
-          <td>Stake-Labels, Druck-Berechnung, roundsLeft</td>
+        <tr style="background:rgba(0,212,161,.04);border-left:2px solid var(--accent);">
+          <td><strong style="color:var(--accent)">API-Football Pro</strong> <span style="font-size:10px;color:var(--muted)">($19/Mo)</span></td>
+          <td>Fixture-IDs · Schiedsrichter-Name · Verletzungen/Sperren pro Spieler · Echtes H2H · Kartenereignisse · Statistiken</td>
+          <td>Pre-Match Enrichment: Schiedsrichter-Stats, Spieler-Ausfälle, echte H2H-Torquoten</td>
         </tr>
         <tr>
-          <td>H2H-Datenbank</td>
-          <td>Historische Duelle: Siege/Remis/Niederlagen, Tore, Heimsieg-Quote</td>
-          <td>Draw-Rate, Heimsieg-Rate, Auswärtssieg-Rate als Basis-Wahrscheinlichkeiten</td>
+          <td>H2H-Datenbank (API + Config)</td>
+          <td>Direkte Duelle: Siege/Remis, <strong>Over-2.5-Rate, BTTS-Rate, Ø Tore/Spiel</strong>, letzte 5 Ergebnisse</td>
+          <td>Draw/Win-Rates + H2H-Tormodifier für Over/Under- und BTTS-Picks</td>
         </tr>
         <tr>
           <td>Formverlauf</td>
@@ -678,9 +678,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <td>homeInForm/awayInForm-Flags, Streak-Bonus/-Malus</td>
         </tr>
         <tr>
-          <td>Pinnacle / Bet365 Odds</td>
-          <td>Marktquoten: Heimsieg, Remis, Auswärtssieg, Over/Under 2.5, 3.5</td>
-          <td>Value-Schätzung (Edge-Berechnung), Mindestquoten-Filter (≥ 1.30)</td>
+          <td>The Odds API</td>
+          <td>Marktquoten: H2H, Over/Under 2.5, BTTS — 6h gecacht</td>
+          <td>Value-Schätzung (Edge-Berechnung), Quoten-Anzeige in Cards</td>
         </tr>
         <tr>
           <td>Backtest-CSVs (football-data.co.uk)</td>
@@ -688,6 +688,61 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <td>Kalibrierung aller Schwellenwerte, Marktkalibrierung</td>
         </tr>
       </table>
+    </div>
+  </div>
+
+  <!-- 2b. Pre-Match Enrichment (Pro Plan) -->
+  <div class="heart-section">
+    <div class="heart-section-title">🔄 Pre-Match Enrichment System (API Pro)</div>
+    <div class="heart-grid">
+      <div class="heart-card accent">
+        <h3>⚙️ Wie es funktioniert</h3>
+        <p style="margin-bottom:8px;">1,5 Sekunden nach dem Page-Load lädt <code style="background:var(--card2);padding:1px 5px;border-radius:4px;font-size:11px;">loadPreMatchData()</code> im Hintergrund echte Spieldaten für die nächsten 7 Tage.</p>
+        <ul>
+          <li>API-Fixture-IDs werden auf Config-Spiele gemappt (fuzzy team matching)</li>
+          <li>Verletzungen + Sperren per <code style="font-size:11px;">/injuries?fixture=ID</code></li>
+          <li>H2H-Daten per <code style="font-size:11px;">/fixtures/headtohead?h2h=ID-ID&last=10</code></li>
+          <li>Schiedsrichter-Name aus Fixture → Kartenstats aus letzten 8 Spielen</li>
+          <li>Alles gecacht: Verletzungen 3h · H2H 24h · Schiedsrichter 48h</li>
+          <li>Cards werden automatisch neu gerendert wenn Daten bereit sind</li>
+        </ul>
+        <p style="margin-top:8px;color:var(--muted);font-size:12px;">Budget: ~70–100 API-Requests/Tag von 7.500 verfügbaren → &lt;1.5%</p>
+      </div>
+      <div class="heart-card">
+        <h3>👨‍⚖️ Schiedsrichter-Integration</h3>
+        <p style="margin-bottom:8px;">Karten-Picks werden jetzt schiedsrichterbasiert skaliert:</p>
+        <table class="heart-table" style="font-size:11px;">
+          <tr><th>Ø Karten/Sp</th><th>Modifier</th><th>Effekt</th></tr>
+          <tr><td>≥ 5.5</td><td style="color:#3fb950">+0.18</td><td>Starker Boost</td></tr>
+          <tr><td>4.5–5.4</td><td style="color:#3fb950">+0.10</td><td>Boost</td></tr>
+          <tr><td>3.5–4.4</td><td style="color:#3fb950">+0.04</td><td>Leichter Boost</td></tr>
+          <tr><td>&lt; 2.5</td><td style="color:#f85149">−0.20</td><td>Pick komplett unterdrückt</td></tr>
+          <tr><td>&lt; 3.0</td><td style="color:#f85149">−0.12</td><td>Stark gedämpft</td></tr>
+        </table>
+        <p style="margin-top:8px;color:var(--muted);font-size:12px;">Kein Daten → neutral (0). Lenient Ref + nicht extremes Druckspiel → Karten-Pick wird entfernt.</p>
+      </div>
+      <div class="heart-card">
+        <h3>🏥 Verletzungs-Integration</h3>
+        <p style="margin-bottom:8px;">Echte Spieler-Ausfälle aus der API ersetzen statische Config-Daten:</p>
+        <ul>
+          <li>Spieler-Namen + Status (Verletzt / Gesperrt / Angeschlagen) direkt in der Card</li>
+          <li>Jeder Ausfall dämpft Angriffsstärke um ~8% (max −25%)</li>
+          <li>Defensive Ausfälle erhöhen Gegentorrate um ~7% (max +25%)</li>
+          <li>Fließt in <code style="font-size:11px;">homeAttStr / awayAttStr</code> ein → beeinflusst alle Tore-Picks</li>
+        </ul>
+      </div>
+      <div class="heart-card">
+        <h3>📊 H2H-Torstatistiken</h3>
+        <p style="margin-bottom:8px;">Echte historische Direktvergleichs-Torquoten als zusätzliches Signal:</p>
+        <table class="heart-table" style="font-size:11px;">
+          <tr><th>H2H Over-2.5-Rate</th><th>Modifier auf Over 2.5</th></tr>
+          <tr><td>≥ 70%</td><td style="color:#3fb950">+0.12 Boost</td></tr>
+          <tr><td>60–69%</td><td style="color:#3fb950">+0.06</td></tr>
+          <tr><td>≤ 20%</td><td style="color:#f85149">−0.14</td></tr>
+          <tr><td>≤ 30%</td><td style="color:#f85149">−0.08</td></tr>
+        </table>
+        <p style="margin-top:6px;color:var(--muted);font-size:11px;">Under 2.5 bekommt den inversen Modifier. BTTS-Rate beeinflusst analog den BTTS-Pick (±0.05–0.16). Nur bei ≥5 H2H-Spielen aktiv.</p>
+      </div>
     </div>
   </div>
 
@@ -766,17 +821,19 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>1HZ Under 0.5:</strong> Nur bei Gold + engen Spielen (supprimiert bei Druck)</li>
         </ul>
         <p style="margin-top:8px;color:var(--muted);font-size:12px;">Consistency-Guard: defensiver Sieger dämpft Over-Märkte graduell.</p>
+        <p style="margin-top:6px;color:#58a6ff;font-size:12px;">🔗 <strong>H2H-Modifier (API-Pro):</strong> Wenn ≥5 Duelle vorliegen, verschiebt die echte Über-2.5-Rate (±0.06–0.14) und BTTS-Rate (±0.05–0.16) die Model-Probability für Over/Under- und BTTS-Picks direkt.</p>
       </div>
       <div class="heart-card">
         <h3>🔬 PICK 3 — Spezialist</h3>
         <p style="margin-bottom:8px;">Differenzierungsmarkt — nie überschneidend mit Pick 1+2:</p>
         <ul>
           <li><strong>Ecken:</strong> xG-Modell → Eckenschätzung, Druck-Boost</li>
-          <li><strong>Karten:</strong> Abstiegsdruck × Intensität, granular mit _rl</li>
+          <li><strong>Karten:</strong> Abstiegsdruck × Intensität, granular mit _rl — <em style="color:#e3b341;">jetzt Schiedsrichter-adjustiert</em></li>
           <li><strong>Handicap -0.5:</strong> Dominant + Gegner schwach, Druck-Boost</li>
           <li><strong>1HZ Over 0.5:</strong> expGoals > 3.4 (bei Druck > 3.1), backtested</li>
           <li><strong>1HZ BTTS / Under 1.5:</strong> Tempo-Signale für erste Halbzeit</li>
         </ul>
+        <p style="margin-top:8px;color:#e3b341;font-size:12px;">🃏 <strong>Schiedsrichter-Modifier (API-Pro):</strong> Ø Karten/Sp der letzten 8 Spiele des Schiedsrichters → Karten-Picks +0.04 bis +0.18 (strenger SR) oder −0.05 bis −0.20 (laxer SR). Gecacht 48h.</p>
       </div>
     </div>
   </div>
@@ -870,10 +927,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <h3>💡 Mögliche Erweiterungen</h3>
         <ul>
           <li><strong>Live Odds-API:</strong> Automatischer Value-Check gegen Pinnacle in Echtzeit</li>
-          <li><strong>Spieler-Ausfälle:</strong> Torjäger fehlt → Tore-Modell anpassen</li>
           <li><strong>Weather-Integration:</strong> Wind/Regen → Under-Boost, Corners-Dämpfung</li>
           <li><strong>Motivations-Tracker:</strong> Team bereits abgestiegen / Meister → Druck = 0</li>
           <li><strong>Bankroll-Empfehlung:</strong> Stake-Größe basierend auf Edge × Konfidenz</li>
+          <li><strong>Historischer Backtest (API):</strong> API-Daten für Trefferquoten-Validierung der Pick-Logik nutzen</li>
         </ul>
       </div>
       <div class="heart-card" style="opacity:.85;">
@@ -885,6 +942,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>DNB + Doppelte Chance</strong> als echte PICK 1-Kandidaten</li>
           <li><strong>xG-Modell</strong> mit Goals-Fallback für alle Ligen</li>
           <li><strong>Value-Badge</strong> (🔥/💰) basierend auf echtem Edge</li>
+          <li><strong>API-Football Pro-Plan</strong> ($19/Mo · 7 500 req/day · alle Endpoints)</li>
+          <li><strong>Pre-Match Enrichment</strong> (Hintergrundladen, 8-Tage-Fenster, 3h-Cache)</li>
+          <li><strong>Schiedsrichter-Stats</strong> live aus API — Karten-Modifier ±0.04–0.20</li>
+          <li><strong>Echte Spieler-Ausfälle</strong> mit Namen aus /injuries-Endpoint</li>
+          <li><strong>Echte H2H-Torstatistiken</strong> (Über-2.5-Rate, BTTS-Rate, Ø Tore) als Pick-Modifier</li>
+          <li><strong>Dynamische Score-Obergrenze</strong> — Max-Score skaliert mit <em>roundsLeft</em> (1 Runde → 12.0, ≥10 → 7.5)</li>
         </ul>
       </div>
     </div>
