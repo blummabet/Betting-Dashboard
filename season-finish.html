@@ -2319,8 +2319,21 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   const score  = computeMatchScore(match, leagueKey);
   const angle  = getBettingAngle(match);
   const odds   = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
+  const oddsD  = deriveOdds(odds || {});
+  // Context: rest days + injuries (mirrors card logic)
+  const _igFix   = leagueKey ? (LEAGUES[leagueKey]?.fixtures || []) : [];
+  const _igHRest = getRestDays(match.home, match.date, _igFix);
+  const _igARest = getRestDays(match.away, match.date, _igFix);
+  const _igHInj  = match.homeForm?.injuries || null;
+  const _igAInj  = match.awayForm?.injuries || null;
+  const _igCtxBadges = [];
+  if (_igHRest != null && _igHRest <= 5) _igCtxBadges.push({text:`😴 ${match.home}: ${_igHRest}T Pause`, col:_igHRest<=3?'#f85149':'#e3b341'});
+  if (_igARest != null && _igARest <= 5) _igCtxBadges.push({text:`😴 ${match.away}: ${_igARest}T Pause`, col:_igARest<=3?'#f85149':'#e3b341'});
+  if (_igHInj && (_igHInj.attack>0||_igHInj.defense>0)) { const _n=(_igHInj.attack||0)+(_igHInj.defense||0); _igCtxBadges.push({text:`🏥 ${match.home}: ${_n} Ausfall${_n>1?'s':''}`, col:'#a78bfa'}); }
+  if (_igAInj && (_igAInj.attack>0||_igAInj.defense>0)) { const _n=(_igAInj.attack||0)+(_igAInj.defense||0); _igCtxBadges.push({text:`🏥 ${match.away}: ${_n} Ausfall${_n>1?'s':''}`, col:'#a78bfa'}); }
+  const _igHasCtx = _igCtxBadges.length > 0;
   // Only show high/medium confidence picks in the infographic — low conf = not worth sharing
-  const picks  = getBettingPicks(match, odds, leagueKey)
+  const picks  = getBettingPicks(match, oddsD, leagueKey)
     .filter(p => p.conf === 'high' || p.conf === 'medium')
     .slice(0, 3);
   const hLabels = match.homeStake?.labels || [];
