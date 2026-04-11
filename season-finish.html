@@ -1171,8 +1171,8 @@ function getBettingAngle(match) {
 //  LIVE ODDS ENGINE (the-odds-api.com · Pinnacle)
 // ═══════════════════════════════════════════════════════
 const ODDS_API_KEY   = '95ee9d163cab37c1b57a359f1dd762ac';
-const RAPIDAPI_KEY   = '67dd0eab2bmsh3e4377bccde4d76p1ea85bjsn3580556f42f4';
-const RAPIDAPI_HOST  = 'api-football-v1.p.rapidapi.com';
+const APISPORTS_KEY  = '9f36726c1bdc9957b4a49f89277b80db';
+const APISPORTS_BASE = 'https://v3.football.api-sports.io';
 const LEAGUE_SPORT_KEYS = {
   ENG:'soccer_epl',
   GER:'soccer_germany_bundesliga',
@@ -4248,18 +4248,21 @@ async function _fetchOddsApiScores(daysFrom = 3) {
   return { results, errors };
 }
 
-// ── API-Football (RapidAPI) — scores + corners + cards ───────────────────────
+// ── API-Football (api-sports.io direct) — scores + corners + cards ───────────
 async function _apifbFetchDate(dateIso) {
   try {
     const resp = await fetch(
-      `https://${RAPIDAPI_HOST}/v3/fixtures?date=${dateIso}&timezone=Europe%2FVienna`,
-      { headers: { 'X-RapidAPI-Key': RAPIDAPI_KEY, 'X-RapidAPI-Host': RAPIDAPI_HOST } }
+      `${APISPORTS_BASE}/fixtures?date=${dateIso}&timezone=Europe%2FVienna`,
+      { headers: { 'x-apisports-key': APISPORTS_KEY } }
     );
     if (!resp.ok) {
       const t = await resp.text().catch(()=>'');
       return { fixtures: [], error: `HTTP ${resp.status}: ${t.slice(0,80)}` };
     }
     const data = await resp.json();
+    if (data.errors && Object.keys(data.errors).length) {
+      return { fixtures: [], error: JSON.stringify(data.errors) };
+    }
     return { fixtures: data.response || [], error: null };
   } catch(e) { return { fixtures: [], error: e.message }; }
 }
@@ -4267,8 +4270,8 @@ async function _apifbFetchDate(dateIso) {
 async function _apifbFetchStats(fixtureId) {
   try {
     const resp = await fetch(
-      `https://${RAPIDAPI_HOST}/v3/fixtures/statistics?fixture=${fixtureId}`,
-      { headers: { 'X-RapidAPI-Key': RAPIDAPI_KEY, 'X-RapidAPI-Host': RAPIDAPI_HOST } }
+      `${APISPORTS_BASE}/fixtures/statistics?fixture=${fixtureId}`,
+      { headers: { 'x-apisports-key': APISPORTS_KEY } }
     );
     if (!resp.ok) return null;
     const data = await resp.json();
