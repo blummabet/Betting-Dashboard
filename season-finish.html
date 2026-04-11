@@ -5178,7 +5178,9 @@ async function fetchSofaResults(btn) {
   infoEl.textContent = `${pending.length} Spiele mit offenen Picks — hole Ergebnisse…`;
 
   // ── 1. Primär: API-Football via RapidAPI (Scores + Ecken + Karten) ────────
-  const dates = [...new Set(pending.map(e => e.dateIso))].sort();
+  // Expand fetch dates to include ±1 day neighbors — handles timezone drift between stored dates and API dates
+  const _isoAdj = (iso, d) => { const dt = new Date(iso+'T12:00:00Z'); dt.setUTCDate(dt.getUTCDate()+d); return dt.toISOString().slice(0,10); };
+  const dates = [...new Set(pending.flatMap(e => [e.dateIso, _isoAdj(e.dateIso,1), _isoAdj(e.dateIso,-1)]))].sort();
   const apifbByDate = {};
   let resolved = 0, manual = 0, notFound = 0;
 
@@ -5227,21 +5229,39 @@ async function fetchSofaResults(btn) {
 
   for (const entry of picks) {
     if (!entry.picks.some(p => p.result === null)) continue;
-    const fixtures = apifbByDate[entry.dateIso] || [];
-    const fx = fixtures.find(f =>
-      ['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short) &&
+
+    // Search stored date ±1 day — handles timezone drift between dashboard dates and API dates
+    // (e.g. a match stored as Apr 10 may appear in API under Apr 11 due to UTC vs CET)
+    const _isoAdjust = (iso, days) => {
+      const d = new Date(iso + 'T12:00:00Z');
+      d.setUTCDate(d.getUTCDate() + days);
+      return d.toISOString().slice(0, 10);
+    };
+    const _searchDates = [entry.dateIso, _isoAdjust(entry.dateIso, 1), _isoAdjust(entry.dateIso, -1)];
+    const _searchPool = _searchDates.flatMap(d => apifbByDate[d] || []);
+
+    const _FT_STATUSES = ['FT','AET','PEN','AWD','WO'];
+    const fx = _searchPool.find(f =>
+      _FT_STATUSES.includes(f.fixture?.status?.short) &&
       _fuzzyTeam(f.teams?.home?.name || '', entry.home) &&
       _fuzzyTeam(f.teams?.away?.name || '', entry.away)
     );
     if (!fx) {
-      // Show which API name was closest for debugging
-      const candidates = (apifbByDate[entry.dateIso] || [])
-        .filter(f => ['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short))
-        .map(f => `${f.teams?.home?.name} vs ${f.teams?.away?.name}`);
-      const hint = candidates.length
-        ? ` (${candidates.length} FT Spiele am ${entry.dateIso})`
-        : ` (keine FT Spiele am ${entry.dateIso})`;
-      dbg.push(`❌ Nicht gefunden: ${entry.home} vs ${entry.away}${hint}`);
+      // Check if the game is still live (not yet finished)
+      const liveFx = _searchPool.find(f =>
+        !_FT_STATUSES.includes(f.fixture?.status?.short) &&
+        _fuzzyTeam(f.teams?.home?.name || '', entry.home) &&
+        _fuzzyTeam(f.teams?.away?.name || '', entry.away)
+      );
+      if (liveFx) {
+        const liveStatus = liveFx.fixture?.status?.short || '?';
+        dbg.push(`⏳ Noch läuft: ${entry.home} vs ${entry.away} [${liveStatus}] — warte auf Abpfiff`);
+      } else {
+        const candidates = _searchPool
+          .filter(f => _FT_STATUSES.includes(f.fixture?.status?.short))
+          .map(f => `${f.teams?.home?.name} vs ${f.teams?.away?.name}`).slice(0, 5);
+        dbg.push(`❌ Nicht gefunden: ${entry.home} vs ${entry.away}${candidates.length ? ' — nächste FT-Spiele: ' + candidates.join(', ') : ''}`);
+      }
       notFound++; continue;
     }
 
