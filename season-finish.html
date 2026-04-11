@@ -897,7 +897,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
     <button onclick="savePicksToday(this)" style="background:#1c2c1c;border:1px solid var(--green);color:var(--green);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">💾 Picks speichern</button>
     <button id="sfFetchBtn" onclick="fetchSofaResults(this)" style="background:#1a2030;border:1px solid #58a6ff;color:#58a6ff;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">🔄 Ergebnisse holen</button>
-    <button onclick="exportPicksJson()" title="Als picks_history.json speichern → dann update_dashboard.py ausführen" style="background:#1a1a2e;border:1px solid #e3b341;color:#e3b341;border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">📥 Export JSON</button>
+    <button onclick="toggleManualEntry()" style="background:#1a1a2e;border:1px solid #a78bfa;color:#a78bfa;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">✏️ Manuell</button>
+    <button onclick="exportPicksJson()" style="background:#1a1a2e;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">📥 JSON</button>
+  </div>
+
+  <!-- Manual score entry panel -->
+  <div id="manualEntryPanel" style="display:none;background:var(--card);border:1px solid #a78bfa55;border-radius:14px;padding:18px 20px;margin-bottom:20px;">
+    <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:14px;">✏️ Ergebnisse manuell eintragen — Format: <code style="background:#1a1a2e;padding:2px 6px;border-radius:4px;font-size:12px">2:1</code></div>
+    <div id="manualEntryRows" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <button onclick="applyManualScores()" style="margin-top:14px;background:#2d1f4e;border:1px solid #a78bfa;color:#a78bfa;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;">✅ Ergebnisse übernehmen</button>
   </div>
 
   <!-- Stats overview -->
@@ -1162,7 +1170,9 @@ function getBettingAngle(match) {
 // ═══════════════════════════════════════════════════════
 //  LIVE ODDS ENGINE (the-odds-api.com · Pinnacle)
 // ═══════════════════════════════════════════════════════
-const ODDS_API_KEY = '95ee9d163cab37c1b57a359f1dd762ac';
+const ODDS_API_KEY   = '95ee9d163cab37c1b57a359f1dd762ac';
+const RAPIDAPI_KEY   = '67dd0eab2bmsh3e4377bccde4d76p1ea85bjsn3580556f42f4';
+const RAPIDAPI_HOST  = 'api-football-v1.p.rapidapi.com';
 const LEAGUE_SPORT_KEYS = {
   ENG:'soccer_epl',
   GER:'soccer_germany_bundesliga',
@@ -4114,9 +4124,11 @@ function savePicksToday(btn) {
 }
 
 // ── Outcome determination ────────────────────────────
-function _determineOutcome(market, h, a) {
+function _determineOutcome(market, h, a, stats = null) {
   const goals = h + a;
   const m = (market || '').toLowerCase();
+
+  // ── Goals / Result markets (from score alone) ────────────────────────────
   if (m.includes('über 3.5') || m.includes('over 3.5'))   return goals > 3 ? 'win' : 'loss';
   if (m.includes('über 2.5') || m.includes('over 2.5'))   return goals > 2 ? 'win' : 'loss';
   if (m.includes('über 1.5') || m.includes('over 1.5'))   return goals > 1 ? 'win' : 'loss';
@@ -4140,7 +4152,42 @@ function _determineOutcome(market, h, a) {
     if (m.includes('heim') || m.includes('home')) return h > a ? 'win' : 'loss';
     if (m.includes('auswärts') || m.includes('away')) return a > h ? 'win' : 'loss';
   }
-  // HZ, Corners, Cards — can't auto-determine from final score alone
+
+  // ── Stats-based markets (corners / cards) — needs API-Football stats ─────
+  if (stats) {
+    const _stat = (teamIdx, type) => {
+      const v = stats[teamIdx]?.statistics?.find(s => s.type === type)?.value;
+      return (v === null || v === undefined) ? 0 : parseInt(v, 10) || 0;
+    };
+    const _lineFromMarket = () => {
+      const n = m.match(/(\d+(?:[.,]\d+)?)/); return n ? parseFloat(n[1].replace(',','.')) : null;
+    };
+    const _overUnder = (total) => {
+      const line = _lineFromMarket(); if (line === null) return null;
+      if (m.includes('über') || m.includes('over'))  return total > line  ? 'win' : 'loss';
+      if (m.includes('unter') || m.includes('under')) return total < line ? 'win' : 'loss';
+      return null;
+    };
+
+    // Corners
+    if (m.includes('ecke') || m.includes('corner')) {
+      const total = _stat(0,'Corner Kicks') + _stat(1,'Corner Kicks');
+      return _overUnder(total);
+    }
+    // Yellow cards
+    if (m.includes('gelbe') || m.includes('yellow card')) {
+      const total = _stat(0,'Yellow Cards') + _stat(1,'Yellow Cards');
+      return _overUnder(total);
+    }
+    // Total cards (yellow + red)
+    if (m.includes('karte') || m.includes('card')) {
+      const total = _stat(0,'Yellow Cards') + _stat(1,'Yellow Cards')
+                  + _stat(0,'Red Cards')    + _stat(1,'Red Cards');
+      return _overUnder(total);
+    }
+  }
+
+  // HZ (half-time result) — needs separate API call not implemented yet
   return null;
 }
 
@@ -4201,6 +4248,34 @@ async function _fetchOddsApiScores(daysFrom = 3) {
   return { results, errors };
 }
 
+// ── API-Football (RapidAPI) — scores + corners + cards ───────────────────────
+async function _apifbFetchDate(dateIso) {
+  try {
+    const resp = await fetch(
+      `https://${RAPIDAPI_HOST}/v3/fixtures?date=${dateIso}&timezone=Europe%2FVienna`,
+      { headers: { 'X-RapidAPI-Key': RAPIDAPI_KEY, 'X-RapidAPI-Host': RAPIDAPI_HOST } }
+    );
+    if (!resp.ok) {
+      const t = await resp.text().catch(()=>'');
+      return { fixtures: [], error: `HTTP ${resp.status}: ${t.slice(0,80)}` };
+    }
+    const data = await resp.json();
+    return { fixtures: data.response || [], error: null };
+  } catch(e) { return { fixtures: [], error: e.message }; }
+}
+
+async function _apifbFetchStats(fixtureId) {
+  try {
+    const resp = await fetch(
+      `https://${RAPIDAPI_HOST}/v3/fixtures/statistics?fixture=${fixtureId}`,
+      { headers: { 'X-RapidAPI-Key': RAPIDAPI_KEY, 'X-RapidAPI-Host': RAPIDAPI_HOST } }
+    );
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return data.response || null; // [{team:{name}, statistics:[{type,value}]}, ...]
+  } catch(e) { return null; }
+}
+
 // ── SofaScore fallback (direct + CORS proxies) ────────────────────────────────
 async function _sfFetchDate(dateIso) {
   const SF_URL = `https://api.sofascore.com/api/v1/sport/football/scheduled-events/${dateIso}`;
@@ -4258,39 +4333,58 @@ async function fetchSofaResults(btn) {
 
   infoEl.textContent = `${pending.length} Spiele mit offenen Picks — hole Ergebnisse…`;
 
-  // ── 1. Primär: The Odds API Scores (kein CORS-Problem) ───────────────────
-  btn.textContent = '⏳ The Odds API…';
-  const { results: oddsScores, errors: oddsErrors } = await _fetchOddsApiScores(3);
+  // ── 1. Primär: API-Football via RapidAPI (Scores + Ecken + Karten) ────────
+  const dates = [...new Set(pending.map(e => e.dateIso))].sort();
+  const apifbByDate = {};
   let resolved = 0, manual = 0, notFound = 0;
 
   const dbg = [];
   dbg.push(`📦 Gespeicherte Picks: ${pending.length} Spiele`);
   pending.forEach(e => dbg.push(`  · ${e.dateIso}  ${e.home} vs ${e.away}`));
-  dbg.push(`\n🌐 The Odds API: ${oddsScores.length} Ergebnisse geladen`);
-  if (oddsErrors.length) oddsErrors.forEach(e => dbg.push(`  ⚠ ${e}`));
-  if (oddsScores.length) oddsScores.slice(0,12).forEach(s => dbg.push(`  · ${s.dateIso}  ${s.home} ${s.h}:${s.a} ${s.away}`));
+  dbg.push('');
+
+  for (const date of dates) {
+    btn.textContent = `⏳ API-Football ${date}…`;
+    const { fixtures, error } = await _apifbFetchDate(date);
+    if (error) { dbg.push(`⚠ API-Football ${date}: ${error}`); continue; }
+    apifbByDate[date] = fixtures;
+    const done = fixtures.filter(f => ['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short));
+    dbg.push(`📅 ${date}: ${done.length} abgeschlossene Spiele von ${fixtures.length} geladen`);
+  }
   _showDebug(dbg);
 
-  if (oddsScores.length > 0) {
-    for (const entry of picks) {
-      if (!entry.picks.some(p => p.result === null)) continue;
-      // Also check ±1 day — old picks may have been saved with UTC-shifted dateIso
-      const nearbyDates = new Set([entry.dateIso]);
-      const dBase = new Date(entry.dateIso);
-      nearbyDates.add(new Date(dBase.getTime() + 864e5).toISOString().slice(0,10));
-      nearbyDates.add(new Date(dBase.getTime() - 864e5).toISOString().slice(0,10));
-      const score = oddsScores.find(s =>
-        _fuzzyTeam(s.home, entry.home) && _fuzzyTeam(s.away, entry.away) &&
-        nearbyDates.has(s.dateIso)
-      );
-      if (!score) { notFound++; continue; }
-      entry.finalScore = `${score.h}:${score.a}`;
-      for (const p of entry.picks) {
-        if (p.result !== null) continue;
-        const outcome = _determineOutcome(p.market, score.h, score.a);
-        if (outcome !== null) { p.result = outcome; p.finalScore = `${score.h}:${score.a}`; resolved++; }
-        else manual++;
-      }
+  for (const entry of picks) {
+    if (!entry.picks.some(p => p.result === null)) continue;
+    const fixtures = apifbByDate[entry.dateIso] || [];
+    const fx = fixtures.find(f =>
+      ['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short) &&
+      _fuzzyTeam(f.teams?.home?.name || '', entry.home) &&
+      _fuzzyTeam(f.teams?.away?.name || '', entry.away)
+    );
+    if (!fx) { notFound++; continue; }
+
+    const h = fx.goals?.home ?? null;
+    const a = fx.goals?.away ?? null;
+    if (h === null) continue;
+    entry.finalScore = `${h}:${a}`;
+
+    // Check if any pending picks need statistics (corners/cards)
+    const needsStats = entry.picks.some(p =>
+      p.result === null &&
+      (p.market.toLowerCase().includes('ecke') || p.market.toLowerCase().includes('corner') ||
+       p.market.toLowerCase().includes('karte') || p.market.toLowerCase().includes('card'))
+    );
+    let stats = null;
+    if (needsStats && fx.fixture?.id) {
+      btn.textContent = `⏳ Stats ${entry.home}…`;
+      stats = await _apifbFetchStats(fx.fixture.id);
+    }
+
+    for (const p of entry.picks) {
+      if (p.result !== null) continue;
+      const outcome = _determineOutcome(p.market, h, a, stats);
+      if (outcome !== null) { p.result = outcome; p.finalScore = `${h}:${a}`; resolved++; }
+      else manual++;
     }
   }
 
@@ -4350,6 +4444,66 @@ async function fetchSofaResults(btn) {
   infoEl.textContent = msg;
   btn.textContent = '🔄 Ergebnisse holen';
   btn.disabled = false;
+}
+
+// ── Manual score entry ────────────────────────────────
+function toggleManualEntry() {
+  const panel = document.getElementById('manualEntryPanel');
+  const isVisible = panel.style.display !== 'none';
+  if (isVisible) { panel.style.display = 'none'; return; }
+
+  const picks = _loadStoredPicks();
+  const pending = picks.filter(e => e.picks.some(p => p.result === null));
+  if (!pending.length) {
+    document.getElementById('sfTrackerInfo').textContent = 'Keine offenen Picks zum Eintragen.';
+    return;
+  }
+
+  // Sort by date
+  pending.sort((a,b) => a.dateIso.localeCompare(b.dateIso));
+
+  const rows = pending.map(e => `
+    <div style="display:flex;align-items:center;gap:10px;padding:7px 10px;background:#0d1117;border-radius:8px;border:1px solid var(--border);" data-key="${e.dateIso}|${e.home}|${e.away}">
+      <span style="flex:1;font-size:12px;color:var(--muted)">${e.dateIso}</span>
+      <span style="flex:3;font-size:13px;font-weight:600">${e.home} <span style="color:var(--muted)">vs</span> ${e.away}</span>
+      <input type="text" placeholder="z.B. 2:1" maxlength="6"
+        style="width:72px;background:#1c2128;border:1px solid #a78bfa55;color:#e6edf3;border-radius:6px;padding:5px 8px;font-size:13px;text-align:center;font-family:monospace;"
+        oninput="this.style.borderColor=this.value.match(/^\\d+:\\d+$/)? '#a78bfa' : '#f8514944'"/>
+      <span style="font-size:11px;color:var(--muted);min-width:60px">${e.picks.length} Pick${e.picks.length>1?'s':''}</span>
+    </div>`).join('');
+
+  document.getElementById('manualEntryRows').innerHTML = rows;
+  panel.style.display = 'block';
+}
+
+function applyManualScores() {
+  const picks = _loadStoredPicks();
+  let resolved = 0, skipped = 0;
+
+  document.querySelectorAll('#manualEntryRows [data-key]').forEach(row => {
+    const input = row.querySelector('input');
+    const val = (input?.value || '').trim();
+    if (!val.match(/^\d+:\d+$/)) { skipped++; return; }
+    const [h, a] = val.split(':').map(Number);
+    const [dateIso, home, away] = row.dataset.key.split('|');
+
+    const entry = picks.find(e => e.dateIso === dateIso && e.home === home && e.away === away);
+    if (!entry) return;
+    entry.finalScore = `${h}:${a}`;
+    for (const p of entry.picks) {
+      if (p.result !== null) continue;
+      const outcome = _determineOutcome(p.market, h, a);
+      if (outcome !== null) { p.result = outcome; p.finalScore = `${h}:${a}`; resolved++; }
+    }
+  });
+
+  _storedSave(picks);
+  document.getElementById('manualEntryPanel').style.display = 'none';
+  _resultsLoaded = false;
+  initResults();
+
+  const msg = `✅ ${resolved} Pick${resolved!==1?'s':''} aufgelöst${skipped?' · '+skipped+' übersprungen (kein Ergebnis eingegeben)':''}`;
+  document.getElementById('sfTrackerInfo').textContent = msg;
 }
 
 // ── Export picks_history.json ─────────────────────────
