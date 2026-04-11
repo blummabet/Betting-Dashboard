@@ -1438,8 +1438,11 @@ function getBettingPicks(match, odds, leagueKey) {
     : 0;
 
   // Avg goals H2H note for pick reasons
+  // With API data: full goals stats. With static config only: win rate summary.
   const _h2hGoalNote = (_h2hSample && _h2hAvgG != null)
     ? `<br>📊 H2H (${h2hN} Duelle): Ø ${_h2hAvgG} Tore/Sp · ${Math.round((_h2hOver25||0)*100)}% Über 2.5 · ${Math.round((_h2hBtts||0)*100)}% BTTS`
+    : (_h2hSample && h2hN >= 5)
+    ? `<br>📊 H2H (${h2hN} Duelle): ${h2h.homeWins||0}H / ${h2h.draws||0}U / ${h2h.awayWins||0}A — Heimsieg-Rate ${Math.round((h2h.homeWins||0)/h2hN*100)}%`
     : '';
 
   // ── Real xG & venue stats from understat cache (injected by refresh_stats.py) ───
@@ -2221,6 +2224,52 @@ function getBettingPicks(match, odds, leagueKey) {
     ? `<strong>🏥 ${match.away} Verletzte: ${(_aInj.notes||[]).slice(0,2).join(', ')||'Ausfälle im Kader'}.</strong>`
     : '';
 
+  // ── Build modifier chip array shared across picks ──────────────────────────
+  // These chips appear in every pick card to make active modifiers visible.
+  const _modChips = [];
+
+  // H2H goal modifier
+  if (_h2hSample && _h2hO25Mod !== 0) {
+    const dir = _h2hO25Mod > 0 ? '▲' : '▼';
+    const pct = `${_h2hO25Mod > 0 ? '+' : ''}${Math.round(_h2hO25Mod * 100)}%`;
+    _modChips.push(`<span class="mod-chip mod-h2h">📊 H2H Over/Under ${dir}${pct}</span>`);
+  }
+  if (_h2hSample && _h2hBttsMod !== 0) {
+    const dir = _h2hBttsMod > 0 ? '▲' : '▼';
+    const pct = `${_h2hBttsMod > 0 ? '+' : ''}${Math.round(_h2hBttsMod * 100)}%`;
+    _modChips.push(`<span class="mod-chip mod-h2h">📊 H2H BTTS ${dir}${pct}</span>`);
+  }
+  if (_h2hSample && _h2hO25Mod === 0 && _h2hBttsMod === 0 && h2hN >= 5) {
+    _modChips.push(`<span class="mod-chip mod-h2h mod-neutral">📊 H2H neutral (${h2hN} Duelle)</span>`);
+  }
+
+  // Referee modifier
+  if (_refStats?.name) {
+    if (_refCardMod !== 0) {
+      const dir = _refCardMod > 0 ? '▲' : '▼';
+      _modChips.push(`<span class="mod-chip mod-ref">👨‍⚖️ ${_refStats.name} ${dir}${_refAvg} K/Sp</span>`);
+    } else if (_refAvg != null) {
+      _modChips.push(`<span class="mod-chip mod-ref mod-neutral">👨‍⚖️ ${_refStats.name}: Ø ${_refAvg} K/Sp</span>`);
+    } else {
+      _modChips.push(`<span class="mod-chip mod-ref mod-neutral">👨‍⚖️ ${_refStats.name}</span>`);
+    }
+  }
+
+  // Injury modifiers
+  if (_hInj && (_hInj.attack > 0 || _hInj.defense > 0)) {
+    const n = (_hInj.attack||0) + (_hInj.defense||0);
+    _modChips.push(`<span class="mod-chip mod-inj">🏥 ${match.home}: ${n} Ausfall${n>1?'s':''}</span>`);
+  }
+  if (_aInj && (_aInj.attack > 0 || _aInj.defense > 0)) {
+    const n = (_aInj.attack||0) + (_aInj.defense||0);
+    _modChips.push(`<span class="mod-chip mod-inj">🏥 ${match.away}: ${n} Ausfall${n>1?'s':''}</span>`);
+  }
+
+  // Fatigue modifiers
+  if (_hFatigAtt < 1.0) _modChips.push(`<span class="mod-chip mod-fat">😴 ${match.home}: ${_hRest}T Pause</span>`);
+  if (_aFatigAtt < 1.0) _modChips.push(`<span class="mod-chip mod-fat">😴 ${match.away}: ${_aRest}T Pause</span>`);
+
+  // Attach chips + context notes to each pick
   picks.forEach(p => {
     const hHome = ['Heimsieg','DNB: Heimteam','Doppelte Chance: 1X','Handicap Heim -0.5'].includes(p.market);
     const hAway = ['Auswärtssieg','DNB: Auswärtsteam','Doppelte Chance: X2','Handicap Auswärts -0.5'].includes(p.market);
@@ -2229,6 +2278,8 @@ function getBettingPicks(match, odds, leagueKey) {
     if (hHome || hGoal) { if (_hFatigNote) extras.push(_hFatigNote); if (_hInjNote) extras.push(_hInjNote); }
     if (hAway || hGoal) { if (_aFatigNote) extras.push(_aFatigNote); if (_aInjNote) extras.push(_aInjNote); }
     if (extras.length) p.reason += '<br>' + extras.join('<br>');
+    // Attach modifier chips to pick for rendering
+    p._modChips = _modChips;
   });
 
   return picks;
@@ -4893,7 +4944,7 @@ async function _apifbGetRefereeStats(refereeName) {
 
     // 2 — Get last 10 finished fixtures with this referee (current season)
     const fxResp = await fetch(
-      `${APISPORTS_BASE}/fixtures?referee=${refId}&season=2024&last=10`,
+      `${APISPORTS_BASE}/fixtures?referee=${refId}&season=2025&last=10`,
       { headers: { 'x-apisports-key': APISPORTS_KEY } }
     );
     if (!fxResp.ok) return { name: refereeName, avgCards: null };
