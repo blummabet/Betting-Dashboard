@@ -150,7 +150,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   border:1px solid var(--border);
   border-radius:16px;
   padding:18px;
-  display:flex;flex-direction:column;gap:12px;
+  display:flex;flex-direction:column;gap:10px;
   position:relative;overflow:hidden;
   transition:transform .18s cubic-bezier(.22,.61,.36,1), box-shadow .18s, border-color .2s;
 }
@@ -231,10 +231,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 }
 .infographic-btn:hover{background:rgba(0,212,161,.08);border-color:var(--accent);color:var(--accent);}
 
-.card-top{display:flex;flex-direction:column;gap:5px;padding-right:72px;position:relative;z-index:1;}
-.card-league{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:5px;text-transform:uppercase;letter-spacing:.4px;}
-.card-date{font-size:11px;color:var(--muted);}
-.card-match{font-size:17px;font-weight:700;color:var(--text);line-height:1.3;margin-top:2px;}
+.card-top{display:flex;flex-direction:column;gap:6px;padding-right:72px;position:relative;z-index:1;}
+.card-meta{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);flex-wrap:wrap;}
+.card-league-name{text-transform:uppercase;letter-spacing:.4px;font-weight:600;}
+.card-meta-sep{opacity:.35;}
+.card-date-inline{font-size:10px;}
+.card-match{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;margin-top:1px;}
+.card-home,.card-away{font-size:16px;font-weight:700;color:var(--text);line-height:1.3;}
+.card-vs{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.3px;}
 
 /* INFOGRAPHIC MODAL */
 #ig-modal{
@@ -279,18 +283,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .ig-tip{font-size:11px;color:var(--muted);text-align:center;line-height:1.6;}
 
 /* Stake rows */
-.teams-stakes{display:flex;flex-direction:column;gap:6px;}
+.teams-stakes{display:flex;flex-direction:column;gap:5px;}
 .team-row{
-  display:flex;flex-direction:column;gap:0;
-  background:var(--card2);border-radius:8px;padding:8px 12px 6px;
+  display:flex;flex-direction:row;align-items:center;
+  background:var(--card2);border-radius:8px;padding:8px 10px 8px 12px;
+  gap:8px;
 }
-.tr-main{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
-.tr-form{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-top:6px;padding-top:5px;
-  border-top:1px solid rgba(255,255,255,.05);
-}
-.tr-form-meta{display:flex;align-items:center;gap:6px;font-size:9px;color:var(--muted);}
+.tr-left{flex:1;display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0;}
+.tr-right{flex-shrink:0;display:flex;align-items:center;}
 .team-name{font-size:12px;font-weight:600;color:var(--text);flex-shrink:0;}
 .stake-pill{
   font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;white-space:nowrap;
@@ -328,18 +328,22 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 /* H2H strip */
 .h2h-strip{
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  display:flex;align-items:center;gap:7px;flex-wrap:wrap;
   background:rgba(255,255,255,.03);border:1px solid var(--border);
   border-radius:7px;padding:6px 10px;font-size:10px;
 }
-.h2h-label{font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;}
+.h2h-label{font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;font-size:10px;}
+.h2h-record{font-size:10px;white-space:nowrap;display:flex;gap:4px;align-items:center;}
+.h2h-record strong{font-size:11px;}
 .h2h-bar{display:flex;gap:2px;align-items:center;}
-.h2h-seg{height:6px;border-radius:3px;}
+.h2h-seg{height:4px;border-radius:2px;}
 .h2h-home{background:var(--green);}
 .h2h-draw{background:var(--muted);}
 .h2h-away{background:var(--red);}
 .h2h-stat{color:var(--muted);font-size:10px;white-space:nowrap;}
 .h2h-stat strong{color:var(--text);}
+.h2h-ngames{font-size:9px;color:var(--muted);opacity:.55;white-space:nowrap;}
+.h2h-div{color:var(--border);font-size:10px;opacity:.6;}
 .sp-red{background:#2d0a0a;color:var(--red);border:1px solid #5d1010;}
 .sp-gold{background:#2d2000;color:var(--gold);border:1px solid #5d4000;}
 .sp-blue{background:#0a1a2d;color:var(--blue);border:1px solid #1040a0;}
@@ -350,11 +354,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 /* Betting angle */
 .bet-angle{
-  border-top:1px solid var(--border);padding-top:9px;
-  display:flex;align-items:flex-start;gap:8px;
+  border-top:1px solid var(--border);padding-top:10px;
+  display:flex;flex-direction:column;gap:6px;
 }
+.ba-header{display:flex;align-items:center;gap:8px;}
+.ba-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#444d56;}
 .ba-badge{
-  font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0;
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0;
 }
 .ba-chaos{background:#2d1500;color:var(--orange);}
 .ba-title{background:#2d2000;color:var(--gold);}
@@ -363,7 +369,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .ba-euro{background:#1a0a30;color:var(--purple);}
 .ba-hot{background:#1a1500;color:var(--yellow);}
 
-.ba-text{font-size:11px;color:var(--muted);line-height:1.6;}
+.ba-text{font-size:11px;color:var(--muted);line-height:1.65;}
 .ba-text strong{color:var(--text);}
 
 /* OVERVIEW TOP PICKS */
@@ -458,8 +464,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .ps-rounds{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text);}
 .ps-team{font-size:11px;color:var(--muted);font-weight:500;}
 
-/* FATIGUE + INJURY STRIP */
-.context-strip{display:flex;flex-wrap:wrap;gap:6px;padding:7px 10px;border-radius:7px;margin-bottom:9px;background:#0d1117;border:1px solid #21262d;font-size:11px;}
+/* FATIGUE + INJURY + REFEREE CONTEXT STRIP */
+.context-strip{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 10px;border-radius:7px;margin-bottom:9px;background:#0d1117;border:1px solid #21262d;font-size:11px;}
+.ctx-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#444d56;white-space:nowrap;margin-right:2px;flex-shrink:0;}
 .ctx-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-weight:600;font-size:10.5px;}
 .ctx-fatigue-high{background:#2a1000;color:#f85149;border:1px solid #6b1d1d;}
 .ctx-fatigue-med {background:#1a1500;color:#e3b341;border:1px solid #5a4700;}
@@ -3731,13 +3738,8 @@ function computeRemainingDifficulty(leagueKey, teamName) {
 
 function renderStakeRow(name, stakeInfo, formData, leagueKey) {
   const sparkline = renderFormSparkline(formData?.form);
-  // Restprogramm difficulty
-  const diff = leagueKey ? computeRemainingDifficulty(leagueKey, name) : null;
-  const diffTag = diff
-    ? `<span class="rest-tag ${diff.cls}" title="Restprogramm: Ø Gegner-Score ${diff.avg} über ${diff.n} verbleibende Spiele">${diff.label}</span>`
-    : '';
 
-  // fixture.homeStake/awayStake don't carry pos — look it up from stakeTeams
+  // Table position lookup
   let pos = stakeInfo?.pos;
   if (!pos && leagueKey && LEAGUES[leagueKey]?.stakeTeams) {
     const st = LEAGUES[leagueKey].stakeTeams.find(t => t.team === name);
@@ -3747,15 +3749,10 @@ function renderStakeRow(name, stakeInfo, formData, leagueKey) {
   const posClass = pos <= 3 ? 'pos-top' : pos >= totalTeams - 2 ? 'pos-bot' : '';
   const posTag = pos ? `<span class="pos-tag ${posClass}">#${pos}</span>` : '';
 
-  // Mini goal-rate stat: "⚽ 1.6 | 🥅 1.2"
-  const goalStat = (formData?.goalsPerGame != null && formData?.concededPerGame != null)
-    ? `<span class="h2h-stat" style="font-size:9.5px;white-space:nowrap;opacity:.75">⚽ ${Number(formData.goalsPerGame).toFixed(1)} | 🥅 ${Number(formData.concededPerGame).toFixed(1)}</span>`
-    : '';
-
   if (!stakeInfo) {
     return `<div class="team-row">
-      <div class="tr-main"><span class="team-name">${name}</span>${posTag}<span class="sp-none">kein direkter Stake</span></div>
-      <div class="tr-form"><div class="tr-form-meta">${diffTag}${goalStat}</div>${sparkline}</div>
+      <div class="tr-left"><span class="team-name">${name}</span>${posTag}<span class="sp-none">kein direkter Stake</span></div>
+      <div class="tr-right">${sparkline}</div>
     </div>`;
   }
 
@@ -3764,8 +3761,8 @@ function renderStakeRow(name, stakeInfo, formData, leagueKey) {
     : `<span class="sp-none">gesichert / keine Agenda</span>`;
 
   return `<div class="team-row">
-    <div class="tr-main"><span class="team-name">${name}</span>${posTag}${pills}</div>
-    <div class="tr-form"><div class="tr-form-meta">${diffTag}${goalStat}</div>${sparkline}</div>
+    <div class="tr-left"><span class="team-name">${name}</span>${posTag}${pills}</div>
+    <div class="tr-right">${sparkline}</div>
   </div>`;
 }
 
@@ -3773,31 +3770,10 @@ function renderH2H(h2h) {
   if (!h2h || h2h.games < 3) return '';
   const n  = h2h.games;
   const hw = h2h.homeWins, dw = h2h.draws, aw = h2h.awayWins;
-  const hwP = hw/n, dwP = dw/n, awP = aw/n;
-  const BAR = 78;
-  const hwW = Math.max(4,Math.round(hwP*BAR));
-  const dwW = Math.max(4,Math.round(dwP*BAR));
-  const awW = Math.max(4,Math.round(awP*BAR));
 
-  // SVG mini-donut (28×28, r=9)
-  const r=9, cxD=14, cyD=14, circ=2*Math.PI*r;
-  const hwA=hwP*circ, dwA=dwP*circ, awA=awP*circ;
-  // Start from top (−90°) → dashoffset = circ/4 − accumulated arcs
-  const hwOff = circ/4;
-  const dwOff = circ/4 - hwA;
-  const awOff = circ/4 - hwA - dwA;
-  const seg = (col, arc, off) => arc < 0.4 ? '' :
-    `<circle cx="${cxD}" cy="${cyD}" r="${r}" fill="none" stroke="${col}" stroke-width="5"
-      stroke-dasharray="${arc.toFixed(2)} ${(circ-arc).toFixed(2)}"
-      stroke-dashoffset="${off.toFixed(2)}" stroke-linecap="butt"/>`;
-  const donut = `<svg width="28" height="28" viewBox="0 0 28 28" style="flex-shrink:0;transform:rotate(-90deg)">
-    <circle cx="${cxD}" cy="${cyD}" r="${r}" fill="none" stroke="rgba(48,54,61,0.6)" stroke-width="5"/>
-    ${seg('#3fb950',hwA,hwOff)}${seg('#8b949e',dwA,dwOff)}${seg('#f85149',awA,awOff)}
-  </svg>`;
-
-  // ── Extra stats from API H2H (over25Rate, bttsRate, avgGoals, lastResults) ──
+  // Result mini-chips (H/X/A)
   const hasApiStats = h2h.over25Rate != null;
-  let statsRow = '';
+  let extHtml = '';
   if (hasApiStats) {
     const o25Pct  = Math.round(h2h.over25Rate * 100);
     const bttsPct = Math.round(h2h.bttsRate   * 100);
@@ -3805,38 +3781,48 @@ function renderH2H(h2h) {
     const o25Col  = o25Pct >= 60 ? '#3fb950' : o25Pct >= 40 ? '#e3b341' : '#8b949e';
     const bttsCol = bttsPct >= 60 ? '#3fb950' : bttsPct >= 40 ? '#e3b341' : '#8b949e';
 
-    // Mini result chips for last 5 games (H=home win, X=draw, A=away win)
     const chips = (h2h.lastResults || []).map(r => {
-      const lbl  = r.homeWon ? 'H' : r.awayWon ? 'A' : 'X';
-      const col  = r.homeWon ? '#3fb950' : r.awayWon ? '#f85149' : '#8b949e';
-      const tip  = `${r.homeGoals}:${r.awayGoals} (${r.year})`;
+      const lbl = r.homeWon ? 'H' : r.awayWon ? 'A' : 'X';
+      const col = r.homeWon ? '#3fb950' : r.awayWon ? '#f85149' : '#8b949e';
+      const tip = `${r.homeGoals}:${r.awayGoals} (${r.year})`;
       return `<span title="${tip}" style="display:inline-flex;align-items:center;justify-content:center;
         width:16px;height:16px;border-radius:3px;font-size:9px;font-weight:800;
         background:${col}22;color:${col};border:1px solid ${col}55">${lbl}</span>`;
     }).join('');
 
-    statsRow = `<div style="display:flex;align-items:center;gap:10px;padding:5px 10px 6px;
-      border-top:1px solid #21262d;font-size:10px;color:var(--muted);flex-wrap:wrap;">
-      <span>Ø <strong style="color:var(--text)">${avgG}</strong> Tore/Sp</span>
-      <span>Über 2.5: <strong style="color:${o25Col}">${o25Pct}%</strong></span>
-      <span>BTTS: <strong style="color:${bttsCol}">${bttsPct}%</strong></span>
-      ${chips ? `<span style="display:flex;gap:3px;margin-left:auto">${chips}</span>` : ''}
-    </div>`;
+    extHtml = `
+      <span class="h2h-div">·</span>
+      <span class="h2h-stat">Ø <strong>${avgG}</strong> Tore</span>
+      <span class="h2h-div">·</span>
+      <span class="h2h-stat">+2.5: <strong style="color:${o25Col}">${o25Pct}%</strong></span>
+      <span class="h2h-div">·</span>
+      <span class="h2h-stat">BTTS: <strong style="color:${bttsCol}">${bttsPct}%</strong></span>
+      ${chips ? `<span class="h2h-div">·</span><span style="display:flex;gap:2px;align-items:center">${chips}</span>` : ''}
+    `;
   }
 
-  return `
-  <div class="h2h-strip" style="${hasApiStats ? 'padding-bottom:0;border-bottom:none' : ''}">
+  // Win-rate mini-bar (compact, 54px total)
+  const hwP = hw/n, dwP = dw/n, awP = aw/n;
+  const BAR = 54;
+  const hwW = Math.max(3, Math.round(hwP*BAR));
+  const dwW = Math.max(3, Math.round(dwP*BAR));
+  const awW = Math.max(3, Math.round(awP*BAR));
+
+  return `<div class="h2h-strip">
     <span class="h2h-label">H2H</span>
-    ${donut}
-    <div class="h2h-bar" title="${hw} Heim · ${dw} Unent. · ${aw} Auswärts">
+    <span class="h2h-record">
+      <strong style="color:#3fb950">${hw}</strong>H
+      <strong style="color:#8b949e">${dw}</strong>X
+      <strong style="color:#f85149">${aw}</strong>A
+    </span>
+    <div class="h2h-bar" title="${hw} Heim · ${dw} Unentschieden · ${aw} Auswärts">
       <div class="h2h-seg h2h-home" style="width:${hwW}px"></div>
       <div class="h2h-seg h2h-draw" style="width:${dwW}px"></div>
       <div class="h2h-seg h2h-away" style="width:${awW}px"></div>
     </div>
-    <span class="h2h-stat"><strong>${hw}</strong>H <strong>${dw}</strong>X <strong>${aw}</strong>A</span>
-    <span class="h2h-stat" style="margin-left:auto;font-size:9px;opacity:.6">${n} Duelle</span>
-  </div>
-  ${statsRow ? `<div style="background:#0d1117;border:1px solid #21262d;border-top:none;border-radius:0 0 7px 7px;margin-bottom:9px;">${statsRow}</div>` : ''}`;
+    <span class="h2h-ngames">${n} Sp.</span>
+    ${extHtml}
+  </div>`;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -4068,70 +4054,72 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     </div>`;
   }
 
-  // ── Context strip: rest days + injuries ─────────────────────────────────
+  // ── Context strip: rest days + injuries + referee ───────────────────────
   const _ctxFix  = leagueKey ? (LEAGUES[leagueKey]?.fixtures || []) : [];
   const _ctxHRest = getRestDays(match.home, match.date, _ctxFix);
   const _ctxARest = getRestDays(match.away, match.date, _ctxFix);
   const _ctxHInj  = match.homeForm?.injuries || null;
   const _ctxAInj  = match.awayForm?.injuries || null;
   const ctxBadges = [];
+
+  // Fatigue — show in plain language, spell out Tage
   if (_ctxHRest != null && _ctxHRest <= 5) {
     const cls = _ctxHRest <= 3 ? 'ctx-fatigue-high' : 'ctx-fatigue-med';
-    ctxBadges.push(`<span class="ctx-badge ${cls}">😴 ${match.home}: ${_ctxHRest}T Pause</span>`);
+    ctxBadges.push(`<span class="ctx-badge ${cls}">😴 Kurze Pause: ${match.home} (${_ctxHRest} Tage)</span>`);
   }
   if (_ctxARest != null && _ctxARest <= 5) {
     const cls = _ctxARest <= 3 ? 'ctx-fatigue-high' : 'ctx-fatigue-med';
-    ctxBadges.push(`<span class="ctx-badge ${cls}">😴 ${match.away}: ${_ctxARest}T Pause</span>`);
+    ctxBadges.push(`<span class="ctx-badge ${cls}">😴 Kurze Pause: ${match.away} (${_ctxARest} Tage)</span>`);
   }
+
+  // Injuries — focus on names, not technical impact score
   const _buildInjBadge = (inj, teamName) => {
     if (!inj || (inj.total||0) === 0) return '';
-    const imp  = inj.impactScore || 0;
+    const imp = inj.impactScore || 0;
     if (imp < 0.3 && (inj.confirmed||0) === 0) return '';
-    const icon = imp >= 3.5 ? '🔴' : imp >= 2.0 ? '🟠' : '🟡';
-    const cls  = imp >= 3.5 ? 'ctx-injury-high' : imp >= 2.0 ? 'ctx-injury-atk' : 'ctx-injury-def';
-    // Position breakdown label
-    const areas = [];
-    if ((inj.goalkeeper||0) > 0) areas.push(`Tor ${inj.goalkeeper}`);
-    if ((inj.attack||0)    > 0) areas.push(`Angriff ${inj.attack}`);
-    if ((inj.defense||0)   > 0) areas.push(`Abwehr ${inj.defense}`);
-    if ((inj.midfield||0)  > 0 && areas.length < 3) areas.push(`MF ${inj.midfield}`);
-    const areaStr = areas.length ? ` (${areas.join(', ')})` : '';
-    const qStr = (inj.questionable||0) > 0 ? ` + ${inj.questionable} fragl.` : '';
-    // Compact badge: show impact + position counts (no player names — saves space)
+    const cls = imp >= 3.5 ? 'ctx-injury-high' : imp >= 2.0 ? 'ctx-injury-atk' : 'ctx-injury-def';
+    // Player names (last name only, max 2)
     const confirmed = (inj._raw || []).filter(p => p.type === 'Missing Fixture');
-    const cStr = confirmed.length ? ` · ${confirmed.slice(0,2).map(p=>p.player.split(' ').slice(-1)[0]).join(', ')}${confirmed.length>2?'+':''} out` : '';
-    return `<span class="ctx-badge ${cls}">${icon} ${teamName}: Impact ${imp.toFixed(1)}${areaStr}${cStr}</span>`;
+    const names = confirmed.slice(0, 2).map(p => p.player.split(' ').slice(-1)[0]);
+    const nameStr = names.length ? names.join(', ') + (confirmed.length > 2 ? ` +${confirmed.length - 2}` : '') : '';
+    // Position area (most affected)
+    const areaMap = [];
+    if ((inj.attack||0)    > 0) areaMap.push(`${inj.attack} Angriff`);
+    if ((inj.defense||0)   > 0) areaMap.push(`${inj.defense} Abwehr`);
+    if ((inj.midfield||0)  > 0 && areaMap.length < 2) areaMap.push(`${inj.midfield} MF`);
+    if ((inj.goalkeeper||0)> 0) areaMap.push(`Torwart`);
+    const areaStr = areaMap.length ? ` · ${areaMap[0]}` : '';
+    const label = nameStr ? `${nameStr} fehlt${confirmed.length > 1 ? 'en' : ''}${areaStr}` : `${inj.total} Ausfälle${areaStr}`;
+    return `<span class="ctx-badge ${cls}">🏥 ${teamName}: ${label}</span>`;
   };
   const hInjHtml = _buildInjBadge(_ctxHInj, match.home);
   const aInjHtml = _buildInjBadge(_ctxAInj, match.away);
   if (hInjHtml) ctxBadges.push(hInjHtml);
   if (aInjHtml) ctxBadges.push(aInjHtml);
 
-  // ── Referee badge: merged into context strip ────────────────────────────
+  // Referee — clear label, readable format
   const _ref = match.refereeStats || null;
   if (_ref?.name) {
     const avg = _ref.avgCards;
-    const refCls  = avg == null    ? 'ctx-ref-neutral'
-                  : avg >= 4.5    ? 'ctx-ref-high'
-                  : avg >= 3.5    ? 'ctx-ref-med'
-                  : avg >= 0      ? 'ctx-ref-low'
-                  : 'ctx-ref-neutral';
-    const refIcon = avg == null ? '' : avg >= 5.0 ? '⚠️ ' : avg >= 4.5 ? '' : avg < 2.8 ? '🟢 ' : '';
-    const avgNote = avg != null ? ` Ø ${avg} K` : '';
-    ctxBadges.push(`<span class="ctx-badge ${refCls}">👨‍⚖️ ${refIcon}${_ref.name}${avgNote}${_ref.games ? ' ('+_ref.games+'Sp)' : ''}</span>`);
+    const refCls = avg == null    ? 'ctx-ref-neutral'
+                 : avg >= 4.5    ? 'ctx-ref-high'
+                 : avg >= 3.5    ? 'ctx-ref-med'
+                 : avg >= 0      ? 'ctx-ref-low'
+                 : 'ctx-ref-neutral';
+    const avgNote = avg != null ? ` · Ø ${avg} Karten/Sp` : '';
+    ctxBadges.push(`<span class="ctx-badge ${refCls}">👨‍⚖️ Schiri: ${_ref.name}${avgNote}</span>`);
   }
 
   const contextHtml = ctxBadges.length
-    ? `<div class="context-strip">${ctxBadges.join('')}</div>`
+    ? `<div class="context-strip"><span class="ctx-label">Kontext</span>${ctxBadges.join('')}</div>`
     : '';
 
   return `
   <div class="stake-card ${ct}">
     <div class="score-badge ${scoreClass(sc)}"><span class="sb-val">${sc}</span><span class="sb-sub">/12</span></div>
     <div class="card-top">
-      <div class="card-league">${leagueFlag} ${leagueName}</div>
-      <div class="card-date">📅 ${match.date}${match.time ? ' · ' + match.time : ''}</div>
-      <div class="card-match">${match.home} vs ${match.away}</div>
+      <div class="card-meta">${leagueFlag} <span class="card-league-name">${leagueName}</span><span class="card-meta-sep">·</span><span class="card-date-inline">📅 ${match.date}${match.time ? ' · ' + match.time : ''}</span></div>
+      <div class="card-match"><span class="card-home">${match.home}</span><span class="card-vs">vs</span><span class="card-away">${match.away}</span></div>
     </div>
     ${pressureHtml}${contextHtml}
     <div class="teams-stakes">
@@ -4140,7 +4128,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     </div>
     ${renderH2H(match.h2h)}
     <div class="bet-angle">
-      <span class="ba-badge ${angle.cls}">${angle.badge}</span>
+      <div class="ba-header"><span class="ba-label">Wett-Winkel</span><span class="ba-badge ${angle.cls}">${angle.badge}</span></div>
       <div class="ba-text">${angle.text}</div>
     </div>
     <div class="picks-section">
