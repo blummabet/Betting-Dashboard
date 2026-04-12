@@ -4084,10 +4084,7 @@ setTimeout(() => loadPreMatchData(), 1500);
 function showPreMatchDebug() {
   const pm = window._preMatchData || {};
   const entries = Object.entries(pm);
-  if (!entries.length) {
-    alert('Noch keine Pre-Match Daten geladen. Klick auf 🔃 Pre-Match.');
-    return;
-  }
+
   const total    = entries.length;
   const withFx   = entries.filter(([,d]) => d.fixtureId).length;
   const withTeam = entries.filter(([,d]) => d.homeTeamId && d.awayTeamId).length;
@@ -4096,32 +4093,62 @@ function showPreMatchDebug() {
   const withInj  = entries.filter(([,d]) => d.injuries?.home?.length || d.injuries?.away?.length).length;
   const withH2h  = entries.filter(([,d]) => d.h2h?.avgGoals != null).length;
   const withOdds = entries.filter(([,d]) => d.odds).length;
-  // Sample entry
-  const [sampleKey, sampleD] = entries[0];
-  const sampleLines = [
-    `Key: ${sampleKey}`,
-    `fixtureId: ${sampleD.fixtureId}`,
-    `homeTeamId: ${sampleD.homeTeamId}  awayTeamId: ${sampleD.awayTeamId}`,
-    `referee: ${sampleD.referee || '(keiner)'}`,
-    `refereeStats: ${JSON.stringify(sampleD.refereeStats || null)}`,
-    `injuries: H=${sampleD.injuries?.home?.length||0} A=${sampleD.injuries?.away?.length||0}`,
-    `h2h: ${sampleD.h2h ? `avgGoals=${sampleD.h2h.avgGoals} over25=${sampleD.h2h.over25Rate}` : 'null'}`,
-    `odds: ${sampleD.odds ? JSON.stringify(sampleD.odds) : 'null'}`
-  ];
-  alert(
-    `🔬 Pre-Match API Status\n` +
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-    `Spiele gematcht:  ${total}\n` +
-    `Mit Fixture-ID:   ${withFx}\n` +
-    `Mit Team-IDs:     ${withTeam}\n` +
-    `Mit Schiri-Name:  ${withRef}\n` +
-    `Mit Schiri-Stats: ${withSR}   ← (Karten-Modifier)\n` +
-    `Mit Verletzungen: ${withInj}\n` +
-    `Mit H2H-Tordaten: ${withH2h}   ← (Over/BTTS-Modifier)\n` +
-    `Mit Quoten:       ${withOdds}\n` +
-    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
-    `Beispiel-Eintrag:\n${sampleLines.join('\n')}`
-  );
+
+  // Build full text (copyable)
+  const [sampleKey, sampleD] = total ? entries[0] : ['–', {}];
+  const lines = [
+    `🔬 Pre-Match API Status  —  ${new Date().toLocaleTimeString('de-AT')}`,
+    ``,
+    `Spiele gematcht:   ${total}`,
+    `Mit Fixture-ID:    ${withFx}`,
+    `Mit Team-IDs:      ${withTeam}`,
+    `Mit Schiri-Name:   ${withRef}`,
+    `Mit Schiri-Stats:  ${withSR}   ← Karten-Modifier`,
+    `Mit Verletzungen:  ${withInj}`,
+    `Mit H2H-Tordaten:  ${withH2h}   ← Over/BTTS-Modifier`,
+    `Mit Quoten:        ${withOdds}`,
+    ``,
+    `── Beispiel-Eintrag (${sampleKey}) ──────────────────`,
+    `fixtureId:    ${sampleD.fixtureId ?? '–'}`,
+    `homeTeamId:   ${sampleD.homeTeamId ?? '–'}   awayTeamId: ${sampleD.awayTeamId ?? '–'}`,
+    `referee:      ${sampleD.referee || '(keiner)'}`,
+    `refStats:     ${JSON.stringify(sampleD.refereeStats ?? null)}`,
+    `injuries:     H=${sampleD.injuries?.home?.length??0}  A=${sampleD.injuries?.away?.length??0}`,
+    `h2h:          ${sampleD.h2h ? `avgGoals=${sampleD.h2h.avgGoals}  over25=${sampleD.h2h.over25Rate}  btts=${sampleD.h2h.bttsRate}` : 'null'}`,
+    `odds:         ${sampleD.odds ? JSON.stringify(sampleD.odds) : 'null'}`,
+    ``,
+    `── Alle Einträge (JSON) ─────────────────────────────`,
+    JSON.stringify(pm, null, 2)
+  ].join('\n');
+
+  // Show copyable overlay
+  let ov = document.getElementById('pmDebugOverlay');
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.id = 'pmDebugOverlay';
+    Object.assign(ov.style, {
+      position:'fixed', inset:'0', background:'rgba(0,0,0,0.85)', zIndex:'99999',
+      display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'20px'
+    });
+    document.body.appendChild(ov);
+  }
+  ov.innerHTML = `
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:12px;width:min(700px,95vw);max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #21262d">
+        <span style="color:#e3b341;font-weight:700;font-size:13px">🔬 Pre-Match API Status</span>
+        <div style="display:flex;gap:8px">
+          <button onclick="navigator.clipboard.writeText(document.getElementById('pmDebugTxt').value).then(()=>{this.textContent='✅ Kopiert!';setTimeout(()=>this.textContent='📋 Kopieren',1500)})"
+            style="background:#1c2c1c;border:1px solid #3fb950;color:#3fb950;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700">📋 Kopieren</button>
+          <button onclick="document.getElementById('pmDebugOverlay').remove()"
+            style="background:#2a1500;border:1px solid #f85149;color:#f85149;border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer;font-weight:700">✕ Schließen</button>
+        </div>
+      </div>
+      <textarea id="pmDebugTxt" readonly
+        style="flex:1;background:#0d1117;color:#c9d1d9;font-family:monospace;font-size:11px;line-height:1.5;padding:14px 16px;border:none;outline:none;resize:none;overflow-y:auto"
+        onclick="this.select()">${lines.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>
+    </div>`;
+  ov.style.display = 'flex';
+  ov.onclick = e => { if (e.target === ov) ov.remove(); };
 }
 
 async function reloadPreMatchData(btn) {
@@ -4129,7 +4156,7 @@ async function reloadPreMatchData(btn) {
   // Clear all pre-match + referee caches so everything is re-fetched
   try {
     Object.keys(localStorage)
-      .filter(k => k.startsWith('pmData_') || k === 'refStats_v4' || k === 'h2hData_v2')
+      .filter(k => k.startsWith('pmData_') || k === 'refStats_v5' || k === 'h2hData_v2')
       .forEach(k => localStorage.removeItem(k));
   } catch(e) {}
   window._preMatchData   = {};
@@ -4141,7 +4168,7 @@ async function reloadPreMatchData(btn) {
 // ── Clear stale pre-match caches from old versions ─────────────────────────
 try {
   Object.keys(localStorage)
-    .filter(k => k.startsWith('pmData_v1_') || k.startsWith('pmData_v2_') || k.startsWith('pmData_v3_') || k.startsWith('pmData_v4_') || k === 'refStats_v3')
+    .filter(k => k.startsWith('pmData_v1_') || k.startsWith('pmData_v2_') || k.startsWith('pmData_v3_') || k.startsWith('pmData_v4_') || k === 'refStats_v3' || k === 'refStats_v4')
     .forEach(k => localStorage.removeItem(k));
 } catch(e) {}
 
@@ -4950,10 +4977,12 @@ async function _apifbFetchH2H(homeTeamId, awayTeamId) {
 // ── Compute referee card stats — cached 48h ─────────────────────────────────
 async function _apifbGetRefereeStats(refereeName) {
   if (!refereeName) return null;
-  const REF_CACHE_KEY = 'refStats_v4';
+  // API-Football returns names like "Michael Oliver, England" — strip country suffix for search
+  const _searchName = refereeName.split(',')[0].trim();
+  const REF_CACHE_KEY = 'refStats_v5';
   const REF_CACHE_TTL = 48 * 3600 * 1000;
 
-  // Return cached if fresh
+  // Return cached if fresh (cache by original name to avoid double-fetching)
   try {
     const cache = JSON.parse(localStorage.getItem(REF_CACHE_KEY) || '{}');
     if (cache[refereeName] && Date.now() - cache[refereeName].ts < REF_CACHE_TTL)
@@ -4963,7 +4992,7 @@ async function _apifbGetRefereeStats(refereeName) {
   try {
     // 1 — Find referee ID by name
     const searchResp = await fetch(
-      `${APISPORTS_BASE}/referees?name=${encodeURIComponent(refereeName)}`,
+      `${APISPORTS_BASE}/referees?name=${encodeURIComponent(_searchName)}`,
       { headers: { 'x-apisports-key': APISPORTS_KEY } }
     );
     if (!searchResp.ok) return { name: refereeName, avgCards: null };
@@ -5072,13 +5101,16 @@ async function loadPreMatchData() {
         if (!apiFx) continue;
 
         const key = `${match.home}|${match.away}`;
+        const _fxStatus = apiFx.fixture?.status?.short || 'NS';
+        const _isFinished = ['FT','AET','PEN','AWD','WO','CANC','ABD'].includes(_fxStatus);
         result[key] = {
           fixtureId:    apiFx.fixture.id,
           referee:      apiFx.fixture.referee || null,
           refereeStats: null,
           homeTeamId:   apiFx.teams?.home?.id,
           awayTeamId:   apiFx.teams?.away?.id,
-          injuries:     { home: [], away: [] }
+          injuries:     { home: [], away: [] },
+          isFinished:   _isFinished   // odds only available for upcoming/live games
         };
       }
     }
@@ -5116,13 +5148,18 @@ async function loadPreMatchData() {
   const _sampleEntry = Object.values(result)[0];
   if (_sampleEntry) console.log('[PreMatch] Sample entry:', JSON.stringify(_sampleEntry).slice(0, 200));
 
-  // ── Step 3: fetch H2H for each matched fixture (parallel) ──────────────────
+  // ── Step 3: fetch H2H — batched (10 at a time) to avoid rate-limiting ─────
   let _h2hOk = 0, _h2hFail = 0;
-  await Promise.allSettled(Object.values(result).map(async d => {
-    if (!d.homeTeamId || !d.awayTeamId) { _h2hFail++; return; }
-    d.h2h = await _apifbFetchH2H(d.homeTeamId, d.awayTeamId);
-    if (d.h2h?.avgGoals != null) _h2hOk++; else _h2hFail++;
-  }));
+  const _h2hEntries = Object.values(result).filter(d => d.homeTeamId && d.awayTeamId);
+  _h2hFail += Object.values(result).length - _h2hEntries.length; // no-team-id entries
+  for (let i = 0; i < _h2hEntries.length; i += 10) {
+    const batch = _h2hEntries.slice(i, i + 10);
+    await Promise.allSettled(batch.map(async d => {
+      d.h2h = await _apifbFetchH2H(d.homeTeamId, d.awayTeamId);
+      if (d.h2h?.avgGoals != null) _h2hOk++; else _h2hFail++;
+    }));
+    if (i + 10 < _h2hEntries.length) await new Promise(r => setTimeout(r, 300)); // small pause between batches
+  }
   console.log(`[PreMatch] Step3 H2H: ${_h2hOk} OK · ${_h2hFail} fail/no-data`);
 
   // ── Step 4: fetch referee stats for all unique referees (parallel) ──────────
@@ -5165,7 +5202,7 @@ async function loadPreMatchData() {
     || (_oddsRawSample?.[0]?.id);
   if (_pinnacleId) console.log(`[PreMatch] Step5 using bookmaker id=${_pinnacleId}`);
   await Promise.allSettled(Object.entries(result).map(async ([, d]) => {
-    if (!d.fixtureId) return;
+    if (!d.fixtureId || d.isFinished) return; // no odds for completed games
     try {
       const _bmParam = _pinnacleId ? `&bookmaker=${_pinnacleId}` : '';
       const resp = await fetch(
