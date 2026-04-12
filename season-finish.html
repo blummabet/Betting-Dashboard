@@ -1703,8 +1703,7 @@ function getBettingPicks(match, odds, leagueKey) {
   const cornersOver8  = cornersEst >= 8.0;
   const cornersOver9  = cornersEst >= 9.5;
   const cornersOver11 = cornersEst >= 11.0;
-  // Cards — helper flags
-  const anyGold   = hc.includes('gold')   || ac.includes('gold');
+  // Cards — helper flags (anyGold already declared above; anyOrange added here)
   const anyOrange = hc.includes('orange') || ac.includes('orange');
   const cardsVeryHigh = bothRed && hStreak <= -2 && aStreak <= -2;
   // cardsHigh: relegation vs any high-stakes team (title, UCL, Europa, or both red)
