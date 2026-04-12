@@ -990,6 +990,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <button onclick="savePicksToday(this)" style="background:#1c2c1c;border:1px solid var(--green);color:var(--green);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">💾 Picks speichern</button>
     <button id="sfFetchBtn" onclick="fetchSofaResults(this)" style="background:#1a2030;border:1px solid #58a6ff;color:#58a6ff;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">🔄 Ergebnisse holen</button>
     <button onclick="reloadPreMatchData(this)" style="background:#1a1a0d;border:1px solid var(--gold);color:var(--gold);border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;" title="Schiedsrichter, Verletzungen & H2H neu laden">🔃 Pre-Match</button>
+    <button onclick="showPreMatchDebug()" style="background:#161b22;border:1px solid #444d56;color:#8b949e;border-radius:8px;padding:9px 10px;font-size:12px;cursor:pointer;white-space:nowrap;" title="Pre-Match API Status anzeigen">🔬 API Status</button>
     <button onclick="toggleManualEntry()" style="background:#1a1a2e;border:1px solid #a78bfa;color:#a78bfa;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">✏️ Manuell</button>
     <button onclick="exportPicksJson()" style="background:#1a1a2e;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">📥 JSON</button>
   </div>
@@ -4080,6 +4081,49 @@ loadAllOdds().then(() => {
 setTimeout(() => loadPreMatchData(), 1500);
 
 // ── Manual Pre-Match reload (clears cache first) ───────────────────────────
+function showPreMatchDebug() {
+  const pm = window._preMatchData || {};
+  const entries = Object.entries(pm);
+  if (!entries.length) {
+    alert('Noch keine Pre-Match Daten geladen. Klick auf 🔃 Pre-Match.');
+    return;
+  }
+  const total    = entries.length;
+  const withFx   = entries.filter(([,d]) => d.fixtureId).length;
+  const withTeam = entries.filter(([,d]) => d.homeTeamId && d.awayTeamId).length;
+  const withRef  = entries.filter(([,d]) => d.referee).length;
+  const withSR   = entries.filter(([,d]) => d.refereeStats?.avgCards != null).length;
+  const withInj  = entries.filter(([,d]) => d.injuries?.home?.length || d.injuries?.away?.length).length;
+  const withH2h  = entries.filter(([,d]) => d.h2h?.avgGoals != null).length;
+  const withOdds = entries.filter(([,d]) => d.odds).length;
+  // Sample entry
+  const [sampleKey, sampleD] = entries[0];
+  const sampleLines = [
+    `Key: ${sampleKey}`,
+    `fixtureId: ${sampleD.fixtureId}`,
+    `homeTeamId: ${sampleD.homeTeamId}  awayTeamId: ${sampleD.awayTeamId}`,
+    `referee: ${sampleD.referee || '(keiner)'}`,
+    `refereeStats: ${JSON.stringify(sampleD.refereeStats || null)}`,
+    `injuries: H=${sampleD.injuries?.home?.length||0} A=${sampleD.injuries?.away?.length||0}`,
+    `h2h: ${sampleD.h2h ? `avgGoals=${sampleD.h2h.avgGoals} over25=${sampleD.h2h.over25Rate}` : 'null'}`,
+    `odds: ${sampleD.odds ? JSON.stringify(sampleD.odds) : 'null'}`
+  ];
+  alert(
+    `🔬 Pre-Match API Status\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `Spiele gematcht:  ${total}\n` +
+    `Mit Fixture-ID:   ${withFx}\n` +
+    `Mit Team-IDs:     ${withTeam}\n` +
+    `Mit Schiri-Name:  ${withRef}\n` +
+    `Mit Schiri-Stats: ${withSR}   ← (Karten-Modifier)\n` +
+    `Mit Verletzungen: ${withInj}\n` +
+    `Mit H2H-Tordaten: ${withH2h}   ← (Over/BTTS-Modifier)\n` +
+    `Mit Quoten:       ${withOdds}\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `Beispiel-Eintrag:\n${sampleLines.join('\n')}`
+  );
+}
+
 async function reloadPreMatchData(btn) {
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Lädt…'; }
   // Clear all pre-match + referee caches so everything is re-fetched
@@ -5063,35 +5107,72 @@ async function loadPreMatchData() {
     }
   }));
 
+  // ── Diagnostic: count how many fixtures have team IDs ──────────────────────
+  const _withTeamIds = Object.values(result).filter(d => d.homeTeamId && d.awayTeamId).length;
+  const _withFixIds  = Object.values(result).filter(d => d.fixtureId).length;
+  const _withRefs    = Object.values(result).filter(d => d.referee).length;
+  console.log(`[PreMatch] Step1: ${Object.keys(result).length} matched · ${_withFixIds} with fixtureId · ${_withTeamIds} with teamIds · ${_withRefs} with referee`);
+  // Log sample fixture to see structure
+  const _sampleEntry = Object.values(result)[0];
+  if (_sampleEntry) console.log('[PreMatch] Sample entry:', JSON.stringify(_sampleEntry).slice(0, 200));
+
   // ── Step 3: fetch H2H for each matched fixture (parallel) ──────────────────
+  let _h2hOk = 0, _h2hFail = 0;
   await Promise.allSettled(Object.values(result).map(async d => {
-    if (!d.homeTeamId || !d.awayTeamId) return;
+    if (!d.homeTeamId || !d.awayTeamId) { _h2hFail++; return; }
     d.h2h = await _apifbFetchH2H(d.homeTeamId, d.awayTeamId);
+    if (d.h2h?.avgGoals != null) _h2hOk++; else _h2hFail++;
   }));
+  console.log(`[PreMatch] Step3 H2H: ${_h2hOk} OK · ${_h2hFail} fail/no-data`);
 
   // ── Step 4: fetch referee stats for all unique referees (parallel) ──────────
   const uniqueRefs = [...new Set(
     Object.values(result).map(d => d.referee).filter(Boolean)
   )];
+  console.log(`[PreMatch] Step4: ${uniqueRefs.length} unique referees:`, uniqueRefs.slice(0,5).join(', '));
   const refMap = {};
   await Promise.allSettled(uniqueRefs.map(async name => {
     refMap[name] = await _apifbGetRefereeStats(name);
   }));
+  let _refOk = 0;
   for (const d of Object.values(result)) {
-    if (d.referee && refMap[d.referee]) d.refereeStats = refMap[d.referee];
+    if (d.referee && refMap[d.referee]) {
+      d.refereeStats = refMap[d.referee];
+      if (d.refereeStats?.avgCards != null) _refOk++;
+    }
   }
+  console.log(`[PreMatch] Step4 Referees: ${_refOk} with avgCards · sample:`, uniqueRefs[0] ? JSON.stringify(refMap[uniqueRefs[0]]) : 'none');
 
   // ── Step 5: fetch Pinnacle odds via API-Football (replaces the-odds-api.com) ──
   // Bookmaker 8 = Pinnacle. Fetched per fixture using IDs we already have.
   // Stored as d.odds = { hw, dr, aw, o25, u25, o35, bttsY, bttsN } — same format findOdds uses.
+  let _oddsOk = 0, _oddsFail = 0, _oddsRawSample = null;
+  // Use FIRST fixture as a diagnostic probe — log raw response to see bet names & structure
+  const _firstFxId = Object.values(result).find(d => d.fixtureId)?.fixtureId;
+  if (_firstFxId) {
+    try {
+      const _probe = await fetch(`${APISPORTS_BASE}/odds?fixture=${_firstFxId}`, { headers: { 'x-apisports-key': APISPORTS_KEY } });
+      const _probeData = _probe.ok ? await _probe.json() : { error: _probe.status };
+      const _bkrs = (_probeData.response || [])[0]?.bookmakers || [];
+      console.log(`[PreMatch] Step5 Odds probe (fixture ${_firstFxId}): HTTP ${_probe.status} · ${_bkrs.length} bookmakers · first:`, _bkrs[0] ? `id=${_bkrs[0].id} name=${_bkrs[0].name} bets=${_bkrs[0].bets?.length}` : 'none');
+      if (_bkrs[0]?.bets?.[0]) console.log('[PreMatch] Step5 sample bet:', JSON.stringify(_bkrs[0].bets[0]));
+      _oddsRawSample = _bkrs;
+    } catch(e) { console.log('[PreMatch] Step5 probe error:', e.message); }
+  }
+  // Determine correct bookmaker ID from probe — use first available if id 8 not found
+  const _pinnacleId = _oddsRawSample?.find(b => b.name?.toLowerCase().includes('pinnacle'))?.id
+    || _oddsRawSample?.find(b => b.id === 8)?.id
+    || (_oddsRawSample?.[0]?.id);
+  if (_pinnacleId) console.log(`[PreMatch] Step5 using bookmaker id=${_pinnacleId}`);
   await Promise.allSettled(Object.entries(result).map(async ([, d]) => {
     if (!d.fixtureId) return;
     try {
+      const _bmParam = _pinnacleId ? `&bookmaker=${_pinnacleId}` : '';
       const resp = await fetch(
-        `${APISPORTS_BASE}/odds?fixture=${d.fixtureId}&bookmaker=8`,
+        `${APISPORTS_BASE}/odds?fixture=${d.fixtureId}${_bmParam}`,
         { headers: { 'x-apisports-key': APISPORTS_KEY } }
       );
-      if (!resp.ok) return;
+      if (!resp.ok) { _oddsFail++; return; }
       const data = await resp.json();
       const bets = (data.response || [])[0]?.bookmakers?.[0]?.bets || [];
       if (!bets.length) return;
@@ -5124,9 +5205,10 @@ async function loadPreMatchData() {
           }
         }
       }
-      if (Object.keys(r).length) d.odds = r;
-    } catch(e) {}
+      if (Object.keys(r).length) { d.odds = r; _oddsOk++; } else _oddsFail++;
+    } catch(e) { _oddsFail++; }
   }));
+  console.log(`[PreMatch] Step5 Odds: ${_oddsOk} OK · ${_oddsFail} fail/empty`);
 
   // ── Persist + activate ──────────────────────────────────────────────────────
   window._preMatchData   = result;
