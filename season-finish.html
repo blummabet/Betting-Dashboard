@@ -1774,15 +1774,19 @@ function getBettingPicks(match, odds, leagueKey) {
       // without pressure still show (backtest showed too many good picks hidden at 0.72).
       const conf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
       const _xgLbl = xGBased ? 'xG' : 'Tore';
+      // Build reason: lead with the primary signal, support with attack vs defence matchup, add H2H context
+      const _hH2hSnippet = h2hN >= 3
+        ? ` · H2H: ${h2h.homeWins||0}H/${h2h.draws||0}U/${h2h.awayWins||0}A (${h2hN} Duelle)`
+        : '';
       let reason = homeInForm
-        ? `${hStreak} Siege in Serie · ${Math.round(hFS_home*100)}% Heim-Win-Rate · ${homeAttStr.toFixed(1)} vs ${awayDefStr.toFixed(1)} ${_xgLbl}/Sp xGA`
+        ? `${match.home} in Topform: ${hStreak} Siege in Serie, ${Math.round(hFS_home*100)}% Heim-Win-Rate. Angriff (${homeAttStr.toFixed(1)} ${_xgLbl}/Sp) trifft auf ${match.away}-Abwehr (${awayDefStr.toFixed(1)} xGA/Sp).${_hH2hSnippet}`
         : hc.includes('gold')
-          ? `Titelkampf · ${Math.round(hFS_home*100)}% Heim-Win-Rate · ${homeAttStr.toFixed(1)} vs ${awayDefStr.toFixed(1)} ${_xgLbl}/Sp xGA`
+          ? `Titelkampf — Heimsieg zwingend. ${Math.round(hFS_home*100)}% Heim-Win-Rate, ${homeAttStr.toFixed(1)} vs ${awayDefStr.toFixed(1)} ${_xgLbl}/Sp. Druck treibt Leistung.${_hH2hSnippet}`
           : ac.includes('red')
-          ? `${match.away} schwache Abwehr (${awayDefStr.toFixed(1)} ${_xgLbl}/Sp xGA) · Heimvorteil + ${Math.round(hFS_home*100)}% Form`
-          : `${Math.round(homeWinRate*100)}% H2H-Heimsiege${h2hN>=3?' ('+h2hN+' Spiele)':''} · ${homeAttStr.toFixed(1)} vs ${awayDefStr.toFixed(1)} ${_xgLbl}/Sp`;
+          ? `${match.away} im Abstiegskampf — schwache Abwehr (${awayDefStr.toFixed(1)} ${_xgLbl}/Sp kassiert). ${match.home} nutzt Heimvorteil: ${Math.round(hFS_home*100)}% Heim-Win-Rate.${_hH2hSnippet}`
+          : `${match.home} Heimstärke: ${Math.round(hFS_home*100)}% Win-Rate, Angriff ${homeAttStr.toFixed(1)} vs Abwehr ${awayDefStr.toFixed(1)} ${_xgLbl}/Sp.${_hH2hSnippet}`;
       if (eloAwayFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
-      else if (eloHomeFav && eloLabel) reason += `<br>📊 Elo: ${eloLabel}`;
+      else if (eloHomeFav && eloLabel) reason += `<br>📊 Elo bestätigt: ${eloLabel}`;
       rC.push({sc, p:{icon:'🏠', market:'Heimsieg', odds:o.hw, conf, reason}});
     }
     // ── Auswärtssieg ──────────────────────────────────────────────────────
@@ -1803,15 +1807,18 @@ function getBettingPicks(match, odds, leagueKey) {
       // Threshold: ★★★ at 1.30 (slightly lower than Heimsieg since away wins are rarer/more selective)
       const conf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
       const _xgLblA = xGBased ? 'xG' : 'Tore';
+      const _aH2hSnippet = h2hN >= 3
+        ? ` · H2H: ${h2h.homeWins||0}H/${h2h.draws||0}U/${h2h.awayWins||0}A (${h2hN} Duelle)`
+        : '';
       let reason = awayInForm
-        ? `${aStreak} Siege in Serie · ${Math.round(aFS_away*100)}% Ausw.-Win-Rate · ${awayAttStr.toFixed(1)} vs ${homeDefStr.toFixed(1)} ${_xgLblA}/Sp xGA`
+        ? `${match.away} auf Kurs: ${aStreak} Siege in Serie, ${Math.round(aFS_away*100)}% Auswärts-Win-Rate. Angriff (${awayAttStr.toFixed(1)} ${_xgLblA}/Sp) überfordert ${match.home}-Abwehr (${homeDefStr.toFixed(1)} xGA/Sp).${_aH2hSnippet}`
         : ac.includes('gold')
-          ? `Titelkampf · ${Math.round(aFS_away*100)}% Ausw.-Win-Rate · ${awayAttStr.toFixed(1)} vs ${homeDefStr.toFixed(1)} ${_xgLblA}/Sp xGA`
+          ? `Titelkampf — ${match.away} braucht Punkte auswärts. ${Math.round(aFS_away*100)}% Auswärts-Win-Rate, Angriff ${awayAttStr.toFixed(1)} vs Abwehr ${homeDefStr.toFixed(1)} ${_xgLblA}/Sp.${_aH2hSnippet}`
           : hc.includes('red')
-          ? `${match.home} schwache Abwehr (${homeDefStr.toFixed(1)} ${_xgLblA}/Sp xGA) · Auswärts ${Math.round(aFS_away*100)}% Form`
-          : `${Math.round(awayWinRate*100)}% H2H-Auswärtssiege${h2hN>=3?' ('+h2hN+' Spiele)':''} · ${awayAttStr.toFixed(1)} vs ${homeDefStr.toFixed(1)} ${_xgLblA}/Sp`;
+          ? `${match.home} im Abstiegskampf — Abwehr porös (${homeDefStr.toFixed(1)} ${_xgLblA}/Sp kassiert). ${match.away} nutzt das: ${Math.round(aFS_away*100)}% Auswärts-Win-Rate.${_aH2hSnippet}`
+          : `${match.away} Auswärtsstärke: ${Math.round(aFS_away*100)}% Win-Rate, Angriff ${awayAttStr.toFixed(1)} vs Abwehr ${homeDefStr.toFixed(1)} ${_xgLblA}/Sp.${_aH2hSnippet}`;
       if (eloHomeFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
-      else if (eloAwayFav && eloLabel) reason += `<br>📊 Elo: ${eloLabel}`;
+      else if (eloAwayFav && eloLabel) reason += `<br>📊 Elo bestätigt: ${eloLabel}`;
       rC.push({sc, p:{icon:'✈️', market:'Auswärtssieg', odds:o.aw, conf, reason}});
     }
     // ── Unentschieden ─────────────────────────────────────────────────────
@@ -1833,9 +1840,10 @@ function getBettingPicks(match, odds, leagueKey) {
         const bothGoldLeader = bothGold && !urgencyHigh;
         if (!bothGoldLeader) sc = Math.max(0, sc - drawSuppress);
       }
+      const _drH2h = h2hN >= 3 ? ` In ${h2hN} Duellen: ${h2h.draws||0}× Remis (${Math.round(drawRate*100)}%).` : ` H2H-Remisquote: ${Math.round(drawRate*100)}%.`;
       let reason = bothGold
-        ? `Titelduell auf Augenhöhe · H2H ${Math.round(drawRate*100)}% Remis (${h2hN} Sp.) · Form: ${Math.round(hFS_home*100)}% vs ${Math.round(aFS_away*100)}%`
-        : `H2H ${Math.round(drawRate*100)}% Remis · Heim ${Math.round(hFS_home*100)}% vs Ausw. ${Math.round(aFS_away*100)}% Form${eloClose&&eloLabel?' · '+eloLabel:''}`;
+        ? `Titelduell zweier gleichwertiger Teams — keiner will verlieren.${_drH2h} Form: ${Math.round(hFS_home*100)}% vs ${Math.round(aFS_away*100)}%${eloClose&&eloLabel?' · '+eloLabel:''}.`
+        : `Ausgeglichene Kräfteverhältnisse: Heim ${Math.round(hFS_home*100)}% vs Ausw. ${Math.round(aFS_away*100)}%.${_drH2h}${eloClose&&eloLabel?' '+eloLabel:''}`;
       rC.push({sc, p:{icon:'🤝', market:'Unentschieden', odds:o.dr, conf: sc > 0.62 ? 'medium' : 'low', reason}});
     }
     // ── Draw No Bet (DNB) — Heim ─────────────────────────────────────────
@@ -1849,7 +1857,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if (sc > 0.38 && drawRate > 0.20) {
         const conf = sc > 0.52 ? 'medium' : 'low';
         rC.push({sc, p:{icon:'🏠', market:'DNB: Heimteam', odds: o.dnbH||null, conf,
-          reason:`${match.home} Favorit · ${Math.round(drawRate*100)}% H2H-Remisrisiko → DNB sichert gegen Remis ab`}});
+          reason:`${match.home} leichter Favorit, aber ${Math.round(drawRate*100)}% Remisrisiko. DNB eliminiert das Unentschieden — Geld zurück bei Remis.`}});
       }
     }
     // ── Draw No Bet (DNB) — Auswärts ─────────────────────────────────────
@@ -1859,7 +1867,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if (sc > 0.38 && drawRate > 0.20) {
         const conf = sc > 0.50 ? 'medium' : 'low';
         rC.push({sc, p:{icon:'✈️', market:'DNB: Auswärtsteam', odds: o.dnbA||null, conf,
-          reason:`${match.away} Favorit auswärts · ${Math.round(drawRate*100)}% H2H-Remisrisiko → DNB sichert gegen Remis ab`}});
+          reason:`${match.away} klarer Favorit, aber ${Math.round(drawRate*100)}% Remisrisiko. DNB eliminiert das Unentschieden — Geld zurück bei Remis.`}});
       }
     }
     // ── Doppelte Chance ───────────────────────────────────────────────────
@@ -1876,8 +1884,8 @@ function getBettingPicks(match, odds, leagueKey) {
         : Math.min(0.68, aFS_away * 0.48 + drawRate * 0.40 + (ac.includes('gold')||hc.includes('red') ? 0.08 : 0));
       const conf = sc > 0.55 ? 'medium' : 'low';
       const reason = dcHome
-        ? `${match.home} Favorit (${Math.round(hFS_home*100)}% Form) · DC 1X deckt Sieg + Remis · H2H ${Math.round(drawRate*100)}% Remis`
-        : `${match.away} Auswärtsstärke (${Math.round(aFS_away*100)}% Form) · DC X2 deckt Sieg + Remis · H2H ${Math.round(drawRate*100)}% Remis`;
+        ? `${match.home} Favorit mit ${Math.round(hFS_home*100)}% Heim-Win-Rate, aber ${Math.round(drawRate*100)}% Remisrisiko. DC 1X gewinnt bei Sieg oder Unentschieden.`
+        : `${match.away} Auswärtsstärke (${Math.round(aFS_away*100)}% Win-Rate), aber ${Math.round(drawRate*100)}% Remisrisiko. DC X2 gewinnt bei Sieg oder Unentschieden.`;
       // Prefer real bookmaker DC odds; fall back to 1X2-derived estimate
       const dcOdds = dcHome ? (o.dc1X_bkr||o.dc1X||null) : (o.dcX2_bkr||o.dcX2||null);
       // Skip DC if odds known and < 1.25 — heavy favourite, DC adds no value
@@ -1943,9 +1951,10 @@ function getBettingPicks(match, odds, leagueKey) {
       // 🔑 PRESSURE/RUNDEN: Abstiegsteam geht all-in → Angriffsdruck → mehr Tore
       if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 1.20);
       else if (_anyNeedsWin) sc = Math.min(0.88, sc + _pressureBoost * 0.70);
+      const _o35H2hNote = (_h2hSample && _h2hAvgG != null) ? ` Historisch Ø ${_h2hAvgG} Tore/Duell.` : '';
       gC.push({sc, p:{icon:'🔥', market:'Over 3.5 Tore', odds:o.o35,
         conf: sc>0.68?'high':sc>0.44?'medium':'low',
-        reason:`${egPfx} · Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp · beide Abwehren permissiv`}}); }
+        reason:`Torfestival erwartet: ${egPfx}. Beide Angriffe stark (${homeAttStr.toFixed(1)} + ${awayAttStr.toFixed(1)} ${xGBased?'xG':'T'}/Sp), Abwehren permissiv (${homeDefStr.toFixed(1)} / ${awayDefStr.toFixed(1)} xGA/Sp).${_o35H2hNote}`}}); }
 
     // Over 2.5
     { let sc = expGoals>3.2?0.78:expGoals>2.8?0.66:expGoals>2.5?0.52:expGoals>2.2?0.30:0.10;
@@ -1959,9 +1968,12 @@ function getBettingPicks(match, odds, leagueKey) {
       if (anyGold && !anyRed && urgencyHigh) sc = Math.max(0, sc - 0.07);
       // 🔑 H2H GOALS HISTORY: real historical Over 2.5 rate confirms or contradicts model
       sc = Math.min(0.92, Math.max(0, sc + _h2hO25Mod));
+      const _o25H2hNote = (_h2hSample && _h2hOver25 != null)
+        ? ` Historisch ${Math.round(_h2hOver25*100)}% der ${h2hN} Duelle über 2.5 Tore${_h2hAvgG!=null?' (Ø '+_h2hAvgG+' Tore/Sp)':''}.`
+        : '';
       gC.push({sc, p:{icon:'⚽', market:'Over 2.5 Tore', odds:o.o25,
         conf: sc>0.66?'high':sc>0.46?'medium':'low',
-        reason:`${egPfx} · Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp${_h2hSample&&_h2hOver25!=null?' · H2H '+Math.round(_h2hOver25*100)+'% Ü2.5':''}`}}); }
+        reason:`${egPfx} — Angriff trifft auf offene Abwehren. ${match.home} ${homeAttStr.toFixed(1)} / ${match.away} ${awayAttStr.toFixed(1)} ${xGBased?'xG':'T'}/Sp, kassieren ${homeDefStr.toFixed(1)} / ${awayDefStr.toFixed(1)} xGA/Sp.${_o25H2hNote}`}}); }
 
     // Under 2.5
     { let sc = expGoals<1.7?0.85:expGoals<2.0?0.72:expGoals<2.3?0.57:expGoals<2.6?0.34:0.12;
@@ -1977,9 +1989,12 @@ function getBettingPicks(match, odds, leagueKey) {
       const _u25DefTeam = _topResultMkt==='Heimsieg'?match.home:_topResultMkt==='Auswärtssieg'?match.away:null;
       const _pressWarn = _anyNeedsWin
         ? `<br><strong>⚠️ ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — Angriffsdrang erhöht Torrisiko, Under-Signal geschwächt.</strong>` : '';
+      const _u25H2hNote = (_h2hSample && _h2hOver25 != null)
+        ? ` Historisch ${100-Math.round(_h2hOver25*100)}% der ${h2hN} Duelle unter 2.5 Tore${_h2hAvgG!=null?' (Ø '+_h2hAvgG+' Tore/Sp)':''}.`
+        : '';
       const _u25Reason = _favWeak > 0.4 && _u25DefTeam
-        ? `${_u25DefTeam} gewinnt defensiv · Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} ${xGBased?'xG':'Tore'}/Sp${_h2hSample&&_h2hOver25!=null?' · H2H '+(100-Math.round(_h2hOver25*100))+'% U2.5':''}`
-        : `${egPfx} · Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp${_h2hSample&&_h2hOver25!=null?' · H2H '+(100-Math.round(_h2hOver25*100))+'% U2.5':''}`;
+        ? `${_u25DefTeam} siegt defensiv — schwächerer Angriff (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} ${xGBased?'xG':'T'}/Sp) lässt wenig Tore zu.${_u25H2hNote}${_pressWarn}`
+        : `Wenig Tore erwartet: ${egPfx}. ${match.home} ${homeAttStr.toFixed(1)} / ${match.away} ${awayAttStr.toFixed(1)} ${xGBased?'xG':'T'}/Sp — beide Angriffe harmlos.${_u25H2hNote}${_pressWarn}`;
       gC.push({sc, p:{icon:'🛡️', market:'Under 2.5 Tore', odds:o.u25,
         conf: sc>0.68?'high':sc>0.48?'medium':'low',
         reason: _u25Reason}}); }
@@ -1990,7 +2005,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 1.50);
       gC.push({sc, p:{icon:'🔒', market:'Under 1.5 Tore', odds:null,
         conf: sc>0.65?'medium':'low',
-        reason:`${egPfx} · sehr schwache Angriffe (${homeAttStr.toFixed(1)} / ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp) · max. 1 Treffer erwartet`}}); }
+        reason:`Extrem torarm: ${egPfx}. Beide Angriffe sehr schwach (${homeAttStr.toFixed(1)} / ${awayAttStr.toFixed(1)} ${xGBased?'xG':'T'}/Sp) — maximal 1 Tor erwartet.`}}); }
 
     // BTTS Ja
     { let sc = 0.14;
@@ -2011,9 +2026,12 @@ function getBettingPicks(match, odds, leagueKey) {
       const _bttsPressNote = bothNeedWin
         ? `<br><strong>⚡ Beide Teams müssen gewinnen${_rlSfx} — beide greifen an, beide riskieren Kontertore.</strong>`
         : _anyNeedsWin ? `<br><strong>⚡ ${homeNeedsWin ? _pHLabel : _pALabel}${_rlSfx} — öffnet hinten Räume, Kontertreffer für Gegner wahrscheinlich.</strong>` : '';
+      const _bttsH2hNote = (_h2hSample && _h2hBtts != null)
+        ? ` Historisch ${Math.round(_h2hBtts*100)}% der ${h2hN} Duelle mit Toren auf beiden Seiten.`
+        : '';
       gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:o.bttsY||null,
         conf: sc>0.65?'high':sc>0.44?'medium':'low',
-        reason:`Heim ${homeAttStr.toFixed(1)} / Ausw. ${awayAttStr.toFixed(1)} ${xGBased?'xG':'Tore'}/Sp · beide Abwehren offen (${homeDefStr.toFixed(1)} / ${awayDefStr.toFixed(1)} xGA)${_h2hSample&&_h2hBtts!=null?' · H2H '+Math.round(_h2hBtts*100)+'% BTTS':''}`}}); }
+        reason:`${match.home} (${homeAttStr.toFixed(1)} ${xGBased?'xG':'T'}/Sp) und ${match.away} (${awayAttStr.toFixed(1)} ${xGBased?'xG':'T'}/Sp) kommen beide zum Abschluss. Abwehren permissiv: ${homeDefStr.toFixed(1)} / ${awayDefStr.toFixed(1)} xGA/Sp.${_bttsH2hNote}${_bttsPressNote}`}}); }
 
     // BTTS Nein
     { const bothAttWeak = homeAttStr < 0.88 && awayAttStr < 0.82;
@@ -2028,9 +2046,12 @@ function getBettingPicks(match, odds, leagueKey) {
       // 🔑 H2H BTTS HISTORY: inverse of BTTS Ja modifier — high historical BTTS rate suppresses Nein
       sc = Math.min(0.80, Math.max(0, sc - _h2hBttsMod));
       const weakAtt = homeAttStr<awayAttStr?match.home:match.away;
+      const _bttsNoH2h = (_h2hSample && _h2hBtts != null)
+        ? ` Historisch ${100-Math.round(_h2hBtts*100)}% der ${h2hN} Duelle blieb ein Team torlos.`
+        : '';
       gC.push({sc, p:{icon:'🔒', market:'Beide Teams treffen: Nein', odds:o.bttsN||null,
         conf: sc>0.58?'medium':'low',
-        reason:`${weakAtt} trifft selten (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} ${xGBased?'xG':'Tore'}/Sp)${_h2hSample&&_h2hBtts!=null?' · H2H '+(100-Math.round(_h2hBtts*100))+'% kein BTTS':''}`}}); }
+        reason:`${weakAtt} kaum torgefährlich (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} ${xGBased?'xG':'T'}/Sp) — ein Team bleibt wahrscheinlich ohne Treffer.${_bttsNoH2h}`}}); }
 
     // ── Heimteam Over 1.5 Tore — BACKTEST VALIDATED: 69% bei expHome > 1.85 ──────
     { const expH = (homeAttStr + awayDefStr) / 2;
@@ -2340,11 +2361,7 @@ function getBettingPicks(match, odds, leagueKey) {
     const hGoal = ['Over 2.5 Tore','Over 3.5 Tore','Under 2.5 Tore','Beide Teams treffen','Beide Teams treffen: Nein'].includes(p.market);
     const hCard = p.market.includes('Karten');
     const chips = [];
-    // Pressure chip
-    if (_anyNeedsWin && urgencyMed) {
-      const pressTeam = bothNeedWin ? 'Beide' : homeNeedsWin ? match.home : match.away;
-      chips.push(`<span class="mod-chip" style="background:#2d0a0a;color:#f85149;border:1px solid #5d1818">⚡ ${pressTeam}: Muss gewinnen${_rlSfx}</span>`);
-    }
+    // Pressure chip intentionally omitted here — shown once in the event's pressure-strip banner above.
     // Injury chips (relevant markets)
     if ((hHome || hGoal) && _hImpact >= 0.5) {
       const _hInjIcon = _hImpact >= 3.5 ? '🔴' : _hImpact >= 2.0 ? '🟠' : '🟡';
