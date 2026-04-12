@@ -572,6 +572,90 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .legend-badge{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;margin-top:1px;}
 .legend-desc{color:var(--muted);line-height:1.4;}
 .legend-desc strong{color:var(--text);}
+
+/* ── MOBILE ─────────────────────────────────────────────── */
+@media(max-width:640px){
+
+  /* Nav: scrollable row, tighter buttons */
+  .top-nav{
+    padding:0 8px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    flex-wrap:nowrap;
+  }
+  .top-nav::-webkit-scrollbar{display:none;}
+  .top-nav-logo{padding:0 10px 0 0;margin-right:6px;}
+  .top-nav-logo .lt{font-size:13px;}
+  .top-nav-btn{
+    padding:12px 11px;
+    font-size:11px;
+    gap:4px;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+
+  /* Container padding */
+  .container{padding:12px 10px;}
+
+  /* Cards */
+  .fixture-card{border-radius:12px;padding:0;}
+  .card-top{padding:12px 14px 8px;}
+  .card-match{flex-direction:column;gap:2px;align-items:flex-start;}
+  .card-home,.card-away{font-size:16px;}
+  .card-vs{font-size:11px;margin:0;}
+  .card-meta{font-size:11px;}
+
+  /* Team rows */
+  .team-row{flex-wrap:wrap;gap:6px;padding:8px 14px;}
+  .tr-left{flex:1;min-width:0;}
+  .team-name{font-size:13px;}
+
+  /* H2H strip */
+  .h2h-strip{flex-wrap:wrap;gap:6px;padding:8px 14px;font-size:11px;}
+  .h2h-bar{min-width:60px;}
+
+  /* Context strip */
+  .context-strip{padding:8px 14px;gap:6px;flex-wrap:wrap;}
+  .ctx-badge{font-size:10px;padding:3px 7px;}
+
+  /* Bet angle */
+  .bet-angle{padding:10px 14px;}
+  .ba-text{font-size:12px;}
+
+  /* Picks */
+  .picks-section{padding:10px 14px 12px;}
+  .pick-row{gap:8px;flex-wrap:wrap;}
+  .pick-label{font-size:12px;}
+  .pick-conf{font-size:11px;}
+
+  /* Results table: hide less important columns */
+  .res-table th:nth-child(3),
+  .res-table td:nth-child(3){display:none;} /* Liga */
+  .res-table th:nth-child(5),
+  .res-table td:nth-child(5){display:none;} /* Conf */
+  .res-table{font-size:11px;}
+  .res-table th,.res-table td{padding:8px 6px;}
+
+  /* Results filter buttons */
+  .res-filter-btn{padding:5px 9px;font-size:11px;}
+
+  /* Results stats grid */
+  #resultsStats{grid-template-columns:repeat(2,1fr)!important;}
+
+  /* Stake grid already handled above */
+  .stake-grid{grid-template-columns:1fr;}
+
+  /* League info bar */
+  .league-info-bar{gap:8px;padding:10px 12px;}
+  .lib-val{font-size:13px;}
+
+  /* Charts container */
+  #chartContainer{padding:12px 10px;}
+
+  /* Section panels */
+  #resultsPanel{padding:12px 10px 60px!important;}
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
