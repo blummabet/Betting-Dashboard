@@ -221,6 +221,17 @@ const FINISHED = new Set(['FT','AET','PEN','AWD','WO','CANC','ABD']);
 //  MAIN FETCH FUNCTION
 // ════════════════════════════════════════════════════════════════════════════
 async function fetchAllPrematchData() {
+  // ── Account quota check ──────────────────────────────────────────────────
+  try {
+    const _st = await apiFetch('/status');
+    const _sub = (_st.response || {}).subscription || {};
+    const _req = (_st.response || {}).requests || {};
+    console.log(`[Server] API-Account: Plan="${_sub.plan||'?'}" | Heute: ${_req.current??'?'}/${_req.limit_day??'?'} Requests | Verbleibend: ${(_req.limit_day??0)-(_req.current??0)}`);
+    if (_st.errors && Object.keys(_st.errors).length) {
+      console.warn(`[Server] API-Status Fehler:`, JSON.stringify(_st.errors));
+    }
+  } catch(e) { console.warn('[Server] API-Status nicht abrufbar:', e.message); }
+
   const today = new Date();
   const dates = [];
   for (let i = -1; i <= 7; i++) {
@@ -354,13 +365,21 @@ async function fetchAllPrematchData() {
   const h2hable = fixtures.filter(d => d.homeTeamId && d.awayTeamId);
   console.log(`[Server] Step3: H2H für ${h2hable.length} Paarungen...`);
   let h2hOk = 0;
+  let _firstH2hErr = null;
   for (let i = 0; i < h2hable.length; i += 10) {
     const batch = h2hable.slice(i, i + 10);
     await Promise.allSettled(batch.map(async d => {
       try {
         const data = await apiFetch(`/fixtures/headtohead?h2h=${d.homeTeamId}-${d.awayTeamId}&last=10`);
+        if (data.errors && Object.keys(data.errors).length && !_firstH2hErr) {
+          _firstH2hErr = { type: 'api_error', errors: data.errors, h2h: `${d.homeTeamId}-${d.awayTeamId}` };
+          console.warn(`  [H2H] API-Error:`, JSON.stringify(data.errors));
+        }
         const fxs = data.response || [];
-        if (!fxs.length) return;
+        if (!fxs.length) {
+          if (!_firstH2hErr) _firstH2hErr = { type: 'empty', results: data.results, h2h: `${d.homeTeamId}-${d.awayTeamId}` };
+          return;
+        }
         let totalGoals = 0, over25 = 0, over35 = 0, btts = 0, homeWins = 0, draws = 0, awayWins = 0;
         let lastYear = null;
         const lastResults = [];
@@ -392,10 +411,13 @@ async function fetchAllPrematchData() {
           lastResults:  lastResults.slice(0, 5)
         };
         h2hOk++;
-      } catch(e) {}
+      } catch(e) {
+        if (!_firstH2hErr) _firstH2hErr = { type: 'exception', message: e.message, h2h: `${d.homeTeamId}-${d.awayTeamId}` };
+      }
     }));
     if (i + 10 < h2hable.length) await sleep(BATCH_DELAY);
   }
+  if (_firstH2hErr) console.warn(`  [H2H] Erstes Problem:`, JSON.stringify(_firstH2hErr));
   console.log(`  Step3 fertig: ${h2hOk} Paarungen mit H2H`);
 
   // ── Step 4: Referee stats — ÜBERSPRUNGEN in GitHub Actions ──────────────
