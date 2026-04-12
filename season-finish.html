@@ -2984,20 +2984,40 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   const _igARest = getRestDays(match.away, match.date, _igFix);
   const _igHInj  = match.homeForm?.injuries || null;
   const _igAInj  = match.awayForm?.injuries || null;
+  // ── Context badges (mirrors card logic) ─────────────────
   const _igCtxBadges = [];
-  if (_igHRest != null && _igHRest <= 5) _igCtxBadges.push({text:`😴 ${match.home}: ${_igHRest}T Pause`, col:_igHRest<=3?'#f85149':'#e3b341'});
-  if (_igARest != null && _igARest <= 5) _igCtxBadges.push({text:`😴 ${match.away}: ${_igARest}T Pause`, col:_igARest<=3?'#f85149':'#e3b341'});
-  if (_igHInj && (_igHInj.total||0) > 0) {
-    const _imp = _igHInj.impactScore||0;
-    const _col = _imp >= 3.5 ? '#f85149' : _imp >= 2.0 ? '#e3b341' : '#a78bfa';
-    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
-    _igCtxBadges.push({text:`${_icon} ${match.home}: Impact ${_imp.toFixed(1)} (${_igHInj.confirmed||0} out)`, col:_col});
-  }
-  if (_igAInj && (_igAInj.total||0) > 0) {
-    const _imp = _igAInj.impactScore||0;
-    const _col = _imp >= 3.5 ? '#f85149' : _imp >= 2.0 ? '#e3b341' : '#a78bfa';
-    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
-    _igCtxBadges.push({text:`${_icon} ${match.away}: Impact ${_imp.toFixed(1)} (${_igAInj.confirmed||0} out)`, col:_col});
+  // Fatigue — same human-readable format as card
+  if (_igHRest != null && _igHRest <= 5) _igCtxBadges.push({text:`😴 Kurze Pause: ${match.home} (${_igHRest} Tage)`, col:_igHRest<=3?'#f85149':'#e3b341'});
+  if (_igARest != null && _igARest <= 5) _igCtxBadges.push({text:`😴 Kurze Pause: ${match.away} (${_igARest} Tage)`, col:_igARest<=3?'#f85149':'#e3b341'});
+  // Injuries — player names like card
+  const _igBuildInj = (inj, teamName) => {
+    if (!inj || (inj.total||0) === 0) return null;
+    const imp = inj.impactScore || 0;
+    if (imp < 0.3 && (inj.confirmed||0) === 0) return null;
+    const col = imp >= 3.5 ? '#f85149' : imp >= 2.0 ? '#e3b341' : '#a78bfa';
+    const confirmed = (inj._raw || []).filter(p => p.type === 'Missing Fixture');
+    const names = confirmed.slice(0, 2).map(p => p.player.split(' ').slice(-1)[0]);
+    const nameStr = names.length ? names.join(', ') + (confirmed.length > 2 ? ` +${confirmed.length - 2}` : '') : '';
+    const areaMap = [];
+    if ((inj.attack||0)   > 0) areaMap.push(`${inj.attack} Angriff`);
+    if ((inj.defense||0)  > 0) areaMap.push(`${inj.defense} Abwehr`);
+    if ((inj.midfield||0) > 0 && areaMap.length < 2) areaMap.push(`${inj.midfield} MF`);
+    if ((inj.goalkeeper||0) > 0) areaMap.push('Torwart');
+    const areaStr = areaMap.length ? ` · ${areaMap[0]}` : '';
+    const label = nameStr ? `${nameStr} fehlt${confirmed.length > 1 ? 'en' : ''}${areaStr}` : `${inj.total} Ausfälle${areaStr}`;
+    return {text:`🏥 ${teamName}: ${label}`, col};
+  };
+  const _igHInjB = _igBuildInj(_igHInj, match.home);
+  const _igAInjB = _igBuildInj(_igAInj, match.away);
+  if (_igHInjB) _igCtxBadges.push(_igHInjB);
+  if (_igAInjB) _igCtxBadges.push(_igAInjB);
+  // Referee
+  const _igRef = match.refereeStats || null;
+  if (_igRef?.name) {
+    const avg = _igRef.avgCards;
+    const refCol = avg == null ? '#8b949e' : avg >= 4.5 ? '#f85149' : avg >= 3.5 ? '#e3b341' : '#3fb950';
+    const avgNote = avg != null ? ` · Ø ${avg} Karten/Sp` : '';
+    _igCtxBadges.push({text:`👨‍⚖️ Schiri: ${_igRef.name}${avgNote}`, col:refCol});
   }
   const _igHasCtx = _igCtxBadges.length > 0;
   // Only show high/medium confidence picks in the infographic — low conf = not worth sharing
@@ -3539,31 +3559,48 @@ function shareTelegram(matchJson, leagueName, leagueFlag, leagueKey) {
   const _ok   = p => p.odds == null ? true : p.odds >= 1.30;
   const visiblePicks = picks.filter(p => (p.conf==='high'||p.conf==='medium') && _ok(p));
 
-  // Context: rest days + injuries
+  // Context: rest days + injuries + referee (mirrors card logic)
   const _tgFix   = leagueKey ? (LEAGUES[leagueKey]?.fixtures||[]) : [];
   const _tgHRest = getRestDays(match.home, match.date, _tgFix);
   const _tgARest = getRestDays(match.away, match.date, _tgFix);
   const _tgHInj  = match.homeForm?.injuries || null;
   const _tgAInj  = match.awayForm?.injuries || null;
+  const _tgRef   = match.refereeStats || null;
+  const _tgBuildInj = (inj, teamName) => {
+    if (!inj || (inj.total||0) === 0) return '';
+    const imp = inj.impactScore || 0;
+    if (imp < 0.3 && (inj.confirmed||0) === 0) return '';
+    const icon = imp >= 3.5 ? '🔴' : imp >= 2.0 ? '🟠' : '🟡';
+    const confirmed = (inj._raw || []).filter(p => p.type === 'Missing Fixture');
+    const names = confirmed.slice(0, 2).map(p => p.player.split(' ').slice(-1)[0]);
+    const nameStr = names.length ? names.join(', ') + (confirmed.length > 2 ? ` +${confirmed.length - 2}` : '') : '';
+    const areaMap = [];
+    if ((inj.attack||0)   > 0) areaMap.push(`${inj.attack} Angriff`);
+    if ((inj.defense||0)  > 0) areaMap.push(`${inj.defense} Abwehr`);
+    if ((inj.midfield||0) > 0 && areaMap.length < 2) areaMap.push(`${inj.midfield} MF`);
+    if ((inj.goalkeeper||0) > 0) areaMap.push('Torwart');
+    const areaStr = areaMap.length ? ` · ${areaMap[0]}` : '';
+    const label = nameStr ? `${nameStr} fehlt${confirmed.length > 1 ? 'en' : ''}${areaStr}` : `${inj.total} Ausfälle${areaStr}`;
+    return `${icon} 🏥 ${teamName}: ${label}`;
+  };
   const ctxLines = [];
-  if (_tgHRest != null && _tgHRest <= 5) ctxLines.push(`😴 ${match.home}: nur ${_tgHRest} Tage Pause`);
-  if (_tgARest != null && _tgARest <= 5) ctxLines.push(`😴 ${match.away}: nur ${_tgARest} Tage Pause`);
-  if (_tgHInj && (_tgHInj.total||0) > 0) {
-    const _imp = _tgHInj.impactScore || 0;
-    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
-    ctxLines.push(`${_icon} ${match.home}: Verletzungs-Impact ${_imp.toFixed(1)}/6 (${_tgHInj.confirmed||0} bestätigt, ${_tgHInj.questionable||0} fraglich)`);
-  }
-  if (_tgAInj && (_tgAInj.total||0) > 0) {
-    const _imp = _tgAInj.impactScore || 0;
-    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
-    ctxLines.push(`${_icon} ${match.away}: Verletzungs-Impact ${_imp.toFixed(1)}/6 (${_tgAInj.confirmed||0} bestätigt, ${_tgAInj.questionable||0} fraglich)`);
+  if (_tgHRest != null && _tgHRest <= 5) ctxLines.push(`😴 Kurze Pause: ${match.home} (${_tgHRest} Tage)`);
+  if (_tgARest != null && _tgARest <= 5) ctxLines.push(`😴 Kurze Pause: ${match.away} (${_tgARest} Tage)`);
+  const _tgHInjLine = _tgBuildInj(_tgHInj, match.home);
+  const _tgAInjLine = _tgBuildInj(_tgAInj, match.away);
+  if (_tgHInjLine) ctxLines.push(_tgHInjLine);
+  if (_tgAInjLine) ctxLines.push(_tgAInjLine);
+  if (_tgRef?.name) {
+    const avg = _tgRef.avgCards;
+    const avgNote = avg != null ? ` · Ø ${avg} Karten/Sp` : '';
+    ctxLines.push(`👨‍⚖️ Schiri: ${_tgRef.name}${avgNote}`);
   }
 
   const hLabels = (match.homeStake?.labels||[]).map(l=>l.l).join(' · ') || '—';
   const aLabels = (match.awayStake?.labels||[]).map(l=>l.l).join(' · ') || '—';
 
   let msg = `🏁 Season Finish · ${leagueFlag} ${leagueName}\n`;
-  msg += `📅 ${match.date}  ·  ⭐ Score ${score}/12\n`;
+  msg += `📅 ${match.date}${match.time ? ' · ' + match.time : ''}  ·  ⭐ Score ${score}/12\n`;
   msg += `${'─'.repeat(32)}\n`;
   msg += `⚽ ${match.home} vs ${match.away}\n\n`;
   msg += `🏠 ${match.home}: ${hLabels}\n`;
@@ -3630,31 +3667,48 @@ function copyCard(matchJson, leagueName, leagueFlag, leagueKey, btn) {
   const _ok   = p => p.odds == null ? true : p.odds >= 1.30;
   const visiblePicks = picks.filter(p => (p.conf==='high'||p.conf==='medium') && _ok(p));
 
-  // Context: rest days + injuries
+  // Context: rest days + injuries + referee (mirrors card logic)
   const _cpFix   = leagueKey ? (LEAGUES[leagueKey]?.fixtures||[]) : [];
   const _cpHRest = getRestDays(match.home, match.date, _cpFix);
   const _cpARest = getRestDays(match.away, match.date, _cpFix);
   const _cpHInj  = match.homeForm?.injuries || null;
   const _cpAInj  = match.awayForm?.injuries || null;
+  const _cpRef   = match.refereeStats || null;
+  const _cpBuildInj = (inj, teamName) => {
+    if (!inj || (inj.total||0) === 0) return '';
+    const imp = inj.impactScore || 0;
+    if (imp < 0.3 && (inj.confirmed||0) === 0) return '';
+    const icon = imp >= 3.5 ? '🔴' : imp >= 2.0 ? '🟠' : '🟡';
+    const confirmed = (inj._raw || []).filter(p => p.type === 'Missing Fixture');
+    const names = confirmed.slice(0, 2).map(p => p.player.split(' ').slice(-1)[0]);
+    const nameStr = names.length ? names.join(', ') + (confirmed.length > 2 ? ` +${confirmed.length - 2}` : '') : '';
+    const areaMap = [];
+    if ((inj.attack||0)   > 0) areaMap.push(`${inj.attack} Angriff`);
+    if ((inj.defense||0)  > 0) areaMap.push(`${inj.defense} Abwehr`);
+    if ((inj.midfield||0) > 0 && areaMap.length < 2) areaMap.push(`${inj.midfield} MF`);
+    if ((inj.goalkeeper||0) > 0) areaMap.push('Torwart');
+    const areaStr = areaMap.length ? ` · ${areaMap[0]}` : '';
+    const label = nameStr ? `${nameStr} fehlt${confirmed.length > 1 ? 'en' : ''}${areaStr}` : `${inj.total} Ausfälle${areaStr}`;
+    return `${icon} 🏥 ${teamName}: ${label}`;
+  };
   const ctxLines = [];
-  if (_cpHRest != null && _cpHRest <= 5) ctxLines.push(`😴 ${match.home}: nur ${_cpHRest} Tage Pause`);
-  if (_cpARest != null && _cpARest <= 5) ctxLines.push(`😴 ${match.away}: nur ${_cpARest} Tage Pause`);
-  if (_cpHInj && (_cpHInj.total||0) > 0) {
-    const _imp = _cpHInj.impactScore || 0;
-    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
-    ctxLines.push(`${_icon} ${match.home}: Verletzungs-Impact ${_imp.toFixed(1)}/6 (${_cpHInj.confirmed||0} bestätigt, ${_cpHInj.questionable||0} fraglich)`);
-  }
-  if (_cpAInj && (_cpAInj.total||0) > 0) {
-    const _imp = _cpAInj.impactScore || 0;
-    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
-    ctxLines.push(`${_icon} ${match.away}: Verletzungs-Impact ${_imp.toFixed(1)}/6 (${_cpAInj.confirmed||0} bestätigt, ${_cpAInj.questionable||0} fraglich)`);
+  if (_cpHRest != null && _cpHRest <= 5) ctxLines.push(`😴 Kurze Pause: ${match.home} (${_cpHRest} Tage)`);
+  if (_cpARest != null && _cpARest <= 5) ctxLines.push(`😴 Kurze Pause: ${match.away} (${_cpARest} Tage)`);
+  const _cpHInjLine = _cpBuildInj(_cpHInj, match.home);
+  const _cpAInjLine = _cpBuildInj(_cpAInj, match.away);
+  if (_cpHInjLine) ctxLines.push(_cpHInjLine);
+  if (_cpAInjLine) ctxLines.push(_cpAInjLine);
+  if (_cpRef?.name) {
+    const avg = _cpRef.avgCards;
+    const avgNote = avg != null ? ` · Ø ${avg} Karten/Sp` : '';
+    ctxLines.push(`👨‍⚖️ Schiri: ${_cpRef.name}${avgNote}`);
   }
 
   const hLabels = (match.homeStake?.labels||[]).map(l=>l.l).join(' · ') || '—';
   const aLabels = (match.awayStake?.labels||[]).map(l=>l.l).join(' · ') || '—';
 
   let msg = `🏁 Season Finish · ${leagueFlag} ${leagueName}\n`;
-  msg += `📅 ${match.date}  ·  ⭐ Score ${score}/12\n`;
+  msg += `📅 ${match.date}${match.time ? ' · ' + match.time : ''}  ·  ⭐ Score ${score}/12\n`;
   msg += `${'─'.repeat(32)}\n`;
   msg += `⚽ ${match.home} vs ${match.away}\n\n`;
   msg += `🏠 ${match.home}: ${hLabels}\n`;
