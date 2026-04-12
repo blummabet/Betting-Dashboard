@@ -1291,6 +1291,11 @@ function norm(n) {
 }
 
 function findOdds(leagueKey, home, away) {
+  // ── Primary: API-Football Pinnacle odds (fetched during pre-match load) ──────
+  const pm = window._preMatchData?.[`${home}|${away}`];
+  if (pm?.odds && Object.keys(pm.odds).length >= 2) return pm.odds;
+
+  // ── Fallback: the-odds-api.com data (if quota available) ─────────────────────
   const games = window._oddsData[leagueKey] || [];
   const hn = norm(home), an = norm(away);
   for (const g of games) {
@@ -1344,17 +1349,33 @@ async function loadAllOdds() {
   } catch(e) {}
 
   // ── Fetch: no bookmaker restriction → uses best available (bet365, unibet, etc.) ──
+  let oddsApiOk = 0, oddsApiErr = '', oddsApiQuota = null;
   await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
     try {
       const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,totals,btts&oddsFormat=decimal`;
       const resp = await fetch(url);
+      // Track remaining quota from response headers
+      if (resp.headers?.get('x-requests-remaining')) {
+        oddsApiQuota = resp.headers.get('x-requests-remaining');
+      }
       if (resp.ok) {
         const data = await resp.json();
-        if (Array.isArray(data) && data.length > 0) window._oddsData[lk] = data;
+        if (Array.isArray(data) && data.length > 0) { window._oddsData[lk] = data; oddsApiOk++; }
+      } else if (resp.status === 401) {
+        oddsApiErr = '401 Ungültiger API-Key';
+      } else if (resp.status === 422) {
+        oddsApiErr = '422 Sport nicht verfügbar';
+      } else if (resp.status === 429) {
+        oddsApiErr = `429 Monatliches Limit erreicht`;
+      } else {
+        oddsApiErr = `HTTP ${resp.status}`;
       }
-    } catch(e) { /* silent fail */ }
+    } catch(e) { oddsApiErr = e.message; }
   }));
   window._oddsReady = true;
+  // Show diagnostic in console for debugging
+  if (oddsApiErr) console.warn(`[TheOddsAPI] ${oddsApiErr}${oddsApiQuota !== null ? ' · Remaining: '+oddsApiQuota : ''}`);
+  else console.log(`[TheOddsAPI] OK — ${oddsApiOk} Ligen geladen${oddsApiQuota !== null ? ' · Remaining: '+oddsApiQuota : ''}`);
 
   // ── Save to cache ─────────────────────────────────────────────────────────
   try {
@@ -5060,6 +5081,53 @@ async function loadPreMatchData() {
     if (d.referee && refMap[d.referee]) d.refereeStats = refMap[d.referee];
   }
 
+  // ── Step 5: fetch Pinnacle odds via API-Football (replaces the-odds-api.com) ──
+  // Bookmaker 8 = Pinnacle. Fetched per fixture using IDs we already have.
+  // Stored as d.odds = { hw, dr, aw, o25, u25, o35, bttsY, bttsN } — same format findOdds uses.
+  await Promise.allSettled(Object.entries(result).map(async ([, d]) => {
+    if (!d.fixtureId) return;
+    try {
+      const resp = await fetch(
+        `${APISPORTS_BASE}/odds?fixture=${d.fixtureId}&bookmaker=8`,
+        { headers: { 'x-apisports-key': APISPORTS_KEY } }
+      );
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const bets = (data.response || [])[0]?.bookmakers?.[0]?.bets || [];
+      if (!bets.length) return;
+      const r = {};
+      for (const bet of bets) {
+        if (bet.name === 'Match Winner') {
+          for (const v of (bet.values || [])) {
+            if (v.value === 'Home') r.hw = parseFloat(v.odd);
+            else if (v.value === 'Away') r.aw = parseFloat(v.odd);
+            else if (v.value === 'Draw') r.dr = parseFloat(v.odd);
+          }
+        } else if (bet.name === 'Goals Over/Under') {
+          for (const v of (bet.values || [])) {
+            if      (v.value === 'Over 2.5')  r.o25  = parseFloat(v.odd);
+            else if (v.value === 'Under 2.5') r.u25  = parseFloat(v.odd);
+            else if (v.value === 'Over 3.5')  r.o35  = parseFloat(v.odd);
+            else if (v.value === 'Under 3.5') r.u35  = parseFloat(v.odd);
+            else if (v.value === 'Over 1.5')  r.o15  = parseFloat(v.odd);
+          }
+        } else if (bet.name === 'Both Teams Score') {
+          for (const v of (bet.values || [])) {
+            if (v.value === 'Yes') r.bttsY = parseFloat(v.odd);
+            else if (v.value === 'No') r.bttsN = parseFloat(v.odd);
+          }
+        } else if (bet.name === 'Asian Handicap') {
+          // DNB approximation: Home -0 Asian Handicap ≈ DNB Home
+          for (const v of (bet.values || [])) {
+            if (v.value === 'Home' && !r.dnbH) r.dnbH = parseFloat(v.odd);
+            else if (v.value === 'Away' && !r.dnbA) r.dnbA = parseFloat(v.odd);
+          }
+        }
+      }
+      if (Object.keys(r).length) d.odds = r;
+    } catch(e) {}
+  }));
+
   // ── Persist + activate ──────────────────────────────────────────────────────
   window._preMatchData   = result;
   window._preMatchLoaded = true;
@@ -5118,8 +5186,9 @@ function _injectPreMatchAndRerender() {
   const _withRef = Object.values(window._preMatchData).filter(d => d.refereeStats?.avgCards != null).length;
   const _withInj = Object.values(window._preMatchData).filter(d => d.injuries?.home?.length || d.injuries?.away?.length).length;
   const _withH2h = Object.values(window._preMatchData).filter(d => d.h2h?.avgGoals != null).length;
+  const _withOdds = Object.values(window._preMatchData).filter(d => d.odds).length;
   toast.textContent = loaded
-    ? `✅ Pre-Match: ${loaded} Spiele — 👨‍⚖️ ${_withRef} SR · 🏥 ${_withInj} Verletzte · 📊 ${_withH2h} H2H`
+    ? `✅ Pre-Match: ${loaded} Spiele — 👨‍⚖️ ${_withRef} SR · 🏥 ${_withInj} Verletzte · 📊 ${_withH2h} H2H · 💰 ${_withOdds} Quoten`
     : '⚠️ Pre-Match: Keine Spieldaten für diese Woche — Klick auf 🔃 Pre-Match zum Reload';
   Object.assign(toast.style, {
     position:'fixed', bottom:'80px', left:'50%', transform:'translateX(-50%)',
