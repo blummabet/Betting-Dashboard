@@ -97,6 +97,11 @@ def main():
             if not data:
                 continue
 
+            # API sometimes returns a list on error instead of a dict
+            if not isinstance(data, dict):
+                print(f"  ⚠ Unerwartete Antwort [{lkey} {date}]: {str(data)[:200]}")
+                continue
+
             if data.get("errors", {}).get("rateLimit"):
                 print(f"  ⚠ Rate limit [{lkey} {date}] — warte 5s…")
                 time.sleep(5)
