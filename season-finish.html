@@ -1439,6 +1439,12 @@ function getBettingPicks(match, odds, leagueKey) {
   const anyGold  = hc.includes('gold') || ac.includes('gold');
   const anyBlue  = hc.includes('blue') || ac.includes('blue');
   const o = deriveOdds(odds || {});
+  // De-vig base probabilities — anchor fair value to market 1X2 when odds are available.
+  // Fixes wildly wrong formula-based estimates (e.g. Benfica 1.80 computed vs 1.12 real).
+  const _bkrTot = (odds?.hw && odds?.dr && odds?.aw) ? (1/odds.hw + 1/odds.dr + 1/odds.aw) : 0;
+  const _bkrPH  = _bkrTot > 0 ? (1/odds.hw) / _bkrTot : null;  // de-vigged home win prob
+  const _bkrPD  = _bkrTot > 0 ? (1/odds.dr) / _bkrTot : null;  // de-vigged draw prob
+  const _bkrPA  = _bkrTot > 0 ? (1/odds.aw) / _bkrTot : null;  // de-vigged away win prob
 
   // ── Form signals ──────────────────────────────────────
   const hF = match.homeForm || {}, aF = match.awayForm || {};
@@ -1842,7 +1848,8 @@ function getBettingPicks(match, odds, leagueKey) {
       const reason = dcHome
         ? `${match.home} als Favorit (Heim-Form ${Math.round(hFS_home*100)}%) — DC 1X deckt Sieg UND Remis ab.<br>H2H-Remisquote ${Math.round(drawRate*100)}% macht Remis-Puffer sinnvoll — strukturell sicherste Result-Wette.`
         : `${match.away} mit Auswärtsstärke (Form ${Math.round(aFS_away*100)}%) — DC X2 schließt Remis mit ein.<br>H2H-Remisquote ${Math.round(drawRate*100)}% — guter Puffer falls Heimteam ausgleicht.`;
-      const dcOdds = dcHome ? (o.dc1X||null) : (o.dcX2||null);
+      // Prefer real bookmaker DC odds; fall back to 1X2-derived estimate
+      const dcOdds = dcHome ? (o.dc1X_bkr||o.dc1X||null) : (o.dcX2_bkr||o.dcX2||null);
       // Skip DC if odds known and < 1.25 — heavy favourite, DC adds no value
       if (!(dcOdds !== null && dcOdds < 1.25)) {
         rC.push({sc, p:{icon:'🎯', market:dcMkt, odds:dcOdds, conf, reason}});
@@ -2079,8 +2086,9 @@ function getBettingPicks(match, odds, leagueKey) {
       }
       // Suppress card pick if referee is very lenient and situation isn't extreme
       if (cardSc > 0 && _refAvg != null && _refAvg < 2.5 && !cardsVeryHigh) cardSc = 0;
+      const _cardOdds = cardMkt.includes('4.5') ? (o.cards_o45||null) : (o.cards_o35||null);
       if (cardSc > 0) sC.push({sc: cardSc, p:{icon: cardMkt.includes('4.5') ? '🟥' : '🟨',
-        market: cardMkt, odds: null, conf: cardSc>0.65?'high':cardSc>0.45?'medium':'low',
+        market: cardMkt, odds: _cardOdds, conf: cardSc>0.65?'high':cardSc>0.45?'medium':'low',
         reason: cardReason}});
     }
 
@@ -2157,16 +2165,27 @@ function getBettingPicks(match, odds, leagueKey) {
     let mp = null;           // our model probability estimate
     switch (p.market) {
       case 'Heimsieg':
-        mp = Math.min(0.82, 0.34 + (hFS_home - 0.5) * 0.65 + Math.max(0, hStreak) * 0.03 + homeWinRate * 0.16);
-        if (xGBased) mp = Math.min(0.82, mp + Math.max(0, homeAttStr - 1.2) * 0.08 - Math.max(0, awayAttStr - 1.4) * 0.06);
-        if (eloHomeFav) mp = Math.min(0.82, mp + 0.04);
-        if (homeNeedsWin) mp = Math.min(0.82, mp + _pressureBoost * 0.18);
+        if (_bkrPH !== null) {
+          // Market-anchored: bookmaker's de-vigged prob as base, small pressure adjustment only
+          let _adj = homeNeedsWin ? _pressureBoost * 0.18 : 0;
+          mp = Math.min(0.97, Math.max(0.02, _bkrPH + Math.min(0.06, Math.max(-0.06, _adj))));
+        } else {
+          mp = Math.min(0.82, 0.34 + (hFS_home - 0.5) * 0.65 + Math.max(0, hStreak) * 0.03 + homeWinRate * 0.16);
+          if (xGBased) mp = Math.min(0.82, mp + Math.max(0, homeAttStr - 1.2) * 0.08 - Math.max(0, awayAttStr - 1.4) * 0.06);
+          if (eloHomeFav) mp = Math.min(0.82, mp + 0.04);
+          if (homeNeedsWin) mp = Math.min(0.82, mp + _pressureBoost * 0.18);
+        }
         break;
       case 'Auswärtssieg':
-        mp = Math.min(0.76, 0.26 + (aFS_away - 0.5) * 0.65 + Math.max(0, aStreak) * 0.03 + awayWinRate * 0.16);
-        if (xGBased) mp = Math.min(0.76, mp + Math.max(0, awayAttStr - 1.1) * 0.08 - Math.max(0, homeAttStr - 1.4) * 0.06);
-        if (eloAwayFav) mp = Math.min(0.76, mp + 0.04);
-        if (awayNeedsWin) mp = Math.min(0.76, mp + _pressureBoost * 0.18);
+        if (_bkrPA !== null) {
+          let _adj = awayNeedsWin ? _pressureBoost * 0.18 : 0;
+          mp = Math.min(0.97, Math.max(0.02, _bkrPA + Math.min(0.06, Math.max(-0.06, _adj))));
+        } else {
+          mp = Math.min(0.76, 0.26 + (aFS_away - 0.5) * 0.65 + Math.max(0, aStreak) * 0.03 + awayWinRate * 0.16);
+          if (xGBased) mp = Math.min(0.76, mp + Math.max(0, awayAttStr - 1.1) * 0.08 - Math.max(0, homeAttStr - 1.4) * 0.06);
+          if (eloAwayFav) mp = Math.min(0.76, mp + 0.04);
+          if (awayNeedsWin) mp = Math.min(0.76, mp + _pressureBoost * 0.18);
+        }
         break;
       // ── DC / DNB: derived markets — computed from de-vigged 1X2 probs ─────────
       // DC/DNB fair value = sum of underlying outcome probabilities.
@@ -2200,8 +2219,13 @@ function getBettingPicks(match, odds, leagueKey) {
         break;
       }
       case 'Unentschieden':
-        mp = Math.min(0.40, drawRate * 0.72 + 0.10);
-        if (homeNeedsWin || awayNeedsWin) mp = Math.max(0.05, mp - _pressureBoost * 0.30);
+        if (_bkrPD !== null) {
+          let _adj = (homeNeedsWin || awayNeedsWin) ? -Math.min(0.10, _pressureBoost * 0.30) : 0;
+          mp = Math.max(0.03, Math.min(0.65, _bkrPD + _adj));
+        } else {
+          mp = Math.min(0.40, drawRate * 0.72 + 0.10);
+          if (homeNeedsWin || awayNeedsWin) mp = Math.max(0.05, mp - _pressureBoost * 0.30);
+        }
         break;
       case 'Over 2.5 Tore':
         mp = expGoals > 3.2 ? 0.72 : expGoals > 2.8 ? 0.60 : expGoals > 2.4 ? 0.48 : 0.36;
@@ -5149,35 +5173,18 @@ async function _enrichMissingData(result, cacheKey) {
   }
 
   // ── Step 5: odds for upcoming fixtures still missing them ────────────────────
-  const _ODDS_CACHE_KEY = 'oddsData_v1';
+  // Fetches ALL bookmakers (no filter) → _parseOddsBets merges BTTS/DC/Cards from any bookie
+  const _ODDS_CACHE_KEY = 'oddsData_v2';
   const _ODDS_TTL = 6 * 3600 * 1000;
-  const needOdds = Object.values(result).filter(d => d.fixtureId && !d.isFinished && d.odds == null);
+  // Re-fetch if odds missing entirely OR if stale (missing BTTS/DC/Cards from old Pinnacle-only fetch)
+  const needOdds = Object.values(result).filter(d =>
+    d.fixtureId && !d.isFinished &&
+    (d.odds == null || (!d.odds.bttsY && !d.odds.dc1X_bkr && !d.odds.cards_o35))
+  );
   if (needOdds.length) {
-    // Probe first fixture to detect bookmaker ID
-    let _pinnacleId = null;
-    try {
-      const _probe = await fetch(`${APISPORTS_BASE}/odds?fixture=${needOdds[0].fixtureId}`, { headers: { 'x-apisports-key': APISPORTS_KEY } });
-      if (_probe.ok) {
-        const _pd = await _probe.json();
-        const _bkrs = (_pd.response || [])[0]?.bookmakers || [];
-        _pinnacleId = _bkrs.find(b => b.name?.toLowerCase().includes('pinnacle'))?.id
-          || _bkrs.find(b => b.id === 8)?.id
-          || _bkrs[0]?.id;
-        if (_bkrs[0]?.bets?.[0]) console.log('[PreMatch] Enrich Step5 sample bet:', JSON.stringify(_bkrs[0].bets[0]).slice(0, 120));
-        // Assign odds for the probe fixture directly
-        const _bets = (_pd.response || [])[0]?.bookmakers?.[0]?.bets || [];
-        if (_bets.length) {
-          const r = _parseOddsBets(_bets);
-          if (Object.keys(r).length) { needOdds[0].odds = r; }
-        }
-      }
-    } catch(e) { console.log('[PreMatch] Enrich Step5 probe error:', e.message); }
-
-    console.log(`[PreMatch] Enrich Step5: ${needOdds.length} fixtures needing odds · bookmaker=${_pinnacleId}`);
-    const _bmParam = _pinnacleId ? `&bookmaker=${_pinnacleId}` : '';
+    console.log(`[PreMatch] Enrich Step5: ${needOdds.length} fixtures needing odds (all bookmakers)`);
     let _oddsOk = 0, _oddsFail = 0;
-    // skip index 0 — already fetched in probe above
-    await Promise.allSettled(needOdds.slice(1).map(async d => {
+    await Promise.allSettled(needOdds.map(async d => {
       try {
         // Check sub-cache first
         try {
@@ -5187,14 +5194,15 @@ async function _enrichMissingData(result, cacheKey) {
           }
         } catch(e) {}
         const resp = await fetch(
-          `${APISPORTS_BASE}/odds?fixture=${d.fixtureId}${_bmParam}`,
+          `${APISPORTS_BASE}/odds?fixture=${d.fixtureId}`,
           { headers: { 'x-apisports-key': APISPORTS_KEY } }
         );
         if (!resp.ok) { _oddsFail++; return; }
         const data = await resp.json();
-        const bets = (data.response || [])[0]?.bookmakers?.[0]?.bets || [];
-        if (!bets.length) { _oddsFail++; return; }
-        const r = _parseOddsBets(bets);
+        const bookmakers = (data.response || [])[0]?.bookmakers || [];
+        if (!bookmakers.length) { _oddsFail++; return; }
+        if (bookmakers[0]?.bets?.[0]) console.log('[PreMatch] Enrich Step5:', bookmakers.map(b=>b.name).join(', '), '| sample:', JSON.stringify(bookmakers[0].bets[0]).slice(0, 80));
+        const r = _parseOddsBets(bookmakers);
         if (Object.keys(r).length) {
           d.odds = r; _oddsOk++;
           try {
@@ -5205,14 +5213,6 @@ async function _enrichMissingData(result, cacheKey) {
         } else _oddsFail++;
       } catch(e) { _oddsFail++; }
     }));
-    // Cache probe result too
-    if (needOdds[0].odds) {
-      try {
-        const _oc = JSON.parse(localStorage.getItem(_ODDS_CACHE_KEY) || '{}');
-        _oc[needOdds[0].fixtureId] = { ts: Date.now(), data: needOdds[0].odds };
-        localStorage.setItem(_ODDS_CACHE_KEY, JSON.stringify(_oc));
-      } catch(e) {}
-    }
     console.log(`[PreMatch] Enrich Step5 done: ${_oddsOk} OK · ${_oddsFail} fail/empty`);
   }
 
@@ -5223,33 +5223,57 @@ async function _enrichMissingData(result, cacheKey) {
   }
 }
 
-// Shared bet parser — used by both fresh load and enrichment
-function _parseOddsBets(bets) {
+// Shared bet parser — accepts full bookmakers array from API-Football
+// Merges markets from all bookmakers: Pinnacle-priority for 1X2/Goals, any bookie for BTTS/DC/Cards
+function _parseOddsBets(bookmakers) {
+  if (!Array.isArray(bookmakers) || !bookmakers.length) return {};
   const r = {};
-  for (const bet of bets) {
-    if (bet.name === 'Match Winner') {
-      for (const v of (bet.values || [])) {
-        if      (v.value === 'Home') r.hw = parseFloat(v.odd);
-        else if (v.value === 'Away') r.aw = parseFloat(v.odd);
-        else if (v.value === 'Draw') r.dr = parseFloat(v.odd);
-      }
-    } else if (bet.name === 'Goals Over/Under') {
-      for (const v of (bet.values || [])) {
-        if      (v.value === 'Over 2.5')  r.o25  = parseFloat(v.odd);
-        else if (v.value === 'Under 2.5') r.u25  = parseFloat(v.odd);
-        else if (v.value === 'Over 3.5')  r.o35  = parseFloat(v.odd);
-        else if (v.value === 'Under 3.5') r.u35  = parseFloat(v.odd);
-        else if (v.value === 'Over 1.5')  r.o15  = parseFloat(v.odd);
-      }
-    } else if (bet.name === 'Both Teams Score') {
-      for (const v of (bet.values || [])) {
-        if      (v.value === 'Yes') r.bttsY = parseFloat(v.odd);
-        else if (v.value === 'No')  r.bttsN = parseFloat(v.odd);
-      }
-    } else if (bet.name === 'Asian Handicap') {
-      for (const v of (bet.values || [])) {
-        if      (v.value === 'Home' && !r.dnbH) r.dnbH = parseFloat(v.odd);
-        else if (v.value === 'Away' && !r.dnbA) r.dnbA = parseFloat(v.odd);
+  // Pinnacle (id=8 or name includes 'pinnacle') first — most accurate for liquid markets
+  const sorted = [...bookmakers].sort((a, b) => {
+    const aP = (a.name?.toLowerCase().includes('pinnacle') || a.id === 8) ? 0 : 1;
+    const bP = (b.name?.toLowerCase().includes('pinnacle') || b.id === 8) ? 0 : 1;
+    return aP - bP;
+  });
+  for (const bkr of sorted) {
+    for (const bet of (bkr.bets || [])) {
+      const bn = bet.name || '';
+      if (bn === 'Match Winner') {
+        for (const v of (bet.values || [])) {
+          if      (v.value === 'Home' && !r.hw) r.hw = parseFloat(v.odd);
+          else if (v.value === 'Away' && !r.aw) r.aw = parseFloat(v.odd);
+          else if (v.value === 'Draw' && !r.dr) r.dr = parseFloat(v.odd);
+        }
+      } else if (bn === 'Goals Over/Under') {
+        for (const v of (bet.values || [])) {
+          if      (v.value === 'Over 2.5'  && !r.o25) r.o25 = parseFloat(v.odd);
+          else if (v.value === 'Under 2.5' && !r.u25) r.u25 = parseFloat(v.odd);
+          else if (v.value === 'Over 3.5'  && !r.o35) r.o35 = parseFloat(v.odd);
+          else if (v.value === 'Under 3.5' && !r.u35) r.u35 = parseFloat(v.odd);
+          else if (v.value === 'Over 1.5'  && !r.o15) r.o15 = parseFloat(v.odd);
+        }
+      } else if (bn === 'Both Teams Score') {
+        for (const v of (bet.values || [])) {
+          if      (v.value === 'Yes' && !r.bttsY) r.bttsY = parseFloat(v.odd);
+          else if (v.value === 'No'  && !r.bttsN) r.bttsN = parseFloat(v.odd);
+        }
+      } else if (bn === 'Double Chance') {
+        for (const v of (bet.values || [])) {
+          if      ((v.value === 'Home/Draw' || v.value === '1X') && !r.dc1X_bkr) r.dc1X_bkr = parseFloat(v.odd);
+          else if ((v.value === 'Draw/Away' || v.value === 'X2') && !r.dcX2_bkr) r.dcX2_bkr = parseFloat(v.odd);
+        }
+      } else if (bn === 'Asian Handicap') {
+        for (const v of (bet.values || [])) {
+          if      (v.value === 'Home' && !r.dnbH) r.dnbH = parseFloat(v.odd);
+          else if (v.value === 'Away' && !r.dnbA) r.dnbA = parseFloat(v.odd);
+        }
+      } else if (bn === 'Cards Over/Under' || bn === 'Total - Cards' || bn === 'Bookings') {
+        for (const v of (bet.values || [])) {
+          if      (v.value === 'Over 3.5'  && !r.cards_o35) r.cards_o35 = parseFloat(v.odd);
+          else if (v.value === 'Under 3.5' && !r.cards_u35) r.cards_u35 = parseFloat(v.odd);
+          else if (v.value === 'Over 4.5'  && !r.cards_o45) r.cards_o45 = parseFloat(v.odd);
+          else if (v.value === 'Under 4.5' && !r.cards_u45) r.cards_u45 = parseFloat(v.odd);
+          else if (v.value === 'Over 5.5'  && !r.cards_o55) r.cards_o55 = parseFloat(v.odd);
+        }
       }
     }
   }
