@@ -491,6 +491,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .value-tag{display:inline-block;font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;margin-left:6px;vertical-align:middle;letter-spacing:.3px;}
 .value-tag.hot{background:#2d1200;color:#ff8c00;border:1px solid #7d3800;}
 .value-tag.val{background:#0d2800;color:#7ec800;border:1px solid #3d6a00;}
+.value-tag.inj{background:#1a0d2e;color:#c084fc;border:1px solid #7c3aed;}
+/* Injury severity badge override */
+.ctx-injury-high{background:rgba(248,81,73,0.15)!important;color:#f85149!important;border-color:#7d2020!important;}
 
 /* KOMBI-TIPP SECTION */
 .kombi-section{
@@ -1404,6 +1407,21 @@ async function loadAllOdds() {
   } catch(e) {}
 }
 
+// ── Injury Impact Score (client-side mirror of server logic) ─────────────────
+function computeClientInjuryImpact(inj) {
+  if (!inj) return 0;
+  let sc = 0;
+  sc += (inj.goalkeeper || 0) * 1.1;
+  sc += Math.min(inj.attack || 0, 4) * 0.95;
+  if ((inj.attack || 0) >= 3) sc += 0.7;
+  sc += Math.min(inj.defense || 0, 4) * 0.60;
+  if ((inj.defense || 0) >= 3) sc += 0.5;
+  sc += Math.min(inj.midfield || 0, 5) * 0.30;
+  sc += (inj.goalkeeper || 0) >= 2 ? 1.0 : 0;
+  sc += (inj.questionable || 0) * 0.25;
+  return Math.min(6.0, Math.round(sc * 10) / 10);
+}
+
 // ═══════════════════════════════════════════════════════
 //  DERIVED ODDS HELPER (DNB + Doppelte Chance from 1X2)
 // ═══════════════════════════════════════════════════════
@@ -1633,16 +1651,39 @@ function getBettingPicks(match, odds, leagueKey) {
   const _hFatigDef = _hRest == null ? 1.0 : _hRest <= 3 ? 1.10 : _hRest <= 4 ? 1.06 : _hRest <= 5 ? 1.02 : 1.0;
   const _aFatigDef = _aRest == null ? 1.0 : _aRest <= 3 ? 1.12 : _aRest <= 4 ? 1.07 : _aRest <= 5 ? 1.02 : 1.0;
 
-  // ── Injuries (injected by update_dashboard.py via SofaScore) ────────────────
-  // form.injuries = { attack: N, defense: N, notes: ["Player (ca. 2 Wo.)", ...] }
+  // ── Injuries: position-specific xG modifiers ──────────────────────────────
+  // New format: { goalkeeper, defense, midfield, attack, confirmed, questionable, impactScore }
   const _hInj      = hF.injuries || null;
   const _aInj      = aF.injuries || null;
-  // Attack injury: each missing attacker/midfielder damps scoring by ~8% (max -25%)
-  const _hInjAtt   = _hInj ? Math.max(0.75, 1 - (_hInj.attack  || 0) * 0.08) : 1.0;
-  const _aInjAtt   = _aInj ? Math.max(0.75, 1 - (_aInj.attack  || 0) * 0.08) : 1.0;
-  // Defense injury: each missing defender/keeper increases concede rate by ~7% (max +25%)
-  const _hInjDef   = _hInj ? Math.min(1.25, 1 + (_hInj.defense || 0) * 0.07) : 1.0;
-  const _aInjDef   = _aInj ? Math.min(1.25, 1 + (_aInj.defense || 0) * 0.07) : 1.0;
+  const _hImpact   = _hInj?.impactScore ?? 0;
+  const _aImpact   = _aInj?.impactScore ?? 0;
+  // xG attack multiplier: strikers (0.10/player) + midfielders (0.04/player) + compound bonus
+  const _hInjAtt = _hInj ? Math.max(0.68,
+    1 - (_hInj.attack   || 0) * 0.10
+      - (_hInj.midfield || 0) * 0.04
+      - ((_hInj.attack  || 0) >= 2 ? 0.05 : 0)   // compound: 2+ strikers missing
+      - ((_hInj.attack  || 0) >= 3 ? 0.07 : 0)   // compound: no real striker
+  ) : 1.0;
+  const _aInjAtt = _aInj ? Math.max(0.68,
+    1 - (_aInj.attack   || 0) * 0.10
+      - (_aInj.midfield || 0) * 0.04
+      - ((_aInj.attack  || 0) >= 2 ? 0.05 : 0)
+      - ((_aInj.attack  || 0) >= 3 ? 0.07 : 0)
+  ) : 1.0;
+  // xGA defense multiplier: GK (9%) + each CB/fullback (7%)
+  const _hInjDef = _hInj ? Math.min(1.30,
+    1 + (_hInj.goalkeeper || 0) * 0.09
+      + (_hInj.defense    || 0) * 0.07
+      + ((_hInj.defense   || 0) >= 3 ? 0.06 : 0) // compound: exposed backline
+  ) : 1.0;
+  const _aInjDef = _aInj ? Math.min(1.30,
+    1 + (_aInj.goalkeeper || 0) * 0.09
+      + (_aInj.defense    || 0) * 0.07
+      + ((_aInj.defense   || 0) >= 3 ? 0.06 : 0)
+  ) : 1.0;
+  // Net xG deltas for edge display (positive = team scored more/less)
+  const _hInjxGDelta = -(1 - _hInjAtt);   // e.g. -0.22 means team scores 22% less
+  const _aInjxGDelta = -(1 - _aInjAtt);
 
   // ── xG-based profiles (xG preferred, goals as fallback) ─────────────────
   // Fatigue + injury multipliers applied at source → flow through ALL pick computations.
@@ -2268,6 +2309,18 @@ function getBettingPicks(match, odds, leagueKey) {
       if (ip !== null) {
         const edge = mp - ip;
         p.value = edge >= 0.13 ? 'hot' : edge >= 0.07 ? 'value' : null;
+        // Injury edge amplifier: when injury impact is high AND market is affected,
+        // our model captures it more precisely than the bookmaker → lower edge threshold
+        const _hImpactHigh = _hImpact >= 2.0;
+        const _aImpactHigh = _aImpact >= 2.0;
+        const _injAffectsGoals = ['Over 2.5 Tore','Under 2.5 Tore','Beide Teams treffen','Beide Teams treffen: Nein'].includes(p.market);
+        const _injAffectsResult = ['Heimsieg','Auswärtssieg','DNB: Heimteam','DNB: Auswärtsteam'].includes(p.market);
+        if (p.value === null && (_hImpactHigh || _aImpactHigh)) {
+          // Injury-adjusted: lower threshold to 0.05 for affected markets
+          if ((_injAffectsGoals || _injAffectsResult) && edge >= 0.05) {
+            p.value = 'inj-edge';  // special: injury-created edge
+          }
+        }
       } else {
         p.value = null;
       }
@@ -2290,12 +2343,36 @@ function getBettingPicks(match, odds, leagueKey) {
   const _aFatigNote = _aFatigAtt < 1.0
     ? `<strong>😴 ${match.away}: nur ${_aRest}T Pause — Ermüdungseffekt (${Math.round((1-_aFatigAtt)*100)}% Angriffsdämpfung) eingerechnet.</strong>`
     : '';
-  const _hInjNote = (_hInj && (_hInj.attack > 0 || _hInj.defense > 0))
-    ? `<strong>🏥 ${match.home} Verletzte: ${(_hInj.notes||[]).slice(0,2).join(', ')||'Ausfälle im Kader'}.</strong>`
-    : '';
-  const _aInjNote = (_aInj && (_aInj.attack > 0 || _aInj.defense > 0))
-    ? `<strong>🏥 ${match.away} Verletzte: ${(_aInj.notes||[]).slice(0,2).join(', ')||'Ausfälle im Kader'}.</strong>`
-    : '';
+  // Injury impact notes — position-aware, market-specific
+  const _injImpactLabel = (inj, teamName) => {
+    if (!inj || (inj.total || 0) === 0) return '';
+    const imp = inj.impactScore || 0;
+    if (imp < 0.5) return '';
+    const areas = [];
+    if ((inj.goalkeeper || 0) > 0) areas.push(`Tor(${inj.goalkeeper})`);
+    if ((inj.attack || 0) > 0)     areas.push(`Angriff(${inj.attack})`);
+    if ((inj.defense || 0) > 0)    areas.push(`Abwehr(${inj.defense})`);
+    if ((inj.midfield || 0) > 0 && areas.length < 2) areas.push(`Mittelfeld(${inj.midfield})`);
+    const severity = imp >= 3.5 ? '🔴' : imp >= 2.0 ? '🟠' : '🟡';
+    const impStr = imp.toFixed(1);
+    const qNote = (inj.questionable || 0) > 0 ? ` + ${inj.questionable} fraglich` : '';
+    return `<strong>${severity} ${teamName}: Impact ${impStr}/6 — ${areas.join(', ')} [${inj.confirmed || 0} bestätigt${qNote}]</strong>`;
+  };
+  const _injGoalsNote = (hInj, aInj) => {
+    const hDelta = hInj ? Math.round((1 - _hInjAtt) * 100) : 0;
+    const aDelta = aInj ? Math.round((1 - _aInjAtt) * 100) : 0;
+    const hDef   = hInj ? Math.round((_hInjDef - 1) * 100) : 0;
+    const aDef   = aInj ? Math.round((_aInjDef - 1) * 100) : 0;
+    const parts = [];
+    if (hDelta >= 8) parts.push(`${match.home} -${hDelta}% xG`);
+    if (aDelta >= 8) parts.push(`${match.away} -${aDelta}% xG`);
+    if (hDef >= 6)  parts.push(`${match.home} +${hDef}% xGA`);
+    if (aDef >= 6)  parts.push(`${match.away} +${aDef}% xGA`);
+    return parts.length ? `<strong>📉 Verletzungsimpact auf Tore: ${parts.join(' | ')}. Modell eingerechnet.</strong>` : '';
+  };
+  const _hInjNote = _injImpactLabel(_hInj, match.home);
+  const _aInjNote = _injImpactLabel(_aInj, match.away);
+  const _goalsInjNote = _injGoalsNote(_hInj, _aInj);
 
   // ── Context notes appended inline to relevant pick reasons ────────────────
   // Principle: info appears where it's meaningful, not as separate chips.
@@ -2309,6 +2386,7 @@ function getBettingPicks(match, odds, leagueKey) {
     const extras = [];
     if (hHome || hGoal) { if (_hFatigNote) extras.push(_hFatigNote); if (_hInjNote) extras.push(_hInjNote); }
     if (hAway || hGoal) { if (_aFatigNote) extras.push(_aFatigNote); if (_aInjNote) extras.push(_aInjNote); }
+    if (hGoal && _goalsInjNote) extras.push(_goalsInjNote);
     if (extras.length) p.reason += '<br>' + extras.join('<br>');
   });
 
@@ -2667,8 +2745,18 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   const _igCtxBadges = [];
   if (_igHRest != null && _igHRest <= 5) _igCtxBadges.push({text:`😴 ${match.home}: ${_igHRest}T Pause`, col:_igHRest<=3?'#f85149':'#e3b341'});
   if (_igARest != null && _igARest <= 5) _igCtxBadges.push({text:`😴 ${match.away}: ${_igARest}T Pause`, col:_igARest<=3?'#f85149':'#e3b341'});
-  if (_igHInj && (_igHInj.attack>0||_igHInj.defense>0)) { const _n=(_igHInj.attack||0)+(_igHInj.defense||0); _igCtxBadges.push({text:`🏥 ${match.home}: ${_n} Ausfall${_n>1?'s':''}`, col:'#a78bfa'}); }
-  if (_igAInj && (_igAInj.attack>0||_igAInj.defense>0)) { const _n=(_igAInj.attack||0)+(_igAInj.defense||0); _igCtxBadges.push({text:`🏥 ${match.away}: ${_n} Ausfall${_n>1?'s':''}`, col:'#a78bfa'}); }
+  if (_igHInj && (_igHInj.total||0) > 0) {
+    const _imp = _igHInj.impactScore||0;
+    const _col = _imp >= 3.5 ? '#f85149' : _imp >= 2.0 ? '#e3b341' : '#a78bfa';
+    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
+    _igCtxBadges.push({text:`${_icon} ${match.home}: Impact ${_imp.toFixed(1)} (${_igHInj.confirmed||0} out)`, col:_col});
+  }
+  if (_igAInj && (_igAInj.total||0) > 0) {
+    const _imp = _igAInj.impactScore||0;
+    const _col = _imp >= 3.5 ? '#f85149' : _imp >= 2.0 ? '#e3b341' : '#a78bfa';
+    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
+    _igCtxBadges.push({text:`${_icon} ${match.away}: Impact ${_imp.toFixed(1)} (${_igAInj.confirmed||0} out)`, col:_col});
+  }
   const _igHasCtx = _igCtxBadges.length > 0;
   // Only show high/medium confidence picks in the infographic — low conf = not worth sharing
   const picks  = getBettingPicks(match, oddsD, leagueKey)
@@ -3056,6 +3144,11 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
         const vw=ctx.measureText('💰 Value').width+16;
         ctx.fillStyle='rgba(240,192,64,0.18)'; igRoundRect(ctx,W-68-vw,curY+16,vw,26,7,true,false);
         ctx.fillStyle='#f0c040'; ctx.textAlign='right'; ctx.fillText('💰 Value',W-68,curY+29);
+      } else if(p.value==='inj-edge'){
+        ctx.font='bold 13px system-ui,sans-serif';
+        const vw=ctx.measureText('🏥 Inj. Edge').width+16;
+        ctx.fillStyle='rgba(192,132,252,0.15)'; igRoundRect(ctx,W-68-vw,curY+16,vw,26,7,true,false);
+        ctx.fillStyle='#c084fc'; ctx.textAlign='right'; ctx.fillText('🏥 Inj. Edge',W-68,curY+29);
       } else if(p.odds){
         ctx.font='bold 26px system-ui,sans-serif'; ctx.fillStyle='#e6edf3';
         ctx.textAlign='right'; ctx.textBaseline='middle'; ctx.fillText(p.odds.toFixed(2),W-68,curY+30);
@@ -3213,13 +3306,15 @@ function shareTelegram(matchJson, leagueName, leagueFlag, leagueKey) {
   const ctxLines = [];
   if (_tgHRest != null && _tgHRest <= 5) ctxLines.push(`😴 ${match.home}: nur ${_tgHRest} Tage Pause`);
   if (_tgARest != null && _tgARest <= 5) ctxLines.push(`😴 ${match.away}: nur ${_tgARest} Tage Pause`);
-  if (_tgHInj && (_tgHInj.attack>0||_tgHInj.defense>0)) {
-    const _n=(_tgHInj.attack||0)+(_tgHInj.defense||0);
-    ctxLines.push(`🏥 ${match.home}: ${_n} Verletzte/r`);
+  if (_tgHInj && (_tgHInj.total||0) > 0) {
+    const _imp = _tgHInj.impactScore || 0;
+    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
+    ctxLines.push(`${_icon} ${match.home}: Verletzungs-Impact ${_imp.toFixed(1)}/6 (${_tgHInj.confirmed||0} bestätigt, ${_tgHInj.questionable||0} fraglich)`);
   }
-  if (_tgAInj && (_tgAInj.attack>0||_tgAInj.defense>0)) {
-    const _n=(_tgAInj.attack||0)+(_tgAInj.defense||0);
-    ctxLines.push(`🏥 ${match.away}: ${_n} Verletzte/r`);
+  if (_tgAInj && (_tgAInj.total||0) > 0) {
+    const _imp = _tgAInj.impactScore || 0;
+    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
+    ctxLines.push(`${_icon} ${match.away}: Verletzungs-Impact ${_imp.toFixed(1)}/6 (${_tgAInj.confirmed||0} bestätigt, ${_tgAInj.questionable||0} fraglich)`);
   }
 
   const hLabels = (match.homeStake?.labels||[]).map(l=>l.l).join(' · ') || '—';
@@ -3302,13 +3397,15 @@ function copyCard(matchJson, leagueName, leagueFlag, leagueKey, btn) {
   const ctxLines = [];
   if (_cpHRest != null && _cpHRest <= 5) ctxLines.push(`😴 ${match.home}: nur ${_cpHRest} Tage Pause`);
   if (_cpARest != null && _cpARest <= 5) ctxLines.push(`😴 ${match.away}: nur ${_cpARest} Tage Pause`);
-  if (_cpHInj && (_cpHInj.attack>0||_cpHInj.defense>0)) {
-    const _n=(_cpHInj.attack||0)+(_cpHInj.defense||0);
-    ctxLines.push(`🏥 ${match.home}: ${_n} Verletzte/r`);
+  if (_cpHInj && (_cpHInj.total||0) > 0) {
+    const _imp = _cpHInj.impactScore || 0;
+    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
+    ctxLines.push(`${_icon} ${match.home}: Verletzungs-Impact ${_imp.toFixed(1)}/6 (${_cpHInj.confirmed||0} bestätigt, ${_cpHInj.questionable||0} fraglich)`);
   }
-  if (_cpAInj && (_cpAInj.attack>0||_cpAInj.defense>0)) {
-    const _n=(_cpAInj.attack||0)+(_cpAInj.defense||0);
-    ctxLines.push(`🏥 ${match.away}: ${_n} Verletzte/r`);
+  if (_cpAInj && (_cpAInj.total||0) > 0) {
+    const _imp = _cpAInj.impactScore || 0;
+    const _icon = _imp >= 3.5 ? '🔴' : _imp >= 2.0 ? '🟠' : '🟡';
+    ctxLines.push(`${_icon} ${match.away}: Verletzungs-Impact ${_imp.toFixed(1)}/6 (${_cpAInj.confirmed||0} bestätigt, ${_cpAInj.questionable||0} fraglich)`);
   }
 
   const hLabels = (match.homeStake?.labels||[]).map(l=>l.l).join(' · ') || '—';
@@ -3615,10 +3712,10 @@ function buildKombiHtml(matchList) {
       if (p.conf === 'high') candidates.push({p, sc, m});
     }
   }
-  // Sort: hot-value first → value → plain, then by match score descending
+  // Sort: hot-value first → value → inj-edge → plain, then by match score descending
   candidates.sort((a, b) => {
-    const av = a.p.value === 'hot' ? 2 : a.p.value === 'value' ? 1 : 0;
-    const bv = b.p.value === 'hot' ? 2 : b.p.value === 'value' ? 1 : 0;
+    const av = a.p.value === 'hot' ? 3 : a.p.value === 'value' ? 2 : a.p.value === 'inj-edge' ? 1 : 0;
+    const bv = b.p.value === 'hot' ? 3 : b.p.value === 'value' ? 2 : b.p.value === 'inj-edge' ? 1 : 0;
     if (bv !== av) return bv - av;
     return b.sc - a.sc;
   });
@@ -3636,8 +3733,9 @@ function buildKombiHtml(matchList) {
     const oddsHtml = p.odds
       ? `<span class="kombi-odds-lbl">@ ${p.odds.toFixed(2)}</span>`
       : `<span class="kombi-odds-lbl" style="font-size:11px;color:var(--muted)">—</span>`;
-    const vTag = p.value === 'hot'   ? ' <span class="value-tag hot">🔥</span>'
-               : p.value === 'value' ? ' <span class="value-tag val">💰</span>' : '';
+    const vTag = p.value === 'hot'      ? ' <span class="value-tag hot">🔥</span>'
+               : p.value === 'value'   ? ' <span class="value-tag val">💰</span>'
+               : p.value === 'inj-edge'? ' <span class="value-tag inj">🏥</span>' : '';
     return `<div class="kombi-pick-row">
       <span class="kombi-icon">${p.icon}</span>
       <div class="kombi-body">
@@ -3710,8 +3808,9 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       : `<span style="font-size:10px;color:var(--muted);margin-left:4px;font-style:italic">keine Quote</span>`;
     const lowWarn  = oddsNum != null && oddsNum < 1.40
       ? `<span style="font-size:10px;color:#e3b341;margin-left:5px;font-weight:600" title="Quote unter 1.40 — wenig Wert">⚠ niedrig</span>` : '';
-    const valueTag = p.value === 'hot'   ? '<span class="value-tag hot">🔥 VALUE</span>'
-                   : p.value === 'value' ? '<span class="value-tag val">💰 Value</span>' : '';
+    const valueTag = p.value === 'hot'       ? '<span class="value-tag hot">🔥 VALUE</span>'
+                   : p.value === 'value'    ? '<span class="value-tag val">💰 Value</span>'
+                   : p.value === 'inj-edge' ? '<span class="value-tag inj">🏥 Inj. Edge</span>' : '';
     const confClass = {high:'conf-high',medium:'conf-medium',low:'conf-low'}[p.conf]||'conf-medium';
     const confLabel = {high:'★★★',medium:'★★☆',low:'★☆☆'}[p.conf]||'★★☆';
 
@@ -3818,17 +3917,25 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     ctxBadges.push(`<span class="ctx-badge ${cls}">😴 ${match.away}: ${_ctxARest}T Pause</span>`);
   }
   const _buildInjBadge = (inj, teamName) => {
-    if (!inj || (inj.attack === 0 && inj.defense === 0)) return '';
-    const n   = (inj.attack||0) + (inj.defense||0);
-    const cls = inj.attack > 0 ? 'ctx-injury-atk' : 'ctx-injury-def';
-    // Show up to 3 player names if available from API (_raw), else just count
-    const names = (inj._raw || []).slice(0, 3).map(p => {
-      const tag = p.type === 'Missing Fixture' ? '🔴 gesperrt' : '🟡 verletzt';
-      return `${p.player}${p.reason ? ' ('+p.reason+')' : ''} ${tag}`;
-    });
-    const nameStr = names.length
-      ? `<span class="inj-names">${names.join(' · ')}</span>` : '';
-    return `<span class="ctx-badge ${cls}">🏥 ${teamName}: ${n} Ausfall${n>1?'s':''}</span>${nameStr}`;
+    if (!inj || (inj.total||0) === 0) return '';
+    const imp  = inj.impactScore || 0;
+    if (imp < 0.3 && (inj.confirmed||0) === 0) return '';
+    const icon = imp >= 3.5 ? '🔴' : imp >= 2.0 ? '🟠' : '🟡';
+    const cls  = imp >= 3.5 ? 'ctx-injury-high' : imp >= 2.0 ? 'ctx-injury-atk' : 'ctx-injury-def';
+    // Position breakdown label
+    const areas = [];
+    if ((inj.goalkeeper||0) > 0) areas.push(`Tor ${inj.goalkeeper}`);
+    if ((inj.attack||0)    > 0) areas.push(`Angriff ${inj.attack}`);
+    if ((inj.defense||0)   > 0) areas.push(`Abwehr ${inj.defense}`);
+    if ((inj.midfield||0)  > 0 && areas.length < 3) areas.push(`MF ${inj.midfield}`);
+    const areaStr = areas.length ? ` (${areas.join(', ')})` : '';
+    const qStr = (inj.questionable||0) > 0 ? ` + ${inj.questionable} fragl.` : '';
+    const badge = `<span class="ctx-badge ${cls}">${icon} ${teamName}: Impact ${imp.toFixed(1)} — ${inj.confirmed||0} out${qStr}${areaStr}</span>`;
+    // Show up to 3 confirmed out with reason
+    const confirmed = (inj._raw || []).filter(p => p.type === 'Missing Fixture').slice(0, 3);
+    const nameStr = confirmed.length
+      ? `<span class="inj-names">${confirmed.map(p => `${p.player}${p.reason ? ' ('+p.reason+')' : ''}`).join(' · ')}</span>` : '';
+    return badge + nameStr;
   };
   const hInjHtml = _buildInjBadge(_ctxHInj, match.home);
   const aInjHtml = _buildInjBadge(_ctxAInj, match.away);
@@ -5579,21 +5686,57 @@ function _injectPreMatchAndRerender() {
       if (pm.h2h && pm.h2h.games >= 3) match.h2h = pm.h2h;
 
       // Injuries from API (overrides static config when API has data)
-      const _buildInj = (list) => ({
-        attack:  list.length,  // conservative: count all as attack impact
-        defense: 0,
-        notes:   list.map(i =>
-          `${i.player} (${i.type === 'Missing Fixture' ? 'Gesperrt' : 'Verletzt'}${i.reason ? ' — ' + i.reason : ''})`
-        ),
-        _raw: list
-      });
+      const _buildInj = (list, serverSummary) => {
+        // If server already computed full summary (has position data), use it
+        if (serverSummary && serverSummary.impactScore != null) {
+          return serverSummary;
+        }
+        // Fallback: browser-fetched injuries, no position data
+        // Heuristic: ~20% GK chance, ~30% attack, ~25% defense, ~25% midfield for unknown
+        const confirmed   = list.filter(i => i.type === 'Missing Fixture' || i.type === 'Gesperrt/Verletzt');
+        const questionable = list.filter(i => i.type === 'Questionable' || i.type === 'Fraglich');
+        // If entry has position data (e.g. came from server-enriched list)
+        const hasPos = list.some(i => i.position);
+        const count = (arr, pos) => arr.filter(i => i.position === pos).length;
+        let inj;
+        if (hasPos) {
+          inj = {
+            goalkeeper:   count(confirmed, 'G'),
+            defense:      count(confirmed, 'D'),
+            midfield:     count(confirmed, 'M'),
+            attack:       count(confirmed, 'F'),
+            confirmed:    confirmed.length,
+            questionable: questionable.length,
+            total:        list.length,
+            notes:        list.map(i => `${i.player} (${i.type === 'Missing Fixture' ? 'Gesperrt/Verletzt' : 'Fraglich'}${i.reason ? ' — ' + i.reason : ''})`),
+            _raw: list
+          };
+        } else {
+          // No position data — use total count, distribute by average league statistics
+          // On average: ~15% GK, ~28% DEF, ~32% MID, ~25% FWD of injured players
+          const c = confirmed.length;
+          inj = {
+            goalkeeper:   Math.round(c * 0.15),
+            defense:      Math.round(c * 0.28),
+            midfield:     Math.round(c * 0.32),
+            attack:       Math.round(c * 0.25),
+            confirmed:    c,
+            questionable: questionable.length,
+            total:        list.length,
+            notes:        list.map(i => `${i.player} (${i.type === 'Missing Fixture' ? 'Gesperrt/Verletzt' : 'Fraglich'}${i.reason ? ' — ' + i.reason : ''})`),
+            _raw: list
+          };
+        }
+        inj.impactScore = computeClientInjuryImpact(inj);
+        return inj;
+      };
       if (pm.injuries.home.length) {
-        if (!match.homeForm) match.homeForm = {};
-        match.homeForm.injuries = _buildInj(pm.injuries.home);
+        match.homeForm = match.homeForm || {};
+        match.homeForm.injuries = _buildInj(pm.injuries.home, pm.injurySummary?.home || null);
       }
       if (pm.injuries.away.length) {
-        if (!match.awayForm) match.awayForm = {};
-        match.awayForm.injuries = _buildInj(pm.injuries.away);
+        match.awayForm = match.awayForm || {};
+        match.awayForm.injuries = _buildInj(pm.injuries.away, pm.injurySummary?.away || null);
       }
     }
   }

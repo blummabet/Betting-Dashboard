@@ -102,6 +102,49 @@ function fuzzy(apiName, localName) {
   return false;
 }
 
+// ── Squad position cache (7-day TTL) ────────────────────────────────────────
+const _squadCache = {};  // teamId → { playerName: 'G'|'D'|'M'|'F' }
+const SQUAD_TTL = 7 * 24 * 3600 * 1000;
+
+async function fetchSquadPositions(teamId) {
+  if (!teamId) return {};
+  const cached = _squadCache[teamId];
+  if (cached && Date.now() - cached.ts < SQUAD_TTL) return cached.data;
+  try {
+    const data = await apiFetch(`/players/squads?team=${teamId}`);
+    const players = (data.response || [])[0]?.players || [];
+    const posMap = {};
+    for (const p of players) {
+      const pos = p.position || '';
+      const code = pos.startsWith('Goal') ? 'G'
+                 : pos.startsWith('Def')  ? 'D'
+                 : pos.startsWith('Mid')  ? 'M'
+                 : pos.startsWith('For')  ? 'F'
+                 : 'M';  // default midfield
+      // Store by normalized name (lowercase, trim)
+      posMap[(p.name || '').toLowerCase().trim()] = code;
+      if (p.id) posMap[`id_${p.id}`] = code;
+    }
+    _squadCache[teamId] = { ts: Date.now(), data: posMap };
+    return posMap;
+  } catch(e) { return {}; }
+}
+
+// ── Compute injury impact score (0–6 scale) ──────────────────────────────────
+function computeInjuryImpact(inj) {
+  // Weights per position: based on how replaceable each role is
+  let sc = 0;
+  sc += (inj.goalkeeper || 0) * 1.1;          // GK: hardest to replace truly
+  sc += Math.min(inj.attack || 0, 4) * 0.95;  // each striker directly reduces xG
+  if ((inj.attack || 0) >= 3) sc += 0.7;      // compound: no real striker crisis
+  sc += Math.min(inj.defense || 0, 4) * 0.60; // each CB/fullback: leaky defence
+  if ((inj.defense || 0) >= 3) sc += 0.5;     // compound: exposed backline
+  sc += Math.min(inj.midfield || 0, 5) * 0.30;// midfielders: less critical individually
+  sc += (inj.goalkeeper || 0) >= 2 ? 1.0 : 0; // 2nd GK missing = crisis
+  sc += (inj.questionable || 0) * 0.25;        // questionable at half-weight
+  return Math.min(6.0, Math.round(sc * 10) / 10);
+}
+
 // ── Parse bookmakers array → odds object (same format as HTML) ───────────────
 // Accepts full bookmakers array; Pinnacle takes priority for 1X2/Goals.
 // Merges BTTS, Double Chance, and Cards from any available bookmaker.
@@ -202,6 +245,7 @@ async function fetchAllPrematchData() {
           refereeStats: null,
           date:         fxDate,
           injuries:     { home: [], away: [] },
+          injurySummary: { home: null, away: null },
           h2h:          null,
           isFinished:   FINISHED.has(fxStatus),
           odds:         null
@@ -217,7 +261,15 @@ async function fetchAllPrematchData() {
   console.log(`[Server] Step1 fertig: ${fixtures.length} Spiele total`);
   if (!fixtures.length) return [];
 
-  // ── Step 2: Injuries (parallel batches of 10) ─────────────────────────────
+  // ── Step 1.5: Squad positions for all teams (7-day cache) ───────────────────
+  console.log(`[Server] Step1.5: Squad-Positionen für alle Teams...`);
+  const uniqueTeamIds = [...new Set(
+    fixtures.flatMap(d => [d.homeTeamId, d.awayTeamId].filter(Boolean))
+  )];
+  await Promise.allSettled(uniqueTeamIds.map(id => fetchSquadPositions(id)));
+  console.log(`  Step1.5 fertig: ${uniqueTeamIds.length} Teams, Squad-Cache aufgebaut`);
+
+  // ── Step 2: Injuries with position data (parallel batches of 10) ────────────
   console.log(`[Server] Step2: Verletzungen für ${fixtures.length} Spiele...`);
   let injOk = 0;
   for (let i = 0; i < fixtures.length; i += 10) {
@@ -227,24 +279,64 @@ async function fetchAllPrematchData() {
         const data = await apiFetch(`/injuries?fixture=${d.fixtureId}`);
         const injuries = data.response || [];
         const seen = new Set();
+        const homePosMap = _squadCache[d.homeTeamId]?.data || {};
+        const awayPosMap = _squadCache[d.awayTeamId]?.data || {};
+
         for (const inj of injuries) {
           const pName = inj.player?.name || '?';
           if (seen.has(pName)) continue;
           seen.add(pName);
+          const injType = inj.player?.type || 'Injured';  // "Missing Fixture" | "Questionable"
+          const isHome = fuzzy(inj.team?.name || '', d.homeTeamName);
+          const posMap = isHome ? homePosMap : awayPosMap;
+          // Look up position: try by ID first, then normalized name
+          const pId = inj.player?.id;
+          const pPos = (pId && posMap[`id_${pId}`])
+            || posMap[(pName).toLowerCase().trim()]
+            || 'M';  // default midfield if unknown
           const entry = {
-            player: pName,
-            type:   inj.player?.type   || 'Injured',
-            reason: inj.player?.reason || null
+            player:   pName,
+            position: pPos,          // 'G' | 'D' | 'M' | 'F'
+            type:     injType,       // 'Missing Fixture' | 'Questionable'
+            reason:   inj.player?.reason || null
           };
-          if (fuzzy(inj.team?.name || '', d.homeTeamName)) d.injuries.home.push(entry);
-          else d.injuries.away.push(entry);
+          if (isHome) d.injuries.home.push(entry);
+          else        d.injuries.away.push(entry);
         }
+
+        // Compute structured injury summary for each side
+        const _buildInjSummary = (list) => {
+          const confirmed   = list.filter(i => i.type === 'Missing Fixture');
+          const questionable = list.filter(i => i.type !== 'Missing Fixture');
+          const count = (arr, pos) => arr.filter(i => i.position === pos).length;
+          const inj = {
+            goalkeeper:   count(confirmed, 'G'),
+            defense:      count(confirmed, 'D'),
+            midfield:     count(confirmed, 'M'),
+            attack:       count(confirmed, 'F'),
+            confirmed:    confirmed.length,
+            questionable: questionable.length,
+            total:        list.length,
+            notes:        list.map(i =>
+              `${i.player} (${i.type === 'Missing Fixture' ? 'Gesperrt/Verletzt' : 'Fraglich'}${i.reason ? ' — ' + i.reason : ''})`
+            ),
+            _raw: list
+          };
+          inj.impactScore = computeInjuryImpact(inj);
+          return inj;
+        };
+
+        d.injurySummary = {
+          home: _buildInjSummary(d.injuries.home),
+          away: _buildInjSummary(d.injuries.away)
+        };
+
         if (injuries.length) injOk++;
       } catch(e) {}
     }));
     if (i + 10 < fixtures.length) await sleep(BATCH_DELAY);
   }
-  console.log(`  Step2 fertig: ${injOk} Spiele mit Verletzungsdaten`);
+  console.log(`  Step2 fertig: ${injOk} Spiele mit Verletzungsdaten (inkl. Positionen)`);
 
   // ── Step 3: H2H (parallel batches of 10) ─────────────────────────────────
   const h2hable = fixtures.filter(d => d.homeTeamId && d.awayTeamId);
