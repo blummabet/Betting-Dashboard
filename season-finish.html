@@ -2246,15 +2246,12 @@ function getBettingPicks(match, odds, leagueKey) {
     const pct = `${_h2hBttsMod > 0 ? '+' : ''}${Math.round(_h2hBttsMod * 100)}%`;
     _modChips.push(`<span class="mod-chip mod-h2h">📊 H2H BTTS ${dir}${pct}</span>`);
   }
-  if (_h2hSample && _h2hO25Mod === 0 && _h2hBttsMod === 0 && h2hN >= 5) {
-    _modChips.push(`<span class="mod-chip mod-h2h mod-neutral">📊 H2H neutral (${h2hN} Duelle)</span>`);
-  }
-
-  // Referee modifier
+  // Referee modifier — show always when referee known (even if modifier = 0, name is useful info)
   if (_refStats?.name) {
-    if (_refCardMod !== 0) {
-      const dir = _refCardMod > 0 ? '▲' : '▼';
-      _modChips.push(`<span class="mod-chip mod-ref">👨‍⚖️ ${_refStats.name} ${dir}${_refAvg} K/Sp</span>`);
+    if (_refCardMod > 0) {
+      _modChips.push(`<span class="mod-chip mod-ref">👨‍⚖️ ${_refStats.name}: Ø ${_refAvg} K/Sp — strenger Pfeifer ▲</span>`);
+    } else if (_refCardMod < 0) {
+      _modChips.push(`<span class="mod-chip mod-ref" style="color:#79c0ff;border-color:#1d4e7a;background:#001a2a">👨‍⚖️ ${_refStats.name}: Ø ${_refAvg} K/Sp — laxer Pfeifer ▼</span>`);
     } else if (_refAvg != null) {
       _modChips.push(`<span class="mod-chip mod-ref mod-neutral">👨‍⚖️ ${_refStats.name}: Ø ${_refAvg} K/Sp</span>`);
     } else {
@@ -4110,7 +4107,7 @@ async function reloadPreMatchData(btn) {
   // Clear all pre-match + referee caches so everything is re-fetched
   try {
     Object.keys(localStorage)
-      .filter(k => k.startsWith('pmData_') || k === 'refStats_v3' || k === 'h2hData_v2')
+      .filter(k => k.startsWith('pmData_') || k === 'refStats_v4' || k === 'h2hData_v2')
       .forEach(k => localStorage.removeItem(k));
   } catch(e) {}
   window._preMatchData   = {};
@@ -4122,7 +4119,7 @@ async function reloadPreMatchData(btn) {
 // ── Clear stale pre-match caches from old versions ─────────────────────────
 try {
   Object.keys(localStorage)
-    .filter(k => k.startsWith('pmData_v1_') || k.startsWith('pmData_v2_'))
+    .filter(k => k.startsWith('pmData_v1_') || k.startsWith('pmData_v2_') || k.startsWith('pmData_v3_') || k.startsWith('pmData_v4_') || k === 'refStats_v3')
     .forEach(k => localStorage.removeItem(k));
 } catch(e) {}
 
@@ -4931,7 +4928,7 @@ async function _apifbFetchH2H(homeTeamId, awayTeamId) {
 // ── Compute referee card stats — cached 48h ─────────────────────────────────
 async function _apifbGetRefereeStats(refereeName) {
   if (!refereeName) return null;
-  const REF_CACHE_KEY = 'refStats_v3';
+  const REF_CACHE_KEY = 'refStats_v4';
   const REF_CACHE_TTL = 48 * 3600 * 1000;
 
   // Return cached if fresh
@@ -5006,15 +5003,18 @@ window._preMatchLoaded = false;
 
 async function loadPreMatchData() {
   // Build date range: today − 1 day through today + 6 days (full week window)
-  // Negative offset catches yesterday's late games still in config
+  // IMPORTANT: use LOCAL date components (not toISOString/UTC) to match parseGermanDate behavior.
+  // parseGermanDate returns local midnight, so toISOString() shifts to UTC (e.g. Vienna midnight = prev-day UTC).
+  // All date comparisons must stay in local time to avoid off-by-one mismatches.
+  const _localIso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   const today = new Date();
   const dates  = [-1, 0, 1, 2, 3, 4, 5, 6].map(i => {
-    const d = new Date(today.getTime() + i * 864e5);
-    return d.toISOString().slice(0, 10);
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+    return _localIso(d);
   });
 
   // Serve from cache (key = today's date, TTL 3h)
-  const cacheKey = `pmData_v3_${dates[0]}`;
+  const cacheKey = `pmData_v5_${dates[0]}`;
   const PM_TTL   = 3 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
@@ -5035,11 +5035,11 @@ async function loadPreMatchData() {
 
     for (const [, L] of Object.entries(LEAGUES)) {
       for (const match of (L.fixtures || [])) {
-        // Resolve German date to ISO
+        // Resolve German date to local ISO (NOT toISOString which shifts to UTC)
         let matchDateIso = null;
         try {
           const md = parseGermanDate(match.date);
-          matchDateIso = md.toISOString().slice(0, 10);
+          matchDateIso = _localIso(md);
         } catch(e) { continue; }
         if (matchDateIso !== date) continue;
 
