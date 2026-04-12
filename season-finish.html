@@ -5190,9 +5190,10 @@ async function _apifbFetchDate(dateIso) {
   const allFixtures = [];
   const errors = [];
   for (const [lKey, leagueId] of Object.entries(_RESULT_LEAGUE_IDS)) {
+    await new Promise(r => setTimeout(r, 150)); // pace requests to avoid rate limiting
     try {
       const resp = await fetch(
-        `${APISPORTS_BASE}/fixtures?date=${dateIso}&league=${leagueId}&timezone=Europe%2FVienna`,
+        `${APISPORTS_BASE}/fixtures?date=${dateIso}&league=${leagueId}&season=2025&timezone=Europe%2FVienna`,
         { headers: { 'x-apisports-key': APISPORTS_KEY } }
       );
       if (!resp.ok) {
@@ -6127,20 +6128,62 @@ async function fetchSofaResults(btn) {
     _showDebug(dbg);
   }
 
-  // ── Fallback: date+league fetching for picks without fixtureId ────────────
-  // Fetches per league (not globally) to avoid 1MB proxy size limit
+  // ── Fallback: targeted (date × league) fetching for picks without fixtureId ──
+  // Uses the stored leagueKey to fetch only the specific league needed per pick —
+  // avoids rate limits by not hammering all 10 leagues × all 5 dates at once.
+  // Also adds &season=2025 which is required for API-Football to return results.
   if (withoutIds.length) {
     dbg.push(`\n📅 Datum-Abruf (${withoutIds.length} Spiele ohne ID):`);
-    const dates = [...new Set(withoutIds.flatMap(e => [e.dateIso, _isoAdj(e.dateIso,1), _isoAdj(e.dateIso,-1)]))].sort();
-    for (const date of dates) {
-      if (apifbByDate[date]) continue; // already loaded via ID path
-      btn.textContent = `⏳ Lade ${date}…`;
-      const { fixtures, error } = await _apifbFetchDate(date);
-      if (error) { dbg.push(`  ⚠ ${date}: ${error}`); continue; }
-      apifbByDate[date] = [...(apifbByDate[date] || []), ...fixtures];
-      const done = fixtures.filter(f => ['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short));
-      dbg.push(`  📅 ${date}: ${done.length} abgeschlossene Spiele (${Object.keys(_RESULT_LEAGUE_IDS).length} Ligen)`);
+
+    // Build minimal set of (date, leagueId) combos based on which picks actually need them
+    const _comboSeen = new Set();
+    const _comboList = [];
+    for (const e of withoutIds) {
+      const lkUp = (e.leagueKey || '').toUpperCase();
+      const leagueId = _RESULT_LEAGUE_IDS[lkUp];
+      if (!leagueId) {
+        // leagueKey not in map — fall back to fetching all tracked leagues for this date
+        for (const [lk, lid] of Object.entries(_RESULT_LEAGUE_IDS)) {
+          for (const d of [e.dateIso, _isoAdj(e.dateIso, 1), _isoAdj(e.dateIso, -1)]) {
+            const key = `${d}|${lid}`;
+            if (!_comboSeen.has(key)) { _comboSeen.add(key); _comboList.push({ date: d, leagueId: lid, lKey: lk }); }
+          }
+        }
+        continue;
+      }
+      // Only fetch the specific league this pick belongs to, ±1 day for timezone drift
+      for (const d of [e.dateIso, _isoAdj(e.dateIso, 1), _isoAdj(e.dateIso, -1)]) {
+        const key = `${d}|${leagueId}`;
+        if (!_comboSeen.has(key)) { _comboSeen.add(key); _comboList.push({ date: d, leagueId, lKey: lkUp }); }
+      }
     }
+
+    dbg.push(`  → ${_comboList.length} Liga×Datum Kombinationen (mit 150ms Pause)`);
+    _showDebug(dbg);
+
+    for (const { date, leagueId, lKey } of _comboList) {
+      await new Promise(r => setTimeout(r, 150)); // ~400 req/min — stays under API rate limit
+      btn.textContent = `⏳ ${lKey} ${date}…`;
+      try {
+        const resp = await fetch(
+          `${APISPORTS_BASE}/fixtures?date=${date}&league=${leagueId}&season=2025&timezone=Europe%2FVienna`,
+          { headers: { 'x-apisports-key': APISPORTS_KEY } }
+        );
+        if (!resp.ok) {
+          const t = await resp.text().catch(()=>'');
+          dbg.push(`  ⚠ ${lKey} ${date}: HTTP ${resp.status}: ${t.slice(0,50)}`);
+          continue;
+        }
+        const data = await resp.json();
+        if (data.errors?.rateLimit) { dbg.push(`  ⚠ ${lKey} ${date}: Rate limit — verlangsame…`); await new Promise(r => setTimeout(r, 2000)); continue; }
+        const fxs = data.response || [];
+        (apifbByDate[date] = apifbByDate[date] || []).push(...fxs);
+        if (fxs.length) dbg.push(`  ✅ ${lKey} ${date}: ${fxs.length} Spiele geladen`);
+      } catch(e) { dbg.push(`  ⚠ ${lKey} ${date}: ${e.message}`); }
+    }
+
+    const _rdone = Object.values(apifbByDate).flatMap(a=>a).filter(f=>['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short)).length;
+    dbg.push(`  📊 ${_rdone} abgeschlossene Spiele über alle geladenen Daten`);
     _showDebug(dbg);
   }
   // ── Summary: total fixtures loaded ──────────────────────────────────────────
