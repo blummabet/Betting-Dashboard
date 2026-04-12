@@ -102,7 +102,8 @@ def main():
                 print(f"  ⚠ Unerwartete Antwort [{lkey} {date}]: {str(data)[:200]}")
                 continue
 
-            if data.get("errors", {}).get("rateLimit"):
+            errors = data.get("errors", {})
+            if isinstance(errors, dict) and errors.get("rateLimit"):
                 print(f"  ⚠ Rate limit [{lkey} {date}] — warte 5s…")
                 time.sleep(5)
                 continue
