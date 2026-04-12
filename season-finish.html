@@ -4091,10 +4091,10 @@ fetch('./stats_cache.json')
     }
   });
 
-// Load live odds in background, then re-render current view
-loadAllOdds().then(() => {
-  renderLeague(window._currentLeague);
-});
+// NOTE: loadAllOdds() (the-odds-api.com, alte Free-Plan API) ist deaktiviert.
+// Quoten kommen jetzt von api-football via prematch-server.js (Pro Plan).
+// Falls das alte Fallback wieder gebraucht wird: loadAllOdds() hier wieder einkommentieren.
+// loadAllOdds().then(() => { renderLeague(window._currentLeague); });
 
 // Load Pro plan pre-match data in background — re-renders cards when ready
 // Small delay to let the initial render finish first
@@ -5301,6 +5301,60 @@ async function loadPreMatchData() {
       return;
     }
   } catch(e) {}
+
+  // ── Lokaler Server? Wenn ja: Server macht die API-Calls, kein CORS-Problem ──
+  // Starten mit: node prematch-server.js  →  http://localhost:3001
+  // Wenn Server nicht läuft: normaler Browser-Fallback (CORS-Proxy)
+  try {
+    const _sResp = await fetch('http://localhost:3001/prematch', {
+      signal: AbortSignal.timeout(4000)
+    });
+    if (_sResp.ok) {
+      const _sData = await _sResp.json();
+      const _sFxs  = _sData.fixtures || [];
+      if (_sFxs.length > 0) {
+        console.log(`[PreMatch] ✅ Local Server: ${_sFxs.length} Spiele empfangen`);
+        const _sResult = {};
+        for (const [, L] of Object.entries(LEAGUES)) {
+          for (const match of (L.fixtures || [])) {
+            let mDateIso = null;
+            try { mDateIso = _localIso(parseGermanDate(match.date)); } catch(e) { continue; }
+            const sf = _sFxs.find(f =>
+              f.date === mDateIso &&
+              _fuzzyTeam(f.homeTeamName || '', match.home) &&
+              _fuzzyTeam(f.awayTeamName || '', match.away)
+            );
+            if (!sf) continue;
+            _sResult[`${match.home}|${match.away}`] = {
+              fixtureId:    sf.fixtureId,
+              referee:      sf.referee      || null,
+              refereeStats: sf.refereeStats || null,
+              homeTeamId:   sf.homeTeamId,
+              awayTeamId:   sf.awayTeamId,
+              injuries:     sf.injuries     || { home: [], away: [] },
+              h2h:          sf.h2h          || null,
+              isFinished:   sf.isFinished   || false,
+              odds:         sf.odds         || null
+            };
+          }
+        }
+        if (Object.keys(_sResult).length > 0) {
+          window._preMatchData   = _sResult;
+          window._preMatchLoaded = true;
+          try { localStorage.setItem(cacheKey, JSON.stringify({ ts: _sData.ts || Date.now(), data: _sResult })); } catch(e) {}
+          _injectPreMatchAndRerender();
+          console.log(`[PreMatch] Server-Daten: ${Object.keys(_sResult).length} Spiele gematcht`);
+          return;
+        }
+      }
+    }
+  } catch(e) {
+    if (!e.message?.includes('abort') && !e.message?.includes('Failed to fetch')) {
+      console.log('[PreMatch] Local Server Fehler:', e.message?.slice(0, 60));
+    } else {
+      console.log('[PreMatch] Local Server nicht aktiv → Browser-Fallback (CORS-Proxy)');
+    }
+  }
 
   const result = {};
 
