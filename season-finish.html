@@ -4171,10 +4171,10 @@ async function showPreMatchDebug() {
 
 async function reloadPreMatchData(btn) {
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Lädt…'; }
-  // Clear all pre-match + referee caches so everything is re-fetched
+  // Clear only the top-level fixture cache — keep H2H + referee caches (expensive, long-lived)
   try {
     Object.keys(localStorage)
-      .filter(k => k.startsWith('pmData_') || k === 'refStats_v5' || k === 'h2hData_v2')
+      .filter(k => k.startsWith('pmData_'))
       .forEach(k => localStorage.removeItem(k));
   } catch(e) {}
   window._preMatchData   = {};
@@ -4876,6 +4876,13 @@ async function _apifbFetchStats(fixtureId) {
 
 // ── Fetch injuries for a specific fixture ───────────────────────────────────
 async function _apifbFetchInjuries(fixtureId) {
+  // Cache 24h — injuries don't change often
+  const INJ_KEY = 'injData_v1';
+  const INJ_TTL = 24 * 3600 * 1000;
+  try {
+    const cache = JSON.parse(localStorage.getItem(INJ_KEY) || '{}');
+    if (cache[fixtureId] && Date.now() - cache[fixtureId].ts < INJ_TTL) return cache[fixtureId].data;
+  } catch(e) {}
   try {
     const resp = await fetch(
       `${APISPORTS_BASE}/injuries?fixture=${fixtureId}`,
@@ -4883,7 +4890,15 @@ async function _apifbFetchInjuries(fixtureId) {
     );
     if (!resp.ok) return null;
     const data = await resp.json();
-    return data.response || null;
+    const result = data.response || null;
+    if (result) {
+      try {
+        const cache = JSON.parse(localStorage.getItem(INJ_KEY) || '{}');
+        cache[fixtureId] = { ts: Date.now(), data: result };
+        localStorage.setItem(INJ_KEY, JSON.stringify(cache));
+      } catch(e) {}
+    }
+    return result;
     // Each entry: { player:{id,name,photo,type,reason}, team:{id,name} }
   } catch(e) { return null; }
 }
@@ -5101,7 +5116,7 @@ async function loadPreMatchData() {
 
   // Serve from cache (key = today's local date, TTL 3h)
   const cacheKey = `pmData_v6_${todayIso}`;
-  const PM_TTL   = 3 * 3600 * 1000;
+  const PM_TTL   = 23 * 3600 * 1000; // 23h — survive the whole day, reset with new key tomorrow
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
     if (cached && Date.now() - cached.ts < PM_TTL && Object.keys(cached.data).length > 0) {
@@ -5163,9 +5178,14 @@ async function loadPreMatchData() {
     const injuries = await _apifbFetchInjuries(d.fixtureId);
     if (!injuries?.length) return;
     const homeName = key.split('|')[0];
+    // Deduplicate: API sometimes returns each player twice
+    const _seen = new Set();
     for (const inj of injuries) {
+      const pName = inj.player?.name || '?';
+      if (_seen.has(pName)) continue;
+      _seen.add(pName);
       const entry = {
-        player: inj.player?.name  || '?',
+        player: pName,
         type:   inj.player?.type  || 'Injured',
         reason: inj.player?.reason || null
       };
@@ -5237,9 +5257,18 @@ async function loadPreMatchData() {
     || _oddsRawSample?.find(b => b.id === 8)?.id
     || (_oddsRawSample?.[0]?.id);
   if (_pinnacleId) console.log(`[PreMatch] Step5 using bookmaker id=${_pinnacleId}`);
+  const _ODDS_CACHE_KEY = 'oddsData_v1';
+  const _ODDS_TTL = 6 * 3600 * 1000;
   await Promise.allSettled(Object.entries(result).map(async ([, d]) => {
     if (!d.fixtureId || d.isFinished) return; // no odds for completed games
     try {
+      // Serve odds from cache (6h TTL) — saves API quota
+      try {
+        const _oc = JSON.parse(localStorage.getItem(_ODDS_CACHE_KEY) || '{}');
+        if (_oc[d.fixtureId] && Date.now() - _oc[d.fixtureId].ts < _ODDS_TTL) {
+          d.odds = _oc[d.fixtureId].data; _oddsOk++; return;
+        }
+      } catch(e) {}
       const _bmParam = _pinnacleId ? `&bookmaker=${_pinnacleId}` : '';
       const resp = await fetch(
         `${APISPORTS_BASE}/odds?fixture=${d.fixtureId}${_bmParam}`,
@@ -5278,7 +5307,14 @@ async function loadPreMatchData() {
           }
         }
       }
-      if (Object.keys(r).length) { d.odds = r; _oddsOk++; } else _oddsFail++;
+      if (Object.keys(r).length) {
+        d.odds = r; _oddsOk++;
+        try {
+          const _oc = JSON.parse(localStorage.getItem(_ODDS_CACHE_KEY) || '{}');
+          _oc[d.fixtureId] = { ts: Date.now(), data: r };
+          localStorage.setItem(_ODDS_CACHE_KEY, JSON.stringify(_oc));
+        } catch(e) {}
+      } else _oddsFail++;
     } catch(e) { _oddsFail++; }
   }));
   console.log(`[PreMatch] Step5 Odds: ${_oddsOk} OK · ${_oddsFail} fail/empty`);
