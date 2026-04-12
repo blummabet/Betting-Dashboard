@@ -1,5 +1,5 @@
 {
-  "ts": 1776001981069,
+  "ts": 1776003084871,
   "fixtures": [
     {
       "fixtureId": 1378174,
@@ -124,24 +124,7 @@
           "impactScore": 2.6
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 2,
-        "draws": 5,
-        "awayWins": 3,
-        "lastMeetingYear": 2026,
-        "avgGoals": 2,
-        "over25Rate": 0.4,
-        "over35Rate": 0.2,
-        "bttsRate": 0.4,
-        "lastResults": [
-          "L",
-          "W",
-          "D",
-          "L",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null
     },
@@ -351,33 +334,143 @@
       "refereeStats": null,
       "date": "2026-04-11",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "M. Felici",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "R. Idrissi",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "L. Pavoletti",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          }
+        ],
+        "away": [
+          {
+            "player": "M. Collocolo",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "Y. Maleh",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Red Card"
+          },
+          {
+            "player": "F. Moumbagna",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "M. Thorsby",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "J. Vardy",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 1,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 3,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 3,
+          "notes": [
+            "M. Felici (Gesperrt/Verletzt — Knee Injury)",
+            "R. Idrissi (Gesperrt/Verletzt — Knee Injury)",
+            "L. Pavoletti (Gesperrt/Verletzt — Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "M. Felici",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "R. Idrissi",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "L. Pavoletti",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            }
+          ],
+          "impactScore": 1.2
         },
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 0,
+          "midfield": 5,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 5,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 5,
+          "notes": [
+            "M. Collocolo (Gesperrt/Verletzt — Injury)",
+            "Y. Maleh (Gesperrt/Verletzt — Red Card)",
+            "F. Moumbagna (Gesperrt/Verletzt — Muscle Injury)",
+            "M. Thorsby (Gesperrt/Verletzt — Injury)",
+            "J. Vardy (Gesperrt/Verletzt — Muscle Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "M. Collocolo",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "Y. Maleh",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Red Card"
+            },
+            {
+              "player": "F. Moumbagna",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "M. Thorsby",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "J. Vardy",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            }
+          ],
+          "impactScore": 1.5
         }
       },
       "h2h": {
@@ -484,25 +577,41 @@
           "impactScore": 0.9
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 4,
+        "homeWins": 0,
+        "draws": 1,
+        "awayWins": 3,
+        "lastMeetingYear": 2026,
+        "avgGoals": 2,
+        "over25Rate": 0.25,
+        "over35Rate": 0.25,
+        "bttsRate": 0,
+        "lastResults": [
+          "D",
+          "L",
+          "L",
+          "L"
+        ]
+      },
       "isFinished": false,
       "odds": {
-        "hw": 3,
-        "dr": 3.3,
+        "hw": 3.1,
+        "dr": 3.25,
         "aw": 2.38,
         "o15": 1.28,
         "o25": 1.91,
         "u25": 1.91,
-        "o35": 3.2,
-        "u35": 1.36,
+        "o35": 3.4,
+        "u35": 1.33,
         "bttsY": 1.7,
         "bttsN": 2.05,
         "dc1X_bkr": 1.57,
         "dcX2_bkr": 1.36,
         "cards_o35": 1.62,
         "cards_u35": 2.2,
-        "cards_o45": 2.1,
-        "cards_u45": 1.67,
+        "cards_o45": 2.05,
+        "cards_u45": 1.75,
         "cards_o55": 3.1
       }
     },
@@ -564,25 +673,7 @@
         ]
       },
       "isFinished": false,
-      "odds": {
-        "hw": 2.35,
-        "dr": 3.1,
-        "aw": 3.3,
-        "o15": 1.36,
-        "o25": 2.2,
-        "u25": 1.67,
-        "o35": 4,
-        "u35": 1.25,
-        "bttsY": 1.91,
-        "bttsN": 1.91,
-        "dc1X_bkr": 1.3,
-        "dcX2_bkr": 1.57,
-        "cards_o55": 2,
-        "cards_o45": 1.55,
-        "cards_u45": 2.28,
-        "cards_o35": 3.44,
-        "cards_u35": 1.25
-      }
+      "odds": null
     },
     {
       "fixtureId": 1378179,
@@ -594,130 +685,33 @@
       "refereeStats": null,
       "date": "2026-04-12",
       "injuries": {
-        "home": [
-          {
-            "player": "M. Cornet",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Thigh Injury"
-          },
-          {
-            "player": "B. Norton-Cuffy",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Thigh Injury"
-          },
-          {
-            "player": "J. Onana",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Injury"
-          }
-        ],
-        "away": [
-          {
-            "player": "D. Boloca",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          },
-          {
-            "player": "F. Cande",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "E. Pieragnolo",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "F. Romagna",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 1,
-          "midfield": 2,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 3,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 3,
-          "notes": [
-            "M. Cornet (Gesperrt/Verletzt — Thigh Injury)",
-            "B. Norton-Cuffy (Gesperrt/Verletzt — Thigh Injury)",
-            "J. Onana (Gesperrt/Verletzt — Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "M. Cornet",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Thigh Injury"
-            },
-            {
-              "player": "B. Norton-Cuffy",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Thigh Injury"
-            },
-            {
-              "player": "J. Onana",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Injury"
-            }
-          ],
-          "impactScore": 1.2
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 2,
-          "midfield": 2,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 4,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 4,
-          "notes": [
-            "D. Boloca (Gesperrt/Verletzt — Muscle Injury)",
-            "F. Cande (Gesperrt/Verletzt — Knee Injury)",
-            "E. Pieragnolo (Gesperrt/Verletzt — Knee Injury)",
-            "F. Romagna (Gesperrt/Verletzt — Knee Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "D. Boloca",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            },
-            {
-              "player": "F. Cande",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "E. Pieragnolo",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "F. Romagna",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            }
-          ],
-          "impactScore": 1.8
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
       "h2h": null,
@@ -792,7 +786,24 @@
           "impactScore": 0.6
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 5,
+        "draws": 2,
+        "awayWins": 3,
+        "lastMeetingYear": 2026,
+        "avgGoals": 3.1,
+        "over25Rate": 0.6,
+        "over35Rate": 0.4,
+        "bttsRate": 0.5,
+        "lastResults": [
+          "L",
+          "W",
+          "W",
+          "W",
+          "W"
+        ]
+      },
       "isFinished": true,
       "odds": null
     },
@@ -947,7 +958,25 @@
       },
       "h2h": null,
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 6.5,
+        "dr": 3.9,
+        "aw": 1.55,
+        "o15": 1.4,
+        "o25": 2.2,
+        "u25": 1.67,
+        "o35": 4,
+        "u35": 1.25,
+        "bttsY": 2.2,
+        "bttsN": 1.62,
+        "dc1X_bkr": 2.3,
+        "dcX2_bkr": 1.12,
+        "cards_o35": 2.08,
+        "cards_u35": 1.72,
+        "cards_o45": 2.5,
+        "cards_u45": 1.45,
+        "cards_o55": 4.75
+      }
     },
     {
       "fixtureId": 1378183,
@@ -1098,7 +1127,24 @@
           "impactScore": 1.2
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 7,
+        "draws": 3,
+        "awayWins": 0,
+        "lastMeetingYear": 2026,
+        "avgGoals": 2.1,
+        "over25Rate": 0.4,
+        "over35Rate": 0.1,
+        "bttsRate": 0.5,
+        "lastResults": [
+          "W",
+          "W",
+          "D",
+          "W",
+          "W"
+        ]
+      },
       "isFinished": true,
       "odds": null
     },
@@ -1113,14 +1159,7 @@
       "date": "2026-04-19",
       "injuries": {
         "home": [],
-        "away": [
-          {
-            "player": "Zannetos Savva",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Jumpers knee"
-          }
-        ]
+        "away": []
       },
       "injurySummary": {
         "home": {
@@ -1138,45 +1177,32 @@
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 1,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 1,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 1,
-          "notes": [
-            "Zannetos Savva (Gesperrt/Verletzt — Jumpers knee)"
-          ],
-          "_raw": [
-            {
-              "player": "Zannetos Savva",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Jumpers knee"
-            }
-          ],
-          "impactScore": 0.3
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 7,
-        "homeWins": 1,
-        "draws": 3,
-        "awayWins": 3,
-        "lastMeetingYear": 2025,
-        "avgGoals": 2.3,
-        "over25Rate": 0.57,
-        "over35Rate": 0.29,
-        "bttsRate": 0.57,
-        "lastResults": [
-          "L",
-          "L",
-          "W",
-          "D",
-          "D"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 2.75,
+        "dr": 3.2,
+        "aw": 2.55,
+        "o15": 1.36,
+        "o25": 2.2,
+        "u25": 1.67,
+        "o35": 4,
+        "u35": 1.25,
+        "bttsY": 1.8,
+        "bttsN": 1.95,
+        "dc1X_bkr": 1.5,
+        "dcX2_bkr": 1.4
+      }
     },
     {
       "fixtureId": 1378185,
@@ -1309,20 +1335,7 @@
         ]
       },
       "isFinished": false,
-      "odds": {
-        "hw": 1.45,
-        "dr": 4.1,
-        "aw": 7,
-        "o15": 1.25,
-        "o25": 1.8,
-        "u25": 2,
-        "o35": 3,
-        "u35": 1.4,
-        "bttsY": 1.95,
-        "bttsN": 1.8,
-        "dc1X_bkr": 1.1,
-        "dcX2_bkr": 2.62
-      }
+      "odds": null
     },
     {
       "fixtureId": 1378188,
@@ -1478,37 +1491,21 @@
       "refereeStats": null,
       "date": "2026-04-18",
       "injuries": {
-        "home": [
-          {
-            "player": "E. Bove",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "heart problems"
-          }
-        ],
+        "home": [],
         "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 1,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 1,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 1,
-          "notes": [
-            "E. Bove (Gesperrt/Verletzt — heart problems)"
-          ],
-          "_raw": [
-            {
-              "player": "E. Bove",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "heart problems"
-            }
-          ],
-          "impactScore": 0.3
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
@@ -1542,7 +1539,20 @@
         ]
       },
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 2.15,
+        "dr": 3.3,
+        "aw": 3.2,
+        "o15": 1.3,
+        "o25": 2,
+        "u25": 1.8,
+        "o35": 3.4,
+        "u35": 1.33,
+        "bttsY": 1.75,
+        "bttsN": 2,
+        "dc1X_bkr": 1.36,
+        "dcX2_bkr": 1.67
+      }
     },
     {
       "fixtureId": 1378191,
@@ -1642,20 +1652,7 @@
       },
       "h2h": null,
       "isFinished": false,
-      "odds": {
-        "hw": 2.15,
-        "dr": 3.1,
-        "aw": 3.4,
-        "o15": 1.44,
-        "o25": 2.3,
-        "u25": 1.62,
-        "o35": 4.33,
-        "u35": 1.22,
-        "bttsY": 2,
-        "bttsN": 1.75,
-        "dc1X_bkr": 1.3,
-        "dcX2_bkr": 1.67
-      }
+      "odds": null
     },
     {
       "fixtureId": 1378193,
@@ -1696,24 +1693,7 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 0,
-        "draws": 0,
-        "awayWins": 10,
-        "lastMeetingYear": 2025,
-        "avgGoals": 2.8,
-        "over25Rate": 0.6,
-        "over35Rate": 0.4,
-        "bttsRate": 0.5,
-        "lastResults": [
-          "L",
-          "L",
-          "L",
-          "L",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": null
     },
@@ -1827,7 +1807,24 @@
           "impactScore": 0.6
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 6,
+        "draws": 1,
+        "awayWins": 3,
+        "lastMeetingYear": 2026,
+        "avgGoals": 3.3,
+        "over25Rate": 0.8,
+        "over35Rate": 0.3,
+        "bttsRate": 0.6,
+        "lastResults": [
+          "L",
+          "W",
+          "L",
+          "L",
+          "D"
+        ]
+      },
       "isFinished": true,
       "odds": null
     },
@@ -1980,24 +1977,7 @@
           "impactScore": 0.6
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 2,
-        "draws": 4,
-        "awayWins": 4,
-        "lastMeetingYear": 2026,
-        "avgGoals": 3,
-        "over25Rate": 0.5,
-        "over35Rate": 0.5,
-        "bttsRate": 0.7,
-        "lastResults": [
-          "D",
-          "W",
-          "D",
-          "D",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null
     },
@@ -2226,16 +2206,16 @@
             "reason": "Hamstring Injury"
           },
           {
+            "player": "F. Jorgensen",
+            "position": "G",
+            "type": "Missing Fixture",
+            "reason": "Groin Injury"
+          },
+          {
             "player": "M. Mudryk",
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Suspended"
-          },
-          {
-            "player": "F. Jorgensen",
-            "position": "G",
-            "type": "Questionable",
-            "reason": "Groin Injury"
           }
         ],
         "away": [
@@ -2261,12 +2241,12 @@
       },
       "injurySummary": {
         "home": {
-          "goalkeeper": 0,
+          "goalkeeper": 1,
           "defense": 2,
           "midfield": 4,
           "attack": 0,
-          "confirmed": 6,
-          "questionable": 1,
+          "confirmed": 7,
+          "questionable": 0,
           "total": 7,
           "notes": [
             "T. Chalobah (Gesperrt/Verletzt — Ankle Injury)",
@@ -2274,8 +2254,8 @@
             "E. Fernandez (Gesperrt/Verletzt — Coach's decision)",
             "J. Gittens (Gesperrt/Verletzt — Muscle Injury)",
             "R. James (Gesperrt/Verletzt — Hamstring Injury)",
-            "M. Mudryk (Gesperrt/Verletzt — Suspended)",
-            "F. Jorgensen (Fraglich — Groin Injury)"
+            "F. Jorgensen (Gesperrt/Verletzt — Groin Injury)",
+            "M. Mudryk (Gesperrt/Verletzt — Suspended)"
           ],
           "_raw": [
             {
@@ -2309,19 +2289,19 @@
               "reason": "Hamstring Injury"
             },
             {
+              "player": "F. Jorgensen",
+              "position": "G",
+              "type": "Missing Fixture",
+              "reason": "Groin Injury"
+            },
+            {
               "player": "M. Mudryk",
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Suspended"
-            },
-            {
-              "player": "F. Jorgensen",
-              "position": "G",
-              "type": "Questionable",
-              "reason": "Groin Injury"
             }
           ],
-          "impactScore": 2.7
+          "impactScore": 3.5
         },
         "away": {
           "goalkeeper": 0,
@@ -2390,133 +2370,53 @@
       "refereeStats": null,
       "date": "2026-04-12",
       "injuries": {
-        "home": [
-          {
-            "player": "C. Doucoure",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "J. Mateta",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Rest"
-          },
-          {
-            "player": "E. Nketiah",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Thigh Injury"
-          },
-          {
-            "player": "E. Guessand",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Injury"
-          }
-        ],
-        "away": [
-          {
-            "player": "Bruno Guimaraes",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          },
-          {
-            "player": "E. Krafth",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "F. Schar",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Ankle Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 3,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 3,
-          "questionable": 1,
-          "total": 4,
-          "notes": [
-            "C. Doucoure (Gesperrt/Verletzt — Knee Injury)",
-            "J. Mateta (Gesperrt/Verletzt — Rest)",
-            "E. Nketiah (Gesperrt/Verletzt — Thigh Injury)",
-            "E. Guessand (Fraglich — Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "C. Doucoure",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "J. Mateta",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Rest"
-            },
-            {
-              "player": "E. Nketiah",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Thigh Injury"
-            },
-            {
-              "player": "E. Guessand",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Injury"
-            }
-          ],
-          "impactScore": 1.2
+          "confirmed": 0,
+          "questionable": 0,
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 2,
-          "midfield": 1,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 3,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 3,
-          "notes": [
-            "Bruno Guimaraes (Gesperrt/Verletzt — Muscle Injury)",
-            "E. Krafth (Gesperrt/Verletzt — Knee Injury)",
-            "F. Schar (Gesperrt/Verletzt — Ankle Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "Bruno Guimaraes",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            },
-            {
-              "player": "E. Krafth",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "F. Schar",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Ankle Injury"
-            }
-          ],
-          "impactScore": 1.5
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 1,
+        "draws": 5,
+        "awayWins": 4,
+        "lastMeetingYear": 2026,
+        "avgGoals": 1.8,
+        "over25Rate": 0.2,
+        "over35Rate": 0.2,
+        "bttsRate": 0.2,
+        "lastResults": [
+          "L",
+          "L",
+          "D",
+          "W",
+          "L"
+        ]
+      },
       "isFinished": false,
       "odds": null
     },
@@ -2700,143 +2600,33 @@
       "refereeStats": null,
       "date": "2026-04-13",
       "injuries": {
-        "home": [
-          {
-            "player": "H. Maguire",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Red Card"
-          },
-          {
-            "player": "M. de Ligt",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Back Injury"
-          },
-          {
-            "player": "L. Martinez",
-            "position": "D",
-            "type": "Questionable",
-            "reason": "Calf Injury"
-          }
-        ],
-        "away": [
-          {
-            "player": "D. James",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          },
-          {
-            "player": "J. Rodon",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Ankle Injury"
-          },
-          {
-            "player": "A. Stach",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Ankle Injury"
-          },
-          {
-            "player": "G. Gudmundsson",
-            "position": "D",
-            "type": "Questionable",
-            "reason": "Groin Injury"
-          },
-          {
-            "player": "N. Okafor",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Back Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 2,
+          "defense": 0,
           "midfield": 0,
           "attack": 0,
-          "confirmed": 2,
-          "questionable": 1,
-          "total": 3,
-          "notes": [
-            "H. Maguire (Gesperrt/Verletzt — Red Card)",
-            "M. de Ligt (Gesperrt/Verletzt — Back Injury)",
-            "L. Martinez (Fraglich — Calf Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "H. Maguire",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Red Card"
-            },
-            {
-              "player": "M. de Ligt",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Back Injury"
-            },
-            {
-              "player": "L. Martinez",
-              "position": "D",
-              "type": "Questionable",
-              "reason": "Calf Injury"
-            }
-          ],
-          "impactScore": 1.5
+          "confirmed": 0,
+          "questionable": 0,
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 1,
-          "midfield": 2,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 3,
-          "questionable": 2,
-          "total": 5,
-          "notes": [
-            "D. James (Gesperrt/Verletzt — Muscle Injury)",
-            "J. Rodon (Gesperrt/Verletzt — Ankle Injury)",
-            "A. Stach (Gesperrt/Verletzt — Ankle Injury)",
-            "G. Gudmundsson (Fraglich — Groin Injury)",
-            "N. Okafor (Fraglich — Back Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "D. James",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            },
-            {
-              "player": "J. Rodon",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Ankle Injury"
-            },
-            {
-              "player": "A. Stach",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Ankle Injury"
-            },
-            {
-              "player": "G. Gudmundsson",
-              "position": "D",
-              "type": "Questionable",
-              "reason": "Groin Injury"
-            },
-            {
-              "player": "N. Okafor",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Back Injury"
-            }
-          ],
-          "impactScore": 1.7
+          "confirmed": 0,
+          "questionable": 0,
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
       "h2h": {
@@ -2996,24 +2786,7 @@
           "impactScore": 0.9
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 2,
-        "draws": 3,
-        "awayWins": 5,
-        "lastMeetingYear": 2026,
-        "avgGoals": 3.6,
-        "over25Rate": 0.6,
-        "over35Rate": 0.4,
-        "bttsRate": 0.7,
-        "lastResults": [
-          "L",
-          "L",
-          "W",
-          "L",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": null
     },
@@ -3045,6 +2818,12 @@
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Ankle Injury"
+          },
+          {
+            "player": "S. Moore",
+            "position": "G",
+            "type": "Missing Fixture",
+            "reason": "Wrist Injury"
           },
           {
             "player": "R. Mundle",
@@ -3113,28 +2892,23 @@
             "position": "M",
             "type": "Questionable",
             "reason": "Shoulder Injury"
-          },
-          {
-            "player": "M. Tel",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Thigh Injury"
           }
         ]
       },
       "injurySummary": {
         "home": {
-          "goalkeeper": 0,
+          "goalkeeper": 1,
           "defense": 1,
           "midfield": 4,
           "attack": 0,
-          "confirmed": 5,
+          "confirmed": 6,
           "questionable": 0,
-          "total": 5,
+          "total": 6,
           "notes": [
             "N. Angulo (Gesperrt/Verletzt — Muscle Injury)",
             "D. Ballard (Gesperrt/Verletzt — Muscle Injury)",
             "J. T. Bi (Gesperrt/Verletzt — Ankle Injury)",
+            "S. Moore (Gesperrt/Verletzt — Wrist Injury)",
             "R. Mundle (Gesperrt/Verletzt — Hamstring Injury)",
             "B. Traore (Gesperrt/Verletzt — Knee Injury)"
           ],
@@ -3158,6 +2932,12 @@
               "reason": "Ankle Injury"
             },
             {
+              "player": "S. Moore",
+              "position": "G",
+              "type": "Missing Fixture",
+              "reason": "Wrist Injury"
+            },
+            {
               "player": "R. Mundle",
               "position": "M",
               "type": "Missing Fixture",
@@ -3170,7 +2950,7 @@
               "reason": "Knee Injury"
             }
           ],
-          "impactScore": 1.8
+          "impactScore": 2.9
         },
         "away": {
           "goalkeeper": 1,
@@ -3178,8 +2958,8 @@
           "midfield": 5,
           "attack": 0,
           "confirmed": 7,
-          "questionable": 3,
-          "total": 10,
+          "questionable": 2,
+          "total": 9,
           "notes": [
             "R. Bentancur (Gesperrt/Verletzt — Muscle Injury)",
             "B. Davies (Gesperrt/Verletzt — Ankle Injury)",
@@ -3189,8 +2969,7 @@
             "W. Odobert (Gesperrt/Verletzt — Knee Injury)",
             "G. Vicario (Gesperrt/Verletzt — Groin Injury)",
             "Y. Bissouma (Fraglich — Muscle Injury)",
-            "P. M. Sarr (Fraglich — Shoulder Injury)",
-            "M. Tel (Fraglich — Thigh Injury)"
+            "P. M. Sarr (Fraglich — Shoulder Injury)"
           ],
           "_raw": [
             {
@@ -3246,35 +3025,12 @@
               "position": "M",
               "type": "Questionable",
               "reason": "Shoulder Injury"
-            },
-            {
-              "player": "M. Tel",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Thigh Injury"
             }
           ],
-          "impactScore": 4
+          "impactScore": 3.7
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 0,
-        "draws": 3,
-        "awayWins": 7,
-        "lastMeetingYear": 2026,
-        "avgGoals": 2.6,
-        "over25Rate": 0.5,
-        "over35Rate": 0.3,
-        "bttsRate": 0.6,
-        "lastResults": [
-          "D",
-          "D",
-          "L",
-          "L",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": null
     },
@@ -3289,7 +3045,14 @@
       "date": "2026-04-19",
       "injuries": {
         "home": [],
-        "away": []
+        "away": [
+          {
+            "player": "A. Alese",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Shoulder injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
@@ -3307,14 +3070,23 @@
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 0,
+          "midfield": 1,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 1,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 1,
+          "notes": [
+            "A. Alese (Gesperrt/Verletzt — Shoulder injury)"
+          ],
+          "_raw": [
+            {
+              "player": "A. Alese",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Shoulder injury"
+            }
+          ],
+          "impactScore": 0.3
         }
       },
       "h2h": {
@@ -3439,7 +3211,20 @@
       },
       "h2h": null,
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 2.1,
+        "dr": 3.6,
+        "aw": 3,
+        "o15": 1.17,
+        "o25": 1.53,
+        "u25": 2.5,
+        "o35": 2.3,
+        "u35": 1.62,
+        "bttsY": 1.44,
+        "bttsN": 2.62,
+        "dc1X_bkr": 1.36,
+        "dcX2_bkr": 1.7
+      }
     },
     {
       "fixtureId": 1379293,
@@ -3499,7 +3284,20 @@
         ]
       },
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 3.4,
+        "dr": 3.5,
+        "aw": 2,
+        "o15": 1.22,
+        "o25": 1.73,
+        "u25": 2.1,
+        "o35": 2.75,
+        "u35": 1.44,
+        "bttsY": 1.62,
+        "bttsN": 2.2,
+        "dc1X_bkr": 1.73,
+        "dcX2_bkr": 1.3
+      }
     },
     {
       "fixtureId": 1379294,
@@ -3540,7 +3338,24 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 4,
+        "draws": 1,
+        "awayWins": 5,
+        "lastMeetingYear": 2025,
+        "avgGoals": 3.1,
+        "over25Rate": 0.6,
+        "over35Rate": 0.4,
+        "bttsRate": 0.6,
+        "lastResults": [
+          "W",
+          "W",
+          "L",
+          "W",
+          "W"
+        ]
+      },
       "isFinished": false,
       "odds": null
     },
@@ -3602,7 +3417,20 @@
         ]
       },
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 1.95,
+        "dr": 3.5,
+        "aw": 3.6,
+        "o15": 1.25,
+        "o25": 1.8,
+        "u25": 2,
+        "o35": 3,
+        "u35": 1.4,
+        "bttsY": 1.7,
+        "bttsN": 2.05,
+        "dc1X_bkr": 1.28,
+        "dcX2_bkr": 1.8
+      }
     },
     {
       "fixtureId": 1379296,
@@ -3662,20 +3490,7 @@
         ]
       },
       "isFinished": false,
-      "odds": {
-        "hw": 1.85,
-        "dr": 3.8,
-        "aw": 3.6,
-        "o15": 1.14,
-        "o25": 1.5,
-        "u25": 2.62,
-        "o35": 2.1,
-        "u35": 1.73,
-        "bttsY": 1.44,
-        "bttsN": 2.62,
-        "dc1X_bkr": 1.28,
-        "dcX2_bkr": 1.91
-      }
+      "odds": null
     },
     {
       "fixtureId": 1379297,
@@ -3820,156 +3635,38 @@
       "refereeStats": null,
       "date": "2026-04-12",
       "injuries": {
-        "home": [
-          {
-            "player": "J. Hornkamp",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Injury"
-          },
-          {
-            "player": "D. Kasius",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Injury"
-          },
-          {
-            "player": "P. Koopmeiners",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          }
-        ],
-        "away": [
-          {
-            "player": "L. Smans",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "D. Vente",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Inactive"
-          },
-          {
-            "player": "A. van Axel Dongen",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Illness"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 3,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 3,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 3,
-          "notes": [
-            "J. Hornkamp (Gesperrt/Verletzt — Injury)",
-            "D. Kasius (Gesperrt/Verletzt — Injury)",
-            "P. Koopmeiners (Gesperrt/Verletzt — Muscle Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "J. Hornkamp",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Injury"
-            },
-            {
-              "player": "D. Kasius",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Injury"
-            },
-            {
-              "player": "P. Koopmeiners",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            }
-          ],
-          "impactScore": 0.9
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 1,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 1,
-          "questionable": 2,
-          "total": 3,
-          "notes": [
-            "L. Smans (Gesperrt/Verletzt — Knee Injury)",
-            "D. Vente (Fraglich — Inactive)",
-            "A. van Axel Dongen (Fraglich — Illness)"
-          ],
-          "_raw": [
-            {
-              "player": "L. Smans",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "D. Vente",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Inactive"
-            },
-            {
-              "player": "A. van Axel Dongen",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Illness"
-            }
-          ],
-          "impactScore": 0.8
+          "confirmed": 0,
+          "questionable": 0,
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 5,
-        "draws": 2,
-        "awayWins": 3,
-        "lastMeetingYear": 2025,
-        "avgGoals": 4.1,
-        "over25Rate": 0.7,
-        "over35Rate": 0.6,
-        "bttsRate": 0.7,
-        "lastResults": [
-          "L",
-          "W",
-          "L",
-          "W",
-          "D"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
-      "odds": {
-        "hw": 1.75,
-        "dr": 4.1,
-        "aw": 4.1,
-        "o15": 1.1,
-        "o25": 1.4,
-        "u25": 2.88,
-        "o35": 1.91,
-        "u35": 1.8,
-        "bttsY": 1.4,
-        "bttsN": 2.75,
-        "dc1X_bkr": 1.22,
-        "dcX2_bkr": 2,
-        "cards_o35": 1.91,
-        "cards_u35": 1.77,
-        "cards_o45": 2.8,
-        "cards_u45": 1.37
-      }
+      "odds": null
     },
     {
       "fixtureId": 1381129,
@@ -4112,156 +3809,33 @@
       "refereeStats": null,
       "date": "2026-04-11",
       "injuries": {
-        "home": [
-          {
-            "player": "M. Benita",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Yellow Cards"
-          },
-          {
-            "player": "A. Hrustic",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Injury"
-          },
-          {
-            "player": "J. Reine-Adelaide",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "F. de Keijzer",
-            "position": "G",
-            "type": "Missing Fixture",
-            "reason": "Inactive"
-          },
-          {
-            "player": "M. te Wierik",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Inactive"
-          }
-        ],
-        "away": [
-          {
-            "player": "K. Fitz-Jim",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Inactive"
-          },
-          {
-            "player": "V. Jaros",
-            "position": "G",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "Y. Regeer",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Hamstring Injury"
-          },
-          {
-            "player": "O. Zinchenko",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
-          "goalkeeper": 1,
-          "defense": 2,
-          "midfield": 2,
+          "goalkeeper": 0,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 5,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 5,
-          "notes": [
-            "M. Benita (Gesperrt/Verletzt — Yellow Cards)",
-            "A. Hrustic (Gesperrt/Verletzt — Injury)",
-            "J. Reine-Adelaide (Gesperrt/Verletzt — Knee Injury)",
-            "F. de Keijzer (Gesperrt/Verletzt — Inactive)",
-            "M. te Wierik (Gesperrt/Verletzt — Inactive)"
-          ],
-          "_raw": [
-            {
-              "player": "M. Benita",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Yellow Cards"
-            },
-            {
-              "player": "A. Hrustic",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Injury"
-            },
-            {
-              "player": "J. Reine-Adelaide",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "F. de Keijzer",
-              "position": "G",
-              "type": "Missing Fixture",
-              "reason": "Inactive"
-            },
-            {
-              "player": "M. te Wierik",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Inactive"
-            }
-          ],
-          "impactScore": 2.9
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
-          "goalkeeper": 1,
-          "defense": 1,
-          "midfield": 2,
+          "goalkeeper": 0,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 4,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 4,
-          "notes": [
-            "K. Fitz-Jim (Gesperrt/Verletzt — Inactive)",
-            "V. Jaros (Gesperrt/Verletzt — Knee Injury)",
-            "Y. Regeer (Gesperrt/Verletzt — Hamstring Injury)",
-            "O. Zinchenko (Gesperrt/Verletzt — Knee Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "K. Fitz-Jim",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Inactive"
-            },
-            {
-              "player": "V. Jaros",
-              "position": "G",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "Y. Regeer",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Hamstring Injury"
-            },
-            {
-              "player": "O. Zinchenko",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            }
-          ],
-          "impactScore": 2.3
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
       "h2h": null,
@@ -4501,7 +4075,24 @@
         ]
       },
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 2.15,
+        "dr": 3.9,
+        "aw": 3,
+        "o15": 1.12,
+        "o25": 1.44,
+        "u25": 2.7,
+        "o35": 2,
+        "u35": 1.73,
+        "bttsY": 1.4,
+        "bttsN": 2.75,
+        "dc1X_bkr": 1.4,
+        "dcX2_bkr": 1.67,
+        "cards_o35": 1.73,
+        "cards_u35": 1.96,
+        "cards_o45": 2.45,
+        "cards_u45": 1.47
+      }
     },
     {
       "fixtureId": 1381132,
@@ -4696,33 +4287,104 @@
       "refereeStats": null,
       "date": "2026-04-11",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "L. Martes",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Yellow Cards"
+          }
+        ],
+        "away": [
+          {
+            "player": "S. Dest",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Hamstring Injury"
+          },
+          {
+            "player": "A. Plea",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "J. Schouten",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "R. van Bommel",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
+          "defense": 1,
           "midfield": 0,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 1,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 1,
+          "notes": [
+            "L. Martes (Gesperrt/Verletzt — Yellow Cards)"
+          ],
+          "_raw": [
+            {
+              "player": "L. Martes",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Yellow Cards"
+            }
+          ],
+          "impactScore": 0.6
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 2,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 4,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 4,
+          "notes": [
+            "S. Dest (Gesperrt/Verletzt — Hamstring Injury)",
+            "A. Plea (Gesperrt/Verletzt — Knee Injury)",
+            "J. Schouten (Gesperrt/Verletzt — Knee Injury)",
+            "R. van Bommel (Gesperrt/Verletzt — Knee Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "S. Dest",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Hamstring Injury"
+            },
+            {
+              "player": "A. Plea",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "J. Schouten",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "R. van Bommel",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            }
+          ],
+          "impactScore": 1.8
         }
       },
       "h2h": {
@@ -4756,91 +4418,33 @@
       "refereeStats": null,
       "date": "2026-04-11",
       "injuries": {
-        "home": [
-          {
-            "player": "V. Jensen",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "M. Rodriguez",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "J. van Ommeren",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Injury"
-          }
-        ],
-        "away": [
-          {
-            "player": "N. Thorisson",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Hamstring Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 3,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 3,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 3,
-          "notes": [
-            "V. Jensen (Gesperrt/Verletzt — Knee Injury)",
-            "M. Rodriguez (Gesperrt/Verletzt — Knee Injury)",
-            "J. van Ommeren (Gesperrt/Verletzt — Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "V. Jensen",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "M. Rodriguez",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "J. van Ommeren",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Injury"
-            }
-          ],
-          "impactScore": 0.9
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 1,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 1,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 1,
-          "notes": [
-            "N. Thorisson (Gesperrt/Verletzt — Hamstring Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "N. Thorisson",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Hamstring Injury"
-            }
-          ],
-          "impactScore": 0.3
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
       "h2h": {
@@ -5012,16 +4616,16 @@
       },
       "h2h": {
         "games": 10,
-        "homeWins": 6,
-        "draws": 2,
+        "homeWins": 5,
+        "draws": 3,
         "awayWins": 2,
         "lastMeetingYear": 2026,
-        "avgGoals": 2.8,
+        "avgGoals": 2.9,
         "over25Rate": 0.5,
-        "over35Rate": 0.1,
+        "over35Rate": 0.2,
         "bttsRate": 0.7,
         "lastResults": [
-          "W",
+          "D",
           "L",
           "W",
           "W",
@@ -5029,24 +4633,7 @@
         ]
       },
       "isFinished": false,
-      "odds": {
-        "hw": 2.2,
-        "dr": 3.7,
-        "aw": 3,
-        "o15": 1.18,
-        "o25": 1.62,
-        "u25": 2.25,
-        "o35": 2.5,
-        "u35": 1.5,
-        "bttsY": 1.53,
-        "bttsN": 2.38,
-        "dc1X_bkr": 1.36,
-        "dcX2_bkr": 1.67,
-        "cards_o35": 1.83,
-        "cards_u35": 1.85,
-        "cards_o45": 2.7,
-        "cards_u45": 1.4
-      }
+      "odds": null
     },
     {
       "fixtureId": 1382858,
@@ -5087,7 +4674,24 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 3,
+        "draws": 2,
+        "awayWins": 5,
+        "lastMeetingYear": 2026,
+        "avgGoals": 3,
+        "over25Rate": 0.5,
+        "over35Rate": 0.4,
+        "bttsRate": 0.4,
+        "lastResults": [
+          "W",
+          "L",
+          "L",
+          "W",
+          "L"
+        ]
+      },
       "isFinished": true,
       "odds": null
     },
@@ -5130,24 +4734,7 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 8,
-        "draws": 1,
-        "awayWins": 1,
-        "lastMeetingYear": 2026,
-        "avgGoals": 3,
-        "over25Rate": 0.6,
-        "over35Rate": 0.3,
-        "bttsRate": 0.4,
-        "lastResults": [
-          "W",
-          "L",
-          "W",
-          "W",
-          "D"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null
     },
@@ -5190,24 +4777,7 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 4,
-        "draws": 2,
-        "awayWins": 4,
-        "lastMeetingYear": 2026,
-        "avgGoals": 2.6,
-        "over25Rate": 0.5,
-        "over35Rate": 0.2,
-        "bttsRate": 0.7,
-        "lastResults": [
-          "W",
-          "W",
-          "D",
-          "L",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null
     },
@@ -5250,7 +4820,24 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 2,
+        "draws": 4,
+        "awayWins": 4,
+        "lastMeetingYear": 2026,
+        "avgGoals": 3.4,
+        "over25Rate": 0.6,
+        "over35Rate": 0.5,
+        "bttsRate": 0.7,
+        "lastResults": [
+          "L",
+          "D",
+          "D",
+          "L",
+          "W"
+        ]
+      },
       "isFinished": true,
       "odds": null
     },
@@ -5681,38 +5268,179 @@
       "refereeStats": null,
       "date": "2026-04-12",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "M. Abdelmonem",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Lacking Match Fitness"
+          },
+          {
+            "player": "M. Bombito",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Leg Injury"
+          },
+          {
+            "player": "Dante",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "Y. Ndayishimiye",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Red Card"
+          },
+          {
+            "player": "E. Pereira",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Ankle Injury"
+          },
+          {
+            "player": "K. Peprah",
+            "position": "D",
+            "type": "Questionable",
+            "reason": "Injury"
+          }
+        ],
+        "away": [
+          {
+            "player": "F. Mambimbi",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "A. Toure",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "I. Soumare",
+            "position": "M",
+            "type": "Questionable",
+            "reason": "Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 2,
+          "midfield": 3,
           "attack": 0,
-          "confirmed": 0,
-          "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "confirmed": 5,
+          "questionable": 1,
+          "total": 6,
+          "notes": [
+            "M. Abdelmonem (Gesperrt/Verletzt — Lacking Match Fitness)",
+            "M. Bombito (Gesperrt/Verletzt — Leg Injury)",
+            "Dante (Gesperrt/Verletzt — Injury)",
+            "Y. Ndayishimiye (Gesperrt/Verletzt — Red Card)",
+            "E. Pereira (Gesperrt/Verletzt — Ankle Injury)",
+            "K. Peprah (Fraglich — Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "M. Abdelmonem",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Lacking Match Fitness"
+            },
+            {
+              "player": "M. Bombito",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Leg Injury"
+            },
+            {
+              "player": "Dante",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "Y. Ndayishimiye",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Red Card"
+            },
+            {
+              "player": "E. Pereira",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Ankle Injury"
+            },
+            {
+              "player": "K. Peprah",
+              "position": "D",
+              "type": "Questionable",
+              "reason": "Injury"
+            }
+          ],
+          "impactScore": 2.3
         },
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 0,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 0,
-          "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "confirmed": 2,
+          "questionable": 1,
+          "total": 3,
+          "notes": [
+            "F. Mambimbi (Gesperrt/Verletzt — Injury)",
+            "A. Toure (Gesperrt/Verletzt — Knee Injury)",
+            "I. Soumare (Fraglich — Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "F. Mambimbi",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "A. Toure",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "I. Soumare",
+              "position": "M",
+              "type": "Questionable",
+              "reason": "Injury"
+            }
+          ],
+          "impactScore": 0.9
         }
       },
       "h2h": null,
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 1.9,
+        "dr": 3.4,
+        "aw": 4.33,
+        "o15": 1.28,
+        "o25": 1.91,
+        "u25": 1.91,
+        "o35": 3.4,
+        "u35": 1.33,
+        "bttsY": 1.8,
+        "bttsN": 1.95,
+        "dc1X_bkr": 1.2,
+        "dcX2_bkr": 1.83,
+        "cards_o45": 2.2,
+        "cards_u45": 1.62,
+        "cards_o35": 1.57,
+        "cards_u35": 2.23,
+        "cards_o55": 3.05
+      }
     },
     {
       "fixtureId": 1387957,
@@ -5753,24 +5481,7 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 7,
-        "draws": 2,
-        "awayWins": 1,
-        "lastMeetingYear": 2026,
-        "avgGoals": 2.6,
-        "over25Rate": 0.5,
-        "over35Rate": 0.1,
-        "bttsRate": 0.5,
-        "lastResults": [
-          "W",
-          "D",
-          "W",
-          "W",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null
     },
@@ -5942,7 +5653,25 @@
         ]
       },
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 3.25,
+        "dr": 3.3,
+        "aw": 2.25,
+        "o15": 1.4,
+        "o25": 2.2,
+        "u25": 1.67,
+        "o35": 4,
+        "u35": 1.25,
+        "bttsY": 1.95,
+        "bttsN": 1.8,
+        "dc1X_bkr": 1.57,
+        "dcX2_bkr": 1.33,
+        "cards_o35": 1.67,
+        "cards_u35": 2.1,
+        "cards_o45": 2.1,
+        "cards_u45": 1.63,
+        "cards_o55": 3
+      }
     },
     {
       "fixtureId": 1387959,
@@ -5983,39 +5712,9 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 4,
-        "draws": 2,
-        "awayWins": 4,
-        "lastMeetingYear": 2026,
-        "avgGoals": 1.9,
-        "over25Rate": 0.4,
-        "over35Rate": 0.1,
-        "bttsRate": 0.5,
-        "lastResults": [
-          "L",
-          "D",
-          "D",
-          "W",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
-      "odds": {
-        "hw": 2.75,
-        "dr": 3.1,
-        "aw": 2.55,
-        "o15": 1.44,
-        "o25": 2.3,
-        "u25": 1.62,
-        "o35": 4.33,
-        "u35": 1.22,
-        "bttsY": 1.95,
-        "bttsN": 1.8,
-        "dc1X_bkr": 1.5,
-        "dcX2_bkr": 1.4
-      }
+      "odds": null
     },
     {
       "fixtureId": 1387960,
@@ -6056,24 +5755,7 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 7,
-        "draws": 1,
-        "awayWins": 2,
-        "lastMeetingYear": 2026,
-        "avgGoals": 1.9,
-        "over25Rate": 0.3,
-        "over35Rate": 0,
-        "bttsRate": 0.2,
-        "lastResults": [
-          "W",
-          "D",
-          "L",
-          "W",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": null
     },
@@ -6116,22 +5798,26 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 3,
+        "draws": 3,
+        "awayWins": 4,
+        "lastMeetingYear": 2025,
+        "avgGoals": 2.9,
+        "over25Rate": 0.6,
+        "over35Rate": 0.4,
+        "bttsRate": 0.6,
+        "lastResults": [
+          "L",
+          "W",
+          "D",
+          "D",
+          "D"
+        ]
+      },
       "isFinished": false,
-      "odds": {
-        "hw": 1.6,
-        "dr": 3.7,
-        "aw": 5.75,
-        "o15": 1.28,
-        "o25": 1.91,
-        "u25": 1.91,
-        "o35": 3.2,
-        "u35": 1.36,
-        "bttsY": 1.91,
-        "bttsN": 1.91,
-        "dc1X_bkr": 1.14,
-        "dcX2_bkr": 2.3
-      }
+      "odds": null
     },
     {
       "fixtureId": 1387962,
@@ -6191,7 +5877,20 @@
         ]
       },
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 3.75,
+        "dr": 3.6,
+        "aw": 1.9,
+        "o15": 1.22,
+        "o25": 1.73,
+        "u25": 2.1,
+        "o35": 2.75,
+        "u35": 1.44,
+        "bttsY": 1.67,
+        "bttsN": 2.1,
+        "dc1X_bkr": 1.91,
+        "dcX2_bkr": 1.25
+      }
     },
     {
       "fixtureId": 1387963,
@@ -6232,22 +5931,26 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 6,
+        "draws": 2,
+        "awayWins": 2,
+        "lastMeetingYear": 2025,
+        "avgGoals": 3.2,
+        "over25Rate": 0.7,
+        "over35Rate": 0.3,
+        "bttsRate": 0.9,
+        "lastResults": [
+          "L",
+          "W",
+          "W",
+          "D",
+          "W"
+        ]
+      },
       "isFinished": false,
-      "odds": {
-        "hw": 3.2,
-        "dr": 3.3,
-        "aw": 2.15,
-        "o15": 1.28,
-        "o25": 1.91,
-        "u25": 1.91,
-        "o35": 3.4,
-        "u35": 1.33,
-        "bttsY": 1.8,
-        "bttsN": 1.95,
-        "dc1X_bkr": 1.67,
-        "dcX2_bkr": 1.36
-      }
+      "odds": null
     },
     {
       "fixtureId": 1387964,
@@ -6307,20 +6010,7 @@
         ]
       },
       "isFinished": false,
-      "odds": {
-        "hw": 1.57,
-        "dr": 3.9,
-        "aw": 5.75,
-        "o15": 1.22,
-        "o25": 1.73,
-        "u25": 2.1,
-        "o35": 2.75,
-        "u35": 1.44,
-        "bttsY": 1.75,
-        "bttsN": 2,
-        "dc1X_bkr": 1.14,
-        "dcX2_bkr": 2.3
-      }
+      "odds": null
     },
     {
       "fixtureId": 1387965,
@@ -6437,39 +6127,9 @@
           "impactScore": 0.3
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 8,
-        "draws": 1,
-        "awayWins": 1,
-        "lastMeetingYear": 2025,
-        "avgGoals": 3.4,
-        "over25Rate": 0.7,
-        "over35Rate": 0.5,
-        "bttsRate": 0.8,
-        "lastResults": [
-          "W",
-          "W",
-          "W",
-          "W",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
-      "odds": {
-        "hw": 1.27,
-        "dr": 5.25,
-        "aw": 9.5,
-        "o15": 1.14,
-        "o25": 1.44,
-        "u25": 2.75,
-        "o35": 2.1,
-        "u35": 1.73,
-        "bttsY": 1.75,
-        "bttsN": 2,
-        "dc1X_bkr": 1.07,
-        "dcX2_bkr": 3.75
-      }
+      "odds": null
     },
     {
       "fixtureId": 1387967,
@@ -6529,20 +6189,7 @@
         ]
       },
       "isFinished": false,
-      "odds": {
-        "hw": 2.5,
-        "dr": 3.5,
-        "aw": 2.6,
-        "o15": 1.22,
-        "o25": 1.67,
-        "u25": 2.2,
-        "o35": 2.75,
-        "u35": 1.44,
-        "bttsY": 1.57,
-        "bttsN": 2.25,
-        "dc1X_bkr": 1.5,
-        "dcX2_bkr": 1.5
-      }
+      "odds": null
     },
     {
       "fixtureId": 1388561,
@@ -6693,7 +6340,24 @@
           "impactScore": 1.5
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 4,
+        "draws": 2,
+        "awayWins": 4,
+        "lastMeetingYear": 2026,
+        "avgGoals": 3,
+        "over25Rate": 0.4,
+        "over35Rate": 0.3,
+        "bttsRate": 0.6,
+        "lastResults": [
+          "L",
+          "L",
+          "W",
+          "W",
+          "L"
+        ]
+      },
       "isFinished": true,
       "odds": null
     },
@@ -7156,150 +6820,36 @@
       "refereeStats": null,
       "date": "2026-04-11",
       "injuries": {
-        "home": [
-          {
-            "player": "V. Gebel",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "C. Harder",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Thigh Injury"
-          },
-          {
-            "player": "C. Lukeba",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          },
-          {
-            "player": "S. Sani",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Hip Injury"
-          },
-          {
-            "player": "L. Zingerle",
-            "position": "G",
-            "type": "Missing Fixture",
-            "reason": "Wrist Injury"
-          }
-        ],
-        "away": [
-          {
-            "player": "R. Hack",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          },
-          {
-            "player": "T. Kleindienst",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
-          "goalkeeper": 1,
-          "defense": 1,
-          "midfield": 3,
+          "goalkeeper": 0,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 5,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 5,
-          "notes": [
-            "V. Gebel (Gesperrt/Verletzt — Knee Injury)",
-            "C. Harder (Gesperrt/Verletzt — Thigh Injury)",
-            "C. Lukeba (Gesperrt/Verletzt — Muscle Injury)",
-            "S. Sani (Gesperrt/Verletzt — Hip Injury)",
-            "L. Zingerle (Gesperrt/Verletzt — Wrist Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "V. Gebel",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "C. Harder",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Thigh Injury"
-            },
-            {
-              "player": "C. Lukeba",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            },
-            {
-              "player": "S. Sani",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Hip Injury"
-            },
-            {
-              "player": "L. Zingerle",
-              "position": "G",
-              "type": "Missing Fixture",
-              "reason": "Wrist Injury"
-            }
-          ],
-          "impactScore": 2.6
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 2,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 2,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 2,
-          "notes": [
-            "R. Hack (Gesperrt/Verletzt — Muscle Injury)",
-            "T. Kleindienst (Gesperrt/Verletzt — Knee Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "R. Hack",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            },
-            {
-              "player": "T. Kleindienst",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            }
-          ],
-          "impactScore": 0.6
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 5,
-        "draws": 2,
-        "awayWins": 3,
-        "lastMeetingYear": 2026,
-        "avgGoals": 2,
-        "over25Rate": 0.4,
-        "over35Rate": 0.2,
-        "bttsRate": 0.2,
-        "lastResults": [
-          "W",
-          "D",
-          "L",
-          "D",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null
     },
@@ -7342,7 +6892,24 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 6,
+        "homeWins": 0,
+        "draws": 0,
+        "awayWins": 6,
+        "lastMeetingYear": 2026,
+        "avgGoals": 4.5,
+        "over25Rate": 0.83,
+        "over35Rate": 0.67,
+        "bttsRate": 0.5,
+        "lastResults": [
+          "L",
+          "L",
+          "L",
+          "L",
+          "L"
+        ]
+      },
       "isFinished": true,
       "odds": null
     },
@@ -7540,7 +7107,25 @@
         ]
       },
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 1.33,
+        "dr": 5.75,
+        "aw": 8.5,
+        "o15": 1.1,
+        "o25": 1.36,
+        "u25": 3.2,
+        "o35": 1.91,
+        "u35": 1.91,
+        "bttsY": 1.62,
+        "bttsN": 2.2,
+        "dc1X_bkr": 1.08,
+        "dcX2_bkr": 3.4,
+        "cards_o35": 1.92,
+        "cards_u35": 1.88,
+        "cards_o45": 2.2,
+        "cards_u45": 1.62,
+        "cards_o55": 3.9
+      }
     },
     {
       "fixtureId": 1388568,
@@ -7977,20 +7562,7 @@
         ]
       },
       "isFinished": false,
-      "odds": {
-        "hw": 2.45,
-        "dr": 3.4,
-        "aw": 2.75,
-        "o15": 1.28,
-        "o25": 1.91,
-        "u25": 1.91,
-        "o35": 3.2,
-        "u35": 1.36,
-        "bttsY": 1.7,
-        "bttsN": 2.05,
-        "dc1X_bkr": 1.4,
-        "dcX2_bkr": 1.53
-      }
+      "odds": null
     },
     {
       "fixtureId": 1388572,
@@ -8050,20 +7622,7 @@
         ]
       },
       "isFinished": false,
-      "odds": {
-        "hw": 3.1,
-        "dr": 3.8,
-        "aw": 2.05,
-        "o15": 1.14,
-        "o25": 1.5,
-        "u25": 2.62,
-        "o35": 2.2,
-        "u35": 1.67,
-        "bttsY": 1.44,
-        "bttsN": 2.62,
-        "dc1X_bkr": 1.73,
-        "dcX2_bkr": 1.36
-      }
+      "odds": null
     },
     {
       "fixtureId": 1388573,
@@ -8106,7 +7665,20 @@
       },
       "h2h": null,
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 1.62,
+        "dr": 3.8,
+        "aw": 5.25,
+        "o15": 1.2,
+        "o25": 1.67,
+        "u25": 2.2,
+        "o35": 2.62,
+        "u35": 1.5,
+        "bttsY": 1.7,
+        "bttsN": 2.05,
+        "dc1X_bkr": 1.17,
+        "dcX2_bkr": 2.25
+      }
     },
     {
       "fixtureId": 1388574,
@@ -8147,26 +7719,22 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 1,
-        "draws": 1,
-        "awayWins": 8,
-        "lastMeetingYear": 2025,
-        "avgGoals": 3.1,
-        "over25Rate": 0.5,
-        "over35Rate": 0.5,
-        "bttsRate": 0.6,
-        "lastResults": [
-          "L",
-          "L",
-          "D",
-          "W",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 2.62,
+        "dr": 3.75,
+        "aw": 2.35,
+        "o15": 1.14,
+        "o25": 1.5,
+        "u25": 2.62,
+        "o35": 2.2,
+        "u35": 1.67,
+        "bttsY": 1.44,
+        "bttsN": 2.62,
+        "dc1X_bkr": 1.57,
+        "dcX2_bkr": 1.44
+      }
     },
     {
       "fixtureId": 1388575,
@@ -8207,24 +7775,7 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 9,
-        "homeWins": 1,
-        "draws": 2,
-        "awayWins": 6,
-        "lastMeetingYear": 2025,
-        "avgGoals": 3,
-        "over25Rate": 0.56,
-        "over35Rate": 0.33,
-        "bttsRate": 0.33,
-        "lastResults": [
-          "D",
-          "L",
-          "L",
-          "L",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": null
     },
@@ -8267,7 +7818,24 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 5,
+        "draws": 1,
+        "awayWins": 4,
+        "lastMeetingYear": 2025,
+        "avgGoals": 2,
+        "over25Rate": 0.3,
+        "over35Rate": 0.1,
+        "bttsRate": 0.4,
+        "lastResults": [
+          "L",
+          "W",
+          "L",
+          "W",
+          "L"
+        ]
+      },
       "isFinished": false,
       "odds": null
     },
@@ -8329,7 +7897,20 @@
         ]
       },
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 2,
+        "dr": 3.5,
+        "aw": 3.3,
+        "o15": 1.22,
+        "o25": 1.73,
+        "u25": 2.1,
+        "o35": 2.75,
+        "u35": 1.44,
+        "bttsY": 1.62,
+        "bttsN": 2.2,
+        "dc1X_bkr": 1.33,
+        "dcX2_bkr": 1.8
+      }
     },
     {
       "fixtureId": 1391119,
@@ -8499,25 +8080,7 @@
         ]
       },
       "isFinished": false,
-      "odds": {
-        "hw": 2.05,
-        "dr": 3.6,
-        "aw": 3.5,
-        "o15": 1.3,
-        "o25": 1.91,
-        "u25": 1.91,
-        "o35": 3.4,
-        "u35": 1.33,
-        "bttsY": 1.75,
-        "bttsN": 2,
-        "dc1X_bkr": 1.28,
-        "dcX2_bkr": 1.73,
-        "cards_o45": 1.78,
-        "cards_u45": 2.02,
-        "cards_o55": 2.2,
-        "cards_o35": 4.54,
-        "cards_u35": 1.15
-      }
+      "odds": null
     },
     {
       "fixtureId": 1391120,
@@ -8629,7 +8192,24 @@
           "impactScore": 0.9
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 7,
+        "draws": 3,
+        "awayWins": 0,
+        "lastMeetingYear": 2026,
+        "avgGoals": 3.1,
+        "over25Rate": 0.5,
+        "over35Rate": 0.5,
+        "bttsRate": 0.6,
+        "lastResults": [
+          "W",
+          "W",
+          "W",
+          "W",
+          "W"
+        ]
+      },
       "isFinished": true,
       "odds": null
     },
@@ -8643,33 +8223,130 @@
       "refereeStats": null,
       "date": "2026-04-12",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "H. Alvarez",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "M. Ristic",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "J. Rodriguez",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Yellow Cards"
+          },
+          {
+            "player": "C. Starfelt",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          }
+        ],
+        "away": [
+          {
+            "player": "L. Dendoncker",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "A. Fores",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "L. Ilic",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Achilles Tendon Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 3,
+          "midfield": 1,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 4,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 4,
+          "notes": [
+            "H. Alvarez (Gesperrt/Verletzt — Injury)",
+            "M. Ristic (Gesperrt/Verletzt — Injury)",
+            "J. Rodriguez (Gesperrt/Verletzt — Yellow Cards)",
+            "C. Starfelt (Gesperrt/Verletzt — Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "H. Alvarez",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "M. Ristic",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "J. Rodriguez",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Yellow Cards"
+            },
+            {
+              "player": "C. Starfelt",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            }
+          ],
+          "impactScore": 2.6
         },
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 0,
+          "midfield": 3,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 3,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 3,
+          "notes": [
+            "L. Dendoncker (Gesperrt/Verletzt — Injury)",
+            "A. Fores (Gesperrt/Verletzt — Injury)",
+            "L. Ilic (Gesperrt/Verletzt — Achilles Tendon Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "L. Dendoncker",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "A. Fores",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "L. Ilic",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Achilles Tendon Injury"
+            }
+          ],
+          "impactScore": 0.9
         }
       },
       "h2h": {
@@ -9179,26 +8856,27 @@
           "impactScore": 0.8
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 5,
-        "draws": 2,
-        "awayWins": 3,
-        "lastMeetingYear": 2026,
-        "avgGoals": 2.4,
-        "over25Rate": 0.6,
-        "over35Rate": 0.2,
-        "bttsRate": 0.5,
-        "lastResults": [
-          "L",
-          "D",
-          "W",
-          "W",
-          "D"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 2.35,
+        "dr": 3.2,
+        "aw": 3.1,
+        "o15": 1.36,
+        "o25": 2.1,
+        "u25": 1.73,
+        "o35": 4,
+        "u35": 1.25,
+        "bttsY": 1.95,
+        "bttsN": 1.8,
+        "dc1X_bkr": 1.36,
+        "dcX2_bkr": 1.53,
+        "cards_o55": 2,
+        "cards_o45": 1.68,
+        "cards_u45": 2.04,
+        "cards_o35": 3.91,
+        "cards_u35": 1.19
+      }
     },
     {
       "fixtureId": 1391125,
@@ -9210,117 +8888,33 @@
       "refereeStats": null,
       "date": "2026-04-12",
       "injuries": {
-        "home": [
-          {
-            "player": "I. Benito",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "F. Boyomo",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Yellow Cards"
-          },
-          {
-            "player": "A. Osambela",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Red Card"
-          }
-        ],
-        "away": [
-          {
-            "player": "J. Firpo",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Injury"
-          },
-          {
-            "player": "Isco",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Ankle Injury"
-          },
-          {
-            "player": "A. Ortiz",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Shoulder Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 3,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 3,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 3,
-          "notes": [
-            "I. Benito (Gesperrt/Verletzt — Knee Injury)",
-            "F. Boyomo (Gesperrt/Verletzt — Yellow Cards)",
-            "A. Osambela (Gesperrt/Verletzt — Red Card)"
-          ],
-          "_raw": [
-            {
-              "player": "I. Benito",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "F. Boyomo",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Yellow Cards"
-            },
-            {
-              "player": "A. Osambela",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Red Card"
-            }
-          ],
-          "impactScore": 0.9
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 2,
-          "midfield": 1,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 3,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 3,
-          "notes": [
-            "J. Firpo (Gesperrt/Verletzt — Injury)",
-            "Isco (Gesperrt/Verletzt — Ankle Injury)",
-            "A. Ortiz (Gesperrt/Verletzt — Shoulder Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "J. Firpo",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Injury"
-            },
-            {
-              "player": "Isco",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Ankle Injury"
-            },
-            {
-              "player": "A. Ortiz",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Shoulder Injury"
-            }
-          ],
-          "impactScore": 1.5
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
       "h2h": {
@@ -9341,7 +8935,7 @@
           "L"
         ]
       },
-      "isFinished": false,
+      "isFinished": true,
       "odds": null
     },
     {
@@ -9520,33 +9114,182 @@
       "refereeStats": null,
       "date": "2026-04-11",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "C. Azpilicueta",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "J. A. Carmona",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Yellow Cards"
+          },
+          {
+            "player": "Marcao",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "T. Nianzou",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Red Card"
+          }
+        ],
+        "away": [
+          {
+            "player": "P. Barrios",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "J. Cardoso",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "J. M. Gimenez",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "N. Gonzalez",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Red Card"
+          },
+          {
+            "player": "D. Hancko",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "Koke",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Yellow Cards"
+          },
+          {
+            "player": "J. Oblak",
+            "position": "G",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
+          "defense": 4,
           "midfield": 0,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 4,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 4,
+          "notes": [
+            "C. Azpilicueta (Gesperrt/Verletzt — Injury)",
+            "J. A. Carmona (Gesperrt/Verletzt — Yellow Cards)",
+            "Marcao (Gesperrt/Verletzt — Knee Injury)",
+            "T. Nianzou (Gesperrt/Verletzt — Red Card)"
+          ],
+          "_raw": [
+            {
+              "player": "C. Azpilicueta",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "J. A. Carmona",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Yellow Cards"
+            },
+            {
+              "player": "Marcao",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "T. Nianzou",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Red Card"
+            }
+          ],
+          "impactScore": 2.9
         },
         "away": {
-          "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "goalkeeper": 1,
+          "defense": 3,
+          "midfield": 3,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 7,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 7,
+          "notes": [
+            "P. Barrios (Gesperrt/Verletzt — Muscle Injury)",
+            "J. Cardoso (Gesperrt/Verletzt — Muscle Injury)",
+            "J. M. Gimenez (Gesperrt/Verletzt — Injury)",
+            "N. Gonzalez (Gesperrt/Verletzt — Red Card)",
+            "D. Hancko (Gesperrt/Verletzt — Injury)",
+            "Koke (Gesperrt/Verletzt — Yellow Cards)",
+            "J. Oblak (Gesperrt/Verletzt — Muscle Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "P. Barrios",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "J. Cardoso",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "J. M. Gimenez",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "N. Gonzalez",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Red Card"
+            },
+            {
+              "player": "D. Hancko",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "Koke",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Yellow Cards"
+            },
+            {
+              "player": "J. Oblak",
+              "position": "G",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            }
+          ],
+          "impactScore": 4.3
         }
       },
       "h2h": {
@@ -9652,7 +9395,21 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 2,
+        "homeWins": 1,
+        "draws": 0,
+        "awayWins": 1,
+        "lastMeetingYear": 2025,
+        "avgGoals": 3.5,
+        "over25Rate": 0.5,
+        "over35Rate": 0.5,
+        "bttsRate": 0.5,
+        "lastResults": [
+          "W",
+          "L"
+        ]
+      },
       "isFinished": false,
       "odds": null
     },
@@ -9695,43 +9452,9 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 9,
-        "draws": 1,
-        "awayWins": 0,
-        "lastMeetingYear": 2025,
-        "avgGoals": 4,
-        "over25Rate": 0.8,
-        "over35Rate": 0.5,
-        "bttsRate": 0.5,
-        "lastResults": [
-          "W",
-          "W",
-          "W",
-          "W",
-          "D"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
-      "odds": {
-        "hw": 1.17,
-        "dr": 7.5,
-        "aw": 13,
-        "o15": 1.1,
-        "o25": 1.36,
-        "u25": 3.1,
-        "o35": 1.83,
-        "u35": 1.83,
-        "bttsY": 1.95,
-        "bttsN": 1.8,
-        "dc1X_bkr": 1.04,
-        "dcX2_bkr": 5,
-        "cards_o35": 4.7,
-        "cards_u35": 1.14,
-        "cards_o45": 3.7,
-        "cards_u45": 1.22
-      }
+      "odds": null
     },
     {
       "fixtureId": 1396492,
@@ -9772,26 +9495,27 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 8,
-        "draws": 1,
-        "awayWins": 1,
-        "lastMeetingYear": 2025,
-        "avgGoals": 2.8,
-        "over25Rate": 0.6,
-        "over35Rate": 0.3,
-        "bttsRate": 0.3,
-        "lastResults": [
-          "W",
-          "W",
-          "W",
-          "L",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 1.44,
+        "dr": 4.2,
+        "aw": 7.5,
+        "o15": 1.28,
+        "o25": 1.9,
+        "u25": 1.9,
+        "o35": 3.25,
+        "u35": 1.33,
+        "bttsY": 2,
+        "bttsN": 1.75,
+        "dc1X_bkr": 1.1,
+        "dcX2_bkr": 2.62,
+        "cards_o55": 1.85,
+        "cards_o35": 4,
+        "cards_u35": 1.18,
+        "cards_o45": 5,
+        "cards_u45": 1.12
+      }
     },
     {
       "fixtureId": 1396493,
@@ -9832,24 +9556,7 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 3,
-        "draws": 1,
-        "awayWins": 6,
-        "lastMeetingYear": 2025,
-        "avgGoals": 2.7,
-        "over25Rate": 0.5,
-        "over35Rate": 0.4,
-        "bttsRate": 0.4,
-        "lastResults": [
-          "L",
-          "L",
-          "L",
-          "W",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": {
         "hw": 7,
@@ -10029,7 +9736,24 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 9,
+        "homeWins": 2,
+        "draws": 3,
+        "awayWins": 4,
+        "lastMeetingYear": 2025,
+        "avgGoals": 2.2,
+        "over25Rate": 0.33,
+        "over35Rate": 0.11,
+        "bttsRate": 0.44,
+        "lastResults": [
+          "W",
+          "D",
+          "L",
+          "L",
+          "L"
+        ]
+      },
       "isFinished": false,
       "odds": {
         "hw": 4.1,
@@ -10429,23 +10153,7 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 4,
-        "homeWins": 1,
-        "draws": 2,
-        "awayWins": 1,
-        "lastMeetingYear": 2025,
-        "avgGoals": 2,
-        "over25Rate": 0.25,
-        "over35Rate": 0,
-        "bttsRate": 0.75,
-        "lastResults": [
-          "W",
-          "D",
-          "D",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": null
     },
@@ -10608,9 +10316,42 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 7,
+        "draws": 0,
+        "awayWins": 3,
+        "lastMeetingYear": 2025,
+        "avgGoals": 3,
+        "over25Rate": 0.8,
+        "over35Rate": 0.3,
+        "bttsRate": 0.7,
+        "lastResults": [
+          "W",
+          "W",
+          "W",
+          "L",
+          "L"
+        ]
+      },
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 1.62,
+        "dr": 3.8,
+        "aw": 4.75,
+        "o15": 1.18,
+        "o25": 1.67,
+        "u25": 2.15,
+        "o35": 2.62,
+        "u35": 1.44,
+        "bttsY": 1.7,
+        "bttsN": 2.05,
+        "dc1X_bkr": 1.17,
+        "dcX2_bkr": 2.2,
+        "cards_o45": 1.75,
+        "cards_u45": 1.95,
+        "cards_o55": 1.94
+      }
     },
     {
       "fixtureId": 1536942,
@@ -10651,24 +10392,7 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 0,
-        "draws": 4,
-        "awayWins": 6,
-        "lastMeetingYear": 2025,
-        "avgGoals": 3.2,
-        "over25Rate": 0.5,
-        "over35Rate": 0.4,
-        "bttsRate": 0.7,
-        "lastResults": [
-          "D",
-          "L",
-          "L",
-          "L",
-          "D"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": null
     },
@@ -10754,7 +10478,24 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 5,
+        "draws": 4,
+        "awayWins": 1,
+        "lastMeetingYear": 2026,
+        "avgGoals": 2.8,
+        "over25Rate": 0.4,
+        "over35Rate": 0.4,
+        "bttsRate": 0.7,
+        "lastResults": [
+          "L",
+          "W",
+          "D",
+          "D",
+          "W"
+        ]
+      },
       "isFinished": false,
       "odds": null
     },
@@ -10797,7 +10538,22 @@
           "impactScore": 0
         }
       },
-      "h2h": null,
+      "h2h": {
+        "games": 3,
+        "homeWins": 1,
+        "draws": 0,
+        "awayWins": 2,
+        "lastMeetingYear": 2026,
+        "avgGoals": 3.3,
+        "over25Rate": 1,
+        "over35Rate": 0.33,
+        "bttsRate": 0.67,
+        "lastResults": [
+          "W",
+          "L",
+          "L"
+        ]
+      },
       "isFinished": true,
       "odds": null
     },
@@ -10960,23 +10716,7 @@
           "impactScore": 0
         }
       },
-      "h2h": {
-        "games": 4,
-        "homeWins": 0,
-        "draws": 3,
-        "awayWins": 1,
-        "lastMeetingYear": 2025,
-        "avgGoals": 1.8,
-        "over25Rate": 0.5,
-        "over35Rate": 0.25,
-        "bttsRate": 0.5,
-        "lastResults": [
-          "D",
-          "D",
-          "D",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": null
     },
@@ -11141,23 +10881,7 @@
       },
       "h2h": null,
       "isFinished": false,
-      "odds": {
-        "hw": 1.91,
-        "dr": 3.5,
-        "aw": 3.6,
-        "o15": 1.2,
-        "o25": 1.67,
-        "u25": 2.15,
-        "o35": 2.62,
-        "u35": 1.44,
-        "bttsY": 1.57,
-        "bttsN": 2.25,
-        "dc1X_bkr": 1.28,
-        "dcX2_bkr": 1.83,
-        "cards_o45": 1.8,
-        "cards_u45": 1.9,
-        "cards_o55": 2.1
-      }
+      "odds": null
     },
     {
       "fixtureId": 1536984,
