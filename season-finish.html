@@ -4081,7 +4081,7 @@ loadAllOdds().then(() => {
 setTimeout(() => loadPreMatchData(), 1500);
 
 // ── Manual Pre-Match reload (clears cache first) ───────────────────────────
-function showPreMatchDebug() {
+async function showPreMatchDebug() {
   const pm = window._preMatchData || {};
   const entries = Object.entries(pm);
 
@@ -4094,10 +4094,25 @@ function showPreMatchDebug() {
   const withH2h  = entries.filter(([,d]) => d.h2h?.avgGoals != null).length;
   const withOdds = entries.filter(([,d]) => d.odds).length;
 
+  // Check API quota (fast — uses /status endpoint, costs 0 API credits on some plans)
+  let apiStatusLine = '⏳ Prüfe API-Quota...';
+  try {
+    const _st = await fetch('https://v3.football.api-sports.io/status', { headers: { 'x-apisports-key': '9f36726c1bdc9957b4a49f89277b80db' } });
+    const _sd = await _st.json();
+    const _sub = (_sd.response || {}).subscription || {};
+    const _req = (_sd.response || {}).requests || {};
+    apiStatusLine = `API Plan: ${_sub.plan||'?'} | Requests heute: ${_req.current??'?'} / ${_req.limit_day??'?'} | Verbleibend: ${(_req.limit_day??0) - (_req.current??0)}`;
+  } catch(e) { apiStatusLine = `API-Status nicht abrufbar: ${e.message}`; }
+
+  // Collect errors from last load
+  const errLog = (window._pmErrors || []).join('\n') || '(keine Fehler)';
+
   // Build full text (copyable)
   const [sampleKey, sampleD] = total ? entries[0] : ['–', {}];
   const lines = [
     `🔬 Pre-Match API Status  —  ${new Date().toLocaleTimeString('de-AT')}`,
+    ``,
+    `${apiStatusLine}`,
     ``,
     `Spiele gematcht:   ${total}`,
     `Mit Fixture-ID:    ${withFx}`,
@@ -4107,6 +4122,9 @@ function showPreMatchDebug() {
     `Mit Verletzungen:  ${withInj}`,
     `Mit H2H-Tordaten:  ${withH2h}   ← Over/BTTS-Modifier`,
     `Mit Quoten:        ${withOdds}`,
+    ``,
+    `── Fehler beim letzten Ladevorgang ──────────────────`,
+    errLog,
     ``,
     `── Beispiel-Eintrag (${sampleKey}) ──────────────────`,
     `fixtureId:    ${sampleD.fixtureId ?? '–'}`,
@@ -4121,7 +4139,7 @@ function showPreMatchDebug() {
     JSON.stringify(pm, null, 2)
   ].join('\n');
 
-  // Show copyable overlay
+  // Show copyable overlay — initial content while API status loads
   let ov = document.getElementById('pmDebugOverlay');
   if (!ov) {
     ov = document.createElement('div');
@@ -4168,7 +4186,7 @@ async function reloadPreMatchData(btn) {
 // ── Clear stale pre-match caches from old versions ─────────────────────────
 try {
   Object.keys(localStorage)
-    .filter(k => k.startsWith('pmData_v1_') || k.startsWith('pmData_v2_') || k.startsWith('pmData_v3_') || k.startsWith('pmData_v4_') || k === 'refStats_v3' || k === 'refStats_v4')
+    .filter(k => k.startsWith('pmData_v1_') || k.startsWith('pmData_v2_') || k.startsWith('pmData_v3_') || k.startsWith('pmData_v4_') || k.startsWith('pmData_v5_') || k === 'refStats_v3' || k === 'refStats_v4')
     .forEach(k => localStorage.removeItem(k));
 } catch(e) {}
 
@@ -5051,35 +5069,38 @@ async function _apifbGetRefereeStats(refereeName) {
 // ═══════════════════════════════════════════════════════
 window._preMatchData   = {};
 window._preMatchLoaded = false;
+window._pmErrors       = [];   // API errors captured during last load
 
 async function loadPreMatchData() {
   // IMPORTANT: use LOCAL date components (not toISOString/UTC) to match parseGermanDate behavior.
   const _localIso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   const today = new Date();
+  const todayY = today.getFullYear(), todayM = today.getMonth(), todayD = today.getDate();
   const todayIso = _localIso(today);
 
-  // Collect only dates that actually have LEAGUES fixtures — much more efficient than
-  // fetching every day for 21 days. Always include yesterday (catch late results) + today.
-  const _configDates = new Set([
-    _localIso(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)), // yesterday
-    todayIso
-  ]);
+  // Step A: collect dates with LEAGUES fixtures (yesterday → +7 days only)
+  // Limiting to 7 days keeps API calls low (free tier: 100/day).
+  window._pmErrors = []; // reset error log for this run
+  const _fixtureDateSet = new Set();
   for (const L of Object.values(LEAGUES)) {
     for (const f of (L.fixtures || [])) {
       try {
         const fd = parseGermanDate(f.date);
-        const fiso = _localIso(fd);
-        // Include all fixture dates from today up to 30 days out
-        const diffDays = Math.round((fd - today) / 864e5);
-        if (diffDays >= -1 && diffDays <= 30) _configDates.add(fiso);
+        const msPerDay = 86400000;
+        const diffMs = fd.getTime() - new Date(todayY, todayM, todayD).getTime();
+        const diffDays = Math.round(diffMs / msPerDay);
+        if (diffDays >= -1 && diffDays <= 7) _fixtureDateSet.add(_localIso(fd));
       } catch(e) {}
     }
   }
-  const dates = [..._configDates].sort();
-  console.log(`[PreMatch] Fetching ${dates.length} dates:`, dates.join(', '));
+  // Always include yesterday + today as safety net
+  _fixtureDateSet.add(_localIso(new Date(todayY, todayM, todayD - 1)));
+  _fixtureDateSet.add(todayIso);
+  const dates = [..._fixtureDateSet].sort();
+  console.log(`[PreMatch] Fetching ${dates.length} fixture dates:`, dates.join(', '));
 
   // Serve from cache (key = today's local date, TTL 3h)
-  const cacheKey = `pmData_v5_${todayIso}`;
+  const cacheKey = `pmData_v6_${todayIso}`;
   const PM_TTL   = 3 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
@@ -5096,6 +5117,7 @@ async function loadPreMatchData() {
   // ── Step 1: fetch API fixtures for each date, map to LEAGUES entries ────────
   for (const date of dates) {
     const { fixtures, error } = await _apifbFetchDate(date);
+    if (error) { window._pmErrors.push(`[${date}] API Fehler: ${error}`); console.warn(`[PreMatch] ${date} error:`, error); }
     if (error || !fixtures.length) continue;
 
     for (const [, L] of Object.entries(LEAGUES)) {
