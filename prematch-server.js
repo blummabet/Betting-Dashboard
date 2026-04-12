@@ -88,6 +88,11 @@ function localIso(d) {
 // ── Fuzzy team name matching (mirrors HTML's _fuzzyTeam) ────────────────────
 function norm(s) {
   return (s || '').toLowerCase()
+    // Umlaut normalization: ö→o, ü→u, ä→a, etc. so "Köln" matches "Koln"
+    .replace(/[àáâãäå]/g,'a').replace(/[èéêë]/g,'e').replace(/[ìíîï]/g,'i')
+    .replace(/[òóôõöø]/g,'o').replace(/[ùúûü]/g,'u').replace(/[ýÿ]/g,'y')
+    .replace(/[ñ]/g,'n').replace(/[ç]/g,'c').replace(/[ß]/g,'ss')
+    .replace(/[şș]/g,'s').replace(/[ğ]/g,'g').replace(/[ı]/g,'i')
     .replace(/\bfc\b|\bafc\b|\bcf\b|\bsc\b|\bsv\b|\bac\b|\bbc\b|\bfk\b|\bsk\b/g, '')
     .replace(/[^a-z0-9]/g, '');
 }

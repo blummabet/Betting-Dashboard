@@ -1310,6 +1310,12 @@ window._teamStats = {};   // populated by stats_cache.json (understat xG + venue
 
 function norm(n) {
   return (n||'').toLowerCase()
+    // Umlaut + diacritic normalization FIRST — convert ö→o, ü→u, ä→a, ñ→n, etc.
+    // so "Köln" and "Koln" both become "koln" and fuzzy-match correctly
+    .replace(/[àáâãäå]/g,'a').replace(/[èéêë]/g,'e').replace(/[ìíîï]/g,'i')
+    .replace(/[òóôõöø]/g,'o').replace(/[ùúûü]/g,'u').replace(/[ýÿ]/g,'y')
+    .replace(/[ñ]/g,'n').replace(/[ç]/g,'c').replace(/[ß]/g,'ss')
+    .replace(/[şș]/g,'s').replace(/[ğ]/g,'g').replace(/[ı]/g,'i')
     .replace(/\b(fc|sv|sc|ac|ss|rc|sk|tsv|rb|vfb|bsc|vfl|1\.fc|spvgg|as|ss|us|cd|cf)\b/g,' ')
     .replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
 }
@@ -5241,6 +5247,63 @@ async function _apifbGetRefereeStats(refereeName) {
 //  never makes redundant API calls.
 // ═══════════════════════════════════════════════════════
 async function _enrichMissingData(result, cacheKey) {
+  // ── Step 3: H2H for upcoming fixtures that are missing it ───────────────────
+  // Capped at 25 fixtures per run (today-only) to avoid quota burn.
+  // Results are stored in the main cache so future loads use them.
+  const _localIsoE = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const _todayIso  = _localIsoE(new Date());
+  const needH2H = Object.values(result).filter(d =>
+    d.homeTeamId && d.awayTeamId && !d.h2h && !d.isFinished && d.date === _todayIso
+  ).slice(0, 25);
+  if (needH2H.length) {
+    console.log(`[PreMatch] Enrich Step3: ${needH2H.length} H2H heute fehlend`);
+    let _h2hOk = 0;
+    for (let _hi = 0; _hi < needH2H.length; _hi += 5) {
+      const _hb = needH2H.slice(_hi, _hi + 5);
+      await Promise.allSettled(_hb.map(async d => {
+        try {
+          const _hr = await fetch(
+            `${APISPORTS_BASE}/fixtures/headtohead?h2h=${d.homeTeamId}-${d.awayTeamId}&last=10`,
+            { headers: { 'x-apisports-key': APISPORTS_KEY } }
+          );
+          if (!_hr.ok) return;
+          const _hd = await _hr.json();
+          const fxs = _hd.response || [];
+          if (!fxs.length) return;
+          let totalGoals = 0, over25 = 0, over35 = 0, btts = 0, homeWins = 0, draws = 0, awayWins = 0;
+          let lastYear = null;
+          const lastResults = [];
+          for (const f of fxs) {
+            const hg = f.goals?.home ?? 0, ag = f.goals?.away ?? 0;
+            totalGoals += hg + ag;
+            if (hg + ag > 2.5) over25++;
+            if (hg + ag > 3.5) over35++;
+            if (hg > 0 && ag > 0) btts++;
+            const isH = f.teams?.home?.id === d.homeTeamId;
+            if (isH ? hg > ag : ag > hg) homeWins++;
+            else if (hg === ag) draws++;
+            else awayWins++;
+            const yr = new Date(f.fixture?.date || '').getFullYear();
+            if (!isNaN(yr) && (!lastYear || yr > lastYear)) lastYear = yr;
+            lastResults.push(isH ? (hg>ag?'W':hg===ag?'D':'L') : (ag>hg?'W':hg===ag?'D':'L'));
+          }
+          const n = fxs.length;
+          d.h2h = {
+            games: n, homeWins, draws, awayWins, lastMeetingYear: lastYear,
+            avgGoals:   Math.round(totalGoals/n*10)/10,
+            over25Rate: Math.round(over25/n*100)/100,
+            over35Rate: Math.round(over35/n*100)/100,
+            bttsRate:   Math.round(btts/n*100)/100,
+            lastResults: lastResults.slice(0, 5)
+          };
+          _h2hOk++;
+        } catch(e) {}
+      }));
+      if (_hi + 5 < needH2H.length) await new Promise(r => setTimeout(r, 300));
+    }
+    console.log(`[PreMatch] Enrich Step3 done: ${_h2hOk} H2H geladen`);
+  }
+
   // ── Step 4: referee stats for entries still missing them ────────────────────
   const uniqueRefs = [...new Set(
     Object.values(result)
@@ -5318,7 +5381,7 @@ async function _enrichMissingData(result, cacheKey) {
   }
 
   // ── Persist enriched result + re-render ─────────────────────────────────────
-  if (uniqueRefs.length || needOdds.length) {
+  if (uniqueRefs.length || needOdds.length || needH2H.length) {
     try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: result })); } catch(e) {}
     _injectPreMatchAndRerender();
   }
