@@ -719,7 +719,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="heart-grid">
       <div class="heart-card accent">
         <h3>⚙️ Wie es funktioniert</h3>
-        <p style="margin-bottom:8px;">1,5 Sekunden nach dem Page-Load lädt <code style="background:var(--card2);padding:1px 5px;border-radius:4px;font-size:11px;">loadPreMatchData()</code> im Hintergrund echte Spieldaten für die nächsten 7 Tage.</p>
+        <p style="margin-bottom:8px;">1,5 Sekunden nach dem Page-Load lädt <code style="background:var(--card2);padding:1px 5px;border-radius:4px;font-size:11px;">loadPreMatchData()</code> im Hintergrund echte Spieldaten — nur für Tage mit konfigurierten Spielen, bis zu 30 Tage im Voraus.</p>
         <ul>
           <li>API-Fixture-IDs werden auf Config-Spiele gemappt (fuzzy team matching)</li>
           <li>Verletzungen + Sperren per <code style="font-size:11px;">/injuries?fixture=ID</code></li>
@@ -5053,19 +5053,33 @@ window._preMatchData   = {};
 window._preMatchLoaded = false;
 
 async function loadPreMatchData() {
-  // Build date range: today − 1 day through today + 6 days (full week window)
   // IMPORTANT: use LOCAL date components (not toISOString/UTC) to match parseGermanDate behavior.
-  // parseGermanDate returns local midnight, so toISOString() shifts to UTC (e.g. Vienna midnight = prev-day UTC).
-  // All date comparisons must stay in local time to avoid off-by-one mismatches.
   const _localIso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   const today = new Date();
-  const dates  = [-1, 0, 1, 2, 3, 4, 5, 6].map(i => {
-    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
-    return _localIso(d);
-  });
+  const todayIso = _localIso(today);
 
-  // Serve from cache (key = today's date, TTL 3h)
-  const cacheKey = `pmData_v5_${dates[0]}`;
+  // Collect only dates that actually have LEAGUES fixtures — much more efficient than
+  // fetching every day for 21 days. Always include yesterday (catch late results) + today.
+  const _configDates = new Set([
+    _localIso(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)), // yesterday
+    todayIso
+  ]);
+  for (const L of Object.values(LEAGUES)) {
+    for (const f of (L.fixtures || [])) {
+      try {
+        const fd = parseGermanDate(f.date);
+        const fiso = _localIso(fd);
+        // Include all fixture dates from today up to 30 days out
+        const diffDays = Math.round((fd - today) / 864e5);
+        if (diffDays >= -1 && diffDays <= 30) _configDates.add(fiso);
+      } catch(e) {}
+    }
+  }
+  const dates = [..._configDates].sort();
+  console.log(`[PreMatch] Fetching ${dates.length} dates:`, dates.join(', '));
+
+  // Serve from cache (key = today's local date, TTL 3h)
+  const cacheKey = `pmData_v5_${todayIso}`;
   const PM_TTL   = 3 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
