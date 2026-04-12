@@ -4204,14 +4204,16 @@ fetch('./stats_cache.json')
     }
   });
 
-// NOTE: loadAllOdds() (the-odds-api.com, alte Free-Plan API) ist deaktiviert.
-// Quoten kommen jetzt von api-football via prematch-server.js (Pro Plan).
-// Falls das alte Fallback wieder gebraucht wird: loadAllOdds() hier wieder einkommentieren.
-// loadAllOdds().then(() => { renderLeague(window._currentLeague); });
-
-// Load Pro plan pre-match data in background — re-renders cards when ready
-// Small delay to let the initial render finish first
-setTimeout(() => loadPreMatchData(), 1500);
+// Odds-Strategie (beide laufen parallel — jeder re-rendert wenn er fertig ist):
+// 1. api-football (Pro Plan) via prematch-data.json + _enrichMissingData → Verletzungen, H2H, Schiri, Quoten
+// 2. the-odds-api.com → Fallback wenn api-football keine Quoten liefert (deckt alle 11 Ligen ab)
+// findOdds() prüft pm.odds zuerst, fällt dann auf _oddsData zurück — beide Quellen ergänzen sich.
+setTimeout(() => {
+  // Primär: api-football Pro Plan (Verletzungen, H2H, Schiri-Stats, Quoten)
+  loadPreMatchData();
+  // Fallback: the-odds-api.com — lädt Quoten für alle Ligen; re-rendert wenn fertig
+  loadAllOdds().then(() => renderLeague(window._currentLeague));
+}, 1500);
 
 // ── Manual Pre-Match reload (clears cache first) ───────────────────────────
 async function showPreMatchDebug() {

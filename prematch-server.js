@@ -148,6 +148,7 @@ function computeInjuryImpact(inj) {
 // ── Parse bookmakers array → odds object (same format as HTML) ───────────────
 // Accepts full bookmakers array; Pinnacle takes priority for 1X2/Goals.
 // Merges BTTS, Double Chance, and Cards from any available bookmaker.
+// Case-insensitive matching — mirrors browser _parseOddsBets logic.
 function parseBets(bookmakers) {
   if (!Array.isArray(bookmakers) || !bookmakers.length) return {};
   const r = {};
@@ -158,43 +159,49 @@ function parseBets(bookmakers) {
   });
   for (const bkr of sorted) {
     for (const bet of (bkr.bets || [])) {
-      const bn = bet.name || '';
-      if (bn === 'Match Winner') {
+      const bn = (bet.name || '').toLowerCase().trim();
+      if (bn === 'match winner' || bn === '1x2' || bn === 'result' || bn === 'fulltime result' || bn === 'winner' || bn === 'match result') {
         for (const v of (bet.values || [])) {
-          if      (v.value === 'Home' && !r.hw) r.hw = parseFloat(v.odd);
-          else if (v.value === 'Away' && !r.aw) r.aw = parseFloat(v.odd);
-          else if (v.value === 'Draw' && !r.dr) r.dr = parseFloat(v.odd);
+          const vl = (v.value || '').toLowerCase();
+          if      (vl === 'home' && !r.hw) r.hw = parseFloat(v.odd);
+          else if (vl === 'away' && !r.aw) r.aw = parseFloat(v.odd);
+          else if (vl === 'draw' && !r.dr) r.dr = parseFloat(v.odd);
         }
-      } else if (bn === 'Goals Over/Under') {
+      } else if (bn === 'goals over/under' || bn === 'total goals' || bn === 'over/under' || bn === 'total - goals' || bn.includes('goals o/u') || (bn.includes('over') && bn.includes('under') && bn.includes('goal'))) {
         for (const v of (bet.values || [])) {
-          if      (v.value === 'Over 2.5'  && !r.o25) r.o25 = parseFloat(v.odd);
-          else if (v.value === 'Under 2.5' && !r.u25) r.u25 = parseFloat(v.odd);
-          else if (v.value === 'Over 3.5'  && !r.o35) r.o35 = parseFloat(v.odd);
-          else if (v.value === 'Under 3.5' && !r.u35) r.u35 = parseFloat(v.odd);
-          else if (v.value === 'Over 1.5'  && !r.o15) r.o15 = parseFloat(v.odd);
+          const vl = (v.value || '').toLowerCase();
+          if      (vl === 'over 2.5'  && !r.o25) r.o25 = parseFloat(v.odd);
+          else if (vl === 'under 2.5' && !r.u25) r.u25 = parseFloat(v.odd);
+          else if (vl === 'over 3.5'  && !r.o35) r.o35 = parseFloat(v.odd);
+          else if (vl === 'under 3.5' && !r.u35) r.u35 = parseFloat(v.odd);
+          else if (vl === 'over 1.5'  && !r.o15) r.o15 = parseFloat(v.odd);
         }
-      } else if (bn === 'Both Teams Score') {
+      } else if (bn.includes('both teams') || bn === 'btts' || bn === 'gg/ng') {
         for (const v of (bet.values || [])) {
-          if      (v.value === 'Yes' && !r.bttsY) r.bttsY = parseFloat(v.odd);
-          else if (v.value === 'No'  && !r.bttsN) r.bttsN = parseFloat(v.odd);
+          const vl = (v.value || '').toLowerCase();
+          if      ((vl === 'yes' || vl === 'gg') && !r.bttsY) r.bttsY = parseFloat(v.odd);
+          else if ((vl === 'no'  || vl === 'ng') && !r.bttsN) r.bttsN = parseFloat(v.odd);
         }
-      } else if (bn === 'Double Chance') {
+      } else if (bn === 'double chance' || bn.includes('double chance')) {
         for (const v of (bet.values || [])) {
-          if      ((v.value === 'Home/Draw' || v.value === '1X') && !r.dc1X_bkr) r.dc1X_bkr = parseFloat(v.odd);
-          else if ((v.value === 'Draw/Away' || v.value === 'X2') && !r.dcX2_bkr) r.dcX2_bkr = parseFloat(v.odd);
+          const vl = (v.value || '').toLowerCase();
+          if      ((vl === 'home/draw' || vl === '1x' || vl === 'home or draw') && !r.dc1X_bkr) r.dc1X_bkr = parseFloat(v.odd);
+          else if ((vl === 'draw/away' || vl === 'x2' || vl === 'draw or away') && !r.dcX2_bkr) r.dcX2_bkr = parseFloat(v.odd);
         }
-      } else if (bn === 'Asian Handicap') {
+      } else if (bn === 'asian handicap' || bn === 'draw no bet' || bn === 'dnb') {
         for (const v of (bet.values || [])) {
-          if      (v.value === 'Home' && !r.dnbH) r.dnbH = parseFloat(v.odd);
-          else if (v.value === 'Away' && !r.dnbA) r.dnbA = parseFloat(v.odd);
+          const vl = (v.value || '').toLowerCase();
+          if      (vl === 'home' && !r.dnbH) r.dnbH = parseFloat(v.odd);
+          else if (vl === 'away' && !r.dnbA) r.dnbA = parseFloat(v.odd);
         }
-      } else if (bn === 'Cards Over/Under' || bn === 'Total - Cards' || bn === 'Bookings') {
+      } else if (bn.includes('card') || bn.includes('booking') || bn === 'total - cards') {
         for (const v of (bet.values || [])) {
-          if      (v.value === 'Over 3.5'  && !r.cards_o35) r.cards_o35 = parseFloat(v.odd);
-          else if (v.value === 'Under 3.5' && !r.cards_u35) r.cards_u35 = parseFloat(v.odd);
-          else if (v.value === 'Over 4.5'  && !r.cards_o45) r.cards_o45 = parseFloat(v.odd);
-          else if (v.value === 'Under 4.5' && !r.cards_u45) r.cards_u45 = parseFloat(v.odd);
-          else if (v.value === 'Over 5.5'  && !r.cards_o55) r.cards_o55 = parseFloat(v.odd);
+          const vl = (v.value || '').toLowerCase();
+          if      (vl === 'over 3.5'  && !r.cards_o35) r.cards_o35 = parseFloat(v.odd);
+          else if (vl === 'under 3.5' && !r.cards_u35) r.cards_u35 = parseFloat(v.odd);
+          else if (vl === 'over 4.5'  && !r.cards_o45) r.cards_o45 = parseFloat(v.odd);
+          else if (vl === 'under 4.5' && !r.cards_u45) r.cards_u45 = parseFloat(v.odd);
+          else if (vl === 'over 5.5'  && !r.cards_o55) r.cards_o55 = parseFloat(v.odd);
         }
       }
     }
@@ -398,23 +405,48 @@ async function fetchAllPrematchData() {
   // No bookmaker filter — fetch all bookmakers, parseBets() merges BTTS/DC/Cards from any.
   const upcoming = fixtures.filter(d => !d.isFinished && d.fixtureId);
   console.log(`[Server] Step5: Quoten für ${upcoming.length} bevorstehende Spiele (alle Bookmaker)...`);
-  let oddsOk = 0;
+  let oddsOk = 0, oddsFail = 0;
+  let _firstOddsErr = null;  // capture first error/empty for diagnostics
 
   for (let i = 0; i < upcoming.length; i += 20) {
     const batch = upcoming.slice(i, i + 20);
     await Promise.allSettled(batch.map(async d => {
       try {
         const data = await apiFetch(`/odds?fixture=${d.fixtureId}`);
+        // Capture API-level errors (plan restriction, quota, etc.)
+        if (data.errors && Object.keys(data.errors).length && !_firstOddsErr) {
+          _firstOddsErr = { type: 'api_error', errors: data.errors, fixture: d.fixtureId };
+          console.warn(`  [Odds] API-Error für Fixture ${d.fixtureId}:`, JSON.stringify(data.errors));
+        }
         const bookmakers = (data.response || [])[0]?.bookmakers || [];
         if (bookmakers.length) {
+          // Log bookmaker/bet names for first successful fetch (once)
+          if (oddsOk === 0) {
+            const bkrNames = bookmakers.map(b => b.name).join(', ');
+            const betNames = [...new Set(bookmakers.flatMap(b => (b.bets||[]).map(bt => bt.name)))].join(', ');
+            console.log(`  [Odds] Sample bkrs: ${bkrNames}`);
+            console.log(`  [Odds] Sample bets: ${betNames}`);
+          }
           const r = parseBets(bookmakers);
           if (Object.keys(r).length) { d.odds = r; oddsOk++; }
+          else { oddsFail++; }
+        } else {
+          // No bookmakers in response — log once for diagnostics
+          if (!_firstOddsErr) {
+            _firstOddsErr = { type: 'no_bookmakers', results: data.results, fixture: d.fixtureId };
+            console.warn(`  [Odds] Keine Bookmaker für Fixture ${d.fixtureId}: results=${data.results}, errors=${JSON.stringify(data.errors||{})}`);
+          }
+          oddsFail++;
         }
-      } catch(e) {}
+      } catch(e) {
+        if (!_firstOddsErr) _firstOddsErr = { type: 'exception', message: e.message, fixture: d.fixtureId };
+        oddsFail++;
+      }
     }));
     if (i + 20 < upcoming.length) await sleep(BATCH_DELAY);
   }
-  console.log(`  Step5 fertig: ${oddsOk}/${upcoming.length} Spiele mit Quoten`);
+  if (_firstOddsErr) console.warn(`  [Odds] Erstes Problem:`, JSON.stringify(_firstOddsErr));
+  console.log(`  Step5 fertig: ${oddsOk} OK · ${oddsFail} leer/Fehler (von ${upcoming.length} Spielen)`);
 
   const refNote = uniqueRefs.length ? `, ${uniqueRefs.length} Schiri-Namen (Stats im Browser)` : '';
   console.log(`\n[Server] ✅ Fertig: ${fixtures.length} Spiele, ${h2hOk} H2H, ${injOk} Verletzungen${refNote}, ${oddsOk} Quoten\n`);
