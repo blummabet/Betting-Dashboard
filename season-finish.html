@@ -5414,43 +5414,67 @@ async function loadPreMatchData() {
 
   const result = {};
 
-  // ── Step 1: fetch API fixtures for each date, map to LEAGUES entries ────────
-  for (const date of dates) {
-    const { fixtures, error } = await _apifbFetchDate(date);
-    if (error) { window._pmErrors.push(`[${date}] API Fehler: ${error}`); console.warn(`[PreMatch] ${date} error:`, error); }
-    if (error || !fixtures.length) continue;
+  // ── Step 1: fixtures per Liga mit Datumsbereich ──────────────────────────
+  // Nicht per Datum (→ alle Spiele weltweit, 1000+ → 413-Fehler),
+  // sondern pro Liga (→ nur relevante Spiele, kleine Response)
+  const _APIFB_LEAGUES = {
+    ENG:39, GER:78, ITA:135, ESP:140, FRA:61,
+    AUT:144, NED:88, POR:94, SCO:179, TUR:203
+  };
+  const _dateFrom = dates[0], _dateTo = dates[dates.length - 1];
 
-    for (const [, L] of Object.entries(LEAGUES)) {
-      for (const match of (L.fixtures || [])) {
-        // Resolve German date to local ISO (NOT toISOString which shifts to UTC)
-        let matchDateIso = null;
-        try {
-          const md = parseGermanDate(match.date);
-          matchDateIso = _localIso(md);
-        } catch(e) { continue; }
-        if (matchDateIso !== date) continue;
-
-        const apiFx = fixtures.find(f =>
-          _fuzzyTeam(f.teams?.home?.name || '', match.home) &&
-          _fuzzyTeam(f.teams?.away?.name || '', match.away)
-        );
-        if (!apiFx) continue;
-
-        const key = `${match.home}|${match.away}`;
-        const _fxStatus = apiFx.fixture?.status?.short || 'NS';
-        const _isFinished = ['FT','AET','PEN','AWD','WO','CANC','ABD'].includes(_fxStatus);
-        result[key] = {
-          fixtureId:    apiFx.fixture.id,
-          referee:      apiFx.fixture.referee || null,
-          refereeStats: null,
-          homeTeamId:   apiFx.teams?.home?.id,
-          awayTeamId:   apiFx.teams?.away?.id,
-          injuries:     { home: [], away: [] },
-          isFinished:   _isFinished   // odds only available for upcoming/live games
-        };
-      }
+  // LEAGUES-Fixtures nach Datum indexieren für schnelles Matching
+  const _leagueMatchByDate = {}; // dateIso → [{match, key}]
+  for (const L of Object.values(LEAGUES)) {
+    for (const match of (L.fixtures || [])) {
+      try {
+        const dIso = _localIso(parseGermanDate(match.date));
+        (_leagueMatchByDate[dIso] = _leagueMatchByDate[dIso] || []).push(match);
+      } catch(e) {}
     }
   }
+
+  for (const [lKey, leagueId] of Object.entries(_APIFB_LEAGUES)) {
+    try {
+      const _lResp = await fetch(
+        `${APISPORTS_BASE}/fixtures?league=${leagueId}&season=2025&from=${_dateFrom}&to=${_dateTo}&timezone=Europe%2FVienna`,
+        { headers: { 'x-apisports-key': APISPORTS_KEY } }
+      );
+      if (!_lResp.ok) {
+        const _errTxt = await _lResp.text().catch(() => '');
+        window._pmErrors.push(`[${lKey}] HTTP ${_lResp.status}: ${_errTxt.slice(0,80)}`);
+        continue;
+      }
+      const _lData = await _lResp.json();
+      if (_lData.errors?.rateLimit) { window._pmErrors.push(`[${lKey}] Rate limit`); continue; }
+      const _apiFxs = _lData.response || [];
+      console.log(`[PreMatch] Step1 ${lKey}: ${_apiFxs.length} Spiele`);
+
+      for (const apiFx of _apiFxs) {
+        const _fxDate = (apiFx.fixture?.date || '').slice(0, 10);
+        const _candidates = _leagueMatchByDate[_fxDate] || [];
+        for (const match of _candidates) {
+          if (!_fuzzyTeam(apiFx.teams?.home?.name || '', match.home)) continue;
+          if (!_fuzzyTeam(apiFx.teams?.away?.name || '', match.away)) continue;
+          const key = `${match.home}|${match.away}`;
+          if (result[key]) continue; // bereits gematcht
+          const _fxStatus = apiFx.fixture?.status?.short || 'NS';
+          result[key] = {
+            fixtureId:    apiFx.fixture.id,
+            referee:      apiFx.fixture.referee || null,
+            refereeStats: null,
+            homeTeamId:   apiFx.teams?.home?.id,
+            awayTeamId:   apiFx.teams?.away?.id,
+            injuries:     { home: [], away: [] },
+            isFinished:   ['FT','AET','PEN','AWD','WO','CANC','ABD'].includes(_fxStatus)
+          };
+        }
+      }
+    } catch(e) {
+      window._pmErrors.push(`[${lKey}] ${e.message}`);
+    }
+  }
+  console.log(`[PreMatch] Step1 fertig: ${Object.keys(result).length} Spiele gematcht`);
 
   if (!Object.keys(result).length) {
     window._preMatchLoaded = true;
