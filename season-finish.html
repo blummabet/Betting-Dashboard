@@ -1074,11 +1074,18 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
     <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
       <span style="font-size:14px;font-weight:700;">Alle Picks</span>
-      <div style="display:flex;gap:8px;" id="resultsFilter">
-        <button class="res-filter-btn active" data-filter="all">Alle</button>
-        <button class="res-filter-btn" data-filter="win">✅ Gewonnen</button>
-        <button class="res-filter-btn" data-filter="loss">❌ Verloren</button>
-        <button class="res-filter-btn" data-filter="pending">⏳ Offen</button>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
+        <div style="display:flex;gap:6px;" id="resultsDateFilter">
+          <button class="res-filter-btn active" data-days="7">7 Tage</button>
+          <button class="res-filter-btn" data-days="30">30 Tage</button>
+          <button class="res-filter-btn" data-days="all">Alle</button>
+        </div>
+        <div style="display:flex;gap:8px;" id="resultsFilter">
+          <button class="res-filter-btn active" data-filter="all">Alle</button>
+          <button class="res-filter-btn" data-filter="win">✅ Gewonnen</button>
+          <button class="res-filter-btn" data-filter="loss">❌ Verloren</button>
+          <button class="res-filter-btn" data-filter="pending">⏳ Offen</button>
+        </div>
       </div>
     </div>
     <div id="resultsTable" style="overflow-x:auto;"></div>
@@ -4532,7 +4539,8 @@ function showView(view) {
 let _resultsLoaded = false;
 let _resultsData   = [];
 let _charts        = {};
-let _activeFilter  = 'all';
+let _activeFilter     = 'all';
+let _activeDaysFilter = '7';
 
 function initResults() {
   if (_resultsLoaded) { renderResultsTable(_activeFilter); return; }
@@ -4550,13 +4558,22 @@ function initResults() {
 function renderResultsAll() {
   renderResultsStats();
   renderResultsCharts();
-  renderResultsTable('all');
-  // Filter buttons
-  document.querySelectorAll('.res-filter-btn').forEach(btn => {
+  renderResultsTable(_activeFilter);
+  // Result filter buttons (win/loss/pending/all)
+  document.querySelectorAll('#resultsFilter .res-filter-btn').forEach(btn => {
     btn.onclick = () => {
-      document.querySelectorAll('.res-filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#resultsFilter .res-filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       _activeFilter = btn.dataset.filter;
+      renderResultsTable(_activeFilter);
+    };
+  });
+  // Date range filter buttons (7 / 30 / all)
+  document.querySelectorAll('#resultsDateFilter .res-filter-btn').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('#resultsDateFilter .res-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      _activeDaysFilter = btn.dataset.days;
       renderResultsTable(_activeFilter);
     };
   });
@@ -6524,6 +6541,14 @@ function renderResultsTable(filter) {
   let rows = _resultsData.flatMap(e =>
     e.picks.map(p => ({ ...e, pick: p }))
   );
+  // Date range filter
+  if (_activeDaysFilter !== 'all') {
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - parseInt(_activeDaysFilter));
+    const cutoffIso = cutoff.toISOString().slice(0, 10);
+    rows = rows.filter(r => (r.dateIso || '') >= cutoffIso);
+  }
+  // Result filter
   if (filter === 'win')     rows = rows.filter(r => r.pick.result === 'win');
   if (filter === 'loss')    rows = rows.filter(r => r.pick.result === 'loss');
   if (filter === 'pending') rows = rows.filter(r => !r.pick.result);
