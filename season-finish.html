@@ -4925,6 +4925,7 @@ function savePicksToday(btn) {
         dateIso, date: f.date,
         league: L.name, leagueFlag: L.flag, leagueKey: key,
         home: f.home, away: f.away,
+        fixtureId: f.fixtureId || null,   // from prematch enrichment — enables direct ID lookup
         finalScore: null,
         picks: picks.map(p => ({
           icon: p.icon, market: p.market, conf: p.conf,
@@ -5157,10 +5158,20 @@ async function _fetchOddsApiScores(daysFrom = 3) {
 }
 
 // ── API-Football (api-sports.io direct) — scores + corners + cards ───────────
-async function _apifbFetchDate(dateIso) {
+// Leagues tracked for result resolution — same set as prematch enrichment.
+// Per-league fetching avoids global ?date= requests which can exceed 1MB on
+// busy matchdays and trigger a 413 error from corsproxy.io.
+const _RESULT_LEAGUE_IDS = {
+  ENG:39, GER:78, ITA:135, ESP:140, FRA:61,
+  AUT:144, NED:88, POR:94, SCO:179, TUR:203
+};
+
+// Fetch a single set of fixture IDs directly (max ~20 per call).
+async function _apifbFetchByIds(ids) {
+  if (!ids || !ids.length) return { fixtures: [], error: null };
   try {
     const resp = await fetch(
-      `${APISPORTS_BASE}/fixtures?date=${dateIso}&timezone=Europe%2FVienna`,
+      `${APISPORTS_BASE}/fixtures?ids=${ids.join('-')}`,
       { headers: { 'x-apisports-key': APISPORTS_KEY } }
     );
     if (!resp.ok) {
@@ -5168,11 +5179,33 @@ async function _apifbFetchDate(dateIso) {
       return { fixtures: [], error: `HTTP ${resp.status}: ${t.slice(0,80)}` };
     }
     const data = await resp.json();
-    if (data.errors && Object.keys(data.errors).length) {
-      return { fixtures: [], error: JSON.stringify(data.errors) };
-    }
     return { fixtures: data.response || [], error: null };
   } catch(e) { return { fixtures: [], error: e.message }; }
+}
+
+// Fetch all fixtures for a date — BUT per league, not globally.
+// A global ?date= request on a busy day (400+ games) exceeds 1MB → 413 from proxy.
+// Per-league calls are small (< 20 fixtures each) and never hit the size limit.
+async function _apifbFetchDate(dateIso) {
+  const allFixtures = [];
+  const errors = [];
+  for (const [lKey, leagueId] of Object.entries(_RESULT_LEAGUE_IDS)) {
+    try {
+      const resp = await fetch(
+        `${APISPORTS_BASE}/fixtures?date=${dateIso}&league=${leagueId}&timezone=Europe%2FVienna`,
+        { headers: { 'x-apisports-key': APISPORTS_KEY } }
+      );
+      if (!resp.ok) {
+        const t = await resp.text().catch(()=>'');
+        errors.push(`[${lKey}] HTTP ${resp.status}: ${t.slice(0,50)}`);
+        continue;
+      }
+      const data = await resp.json();
+      if (data.errors?.rateLimit) { errors.push(`[${lKey}] Rate limit`); continue; }
+      allFixtures.push(...(data.response || []));
+    } catch(e) { errors.push(`[${lKey}] ${e.message}`); }
+  }
+  return { fixtures: allFixtures, error: errors.length && !allFixtures.length ? errors.join(' | ') : null };
 }
 
 async function _apifbFetchStats(fixtureId) {
@@ -6063,54 +6096,57 @@ async function fetchSofaResults(btn) {
 
   infoEl.textContent = `${pending.length} Spiele mit offenen Picks — hole Ergebnisse…`;
 
-  // ── 1. Primär: API-Football via RapidAPI (Scores + Ecken + Karten) ────────
-  // Expand fetch dates to include ±1 day neighbors — handles timezone drift between stored dates and API dates
+  // ── 1. Primär: API-Football (Scores + Ecken + Karten) ────────────────────
   const _isoAdj = (iso, d) => { const dt = new Date(iso+'T12:00:00Z'); dt.setUTCDate(dt.getUTCDate()+d); return dt.toISOString().slice(0,10); };
-  const dates = [...new Set(pending.flatMap(e => [e.dateIso, _isoAdj(e.dateIso,1), _isoAdj(e.dateIso,-1)]))].sort();
   const apifbByDate = {};
   let resolved = 0, manual = 0, notFound = 0;
 
   const dbg = [];
   dbg.push(`📦 Gespeicherte Picks: ${pending.length} Spiele`);
-  pending.forEach(e => dbg.push(`  · ${e.dateIso}  ${e.home} vs ${e.away}`));
+  pending.forEach(e => dbg.push(`  · ${e.dateIso}  ${e.home} vs ${e.away}${e.fixtureId ? ' [ID:'+e.fixtureId+']' : ''}`));
   dbg.push('');
 
-  for (const date of dates) {
-    btn.textContent = `⏳ API-Football ${date}…`;
-    const { fixtures, error } = await _apifbFetchDate(date);
-    if (error) { dbg.push(`⚠ API-Football ${date}: ${error}`); continue; }
-    apifbByDate[date] = fixtures;
-    const done = fixtures.filter(f => ['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short));
-    dbg.push(`📅 ${date}: ${done.length} abgeschlossene Spiele von ${fixtures.length} geladen`);
-    // Show leagues present in API response (critical for free plan debugging)
-    const leagueSet = {};
-    for (const f of done) {
-      const lg = f.league?.name || '?';
-      const country = f.league?.country || '?';
-      leagueSet[country + ' – ' + lg] = (leagueSet[country + ' – ' + lg] || 0) + 1;
+  // ── Fast-path: if picks have fixtureId, fetch them directly (1-2 API calls) ──
+  const withIds    = pending.filter(e => e.fixtureId);
+  const withoutIds = pending.filter(e => !e.fixtureId);
+
+  if (withIds.length) {
+    btn.textContent = `⏳ Direktabruf ${withIds.length} Spiele…`;
+    dbg.push(`🎯 Direktabruf via Fixture-ID: ${withIds.length} Spiele`);
+    for (let i = 0; i < withIds.length; i += 20) {
+      const batch = withIds.slice(i, i+20);
+      const ids = batch.map(e => e.fixtureId);
+      const { fixtures, error } = await _apifbFetchByIds(ids);
+      if (error) { dbg.push(`  ⚠ ID-Fetch Fehler: ${error}`); continue; }
+      for (const fx of fixtures) {
+        const date = (fx.fixture?.date || '').slice(0, 10);
+        (apifbByDate[date] = apifbByDate[date] || []).push(fx);
+      }
+      dbg.push(`  ✅ Batch ${Math.floor(i/20)+1}: ${fixtures.length} Spiele geladen`);
     }
-    const euKeywords = ['England','Germany','Italy','Spain','France','Netherlands','Austria','Portugal','Scotland','Turkey'];
-    const euLeagues = Object.entries(leagueSet).filter(([k]) => euKeywords.some(c => k.startsWith(c)));
-    const otherLeagues = Object.entries(leagueSet).filter(([k]) => !euKeywords.some(c => k.startsWith(c)));
-    if (euLeagues.length) {
-      dbg.push(`  ✅ Europäische Ligen (${euLeagues.length}):`);
-      euLeagues.forEach(([k,v]) => dbg.push(`    ${k}: ${v} Spiele`));
-    } else {
-      dbg.push(`  ❌ KEINE europäischen Ligen! Nur: ${otherLeagues.slice(0,5).map(([k,v])=>k+'('+v+')').join(', ')}`);
+    _showDebug(dbg);
+  }
+
+  // ── Fallback: date+league fetching for picks without fixtureId ────────────
+  // Fetches per league (not globally) to avoid 1MB proxy size limit
+  if (withoutIds.length) {
+    dbg.push(`\n📅 Datum-Abruf (${withoutIds.length} Spiele ohne ID):`);
+    const dates = [...new Set(withoutIds.flatMap(e => [e.dateIso, _isoAdj(e.dateIso,1), _isoAdj(e.dateIso,-1)]))].sort();
+    for (const date of dates) {
+      if (apifbByDate[date]) continue; // already loaded via ID path
+      btn.textContent = `⏳ Lade ${date}…`;
+      const { fixtures, error } = await _apifbFetchDate(date);
+      if (error) { dbg.push(`  ⚠ ${date}: ${error}`); continue; }
+      apifbByDate[date] = [...(apifbByDate[date] || []), ...fixtures];
+      const done = fixtures.filter(f => ['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short));
+      dbg.push(`  📅 ${date}: ${done.length} abgeschlossene Spiele (${Object.keys(_RESULT_LEAGUE_IDS).length} Ligen)`);
     }
+    _showDebug(dbg);
   }
-  // ── Direkttest: Suche nach bekannten Teams ───────────────────────────────────
-  const _testTeams = ['Arsenal','Liverpool','Dortmund','Barcelona','Bayern','Celtic','Ajax','Feyenoord'];
-  for (const [date, fxList] of Object.entries(apifbByDate)) {
-    const found = _testTeams.flatMap(t =>
-      fxList.filter(f =>
-        (f.teams?.home?.name||'').toLowerCase().includes(t.toLowerCase()) ||
-        (f.teams?.away?.name||'').toLowerCase().includes(t.toLowerCase())
-      ).map(f => `${t}→${f.teams?.home?.name} vs ${f.teams?.away?.name} [${f.fixture?.status?.short}]`)
-    );
-    if (found.length) dbg.push(`🔍 ${date}: ${found.join(', ')}`);
-    else dbg.push(`🔍 ${date}: KEINER der Testteams gefunden in ${fxList.length} Spielen!`);
-  }
+  // ── Summary: total fixtures loaded ──────────────────────────────────────────
+  const _totalLoaded = Object.values(apifbByDate).reduce((s, arr) => s + arr.length, 0);
+  const _totalDone   = Object.values(apifbByDate).flatMap(a=>a).filter(f => ['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short)).length;
+  dbg.push(`\n📊 Gesamt geladen: ${_totalLoaded} Fixtures über ${Object.keys(apifbByDate).length} Datum(e) · ${_totalDone} abgeschlossen`);
   _showDebug(dbg);
 
   for (const entry of picks) {
