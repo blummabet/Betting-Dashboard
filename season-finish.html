@@ -5080,6 +5080,143 @@ async function _apifbGetRefereeStats(refereeName) {
 }
 
 // ═══════════════════════════════════════════════════════
+//  ENRICHMENT HELPER — fills in ref stats + odds
+//  Runs both after a cache hit AND after a fresh load.
+//  Uses sub-caches (refStats_v5, oddsData_v1) so it
+//  never makes redundant API calls.
+// ═══════════════════════════════════════════════════════
+async function _enrichMissingData(result, cacheKey) {
+  // ── Step 4: referee stats for entries still missing them ────────────────────
+  const uniqueRefs = [...new Set(
+    Object.values(result)
+      .filter(d => d.referee && d.refereeStats?.avgCards == null)
+      .map(d => d.referee)
+  )];
+  if (uniqueRefs.length) {
+    console.log(`[PreMatch] Enrich Step4: ${uniqueRefs.length} refs needing stats`);
+    const refMap = {};
+    await Promise.allSettled(uniqueRefs.map(async name => {
+      refMap[name] = await _apifbGetRefereeStats(name);
+    }));
+    let _refOk = 0;
+    for (const d of Object.values(result)) {
+      if (d.referee && refMap[d.referee]) {
+        d.refereeStats = refMap[d.referee];
+        if (d.refereeStats?.avgCards != null) _refOk++;
+      }
+    }
+    console.log(`[PreMatch] Enrich Step4 done: ${_refOk} with avgCards`);
+  }
+
+  // ── Step 5: odds for upcoming fixtures still missing them ────────────────────
+  const _ODDS_CACHE_KEY = 'oddsData_v1';
+  const _ODDS_TTL = 6 * 3600 * 1000;
+  const needOdds = Object.values(result).filter(d => d.fixtureId && !d.isFinished && d.odds == null);
+  if (needOdds.length) {
+    // Probe first fixture to detect bookmaker ID
+    let _pinnacleId = null;
+    try {
+      const _probe = await fetch(`${APISPORTS_BASE}/odds?fixture=${needOdds[0].fixtureId}`, { headers: { 'x-apisports-key': APISPORTS_KEY } });
+      if (_probe.ok) {
+        const _pd = await _probe.json();
+        const _bkrs = (_pd.response || [])[0]?.bookmakers || [];
+        _pinnacleId = _bkrs.find(b => b.name?.toLowerCase().includes('pinnacle'))?.id
+          || _bkrs.find(b => b.id === 8)?.id
+          || _bkrs[0]?.id;
+        if (_bkrs[0]?.bets?.[0]) console.log('[PreMatch] Enrich Step5 sample bet:', JSON.stringify(_bkrs[0].bets[0]).slice(0, 120));
+        // Assign odds for the probe fixture directly
+        const _bets = (_pd.response || [])[0]?.bookmakers?.[0]?.bets || [];
+        if (_bets.length) {
+          const r = _parseOddsBets(_bets);
+          if (Object.keys(r).length) { needOdds[0].odds = r; }
+        }
+      }
+    } catch(e) { console.log('[PreMatch] Enrich Step5 probe error:', e.message); }
+
+    console.log(`[PreMatch] Enrich Step5: ${needOdds.length} fixtures needing odds · bookmaker=${_pinnacleId}`);
+    const _bmParam = _pinnacleId ? `&bookmaker=${_pinnacleId}` : '';
+    let _oddsOk = 0, _oddsFail = 0;
+    // skip index 0 — already fetched in probe above
+    await Promise.allSettled(needOdds.slice(1).map(async d => {
+      try {
+        // Check sub-cache first
+        try {
+          const _oc = JSON.parse(localStorage.getItem(_ODDS_CACHE_KEY) || '{}');
+          if (_oc[d.fixtureId] && Date.now() - _oc[d.fixtureId].ts < _ODDS_TTL) {
+            d.odds = _oc[d.fixtureId].data; _oddsOk++; return;
+          }
+        } catch(e) {}
+        const resp = await fetch(
+          `${APISPORTS_BASE}/odds?fixture=${d.fixtureId}${_bmParam}`,
+          { headers: { 'x-apisports-key': APISPORTS_KEY } }
+        );
+        if (!resp.ok) { _oddsFail++; return; }
+        const data = await resp.json();
+        const bets = (data.response || [])[0]?.bookmakers?.[0]?.bets || [];
+        if (!bets.length) { _oddsFail++; return; }
+        const r = _parseOddsBets(bets);
+        if (Object.keys(r).length) {
+          d.odds = r; _oddsOk++;
+          try {
+            const _oc = JSON.parse(localStorage.getItem(_ODDS_CACHE_KEY) || '{}');
+            _oc[d.fixtureId] = { ts: Date.now(), data: r };
+            localStorage.setItem(_ODDS_CACHE_KEY, JSON.stringify(_oc));
+          } catch(e) {}
+        } else _oddsFail++;
+      } catch(e) { _oddsFail++; }
+    }));
+    // Cache probe result too
+    if (needOdds[0].odds) {
+      try {
+        const _oc = JSON.parse(localStorage.getItem(_ODDS_CACHE_KEY) || '{}');
+        _oc[needOdds[0].fixtureId] = { ts: Date.now(), data: needOdds[0].odds };
+        localStorage.setItem(_ODDS_CACHE_KEY, JSON.stringify(_oc));
+      } catch(e) {}
+    }
+    console.log(`[PreMatch] Enrich Step5 done: ${_oddsOk} OK · ${_oddsFail} fail/empty`);
+  }
+
+  // ── Persist enriched result + re-render ─────────────────────────────────────
+  if (uniqueRefs.length || needOdds.length) {
+    try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: result })); } catch(e) {}
+    _injectPreMatchAndRerender();
+  }
+}
+
+// Shared bet parser — used by both fresh load and enrichment
+function _parseOddsBets(bets) {
+  const r = {};
+  for (const bet of bets) {
+    if (bet.name === 'Match Winner') {
+      for (const v of (bet.values || [])) {
+        if      (v.value === 'Home') r.hw = parseFloat(v.odd);
+        else if (v.value === 'Away') r.aw = parseFloat(v.odd);
+        else if (v.value === 'Draw') r.dr = parseFloat(v.odd);
+      }
+    } else if (bet.name === 'Goals Over/Under') {
+      for (const v of (bet.values || [])) {
+        if      (v.value === 'Over 2.5')  r.o25  = parseFloat(v.odd);
+        else if (v.value === 'Under 2.5') r.u25  = parseFloat(v.odd);
+        else if (v.value === 'Over 3.5')  r.o35  = parseFloat(v.odd);
+        else if (v.value === 'Under 3.5') r.u35  = parseFloat(v.odd);
+        else if (v.value === 'Over 1.5')  r.o15  = parseFloat(v.odd);
+      }
+    } else if (bet.name === 'Both Teams Score') {
+      for (const v of (bet.values || [])) {
+        if      (v.value === 'Yes') r.bttsY = parseFloat(v.odd);
+        else if (v.value === 'No')  r.bttsN = parseFloat(v.odd);
+      }
+    } else if (bet.name === 'Asian Handicap') {
+      for (const v of (bet.values || [])) {
+        if      (v.value === 'Home' && !r.dnbH) r.dnbH = parseFloat(v.odd);
+        else if (v.value === 'Away' && !r.dnbA) r.dnbA = parseFloat(v.odd);
+      }
+    }
+  }
+  return r;
+}
+
+// ═══════════════════════════════════════════════════════
 //  PRE-MATCH LOADER — runs on page load, enriches cards
 // ═══════════════════════════════════════════════════════
 window._preMatchData   = {};
@@ -5123,6 +5260,9 @@ async function loadPreMatchData() {
       window._preMatchData   = cached.data;
       window._preMatchLoaded = true;
       _injectPreMatchAndRerender();
+      // Asynchronously fill in referee stats + odds that were null when the cache was written
+      // (e.g. because the API was down at load time). Sub-caches prevent redundant API calls.
+      _enrichMissingData(cached.data, cacheKey).catch(e => console.warn('[PreMatch] enrich error:', e));
       return;
     }
   } catch(e) {}
@@ -5218,115 +5358,18 @@ async function loadPreMatchData() {
   }
   console.log(`[PreMatch] Step3 H2H: ${_h2hOk} OK · ${_h2hFail} fail/no-data`);
 
-  // ── Step 4: fetch referee stats for all unique referees (parallel) ──────────
-  const uniqueRefs = [...new Set(
-    Object.values(result).map(d => d.referee).filter(Boolean)
-  )];
-  console.log(`[PreMatch] Step4: ${uniqueRefs.length} unique referees:`, uniqueRefs.slice(0,5).join(', '));
-  const refMap = {};
-  await Promise.allSettled(uniqueRefs.map(async name => {
-    refMap[name] = await _apifbGetRefereeStats(name);
-  }));
-  let _refOk = 0;
-  for (const d of Object.values(result)) {
-    if (d.referee && refMap[d.referee]) {
-      d.refereeStats = refMap[d.referee];
-      if (d.refereeStats?.avgCards != null) _refOk++;
-    }
-  }
-  console.log(`[PreMatch] Step4 Referees: ${_refOk} with avgCards · sample:`, uniqueRefs[0] ? JSON.stringify(refMap[uniqueRefs[0]]) : 'none');
-
-  // ── Step 5: fetch Pinnacle odds via API-Football (replaces the-odds-api.com) ──
-  // Bookmaker 8 = Pinnacle. Fetched per fixture using IDs we already have.
-  // Stored as d.odds = { hw, dr, aw, o25, u25, o35, bttsY, bttsN } — same format findOdds uses.
-  let _oddsOk = 0, _oddsFail = 0, _oddsRawSample = null;
-  // Use FIRST fixture as a diagnostic probe — log raw response to see bet names & structure
-  const _firstFxId = Object.values(result).find(d => d.fixtureId)?.fixtureId;
-  if (_firstFxId) {
-    try {
-      const _probe = await fetch(`${APISPORTS_BASE}/odds?fixture=${_firstFxId}`, { headers: { 'x-apisports-key': APISPORTS_KEY } });
-      const _probeData = _probe.ok ? await _probe.json() : { error: _probe.status };
-      const _bkrs = (_probeData.response || [])[0]?.bookmakers || [];
-      console.log(`[PreMatch] Step5 Odds probe (fixture ${_firstFxId}): HTTP ${_probe.status} · ${_bkrs.length} bookmakers · first:`, _bkrs[0] ? `id=${_bkrs[0].id} name=${_bkrs[0].name} bets=${_bkrs[0].bets?.length}` : 'none');
-      if (_bkrs[0]?.bets?.[0]) console.log('[PreMatch] Step5 sample bet:', JSON.stringify(_bkrs[0].bets[0]));
-      _oddsRawSample = _bkrs;
-    } catch(e) { console.log('[PreMatch] Step5 probe error:', e.message); }
-  }
-  // Determine correct bookmaker ID from probe — use first available if id 8 not found
-  const _pinnacleId = _oddsRawSample?.find(b => b.name?.toLowerCase().includes('pinnacle'))?.id
-    || _oddsRawSample?.find(b => b.id === 8)?.id
-    || (_oddsRawSample?.[0]?.id);
-  if (_pinnacleId) console.log(`[PreMatch] Step5 using bookmaker id=${_pinnacleId}`);
-  const _ODDS_CACHE_KEY = 'oddsData_v1';
-  const _ODDS_TTL = 6 * 3600 * 1000;
-  await Promise.allSettled(Object.entries(result).map(async ([, d]) => {
-    if (!d.fixtureId || d.isFinished) return; // no odds for completed games
-    try {
-      // Serve odds from cache (6h TTL) — saves API quota
-      try {
-        const _oc = JSON.parse(localStorage.getItem(_ODDS_CACHE_KEY) || '{}');
-        if (_oc[d.fixtureId] && Date.now() - _oc[d.fixtureId].ts < _ODDS_TTL) {
-          d.odds = _oc[d.fixtureId].data; _oddsOk++; return;
-        }
-      } catch(e) {}
-      const _bmParam = _pinnacleId ? `&bookmaker=${_pinnacleId}` : '';
-      const resp = await fetch(
-        `${APISPORTS_BASE}/odds?fixture=${d.fixtureId}${_bmParam}`,
-        { headers: { 'x-apisports-key': APISPORTS_KEY } }
-      );
-      if (!resp.ok) { _oddsFail++; return; }
-      const data = await resp.json();
-      const bets = (data.response || [])[0]?.bookmakers?.[0]?.bets || [];
-      if (!bets.length) return;
-      const r = {};
-      for (const bet of bets) {
-        if (bet.name === 'Match Winner') {
-          for (const v of (bet.values || [])) {
-            if (v.value === 'Home') r.hw = parseFloat(v.odd);
-            else if (v.value === 'Away') r.aw = parseFloat(v.odd);
-            else if (v.value === 'Draw') r.dr = parseFloat(v.odd);
-          }
-        } else if (bet.name === 'Goals Over/Under') {
-          for (const v of (bet.values || [])) {
-            if      (v.value === 'Over 2.5')  r.o25  = parseFloat(v.odd);
-            else if (v.value === 'Under 2.5') r.u25  = parseFloat(v.odd);
-            else if (v.value === 'Over 3.5')  r.o35  = parseFloat(v.odd);
-            else if (v.value === 'Under 3.5') r.u35  = parseFloat(v.odd);
-            else if (v.value === 'Over 1.5')  r.o15  = parseFloat(v.odd);
-          }
-        } else if (bet.name === 'Both Teams Score') {
-          for (const v of (bet.values || [])) {
-            if (v.value === 'Yes') r.bttsY = parseFloat(v.odd);
-            else if (v.value === 'No') r.bttsN = parseFloat(v.odd);
-          }
-        } else if (bet.name === 'Asian Handicap') {
-          // DNB approximation: Home -0 Asian Handicap ≈ DNB Home
-          for (const v of (bet.values || [])) {
-            if (v.value === 'Home' && !r.dnbH) r.dnbH = parseFloat(v.odd);
-            else if (v.value === 'Away' && !r.dnbA) r.dnbA = parseFloat(v.odd);
-          }
-        }
-      }
-      if (Object.keys(r).length) {
-        d.odds = r; _oddsOk++;
-        try {
-          const _oc = JSON.parse(localStorage.getItem(_ODDS_CACHE_KEY) || '{}');
-          _oc[d.fixtureId] = { ts: Date.now(), data: r };
-          localStorage.setItem(_ODDS_CACHE_KEY, JSON.stringify(_oc));
-        } catch(e) {}
-      } else _oddsFail++;
-    } catch(e) { _oddsFail++; }
-  }));
-  console.log(`[PreMatch] Step5 Odds: ${_oddsOk} OK · ${_oddsFail} fail/empty`);
-
-  // ── Persist + activate ──────────────────────────────────────────────────────
+  // ── Steps 4 + 5: referee stats + odds (shared with cache-hit path) ─────────
+  // Persist skeleton result first (H2H + injuries are done), then enrich.
+  // _enrichMissingData will overwrite the cache again once ref stats + odds arrive.
   window._preMatchData   = result;
   window._preMatchLoaded = true;
   try {
     localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: result }));
   } catch(e) {}
-
   _injectPreMatchAndRerender();
+
+  // Enrichment runs async — fills in refereeStats + odds using sub-caches
+  await _enrichMissingData(result, cacheKey);
 }
 
 // Inject enrichment into LEAGUES match objects + re-render current view
