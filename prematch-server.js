@@ -46,8 +46,8 @@ const LEAGUE_IDS = {
 };
 const PORT      = 3001;
 const CACHE_TTL = 6 * 3600 * 1000;  // 6 Stunden
-const BATCH_DELAY = 150;             // ms zwischen Batches
-const CALL_DELAY  = 50;              // ms zwischen einzelnen Calls
+const BATCH_DELAY = 600;             // ms zwischen Batches (Pro Plan: ~300req/min safe margin)
+const CALL_DELAY  = 200;             // ms zwischen einzelnen Calls
 
 // ── In-Memory Cache ──────────────────────────────────────────────────────────
 let _cache = { ts: 0, data: null, fetching: false };
@@ -107,9 +107,17 @@ function fuzzy(apiName, localName) {
   return false;
 }
 
-// ── Squad position cache (7-day TTL) ────────────────────────────────────────
-const _squadCache = {};  // teamId → { playerName: 'G'|'D'|'M'|'F' }
+// ── Squad position cache (7-day TTL, persisted to squad-cache.json) ─────────
+const SQUAD_CACHE_FILE = path.join(__dirname, 'squad-cache.json');
 const SQUAD_TTL = 7 * 24 * 3600 * 1000;
+// Load persisted cache from disk (survives GitHub Actions runs)
+let _squadCache = {};
+try {
+  const _raw = fs.readFileSync(SQUAD_CACHE_FILE, 'utf8');
+  _squadCache = JSON.parse(_raw);
+  const _alive = Object.keys(_squadCache).filter(id => Date.now() - (_squadCache[id]?.ts||0) < SQUAD_TTL).length;
+  console.log(`[Squad] Cache geladen: ${Object.keys(_squadCache).length} Teams (${_alive} noch gültig)`);
+} catch(e) { /* first run — cache file doesn't exist yet */ }
 
 async function fetchSquadPositions(teamId) {
   if (!teamId) return {};
@@ -133,6 +141,10 @@ async function fetchSquadPositions(teamId) {
     _squadCache[teamId] = { ts: Date.now(), data: posMap };
     return posMap;
   } catch(e) { return {}; }
+}
+function _saveSquadCache() {
+  try { fs.writeFileSync(SQUAD_CACHE_FILE, JSON.stringify(_squadCache)); }
+  catch(e) { console.warn('[Squad] Cache speichern fehlgeschlagen:', e.message); }
 }
 
 // ── Compute injury impact score (0–6 scale) ──────────────────────────────────
@@ -284,13 +296,23 @@ async function fetchAllPrematchData() {
   console.log(`[Server] Step1 fertig: ${fixtures.length} Spiele total`);
   if (!fixtures.length) return [];
 
-  // ── Step 1.5: Squad positions for all teams (7-day cache) ───────────────────
-  console.log(`[Server] Step1.5: Squad-Positionen für alle Teams...`);
+  // ── Step 1.5: Squad positions for all teams (7-day disk cache) ──────────────
+  // Cache persists across runs — only fetch teams whose data is expired/missing.
+  // Batched 5-at-a-time with 800ms delay to avoid rate-limit bursts.
   const uniqueTeamIds = [...new Set(
     fixtures.flatMap(d => [d.homeTeamId, d.awayTeamId].filter(Boolean))
   )];
-  await Promise.allSettled(uniqueTeamIds.map(id => fetchSquadPositions(id)));
-  console.log(`  Step1.5 fertig: ${uniqueTeamIds.length} Teams, Squad-Cache aufgebaut`);
+  const staleTeams = uniqueTeamIds.filter(id => {
+    const c = _squadCache[id];
+    return !c || Date.now() - c.ts >= SQUAD_TTL;
+  });
+  console.log(`[Server] Step1.5: ${staleTeams.length} Teams brauchen Squad-Fetch (${uniqueTeamIds.length - staleTeams.length} gecacht)`);
+  for (let i = 0; i < staleTeams.length; i += 5) {
+    await Promise.allSettled(staleTeams.slice(i, i + 5).map(id => fetchSquadPositions(id)));
+    if (i + 5 < staleTeams.length) await sleep(800);
+  }
+  if (staleTeams.length) _saveSquadCache();
+  console.log(`  Step1.5 fertig: ${uniqueTeamIds.length} Teams gesamt, ${staleTeams.length} neu geladen`);
 
   // ── Step 2: Injuries with position data (parallel batches of 10) ────────────
   console.log(`[Server] Step2: Verletzungen für ${fixtures.length} Spiele...`);

@@ -29,11 +29,11 @@ jobs:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         timeout-minutes: 10
 
-      - name: Commit & Push prematch-data.json
+      - name: Commit & Push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add prematch-data.json
+          git add prematch-data.json squad-cache.json
           # Nur committen wenn sich tatsächlich etwas geändert hat
           git diff --staged --quiet || git commit -m "chore: update prematch data [skip ci]"
           git push
