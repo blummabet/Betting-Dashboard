@@ -148,18 +148,25 @@ async function fetchAllPrematchData() {
     dates.push(localIso(new Date(today.getFullYear(), today.getMonth(), today.getDate() + i)));
   }
 
-  console.log(`\n[Server] Fetching fixtures for ${dates.length} dates: ${dates.join(', ')}`);
+  const dateFrom = dates[0];
+  const dateTo   = dates[dates.length - 1];
+  console.log(`\n[Server] Fetching ${Object.keys(LEAGUE_IDS).length} Ligen von ${dateFrom} bis ${dateTo}`);
 
-  // ── Step 1: Fixtures per date ─────────────────────────────────────────────
-  const fixtureMap = {}; // fixtureId → fixture data
-  for (const date of dates) {
+  // ── Step 1: Fixtures pro Liga mit Datumsbereich (statt alle Spiele weltweit) ─
+  // Pro Liga 1 API-Call statt pro Datum alle Ligen → ~9 Calls statt 7000+ Spiele
+  const fixtureMap = {};
+  for (const [leagueId, leagueName] of Object.entries(LEAGUE_IDS)) {
     try {
-      const data = await apiFetch(`/fixtures?date=${date}&timezone=Europe%2FVienna`);
+      const data = await apiFetch(
+        `/fixtures?league=${leagueId}&season=2025&from=${dateFrom}&to=${dateTo}&timezone=Europe%2FVienna`
+      );
       const fxs = data.response || [];
-      console.log(`  [Step1] ${date}: ${fxs.length} Spiele`);
+      console.log(`  [Step1] ${leagueName} (${leagueId}): ${fxs.length} Spiele`);
       for (const fx of fxs) {
         const id = fx.fixture?.id;
         if (!id) continue;
+        // Datum aus API-Antwort extrahieren (YYYY-MM-DD)
+        const fxDate = (fx.fixture?.date || '').slice(0, 10);
         const fxStatus = fx.fixture?.status?.short || 'NS';
         fixtureMap[id] = {
           fixtureId:    id,
@@ -169,7 +176,7 @@ async function fetchAllPrematchData() {
           awayTeamId:   fx.teams?.away?.id   || null,
           referee:      fx.fixture?.referee  || null,
           refereeStats: null,
-          date:         date,
+          date:         fxDate,
           injuries:     { home: [], away: [] },
           h2h:          null,
           isFinished:   FINISHED.has(fxStatus),
@@ -178,7 +185,7 @@ async function fetchAllPrematchData() {
       }
       await sleep(CALL_DELAY);
     } catch(e) {
-      console.warn(`  [Step1] ${date} Fehler:`, e.message);
+      console.warn(`  [Step1] Liga ${leagueId} Fehler:`, e.message);
     }
   }
 
