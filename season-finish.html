@@ -1267,6 +1267,26 @@ function getBettingAngle(match) {
 const ODDS_API_KEY   = '95ee9d163cab37c1b57a359f1dd762ac';
 const APISPORTS_KEY  = '9f36726c1bdc9957b4a49f89277b80db';
 const APISPORTS_BASE = 'https://v3.football.api-sports.io';
+
+// ── CORS-Proxy für Browser-Requests ────────────────────────────────────────
+// api-sports.io lehnt Browser-Anfragen (null-Origin / file://) per CORS-Policy ab.
+// Dieser Interceptor leitet alle api-sports.io Calls durch corsproxy.io, das
+// die Headers (inkl. x-apisports-key) transparent weiterleitet.
+// Hinweis: corsproxy.io sieht den API-Key im Transit. Für privates Dashboard OK.
+(function _installCorsProxy() {
+  const _origFetch = window.fetch.bind(window);
+  const _PROXY = 'https://corsproxy.io/?';
+  window.fetch = function(resource, init) {
+    const url = (typeof resource === 'string') ? resource : (resource?.url || '');
+    if (url.includes('api-sports.io') && !url.includes('corsproxy.io')) {
+      const proxied = _PROXY + encodeURIComponent(url);
+      console.log('[CORS-Proxy] →', url.split('?')[0]);
+      return _origFetch(proxied, init);
+    }
+    return _origFetch(resource, init);
+  };
+  console.log('[CORS-Proxy] installiert — api-sports.io Requests laufen via corsproxy.io');
+})();
 const LEAGUE_SPORT_KEYS = {
   ENG:'soccer_epl',
   GER:'soccer_germany_bundesliga',
@@ -4096,13 +4116,15 @@ async function showPreMatchDebug() {
 
   // Check API quota (fast — uses /status endpoint, costs 0 API credits on some plans)
   let apiStatusLine = '⏳ Prüfe API-Quota...';
+  const _proxyActive = typeof window.fetch.toString === 'function' && window.fetch.toString().includes('corsproxy.io');
+  const _proxyNote = '(via CORS-Proxy)';
   try {
-    const _st = await fetch('https://v3.football.api-sports.io/status', { headers: { 'x-apisports-key': '9f36726c1bdc9957b4a49f89277b80db' } });
+    const _st = await fetch('https://v3.football.api-sports.io/status', { headers: { 'x-apisports-key': APISPORTS_KEY } });
     const _sd = await _st.json();
     const _sub = (_sd.response || {}).subscription || {};
     const _req = (_sd.response || {}).requests || {};
-    apiStatusLine = `API Plan: ${_sub.plan||'?'} | Requests heute: ${_req.current??'?'} / ${_req.limit_day??'?'} | Verbleibend: ${(_req.limit_day??0) - (_req.current??0)}`;
-  } catch(e) { apiStatusLine = `API-Status nicht abrufbar: ${e.message}`; }
+    apiStatusLine = `API Plan: ${_sub.plan||'?'} ${_proxyNote} | Requests heute: ${_req.current??'?'} / ${_req.limit_day??'?'} | Verbleibend: ${(_req.limit_day??0) - (_req.current??0)}`;
+  } catch(e) { apiStatusLine = `API-Status nicht abrufbar: ${e.message} ${_proxyNote}`; }
 
   // Collect errors from last load
   const errLog = (window._pmErrors || []).join('\n') || '(keine Fehler)';
@@ -4170,7 +4192,12 @@ async function showPreMatchDebug() {
 }
 
 async function reloadPreMatchData(btn) {
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Lädt…'; }
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '⏳ Lädt…';
+    btn.style.borderColor = '#58a6ff';
+    btn.style.color = '#58a6ff';
+  }
   // Clear only the top-level fixture cache — keep H2H + referee caches (expensive, long-lived)
   try {
     Object.keys(localStorage)
@@ -4179,8 +4206,16 @@ async function reloadPreMatchData(btn) {
   } catch(e) {}
   window._preMatchData   = {};
   window._preMatchLoaded = false;
-  await loadPreMatchData();
-  if (btn) { btn.disabled = false; btn.textContent = '🔃 Pre-Match'; }
+  try {
+    await loadPreMatchData();
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = '🔃 Pre-Match';
+      btn.style.borderColor = '';
+      btn.style.color = '';
+    }
+  }
 }
 
 // ── Clear stale pre-match caches from old versions ─────────────────────────
