@@ -304,6 +304,67 @@ def calc_labels(team, standings, cfg):
 
     return labels
 
+def calc_motivation(team, labels, standings, cfg, rounds_left):
+    """
+    Computes motivationLevel for a team based on whether their season
+    outcome is already mathematically confirmed.
+
+    'none'  – position confirmed (relegated, champion, or European spot locked in).
+              Expect rotation, lower intensity — treat like a mid-table team for xG.
+    'low'   – nearly confirmed (gap closable only in theory with a miracle run).
+              Partial motivation reduction.
+    'full'  – actively fighting (default for all stake teams).
+    """
+    if not labels:
+        return 'full'
+
+    pos      = team["pos"]
+    pts      = team["pts"]
+    max_gain = rounds_left * 3   # max additional points any team can earn
+
+    is_gold   = any(l["c"] == "gold"   for l in labels)
+    is_red    = any(l["c"] == "red"    for l in labels)
+    is_blue   = any(l["c"] == "blue"   for l in labels)
+    is_orange = any(l["c"] == "orange" for l in labels)
+
+    # ── Title secured ──────────────────────────────────────────────────────────
+    if is_gold and pos == 1:
+        pts_2nd = pts_at_pos(standings, 2)
+        gap = pts - pts_2nd
+        if gap > max_gain:         return 'none'   # Confirmed champion
+        if gap > max_gain * 0.55:  return 'low'    # Nearly confirmed
+
+    # ── UCL secured ────────────────────────────────────────────────────────────
+    if is_blue and pos <= cfg["ucl"]:
+        pts_below = pts_at_pos(standings, cfg["ucl"] + 1)
+        gap = pts - pts_below
+        if gap > max_gain:         return 'none'
+        if gap > max_gain * 0.55:  return 'low'
+
+    # ── Europa League secured ──────────────────────────────────────────────────
+    if is_orange:
+        el_cutoff = cfg["ucl"] + cfg["el"]
+        if pos <= el_cutoff:
+            pts_below = pts_at_pos(standings, el_cutoff + 1)
+            gap = pts - pts_below
+            if gap > max_gain:         return 'none'
+            if gap > max_gain * 0.55:  return 'low'
+
+    # ── Mathematically relegated ───────────────────────────────────────────────
+    if is_red:
+        total     = cfg["total"]
+        rel       = cfg["rel"]
+        rel_ply   = cfg["rel_playoff"]
+        rel_start = total - rel + 1
+        safe_pos  = rel_start - rel_ply - 1
+        if safe_pos > 0:
+            pts_safe      = pts_at_pos(standings, safe_pos)
+            gap_to_safety = pts_safe - pts
+            if gap_to_safety > max_gain:         return 'none'   # Confirmed relegated
+            if gap_to_safety > max_gain * 0.55:  return 'low'    # Nearly gone
+
+    return 'full'
+
 def calc_score(labels, rounds_left, form_data=None):
     is_red  = any(l["c"] == "red"  for l in labels)
     is_gold = any(l["c"] == "gold" for l in labels)
@@ -475,8 +536,10 @@ def fetch_league(key, cfg):
         h_form = form_cache.get(f["home"]) or form_cache.get(ht["team"])
         a_form = form_cache.get(f["away"]) or form_cache.get(at["team"])
 
-        home_stake = {"score": calc_score(h_labels, rounds_left, h_form), "labels": h_labels} if h_labels else None
-        away_stake = {"score": calc_score(a_labels, rounds_left, a_form), "labels": a_labels} if a_labels else None
+        home_stake = {"score": calc_score(h_labels, rounds_left, h_form), "labels": h_labels,
+                      "motivationLevel": calc_motivation(ht, h_labels, standings, cfg, rounds_left)} if h_labels else None
+        away_stake = {"score": calc_score(a_labels, rounds_left, a_form), "labels": a_labels,
+                      "motivationLevel": calc_motivation(at, a_labels, standings, cfg, rounds_left)} if a_labels else None
 
         # Fetch H2H
         h2h = fetch_h2h(f["eventId"]) if f.get("eventId") else None

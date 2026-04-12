@@ -452,6 +452,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .pressure-strip.critical{background:rgba(248,81,73,.12);border:1px solid rgba(248,81,73,.35);}
 .pressure-strip.high{background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.35);}
 .pressure-strip.medium{background:rgba(240,192,64,.10);border:1px solid rgba(240,192,64,.25);}
+.pressure-strip.secured{background:rgba(110,118,129,.10);border:1px solid rgba(110,118,129,.25);}
 .ps-icon{font-size:18px;flex-shrink:0;line-height:1;}
 .ps-content{display:flex;flex-direction:column;gap:3px;}
 .ps-rounds{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text);}
@@ -815,6 +816,20 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         </ul>
       </div>
     </div>
+    <!-- Motivation Tracker sub-section -->
+    <div class="heart-grid" style="margin-top:10px;">
+      <div class="heart-card" style="border-color:rgba(110,118,129,.35)">
+        <h3>⬜ Motivations-Tracker — <em>Bereits gesicherte Teams</em></h3>
+        <p style="margin-bottom:10px;font-size:12.5px;color:var(--muted);">Teams deren Saisonfate mathematisch besiegelt ist (Abstieg bestätigt, Meister gekrönt, Europa-Platz gesichert) haben <em>null Anreiz</em> für Vollgas — sie rotieren Stammspieler und senken die Intensität.</p>
+        <table class="heart-table">
+          <tr><th>Level</th><th>Bedeutung</th><th>Bedingung</th><th>xG-Effekt</th></tr>
+          <tr><td><code>full</code></td><td>Aktiv kämpfend</td><td>Standard — Ziel noch offen</td><td>Kein Penalty</td></tr>
+          <tr><td><code>low</code></td><td>Nahezu gesichert</td><td>Rückstand > 55% der verbleibenden Max-Punkte</td><td>Att −8% · Def +6%</td></tr>
+          <tr><td><code>none</code></td><td>Mathematisch bestätigt</td><td>Rückstand > 100% der Max-Punkte (unmöglich aufzuholen)</td><td>Att −18% · Def +12%</td></tr>
+        </table>
+        <p style="margin-top:10px;font-size:12px;color:var(--muted);">Berechnung: <code>update_dashboard.py → calc_motivation()</code> · Wird in <code>homeStake.motivationLevel</code> / <code>awayStake.motivationLevel</code> gespeichert · Pressure-Strip zeigt ⬜ statt 🚨 wenn alle Stakes gesichert sind · Druck-Boost (homeNeedsWin) deaktiviert für <code>none</code>-Teams.</p>
+      </div>
+    </div>
   </div>
 
   <!-- 4. Stake Labels -->
@@ -969,7 +984,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <ul>
           <li><strong>Live Odds-API:</strong> Automatischer Value-Check gegen Pinnacle in Echtzeit</li>
           <li><strong>Weather-Integration:</strong> Wind/Regen → Under-Boost, Corners-Dämpfung</li>
-          <li><strong>Motivations-Tracker:</strong> Team bereits abgestiegen / Meister → Druck = 0</li>
+          <li><strong>Weather-Integration:</strong> Wind/Regen → Under-Boost, Corners-Dämpfung</li>
           <li><strong>Bankroll-Empfehlung:</strong> Stake-Größe basierend auf Edge × Konfidenz</li>
           <li><strong>Historischer Backtest (API):</strong> API-Daten für Trefferquoten-Validierung der Pick-Logik nutzen</li>
         </ul>
@@ -994,6 +1009,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Pinnacle-Quoten via api-football</strong> — als primäre Fair-Value-Basis (nicht nur the-odds-api.com)</li>
           <li><strong>Squad Cache (squad-cache.json)</strong> — 154 Teams, 7-Tage-TTL, persistent — eliminiert Rate-Limit-Burst</li>
           <li><strong>Dynamische Score-Obergrenze</strong> — Max-Score skaliert mit <em>roundsLeft</em> (1 Runde → 12.0, ≥10 → 7.5)</li>
+          <li><strong>Motivations-Tracker</strong> — <code>motivationLevel: 'full' | 'low' | 'none'</code> aus <code>update_dashboard.py → calc_motivation()</code>. Mathematisch bestätigte Teams (Abstieg/Titel gesichert per Punkte-Gap vs. Runden) bekommen: Attack −18% xG, Defense +12% xGA (Rotation-Effekt). <em>Low</em>: −8% / +6%. Kein Druck-Boost mehr für bereits gesicherte Teams. Pressure-Strip zeigt ⬜ statt 🚨 wenn Saisonziel bestätigt ist.</li>
         </ul>
       </div>
     </div>
@@ -1646,8 +1662,24 @@ function getBettingPicks(match, odds, leagueKey) {
   // hc/ac are arrays like ['red'] or ['gold','blue'] — use .length
   const homeHasStake  = hc.length > 0;
   const awayHasStake  = ac.length > 0;
-  const homeNeedsWin  = urgencyMed && homeHasStake;
-  const awayNeedsWin  = urgencyMed && awayHasStake;
+
+  // ── Motivation Tracker ────────────────────────────────────────────────────
+  // Teams whose season outcome is already mathematically confirmed have reduced motivation:
+  // 'none' = confirmed champion/relegated/qualified → expect rotation, zero-pressure play
+  // 'low'  = nearly confirmed (miracle needed to change outcome) → partial reduction
+  // 'full' = actively fighting (default)
+  // Computed in update_dashboard.py → calc_motivation() based on points gap vs. rounds left.
+  const hMotiv = match.homeStake?.motivationLevel || 'full';
+  const aMotiv = match.awayStake?.motivationLevel || 'full';
+  const hMotivNone = hMotiv === 'none';
+  const aMotivNone = aMotiv === 'none';
+  const hMotivLow  = hMotiv === 'low';
+  const aMotivLow  = aMotiv === 'low';
+
+  // Must-win only applies when the team is STILL fighting — not already confirmed.
+  // A relegated team that can't escape has nothing to push for.
+  const homeNeedsWin  = urgencyMed && homeHasStake && !hMotivNone;
+  const awayNeedsWin  = urgencyMed && awayHasStake && !aMotivNone;
   const bothNeedWin   = homeNeedsWin && awayNeedsWin;
   // Urgency label for pick reason texts — graduated language based on severity
   const urgencyLabel  = _rl <= 1 ? `🚨 LETZTE RUNDE — dieser Sieg kann alles entscheiden`
@@ -1659,21 +1691,38 @@ function getBettingPicks(match, odds, leagueKey) {
   // ── Pressure context helpers — used across PICK 1, 2 and 3 ──────────────
   // Defined here so all pick blocks can reference them without re-calculation.
   const _anyNeedsWin = homeNeedsWin || awayNeedsWin;
-  // Human-readable team labels (color-aware)
-  const _pHLabel = homeNeedsWin
+  // Human-readable team labels (color-aware, motivation-aware)
+  const _pHLabel = hMotivNone
+    ? (hc.includes('gold') ? `${match.home} bereits Meister` : hc.includes('red') ? `${match.home} bereits abgestiegen` : `${match.home} gesichert`)
+    : homeNeedsWin
     ? (hc.includes('gold') ? `${match.home} im Titelkampf` : hc.includes('red') ? `${match.home} im Abstiegskampf` : `${match.home} unter Druck`)
     : '';
-  const _pALabel = awayNeedsWin
+  const _pALabel = aMotivNone
+    ? (ac.includes('gold') ? `${match.away} bereits Meister` : ac.includes('red') ? `${match.away} bereits abgestiegen` : `${match.away} gesichert`)
+    : awayNeedsWin
     ? (ac.includes('gold') ? `${match.away} im Titelkampf` : ac.includes('red') ? `${match.away} im Abstiegskampf` : `${match.away} unter Druck`)
     : '';
   const _rlSfx = _rl < 99 ? `, noch ${_rl} Spieltag${_rl === 1 ? '' : 'e'}` : '';
-  // Generic pressure note for goals/specialist reason texts — appended to explain WHY the market fires
+  // Generic pressure note for goals/specialist reason texts
+  // Confirmed teams: warn that opponent gets tactical free-ride vs. low-intensity lineup
+  const _motivWarnH = hMotivNone
+    ? `<br><strong>⬜ ${_pHLabel} — mögliche Rotation, reduzierte Intensität. Vorteil für Gegner.</strong>`
+    : hMotivLow
+    ? `<br><em>⚠️ ${match.home} nahezu gesichert — leicht reduzierte Motivation erwartet.</em>`
+    : '';
+  const _motivWarnA = aMotivNone
+    ? `<br><strong>⬜ ${_pALabel} — mögliche Rotation, reduzierte Intensität. Vorteil für Gegner.</strong>`
+    : aMotivLow
+    ? `<br><em>⚠️ ${match.away} nahezu gesichert — leicht reduzierte Motivation erwartet.</em>`
+    : '';
   const _pressNote = bothNeedWin
     ? `<br><strong>⚡ Beide Teams müssen gewinnen${_rlSfx} — maximaler Angriffsdruck, taktische Sicherung Nebensache.</strong>`
     : homeNeedsWin
     ? `<br><strong>⚡ ${_pHLabel}${_rlSfx} — Heimteam geht volles Risiko, öffnet Räume für Konter.</strong>`
     : awayNeedsWin
     ? `<br><strong>⚡ ${_pALabel}${_rlSfx} — Auswärtsteam agiert mit Vollgas-Mentalität.</strong>`
+    : (hMotivNone || aMotivNone)
+    ? `${_motivWarnH}${_motivWarnA}`
     : '';
 
   // ── Derived ───────────────────────────────────────────
@@ -1750,6 +1799,19 @@ function getBettingPicks(match, odds, leagueKey) {
   let homeDefStr = (xGBased ? _hXGA : hConc)  * _hFatigDef * _hInjDef;
   let awayAttStr = (xGBased ? _aXG  : aGoals) * _aFatigAtt * _aInjAtt;
   let awayDefStr = (xGBased ? _aXGA : aConc)  * _aFatigDef * _aInjDef;
+
+  // ── Motivation penalty (applied after fatigue + injury) ───────────────────
+  // Confirmed teams (motivationLevel='none') rotate key players and lower intensity:
+  //   Attack:  -18% xG (rotated strikers, tactical shape abandoned)
+  //   Defense: +12% xGA (second-string defenders, less pressing)
+  // Near-confirmed (motivationLevel='low'):
+  //   Attack:  -8% xG
+  //   Defense: +6% xGA
+  if (hMotivNone) { homeAttStr *= 0.82; homeDefStr *= 1.12; }
+  else if (hMotivLow) { homeAttStr *= 0.92; homeDefStr *= 1.06; }
+  if (aMotivNone) { awayAttStr *= 0.82; awayDefStr *= 1.12; }
+  else if (aMotivLow) { awayAttStr *= 0.92; awayDefStr *= 1.06; }
+
   // BTTS signals (refined by xG)
   const bttsXGStrong = homeAttStr > 1.30 && awayAttStr > 1.10 && homeDefStr > 0.90 && awayDefStr > 0.90;
   const bttsLikely   = homeAttStr > 1.15 && awayAttStr > 0.95 && homeDefStr > 0.85 && awayDefStr > 0.85;
@@ -2459,6 +2521,16 @@ function getBettingPicks(match, odds, leagueKey) {
       if (_hFair > 1.12 && hHome) chips.push(`<span class="mod-chip mod-neutral">⚠️ ${match.home} überperformt xG (${Math.round(_hFair*100)}%)</span>`);
       if (_aFair > 1.12 && hAway) chips.push(`<span class="mod-chip mod-neutral">⚠️ ${match.away} überperformt xG (${Math.round(_aFair*100)}%)</span>`);
     }
+    // Motivation chips — shown when a team's season fate is already confirmed
+    // Signals to bettor: expect rotation, reduced effort, underperformance vs. xG baseline
+    if (hMotivNone && (hHome || hGoal))
+      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.home} gesichert (-18% xG)</span>`);
+    else if (hMotivLow && (hHome || hGoal))
+      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.home} nahezu gesichert (-8% xG)</span>`);
+    if (aMotivNone && (hAway || hGoal))
+      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.away} gesichert (-18% xG)</span>`);
+    else if (aMotivLow && (hAway || hGoal))
+      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.away} nahezu gesichert (-8% xG)</span>`);
     p.mods = chips;
   });
 
@@ -3850,6 +3922,20 @@ function buildKombiHtml(matchList) {
 function getPressureLabel(stakeObj, teamName) {
   if (!stakeObj || !stakeObj.labels || !stakeObj.labels.length) return '';
   const colors = stakeObj.labels.map(l => l.c);
+  const motiv  = stakeObj.motivationLevel || 'full';
+  // Teams with confirmed/secured season outcome — show as demotivated, not as fighters
+  if (motiv === 'none') {
+    if (colors.includes('red'))    return `<span style="opacity:.65">⬜ ${teamName} bereits abgestiegen (keine Motivation)</span>`;
+    if (colors.includes('gold'))   return `<span style="opacity:.65">⬜ ${teamName} bereits Meister (Rotation möglich)</span>`;
+    if (colors.includes('blue'))   return `<span style="opacity:.65">⬜ ${teamName} UCL bereits gesichert</span>`;
+    if (colors.includes('orange')) return `<span style="opacity:.65">⬜ ${teamName} EL bereits gesichert</span>`;
+    return `<span style="opacity:.65">⬜ ${teamName} Saison-Ziel gesichert</span>`;
+  }
+  if (motiv === 'low') {
+    if (colors.includes('red'))    return `${teamName} kämpft gegen den Abstieg (nahezu bestätigt)`;
+    if (colors.includes('gold'))   return `${teamName} kämpft um den Titel (nahezu gesichert)`;
+  }
+  // Standard pressure labels — team is still actively fighting
   if (colors.includes('red'))    return `${teamName} kämpft gegen den Abstieg`;
   if (colors.includes('gold'))   return `${teamName} kämpft um den Titel`;
   if (colors.includes('blue'))   return `${teamName} kämpft um die Champions League`;
@@ -3960,9 +4046,16 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   const _anyStake = (_hSC?.labels?.length > 0) || (_aSC?.labels?.length > 0);
   let pressureHtml = '';
   if (_rlC <= 6 && _anyStake) {
-    const _pInt   = _rlC <= 1 ? 'extreme' : _rlC <= 2 ? 'critical' : _rlC <= 3 ? 'high' : 'medium';
-    const _pIcon  = _rlC <= 1 ? '🚨' : _rlC <= 2 ? '🔥' : _rlC <= 3 ? '⚠️' : '📍';
-    const _pRounds = _rlC <= 1 ? 'LETZTE RUNDE DER SAISON' : `NOCH ${_rlC} RUNDEN`;
+    const _hMotivBanner = _hSC?.motivationLevel || 'full';
+    const _aMotivBanner = _aSC?.motivationLevel || 'full';
+    const _allSecured = (!_hSC || _hMotivBanner === 'none') && (!_aSC || _aMotivBanner === 'none');
+    // If all staked teams are already confirmed, show neutral "secured" strip instead of alarm
+    const _pInt   = _allSecured ? 'secured'
+                  : _rlC <= 1 ? 'extreme' : _rlC <= 2 ? 'critical' : _rlC <= 3 ? 'high' : 'medium';
+    const _pIcon  = _allSecured ? '⬜'
+                  : _rlC <= 1 ? '🚨' : _rlC <= 2 ? '🔥' : _rlC <= 3 ? '⚠️' : '📍';
+    const _pRounds = _allSecured ? 'SAISONZIEL GESICHERT'
+                   : _rlC <= 1 ? 'LETZTE RUNDE DER SAISON' : `NOCH ${_rlC} RUNDEN`;
     const _hLabel = getPressureLabel(_hSC, match.home);
     const _aLabel = getPressureLabel(_aSC, match.away);
     pressureHtml = `<div class="pressure-strip ${_pInt}">
