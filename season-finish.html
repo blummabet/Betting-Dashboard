@@ -2231,49 +2231,11 @@ function getBettingPicks(match, odds, leagueKey) {
     ? `<strong>🏥 ${match.away} Verletzte: ${(_aInj.notes||[]).slice(0,2).join(', ')||'Ausfälle im Kader'}.</strong>`
     : '';
 
-  // ── Build modifier chip array shared across picks ──────────────────────────
-  // These chips appear in every pick card to make active modifiers visible.
-  const _modChips = [];
-
-  // H2H goal modifier
-  if (_h2hSample && _h2hO25Mod !== 0) {
-    const dir = _h2hO25Mod > 0 ? '▲' : '▼';
-    const pct = `${_h2hO25Mod > 0 ? '+' : ''}${Math.round(_h2hO25Mod * 100)}%`;
-    _modChips.push(`<span class="mod-chip mod-h2h">📊 H2H Over/Under ${dir}${pct}</span>`);
-  }
-  if (_h2hSample && _h2hBttsMod !== 0) {
-    const dir = _h2hBttsMod > 0 ? '▲' : '▼';
-    const pct = `${_h2hBttsMod > 0 ? '+' : ''}${Math.round(_h2hBttsMod * 100)}%`;
-    _modChips.push(`<span class="mod-chip mod-h2h">📊 H2H BTTS ${dir}${pct}</span>`);
-  }
-  // Referee modifier — show always when referee known (even if modifier = 0, name is useful info)
-  if (_refStats?.name) {
-    if (_refCardMod > 0) {
-      _modChips.push(`<span class="mod-chip mod-ref">👨‍⚖️ ${_refStats.name}: Ø ${_refAvg} K/Sp — strenger Pfeifer ▲</span>`);
-    } else if (_refCardMod < 0) {
-      _modChips.push(`<span class="mod-chip mod-ref" style="color:#79c0ff;border-color:#1d4e7a;background:#001a2a">👨‍⚖️ ${_refStats.name}: Ø ${_refAvg} K/Sp — laxer Pfeifer ▼</span>`);
-    } else if (_refAvg != null) {
-      _modChips.push(`<span class="mod-chip mod-ref mod-neutral">👨‍⚖️ ${_refStats.name}: Ø ${_refAvg} K/Sp</span>`);
-    } else {
-      _modChips.push(`<span class="mod-chip mod-ref mod-neutral">👨‍⚖️ ${_refStats.name}</span>`);
-    }
-  }
-
-  // Injury modifiers
-  if (_hInj && (_hInj.attack > 0 || _hInj.defense > 0)) {
-    const n = (_hInj.attack||0) + (_hInj.defense||0);
-    _modChips.push(`<span class="mod-chip mod-inj">🏥 ${match.home}: ${n} Ausfall${n>1?'s':''}</span>`);
-  }
-  if (_aInj && (_aInj.attack > 0 || _aInj.defense > 0)) {
-    const n = (_aInj.attack||0) + (_aInj.defense||0);
-    _modChips.push(`<span class="mod-chip mod-inj">🏥 ${match.away}: ${n} Ausfall${n>1?'s':''}</span>`);
-  }
-
-  // Fatigue modifiers
-  if (_hFatigAtt < 1.0) _modChips.push(`<span class="mod-chip mod-fat">😴 ${match.home}: ${_hRest}T Pause</span>`);
-  if (_aFatigAtt < 1.0) _modChips.push(`<span class="mod-chip mod-fat">😴 ${match.away}: ${_aRest}T Pause</span>`);
-
-  // Attach chips + context notes to each pick
+  // ── Context notes appended inline to relevant pick reasons ────────────────
+  // Principle: info appears where it's meaningful, not as separate chips.
+  // • Referee: only relevant for card picks → handled via _refCardNote embedded above
+  // • Injuries: appended to result picks (home/away wins, DNB, DC) and goals picks (Over/Under, BTTS)
+  // • Fatigue: same as injuries
   picks.forEach(p => {
     const hHome = ['Heimsieg','DNB: Heimteam','Doppelte Chance: 1X','Handicap Heim -0.5'].includes(p.market);
     const hAway = ['Auswärtssieg','DNB: Auswärtsteam','Doppelte Chance: X2','Handicap Auswärts -0.5'].includes(p.market);
@@ -2282,8 +2244,6 @@ function getBettingPicks(match, odds, leagueKey) {
     if (hHome || hGoal) { if (_hFatigNote) extras.push(_hFatigNote); if (_hInjNote) extras.push(_hInjNote); }
     if (hAway || hGoal) { if (_aFatigNote) extras.push(_aFatigNote); if (_aInjNote) extras.push(_aInjNote); }
     if (extras.length) p.reason += '<br>' + extras.join('<br>');
-    // Attach modifier chips to pick for rendering
-    p._modChips = _modChips;
   });
 
   return picks;
@@ -3738,14 +3698,11 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       }
     }
 
-    const modsHtml = (p._modChips && p._modChips.length)
-      ? `<div class="pick-mods">${p._modChips.join('')}</div>` : '';
     return `<div class="pick-item">
       <span class="pick-icon">${p.icon}</span>
       <div class="pick-body">
         <div class="pick-market">${p.market}${oddsTag}${lowWarn}${valueTag}</div>
         ${fairOddsHtml}
-        ${modsHtml}
         <div class="pick-reason">${p.reason}</div>
       </div>
       <span class="pick-conf ${confClass}">${confLabel}</span>
