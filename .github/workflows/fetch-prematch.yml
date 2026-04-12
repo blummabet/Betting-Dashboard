@@ -1,0 +1,39 @@
+name: Fetch Pre-Match Data
+
+on:
+  # Automatisch: 2x täglich (8:00 und 14:00 Uhr Wien-Zeit = 6:00 und 12:00 UTC)
+  schedule:
+    - cron: '0 6 * * *'
+    - cron: '0 12 * * *'
+  # Manuell auslösbar (GitHub → Actions → "Run workflow")
+  workflow_dispatch:
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # Brauchen wir um prematch-data.json zu commiten
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Fetch Pre-Match Data from API-Football
+        run: node prematch-server.js --write
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        timeout-minutes: 10
+
+      - name: Commit & Push prematch-data.json
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add prematch-data.json
+          # Nur committen wenn sich tatsächlich etwas geändert hat
+          git diff --staged --quiet || git commit -m "chore: update prematch data [skip ci]"
+          git push

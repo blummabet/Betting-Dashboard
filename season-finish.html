@@ -4116,8 +4116,13 @@ async function showPreMatchDebug() {
 
   // Check API quota (fast — uses /status endpoint, costs 0 API credits on some plans)
   let apiStatusLine = '⏳ Prüfe API-Quota...';
-  const _proxyActive = typeof window.fetch.toString === 'function' && window.fetch.toString().includes('corsproxy.io');
-  const _proxyNote = '(via CORS-Proxy)';
+  // Detect data source: GitHub Actions JSON, local server, or CORS proxy
+  let _dataSource = '(Browser / CORS-Proxy)';
+  try {
+    const _jChk = await fetch('prematch-data.json', { signal: AbortSignal.timeout(1000) });
+    if (_jChk.ok) { const _jd = await _jChk.json(); _dataSource = `prematch-data.json (${Math.round((Date.now()-(_jd.ts||0))/60000)}min alt)`; }
+  } catch(e) {}
+  const _proxyNote = `[${_dataSource}]`;
   try {
     const _st = await fetch('https://v3.football.api-sports.io/status', { headers: { 'x-apisports-key': APISPORTS_KEY } });
     const _sd = await _st.json();
@@ -5302,7 +5307,58 @@ async function loadPreMatchData() {
     }
   } catch(e) {}
 
-  // ── Lokaler Server? Wenn ja: Server macht die API-Calls, kein CORS-Problem ──
+  // ── 1. Versuch: prematch-data.json (GitHub Actions → GitHub Pages, gleicher Origin) ──
+  // Die Datei wird von .github/workflows/fetch-prematch.yml automatisch aktualisiert.
+  // Funktioniert nur wenn die Seite per HTTP(S) geladen wird (nicht file://).
+  const PM_DATA_URL = 'prematch-data.json';
+  const PM_DATA_MAX_AGE = 14 * 3600 * 1000; // 14h — Actions laufen 2x täglich
+  try {
+    const _jResp = await fetch(PM_DATA_URL, { signal: AbortSignal.timeout(3000) });
+    if (_jResp.ok) {
+      const _jData = await _jResp.json();
+      const _jFxs  = _jData.fixtures || [];
+      const _jAge  = Date.now() - (_jData.ts || 0);
+      if (_jFxs.length > 0 && _jAge < PM_DATA_MAX_AGE) {
+        console.log(`[PreMatch] ✅ prematch-data.json: ${_jFxs.length} Spiele (${Math.round(_jAge/60000)}min alt)`);
+        const _jResult = {};
+        for (const [, L] of Object.entries(LEAGUES)) {
+          for (const match of (L.fixtures || [])) {
+            let mDateIso = null;
+            try { mDateIso = _localIso(parseGermanDate(match.date)); } catch(e) { continue; }
+            const sf = _jFxs.find(f =>
+              f.date === mDateIso &&
+              _fuzzyTeam(f.homeTeamName || '', match.home) &&
+              _fuzzyTeam(f.awayTeamName || '', match.away)
+            );
+            if (!sf) continue;
+            _jResult[`${match.home}|${match.away}`] = {
+              fixtureId:    sf.fixtureId,
+              referee:      sf.referee      || null,
+              refereeStats: sf.refereeStats || null,
+              homeTeamId:   sf.homeTeamId,
+              awayTeamId:   sf.awayTeamId,
+              injuries:     sf.injuries     || { home: [], away: [] },
+              h2h:          sf.h2h          || null,
+              isFinished:   sf.isFinished   || false,
+              odds:         sf.odds         || null
+            };
+          }
+        }
+        if (Object.keys(_jResult).length > 0) {
+          window._preMatchData   = _jResult;
+          window._preMatchLoaded = true;
+          try { localStorage.setItem(cacheKey, JSON.stringify({ ts: _jData.ts || Date.now(), data: _jResult })); } catch(e) {}
+          _injectPreMatchAndRerender();
+          console.log(`[PreMatch] prematch-data.json: ${Object.keys(_jResult).length} Spiele gematcht`);
+          return;
+        }
+      }
+    }
+  } catch(e) {
+    // file:// oder Datei existiert noch nicht → nächsten Fallback versuchen
+  }
+
+  // ── 2. Versuch: Lokaler Server (Development: node prematch-server.js) ────────
   // Starten mit: node prematch-server.js  →  http://localhost:3001
   // Wenn Server nicht läuft: normaler Browser-Fallback (CORS-Proxy)
   try {

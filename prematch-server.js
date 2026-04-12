@@ -21,8 +21,14 @@ const https = require('https');
 const fs    = require('fs');
 const path  = require('path');
 
+// ── Modi ─────────────────────────────────────────────────────────────────────
+//   node prematch-server.js          → lokaler HTTP-Server (Development)
+//   node prematch-server.js --write  → JSON-Datei schreiben (GitHub Actions)
+const WRITE_MODE = process.argv.includes('--write');
+
 // ── Config ──────────────────────────────────────────────────────────────────
-const API_KEY   = '9f36726c1bdc9957b4a49f89277b80db';
+// API Key: zuerst Environment Variable (GitHub Secret), dann Fallback für lokalen Dev
+const API_KEY   = process.env.APISPORTS_KEY || '9f36726c1bdc9957b4a49f89277b80db';
 const API_HOST  = 'v3.football.api-sports.io';
 const PORT      = 3001;
 const CACHE_TTL = 6 * 3600 * 1000;  // 6 Stunden
@@ -427,32 +433,53 @@ const server = http.createServer(async (req, res) => {
   res.writeHead(404); res.end('Not found');
 });
 
-server.listen(PORT, '127.0.0.1', () => {
-  console.log('');
-  console.log('╔═══════════════════════════════════════════════════════╗');
-  console.log('║         Betting Dashboard — Pre-Match Server           ║');
-  console.log('╠═══════════════════════════════════════════════════════╣');
-  console.log(`║  Dashboard:  http://localhost:${PORT}                   ║`);
-  console.log(`║  API-Daten:  http://localhost:${PORT}/prematch           ║`);
-  console.log(`║  Refresh:    http://localhost:${PORT}/prematch?refresh=1 ║`);
-  console.log(`║  Quota:      http://localhost:${PORT}/status             ║`);
-  console.log('╠═══════════════════════════════════════════════════════╣');
-  console.log('║  Strg+C zum Beenden                                    ║');
-  console.log('╚═══════════════════════════════════════════════════════╝');
-  console.log('');
-  console.log('[Server] Starte initialen Daten-Load im Hintergrund...');
-
-  // Pre-fetch on startup (non-blocking)
+// ════════════════════════════════════════════════════════════════════════════
+//  ENTRY POINT — je nach Modus HTTP-Server oder JSON-Datei schreiben
+// ════════════════════════════════════════════════════════════════════════════
+if (WRITE_MODE) {
+  // GitHub Actions Modus: Daten holen, prematch-data.json schreiben, exit
+  console.log('[GitHub Actions] Starte Daten-Fetch für prematch-data.json...');
   fetchAllPrematchData()
-    .then(data => {
-      _cache = { ts: Date.now(), data, fetching: false };
-      console.log(`[Server] ✅ ${data.length} Spiele geladen und gecacht (6h TTL)`);
+    .then(fixtures => {
+      const outPath = path.join(__dirname, 'prematch-data.json');
+      const output  = JSON.stringify({ ts: Date.now(), fixtures }, null, 2);
+      fs.writeFileSync(outPath, output, 'utf8');
+      const kb = Math.round(Buffer.byteLength(output) / 1024);
+      console.log(`\n✅ prematch-data.json geschrieben: ${fixtures.length} Spiele (${kb} KB)`);
+      process.exit(0);
     })
     .catch(e => {
-      _cache.fetching = false;
-      console.error('[Server] ❌ Initialer Load fehlgeschlagen:', e.message);
+      console.error('\n❌ Fehler:', e.message);
+      process.exit(1);
     });
-});
+} else {
+  // Lokaler Server Modus
+  server.listen(PORT, '127.0.0.1', () => {
+    console.log('');
+    console.log('╔═══════════════════════════════════════════════════════╗');
+    console.log('║         Betting Dashboard — Pre-Match Server           ║');
+    console.log('╠═══════════════════════════════════════════════════════╣');
+    console.log(`║  Dashboard:  http://localhost:${PORT}                   ║`);
+    console.log(`║  API-Daten:  http://localhost:${PORT}/prematch           ║`);
+    console.log(`║  Refresh:    http://localhost:${PORT}/prematch?refresh=1 ║`);
+    console.log(`║  Quota:      http://localhost:${PORT}/status             ║`);
+    console.log('╠═══════════════════════════════════════════════════════╣');
+    console.log('║  Strg+C zum Beenden                                    ║');
+    console.log('╚═══════════════════════════════════════════════════════╝');
+    console.log('');
+    console.log('[Server] Starte initialen Daten-Load im Hintergrund...');
+
+    fetchAllPrematchData()
+      .then(data => {
+        _cache = { ts: Date.now(), data, fetching: false };
+        console.log(`[Server] ✅ ${data.length} Spiele geladen und gecacht (6h TTL)`);
+      })
+      .catch(e => {
+        _cache.fetching = false;
+        console.error('[Server] ❌ Initialer Load fehlgeschlagen:', e.message);
+      });
+  });
+}
 
 server.on('error', e => {
   if (e.code === 'EADDRINUSE') {
