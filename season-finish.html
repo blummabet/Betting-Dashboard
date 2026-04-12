@@ -6139,11 +6139,6 @@ async function fetchSofaResults(btn) {
     dbg.push(`ℹ️ Cache-Fetch Fehler: ${_ce.message} — nutze direkte API`);
   }
 
-  // ── Fast-path: if picks have fixtureId, fetch them directly (1-2 API calls) ──
-  // Only needed for picks NOT already resolved via cache above
-  const withIds    = pending.filter(e => e.fixtureId);
-  const withoutIds = pending.filter(e => !e.fixtureId);
-
   // Check how many picks the cache already covers (to skip unnecessary API calls)
   const _FT_CHECK = ['FT','AET','PEN','AWD','WO'];
   const _cachePool = pending.flatMap(e => {
