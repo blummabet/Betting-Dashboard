@@ -1,0 +1,49 @@
+name: 📊 Ergebnisse holen
+
+on:
+  # Automatisch: 04:00, 18:00, 23:00 Uhr Vienna (CEST = UTC+2)
+  #   04:00 Vienna = 02:00 UTC
+  #   18:00 Vienna = 16:00 UTC
+  #   23:00 Vienna = 21:00 UTC
+  schedule:
+    - cron: '0 2 * * *'
+    - cron: '0 16 * * *'
+    - cron: '0 21 * * *'
+
+  # Manuell ausführbar per Knopfdruck auf GitHub
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-results:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📊 Ergebnisse von API-Football holen
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_results.py
+
+      - name: 💾 results-cache.json speichern & pushen
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add results-cache.json
+          if git diff --staged --quiet; then
+            echo "Keine neuen Ergebnisse — kein Commit nötig."
+          else
+            git commit -m "📊 Ergebnisse aktualisiert $(date +'%d.%m.%Y %H:%M') UTC"
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

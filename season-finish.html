@@ -6107,13 +6107,77 @@ async function fetchSofaResults(btn) {
   pending.forEach(e => dbg.push(`  · ${e.dateIso}  ${e.home} vs ${e.away}${e.fixtureId ? ' [ID:'+e.fixtureId+']' : ''}`));
   dbg.push('');
 
+  // ── 0. Cache: load results-cache.json from GitHub Pages (written by Actions) ──
+  // This is the primary path — GitHub Actions fetches results 3× daily and
+  // writes results-cache.json to the repo. If the cache is fresh (<4h), we use
+  // it directly and skip all browser-side API calls.
+  try {
+    btn.textContent = '⏳ Cache laden…';
+    const _cacheUrl = 'https://blummabet.github.io/Betting-Dashboard/results-cache.json?t=' + Date.now();
+    const _cacheResp = await fetch(_cacheUrl);
+    if (_cacheResp.ok) {
+      const _cd = await _cacheResp.json();
+      const _ageMin = Math.round((Date.now() - new Date(_cd.generated).getTime()) / 60000);
+      dbg.push(`📦 results-cache.json geladen — ${(_cd.fixtures||[]).length} Fixtures · ${_ageMin}min alt · ${_cd.dates?.join(', ')}`);
+      // Inject cache fixtures into apifbByDate using the same structure the resolver expects
+      for (const fx of (_cd.fixtures || [])) {
+        const _norm = {
+          fixture: { id: fx.id, date: fx.date + 'T00:00:00+01:00', status: { short: fx.status } },
+          teams:   { home: { id: fx.homeTeamId, name: fx.home }, away: { id: fx.awayTeamId, name: fx.away } },
+          goals:   { home: fx.goalsHome, away: fx.goalsAway },
+          score:   { halftime: { home: fx.htHome, away: fx.htAway } },
+          league:  { id: fx.leagueId },
+        };
+        (apifbByDate[fx.date] = apifbByDate[fx.date] || []).push(_norm);
+      }
+      dbg.push('');
+      _showDebug(dbg);
+    } else {
+      dbg.push(`ℹ️ Cache nicht verfügbar (${_cacheResp.status}) — nutze direkte API`);
+    }
+  } catch(_ce) {
+    dbg.push(`ℹ️ Cache-Fetch Fehler: ${_ce.message} — nutze direkte API`);
+  }
+
   // ── Fast-path: if picks have fixtureId, fetch them directly (1-2 API calls) ──
+  // Only needed for picks NOT already resolved via cache above
   const withIds    = pending.filter(e => e.fixtureId);
   const withoutIds = pending.filter(e => !e.fixtureId);
 
+  // Check how many picks the cache already covers (to skip unnecessary API calls)
+  const _FT_CHECK = ['FT','AET','PEN','AWD','WO'];
+  const _cachePool = pending.flatMap(e => {
+    const _ds = [e.dateIso, _isoAdj(e.dateIso,1), _isoAdj(e.dateIso,-1)];
+    return _ds.flatMap(d => apifbByDate[d] || []);
+  });
+  const _cacheCovers = pending.filter(e => {
+    const _ds = [e.dateIso, _isoAdj(e.dateIso,1), _isoAdj(e.dateIso,-1)];
+    return _ds.flatMap(d => apifbByDate[d] || []).some(f =>
+      _FT_CHECK.includes(f.fixture?.status?.short) &&
+      _fuzzyTeam(f.teams?.home?.name||'', e.home) &&
+      _fuzzyTeam(f.teams?.away?.name||'', e.away)
+    );
+  });
+  if (_cacheCovers.length > 0) {
+    dbg.push(`✅ Cache deckt ${_cacheCovers.length}/${pending.length} Spiele ab — kein direkter API-Call nötig`);
+    _showDebug(dbg);
+  }
+
+  // ── Direct ID fetch — only for picks NOT found in cache ──────────────────
+  const _needsApiFetch = pending.filter(e => {
+    const _ds = [e.dateIso, _isoAdj(e.dateIso,1), _isoAdj(e.dateIso,-1)];
+    return !_ds.flatMap(d => apifbByDate[d] || []).some(f =>
+      _FT_CHECK.includes(f.fixture?.status?.short) &&
+      _fuzzyTeam(f.teams?.home?.name||'', e.home) &&
+      _fuzzyTeam(f.teams?.away?.name||'', e.away)
+    );
+  });
+  const withIds    = _needsApiFetch.filter(e => e.fixtureId);
+  const withoutIds = _needsApiFetch.filter(e => !e.fixtureId);
+
   if (withIds.length) {
     btn.textContent = `⏳ Direktabruf ${withIds.length} Spiele…`;
-    dbg.push(`🎯 Direktabruf via Fixture-ID: ${withIds.length} Spiele`);
+    dbg.push(`🎯 Direktabruf via Fixture-ID: ${withIds.length} Spiele (nicht im Cache)`);
     for (let i = 0; i < withIds.length; i += 20) {
       const batch = withIds.slice(i, i+20);
       const ids = batch.map(e => e.fixtureId);
