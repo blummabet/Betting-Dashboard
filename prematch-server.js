@@ -30,10 +30,24 @@ const WRITE_MODE = process.argv.includes('--write');
 // API Key: zuerst Environment Variable (GitHub Secret), dann Fallback für lokalen Dev
 const API_KEY   = process.env.APISPORTS_KEY || '9f36726c1bdc9957b4a49f89277b80db';
 const API_HOST  = 'v3.football.api-sports.io';
+
+// Nur diese Ligen fetchen — verhindert 7000+ Spiele pro Tag weltweit
+// api-football League IDs: https://www.api-football.com/documentation-v3#tag/Leagues
+const LEAGUE_IDS = {
+  39:  'Premier League',
+  78:  'Bundesliga',
+  135: 'Serie A',
+  140: 'La Liga',
+  61:  'Ligue 1',
+  144: 'Austrian Bundesliga',
+  88:  'Eredivisie',
+  94:  'Primeira Liga',
+  179: 'Scottish Premiership',
+};
 const PORT      = 3001;
 const CACHE_TTL = 6 * 3600 * 1000;  // 6 Stunden
-const BATCH_DELAY = 300;             // ms zwischen Batches (Rate-Limiting)
-const CALL_DELAY  = 100;             // ms zwischen einzelnen Calls
+const BATCH_DELAY = 150;             // ms zwischen Batches
+const CALL_DELAY  = 50;              // ms zwischen einzelnen Calls
 
 // ── In-Memory Cache ──────────────────────────────────────────────────────────
 let _cache = { ts: 0, data: null, fetching: false };
@@ -249,67 +263,13 @@ async function fetchAllPrematchData() {
   }
   console.log(`  Step3 fertig: ${h2hOk} Paarungen mit H2H`);
 
-  // ── Step 4: Referee stats ─────────────────────────────────────────────────
+  // ── Step 4: Referee stats — ÜBERSPRUNGEN in GitHub Actions ──────────────
+  // Schiri-Stats brauchen pro Schiri 3+ sequentielle API-Calls (zu langsam für CI).
+  // Sie werden stattdessen im Browser via _enrichMissingData geladen (48h Cache).
+  // Die referee-Namen sind im JSON enthalten → Browser kann sie direkt nachladen.
   const uniqueRefs = [...new Set(fixtures.map(d => d.referee).filter(Boolean))];
-  console.log(`[Server] Step4: Schiri-Stats für ${uniqueRefs.length} Schiris...`);
-  const refMap = {};
-  let refOk = 0;
-  for (const refName of uniqueRefs) {
-    try {
-      const searchName = refName.split(',')[0].trim();
-      const searchData = await apiFetch(`/referees?name=${encodeURIComponent(searchName)}`);
-      const refId = (searchData.response || [])[0]?.id;
-      if (!refId) { refMap[refName] = { name: refName, avgCards: null }; continue; }
-      await sleep(CALL_DELAY);
-
-      const fxData = await apiFetch(`/fixtures?referee=${refId}&season=2025&last=10`);
-      const fxIds = (fxData.response || [])
-        .filter(f => FINISHED.has(f.fixture?.status?.short))
-        .slice(0, 8)
-        .map(f => f.fixture.id);
-
-      if (!fxIds.length) { refMap[refName] = { name: refName, id: refId, avgCards: null }; continue; }
-      await sleep(CALL_DELAY);
-
-      // Fetch card events for each recent fixture
-      let totalYellow = 0, totalRed = 0, games = 0;
-      for (let i = 0; i < fxIds.length; i += 4) {
-        const batch = fxIds.slice(i, i + 4);
-        const eventResults = await Promise.allSettled(batch.map(id =>
-          apiFetch(`/fixtures/events?fixture=${id}&type=Card`)
-        ));
-        for (const r of eventResults) {
-          if (r.status !== 'fulfilled') continue;
-          let y = 0, red = 0;
-          for (const ev of (r.value.response || [])) {
-            if (ev.detail === 'Yellow Card') y++;
-            else if (ev.detail === 'Red Card' || ev.detail === 'Second Yellow card') red++;
-          }
-          totalYellow += y; totalRed += red; games++;
-        }
-        if (i + 4 < fxIds.length) await sleep(CALL_DELAY);
-      }
-
-      refMap[refName] = games > 0 ? {
-        name:      refName,
-        id:        refId,
-        avgYellow: Math.round(totalYellow / games * 10) / 10,
-        avgRed:    Math.round(totalRed    / games * 10) / 10,
-        avgCards:  Math.round((totalYellow + totalRed) / games * 10) / 10,
-        games
-      } : { name: refName, id: refId, avgCards: null };
-
-      if (refMap[refName].avgCards != null) refOk++;
-      await sleep(CALL_DELAY);
-    } catch(e) {
-      refMap[refName] = { name: refName, avgCards: null };
-    }
-  }
-  // Assign to fixtures
-  for (const d of fixtures) {
-    if (d.referee && refMap[d.referee]) d.refereeStats = refMap[d.referee];
-  }
-  console.log(`  Step4 fertig: ${refOk}/${uniqueRefs.length} Schiris mit avgCards`);
+  console.log(`[Server] Step4: ${uniqueRefs.length} Schiris in JSON (Stats werden im Browser geladen)`);
+  // refereeStats bleibt null — Browser füllt sie via refStats_v5 Cache
 
   // ── Step 5: Odds (upcoming games only) ───────────────────────────────────
   const upcoming = fixtures.filter(d => !d.isFinished && d.fixtureId);
@@ -337,8 +297,8 @@ async function fetchAllPrematchData() {
   }
 
   const bmParam = pinnacleId ? `&bookmaker=${pinnacleId}` : '';
-  for (let i = 1; i < upcoming.length; i += 10) {
-    const batch = upcoming.slice(i, i + 10);
+  for (let i = 1; i < upcoming.length; i += 20) {
+    const batch = upcoming.slice(i, i + 20);
     await Promise.allSettled(batch.map(async d => {
       try {
         const data = await apiFetch(`/odds?fixture=${d.fixtureId}${bmParam}`);
@@ -347,11 +307,12 @@ async function fetchAllPrematchData() {
         if (Object.keys(r).length) { d.odds = r; oddsOk++; }
       } catch(e) {}
     }));
-    if (i + 10 < upcoming.length) await sleep(BATCH_DELAY);
+    if (i + 20 < upcoming.length) await sleep(BATCH_DELAY);
   }
   console.log(`  Step5 fertig: ${oddsOk}/${upcoming.length} Spiele mit Quoten`);
 
-  console.log(`\n[Server] ✅ Fertig: ${fixtures.length} Spiele, ${h2hOk} H2H, ${injOk} Verletzungen, ${refOk} Schiris, ${oddsOk} Quoten\n`);
+  const refNote = uniqueRefs.length ? `, ${uniqueRefs.length} Schiri-Namen (Stats im Browser)` : '';
+  console.log(`\n[Server] ✅ Fertig: ${fixtures.length} Spiele, ${h2hOk} H2H, ${injOk} Verletzungen${refNote}, ${oddsOk} Quoten\n`);
   return fixtures;
 }
 
