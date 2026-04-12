@@ -688,14 +688,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <td>Qualitätsgefälle zwischen Teams, Bestätigung/Warnung bei Favorit</td>
         </tr>
         <tr style="background:rgba(0,212,161,.04);border-left:2px solid var(--accent);">
-          <td><strong style="color:var(--accent)">API-Football Pro</strong> <span style="font-size:10px;color:var(--muted)">($19/Mo)</span></td>
-          <td>Fixture-IDs · Schiedsrichter-Name · Verletzungen/Sperren pro Spieler · Echtes H2H · Kartenereignisse · Statistiken</td>
-          <td>Pre-Match Enrichment: Schiedsrichter-Stats, Spieler-Ausfälle, echte H2H-Torquoten</td>
+          <td><strong style="color:var(--accent)">API-Football Pro</strong> <span style="font-size:10px;color:var(--muted)">($19/Mo · 7.500 req/Tag)</span></td>
+          <td>Fixture-IDs · Schiedsrichter-Name · Verletzungen/Sperren (positionsspezifisch) · Echtes H2H (last 10) · <strong>Pinnacle-Quoten</strong> (alle Bookmaker)</td>
+          <td>Pre-Match Enrichment: Schiedsrichter-Stats, Spieler-Ausfälle mit xG-Impact, echte H2H-Torquoten, <strong>Pinnacle als primäre Fair-Value-Basis</strong></td>
         </tr>
         <tr>
-          <td>H2H-Datenbank (API + Config)</td>
-          <td>Direkte Duelle: Siege/Remis, <strong>Over-2.5-Rate, BTTS-Rate, Ø Tore/Spiel</strong>, letzte 5 Ergebnisse</td>
-          <td>Draw/Win-Rates + H2H-Tormodifier für Over/Under- und BTTS-Picks</td>
+          <td>H2H-Datenbank (API)</td>
+          <td>Direkte Duelle: Siege/Remis, Over-2.5-Rate, BTTS-Rate, Ø Tore/Spiel, <strong>letzte 5 Ergebnisse (W/D/L) mit Recency-Gewichtung</strong></td>
+          <td>Draw/Win-Rates · H2H-Tormodifier für Over/Under- und BTTS-Picks · <strong>Recency-Modifier für Ergebnis-Picks</strong> (±0.07)</td>
         </tr>
         <tr>
           <td>Formverlauf</td>
@@ -703,9 +703,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <td>homeInForm/awayInForm-Flags, Streak-Bonus/-Malus</td>
         </tr>
         <tr>
-          <td>The Odds API</td>
-          <td>Marktquoten: H2H, Over/Under 2.5, BTTS — 6h gecacht</td>
-          <td>Value-Schätzung (Edge-Berechnung), Quoten-Anzeige in Cards</td>
+          <td>The Odds API <span style="font-size:10px;color:var(--muted)">(Fallback)</span></td>
+          <td>Marktquoten: H2H, Over/Under 2.5, BTTS — 6h gecacht · 11 Ligen</td>
+          <td>Fallback wenn Pinnacle-Odds aus api-football nicht verfügbar · Quoten-Anzeige in Cards</td>
         </tr>
         <tr>
           <td>Backtest-CSVs (football-data.co.uk)</td>
@@ -748,25 +748,39 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       </div>
       <div class="heart-card">
         <h3>🏥 Verletzungs-Integration</h3>
-        <p style="margin-bottom:8px;">Echte Spieler-Ausfälle aus der API ersetzen statische Config-Daten:</p>
-        <ul>
-          <li>Spieler-Namen + Status (Verletzt / Gesperrt / Angeschlagen) direkt in der Card</li>
-          <li>Jeder Ausfall dämpft Angriffsstärke um ~8% (max −25%)</li>
-          <li>Defensive Ausfälle erhöhen Gegentorrate um ~7% (max +25%)</li>
-          <li>Fließt in <code style="font-size:11px;">homeAttStr / awayAttStr</code> ein → beeinflusst alle Tore-Picks</li>
-        </ul>
+        <p style="margin-bottom:8px;">Echte Spieler-Ausfälle aus der API mit positionsspezifischen xG-Impacts:</p>
+        <table class="heart-table" style="font-size:11px;">
+          <tr><th>Position</th><th>Ausfall → Angriff</th><th>Ausfall → Abwehr</th></tr>
+          <tr><td>⛔ Torwart</td><td>−</td><td>+9% xGA/Ausfall</td></tr>
+          <tr><td>🛡️ Abwehr</td><td>−</td><td>+7% xGA/Ausfall</td></tr>
+          <tr><td>⚽ Sturm</td><td>−10% xG/Ausfall</td><td>−</td></tr>
+          <tr><td>🔄 Mittelfeld</td><td>−4% xG/Ausfall</td><td>−</td></tr>
+        </table>
+        <p style="margin-top:8px;font-size:11px;color:var(--muted);">Alle Impacts gekappt bei max −25% xG / +25% xGA. Fließt in <code>homeAttStr / awayAttStr / homeDefStr / awayDefStr</code> ein → beeinflusst alle Tore- und Ergebnis-Picks direkt.</p>
+        <p style="margin-top:6px;font-size:11px;color:#f0c040;">🏥 <strong>Injury Edge Badge:</strong> Wenn impactScore ≥ 2.0 UND Edge ≥ 5% (statt 7%) → Pick erhält Injury-Edge-Markierung.</p>
       </div>
       <div class="heart-card">
-        <h3>📊 H2H-Torstatistiken</h3>
-        <p style="margin-bottom:8px;">Echte historische Direktvergleichs-Torquoten als zusätzliches Signal:</p>
-        <table class="heart-table" style="font-size:11px;">
-          <tr><th>H2H Over-2.5-Rate</th><th>Modifier auf Over 2.5</th></tr>
-          <tr><td>≥ 70%</td><td style="color:#3fb950">+0.12 Boost</td></tr>
+        <h3>📊 H2H-Torstatistiken + Recency</h3>
+        <p style="margin-bottom:6px;">Drei unabhängige H2H-Signale kombiniert:</p>
+        <p style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">① Over-2.5-Rate → Over/Under-Modifier:</p>
+        <table class="heart-table" style="font-size:11px;margin-bottom:8px;">
+          <tr><th>H2H Over-2.5-Rate</th><th>Modifier</th></tr>
+          <tr><td>≥ 70%</td><td style="color:#3fb950">+0.12</td></tr>
           <tr><td>60–69%</td><td style="color:#3fb950">+0.06</td></tr>
           <tr><td>≤ 20%</td><td style="color:#f85149">−0.14</td></tr>
           <tr><td>≤ 30%</td><td style="color:#f85149">−0.08</td></tr>
         </table>
-        <p style="margin-top:6px;color:var(--muted);font-size:11px;">Under 2.5 bekommt den inversen Modifier. BTTS-Rate beeinflusst analog den BTTS-Pick (±0.05–0.16). Nur bei ≥5 H2H-Spielen aktiv.</p>
+        <p style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">② Ø Tore/Spiel → unabhängige Bestätigung:</p>
+        <table class="heart-table" style="font-size:11px;margin-bottom:8px;">
+          <tr><th>Ø Tore/Spiel</th><th>Modifier</th></tr>
+          <tr><td>≥ 3.5</td><td style="color:#3fb950">+0.05</td></tr>
+          <tr><td>3.0–3.4</td><td style="color:#3fb950">+0.03</td></tr>
+          <tr><td>≤ 1.6</td><td style="color:#f85149">−0.05</td></tr>
+          <tr><td>≤ 2.0</td><td style="color:#f85149">−0.03</td></tr>
+        </table>
+        <p style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">③ Letzte 5 Ergebnisse (W/D/L) → Recency-Modifier auf Ergebnis-Picks:</p>
+        <p style="font-size:11px;color:var(--muted);">Jüngste Meetings zählen mehr (Gewichte 10/15/25/25/25%). Max ±0.07 auf Heimsieg/Auswärtssieg-Score. Wenn das Team zuletzt dominiert hat, steigt die Konfidenz — unabhängig vom Gesamtverlauf.</p>
+        <p style="margin-top:6px;color:var(--muted);font-size:11px;">BTTS-Rate beeinflusst analog den BTTS-Pick (±0.05–0.16). Alles nur bei ≥5 H2H-Spielen aktiv (≥3 für Win/Draw-Rates).</p>
       </div>
     </div>
   </div>
@@ -892,14 +906,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         </ul>
       </div>
       <div class="heart-card gold-c">
-        <h3>💡 Value-Schätzung (🔥 / 💰)</h3>
+        <h3>💡 Value-Schätzung (🔥 / 💰 / 🏥)</h3>
         <p>Für Picks mit echten Pinnacle-Odds wird der <strong>Edge</strong> berechnet:</p>
         <p style="margin-top:8px;font-family:monospace;font-size:12px;background:var(--card2);padding:8px;border-radius:6px;">Edge = Modell-Prob − Pinnacle-Implied-Prob</p>
+        <p style="margin-top:6px;font-size:11px;color:var(--muted);">Pinnacle-Quoten kommen primär aus <strong>api-football Pro</strong> (alle Bookmaker inklusive Pinnacle-ID 8). Fallback: the-odds-api.com (11 Ligen, 6h gecacht).</p>
         <ul style="margin-top:8px;">
           <li><strong>🔥 HOT VALUE</strong> — Edge ≥ 13%</li>
           <li><strong>💰 Value</strong> — Edge ≥ 7%</li>
+          <li><strong>🏥 Injury Edge</strong> — Edge ≥ 5% UND verletzungsbedingter Impact ≥ 2.0 auf relevanten Markt. Die API weiß es, der Markt noch nicht.</li>
         </ul>
-        <p style="margin-top:8px;color:var(--muted);font-size:12px;">Druck erhöht auch die Model-Prob für Over/Under (Wert wird realistischer).</p>
+        <p style="margin-top:8px;color:var(--muted);font-size:12px;">Druck erhöht die Model-Prob für Over/Under → Value-Badge erscheint häufiger bei Druckspielen. H2H-Modifiers fließen ebenfalls in die Model-Prob ein.</p>
       </div>
     </div>
   </div>
@@ -972,6 +988,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Schiedsrichter-Stats</strong> live aus API — Karten-Modifier ±0.04–0.20</li>
           <li><strong>Echte Spieler-Ausfälle</strong> mit Namen aus /injuries-Endpoint</li>
           <li><strong>Echte H2H-Torstatistiken</strong> (Über-2.5-Rate, BTTS-Rate, Ø Tore) als Pick-Modifier</li>
+          <li><strong>H2H Recency-Modifier</strong> — letzte 5 Duelle recency-gewichtet (±0.07) auf Ergebnis-Picks</li>
+          <li><strong>avgGoals als 2. H2H-Signal</strong> — unabhängige Bestätigung für Over/Under (±0.03–0.05)</li>
+          <li><strong>Injury Edge Badge (🏥)</strong> — Edge-Schwelle auf 5% gesenkt wenn verletzungsbedingter Markt-Impact ≥ 2.0</li>
+          <li><strong>Pinnacle-Quoten via api-football</strong> — als primäre Fair-Value-Basis (nicht nur the-odds-api.com)</li>
+          <li><strong>Squad Cache (squad-cache.json)</strong> — 154 Teams, 7-Tage-TTL, persistent — eliminiert Rate-Limit-Burst</li>
           <li><strong>Dynamische Score-Obergrenze</strong> — Max-Score skaliert mit <em>roundsLeft</em> (1 Runde → 12.0, ≥10 → 7.5)</li>
         </ul>
       </div>
@@ -1516,6 +1537,38 @@ function getBettingPicks(match, odds, leagueKey) {
     : _h2hBtts <= 0.25 ? -0.10
     : 0;
 
+  // ── H2H lastResults recency modifier ────────────────────────────────────────
+  // lastResults = ['W','D','L','W','W'] (W = home team won that meeting, oldest→newest)
+  // Weighted average: most recent game counts most. Applied to result picks only (±0.07 max).
+  // This captures TREND: home team dominating recent H2H meetings → real signal beyond overall rate.
+  const _h2hLastResults = Array.isArray(h2h.lastResults) ? h2h.lastResults : [];
+  let _h2hRecencyMod = 0; // positive = home wins recent H2H, negative = away wins recent H2H
+  if (_h2hLastResults.length >= 3) {
+    const _wr = [0.10, 0.15, 0.25, 0.25, 0.25]; // weight: oldest→newest (last slot = most recent)
+    const _offset = Math.max(0, _wr.length - _h2hLastResults.length);
+    let _wScore = 0, _wTotal = 0;
+    for (let _ri = 0; _ri < _h2hLastResults.length; _ri++) {
+      const _w = _wr[_offset + _ri] ?? 0.20;
+      _wScore += (_h2hLastResults[_ri] === 'W' ? 1.0 : _h2hLastResults[_ri] === 'D' ? 0.5 : 0.0) * _w;
+      _wTotal += _w;
+    }
+    const _recScore = _wTotal > 0 ? _wScore / _wTotal : 0.5; // 0.0–1.0, 0.5 = neutral
+    _h2hRecencyMod = (_recScore - 0.5) * 0.14; // maps 0..1 → −0.07..+0.07
+  }
+
+  // ── H2H avgGoals secondary Over/Under modifier ───────────────────────────────
+  // Applied IN ADDITION to _h2hO25Mod (which is based on over25Rate).
+  // avgGoals provides an independent confirmation: high Ø tore → stronger Over signal.
+  // Only applied when _h2hSample (≥5 games) and avgGoals available.
+  const _h2hAvgGMod = (_h2hSample && _h2hAvgG != null)
+    ? _h2hAvgG >= 3.5 ?  0.05
+    : _h2hAvgG >= 3.0 ?  0.03
+    : _h2hAvgG >= 2.8 ?  0.01
+    : _h2hAvgG <= 1.6 ? -0.05
+    : _h2hAvgG <= 2.0 ? -0.03
+    : 0
+    : 0;
+
   // Avg goals H2H note for pick reasons
   // With API data: full goals stats. With static config only: win rate summary.
   const _h2hGoalNote = (_h2hSample && _h2hAvgG != null)
@@ -1770,6 +1823,9 @@ function getBettingPicks(match, odds, leagueKey) {
       // unlucky away team → regression risk → further softens home win case
       sc += _hFairMod;   // home overperforming xG at home → reduce confidence
       sc -= _aFairMod;   // away underperforming → they're due, hurts home win case
+      // 🔑 H2H RECENCY: last 5 direct meetings, recency-weighted. Positive = home has been winning recently.
+      // Max ±0.07 — small but meaningful for borderline picks.
+      sc += _h2hRecencyMod;
       // ★★★ threshold 1.50 (multi-signal). ★★☆ lowered 0.72→0.50 so normal home favorites
       // without pressure still show (backtest showed too many good picks hidden at 0.72).
       const conf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
@@ -1804,6 +1860,8 @@ function getBettingPicks(match, odds, leagueKey) {
       // unlucky home team → they're due → hurts away win case
       sc += _aFairMod;   // away overperforming → reduce confidence
       sc -= _hFairMod;   // home underperforming → they'll improve, hurts away win
+      // 🔑 H2H RECENCY: inverted — negative _h2hRecencyMod means away has been winning recently
+      sc -= _h2hRecencyMod;
       // Threshold: ★★★ at 1.30 (slightly lower than Heimsieg since away wins are rarer/more selective)
       const conf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
       const _xgLblA = xGBased ? 'xG' : 'Tore';
@@ -1966,8 +2024,8 @@ function getBettingPicks(match, odds, leagueKey) {
       else if (_anyNeedsWin) sc = Math.min(0.88, sc + _pressureBoost * 0.85);
       // Titelduell in Crunch-Zeit: kontrolliertes Spiel → leichte Over-Suppression
       if (anyGold && !anyRed && urgencyHigh) sc = Math.max(0, sc - 0.07);
-      // 🔑 H2H GOALS HISTORY: real historical Over 2.5 rate confirms or contradicts model
-      sc = Math.min(0.92, Math.max(0, sc + _h2hO25Mod));
+      // 🔑 H2H GOALS HISTORY: over25Rate + avgGoals as independent confirmation
+      sc = Math.min(0.92, Math.max(0, sc + _h2hO25Mod + _h2hAvgGMod));
       const _o25H2hNote = (_h2hSample && _h2hOver25 != null)
         ? ` Historisch ${Math.round(_h2hOver25*100)}% der ${h2hN} Duelle über 2.5 Tore${_h2hAvgG!=null?' (Ø '+_h2hAvgG+' Tore/Sp)':''}.`
         : '';
@@ -1984,8 +2042,8 @@ function getBettingPicks(match, odds, leagueKey) {
       // 🔑 PRESSURE/RUNDEN: Muss-gewinnen → Angriffsdrang killt Under-Signal
       if (bothNeedWin)       sc = Math.max(0, sc - _pressureBoost * 1.10);
       else if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 0.65);
-      // 🔑 H2H: under 2.5 is inverse of over 2.5 modifier
-      sc = Math.min(0.92, Math.max(0, sc - _h2hO25Mod));
+      // 🔑 H2H: under 2.5 is inverse of both H2H modifiers
+      sc = Math.min(0.92, Math.max(0, sc - _h2hO25Mod - _h2hAvgGMod));
       const _u25DefTeam = _topResultMkt==='Heimsieg'?match.home:_topResultMkt==='Auswärtssieg'?match.away:null;
       const _pressWarn = _anyNeedsWin
         ? `<br><strong>⚠️ ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — Angriffsdrang erhöht Torrisiko, Under-Signal geschwächt.</strong>` : '';
