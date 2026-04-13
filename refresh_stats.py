@@ -41,374 +41,139 @@ except ImportError:
 # ── Config ─────────────────────────────────────────────────────────────────────
 SEASON = 2025   # 2025-26 season (understat uses start year)
 
-LEAGUE_MAP = {
-    "ENG": "EPL",
-    "GER": "Bundesliga",
-    "ITA": "Serie_A",
-    "ESP": "La_Liga",
-    "FRA": "Ligue_1",
-}
+import http.client
+import os
+import time as _time
 
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/122.0.0.0 Safari/537.36"
-    ),
-    "Accept-Language": "en-US,en;q=0.9",
-}
+# ── API-Football config ────────────────────────────────────────────────────────
+APIF_HOST  = "v3.football.api-sports.io"
+APIF_KEY   = os.environ.get("APISPORTS_KEY", "")
+APIF_DELAY = 1.2   # seconds between calls
 
-# ── Understat name → our HTML team name (only the mismatches) ─────────────────
-NAME_MAP = {
-    # Premier League
-    "Tottenham":                  "Tottenham Hotspur",
-    "Wolverhampton Wanderers":    "Wolverhampton",
-    "Brighton":                   "Brighton & Hove Albion",
-    "West Ham":                   "West Ham United",
-    "Leeds":                      "Leeds United",
-    "Newcastle United":           "Newcastle United",
-    "Leicester":                  "Leicester City",
-    "Ipswich":                    "Ipswich Town",
-    # Bundesliga
-    "Bayern Munich":              "FC Bayern München",
-    "Bayer Leverkusen":           "Bayer 04 Leverkusen",
-    "RasenBallsport Leipzig":     "RB Leipzig",
-    "Greuther Fuerth":            "SpVgg Greuther Fürth",
-    "Borussia M.Gladbach":        "Borussia Mönchengladbach",
-    "Koeln":                      "1. FC Köln",
-    "Kaiserslautern":             "1. FC Kaiserslautern",
-    # Serie A
-    "Internazionale":             "Inter",
-    # La Liga
-    "Atletico Madrid":            "Atlético de Madrid",
-    "Athletic Club":              "Athletic Bilbao",
-    "Celta Vigo":                 "Celta de Vigo",
-    "Alaves":                     "Deportivo Alavés",
-    "Leganes":                    "CD Leganés",
-    "Espanol":                    "RCD Espanyol",
-    "Mallorca":                   "RCD Mallorca",
-    "Getafe":                     "Getafe CF",
-    "Valladolid":                 "Real Valladolid",
-    "Osasuna":                    "CA Osasuna",
-    "Las Palmas":                 "UD Las Palmas",
-    # Ligue 1
-    "Marseille":                  "Olympique de Marseille",
-    "Lyon":                       "Olympique Lyonnais",
-    "Saint-Etienne":              "AS Saint-Étienne",
-    "Lens":                       "RC Lens",
-    "Rennes":                     "Stade Rennais",
-    "Nantes":                     "FC Nantes",
-    "Strasbourg":                 "RC Strasbourg",
-    "Reims":                      "Stade de Reims",
-    "Brest":                      "Stade Brestois 29",
-    "Auxerre":                    "AJ Auxerre",
-    "Havre":                      "Le Havre AC",
-    "Montpellier":                "Montpellier HSC",
-    "Toulouse":                   "Toulouse FC",
-    "Angers":                     "Angers SCO",
-    "Metz":                       "FC Metz",
-}
-
-# ── ClubElo name → our HTML team name ─────────────────────────────────────────
-# ClubElo uses short English names; this maps them to our Sofascore-based names.
-ELO_NAME_MAP = {
-    # Premier League
-    "Man City":          "Manchester City",
-    "Man United":        "Manchester United",
-    "Tottenham":         "Tottenham Hotspur",
-    "West Ham":          "West Ham United",
-    "Brighton":          "Brighton & Hove Albion",
-    "Wolves":            "Wolverhampton",
-    "Newcastle":         "Newcastle United",
-    "Leicester":         "Leicester City",
-    "Ipswich":           "Ipswich Town",
-    "Nott'm Forest":     "Nottingham Forest",
-    # Bundesliga
-    "Bayern Munich":     "FC Bayern München",
-    "Leverkusen":        "Bayer 04 Leverkusen",
-    "Leipzig":           "RB Leipzig",
-    "Dortmund":          "Borussia Dortmund",
-    "Frankfurt":         "Eintracht Frankfurt",
-    "M'gladbach":        "Borussia Mönchengladbach",
-    "Koeln":             "1. FC Köln",
-    "Kaiserslautern":    "1. FC Kaiserslautern",
-    "Greuther Fuerth":   "SpVgg Greuther Fürth",
-    "Union Berlin":      "1. FC Union Berlin",
-    "Wolfsburg":         "VfL Wolfsburg",
-    "Freiburg":          "SC Freiburg",
-    "Stuttgart":         "VfB Stuttgart",
-    "Hoffenheim":        "TSG Hoffenheim",
-    "Augsburg":          "FC Augsburg",
-    "Mainz":             "1. FSV Mainz 05",
-    "Bremen":            "SV Werder Bremen",
-    "St. Pauli":         "FC St. Pauli",
-    "Holstein Kiel":     "Holstein Kiel",
-    "Heidenheim":        "Heidenheim",
-    "Bochum":            "VfL Bochum",
-    "Darmstadt":         "SV Darmstadt 98",
-    # Serie A
-    "Milan":             "AC Milan",
-    "Inter":             "Inter",
-    "Juventus":          "Juventus",
-    "Napoli":            "Napoli",
-    "Roma":              "AS Roma",
-    "Lazio":             "Lazio",
-    "Atalanta":          "Atalanta",
-    "Fiorentina":        "Fiorentina",
-    "Bologna":           "Bologna",
-    "Torino":            "Torino",
-    "Monza":             "Monza",
-    "Udinese":           "Udinese",
-    "Genoa":             "Genoa",
-    "Empoli":            "Empoli",
-    "Cagliari":          "Cagliari",
-    "Lecce":             "Lecce",
-    "Verona":            "Hellas Verona",
-    "Sassuolo":          "Sassuolo",
-    "Salernitana":       "Salernitana",
-    "Frosinone":         "Frosinone",
-    "Como":              "Como",
-    "Venezia":           "Venezia",
-    "Parma":             "Parma",
-    # La Liga
-    "Real Madrid":       "Real Madrid",
-    "Barcelona":         "Barcelona",
-    "Atletico Madrid":   "Atlético de Madrid",
-    "Sevilla":           "Sevilla FC",
-    "Valencia":          "Valencia CF",
-    "Betis":             "Real Betis",
-    "Sociedad":          "Real Sociedad",
-    "Athletic Club":     "Athletic Bilbao",
-    "Villarreal":        "Villarreal CF",
-    "Osasuna":           "CA Osasuna",
-    "Celta":             "Celta de Vigo",
-    "Mallorca":          "RCD Mallorca",
-    "Espanyol":          "RCD Espanyol",
-    "Getafe":            "Getafe CF",
-    "Girona":            "Girona FC",
-    "Las Palmas":        "UD Las Palmas",
-    "Alaves":            "Deportivo Alavés",
-    "Valladolid":        "Real Valladolid",
-    "Leganes":           "CD Leganés",
-    # Ligue 1
-    "PSG":               "Paris Saint-Germain",
-    "Paris SG":          "Paris Saint-Germain",
-    "Marseille":         "Olympique de Marseille",
-    "Lyon":              "Olympique Lyonnais",
-    "Monaco":            "AS Monaco",
-    "Lille":             "Lille OSC",
-    "Nice":              "OGC Nice",
-    "Rennes":            "Stade Rennais",
-    "Lens":              "RC Lens",
-    "Strasbourg":        "RC Strasbourg",
-    "Reims":             "Stade de Reims",
-    "Nantes":            "FC Nantes",
-    "Montpellier":       "Montpellier HSC",
-    "Brest":             "Stade Brestois 29",
-    "Toulouse":          "Toulouse FC",
-    "Lorient":           "FC Lorient",
-    "Angers":            "Angers SCO",
-    "Metz":              "FC Metz",
-    "Le Havre":          "Le Havre AC",
-    "Auxerre":           "AJ Auxerre",
-    "St Etienne":        "AS Saint-Étienne",
-    "Clermont":          "Clermont Foot",
-    # Austrian Bundesliga
-    "Salzburg":          "FC Red Bull Salzburg",
-    "Sturm Graz":        "Sturm Graz",
-    "Austria Wien":      "FK Austria Wien",
-    "Rapid Wien":        "SK Rapid Wien",
-    "LASK":              "LASK",
-    "Wolfsberg":         "Wolfsberger AC",
-    "Klagenfurt":        "FC Kärnten",
-    "Hartberg":          "TSV Hartberg",
-    # Netherlands Eredivisie
-    "Ajax":              "Ajax",
-    "PSV":               "PSV Eindhoven",
-    "Feyenoord":         "Feyenoord",
-    "AZ":                "AZ Alkmaar",
-    "Utrecht":           "FC Utrecht",
-    "Twente":            "FC Twente",
-    "Groningen":         "FC Groningen",
-    "Heerenveen":        "SC Heerenveen",
-    "Sparta Rotterdam":  "Sparta Rotterdam",
-    "Go Ahead Eagles":   "Go Ahead Eagles",
-    # Scottish Premiership
-    "Celtic":            "Celtic",
-    "Rangers":           "Rangers",
-    "Aberdeen":          "Aberdeen",
-    "Hearts":            "Heart of Midlothian",
-    "Hibernian":         "Hibernian",
-    "Kilmarnock":        "Kilmarnock",
-    "Dundee":            "Dundee",
-    "Ross County":       "Ross County",
-    # Turkish Super Lig
-    "Galatasaray":       "Galatasaray",
-    "Fenerbahce":        "Fenerbahçe",
-    "Besiktas":          "Beşiktaş",
-    "Trabzonspor":       "Trabzonspor",
-    "Basaksehir":        "İstanbul Başakşehir",
-    "Sivasspor":         "Sivasspor",
-    # Swiss Super League
-    "Young Boys":        "Young Boys",
-    "Basel":             "FC Basel",
-    "Lugano":            "FC Lugano",
-    "Zurich":            "FC Zürich",
-    "Zuerich":           "FC Zürich",
-    "Servette":          "Servette FC",
-    "St. Gallen":        "FC St. Gallen",
-    "Luzern":            "FC Luzern",
-    "Lausanne":          "Lausanne-Sport",
-    "GC Zurich":         "Grasshopper Club Zürich",
-    # Portuguese Primeira Liga
-    "Porto":             "FC Porto",
-    "Benfica":           "SL Benfica",
-    "Sporting CP":       "Sporting CP",
-    "Braga":             "SC Braga",
-    "Guimaraes":         "Vitória SC",
+# League key → API-Football league ID
+LEAGUE_APIF = {
+    "ENG": 39,   "GER": 78,  "ITA": 135, "ESP": 140, "FRA": 61,
+    "AUT": 144,  "NED": 88,  "POR": 94,  "SCO": 179,
+    "TUR": 203,  "SUI": 207,
 }
 
 
-# ════════════════════════════════════════════════════════════════════════════════
-#  UNDERSTAT
-# ════════════════════════════════════════════════════════════════════════════════
-
-def decode_understat(raw: str) -> dict:
-    """Understat embeds JSON as a JS string with \\xNN hex-escaped characters."""
+def apif_get(endpoint: str, params: dict) -> list:
+    """Fetch from API-Football with rate limiting. Returns response list."""
+    if not APIF_KEY:
+        return []
+    query = "&".join(f"{k}={v}" for k, v in params.items())
+    path  = f"/{endpoint}?{query}"
     try:
-        decoded = raw.encode("raw_unicode_escape").decode("unicode_escape")
-        return json.loads(decoded)
-    except Exception:
-        pass
-    try:
-        return json.loads(raw)
+        conn = http.client.HTTPSConnection(APIF_HOST, timeout=15)
+        conn.request("GET", path, headers={"x-apisports-key": APIF_KEY})
+        resp = conn.getresponse()
+        data = json.loads(resp.read().decode())
+        conn.close()
+        errors = data.get("errors", {})
+        if isinstance(errors, dict) and errors:
+            return []
+        return data.get("response", [])
     except Exception as e:
-        raise ValueError(f"Could not decode understat JSON: {e}") from e
+        print(f"  ⚠️  apif_get error ({endpoint}): {e}")
+        return []
+    finally:
+        _time.sleep(APIF_DELAY)
 
 
-def fetch_teams(league_name: str, season: int) -> dict:
-    url = f"https://understat.com/league/{league_name}/{season}"
-    resp = requests.get(url, headers=HEADERS, timeout=20)
-    resp.raise_for_status()
-    html = resp.text
+def fetch_league_stats(league_id: int, season: int = 2025) -> dict:
+    """
+    Fetch all finished fixtures for a league season, compute per-team
+    home/away win rates and goals/game averages (used as xG proxy).
+    Returns {team_name: {xG_home, xGA_home, homeWinRate, ..., xg_fairness*}}
+    """
+    resp = apif_get("fixtures", {
+        "league": league_id, "season": season,
+        "status": "FT-AET-PEN",
+    })
+    if not resp:
+        # Try next season as fallback
+        resp = apif_get("fixtures", {
+            "league": league_id, "season": season + 1,
+            "status": "FT-AET-PEN",
+        })
+    if not resp:
+        return {}
 
-    # Understat has changed their embedded-data format over time.
-    # Try all known variants in order of likelihood.
+    # Aggregate per team
+    teams: dict = {}
+    for fx in resp:
+        h_id   = fx["teams"]["home"]["id"]
+        a_id   = fx["teams"]["away"]["id"]
+        h_name = fx["teams"]["home"]["name"]
+        a_name = fx["teams"]["away"]["name"]
+        h_win  = fx["teams"]["home"].get("winner")
+        a_win  = fx["teams"]["away"].get("winner")
+        h_gf   = fx["goals"]["home"] or 0
+        a_gf   = fx["goals"]["away"] or 0
 
-    # Pattern 1: classic single-quote JSON.parse (2019–2024)
-    m = re.search(r"var\s+teamsData\s*=\s*JSON\.parse\('(.*?)'\)\s*;", html, re.DOTALL)
-    if m:
-        return decode_understat(m.group(1))
+        def _ensure(name):
+            if name not in teams:
+                teams[name] = {"home_gf": [], "home_ga": [], "home_wins": 0, "home_games": 0,
+                               "away_gf": [], "away_ga": [], "away_wins": 0, "away_games": 0}
 
-    # Pattern 2: double-quote variant
-    m = re.search(r'var\s+teamsData\s*=\s*JSON\.parse\("(.*?)"\)\s*;', html, re.DOTALL)
-    if m:
-        return decode_understat(m.group(1))
+        _ensure(h_name)
+        teams[h_name]["home_gf"].append(h_gf)
+        teams[h_name]["home_ga"].append(a_gf)
+        teams[h_name]["home_games"] += 1
+        if h_win: teams[h_name]["home_wins"] += 1
 
-    # Pattern 3: no 'var', direct assignment with single quotes
-    m = re.search(r"teamsData\s*=\s*JSON\.parse\('(.*?)'\)", html, re.DOTALL)
-    if m:
-        return decode_understat(m.group(1))
+        _ensure(a_name)
+        teams[a_name]["away_gf"].append(a_gf)
+        teams[a_name]["away_ga"].append(h_gf)
+        teams[a_name]["away_games"] += 1
+        if a_win: teams[a_name]["away_wins"] += 1
 
-    # Pattern 4: no 'var', double quotes
-    m = re.search(r'teamsData\s*=\s*JSON\.parse\("(.*?)"\)', html, re.DOTALL)
-    if m:
-        return decode_understat(m.group(1))
+    result = {}
+    for name, d in teams.items():
+        hg = len(d["home_gf"]); ag = len(d["away_gf"])
+        xg_h  = round(sum(d["home_gf"]) / hg, 3) if hg else None
+        xga_h = round(sum(d["home_ga"]) / hg, 3) if hg else None
+        xg_a  = round(sum(d["away_gf"]) / ag, 3) if ag else None
+        xga_a = round(sum(d["away_ga"]) / ag, 3) if ag else None
+        result[name] = {
+            "xG_home":          xg_h,
+            "xGA_home":         xga_h,
+            "homeWinRate":      round(d["home_wins"] / hg, 3) if hg else None,
+            "home_games":       hg,
+            "xG_away":          xg_a,
+            "xGA_away":         xga_a,
+            "awayWinRate":      round(d["away_wins"] / ag, 3) if ag else None,
+            "away_games":       ag,
+            # xG fairness not computable from goals alone — set neutral
+            "xg_fairness":      1.0,
+            "xg_fairness_home": 1.0,
+            "xg_fairness_away": 1.0,
+        }
+    return result
 
-    # Pattern 5: direct object literal (not JSON.parse'd string)
-    m = re.search(r"var\s+teamsData\s*=\s*(\{.+?\})\s*;", html, re.DOTALL)
-    if m:
-        try:
-            return json.loads(m.group(1))
-        except Exception:
-            pass
 
-    # Pattern 6: Understat unofficial AJAX endpoint (fallback when HTML scraping fails)
-    # POST to /main/getTeamsStats/ with league + season params
+def process_league(league_key: str) -> dict:
+    league_id = LEAGUE_APIF.get(league_key)
+    if not league_id:
+        return {}
+    print(f"  📊  {league_key}  (API-Football ID {league_id})")
     try:
-        api_url = "https://understat.com/main/getTeamsStats/"
-        api_resp = requests.post(
-            api_url,
-            data={"league": league_name, "season": str(season)},
-            headers={**HEADERS, "X-Requested-With": "XMLHttpRequest",
-                     "Content-Type": "application/x-www-form-urlencoded"},
-            timeout=20,
-        )
-        api_resp.raise_for_status()
-        payload = api_resp.json()
-        # Response is {"success": true, "data": {...teams...}}
-        if payload.get("success") and payload.get("data"):
-            return payload["data"]
-    except Exception:
-        pass
-
-    # Debug: show what data vars ARE present on the page (helps diagnose format change)
-    found_vars = re.findall(r"var\s+(\w+Data)\s*=", html)
-    debug_hint = f" (vars on page: {found_vars})" if found_vars else " (no *Data vars found — possible bot-block or format change)"
-    raise ValueError(f"teamsData not found on {url}{debug_hint}")
-
-
-def safe_avg(games: list, key: str) -> Optional[float]:
-    vals = [float(g[key]) for g in games if g.get(key) not in (None, "")]
-    return round(sum(vals) / len(vals), 3) if vals else None
-
-
-def win_rate(games: list) -> Optional[float]:
-    if not games:
-        return None
-    wins = sum(1 for g in games if g.get("result") == "w")
-    return round(wins / len(games), 3)
-
-
-def process_league(league_key: str, league_name: str) -> dict:
-    print(f"  📊  {league_key}  ({league_name})")
-    try:
-        teams_data = fetch_teams(league_name, SEASON)
+        stats = fetch_league_stats(league_id)
+        if stats:
+            sample = list(stats.items())[:2]
+            for name, s in sample:
+                print(f"       {name:<30}  xG_h={s['xG_home'] or '-':>4}  "
+                      f"xG_a={s['xG_away'] or '-':>4}  "
+                      f"WR_h={s['homeWinRate'] or '-':>4}  "
+                      f"WR_a={s['awayWinRate'] or '-':>4}")
+            print(f"       → {len(stats)} teams")
+        else:
+            print(f"       ⚠️  No data returned")
+        return stats
     except Exception as exc:
         print(f"       ⚠️  Failed: {exc}")
         return {}
-
-    stats = {}
-    for raw_name, team in teams_data.items():
-        our = NAME_MAP.get(raw_name, raw_name)
-        hist = team.get("history", [])
-        home_g = [g for g in hist if g.get("h_a") == "h"]
-        away_g = [g for g in hist if g.get("h_a") == "a"]
-
-        # ── xG Fairness: actual goals scored ÷ expected goals ────────────────
-        # > 1.0 = overperforming xG (lucky, regression likely)
-        # < 1.0 = underperforming xG (unlucky, positive regression likely)
-        def _fairness(games: list) -> Optional[float]:
-            scored = sum(float(g.get("scored") or 0) for g in games)
-            xg     = sum(float(g.get("xG")     or 0) for g in games)
-            return round(scored / xg, 3) if xg > 1.0 else None
-
-        entry = {
-            "xG_home":          safe_avg(home_g, "xG"),
-            "xGA_home":         safe_avg(home_g, "xGA"),
-            "homeWinRate":      win_rate(home_g),
-            "home_games":       len(home_g),
-            "xG_away":          safe_avg(away_g, "xG"),
-            "xGA_away":         safe_avg(away_g, "xGA"),
-            "awayWinRate":      win_rate(away_g),
-            "away_games":       len(away_g),
-            # xG Fairness — overall + split by venue
-            "xg_fairness":      _fairness(hist),
-            "xg_fairness_home": _fairness(home_g),
-            "xg_fairness_away": _fairness(away_g),
-        }
-        stats[our] = entry
-
-        fair_str = f"{entry['xg_fairness']:.2f}" if entry['xg_fairness'] else "-"
-        print(f"       {our:<32}  "
-              f"xG_h={str(entry['xG_home'] or '-'):>5}  "
-              f"xG_a={str(entry['xG_away'] or '-'):>5}  "
-              f"WR_h={str(entry['homeWinRate'] or '-'):>4}  "
-              f"WR_a={str(entry['awayWinRate'] or '-'):>4}  "
-              f"Fair={fair_str:>5}")
-
-    print(f"       → {len(stats)} teams\n")
-    return stats
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -511,13 +276,13 @@ def main():
     today = datetime.date.today().isoformat()
     print(f"🔄  Stats refresh — season {SEASON}/{SEASON + 1}  ({today})\n")
 
-    # ── Step 1: Understat xG ──────────────────────────────────────────────────
+    # ── Step 1: API-Football — goals/game + win rates (xG proxy) ────────────
     print("━" * 58)
-    print("  UNDERSTAT — real xG + venue win rates")
+    print("  API-FOOTBALL — goals/game + venue win rates (xG proxy)")
     print("━" * 58)
     all_stats: dict = {}
-    for key, name in LEAGUE_MAP.items():
-        all_stats[key] = process_league(key, name)
+    for key in LEAGUE_APIF:
+        all_stats[key] = process_league(key)
 
     # ── Step 2: ClubElo ratings ───────────────────────────────────────────────
     print("━" * 58)
@@ -568,14 +333,13 @@ def main():
     )
 
     print(f"   Teams total : {total_teams}")
-    print(f"   xG data     : {xg_populated} teams  (Big-5 leagues)")
-    print(f"   xG Fairness : {fair_populated} teams  (Big-5 leagues)")
+    print(f"   Goals/game  : {xg_populated} teams  (all leagues, as xG proxy)")
+    print(f"   Win rates   : {xg_populated} teams  (home/away)")
     print(f"   Elo data    : {elo_populated} teams  (all covered leagues)")
     print(f"   File        : {out}")
     print()
     print("ℹ️  Reload season-finish.html to apply new stats.")
-    print("   ENG/GER/ITA/ESP/FRA → real Understat xG + xG Fairness + Elo")
-    print("   AUT/NED/SCO/TUR/SUI/POR → Elo only (no xG)")
+    print("   All leagues → Goals/game (xG proxy) + Win rates + Elo")
 
 
 if __name__ == "__main__":

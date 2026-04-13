@@ -41,10 +41,12 @@ jobs:
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
-      # 5. Statistiken aktualisieren (Understat xG, Elo etc. → stats_cache.json)
+      # 5. Statistiken aktualisieren (API-Football + ClubElo → stats_cache.json)
       - name: 📈 Statistiken aktualisieren
         run: python refresh_stats.py
         continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
       # 6. Heutige Picks speichern (matches_today.json → picks_history.json)
       - name: 📝 Picks speichern
