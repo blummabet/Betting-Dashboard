@@ -457,42 +457,39 @@ async function fetchAllPrematchData() {
   let oddsOk = 0, oddsFail = 0;
   let _firstOddsErr = null;  // capture first error/empty for diagnostics
 
-  for (let i = 0; i < upcoming.length; i += 20) {
-    const batch = upcoming.slice(i, i + 20);
-    await Promise.allSettled(batch.map(async d => {
-      try {
-        const data = await apiFetch(`/odds?fixture=${d.fixtureId}`);
-        // Capture API-level errors (plan restriction, quota, etc.)
-        if (data.errors && Object.keys(data.errors).length && !_firstOddsErr) {
-          _firstOddsErr = { type: 'api_error', errors: data.errors, fixture: d.fixtureId };
-          console.warn(`  [Odds] API-Error für Fixture ${d.fixtureId}:`, JSON.stringify(data.errors));
+  for (const d of upcoming) {
+    await sleep(1200);
+    try {
+      const data = await apiFetch(`/odds?fixture=${d.fixtureId}`);
+      // Capture API-level errors (plan restriction, quota, etc.)
+      if (data.errors && Object.keys(data.errors).length && !_firstOddsErr) {
+        _firstOddsErr = { type: 'api_error', errors: data.errors, fixture: d.fixtureId };
+        console.warn(`  [Odds] API-Error für Fixture ${d.fixtureId}:`, JSON.stringify(data.errors));
+      }
+      const bookmakers = (data.response || [])[0]?.bookmakers || [];
+      if (bookmakers.length) {
+        // Log bookmaker/bet names for first successful fetch (once)
+        if (oddsOk === 0) {
+          const bkrNames = bookmakers.map(b => b.name).join(', ');
+          const betNames = [...new Set(bookmakers.flatMap(b => (b.bets||[]).map(bt => bt.name)))].join(', ');
+          console.log(`  [Odds] Sample bkrs: ${bkrNames}`);
+          console.log(`  [Odds] Sample bets: ${betNames}`);
         }
-        const bookmakers = (data.response || [])[0]?.bookmakers || [];
-        if (bookmakers.length) {
-          // Log bookmaker/bet names for first successful fetch (once)
-          if (oddsOk === 0) {
-            const bkrNames = bookmakers.map(b => b.name).join(', ');
-            const betNames = [...new Set(bookmakers.flatMap(b => (b.bets||[]).map(bt => bt.name)))].join(', ');
-            console.log(`  [Odds] Sample bkrs: ${bkrNames}`);
-            console.log(`  [Odds] Sample bets: ${betNames}`);
-          }
-          const r = parseBets(bookmakers);
-          if (Object.keys(r).length) { d.odds = r; oddsOk++; }
-          else { oddsFail++; }
-        } else {
-          // No bookmakers in response — log once for diagnostics
-          if (!_firstOddsErr) {
-            _firstOddsErr = { type: 'no_bookmakers', results: data.results, fixture: d.fixtureId };
-            console.warn(`  [Odds] Keine Bookmaker für Fixture ${d.fixtureId}: results=${data.results}, errors=${JSON.stringify(data.errors||{})}`);
-          }
-          oddsFail++;
+        const r = parseBets(bookmakers);
+        if (Object.keys(r).length) { d.odds = r; oddsOk++; }
+        else { oddsFail++; }
+      } else {
+        // No bookmakers in response — log once for diagnostics
+        if (!_firstOddsErr) {
+          _firstOddsErr = { type: 'no_bookmakers', results: data.results, fixture: d.fixtureId };
+          console.warn(`  [Odds] Keine Bookmaker für Fixture ${d.fixtureId}: results=${data.results}, errors=${JSON.stringify(data.errors||{})}`);
         }
-      } catch(e) {
-        if (!_firstOddsErr) _firstOddsErr = { type: 'exception', message: e.message, fixture: d.fixtureId };
         oddsFail++;
       }
-    }));
-    if (i + 20 < upcoming.length) await sleep(BATCH_DELAY);
+    } catch(e) {
+      if (!_firstOddsErr) _firstOddsErr = { type: 'exception', message: e.message, fixture: d.fixtureId };
+      oddsFail++;
+    }
   }
   if (_firstOddsErr) console.warn(`  [Odds] Erstes Problem:`, JSON.stringify(_firstOddsErr));
   console.log(`  Step5 fertig: ${oddsOk} OK · ${oddsFail} leer/Fehler (von ${upcoming.length} Spielen)`);
