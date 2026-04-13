@@ -658,6 +658,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -3042,6 +3043,72 @@ function _pillColor(c) {
   })[c] || {bg:'rgba(28,33,40,0.92)', text:'#8b949e', border:'rgba(48,54,61,0.85)'};
 }
 
+// ── Infographic text translation DE→EN ──────────────────────
+// Applied to pick markets and reason strings drawn on the canvas.
+function _igT(s) {
+  if (!s) return s;
+  return s
+    // Markets
+    .replace(/\bHeimsiege?\b/g, 'Home Win')
+    .replace(/\bAuswärtssieg\b/g, 'Away Win')
+    .replace(/\bUnentschieden\b/g, 'Draw')
+    .replace(/[Üü]ber ([\d,.]+) Tore/g, 'Over $1 Goals')
+    .replace(/[Uu]nter ([\d,.]+) Tore/g, 'Under $1 Goals')
+    .replace(/\bOver ([\d,.]+) Tore\b/g, 'Over $1 Goals')
+    .replace(/\bUnder ([\d,.]+) Tore\b/g, 'Under $1 Goals')
+    .replace(/Beide Teams treffen: Nein/g, 'Both Teams Score: No')
+    .replace(/Beide Teams treffen: Ja/g, 'Both Teams Score: Yes')
+    .replace(/Beide Teams treffen\b/g, 'Both Teams Score')
+    .replace(/\b1\. HZ:/g, '1st Half:')
+    .replace(/\b([A-Za-zÄÖÜäöüß ]+) über ([\d,.]+) Tore/g, '$1 Over $2 Goals')
+    // Pick reason snippets
+    .replace(/Torfestival erwartet/g, 'Goal fest expected')
+    .replace(/Wenig Tore erwartet/g, 'Low-scoring game expected')
+    .replace(/Extrem torarm/g, 'Extremely low-scoring')
+    .replace(/Angriff trifft auf offene Abwehren\./g, 'Attack meets open defense.')
+    .replace(/Beide Angriffe stark/g, 'Both attacks strong')
+    .replace(/Beide Abwehren permissiv/g, 'Both defenses leaky')
+    .replace(/kaum torgefährlich/g, 'barely dangerous in front of goal')
+    .replace(/siegt defensiv/g, 'wins defensively')
+    .replace(/schwächerer Angriff/g, 'weaker attack')
+    .replace(/lässt wenig Tore zu/g, 'concedes few goals')
+    .replace(/greift voll an/g, 'attacks fully')
+    .replace(/geht volles Risiko/g, 'goes all-in')
+    .replace(/Druckspiel.*?verstärkt\./g, 'pick amplified by pressure.')
+    .replace(/Druckspiel.*?verstärkt/g, 'pick amplified by pressure')
+    .replace(/Heimteam greift voll an/g, 'Home team attacks fully')
+    .replace(/Auswärtsteam geht volles Risiko/g, 'Away team goes all-in')
+    .replace(/unter Druck/g, 'under pressure')
+    .replace(/Beide Teams\b/g, 'Both teams')
+    .replace(/\bHeimteam\b/g, 'Home team')
+    .replace(/\bAuswärtsteam\b/g, 'Away team')
+    .replace(/muss gewinnen/g, 'must win')
+    .replace(/Historisch /g, 'Historically ')
+    .replace(/ Duelle\b/g, ' meetings')
+    .replace(/presst von Minute 1/g, 'pressing from minute 1')
+    .replace(/erhöht früh-Tor-Wahrscheinlichkeit/g, 'increases early goal probability')
+    .replace(/erhöht frühe BTTS-Wahrscheinlichkeit/g, 'increases early BTTS probability')
+    .replace(/Pressingspiel von Beginn/g, 'High-press game from the start')
+    .replace(/intensives Pressing treibt Eckenzahl/g, 'pressing drives corner count')
+    .replace(/ca\. (\d+) Ecken erwartet/g, 'est. $1 corners')
+    .replace(/ca\.? ?(\d+) Karten erwartet/g, 'est. $1 cards expected')
+    .replace(/kassieren ([\d.]+) \/ ([\d.]+)/g, 'concede $1 / $2')
+    .replace(/kassieren/g, 'concede')
+    // Stats suffixes
+    .replace(/xG\/Sp\b/g, 'xG/g')
+    .replace(/T\/Sp\b/g, 'G/g')
+    .replace(/Tore\/Sp\b/g, 'G/g')
+    .replace(/\bTore\b/g, 'Goals')
+    .replace(/Ø ([\d.]+) EG\b/g, 'Avg $1 EG')
+    // H2H snippets
+    .replace(/H2H: (\d+)H\/(\d+)U\/(\d+)A/g, 'H2H: $1W/$2D/$3A')
+    .replace(/Ø ([\d.]+) Tore\/Duell/g, 'avg $1 goals/match')
+    .replace(/Ø ([\d.]+) Tore\/Sp/g, 'avg $1 G/g')
+    .replace(/der ([\d]+) Duelle/g, 'of $1 meetings')
+    .replace(/unter 2\.5 Tore/g, 'under 2.5 Goals')
+    ;
+}
+
 // ── Infographic generator — 1080×1920px Social Media (9:16) ──
 function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   const match  = JSON.parse(decodeURIComponent(matchJson));
@@ -3057,10 +3124,10 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   const _igAInj  = match.awayForm?.injuries || null;
   // ── Context badges (mirrors card logic) ─────────────────
   const _igCtxBadges = [];
-  // Fatigue — same human-readable format as card
-  if (_igHRest != null && _igHRest <= 5) _igCtxBadges.push({text:`😴 Kurze Pause: ${match.home} (${_igHRest} Tage)`, col:_igHRest<=3?'#f85149':'#e3b341'});
-  if (_igARest != null && _igARest <= 5) _igCtxBadges.push({text:`😴 Kurze Pause: ${match.away} (${_igARest} Tage)`, col:_igARest<=3?'#f85149':'#e3b341'});
-  // Injuries — player names like card
+  // Fatigue — English text for infographic
+  if (_igHRest != null && _igHRest <= 5) _igCtxBadges.push({text:`😴 Short rest: ${match.home} (${_igHRest}d)`, col:_igHRest<=3?'#f85149':'#e3b341'});
+  if (_igARest != null && _igARest <= 5) _igCtxBadges.push({text:`😴 Short rest: ${match.away} (${_igARest}d)`, col:_igARest<=3?'#f85149':'#e3b341'});
+  // Injuries — player names like card (English labels)
   const _igBuildInj = (inj, teamName) => {
     if (!inj || (inj.total||0) === 0) return null;
     const imp = inj.impactScore || 0;
@@ -3070,12 +3137,12 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
     const names = confirmed.slice(0, 2).map(p => p.player.split(' ').slice(-1)[0]);
     const nameStr = names.length ? names.join(', ') + (confirmed.length > 2 ? ` +${confirmed.length - 2}` : '') : '';
     const areaMap = [];
-    if ((inj.attack||0)   > 0) areaMap.push(`${inj.attack} Angriff`);
-    if ((inj.defense||0)  > 0) areaMap.push(`${inj.defense} Abwehr`);
-    if ((inj.midfield||0) > 0 && areaMap.length < 2) areaMap.push(`${inj.midfield} MF`);
-    if ((inj.goalkeeper||0) > 0) areaMap.push('Torwart');
+    if ((inj.attack||0)   > 0) areaMap.push(`${inj.attack} att`);
+    if ((inj.defense||0)  > 0) areaMap.push(`${inj.defense} def`);
+    if ((inj.midfield||0) > 0 && areaMap.length < 2) areaMap.push(`${inj.midfield} mid`);
+    if ((inj.goalkeeper||0) > 0) areaMap.push('GK');
     const areaStr = areaMap.length ? ` · ${areaMap[0]}` : '';
-    const label = nameStr ? `${nameStr} fehlt${confirmed.length > 1 ? 'en' : ''}${areaStr}` : `${inj.total} Ausfälle${areaStr}`;
+    const label = nameStr ? `${nameStr} out${areaStr}` : `${inj.total} missing${areaStr}`;
     return {text:`🏥 ${teamName}: ${label}`, col};
   };
   const _igHInjB = _igBuildInj(_igHInj, match.home);
@@ -3087,8 +3154,8 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   if (_igRef?.name) {
     const avg = _igRef.avgCards;
     const refCol = avg == null ? '#8b949e' : avg >= 4.5 ? '#f85149' : avg >= 3.5 ? '#e3b341' : '#3fb950';
-    const avgNote = avg != null ? ` · Ø ${avg} Karten/Sp` : '';
-    _igCtxBadges.push({text:`👨‍⚖️ Schiri: ${_igRef.name}${avgNote}`, col:refCol});
+    const avgNote = avg != null ? ` · Ø ${avg} cards/g` : '';
+    _igCtxBadges.push({text:`👨‍⚖️ Referee: ${_igRef.name}${avgNote}`, col:refCol});
   }
   const _igHasCtx = _igCtxBadges.length > 0;
   // Only show high/medium confidence picks in the infographic — low conf = not worth sharing
@@ -3307,13 +3374,13 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
     ctx.font='bold 26px system-ui,sans-serif'; ctx.fillStyle='#e6edf3';
     ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(n,dCX,dCY-6);
     ctx.font='11px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
-    ctx.fillText('Spiele',dCX,dCY+14); ctx.textBaseline='alphabetic';
+    ctx.fillText('Games',dCX,dCY+14); ctx.textBaseline='alphabetic';
 
     // Legend right of donut
     const legX=dCX+dOuter+26;
     const legRows=[
       {col:hC.main, val:h2h.homeWins, lbl:igTrunc(ctx,match.home,250)},
-      {col:'#8b949e', val:h2h.draws,  lbl:'Remis'},
+      {col:'#8b949e', val:h2h.draws,  lbl:'Draw'},
       {col:aC.main, val:h2h.awayWins, lbl:igTrunc(ctx,match.away,250)},
     ];
     let lY=dCY-46;
@@ -3342,7 +3409,7 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
       ctx.font='bold 30px system-ui,sans-serif'; ctx.fillStyle=s.col;
       ctx.fillText(s.val,statX,stY+18);
       ctx.font='11px system-ui,sans-serif'; ctx.fillStyle='#8b949e88';
-      ctx.fillText('Form-Score',statX+68,stY+18);
+      ctx.fillText('Form Score',statX+68,stY+18);
       stY+=68;
     }
 
@@ -3389,11 +3456,11 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
 
     const pAllCols=[...hLabels,...aLabels].map(l=>l.c);
     const pMain=pAllCols.includes('red')?'#f85149':pAllCols.includes('gold')?'#f0c040':'#00d4a1';
-    const pRlStr=_rl_ig<99?` · noch ${_rl_ig} Spieltag${_rl_ig===1?'':'e'}`:'';
+    const pRlStr=_rl_ig<99?` · ${_rl_ig} matchday${_rl_ig===1?'':'s'} left`:'';
     const pTxt=_hNW&&_aNW
-      ? `⚡  Beide Teams kämpfen — Druckspiel${pRlStr}`
-      : _hNW ? `⚡  ${igTrunc(ctx,match.home,360)} kämpft${pRlStr}`
-             : `⚡  ${igTrunc(ctx,match.away,360)} kämpft${pRlStr}`;
+      ? `⚡  Both teams fighting — high-stakes${pRlStr}`
+      : _hNW ? `⚡  ${igTrunc(ctx,match.home,360)} fighting${pRlStr}`
+             : `⚡  ${igTrunc(ctx,match.away,360)} fighting${pRlStr}`;
 
     const pressH=62;
     // Glowing background
@@ -3433,7 +3500,7 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
 
   ctx.font='bold 15px system-ui,sans-serif'; ctx.fillStyle='#8b949e77';
   ctx.textAlign='left'; ctx.textBaseline='alphabetic';
-  ctx.fillText('🎲  TOP WETTEN', 48, curY+16); curY+=36;
+  ctx.fillText('🎲  TOP BETS', 48, curY+16); curY+=36;
 
   for(let i=0;i<picks.length;i++){
     const p=picks[i];
@@ -3444,7 +3511,7 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
       ?(_scRaw?Math.min(92,Math.round(55+(_scRaw/2.0)*40)):78)
       :p.conf==='medium'
       ?(_scRaw?Math.min(74,Math.round(48+(_scRaw/1.2)*22)):63):52;
-    const reasonRaw=(p.reason||'').replace(/<br>/gi,' · ').replace(/<[^>]+>/g,'');
+    const reasonRaw=_igT((p.reason||'').replace(/<br>/gi,' · ').replace(/<[^>]+>/g,''));
 
     if(isHero){
       const cardH=246;
@@ -3485,20 +3552,20 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
       } else if(p.odds){
         ctx.font='bold 26px system-ui,sans-serif'; ctx.fillStyle='#e6edf3';
         ctx.textAlign='right'; ctx.textBaseline='middle'; ctx.fillText(p.odds.toFixed(2),W-68,curY+30);
-        ctx.font='12px system-ui,sans-serif'; ctx.fillStyle='#8b949e'; ctx.fillText('QUOTE',W-68,curY+50);
+        ctx.font='12px system-ui,sans-serif'; ctx.fillStyle='#8b949e'; ctx.fillText('ODDS',W-68,curY+50);
       }
 
-      // Market — big
+      // Market — big (translated EN)
       ctx.font='bold 44px system-ui,sans-serif'; ctx.fillStyle='#ffffff';
       ctx.textAlign='left'; ctx.textBaseline='middle';
-      ctx.fillText(`${p.icon}  ${igTrunc(ctx,p.market,780)}`,68,curY+104);
+      ctx.fillText(`${p.icon}  ${igTrunc(ctx,_igT(p.market),780)}`,68,curY+104);
 
       // Confidence circle / large %
       ctx.font='bold 72px system-ui,sans-serif'; ctx.fillStyle=confCol;
       ctx.textAlign='right'; ctx.textBaseline='middle';
       ctx.fillText(`${confPct}%`,W-68,curY+156);
       ctx.font='bold 14px system-ui,sans-serif'; ctx.fillStyle=confCol+'99';
-      ctx.fillText('KONFIDENZ',W-68,curY+196);
+      ctx.fillText('CONFIDENCE',W-68,curY+196);
 
       // Reason
       ctx.font='17px system-ui,sans-serif'; ctx.fillStyle='#8b949e';
@@ -3518,7 +3585,7 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
       ctx.font='bold 28px system-ui,sans-serif'; ctx.fillStyle='#e6edf3';
       ctx.textAlign='left'; ctx.textBaseline='middle';
       const oStr=p.odds?` @ ${p.odds.toFixed(2)}`:'';
-      ctx.fillText(`${p.icon}  ${igTrunc(ctx,p.market+oStr,680)}`,66,curY+50);
+      ctx.fillText(`${p.icon}  ${igTrunc(ctx,_igT(p.market)+oStr,680)}`,66,curY+50);
 
       ctx.font='bold 36px system-ui,sans-serif'; ctx.fillStyle=confCol;
       ctx.textAlign='right'; ctx.textBaseline='middle'; ctx.fillText(`${confPct}%`,W-66,curY+50);
@@ -3544,8 +3611,8 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
     if(oddsD.dnbA)  oi2.push(`DNB A ${oddsD.dnbA.toFixed(2)}`);
     if(oddsD.dc1X)  oi2.push(`1X ${oddsD.dc1X.toFixed(2)}`);
     if(oddsD.dcX2)  oi2.push(`X2 ${oddsD.dcX2.toFixed(2)}`);
-    if(oddsD.bttsY) oi2.push(`BTTS Ja ${oddsD.bttsY.toFixed(2)}`);
-    if(oddsD.bttsN) oi2.push(`BTTS Nein ${oddsD.bttsN.toFixed(2)}`);
+    if(oddsD.bttsY) oi2.push(`BTTS Yes ${oddsD.bttsY.toFixed(2)}`);
+    if(oddsD.bttsN) oi2.push(`BTTS No ${oddsD.bttsN.toFixed(2)}`);
     ctx.font='14px system-ui,sans-serif'; ctx.fillStyle='#8b949e66';
     ctx.textAlign='left'; ctx.textBaseline='alphabetic';
     ctx.fillText('📊 Pinnacle: '+oi1.join(' · '),48,curY+16);
@@ -3568,7 +3635,7 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
 
   ctx.font='16px system-ui,sans-serif'; ctx.fillStyle='#8b949e55';
   ctx.textAlign='right'; ctx.textBaseline='middle';
-  ctx.fillText('Nur ab 18 · Keine Gewinngarantie · Kein Tipp ist garantiert',W-48,curY+34);
+  ctx.fillText('18+ only · No winnings guaranteed · Gamble responsibly',W-48,curY+34);
   ctx.textBaseline='alphabetic';
 
   // ── Show modal ───────────────────────────────────────────
@@ -3597,6 +3664,44 @@ async function shareInfographic() {
     const file=new File([blob], window._igFileName, {type:'image/png'});
     await navigator.share({files:[file], title:'BetEdge Infografik'});
   } catch(e) {}
+}
+
+// ── Copy the rendered HTML card as a PNG image ───────────
+async function copyCardImage(btn) {
+  const card = btn.closest('.stake-card');
+  if (!card) return;
+  const orig = btn.innerHTML;
+  btn.innerHTML = '⏳';
+  btn.disabled = true;
+  try {
+    // html2canvas: scale 2× for retina-quality, transparent bg preserved
+    const canvas = await html2canvas(card, {
+      scale: 2,
+      backgroundColor: null,
+      useCORS: true,
+      logging: false,
+      // Ensure the full card including shadows is captured
+      scrollX: 0,
+      scrollY: -window.scrollY,
+    });
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
+    if (navigator.clipboard?.write) {
+      await navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+      btn.innerHTML = '✅';
+      setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 2000);
+    } else {
+      // Fallback: download
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = `betedge-card-${card.querySelector('.card-home')?.textContent?.trim().replace(/\s+/g,'-')}-vs-${card.querySelector('.card-away')?.textContent?.trim().replace(/\s+/g,'-')}.png`;
+      a.click();
+      btn.innerHTML = orig; btn.disabled = false;
+    }
+  } catch(e) {
+    console.error('[copyCardImage]', e);
+    btn.innerHTML = '❌';
+    setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 2000);
+  }
 }
 
 async function copyInfographic(btn) {
@@ -4367,8 +4472,11 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       <button class="share-btn" style="flex:1" onclick="shareTelegram('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}')">
         📤 Telegram
       </button>
-      <button class="share-btn" style="flex:0 0 auto;padding:9px 13px" title="Text kopieren" onclick="copyCard('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}',this)">
+      <button class="share-btn" style="flex:0 0 auto;padding:9px 10px" title="Text kopieren (DE)" onclick="copyCard('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}',this)">
         📋
+      </button>
+      <button class="share-btn" style="flex:0 0 auto;padding:9px 10px;color:#a78bfa;border-color:#a78bfa55;" title="Card als Bild kopieren (DE)" onclick="copyCardImage(this)">
+        🖼️
       </button>
     </div>
   </div>`;
