@@ -2701,6 +2701,28 @@ function computeMatchScore(match, leagueKey) {
     score = maxS;
   }
 
+  // ── mustWin amplifier: when a team NEEDS to win (not just "wants to") ──────
+  // pressureRatio > 0.65 → mustWin=true → team plays with maximum intensity.
+  // Two mustWin teams = explosive, unpredictable match (best for betting markets).
+  {
+    const hMW = match.homeStake?.mustWin || false;
+    const aMW = match.awayStake?.mustWin || false;
+    if (hMW && aMW) score += 0.8;      // both desperate — maximum contest
+    else if (hMW || aMW) score += 0.4; // one team in crisis mode
+  }
+
+  // ── motivationLevel penalty: secured/confirmed teams rotate & coast ─────
+  // 'none' = mathematically confirmed → expect squad rotation, lower intensity.
+  // This directly reduces match interest for betting (less committed play).
+  {
+    const hMot = match.homeStake?.motivationLevel;
+    const aMot = match.awayStake?.motivationLevel;
+    if      (hMot === 'none' && aMot === 'none') score -= 2.0; // dead rubber
+    else if (hMot === 'none' || aMot === 'none') score -= 1.0; // one team coasting
+    else if (hMot === 'low'  && aMot === 'low')  score -= 0.6; // both nearly done
+    else if (hMot === 'low'  || aMot === 'low')  score -= 0.3; // one nearly done
+  }
+
   // ── Form-based modifier (mirrors Python logic) ──────────────────────────
   function _formMod(fd, isRed) {
     if (!fd) return 0;

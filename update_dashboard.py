@@ -365,27 +365,119 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
 
     return 'full'
 
-def calc_score(labels, rounds_left, form_data=None):
+def calc_pressure(team, labels, standings, cfg, rounds_left):
+    """
+    Computes concrete pressure metrics: how many points does this team
+    actually need, and how desperate is their situation?
+
+    Returns dict with:
+      pointsNeeded  – exact gap to relevant boundary (0 = already there / secured)
+      pressureRatio – pointsNeeded / max_gainable, 0.0–1.0
+      mustWin       – True when team needs >65% of remaining points (every game crucial)
+      canDraw       – True when team needs <30% (draws acceptable)
+    """
+    if not labels:
+        return {"pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": False, "canDraw": True}
+
+    pts      = team["pts"]
+    max_gain = rounds_left * 3
+    if max_gain == 0:
+        return {"pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": False, "canDraw": True}
+
+    is_gold   = any(l["c"] == "gold"   for l in labels)
+    is_red    = any(l["c"] == "red"    for l in labels)
+    is_blue   = any(l["c"] == "blue"   for l in labels)
+    is_orange = any(l["c"] == "orange" for l in labels)
+
+    points_needed = 0
+
+    if is_red:
+        total     = cfg["total"]
+        rel       = cfg["rel"]
+        rel_ply   = cfg["rel_playoff"]
+        rel_start = total - rel + 1
+        safe_pos  = rel_start - rel_ply - 1
+        if safe_pos > 0:
+            pts_safe     = pts_at_pos(standings, safe_pos)
+            points_needed = max(0, pts_safe - pts + 1)   # need to overtake safe team
+        else:
+            points_needed = max_gain
+
+    elif is_gold:
+        pos = team["pos"]
+        if pos == 1:
+            pts_2nd      = pts_at_pos(standings, 2)
+            gap          = pts - pts_2nd
+            points_needed = max(0, 1 - gap)              # need to keep at least 1 ahead
+        else:
+            pts_leader   = pts_at_pos(standings, 1)
+            points_needed = max(0, pts_leader - pts + 1) # need to overtake leader
+
+    elif is_blue:
+        ucl = cfg["ucl"]
+        pos = team["pos"]
+        if pos <= ucl:
+            pts_below    = pts_at_pos(standings, ucl + 1)
+            gap          = pts - pts_below
+            points_needed = max(0, 1 - gap)              # defend UCL spot
+        else:
+            pts_ucl      = pts_at_pos(standings, ucl)
+            points_needed = max(0, pts_ucl - pts + 1)    # chase UCL
+
+    elif is_orange:
+        ucl      = cfg["ucl"]
+        el       = cfg.get("el", 0)
+        el_cutoff = ucl + el
+        pos      = team["pos"]
+        if pos <= el_cutoff:
+            pts_below    = pts_at_pos(standings, el_cutoff + 1)
+            gap          = pts - pts_below
+            points_needed = max(0, 1 - gap)
+        else:
+            pts_el       = pts_at_pos(standings, el_cutoff)
+            points_needed = max(0, pts_el - pts + 1)
+
+    pressure_ratio = min(1.0, points_needed / max_gain)
+
+    return {
+        "pointsNeeded":  points_needed,
+        "pressureRatio": round(pressure_ratio, 3),
+        "mustWin":       pressure_ratio > 0.65,
+        "canDraw":       pressure_ratio < 0.30,
+    }
+
+
+def calc_score(labels, rounds_left, form_data=None, pressure_ratio=None):
     is_red  = any(l["c"] == "red"  for l in labels)
     is_gold = any(l["c"] == "gold" for l in labels)
     is_blue = any(l["c"] == "blue" for l in labels)
-    urgency = max(0.0, min(1.5, (10 - rounds_left) / 7))
 
+    # Zone base — lower than before so pressure_ratio carries the differentiation
     if is_red and any("Abstieg" in l["l"] and "gefahr" not in l["l"] for l in labels):
-        base = 8
+        base = 6.5
     elif is_red:
-        base = 7
+        base = 5.5
     elif is_gold and any("Titelkampf" in l["l"] for l in labels):
-        base = 8
+        base = 6.5
     elif is_gold:
-        base = 7
+        base = 5.5
     elif is_blue:
-        base = 6
+        base = 5.0
     else:
-        base = 5
+        base = 4.5  # orange / yellow
 
-    score = base + urgency * 2 + form_score_mod(form_data, is_red)
-    return min(10, round(score))
+    # Pressure-ratio is the primary driver (0-1 → adds 0-3.5 pts).
+    # A team needing 90% of remaining points scores near-maximum;
+    # one that can comfortably draw scores much lower.
+    if pressure_ratio is not None:
+        pressure_score = pressure_ratio * 3.5
+    else:
+        # Fallback: old urgency formula when pressure data unavailable
+        urgency = max(0.0, min(1.5, (10 - rounds_left) / 7))
+        pressure_score = urgency * 1.5
+
+    score = base + pressure_score + form_score_mod(form_data, is_red)
+    return min(10, round(score, 1))
 
 def calc_match_score(home_stake, away_stake, h2h=None):
     hs  = (home_stake or {}).get("score", 0)
@@ -498,13 +590,18 @@ def fetch_league(key, cfg):
     for t in standings:
         labels = calc_labels(t, standings, cfg)
         if labels:
-            form   = form_cache.get(t["team"])
-            score  = calc_score(labels, rounds_left, form)
-            gd_str = f"+{t['gd']}" if t["gd"] >= 0 else str(t["gd"])
+            form     = form_cache.get(t["team"])
+            pressure = calc_pressure(t, labels, standings, cfg, rounds_left)
+            score    = calc_score(labels, rounds_left, form, pressure["pressureRatio"])
+            gd_str   = f"+{t['gd']}" if t["gd"] >= 0 else str(t["gd"])
             stake_teams.append({
                 "pos": t["pos"], "team": t["team"], "pts": t["pts"],
                 "played": t["played"], "gd": gd_str, "score": score,
                 "labels": labels, "form": form,
+                "pointsNeeded":  pressure["pointsNeeded"],
+                "pressureRatio": pressure["pressureRatio"],
+                "mustWin":       pressure["mustWin"],
+                "canDraw":       pressure["canDraw"],
             })
 
     # ── Stake fixtures (with form + H2H) ─────────────────────────────────────
@@ -536,10 +633,22 @@ def fetch_league(key, cfg):
         h_form = form_cache.get(f["home"]) or form_cache.get(ht["team"])
         a_form = form_cache.get(f["away"]) or form_cache.get(at["team"])
 
-        home_stake = {"score": calc_score(h_labels, rounds_left, h_form), "labels": h_labels,
-                      "motivationLevel": calc_motivation(ht, h_labels, standings, cfg, rounds_left)} if h_labels else None
-        away_stake = {"score": calc_score(a_labels, rounds_left, a_form), "labels": a_labels,
-                      "motivationLevel": calc_motivation(at, a_labels, standings, cfg, rounds_left)} if a_labels else None
+        h_pressure = calc_pressure(ht, h_labels, standings, cfg, rounds_left) if h_labels else {}
+        a_pressure = calc_pressure(at, a_labels, standings, cfg, rounds_left) if a_labels else {}
+        home_stake = {"score": calc_score(h_labels, rounds_left, h_form, h_pressure.get("pressureRatio")),
+                      "labels": h_labels,
+                      "motivationLevel": calc_motivation(ht, h_labels, standings, cfg, rounds_left),
+                      "pointsNeeded": h_pressure.get("pointsNeeded", 0),
+                      "pressureRatio": h_pressure.get("pressureRatio", 0.0),
+                      "mustWin": h_pressure.get("mustWin", False),
+                      "canDraw": h_pressure.get("canDraw", True)} if h_labels else None
+        away_stake = {"score": calc_score(a_labels, rounds_left, a_form, a_pressure.get("pressureRatio")),
+                      "labels": a_labels,
+                      "motivationLevel": calc_motivation(at, a_labels, standings, cfg, rounds_left),
+                      "pointsNeeded": a_pressure.get("pointsNeeded", 0),
+                      "pressureRatio": a_pressure.get("pressureRatio", 0.0),
+                      "mustWin": a_pressure.get("mustWin", False),
+                      "canDraw": a_pressure.get("canDraw", True)} if a_labels else None
 
         # Fetch H2H
         h2h = fetch_h2h(f["eventId"]) if f.get("eventId") else None
