@@ -2066,7 +2066,10 @@ function getBettingPicks(match, odds, leagueKey) {
       // Fix: start at 0.0 — positive signals must actively push score above thresholds.
       let sc = 0.0 + (hFS_home - 0.5)*1.20 + Math.max(0,hStreak)*0.09 + homeWinRate*0.35;
       if (hc.includes('gold')) sc += 0.16; if (hc.includes('blue')) sc += 0.10;
-      if (ac.includes('red'))  sc += 0.14; if (homeInForm && !awayInForm) sc += 0.28;
+      // Red away team boosts home win — BUT only if that away team is NOT under must-win pressure.
+      // When awayNeedsWin, desperation overrides demoralisation: they fight hard away, not collapse.
+      if (ac.includes('red') && !awayNeedsWin) sc += 0.14;
+      if (homeInForm && !awayInForm) sc += 0.28;
       if (homePoor) sc -= 0.48;            if (awayInForm && !homeInForm) sc -= 0.20;
       if (eloDiff !== null) sc += Math.min(0.22, Math.max(-0.22, eloDiff / 700));
       if (homeNeedsWin && !awayNeedsWin) sc += _pressureBoost;
@@ -2087,12 +2090,14 @@ function getBettingPicks(match, odds, leagueKey) {
         ? ` · H2H: ${h2h.homeWins||0}H/${h2h.draws||0}U/${h2h.awayWins||0}A (${h2hN} Duelle)`
         : '';
       let reason = homeInForm
-        ? `${match.home} in Topform: ${hStreak} Siege in Serie, ${Math.round(hFS_home*100)}% Heim-Win-Rate. Angriff (${homeAttStr.toFixed(1)} ${_xgLbl}/Sp) trifft auf ${match.away}-Abwehr (${awayDefStr.toFixed(1)} xGA/Sp).${_hH2hSnippet}`
+        ? `${match.home} ist in Topform (zuletzt ${hStreak} Siege) und gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele. Das Angriffsspiel (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) trifft auf eine anfällige ${match.away}-Abwehr (kassiert Ø ${awayDefStr.toFixed(1)} Tore/Spiel).${_hH2hSnippet}`
         : hc.includes('gold')
-          ? `Titelkampf — Heimsieg zwingend. ${Math.round(hFS_home*100)}% Heim-Win-Rate, ${homeAttStr.toFixed(1)} vs ${awayDefStr.toFixed(1)} ${_xgLbl}/Sp. Druck treibt Leistung.${_hH2hSnippet}`
-          : ac.includes('red')
-          ? `${match.away} im Abstiegskampf — schwache Abwehr (${awayDefStr.toFixed(1)} ${_xgLbl}/Sp kassiert). ${match.home} nutzt Heimvorteil: ${Math.round(hFS_home*100)}% Heim-Win-Rate.${_hH2hSnippet}`
-          : `${match.home} Heimstärke: ${Math.round(hFS_home*100)}% Win-Rate, Angriff ${homeAttStr.toFixed(1)} vs Abwehr ${awayDefStr.toFixed(1)} ${_xgLbl}/Sp.${_hH2hSnippet}`;
+          ? `${match.home} kämpft um den Titel — ein Heimsieg ist Pflicht. Gewinnt ${Math.round(hFS_home*100)}% der Heimspiele und erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel. Der Druck erhöht die Intensität.${_hH2hSnippet}`
+          : hc.includes('red') && homeNeedsWin
+            ? `${match.home} kämpft gegen den Abstieg und braucht jeden Punkt zu Hause — das steigert die Intensität und Entschlossenheit. ${match.away} kommt mit nur ${Math.round(aFS_away*100)}% Auswärtssieg-Rate.${_hH2hSnippet}`
+            : ac.includes('red') && !awayNeedsWin
+              ? `${match.away} ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. ${match.home} gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele und kann diesen Vorteil nutzen.${_hH2hSnippet}`
+              : `${match.home} gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele und erzielt dabei Ø ${homeAttStr.toFixed(1)} Tore/Spiel. Der Gegner kassiert Ø ${awayDefStr.toFixed(1)} Tore/Spiel.${_hH2hSnippet}`;
       if (eloAwayFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
       else if (eloHomeFav && eloLabel) reason += `<br>📊 Elo bestätigt: ${eloLabel}`;
       rC.push({sc, p:{icon:'🏠', market:'Heimsieg', odds:o.hw, conf, reason}});
@@ -2103,7 +2108,10 @@ function getBettingPicks(match, odds, leagueKey) {
       // Base 0.26 → 0.0 (same fix as Heimsieg — require active positive signals)
       let sc = 0.0 + (aFS_away - 0.5)*1.20 + Math.max(0,aStreak)*0.09 + awayWinRate*0.35;
       if (ac.includes('gold')) sc += 0.16; if (ac.includes('blue')) sc += 0.10;
-      if (hc.includes('red'))  sc += 0.14; if (awayInForm && !homeInForm) sc += 0.28;
+      // Red home team boosts away win — BUT only if that home team is NOT under must-win pressure.
+      // When homeNeedsWin, desperation at home overrides demoralisation: they fight, not collapse.
+      if (hc.includes('red') && !homeNeedsWin) sc += 0.14;
+      if (awayInForm && !homeInForm) sc += 0.28;
       if (awayPoor) sc -= 0.48;            if (homeInForm && !awayInForm) sc -= 0.20;
       if (eloDiff !== null) sc += Math.min(0.22, Math.max(-0.22, -eloDiff / 700));
       if (awayNeedsWin && !homeNeedsWin) sc += _pressureBoost;
@@ -2121,12 +2129,12 @@ function getBettingPicks(match, odds, leagueKey) {
         ? ` · H2H: ${h2h.homeWins||0}H/${h2h.draws||0}U/${h2h.awayWins||0}A (${h2hN} Duelle)`
         : '';
       let reason = awayInForm
-        ? `${match.away} auf Kurs: ${aStreak} Siege in Serie, ${Math.round(aFS_away*100)}% Auswärts-Win-Rate. Angriff (${awayAttStr.toFixed(1)} ${_xgLblA}/Sp) überfordert ${match.home}-Abwehr (${homeDefStr.toFixed(1)} xGA/Sp).${_aH2hSnippet}`
+        ? `${match.away} ist in Topform (zuletzt ${aStreak} Siege) und gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele. Das Angriffsspiel (Ø ${awayAttStr.toFixed(1)} Tore/Spiel) trifft auf eine anfällige ${match.home}-Abwehr (kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel).${_aH2hSnippet}`
         : ac.includes('gold')
-          ? `Titelkampf — ${match.away} braucht Punkte auswärts. ${Math.round(aFS_away*100)}% Auswärts-Win-Rate, Angriff ${awayAttStr.toFixed(1)} vs Abwehr ${homeDefStr.toFixed(1)} ${_xgLblA}/Sp.${_aH2hSnippet}`
-          : hc.includes('red')
-          ? `${match.home} im Abstiegskampf — Abwehr porös (${homeDefStr.toFixed(1)} ${_xgLblA}/Sp kassiert). ${match.away} nutzt das: ${Math.round(aFS_away*100)}% Auswärts-Win-Rate.${_aH2hSnippet}`
-          : `${match.away} Auswärtsstärke: ${Math.round(aFS_away*100)}% Win-Rate, Angriff ${awayAttStr.toFixed(1)} vs Abwehr ${homeDefStr.toFixed(1)} ${_xgLblA}/Sp.${_aH2hSnippet}`;
+          ? `${match.away} kämpft im Titelkampf um Punkte auswärts. Gewinnt ${Math.round(aFS_away*100)}% der Auswärtsspiele und erzielt Ø ${awayAttStr.toFixed(1)} Tore/Spiel. Titeldruck treibt die Leistung.${_aH2hSnippet}`
+          : hc.includes('red') && !homeNeedsWin
+            ? `${match.home} steckt im Abstiegskampf und ist defensiv anfällig (kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel). ${match.away} mit ${Math.round(aFS_away*100)}% Auswärtssieg-Rate kann diesen Vorteil nutzen.${_aH2hSnippet}`
+            : `${match.away} gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele und erzielt dabei Ø ${awayAttStr.toFixed(1)} Tore/Spiel. Der Gegner kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel.${_aH2hSnippet}`;
       if (eloHomeFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
       else if (eloAwayFav && eloLabel) reason += `<br>📊 Elo bestätigt: ${eloLabel}`;
       rC.push({sc, p:{icon:'✈️', market:'Auswärtssieg', odds:o.aw, conf, reason}});
