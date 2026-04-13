@@ -2290,8 +2290,8 @@ function getBettingPicks(match, odds, leagueKey) {
       if (bothGold && !anyRed && expGoals < 2.5) sc = Math.min(0.90, sc + 0.12);
       if (_eBothRed) sc = Math.max(0, sc - 0.28);
       if (_favWeak1) sc = Math.min(0.90, sc + 0.40 * _favWeak);
-      if (bothNeedWin && _favWeak1) sc = Math.max(0, sc - 0.18); // existing defensive-winner contradiction fix
       // 🔑 PRESSURE/RUNDEN: Muss-gewinnen → Angriffsdrang killt Under-Signal
+      // Note: bothNeedWin already fully handled below — no separate _favWeak1 penalty needed
       if (bothNeedWin)       sc = Math.max(0, sc - _pressureBoost * 1.10);
       else if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 0.65);
       // 🔑 H2H: under 2.5 is inverse of both H2H modifiers
@@ -2573,11 +2573,12 @@ function getBettingPicks(match, odds, leagueKey) {
           _pA = (1/o.aw) / _tot;
         } else {
           // No 1X2 odds — use normalized 3-way model estimate
-          const _mH = Math.min(0.82, 0.34+(hFS_home-0.5)*0.65+Math.max(0,hStreak)*0.03+homeWinRate*0.16+(xGBased?Math.max(0,homeAttStr-1.2)*0.08-Math.max(0,awayAttStr-1.4)*0.06:0)+(eloHomeFav?0.04:0)+(homeNeedsWin?_pressureBoost*0.18:0));
-          const _mA = Math.min(0.76, 0.26+(aFS_away-0.5)*0.65+Math.max(0,aStreak)*0.03+awayWinRate*0.16+(xGBased?Math.max(0,awayAttStr-1.1)*0.08-Math.max(0,homeAttStr-1.4)*0.06:0)+(eloAwayFav?0.04:0)+(awayNeedsWin?_pressureBoost*0.18:0));
-          const _mD = Math.min(0.40, Math.max(0.05, drawRate*0.72+0.10-((homeNeedsWin||awayNeedsWin)?_pressureBoost*0.30:0)));
-          const _mTot = _mH + _mA + _mD;
-          _pH = _mH/_mTot; _pA = _mA/_mTot; _pD = _mD/_mTot;
+          // IMPORTANT: caps are applied AFTER normalization so relative probabilities are correct
+          const _mH = Math.max(0.01, 0.34+(hFS_home-0.5)*0.65+Math.max(0,hStreak)*0.03+homeWinRate*0.16+(xGBased?Math.max(0,homeAttStr-1.2)*0.08-Math.max(0,awayAttStr-1.4)*0.06:0)+(eloHomeFav?0.04:0)+(homeNeedsWin?_pressureBoost*0.18:0));
+          const _mA = Math.max(0.01, 0.26+(aFS_away-0.5)*0.65+Math.max(0,aStreak)*0.03+awayWinRate*0.16+(xGBased?Math.max(0,awayAttStr-1.1)*0.08-Math.max(0,homeAttStr-1.4)*0.06:0)+(eloAwayFav?0.04:0)+(awayNeedsWin?_pressureBoost*0.18:0));
+          const _mD = Math.max(0.05, drawRate*0.72+0.10-((homeNeedsWin||awayNeedsWin)?_pressureBoost*0.30:0));
+          const _mTot = Math.max(0.01, _mH + _mA + _mD);
+          _pH = Math.min(0.82, _mH/_mTot); _pA = Math.min(0.76, _mA/_mTot); _pD = Math.min(0.40, _mD/_mTot);
         }
         if      (p.market === 'Doppelte Chance: 1X') mp = Math.min(0.97, _pH + _pD);
         else if (p.market === 'Doppelte Chance: X2') mp = Math.min(0.97, _pA + _pD);
@@ -4342,21 +4343,24 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
         ? '<span style="font-size:9px;color:#444d56;font-style:italic"> (Modell-Näherung)</span>'
         : '';
       if (oddsNum != null) {
-        // Compare bookie vs our model odds
-        const pctDiff = Math.round((oddsNum - p.modelOdds) / p.modelOdds * 100);
+        // Edge = model probability minus implied (bookie) probability — consistent with p.value thresholds
+        // edgePp: positive = we have edge (bookie odds too high), negative = no edge
+        const _modelProb = p.modelOdds ? 1 / p.modelOdds : null;
+        const _impliedProb = 1 / oddsNum;
+        const edgePp = _modelProb != null ? Math.round((_modelProb - _impliedProb) * 100) : null;
         let edgeCls, edgeTxt, bookieCls;
-        if (pctDiff >= 10) {
+        if (edgePp != null && edgePp >= 13) {
           edgeCls = 'fov-hot'; bookieCls = 'fov-hot';
-          edgeTxt = `↑ +${pctDiff}% über Fair Value`;
-        } else if (pctDiff >= 3) {
+          edgeTxt = `↑ +${edgePp}pp Edge`;
+        } else if (edgePp != null && edgePp >= 7) {
           edgeCls = 'fov-value'; bookieCls = 'fov-value';
-          edgeTxt = `↑ +${pctDiff}% über Fair Value`;
-        } else if (pctDiff >= -3) {
+          edgeTxt = `↑ +${edgePp}pp Edge`;
+        } else if (edgePp == null || (edgePp >= -3 && edgePp < 7)) {
           edgeCls = ''; bookieCls = 'fov-fair';
-          edgeTxt = '≈ Fair';
+          edgeTxt = edgePp != null && edgePp > 0 ? `+${edgePp}pp` : '≈ Fair';
         } else {
           edgeCls = 'fov-below'; bookieCls = 'fov-below';
-          edgeTxt = `↓ ${pctDiff}% unter Fair Value`;
+          edgeTxt = `↓ ${edgePp}pp`;
         }
         fairOddsHtml = `<div class="pick-fair-odds">
           <span class="fov-label">Fair Value</span>
