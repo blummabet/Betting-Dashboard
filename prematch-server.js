@@ -268,8 +268,10 @@ async function fetchAllPrematchData() {
       for (const fx of fxs) {
         const id = fx.fixture?.id;
         if (!id) continue;
-        // Datum aus API-Antwort extrahieren (YYYY-MM-DD)
-        const fxDate = (fx.fixture?.date || '').slice(0, 10);
+        // Datum + Uhrzeit aus API-Antwort extrahieren
+        const fxRaw    = fx.fixture?.date || '';
+        const fxDate   = fxRaw.slice(0, 10);
+        const fxTime   = fxRaw.length >= 16 ? fxRaw.slice(11, 16) : null; // "HH:MM" local time
         const fxStatus = fx.fixture?.status?.short || 'NS';
         fixtureMap[id] = {
           fixtureId:    id,
@@ -280,6 +282,7 @@ async function fetchAllPrematchData() {
           referee:      fx.fixture?.referee  || null,
           refereeStats: null,
           date:         fxDate,
+          time:         fxTime,
           injuries:     { home: [], away: [] },
           injurySummary: { home: null, away: null },
           h2h:          null,

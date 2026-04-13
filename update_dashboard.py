@@ -64,6 +64,10 @@ def fmt_date(ts):
     d = datetime.fromtimestamp(ts)
     return f"{d.day:02d}.{d.month:02d}.{d.year}"
 
+def fmt_time(ts):
+    d = datetime.fromtimestamp(ts)
+    return f"{d.hour:02d}:{d.minute:02d}"
+
 def within_7_days(date_str):
     try:
         d, m, y = date_str.split(".")
@@ -557,6 +561,7 @@ def fetch_league(key, cfg):
     fixtures = [
         {
             "date":    fmt_date(e["startTimestamp"]),
+            "time":    fmt_time(e["startTimestamp"]),
             "home":    e["homeTeam"]["name"],
             "away":    e["awayTeam"]["name"],
             "eventId": e["id"],
@@ -659,7 +664,8 @@ def fetch_league(key, cfg):
         if ms < 5:
             continue
         stake_fixtures.append({
-            "date": f["date"], "home": f["home"], "away": f["away"],
+            "date": f["date"], "time": f.get("time"),
+            "home": f["home"], "away": f["away"],
             "eventId": f.get("eventId"),
             "matchScore": ms, "bothStakes": bool(home_stake and away_stake),
             "homeStake": home_stake, "awayStake": away_stake,
