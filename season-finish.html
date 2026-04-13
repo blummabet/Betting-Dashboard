@@ -1128,7 +1128,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
   <!-- Manual score entry panel -->
   <div id="manualEntryPanel" style="display:none;background:var(--card);border:1px solid #a78bfa55;border-radius:14px;padding:18px 20px;margin-bottom:20px;">
-    <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:14px;">✏️ Ergebnisse manuell eintragen — Format: <code style="background:#1a1a2e;padding:2px 6px;border-radius:4px;font-size:12px">2:1</code></div>
+    <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:6px;">✏️ Ergebnisse manuell eintragen</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">FT/HZ: Format <code style="background:#1a1a2e;padding:1px 5px;border-radius:4px">2:1</code> &nbsp;·&nbsp; Ecken/Karten: Gesamtzahl <code style="background:#1a1a2e;padding:1px 5px;border-radius:4px">10</code></div>
     <div id="manualEntryRows" style="display:flex;flex-direction:column;gap:8px;"></div>
     <button onclick="applyManualScores()" style="margin-top:14px;background:#2d1f4e;border:1px solid #a78bfa;color:#a78bfa;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;">✅ Ergebnisse übernehmen</button>
   </div>
@@ -6582,20 +6583,32 @@ function toggleManualEntry() {
   // Sort by date
   pending.sort((a,b) => a.dateIso.localeCompare(b.dateIso));
 
-  const rows = pending.map(e => `
+  const _hasStat = (picks, kw) => picks.some(p => (p.market||'').toLowerCase().includes(kw));
+  const rows = pending.map(e => {
+    const needsCorners = _hasStat(e.picks, 'ecke') || _hasStat(e.picks, 'corner');
+    const needsCards   = _hasStat(e.picks, 'karte') || _hasStat(e.picks, 'card') || _hasStat(e.picks, 'gelbe');
+    return `
     <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:#0d1117;border-radius:8px;border:1px solid var(--border);" data-key="${e.dateIso}|${e.home}|${e.away}">
-      <span style="flex:1;font-size:12px;color:var(--muted)">${e.dateIso}</span>
-      <span style="flex:3;font-size:13px;font-weight:600">${e.home} <span style="color:var(--muted)">vs</span> ${e.away}</span>
+      <span style="flex:1;font-size:11px;color:var(--muted)">${e.dateIso}</span>
+      <span style="flex:3;font-size:12px;font-weight:600">${e.home} <span style="color:var(--muted)">vs</span> ${e.away}</span>
       <div style="display:flex;flex-direction:column;gap:3px">
-        <input type="text" placeholder="FT z.B. 2:1" maxlength="6" class="score-ft"
-          style="width:88px;background:#1c2128;border:1px solid #a78bfa55;color:#e6edf3;border-radius:6px;padding:4px 8px;font-size:12px;text-align:center;font-family:monospace;"
+        <input type="text" placeholder="FT 2:1" maxlength="6" class="score-ft"
+          style="width:78px;background:#1c2128;border:1px solid #a78bfa55;color:#e6edf3;border-radius:6px;padding:4px 8px;font-size:12px;text-align:center;font-family:monospace;"
           oninput="this.style.borderColor=this.value.match(/^\\d+:\\d+$/)? '#a78bfa' : '#f8514944'"/>
-        <input type="text" placeholder="HZ z.B. 0:1" maxlength="6" class="score-ht"
-          style="width:88px;background:#1c2128;border:1px solid #58a6ff44;color:#8b949e;border-radius:6px;padding:4px 8px;font-size:11px;text-align:center;font-family:monospace;"
+        <input type="text" placeholder="HZ 0:1" maxlength="6" class="score-ht"
+          style="width:78px;background:#1c2128;border:1px solid #58a6ff44;color:#8b949e;border-radius:6px;padding:4px 8px;font-size:11px;text-align:center;font-family:monospace;"
           oninput="this.style.borderColor=this.value.match(/^\\d+:\\d+$/)? '#58a6ff' : 'rgba(88,166,255,0.27)'"/>
       </div>
-      <span style="font-size:11px;color:var(--muted);min-width:60px">${e.picks.length} Pick${e.picks.length>1?'s':''}</span>
-    </div>`).join('');
+      <div style="display:flex;flex-direction:column;gap:3px">
+        <input type="number" placeholder="🚩 Ecken" min="0" max="30" class="score-corners"
+          style="width:78px;background:#1c2128;border:1px solid ${needsCorners ? '#e3b34177' : '#30363d'};color:${needsCorners ? '#e3b341' : '#8b949e'};border-radius:6px;padding:4px 8px;font-size:11px;text-align:center;"
+          oninput="this.style.borderColor=this.value ?'#e3b341':'${needsCorners ? '#e3b34177' : '#30363d'}'"/>
+        <input type="number" placeholder="🟨 Karten" min="0" max="20" class="score-cards"
+          style="width:78px;background:#1c2128;border:1px solid ${needsCards ? '#f8514977' : '#30363d'};color:${needsCards ? '#f85149' : '#8b949e'};border-radius:6px;padding:4px 8px;font-size:11px;text-align:center;"
+          oninput="this.style.borderColor=this.value ?'#f85149':'${needsCards ? '#f8514977' : '#30363d'}'"/>
+      </div>
+      <span style="font-size:11px;color:var(--muted);min-width:50px">${e.picks.length} Pick${e.picks.length>1?'s':''}</span>
+    </div>`}).join('');
 
   document.getElementById('manualEntryRows').innerHTML = rows;
   panel.style.display = 'block';
@@ -6606,8 +6619,10 @@ function applyManualScores() {
   let resolved = 0, skipped = 0;
 
   document.querySelectorAll('#manualEntryRows [data-key]').forEach(row => {
-    const ftInput = row.querySelector('.score-ft');
-    const htInput = row.querySelector('.score-ht');
+    const ftInput      = row.querySelector('.score-ft');
+    const htInput      = row.querySelector('.score-ht');
+    const cornersInput = row.querySelector('.score-corners');
+    const cardsInput   = row.querySelector('.score-cards');
     const ftVal = (ftInput?.value || '').trim();
     if (!ftVal.match(/^\d+:\d+$/)) { skipped++; return; }
     const [h, a] = ftVal.split(':').map(Number);
@@ -6617,23 +6632,43 @@ function applyManualScores() {
     const htValid = htVal.match(/^\d+:\d+$/);
     const [hHT, aHT] = htValid ? htVal.split(':').map(Number) : [null, null];
 
+    // Parse corners + cards → build synthetic stats object for _determineOutcome
+    const totalCorners = parseInt(cornersInput?.value || '', 10);
+    const totalCards   = parseInt(cardsInput?.value   || '', 10);
+    const hasStats = !isNaN(totalCorners) || !isNaN(totalCards);
+    const _syntheticStats = hasStats ? [
+      { statistics: [
+          { type: 'Corner Kicks',  value: isNaN(totalCorners) ? 0 : totalCorners },
+          { type: 'Yellow Cards',  value: isNaN(totalCards)   ? 0 : totalCards },
+          { type: 'Red Cards',     value: 0 },
+      ]},
+      { statistics: [
+          { type: 'Corner Kicks',  value: 0 },
+          { type: 'Yellow Cards',  value: 0 },
+          { type: 'Red Cards',     value: 0 },
+      ]},
+    ] : null;
+
     const [dateIso, home, away] = row.dataset.key.split('|');
     const entry = picks.find(e => e.dateIso === dateIso && e.home === home && e.away === away);
     if (!entry) return;
     entry.finalScore = `${h}:${a}`;
     if (htValid) entry.htScore = `${hHT}:${aHT}`;
+    if (!isNaN(totalCorners)) entry.totalCorners = totalCorners;
+    if (!isNaN(totalCards))   entry.totalCards   = totalCards;
 
     for (const p of entry.picks) {
-      // Try with HT score first for HZ markets
       const isHZ = !!(p.market || '').toLowerCase().match(/1\. hz|halbzeit|first half|halftime| hz /);
       let outcome = null;
       if (isHZ && htValid) {
-        // For HZ markets pass isHalfTime=true so the HZ guard is bypassed
         outcome = _determineOutcome(p.market, hHT, aHT, null, true);
       }
-      if (outcome === null) outcome = _determineOutcome(p.market, h, a);
-      // Always update — this ensures previously wrong results (e.g. card picks) get corrected
-      if (outcome !== null) { p.result = outcome; p.finalScore = isHZ && htValid ? `${hHT}:${aHT} (HZ)` : `${h}:${a}`; resolved++; }
+      if (outcome === null) outcome = _determineOutcome(p.market, h, a, _syntheticStats);
+      if (outcome !== null) {
+        p.result = outcome;
+        p.finalScore = isHZ && htValid ? `${hHT}:${aHT} (HZ)` : `${h}:${a}`;
+        resolved++;
+      }
     }
   });
 
