@@ -10,7 +10,10 @@ import json
 import re
 import os
 import sys
+import time
+import http.client
 from datetime import datetime, timedelta
+from pathlib import Path
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -18,17 +21,17 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_FILE  = os.path.join(SCRIPT_DIR, "season-finish.html")
 
 LEAGUES = {
-    "ENG": dict(tid=17,  name="Premier League",  flag="🏴󠁧󠁢󠁥󠁮󠁧󠁿", total=20, rounds=38, ucl=4, el=2, uecl=1, rel_playoff=0, rel=3),
-    "GER": dict(tid=35,  name="Bundesliga",       flag="🇩🇪",         total=18, rounds=34, ucl=4, el=2, uecl=1, rel_playoff=1, rel=2),
-    "ITA": dict(tid=23,  name="Serie A",          flag="🇮🇹",         total=20, rounds=38, ucl=4, el=2, uecl=1, rel_playoff=0, rel=3),
-    "ESP": dict(tid=8,   name="La Liga",          flag="🇪🇸",         total=20, rounds=38, ucl=4, el=2, uecl=1, rel_playoff=0, rel=3),
-    "FRA": dict(tid=34,  name="Ligue 1",          flag="🇫🇷",         total=18, rounds=34, ucl=3, el=2, uecl=1, rel_playoff=1, rel=2),
-    "AUT": dict(tid=45,  name="Österreich BL",    flag="🇦🇹",         total=12, rounds=32, ucl=2, el=1, uecl=0, rel_playoff=1, rel=2),
-    "NED": dict(tid=37,  name="Eredivisie",       flag="🇳🇱",         total=18, rounds=34, ucl=2, el=2, uecl=0, rel_playoff=2, rel=1),
-    "POR": dict(tid=238, name="Primeira Liga",    flag="🇵🇹",         total=18, rounds=34, ucl=3, el=2, uecl=1, rel_playoff=1, rel=2),
-    "SCO": dict(tid=36,  name="Scottish Prem",    flag="🏴󠁧󠁢󠁳󠁣󠁴󠁿", total=12, rounds=38, ucl=2, el=2, uecl=0, rel_playoff=1, rel=1),
-    "TUR": dict(tid=52,  name="Süper Lig",        flag="🇹🇷",         total=19, rounds=38, ucl=2, el=2, uecl=1, rel_playoff=0, rel=3),
-    "SUI": dict(tid=57,  name="Swiss SL",         flag="🇨🇭",         total=10, rounds=36, ucl=1, el=1, uecl=0, rel_playoff=1, rel=1),
+    "ENG": dict(tid=17,  apif_id=39,  name="Premier League",  flag="🏴󠁧󠁢󠁥󠁮󠁧󠁿", total=20, rounds=38, ucl=4, el=2, uecl=1, rel_playoff=0, rel=3),
+    "GER": dict(tid=35,  apif_id=78,  name="Bundesliga",       flag="🇩🇪",         total=18, rounds=34, ucl=4, el=2, uecl=1, rel_playoff=1, rel=2),
+    "ITA": dict(tid=23,  apif_id=135, name="Serie A",          flag="🇮🇹",         total=20, rounds=38, ucl=4, el=2, uecl=1, rel_playoff=0, rel=3),
+    "ESP": dict(tid=8,   apif_id=140, name="La Liga",          flag="🇪🇸",         total=20, rounds=38, ucl=4, el=2, uecl=1, rel_playoff=0, rel=3),
+    "FRA": dict(tid=34,  apif_id=61,  name="Ligue 1",          flag="🇫🇷",         total=18, rounds=34, ucl=3, el=2, uecl=1, rel_playoff=1, rel=2),
+    "AUT": dict(tid=45,  apif_id=144, name="Österreich BL",    flag="🇦🇹",         total=12, rounds=32, ucl=2, el=1, uecl=0, rel_playoff=1, rel=2),
+    "NED": dict(tid=37,  apif_id=88,  name="Eredivisie",       flag="🇳🇱",         total=18, rounds=34, ucl=2, el=2, uecl=0, rel_playoff=2, rel=1),
+    "POR": dict(tid=238, apif_id=94,  name="Primeira Liga",    flag="🇵🇹",         total=18, rounds=34, ucl=3, el=2, uecl=1, rel_playoff=1, rel=2),
+    "SCO": dict(tid=36,  apif_id=179, name="Scottish Prem",    flag="🏴󠁧󠁢󠁳󠁣󠁴󠁿", total=12, rounds=38, ucl=2, el=2, uecl=0, rel_playoff=1, rel=1),
+    "TUR": dict(tid=52,  apif_id=203, name="Süper Lig",        flag="🇹🇷",         total=19, rounds=38, ucl=2, el=2, uecl=1, rel_playoff=0, rel=3),
+    "SUI": dict(tid=57,  apif_id=207, name="Swiss SL",         flag="🇨🇭",         total=10, rounds=36, ucl=1, el=1, uecl=0, rel_playoff=1, rel=1),
 }
 
 HEADERS = {
@@ -38,6 +41,36 @@ HEADERS = {
     "Origin": "https://www.sofascore.com",
     "x-requested-with": "XMLHttpRequest",
 }
+
+# ── API-Football ─────────────────────────────────────────────────────────────
+
+APIF_HOST = "v3.football.api-sports.io"
+APIF_KEY  = os.environ.get("APISPORTS_KEY", "")
+APIF_DELAY = 1.2  # seconds between calls (Pro plan rate limit)
+
+def apif_get(endpoint, params):
+    """Fetch from API-Football with rate limiting."""
+    if not APIF_KEY:
+        print("  ⚠ APISPORTS_KEY not set")
+        return []
+    query = "&".join(f"{k}={v}" for k, v in params.items())
+    path = f"/{endpoint}?{query}"
+    try:
+        conn = http.client.HTTPSConnection(APIF_HOST, timeout=15)
+        conn.request("GET", path, headers={"x-apisports-key": APIF_KEY})
+        resp = conn.getresponse()
+        data = json.loads(resp.read().decode())
+        conn.close()
+        errors = data.get("errors", {})
+        if isinstance(errors, dict) and errors:
+            print(f"  ⚠ API-Football error on /{endpoint}: {errors}")
+            return []
+        return data.get("response", [])
+    except Exception as e:
+        print(f"  ⚠ apif_get /{endpoint} error: {e}")
+        return []
+    finally:
+        time.sleep(APIF_DELAY)
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -64,6 +97,13 @@ def fmt_date(ts):
     d = datetime.fromtimestamp(ts)
     return f"{d.day:02d}.{d.month:02d}.{d.year}"
 
+def fmt_date_from_iso(iso_str):
+    """Convert YYYY-MM-DD to DD.MM.YYYY"""
+    if not iso_str or len(iso_str) < 10:
+        return iso_str
+    y, m, d = iso_str[:10].split("-")
+    return f"{d}.{m}.{y}"
+
 def fmt_time(ts):
     d = datetime.fromtimestamp(ts)
     return f"{d.hour:02d}:{d.minute:02d}"
@@ -85,38 +125,41 @@ def german_date(dt=None):
 
 # ── Historical data ───────────────────────────────────────────────────────────
 
-def fetch_team_form(team_id):
-    """Fetch last 6 finished games for a team → form string + metrics."""
-    data = fetch(f"https://api.sofascore.com/api/v1/team/{team_id}/events/last/0")
-    if not data or not data.get("events"):
+def fetch_team_form(team_id, season=2025):
+    """Fetch last 10 finished games → form string + metrics (API-Football)."""
+    resp = apif_get("fixtures", {"team": team_id, "season": season, "last": 10})
+    if not resp:
+        # Try season fallback
+        resp = apif_get("fixtures", {"team": team_id, "season": season + 1, "last": 10})
+    if not resp:
         return None
 
-    events = sorted(data["events"], key=lambda e: e.get("startTimestamp", 0))
-    results, gf_list, ga_list = [], [], []
+    finished = [fx for fx in resp
+                if fx.get("fixture", {}).get("status", {}).get("short") in
+                   ("FT", "AET", "PEN", "AWD", "WO")]
+    finished.sort(key=lambda fx: fx["fixture"].get("timestamp", 0))
 
-    for e in events:
-        if e.get("status", {}).get("type") != "finished":
-            continue
-        hs  = (e.get("homeScore") or {}).get("current") or 0
-        as_ = (e.get("awayScore") or {}).get("current") or 0
-        is_home = e["homeTeam"]["id"] == team_id
-        gf = hs if is_home else as_
-        ga = as_ if is_home else hs
-        gf_list.append(gf); ga_list.append(ga)
+    results, gf_list, ga_list = [], [], []
+    for fx in finished:
+        is_home = fx["teams"]["home"]["id"] == team_id
+        gf = (fx["goals"]["home"] if is_home else fx["goals"]["away"]) or 0
+        ga = (fx["goals"]["away"] if is_home else fx["goals"]["home"]) or 0
+        gf_list.append(gf)
+        ga_list.append(ga)
         results.append("W" if gf > ga else ("D" if gf == ga else "L"))
 
-    results = results[-6:]  # keep last 6
+    results = results[-6:]
     if not results:
         return None
 
-    # Streak: count consecutive same result from the end
+    # Streak (same as original logic)
     streak = 1
     for i in range(len(results) - 2, -1, -1):
         if results[i] == results[-1]:
             streak += 1
         else:
             break
-    if results[-1] == "L": streak = -streak
+    if results[-1] == "L":   streak = -streak
     elif results[-1] == "D": streak = 0
 
     pts     = sum(3 if r == "W" else (1 if r == "D" else 0) for r in results)
@@ -126,8 +169,8 @@ def fetch_team_form(team_id):
         "form":            "".join(results),
         "formScore":       round(pts / max_pts, 2) if max_pts else 0.5,
         "streak":          streak,
-        "goalsPerGame":    round(sum(gf_list[-6:]) / len(gf_list[-6:]), 1) if gf_list else 0,
-        "concededPerGame": round(sum(ga_list[-6:]) / len(ga_list[-6:]), 1) if ga_list else 0,
+        "goalsPerGame":    round(sum(gf_list[-6:]) / len(gf_list[-6:]), 1) if gf_list else 0.0,
+        "concededPerGame": round(sum(ga_list[-6:]) / len(ga_list[-6:]), 1) if ga_list else 0.0,
     }
 
 
@@ -194,30 +237,54 @@ def fetch_team_injuries(team_id):
     }
 
 
-def fetch_h2h(event_id):
-    """Fetch H2H stats for a given upcoming event.
-    Sofascore returns aggregate wins/draws/losses in teamDuel — no per-match data.
-    """
-    data = fetch(f"https://api.sofascore.com/api/v1/event/{event_id}/h2h")
-    if not data:
+def fetch_h2h(home_id, away_id):
+    """Fetch H2H stats using API-Football headtohead endpoint."""
+    resp = apif_get("fixtures/headtohead", {"h2h": f"{home_id}-{away_id}", "last": 10})
+    if not resp:
         return None
 
-    td = data.get("teamDuel")
-    if not td:
-        return None
+    home_wins, away_wins, draws = 0, 0, 0
+    total_goals = []
+    last_year = None
 
-    home_wins = td.get("homeWins", 0)
-    draws     = td.get("draws",    0)
-    away_wins = td.get("awayWins", 0)
-    n = home_wins + draws + away_wins
+    for fx in resp:
+        status = fx.get("fixture", {}).get("status", {}).get("short", "")
+        if status not in ("FT", "AET", "PEN"):
+            continue
+        h_id  = fx["teams"]["home"]["id"]
+        h_win = fx["teams"]["home"].get("winner")
+        a_win = fx["teams"]["away"].get("winner")
+        # perspective: home_id is "home" team in our fixture
+        if h_id == home_id:
+            if h_win:   home_wins += 1
+            elif a_win: away_wins += 1
+            else:       draws += 1
+        else:
+            if a_win:   home_wins += 1
+            elif h_win: away_wins += 1
+            else:       draws += 1
+
+        gh = fx["goals"]["home"] or 0
+        ga = fx["goals"]["away"] or 0
+        total_goals.append(gh + ga)
+
+        ts = fx["fixture"].get("timestamp", 0)
+        if ts:
+            year = datetime.fromtimestamp(ts).year
+            if last_year is None or year > last_year:
+                last_year = year
+
+    n = home_wins + away_wins + draws
     if n == 0:
         return None
 
     return {
-        "games":    n,
-        "homeWins": home_wins,
-        "draws":    draws,
-        "awayWins": away_wins,
+        "games":           n,
+        "homeWins":        home_wins,
+        "draws":           draws,
+        "awayWins":        away_wins,
+        "avgGoals":        round(sum(total_goals) / n, 2) if total_goals else 2.5,
+        "lastMeetingYear": last_year,
     }
 
 
@@ -527,70 +594,84 @@ def calc_match_score(home_stake, away_stake, h2h=None):
 
 def fetch_league(key, cfg):
     print(f"\n  {cfg['flag']} {cfg['name']}...")
-    tid = cfg["tid"]
-
-    seasons_data = fetch(f"https://api.sofascore.com/api/v1/unique-tournament/{tid}/seasons")
-    if not seasons_data:
-        return None
-    sid = seasons_data["seasons"][0]["id"]
-
-    stand_data = fetch(f"https://api.sofascore.com/api/v1/unique-tournament/{tid}/season/{sid}/standings/total")
-    if not stand_data or not stand_data.get("standings"):
+    apif_id = cfg.get("apif_id")
+    if not apif_id:
+        print(f"  ⚠ Kein apif_id für {key} — übersprungen")
         return None
 
-    rows = stand_data["standings"][0]["rows"]
-    standings = [
-        {
-            "pos":    r["position"],
-            "team":   r["team"]["name"],
-            "teamId": r["team"]["id"],           # ← store team ID for form fetch
-            "pts":    r["points"],
-            "played": r["matches"],
-            "gd":     r["scoresFor"] - r["scoresAgainst"],
-        }
-        for r in rows
-    ]
+    # ── Standings ────────────────────────────────────────────────────────────
+    standings = []
+    for season in [2025, 2026]:
+        resp = apif_get("standings", {"league": apif_id, "season": season})
+        if resp:
+            rows = resp[0].get("league", {}).get("standings", [[]])[0]
+            standings = [
+                {
+                    "pos":    r["rank"],
+                    "team":   r["team"]["name"],
+                    "teamId": r["team"]["id"],
+                    "pts":    r["points"],
+                    "played": r["all"]["played"],
+                    "gd":     r["goalsDiff"],
+                }
+                for r in rows
+            ]
+            if standings:
+                break
 
-    # Fetch next 2 rounds of fixtures (keep event IDs for H2H)
+    if not standings:
+        print(f"  ⚠ Keine Standings für {cfg['name']}")
+        return None
+
+    # ── Upcoming fixtures (next 14 days) ─────────────────────────────────────
+    today     = datetime.now()
+    date_from = today.strftime("%Y-%m-%d")
+    date_to   = (today + timedelta(days=14)).strftime("%Y-%m-%d")
+
     fixtures_raw = []
-    for page in [0, 1]:
-        data = fetch(f"https://api.sofascore.com/api/v1/unique-tournament/{tid}/season/{sid}/events/next/{page}")
-        if data and data.get("events"):
-            fixtures_raw.extend(data["events"])
+    for season in [2025, 2026]:
+        resp = apif_get("fixtures", {
+            "league":   apif_id,
+            "season":   season,
+            "from":     date_from,
+            "to":       date_to,
+            "timezone": "Europe/Vienna",
+            "status":   "NS-TBD",
+        })
+        if resp:
+            fixtures_raw = resp
+            break
 
-    fixtures = [
-        {
-            "date":    fmt_date(e["startTimestamp"]),
-            "time":    fmt_time(e["startTimestamp"]),
-            "home":    e["homeTeam"]["name"],
-            "away":    e["awayTeam"]["name"],
-            "eventId": e["id"],
-        }
-        for e in fixtures_raw
-    ]
+    fixtures = []
+    for fx in fixtures_raw:
+        raw_date = fx["fixture"].get("date", "")
+        fixtures.append({
+            "date":   fmt_date_from_iso(raw_date[:10]) if raw_date else "",
+            "time":   raw_date[11:16] if len(raw_date) >= 16 else None,
+            "home":   fx["teams"]["home"]["name"],
+            "away":   fx["teams"]["away"]["name"],
+            "homeId": fx["teams"]["home"]["id"],
+            "awayId": fx["teams"]["away"]["id"],
+            "eventId": fx["fixture"]["id"],
+        })
 
     max_played  = max(t["played"] for t in standings) if standings else 0
     rounds_left = max(0, cfg["rounds"] - max_played)
 
-    # ── Pre-fetch form + injuries for teams that have stakes ─────────────────
-    print(f"    Fetching form + injury data...")
-    form_cache = {}   # team_name → form dict (includes injuries when available)
+    # ── Form for stake teams ──────────────────────────────────────────────────
+    print(f"    Fetching form data for stake teams...")
+    form_cache = {}
     for t in standings:
         labels = calc_labels(t, standings, cfg)
         if not labels:
             continue
         fd = fetch_team_form(t["teamId"])
         if fd:
-            # Attach current injury data to form dict
-            inj = fetch_team_injuries(t["teamId"])
-            if inj:
-                fd["injuries"] = inj
-                print(f"      {t['team']}: 🏥 {inj['attack']} Angriff / {inj['defense']} Abwehr Ausfälle")
             form_cache[t["team"]] = fd
             streak_str = f"+{fd['streak']}" if fd["streak"] > 0 else str(fd["streak"])
             print(f"      {t['team']}: {fd['form']}  streak={streak_str}  fs={fd['formScore']}")
 
-    # ── Stake teams (with form) ───────────────────────────────────────────────
+    # ── Stake teams ───────────────────────────────────────────────────────────
     stake_teams = []
     for t in standings:
         labels = calc_labels(t, standings, cfg)
@@ -609,25 +690,41 @@ def fetch_league(key, cfg):
                 "canDraw":       pressure["canDraw"],
             })
 
-    # ── Stake fixtures (with form + H2H) ─────────────────────────────────────
-    stand_map = {norm(t["team"]): t for t in standings}
+    # ── Stake fixtures ────────────────────────────────────────────────────────
+    # Build a teamId lookup from standings
+    id_map = {t["team"]: t["teamId"] for t in standings}
 
-    def find_team(name):
+    # Also build by norm for fuzzy matching
+    norm_id_map = {norm(t["team"]): t["teamId"] for t in standings}
+
+    def find_team_id(name):
+        if name in id_map:
+            return id_map[name]
         n = norm(name)
-        if n in stand_map:
-            return stand_map[n]
-        for k, v in stand_map.items():
+        if n in norm_id_map:
+            return norm_id_map[n]
+        for k, v in norm_id_map.items():
             if n in k or k in n:
                 return v
-            words = [w for w in n.split() if len(w) > 3]
-            if any(w in k for w in words):
+        return None
+
+    def find_team_data(name):
+        stand_map = {t["team"]: t for t in standings}
+        norm_stand = {norm(t["team"]): t for t in standings}
+        if name in stand_map:
+            return stand_map[name]
+        n = norm(name)
+        if n in norm_stand:
+            return norm_stand[n]
+        for k, v in norm_stand.items():
+            if n in k or k in n:
                 return v
         return None
 
     stake_fixtures = []
     for f in fixtures:
-        ht = find_team(f["home"])
-        at = find_team(f["away"])
+        ht = find_team_data(f["home"])
+        at = find_team_data(f["away"])
         if not ht or not at:
             continue
         h_labels = calc_labels(ht, standings, cfg)
@@ -655,10 +752,14 @@ def fetch_league(key, cfg):
                       "mustWin": a_pressure.get("mustWin", False),
                       "canDraw": a_pressure.get("canDraw", True)} if a_labels else None
 
-        # Fetch H2H
-        h2h = fetch_h2h(f["eventId"]) if f.get("eventId") else None
-        if h2h:
-            print(f"      H2H {f['home']} vs {f['away']}: {h2h['homeWins']}H {h2h['draws']}X {h2h['awayWins']}A ({h2h['games']}G)")
+        # H2H using API-Football team IDs
+        home_id = f.get("homeId") or find_team_id(f["home"])
+        away_id = f.get("awayId") or find_team_id(f["away"])
+        h2h = None
+        if home_id and away_id:
+            h2h = fetch_h2h(home_id, away_id)
+            if h2h:
+                print(f"      H2H {f['home']} vs {f['away']}: {h2h['homeWins']}H {h2h['draws']}X {h2h['awayWins']}A ({h2h['games']}G)")
 
         ms = calc_match_score(home_stake, away_stake, h2h)
         if ms < 5:
@@ -742,7 +843,7 @@ def main():
     print("  BetEdge Dashboard — Daten-Update")
     print(f"  {datetime.now().strftime('%d.%m.%Y %H:%M')}")
     print("=" * 60)
-    print("\nFetching Sofascore data...")
+    print("\nFetching API-Football data...")
 
     results = {}
     for key, cfg in LEAGUES.items():
