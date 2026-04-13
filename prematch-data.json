@@ -1,5 +1,5 @@
 {
-  "ts": 1776087593667,
+  "ts": 1776097452728,
   "fixtures": [
     {
       "fixtureId": 1378175,
@@ -10,6 +10,7 @@
       "referee": "Andrea Colombo, Italy",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "18:00",
       "injuries": {
         "home": [
           {
@@ -189,24 +190,7 @@
           "impactScore": 1.5
         }
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 7,
-        "draws": 3,
-        "awayWins": 0,
-        "lastMeetingYear": 2026,
-        "avgGoals": 3,
-        "over25Rate": 0.5,
-        "over35Rate": 0.5,
-        "bttsRate": 0.5,
-        "lastResults": [
-          "W",
-          "D",
-          "D",
-          "W",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null
     },
@@ -219,6 +203,7 @@
       "referee": "Davide Massa, Italy",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "20:45",
       "injuries": {
         "home": [
           {
@@ -311,6 +296,7 @@
       "referee": "M. Fabbri",
       "refereeStats": null,
       "date": "2026-04-13",
+      "time": "20:45",
       "injuries": {
         "home": [
           {
@@ -320,10 +306,22 @@
             "reason": "Yellow Cards"
           },
           {
+            "player": "N. Fortini",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Back Injury"
+          },
+          {
             "player": "A. Gudmundsson",
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Red Card"
+          },
+          {
+            "player": "M. Kean",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Calf Injury"
           },
           {
             "player": "T. Lamptey",
@@ -332,28 +330,10 @@
             "reason": "Knee Injury"
           },
           {
-            "player": "N. Fortini",
-            "position": "D",
-            "type": "Questionable",
-            "reason": "Back Injury"
-          },
-          {
-            "player": "M. Kean",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Calf Injury"
-          },
-          {
             "player": "F. Parisi",
             "position": "D",
-            "type": "Questionable",
+            "type": "Missing Fixture",
             "reason": "Inactive"
-          },
-          {
-            "player": "M. Solomon",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Muscle Injury"
           }
         ],
         "away": [
@@ -392,44 +372,25 @@
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Broken collarbone"
-          },
-          {
-            "player": "Patric",
-            "position": "D",
-            "type": "Questionable",
-            "reason": "Inactive"
-          },
-          {
-            "player": "L. Pellegrini",
-            "position": "D",
-            "type": "Questionable",
-            "reason": "Inactive"
-          },
-          {
-            "player": "M. Zaccagni",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Thigh Injury"
           }
         ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 3,
+          "defense": 2,
+          "midfield": 4,
           "attack": 0,
-          "confirmed": 3,
-          "questionable": 4,
-          "total": 7,
+          "confirmed": 6,
+          "questionable": 0,
+          "total": 6,
           "notes": [
             "N. Fagioli (Gesperrt/Verletzt — Yellow Cards)",
+            "N. Fortini (Gesperrt/Verletzt — Back Injury)",
             "A. Gudmundsson (Gesperrt/Verletzt — Red Card)",
+            "M. Kean (Gesperrt/Verletzt — Calf Injury)",
             "T. Lamptey (Gesperrt/Verletzt — Knee Injury)",
-            "N. Fortini (Fraglich — Back Injury)",
-            "M. Kean (Fraglich — Calf Injury)",
-            "F. Parisi (Fraglich — Inactive)",
-            "M. Solomon (Fraglich — Muscle Injury)"
+            "F. Parisi (Gesperrt/Verletzt — Inactive)"
           ],
           "_raw": [
             {
@@ -439,10 +400,22 @@
               "reason": "Yellow Cards"
             },
             {
+              "player": "N. Fortini",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Back Injury"
+            },
+            {
               "player": "A. Gudmundsson",
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Red Card"
+            },
+            {
+              "player": "M. Kean",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Calf Injury"
             },
             {
               "player": "T. Lamptey",
@@ -451,31 +424,13 @@
               "reason": "Knee Injury"
             },
             {
-              "player": "N. Fortini",
-              "position": "D",
-              "type": "Questionable",
-              "reason": "Back Injury"
-            },
-            {
-              "player": "M. Kean",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Calf Injury"
-            },
-            {
               "player": "F. Parisi",
               "position": "D",
-              "type": "Questionable",
+              "type": "Missing Fixture",
               "reason": "Inactive"
-            },
-            {
-              "player": "M. Solomon",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Muscle Injury"
             }
           ],
-          "impactScore": 1.9
+          "impactScore": 2.4
         },
         "away": {
           "goalkeeper": 1,
@@ -483,18 +438,15 @@
           "midfield": 3,
           "attack": 0,
           "confirmed": 6,
-          "questionable": 3,
-          "total": 9,
+          "questionable": 0,
+          "total": 6,
           "notes": [
             "S. Gigot (Gesperrt/Verletzt — Ankle Injury)",
             "M. Gila (Gesperrt/Verletzt — Knee Injury)",
             "D. Maldini (Gesperrt/Verletzt — Foot Injury)",
             "A. Marusic (Gesperrt/Verletzt — Muscle Injury)",
             "I. Provedel (Gesperrt/Verletzt — Shoulder Injury)",
-            "N. Rovella (Gesperrt/Verletzt — Broken collarbone)",
-            "Patric (Fraglich — Inactive)",
-            "L. Pellegrini (Fraglich — Inactive)",
-            "M. Zaccagni (Fraglich — Thigh Injury)"
+            "N. Rovella (Gesperrt/Verletzt — Broken collarbone)"
           ],
           "_raw": [
             {
@@ -532,27 +484,9 @@
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Broken collarbone"
-            },
-            {
-              "player": "Patric",
-              "position": "D",
-              "type": "Questionable",
-              "reason": "Inactive"
-            },
-            {
-              "player": "L. Pellegrini",
-              "position": "D",
-              "type": "Questionable",
-              "reason": "Inactive"
-            },
-            {
-              "player": "M. Zaccagni",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Thigh Injury"
             }
           ],
-          "impactScore": 4
+          "impactScore": 3.2
         }
       },
       "h2h": {
@@ -577,10 +511,10 @@
       "odds": {
         "hw": 2.3,
         "dr": 3.2,
-        "aw": 3.4,
+        "aw": 3.3,
         "o15": 1.36,
-        "o25": 2.2,
-        "u25": 1.67,
+        "o25": 2.1,
+        "u25": 1.73,
         "o35": 4,
         "u35": 1.25,
         "bttsY": 1.91,
@@ -588,8 +522,8 @@
         "dc1X_bkr": 1.33,
         "dcX2_bkr": 1.57,
         "cards_o55": 1.98,
-        "cards_o45": 1.55,
-        "cards_u45": 2.28,
+        "cards_o45": 1.56,
+        "cards_u45": 2.23,
         "cards_o35": 3.39,
         "cards_u35": 1.25
       }
@@ -603,6 +537,7 @@
       "referee": "Antonio Rapuano, Italy",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "12:30",
       "injuries": {
         "home": [
           {
@@ -760,6 +695,7 @@
       "referee": "Marco Di Bello, Italy",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "15:00",
       "injuries": {
         "home": [
           {
@@ -930,6 +866,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "12:30",
       "injuries": {
         "home": [],
         "away": [
@@ -1019,6 +956,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-17",
+      "time": "20:45",
       "injuries": {
         "home": [],
         "away": []
@@ -1092,6 +1030,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "20:45",
       "injuries": {
         "home": [],
         "away": []
@@ -1165,6 +1104,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-20",
+      "time": "20:45",
       "injuries": {
         "home": [
           {
@@ -1254,6 +1194,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "18:00",
       "injuries": {
         "home": [],
         "away": []
@@ -1327,6 +1268,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "18:00",
       "injuries": {
         "home": [],
         "away": []
@@ -1398,6 +1340,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "20:45",
       "injuries": {
         "home": [
           {
@@ -1475,7 +1418,7 @@
         "bttsY": 1.75,
         "bttsN": 2,
         "dc1X_bkr": 1.36,
-        "dcX2_bkr": 1.67
+        "dcX2_bkr": 1.62
       }
     },
     {
@@ -1487,6 +1430,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-17",
+      "time": "18:30",
       "injuries": {
         "home": [],
         "away": []
@@ -1557,6 +1501,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "15:00",
       "injuries": {
         "home": [],
         "away": []
@@ -1630,6 +1575,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "15:00",
       "injuries": {
         "home": [],
         "away": []
@@ -1703,6 +1649,7 @@
       "referee": "Chris Kavanagh, England",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "17:30",
       "injuries": {
         "home": [
           {
@@ -1899,6 +1846,7 @@
       "referee": "Andy Madley, England",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "15:00",
       "injuries": {
         "home": [
           {
@@ -2043,6 +1991,7 @@
       "referee": "P. Tierney",
       "refereeStats": null,
       "date": "2026-04-13",
+      "time": "21:00",
       "injuries": {
         "home": [
           {
@@ -2244,6 +2193,7 @@
       "referee": "Michael Salisbury, England",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "15:00",
       "injuries": {
         "home": [
           {
@@ -2401,6 +2351,7 @@
       "referee": "Robert Jones, England",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "15:00",
       "injuries": {
         "home": [
           {
@@ -2636,6 +2587,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "15:00",
       "injuries": {
         "home": [],
         "away": [
@@ -2725,6 +2677,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "13:30",
       "injuries": {
         "home": [],
         "away": []
@@ -2798,6 +2751,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "21:00",
       "injuries": {
         "home": [],
         "away": []
@@ -2871,6 +2825,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-20",
+      "time": "21:00",
       "injuries": {
         "home": [],
         "away": []
@@ -2944,6 +2899,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "15:00",
       "injuries": {
         "home": [],
         "away": []
@@ -3017,6 +2973,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "16:00",
       "injuries": {
         "home": [],
         "away": []
@@ -3067,16 +3024,16 @@
       },
       "isFinished": false,
       "odds": {
-        "hw": 1.62,
-        "dr": 3.7,
-        "aw": 5.75,
+        "hw": 1.6,
+        "dr": 3.75,
+        "aw": 6,
         "o15": 1.28,
         "o25": 1.91,
         "u25": 1.91,
         "o35": 3.2,
         "u35": 1.36,
-        "bttsY": 1.91,
-        "bttsN": 1.91,
+        "bttsY": 1.95,
+        "bttsN": 1.8,
         "dc1X_bkr": 1.14,
         "dcX2_bkr": 2.25
       }
@@ -3090,6 +3047,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "17:30",
       "injuries": {
         "home": [],
         "away": []
@@ -3163,6 +3121,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "16:00",
       "injuries": {
         "home": [],
         "away": []
@@ -3236,6 +3195,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "15:00",
       "injuries": {
         "home": [],
         "away": []
@@ -3309,6 +3269,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "18:30",
       "injuries": {
         "home": [],
         "away": []
@@ -3382,6 +3343,7 @@
       "referee": "Marc Nagtegaal, Netherlands",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "16:45",
       "injuries": {
         "home": [
           {
@@ -3526,6 +3488,7 @@
       "referee": "Serdar Gozubuyuk, Netherlands",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "14:30",
       "injuries": {
         "home": [],
         "away": [
@@ -3706,6 +3669,7 @@
       "referee": "Jeroen Manschot, Netherlands",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "12:15",
       "injuries": {
         "home": [
           {
@@ -3860,6 +3824,7 @@
       "referee": "Rob Dieperink, Netherlands",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "14:30",
       "injuries": {
         "home": [
           {
@@ -4004,6 +3969,7 @@
       "referee": "D. Robertson",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "13:00",
       "injuries": {
         "home": [],
         "away": []
@@ -4064,6 +4030,7 @@
       "referee": "Benoît Bastien, France",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "20:45",
       "injuries": {
         "home": [
           {
@@ -4273,6 +4240,7 @@
       "referee": "Abdelatif Kherradji, France",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "17:15",
       "injuries": {
         "home": [
           {
@@ -4417,6 +4385,7 @@
       "referee": "Hakim Ben el Salem Hadj, France",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "17:15",
       "injuries": {
         "home": [
           {
@@ -4574,6 +4543,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "19:00",
       "injuries": {
         "home": [],
         "away": []
@@ -4647,6 +4617,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-17",
+      "time": "20:45",
       "injuries": {
         "home": [],
         "away": []
@@ -4720,6 +4691,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "21:05",
       "injuries": {
         "home": [],
         "away": []
@@ -4793,6 +4765,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "17:00",
       "injuries": {
         "home": [],
         "away": []
@@ -4866,6 +4839,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "17:15",
       "injuries": {
         "home": [],
         "away": []
@@ -4939,6 +4913,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "15:00",
       "injuries": {
         "home": [],
         "away": []
@@ -5012,6 +4987,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "17:15",
       "injuries": {
         "home": [],
         "away": []
@@ -5085,6 +5061,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "20:45",
       "injuries": {
         "home": [],
         "away": [
@@ -5174,6 +5151,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "17:15",
       "injuries": {
         "home": [],
         "away": []
@@ -5247,6 +5225,7 @@
       "referee": "Tobias Reichel, Germany",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "15:30",
       "injuries": {
         "home": [
           {
@@ -5456,6 +5435,7 @@
       "referee": "Felix Zwayer, Germany",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "19:30",
       "injuries": {
         "home": [
           {
@@ -5665,157 +5645,35 @@
       "referee": "Sven Jablonski, Germany",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "17:30",
       "injuries": {
-        "home": [
-          {
-            "player": "L. Jovanovic",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Back Injury"
-          },
-          {
-            "player": "A. Karazor",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Yellow Cards"
-          }
-        ],
-        "away": [
-          {
-            "player": "J. Dompe",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Foot Injury"
-          },
-          {
-            "player": "B. Jatta",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Hamstring Injury"
-          },
-          {
-            "player": "A. S. Lokonga",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Thigh Injury"
-          },
-          {
-            "player": "M. Muheim",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Red Card"
-          },
-          {
-            "player": "Y. Poulsen",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Thigh Injury"
-          },
-          {
-            "player": "A. Rossing-Lelesiit",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Ankle Injury"
-          },
-          {
-            "player": "L. Vuskovic",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 2,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 2,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 2,
-          "notes": [
-            "L. Jovanovic (Gesperrt/Verletzt — Back Injury)",
-            "A. Karazor (Gesperrt/Verletzt — Yellow Cards)"
-          ],
-          "_raw": [
-            {
-              "player": "L. Jovanovic",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Back Injury"
-            },
-            {
-              "player": "A. Karazor",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Yellow Cards"
-            }
-          ],
-          "impactScore": 0.6
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 2,
-          "midfield": 5,
+          "defense": 0,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 7,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 7,
-          "notes": [
-            "J. Dompe (Gesperrt/Verletzt — Foot Injury)",
-            "B. Jatta (Gesperrt/Verletzt — Hamstring Injury)",
-            "A. S. Lokonga (Gesperrt/Verletzt — Thigh Injury)",
-            "M. Muheim (Gesperrt/Verletzt — Red Card)",
-            "Y. Poulsen (Gesperrt/Verletzt — Thigh Injury)",
-            "A. Rossing-Lelesiit (Gesperrt/Verletzt — Ankle Injury)",
-            "L. Vuskovic (Gesperrt/Verletzt — Knee Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "J. Dompe",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Foot Injury"
-            },
-            {
-              "player": "B. Jatta",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Hamstring Injury"
-            },
-            {
-              "player": "A. S. Lokonga",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Thigh Injury"
-            },
-            {
-              "player": "M. Muheim",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Red Card"
-            },
-            {
-              "player": "Y. Poulsen",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Thigh Injury"
-            },
-            {
-              "player": "A. Rossing-Lelesiit",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Ankle Injury"
-            },
-            {
-              "player": "L. Vuskovic",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            }
-          ],
-          "impactScore": 2.7
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
       "h2h": {
@@ -5848,6 +5706,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "15:30",
       "injuries": {
         "home": [],
         "away": []
@@ -5921,6 +5780,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "17:30",
       "injuries": {
         "home": [],
         "away": []
@@ -5994,6 +5854,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "19:30",
       "injuries": {
         "home": [],
         "away": []
@@ -6067,6 +5928,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "18:30",
       "injuries": {
         "home": [],
         "away": []
@@ -6140,6 +6002,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "15:30",
       "injuries": {
         "home": [],
         "away": []
@@ -6213,6 +6076,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "15:30",
       "injuries": {
         "home": [],
         "away": []
@@ -6286,6 +6150,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-17",
+      "time": "20:30",
       "injuries": {
         "home": [],
         "away": []
@@ -6359,6 +6224,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "15:30",
       "injuries": {
         "home": [],
         "away": []
@@ -6432,6 +6298,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "15:30",
       "injuries": {
         "home": [],
         "away": []
@@ -6505,6 +6372,7 @@
       "referee": "Jose Luis Guzman Mansilla, Spain",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "21:00",
       "injuries": {
         "home": [
           {
@@ -6675,6 +6543,7 @@
       "referee": "Miguel Angel Ortiz Arias, Spain",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "18:30",
       "injuries": {
         "home": [
           {
@@ -6843,6 +6712,7 @@
       "referee": "A. Quintero",
       "refereeStats": null,
       "date": "2026-04-13",
+      "time": "21:00",
       "injuries": {
         "home": [
           {
@@ -6992,6 +6862,7 @@
       "referee": "Jesus Gil Manzano, Spain",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "16:15",
       "injuries": {
         "home": [
           {
@@ -7149,6 +7020,7 @@
       "referee": "Miguel Sesma Espinosa, Spain",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "14:00",
       "injuries": {
         "home": [
           {
@@ -7290,9 +7162,10 @@
       "awayTeamName": "Samsunspor",
       "homeTeamId": 3588,
       "awayTeamId": 3603,
-      "referee": "Y. Kol",
+      "referee": "Yasin Kol, Türkiye",
       "refereeStats": null,
       "date": "2026-04-13",
+      "time": "19:00",
       "injuries": {
         "home": [
           {
@@ -7466,22 +7339,22 @@
       },
       "isFinished": false,
       "odds": {
-        "hw": 4.2,
+        "hw": 4,
         "dr": 3.4,
-        "aw": 1.85,
+        "aw": 1.9,
         "o15": 1.28,
         "o25": 1.95,
         "u25": 1.85,
         "o35": 3.4,
         "u35": 1.3,
-        "bttsY": 1.83,
-        "bttsN": 1.83,
+        "bttsY": 1.8,
+        "bttsN": 1.91,
         "dc1X_bkr": 1.91,
         "dcX2_bkr": 1.22,
         "cards_o35": 4,
         "cards_u35": 1.18,
-        "cards_o45": 1.67,
-        "cards_u45": 2.1
+        "cards_o45": 1.72,
+        "cards_u45": 2.05
       }
     },
     {
@@ -7493,6 +7366,7 @@
       "referee": "Oguzhan Cakir, Türkiye",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "19:00",
       "injuries": {
         "home": [
           {
@@ -7647,6 +7521,7 @@
       "referee": "Cagdas Altay, Türkiye",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "16:00",
       "injuries": {
         "home": [
           {
@@ -7804,6 +7679,7 @@
       "referee": "Oguzhan Aksu, Türkiye",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "13:30",
       "injuries": {
         "home": [
           {
@@ -7984,9 +7860,10 @@
       "awayTeamName": "Gaziantep FK",
       "homeTeamId": 1007,
       "awayTeamId": 3573,
-      "referee": "O. Ergun",
+      "referee": "Ozan Ergun, Türkiye",
       "refereeStats": null,
       "date": "2026-04-13",
+      "time": "19:00",
       "injuries": {
         "home": [
           {
@@ -8147,6 +8024,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-17",
+      "time": "19:00",
       "injuries": {
         "home": [],
         "away": []
@@ -8220,6 +8098,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-17",
+      "time": "19:00",
       "injuries": {
         "home": [],
         "away": []
@@ -8293,6 +8172,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-20",
+      "time": "19:00",
       "injuries": {
         "home": [],
         "away": []
@@ -8353,6 +8233,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "19:00",
       "injuries": {
         "home": [
           {
@@ -8442,6 +8323,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "13:30",
       "injuries": {
         "home": [],
         "away": []
@@ -8511,6 +8393,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "13:30",
       "injuries": {
         "home": [],
         "away": []
@@ -8584,6 +8467,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "16:00",
       "injuries": {
         "home": [],
         "away": []
@@ -8636,8 +8520,8 @@
         "dr": 3.1,
         "aw": 2.8,
         "o15": 1.44,
-        "o25": 2.35,
-        "u25": 1.57,
+        "o25": 2.4,
+        "u25": 1.53,
         "o35": 4.5,
         "u35": 1.18,
         "bttsY": 2,
@@ -8655,6 +8539,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "16:00",
       "injuries": {
         "home": [],
         "away": []
@@ -8728,6 +8613,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "19:00",
       "injuries": {
         "home": [],
         "away": []
@@ -8801,6 +8687,7 @@
       "referee": "Luis Carlos Mateus Filipe, Portugal",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "16:30",
       "injuries": {
         "home": [],
         "away": []
@@ -8859,6 +8746,7 @@
       "referee": "Fabio Jose Costa Verissimo, Portugal",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "19:00",
       "injuries": {
         "home": [],
         "away": []
@@ -8919,6 +8807,7 @@
       "referee": "Claudio Filipe Ruivo Pereira, Portugal",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "19:00",
       "injuries": {
         "home": [],
         "away": []
@@ -8979,6 +8868,7 @@
       "referee": "Luís Godinho, Portugal",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "21:30",
       "injuries": {
         "home": [],
         "away": []
@@ -9039,6 +8929,7 @@
       "referee": "M. Fonseca",
       "refereeStats": null,
       "date": "2026-04-13",
+      "time": "21:15",
       "injuries": {
         "home": [],
         "away": []
@@ -9101,7 +8992,7 @@
         "bttsN": 1.75,
         "dc1X_bkr": 1.8,
         "dcX2_bkr": 1.22,
-        "cards_o55": 2,
+        "cards_o55": 1.95,
         "cards_o35": 2.95,
         "cards_u35": 1.33,
         "cards_o45": 5,
@@ -9117,6 +9008,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "16:30",
       "injuries": {
         "home": [],
         "away": []
@@ -9190,6 +9082,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "21:30",
       "injuries": {
         "home": [],
         "away": []
@@ -9263,6 +9156,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "19:00",
       "injuries": {
         "home": [],
         "away": []
@@ -9336,6 +9230,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "21:30",
       "injuries": {
         "home": [],
         "away": []
@@ -9386,18 +9281,18 @@
       },
       "isFinished": false,
       "odds": {
-        "hw": 1.23,
-        "dr": 5.6,
-        "aw": 13,
-        "o15": 1.21,
-        "o25": 1.72,
-        "u25": 1.98,
-        "o35": 2.8,
-        "u35": 1.37,
-        "bttsY": 2.43,
-        "bttsN": 1.48,
-        "dc1X_bkr": 1.03,
-        "dcX2_bkr": 1.97
+        "hw": 1.14,
+        "dr": 6.5,
+        "aw": 19,
+        "o15": 1.17,
+        "o25": 1.57,
+        "u25": 2.35,
+        "o35": 2.38,
+        "u35": 1.53,
+        "bttsY": 2.5,
+        "bttsN": 1.5,
+        "dc1X_bkr": 1.02,
+        "dcX2_bkr": 4.75
       }
     },
     {
@@ -9409,6 +9304,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "21:30",
       "injuries": {
         "home": [],
         "away": []
@@ -9482,6 +9378,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-20",
+      "time": "21:15",
       "injuries": {
         "home": [],
         "away": []
@@ -9531,7 +9428,20 @@
         ]
       },
       "isFinished": false,
-      "odds": null
+      "odds": {
+        "hw": 2.88,
+        "dr": 3.4,
+        "aw": 2.3,
+        "o15": 1.25,
+        "o25": 1.85,
+        "u25": 1.95,
+        "o35": 3,
+        "u35": 1.36,
+        "bttsY": 1.67,
+        "bttsN": 2.1,
+        "dc1X_bkr": 1.36,
+        "dcX2_bkr": 1.36
+      }
     },
     {
       "fixtureId": 1396504,
@@ -9542,6 +9452,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "16:30",
       "injuries": {
         "home": [],
         "away": []
@@ -9598,8 +9509,8 @@
         "u35": 1.33,
         "bttsY": 1.7,
         "bttsN": 2.05,
-        "dc1X_bkr": 1.3,
-        "dcX2_bkr": 1.7
+        "dc1X_bkr": 1.33,
+        "dcX2_bkr": 1.67
       }
     },
     {
@@ -9611,6 +9522,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-17",
+      "time": "21:45",
       "injuries": {
         "home": [],
         "away": []
@@ -9660,16 +9572,16 @@
       },
       "isFinished": false,
       "odds": {
-        "hw": 1.65,
-        "dr": 3.8,
-        "aw": 5,
-        "o15": 1.25,
-        "o25": 1.8,
-        "u25": 2,
-        "o35": 3,
-        "u35": 1.36,
-        "bttsY": 1.8,
-        "bttsN": 1.95,
+        "hw": 1.7,
+        "dr": 3.75,
+        "aw": 4.75,
+        "o15": 1.28,
+        "o25": 1.95,
+        "u25": 1.85,
+        "o35": 3.4,
+        "u35": 1.3,
+        "bttsY": 1.91,
+        "bttsN": 1.91,
         "dc1X_bkr": 1.17,
         "dcX2_bkr": 2.2
       }
@@ -9683,6 +9595,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "19:00",
       "injuries": {
         "home": [],
         "away": []
@@ -9756,6 +9669,7 @@
       "referee": "Wim Smet, Belgium",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "16:00",
       "injuries": {
         "home": [],
         "away": []
@@ -9816,6 +9730,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "18:15",
       "injuries": {
         "home": [],
         "away": []
@@ -9889,6 +9804,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "18:15",
       "injuries": {
         "home": [],
         "away": []
@@ -9962,6 +9878,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "16:00",
       "injuries": {
         "home": [],
         "away": []
@@ -10035,6 +9952,7 @@
       "referee": "Jasper Vergoote, Belgium",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "19:15",
       "injuries": {
         "home": [],
         "away": []
@@ -10095,6 +10013,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "16:00",
       "injuries": {
         "home": [],
         "away": []
@@ -10168,6 +10087,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "19:15",
       "injuries": {
         "home": [],
         "away": []
@@ -10240,6 +10160,7 @@
       "referee": "Nicolas Laforge, Belgium",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "13:30",
       "injuries": {
         "home": [],
         "away": []
@@ -10300,6 +10221,7 @@
       "referee": "Lawrence Visser, Belgium",
       "refereeStats": null,
       "date": "2026-04-12",
+      "time": "18:30",
       "injuries": {
         "home": [],
         "away": []
@@ -10360,6 +10282,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "13:30",
       "injuries": {
         "home": [],
         "away": []
@@ -10433,6 +10356,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-18",
+      "time": "20:45",
       "injuries": {
         "home": [],
         "away": []
@@ -10506,6 +10430,7 @@
       "referee": null,
       "refereeStats": null,
       "date": "2026-04-19",
+      "time": "18:30",
       "injuries": {
         "home": [],
         "away": []
