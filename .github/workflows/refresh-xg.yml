@@ -1,0 +1,61 @@
+name: 📐 xG-Statistiken aktualisieren (wöchentlich)
+
+on:
+  # Automatisch: jeden Montag um 05:00 UTC (07:00 MEZ)
+  # → läuft VOR dem täglichen Dashboard-Update (06:00 UTC)
+  schedule:
+    - cron: '0 5 * * 1'
+
+  # Manuell: jederzeit per Knopfdruck auf GitHub ausführbar
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-xg:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      # 1. Repository auschecken
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      # 2. Python einrichten
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3. Dependencies installieren
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
+      # 4. xG-Statistiken via API-Football Fixture-Statistics holen
+      #    Verarbeitet ~560 API-Calls (11 Ligen × ~51 Requests) → ~11 Minuten
+      #    Big-5 (ENG/GER/ITA/ESP/FRA): Native Expected Goals
+      #    Andere Ligen: Shots-on-Goal × 0.32 Proxy
+      - name: 📐 xG-Statistiken aktualisieren
+        run: python refresh_xg.py
+        continue-on-error: false
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        timeout-minutes: 25
+
+      # 5. Geänderte stats_cache.json zurück ins Repo pushen
+      - name: 💾 xG-Daten speichern & pushen
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add stats_cache.json
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — kein Commit nötig."
+          else
+            git commit -m "📐 xG-Update $(date +'%d.%m.%Y %H:%M') UTC"
+            git pull --rebase origin main
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
