@@ -6959,7 +6959,13 @@ function renderResultsTable(filter) {
   let rows = _resultsData.flatMap(e =>
     e.picks.map(p => ({ ...e, pick: p }))
   );
-  // Date range filter
+  // Cap future: never show games more than 7 days ahead (mirrors card filter)
+  const _futureMax = new Date();
+  _futureMax.setDate(_futureMax.getDate() + 7);
+  const _futureMaxIso = _futureMax.toISOString().slice(0, 10);
+  rows = rows.filter(r => (r.dateIso || '') <= _futureMaxIso);
+
+  // Date range filter (past window)
   if (_activeDaysFilter !== 'all') {
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - parseInt(_activeDaysFilter));
