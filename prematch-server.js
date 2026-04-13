@@ -43,6 +43,7 @@ const LEAGUE_IDS = {
   88:  'Eredivisie',
   94:  'Primeira Liga',
   179: 'Scottish Premiership',
+  203: 'Süper Lig',
 };
 const PORT      = 3001;
 const CACHE_TTL = 6 * 3600 * 1000;  // 6 Stunden
