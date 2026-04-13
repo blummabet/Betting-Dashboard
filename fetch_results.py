@@ -85,30 +85,33 @@ def main():
 
     for date in dates:
         for lkey, league_id in LEAGUES.items():
-            time.sleep(0.15)  # ~400 req/min — safe for Pro plan rate limits
+            time.sleep(1.2)  # ≤1 req/sec — safely within API-Football rate limit
             total_calls += 1
 
-            data = api_get("fixtures", {
-                "date":     date,
-                "league":   league_id,
-                "season":   2025,
-                "timezone": "Europe/Vienna",
-            })
-            if not data:
-                continue
+            # Try season=2025 first, fall back to season=2026 if empty
+            fixtures_raw = []
+            for season in [2025, 2026]:
+                data = api_get("fixtures", {
+                    "date":     date,
+                    "league":   league_id,
+                    "season":   season,
+                    "timezone": "Europe/Vienna",
+                })
+                if not data:
+                    continue
+                if not isinstance(data, dict):
+                    print(f"  ⚠ Unerwartete Antwort [{lkey} {date}]: {str(data)[:200]}")
+                    break
+                errors = data.get("errors", {})
+                if isinstance(errors, dict) and errors.get("rateLimit"):
+                    print(f"  ⚠ Rate limit [{lkey} {date}] — warte 10s…")
+                    time.sleep(10)
+                    break
+                fixtures_raw = data.get("response", [])
+                if fixtures_raw:
+                    break  # found data — no need to try next season
 
-            # API sometimes returns a list on error instead of a dict
-            if not isinstance(data, dict):
-                print(f"  ⚠ Unerwartete Antwort [{lkey} {date}]: {str(data)[:200]}")
-                continue
-
-            errors = data.get("errors", {})
-            if isinstance(errors, dict) and errors.get("rateLimit"):
-                print(f"  ⚠ Rate limit [{lkey} {date}] — warte 5s…")
-                time.sleep(5)
-                continue
-
-            for fx in data.get("response", []):
+            for fx in fixtures_raw:
                 status = fx.get("fixture", {}).get("status", {}).get("short", "")
                 if status not in FINISHED_STATUSES:
                     continue

@@ -5345,20 +5345,26 @@ async function _apifbFetchDate(dateIso) {
   const allFixtures = [];
   const errors = [];
   for (const [lKey, leagueId] of Object.entries(_RESULT_LEAGUE_IDS)) {
-    await new Promise(r => setTimeout(r, 150)); // pace requests to avoid rate limiting
+    await new Promise(r => setTimeout(r, 1200)); // ≤1 req/sec — within API-Football rate limit
     try {
-      const resp = await fetch(
-        `${APISPORTS_BASE}/fixtures?date=${dateIso}&league=${leagueId}&season=2025&timezone=Europe%2FVienna`,
-        { headers: { 'x-apisports-key': APISPORTS_KEY } }
-      );
-      if (!resp.ok) {
-        const t = await resp.text().catch(()=>'');
-        errors.push(`[${lKey}] HTTP ${resp.status}: ${t.slice(0,50)}`);
-        continue;
+      let _fxList = [];
+      for (const _season of [2025, 2026]) {
+        const resp = await fetch(
+          `${APISPORTS_BASE}/fixtures?date=${dateIso}&league=${leagueId}&season=${_season}&timezone=Europe%2FVienna`,
+          { headers: { 'x-apisports-key': APISPORTS_KEY } }
+        );
+        if (!resp.ok) {
+          const t = await resp.text().catch(()=>'');
+          errors.push(`[${lKey}] HTTP ${resp.status}: ${t.slice(0,50)}`);
+          break;
+        }
+        const data = await resp.json();
+        if (data.errors?.rateLimit) { errors.push(`[${lKey}] Rate limit`); break; }
+        _fxList = data.response || [];
+        if (_fxList.length) break;
+        await new Promise(r => setTimeout(r, 1200));
       }
-      const data = await resp.json();
-      if (data.errors?.rateLimit) { errors.push(`[${lKey}] Rate limit`); continue; }
-      allFixtures.push(...(data.response || []));
+      allFixtures.push(..._fxList);
     } catch(e) { errors.push(`[${lKey}] ${e.message}`); }
   }
   return { fixtures: allFixtures, error: errors.length && !allFixtures.length ? errors.join(' | ') : null };
@@ -6372,28 +6378,34 @@ async function fetchSofaResults(btn) {
       }
     }
 
-    dbg.push(`  → ${_comboList.length} Liga×Datum Kombinationen (mit 150ms Pause)`);
+    dbg.push(`  → ${_comboList.length} Liga×Datum Kombinationen (mit 1.2s Pause)`);
     _showDebug(dbg);
 
     for (const { date, leagueId, lKey } of _comboList) {
-      await new Promise(r => setTimeout(r, 150)); // ~400 req/min — stays under API rate limit
+      await new Promise(r => setTimeout(r, 1200)); // ≤1 req/sec — within API-Football rate limit
       btn.textContent = `⏳ ${lKey} ${date}…`;
       try {
-        const resp = await fetch(
-          `${APISPORTS_BASE}/fixtures?date=${date}&league=${leagueId}&season=2025&timezone=Europe%2FVienna`,
-          { headers: { 'x-apisports-key': APISPORTS_KEY } }
-        );
-        if (!resp.ok) {
-          const t = await resp.text().catch(()=>'');
-          dbg.push(`  ⚠ ${lKey} ${date}: HTTP ${resp.status}: ${t.slice(0,50)}`);
-          continue;
+        // Try season=2025 first, fall back to season=2026 if empty
+        let _fxList = [];
+        for (const _season of [2025, 2026]) {
+          const resp = await fetch(
+            `${APISPORTS_BASE}/fixtures?date=${date}&league=${leagueId}&season=${_season}&timezone=Europe%2FVienna`,
+            { headers: { 'x-apisports-key': APISPORTS_KEY } }
+          );
+          if (!resp.ok) {
+            const t = await resp.text().catch(()=>'');
+            dbg.push(`  ⚠ ${lKey} ${date}: HTTP ${resp.status}: ${t.slice(0,50)}`);
+            break;
+          }
+          const _d = await resp.json();
+          if (_d.errors?.rateLimit) { dbg.push(`  ⚠ ${lKey} ${date}: Rate limit — warte 3s…`); await new Promise(r => setTimeout(r, 3000)); break; }
+          _fxList = _d.response || [];
+          if (_fxList.length) break; // found data — no need to try next season
+          await new Promise(r => setTimeout(r, 1200)); // wait before retry with next season
         }
-        const data = await resp.json();
-        if (data.errors?.rateLimit) { dbg.push(`  ⚠ ${lKey} ${date}: Rate limit — verlangsame…`); await new Promise(r => setTimeout(r, 2000)); continue; }
-        const fxs = data.response || [];
-        (apifbByDate[date] = apifbByDate[date] || []).push(...fxs);
-        if (fxs.length) dbg.push(`  ✅ ${lKey} ${date}: ${fxs.length} Spiele geladen`);
-      } catch(e) { dbg.push(`  ⚠ ${lKey} ${date}: ${e.message}`); }
+        (apifbByDate[date] = apifbByDate[date] || []).push(..._fxList);
+        if (_fxList.length) dbg.push(`  ✅ ${lKey} ${date}: ${_fxList.length} Spiele geladen`);
+      } catch(e) { dbg.push(`  ⚠ ${lKey} ${date}: Failed to fetch`); }
     }
 
     const _rdone = Object.values(apifbByDate).flatMap(a=>a).filter(f=>['FT','AET','PEN','AWD','WO'].includes(f.fixture?.status?.short)).length;
