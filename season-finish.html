@@ -4100,6 +4100,11 @@ function getPressureLabel(stakeObj, teamName) {
 }
 
 function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
+  // Enrich match.time from prematch-data.json if not already set
+  if (!match.time) {
+    const pm = window._preMatchData?.[`${match.home}|${match.away}`];
+    if (pm?.time) match.time = pm.time;
+  }
   const angle = getBettingAngle(match);
   const ct = cardType(match);
   // Use precision computed score, fall back to hardcoded while odds load
@@ -5911,7 +5916,8 @@ async function loadPreMatchData() {
               injurySummary: sf.injurySummary || null,
               h2h:           sf.h2h           || null,
               isFinished:    sf.isFinished    || false,
-              odds:          sf.odds          || null
+              odds:          sf.odds          || null,
+              time:          sf.time          || null
             };
           }
         }
