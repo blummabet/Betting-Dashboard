@@ -2244,8 +2244,9 @@ function getBettingPicks(match, odds, leagueKey) {
       const auswSc     = rC.find(r => r.p.market === 'Auswärtssieg')?.sc ?? 0;
       const dcHome = heimsiegSc >= auswSc;
       const dcMkt  = dcHome ? 'Doppelte Chance: 1X' : 'Doppelte Chance: X2';
-      // When a team must win (not bothNeedWin), the draw option is unlikely AND unhelpful → reduce weight
-      const _dcDrawW = bothNeedWin ? 1.0 : (dcHome && homeNeedsWin) || (!dcHome && awayNeedsWin) ? 0.25 : 1.0;
+      // When a team must win, the draw option is unlikely AND unhelpful → reduce weight.
+      // bothNeedWin: draws are even less likely than when only one team needs a win → lowest weight.
+      const _dcDrawW = bothNeedWin ? 0.10 : (dcHome && homeNeedsWin) || (!dcHome && awayNeedsWin) ? 0.25 : 1.0;
       const sc = dcHome
         ? Math.min(0.72, hFS_home * 0.48 + drawRate * 0.40 * _dcDrawW + (hc.includes('gold')||ac.includes('red') ? 0.08 : 0))
         : Math.min(0.68, aFS_away * 0.48 + drawRate * 0.40 * _dcDrawW + (ac.includes('gold')||hc.includes('red') ? 0.08 : 0));
@@ -2255,8 +2256,8 @@ function getBettingPicks(match, odds, leagueKey) {
         ? `<br><strong>⚠️ ${dcHome ? match.home : match.away} kämpft um die Meisterschaft und braucht einen Sieg — ein Remis wäre sportlich wertlos. DC sichert trotzdem beide Ergebnisse ab.</strong>`
         : '';
       const reason = dcHome
-        ? `${match.home} ist Favorit (${Math.round(hFS_home*100)}% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Selbst wenn ${match.home} nicht gewinnt, ist das Geld zurück.${_dcPressNote}`
-        : `${match.away} zeigt starke Auswärtsform (${Math.round(aFS_away*100)}% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Selbst wenn ${match.away} nicht gewinnt, ist das Geld zurück.${_dcPressNote}`;
+        ? `${match.home} ist Favorit (${Math.round(hFS_home*100)}% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von ${match.home} geht der Einsatz verloren.${_dcPressNote}`
+        : `${match.away} zeigt starke Auswärtsform (${Math.round(aFS_away*100)}% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von ${match.away} geht der Einsatz verloren.${_dcPressNote}`;
       // Prefer real bookmaker DC odds; fall back to 1X2-derived estimate
       const dcOdds = dcHome ? (o.dc1X_bkr||o.dc1X||null) : (o.dcX2_bkr||o.dcX2||null);
       // Skip DC if odds known and < 1.25 — heavy favourite, DC adds no value
@@ -2473,7 +2474,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 1.20);
       gC.push({sc, p:{icon:'⏱️', market:'1. HZ: Under 0.5 Tore', odds:null,
         conf: sc>0.50?'medium':'low',
-        reason:`Das Spiel wird offensiv — mindestens 1 Tor schon in der ersten Halbzeit ist gut möglich. Gesamtprognose: ${expGoals.toFixed(1)} Tore.`}}); }
+        reason:`Taktisch vorsichtiger Spielbeginn erwartet — beide Teams tasten sich ab. Das Modell erwartet insgesamt nur ${expGoals.toFixed(1)} Tore: ein torloser Start in die erste Halbzeit ist gut möglich.`}}); }
 
     gC.sort((a,b) => b.sc - a.sc);
     for (const c of gC) { if (_push(c.p, c.sc)) break; }
@@ -3234,9 +3235,9 @@ function _igT(s) {
     // Team over goals — away
     .replace(/(.+?) trifft im Schnitt ([\d.]+) Mal pro Spiel — der Gegner lässt ([\d.]+) Tore zu\. Das Modell erwartet ([\d.]+) Auswärtstore: mindestens 2 Treffer für (.+?) sind gut möglich\./g,
       '$1 avg $2 goals/game — opponents concede $3. Model expects $4 away goals: 2+ for $5 is very plausible.')
-    // 1st Half over 0.5
-    .replace(/Das Spiel wird offensiv — mindestens 1 Tor schon in der ersten Halbzeit ist gut möglich\. Gesamtprognose: ([\d.]+) Tore\./g,
-      'An attacking game expected — at least 1 goal in the first half is likely. Total expected: $1 goals.')
+    // 1st Half under 0.5
+    .replace(/Taktisch vorsichtiger Spielbeginn erwartet — beide Teams tasten sich ab\. Das Modell erwartet insgesamt nur ([\d.]+) Tore: ein torloser Start in die erste Halbzeit ist gut möglich\./g,
+      'A cautious tactical start expected — both teams feeling each other out. Model expects only $1 total goals: a scoreless first half is plausible.')
     // Corners
     .replace(/Beide Teams spielen offensiv — ca\. (\d+) Ecken werden in diesem Spiel erwartet\. Beide Defensiven sind anfällig, was viele Angriffe und damit viele Ecken begünstigt\./g,
       'Both teams play offensively — est. $1 corners expected. Leaky defenses mean lots of attacks and more set pieces.')
