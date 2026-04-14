@@ -3106,20 +3106,86 @@ function _pillColor(c) {
 function _igT(s) {
   if (!s) return s;
   return s
-    // Markets
+    // ── Full sentence patterns (longest/most specific first) ──────────────
+    // DNB reason
+    .replace(/(.+?) ist Favorit, aber ein Remis ist zu (\d+)% möglich\. DNB \(Draw No Bet\) ist eine Absicherung: bei einem Unentschieden bekommst du den Einsatz zurück — nur bei einer Niederlage verlierst du\./g,
+      '$1 are favourites, but a draw occurs $2% of the time. Draw No Bet (DNB) is your safety net: if it draws you get your stake back — only a loss costs you.')
+    .replace(/(.+?) ist klarer Favorit, aber ein Remis ist zu (\d+)% möglich\. DNB \(Draw No Bet\) ist eine Absicherung: bei einem Unentschieden bekommst du den Einsatz zurück — nur bei einer Niederlage verlierst du\./g,
+      '$1 are clear favourites, but a draw occurs $2% of the time. Draw No Bet (DNB) is your safety net: if it draws you get your stake back — only a loss costs you.')
+    // Over 3.5 reason
+    .replace(/(.+?) erzielt Ø ([\d.]+) Tore\/Spiel, (.+?) Ø ([\d.]+) — beide Defensiven sind anfällig und lassen viele Gegentore zu\. Das Modell erwartet ([\d.]+) Tore insgesamt: ein Torfestival mit 4\+ Treffern ist klar möglich\./g,
+      '$1 avg $2 G/g, $3 avg $4 — both defenses are leaky. Model expects $5 goals total: a 4+ goal festival is very likely.')
+    // Over 2.5 reason
+    .replace(/(.+?) erzielt Ø ([\d.]+) Tore\/Spiel, (.+?) Ø ([\d.]+) — beide Defensiven lassen regelmäßig Gegentore zu\. Das Modell erwartet ([\d.]+) Tore: mindestens 3 Treffer sind gut möglich\./g,
+      '$1 avg $2 G/g, $3 avg $4 — both defenses concede regularly. Model expects $5 goals: 3+ goals are well within reach.')
+    // Under 2.5 — dominant team variant
+    .replace(/(.+?) dominiert dieses Spiel — der schwächere Angriff \(Ø ([\d.]+) Tore\/Spiel\) kommt kaum zu Chancen\. Weniger als 3 Tore sind zu erwarten\./g,
+      '$1 expected to dominate — the weaker attack (avg $2 G/g) will struggle to create chances. Under 3 goals anticipated.')
+    // Under 2.5 — both weak variant
+    .replace(/Das Modell erwartet nur ([\d.]+) Tore insgesamt — (.+?) \(Ø ([\d.]+) Tore\/Spiel\) und (.+?) \(Ø ([\d.]+)\) sind beide offensiv zu schwach für viele Treffer\./g,
+      'Model expects just $1 goals total — $2 (avg $3 G/g) and $4 (avg $5) are both too weak in attack for a high-scoring game.')
+    // Under 2.5 — extreme variant
+    .replace(/Das Modell erwartet nur ([\d.]+) Tore — beide Teams sind offensiv extrem schwach\. Ein einziger Treffer in diesem Spiel wäre schon viel\./g,
+      'Model expects just $1 goals — both teams are extremely weak in attack. Even one goal would be a lot to ask.')
+    // BTTS Yes reason
+    .replace(/(.+?) \(Ø ([\d.]+) Tore\/Spiel\) und (.+?) \(Ø ([\d.]+)\) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu\. Beide Teams werden voraussichtlich treffen\./g,
+      '$1 (avg $2 G/g) and $3 (avg $4) both score regularly — both defenses are leaky. Both teams are expected to find the net.')
+    // BTTS No reason
+    .replace(/(.+?) ist offensiv sehr schwach \(Ø ([\d.]+) Tore\/Spiel\) — ein Treffer ist für dieses Team schon eine Herausforderung\. Wahrscheinlich bleibt eines der beiden Teams ohne Tor\./g,
+      '$1 are very weak in attack (avg $2 G/g) — even scoring once is a challenge for them. One team likely to keep a clean sheet.')
+    // Team over goals — home
+    .replace(/(.+?) trifft im Schnitt ([\d.]+) Mal pro Spiel — der Gegner lässt ([\d.]+) Tore zu\. Das Modell erwartet ([\d.]+) Heimtore: mindestens 2 Treffer für (.+?) sind gut möglich\./g,
+      '$1 avg $2 goals/game — opponents concede $3. Model expects $4 home goals: 2+ for $5 is very plausible.')
+    // Team over goals — away
+    .replace(/(.+?) trifft im Schnitt ([\d.]+) Mal pro Spiel — der Gegner lässt ([\d.]+) Tore zu\. Das Modell erwartet ([\d.]+) Auswärtstore: mindestens 2 Treffer für (.+?) sind gut möglich\./g,
+      '$1 avg $2 goals/game — opponents concede $3. Model expects $4 away goals: 2+ for $5 is very plausible.')
+    // 1st Half over 0.5
+    .replace(/Das Spiel wird offensiv — mindestens 1 Tor schon in der ersten Halbzeit ist gut möglich\. Gesamtprognose: ([\d.]+) Tore\./g,
+      'An attacking game expected — at least 1 goal in the first half is likely. Total expected: $1 goals.')
+    // Corners
+    .replace(/Beide Teams spielen offensiv — ca\. (\d+) Ecken werden in diesem Spiel erwartet\. Beide Defensiven sind anfällig, was viele Angriffe und damit viele Ecken begünstigt\./g,
+      'Both teams play offensively — est. $1 corners expected. Leaky defenses mean lots of attacks and more set pieces.')
+    .replace(/Beide Teams spielen offensiv — ca\. (\d+) Ecken werden in diesem Spiel erwartet\./g,
+      'Both teams play offensively — est. $1 corners expected.')
+    // Handicap home
+    .replace(/(.+?) gewinnt (\d+)% seiner Heimspiele und erzielt dabei im Schnitt ([\d.]+) Tore — ein klarer Heimsieg \(Handicap -0\.5\) ist gut möglich\./g,
+      '$1 win $2% of home games, averaging $3 goals — a convincing home win (Handicap -0.5) is very plausible.')
+    // Handicap away
+    .replace(/(.+?) gewinnt (\d+)% seiner Auswärtsspiele und trifft dabei im Schnitt ([\d.]+) Mal — ein klarer Auswärtssieg \(Handicap -0\.5\) ist gut möglich\./g,
+      '$1 win $2% of away games, averaging $3 goals — a convincing away win (Handicap -0.5) is very plausible.')
+    // 1st Half BTTS Yes
+    .replace(/(.+?) \(Ø ([\d.]+) Tore\/Spiel\) und (.+?) \(Ø ([\d.]+)\) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich\./g,
+      '$1 (avg $2 G/g) and $3 (avg $4) both attack from the off — at least 1 goal in the first half is very likely.')
+    .replace(/(.+?) \(Ø ([\d.]+) Tore\/Spiel\) und (.+?) \(Ø ([\d.]+)\) starten offensiv — beide Teams könnten schon in der ersten Halbzeit getroffen haben\./g,
+      '$1 (avg $2 G/g) and $3 (avg $4) come out attacking — both teams could score before half time.')
+    // 1st Half under
+    .replace(/Vorsichtiger Spielbeginn erwartet — beide Teams tasten sich erst ab\. Das Modell erwartet ([\d.]+) Tore insgesamt: in der ersten Halbzeit ist maximal 1 Treffer wahrscheinlich\./g,
+      'A cautious start expected — both teams will feel each other out. Model expects $1 goals total: max 1 goal before half time is likely.')
+    // Cards — relegation battle
+    .replace(/6-Punkte-Kellerduell(.*?) — Verzweiflung, taktische Fouls, emotionale Zweikämpfe\. Historisch >4\.5 Karten\./g,
+      'Six-pointer relegation clash$1 — desperation, cynical fouls, heated duels. Historically >4.5 cards.')
+    // Pressure amplifier note
+    .replace(/Druckspiel(.*?)verstärkt\./g, 'Pressure game$1amplifies this pick.')
+    .replace(/Druckspiel(.*?)verstärkt/g, 'Pressure game$1amplifies this pick')
+    // ── H2H appendix notes ────────────────────────────────
+    .replace(/Historisch Ø ([\d.]+) Tore\/Duell\./g, 'Historically avg $1 goals/meeting.')
+    .replace(/Historisch ([\d]+)\/([\d]+) Spielen über 2\.5 Tore\./g, 'Historically $1/$2 meetings over 2.5 goals.')
+    .replace(/Historisch ([\d]+)\/([\d]+) Spielen über 3\.5 Tore\./g, 'Historically $1/$2 meetings over 3.5 goals.')
+    .replace(/Historisch beide Teams in ([\d]+)\/([\d]+) Duellen getroffen\./g, 'BTTS in $1/$2 previous meetings.')
+    .replace(/Historisch nur ([\d]+)\/([\d]+) BTTS-Duelle\./g, 'Only $1/$2 BTTS meetings historically.')
+    .replace(/H2H: häufig unter 2\.5 Tore \(([\d]+)\/([\d]+) Spielen\)\./g, 'H2H: frequently under 2.5 goals ($1/$2 games).')
+    // ── Markets ───────────────────────────────────────────
     .replace(/\bHeimsiege?\b/g, 'Home Win')
     .replace(/\bAuswärtssieg\b/g, 'Away Win')
     .replace(/\bUnentschieden\b/g, 'Draw')
     .replace(/[Üü]ber ([\d,.]+) Tore/g, 'Over $1 Goals')
     .replace(/[Uu]nter ([\d,.]+) Tore/g, 'Under $1 Goals')
-    .replace(/\bOver ([\d,.]+) Tore\b/g, 'Over $1 Goals')
-    .replace(/\bUnder ([\d,.]+) Tore\b/g, 'Under $1 Goals')
     .replace(/Beide Teams treffen: Nein/g, 'Both Teams Score: No')
     .replace(/Beide Teams treffen: Ja/g, 'Both Teams Score: Yes')
     .replace(/Beide Teams treffen\b/g, 'Both Teams Score')
     .replace(/\b1\. HZ:/g, '1st Half:')
     .replace(/\b([A-Za-zÄÖÜäöüß ]+) über ([\d,.]+) Tore/g, '$1 Over $2 Goals')
-    // Pick reason snippets
+    // ── Word-level fallbacks ──────────────────────────────
     .replace(/Torfestival erwartet/g, 'Goal fest expected')
     .replace(/Wenig Tore erwartet/g, 'Low-scoring game expected')
     .replace(/Extrem torarm/g, 'Extremely low-scoring')
@@ -3132,8 +3198,6 @@ function _igT(s) {
     .replace(/lässt wenig Tore zu/g, 'concedes few goals')
     .replace(/greift voll an/g, 'attacks fully')
     .replace(/geht volles Risiko/g, 'goes all-in')
-    .replace(/Druckspiel.*?verstärkt\./g, 'pick amplified by pressure.')
-    .replace(/Druckspiel.*?verstärkt/g, 'pick amplified by pressure')
     .replace(/Heimteam greift voll an/g, 'Home team attacks fully')
     .replace(/Auswärtsteam geht volles Risiko/g, 'Away team goes all-in')
     .replace(/unter Druck/g, 'under pressure')
@@ -3155,13 +3219,15 @@ function _igT(s) {
     // Stats suffixes
     .replace(/xG\/Sp\b/g, 'xG/g')
     .replace(/T\/Sp\b/g, 'G/g')
+    .replace(/Tore\/Spiel\b/g, 'G/g')
     .replace(/Tore\/Sp\b/g, 'G/g')
     .replace(/\bTore\b/g, 'Goals')
     .replace(/Ø ([\d.]+) EG\b/g, 'Avg $1 EG')
-    // H2H snippets
+    .replace(/Ø ([\d.]+)/g, 'avg $1')
+    // H2H snippets (fallback)
     .replace(/H2H: (\d+)H\/(\d+)U\/(\d+)A/g, 'H2H: $1W/$2D/$3A')
-    .replace(/Ø ([\d.]+) Tore\/Duell/g, 'avg $1 goals/match')
-    .replace(/Ø ([\d.]+) Tore\/Sp/g, 'avg $1 G/g')
+    .replace(/avg ([\d.]+) goals\/match/g, 'avg $1 goals/match')
+    .replace(/avg ([\d.]+) G\/g/g, 'avg $1 G/g')
     .replace(/der ([\d]+) Duelle/g, 'of $1 meetings')
     .replace(/unter 2\.5 Tore/g, 'under 2.5 Goals')
     ;
