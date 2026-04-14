@@ -327,6 +327,31 @@ def pts_at_pos(standings, pos):
             return t["pts"]
     return 0
 
+def get_team_ppg(standings, pos):
+    """Current points-per-game for the team at position `pos`."""
+    for t in standings:
+        if t["pos"] == pos:
+            played = max(1, t.get("played", 1))
+            return t["pts"] / played
+    return 1.2  # conservative league-average fallback
+
+def get_team_gd(standings, pos):
+    """Goal difference for the team at position `pos`."""
+    for t in standings:
+        if t["pos"] == pos:
+            return t.get("gd", 0)
+    return 0
+
+def comp_gain_est(standings, pos, rounds_left):
+    """
+    Estimate how many more points the team at `pos` will earn in the
+    remaining rounds, based on their current PPG (clamped 0.8–2.4).
+    This is used to project where a competitor will likely end up,
+    rather than treating their current points as a frozen target.
+    """
+    ppg = max(0.8, min(2.4, get_team_ppg(standings, pos)))
+    return round(rounds_left * ppg)
+
 def calc_labels(team, standings, cfg):
     pos   = team["pos"]
     pts   = team["pts"]
@@ -384,20 +409,27 @@ def calc_labels(team, standings, cfg):
 def calc_motivation(team, labels, standings, cfg, rounds_left):
     """
     Computes motivationLevel for a team based on whether their season
-    outcome is already mathematically confirmed.
+    outcome is already mathematically confirmed or practically decided.
 
-    'none'  – position confirmed (relegated, champion, or European spot locked in).
+    'none'  – position confirmed (mathematically impossible to change outcome).
               Expect rotation, lower intensity — treat like a mid-table team for xG.
-    'low'   – nearly confirmed (gap closable only in theory with a miracle run).
-              Partial motivation reduction.
+    'low'   – outcome practically decided: even accounting for the competitor's
+              projected gains (at their current PPG), the gap is so large that
+              a reversal would require a genuine miracle (need >75% of remaining
+              points just to match where the competitor will likely end up).
     'full'  – actively fighting (default for all stake teams).
+
+    Key change from naive version: 'low' now uses competitor-adjusted effective
+    gaps rather than just the raw static point gap. This prevents falsely flagging
+    a team as "nearly done" when the competitor they need to catch is also still
+    playing and likely to keep earning points.
     """
     if not labels:
         return 'full'
 
     pos      = team["pos"]
     pts      = team["pts"]
-    max_gain = rounds_left * 3   # max additional points any team can earn
+    max_gain = rounds_left * 3   # maximum additional points any single team can earn
 
     is_gold   = any(l["c"] == "gold"   for l in labels)
     is_red    = any(l["c"] == "red"    for l in labels)
@@ -407,27 +439,33 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
     # ── Title secured ──────────────────────────────────────────────────────────
     if is_gold and pos == 1:
         pts_2nd = pts_at_pos(standings, 2)
-        gap = pts - pts_2nd
-        if gap > max_gain:         return 'none'   # Confirmed champion
-        if gap > max_gain * 0.55:  return 'low'    # Nearly confirmed
+        gap     = pts - pts_2nd
+        # 'none': even if 2nd wins ALL remaining games and we win 0, they can't catch us
+        if gap > max_gain:  return 'none'
+        # 'low': accounting for 2nd's realistic gain, our adjusted lead is > 15% of max_gain
+        # i.e., even if they run at their average PPG, we'd still be comfortably ahead
+        cg = comp_gain_est(standings, 2, rounds_left)
+        if (gap - cg) > max_gain * 0.15:  return 'low'
 
     # ── UCL secured ────────────────────────────────────────────────────────────
     if is_blue and pos <= cfg["ucl"]:
         pts_below = pts_at_pos(standings, cfg["ucl"] + 1)
-        gap = pts - pts_below
-        if gap > max_gain:         return 'none'
-        if gap > max_gain * 0.55:  return 'low'
+        gap       = pts - pts_below
+        if gap > max_gain:  return 'none'
+        cg = comp_gain_est(standings, cfg["ucl"] + 1, rounds_left)
+        if (gap - cg) > max_gain * 0.15:  return 'low'
 
     # ── Europa League secured ──────────────────────────────────────────────────
     if is_orange:
         el_cutoff = cfg["ucl"] + cfg["el"]
         if pos <= el_cutoff:
             pts_below = pts_at_pos(standings, el_cutoff + 1)
-            gap = pts - pts_below
-            if gap > max_gain:         return 'none'
-            if gap > max_gain * 0.55:  return 'low'
+            gap       = pts - pts_below
+            if gap > max_gain:  return 'none'
+            cg = comp_gain_est(standings, el_cutoff + 1, rounds_left)
+            if (gap - cg) > max_gain * 0.15:  return 'low'
 
-    # ── Mathematically relegated ───────────────────────────────────────────────
+    # ── Mathematically relegated / practically doomed ─────────────────────────
     if is_red:
         total     = cfg["total"]
         rel       = cfg["rel"]
@@ -437,8 +475,12 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
         if safe_pos > 0:
             pts_safe      = pts_at_pos(standings, safe_pos)
             gap_to_safety = pts_safe - pts
-            if gap_to_safety > max_gain:         return 'none'   # Confirmed relegated
-            if gap_to_safety > max_gain * 0.55:  return 'low'    # Nearly gone
+            # 'none': we win everything, safe team wins nothing — still can't escape
+            if gap_to_safety > max_gain:  return 'none'
+            # 'low': competitor-adjusted — need >75% of max_gain just to match where
+            # the safe team will likely end up at their current PPG
+            cg = comp_gain_est(standings, safe_pos, rounds_left)
+            if (gap_to_safety + cg) > max_gain * 0.75:  return 'low'
 
     return 'full'
 
@@ -447,16 +489,26 @@ def calc_pressure(team, labels, standings, cfg, rounds_left):
     Computes concrete pressure metrics: how many points does this team
     actually need, and how desperate is their situation?
 
+    Key improvements vs. naive gap calculation:
+    - Competitor-aware: projects where the boundary team will END UP (using their
+      current PPG), not just where they sit now. A team 3pts behind safety with 5
+      rounds left looks fine on a static snapshot, but if the safe team averages
+      1.5 PPG they'll likely gain ~8 more pts — making the real gap 11, not 3.
+    - GD tiebreaker: when teams are level on points the team with better goal
+      difference sits higher. A team that draws level but has inferior GD is still
+      effectively behind — so we add 1pt to their required total.
+
     Returns dict with:
-      pointsNeeded  – exact gap to relevant boundary (0 = already there / secured)
+      pointsNeeded  – competitor-adjusted points required (0 = already secured)
       pressureRatio – pointsNeeded / max_gainable, 0.0–1.0
-      mustWin       – True when team needs >65% of remaining points (every game crucial)
+      mustWin       – True when team needs >65% of remaining points
       canDraw       – True when team needs <30% (draws acceptable)
     """
     if not labels:
         return {"pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": False, "canDraw": True}
 
     pts      = team["pts"]
+    team_gd  = team.get("gd", 0)
     max_gain = rounds_left * 3
     if max_gain == 0:
         return {"pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": False, "canDraw": True}
@@ -469,50 +521,85 @@ def calc_pressure(team, labels, standings, cfg, rounds_left):
     points_needed = 0
 
     if is_red:
+        # ── Relegated / relegation danger: need to climb above safe position ──
         total     = cfg["total"]
         rel       = cfg["rel"]
         rel_ply   = cfg["rel_playoff"]
         rel_start = total - rel + 1
         safe_pos  = rel_start - rel_ply - 1
         if safe_pos > 0:
-            pts_safe     = pts_at_pos(standings, safe_pos)
-            points_needed = max(0, pts_safe - pts + 1)   # need to overtake safe team
+            pts_safe  = pts_at_pos(standings, safe_pos)
+            safe_gd   = get_team_gd(standings, safe_pos)
+            cg        = comp_gain_est(standings, safe_pos, rounds_left)
+            # GD penalty: level on pts but inferior GD → still ranked below → +1
+            gd_pen    = 1 if (pts >= pts_safe and team_gd < safe_gd) else 0
+            # Competitor-adjusted target: where safe team will likely end up
+            points_needed = max(0, (pts_safe + cg) - pts + 1 + gd_pen)
         else:
             points_needed = max_gain
 
     elif is_gold:
         pos = team["pos"]
         if pos == 1:
-            pts_2nd      = pts_at_pos(standings, 2)
-            gap          = pts - pts_2nd
-            points_needed = max(0, 1 - gap)              # need to keep at least 1 ahead
+            # ── Title defender: keep at least 1pt ahead of 2nd's projected total ──
+            pts_2nd   = pts_at_pos(standings, 2)
+            second_gd = get_team_gd(standings, 2)
+            cg        = comp_gain_est(standings, 2, rounds_left)
+            gap       = pts - pts_2nd
+            # GD penalty: 1pt lead but inferior GD → if they draw level, they pass us
+            gd_pen    = 1 if (gap <= 1 and team_gd < second_gd) else 0
+            # Need: our_pts + X  >=  pts_2nd + cg + 1  →  X >= cg - gap + 1
+            points_needed = max(0, cg - gap + 1 + gd_pen)
         else:
-            pts_leader   = pts_at_pos(standings, 1)
-            points_needed = max(0, pts_leader - pts + 1) # need to overtake leader
+            # ── Title chaser: need to exceed leader's projected final total ──
+            pts_leader = pts_at_pos(standings, 1)
+            leader_gd  = get_team_gd(standings, 1)
+            cg         = comp_gain_est(standings, 1, rounds_left)
+            gap_now    = pts_leader - pts
+            gd_pen     = 1 if (gap_now <= 0 and team_gd < leader_gd) else 0
+            points_needed = max(0, (pts_leader + cg) - pts + 1 + gd_pen)
 
     elif is_blue:
         ucl = cfg["ucl"]
         pos = team["pos"]
         if pos <= ucl:
-            pts_below    = pts_at_pos(standings, ucl + 1)
-            gap          = pts - pts_below
-            points_needed = max(0, 1 - gap)              # defend UCL spot
+            # ── UCL defender: stay ahead of the chaser's projected total ──
+            pts_below  = pts_at_pos(standings, ucl + 1)
+            below_gd   = get_team_gd(standings, ucl + 1)
+            cg         = comp_gain_est(standings, ucl + 1, rounds_left)
+            gap        = pts - pts_below
+            gd_pen     = 1 if (gap <= 1 and team_gd < below_gd) else 0
+            points_needed = max(0, cg - gap + 1 + gd_pen)
         else:
-            pts_ucl      = pts_at_pos(standings, ucl)
-            points_needed = max(0, pts_ucl - pts + 1)    # chase UCL
+            # ── UCL chaser: exceed the current UCL team's projected total ──
+            pts_ucl   = pts_at_pos(standings, ucl)
+            ucl_gd    = get_team_gd(standings, ucl)
+            cg        = comp_gain_est(standings, ucl, rounds_left)
+            gap_now   = pts_ucl - pts
+            gd_pen    = 1 if (gap_now <= 0 and team_gd < ucl_gd) else 0
+            points_needed = max(0, (pts_ucl + cg) - pts + 1 + gd_pen)
 
     elif is_orange:
-        ucl      = cfg["ucl"]
-        el       = cfg.get("el", 0)
+        ucl       = cfg["ucl"]
+        el        = cfg.get("el", 0)
         el_cutoff = ucl + el
-        pos      = team["pos"]
+        pos       = team["pos"]
         if pos <= el_cutoff:
-            pts_below    = pts_at_pos(standings, el_cutoff + 1)
-            gap          = pts - pts_below
-            points_needed = max(0, 1 - gap)
+            # ── EL defender ──
+            pts_below  = pts_at_pos(standings, el_cutoff + 1)
+            below_gd   = get_team_gd(standings, el_cutoff + 1)
+            cg         = comp_gain_est(standings, el_cutoff + 1, rounds_left)
+            gap        = pts - pts_below
+            gd_pen     = 1 if (gap <= 1 and team_gd < below_gd) else 0
+            points_needed = max(0, cg - gap + 1 + gd_pen)
         else:
-            pts_el       = pts_at_pos(standings, el_cutoff)
-            points_needed = max(0, pts_el - pts + 1)
+            # ── EL chaser ──
+            pts_el    = pts_at_pos(standings, el_cutoff)
+            el_gd     = get_team_gd(standings, el_cutoff)
+            cg        = comp_gain_est(standings, el_cutoff, rounds_left)
+            gap_now   = pts_el - pts
+            gd_pen    = 1 if (gap_now <= 0 and team_gd < el_gd) else 0
+            points_needed = max(0, (pts_el + cg) - pts + 1 + gd_pen)
 
     pressure_ratio = min(1.0, points_needed / max_gain)
 
