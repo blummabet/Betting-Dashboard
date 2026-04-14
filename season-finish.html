@@ -1898,12 +1898,16 @@ function getBettingPicks(match, odds, leagueKey) {
   const _motivWarnH = hMotivNone
     ? `<br><strong>⬜ ${_pHLabel} — mögliche Rotation, reduzierte Intensität. Vorteil für Gegner.</strong>`
     : hMotivLow
-    ? `<br><em>⚠️ ${match.home} nahezu gesichert — leicht reduzierte Motivation erwartet.</em>`
+    ? hc.includes('red')
+      ? `<br><em>⚠️ ${match.home} Abstieg quasi sicher — Motivation könnte nachlassen, Gegner profitiert.</em>`
+      : `<br><em>⚠️ ${match.home} nahezu gesichert — leicht reduzierte Motivation erwartet.</em>`
     : '';
   const _motivWarnA = aMotivNone
     ? `<br><strong>⬜ ${_pALabel} — mögliche Rotation, reduzierte Intensität. Vorteil für Gegner.</strong>`
     : aMotivLow
-    ? `<br><em>⚠️ ${match.away} nahezu gesichert — leicht reduzierte Motivation erwartet.</em>`
+    ? ac.includes('red')
+      ? `<br><em>⚠️ ${match.away} Abstieg quasi sicher — Motivation könnte nachlassen, Gegner profitiert.</em>`
+      : `<br><em>⚠️ ${match.away} nahezu gesichert — leicht reduzierte Motivation erwartet.</em>`
     : '';
   const _pressNote = bothNeedWin
     ? `<br><strong>⚡ Beide Teams müssen gewinnen${_rlSfx} — maximaler Angriffsdruck, taktische Sicherung Nebensache.</strong>`
@@ -2730,13 +2734,13 @@ function getBettingPicks(match, odds, leagueKey) {
     // Motivation chips — shown when a team's season fate is already confirmed
     // Signals to bettor: expect rotation, reduced effort, underperformance vs. xG baseline
     if (hMotivNone && (hHome || hGoal))
-      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.home} gesichert (-18% xG)</span>`);
+      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.home} ${hc.includes('red') ? 'abgestiegen' : 'gesichert'} (-18% xG)</span>`);
     else if (hMotivLow && (hHome || hGoal))
-      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.home} nahezu gesichert (-8% xG)</span>`);
+      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.home} ${hc.includes('red') ? 'Abstieg quasi sicher' : 'nahezu gesichert'} (-8% xG)</span>`);
     if (aMotivNone && (hAway || hGoal))
-      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.away} gesichert (-18% xG)</span>`);
+      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.away} ${ac.includes('red') ? 'abgestiegen' : 'gesichert'} (-18% xG)</span>`);
     else if (aMotivLow && (hAway || hGoal))
-      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.away} nahezu gesichert (-8% xG)</span>`);
+      chips.push(`<span class="mod-chip" style="background:#1a1a1a;color:#aaa;border:1px solid #444">⬜ ${match.away} ${ac.includes('red') ? 'Abstieg quasi sicher' : 'nahezu gesichert'} (-8% xG)</span>`);
     p.mods = chips;
   });
 
