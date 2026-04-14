@@ -1172,6 +1172,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Over/Under API-Konsens ±0.06–0.07</strong> — <code>apiPrediction.underOver</code> verstärkt das eigene Modell wenn beide übereinstimmen (Over: +0.07, Under: +0.07) und dämpft wenn sie divergieren (−0.06). Verhindert Over-Empfehlungen wenn das API-Modell "Under" sieht und umgekehrt. <em>(season-finish.html)</em></li>
           <li><strong>API Poisson als Fair-Value-Ergänzung</strong> — <code>poissonHome/Away</code> (0–100%) wird als milde Korrekturgröße für Heimsieg/Auswärtssieg-Score eingesetzt wenn <strong>keine Pinnacle-Quoten vorliegen</strong> (max ±0.10). Ist Pinnacle vorhanden, bleibt de-viggte Marktquote primär. Poisson-Werte erscheinen als "🤖 API-Modell: X% Heim · Y% Remis · Z% Auswärts" in Begründungstexten. <em>(season-finish.html)</em></li>
           <li><strong>Venue-Stats in Begründungstexten</strong> — Heimsieg-Picks zeigen "📊 Heimstatistik (Saison): X% Siege · Y% Clean Sheets", Auswärtssieg entsprechend. Under 2.5 und BTTS-Nein-Picks zeigen saisonale Clean-Sheet- und Failed-to-Score-Raten als Faktenbasis. <em>(season-finish.html)</em></li>
+          <li><strong>Comparison-Signals aus /predictions</strong> — <code>prematch-server.js Step 5.5</code> extrahiert jetzt auch <code>comparison.form</code>, <code>comparison.att</code>, <code>comparison.def</code>, <code>comparison.goals</code> (je {home: 0–100, away: 0–100}) ins <code>apiPrediction</code>-Objekt. In <code>getBettingPicks()</code> werden Differentials berechnet (<code>_compFormDiff</code>, <code>_compAttDiff</code>, <code>_compDefDiff</code>, <code>_compGoalsDiff</code>) und als schwache Score-Korrekturgröße (+max 0.07 Heim, inversiert für Auswärts) in Heimsieg- und Auswärtssieg-Scoring eingebaut. <em>(prematch-server.js + season-finish.html)</em></li>
+          <li><strong>Blended Fair Probabilities (_fairPH/D/A)</strong> — Pinnacle de-viggte Wahrscheinlichkeiten werden 80:20 mit den API-Prediction-Prozent (<code>pctHome/Draw/Away</code>) gemischt. Das Ergebnis (<code>_fairPH</code>, <code>_fairPD</code>, <code>_fairPA</code>) wird überall dort verwendet wo bisher <code>_bkrPH/D/A</code> stand: Draw-Unterdrückung, mp-Berechnung für Heimsieg/Auswärtssieg/Unentschieden. Wenn nur eine der Quellen vorhanden: wird diese alleine genutzt. <em>(season-finish.html)</em></li>
+          <li><strong>Formation-Modifier</strong> — <code>refresh_stats.py</code> holt via <code>GET /teams/statistics</code> (nach dem Fixture-Loop, 1 API-Call pro Team) die häufigste Aufstellung der Saison und speichert sie als <code>formation</code> (z.B. "4-3-3"). In <code>getBettingPicks()</code> wird die Anzahl der Stürmer (letzte Zahl) ausgelesen: ≥3 Stürmer = offensiv (+7% Angriff, −3,5% Verteidigung), ≤1 Stürmer = defensiv (−7% Angriff, +3,5% Verteidigung). Angewendet nach Fatigue/Injury/Motivation-Penalties auf <code>homeAttStr/awayAttStr</code>. Formation wird auch in Begründungstexten ("📋 Formation: 4-3-3 vs 4-5-1") angezeigt. <em>(refresh_stats.py + season-finish.html)</em></li>
+          <li><strong>Streak-Momentum-Signal</strong> — <code>refresh_stats.py</code> berechnet aus den Fixture-Timestamps (ohne neue API-Calls) den <code>currentStreak</code> (+N = N Spiele in Folge ungeschlagen/gewonnen, −N = N Spiele in Folge ohne Sieg). Außerdem werden via <code>GET /teams/statistics</code> die saisonbesten Streaks gespeichert: <code>biggestWinStreak</code>, <code>biggestLoseStreak</code>, <code>biggestDrawStreak</code>. In <code>getBettingPicks()</code> fließen diese in Heimsieg- und Auswärtssieg-Scoring ein: BigWinStreak ≥5 = dominantes Team (+max 0.08), aktueller Lauf ≥3 = momentum (+max 0.08). Streak ≥3 erscheint auch als "🔥 Aktueller Lauf: X× ungeschlagen" in Begründungstexten. <em>(refresh_stats.py + season-finish.html)</em></li>
         </ul>
       </div>
     </div>
@@ -1863,6 +1867,49 @@ function getBettingPicks(match, odds, leagueKey) {
   const _apiPoiA    = _apiPred?.poissonAway ?? null;
   // Blended API expected goals — used when xGBased=false (non-Big5 or no refresh_stats run)
   const _apiExpG = (_apiGoalsH !== null && _apiGoalsA !== null) ? (_apiGoalsH + _apiGoalsA) : null;
+
+  // ── Blended fair probabilities: 80% Pinnacle de-vigged + 20% API prediction pct ──
+  // When both signals available: blend for sharpest estimate.
+  // When only one: use that one. When neither: null (pure formula fallback).
+  const _fairPH = (_bkrPH !== null && _apiPctH !== null)
+    ? _bkrPH * 0.80 + (_apiPctH / 100) * 0.20
+    : (_bkrPH ?? (_apiPctH !== null ? _apiPctH / 100 : null));
+  const _fairPD = (_bkrPD !== null && _apiPctD !== null)
+    ? _bkrPD * 0.80 + (_apiPctD / 100) * 0.20
+    : (_bkrPD ?? (_apiPctD !== null ? _apiPctD / 100 : null));
+  const _fairPA = (_bkrPA !== null && _apiPctA !== null)
+    ? _bkrPA * 0.80 + (_apiPctA / 100) * 0.20
+    : (_bkrPA ?? (_apiPctA !== null ? _apiPctA / 100 : null));
+
+  // ── Comparison signals from API /predictions endpoint ─────────────────────────
+  // Each field: {home: 0–100, away: 0–100} (higher = better for that side)
+  const _compForm  = _apiPred?.compForm  ?? null;  // recent form comparison
+  const _compAtt   = _apiPred?.compAtt   ?? null;  // attack strength comparison
+  const _compDef   = _apiPred?.compDef   ?? null;  // defensive strength comparison
+  const _compGoals = _apiPred?.compGoals ?? null;  // goals comparison
+  // Compute differentials: positive = home has edge, negative = away has edge
+  const _compFormDiff  = _compForm  ? _compForm.home  - _compForm.away  : null;  // +30 → home clearly better form
+  const _compAttDiff   = _compAtt   ? _compAtt.home   - _compAtt.away   : null;
+  const _compDefDiff   = _compDef   ? _compDef.home   - _compDef.away   : null;  // positive = home defends better
+  const _compGoalsDiff = _compGoals ? _compGoals.home - _compGoals.away : null;
+
+  // ── Season-level stats from refresh_stats.py (formation, streaks) ─────────────
+  const _hFormation  = hStat.formation       ?? null;  // e.g. "4-3-3"
+  const _aFormation  = aStat.formation       ?? null;
+  const _hBigWinStr  = hStat.biggestWinStreak  ?? null;
+  const _hBigLoseStr = hStat.biggestLoseStreak ?? null;
+  const _aBigWinStr  = aStat.biggestWinStreak  ?? null;
+  const _aBigLoseStr = aStat.biggestLoseStreak ?? null;
+  const _hCurStreak  = hStat.currentStreak   ?? null;  // +N=win, -N=loss, 0=neutral
+  const _aCurStreak  = aStat.currentStreak   ?? null;
+  // Parse formation → last digit = number of forwards (offensive indicator)
+  // 4-3-3 → 3 fwd (offensive), 4-5-1 → 1 fwd (defensive), 4-4-2 → neutral
+  const _fwds = (f) => { if (!f) return null; const p = f.split('-'); return p.length >= 2 ? parseInt(p[p.length-1]) : null; };
+  const _hFwds = _fwds(_hFormation);  // null if unknown
+  const _aFwds = _fwds(_aFormation);
+  // Formation modifier: 3+ fwd = offensive (+0.07 xG modifier), 1 fwd = defensive (-0.07)
+  const _hFormMod = _hFwds === null ? 0 : _hFwds >= 3 ? 0.07 : _hFwds <= 1 ? -0.07 : 0;
+  const _aFormMod = _aFwds === null ? 0 : _aFwds >= 3 ? 0.07 : _aFwds <= 1 ? -0.07 : 0;
   const _hElo  = hStat.elo || null;         // ClubElo rating home team
   const _aElo  = aStat.elo || null;         // ClubElo rating away team
   // eloDiff > 0 = home stronger; <0 = away stronger
@@ -2085,6 +2132,12 @@ function getBettingPicks(match, odds, leagueKey) {
   if (aMotivNone) { awayAttStr *= 0.82; awayDefStr *= 1.12; }
   else if (aMotivLow) { awayAttStr *= 0.92; awayDefStr *= 1.06; }
 
+  // ── Formation modifier (applied after fatigue + injury + motivation) ───────────
+  // Offensive formation (3+ forwards): +7% attack. Defensive (1 forward): −7% attack.
+  // Max ±7% so it enhances but never dominates the fatigue/injury signals.
+  if (_hFormMod !== 0) { homeAttStr *= (1 + _hFormMod); homeDefStr *= (1 - _hFormMod * 0.5); }
+  if (_aFormMod !== 0) { awayAttStr *= (1 + _aFormMod); awayDefStr *= (1 - _aFormMod * 0.5); }
+
   // BTTS signals (refined by xG)
   const bttsXGStrong = homeAttStr > 1.30 && awayAttStr > 1.10 && homeDefStr > 0.90 && awayDefStr > 0.90;
   const bttsLikely   = homeAttStr > 1.15 && awayAttStr > 0.95 && homeDefStr > 0.85 && awayDefStr > 0.85;
@@ -2173,6 +2226,21 @@ function getBettingPicks(match, odds, leagueKey) {
         else if (_ph <= 0.25) sc -= 0.08;
         else if (_ph <= 0.35) sc -= 0.04;
       }
+      // 🔑 COMPARISON SIGNALS — API-Football model: form/att/def/goals differentials
+      // Each capped at ±0.10 total to prevent single signal from dominating.
+      if (_compFormDiff !== null)  sc += Math.min(0.07, Math.max(-0.07, _compFormDiff / 100 * 0.70));
+      if (_compAttDiff !== null)   sc += Math.min(0.06, Math.max(-0.06, _compAttDiff  / 100 * 0.60));
+      if (_compDefDiff !== null)   sc += Math.min(0.05, Math.max(-0.05, _compDefDiff  / 100 * 0.50));
+      if (_compGoalsDiff !== null) sc += Math.min(0.05, Math.max(-0.05, _compGoalsDiff/ 100 * 0.50));
+      // 🔑 STREAK MOMENTUM — biggest win/loss streak this season + current streak
+      // Biggest win streak ≥5 = dominant team this season → small boost
+      if (_hBigWinStr  !== null && _hBigWinStr  >= 5) sc += Math.min(0.08, (_hBigWinStr  - 4) * 0.02);
+      if (_aBigLoseStr !== null && _aBigLoseStr >= 4) sc += Math.min(0.06, (_aBigLoseStr - 3) * 0.02);
+      // Current streak (from refresh_stats.py): positive = recent wins, negative = recent losses
+      if (_hCurStreak !== null && _hCurStreak >= 3)  sc += Math.min(0.08, (_hCurStreak - 2) * 0.025);
+      if (_hCurStreak !== null && _hCurStreak <= -3) sc -= Math.min(0.08, (-_hCurStreak - 2) * 0.025);
+      if (_aCurStreak !== null && _aCurStreak >= 3)  sc -= Math.min(0.08, (_aCurStreak - 2) * 0.025);
+      if (_aCurStreak !== null && _aCurStreak <= -3) sc += Math.min(0.06, (-_aCurStreak - 2) * 0.020);
       // ★★★ threshold 1.50 (multi-signal). ★★☆ lowered 0.72→0.50 so normal home favorites
       // without pressure still show (backtest showed too many good picks hidden at 0.72).
       const conf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
@@ -2184,6 +2252,18 @@ function getBettingPicks(match, odds, leagueKey) {
       // Venue-specific season stat note — shown only when meaningful
       const _hVenueNote = (_hHWR !== null || _hCSHome !== null)
         ? `<br>📊 Heimstatistik (Saison): ${_hHWR !== null ? `${Math.round(_hHWR*100)}% Siege` : ''}${_hHWR !== null && _hCSHome !== null ? ' · ' : ''}${_hCSHome !== null ? `${Math.round(_hCSHome*100)}% Clean Sheets` : ''}.`
+        : '';
+      // Formation note
+      const _hFormNote = (_hFormation || _aFormation)
+        ? `<br>📋 Formation: ${_hFormation || '?'} (Heim) vs ${_aFormation || '?'} (Ausw.).`
+        : '';
+      // Streak note
+      const _hStreakNote = (_hCurStreak !== null && Math.abs(_hCurStreak) >= 3)
+        ? `<br>🔥 Aktueller Lauf: ${match.home} ${_hCurStreak > 0 ? `${_hCurStreak}× ungeschlagen` : `${-_hCurStreak}× ohne Sieg`}.`
+        : '';
+      // Comparison note
+      const _hCompNote = (_compFormDiff !== null && Math.abs(_compFormDiff) >= 15)
+        ? `<br>📡 API-Vergleich: Form ${_compForm.home}% vs ${_compForm.away}% · Angriff ${_compAtt?.home ?? '?'}% vs ${_compAtt?.away ?? '?'}%.`
         : '';
       let reason = homeInForm
         ? `${match.home} ist in Topform (zuletzt ${hStreak} Siege) und gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele. Das Angriffsspiel (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) trifft auf eine anfällige ${match.away}-Abwehr (kassiert Ø ${awayDefStr.toFixed(1)} Tore/Spiel).${_hH2hSnippet}`
@@ -2197,6 +2277,9 @@ function getBettingPicks(match, odds, leagueKey) {
       if (eloAwayFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
       else if (eloHomeFav && eloLabel) reason += `<br>📊 Elo bestätigt: ${eloLabel}`;
       reason += _hVenueNote;
+      reason += _hFormNote;
+      reason += _hStreakNote;
+      reason += _hCompNote;
       if (_apiPoiH !== null) reason += `<br>🤖 API-Modell: ${_apiPoiH}% Heim · ${_apiPoiD ?? '?'}% Remis · ${_apiPoiA ?? '?'}% Auswärts (Poisson).`;
       rC.push({sc, p:{icon:'🏠', market:'Heimsieg', odds:o.hw, conf, reason}});
     }
@@ -2228,6 +2311,18 @@ function getBettingPicks(match, odds, leagueKey) {
         else if (_pa <= 0.20) sc -= 0.08;
         else if (_pa <= 0.30) sc -= 0.04;
       }
+      // 🔑 COMPARISON SIGNALS (inverted for away team: negative diff = away has edge)
+      if (_compFormDiff  !== null) sc += Math.min(0.07, Math.max(-0.07, -_compFormDiff  / 100 * 0.70));
+      if (_compAttDiff   !== null) sc += Math.min(0.06, Math.max(-0.06, -_compAttDiff   / 100 * 0.60));
+      if (_compDefDiff   !== null) sc += Math.min(0.05, Math.max(-0.05, -_compDefDiff   / 100 * 0.50));
+      if (_compGoalsDiff !== null) sc += Math.min(0.05, Math.max(-0.05, -_compGoalsDiff / 100 * 0.50));
+      // 🔑 STREAK MOMENTUM — away team version
+      if (_aBigWinStr  !== null && _aBigWinStr  >= 5) sc += Math.min(0.08, (_aBigWinStr  - 4) * 0.02);
+      if (_hBigLoseStr !== null && _hBigLoseStr >= 4) sc += Math.min(0.06, (_hBigLoseStr - 3) * 0.02);
+      if (_aCurStreak !== null && _aCurStreak >= 3)  sc += Math.min(0.08, (_aCurStreak - 2) * 0.025);
+      if (_aCurStreak !== null && _aCurStreak <= -3) sc -= Math.min(0.08, (-_aCurStreak - 2) * 0.025);
+      if (_hCurStreak !== null && _hCurStreak >= 3)  sc -= Math.min(0.08, (_hCurStreak - 2) * 0.025);
+      if (_hCurStreak !== null && _hCurStreak <= -3) sc += Math.min(0.06, (-_hCurStreak - 2) * 0.020);
       // Threshold: ★★★ at 1.30 (slightly lower than Heimsieg since away wins are rarer/more selective)
       const conf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
       const _xgLblA = xGBased ? 'xG' : 'Tore';
@@ -2236,6 +2331,13 @@ function getBettingPicks(match, odds, leagueKey) {
         : '';
       const _aVenueNote = (_aAWR !== null || _aCSAway !== null)
         ? `<br>📊 Auswärtsstatistik (Saison): ${_aAWR !== null ? `${Math.round(_aAWR*100)}% Siege` : ''}${_aAWR !== null && _aCSAway !== null ? ' · ' : ''}${_aCSAway !== null ? `${Math.round(_aCSAway*100)}% Clean Sheets` : ''}.`
+        : '';
+      // Formation + streak notes (away perspective)
+      const _aStreakNote = (_aCurStreak !== null && Math.abs(_aCurStreak) >= 3)
+        ? `<br>🔥 Aktueller Lauf: ${match.away} ${_aCurStreak > 0 ? `${_aCurStreak}× ungeschlagen` : `${-_aCurStreak}× ohne Sieg`}.`
+        : '';
+      const _aCompNote = (_compFormDiff !== null && Math.abs(_compFormDiff) >= 15)
+        ? `<br>📡 API-Vergleich: Form ${_compForm.home}% vs ${_compForm.away}% · Angriff ${_compAtt?.home ?? '?'}% vs ${_compAtt?.away ?? '?'}%.`
         : '';
       let reason = awayInForm
         ? `${match.away} ist in Topform (zuletzt ${aStreak} Siege) und gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele. Das Angriffsspiel (Ø ${awayAttStr.toFixed(1)} Tore/Spiel) trifft auf eine anfällige ${match.home}-Abwehr (kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel).${_aH2hSnippet}`
@@ -2247,6 +2349,9 @@ function getBettingPicks(match, odds, leagueKey) {
       if (eloHomeFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
       else if (eloAwayFav && eloLabel) reason += `<br>📊 Elo bestätigt: ${eloLabel}`;
       reason += _aVenueNote;
+      if (_hFormation || _aFormation) reason += `<br>📋 Formation: ${_hFormation || '?'} (Heim) vs ${_aFormation || '?'} (Ausw.).`;
+      reason += _aStreakNote;
+      reason += _aCompNote;
       if (_apiPoiA !== null) reason += `<br>🤖 API-Modell: ${_apiPoiH ?? '?'}% Heim · ${_apiPoiD ?? '?'}% Remis · ${_apiPoiA}% Auswärts (Poisson).`;
       rC.push({sc, p:{icon:'✈️', market:'Auswärtssieg', odds:o.aw, conf, reason}});
     }
@@ -2272,9 +2377,9 @@ function getBettingPicks(match, odds, leagueKey) {
       // Extra suppression 1: red-zone teams rarely helped by a draw (even if not technically mustWin)
       if ((hc.includes('red') || ac.includes('red')) && !bothNeedWin) sc = Math.max(0, sc - 0.18);
       // Extra suppression 2: heavy market favorite → draw probability is low regardless of form signals
-      // _bkrPH/PA are de-vigged from Pinnacle 1X2 — most reliable signal of true win probability
-      if (_bkrPH != null && _bkrPH > 0.55) sc = Math.max(0, sc - (_bkrPH - 0.55) * 2.2);
-      else if (_bkrPA != null && _bkrPA > 0.55) sc = Math.max(0, sc - (_bkrPA - 0.55) * 2.2);
+      // _fairPH/PA = blended Pinnacle (80%) + API pct (20%) — most reliable signal of true win prob
+      if (_fairPH != null && _fairPH > 0.55) sc = Math.max(0, sc - (_fairPH - 0.55) * 2.2);
+      else if (_fairPA != null && _fairPA > 0.55) sc = Math.max(0, sc - (_fairPA - 0.55) * 2.2);
       const _drH2h = h2hN >= 3 ? ` In ${h2hN} Duellen: ${h2h.draws||0}× Remis (${Math.round(drawRate*100)}%).` : ` H2H-Remisquote: ${Math.round(drawRate*100)}%.`;
       let reason = bothGold
         ? `Titelduell zweier gleichwertiger Teams — keiner will verlieren.${_drH2h} Form: ${Math.round(hFS_home*100)}% vs ${Math.round(aFS_away*100)}%${eloClose&&eloLabel?' · '+eloLabel:''}.`
@@ -2732,10 +2837,10 @@ function getBettingPicks(match, odds, leagueKey) {
     let mp = null;           // our model probability estimate
     switch (p.market) {
       case 'Heimsieg':
-        if (_bkrPH !== null) {
-          // Market-anchored: bookmaker's de-vigged prob as base, small pressure adjustment only
+        if (_fairPH !== null) {
+          // Market-anchored: blended fair prob (80% Pinnacle + 20% API pct) as base
           let _adj = homeNeedsWin ? _pressureBoost * 0.18 : 0;
-          mp = Math.min(0.97, Math.max(0.02, _bkrPH + Math.min(0.06, Math.max(-0.06, _adj))));
+          mp = Math.min(0.97, Math.max(0.02, _fairPH + Math.min(0.06, Math.max(-0.06, _adj))));
         } else {
           mp = Math.min(0.82, 0.34 + (hFS_home - 0.5) * 0.65 + Math.max(0, hStreak) * 0.03 + homeWinRate * 0.16);
           if (xGBased) mp = Math.min(0.82, mp + Math.max(0, homeAttStr - 1.2) * 0.08 - Math.max(0, awayAttStr - 1.4) * 0.06);
@@ -2744,9 +2849,9 @@ function getBettingPicks(match, odds, leagueKey) {
         }
         break;
       case 'Auswärtssieg':
-        if (_bkrPA !== null) {
+        if (_fairPA !== null) {
           let _adj = awayNeedsWin ? _pressureBoost * 0.18 : 0;
-          mp = Math.min(0.97, Math.max(0.02, _bkrPA + Math.min(0.06, Math.max(-0.06, _adj))));
+          mp = Math.min(0.97, Math.max(0.02, _fairPA + Math.min(0.06, Math.max(-0.06, _adj))));
         } else {
           mp = Math.min(0.76, 0.26 + (aFS_away - 0.5) * 0.65 + Math.max(0, aStreak) * 0.03 + awayWinRate * 0.16);
           if (xGBased) mp = Math.min(0.76, mp + Math.max(0, awayAttStr - 1.1) * 0.08 - Math.max(0, homeAttStr - 1.4) * 0.06);
@@ -2787,9 +2892,9 @@ function getBettingPicks(match, odds, leagueKey) {
         break;
       }
       case 'Unentschieden':
-        if (_bkrPD !== null) {
+        if (_fairPD !== null) {
           let _adj = (homeNeedsWin || awayNeedsWin) ? -Math.min(0.10, _pressureBoost * 0.30) : 0;
-          mp = Math.max(0.03, Math.min(0.65, _bkrPD + _adj));
+          mp = Math.max(0.03, Math.min(0.65, _fairPD + _adj));
         } else {
           mp = Math.min(0.40, drawRate * 0.72 + 0.10);
           if (homeNeedsWin || awayNeedsWin) mp = Math.max(0.05, mp - _pressureBoost * 0.30);

@@ -45,6 +45,47 @@ import http.client
 import os
 import time as _time
 
+# ── HTTP headers for external requests (ClubElo) ──────────────────────────────
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; BettingDashboard/1.0)"}
+
+# ── ClubElo → dashboard name overrides ────────────────────────────────────────
+# Maps ClubElo team names (right side) that differ from API-Football names (left side).
+# Add entries here when a team's Elo data isn't being matched automatically.
+# Example: "Man United" (our name) → ClubElo calls them "ManUnited"
+ELO_NAME_MAP: dict[str, str] = {
+    # ClubElo name → our (API-Football) name
+    "ManUnited":      "Manchester United",
+    "ManCity":        "Manchester City",
+    "Ncastle":        "Newcastle United",
+    "Wolves":         "Wolverhampton Wanderers",
+    "WestHam":        "West Ham United",
+    "Nottm Forest":   "Nottingham Forest",
+    "Leverkusen":     "Bayer Leverkusen",
+    "Gladbach":       "Borussia M'gladbach",
+    "Dortmund":       "Borussia Dortmund",
+    "Eintr Frankfurt": "Eintracht Frankfurt",
+    "Bayern":         "Bayern Munich",
+    "Paris":          "Paris Saint Germain",
+    "St Etienne":     "Saint-Etienne",
+    "Atletico":       "Atletico Madrid",
+    "Betis":          "Real Betis",
+    "Sociedad":       "Real Sociedad",
+    "Villareal":      "Villarreal",
+    "Inter":          "Inter Milan",
+    "Spal":           "SPAL",
+    "Verona":         "Hellas Verona",
+    "PSV":            "PSV Eindhoven",
+    "Ajax":           "Ajax",
+    "Brugge":         "Club Brugge",
+    "Anderlecht":     "R.S.C. Anderlecht",
+    "Gent":           "KAA Gent",
+    "Leuven":         "OH Leuven",
+    "Red Bull Salzburg": "RB Salzburg",
+    "Austria Wien":   "FK Austria Wien",
+    "LASK":           "LASK",
+    "Rapid":          "SK Rapid Wien",
+}
+
 # ── API-Football config ────────────────────────────────────────────────────────
 APIF_HOST  = "v3.football.api-sports.io"
 APIF_KEY   = os.environ.get("APISPORTS_KEY", "")
@@ -82,11 +123,14 @@ def apif_get(endpoint: str, params: dict) -> list:
         _time.sleep(APIF_DELAY)
 
 
-def fetch_league_stats(league_id: int, season: int = 2025) -> dict:
+def fetch_league_stats(league_id: int, season: int = 2025) -> tuple[dict, dict]:
     """
     Fetch all finished fixtures for a league season, compute per-team
     home/away win rates and goals/game averages (used as xG proxy).
-    Returns {team_name: {xG_home, xGA_home, homeWinRate, ..., xg_fairness*}}
+    Also computes currentStreak from fixture timestamps.
+    Returns:
+      - stats dict: {team_name: {xG_home, xGA_home, homeWinRate, ..., currentStreak}}
+      - team_ids:   {team_name: team_id}  (used for teams/statistics batch calls)
     """
     resp = apif_get("fixtures", {
         "league": league_id, "season": season,
@@ -99,10 +143,26 @@ def fetch_league_stats(league_id: int, season: int = 2025) -> dict:
             "status": "FT-AET-PEN",
         })
     if not resp:
-        return {}
+        return {}, {}
 
     # Aggregate per team
     teams: dict = {}
+    team_ids: dict[str, int] = {}
+
+    def _ensure(name, tid):
+        if name not in teams:
+            teams[name] = {
+                "home_gf": [], "home_ga": [], "home_wins": 0, "home_games": 0,
+                "away_gf": [], "away_ga": [], "away_wins": 0, "away_games": 0,
+                # Clean sheet + failed-to-score counts
+                "home_clean_sheets": 0, "home_failed_score": 0,
+                "away_clean_sheets": 0, "away_failed_score": 0,
+                # For streak computation: list of (unix_ts, 'W'|'D'|'L')
+                "_results_ts": [],
+            }
+        if tid:
+            team_ids[name] = tid
+
     for fx in resp:
         h_id   = fx["teams"]["home"]["id"]
         a_id   = fx["teams"]["away"]["id"]
@@ -112,32 +172,27 @@ def fetch_league_stats(league_id: int, season: int = 2025) -> dict:
         a_win  = fx["teams"]["away"].get("winner")
         h_gf   = fx["goals"]["home"] or 0
         a_gf   = fx["goals"]["away"] or 0
+        ts     = fx.get("fixture", {}).get("timestamp") or 0
 
-        def _ensure(name):
-            if name not in teams:
-                teams[name] = {
-                    "home_gf": [], "home_ga": [], "home_wins": 0, "home_games": 0,
-                    "away_gf": [], "away_ga": [], "away_wins": 0, "away_games": 0,
-                    # New: clean sheet + failed-to-score counts
-                    "home_clean_sheets": 0, "home_failed_score": 0,
-                    "away_clean_sheets": 0, "away_failed_score": 0,
-                }
-
-        _ensure(h_name)
+        _ensure(h_name, h_id)
         teams[h_name]["home_gf"].append(h_gf)
         teams[h_name]["home_ga"].append(a_gf)
         teams[h_name]["home_games"] += 1
         if h_win: teams[h_name]["home_wins"] += 1
-        if a_gf == 0: teams[h_name]["home_clean_sheets"] += 1   # kept a clean sheet at home
+        if a_gf == 0: teams[h_name]["home_clean_sheets"] += 1   # clean sheet at home
         if h_gf == 0: teams[h_name]["home_failed_score"] += 1   # failed to score at home
+        h_result = "W" if h_win else ("L" if a_win else "D")
+        teams[h_name]["_results_ts"].append((ts, h_result))
 
-        _ensure(a_name)
+        _ensure(a_name, a_id)
         teams[a_name]["away_gf"].append(a_gf)
         teams[a_name]["away_ga"].append(h_gf)
         teams[a_name]["away_games"] += 1
         if a_win: teams[a_name]["away_wins"] += 1
-        if h_gf == 0: teams[a_name]["away_clean_sheets"] += 1   # kept a clean sheet away
+        if h_gf == 0: teams[a_name]["away_clean_sheets"] += 1   # clean sheet away
         if a_gf == 0: teams[a_name]["away_failed_score"] += 1   # failed to score away
+        a_result = "W" if a_win else ("L" if h_win else "D")
+        teams[a_name]["_results_ts"].append((ts, a_result))
 
     result = {}
     for name, d in teams.items():
@@ -146,25 +201,85 @@ def fetch_league_stats(league_id: int, season: int = 2025) -> dict:
         xga_h = round(sum(d["home_ga"]) / hg, 3) if hg else None
         xg_a  = round(sum(d["away_gf"]) / ag, 3) if ag else None
         xga_a = round(sum(d["away_ga"]) / ag, 3) if ag else None
+
+        # Compute currentStreak: sort by timestamp, count consecutive W/L/D from end
+        sorted_results = [r for _, r in sorted(d["_results_ts"], key=lambda x: x[0])]
+        current_streak = 0
+        if sorted_results:
+            streak_type = sorted_results[-1]  # last result type
+            for r in reversed(sorted_results):
+                if r == streak_type:
+                    current_streak += 1
+                else:
+                    break
+            if streak_type == "L":
+                current_streak = -current_streak  # negative = losing streak
+
         result[name] = {
             "xG_home":            xg_h,
             "xGA_home":           xga_h,
-            "homeWinRate":        round(d["home_wins"]       / hg, 3) if hg else None,
+            "homeWinRate":        round(d["home_wins"]         / hg, 3) if hg else None,
             "cleanSheetHome":     round(d["home_clean_sheets"] / hg, 3) if hg else None,
             "failedToScoreHome":  round(d["home_failed_score"] / hg, 3) if hg else None,
             "home_games":         hg,
             "xG_away":            xg_a,
             "xGA_away":           xga_a,
-            "awayWinRate":        round(d["away_wins"]       / ag, 3) if ag else None,
+            "awayWinRate":        round(d["away_wins"]         / ag, 3) if ag else None,
             "cleanSheetAway":     round(d["away_clean_sheets"] / ag, 3) if ag else None,
             "failedToScoreAway":  round(d["away_failed_score"] / ag, 3) if ag else None,
             "away_games":         ag,
+            "currentStreak":      current_streak,   # +N = N-game win streak, -N = N-game loss streak
             # xG fairness not computable from goals alone — set neutral
             "xg_fairness":        1.0,
             "xg_fairness_home":   1.0,
             "xg_fairness_away":   1.0,
         }
-    return result
+    return result, team_ids
+
+
+def fetch_team_season_stats_extra(team_id: int, league_id: int, season: int = 2025) -> dict:
+    """
+    Fetch teams/statistics for a single team → extract:
+      - lineups[0].formation  (most-used formation this season)
+      - biggest.streak.wins   (longest winning streak)
+      - biggest.streak.loses  (longest losing streak)
+    Returns partial dict to merge into team entry, or {} on failure.
+    """
+    resp = apif_get("teams/statistics", {
+        "team": team_id, "league": league_id, "season": season,
+    })
+    if not resp:
+        return {}
+
+    stat = resp if isinstance(resp, dict) else (resp[0] if isinstance(resp, list) and resp else None)
+    if not stat:
+        return {}
+
+    # Most-used formation
+    lineups = stat.get("lineups") or []
+    formation = None
+    if lineups:
+        # Sort by played count descending → pick first
+        sorted_lineups = sorted(lineups, key=lambda x: x.get("played", 0), reverse=True)
+        formation = sorted_lineups[0].get("formation")
+
+    # Biggest streaks
+    biggest = stat.get("biggest", {})
+    streak = biggest.get("streak", {})
+    biggest_win_streak  = streak.get("wins")   or 0
+    biggest_lose_streak = streak.get("loses")  or 0
+    biggest_draw_streak = streak.get("draws")  or 0
+
+    out = {}
+    if formation:
+        out["formation"] = formation
+    if biggest_win_streak:
+        out["biggestWinStreak"]  = biggest_win_streak
+    if biggest_lose_streak:
+        out["biggestLoseStreak"] = biggest_lose_streak
+    if biggest_draw_streak:
+        out["biggestDrawStreak"] = biggest_draw_streak
+    return out
 
 
 def process_league(league_key: str) -> dict:
@@ -173,7 +288,7 @@ def process_league(league_key: str) -> dict:
         return {}
     print(f"  📊  {league_key}  (API-Football ID {league_id})")
     try:
-        stats = fetch_league_stats(league_id)
+        stats, team_ids = fetch_league_stats(league_id)
         if stats:
             sample = list(stats.items())[:2]
             for name, s in sample:
@@ -182,8 +297,21 @@ def process_league(league_key: str) -> dict:
                       f"WR_h={s['homeWinRate'] or '-':>4}  "
                       f"WR_a={s['awayWinRate'] or '-':>4}  "
                       f"CS_h={s['cleanSheetHome'] or '-':>4}  "
-                      f"FTS_a={s['failedToScoreAway'] or '-':>4}")
-            print(f"       → {len(stats)} teams")
+                      f"FTS_a={s['failedToScoreAway'] or '-':>4}  "
+                      f"streak={s['currentStreak']:+d}")
+            print(f"       → {len(stats)} teams — fetching teams/statistics for formation+biggestStreak…")
+
+            # Batch-fetch teams/statistics for each team (rate-limited)
+            extra_ok = 0
+            for tname, entry in stats.items():
+                tid = team_ids.get(tname)
+                if not tid:
+                    continue
+                extra = fetch_team_season_stats_extra(tid, league_id)
+                if extra:
+                    entry.update(extra)
+                    extra_ok += 1
+            print(f"       → {extra_ok}/{len(stats)} teams enriched with formation+biggestStreak")
         else:
             print(f"       ⚠️  No data returned")
         return stats

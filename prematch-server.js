@@ -519,6 +519,11 @@ async function fetchAllPrematchData() {
         const cp = pred.comparison  || {};
         // Percent fields come as "70%" strings — parse to int
         const _pct = (s) => { const n = parseInt(s); return isNaN(n) ? null : n; };
+        // Helper: extract {home, away} int pair from comparison sub-object
+        const _comp = (key) => {
+          const h = parseInt(cp[key]?.home); const a = parseInt(cp[key]?.away);
+          return (!isNaN(h) && !isNaN(a)) ? { home: h, away: a } : null;
+        };
         d.apiPrediction = {
           goalsHome:   parseFloat(p.goals?.home)               || null,  // e.g. 1.8
           goalsAway:   parseFloat(p.goals?.away)               || null,  // e.g. 1.2
@@ -530,6 +535,11 @@ async function fetchAllPrematchData() {
           poissonHome: _pct(cp.poisson_distribution?.home),
           poissonDraw: _pct(cp.poisson_distribution?.draws),
           poissonAway: _pct(cp.poisson_distribution?.away),
+          // Comparison signals (0–100 each side, higher = better)
+          compForm:    _comp('form'),    // recent form score
+          compAtt:     _comp('att'),     // attack strength
+          compDef:     _comp('def'),     // defensive strength
+          compGoals:   _comp('goals'),   // goals comparison
         };
         predOk++;
       }
