@@ -129,6 +129,15 @@ def generate_picks(match: dict) -> list[dict]:
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
+def fixture_date_iso(date_str: str, fallback: str) -> str:
+    """Convert German date string DD.MM.YYYY → ISO YYYY-MM-DD."""
+    try:
+        d = datetime.datetime.strptime(date_str.strip(), "%d.%m.%Y")
+        return d.strftime("%Y-%m-%d")
+    except Exception:
+        return fallback
+
+
 def main():
     today_iso = datetime.date.today().isoformat()
     print(f"📝  Save picks — {today_iso}")
@@ -146,19 +155,18 @@ def main():
         with open(HISTORY_FILE, encoding="utf-8") as f:
             history = json.load(f)
 
-    # Build set of already-saved match IDs for today
-    saved_ids = {
-        e["id"] for e in history
-        if e.get("dateIso") == today_iso
-    }
+    # Build set of already-saved match IDs (global, not just today)
+    saved_ids = {e["id"] for e in history}
 
     added = 0
     for match in matches:
-        mid = f"{today_iso}-{match['league']}-{match['home']}-{match['away']}"
+        # Use the ACTUAL fixture date for dateIso, not today's run date
+        date_iso = fixture_date_iso(match.get("date", ""), today_iso)
+        mid = f"{date_iso}-{match['league']}-{match['home']}-{match['away']}"
         mid = mid.replace(" ", "_").replace("/", "-")
 
         if mid in saved_ids:
-            continue  # Already saved today
+            continue  # Already saved for this fixture date
 
         picks = generate_picks(match)
         if not picks:
@@ -167,7 +175,7 @@ def main():
         entry = {
             "id":          mid,
             "date":        match["date"],
-            "dateIso":     today_iso,
+            "dateIso":     date_iso,  # Actual fixture date, not run date
             "league":      match["league"],
             "leagueName":  match["leagueName"],
             "leagueFlag":  match["leagueFlag"],
