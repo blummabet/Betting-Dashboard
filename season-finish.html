@@ -910,13 +910,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <!-- pressureRatio / mustWin / canDraw -->
     <div class="heart-grid" style="margin-top:10px;">
       <div class="heart-card pressure" style="grid-column:1/-1">
-        <h3>📐 pressureRatio / mustWin / canDraw — Neues Score-Fundament</h3>
-        <p style="margin-bottom:10px;font-size:12.5px;color:var(--muted);">Seit dem letzten Update basiert der Match Score <em>primär auf dem pressureRatio</em> — nicht mehr nur auf roundsLeft. Das Modell berechnet wie viele Punkte ein Team noch braucht im Verhältnis zu den maximal möglichen:</p>
+        <h3>📐 pressureRatio / mustWin / canDraw — Score-Fundament</h3>
+        <p style="margin-bottom:10px;font-size:12.5px;color:var(--muted);">Der Match Score basiert <em>primär auf dem pressureRatio</em>. Das Modell berechnet wie viele Punkte ein Team noch braucht — <strong>konkurrenz-adjustiert</strong>: statt den aktuellen Punktestand des Konkurrenten einzufrieren, wird dessen projiziertes Endresultat (via PPG) berücksichtigt. Zusätzlich gilt ein Torverhältnis-Tiebreaker bei Punktegleichstand.</p>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
           <div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Formel</div>
-            <code style="font-size:12px;color:var(--accent);">pressureRatio = pointsNeeded / (roundsLeft × 3)</code>
-            <p style="font-size:11px;color:var(--muted);margin-top:6px;">Beispiel: Team braucht 8 Punkte, 6 Runden → 8/18 = 0.44 → mittlerer Druck</p>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Formel (Konkurrenz-adjustiert)</div>
+            <code style="font-size:12px;color:var(--accent);">pointsNeeded = (pts_boundary + comp_gain) − pts + 1 [+ GD-Penalty]</code>
+            <p style="font-size:11px;color:var(--muted);margin-top:6px;"><code>comp_gain = roundsLeft × PPG_competitor</code> (PPG aus aktuellem Tabellenstand, geclampt 0.8–2.4). GD-Penalty +1 wenn Punktegleichstand aber schlechteres Torverhältnis. <code>pressureRatio = min(1.0, pointsNeeded / max_gain)</code></p>
+            <p style="font-size:11px;color:var(--accent);margin-top:5px;"><strong>Beispiel:</strong> Abstiegsteam 4 Punkte hinter Sicherheit, sicheres Team PPG 1.5, 4 Runden → comp_gain ≈ 6 → pointsNeeded = 4+6+1 = <strong>11</strong>, ratio = 11/12 = <strong>0.92 → mustWin</strong>. Alt: pointsNeeded = 5, ratio = 0.42 → kein Druck.</p>
           </div>
           <div style="background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.3);border-radius:8px;padding:12px;">
             <div style="font-size:11px;color:#f85149;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">⚡ mustWin = true</div>
@@ -945,7 +946,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <table class="heart-table">
           <tr><th>Level</th><th>Bedeutung</th><th>Bedingung</th><th>xG-Effekt</th></tr>
           <tr><td><code>full</code></td><td>Aktiv kämpfend</td><td>Standard — Ziel noch offen</td><td>Kein Penalty</td></tr>
-          <tr><td><code>low</code></td><td>Nahezu gesichert</td><td>Rückstand > 55% der verbleibenden Max-Punkte</td><td>Att −8% · Def +6%</td></tr>
+          <tr><td><code>low</code></td><td>Nahezu gesichert</td><td><strong>Abstieg:</strong> (Rückstand zu Sicherheit + comp_gain) > 75% der Max-Punkte · <strong>Titelrennen/UCL:</strong> (Vorsprung − comp_gain) > 15% der Max-Punkte · comp_gain = PPG_Konkurrent × roundsLeft (geclampt 0.8–2.4)</td><td>Att −8% · Def +6%</td></tr>
           <tr><td><code>none</code></td><td>Mathematisch bestätigt</td><td>Rückstand > 100% der Max-Punkte (unmöglich aufzuholen)</td><td>Att −18% · Def +12%</td></tr>
         </table>
         <p style="margin-top:10px;font-size:12px;color:var(--muted);">Berechnung: <code>update_dashboard.py → calc_motivation()</code> · Wird in <code>homeStake.motivationLevel</code> / <code>awayStake.motivationLevel</code> gespeichert · Pressure-Strip zeigt ⬜ statt 🚨 wenn alle Stakes gesichert sind · Druck-Boost (homeNeedsWin) deaktiviert für <code>none</code>-Teams.</p>
@@ -1160,6 +1161,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Pinnacle-Quoten via api-football</strong> — primäre Fair-Value-Basis</li>
           <li><strong>Squad Cache (squad-cache.json)</strong> — 154 Teams, 7-Tage-TTL</li>
           <li><strong>Dynamische Score-Obergrenze</strong> — Max-Score skaliert mit roundsLeft (1 Runde → 12.0, ≥10 → 7.5)</li>
+          <li><strong>Konkurrenz-adjustierter calc_pressure()</strong> — <code>pointsNeeded = (pts_boundary + comp_gain) − pts + 1 [+ GD-Penalty]</code>. comp_gain = PPG des Grenztabellen-Teams × roundsLeft (geclampt 0.8–2.4 PPG). Verhindert dass ein Team als sicher gilt, wenn der Konkurrent noch 6–8 Punkte dazugewinnt. GD-Penalty +1 wenn Punktegleichstand aber schlechteres Torverhältnis — weil das Team dann tatsächlich einen Platz hinter dem Konkurrenten liegt. <em>(update_dashboard.py)</em></li>
+          <li><strong>Konkurrenz-adjustierter calc_motivation() 'low'-Schwellenwert</strong> — Abstiegszone: 'low' wenn (gap_to_safety + comp_gain) > max_gain × 0.75 (statt starrer 55%-Grenze). Titelrennen/UCL: 'low' wenn (gap − comp_gain) > max_gain × 0.15. Berücksichtigt, dass ein Vorsprung schmilzt, wenn der Verfolger noch viele Punkte holt. <em>(update_dashboard.py)</em></li>
+          <li><strong>DC-Begründungstext-Fix</strong> — "Selbst wenn … nicht gewinnt, ist das Geld zurück" (Beschreibung von DNB) ersetzt durch "Nur bei einer Niederlage von … geht der Einsatz verloren" (korrekte DC-Semantik: Einsatz ist nur bei Gegner-Sieg verloren, Remis gewinnt). <em>(season-finish.html)</em></li>
+          <li><strong>_dcDrawW = 0.10 bei bothNeedWin</strong> — Wenn beide Teams mustWin sind (pressureRatio > 0.65), ist ein Remis das unwahrscheinlichste Ergebnis. Draw-Gewicht im DC-Score auf 0.10 gesenkt (statt 1.0), damit DC-Picks in Abstieg-vs-Abstieg-Duellen nicht durch das Remis-Szenario verwässert werden. <em>(season-finish.html)</em></li>
+          <li><strong>1. HZ: Under 0.5 Begründungstext-Fix</strong> — Alter Text beschrieb ein offensives Spiel mit mindestens einem Tor (= Begründung für Over, nicht Under). Neuer Text erklärt taktisch vorsichtigen Spielbeginn und niedrige Gesamtprognose als Grund warum kein Tor in HZ1 erwartet wird. <em>(season-finish.html)</em></li>
         </ul>
       </div>
     </div>
