@@ -291,8 +291,9 @@ async function fetchAllPrematchData() {
           injuries:     { home: [], away: [] },
           injurySummary: { home: null, away: null },
           h2h:          null,
-          isFinished:   FINISHED.has(fxStatus),
-          odds:         null
+          isFinished:    FINISHED.has(fxStatus),
+          odds:          null,
+          apiPrediction: null
         };
       }
       await sleep(CALL_DELAY);
@@ -503,8 +504,43 @@ async function fetchAllPrematchData() {
   if (_firstOddsErr) console.warn(`  [Odds] Erstes Problem:`, JSON.stringify(_firstOddsErr));
   console.log(`  Step5 fertig: ${oddsOk} OK · ${oddsFail} leer/Fehler (von ${upcoming.length} Spielen)`);
 
+  // ── Step 5.5: API Predictions ─────────────────────────────────────────────
+  // /predictions returns the API-Football model's expected goals, result percentages
+  // and Poisson-distribution win/draw/loss probabilities — used as independent signal.
+  console.log(`[Server] Step5.5: Predictions für ${upcoming.length} Spiele...`);
+  let predOk = 0;
+  for (const d of upcoming) {
+    await sleep(1200);
+    try {
+      const data = await apiFetch(`/predictions?fixture=${d.fixtureId}`);
+      const pred = (data.response || [])[0];
+      if (pred) {
+        const p  = pred.predictions || {};
+        const cp = pred.comparison  || {};
+        // Percent fields come as "70%" strings — parse to int
+        const _pct = (s) => { const n = parseInt(s); return isNaN(n) ? null : n; };
+        d.apiPrediction = {
+          goalsHome:   parseFloat(p.goals?.home)               || null,  // e.g. 1.8
+          goalsAway:   parseFloat(p.goals?.away)               || null,  // e.g. 1.2
+          underOver:   p.under_over                            || null,  // "Over 2.5" | "Under 2.5"
+          pctHome:     _pct(p.percent?.home),  // 0–100 (percentage string without %)
+          pctDraw:     _pct(p.percent?.draw),
+          pctAway:     _pct(p.percent?.away),
+          // Poisson distribution — API's own model result probabilities (0–100)
+          poissonHome: _pct(cp.poisson_distribution?.home),
+          poissonDraw: _pct(cp.poisson_distribution?.draws),
+          poissonAway: _pct(cp.poisson_distribution?.away),
+        };
+        predOk++;
+      }
+    } catch(e) {
+      // Silently skip — predictions are optional enrichment
+    }
+  }
+  console.log(`  Step5.5 fertig: ${predOk} Predictions geladen (von ${upcoming.length} Spielen)`);
+
   const refNote = uniqueRefs.length ? `, ${uniqueRefs.length} Schiri-Namen (Stats im Browser)` : '';
-  console.log(`\n[Server] ✅ Fertig: ${fixtures.length} Spiele, ${h2hOk} H2H, ${injOk} Verletzungen${refNote}, ${oddsOk} Quoten\n`);
+  console.log(`\n[Server] ✅ Fertig: ${fixtures.length} Spiele, ${h2hOk} H2H, ${injOk} Verletzungen${refNote}, ${oddsOk} Quoten, ${predOk} Predictions\n`);
   return fixtures;
 }
 

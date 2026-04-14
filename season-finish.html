@@ -758,7 +758,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <tr><th>Quelle</th><th>Was geliefert wird</th><th>Script / Trigger</th><th>Verwendet für</th></tr>
         <tr style="background:rgba(0,212,161,.04);border-left:2px solid var(--accent);">
           <td><strong style="color:var(--accent)">API-Football Pro</strong> <span style="font-size:10px;color:var(--muted)">($19/Mo · 7.500 req/Tag)</span></td>
-          <td>Standings · Fixtures · Form (last 10) · Schiedsrichter · Verletzungen/Sperren · Echtes H2H · <strong>Pinnacle-Quoten</strong> · Fixture-Statistics (Shots + xG)</td>
+          <td>Standings · Fixtures · Form (last 10) · Schiedsrichter · Verletzungen/Sperren · Echtes H2H · <strong>Pinnacle-Quoten</strong> · Fixture-Statistics (Shots + xG) · <strong>Predictions</strong> (expected goals · Over/Under · Poisson %)</td>
           <td><code style="font-size:10px;">update_dashboard.py</code> täglich · <code style="font-size:10px;">refresh_stats.py</code> täglich · <code style="font-size:10px;">refresh_xg.py</code> wöchentlich · <code style="font-size:10px;">prematch-server.js</code> täglich</td>
           <td><strong>Alle Daten</strong> — einzige externe Quelle: Tabellen, Picks, xG, Pre-Match, Quoten</td>
         </tr>
@@ -769,10 +769,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <td>xG_home · xGA_home · xG_away · xGA_away · xg_fairness (actual_goals / xG) pro Team → activiert <code>xGBased=true</code> im Dashboard</td>
         </tr>
         <tr>
-          <td>📊 <strong>refresh_stats.py</strong> — Tore-Proxy + Elo</td>
-          <td>Alle FT-Fixtures der Saison → Tore/Spiel pro Team (home/away split) · homeWinRate · awayWinRate</td>
+          <td>📊 <strong>refresh_stats.py</strong> — Tore-Proxy + Elo + CS/FTS</td>
+          <td>Alle FT-Fixtures der Saison → Tore/Spiel pro Team (home/away split) · homeWinRate · awayWinRate · <strong>cleanSheetHome/Away</strong> · <strong>failedToScoreHome/Away</strong></td>
           <td><code style="font-size:10px;">refresh_stats.py</code> — täglich 05:45 UTC · ClubElo-Elo täglich</td>
-          <td>homeWinRate · awayWinRate · Elo-Rating → Fallback wenn refresh_xg noch nicht gelaufen</td>
+          <td>homeWinRate · awayWinRate · Elo-Rating · cleanSheet- &amp; failedToScore-Raten → BTTS, Under, Over Kalibrierung</td>
         </tr>
         <tr>
           <td>ClubElo</td>
@@ -1166,6 +1166,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>DC-Begründungstext-Fix</strong> — "Selbst wenn … nicht gewinnt, ist das Geld zurück" (Beschreibung von DNB) ersetzt durch "Nur bei einer Niederlage von … geht der Einsatz verloren" (korrekte DC-Semantik: Einsatz ist nur bei Gegner-Sieg verloren, Remis gewinnt). <em>(season-finish.html)</em></li>
           <li><strong>_dcDrawW = 0.10 bei bothNeedWin</strong> — Wenn beide Teams mustWin sind (pressureRatio > 0.65), ist ein Remis das unwahrscheinlichste Ergebnis. Draw-Gewicht im DC-Score auf 0.10 gesenkt (statt 1.0), damit DC-Picks in Abstieg-vs-Abstieg-Duellen nicht durch das Remis-Szenario verwässert werden. <em>(season-finish.html)</em></li>
           <li><strong>1. HZ: Under 0.5 Begründungstext-Fix</strong> — Alter Text beschrieb ein offensives Spiel mit mindestens einem Tor (= Begründung für Over, nicht Under). Neuer Text erklärt taktisch vorsichtigen Spielbeginn und niedrige Gesamtprognose als Grund warum kein Tor in HZ1 erwartet wird. <em>(season-finish.html)</em></li>
+          <li><strong>Clean Sheet &amp; Failed-to-Score Raten</strong> — <code>refresh_stats.py</code> berechnet jetzt aus dem bestehenden Fixture-Loop pro Team: <code>cleanSheetHome</code>, <code>cleanSheetAway</code>, <code>failedToScoreHome</code>, <code>failedToScoreAway</code> (0.0–1.0, Saisonbasis, keine neuen API-Calls nötig). Fließt in BTTS Nein (+0.12–0.26 Bonus), BTTS Ja (−0.10–0.18 Dämpfer), Under 2.5 (+0.05–0.10 Boost), Over 2.5 (−0.10 wenn sehr defensiv) und Begründungstexte ein. <em>(refresh_stats.py + season-finish.html)</em></li>
+          <li><strong>API-Prediction Konsens-Signal</strong> — <code>prematch-server.js Step 5.5</code> holt <code>/predictions?fixture=</code> für jedes Spiel: <code>goalsHome</code>, <code>goalsAway</code>, <code>underOver</code> ("Over 2.5" / "Under 2.5"), <code>pctHome/Draw/Away</code> sowie <code>poissonHome/Draw/Away</code>. Wird ins <code>apiPrediction</code>-Objekt auf dem Match gespeichert. <em>(prematch-server.js)</em></li>
+          <li><strong>expGoals API-Blend (non-xG Ligen)</strong> — Wenn <code>xGBased=false</code> (kein Understat-xG) und API-Goals verfügbar: <code>expGoals = 0.70 × Modell + 0.30 × API-Prediction-Goals</code>. Ergebnislabel zeigt "🤖 EG (Modell + API)" statt "Ø EG". Für Big-5 mit echtem xG kein Blend — dort ist die Datenbasis bereits stark. <em>(season-finish.html)</em></li>
+          <li><strong>Over/Under API-Konsens ±0.06–0.07</strong> — <code>apiPrediction.underOver</code> verstärkt das eigene Modell wenn beide übereinstimmen (Over: +0.07, Under: +0.07) und dämpft wenn sie divergieren (−0.06). Verhindert Over-Empfehlungen wenn das API-Modell "Under" sieht und umgekehrt. <em>(season-finish.html)</em></li>
+          <li><strong>API Poisson als Fair-Value-Ergänzung</strong> — <code>poissonHome/Away</code> (0–100%) wird als milde Korrekturgröße für Heimsieg/Auswärtssieg-Score eingesetzt wenn <strong>keine Pinnacle-Quoten vorliegen</strong> (max ±0.10). Ist Pinnacle vorhanden, bleibt de-viggte Marktquote primär. Poisson-Werte erscheinen als "🤖 API-Modell: X% Heim · Y% Remis · Z% Auswärts" in Begründungstexten. <em>(season-finish.html)</em></li>
+          <li><strong>Venue-Stats in Begründungstexten</strong> — Heimsieg-Picks zeigen "📊 Heimstatistik (Saison): X% Siege · Y% Clean Sheets", Auswärtssieg entsprechend. Under 2.5 und BTTS-Nein-Picks zeigen saisonale Clean-Sheet- und Failed-to-Score-Raten als Faktenbasis. <em>(season-finish.html)</em></li>
         </ul>
       </div>
     </div>
@@ -1835,6 +1841,28 @@ function getBettingPicks(match, odds, leagueKey) {
   const _aXGA  = aStat.xGA_away || null;   // away team avg xGA away
   const _hHWR  = hStat.homeWinRate ?? null; // home team actual home win rate
   const _aAWR  = aStat.awayWinRate ?? null; // away team actual away win rate
+  // ── Clean sheet & failed-to-score rates (from refresh_stats.py) ──────────────
+  // cleanSheetHome  = % of home games where home team kept a clean sheet
+  // failedToScoreAway = % of away games where away team scored 0 goals
+  // These directly drive BTTS No + Under calibration (venue-specific, full-season basis)
+  const _hCSHome  = hStat.cleanSheetHome   ?? null;
+  const _aCSAway  = aStat.cleanSheetAway   ?? null;
+  const _hFTSHome = hStat.failedToScoreHome ?? null;
+  const _aFTSAway = aStat.failedToScoreAway ?? null;
+  // ── API Prediction (from prematch-server.js /predictions endpoint) ───────────
+  // Independent model signal: expected goals, result %, Poisson distribution
+  const _apiPred    = match.apiPrediction   || null;
+  const _apiGoalsH  = _apiPred?.goalsHome   ?? null;  // API-expected goals for home team
+  const _apiGoalsA  = _apiPred?.goalsAway   ?? null;  // API-expected goals for away team
+  const _apiUO      = _apiPred?.underOver   ?? null;  // "Over 2.5" | "Under 2.5" | null
+  const _apiPctH    = _apiPred?.pctHome     ?? null;  // 0–100
+  const _apiPctD    = _apiPred?.pctDraw     ?? null;
+  const _apiPctA    = _apiPred?.pctAway     ?? null;
+  const _apiPoiH    = _apiPred?.poissonHome ?? null;  // Poisson win% (0–100)
+  const _apiPoiD    = _apiPred?.poissonDraw ?? null;
+  const _apiPoiA    = _apiPred?.poissonAway ?? null;
+  // Blended API expected goals — used when xGBased=false (non-Big5 or no refresh_stats run)
+  const _apiExpG = (_apiGoalsH !== null && _apiGoalsA !== null) ? (_apiGoalsH + _apiGoalsA) : null;
   const _hElo  = hStat.elo || null;         // ClubElo rating home team
   const _aElo  = aStat.elo || null;         // ClubElo rating away team
   // eloDiff > 0 = home stronger; <0 = away stronger
@@ -1963,11 +1991,20 @@ function getBettingPicks(match, odds, leagueKey) {
 
   // ── Derived ───────────────────────────────────────────
   // Expected goals: prefer real xG model (home xG + away xGA, away xG + home xGA)
-  const expGoals = xGBased
+  const _expGoalsModel = xGBased
     ? (_hXG + _aXGA + _aXG + _hXGA) / 2
     : (hGoals + aConc + aGoals + hConc) / 2;
+  // API Prediction blend: when xGBased=false and API goals available, blend 70/30.
+  // Only blend for non-xG path — when Understat xG is available it's already strong.
+  const expGoals = (!xGBased && _apiExpG !== null)
+    ? Math.round((_expGoalsModel * 0.70 + _apiExpG * 0.30) * 10) / 10
+    : _expGoalsModel;
   // Label shown in pick reasons — distinguishes real xG model from estimated EG
-  const egPfx = xGBased ? `📐 ${expGoals.toFixed(1)} xG (Understat)` : `Ø ${expGoals.toFixed(1)} EG`;
+  const egPfx = xGBased
+    ? `📐 ${expGoals.toFixed(1)} xG (Understat)`
+    : (_apiExpG !== null)
+      ? `🤖 ${expGoals.toFixed(1)} EG (Modell + API)`
+      : `Ø ${expGoals.toFixed(1)} EG`;
   // Venue form: blend real home/away win rate (55%) with overall formScore (45%) when available
   // Fallback: proxy formula (home +15%, away -13%)
   const hFS_home = _hHWR != null
@@ -2127,6 +2164,15 @@ function getBettingPicks(match, odds, leagueKey) {
       // 🔑 H2H RECENCY: last 5 direct meetings, recency-weighted. Positive = home has been winning recently.
       // Max ±0.07 — small but meaningful for borderline picks.
       sc += _h2hRecencyMod;
+      // 🔑 API POISSON — fair value supplement (only when Pinnacle odds absent; max ±0.10)
+      // Poisson from /predictions is an independent model — use as mild confirmatory signal.
+      if (_apiPoiH !== null && !_bkrPH) {
+        const _ph = _apiPoiH / 100;
+        if (_ph >= 0.60) sc += 0.10;
+        else if (_ph >= 0.50) sc += 0.05;
+        else if (_ph <= 0.25) sc -= 0.08;
+        else if (_ph <= 0.35) sc -= 0.04;
+      }
       // ★★★ threshold 1.50 (multi-signal). ★★☆ lowered 0.72→0.50 so normal home favorites
       // without pressure still show (backtest showed too many good picks hidden at 0.72).
       const conf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
@@ -2134,6 +2180,10 @@ function getBettingPicks(match, odds, leagueKey) {
       // Build reason: lead with the primary signal, support with attack vs defence matchup, add H2H context
       const _hH2hSnippet = h2hN >= 3
         ? ` · H2H: ${h2h.homeWins||0}H/${h2h.draws||0}U/${h2h.awayWins||0}A (${h2hN} Duelle)`
+        : '';
+      // Venue-specific season stat note — shown only when meaningful
+      const _hVenueNote = (_hHWR !== null || _hCSHome !== null)
+        ? `<br>📊 Heimstatistik (Saison): ${_hHWR !== null ? `${Math.round(_hHWR*100)}% Siege` : ''}${_hHWR !== null && _hCSHome !== null ? ' · ' : ''}${_hCSHome !== null ? `${Math.round(_hCSHome*100)}% Clean Sheets` : ''}.`
         : '';
       let reason = homeInForm
         ? `${match.home} ist in Topform (zuletzt ${hStreak} Siege) und gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele. Das Angriffsspiel (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) trifft auf eine anfällige ${match.away}-Abwehr (kassiert Ø ${awayDefStr.toFixed(1)} Tore/Spiel).${_hH2hSnippet}`
@@ -2146,6 +2196,8 @@ function getBettingPicks(match, odds, leagueKey) {
               : `${match.home} gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele und erzielt dabei Ø ${homeAttStr.toFixed(1)} Tore/Spiel. Der Gegner kassiert Ø ${awayDefStr.toFixed(1)} Tore/Spiel.${_hH2hSnippet}`;
       if (eloAwayFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
       else if (eloHomeFav && eloLabel) reason += `<br>📊 Elo bestätigt: ${eloLabel}`;
+      reason += _hVenueNote;
+      if (_apiPoiH !== null) reason += `<br>🤖 API-Modell: ${_apiPoiH}% Heim · ${_apiPoiD ?? '?'}% Remis · ${_apiPoiA ?? '?'}% Auswärts (Poisson).`;
       rC.push({sc, p:{icon:'🏠', market:'Heimsieg', odds:o.hw, conf, reason}});
     }
     // ── Auswärtssieg ──────────────────────────────────────────────────────
@@ -2168,11 +2220,22 @@ function getBettingPicks(match, odds, leagueKey) {
       sc -= _hFairMod;   // home underperforming → they'll improve, hurts away win
       // 🔑 H2H RECENCY: inverted — negative _h2hRecencyMod means away has been winning recently
       sc -= _h2hRecencyMod;
+      // 🔑 API POISSON — fair value supplement when Pinnacle odds absent
+      if (_apiPoiA !== null && !_bkrPA) {
+        const _pa = _apiPoiA / 100;
+        if (_pa >= 0.55) sc += 0.10;
+        else if (_pa >= 0.45) sc += 0.05;
+        else if (_pa <= 0.20) sc -= 0.08;
+        else if (_pa <= 0.30) sc -= 0.04;
+      }
       // Threshold: ★★★ at 1.30 (slightly lower than Heimsieg since away wins are rarer/more selective)
       const conf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
       const _xgLblA = xGBased ? 'xG' : 'Tore';
       const _aH2hSnippet = h2hN >= 3
         ? ` · H2H: ${h2h.homeWins||0}H/${h2h.draws||0}U/${h2h.awayWins||0}A (${h2hN} Duelle)`
+        : '';
+      const _aVenueNote = (_aAWR !== null || _aCSAway !== null)
+        ? `<br>📊 Auswärtsstatistik (Saison): ${_aAWR !== null ? `${Math.round(_aAWR*100)}% Siege` : ''}${_aAWR !== null && _aCSAway !== null ? ' · ' : ''}${_aCSAway !== null ? `${Math.round(_aCSAway*100)}% Clean Sheets` : ''}.`
         : '';
       let reason = awayInForm
         ? `${match.away} ist in Topform (zuletzt ${aStreak} Siege) und gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele. Das Angriffsspiel (Ø ${awayAttStr.toFixed(1)} Tore/Spiel) trifft auf eine anfällige ${match.home}-Abwehr (kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel).${_aH2hSnippet}`
@@ -2183,6 +2246,8 @@ function getBettingPicks(match, odds, leagueKey) {
             : `${match.away} gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele und erzielt dabei Ø ${awayAttStr.toFixed(1)} Tore/Spiel. Der Gegner kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel.${_aH2hSnippet}`;
       if (eloHomeFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
       else if (eloAwayFav && eloLabel) reason += `<br>📊 Elo bestätigt: ${eloLabel}`;
+      reason += _aVenueNote;
+      if (_apiPoiA !== null) reason += `<br>🤖 API-Modell: ${_apiPoiH ?? '?'}% Heim · ${_apiPoiD ?? '?'}% Remis · ${_apiPoiA}% Auswärts (Poisson).`;
       rC.push({sc, p:{icon:'✈️', market:'Auswärtssieg', odds:o.aw, conf, reason}});
     }
     // ── Unentschieden ─────────────────────────────────────────────────────
@@ -2358,12 +2423,24 @@ function getBettingPicks(match, odds, leagueKey) {
       if (anyGold && !anyRed && urgencyHigh) sc = Math.max(0, sc - 0.07);
       // 🔑 H2H GOALS HISTORY: over25Rate + avgGoals as independent confirmation
       sc = Math.min(0.92, Math.max(0, sc + _h2hO25Mod + _h2hAvgGMod));
+      // 🔑 CLEAN SHEET / FAILED TO SCORE: both teams rarely shut out → Over supported
+      if (_hCSHome !== null && _aCSAway !== null) {
+        const _csAvg = (_hCSHome + _aCSAway) / 2;
+        if (_csAvg <= 0.12) sc = Math.min(0.92, sc + 0.06);   // rarely shut out → both attack well
+        else if (_csAvg >= 0.45) sc = Math.max(0, sc - 0.10); // very defensive → Over less likely
+      }
+      // 🔑 API PREDICTION CONSENSUS: independent model agrees → amplify signal
+      if (_apiUO === 'Over 2.5') sc = Math.min(0.92, sc + 0.07);
+      else if (_apiUO === 'Under 2.5') sc = Math.max(0, sc - 0.06);
       const _o25H2hNote = (_h2hSample && _h2hOver25 != null)
         ? ` Historisch ${Math.round(_h2hOver25*100)}% der ${h2hN} Duelle über 2.5 Tore${_h2hAvgG!=null?' (Ø '+_h2hAvgG+' Tore/Spiel)':''}.`
         : '';
+      const _o25ApiNote = (_apiGoalsH !== null && _apiGoalsA !== null)
+        ? `<br>🤖 API-Modell: ${_apiGoalsH.toFixed(1)}H + ${_apiGoalsA.toFixed(1)}A = ${(_apiGoalsH+_apiGoalsA).toFixed(1)} Tore erwartet.`
+        : '';
       gC.push({sc, p:{icon:'⚽', market:'Over 2.5 Tore', odds:o.o25,
         conf: sc>0.66?'high':sc>0.46?'medium':'low',
-        reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven lassen regelmäßig Gegentore zu. Das Modell erwartet ${expGoals.toFixed(1)} Tore: mindestens 3 Treffer sind gut möglich.${_o25H2hNote}`}}); }
+        reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven lassen regelmäßig Gegentore zu. Das Modell erwartet ${expGoals.toFixed(1)} Tore: mindestens 3 Treffer sind gut möglich.${_o25H2hNote}${_o25ApiNote}`}}); }
 
     // Under 2.5
     { let sc = expGoals<1.7?0.85:expGoals<2.0?0.72:expGoals<2.3?0.57:expGoals<2.6?0.34:0.12;
@@ -2376,15 +2453,29 @@ function getBettingPicks(match, odds, leagueKey) {
       else if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 0.65);
       // 🔑 H2H: under 2.5 is inverse of both H2H modifiers
       sc = Math.min(0.92, Math.max(0, sc - _h2hO25Mod - _h2hAvgGMod));
+      // 🔑 CLEAN SHEET / FAILED TO SCORE: defensive teams at home + struggling away attackers → Under
+      if (_hCSHome !== null && _aCSAway !== null) {
+        const _csAvg = (_hCSHome + _aCSAway) / 2;
+        if (_csAvg >= 0.40) sc = Math.min(0.92, sc + 0.10);   // both very defensive → Under likely
+        else if (_csAvg >= 0.30) sc = Math.min(0.92, sc + 0.05);
+      }
+      if (_aFTSAway !== null && _aFTSAway >= 0.35) sc = Math.min(0.92, sc + 0.07);  // away often fails to score
+      if (_hFTSHome !== null && _hFTSHome >= 0.30) sc = Math.min(0.92, sc + 0.05);  // home also struggles to score
+      // 🔑 API PREDICTION CONSENSUS
+      if (_apiUO === 'Under 2.5') sc = Math.min(0.92, sc + 0.07);
+      else if (_apiUO === 'Over 2.5') sc = Math.max(0, sc - 0.06);
       const _u25DefTeam = _topResultMkt==='Heimsieg'?match.home:_topResultMkt==='Auswärtssieg'?match.away:null;
       const _pressWarn = _anyNeedsWin
         ? `<br><strong>⚠️ ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — Angriffsdrang erhöht Torrisiko, Under-Signal geschwächt.</strong>` : '';
       const _u25H2hNote = (_h2hSample && _h2hOver25 != null)
         ? ` Historisch ${100-Math.round(_h2hOver25*100)}% der ${h2hN} Duelle unter 2.5 Tore${_h2hAvgG!=null?' (Ø '+_h2hAvgG+' Tore/Spiel)':''}.`
         : '';
+      const _u25CSNote = (_hCSHome !== null || _aFTSAway !== null)
+        ? `<br>📊 Saison-Statistiken: ${_hCSHome !== null ? `${match.home} ${Math.round(_hCSHome*100)}% Clean Sheets zuhause` : ''}${_hCSHome !== null && _aFTSAway !== null ? ' · ' : ''}${_aFTSAway !== null ? `${match.away} trifft in ${Math.round(_aFTSAway*100)}% der Auswärtsspiele nicht` : ''}.`
+        : '';
       const _u25Reason = _favWeak > 0.4 && _u25DefTeam
-        ? `${_u25DefTeam} dominiert dieses Spiel — der schwächere Angriff (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} Tore/Spiel) kommt kaum zu Chancen. Weniger als 3 Tore sind zu erwarten.${_u25H2hNote}${_pressWarn}`
-        : `Das Modell erwartet nur ${expGoals.toFixed(1)} Tore insgesamt — ${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) sind beide offensiv zu schwach für viele Treffer.${_u25H2hNote}${_pressWarn}`;
+        ? `${_u25DefTeam} dominiert dieses Spiel — der schwächere Angriff (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} Tore/Spiel) kommt kaum zu Chancen. Weniger als 3 Tore sind zu erwarten.${_u25H2hNote}${_u25CSNote}${_pressWarn}`
+        : `Das Modell erwartet nur ${expGoals.toFixed(1)} Tore insgesamt — ${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) sind beide offensiv zu schwach für viele Treffer.${_u25H2hNote}${_u25CSNote}${_pressWarn}`;
       gC.push({sc, p:{icon:'🛡️', market:'Under 2.5 Tore', odds:o.u25,
         conf: sc>0.68?'high':sc>0.48?'medium':'low',
         reason: _u25Reason}}); }
@@ -2418,6 +2509,11 @@ function getBettingPicks(match, odds, leagueKey) {
       // In these cases BTTS Nein or a goals pick without home contribution is more accurate.
       if (o.hw && o.hw > 5.0) sc = Math.max(0, sc - 0.30);
       else if (o.hw && o.hw > 3.5) sc = Math.max(0, sc - 0.10);  // mild suppress for moderate underdogs
+      // 🔑 CLEAN SHEET / FAILED TO SCORE: direct evidence against BTTS
+      // If away team often fails to score away AND home team often keeps clean sheets → BTTS very unlikely
+      if (_hCSHome !== null && _hCSHome >= 0.40) sc = Math.max(0, sc - 0.10);
+      if (_aFTSAway !== null && _aFTSAway >= 0.35) sc = Math.max(0, sc - 0.10);
+      if (_hCSHome !== null && _aFTSAway !== null && _hCSHome >= 0.35 && _aFTSAway >= 0.30) sc = Math.max(0, sc - 0.08); // compound: both signals confirm
       const _bttsPressNote = bothNeedWin
         ? `<br><strong>⚡ Beide Teams müssen gewinnen${_rlSfx} — beide greifen an, beide riskieren Kontertore.</strong>`
         : _anyNeedsWin ? `<br><strong>⚡ ${homeNeedsWin ? _pHLabel : _pALabel}${_rlSfx} — öffnet hinten Räume, Kontertreffer für Gegner wahrscheinlich.</strong>` : '';
@@ -2440,13 +2536,22 @@ function getBettingPicks(match, odds, leagueKey) {
       else if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 0.70);
       // 🔑 H2H BTTS HISTORY: inverse of BTTS Ja modifier — high historical BTTS rate suppresses Nein
       sc = Math.min(0.80, Math.max(0, sc - _h2hBttsMod));
+      // 🔑 CLEAN SHEET / FAILED TO SCORE: season-long evidence for BTTS No
+      if (_hCSHome !== null && _hCSHome >= 0.45) sc = Math.min(0.88, sc + 0.14); // home rarely concedes at home
+      else if (_hCSHome !== null && _hCSHome >= 0.32) sc = Math.min(0.88, sc + 0.07);
+      if (_aFTSAway !== null && _aFTSAway >= 0.40) sc = Math.min(0.88, sc + 0.12); // away rarely scores away
+      else if (_aFTSAway !== null && _aFTSAway >= 0.28) sc = Math.min(0.88, sc + 0.06);
       const weakAtt = homeAttStr<awayAttStr?match.home:match.away;
       const _bttsNoH2h = (_h2hSample && _h2hBtts != null)
         ? ` Historisch ${100-Math.round(_h2hBtts*100)}% der ${h2hN} Duelle blieb ein Team torlos.`
         : '';
+      // Build clean sheet / FTS note for reason text
+      const _bttsNoStatNote = (_hCSHome !== null || _aFTSAway !== null)
+        ? `<br>📊 Saison-Stats: ${_hCSHome !== null ? `${match.home} hält ${Math.round(_hCSHome*100)}% Clean Sheets zuhause` : ''}${_hCSHome !== null && _aFTSAway !== null ? ' · ' : ''}${_aFTSAway !== null ? `${match.away} trifft in ${Math.round(_aFTSAway*100)}% der Auswärtsspiele nicht` : ''}.`
+        : '';
       gC.push({sc, p:{icon:'🔒', market:'Beide Teams treffen: Nein', odds:o.bttsN||null,
         conf: sc>0.58?'medium':'low',
-        reason:`${weakAtt} ist offensiv sehr schwach (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} Tore/Spiel) — ein Treffer ist für dieses Team schon eine Herausforderung. Wahrscheinlich bleibt eines der beiden Teams ohne Tor.${_bttsNoH2h}`}}); }
+        reason:`${weakAtt} ist offensiv sehr schwach (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} Tore/Spiel) — ein Treffer ist für dieses Team schon eine Herausforderung. Wahrscheinlich bleibt eines der beiden Teams ohne Tor.${_bttsNoH2h}${_bttsNoStatNote}`}}); }
 
     // ── Heimteam Over 1.5 Tore — BACKTEST VALIDATED: 69% bei expHome > 1.85 ──────
     { const expH = (homeAttStr + awayDefStr) / 2;
@@ -6459,17 +6564,18 @@ async function loadPreMatchData() {
             );
             if (!sf) continue;
             _jResult[`${match.home}|${match.away}`] = {
-              fixtureId:     sf.fixtureId,
-              referee:       sf.referee       || null,
-              refereeStats:  sf.refereeStats  || null,
-              homeTeamId:    sf.homeTeamId,
-              awayTeamId:    sf.awayTeamId,
-              injuries:      sf.injuries      || { home: [], away: [] },
-              injurySummary: sf.injurySummary || null,
-              h2h:           sf.h2h           || null,
-              isFinished:    sf.isFinished    || false,
-              odds:          sf.odds          || null,
-              time:          sf.time          || null
+              fixtureId:      sf.fixtureId,
+              referee:        sf.referee        || null,
+              refereeStats:   sf.refereeStats   || null,
+              homeTeamId:     sf.homeTeamId,
+              awayTeamId:     sf.awayTeamId,
+              injuries:       sf.injuries       || { home: [], away: [] },
+              injurySummary:  sf.injurySummary  || null,
+              h2h:            sf.h2h            || null,
+              isFinished:     sf.isFinished     || false,
+              odds:           sf.odds           || null,
+              time:           sf.time           || null,
+              apiPrediction:  sf.apiPrediction  || null
             };
           }
         }
@@ -6513,16 +6619,17 @@ async function loadPreMatchData() {
             );
             if (!sf) continue;
             _sResult[`${match.home}|${match.away}`] = {
-              fixtureId:     sf.fixtureId,
-              referee:       sf.referee       || null,
-              refereeStats:  sf.refereeStats  || null,
-              homeTeamId:    sf.homeTeamId,
-              awayTeamId:    sf.awayTeamId,
-              injuries:      sf.injuries      || { home: [], away: [] },
-              injurySummary: sf.injurySummary || null,
-              h2h:           sf.h2h           || null,
-              isFinished:    sf.isFinished    || false,
-              odds:          sf.odds          || null
+              fixtureId:      sf.fixtureId,
+              referee:        sf.referee        || null,
+              refereeStats:   sf.refereeStats   || null,
+              homeTeamId:     sf.homeTeamId,
+              awayTeamId:     sf.awayTeamId,
+              injuries:       sf.injuries       || { home: [], away: [] },
+              injurySummary:  sf.injurySummary  || null,
+              h2h:            sf.h2h            || null,
+              isFinished:     sf.isFinished     || false,
+              odds:           sf.odds           || null,
+              apiPrediction:  sf.apiPrediction  || null
             };
           }
         }
@@ -6683,6 +6790,9 @@ function _injectPreMatchAndRerender() {
 
       // Referee
       if (pm.refereeStats) match.refereeStats = pm.refereeStats;
+
+      // API Prediction (goals, percentages, Poisson distribution)
+      if (pm.apiPrediction) match.apiPrediction = pm.apiPrediction;
 
       // H2H — replace static config data with fresh API data (richer + auto-updated)
       if (pm.h2h && pm.h2h.games >= 3) match.h2h = pm.h2h;

@@ -115,20 +115,29 @@ def fetch_league_stats(league_id: int, season: int = 2025) -> dict:
 
         def _ensure(name):
             if name not in teams:
-                teams[name] = {"home_gf": [], "home_ga": [], "home_wins": 0, "home_games": 0,
-                               "away_gf": [], "away_ga": [], "away_wins": 0, "away_games": 0}
+                teams[name] = {
+                    "home_gf": [], "home_ga": [], "home_wins": 0, "home_games": 0,
+                    "away_gf": [], "away_ga": [], "away_wins": 0, "away_games": 0,
+                    # New: clean sheet + failed-to-score counts
+                    "home_clean_sheets": 0, "home_failed_score": 0,
+                    "away_clean_sheets": 0, "away_failed_score": 0,
+                }
 
         _ensure(h_name)
         teams[h_name]["home_gf"].append(h_gf)
         teams[h_name]["home_ga"].append(a_gf)
         teams[h_name]["home_games"] += 1
         if h_win: teams[h_name]["home_wins"] += 1
+        if a_gf == 0: teams[h_name]["home_clean_sheets"] += 1   # kept a clean sheet at home
+        if h_gf == 0: teams[h_name]["home_failed_score"] += 1   # failed to score at home
 
         _ensure(a_name)
         teams[a_name]["away_gf"].append(a_gf)
         teams[a_name]["away_ga"].append(h_gf)
         teams[a_name]["away_games"] += 1
         if a_win: teams[a_name]["away_wins"] += 1
+        if h_gf == 0: teams[a_name]["away_clean_sheets"] += 1   # kept a clean sheet away
+        if a_gf == 0: teams[a_name]["away_failed_score"] += 1   # failed to score away
 
     result = {}
     for name, d in teams.items():
@@ -138,18 +147,22 @@ def fetch_league_stats(league_id: int, season: int = 2025) -> dict:
         xg_a  = round(sum(d["away_gf"]) / ag, 3) if ag else None
         xga_a = round(sum(d["away_ga"]) / ag, 3) if ag else None
         result[name] = {
-            "xG_home":          xg_h,
-            "xGA_home":         xga_h,
-            "homeWinRate":      round(d["home_wins"] / hg, 3) if hg else None,
-            "home_games":       hg,
-            "xG_away":          xg_a,
-            "xGA_away":         xga_a,
-            "awayWinRate":      round(d["away_wins"] / ag, 3) if ag else None,
-            "away_games":       ag,
+            "xG_home":            xg_h,
+            "xGA_home":           xga_h,
+            "homeWinRate":        round(d["home_wins"]       / hg, 3) if hg else None,
+            "cleanSheetHome":     round(d["home_clean_sheets"] / hg, 3) if hg else None,
+            "failedToScoreHome":  round(d["home_failed_score"] / hg, 3) if hg else None,
+            "home_games":         hg,
+            "xG_away":            xg_a,
+            "xGA_away":           xga_a,
+            "awayWinRate":        round(d["away_wins"]       / ag, 3) if ag else None,
+            "cleanSheetAway":     round(d["away_clean_sheets"] / ag, 3) if ag else None,
+            "failedToScoreAway":  round(d["away_failed_score"] / ag, 3) if ag else None,
+            "away_games":         ag,
             # xG fairness not computable from goals alone — set neutral
-            "xg_fairness":      1.0,
-            "xg_fairness_home": 1.0,
-            "xg_fairness_away": 1.0,
+            "xg_fairness":        1.0,
+            "xg_fairness_home":   1.0,
+            "xg_fairness_away":   1.0,
         }
     return result
 
@@ -167,7 +180,9 @@ def process_league(league_key: str) -> dict:
                 print(f"       {name:<30}  xG_h={s['xG_home'] or '-':>4}  "
                       f"xG_a={s['xG_away'] or '-':>4}  "
                       f"WR_h={s['homeWinRate'] or '-':>4}  "
-                      f"WR_a={s['awayWinRate'] or '-':>4}")
+                      f"WR_a={s['awayWinRate'] or '-':>4}  "
+                      f"CS_h={s['cleanSheetHome'] or '-':>4}  "
+                      f"FTS_a={s['failedToScoreAway'] or '-':>4}")
             print(f"       → {len(stats)} teams")
         else:
             print(f"       ⚠️  No data returned")
