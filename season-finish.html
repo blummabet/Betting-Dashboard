@@ -5114,6 +5114,7 @@ function renderResultsAll() {
       document.querySelectorAll('#resultsDateFilter .res-filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       _activeDaysFilter = btn.dataset.days;
+      renderResultsStats();
       renderResultsTable(_activeFilter);
     };
   });
@@ -5121,7 +5122,16 @@ function renderResultsAll() {
 
 // ── Stats overview ──────────────────────────────────────
 function renderResultsStats() {
-  const allPicks = _resultsData.flatMap(e => e.picks.map(p => ({...p, league: e.league, leagueFlag: e.leagueFlag})));
+  // Apply same date window as the table
+  let allPicks = _resultsData.flatMap(e => e.picks.map(p => ({...p, dateIso: e.dateIso, league: e.league, leagueFlag: e.leagueFlag})));
+  const _futureMax = new Date(); _futureMax.setDate(_futureMax.getDate() + 7);
+  const _futureMaxIso = _futureMax.toISOString().slice(0, 10);
+  allPicks = allPicks.filter(p => (p.dateIso || '') <= _futureMaxIso);
+  if (_activeDaysFilter !== 'all') {
+    const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - parseInt(_activeDaysFilter));
+    const cutoffIso = cutoff.toISOString().slice(0, 10);
+    allPicks = allPicks.filter(p => (p.dateIso || '') >= cutoffIso);
+  }
   const total    = allPicks.length;
   const won      = allPicks.filter(p => p.result === 'win').length;
   const lost     = allPicks.filter(p => p.result === 'loss').length;
