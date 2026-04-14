@@ -44,6 +44,11 @@ const LEAGUE_IDS = {
   94:  'Primeira Liga',
   179: 'Scottish Premiership',
   203: 'Süper Lig',
+  // Neue Ligen (Saison-Ende April/Mai)
+  144: 'Jupiler Pro League',
+  106: 'Ekstraklasa',
+  271: 'NB I',
+  210: 'HNL',
 };
 const PORT      = 3001;
 const CACHE_TTL = 6 * 3600 * 1000;  // 6 Stunden

@@ -1090,6 +1090,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <div style="font-size:13px;color:var(--text);">🇹🇷 Süper Lig — <span style="color:#e3b341;">Shots-Proxy xG + Elo</span></div>
         <div style="font-size:13px;color:var(--text);">🇨🇭 Swiss SL — <span style="color:#e3b341;">Shots-Proxy xG + Elo</span></div>
         <div style="font-size:13px;color:var(--text);">🇦🇹 Bundesliga AT — <span style="color:#e3b341;">Shots-Proxy xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇧🇪 Jupiler Pro League — <span style="color:#e3b341;">Shots-Proxy xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇵🇱 Ekstraklasa — <span style="color:#e3b341;">Shots-Proxy xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇭🇺 NB I — <span style="color:#e3b341;">Shots-Proxy xG + Elo</span></div>
+        <div style="font-size:13px;color:var(--text);">🇭🇷 HNL — <span style="color:#e3b341;">Shots-Proxy xG + Elo</span></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
         <div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:11px;">
@@ -1101,6 +1105,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           Shots on Goal × 0.32 — empirischer Durchschnitt über europäische Ligen. ~4–6 pp schlechter als native xG bei Over/Under-Picks.
         </div>
       </div>
+      <p style="margin-top:8px;font-size:11px;color:var(--muted);">🇧🇪🇵🇱🇭🇺🇭🇷 <strong>Neue Ligen (Apr 2026):</strong> BEL (Jupiler Pro League, ID 144), POL (Ekstraklasa, ID 106), HUN (NB I, ID 271), CRO (HNL, ID 210). Alle mit Shots-Proxy xG. lgCap: BEL +0.02, POL/CRO/HUN ±0. BEL hat Championship-Playoffs (Top 6 spielen 10 Extra-Runden) → rounds=40 konfiguriert.</p>
       <p style="margin-top:10px;font-size:12px;color:var(--muted);">Wenn <code>refresh_xg.py</code> noch nie gelaufen ist: <code>xGBased = false</code> → Dashboard fällt auf Goals-Proxy (Tore/Spiel aus <code>refresh_stats.py</code>) zurück. Anzeige: "Ø X.X EG" statt "📐 X.X xG".</p>
     </div>
   </div>
@@ -1703,7 +1708,7 @@ function getBettingPicks(match, odds, leagueKey) {
   // High-scoring leagues (ENG, GER, AUT, TUR, SCO) get a positive cap offset.
   // Defensive leagues (ITA, FRA) get a negative offset.
   // This corrects the single-cap model that was tuned on mid-scoring leagues.
-  const _lgCap = ({ENG:0.05, GER:0.05, AUT:0.04, TUR:0.03, SCO:0.03, POR:0.01, ESP:0, NED:0.03, ITA:-0.04, FRA:-0.04})[leagueKey] || 0;
+  const _lgCap = ({ENG:0.05, GER:0.05, AUT:0.04, TUR:0.03, SCO:0.03, NED:0.03, BEL:0.02, POR:0.01, POL:0, CRO:0, HUN:0, ESP:0, ITA:-0.04, FRA:-0.04})[leagueKey] || 0;
 
   // De-vig base probabilities — anchor fair value to market 1X2 when odds are available.
   // Fixes wildly wrong formula-based estimates (e.g. Benfica 1.80 computed vs 1.12 real).

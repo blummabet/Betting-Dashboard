@@ -32,6 +32,12 @@ LEAGUES = {
     "SCO": dict(tid=36,  apif_id=179, name="Scottish Prem",    flag="🏴󠁧󠁢󠁳󠁣󠁴󠁿", total=12, rounds=38, ucl=2, el=2, uecl=0, rel_playoff=1, rel=1),
     "TUR": dict(tid=52,  apif_id=203, name="Süper Lig",        flag="🇹🇷",         total=19, rounds=38, ucl=2, el=2, uecl=1, rel_playoff=0, rel=3),
     "SUI": dict(tid=57,  apif_id=207, name="Swiss SL",         flag="🇨🇭",         total=10, rounds=36, ucl=1, el=1, uecl=0, rel_playoff=1, rel=1),
+    # ── Neue Ligen (Saison-Ende April/Mai) ──────────────────────────────────
+    # BEL: 30 Runden Grunddurchgang + 10 Championship-Playoff-Runden für Top 6 → rounds=40
+    "BEL": dict(tid=0,   apif_id=144, name="Jupiler Pro League", flag="🇧🇪",       total=16, rounds=40, ucl=2, el=1, uecl=1, rel_playoff=3, rel=1),
+    "POL": dict(tid=0,   apif_id=106, name="Ekstraklasa",        flag="🇵🇱",       total=18, rounds=34, ucl=1, el=1, uecl=1, rel_playoff=2, rel=2),
+    "HUN": dict(tid=0,   apif_id=271, name="NB I",               flag="🇭🇺",       total=12, rounds=33, ucl=1, el=1, uecl=1, rel_playoff=0, rel=2),
+    "CRO": dict(tid=0,   apif_id=210, name="HNL",                flag="🇭🇷",       total=10, rounds=36, ucl=1, el=1, uecl=1, rel_playoff=1, rel=1),
 }
 
 HEADERS = {

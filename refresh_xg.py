@@ -46,6 +46,7 @@ LEAGUE_APIF = {
     "ENG": 39,   "GER": 78,  "ITA": 135, "ESP": 140, "FRA": 61,
     "AUT": 218,  "NED": 88,  "POR": 94,  "SCO": 179,
     "TUR": 203,  "SUI": 207,
+    "BEL": 144,  "POL": 106, "HUN": 271, "CRO": 210,
 }
 
 # Big-5 leagues that carry native Expected Goals data in API-Football

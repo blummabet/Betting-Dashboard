@@ -55,6 +55,7 @@ LEAGUE_APIF = {
     "ENG": 39,   "GER": 78,  "ITA": 135, "ESP": 140, "FRA": 61,
     "AUT": 218,  "NED": 88,  "POR": 94,  "SCO": 179,
     "TUR": 203,  "SUI": 207,
+    "BEL": 144,  "POL": 106, "HUN": 271, "CRO": 210,
 }
 
 
@@ -204,7 +205,8 @@ def fetch_elo_snapshot(date_str: str) -> dict[str, tuple]:
 
 
 # Supported league keys (must match all_stats keys)
-SUPPORTED_LEAGUES = {"ENG", "GER", "ITA", "ESP", "FRA", "AUT", "NED", "SCO", "TUR", "SUI", "POR"}
+SUPPORTED_LEAGUES = {"ENG", "GER", "ITA", "ESP", "FRA", "AUT", "NED", "SCO", "TUR", "SUI", "POR",
+                     "BEL", "POL", "HUN", "CRO"}
 
 
 def merge_elo_into_stats(all_stats: dict, elo_raw: dict[str, tuple]) -> int:
