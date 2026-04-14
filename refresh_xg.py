@@ -44,7 +44,7 @@ SHOTS_XG_COEFF = 0.32
 # Leagues to refresh (key → API-Football league ID)
 LEAGUE_APIF = {
     "ENG": 39,   "GER": 78,  "ITA": 135, "ESP": 140, "FRA": 61,
-    "AUT": 144,  "NED": 88,  "POR": 94,  "SCO": 179,
+    "AUT": 218,  "NED": 88,  "POR": 94,  "SCO": 179,
     "TUR": 203,  "SUI": 207,
 }
 

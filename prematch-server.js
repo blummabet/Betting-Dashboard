@@ -39,7 +39,7 @@ const LEAGUE_IDS = {
   135: 'Serie A',
   140: 'La Liga',
   61:  'Ligue 1',
-  144: 'Austrian Bundesliga',
+  218: 'Austrian Bundesliga',
   88:  'Eredivisie',
   94:  'Primeira Liga',
   179: 'Scottish Premiership',

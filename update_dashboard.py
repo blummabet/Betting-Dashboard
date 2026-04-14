@@ -26,7 +26,7 @@ LEAGUES = {
     "ITA": dict(tid=23,  apif_id=135, name="Serie A",          flag="🇮🇹",         total=20, rounds=38, ucl=4, el=2, uecl=1, rel_playoff=0, rel=3),
     "ESP": dict(tid=8,   apif_id=140, name="La Liga",          flag="🇪🇸",         total=20, rounds=38, ucl=4, el=2, uecl=1, rel_playoff=0, rel=3),
     "FRA": dict(tid=34,  apif_id=61,  name="Ligue 1",          flag="🇫🇷",         total=18, rounds=34, ucl=3, el=2, uecl=1, rel_playoff=1, rel=2),
-    "AUT": dict(tid=45,  apif_id=144, name="Österreich BL",    flag="🇦🇹",         total=12, rounds=32, ucl=2, el=1, uecl=0, rel_playoff=1, rel=2),
+    "AUT": dict(tid=45,  apif_id=218, name="Österreich BL",    flag="🇦🇹",         total=12, rounds=32, ucl=2, el=1, uecl=0, rel_playoff=1, rel=2),
     "NED": dict(tid=37,  apif_id=88,  name="Eredivisie",       flag="🇳🇱",         total=18, rounds=34, ucl=2, el=2, uecl=0, rel_playoff=2, rel=1),
     "POR": dict(tid=238, apif_id=94,  name="Primeira Liga",    flag="🇵🇹",         total=18, rounds=34, ucl=3, el=2, uecl=1, rel_playoff=1, rel=2),
     "SCO": dict(tid=36,  apif_id=179, name="Scottish Prem",    flag="🏴󠁧󠁢󠁳󠁣󠁴󠁿", total=12, rounds=38, ucl=2, el=2, uecl=0, rel_playoff=1, rel=1),
