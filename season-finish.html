@@ -7099,8 +7099,12 @@ function exportPicksJson() {
   // Merge with loaded file data
   const existing = _resultsData || [];
   const existingKeys = new Set(existing.map(e => `${e.dateIso}|${e.home}|${e.away}`));
+  const existingPairs = new Set(existing.map(e => `${e.home}|${e.away}`));
   const merged = [...existing,
-    ...local.filter(e => !existingKeys.has(`${e.dateIso}|${e.home}|${e.away}`))
+    ...local.filter(e =>
+      !existingKeys.has(`${e.dateIso}|${e.home}|${e.away}`) &&
+      !existingPairs.has(`${e.home}|${e.away}`)
+    )
   ];
   const blob = new Blob([JSON.stringify(merged, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
@@ -7114,7 +7118,14 @@ function _mergeLocalPicks() {
   const local = _loadStoredPicks();
   if (!local.length) return;
   const existingKeys = new Set(_resultsData.map(e => `${e.dateIso}|${e.home}|${e.away}`));
-  const toAdd = local.filter(e => !existingKeys.has(`${e.dateIso}|${e.home}|${e.away}`))
+  // Also deduplicate by home|away alone — catches stale localStorage entries where
+  // dateIso was wrong (e.g. all saved as "2026-04-13" before the dateIso bug was fixed).
+  // Prefer the picks_history.json version (already has correct dates + resolved results).
+  const existingPairs = new Set(_resultsData.map(e => `${e.home}|${e.away}`));
+  const toAdd = local.filter(e =>
+    !existingKeys.has(`${e.dateIso}|${e.home}|${e.away}`) &&
+    !existingPairs.has(`${e.home}|${e.away}`)
+  )
     .map(e => ({
       dateIso: e.dateIso, date: e.date,
       league: e.league, leagueFlag: e.leagueFlag,
