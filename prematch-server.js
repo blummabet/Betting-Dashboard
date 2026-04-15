@@ -734,6 +734,28 @@ if (WRITE_MODE) {
   fetchAllPrematchData()
     .then(fixtures => {
       const outPath = path.join(__dirname, 'prematch-data.json');
+
+      // ── Preserve odds_open from previous run ──────────────────────────────
+      // odds_open is set once (first time we see a fixture with odds) and never overwritten.
+      // This creates a permanent opening-line snapshot for line movement detection.
+      const prevOddsOpen = {};
+      try {
+        const prev = JSON.parse(fs.readFileSync(outPath, 'utf8'));
+        for (const fx of (prev.fixtures || [])) {
+          if (fx.fixtureId && fx.odds_open) prevOddsOpen[fx.fixtureId] = fx.odds_open;
+        }
+        console.log(`[GitHub Actions] odds_open: ${Object.keys(prevOddsOpen).length} Opening-Snapshots aus vorherigem Run geladen`);
+      } catch(e) {
+        console.log('[GitHub Actions] odds_open: Kein vorheriger Run gefunden (erster Lauf oder Datei fehlt)');
+      }
+      for (const fx of fixtures) {
+        if (fx.odds && Object.keys(fx.odds).length > 0) {
+          // Keep existing opening snapshot, or set current odds as baseline (first time)
+          fx.odds_open = prevOddsOpen[fx.fixtureId] || { ...fx.odds };
+        }
+      }
+      // ─────────────────────────────────────────────────────────────────────
+
       const output  = JSON.stringify({ ts: Date.now(), fixtures }, null, 2);
       fs.writeFileSync(outPath, output, 'utf8');
       const kb = Math.round(Buffer.byteLength(output) / 1024);
