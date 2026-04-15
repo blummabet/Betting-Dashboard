@@ -234,15 +234,30 @@ def fetch_league_stats(league_id: int, season: int = 2025) -> tuple[dict, dict]:
             "xg_fairness_home":   1.0,
             "xg_fairness_away":   1.0,
         }
-    return result, team_ids
+    # Collect fixture info for corner stats batch fetch (sorted oldest→newest)
+    fixture_info = sorted(
+        [
+            (fx.get("fixture", {}).get("timestamp", 0),
+             fx.get("fixture", {}).get("id"),
+             fx["teams"]["home"]["name"],
+             fx["teams"]["away"]["name"])
+            for fx in resp
+            if fx.get("fixture", {}).get("id")
+        ],
+        key=lambda x: x[0]
+    )
+
+    return result, team_ids, fixture_info
 
 
 def fetch_team_season_stats_extra(team_id: int, league_id: int, season: int = 2025) -> dict:
     """
     Fetch teams/statistics for a single team → extract:
       - lineups[0].formation  (most-used formation this season)
-      - biggest.streak.wins   (longest winning streak)
-      - biggest.streak.loses  (longest losing streak)
+      - biggest.streak.wins/loses/draws
+      - shots.home/away.total + shots.home/away.on → shots-based xG (replaces goals proxy)
+        Formula: xG = SoT/game × 0.35 + (Shots - SoT)/game × 0.055
+        This gives a much better attack-strength estimate than goals/game.
     Returns partial dict to merge into team entry, or {} on failure.
     """
     resp = apif_get("teams/statistics", {
@@ -259,18 +274,38 @@ def fetch_team_season_stats_extra(team_id: int, league_id: int, season: int = 20
     lineups = stat.get("lineups") or []
     formation = None
     if lineups:
-        # Sort by played count descending → pick first
         sorted_lineups = sorted(lineups, key=lambda x: x.get("played", 0), reverse=True)
         formation = sorted_lineups[0].get("formation")
 
     # Biggest streaks
     biggest = stat.get("biggest", {})
-    streak = biggest.get("streak", {})
-    biggest_win_streak  = streak.get("wins")   or 0
-    biggest_lose_streak = streak.get("loses")  or 0
-    biggest_draw_streak = streak.get("draws")  or 0
+    streak  = biggest.get("streak", {})
+    biggest_win_streak  = streak.get("wins")  or 0
+    biggest_lose_streak = streak.get("loses") or 0
+    biggest_draw_streak = streak.get("draws") or 0
 
-    out = {}
+    # Shots-based xG — much better attack proxy than goals/game
+    # shots.home = team's own shots in HOME games (attack at home)
+    # shots.away = team's own shots in AWAY games (attack away)
+    shots   = stat.get("shots", {})
+    fx_pl   = stat.get("fixtures", {}).get("played", {})
+    h_games = fx_pl.get("home", 0) or 0
+    a_games = fx_pl.get("away", 0) or 0
+
+    def _xg_from_shots(total, on_goal, games):
+        """Compute xG/game from season-aggregate shot counts."""
+        if not games or not total:
+            return None
+        sot_pg  = (on_goal or 0) / games
+        soff_pg = max(0, total - (on_goal or 0)) / games
+        return round(sot_pg * 0.35 + soff_pg * 0.055, 3)
+
+    sh = shots.get("home", {})
+    sa = shots.get("away", {})
+    xg_h_shots = _xg_from_shots(sh.get("total"), sh.get("on"), h_games)
+    xg_a_shots = _xg_from_shots(sa.get("total"), sa.get("on"), a_games)
+
+    out: dict = {}
     if formation:
         out["formation"] = formation
     if biggest_win_streak:
@@ -279,41 +314,161 @@ def fetch_team_season_stats_extra(team_id: int, league_id: int, season: int = 20
         out["biggestLoseStreak"] = biggest_lose_streak
     if biggest_draw_streak:
         out["biggestDrawStreak"] = biggest_draw_streak
+    # Shots-based xG — stored separately so caller can decide to upgrade xG fields
+    if xg_h_shots is not None:
+        out["xG_home_shots"] = xg_h_shots
+    if xg_a_shots is not None:
+        out["xG_away_shots"] = xg_a_shots
     return out
 
 
-def process_league(league_key: str) -> dict:
+# ── Fixture-level stats for corner averages ────────────────────────────────────
+STAT_TYPES = {
+    "Shots on Goal": "sot",
+    "Total Shots":   "shots",
+    "Corner Kicks":  "corners",
+}
+
+def fetch_fixture_stats_batch(
+    fixture_info: list[tuple],
+    max_fixtures: int = 25,
+) -> dict[str, dict]:
+    """
+    Fetch GET /fixtures/statistics for the last `max_fixtures` finished fixtures.
+    Extracts per-fixture: corner kicks, shots on goal, total shots for home and away team.
+
+    fixture_info: [(timestamp, fixture_id, home_name, away_name), ...] sorted oldest→newest
+    Returns: {team_name: {"home_corners": [list], "away_corners": [list],
+                          "home_sot": [list], "away_sot": [list],
+                          "home_shots": [list], "away_shots": [list]}}
+    """
+    if not APIF_KEY:
+        return {}
+
+    recent = fixture_info[-max_fixtures:]
+    result: dict[str, dict] = {}
+
+    def _ensure_team(name):
+        if name not in result:
+            result[name] = {
+                "home_corners": [], "away_corners": [],
+                "home_sot": [],     "away_sot": [],
+                "home_shots": [],   "away_shots": [],
+            }
+
+    for ts, fid, h_name, a_name in recent:
+        if not fid:
+            continue
+        stats_resp = apif_get("fixtures/statistics", {"fixture": fid})
+        if not stats_resp:
+            continue
+
+        # Response: [{team: {id, name}, statistics: [{type, value}, ...]}, ...]
+        for team_stat in stats_resp:
+            tname = team_stat.get("team", {}).get("name", "")
+            is_home = (tname == h_name)
+            is_away = (tname == a_name)
+            if not (is_home or is_away):
+                # Name mismatch — try fuzzy: check if either name starts with the other
+                hl = h_name.lower(); al = a_name.lower(); tl = tname.lower()
+                if any(tl.startswith(h[:6]) or h[:6].startswith(tl[:6]) for h in [hl]):
+                    is_home = True
+                elif any(tl.startswith(a[:6]) or a[:6].startswith(tl[:6]) for a in [al]):
+                    is_away = True
+                else:
+                    continue
+
+            # Parse stats list: [{type: "Corner Kicks", value: "5"}, ...]
+            parsed: dict = {}
+            for s in team_stat.get("statistics", []):
+                key = STAT_TYPES.get(s.get("type", ""))
+                if key:
+                    try:
+                        parsed[key] = int(s.get("value") or 0)
+                    except (ValueError, TypeError):
+                        parsed[key] = 0
+
+            side = "home" if is_home else "away"
+            tgt  = h_name if is_home else a_name
+            _ensure_team(tgt)
+            if "corners" in parsed:
+                result[tgt][f"{side}_corners"].append(parsed["corners"])
+            if "sot" in parsed:
+                result[tgt][f"{side}_sot"].append(parsed["sot"])
+            if "shots" in parsed:
+                result[tgt][f"{side}_shots"].append(parsed["shots"])
+
+    return result
+
+
+def process_league(league_key: str, fetch_fixture_stats: bool = True) -> dict:
     league_id = LEAGUE_APIF.get(league_key)
     if not league_id:
         return {}
     print(f"  📊  {league_key}  (API-Football ID {league_id})")
     try:
-        stats, team_ids = fetch_league_stats(league_id)
-        if stats:
-            sample = list(stats.items())[:2]
-            for name, s in sample:
-                print(f"       {name:<30}  xG_h={s['xG_home'] or '-':>4}  "
-                      f"xG_a={s['xG_away'] or '-':>4}  "
-                      f"WR_h={s['homeWinRate'] or '-':>4}  "
-                      f"WR_a={s['awayWinRate'] or '-':>4}  "
-                      f"CS_h={s['cleanSheetHome'] or '-':>4}  "
-                      f"FTS_a={s['failedToScoreAway'] or '-':>4}  "
-                      f"streak={s['currentStreak']:+d}")
-            print(f"       → {len(stats)} teams — fetching teams/statistics for formation+biggestStreak…")
-
-            # Batch-fetch teams/statistics for each team (rate-limited)
-            extra_ok = 0
-            for tname, entry in stats.items():
-                tid = team_ids.get(tname)
-                if not tid:
-                    continue
-                extra = fetch_team_season_stats_extra(tid, league_id)
-                if extra:
-                    entry.update(extra)
-                    extra_ok += 1
-            print(f"       → {extra_ok}/{len(stats)} teams enriched with formation+biggestStreak")
-        else:
+        stats, team_ids, fixture_info = fetch_league_stats(league_id)
+        if not stats:
             print(f"       ⚠️  No data returned")
+            return {}
+
+        sample = list(stats.items())[:2]
+        for name, s in sample:
+            print(f"       {name:<30}  xG_h={s['xG_home'] or '-':>4}  "
+                  f"xG_a={s['xG_away'] or '-':>4}  "
+                  f"WR_h={s['homeWinRate'] or '-':>4}  "
+                  f"WR_a={s['awayWinRate'] or '-':>4}  "
+                  f"CS_h={s['cleanSheetHome'] or '-':>4}  "
+                  f"FTS_a={s['failedToScoreAway'] or '-':>4}  "
+                  f"streak={s['currentStreak']:+d}")
+        print(f"       → {len(stats)} teams, {len(fixture_info)} fixtures")
+
+        # ── Step A: teams/statistics → formation + biggestStreak + shots-based xG ──
+        print(f"       Fetching teams/statistics (formation + biggestStreak + shots-xG)…")
+        extra_ok = shots_ok = 0
+        for tname, entry in stats.items():
+            tid = team_ids.get(tname)
+            if not tid:
+                continue
+            extra = fetch_team_season_stats_extra(tid, league_id)
+            if not extra:
+                continue
+            entry.update({k: v for k, v in extra.items()
+                          if k not in ("xG_home_shots", "xG_away_shots")})
+            # Upgrade xG fields from shots (better attack proxy than goals/game)
+            if extra.get("xG_home_shots"):
+                entry["xG_home"] = extra["xG_home_shots"]
+                entry["xgSource"] = "shots"
+            if extra.get("xG_away_shots"):
+                entry["xG_away"] = extra["xG_away_shots"]
+                entry.setdefault("xgSource", "shots")
+            if extra.get("xG_home_shots") or extra.get("xG_away_shots"):
+                shots_ok += 1
+            extra_ok += 1
+
+        print(f"       → {extra_ok}/{len(stats)} teams: formation+streaks · "
+              f"{shots_ok} upgraded to shots-based xG")
+
+        # ── Step B: fixtures/statistics → corner averages ─────────────────────────
+        if fetch_fixture_stats and fixture_info:
+            n_fix = min(25, len(fixture_info))
+            print(f"       Fetching fixture stats for last {n_fix} fixtures (corners)…")
+            corner_data = fetch_fixture_stats_batch(fixture_info, max_fixtures=n_fix)
+            corners_ok = 0
+            for tname, cdata in corner_data.items():
+                if tname not in stats:
+                    continue
+                if cdata["home_corners"]:
+                    stats[tname]["cornersHome"] = round(
+                        sum(cdata["home_corners"]) / len(cdata["home_corners"]), 1)
+                    corners_ok += 1
+                if cdata["away_corners"]:
+                    stats[tname]["cornersAway"] = round(
+                        sum(cdata["away_corners"]) / len(cdata["away_corners"]), 1)
+            print(f"       → {corners_ok} teams enriched with corner averages")
+        else:
+            print(f"       ⚙️  Fixture stats skipped (--fast mode)")
+
         return stats
     except Exception as exc:
         print(f"       ⚠️  Failed: {exc}")
@@ -419,15 +574,20 @@ def print_elo_summary(all_stats: dict):
 def main():
     out = Path(__file__).parent / "stats_cache.json"
     today = datetime.date.today().isoformat()
-    print(f"🔄  Stats refresh — season {SEASON}/{SEASON + 1}  ({today})\n")
+    fast_mode = "--fast" in sys.argv   # skip fixture-level stats (corners) for a quicker run
 
-    # ── Step 1: API-Football — goals/game + win rates (xG proxy) ────────────
+    print(f"🔄  Stats refresh — season {SEASON}/{SEASON + 1}  ({today})")
+    if fast_mode:
+        print("⚡  Fast mode: fixture stats (corners) skipped")
+    print()
+
+    # ── Step 1: API-Football — goals/game + win rates + shots-xG + corners ──
     print("━" * 58)
-    print("  API-FOOTBALL — goals/game + venue win rates (xG proxy)")
+    print("  API-FOOTBALL — stats per league (shots-xG · corners · streaks)")
     print("━" * 58)
     all_stats: dict = {}
     for key in LEAGUE_APIF:
-        all_stats[key] = process_league(key)
+        all_stats[key] = process_league(key, fetch_fixture_stats=not fast_mode)
 
     # ── Step 2: ClubElo ratings ───────────────────────────────────────────────
     print("━" * 58)
@@ -477,11 +637,18 @@ def main():
         for e in teams.values() if e.get("xg_fairness") is not None
     )
 
-    print(f"   Teams total : {total_teams}")
-    print(f"   Goals/game  : {xg_populated} teams  (all leagues, as xG proxy)")
-    print(f"   Win rates   : {xg_populated} teams  (home/away)")
-    print(f"   Elo data    : {elo_populated} teams  (all covered leagues)")
-    print(f"   File        : {out}")
+    shots_populated  = sum(1 for teams in all_stats.values()
+                           for e in teams.values() if e.get("xgSource") == "shots")
+    corners_populated = sum(1 for teams in all_stats.values()
+                            for e in teams.values() if e.get("cornersHome") is not None)
+
+    print(f"   Teams total     : {total_teams}")
+    print(f"   Goals/game (xG) : {xg_populated} teams  (all leagues)")
+    print(f"   Shots-based xG  : {shots_populated} teams  (upgraded from goals proxy)")
+    print(f"   Corner averages : {corners_populated} teams  (home/away Ecken pro Spiel)")
+    print(f"   Win rates       : {xg_populated} teams  (home/away)")
+    print(f"   Elo data        : {elo_populated} teams  (all covered leagues)")
+    print(f"   File            : {out}")
     print()
     print("ℹ️  Reload season-finish.html to apply new stats.")
     print("   All leagues → Goals/game (xG proxy) + Win rates + Elo")

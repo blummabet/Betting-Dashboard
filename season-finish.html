@@ -1176,6 +1176,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Blended Fair Probabilities (_fairPH/D/A)</strong> — Pinnacle de-viggte Wahrscheinlichkeiten werden 80:20 mit den API-Prediction-Prozent (<code>pctHome/Draw/Away</code>) gemischt. Das Ergebnis (<code>_fairPH</code>, <code>_fairPD</code>, <code>_fairPA</code>) wird überall dort verwendet wo bisher <code>_bkrPH/D/A</code> stand: Draw-Unterdrückung, mp-Berechnung für Heimsieg/Auswärtssieg/Unentschieden. Wenn nur eine der Quellen vorhanden: wird diese alleine genutzt. <em>(season-finish.html)</em></li>
           <li><strong>Formation-Modifier</strong> — <code>refresh_stats.py</code> holt via <code>GET /teams/statistics</code> (nach dem Fixture-Loop, 1 API-Call pro Team) die häufigste Aufstellung der Saison und speichert sie als <code>formation</code> (z.B. "4-3-3"). In <code>getBettingPicks()</code> wird die Anzahl der Stürmer (letzte Zahl) ausgelesen: ≥3 Stürmer = offensiv (+7% Angriff, −3,5% Verteidigung), ≤1 Stürmer = defensiv (−7% Angriff, +3,5% Verteidigung). Angewendet nach Fatigue/Injury/Motivation-Penalties auf <code>homeAttStr/awayAttStr</code>. Formation wird auch in Begründungstexten ("📋 Formation: 4-3-3 vs 4-5-1") angezeigt. <em>(refresh_stats.py + season-finish.html)</em></li>
           <li><strong>Streak-Momentum-Signal</strong> — <code>refresh_stats.py</code> berechnet aus den Fixture-Timestamps (ohne neue API-Calls) den <code>currentStreak</code> (+N = N Spiele in Folge ungeschlagen/gewonnen, −N = N Spiele in Folge ohne Sieg). Außerdem werden via <code>GET /teams/statistics</code> die saisonbesten Streaks gespeichert: <code>biggestWinStreak</code>, <code>biggestLoseStreak</code>, <code>biggestDrawStreak</code>. In <code>getBettingPicks()</code> fließen diese in Heimsieg- und Auswärtssieg-Scoring ein: BigWinStreak ≥5 = dominantes Team (+max 0.08), aktueller Lauf ≥3 = momentum (+max 0.08). Streak ≥3 erscheint auch als "🔥 Aktueller Lauf: X× ungeschlagen" in Begründungstexten. <em>(refresh_stats.py + season-finish.html)</em></li>
+          <li><strong>Shots-basiertes xG (Tier 2)</strong> — <code>GET /teams/statistics</code> (bereits für Formation/Streaks gecalled) liefert auch <code>shots.home.total</code>, <code>shots.home.on</code> etc. → xG wird jetzt aus Schüssen berechnet: <code>SoT/Spiel × 0.35 + (Schüsse − SoT)/Spiel × 0.055</code>. Das ist deutlich genauer als Tore/Spiel als xG-Proxy — vor allem für TUR/NED/POR/SCO etc. wo kein Understat vorliegt. Das verbesserte xG setzt <code>xGBased=true</code> und erscheint als "🎯 X.X xG (Schüsse)" in Begründungstexten. <strong>Null zusätzliche API-Calls</strong> gegenüber dem bisherigen Stand. <em>(refresh_stats.py + season-finish.html)</em></li>
+          <li><strong>Echte Eckball-Daten + neues Corner-Pick-Pool (Tier 2)</strong> — <code>refresh_stats.py</code> fetcht via <code>GET /fixtures/statistics?fixture=</code> für die letzten 25 Spiele pro Liga die Spielstatistiken (Corner Kicks). Pro Team wird der Schnitt der Heimecken (<code>cornersHome</code>) und Auswärtsecken (<code>cornersAway</code>) gespeichert. In <code>getBettingPicks()</code> ersetzt die echte Summe aus Home+Away-Schnitt die Formel-Schätzung (homeAttStr × 3.4 + ...). Neue Corner-Picks in Pick 3: <strong>Über 8.5/9.5/10.5/11.5 Ecken</strong> mit dynamischer Marktlinie basierend auf echtem Schnitt, und neu <strong>Unter 8.5/9.5 Ecken</strong> für defensiv geprägte Spiele. Corner-Quoten aus <code>parseBets</code> (co85/co95/co105/co115/cu85/cu95) werden für Value-Check verwendet. Das Label "📊 Echte Ecken-Daten (Saison): X Heim · Y Ausw." erscheint in Begründungstexten wenn echte Daten vorliegen. Ohne echte Daten: Formel-Fallback. <code>--fast</code>-Flag überspringt den Fixture-Stats-Fetch. <em>(refresh_stats.py + prematch-server.js + season-finish.html)</em></li>
         </ul>
       </div>
     </div>
@@ -1853,6 +1855,16 @@ function getBettingPicks(match, odds, leagueKey) {
   const _aCSAway  = aStat.cleanSheetAway   ?? null;
   const _hFTSHome = hStat.failedToScoreHome ?? null;
   const _aFTSAway = aStat.failedToScoreAway ?? null;
+  // ── Corner stats (from refresh_stats.py fixture-level batch fetch) ────────────
+  // cornersHome = avg corners when team plays at home  |  cornersAway = avg corners away
+  // Used to replace the formula-based cornersEst when real data is available.
+  const _hCornersHome = hStat.cornersHome ?? null;  // home team: corners per home game
+  const _aCornersHome = aStat.cornersHome ?? null;  // away team: corners when they play at home (not relevant for this match, but cross-ref)
+  const _hCornersAway = hStat.cornersAway ?? null;  // home team: corners per away game
+  const _aCornersAway = aStat.cornersAway ?? null;  // away team: corners per away game
+  // xGSource — "shots" if upgraded by teams/statistics, "goals" otherwise
+  const _hXGSource = hStat.xgSource ?? 'goals';
+  const _aXGSource = aStat.xgSource ?? 'goals';
   // ── API Prediction (from prematch-server.js /predictions endpoint) ───────────
   // Independent model signal: expected goals, result %, Poisson distribution
   const _apiPred    = match.apiPrediction   || null;
@@ -2046,12 +2058,16 @@ function getBettingPicks(match, odds, leagueKey) {
   const expGoals = (!xGBased && _apiExpG !== null)
     ? Math.round((_expGoalsModel * 0.70 + _apiExpG * 0.30) * 10) / 10
     : _expGoalsModel;
-  // Label shown in pick reasons — distinguishes real xG model from estimated EG
-  const egPfx = xGBased
-    ? `📐 ${expGoals.toFixed(1)} xG (Understat)`
-    : (_apiExpG !== null)
-      ? `🤖 ${expGoals.toFixed(1)} EG (Modell + API)`
-      : `Ø ${expGoals.toFixed(1)} EG`;
+  // Label shown in pick reasons — distinguishes data source for expected goals estimate
+  // Priority: shots-based xG (teams/statistics) > API expGoals blend > goals proxy
+  const _shotsBased = (_hXGSource === 'shots' || _aXGSource === 'shots');
+  const egPfx = xGBased && _shotsBased
+    ? `🎯 ${expGoals.toFixed(1)} xG (Schüsse)`    // shots-based xG from teams/statistics
+    : xGBased
+      ? `📐 ${expGoals.toFixed(1)} xG (Understat)` // real Understat xG (legacy)
+      : (_apiExpG !== null)
+        ? `🤖 ${expGoals.toFixed(1)} EG (Modell + API)`
+        : `Ø ${expGoals.toFixed(1)} EG`;
   // Venue form: blend real home/away win rate (55%) with overall formScore (45%) when available
   // Fallback: proxy formula (home +15%, away -13%)
   const hFS_home = _hHWR != null
@@ -2143,13 +2159,20 @@ function getBettingPicks(match, odds, leagueKey) {
   const bttsLikely   = homeAttStr > 1.15 && awayAttStr > 0.95 && homeDefStr > 0.85 && awayDefStr > 0.85;
   const bttsBad      = homeAttStr < 0.90 || awayAttStr < 0.80;
   const bttsNoSignal = homeAttStr < 1.00 || awayAttStr < 0.90;
-  // Corners (estimate from xG: ~3.4 corners/home-xG-unit + ~3.0/away-xG-unit)
-  // Defensive leakiness bonus: teams with porous defences force more pressure → more corners
+  // Corners estimate — prefer real stats-cache data over xG formula
+  // cornersEst formula: ~3.4 corners/home-xG-unit + ~3.0/away-xG-unit (calibrated on Big5)
+  // Defensive leakiness bonus: porous defences invite more pressure → more corners
   const _defBonus = Math.min(1.2, Math.max(0, (homeDefStr + awayDefStr - 2.0) * 0.5));
-  const cornersEst    = homeAttStr * 3.4 + awayAttStr * 3.0 + _defBonus;
-  const cornersOver8  = cornersEst >= 8.0;
-  const cornersOver9  = cornersEst >= 9.5;
-  const cornersOver11 = cornersEst >= 11.0;
+  const _cornersFormula = homeAttStr * 3.4 + awayAttStr * 3.0 + _defBonus;
+  // Real corner data from fixtures/statistics batch fetch: home avg at home + away avg away
+  const _cornersReal = (_hCornersHome !== null && _aCornersAway !== null)
+    ? Math.round((_hCornersHome + _aCornersAway) * 10) / 10
+    : null;
+  const cornersEst     = _cornersReal !== null ? _cornersReal : _cornersFormula;
+  const cornersDataReal = _cornersReal !== null;
+  const cornersOver8   = cornersEst >= 8.0;
+  const cornersOver9   = cornersEst >= 9.5;
+  const cornersOver11  = cornersEst >= 11.0;
   // Cards — helper flags (anyGold already declared above; anyOrange added here)
   const anyOrange = hc.includes('orange') || ac.includes('orange');
   const cardsVeryHigh = bothRed && hStreak <= -2 && aStreak <= -2;
@@ -2703,19 +2726,60 @@ function getBettingPicks(match, odds, leagueKey) {
   {
     const sC = [];
 
-    // ── Corners ───────────────────────────────────────────────────────────────
-    { let sc = cornersOver11 ? 0.74 : cornersOver9 ? 0.58 : cornersOver8 ? 0.40 : 0.18;
-      if (bothBlue) sc = Math.min(sc + 0.06, 0.82);
-      // 🔑 PRESSURE/RUNDEN: Druckteam presst aggressiv → erzwingt mehr Ecken
-      if (bothNeedWin)       sc = Math.min(0.88, sc + _pressureBoost * 1.00);
-      else if (_anyNeedsWin) sc = Math.min(0.82, sc + _pressureBoost * 0.55);
-      const cMkt = sc >= 0.65 || cornersOver11 ? 'Über 11.5 Ecken'
-                 : sc >= 0.46 || cornersOver9  ? 'Über 9.5 Ecken'  : 'Über 8.5 Ecken';
+    // ── Corners Over / Under ────────────────────────────────────────────────────
+    // Over: high corners expected. Under: defensively-oriented match with low corners.
+    // When cornersDataReal: estimate from real stats_cache averages → slight confidence boost.
+    // Odds from parseBets corners market (co95/cu95/co85/cu85/co105/cu105/co115).
+    {
+      // ── Over ─────────────────────────────────────────────────────────────────
+      let scO = cornersOver11 ? 0.74 : cornersOver9 ? 0.58 : cornersOver8 ? 0.40 : 0.18;
+      if (bothBlue) scO = Math.min(scO + 0.06, 0.82);
+      // 🔑 PRESSURE: Druckteam presst aggressiv → erzwingt mehr Ecken
+      if (bothNeedWin)       scO = Math.min(0.88, scO + _pressureBoost * 1.00);
+      else if (_anyNeedsWin) scO = Math.min(0.82, scO + _pressureBoost * 0.55);
+      // Real corner data → slight confidence boost (better estimate than formula)
+      if (cornersDataReal) scO = Math.min(0.92, scO + 0.05);
+      // Choose market line closest to estimate from below
+      const _cOMkt  = cornersEst >= 11.5 ? 'Über 11.5 Ecken'
+                    : cornersEst >= 10.5 ? 'Über 10.5 Ecken'
+                    : cornersEst >= 9.5  ? 'Über 9.5 Ecken'
+                    :                      'Über 8.5 Ecken';
+      const _cOOdds = _cOMkt === 'Über 11.5 Ecken' ? (o.co115 || null)
+                    : _cOMkt === 'Über 10.5 Ecken' ? (o.co105 || null)
+                    : _cOMkt === 'Über 9.5 Ecken'  ? (o.co95  || null)
+                    :                                 (o.co85  || null);
       const _cornPressNote = _anyNeedsWin
-        ? ` ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — intensives Pressing treibt Eckenzahl über Modellbasis.` : '';
-      sC.push({sc, p:{icon:'🚩', market:cMkt, odds:null,
-        conf: sc>0.65?'high':sc>0.38?'medium':'low',
-        reason:`Beide Teams spielen offensiv — ca. ${cornersEst.toFixed(0)} Ecken werden in diesem Spiel erwartet.${_defBonus > 0.5?' Beide Defensiven sind anfällig, was viele Angriffe und damit viele Ecken begünstigt.':''}`}}); }
+        ? ` ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — intensives Pressing erzwingt mehr Ecken.` : '';
+      const _cornDataNote = cornersDataReal
+        ? `<br>📊 Echte Ecken-Daten (Saison): ${match.home} Ø ${_hCornersHome} Heim · ${match.away} Ø ${_aCornersAway} Ausw. → Ø ${cornersEst.toFixed(1)} erwartet.`
+        : ``;
+      sC.push({sc: scO, p:{icon:'🚩', market:_cOMkt, odds:_cOOdds,
+        conf: scO>0.65?'high':scO>0.38?'medium':'low',
+        reason:`${cornersDataReal
+          ? `Saisonstatistik: ${cornersEst.toFixed(1)} Ecken erwartet (${match.home} Ø ${_hCornersHome} Heim + ${match.away} Ø ${_aCornersAway} Ausw.).`
+          : `Beide Teams spielen offensiv — ca. ${cornersEst.toFixed(0)} Ecken werden in diesem Spiel erwartet.${_defBonus > 0.5 ? ' Beide Defensiven sind anfällig, was viele Angriffe und damit mehr Ecken begünstigt.' : ''}`
+        }${_cornPressNote}${_cornDataNote}`}});
+
+      // ── Under ────────────────────────────────────────────────────────────────
+      // Only meaningful when estimate clearly below the chosen threshold
+      if (cornersEst < 9.0 && !_anyNeedsWin) {
+        let scU = cornersEst < 7.0 ? 0.72 : cornersEst < 7.5 ? 0.60 : cornersEst < 8.0 ? 0.47 : 0.34;
+        if (cornersDataReal) scU = Math.min(0.88, scU + 0.06);
+        if (scU >= 0.32) {
+          const _cUMkt  = cornersEst < 7.5 ? 'Unter 8.5 Ecken' : 'Unter 9.5 Ecken';
+          const _cUOdds = _cUMkt === 'Unter 8.5 Ecken' ? (o.cu85 || null) : (o.cu95 || null);
+          const _uDataNote = cornersDataReal
+            ? `<br>📊 Echte Ecken-Daten (Saison): ${match.home} Ø ${_hCornersHome} Heim · ${match.away} Ø ${_aCornersAway} Ausw. → nur Ø ${cornersEst.toFixed(1)} erwartet.`
+            : ``;
+          sC.push({sc: scU, p:{icon:'🚩', market:_cUMkt, odds:_cUOdds,
+            conf: scU>0.60?'high':scU>0.38?'medium':'low',
+            reason:`${cornersDataReal
+              ? `Defensives Spiel — Saisonschnitt ergibt nur ${cornersEst.toFixed(1)} Ecken gesamt.`
+              : `Taktisch defensives Spiel mit erwarteten ~${cornersEst.toFixed(0)} Ecken.`
+            }${_uDataNote}`}});
+        }
+      }
+    }
 
     // ── Cards — granular mit Runden-Faktor ────────────────────────────────────
     // 🔑 PRESSURE/RUNDEN: Karten-Signal ist Druck × Intensität — beide Faktoren eingerechnet
@@ -2944,6 +3008,13 @@ function getBettingPicks(match, odds, leagueKey) {
           ));
           mp = _bttsNMp;
         } break;
+      // ── Corners — model probability from expected corner estimate ─────────────
+      case 'Über 11.5 Ecken': mp = Math.min(0.88, Math.max(0.08, 0.35 + (cornersEst - 11.5) * 0.12)); break;
+      case 'Über 10.5 Ecken': mp = Math.min(0.88, Math.max(0.10, 0.40 + (cornersEst - 10.5) * 0.12)); break;
+      case 'Über 9.5 Ecken':  mp = Math.min(0.88, Math.max(0.12, 0.50 + (cornersEst - 9.5)  * 0.10)); break;
+      case 'Über 8.5 Ecken':  mp = Math.min(0.88, Math.max(0.14, 0.60 + (cornersEst - 8.5)  * 0.10)); break;
+      case 'Unter 9.5 Ecken': mp = Math.min(0.85, Math.max(0.08, 0.50 + (9.5 - cornersEst)  * 0.10)); break;
+      case 'Unter 8.5 Ecken': mp = Math.min(0.85, Math.max(0.08, 0.55 + (8.5 - cornersEst)  * 0.12)); break;
     }
     // For markets with a proper mp, compute model odds + edge
     if (mp !== null) {
