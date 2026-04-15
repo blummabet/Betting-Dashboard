@@ -528,7 +528,13 @@ def calc_pressure(team, labels, standings, cfg, rounds_left):
         rel_start = total - rel + 1
         safe_pos  = rel_start - rel_ply - 1
         if safe_pos > 0:
-            pts_safe  = pts_at_pos(standings, safe_pos)
+            pts_safe      = pts_at_pos(standings, safe_pos)
+            gap_to_safety = pts_safe - pts
+            # ── Confirmed relegated: cannot mathematically escape — zero pressure ──
+            # Even winning every remaining game can't close the gap. motivationLevel
+            # will be 'none'; mustWin must also be False so match score stays low.
+            if gap_to_safety > max_gain:
+                return {"pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": False, "canDraw": True}
             safe_gd   = get_team_gd(standings, safe_pos)
             cg        = comp_gain_est(standings, safe_pos, rounds_left)
             # GD penalty: level on pts but inferior GD → still ranked below → +1

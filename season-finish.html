@@ -1481,9 +1481,31 @@ function getBettingAngle(match) {
   const anyGold = all.includes('gold');
   const anyBlue = all.includes('blue');
 
+  // ── Motivation guard: detect confirmed-relegated / already-secured teams ──
+  const hMotivAngle = match.homeStake?.motivationLevel || 'full';
+  const aMotivAngle = match.awayStake?.motivationLevel || 'full';
+  const hConfRel = hc.includes('red') && hMotivAngle === 'none';
+  const aConfRel = ac.includes('red') && aMotivAngle === 'none';
+  const anyConfRel = hConfRel || aConfRel;
+  const bothConfRel = hConfRel && aConfRel;
+
   // deterministic variant selector based on team names
   const _h = (match.home + match.away).split('').reduce((a,c)=>a+c.charCodeAt(0),0);
   const _v = (arr) => arr[_h % arr.length];
+
+  // ── Already-relegated teams: suppress survival-battle language ────────────
+  if (bothConfRel) return _v([
+    {badge:'⬜ Bedeutungslos',  cls:'ba-hot',   text:'<strong>Beide Teams bereits abgestiegen</strong> — der Ausgang dieser Partie hat keinen Einfluss mehr auf das Saisonergebnis. Rotation wahrscheinlich, reduzierte Intensität, Wettmärkte schwer einzuschätzen.'},
+    {badge:'⬜ Saison vorbei',  cls:'ba-hot',   text:'<strong>Keine Abstiegsrelevanz mehr</strong> — beide Klubs spielen nur noch die Saison aus. Kader-Rotation zu erwarten, Youngsters und Ersatzspieler bekommen Einsatzzeit. Vorsicht bei Hochvertrauens-Picks.'},
+  ]);
+  if (hConfRel && !aConfRel && anyRed) return _v([
+    {badge:'⬜ Abstieg bestätigt',cls:'ba-hot',  text:`<strong>${match.home} bereits abgestiegen</strong> — der Abstieg ist mathematisch besiegelt. Der Gegner kämpft noch um Punkte, aber die Motivation auf Heimseite ist fraglich. Rotation und reduzierte Intensität möglich.`},
+    {badge:'⬜ Freies Spiel',   cls:'ba-hot',   text:`<strong>${match.home} hat nichts mehr zu verlieren</strong> — Abstieg bereits sicher, kein Druck, kein Ziel. Der Gegner hingegen braucht Punkte. Asymmetrische Motivation — Wettempfehlungen hier mit Vorsicht zu genießen.`},
+  ]);
+  if (aConfRel && !hConfRel && anyRed) return _v([
+    {badge:'⬜ Abstieg bestätigt',cls:'ba-hot',  text:`<strong>${match.away} bereits abgestiegen</strong> — der Abstieg ist mathematisch besiegelt. Die Heimmannschaft kämpft noch, der Gast tritt ohne Druck an. Rotation und reduzierte Auswärtsintensität wahrscheinlich.`},
+    {badge:'⬜ Freies Spiel',   cls:'ba-hot',   text:`<strong>${match.away} hat nichts mehr zu verlieren</strong> — Abstieg bereits sicher. Die Heimmannschaft benötigt Punkte, der Gast spielt ohne Konsequenzen. Asymmetrische Motivation — Heimsieg-Picks bekommen Rückenwind.`},
+  ]);
 
   if (bothGold && bothRed) return _v([
     {badge:'🔥 Extremduell',    cls:'ba-chaos', text:'<strong>Titel vs Abstieg</strong> — maximaler Kontrast. Das Abstiegsteam kämpft ums nackte Überleben, das Titelteam darf sich keinen Ausrutscher erlauben. Hohe Intensität, viele Karten möglich.'},
@@ -1514,12 +1536,12 @@ function getBettingAngle(match) {
     {badge:'🔵 Europacup-Battle',cls:'ba-ucl',  text:'<strong>Beide Teams jagen den gleichen Platz</strong> — das schafft Feindschaft auf dem Platz und offensiven Fußball in der Taktik. Niemand wird hier auf Unentschieden spielen.'},
     {badge:'🔵 Top-4-Kampf',    cls:'ba-ucl',   text:'<strong>Millionenspiel ohne Aufsteiger-Bonus</strong> — UCL-Qualifikation ist für beide der Saisonteil. Intensives Pressing, schnelle Übergänge, viele Ecken. Über 9.5 Ecken als Ergänzung überlegenswert.'},
   ]);
-  if (anyRed && anyBlue) return _v([
+  if (anyRed && anyBlue && !anyConfRel) return _v([
     {badge:'⚡ Muss-Spiel',     cls:'ba-chaos', text:'<strong>Europacup-Jagd trifft Abstiegskampf</strong> — der Abstiegskandidat spielt mit allem. Der Top-Klub braucht die Punkte für Europa. Intensiv und motivationsstark auf beiden Seiten.'},
     {badge:'⚡ Kontrastprogramm',cls:'ba-chaos',text:'<strong>Zwei Welten kollidieren</strong> — der Abstiegskandidat kämpft ums Überleben, der Gegner für einen Traum. Dieser Kontrast macht solche Spiele emotionaler und unberechenbarer als die Quoten vermuten.'},
     {badge:'⚡ Underdog kämpft',cls:'ba-chaos', text:'<strong>Abstiegskandidat mit Rücken zur Wand</strong> — nichts zu verlieren erzeugt Aggressivität. Der Europacup-Aspirant hat das bessere Kader, aber der Druck liegt auf seiner Seite. Oft enger als erwartet.'},
   ]);
-  if (anyRed) return _v([
+  if (anyRed && !anyConfRel) return _v([
     {badge:'🔴 Muss-Spiel',     cls:'ba-rel',   text:'<strong>Abstiegskampf</strong> — dieser Klub braucht dringend Punkte. Extreme Motivation, hohes Risiko, karten-intensive Partie. Heimvorteil in Existenzkämpfen besonders wertvoll.'},
     {badge:'🔴 Abstiegsangst',  cls:'ba-rel',   text:'<strong>Punkte als Überlebensmittel</strong> — das abstiegsgefährdete Team wird nichts dem Zufall überlassen. Physisch, direkt und mit maximaler Intensität. Gegner muss früh im Spiel stabil stehen.'},
     {badge:'🔴 Rücken zur Wand',cls:'ba-rel',   text:'<strong>Wenn Angst motiviert</strong> — Abstiegsangst kann ein Team beflügeln oder lähmen. Welcher Effekt überwiegt, zeigt oft der Spielbeginn. Ein früher Rückstand wäre psychologisch verheerend.'},
@@ -3182,9 +3204,13 @@ function computeMatchScore(match, leagueKey) {
   // ── mustWin amplifier: when a team NEEDS to win (not just "wants to") ──────
   // pressureRatio > 0.65 → mustWin=true → team plays with maximum intensity.
   // Two mustWin teams = explosive, unpredictable match (best for betting markets).
+  // Guard: mustWin is meaningless when motivationLevel='none' (already relegated/
+  // confirmed) — those teams play with zero pressure regardless of the flag.
   {
-    const hMW = match.homeStake?.mustWin || false;
-    const aMW = match.awayStake?.mustWin || false;
+    const hMot = match.homeStake?.motivationLevel;
+    const aMot = match.awayStake?.motivationLevel;
+    const hMW = (match.homeStake?.mustWin || false) && hMot !== 'none';
+    const aMW = (match.awayStake?.mustWin || false) && aMot !== 'none';
     if (hMW && aMW) score += 0.8;      // both desperate — maximum contest
     else if (hMW || aMW) score += 0.4; // one team in crisis mode
   }
