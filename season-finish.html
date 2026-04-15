@@ -1120,9 +1120,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <ul>
           <li><strong>Live Odds-API:</strong> Automatischer Value-Check gegen Pinnacle in Echtzeit</li>
           <li><strong>Weather-Integration:</strong> Wind/Regen → Under-Boost, Corners-Dämpfung</li>
-          <li><strong>Weather-Integration:</strong> Wind/Regen → Under-Boost, Corners-Dämpfung</li>
           <li><strong>Bankroll-Empfehlung:</strong> Stake-Größe basierend auf Edge × Konfidenz</li>
           <li><strong>Historischer Backtest (API):</strong> API-Daten für Trefferquoten-Validierung der Pick-Logik nutzen</li>
+          <li><strong>[Tier 2] fixtures/lineups (T−1h):</strong> Offizielle Startelf + Formation ~1h vor Anpfiff → Late-Update-Step in prematch-server.js. Rotation, Schlüsselspieler auf Bank, Formation-Abweichung als Signal. Überschreibt injury-basierte xG-Schätzungen wenn echter Kader bekannt.</li>
+          <li><strong>[Tier 2] players/statistics:</strong> Individuelle Tore, Assists, Shots on Target, Rating pro Spieler → verfeinert Injury-Impact. Statt pauschaler attack_count × 0.95: Topscorer (18 Tore) fehlt vs. Backup (2 Tore) — enormer Unterschied, aktuell nicht sichtbar im Modell.</li>
+          <li><strong>[Tier 3] players/sidelined:</strong> Langzeitausfälle besser als injury-Endpoint, aber Fixture-Injuries decken das bereits weitgehend ab.</li>
+          <li><strong>[Tier 3] fixtures/events:</strong> Torminuten, Karten, Auswechslungen historisch → First-Goal-Rate, Late-Goal-Rate als neue Markt-Signale. Aufwändig zu aggregieren.</li>
+          <li><strong>[Tier 3] coaches:</strong> Coach-Wechsel-Signal (neuer Trainer = oft defensive Phase). Interessant, aber kein direkter Score-Einfluss.</li>
         </ul>
       </div>
       <div class="heart-card" style="opacity:.85;">
@@ -1178,6 +1182,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Streak-Momentum-Signal</strong> — <code>refresh_stats.py</code> berechnet aus den Fixture-Timestamps (ohne neue API-Calls) den <code>currentStreak</code> (+N = N Spiele in Folge ungeschlagen/gewonnen, −N = N Spiele in Folge ohne Sieg). Außerdem werden via <code>GET /teams/statistics</code> die saisonbesten Streaks gespeichert: <code>biggestWinStreak</code>, <code>biggestLoseStreak</code>, <code>biggestDrawStreak</code>. In <code>getBettingPicks()</code> fließen diese in Heimsieg- und Auswärtssieg-Scoring ein: BigWinStreak ≥5 = dominantes Team (+max 0.08), aktueller Lauf ≥3 = momentum (+max 0.08). Streak ≥3 erscheint auch als "🔥 Aktueller Lauf: X× ungeschlagen" in Begründungstexten. <em>(refresh_stats.py + season-finish.html)</em></li>
           <li><strong>Shots-basiertes xG (Tier 2)</strong> — <code>GET /teams/statistics</code> (bereits für Formation/Streaks gecalled) liefert auch <code>shots.home.total</code>, <code>shots.home.on</code> etc. → xG wird jetzt aus Schüssen berechnet: <code>SoT/Spiel × 0.35 + (Schüsse − SoT)/Spiel × 0.055</code>. Das ist deutlich genauer als Tore/Spiel als xG-Proxy — vor allem für TUR/NED/POR/SCO etc. wo kein Understat vorliegt. Das verbesserte xG setzt <code>xGBased=true</code> und erscheint als "🎯 X.X xG (Schüsse)" in Begründungstexten. <strong>Null zusätzliche API-Calls</strong> gegenüber dem bisherigen Stand. <em>(refresh_stats.py + season-finish.html)</em></li>
           <li><strong>Echte Eckball-Daten + neues Corner-Pick-Pool (Tier 2)</strong> — <code>refresh_stats.py</code> fetcht via <code>GET /fixtures/statistics?fixture=</code> für die letzten 25 Spiele pro Liga die Spielstatistiken (Corner Kicks). Pro Team wird der Schnitt der Heimecken (<code>cornersHome</code>) und Auswärtsecken (<code>cornersAway</code>) gespeichert. In <code>getBettingPicks()</code> ersetzt die echte Summe aus Home+Away-Schnitt die Formel-Schätzung (homeAttStr × 3.4 + ...). Neue Corner-Picks in Pick 3: <strong>Über 8.5/9.5/10.5/11.5 Ecken</strong> mit dynamischer Marktlinie basierend auf echtem Schnitt, und neu <strong>Unter 8.5/9.5 Ecken</strong> für defensiv geprägte Spiele. Corner-Quoten aus <code>parseBets</code> (co85/co95/co105/co115/cu85/cu95) werden für Value-Check verwendet. Das Label "📊 Echte Ecken-Daten (Saison): X Heim · Y Ausw." erscheint in Begründungstexten wenn echte Daten vorliegen. Ohne echte Daten: Formel-Fallback. <code>--fast</code>-Flag überspringt den Fixture-Stats-Fetch. <em>(refresh_stats.py + prematch-server.js + season-finish.html)</em></li>
+          <li><strong>Confirmed-Relegated Fix in calc_pressure()</strong> — Abstieg bereits bestätigte Teams (motiv='none') wurden fälschlicherweise als <code>mustWin=True</code> behandelt wenn <code>pressureRatio &gt; 0.65</code>. Neu: Early-Return in <code>calc_pressure()</code> für solche Teams → <code>mustWin=False</code>, <code>pressureRatio=0</code>. Gleiches Guard in JS. Verhindert Scores wie 10.3/12 und falsche "Abstiegskampf"-Narrative für bereits abgestiegene Teams. <em>(update_dashboard.py + season-finish.html)</em></li>
+          <li><strong>calc_match_score() Ceiling + Red-Safe-Erkennung (Python)</strong> — Python-Funktion <code>calc_match_score()</code> hatte keine rounds_left-basierte Score-Obergrenze. Jetzt identisch mit JS: rl=1→12.0, rl≤6→9.5, rl≤7→9.0, rl≥10→7.5. Red-Safe-Erkennung: Teams mit rotem Label aber <code>pressure=0</code> und <code>ptNeeded=0</code> (mathematisch gerettet) erhalten reduzierten Drama-Bonus statt vollem. Neue Signatur: <code>calc_match_score(home_stake, away_stake, h2h, rounds_left)</code>. <em>(update_dashboard.py)</em></li>
+          <li><strong>computeMatchScore() Red-Safe-Bonus-Dämpfung (JS)</strong> — <code>computeMatchScore()</code> in der HTML wendet jetzt dieselbe red-safe-Logik an wie Python: <code>bothRed &amp;&amp; bothRedSafe → +0.2</code> (statt vollem Drama-Bonus); <code>anyGold &amp;&amp; anyRed &amp;&amp; anyRedSafe → reduzierte Formel</code>; <code>anyRed &amp;&amp; anyRedSafe &amp;&amp; bothStakes → +0.15</code>. Verhindert überhöhte Scores wenn ein Team zwar rot-labelled aber bereits gerettet ist. <em>(season-finish.html)</em></li>
+          <li><strong>getBettingAngle() Logik-Overhaul (Pick-Narrative)</strong> — 8 neue/überarbeitete Pfade in der Narrativ-Generierung: (1) <code>bothRed &amp;&amp; bothRedSafe</code> → "⬜ Abstiegszone erledigt" statt Drama-Text; (2) <code>anyGold &amp;&amp; anyRed &amp;&amp; anyRedSafe</code> → "🏆 Klassenunterschied" (kein Underdogalarm); (3) <code>anyGold &amp;&amp; anyRed &amp;&amp; h2hDominated</code> → "🔥 Klasse dominiert H2H"; (4) <code>anyRed &amp;&amp; anyRedSafe</code> → "🟡 Abstiegszone" (neutral, kein Panik-Text); (5) <code>anyRed &amp;&amp; h2hDominated</code> → "🔴 Abstiegsdruck+H2H" (realistischer); (6) gold-secured: gold-Team mit <code>pressure=0/ptNeeded=0</code> → "🏆 Pflichtaufgabe/Dominanztest"; (7) <code>bothOrange</code> → "🟠 Europa-Duell" statt generischem "⭐ High Stakes"; (8) "BTTS realistisch" in Drama-Text entfernt → "Intensive, offene Partie" (war irreführend bei low-gpg Teams). <em>(season-finish.html)</em></li>
+          <li><strong>check_picks_logic.py — Täglicher Logik-Validator</strong> — Neues Standalone-Script das <code>season-finish.html</code> liest und alle bevorstehenden Fixtures (21 Tage voraus) auf 13 Logik-Muster prüft. Drei Schweregrade: 🔴 FEHLER (z.B. <code>MW_ON_CONFIRMED_REL</code>, <code>SCORE_EXCEEDS_CEILING</code>, <code>DEAD_RUBBER_HIGH_SCORE</code>), 🟡 WARNUNG (z.B. <code>RED_SAFE_HIGH_SCORE</code>, <code>MUSTWIN_LOW_GPG</code>, <code>H2H_DOMINATED_HIGH_SCORE</code>), 🔵 HINWEIS (z.B. <code>LOW_H2H_SAMPLE</code>, <code>BOTH_GOLD_NO_PRESSURE</code>). CLI-Flags: <code>--errors</code> (nur Fehler), <code>--date DD.MM</code>, <code>--days N</code>. Täglich nach jedem <code>update_dashboard.py</code>-Lauf ausführen. <em>(check_picks_logic.py)</em></li>
         </ul>
       </div>
     </div>
@@ -3220,13 +3229,28 @@ function computeMatchScore(match, leagueKey) {
   const anyRed   = hc.includes('red')  || ac.includes('red');
   const anyGold  = hc.includes('gold') || ac.includes('gold');
 
+  // ── Red-safe: in red zone but already mathematically rescued (no real urgency) ──
+  const _hMotCS = match.homeStake?.motivationLevel;
+  const _aMotCS = match.awayStake?.motivationLevel;
+  const _hPRcs  = match.homeStake?.pressureRatio || 0;
+  const _aPRcs  = match.awayStake?.pressureRatio || 0;
+  const _hPNcs  = match.homeStake?.pointsNeeded  || 0;
+  const _aPNcs  = match.awayStake?.pointsNeeded  || 0;
+  const _hRScs  = hc.includes('red') && _hMotCS !== 'none' && _hPRcs === 0 && _hPNcs === 0;
+  const _aRScs  = ac.includes('red') && _aMotCS !== 'none' && _aPRcs === 0 && _aPNcs === 0;
+  const _anyRScs = _hRScs || _aRScs;
+
   let score;
 
   // ── Zone-based base + graduated second-team bonus ──────────────────────
   // Formula: base = maxS, bonus scales with how high BOTH scores are.
   // This means two teams at 10+10 >> 10+5, creating real differentiation.
 
-  if (bothRed) {
+  if (bothRed && _hRScs && _aRScs) {
+    // Both red but both already safe — dead rubber, minimal bonus
+    score = maxS + 0.2;
+
+  } else if (bothRed) {
     // Both relegated: intense survival battle
     // maxS=10, minS=10 → 10 + 1.0 + 1.5 = 12.5 → 12 (reserved for life-or-death)
     // maxS=10, minS=5  → 10 + 1.0 + 0.75 = 11.75
@@ -3240,6 +3264,10 @@ function computeMatchScore(match, leagueKey) {
     // maxS=9,  minS=7 → 10.8
     score = maxS + 0.75 + (minS / 10) * 1.5;
 
+  } else if (anyGold && anyRed && _anyRScs) {
+    // Gold vs red-safe: red team already rescued — reduce drama bonus significantly
+    score = maxS + 0.2 + (minS / 10) * 0.2;
+
   } else if (anyGold && anyRed) {
     // Drama: title chaser vs relegated side — extreme contrast
     // maxS=10 → 10.8-11.0 range
@@ -3248,6 +3276,10 @@ function computeMatchScore(match, leagueKey) {
   } else if (bothBlue) {
     // UCL battle: both need European points
     score = maxS + 0.5 + (minS / 10) * 0.5;
+
+  } else if (anyRed && _anyRScs && match.bothStakes) {
+    // Red-safe vs staked opponent — minimal bonus
+    score = maxS + 0.15;
 
   } else if (anyRed && match.bothStakes) {
     // Relegated vs European chaser — still compelling
