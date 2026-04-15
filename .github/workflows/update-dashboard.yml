@@ -69,7 +69,7 @@ jobs:
             echo "Keine Änderungen — kein Commit nötig."
           else
             git commit -m "🔄 Auto-Update $(date +'%d.%m.%Y %H:%M') UTC"
-            git pull --rebase origin main
+            git pull origin main --no-rebase -X ours
             git push
           fi
         env:

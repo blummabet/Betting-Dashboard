@@ -37,5 +37,5 @@ jobs:
           # Nur committen wenn sich tatsächlich etwas geändert hat
           git diff --staged --quiet || git commit -m "chore: update prematch data [skip ci]"
           # Pull rebase before push to avoid rejection when other commits landed in between
-          git pull --rebase origin main
+          git pull origin main --no-rebase -X ours
           git push
