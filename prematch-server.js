@@ -515,6 +515,43 @@ async function fetchAllPrematchData() {
   if (_firstOddsErr) console.warn(`  [Odds] Erstes Problem:`, JSON.stringify(_firstOddsErr));
   console.log(`  Step5 fertig: ${oddsOk} OK · ${oddsFail} leer/Fehler (von ${upcoming.length} Spielen)`);
 
+  // ── Step 5b: Late-fetch cards odds for fixtures ≤48h away ────────────────
+  // Card markets open later than 1X2/O2.5 — only worth re-fetching close to kickoff.
+  // Only targets fixtures that already have main odds (BTTS/DC present) but no cards.
+  const _d0 = new Date().toISOString().slice(0, 10);
+  const _d1 = new Date(Date.now() + 24 * 3600 * 1000).toISOString().slice(0, 10);
+  const _d2 = new Date(Date.now() + 48 * 3600 * 1000).toISOString().slice(0, 10);
+  const needCards = upcoming.filter(d =>
+    d.odds &&                                               // main odds exist (Step 5 succeeded)
+    !d.odds.cards_o35 && !d.odds.cards_o45 &&              // cards still missing
+    (d.date === _d0 || d.date === _d1 || d.date === _d2)   // kickoff within ~48h
+  );
+  if (needCards.length) {
+    console.log(`[Server] Step5b: Karten-Quoten Late-Fetch für ${needCards.length} Spiele ≤48h...`);
+    let cardsOk = 0;
+    for (const d of needCards) {
+      await sleep(1200);
+      try {
+        const data = await apiFetch(`/odds?fixture=${d.fixtureId}`);
+        const bookmakers = (data.response || [])[0]?.bookmakers || [];
+        if (bookmakers.length) {
+          const r = parseBets(bookmakers);
+          // Merge only card fields — don't overwrite existing 1X2/BTTS/DC/Goals odds
+          if (r.cards_o35 || r.cards_o45) {
+            if (r.cards_o35)  d.odds.cards_o35  = r.cards_o35;
+            if (r.cards_u35)  d.odds.cards_u35  = r.cards_u35;
+            if (r.cards_o45)  d.odds.cards_o45  = r.cards_o45;
+            if (r.cards_u45)  d.odds.cards_u45  = r.cards_u45;
+            if (r.cards_o55)  d.odds.cards_o55  = r.cards_o55;
+            cardsOk++;
+            console.log(`  [Step5b] ✅ ${d.homeTeamName} vs ${d.awayTeamName}: cards o35=${r.cards_o35||'-'} o45=${r.cards_o45||'-'}`);
+          }
+        }
+      } catch(e) { /* silent — cards are bonus data, never block the run */ }
+    }
+    console.log(`  Step5b fertig: ${cardsOk}/${needCards.length} Spiele mit Karten-Quoten gefunden`);
+  }
+
   // ── Step 5.5: API Predictions ─────────────────────────────────────────────
   // /predictions returns the API-Football model's expected goals, result percentages
   // and Poisson-distribution win/draw/loss probabilities — used as independent signal.
