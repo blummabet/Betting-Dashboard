@@ -868,19 +868,24 @@ def fetch_league(key, cfg):
 
         h_pressure = calc_pressure(ht, h_labels, standings, cfg, rounds_left) if h_labels else {}
         a_pressure = calc_pressure(at, a_labels, standings, cfg, rounds_left) if a_labels else {}
+        # Cache motivation so we can use it for both motivationLevel and mustWin override
+        h_motiv = calc_motivation(ht, h_labels, standings, cfg, rounds_left) if h_labels else 'full'
+        a_motiv = calc_motivation(at, a_labels, standings, cfg, rounds_left) if a_labels else 'full'
         home_stake = {"score": calc_score(h_labels, rounds_left, h_form, h_pressure.get("pressureRatio")),
                       "labels": h_labels,
-                      "motivationLevel": calc_motivation(ht, h_labels, standings, cfg, rounds_left),
+                      "motivationLevel": h_motiv,
                       "pointsNeeded": h_pressure.get("pointsNeeded", 0),
                       "pressureRatio": h_pressure.get("pressureRatio", 0.0),
-                      "mustWin": h_pressure.get("mustWin", False),
+                      # mustWin=False when motiv='none': confirmed team has given up regardless of ratio
+                      "mustWin": h_pressure.get("mustWin", False) and h_motiv != 'none',
                       "canDraw": h_pressure.get("canDraw", True)} if h_labels else None
         away_stake = {"score": calc_score(a_labels, rounds_left, a_form, a_pressure.get("pressureRatio")),
                       "labels": a_labels,
-                      "motivationLevel": calc_motivation(at, a_labels, standings, cfg, rounds_left),
+                      "motivationLevel": a_motiv,
                       "pointsNeeded": a_pressure.get("pointsNeeded", 0),
                       "pressureRatio": a_pressure.get("pressureRatio", 0.0),
-                      "mustWin": a_pressure.get("mustWin", False),
+                      # mustWin=False when motiv='none': confirmed team has given up regardless of ratio
+                      "mustWin": a_pressure.get("mustWin", False) and a_motiv != 'none',
                       "canDraw": a_pressure.get("canDraw", True)} if a_labels else None
 
         # H2H using API-Football team IDs
