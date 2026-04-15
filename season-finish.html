@@ -1489,6 +1489,28 @@ function getBettingAngle(match) {
   const anyConfRel = hConfRel || aConfRel;
   const bothConfRel = hConfRel && aConfRel;
 
+  // ── Red-safe guard: in red zone positionally but already mathematically rescued ──
+  // pressure=0 AND ptNeeded=0 means they've secured survival, just sitting in the
+  // red zone due to positional label assignment. No urgent narrative warranted.
+  const hPR      = match.homeStake?.pressureRatio || 0;
+  const aPR      = match.awayStake?.pressureRatio || 0;
+  const hPN      = match.homeStake?.pointsNeeded  || 0;
+  const aPN      = match.awayStake?.pointsNeeded  || 0;
+  const hRedSafe = hc.includes('red') && hMotivAngle !== 'none' && hPR === 0 && hPN === 0;
+  const aRedSafe = ac.includes('red') && aMotivAngle !== 'none' && aPR === 0 && aPN === 0;
+  const anyRedSafe  = hRedSafe || aRedSafe;
+  const bothRedSafe = hRedSafe && aRedSafe;
+
+  // ── H2H dominance: one team won ≥75% of all head-to-head meetings ──────────
+  // Strong historical dominance dampens "upset potential" narrative.
+  const _h2hG  = match.h2h?.games     || 0;
+  const _h2hHW = match.h2h?.homeWins  || 0;
+  const _h2hAW = match.h2h?.awayWins  || 0;
+  const h2hDominated = _h2hG >= 5 && (_h2hHW / _h2hG >= 0.75 || _h2hAW / _h2hG >= 0.75);
+
+  // ── Orange-vs-Orange: both chasing the same Europa League spot ───────────
+  const bothOrange = hc.includes('orange') && ac.includes('orange');
+
   // deterministic variant selector based on team names
   const _h = (match.home + match.away).split('').reduce((a,c)=>a+c.charCodeAt(0),0);
   const _v = (arr) => arr[_h % arr.length];
@@ -1505,6 +1527,12 @@ function getBettingAngle(match) {
   if (aConfRel && !hConfRel && anyRed) return _v([
     {badge:'⬜ Abstieg bestätigt',cls:'ba-hot',  text:`<strong>${match.away} bereits abgestiegen</strong> — der Abstieg ist mathematisch besiegelt. Die Heimmannschaft kämpft noch, der Gast tritt ohne Druck an. Rotation und reduzierte Auswärtsintensität wahrscheinlich.`},
     {badge:'⬜ Freies Spiel',   cls:'ba-hot',   text:`<strong>${match.away} hat nichts mehr zu verlieren</strong> — Abstieg bereits sicher. Die Heimmannschaft benötigt Punkte, der Gast spielt ohne Konsequenzen. Asymmetrische Motivation — Heimsieg-Picks bekommen Rückenwind.`},
+  ]);
+
+  // ── Both red but already mathematically safe — dead rubber ──────────────────
+  if (bothRed && bothRedSafe) return _v([
+    {badge:'⬜ Abstiegszone erledigt', cls:'ba-hot', text:'<strong>Beide Teams sind mathematisch gerettet</strong> — Tabellenposition unkritisch, kein akuter Abstiegsdruck auf beiden Seiten. Reduzierte Intensität möglich, Rotation wahrscheinlich. Vorsicht bei Hochvertrauens-Picks.'},
+    {badge:'⬜ Kein Abstiegsdruck',    cls:'ba-hot', text:'<strong>Abstiegskampf bereits entschieden</strong> — beide Klubs haben den Klassenerhalt gesichert, spielen aber noch in der roten Zone. Tabellenplatz ohne große Konsequenz — Gleichgültigkeit auf dem Platz möglich.'},
   ]);
 
   if (bothGold && bothRed) return _v([
@@ -1524,11 +1552,21 @@ function getBettingAngle(match) {
     {badge:'🏆 Meistertitel',   cls:'ba-title', text:'<strong>Das könnte die Saison entscheiden</strong> — ein Sieg hier schafft Abstand und Selbstvertrauen, eine Niederlage öffnet den Verfolger Tür und Tor. Keine Mannschaft geht hier volles Risiko.'},
     {badge:'🏆 Nervenstärke',   cls:'ba-title', text:'<strong>Taktik schlägt Tempo</strong> — beide Kader sind für solche Partien gebaut. Erwarte ein kontrollierteres Spiel mit wenigen Chancen. Wer seine nutzt, gewinnt — DNB auf den Favoriten oft klug.'},
   ]);
+  // Gold vs red-safe: red team is positionally in red zone but already rescued — no drama
+  if (anyGold && anyRed && anyRedSafe) return _v([
+    {badge:'🏆 Klassenunterschied', cls:'ba-title', text:'<strong>Titelanwärter gegen gesicherten Gegner</strong> — der Gegner steht zwar in der roten Zone, ist aber mathematisch bereits gerettet. Kein akuter Abstiegsdruck. Der Favorit kann kontrolliert spielen — solide Pick-Basis.'},
+    {badge:'🏆 Pflichtaufgabe',     cls:'ba-title', text:'<strong>Titelteam trifft auf entspannten Gegner</strong> — Abstiegsgefahr ist für diesen Gegner vorbei, sein roter Tabellenplatz täuscht. Das Titelteam muss liefern, erwartet aber keinen verzweifelten Gegenpressing-Kampf. Klarer Favorit.'},
+  ]);
+  // Gold vs red with genuine pressure — but H2H history strongly favors one side
+  if (anyGold && anyRed && h2hDominated) return _v([
+    {badge:'🔥 Klasse dominiert', cls:'ba-chaos', text:'<strong>Historische Überlegenheit trifft Abstiegsdruck</strong> — der Favorit hat diese Begegnung statistisch dominiert. Abstiegskampf motiviert den Underdog, aber die H2H-Bilanz spricht eine klare Sprache. Pick-Richtung eindeutig.'},
+    {badge:'🔥 Favoritenpflicht',  cls:'ba-chaos', text:'<strong>Kampfgeist trifft Klasse und Geschichte</strong> — der Abstiegskandidat gibt alles, aber die historische Bilanz zeigt: dieser Favorit lässt sich selten überraschen. Emotionale Partie, Ergebnis tendenziell klar.'},
+  ]);
   if (anyGold && anyRed) return _v([
     {badge:'🔥 Drama',          cls:'ba-chaos', text:'<strong>Titel vs Abstieg</strong> — das Abstiegsteam ist wild entschlossen, das Titelteam steht unter Beobachtung. Beide haben extreme Motivation aus völlig unterschiedlichen Gründen. Selten langweilig.'},
-    {badge:'🔥 Underdogalarm',  cls:'ba-chaos', text:'<strong>Asymmetrische Motivation</strong> — der Abstiegskandidat hat nichts mehr zu verlieren. Diese Freiheit macht ihn gefährlich. Der Titelkandidaten spielt mit dem Druck des Favoriten — ein Patzer wäre fatal.'},
+    {badge:'🔥 Underdogalarm',  cls:'ba-chaos', text:'<strong>Asymmetrische Motivation</strong> — der Abstiegskandidat hat nichts mehr zu verlieren. Diese Freiheit macht ihn gefährlich. Der Titelanwärter spielt mit dem Druck des Favoriten — ein Patzer wäre fatal.'},
     {badge:'🔥 Brisantes Duell',cls:'ba-chaos', text:'<strong>Kampfgeist trifft Klasse</strong> — das abstiegsgefährdete Team wird intensiv pressen und früh stören wollen. Das Titelteam braucht Ruhe am Ball. Wer seine Stärke durchsetzt, dominiert.'},
-    {badge:'🔥 Kontrastreiche Partie',cls:'ba-chaos',text:'<strong>Verzweiflung gegen Druck</strong> — wenige Spielkonstellationen erzeugen so viel Energie wie diese. Der Abstiegskandidat kämpft mit allem, der Titelanwärter darf nicht patzen. BTTS realistisch.'},
+    {badge:'🔥 Kontrastreiche Partie',cls:'ba-chaos',text:'<strong>Verzweiflung gegen Druck</strong> — wenige Spielkonstellationen erzeugen so viel Energie wie diese. Der Abstiegskandidat kämpft mit allem, der Titelanwärter darf nicht patzen. Intensive, offene Partie.'},
   ]);
   if (bothBlue) return _v([
     {badge:'🔵 UCL-Duell',      cls:'ba-ucl',   text:'<strong>Beide brauchen Punkte für UCL</strong> — direktes Aufeinandertreffen um Europacup-Plätze. Angriffsfußball garantiert, beide wollen siegen. BTTS + Over 2.5 aus gutem Grund attraktiv.'},
@@ -1536,22 +1574,48 @@ function getBettingAngle(match) {
     {badge:'🔵 Europacup-Battle',cls:'ba-ucl',  text:'<strong>Beide Teams jagen den gleichen Platz</strong> — das schafft Feindschaft auf dem Platz und offensiven Fußball in der Taktik. Niemand wird hier auf Unentschieden spielen.'},
     {badge:'🔵 Top-4-Kampf',    cls:'ba-ucl',   text:'<strong>Millionenspiel ohne Aufsteiger-Bonus</strong> — UCL-Qualifikation ist für beide der Saisonteil. Intensives Pressing, schnelle Übergänge, viele Ecken. Über 9.5 Ecken als Ergänzung überlegenswert.'},
   ]);
-  if (anyRed && anyBlue && !anyConfRel) return _v([
+  if (anyRed && anyBlue && !anyConfRel && !anyRedSafe) return _v([
     {badge:'⚡ Muss-Spiel',     cls:'ba-chaos', text:'<strong>Europacup-Jagd trifft Abstiegskampf</strong> — der Abstiegskandidat spielt mit allem. Der Top-Klub braucht die Punkte für Europa. Intensiv und motivationsstark auf beiden Seiten.'},
     {badge:'⚡ Kontrastprogramm',cls:'ba-chaos',text:'<strong>Zwei Welten kollidieren</strong> — der Abstiegskandidat kämpft ums Überleben, der Gegner für einen Traum. Dieser Kontrast macht solche Spiele emotionaler und unberechenbarer als die Quoten vermuten.'},
     {badge:'⚡ Underdog kämpft',cls:'ba-chaos', text:'<strong>Abstiegskandidat mit Rücken zur Wand</strong> — nichts zu verlieren erzeugt Aggressivität. Der Europacup-Aspirant hat das bessere Kader, aber der Druck liegt auf seiner Seite. Oft enger als erwartet.'},
   ]);
-  if (anyRed && !anyConfRel) return _v([
+  // Red team in red zone but already safe — no urgency narrative, neutral pick basis
+  if (anyRed && anyRedSafe && !anyConfRel) return _v([
+    {badge:'🟡 Abstiegszone',      cls:'ba-hot', text:'<strong>In der Gefahrenzone, aber mathematisch gerettet</strong> — der rote Tabellenplatz täuscht: dieser Klub hat keine akute Abstiegsgefahr mehr. Weniger Intensität zu erwarten als die Tabellenposition vermuten lässt. Pick auf Form und H2H stützen.'},
+    {badge:'🟡 Entspannter Keller',cls:'ba-hot', text:'<strong>Kein echter Druck trotz rotem Label</strong> — Klassenerhalt gesichert, die Punkte sind da. Gegner sollte keine panische Gegenwehr fürchten. Form, Heimstärke und H2H sind die relevanten Pick-Faktoren hier.'},
+  ]);
+  // Red team under real pressure — but H2H record strongly against the staked team
+  if (anyRed && h2hDominated && !anyConfRel && !anyRedSafe) return _v([
+    {badge:'🔴 Abstiegskampf',  cls:'ba-rel', text:'<strong>Abstiegsdruck trifft auf historische Hürde</strong> — das rote Team braucht Punkte, aber die H2H-Bilanz spricht gegen sie. Kampfgeist motiviert, Klasse und historische Stärke des Gegners sprechen dagegen.'},
+    {badge:'🔴 Gegen die Geschichte', cls:'ba-rel', text:'<strong>Kampfgeist vs. historische Dominanz</strong> — dieser Abstiegskandidat kämpft mit allem, hat aber selten gegen diesen Gegner gewonnen. Intensives Spiel garantiert, Pick-Richtung klar vorgezeichnet.'},
+  ]);
+  if (anyRed && !anyConfRel && !anyRedSafe) return _v([
     {badge:'🔴 Muss-Spiel',     cls:'ba-rel',   text:'<strong>Abstiegskampf</strong> — dieser Klub braucht dringend Punkte. Extreme Motivation, hohes Risiko, karten-intensive Partie. Heimvorteil in Existenzkämpfen besonders wertvoll.'},
     {badge:'🔴 Abstiegsangst',  cls:'ba-rel',   text:'<strong>Punkte als Überlebensmittel</strong> — das abstiegsgefährdete Team wird nichts dem Zufall überlassen. Physisch, direkt und mit maximaler Intensität. Gegner muss früh im Spiel stabil stehen.'},
     {badge:'🔴 Rücken zur Wand',cls:'ba-rel',   text:'<strong>Wenn Angst motiviert</strong> — Abstiegsangst kann ein Team beflügeln oder lähmen. Welcher Effekt überwiegt, zeigt oft der Spielbeginn. Ein früher Rückstand wäre psychologisch verheerend.'},
     {badge:'🔴 Drucksituation', cls:'ba-rel',   text:'<strong>Kein Spielraum für Fehler</strong> — das Abstiegsteam wird mit maximaler Überzeugung spielen. Der Gegner hat technisch das bessere Material, muss aber mit der physischen Intensität umgehen.'},
   ]);
+  // Gold team has already secured title (pressure=0, ptNeeded=0) — comfortable favorite
+  {
+    const _gIsHome = hc.includes('gold');
+    const _gPR = _gIsHome ? hPR : aPR;
+    const _gPN = _gIsHome ? hPN : aPN;
+    if (anyGold && _gPR === 0 && _gPN === 0) return _v([
+      {badge:'🏆 Pflichtaufgabe', cls:'ba-title', text:'<strong>Titelführer ohne akuten Druck</strong> — Meisterschaft bereits so gut wie gesichert. Dieser Klub kann kontrolliert spielen, mit ruhigem Kopf. Erwarte strukturierten Fußball ohne Panikreaktionen — klarer Favorit, DNB attraktiv.'},
+      {badge:'🏆 Dominanztest',   cls:'ba-title', text:'<strong>Der Tabellenführer spielt befreit</strong> — kein Rückstand aufzuholen, kein Druck von oben. Dieser Klub kann die Partie nach Belieben gestalten. Form und Kadertiefe entscheiden, nicht Nerven. Sieg mit Kontrolle zu erwarten.'},
+    ]);
+  }
   if (anyGold) return _v([
     {badge:'🏆 Titelkampf',     cls:'ba-title', text:'<strong>Titelanwärter unter Druck</strong> — Punktverlust wäre katastrophal. Hohe Konsequenz jedes Ergebnisses. Favorit spielt auf Sieg, Außenseiter kann überraschen.'},
     {badge:'🏆 Pflichtaufgabe', cls:'ba-title', text:'<strong>Pflichtpunkte für den Meisterkandidaten</strong> — der Tabellenführer kann sich keine Überraschung leisten. Der Gegner sitzt im Mittelfeld und hat nichts zu verlieren — genau solche Spiele werden unterschätzt.'},
     {badge:'🏆 Formtest',       cls:'ba-title', text:'<strong>Titelanwärter muss liefern</strong> — die Konkurrenz schaut zu. Ein Remis hier gibt dem Verfolger Hoffnung und kostet Momentum. Under 2.5 als taktische Wette auf kontrollierten Titelkandidaten interessant.'},
     {badge:'🏆 Saisonentscheidung',cls:'ba-title',text:'<strong>Jeder Punkt zählt doppelt</strong> — in der Endphase einer engen Meisterschaft wird jeder Spieltag zum Finale. Das Titelteam trägt den psychologischen Druck, der Außenseiter spielt befreit auf.'},
+  ]);
+  // Both chasing the same Europa League spot — direct EL battle
+  if (bothOrange) return _v([
+    {badge:'🟠 Europa-Duell',  cls:'ba-hot',   text:'<strong>Beide Klubs kämpfen um denselben Europacup-Platz</strong> — direktes Aufeinandertreffen in der EL/EK-Qualifikationszone. Wer heute verliert, muss auf Patzer der Konkurrenz hoffen. Motivationsstark auf beiden Seiten.'},
+    {badge:'🟠 EL-Battle',     cls:'ba-hot',   text:'<strong>Europa League direkt auf dem Spiel</strong> — ein Sieg hier bedeutet mehr als drei Punkte: direkter Vorteil im Rennen um einen Europacup-Startplatz. Erwarte ein offensives, risikobehaftetes Spiel beider Teams.'},
+    {badge:'🟠 EL-Direktduell',cls:'ba-hot',   text:'<strong>Kopf-an-Kopf um den Europa-Platz</strong> — zwei Teams mit identischem Ziel in derselben Tabellenzone. Taktisch komplex, emotional geladen. Der Sieger gibt dem Verlierer kaum noch Chancen auf Europa.'},
   ]);
   return _v([
     {badge:'⭐ High Stakes',    cls:'ba-hot',   text:'<strong>Wichtige Partie</strong> — beide Teams haben Saisonziele auf dem Spiel. Erhöhte Intensität und Motivation zu erwarten.'},

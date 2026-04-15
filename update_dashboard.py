@@ -649,7 +649,7 @@ def calc_score(labels, rounds_left, form_data=None, pressure_ratio=None):
     score = base + pressure_score + form_score_mod(form_data, is_red)
     return min(10, round(score, 1))
 
-def calc_match_score(home_stake, away_stake, h2h=None):
+def calc_match_score(home_stake, away_stake, h2h=None, rounds_left=99):
     hs  = (home_stake or {}).get("score", 0)
     as_ = (away_stake or {}).get("score", 0)
     hc  = [l["c"] for l in (home_stake or {}).get("labels", [])]
@@ -662,15 +662,38 @@ def calc_match_score(home_stake, away_stake, h2h=None):
     any_red   = "red"  in hc or "red"  in ac
     any_gold  = "gold" in hc or "gold" in ac
 
+    # ── Red-safe detection: red label but pressure=0/ptNeeded=0 (already rescued) ──
+    h_pr = (home_stake or {}).get("pressureRatio", 0)
+    a_pr = (away_stake or {}).get("pressureRatio", 0)
+    h_pn = (home_stake or {}).get("pointsNeeded", 0)
+    a_pn = (away_stake or {}).get("pointsNeeded", 0)
+    h_mot = (home_stake or {}).get("motivationLevel", "full")
+    a_mot = (away_stake or {}).get("motivationLevel", "full")
+    h_red_safe = "red" in hc and h_mot != "none" and h_pr == 0 and h_pn == 0
+    a_red_safe = "red" in ac and a_mot != "none" and a_pr == 0 and a_pn == 0
+    any_red_safe = h_red_safe or a_red_safe
+    both_red_safe = h_red_safe and a_red_safe
+
     score = max_s
-    if both_red:
+    if both_red and both_red_safe:
+        # Both red but already safe — low urgency, treat like normal bothStakes
+        score = max_s + 0.2
+    elif both_red:
         score = max_s + 1.0 + (min_s / 10) * 1.5
     elif both_gold:
         score = max_s + 0.75 + (min_s / 10) * 1.5
+    elif any_gold and any_red and any_red_safe:
+        # Gold vs red-safe: red team already rescued — no drama bonus
+        score = max_s + 0.2 + (min_s / 10) * 0.2
     elif any_gold and any_red:
         score = max_s + 0.5 + (min_s / 10) * 0.5
     elif both_blue:
         score = max_s + 0.5 + (min_s / 10) * 0.5
+    elif any_red and any_red_safe and home_stake and away_stake:
+        # Red-safe vs non-red: minimal boost
+        score = max_s + 0.15
+    elif any_red and home_stake and away_stake:
+        score = max_s + 0.4 + (min_s / 10) * 0.4
     elif home_stake and away_stake:
         score = max_s + 0.3
 
@@ -687,7 +710,16 @@ def calc_match_score(home_stake, away_stake, h2h=None):
         elif balance >= 0.8:
             score += 0.15
 
-    return round(min(12.0, score) * 10) / 10
+    # ── Season urgency ceiling: mirrors JS computeMatchScore() ceiling logic ────
+    # Prevents extreme scores from appearing too early in the final stretch.
+    # rl=1→12.0  rl=2→11.5  rl=3→11.0  rl=4→10.5  rl=5→10.0  rl=6→9.5
+    # rl=7→9.0   rl=8→8.5   rl=9→8.0   rl≥10→7.5
+    rl = rounds_left
+    max_score = (12.0 if rl <= 1 else 11.5 if rl <= 2 else 11.0 if rl <= 3 else
+                 10.5 if rl <= 4 else 10.0 if rl <= 5 else  9.5 if rl <= 6 else
+                  9.0 if rl <= 7 else  8.5 if rl <= 8 else  8.0 if rl <= 9 else 7.5)
+
+    return round(min(max_score, score) * 10) / 10
 
 # ── Main fetch loop ───────────────────────────────────────────────────────────
 
@@ -860,7 +892,7 @@ def fetch_league(key, cfg):
             if h2h:
                 print(f"      H2H {f['home']} vs {f['away']}: {h2h['homeWins']}H {h2h['draws']}X {h2h['awayWins']}A ({h2h['games']}G)")
 
-        ms = calc_match_score(home_stake, away_stake, h2h)
+        ms = calc_match_score(home_stake, away_stake, h2h, rounds_left)
         if ms < 5:
             continue
         stake_fixtures.append({
