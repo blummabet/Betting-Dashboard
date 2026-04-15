@@ -5831,8 +5831,14 @@ function runPicksValidator() {
         flag('warn', 'BOTH_LOW_MOTIV_HIGH_SCORE', `Beide motiv='low', Score trotzdem ${ms} ≥9 — ungewöhnlich hoher Score bei niedrigem Antrieb`);
       }
       const avgGPG = (hGPG + aGPG) / 2;
-      if (avgGPG > 0 && avgGPG < 0.9 && h2hAvgGoals < 2.0 && h2hGames >= 3) {
-        flag('warn', 'LOW_SCORING_OVER_RISK', `Ø gpg=${avgGPG.toFixed(2)}, H2H Ø=${h2hAvgGoals.toFixed(1)} Tore — Over-Picks in diesem Spiel riskant`);
+      // LOW_SCORING: two-tier check.
+      // 🟡 Warnung nur wenn H2H-Sample ≥5 (zuverlässig) UND beide Teams wirklich schwach (gpg < 0.7)
+      //    → hier könnten Over-Picks trotz Suppression noch durchkommen
+      // 🔵 Hinweis wenn nur eine Bedingung (wenig H2H oder nur einer schwach) — Engine unterdrückt Over automatisch
+      if (avgGPG > 0 && avgGPG < 0.7 && h2hAvgGoals < 2.0 && h2hGames >= 5) {
+        flag('warn', 'LOW_SCORING_OVER_RISK', `Ø gpg=${avgGPG.toFixed(2)}, H2H Ø=${h2hAvgGoals.toFixed(1)} Tore (${h2hGames} Sp.) — Over-Pick prüfen, Hard Gate sollte greifen`);
+      } else if (avgGPG > 0 && avgGPG < 0.9 && h2hAvgGoals < 2.0 && h2hGames >= 3) {
+        flag('info', 'LOW_SCORING_PROFILE', `Ø gpg=${avgGPG.toFixed(2)}, H2H Ø=${h2hAvgGoals.toFixed(1)} Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt`);
       }
 
       // ── 🔵 HINWEISE ────────────────────────────────────────────
