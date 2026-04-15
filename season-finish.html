@@ -1822,10 +1822,21 @@ function computeClientInjuryImpact(inj) {
 // DC 1X fair odds: covers home win + draw → 1 / (P(home) + P(draw))
 function deriveOdds(raw) {
   if (!raw || !raw.hw || !raw.dr || !raw.aw) return raw || {};
-  const tot = 1/raw.hw + 1/raw.dr + 1/raw.aw;  // total implied (>1 = overround)
-  const ph = (1/raw.hw) / tot;                  // de-vigged home win probability
-  const pd = (1/raw.dr) / tot;                  // de-vigged draw probability
-  const pa = (1/raw.aw) / tot;                  // de-vigged away win probability
+  let ph, pd, pa;
+  if (raw.hw_fair && raw.dr_fair && raw.aw_fair) {
+    // Consensus fair odds available — no further devig needed, already margin-free.
+    // Convert back to probabilities, re-normalise for floating-point safety.
+    const _tot = 1/raw.hw_fair + 1/raw.dr_fair + 1/raw.aw_fair;
+    ph = (1/raw.hw_fair) / _tot;
+    pd = (1/raw.dr_fair) / _tot;
+    pa = (1/raw.aw_fair) / _tot;
+  } else {
+    // Fallback: single-source devig from best available 1X2 odds.
+    const tot = 1/raw.hw + 1/raw.dr + 1/raw.aw;  // total implied (>1 = overround)
+    ph = (1/raw.hw) / tot;                         // de-vigged home win probability
+    pd = (1/raw.dr) / tot;                         // de-vigged draw probability
+    pa = (1/raw.aw) / tot;                         // de-vigged away win probability
+  }
   const m  = 0.97;                              // ~3% Pinnacle-style margin applied to derived markets
   const r  = (x) => Math.round(x * 100) / 100;
   return {
@@ -7013,6 +7024,49 @@ function _parseOddsBets(bookmakers) {
     const bP = (b.name?.toLowerCase().includes('pinnacle') || b.id === 8) ? 0 : 1;
     return aP - bP;
   });
+
+  // ── Pass 1: consensus fair 1X2 from all bookmakers ──────────────────────────
+  // Weighted average of de-vigged probabilities (Pinnacle 2×, others 1×).
+  // Cancels individual bookmaker biases → hw_fair/dr_fair/aw_fair = true fair odds.
+  const _cSamples = [];
+  for (const bkr of bookmakers) {
+    let _hw = null, _dr = null, _aw = null;
+    for (const bet of (bkr.bets || [])) {
+      const bn = (bet.name || '').toLowerCase().trim();
+      if (bn === 'match winner' || bn === '1x2' || bn === 'result' || bn === 'fulltime result' || bn === 'winner' || bn === 'match result') {
+        for (const v of (bet.values || [])) {
+          const vl = (v.value || '').toLowerCase();
+          if      (vl === 'home') _hw = parseFloat(v.odd);
+          else if (vl === 'away') _aw = parseFloat(v.odd);
+          else if (vl === 'draw') _dr = parseFloat(v.odd);
+        }
+      }
+    }
+    if (!_hw || !_dr || !_aw || isNaN(_hw) || isNaN(_dr) || isNaN(_aw)) continue;
+    const _tot = 1/_hw + 1/_dr + 1/_aw;
+    const _margin = _tot - 1;
+    if (_margin > 0.15 || _margin < -0.02) continue; // skip corrupt/exchange outliers
+    const _isPinn = bkr.name?.toLowerCase().includes('pinnacle') || bkr.id === 8;
+    _cSamples.push({
+      ph: (1/_hw) / _tot, pd: (1/_dr) / _tot, pa: (1/_aw) / _tot,
+      weight: _isPinn ? 2.0 : 1.0,
+      name: bkr.name || `id${bkr.id}`
+    });
+  }
+  if (_cSamples.length >= 1) {
+    const _tw  = _cSamples.reduce((s, d) => s + d.weight, 0);
+    const _ph  = _cSamples.reduce((s, d) => s + d.ph * d.weight, 0) / _tw;
+    const _pd  = _cSamples.reduce((s, d) => s + d.pd * d.weight, 0) / _tw;
+    const _pa  = _cSamples.reduce((s, d) => s + d.pa * d.weight, 0) / _tw;
+    const _n   = _ph + _pd + _pa;  // normalize floating point
+    const _r2  = (x) => Math.round(x * 100) / 100;
+    r.hw_fair  = _r2(_n / _ph);    // true fair odds = 1/prob, no margin
+    r.dr_fair  = _r2(_n / _pd);
+    r.aw_fair  = _r2(_n / _pa);
+    r._cn      = _cSamples.length; // how many books contributed
+  }
+
+  // ── Pass 2: primary markets (Pinnacle-first for actual betting odds) ─────────
   for (const bkr of sorted) {
     for (const bet of (bkr.bets || [])) {
       const bn = (bet.name || '').toLowerCase().trim();

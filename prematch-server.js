@@ -171,6 +171,9 @@ function computeInjuryImpact(inj) {
 // ── Parse bookmakers array → odds object (same format as HTML) ───────────────
 // Accepts full bookmakers array; Pinnacle takes priority for 1X2/Goals.
 // Merges BTTS, Double Chance, and Cards from any available bookmaker.
+// Computes consensus fair value (hw_fair/dr_fair/aw_fair) from all bookmakers:
+//   Pinnacle (margin <2.5%) gets 2× weight, others 1×.
+//   Averaging multiple de-vigged sources cancels individual bookmaker biases.
 // Case-insensitive matching — mirrors browser _parseOddsBets logic.
 function parseBets(bookmakers) {
   if (!Array.isArray(bookmakers) || !bookmakers.length) return {};
@@ -180,6 +183,48 @@ function parseBets(bookmakers) {
     const bP = (b.name?.toLowerCase().includes('pinnacle') || b.id === 8) ? 0 : 1;
     return aP - bP;
   });
+
+  // ── Pass 1: collect consensus 1X2 data from all bookmakers ──────────────────
+  const _cSamples = [];
+  for (const bkr of bookmakers) {
+    let _hw = null, _dr = null, _aw = null;
+    for (const bet of (bkr.bets || [])) {
+      const bn = (bet.name || '').toLowerCase().trim();
+      if (bn === 'match winner' || bn === '1x2' || bn === 'result' || bn === 'fulltime result' || bn === 'winner' || bn === 'match result') {
+        for (const v of (bet.values || [])) {
+          const vl = (v.value || '').toLowerCase();
+          if (vl === 'home') _hw = parseFloat(v.odd);
+          else if (vl === 'away') _aw = parseFloat(v.odd);
+          else if (vl === 'draw') _dr = parseFloat(v.odd);
+        }
+        break;
+      }
+    }
+    if (!_hw || !_dr || !_aw || isNaN(_hw) || isNaN(_dr) || isNaN(_aw)) continue;
+    const _tot = 1/_hw + 1/_dr + 1/_aw;
+    const _margin = _tot - 1;
+    if (_margin > 0.15 || _margin < -0.02) continue; // skip corrupt/exchange outliers
+    const _isPinn = bkr.name?.toLowerCase().includes('pinnacle') || bkr.id === 8;
+    _cSamples.push({
+      ph: (1/_hw) / _tot, pd: (1/_dr) / _tot, pa: (1/_aw) / _tot,
+      weight: _isPinn ? 2.0 : 1.0,  // Pinnacle: 2× weight (sharper, no bias)
+      name: bkr.name || `id${bkr.id}`
+    });
+  }
+  if (_cSamples.length >= 1) {
+    const _tw  = _cSamples.reduce((s, d) => s + d.weight, 0);
+    const _ph  = _cSamples.reduce((s, d) => s + d.ph * d.weight, 0) / _tw;
+    const _pd  = _cSamples.reduce((s, d) => s + d.pd * d.weight, 0) / _tw;
+    const _pa  = _cSamples.reduce((s, d) => s + d.pa * d.weight, 0) / _tw;
+    const _n   = _ph + _pd + _pa;  // normalize floating point
+    const _r2  = (x) => Math.round(x * 100) / 100;
+    r.hw_fair  = _r2(_n / _ph);    // true fair odds = 1/prob, no margin
+    r.dr_fair  = _r2(_n / _pd);
+    r.aw_fair  = _r2(_n / _pa);
+    r._cn      = _cSamples.length; // how many books contributed
+  }
+
+  // ── Pass 2: primary markets (Pinnacle-first for actual betting odds) ─────────
   for (const bkr of sorted) {
     for (const bet of (bkr.bets || [])) {
       const bn = (bet.name || '').toLowerCase().trim();
