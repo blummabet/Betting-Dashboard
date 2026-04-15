@@ -2377,6 +2377,10 @@ function getBettingPicks(match, odds, leagueKey) {
       if (_hCurStreak !== null && _hCurStreak <= -3) sc -= Math.min(0.08, (-_hCurStreak - 2) * 0.025);
       if (_aCurStreak !== null && _aCurStreak >= 3)  sc -= Math.min(0.08, (_aCurStreak - 2) * 0.025);
       if (_aCurStreak !== null && _aCurStreak <= -3) sc += Math.min(0.06, (-_aCurStreak - 2) * 0.020);
+      // 🔑 MUSTWIN_LOW_GPG: home team must win but structurally can't score
+      // AVS (0.20 gpg), Konyaspor etc. — urgency ≠ firepower
+      if (homeNeedsWin && homeAttStr < 0.50) sc = Math.max(0, sc - 0.40); // very low scorer + must win
+      else if (homeNeedsWin && homeAttStr < 0.70) sc = Math.max(0, sc - 0.20); // low scorer + must win
       // ★★★ threshold 1.50 (multi-signal). ★★☆ lowered 0.72→0.50 so normal home favorites
       // without pressure still show (backtest showed too many good picks hidden at 0.72).
       const conf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
@@ -2459,6 +2463,9 @@ function getBettingPicks(match, odds, leagueKey) {
       if (_aCurStreak !== null && _aCurStreak <= -3) sc -= Math.min(0.08, (-_aCurStreak - 2) * 0.025);
       if (_hCurStreak !== null && _hCurStreak >= 3)  sc -= Math.min(0.08, (_hCurStreak - 2) * 0.025);
       if (_hCurStreak !== null && _hCurStreak <= -3) sc += Math.min(0.06, (-_hCurStreak - 2) * 0.020);
+      // 🔑 MUSTWIN_LOW_GPG: away team must win but structurally can't score
+      if (awayNeedsWin && awayAttStr < 0.50) sc = Math.max(0, sc - 0.40);
+      else if (awayNeedsWin && awayAttStr < 0.70) sc = Math.max(0, sc - 0.20);
       // Threshold: ★★★ at 1.30 (slightly lower than Heimsieg since away wins are rarer/more selective)
       const conf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
       const _xgLblA = xGBased ? 'xG' : 'Tore';
@@ -2647,6 +2654,9 @@ function getBettingPicks(match, odds, leagueKey) {
       // 🔑 PRESSURE/RUNDEN: Abstiegsteam geht all-in → Angriffsdruck → mehr Tore
       if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 1.20);
       else if (_anyNeedsWin) sc = Math.min(0.88, sc + _pressureBoost * 0.70);
+      // Low-scoring suppression (same logic as Over 2.5)
+      { const _bvl = homeAttStr < 0.65 && awayAttStr < 0.65;
+        if (_bvl) sc = Math.max(0, sc - 0.40); }
       const _o35H2hNote = (_h2hSample && _h2hAvgG != null) ? ` Historisch Ø ${_h2hAvgG} Tore/Duell.` : '';
       gC.push({sc, p:{icon:'🔥', market:'Over 3.5 Tore', odds:o.o35,
         conf: sc>0.68?'high':sc>0.44?'medium':'low',
@@ -2673,6 +2683,15 @@ function getBettingPicks(match, odds, leagueKey) {
       // 🔑 API PREDICTION CONSENSUS: independent model agrees → amplify signal
       if (_apiUO === 'Over 2.5') sc = Math.min(0.92, sc + 0.07);
       else if (_apiUO === 'Under 2.5') sc = Math.max(0, sc - 0.06);
+      // 🔑 LOW-SCORING SUPPRESSION: both teams structurally can't score enough for Over 2.5
+      // Antalyaspor/Konyaspor (Ø 0.5 gpg), Osijek/Varazdin (Ø 0.4 gpg) etc.
+      // attStr < 0.65 ≈ teams averaging under ~0.7 goals/game after adjustments
+      { const _bothVeryLow = homeAttStr < 0.65 && awayAttStr < 0.65;
+        const _h2hLowG = _h2hSample && _h2hAvgG !== null && _h2hAvgG < 2.0;
+        if (_bothVeryLow && _h2hLowG) sc = Math.max(0, sc - 0.50);      // both low + H2H confirms → strong
+        else if (_bothVeryLow)         sc = Math.max(0, sc - 0.30);      // both low → moderate
+        else if ((homeAttStr < 0.65 || awayAttStr < 0.65) && _h2hLowG)
+                                       sc = Math.max(0, sc - 0.18); }    // one side + H2H → mild
       const _o25H2hNote = (_h2hSample && _h2hOver25 != null)
         ? ` Historisch ${Math.round(_h2hOver25*100)}% der ${h2hN} Duelle über 2.5 Tore${_h2hAvgG!=null?' (Ø '+_h2hAvgG+' Tore/Spiel)':''}.`
         : '';
