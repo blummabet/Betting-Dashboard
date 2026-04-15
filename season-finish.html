@@ -1297,12 +1297,30 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   </div>
 
   <!-- 4 ── Quick Actions / Links ──────────────────────────────────── -->
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;">
     <div style="font-size:14px;font-weight:700;margin-bottom:16px;">🚀 Workflows manuell starten</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;" id="statusQuickLinks"></div>
     <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">
       Workflows können auf GitHub gestartet werden: Actions → Workflow auswählen → <strong>Run workflow</strong>
     </div>
+  </div>
+
+  <!-- 5 ── Logik-Validator ──────────────────────────────────────── -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;">
+    <div style="font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+      <span>🧪</span> Logik-Validator
+      <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:auto;">13 Checks · 🔴 Fehler · 🟡 Warnungen · 🔵 Hinweise</span>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Wähle einen Spieltag — der Validator prüft alle Picks auf Logik-Konsistenz direkt im Browser</div>
+
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+      <select id="validatorDateSelect" onchange="runPicksValidator()" style="background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 14px;font-size:13px;font-family:inherit;cursor:pointer;min-width:180px;">
+        <option value="">— Spieltag wählen —</option>
+      </select>
+      <button id="validatorCopyBtn" onclick="copyValidatorOutput()" style="display:none;background:#1a2030;border:1px solid var(--blue);color:var(--blue);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">📋 Kopieren</button>
+    </div>
+
+    <div id="validatorOutput" style="font-size:12.5px;line-height:1.6;"></div>
   </div>
 
 </div>
@@ -5488,7 +5506,7 @@ function showView(view) {
   document.getElementById('navHeart').classList.toggle('active',   isHeart);
   document.getElementById('navStatus').classList.toggle('active',  isStatus);
   if (isResults) initResults();
-  if (isStatus)  initStatus();
+  if (isStatus)  { initStatus(); buildValidatorDates(); }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -5642,6 +5660,239 @@ async function initStatus() {
       `https://github.com/${_REPO}/actions/workflows/${w.id}.yml`,
       w.color)
   ).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+//  LOGIK-VALIDATOR
+// ═══════════════════════════════════════════════════════
+
+function buildValidatorDates() {
+  const sel = document.getElementById('validatorDateSelect');
+  if (!sel || typeof LEAGUES === 'undefined') return;
+
+  // Parse "DD.MM.YYYY" → Date
+  const parseDate = s => {
+    const [d, m, y] = s.split('.');
+    return new Date(`${y}-${m}-${d}T12:00:00`);
+  };
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const limit = new Date(today); limit.setDate(limit.getDate() + 21);
+
+  const dateSet = new Set();
+  for (const lk of Object.keys(LEAGUES)) {
+    for (const fx of (LEAGUES[lk].fixtures || [])) {
+      if (!fx.date) continue;
+      const d = parseDate(fx.date);
+      if (d >= today && d <= limit) dateSet.add(fx.date);
+    }
+  }
+
+  // Sort DD.MM.YYYY by converting to comparable string
+  const sorted = [...dateSet].sort((a, b) => {
+    const [ad,am,ay] = a.split('.');
+    const [bd,bm,by] = b.split('.');
+    return new Date(`${ay}-${am}-${ad}`) - new Date(`${by}-${bm}-${bd}`);
+  });
+
+  const weekdays = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+  sel.innerHTML = '<option value="">— Spieltag wählen —</option>' + sorted.map(dateStr => {
+    const [d,m,y] = dateStr.split('.');
+    const dt = new Date(`${y}-${m}-${d}T12:00:00`);
+    const wd = weekdays[dt.getDay()];
+    return `<option value="${dateStr}">${wd} ${d}.${m}.</option>`;
+  }).join('');
+}
+
+function runPicksValidator() {
+  const sel = document.getElementById('validatorDateSelect');
+  const date = sel?.value;
+  const out = document.getElementById('validatorOutput');
+  const copyBtn = document.getElementById('validatorCopyBtn');
+  if (!out) return;
+  if (!date) { out.innerHTML = ''; if (copyBtn) copyBtn.style.display='none'; return; }
+
+  const results = [];
+  let checked = 0;
+
+  for (const lk of Object.keys(LEAGUES)) {
+    const lg = LEAGUES[lk];
+    const rl = lg.roundsLeft || 99;
+    const ceiling = rl<=1?12.0:rl<=2?11.5:rl<=3?11.0:rl<=4?10.5:rl<=5?10.0:rl<=6?9.5:rl<=7?9.0:rl<=8?8.5:rl<=9?8.0:7.5;
+
+    for (const fx of (lg.fixtures || [])) {
+      if (fx.date !== date) continue;
+      if (!fx.homeStake && !fx.awayStake) continue; // no stakes = not in scope
+      checked++;
+
+      const hs = fx.homeStake || {};
+      const as = fx.awayStake || {};
+      const hf = fx.homeForm  || {};
+      const af = fx.awayForm  || {};
+      const ms = fx.matchScore || 0;
+      const h2h = fx.h2h || {};
+      const label = `${lg.flag || ''} ${fx.home} vs ${fx.away}`;
+
+      const hMotiv = hs.motivationLevel || '';
+      const aMotiv = as.motivationLevel || '';
+      const hPR = hs.pressureRatio || 0;
+      const aPR = as.pressureRatio || 0;
+      const hPN = hs.pointsNeeded || 0;
+      const aPN = as.pointsNeeded || 0;
+      const hMW = hs.mustWin || false;
+      const aMW = as.mustWin || false;
+      const hGPG = hf.goalsPerGame || hs.goalsPerGame || 0;
+      const aGPG = af.goalsPerGame || as.goalsPerGame || 0;
+      const hScore = hs.score || 0;
+      const aScore = as.score || 0;
+
+      // Label-based color
+      const hColor = (hs.labels||[]).map(x=>x.c||'').join(' ');
+      const aColor = (as.labels||[]).map(x=>x.c||'').join(' ');
+      const hRed  = hColor.includes('red');
+      const aRed  = aColor.includes('red');
+      const hGold = hColor.includes('gold');
+      const aGold = aColor.includes('gold');
+      const anyRed  = hRed || aRed;
+      const bothRed = hRed && aRed;
+      const anyGold = hGold || aGold;
+      const bothGold = hGold && aGold;
+
+      const hRedSafe = hRed && hMotiv !== 'none' && hPR === 0 && hPN === 0;
+      const aRedSafe = aRed && aMotiv !== 'none' && aPR === 0 && aPN === 0;
+      const bothRedSafe = hRedSafe && aRedSafe;
+      const bothNone = hMotiv === 'none' && aMotiv === 'none';
+      const bothLow  = hMotiv === 'low'  && aMotiv === 'low';
+
+      const h2hGames    = h2h.games    || 0;
+      const h2hHW       = h2h.homeWins || 0;
+      const h2hAW       = h2h.awayWins || 0;
+      const h2hAvgGoals = h2h.avgGoals || 0;
+      const h2hDom = h2hGames >= 5 && (h2hHW/h2hGames >= 0.75 || h2hAW/h2hGames >= 0.75);
+
+      const flag = (sev, code, msg) => results.push({sev, code, label, league: lg.name, msg});
+
+      // ── 🔴 FEHLER ──────────────────────────────────────────────
+      if ((hMW && hMotiv === 'none') || (aMW && aMotiv === 'none')) {
+        const who = (hMW && hMotiv==='none') ? fx.home : fx.away;
+        flag('error', 'MW_ON_CONFIRMED_REL', `${who}: mustWin=true aber motiv='none' — abgestiegenes/gesichertes Team wird falsch bewertet`);
+      }
+      if (ms > ceiling + 0.05) {
+        flag('error', 'SCORE_EXCEEDS_CEILING', `Score ${ms} überschreitet Ceiling ${ceiling} für roundsLeft=${rl} — Python-Daten vor dem Fix generiert`);
+      }
+      if (bothNone && ms > 6) {
+        flag('error', 'DEAD_RUBBER_HIGH_SCORE', `Beide motiv='none' (Dead Rubber) — Score ${ms} > 6, Dead-Rubber-Penalty nicht angewendet`);
+      }
+
+      // ── 🟡 WARNUNGEN ───────────────────────────────────────────
+      if (anyRed && (hRedSafe || aRedSafe) && ms >= 7.5) {
+        const who = bothRedSafe ? 'Beide' : (hRedSafe ? fx.home : fx.away);
+        flag('warn', 'RED_SAFE_HIGH_SCORE', `${who}: rot-Label aber pressure=0, ptNeeded=0, Score ${ms} ≥7.5 — Angle-Text könnte falsche Dringlichkeit ausstrahlen`);
+      }
+      if (hMW && hGPG < 0.8 && hGPG > 0) {
+        flag('warn', 'MUSTWIN_LOW_GPG', `${fx.home}: mustWin=true aber goalsPerGame=${hGPG.toFixed(2)} — Team kann realistisch kaum gewinnen`);
+      }
+      if (aMW && aGPG < 0.8 && aGPG > 0) {
+        flag('warn', 'MUSTWIN_LOW_GPG', `${fx.away}: mustWin=true aber goalsPerGame=${aGPG.toFixed(2)} — Team kann realistisch kaum gewinnen`);
+      }
+      if (h2hDom && ms >= 8) {
+        const domTeam = h2hHW/h2hGames >= 0.75 ? fx.home : fx.away;
+        const domPct  = Math.round(Math.max(h2hHW,h2hAW)/h2hGames*100);
+        flag('warn', 'H2H_DOMINATED_HIGH_SCORE', `${domTeam} dominiert H2H (${domPct}% / ${h2hGames} Sp.) — Underdog-Alarm-Text könnte irreführend sein`);
+      }
+      if (bothRed && bothRedSafe) {
+        flag('warn', 'BOTH_RED_SAFE', `Beide Teams rot aber beide mathematisch gerettet (pressure=0) — Kellerduell-Narrative ist falsch`);
+      }
+      if (bothLow && ms >= 9) {
+        flag('warn', 'BOTH_LOW_MOTIV_HIGH_SCORE', `Beide motiv='low', Score trotzdem ${ms} ≥9 — ungewöhnlich hoher Score bei niedrigem Antrieb`);
+      }
+      const avgGPG = (hGPG + aGPG) / 2;
+      if (avgGPG > 0 && avgGPG < 0.9 && h2hAvgGoals < 2.0 && h2hGames >= 3) {
+        flag('warn', 'LOW_SCORING_OVER_RISK', `Ø gpg=${avgGPG.toFixed(2)}, H2H Ø=${h2hAvgGoals.toFixed(1)} Tore — Over-Picks in diesem Spiel riskant`);
+      }
+
+      // ── 🔵 HINWEISE ────────────────────────────────────────────
+      if (h2hDom && anyGold && anyRed) {
+        flag('info', 'H2H_DOM_GOLD_RED', `Gold+Rot Duell mit H2H-Dominanz — Pick-Richtung sollte durch Angle bestätigt werden`);
+      }
+      if (h2hGames < 5 && ms >= 8) {
+        flag('info', 'LOW_H2H_SAMPLE', `Nur ${h2hGames} H2H-Spiele bei Score ${ms} — Quoten stärker gewichten als H2H-Statistiken`);
+      }
+      if (bothGold && hPR === 0 && aPR === 0) {
+        flag('info', 'BOTH_GOLD_NO_PRESSURE', `bothGold aber beide pressure=0 — "Titelduell"-Text übertreibt Dringlichkeit`);
+      }
+      const scoreDiff = Math.abs(hScore - aScore);
+      if (scoreDiff >= 4 && hScore > 0 && aScore > 0) {
+        flag('info', 'ASYMMETRIC_STAKE_SCORES', `Score-Differenz ${scoreDiff.toFixed(1)} Punkte (${fx.home}: ${hScore} vs ${fx.away}: ${aScore}) — sehr klarer Favorit`);
+      }
+    }
+  }
+
+  renderValidatorOutput(results, checked, date);
+}
+
+function renderValidatorOutput(results, checked, date) {
+  const out = document.getElementById('validatorOutput');
+  const copyBtn = document.getElementById('validatorCopyBtn');
+  if (!out) return;
+
+  const errors = results.filter(r => r.sev === 'error');
+  const warns  = results.filter(r => r.sev === 'warn');
+  const infos  = results.filter(r => r.sev === 'info');
+
+  const sevStyle = {
+    error: {bg:'rgba(248,81,73,.08)', border:'rgba(248,81,73,.3)', badge:'background:#f85149;color:#fff', icon:'🔴', label:'FEHLER'},
+    warn:  {bg:'rgba(227,179,65,.06)', border:'rgba(227,179,65,.25)', badge:'background:#e3b341;color:#000', icon:'🟡', label:'WARNUNG'},
+    info:  {bg:'rgba(88,166,255,.06)', border:'rgba(88,166,255,.2)', badge:'background:#58a6ff;color:#000', icon:'🔵', label:'HINWEIS'},
+  };
+
+  // Summary bar
+  let html = `<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;background:var(--card2);border-radius:8px;margin-bottom:14px;font-size:12px;">
+    <span style="color:var(--muted);">Geprüft: <strong style="color:var(--text)">${checked} Spiele</strong></span>
+    <span style="color:#f85149;font-weight:700;">🔴 ${errors.length} Fehler</span>
+    <span style="color:#e3b341;font-weight:700;">🟡 ${warns.length} Warnungen</span>
+    <span style="color:#58a6ff;font-weight:700;">🔵 ${infos.length} Hinweise</span>
+  </div>`;
+
+  if (results.length === 0) {
+    html += `<div style="text-align:center;padding:24px;color:var(--green);font-weight:700;font-size:14px;">✅ Keine Logik-Fehler gefunden — alle Picks sind konsistent</div>`;
+  } else {
+    for (const sev of ['error','warn','info']) {
+      const items = results.filter(r => r.sev === sev);
+      if (!items.length) continue;
+      const s = sevStyle[sev];
+      for (const item of items) {
+        html += `<div style="background:${s.bg};border:1px solid ${s.border};border-radius:8px;padding:10px 14px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;">
+          <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:5px;font-size:10px;font-weight:700;white-space:nowrap;${s.badge}">${s.icon} ${s.label}</span>
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:700;color:var(--text);margin-bottom:2px;">${item.label}</div>
+            <div style="color:var(--muted);font-size:11.5px;"><code style="background:rgba(255,255,255,.06);padding:1px 5px;border-radius:3px;font-size:10.5px;">${item.code}</code> — ${item.msg}</div>
+          </div>
+        </div>`;
+      }
+    }
+  }
+
+  out.innerHTML = html;
+  if (copyBtn) copyBtn.style.display = checked > 0 ? '' : 'none';
+
+  // Store plain-text version for copy
+  out._plainText = `Logik-Validator — ${date}\nGeprüft: ${checked} Spiele | 🔴 ${errors.length} Fehler | 🟡 ${warns.length} Warnungen | 🔵 ${infos.length} Hinweise\n${'─'.repeat(60)}\n` +
+    (results.length === 0 ? '✅ Keine Logik-Fehler gefunden\n' :
+      results.map(r => {
+        const icon = r.sev==='error'?'🔴':r.sev==='warn'?'🟡':'🔵';
+        return `${icon} [${r.code}]\n   ${r.label}\n   ${r.msg}`;
+      }).join('\n\n'));
+}
+
+function copyValidatorOutput() {
+  const out = document.getElementById('validatorOutput');
+  const btn = document.getElementById('validatorCopyBtn');
+  const text = out?._plainText;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    if (btn) { btn.textContent = '✅ Kopiert!'; setTimeout(() => { btn.textContent = '📋 Kopieren'; }, 2000); }
+  });
 }
 
 // ═══════════════════════════════════════════════════════

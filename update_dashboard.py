@@ -1035,8 +1035,8 @@ def main():
     print("   Öffne season-finish.html im Browser um die Änderungen zu sehen.\n")
 
 # ─────────────────────────────────────────────────────────────────────────────
-#  PICK RESOLVER — reads picks_history.json, fetches SofaScore results (no CORS
-#  since Python runs locally), resolves outcomes, writes picks_history.json back
+#  PICK RESOLVER — reads picks_history.json, fetches API-Football results,
+#  resolves outcomes, writes picks_history.json back
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _fuzzy_team(a, b):
@@ -1079,17 +1079,21 @@ def _determine_outcome(market, h, a):
         if "auswärts" in m or "away" in m: return "win" if a > h else "loss"
     return None  # HZ / Ecken / Karten — can't auto-determine
 
-def _sf_fetch_results(date_iso):
-    """Fetch SofaScore finished events for a date (ISO: YYYY-MM-DD)."""
-    url = f"https://api.sofascore.com/api/v1/sport/football/scheduled-events/{date_iso}"
-    data = fetch(url)
-    if not data:
-        return []
-    events = data.get("events", [])
-    return [e for e in events if e.get("status", {}).get("type") in ("finished", "postponed")]
+def _apif_fetch_results(date_iso):
+    """Fetch API-Football finished fixtures for a date (ISO: YYYY-MM-DD)."""
+    fixtures = apif_get("fixtures", {"date": date_iso, "status": "FT-AET-PEN"})
+    result = []
+    for fx in fixtures:
+        home = fx.get("teams", {}).get("home", {}).get("name", "")
+        away = fx.get("teams", {}).get("away", {}).get("name", "")
+        gh   = fx.get("goals", {}).get("home")
+        ga   = fx.get("goals", {}).get("away")
+        if home and away and gh is not None and ga is not None:
+            result.append({"home": home, "away": away, "gh": gh, "ga": ga})
+    return result
 
 def resolve_pending_picks():
-    """Read picks_history.json, resolve pending picks via SofaScore, write back."""
+    """Read picks_history.json, resolve pending picks via API-Football, write back."""
     picks_file = os.path.join(SCRIPT_DIR, "picks_history.json")
     if not os.path.exists(picks_file):
         print("  ℹ  picks_history.json nicht gefunden — überspringe Pick-Auflösung")
@@ -1103,17 +1107,25 @@ def resolve_pending_picks():
         print("  ✓ Alle Picks bereits aufgelöst")
         return
 
-    print(f"\n🎲 Löse {len(pending_entries)} Einträge mit offenen Picks auf…")
-    dates = sorted(set(e["dateIso"] for e in pending_entries))
+    # Only try to resolve past dates (today or earlier)
+    today = datetime.utcnow().date()
+    past_pending = [e for e in pending_entries if e.get("dateIso", "9999") <= str(today)]
+    if not past_pending:
+        print(f"  ℹ  {len(pending_entries)} offene Picks — alle in der Zukunft, noch nicht auflösbar")
+        return
+
+    print(f"\n🎲 Löse {len(past_pending)} Einträge mit offenen Picks auf…")
+    dates = sorted(set(e["dateIso"] for e in past_pending))
     resolved_total = 0
 
     for date_iso in dates:
-        print(f"  📅 {date_iso} wird von SofaScore geladen…", end=" ", flush=True)
-        events = _sf_fetch_results(date_iso)
+        print(f"  📅 {date_iso} wird von API-Football geladen…", end=" ", flush=True)
+        events = _apif_fetch_results(date_iso)
         if not events:
             print("keine Daten")
             continue
         print(f"{len(events)} Spiele")
+        # Note: apif_get() already applies APIF_DELAY internally
 
         for entry in picks:
             if entry["dateIso"] != date_iso:
@@ -1121,22 +1133,18 @@ def resolve_pending_picks():
             if not any(p.get("result") is None for p in entry.get("picks", [])):
                 continue
 
-            # Find matching SofaScore event
+            # Find matching API-Football fixture
             ev = next((
                 e for e in events
-                if _fuzzy_team(e.get("homeTeam", {}).get("name", ""), entry["home"])
-                and _fuzzy_team(e.get("awayTeam", {}).get("name", ""), entry["away"])
+                if _fuzzy_team(e["home"], entry["home"])
+                and _fuzzy_team(e["away"], entry["away"])
             ), None)
 
             if not ev:
                 print(f"    ⚠  {entry['home']} vs {entry['away']} — nicht gefunden")
                 continue
 
-            h = ev.get("homeScore", {}).get("current")
-            a = ev.get("awayScore", {}).get("current")
-            if h is None or a is None:
-                continue
-
+            h, a = ev["gh"], ev["ga"]
             entry["finalScore"] = f"{h}:{a}"
 
             for p in entry["picks"]:
