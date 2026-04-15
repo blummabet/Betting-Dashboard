@@ -2698,9 +2698,14 @@ function getBettingPicks(match, odds, leagueKey) {
       const _o25ApiNote = (_apiGoalsH !== null && _apiGoalsA !== null)
         ? `<br>🤖 API-Modell: ${_apiGoalsH.toFixed(1)}H + ${_apiGoalsA.toFixed(1)}A = ${(_apiGoalsH+_apiGoalsA).toFixed(1)} Tore erwartet.`
         : '';
-      gC.push({sc, p:{icon:'⚽', market:'Over 2.5 Tore', odds:o.o25,
-        conf: sc>0.66?'high':sc>0.46?'medium':'low',
-        reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven lassen regelmäßig Gegentore zu. Das Modell erwartet ${expGoals.toFixed(1)} Tore: mindestens 3 Treffer sind gut möglich.${_o25H2hNote}${_o25ApiNote}`}}); }
+      // Hard gate: Kein Over 2.5-Pick wenn Modell selbst < 2.5 Tore erwartet (verhindert Widersprüche)
+      const _o25GoalText = expGoals > 2.8
+        ? `mindestens 3 Treffer sind gut möglich`
+        : `mit ${expGoals.toFixed(1)} erwarteten Toren ist die Marke von 2.5 Toren erreichbar`;
+      if (expGoals >= 2.5) {
+        gC.push({sc, p:{icon:'⚽', market:'Over 2.5 Tore', odds:o.o25,
+          conf: sc>0.66?'high':sc>0.46?'medium':'low',
+          reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven lassen regelmäßig Gegentore zu. Das Modell erwartet ${expGoals.toFixed(1)} Tore: ${_o25GoalText}.${_o25H2hNote}${_o25ApiNote}`}}); } }
 
     // Under 2.5
     { let sc = expGoals<1.7?0.85:expGoals<2.0?0.72:expGoals<2.3?0.57:expGoals<2.6?0.34:0.12;
