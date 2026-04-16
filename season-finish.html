@@ -2712,18 +2712,16 @@ function getBettingPicks(match, odds, leagueKey) {
       const _hVenueNote = (_hHWR !== null || _hCSHome !== null)
         ? `<br>📊 Heimstatistik (Saison): ${_hHWR !== null ? `${Math.round(_hHWR*100)}% Siege` : ''}${_hHWR !== null && _hCSHome !== null ? ' · ' : ''}${_hCSHome !== null ? `${Math.round(_hCSHome*100)}% Clean Sheets` : ''}.`
         : '';
-      // Formation note
-      const _hFormNote = (_hFormation || _aFormation)
-        ? `<br>📋 Formation: ${_hFormation || '?'} (Heim) vs ${_aFormation || '?'} (Ausw.).`
-        : '';
       // Streak note
       const _hStreakNote = (_hCurStreak !== null && Math.abs(_hCurStreak) >= 3)
         ? `<br>🔥 Aktueller Lauf: ${match.home} ${_hCurStreak > 0 ? `${_hCurStreak}× ungeschlagen` : `${-_hCurStreak}× ohne Sieg`}.`
         : '';
       // Comparison note
-      const _hCompNote = (_compFormDiff !== null && Math.abs(_compFormDiff) >= 15)
-        ? `<br>📡 API-Vergleich: Form ${_compForm.home}% vs ${_compForm.away}% · Angriff ${_compAtt?.home ?? '?'}% vs ${_compAtt?.away ?? '?'}%.`
-        : '';
+      const _hCompNote = (_compFormDiff !== null && _compFormDiff >= 20)
+        ? `<br>📡 API-Signale bestätigen den Heimvorteil: ${match.home} zeigt aktuell klar die bessere Form.`
+        : (_compFormDiff !== null && _compFormDiff <= -20)
+          ? `<br>⚠️ API-Signale: ${match.away} hat aktuell die bessere Formkurve — Vorsicht.`
+          : '';
       let reason = homeInForm
         ? `${match.home} ist in Topform (zuletzt ${hStreak} Siege) und gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele. Das Angriffsspiel (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) trifft auf eine anfällige ${match.away}-Abwehr (kassiert Ø ${awayDefStr.toFixed(1)} Tore/Spiel).${_hH2hSnippet}`
         : hc.includes('gold')
@@ -2736,10 +2734,12 @@ function getBettingPicks(match, odds, leagueKey) {
       if (eloAwayFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
       else if (eloHomeFav && eloLabel) reason += `<br>📊 Elo bestätigt: ${eloLabel}`;
       reason += _hVenueNote;
-      reason += _hFormNote;
       reason += _hStreakNote;
       reason += _hCompNote;
-      if (_apiPoiH !== null) reason += `<br>🤖 API-Modell: ${_apiPoiH}% Heim · ${_apiPoiD ?? '?'}% Remis · ${_apiPoiA ?? '?'}% Auswärts (Poisson).`;
+      if (_apiPoiH !== null) {
+        if (_apiPoiH >= 50) reason += `<br>🤖 Statistisches Modell sieht ${match.home} mit ${_apiPoiH}% als Favorit — bestätigt die Analyse.`;
+        else if (_apiPoiH <= 32) reason += `<br>⚠️ Statistisches Modell: ${match.home} nur bei ${_apiPoiH}% Siegchance — Modell ist skeptischer.`;
+      }
       rC.push({sc, p:{icon:'🏠', market:'Heimsieg', odds:o.hw, conf, reason}});
     }
     // ── Auswärtssieg ──────────────────────────────────────────────────────
@@ -2798,9 +2798,11 @@ function getBettingPicks(match, odds, leagueKey) {
       const _aStreakNote = (_aCurStreak !== null && Math.abs(_aCurStreak) >= 3)
         ? `<br>🔥 Aktueller Lauf: ${match.away} ${_aCurStreak > 0 ? `${_aCurStreak}× ungeschlagen` : `${-_aCurStreak}× ohne Sieg`}.`
         : '';
-      const _aCompNote = (_compFormDiff !== null && Math.abs(_compFormDiff) >= 15)
-        ? `<br>📡 API-Vergleich: Form ${_compForm.home}% vs ${_compForm.away}% · Angriff ${_compAtt?.home ?? '?'}% vs ${_compAtt?.away ?? '?'}%.`
-        : '';
+      const _aCompNote = (_compFormDiff !== null && _compFormDiff <= -20)
+        ? `<br>📡 API-Signale bestätigen: ${match.away} zeigt aktuell klar die bessere Form.`
+        : (_compFormDiff !== null && _compFormDiff >= 20)
+          ? `<br>⚠️ API-Signale: ${match.home} liegt in der aktuellen Form vorn — Vorsicht.`
+          : '';
       let reason = awayInForm
         ? `${match.away} ist in Topform (zuletzt ${aStreak} Siege) und gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele. Das Angriffsspiel (Ø ${awayAttStr.toFixed(1)} Tore/Spiel) trifft auf eine anfällige ${match.home}-Abwehr (kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel).${_aH2hSnippet}`
         : ac.includes('gold')
@@ -2811,10 +2813,12 @@ function getBettingPicks(match, odds, leagueKey) {
       if (eloHomeFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
       else if (eloAwayFav && eloLabel) reason += `<br>📊 Elo bestätigt: ${eloLabel}`;
       reason += _aVenueNote;
-      if (_hFormation || _aFormation) reason += `<br>📋 Formation: ${_hFormation || '?'} (Heim) vs ${_aFormation || '?'} (Ausw.).`;
       reason += _aStreakNote;
       reason += _aCompNote;
-      if (_apiPoiA !== null) reason += `<br>🤖 API-Modell: ${_apiPoiH ?? '?'}% Heim · ${_apiPoiD ?? '?'}% Remis · ${_apiPoiA}% Auswärts (Poisson).`;
+      if (_apiPoiA !== null) {
+        if (_apiPoiA >= 50) reason += `<br>🤖 Statistisches Modell sieht ${match.away} mit ${_apiPoiA}% als Favorit — bestätigt die Analyse.`;
+        else if (_apiPoiA <= 32) reason += `<br>⚠️ Statistisches Modell: ${match.away} nur bei ${_apiPoiA}% Siegchance — Modell ist skeptischer.`;
+      }
       rC.push({sc, p:{icon:'✈️', market:'Auswärtssieg', odds:o.aw, conf, reason}});
     }
     // ── Unentschieden ─────────────────────────────────────────────────────
