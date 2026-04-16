@@ -2571,8 +2571,9 @@ function getBettingPicks(match, odds, leagueKey) {
   const _cornersReal = (_hCH !== null && _aCA !== null)
     ? Math.round((_hCH + _aCA) * 10) / 10
     : null;
-  // Hard cap on total estimate: 15 corners max (prevents extreme outliers from generating huge edges)
-  const cornersEst     = _cornersReal !== null ? Math.min(_cornersReal, 15.0) : Math.min(_cornersFormula, 15.0);
+  // Hard cap on total estimate: 13 corners max — keeps Over 11.5 FV above 1.25 even for high-pressing games.
+  // Anything beyond 13 expected corners is likely a data artefact (API noise / small sample).
+  const cornersEst     = _cornersReal !== null ? Math.min(_cornersReal, 13.0) : Math.min(_cornersFormula, 13.0);
   const cornersDataReal = _cornersReal !== null;
   const cornersOver8   = cornersEst >= 8.0;
   const cornersOver9   = cornersEst >= 9.5;
