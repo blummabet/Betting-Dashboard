@@ -3477,7 +3477,7 @@ function getBettingPicks(match, odds, leagueKey) {
   // ── Remove picks where bookie odds are available but our model is BELOW market ──
   // Negative edge means the bookmaker prices this outcome cheaper than we do → no value.
   // Model-only picks (ip === null, no bookie comparison) are kept regardless.
-  picks = picks.filter(p => {
+  const picksFiltered = picks.filter(p => {
     if (p.odds && p.modelOdds) {
       const ip = (1 / p.odds) * 1.03;
       const mp = 1 / p.modelOdds;
@@ -3485,6 +3485,8 @@ function getBettingPicks(match, odds, leagueKey) {
     }
     return true;
   });
+  picks.length = 0;
+  picksFiltered.forEach(p => picks.push(p));
 
   // ── Mod-chips: compact context badges attached to each pick ─────────────────
   // Injury, fatigue, pressure, H2H goals, ref info shown as scannable chips
