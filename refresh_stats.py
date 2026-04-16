@@ -459,12 +459,16 @@ def process_league(league_key: str, fetch_fixture_stats: bool = True) -> dict:
                 if tname not in stats:
                     continue
                 if cdata["home_corners"]:
-                    stats[tname]["cornersHome"] = round(
-                        sum(cdata["home_corners"]) / len(cdata["home_corners"]), 1)
+                    raw_avg = sum(cdata["home_corners"]) / len(cdata["home_corners"])
+                    if raw_avg > 9.5:
+                        print(f"       ⚠ {tname} cornersHome={raw_avg:.1f} capped at 9.5 (n={len(cdata['home_corners'])})")
+                    stats[tname]["cornersHome"] = round(min(raw_avg, 9.5), 1)
                     corners_ok += 1
                 if cdata["away_corners"]:
-                    stats[tname]["cornersAway"] = round(
-                        sum(cdata["away_corners"]) / len(cdata["away_corners"]), 1)
+                    raw_avg = sum(cdata["away_corners"]) / len(cdata["away_corners"])
+                    if raw_avg > 8.5:
+                        print(f"       ⚠ {tname} cornersAway={raw_avg:.1f} capped at 8.5 (n={len(cdata['away_corners'])})")
+                    stats[tname]["cornersAway"] = round(min(raw_avg, 8.5), 1)
             print(f"       → {corners_ok} teams enriched with corner averages")
         else:
             print(f"       ⚙️  Fixture stats skipped (--fast mode)")

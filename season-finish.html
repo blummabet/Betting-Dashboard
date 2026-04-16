@@ -2565,10 +2565,14 @@ function getBettingPicks(match, odds, leagueKey) {
   const _defBonus = Math.min(1.2, Math.max(0, (homeDefStr + awayDefStr - 2.0) * 0.5));
   const _cornersFormula = homeAttStr * 3.4 + awayAttStr * 3.0 + _defBonus;
   // Real corner data from fixtures/statistics batch fetch: home avg at home + away avg away
-  const _cornersReal = (_hCornersHome !== null && _aCornersAway !== null)
-    ? Math.round((_hCornersHome + _aCornersAway) * 10) / 10
+  // Sanity-cap individual team averages before combining (API data can be noisy for smaller leagues)
+  const _hCH = _hCornersHome !== null ? Math.min(_hCornersHome, 9.5) : null;
+  const _aCA = _aCornersAway !== null ? Math.min(_aCornersAway, 8.5) : null;
+  const _cornersReal = (_hCH !== null && _aCA !== null)
+    ? Math.round((_hCH + _aCA) * 10) / 10
     : null;
-  const cornersEst     = _cornersReal !== null ? _cornersReal : _cornersFormula;
+  // Hard cap on total estimate: 15 corners max (prevents extreme outliers from generating huge edges)
+  const cornersEst     = _cornersReal !== null ? Math.min(_cornersReal, 15.0) : Math.min(_cornersFormula, 15.0);
   const cornersDataReal = _cornersReal !== null;
   const cornersOver8   = cornersEst >= 8.0;
   const cornersOver9   = cornersEst >= 9.5;
