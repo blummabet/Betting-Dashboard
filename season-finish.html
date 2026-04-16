@@ -2116,10 +2116,12 @@ function getBettingPicks(match, odds, leagueKey) {
   const _hasFair = odds?.hw_fair && odds?.dr_fair && odds?.aw_fair;
   let _bkrPH, _bkrPD, _bkrPA;
   if (_hasFair) {
-    // hw_fair/dr_fair/aw_fair are already margin-free consensus probabilities
-    _bkrPH = odds.hw_fair;
-    _bkrPD = odds.dr_fair;
-    _bkrPA = odds.aw_fair;
+    // hw_fair/dr_fair/aw_fair are fair ODDS (e.g. 2.13), NOT probabilities.
+    // Convert: prob = 1/odds, then normalise (sum should be ~1.0 since already margin-free).
+    const _fairTot = 1/odds.hw_fair + 1/odds.dr_fair + 1/odds.aw_fair;
+    _bkrPH = (1/odds.hw_fair) / _fairTot;
+    _bkrPD = (1/odds.dr_fair) / _fairTot;
+    _bkrPA = (1/odds.aw_fair) / _fairTot;
   } else {
     const _bkrTot = (odds?.hw && odds?.dr && odds?.aw) ? (1/odds.hw + 1/odds.dr + 1/odds.aw) : 0;
     _bkrPH = _bkrTot > 0 ? (1/odds.hw) / _bkrTot : null;  // de-vigged home win prob
