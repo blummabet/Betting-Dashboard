@@ -3474,6 +3474,18 @@ function getBettingPicks(match, odds, leagueKey) {
     }
   });
 
+  // ── Remove picks where bookie odds are available but our model is BELOW market ──
+  // Negative edge means the bookmaker prices this outcome cheaper than we do → no value.
+  // Model-only picks (ip === null, no bookie comparison) are kept regardless.
+  picks = picks.filter(p => {
+    if (p.odds && p.modelOdds) {
+      const ip = (1 / p.odds) * 1.03;
+      const mp = 1 / p.modelOdds;
+      if (mp - ip < 0) return false;  // negative edge → suppress
+    }
+    return true;
+  });
+
   // ── Mod-chips: compact context badges attached to each pick ─────────────────
   // Injury, fatigue, pressure, H2H goals, ref info shown as scannable chips
   // instead of long appended text — keeps reason text concise.
@@ -5234,6 +5246,11 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   // Show all high/medium confidence picks — user decides what's worth betting.
   // Low-odds picks get ⚠ label instead of being hidden.
   const visiblePicks = picks.filter(p => p.conf === 'high' || p.conf === 'medium');
+
+  // ── No valid picks → suppress card entirely ───────────────────────────────
+  // Negative-edge picks are already removed inside getBettingPicks().
+  // If nothing survives, there's no value here — don't render a card at all.
+  if (visiblePicks.length === 0) return '';
   const picksHtml = visiblePicks.map(p => {
     const oddsNum  = p.odds ?? null;
     const oddsTag  = oddsNum != null
