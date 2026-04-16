@@ -460,6 +460,25 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .alt-note{font-size:10px;opacity:.6;}
 .alt-divider{opacity:.4;}
 .alt-bold-label{opacity:.75;font-style:italic;}
+
+/* ── Pick of the Day ── */
+.potd-section{background:linear-gradient(135deg,rgba(227,179,65,.07) 0%,rgba(63,185,80,.06) 100%);border:1px solid rgba(227,179,65,.30);border-radius:12px;padding:16px 18px;margin-bottom:18px;position:relative;overflow:hidden;}
+.potd-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#e3b341,#3fb950);}
+.potd-label{font-size:10px;font-weight:700;letter-spacing:.12em;color:#e3b341;text-transform:uppercase;margin-bottom:10px;opacity:.85;}
+.potd-matchline{font-size:13px;font-weight:600;color:#c9d1d9;margin-bottom:10px;}
+.potd-vs{opacity:.45;margin:0 5px;font-weight:400;}
+.potd-meta{font-size:11px;opacity:.5;font-weight:400;margin-left:6px;}
+.potd-pick-line{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:8px;}
+.potd-icon{font-size:18px;}
+.potd-market{font-size:15px;font-weight:700;color:#e6edf3;}
+.potd-odds{font-size:14px;font-weight:700;color:#3fb950;}
+.potd-conf{font-size:12px;color:#e3b341;margin-left:2px;}
+.potd-fv{display:block;font-size:11px;color:var(--muted);margin-bottom:6px;opacity:.8;}
+.potd-alt{font-size:11px;margin-bottom:6px;padding:5px 8px;border-radius:6px;line-height:1.5;}
+.potd-alt.safer{background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.20);color:#c9d1d9;}
+.potd-alt.bold{background:rgba(227,179,65,.07);border:1px solid rgba(227,179,65,.18);color:#c9d1d9;}
+.potd-reason{font-size:11px;color:var(--muted);line-height:1.55;border-top:1px solid rgba(255,255,255,.06);padding-top:8px;margin-top:4px;}
+
 .pick-mods{display:flex;flex-wrap:wrap;gap:4px;margin:3px 0 4px 0;}
 .mod-chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:600;white-space:nowrap;}
 .mod-h2h{background:#0d2b45;color:#58a6ff;border:1px solid #1d4e7a;}
@@ -5261,6 +5280,78 @@ function renderH2H(h2h) {
 }
 
 // ═══════════════════════════════════════════════════════
+//  PICK OF THE DAY BUILDER
+//  Finds the single strongest pick across all matches.
+//  Ranked by: hot(3)>value(2)>inj-edge(1)>plain(0), then match score.
+// ═══════════════════════════════════════════════════════
+function buildPickOfDayHtml(matchList) {
+  const candidates = [];
+  for (const m of matchList) {
+    const sc = computeMatchScore(m, m.leagueKey);
+    if (sc < 7) continue;
+    const odds = m.leagueKey ? findOdds(m.leagueKey, m.home, m.away) : null;
+    const picks = getBettingPicks(m, odds, m.leagueKey);
+    for (const p of picks) {
+      if (p.conf === 'high' || p.conf === 'medium') candidates.push({p, sc, m});
+    }
+  }
+  if (candidates.length === 0) return '';
+
+  candidates.sort((a, b) => {
+    const vScore = x => x === 'hot' ? 3 : x === 'value' ? 2 : x === 'inj-edge' ? 1 : 0;
+    const av = vScore(a.p.value) * 10 + a.sc;
+    const bv = vScore(b.p.value) * 10 + b.sc;
+    return bv - av;
+  });
+
+  const {p, sc, m} = candidates[0];
+  const flag  = m.leagueFlag || '';
+  const date  = m.date || '';
+  const time  = m.time  ? ` · ${m.time}` : '';
+  const vTag  = p.value === 'hot'       ? '<span class="value-tag hot">🔥 VALUE</span>'
+              : p.value === 'value'     ? '<span class="value-tag val">💰 Value</span>'
+              : p.value === 'inj-edge'  ? '<span class="value-tag inj">🏥 Inj. Edge</span>' : '';
+  const oddsStr = p.odds ? `@ ${p.odds.toFixed(2)}` : '';
+  const confStr = p.conf === 'high' ? '★★★' : '★★☆';
+
+  // Fair value display
+  let fvStr = '';
+  if (p.modelOdds && p.odds) {
+    const edgePp = Math.round((1/p.modelOdds - (1/p.odds)*1.03) * 100);
+    const edgeTxt = edgePp > 0 ? `+${edgePp}pp Edge` : edgePp === 0 ? '≈ Fair' : `${edgePp}pp`;
+    fvStr = `<span class="potd-fv">FV ${p.modelOdds} → Bookie ${p.odds.toFixed(2)} <span style="color:${edgePp>=10?'#3fb950':edgePp>=5?'#e3b341':'#8b949e'}">${edgeTxt}</span></span>`;
+  } else if (p.modelOdds) {
+    fvStr = `<span class="potd-fv">FV ${p.modelOdds} (Modell-Näherung)</span>`;
+  }
+
+  // Safer alt line
+  let altStr = '';
+  if (p.saferAlt) {
+    altStr = `<div class="potd-alt safer">🛡️ <strong>Safer:</strong> ${p.saferAlt.market} @ ~${p.saferAlt.estOdds.toFixed(2)} <span style="opacity:.6;font-size:10px">(Modell-Näherung)</span></div>`;
+  } else if (p.boldAlt) {
+    altStr = `<div class="potd-alt bold">📈 <strong>Mehr Value:</strong> ${p.boldAlt.market} @ ~${p.boldAlt.estOdds.toFixed(2)} <span style="opacity:.6;font-size:10px">(Modell-Näherung)</span></div>`;
+  }
+
+  // Short reason (first sentence only)
+  const shortReason = (p.reason || '').replace(/<[^>]+>/g,'').split('·')[0].split('📊')[0].trim();
+
+  return `<div class="potd-section">
+    <div class="potd-label">⭐ PICK OF THE DAY</div>
+    <div class="potd-matchline">${flag} ${m.home} <span class="potd-vs">vs</span> ${m.away} <span class="potd-meta">${date}${time} · Score ${sc}/12</span></div>
+    <div class="potd-pick-line">
+      <span class="potd-icon">${p.icon}</span>
+      <span class="potd-market">${p.market}</span>
+      <span class="potd-odds">${oddsStr}</span>
+      ${vTag}
+      <span class="potd-conf">${confStr}</span>
+    </div>
+    ${fvStr}
+    ${altStr}
+    <div class="potd-reason">${shortReason}</div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
 //  KOMBI-TIPP BUILDER
 //  Collects the 3 highest-confidence picks across all matches,
 //  prioritising value-tagged picks, then match score.
@@ -5646,6 +5737,7 @@ function renderLeague(key) {
   // Apply active day filter for actual card display
   const filtered = applyDayFilter(week).sort((a,b)=>computeMatchScore(b,key)-computeMatchScore(a,key));
   const cards = filtered.map(m=>renderFixtureCard(m, L.name, L.flag, key)).join('');
+  const potdHtml = buildPickOfDayHtml(filtered.map(m=>({...m, leagueKey:key, leagueFlag:L.flag})));
 
   const dayLabel = window._selectedDay === 'all'
     ? weekLabel()
@@ -5674,6 +5766,8 @@ function renderLeague(key) {
     ${topChips||botChips ? `<div class="standings-strip">${topChips}${botChips}</div>` : ''}
 
     ${buildDayFilterHtml(week)}
+
+    ${potdHtml}
 
     <div class="section-label">🎯 High-Stakes Spiele · ${L.name} · 📅 ${dayLabel}</div>
     <div class="stake-grid">${cards || emptyState}</div>
