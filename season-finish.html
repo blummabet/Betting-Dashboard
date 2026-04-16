@@ -452,6 +452,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   letter-spacing:.2px;
 }
 .pick-reason{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.55;}
+.pick-alt{font-size:11px;margin-top:6px;padding:5px 8px;border-radius:6px;line-height:1.5;}
+.pick-alt.safer{background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.20);color:#c9d1d9;}
+.pick-alt.bold{background:rgba(227,179,65,.07);border:1px solid rgba(227,179,65,.18);color:#c9d1d9;}
+.alt-odds{font-weight:700;color:#3fb950;}
+.pick-alt.bold .alt-odds{color:#e3b341;}
+.alt-note{font-size:10px;opacity:.6;}
+.alt-divider{opacity:.4;}
+.alt-bold-label{opacity:.75;font-style:italic;}
 .pick-mods{display:flex;flex-wrap:wrap;gap:4px;margin:3px 0 4px 0;}
 .mod-chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:600;white-space:nowrap;}
 .mod-h2h{background:#0d2b45;color:#58a6ff;border:1px solid #1d4e7a;}
@@ -3547,6 +3555,142 @@ function getBettingPicks(match, odds, leagueKey) {
     p.mods = chips;
   });
 
+  // ── Safer Alternative / Bold Alternative computation ────────────────────────
+  // For picks with odds > 2.0: compute one step DOWN (safer line, ~1.7–2.0 range).
+  //   → saferAlt becomes the PRIMARY recommended bet on the card.
+  //   → original high-odds pick becomes the "Value Alternative".
+  // For picks with odds 1.4–2.0: optionally compute one step UP (bolder version).
+  //   → boldAlt is shown as secondary "Mehr Value" suggestion.
+  // All estimated odds are model-derived (no extra API call needed).
+  const _r2 = x => Math.round(x * 100) / 100;
+
+  // ── Odds step helper: anchors on bookie ip + empirical line step ─────────────
+  // More reliable than pure model formula (avoids ceiling artefacts).
+  // ip = implied prob of the current pick (stripped of ~3% margin).
+  // stepUp = additional probability gained by dropping one line (empirical calibration).
+  // Returns model-estimated odds for the safer/bolder alternative, or null if out of range.
+  const _stepOdds = (baseOdds, stepUp, minO, maxO) => {
+    const ip = baseOdds ? (1 / baseOdds) * 1.03 : null;
+    if (!ip) return null;
+    const newProb = Math.min(0.87, ip + stepUp);
+    const est = Math.round((1 / newProb) * 100) / 100;
+    return (est >= minO && est <= maxO) ? est : null;
+  };
+  const _stepOddsDown = (baseOdds, stepUp, minO = 1.30, maxO = 2.60) =>
+    _stepOdds(baseOdds, stepUp, minO, maxO);
+  const _stepOddsUp = (baseOdds, stepDown, minO = 1.80, maxO = 6.50) => {
+    const ip = baseOdds ? (1 / baseOdds) * 1.03 : null;
+    if (!ip) return null;
+    const newProb = Math.max(0.13, ip - stepDown);
+    const est = Math.round((1 / newProb) * 100) / 100;
+    return (est >= minO && est <= maxO) ? est : null;
+  };
+
+  picks.forEach(p => {
+    const o = p.odds;
+    // ── Step-DOWN (safer): for risky odds > 2.0 ─────────────────────────
+    if (o && o > 2.00) {
+      switch (p.market) {
+        case 'Heimsieg': {
+          if (_bkrPH && _bkrPD) {
+            const dnb = (_bkrPH + _bkrPD) / _bkrPH;
+            const raw = 1 / _bkrPH;
+            const ah  = _r2((dnb + raw) / 2);
+            if (ah >= 1.35 && ah <= 2.50) p.saferAlt = { market: 'AH -0.25 Heim', estOdds: ah };
+          }
+          break;
+        }
+        case 'Auswärtssieg': {
+          if (_bkrPA && _bkrPD) {
+            const dnb = (_bkrPA + _bkrPD) / _bkrPA;
+            const raw = 1 / _bkrPA;
+            const ah  = _r2((dnb + raw) / 2);
+            if (ah >= 1.35 && ah <= 2.50) p.saferAlt = { market: 'AH -0.25 Auswärts', estOdds: ah };
+          }
+          break;
+        }
+        // Corners: +22pp probability per 2-line step (empirically calibrated)
+        case 'Über 11.5 Ecken': {
+          const est = _stepOddsDown(o, 0.22);
+          if (est) p.saferAlt = { market: 'Über 9.5 Ecken', estOdds: est };
+          break;
+        }
+        case 'Über 9.5 Ecken': {
+          const est = _stepOddsDown(o, 0.22);
+          if (est) p.saferAlt = { market: 'Über 7.5 Ecken', estOdds: est };
+          break;
+        }
+        case 'Über 8.5 Ecken': {
+          const est = _stepOddsDown(o, 0.20);
+          if (est) p.saferAlt = { market: 'Über 7.5 Ecken', estOdds: est };
+          break;
+        }
+        // Goals: +20pp per 1-goal step
+        case 'Over 3.5 Tore': {
+          const est = _stepOddsDown(o, 0.20);
+          if (est) p.saferAlt = { market: 'Over 2.5 Tore', estOdds: est };
+          break;
+        }
+        case 'Over 2.5 Tore': {
+          const est = _stepOddsDown(o, 0.22, 1.20, 2.20);
+          if (est) p.saferAlt = { market: 'Over 1.5 Tore', estOdds: est };
+          break;
+        }
+        case 'Beide Teams treffen': {
+          const est = _stepOddsDown(o, 0.22, 1.20, 2.00);
+          if (est) p.saferAlt = { market: 'Over 1.5 Tore', estOdds: est };
+          break;
+        }
+        // Cards: +17pp per 1-card step
+        case 'Über 5.5 Karten': {
+          const est = _stepOddsDown(o, 0.17);
+          if (est) p.saferAlt = { market: 'Über 4.5 Karten', estOdds: est };
+          break;
+        }
+        case 'Über 4.5 Karten': {
+          const est = _stepOddsDown(o, 0.17);
+          if (est) p.saferAlt = { market: 'Über 3.5 Karten', estOdds: est };
+          break;
+        }
+        case 'Über 3.5 Karten': {
+          const est = _stepOddsDown(o, 0.17, 1.20, 2.00);
+          if (est) p.saferAlt = { market: 'Über 2.5 Karten', estOdds: est };
+          break;
+        }
+      }
+    }
+    // ── Step-UP (bold): for safer odds 1.40–2.00 show a bolder option ────
+    else if (o && o >= 1.40 && o <= 2.00) {
+      switch (p.market) {
+        case 'Über 9.5 Ecken': {
+          const est = _stepOddsUp(o, 0.22);
+          if (est) p.boldAlt = { market: 'Über 11.5 Ecken', estOdds: est };
+          break;
+        }
+        case 'Over 2.5 Tore': {
+          const est = _stepOddsUp(o, 0.20);
+          if (est) p.boldAlt = { market: 'Over 3.5 Tore', estOdds: est };
+          break;
+        }
+        case 'Over 1.5 Tore': {
+          const est = _stepOddsUp(o, 0.22, 1.70, 4.50);
+          if (est) p.boldAlt = { market: 'Over 2.5 Tore', estOdds: est };
+          break;
+        }
+        case 'Über 4.5 Karten': {
+          const est = _stepOddsUp(o, 0.17);
+          if (est) p.boldAlt = { market: 'Über 5.5 Karten', estOdds: est };
+          break;
+        }
+        case 'Über 3.5 Karten': {
+          const est = _stepOddsUp(o, 0.17, 1.80, 5.00);
+          if (est) p.boldAlt = { market: 'Über 4.5 Karten', estOdds: est };
+          break;
+        }
+      }
+    }
+  });
+
   return picks;
 }
 
@@ -5316,6 +5460,25 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     }
 
     const modsHtml = (p.mods?.length) ? `<div class="pick-mods">${p.mods.join('')}</div>` : '';
+
+    // ── Safer / Bolder alternative lines ─────────────────────────────────────
+    // saferAlt: pick has odds > 2.0 → safer version is the primary recommendation
+    // boldAlt:  pick has odds 1.4–2.0 → bolder version shown as secondary option
+    let altHtml = '';
+    if (p.saferAlt) {
+      altHtml = `<div class="pick-alt safer">
+        🛡️ <strong>Hauptempfehlung:</strong> ${p.saferAlt.market} <span class="alt-odds">@ ~${p.saferAlt.estOdds.toFixed(2)}</span>
+        <span class="alt-note">(Modell-Näherung)</span>
+        <span class="alt-divider"> · </span>
+        <span class="alt-bold-label">Value Alternative: ${p.market} @ ${oddsNum ? oddsNum.toFixed(2) : '?'}</span>
+      </div>`;
+    } else if (p.boldAlt) {
+      altHtml = `<div class="pick-alt bold">
+        📈 <strong>Mehr Value:</strong> ${p.boldAlt.market} <span class="alt-odds">@ ~${p.boldAlt.estOdds.toFixed(2)}</span>
+        <span class="alt-note">(Modell-Näherung)</span>
+      </div>`;
+    }
+
     return `<div class="pick-item">
       <span class="pick-icon">${p.icon}</span>
       <div class="pick-body">
@@ -5323,6 +5486,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
         ${fairOddsHtml}
         ${modsHtml}
         <div class="pick-reason">${p.reason}</div>
+        ${altHtml}
       </div>
       <span class="pick-conf ${confClass}">${confLabel}</span>
     </div>`;
