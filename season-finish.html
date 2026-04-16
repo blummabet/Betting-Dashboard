@@ -1088,8 +1088,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <p style="margin-top:8px;font-family:monospace;font-size:12px;background:var(--card2);padding:8px;border-radius:6px;">Edge = Modell-Prob − (1/Odds × 1.03)</p>
         <p style="margin-top:6px;font-size:11px;color:var(--muted);">Der Faktor <strong style="color:var(--text);">×1.03</strong> zieht die ~3% Buchmaker-Marge (Vig) aus der Implied-Prob heraus, bevor wir den Edge berechnen. Ohne diesen Korrekturfaktor würde jede Edge ~3 Prozentpunkte zu hoch erscheinen und zu viele Picks als "value" markiert. Pinnacle-Quoten kommen primär aus <strong>api-football Pro</strong> (alle Bookmaker inklusive Pinnacle-ID 8). Fallback: the-odds-api.com (11 Ligen, 6h gecacht).</p>
         <ul style="margin-top:8px;">
-          <li><strong>🔥 HOT VALUE</strong> — Edge ≥ 13%</li>
-          <li><strong>💰 Value</strong> — Edge ≥ 7%</li>
+          <li><strong>🔥 HOT VALUE</strong> — Edge ≥ 10%</li>
+          <li><strong>💰 Value</strong> — Edge ≥ 5%</li>
           <li><strong>🏥 Injury Edge</strong> — Edge ≥ 5% UND verletzungsbedingter Impact ≥ 2.0 auf relevanten Markt. Die API weiß es, der Markt noch nicht.</li>
         </ul>
         <p style="margin-top:8px;color:var(--muted);font-size:12px;">Druck erhöht die Model-Prob für Over/Under → Value-Badge erscheint häufiger bei Druckspielen. H2H-Modifiers fließen ebenfalls in die Model-Prob ein.</p>
@@ -2110,12 +2110,22 @@ function getBettingPicks(match, odds, leagueKey) {
   // This corrects the single-cap model that was tuned on mid-scoring leagues.
   const _lgCap = ({ENG:0.05, GER:0.05, AUT:0.04, TUR:0.03, SCO:0.03, NED:0.03, BEL:0.02, POR:0.01, POL:0, CRO:0, HUN:0, ESP:0, ITA:-0.04, FRA:-0.04})[leagueKey] || 0;
 
-  // De-vig base probabilities — anchor fair value to market 1X2 when odds are available.
-  // Fixes wildly wrong formula-based estimates (e.g. Benfica 1.80 computed vs 1.12 real).
-  const _bkrTot = (odds?.hw && odds?.dr && odds?.aw) ? (1/odds.hw + 1/odds.dr + 1/odds.aw) : 0;
-  const _bkrPH  = _bkrTot > 0 ? (1/odds.hw) / _bkrTot : null;  // de-vigged home win prob
-  const _bkrPD  = _bkrTot > 0 ? (1/odds.dr) / _bkrTot : null;  // de-vigged draw prob
-  const _bkrPA  = _bkrTot > 0 ? (1/odds.aw) / _bkrTot : null;  // de-vigged away win prob
+  // De-vig base probabilities — prefer Konsens-Devig (hw_fair) when available;
+  // fall back to single-source Pinnacle de-vig if consensus is missing.
+  const _cn     = odds?._cn || 0;                                // number of contributing bookmakers
+  const _hasFair = odds?.hw_fair && odds?.dr_fair && odds?.aw_fair;
+  let _bkrPH, _bkrPD, _bkrPA;
+  if (_hasFair) {
+    // hw_fair/dr_fair/aw_fair are already margin-free consensus probabilities
+    _bkrPH = odds.hw_fair;
+    _bkrPD = odds.dr_fair;
+    _bkrPA = odds.aw_fair;
+  } else {
+    const _bkrTot = (odds?.hw && odds?.dr && odds?.aw) ? (1/odds.hw + 1/odds.dr + 1/odds.aw) : 0;
+    _bkrPH = _bkrTot > 0 ? (1/odds.hw) / _bkrTot : null;  // de-vigged home win prob
+    _bkrPD = _bkrTot > 0 ? (1/odds.dr) / _bkrTot : null;  // de-vigged draw prob
+    _bkrPA = _bkrTot > 0 ? (1/odds.aw) / _bkrTot : null;  // de-vigged away win prob
+  }
 
   // ── Form signals ──────────────────────────────────────
   const hF = match.homeForm || {}, aF = match.awayForm || {};
@@ -2246,18 +2256,40 @@ function getBettingPicks(match, odds, leagueKey) {
   // Blended API expected goals — used when xGBased=false (non-Big5 or no refresh_stats run)
   const _apiExpG = (_apiGoalsH !== null && _apiGoalsA !== null) ? (_apiGoalsH + _apiGoalsA) : null;
 
-  // ── Blended fair probabilities: 80% Pinnacle de-vigged + 20% API prediction pct ──
+  // ── Dynamic blend ratio: more bookmakers → trust consensus more ──
+  // _cn is the number of contributing bookmakers from Konsens-Devig.
+  // ≥5 books: 90% market / 10% API | ≥3: 87% | ≥2: 83% | <2: 80%
+  const _wBkr = _hasFair ? (_cn >= 5 ? 0.90 : _cn >= 3 ? 0.87 : _cn >= 2 ? 0.83 : 0.80) : 0.80;
+  const _wApi = 1 - _wBkr;
+
+  // ── Blended fair probabilities: dynamic market weight + API prediction pct ──
   // When both signals available: blend for sharpest estimate.
   // When only one: use that one. When neither: null (pure formula fallback).
   const _fairPH = (_bkrPH !== null && _apiPctH !== null)
-    ? _bkrPH * 0.80 + (_apiPctH / 100) * 0.20
+    ? _bkrPH * _wBkr + (_apiPctH / 100) * _wApi
     : (_bkrPH ?? (_apiPctH !== null ? _apiPctH / 100 : null));
   const _fairPD = (_bkrPD !== null && _apiPctD !== null)
-    ? _bkrPD * 0.80 + (_apiPctD / 100) * 0.20
+    ? _bkrPD * _wBkr + (_apiPctD / 100) * _wApi
     : (_bkrPD ?? (_apiPctD !== null ? _apiPctD / 100 : null));
   const _fairPA = (_bkrPA !== null && _apiPctA !== null)
-    ? _bkrPA * 0.80 + (_apiPctA / 100) * 0.20
+    ? _bkrPA * _wBkr + (_apiPctA / 100) * _wApi
     : (_bkrPA ?? (_apiPctA !== null ? _apiPctA / 100 : null));
+
+  // ── Line movement nudge ─────────────────────────────────────────────────────
+  // ppShift = (1/current − 1/open) × 100 → positive means market moved toward that outcome.
+  // We apply a small nudge to mp: +0.015 per full pp of steam toward home/away/draw.
+  // Cap at ±3pp to avoid overweighting noisy openers.
+  const _pmEntry = window._preMatchData?.[`${match.home}|${match.away}`] || null;
+  const _oOpen   = _pmEntry?.odds_open || null;
+  let _lmH = 0, _lmD = 0, _lmA = 0;
+  if (_oOpen && odds?.hw && odds?.dr && odds?.aw) {
+    const _ppH = Math.round(((1/odds.hw)  - (1/(_oOpen.hw  || odds.hw)))  * 100);
+    const _ppD = Math.round(((1/odds.dr)  - (1/(_oOpen.dr  || odds.dr)))  * 100);
+    const _ppA = Math.round(((1/odds.aw)  - (1/(_oOpen.aw  || odds.aw)))  * 100);
+    _lmH = Math.max(-0.045, Math.min(0.045, _ppH * 0.015));
+    _lmD = Math.max(-0.045, Math.min(0.045, _ppD * 0.015));
+    _lmA = Math.max(-0.045, Math.min(0.045, _ppA * 0.015));
+  }
 
   // ── Comparison signals from API /predictions endpoint ─────────────────────────
   // Each field: {home: 0–100, away: 0–100} (higher = better for that side)
@@ -3283,7 +3315,7 @@ function getBettingPicks(match, odds, leagueKey) {
   }
   // ── Value estimation ─────────────────────────────────────────────────────
   // Compare our model probability (derived from signals) vs Pinnacle implied prob.
-  // Edge ≥ 13% → 🔥 hot value  |  Edge ≥ 7% → 💰 value  |  else → null
+  // Edge ≥ 10% → 🔥 hot value  |  Edge ≥ 5% → 💰 value  |  else → null
   // Only applies to picks with Pinnacle odds (hw/dr/aw/o25/u25/o35).
   // Specialty markets (BTTS, cards, corners, DC, 1st half) stay untagged — no odds to compare.
   picks.forEach(p => {
@@ -3292,9 +3324,10 @@ function getBettingPicks(match, odds, leagueKey) {
     switch (p.market) {
       case 'Heimsieg':
         if (_fairPH !== null) {
-          // Market-anchored: blended fair prob (80% Pinnacle + 20% API pct) as base
+          // Market-anchored: blended fair prob (dynamic weight consensus + API pct) as base
+          // + line movement nudge: steam toward home shifts mp up
           let _adj = homeNeedsWin ? _pressureBoost * 0.18 : 0;
-          mp = Math.min(0.97, Math.max(0.02, _fairPH + Math.min(0.06, Math.max(-0.06, _adj))));
+          mp = Math.min(0.97, Math.max(0.02, _fairPH + Math.min(0.06, Math.max(-0.06, _adj)) + _lmH));
         } else {
           mp = Math.min(0.82, 0.34 + (hFS_home - 0.5) * 0.65 + Math.max(0, hStreak) * 0.03 + homeWinRate * 0.16);
           if (xGBased) mp = Math.min(0.82, mp + Math.max(0, homeAttStr - 1.2) * 0.08 - Math.max(0, awayAttStr - 1.4) * 0.06);
@@ -3305,7 +3338,7 @@ function getBettingPicks(match, odds, leagueKey) {
       case 'Auswärtssieg':
         if (_fairPA !== null) {
           let _adj = awayNeedsWin ? _pressureBoost * 0.18 : 0;
-          mp = Math.min(0.97, Math.max(0.02, _fairPA + Math.min(0.06, Math.max(-0.06, _adj))));
+          mp = Math.min(0.97, Math.max(0.02, _fairPA + Math.min(0.06, Math.max(-0.06, _adj)) + _lmA));
         } else {
           mp = Math.min(0.76, 0.26 + (aFS_away - 0.5) * 0.65 + Math.max(0, aStreak) * 0.03 + awayWinRate * 0.16);
           if (xGBased) mp = Math.min(0.76, mp + Math.max(0, awayAttStr - 1.1) * 0.08 - Math.max(0, homeAttStr - 1.4) * 0.06);
@@ -3348,7 +3381,7 @@ function getBettingPicks(match, odds, leagueKey) {
       case 'Unentschieden':
         if (_fairPD !== null) {
           let _adj = (homeNeedsWin || awayNeedsWin) ? -Math.min(0.10, _pressureBoost * 0.30) : 0;
-          mp = Math.max(0.03, Math.min(0.65, _fairPD + _adj));
+          mp = Math.max(0.03, Math.min(0.65, _fairPD + _adj + _lmD));
         } else {
           mp = Math.min(0.40, drawRate * 0.72 + 0.10);
           if (homeNeedsWin || awayNeedsWin) mp = Math.max(0.05, mp - _pressureBoost * 0.30);
@@ -3411,7 +3444,7 @@ function getBettingPicks(match, odds, leagueKey) {
       p.modelOdds = Math.round((1 / mp) * 100) / 100;
       if (ip !== null) {
         const edge = mp - ip;
-        p.value = edge >= 0.13 ? 'hot' : edge >= 0.07 ? 'value' : null;
+        p.value = edge >= 0.10 ? 'hot' : edge >= 0.05 ? 'value' : null;
         // Injury edge amplifier: when injury impact is high AND market is affected,
         // our model captures it more precisely than the bookmaker → lower edge threshold
         const _hImpactHigh = _hImpact >= 2.0;
