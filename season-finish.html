@@ -19,6 +19,18 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .res-stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
 .res-stat-val{font-size:28px;font-weight:900;line-height:1;}
 .res-stat-lbl{font-size:11px;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
+.res-chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;}
+.res-chart-title{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;letter-spacing:.6px;text-transform:uppercase;}
+.res-chart-sub{font-size:11px;color:var(--muted);margin-bottom:13px;opacity:.75;}
+.res-matrix table{width:100%;border-collapse:separate;border-spacing:3px;font-size:12px;}
+.res-matrix th{padding:6px 10px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;text-align:center;}
+.res-matrix th:first-child{text-align:left;}
+.res-matrix td{padding:7px 10px;border-radius:6px;text-align:center;background:var(--card2);}
+.res-matrix td:first-child{text-align:left;font-weight:600;color:var(--fg);background:transparent;}
+.res-mx-cell-g{background:rgba(63,185,80,.18)!important;color:#3fb950;font-weight:700;}
+.res-mx-cell-y{background:rgba(227,179,65,.15)!important;color:#e3b341;font-weight:700;}
+.res-mx-cell-r{background:rgba(248,81,73,.13)!important;color:#f85149;font-weight:700;}
+.res-mx-cell-e{color:#484f58;font-size:11px;}
 .res-filter-btn{background:none;border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:11px;font-weight:600;padding:5px 12px;cursor:pointer;font-family:inherit;transition:all .15s;}
 .res-filter-btn.active{background:var(--accent);border-color:var(--accent);color:#000;}
 .res-filter-btn:hover:not(.active){border-color:var(--accent);color:var(--accent);}
@@ -649,6 +661,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
   /* Results stats grid */
   #resultsStats{grid-template-columns:repeat(2,1fr)!important;}
+  #chartsRow2,#chartsRow3{grid-template-columns:1fr!important;}
 
   /* Stake grid already handled above */
   .stake-grid{grid-template-columns:1fr;}
@@ -1325,6 +1338,41 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:24px;">
     <div style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:14px;letter-spacing:.5px;text-transform:uppercase;">💰 ROI Simulation (10€ pro Wette)</div>
     <canvas id="chartRoi" height="130"></canvas>
+  </div>
+
+  <!-- Kalibrierung + Rolling Form -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;" id="chartsRow2">
+    <div class="res-chart-card">
+      <div class="res-chart-title">🎯 Konfidenz-Kalibrierung</div>
+      <div class="res-chart-sub">Trifft ★★★ wirklich öfter als ★☆☆? Lila = Zielkalibrierung</div>
+      <canvas id="chartCalib" height="220"></canvas>
+    </div>
+    <div class="res-chart-card">
+      <div class="res-chart-title">📈 Rolling Form (10-Pick Fenster)</div>
+      <div class="res-chart-sub">Gleitende Win Rate — zeigt aktuelle Form &amp; Trends</div>
+      <canvas id="chartRolling" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- Markt × Konfidenz Matrix -->
+  <div class="res-chart-card" style="margin-bottom:24px;">
+    <div class="res-chart-title">🔬 Markt × Konfidenz Matrix</div>
+    <div class="res-chart-sub">Win Rate pro Markt und Konfidenz-Level — zeigt wo der echte Edge liegt</div>
+    <div id="chartMatrix" class="res-matrix" style="overflow-x:auto;"></div>
+  </div>
+
+  <!-- Value Check + Weekly Trend -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;" id="chartsRow3">
+    <div class="res-chart-card">
+      <div class="res-chart-title">💎 Value Check</div>
+      <div class="res-chart-sub">Implizierte Wahrscheinlichkeit (Quote) vs. tatsächliche Win Rate — Grün = Edge</div>
+      <canvas id="chartValue" height="230"></canvas>
+    </div>
+    <div class="res-chart-card">
+      <div class="res-chart-title">📅 Wöchentlicher Trend</div>
+      <div class="res-chart-sub">Win Rate pro Kalenderwoche — zeigt Entwicklung des Systems über Zeit</div>
+      <canvas id="chartWeekly" height="230"></canvas>
+    </div>
   </div>
 
   <!-- Pick history table -->
@@ -6201,10 +6249,36 @@ function renderResultsStats() {
 
   // ROI simulation: 10€ per pick, odds used if available else 1.85
   let bankroll = 0;
-  allPicks.filter(p => p.result && p.result !== 'void').forEach(p => {
+  const resolvedSorted = allPicks
+    .filter(p => p.result && p.result !== 'void')
+    .sort((a, b) => (a.dateIso || '').localeCompare(b.dateIso || ''));
+  resolvedSorted.forEach(p => {
     const odds = p.odds || 1.85;
     bankroll += p.result === 'win' ? (odds - 1) * 10 : -10;
   });
+
+  // Peak bankroll (highest point ever reached)
+  let cumBR = 0, peakBR = 0;
+  resolvedSorted.forEach(p => {
+    const odds = p.odds || 1.85;
+    cumBR += p.result === 'win' ? (odds - 1) * 10 : -10;
+    if (cumBR > peakBR) peakBR = cumBR;
+  });
+
+  // Current streak (consecutive wins or losses from most recent)
+  let curStreak = 0, streakType = null;
+  for (let i = resolvedSorted.length - 1; i >= 0; i--) {
+    const r = resolvedSorted[i].result;
+    if (streakType === null) { streakType = r; curStreak = 1; }
+    else if (r === streakType) curStreak++;
+    else break;
+  }
+  const streakVal   = streakType === 'win' ? `🔥 +${curStreak}` : streakType === 'loss' ? `❄️ -${curStreak}` : '—';
+  const streakColor = streakType === 'win' ? '#3fb950' : streakType === 'loss' ? '#f85149' : '#8b949e';
+
+  // Yield = net profit / total staked × 100
+  const resolvedN = won + lost;
+  const yieldPct  = resolvedN > 0 ? bankroll / (resolvedN * 10) * 100 : null;
 
   const stats = [
     { val: total,              lbl: 'Picks gesamt',    color: 'var(--accent)' },
@@ -6213,6 +6287,9 @@ function renderResultsStats() {
     { val: wr !== null ? wr + '%' : '—', lbl: 'Win Rate', color: wr >= 55 ? '#3fb950' : wr >= 45 ? '#e3b341' : '#f85149' },
     { val: pending,            lbl: '⏳ Ausstehend',   color: '#8b949e' },
     { val: (bankroll >= 0 ? '+' : '') + bankroll.toFixed(0) + '€', lbl: 'Simulierter ROI', color: bankroll >= 0 ? '#3fb950' : '#f85149' },
+    { val: streakVal,          lbl: 'Aktueller Streak', color: streakColor },
+    { val: peakBR > 0 ? '+' + peakBR.toFixed(0) + '€' : '—', lbl: '📈 Peak Bankroll', color: '#a78bfa' },
+    { val: yieldPct !== null ? (yieldPct >= 0 ? '+' : '') + yieldPct.toFixed(1) + '%' : '—', lbl: 'Yield (Gewinn/Einsatz)', color: yieldPct >= 5 ? '#3fb950' : yieldPct >= 0 ? '#e3b341' : '#f85149' },
   ];
 
   document.getElementById('resultsStats').innerHTML = stats.map(s => `
@@ -6319,6 +6396,253 @@ function renderResultsCharts() {
       scales: {
         y: { ticks: { color: '#8b949e', callback: v => v + '€' }, grid: { color: 'rgba(255,255,255,0.05)' } },
         x: { ticks: { color: '#8b949e', maxTicksLimit: 10 }, grid: { display: false } }
+      }
+    }
+  });
+
+  // ── CHART 4: Konfidenz-Kalibrierung ─────────────────────────
+  const confBuckets = { high:{w:0,l:0}, medium:{w:0,l:0}, low:{w:0,l:0} };
+  _resultsData.forEach(e => e.picks.forEach(p => {
+    if (!p.conf || !p.result || p.result === 'void') return;
+    const b = confBuckets[p.conf];
+    if (!b) return;
+    if (p.result === 'win')  b.w++;
+    if (p.result === 'loss') b.l++;
+  }));
+  const calibKeys   = ['high','medium','low'];
+  const calibNames  = ['★★★ Hoch','★★☆ Mittel','★☆☆ Niedrig'];
+  const calibActual = calibKeys.map(k => {
+    const {w,l} = confBuckets[k];
+    return w+l > 0 ? Math.round(w/(w+l)*100) : null;
+  });
+  const calibN       = calibKeys.map(k => confBuckets[k].w + confBuckets[k].l);
+  // Target calibration: well-tuned model should hit these approximately
+  const calibTargets = [68, 57, 47];
+
+  const ctxCalib = document.getElementById('chartCalib').getContext('2d');
+  _charts.calib = new Chart(ctxCalib, {
+    type: 'bar',
+    data: {
+      labels: calibNames.map((n,i) => calibN[i] > 0 ? `${n} (n=${calibN[i]})` : n),
+      datasets: [
+        {
+          label: 'Tatsächliche Win Rate',
+          data: calibActual,
+          backgroundColor: calibActual.map(v => v == null ? 'rgba(139,148,158,.3)' : v >= 58 ? 'rgba(63,185,80,.75)' : v >= 47 ? 'rgba(227,179,65,.75)' : 'rgba(248,81,73,.75)'),
+          borderRadius: 6, order: 2
+        },
+        {
+          label: 'Ziel-Kalibrierung',
+          data: calibTargets,
+          type: 'line',
+          borderColor: 'rgba(167,139,250,.9)',
+          borderDash: [5,3], borderWidth: 2,
+          pointRadius: 5, pointBackgroundColor: '#a78bfa',
+          backgroundColor: 'transparent', order: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true, labels: { color: '#8b949e', boxWidth: 14, font: {size:11} } },
+        tooltip: { callbacks: { label: ctx => ctx.datasetIndex === 0 ? ` Win Rate: ${ctx.raw ?? '–'}%` : ` Ziel: ${ctx.raw}%` } }
+      },
+      scales: {
+        y: { min: 25, max: 100, ticks: { color: '#8b949e', callback: v => v+'%' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color: '#8b949e' }, grid: { display: false } }
+      }
+    }
+  });
+
+  // ── CHART 5: Rolling Form (10-Pick Fenster) ──────────────────
+  const allChron = _resultsData
+    .flatMap(e => e.picks.map(p => ({...p, dateIso: e.dateIso})))
+    .filter(p => p.result === 'win' || p.result === 'loss')
+    .sort((a,b) => (a.dateIso||'').localeCompare(b.dateIso||''));
+  const ROLL = 10;
+  const rollingWR = allChron.map((_, i) => {
+    const slice = allChron.slice(Math.max(0, i - ROLL + 1), i + 1);
+    return Math.round(slice.filter(p => p.result === 'win').length / slice.length * 100);
+  });
+
+  const ctxRolling = document.getElementById('chartRolling').getContext('2d');
+  _charts.rolling = new Chart(ctxRolling, {
+    type: 'line',
+    data: {
+      labels: allChron.map((_, i) => `#${i+1}`),
+      datasets: [
+        {
+          data: rollingWR,
+          borderColor: '#a78bfa', backgroundColor: 'rgba(167,139,250,.1)',
+          fill: true, tension: 0.4, pointRadius: 2, borderWidth: 2
+        },
+        // 50% reference line
+        {
+          data: allChron.map(() => 50),
+          borderColor: 'rgba(248,81,73,.35)', borderDash: [4,4],
+          borderWidth: 1, pointRadius: 0, fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ctx.datasetIndex === 0 ? ` Win Rate: ${ctx.raw}%` : null } }
+      },
+      scales: {
+        y: { min: 0, max: 100, ticks: { color: '#8b949e', callback: v => v+'%' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color: '#8b949e', maxTicksLimit: 10 }, grid: { display: false } }
+      }
+    }
+  });
+
+  // ── CHART 6: Markt × Konfidenz Matrix (HTML table) ──────────
+  const _mlbls = { homeWin:'🏠 Heimsieg', awayWin:'✈️ Auswärtssieg', draw:'🤝 Unentschieden',
+    over25:'⚽ Über 2.5', under25:'🔒 Unter 2.5', over35:'🚀 Über 3.5',
+    btts:'🎯 Beide treffen', noBtts:'🚫 Keine btts' };
+  const mxData = {};
+  _resultsData.forEach(e => e.picks.forEach(p => {
+    const k = p.marketKey || 'other';
+    const c = p.conf || 'low';
+    if (!p.result || p.result === 'void') return;
+    if (!mxData[k]) mxData[k] = { high:{w:0,l:0}, medium:{w:0,l:0}, low:{w:0,l:0} };
+    if (p.result === 'win')  mxData[k][c].w++;
+    if (p.result === 'loss') mxData[k][c].l++;
+  }));
+
+  const _mxCell = (d, total) => {
+    const n = d.w + d.l;
+    if (n === 0) return `<td class="res-mx-cell-e">—</td>`;
+    const wr = Math.round(d.w / n * 100);
+    const cls = wr >= 58 ? 'res-mx-cell-g' : wr >= 46 ? 'res-mx-cell-y' : 'res-mx-cell-r';
+    const pct = total > 0 ? Math.round(n / total * 100) : 0;
+    return `<td class="${cls}"><div>${wr}%</div><div style="font-size:10px;opacity:.65;font-weight:400">n=${n}</div></td>`;
+  };
+
+  let mxHtml = `<table><thead><tr>
+    <th>Markt</th>
+    <th>★★★ Hoch</th><th>★★☆ Mittel</th><th>★☆☆ Niedrig</th><th>Gesamt</th>
+  </tr></thead><tbody>`;
+  // Sort by total volume desc
+  const mxSorted = Object.entries(mxData).sort((a,b) => {
+    const ta = Object.values(a[1]).reduce((s,v) => s+v.w+v.l, 0);
+    const tb = Object.values(b[1]).reduce((s,v) => s+v.w+v.l, 0);
+    return tb - ta;
+  });
+  mxSorted.forEach(([k, vals]) => {
+    const tot = {w:0,l:0};
+    Object.values(vals).forEach(v => { tot.w+=v.w; tot.l+=v.l; });
+    const total = tot.w+tot.l;
+    if (total === 0) return;
+    mxHtml += `<tr>
+      <td>${_mlbls[k] || k}</td>
+      ${_mxCell(vals.high, total)}${_mxCell(vals.medium, total)}${_mxCell(vals.low, total)}${_mxCell(tot, total)}
+    </tr>`;
+  });
+  mxHtml += '</tbody></table>';
+  const mxEl = document.getElementById('chartMatrix');
+  if (mxEl) mxEl.innerHTML = mxHtml;
+
+  // ── CHART 7: Value Check ─────────────────────────────────────
+  const vData = {};
+  _resultsData.forEach(e => e.picks.forEach(p => {
+    if (!p.result || p.result === 'void' || !p.odds) return;
+    const k = p.marketKey || 'other';
+    if (!vData[k]) vData[k] = { w:0, l:0, oddsSum:0, n:0 };
+    if (p.result === 'win')  vData[k].w++;
+    if (p.result === 'loss') vData[k].l++;
+    vData[k].oddsSum += p.odds;
+    vData[k].n++;
+  }));
+  const vEntries = Object.entries(vData)
+    .filter(([,v]) => v.w + v.l >= 5)
+    .sort((a,b) => (b[1].w+b[1].l) - (a[1].w+a[1].l));
+  const vLabels  = vEntries.map(([k]) => (_mlbls[k] || k).replace(/[🏠✈️🤝⚽🔒🚀🎯🚫]/u, '').trim());
+  const vImplied = vEntries.map(([,v]) => v.n > 0 ? Math.round(100 / (v.oddsSum / v.n)) : 0);
+  const vActual  = vEntries.map(([,v]) => { const t=v.w+v.l; return t>0?Math.round(v.w/t*100):0; });
+
+  const ctxV = document.getElementById('chartValue').getContext('2d');
+  _charts.value = new Chart(ctxV, {
+    type: 'bar',
+    data: {
+      labels: vLabels,
+      datasets: [
+        { label: 'Impliziert (aus Quote)', data: vImplied, backgroundColor: 'rgba(139,148,158,.35)', borderRadius: 4 },
+        { label: 'Tatsächlich', data: vActual,
+          backgroundColor: vActual.map((v,i) => v > vImplied[i] ? 'rgba(63,185,80,.75)' : 'rgba(248,81,73,.65)'),
+          borderRadius: 4 }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true, labels: { color: '#8b949e', boxWidth: 14, font:{size:11} } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}%` } }
+      },
+      scales: {
+        y: { min: 20, max: 100, ticks: { color: '#8b949e', callback: v => v+'%' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color: '#8b949e', font:{size:11} }, grid: { display: false } }
+      }
+    }
+  });
+
+  // ── CHART 8: Wöchentlicher Trend ─────────────────────────────
+  const _isoWeek = dateStr => {
+    const d = new Date(dateStr);
+    if (isNaN(d)) return null;
+    const dt = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    dt.setUTCDate(dt.getUTCDate() + 4 - (dt.getUTCDay() || 7));
+    const y1 = new Date(Date.UTC(dt.getUTCFullYear(), 0, 1));
+    const kw = String(Math.ceil((((dt - y1) / 86400000) + 1) / 7)).padStart(2,'0');
+    return `${dt.getUTCFullYear()}-KW${kw}`;
+  };
+  const wkData = {};
+  _resultsData.forEach(e => e.picks.forEach(p => {
+    if (!p.result || p.result === 'void' || !e.dateIso) return;
+    const wk = _isoWeek(e.dateIso);
+    if (!wk) return;
+    if (!wkData[wk]) wkData[wk] = { w:0, l:0 };
+    if (p.result === 'win')  wkData[wk].w++;
+    if (p.result === 'loss') wkData[wk].l++;
+  }));
+  const wkKeys = Object.keys(wkData).sort();
+  const wkLabels = wkKeys.map(k => k.slice(-5));   // "KW42"
+  const wkWR = wkKeys.map(k => {
+    const {w,l} = wkData[k];
+    return w+l >= 2 ? Math.round(w/(w+l)*100) : null;
+  });
+  const wkColors = wkWR.map(v => v == null ? '#8b949e' : v >= 55 ? '#3fb950' : v >= 45 ? '#e3b341' : '#f85149');
+
+  const ctxW = document.getElementById('chartWeekly').getContext('2d');
+  _charts.weekly = new Chart(ctxW, {
+    type: 'line',
+    data: {
+      labels: wkLabels,
+      datasets: [
+        {
+          data: wkWR,
+          borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,.10)',
+          fill: true, tension: 0.3, spanGaps: true,
+          pointRadius: 5, pointBackgroundColor: wkColors,
+          pointBorderColor: wkColors, borderWidth: 2
+        },
+        // 50% reference
+        {
+          data: wkKeys.map(() => 50),
+          borderColor: 'rgba(248,81,73,.3)', borderDash: [4,4],
+          borderWidth: 1, pointRadius: 0, fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ctx.datasetIndex === 0 && ctx.raw != null ? ` Win Rate: ${ctx.raw}%` : null } }
+      },
+      scales: {
+        y: { min: 0, max: 100, ticks: { color: '#8b949e', callback: v => v+'%' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color: '#8b949e', maxTicksLimit: 12 }, grid: { display: false } }
       }
     }
   });

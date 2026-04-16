@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>BetEdge Backtest v3 — Pressure Validation</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: #0d1117; color: #c9d1d9; padding: 24px; }
+  h1 { color: #f0f6fc; font-size: 26px; margin-bottom: 6px; }
+  h2 { color: #f0f6fc; font-size: 18px; margin: 28px 0 12px; padding-bottom: 6px;
+        border-bottom: 1px solid #30363d; }
+  .subtitle { color: #8b949e; margin-bottom: 24px; font-size: 13px; }
+  .badge { display:inline-block; background:#21262d; border:1px solid #30363d;
+            border-radius:6px; padding:3px 10px; font-size:12px; margin-right:8px; }
+  .badge.v3  { border-color:#7c3aed; color:#a78bfa; }
+  .badge.new { border-color:#0ea5e9; color:#7dd3fc; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+           gap:16px; margin-bottom:28px; }
+  .card { background:#161b22; border:1px solid #30363d; border-radius:8px; padding:16px; }
+  .card .label { color:#8b949e; font-size:12px; margin-bottom:4px; }
+  .card .value { font-size:24px; font-weight:700; color:#f0f6fc; }
+  .card .sub   { font-size:11px; color:#8b949e; margin-top:4px; }
+  table { width:100%; border-collapse:collapse; margin-bottom:24px; font-size:13px; }
+  th { background:#161b22; color:#8b949e; text-align:left; padding:8px 10px;
+        border-bottom:2px solid #30363d; font-size:12px; font-weight:600; }
+  td { padding:7px 10px; border-bottom:1px solid #21262d; }
+  tr:hover td { background:#161b22; }
+  .findings { background:#161b22; border:1px solid #30363d; border-radius:8px;
+               padding:18px 22px; margin-bottom:24px; }
+  .findings ul { padding-left:18px; }
+  .delta-hero { background:#161b22; border:1px solid #7c3aed; border-radius:10px;
+                 padding:20px 24px; margin-bottom:24px; text-align:center; }
+  .legend { display:flex; gap:18px; flex-wrap:wrap; font-size:12px; color:#8b949e;
+             margin-bottom:20px; }
+  .legend span { display:flex; align-items:center; gap:6px; }
+  .dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+</style>
+</head>
+<body>
+<h1>⚡ BetEdge Backtest v3 — Pressure System Validation</h1>
+<div class="subtitle">
+  Generiert: 16.04.2026 15:38 &nbsp;|&nbsp; Saisons: 2223, 2324, 2425 &nbsp;|&nbsp;
+  Ligen: 11 &nbsp;|&nbsp; Picks gesamt: 24,606
+  <br style="margin:4px 0">
+  <span class="badge v3">v3 NEU</span> Live-Tabellen-Rekonstruktion aus CSV-Resultaten
+  <span class="badge new">NEU</span> Pressure-System: pressureRatio / mustWin / canDraw
+  <span class="badge">v2 Basis</span> shots-xG · CS/FTS-Raten · Hard Gate · liga-Caps
+</div>
+
+<div class="delta-hero">
+  <div style="font-size:14px;color:#8b949e;margin-bottom:8px">Gesamteffekt Pressure-Schicht (v3 vs. v2)</div>
+  <span style='color:#fb923c;font-size:28px;font-weight:700'>-0.3pp ↓</span> v2 besser als v3
+  <div style="font-size:13px;color:#8b949e;margin-top:8px">
+    v2: 52.6% &nbsp;→&nbsp; v3: 52.3% &nbsp;|&nbsp;
+    MustWin-Spiele: 549 &nbsp;|&nbsp; Picks geändert: 687
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <div class="label">Picks gesamt</div>
+    <div class="value">24,606</div>
+    <div class="sub">nach Warmup (6 Spiele)</div>
+  </div>
+  <div class="card">
+    <div class="label">🔥 MustWin-Spiele</div>
+    <div class="value">549</div>
+    <div class="sub">2.2% aller Picks — mind. 1 Team unter Druck</div>
+  </div>
+  <div class="card">
+    <div class="label">💤 Dead Rubbers</div>
+    <div class="value">22,158</div>
+    <div class="sub">90.1% — beide Teams entspannt</div>
+  </div>
+  <div class="card">
+    <div class="label">🔄 Picks geändert</div>
+    <div class="value">687</div>
+    <div class="sub">2.8% — v2≠v3 Markt</div>
+  </div>
+</div>
+
+<div class="legend">
+  <span><span class="dot" style="background:#22c55e"></span>Hit-Rate ≥65% / Delta ≥+2pp</span>
+  <span><span class="dot" style="background:#a3e635"></span>≥50% / ≥+0.5pp</span>
+  <span><span class="dot" style="background:#888"></span>Neutral</span>
+  <span><span class="dot" style="background:#fb923c"></span>&lt;50% / negativ</span>
+  <span><span class="dot" style="background:#f85149"></span>&lt;40% / stark negativ</span>
+</div>
+
+<h2>🔍 Auto-Findings</h2>
+<div class="findings"><ul><li style='margin-bottom:10px'>⚖️ <strong>Gesamteffekt minimal:</strong> Pressure-Schicht ändert Gesamttrefferquote um nur -0.3pp — das ist statistisch nicht signifikant. Beide Modelle performen vergleichbar.</li><li style='margin-bottom:10px'>📈 <strong>MustWin-Spiele:</strong> leichte Verbesserung von +0.7pp — Trend in die richtige Richtung, aber zu schwach für sichere Aussage.</li><li style='margin-bottom:10px'>🔄 <strong>687 Picks (2.8%)</strong> wurden durch Pressure von v2 zu v3 geändert (anderer Markt). MustWin-Spiele: 549 (2.2%). Dead Rubbers: 22,158.</li><li style='margin-bottom:10px'>🏆 <strong>Stärkster Pressure-Effekt:</strong> 🇮🇹 Serie A mit +0.3pp durch v3 — Liga mit besonders klaren Drucksituationen.</li></ul></div>
+
+<h2>⚡ Pressure-Kategorien: v2 vs. v3 Vergleich</h2>
+<p style="color:#8b949e;font-size:12px;margin-bottom:12px">
+  Kernfrage: Hilft das Pressure-Signal in den Situationen wo es am meisten wirken sollte?
+</p>
+<table>
+  <tr>
+    <th>Kategorie</th><th>n</th>
+    <th>HR v2</th><th>HR v3</th><th>Δ HR</th>
+    <th>ROI v2</th><th>ROI v3</th><th>Δ ROI</th>
+  </tr>
+  <tr>
+          <td style="font-weight:600">🔥 MustWin (≥1 Team unter Druck)</td>
+          <td>549</td>
+          <td style="color:#a3e635">54.3%</td>
+          <td style="color:#a3e635">55.0%</td>
+          <td style="color:#a3e635;font-weight:700">+0.7pp</td>
+          <td style="color:#fb923c">-3.3%</td>
+          <td style="color:#fb923c">-1.7%</td>
+          <td style="color:#a3e635">+1.6pp</td>
+        </tr><tr>
+          <td style="font-weight:600">💤 Dead Rubber (beide entspannt)</td>
+          <td>22,158</td>
+          <td style="color:#a3e635">52.5%</td>
+          <td style="color:#a3e635">52.2%</td>
+          <td style="color:#888;font-weight:700">-0.3pp</td>
+          <td style="color:#fb923c">-3.7%</td>
+          <td style="color:#fb923c">-3.6%</td>
+          <td style="color:#888">+0.1pp</td>
+        </tr><tr>
+          <td style="font-weight:600">⚖️ Neutral</td>
+          <td>1,899</td>
+          <td style="color:#a3e635">52.7%</td>
+          <td style="color:#a3e635">53.0%</td>
+          <td style="color:#888;font-weight:700">+0.3pp</td>
+          <td style="color:#fb923c">-2.9%</td>
+          <td style="color:#fb923c">-2.1%</td>
+          <td style="color:#a3e635">+0.9pp</td>
+        </tr>
+</table>
+
+<h2>📊 Markt × Konfidenz (v2 vs. v3)</h2>
+<table>
+  <tr>
+    <th>Markt</th><th>Konfidenz</th><th>n</th>
+    <th>HR v2</th><th>HR v3</th><th>Δ HR</th>
+    <th>ROI v2</th><th>ROI v3</th>
+  </tr>
+  <tr>
+          <td>🏠 Heimsieg</td>
+          <td>★★★ Hoch</td>
+          <td>687</td>
+          <td style="color:#22c55e">68.0%</td>
+          <td style="color:#22c55e">68.0%</td>
+          <td style="color:#888;font-weight:700">+0.0pp</td>
+          <td style="color:#fb923c">-1.7%</td>
+          <td style="color:#fb923c">-1.7%</td>
+        </tr><tr>
+          <td>🏠 Heimsieg</td>
+          <td>★★☆ Mittel</td>
+          <td>1,581</td>
+          <td style="color:#a3e635">58.4%</td>
+          <td style="color:#a3e635">58.4%</td>
+          <td style="color:#888;font-weight:700">-0.1pp</td>
+          <td style="color:#fb923c">-1.5%</td>
+          <td style="color:#fb923c">-1.6%</td>
+        </tr><tr>
+          <td>🏠 Heimsieg</td>
+          <td>★☆☆ Niedrig</td>
+          <td>2,898</td>
+          <td style="color:#fb923c">46.5%</td>
+          <td style="color:#fb923c">44.8%</td>
+          <td style="color:#fb923c;font-weight:700">-1.7pp</td>
+          <td style="color:#fb923c">-4.9%</td>
+          <td style="color:#fb923c">-3.5%</td>
+        </tr><tr>
+          <td>✈️ Auswärtssieg</td>
+          <td>★★★ Hoch</td>
+          <td>497</td>
+          <td style="color:#a3e635">59.8%</td>
+          <td style="color:#a3e635">59.8%</td>
+          <td style="color:#888;font-weight:700">+0.0pp</td>
+          <td style="color:#a3e635">+2.5%</td>
+          <td style="color:#a3e635">+2.5%</td>
+        </tr><tr>
+          <td>✈️ Auswärtssieg</td>
+          <td>★★☆ Mittel</td>
+          <td>468</td>
+          <td style="color:#a3e635">53.8%</td>
+          <td style="color:#a3e635">54.1%</td>
+          <td style="color:#888;font-weight:700">+0.2pp</td>
+          <td style="color:#fb923c">-1.0%</td>
+          <td style="color:#fb923c">-0.3%</td>
+        </tr><tr>
+          <td>✈️ Auswärtssieg</td>
+          <td>★☆☆ Niedrig</td>
+          <td>969</td>
+          <td style="color:#fb923c">43.0%</td>
+          <td style="color:#fb923c">40.8%</td>
+          <td style="color:#f85149;font-weight:700">-2.3pp</td>
+          <td style="color:#f85149">-9.9%</td>
+          <td style="color:#f85149">-11.1%</td>
+        </tr><tr>
+          <td>🤝 Unentschieden</td>
+          <td>★★★ Hoch</td>
+          <td>23</td>
+          <td style="color:#f85149">17.4%</td>
+          <td style="color:#f85149">17.4%</td>
+          <td style="color:#888;font-weight:700">+0.0pp</td>
+          <td style="color:#f85149">-33.2%</td>
+          <td style="color:#f85149">-33.2%</td>
+        </tr><tr>
+          <td>🤝 Unentschieden</td>
+          <td>★☆☆ Niedrig</td>
+          <td>1,079</td>
+          <td style="color:#f85149">27.4%</td>
+          <td style="color:#f85149">28.3%</td>
+          <td style="color:#a3e635;font-weight:700">+0.8pp</td>
+          <td style="color:#fb923c">-2.6%</td>
+          <td style="color:#fb923c">-1.1%</td>
+        </tr><tr>
+          <td>⚽ Über 2.5</td>
+          <td>★★★ Hoch</td>
+          <td>6,538</td>
+          <td style="color:#a3e635">56.4%</td>
+          <td style="color:#a3e635">56.4%</td>
+          <td style="color:#888;font-weight:700">+0.0pp</td>
+          <td style="color:#fb923c">-3.8%</td>
+          <td style="color:#fb923c">-3.8%</td>
+        </tr><tr>
+          <td>⚽ Über 2.5</td>
+          <td>★★☆ Mittel</td>
+          <td>1,216</td>
+          <td style="color:#fb923c">48.2%</td>
+          <td style="color:#fb923c">48.2%</td>
+          <td style="color:#888;font-weight:700">+0.0pp</td>
+          <td style="color:#fb923c">-4.1%</td>
+          <td style="color:#fb923c">-4.1%</td>
+        </tr><tr>
+          <td>⚽ Über 2.5</td>
+          <td>★☆☆ Niedrig</td>
+          <td>286</td>
+          <td style="color:#fb923c">46.2%</td>
+          <td style="color:#fb923c">45.8%</td>
+          <td style="color:#888;font-weight:700">-0.3pp</td>
+          <td style="color:#fb923c">-3.1%</td>
+          <td style="color:#f85149">-8.2%</td>
+        </tr><tr>
+          <td>🔒 Unter 2.5</td>
+          <td>★★☆ Mittel</td>
+          <td>41</td>
+          <td style="color:#a3e635">58.5%</td>
+          <td style="color:#a3e635">58.5%</td>
+          <td style="color:#888;font-weight:700">+0.0pp</td>
+          <td style="color:#fb923c">-2.8%</td>
+          <td style="color:#fb923c">-2.8%</td>
+        </tr><tr>
+          <td>🔒 Unter 2.5</td>
+          <td>★☆☆ Niedrig</td>
+          <td>117</td>
+          <td style="color:#a3e635">61.5%</td>
+          <td style="color:#a3e635">61.5%</td>
+          <td style="color:#888;font-weight:700">+0.0pp</td>
+          <td style="color:#a3e635">+2.0%</td>
+          <td style="color:#a3e635">+2.4%</td>
+        </tr><tr>
+          <td>🎯 Beide treffen</td>
+          <td>★★★ Hoch</td>
+          <td>270</td>
+          <td style="color:#a3e635">61.5%</td>
+          <td style="color:#a3e635">61.5%</td>
+          <td style="color:#888;font-weight:700">+0.0pp</td>
+          <td style="color:#888">–</td>
+          <td style="color:#888">–</td>
+        </tr><tr>
+          <td>🎯 Beide treffen</td>
+          <td>★★☆ Mittel</td>
+          <td>1,638</td>
+          <td style="color:#a3e635">58.7%</td>
+          <td style="color:#a3e635">58.7%</td>
+          <td style="color:#888;font-weight:700">+0.0pp</td>
+          <td style="color:#888">–</td>
+          <td style="color:#888">–</td>
+        </tr><tr>
+          <td>🎯 Beide treffen</td>
+          <td>★☆☆ Niedrig</td>
+          <td>6,294</td>
+          <td style="color:#a3e635">52.6%</td>
+          <td style="color:#a3e635">52.6%</td>
+          <td style="color:#888;font-weight:700">+0.0pp</td>
+          <td style="color:#888">–</td>
+          <td style="color:#888">–</td>
+        </tr>
+</table>
+
+<h2>🌍 Ligen-Übersicht (v2 vs. v3)</h2>
+<table>
+  <tr><th>Liga</th><th>n</th><th>HR v2</th><th>HR v3</th><th>Δ HR</th></tr>
+  <tr>
+          <td>🇧🇪 Belgian Pro League</td>
+          <td>2,331</td>
+          <td style="color:#a3e635">52.4%</td>
+          <td style="color:#a3e635">52.0%</td>
+          <td style="color:#888;font-weight:700">-0.3pp</td>
+        </tr><tr>
+          <td>🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League</td>
+          <td>2,877</td>
+          <td style="color:#a3e635">54.5%</td>
+          <td style="color:#a3e635">53.8%</td>
+          <td style="color:#fb923c;font-weight:700">-0.7pp</td>
+        </tr><tr>
+          <td>🇪🇸 La Liga</td>
+          <td>2,871</td>
+          <td style="color:#fb923c">49.1%</td>
+          <td style="color:#fb923c">49.4%</td>
+          <td style="color:#888;font-weight:700">+0.3pp</td>
+        </tr><tr>
+          <td>🇫🇷 Ligue 1</td>
+          <td>2,472</td>
+          <td style="color:#a3e635">52.1%</td>
+          <td style="color:#a3e635">51.9%</td>
+          <td style="color:#888;font-weight:700">-0.2pp</td>
+        </tr><tr>
+          <td>🇩🇪 Bundesliga</td>
+          <td>2,268</td>
+          <td style="color:#a3e635">55.4%</td>
+          <td style="color:#a3e635">55.0%</td>
+          <td style="color:#888;font-weight:700">-0.4pp</td>
+        </tr><tr>
+          <td>🇮🇹 Serie A</td>
+          <td>2,880</td>
+          <td style="color:#fb923c">49.4%</td>
+          <td style="color:#fb923c">49.7%</td>
+          <td style="color:#888;font-weight:700">+0.3pp</td>
+        </tr><tr>
+          <td>🇳🇱 Eredivisie</td>
+          <td>2,259</td>
+          <td style="color:#a3e635">54.7%</td>
+          <td style="color:#a3e635">54.2%</td>
+          <td style="color:#888;font-weight:700">-0.5pp</td>
+        </tr><tr>
+          <td>🇵🇹 Primeira Liga</td>
+          <td>2,268</td>
+          <td style="color:#a3e635">50.8%</td>
+          <td style="color:#a3e635">50.3%</td>
+          <td style="color:#888;font-weight:700">-0.5pp</td>
+        </tr><tr>
+          <td>🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scottish Prem</td>
+          <td>1,725</td>
+          <td style="color:#a3e635">53.9%</td>
+          <td style="color:#a3e635">53.6%</td>
+          <td style="color:#888;font-weight:700">-0.3pp</td>
+        </tr><tr>
+          <td>🇹🇷 Süper Lig</td>
+          <td>2,655</td>
+          <td style="color:#a3e635">54.8%</td>
+          <td style="color:#a3e635">54.5%</td>
+          <td style="color:#888;font-weight:700">-0.3pp</td>
+        </tr>
+</table>
+
+<h2>💡 Methodische Hinweise</h2>
+<div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:16px 20px;font-size:13px;color:#8b949e;line-height:1.7">
+  <p><strong style="color:#c9d1d9">Tabellenrekonstruktion statt API-Calls:</strong>
+  Die Liga-Tabelle wird aus den CSV-Resultaten selbst rekonstruiert (chronologisch).
+  Dies liefert denselben Informationsgehalt wie API-Football /standings?round=X —
+  ohne ~570 API-Calls und unabhängig von Rate-Limits.</p>
+  <br>
+  <p><strong style="color:#c9d1d9">Pressure-Berechnung:</strong>
+  pressureRatio = (benötigte Punkte / maximal erreichbare Punkte).
+  Safe-Position = Gesamtteams − Abstiegsplätze − Playoff-Plätze.
+  Competitor-adjusted: der safe-Team gewinnt ebenfalls ~1.2 PPG weiter.
+  mustWin wenn pressureRatio &gt; 0.65, canDraw wenn &lt; 0.30.</p>
+  <br>
+  <p><strong style="color:#c9d1d9">Pressure-Adjustments:</strong>
+  mustWin home → Heimsieg +0.14, Draw −0.09.
+  mustWin away → Auswärtssieg +0.11, Draw −0.09.
+  Beide mustWin → Over2.5 +0.08, BTTS +0.07.
+  Beide canDraw → Draw +0.10, Over2.5 −0.05.</p>
+  <br>
+  <p><strong style="color:#c9d1d9">Warmup:</strong> 6 Spiele pro Team &amp; Saison
+  bevor Picks simuliert werden (vermeidet Kaltstartfehler).</p>
+</div>
+
+<div style="text-align:center;margin-top:32px;color:#484f58;font-size:11px">
+  BetEdge Backtest v3 · Saisons 2223, 2324, 2425 · 11 Ligen
+</div>
+</body>
+</html>
