@@ -3619,20 +3619,32 @@ function getBettingPicks(match, odds, leagueKey) {
     if (o && o > 2.00) {
       switch (p.market) {
         case 'Heimsieg': {
-          if (_bkrPH && _bkrPD) {
-            const dnb = (_bkrPH + _bkrPD) / _bkrPH;
-            const raw = 1 / _bkrPH;
+          // Use blended prob if available, else fall back to bookie odds directly
+          const _pH = _bkrPH || (o ? (1/o) * 1.03 : null);
+          const _pD = _bkrPD || null;
+          if (_pH && _pD) {
+            const dnb = (_pH + _pD) / _pH;
+            const raw = 1 / _pH;
             const ah  = _r2((dnb + raw) / 2);
-            if (ah >= 1.35 && ah <= 2.50) p.saferAlt = { market: 'AH -0.25 Heim', estOdds: ah };
+            if (ah >= 1.35 && ah <= 2.90) p.saferAlt = { market: 'AH -0.25 Heim', estOdds: ah };
+          } else if (_pH) {
+            // No draw prob — approximate AH via DNB only
+            const dnbOnly = _r2(1 / _pH);
+            if (dnbOnly >= 1.35 && dnbOnly <= 2.90) p.saferAlt = { market: 'DNB: Heimteam', estOdds: dnbOnly };
           }
           break;
         }
         case 'Auswärtssieg': {
-          if (_bkrPA && _bkrPD) {
-            const dnb = (_bkrPA + _bkrPD) / _bkrPA;
-            const raw = 1 / _bkrPA;
+          const _pA = _bkrPA || (o ? (1/o) * 1.03 : null);
+          const _pD = _bkrPD || null;
+          if (_pA && _pD) {
+            const dnb = (_pA + _pD) / _pA;
+            const raw = 1 / _pA;
             const ah  = _r2((dnb + raw) / 2);
-            if (ah >= 1.35 && ah <= 2.50) p.saferAlt = { market: 'AH -0.25 Auswärts', estOdds: ah };
+            if (ah >= 1.35 && ah <= 2.90) p.saferAlt = { market: 'AH -0.25 Auswärts', estOdds: ah };
+          } else if (_pA) {
+            const dnbOnly = _r2(1 / _pA);
+            if (dnbOnly >= 1.35 && dnbOnly <= 2.90) p.saferAlt = { market: 'DNB: Auswärtsteam', estOdds: dnbOnly };
           }
           break;
         }
