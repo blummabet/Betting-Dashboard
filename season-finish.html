@@ -3018,8 +3018,12 @@ function getBettingPicks(match, odds, leagueKey) {
       const _o25H2hNote = (_h2hSample && _h2hOver25 != null)
         ? ` Historisch ${Math.round(_h2hOver25*100)}% der ${h2hN} Duelle über 2.5 Tore${_h2hAvgG!=null?' (Ø '+_h2hAvgG+' Tore/Spiel)':''}.`
         : '';
-      const _o25ApiNote = (_apiGoalsH !== null && _apiGoalsA !== null)
-        ? `<br>🤖 API-Modell: ${_apiGoalsH.toFixed(1)}H + ${_apiGoalsA.toFixed(1)}A = ${(_apiGoalsH+_apiGoalsA).toFixed(1)} Tore erwartet.`
+      const _o25ApiTotal = (_apiGoalsH !== null && _apiGoalsA !== null && _apiGoalsH > 0 && _apiGoalsA > 0)
+        ? _apiGoalsH + _apiGoalsA : null;
+      const _o25ApiNote = _o25ApiTotal !== null
+        ? (_o25ApiTotal >= 2.5
+            ? `<br>🤖 API-Modell erwartet ${_o25ApiTotal.toFixed(1)} Tore — bestätigt die Over-Prognose.`
+            : `<br>⚠️ API-Modell erwartet nur ${_o25ApiTotal.toFixed(1)} Tore — geht von weniger Toren aus.`)
         : '';
       // Hard gate: Kein Over 2.5-Pick wenn Modell selbst < 2.5 Tore erwartet (verhindert Widersprüche)
       const _o25GoalText = expGoals > 2.8
