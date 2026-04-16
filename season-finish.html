@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BetEdge – Season Finish</title>
+<title>CocoBet – Season Finish</title>
 <style>
 :root {
   --bg:#0d1117; --card:#161b22; --card2:#1c2128; --border:#30363d;
@@ -94,8 +94,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   padding:0 20px; display:flex; align-items:stretch; gap:0; position:sticky; top:0; z-index:200;
 }
 .top-nav-logo{display:flex;align-items:center;gap:8px;padding:0 16px 0 0;margin-right:8px;border-right:1px solid var(--border);}
-.top-nav-logo .li{font-size:20px;}
-.top-nav-logo .lt{font-size:16px;font-weight:700;color:var(--accent);}
+.top-nav-logo .logo-img{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+.top-nav-logo .logo-fallback{width:36px;height:36px;border-radius:50%;background:#f5c518;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.top-nav-logo .lt{font-size:16px;font-weight:700;color:#f5c518;letter-spacing:.02em;}
+.top-nav-logo .li{display:none;}
 .top-nav-btn{
   display:flex;align-items:center;gap:6px;padding:14px 18px;background:none;border:none;
   border-bottom:3px solid transparent;margin-bottom:-1px;
@@ -170,6 +172,20 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   transform:translateY(-4px);
   box-shadow:0 16px 40px rgba(0,0,0,.45);
 }
+/* CocoBet Watermark */
+.card-watermark{
+  position:absolute;bottom:12px;right:14px;
+  width:52px;height:52px;border-radius:50%;
+  opacity:.07;pointer-events:none;z-index:0;
+  overflow:hidden;
+}
+.card-watermark img{width:100%;height:100%;object-fit:cover;}
+.card-watermark-fallback{
+  position:absolute;bottom:12px;right:14px;
+  font-size:28px;opacity:.06;pointer-events:none;z-index:0;
+  user-select:none;
+}
+
 /* Top accent bar */
 .stake-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:1;
@@ -758,7 +774,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <!-- TOP NAV -->
 <div class="top-nav">
-  <div class="top-nav-logo"><span class="li">⚽</span><span class="lt">BetEdge</span></div>
+  <div class="top-nav-logo">
+    <img src="cocobet-logo.png" alt="CocoBet" class="logo-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="logo-fallback" style="display:none">🐕</div>
+    <span class="lt">CocoBet</span>
+  </div>
   <a href="betting-dashboard.html" class="top-nav-btn">⚡ Daily Picks</a>
   <button class="top-nav-btn active" id="navSeason" onclick="showView('season')">🏁 Season Finish</button>
   <button class="top-nav-btn" id="navResults" onclick="showView('results')">📊 Results</button>
@@ -791,7 +811,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
   <!-- Hero -->
   <div class="heart-hero">
-    <h1>❤️ Das Herz von BetEdge</h1>
+    <h1>❤️ Das Herz von CocoBet</h1>
     <p>Hier ist alles dokumentiert was unter der Haube passiert — jede Datenquelle, jede Logik, jeder Score. Kein Black Box. Du siehst exakt warum eine Wette empfohlen wird und was sie von Standard-Portalen unterscheidet.</p>
   </div>
 
@@ -812,7 +832,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div class="heart-card" style="border-color:rgba(56,139,253,.30);background:rgba(56,139,253,.04);">
         <h3>📈 Sharp Money Radar</h3>
         <p>Jedes Spiel hat eine <strong style="color:var(--text)">Opening-Quote</strong> (erste Beobachtung, eingefroren) und eine <strong style="color:var(--text)">aktuelle Quote</strong> (alle 3h aktualisiert). Die Differenz zeigt wo professionelle Wetter ihr Geld hinschicken.</p>
-        <p style="margin-top:8px;">Quoten fallen von 2.20 auf 1.85? Das ist <strong style="color:#58a6ff">SHARP Money</strong> — institutionelles Kapital das den Preis drückt. BetEdge erkennt das automatisch und markiert es farblich auf jeder Card: Grün wenn es unseren Pick bestätigt, Rot wenn es ihm widerspricht.</p>
+        <p style="margin-top:8px;">Quoten fallen von 2.20 auf 1.85? Das ist <strong style="color:#58a6ff">SHARP Money</strong> — institutionelles Kapital das den Preis drückt. CocoBet erkennt das automatisch und markiert es farblich auf jeder Card: Grün wenn es unseren Pick bestätigt, Rot wenn es ihm widerspricht.</p>
       </div>
     </div>
   </div>
@@ -4779,12 +4799,12 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   ctx.beginPath(); ctx.moveTo(48,curY); ctx.lineTo(W-48,curY); ctx.stroke();
   curY+=2;
 
-  // BetEdge logo left with team color
+  // CocoBet logo left with team color
   ctx.font='bold 24px system-ui,sans-serif';
   const fBg=ctx.createLinearGradient(48,0,320,0);
   fBg.addColorStop(0,hC.main); fBg.addColorStop(1,aC.main);
   ctx.fillStyle=fBg; ctx.textAlign='left'; ctx.textBaseline='middle';
-  ctx.fillText('⚽ BetEdge',48,curY+34);
+  ctx.fillText('⚽ CocoBet',48,curY+34);
 
   ctx.font='16px system-ui,sans-serif'; ctx.fillStyle='#8b949e55';
   ctx.textAlign='right'; ctx.textBaseline='middle';
@@ -4815,7 +4835,7 @@ async function shareInfographic() {
     const res=await fetch(window._igDataUrl);
     const blob=await res.blob();
     const file=new File([blob], window._igFileName, {type:'image/png'});
-    await navigator.share({files:[file], title:'BetEdge Infografik'});
+    await navigator.share({files:[file], title:'CocoBet Infografik'});
   } catch(e) {}
 }
 
@@ -4964,7 +4984,7 @@ function shareTelegram(matchJson, leagueName, leagueFlag, leagueKey) {
   if (!visiblePicks.length) msg += `(Kein Pick mit ausreichender Konfidenz)\n`;
 
   msg += `${'─'.repeat(32)}\n`;
-  msg += `via BetEdge · Nur ab 18 Jahren`;
+  msg += `via CocoBet · Nur ab 18 Jahren`;
 
   // Try native desktop app first (tg:// scheme)
   // Falls back to web after 800ms if app didn't open
@@ -5070,7 +5090,7 @@ function copyCard(matchJson, leagueName, leagueFlag, leagueKey, btn) {
     msg += `${p.icon} ${p.market}${oddsStr}  ${confStr}\n`;
   }
   if (!visiblePicks.length) msg += `(Kein Pick mit ausreichender Konfidenz)\n`;
-  msg += `${'─'.repeat(32)}\nvia BetEdge · Nur ab 18 Jahren`;
+  msg += `${'─'.repeat(32)}\nvia CocoBet · Nur ab 18 Jahren`;
 
   navigator.clipboard.writeText(msg).then(() => {
     const orig = btn.textContent;
@@ -5699,6 +5719,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
   return `
   <div class="stake-card ${ct}">
+    <div class="card-watermark"><img src="cocobet-logo.png" alt="" onerror="this.parentElement.style.display='none'"></div>
     <div class="score-badge ${scoreClass(sc)}"><span class="sb-val">${sc}</span><span class="sb-sub">/12</span></div>
     <div class="card-top">
       <div class="card-meta">${leagueFlag} <span class="card-league-name">${leagueName}</span><span class="card-meta-sep">·</span><span class="card-date-inline">📅 ${match.date}${match.time ? ' · ' + match.time : ''}</span></div>
@@ -7102,16 +7123,16 @@ function generateScript(matchJson, leagueName, leagueFlag, leagueKey) {
 
   // ── Zusammenbauen ─────────────────────────────────────
   const intros = [
-    `Guten Abend und herzlich willkommen zur BetEdge Sportschau!`,
-    `Willkommen bei der BetEdge Sportschau — hier kommen eure Wett-Empfehlungen!`,
-    `Hallo und willkommen! Das ist die BetEdge Sportschau mit den besten Picks der Woche.`,
+    `Guten Abend und herzlich willkommen zur CocoBet Sportschau!`,
+    `Willkommen bei der CocoBet Sportschau — hier kommen eure Wett-Empfehlungen!`,
+    `Hallo und willkommen! Das ist die CocoBet Sportschau mit den besten Picks der Woche.`,
   ];
   const intro = intros[Math.floor(Math.random() * intros.length)];
 
   const outros = [
-    `Das war euer BetEdge Tipp für heute. Viel Erfolg — und mögen die Quoten mit euch sein!`,
-    `Das war die BetEdge Sportschau. Spielt verantwortungsvoll, und bis zum nächsten Spieltag!`,
-    `Bleibt dabei, trefft gute Entscheidungen — und bis zum nächsten BetEdge Update!`,
+    `Das war euer CocoBet Tipp für heute. Viel Erfolg — und mögen die Quoten mit euch sein!`,
+    `Das war die CocoBet Sportschau. Spielt verantwortungsvoll, und bis zum nächsten Spieltag!`,
+    `Bleibt dabei, trefft gute Entscheidungen — und bis zum nächsten CocoBet Update!`,
   ];
   const outro = outros[Math.floor(Math.random() * outros.length)];
 
