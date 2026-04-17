@@ -1743,14 +1743,19 @@ function getBettingAngle(match) {
   const bothConfRel = hConfRel && aConfRel;
 
   // ── Red-safe guard: in red zone positionally but already mathematically rescued ──
-  // pressure=0 AND ptNeeded=0 means they've secured survival, just sitting in the
-  // red zone due to positional label assignment. No urgent narrative warranted.
-  const hPR      = match.homeStake?.pressureRatio || 0;
-  const aPR      = match.awayStake?.pressureRatio || 0;
-  const hPN      = match.homeStake?.pointsNeeded  || 0;
-  const aPN      = match.awayStake?.pointsNeeded  || 0;
-  const hRedSafe = hc.includes('red') && hMotivAngle !== 'none' && hPR === 0 && hPN === 0;
-  const aRedSafe = ac.includes('red') && aMotivAngle !== 'none' && aPR === 0 && aPN === 0;
+  // IMPORTANT: use strict equality (=== 0) not || 0 default — if pressureRatio/pointsNeeded
+  // are missing from the data (undefined), we must NOT treat that as "safely rescued".
+  // Missing data = unknown situation = assume they're still fighting.
+  // A team is only redSafe if the data EXPLICITLY says pressure=0 AND pointsNeeded=0.
+  const hPR      = match.homeStake?.pressureRatio ?? null;
+  const aPR      = match.awayStake?.pressureRatio ?? null;
+  const hPN      = match.homeStake?.pointsNeeded  ?? null;
+  const aPN      = match.awayStake?.pointsNeeded  ?? null;
+  // redSafe requires BOTH pressure signals to agree: pressureRatio=0 AND motivationLevel='low'.
+  // motivationLevel='full' means the system still considers them actively fighting — don't
+  // override that with a "safe" narrative just because the PPG-based pressureRatio hit 0.
+  const hRedSafe = hc.includes('red') && hMotivAngle === 'low' && hPR === 0 && hPN === 0;
+  const aRedSafe = ac.includes('red') && aMotivAngle === 'low' && aPR === 0 && aPN === 0;
   const anyRedSafe  = hRedSafe || aRedSafe;
   const bothRedSafe = hRedSafe && aRedSafe;
 
@@ -3862,12 +3867,12 @@ function computeMatchScore(match, leagueKey) {
   // ── Red-safe: in red zone but already mathematically rescued (no real urgency) ──
   const _hMotCS = match.homeStake?.motivationLevel;
   const _aMotCS = match.awayStake?.motivationLevel;
-  const _hPRcs  = match.homeStake?.pressureRatio || 0;
-  const _aPRcs  = match.awayStake?.pressureRatio || 0;
-  const _hPNcs  = match.homeStake?.pointsNeeded  || 0;
-  const _aPNcs  = match.awayStake?.pointsNeeded  || 0;
-  const _hRScs  = hc.includes('red') && _hMotCS !== 'none' && _hPRcs === 0 && _hPNcs === 0;
-  const _aRScs  = ac.includes('red') && _aMotCS !== 'none' && _aPRcs === 0 && _aPNcs === 0;
+  const _hPRcs  = match.homeStake?.pressureRatio ?? null;
+  const _aPRcs  = match.awayStake?.pressureRatio ?? null;
+  const _hPNcs  = match.homeStake?.pointsNeeded  ?? null;
+  const _aPNcs  = match.awayStake?.pointsNeeded  ?? null;
+  const _hRScs  = hc.includes('red') && _hMotCS === 'low' && _hPRcs === 0 && _hPNcs === 0;
+  const _aRScs  = ac.includes('red') && _aMotCS === 'low' && _aPRcs === 0 && _aPNcs === 0;
   const _anyRScs = _hRScs || _aRScs;
 
   let score;
