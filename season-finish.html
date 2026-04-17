@@ -2084,9 +2084,15 @@ async function loadAllOdds() {
     if (cached && Date.now() - cached.ts < CACHE_TTL && Object.keys(cached.data).length > 0) {
       window._oddsData = cached.data;
       window._oddsReady = true;
+      window._oddsCacheAge  = Math.round((Date.now() - cached.ts) / 60000);
+      window._oddsP1Ok      = Object.keys(cached.data).length;
+      window._oddsBttsLgs   = '(cache)';
+      window._oddsAltLgs    = '(cache)';
+      window._oddsRemaining = null;
       return;
     }
   } catch(e) {}
+  window._oddsCacheAge = null; // live fetch
 
   // ── Fetch Pass 1: EU region — h2h + spreads (AH) + totals (O/U) ──────────
   let oddsApiOk = 0, oddsApiErr = '', oddsApiQuota = null;
@@ -2111,7 +2117,9 @@ async function loadAllOdds() {
       }
     } catch(e) { oddsApiErr = e.message; }
   }));
-  window._oddsReady = true;
+  window._oddsReady    = true;
+  window._oddsP1Ok     = oddsApiOk;
+  window._oddsRemaining = oddsApiQuota;
   if (oddsApiErr) console.warn(`[TheOddsAPI] Pass1: ${oddsApiErr}`);
   else console.log(`[TheOddsAPI] OK — ${oddsApiOk} Ligen geladen${oddsApiQuota !== null ? ' · Remaining: '+oddsApiQuota : ''}`);
 
@@ -2145,6 +2153,7 @@ async function loadAllOdds() {
       if (bttsEvents.length > 0) bttsOk++;
     } catch(e) { /* silent */ }
   }));
+  window._oddsBttsLgs = bttsOk;
   if (bttsOk > 0) console.log(`[TheOddsAPI] BTTS enriched — ${bttsOk} Ligen`);
 
   // ── Fetch Pass 3: EU region — Corners + Cards + Double Chance ────────────
@@ -2177,6 +2186,7 @@ async function loadAllOdds() {
       if (altEvents.length > 0) altOk++;
     } catch(e) { /* silent */ }
   }));
+  window._oddsAltLgs = altOk;
   if (altOk > 0) console.log(`[TheOddsAPI] Corners/Cards/DC enriched — ${altOk} Ligen`);
 
   // ── Save to cache ─────────────────────────────────────────────────────────
@@ -6755,9 +6765,30 @@ async function showPreMatchDebug() {
   const withH2h  = entries.filter(([,d]) => d.h2h?.avgGoals != null).length;
   const withOdds = entries.filter(([,d]) => d.odds).length;
 
-  // Check API quota (fast — uses /status endpoint, costs 0 API credits on some plans)
-  let apiStatusLine = '⏳ Prüfe API-Quota...';
-  // Detect data source: GitHub Actions JSON, local server, or CORS proxy
+  // ── The Odds API live coverage (iterate _oddsData, parse each event) ───────
+  let oddsTotal=0, oddsBtts=0, oddsCorn=0, oddsCards=0, oddsDC=0, oddsAH=0;
+  const odData = window._oddsData || {};
+  for (const events of Object.values(odData)) {
+    for (const ev of events) {
+      const r = _parseTheOddsEvent(ev);
+      if (r.hw && r.aw) oddsTotal++;
+      if (r.bttsY)              oddsBtts++;
+      if (r.co85 || r.co95)     oddsCorn++;
+      if (r.cards_o35 || r.cards_o45) oddsCards++;
+      if (r.dc1X_bkr)           oddsDC++;
+      if (r.ah_h)               oddsAH++;
+    }
+  }
+  const totalLeagues   = Object.keys(odData).length;
+  const p1Ok           = window._oddsP1Ok    ?? totalLeagues;
+  const bttsLg         = window._oddsBttsLgs ?? '?';
+  const altLg          = window._oddsAltLgs  ?? '?';
+  const remain         = window._oddsRemaining ?? '?';
+  const cacheAgeMin    = window._oddsCacheAge;
+  const cacheNote      = cacheAgeMin != null ? `aus Cache (${cacheAgeMin}min alt)` : 'Live-Fetch';
+
+  // ── API-Football quota ─────────────────────────────────────────────────────
+  let apifLine = '⏳ Prüfe API-Football Quota...';
   let _dataSource = '(Browser / CORS-Proxy)';
   try {
     const _jChk = await fetch('prematch-data.json', { signal: AbortSignal.timeout(1000) });
@@ -6769,19 +6800,56 @@ async function showPreMatchDebug() {
     const _sd = await _st.json();
     const _sub = (_sd.response || {}).subscription || {};
     const _req = (_sd.response || {}).requests || {};
-    apiStatusLine = `API Plan: ${_sub.plan||'?'} ${_proxyNote} | Requests heute: ${_req.current??'?'} / ${_req.limit_day??'?'} | Verbleibend: ${(_req.limit_day??0) - (_req.current??0)}`;
-  } catch(e) { apiStatusLine = `API-Status nicht abrufbar: ${e.message} ${_proxyNote}`; }
+    apifLine = `Plan: ${_sub.plan||'?'} ${_proxyNote} | Requests heute: ${_req.current??'?'} / ${_req.limit_day??'?'} | Verbleibend: ${(_req.limit_day??0)-(_req.current??0)}`;
+  } catch(e) { apifLine = `API-Status nicht abrufbar: ${e.message} ${_proxyNote}`; }
 
-  // Collect errors from last load
+  // ── Error log ──────────────────────────────────────────────────────────────
   const errLog = (window._pmErrors || []).join('\n') || '(keine Fehler)';
 
-  // Build full text (copyable)
+  // ── Sample entry ───────────────────────────────────────────────────────────
   const [sampleKey, sampleD] = total ? entries[0] : ['–', {}];
+  const sO = sampleD.odds || {};
+
   const lines = [
     `🔬 Pre-Match API Status  —  ${new Date().toLocaleTimeString('de-AT')}`,
     ``,
-    `${apiStatusLine}`,
+    `── API-Football ──────────────────────────────────────────────────────`,
+    apifLine,
     ``,
+    `── The Odds API ──────────────────────────────────────────────────────`,
+    `Datenquelle:    ${cacheNote} | Quota verbleibend: ${remain}`,
+    `Pass 1 (EU  h2h + spreads + totals):          ${p1Ok} Ligen OK`,
+    `Pass 2 (UK  btts):                            ${bttsLg} Ligen enriched`,
+    `Pass 3 (EU  corners + cards + double_chance): ${altLg} Ligen enriched`,
+    ``,
+    `── The Odds API Feldabdeckung (über alle ${oddsTotal} Events mit h/a-Quoten) ─`,
+    `Events mit BTTS-Quote (bttsY):       ${oddsBtts}`,
+    `Events mit Ecken-Quote (co85+):      ${oddsCorn}`,
+    `Events mit Karten-Quote (cards_o35): ${oddsCards}`,
+    `Events mit Double Chance (dc1X_bkr): ${oddsDC}`,
+    `Events mit Asian Handicap (ah_h):    ${oddsAH}`,
+    ``,
+    `── Markt-Status ──────────────────────────────────────────────────────`,
+    `✅  Heimsieg / Auswärtssieg / Unentschieden`,
+    `    → h2h  (Pass 1 EU)`,
+    `✅  Über/Unter 2.5 / 3.5 Tore`,
+    `    → totals  (Pass 1 EU)`,
+    `✅  Beide Teams treffen`,
+    `    → btts  (Pass 2 UK — EU gibt 422)`,
+    `✅  Doppelte Chance 1X / X2`,
+    `    → double_chance  (Pass 3 EU) + abgeleitet aus fairen Wahrscheinlichkeiten`,
+    `✅  Über/Unter 8.5–11.5 Ecken`,
+    `    → alternate_totals_corners  (Pass 3 EU) + Poisson-Fallback`,
+    `✅  Über/Unter 3.5–5.5 Karten`,
+    `    → alternate_totals_cards  (Pass 3 EU) + Poisson-Fallback`,
+    `⚠️  Handicap Heim/Auswärts -0.5 / -0.75 / -1.0`,
+    `    → spreads gefetcht (ah_h/ah_a), aber Pick-Logik verwendet immer _ahEstO (Modell)`,
+    `❌  Unter 1.5 Tore`,
+    `    → odds:null hardcoded; u15 wird nicht aus The Odds API geparst`,
+    `❌  1. HZ: Over 0.5 / Under 0.5 / BTTS / Under 1.5`,
+    `    → h2h_h1 / totals_h1 / btts_h1 werden nicht gefetcht (nur alter _parseOddsBets)`,
+    ``,
+    `── Pre-Match Daten ───────────────────────────────────────────────────`,
     `Spiele gematcht:   ${total}`,
     `Mit Fixture-ID:    ${withFx}`,
     `Mit Team-IDs:      ${withTeam}`,
@@ -6789,25 +6857,30 @@ async function showPreMatchDebug() {
     `Mit Schiri-Stats:  ${withSR}   ← Karten-Modifier`,
     `Mit Verletzungen:  ${withInj}`,
     `Mit H2H-Tordaten:  ${withH2h}   ← Over/BTTS-Modifier`,
-    `Mit Quoten:        ${withOdds}`,
+    `Mit Odds (JSON):   ${withOdds}   ← prematch-data.json Fallback`,
     ``,
-    `── Fehler beim letzten Ladevorgang ──────────────────`,
+    `── Fehler beim letzten Ladevorgang ──────────────────────────────────`,
     errLog,
     ``,
-    `── Beispiel-Eintrag (${sampleKey}) ──────────────────`,
+    `── Beispiel-Eintrag (${sampleKey}) ──────────────────────────────────`,
     `fixtureId:    ${sampleD.fixtureId ?? '–'}`,
     `homeTeamId:   ${sampleD.homeTeamId ?? '–'}   awayTeamId: ${sampleD.awayTeamId ?? '–'}`,
     `referee:      ${sampleD.referee || '(keiner)'}`,
     `refStats:     ${JSON.stringify(sampleD.refereeStats ?? null)}`,
     `injuries:     H=${sampleD.injuries?.home?.length??0}  A=${sampleD.injuries?.away?.length??0}`,
     `h2h:          ${sampleD.h2h ? `avgGoals=${sampleD.h2h.avgGoals}  over25=${sampleD.h2h.over25Rate}  btts=${sampleD.h2h.bttsRate}` : 'null'}`,
-    `odds:         ${sampleD.odds ? JSON.stringify(sampleD.odds) : 'null'}`,
+    `odds.hw:      ${sO.hw ?? '–'}   odds.aw: ${sO.aw ?? '–'}   odds.dr: ${sO.dr ?? '–'}`,
+    `odds.o25:     ${sO.o25 ?? '–'}   odds.u25: ${sO.u25 ?? '–'}   odds.o35: ${sO.o35 ?? '–'}`,
+    `odds.bttsY:   ${sO.bttsY ?? '–'}   odds.dc1X_bkr: ${sO.dc1X_bkr ?? '–'}`,
+    `odds.co85:    ${sO.co85 ?? '–'}   odds.co95: ${sO.co95 ?? '–'}   odds.co105: ${sO.co105 ?? '–'}`,
+    `odds.cards35: ${sO.cards_o35 ?? '–'}   odds.cards45: ${sO.cards_o45 ?? '–'}`,
+    `odds.ah_h:    ${sO.ah_h ?? '–'}(${sO.ah_h_point ?? '–'})   odds.ah_a: ${sO.ah_a ?? '–'}(${sO.ah_a_point ?? '–'})`,
     ``,
-    `── Alle Einträge (JSON) ─────────────────────────────`,
+    `── Alle Einträge (JSON) ──────────────────────────────────────────────`,
     JSON.stringify(pm, null, 2)
   ].join('\n');
 
-  // Show copyable overlay — initial content while API status loads
+  // Show copyable overlay
   let ov = document.getElementById('pmDebugOverlay');
   if (!ov) {
     ov = document.createElement('div');
@@ -6819,7 +6892,7 @@ async function showPreMatchDebug() {
     document.body.appendChild(ov);
   }
   ov.innerHTML = `
-    <div style="background:#0d1117;border:1px solid #30363d;border-radius:12px;width:min(700px,95vw);max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:12px;width:min(740px,95vw);max-height:85vh;display:flex;flex-direction:column;overflow:hidden">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #21262d">
         <span style="color:#e3b341;font-weight:700;font-size:13px">🔬 Pre-Match API Status</span>
         <div style="display:flex;gap:8px">
