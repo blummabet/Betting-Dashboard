@@ -27,9 +27,12 @@ const path  = require('path');
 const WRITE_MODE = process.argv.includes('--write');
 
 // ── Config ──────────────────────────────────────────────────────────────────
-// API Key: zuerst Environment Variable (GitHub Secret), dann Fallback für lokalen Dev
+// API-Football key (injuries, H2H, referee stats, fixtures, bookings)
 const API_KEY   = process.env.APISPORTS_KEY || '9f36726c1bdc9957b4a49f89277b80db';
 const API_HOST  = 'v3.football.api-sports.io';
+// The Odds API key (all pre-match odds incl. same-day — replaces API-Football /odds)
+const ODDS_API_KEY  = process.env.ODDS_API_KEY || 'e33cee8d4ce8d646476115c7d1e3f3e4';
+const ODDS_API_HOST = 'api.the-odds-api.com';
 
 // Nur diese Ligen fetchen — verhindert 7000+ Spiele pro Tag weltweit
 // api-football League IDs: https://www.api-football.com/documentation-v3#tag/Leagues
@@ -49,6 +52,25 @@ const LEAGUE_IDS = {
   106: 'Ekstraklasa',
   271: 'NB I',
   210: 'HNL',
+};
+
+// The Odds API sport keys — one call per key fetches ALL upcoming fixtures for that league.
+// Far more efficient than API-Football (15 calls vs 136 per run) + covers same-day games.
+const LEAGUE_ODDS_KEYS = {
+  39:  'soccer_epl',
+  78:  'soccer_germany_bundesliga',
+  135: 'soccer_italy_serie_a',
+  140: 'soccer_spain_la_liga',
+  61:  'soccer_france_ligue_one',
+  218: 'soccer_austria_bundesliga',
+  88:  'soccer_netherlands_eredivisie',
+  94:  'soccer_portugal_primeira_liga',
+  179: 'soccer_scotland_premiership',
+  203: 'soccer_turkey_super_league',
+  144: 'soccer_belgium_first_div_a',
+  106: 'soccer_poland_ekstraklasa',
+  271: 'soccer_hungary_nb_i',
+  210: 'soccer_croatia_hnl',
 };
 const PORT      = 3001;
 const CACHE_TTL = 6 * 3600 * 1000;  // 6 Stunden
@@ -82,6 +104,148 @@ function apiFetch(urlPath) {
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ── The Odds API helper ──────────────────────────────────────────────────────
+// Fetches ALL upcoming odds for a given sport in one call (h2h + spreads + totals + btts).
+// Returns { data: [...events], remaining: '19950' }
+function oddsApiFetch(sportKey) {
+  return new Promise((resolve, reject) => {
+    const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
+      + `&regions=eu&markets=h2h,spreads,totals,btts&oddsFormat=decimal`;
+    const options = { hostname: ODDS_API_HOST, path, method: 'GET',
+      headers: { 'User-Agent': 'CocoBet/1.0' } };
+    const req = https.request(options, res => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => {
+        try {
+          const data = JSON.parse(body);
+          const remaining = res.headers['x-requests-remaining'] || null;
+          resolve({ data, remaining });
+        } catch(e) { reject(new Error(`JSON parse: ${e.message}`)); }
+      });
+    });
+    req.on('error', reject);
+    req.setTimeout(15000, () => { req.destroy(); reject(new Error(`Timeout: ${sportKey}`)); });
+    req.end();
+  });
+}
+
+// Normalize team names for fuzzy matching across APIs (API-Football vs The Odds API)
+// Examples: "Inter" ↔ "Inter Milan", "HNK Hajduk Split" ↔ "Hajduk Split"
+function normTeam(n) {
+  return (n || '').toLowerCase()
+    .replace(/[àáâãäå]/g, 'a').replace(/[èéêë]/g, 'e').replace(/[ìíîï]/g, 'i')
+    .replace(/[òóôõöø]/g, 'o').replace(/[ùúûü]/g, 'u').replace(/[ß]/g, 'ss')
+    .replace(/\b(fc|sv|sc|ac|ss|rc|sk|bsc|rb|vfb|vfl|1\.fc|tsv|spvgg|as|us|cd|cf|hnk|nk|gks|rsca|rsc)\b/g, ' ')
+    .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+// Find the matching Odds API event for a fixture by team names + date
+function matchOddsEvent(fixtureHome, fixtureAway, fixtureDate, oddsEvents) {
+  const hN = normTeam(fixtureHome), aN = normTeam(fixtureAway);
+  for (const e of oddsEvents) {
+    // compare YYYY-MM-DD (UTC) — Odds API uses ISO8601 commence_time
+    const eDate = (e.commence_time || '').slice(0, 10);
+    if (eDate !== fixtureDate) continue;
+    const ehN = normTeam(e.home_team), eaN = normTeam(e.away_team);
+    // Bidirectional contains-check + word-level match (handles "Inter" ↔ "Inter Milan")
+    const homeOk = ehN.includes(hN) || hN.includes(ehN)
+                 || hN.split(' ').some(w => w.length > 3 && ehN.includes(w));
+    const awayOk = eaN.includes(aN) || aN.includes(eaN)
+                 || aN.split(' ').some(w => w.length > 3 && eaN.includes(w));
+    if (homeOk && awayOk) return e;
+  }
+  return null;
+}
+
+// Parse a The Odds API event into the same odds object format as parseBets().
+// Produces: hw, dr, aw, hw_fair, dr_fair, aw_fair, _cn, bttsY, bttsN,
+//           o25, u25, o35, u35, o15, dc1X_bkr, dcX2_bkr, dc12_bkr,
+//           ah_h, ah_h_point, ah_a, ah_a_point
+function parseTheOddsEvent(oddsEvent) {
+  const r = {};
+  const books = oddsEvent.bookmakers || [];
+  if (!books.length) return r;
+  const hTeam = normTeam(oddsEvent.home_team);
+  const aTeam = normTeam(oddsEvent.away_team);
+  // Pinnacle first for primary-market values
+  const sorted = [...books].sort((a, b) => (a.key === 'pinnacle' ? 0 : 1) - (b.key === 'pinnacle' ? 0 : 1));
+
+  // ── Pass 1: consensus fair 1X2 (Pinnacle 2×, others 1×) ───────────────────
+  const _samples = [];
+  for (const bkr of books) {
+    const h2h = (bkr.markets || []).find(m => m.key === 'h2h');
+    if (!h2h) continue;
+    let hw = null, dr = null, aw = null;
+    for (const o of (h2h.outcomes || [])) {
+      const nm = normTeam(o.name);
+      if (nm === hTeam || hTeam.includes(nm) || nm.includes(hTeam)) hw = o.price;
+      else if (nm === aTeam || aTeam.includes(nm) || nm.includes(aTeam)) aw = o.price;
+      else dr = o.price;
+    }
+    if (!hw || !dr || !aw || isNaN(hw) || isNaN(dr) || isNaN(aw)) continue;
+    const tot = 1/hw + 1/dr + 1/aw, margin = tot - 1;
+    if (margin > 0.15 || margin < -0.02) continue;
+    _samples.push({ ph: (1/hw)/tot, pd: (1/dr)/tot, pa: (1/aw)/tot,
+                    weight: bkr.key === 'pinnacle' ? 2.0 : 1.0 });
+  }
+  if (_samples.length) {
+    const tw = _samples.reduce((s, d) => s + d.weight, 0);
+    const ph = _samples.reduce((s, d) => s + d.ph * d.weight, 0) / tw;
+    const pd = _samples.reduce((s, d) => s + d.pd * d.weight, 0) / tw;
+    const pa = _samples.reduce((s, d) => s + d.pa * d.weight, 0) / tw;
+    const n  = ph + pd + pa;
+    const r2 = x => Math.round(x * 100) / 100;
+    r.hw_fair  = r2(n / ph);
+    r.dr_fair  = r2(n / pd);
+    r.aw_fair  = r2(n / pa);
+    r._cn      = _samples.length;
+    // Derive Double Chance odds from fair probs (The Odds API has no DC market)
+    r.dc1X_bkr = r2(1 / (ph + pd));
+    r.dcX2_bkr = r2(1 / (pd + pa));
+    r.dc12_bkr = r2(1 / (ph + pa));
+  }
+
+  // ── Pass 2: primary market values ─────────────────────────────────────────
+  for (const bkr of sorted) {
+    for (const mkt of (bkr.markets || [])) {
+      const mk = mkt.key;
+      if (mk === 'h2h') {
+        for (const o of (mkt.outcomes || [])) {
+          const nm = normTeam(o.name);
+          if (!r.hw && (nm === hTeam || hTeam.includes(nm) || nm.includes(hTeam))) r.hw = o.price;
+          else if (!r.aw && (nm === aTeam || aTeam.includes(nm) || nm.includes(aTeam))) r.aw = o.price;
+          else if (!r.dr && o.price > 1.01) r.dr = o.price;
+        }
+      } else if (mk === 'totals') {
+        for (const o of (mkt.outcomes || [])) {
+          if      (o.name === 'Over'  && Math.abs(o.point - 2.5) < 0.01 && !r.o25) r.o25 = o.price;
+          else if (o.name === 'Under' && Math.abs(o.point - 2.5) < 0.01 && !r.u25) r.u25 = o.price;
+          else if (o.name === 'Over'  && Math.abs(o.point - 3.5) < 0.01 && !r.o35) r.o35 = o.price;
+          else if (o.name === 'Under' && Math.abs(o.point - 3.5) < 0.01 && !r.u35) r.u35 = o.price;
+          else if (o.name === 'Over'  && Math.abs(o.point - 1.5) < 0.01 && !r.o15) r.o15 = o.price;
+        }
+      } else if (mk === 'btts') {
+        for (const o of (mkt.outcomes || [])) {
+          if      (o.name === 'Yes' && !r.bttsY) r.bttsY = o.price;
+          else if (o.name === 'No'  && !r.bttsN) r.bttsN = o.price;
+        }
+      } else if (mk === 'spreads') {
+        // Asian Handicap — store the primary (most common) line per side
+        for (const o of (mkt.outcomes || [])) {
+          const nm = normTeam(o.name);
+          if (!r.ah_h_point && (nm === hTeam || hTeam.includes(nm) || nm.includes(hTeam))) {
+            r.ah_h_point = o.point; r.ah_h = o.price;
+          } else if (!r.ah_a_point) {
+            r.ah_a_point = o.point; r.ah_a = o.price;
+          }
+        }
+      }
+    }
+  }
+  return r;
+}
 
 // ── Date helper ──────────────────────────────────────────────────────────────
 function localIso(d) {
@@ -662,86 +826,65 @@ async function fetchAllPrematchData() {
   console.log(`[Server] Step4: ${uniqueRefs.length} Schiris in JSON (Stats werden im Browser geladen)`);
   // refereeStats bleibt null — Browser füllt sie via refStats_v5 Cache
 
-  // ── Step 5: Odds (upcoming games only) ───────────────────────────────────
-  // No bookmaker filter — fetch all bookmakers, parseBets() merges BTTS/DC/Cards from any.
+  // ── Step 5: The Odds API — Pre-Match Odds ────────────────────────────────
+  // One API call per league fetches ALL upcoming fixtures' odds at once.
+  // Covers same-day games (unlike API-Football which stops ~4 days before kickoff).
+  // Markets: h2h (1X2), spreads (AH), totals (O/U), btts.
+  // DC odds (dc1X/X2/12) are derived from fair h2h probabilities.
+  // Note: Cards market not available via The Odds API — Karten picks use model score only.
   const upcoming = fixtures.filter(d => !d.isFinished && d.fixtureId);
-  console.log(`[Server] Step5: Quoten für ${upcoming.length} bevorstehende Spiele (alle Bookmaker)...`);
-  let oddsOk = 0, oddsFail = 0;
-  let _firstOddsErr = null;  // capture first error/empty for diagnostics
+  const _uniqueSportKeys = [...new Set(
+    fixtures.filter(d => !d.isFinished && d.leagueId && LEAGUE_ODDS_KEYS[d.leagueId])
+            .map(d => LEAGUE_ODDS_KEYS[d.leagueId])
+  )];
+  console.log(`[Server] Step5 (TheOddsAPI): ${_uniqueSportKeys.length} Ligen, ~${upcoming.length} Spiele...`);
 
-  for (const d of upcoming) {
-    await sleep(1200);
+  const _sportKeyEvents = {};   // sportKey → events[]
+  let _oddsApiRemaining = null;
+  for (const sk of _uniqueSportKeys) {
+    await sleep(600);
     try {
-      const data = await apiFetch(`/odds?fixture=${d.fixtureId}`);
-      // Capture API-level errors (plan restriction, quota, etc.)
-      if (data.errors && Object.keys(data.errors).length && !_firstOddsErr) {
-        _firstOddsErr = { type: 'api_error', errors: data.errors, fixture: d.fixtureId };
-        console.warn(`  [Odds] API-Error für Fixture ${d.fixtureId}:`, JSON.stringify(data.errors));
-      }
-      const bookmakers = (data.response || [])[0]?.bookmakers || [];
-      if (bookmakers.length) {
-        // Log bookmaker/bet names for first successful fetch (once)
-        if (oddsOk === 0) {
-          const bkrNames = bookmakers.map(b => b.name).join(', ');
-          const betNames = [...new Set(bookmakers.flatMap(b => (b.bets||[]).map(bt => bt.name)))].join(', ');
-          console.log(`  [Odds] Sample bkrs: ${bkrNames}`);
-          console.log(`  [Odds] Sample bets: ${betNames}`);
-        }
-        const r = parseBets(bookmakers);
-        if (Object.keys(r).length) { d.odds = r; oddsOk++; }
-        else { oddsFail++; }
+      const { data, remaining } = await oddsApiFetch(sk);
+      if (remaining !== null) _oddsApiRemaining = remaining;
+      if (Array.isArray(data) && data.length > 0) {
+        _sportKeyEvents[sk] = data;
+        console.log(`  [OddsAPI] ${sk}: ${data.length} Events`);
+      } else if (Array.isArray(data)) {
+        _sportKeyEvents[sk] = [];
+        console.log(`  [OddsAPI] ${sk}: 0 Events (kein Spieltag oder Liga nicht verfügbar)`);
       } else {
-        // No bookmakers in response — log once for diagnostics
-        if (!_firstOddsErr) {
-          _firstOddsErr = { type: 'no_bookmakers', results: data.results, fixture: d.fixtureId };
-          console.warn(`  [Odds] Keine Bookmaker für Fixture ${d.fixtureId}: results=${data.results}, errors=${JSON.stringify(data.errors||{})}`);
-        }
-        oddsFail++;
+        _sportKeyEvents[sk] = [];
+        const errMsg = data?.message || JSON.stringify(data).slice(0, 80);
+        console.warn(`  [OddsAPI] ${sk}: Fehler — ${errMsg}`);
       }
     } catch(e) {
-      if (!_firstOddsErr) _firstOddsErr = { type: 'exception', message: e.message, fixture: d.fixtureId };
-      oddsFail++;
+      _sportKeyEvents[sk] = [];
+      console.warn(`  [OddsAPI] ${sk}: Exception — ${e.message}`);
     }
   }
-  if (_firstOddsErr) console.warn(`  [Odds] Erstes Problem:`, JSON.stringify(_firstOddsErr));
-  console.log(`  Step5 fertig: ${oddsOk} OK · ${oddsFail} leer/Fehler (von ${upcoming.length} Spielen)`);
+  if (_oddsApiRemaining !== null)
+    console.log(`[OddsAPI] Verbleibende Requests diesen Monat: ${_oddsApiRemaining}`);
 
-  // ── Step 5b: Late-fetch cards odds for fixtures ≤48h away ────────────────
-  // Card markets open later than 1X2/O2.5 — only worth re-fetching close to kickoff.
-  // Only targets fixtures that already have main odds (BTTS/DC present) but no cards.
-  const _d0 = new Date().toISOString().slice(0, 10);
-  const _d1 = new Date(Date.now() + 24 * 3600 * 1000).toISOString().slice(0, 10);
-  const _d2 = new Date(Date.now() + 48 * 3600 * 1000).toISOString().slice(0, 10);
-  const needCards = upcoming.filter(d =>
-    d.odds &&                                               // main odds exist (Step 5 succeeded)
-    !d.odds.cards_o35 && !d.odds.cards_o45 &&              // cards still missing
-    (d.date === _d0 || d.date === _d1 || d.date === _d2)   // kickoff within ~48h
-  );
-  if (needCards.length) {
-    console.log(`[Server] Step5b: Karten-Quoten Late-Fetch für ${needCards.length} Spiele ≤48h...`);
-    let cardsOk = 0;
-    for (const d of needCards) {
-      await sleep(1200);
-      try {
-        const data = await apiFetch(`/odds?fixture=${d.fixtureId}`);
-        const bookmakers = (data.response || [])[0]?.bookmakers || [];
-        if (bookmakers.length) {
-          const r = parseBets(bookmakers);
-          // Merge only card fields — don't overwrite existing 1X2/BTTS/DC/Goals odds
-          if (r.cards_o35 || r.cards_o45) {
-            if (r.cards_o35)  d.odds.cards_o35  = r.cards_o35;
-            if (r.cards_u35)  d.odds.cards_u35  = r.cards_u35;
-            if (r.cards_o45)  d.odds.cards_o45  = r.cards_o45;
-            if (r.cards_u45)  d.odds.cards_u45  = r.cards_u45;
-            if (r.cards_o55)  d.odds.cards_o55  = r.cards_o55;
-            cardsOk++;
-            console.log(`  [Step5b] ✅ ${d.homeTeamName} vs ${d.awayTeamName}: cards o35=${r.cards_o35||'-'} o45=${r.cards_o45||'-'}`);
-          }
+  let oddsOk = 0, oddsMiss = 0;
+  for (const d of upcoming) {
+    const sk = d.leagueId ? LEAGUE_ODDS_KEYS[d.leagueId] : null;
+    const events = sk ? (_sportKeyEvents[sk] || []) : [];
+    const matched = matchOddsEvent(d.homeTeamName, d.awayTeamName, d.date, events);
+    if (matched) {
+      const parsed = parseTheOddsEvent(matched);
+      if (Object.keys(parsed).length > 0) {
+        d.odds = parsed;
+        // Log first successful parse for diagnostics
+        if (oddsOk === 0) {
+          const bkrNames = matched.bookmakers.map(b => b.title || b.key).join(', ');
+          console.log(`  [OddsAPI] Sample Bookies: ${bkrNames}`);
+          console.log(`  [OddsAPI] Sample Parsed: hw=${parsed.hw} dr=${parsed.dr} aw=${parsed.aw} bttsY=${parsed.bttsY||'-'} o25=${parsed.o25||'-'} ah_h=${parsed.ah_h||'-'}@${parsed.ah_h_point}`);
         }
-      } catch(e) { /* silent — cards are bonus data, never block the run */ }
-    }
-    console.log(`  Step5b fertig: ${cardsOk}/${needCards.length} Spiele mit Karten-Quoten gefunden`);
+        oddsOk++;
+      } else { oddsMiss++; }
+    } else { oddsMiss++; }
   }
+  console.log(`  Step5 fertig: ${oddsOk} OK · ${oddsMiss} kein Match (von ${upcoming.length} Spielen)`);
 
   // ── Step 5.5: API Predictions ─────────────────────────────────────────────
   // /predictions returns the API-Football model's expected goals, result percentages

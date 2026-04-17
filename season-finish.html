@@ -1885,7 +1885,7 @@ function getBettingAngle(match) {
 // ═══════════════════════════════════════════════════════
 //  LIVE ODDS ENGINE (the-odds-api.com · Pinnacle)
 // ═══════════════════════════════════════════════════════
-const ODDS_API_KEY   = '95ee9d163cab37c1b57a359f1dd762ac';
+const ODDS_API_KEY   = 'e33cee8d4ce8d646476115c7d1e3f3e4';
 const APISPORTS_KEY  = '9f36726c1bdc9957b4a49f89277b80db';
 const APISPORTS_BASE = 'https://v3.football.api-sports.io';
 
@@ -1920,6 +1920,11 @@ const LEAGUE_SPORT_KEYS = {
   SCO:'soccer_scotland_premiership',
   TUR:'soccer_turkey_super_league',
   SUI:'soccer_switzerland_superleague',
+  // Additional leagues now fully covered:
+  BEL:'soccer_belgium_first_div_a',
+  POL:'soccer_poland_ekstraklasa',
+  HUN:'soccer_hungary_nb_i',
+  CRO:'soccer_croatia_hnl',
 };
 
 window._oddsData = {};
@@ -1938,55 +1943,108 @@ function norm(n) {
     .replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
 }
 
+// Parse a The Odds API event into our odds format.
+// Mirrors the server-side parseTheOddsEvent() in prematch-server.js.
+function _parseTheOddsEvent(g) {
+  const r = {};
+  const books = g.bookmakers || [];
+  if (!books.length) return r;
+  const hTeam = norm(g.home_team), aTeam = norm(g.away_team);
+  const sorted = [...books].sort((a,b) => (a.key==='pinnacle'?0:1)-(b.key==='pinnacle'?0:1));
+
+  // Pass 1: consensus fair 1X2 (Pinnacle 2×, others 1×)
+  const _samples = [];
+  for (const bkr of books) {
+    const h2h = (bkr.markets||[]).find(m=>m.key==='h2h');
+    if (!h2h) continue;
+    let hw=null, dr=null, aw=null;
+    for (const o of (h2h.outcomes||[])) {
+      const nm=norm(o.name);
+      if (nm===hTeam||hTeam.includes(nm)||nm.includes(hTeam)) hw=o.price;
+      else if (nm===aTeam||aTeam.includes(nm)||nm.includes(aTeam)) aw=o.price;
+      else dr=o.price;
+    }
+    if (!hw||!dr||!aw||isNaN(hw)||isNaN(dr)||isNaN(aw)) continue;
+    const tot=1/hw+1/dr+1/aw, margin=tot-1;
+    if (margin>0.15||margin<-0.02) continue;
+    _samples.push({ph:(1/hw)/tot,pd:(1/dr)/tot,pa:(1/aw)/tot,weight:bkr.key==='pinnacle'?2:1});
+  }
+  if (_samples.length) {
+    const tw=_samples.reduce((s,d)=>s+d.weight,0);
+    const ph=_samples.reduce((s,d)=>s+d.ph*d.weight,0)/tw;
+    const pd=_samples.reduce((s,d)=>s+d.pd*d.weight,0)/tw;
+    const pa=_samples.reduce((s,d)=>s+d.pa*d.weight,0)/tw;
+    const n=ph+pd+pa, r2=x=>Math.round(x*100)/100;
+    r.hw_fair=r2(n/ph); r.dr_fair=r2(n/pd); r.aw_fair=r2(n/pa); r._cn=_samples.length;
+    r.dc1X_bkr=r2(1/(ph+pd)); r.dcX2_bkr=r2(1/(pd+pa)); r.dc12_bkr=r2(1/(ph+pa));
+  }
+  // Pass 2: market values (Pinnacle first)
+  for (const bkr of sorted) {
+    for (const mkt of (bkr.markets||[])) {
+      const mk=mkt.key;
+      if (mk==='h2h') {
+        for (const o of (mkt.outcomes||[])) {
+          const nm=norm(o.name);
+          if (!r.hw&&(nm===hTeam||hTeam.includes(nm)||nm.includes(hTeam))) r.hw=o.price;
+          else if (!r.aw&&(nm===aTeam||aTeam.includes(nm)||nm.includes(aTeam))) r.aw=o.price;
+          else if (!r.dr&&o.price>1.01) r.dr=o.price;
+        }
+      } else if (mk==='totals') {
+        for (const o of (mkt.outcomes||[])) {
+          if      (o.name==='Over' &&Math.abs(o.point-2.5)<0.01&&!r.o25) r.o25=o.price;
+          else if (o.name==='Under'&&Math.abs(o.point-2.5)<0.01&&!r.u25) r.u25=o.price;
+          else if (o.name==='Over' &&Math.abs(o.point-3.5)<0.01&&!r.o35) r.o35=o.price;
+          else if (o.name==='Under'&&Math.abs(o.point-3.5)<0.01&&!r.u35) r.u35=o.price;
+          else if (o.name==='Over' &&Math.abs(o.point-1.5)<0.01&&!r.o15) r.o15=o.price;
+        }
+      } else if (mk==='btts') {
+        for (const o of (mkt.outcomes||[])) {
+          if (o.name==='Yes'&&!r.bttsY) r.bttsY=o.price;
+          if (o.name==='No' &&!r.bttsN) r.bttsN=o.price;
+        }
+      } else if (mk==='spreads') {
+        for (const o of (mkt.outcomes||[])) {
+          const nm=norm(o.name);
+          if (!r.ah_h_point&&(nm===hTeam||hTeam.includes(nm)||nm.includes(hTeam))) {
+            r.ah_h_point=o.point; r.ah_h=o.price;
+          } else if (!r.ah_a_point) {
+            r.ah_a_point=o.point; r.ah_a=o.price;
+          }
+        }
+      }
+    }
+  }
+  return r;
+}
+
 function findOdds(leagueKey, home, away) {
-  // ── Primary: API-Football Pinnacle odds (fetched during pre-match load) ──────
+  const hn = norm(home), an = norm(away);
+
+  // ── Primary: The Odds API live data (loadAllOdds runs on page load) ────────
+  const games = window._oddsData[leagueKey] || [];
+  for (const g of games) {
+    const ghn=norm(g.home_team), gan=norm(g.away_team);
+    const homeOk=ghn.includes(hn)||hn.includes(ghn)||hn.split(' ').some(w=>w.length>3&&ghn.includes(w));
+    const awayOk=gan.includes(an)||an.includes(gan)||an.split(' ').some(w=>w.length>3&&gan.includes(w));
+    if (homeOk && awayOk) {
+      const r = _parseTheOddsEvent(g);
+      if (Object.keys(r).length >= 2) return r;
+    }
+  }
+
+  // ── Fallback: prematch-data.json (server-side fetch via GitHub Actions) ────
+  // The server also uses The Odds API now, so this data is the same provider
+  // but may be up to 12h older. Good fallback for upcoming-week fixtures.
   const pm = window._preMatchData?.[`${home}|${away}`];
   if (pm?.odds && Object.keys(pm.odds).length >= 2) return pm.odds;
 
-  // ── Fallback: the-odds-api.com data (if quota available) ─────────────────────
-  const games = window._oddsData[leagueKey] || [];
-  const hn = norm(home), an = norm(away);
-  for (const g of games) {
-    const ghn = norm(g.home_team), gan = norm(g.away_team);
-    const homeOk = ghn.includes(hn) || hn.includes(ghn) || hn.split(' ').some(w=>w.length>3 && ghn.includes(w));
-    const awayOk = gan.includes(an) || an.includes(gan) || an.split(' ').some(w=>w.length>3 && gan.includes(w));
-    if (homeOk && awayOk) {
-      const book = (g.bookmakers||[])[0];
-      if (!book) continue;
-      const h2h = (book.markets||[]).find(m=>m.key==='h2h');
-      const tot = (book.markets||[]).find(m=>m.key==='totals');
-      const r = {};
-      if (h2h) {
-        for (const o of (h2h.outcomes||[])) {
-          if (o.name===g.home_team) r.hw=o.price;
-          else if (o.name===g.away_team) r.aw=o.price;
-          else r.dr=o.price;
-        }
-      }
-      if (tot) {
-        for (const o of (tot.outcomes||[])) {
-          if (o.name==='Over'  && Math.abs(o.point-2.5)<0.01) r.o25=o.price;
-          if (o.name==='Under' && Math.abs(o.point-2.5)<0.01) r.u25=o.price;
-          if (o.name==='Over'  && Math.abs(o.point-3.5)<0.01) r.o35=o.price;
-        }
-      }
-      const btts = (book.markets||[]).find(m=>m.key==='btts');
-      if (btts) {
-        for (const o of (btts.outcomes||[])) {
-          if (o.name==='Yes') r.bttsY=o.price;
-          if (o.name==='No')  r.bttsN=o.price;
-        }
-      }
-      return Object.keys(r).length ? r : null;
-    }
-  }
   return null;
 }
 
 async function loadAllOdds() {
-  // ── Cache: refresh once every 6h, don't waste monthly quota ─────────────
-  const CACHE_KEY = 'sfOddsCache_v3';
-  const CACHE_TTL = 6 * 3600 * 1000;
+  // ── Cache: refresh every 2h — odds move more often closer to kickoff ─────
+  const CACHE_KEY = 'sfOddsCache_v5';  // bumped: added spreads + 4 new leagues
+  const CACHE_TTL = 2 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
     if (cached && Date.now() - cached.ts < CACHE_TTL && Object.keys(cached.data).length > 0) {
@@ -1996,11 +2054,11 @@ async function loadAllOdds() {
     }
   } catch(e) {}
 
-  // ── Fetch: no bookmaker restriction → uses best available (bet365, unibet, etc.) ──
+  // ── Fetch: all bookmakers (eu region), includes AH spreads ───────────────
   let oddsApiOk = 0, oddsApiErr = '', oddsApiQuota = null;
   await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
     try {
-      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,totals,btts&oddsFormat=decimal`;
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,spreads,totals,btts&oddsFormat=decimal`;
       const resp = await fetch(url);
       // Track remaining quota from response headers
       if (resp.headers?.get('x-requests-remaining')) {
@@ -8345,78 +8403,13 @@ async function _enrichMissingData(result, cacheKey) {
     console.log(`[PreMatch] Enrich Step4 done: ${_refOk} with avgCards`);
   }
 
-  // ── Step 5: odds for upcoming fixtures still missing them ────────────────────
-  // Fetches ALL bookmakers (no filter) → _parseOddsBets merges BTTS/DC/Cards from any bookie
-  const _ODDS_CACHE_KEY = 'oddsData_v2';
-  const _ODDS_TTL = 6 * 3600 * 1000;
-  // Re-fetch if odds missing entirely OR if stale (missing BTTS/DC/Cards from old Pinnacle-only fetch)
-  // Limit to fixtures within next 72h — API-Football /odds only returns data ~3+ days before kickoff
-  // for same-day/tomorrow fixtures anyway, so fetching them burns quota without result.
-  const _nowMs  = Date.now();
-  const _72hMs  = 72 * 3600 * 1000;
-  const needOdds = Object.values(result).filter(d => {
-    if (!d.fixtureId || d.isFinished) return false;
-    if (d.odds != null && (d.odds.bttsY || d.odds.dc1X_bkr || d.odds.cards_o35)) return false;
-    // Only fetch odds for fixtures at least 24h away (API rarely has same-day data)
-    // and at most 7 days out (beyond that we'll get them on the next server run)
-    if (d.date) {
-      const _fxMs = new Date(d.date + 'T' + (d.time || '20:00') + ':00').getTime();
-      const _diffH = (_fxMs - _nowMs) / 3600000;
-      if (_diffH < 20 || _diffH > 168) return false;  // skip same-day and >7 days
-    }
-    return true;
-  });
-  if (needOdds.length) {
-    console.log(`[PreMatch] Enrich Step5: ${needOdds.length} fixtures needing odds (all bookmakers)`);
-    let _oddsOk = 0, _oddsFail = 0;
-    // Sequential with small delay — avoids burning free-plan quota (100/day) on parallel blasts
-    for (const d of needOdds) {
-    await (async d => {
-      try {
-        // Check sub-cache first (shorter TTL for partial/empty odds so they retry sooner)
-        try {
-          const _oc = JSON.parse(localStorage.getItem(_ODDS_CACHE_KEY) || '{}');
-          if (_oc[d.fixtureId]) {
-            const _cached = _oc[d.fixtureId];
-            const _hasComplete = _cached.data?.bttsY || _cached.data?.dc1X_bkr || _cached.data?.hw;
-            const _ttl = _hasComplete ? _ODDS_TTL : 60 * 60 * 1000; // complete: 6h, partial: 1h
-            if (Date.now() - _cached.ts < _ttl) { d.odds = _cached.data; _oddsOk++; return; }
-          }
-        } catch(e) {}
-        const resp = await fetch(
-          `${APISPORTS_BASE}/odds?fixture=${d.fixtureId}`,
-          { headers: { 'x-apisports-key': APISPORTS_KEY } }
-        );
-        if (!resp.ok) { _oddsFail++; return; }
-        const data = await resp.json();
-        const bookmakers = (data.response || [])[0]?.bookmakers || [];
-        if (!bookmakers.length) {
-          console.log(`[PreMatch] Step5 no bookmakers for fixture ${d.fixtureId}`);
-          _oddsFail++; return;
-        }
-        console.log('[PreMatch] Enrich Step5 bkrs:', bookmakers.map(b=>b.name).join(', '), '| bets:', bookmakers.flatMap(b=>b.bets?.map(bt=>bt.name)||[]).filter((v,i,a)=>a.indexOf(v)===i).join(', '));
-        const r = _parseOddsBets(bookmakers);
-        console.log('[PreMatch] Step5 parsed odds:', JSON.stringify(r).slice(0, 120));
-        if (Object.keys(r).length) {
-          d.odds = r; _oddsOk++;
-          // Only cache complete odds (has BTTS or DC) for full 6h; partial for 1h
-          const _hasBttsOrDc = r.bttsY || r.dc1X_bkr;
-          const _cacheTtl = _hasBttsOrDc ? _ODDS_TTL : 3600000; // 1h for partial
-          try {
-            const _oc = JSON.parse(localStorage.getItem(_ODDS_CACHE_KEY) || '{}');
-            _oc[d.fixtureId] = { ts: Date.now() - (_ODDS_TTL - _cacheTtl), data: r };
-            localStorage.setItem(_ODDS_CACHE_KEY, JSON.stringify(_oc));
-          } catch(e) {}
-        } else { console.log(`[PreMatch] Step5 parse returned empty for ${d.fixtureId}`); _oddsFail++; }
-      } catch(e) { _oddsFail++; }
-    })(d);
-    await new Promise(r => setTimeout(r, 400)); // 400ms between calls — ~150/min, safe on free plan
-    }
-    console.log(`[PreMatch] Enrich Step5 done: ${_oddsOk} OK · ${_oddsFail} fail/empty`);
-  }
+  // ── Step 5: Odds ─────────────────────────────────────────────────────────────
+  // Odds are now handled exclusively by loadAllOdds() (The Odds API — runs on page load).
+  // _enrichMissingData no longer calls API-Football /odds to avoid burning its quota.
+  // findOdds() checks window._oddsData (The Odds API live) first, then prematch-data.json fallback.
 
   // ── Persist enriched result + re-render ─────────────────────────────────────
-  if (uniqueRefs.length || needOdds.length || needH2H.length) {
+  if (uniqueRefs.length || needH2H.length) {
     try { localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data: result })); } catch(e) {}
     _injectPreMatchAndRerender();
   }

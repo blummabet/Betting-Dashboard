@@ -23,10 +23,11 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Fetch Pre-Match Data from API-Football
+      - name: Fetch Pre-Match Data
         run: node prematch-server.js --write
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         timeout-minutes: 10
 
       - name: Commit & Push
