@@ -1432,6 +1432,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <canvas id="chartRoi" height="130"></canvas>
   </div>
 
+  <!-- Tages-Performance -->
+  <div class="res-chart-card" style="margin-bottom:24px;">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:4px;">
+      <div class="res-chart-title">📅 Tages-Performance</div>
+      <div id="dailyWqsLegend" style="font-size:11px;color:var(--muted);display:flex;gap:14px;"></div>
+    </div>
+    <div class="res-chart-sub">Win Rate pro Tag · Balken = roh · Linie = score-gewichtet (trifft du die starken Picks?)</div>
+    <canvas id="chartDaily" height="150"></canvas>
+  </div>
+
   <!-- Kalibrierung + Rolling Form -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;" id="chartsRow2">
     <div class="res-chart-card">
@@ -7554,11 +7564,23 @@ function renderResultsStats() {
   const resolvedN = won + lost;
   const yieldPct  = resolvedN > 0 ? bankroll / (resolvedN * 10) * 100 : null;
 
+  // Score-gewichtete Win Rate: Picks mit hohem sc zählen mehr.
+  // wWR = Σ(sc × isWin) / Σ(sc)  — spiegelt ob du die "richtigen" Picks triffst.
+  const _scWon  = resolvedSorted.filter(p => p.result === 'win').reduce((s, p)  => s + (p.sc || 0.5), 0);
+  const _scAll  = resolvedSorted.reduce((s, p) => s + (p.sc || 0.5), 0);
+  const wWR     = _scAll > 0 ? Math.round(_scWon / _scAll * 100) : null;
+  const wWRDelta = (wWR !== null && wr !== null) ? wWR - wr : null;
+  const wWRStr  = wWR !== null
+    ? wWR + '%' + (wWRDelta !== null ? `\u2002(${wWRDelta >= 0 ? '+' : ''}${wWRDelta}pp)` : '')
+    : '—';
+
   const stats = [
     { val: total,              lbl: 'Picks gesamt',    color: 'var(--accent)' },
     { val: won,                lbl: '✅ Gewonnen',      color: '#3fb950' },
     { val: lost,               lbl: '❌ Verloren',      color: '#f85149' },
     { val: wr !== null ? wr + '%' : '—', lbl: 'Win Rate', color: wr >= 55 ? '#3fb950' : wr >= 45 ? '#e3b341' : '#f85149' },
+    { val: wWRStr,             lbl: '🎯 Gewichtete Win Rate', color: wWR >= 55 ? '#3fb950' : wWR >= 45 ? '#e3b341' : wWR !== null ? '#f85149' : '#8b949e',
+      title: '+pp = du triffst die High-Score-Picks öfter als die Low-Score-Picks' },
     { val: pending,            lbl: '⏳ Ausstehend',   color: '#8b949e' },
     { val: (bankroll >= 0 ? '+' : '') + bankroll.toFixed(0) + '€', lbl: 'Simulierter ROI', color: bankroll >= 0 ? '#3fb950' : '#f85149' },
     { val: streakVal,          lbl: 'Aktueller Streak', color: streakColor },
@@ -7567,7 +7589,7 @@ function renderResultsStats() {
   ];
 
   document.getElementById('resultsStats').innerHTML = stats.map(s => `
-    <div class="res-stat-card">
+    <div class="res-stat-card"${s.title ? ` title="${s.title}"` : ''}>
       <div class="res-stat-val" style="color:${s.color}">${s.val}</div>
       <div class="res-stat-lbl">${s.lbl}</div>
     </div>`).join('');
@@ -7920,6 +7942,132 @@ function renderResultsCharts() {
       }
     }
   });
+
+  // ── CHART 8: Tages-Performance ───────────────────────────────────────────
+  // Bar = raw win rate per day (green/yellow/red)
+  // Line = score-weighted win rate (picks with higher sc count more)
+  // This answers: "did I hit the high-confidence picks, or just lucky on weak ones?"
+
+  // Group all resolved picks by date, applying same filter window as stats
+  const _dailyMap = {};
+  let _dpFiltered = _resultsData.flatMap(e =>
+    e.picks
+      .filter(p => p.result === 'win' || p.result === 'loss')
+      .map(p => ({ dateIso: e.dateIso, result: p.result, sc: p.sc || 0.5 }))
+  );
+  if (_activeDaysFilter !== 'all') {
+    const _dc = new Date(); _dc.setDate(_dc.getDate() - parseInt(_activeDaysFilter));
+    const _dci = _dc.toISOString().slice(0,10);
+    _dpFiltered = _dpFiltered.filter(p => (p.dateIso||'') >= _dci);
+  }
+  _dpFiltered.forEach(p => {
+    if (!_dailyMap[p.dateIso]) _dailyMap[p.dateIso] = { won:0, lost:0, scWon:0, scAll:0 };
+    const d = _dailyMap[p.dateIso];
+    if (p.result === 'win') { d.won++; d.scWon += p.sc; }
+    else d.lost++;
+    d.scAll += p.sc;
+  });
+
+  const _dDates = Object.keys(_dailyMap).sort();
+  const _dLabels = _dDates.map(iso => {
+    const [, m, day] = iso.split('-');
+    return `${day}.${m}`;
+  });
+  const _dRawWR  = _dDates.map(d => {
+    const { won, lost } = _dailyMap[d];
+    return won + lost > 0 ? Math.round(won / (won + lost) * 100) : null;
+  });
+  const _dWqsWR  = _dDates.map(d => {
+    const { scWon, scAll } = _dailyMap[d];
+    return scAll > 0 ? Math.round(scWon / scAll * 100) : null;
+  });
+  // Tooltip: show wins/losses and both WR values per day
+  const _dTooltipExtra = _dDates.map(d => {
+    const { won, lost, scWon, scAll } = _dailyMap[d];
+    const rWR = won+lost>0 ? Math.round(won/(won+lost)*100) : null;
+    const wWR2 = scAll>0 ? Math.round(scWon/scAll*100) : null;
+    return `${won}✅ ${lost}❌  Raw: ${rWR ?? '–'}%  Gewichtet: ${wWR2 ?? '–'}%`;
+  });
+
+  const _dBarColors = _dRawWR.map(v => v == null ? 'rgba(139,148,158,.3)' : v >= 60 ? 'rgba(63,185,80,.75)' : v >= 45 ? 'rgba(227,179,65,.75)' : 'rgba(248,81,73,.75)');
+
+  const ctxDaily = document.getElementById('chartDaily').getContext('2d');
+  if (_charts.daily) _charts.daily.destroy();
+  _charts.daily = new Chart(ctxDaily, {
+    type: 'bar',
+    data: {
+      labels: _dLabels,
+      datasets: [
+        {
+          label: 'Win Rate (roh)',
+          data: _dRawWR,
+          backgroundColor: _dBarColors,
+          borderRadius: 6, order: 2, yAxisID: 'y'
+        },
+        {
+          label: 'Gewichtete Win Rate',
+          data: _dWqsWR,
+          type: 'line',
+          borderColor: 'rgba(167,139,250,.9)',
+          backgroundColor: 'transparent',
+          borderWidth: 2, pointRadius: 4,
+          pointBackgroundColor: _dWqsWR.map((v, i) =>
+            v == null ? 'transparent' :
+            v > (_dRawWR[i]||0) ? '#3fb950' : v < (_dRawWR[i]||0) ? '#f85149' : '#a78bfa'
+          ),
+          pointBorderColor: 'transparent',
+          tension: 0.3, order: 1, yAxisID: 'y'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            title: ctx => _dDates[ctx[0].dataIndex],
+            afterBody: ctx => _dTooltipExtra[ctx[0].dataIndex]
+              ? [_dTooltipExtra[ctx[0].dataIndex]] : [],
+            label: ctx => ctx.datasetIndex === 0
+              ? ` Roh: ${ctx.raw ?? '–'}%`
+              : ` Gewichtet: ${ctx.raw ?? '–'}%`
+          }
+        }
+      },
+      scales: {
+        y: {
+          min: 0, max: 100,
+          ticks: { color: '#8b949e', callback: v => v + '%' },
+          grid: { color: 'rgba(255,255,255,0.05)' }
+        },
+        x: { ticks: { color: '#8b949e' }, grid: { display: false } }
+      }
+    }
+  });
+
+  // Update legend hint
+  const _legendEl = document.getElementById('dailyWqsLegend');
+  if (_legendEl) {
+    _legendEl.innerHTML = `
+      <span style="display:flex;align-items:center;gap:5px;">
+        <span style="width:12px;height:12px;border-radius:2px;background:rgba(63,185,80,.75);display:inline-block;"></span>
+        Guter Tag (≥60%)
+      </span>
+      <span style="display:flex;align-items:center;gap:5px;">
+        <span style="width:12px;height:12px;border-radius:2px;background:rgba(227,179,65,.75);display:inline-block;"></span>
+        OK (45–59%)
+      </span>
+      <span style="display:flex;align-items:center;gap:5px;">
+        <span style="width:12px;height:12px;border-radius:2px;background:rgba(248,81,73,.75);display:inline-block;"></span>
+        Schlechter Tag
+      </span>
+      <span style="display:flex;align-items:center;gap:5px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:#a78bfa;display:inline-block;"></span>
+        Linie = score-gewichtet
+      </span>`;
+  }
 }
 
 // ── Pick history table ──────────────────────────────────
