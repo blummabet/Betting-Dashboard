@@ -6249,7 +6249,25 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   const _lmRows   = computeLineMovement(_oddsOpen, odds);
   const lineMovementHtml = renderLineMovement(_lmRows, picks);
 
-  // Odds are now embedded directly in each pick via p.odds — no separate strip needed
+  // ── Odds Strip — compact 1X2 + key markets at a glance ─────────────────────
+  let oddsStripHtml = '';
+  if (oddsD.hw) {
+    const _f = v => v.toFixed(2);
+    const _chip = (lbl, val, best) =>
+      `<div class="odds-chip"><div class="oc-label">${lbl}</div><div class="oc-val${best?' best':''}">${_f(val)}</div></div>`;
+    // Highlight the single cheapest outcome (best value for a win bet)
+    const _1x2min = Math.min(oddsD.hw, oddsD.dr||99, oddsD.aw||99);
+    const _chips = [];
+    _chips.push(_chip('Heim',  oddsD.hw, oddsD.hw  === _1x2min));
+    if (oddsD.dr) _chips.push(_chip('Remis', oddsD.dr, oddsD.dr === _1x2min));
+    _chips.push(_chip('Ausw',  oddsD.aw, oddsD.aw  === _1x2min));
+    if (oddsD.o25) _chips.push(_chip('O2.5', oddsD.o25, false));
+    if (oddsD.u25) _chips.push(_chip('U2.5', oddsD.u25, false));
+    if (oddsD.bttsY) _chips.push(_chip('BTTS', oddsD.bttsY, false));
+    if (oddsD.dc1X)  _chips.push(_chip('1X',   oddsD.dc1X,  false));
+    if (oddsD.dcX2)  _chips.push(_chip('X2',   oddsD.dcX2,  false));
+    oddsStripHtml = `<div class="odds-strip">${_chips.join('')}<span class="odds-source">The Odds API</span></div>`;
+  }
 
   // Show all high/medium confidence picks — user decides what's worth betting.
   // Low-odds picks get ⚠ label instead of being hidden.
@@ -6605,6 +6623,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       ${renderStakeRow(match.away, match.awayStake, match.awayForm, leagueKey)}
     </div>
     ${renderH2H(match.h2h)}
+    ${oddsStripHtml}
     <div class="bet-angle">
       <div class="ba-header"><span class="ba-label">Wett-Winkel</span><span class="ba-badge ${angle.cls}">${angle.badge}</span></div>
       <div class="ba-text">${angle.text}</div>
