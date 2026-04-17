@@ -3610,15 +3610,29 @@ function getBettingPicks(match, odds, leagueKey) {
       else if (_anyNeedsWin) scO = Math.min(0.82, scO + _pressureBoost * 0.55);
       // Real corner data → slight confidence boost (better estimate than formula)
       if (cornersDataReal) scO = Math.min(0.92, scO + 0.05);
-      // Choose market line closest to estimate from below
-      const _cOMkt  = cornersEst >= 11.5 ? 'Über 11.5 Ecken'
-                    : cornersEst >= 10.5 ? 'Über 10.5 Ecken'
-                    : cornersEst >= 9.5  ? 'Über 9.5 Ecken'
-                    :                      'Über 8.5 Ecken';
-      const _cOOdds = _cOMkt === 'Über 11.5 Ecken' ? (o.co115 || null)
-                    : _cOMkt === 'Über 10.5 Ecken' ? (o.co105 || null)
-                    : _cOMkt === 'Über 9.5 Ecken'  ? (o.co95  || null)
-                    :                                 (o.co85  || null);
+      // Choose market line closest to estimate from below.
+      // MIN_ODD escalation: if the chosen Over line is too cheap (< 1.35) because
+      // cornersEst greatly exceeds the threshold, step up to a higher line.
+      // Higher Over line = harder to hit = better odds.  Keep stepping until >= 1.35
+      // or until no higher line is available (then keep current regardless).
+      const _OVER_MIN_ODD = 1.35;
+      const _overLines = [
+        { mkt:'Über 8.5 Ecken',  odds: o.co85  || null },
+        { mkt:'Über 9.5 Ecken',  odds: o.co95  || null },
+        { mkt:'Über 10.5 Ecken', odds: o.co105 || null },
+        { mkt:'Über 11.5 Ecken', odds: o.co115 || null },
+      ];
+      // Starting line: based on cornersEst
+      let _overStartIdx = cornersEst >= 11.5 ? 3 : cornersEst >= 10.5 ? 2 : cornersEst >= 9.5 ? 1 : 0;
+      // Escalate if odds too cheap
+      let _overIdx = _overStartIdx;
+      while (_overIdx < _overLines.length - 1) {
+        const _chk = _overLines[_overIdx].odds;
+        if (_chk !== null && _chk < _OVER_MIN_ODD) _overIdx++;
+        else break;
+      }
+      const _cOMkt  = _overLines[_overIdx].mkt;
+      const _cOOdds = _overLines[_overIdx].odds;
       const _cornPressNote = _anyNeedsWin
         ? ` ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — intensives Pressing erzwingt mehr Ecken.` : '';
       const _cornDataNote = cornersDataReal
@@ -3632,22 +3646,32 @@ function getBettingPicks(match, odds, leagueKey) {
         }${_cornPressNote}${_cornDataNote}`}});
 
       // ── Under ────────────────────────────────────────────────────────────────
-      // Only meaningful when estimate clearly below the chosen threshold
+      // Only meaningful when estimate clearly below the chosen threshold.
+      // MIN_ODD guard: Under-Ecken odds fall as the line rises (higher Under = even more
+      // certain = even cheaper). So if the chosen line has odds < 1.35 there is no
+      // meaningful value on ANY Under line — drop the pick entirely rather than
+      // suggesting a higher line that would be even shorter.
       if (cornersEst < 9.0 && !_anyNeedsWin) {
         let scU = cornersEst < 7.0 ? 0.72 : cornersEst < 7.5 ? 0.60 : cornersEst < 8.0 ? 0.47 : 0.34;
         if (cornersDataReal) scU = Math.min(0.88, scU + 0.06);
         if (scU >= 0.32) {
           const _cUMkt  = cornersEst < 7.5 ? 'Unter 8.5 Ecken' : 'Unter 9.5 Ecken';
           const _cUOdds = _cUMkt === 'Unter 8.5 Ecken' ? (o.cu85 || null) : (o.cu95 || null);
-          const _uDataNote = cornersDataReal
-            ? `<br>📊 Echte Ecken-Daten (Saison): ${match.home} Ø ${_hCornersHome} Heim · ${match.away} Ø ${_aCornersAway} Ausw. → nur Ø ${cornersEst.toFixed(1)} erwartet.`
-            : ``;
-          sC.push({sc: scU, p:{icon:'🚩', market:_cUMkt, odds:_cUOdds, oddsIsEst: o._cornersOddsEst||false,
-            conf: scU>0.60?'high':scU>0.38?'medium':'low',
-            reason:`${cornersDataReal
-              ? `Defensives Spiel — Saisonschnitt ergibt nur ${cornersEst.toFixed(1)} Ecken gesamt.`
-              : `Taktisch defensives Spiel mit erwarteten ~${cornersEst.toFixed(0)} Ecken.`
-            }${_uDataNote}`}});
+          // Drop pick when odds are known but below the minimum threshold (1.35).
+          // A 1.11 "Unter 8.5" is not a recommendation — it's noise.
+          const _UNDER_MIN_ODD = 1.35;
+          const _underOddsOk = _cUOdds == null || _cUOdds >= _UNDER_MIN_ODD;
+          if (_underOddsOk) {
+            const _uDataNote = cornersDataReal
+              ? `<br>📊 Echte Ecken-Daten (Saison): ${match.home} Ø ${_hCornersHome} Heim · ${match.away} Ø ${_aCornersAway} Ausw. → nur Ø ${cornersEst.toFixed(1)} erwartet.`
+              : ``;
+            sC.push({sc: scU, p:{icon:'🚩', market:_cUMkt, odds:_cUOdds, oddsIsEst: o._cornersOddsEst||false,
+              conf: scU>0.60?'high':scU>0.38?'medium':'low',
+              reason:`${cornersDataReal
+                ? `Defensives Spiel — Saisonschnitt ergibt nur ${cornersEst.toFixed(1)} Ecken gesamt.`
+                : `Taktisch defensives Spiel mit erwarteten ~${cornersEst.toFixed(0)} Ecken.`
+              }${_uDataNote}`}});
+          }
         }
       }
     }
