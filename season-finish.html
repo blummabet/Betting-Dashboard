@@ -5004,8 +5004,80 @@ function shareTelegram(matchJson, leagueName, leagueFlag, leagueKey) {
   }, 900);
 }
 
+// ── EN Translation map for copyCard ────────────────────
+function _translateEN(text) {
+  const map = [
+    // Section headers
+    [/🏁 Season Finish/g,           '🏁 Season Finish'],
+    [/⚠️ Kontext/g,                  '⚠️ Context'],
+    [/📊 Pinnacle Quoten/g,          '📊 Pinnacle Odds'],
+    [/🎲 Top Wetten \(★★☆\+\)/g,    '🎲 Top Bets (★★☆+)'],
+    [/Kein Pick mit ausreichender Konfidenz/g, 'No pick with sufficient confidence'],
+    [/via CocoBet · Nur ab 18 Jahren/g, 'via CocoBet · 18+ only'],
+
+    // Markets — specific first, then general
+    [/Beide Teams treffen: Nein/g,   'BTTS: No'],
+    [/Beide Teams treffen/g,         'BTTS: Yes'],
+    [/Heimsieg/g,                    'Home Win'],
+    [/Auswärtssieg/g,                'Away Win'],
+    [/Unentschieden/g,               'Draw'],
+    [/DNB: Heimteam/g,               'DNB: Home'],
+    [/DNB: Auswärtsteam/g,           'DNB: Away'],
+    [/AH -0\.25 Heim/g,              'AH -0.25 Home'],
+    [/AH -0\.25 Auswärts/g,          'AH -0.25 Away'],
+    [/Doppelte Chance 1X/g,          'Double Chance 1X'],
+    [/Doppelte Chance X2/g,          'Double Chance X2'],
+    [/Handicap -0\.5 Heim/g,         'Handicap -0.5 Home'],
+    [/Handicap -0\.5 Auswärts/g,     'Handicap -0.5 Away'],
+    [/(Over|Under) ([\d.]+) Tore/g,  (_, ou, n) => `${ou} ${n} Goals`],
+    [/Über ([\d.]+) Ecken/g,         (_, n) => `Over ${n} Corners`],
+    [/Über ([\d.]+) Karten/g,        (_, n) => `Over ${n} Cards`],
+    [/1\. HZ: Under ([\d.]+) Tore/g, (_, n) => `1st Half: Under ${n} Goals`],
+    [/1\. HZ: Over ([\d.]+) Tore/g,  (_, n) => `1st Half: Over ${n} Goals`],
+    [/1\. HZ: BTTS/g,                '1st Half: BTTS'],
+    [/ über ([\d.]+) Tore/g,         (_, n) => ` Over ${n} Goals`],
+
+    // Context labels
+    [/Kurze Pause/g,                 'Short Rest'],
+    [/ Tage\b/g,                     ' days'],
+    [/Schiri:/g,                     'Referee:'],
+    [/Karten\/Sp/g,                  'cards\/game'],
+    [/ Ausfälle/g,                   ' missing'],
+    [/ fehlen\b/g,                   ' out'],
+    [/ fehlt\b/g,                    ' out'],
+    [/Angriff/g,                     'Attack'],
+    [/Abwehr/g,                      'Defense'],
+    [/Torwart/g,                     'Goalkeeper'],
+
+    // Stake labels
+    [/Titelkampf/g,                  'Title Race'],
+    [/Abstiegskampf/g,               'Relegation Battle'],
+    [/Champions League/g,            'Champions League'],
+    [/Europa League/g,               'Europa League'],
+    [/Conference League/g,           'Conference League'],
+    [/kein direkter Stake/g,         'no direct stake'],
+    [/Keine Daten/g,                 'No data'],
+
+    // Pressure angle snippets
+    [/Muss-Spiel/g,                  'Must-Win'],
+    [/Muss gewinnen/g,               'Must Win'],
+    [/Druckspiel/g,                  'Pressure Game'],
+    [/Titelfavorit/g,                'Title Contender'],
+    [/Abstiegszone/g,                'Relegation Zone'],
+    [/Tabellenführer/g,              'League Leader'],
+    [/Runden verbleibend/g,          'rounds remaining'],
+    [/Spieltage? verbleibend/g,      'matchdays remaining'],
+    [/NOCH (\d+) RUNDEN/g,           (_, n) => `${n} ROUNDS LEFT`],
+  ];
+  let out = text;
+  for (const [from, to] of map) {
+    out = out.replace(from, to);
+  }
+  return out;
+}
+
 // ── Copy card text to clipboard ────────────────────────
-function copyCard(matchJson, leagueName, leagueFlag, leagueKey, btn) {
+function copyCard(matchJson, leagueName, leagueFlag, leagueKey, btn, lang = 'de') {
   const match = JSON.parse(decodeURIComponent(matchJson));
   const score = computeMatchScore(match, leagueKey);
   const angle = getBettingAngle(match);
@@ -5092,13 +5164,16 @@ function copyCard(matchJson, leagueName, leagueFlag, leagueKey, btn) {
   if (!visiblePicks.length) msg += `(Kein Pick mit ausreichender Konfidenz)\n`;
   msg += `${'─'.repeat(32)}\nvia CocoBet · Nur ab 18 Jahren`;
 
+  if (lang === 'en') msg = _translateEN(msg);
+
   navigator.clipboard.writeText(msg).then(() => {
-    const orig = btn.textContent;
-    btn.textContent = '✓';
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓';
     btn.style.color = 'var(--green)';
     btn.style.borderColor = 'var(--green)';
-    setTimeout(() => { btn.textContent = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
-    showToast('📋 Kopiert!', 'Text in Zwischenablage — einfach in Telegram einfügen');
+    setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+    const label = lang === 'en' ? '🇬🇧 Copied!' : '📋 Kopiert!';
+    showToast(label, 'Text in Zwischenablage — einfach in Telegram einfügen');
   });
 }
 
@@ -5750,8 +5825,11 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       <button class="share-btn" style="flex:1" onclick="shareTelegram('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}')">
         📤 Telegram
       </button>
-      <button class="share-btn" style="flex:0 0 auto;width:auto;padding:9px 10px" title="Text kopieren (DE)" onclick="copyCard('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}',this)">
+      <button class="share-btn" style="flex:0 0 auto;width:auto;padding:9px 10px" title="Text kopieren (DE)" onclick="copyCard('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}',this,'de')">
         📋
+      </button>
+      <button class="share-btn" style="flex:0 0 auto;width:auto;padding:9px 10px;color:#58a6ff;border-color:#58a6ff55;" title="Copy text (EN)" onclick="copyCard('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}',this,'en')">
+        🇬🇧
       </button>
       <button class="share-btn" style="flex:0 0 auto;width:auto;padding:9px 10px;color:#a78bfa;border-color:#a78bfa55;" title="Card als Bild kopieren (DE)" onclick="copyCardImage(this)">
         🖼️
