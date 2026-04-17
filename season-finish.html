@@ -83,7 +83,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .pf-row.critical{border-color:rgba(248,81,73,.25);background:rgba(248,81,73,.04);}
 .pf-row.high{border-color:rgba(251,146,60,.25);background:rgba(251,146,60,.03);}
 .pf-row.med{border-color:rgba(240,192,64,.20);background:rgba(240,192,64,.03);}
-.signal-bar{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;}
+.perf-signal-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px;}
 .signal-fill{height:6px;border-radius:3px;background:var(--accent);opacity:.85;}
 .signal-label{color:var(--muted);min-width:180px;}
 .signal-val{color:var(--text);font-weight:700;font-size:11px;}
@@ -545,6 +545,24 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .lm-neutral-short{color:#79c0ff;} /* money in, no pick on this side */
 .lm-neutral-drift{color:#6e7681;} /* drifting, neutral */
 .lm-sharp{display:inline-block;padding:1px 5px;border-radius:4px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;background:rgba(56,139,253,.20);color:#58a6ff;border:1px solid rgba(56,139,253,.40);margin-left:3px;font-family:sans-serif;}
+/* ── Signal Bar ─────────────────────────────────────────────────── */
+/* Extends edge-to-edge inside the card (negative margins cancel the 18px card-padding) */
+.signal-bar{display:flex;gap:5px;flex-wrap:wrap;
+  padding:7px 18px 8px;margin:-4px -18px 0;
+  border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);
+  background:rgba(255,255,255,.018);}
+.signal-pill{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.04em;white-space:nowrap;line-height:1.4;}
+.sig-value-hot  {background:rgba(248,130,50,.18);color:#ff8c00;border:1px solid rgba(125,64,0,.8);}
+.sig-value      {background:rgba(100,200,80,.14);color:#7ec800;border:1px solid rgba(61,106,0,.8);}
+.sig-inj-crit   {background:rgba(248,81,73,.18);color:#f85149;border:1px solid rgba(125,32,32,.8);}
+.sig-inj-warn   {background:rgba(210,168,80,.14);color:#d2a850;border:1px solid rgba(120,80,20,.8);}
+.sig-pressure-red  {background:rgba(248,81,73,.14);color:#ff7b72;border:1px solid rgba(125,32,32,.8);}
+.sig-pressure-gold {background:rgba(227,179,65,.14);color:#e3b341;border:1px solid rgba(122,96,16,.8);}
+.sig-pressure-warn {background:rgba(192,132,252,.14);color:#c084fc;border:1px solid rgba(109,47,160,.8);}
+.sig-fatigue    {background:rgba(121,192,255,.12);color:#79c0ff;border:1px solid rgba(29,78,122,.8);}
+.sig-h2h        {background:rgba(160,148,255,.12);color:#a094ff;border:1px solid rgba(90,74,154,.8);}
+.sig-movement   {background:rgba(63,185,80,.12);color:#56d364;border:1px solid rgba(26,92,36,.8);}
+/* ── end Signal Bar ─────────────────────────────────────────────── */
 .ctx-fatigue-high{background:#2a1000;color:#f85149;border:1px solid #6b1d1d;}
 .ctx-fatigue-med {background:#1a1500;color:#e3b341;border:1px solid #5a4700;}
 .ctx-injury-atk  {background:#1a001a;color:#d2a8ff;border:1px solid #5a2d82;}
@@ -5930,6 +5948,65 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     ? `<div class="context-strip"><span class="ctx-label">Kontext</span>${ctxBadges.join('')}</div>`
     : '';
 
+  // ── Signal Bar: at-a-glance indicators (why is this match special?) ──────────
+  // Shows up to 4 prioritised signals between match title and context strip.
+  // Priority: 1) Value  2) Injuries  3) Pressure  4) Fatigue  5) H2H  6) LineMove
+  const _signals = [];
+
+  // 1 — Value signals (most actionable)
+  const _sigHasHot   = visiblePicks.some(p => p.value === 'hot');
+  const _sigHasValue = visiblePicks.some(p => p.value === 'value' || p.value === 'inj-edge');
+  if (_sigHasHot)        _signals.push({cls:'sig-value-hot',   txt:'🔥 HOT VALUE'});
+  else if (_sigHasValue) _signals.push({cls:'sig-value',       txt:'💰 Value Edge'});
+
+  // 2 — Injury signals
+  const _sigMaxInj = Math.max(_ctxHInj?.impactScore||0, _ctxAInj?.impactScore||0);
+  const _sigInjTeam = (_ctxAInj?.impactScore||0) >= (_ctxHInj?.impactScore||0) ? match.away : match.home;
+  const _sigInjShort = _sigInjTeam.split(' ').slice(-1)[0];
+  if (_sigMaxInj >= 3.5)       _signals.push({cls:'sig-inj-crit', txt:`🏥 Schwer: ${_sigInjShort}`});
+  else if (_sigMaxInj >= 2.0)  _signals.push({cls:'sig-inj-warn', txt:`🏥 Ausfälle: ${_sigInjShort}`});
+
+  // 3 — Pressure / Tabellenkontext signals
+  const _sigHColors = (match.homeStake?.labels||[]).map(l=>l.c);
+  const _sigAColors = (match.awayStake?.labels||[]).map(l=>l.c);
+  const _sigBothRed  = _sigHColors.includes('red')  && _sigAColors.includes('red');
+  const _sigBothGold = _sigHColors.includes('gold') && _sigAColors.includes('gold');
+  const _sigMustWin  = match.homeStake?.mustWin || match.awayStake?.mustWin;
+  const _sigRedVsGold = (_sigHColors.includes('red') && _sigAColors.includes('gold'))
+                     || (_sigHColors.includes('gold') && _sigAColors.includes('red'));
+  if (_sigBothGold)        _signals.push({cls:'sig-pressure-gold', txt:'🏆 Titelduell'});
+  else if (_sigBothRed)    _signals.push({cls:'sig-pressure-red',  txt:'🆘 Kellerduell'});
+  else if (_sigRedVsGold)  _signals.push({cls:'sig-pressure-warn', txt:'⚡ Spitze vs Keller'});
+  else if (_sigMustWin)    _signals.push({cls:'sig-pressure-warn', txt:'⚡ Muss-Sieg'});
+
+  // 4 — Fatigue signal
+  const _sigMinRest = Math.min(_ctxHRest ?? 99, _ctxARest ?? 99);
+  if (_sigMinRest !== 99 && _sigMinRest <= 3) {
+    const _sigFatTeam = (_ctxHRest||99) <= (_ctxARest||99) ? match.home : match.away;
+    _signals.push({cls:'sig-fatigue', txt:`😴 ${_sigFatTeam.split(' ').slice(-1)[0]}: nur ${_sigMinRest}T`});
+  }
+
+  // 5 — H2H signal (strong pattern over ≥5 games)
+  const _sigH2h = match.h2h;
+  if (_sigH2h?.games >= 5) {
+    const _g  = _sigH2h.games;
+    const _br = (_sigH2h.btts  ||0) / _g;
+    const _or = (_sigH2h.over25||0) / _g;
+    const _hw = (_sigH2h.homeWins||0) / _g;
+    const _aw = (_sigH2h.awayWins||0) / _g;
+    if      (_br >= 0.70) _signals.push({cls:'sig-h2h', txt:`⚽ H2H ${Math.round(_br*100)}% BTTS`});
+    else if (_or >= 0.70) _signals.push({cls:'sig-h2h', txt:`⚽ H2H ${Math.round(_or*100)}% Over 2.5`});
+    else if (_hw >= 0.75) _signals.push({cls:'sig-h2h', txt:`📊 H2H: ${match.home.split(' ').slice(-1)[0]} dom.`});
+    else if (_aw >= 0.75) _signals.push({cls:'sig-h2h', txt:`📊 H2H: ${match.away.split(' ').slice(-1)[0]} dom.`});
+  }
+
+  // 6 — Line movement signal
+  if (_lmRows?.length) _signals.push({cls:'sig-movement', txt:'📈 Linie bewegt'});
+
+  const signalBarHtml = _signals.length
+    ? `<div class="signal-bar">${_signals.slice(0,4).map(s=>`<span class="signal-pill ${s.cls}">${s.txt}</span>`).join('')}</div>`
+    : '';
+
   return `
   <div class="stake-card ${ct}">
     <div class="card-watermark"><img src="cocobet-logo.png" alt="" onerror="this.parentElement.style.display='none'"></div>
@@ -5938,7 +6015,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       <div class="card-meta">${leagueFlag} <span class="card-league-name">${leagueName}</span><span class="card-meta-sep">·</span><span class="card-date-inline">📅 ${match.date}${match.time ? ' · ' + match.time : ''}</span></div>
       <div class="card-match"><span class="card-home">${match.home}</span><span class="card-vs">vs</span><span class="card-away">${match.away}</span></div>
     </div>
-    ${pressureHtml}${contextHtml}${lineMovementHtml}
+    ${signalBarHtml}${pressureHtml}${contextHtml}${lineMovementHtml}
     <div class="teams-stakes">
       ${renderStakeRow(match.home, match.homeStake, match.homeForm, leagueKey)}
       ${renderStakeRow(match.away, match.awayStake, match.awayForm, leagueKey)}
