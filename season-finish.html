@@ -6103,37 +6103,43 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   if (hInjHtml) ctxBadges.push(hInjHtml);
   if (aInjHtml) ctxBadges.push(aInjHtml);
 
-  // ── Yellow card accumulation / tactical booking ──────────────────────────────
-  const _allFix = leagueKey ? (LEAGUES[leagueKey]?.fixtures || []) : [];
-  const _bkHome = match.bookings?.home || [];
-  const _bkAway = match.bookings?.away || [];
-  const _homeTacSigs = getTacticalBookingSignals(_bkHome, match.home, match.date, _allFix);
-  const _awayTacSigs = getTacticalBookingSignals(_bkAway, match.away, match.date, _allFix);
+  // ── Karten-Pick guard (used by both yellow-card badges and referee stats below) ──
+  const _hasKartenPick = visiblePicks.some(p => p.market.includes('Karten'));
 
-  for (const sig of [..._homeTacSigs, ..._awayTacSigs]) {
-    const teamLabel = [..._homeTacSigs].includes(sig) ? match.home : match.away;
-    let badgeCls, badgeText;
-    if (sig.isTacticalStrong) {
-      // Clear case: miss a weak game, return for a big one
-      badgeCls  = 'ctx-booking-tactical';
-      badgeText = `🟨 ${sig.lastName}${sig.posStr}: ${sig.yellows}/${sig.threshold} Gelbe`
-        + ` — Sperre vs ${sig.nextOpponent} (schwächer) denkbar`;
-    } else if (sig.isTactical) {
-      // Mild case: slight quality difference
-      badgeCls  = 'ctx-booking-warn';
-      badgeText = `🟨 ${sig.lastName}${sig.posStr}: ${sig.yellows}/${sig.threshold} Gelbe`
-        + ` — eine Karte = gesperrt vs ${sig.nextOpponent}`;
-    } else {
-      // Suspension risk only — no tactical angle visible
-      badgeCls  = 'ctx-booking-risk';
-      badgeText = `🟨 ${sig.lastName}${sig.posStr}: ${sig.yellows}/${sig.threshold} Gelbe — Sperren-Risiko`;
+  // ── Yellow card accumulation / tactical booking ──────────────────────────────
+  // Only shown when the system generated a Karten pick — avoids orphaned info.
+  if (_hasKartenPick) {
+    const _allFix = leagueKey ? (LEAGUES[leagueKey]?.fixtures || []) : [];
+    const _bkHome = match.bookings?.home || [];
+    const _bkAway = match.bookings?.away || [];
+    const _homeTacSigs = getTacticalBookingSignals(_bkHome, match.home, match.date, _allFix);
+    const _awayTacSigs = getTacticalBookingSignals(_bkAway, match.away, match.date, _allFix);
+
+    for (const sig of [..._homeTacSigs, ..._awayTacSigs]) {
+      const teamLabel = [..._homeTacSigs].includes(sig) ? match.home : match.away;
+      let badgeCls, badgeText;
+      if (sig.isTacticalStrong) {
+        // Clear case: miss a weak game, return for a big one
+        badgeCls  = 'ctx-booking-tactical';
+        badgeText = `🟨 ${sig.lastName}${sig.posStr}: ${sig.yellows}/${sig.threshold} Gelbe`
+          + ` — Sperre vs ${sig.nextOpponent} (schwächer) denkbar`;
+      } else if (sig.isTactical) {
+        // Mild case: slight quality difference
+        badgeCls  = 'ctx-booking-warn';
+        badgeText = `🟨 ${sig.lastName}${sig.posStr}: ${sig.yellows}/${sig.threshold} Gelbe`
+          + ` — eine Karte = gesperrt vs ${sig.nextOpponent}`;
+      } else {
+        // Suspension risk only — no tactical angle visible
+        badgeCls  = 'ctx-booking-risk';
+        badgeText = `🟨 ${sig.lastName}${sig.posStr}: ${sig.yellows}/${sig.threshold} Gelbe — Sperren-Risiko`;
+      }
+      ctxBadges.push(`<span class="ctx-badge ${badgeCls}">${badgeText}</span>`);
     }
-    ctxBadges.push(`<span class="ctx-badge ${badgeCls}">${badgeText}</span>`);
   }
 
-  // Referee — clear label, readable format
+  // Referee — only shown alongside a Karten pick (card tendency only matters for that market)
   const _ref = match.refereeStats || null;
-  if (_ref?.name) {
+  if (_hasKartenPick && _ref?.name) {
     const avg = _ref.avgCards;
     const refCls = avg == null    ? 'ctx-ref-neutral'
                  : avg >= 4.5    ? 'ctx-ref-high'
@@ -6210,8 +6216,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   const _tacStrong = [..._tacHome, ..._tacAway].filter(s => s.isTacticalStrong);
   const _tacAny    = [..._tacHome, ..._tacAway].filter(s => s.isTactical);
   // Only show booking signal when the system actually generated a Karten pick —
-  // otherwise the info is orphaned and adds noise without an actionable bet.
-  const _hasKartenPick = visiblePicks.some(p => p.market.includes('Karten'));
+  // (_hasKartenPick already computed above, before the context section)
   if (_hasKartenPick) {
     if (_tacStrong.length) {
       _signals.push({cls:'sig-booking', txt:`🟨 Takt. Sperre: ${_tacStrong[0].lastName}`});
