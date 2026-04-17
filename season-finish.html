@@ -2041,7 +2041,7 @@ function findOdds(leagueKey, home, away) {
 
 async function loadAllOdds() {
   // ── Cache: refresh every 2h — odds move more often closer to kickoff ─────
-  const CACHE_KEY = 'sfOddsCache_v7';  // bumped: removed BEL (404)
+  const CACHE_KEY = 'sfOddsCache_v8';  // bumped: added BTTS Pass2 (uk region)
   const CACHE_TTL = 2 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
@@ -2052,13 +2052,12 @@ async function loadAllOdds() {
     }
   } catch(e) {}
 
-  // ── Fetch: all bookmakers (eu region), includes AH spreads ───────────────
+  // ── Fetch Pass 1: EU region — h2h + spreads (AH) + totals (O/U) ──────────
   let oddsApiOk = 0, oddsApiErr = '', oddsApiQuota = null;
   await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
     try {
       const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,spreads,totals&oddsFormat=decimal`;
       const resp = await fetch(url);
-      // Track remaining quota from response headers
       if (resp.headers?.get('x-requests-remaining')) {
         oddsApiQuota = resp.headers.get('x-requests-remaining');
       }
@@ -2068,7 +2067,7 @@ async function loadAllOdds() {
       } else if (resp.status === 401) {
         oddsApiErr = '401 Ungültiger API-Key';
       } else if (resp.status === 422) {
-        oddsApiErr = '422 Sport nicht verfügbar';
+        oddsApiErr = '422 Markt nicht verfügbar (EU)';
       } else if (resp.status === 429) {
         oddsApiErr = `429 Monatliches Limit erreicht`;
       } else {
@@ -2077,9 +2076,40 @@ async function loadAllOdds() {
     } catch(e) { oddsApiErr = e.message; }
   }));
   window._oddsReady = true;
-  // Show diagnostic in console for debugging
-  if (oddsApiErr) console.warn(`[TheOddsAPI] ${oddsApiErr}${oddsApiQuota !== null ? ' · Remaining: '+oddsApiQuota : ''}`);
+  if (oddsApiErr) console.warn(`[TheOddsAPI] Pass1: ${oddsApiErr}`);
   else console.log(`[TheOddsAPI] OK — ${oddsApiOk} Ligen geladen${oddsApiQuota !== null ? ' · Remaining: '+oddsApiQuota : ''}`);
+
+  // ── Fetch Pass 2: UK region — BTTS only (not available in EU region) ──────
+  // btts market returns 422 with regions=eu; UK bookmakers (Bet365 etc.) carry it.
+  // Merge by event ID into existing _oddsData entries so _parseTheOddsEvent picks it up.
+  let bttsOk = 0;
+  await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
+    if (!window._oddsData[lk]?.length) return; // no main events yet → skip
+    try {
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=uk&markets=btts&oddsFormat=decimal`;
+      const resp = await fetch(url);
+      if (!resp.ok) return; // silent — btts may not exist for this league/region
+      const bttsEvents = await resp.json();
+      if (!Array.isArray(bttsEvents)) return;
+      for (const be of bttsEvents) {
+        const main = window._oddsData[lk].find(e => e.id === be.id);
+        if (!main) continue;
+        for (const bkr of (be.bookmakers || [])) {
+          const existing = main.bookmakers.find(b => b.key === bkr.key);
+          if (existing) {
+            // Bookmaker already present — merge btts market in
+            for (const mkt of (bkr.markets || [])) {
+              if (!existing.markets.find(m => m.key === mkt.key)) existing.markets.push(mkt);
+            }
+          } else {
+            main.bookmakers.push(bkr);
+          }
+        }
+      }
+      if (bttsEvents.length > 0) bttsOk++;
+    } catch(e) { /* silent */ }
+  }));
+  if (bttsOk > 0) console.log(`[TheOddsAPI] BTTS enriched — ${bttsOk} Ligen`);
 
   // ── Save to cache ─────────────────────────────────────────────────────────
   try {

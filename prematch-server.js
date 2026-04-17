@@ -104,7 +104,8 @@ function apiFetch(urlPath) {
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ── The Odds API helper ──────────────────────────────────────────────────────
-// Fetches ALL upcoming odds for a given sport in one call (h2h + spreads + totals + btts).
+// Fetches ALL upcoming odds for a given sport in one call.
+// Pass1: EU region, h2h + spreads + totals.
 // Returns { data: [...events], remaining: '19950' }
 function oddsApiFetch(sportKey) {
   return new Promise((resolve, reject) => {
@@ -125,6 +126,31 @@ function oddsApiFetch(sportKey) {
     });
     req.on('error', reject);
     req.setTimeout(15000, () => { req.destroy(); reject(new Error(`Timeout: ${sportKey}`)); });
+    req.end();
+  });
+}
+
+// Fetch BTTS market via UK region (btts is not available in EU region — causes 422).
+// Returns array of events with btts bookmakers, or [] on any error/404.
+function oddsApiFetchBtts(sportKey) {
+  return new Promise((resolve) => {
+    const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
+      + `&regions=uk&markets=btts&oddsFormat=decimal`;
+    const options = { hostname: ODDS_API_HOST, path, method: 'GET',
+      headers: { 'User-Agent': 'CocoBet/1.0' } };
+    const req = https.request(options, res => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => {
+        try {
+          if (res.statusCode !== 200) { resolve([]); return; }
+          const data = JSON.parse(body);
+          resolve(Array.isArray(data) ? data : []);
+        } catch(e) { resolve([]); }
+      });
+    });
+    req.on('error', () => resolve([]));
+    req.setTimeout(15000, () => { req.destroy(); resolve([]); });
     req.end();
   });
 }
@@ -862,6 +888,32 @@ async function fetchAllPrematchData() {
   }
   if (_oddsApiRemaining !== null)
     console.log(`[OddsAPI] Verbleibende Requests diesen Monat: ${_oddsApiRemaining}`);
+
+  // ── Step 5b: BTTS enrichment via UK region ────────────────────────────────
+  // btts market causes 422 with regions=eu — UK bookmakers (Bet365 etc.) carry it.
+  // Merge into existing _sportKeyEvents by event ID so parseTheOddsEvent gets btts data.
+  let bttsEnriched = 0;
+  for (const sk of _uniqueSportKeys) {
+    if (!_sportKeyEvents[sk]?.length) continue;
+    await sleep(400);
+    const bttsEvents = await oddsApiFetchBtts(sk);
+    for (const be of bttsEvents) {
+      const main = _sportKeyEvents[sk].find(e => e.id === be.id);
+      if (!main) continue;
+      for (const bkr of (be.bookmakers || [])) {
+        const existing = main.bookmakers.find(b => b.key === bkr.key);
+        if (existing) {
+          for (const mkt of (bkr.markets || [])) {
+            if (!existing.markets.find(m => m.key === mkt.key)) existing.markets.push(mkt);
+          }
+        } else {
+          main.bookmakers.push(bkr);
+        }
+      }
+      bttsEnriched++;
+    }
+  }
+  if (bttsEnriched > 0) console.log(`  [OddsAPI] BTTS enriched: ${bttsEnriched} Events`);
 
   let oddsOk = 0, oddsMiss = 0;
   for (const d of upcoming) {
