@@ -2044,6 +2044,28 @@ function _parseTheOddsEvent(g) {
           else if ((nm==='x2'||nm==='draw/away')&&!r.dcX2_bkr) r.dcX2_bkr=o.price;
           else if ((nm==='12'||nm==='home/away'||nm==='1 & 2')&&!r.dc12_bkr) r.dc12_bkr=o.price;
         }
+      } else if (mk==='h2h_h1') {
+        // 1st half 1X2 — home win / draw / away win at halftime
+        for (const o of (mkt.outcomes||[])) {
+          const nm=norm(o.name);
+          if (!r.ht_hw&&o.price>1.01&&(nm===hTeam||hTeam.includes(nm)||nm.includes(hTeam))) r.ht_hw=o.price;
+          else if (!r.ht_aw&&o.price>1.01&&(nm===aTeam||aTeam.includes(nm)||nm.includes(aTeam))) r.ht_aw=o.price;
+          else if (!r.ht_dr&&o.price>1.01) r.ht_dr=o.price;
+        }
+      } else if (mk==='totals_h1') {
+        // 1st half over/under totals (0.5 and 1.5 lines)
+        for (const o of (mkt.outcomes||[])) {
+          if      (o.name==='Over' &&Math.abs(o.point-0.5)<0.01&&!r.ht_o05) r.ht_o05=o.price;
+          else if (o.name==='Under'&&Math.abs(o.point-0.5)<0.01&&!r.ht_u05) r.ht_u05=o.price;
+          else if (o.name==='Over' &&Math.abs(o.point-1.5)<0.01&&!r.ht_o15) r.ht_o15=o.price;
+          else if (o.name==='Under'&&Math.abs(o.point-1.5)<0.01&&!r.ht_u15) r.ht_u15=o.price;
+        }
+      } else if (mk==='btts_h1') {
+        // Both teams to score in 1st half (UK bookmakers)
+        for (const o of (mkt.outcomes||[])) {
+          if (o.name==='Yes'&&!r.ht_bttsY) r.ht_bttsY=o.price;
+          if (o.name==='No' &&!r.ht_bttsN) r.ht_bttsN=o.price;
+        }
       }
     }
   }
@@ -2077,18 +2099,20 @@ function findOdds(leagueKey, home, away) {
 
 async function loadAllOdds() {
   // ── Cache: refresh every 2h — odds move more often closer to kickoff ─────
-  const CACHE_KEY = 'sfOddsCache_v9';  // bumped: added Pass3 corners/cards/DC (alternate markets)
+  const CACHE_KEY = 'sfOddsCache_v10'; // bumped: added Pass4 halftime markets (h2h_h1/totals_h1/btts_h1)
   const CACHE_TTL = 2 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
     if (cached && Date.now() - cached.ts < CACHE_TTL && Object.keys(cached.data).length > 0) {
       window._oddsData = cached.data;
       window._oddsReady = true;
-      window._oddsCacheAge  = Math.round((Date.now() - cached.ts) / 60000);
-      window._oddsP1Ok      = Object.keys(cached.data).length;
-      window._oddsBttsLgs   = '(cache)';
-      window._oddsAltLgs    = '(cache)';
-      window._oddsRemaining = null;
+      window._oddsCacheAge    = Math.round((Date.now() - cached.ts) / 60000);
+      window._oddsP1Ok        = Object.keys(cached.data).length;
+      window._oddsBttsLgs     = '(cache)';
+      window._oddsAltLgs      = '(cache)';
+      window._oddsHtLgs       = '(cache)';
+      window._oddsHtBttsLgs   = '(cache)';
+      window._oddsRemaining   = null;
       return;
     }
   } catch(e) {}
@@ -2188,6 +2212,67 @@ async function loadAllOdds() {
   }));
   window._oddsAltLgs = altOk;
   if (altOk > 0) console.log(`[TheOddsAPI] Corners/Cards/DC enriched — ${altOk} Ligen`);
+
+  // ── Fetch Pass 4a: EU region — 1st half 1X2 + totals ─────────────────────
+  // h2h_h1 = halftime moneyline, totals_h1 = halftime over/under (0.5 / 1.5 lines)
+  let htOk = 0;
+  await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
+    if (!window._oddsData[lk]?.length) return;
+    try {
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h_h1,totals_h1&oddsFormat=decimal`;
+      const resp = await fetch(url);
+      if (!resp.ok) return;
+      const htEvents = await resp.json();
+      if (!Array.isArray(htEvents)) return;
+      for (const he of htEvents) {
+        const main = window._oddsData[lk].find(e => e.id === he.id);
+        if (!main) continue;
+        for (const bkr of (he.bookmakers || [])) {
+          const existing = main.bookmakers.find(b => b.key === bkr.key);
+          if (existing) {
+            for (const mkt of (bkr.markets || [])) {
+              if (!existing.markets.find(m => m.key === mkt.key)) existing.markets.push(mkt);
+            }
+          } else {
+            main.bookmakers.push(bkr);
+          }
+        }
+      }
+      if (htEvents.length > 0) htOk++;
+    } catch(e) { /* silent */ }
+  }));
+
+  // ── Fetch Pass 4b: UK region — 1st half BTTS ─────────────────────────────
+  // btts_h1 requires UK bookmakers (same pattern as Pass 2 btts)
+  let htBttsOk = 0;
+  await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
+    if (!window._oddsData[lk]?.length) return;
+    try {
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=uk&markets=btts_h1&oddsFormat=decimal`;
+      const resp = await fetch(url);
+      if (!resp.ok) return;
+      const htBttsEvents = await resp.json();
+      if (!Array.isArray(htBttsEvents)) return;
+      for (const hbe of htBttsEvents) {
+        const main = window._oddsData[lk].find(e => e.id === hbe.id);
+        if (!main) continue;
+        for (const bkr of (hbe.bookmakers || [])) {
+          const existing = main.bookmakers.find(b => b.key === bkr.key);
+          if (existing) {
+            for (const mkt of (bkr.markets || [])) {
+              if (!existing.markets.find(m => m.key === mkt.key)) existing.markets.push(mkt);
+            }
+          } else {
+            main.bookmakers.push(bkr);
+          }
+        }
+      }
+      if (htBttsEvents.length > 0) htBttsOk++;
+    } catch(e) { /* silent */ }
+  }));
+  window._oddsHtLgs = htOk;
+  window._oddsHtBttsLgs = htBttsOk;
+  if (htOk > 0 || htBttsOk > 0) console.log(`[TheOddsAPI] HZ-Märkte enriched — h2h_h1/totals_h1: ${htOk} · btts_h1: ${htBttsOk} Ligen`);
 
   // ── Save to cache ─────────────────────────────────────────────────────────
   try {
@@ -3682,7 +3767,7 @@ function getBettingPicks(match, odds, leagueKey) {
     // 1HZ Under 1.5 (slow tight opener — suppressed when any team under pressure)
     { let u15sc = firstHalfTight ? 0.50 : 0;
       if (u15sc > 0 && _anyNeedsWin) u15sc = Math.max(0, u15sc - _pressureBoost * 1.10);
-      if (u15sc > 0) sC.push({sc: u15sc, p:{icon:'⏱️', market:'1. HZ: Under 1.5 Tore', odds:null, conf:'medium',
+      if (u15sc > 0) sC.push({sc: u15sc, p:{icon:'⏱️', market:'1. HZ: Under 1.5 Tore', odds:o.ht_u15||null, conf:'medium',
         reason:`Vorsichtiger Spielbeginn erwartet — beide Teams tasten sich erst ab. Das Modell erwartet ${expGoals.toFixed(1)} Tore insgesamt: in der ersten Halbzeit ist maximal 1 Treffer wahrscheinlich.`}});
     }
 
@@ -6780,9 +6865,11 @@ async function showPreMatchDebug() {
     }
   }
   const totalLeagues   = Object.keys(odData).length;
-  const p1Ok           = window._oddsP1Ok    ?? totalLeagues;
-  const bttsLg         = window._oddsBttsLgs ?? '?';
-  const altLg          = window._oddsAltLgs  ?? '?';
+  const p1Ok           = window._oddsP1Ok      ?? totalLeagues;
+  const bttsLg         = window._oddsBttsLgs   ?? '?';
+  const altLg          = window._oddsAltLgs    ?? '?';
+  const htLg           = window._oddsHtLgs     ?? '?';
+  const htBttsLg       = window._oddsHtBttsLgs ?? '?';
   const remain         = window._oddsRemaining ?? '?';
   const cacheAgeMin    = window._oddsCacheAge;
   const cacheNote      = cacheAgeMin != null ? `aus Cache (${cacheAgeMin}min alt)` : 'Live-Fetch';
@@ -6821,6 +6908,8 @@ async function showPreMatchDebug() {
     `Pass 1 (EU  h2h + spreads + totals):          ${p1Ok} Ligen OK`,
     `Pass 2 (UK  btts):                            ${bttsLg} Ligen enriched`,
     `Pass 3 (EU  corners + cards + double_chance): ${altLg} Ligen enriched`,
+    `Pass 4a (EU h2h_h1 + totals_h1):             ${htLg} Ligen enriched`,
+    `Pass 4b (UK btts_h1):                         ${htBttsLg} Ligen enriched`,
     ``,
     `── The Odds API Feldabdeckung (über alle ${oddsTotal} Events mit h/a-Quoten) ─`,
     `Events mit BTTS-Quote (bttsY):       ${oddsBtts}`,
@@ -6844,10 +6933,16 @@ async function showPreMatchDebug() {
     `    → alternate_totals_cards  (Pass 3 EU) + Poisson-Fallback`,
     `⚠️  Handicap Heim/Auswärts -0.5 / -0.75 / -1.0`,
     `    → spreads gefetcht (ah_h/ah_a), aber Pick-Logik verwendet immer _ahEstO (Modell)`,
-    `❌  Unter 1.5 Tore`,
-    `    → odds:null hardcoded; u15 wird nicht aus The Odds API geparst`,
-    `❌  1. HZ: Over 0.5 / Under 0.5 / BTTS / Under 1.5`,
-    `    → h2h_h1 / totals_h1 / btts_h1 werden nicht gefetcht (nur alter _parseOddsBets)`,
+    `❌  Unter 1.5 Tore (Vollzeit)`,
+    `    → odds:null hardcoded; u15 (Vollzeit) wird nicht aus The Odds API geparst`,
+    `✅  1. HZ: Over 0.5 Tore`,
+    `    → ht_o05 ← totals_h1 Over 0.5  (Pass 4a EU)`,
+    `✅  1. HZ: Under 0.5 Tore`,
+    `    → ht_u05 ← totals_h1 Under 0.5  (Pass 4a EU)`,
+    `✅  1. HZ: Under 1.5 Tore`,
+    `    → ht_u15 ← totals_h1 Under 1.5  (Pass 4a EU)`,
+    `✅  1. HZ: Beide Teams treffen`,
+    `    → ht_bttsY ← btts_h1  (Pass 4b UK)`,
     ``,
     `── Pre-Match Daten ───────────────────────────────────────────────────`,
     `Spiele gematcht:   ${total}`,
@@ -6875,6 +6970,8 @@ async function showPreMatchDebug() {
     `odds.co85:    ${sO.co85 ?? '–'}   odds.co95: ${sO.co95 ?? '–'}   odds.co105: ${sO.co105 ?? '–'}`,
     `odds.cards35: ${sO.cards_o35 ?? '–'}   odds.cards45: ${sO.cards_o45 ?? '–'}`,
     `odds.ah_h:    ${sO.ah_h ?? '–'}(${sO.ah_h_point ?? '–'})   odds.ah_a: ${sO.ah_a ?? '–'}(${sO.ah_a_point ?? '–'})`,
+    `odds.ht_o05:  ${sO.ht_o05 ?? '–'}   odds.ht_u05: ${sO.ht_u05 ?? '–'}   odds.ht_u15: ${sO.ht_u15 ?? '–'}`,
+    `odds.ht_bttsY:${sO.ht_bttsY ?? '–'}   odds.ht_hw:  ${sO.ht_hw ?? '–'}   odds.ht_dr: ${sO.ht_dr ?? '–'}`,
     ``,
     `── Alle Einträge (JSON) ──────────────────────────────────────────────`,
     JSON.stringify(pm, null, 2)

@@ -156,6 +156,56 @@ function oddsApiFetchAlt(sportKey) {
   });
 }
 
+// Fetch 1st-half markets via EU region (h2h_h1 = HT 1X2, totals_h1 = HT over/under).
+// Returns array of events, or [] on any error/non-200.
+function oddsApiFetchHT(sportKey) {
+  return new Promise((resolve) => {
+    const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
+      + `&regions=eu&markets=h2h_h1,totals_h1&oddsFormat=decimal`;
+    const options = { hostname: ODDS_API_HOST, path, method: 'GET',
+      headers: { 'User-Agent': 'CocoBet/1.0' } };
+    const req = https.request(options, res => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => {
+        try {
+          if (res.statusCode !== 200) { resolve([]); return; }
+          const data = JSON.parse(body);
+          resolve(Array.isArray(data) ? data : []);
+        } catch(e) { resolve([]); }
+      });
+    });
+    req.on('error', () => resolve([]));
+    req.setTimeout(15000, () => { req.destroy(); resolve([]); });
+    req.end();
+  });
+}
+
+// Fetch 1st-half BTTS via UK region (btts_h1 not available in EU — follows same pattern as btts).
+// Returns array of events, or [] on any error/non-200.
+function oddsApiFetchHTBtts(sportKey) {
+  return new Promise((resolve) => {
+    const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
+      + `&regions=uk&markets=btts_h1&oddsFormat=decimal`;
+    const options = { hostname: ODDS_API_HOST, path, method: 'GET',
+      headers: { 'User-Agent': 'CocoBet/1.0' } };
+    const req = https.request(options, res => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => {
+        try {
+          if (res.statusCode !== 200) { resolve([]); return; }
+          const data = JSON.parse(body);
+          resolve(Array.isArray(data) ? data : []);
+        } catch(e) { resolve([]); }
+      });
+    });
+    req.on('error', () => resolve([]));
+    req.setTimeout(15000, () => { req.destroy(); resolve([]); });
+    req.end();
+  });
+}
+
 // Fetch BTTS market via UK region (btts is not available in EU region — causes 422).
 // Returns array of events with btts bookmakers, or [] on any error/404.
 function oddsApiFetchBtts(sportKey) {
@@ -323,6 +373,28 @@ function parseTheOddsEvent(oddsEvent) {
           if ((nm === '1x' || nm === 'home/draw') && o.price > 1.01) r.dc1X_bkr = o.price;
           else if ((nm === 'x2' || nm === 'draw/away') && o.price > 1.01) r.dcX2_bkr = o.price;
           else if ((nm === '12' || nm === 'home/away' || nm === '1 & 2') && o.price > 1.01) r.dc12_bkr = o.price;
+        }
+      } else if (mk === 'h2h_h1') {
+        // 1st half 1X2 — halftime winner market
+        for (const o of (mkt.outcomes || [])) {
+          const nm = norm(o.name);
+          if (!r.ht_hw && o.price > 1.01 && (nm === hTeam || hTeam.includes(nm) || nm.includes(hTeam))) r.ht_hw = o.price;
+          else if (!r.ht_aw && o.price > 1.01 && (nm === aTeam || aTeam.includes(nm) || nm.includes(aTeam))) r.ht_aw = o.price;
+          else if (!r.ht_dr && o.price > 1.01) r.ht_dr = o.price;
+        }
+      } else if (mk === 'totals_h1') {
+        // 1st half over/under totals (0.5 and 1.5 lines)
+        for (const o of (mkt.outcomes || [])) {
+          if      (o.name === 'Over'  && Math.abs(o.point - 0.5) < 0.01 && !r.ht_o05) r.ht_o05 = o.price;
+          else if (o.name === 'Under' && Math.abs(o.point - 0.5) < 0.01 && !r.ht_u05) r.ht_u05 = o.price;
+          else if (o.name === 'Over'  && Math.abs(o.point - 1.5) < 0.01 && !r.ht_o15) r.ht_o15 = o.price;
+          else if (o.name === 'Under' && Math.abs(o.point - 1.5) < 0.01 && !r.ht_u15) r.ht_u15 = o.price;
+        }
+      } else if (mk === 'btts_h1') {
+        // Both teams to score in 1st half (UK bookmakers)
+        for (const o of (mkt.outcomes || [])) {
+          if (o.name === 'Yes' && !r.ht_bttsY) r.ht_bttsY = o.price;
+          if (o.name === 'No'  && !r.ht_bttsN) r.ht_bttsN = o.price;
         }
       }
     }
@@ -997,6 +1069,54 @@ async function fetchAllPrematchData() {
     }
   }
   if (altEnriched > 0) console.log(`  [OddsAPI] Corners/Cards/DC enriched: ${altEnriched} Events`);
+
+  // ── Step 5d: 1st half markets — h2h_h1 + totals_h1 (EU) + btts_h1 (UK) ───
+  // Pass 4a: EU region — halftime 1X2 and halftime over/under totals
+  let htEnriched = 0;
+  for (const sk of _uniqueSportKeys) {
+    if (!_sportKeyEvents[sk]?.length) continue;
+    await sleep(400);
+    const htEvents = await oddsApiFetchHT(sk);
+    for (const he of htEvents) {
+      const main = _sportKeyEvents[sk].find(e => e.id === he.id);
+      if (!main) continue;
+      for (const bkr of (he.bookmakers || [])) {
+        const existing = main.bookmakers.find(b => b.key === bkr.key);
+        if (existing) {
+          for (const mkt of (bkr.markets || [])) {
+            if (!existing.markets.find(m => m.key === mkt.key)) existing.markets.push(mkt);
+          }
+        } else {
+          main.bookmakers.push(bkr);
+        }
+      }
+      htEnriched++;
+    }
+  }
+  // Pass 4b: UK region — 1st half BTTS (btts_h1 not in EU region)
+  let htBttsEnriched = 0;
+  for (const sk of _uniqueSportKeys) {
+    if (!_sportKeyEvents[sk]?.length) continue;
+    await sleep(400);
+    const htBttsEvents = await oddsApiFetchHTBtts(sk);
+    for (const hbe of htBttsEvents) {
+      const main = _sportKeyEvents[sk].find(e => e.id === hbe.id);
+      if (!main) continue;
+      for (const bkr of (hbe.bookmakers || [])) {
+        const existing = main.bookmakers.find(b => b.key === bkr.key);
+        if (existing) {
+          for (const mkt of (bkr.markets || [])) {
+            if (!existing.markets.find(m => m.key === mkt.key)) existing.markets.push(mkt);
+          }
+        } else {
+          main.bookmakers.push(bkr);
+        }
+      }
+      htBttsEnriched++;
+    }
+  }
+  if (htEnriched > 0 || htBttsEnriched > 0)
+    console.log(`  [OddsAPI] HZ-Märkte enriched: h2h_h1/totals_h1 ${htEnriched} · btts_h1 ${htBttsEnriched} Events`);
 
   let oddsOk = 0, oddsMiss = 0;
   for (const d of upcoming) {
