@@ -1985,13 +1985,13 @@ async function loadAllOdds() {
 function computeClientInjuryImpact(inj) {
   if (!inj) return 0;
   let sc = 0;
-  sc += (inj.goalkeeper || 0) * 1.1;
+  sc += (inj.goalkeeper || 0) * 0.9;            // 1 TW-Ausfall spürbar, Backup meist solide
   sc += Math.min(inj.attack || 0, 4) * 0.95;
   if ((inj.attack || 0) >= 3) sc += 0.7;
   sc += Math.min(inj.defense || 0, 4) * 0.60;
   if ((inj.defense || 0) >= 3) sc += 0.5;
   sc += Math.min(inj.midfield || 0, 5) * 0.30;
-  sc += (inj.goalkeeper || 0) >= 2 ? 1.0 : 0;
+  sc += (inj.goalkeeper || 0) >= 2 ? 0.4 : 0;  // 2 TW fehlen: deutlich, aber nicht katastrophal
   sc += (inj.questionable || 0) * 0.25;
   return Math.min(6.0, Math.round(sc * 10) / 10);
 }
@@ -3557,6 +3557,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if ((_hInj?.goalkeeper||0)>0) _hAreas.push(`TW${_hInj.goalkeeper}`);
       if ((_hInj?.attack||0)>0)     _hAreas.push(`Ang${_hInj.attack}`);
       if ((_hInj?.defense||0)>0)    _hAreas.push(`Abw${_hInj.defense}`);
+      if ((_hInj?.midfield||0)>0)   _hAreas.push(`MF${_hInj.midfield}`);
       chips.push(`<span class="mod-chip mod-inj">${_hInjIcon} ${match.home} ${_hImpact.toFixed(1)}${_hAreas.length?' ('+_hAreas.join('/')+')':''}</span>`);
     }
     if ((hAway || hGoal) && _aImpact >= 0.5) {
@@ -3565,6 +3566,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if ((_aInj?.goalkeeper||0)>0) _aAreas.push(`TW${_aInj.goalkeeper}`);
       if ((_aInj?.attack||0)>0)     _aAreas.push(`Ang${_aInj.attack}`);
       if ((_aInj?.defense||0)>0)    _aAreas.push(`Abw${_aInj.defense}`);
+      if ((_aInj?.midfield||0)>0)   _aAreas.push(`MF${_aInj.midfield}`);
       chips.push(`<span class="mod-chip mod-inj">${_aInjIcon} ${match.away} ${_aImpact.toFixed(1)}${_aAreas.length?' ('+_aAreas.join('/')+')':''}</span>`);
     }
     // xG impact summary for goals markets
@@ -4310,11 +4312,11 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
     const names = confirmed.slice(0, 2).map(p => p.player.split(' ').slice(-1)[0]);
     const nameStr = names.length ? names.join(', ') + (confirmed.length > 2 ? ` +${confirmed.length - 2}` : '') : '';
     const areaMap = [];
-    if ((inj.attack||0)   > 0) areaMap.push(`${inj.attack} att`);
-    if ((inj.defense||0)  > 0) areaMap.push(`${inj.defense} def`);
-    if ((inj.midfield||0) > 0 && areaMap.length < 2) areaMap.push(`${inj.midfield} mid`);
     if ((inj.goalkeeper||0) > 0) areaMap.push('GK');
-    const areaStr = areaMap.length ? ` · ${areaMap[0]}` : '';
+    if ((inj.attack||0)     > 0) areaMap.push(`${inj.attack} att`);
+    if ((inj.defense||0)    > 0) areaMap.push(`${inj.defense} def`);
+    if ((inj.midfield||0)   > 0) areaMap.push(`${inj.midfield} mid`);
+    const areaStr = areaMap.length ? ` · ${areaMap.slice(0,3).join('/')}` : '';
     const label = nameStr ? `${nameStr} out${areaStr}` : `${inj.total} missing${areaStr}`;
     return {text:`🏥 ${teamName}: ${label}`, col};
   };
@@ -4951,11 +4953,11 @@ function shareTelegram(matchJson, leagueName, leagueFlag, leagueKey) {
     const names = confirmed.slice(0, 2).map(p => p.player.split(' ').slice(-1)[0]);
     const nameStr = names.length ? names.join(', ') + (confirmed.length > 2 ? ` +${confirmed.length - 2}` : '') : '';
     const areaMap = [];
-    if ((inj.attack||0)   > 0) areaMap.push(`${inj.attack} Angriff`);
-    if ((inj.defense||0)  > 0) areaMap.push(`${inj.defense} Abwehr`);
-    if ((inj.midfield||0) > 0 && areaMap.length < 2) areaMap.push(`${inj.midfield} MF`);
-    if ((inj.goalkeeper||0) > 0) areaMap.push('Torwart');
-    const areaStr = areaMap.length ? ` · ${areaMap[0]}` : '';
+    if ((inj.goalkeeper||0) > 0) areaMap.push('TW');
+    if ((inj.attack||0)     > 0) areaMap.push(`${inj.attack} Ang`);
+    if ((inj.defense||0)    > 0) areaMap.push(`${inj.defense} Abw`);
+    if ((inj.midfield||0)   > 0) areaMap.push(`${inj.midfield} MF`);
+    const areaStr = areaMap.length ? ` · ${areaMap.slice(0,3).join('/')}` : '';
     const label = nameStr ? `${nameStr} fehlt${confirmed.length > 1 ? 'en' : ''}${areaStr}` : `${inj.total} Ausfälle${areaStr}`;
     return `${icon} 🏥 ${teamName}: ${label}`;
   };
@@ -5224,11 +5226,11 @@ function copyCard(matchJson, leagueName, leagueFlag, leagueKey, btn, lang = 'de'
     const names = confirmed.slice(0, 2).map(p => p.player.split(' ').slice(-1)[0]);
     const nameStr = names.length ? names.join(', ') + (confirmed.length > 2 ? ` +${confirmed.length - 2}` : '') : '';
     const areaMap = [];
-    if ((inj.attack||0)   > 0) areaMap.push(`${inj.attack} Angriff`);
-    if ((inj.defense||0)  > 0) areaMap.push(`${inj.defense} Abwehr`);
-    if ((inj.midfield||0) > 0 && areaMap.length < 2) areaMap.push(`${inj.midfield} MF`);
-    if ((inj.goalkeeper||0) > 0) areaMap.push('Torwart');
-    const areaStr = areaMap.length ? ` · ${areaMap[0]}` : '';
+    if ((inj.goalkeeper||0) > 0) areaMap.push('TW');
+    if ((inj.attack||0)     > 0) areaMap.push(`${inj.attack} Ang`);
+    if ((inj.defense||0)    > 0) areaMap.push(`${inj.defense} Abw`);
+    if ((inj.midfield||0)   > 0) areaMap.push(`${inj.midfield} MF`);
+    const areaStr = areaMap.length ? ` · ${areaMap.slice(0,3).join('/')}` : '';
     const label = nameStr ? `${nameStr} fehlt${confirmed.length > 1 ? 'en' : ''}${areaStr}` : `${inj.total} Ausfälle${areaStr}`;
     return `${icon} 🏥 ${teamName}: ${label}`;
   };
@@ -5543,9 +5545,17 @@ function buildPickOfDayHtml(matchList) {
   const flag  = m.leagueFlag || '';
   const date  = m.date || '';
   const time  = m.time  ? ` · ${m.time}` : '';
+  const _potdInjTeam = (() => {
+    const hi = m.homeForm?.injuries?.impactScore || 0;
+    const ai = m.awayForm?.injuries?.impactScore || 0;
+    if (hi >= 2.0 && ai >= 2.0) return '';
+    if (hi >= 2.0) return ` · ${m.home.split(' ').slice(-1)[0]}`;
+    if (ai >= 2.0) return ` · ${m.away.split(' ').slice(-1)[0]}`;
+    return '';
+  })();
   const vTag  = p.value === 'hot'       ? '<span class="value-tag hot">🔥 VALUE</span>'
               : p.value === 'value'     ? '<span class="value-tag val">💰 Value</span>'
-              : p.value === 'inj-edge'  ? '<span class="value-tag inj">🏥 Inj. Edge</span>' : '';
+              : p.value === 'inj-edge'  ? `<span class="value-tag inj">🏥 Inj. Edge${_potdInjTeam}</span>` : '';
   const oddsStr = p.odds ? `@ ${p.odds.toFixed(2)}` : '';
   const confStr = p.conf === 'high' ? '★★★' : '★★☆';
 
@@ -5727,9 +5737,17 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       : `<span style="font-size:10px;color:var(--muted);margin-left:4px;font-style:italic">keine Quote</span>`;
     const lowWarn  = oddsNum != null && oddsNum < 1.40
       ? `<span style="font-size:10px;color:#e3b341;margin-left:5px;font-weight:600" title="Quote unter 1.40 — wenig Wert">⚠ niedrig</span>` : '';
+    const _injEdgeTeam = (() => {
+      const hi = match.homeForm?.injuries?.impactScore || 0;
+      const ai = match.awayForm?.injuries?.impactScore || 0;
+      if (hi >= 2.0 && ai >= 2.0) return '';
+      if (hi >= 2.0) return ` · ${match.home.split(' ').slice(-1)[0]}`;
+      if (ai >= 2.0) return ` · ${match.away.split(' ').slice(-1)[0]}`;
+      return '';
+    })();
     const valueTag = p.value === 'hot'       ? '<span class="value-tag hot">🔥 VALUE</span>'
                    : p.value === 'value'    ? '<span class="value-tag val">💰 Value</span>'
-                   : p.value === 'inj-edge' ? '<span class="value-tag inj">🏥 Inj. Edge</span>' : '';
+                   : p.value === 'inj-edge' ? `<span class="value-tag inj">🏥 Inj. Edge${_injEdgeTeam}</span>` : '';
     const confClass = {high:'conf-high',medium:'conf-medium',low:'conf-low'}[p.conf]||'conf-medium';
     const confLabel = {high:'★★★',medium:'★★☆',low:'★☆☆'}[p.conf]||'★★☆';
 
@@ -5882,11 +5900,11 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     const nameStr = names.length ? names.join(', ') + (confirmed.length > 2 ? ` +${confirmed.length - 2}` : '') : '';
     // Position area (most affected)
     const areaMap = [];
-    if ((inj.attack||0)    > 0) areaMap.push(`${inj.attack} Angriff`);
-    if ((inj.defense||0)   > 0) areaMap.push(`${inj.defense} Abwehr`);
-    if ((inj.midfield||0)  > 0 && areaMap.length < 2) areaMap.push(`${inj.midfield} MF`);
-    if ((inj.goalkeeper||0)> 0) areaMap.push(`Torwart`);
-    const areaStr = areaMap.length ? ` · ${areaMap[0]}` : '';
+    if ((inj.goalkeeper||0) > 0) areaMap.push('TW');
+    if ((inj.attack||0)     > 0) areaMap.push(`${inj.attack} Ang`);
+    if ((inj.defense||0)    > 0) areaMap.push(`${inj.defense} Abw`);
+    if ((inj.midfield||0)   > 0) areaMap.push(`${inj.midfield} MF`);
+    const areaStr = areaMap.length ? ` · ${areaMap.slice(0,3).join('/')}${inj.posEstimated ? ' ~' : ''}` : '';
     const label = nameStr ? `${nameStr} fehlt${confirmed.length > 1 ? 'en' : ''}${areaStr}` : `${inj.total} Ausfälle${areaStr}`;
     return `<span class="ctx-badge ${cls}">🏥 ${teamName}: ${label}</span>`;
   };
@@ -7739,9 +7757,9 @@ async function _apifbFetchStats(fixtureId) {
 
 // ── Fetch injuries for a specific fixture ───────────────────────────────────
 async function _apifbFetchInjuries(fixtureId) {
-  // Cache 24h — injuries don't change often
+  // Cache 3h — late withdrawals come 2-4h before kickoff
   const INJ_KEY = 'injData_v1';
-  const INJ_TTL = 24 * 3600 * 1000;
+  const INJ_TTL = 3 * 3600 * 1000;
   try {
     const cache = JSON.parse(localStorage.getItem(INJ_KEY) || '{}');
     if (cache[fixtureId] && Date.now() - cache[fixtureId].ts < INJ_TTL) return cache[fixtureId].data;
@@ -8537,6 +8555,8 @@ function _injectPreMatchAndRerender() {
         } else {
           // No position data — use total count, distribute by average league statistics
           // On average: ~15% GK, ~28% DEF, ~32% MID, ~25% FWD of injured players
+          // Positionen unbekannt → statistische Schätzung (keine echten Positionsdaten verfügbar)
+          // Positionsbadges in dieser Konstellation sind Näherungswerte, nicht bestätigte Fakten
           const c = confirmed.length;
           inj = {
             goalkeeper:   Math.round(c * 0.15),
@@ -8546,6 +8566,7 @@ function _injectPreMatchAndRerender() {
             confirmed:    c,
             questionable: questionable.length,
             total:        list.length,
+            posEstimated: true,   // ← flag: Positionsangaben sind Schätzungen, keine API-Daten
             notes:        list.map(i => `${i.player} (${i.type === 'Missing Fixture' ? 'Gesperrt/Verletzt' : 'Fraglich'}${i.reason ? ' — ' + i.reason : ''})`),
             _raw: list
           };
