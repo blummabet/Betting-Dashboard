@@ -65,12 +65,11 @@ const LEAGUE_ODDS_KEYS = {
   218: 'soccer_austria_bundesliga',
   88:  'soccer_netherlands_eredivisie',
   94:  'soccer_portugal_primeira_liga',
-  179: 'soccer_scotland_premiership',
   203: 'soccer_turkey_super_league',
   144: 'soccer_belgium_first_div_a',
   106: 'soccer_poland_ekstraklasa',
-  271: 'soccer_hungary_nb_i',
-  210: 'soccer_croatia_hnl',
+  // 179 (SCO), 271 (HUN), 210 (CRO): not available in The Odds API — these leagues
+  // have no coverage and return 404. Odds for these come from API-Football fallback.
 };
 const PORT      = 3001;
 const CACHE_TTL = 6 * 3600 * 1000;  // 6 Stunden
@@ -111,7 +110,7 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 function oddsApiFetch(sportKey) {
   return new Promise((resolve, reject) => {
     const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
-      + `&regions=eu&markets=h2h,spreads,totals,btts&oddsFormat=decimal`;
+      + `&regions=eu&markets=h2h,spreads,totals&oddsFormat=decimal`;
     const options = { hostname: ODDS_API_HOST, path, method: 'GET',
       headers: { 'User-Agent': 'CocoBet/1.0' } };
     const req = https.request(options, res => {

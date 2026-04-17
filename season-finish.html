@@ -1917,14 +1917,11 @@ const LEAGUE_SPORT_KEYS = {
   AUT:'soccer_austria_bundesliga',
   NED:'soccer_netherlands_eredivisie',
   POR:'soccer_portugal_primeira_liga',
-  SCO:'soccer_scotland_premiership',
   TUR:'soccer_turkey_super_league',
   SUI:'soccer_switzerland_superleague',
-  // Additional leagues now fully covered:
   BEL:'soccer_belgium_first_div_a',
   POL:'soccer_poland_ekstraklasa',
-  HUN:'soccer_hungary_nb_i',
-  CRO:'soccer_croatia_hnl',
+  // SCO / HUN / CRO: not covered by The Odds API — odds via prematch-data.json fallback
 };
 
 window._oddsData = {};
@@ -2043,7 +2040,7 @@ function findOdds(leagueKey, home, away) {
 
 async function loadAllOdds() {
   // ── Cache: refresh every 2h — odds move more often closer to kickoff ─────
-  const CACHE_KEY = 'sfOddsCache_v5';  // bumped: added spreads + 4 new leagues
+  const CACHE_KEY = 'sfOddsCache_v6';  // bumped: removed btts (422), removed SCO/HUN/CRO (404)
   const CACHE_TTL = 2 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
@@ -2058,7 +2055,7 @@ async function loadAllOdds() {
   let oddsApiOk = 0, oddsApiErr = '', oddsApiQuota = null;
   await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
     try {
-      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,spreads,totals,btts&oddsFormat=decimal`;
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=h2h,spreads,totals&oddsFormat=decimal`;
       const resp = await fetch(url);
       // Track remaining quota from response headers
       if (resp.headers?.get('x-requests-remaining')) {
