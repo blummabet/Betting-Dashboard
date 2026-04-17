@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-BetEdge — Daily Picks Logic Validator
+CocoBet — Daily Picks Logic Validator
 ======================================
 Liest season-finish.html, extrahiert alle anstehenden Spiele und prüft
 jeden Pick auf logische Konsistenz. Gibt strukturierte Fehler/Warnungen aus.
@@ -15,6 +15,14 @@ Prüft automatisch auf:
   🔴 FEHLER   — definitive Logik-Bugs (z.B. mustWin auf bestätigtem Abstieg)
   🟡 WARNUNG  — verdächtige Konstellationen (z.B. red-safe mit Panik-Text)
   🔵 HINWEIS  — schwache Pick-Basis (z.B. H2H dominiert aber kein Kontext)
+
+Injury-Checks (neu):
+  🔴 FEHLER   — impactScore fehlt obwohl Ausfälle vorhanden
+  🔴 FEHLER   — impactScore > 6.0 (Kappung überschritten)
+  🟡 WARNUNG  — posEstimated=True bei hohem Impact (Positionen geraten, nicht bestätigt)
+  🟡 WARNUNG  — Auswärtsteam hat kritischen Impact aber Heimsieg klar empfohlen
+  🟡 WARNUNG  — Heimteam hat kritischen Impact aber Away-Wette fehlt als Absicherung
+  🔵 HINWEIS  — Over 2.5 Empfehlung bei kombinierten Verletzungsausfällen (xG reduziert)
 """
 
 import json
@@ -200,6 +208,101 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
                  f"vs {low_side} ({min(hs.get('score',0),aws.get('score',0))}). "
                  f"Pick-Richtung sehr klar — Favoritenpflicht prüfen.")
 
+    # ─────────────────────────────────────────────────────────────────────────
+    # INJURY CHECKS
+    # ─────────────────────────────────────────────────────────────────────────
+    h_inj = hf.get("injuries") or {}
+    a_inj = af.get("injuries") or {}
+
+    def inj_impact(inj_obj):
+        return inj_obj.get("impactScore", 0) or 0
+
+    def inj_confirmed(inj_obj):
+        return inj_obj.get("confirmed", 0) or 0
+
+    def inj_total(inj_obj):
+        return inj_obj.get("total", 0) or 0
+
+    h_impact = inj_impact(h_inj)
+    a_impact = inj_impact(a_inj)
+    h_conf   = inj_confirmed(h_inj)
+    a_conf   = inj_confirmed(a_inj)
+
+    # 🔴 FEHLER: impactScore fehlt aber Ausfälle vorhanden
+    if inj_total(h_inj) > 0 and h_inj.get("impactScore") is None:
+        flag("ERROR", "INJ_MISSING_IMPACT_HOME",
+             f"{home}: {inj_total(h_inj)} Verletzte/Gesperrte aber impactScore fehlt. "
+             f"computeClientInjuryImpact() wurde nicht aufgerufen.")
+    if inj_total(a_inj) > 0 and a_inj.get("impactScore") is None:
+        flag("ERROR", "INJ_MISSING_IMPACT_AWAY",
+             f"{away}: {inj_total(a_inj)} Verletzte/Gesperrte aber impactScore fehlt. "
+             f"computeClientInjuryImpact() wurde nicht aufgerufen.")
+
+    # 🔴 FEHLER: impactScore > 6.0 (Kappung überschritten — JS capped bei 6.0)
+    if h_impact > 6.1:
+        flag("ERROR", "INJ_IMPACT_CAP_EXCEEDED_HOME",
+             f"{home}: impactScore={h_impact:.1f} überschreitet Cap von 6.0. "
+             f"computeClientInjuryImpact() hat Math.min(6.0, ...) nicht korrekt angewendet.")
+    if a_impact > 6.1:
+        flag("ERROR", "INJ_IMPACT_CAP_EXCEEDED_AWAY",
+             f"{away}: impactScore={a_impact:.1f} überschreitet Cap von 6.0.")
+
+    # 🔴 FEHLER: impactScore ist negativ (Rechenfehler)
+    if h_impact < 0:
+        flag("ERROR", "INJ_NEGATIVE_IMPACT_HOME",
+             f"{home}: impactScore={h_impact:.1f} ist negativ — Berechnungsfehler.")
+    if a_impact < 0:
+        flag("ERROR", "INJ_NEGATIVE_IMPACT_AWAY",
+             f"{away}: impactScore={a_impact:.1f} ist negativ — Berechnungsfehler.")
+
+    # 🟡 WARNUNG: posEstimated=True bei hohem Impact
+    if h_inj.get("posEstimated") and h_impact >= 2.0:
+        flag("WARN", "INJ_POSITIONS_ESTIMATED_HOME",
+             f"{home}: impactScore={h_impact:.1f} aber Positionsdaten geschätzt (posEstimated=True). "
+             f"Keine echten Positionsdaten vom Server — xG-Modifikation ungenau.")
+    if a_inj.get("posEstimated") and a_impact >= 2.0:
+        flag("WARN", "INJ_POSITIONS_ESTIMATED_AWAY",
+             f"{away}: impactScore={a_impact:.1f} aber Positionsdaten geschätzt (posEstimated=True). "
+             f"Keine echten Positionsdaten vom Server — xG-Modifikation ungenau.")
+
+    # 🟡 WARNUNG: Kritischer Ausfall bei Auswärtsteam (≥3.5) + Away-Angriff stark betroffen
+    # → Over 2.5 Empfehlung ist fragwürdig
+    a_attack_out = (a_inj.get("attack") or 0)
+    h_attack_out = (h_inj.get("attack") or 0)
+    if a_impact >= 3.5 and a_attack_out >= 2 and ms >= 7.0:
+        flag("WARN", "INJ_AWAY_CRITICAL_ATTACK_HIGH_SCORE",
+             f"{away}: kritischer Ausfall (impact={a_impact:.1f}, {a_attack_out} Stürmer fehlen) "
+             f"bei matchScore={ms}. Over 2.5 oder BTTS-Picks in diese Richtung kritisch prüfen.")
+
+    if h_impact >= 3.5 and h_attack_out >= 2 and ms >= 7.0:
+        flag("WARN", "INJ_HOME_CRITICAL_ATTACK_HIGH_SCORE",
+             f"{home}: kritischer Ausfall (impact={h_impact:.1f}, {h_attack_out} Stürmer fehlen) "
+             f"bei matchScore={ms}. Over 2.5 oder BTTS-Picks kritisch prüfen.")
+
+    # 🟡 WARNUNG: Heim-Torhüter fehlt UND Auswärtssieg NICHT in Picks vertreten
+    # Kein Zugriff auf Pick-Liste hier → prüfen ob Auswärtssieg wenigstens diskutiert wird
+    h_gk_out = (h_inj.get("goalkeeper") or 0)
+    if h_gk_out >= 1 and h_impact >= 2.0 and ms >= 7.5:
+        flag("INFO", "INJ_HOME_GK_MISSING_CHECK_AWAY",
+             f"{home}: {h_gk_out} TW fehlt (impact={h_impact:.1f}). "
+             f"Bei matchScore={ms} prüfen ob Auswärtssieg-Pick oder DNB Away als Safer Alt vorhanden.")
+
+    # 🔵 HINWEIS: Beide Teams haben Ausfälle → Over 2.5 ist riskant
+    both_attack_out = h_attack_out + a_attack_out
+    if both_attack_out >= 3 and ms >= 6.5:
+        flag("INFO", "INJ_BOTH_TEAMS_ATTACK_DEPLETED",
+             f"Kombiniert {both_attack_out} Stürmer fehlen (H:{h_attack_out} A:{a_attack_out}). "
+             f"Over 2.5 Tore Picks sind durch Verletzungskorrektur stark reduziert — Modell bevorzugt Under.")
+
+    # 🔵 HINWEIS: Sehr hohe Ausfallrate (≥5 bestätigt) — Kader-Tiefe kritisch
+    if h_conf >= 5:
+        flag("INFO", "INJ_SQUAD_DEPTH_HOME",
+             f"{home}: {h_conf} bestätigte Ausfälle — Kadertiefe kritisch, "
+             f"Rotation und Formeinbruch wahrscheinlich. Impact={h_impact:.1f}.")
+    if a_conf >= 5:
+        flag("INFO", "INJ_SQUAD_DEPTH_AWAY",
+             f"{away}: {a_conf} bestätigte Ausfälle — Kadertiefe kritisch. Impact={a_impact:.1f}.")
+
     return issues
 
 
@@ -344,7 +447,7 @@ def main():
         cutoff = today + timedelta(days=21)  # max 3 Wochen voraus
 
     print("=" * 65)
-    print("  BetEdge — Picks Logik-Check")
+    print("  🐕 CocoBet — Picks Logik-Check")
     print(f"  {datetime.now().strftime('%d.%m.%Y %H:%M')}")
     if filter_date:
         print(f"  Filter: Datum {filter_date}")
