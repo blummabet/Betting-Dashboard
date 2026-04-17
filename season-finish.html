@@ -4839,42 +4839,69 @@ async function shareInfographic() {
   } catch(e) {}
 }
 
-// ── Copy the rendered HTML card as a PNG image ───────────
-async function copyCardImage(btn) {
-  const card = btn.closest('.stake-card');
-  if (!card) return;
+// ── Shared card-to-PNG helper ────────────────────────────
+async function _captureCard(card, btn, lang = 'de') {
   const orig = btn.innerHTML;
   btn.innerHTML = '⏳';
   btn.disabled = true;
+
+  // For EN: translate all text nodes in the card, revert after screenshot
+  const _snapshots = [];
+  if (lang === 'en') {
+    const walk = node => {
+      if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+        const translated = _translateEN(node.textContent);
+        if (translated !== node.textContent) {
+          _snapshots.push({ node, orig: node.textContent });
+          node.textContent = translated;
+        }
+      } else {
+        node.childNodes.forEach(walk);
+      }
+    };
+    walk(card);
+  }
+
   try {
-    // html2canvas: scale 2× for retina-quality, transparent bg preserved
     const canvas = await html2canvas(card, {
       scale: 2,
       backgroundColor: null,
       useCORS: true,
       logging: false,
-      // Ensure the full card including shadows is captured
       scrollX: 0,
       scrollY: -window.scrollY,
     });
+
+    // Revert DOM immediately after capture
+    _snapshots.forEach(({ node, orig }) => { node.textContent = orig; });
+
     const blob = await new Promise(r => canvas.toBlob(r, 'image/png'));
     if (navigator.clipboard?.write) {
       await navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
-      btn.innerHTML = '✅';
+      btn.innerHTML = lang === 'en' ? '🇬🇧✅' : '✅';
       setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 2000);
     } else {
-      // Fallback: download
+      const home = card.querySelector('.card-home')?.textContent?.trim().replace(/\s+/g,'-') || 'home';
+      const away = card.querySelector('.card-away')?.textContent?.trim().replace(/\s+/g,'-') || 'away';
       const a = document.createElement('a');
       a.href = canvas.toDataURL('image/png');
-      a.download = `betedge-card-${card.querySelector('.card-home')?.textContent?.trim().replace(/\s+/g,'-')}-vs-${card.querySelector('.card-away')?.textContent?.trim().replace(/\s+/g,'-')}.png`;
+      a.download = `cocobet-card-${home}-vs-${away}${lang==='en'?'-en':''}.png`;
       a.click();
       btn.innerHTML = orig; btn.disabled = false;
     }
   } catch(e) {
+    _snapshots.forEach(({ node, orig }) => { node.textContent = orig; }); // always revert
     console.error('[copyCardImage]', e);
     btn.innerHTML = '❌';
     setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 2000);
   }
+}
+
+// ── Copy the rendered HTML card as a PNG image ───────────
+async function copyCardImage(btn, lang = 'de') {
+  const card = btn.closest('.stake-card');
+  if (!card) return;
+  await _captureCard(card, btn, lang);
 }
 
 async function copyInfographic(btn) {
@@ -5057,6 +5084,87 @@ function _translateEN(text) {
     [/Conference League/g,           'Conference League'],
     [/kein direkter Stake/g,         'no direct stake'],
     [/Keine Daten/g,                 'No data'],
+
+    // Odds display (text copy)
+    [/BTTS Ja\b/g,                   'BTTS Yes'],
+    [/BTTS Nein\b/g,                 'BTTS No'],
+
+    // Card UI labels (image copy)
+    [/🎲 Top Wetten für diese Partie/g, '🎲 Top Bets for this Match'],
+    [/Wett-Winkel/g,                 'Betting Angle'],
+    [/🛡️ Hauptempfehlung:/g,         '🛡️ Main Pick:'],
+    [/📈 Mehr Value:/g,              '📈 More Value:'],
+    [/Modell-Näherung/g,             'Model estimate'],
+    [/Hohe Konfidenz/g,              'High Confidence'],
+    [/Mittlere Konfidenz/g,          'Medium Confidence'],
+    [/Niedrige Konfidenz/g,          'Low Confidence'],
+
+    // Reason text — fixed patterns
+    [/📊 Heimstatistik \(Saison\):/g,     '📊 Home stats (season):'],
+    [/📊 Auswärtsstatistik \(Saison\):/g, '📊 Away stats (season):'],
+    [/🔥 Aktueller Lauf:/g,          '🔥 Current streak:'],
+    [/📡 API-Signale bestätigen[^:]*:/g,  '📡 API signals confirm:'],
+    [/📡 API-Signale:/g,             '📡 API signals:'],
+    [/🤖 Statistisches Modell sieht ([^m]+) mit (\d+)% als Favorit — bestätigt die Analyse\./g,
+      (_, team, pct) => `🤖 Statistical model: ${team} at ${pct}% — confirms the analysis.`],
+    [/🤖 Statistisches Modell sieht ([^m]+) mit (\d+)% als Favorit\./g,
+      (_, team, pct) => `🤖 Statistical model: ${team} at ${pct}% — slightly favoured.`],
+    [/⚠️ Statistisches Modell: ([^ ]+) nur bei (\d+)% Siegchance — Modell ist skeptischer\./g,
+      (_, team, pct) => `⚠️ Statistical model: ${team} only at ${pct}% — model is more cautious.`],
+    [/🤖 API-Modell erwartet ([\d.]+) Tore — bestätigt die Over-Prognose\./g,
+      (_, n) => `🤖 Model expects ${n} goals — confirms the Over.`],
+    [/🤖 API-Modell erwartet nur ([\d.]+) Tore — geht von weniger Toren aus\./g,
+      (_, n) => `🤖 Model expects only ${n} goals — projects fewer goals.`],
+    [/📊 Elo bestätigt:/g,           '📊 Elo confirms:'],
+    [/⚠️ Elo-Warnung:/g,             '⚠️ Elo warning:'],
+    [/% Siege/g,                     '% wins'],
+    [/% Siege · /g,                  '% wins · '],
+    [/% Clean Sheets/g,              '% clean sheets'],
+    [/(\d+)× ungeschlagen/g,         (_, n) => `${n}× unbeaten`],
+    [/(\d+)× ohne Sieg/g,            (_, n) => `${n}× without a win`],
+    [/ zeigt aktuell klar die bessere Form\./g, ' is showing clearly better current form.'],
+    [/ hat aktuell die bessere Formkurve — Vorsicht\./g, ' has the better current form — caution.'],
+    [/ liegt in der aktuellen Form vorn — Vorsicht\./g, ' leads in current form — caution.'],
+
+    // Reason prose — most common sentences
+    [/ist in Topform \(zuletzt (\d+) Siege\)/g,  (_, n) => `is in top form (last ${n} wins)`],
+    [/kämpft um den Titel/g,         'fighting for the title'],
+    [/kämpft gegen den Abstieg/g,    'fighting relegation'],
+    [/kämpft im Abstiegskampf/g,     'in the relegation battle'],
+    [/braucht jeden Punkt/g,         'needs every point'],
+    [/ist Favorit/g,                 'is the favourite'],
+    [/erzielt Ø ([\d.]+) Tore\/Spiel/g,  (_, n) => `avg ${n} goals/game`],
+    [/kassiert Ø ([\d.]+) Tore\/Spiel/g, (_, n) => `concedes avg ${n} goals/game`],
+    [/lassen regelmäßig Gegentore zu/g,  'concede regularly'],
+    [/ist anfällig/g,                'is vulnerable'],
+    [/Das Modell erwartet ([\d.]+) Tore/g, (_, n) => `Model expects ${n} goals`],
+    [/Tore erwartet/g,               'goals expected'],
+    [/mindestens (\d+) Treffer sind gut möglich/g, (_, n) => `at least ${n} goals are likely`],
+    [/Historisch (\d+)% der (\d+) Duelle über 2\.5 Tore/g,
+      (_, pct, n) => `Historically ${pct}% of ${n} H2H matches over 2.5 goals`],
+    [/Ø ([\d.]+) Tore\/Spiel/g,      (_, n) => `avg ${n} goals/game`],
+    [/gewinnt (\d+)% seiner Heimspiele/g,  (_, n) => `wins ${n}% of home games`],
+    [/gewinnt (\d+)% seiner Auswärtsspiele/g, (_, n) => `wins ${n}% of away games`],
+    [/· H2H: (\d+)H\/(\d+)U\/(\d+)A \((\d+) Duelle\)/g,
+      (_, h, d, a, n) => `· H2H: ${h}W/${d}D/${a}L (${n} games)`],
+    [/ Duelle\b/g,                   ' games'],
+    [/ Duellen\b/g,                  ' games'],
+    [/\bTore\b/g,                    'goals'],
+    [/\bTreffer\b/g,                 'goals'],
+    [/Remis/g,                       'draw'],
+    [/ ist Pflicht/g,                ' is a must'],
+    [/Titeldruck/g,                  'title pressure'],
+    [/mathematisch bestätigt/g,      'mathematically confirmed'],
+    [/ ist abgestiegen/g,            ' has been relegated'],
+    [/ abgestiegen\b/g,              ' relegated'],
+    [/ gesichert\b/g,                ' secured'],
+    [/\bgesichert\b/g,               'secured'],
+    [/nahezu bestätigt/g,            'near-confirmed'],
+    [/Heimvorteil in Existenzkämpfen/g, 'home advantage in must-win games'],
+    [/Druckspiel — /g,               'Pressure game — '],
+    [/Extreme Motivation/g,          'Extreme motivation'],
+    [/hohes Risiko/g,                'high risk'],
+    [/karten-intensive Partie/g,     'card-intensive match'],
 
     // Pressure angle snippets
     [/Muss-Spiel/g,                  'Must-Win'],
@@ -5831,8 +5939,11 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       <button class="share-btn" style="flex:0 0 auto;width:auto;padding:9px 10px;color:#58a6ff;border-color:#58a6ff55;" title="Copy text (EN)" onclick="copyCard('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}',this,'en')">
         🇬🇧
       </button>
-      <button class="share-btn" style="flex:0 0 auto;width:auto;padding:9px 10px;color:#a78bfa;border-color:#a78bfa55;" title="Card als Bild kopieren (DE)" onclick="copyCardImage(this)">
+      <button class="share-btn" style="flex:0 0 auto;width:auto;padding:9px 10px;color:#a78bfa;border-color:#a78bfa55;" title="Card als Bild kopieren (DE)" onclick="copyCardImage(this,'de')">
         🖼️
+      </button>
+      <button class="share-btn" style="flex:0 0 auto;width:auto;padding:9px 10px;color:#58a6ff;border-color:#58a6ff55;" title="Copy card as image (EN)" onclick="copyCardImage(this,'en')">
+        🇬🇧🖼️
       </button>
     </div>
   </div>`;
