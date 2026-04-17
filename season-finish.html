@@ -1981,8 +1981,9 @@ function _parseTheOddsEvent(g) {
       if (mk==='h2h') {
         for (const o of (mkt.outcomes||[])) {
           const nm=norm(o.name);
-          if (!r.hw&&(nm===hTeam||hTeam.includes(nm)||nm.includes(hTeam))) r.hw=o.price;
-          else if (!r.aw&&(nm===aTeam||aTeam.includes(nm)||nm.includes(aTeam))) r.aw=o.price;
+          // o.price > 1.01: reject suspended-market placeholder prices (bookmakers use 1.01 to indicate suspended)
+          if (!r.hw&&o.price>1.01&&(nm===hTeam||hTeam.includes(nm)||nm.includes(hTeam))) r.hw=o.price;
+          else if (!r.aw&&o.price>1.01&&(nm===aTeam||aTeam.includes(nm)||nm.includes(aTeam))) r.aw=o.price;
           else if (!r.dr&&o.price>1.01) r.dr=o.price;
         }
       } else if (mk==='totals') {
@@ -2024,7 +2025,8 @@ function findOdds(leagueKey, home, away) {
     const awayOk=gan.includes(an)||an.includes(gan)||an.split(' ').some(w=>w.length>3&&gan.includes(w));
     if (homeOk && awayOk) {
       const r = _parseTheOddsEvent(g);
-      if (Object.keys(r).length >= 2) return r;
+      // Require at least hw+aw (valid h2h prices > 1.01) — otherwise skip this event
+      if (r.hw && r.aw && r.hw > 1.01 && r.aw > 1.01) return r;
     }
   }
 

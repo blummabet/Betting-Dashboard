@@ -66,10 +66,9 @@ const LEAGUE_ODDS_KEYS = {
   88:  'soccer_netherlands_eredivisie',
   94:  'soccer_portugal_primeira_liga',
   203: 'soccer_turkey_super_league',
-  144: 'soccer_belgium_first_div_a',
   106: 'soccer_poland_ekstraklasa',
-  // 179 (SCO), 271 (HUN), 210 (CRO): not available in The Odds API — these leagues
-  // have no coverage and return 404. Odds for these come from API-Football fallback.
+  // 179 (SCO), 271 (HUN), 210 (CRO), 144 (BEL): not available in The Odds API
+  // These leagues return 404. Odds for these come from API-Football fallback.
 };
 const PORT      = 3001;
 const CACHE_TTL = 6 * 3600 * 1000;  // 6 Stunden
