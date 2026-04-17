@@ -562,7 +562,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .sig-fatigue    {background:rgba(121,192,255,.12);color:#79c0ff;border:1px solid rgba(29,78,122,.8);}
 .sig-h2h        {background:rgba(160,148,255,.12);color:#a094ff;border:1px solid rgba(90,74,154,.8);}
 .sig-movement   {background:rgba(63,185,80,.12);color:#56d364;border:1px solid rgba(26,92,36,.8);}
+.sig-booking    {background:rgba(240,192,64,.12);color:#f0c040;border:1px solid rgba(122,101,0,.8);}
 /* ── end Signal Bar ─────────────────────────────────────────────── */
+.ctx-booking-tactical{background:#1a1800;color:#f0c040;border:1px solid #7a6500;}
+.ctx-booking-warn    {background:#161400;color:#c8a830;border:1px solid #5a4a00;}
+.ctx-booking-risk    {background:#131300;color:#9a9060;border:1px solid #3a3800;}
 .ctx-fatigue-high{background:#2a1000;color:#f85149;border:1px solid #6b1d1d;}
 .ctx-fatigue-med {background:#1a1500;color:#e3b341;border:1px solid #5a4700;}
 .ctx-injury-atk  {background:#1a001a;color:#d2a8ff;border:1px solid #5a2d82;}
@@ -5720,6 +5724,84 @@ function getPressureLabel(stakeObj, teamName) {
   return '';
 }
 
+// ═══════════════════════════════════════════════════════════════════
+//  TACTICAL BOOKING HELPERS
+// ═══════════════════════════════════════════════════════════════════
+
+// Returns next N upcoming fixtures for a team from the league's fixture list
+function getNextFixtures(teamName, afterDate, allFixtures, n = 2) {
+  const d0 = parseGermanDate(afterDate);
+  return allFixtures
+    .filter(f => (f.home === teamName || f.away === teamName)
+              && parseGermanDate(f.date) > d0)
+    .sort((a, b) => parseGermanDate(a.date) - parseGermanDate(b.date))
+    .slice(0, n);
+}
+
+// Opponent quality score for a fixture, from the perspective of teamName.
+// Higher = more important / harder opponent → less likely to "waste" a suspension here.
+function getOpponentQuality(fixture, teamName) {
+  if (!fixture) return 5;
+  const isHome   = fixture.home === teamName;
+  const oppStake = isHome ? fixture.awayStake : fixture.homeStake;
+  if (!oppStake) return 5;
+  const colors = (oppStake.labels || []).map(l => l.c);
+  let q = (oppStake.score || 5);
+  if (colors.includes('gold'))   q += 3.0;   // title contender — big game
+  if (colors.includes('blue'))   q += 2.0;   // UCL chaser
+  if (colors.includes('orange')) q += 1.0;   // EL chaser
+  if (colors.includes('red'))    q += 1.5;   // relegation battle — intense game
+  if (oppStake.mustWin)          q += 2.0;   // must-win for opponent → extra pressure
+  if ((oppStake.pressureRatio || 0) > 0) q += oppStake.pressureRatio * 1.5;
+  return Math.round(q * 10) / 10;
+}
+
+// Analyses a team's bookings for tactical booking risk.
+// Returns array of {player, yellows, threshold, signal} or []
+function getTacticalBookingSignals(bookingsSide, teamName, matchDate, allFixtures) {
+  if (!bookingsSide?.length) return [];
+  const signals = [];
+  const next2 = getNextFixtures(teamName, matchDate, allFixtures, 2);
+  const nextFx    = next2[0] || null;   // game they'd MISS if booked now
+  const overNextFx = next2[1] || null;  // game they'd RETURN for
+
+  const q1 = nextFx     ? getOpponentQuality(nextFx, teamName)     : null;
+  const q2 = overNextFx ? getOpponentQuality(overNextFx, teamName) : null;
+
+  // Tactical booking makes sense when:
+  //   suspension game (q1) is against a weaker opponent than the return game (q2)
+  const isTactical = q1 !== null && q2 !== null && q2 > q1 + 1.0;
+  // Suspension is "worth it" — miss a easier game, come back fresh for the harder one
+  const isTacticalStrong = q1 !== null && q2 !== null && q2 > q1 + 2.5;
+
+  for (const p of bookingsSide) {
+    if (!p.oneAway) continue;  // only players ONE yellow away from ban
+    const lastName = (p.name || '').split(' ').slice(-1)[0];
+    const posLabel = p.position === 'G' ? 'TW'
+                   : p.position === 'D' ? 'Abwehr'
+                   : p.position === 'F' ? 'Sturm'
+                   : p.position === 'M' ? 'Mittelfeld' : '';
+    const posStr = posLabel ? ` (${posLabel})` : '';
+    signals.push({
+      name:      p.name,
+      lastName,
+      yellows:   p.yellows,
+      threshold: p.threshold,
+      posStr,
+      isTactical,
+      isTacticalStrong,
+      nextOpponent:     nextFx
+        ? (nextFx.home === teamName ? nextFx.away : nextFx.home)
+        : null,
+      overNextOpponent: overNextFx
+        ? (overNextFx.home === teamName ? overNextFx.away : overNextFx.home)
+        : null,
+      q1, q2,
+    });
+  }
+  return signals;
+}
+
 function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   // Enrich match.time + odds_open from prematch-data.json if not already set
   const _pm = window._preMatchData?.[`${match.home}|${match.away}`];
@@ -5823,6 +5905,23 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
     const modsHtml = (p.mods?.length) ? `<div class="pick-mods">${p.mods.join('')}</div>` : '';
 
+    // ── Tactical booking hint (card picks only) ───────────────────────────────
+    // When players are one yellow from suspension, they may play more aggressively
+    // in this match — relevant signal for card market picks.
+    let _tacBookHint = '';
+    if (p.market.includes('Karten')) {
+      const _tbFix  = leagueKey ? (LEAGUES[leagueKey]?.fixtures || []) : [];
+      const _tbSigs = [
+        ...getTacticalBookingSignals(match.bookings?.home || [], match.home, match.date, _tbFix),
+        ...getTacticalBookingSignals(match.bookings?.away || [], match.away, match.date, _tbFix),
+      ];
+      if (_tbSigs.length) {
+        const _tbNames = _tbSigs.slice(0, 2).map(s => `${s.lastName}${s.posStr}`).join(', ');
+        const _tbExtra = _tbSigs.length > 2 ? ` +${_tbSigs.length - 2} weitere` : '';
+        _tacBookHint = `<br>🟨 Gelb-Risiko: ${_tbNames}${_tbExtra} nahe Sperre — könnte(n) aggressiver auftreten.`;
+      }
+    }
+
     // ── Safer / Bolder alternative lines ─────────────────────────────────────
     // saferAlt: pick has odds > 2.0 → safer version is the primary recommendation
     // boldAlt:  pick has odds 1.4–2.0 → bolder version shown as secondary option
@@ -5848,7 +5947,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
         ${altHtml}
         ${fairOddsHtml}
         ${modsHtml}
-        <div class="pick-reason">${p.reason}</div>
+        <div class="pick-reason">${p.reason}${_tacBookHint}</div>
       </div>
       <span class="pick-conf ${confClass}">${confLabel}</span>
     </div>`;
@@ -5931,6 +6030,34 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   if (hInjHtml) ctxBadges.push(hInjHtml);
   if (aInjHtml) ctxBadges.push(aInjHtml);
 
+  // ── Yellow card accumulation / tactical booking ──────────────────────────────
+  const _allFix = leagueKey ? (LEAGUES[leagueKey]?.fixtures || []) : [];
+  const _bkHome = match.bookings?.home || [];
+  const _bkAway = match.bookings?.away || [];
+  const _homeTacSigs = getTacticalBookingSignals(_bkHome, match.home, match.date, _allFix);
+  const _awayTacSigs = getTacticalBookingSignals(_bkAway, match.away, match.date, _allFix);
+
+  for (const sig of [..._homeTacSigs, ..._awayTacSigs]) {
+    const teamLabel = [..._homeTacSigs].includes(sig) ? match.home : match.away;
+    let badgeCls, badgeText;
+    if (sig.isTacticalStrong) {
+      // Clear case: miss a weak game, return for a big one
+      badgeCls  = 'ctx-booking-tactical';
+      badgeText = `🟨 ${sig.lastName}${sig.posStr}: ${sig.yellows}/${sig.threshold} Gelbe`
+        + ` — Sperre vs ${sig.nextOpponent} (schwächer) denkbar`;
+    } else if (sig.isTactical) {
+      // Mild case: slight quality difference
+      badgeCls  = 'ctx-booking-warn';
+      badgeText = `🟨 ${sig.lastName}${sig.posStr}: ${sig.yellows}/${sig.threshold} Gelbe`
+        + ` — eine Karte = gesperrt vs ${sig.nextOpponent}`;
+    } else {
+      // Suspension risk only — no tactical angle visible
+      badgeCls  = 'ctx-booking-risk';
+      badgeText = `🟨 ${sig.lastName}${sig.posStr}: ${sig.yellows}/${sig.threshold} Gelbe — Sperren-Risiko`;
+    }
+    ctxBadges.push(`<span class="ctx-badge ${badgeCls}">${badgeText}</span>`);
+  }
+
   // Referee — clear label, readable format
   const _ref = match.refereeStats || null;
   if (_ref?.name) {
@@ -6002,6 +6129,18 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
   // 6 — Line movement signal
   if (_lmRows?.length) _signals.push({cls:'sig-movement', txt:'📈 Linie bewegt'});
+
+  // 7 — Tactical booking signal
+  const _allFixSig = leagueKey ? (LEAGUES[leagueKey]?.fixtures || []) : [];
+  const _tacHome = getTacticalBookingSignals(match.bookings?.home || [], match.home, match.date, _allFixSig);
+  const _tacAway = getTacticalBookingSignals(match.bookings?.away || [], match.away, match.date, _allFixSig);
+  const _tacStrong = [..._tacHome, ..._tacAway].filter(s => s.isTacticalStrong);
+  const _tacAny    = [..._tacHome, ..._tacAway].filter(s => s.isTactical);
+  if (_tacStrong.length) {
+    _signals.push({cls:'sig-booking', txt:`🟨 Takt. Sperre: ${_tacStrong[0].lastName}`});
+  } else if (_tacAny.length) {
+    _signals.push({cls:'sig-booking', txt:`🟨 Sperren-Risiko: ${_tacAny[0].lastName}`});
+  }
 
   const signalBarHtml = _signals.length
     ? `<div class="signal-bar">${_signals.slice(0,4).map(s=>`<span class="signal-pill ${s.cls}">${s.txt}</span>`).join('')}</div>`
@@ -8375,6 +8514,7 @@ async function loadPreMatchData() {
               awayTeamId:     sf.awayTeamId,
               injuries:       sf.injuries       || { home: [], away: [] },
               injurySummary:  sf.injurySummary  || null,
+              bookings:       sf.bookings       || null,
               h2h:            sf.h2h            || null,
               isFinished:     sf.isFinished     || false,
               odds:           sf.odds           || null,
@@ -8431,6 +8571,7 @@ async function loadPreMatchData() {
               awayTeamId:     sf.awayTeamId,
               injuries:       sf.injuries       || { home: [], away: [] },
               injurySummary:  sf.injurySummary  || null,
+              bookings:       sf.bookings       || null,
               h2h:            sf.h2h            || null,
               isFinished:     sf.isFinished     || false,
               odds:           sf.odds           || null,
@@ -8659,6 +8800,8 @@ function _injectPreMatchAndRerender() {
         match.awayForm = match.awayForm || {};
         match.awayForm.injuries = _buildInj(pm.injuries.away, pm.injurySummary?.away || null);
       }
+      // Bookings (yellow card accumulation)
+      if (pm.bookings) match.bookings = pm.bookings;
     }
   }
 

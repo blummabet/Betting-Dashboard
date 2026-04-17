@@ -113,6 +113,66 @@ function fuzzy(apiName, localName) {
   return false;
 }
 
+// ── Yellow card suspension thresholds per league ────────────────────────────
+// Threshold = number of yellows that triggers 1-match ban in that competition
+const YELLOW_THRESHOLDS = {
+  39:  5,   // Premier League (5, 10, 15)
+  78:  5,   // Bundesliga
+  135: 5,   // Serie A
+  140: 5,   // La Liga
+  61:  5,   // Ligue 1
+  218: 4,   // Austrian Bundesliga
+  88:  5,   // Eredivisie
+  94:  5,   // Primeira Liga
+  179: 5,   // Scottish Premiership
+  203: 5,   // Süper Lig
+  144: 5,   // Jupiler Pro League
+  106: 5,   // Ekstraklasa
+  271: 5,   // NB I
+  210: 4,   // HNL
+};
+
+// ── Bookings cache (24h TTL, persisted to bookings-cache.json) ──────────────
+// Stores yellow card counts per player per team — refreshed daily
+const BOOKINGS_CACHE_FILE = path.join(__dirname, 'bookings-cache.json');
+const BOOKINGS_TTL = 24 * 3600 * 1000;
+let _bookingsCache = {};
+try {
+  _bookingsCache = JSON.parse(fs.readFileSync(BOOKINGS_CACHE_FILE, 'utf8'));
+  const _alive = Object.keys(_bookingsCache).filter(id => Date.now() - (_bookingsCache[id]?.ts||0) < BOOKINGS_TTL).length;
+  console.log(`[Bookings] Cache geladen: ${Object.keys(_bookingsCache).length} Teams (${_alive} noch gültig)`);
+} catch(e) { /* first run */ }
+
+async function fetchTeamBookings(teamId) {
+  if (!teamId) return [];
+  const cached = _bookingsCache[teamId];
+  if (cached && Date.now() - cached.ts < BOOKINGS_TTL) return cached.data;
+  try {
+    // Fetch page 1 (and page 2 if needed) of player stats for this team
+    const data = await apiFetch(`/players?team=${teamId}&season=2025`);
+    const total = data.paging?.total || 1;
+    let entries = data.response || [];
+    if (total >= 2) {
+      await sleep(200);
+      const data2 = await apiFetch(`/players?team=${teamId}&season=2025&page=2`);
+      entries = entries.concat(data2.response || []);
+    }
+    const players = entries
+      .map(e => ({
+        id:      e.player?.id || null,
+        name:    e.player?.name || '?',
+        yellows: e.statistics?.[0]?.cards?.yellow || 0,
+      }))
+      .filter(p => p.yellows > 0);
+    _bookingsCache[teamId] = { ts: Date.now(), data: players };
+    return players;
+  } catch(e) { return []; }
+}
+function _saveBookingsCache() {
+  try { fs.writeFileSync(BOOKINGS_CACHE_FILE, JSON.stringify(_bookingsCache)); }
+  catch(e) { console.warn('[Bookings] Cache speichern fehlgeschlagen:', e.message); }
+}
+
 // ── Squad position cache (7-day TTL, persisted to squad-cache.json) ─────────
 const SQUAD_CACHE_FILE = path.join(__dirname, 'squad-cache.json');
 const SQUAD_TTL = 7 * 24 * 3600 * 1000;
@@ -336,6 +396,7 @@ async function fetchAllPrematchData() {
         const fxStatus = fx.fixture?.status?.short || 'NS';
         fixtureMap[id] = {
           fixtureId:    id,
+          leagueId:     parseInt(leagueId, 10),
           homeTeamName: fx.teams?.home?.name || '',
           awayTeamName: fx.teams?.away?.name || '',
           homeTeamId:   fx.teams?.home?.id   || null,
@@ -346,6 +407,7 @@ async function fetchAllPrematchData() {
           time:         fxTime,
           injuries:     { home: [], away: [] },
           injurySummary: { home: null, away: null },
+          bookings:     { threshold: YELLOW_THRESHOLDS[parseInt(leagueId,10)] || 5, home: [], away: [] },
           h2h:          null,
           isFinished:    FINISHED.has(fxStatus),
           odds:          null,
@@ -379,6 +441,52 @@ async function fetchAllPrematchData() {
   }
   if (staleTeams.length) _saveSquadCache();
   console.log(`  Step1.5 fertig: ${uniqueTeamIds.length} Teams gesamt, ${staleTeams.length} neu geladen`);
+
+  // ── Step 1.6: Yellow card counts (24h cache, 1–2 calls per team) ────────────
+  // Finds players with yellows >= threshold-1 (one away from suspension)
+  // Cached 24h — bookings change once per matchday, not intra-day
+  const staleBookingTeams = uniqueTeamIds.filter(id => {
+    const c = _bookingsCache[id];
+    return !c || Date.now() - c.ts >= BOOKINGS_TTL;
+  });
+  console.log(`[Server] Step1.6: Gelbkarten — ${staleBookingTeams.length} Teams neu laden, ${uniqueTeamIds.length - staleBookingTeams.length} gecacht`);
+  for (let i = 0; i < staleBookingTeams.length; i += 5) {
+    await Promise.allSettled(staleBookingTeams.slice(i, i + 5).map(id => fetchTeamBookings(id)));
+    if (i + 5 < staleBookingTeams.length) await sleep(800);
+  }
+  if (staleBookingTeams.length) _saveBookingsCache();
+
+  // Enrich each fixture with near-suspension players
+  for (const d of fixtures) {
+    const threshold = YELLOW_THRESHOLDS[d.leagueId] || 5;
+    const enrichSide = (teamId) => {
+      const raw  = _bookingsCache[teamId]?.data || [];
+      const posMap = _squadCache[teamId]?.data || {};
+      return raw
+        .filter(p => p.yellows >= threshold - 1)
+        .map(p => {
+          const pos = (p.id && posMap[`id_${p.id}`])
+            || posMap[(p.name || '').toLowerCase().trim()]
+            || null;
+          return {
+            id:         p.id,
+            name:       p.name,
+            yellows:    p.yellows,
+            threshold,
+            position:   pos,
+            atThreshold: p.yellows >= threshold,  // already AT threshold — suspended if not reset
+            oneAway:    p.yellows === threshold - 1,  // one yellow away from ban
+          };
+        })
+        .sort((a, b) => b.yellows - a.yellows);
+    };
+    d.bookings = {
+      threshold,
+      home: enrichSide(d.homeTeamId),
+      away: enrichSide(d.awayTeamId),
+    };
+  }
+  console.log(`  Step1.6 fertig`);
 
   // ── Step 2: Injuries with position data (parallel batches of 10) ────────────
   console.log(`[Server] Step2: Verletzungen für ${fixtures.length} Spiele...`);
