@@ -1919,9 +1919,8 @@ const LEAGUE_SPORT_KEYS = {
   POR:'soccer_portugal_primeira_liga',
   TUR:'soccer_turkey_super_league',
   SUI:'soccer_switzerland_superleague',
-  BEL:'soccer_belgium_first_div_a',
   POL:'soccer_poland_ekstraklasa',
-  // SCO / HUN / CRO: not covered by The Odds API — odds via prematch-data.json fallback
+  // SCO / HUN / CRO / BEL: not covered by The Odds API — odds via prematch-data.json fallback
 };
 
 window._oddsData = {};
@@ -2040,7 +2039,7 @@ function findOdds(leagueKey, home, away) {
 
 async function loadAllOdds() {
   // ── Cache: refresh every 2h — odds move more often closer to kickoff ─────
-  const CACHE_KEY = 'sfOddsCache_v6';  // bumped: removed btts (422), removed SCO/HUN/CRO (404)
+  const CACHE_KEY = 'sfOddsCache_v7';  // bumped: removed BEL (404)
   const CACHE_TTL = 2 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
