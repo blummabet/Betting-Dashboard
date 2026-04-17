@@ -5076,14 +5076,26 @@ function _translateEN(text) {
     [/Abwehr/g,                      'Defense'],
     [/Torwart/g,                     'Goalkeeper'],
 
-    // Stake labels
+    // Stake labels — specific before general
+    [/Titelchance/g,                 'Title Chance'],
     [/Titelkampf/g,                  'Title Race'],
+    [/Abstiegsgefahr/g,              'Relegation Risk'],
     [/Abstiegskampf/g,               'Relegation Battle'],
+    [/\bAbstieg\b/g,                 'Relegated'],
+    [/UCL Jagd/g,                    'UCL Hunt'],
+    [/UCL sichern/g,                 'UCL Secure'],
+    [/EL Jagd/g,                     'EL Hunt'],
+    [/EL sichern/g,                  'EL Secure'],
+    [/Rel\.-Playoff/g,               'Rel. Playoff'],
     [/Champions League/g,            'Champions League'],
     [/Europa League/g,               'Europa League'],
     [/Conference League/g,           'Conference League'],
     [/kein direkter Stake/g,         'no direct stake'],
     [/Keine Daten/g,                 'No data'],
+
+    // Card UI — also match without leading emoji (DOM splits text nodes)
+    [/Hauptempfehlung:/g,            'Main Pick:'],
+    [/Hauptempfehlung\b/g,           'Main Pick'],
 
     // Odds display (text copy)
     [/BTTS Ja\b/g,                   'BTTS Yes'],
