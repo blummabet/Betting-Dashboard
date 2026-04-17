@@ -8345,14 +8345,28 @@ async function _enrichMissingData(result, cacheKey) {
   const _ODDS_CACHE_KEY = 'oddsData_v2';
   const _ODDS_TTL = 6 * 3600 * 1000;
   // Re-fetch if odds missing entirely OR if stale (missing BTTS/DC/Cards from old Pinnacle-only fetch)
-  const needOdds = Object.values(result).filter(d =>
-    d.fixtureId && !d.isFinished &&
-    (d.odds == null || (!d.odds.bttsY && !d.odds.dc1X_bkr && !d.odds.cards_o35))
-  );
+  // Limit to fixtures within next 72h — API-Football /odds only returns data ~3+ days before kickoff
+  // for same-day/tomorrow fixtures anyway, so fetching them burns quota without result.
+  const _nowMs  = Date.now();
+  const _72hMs  = 72 * 3600 * 1000;
+  const needOdds = Object.values(result).filter(d => {
+    if (!d.fixtureId || d.isFinished) return false;
+    if (d.odds != null && (d.odds.bttsY || d.odds.dc1X_bkr || d.odds.cards_o35)) return false;
+    // Only fetch odds for fixtures at least 24h away (API rarely has same-day data)
+    // and at most 7 days out (beyond that we'll get them on the next server run)
+    if (d.date) {
+      const _fxMs = new Date(d.date + 'T' + (d.time || '20:00') + ':00').getTime();
+      const _diffH = (_fxMs - _nowMs) / 3600000;
+      if (_diffH < 20 || _diffH > 168) return false;  // skip same-day and >7 days
+    }
+    return true;
+  });
   if (needOdds.length) {
     console.log(`[PreMatch] Enrich Step5: ${needOdds.length} fixtures needing odds (all bookmakers)`);
     let _oddsOk = 0, _oddsFail = 0;
-    await Promise.allSettled(needOdds.map(async d => {
+    // Sequential with small delay — avoids burning free-plan quota (100/day) on parallel blasts
+    for (const d of needOdds) {
+    await (async d => {
       try {
         // Check sub-cache first (shorter TTL for partial/empty odds so they retry sooner)
         try {
@@ -8390,7 +8404,9 @@ async function _enrichMissingData(result, cacheKey) {
           } catch(e) {}
         } else { console.log(`[PreMatch] Step5 parse returned empty for ${d.fixtureId}`); _oddsFail++; }
       } catch(e) { _oddsFail++; }
-    }));
+    })(d);
+    await new Promise(r => setTimeout(r, 400)); // 400ms between calls — ~150/min, safe on free plan
+    }
     console.log(`[PreMatch] Enrich Step5 done: ${_oddsOk} OK · ${_oddsFail} fail/empty`);
   }
 
