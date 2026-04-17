@@ -3347,21 +3347,56 @@ function getBettingPicks(match, odds, leagueKey) {
         reason: cardReason}});
     }
 
-    // ── Handicap — mit Druck-Boost ────────────────────────────────────────────
+    // ── Handicap — tiered AH level based on favorite strength ────────────────
+    // When a team is a very heavy favorite, plain Heimsieg is underpriced (e.g. 1.20).
+    // A higher AH level (-0.75 / -1.0) gives more meaningful odds with potential edge.
+    //
+    // AH level selection by de-vigged win probability:
+    //   _bkrPH >= 0.78  →  AH -1.0  (needs 2+ goal margin; ~65-75% of wins)  est. odds ÷ 0.75
+    //   _bkrPH >= 0.68  →  AH -0.75 (quarter ball: half on -0.5, half on -1.0) est. odds ÷ 0.875
+    //   else            →  AH -0.5  (plain home win, no draw)
+    //
+    // Estimated AH odds = 1 / (_bkrPH × ahFactor). Shown as model estimate, not bookie.
     if (homeHandicap) {
-      let hcSc = Math.min(0.82, 0.56 + hFS_home*0.30 + Math.max(0,hStreak)*0.04 + Math.max(0,((_hHWR??homeWinRate)-0.54)*0.60));
+      const _ahP    = _bkrPH ?? 0;
+      const _ahFac  = _ahP >= 0.78 ? 0.75 : _ahP >= 0.68 ? 0.875 : 1.00;
+      const _ahMkt  = _ahP >= 0.78 ? 'Handicap Heim -1.0'
+                    : _ahP >= 0.68 ? 'Handicap Heim -0.75'
+                    :                'Handicap Heim -0.5';
+      // Estimated AH odds from de-vigged probability (clearly a model estimate)
+      const _ahEstO = (_ahP > 0) ? +Math.max(1.12, 1 / (_ahP * _ahFac)).toFixed(2) : null;
+
+      let hcSc = Math.min(0.84, 0.56 + hFS_home*0.30 + Math.max(0,hStreak)*0.04 + Math.max(0,((_hHWR??homeWinRate)-0.54)*0.60));
       // 🔑 PRESSURE: Heimteam muss gewinnen → Vollgas-Angriff → Handicap noch stärker
       if (homeNeedsWin) hcSc = Math.min(0.90, hcSc + _pressureBoost * 0.70);
-      const _hcPN = homeNeedsWin ? `<br><strong>⚡ ${_pHLabel}${_rlSfx} — Vollgas-Einsatz zu Hause, Handicap-Signal durch Druck verstärkt.</strong>` : '';
-      sC.push({sc: hcSc, p:{icon:'🏠', market:'Handicap Heim -0.5', odds:null, conf: hcSc>0.70?'high':'medium',
-        reason:`${match.home} gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele und erzielt dabei im Schnitt ${hGoals.toFixed(1)} Tore — ein klarer Heimsieg (Handicap -0.5) ist gut möglich.`}});
+
+      const _ahReasonLevel = _ahMkt.includes('-1.0')
+        ? `Der Heimsieg ist mit ~${Math.round(_ahP*100)}% so klar eingepreist (@ ${odds?.hw?.toFixed(2)||'?'}), dass ein -1.0 Handicap besser quotiert ist. ${match.home} erzielt Ø ${hGoals.toFixed(1)} Heimtore/Spiel — Siege mit ≥2 Toren Vorsprung sind realistisch.`
+        : _ahMkt.includes('-0.75')
+        ? `${match.home} ist mit ~${Math.round(_ahP*100)}% Siegwahrscheinlichkeit klarer Favorit (Heimsieg @ ${odds?.hw?.toFixed(2)||'?'}). Das -0.75 Handicap bietet mehr Wert als der unterquotierte Heimsieg. Ø ${hGoals.toFixed(1)} Tore/Spiel bestätigen die Überlegenheit.`
+        : `${match.home} gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele und erzielt dabei im Schnitt ${hGoals.toFixed(1)} Tore — ein klarer Heimsieg (Handicap -0.5) ist gut möglich.`;
+
+      sC.push({sc: hcSc, p:{icon:'🏠', market: _ahMkt, odds: _ahEstO, oddsIsEst: !!_ahEstO,
+        conf: hcSc>0.70?'high':'medium', reason: _ahReasonLevel}});
+
     } else if (awayHandicap) {
+      const _ahP    = _bkrPA ?? 0;
+      const _ahFac  = _ahP >= 0.72 ? 0.75 : _ahP >= 0.62 ? 0.875 : 1.00;
+      const _ahMkt  = _ahP >= 0.72 ? 'Handicap Auswärts -1.0'
+                    : _ahP >= 0.62 ? 'Handicap Auswärts -0.75'
+                    :                'Handicap Auswärts -0.5';
+      const _ahEstO = (_ahP > 0) ? +Math.max(1.12, 1 / (_ahP * _ahFac)).toFixed(2) : null;
+
       let hcSc = Math.min(0.78, 0.50 + aFS_away*0.30 + Math.max(0,aStreak)*0.04 + Math.max(0,((_aAWR??awayWinRate)-0.46)*0.60));
       // 🔑 PRESSURE: Auswärtsteam muss gewinnen → All-in auch auswärts
       if (awayNeedsWin) hcSc = Math.min(0.86, hcSc + _pressureBoost * 0.65);
-      const _acPN = awayNeedsWin ? `<br><strong>⚡ ${_pALabel}${_rlSfx} — Auswärtsteam geht kein Risiko, Handicap durch Druck verstärkt.</strong>` : '';
-      sC.push({sc: hcSc, p:{icon:'✈️', market:'Handicap Auswärts -0.5', odds:null, conf: hcSc>0.65?'high':'medium',
-        reason:`${match.away} gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele und trifft dabei im Schnitt ${aGoals.toFixed(1)} Mal — ein klarer Auswärtssieg (Handicap -0.5) ist gut möglich.`}});
+
+      const _ahReasonAway = _ahMkt.includes('-1.0') || _ahMkt.includes('-0.75')
+        ? `${match.away} ist mit ~${Math.round(_ahP*100)}% Siegwahrscheinlichkeit klarer Favorit (@ ${odds?.aw?.toFixed(2)||'?'}). Das ${_ahMkt.replace('Handicap Auswärts ','')} Handicap bietet mehr Wert. Ø ${aGoals.toFixed(1)} Tore/Spiel auswärts bestätigen die Klasse.`
+        : `${match.away} gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele und trifft dabei im Schnitt ${aGoals.toFixed(1)} Mal — ein klarer Auswärtssieg (Handicap -0.5) ist gut möglich.`;
+
+      sC.push({sc: hcSc, p:{icon:'✈️', market: _ahMkt, odds: _ahEstO, oddsIsEst: !!_ahEstO,
+        conf: hcSc>0.65?'high':'medium', reason: _ahReasonAway}});
     }
 
     // ── 1. HZ: Over 0.5 Tore ────────────────────────────────────────────────
@@ -3413,9 +3448,11 @@ function getBettingPicks(match, odds, leagueKey) {
     { const _p1Mkt = picks.length > 0 ? picks[0].market : null;
       const _p1Home = ['Heimsieg','DNB: Heimteam','Doppelte Chance: 1X'].includes(_p1Mkt);
       const _p1Away = ['Auswärtssieg','DNB: Auswärtsteam','Doppelte Chance: X2'].includes(_p1Mkt);
+      const _isHomeHC = m => m?.startsWith('Handicap Heim');
+      const _isAwayHC = m => m?.startsWith('Handicap Auswärts');
       for (const c of sC) {
-        if (c.p.market === 'Handicap Heim -0.5'    && _p1Home) continue;
-        if (c.p.market === 'Handicap Auswärts -0.5' && _p1Away) continue;
+        if (_isHomeHC(c.p.market) && _p1Home) continue;
+        if (_isAwayHC(c.p.market) && _p1Away) continue;
         if (_push(c.p, c.sc)) break;
       }
     }
@@ -3426,7 +3463,9 @@ function getBettingPicks(match, odds, leagueKey) {
   // Only applies to picks with Pinnacle odds (hw/dr/aw/o25/u25/o35).
   // Specialty markets (BTTS, cards, corners, DC, 1st half) stay untagged — no odds to compare.
   picks.forEach(p => {
-    const ip = p.odds ? (1 / p.odds) * 1.03 : null;  // ×1.03 strips ~3% bookmaker margin
+    // oddsIsEst = true means p.odds is a model estimate, not a real bookie price.
+    // Comparing model vs. model would produce meaningless "edge" — skip value tag for those.
+    const ip = (p.odds && !p.oddsIsEst) ? (1 / p.odds) * 1.03 : null;  // ×1.03 strips ~3% bookmaker margin
     let mp = null;           // our model probability estimate
     switch (p.market) {
       case 'Heimsieg':
@@ -3589,8 +3628,8 @@ function getBettingPicks(match, odds, leagueKey) {
   // Injury, fatigue, pressure, H2H goals, ref info shown as scannable chips
   // instead of long appended text — keeps reason text concise.
   picks.forEach(p => {
-    const hHome = ['Heimsieg','DNB: Heimteam','Doppelte Chance: 1X','Handicap Heim -0.5'].includes(p.market);
-    const hAway = ['Auswärtssieg','DNB: Auswärtsteam','Doppelte Chance: X2','Handicap Auswärts -0.5'].includes(p.market);
+    const hHome = ['Heimsieg','DNB: Heimteam','Doppelte Chance: 1X'].includes(p.market) || p.market.startsWith('Handicap Heim');
+    const hAway = ['Auswärtssieg','DNB: Auswärtsteam','Doppelte Chance: X2'].includes(p.market) || p.market.startsWith('Handicap Auswärts');
     const hGoal = ['Over 2.5 Tore','Over 3.5 Tore','Under 2.5 Tore','Beide Teams treffen','Beide Teams treffen: Nein'].includes(p.market);
     const hCard = p.market.includes('Karten');
     const chips = [];
@@ -5856,9 +5895,11 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   const picksHtml = visiblePicks.map(p => {
     const oddsNum  = p.odds ?? null;
     const oddsTag  = oddsNum != null
-      ? `<span class="pick-odds-tag" style="${oddsNum < 1.40 ? 'opacity:.6' : ''}">@ ${oddsNum.toFixed(2)}</span>`
+      ? p.oddsIsEst
+        ? `<span class="pick-odds-tag" style="opacity:.85">@ ~${oddsNum.toFixed(2)}<span style="font-size:9px;opacity:.6;margin-left:2px">(est.)</span></span>`
+        : `<span class="pick-odds-tag" style="${oddsNum < 1.40 ? 'opacity:.6' : ''}">@ ${oddsNum.toFixed(2)}</span>`
       : `<span style="font-size:10px;color:var(--muted);margin-left:4px;font-style:italic">keine Quote</span>`;
-    const lowWarn  = oddsNum != null && oddsNum < 1.40
+    const lowWarn  = oddsNum != null && !p.oddsIsEst && oddsNum < 1.40
       ? `<span style="font-size:10px;color:#e3b341;margin-left:5px;font-weight:600" title="Quote unter 1.40 — wenig Wert">⚠ niedrig</span>` : '';
     const _injEdgeTeam = (() => {
       const hi = match.homeForm?.injuries?.impactScore || 0;
@@ -5882,9 +5923,10 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     if (p.modelOdds != null) {
       const mo = p.modelOdds.toFixed(2);
       const isScBased = ['Über 8.5 Ecken','Über 9.5 Ecken','Über 11.5 Ecken',
-        'Über 3.5 Karten','Über 4.5 Karten','Handicap Heim -0.5','Handicap Auswärts -0.5',
+        'Über 3.5 Karten','Über 4.5 Karten',
         '1. HZ: Over 0.5 Tore','1. HZ: Under 0.5 Tore','1. HZ: Under 1.5 Tore',
         '1. HZ: Beide Teams treffen','1. HZ: Under 0.5 Tore'].includes(p.market)
+        || p.market.startsWith('Handicap Heim') || p.market.startsWith('Handicap Auswärts')
         || p.market.includes(' über 1.5 Tore') || p.market.includes('Karten');
       const srcLabel = isScBased
         ? '<span style="font-size:9px;color:#444d56;font-style:italic"> (Modell-Näherung)</span>'
