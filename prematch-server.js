@@ -382,11 +382,16 @@ const FINISHED = new Set(['FT','AET','PEN','AWD','WO','CANC','ABD']);
 // ════════════════════════════════════════════════════════════════════════════
 async function fetchAllPrematchData() {
   // ── Account quota check ──────────────────────────────────────────────────
+  let _apiRemaining = 9999; // assume plenty unless we can check
   try {
     const _st = await apiFetch('/status');
     const _sub = (_st.response || {}).subscription || {};
     const _req = (_st.response || {}).requests || {};
-    console.log(`[Server] API-Account: Plan="${_sub.plan||'?'}" | Heute: ${_req.current??'?'}/${_req.limit_day??'?'} Requests | Verbleibend: ${(_req.limit_day??0)-(_req.current??0)}`);
+    _apiRemaining = (_req.limit_day ?? 9999) - (_req.current ?? 0);
+    console.log(`[Server] API-Account: Plan="${_sub.plan||'?'}" | Heute: ${_req.current??'?'}/${_req.limit_day??'?'} Requests | Verbleibend: ${_apiRemaining}`);
+    if (_apiRemaining < 200) {
+      console.warn(`[Server] ⚠ Quota knapp (${_apiRemaining} verbleibend) — Step1.6 (Bookings) wird übersprungen um Odds-Fetch zu sichern`);
+    }
     if (_st.errors && Object.keys(_st.errors).length) {
       console.warn(`[Server] API-Status Fehler:`, JSON.stringify(_st.errors));
     }
@@ -475,12 +480,19 @@ async function fetchAllPrematchData() {
     const c = _bookingsCache[id];
     return !c || Date.now() - c.ts >= BOOKINGS_TTL;
   });
-  console.log(`[Server] Step1.6: Gelbkarten — ${staleBookingTeams.length} Teams neu laden, ${uniqueTeamIds.length - staleBookingTeams.length} gecacht`);
-  for (let i = 0; i < staleBookingTeams.length; i += 5) {
-    await Promise.allSettled(staleBookingTeams.slice(i, i + 5).map(id => fetchTeamBookings(id)));
-    if (i + 5 < staleBookingTeams.length) await sleep(800);
+  // Guard: skip booking re-fetch if quota is too low — odds (Step 5) must have priority.
+  // Each team needs 1-2 calls; with 272 teams that's up to 544 calls. Keep 400+ for odds/injuries.
+  const _needBookingCalls = staleBookingTeams.length * 1.5; // estimate 1.5 calls/team average
+  if (_apiRemaining < 200 && staleBookingTeams.length > 0) {
+    console.warn(`[Server] Step1.6: ÜBERSPRUNGEN — nur ${_apiRemaining} API-Calls verbleibend, Odds-Fetch hat Vorrang`);
+  } else {
+    console.log(`[Server] Step1.6: Gelbkarten — ${staleBookingTeams.length} Teams neu laden (~${Math.round(_needBookingCalls)} Calls), ${uniqueTeamIds.length - staleBookingTeams.length} gecacht`);
+    for (let i = 0; i < staleBookingTeams.length; i += 5) {
+      await Promise.allSettled(staleBookingTeams.slice(i, i + 5).map(id => fetchTeamBookings(id)));
+      if (i + 5 < staleBookingTeams.length) await sleep(800);
+    }
+    if (staleBookingTeams.length) _saveBookingsCache();
   }
-  if (staleBookingTeams.length) _saveBookingsCache();
 
   // Enrich each fixture with near-suspension players
   for (const d of fixtures) {
