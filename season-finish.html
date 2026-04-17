@@ -3240,7 +3240,7 @@ function getBettingPicks(match, odds, leagueKey) {
     { let sc = (bothGold && expGoals < 2.5) ? 0.55 : firstHalfTight ? 0.44 : 0.12;
       // 🔑 PRESSURE/RUNDEN: Druckteam presst von Minute 1 → kein langsamer Start
       if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 1.20);
-      gC.push({sc, p:{icon:'⏱️', market:'1. HZ: Under 0.5 Tore', odds:null,
+      gC.push({sc, p:{icon:'⏱️', market:'1. HZ: Under 0.5 Tore', odds:o.ht_u05||null,
         conf: sc>0.50?'medium':'low',
         reason:`Taktisch vorsichtiger Spielbeginn erwartet — beide Teams tasten sich ab. Das Modell erwartet insgesamt nur ${expGoals.toFixed(1)} Tore: ein torloser Start in die erste Halbzeit ist gut möglich.`}}); }
 
@@ -3410,7 +3410,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if (htSc > 0) {
         const _htPN = _anyNeedsWin && expGoals <= 3.4
           ? `<br><strong>⚡ ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? _pHLabel : _pALabel}${_rlSfx} — presst von Minute 1, erhöht früh-Tor-Wahrscheinlichkeit deutlich.</strong>` : '';
-        sC.push({sc: htSc, p:{icon:'⏱️', market:'1. HZ: Over 0.5 Tore', odds: null,
+        sC.push({sc: htSc, p:{icon:'⏱️', market:'1. HZ: Over 0.5 Tore', odds: o.ht_o05||null,
           conf: htSc > 0.78 ? 'high' : 'medium',
           reason:`${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.`}});
       }
@@ -3426,7 +3426,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if (btts1sc > 0 && _anyNeedsWin) btts1sc = Math.min(0.70, btts1sc + _pressureBoost * 0.80);
       if (btts1sc > 0) {
         const _b1PN = _anyNeedsWin ? `<br><strong>⚡ ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? _pHLabel : _pALabel}${_rlSfx} — Pressingspiel von Beginn an erhöht frühe BTTS-Wahrscheinlichkeit.</strong>` : '';
-        sC.push({sc: btts1sc, p:{icon:'⏱️', market:'1. HZ: Beide Teams treffen', odds:null, conf: btts1sc>0.50?'medium':'low',
+        sC.push({sc: btts1sc, p:{icon:'⏱️', market:'1. HZ: Beide Teams treffen', odds:o.ht_bttsY||null, conf: btts1sc>0.50?'medium':'low',
           reason:`${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) starten offensiv — beide Teams könnten schon in der ersten Halbzeit getroffen haben.`}});
       }
     }
@@ -8492,6 +8492,32 @@ function _parseOddsBets(bookmakers) {
           else if (vl === 'over 4.5'  && !r.cards_o45) r.cards_o45 = parseFloat(v.odd);
           else if (vl === 'under 4.5' && !r.cards_u45) r.cards_u45 = parseFloat(v.odd);
           else if (vl === 'over 5.5'  && !r.cards_o55) r.cards_o55 = parseFloat(v.odd);
+        }
+      } else if (
+        // First Half Goals — various API-Football bet names:
+        // "First Half - Goals - Over/Under", "Goals - 1st Half", "First Half Goals",
+        // "1st Half Total Goals", "Half Time - Over/Under Goals", "HT Total Goals"
+        (bn.includes('first half') && (bn.includes('goal') || bn.includes('over') || bn.includes('under'))) ||
+        (bn.includes('1st half')   && (bn.includes('goal') || bn.includes('over') || bn.includes('under'))) ||
+        bn === 'ht goals over/under' || bn === 'half time goals' || bn === 'first half - goals'
+      ) {
+        for (const v of (bet.values || [])) {
+          const vl = (v.value || '').toLowerCase();
+          if      (vl === 'over 0.5'  && !r.ht_o05) r.ht_o05 = parseFloat(v.odd);
+          else if (vl === 'under 0.5' && !r.ht_u05) r.ht_u05 = parseFloat(v.odd);
+          else if (vl === 'over 1.5'  && !r.ht_o15) r.ht_o15 = parseFloat(v.odd);
+          else if (vl === 'under 1.5' && !r.ht_u15) r.ht_u15 = parseFloat(v.odd);
+          else if (vl === 'over 2.5'  && !r.ht_o25) r.ht_o25 = parseFloat(v.odd);
+          else if (vl === 'under 2.5' && !r.ht_u25) r.ht_u25 = parseFloat(v.odd);
+        }
+      } else if (
+        (bn.includes('first half') || bn.includes('1st half') || bn.includes('half time')) &&
+        bn.includes('both teams')
+      ) {
+        for (const v of (bet.values || [])) {
+          const vl = (v.value || '').toLowerCase();
+          if      ((vl === 'yes' || vl === 'gg') && !r.ht_bttsY) r.ht_bttsY = parseFloat(v.odd);
+          else if ((vl === 'no'  || vl === 'ng') && !r.ht_bttsN) r.ht_bttsN = parseFloat(v.odd);
         }
       }
     }

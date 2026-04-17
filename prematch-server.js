@@ -342,6 +342,32 @@ function parseBets(bookmakers) {
           else if (vl === 'under 4.5' && !r.cards_u45) r.cards_u45 = parseFloat(v.odd);
           else if (vl === 'over 5.5'  && !r.cards_o55) r.cards_o55 = parseFloat(v.odd);
         }
+      } else if (
+        // API-Football First Half goals market — various bet names observed in the wild:
+        // "First Half - Goals - Over/Under", "Goals - 1st Half", "First Half Goals",
+        // "1st Half Total Goals", "Half Time - Over/Under Goals", "HT Total Goals"
+        (bn.includes('first half') && (bn.includes('goal') || bn.includes('over') || bn.includes('under'))) ||
+        (bn.includes('1st half') && (bn.includes('goal') || bn.includes('over') || bn.includes('under'))) ||
+        bn === 'ht goals over/under' || bn === 'half time goals' || bn === 'first half - goals'
+      ) {
+        for (const v of (bet.values || [])) {
+          const vl = (v.value || '').toLowerCase();
+          if      (vl === 'over 0.5'  && !r.ht_o05) r.ht_o05 = parseFloat(v.odd);
+          else if (vl === 'under 0.5' && !r.ht_u05) r.ht_u05 = parseFloat(v.odd);
+          else if (vl === 'over 1.5'  && !r.ht_o15) r.ht_o15 = parseFloat(v.odd);
+          else if (vl === 'under 1.5' && !r.ht_u15) r.ht_u15 = parseFloat(v.odd);
+          else if (vl === 'over 2.5'  && !r.ht_o25) r.ht_o25 = parseFloat(v.odd);
+          else if (vl === 'under 2.5' && !r.ht_u25) r.ht_u25 = parseFloat(v.odd);
+        }
+      } else if (
+        (bn.includes('first half') || bn.includes('1st half') || bn.includes('half time')) &&
+        bn.includes('both teams')
+      ) {
+        for (const v of (bet.values || [])) {
+          const vl = (v.value || '').toLowerCase();
+          if      ((vl === 'yes' || vl === 'gg') && !r.ht_bttsY) r.ht_bttsY = parseFloat(v.odd);
+          else if ((vl === 'no'  || vl === 'ng') && !r.ht_bttsN) r.ht_bttsN = parseFloat(v.odd);
+        }
       }
     }
   }
