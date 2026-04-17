@@ -469,13 +469,33 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 }
 .pick-reason{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.55;}
 .pick-alt{font-size:11px;margin-top:6px;padding:5px 8px;border-radius:6px;line-height:1.5;}
-.pick-alt.safer{background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.20);color:#c9d1d9;}
+.pick-alt.safer{
+  background:rgba(63,185,80,.13);
+  border:1px solid rgba(63,185,80,.45);
+  border-left:3px solid #3fb950;
+  color:#c9d1d9;
+  margin-top:8px;
+  padding:8px 10px;
+  border-radius:7px;
+}
+.pick-alt.safer .safer-label{
+  display:inline-block;
+  font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;
+  background:#3fb950;color:#0d1117;
+  padding:1px 6px;border-radius:10px;margin-right:6px;vertical-align:middle;
+}
+.pick-alt.safer .safer-market{
+  font-size:13px;font-weight:700;color:#e6edf3;
+}
+.pick-alt.safer .safer-odds{
+  font-size:13px;font-weight:800;color:#3fb950;margin-left:3px;
+}
 .pick-alt.bold{background:rgba(227,179,65,.07);border:1px solid rgba(227,179,65,.18);color:#c9d1d9;}
 .alt-odds{font-weight:700;color:#3fb950;}
 .pick-alt.bold .alt-odds{color:#e3b341;}
 .alt-note{font-size:10px;opacity:.6;}
 .alt-divider{opacity:.4;}
-.alt-bold-label{opacity:.75;font-style:italic;}
+.alt-bold-label{opacity:.75;font-style:italic;font-size:10px;}
 
 /* ── Pick of the Day ── */
 .potd-section{background:linear-gradient(135deg,rgba(227,179,65,.07) 0%,rgba(63,185,80,.06) 100%);border:1px solid rgba(227,179,65,.30);border-radius:12px;padding:16px 18px;margin-bottom:18px;position:relative;overflow:hidden;}
@@ -491,7 +511,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .potd-conf{font-size:12px;color:#e3b341;margin-left:2px;}
 .potd-fv{display:block;font-size:11px;color:var(--muted);margin-bottom:6px;opacity:.8;}
 .potd-alt{font-size:11px;margin-bottom:6px;padding:5px 8px;border-radius:6px;line-height:1.5;}
-.potd-alt.safer{background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.20);color:#c9d1d9;}
+.potd-alt.safer{
+  background:rgba(63,185,80,.13);border:1px solid rgba(63,185,80,.45);
+  border-left:3px solid #3fb950;color:#c9d1d9;padding:8px 10px;
+}
 .potd-alt.bold{background:rgba(227,179,65,.07);border:1px solid rgba(227,179,65,.18);color:#c9d1d9;}
 .potd-reason{font-size:11px;color:var(--muted);line-height:1.55;border-top:1px solid rgba(255,255,255,.06);padding-top:8px;margin-top:4px;}
 
@@ -5594,7 +5617,7 @@ function buildPickOfDayHtml(matchList) {
   // Safer alt line
   let altStr = '';
   if (p.saferAlt) {
-    altStr = `<div class="potd-alt safer">🛡️ <strong>Safer:</strong> ${p.saferAlt.market} @ ~${p.saferAlt.estOdds.toFixed(2)} <span style="opacity:.6;font-size:10px">(Modell-Näherung)</span></div>`;
+    altStr = `<div class="potd-alt safer"><span class="safer-label">✓ Main Pick</span> <span class="safer-market">${p.saferAlt.market}</span> <span class="safer-odds">@ ~${p.saferAlt.estOdds.toFixed(2)}</span> <span style="opacity:.5;font-size:10px">(est.)</span></div>`;
   } else if (p.boldAlt) {
     altStr = `<div class="potd-alt bold">📈 <strong>Mehr Value:</strong> ${p.boldAlt.market} @ ~${p.boldAlt.estOdds.toFixed(2)} <span style="opacity:.6;font-size:10px">(Modell-Näherung)</span></div>`;
   }
@@ -5928,10 +5951,13 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     let altHtml = '';
     if (p.saferAlt) {
       altHtml = `<div class="pick-alt safer">
-        🛡️ <strong>Hauptempfehlung:</strong> ${p.saferAlt.market} <span class="alt-odds">@ ~${p.saferAlt.estOdds.toFixed(2)}</span>
-        <span class="alt-note">(Modell-Näherung)</span>
-        <span class="alt-divider"> · </span>
-        <span class="alt-bold-label">Value Alternative: ${p.market} @ ${oddsNum ? oddsNum.toFixed(2) : '?'}</span>
+        <div style="margin-bottom:3px;">
+          <span class="safer-label">✓ Main Pick</span>
+          <span class="safer-market">${p.saferAlt.market}</span>
+          <span class="safer-odds">@ ~${p.saferAlt.estOdds.toFixed(2)}</span>
+          <span class="alt-note" style="margin-left:4px;">(est.)</span>
+        </div>
+        <div style="font-size:10px;opacity:.55;">Value alt: ${p.market} @ ${oddsNum ? oddsNum.toFixed(2) : '?'}</div>
       </div>`;
     } else if (p.boldAlt) {
       altHtml = `<div class="pick-alt bold">
