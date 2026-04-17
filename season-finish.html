@@ -6209,10 +6209,15 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   const _tacAway = getTacticalBookingSignals(match.bookings?.away || [], match.away, match.date, _allFixSig);
   const _tacStrong = [..._tacHome, ..._tacAway].filter(s => s.isTacticalStrong);
   const _tacAny    = [..._tacHome, ..._tacAway].filter(s => s.isTactical);
-  if (_tacStrong.length) {
-    _signals.push({cls:'sig-booking', txt:`🟨 Takt. Sperre: ${_tacStrong[0].lastName}`});
-  } else if (_tacAny.length) {
-    _signals.push({cls:'sig-booking', txt:`🟨 Sperren-Risiko: ${_tacAny[0].lastName}`});
+  // Only show booking signal when the system actually generated a Karten pick —
+  // otherwise the info is orphaned and adds noise without an actionable bet.
+  const _hasKartenPick = visiblePicks.some(p => p.market.includes('Karten'));
+  if (_hasKartenPick) {
+    if (_tacStrong.length) {
+      _signals.push({cls:'sig-booking', txt:`🟨 Takt. Sperre: ${_tacStrong[0].lastName}`});
+    } else if (_tacAny.length) {
+      _signals.push({cls:'sig-booking', txt:`🟨 Sperren-Risiko: ${_tacAny[0].lastName}`});
+    }
   }
 
   const signalBarHtml = _signals.length

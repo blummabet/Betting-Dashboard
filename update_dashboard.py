@@ -446,6 +446,23 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
         # i.e., even if they run at their average PPG, we'd still be comfortably ahead
         cg = comp_gain_est(standings, 2, rounds_left)
         if (gap - cg) > max_gain * 0.15:  return 'low'
+        # Still defending title — stop here, don't let UCL/EL checks override
+        return 'full'
+
+    # ── Title chaser (pos > 1) ─────────────────────────────────────────────────
+    # Must be evaluated BEFORE UCL/EL checks: a team tied at the top is still
+    # hunting the title even if their UCL/EL spot is already secured.
+    # Only fall through to UCL/EL/red checks if mathematically out of the race.
+    if is_gold and pos != 1:
+        pts_leader = pts_at_pos(standings, 1)
+        gap        = pts_leader - pts
+        if gap <= max_gain:
+            # Still mathematically in title contention
+            cg = comp_gain_est(standings, 1, rounds_left)
+            # 'low': leader's projected total is so far ahead it's practically over
+            if (gap + cg) > max_gain * 0.75:  return 'low'
+            return 'full'   # actively chasing — don't let UCL/EL security override
+        # gap > max_gain: title is gone, fall through to check next objectives
 
     # ── UCL secured ────────────────────────────────────────────────────────────
     if is_blue and pos <= cfg["ucl"]:
