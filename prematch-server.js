@@ -130,6 +130,32 @@ function oddsApiFetch(sportKey) {
   });
 }
 
+// Fetch alternate soccer markets (corners + cards + double chance) via EU region.
+// These are under "Other soccer betting markets" in The Odds API docs.
+// Returns { data: [...events] } or { data: [] } on error.
+function oddsApiFetchAlt(sportKey) {
+  return new Promise((resolve) => {
+    const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
+      + `&regions=eu&markets=alternate_totals_corners,alternate_totals_cards,double_chance&oddsFormat=decimal`;
+    const options = { hostname: ODDS_API_HOST, path, method: 'GET',
+      headers: { 'User-Agent': 'CocoBet/1.0' } };
+    const req = https.request(options, res => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => {
+        try {
+          if (res.statusCode !== 200) { resolve({ data: [] }); return; }
+          const data = JSON.parse(body);
+          resolve({ data: Array.isArray(data) ? data : [] });
+        } catch(e) { resolve({ data: [] }); }
+      });
+    });
+    req.on('error', () => resolve({ data: [] }));
+    req.setTimeout(15000, () => { req.destroy(); resolve({ data: [] }); });
+    req.end();
+  });
+}
+
 // Fetch BTTS market via UK region (btts is not available in EU region — causes 422).
 // Returns array of events with btts bookmakers, or [] on any error/404.
 function oddsApiFetchBtts(sportKey) {
@@ -225,7 +251,7 @@ function parseTheOddsEvent(oddsEvent) {
     r.dr_fair  = r2(n / pd);
     r.aw_fair  = r2(n / pa);
     r._cn      = _samples.length;
-    // Derive Double Chance odds from fair probs (The Odds API has no DC market)
+    // Derived DC from fair probs — used as fallback if real double_chance market unavailable
     r.dc1X_bkr = r2(1 / (ph + pd));
     r.dcX2_bkr = r2(1 / (pd + pa));
     r.dc12_bkr = r2(1 / (ph + pa));
@@ -256,7 +282,6 @@ function parseTheOddsEvent(oddsEvent) {
           else if (o.name === 'No'  && !r.bttsN) r.bttsN = o.price;
         }
       } else if (mk === 'spreads') {
-        // Asian Handicap — store the primary (most common) line per side
         for (const o of (mkt.outcomes || [])) {
           const nm = normTeam(o.name);
           if (!r.ah_h_point && (nm === hTeam || hTeam.includes(nm) || nm.includes(hTeam))) {
@@ -264,6 +289,40 @@ function parseTheOddsEvent(oddsEvent) {
           } else if (!r.ah_a_point) {
             r.ah_a_point = o.point; r.ah_a = o.price;
           }
+        }
+      } else if (mk === 'alternate_totals_corners') {
+        for (const o of (mkt.outcomes || [])) {
+          const pt = o.point; const p = o.price;
+          if (o.name === 'Over') {
+            if (Math.abs(pt - 8.5)  < 0.01 && !r.co85)  r.co85  = p;
+            else if (Math.abs(pt - 9.5)  < 0.01 && !r.co95)  r.co95  = p;
+            else if (Math.abs(pt - 10.5) < 0.01 && !r.co105) r.co105 = p;
+            else if (Math.abs(pt - 11.5) < 0.01 && !r.co115) r.co115 = p;
+          } else if (o.name === 'Under') {
+            if (Math.abs(pt - 8.5)  < 0.01 && !r.cu85)  r.cu85  = p;
+            else if (Math.abs(pt - 9.5)  < 0.01 && !r.cu95)  r.cu95  = p;
+            else if (Math.abs(pt - 10.5) < 0.01 && !r.cu105) r.cu105 = p;
+          }
+        }
+      } else if (mk === 'alternate_totals_cards') {
+        for (const o of (mkt.outcomes || [])) {
+          const pt = o.point; const p = o.price;
+          if (o.name === 'Over') {
+            if (Math.abs(pt - 3.5) < 0.01 && !r.cards_o35) r.cards_o35 = p;
+            else if (Math.abs(pt - 4.5) < 0.01 && !r.cards_o45) r.cards_o45 = p;
+            else if (Math.abs(pt - 5.5) < 0.01 && !r.cards_o55) r.cards_o55 = p;
+          } else if (o.name === 'Under') {
+            if (Math.abs(pt - 3.5) < 0.01 && !r.cards_u35) r.cards_u35 = p;
+            else if (Math.abs(pt - 4.5) < 0.01 && !r.cards_u45) r.cards_u45 = p;
+          }
+        }
+      } else if (mk === 'double_chance') {
+        // Real bookmaker DC quotes override derived values
+        for (const o of (mkt.outcomes || [])) {
+          const nm = (o.name || '').toLowerCase();
+          if ((nm === '1x' || nm === 'home/draw') && o.price > 1.01) r.dc1X_bkr = o.price;
+          else if ((nm === 'x2' || nm === 'draw/away') && o.price > 1.01) r.dcX2_bkr = o.price;
+          else if ((nm === '12' || nm === 'home/away' || nm === '1 & 2') && o.price > 1.01) r.dc12_bkr = o.price;
         }
       }
     }
@@ -914,6 +973,30 @@ async function fetchAllPrematchData() {
     }
   }
   if (bttsEnriched > 0) console.log(`  [OddsAPI] BTTS enriched: ${bttsEnriched} Events`);
+
+  // ── Step 5c: Alternate markets — Corners + Cards + Double Chance ─────────
+  let altEnriched = 0;
+  for (const sk of _uniqueSportKeys) {
+    if (!_sportKeyEvents[sk]?.length) continue;
+    await sleep(400);
+    const { data: altEvents } = await oddsApiFetchAlt(sk);
+    for (const ae of altEvents) {
+      const main = _sportKeyEvents[sk].find(e => e.id === ae.id);
+      if (!main) continue;
+      for (const bkr of (ae.bookmakers || [])) {
+        const existing = main.bookmakers.find(b => b.key === bkr.key);
+        if (existing) {
+          for (const mkt of (bkr.markets || [])) {
+            if (!existing.markets.find(m => m.key === mkt.key)) existing.markets.push(mkt);
+          }
+        } else {
+          main.bookmakers.push(bkr);
+        }
+      }
+      altEnriched++;
+    }
+  }
+  if (altEnriched > 0) console.log(`  [OddsAPI] Corners/Cards/DC enriched: ${altEnriched} Events`);
 
   let oddsOk = 0, oddsMiss = 0;
   for (const d of upcoming) {

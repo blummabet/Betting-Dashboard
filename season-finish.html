@@ -2008,6 +2008,42 @@ function _parseTheOddsEvent(g) {
             r.ah_a_point=o.point; r.ah_a=o.price;
           }
         }
+      } else if (mk==='alternate_totals_corners') {
+        // Corners Over/Under lines (8.5 / 9.5 / 10.5 / 11.5)
+        for (const o of (mkt.outcomes||[])) {
+          const pt=o.point; const p=o.price;
+          if (o.name==='Over') {
+            if (Math.abs(pt-8.5)<0.01&&!r.co85)  r.co85=p;
+            else if (Math.abs(pt-9.5)<0.01&&!r.co95)  r.co95=p;
+            else if (Math.abs(pt-10.5)<0.01&&!r.co105) r.co105=p;
+            else if (Math.abs(pt-11.5)<0.01&&!r.co115) r.co115=p;
+          } else if (o.name==='Under') {
+            if (Math.abs(pt-8.5)<0.01&&!r.cu85)  r.cu85=p;
+            else if (Math.abs(pt-9.5)<0.01&&!r.cu95)  r.cu95=p;
+            else if (Math.abs(pt-10.5)<0.01&&!r.cu105) r.cu105=p;
+          }
+        }
+      } else if (mk==='alternate_totals_cards') {
+        // Cards Over/Under (3.5 / 4.5 / 5.5)
+        for (const o of (mkt.outcomes||[])) {
+          const pt=o.point; const p=o.price;
+          if (o.name==='Over') {
+            if (Math.abs(pt-3.5)<0.01&&!r.cards_o35) r.cards_o35=p;
+            else if (Math.abs(pt-4.5)<0.01&&!r.cards_o45) r.cards_o45=p;
+            else if (Math.abs(pt-5.5)<0.01&&!r.cards_o55) r.cards_o55=p;
+          } else if (o.name==='Under') {
+            if (Math.abs(pt-3.5)<0.01&&!r.cards_u35) r.cards_u35=p;
+            else if (Math.abs(pt-4.5)<0.01&&!r.cards_u45) r.cards_u45=p;
+          }
+        }
+      } else if (mk==='double_chance') {
+        // Real bookmaker DC quotes — preferred over derived values
+        for (const o of (mkt.outcomes||[])) {
+          const nm=(o.name||'').toLowerCase();
+          if ((nm==='1x'||nm==='home/draw')&&!r.dc1X_bkr) r.dc1X_bkr=o.price;
+          else if ((nm==='x2'||nm==='draw/away')&&!r.dcX2_bkr) r.dcX2_bkr=o.price;
+          else if ((nm==='12'||nm==='home/away'||nm==='1 & 2')&&!r.dc12_bkr) r.dc12_bkr=o.price;
+        }
       }
     }
   }
@@ -2041,7 +2077,7 @@ function findOdds(leagueKey, home, away) {
 
 async function loadAllOdds() {
   // ── Cache: refresh every 2h — odds move more often closer to kickoff ─────
-  const CACHE_KEY = 'sfOddsCache_v8';  // bumped: added BTTS Pass2 (uk region)
+  const CACHE_KEY = 'sfOddsCache_v9';  // bumped: added Pass3 corners/cards/DC (alternate markets)
   const CACHE_TTL = 2 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
@@ -2111,6 +2147,38 @@ async function loadAllOdds() {
   }));
   if (bttsOk > 0) console.log(`[TheOddsAPI] BTTS enriched — ${bttsOk} Ligen`);
 
+  // ── Fetch Pass 3: EU region — Corners + Cards + Double Chance ────────────
+  // alternate_totals_corners, alternate_totals_cards, double_chance are valid
+  // soccer-specific markets in The Odds API (documented under "Other soccer betting markets").
+  // Separate pass so a 404/422 here never affects the core h2h/spreads/totals data.
+  let altOk = 0;
+  await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
+    if (!window._oddsData[lk]?.length) return;
+    try {
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=alternate_totals_corners,alternate_totals_cards,double_chance&oddsFormat=decimal`;
+      const resp = await fetch(url);
+      if (!resp.ok) return;
+      const altEvents = await resp.json();
+      if (!Array.isArray(altEvents)) return;
+      for (const ae of altEvents) {
+        const main = window._oddsData[lk].find(e => e.id === ae.id);
+        if (!main) continue;
+        for (const bkr of (ae.bookmakers || [])) {
+          const existing = main.bookmakers.find(b => b.key === bkr.key);
+          if (existing) {
+            for (const mkt of (bkr.markets || [])) {
+              if (!existing.markets.find(m => m.key === mkt.key)) existing.markets.push(mkt);
+            }
+          } else {
+            main.bookmakers.push(bkr);
+          }
+        }
+      }
+      if (altEvents.length > 0) altOk++;
+    } catch(e) { /* silent */ }
+  }));
+  if (altOk > 0) console.log(`[TheOddsAPI] Corners/Cards/DC enriched — ${altOk} Ligen`);
+
   // ── Save to cache ─────────────────────────────────────────────────────────
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: window._oddsData }));
@@ -2163,6 +2231,53 @@ function deriveOdds(raw) {
     dc1X: r((1/(ph+pd)) * m),   // Doppelte Chance 1X
     dcX2: r((1/(pd+pa)) * m),   // Doppelte Chance X2
   };
+}
+
+// ═══════════════════════════════════════════════════════
+//  POISSON MODEL — corners & cards fair value estimation
+// ═══════════════════════════════════════════════════════
+// Cumulative Poisson P(X > threshold) using Poisson(λ).
+// threshold is the .5 line (e.g. 9.5 → pass 9, returns P(X>=10))
+function _poissonOver(lambda, threshold) {
+  if (lambda <= 0) return 0.5;
+  const k = Math.floor(threshold); // P(X > k+0.5) = P(X >= k+1) = 1 - CDF(k)
+  let cdf = 0, term = Math.exp(-lambda);
+  for (let i = 0; i <= k; i++) {
+    cdf += term;
+    term *= lambda / (i + 1);
+  }
+  return Math.max(0.02, Math.min(0.98, 1 - cdf));
+}
+// Convert fair prob → bookmaker odds with given margin (default 6%).
+function _poissonOdds(prob, margin) {
+  margin = margin || 0.06;
+  return Math.round((1 / prob) * (1 - margin) * 100) / 100;
+}
+// Estimate corners odds from expected corners total (Poisson model, 6% margin).
+// Returns { co85, co95, co105, co115, cu85, cu95, oddsIsEst: true } — same keys as _parseOddsBets.
+function estimateCornersOdds(lambda) {
+  if (!lambda || lambda <= 0) return {};
+  const r = { oddsIsEst: true };
+  ['8.5','9.5','10.5','11.5'].forEach(line => {
+    const l = parseFloat(line);
+    const pOver = _poissonOver(lambda, l);
+    const key = 'co' + line.replace('.','');
+    r[key] = _poissonOdds(pOver);
+    const ku = 'cu' + line.replace('.','');
+    r[ku] = _poissonOdds(1 - pOver);
+  });
+  return r;
+}
+// Estimate cards odds from expected total cards (Poisson model, 7% margin — wider cards market).
+// Returns { cards_o35, cards_o45, oddsIsEst: true }
+function estimateCardsOdds(expectedCards) {
+  if (!expectedCards || expectedCards <= 0) return {};
+  const r = { oddsIsEst: true };
+  const p35 = _poissonOver(expectedCards, 3.5);
+  const p45 = _poissonOver(expectedCards, 4.5);
+  r.cards_o35 = _poissonOdds(p35, 0.07);
+  r.cards_o45 = _poissonOdds(p45, 0.07);
+  return r;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2286,6 +2401,13 @@ function getBettingPicks(match, odds, leagueKey) {
   const anyGold  = hc.includes('gold') || ac.includes('gold');
   const anyBlue  = hc.includes('blue') || ac.includes('blue');
   const o = deriveOdds(odds || {});
+
+  // ── Inject Poisson-estimated corners/cards odds when real bookmaker quotes missing ──
+  // The Odds API has no corners/cards markets — we derive fair value via Poisson model.
+  // Marked oddsIsEst=true → rendered with "~" prefix so user knows it's model-estimated.
+  // cornersEst is computed below, so we populate lazily inside the pick blocks instead.
+  // Cards: expected ≈ referee average if known, else league-calibrated base × pressure
+  // (populated in Specialist Pick block where _refAvg is available)
 
   // ── League-specific Over/Under probability offset ─────────────────────────
   // High-scoring leagues (ENG, GER, AUT, TUR, SCO) get a positive cap offset.
@@ -2761,6 +2883,15 @@ function getBettingPicks(match, odds, leagueKey) {
   const cornersOver8   = cornersEst >= 8.0;
   const cornersOver9   = cornersEst >= 9.5;
   const cornersOver11  = cornersEst >= 11.0;
+  // ── Poisson-estimated corners odds (injected into o when real quotes absent) ──
+  if (!o.co95 || !o.co85) {
+    const _cEst = estimateCornersOdds(cornersEst);
+    if (!o.co85)  { o.co85  = _cEst.co85;  o.cu85  = _cEst.cu85;  }
+    if (!o.co95)  { o.co95  = _cEst.co95;  o.cu95  = _cEst.cu95;  }
+    if (!o.co105) { o.co105 = _cEst.co105; o.cu105 = _cEst.cu105; }
+    if (!o.co115) { o.co115 = _cEst.co115; o.cu115 = _cEst.cu115; }
+    if (_cEst.oddsIsEst) o._cornersOddsEst = true;  // flag for render
+  }
   // Cards — helper flags (anyGold already declared above; anyOrange added here)
   const anyOrange = hc.includes('orange') || ac.includes('orange');
   const cardsVeryHigh = bothRed && hStreak <= -2 && aStreak <= -2;
@@ -2786,6 +2917,21 @@ function getBettingPicks(match, odds, leagueKey) {
     : _refAvg >= 4.5 ? `<br>👨‍⚖️ Schiedsrichter ${_refStats.name}: Ø ${_refAvg} Karten/Spiel — hohe Kartentendenz bestätigt.`
     : _refAvg < 3.0  ? `<br>👨‍⚖️ Schiedsrichter ${_refStats.name}: Ø ${_refAvg} Karten/Spiel — ruhiger Pfeifer, Markt kritisch prüfen.`
     : `<br>👨‍⚖️ Schiedsrichter ${_refStats.name}: Ø ${_refAvg} Karten/Spiel.`;
+  // ── Poisson-estimated cards odds (injected into o when real quotes absent) ──
+  // Expected total cards: referee average is best predictor; fallback = league base × pressure
+  if (!o.cards_o35) {
+    // Base expected cards: referee Ø if known, else 3.5 league average
+    const _leagueCardBase = ({ENG:3.8, GER:3.6, ITA:3.5, ESP:3.4, FRA:3.6, AUT:3.7,
+                              NED:3.5, POR:3.8, TUR:4.2, SCO:4.0, POL:3.6, SUI:3.4})[leagueKey] || 3.5;
+    const _expCards = _refAvg !== null
+      ? _refAvg                                    // referee avg is single best predictor
+      : _leagueCardBase + (bothRed ? 0.8 : anyRed ? 0.4 : 0)  // fallback: league + stakes
+             + (bothNeedWin ? 0.5 : _anyNeedsWin ? 0.25 : 0);  // pressure bonus
+    const _cOdds = estimateCardsOdds(_expCards);
+    if (!o.cards_o35) { o.cards_o35 = _cOdds.cards_o35; }
+    if (!o.cards_o45) { o.cards_o45 = _cOdds.cards_o45; }
+    if (_cOdds.oddsIsEst) o._cardsOddsEst = true;  // flag for render
+  }
   // Handicap: dominant team vs clearly inferior opposition
   const homeHandicap  = hFS_home > 0.66 && (_hHWR ?? homeWinRate) > 0.54 && (awayPoor || aFS_away < 0.35);
   const awayHandicap  = aFS_away > 0.60 && (_aAWR ?? awayWinRate) > 0.46 && (homePoor || hFS_home < 0.35);
@@ -3373,7 +3519,7 @@ function getBettingPicks(match, odds, leagueKey) {
       const _cornDataNote = cornersDataReal
         ? `<br>📊 Echte Ecken-Daten (Saison): ${match.home} Ø ${_hCornersHome} Heim · ${match.away} Ø ${_aCornersAway} Ausw. → Ø ${cornersEst.toFixed(1)} erwartet.`
         : ``;
-      sC.push({sc: scO, p:{icon:'🚩', market:_cOMkt, odds:_cOOdds,
+      sC.push({sc: scO, p:{icon:'🚩', market:_cOMkt, odds:_cOOdds, oddsIsEst: o._cornersOddsEst||false,
         conf: scO>0.65?'high':scO>0.38?'medium':'low',
         reason:`${cornersDataReal
           ? `Saisonstatistik: ${cornersEst.toFixed(1)} Ecken erwartet (${match.home} Ø ${_hCornersHome} Heim + ${match.away} Ø ${_aCornersAway} Ausw.).`
@@ -3391,7 +3537,7 @@ function getBettingPicks(match, odds, leagueKey) {
           const _uDataNote = cornersDataReal
             ? `<br>📊 Echte Ecken-Daten (Saison): ${match.home} Ø ${_hCornersHome} Heim · ${match.away} Ø ${_aCornersAway} Ausw. → nur Ø ${cornersEst.toFixed(1)} erwartet.`
             : ``;
-          sC.push({sc: scU, p:{icon:'🚩', market:_cUMkt, odds:_cUOdds,
+          sC.push({sc: scU, p:{icon:'🚩', market:_cUMkt, odds:_cUOdds, oddsIsEst: o._cornersOddsEst||false,
             conf: scU>0.60?'high':scU>0.38?'medium':'low',
             reason:`${cornersDataReal
               ? `Defensives Spiel — Saisonschnitt ergibt nur ${cornersEst.toFixed(1)} Ecken gesamt.`
@@ -3434,7 +3580,8 @@ function getBettingPicks(match, odds, leagueKey) {
       if (cardSc > 0 && _refAvg != null && _refAvg < 2.5 && !cardsVeryHigh) cardSc = 0;
       const _cardOdds = cardMkt.includes('4.5') ? (o.cards_o45||null) : (o.cards_o35||null);
       if (cardSc > 0) sC.push({sc: cardSc, p:{icon: cardMkt.includes('4.5') ? '🟥' : '🟨',
-        market: cardMkt, odds: _cardOdds, conf: cardSc>0.65?'high':cardSc>0.45?'medium':'low',
+        market: cardMkt, odds: _cardOdds, oddsIsEst: o._cardsOddsEst||false,
+        conf: cardSc>0.65?'high':cardSc>0.45?'medium':'low',
         reason: cardReason}});
     }
 
