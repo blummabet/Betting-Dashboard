@@ -5848,7 +5848,8 @@ function renderOverview() {
       <div style="font-size:12px">${window._selectedDay !== 'all' ? 'Anderen Tag wählen oder auf "Alle" klicken' : 'Schau nächste Woche wieder rein — die Lage spitzt sich zu!'}</div>
     </div>`;
 
-  // Kombi uses only the filtered (day-selected) matches
+  // Kombi + POTD use only the filtered (day-selected) matches
+  const potdHtml  = buildPickOfDayHtml(filtered);
   const kombiHtml = buildKombiHtml(filtered);
 
   mc.innerHTML = `
@@ -5860,6 +5861,8 @@ function renderOverview() {
     </div>
 
     ${buildDayFilterHtml(week)}
+
+    ${potdHtml}
 
     ${kombiHtml}
 
