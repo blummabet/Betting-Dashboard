@@ -74,11 +74,12 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
     ac = labels_colors(aws)
 
     def is_red_safe(stake, colors):
+        """Mirrors the JS fix: only truly safe when motivationLevel='low' AND pressure=0."""
         if not stake: return False
         mot = stake.get("motivationLevel", "full")
-        pr  = stake.get("pressureRatio", 0)
-        pn  = stake.get("pointsNeeded", 0)
-        return "red" in colors and mot != "none" and pr == 0 and pn == 0
+        pr  = stake.get("pressureRatio")   # None if missing — NOT defaulted to 0
+        pn  = stake.get("pointsNeeded")    # None if missing
+        return "red" in colors and mot == "low" and pr == 0 and pn == 0
 
     h_red_safe = is_red_safe(hs, hc)
     a_red_safe = is_red_safe(aws, ac)
@@ -302,6 +303,144 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
     if a_conf >= 5:
         flag("INFO", "INJ_SQUAD_DEPTH_AWAY",
              f"{away}: {a_conf} bestätigte Ausfälle — Kadertiefe kritisch. Impact={a_impact:.1f}.")
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # PRESSURE CONSISTENCY CHECKS
+    # Fängt den Inter/Cagliari-Typ-Bug: zwei Pressure-Modelle widersprechen sich
+    # ─────────────────────────────────────────────────────────────────────────
+
+    for stake, side, colors in [(hs, home, hc), (aws, away, ac)]:
+        if not stake: continue
+        mot = stake.get("motivationLevel", "full")
+        pr  = stake.get("pressureRatio")   # None = Daten fehlen
+        pn  = stake.get("pointsNeeded")    # None = Daten fehlen
+        mw  = stake.get("mustWin", False)
+        cd  = stake.get("canDraw", False)
+
+        # 🔴 FEHLER: pressureRatio > 0.65 aber mustWin=False — Widerspruch in den Daten
+        if pr is not None and pr > 0.65 and not mw:
+            flag("ERROR", "PRESSURE_MUSTWINFLAG_MISMATCH",
+                 f"{side}: pressureRatio={pr:.2f} > 0.65 aber mustWin=False. "
+                 f"calc_pressure() hat mustWin-Flag nicht korrekt gesetzt.")
+
+        # 🔴 FEHLER: mustWin=True aber canDraw=True gleichzeitig — direkter Widerspruch
+        if mw and cd:
+            flag("ERROR", "MUSTWИН_AND_CANDRAW",
+                 f"{side}: mustWin=True UND canDraw=True gleichzeitig gesetzt. "
+                 f"Widerspruch in calc_pressure() — unmöglich beides wahr.")
+
+        # 🔴 FEHLER: pressureRatio fehlt komplett aber Team hat rotes Label mit hohem Score
+        if pr is None and "red" in colors and ms >= 7.0:
+            flag("ERROR", "PRESSURE_DATA_MISSING",
+                 f"{side}: rotes Label, matchScore={ms} aber pressureRatio fehlt komplett. "
+                 f"update_dashboard.py hat calc_pressure() nicht für dieses Team aufgerufen.")
+
+        # 🟡 WARNUNG: Der Inter/Cagliari-Bug — pressureRatio=0 aber motivationLevel='full'
+        # Das System sagt gleichzeitig 'kämpft noch' UND 'braucht keine Punkte' — Narrativ-Konflikt
+        if "red" in colors and mot == "full" and pr == 0 and pn == 0:
+            flag("WARN", "RED_FULL_MOTIV_ZERO_PRESSURE",
+                 f"{side}: rotes Label + motivationLevel='full' + pressureRatio=0. "
+                 f"PPG-Modell sagt 'sicher', Motivationsmodell sagt 'kämpft' — "
+                 f"Betting-Winkel 'gesicherter Gegner' wäre FALSCH. Fix: motivationLevel muss "
+                 f"'low' sein bevor ein redSafe-Narrativ greifen darf.")
+
+        # 🟡 WARNUNG: pressureRatio < 0.30 aber mustWin=True — canDraw fehlt obwohl Druck niedrig
+        if pr is not None and pr < 0.30 and mw:
+            flag("WARN", "LOW_PRESSURE_BUT_MUSTWИН",
+                 f"{side}: pressureRatio={pr:.2f} < 0.30 aber mustWin=True. "
+                 f"Hoher Druck im Narrativ aber Pressure-Score ist niedrig — prüfen.")
+
+        # 🟡 WARNUNG: motivationLevel='none' aber pressureRatio > 0 — Inkonsistenz
+        if mot == "none" and pr is not None and pr > 0:
+            flag("WARN", "CONFIRMED_NONE_WITH_PRESSURE",
+                 f"{side}: motivationLevel='none' (bestätigt) aber pressureRatio={pr:.2f} > 0. "
+                 f"Bestätigtes Team darf keine Pressure haben — calc_motivation() prüfen.")
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # NARRATIVE CONSISTENCY CHECKS
+    # Prüft ob der Wett-Winkel mit den tatsächlichen Daten übereinstimmt
+    # ─────────────────────────────────────────────────────────────────────────
+
+    h_pr = (hs or {}).get("pressureRatio") or 0
+    a_pr = (aws or {}).get("pressureRatio") or 0
+    h_mot = (hs or {}).get("motivationLevel", "full")
+    a_mot = (aws or {}).get("motivationLevel", "full")
+
+    # 🟡 WARNUNG: Gold+Red Spiel aber rotes Team hat pressure=0 mit motivationLevel='full'
+    # → falsches "Klassenunterschied mit gesichertem Gegner"-Narrativ
+    if "gold" in hc and "red" in ac:
+        if a_pr == 0 and a_mot == "full":
+            flag("WARN", "GOLD_VS_RED_FALSE_SAFE_NARRATIVE",
+                 f"{away} (rot): pressureRatio=0 aber motivationLevel='full'. "
+                 f"Angle 'Titelanwärter gegen gesicherten Gegner' ist FALSCH — "
+                 f"Gegner kämpft laut Motivationsmodell noch. Prüfe Standings-Daten.")
+    if "red" in hc and "gold" in ac:
+        if h_pr == 0 and h_mot == "full":
+            flag("WARN", "GOLD_VS_RED_FALSE_SAFE_NARRATIVE",
+                 f"{home} (rot): pressureRatio=0 aber motivationLevel='full'. "
+                 f"Angle 'Titelanwärter gegen gesicherten Gegner' ist FALSCH — "
+                 f"Heim-Team kämpft laut Motivationsmodell noch.")
+
+    # 🟡 WARNUNG: Beide Teams red, aber nur eines hat echten Druck
+    if "red" in hc and "red" in ac:
+        only_one_pressure = (h_pr > 0.30) != (a_pr > 0.30)
+        if only_one_pressure:
+            high_side = home if h_pr > a_pr else away
+            low_side  = away if h_pr > a_pr else home
+            flag("WARN", "BOTRED_ASYMMETRIC_PRESSURE",
+                 f"Kellerduell-Narrativ aber asymmetrischer Druck: "
+                 f"{high_side} pressureRatio={max(h_pr,a_pr):.2f} vs "
+                 f"{low_side} pressureRatio={min(h_pr,a_pr):.2f}. "
+                 f"Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht.")
+
+    # 🔵 HINWEIS: matchScore >= 9 aber kein Team mit mustWin — woher kommt der hohe Score?
+    h_mw = (hs or {}).get("mustWin", False)
+    a_mw = (aws or {}).get("mustWin", False)
+    if ms >= 9.0 and not h_mw and not a_mw:
+        flag("INFO", "HIGH_SCORE_NO_MUSTWИН",
+             f"matchScore={ms} aber kein Team mit mustWin. "
+             f"Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden).")
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # FORM vs PICK-RICHTUNG CHECKS
+    # Fängt wenn der Score-Algorithmus eine Richtung wählt die die Form widerlegt
+    # ─────────────────────────────────────────────────────────────────────────
+
+    h_fs   = hf.get("formScore", 0.5)
+    a_fs   = af.get("formScore", 0.5)
+    h_wrate = hf.get("homeWinRate") or hf.get("winRate", 0)
+    a_wrate = af.get("awayWinRate") or af.get("winRate", 0)
+    h_gpg  = hf.get("goalsPerGame", 1.4)
+    a_gpg  = af.get("goalsPerGame", 1.4)
+    h_conc = hf.get("concededPerGame", 1.3)
+    a_conc = af.get("concededPerGame", 1.3)
+
+    # 🟡 WARNUNG: Heimteam extrem schwach (formScore < 0.25) aber matchScore hoch
+    if h_fs < 0.25 and ms >= 7.5 and "gold" not in hc:
+        flag("WARN", "HOME_POOR_FORM_HIGH_SCORE",
+             f"{home}: formScore={h_fs:.2f} (sehr schwach) aber matchScore={ms}. "
+             f"Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.")
+
+    # 🟡 WARNUNG: Over 2.5 Empfehlung bei tief defensiven Teams (beide < 1.0 Tore/Spiel)
+    if h_gpg < 1.0 and a_gpg < 1.0 and ms >= 6.5:
+        exp_goals_approx = (h_gpg + a_gpg) * 0.85  # grobe Schätzung
+        if exp_goals_approx < 1.8:
+            flag("WARN", "BOTH_DEFENSIVE_OVER_RISK",
+                 f"{home} ({h_gpg:.1f} Tore/Sp) + {away} ({a_gpg:.1f} Tore/Sp): "
+                 f"kombiniert nur ~{exp_goals_approx:.1f} erwartete Tore. "
+                 f"Over 2.5 Pick wäre kontraindiziert — Modell prüfen.")
+
+    # 🔵 HINWEIS: Sehr einseitige H2H (≥80%) aber kein hoher matchScore — Pick wird gezeigt?
+    h2h_games = h2h.get("games", 0)
+    if h2h_games >= 5:
+        hw = h2h.get("homeWins", 0)
+        aw_h2h = h2h.get("awayWins", 0)
+        if (hw / h2h_games >= 0.80 or aw_h2h / h2h_games >= 0.80) and ms < 7.0:
+            dom_team = home if hw / h2h_games >= 0.80 else away
+            flag("INFO", "STRONG_H2H_LOW_SCORE",
+                 f"{dom_team} dominiert H2H mit ≥80% bei {h2h_games} Spielen, "
+                 f"aber matchScore={ms} ist niedrig. Pick-Richtung trotzdem prüfen — "
+                 f"H2H-Signal nicht ausreichend im Score reflektiert?")
 
     return issues
 
