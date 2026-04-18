@@ -925,10 +925,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <td>homeInForm/awayInForm-Flags · Streak-Bonus/-Malus · formScore</td>
         </tr>
         <tr>
-          <td>The Odds API <span style="font-size:10px;color:var(--muted)">(Fallback)</span></td>
-          <td>Marktquoten: H2H, Over/Under 2.5, BTTS — 6h gecacht · 11 Ligen</td>
-          <td>Browser (client-side)</td>
-          <td>Fallback wenn Pinnacle-Odds aus api-football nicht verfügbar · Quoten-Anzeige in Cards</td>
+          <td>The Odds API <span style="font-size:10px;color:var(--muted)">(primär für Spezial-Märkte)</span></td>
+          <td>5 Fetch-Passes (client-side): <strong>Pass 1</strong> H2H + OU2.5 + Spreads · <strong>Pass 2</strong> BTTS · <strong>Pass 3</strong> Corners + Cards + DC · <strong>Pass 4a/b</strong> HZ-H2H + HZ-Totals + HZ-BTTS · <strong>Pass 5</strong> Team Goals (ü1.5 pro Team) — gecacht 6h · 11 Ligen</td>
+          <td>Browser (client-side) — <code>loadAllOdds()</code></td>
+          <td>Primär für Spezial-Märkte (BTTS, HT Over, Corners, Cards, Team Goals) die api-football nicht liefert oder die CORS-blockiert wären · Supplement für fehlende bt­tsY/ht_o05 wenn Hauptquoten gefunden aber Spezialmärkte fehlen</td>
         </tr>
         <tr>
           <td>Backtest-CSVs (football-data.co.uk)</td>
@@ -965,8 +965,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <tr><td>≥ 5.5</td><td style="color:#3fb950">+0.18</td><td>Starker Boost</td></tr>
           <tr><td>4.5–5.4</td><td style="color:#3fb950">+0.10</td><td>Boost</td></tr>
           <tr><td>3.5–4.4</td><td style="color:#3fb950">+0.04</td><td>Leichter Boost</td></tr>
-          <tr><td>&lt; 2.5</td><td style="color:#f85149">−0.20</td><td>Pick komplett unterdrückt</td></tr>
-          <tr><td>&lt; 3.0</td><td style="color:#f85149">−0.12</td><td>Stark gedämpft</td></tr>
+          <tr><td>&lt; 2.0</td><td style="color:#f85149">−0.20</td><td>Pick komplett unterdrückt</td></tr>
+          <tr><td>&lt; 2.8</td><td style="color:#f85149">−0.12</td><td>Stark gedämpft</td></tr>
         </table>
         <p style="margin-top:8px;color:var(--muted);font-size:12px;">Kein Daten → neutral (0). Lenient Ref + nicht extremes Druckspiel → Karten-Pick wird entfernt.</p>
       </div>
@@ -1061,11 +1061,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           </div>
         </div>
         <table class="heart-table" style="font-size:11px;">
-          <tr><th>pressureRatio</th><th>Interpretation</th><th>mustWin</th><th>canDraw</th><th>Score-Effekt</th></tr>
-          <tr><td>&gt; 0.65</td><td>Existenzkampf — muss nahezu jeden Punkt gewinnen</td><td style="color:#f85149">✅ ja</td><td>—</td><td style="color:#f85149">+0.4 (einer) / +0.8 (beide)</td></tr>
+          <tr><th>pressureRatio</th><th>Interpretation</th><th>mustWin (nur bei motiv=full)</th><th>canDraw</th><th>Score-Effekt</th></tr>
+          <tr><td>&gt; 0.65</td><td>Existenzkampf — muss nahezu jeden Punkt gewinnen</td><td style="color:#f85149">✅ ja (wenn motiv=full)</td><td>—</td><td style="color:#f85149">+0.4 (einer) / +0.8 (beide)</td></tr>
           <tr><td>0.30–0.65</td><td>Mittlerer Druck — jeder Punkt wichtig aber kein Muss</td><td>—</td><td>—</td><td>pressure_score = ratio × 3.5</td></tr>
           <tr><td>&lt; 0.30</td><td>Komfortzone — kann Remis akzeptieren</td><td>—</td><td style="color:#3fb950">✅ ja</td><td>Dämpft Under/Draw leicht</td></tr>
-          <tr><td>motivationLevel='none'</td><td>Mathematisch bestätigt (Abstieg/Titel gesichert)</td><td>—</td><td>—</td><td style="color:#f85149">−1.0 (einer) / −2.0 (beide)</td></tr>
+          <tr><td>0 + motiv='low'</td><td>Praktisch erledigt — kein echter Kampfwille mehr</td><td style="color:#6e7681">— unterdrückt</td><td>—</td><td style="color:#e3b341">−0.3 (einer low) / −0.6 (beide low)</td></tr>
+          <tr><td>0 + motiv='none'</td><td>Mathematisch bestätigt (Abstieg/Titel gesichert)</td><td style="color:#6e7681">— unterdrückt</td><td>—</td><td style="color:#f85149">−1.0 (einer none) / −2.0 (beide none)</td></tr>
         </table>
         <p style="margin-top:8px;font-size:11px;color:var(--muted);">Berechnung: <code>update_dashboard.py → calc_pressure()</code> → gespeichert in <code>homeStake.pressureRatio / mustWin / canDraw / pointsNeeded</code> → <code>computeMatchScore()</code> in JS liest diese Flags direkt.</p>
       </div>
@@ -1076,12 +1077,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <h3>⬜ Motivations-Tracker — <em>Bereits gesicherte Teams</em></h3>
         <p style="margin-bottom:10px;font-size:12.5px;color:var(--muted);">Teams deren Saisonfate mathematisch besiegelt ist (Abstieg bestätigt, Meister gekrönt, Europa-Platz gesichert) haben <em>null Anreiz</em> für Vollgas — sie rotieren Stammspieler und senken die Intensität.</p>
         <table class="heart-table">
-          <tr><th>Level</th><th>Bedeutung</th><th>Bedingung</th><th>xG-Effekt</th></tr>
-          <tr><td><code>full</code></td><td>Aktiv kämpfend</td><td>Standard — Ziel noch offen</td><td>Kein Penalty</td></tr>
-          <tr><td><code>low</code></td><td>Nahezu gesichert</td><td><strong>Abstieg:</strong> (Rückstand zu Sicherheit + comp_gain) > 75% der Max-Punkte · <strong>Titelrennen/UCL:</strong> (Vorsprung − comp_gain) > 15% der Max-Punkte · comp_gain = PPG_Konkurrent × roundsLeft (geclampt 0.8–2.4)</td><td>Att −8% · Def +6%</td></tr>
-          <tr><td><code>none</code></td><td>Mathematisch bestätigt</td><td>Rückstand > 100% der Max-Punkte (unmöglich aufzuholen)</td><td>Att −18% · Def +12%</td></tr>
+          <tr><th>Level</th><th>Bedeutung</th><th>Bedingung</th><th>xG-Effekt</th><th>Score-Effekt</th></tr>
+          <tr><td><code>full</code></td><td>Aktiv kämpfend</td><td>Standard — Ziel noch offen</td><td>Kein Penalty</td><td>—</td></tr>
+          <tr><td><code>low</code></td><td>Praktisch entschieden</td><td><strong>Abstieg:</strong> (Rückstand + comp_gain) &gt; 75% der Max-Punkte ODER bereits über der Sicherheitslinie (label residual) · <strong>Titelrennen/UCL:</strong> (Vorsprung − comp_gain) &gt; 15% der Max-Punkte · comp_gain = PPG_Konkurrent × roundsLeft (geclampt 0.8–2.4)</td><td>Att −8% · Def +6%</td><td>−0.3 (einer low) · −0.6 (beide low)</td></tr>
+          <tr><td><code>none</code></td><td>Mathematisch bestätigt</td><td>Rückstand (roh) &gt; max_gain ODER konkurrenz-adjustiert: (Rückstand + comp_gain) ≥ max_gain — auch wenn rein mathematisch noch möglich, aber der Konkurrent gewinnt realistischerweise genug Punkte um unerreichbar zu bleiben</td><td>Att −18% · Def +12%</td><td>−1.0 (einer none) · −2.0 (beide none)</td></tr>
         </table>
-        <p style="margin-top:10px;font-size:12px;color:var(--muted);">Berechnung: <code>update_dashboard.py → calc_motivation()</code> · Wird in <code>homeStake.motivationLevel</code> / <code>awayStake.motivationLevel</code> gespeichert · Pressure-Strip zeigt ⬜ statt 🚨 wenn alle Stakes gesichert sind · Druck-Boost (homeNeedsWin) deaktiviert für <code>none</code>-Teams.</p>
+        <p style="margin-top:10px;font-size:12px;color:var(--muted);">Berechnung: <code>update_dashboard.py → calc_motivation()</code> · Wird in <code>homeStake.motivationLevel</code> / <code>awayStake.motivationLevel</code> gespeichert · <strong>mustWin</strong> wird jetzt für <code>low</code> UND <code>none</code> unterdrückt — nur <code>full</code>-Teams spielen mit echter Muss-gewinnen-Intensität.</p>
       </div>
     </div>
   </div>
@@ -1092,13 +1093,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="heart-card">
       <p style="margin-bottom:14px;color:var(--muted);font-size:13px;">Jedes Team bekommt ein Label basierend auf Tabellenposition und Abstand zu kritischen Plätzen. Diese Labels lösen den Druckfaktor aus:</p>
       <table class="heart-table">
-        <tr><th>Label</th><th>Bedeutung</th><th>Trigger-Bedingung</th><th>Druck-Effekt</th></tr>
-        <tr><td>🏆 <span class="hbadge gold-c" style="background:rgba(240,192,64,.15);color:var(--gold);border:1px solid rgba(240,192,64,.3);">GOLD</span></td><td>Titelrennen</td><td>Position 1–2, Abstand ≤ 5 Punkte</td><td>Heimsieg/Auswärtssieg +Boost; Remis oft akzeptabel für Leader</td></tr>
-        <tr><td>🔵 <span class="hbadge blue">BLAU</span></td><td>Champions League</td><td>Position 3–4, Abstand ≤ 4 Punkte</td><td>Moderate Druck, UCL-Platz ist Millionenspiel</td></tr>
-        <tr><td>🟠 <span class="hbadge" style="background:rgba(251,146,60,.12);color:#fb923c;border:1px solid rgba(251,146,60,.3);">ORANGE</span></td><td>Europa League</td><td>Position 5–6, Abstand ≤ 3 Punkte</td><td>Leichter Druck</td></tr>
-        <tr><td>🟡 <span class="hbadge yellow">GELB</span></td><td>Europapokal</td><td>Position je Liga, Europa-Zone</td><td>Leichter Druck</td></tr>
-        <tr><td>🟣 <span class="hbadge" style="background:rgba(167,139,250,.12);color:#a78bfa;border:1px solid rgba(167,139,250,.3);">LILA</span></td><td>Conference League</td><td>Position je Liga</td><td>Minimaler Druck</td></tr>
-        <tr><td>🔴 <span class="hbadge red">ROT</span></td><td>Abstiegskampf</td><td>Position ≥ 16 (Top 5), Abstand ≤ 4 Punkte</td><td>Stärkster Boost aller Labels — Existenzangst treibt maximalen Angriffsdruck</td></tr>
+        <tr><th>Label</th><th>Bedeutung</th><th>Trigger-Bedingung (aus calc_labels())</th><th>Druck-Effekt</th></tr>
+        <tr><td>🏆 <span class="hbadge gold-c" style="background:rgba(240,192,64,.15);color:var(--gold);border:1px solid rgba(240,192,64,.3);">GOLD</span></td><td>Titelrennen</td><td><strong>Titelkampf:</strong> Position 1 · <strong>Titelchance:</strong> Position ≤ 3 UND Abstand zum Ersten ≤ 6 Punkte</td><td>Heimsieg/Auswärtssieg +Boost; Leader: canDraw wenn gesichert</td></tr>
+        <tr><td>🔵 <span class="hbadge blue">BLAU</span></td><td>Champions League</td><td><strong>UCL sichern:</strong> Position ≤ UCL-Plätze UND Vorsprung auf Verfolger ≤ 3 Punkte · <strong>UCL Jagd:</strong> Position &gt; UCL-Plätze UND Rückstand auf UCL-Letzten ≤ 4 Punkte</td><td>Moderater Druck, UCL-Platz ist Millionenspiel</td></tr>
+        <tr><td>🟠 <span class="hbadge" style="background:rgba(251,146,60,.12);color:#fb923c;border:1px solid rgba(251,146,60,.3);">ORANGE</span></td><td>Europa League</td><td><strong>EL sichern:</strong> In EL-Zone UND Abstand zur Grenze ≤ 3 Punkte · <strong>EL Jagd:</strong> Außerhalb EL-Zone UND Rückstand auf EL-Letzten ≤ 3 Punkte</td><td>Leichter Druck</td></tr>
+        <tr><td>🟡 <span class="hbadge yellow">GELB</span></td><td>Rel.-Playoff</td><td>In der Playoff-Zone (Liga-spezifisch): zwischen letztem sicheren Platz und echtem Abstiegszone — bekommt Playoff + Abstiegsgefahr-Label</td><td>Erhöhter Druck — ein Spiel entscheidet über Verbleib</td></tr>
+        <tr><td>🔴 <span class="hbadge red">ROT</span></td><td>Abstiegskampf</td><td><strong>Abstieg:</strong> Position ≥ erster Abstiegsplatz (liga-spezifisch) · <strong>Abstiegsgefahr:</strong> Rückstand auf sicheren Platz ≤ 6 Punkte UND Position ≤ 2 über Sicherheitszone · <strong>Achtung:</strong> Label basiert auf aktueller Position — <code>motivationLevel</code> zeigt ob mathematisch noch möglich</td><td>Stärkster Boost — Existenzangst treibt maximalen Angriffsdruck</td></tr>
       </table>
     </div>
   </div>
@@ -1154,8 +1154,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <table class="heart-table">
         <tr><th>Level</th><th>Anzeige</th><th>PICK 1 Schwelle (Heimsieg)</th><th>Backtest-Trefferquote</th></tr>
         <tr><td><span class="hbadge green">★★★ HIGH</span></td><td>Grüner Rahmen</td><td>sc > 1.50</td><td>~68–72% (kalibriert)</td></tr>
-        <tr><td><span class="hbadge yellow">★★☆ MEDIUM</span></td><td>Gelber Rahmen</td><td>sc > 0.72</td><td>~55–62%</td></tr>
-        <tr><td><span class="hbadge muted">★☆☆ LOW</span></td><td>Nicht angezeigt</td><td>sc ≤ 0.72</td><td>~47% (unterdrückt)</td></tr>
+        <tr><td><span class="hbadge yellow">★★☆ MEDIUM</span></td><td>Gelber Rahmen</td><td>sc > 0.50</td><td>~55–62%</td></tr>
+        <tr><td><span class="hbadge muted">★☆☆ LOW</span></td><td>Nicht angezeigt</td><td>sc ≤ 0.50</td><td>~47% (unterdrückt)</td></tr>
       </table>
       <p style="margin-top:12px;font-size:12px;color:var(--muted);">Low-Confidence Picks werden <strong style="color:var(--text)">grundsätzlich nicht angezeigt</strong> — Backtest zeigte 47.6% Trefferquote, kaum besser als Zufall.</p>
     </div>
@@ -1378,6 +1378,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Step 5b: Late-Fetch Karten-Quoten (prematch-server.js)</strong> — Karten-Märkte öffnen erst 24–48h vor Kickoff. Step 5b fetcht nachträglich <code>cards_o35/o45/o55/u35/u45</code> für alle Fixtures ≤48h mit Hauptquoten aber ohne Karten. 1.2s Delay zwischen Calls. Resultat: Karten-Picks haben echte Bookie-Quoten für den Value-Check statt "keine Quote". <em>(prematch-server.js)</em></li>
           <li><strong>Konsens-Devig (Consensus Fair Value)</strong> — Pass 1 in <code>parseBets()</code> (Server) und <code>_parseOddsBets()</code> (Browser): alle Bookmaker werden gesammelt, de-viggt und gewichtet gemittelt (Pinnacle 2×, andere 1×). Ergebnis: <code>hw_fair / dr_fair / aw_fair</code> = bookmaker-bias-freier fairer Preis. <code>deriveOdds()</code> nutzt fair-Werte wenn verfügbar (kein weiteres De-Vig nötig); Fallback auf Single-Source-Devig. <em>(prematch-server.js + season-finish.html)</em></li>
           <li><strong>Line Movement Strip auf Cards</strong> — <code>odds_open</code> wird beim ersten GitHub-Actions-Fetch eingefroren und nie überschrieben. <code>computeLineMovement()</code> berechnet den ppShift pro 1X2-Outcome; Strip erscheint ab ≥3pp Bewegung. Visualisierung: ↘/↗ (3–5pp), ⬇/⬆ (5–8pp), ⬇⬇ + SHARP-Badge (≥8pp). Farbkodierung: 🟢 Grün = bestätigt Pick, 🔴 Rot = widerspricht Pick, 🔵 Blau = neutrales Sharp Money, Grau = Drift. Kein Strip bei stabilen Linien (kein Clutter). <em>(prematch-server.js + season-finish.html)</em></li>
+          <li><strong>The Odds API — Vollintegration aller Spezial-Märkte (CORS-Lösung)</strong> — CORS blockiert alle direkten API-Football-Calls aus dem Browser. Lösung: The Odds API als client-side Quell für alle 5 Märkte in <code>loadAllOdds()</code>. <strong>Pass 1</strong> (EU): H2H + Spreads + Totals (ü/u2.5, ü/u1.5). <strong>Pass 2</strong> (UK): BTTS. <strong>Pass 3</strong> (EU): Corners + Karten (o/u 3.5, 4.5, 5.5) + DC. <strong>Pass 4a/b</strong> (EU+UK): HZ-H2H + HZ-Totals + HZ-BTTS. <strong>Pass 5</strong> (EU): Team Goals (ü1.5 pro Team → <code>hto15 / ato15</code>). Ergebnis: BTTS, HT Over 0.5, Team Über 1.5 Tore, Ecken, Karten — alle mit echten Marktquoten. <em>(season-finish.html)</em></li>
+          <li><strong>findOdds() Prematch-Supplement-Fix</strong> — Wenn Hauptquoten (H2H) gefunden wurden, kehrte <code>findOdds()</code> sofort zurück ohne BTTS/HT-Märkte aus <code>_preMatchData</code> zu laden. Fix: Supplement-Pass nach dem frühen Return — fehlendes <code>bttsY/N</code>, <code>ht_o05/u05</code>, <code>ht_o15/u15</code>, <code>ht_bttsY/N</code>, <code>hto15/ato15</code>, <code>cards_o35/u35/o45/u45</code> werden aus prematch-data.json ergänzt. Resultat: Spezial-Markt-Picks haben jetzt fast immer echte Quoten statt "keine Quote". <em>(season-finish.html)</em></li>
+          <li><strong>Under 1.5 FT Parsing</strong> — The Odds API Totals-Parser fehlte die Under-1.5-Quote. Eine Zeile ergänzt: <code>else if (o.name==='Under' &amp;&amp; |o.point−1.5|&lt;0.01) r.u15=o.price</code>. Erlaubt Under 1.5 Picks mit echten Marktquoten. <em>(season-finish.html)</em></li>
+          <li><strong>Geschätzte Quoten (_isEstimated) aus Odd Strip entfernt</strong> — API-Football Predictions liefern prozentuale Wahrscheinlichkeiten die als Quoten umgerechnet wurden (~2.20, ~1.85 usw.). Diese tragen kein unabhängiges Marktsignal und wurden fälschlicherweise wie echte Bookmaker-Quoten angezeigt. Fix: Odd Strip nur noch wenn <code>!odds._isEstimated</code>. Pick-Quoten von reinen Schätzungen werden ebenfalls unterdrückt. <em>(season-finish.html)</em></li>
+          <li><strong>fetch_results.py auf 14 Tage erweitert + Ecken/Karten-Statistiken</strong> — War auf 4 Tage begrenzt. Neu: 14 Tage Coverage. Zusätzlich holt <code>fetch_stats(fixture_id)</code> pro abgeschlossenem Spiel die <code>/fixtures/statistics</code>: <code>cornersHome / cornersAway / yellowHome / yellowAway / redHome / redAway</code>. Fließt in <code>results-cache.json</code> ein → Browser liest _cacheStats aus Cache statt CORS-blockierter API-Direktcalls. Aktiviert Ecken/Karten-Picks-Auswertung im Results-Tab. <em>(fetch_results.py + season-finish.html)</em></li>
+          <li><strong>Konkurrenz-adjustierte Bestätigung in calc_motivation() + calc_pressure()</strong> — Bisheriger Bug: Teams mit <code>motiv='low'</code> aber <code>mustWin=true</code> und <code>pressureRatio=1.0</code> wenn <code>pointsNeeded &gt; max_gain</code> durch comp_gain. Beispiel: Wolves braucht 22 Punkte bei max. 18 verfügbar (6 Runden × 3). Fix: (1) In <code>calc_motivation()</code>: wenn <code>(gap + comp_gain) ≥ max_gain</code> → <code>'none'</code> statt <code>'low'</code> (gilt für Abstieg, Titelchase, UCL/EL-Jagd). (2) In <code>calc_pressure()</code>: wenn <code>pointsNeeded ≥ max_gain</code> nach Berechnung → Early-Return mit <code>pressureRatio=0, mustWin=False</code>. Gilt für alle Zonen. (3) Abstieg: Wenn Team bereits über Sicherheitslinie (<code>gap_to_safety ≤ 0</code>) → <code>motiv='low'</code> statt <code>'full'</code> (Label ist residual). <em>(update_dashboard.py — Apr 2026)</em></li>
+          <li><strong>mustWin-Unterdrückung für 'low'-Motivation</strong> — War: <code>mustWin = pressure.mustWin AND motiv != 'none'</code> (nur 'none' unterdrückt). Neu: <code>mustWin = pressure.mustWin AND motiv == 'full'</code> — auch 'low'-Teams bekommen kein mustWin-Flag. Begründung: ein Team das weiß dass es nicht mehr reinkommt, spielt nicht mit echter Muss-gewinnen-Intensität. Gleiches Guard in JS <code>computeMatchScore()</code>. <em>(update_dashboard.py + season-finish.html — Apr 2026)</em></li>
+          <li><strong>Red-Safe-Detection auf 'none' erweitert</strong> — In <code>computeMatchScore()</code> war Red-Safe nur für <code>motiv='low'</code> aktiv. Bestätigte Absteiger (<code>motiv='none', pressureRatio=0</code>) erhielten dadurch noch den vollen Drama-Bonus. Fix: <code>_hRScs = ... (_hMotCS === 'low' || _hMotCS === 'none') &amp;&amp; pr===0 &amp;&amp; pn===0</code>. <em>(season-finish.html — Apr 2026)</em></li>
         </ul>
       </div>
     </div>
@@ -4323,14 +4331,16 @@ function computeMatchScore(match, leagueKey) {
   const anyGold  = hc.includes('gold') || ac.includes('gold');
 
   // ── Red-safe: in red zone but already mathematically rescued (no real urgency) ──
+  // Covers both 'low' (above safety line, label residual) and 'none' (confirmed
+  // relegated) — both have pressureRatio=0 and pointsNeeded=0 after the fix.
   const _hMotCS = match.homeStake?.motivationLevel;
   const _aMotCS = match.awayStake?.motivationLevel;
   const _hPRcs  = match.homeStake?.pressureRatio ?? null;
   const _aPRcs  = match.awayStake?.pressureRatio ?? null;
   const _hPNcs  = match.homeStake?.pointsNeeded  ?? null;
   const _aPNcs  = match.awayStake?.pointsNeeded  ?? null;
-  const _hRScs  = hc.includes('red') && _hMotCS === 'low' && _hPRcs === 0 && _hPNcs === 0;
-  const _aRScs  = ac.includes('red') && _aMotCS === 'low' && _aPRcs === 0 && _aPNcs === 0;
+  const _hRScs  = hc.includes('red') && (_hMotCS === 'low' || _hMotCS === 'none') && _hPRcs === 0 && _hPNcs === 0;
+  const _aRScs  = ac.includes('red') && (_aMotCS === 'low' || _aMotCS === 'none') && _aPRcs === 0 && _aPNcs === 0;
   const _anyRScs = _hRScs || _aRScs;
 
   let score;
@@ -4393,13 +4403,15 @@ function computeMatchScore(match, leagueKey) {
   // ── mustWin amplifier: when a team NEEDS to win (not just "wants to") ──────
   // pressureRatio > 0.65 → mustWin=true → team plays with maximum intensity.
   // Two mustWin teams = explosive, unpredictable match (best for betting markets).
-  // Guard: mustWin is meaningless when motivationLevel='none' (already relegated/
-  // confirmed) — those teams play with zero pressure regardless of the flag.
+  // Guard: mustWin is only meaningful when motivationLevel='full' (actively fighting).
+  // 'none' = confirmed done (relegated/title secured) — no pressure regardless of flag.
+  // 'low'  = practically decided — team knows it won't make it, no mustWin intensity.
+  // Mirrors the Python change: mustWin = pressure.mustWin AND motiv == 'full'
   {
     const hMot = match.homeStake?.motivationLevel;
     const aMot = match.awayStake?.motivationLevel;
-    const hMW = (match.homeStake?.mustWin || false) && hMot !== 'none';
-    const aMW = (match.awayStake?.mustWin || false) && aMot !== 'none';
+    const hMW = (match.homeStake?.mustWin || false) && hMot === 'full';
+    const aMW = (match.awayStake?.mustWin || false) && aMot === 'full';
     if (hMW && aMW) score += 0.8;      // both desperate — maximum contest
     else if (hMW || aMW) score += 0.4; // one team in crisis mode
   }
