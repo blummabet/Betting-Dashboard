@@ -2003,6 +2003,7 @@ function _parseTheOddsEvent(g) {
           else if (o.name==='Over' &&Math.abs(o.point-3.5)<0.01&&!r.o35) r.o35=o.price;
           else if (o.name==='Under'&&Math.abs(o.point-3.5)<0.01&&!r.u35) r.u35=o.price;
           else if (o.name==='Over' &&Math.abs(o.point-1.5)<0.01&&!r.o15) r.o15=o.price;
+          else if (o.name==='Under'&&Math.abs(o.point-1.5)<0.01&&!r.u15) r.u15=o.price;
         }
       } else if (mk==='btts') {
         for (const o of (mkt.outcomes||[])) {
@@ -3578,7 +3579,7 @@ function getBettingPicks(match, odds, leagueKey) {
     { let sc = expGoals<1.4?0.76:expGoals<1.7?0.54:0.08;
       // 🔑 PRESSURE/RUNDEN: jedes Muss-gewinnen zerstört Under 1.5 komplett
       if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 1.50);
-      gC.push({sc, p:{icon:'🔒', market:'Under 1.5 Tore', odds:null,
+      gC.push({sc, p:{icon:'🔒', market:'Under 1.5 Tore', odds:o.u15||null,
         conf: sc>0.65?'medium':'low',
         reason:`Das Modell erwartet nur ${expGoals.toFixed(1)} Tore — beide Teams sind offensiv extrem schwach. Ein einziger Treffer in diesem Spiel wäre schon viel.`}}); }
 
@@ -7086,7 +7087,7 @@ async function showPreMatchDebug() {
     `⚠️  Handicap Heim/Auswärts -0.5 / -0.75 / -1.0`,
     `    → spreads gefetcht (ah_h/ah_a), aber Pick-Logik verwendet immer _ahEstO (Modell)`,
     `❌  Unter 1.5 Tore (Vollzeit)`,
-    `    → odds:null hardcoded; u15 (Vollzeit) wird nicht aus The Odds API geparst`,
+    `    → u15 ← totals Under 1.5  (Pass 1 EU)`,
     `✅  1. HZ: Over 0.5 Tore`,
     `    → ht_o05 ← totals_h1 Over 0.5  (Pass 4a EU)`,
     `✅  1. HZ: Under 0.5 Tore`,
