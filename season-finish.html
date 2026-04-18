@@ -568,6 +568,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .lm-neutral-short{color:#79c0ff;} /* money in, no pick on this side */
 .lm-neutral-drift{color:#6e7681;} /* drifting, neutral */
 .lm-sharp{display:inline-block;padding:1px 5px;border-radius:4px;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;background:rgba(56,139,253,.20);color:#58a6ff;border:1px solid rgba(56,139,253,.40);margin-left:3px;font-family:sans-serif;}
+.lm-ou-pills{display:flex;gap:4px;flex-shrink:0;}
+.lm-ou-pill{display:flex;flex-direction:column;align-items:center;padding:3px 7px;border-radius:5px;background:#161b22;border:1px solid #30363d;min-width:40px;}
+.lm-ou-pill-lbl{font-size:8px;color:#8b949e;text-transform:uppercase;letter-spacing:.4px;font-family:sans-serif;}
+.lm-ou-pill-val{font-size:10.5px;font-weight:700;color:#e6edf3;font-family:monospace;}
 /* ── Signal Bar ─────────────────────────────────────────────────── */
 /* Extends edge-to-edge inside the card (negative margins cancel the 18px card-padding) */
 .signal-bar{display:flex;gap:5px;flex-wrap:wrap;
@@ -2511,7 +2515,7 @@ function computeLineMovement(oddsOpen, oddsCurrent) {
 
 // Renders the LINE MOVEMENT strip HTML.
 // picks: array from getBettingPicks() — used to colour-code confirming vs. contra moves.
-function renderLineMovement(rows, picks) {
+function renderLineMovement(rows, picks, oddsD, isEstimated) {
   if (!rows || !rows.length) return '';
 
   // Determine which 1X2 outcomes our picks align with
@@ -2577,10 +2581,23 @@ function renderLineMovement(rows, picks) {
   const stripClass = hasSharp ? 'lm-strip lm-strip-sharp' : 'lm-strip';
   const titleIcon  = hasSharp ? '📈' : '📊';
 
+  // O2.5 / U2.5 pills — only from real bookmaker quotes, not estimated
+  let ouHtml = '';
+  if (oddsD && !isEstimated) {
+    const _pill = (lbl, val) =>
+      `<div class="lm-ou-pill"><span class="lm-ou-pill-lbl">${lbl}</span><span class="lm-ou-pill-val">${val.toFixed(2)}</span></div>`;
+    if (oddsD.o25) ouHtml += _pill('O2.5', oddsD.o25);
+    if (oddsD.u25) ouHtml += _pill('U2.5', oddsD.u25);
+  }
+  const ouBlock = ouHtml ? `<div class="lm-ou-pills">${ouHtml}</div>` : '';
+
   return `<div class="${stripClass}">
     <div class="lm-header">
-      <span class="lm-title">${titleIcon} LINE MOVEMENT</span>
-      <span class="lm-sub">Opening → Aktuell</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="lm-title">${titleIcon} LINE MOVEMENT</span>
+        <span class="lm-sub">Opening → Aktuell</span>
+      </div>
+      ${ouBlock}
     </div>
     <div class="lm-rows">${rowsHtml}</div>
   </div>`;
@@ -3431,6 +3448,12 @@ function getBettingPicks(match, odds, leagueKey) {
       }
     }
     rC.sort((a,b) => b.sc - a.sc);
+    // Draw filter: never surface a pure Unentschieden pick.
+    // Pure draws are high-variance, odds typically 3.0+ (well above the 1.4–2.0 target range).
+    // When a draw situation is present, the DC pick (1X or X2) covers both win and draw
+    // with odds in the right range — strictly better risk profile. Demoting to 'low' here
+    // lets the existing fallback logic naturally promote DC/DNB instead.
+    rC.forEach(r => { if (r.p.market === 'Unentschieden') r.p.conf = 'low'; });
     // _topResultMkt is used by PICK 2 consistency guard (awayWinWeak / homeWinWeak).
     // Map DNB/DC back to the underlying directional lean so PICK 2 still works correctly.
     { const _raw = rC[0].p.market;
@@ -4306,6 +4329,16 @@ function getBettingPicks(match, odds, leagueKey) {
       }
     }
   });
+
+  // ── Odds cap: hide picks with real bookmaker odds above 2.05 ─────────────────
+  // Rationale: high-odds picks introduce unnecessary variance for a consistent
+  // tipster output. The 1.40–2.05 range gives 50–70% implied probability per pick,
+  // which is far more sustainable than chasing 2.5+ longshots.
+  // Exception: null odds (no market data yet) and estimated (~) odds are left alone —
+  // those can't be judged by the same standard.
+  for (const p of picks) {
+    if (p.odds != null && !p.oddsIsEst && p.odds > 2.05) p.conf = 'low';
+  }
 
   return picks;
 }
@@ -6355,30 +6388,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   // ── Line movement strip ────────────────────────────────────────────────────
   const _oddsOpen = _pm?.odds_open || null;
   const _lmRows   = computeLineMovement(_oddsOpen, odds);
-  const lineMovementHtml = renderLineMovement(_lmRows, picks);
-
-  // ── Odds Strip — compact 1X2 + key markets at a glance ─────────────────────
-  // Only shown for real bookmaker quotes (The Odds API). Estimated model odds
-  // are suppressed entirely — they come from the same source as the picks and
-  // carry no independent market signal.
-  let oddsStripHtml = '';
-  if (oddsD.hw && !odds?._isEstimated) {
-    const _f = v => v.toFixed(2);
-    const _chip = (lbl, val, best) =>
-      `<div class="odds-chip"><div class="oc-label">${lbl}</div><div class="oc-val${best?' best':''}">${_f(val)}</div></div>`;
-    // Highlight the single cheapest outcome (best value for a win bet)
-    const _1x2min = Math.min(oddsD.hw, oddsD.dr||99, oddsD.aw||99);
-    const _chips = [];
-    _chips.push(_chip('Heim',  oddsD.hw, oddsD.hw  === _1x2min));
-    if (oddsD.dr) _chips.push(_chip('Remis', oddsD.dr, oddsD.dr === _1x2min));
-    _chips.push(_chip('Ausw',  oddsD.aw, oddsD.aw  === _1x2min));
-    if (oddsD.o25) _chips.push(_chip('O2.5', oddsD.o25, false));
-    if (oddsD.u25) _chips.push(_chip('U2.5', oddsD.u25, false));
-    if (oddsD.bttsY) _chips.push(_chip('BTTS', oddsD.bttsY, false));
-    if (oddsD.dc1X)  _chips.push(_chip('1X',   oddsD.dc1X,  false));
-    if (oddsD.dcX2)  _chips.push(_chip('X2',   oddsD.dcX2,  false));
-    oddsStripHtml = `<div class="odds-strip">${_chips.join('')}<span class="odds-source">The Odds API</span></div>`;
-  }
+  const lineMovementHtml = renderLineMovement(_lmRows, picks, oddsD, odds?._isEstimated);
 
   // Show all high/medium confidence picks — user decides what's worth betting.
   // Low-odds picks get ⚠ label instead of being hidden.
@@ -6737,7 +6747,6 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       ${renderStakeRow(match.away, match.awayStake, match.awayForm, leagueKey)}
     </div>
     ${renderH2H(match.h2h)}
-    ${oddsStripHtml}
     <div class="bet-angle">
       <div class="ba-header"><span class="ba-label">Wett-Winkel</span><span class="ba-badge ${angle.cls}">${angle.badge}</span></div>
       <div class="ba-text">${angle.text}</div>
