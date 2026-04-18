@@ -6346,10 +6346,12 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   const lineMovementHtml = renderLineMovement(_lmRows, picks);
 
   // ── Odds Strip — compact 1X2 + key markets at a glance ─────────────────────
+  // Only shown for real bookmaker quotes (The Odds API). Estimated model odds
+  // are suppressed entirely — they come from the same source as the picks and
+  // carry no independent market signal.
   let oddsStripHtml = '';
-  if (oddsD.hw) {
-    const _isEst = !!(odds?._isEstimated);
-    const _f = v => (_isEst ? '~' : '') + v.toFixed(2);
+  if (oddsD.hw && !odds?._isEstimated) {
+    const _f = v => v.toFixed(2);
     const _chip = (lbl, val, best) =>
       `<div class="odds-chip"><div class="oc-label">${lbl}</div><div class="oc-val${best?' best':''}">${_f(val)}</div></div>`;
     // Highlight the single cheapest outcome (best value for a win bet)
@@ -6363,10 +6365,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     if (oddsD.bttsY) _chips.push(_chip('BTTS', oddsD.bttsY, false));
     if (oddsD.dc1X)  _chips.push(_chip('1X',   oddsD.dc1X,  false));
     if (oddsD.dcX2)  _chips.push(_chip('X2',   oddsD.dcX2,  false));
-    const _srcLabel = _isEst
-      ? `<span class="odds-source" style="opacity:.65;font-style:italic" title="Modell-Schätzung aus API-Prediction — keine Buchmacharquoten verfügbar">~ Modell-Schätzung</span>`
-      : `<span class="odds-source">The Odds API</span>`;
-    oddsStripHtml = `<div class="odds-strip">${_chips.join('')}${_srcLabel}</div>`;
+    oddsStripHtml = `<div class="odds-strip">${_chips.join('')}<span class="odds-source">The Odds API</span></div>`;
   }
 
   // Show all high/medium confidence picks — user decides what's worth betting.
@@ -6379,7 +6378,10 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   if (visiblePicks.length === 0) return '';
   const picksHtml = visiblePicks.map(p => {
     const oddsNum  = p.odds ?? null;
-    const oddsTag  = oddsNum != null
+    // When the whole fixture has no real market odds (_isEstimated), suppress
+    // all pick-level estimated quotes too — they're model output, not bookmaker prices.
+    const _noRealOdds = !!(odds?._isEstimated);
+    const oddsTag  = (oddsNum != null && !(_noRealOdds && p.oddsIsEst))
       ? p.oddsIsEst
         ? `<span class="pick-odds-tag" style="opacity:.85">@ ~${oddsNum.toFixed(2)}<span style="font-size:9px;opacity:.6;margin-left:2px">(est.)</span></span>`
         : `<span class="pick-odds-tag" style="${oddsNum < 1.40 ? 'opacity:.6' : ''}">@ ${oddsNum.toFixed(2)}</span>`
