@@ -8338,11 +8338,13 @@ function savePicksToday(btn) {
       const d = parseGermanDate(f.date);
       // Use local date components — toISOString() shifts to UTC and can give the wrong day (e.g. CET midnight = prev day in UTC)
       const dateIso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      const _rawCardSc = computeMatchScore(f, key);
       all.push({
         dateIso, date: f.date,
         league: L.name, leagueFlag: L.flag, leagueKey: key,
         home: f.home, away: f.away,
         fixtureId: f.fixtureId || null,   // from prematch enrichment — enables direct ID lookup
+        cardScore: (typeof _rawCardSc === 'number') ? parseFloat(_rawCardSc.toFixed(1)) : null,
         finalScore: null,
         picks: picks.map(p => ({
           icon: p.icon, market: p.market, conf: p.conf,
@@ -9771,9 +9773,17 @@ async function fetchSofaResults(btn) {
        p.market.toLowerCase().includes('karte') || p.market.toLowerCase().includes('card'))
     );
     let stats = null;
-    if (needsStats && fx.fixture?.id) {
-      btn.textContent = `⏳ Stats ${entry.home}…`;
-      stats = await _apifbFetchStats(fx.fixture.id);
+    // Use fixture ID from API response OR fall back to stored fixtureId (saved at pick time)
+    const _statsFixId = fx.fixture?.id || entry.fixtureId || null;
+    if (needsStats) {
+      if (_statsFixId) {
+        btn.textContent = `⏳ Stats ${entry.home}…`;
+        stats = await _apifbFetchStats(_statsFixId);
+        if (!stats) dbg.push(`  ⚠ Stats-API für ID ${_statsFixId} (${entry.home} vs ${entry.away}) leer — Ecken/Karten bleiben offen`);
+        else dbg.push(`  📊 Stats geladen (ID ${_statsFixId}) — Ecken/Karten auswertbar`);
+      } else {
+        dbg.push(`  ⚠ Keine Fixture-ID für ${entry.home} vs ${entry.away} — Ecken/Karten-Picks bleiben offen (Fixture-ID beim nächsten Speichern vorhanden)`);
+      }
     }
 
     for (const p of entry.picks) {
@@ -9826,9 +9836,21 @@ async function fetchSofaResults(btn) {
       const a = ev.awayScore?.current ?? null;
       if (h === null) continue;
       entry.finalScore = `${h}:${a}`;
+      // Try stats via stored fixtureId — SofaScore has no stats API but API-Football does
+      const _sfNeedsStats = entry.picks.some(p =>
+        p.result === null &&
+        (p.market.toLowerCase().includes('ecke') || p.market.toLowerCase().includes('corner') ||
+         p.market.toLowerCase().includes('karte') || p.market.toLowerCase().includes('card'))
+      );
+      let _sfStats = null;
+      if (_sfNeedsStats && entry.fixtureId) {
+        _sfStats = await _apifbFetchStats(entry.fixtureId);
+        if (_sfStats) dbg.push(`  📊 Stats (Fallback) via stored ID ${entry.fixtureId} — Ecken/Karten auswertbar`);
+        else dbg.push(`  ⚠ Stats-Fallback für ID ${entry.fixtureId} leer`);
+      }
       for (const p of entry.picks) {
         if (p.result !== null) continue;
-        const outcome = _determineOutcome(p.market, h, a);
+        const outcome = _determineOutcome(p.market, h, a, _sfStats);
         if (outcome !== null) { p.result = outcome; p.finalScore = `${h}:${a}`; resolved++; notFound = Math.max(0, notFound-1); }
         else manual++;
       }
@@ -9846,7 +9868,7 @@ async function fetchSofaResults(btn) {
   let msg = resolved
     ? `✅ ${resolved} Pick${resolved>1?'s':''} aufgelöst`
     : '⚠️ Keine neuen Ergebnisse — Spiele noch nicht abgeschlossen?';
-  if (manual)    msg += ` · ${manual} manuell nötig (HZ/Ecken)`;
+  if (manual)    msg += ` · ${manual} manuell nötig (HZ/Stats fehlen)`;
   if (stillOpen) msg += ` · ${stillOpen} Spiele noch offen`;
   infoEl.textContent = msg;
   btn.textContent = '🔄 Ergebnisse holen';
@@ -10014,10 +10036,11 @@ function _mergeLocalPicks() {
       dateIso: e.dateIso, date: e.date,
       league: e.league, leagueFlag: e.leagueFlag,
       home: e.home, away: e.away,
+      cardScore: e.cardScore || null,
       finalScore: e.finalScore,
       picks: e.picks.map(p => ({
         icon: p.icon, market: p.market, conf: p.conf,
-        odds: p.odds, result: p.result, finalScore: p.finalScore
+        sc: p.sc || null, odds: p.odds, result: p.result, finalScore: p.finalScore
       }))
     }));
   _resultsData = [..._resultsData, ...toAdd];
@@ -10068,18 +10091,23 @@ function renderResultsTable(filter) {
   const html = `<table class="res-table">
     <thead><tr>
       <th>Datum</th><th>Spiel</th><th>Liga</th>
-      <th>Wette</th><th>Conf</th><th>Ergebnis</th><th>Resultat</th>
+      <th>Wette</th><th>Conf</th><th title="Card-Score zum Zeitpunkt der Pick-Erstellung">Score</th><th>Ergebnis</th><th>Resultat</th>
     </tr></thead>
-    <tbody>${rows.map(r => `
+    <tbody>${rows.map(r => {
+      const _cs = r.cardScore != null ? r.cardScore.toFixed(1) : null;
+      const _csColor = _cs == null ? 'var(--muted)' : parseFloat(_cs) >= 10 ? '#3fb950' : parseFloat(_cs) >= 7 ? '#e3b341' : '#8b949e';
+      return `
       <tr>
         <td style="color:var(--muted);white-space:nowrap">${r.date}</td>
         <td style="font-weight:600">${r.home} <span style="color:var(--muted)">vs</span> ${r.away}</td>
         <td>${r.leagueFlag} ${r.league}</td>
         <td>${r.pick.icon || ''} ${r.pick.market}</td>
         <td><span style="color:${r.pick.conf==='high'?'#3fb950':r.pick.conf==='medium'?'#e3b341':'#8b949e'};font-weight:700;font-size:12px">${r.pick.conf==='high'?'★★★':r.pick.conf==='medium'?'★★☆':'★☆☆'}</span></td>
+        <td style="font-weight:700;color:${_csColor};font-size:12px">${_cs != null ? _cs+'/12' : '—'}</td>
         <td style="font-weight:700;color:var(--accent)">${r.finalScore || '—'}</td>
         <td>${badgeHtml(r)}</td>
-      </tr>`).join('')}
+      </tr>`;
+    }).join('')}
     </tbody>
   </table>`;
   document.getElementById('resultsTable').innerHTML = html;
