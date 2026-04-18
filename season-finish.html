@@ -2009,6 +2009,20 @@ function _parseTheOddsEvent(g) {
           if (o.name==='Yes'&&!r.bttsY) r.bttsY=o.price;
           if (o.name==='No' &&!r.bttsN) r.bttsN=o.price;
         }
+      } else if (mk==='team_totals') {
+        // Team Goals Over/Under — outcome has name=teamName, description="Over"/"Under", point=line
+        // → r.hto15 = home team over 1.5,  r.ato15 = away team over 1.5
+        for (const o of (mkt.outcomes||[])) {
+          const tn  = norm(o.name||'');
+          const desc= (o.description||'').toLowerCase();
+          const pt  = o.point||0;
+          if (Math.abs(pt-1.5)<0.01) {
+            const isH=tn===hTeam||hTeam.includes(tn)||tn.includes(hTeam);
+            const isA=!isH&&(tn===aTeam||aTeam.includes(tn)||tn.includes(aTeam));
+            if (isH) { if(desc==='over'&&!r.hto15) r.hto15=o.price; else if(desc==='under'&&!r.htu15) r.htu15=o.price; }
+            if (isA) { if(desc==='over'&&!r.ato15) r.ato15=o.price; else if(desc==='under'&&!r.atu15) r.atu15=o.price; }
+          }
+        }
       } else if (mk==='spreads') {
         for (const o of (mkt.outcomes||[])) {
           const nm=norm(o.name);
@@ -2094,7 +2108,19 @@ function findOdds(leagueKey, home, away) {
     if (homeOk && awayOk) {
       const r = _parseTheOddsEvent(g);
       // Require at least hw+aw (valid h2h prices > 1.01) — otherwise skip this event
-      if (r.hw && r.aw && r.hw > 1.01 && r.aw > 1.01) return r;
+      if (r.hw && r.aw && r.hw > 1.01 && r.aw > 1.01) {
+        // Supplement live data with specialty markets from prematch-data.json.
+        // Live data from The Odds API may be missing bttsY/ht_o05 if the UK-region
+        // merge passes failed silently (422 / ID mismatch). Prematch data has these
+        // from API-Football's /odds endpoint (parseBets) and fills the gap reliably.
+        const _pmO = window._preMatchData?.[`${home}|${away}`]?.odds;
+        if (_pmO) {
+          const _supp = ['bttsY','bttsN','ht_o05','ht_u05','ht_o15','ht_u15','ht_bttsY','ht_bttsN',
+                         'hto15','ato15','cards_o35','cards_u35','cards_o45','cards_u45'];
+          for (const k of _supp) if (r[k] == null && _pmO[k] != null) r[k] = _pmO[k];
+        }
+        return r;
+      }
     }
   }
 
@@ -2135,7 +2161,7 @@ function findOdds(leagueKey, home, away) {
 
 async function loadAllOdds() {
   // ── Cache: refresh every 2h — odds move more often closer to kickoff ─────
-  const CACHE_KEY = 'sfOddsCache_v10'; // bumped: added Pass4 halftime markets (h2h_h1/totals_h1/btts_h1)
+  const CACHE_KEY = 'sfOddsCache_v11'; // bumped: added Pass5 team_totals + findOdds prematch supplement
   const CACHE_TTL = 2 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
@@ -2309,6 +2335,38 @@ async function loadAllOdds() {
   window._oddsHtLgs = htOk;
   window._oddsHtBttsLgs = htBttsOk;
   if (htOk > 0 || htBttsOk > 0) console.log(`[TheOddsAPI] HZ-Märkte enriched — h2h_h1/totals_h1: ${htOk} · btts_h1: ${htBttsOk} Ligen`);
+
+  // ── Fetch Pass 5: EU region — Team Goals (Over/Under 1.5 per team) ────────
+  // team_totals market has outcomes: { name: teamName, description: "Over"|"Under", point: 1.5 }
+  // Parsed into r.hto15 / r.ato15 by _parseTheOddsEvent → used in Team Goals picks.
+  let teamTotOk = 0;
+  await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
+    if (!window._oddsData[lk]?.length) return;
+    try {
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=team_totals&oddsFormat=decimal`;
+      const resp = await fetch(url);
+      if (!resp.ok) return;
+      const ttEvents = await resp.json();
+      if (!Array.isArray(ttEvents)) return;
+      for (const te of ttEvents) {
+        const main = window._oddsData[lk].find(e => e.id === te.id);
+        if (!main) continue;
+        for (const bkr of (te.bookmakers || [])) {
+          const existing = main.bookmakers.find(b => b.key === bkr.key);
+          if (existing) {
+            for (const mkt of (bkr.markets || [])) {
+              if (!existing.markets.find(m => m.key === mkt.key)) existing.markets.push(mkt);
+            }
+          } else {
+            main.bookmakers.push(bkr);
+          }
+        }
+      }
+      if (ttEvents.length > 0) teamTotOk++;
+    } catch(e) { /* silent */ }
+  }));
+  window._oddsTeamTotLgs = teamTotOk;
+  if (teamTotOk > 0) console.log(`[TheOddsAPI] Team Goals enriched — team_totals: ${teamTotOk} Ligen`);
 
   // ── Save to cache ─────────────────────────────────────────────────────────
   try {
@@ -3597,7 +3655,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if (sc > 0) {
         const _xL = xGBased ? 'xG' : 'Tore';
         const _hPN = homeNeedsWin ? `<br><strong>⚡ ${_pHLabel}${_rlSfx} — Heimteam greift voll an, Over 1.5 durch Druckspiel klar verstärkt.</strong>` : '';
-        gC.push({sc, p:{icon:'🏠', market:`${match.home} über 1.5 Tore`, odds: null,
+        gC.push({sc, p:{icon:'🏠', market:`${match.home} über 1.5 Tore`, odds: o.hto15||null,
           conf: sc > 0.68 ? 'high' : 'medium',
           reason:`${match.home} trifft im Schnitt ${homeAttStr.toFixed(1)} Mal pro Spiel — der Gegner lässt ${awayDefStr.toFixed(1)} Tore zu. Das Modell erwartet ${expH.toFixed(1)} Heimtore: mindestens 2 Treffer für ${match.home} sind gut möglich.`}}); }
     }
@@ -3610,7 +3668,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if (sc > 0) {
         const _xL = xGBased ? 'xG' : 'Tore';
         const _aPN = awayNeedsWin ? `<br><strong>⚡ ${_pALabel}${_rlSfx} — Auswärtsteam geht volles Risiko, Over 1.5 durch Druckspiel verstärkt.</strong>` : '';
-        gC.push({sc, p:{icon:'✈️', market:`${match.away} über 1.5 Tore`, odds: null,
+        gC.push({sc, p:{icon:'✈️', market:`${match.away} über 1.5 Tore`, odds: o.ato15||null,
           conf: sc > 0.65 ? 'medium' : 'low',
           reason:`${match.away} trifft im Schnitt ${awayAttStr.toFixed(1)} Mal pro Spiel — der Gegner lässt ${homeDefStr.toFixed(1)} Tore zu. Das Modell erwartet ${expA.toFixed(1)} Auswärtstore: mindestens 2 Treffer für ${match.away} sind gut möglich.`}}); }
     }
