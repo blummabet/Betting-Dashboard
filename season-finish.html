@@ -2104,6 +2104,32 @@ function findOdds(leagueKey, home, away) {
   const pm = window._preMatchData?.[`${home}|${away}`];
   if (pm?.odds && Object.keys(pm.odds).length >= 2) return pm.odds;
 
+  // ── Last resort: derive estimated fair odds from API-Football prediction ──
+  // API /predictions returns pctHome/Draw/Away probabilities for ALL leagues,
+  // including CRO, HUN, SCO, BEL that The Odds API doesn't cover.
+  // Marked _isEstimated:true → rendered with "~" prefix everywhere.
+  const _pred = pm?.apiPrediction;
+  if (_pred?.pctHome != null && _pred?.pctDraw != null && _pred?.pctAway != null) {
+    const _pH = _pred.pctHome / 100, _pD = _pred.pctDraw / 100, _pA = _pred.pctAway / 100;
+    const _tot = _pH + _pD + _pA;
+    if (_tot > 0.75 && _pH > 0.01 && _pD > 0.01 && _pA > 0.01) {
+      const _nH = _pH/_tot, _nD = _pD/_tot, _nA = _pA/_tot;
+      const _r2 = v => parseFloat(v.toFixed(2));
+      const _est = {
+        hw: _r2(1/_nH), dr: _r2(1/_nD), aw: _r2(1/_nA),
+        _isEstimated: true
+      };
+      // Also estimate O/U 2.5 via Poisson on expected goals (if available)
+      if (_pred.goalsHome != null && _pred.goalsAway != null) {
+        const _lam = (_pred.goalsHome + _pred.goalsAway) || 2.5;
+        const _pOv = _poissonOver(_lam, 2.5);
+        _est.o25 = _poissonOdds(_pOv);
+        _est.u25 = _poissonOdds(1 - _pOv);
+      }
+      return _est;
+    }
+  }
+
   return null;
 }
 
@@ -3049,7 +3075,18 @@ function getBettingPicks(match, odds, leagueKey) {
   const picks = [];
   const _used  = new Set();
   // _push(p, sc) — attach sc to pick so infographic & results tracking can use it
-  const _push = (p, sc) => { if (!p || _used.has(p.market)) return false; _used.add(p.market); if (sc !== undefined) p.sc = sc; picks.push(p); return true; };
+  // When the underlying odds came from API prediction (not real bookmakers), automatically
+  // mark all picks that have real odds values as estimates — mirrors corners/cards Poisson logic.
+  const _odds1x2IsEst = !!(odds?._isEstimated || o?._isEstimated);
+  const _push = (p, sc) => {
+    if (!p || _used.has(p.market)) return false;
+    _used.add(p.market);
+    if (sc !== undefined) p.sc = sc;
+    // Auto-flag estimated odds on picks from API prediction fallback (not Poisson — those set it themselves)
+    if (_odds1x2IsEst && p.odds != null && !p.oddsIsEst) p.oddsIsEst = true;
+    picks.push(p);
+    return true;
+  };
   let _topResultMkt = ''; // hoisted: set by PICK 1, read by PICK 2 for consistency guard
 
   // ╔══════════════════════════════════════════════════════════════════════╗
@@ -6252,7 +6289,8 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   // ── Odds Strip — compact 1X2 + key markets at a glance ─────────────────────
   let oddsStripHtml = '';
   if (oddsD.hw) {
-    const _f = v => v.toFixed(2);
+    const _isEst = !!(odds?._isEstimated);
+    const _f = v => (_isEst ? '~' : '') + v.toFixed(2);
     const _chip = (lbl, val, best) =>
       `<div class="odds-chip"><div class="oc-label">${lbl}</div><div class="oc-val${best?' best':''}">${_f(val)}</div></div>`;
     // Highlight the single cheapest outcome (best value for a win bet)
@@ -6266,7 +6304,10 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     if (oddsD.bttsY) _chips.push(_chip('BTTS', oddsD.bttsY, false));
     if (oddsD.dc1X)  _chips.push(_chip('1X',   oddsD.dc1X,  false));
     if (oddsD.dcX2)  _chips.push(_chip('X2',   oddsD.dcX2,  false));
-    oddsStripHtml = `<div class="odds-strip">${_chips.join('')}<span class="odds-source">The Odds API</span></div>`;
+    const _srcLabel = _isEst
+      ? `<span class="odds-source" style="opacity:.65;font-style:italic" title="Modell-Schätzung aus API-Prediction — keine Buchmacharquoten verfügbar">~ Modell-Schätzung</span>`
+      : `<span class="odds-source">The Odds API</span>`;
+    oddsStripHtml = `<div class="odds-strip">${_chips.join('')}${_srcLabel}</div>`;
   }
 
   // Show all high/medium confidence picks — user decides what's worth betting.
