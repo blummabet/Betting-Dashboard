@@ -9622,12 +9622,28 @@ async function fetchSofaResults(btn) {
       dbg.push(`📦 results-cache.json geladen — ${(_cd.fixtures||[]).length} Fixtures · ${_ageMin}min alt · ${_cd.dates?.join(', ')}`);
       // Inject cache fixtures into apifbByDate using the same structure the resolver expects
       for (const fx of (_cd.fixtures || [])) {
+        // Build synthetic stats object for corner/card picks from embedded cache data.
+        // This avoids CORS-blocked browser-side API calls to /fixtures/statistics.
+        const _hasCacheStats = fx.cornersHome !== null && fx.cornersHome !== undefined;
+        const _cacheStats = _hasCacheStats ? [
+          { statistics: [
+            { type: 'Corner Kicks', value: fx.cornersHome ?? 0 },
+            { type: 'Yellow Cards', value: fx.yellowHome  ?? 0 },
+            { type: 'Red Cards',    value: fx.redHome     ?? 0 },
+          ]},
+          { statistics: [
+            { type: 'Corner Kicks', value: fx.cornersAway ?? 0 },
+            { type: 'Yellow Cards', value: fx.yellowAway  ?? 0 },
+            { type: 'Red Cards',    value: fx.redAway     ?? 0 },
+          ]},
+        ] : null;
         const _norm = {
           fixture: { id: fx.id, date: fx.date + 'T00:00:00+01:00', status: { short: fx.status } },
           teams:   { home: { id: fx.homeTeamId, name: fx.home }, away: { id: fx.awayTeamId, name: fx.away } },
           goals:   { home: fx.goalsHome, away: fx.goalsAway },
           score:   { halftime: { home: fx.htHome, away: fx.htAway } },
           league:  { id: fx.leagueId },
+          _stats:  _cacheStats, // pre-built stats for corner/card picks — no CORS-blocked API call needed
         };
         (apifbByDate[fx.date] = apifbByDate[fx.date] || []).push(_norm);
       }
@@ -9814,16 +9830,21 @@ async function fetchSofaResults(btn) {
        p.market.toLowerCase().includes('karte') || p.market.toLowerCase().includes('card'))
     );
     let stats = null;
-    // Use fixture ID from API response OR fall back to stored fixtureId (saved at pick time)
-    const _statsFixId = fx.fixture?.id || entry.fixtureId || null;
-    if (needsStats) {
+    if (fx._stats) {
+      // Stats were pre-fetched by GitHub Actions and embedded in results-cache.json —
+      // use them directly to avoid CORS-blocked browser-side API calls.
+      stats = fx._stats;
+      if (needsStats) dbg.push(`  📊 Stats aus Cache (ID ${fx.fixture?.id}) — Ecken/Karten auswertbar`);
+    } else if (needsStats) {
+      // No cached stats — fall back to direct API call (works only server-side / with CORS proxy)
+      const _statsFixId = fx.fixture?.id || entry.fixtureId || null;
       if (_statsFixId) {
         btn.textContent = `⏳ Stats ${entry.home}…`;
         stats = await _apifbFetchStats(_statsFixId);
         if (!stats) dbg.push(`  ⚠ Stats-API für ID ${_statsFixId} (${entry.home} vs ${entry.away}) leer — Ecken/Karten bleiben offen`);
         else dbg.push(`  📊 Stats geladen (ID ${_statsFixId}) — Ecken/Karten auswertbar`);
       } else {
-        dbg.push(`  ⚠ Keine Fixture-ID für ${entry.home} vs ${entry.away} — Ecken/Karten-Picks bleiben offen (Fixture-ID beim nächsten Speichern vorhanden)`);
+        dbg.push(`  ⚠ Keine Fixture-ID für ${entry.home} vs ${entry.away} — Ecken/Karten-Picks bleiben offen`);
       }
     }
 
@@ -9884,10 +9905,20 @@ async function fetchSofaResults(btn) {
          p.market.toLowerCase().includes('karte') || p.market.toLowerCase().includes('card'))
       );
       let _sfStats = null;
-      if (_sfNeedsStats && entry.fixtureId) {
-        _sfStats = await _apifbFetchStats(entry.fixtureId);
-        if (_sfStats) dbg.push(`  📊 Stats (Fallback) via stored ID ${entry.fixtureId} — Ecken/Karten auswertbar`);
-        else dbg.push(`  ⚠ Stats-Fallback für ID ${entry.fixtureId} leer`);
+      if (_sfNeedsStats) {
+        // First: look for this fixture in our already-loaded cache (has embedded stats)
+        const _cachedFx = Object.values(apifbByDate).flat().find(f =>
+          entry.fixtureId && f.fixture?.id && String(f.fixture.id) === String(entry.fixtureId)
+        );
+        if (_cachedFx?._stats) {
+          _sfStats = _cachedFx._stats;
+          dbg.push(`  📊 Stats aus Cache (SofaScore-Fallback, ID ${entry.fixtureId}) — Ecken/Karten auswertbar`);
+        } else if (entry.fixtureId) {
+          // Fall back to direct API call (CORS-blocked in browser, works in Actions)
+          _sfStats = await _apifbFetchStats(entry.fixtureId);
+          if (_sfStats) dbg.push(`  📊 Stats via API-Call ID ${entry.fixtureId} — Ecken/Karten auswertbar`);
+          else dbg.push(`  ⚠ Stats-Fallback für ID ${entry.fixtureId} leer (kein Cache + CORS blockiert)`);
+        }
       }
       for (const p of entry.picks) {
         if (p.result !== null) continue;

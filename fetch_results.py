@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """
 fetch_results.py — Fetches finished fixtures from API-Football Pro for all
-                   tracked leagues (last 4 days) and writes results-cache.json.
+                   tracked leagues (last 14 days) and writes results-cache.json.
+                   Also fetches corner kick + card statistics per finished fixture
+                   so the browser dashboard can resolve corners/cards picks without
+                   any CORS-blocked browser-side API calls.
 
 Run 3× daily via GitHub Actions (04:00, 18:00, 23:00 Vienna / 02:00, 16:00, 21:00 UTC).
 The dashboard reads results-cache.json at page load and uses it to resolve picks
@@ -45,6 +48,9 @@ LEAGUES = {
     "POR2": 95,  # Liga Portugal 2
     "SCO2": 180, # Scottish Championship
     "TUR2": 204, # TFF 1. Lig
+    "HUN": 271,  # NB I (Hungary)
+    "BEL": 55,   # Pro League (Belgium)
+    "CRO": 210,  # HNL (Croatia)
 }
 
 FINISHED_STATUSES = {"FT", "AET", "PEN", "AWD", "WO"}
@@ -66,6 +72,50 @@ def api_get(path: str, params: dict) -> dict | None:
         return None
 
 
+def fetch_stats(fixture_id: int) -> dict | None:
+    """Fetch corner kicks and card statistics for a single finished fixture."""
+    time.sleep(1.2)
+    data = api_get("fixtures/statistics", {"fixture": fixture_id})
+    if not data:
+        return None
+    response = data.get("response", [])
+    if not isinstance(response, list) or len(response) < 2:
+        return None
+
+    def extract(team_stats: dict, stat_name: str) -> int | None:
+        for s in team_stats.get("statistics", []):
+            if s.get("type", "").lower() == stat_name.lower():
+                v = s.get("value")
+                try:
+                    return int(v) if v is not None else None
+                except (ValueError, TypeError):
+                    return None
+        return None
+
+    home = response[0]
+    away = response[1]
+
+    corners_home  = extract(home, "Corner Kicks")
+    corners_away  = extract(away, "Corner Kicks")
+    yellow_home   = extract(home, "Yellow Cards")
+    yellow_away   = extract(away, "Yellow Cards")
+    red_home      = extract(home, "Red Cards")
+    red_away      = extract(away, "Red Cards")
+
+    # Only return if we got at least corners data
+    if corners_home is None and corners_away is None:
+        return None
+
+    return {
+        "cornersHome": corners_home,
+        "cornersAway": corners_away,
+        "yellowHome":  yellow_home,
+        "yellowAway":  yellow_away,
+        "redHome":     red_home,
+        "redAway":     red_away,
+    }
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -76,8 +126,8 @@ def main():
     now = datetime.now(timezone.utc)
     print(f"🔄  Starte fetch_results.py — {now.strftime('%Y-%m-%d %H:%M UTC')}")
 
-    # Fetch past 4 days to cover timezone drift and delayed entries
-    dates = [(now - timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, 4)]
+    # Fetch past 14 days to cover older picks and timezone drift
+    dates = [(now - timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, 14)]
     print(f"   Daten: {', '.join(dates)}")
 
     all_fixtures = []
@@ -116,13 +166,14 @@ def main():
                 if status not in FINISHED_STATUSES:
                     continue
 
-                goals   = fx.get("goals", {})
-                score   = fx.get("score", {})
+                goals    = fx.get("goals", {})
+                score    = fx.get("score", {})
                 halftime = score.get("halftime", {})
-                teams   = fx.get("teams", {})
+                teams    = fx.get("teams", {})
+                fix_id   = fx["fixture"]["id"]
 
                 all_fixtures.append({
-                    "id":          fx["fixture"]["id"],
+                    "id":          fix_id,
                     "date":        (fx["fixture"].get("date") or "")[:10],
                     "leagueKey":   lkey,
                     "leagueId":    league_id,
@@ -135,6 +186,13 @@ def main():
                     "htAway":      halftime.get("away"),
                     "homeTeamId":  teams.get("home", {}).get("id"),
                     "awayTeamId":  teams.get("away", {}).get("id"),
+                    # Stats will be filled in below (or null if unavailable)
+                    "cornersHome": None,
+                    "cornersAway": None,
+                    "yellowHome":  None,
+                    "yellowAway":  None,
+                    "redHome":     None,
+                    "redAway":     None,
                 })
 
     # Deduplicate by fixture ID
@@ -145,17 +203,36 @@ def main():
             seen.add(fx["id"])
             unique.append(fx)
 
+    print(f"\n📋  {len(unique)} unique finished fixtures — hole jetzt Statistiken…")
+
+    # ── Fetch statistics for each finished fixture ────────────────────────────
+    stats_ok   = 0
+    stats_fail = 0
+    for i, fx in enumerate(unique):
+        fix_id = fx["id"]
+        print(f"  📊 [{i+1}/{len(unique)}] Stats für Fixture {fix_id} ({fx['home']} vs {fx['away']})…", end=" ")
+        stats = fetch_stats(fix_id)
+        total_calls += 1
+        if stats:
+            fx.update(stats)
+            stats_ok += 1
+            print(f"✅  Ecken {stats.get('cornersHome')}-{stats.get('cornersAway')} | Gelb {stats.get('yellowHome')}-{stats.get('yellowAway')}")
+        else:
+            stats_fail += 1
+            print("—")
+
     cache = {
-        "generated":  now.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "dates":      dates,
+        "generated":   now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "dates":       dates,
         "leagueCount": len(LEAGUES),
-        "fixtures":   unique,
+        "fixtures":    unique,
     }
 
     with open(OUT_FILE, "w", encoding="utf-8") as f:
         json.dump(cache, f, ensure_ascii=False, separators=(",", ":"))
 
-    print(f"\n✅  {len(unique)} Fixtures aus {total_calls} API-Calls")
+    print(f"\n✅  {len(unique)} Fixtures · {stats_ok} mit Stats · {stats_fail} ohne Stats")
+    print(f"   Gesamt API-Calls: {total_calls}")
     print(f"   Gespeichert: {OUT_FILE}")
 
 
