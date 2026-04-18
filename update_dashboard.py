@@ -459,6 +459,9 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
         if gap <= max_gain:
             # Still mathematically in title contention
             cg = comp_gain_est(standings, 1, rounds_left)
+            # 'none': competitor-adjusted — even winning everything can't catch leader's
+            # projected total. Title is over, treat like secured/confirmed.
+            if (gap + cg) >= max_gain:  return 'none'
             # 'low': leader's projected total is so far ahead it's practically over
             if (gap + cg) > max_gain * 0.75:  return 'low'
             return 'full'   # actively chasing — don't let UCL/EL security override
@@ -494,9 +497,13 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
             gap_to_safety = pts_safe - pts
             # 'none': we win everything, safe team wins nothing — still can't escape
             if gap_to_safety > max_gain:  return 'none'
-            # 'low': competitor-adjusted — need >75% of max_gain just to match where
-            # the safe team will likely end up at their current PPG
+            # 'low': already above the safety line — label is residual, no real fear
+            if gap_to_safety <= 0:  return 'low'
             cg = comp_gain_est(standings, safe_pos, rounds_left)
+            # 'none': competitor-adjusted — even winning everything can't close the gap
+            # once the safe team's projected gains are included. Confirmed doomed.
+            if (gap_to_safety + cg) >= max_gain:  return 'none'
+            # 'low': need >75% of max_gain just to match where safe team will likely end up
             if (gap_to_safety + cg) > max_gain * 0.75:  return 'low'
 
     return 'full'
@@ -548,8 +555,7 @@ def calc_pressure(team, labels, standings, cfg, rounds_left):
             pts_safe      = pts_at_pos(standings, safe_pos)
             gap_to_safety = pts_safe - pts
             # ── Confirmed relegated: cannot mathematically escape — zero pressure ──
-            # Even winning every remaining game can't close the gap. motivationLevel
-            # will be 'none'; mustWin must also be False so match score stays low.
+            # Even winning every remaining game can't close the raw gap.
             if gap_to_safety > max_gain:
                 return {"pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": False, "canDraw": True}
             safe_gd   = get_team_gd(standings, safe_pos)
@@ -558,6 +564,11 @@ def calc_pressure(team, labels, standings, cfg, rounds_left):
             gd_pen    = 1 if (pts >= pts_safe and team_gd < safe_gd) else 0
             # Competitor-adjusted target: where safe team will likely end up
             points_needed = max(0, (pts_safe + cg) - pts + 1 + gd_pen)
+            # ── Competitor-adjusted confirmation: even best-case scenario can't close ──
+            # Winning every game still not enough once the safe team's projected gains
+            # are included. motivationLevel will be 'none'; treat as confirmed.
+            if points_needed >= max_gain:
+                return {"pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": False, "canDraw": True}
         else:
             points_needed = max_gain
 
@@ -581,6 +592,9 @@ def calc_pressure(team, labels, standings, cfg, rounds_left):
             gap_now    = pts_leader - pts
             gd_pen     = 1 if (gap_now <= 0 and team_gd < leader_gd) else 0
             points_needed = max(0, (pts_leader + cg) - pts + 1 + gd_pen)
+            # Competitor-adjusted confirmation: title unreachable even winning everything
+            if points_needed >= max_gain:
+                return {"pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": False, "canDraw": True}
 
     elif is_blue:
         ucl = cfg["ucl"]
@@ -601,6 +615,9 @@ def calc_pressure(team, labels, standings, cfg, rounds_left):
             gap_now   = pts_ucl - pts
             gd_pen    = 1 if (gap_now <= 0 and team_gd < ucl_gd) else 0
             points_needed = max(0, (pts_ucl + cg) - pts + 1 + gd_pen)
+            # Competitor-adjusted confirmation: UCL spot unreachable even winning everything
+            if points_needed >= max_gain:
+                return {"pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": False, "canDraw": True}
 
     elif is_orange:
         ucl       = cfg["ucl"]
@@ -623,6 +640,9 @@ def calc_pressure(team, labels, standings, cfg, rounds_left):
             gap_now   = pts_el - pts
             gd_pen    = 1 if (gap_now <= 0 and team_gd < el_gd) else 0
             points_needed = max(0, (pts_el + cg) - pts + 1 + gd_pen)
+            # Competitor-adjusted confirmation: EL spot unreachable even winning everything
+            if points_needed >= max_gain:
+                return {"pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": False, "canDraw": True}
 
     pressure_ratio = min(1.0, points_needed / max_gain)
 
@@ -893,16 +913,18 @@ def fetch_league(key, cfg):
                       "motivationLevel": h_motiv,
                       "pointsNeeded": h_pressure.get("pointsNeeded", 0),
                       "pressureRatio": h_pressure.get("pressureRatio", 0.0),
-                      # mustWin=False when motiv='none': confirmed team has given up regardless of ratio
-                      "mustWin": h_pressure.get("mustWin", False) and h_motiv != 'none',
+                      # mustWin=False unless motiv='full': confirmed ('none') and practically-doomed
+                      # ('low') teams don't play with mustWin intensity — suppressing here prevents
+                      # misleading high pressure picks for teams whose outcome is already decided.
+                      "mustWin": h_pressure.get("mustWin", False) and h_motiv == 'full',
                       "canDraw": h_pressure.get("canDraw", True)} if h_labels else None
         away_stake = {"score": calc_score(a_labels, rounds_left, a_form, a_pressure.get("pressureRatio")),
                       "labels": a_labels,
                       "motivationLevel": a_motiv,
                       "pointsNeeded": a_pressure.get("pointsNeeded", 0),
                       "pressureRatio": a_pressure.get("pressureRatio", 0.0),
-                      # mustWin=False when motiv='none': confirmed team has given up regardless of ratio
-                      "mustWin": a_pressure.get("mustWin", False) and a_motiv != 'none',
+                      # mustWin=False unless motiv='full': see home_stake comment above
+                      "mustWin": a_pressure.get("mustWin", False) and a_motiv == 'full',
                       "canDraw": a_pressure.get("canDraw", True)} if a_labels else None
 
         # H2H using API-Football team IDs
