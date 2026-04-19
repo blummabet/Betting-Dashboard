@@ -262,7 +262,8 @@ function matchOddsEvent(fixtureHome, fixtureAway, fixtureDate, oddsEvents) {
 // Parse a The Odds API event into the same odds object format as parseBets().
 // Produces: hw, dr, aw, hw_fair, dr_fair, aw_fair, _cn, bttsY, bttsN,
 //           o25, u25, o35, u35, o15, dc1X_bkr, dcX2_bkr, dc12_bkr,
-//           ah_h, ah_h_point, ah_a, ah_a_point
+//           ah_h, ah_h_point, ah_a, ah_a_point,
+//           o25_fair, u25_fair, o25_cn (O/U 2.5 bookmaker consensus)
 function parseTheOddsEvent(oddsEvent) {
   const r = {};
   const books = oddsEvent.bookmakers || [];
@@ -553,6 +554,7 @@ function computeInjuryImpact(inj) {
 // Computes consensus fair value (hw_fair/dr_fair/aw_fair) from all bookmakers:
 //   Pinnacle (margin <2.5%) gets 2× weight, others 1×.
 //   Averaging multiple de-vigged sources cancels individual bookmaker biases.
+// Also computes O/U 2.5 consensus: o25_fair, u25_fair, o25_cn.
 // Case-insensitive matching — mirrors browser _parseOddsBets logic.
 function parseBets(bookmakers) {
   if (!Array.isArray(bookmakers) || !bookmakers.length) return {};
@@ -601,6 +603,43 @@ function parseBets(bookmakers) {
     r.dr_fair  = _r2(_n / _pd);
     r.aw_fair  = _r2(_n / _pa);
     r._cn      = _cSamples.length; // how many books contributed
+  }
+
+  // ── Pass 1b: consensus fair O/U 2.5 (same weighting as 1X2) ────────────────
+  const _ouSamples = [];
+  for (const bkr of bookmakers) {
+    let _o25 = null, _u25 = null;
+    for (const bet of (bkr.bets || [])) {
+      const bn = (bet.name || '').toLowerCase().trim();
+      if (bn === 'goals over/under' || bn === 'total goals' || bn === 'over/under' || bn === 'total - goals' || bn.includes('goals o/u') || (bn.includes('over') && bn.includes('under') && bn.includes('goal'))) {
+        for (const v of (bet.values || [])) {
+          const vl = (v.value || '').toLowerCase();
+          if (vl === 'over 2.5')  _o25 = parseFloat(v.odd);
+          else if (vl === 'under 2.5') _u25 = parseFloat(v.odd);
+        }
+        break;
+      }
+    }
+    if (!_o25 || !_u25 || isNaN(_o25) || isNaN(_u25)) continue;
+    const _tot = 1/_o25 + 1/_u25;
+    const _margin = _tot - 1;
+    if (_margin > 0.12 || _margin < -0.02) continue; // skip corrupt/exchange outliers
+    const _isPinn = bkr.name?.toLowerCase().includes('pinnacle') || bkr.id === 8;
+    _ouSamples.push({
+      po: (1/_o25) / _tot, pu: (1/_u25) / _tot,
+      weight: _isPinn ? 2.0 : 1.0,
+      name: bkr.name || `id${bkr.id}`
+    });
+  }
+  if (_ouSamples.length >= 1) {
+    const _tw  = _ouSamples.reduce((s, d) => s + d.weight, 0);
+    const _po  = _ouSamples.reduce((s, d) => s + d.po * d.weight, 0) / _tw;
+    const _pu  = _ouSamples.reduce((s, d) => s + d.pu * d.weight, 0) / _tw;
+    const _n   = _po + _pu;
+    const _r2  = (x) => Math.round(x * 100) / 100;
+    r.o25_fair = _r2(_n / _po); // fair odds Over 2.5 (no margin)
+    r.u25_fair = _r2(_n / _pu); // fair odds Under 2.5
+    r.o25_cn   = _ouSamples.length; // bookmaker count for O/U consensus
   }
 
   // ── Pass 2: primary markets (Pinnacle-first for actual betting odds) ─────────

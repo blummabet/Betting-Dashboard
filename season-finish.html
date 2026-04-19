@@ -2586,16 +2586,19 @@ function estimateTeamGoalOdds(lambdaTeam) {
 //  LINE MOVEMENT — opening vs. current odds analysis
 // ═══════════════════════════════════════════════════════
 
-// Returns an array of movement rows (one per 1X2 outcome) or null if no meaningful move.
+// Returns an array of movement rows (1X2 + O/U 2.5) or null if no meaningful move.
 // ppShift > 0 = probability increased = odds shortened = money came in on this side.
 // ppShift < 0 = probability decreased = odds drifted = money left / weak side.
 // Returns null if max movement across all outcomes < 3pp (noise threshold).
+// O/U rows carry label 'O25' / 'U25' and are appended after 1X2 rows.
 function computeLineMovement(oddsOpen, oddsCurrent) {
   if (!oddsOpen || !oddsCurrent) return null;
   const markets = [
-    { label: '1', key: 'hw' },
-    { label: 'X', key: 'dr' },
-    { label: '2', key: 'aw' },
+    { label: '1',   key: 'hw'  },
+    { label: 'X',   key: 'dr'  },
+    { label: '2',   key: 'aw'  },
+    { label: 'O25', key: 'o25' },
+    { label: 'U25', key: 'u25' },
   ];
   const rows = [];
   for (const m of markets) {
@@ -2618,7 +2621,7 @@ function computeLineMovement(oddsOpen, oddsCurrent) {
 function renderLineMovement(rows, picks, oddsD, isEstimated) {
   if (!rows || !rows.length) return '';
 
-  // Determine which 1X2 outcomes our picks align with
+  // Determine which outcomes our picks align with (1X2 + O/U)
   const pickLabels = new Set();
   for (const p of (picks || [])) {
     const mkt = (p.market || '').toLowerCase();
@@ -2630,14 +2633,21 @@ function renderLineMovement(rows, picks, oddsD, isEstimated) {
     else if (mkt.includes('dnb') && mkt.includes('auswärts')) pickLabels.add('2');
     else if (mkt.includes('doppelte chance') && (mkt.includes('1x') || mkt.includes('1/'))) { pickLabels.add('1'); pickLabels.add('X'); }
     else if (mkt.includes('doppelte chance') && (mkt.includes('x2') || mkt.includes('/2'))) { pickLabels.add('2'); pickLabels.add('X'); }
+    // O/U picks: align with Over or Under row
+    else if (mkt.includes('over') || mkt.includes('o2.5') || mkt === 'over 2.5' || mkt.includes('btts')) pickLabels.add('O25');
+    else if (mkt.includes('under') || mkt.includes('u2.5') || mkt === 'under 2.5') pickLabels.add('U25');
   }
+
+  // Human-readable labels for display (O25/U25 get nicer names)
+  const _lmDisplayLabel = { '1': '1', 'X': 'X', '2': '2', 'O25': 'O2.5', 'U25': 'U2.5' };
 
   const rowsHtml = rows.map(r => {
     const abs = Math.abs(r.ppShift);
+    const dispLbl = _lmDisplayLabel[r.label] || r.label;
     if (abs < 3) {
       // Flat — show current odds, no arrow
       return `<div class="lm-row">
-        <span class="lm-label">${r.label}</span>
+        <span class="lm-label">${dispLbl}</span>
         <span class="lm-arrow lm-flat">──</span>
         <span class="lm-open">${r.oddOpen.toFixed(2)}</span>
         <span class="lm-sep">→</span>
@@ -2668,7 +2678,7 @@ function renderLineMovement(rows, picks, oddsD, isEstimated) {
     const sign = r.ppShift > 0 ? '+' : '';
 
     return `<div class="lm-row">
-      <span class="lm-label">${r.label}</span>
+      <span class="lm-label">${dispLbl}</span>
       <span class="lm-arrow ${cls}">${arrowStr}</span>
       <span class="lm-open">${r.oddOpen.toFixed(2)}</span>
       <span class="lm-sep">→</span>
@@ -2903,7 +2913,7 @@ function getBettingPicks(match, odds, leagueKey) {
   // Cap at ±3pp to avoid overweighting noisy openers.
   const _pmEntry = window._preMatchData?.[`${match.home}|${match.away}`] || null;
   const _oOpen   = _pmEntry?.odds_open || null;
-  let _lmH = 0, _lmD = 0, _lmA = 0;
+  let _lmH = 0, _lmD = 0, _lmA = 0, _lmO = 0, _lmU = 0;
   if (_oOpen && odds?.hw && odds?.dr && odds?.aw) {
     const _ppH = Math.round(((1/odds.hw)  - (1/(_oOpen.hw  || odds.hw)))  * 100);
     const _ppD = Math.round(((1/odds.dr)  - (1/(_oOpen.dr  || odds.dr)))  * 100);
@@ -2911,6 +2921,13 @@ function getBettingPicks(match, odds, leagueKey) {
     _lmH = Math.max(-0.045, Math.min(0.045, _ppH * 0.015));
     _lmD = Math.max(-0.045, Math.min(0.045, _ppD * 0.015));
     _lmA = Math.max(-0.045, Math.min(0.045, _ppA * 0.015));
+  }
+  // O/U 2.5 line movement nudge — used in goals pick mp adjustments
+  if (_oOpen && odds?.o25 && odds?.u25 && _oOpen.o25 && _oOpen.u25) {
+    const _ppO = Math.round(((1/odds.o25) - (1/(_oOpen.o25 || odds.o25))) * 100);
+    const _ppU = Math.round(((1/odds.u25) - (1/(_oOpen.u25 || odds.u25))) * 100);
+    _lmO = Math.max(-0.045, Math.min(0.045, _ppO * 0.015));
+    _lmU = Math.max(-0.045, Math.min(0.045, _ppU * 0.015));
   }
 
   // ── Comparison signals from API /predictions endpoint ─────────────────────────
@@ -4083,6 +4100,37 @@ function getBettingPicks(match, odds, leagueKey) {
     // Having DC in both PICK 1 + PICK 3 creates contradictory picks (DC X2 + DC 1X same game).
     // If no PICK 3 specialty market qualifies, the card simply shows no third pick.
 
+    // ── 1. HZ: Heimsieg / Auswärtssieg ──────────────────────────────────────
+    // Fires when: strong FT lean AND HT result odds are in value range.
+    // Scaled down ~55%/48% of FT confidence (HT results are more volatile).
+    // Requires a real bookie quote — no model-estimated HT result odds.
+    {
+      // HT Home Win
+      if (o.ht_hw != null && o.ht_hw >= 1.33 && o.ht_hw <= 2.30) {
+        let htHSc = hFS_home * 0.55;
+        if (homeNeedsWin) htHSc = Math.min(0.82, htHSc + _pressureBoost * 0.45);
+        if (eloHomeFav)   htHSc = Math.min(0.82, htHSc + 0.07);
+        if (homeAttStr > 1.4) htHSc = Math.min(0.82, htHSc + 0.05);
+        if (htHSc >= 0.38) {
+          sC.push({sc: htHSc, p:{icon:'⏱️', market:'1. HZ: Heimsieg', odds: o.ht_hw,
+            conf: htHSc > 0.65 ? 'high' : 'medium',
+            reason:`${match.home} dominiert ${Math.round(hFS_home*100)}% seiner Heimspiele und erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel — ein Führungstreffer bereits in Halbzeit 1 ist realistisch. HZ-Quote ${o.ht_hw.toFixed(2)} bietet Wert.`}});
+        }
+      }
+      // HT Away Win
+      if (o.ht_aw != null && o.ht_aw >= 1.45 && o.ht_aw <= 2.50) {
+        let htASc = aFS_away * 0.48;
+        if (awayNeedsWin) htASc = Math.min(0.78, htASc + _pressureBoost * 0.40);
+        if (eloAwayFav)   htASc = Math.min(0.78, htASc + 0.07);
+        if (awayAttStr > 1.4) htASc = Math.min(0.78, htASc + 0.05);
+        if (htASc >= 0.36) {
+          sC.push({sc: htASc, p:{icon:'⏱️', market:'1. HZ: Auswärtssieg', odds: o.ht_aw,
+            conf: htASc > 0.60 ? 'high' : 'medium',
+            reason:`${match.away} gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele und trifft dabei Ø ${awayAttStr.toFixed(1)} Mal/Spiel — auch in Halbzeit 1 realistisch führend. HZ-Quote ${o.ht_aw.toFixed(2)} bietet Wert.`}});
+        }
+      }
+    }
+
     sC.sort((a,b) => b.sc - a.sc);
     // Redundant pick guard: skip Handicap -0.5 if PICK 1 already covers the same direction.
     // Auswärtssieg/DNB-Away + Handicap Auswärts -0.5 = same bet, just confuses the user.
@@ -4180,6 +4228,8 @@ function getBettingPicks(match, odds, leagueKey) {
         if (bothNeedWin)       mp = Math.min(0.88 + _lgCap, mp + _pressureBoost * 0.55);
         else if (_anyNeedsWin) mp = Math.min(0.82 + _lgCap, mp + _pressureBoost * 0.30);
         if (_h2hSample && _h2hOver25 != null) mp = Math.min(0.92, mp + _h2hO25Mod * 0.7);
+        // Line movement nudge: steam toward Over = money coming in on goals → boost mp
+        mp = Math.min(0.92, Math.max(0.12, mp + _lmO));
         // Market anchor: Pinnacle O2.5/U2.5 already prices in relegation pressure.
         // Allow at most +10pp above de-vigged market probability to prevent double-counting.
         if (o.o25 && o.u25) { const _mktO = (1/o.o25)/((1/o.o25)+(1/o.u25)); mp = Math.min(_mktO + 0.10, mp); }
@@ -4190,6 +4240,8 @@ function getBettingPicks(match, odds, leagueKey) {
         if (bothNeedWin)       mp = Math.max(0.10 - _lgCap, mp - _pressureBoost * 0.55);
         else if (_anyNeedsWin) mp = Math.max(0.15 - _lgCap, mp - _pressureBoost * 0.30);
         if (_h2hSample && _h2hOver25 != null) mp = Math.min(0.92, Math.max(0.05, mp - _h2hO25Mod * 0.7));
+        // Line movement nudge: steam toward Under = money on fewer goals → boost mp
+        mp = Math.min(0.92, Math.max(0.08, mp + _lmU));
         // Market anchor: cap Under mp at de-vigged market Under prob + 10pp
         if (o.o25 && o.u25) { const _mktU = (1/o.u25)/((1/o.o25)+(1/o.u25)); mp = Math.min(_mktU + 0.10, mp); }
         break;
@@ -6450,21 +6502,46 @@ function buildTopCardsHtml(matchList) {
         if (_isUnder && _api.underOver === 'Under 2.5') { rank += 2; sigs.push({ label: 'AI', score: 6 }); }
       }
 
-      // ── [4] LINE MOVEMENT ────────────────────────────────────────────────────
+      // ── [4] LINE MOVEMENT + BOOKMAKER CONSENSUS WEIGHT ───────────────────────
+      // _cn = number of bookmakers in 1X2 consensus; o25_cn = same for O/U.
+      // More bookmakers agreeing = more reliable signal → higher rank bonus when LM fires.
       if (Object.keys(_lmMap).length) {
-        const _isHome = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
-        const _isAway = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
-        const _lmH = _lmMap['1'] || 0;
-        const _lmA = _lmMap['2'] || 0;
+        const _isHome  = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
+        const _isAway  = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
+        const _isOver  = mktLow.includes('over') || mktLow.includes('über') || mktLow.includes('o2.5');
+        const _isUnder = mktLow.includes('under') || mktLow.includes('unter') || mktLow.includes('u2.5');
+        const _lmH  = _lmMap['1']   || 0;
+        const _lmA  = _lmMap['2']   || 0;
+        const _lmO  = _lmMap['O25'] || 0;
+        const _lmU  = _lmMap['U25'] || 0;
+        // _cn bonus: ≥5 books = +1 rank + higher score; ≥3 books = slight score lift
+        const _cn1x2 = odds?._cn || 0;
+        const _cnOU  = odds?.o25_cn || 0;
+        const _cnBonus1x2 = _cn1x2 >= 5 ? 1 : 0;
+        const _cnBonusOU  = _cnOU  >= 5 ? 1 : 0;
+        // _norm for Money already 0–15pp; add cn-adjusted score capped at 10
+        const _moneyScore1x2 = (v) => Math.min(10, _norm(v, 0, 15) + (_cn1x2 >= 5 ? 1 : 0));
+        const _moneyScoreOU  = (v) => Math.min(10, _norm(v, 0, 15) + (_cnOU  >= 5 ? 1 : 0));
         if (_isHome) {
-          if (_lmH >= 10)      { rank += 4; sigs.push({ label: 'Money', score: _norm(_lmH, 0, 15) }); }
-          else if (_lmH >= 5)  { rank += 2; sigs.push({ label: 'Money', score: _norm(_lmH, 0, 15) }); }
+          if (_lmH >= 10)      { rank += 4 + _cnBonus1x2; sigs.push({ label: 'Money', score: _moneyScore1x2(_lmH) }); }
+          else if (_lmH >= 5)  { rank += 2 + _cnBonus1x2; sigs.push({ label: 'Money', score: _moneyScore1x2(_lmH) }); }
           else if (_lmH <= -5) { rank -= 2; }
         }
         if (_isAway) {
-          if (_lmA >= 10)      { rank += 4; sigs.push({ label: 'Money', score: _norm(_lmA, 0, 15) }); }
-          else if (_lmA >= 5)  { rank += 2; sigs.push({ label: 'Money', score: _norm(_lmA, 0, 15) }); }
+          if (_lmA >= 10)      { rank += 4 + _cnBonus1x2; sigs.push({ label: 'Money', score: _moneyScore1x2(_lmA) }); }
+          else if (_lmA >= 5)  { rank += 2 + _cnBonus1x2; sigs.push({ label: 'Money', score: _moneyScore1x2(_lmA) }); }
           else if (_lmA <= -5) { rank -= 2; }
+        }
+        // O/U goals line movement — steam toward Over/Under boosts goals picks
+        if (_isOver) {
+          if (_lmO >= 10)      { rank += 4 + _cnBonusOU; sigs.push({ label: 'Money', score: _moneyScoreOU(_lmO) }); }
+          else if (_lmO >= 5)  { rank += 2 + _cnBonusOU; sigs.push({ label: 'Money', score: _moneyScoreOU(_lmO) }); }
+          else if (_lmO <= -5) { rank -= 2; }
+        }
+        if (_isUnder) {
+          if (_lmU >= 10)      { rank += 4 + _cnBonusOU; sigs.push({ label: 'Money', score: _moneyScoreOU(_lmU) }); }
+          else if (_lmU >= 5)  { rank += 2 + _cnBonusOU; sigs.push({ label: 'Money', score: _moneyScoreOU(_lmU) }); }
+          else if (_lmU <= -5) { rank -= 2; }
         }
       }
 
