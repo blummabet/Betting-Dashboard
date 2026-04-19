@@ -455,17 +455,20 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 }
 .picks-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:2px;}
 .pick-item{
-  display:flex;align-items:flex-start;gap:8px;
-  background:var(--card2);border-radius:6px;padding:7px 10px;
+  display:flex;align-items:flex-start;gap:10px;
+  background:var(--card2);border-radius:8px;padding:10px 12px;
+  border-left:3px solid transparent;
 }
-.pick-icon{font-size:14px;flex-shrink:0;line-height:1.5;}
-.pick-body{flex:1;}
-.pick-market{font-size:12px;font-weight:700;color:var(--text);}
+.pick-item.ci-high{border-left-color:var(--green);}
+.pick-item.ci-medium{border-left-color:var(--yellow);}
+.pick-icon{font-size:16px;flex-shrink:0;line-height:1.4;}
+.pick-body{flex:1;min-width:0;}
+.pick-market{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.3;}
 .pick-odds-tag{
-  display:inline-block;font-size:12px;font-weight:800;
-  background:rgba(0,212,161,.12);border:1px solid rgba(0,212,161,.35);
-  border-radius:5px;padding:2px 7px;margin-left:8px;color:var(--accent);
-  letter-spacing:.2px;
+  display:inline-flex;align-items:center;font-size:14px;font-weight:800;
+  background:rgba(0,212,161,.15);border:1px solid rgba(0,212,161,.40);
+  border-radius:6px;padding:3px 9px;color:var(--accent);
+  letter-spacing:.2px;white-space:nowrap;
 }
 .pick-reason{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.55;}
 .pick-alt{font-size:11px;margin-top:6px;padding:5px 8px;border-radius:6px;line-height:1.5;}
@@ -525,7 +528,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .mod-inj{background:#1a001a;color:#d2a8ff;border:1px solid #5a2d82;}
 .mod-fat{background:#0d1a0d;color:#3fb950;border:1px solid #1a4d25;}
 .mod-neutral{opacity:0.55;font-weight:400;}
-.pick-conf{font-size:9px;padding:2px 6px;border-radius:3px;flex-shrink:0;align-self:flex-start;margin-top:1px;}
+.pick-conf{font-size:10px;padding:2px 7px;border-radius:4px;flex-shrink:0;font-weight:700;white-space:nowrap;}
 .conf-high{background:#0d2818;color:var(--green);}
 .conf-medium{background:#1a1500;color:var(--yellow);}
 .conf-low{background:#0a1220;color:var(--blue);}
@@ -778,7 +781,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   .picks-section{padding:10px 14px 12px;}
   .pick-row{gap:8px;flex-wrap:wrap;}
   .pick-label{font-size:12px;}
-  .pick-conf{font-size:11px;}
+  .pick-conf{font-size:10px;}
+  .pick-market{font-size:13px;}
+  .pick-odds-tag{font-size:13px;}
 
   /* Results table: hide less important columns */
   .res-table th:nth-child(3),
@@ -3360,6 +3365,14 @@ function getBettingPicks(match, odds, leagueKey) {
         else if (_apiPoiH <= 32) reason += `<br>⚠️ Statistisches Modell: ${match.home} nur bei ${_apiPoiH}% Siegchance — Modell ist skeptischer.`;
       }
       rC.push({sc, p:{icon:'🏠', market:'Heimsieg', odds:o.hw, conf, reason}});
+      // AH-Kandidat: wenn Heimsieg-Quote zu günstig (< 1.35), AH als werthaltigere Alternative einreihen
+      if (o.hw != null && o.hw < 1.35 && o.ah_h != null && o.ah_h >= 1.35 && o.ah_h <= 2.05) {
+        const _ahPt = o.ah_h_point != null ? (o.ah_h_point >= 0 ? `+${o.ah_h_point}` : `${o.ah_h_point}`) : '';
+        const _ahMkt = `AH Heim${_ahPt ? ' ' + _ahPt : ''}`;
+        const _ahConf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
+        const _ahReason = `${match.home} ist klarer Favorit (1X2-Quote ${o.hw.toFixed(2)} — kein Wert). Asian Handicap${_ahPt ? ' ' + _ahPt : ''} @ ${o.ah_h.toFixed(2)} bietet deutlich besseres Value. ` + reason;
+        rC.push({sc, p:{icon:'🏠', market:_ahMkt, odds:o.ah_h, conf:_ahConf, reason:_ahReason}});
+      }
     }
     // ── Auswärtssieg ──────────────────────────────────────────────────────
     {
@@ -3439,6 +3452,14 @@ function getBettingPicks(match, odds, leagueKey) {
         else if (_apiPoiA <= 32) reason += `<br>⚠️ Statistisches Modell: ${match.away} nur bei ${_apiPoiA}% Siegchance — Modell ist skeptischer.`;
       }
       rC.push({sc, p:{icon:'✈️', market:'Auswärtssieg', odds:o.aw, conf, reason}});
+      // AH-Kandidat: wenn Auswärtssieg-Quote zu günstig (< 1.35), AH als werthaltigere Alternative einreihen
+      if (o.aw != null && o.aw < 1.35 && o.ah_a != null && o.ah_a >= 1.35 && o.ah_a <= 2.05) {
+        const _ahPt = o.ah_a_point != null ? (o.ah_a_point >= 0 ? `+${o.ah_a_point}` : `${o.ah_a_point}`) : '';
+        const _ahMkt = `AH Ausw.${_ahPt ? ' ' + _ahPt : ''}`;
+        const _ahConf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
+        const _ahReason = `${match.away} ist klarer Favorit (1X2-Quote ${o.aw.toFixed(2)} — kein Wert). Asian Handicap${_ahPt ? ' ' + _ahPt : ''} @ ${o.ah_a.toFixed(2)} bietet deutlich besseres Value. ` + reason;
+        rC.push({sc, p:{icon:'✈️', market:_ahMkt, odds:o.ah_a, conf:_ahConf, reason:_ahReason}});
+      }
     }
     // ── Unentschieden ─────────────────────────────────────────────────────
     {
@@ -3545,11 +3566,17 @@ function getBettingPicks(match, odds, leagueKey) {
     // with odds in the right range — strictly better risk profile. Demoting to 'low' here
     // lets the existing fallback logic naturally promote DC/DNB instead.
     rC.forEach(r => { if (r.p.market === 'Unentschieden') r.p.conf = 'low'; });
+    // Cheap ML filter: Heimsieg/Auswärtssieg mit Quote < 1.33 auf 'low' setzen.
+    // Bei so kurzen Quoten ist kaum Wert vorhanden — stattdessen AH-Kandidat bevorzugen (bereits in rC).
+    rC.forEach(r => {
+      if ((r.p.market === 'Heimsieg' || r.p.market === 'Auswärtssieg')
+          && r.p.odds != null && r.p.odds < 1.33) r.p.conf = 'low';
+    });
     // _topResultMkt is used by PICK 2 consistency guard (awayWinWeak / homeWinWeak).
-    // Map DNB/DC back to the underlying directional lean so PICK 2 still works correctly.
+    // Map DNB/DC/AH back to the underlying directional lean so PICK 2 still works correctly.
     { const _raw = rC[0].p.market;
-      _topResultMkt = _raw === 'DNB: Heimteam'      || _raw === 'Doppelte Chance: 1X' ? 'Heimsieg'
-                    : _raw === 'DNB: Auswärtsteam'  || _raw === 'Doppelte Chance: X2' ? 'Auswärtssieg'
+      _topResultMkt = _raw === 'DNB: Heimteam'      || _raw === 'Doppelte Chance: 1X' || _raw.startsWith('AH Heim') ? 'Heimsieg'
+                    : _raw === 'DNB: Auswärtsteam'  || _raw === 'Doppelte Chance: X2' || _raw.startsWith('AH Ausw') ? 'Auswärtssieg'
                     : _raw;
     }
     // Push PICK 1: prefer medium/high result pick.
@@ -4421,14 +4448,15 @@ function getBettingPicks(match, odds, leagueKey) {
     }
   });
 
-  // ── Odds cap: hide picks with real bookmaker odds above 2.05 ─────────────────
-  // Rationale: high-odds picks introduce unnecessary variance for a consistent
-  // tipster output. The 1.40–2.05 range gives 50–70% implied probability per pick,
-  // which is far more sustainable than chasing 2.5+ longshots.
+  // ── Odds cap: hide picks outside the value range ─────────────────────────────
+  // Upper cap 2.05: high-odds picks introduce unnecessary variance.
+  // Lower cap 1.33: too-cheap picks (huge favorites) offer no value — the tiny return
+  // doesn't justify the risk. Picks with real odds < 1.33 are demoted to 'low' globally.
   // Exception: null odds (no market data yet) and estimated (~) odds are left alone —
   // those can't be judged by the same standard.
   for (const p of picks) {
     if (p.odds != null && !p.oddsIsEst && p.odds > 2.05) p.conf = 'low';
+    if (p.odds != null && !p.oddsIsEst && p.odds < 1.33) p.conf = 'low';
   }
 
   return picks;
@@ -6507,7 +6535,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
         : `<span class="pick-odds-tag" style="${oddsNum < 1.40 ? 'opacity:.6' : ''}">@ ${oddsNum.toFixed(2)}</span>`
       : `<span style="font-size:10px;color:var(--muted);margin-left:4px;font-style:italic">keine Quote</span>`;
     const lowWarn  = oddsNum != null && !p.oddsIsEst && oddsNum < 1.40
-      ? `<span style="font-size:10px;color:#e3b341;margin-left:5px;font-weight:600" title="Quote unter 1.40 — wenig Wert">⚠ niedrig</span>` : '';
+      ? `<span style="font-size:11px;color:#e3b341;margin-left:4px;font-weight:600" title="Quote unter 1.40 — wenig Wert">⚠ niedrig</span>` : '';
     const _injEdgeTeam = (() => {
       const hi = match.homeForm?.injuries?.impactScore || 0;
       const ai = match.awayForm?.injuries?.impactScore || 0;
@@ -6615,16 +6643,16 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       </div>`;
     }
 
-    return `<div class="pick-item">
+    const _ciCls = p.conf === 'high' ? ' ci-high' : p.conf === 'medium' ? ' ci-medium' : '';
+    return `<div class="pick-item${_ciCls}">
       <span class="pick-icon">${p.icon}</span>
       <div class="pick-body">
-        <div class="pick-market">${p.market}${oddsTag}${lowWarn}${valueTag}</div>
+        <div class="pick-market"><span class="pick-conf ${confClass}">${confLabel}</span><span>${p.market}</span>${oddsTag}${lowWarn}${valueTag}</div>
         ${altHtml}
         ${fairOddsHtml}
         ${modsHtml}
         <div class="pick-reason">${p.reason}${_tacBookHint}</div>
       </div>
-      <span class="pick-conf ${confClass}">${confLabel}</span>
     </div>`;
   }).join('');
 
