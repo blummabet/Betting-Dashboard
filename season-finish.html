@@ -20,6 +20,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .res-stat-val{font-size:28px;font-weight:900;line-height:1;}
 .res-stat-lbl{font-size:11px;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
 .res-chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;}
+.tc-stats-header{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;
+  color:#a78bfa;margin-bottom:10px;display:flex;align-items:center;gap:6px;
+}
+.tc-stats-header::before{content:'';flex:1;height:1px;background:rgba(167,139,250,.20);}
+.tc-stats-header::after{content:'';flex:1;height:1px;background:rgba(167,139,250,.20);}
+.tc-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+.tc-stat-card{border-color:rgba(167,139,250,.25)!important;background:rgba(167,139,250,.04)!important;}
 .res-chart-title{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:5px;letter-spacing:.6px;text-transform:uppercase;}
 .res-chart-sub{font-size:11px;color:var(--muted);margin-bottom:13px;opacity:.75;}
 .res-matrix table{width:100%;border-collapse:separate;border-spacing:3px;font-size:12px;}
@@ -804,6 +812,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
   /* Results stats grid */
   #resultsStats{grid-template-columns:repeat(2,1fr)!important;}
+  .tc-stats-grid{grid-template-columns:repeat(2,1fr)!important;}
   #chartsRow2,#chartsRow3{grid-template-columns:1fr!important;}
 
   /* Stake grid already handled above */
@@ -1475,7 +1484,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   </div>
 
   <!-- Stats overview -->
-  <div id="resultsStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px;"></div>
+  <div id="resultsStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px;"></div>
+
+  <!-- Cards des Tages Performance -->
+  <div id="tcStats" style="margin-bottom:24px;"></div>
 
   <!-- Charts row -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;" id="chartsRow">
@@ -6536,6 +6548,28 @@ function buildTopCardsHtml(matchList) {
   const realOddsCount = top.filter(c => c.p.odds && !c.p.oddsIsEst).length;
   const highConfCount = top.filter(c => c.p.conf === 'high').length;
 
+  // ── Persist today's top cards to localStorage for Results tracking ────────
+  // Key: home|away|market — used by _mergeLocalPicks to tag isTopCard on picks.
+  // We overwrite today's entries on each render (handles page refreshes correctly).
+  try {
+    const _tcHistory = JSON.parse(localStorage.getItem('tc_history') || '[]');
+    const _todayDate = top[0]?.m?.date || '';
+    const _newEntries = top.map(({ p, m }) => ({
+      date: m.date || '',
+      dateIso: m.dateIso || '',
+      home: m.home,
+      away: m.away,
+      market: p.market,
+      odds: p.odds || null,
+      conf: p.conf,
+    }));
+    // Remove today's previous entries (refresh case), then append fresh ones
+    const _kept = _todayDate ? _tcHistory.filter(e => e.date !== _todayDate) : _tcHistory;
+    // Keep only last 90 days worth of entries to avoid unbounded growth
+    const _pruned = _kept.slice(-630); // 7 cards × 90 days
+    localStorage.setItem('tc_history', JSON.stringify([..._pruned, ..._newEntries]));
+  } catch(_e) { /* localStorage unavailable */ }
+
   return `<div class="topcards-section">
     <div class="topcards-header">
       <span>🃏 Cards des Tages · Top ${top.length}</span>
@@ -8039,6 +8073,59 @@ function renderResultsStats() {
       <div class="res-stat-val" style="color:${s.color}">${s.val}</div>
       <div class="res-stat-lbl">${s.lbl}</div>
     </div>`).join('');
+
+  // ── Top Card Performance Block ────────────────────────────────────────────
+  const tcEl = document.getElementById('tcStats');
+  if (!tcEl) return;
+
+  const tcPicks = allPicks.filter(p => p.isTopCard);
+  if (!tcPicks.length) {
+    tcEl.innerHTML = '';
+    return;
+  }
+
+  const tcTotal   = tcPicks.length;
+  const tcWon     = tcPicks.filter(p => p.result === 'win').length;
+  const tcLost    = tcPicks.filter(p => p.result === 'loss').length;
+  const tcPending = tcPicks.filter(p => !p.result).length;
+  const tcWr      = (tcWon + tcLost) > 0 ? Math.round(tcWon / (tcWon + tcLost) * 100) : null;
+  const tcWrDelta = (tcWr !== null && wr !== null) ? tcWr - wr : null;
+
+  // ROI + Yield for Top Cards
+  let tcBankroll = 0;
+  const tcResolved = tcPicks
+    .filter(p => p.result && p.result !== 'void')
+    .sort((a, b) => (a.dateIso || '').localeCompare(b.dateIso || ''));
+  tcResolved.forEach(p => {
+    const o = p.odds || 1.85;
+    tcBankroll += p.result === 'win' ? (o - 1) * 10 : -10;
+  });
+  const tcYield = tcResolved.length > 0 ? tcBankroll / (tcResolved.length * 10) * 100 : null;
+
+  const _tcWrColor = tcWr !== null ? (tcWr >= 58 ? '#3fb950' : tcWr >= 48 ? '#e3b341' : '#f85149') : '#8b949e';
+  const _tcRoiColor = tcBankroll >= 0 ? '#3fb950' : '#f85149';
+  const _tcDeltaStr = tcWrDelta !== null
+    ? ` <span style="font-size:11px;opacity:.7">(${tcWrDelta >= 0 ? '+' : ''}${tcWrDelta}pp vs Gesamt)</span>` : '';
+
+  const tcStats = [
+    { val: tcTotal,  lbl: 'Cards gesamt',   color: '#a78bfa' },
+    { val: tcWon,    lbl: '✅ Gewonnen',     color: '#3fb950' },
+    { val: tcLost,   lbl: '❌ Verloren',     color: '#f85149' },
+    { val: tcWr !== null ? tcWr + '%' : '—', lbl: 'Win Rate Cards', color: _tcWrColor, extra: _tcDeltaStr },
+    { val: tcPending, lbl: '⏳ Ausstehend',  color: '#8b949e' },
+    { val: (tcBankroll >= 0 ? '+' : '') + tcBankroll.toFixed(0) + '€', lbl: 'ROI Cards', color: _tcRoiColor },
+    { val: tcYield !== null ? (tcYield >= 0 ? '+' : '') + tcYield.toFixed(1) + '%' : '—', lbl: 'Yield Cards', color: tcYield >= 5 ? '#3fb950' : tcYield >= 0 ? '#e3b341' : '#f85149' },
+  ];
+
+  tcEl.innerHTML = `
+    <div class="tc-stats-header">🃏 Cards des Tages — Performance</div>
+    <div class="tc-stats-grid">
+      ${tcStats.map(s => `
+        <div class="res-stat-card tc-stat-card">
+          <div class="res-stat-val" style="color:${s.color}">${s.val}${s.extra || ''}</div>
+          <div class="res-stat-lbl">${s.lbl}</div>
+        </div>`).join('')}
+    </div>`;
 }
 
 // ── Charts ──────────────────────────────────────────────
@@ -10492,6 +10579,24 @@ function _mergeLocalPicks() {
       }))
     }));
   _resultsData = [..._resultsData, ...toAdd];
+
+  // ── Tag isTopCard on picks that were in Cards des Tages ───────────────────
+  // tc_history stores {home, away, market} for every pick that landed in the
+  // top 7 cards. We match by home+away+market — date is not required since
+  // each match pair is unique within a season.
+  try {
+    const _tcHistory = JSON.parse(localStorage.getItem('tc_history') || '[]');
+    if (_tcHistory.length) {
+      const _tcSet = new Set(_tcHistory.map(e => `${e.home}|${e.away}|${e.market}`));
+      for (const e of _resultsData) {
+        for (const p of e.picks) {
+          if (_tcSet.has(`${e.home}|${e.away}|${p.market}`)) {
+            p.isTopCard = true;
+          }
+        }
+      }
+    }
+  } catch(_e) { /* ignore */ }
 
   // Update tracker info
   const total   = local.length;
