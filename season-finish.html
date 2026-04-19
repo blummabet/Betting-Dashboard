@@ -10233,6 +10233,20 @@ function _mergeLocalPicks() {
   // dateIso was wrong (e.g. all saved as "2026-04-13" before the dateIso bug was fixed).
   // Prefer the picks_history.json version (already has correct dates + resolved results).
   const existingPairs = new Set(_resultsData.map(e => `${e.home}|${e.away}`));
+
+  // Backfill cardScore: picks_history.json entries often lack cardScore (saved before the
+  // field was added). When localStorage has a matching entry WITH cardScore, copy it over.
+  const localByPair = {};
+  for (const e of local) {
+    localByPair[`${e.home}|${e.away}`] = e;
+  }
+  for (const e of _resultsData) {
+    if (e.cardScore == null) {
+      const lc = localByPair[`${e.home}|${e.away}`];
+      if (lc?.cardScore != null) e.cardScore = lc.cardScore;
+    }
+  }
+
   const toAdd = local.filter(e =>
     !existingKeys.has(`${e.dateIso}|${e.home}|${e.away}`) &&
     !existingPairs.has(`${e.home}|${e.away}`)
@@ -10292,6 +10306,18 @@ function renderResultsTable(filter) {
     if (r.pick.result === 'loss') return '<span class="res-badge loss">❌ Verloren</span>';
     return '<span class="res-badge void">— Void</span>';
   };
+
+  // For rows where cardScore is missing (e.g. old picks_history.json entries), try to
+  // compute it on the fly from the loaded LEAGUES fixture data.
+  for (const r of rows) {
+    if (r.cardScore == null && r.leagueKey) {
+      const _fix = (LEAGUES[r.leagueKey]?.fixtures || []).find(f => f.home === r.home && f.away === r.away);
+      if (_fix) {
+        const _sc = computeMatchScore(_fix, r.leagueKey);
+        if (typeof _sc === 'number') r.cardScore = parseFloat(_sc.toFixed(1));
+      }
+    }
+  }
 
   const html = `<table class="res-table">
     <thead><tr>
