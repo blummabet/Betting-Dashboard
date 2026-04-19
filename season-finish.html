@@ -630,6 +630,46 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .ctx-injury-high{background:rgba(248,81,73,0.15)!important;color:#f85149!important;border-color:#7d2020!important;}
 
 /* KOMBI-TIPP SECTION */
+/* CARDS DES TAGES */
+.topcards-section{
+  background:linear-gradient(135deg,rgba(88,166,255,.06) 0%,rgba(0,212,161,.04) 100%);
+  border:1px solid rgba(88,166,255,.22);border-radius:12px;padding:14px 16px;margin-bottom:20px;
+}
+.topcards-header{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+  color:#58a6ff;margin-bottom:11px;display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.topcards-header-right{font-size:10px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;}
+.topcards-grid{display:flex;flex-direction:column;gap:5px;}
+.topcards-row{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 11px;background:rgba(0,0,0,.28);border-radius:8px;
+  border:1px solid rgba(255,255,255,.04);cursor:default;
+}
+.topcards-row:hover{background:rgba(88,166,255,.06);border-color:rgba(88,166,255,.18);}
+.tc-score{
+  flex-shrink:0;width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;
+}
+.tc-score-high{background:rgba(63,185,80,.18);color:#3fb950;border:1px solid rgba(63,185,80,.35);}
+.tc-score-mid{background:rgba(227,179,65,.18);color:#e3b341;border:1px solid rgba(227,179,65,.35);}
+.tc-score-low{background:rgba(139,148,158,.12);color:#8b949e;border:1px solid rgba(139,148,158,.25);}
+.tc-body{flex:1;min-width:0;}
+.tc-matchline{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
+.tc-pickline{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;}
+.tc-icon{font-size:13px;}
+.tc-market{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tc-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.tc-odds-pill{
+  padding:3px 8px;border-radius:5px;font-size:12px;font-weight:800;white-space:nowrap;
+}
+.tc-odds-sweet{background:rgba(63,185,80,.18);color:#3fb950;border:1px solid rgba(63,185,80,.30);}
+.tc-odds-ok{background:rgba(88,166,255,.14);color:#58a6ff;border:1px solid rgba(88,166,255,.28);}
+.tc-odds-est{background:rgba(139,148,158,.12);color:#8b949e;border:1px solid rgba(139,148,158,.22);}
+.tc-conf{font-size:11px;font-weight:700;white-space:nowrap;}
+.topcards-note{font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;}
+
 .kombi-section{
   background:linear-gradient(135deg,rgba(0,212,161,.06) 0%,rgba(88,166,255,.04) 100%);
   border:1px solid rgba(0,212,161,.22);border-radius:12px;padding:16px 18px;margin-bottom:20px;
@@ -6240,80 +6280,87 @@ function buildPickOfDayHtml(matchList) {
 }
 
 // ═══════════════════════════════════════════════════════
-//  KOMBI-TIPP BUILDER
-//  Collects the 3 highest-confidence picks across all matches,
-//  prioritising value-tagged picks, then match score.
-//  Returns rendered HTML for the overview kombi section.
+//  CARDS DES TAGES
+//  Top 7 matches for the day, each with their single best pick.
+//  Selection: real bookie odds + pick model score + conf level.
+//  One card per match, sorted by composite rank score.
 // ═══════════════════════════════════════════════════════
-function buildKombiHtml(matchList) {
+function buildTopCardsHtml(matchList) {
   const candidates = [];
+
   for (const m of matchList) {
-    const sc   = computeMatchScore(m, m.leagueKey);
-    if (sc < 7) continue;
-    const odds = m.leagueKey ? findOdds(m.leagueKey, m.home, m.away) : null;
-    const picks = getBettingPicks(m, odds, m.leagueKey);
+    const sc = computeMatchScore(m, m.leagueKey);
+    if (sc < 6) continue;
+    const odds  = m.leagueKey ? findOdds(m.leagueKey, m.home, m.away) : null;
+    const picks = getBettingPicks(m, odds, m.leagueKey)
+      .filter(p => p.conf === 'high' || p.conf === 'medium');
+    if (!picks.length) continue;
+
+    // For each match take the single best pick by composite rank
+    let bestPick = null, bestRank = -Infinity;
     for (const p of picks) {
-      if (p.conf === 'high') candidates.push({p, sc, m});
+      const hasRealOdds = p.odds != null && !p.oddsIsEst;
+      const inRange     = hasRealOdds && p.odds >= 1.40 && p.odds <= 1.95;
+      // Composite rank: pick model score (primary) + bonuses
+      let rank = (p.sc || 0) * 10;
+      if (p.conf === 'high')  rank += 4;
+      if (p.conf === 'medium') rank += 1;
+      if (inRange)             rank += 3;  // sweet-spot odds
+      else if (hasRealOdds)    rank += 1;  // real odds but outside range
+      // Value tags: extra weight for smart-money signals
+      if (p.value === 'hot')       rank += 2;
+      else if (p.value === 'value') rank += 1;
+      if (rank > bestRank) { bestRank = rank; bestPick = p; }
     }
+    if (bestPick) candidates.push({ p: bestPick, rank: bestRank, sc, m });
   }
-  // Sort: hot-value first → value → inj-edge → plain, then by match score descending
-  candidates.sort((a, b) => {
-    const av = a.p.value === 'hot' ? 3 : a.p.value === 'value' ? 2 : a.p.value === 'inj-edge' ? 1 : 0;
-    const bv = b.p.value === 'hot' ? 3 : b.p.value === 'value' ? 2 : b.p.value === 'inj-edge' ? 1 : 0;
-    if (bv !== av) return bv - av;
-    return b.sc - a.sc;
-  });
-  // Deduplicate: max one pick per match
-  const seen = new Set();
-  const kombi = candidates.filter(({m}) => {
-    const k = m.home + '|' + m.away;
-    if (seen.has(k)) return false;
-    seen.add(k); return true;
-  }).slice(0, 3);
 
-  if (kombi.length === 0) return '';
+  if (!candidates.length) return '';
 
-  const rows = kombi.map(({p, m}) => {
-    const oddsHtml = p.odds
-      ? `<span class="kombi-odds-lbl">@ ${p.odds.toFixed(2)}</span>`
-      : `<span class="kombi-odds-lbl" style="font-size:11px;color:var(--muted)">—</span>`;
-    const vTag = p.value === 'hot'      ? ' <span class="value-tag hot">🔥</span>'
-               : p.value === 'value'   ? ' <span class="value-tag val">💰</span>'
-               : p.value === 'inj-edge'? ' <span class="value-tag inj">🏥</span>' : '';
-    return `<div class="kombi-pick-row">
-      <span class="kombi-icon">${p.icon}</span>
-      <div class="kombi-body">
-        <div class="kombi-match-lbl">${m.leagueFlag||''} ${m.home} vs ${m.away} · ${m.date}</div>
-        <div class="kombi-market-lbl">${p.market}${vTag}</div>
+  // Sort by rank desc, deduplicate by match (already one per match above)
+  candidates.sort((a, b) => b.rank - a.rank);
+  const top = candidates.slice(0, 7);
+
+  const scoreClass = s => s >= 9 ? 'tc-score-high' : s >= 7 ? 'tc-score-mid' : 'tc-score-low';
+  const confStr    = c => c === 'high' ? '<span style="color:#3fb950">★★★</span>' : '<span style="color:#e3b341">★★☆</span>';
+  const oddsClass  = (p) => {
+    if (!p.odds) return '';
+    if (p.oddsIsEst) return 'tc-odds-est';
+    return (p.odds >= 1.40 && p.odds <= 1.95) ? 'tc-odds-sweet' : 'tc-odds-ok';
+  };
+
+  const rows = top.map(({ p, sc, m }) => {
+    const time    = m.time ? ` ${m.time}` : '';
+    const vTag    = p.value === 'hot'       ? ' 🔥' : p.value === 'value' ? ' 💰' : p.value === 'inj-edge' ? ' 🏥' : '';
+    const oddsLbl = p.odds
+      ? `<span class="tc-odds-pill ${oddsClass(p)}">@ ${p.odds.toFixed(2)}${p.oddsIsEst ? ' ~' : ''}</span>`
+      : `<span class="tc-odds-pill tc-odds-est">—</span>`;
+    return `<div class="topcards-row">
+      <div class="tc-score ${scoreClass(sc)}">${sc}</div>
+      <div class="tc-body">
+        <div class="tc-matchline">${m.leagueFlag||''} ${m.home} vs ${m.away} · ${m.date}${time}</div>
+        <div class="tc-pickline">
+          <span class="tc-icon">${p.icon}</span>
+          <span class="tc-market">${p.market}${vTag}</span>
+        </div>
       </div>
-      ${oddsHtml}
+      <div class="tc-right">
+        ${oddsLbl}
+        <span class="tc-conf">${confStr(p.conf)}</span>
+      </div>
     </div>`;
   }).join('');
 
-  // Combined odds for picks that have Pinnacle quotes
-  const withOdds = kombi.filter(c => c.p.odds);
-  const combined = withOdds.reduce((acc, c) => acc * c.p.odds, 1);
-  const totalHtml = withOdds.length === kombi.length
-    ? `<div class="kombi-total-row">
-        <span class="kombi-total-label">Kombinierte Quote · ${kombi.length} Tipps</span>
-        <span class="kombi-total-val">@ ${combined.toFixed(2)}</span>
-       </div>`
-    : withOdds.length > 0
-    ? `<div class="kombi-total-row">
-        <span class="kombi-total-label">Teilquote · ${withOdds.length} von ${kombi.length} mit Pinnacle-Quoten</span>
-        <span class="kombi-total-val">@ ${combined.toFixed(2)}</span>
-       </div>`
-    : '';
+  const realOddsCount = top.filter(c => c.p.odds && !c.p.oddsIsEst).length;
+  const highConfCount = top.filter(c => c.p.conf === 'high').length;
 
-  return `<div class="kombi-section">
-    <div class="kombi-header">🎯 Kombi-Tipp des Tages
-      <span style="font-size:10px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">
-        — Top 3 Picks aus allen Spielen dieser Woche
-      </span>
+  return `<div class="topcards-section">
+    <div class="topcards-header">
+      <span>🃏 Cards des Tages · Top ${top.length}</span>
+      <span class="topcards-header-right">${highConfCount}× ★★★ · ${realOddsCount}× echte Quote</span>
     </div>
-    ${rows}
-    ${totalHtml}
-    <div class="kombi-note">★★★ Nur Picks mit höchstem Vertrauen · Sortiert nach Value-Signal &amp; Match-Score · Kein Finanzberater — Wette verantwortungsbewusst</div>
+    <div class="topcards-grid">${rows}</div>
+    <div class="topcards-note">Sortiert nach Pick-Konfidenz + Quoten-Qualität · Score ≥ 6 · Je grüner die Quote, desto näher am 1.40–1.95 Zielbereich</div>
   </div>`;
 }
 
@@ -6921,9 +6968,9 @@ function renderOverview() {
       <div style="font-size:12px">${window._selectedDay !== 'all' ? 'Anderen Tag wählen oder auf "Alle" klicken' : 'Schau nächste Woche wieder rein — die Lage spitzt sich zu!'}</div>
     </div>`;
 
-  // Kombi + POTD use only the filtered (day-selected) matches
-  const potdHtml  = buildPickOfDayHtml(filtered);
-  const kombiHtml = buildKombiHtml(filtered);
+  // Cards des Tages + POTD use only the filtered (day-selected) matches
+  const potdHtml      = buildPickOfDayHtml(filtered);
+  const topCardsHtml  = buildTopCardsHtml(filtered);
 
   mc.innerHTML = `
     <div class="overview-header">
@@ -6937,7 +6984,7 @@ function renderOverview() {
 
     ${potdHtml}
 
-    ${kombiHtml}
+    ${topCardsHtml}
 
     <div class="section-label" style="margin-top:4px">⭐ Alle High-Stakes Spiele${window._selectedDay !== 'all' ? ' · '+dayLabel : ' dieser Woche'} · sortiert nach Score</div>
     <div class="stake-grid">${cards || emptyAll}</div>
