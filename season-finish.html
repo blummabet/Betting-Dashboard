@@ -2226,7 +2226,7 @@ function findOdds(leagueKey, home, away) {
         const _pmO = window._preMatchData?.[`${home}|${away}`]?.odds;
         if (_pmO) {
           const _supp = ['bttsY','bttsN','ht_o05','ht_u05','ht_o15','ht_u15','ht_bttsY','ht_bttsN',
-                         'ht_hw','ht_dr','ht_aw',  // HT 1X2 picks — only in API-Football data
+                         'ht_hw','ht_dr','ht_aw',  // HT 1X2 — API-Football only; ht_dr needed for AH -0.25 estimate
                          'hto15','ato15','cards_o35','cards_u35','cards_o45','cards_u45'];
           for (const k of _supp) if (r[k] == null && _pmO[k] != null) r[k] = _pmO[k];
         }
@@ -4127,34 +4127,68 @@ function getBettingPicks(match, odds, leagueKey) {
     // Having DC in both PICK 1 + PICK 3 creates contradictory picks (DC X2 + DC 1X same game).
     // If no PICK 3 specialty market qualifies, the card simply shows no third pick.
 
-    // ── 1. HZ: Heimsieg / Auswärtssieg ──────────────────────────────────────
-    // Fires when: strong FT lean AND HT result odds are in value range.
-    // Scaled down ~55%/48% of FT confidence (HT results are more volatile).
-    // Requires a real bookie quote — no model-estimated HT result odds.
+    // ── 1. HZ: Heimsieg / Auswärtssieg (+ AH -0.25 Substitution) ───────────
+    // Primary window: odds 1.40–2.05 → straight HT result pick.
+    // Substitution: odds 1.33–1.39 → too cheap; estimate HT AH -0.25 from de-vigged
+    //   HT 1X2 probs (needs ht_hw + ht_dr + ht_aw). Formula:
+    //   AH -0.25 fair = (1 − pD/2) / pH — full win on HT result, half loss on HT draw.
+    //   Applied 4% margin (oddsIsEst: true). Range gate 1.35–2.00.
+    // Scaled down ~55%/48% of FT confidence (HT results more volatile than FT).
     {
-      // HT Home Win — upper bound 2.05 matches global odds cap (picks above are demoted to 'low')
-      if (o.ht_hw != null && o.ht_hw >= 1.33 && o.ht_hw <= 2.05) {
+      // ── HT Home Win helper: build htHSc and push ─────────────────────────
+      const _tryHtHome = (htOdds, isEstimated, mktLabel, oddsLabel) => {
         let htHSc = hFS_home * 0.55;
         if (homeNeedsWin) htHSc = Math.min(0.82, htHSc + _pressureBoost * 0.45);
         if (eloHomeFav)   htHSc = Math.min(0.82, htHSc + 0.07);
         if (homeAttStr > 1.4) htHSc = Math.min(0.82, htHSc + 0.05);
-        if (htHSc >= 0.38) {
-          sC.push({sc: htHSc, p:{icon:'⏱️', market:'1. HZ: Heimsieg', odds: o.ht_hw,
-            conf: htHSc > 0.65 ? 'high' : 'medium',
-            reason:`${match.home} dominiert ${Math.round(hFS_home*100)}% seiner Heimspiele und erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel — ein Führungstreffer bereits in Halbzeit 1 ist realistisch. HZ-Quote ${o.ht_hw.toFixed(2)} bietet Wert.`}});
-        }
+        if (htHSc < 0.38) return;
+        const _reason = isEstimated
+          ? `${match.home} ist klar favorisiert für HZ1 (1X2-Quote ${o.ht_hw.toFixed(2)} — kein Wert). AH -0.25 @ ~${oddsLabel} bietet bessere Rendite: volles Win bei HZ-Heimsieg, nur Halbverlust bei Unentschieden.`
+          : `${match.home} dominiert ${Math.round(hFS_home*100)}% seiner Heimspiele und erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel — ein Führungstreffer bereits in Halbzeit 1 ist realistisch. HZ-Quote ${oddsLabel} bietet Wert.`;
+        sC.push({sc: htHSc, p:{icon:'⏱️', market: mktLabel, odds: htOdds, oddsIsEst: isEstimated,
+          conf: htHSc > 0.65 ? 'high' : 'medium', reason: _reason}});
+      };
+
+      if (o.ht_hw != null && o.ht_hw >= 1.40 && o.ht_hw <= 2.05) {
+        // Value range — straight HT Home Win
+        _tryHtHome(o.ht_hw, false, '1. HZ: Heimsieg', o.ht_hw.toFixed(2));
+      } else if (o.ht_hw != null && o.ht_hw >= 1.33 && o.ht_hw < 1.40
+                 && o.ht_dr != null && o.ht_aw != null) {
+        // Too cheap — substitute with estimated HT AH -0.25
+        const _htTot = 1/o.ht_hw + 1/o.ht_dr + 1/o.ht_aw;
+        const _htPH  = (1/o.ht_hw) / _htTot;
+        const _htPD  = (1/o.ht_dr) / _htTot;
+        const _htAHe = Math.round((1 - _htPD * 0.5) / _htPH * 0.96 * 100) / 100;
+        if (_htAHe >= 1.35 && _htAHe <= 2.00)
+          _tryHtHome(_htAHe, true, '1. HZ: AH Heim -0.25', `~${_htAHe.toFixed(2)}`);
       }
-      // HT Away Win — upper bound 2.05 matches global odds cap
-      if (o.ht_aw != null && o.ht_aw >= 1.45 && o.ht_aw <= 2.05) {
+
+      // ── HT Away Win helper: build htASc and push ─────────────────────────
+      const _tryHtAway = (htOdds, isEstimated, mktLabel, oddsLabel) => {
         let htASc = aFS_away * 0.48;
         if (awayNeedsWin) htASc = Math.min(0.78, htASc + _pressureBoost * 0.40);
         if (eloAwayFav)   htASc = Math.min(0.78, htASc + 0.07);
         if (awayAttStr > 1.4) htASc = Math.min(0.78, htASc + 0.05);
-        if (htASc >= 0.36) {
-          sC.push({sc: htASc, p:{icon:'⏱️', market:'1. HZ: Auswärtssieg', odds: o.ht_aw,
-            conf: htASc > 0.60 ? 'high' : 'medium',
-            reason:`${match.away} gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele und trifft dabei Ø ${awayAttStr.toFixed(1)} Mal/Spiel — auch in Halbzeit 1 realistisch führend. HZ-Quote ${o.ht_aw.toFixed(2)} bietet Wert.`}});
-        }
+        if (htASc < 0.36) return;
+        const _reason = isEstimated
+          ? `${match.away} ist klar favorisiert für HZ1 (1X2-Quote ${o.ht_aw.toFixed(2)} — kein Wert). AH -0.25 @ ~${oddsLabel} bietet bessere Rendite: volles Win bei HZ-Auswärtssieg, nur Halbverlust bei Unentschieden.`
+          : `${match.away} gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele und trifft dabei Ø ${awayAttStr.toFixed(1)} Mal/Spiel — auch in Halbzeit 1 realistisch führend. HZ-Quote ${oddsLabel} bietet Wert.`;
+        sC.push({sc: htASc, p:{icon:'⏱️', market: mktLabel, odds: htOdds, oddsIsEst: isEstimated,
+          conf: htASc > 0.60 ? 'high' : 'medium', reason: _reason}});
+      };
+
+      if (o.ht_aw != null && o.ht_aw >= 1.40 && o.ht_aw <= 2.05) {
+        // Value range — straight HT Away Win
+        _tryHtAway(o.ht_aw, false, '1. HZ: Auswärtssieg', o.ht_aw.toFixed(2));
+      } else if (o.ht_aw != null && o.ht_aw >= 1.33 && o.ht_aw < 1.40
+                 && o.ht_dr != null && o.ht_hw != null) {
+        // Too cheap — substitute with estimated HT AH -0.25
+        const _htTot = 1/o.ht_hw + 1/o.ht_dr + 1/o.ht_aw;
+        const _htPA  = (1/o.ht_aw) / _htTot;
+        const _htPD  = (1/o.ht_dr) / _htTot;
+        const _htAHe = Math.round((1 - _htPD * 0.5) / _htPA * 0.96 * 100) / 100;
+        if (_htAHe >= 1.35 && _htAHe <= 2.00)
+          _tryHtAway(_htAHe, true, '1. HZ: AH Ausw. -0.25', `~${_htAHe.toFixed(2)}`);
       }
     }
 
