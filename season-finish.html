@@ -671,6 +671,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .tc-odds-ok{background:rgba(88,166,255,.14);color:#58a6ff;border:1px solid rgba(88,166,255,.28);}
 .tc-odds-est{background:rgba(139,148,158,.12);color:#8b949e;border:1px solid rgba(139,148,158,.22);}
 .tc-conf{font-size:11px;font-weight:700;white-space:nowrap;}
+.tc-sigs{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;}
+.tc-sig-badge{
+  font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;
+  background:rgba(88,166,255,.10);color:#58a6ff;border:1px solid rgba(88,166,255,.20);
+  white-space:nowrap;
+}
 .topcards-note{font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;}
 
 .kombi-section{
@@ -6313,39 +6319,182 @@ function buildPickOfDayHtml(matchList) {
 //  Selection: real bookie odds + pick model score + conf level.
 //  One card per match, sorted by composite rank score.
 // ═══════════════════════════════════════════════════════
+// CARDS DES TAGES — composite ranking engine
+// Signals used (in order of weight):
+//   1. Pick model score (p.sc × 10) — primary confidence driver
+//   2. Match interest score — sc ≥ 6 gate + (sc−6)×2 rank bonus
+//   3. Model edge (modelOdds vs bookie) — up to +5
+//   4. API prediction confluence — up to +4 when API agrees
+//   5. Line movement direction — smart-money signal, up to +4
+//   6. Elo gap — structural quality gap, up to +3
+//   7. Season pressure — high-stakes team fighting, up to +3
+//   8. Conf level + odds range + value tags (original bonuses)
+// ═══════════════════════════════════════════════════════
 function buildTopCardsHtml(matchList) {
   const candidates = [];
+  const _ts = window._teamStats || {};
 
   for (const m of matchList) {
-    const sc = computeMatchScore(m, m.leagueKey);
-    if (sc < 6) continue;
-    const odds  = m.leagueKey ? findOdds(m.leagueKey, m.home, m.away) : null;
+    const matchSc = computeMatchScore(m, m.leagueKey);
+    if (matchSc < 6) continue;
+    const odds = m.leagueKey ? findOdds(m.leagueKey, m.home, m.away) : null;
     const picks = getBettingPicks(m, odds, m.leagueKey)
       .filter(p => p.conf === 'high' || p.conf === 'medium');
     if (!picks.length) continue;
 
-    // For each match take the single best pick by composite rank
+    // ── Pre-compute match-level signals (shared across all picks of this match) ──
+
+    // Line movement: compare opening odds vs current
+    const _fix = m.leagueKey
+      ? (LEAGUES[m.leagueKey]?.fixtures || []).find(f => f.home === m.home && f.away === m.away)
+      : null;
+    const _lmRows = computeLineMovement(_fix?.odds_open || null, odds);
+    // Build a lookup: label → ppShift  (1=home, X=draw, 2=away)
+    const _lmMap = {};
+    if (_lmRows) for (const r of _lmRows) _lmMap[r.label] = r.ppShift;
+
+    // Elo gap
+    const _hStat  = _ts[m.leagueKey]?.[m.home] || {};
+    const _aStat  = _ts[m.leagueKey]?.[m.away] || {};
+    const _hElo   = _hStat.elo || null;
+    const _aElo   = _aStat.elo || null;
+    const _eloDiff = (_hElo && _aElo) ? (_hElo - _aElo) : null;  // >0 = home stronger
+
+    // Season pressure labels
+    const _hPress = (m.homeStake?.labels || []).map(l => l.c);
+    const _aPress = (m.awayStake?.labels || []).map(l => l.c);
+    const _hMotiv = m.homeStake?.motivationLevel || 'full';
+    const _aMotiv = m.awayStake?.motivationLevel || 'full';
+
+    // API prediction
+    const _api = m.apiPrediction || null;
+
+    // ── Per-pick composite rank ────────────────────────────────────────────────
     let bestPick = null, bestRank = -Infinity;
+    const _signals = {};  // store signals per-pick for display
+
     for (const p of picks) {
       const hasRealOdds = p.odds != null && !p.oddsIsEst;
       const inRange     = hasRealOdds && p.odds >= 1.40 && p.odds <= 1.95;
-      // Composite rank: pick model score (primary) + bonuses
+      const mktLow      = (p.market || '').toLowerCase();
+      const sigs        = [];  // signal badges for this pick
+
+      // ── Base: pick model score ──────────────────────────────────────────────
       let rank = (p.sc || 0) * 10;
-      if (p.conf === 'high')  rank += 4;
+
+      // Conf bonus
+      if (p.conf === 'high')   rank += 4;
       if (p.conf === 'medium') rank += 1;
-      if (inRange)             rank += 3;  // sweet-spot odds
-      else if (hasRealOdds)    rank += 1;  // real odds but outside range
-      // Value tags: extra weight for smart-money signals
-      if (p.value === 'hot')       rank += 2;
-      else if (p.value === 'value') rank += 1;
-      if (rank > bestRank) { bestRank = rank; bestPick = p; }
+
+      // Odds range bonus
+      if (inRange)          rank += 3;
+      else if (hasRealOdds) rank += 1;
+
+      // Value tags
+      if (p.value === 'hot')   { rank += 2; }
+      else if (p.value === 'value') { rank += 1; }
+
+      // ── [1] MATCH SCORE MULTIPLIER ──────────────────────────────────────────
+      // sc ≥ 6 was already the gate; now use the full value as a rank driver.
+      // A sc=11 match contributes +10 vs sc=6 → meaningful separation.
+      rank += (matchSc - 6) * 2;
+
+      // ── [2] MODEL EDGE (modelOdds vs bookie) ────────────────────────────────
+      if (p.modelOdds != null && hasRealOdds) {
+        const _edgePp = Math.round((1 / p.modelOdds - (1 / p.odds) * 1.03) * 100);
+        if (_edgePp >= 13)     { rank += 5; sigs.push('⚡+' + _edgePp + 'pp'); }
+        else if (_edgePp >= 7) { rank += 3; sigs.push('⚡+' + _edgePp + 'pp'); }
+        else if (_edgePp >= 3) { rank += 1; }
+      }
+
+      // ── [3] API PREDICTION CONFLUENCE ───────────────────────────────────────
+      // Bonus when the independent API model agrees with our pick direction.
+      if (_api) {
+        const _isHome = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
+        const _isAway = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
+        const _isOver = mktLow.includes('over') || mktLow.includes('über');
+        const _isUnder = mktLow.includes('under') || mktLow.includes('unter');
+        if (_isHome && _api.pctHome != null) {
+          if (_api.pctHome >= 65)      { rank += 4; sigs.push('🤝 API ' + _api.pctHome + '%'); }
+          else if (_api.pctHome >= 55) { rank += 2; sigs.push('🤝 API ' + _api.pctHome + '%'); }
+        }
+        if (_isAway && _api.pctAway != null) {
+          if (_api.pctAway >= 65)      { rank += 4; sigs.push('🤝 API ' + _api.pctAway + '%'); }
+          else if (_api.pctAway >= 55) { rank += 2; sigs.push('🤝 API ' + _api.pctAway + '%'); }
+        }
+        if (_isOver  && _api.underOver === 'Over 2.5')  { rank += 2; sigs.push('🤝 API Over');  }
+        if (_isUnder && _api.underOver === 'Under 2.5') { rank += 2; sigs.push('🤝 API Under'); }
+      }
+
+      // ── [4] LINE MOVEMENT DIRECTION ─────────────────────────────────────────
+      // Smart money coming in on our pick direction is a strong confirming signal.
+      if (Object.keys(_lmMap).length) {
+        const _isHome = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
+        const _isAway = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
+        const _lmH = _lmMap['1'] || 0;
+        const _lmA = _lmMap['2'] || 0;
+        if (_isHome) {
+          if (_lmH >= 10)      { rank += 4; sigs.push('📈 LM +' + _lmH + 'pp'); }
+          else if (_lmH >= 5)  { rank += 2; sigs.push('📈 LM +' + _lmH + 'pp'); }
+          else if (_lmH <= -5) { rank -= 2; }  // contra-movement, penalise quietly
+        }
+        if (_isAway) {
+          if (_lmA >= 10)      { rank += 4; sigs.push('📈 LM +' + _lmA + 'pp'); }
+          else if (_lmA >= 5)  { rank += 2; sigs.push('📈 LM +' + _lmA + 'pp'); }
+          else if (_lmA <= -5) { rank -= 2; }
+        }
+      }
+
+      // ── [5] ELO GAP ─────────────────────────────────────────────────────────
+      // Structural quality difference → more predictable outcome.
+      if (_eloDiff !== null) {
+        const _isHome = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim');
+        const _isAway = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw');
+        if (_isHome && _eloDiff > 250)  { rank += 3; sigs.push('📊 Elo +' + _eloDiff); }
+        else if (_isHome && _eloDiff > 150) { rank += 2; }
+        else if (_isHome && _eloDiff < -150) { rank -= 1; }  // pick against Elo
+        if (_isAway && _eloDiff < -250) { rank += 3; sigs.push('📊 Elo ' + _eloDiff); }
+        else if (_isAway && _eloDiff < -150) { rank += 2; }
+        else if (_isAway && _eloDiff > 150)  { rank -= 1; }
+      }
+
+      // ── [6] SEASON PRESSURE ─────────────────────────────────────────────────
+      // Teams actively fighting for title, UCL, or survival are highly motivated
+      // → their result picks are more predictable than a mid-table snooze-fest.
+      // Only counts when the team is still fighting (motiv !== 'none').
+      const _isHomeP = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
+      const _isAwayP = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
+      if (_isHomeP && _hMotiv !== 'none') {
+        if (_hPress.includes('gold') || _hPress.includes('red')) { rank += 3; sigs.push('🔥 Druck'); }
+        else if (_hPress.includes('blue'))                        { rank += 2; }
+        else if (_hPress.includes('orange') || _hPress.includes('yellow')) { rank += 1; }
+      }
+      if (_isAwayP && _aMotiv !== 'none') {
+        if (_aPress.includes('gold') || _aPress.includes('red')) { rank += 3; sigs.push('🔥 Druck'); }
+        else if (_aPress.includes('blue'))                        { rank += 2; }
+        else if (_aPress.includes('orange') || _aPress.includes('yellow')) { rank += 1; }
+      }
+
+      if (rank > bestRank) {
+        bestRank = rank;
+        bestPick = p;
+        _signals[p.market] = sigs;
+      }
     }
-    if (bestPick) candidates.push({ p: bestPick, rank: bestRank, sc, m });
+
+    if (bestPick) {
+      candidates.push({
+        p: bestPick,
+        rank: bestRank,
+        sc: matchSc,
+        m,
+        sigs: _signals[bestPick.market] || [],
+      });
+    }
   }
 
   if (!candidates.length) return '';
 
-  // Sort by rank desc, deduplicate by match (already one per match above)
   candidates.sort((a, b) => b.rank - a.rank);
   const top = candidates.slice(0, 7);
 
@@ -6357,12 +6506,16 @@ function buildTopCardsHtml(matchList) {
     return (p.odds >= 1.40 && p.odds <= 1.95) ? 'tc-odds-sweet' : 'tc-odds-ok';
   };
 
-  const rows = top.map(({ p, sc, m }) => {
+  const rows = top.map(({ p, sc, m, sigs }) => {
     const time    = m.time ? ` ${m.time}` : '';
-    const vTag    = p.value === 'hot'       ? ' 🔥' : p.value === 'value' ? ' 💰' : p.value === 'inj-edge' ? ' 🏥' : '';
+    const vTag    = p.value === 'hot' ? ' 🔥' : p.value === 'value' ? ' 💰' : p.value === 'inj-edge' ? ' 🏥' : '';
     const oddsLbl = p.odds
       ? `<span class="tc-odds-pill ${oddsClass(p)}">@ ${p.odds.toFixed(2)}${p.oddsIsEst ? ' ~' : ''}</span>`
       : `<span class="tc-odds-pill tc-odds-est">—</span>`;
+    // Signal badges — show up to 3 of the strongest signals that fired
+    const sigsHtml = sigs.length
+      ? `<div class="tc-sigs">${sigs.slice(0, 3).map(s => `<span class="tc-sig-badge">${s}</span>`).join('')}</div>`
+      : '';
     return `<div class="topcards-row">
       <div class="tc-score ${scoreClass(sc)}">${sc}</div>
       <div class="tc-body">
@@ -6371,6 +6524,7 @@ function buildTopCardsHtml(matchList) {
           <span class="tc-icon">${p.icon}</span>
           <span class="tc-market">${p.market}${vTag}</span>
         </div>
+        ${sigsHtml}
       </div>
       <div class="tc-right">
         ${oddsLbl}
@@ -6388,7 +6542,7 @@ function buildTopCardsHtml(matchList) {
       <span class="topcards-header-right">${highConfCount}× ★★★ · ${realOddsCount}× echte Quote</span>
     </div>
     <div class="topcards-grid">${rows}</div>
-    <div class="topcards-note">Sortiert nach Pick-Konfidenz + Quoten-Qualität · Score ≥ 6 · Je grüner die Quote, desto näher am 1.40–1.95 Zielbereich</div>
+    <div class="topcards-note">Multi-Signal Ranking: Pick-Score · Match-Score · Edge · API-Confluenz · Line Movement · Elo · Saisondruck</div>
   </div>`;
 }
 
