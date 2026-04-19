@@ -10307,15 +10307,25 @@ function renderResultsTable(filter) {
     return '<span class="res-badge void">— Void</span>';
   };
 
-  // For rows where cardScore is missing (e.g. old picks_history.json entries), try to
-  // compute it on the fly from the loaded LEAGUES fixture data.
+  // For rows where cardScore is missing (e.g. old picks_history.json entries without leagueKey),
+  // search all loaded LEAGUES for the matching fixture and compute the score on the fly.
   for (const r of rows) {
-    if (r.cardScore == null && r.leagueKey) {
-      const _fix = (LEAGUES[r.leagueKey]?.fixtures || []).find(f => f.home === r.home && f.away === r.away);
-      if (_fix) {
-        const _sc = computeMatchScore(_fix, r.leagueKey);
-        if (typeof _sc === 'number') r.cardScore = parseFloat(_sc.toFixed(1));
+    if (r.cardScore != null) continue;
+    let _fix = null, _lk = r.leagueKey || null;
+    // Fast path: leagueKey is known
+    if (_lk) {
+      _fix = (LEAGUES[_lk]?.fixtures || []).find(f => f.home === r.home && f.away === r.away);
+    }
+    // Fallback: scan all leagues (old entries without leagueKey stored)
+    if (!_fix) {
+      for (const [lk, L] of Object.entries(LEAGUES)) {
+        const found = L.fixtures.find(f => f.home === r.home && f.away === r.away);
+        if (found) { _fix = found; _lk = lk; break; }
       }
+    }
+    if (_fix && _lk) {
+      const _sc = computeMatchScore(_fix, _lk);
+      if (typeof _sc === 'number') r.cardScore = parseFloat(_sc.toFixed(1));
     }
   }
 
