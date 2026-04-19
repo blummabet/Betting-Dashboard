@@ -645,46 +645,57 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .topcards-section{
   background:linear-gradient(135deg,rgba(88,166,255,.06) 0%,rgba(0,212,161,.04) 100%);
   border:1px solid rgba(88,166,255,.22);border-radius:12px;padding:14px 16px;margin-bottom:20px;
+  position:relative;overflow:hidden;
 }
+.topcards-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#58a6ff,#00d4a1);}
 .topcards-header{
   font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
   color:#58a6ff;margin-bottom:11px;display:flex;align-items:center;justify-content:space-between;gap:8px;
 }
 .topcards-header-right{font-size:10px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;}
-.topcards-grid{display:flex;flex-direction:column;gap:5px;}
+.topcards-grid{display:flex;flex-direction:column;gap:7px;}
+
+/* Each card row — POTD-inspired layout */
 .topcards-row{
-  display:flex;align-items:center;gap:9px;
-  padding:8px 11px;background:rgba(0,0,0,.28);border-radius:8px;
-  border:1px solid rgba(255,255,255,.04);cursor:default;
+  background:rgba(0,0,0,.32);border-radius:10px;
+  border:1px solid rgba(255,255,255,.05);padding:10px 12px;
+  transition:border-color .15s;cursor:default;
 }
-.topcards-row:hover{background:rgba(88,166,255,.06);border-color:rgba(88,166,255,.18);}
-.tc-score{
-  flex-shrink:0;width:34px;height:34px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:800;
+.topcards-row:hover{border-color:rgba(88,166,255,.25);}
+.tc-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;}
+.tc-matchline{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tc-score-badge{
+  flex-shrink:0;font-size:10px;font-weight:800;padding:2px 7px;border-radius:4px;white-space:nowrap;
 }
 .tc-score-high{background:rgba(63,185,80,.18);color:#3fb950;border:1px solid rgba(63,185,80,.35);}
 .tc-score-mid{background:rgba(227,179,65,.18);color:#e3b341;border:1px solid rgba(227,179,65,.35);}
 .tc-score-low{background:rgba(139,148,158,.12);color:#8b949e;border:1px solid rgba(139,148,158,.25);}
-.tc-body{flex:1;min-width:0;}
-.tc-matchline{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;}
-.tc-pickline{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;}
-.tc-icon{font-size:13px;}
-.tc-market{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.tc-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+
+.tc-pick-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:5px;}
+.tc-icon{font-size:16px;}
+.tc-market{font-size:14px;font-weight:700;color:var(--text);}
 .tc-odds-pill{
-  padding:3px 8px;border-radius:5px;font-size:12px;font-weight:800;white-space:nowrap;
+  padding:3px 9px;border-radius:5px;font-size:13px;font-weight:800;white-space:nowrap;
 }
 .tc-odds-sweet{background:rgba(63,185,80,.18);color:#3fb950;border:1px solid rgba(63,185,80,.30);}
 .tc-odds-ok{background:rgba(88,166,255,.14);color:#58a6ff;border:1px solid rgba(88,166,255,.28);}
 .tc-odds-est{background:rgba(139,148,158,.12);color:#8b949e;border:1px solid rgba(139,148,158,.22);}
-.tc-conf{font-size:11px;font-weight:700;white-space:nowrap;}
-.tc-sigs{display:flex;flex-wrap:wrap;gap:3px;margin-top:3px;}
-.tc-sig-badge{
-  font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;
-  background:rgba(88,166,255,.10);color:#58a6ff;border:1px solid rgba(88,166,255,.20);
-  white-space:nowrap;
+.tc-conf{font-size:12px;font-weight:700;color:#e3b341;}
+
+/* Signal scores row — normalized X/10 */
+.tc-signals{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px;}
+.tc-sig{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;white-space:nowrap;
 }
+.tc-sig-val{font-size:11px;font-weight:900;}
+.tc-sig-8{background:rgba(63,185,80,.14);color:#3fb950;border:1px solid rgba(63,185,80,.28);}  /* ≥8 = green */
+.tc-sig-6{background:rgba(227,179,65,.12);color:#e3b341;border:1px solid rgba(227,179,65,.25);}  /* 6-7 = yellow */
+.tc-sig-4{background:rgba(139,148,158,.10);color:#8b949e;border:1px solid rgba(139,148,158,.20);}  /* 4-5 = grey */
+
+/* Short reason text */
+.tc-reason{font-size:11px;color:var(--muted);line-height:1.45;opacity:.8;}
+
 .topcards-note{font-size:10px;color:var(--muted);margin-top:8px;font-style:italic;}
 
 .kombi-section{
@@ -6385,11 +6396,15 @@ function buildTopCardsHtml(matchList) {
     let bestPick = null, bestRank = -Infinity;
     const _signals = {};  // store signals per-pick for display
 
+    // Helper: normalise a raw value to a 0–10 score
+    const _norm = (v, min, max) => Math.max(0, Math.min(10, Math.round((v - min) / (max - min) * 10)));
+
     for (const p of picks) {
       const hasRealOdds = p.odds != null && !p.oddsIsEst;
       const inRange     = hasRealOdds && p.odds >= 1.40 && p.odds <= 1.95;
       const mktLow      = (p.market || '').toLowerCase();
-      const sigs        = [];  // signal badges for this pick
+      // sigs: array of {label, score} objects shown as "Label score/10"
+      const sigs = [];
 
       // ── Base: pick model score ──────────────────────────────────────────────
       let rank = (p.sc || 0) * 10;
@@ -6403,88 +6418,81 @@ function buildTopCardsHtml(matchList) {
       else if (hasRealOdds) rank += 1;
 
       // Value tags
-      if (p.value === 'hot')   { rank += 2; }
-      else if (p.value === 'value') { rank += 1; }
+      if (p.value === 'hot')        rank += 2;
+      else if (p.value === 'value') rank += 1;
 
       // ── [1] MATCH SCORE MULTIPLIER ──────────────────────────────────────────
-      // sc ≥ 6 was already the gate; now use the full value as a rank driver.
-      // A sc=11 match contributes +10 vs sc=6 → meaningful separation.
       rank += (matchSc - 6) * 2;
 
-      // ── [2] MODEL EDGE (modelOdds vs bookie) ────────────────────────────────
+      // ── [2] MODEL EDGE ───────────────────────────────────────────────────────
       if (p.modelOdds != null && hasRealOdds) {
         const _edgePp = Math.round((1 / p.modelOdds - (1 / p.odds) * 1.03) * 100);
-        if (_edgePp >= 13)     { rank += 5; sigs.push('⚡+' + _edgePp + 'pp'); }
-        else if (_edgePp >= 7) { rank += 3; sigs.push('⚡+' + _edgePp + 'pp'); }
+        if (_edgePp >= 13)     { rank += 5; sigs.push({ label: 'Edge', score: _norm(_edgePp, 0, 15) }); }
+        else if (_edgePp >= 7) { rank += 3; sigs.push({ label: 'Edge', score: _norm(_edgePp, 0, 15) }); }
         else if (_edgePp >= 3) { rank += 1; }
       }
 
-      // ── [3] API PREDICTION CONFLUENCE ───────────────────────────────────────
-      // Bonus when the independent API model agrees with our pick direction.
+      // ── [3] API PREDICTION CONFLUENCE ────────────────────────────────────────
       if (_api) {
-        const _isHome = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
-        const _isAway = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
-        const _isOver = mktLow.includes('over') || mktLow.includes('über');
+        const _isHome  = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
+        const _isAway  = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
+        const _isOver  = mktLow.includes('over') || mktLow.includes('über');
         const _isUnder = mktLow.includes('under') || mktLow.includes('unter');
         if (_isHome && _api.pctHome != null) {
-          if (_api.pctHome >= 65)      { rank += 4; sigs.push('🤝 API ' + _api.pctHome + '%'); }
-          else if (_api.pctHome >= 55) { rank += 2; sigs.push('🤝 API ' + _api.pctHome + '%'); }
+          if (_api.pctHome >= 65)      { rank += 4; sigs.push({ label: 'AI', score: _norm(_api.pctHome, 50, 85) }); }
+          else if (_api.pctHome >= 55) { rank += 2; sigs.push({ label: 'AI', score: _norm(_api.pctHome, 50, 85) }); }
         }
         if (_isAway && _api.pctAway != null) {
-          if (_api.pctAway >= 65)      { rank += 4; sigs.push('🤝 API ' + _api.pctAway + '%'); }
-          else if (_api.pctAway >= 55) { rank += 2; sigs.push('🤝 API ' + _api.pctAway + '%'); }
+          if (_api.pctAway >= 65)      { rank += 4; sigs.push({ label: 'AI', score: _norm(_api.pctAway, 50, 85) }); }
+          else if (_api.pctAway >= 55) { rank += 2; sigs.push({ label: 'AI', score: _norm(_api.pctAway, 50, 85) }); }
         }
-        if (_isOver  && _api.underOver === 'Over 2.5')  { rank += 2; sigs.push('🤝 API Over');  }
-        if (_isUnder && _api.underOver === 'Under 2.5') { rank += 2; sigs.push('🤝 API Under'); }
+        if (_isOver  && _api.underOver === 'Over 2.5')  { rank += 2; sigs.push({ label: 'AI', score: 6 }); }
+        if (_isUnder && _api.underOver === 'Under 2.5') { rank += 2; sigs.push({ label: 'AI', score: 6 }); }
       }
 
-      // ── [4] LINE MOVEMENT DIRECTION ─────────────────────────────────────────
-      // Smart money coming in on our pick direction is a strong confirming signal.
+      // ── [4] LINE MOVEMENT ────────────────────────────────────────────────────
       if (Object.keys(_lmMap).length) {
         const _isHome = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
         const _isAway = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
         const _lmH = _lmMap['1'] || 0;
         const _lmA = _lmMap['2'] || 0;
         if (_isHome) {
-          if (_lmH >= 10)      { rank += 4; sigs.push('📈 LM +' + _lmH + 'pp'); }
-          else if (_lmH >= 5)  { rank += 2; sigs.push('📈 LM +' + _lmH + 'pp'); }
-          else if (_lmH <= -5) { rank -= 2; }  // contra-movement, penalise quietly
+          if (_lmH >= 10)      { rank += 4; sigs.push({ label: 'Money', score: _norm(_lmH, 0, 15) }); }
+          else if (_lmH >= 5)  { rank += 2; sigs.push({ label: 'Money', score: _norm(_lmH, 0, 15) }); }
+          else if (_lmH <= -5) { rank -= 2; }
         }
         if (_isAway) {
-          if (_lmA >= 10)      { rank += 4; sigs.push('📈 LM +' + _lmA + 'pp'); }
-          else if (_lmA >= 5)  { rank += 2; sigs.push('📈 LM +' + _lmA + 'pp'); }
+          if (_lmA >= 10)      { rank += 4; sigs.push({ label: 'Money', score: _norm(_lmA, 0, 15) }); }
+          else if (_lmA >= 5)  { rank += 2; sigs.push({ label: 'Money', score: _norm(_lmA, 0, 15) }); }
           else if (_lmA <= -5) { rank -= 2; }
         }
       }
 
-      // ── [5] ELO GAP ─────────────────────────────────────────────────────────
-      // Structural quality difference → more predictable outcome.
+      // ── [5] ELO GAP ──────────────────────────────────────────────────────────
       if (_eloDiff !== null) {
         const _isHome = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim');
         const _isAway = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw');
-        if (_isHome && _eloDiff > 250)  { rank += 3; sigs.push('📊 Elo +' + _eloDiff); }
-        else if (_isHome && _eloDiff > 150) { rank += 2; }
-        else if (_isHome && _eloDiff < -150) { rank -= 1; }  // pick against Elo
-        if (_isAway && _eloDiff < -250) { rank += 3; sigs.push('📊 Elo ' + _eloDiff); }
-        else if (_isAway && _eloDiff < -150) { rank += 2; }
+        const _eloAbs = Math.abs(_eloDiff);
+        if (_isHome && _eloDiff > 250)       { rank += 3; sigs.push({ label: 'Elo', score: _norm(_eloAbs, 0, 400) }); }
+        else if (_isHome && _eloDiff > 150)  { rank += 2; sigs.push({ label: 'Elo', score: _norm(_eloAbs, 0, 400) }); }
+        else if (_isHome && _eloDiff < -150) { rank -= 1; }
+        if (_isAway && _eloDiff < -250)      { rank += 3; sigs.push({ label: 'Elo', score: _norm(_eloAbs, 0, 400) }); }
+        else if (_isAway && _eloDiff < -150) { rank += 2; sigs.push({ label: 'Elo', score: _norm(_eloAbs, 0, 400) }); }
         else if (_isAway && _eloDiff > 150)  { rank -= 1; }
       }
 
-      // ── [6] SEASON PRESSURE ─────────────────────────────────────────────────
-      // Teams actively fighting for title, UCL, or survival are highly motivated
-      // → their result picks are more predictable than a mid-table snooze-fest.
-      // Only counts when the team is still fighting (motiv !== 'none').
+      // ── [6] SEASON PRESSURE ──────────────────────────────────────────────────
       const _isHomeP = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
       const _isAwayP = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
       if (_isHomeP && _hMotiv !== 'none') {
-        if (_hPress.includes('gold') || _hPress.includes('red')) { rank += 3; sigs.push('🔥 Druck'); }
-        else if (_hPress.includes('blue'))                        { rank += 2; }
-        else if (_hPress.includes('orange') || _hPress.includes('yellow')) { rank += 1; }
+        if (_hPress.includes('gold') || _hPress.includes('red'))         { rank += 3; sigs.push({ label: 'Pressure', score: 9 }); }
+        else if (_hPress.includes('blue'))                                { rank += 2; sigs.push({ label: 'Pressure', score: 7 }); }
+        else if (_hPress.includes('orange') || _hPress.includes('yellow')) { rank += 1; sigs.push({ label: 'Pressure', score: 5 }); }
       }
       if (_isAwayP && _aMotiv !== 'none') {
-        if (_aPress.includes('gold') || _aPress.includes('red')) { rank += 3; sigs.push('🔥 Druck'); }
-        else if (_aPress.includes('blue'))                        { rank += 2; }
-        else if (_aPress.includes('orange') || _aPress.includes('yellow')) { rank += 1; }
+        if (_aPress.includes('gold') || _aPress.includes('red'))         { rank += 3; sigs.push({ label: 'Pressure', score: 9 }); }
+        else if (_aPress.includes('blue'))                                { rank += 2; sigs.push({ label: 'Pressure', score: 7 }); }
+        else if (_aPress.includes('orange') || _aPress.includes('yellow')) { rank += 1; sigs.push({ label: 'Pressure', score: 5 }); }
       }
 
       if (rank > bestRank) {
@@ -6510,38 +6518,50 @@ function buildTopCardsHtml(matchList) {
   candidates.sort((a, b) => b.rank - a.rank);
   const top = candidates.slice(0, 7);
 
-  const scoreClass = s => s >= 9 ? 'tc-score-high' : s >= 7 ? 'tc-score-mid' : 'tc-score-low';
-  const confStr    = c => c === 'high' ? '<span style="color:#3fb950">★★★</span>' : '<span style="color:#e3b341">★★☆</span>';
-  const oddsClass  = (p) => {
-    if (!p.odds) return '';
-    if (p.oddsIsEst) return 'tc-odds-est';
+  const scoreBadgeClass = s => s >= 9 ? 'tc-score-high' : s >= 7 ? 'tc-score-mid' : 'tc-score-low';
+  const confStr         = c => c === 'high' ? '★★★' : '★★☆';
+  const oddsClass       = (p) => {
+    if (!p.odds || p.oddsIsEst) return 'tc-odds-est';
     return (p.odds >= 1.40 && p.odds <= 1.95) ? 'tc-odds-sweet' : 'tc-odds-ok';
+  };
+  // Render a {label, score} signal as "Label score/10" pill
+  const sigHtml = ({ label, score }) => {
+    const cls = score >= 8 ? 'tc-sig-8' : score >= 6 ? 'tc-sig-6' : 'tc-sig-4';
+    return `<span class="tc-sig ${cls}">${label} <span class="tc-sig-val">${score}/10</span></span>`;
   };
 
   const rows = top.map(({ p, sc, m, sigs }) => {
-    const time    = m.time ? ` ${m.time}` : '';
-    const vTag    = p.value === 'hot' ? ' 🔥' : p.value === 'value' ? ' 💰' : p.value === 'inj-edge' ? ' 🏥' : '';
-    const oddsLbl = p.odds
+    const time     = m.time ? ` · ${m.time}` : '';
+    const oddsLbl  = p.odds
       ? `<span class="tc-odds-pill ${oddsClass(p)}">@ ${p.odds.toFixed(2)}${p.oddsIsEst ? ' ~' : ''}</span>`
-      : `<span class="tc-odds-pill tc-odds-est">—</span>`;
-    // Signal badges — show up to 3 of the strongest signals that fired
-    const sigsHtml = sigs.length
-      ? `<div class="tc-sigs">${sigs.slice(0, 3).map(s => `<span class="tc-sig-badge">${s}</span>`).join('')}</div>`
       : '';
+    const vTag     = p.value === 'hot'      ? '<span class="value-tag hot" style="font-size:10px">🔥 VALUE</span>'
+                   : p.value === 'value'    ? '<span class="value-tag val" style="font-size:10px">💰 Value</span>'
+                   : p.value === 'inj-edge' ? '<span class="value-tag inj" style="font-size:10px">🏥 Edge</span>' : '';
+    // Short reason: strip HTML tags, take first sentence, cap at 110 chars
+    const _rawReason = (p.reason || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    const _shortReason = _rawReason.length > 110 ? _rawReason.slice(0, 107) + '…' : _rawReason;
+    // Signals — deduplicate by label, show up to 4
+    const _uniqSigs = [];
+    const _seenLabels = new Set();
+    for (const s of sigs) { if (!_seenLabels.has(s.label)) { _uniqSigs.push(s); _seenLabels.add(s.label); } }
+    const sigsHtml = _uniqSigs.length
+      ? `<div class="tc-signals">${_uniqSigs.slice(0, 4).map(sigHtml).join('')}</div>`
+      : '';
+
     return `<div class="topcards-row">
-      <div class="tc-score ${scoreClass(sc)}">${sc}</div>
-      <div class="tc-body">
-        <div class="tc-matchline">${m.leagueFlag||''} ${m.home} vs ${m.away} · ${m.date}${time}</div>
-        <div class="tc-pickline">
-          <span class="tc-icon">${p.icon}</span>
-          <span class="tc-market">${p.market}${vTag}</span>
-        </div>
-        ${sigsHtml}
+      <div class="tc-top">
+        <div class="tc-matchline">${m.leagueFlag || ''} ${m.home} vs ${m.away} · ${m.date}${time}</div>
+        <span class="tc-score-badge ${scoreBadgeClass(sc)}">${sc}/12</span>
       </div>
-      <div class="tc-right">
-        ${oddsLbl}
+      <div class="tc-pick-row">
+        <span class="tc-icon">${p.icon}</span>
+        <span class="tc-market">${p.market}</span>
+        ${oddsLbl}${vTag}
         <span class="tc-conf">${confStr(p.conf)}</span>
       </div>
+      ${sigsHtml}
+      ${_shortReason ? `<div class="tc-reason">${_shortReason}</div>` : ''}
     </div>`;
   }).join('');
 
@@ -6572,11 +6592,11 @@ function buildTopCardsHtml(matchList) {
 
   return `<div class="topcards-section">
     <div class="topcards-header">
-      <span>🃏 Cards des Tages · Top ${top.length}</span>
-      <span class="topcards-header-right">${highConfCount}× ★★★ · ${realOddsCount}× echte Quote</span>
+      <span>🃏 Top Picks · ${top.length} Picks Today</span>
+      <span class="topcards-header-right">${highConfCount}× ★★★ · ${realOddsCount} confirmed odds</span>
     </div>
     <div class="topcards-grid">${rows}</div>
-    <div class="topcards-note">Multi-Signal Ranking: Pick-Score · Match-Score · Edge · API-Confluenz · Line Movement · Elo · Saisondruck</div>
+    <div class="topcards-note">Ranked by: Pick confidence · Match score · Edge · AI forecast · Smart money · Elo · Season pressure</div>
   </div>`;
 }
 
