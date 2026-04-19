@@ -308,6 +308,35 @@ function parseTheOddsEvent(oddsEvent) {
     r.dc12_bkr = r2(1 / (ph + pa));
   }
 
+  // ── Pass 1b: consensus fair O/U 2.5 (same Pinnacle-2× weighting) ──────────
+  const _ouSamples = [];
+  for (const bkr of books) {
+    const totMkt = (bkr.markets || []).find(m => m.key === 'totals');
+    if (!totMkt) continue;
+    let _o25 = null, _u25 = null;
+    for (const o of (totMkt.outcomes || [])) {
+      if (o.name === 'Over'  && Math.abs(o.point - 2.5) < 0.01) _o25 = o.price;
+      else if (o.name === 'Under' && Math.abs(o.point - 2.5) < 0.01) _u25 = o.price;
+    }
+    if (!_o25 || !_u25 || isNaN(_o25) || isNaN(_u25)) continue;
+    const _tot = 1/_o25 + 1/_u25, _margin = _tot - 1;
+    if (_margin > 0.12 || _margin < -0.02) continue;
+    _ouSamples.push({
+      po: (1/_o25)/_tot, pu: (1/_u25)/_tot,
+      weight: bkr.key === 'pinnacle' ? 2.0 : 1.0
+    });
+  }
+  if (_ouSamples.length >= 1) {
+    const _tw = _ouSamples.reduce((s, d) => s + d.weight, 0);
+    const _po = _ouSamples.reduce((s, d) => s + d.po * d.weight, 0) / _tw;
+    const _pu = _ouSamples.reduce((s, d) => s + d.pu * d.weight, 0) / _tw;
+    const _n  = _po + _pu;
+    const _r2 = x => Math.round(x * 100) / 100;
+    r.o25_fair = _r2(_n / _po);
+    r.u25_fair = _r2(_n / _pu);
+    r.o25_cn   = _ouSamples.length;
+  }
+
   // ── Pass 2: primary market values ─────────────────────────────────────────
   for (const bkr of sorted) {
     for (const mkt of (bkr.markets || [])) {

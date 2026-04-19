@@ -2070,6 +2070,29 @@ function _parseTheOddsEvent(g) {
     r.hw_fair=r2(n/ph); r.dr_fair=r2(n/pd); r.aw_fair=r2(n/pa); r._cn=_samples.length;
     r.dc1X_bkr=r2(1/(ph+pd)); r.dcX2_bkr=r2(1/(pd+pa)); r.dc12_bkr=r2(1/(ph+pa));
   }
+  // Pass 1b: consensus fair O/U 2.5 (Pinnacle 2×, others 1×)
+  { const _ouS=[];
+    for (const bkr of books) {
+      const totMkt=(bkr.markets||[]).find(m=>m.key==='totals');
+      if (!totMkt) continue;
+      let _o25=null,_u25=null;
+      for (const o of (totMkt.outcomes||[])) {
+        if (o.name==='Over' &&Math.abs(o.point-2.5)<0.01) _o25=o.price;
+        else if (o.name==='Under'&&Math.abs(o.point-2.5)<0.01) _u25=o.price;
+      }
+      if (!_o25||!_u25||isNaN(_o25)||isNaN(_u25)) continue;
+      const _tot=1/_o25+1/_u25, _margin=_tot-1;
+      if (_margin>0.12||_margin<-0.02) continue;
+      _ouS.push({po:(1/_o25)/_tot,pu:(1/_u25)/_tot,weight:bkr.key==='pinnacle'?2:1});
+    }
+    if (_ouS.length>=1) {
+      const _tw=_ouS.reduce((s,d)=>s+d.weight,0);
+      const _po=_ouS.reduce((s,d)=>s+d.po*d.weight,0)/_tw;
+      const _pu=_ouS.reduce((s,d)=>s+d.pu*d.weight,0)/_tw;
+      const _n=_po+_pu, _r2=x=>Math.round(x*100)/100;
+      r.o25_fair=_r2(_n/_po); r.u25_fair=_r2(_n/_pu); r.o25_cn=_ouS.length;
+    }
+  }
   // Pass 2: market values (Pinnacle first)
   for (const bkr of sorted) {
     for (const mkt of (bkr.markets||[])) {
@@ -2203,6 +2226,7 @@ function findOdds(leagueKey, home, away) {
         const _pmO = window._preMatchData?.[`${home}|${away}`]?.odds;
         if (_pmO) {
           const _supp = ['bttsY','bttsN','ht_o05','ht_u05','ht_o15','ht_u15','ht_bttsY','ht_bttsN',
+                         'ht_hw','ht_dr','ht_aw',  // HT 1X2 picks — only in API-Football data
                          'hto15','ato15','cards_o35','cards_u35','cards_o45','cards_u45'];
           for (const k of _supp) if (r[k] == null && _pmO[k] != null) r[k] = _pmO[k];
         }
@@ -2608,6 +2632,9 @@ function computeLineMovement(oddsOpen, oddsCurrent) {
     const pOpen = 1 / o;
     const pCurr = 1 / c;
     const ppShift = Math.round((pCurr - pOpen) * 100);
+    // O25/U25 are only included when movement is meaningful (≥3pp).
+    // Static O/U prices are already shown via the pills in the strip header.
+    if ((m.label === 'O25' || m.label === 'U25') && Math.abs(ppShift) < 3) continue;
     rows.push({ label: m.label, oddOpen: o, oddCurr: c, ppShift });
   }
   if (!rows.length) return null;
@@ -4105,8 +4132,8 @@ function getBettingPicks(match, odds, leagueKey) {
     // Scaled down ~55%/48% of FT confidence (HT results are more volatile).
     // Requires a real bookie quote — no model-estimated HT result odds.
     {
-      // HT Home Win
-      if (o.ht_hw != null && o.ht_hw >= 1.33 && o.ht_hw <= 2.30) {
+      // HT Home Win — upper bound 2.05 matches global odds cap (picks above are demoted to 'low')
+      if (o.ht_hw != null && o.ht_hw >= 1.33 && o.ht_hw <= 2.05) {
         let htHSc = hFS_home * 0.55;
         if (homeNeedsWin) htHSc = Math.min(0.82, htHSc + _pressureBoost * 0.45);
         if (eloHomeFav)   htHSc = Math.min(0.82, htHSc + 0.07);
@@ -4117,8 +4144,8 @@ function getBettingPicks(match, odds, leagueKey) {
             reason:`${match.home} dominiert ${Math.round(hFS_home*100)}% seiner Heimspiele und erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel — ein Führungstreffer bereits in Halbzeit 1 ist realistisch. HZ-Quote ${o.ht_hw.toFixed(2)} bietet Wert.`}});
         }
       }
-      // HT Away Win
-      if (o.ht_aw != null && o.ht_aw >= 1.45 && o.ht_aw <= 2.50) {
+      // HT Away Win — upper bound 2.05 matches global odds cap
+      if (o.ht_aw != null && o.ht_aw >= 1.45 && o.ht_aw <= 2.05) {
         let htASc = aFS_away * 0.48;
         if (awayNeedsWin) htASc = Math.min(0.78, htASc + _pressureBoost * 0.40);
         if (eloAwayFav)   htASc = Math.min(0.78, htASc + 0.07);
@@ -4132,11 +4159,14 @@ function getBettingPicks(match, odds, leagueKey) {
     }
 
     sC.sort((a,b) => b.sc - a.sc);
-    // Redundant pick guard: skip Handicap -0.5 if PICK 1 already covers the same direction.
-    // Auswärtssieg/DNB-Away + Handicap Auswärts -0.5 = same bet, just confuses the user.
+    // Redundant pick guard: skip Handicap picks if PICK 1 already covers the same direction.
+    // Both 'Handicap Heim *' (PICK 3 model-estimated) and the 'AH Heim *' (PICK 1 AH substitution)
+    // represent the same underlying bet — showing both on one card confuses the user.
     { const _p1Mkt = picks.length > 0 ? picks[0].market : null;
-      const _p1Home = ['Heimsieg','DNB: Heimteam','Doppelte Chance: 1X'].includes(_p1Mkt);
-      const _p1Away = ['Auswärtssieg','DNB: Auswärtsteam','Doppelte Chance: X2'].includes(_p1Mkt);
+      const _p1Home = ['Heimsieg','DNB: Heimteam','Doppelte Chance: 1X'].includes(_p1Mkt)
+                    || (_p1Mkt?.startsWith('AH Heim'));   // AH substitution counts as home direction
+      const _p1Away = ['Auswärtssieg','DNB: Auswärtsteam','Doppelte Chance: X2'].includes(_p1Mkt)
+                    || (_p1Mkt?.startsWith('AH Ausw'));   // AH Ausw. substitution = away direction
       const _isHomeHC = m => m?.startsWith('Handicap Heim');
       const _isAwayHC = m => m?.startsWith('Handicap Auswärts');
       for (const c of sC) {
@@ -9591,6 +9621,39 @@ function _parseOddsBets(bookmakers) {
     r.dr_fair  = _r2(_n / _pd);
     r.aw_fair  = _r2(_n / _pa);
     r._cn      = _cSamples.length; // how many books contributed
+  }
+
+  // ── Pass 1b: consensus fair O/U 2.5 (same weighting as 1X2) ────────────────
+  { const _ouS = [];
+    for (const bkr of bookmakers) {
+      let _o25 = null, _u25 = null;
+      for (const bet of (bkr.bets || [])) {
+        const bn = (bet.name || '').toLowerCase().trim();
+        if (bn === 'goals over/under' || bn === 'total goals' || bn === 'over/under' || bn === 'total - goals' || bn.includes('goals o/u') || (bn.includes('over') && bn.includes('under') && bn.includes('goal'))) {
+          for (const v of (bet.values || [])) {
+            const vl = (v.value || '').toLowerCase();
+            if (vl === 'over 2.5')       _o25 = parseFloat(v.odd);
+            else if (vl === 'under 2.5') _u25 = parseFloat(v.odd);
+          }
+          break;
+        }
+      }
+      if (!_o25 || !_u25 || isNaN(_o25) || isNaN(_u25)) continue;
+      const _tot = 1/_o25 + 1/_u25, _margin = _tot - 1;
+      if (_margin > 0.12 || _margin < -0.02) continue;
+      const _isPinn = bkr.name?.toLowerCase().includes('pinnacle') || bkr.id === 8;
+      _ouS.push({ po: (1/_o25)/_tot, pu: (1/_u25)/_tot, weight: _isPinn ? 2.0 : 1.0 });
+    }
+    if (_ouS.length >= 1) {
+      const _tw = _ouS.reduce((s, d) => s + d.weight, 0);
+      const _po = _ouS.reduce((s, d) => s + d.po * d.weight, 0) / _tw;
+      const _pu = _ouS.reduce((s, d) => s + d.pu * d.weight, 0) / _tw;
+      const _n  = _po + _pu;
+      const _r2 = x => Math.round(x * 100) / 100;
+      r.o25_fair = _r2(_n / _po);
+      r.u25_fair = _r2(_n / _pu);
+      r.o25_cn   = _ouS.length;
+    }
   }
 
   // ── Pass 2: primary markets (Pinnacle-first for actual betting odds) ─────────
