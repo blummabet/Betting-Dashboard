@@ -1,5 +1,5 @@
 {
-  "ts": 1776687618673,
+  "ts": 1776703794539,
   "fixtures": [
     {
       "fixtureId": 1378184,
@@ -393,24 +393,7 @@
         "home": [],
         "away": []
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 4,
-        "draws": 6,
-        "awayWins": 0,
-        "lastMeetingYear": 2026,
-        "avgGoals": 2.6,
-        "over25Rate": 0.3,
-        "over35Rate": 0.2,
-        "bttsRate": 0.6,
-        "lastResults": [
-          "W",
-          "W",
-          "D",
-          "D",
-          "D"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null,
       "apiPrediction": null
@@ -455,11 +438,23 @@
           {
             "player": "R. Sottil",
             "position": "M",
-            "type": "Questionable",
+            "type": "Missing Fixture",
             "reason": "Back Injury"
           }
         ],
         "away": [
+          {
+            "player": "N. Fortini",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Back Injury"
+          },
+          {
+            "player": "M. Kean",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Calf Injury"
+          },
           {
             "player": "T. Lamptey",
             "position": "M",
@@ -471,24 +466,6 @@
             "position": "D",
             "type": "Missing Fixture",
             "reason": "Inactive"
-          },
-          {
-            "player": "M. Brescianini",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Injury"
-          },
-          {
-            "player": "N. Fortini",
-            "position": "D",
-            "type": "Questionable",
-            "reason": "Back Injury"
-          },
-          {
-            "player": "M. Kean",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Calf Injury"
           }
         ]
       },
@@ -496,17 +473,17 @@
         "home": {
           "goalkeeper": 0,
           "defense": 1,
-          "midfield": 3,
+          "midfield": 4,
           "attack": 0,
-          "confirmed": 4,
-          "questionable": 1,
+          "confirmed": 5,
+          "questionable": 0,
           "total": 5,
           "notes": [
             "M. Berisha (Gesperrt/Verletzt — Thigh Injury)",
             "F. Camarda (Gesperrt/Verletzt — Shoulder Injury)",
             "S. Fofana (Gesperrt/Verletzt — Inactive)",
             "K. Gaspar (Gesperrt/Verletzt — Knee Injury)",
-            "R. Sottil (Fraglich — Back Injury)"
+            "R. Sottil (Gesperrt/Verletzt — Back Injury)"
           ],
           "_raw": [
             {
@@ -536,7 +513,7 @@
             {
               "player": "R. Sottil",
               "position": "M",
-              "type": "Questionable",
+              "type": "Missing Fixture",
               "reason": "Back Injury"
             }
           ],
@@ -544,20 +521,31 @@
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 1,
-          "midfield": 1,
+          "defense": 2,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 2,
-          "questionable": 3,
-          "total": 5,
+          "confirmed": 4,
+          "questionable": 0,
+          "total": 4,
           "notes": [
+            "N. Fortini (Gesperrt/Verletzt — Back Injury)",
+            "M. Kean (Gesperrt/Verletzt — Calf Injury)",
             "T. Lamptey (Gesperrt/Verletzt — Knee Injury)",
-            "F. Parisi (Gesperrt/Verletzt — Inactive)",
-            "M. Brescianini (Fraglich — Injury)",
-            "N. Fortini (Fraglich — Back Injury)",
-            "M. Kean (Fraglich — Calf Injury)"
+            "F. Parisi (Gesperrt/Verletzt — Inactive)"
           ],
           "_raw": [
+            {
+              "player": "N. Fortini",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Back Injury"
+            },
+            {
+              "player": "M. Kean",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Calf Injury"
+            },
             {
               "player": "T. Lamptey",
               "position": "M",
@@ -569,27 +557,9 @@
               "position": "D",
               "type": "Missing Fixture",
               "reason": "Inactive"
-            },
-            {
-              "player": "M. Brescianini",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Injury"
-            },
-            {
-              "player": "N. Fortini",
-              "position": "D",
-              "type": "Questionable",
-              "reason": "Back Injury"
-            },
-            {
-              "player": "M. Kean",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Calf Injury"
             }
           ],
-          "impactScore": 1.7
+          "impactScore": 1.8
         }
       },
       "bookings": {
@@ -681,25 +651,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 3.68,
-        "dr_fair": 3.46,
-        "aw_fair": 2.27,
+        "hw_fair": 3.67,
+        "dr_fair": 3.42,
+        "aw_fair": 2.3,
         "_cn": 23,
-        "dc1X_bkr": 1.78,
+        "dc1X_bkr": 1.77,
         "dcX2_bkr": 1.37,
         "dc12_bkr": 1.41,
-        "o25_fair": 2.3,
-        "u25_fair": 1.77,
+        "o25_fair": 2.36,
+        "u25_fair": 1.74,
         "o25_cn": 11,
-        "aw": 2.23,
-        "hw": 3.57,
-        "dr": 3.34,
+        "aw": 2.26,
+        "hw": 3.61,
+        "dr": 3.24,
         "ah_a_point": -0.25,
-        "ah_a": 1.92,
+        "ah_a": 1.93,
         "ah_h_point": 0.25,
-        "ah_h": 2.01,
-        "o25": 2.18,
-        "u25": 1.65
+        "ah_h": 2,
+        "o25": 2.22,
+        "u25": 1.62
       },
       "apiPrediction": {
         "goalsHome": -1.5,
@@ -916,7 +886,23 @@
         "home": [],
         "away": []
       },
-      "h2h": null,
+      "h2h": {
+        "games": 4,
+        "homeWins": 0,
+        "draws": 2,
+        "awayWins": 2,
+        "lastMeetingYear": 2026,
+        "avgGoals": 1.5,
+        "over25Rate": 0.25,
+        "over35Rate": 0,
+        "bttsRate": 0.5,
+        "lastResults": [
+          "L",
+          "D",
+          "D",
+          "L"
+        ]
+      },
       "isFinished": true,
       "odds": null,
       "apiPrediction": null
@@ -941,6 +927,18 @@
             "reason": "Injury"
           },
           {
+            "player": "D. Mosquera",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "A. Sarr",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Inactive"
+          },
+          {
             "player": "S. Serdar",
             "position": "M",
             "type": "Missing Fixture",
@@ -953,13 +951,15 @@
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 2,
+          "midfield": 4,
           "attack": 0,
-          "confirmed": 2,
+          "confirmed": 4,
           "questionable": 0,
-          "total": 2,
+          "total": 4,
           "notes": [
             "K. Bowie (Gesperrt/Verletzt — Injury)",
+            "D. Mosquera (Gesperrt/Verletzt — Knee Injury)",
+            "A. Sarr (Gesperrt/Verletzt — Inactive)",
             "S. Serdar (Gesperrt/Verletzt — Knee Injury)"
           ],
           "_raw": [
@@ -970,13 +970,25 @@
               "reason": "Injury"
             },
             {
+              "player": "D. Mosquera",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "A. Sarr",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Inactive"
+            },
+            {
               "player": "S. Serdar",
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Knee Injury"
             }
           ],
-          "impactScore": 0.6
+          "impactScore": 1.2
         },
         "away": {
           "goalkeeper": 0,
@@ -1178,11 +1190,11 @@
         "hw_fair": 3.14,
         "dr_fair": 3.4,
         "aw_fair": 2.58,
-        "_cn": 22,
+        "_cn": 23,
         "dc1X_bkr": 1.63,
         "dcX2_bkr": 1.47,
         "dc12_bkr": 1.42,
-        "o25_fair": 2.2,
+        "o25_fair": 2.21,
         "u25_fair": 1.83,
         "o25_cn": 10,
         "aw": 2.48,
@@ -1196,7 +1208,7 @@
         "u25": 1.68
       },
       "apiPrediction": {
-        "goalsHome": -2.5,
+        "goalsHome": -1.5,
         "goalsAway": -2.5,
         "underOver": null,
         "pctHome": 45,
@@ -1210,8 +1222,8 @@
           "away": 44
         },
         "compAtt": {
-          "home": 43,
-          "away": 57
+          "home": 38,
+          "away": 62
         },
         "compDef": {
           "home": 62,
@@ -1297,19 +1309,36 @@
         ],
         "away": []
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 2,
+        "draws": 1,
+        "awayWins": 7,
+        "lastMeetingYear": 2025,
+        "avgGoals": 2.7,
+        "over25Rate": 0.6,
+        "over35Rate": 0.2,
+        "bttsRate": 0.6,
+        "lastResults": [
+          "L",
+          "D",
+          "L",
+          "W",
+          "L"
+        ]
+      },
       "isFinished": false,
       "odds": {
-        "hw_fair": 4.95,
-        "dr_fair": 4.07,
+        "hw_fair": 4.98,
+        "dr_fair": 4.05,
         "aw_fair": 1.81,
-        "_cn": 20,
+        "_cn": 21,
         "dc1X_bkr": 2.23,
         "dcX2_bkr": 1.25,
         "dc12_bkr": 1.33,
         "o25_fair": 2.03,
         "u25_fair": 1.97,
-        "o25_cn": 10,
+        "o25_cn": 11,
         "aw": 1.74,
         "hw": 4.62,
         "dr": 4,
@@ -1510,18 +1539,18 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 2.04,
-        "dr_fair": 3.52,
-        "aw_fair": 4.43,
-        "_cn": 22,
+        "dr_fair": 3.51,
+        "aw_fair": 4.44,
+        "_cn": 23,
         "dc1X_bkr": 1.29,
         "dcX2_bkr": 1.96,
         "dc12_bkr": 1.4,
         "o25_fair": 1.97,
-        "u25_fair": 2.03,
-        "o25_cn": 11,
+        "u25_fair": 2.04,
+        "o25_cn": 13,
         "hw": 1.97,
         "aw": 4.53,
-        "dr": 3.25,
+        "dr": 3.26,
         "ah_h_point": -0.5,
         "ah_h": 1.98,
         "ah_a_point": 0.5,
@@ -1660,24 +1689,24 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 4.71,
+        "hw_fair": 4.75,
         "dr_fair": 3.96,
-        "aw_fair": 1.87,
-        "_cn": 22,
-        "dc1X_bkr": 2.15,
+        "aw_fair": 1.86,
+        "_cn": 23,
+        "dc1X_bkr": 2.16,
         "dcX2_bkr": 1.27,
         "dc12_bkr": 1.34,
         "o25_fair": 2.12,
-        "u25_fair": 1.9,
+        "u25_fair": 1.89,
         "o25_cn": 11,
         "aw": 1.76,
-        "hw": 4.5,
+        "hw": 4.59,
         "dr": 3.98,
         "ah_a_point": -0.75,
         "ah_a": 2.03,
         "ah_h_point": 0.75,
-        "ah_h": 1.86,
-        "o25": 2.03,
+        "ah_h": 1.88,
+        "o25": 2.04,
         "u25": 1.85
       },
       "apiPrediction": {
@@ -1836,32 +1865,15 @@
         ],
         "away": []
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 3,
-        "draws": 5,
-        "awayWins": 2,
-        "lastMeetingYear": 2025,
-        "avgGoals": 2.5,
-        "over25Rate": 0.4,
-        "over35Rate": 0.1,
-        "bttsRate": 0.7,
-        "lastResults": [
-          "D",
-          "D",
-          "L",
-          "L",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": {
         "hw_fair": 2.08,
-        "dr_fair": 3.53,
-        "aw_fair": 4.22,
-        "_cn": 19,
+        "dr_fair": 3.54,
+        "aw_fair": 4.23,
+        "_cn": 20,
         "dc1X_bkr": 1.31,
-        "dcX2_bkr": 1.92,
+        "dcX2_bkr": 1.93,
         "dc12_bkr": 1.39,
         "o25_fair": 2.32,
         "u25_fair": 1.76,
@@ -2010,25 +2022,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.89,
-        "dr_fair": 3.38,
+        "hw_fair": 2.92,
+        "dr_fair": 3.32,
         "aw_fair": 2.8,
-        "_cn": 22,
+        "_cn": 23,
         "dc1X_bkr": 1.56,
-        "dcX2_bkr": 1.53,
-        "dc12_bkr": 1.42,
+        "dcX2_bkr": 1.52,
+        "dc12_bkr": 1.43,
         "o25_fair": 2.03,
         "u25_fair": 1.98,
-        "o25_cn": 12,
-        "hw": 2.83,
-        "aw": 2.7,
-        "dr": 3.19,
+        "o25_cn": 13,
+        "hw": 2.89,
+        "aw": 2.73,
+        "dr": 3.07,
         "ah_h_point": 0.5,
         "ah_h": 1.48,
         "ah_a_point": -0.5,
         "ah_a": 2.61,
-        "o25": 1.93,
-        "u25": 1.94
+        "o25": 1.94,
+        "u25": 1.93
       },
       "apiPrediction": {
         "goalsHome": -1.5,
@@ -2161,15 +2173,15 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.4,
-        "dr_fair": 5.29,
-        "aw_fair": 10.11,
-        "_cn": 22,
+        "dr_fair": 5.31,
+        "aw_fair": 10.09,
+        "_cn": 23,
         "dc1X_bkr": 1.11,
-        "dcX2_bkr": 3.47,
+        "dcX2_bkr": 3.48,
         "dc12_bkr": 1.23,
         "o25_fair": 2,
         "u25_fair": 2,
-        "o25_cn": 12,
+        "o25_cn": 13,
         "aw": 9.7,
         "hw": 1.34,
         "dr": 5.28,
@@ -2294,12 +2306,12 @@
       "odds": {
         "hw_fair": 2.15,
         "dr_fair": 3.44,
-        "aw_fair": 4.08,
-        "_cn": 22,
+        "aw_fair": 4.09,
+        "_cn": 23,
         "dc1X_bkr": 1.32,
         "dcX2_bkr": 1.87,
         "dc12_bkr": 1.41,
-        "o25_fair": 2.41,
+        "o25_fair": 2.4,
         "u25_fair": 1.71,
         "o25_cn": 10,
         "hw": 2.09,
@@ -2440,21 +2452,21 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 7.66,
-        "dr_fair": 5.14,
+        "hw_fair": 7.65,
+        "dr_fair": 5.16,
         "aw_fair": 1.48,
-        "_cn": 22,
-        "dc1X_bkr": 3.07,
+        "_cn": 23,
+        "dc1X_bkr": 3.08,
         "dcX2_bkr": 1.15,
         "dc12_bkr": 1.24,
         "o25_fair": 1.74,
         "u25_fair": 2.36,
         "o25_cn": 9,
         "aw": 1.4,
-        "hw": 7.47,
-        "dr": 5.1,
+        "hw": 7.57,
+        "dr": 5.14,
         "ah_a_point": -1.25,
-        "ah_a": 1.95,
+        "ah_a": 1.96,
         "ah_h_point": 1.25,
         "ah_h": 1.93,
         "o25": 1.6,
@@ -2607,12 +2619,12 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.57,
-        "dr_fair": 3.23,
-        "aw_fair": 3.32,
-        "_cn": 22,
+        "hw_fair": 2.59,
+        "dr_fair": 3.22,
+        "aw_fair": 3.31,
+        "_cn": 23,
         "dc1X_bkr": 1.43,
-        "dcX2_bkr": 1.64,
+        "dcX2_bkr": 1.63,
         "dc12_bkr": 1.45,
         "o25_fair": 2.83,
         "u25_fair": 1.55,
@@ -2853,16 +2865,16 @@
             "reason": "Injury"
           },
           {
+            "player": "M. Lacroix",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
             "player": "E. Nketiah",
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Thigh Injury"
-          },
-          {
-            "player": "M. Lacroix",
-            "position": "D",
-            "type": "Questionable",
-            "reason": "Injury"
           },
           {
             "player": "A. Wharton",
@@ -2883,17 +2895,17 @@
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
+          "defense": 1,
           "midfield": 3,
           "attack": 0,
-          "confirmed": 3,
-          "questionable": 2,
+          "confirmed": 4,
+          "questionable": 1,
           "total": 5,
           "notes": [
             "C. Doucoure (Gesperrt/Verletzt — Knee Injury)",
             "E. Guessand (Gesperrt/Verletzt — Injury)",
+            "M. Lacroix (Gesperrt/Verletzt — Injury)",
             "E. Nketiah (Gesperrt/Verletzt — Thigh Injury)",
-            "M. Lacroix (Fraglich — Injury)",
             "A. Wharton (Fraglich — Injury)"
           ],
           "_raw": [
@@ -2910,16 +2922,16 @@
               "reason": "Injury"
             },
             {
+              "player": "M. Lacroix",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
               "player": "E. Nketiah",
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Thigh Injury"
-            },
-            {
-              "player": "M. Lacroix",
-              "position": "D",
-              "type": "Questionable",
-              "reason": "Injury"
             },
             {
               "player": "A. Wharton",
@@ -2928,7 +2940,7 @@
               "reason": "Injury"
             }
           ],
-          "impactScore": 1.4
+          "impactScore": 1.8
         },
         "away": {
           "goalkeeper": 0,
@@ -2977,25 +2989,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.66,
-        "dr_fair": 3.46,
-        "aw_fair": 2.99,
+        "hw_fair": 2.73,
+        "dr_fair": 3.49,
+        "aw_fair": 2.88,
         "_cn": 23,
-        "dc1X_bkr": 1.5,
-        "dcX2_bkr": 1.6,
-        "dc12_bkr": 1.41,
+        "dc1X_bkr": 1.53,
+        "dcX2_bkr": 1.58,
+        "dc12_bkr": 1.4,
         "o25_fair": 1.97,
         "u25_fair": 2.03,
         "o25_cn": 13,
-        "hw": 2.62,
-        "aw": 2.88,
-        "dr": 3.35,
+        "hw": 2.67,
+        "aw": 2.76,
+        "dr": 3.44,
         "ah_h_point": -0.5,
-        "ah_h": 2.45,
+        "ah_h": 2.58,
         "ah_a_point": 0.5,
         "ah_a": 1.51,
         "o25": 1.93,
-        "u25": 1.98
+        "u25": 1.97
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -3654,13 +3666,13 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.59,
-        "dr_fair": 4.78,
-        "aw_fair": 6.18,
+        "dr_fair": 4.79,
+        "aw_fair": 6.21,
         "_cn": 22,
         "dc1X_bkr": 1.19,
         "dcX2_bkr": 2.7,
         "dc12_bkr": 1.26,
-        "o25_fair": 1.7,
+        "o25_fair": 1.69,
         "u25_fair": 2.44,
         "o25_cn": 10,
         "hw": 1.52,
@@ -3733,104 +3745,33 @@
       "date": "2026-04-22",
       "time": "21:00",
       "injuries": {
-        "home": [
-          {
-            "player": "L. Cook",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Hamstring Injury"
-          },
-          {
-            "player": "J. Kluivert",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
-            "player": "J. Soler",
-            "position": "D",
-            "type": "Questionable",
-            "reason": "Hamstring Injury"
-          }
-        ],
-        "away": [
-          {
-            "player": "D. James",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          },
-          {
-            "player": "A. Stach",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Ankle Injury"
-          }
-        ]
+        "home": [],
+        "away": []
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 2,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 2,
-          "questionable": 1,
-          "total": 3,
-          "notes": [
-            "L. Cook (Gesperrt/Verletzt — Hamstring Injury)",
-            "J. Kluivert (Gesperrt/Verletzt — Knee Injury)",
-            "J. Soler (Fraglich — Hamstring Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "L. Cook",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Hamstring Injury"
-            },
-            {
-              "player": "J. Kluivert",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
-              "player": "J. Soler",
-              "position": "D",
-              "type": "Questionable",
-              "reason": "Hamstring Injury"
-            }
-          ],
-          "impactScore": 0.9
+          "confirmed": 0,
+          "questionable": 0,
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         },
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 2,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 2,
+          "confirmed": 0,
           "questionable": 0,
-          "total": 2,
-          "notes": [
-            "D. James (Gesperrt/Verletzt — Muscle Injury)",
-            "A. Stach (Gesperrt/Verletzt — Ankle Injury)"
-          ],
-          "_raw": [
-            {
-              "player": "D. James",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            },
-            {
-              "player": "A. Stach",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Ankle Injury"
-            }
-          ],
-          "impactScore": 0.6
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
         }
       },
       "bookings": {
@@ -3870,13 +3811,13 @@
       "odds": {
         "hw_fair": 2.12,
         "dr_fair": 3.76,
-        "aw_fair": 3.82,
+        "aw_fair": 3.83,
         "_cn": 23,
         "dc1X_bkr": 1.35,
-        "dcX2_bkr": 1.89,
+        "dcX2_bkr": 1.9,
         "dc12_bkr": 1.36,
         "o25_fair": 1.83,
-        "u25_fair": 2.2,
+        "u25_fair": 2.21,
         "o25_cn": 12,
         "hw": 2.04,
         "aw": 3.76,
@@ -3948,6 +3889,18 @@
       "injuries": {
         "home": [
           {
+            "player": "D. Gomez",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "S. March",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          },
+          {
             "player": "J. Milner",
             "position": "M",
             "type": "Missing Fixture",
@@ -3960,16 +3913,10 @@
             "reason": "Knee Injury"
           },
           {
-            "player": "D. Gomez",
+            "player": "A. Webster",
             "position": "M",
-            "type": "Questionable",
-            "reason": "Injury"
-          },
-          {
-            "player": "K. Mitoma",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Injury"
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
           }
         ],
         "away": [
@@ -3980,28 +3927,16 @@
             "reason": "Knee Injury"
           },
           {
-            "player": "J. Gittens",
+            "player": "?",
             "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          },
-          {
-            "player": "R. James",
-            "position": "D",
             "type": "Missing Fixture",
             "reason": "Hamstring Injury"
           },
           {
-            "player": "Joao Pedro",
+            "player": "J. Gittens",
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Muscle Injury"
-          },
-          {
-            "player": "F. Jorgensen",
-            "position": "G",
-            "type": "Missing Fixture",
-            "reason": "Groin Injury"
           },
           {
             "player": "M. Mudryk",
@@ -4010,16 +3945,28 @@
             "reason": "Suspended"
           },
           {
-            "player": "?",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Hamstring Injury"
-          },
-          {
             "player": "E. Fernandez",
             "position": "M",
             "type": "Questionable",
             "reason": "Injury"
+          },
+          {
+            "player": "R. James",
+            "position": "D",
+            "type": "Questionable",
+            "reason": "Hamstring Injury"
+          },
+          {
+            "player": "Joao Pedro",
+            "position": "M",
+            "type": "Questionable",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "F. Jorgensen",
+            "position": "G",
+            "type": "Questionable",
+            "reason": "Groin Injury"
           }
         ]
       },
@@ -4027,18 +3974,31 @@
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 2,
+          "midfield": 5,
           "attack": 0,
-          "confirmed": 2,
-          "questionable": 2,
-          "total": 4,
+          "confirmed": 5,
+          "questionable": 0,
+          "total": 5,
           "notes": [
+            "D. Gomez (Gesperrt/Verletzt — Injury)",
+            "S. March (Gesperrt/Verletzt — Muscle Injury)",
             "J. Milner (Gesperrt/Verletzt — Injury)",
             "S. Tzimas (Gesperrt/Verletzt — Knee Injury)",
-            "D. Gomez (Fraglich — Injury)",
-            "K. Mitoma (Fraglich — Injury)"
+            "A. Webster (Gesperrt/Verletzt — Knee Injury)"
           ],
           "_raw": [
+            {
+              "player": "D. Gomez",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "S. March",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            },
             {
               "player": "J. Milner",
               "position": "M",
@@ -4052,37 +4012,31 @@
               "reason": "Knee Injury"
             },
             {
-              "player": "D. Gomez",
+              "player": "A. Webster",
               "position": "M",
-              "type": "Questionable",
-              "reason": "Injury"
-            },
-            {
-              "player": "K. Mitoma",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Injury"
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
             }
           ],
-          "impactScore": 1.1
+          "impactScore": 1.5
         },
         "away": {
-          "goalkeeper": 1,
-          "defense": 1,
+          "goalkeeper": 0,
+          "defense": 0,
           "midfield": 4,
           "attack": 0,
-          "confirmed": 6,
-          "questionable": 2,
+          "confirmed": 4,
+          "questionable": 4,
           "total": 8,
           "notes": [
             "L. Colwill (Gesperrt/Verletzt — Knee Injury)",
+            "? (Gesperrt/Verletzt — Hamstring Injury)",
             "J. Gittens (Gesperrt/Verletzt — Muscle Injury)",
-            "R. James (Gesperrt/Verletzt — Hamstring Injury)",
-            "Joao Pedro (Gesperrt/Verletzt — Muscle Injury)",
-            "F. Jorgensen (Gesperrt/Verletzt — Groin Injury)",
             "M. Mudryk (Gesperrt/Verletzt — Suspended)",
-            "? (Fraglich — Hamstring Injury)",
-            "E. Fernandez (Fraglich — Injury)"
+            "E. Fernandez (Fraglich — Injury)",
+            "R. James (Fraglich — Hamstring Injury)",
+            "Joao Pedro (Fraglich — Muscle Injury)",
+            "F. Jorgensen (Fraglich — Groin Injury)"
           ],
           "_raw": [
             {
@@ -4092,28 +4046,16 @@
               "reason": "Knee Injury"
             },
             {
-              "player": "J. Gittens",
+              "player": "?",
               "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            },
-            {
-              "player": "R. James",
-              "position": "D",
               "type": "Missing Fixture",
               "reason": "Hamstring Injury"
             },
             {
-              "player": "Joao Pedro",
+              "player": "J. Gittens",
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Muscle Injury"
-            },
-            {
-              "player": "F. Jorgensen",
-              "position": "G",
-              "type": "Missing Fixture",
-              "reason": "Groin Injury"
             },
             {
               "player": "M. Mudryk",
@@ -4122,19 +4064,31 @@
               "reason": "Suspended"
             },
             {
-              "player": "?",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Hamstring Injury"
-            },
-            {
               "player": "E. Fernandez",
               "position": "M",
               "type": "Questionable",
               "reason": "Injury"
+            },
+            {
+              "player": "R. James",
+              "position": "D",
+              "type": "Questionable",
+              "reason": "Hamstring Injury"
+            },
+            {
+              "player": "Joao Pedro",
+              "position": "M",
+              "type": "Questionable",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "F. Jorgensen",
+              "position": "G",
+              "type": "Questionable",
+              "reason": "Groin Injury"
             }
           ],
-          "impactScore": 3.4
+          "impactScore": 2.2
         }
       },
       "bookings": {
@@ -4162,25 +4116,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.57,
+        "hw_fair": 2.58,
         "dr_fair": 3.89,
-        "aw_fair": 2.83,
+        "aw_fair": 2.82,
         "_cn": 23,
         "dc1X_bkr": 1.55,
-        "dcX2_bkr": 1.64,
+        "dcX2_bkr": 1.63,
         "dc12_bkr": 1.35,
-        "o25_fair": 1.74,
-        "u25_fair": 2.36,
+        "o25_fair": 1.73,
+        "u25_fair": 2.37,
         "o25_cn": 10,
-        "hw": 2.44,
-        "aw": 2.74,
-        "dr": 3.86,
+        "hw": 2.45,
+        "aw": 2.75,
+        "dr": 3.84,
         "ah_h_point": -0.5,
-        "ah_h": 2.36,
+        "ah_h": 2.35,
         "ah_a_point": 0.5,
         "ah_a": 1.55,
-        "o25": 1.63,
-        "u25": 2.19
+        "o25": 1.62,
+        "u25": 2.21
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -4401,25 +4355,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 17.06,
-        "dr_fair": 9.03,
+        "hw_fair": 17.52,
+        "dr_fair": 9.17,
         "aw_fair": 1.2,
         "_cn": 23,
-        "dc1X_bkr": 5.91,
+        "dc1X_bkr": 6.02,
         "dcX2_bkr": 1.06,
         "dc12_bkr": 1.12,
         "o25_fair": 1.42,
         "u25_fair": 3.41,
         "o25_cn": 3,
-        "hw": 16.19,
+        "hw": 16.13,
         "aw": 1.15,
-        "dr": 9.5,
+        "dr": 9.49,
         "ah_h_point": 2.25,
         "ah_h": 1.97,
         "ah_a_point": -2.25,
         "ah_a": 1.92,
-        "o35": 1.92,
-        "u35": 1.95,
+        "o35": 1.93,
+        "u35": 1.93,
         "o25": 1.35,
         "u25": 3.2
       },
@@ -4537,15 +4491,15 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.68,
+        "hw_fair": 2.69,
         "dr_fair": 3.79,
         "aw_fair": 2.75,
         "_cn": 23,
         "dc1X_bkr": 1.57,
         "dcX2_bkr": 1.59,
         "dc12_bkr": 1.36,
-        "o25_fair": 1.84,
-        "u25_fair": 2.19,
+        "o25_fair": 1.83,
+        "u25_fair": 2.2,
         "o25_cn": 12,
         "aw": 2.74,
         "hw": 2.51,
@@ -4670,22 +4624,22 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.54,
-        "dr_fair": 5.03,
+        "dr_fair": 5.06,
         "aw_fair": 6.6,
         "_cn": 23,
         "dc1X_bkr": 1.18,
-        "dcX2_bkr": 2.85,
+        "dcX2_bkr": 2.86,
         "dc12_bkr": 1.25,
         "o25_fair": 1.66,
         "u25_fair": 2.5,
         "o25_cn": 6,
-        "aw": 6.45,
+        "aw": 6.49,
         "hw": 1.46,
-        "dr": 5.02,
+        "dr": 5.06,
         "ah_a_point": 1.25,
-        "ah_a": 1.83,
+        "ah_a": 1.84,
         "ah_h_point": -1.25,
-        "ah_h": 2.09,
+        "ah_h": 2.08,
         "o25": 1.53,
         "u25": 2.29,
         "o35": 2.52,
@@ -4807,9 +4761,9 @@
       "odds": {
         "hw_fair": 1.97,
         "dr_fair": 4.05,
-        "aw_fair": 4.07,
+        "aw_fair": 4.08,
         "_cn": 20,
-        "dc1X_bkr": 1.33,
+        "dc1X_bkr": 1.32,
         "dcX2_bkr": 2.03,
         "dc12_bkr": 1.33,
         "o25_fair": 1.66,
@@ -4959,12 +4913,12 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.97,
-        "dr_fair": 3.44,
-        "aw_fair": 2.68,
+        "hw_fair": 2.9,
+        "dr_fair": 3.43,
+        "aw_fair": 2.75,
         "_cn": 23,
-        "dc1X_bkr": 1.59,
-        "dcX2_bkr": 1.51,
+        "dc1X_bkr": 1.57,
+        "dcX2_bkr": 1.53,
         "dc12_bkr": 1.41,
         "o25_fair": 2.2,
         "u25_fair": 1.83,
@@ -5091,23 +5045,23 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.63,
+        "hw_fair": 2.61,
         "dr_fair": 3.55,
-        "aw_fair": 2.96,
+        "aw_fair": 2.97,
         "_cn": 23,
         "dc1X_bkr": 1.51,
-        "dcX2_bkr": 1.61,
+        "dcX2_bkr": 1.62,
         "dc12_bkr": 1.39,
-        "o25_fair": 1.93,
+        "o25_fair": 1.94,
         "u25_fair": 2.07,
         "o25_cn": 12,
-        "aw": 2.91,
-        "hw": 2.52,
-        "dr": 3.42,
+        "aw": 2.9,
+        "hw": 2.53,
+        "dr": 3.41,
         "ah_a_point": 0.5,
         "ah_a": 1.52,
         "ah_h_point": -0.5,
-        "ah_h": 2.37,
+        "ah_h": 2.36,
         "o25": 1.88,
         "u25": 2.01
       },
@@ -6507,7 +6461,7 @@
       "awayTeamName": "Piast Gliwice",
       "homeTeamId": 343,
       "awayTeamId": 349,
-      "referee": "P. Raczkowski",
+      "referee": "Paweł Raczkowski, Poland",
       "refereeStats": null,
       "date": "2026-04-20",
       "time": "19:00",
@@ -6694,25 +6648,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.23,
-        "dr_fair": 3.84,
-        "aw_fair": 3.43,
+        "hw_fair": 2.22,
+        "dr_fair": 3.81,
+        "aw_fair": 3.48,
         "_cn": 19,
-        "dc1X_bkr": 1.41,
-        "dcX2_bkr": 1.81,
-        "dc12_bkr": 1.35,
-        "o25_fair": 1.78,
-        "u25_fair": 2.28,
+        "dc1X_bkr": 1.4,
+        "dcX2_bkr": 1.82,
+        "dc12_bkr": 1.36,
+        "o25_fair": 1.74,
+        "u25_fair": 2.36,
         "o25_cn": 8,
-        "hw": 2.1,
+        "hw": 2.14,
         "aw": 3.37,
-        "dr": 3.75,
+        "dr": 3.62,
         "ah_h_point": -0.25,
-        "ah_h": 1.84,
+        "ah_h": 1.87,
         "ah_a_point": 0.25,
-        "ah_a": 2.06,
-        "o25": 1.62,
-        "u25": 2.12
+        "ah_a": 2.02,
+        "o25": 1.6,
+        "u25": 2.2
       },
       "apiPrediction": {
         "goalsHome": -3.5,
@@ -7449,19 +7403,19 @@
         "_cn": 14,
         "dc1X_bkr": 1.44,
         "dcX2_bkr": 1.71,
-        "dc12_bkr": 1.39,
+        "dc12_bkr": 1.38,
         "o25_fair": 1.93,
         "u25_fair": 2.08,
         "o25_cn": 8,
-        "aw": 2.97,
-        "hw": 2.36,
+        "aw": 2.99,
+        "hw": 2.35,
         "dr": 3.39,
         "ah_a_point": 0.25,
         "ah_a": 1.81,
         "ah_h_point": -0.25,
-        "ah_h": 2.05,
+        "ah_h": 2.04,
         "o25": 1.84,
-        "u25": 1.98
+        "u25": 1.99
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -8007,13 +7961,13 @@
         "hw_fair": 2.15,
         "dr_fair": 3.77,
         "aw_fair": 3.72,
-        "_cn": 11,
+        "_cn": 13,
         "dc1X_bkr": 1.37,
         "dcX2_bkr": 1.87,
         "dc12_bkr": 1.36,
-        "o25_fair": 1.83,
+        "o25_fair": 1.84,
         "u25_fair": 2.2,
-        "o25_cn": 5,
+        "o25_cn": 6,
         "hw": 2.06,
         "aw": 3.48,
         "dr": 3.54,
@@ -8491,7 +8445,7 @@
         "hw_fair": 1.92,
         "dr_fair": 3.87,
         "aw_fair": 4.53,
-        "_cn": 12,
+        "_cn": 13,
         "dc1X_bkr": 1.28,
         "dcX2_bkr": 2.09,
         "dc12_bkr": 1.35,
@@ -9134,24 +9088,7 @@
           }
         ]
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 0,
-        "draws": 5,
-        "awayWins": 5,
-        "lastMeetingYear": 2025,
-        "avgGoals": 3.1,
-        "over25Rate": 0.6,
-        "over35Rate": 0.6,
-        "bttsRate": 0.7,
-        "lastResults": [
-          "L",
-          "D",
-          "D",
-          "L",
-          "L"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": {
         "hw_fair": 3.3,
@@ -9159,7 +9096,7 @@
         "aw_fair": 2.33,
         "_cn": 18,
         "dc1X_bkr": 1.75,
-        "dcX2_bkr": 1.44,
+        "dcX2_bkr": 1.43,
         "dc12_bkr": 1.37,
         "o25_fair": 1.84,
         "u25_fair": 2.19,
@@ -9342,10 +9279,10 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.71,
-        "dr_fair": 4.58,
-        "aw_fair": 5.11,
-        "_cn": 18,
-        "dc1X_bkr": 1.24,
+        "dr_fair": 4.61,
+        "aw_fair": 5.04,
+        "_cn": 19,
+        "dc1X_bkr": 1.25,
         "dcX2_bkr": 2.41,
         "dc12_bkr": 1.28,
         "o25_fair": 1.62,
@@ -9478,9 +9415,9 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 3.27,
-        "dr_fair": 3.97,
+        "dr_fair": 3.96,
         "aw_fair": 2.26,
-        "_cn": 18,
+        "_cn": 19,
         "dc1X_bkr": 1.79,
         "dcX2_bkr": 1.44,
         "dc12_bkr": 1.34,
@@ -10202,10 +10139,10 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 3.68,
-        "dr_fair": 4.02,
-        "aw_fair": 2.09,
-        "_cn": 18,
+        "hw_fair": 3.67,
+        "dr_fair": 4.04,
+        "aw_fair": 2.08,
+        "_cn": 19,
         "dc1X_bkr": 1.92,
         "dcX2_bkr": 1.37,
         "dc12_bkr": 1.33,
@@ -10335,11 +10272,11 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.27,
-        "dr_fair": 7.92,
-        "aw_fair": 11.44,
-        "_cn": 19,
+        "dr_fair": 7.93,
+        "aw_fair": 11.35,
+        "_cn": 20,
         "dc1X_bkr": 1.1,
-        "dcX2_bkr": 4.68,
+        "dcX2_bkr": 4.67,
         "dc12_bkr": 1.14,
         "o25_fair": 1.3,
         "u25_fair": 4.32,
@@ -10503,22 +10440,22 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 2.58,
-        "dr_fair": 3.82,
+        "dr_fair": 3.83,
         "aw_fair": 2.84,
-        "_cn": 19,
+        "_cn": 20,
         "dc1X_bkr": 1.54,
         "dcX2_bkr": 1.63,
         "dc12_bkr": 1.35,
         "o25_fair": 1.66,
-        "u25_fair": 2.51,
-        "o25_cn": 4,
+        "u25_fair": 2.5,
+        "o25_cn": 5,
         "hw": 2.48,
         "aw": 2.71,
         "dr": 3.61,
         "ah_h_point": 0,
         "ah_h": 1.82,
         "ah_a_point": 0,
-        "ah_a": 2.02,
+        "ah_a": 1.93,
         "o25": 1.55,
         "u25": 2.24,
         "o35": 2.38,
@@ -10747,8 +10684,8 @@
         "ah_h": 2.01,
         "ah_a_point": 0.5,
         "ah_a": 1.85,
-        "o35": 2,
-        "u35": 1.7,
+        "o35": 2.04,
+        "u35": 1.67,
         "o25": 1.4,
         "u25": 2.7
       },
@@ -13327,11 +13264,11 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.24,
-        "dr_fair": 8.12,
-        "aw_fair": 14.11,
+        "dr_fair": 8.2,
+        "aw_fair": 14.22,
         "_cn": 23,
         "dc1X_bkr": 1.08,
-        "dcX2_bkr": 5.15,
+        "dcX2_bkr": 5.2,
         "dc12_bkr": 1.14,
         "o25_fair": 1.4,
         "u25_fair": 3.52,
@@ -14637,13 +14574,13 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 11.94,
-        "dr_fair": 6.75,
-        "aw_fair": 1.3,
+        "hw_fair": 11.83,
+        "dr_fair": 6.7,
+        "aw_fair": 1.31,
         "_cn": 23,
-        "dc1X_bkr": 4.31,
+        "dc1X_bkr": 4.28,
         "dcX2_bkr": 1.09,
-        "dc12_bkr": 1.17,
+        "dc12_bkr": 1.18,
         "o25_fair": 1.56,
         "u25_fair": 2.79,
         "o25_cn": 3,
@@ -14838,7 +14775,7 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 4.8,
+        "hw_fair": 4.81,
         "dr_fair": 4.19,
         "aw_fair": 1.81,
         "_cn": 23,
@@ -14999,10 +14936,10 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.88,
-        "dr_fair": 3.89,
-        "aw_fair": 4.76,
+        "dr_fair": 3.88,
+        "aw_fair": 4.78,
         "_cn": 22,
-        "dc1X_bkr": 1.27,
+        "dc1X_bkr": 1.26,
         "dcX2_bkr": 2.14,
         "dc12_bkr": 1.35,
         "o25_fair": 2.07,
@@ -15140,23 +15077,23 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.59,
-        "dr_fair": 3.67,
-        "aw_fair": 2.92,
-        "_cn": 22,
-        "dc1X_bkr": 1.52,
-        "dcX2_bkr": 1.63,
+        "hw_fair": 2.48,
+        "dr_fair": 3.68,
+        "aw_fair": 3.08,
+        "_cn": 23,
+        "dc1X_bkr": 1.48,
+        "dcX2_bkr": 1.67,
         "dc12_bkr": 1.37,
-        "o25_fair": 1.92,
+        "o25_fair": 1.91,
         "u25_fair": 2.09,
         "o25_cn": 10,
-        "hw": 2.46,
-        "aw": 2.88,
-        "dr": 3.51,
-        "ah_h_point": 0.5,
-        "ah_h": 1.54,
-        "ah_a_point": -0.5,
-        "ah_a": 2.44,
+        "hw": 2.38,
+        "aw": 3.02,
+        "dr": 3.54,
+        "ah_h_point": -0.25,
+        "ah_h": 2.07,
+        "ah_a_point": 0.25,
+        "ah_a": 1.85,
         "o25": 1.82,
         "u25": 1.98
       },
@@ -15337,7 +15274,7 @@
       "odds": {
         "hw_fair": 1.76,
         "dr_fair": 4.07,
-        "aw_fair": 5.42,
+        "aw_fair": 5.41,
         "_cn": 23,
         "dc1X_bkr": 1.23,
         "dcX2_bkr": 2.32,
@@ -15468,10 +15405,10 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.54,
-        "dr_fair": 5.13,
-        "aw_fair": 6.4,
+        "dr_fair": 5.14,
+        "aw_fair": 6.41,
         "_cn": 22,
-        "dc1X_bkr": 1.19,
+        "dc1X_bkr": 1.18,
         "dcX2_bkr": 2.85,
         "dc12_bkr": 1.24,
         "o25_fair": 1.51,
@@ -15484,8 +15421,8 @@
         "ah_h": 1.98,
         "ah_a_point": 1.25,
         "ah_a": 1.91,
-        "o35": 2.03,
-        "u35": 1.67,
+        "o35": 2.02,
+        "u35": 1.68,
         "o25": 1.43,
         "u25": 2.82
       },
@@ -15609,25 +15546,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 3.9,
-        "dr_fair": 3.74,
-        "aw_fair": 2.1,
+        "hw_fair": 3.95,
+        "dr_fair": 3.76,
+        "aw_fair": 2.08,
         "_cn": 22,
-        "dc1X_bkr": 1.91,
-        "dcX2_bkr": 1.35,
+        "dc1X_bkr": 1.93,
+        "dcX2_bkr": 1.34,
         "dc12_bkr": 1.36,
-        "o25_fair": 1.99,
-        "u25_fair": 2.01,
+        "o25_fair": 1.98,
+        "u25_fair": 2.02,
         "o25_cn": 11,
-        "aw": 2.01,
-        "hw": 3.81,
-        "dr": 3.58,
+        "aw": 1.98,
+        "hw": 3.95,
+        "dr": 3.63,
         "ah_a_point": -0.5,
-        "ah_a": 2.02,
+        "ah_a": 1.99,
         "ah_h_point": 0.5,
-        "ah_h": 1.88,
+        "ah_h": 1.92,
         "o25": 1.91,
-        "u25": 1.96
+        "u25": 1.98
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -15761,22 +15698,22 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.51,
-        "dr_fair": 4.95,
-        "aw_fair": 7.32,
+        "dr_fair": 4.97,
+        "aw_fair": 7.36,
         "_cn": 22,
         "dc1X_bkr": 1.16,
-        "dcX2_bkr": 2.95,
+        "dcX2_bkr": 2.97,
         "dc12_bkr": 1.25,
-        "o25_fair": 1.74,
+        "o25_fair": 1.73,
         "u25_fair": 2.36,
         "o25_cn": 9,
-        "aw": 7.47,
+        "aw": 7.66,
         "hw": 1.42,
-        "dr": 4.85,
+        "dr": 4.92,
         "ah_a_point": 1.25,
-        "ah_a": 1.92,
+        "ah_a": 1.94,
         "ah_h_point": -1.25,
-        "ah_h": 1.97,
+        "ah_h": 1.96,
         "o25": 1.62,
         "u25": 2.22
       },
@@ -15911,23 +15848,23 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 3.45,
-        "dr_fair": 3.79,
-        "aw_fair": 2.24,
+        "hw_fair": 3.49,
+        "dr_fair": 3.8,
+        "aw_fair": 2.22,
         "_cn": 23,
-        "dc1X_bkr": 1.8,
-        "dcX2_bkr": 1.41,
+        "dc1X_bkr": 1.82,
+        "dcX2_bkr": 1.4,
         "dc12_bkr": 1.36,
         "o25_fair": 1.82,
-        "u25_fair": 2.21,
+        "u25_fair": 2.22,
         "o25_cn": 9,
-        "aw": 2.17,
-        "hw": 3.36,
-        "dr": 3.63,
+        "aw": 2.13,
+        "hw": 3.42,
+        "dr": 3.68,
         "ah_a_point": -0.25,
-        "ah_a": 1.89,
+        "ah_a": 1.86,
         "ah_h_point": 0.25,
-        "ah_h": 2.02,
+        "ah_h": 2.06,
         "o25": 1.72,
         "u25": 2.08
       },
@@ -16561,11 +16498,11 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.55,
-        "dr_fair": 3.9,
-        "aw_fair": 2.84,
+        "hw_fair": 2.57,
+        "dr_fair": 3.89,
+        "aw_fair": 2.83,
         "_cn": 23,
-        "dc1X_bkr": 1.54,
+        "dc1X_bkr": 1.55,
         "dcX2_bkr": 1.64,
         "dc12_bkr": 1.35,
         "o25_fair": 1.64,
@@ -16697,25 +16634,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 1.52,
-        "dr_fair": 5.04,
-        "aw_fair": 7.02,
+        "hw_fair": 1.51,
+        "dr_fair": 5.08,
+        "aw_fair": 7,
         "_cn": 21,
         "dc1X_bkr": 1.17,
-        "dcX2_bkr": 2.93,
+        "dcX2_bkr": 2.94,
         "dc12_bkr": 1.25,
         "o25_fair": 1.66,
         "u25_fair": 2.52,
         "o25_cn": 4,
-        "hw": 1.45,
-        "aw": 6.65,
-        "dr": 4.89,
+        "hw": 1.46,
+        "aw": 6.73,
+        "dr": 4.93,
         "ah_h_point": -1.25,
-        "ah_h": 1.94,
+        "ah_h": 1.95,
         "ah_a_point": 1.25,
-        "ah_a": 1.94,
-        "o25": 1.65,
-        "u25": 2.44,
+        "ah_a": 1.95,
+        "o25": 1.64,
+        "u25": 2.46,
         "o35": 2.3,
         "u35": 1.55
       },
@@ -16979,13 +16916,13 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 4.06,
-        "dr_fair": 4.28,
+        "hw_fair": 4.07,
+        "dr_fair": 4.27,
         "aw_fair": 1.92,
         "_cn": 23,
         "dc1X_bkr": 2.08,
         "dcX2_bkr": 1.33,
-        "dc12_bkr": 1.3,
+        "dc12_bkr": 1.31,
         "o25_fair": 1.58,
         "u25_fair": 2.71,
         "o25_cn": 3,
@@ -17115,19 +17052,19 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.63,
-        "dr_fair": 3.52,
-        "aw_fair": 2.99,
+        "hw_fair": 2.61,
+        "dr_fair": 3.51,
+        "aw_fair": 3.01,
         "_cn": 23,
         "dc1X_bkr": 1.5,
-        "dcX2_bkr": 1.61,
+        "dcX2_bkr": 1.62,
         "dc12_bkr": 1.4,
         "o25_fair": 2.06,
-        "u25_fair": 1.94,
+        "u25_fair": 1.95,
         "o25_cn": 12,
-        "hw": 2.53,
-        "aw": 2.92,
-        "dr": 3.38,
+        "hw": 2.49,
+        "aw": 2.97,
+        "dr": 3.39,
         "ah_h_point": -0.5,
         "ah_h": 2.46,
         "ah_a_point": 0.5,
@@ -17258,14 +17195,14 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 5.07,
-        "dr_fair": 4.91,
-        "aw_fair": 1.67,
+        "dr_fair": 4.85,
+        "aw_fair": 1.68,
         "_cn": 23,
-        "dc1X_bkr": 2.49,
+        "dc1X_bkr": 2.48,
         "dcX2_bkr": 1.25,
         "dc12_bkr": 1.26,
-        "o25_fair": 1.47,
-        "u25_fair": 3.13,
+        "o25_fair": 1.48,
+        "u25_fair": 3.09,
         "o25_cn": 3,
         "aw": 1.6,
         "hw": 4.73,
@@ -17276,8 +17213,8 @@
         "ah_h": 1.89,
         "o25": 1.39,
         "u25": 2.92,
-        "o35": 1.94,
-        "u35": 1.74
+        "o35": 1.95,
+        "u35": 1.73
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -17393,8 +17330,8 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 1.41,
-        "dr_fair": 5.55,
+        "hw_fair": 1.42,
+        "dr_fair": 5.54,
         "aw_fair": 8.85,
         "_cn": 23,
         "dc1X_bkr": 1.13,
@@ -17557,27 +17494,27 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 1.63,
-        "dr_fair": 4.45,
-        "aw_fair": 6.19,
+        "hw_fair": 1.62,
+        "dr_fair": 4.51,
+        "aw_fair": 6.22,
         "_cn": 23,
         "dc1X_bkr": 1.19,
-        "dcX2_bkr": 2.59,
+        "dcX2_bkr": 2.61,
         "dc12_bkr": 1.29,
-        "o25_fair": 1.52,
-        "u25_fair": 2.91,
+        "o25_fair": 1.54,
+        "u25_fair": 2.85,
         "o25_cn": 3,
-        "hw": 1.54,
-        "aw": 6.69,
-        "dr": 4.05,
+        "hw": 1.56,
+        "aw": 6.68,
+        "dr": 4.01,
         "ah_h_point": -1,
-        "ah_h": 1.85,
+        "ah_h": 1.89,
         "ah_a_point": 1,
-        "ah_a": 2.05,
-        "o25": 1.43,
-        "u25": 2.75,
-        "o35": 2.02,
-        "u35": 1.68
+        "ah_a": 2.02,
+        "o25": 1.46,
+        "u25": 2.68,
+        "o35": 2.03,
+        "u35": 1.67
       },
       "apiPrediction": {
         "goalsHome": -3.5,
@@ -17712,23 +17649,23 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.43,
+        "hw_fair": 2.41,
         "dr_fair": 3.81,
-        "aw_fair": 3.06,
+        "aw_fair": 3.1,
         "_cn": 23,
         "dc1X_bkr": 1.48,
-        "dcX2_bkr": 1.7,
+        "dcX2_bkr": 1.71,
         "dc12_bkr": 1.36,
         "o25_fair": 1.71,
         "u25_fair": 2.4,
         "o25_cn": 9,
-        "aw": 3.01,
-        "hw": 2.34,
+        "aw": 3.06,
+        "hw": 2.31,
         "dr": 3.64,
         "ah_a_point": 0.25,
-        "ah_a": 1.87,
+        "ah_a": 1.89,
         "ah_h_point": -0.25,
-        "ah_h": 2.04,
+        "ah_h": 2.02,
         "o25": 1.57,
         "u25": 2.21
       },
@@ -17983,12 +17920,12 @@
       "odds": {
         "hw_fair": 2.37,
         "dr_fair": 3.24,
-        "aw_fair": 3.72,
+        "aw_fair": 3.71,
         "_cn": 17,
         "dc1X_bkr": 1.37,
         "dcX2_bkr": 1.73,
         "dc12_bkr": 1.45,
-        "o25_fair": 2.35,
+        "o25_fair": 2.34,
         "u25_fair": 1.74,
         "o25_cn": 9,
         "hw": 2.26,
@@ -18141,25 +18078,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.31,
-        "dr_fair": 3.63,
-        "aw_fair": 3.44,
+        "hw_fair": 2.27,
+        "dr_fair": 3.67,
+        "aw_fair": 3.47,
         "_cn": 17,
-        "dc1X_bkr": 1.41,
-        "dcX2_bkr": 1.77,
-        "dc12_bkr": 1.38,
+        "dc1X_bkr": 1.4,
+        "dcX2_bkr": 1.79,
+        "dc12_bkr": 1.37,
         "o25_fair": 2,
         "u25_fair": 2,
         "o25_cn": 10,
-        "aw": 3.36,
-        "hw": 2.19,
-        "dr": 3.39,
+        "aw": 3.41,
+        "hw": 2.14,
+        "dr": 3.45,
         "ah_a_point": 0.25,
-        "ah_a": 1.96,
+        "ah_a": 2,
         "ah_h_point": -0.25,
-        "ah_h": 1.89,
-        "o25": 1.93,
-        "u25": 1.91
+        "ah_h": 1.85,
+        "o25": 1.92,
+        "u25": 1.92
       },
       "apiPrediction": {
         "goalsHome": -3.5,
@@ -18328,8 +18265,8 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 3.79,
-        "dr_fair": 4.41,
+        "hw_fair": 3.81,
+        "dr_fair": 4.39,
         "aw_fair": 1.96,
         "_cn": 15,
         "dc1X_bkr": 2.04,
@@ -18575,8 +18512,8 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.99,
-        "dr_fair": 3.71,
-        "aw_fair": 4.38,
+        "dr_fair": 3.7,
+        "aw_fair": 4.39,
         "_cn": 17,
         "dc1X_bkr": 1.3,
         "dcX2_bkr": 2.01,
@@ -18782,25 +18719,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 5.98,
-        "dr_fair": 4.58,
-        "aw_fair": 1.63,
+        "hw_fair": 6.52,
+        "dr_fair": 4.78,
+        "aw_fair": 1.57,
         "_cn": 18,
-        "dc1X_bkr": 2.59,
-        "dcX2_bkr": 1.2,
-        "dc12_bkr": 1.28,
-        "o25_fair": 1.86,
-        "u25_fair": 2.16,
+        "dc1X_bkr": 2.76,
+        "dcX2_bkr": 1.18,
+        "dc12_bkr": 1.26,
+        "o25_fair": 1.82,
+        "u25_fair": 2.22,
         "o25_cn": 9,
-        "aw": 1.53,
-        "hw": 5.53,
-        "dr": 4.52,
-        "ah_a_point": -1,
-        "ah_a": 1.83,
-        "ah_h_point": 1,
-        "ah_h": 2.03,
-        "o25": 1.81,
-        "u25": 2.15
+        "aw": 1.47,
+        "hw": 5.89,
+        "dr": 4.79,
+        "ah_a_point": -1.25,
+        "ah_a": 2.01,
+        "ah_h_point": 1.25,
+        "ah_h": 1.85,
+        "o25": 1.79,
+        "u25": 2.19
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -19088,8 +19025,8 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 2.25,
-        "dr_fair": 3.62,
-        "aw_fair": 3.58,
+        "dr_fair": 3.61,
+        "aw_fair": 3.59,
         "_cn": 16,
         "dc1X_bkr": 1.39,
         "dcX2_bkr": 1.8,
@@ -19374,7 +19311,7 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.38,
+        "hw_fair": 2.37,
         "dr_fair": 3.51,
         "aw_fair": 3.4,
         "_cn": 18,
@@ -19625,13 +19562,13 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.46,
-        "dr_fair": 3.45,
-        "aw_fair": 3.3,
+        "hw_fair": 2.45,
+        "dr_fair": 3.47,
+        "aw_fair": 3.29,
         "_cn": 18,
         "dc1X_bkr": 1.44,
         "dcX2_bkr": 1.69,
-        "dc12_bkr": 1.41,
+        "dc12_bkr": 1.4,
         "o25_fair": 2.2,
         "u25_fair": 1.83,
         "o25_cn": 9,
@@ -20119,8 +20056,8 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 2.05,
-        "dr_fair": 3.6,
-        "aw_fair": 4.26,
+        "dr_fair": 3.62,
+        "aw_fair": 4.25,
         "_cn": 17,
         "dc1X_bkr": 1.31,
         "dcX2_bkr": 1.95,
@@ -20390,23 +20327,23 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.04,
-        "dr_fair": 3.5,
-        "aw_fair": 4.49,
+        "hw_fair": 2.01,
+        "dr_fair": 3.52,
+        "aw_fair": 4.59,
         "_cn": 20,
-        "dc1X_bkr": 1.29,
-        "dcX2_bkr": 1.97,
+        "dc1X_bkr": 1.28,
+        "dcX2_bkr": 1.99,
         "dc12_bkr": 1.4,
-        "o25_fair": 2.26,
-        "u25_fair": 1.79,
+        "o25_fair": 2.24,
+        "u25_fair": 1.8,
         "o25_cn": 9,
-        "hw": 1.96,
-        "aw": 4.38,
-        "dr": 3.37,
+        "hw": 1.91,
+        "aw": 4.58,
+        "dr": 3.42,
         "ah_h_point": -0.5,
-        "ah_h": 1.97,
+        "ah_h": 1.92,
         "ah_a_point": 0.5,
-        "ah_a": 1.93,
+        "ah_a": 1.99,
         "o25": 2.03,
         "u25": 1.67
       },
@@ -20498,7 +20435,7 @@
           {
             "player": "C. Starfelt",
             "position": "D",
-            "type": "Missing Fixture",
+            "type": "Questionable",
             "reason": "Back Injury"
           }
         ]
@@ -20541,15 +20478,15 @@
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 1,
+          "defense": 0,
           "midfield": 1,
           "attack": 0,
-          "confirmed": 2,
-          "questionable": 0,
+          "confirmed": 1,
+          "questionable": 1,
           "total": 2,
           "notes": [
             "M. Roman (Gesperrt/Verletzt — Foot Injury)",
-            "C. Starfelt (Gesperrt/Verletzt — Back Injury)"
+            "C. Starfelt (Fraglich — Back Injury)"
           ],
           "_raw": [
             {
@@ -20561,11 +20498,11 @@
             {
               "player": "C. Starfelt",
               "position": "D",
-              "type": "Missing Fixture",
+              "type": "Questionable",
               "reason": "Back Injury"
             }
           ],
-          "impactScore": 0.9
+          "impactScore": 0.6
         }
       },
       "bookings": {
@@ -20658,8 +20595,8 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.3,
-        "dr_fair": 7.36,
-        "aw_fair": 10.49,
+        "dr_fair": 7.38,
+        "aw_fair": 10.5,
         "_cn": 20,
         "dc1X_bkr": 1.11,
         "dcX2_bkr": 4.33,
@@ -20676,8 +20613,8 @@
         "ah_a": 1.89,
         "o25": 1.29,
         "u25": 3.55,
-        "o35": 1.74,
-        "u35": 1.94
+        "o35": 1.73,
+        "u35": 1.95
       },
       "apiPrediction": {
         "goalsHome": -3.5,
@@ -20741,22 +20678,28 @@
       "injuries": {
         "home": [
           {
-            "player": "A. Boayar",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          },
-          {
-            "player": "G. Diangana",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Injury"
-          },
-          {
             "player": "M. Aguado",
             "position": "M",
             "type": "Questionable",
             "reason": "Muscle Injury"
+          },
+          {
+            "player": "A. Boayar",
+            "position": "M",
+            "type": "Questionable",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "Buba Sangare",
+            "position": "D",
+            "type": "Questionable",
+            "reason": "Injury"
+          },
+          {
+            "player": "G. Diangana",
+            "position": "M",
+            "type": "Questionable",
+            "reason": "Injury"
           }
         ],
         "away": [
@@ -20767,9 +20710,21 @@
             "reason": "Injury"
           },
           {
+            "player": "A. Lookman",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "A. Sorloth",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Contusion"
+          },
+          {
             "player": "D. Hancko",
             "position": "D",
-            "type": "Missing Fixture",
+            "type": "Questionable",
             "reason": "Injury"
           }
         ]
@@ -20778,49 +20733,58 @@
         "home": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 2,
+          "midfield": 0,
           "attack": 0,
-          "confirmed": 2,
-          "questionable": 1,
-          "total": 3,
+          "confirmed": 0,
+          "questionable": 4,
+          "total": 4,
           "notes": [
-            "A. Boayar (Gesperrt/Verletzt — Muscle Injury)",
-            "G. Diangana (Gesperrt/Verletzt — Injury)",
-            "M. Aguado (Fraglich — Muscle Injury)"
+            "M. Aguado (Fraglich — Muscle Injury)",
+            "A. Boayar (Fraglich — Muscle Injury)",
+            "Buba Sangare (Fraglich — Injury)",
+            "G. Diangana (Fraglich — Injury)"
           ],
           "_raw": [
-            {
-              "player": "A. Boayar",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
-            },
-            {
-              "player": "G. Diangana",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Injury"
-            },
             {
               "player": "M. Aguado",
               "position": "M",
               "type": "Questionable",
               "reason": "Muscle Injury"
+            },
+            {
+              "player": "A. Boayar",
+              "position": "M",
+              "type": "Questionable",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "Buba Sangare",
+              "position": "D",
+              "type": "Questionable",
+              "reason": "Injury"
+            },
+            {
+              "player": "G. Diangana",
+              "position": "M",
+              "type": "Questionable",
+              "reason": "Injury"
             }
           ],
-          "impactScore": 0.9
+          "impactScore": 1
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 2,
-          "midfield": 0,
+          "defense": 1,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 2,
-          "questionable": 0,
-          "total": 2,
+          "confirmed": 3,
+          "questionable": 1,
+          "total": 4,
           "notes": [
             "J. M. Gimenez (Gesperrt/Verletzt — Injury)",
-            "D. Hancko (Gesperrt/Verletzt — Injury)"
+            "A. Lookman (Gesperrt/Verletzt — Muscle Injury)",
+            "A. Sorloth (Gesperrt/Verletzt — Contusion)",
+            "D. Hancko (Fraglich — Injury)"
           ],
           "_raw": [
             {
@@ -20830,13 +20794,25 @@
               "reason": "Injury"
             },
             {
+              "player": "A. Lookman",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "A. Sorloth",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Contusion"
+            },
+            {
               "player": "D. Hancko",
               "position": "D",
-              "type": "Missing Fixture",
+              "type": "Questionable",
               "reason": "Injury"
             }
           ],
-          "impactScore": 1.2
+          "impactScore": 1.5
         }
       },
       "bookings": {
@@ -20956,25 +20932,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.8,
+        "hw_fair": 2.76,
         "dr_fair": 3.81,
-        "aw_fair": 2.63,
+        "aw_fair": 2.67,
         "_cn": 19,
-        "dc1X_bkr": 1.61,
-        "dcX2_bkr": 1.56,
+        "dc1X_bkr": 1.6,
+        "dcX2_bkr": 1.57,
         "dc12_bkr": 1.36,
         "o25_fair": 1.79,
-        "u25_fair": 2.26,
-        "o25_cn": 8,
-        "aw": 2.55,
-        "hw": 2.75,
-        "dr": 3.59,
+        "u25_fair": 2.27,
+        "o25_cn": 9,
+        "aw": 2.61,
+        "hw": 2.65,
+        "dr": 3.67,
         "ah_a_point": 0,
-        "ah_a": 1.92,
+        "ah_a": 1.98,
         "ah_h_point": 0,
-        "ah_h": 2.06,
-        "o25": 1.72,
-        "u25": 2.08
+        "ah_h": 2,
+        "o25": 1.7,
+        "u25": 2.12
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -21070,12 +21046,6 @@
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Achilles Tendon Injury"
-          },
-          {
-            "player": "R. Artero",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Ankle Injury"
           }
         ],
         "away": [
@@ -21088,13 +21058,19 @@
           {
             "player": "J. Firpo",
             "position": "D",
-            "type": "Questionable",
+            "type": "Missing Fixture",
             "reason": "Injury"
+          },
+          {
+            "player": "D. Llorente",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Ankle Injury"
           },
           {
             "player": "A. Ortiz",
             "position": "D",
-            "type": "Questionable",
+            "type": "Missing Fixture",
             "reason": "Shoulder Injury"
           }
         ]
@@ -21106,16 +21082,15 @@
           "midfield": 5,
           "attack": 0,
           "confirmed": 6,
-          "questionable": 1,
-          "total": 7,
+          "questionable": 0,
+          "total": 6,
           "notes": [
             "Juan Carlos (Gesperrt/Verletzt — Knee Injury)",
             "Portu (Gesperrt/Verletzt — Knee Injury)",
             "A. Ruiz (Gesperrt/Verletzt — Muscle Injury)",
             "V. Vanat (Gesperrt/Verletzt — Injury)",
             "M. ter Stegen (Gesperrt/Verletzt — Hamstring Injury)",
-            "D. van de Beek (Gesperrt/Verletzt — Achilles Tendon Injury)",
-            "R. Artero (Fraglich — Ankle Injury)"
+            "D. van de Beek (Gesperrt/Verletzt — Achilles Tendon Injury)"
           ],
           "_raw": [
             {
@@ -21153,28 +21128,23 @@
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Achilles Tendon Injury"
-            },
-            {
-              "player": "R. Artero",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Ankle Injury"
             }
           ],
-          "impactScore": 2.9
+          "impactScore": 2.6
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 0,
+          "defense": 3,
           "midfield": 1,
           "attack": 0,
-          "confirmed": 1,
-          "questionable": 2,
-          "total": 3,
+          "confirmed": 4,
+          "questionable": 0,
+          "total": 4,
           "notes": [
             "Antony (Gesperrt/Verletzt — Yellow Cards)",
-            "J. Firpo (Fraglich — Injury)",
-            "A. Ortiz (Fraglich — Shoulder Injury)"
+            "J. Firpo (Gesperrt/Verletzt — Injury)",
+            "D. Llorente (Gesperrt/Verletzt — Ankle Injury)",
+            "A. Ortiz (Gesperrt/Verletzt — Shoulder Injury)"
           ],
           "_raw": [
             {
@@ -21186,17 +21156,23 @@
             {
               "player": "J. Firpo",
               "position": "D",
-              "type": "Questionable",
+              "type": "Missing Fixture",
               "reason": "Injury"
+            },
+            {
+              "player": "D. Llorente",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Ankle Injury"
             },
             {
               "player": "A. Ortiz",
               "position": "D",
-              "type": "Questionable",
+              "type": "Missing Fixture",
               "reason": "Shoulder Injury"
             }
           ],
-          "impactScore": 0.8
+          "impactScore": 2.6
         }
       },
       "bookings": {
@@ -21373,13 +21349,13 @@
         "o25_cn": 11,
         "hw": 2.54,
         "aw": 2.9,
-        "dr": 3.4,
+        "dr": 3.39,
         "ah_h_point": 0,
-        "ah_h": 1.88,
+        "ah_h": 1.87,
         "ah_a_point": 0,
         "ah_a": 2.1,
-        "o25": 1.9,
-        "u25": 1.99
+        "o25": 1.91,
+        "u25": 1.98
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -21719,6 +21695,12 @@
       "injuries": {
         "home": [
           {
+            "player": "L. Bergstrom",
+            "position": "G",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
             "player": "M. Joseph",
             "position": "M",
             "type": "Missing Fixture",
@@ -21741,12 +21723,6 @@
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Knee Injury"
-          },
-          {
-            "player": "L. Bergstrom",
-            "position": "G",
-            "type": "Questionable",
-            "reason": "Injury"
           }
         ],
         "away": [
@@ -21781,6 +21757,12 @@
             "reason": "Abdominal strain"
           },
           {
+            "player": "H. Duro",
+            "position": "M",
+            "type": "Questionable",
+            "reason": "Muscle Injury"
+          },
+          {
             "player": "U. Nunez",
             "position": "D",
             "type": "Questionable",
@@ -21790,21 +21772,27 @@
       },
       "injurySummary": {
         "home": {
-          "goalkeeper": 0,
+          "goalkeeper": 1,
           "defense": 1,
           "midfield": 3,
           "attack": 0,
-          "confirmed": 4,
-          "questionable": 1,
+          "confirmed": 5,
+          "questionable": 0,
           "total": 5,
           "notes": [
+            "L. Bergstrom (Gesperrt/Verletzt — Injury)",
             "M. Joseph (Gesperrt/Verletzt — Knee Injury)",
             "Z. Luvumbo (Gesperrt/Verletzt — Injury)",
             "A. Raillo (Gesperrt/Verletzt — Injury)",
-            "J. Salas (Gesperrt/Verletzt — Knee Injury)",
-            "L. Bergstrom (Fraglich — Injury)"
+            "J. Salas (Gesperrt/Verletzt — Knee Injury)"
           ],
           "_raw": [
+            {
+              "player": "L. Bergstrom",
+              "position": "G",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
             {
               "player": "M. Joseph",
               "position": "M",
@@ -21828,15 +21816,9 @@
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Knee Injury"
-            },
-            {
-              "player": "L. Bergstrom",
-              "position": "G",
-              "type": "Questionable",
-              "reason": "Injury"
             }
           ],
-          "impactScore": 1.8
+          "impactScore": 2.6
         },
         "away": {
           "goalkeeper": 1,
@@ -21844,14 +21826,15 @@
           "midfield": 0,
           "attack": 0,
           "confirmed": 4,
-          "questionable": 2,
-          "total": 6,
+          "questionable": 3,
+          "total": 7,
           "notes": [
             "J. Agirrezabala (Gesperrt/Verletzt — Knee Injury)",
             "J. Copete (Gesperrt/Verletzt — Ankle Injury)",
             "M. Diakhaby (Gesperrt/Verletzt — Muscle Injury)",
             "D. Foulquier (Gesperrt/Verletzt — Knee Injury)",
             "E. Comert (Fraglich — Abdominal strain)",
+            "H. Duro (Fraglich — Muscle Injury)",
             "U. Nunez (Fraglich — Muscle Injury)"
           ],
           "_raw": [
@@ -21886,13 +21869,19 @@
               "reason": "Abdominal strain"
             },
             {
+              "player": "H. Duro",
+              "position": "M",
+              "type": "Questionable",
+              "reason": "Muscle Injury"
+            },
+            {
               "player": "U. Nunez",
               "position": "D",
               "type": "Questionable",
               "reason": "Muscle Injury"
             }
           ],
-          "impactScore": 3.9
+          "impactScore": 4.2
         }
       },
       "bookings": {
@@ -22030,23 +22019,23 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.62,
+        "hw_fair": 2.6,
         "dr_fair": 3.34,
-        "aw_fair": 3.13,
+        "aw_fair": 3.16,
         "_cn": 20,
-        "dc1X_bkr": 1.47,
+        "dc1X_bkr": 1.46,
         "dcX2_bkr": 1.62,
         "dc12_bkr": 1.43,
         "o25_fair": 2.28,
         "u25_fair": 1.78,
         "o25_cn": 10,
-        "hw": 2.54,
-        "aw": 3.06,
-        "dr": 3.2,
-        "ah_h_point": 0,
-        "ah_h": 1.83,
-        "ah_a_point": 0,
-        "ah_a": 2.16,
+        "hw": 2.51,
+        "aw": 3.12,
+        "dr": 3.19,
+        "ah_h_point": -0.25,
+        "ah_h": 2.14,
+        "ah_a_point": 0.25,
+        "ah_a": 1.79,
         "o25": 2.09,
         "u25": 1.64
       },
@@ -22318,11 +22307,11 @@
         "o25_fair": 2.25,
         "u25_fair": 1.8,
         "o25_cn": 10,
-        "aw": 3.93,
-        "hw": 2.14,
+        "aw": 3.91,
+        "hw": 2.15,
         "dr": 3.2,
         "ah_a_point": 0.25,
-        "ah_a": 2.1,
+        "ah_a": 2.09,
         "ah_h_point": -0.25,
         "ah_h": 1.83,
         "o25": 2.22,
@@ -22414,16 +22403,16 @@
             "reason": "Suspended"
           },
           {
+            "player": "C. Protesoni",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Muscle Injury"
+          },
+          {
             "player": "A. Rebbach",
             "position": "D",
             "type": "Missing Fixture",
             "reason": "Yellow Cards"
-          },
-          {
-            "player": "C. Protesoni",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Muscle Injury"
           }
         ]
       },
@@ -22466,15 +22455,15 @@
         "away": {
           "goalkeeper": 0,
           "defense": 2,
-          "midfield": 0,
+          "midfield": 1,
           "attack": 0,
-          "confirmed": 2,
-          "questionable": 1,
+          "confirmed": 3,
+          "questionable": 0,
           "total": 3,
           "notes": [
             "F. Garces (Gesperrt/Verletzt — Suspended)",
-            "A. Rebbach (Gesperrt/Verletzt — Yellow Cards)",
-            "C. Protesoni (Fraglich — Muscle Injury)"
+            "C. Protesoni (Gesperrt/Verletzt — Muscle Injury)",
+            "A. Rebbach (Gesperrt/Verletzt — Yellow Cards)"
           ],
           "_raw": [
             {
@@ -22484,16 +22473,16 @@
               "reason": "Suspended"
             },
             {
+              "player": "C. Protesoni",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Muscle Injury"
+            },
+            {
               "player": "A. Rebbach",
               "position": "D",
               "type": "Missing Fixture",
               "reason": "Yellow Cards"
-            },
-            {
-              "player": "C. Protesoni",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Muscle Injury"
             }
           ],
           "impactScore": 1.5
@@ -22606,27 +22595,27 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 1.34,
-        "dr_fair": 6.24,
-        "aw_fair": 10.76,
+        "hw_fair": 1.33,
+        "dr_fair": 6.32,
+        "aw_fair": 10.89,
         "_cn": 20,
         "dc1X_bkr": 1.1,
-        "dcX2_bkr": 3.95,
+        "dcX2_bkr": 4,
         "dc12_bkr": 1.19,
-        "o25_fair": 1.53,
-        "u25_fair": 2.88,
+        "o25_fair": 1.52,
+        "u25_fair": 2.91,
         "o25_cn": 3,
-        "aw": 10.41,
-        "hw": 1.28,
-        "dr": 6.09,
+        "aw": 10.5,
+        "hw": 1.27,
+        "dr": 6.14,
         "ah_a_point": 1.75,
-        "ah_a": 1.88,
+        "ah_a": 1.9,
         "ah_h_point": -1.75,
-        "ah_h": 2.01,
-        "o35": 2.08,
-        "u35": 1.64,
-        "o25": 1.44,
-        "u25": 2.72
+        "ah_h": 1.98,
+        "o35": 2.05,
+        "u35": 1.66,
+        "o25": 1.43,
+        "u25": 2.75
       },
       "apiPrediction": {
         "goalsHome": -3.5,
@@ -22696,12 +22685,6 @@
             "reason": "Red Card"
           },
           {
-            "player": "J. Ochieng",
-            "position": "D",
-            "type": "Missing Fixture",
-            "reason": "Muscle Injury"
-          },
-          {
             "player": "A. Odriozola",
             "position": "D",
             "type": "Missing Fixture",
@@ -22716,13 +22699,13 @@
           {
             "player": "A. Zakharyan",
             "position": "M",
-            "type": "Missing Fixture",
+            "type": "Questionable",
             "reason": "Stomach Disorder"
           },
           {
             "player": "I. Zubeldia",
             "position": "D",
-            "type": "Missing Fixture",
+            "type": "Questionable",
             "reason": "Thigh Injury"
           }
         ],
@@ -22740,35 +22723,34 @@
             "reason": "Injury"
           },
           {
-            "player": "B. Mayoral",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Knee Injury"
-          },
-          {
             "player": "Z. Romero",
             "position": "D",
             "type": "Missing Fixture",
             "reason": "Red Card"
+          },
+          {
+            "player": "B. Mayoral",
+            "position": "M",
+            "type": "Questionable",
+            "reason": "Knee Injury"
           }
         ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 4,
-          "midfield": 2,
+          "defense": 2,
+          "midfield": 1,
           "attack": 0,
-          "confirmed": 6,
-          "questionable": 0,
-          "total": 6,
+          "confirmed": 3,
+          "questionable": 2,
+          "total": 5,
           "notes": [
             "S. Gomez (Gesperrt/Verletzt — Red Card)",
-            "J. Ochieng (Gesperrt/Verletzt — Muscle Injury)",
             "A. Odriozola (Gesperrt/Verletzt — Knee Injury)",
             "I. Ruperez (Gesperrt/Verletzt — Knee Injury)",
-            "A. Zakharyan (Gesperrt/Verletzt — Stomach Disorder)",
-            "I. Zubeldia (Gesperrt/Verletzt — Thigh Injury)"
+            "A. Zakharyan (Fraglich — Stomach Disorder)",
+            "I. Zubeldia (Fraglich — Thigh Injury)"
           ],
           "_raw": [
             {
@@ -22776,12 +22758,6 @@
               "position": "D",
               "type": "Missing Fixture",
               "reason": "Red Card"
-            },
-            {
-              "player": "J. Ochieng",
-              "position": "D",
-              "type": "Missing Fixture",
-              "reason": "Muscle Injury"
             },
             {
               "player": "A. Odriozola",
@@ -22798,31 +22774,31 @@
             {
               "player": "A. Zakharyan",
               "position": "M",
-              "type": "Missing Fixture",
+              "type": "Questionable",
               "reason": "Stomach Disorder"
             },
             {
               "player": "I. Zubeldia",
               "position": "D",
-              "type": "Missing Fixture",
+              "type": "Questionable",
               "reason": "Thigh Injury"
             }
           ],
-          "impactScore": 3.5
+          "impactScore": 2
         },
         "away": {
           "goalkeeper": 0,
           "defense": 2,
-          "midfield": 2,
+          "midfield": 1,
           "attack": 0,
-          "confirmed": 4,
-          "questionable": 0,
+          "confirmed": 3,
+          "questionable": 1,
           "total": 4,
           "notes": [
             "D. Duarte (Gesperrt/Verletzt — Yellow Cards)",
             "Juanmi (Gesperrt/Verletzt — Injury)",
-            "B. Mayoral (Gesperrt/Verletzt — Knee Injury)",
-            "Z. Romero (Gesperrt/Verletzt — Red Card)"
+            "Z. Romero (Gesperrt/Verletzt — Red Card)",
+            "B. Mayoral (Fraglich — Knee Injury)"
           ],
           "_raw": [
             {
@@ -22838,16 +22814,16 @@
               "reason": "Injury"
             },
             {
-              "player": "B. Mayoral",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Knee Injury"
-            },
-            {
               "player": "Z. Romero",
               "position": "D",
               "type": "Missing Fixture",
               "reason": "Red Card"
+            },
+            {
+              "player": "B. Mayoral",
+              "position": "M",
+              "type": "Questionable",
+              "reason": "Knee Injury"
             }
           ],
           "impactScore": 1.8
@@ -23025,13 +23001,13 @@
         "o25_fair": 2.63,
         "u25_fair": 1.61,
         "o25_cn": 6,
-        "aw": 3.85,
-        "hw": 2.25,
-        "dr": 3.04,
+        "aw": 3.84,
+        "hw": 2.26,
+        "dr": 3.03,
         "ah_a_point": 0.25,
-        "ah_a": 2.01,
+        "ah_a": 2,
         "ah_h_point": -0.25,
-        "ah_h": 1.9,
+        "ah_h": 1.91,
         "o25": 2.48,
         "u25": 1.52,
         "o15": 1.5
@@ -23227,8 +23203,8 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 3.94,
-        "dr_fair": 3.52,
+        "hw_fair": 3.95,
+        "dr_fair": 3.51,
         "aw_fair": 2.16,
         "_cn": 20,
         "dc1X_bkr": 1.86,
@@ -23300,7 +23276,7 @@
       "awayTeamName": "Kayserispor",
       "homeTeamId": 3573,
       "awayTeamId": 1001,
-      "referee": "A. Karaoglan",
+      "referee": "Atilla Karaoglan, Türkiye",
       "refereeStats": null,
       "date": "2026-04-20",
       "time": "19:00",
@@ -23341,6 +23317,12 @@
             "position": "M",
             "type": "Questionable",
             "reason": "Injury"
+          },
+          {
+            "player": "K. Rodrigues",
+            "position": "D",
+            "type": "Questionable",
+            "reason": "Inactive"
           }
         ],
         "away": [
@@ -23363,16 +23345,16 @@
             "reason": "Knee Injury"
           },
           {
+            "player": "K. Cihan",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Inactive"
+          },
+          {
             "player": "M. Hosseini",
             "position": "D",
             "type": "Missing Fixture",
             "reason": "Health problems"
-          },
-          {
-            "player": "K. Cihan",
-            "position": "D",
-            "type": "Questionable",
-            "reason": "Inactive"
           }
         ]
       },
@@ -23383,15 +23365,16 @@
           "midfield": 4,
           "attack": 0,
           "confirmed": 4,
-          "questionable": 2,
-          "total": 6,
+          "questionable": 3,
+          "total": 7,
           "notes": [
             "A. Ablak (Gesperrt/Verletzt — Knee Injury)",
             "M. Kabasakal (Gesperrt/Verletzt — Yellow Cards)",
             "S. M'Bakata (Gesperrt/Verletzt — Knee Injury)",
             "O. Ozcicek (Gesperrt/Verletzt — Inactive)",
             "C. Lungoyi (Fraglich — Injury)",
-            "B. Ndiaye (Fraglich — Injury)"
+            "B. Ndiaye (Fraglich — Injury)",
+            "K. Rodrigues (Fraglich — Inactive)"
           ],
           "_raw": [
             {
@@ -23429,24 +23412,30 @@
               "position": "M",
               "type": "Questionable",
               "reason": "Injury"
+            },
+            {
+              "player": "K. Rodrigues",
+              "position": "D",
+              "type": "Questionable",
+              "reason": "Inactive"
             }
           ],
-          "impactScore": 1.7
+          "impactScore": 2
         },
         "away": {
           "goalkeeper": 0,
-          "defense": 2,
+          "defense": 3,
           "midfield": 2,
           "attack": 0,
-          "confirmed": 4,
-          "questionable": 1,
+          "confirmed": 5,
+          "questionable": 0,
           "total": 5,
           "notes": [
             "A. Burak (Gesperrt/Verletzt — Suspended)",
             "L. Carole (Gesperrt/Verletzt — Inactive)",
             "Y. Celtik (Gesperrt/Verletzt — Knee Injury)",
-            "M. Hosseini (Gesperrt/Verletzt — Health problems)",
-            "K. Cihan (Fraglich — Inactive)"
+            "K. Cihan (Gesperrt/Verletzt — Inactive)",
+            "M. Hosseini (Gesperrt/Verletzt — Health problems)"
           ],
           "_raw": [
             {
@@ -23468,19 +23457,19 @@
               "reason": "Knee Injury"
             },
             {
+              "player": "K. Cihan",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Inactive"
+            },
+            {
               "player": "M. Hosseini",
               "position": "D",
               "type": "Missing Fixture",
               "reason": "Health problems"
-            },
-            {
-              "player": "K. Cihan",
-              "position": "D",
-              "type": "Questionable",
-              "reason": "Inactive"
             }
           ],
-          "impactScore": 2.1
+          "impactScore": 2.9
         }
       },
       "bookings": {
@@ -23546,25 +23535,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.41,
-        "dr_fair": 3.65,
-        "aw_fair": 3.21,
+        "hw_fair": 2.35,
+        "dr_fair": 3.68,
+        "aw_fair": 3.3,
         "_cn": 20,
-        "dc1X_bkr": 1.45,
-        "dcX2_bkr": 1.71,
-        "dc12_bkr": 1.38,
-        "o25_fair": 1.81,
-        "u25_fair": 2.23,
+        "dc1X_bkr": 1.43,
+        "dcX2_bkr": 1.74,
+        "dc12_bkr": 1.37,
+        "o25_fair": 1.78,
+        "u25_fair": 2.28,
         "o25_cn": 8,
-        "hw": 2.36,
-        "aw": 3.11,
-        "dr": 3.47,
+        "hw": 2.26,
+        "aw": 3.24,
+        "dr": 3.53,
         "ah_h_point": -0.25,
-        "ah_h": 2.04,
+        "ah_h": 1.96,
         "ah_a_point": 0.25,
-        "ah_a": 1.87,
-        "o25": 1.7,
-        "u25": 2.05
+        "ah_a": 1.94,
+        "o25": 1.67,
+        "u25": 2.09
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -24271,25 +24260,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.43,
-        "dr_fair": 3.12,
+        "hw_fair": 2.36,
+        "dr_fair": 3.24,
         "aw_fair": 3.73,
-        "_cn": 7,
+        "_cn": 14,
         "dc1X_bkr": 1.37,
-        "dcX2_bkr": 1.7,
-        "dc12_bkr": 1.47,
-        "o25_fair": 2.13,
-        "u25_fair": 1.89,
-        "o25_cn": 2,
-        "hw": 2.39,
-        "aw": 3.53,
-        "dr": 2.78,
+        "dcX2_bkr": 1.74,
+        "dc12_bkr": 1.45,
+        "o25_fair": 2.15,
+        "u25_fair": 1.87,
+        "o25_cn": 6,
+        "hw": 2.25,
+        "aw": 3.82,
+        "dr": 2.91,
         "ah_h_point": -0.25,
-        "ah_h": 2,
+        "ah_h": 1.89,
         "ah_a_point": 0.25,
-        "ah_a": 1.83,
-        "o25": 1.93,
-        "u25": 1.75,
+        "ah_a": 1.96,
+        "o25": 2.05,
+        "u25": 1.8,
         "o15": 1.32
       },
       "apiPrediction": {
@@ -24575,27 +24564,27 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 1.39,
-        "dr_fair": 5.74,
-        "aw_fair": 9.4,
-        "_cn": 10,
-        "dc1X_bkr": 1.12,
-        "dcX2_bkr": 3.56,
-        "dc12_bkr": 1.21,
-        "o25_fair": 1.65,
-        "u25_fair": 2.54,
-        "o25_cn": 1,
-        "hw": 1.29,
-        "aw": 8.52,
-        "dr": 5.57,
-        "ah_h_point": -1.5,
-        "ah_h": 1.89,
-        "ah_a_point": 1.5,
-        "ah_a": 1.93,
-        "o35": 2.3,
-        "u35": 1.53,
-        "o25": 1.6,
-        "u25": 2.47
+        "hw_fair": 1.36,
+        "dr_fair": 6.1,
+        "aw_fair": 10.2,
+        "_cn": 12,
+        "dc1X_bkr": 1.11,
+        "dcX2_bkr": 3.82,
+        "dc12_bkr": 1.2,
+        "o25_fair": 1.62,
+        "u25_fair": 2.6,
+        "o25_cn": 2,
+        "hw": 1.27,
+        "aw": 9.53,
+        "dr": 5.92,
+        "ah_h_point": -1.75,
+        "ah_h": 2.03,
+        "ah_a_point": 1.75,
+        "ah_a": 1.81,
+        "o35": 2.27,
+        "u35": 1.54,
+        "o25": 1.51,
+        "u25": 2.42
       },
       "apiPrediction": {
         "goalsHome": -3.5,
@@ -24744,24 +24733,24 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 3.05,
-        "dr_fair": 3.63,
-        "aw_fair": 2.52,
-        "_cn": 12,
+        "dr_fair": 3.62,
+        "aw_fair": 2.53,
+        "_cn": 13,
         "dc1X_bkr": 1.66,
         "dcX2_bkr": 1.49,
         "dc12_bkr": 1.38,
         "o25_fair": 1.96,
         "u25_fair": 2.05,
-        "o25_cn": 6,
+        "o25_cn": 7,
         "hw": 2.88,
         "aw": 2.33,
         "dr": 3.35,
         "o25": 1.82,
         "u25": 1.85,
         "ah_h_point": 0,
-        "ah_h": 2.12,
+        "ah_h": 2.13,
         "ah_a_point": 0,
-        "ah_a": 1.79
+        "ah_a": 1.78
       },
       "apiPrediction": {
         "goalsHome": -1.5,
@@ -24880,7 +24869,7 @@
         "aw_fair": 3.59,
         "_cn": 16,
         "dc1X_bkr": 1.39,
-        "dcX2_bkr": 1.75,
+        "dcX2_bkr": 1.74,
         "dc12_bkr": 1.42,
         "o25_fair": 1.77,
         "u25_fair": 2.29,
@@ -25053,10 +25042,27 @@
           }
         ]
       },
-      "h2h": null,
+      "h2h": {
+        "games": 7,
+        "homeWins": 3,
+        "draws": 2,
+        "awayWins": 2,
+        "lastMeetingYear": 2025,
+        "avgGoals": 2.3,
+        "over25Rate": 0.43,
+        "over35Rate": 0.14,
+        "bttsRate": 0.57,
+        "lastResults": [
+          "L",
+          "W",
+          "L",
+          "W",
+          "D"
+        ]
+      },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.67,
+        "hw_fair": 2.66,
         "dr_fair": 3.37,
         "aw_fair": 3.05,
         "_cn": 18,
@@ -25244,9 +25250,9 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 1.81,
+        "hw_fair": 1.8,
         "dr_fair": 3.87,
-        "aw_fair": 5.32,
+        "aw_fair": 5.34,
         "_cn": 18,
         "dc1X_bkr": 1.23,
         "dcX2_bkr": 2.24,
@@ -25415,24 +25421,24 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 2.74,
-        "dr_fair": 3.73,
-        "aw_fair": 2.72,
-        "_cn": 14,
+        "dr_fair": 3.75,
+        "aw_fair": 2.71,
+        "_cn": 15,
         "dc1X_bkr": 1.58,
         "dcX2_bkr": 1.57,
-        "dc12_bkr": 1.37,
+        "dc12_bkr": 1.36,
         "o25_fair": 1.8,
         "u25_fair": 2.25,
-        "o25_cn": 7,
+        "o25_cn": 8,
         "hw": 2.43,
         "aw": 2.55,
         "dr": 3.4,
         "o25": 1.55,
         "u25": 2.04,
-        "ah_h_point": 2.5,
-        "ah_h": 1.05,
-        "ah_a_point": -2.5,
-        "ah_a": 9.45
+        "ah_h_point": 0.5,
+        "ah_h": 1.54,
+        "ah_a_point": -0.5,
+        "ah_a": 2.44
       },
       "apiPrediction": {
         "goalsHome": -1.5,
@@ -25611,25 +25617,27 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 3.21,
-        "dr_fair": 3.82,
-        "aw_fair": 2.35,
-        "_cn": 9,
+        "hw_fair": 3.22,
+        "dr_fair": 3.81,
+        "aw_fair": 2.34,
+        "_cn": 11,
         "dc1X_bkr": 1.74,
         "dcX2_bkr": 1.45,
         "dc12_bkr": 1.36,
         "o25_fair": 1.85,
         "u25_fair": 2.18,
-        "o25_cn": 2,
-        "hw": 2.95,
-        "aw": 2.23,
-        "dr": 3.65,
+        "o25_cn": 3,
+        "hw": 2.98,
+        "aw": 2.25,
+        "dr": 3.7,
         "ah_h_point": 0.25,
-        "ah_h": 1.86,
+        "ah_h": 1.88,
         "ah_a_point": -0.25,
-        "ah_a": 1.95,
+        "ah_a": 1.97,
         "o25": 1.71,
-        "u25": 1.98
+        "u25": 1.98,
+        "o35": 2.79,
+        "u35": 1.39
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -25829,7 +25837,7 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 6.17,
+        "hw_fair": 6.18,
         "dr_fair": 4.32,
         "aw_fair": 1.65,
         "_cn": 15,
@@ -26595,25 +26603,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 3.21,
-        "dr_fair": 3.61,
-        "aw_fair": 2.43,
+        "hw_fair": 3.22,
+        "dr_fair": 3.64,
+        "aw_fair": 2.41,
         "_cn": 21,
-        "dc1X_bkr": 1.7,
+        "dc1X_bkr": 1.71,
         "dcX2_bkr": 1.45,
         "dc12_bkr": 1.38,
-        "o25_fair": 1.93,
-        "u25_fair": 2.08,
+        "o25_fair": 1.87,
+        "u25_fair": 2.15,
         "o25_cn": 9,
-        "aw": 2.33,
-        "hw": 3.13,
-        "dr": 3.51,
+        "aw": 2.29,
+        "hw": 3.17,
+        "dr": 3.56,
         "ah_a_point": -0.25,
-        "ah_a": 2.02,
+        "ah_a": 1.99,
         "ah_h_point": 0.25,
-        "ah_h": 1.88,
-        "o25": 1.78,
-        "u25": 1.98
+        "ah_h": 1.92,
+        "o25": 1.7,
+        "u25": 2.08
       },
       "apiPrediction": {
         "goalsHome": -1.5,
@@ -26794,16 +26802,16 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 18.04,
-        "dr_fair": 10.17,
+        "hw_fair": 18.7,
+        "dr_fair": 10,
         "aw_fair": 1.18,
-        "_cn": 14,
-        "dc1X_bkr": 6.5,
+        "_cn": 16,
+        "dc1X_bkr": 6.51,
         "dcX2_bkr": 1.06,
         "dc12_bkr": 1.11,
         "o25_fair": 1.38,
-        "u25_fair": 3.64,
-        "o25_cn": 1,
+        "u25_fair": 3.61,
+        "o25_cn": 3,
         "hw": 16.85,
         "aw": 1.11,
         "dr": 10.72,
@@ -26827,16 +26835,16 @@
         "poissonDraw": null,
         "poissonAway": 89,
         "compForm": {
-          "home": 19,
-          "away": 81
+          "home": 23,
+          "away": 77
         },
         "compAtt": {
-          "home": 18,
-          "away": 82
+          "home": 20,
+          "away": 80
         },
         "compDef": {
-          "home": 42,
-          "away": 58
+          "home": 50,
+          "away": 50
         },
         "compGoals": {
           "home": 22,
@@ -27088,16 +27096,16 @@
         "poissonDraw": null,
         "poissonAway": 47,
         "compForm": {
-          "home": 54,
-          "away": 46
+          "home": 44,
+          "away": 56
         },
         "compAtt": {
-          "home": 62,
-          "away": 38
+          "home": 57,
+          "away": 43
         },
         "compDef": {
-          "home": 40,
-          "away": 60
+          "home": 36,
+          "away": 64
         },
         "compGoals": {
           "home": 0,
@@ -27265,27 +27273,27 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 1.25,
-        "dr_fair": 7.12,
-        "aw_fair": 17.55,
-        "_cn": 13,
-        "dc1X_bkr": 1.06,
-        "dcX2_bkr": 5.07,
-        "dc12_bkr": 1.16,
-        "o25_fair": 1.63,
-        "u25_fair": 2.59,
-        "o25_cn": 2,
+        "hw_fair": 1.2,
+        "dr_fair": 8.29,
+        "aw_fair": 20.59,
+        "_cn": 15,
+        "dc1X_bkr": 1.05,
+        "dcX2_bkr": 5.91,
+        "dc12_bkr": 1.14,
+        "o25_fair": 1.56,
+        "u25_fair": 2.8,
+        "o25_cn": 3,
         "hw": 1.13,
         "aw": 17,
         "dr": 7.5,
         "o35": 2.14,
         "u35": 1.61,
-        "ah_h_point": -1.5,
-        "ah_h": 1.66,
-        "ah_a_point": 1.5,
-        "ah_a": 2.33,
-        "o25": 1.52,
-        "u25": 2.42
+        "ah_h_point": -2.5,
+        "ah_h": 2.16,
+        "ah_a_point": 2.5,
+        "ah_a": 1.76,
+        "o25": 1.46,
+        "u25": 2.62
       },
       "apiPrediction": {
         "goalsHome": -3.5,
@@ -27298,16 +27306,16 @@
         "poissonDraw": null,
         "poissonAway": 21,
         "compForm": {
-          "home": 85,
-          "away": 15
+          "home": 87,
+          "away": 13
         },
         "compAtt": {
           "home": 83,
           "away": 17
         },
         "compDef": {
-          "home": 64,
-          "away": 36
+          "home": 70,
+          "away": 30
         },
         "compGoals": {
           "home": 79,
@@ -27568,25 +27576,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 3.2,
-        "dr_fair": 3.51,
-        "aw_fair": 2.48,
-        "_cn": 14,
-        "dc1X_bkr": 1.67,
-        "dcX2_bkr": 1.45,
-        "dc12_bkr": 1.4,
-        "o25_fair": 2.18,
-        "u25_fair": 1.85,
-        "o25_cn": 7,
-        "hw": 2.9,
-        "aw": 2.2,
-        "dr": 3.25,
+        "hw_fair": 3.28,
+        "dr_fair": 3.69,
+        "aw_fair": 2.36,
+        "_cn": 16,
+        "dc1X_bkr": 1.74,
+        "dcX2_bkr": 1.44,
+        "dc12_bkr": 1.37,
+        "o25_fair": 1.9,
+        "u25_fair": 2.11,
+        "o25_cn": 8,
+        "hw": 3.05,
+        "aw": 2.05,
+        "dr": 3.55,
         "ah_h_point": 0.5,
-        "ah_h": 1.61,
+        "ah_h": 1.68,
         "ah_a_point": -0.5,
-        "ah_a": 2.27,
-        "o25": 2.11,
-        "u25": 1.79
+        "ah_a": 2.09,
+        "o25": 1.82,
+        "u25": 2.07
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -27595,20 +27603,20 @@
         "pctHome": 10,
         "pctDraw": 45,
         "pctAway": 45,
-        "poissonHome": 56,
+        "poissonHome": 55,
         "poissonDraw": null,
-        "poissonAway": 44,
+        "poissonAway": 45,
         "compForm": {
-          "home": 27,
-          "away": 73
+          "home": 31,
+          "away": 69
         },
         "compAtt": {
-          "home": 42,
-          "away": 58
+          "home": 38,
+          "away": 62
         },
         "compDef": {
-          "home": 33,
-          "away": 67
+          "home": 43,
+          "away": 57
         },
         "compGoals": {
           "home": 29,
@@ -27706,12 +27714,12 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 9.53,
-        "dr_fair": 5.39,
-        "aw_fair": 1.41,
+        "hw_fair": 9.74,
+        "dr_fair": 5.43,
+        "aw_fair": 1.4,
         "_cn": 19,
-        "dc1X_bkr": 3.44,
-        "dcX2_bkr": 1.12,
+        "dc1X_bkr": 3.49,
+        "dcX2_bkr": 1.11,
         "dc12_bkr": 1.23,
         "o25_fair": 1.86,
         "u25_fair": 2.16,
@@ -27730,23 +27738,23 @@
         "goalsHome": -1.5,
         "goalsAway": -3.5,
         "underOver": null,
-        "pctHome": 10,
-        "pctDraw": 45,
-        "pctAway": 45,
+        "pctHome": 0,
+        "pctDraw": 50,
+        "pctAway": 50,
         "poissonHome": 16,
         "poissonDraw": null,
         "poissonAway": 84,
         "compForm": {
-          "home": 27,
-          "away": 73
+          "home": 19,
+          "away": 81
         },
         "compAtt": {
-          "home": 37,
-          "away": 63
+          "home": 29,
+          "away": 71
         },
         "compDef": {
-          "home": 46,
-          "away": 54
+          "home": 40,
+          "away": 60
         },
         "compGoals": {
           "home": 27,
@@ -27951,28 +27959,45 @@
           }
         ]
       },
-      "h2h": null,
+      "h2h": {
+        "games": 8,
+        "homeWins": 3,
+        "draws": 4,
+        "awayWins": 1,
+        "lastMeetingYear": 2025,
+        "avgGoals": 1.5,
+        "over25Rate": 0.13,
+        "over35Rate": 0.13,
+        "bttsRate": 0.38,
+        "lastResults": [
+          "D",
+          "L",
+          "D",
+          "D",
+          "W"
+        ]
+      },
       "isFinished": false,
       "odds": {
         "hw_fair": 1.69,
-        "dr_fair": 4.04,
-        "aw_fair": 6.26,
-        "_cn": 6,
+        "dr_fair": 4.02,
+        "aw_fair": 6.2,
+        "_cn": 11,
         "dc1X_bkr": 1.19,
-        "dcX2_bkr": 2.45,
+        "dcX2_bkr": 2.44,
         "dc12_bkr": 1.33,
-        "o25_fair": 2.15,
-        "u25_fair": 1.87,
-        "o25_cn": 2,
+        "o25_fair": 2.11,
+        "u25_fair": 1.9,
+        "o25_cn": 6,
         "aw": 5.6,
         "hw": 1.56,
         "dr": 3.7,
         "o25": 1.97,
         "u25": 1.72,
-        "ah_a_point": 0,
-        "ah_a": 5.3,
-        "ah_h_point": 0,
-        "ah_h": 1.19
+        "ah_a_point": 1.5,
+        "ah_a": 1.42,
+        "ah_h_point": -1.5,
+        "ah_h": 2.53
       },
       "apiPrediction": {
         "goalsHome": -2.5,
@@ -28217,16 +28242,16 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 4.37,
-        "dr_fair": 3.56,
+        "hw_fair": 4.36,
+        "dr_fair": 3.57,
         "aw_fair": 2.04,
-        "_cn": 14,
+        "_cn": 16,
         "dc1X_bkr": 1.96,
         "dcX2_bkr": 1.3,
         "dc12_bkr": 1.39,
-        "o25_fair": 2.37,
-        "u25_fair": 1.73,
-        "o25_cn": 5,
+        "o25_fair": 2.36,
+        "u25_fair": 1.74,
+        "o25_cn": 6,
         "aw": 1.91,
         "hw": 4.1,
         "dr": 3.1,
@@ -28500,25 +28525,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.71,
-        "dr_fair": 3.47,
-        "aw_fair": 2.92,
+        "hw_fair": 2.82,
+        "dr_fair": 3.52,
+        "aw_fair": 2.76,
         "_cn": 18,
-        "dc1X_bkr": 1.52,
-        "dcX2_bkr": 1.58,
-        "dc12_bkr": 1.41,
+        "dc1X_bkr": 1.57,
+        "dcX2_bkr": 1.55,
+        "dc12_bkr": 1.4,
         "o25_fair": 2.04,
         "u25_fair": 1.96,
         "o25_cn": 10,
-        "aw": 2.85,
-        "hw": 2.53,
-        "dr": 3.31,
+        "aw": 2.65,
+        "hw": 2.64,
+        "dr": 3.41,
         "ah_a_point": 0.5,
-        "ah_a": 1.52,
+        "ah_a": 1.49,
         "ah_h_point": -0.5,
-        "ah_h": 2.48,
-        "o25": 1.93,
-        "u25": 1.91
+        "ah_h": 2.57,
+        "o25": 1.92,
+        "u25": 1.92
       },
       "apiPrediction": {
         "goalsHome": -1.5,
@@ -28531,12 +28556,12 @@
         "poissonDraw": null,
         "poissonAway": 56,
         "compForm": {
-          "home": 33,
-          "away": 67
+          "home": 25,
+          "away": 75
         },
         "compAtt": {
-          "home": 57,
-          "away": 43
+          "home": 40,
+          "away": 60
         },
         "compDef": {
           "home": 29,
@@ -29255,15 +29280,15 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 1.77,
-        "dr_fair": 4.27,
-        "aw_fair": 4.96,
+        "hw_fair": 1.78,
+        "dr_fair": 4.26,
+        "aw_fair": 4.94,
         "_cn": 16,
         "dc1X_bkr": 1.25,
         "dcX2_bkr": 2.29,
         "dc12_bkr": 1.31,
-        "o25_fair": 1.73,
-        "u25_fair": 2.37,
+        "o25_fair": 1.74,
+        "u25_fair": 2.35,
         "o25_cn": 6,
         "aw": 4.85,
         "hw": 1.65,
@@ -29498,7 +29523,7 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.85,
-        "dr_fair": 3.99,
+        "dr_fair": 4,
         "aw_fair": 4.79,
         "_cn": 16,
         "dc1X_bkr": 1.26,
@@ -29664,24 +29689,7 @@
           }
         ]
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 6,
-        "draws": 2,
-        "awayWins": 2,
-        "lastMeetingYear": 2026,
-        "avgGoals": 3,
-        "over25Rate": 0.5,
-        "over35Rate": 0.4,
-        "bttsRate": 0.6,
-        "lastResults": [
-          "D",
-          "L",
-          "W",
-          "W",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": {
         "hw_fair": 2.77,
@@ -29698,9 +29706,9 @@
         "hw": 2.66,
         "dr": 3.55,
         "ah_a_point": 0,
-        "ah_a": 1.86,
+        "ah_a": 1.85,
         "ah_h_point": 0,
-        "ah_h": 1.96,
+        "ah_h": 1.97,
         "o25": 1.7,
         "u25": 2.05
       },
@@ -29962,15 +29970,15 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 4.12,
+        "hw_fair": 4.14,
         "dr_fair": 3.81,
         "aw_fair": 2.02,
-        "_cn": 11,
+        "_cn": 12,
         "dc1X_bkr": 1.98,
         "dcX2_bkr": 1.32,
         "dc12_bkr": 1.36,
-        "o25_fair": 1.88,
-        "u25_fair": 2.14,
+        "o25_fair": 1.89,
+        "u25_fair": 2.12,
         "o25_cn": 6,
         "hw": 3.6,
         "aw": 1.74,
@@ -30113,15 +30121,15 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 3.46,
-        "dr_fair": 3.78,
+        "hw_fair": 3.49,
+        "dr_fair": 3.75,
         "aw_fair": 2.24,
-        "_cn": 10,
+        "_cn": 11,
         "dc1X_bkr": 1.81,
-        "dcX2_bkr": 1.41,
+        "dcX2_bkr": 1.4,
         "dc12_bkr": 1.36,
-        "o25_fair": 1.84,
-        "u25_fair": 2.2,
+        "o25_fair": 1.87,
+        "u25_fair": 2.15,
         "o25_cn": 6,
         "hw": 3.26,
         "aw": 2.1,
@@ -30264,13 +30272,13 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.57,
-        "dr_fair": 3.51,
-        "aw_fair": 3.06,
-        "_cn": 9,
+        "hw_fair": 2.55,
+        "dr_fair": 3.55,
+        "aw_fair": 3.07,
+        "_cn": 10,
         "dc1X_bkr": 1.48,
-        "dcX2_bkr": 1.64,
-        "dc12_bkr": 1.4,
+        "dcX2_bkr": 1.65,
+        "dc12_bkr": 1.39,
         "o25_fair": 2.06,
         "u25_fair": 1.95,
         "o25_cn": 6,
@@ -30754,25 +30762,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.46,
-        "dr_fair": 3.52,
-        "aw_fair": 3.23,
+        "hw_fair": 2.42,
+        "dr_fair": 3.54,
+        "aw_fair": 3.28,
         "_cn": 17,
-        "dc1X_bkr": 1.45,
-        "dcX2_bkr": 1.69,
-        "dc12_bkr": 1.4,
+        "dc1X_bkr": 1.44,
+        "dcX2_bkr": 1.7,
+        "dc12_bkr": 1.39,
         "o25_fair": 1.99,
         "u25_fair": 2.01,
         "o25_cn": 8,
-        "hw": 2.29,
-        "aw": 3.17,
-        "dr": 3.37,
+        "hw": 2.26,
+        "aw": 3.28,
+        "dr": 3.44,
         "ah_h_point": -0.25,
-        "ah_h": 1.99,
+        "ah_h": 1.95,
         "ah_a_point": 0.25,
-        "ah_a": 1.88,
-        "o25": 1.9,
-        "u25": 1.95
+        "ah_a": 1.93,
+        "o25": 1.91,
+        "u25": 1.96
       },
       "apiPrediction": {
         "goalsHome": -3.5,
@@ -31025,11 +31033,11 @@
       "odds": {
         "hw_fair": 2.37,
         "dr_fair": 3.41,
-        "aw_fair": 3.51,
+        "aw_fair": 3.52,
         "_cn": 17,
         "dc1X_bkr": 1.4,
         "dcX2_bkr": 1.73,
-        "dc12_bkr": 1.41,
+        "dc12_bkr": 1.42,
         "o25_fair": 2.2,
         "u25_fair": 1.84,
         "o25_cn": 7,
@@ -31798,9 +31806,9 @@
         "o25": 1.81,
         "u25": 1.87,
         "ah_a_point": 0,
-        "ah_a": 2.18,
+        "ah_a": 2.16,
         "ah_h_point": 0,
-        "ah_h": 1.64
+        "ah_h": 1.65
       },
       "apiPrediction": {
         "goalsHome": -1.5,
@@ -32986,24 +32994,7 @@
           }
         ]
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 5,
-        "draws": 4,
-        "awayWins": 1,
-        "lastMeetingYear": 2026,
-        "avgGoals": 2,
-        "over25Rate": 0.3,
-        "over35Rate": 0.2,
-        "bttsRate": 0.4,
-        "lastResults": [
-          "W",
-          "D",
-          "L",
-          "D",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": null,
       "apiPrediction": {
