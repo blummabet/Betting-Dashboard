@@ -496,6 +496,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .sqstr-low{color:#f85149;}
 .squad-missing{font-size:10px;color:var(--muted);padding-left:2px;line-height:1.5;}
 .squad-divider{height:1px;background:rgba(255,255,255,.06);margin:7px 0;}
+/* ── Squad strength circle (used in Top Picks list) ─────────────────────── */
+.sqc{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;font-size:9px;font-weight:800;line-height:1;vertical-align:middle;margin-left:3px;flex-shrink:0;}
+.sqc-full{background:rgba(63,185,80,.18);color:#3fb950;border:1px solid rgba(63,185,80,.4);}
+.sqc-ok{background:rgba(227,179,65,.18);color:#e3b341;border:1px solid rgba(227,179,65,.4);}
+.sqc-low{background:rgba(248,81,73,.18);color:#f85149;border:1px solid rgba(248,81,73,.4);}
 /* ── pick icons ────────────────────────────────────────────────────────────── */
 .pick-icon{font-size:16px;flex-shrink:0;line-height:1.4;}
 .pick-body{flex:1;min-width:0;}
@@ -6757,6 +6762,14 @@ function buildTopCardsHtml(matchList) {
     return `<span class="tc-sig ${cls}">${label} <span class="tc-sig-val">${score}/10</span></span>`;
   };
 
+  // Squad strength circle helper
+  const _sqCircle = (stake) => {
+    const sq = stake?.squadStrength ?? null;
+    if (sq == null) return '';
+    const cls = sq >= 8.5 ? 'sqc-full' : sq >= 7.0 ? 'sqc-ok' : 'sqc-low';
+    return `<span class="sqc ${cls}" title="Squad-Stärke: ${sq}/10">${Math.round(sq)}</span>`;
+  };
+
   const rows = top.map(({ p, sc, m, sigs }) => {
     const time     = m.time ? ` · ${m.time}` : '';
     const oddsLbl  = p.odds
@@ -6775,10 +6788,13 @@ function buildTopCardsHtml(matchList) {
     const sigsHtml = _uniqSigs.length
       ? `<div class="tc-signals">${_uniqSigs.slice(0, 4).map(sigHtml).join('')}</div>`
       : '';
+    // Squad circles — only shown when data available (after first fetch_squads.py run)
+    const _hCircle = _sqCircle(m.homeStake);
+    const _aCircle = _sqCircle(m.awayStake);
 
     return `<div class="topcards-row">
       <div class="tc-top">
-        <div class="tc-matchline">${m.leagueFlag || ''} ${m.home} vs ${m.away} · ${m.date}${time}</div>
+        <div class="tc-matchline">${m.leagueFlag || ''} ${m.home}${_hCircle} vs ${m.away}${_aCircle} · ${m.date}${time}</div>
         <span class="tc-score-badge ${scoreBadgeClass(sc)}">${sc}/12</span>
       </div>
       <div class="tc-pick-row">
