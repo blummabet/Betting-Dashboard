@@ -481,6 +481,22 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   color:#1a1207;border-radius:4px;padding:2px 7px;
   white-space:nowrap;flex-shrink:0;
 }
+/* ── Squad Block ─────────────────────────────────────────────────────────── */
+.squad-block{background:var(--card2);border-radius:8px;padding:10px 14px;margin:6px 0;border:1px solid rgba(255,255,255,.06);}
+.squad-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:8px;}
+.squad-row{margin-bottom:7px;}
+.squad-row:last-child{margin-bottom:0;}
+.squad-meta{display:flex;align-items:center;gap:8px;margin-bottom:3px;}
+.squad-name{font-size:12px;font-weight:600;color:var(--text);min-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.squad-bar-wrap{flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
+.squad-bar-fill{height:100%;border-radius:3px;}
+.squad-score{font-size:11px;font-weight:700;white-space:nowrap;min-width:58px;text-align:right;}
+.sqstr-full{color:#3fb950;}
+.sqstr-ok{color:#e3b341;}
+.sqstr-low{color:#f85149;}
+.squad-missing{font-size:10px;color:var(--muted);padding-left:2px;line-height:1.5;}
+.squad-divider{height:1px;background:rgba(255,255,255,.06);margin:7px 0;}
+/* ── pick icons ────────────────────────────────────────────────────────────── */
 .pick-icon{font-size:16px;flex-shrink:0;line-height:1.4;}
 .pick-body{flex:1;min-width:0;}
 .pick-market{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.3;}
@@ -6917,6 +6933,59 @@ function getTacticalBookingSignals(bookingsSide, teamName, matchDate, allFixture
   return signals;
 }
 
+function renderSquadBlock(match) {
+  const hSt = match.homeStake;
+  const aSt = match.awayStake;
+  const hSq = hSt?.squadStrength ?? null;
+  const aSq = aSt?.squadStrength ?? null;
+  if (hSq == null && aSq == null) return '';
+
+  const POS = {F:'ST', M:'MF', D:'VER', G:'TW'};
+  const barColor  = s => s >= 8.5 ? '#3fb950' : s >= 7.0 ? '#e3b341' : '#f85149';
+  const scoreIcon = s => s >= 8.5 ? '⚡' : s >= 7.0 ? '⚠️' : '🏥';
+  const scoreCls  = s => s >= 8.5 ? 'sqstr-full' : s >= 7.0 ? 'sqstr-ok' : 'sqstr-low';
+
+  const renderTeam = (name, sq, missing) => {
+    if (sq == null) return '';
+    const pct = Math.round(sq / 10 * 100);
+    const missingList = (missing || []).filter(p => p && p.name);
+    const missingHtml = missingList.length
+      ? `<div class="squad-missing">↳ ${
+          missingList.map(p => {
+            const posStr = POS[p.pos] || p.pos || '';
+            const eta    = p.eta ? ` · ${p.eta}` : '';
+            return `${p.name}${posStr ? ` (${posStr}${eta})` : eta ? ` (${eta})` : ''}`;
+          }).join(', ')
+        } fehlt${missingList.length > 1 ? 'en' : ''}</div>`
+      : `<div class="squad-missing" style="color:var(--muted);opacity:.6">Vollbesetzt</div>`;
+
+    // Short team name (last word) for narrow layout
+    const shortName = name.split(' ').slice(-1)[0];
+    return `<div class="squad-row">
+      <div class="squad-meta">
+        <span class="squad-name" title="${name}">${shortName}</span>
+        <div class="squad-bar-wrap">
+          <div class="squad-bar-fill" style="width:${pct}%;background:${barColor(sq)}"></div>
+        </div>
+        <span class="squad-score ${scoreCls(sq)}">${scoreIcon(sq)} ${sq.toFixed(1)}/10</span>
+      </div>
+      ${missingHtml}
+    </div>`;
+  };
+
+  const hHtml = renderTeam(match.home, hSq, hSt?.missingStarters);
+  const aHtml = renderTeam(match.away, aSq, aSt?.missingStarters);
+  if (!hHtml && !aHtml) return '';
+
+  // Divider between teams only when both shown
+  const divider = (hHtml && aHtml) ? '<div class="squad-divider"></div>' : '';
+
+  return `<div class="squad-block">
+    <div class="squad-label">🧬 Squad-Status</div>
+    ${hHtml}${divider}${aHtml}
+  </div>`;
+}
+
 function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   // Enrich match.time + odds_open from prematch-data.json if not already set
   const _pm = window._preMatchData?.[`${match.home}|${match.away}`];
@@ -7289,7 +7358,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       <div class="card-meta">${leagueFlag} <span class="card-league-name">${leagueName}</span><span class="card-meta-sep">·</span><span class="card-date-inline">📅 ${match.date}${match.time ? ' · ' + match.time : ''}</span></div>
       <div class="card-match"><span class="card-home">${match.home}</span><span class="card-vs">vs</span><span class="card-away">${match.away}</span></div>
     </div>
-    ${signalBarHtml}${pressureHtml}${contextHtml}${lineMovementHtml}
+    ${signalBarHtml}${pressureHtml}${contextHtml}${renderSquadBlock(match)}${lineMovementHtml}
     <div class="teams-stakes">
       ${renderStakeRow(match.home, match.homeStake, match.homeForm, leagueKey)}
       ${renderStakeRow(match.away, match.awayStake, match.awayForm, leagueKey)}

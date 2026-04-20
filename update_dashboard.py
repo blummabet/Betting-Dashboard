@@ -841,14 +841,113 @@ def calc_match_score(home_stake, away_stake, h2h=None, rounds_left=99):
 
     return round(min(max_score, score) * 10) / 10
 
+# ── Squad cache helpers ───────────────────────────────────────────────────────
+
+def load_squad_cache() -> dict:
+    """Load squad_cache.json (built weekly by fetch_squads.py). Returns {} on miss."""
+    cache_file = os.path.join(SCRIPT_DIR, "squad_cache.json")
+    if not os.path.exists(cache_file):
+        return {}
+    try:
+        with open(cache_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        age_days = 0
+        if data.get("generated"):
+            gen = datetime.fromisoformat(data["generated"].replace("Z", "+00:00"))
+            age_days = (datetime.now().astimezone() - gen).days
+        print(f"  📦 Squad-Cache geladen: {len(data.get('teams', {}))} Teams (Alter: {age_days}d)")
+        return data
+    except Exception as e:
+        print(f"  ⚠ Squad-Cache konnte nicht geladen werden: {e}")
+        return {}
+
+
+def _squad_names_match(a: str, b: str) -> bool:
+    """Fuzzy name match — mirrors fetch_squads.names_match()."""
+    def clean(s):
+        return re.sub(r"[^a-z0-9 ]", " ", s.lower()).strip()
+    ca, cb = clean(a), clean(b)
+    if ca == cb:
+        return True
+    wa = [w for w in ca.split() if len(w) > 2]
+    wb = [w for w in cb.split() if len(w) > 2]
+    if not wa or not wb:
+        return False
+    return wa[-1] == wb[-1] or wa[-1] in cb or wb[-1] in ca
+
+
+def compute_squad_strength(team_id: int, injury_data, squad_cache: dict) -> tuple:
+    """
+    Cross-reference squad starters with current injury/suspension list.
+    Returns (strength_score 0-10 or None, missing_starters list).
+
+    injury_data: dict from fetch_team_injuries() with "notes" list like
+                 ["Player Name (ca. 2 Wo.)", ...]
+    squad_cache: full loaded cache dict (from load_squad_cache())
+    """
+    team_data = squad_cache.get("teams", {}).get(str(team_id))
+    if not team_data:
+        return None, []
+
+    starters = team_data.get("starters", [])
+    if not starters:
+        return None, []
+
+    # Extract player names from injury notes
+    # Injury notes format: "Player Name (ca. 2 Wo.)" or "Player Name (Saison aus)"
+    missing_names = []
+    missing_etas  = {}
+    if injury_data and injury_data.get("notes"):
+        for note in injury_data["notes"]:
+            # Parse "Name (eta)" — name is everything before the last '('
+            m = re.match(r"^(.+?)\s*\(([^)]+)\)\s*$", note.strip())
+            if m:
+                pname = m.group(1).strip()
+                eta   = m.group(2).strip()
+                missing_names.append(pname)
+                missing_etas[pname] = eta
+            else:
+                missing_names.append(note.strip())
+
+    # Position-specific deduction parameters (must match fetch_squads.py)
+    pos_mult  = {"G": 2.5, "F": 1.6, "M": 1.0, "D": 1.2}
+    pos_floor = {"G": 1.5, "F": 0.4, "M": 0.3, "D": 0.3}
+    pos_ceil  = {"G": 2.5, "F": 2.5, "M": 2.0, "D": 2.0}
+
+    score           = 10.0
+    missing_starters = []
+
+    for starter in starters:
+        for mname in missing_names:
+            if _squad_names_match(starter["name"], mname):
+                pos    = starter.get("pos", "M")
+                imp    = starter.get("importance", 0.5)
+                deduct = max(pos_floor.get(pos, 0.3),
+                             min(pos_ceil.get(pos, 2.0),
+                                 imp * pos_mult.get(pos, 1.0) * 3.5))
+                score -= deduct
+                eta = missing_etas.get(mname, "")
+                missing_starters.append({
+                    "name": starter["name"],
+                    "pos":  pos,
+                    "eta":  eta,
+                    "imp":  imp,
+                })
+                break  # don't double-count same starter
+
+    strength = max(0.0, round(score * 2) / 2)  # snap to nearest 0.5
+    return strength, missing_starters
+
+
 # ── Main fetch loop ───────────────────────────────────────────────────────────
 
-def fetch_league(key, cfg):
+def fetch_league(key, cfg, squad_cache=None):
     print(f"\n  {cfg['flag']} {cfg['name']}...")
     apif_id = cfg.get("apif_id")
     if not apif_id:
         print(f"  ⚠ Kein apif_id für {key} — übersprungen")
         return None
+    _squad_cache = squad_cache or {}
 
     # ── Standings ────────────────────────────────────────────────────────────
     standings = []
@@ -909,9 +1008,10 @@ def fetch_league(key, cfg):
     max_played  = max(t["played"] for t in standings) if standings else 0
     rounds_left = max(0, cfg["rounds"] - max_played)
 
-    # ── Form for stake teams ──────────────────────────────────────────────────
-    print(f"    Fetching form data for stake teams...")
-    form_cache = {}
+    # ── Form + injuries for stake teams ──────────────────────────────────────
+    print(f"    Fetching form + injury data for stake teams...")
+    form_cache   = {}
+    injury_cache = {}  # teamId → injury dict from fetch_team_injuries()
     for t in standings:
         labels = calc_labels(t, standings, cfg)
         if not labels:
@@ -921,6 +1021,10 @@ def fetch_league(key, cfg):
             form_cache[t["team"]] = fd
             streak_str = f"+{fd['streak']}" if fd["streak"] > 0 else str(fd["streak"])
             print(f"      {t['team']}: {fd['form']}  streak={streak_str}  fs={fd['formScore']}")
+        inj = fetch_team_injuries(t["teamId"])
+        if inj:
+            injury_cache[t["teamId"]] = inj
+            print(f"      {t['team']} Verletzungen: {inj['attack']} Ang / {inj['defense']} Abw")
 
     # ── Stake teams ───────────────────────────────────────────────────────────
     stake_teams = []
@@ -998,6 +1102,9 @@ def fetch_league(key, cfg):
         # Standings context (position, pts, gap to zone boundary) for visual display
         h_ctx = calc_standings_context(ht, h_labels, standings, cfg) if h_labels else {}
         a_ctx = calc_standings_context(at, a_labels, standings, cfg) if a_labels else {}
+        # Squad strength — cross-reference starters with current injuries
+        h_squad_str, h_missing = compute_squad_strength(ht["teamId"], injury_cache.get(ht["teamId"]), _squad_cache)
+        a_squad_str, a_missing = compute_squad_strength(at["teamId"], injury_cache.get(at["teamId"]), _squad_cache)
         home_stake = {"score": calc_score(h_labels, rounds_left, h_form, h_pressure.get("pressureRatio")),
                       "labels": h_labels,
                       "motivationLevel": h_motiv,
@@ -1008,13 +1115,15 @@ def fetch_league(key, cfg):
                       # misleading high pressure picks for teams whose outcome is already decided.
                       "mustWin": h_pressure.get("mustWin", False) and h_motiv == 'full',
                       "canDraw": h_pressure.get("canDraw", True),
-                      "pos":       h_ctx.get("pos"),
-                      "pts":       h_ctx.get("pts"),
-                      "played":    h_ctx.get("played"),
-                      "teamGD":    h_ctx.get("gd"),
-                      "gapToLine": h_ctx.get("gapToLine"),
-                      "lineName":  h_ctx.get("lineName"),
-                      "linePos":   h_ctx.get("linePos")} if h_labels else None
+                      "pos":             h_ctx.get("pos"),
+                      "pts":             h_ctx.get("pts"),
+                      "played":          h_ctx.get("played"),
+                      "teamGD":          h_ctx.get("gd"),
+                      "gapToLine":       h_ctx.get("gapToLine"),
+                      "lineName":        h_ctx.get("lineName"),
+                      "linePos":         h_ctx.get("linePos"),
+                      "squadStrength":   h_squad_str,
+                      "missingStarters": h_missing} if h_labels else None
         away_stake = {"score": calc_score(a_labels, rounds_left, a_form, a_pressure.get("pressureRatio")),
                       "labels": a_labels,
                       "motivationLevel": a_motiv,
@@ -1023,13 +1132,15 @@ def fetch_league(key, cfg):
                       # mustWin=False unless motiv='full': see home_stake comment above
                       "mustWin": a_pressure.get("mustWin", False) and a_motiv == 'full',
                       "canDraw": a_pressure.get("canDraw", True),
-                      "pos":       a_ctx.get("pos"),
-                      "pts":       a_ctx.get("pts"),
-                      "played":    a_ctx.get("played"),
-                      "teamGD":    a_ctx.get("gd"),
-                      "gapToLine": a_ctx.get("gapToLine"),
-                      "lineName":  a_ctx.get("lineName"),
-                      "linePos":   a_ctx.get("linePos")} if a_labels else None
+                      "pos":             a_ctx.get("pos"),
+                      "pts":             a_ctx.get("pts"),
+                      "played":          a_ctx.get("played"),
+                      "teamGD":          a_ctx.get("gd"),
+                      "gapToLine":       a_ctx.get("gapToLine"),
+                      "lineName":        a_ctx.get("lineName"),
+                      "linePos":         a_ctx.get("linePos"),
+                      "squadStrength":   a_squad_str,
+                      "missingStarters": a_missing} if a_labels else None
 
         # H2H using API-Football team IDs
         home_id = f.get("homeId") or find_team_id(f["home"])
@@ -1124,9 +1235,12 @@ def main():
     print("=" * 60)
     print("\nFetching API-Football data...")
 
+    # Load squad cache once (built weekly by fetch_squads.py)
+    squad_cache = load_squad_cache()
+
     results = {}
     for key, cfg in LEAGUES.items():
-        data = fetch_league(key, cfg)
+        data = fetch_league(key, cfg, squad_cache=squad_cache)
         if data:
             results[key] = data
 
