@@ -6322,22 +6322,23 @@ function renderStakeRow(name, stakeInfo, formData, leagueKey) {
   }
   const totalTeams = leagueKey && LEAGUES[leagueKey]?.stakeTeams ? LEAGUES[leagueKey].stakeTeams.length : 18;
   const posClass = pos != null ? (pos <= 3 ? 'pos-top' : pos >= totalTeams - 2 ? 'pos-bot' : '') : '';
-  const posTag = pos != null ? `<span class="pos-tag ${posClass}">#${pos}</span>` : '';
+  // pos-tag now includes pts: "#18 19Pts"
+  const posTag = pos != null
+    ? `<span class="pos-tag ${posClass}">#${pos}${pts != null ? ' ' + pts + 'Pts' : ''}</span>`
+    : '';
 
-  // ── Standings context row: #pos · Xpts · gap ──────────────────────────────
+  // ── Gap badge only (pos + pts are already in the posTag) ──────────────────
   let standingsCtxHtml = '';
-  if (pos != null && pts != null) {
+  if (gapToLine != null && lineName) {
     let gapHtml = '';
-    if (gapToLine != null && lineName) {
-      if (gapToLine > 0) {
-        gapHtml = `<span class="stctx-gap stctx-ahead">+${gapToLine}P vor ${lineName}</span>`;
-      } else if (gapToLine < 0) {
-        gapHtml = `<span class="stctx-gap stctx-behind">${Math.abs(gapToLine)}P hinter ${lineName}</span>`;
-      } else {
-        gapHtml = `<span class="stctx-gap stctx-level">Gleichstand ${lineName}</span>`;
-      }
+    if (gapToLine > 0) {
+      gapHtml = `<span class="stctx-gap stctx-ahead">+${gapToLine}P vor ${lineName}</span>`;
+    } else if (gapToLine < 0) {
+      gapHtml = `<span class="stctx-gap stctx-behind">${Math.abs(gapToLine)}P hinter ${lineName}</span>`;
+    } else {
+      gapHtml = `<span class="stctx-gap stctx-level">Gleichstand ${lineName}</span>`;
     }
-    standingsCtxHtml = `<div class="standings-ctx"><span class="stctx-pos">#${pos}</span><span class="stctx-sep">·</span><span class="stctx-pts">${pts} Pkt</span>${gapHtml ? `<span class="stctx-sep">·</span>${gapHtml}` : ''}</div>`;
+    standingsCtxHtml = `<div class="standings-ctx">${gapHtml}</div>`;
   }
 
   if (!stakeInfo) {
