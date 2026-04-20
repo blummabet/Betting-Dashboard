@@ -34,7 +34,7 @@ LEAGUES = {
     "ITA": 135,  # Serie A
     "ESP": 140,  # La Liga
     "FRA": 61,   # Ligue 1
-    "AUT": 144,  # Österreichische Bundesliga
+    "AUT": 218,  # Österreichische Bundesliga  (144 wäre belgische Jupiler Pro League!)
     "NED": 88,   # Eredivisie
     "POR": 94,   # Primeira Liga
     "SCO": 179,  # Scottish Premiership
@@ -51,6 +51,7 @@ LEAGUES = {
     "HUN": 271,  # NB I (Hungary)
     "BEL": 55,   # Pro League (Belgium)
     "CRO": 210,  # HNL (Croatia)
+    "POL": 106,  # Ekstraklasa (Poland)
 }
 
 FINISHED_STATUSES = {"FT", "AET", "PEN", "AWD", "WO"}

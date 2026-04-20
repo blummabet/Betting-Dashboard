@@ -9273,7 +9273,8 @@ async function _fetchOddsApiScores(daysFrom = 3) {
 // busy matchdays and trigger a 413 error from corsproxy.io.
 const _RESULT_LEAGUE_IDS = {
   ENG:39, GER:78, ITA:135, ESP:140, FRA:61,
-  AUT:144, NED:88, POR:94, SCO:179, TUR:203
+  AUT:218, NED:88, POR:94, SCO:179, TUR:203,  // AUT=218 (Österr. BL), not 144 (=Belgian Jupiler)
+  BEL:55, POL:106, HUN:271, CRO:210
 };
 
 // Fetch a single set of fixture IDs directly (max ~20 per call).
@@ -9986,7 +9987,8 @@ async function loadPreMatchData() {
   // sondern pro Liga (→ nur relevante Spiele, kleine Response)
   const _APIFB_LEAGUES = {
     ENG:39, GER:78, ITA:135, ESP:140, FRA:61,
-    AUT:144, NED:88, POR:94, SCO:179, TUR:203
+    AUT:218, NED:88, POR:94, SCO:179, TUR:203,  // AUT=218 (Österr. BL)
+    BEL:55, POL:106, HUN:271, CRO:210
   };
   const _dateFrom = dates[0], _dateTo = dates[dates.length - 1];
 
