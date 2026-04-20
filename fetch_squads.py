@@ -261,7 +261,8 @@ def identify_starters(players_raw: list) -> list:
         if minutes < 180:   # ignore players with very little game time
             continue
 
-        api_pos = player.get("position", "Midfielder")
+        # Position lives in statistics[0].games.position, NOT in player.position
+        api_pos = stats.get("games", {}).get("position", "") or player.get("position", "Midfielder")
         # Normalise position to G / D / M / F
         pos_map = {
             "Goalkeeper": "G", "Defender": "D",

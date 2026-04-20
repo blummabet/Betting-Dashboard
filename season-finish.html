@@ -2839,6 +2839,42 @@ function getBettingPicks(match, odds, leagueKey) {
   const hFS     = hF.formScore ?? 0.5;
   const aFS     = aF.formScore ?? 0.5;
 
+  // ── Player context snippets (from squad_cache via update_dashboard.py) ──────
+  // topAttacker/keyDefender are null when squad data unavailable or stats too low.
+  // Injected into goal- and result-pick reason texts to make them concrete.
+  const _hTop = match.homeStake?.topAttacker ?? null;
+  const _aTop = match.awayStake?.topAttacker ?? null;
+  const _hDef = match.homeStake?.keyDefender ?? null;
+  const _aDef = match.awayStake?.keyDefender ?? null;
+
+  const _posDE = {G:'TW', D:'VER', M:'MF', F:'ST'};
+  // "Saka 11G+8A" or "Haaland 26G"
+  const _fmtAtt = (p) => {
+    if (!p) return '';
+    const ga = p.assists > 0 ? `${p.goals}G+${p.assists}A` : `${p.goals}G`;
+    return `${p.name} ${ga}`;
+  };
+  // "Saliba (VER)" — rating only shown when ≥7.0
+  const _fmtDef = (p) => {
+    if (!p) return '';
+    const rtg = p.rating >= 7.0 ? ` · ${p.rating.toFixed(1)} Rtg` : '';
+    return `${p.name} (${_posDE[p.pos]||p.pos}${rtg})`;
+  };
+  // Short last word of team name ("Manchester City" → "City")
+  const _teamShort = (name) => (name||'').split(' ').slice(-1)[0];
+
+  // Pre-built lines — appended inside pick reason strings below
+  const _attLineHome = _hTop ? `${_teamShort(match.home)}: ${_fmtAtt(_hTop)}` : '';
+  const _attLineAway = _aTop ? `${_teamShort(match.away)}: ${_fmtAtt(_aTop)}` : '';
+  // Combined attacker line for goal picks (both teams)
+  const _bothAttLine = (_attLineHome && _attLineAway) ? `<br>⚽ ${_attLineHome} · ${_attLineAway}`
+    : (_attLineHome || _attLineAway) ? `<br>⚽ ${_attLineHome || _attLineAway}` : '';
+  // Defender lines for under/clean-sheet picks
+  const _defLineHome = _hDef ? `${_teamShort(match.home)}: ${_fmtDef(_hDef)}` : '';
+  const _defLineAway = _aDef ? `${_teamShort(match.away)}: ${_fmtDef(_aDef)}` : '';
+  const _bothDefLine = (_defLineHome && _defLineAway) ? `<br>🛡️ ${_defLineHome} · ${_defLineAway}`
+    : (_defLineHome || _defLineAway) ? `<br>🛡️ ${_defLineHome || _defLineAway}` : '';
+
   // ── H2H signals (recency-weighted) ───────────────────
   // If h2h.lastMeetingYear is set, duel data older than ~3y gets discounted:
   // 1y ago → weight 0.88  |  3y → 0.64  |  5y → 0.40  |  7y+ → 0.25
@@ -3750,7 +3786,7 @@ function getBettingPicks(match, odds, leagueKey) {
       const _o35H2hNote = (_h2hSample && _h2hAvgG != null) ? ` Historisch Ø ${_h2hAvgG} Tore/Duell.` : '';
       gC.push({sc, p:{icon:'🔥', market:'Over 3.5 Tore', odds:o.o35,
         conf: sc>0.68?'high':sc>0.44?'medium':'low',
-        reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet ${expGoals.toFixed(1)} Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich.${_o35H2hNote}`}}); }
+        reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet ${expGoals.toFixed(1)} Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich.${_o35H2hNote}${_bothAttLine}`}}); }
 
     // Over 2.5
     { let sc = expGoals>3.2?0.78:expGoals>2.8?0.66:expGoals>2.5?0.52:expGoals>2.2?0.30:0.10;
@@ -3799,7 +3835,7 @@ function getBettingPicks(match, odds, leagueKey) {
       if (expGoals >= 2.5) {
         gC.push({sc, p:{icon:'⚽', market:'Over 2.5 Tore', odds:o.o25,
           conf: sc>0.66?'high':sc>0.46?'medium':'low',
-          reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven lassen regelmäßig Gegentore zu. Das Modell erwartet ${expGoals.toFixed(1)} Tore: ${_o25GoalText}.${_o25H2hNote}${_o25ApiNote}`}}); } }
+          reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven lassen regelmäßig Gegentore zu. Das Modell erwartet ${expGoals.toFixed(1)} Tore: ${_o25GoalText}.${_o25H2hNote}${_o25ApiNote}${_bothAttLine}`}}); } }
 
     // Under 2.5
     { let sc = expGoals<1.7?0.85:expGoals<2.0?0.72:expGoals<2.3?0.57:expGoals<2.6?0.34:0.12;
@@ -3833,8 +3869,8 @@ function getBettingPicks(match, odds, leagueKey) {
         ? `<br>📊 Saison-Statistiken: ${_hCSHome !== null ? `${match.home} ${Math.round(_hCSHome*100)}% Clean Sheets zuhause` : ''}${_hCSHome !== null && _aFTSAway !== null ? ' · ' : ''}${_aFTSAway !== null ? `${match.away} trifft in ${Math.round(_aFTSAway*100)}% der Auswärtsspiele nicht` : ''}.`
         : '';
       const _u25Reason = _favWeak > 0.4 && _u25DefTeam
-        ? `${_u25DefTeam} dominiert dieses Spiel — der schwächere Angriff (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} Tore/Spiel) kommt kaum zu Chancen. Weniger als 3 Tore sind zu erwarten.${_u25H2hNote}${_u25CSNote}${_pressWarn}`
-        : `Das Modell erwartet nur ${expGoals.toFixed(1)} Tore insgesamt — ${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) sind beide offensiv zu schwach für viele Treffer.${_u25H2hNote}${_u25CSNote}${_pressWarn}`;
+        ? `${_u25DefTeam} dominiert dieses Spiel — der schwächere Angriff (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} Tore/Spiel) kommt kaum zu Chancen. Weniger als 3 Tore sind zu erwarten.${_u25H2hNote}${_u25CSNote}${_pressWarn}${_bothDefLine}`
+        : `Das Modell erwartet nur ${expGoals.toFixed(1)} Tore insgesamt — ${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) sind beide offensiv zu schwach für viele Treffer.${_u25H2hNote}${_u25CSNote}${_pressWarn}${_bothDefLine}`;
       gC.push({sc, p:{icon:'🛡️', market:'Under 2.5 Tore', odds:o.u25,
         conf: sc>0.68?'high':sc>0.48?'medium':'low',
         reason: _u25Reason}}); }
@@ -3881,7 +3917,7 @@ function getBettingPicks(match, odds, leagueKey) {
         : '';
       gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:o.bttsY||null, oddsIsEst: o._bttsOddsEst||false,
         conf: sc>0.65?'high':sc>0.44?'medium':'low',
-        reason:`${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu. Beide Teams werden voraussichtlich treffen.${_bttsH2hNote}${_bttsPressNote}`}}); }
+        reason:`${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu. Beide Teams werden voraussichtlich treffen.${_bttsH2hNote}${_bttsPressNote}${_bothAttLine}`}}); }
 
     // BTTS Nein
     { const bothAttWeak = homeAttStr < 0.88 && awayAttStr < 0.82;
@@ -3910,7 +3946,7 @@ function getBettingPicks(match, odds, leagueKey) {
         : '';
       gC.push({sc, p:{icon:'🔒', market:'Beide Teams treffen: Nein', odds:o.bttsN||null, oddsIsEst: o._bttsOddsEst||false,
         conf: sc>0.58?'medium':'low',
-        reason:`${weakAtt} ist offensiv sehr schwach (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} Tore/Spiel) — ein Treffer ist für dieses Team schon eine Herausforderung. Wahrscheinlich bleibt eines der beiden Teams ohne Tor.${_bttsNoH2h}${_bttsNoStatNote}`}}); }
+        reason:`${weakAtt} ist offensiv sehr schwach (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} Tore/Spiel) — ein Treffer ist für dieses Team schon eine Herausforderung. Wahrscheinlich bleibt eines der beiden Teams ohne Tor.${_bttsNoH2h}${_bttsNoStatNote}${_bothDefLine}`}}); }
 
     // ── Heimteam Over 1.5 Tore — BACKTEST VALIDATED: 69% bei expHome > 1.85 ──────
     { const expH = (homeAttStr + awayDefStr) / 2;
@@ -3922,7 +3958,7 @@ function getBettingPicks(match, odds, leagueKey) {
         const _hPN = homeNeedsWin ? `<br><strong>⚡ ${_pHLabel}${_rlSfx} — Heimteam greift voll an, Over 1.5 durch Druckspiel klar verstärkt.</strong>` : '';
         gC.push({sc, p:{icon:'🏠', market:`${match.home} über 1.5 Tore`, odds: o.hto15||null, oddsIsEst: o._hto15Est||false,
           conf: sc > 0.68 ? 'high' : 'medium',
-          reason:`${match.home} trifft im Schnitt ${homeAttStr.toFixed(1)} Mal pro Spiel — der Gegner lässt ${awayDefStr.toFixed(1)} Tore zu. Das Modell erwartet ${expH.toFixed(1)} Heimtore: mindestens 2 Treffer für ${match.home} sind gut möglich.`}}); }
+          reason:`${match.home} trifft im Schnitt ${homeAttStr.toFixed(1)} Mal pro Spiel — der Gegner lässt ${awayDefStr.toFixed(1)} Tore zu. Das Modell erwartet ${expH.toFixed(1)} Heimtore: mindestens 2 Treffer für ${match.home} sind gut möglich.${_attLineHome ? '<br>⚽ ' + _attLineHome : ''}`}}); }
     }
 
     // ── Auswärtsteam Over 1.5 Tore — BACKTEST VALIDATED: 65%+ bei expAway > 1.90 ─
@@ -3935,7 +3971,7 @@ function getBettingPicks(match, odds, leagueKey) {
         const _aPN = awayNeedsWin ? `<br><strong>⚡ ${_pALabel}${_rlSfx} — Auswärtsteam geht volles Risiko, Over 1.5 durch Druckspiel verstärkt.</strong>` : '';
         gC.push({sc, p:{icon:'✈️', market:`${match.away} über 1.5 Tore`, odds: o.ato15||null, oddsIsEst: o._ato15Est||false,
           conf: sc > 0.65 ? 'medium' : 'low',
-          reason:`${match.away} trifft im Schnitt ${awayAttStr.toFixed(1)} Mal pro Spiel — der Gegner lässt ${homeDefStr.toFixed(1)} Tore zu. Das Modell erwartet ${expA.toFixed(1)} Auswärtstore: mindestens 2 Treffer für ${match.away} sind gut möglich.`}}); }
+          reason:`${match.away} trifft im Schnitt ${awayAttStr.toFixed(1)} Mal pro Spiel — der Gegner lässt ${homeDefStr.toFixed(1)} Tore zu. Das Modell erwartet ${expA.toFixed(1)} Auswärtstore: mindestens 2 Treffer für ${match.away} sind gut möglich.${_attLineAway ? '<br>⚽ ' + _attLineAway : ''}`}}); }
     }
 
     // 1HZ Under 0.5 (tactical opener — suppressed when any team is under pressure)

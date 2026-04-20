@@ -876,6 +876,48 @@ def _squad_names_match(a: str, b: str) -> bool:
     return wa[-1] == wb[-1] or wa[-1] in cb or wb[-1] in ca
 
 
+def extract_player_context(team_id: int, squad_cache: dict) -> dict:
+    """Extract key player stats for pick reasoning texts.
+
+    Returns dict with:
+      topAttacker: starter with highest goals+assists  {name, pos, goals, assists, rating}
+      keyDefender: D/G starter with highest importance  {name, pos, rating}
+    Both are None if squad data is unavailable or stats are too low to mention.
+    """
+    team_data = squad_cache.get("teams", {}).get(str(team_id))
+    if not team_data or not team_data.get("starters"):
+        return {"topAttacker": None, "keyDefender": None}
+
+    starters = team_data["starters"]
+
+    # Top attacker: highest goals+assists across all positions
+    top_att = max(starters, key=lambda p: p.get("goals", 0) + p.get("assists", 0), default=None)
+    top_att_score = (top_att.get("goals", 0) + top_att.get("assists", 0)) if top_att else 0
+
+    # Key defender: highest-importance D or G
+    # Fallback: highest-importance non-attacker (handles stale cache where all pos="M")
+    defenders = [p for p in starters if p.get("pos") in ("D", "G")]
+    if not defenders:
+        defenders = [p for p in starters if p.get("pos") != "F"]
+    key_def = max(defenders, key=lambda p: p.get("importance", 0), default=None)
+
+    return {
+        "topAttacker": {
+            "name":    top_att["name"],
+            "pos":     top_att.get("pos", "M"),
+            "goals":   top_att.get("goals", 0),
+            "assists": top_att.get("assists", 0),
+            "rating":  round(top_att.get("rating", 0), 2),
+        } if top_att and top_att_score >= 3 else None,
+
+        "keyDefender": {
+            "name":   key_def["name"],
+            "pos":    key_def.get("pos", "D"),
+            "rating": round(key_def.get("rating", 0), 2),
+        } if key_def else None,
+    }
+
+
 def compute_squad_strength(team_id: int, injury_data, squad_cache: dict) -> tuple:
     """
     Cross-reference squad starters with current injury/suspension list.
@@ -1105,6 +1147,9 @@ def fetch_league(key, cfg, squad_cache=None):
         # Squad strength — cross-reference starters with current injuries
         h_squad_str, h_missing = compute_squad_strength(ht["teamId"], injury_cache.get(ht["teamId"]), _squad_cache)
         a_squad_str, a_missing = compute_squad_strength(at["teamId"], injury_cache.get(at["teamId"]), _squad_cache)
+        # Player context for pick reasoning texts
+        h_player_ctx = extract_player_context(ht["teamId"], _squad_cache)
+        a_player_ctx = extract_player_context(at["teamId"], _squad_cache)
         home_stake = {"score": calc_score(h_labels, rounds_left, h_form, h_pressure.get("pressureRatio")),
                       "labels": h_labels,
                       "motivationLevel": h_motiv,
@@ -1123,7 +1168,9 @@ def fetch_league(key, cfg, squad_cache=None):
                       "lineName":        h_ctx.get("lineName"),
                       "linePos":         h_ctx.get("linePos"),
                       "squadStrength":   h_squad_str,
-                      "missingStarters": h_missing} if h_labels else None
+                      "missingStarters": h_missing,
+                      "topAttacker":     h_player_ctx["topAttacker"],
+                      "keyDefender":     h_player_ctx["keyDefender"]} if h_labels else None
         away_stake = {"score": calc_score(a_labels, rounds_left, a_form, a_pressure.get("pressureRatio")),
                       "labels": a_labels,
                       "motivationLevel": a_motiv,
@@ -1140,7 +1187,9 @@ def fetch_league(key, cfg, squad_cache=None):
                       "lineName":        a_ctx.get("lineName"),
                       "linePos":         a_ctx.get("linePos"),
                       "squadStrength":   a_squad_str,
-                      "missingStarters": a_missing} if a_labels else None
+                      "missingStarters": a_missing,
+                      "topAttacker":     a_player_ctx["topAttacker"],
+                      "keyDefender":     a_player_ctx["keyDefender"]} if a_labels else None
 
         # H2H using API-Football team IDs
         home_id = f.get("homeId") or find_team_id(f["home"])
