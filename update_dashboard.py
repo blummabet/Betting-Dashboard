@@ -180,15 +180,69 @@ def fetch_team_form(team_id, season=2025):
     }
 
 
-def fetch_team_injuries(team_id):
-    """Fetch current injury/suspension list for a team from SofaScore.
-    Tries multiple known endpoint variants (SofaScore API changes frequently).
+def fetch_team_injuries(team_id, season=2025):
+    """Fetch current injury/suspension list for a team.
+
+    Primary source: API-Football /injuries (uses same team IDs as standings).
+    Fallback:       SofaScore endpoints (only works with SofaScore team IDs,
+                    which differ from API-Football IDs — kept as a best-effort
+                    fallback in case the caller has a SofaScore-native team_id).
+
     Returns dict with attack/defense counts and player notes, or None if unavailable.
-    Note: only long-term absences are available; match-day decisions are not.
     """
     now_ts = datetime.now().timestamp()
 
-    # Try known SofaScore injury endpoints (silent 404 — expected when endpoint unavailable)
+    # ── Primary: API-Football /injuries ──────────────────────────────────────
+    # Uses the same team IDs returned by /standings — no ID mismatch.
+    if APIF_KEY:
+        raw = []
+        for s in [season, season + 1]:
+            resp = apif_get("injuries", {"team": team_id, "season": s})
+            if resp:
+                raw = resp
+                break
+
+        if raw:
+            # Map API-Football position strings to short codes
+            _pos_map = {"Goalkeeper": "G", "Defender": "D", "Midfielder": "M", "Attacker": "F"}
+            attack_count, defense_count = 0, 0
+            notes = []
+
+            seen = set()
+            for entry in raw:
+                player   = entry.get("player", {})
+                name     = player.get("name", "?")
+                if name in seen:
+                    continue
+                seen.add(name)
+                # Position lives in player object for this endpoint
+                pos_long = player.get("type", "") or ""  # API-Football uses "type" for pos here
+                # Try statistics → games → position as well
+                stats = entry.get("statistics") or []
+                if isinstance(stats, list) and stats:
+                    pos_long = stats[0].get("games", {}).get("position", pos_long)
+                pos = _pos_map.get(pos_long, "M")
+
+                inj_info = entry.get("injury", {})
+                inj_type = inj_info.get("type", "unbekannt")
+
+                if pos in ("F", "M"):
+                    attack_count += 1
+                elif pos in ("D", "G"):
+                    defense_count += 1
+                else:
+                    attack_count += 1  # unknown pos: assume attacker for display
+
+                notes.append(f"{name} ({inj_type})")
+
+            if attack_count > 0 or defense_count > 0:
+                return {
+                    "attack":  attack_count,
+                    "defense": defense_count,
+                    "notes":   notes[:5],
+                }
+
+    # ── Fallback: SofaScore (only works when team_id is a SofaScore ID) ──────
     candidates = [
         f"https://api.sofascore.com/api/v1/team/{team_id}/injuries",
         f"https://api.sofascore.com/api/v1/team/{team_id}/players/missing",
@@ -197,7 +251,6 @@ def fetch_team_injuries(team_id):
     for url in candidates:
         data = fetch(url, silent_404=True)
         if data:
-            # Normalise: endpoint may return {"injuries":[...]} or {"missingPlayers":[...]}
             raw_injuries = data.get("injuries") or data.get("missingPlayers") or []
             if raw_injuries:
                 break
@@ -1050,6 +1103,28 @@ def fetch_league(key, cfg, squad_cache=None):
     max_played  = max(t["played"] for t in standings) if standings else 0
     rounds_left = max(0, cfg["rounds"] - max_played)
 
+    # ── Lookup helpers (needed before injury loop) ────────────────────────────
+    id_map      = {t["team"]: t["teamId"] for t in standings}
+    norm_id_map = {norm(t["team"]): t["teamId"] for t in standings}
+    stand_map   = {t["team"]: t for t in standings}
+    norm_stand  = {norm(t["team"]): t for t in standings}
+
+    def find_team_id(name):
+        if name in id_map: return id_map[name]
+        n = norm(name)
+        if n in norm_id_map: return norm_id_map[n]
+        for k, v in norm_id_map.items():
+            if n in k or k in n: return v
+        return None
+
+    def find_team_data(name):
+        if name in stand_map: return stand_map[name]
+        n = norm(name)
+        if n in norm_stand: return norm_stand[n]
+        for k, v in norm_stand.items():
+            if n in k or k in n: return v
+        return None
+
     # ── Form + injuries for stake teams ──────────────────────────────────────
     print(f"    Fetching form + injury data for stake teams...")
     form_cache   = {}
@@ -1067,6 +1142,20 @@ def fetch_league(key, cfg, squad_cache=None):
         if inj:
             injury_cache[t["teamId"]] = inj
             print(f"      {t['team']} Verletzungen: {inj['attack']} Ang / {inj['defense']} Abw")
+
+    # ── Also fetch injuries for non-stake teams that appear in fixtures ───────
+    # (so squad block shows for ALL fixture teams, not only stake-labelled ones)
+    fixture_team_ids = set()
+    for f in fixtures:
+        ht_d = find_team_data(f["home"])
+        at_d = find_team_data(f["away"])
+        if ht_d: fixture_team_ids.add(ht_d["teamId"])
+        if at_d: fixture_team_ids.add(at_d["teamId"])
+    for tid in fixture_team_ids:
+        if tid not in injury_cache:
+            inj = fetch_team_injuries(tid)
+            if inj:
+                injury_cache[tid] = inj
 
     # ── Stake teams ───────────────────────────────────────────────────────────
     stake_teams = []
@@ -1092,36 +1181,6 @@ def fetch_league(key, cfg, squad_cache=None):
             })
 
     # ── Stake fixtures ────────────────────────────────────────────────────────
-    # Build a teamId lookup from standings
-    id_map = {t["team"]: t["teamId"] for t in standings}
-
-    # Also build by norm for fuzzy matching
-    norm_id_map = {norm(t["team"]): t["teamId"] for t in standings}
-
-    def find_team_id(name):
-        if name in id_map:
-            return id_map[name]
-        n = norm(name)
-        if n in norm_id_map:
-            return norm_id_map[n]
-        for k, v in norm_id_map.items():
-            if n in k or k in n:
-                return v
-        return None
-
-    def find_team_data(name):
-        stand_map = {t["team"]: t for t in standings}
-        norm_stand = {norm(t["team"]): t for t in standings}
-        if name in stand_map:
-            return stand_map[name]
-        n = norm(name)
-        if n in norm_stand:
-            return norm_stand[n]
-        for k, v in norm_stand.items():
-            if n in k or k in n:
-                return v
-        return None
-
     stake_fixtures = []
     for f in fixtures:
         ht = find_team_data(f["home"])
@@ -1211,6 +1270,9 @@ def fetch_league(key, cfg, squad_cache=None):
             "homeStake": home_stake, "awayStake": away_stake,
             "homeForm": h_form, "awayForm": a_form,
             "h2h": h2h,
+            # Top-level squad data — available for ALL fixture teams (not just stake teams)
+            "homeSquad": {"squadStrength": h_squad_str, "missingStarters": h_missing},
+            "awaySquad": {"squadStrength": a_squad_str, "missingStarters": a_missing},
         })
 
     leader = standings[0] if standings else {"team": "?", "pts": 0}

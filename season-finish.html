@@ -6988,19 +6988,32 @@ function getTacticalBookingSignals(bookingsSide, teamName, matchDate, allFixture
 function renderSquadBlock(match) {
   const hSt = match.homeStake;
   const aSt = match.awayStake;
-  const hSq = hSt?.squadStrength ?? null;
-  const aSq = aSt?.squadStrength ?? null;
-  if (hSq == null && aSq == null) return '';
+
+  // Read squad data from top-level homeSquad/awaySquad (all teams) with
+  // fallback to homeStake/awayStake (legacy path for cached data)
+  const hSq    = match.homeSquad?.squadStrength ?? hSt?.squadStrength ?? null;
+  const aSq    = match.awaySquad?.squadStrength ?? aSt?.squadStrength ?? null;
+  const hMiss  = match.homeSquad?.missingStarters ?? hSt?.missingStarters;
+  const aMiss  = match.awaySquad?.missingStarters ?? aSt?.missingStarters;
+
+  // Only show squad block for a team when there are confirmed missing players.
+  // If injury data is unavailable (endpoint failed / wrong IDs) the score stays
+  // at 10.0 with no missing entries — showing "Vollbesetzt" in that case would
+  // be misleading, so we suppress the block entirely.
+  const hMissList = (hMiss || []).filter(p => p && p.name);
+  const aMissList = (aMiss || []).filter(p => p && p.name);
+  const hShow = hSq != null && (hMissList.length > 0 || hSq < 10.0);
+  const aShow = aSq != null && (aMissList.length > 0 || aSq < 10.0);
+  if (!hShow && !aShow) return '';
 
   const POS = {F:'ST', M:'MF', D:'VER', G:'TW'};
   const barColor  = s => s >= 8.5 ? '#3fb950' : s >= 7.0 ? '#e3b341' : '#f85149';
   const scoreIcon = s => s >= 8.5 ? '⚡' : s >= 7.0 ? '⚠️' : '🏥';
   const scoreCls  = s => s >= 8.5 ? 'sqstr-full' : s >= 7.0 ? 'sqstr-ok' : 'sqstr-low';
 
-  const renderTeam = (name, sq, missing) => {
+  const renderTeam = (name, sq, missingList) => {
     if (sq == null) return '';
     const pct = Math.round(sq / 10 * 100);
-    const missingList = (missing || []).filter(p => p && p.name);
     const missingHtml = missingList.length
       ? `<div class="squad-missing">↳ ${
           missingList.map(p => {
@@ -7025,8 +7038,8 @@ function renderSquadBlock(match) {
     </div>`;
   };
 
-  const hHtml = renderTeam(match.home, hSq, hSt?.missingStarters);
-  const aHtml = renderTeam(match.away, aSq, aSt?.missingStarters);
+  const hHtml = hShow ? renderTeam(match.home, hSq, hMissList) : '';
+  const aHtml = aShow ? renderTeam(match.away, aSq, aMissList) : '';
   if (!hHtml && !aHtml) return '';
 
   // Divider between teams only when both shown
