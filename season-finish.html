@@ -484,6 +484,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .pick-icon{font-size:16px;flex-shrink:0;line-height:1.4;}
 .pick-body{flex:1;min-width:0;}
 .pick-market{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.3;}
+/* ── Standings context row (pos + pts + gap) ─────────────────────────────── */
+.standings-ctx{font-size:11px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;width:100%;}
+.stctx-pos{font-weight:700;color:var(--text);opacity:.75;}
+.stctx-pts{opacity:.8;}
+.stctx-sep{opacity:.35;}
+.stctx-gap{font-size:10px;font-weight:700;border-radius:3px;padding:1px 6px;letter-spacing:.2px;}
+.stctx-ahead{background:rgba(63,185,80,.13);color:#3fb950;}
+.stctx-behind{background:rgba(248,81,73,.13);color:#f85149;}
+.stctx-level{background:rgba(227,179,65,.13);color:#e3b341;}
 .pick-odds-tag{
   display:inline-flex;align-items:center;font-size:14px;font-weight:800;
   background:rgba(0,212,161,.15);border:1px solid rgba(0,212,161,.40);
@@ -6298,19 +6307,42 @@ function computeRemainingDifficulty(leagueKey, teamName) {
 function renderStakeRow(name, stakeInfo, formData, leagueKey) {
   const sparkline = renderFormSparkline(formData?.form);
 
-  // Table position lookup
-  let pos = stakeInfo?.pos;
-  if (!pos && leagueKey && LEAGUES[leagueKey]?.stakeTeams) {
+  // Table position lookup — prefer stake object, fall back to stakeTeams
+  let pos        = stakeInfo?.pos        ?? null;
+  let pts        = stakeInfo?.pts        ?? null;
+  let gapToLine  = stakeInfo?.gapToLine  ?? null;
+  let lineName   = stakeInfo?.lineName   ?? null;
+  if ((pos == null || pts == null) && leagueKey && LEAGUES[leagueKey]?.stakeTeams) {
     const st = LEAGUES[leagueKey].stakeTeams.find(t => t.team === name);
-    if (st) pos = st.pos;
+    if (st) {
+      if (pos      == null) pos      = st.pos;
+      if (pts      == null) pts      = st.pts;
+      if (gapToLine == null && st.gapToLine != null) { gapToLine = st.gapToLine; lineName = st.lineName; }
+    }
   }
   const totalTeams = leagueKey && LEAGUES[leagueKey]?.stakeTeams ? LEAGUES[leagueKey].stakeTeams.length : 18;
-  const posClass = pos <= 3 ? 'pos-top' : pos >= totalTeams - 2 ? 'pos-bot' : '';
-  const posTag = pos ? `<span class="pos-tag ${posClass}">#${pos}</span>` : '';
+  const posClass = pos != null ? (pos <= 3 ? 'pos-top' : pos >= totalTeams - 2 ? 'pos-bot' : '') : '';
+  const posTag = pos != null ? `<span class="pos-tag ${posClass}">#${pos}</span>` : '';
+
+  // ── Standings context row: #pos · Xpts · gap ──────────────────────────────
+  let standingsCtxHtml = '';
+  if (pos != null && pts != null) {
+    let gapHtml = '';
+    if (gapToLine != null && lineName) {
+      if (gapToLine > 0) {
+        gapHtml = `<span class="stctx-gap stctx-ahead">+${gapToLine}P vor ${lineName}</span>`;
+      } else if (gapToLine < 0) {
+        gapHtml = `<span class="stctx-gap stctx-behind">${Math.abs(gapToLine)}P hinter ${lineName}</span>`;
+      } else {
+        gapHtml = `<span class="stctx-gap stctx-level">Gleichstand ${lineName}</span>`;
+      }
+    }
+    standingsCtxHtml = `<div class="standings-ctx"><span class="stctx-pos">#${pos}</span><span class="stctx-sep">·</span><span class="stctx-pts">${pts} Pkt</span>${gapHtml ? `<span class="stctx-sep">·</span>${gapHtml}` : ''}</div>`;
+  }
 
   if (!stakeInfo) {
     return `<div class="team-row">
-      <div class="tr-left"><span class="team-name">${name}</span>${posTag}<span class="sp-none">kein direkter Stake</span></div>
+      <div class="tr-left"><span class="team-name">${name}</span>${posTag}<span class="sp-none">kein direkter Stake</span>${standingsCtxHtml}</div>
       <div class="tr-right">${sparkline}</div>
     </div>`;
   }
@@ -6320,7 +6352,7 @@ function renderStakeRow(name, stakeInfo, formData, leagueKey) {
     : `<span class="sp-none">gesichert / keine Agenda</span>`;
 
   return `<div class="team-row">
-    <div class="tr-left"><span class="team-name">${name}</span>${posTag}${pills}</div>
+    <div class="tr-left"><span class="team-name">${name}</span>${posTag}${pills}${standingsCtxHtml}</div>
     <div class="tr-right">${sparkline}</div>
   </div>`;
 }

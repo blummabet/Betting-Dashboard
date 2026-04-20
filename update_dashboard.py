@@ -654,6 +654,89 @@ def calc_pressure(team, labels, standings, cfg, rounds_left):
     }
 
 
+def calc_standings_context(team, labels, standings, cfg):
+    """
+    Computes display-friendly standings context for a stake team:
+    - pos, pts, played, gd (raw int)
+    - gapToLine: signed pts gap to the relevant zone boundary
+                 positive = we're ahead (safe / leading), negative = behind (need pts)
+    - lineName:  human label for the boundary, e.g. "Platz 15", "Platz 1", "UCL"
+    - linePos:   position number of the boundary
+    """
+    pos    = team["pos"]
+    pts    = team["pts"]
+    played = team["played"]
+    gd_val = team.get("gd", 0)
+
+    is_gold   = any(l["c"] == "gold"   for l in labels)
+    is_red    = any(l["c"] == "red"    for l in labels)
+    is_blue   = any(l["c"] == "blue"   for l in labels)
+    is_orange = any(l["c"] == "orange" for l in labels)
+
+    gap_to_line = None
+    line_name   = None
+    line_pos    = None
+
+    if is_gold:
+        if pos == 1:
+            pts_2nd     = pts_at_pos(standings, 2)
+            gap_to_line = pts - pts_2nd   # positive = leading
+            line_name   = "Platz 2"
+            line_pos    = 2
+        else:
+            pts_leader  = pts_at_pos(standings, 1)
+            gap_to_line = pts - pts_leader  # negative = behind
+            line_name   = "Platz 1"
+            line_pos    = 1
+    elif is_red:
+        total     = cfg["total"]
+        rel       = cfg["rel"]
+        rel_ply   = cfg["rel_playoff"]
+        rel_start = total - rel + 1
+        safe_pos  = rel_start - rel_ply - 1
+        if safe_pos > 0:
+            pts_safe    = pts_at_pos(standings, safe_pos)
+            gap_to_line = pts - pts_safe   # negative = behind safety line
+            line_name   = f"Platz {safe_pos}"
+            line_pos    = safe_pos
+    elif is_blue:
+        ucl = cfg["ucl"]
+        if pos <= ucl:
+            pts_below   = pts_at_pos(standings, ucl + 1)
+            gap_to_line = pts - pts_below  # positive = leading chaser
+            line_name   = f"Platz {ucl + 1}"
+            line_pos    = ucl + 1
+        else:
+            pts_ucl     = pts_at_pos(standings, ucl)
+            gap_to_line = pts - pts_ucl    # negative = behind UCL
+            line_name   = f"Platz {ucl}"
+            line_pos    = ucl
+    elif is_orange:
+        ucl       = cfg["ucl"]
+        el        = cfg.get("el", 0)
+        el_cutoff = ucl + el
+        if pos <= el_cutoff:
+            pts_below   = pts_at_pos(standings, el_cutoff + 1)
+            gap_to_line = pts - pts_below
+            line_name   = f"Platz {el_cutoff + 1}"
+            line_pos    = el_cutoff + 1
+        else:
+            pts_el      = pts_at_pos(standings, el_cutoff)
+            gap_to_line = pts - pts_el
+            line_name   = f"Platz {el_cutoff}"
+            line_pos    = el_cutoff
+
+    return {
+        "pos":       pos,
+        "pts":       pts,
+        "played":    played,
+        "gd":        gd_val,
+        "gapToLine": gap_to_line,
+        "lineName":  line_name,
+        "linePos":   line_pos,
+    }
+
+
 def calc_score(labels, rounds_left, form_data=None, pressure_ratio=None):
     is_red  = any(l["c"] == "red"  for l in labels)
     is_gold = any(l["c"] == "gold" for l in labels)
@@ -848,6 +931,7 @@ def fetch_league(key, cfg):
             pressure = calc_pressure(t, labels, standings, cfg, rounds_left)
             score    = calc_score(labels, rounds_left, form, pressure["pressureRatio"])
             gd_str   = f"+{t['gd']}" if t["gd"] >= 0 else str(t["gd"])
+            ctx      = calc_standings_context(t, labels, standings, cfg)
             stake_teams.append({
                 "pos": t["pos"], "team": t["team"], "pts": t["pts"],
                 "played": t["played"], "gd": gd_str, "score": score,
@@ -856,6 +940,9 @@ def fetch_league(key, cfg):
                 "pressureRatio": pressure["pressureRatio"],
                 "mustWin":       pressure["mustWin"],
                 "canDraw":       pressure["canDraw"],
+                "gapToLine":     ctx["gapToLine"],
+                "lineName":      ctx["lineName"],
+                "linePos":       ctx["linePos"],
             })
 
     # ── Stake fixtures ────────────────────────────────────────────────────────
@@ -908,6 +995,9 @@ def fetch_league(key, cfg):
         # Cache motivation so we can use it for both motivationLevel and mustWin override
         h_motiv = calc_motivation(ht, h_labels, standings, cfg, rounds_left) if h_labels else 'full'
         a_motiv = calc_motivation(at, a_labels, standings, cfg, rounds_left) if a_labels else 'full'
+        # Standings context (position, pts, gap to zone boundary) for visual display
+        h_ctx = calc_standings_context(ht, h_labels, standings, cfg) if h_labels else {}
+        a_ctx = calc_standings_context(at, a_labels, standings, cfg) if a_labels else {}
         home_stake = {"score": calc_score(h_labels, rounds_left, h_form, h_pressure.get("pressureRatio")),
                       "labels": h_labels,
                       "motivationLevel": h_motiv,
@@ -917,7 +1007,14 @@ def fetch_league(key, cfg):
                       # ('low') teams don't play with mustWin intensity — suppressing here prevents
                       # misleading high pressure picks for teams whose outcome is already decided.
                       "mustWin": h_pressure.get("mustWin", False) and h_motiv == 'full',
-                      "canDraw": h_pressure.get("canDraw", True)} if h_labels else None
+                      "canDraw": h_pressure.get("canDraw", True),
+                      "pos":       h_ctx.get("pos"),
+                      "pts":       h_ctx.get("pts"),
+                      "played":    h_ctx.get("played"),
+                      "teamGD":    h_ctx.get("gd"),
+                      "gapToLine": h_ctx.get("gapToLine"),
+                      "lineName":  h_ctx.get("lineName"),
+                      "linePos":   h_ctx.get("linePos")} if h_labels else None
         away_stake = {"score": calc_score(a_labels, rounds_left, a_form, a_pressure.get("pressureRatio")),
                       "labels": a_labels,
                       "motivationLevel": a_motiv,
@@ -925,7 +1022,14 @@ def fetch_league(key, cfg):
                       "pressureRatio": a_pressure.get("pressureRatio", 0.0),
                       # mustWin=False unless motiv='full': see home_stake comment above
                       "mustWin": a_pressure.get("mustWin", False) and a_motiv == 'full',
-                      "canDraw": a_pressure.get("canDraw", True)} if a_labels else None
+                      "canDraw": a_pressure.get("canDraw", True),
+                      "pos":       a_ctx.get("pos"),
+                      "pts":       a_ctx.get("pts"),
+                      "played":    a_ctx.get("played"),
+                      "teamGD":    a_ctx.get("gd"),
+                      "gapToLine": a_ctx.get("gapToLine"),
+                      "lineName":  a_ctx.get("lineName"),
+                      "linePos":   a_ctx.get("linePos")} if a_labels else None
 
         # H2H using API-Football team IDs
         home_id = f.get("homeId") or find_team_id(f["home"])
