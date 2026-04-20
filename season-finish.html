@@ -469,6 +469,18 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 }
 .pick-item.ci-high{border-left-color:var(--green);}
 .pick-item.ci-medium{border-left-color:var(--yellow);}
+.pick-item.is-top-pick{
+  border-left:3px solid #f0b429;
+  background:linear-gradient(135deg,rgba(240,180,41,.10) 0%,var(--card2) 60%);
+  box-shadow:0 0 0 1px rgba(240,180,41,.25);
+}
+.top-pick-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+  background:linear-gradient(90deg,#b7791f,#f0b429);
+  color:#1a1207;border-radius:4px;padding:2px 7px;
+  white-space:nowrap;flex-shrink:0;
+}
 .pick-icon{font-size:16px;flex-shrink:0;line-height:1.4;}
 .pick-body{flex:1;min-width:0;}
 .pick-market{font-size:14px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.3;}
@@ -6509,7 +6521,9 @@ function buildTopCardsHtml(matchList) {
     const _api = m.apiPrediction || null;
 
     // ── Per-pick composite rank ────────────────────────────────────────────────
-    let bestPick = null, bestRank = -Infinity;
+    // All qualifying picks are pushed to candidates (not just the best one).
+    // Global sort + max-2-per-match guard applied after: allows a match to contribute
+    // up to 2 top picks if both independently rank highly enough.
     const _signals = {};  // store signals per-pick for display
 
     // Helper: normalise a raw value to a 0–10 score
@@ -6649,28 +6663,38 @@ function buildTopCardsHtml(matchList) {
         else if (_aPress.includes('orange') || _aPress.includes('yellow')) { rank += 1; sigs.push({ label: 'Pressure', score: 5 }); }
       }
 
-      if (rank > bestRank) {
-        bestRank = rank;
-        bestPick = p;
-        _signals[p.market] = sigs;
-      }
+      // Store rank + sigs for every pick — all go into candidates pool
+      _signals[p.market] = { rank, sigs };
     }
 
-    if (bestPick) {
-      candidates.push({
-        p: bestPick,
-        rank: bestRank,
-        sc: matchSc,
-        m,
-        sigs: _signals[bestPick.market] || [],
-      });
+    // Push all picks from this match into the global candidates pool
+    for (const p of picks) {
+      const _ps = _signals[p.market];
+      if (_ps) candidates.push({ p, rank: _ps.rank, sc: matchSc, m, sigs: _ps.sigs });
     }
   }
 
   if (!candidates.length) return '';
 
   candidates.sort((a, b) => b.rank - a.rank);
-  const top = candidates.slice(0, 7);
+
+  // Max-2-per-match guard: take top 7 globally but cap each match at 2 picks.
+  // This allows a high-value match to contribute 2 top picks while preventing
+  // one dominant match from flooding all 7 slots.
+  const top = [];
+  const _matchPickCount = {};
+  for (const c of candidates) {
+    const _mk = `${c.m.home}|${c.m.away}`;
+    const _cnt = _matchPickCount[_mk] || 0;
+    if (_cnt >= 2) continue;   // already 2 picks from this match
+    _matchPickCount[_mk] = _cnt + 1;
+    top.push(c);
+    if (top.length >= 7) break;
+  }
+
+  // ── Expose top picks globally so renderFixtureCard can highlight them ──────
+  // Set rebuilt on every Cards render (handles page refreshes and date changes).
+  window._topPickSet = new Set(top.map(c => `${c.m.home}|${c.m.away}|${c.p.market}`));
 
   const scoreBadgeClass = s => s >= 9 ? 'tc-score-high' : s >= 7 ? 'tc-score-mid' : 'tc-score-low';
   const confStr         = c => c === 'high' ? '★★★' : '★★☆';
@@ -7006,10 +7030,13 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     }
 
     const _ciCls = p.conf === 'high' ? ' ci-high' : p.conf === 'medium' ? ' ci-medium' : '';
-    return `<div class="pick-item${_ciCls}">
+    const _isTopPick = window._topPickSet?.has(`${match.home}|${match.away}|${p.market}`);
+    const _topCls  = _isTopPick ? ' is-top-pick' : '';
+    const _topBadge = _isTopPick ? `<span class="top-pick-badge">⭐ Top Pick</span>` : '';
+    return `<div class="pick-item${_ciCls}${_topCls}">
       <span class="pick-icon">${p.icon}</span>
       <div class="pick-body">
-        <div class="pick-market"><span class="pick-conf ${confClass}">${confLabel}</span><span>${p.market}</span>${oddsTag}${lowWarn}${valueTag}</div>
+        <div class="pick-market">${_topBadge}<span class="pick-conf ${confClass}">${confLabel}</span><span>${p.market}</span>${oddsTag}${lowWarn}${valueTag}</div>
         ${altHtml}
         ${fairOddsHtml}
         ${modsHtml}
@@ -7349,8 +7376,6 @@ function renderOverview() {
     ? weekLabel()
     : (() => { const d = parseGermanDate(window._selectedDay); return d.toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'}); })();
 
-  const cards = filtered.map(m=>renderFixtureCard(m, m.leagueName, m.leagueFlag, m.leagueKey)).join('');
-
   const emptyAll = `
     <div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted)">
       <div style="font-size:40px;margin-bottom:14px">${window._selectedDay !== 'all' ? '📅' : '🎉'}</div>
@@ -7359,8 +7384,10 @@ function renderOverview() {
     </div>`;
 
   // Cards des Tages + POTD use only the filtered (day-selected) matches
+  // buildTopCardsHtml MUST run before renderFixtureCard so _topPickSet is populated
   const potdHtml      = buildPickOfDayHtml(filtered);
   const topCardsHtml  = buildTopCardsHtml(filtered);
+  const cards = filtered.map(m=>renderFixtureCard(m, m.leagueName, m.leagueFlag, m.leagueKey)).join('');
 
   mc.innerHTML = `
     <div class="overview-header">
