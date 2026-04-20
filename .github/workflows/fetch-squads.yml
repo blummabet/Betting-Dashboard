@@ -1,0 +1,58 @@
+name: 🧬 Squad-Daten aktualisieren
+
+on:
+  # Automatisch: jeden Montag um 03:00 Uhr Vienna-Zeit (01:00 UTC)
+  schedule:
+    - cron: '0 1 * * 1'
+
+  # Manuell: jederzeit per Knopfdruck auf GitHub ausführbar
+  workflow_dispatch:
+
+# Berechtigung zum Zurückschreiben ins Repo
+permissions:
+  contents: write
+
+jobs:
+  fetch-squads:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      # 1. Repository auschecken
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      # 2. Python einrichten
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3. Python-Abhängigkeiten installieren
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
+      # 4. Squad-Daten holen (API-Football /players → squad_cache.json)
+      #    Fetcht Starter + Importance-Scores für alle Stake-Teams.
+      #    Läuft wöchentlich statt täglich — spart ~160 API-Calls/Tag.
+      - name: 🧬 Squad-Daten fetchen
+        run: python fetch_squads.py
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
+      # 5. squad_cache.json ins Repo committen
+      - name: 💾 squad_cache.json speichern & pushen
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add squad_cache.json
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — kein Commit nötig."
+          else
+            git commit -m "🧬 Squad-Cache Update $(date +'%d.%m.%Y') UTC"
+            git pull origin main --no-rebase -X ours
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
