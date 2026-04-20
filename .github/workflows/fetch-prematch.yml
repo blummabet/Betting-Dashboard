@@ -36,7 +36,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add prematch-data.json squad-cache.json bookings-cache.json
+          git add prematch-data.json squad-cache.json bookings-cache.json referee-cache.json
           # Nur committen wenn sich tatsächlich etwas geändert hat
           git diff --staged --quiet || git commit -m "chore: update prematch data [skip ci]"
           # Pull rebase before push to avoid rejection when other commits landed in between

@@ -562,6 +562,83 @@ function _saveSquadCache() {
   catch(e) { console.warn('[Squad] Cache speichern fehlgeschlagen:', e.message); }
 }
 
+// ── Referee cache (48h TTL, persisted to referee-cache.json) ────────────────
+// Stores avgCards/avgYellow/games per referee name — refreshed every 48h.
+// One API call per unique referee name (typically ~10–15 per run).
+const REFEREE_CACHE_FILE = path.join(__dirname, 'referee-cache.json');
+const REFEREE_TTL = 48 * 3600 * 1000;
+let _refereeCache = {};
+try {
+  _refereeCache = JSON.parse(fs.readFileSync(REFEREE_CACHE_FILE, 'utf8'));
+  const _alive = Object.keys(_refereeCache).filter(k => Date.now() - (_refereeCache[k]?.ts||0) < REFEREE_TTL).length;
+  console.log(`[Referee] Cache geladen: ${Object.keys(_refereeCache).length} Schiris (${_alive} noch gültig)`);
+} catch(e) { /* first run */ }
+
+async function fetchRefereeStats(refName) {
+  if (!refName) return null;
+  const key = refName.toLowerCase().trim();
+  const cached = _refereeCache[key];
+  if (cached && Date.now() - cached.ts < REFEREE_TTL) return cached.data;
+
+  try {
+    const encodedName = encodeURIComponent(refName);
+    const data = await apiFetch(`/referees?name=${encodedName}`);
+    let refs = data.response || [];
+
+    // Fallback: try last name only (handles abbreviated "M. Oliver" → "Oliver")
+    if (!refs.length) {
+      const parts = refName.trim().split(/\s+/);
+      const lastName = parts[parts.length - 1];
+      if (lastName && lastName.length > 3 && lastName !== refName) {
+        await sleep(CALL_DELAY);
+        const data2 = await apiFetch(`/referees?name=${encodeURIComponent(lastName)}`);
+        refs = data2.response || [];
+      }
+    }
+
+    if (!refs.length) {
+      _refereeCache[key] = { ts: Date.now(), data: null };
+      return null;
+    }
+
+    // Aggregate across seasons 2024 + 2025 (covers current + previous season)
+    let totalCards = 0, totalYellow = 0, totalGames = 0;
+    for (const ref of refs) {
+      for (const stat of (ref.statistics || [])) {
+        const season = stat.league?.season;
+        if (season !== 2024 && season !== 2025) continue;
+        const games   = stat.games?.played || 0;
+        const yellows = stat.cards?.yellow || 0;
+        const reds    = (stat.cards?.red || 0) + (stat.cards?.yellowred || 0);
+        totalGames  += games;
+        totalYellow += yellows;
+        totalCards  += yellows + reds;
+      }
+    }
+
+    if (!totalGames) {
+      _refereeCache[key] = { ts: Date.now(), data: null };
+      return null;
+    }
+
+    const result = {
+      name:      refs[0]?.referee?.name || refName,
+      avgCards:  Math.round((totalCards  / totalGames) * 100) / 100,
+      avgYellow: Math.round((totalYellow / totalGames) * 100) / 100,
+      games:     totalGames,
+    };
+    _refereeCache[key] = { ts: Date.now(), data: result };
+    return result;
+  } catch(e) {
+    return null;
+  }
+}
+
+function _saveRefereeCache() {
+  try { fs.writeFileSync(REFEREE_CACHE_FILE, JSON.stringify(_refereeCache)); }
+  catch(e) { console.warn('[Referee] Cache speichern fehlgeschlagen:', e.message); }
+}
+
 // ── Compute injury impact score (0–6 scale) ──────────────────────────────────
 function computeInjuryImpact(inj) {
   // Weights per position: based on how replaceable each role is
@@ -1041,13 +1118,31 @@ async function fetchAllPrematchData() {
   if (_firstH2hErr) console.warn(`  [H2H] Erstes Problem:`, JSON.stringify(_firstH2hErr));
   console.log(`  Step3 fertig: ${h2hOk} Paarungen mit H2H`);
 
-  // ── Step 4: Referee stats — ÜBERSPRUNGEN in GitHub Actions ──────────────
-  // Schiri-Stats brauchen pro Schiri 3+ sequentielle API-Calls (zu langsam für CI).
-  // Sie werden stattdessen im Browser via _enrichMissingData geladen (48h Cache).
-  // Die referee-Namen sind im JSON enthalten → Browser kann sie direkt nachladen.
+  // ── Step 4: Referee stats (48h disk cache, ~1 call per unique referee) ────
+  // Fetches /referees?name=X for each unique referee name, aggregates cards/game
+  // across seasons 2024+2025. Results are stored in referee-cache.json (48h TTL).
+  // With ~10–15 unique refs per run this costs ≤15 API calls — well within quota.
   const uniqueRefs = [...new Set(fixtures.map(d => d.referee).filter(Boolean))];
-  console.log(`[Server] Step4: ${uniqueRefs.length} Schiris in JSON (Stats werden im Browser geladen)`);
-  // refereeStats bleibt null — Browser füllt sie via refStats_v5 Cache
+  const staleRefs  = uniqueRefs.filter(name => {
+    const c = _refereeCache[name.toLowerCase().trim()];
+    return !c || Date.now() - c.ts >= REFEREE_TTL;
+  });
+  console.log(`[Server] Step4: ${uniqueRefs.length} Schiris (${staleRefs.length} neu laden, ${uniqueRefs.length - staleRefs.length} gecacht)...`);
+
+  // Sequential fetch — small set, each may need 1–2 API calls (last-name fallback)
+  for (const refName of staleRefs) {
+    await fetchRefereeStats(refName);
+    await sleep(CALL_DELAY);
+  }
+  if (staleRefs.length) _saveRefereeCache();
+
+  // Enrich fixtures with referee stats
+  for (const d of fixtures) {
+    if (!d.referee) continue;
+    d.refereeStats = _refereeCache[d.referee.toLowerCase().trim()]?.data || null;
+  }
+  const refOk = fixtures.filter(d => d.refereeStats).length;
+  console.log(`  Step4 fertig: ${refOk}/${uniqueRefs.length} Schiris mit Stats`);
 
   // ── Step 5: The Odds API — Pre-Match Odds ────────────────────────────────
   // One API call per league fetches ALL upcoming fixtures' odds at once.
@@ -1252,8 +1347,7 @@ async function fetchAllPrematchData() {
   }
   console.log(`  Step5.5 fertig: ${predOk} Predictions geladen (von ${upcoming.length} Spielen)`);
 
-  const refNote = uniqueRefs.length ? `, ${uniqueRefs.length} Schiri-Namen (Stats im Browser)` : '';
-  console.log(`\n[Server] ✅ Fertig: ${fixtures.length} Spiele, ${h2hOk} H2H, ${injOk} Verletzungen${refNote}, ${oddsOk} Quoten, ${predOk} Predictions\n`);
+  console.log(`\n[Server] ✅ Fertig: ${fixtures.length} Spiele, ${h2hOk} H2H, ${injOk} Verletzungen, ${refOk}/${uniqueRefs.length} Schiri-Stats, ${oddsOk} Quoten, ${predOk} Predictions\n`);
   return fixtures;
 }
 
