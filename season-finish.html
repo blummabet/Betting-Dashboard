@@ -6549,19 +6549,32 @@ function buildTopCardsHtml(matchList) {
       }
 
       // ── [3] API PREDICTION CONFLUENCE ────────────────────────────────────────
+      // API-Football predictions use a COARSE discrete scale: 0/10/33/45/50.
+      // Values >= 55 never appear — old thresholds (65/55) made this badge dead.
+      // Recalibrated to the actual data:
+      //   45/45/10 pattern = clear directional lean   → strong signal (rank +4, score 8)
+      //   45 with pctAway >= 33 = mild lean only      → weak signal  (rank +2, score 5)
+      //   Signal strength = direction × differential  → score = _norm(pctHome-pctAway, 0, 45)
       if (_api) {
         const _isHome  = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
         const _isAway  = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
         const _isOver  = mktLow.includes('over') || mktLow.includes('über');
         const _isUnder = mktLow.includes('under') || mktLow.includes('unter');
-        if (_isHome && _api.pctHome != null) {
-          if (_api.pctHome >= 65)      { rank += 4; sigs.push({ label: 'AI', score: _norm(_api.pctHome, 50, 85) }); }
-          else if (_api.pctHome >= 55) { rank += 2; sigs.push({ label: 'AI', score: _norm(_api.pctHome, 50, 85) }); }
+        const _pH = _api.pctHome ?? 0, _pA = _api.pctAway ?? 0;
+        if (_isHome && _pH > _pA) {
+          // Home is API's favoured side — how strongly?
+          const _diff = _pH - _pA;  // e.g. 45−10=35 (strong), 45−33=12 (mild)
+          const _aiScore = Math.min(10, Math.round(_norm(_diff, 0, 40) * 0.9 + 2));
+          if (_diff >= 30)      { rank += 4; sigs.push({ label: 'AI', score: _aiScore }); }
+          else if (_diff >= 10) { rank += 2; sigs.push({ label: 'AI', score: _aiScore }); }
         }
-        if (_isAway && _api.pctAway != null) {
-          if (_api.pctAway >= 65)      { rank += 4; sigs.push({ label: 'AI', score: _norm(_api.pctAway, 50, 85) }); }
-          else if (_api.pctAway >= 55) { rank += 2; sigs.push({ label: 'AI', score: _norm(_api.pctAway, 50, 85) }); }
+        if (_isAway && _pA > _pH) {
+          const _diff = _pA - _pH;
+          const _aiScore = Math.min(10, Math.round(_norm(_diff, 0, 40) * 0.9 + 2));
+          if (_diff >= 30)      { rank += 4; sigs.push({ label: 'AI', score: _aiScore }); }
+          else if (_diff >= 10) { rank += 2; sigs.push({ label: 'AI', score: _aiScore }); }
         }
+        // O/U: underOver field is often null in current data — keep as bonus when present
         if (_isOver  && _api.underOver === 'Over 2.5')  { rank += 2; sigs.push({ label: 'AI', score: 6 }); }
         if (_isUnder && _api.underOver === 'Under 2.5') { rank += 2; sigs.push({ label: 'AI', score: 6 }); }
       }
