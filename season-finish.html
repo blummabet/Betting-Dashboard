@@ -1514,6 +1514,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Fair Value — Über 3.5 verwendet echte o.o35-Quote als Anker</strong> — Der Market Anchor für Über 3.5 nutzte bisher die Über-2.5-Quote als groben Proxy (<code>mktO35 = mktO25 × 0.55</code>). Fix: wenn The Odds API <code>o.o35</code> liefert, wird dieser direkt de-viggt als Anker verwendet. Fallback auf O2.5-Proxy nur wenn <code>o.o35</code> nicht verfügbar. Ergebnis: weniger Über-3.5-Picks mit überhöhter mp wenn der Markt eigentlich @4.50 steht. <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>Over 2.5 Begründungstext zeigt Gegentore-Schnitt</strong> — Der Reason-Text für Über-2.5-Picks zeigte bisher nur Tore/Spiel (Angriff). Ergänzt: beide Defensiven mit "Gegentore: X Ø Y.Y, Z Ø W.W" aus <code>homeDefStr</code> / <code>awayDefStr</code>. Vollständiger Kontext: Angriff UND Abwehr beider Teams → die Basis für "beide Defensiven lassen regelmäßig Gegentore zu" ist jetzt faktisch belegbar. <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>H2H-Supplement aus prematch-data.json (_pmH2h)</strong> — <code>getBettingPicks()</code> las <code>match.h2h</code> aus dem HTML-LEAGUES-Config, das von <code>update_dashboard.py</code> nur mit vereinfachten H2H-Feldern befüllt wird (games, homeWins, draws, awayWins, avgGoals, lastMeetingYear) — <strong>ohne</strong> <code>over25Rate</code> / <code>bttsRate</code>. Resultat: <code>_h2hO25Mod</code> und <code>_h2hBttsMod</code> waren immer 0, auch wenn echte Daten in <code>prematch-data.json</code> lagen (z.B. Brighton vs Chelsea: 90% Über-2.5, 80% BTTS). Fix: <code>const _pmH2h = (window._preMatchData?.[…])?.h2h</code> wird direkt vor den H2H-Variablen definiert; alle drei Werte verwenden Nullish-Coalescing: <code>h2h.over25Rate ?? _pmH2h?.over25Rate ?? null</code>. Ab sofort aktivieren vollständige H2H-Goals-Daten aus prematch-data.json die H2H-Modifier (+0.12 Over, +0.10 BTTS bei ≥70%) korrekt. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>Karten-Picks: Motivation-Guard für bestätigte Absteiger (_cardPressBoost)</strong> — <code>cardsVeryHigh</code>/<code>cardsHigh</code> verwendeten bisher <code>_pressureBoost</code> und "beide Teams unter maximalem Druck" Narrativ auch für Teams mit <code>motivNone</code> (bestätigt abgestiegen). Ein bestätigter Absteiger hat keinen Abstiegsdruck mehr. Fix: neuer <code>_cardPressBoost = _anyRedConf ? _pressureBoost × 0.20 : _pressureBoost</code>; Narrativ-Branches prüfen <code>_bothRedConf</code>/<code>_anyRedConf</code> und verwenden korrekte Formulierungen ("Frust und schlechte Form" statt "maximalem Druck"). <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>Over 2.5 / Over 3.5 Narrativ: Kontext bei schwacher Angriffsreihe</strong> — Wenn <code>homeAttStr &lt; 0.85</code> oder <code>awayAttStr &lt; 0.85</code>, sagte der Reason-Text "beide Defensiven lassen regelmäßig Gegentore zu" — obwohl die eigene Angriffsreihe sehr schwach ist. Widerspruch: 0.6 Tore/Spiel + "beide Defensiven anfällig" klingt falsch. Fix: <code>_o25DefDriven</code>/<code>_o35DefDriven</code> erkennt niedrige Angriffsstärke und wechselt auf "Torerwartung kommt vor allem aus anfälligen Defensiven (Gegentore: X / Y)". Die eigenen Tore/Spiel werden trotzdem gezeigt — vollständiger Kontext ohne Widerspruch. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>Heimsieg/Auswärtssieg Narrativ: bestätigte Meister kein "Titel-Pflicht"-Text</strong> — <code>hc.includes('gold')</code>/<code>ac.includes('gold')</code> in den Result-Pick Reason-Texten triggerte "kämpft um den Titel — ein Heimsieg ist Pflicht. Der Druck erhöht die Intensität." auch für Teams die den Titel bereits gewonnen haben (<code>motivNone</code>). Fix: zusätzliche <code>!hMotivNone</code>/<code>!aMotivNone</code>-Checks; bestätigte Meister erhalten neutralen Text "bereits Meister — Pflichtspiel ohne Saisondruck. Rotation möglich." <em>(season-finish.html — Apr 2026)</em></li>
         </ul>
       </div>
     </div>
@@ -3397,6 +3400,14 @@ function getBettingPicks(match, odds, leagueKey) {
   // cardsHigh: relegation vs any high-stakes team (title, UCL, Europa, or both red)
   const cardsHigh     = bothRed || (anyRed && (anyBlue || anyGold || anyOrange));
   const cardsMed      = (anyRed && (hStreak <= -2 || aStreak <= -2)) || (!anyRed && hStreak <= -2 && aStreak <= -2);
+  // Cards motivation guards — confirmed-out teams don't play under "maximalem Druck"
+  // motivNone = confirmed relegated/champion → reckless play possible but NOT desperation pressure
+  const _hRedConf   = hc.includes('red') && hMotivNone;  // home is confirmed relegated
+  const _aRedConf   = ac.includes('red') && aMotivNone;  // away is confirmed relegated
+  const _anyRedConf = _hRedConf || _aRedConf;
+  const _bothRedConf = _hRedConf && _aRedConf;
+  // Effective pressure boost for cards: confirmed-relegated teams add no desperation energy
+  const _cardPressBoost = _anyRedConf ? _pressureBoost * 0.20 : _pressureBoost;
 
   // ── Referee card influence (Pro plan) ───────────────────────────────────────
   // avgCards from real referee history shifts base confidence for card picks.
@@ -3561,8 +3572,10 @@ function getBettingPicks(match, odds, leagueKey) {
           : '';
       let reason = homeInForm
         ? `${match.home} ist in Topform (zuletzt ${hStreak} Siege) und gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele. Das Angriffsspiel (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) trifft auf eine anfällige ${match.away}-Abwehr (kassiert Ø ${awayDefStr.toFixed(1)} Tore/Spiel).${_hH2hSnippet}`
-        : hc.includes('gold')
+        : hc.includes('gold') && !hMotivNone
           ? `${match.home} kämpft um den Titel — ein Heimsieg ist Pflicht. Gewinnt ${Math.round(hFS_home*100)}% der Heimspiele und erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel. Der Druck erhöht die Intensität.${_hH2hSnippet}`
+          : hc.includes('gold') && hMotivNone
+            ? `${match.home} ist bereits Meister — Pflichtspiel ohne Saisondruck. Gewinnt ${Math.round(hFS_home*100)}% der Heimspiele, Rotation möglich. Qualität bleibt strukturell hoch.${_hH2hSnippet}`
           : hc.includes('red') && homeNeedsWin
             ? `${match.home} kämpft gegen den Abstieg und braucht jeden Punkt zu Hause — das steigert die Intensität und Entschlossenheit. ${match.away} kommt mit nur ${Math.round(aFS_away*100)}% Auswärtssieg-Rate.${_hH2hSnippet}`
             : ac.includes('red') && !awayNeedsWin
@@ -3650,8 +3663,10 @@ function getBettingPicks(match, odds, leagueKey) {
           : '';
       let reason = awayInForm
         ? `${match.away} ist in Topform (zuletzt ${aStreak} Siege) und gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele. Das Angriffsspiel (Ø ${awayAttStr.toFixed(1)} Tore/Spiel) trifft auf eine anfällige ${match.home}-Abwehr (kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel).${_aH2hSnippet}`
-        : ac.includes('gold')
+        : ac.includes('gold') && !aMotivNone
           ? `${match.away} kämpft im Titelkampf um Punkte auswärts. Gewinnt ${Math.round(aFS_away*100)}% der Auswärtsspiele und erzielt Ø ${awayAttStr.toFixed(1)} Tore/Spiel. Titeldruck treibt die Leistung.${_aH2hSnippet}`
+          : ac.includes('gold') && aMotivNone
+            ? `${match.away} ist bereits Meister — Auswärtsspiel ohne Saisondruck. Gewinnt ${Math.round(aFS_away*100)}% der Auswärtsspiele, Rotation möglich. Qualität bleibt strukturell hoch.${_aH2hSnippet}`
           : hc.includes('red') && !homeNeedsWin
             ? `${match.home} steckt im Abstiegskampf und ist defensiv anfällig (kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel). ${match.away} mit ${Math.round(aFS_away*100)}% Auswärtssieg-Rate kann diesen Vorteil nutzen.${_aH2hSnippet}`
             : `${match.away} gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele und erzielt dabei Ø ${awayAttStr.toFixed(1)} Tore/Spiel. Der Gegner kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel.${_aH2hSnippet}`;
@@ -3846,9 +3861,14 @@ function getBettingPicks(match, odds, leagueKey) {
       { const _bvl = homeAttStr < 0.65 && awayAttStr < 0.65;
         if (_bvl) sc = Math.max(0, sc - 0.40); }
       const _o35H2hNote = (_h2hSample && _h2hAvgG != null) ? ` Historisch Ø ${_h2hAvgG} Tore/Duell.` : '';
+      // Low-attack context: when attack stats are modest, the Over signal comes from defensive weakness
+      const _o35DefDriven = homeAttStr < 0.85 || awayAttStr < 0.85;
+      const _o35BaseNote = _o35DefDriven
+        ? `${match.home} erzielt Ø ${homeAttStr.toFixed(1)}, ${match.away} Ø ${awayAttStr.toFixed(1)} Tore/Spiel — die Torerwartung kommt vor allem aus defensiver Anfälligkeit (Gegentore: ${match.home} Ø ${homeDefStr.toFixed(1)}, ${match.away} Ø ${awayDefStr.toFixed(1)}). Das Modell erwartet ${expGoals.toFixed(1)} Tore insgesamt: ein Ergebnis mit 4+ Treffern ist trotz moderater Angriffe möglich.`
+        : `${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet ${expGoals.toFixed(1)} Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich.`;
       gC.push({sc, p:{icon:'🔥', market:'Over 3.5 Tore', odds:o.o35,
         conf: sc>0.68?'high':sc>0.44?'medium':'low',
-        reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet ${expGoals.toFixed(1)} Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich.${_o35H2hNote}${_bothAttLine}`}}); }
+        reason:`${_o35BaseNote}${_o35H2hNote}${_bothAttLine}`}}); }
 
     // Over 2.5
     { let sc = expGoals>3.2?0.78:expGoals>2.8?0.66:expGoals>2.5?0.52:expGoals>2.2?0.30:0.10;
@@ -3894,10 +3914,15 @@ function getBettingPicks(match, odds, leagueKey) {
       const _o25GoalText = expGoals > 2.8
         ? `mindestens 3 Treffer sind gut möglich`
         : `mit ${expGoals.toFixed(1)} erwarteten Toren ist die Marke von 2.5 Toren erreichbar`;
+      // Low-attack context: when one or both teams barely score, explain the Over via defensive weakness
+      const _o25DefDriven = homeAttStr < 0.85 || awayAttStr < 0.85;
+      const _o25BaseNote = _o25DefDriven
+        ? `${match.home} erzielt Ø ${homeAttStr.toFixed(1)}, ${match.away} Ø ${awayAttStr.toFixed(1)} Tore/Spiel — die Torerwartung kommt vor allem aus anfälligen Defensiven (Gegentore: ${match.home} Ø ${homeDefStr.toFixed(1)}, ${match.away} Ø ${awayDefStr.toFixed(1)}). Das Modell erwartet ${expGoals.toFixed(1)} Tore: ${_o25GoalText}.`
+        : `${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: ${match.home} Ø ${homeDefStr.toFixed(1)}, ${match.away} Ø ${awayDefStr.toFixed(1)}). Das Modell erwartet ${expGoals.toFixed(1)} Tore: ${_o25GoalText}.`;
       if (expGoals >= 2.5) {
         gC.push({sc, p:{icon:'⚽', market:'Over 2.5 Tore', odds:o.o25,
           conf: sc>0.66?'high':sc>0.46?'medium':'low',
-          reason:`${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: ${match.home} Ø ${homeDefStr.toFixed(1)}, ${match.away} Ø ${awayDefStr.toFixed(1)}). Das Modell erwartet ${expGoals.toFixed(1)} Tore: ${_o25GoalText}.${_o25H2hNote}${_o25ApiNote}${_bothAttLine}`}}); } }
+          reason:`${_o25BaseNote}${_o25H2hNote}${_o25ApiNote}${_bothAttLine}`}}); } }
 
     // Under 2.5
     { let sc = expGoals<1.7?0.85:expGoals<2.0?0.72:expGoals<2.3?0.57:expGoals<2.6?0.34:0.12;
@@ -4146,18 +4171,26 @@ function getBettingPicks(match, odds, leagueKey) {
       let cardReason = '';
       if (cardsVeryHigh) {
         // Beide im Abstieg + schlechte Form: 4.5er realistisch
-        cardSc  = Math.min(0.96, 0.90 + _pressureBoost * 0.30 + _refCardMod);
+        cardSc  = Math.min(0.96, 0.90 + _cardPressBoost * 0.30 + _refCardMod);
         cardMkt = 'Über 4.5 Karten';
-        cardReason = `6-Punkte-Kellerduell${_rlSfx} — Verzweiflung, taktische Fouls, emotionale Zweikämpfe. Historisch >4.5 Karten.`;
+        cardReason = _bothRedConf
+          ? `Duell bestätigter Absteiger${_rlSfx} — kein Abstiegsdruck mehr, aber Frust und schlechte Form können Aggressivität antreiben. Karten möglich.`
+          : _anyRedConf
+            ? `Schlechte Form, ein Team bereits abgestiegen${_rlSfx} — ungleiche Intensitäten, Frustrationsspiel, taktische Fouls erwartet.`
+            : `6-Punkte-Kellerduell${_rlSfx} — Verzweiflung, taktische Fouls, emotionale Zweikämpfe. Historisch >4.5 Karten.`;
       } else if (cardsHigh) {
-        cardSc  = Math.min(0.88, 0.66 + _pressureBoost * 0.50 + _refCardMod);
+        cardSc  = Math.min(0.88, 0.66 + _cardPressBoost * 0.50 + _refCardMod);
         cardMkt = urgencyHigh ? 'Über 4.5 Karten' : 'Über 3.5 Karten';
         const _relVsElite = anyRed && !bothRed;
         cardReason = _relVsElite
           ? `Abstieg trifft Titelkampf${_rlSfx} — Relegations-Team spielt aggressiv, Elite-Team diktiert Tempo. Intensives Pressing auf beiden Seiten.`
-          : `Abstiegsduell${_rlSfx} — beide Teams unter maximalem Druck. Taktische Fouls und physisches Spiel erwartet.`;
+          : _bothRedConf
+            ? `Duell bestätigter Absteiger${_rlSfx} — Saison bereits entschieden, aber physisches Spiel und Frustration können Karten provozieren.`
+            : _anyRedConf
+              ? `Abstiegskampf trifft bestätigten Absteiger${_rlSfx} — ein Team kämpft noch, das andere spielt ohne Druck. Ungleiche Intensität kann Fouls und Frustration erzeugen.`
+              : `Abstiegsduell${_rlSfx} — beide Teams unter maximalem Druck. Taktische Fouls und physisches Spiel erwartet.`;
       } else if (cardsMed) {
-        cardSc  = Math.min(0.72, 0.40 + _pressureBoost * 0.40 + _refCardMod);
+        cardSc  = Math.min(0.72, 0.40 + _cardPressBoost * 0.40 + _refCardMod);
         const _noRedMed = !anyRed;
         cardReason = _noRedMed
           ? `Beide Teams in schlechter Form — frustriertes Spiel mit erhöhtem Foulspiel erwartet.`
