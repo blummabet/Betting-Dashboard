@@ -1337,15 +1337,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <p style="margin-top:6px;font-size:11px;color:var(--muted);">Strip erscheint nur wenn ≥1 Outcome ≥3pp bewegt hat. Kein Clutter bei stabilen Linien.</p>
       </div>
       <div class="heart-card">
-        <h3>🃏 Karten-Quoten Late-Fetch (Step 5b)</h3>
-        <p style="margin-bottom:8px;">Karten-Märkte öffnen meist erst 24–48h vor Anpfiff — zu spät für den normalen Step-5-Fetch. Step 5b löst das:</p>
+        <h3>🃏 BTTS + Corners + Cards Enrichment (Step 5b/5c)</h3>
+        <p style="margin-bottom:8px;">Spezial-Märkte werden in separaten Passes nach dem Haupt-Fetch ergänzt:</p>
         <ul>
-          <li>Prüft alle Fixtures ≤48h vor Kickoff die bereits Hauptquoten haben</li>
-          <li>Holt nachträglich Karten-Quoten (<code>cards_o35/o45/o55</code>) aus der API</li>
-          <li>Mergt nur Karten-Felder — keine anderen Quoten werden überschrieben</li>
-          <li>1.2s Delay zwischen Calls → kein Rate-Limit</li>
+          <li><strong>Step 5b:</strong> BTTS via UK-Region (Bet365 etc.) — EU-Region liefert 422 für BTTS</li>
+          <li><strong>Step 5c:</strong> Corners + Karten (<code>cards_o35/o45/o55</code>) + Double Chance via Alternate-Markets-Endpoint</li>
+          <li>Mergt nur fehlende Felder — vorhandene Hauptquoten werden nicht überschrieben</li>
+          <li>400ms Delay zwischen Calls → kein Rate-Limit</li>
         </ul>
-        <p style="margin-top:8px;font-size:11px;color:var(--muted);">Resultat: Karten-Picks mit echten Pinnacle-Quoten statt "keine Quote" — auch wenn der normale Fetch zu früh war.</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--muted);">Resultat: BTTS, Corners und Karten-Picks haben echte Bookie-Quoten für den Value-Check.</p>
       </div>
       <div class="heart-card gold-c">
         <h3>🛑 Over 2.5 Hard Gate</h3>
@@ -1492,7 +1492,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Over 2.5 Hard Gate</strong> — <code>if (expGoals &lt; 2.5)</code> verhindert Over-2.5-Picks wenn das Modell selbst unter der Marke liegt — eliminiert den häufigsten Selbstwiderspruch. Adaptiver Begründungstext: expGoals &gt; 2.8 → "mindestens 3 Treffer gut möglich", sonst → "mit X.X erwarteten Toren ist die Marke erreichbar". <em>(season-finish.html)</em></li>
           <li><strong>LOW_SCORING_OVER_RISK Two-Tier Validator</strong> — 🟡 WARNUNG nur wenn H2H-Sample ≥5 Spiele UND Ø gpg &lt;0.70 (zuverlässiges Low-Scoring-Signal). Darunter: 🔵 INFO LOW_SCORING_PROFILE mit Hinweis dass Hard Gate automatisch greift. Eliminiert False-Positive-Warnungen bei kleinen H2H-Samples nach dem Hard Gate Fix. <em>(check_picks_logic.py)</em></li>
           <li><strong>MW_ON_CONFIRMED_REL Fix in update_dashboard.py</strong> — <code>calc_pressure()</code> und <code>calc_motivation()</code> wurden bisher unabhängig berechnet und konnten sich widersprechen: bereits abgestiegene Teams erhielten <code>mustWin=True</code>. Fix: Motivation für beide Teams wird vor dem Pressure-Call berechnet und gecacht; <code>mustWin = pressure.mustWin AND motiv != 'none'</code>. Verhindert 🔴-Fehler und falsche "Abstiegskampf"-Narrative für bestätigte Absteiger. <em>(update_dashboard.py)</em></li>
-          <li><strong>Step 5b: Late-Fetch Karten-Quoten (prematch-server.js)</strong> — Karten-Märkte öffnen erst 24–48h vor Kickoff. Step 5b fetcht nachträglich <code>cards_o35/o45/o55/u35/u45</code> für alle Fixtures ≤48h mit Hauptquoten aber ohne Karten. 1.2s Delay zwischen Calls. Resultat: Karten-Picks haben echte Bookie-Quoten für den Value-Check statt "keine Quote". <em>(prematch-server.js)</em></li>
+          <li><strong>Step 5b/5c: BTTS + Corners + Cards Enrichment (prematch-server.js)</strong> — Spezial-Märkte werden in zwei separaten Passes geholt: Step 5b holt BTTS via UK-Region (Bet365 etc.; EU-Region liefert 422). Step 5c holt Corners + Karten (<code>cards_o35/o45/o55/u35/u45</code>) + Double Chance für alle Fixtures via Alternate-Markets-Endpoint. Ergebnis: BTTS, Corners und Karten-Picks haben echte Bookie-Quoten für den Value-Check. <em>(prematch-server.js)</em></li>
           <li><strong>Konsens-Devig (Consensus Fair Value)</strong> — Pass 1 in <code>parseBets()</code> (Server) und <code>_parseOddsBets()</code> (Browser): alle Bookmaker werden gesammelt, de-viggt und gewichtet gemittelt (Pinnacle 2×, andere 1×). Ergebnis: <code>hw_fair / dr_fair / aw_fair</code> = bookmaker-bias-freier fairer Preis. <code>deriveOdds()</code> nutzt fair-Werte wenn verfügbar (kein weiteres De-Vig nötig); Fallback auf Single-Source-Devig. <em>(prematch-server.js + season-finish.html)</em></li>
           <li><strong>Line Movement Strip auf Cards</strong> — <code>odds_open</code> wird beim ersten GitHub-Actions-Fetch eingefroren und nie überschrieben. <code>computeLineMovement()</code> berechnet den ppShift pro 1X2-Outcome; Strip erscheint ab ≥3pp Bewegung. Visualisierung: ↘/↗ (3–5pp), ⬇/⬆ (5–8pp), ⬇⬇ + SHARP-Badge (≥8pp). Farbkodierung: 🟢 Grün = bestätigt Pick, 🔴 Rot = widerspricht Pick, 🔵 Blau = neutrales Sharp Money, Grau = Drift. Kein Strip bei stabilen Linien (kein Clutter). <em>(prematch-server.js + season-finish.html)</em></li>
           <li><strong>The Odds API — Vollintegration aller Spezial-Märkte (CORS-Lösung)</strong> — CORS blockiert alle direkten API-Football-Calls aus dem Browser. Lösung: The Odds API als client-side Quell für alle 5 Märkte in <code>loadAllOdds()</code>. <strong>Pass 1</strong> (EU): H2H + Spreads + Totals (ü/u2.5, ü/u1.5). <strong>Pass 2</strong> (UK): BTTS. <strong>Pass 3</strong> (EU): Corners + Karten (o/u 3.5, 4.5, 5.5) + DC. <strong>Pass 4a/b</strong> (EU+UK): HZ-H2H + HZ-Totals + HZ-BTTS. <strong>Pass 5</strong> (EU): Team Goals (ü1.5 pro Team → <code>hto15 / ato15</code>). Ergebnis: BTTS, HT Over 0.5, Team Über 1.5 Tore, Ecken, Karten — alle mit echten Marktquoten. <em>(season-finish.html)</em></li>
@@ -1503,6 +1503,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Konkurrenz-adjustierte Bestätigung in calc_motivation() + calc_pressure()</strong> — Bisheriger Bug: Teams mit <code>motiv='low'</code> aber <code>mustWin=true</code> und <code>pressureRatio=1.0</code> wenn <code>pointsNeeded &gt; max_gain</code> durch comp_gain. Beispiel: Wolves braucht 22 Punkte bei max. 18 verfügbar (6 Runden × 3). Fix: (1) In <code>calc_motivation()</code>: wenn <code>(gap + comp_gain) ≥ max_gain</code> → <code>'none'</code> statt <code>'low'</code> (gilt für Abstieg, Titelchase, UCL/EL-Jagd). (2) In <code>calc_pressure()</code>: wenn <code>pointsNeeded ≥ max_gain</code> nach Berechnung → Early-Return mit <code>pressureRatio=0, mustWin=False</code>. Gilt für alle Zonen. (3) Abstieg: Wenn Team bereits über Sicherheitslinie (<code>gap_to_safety ≤ 0</code>) → <code>motiv='low'</code> statt <code>'full'</code> (Label ist residual). <em>(update_dashboard.py — Apr 2026)</em></li>
           <li><strong>mustWin-Unterdrückung für 'low'-Motivation</strong> — War: <code>mustWin = pressure.mustWin AND motiv != 'none'</code> (nur 'none' unterdrückt). Neu: <code>mustWin = pressure.mustWin AND motiv == 'full'</code> — auch 'low'-Teams bekommen kein mustWin-Flag. Begründung: ein Team das weiß dass es nicht mehr reinkommt, spielt nicht mit echter Muss-gewinnen-Intensität. Gleiches Guard in JS <code>computeMatchScore()</code>. <em>(update_dashboard.py + season-finish.html — Apr 2026)</em></li>
           <li><strong>Red-Safe-Detection auf 'none' erweitert</strong> — In <code>computeMatchScore()</code> war Red-Safe nur für <code>motiv='low'</code> aktiv. Bestätigte Absteiger (<code>motiv='none', pressureRatio=0</code>) erhielten dadurch noch den vollen Drama-Bonus. Fix: <code>_hRScs = ... (_hMotCS === 'low' || _hMotCS === 'none') &amp;&amp; pr===0 &amp;&amp; pn===0</code>. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>save_picks.py — Category-Dedup Fix</strong> — <code>generate_picks()</code> generierte 5 Kandidaten und nahm naiv die Top 3, was regelmäßig zu <em>Heimsieg + Auswärtssieg</em> gleichzeitig im selben Eintrag führte. Fix: exakt derselbe Category-Dedup wie in JS <code>getBettingPicks()</code> — <code>RESULT_KEYS</code> / <code>GOALS_KEYS</code> Sets + <code>seen_categories</code>-Filter stellen sicher: max 1 Ergebnis-Pick + max 1 Tore-Pick + max 1 Specialist-Pick. Alle 306 korrupten Einträge in <code>picks_history.json</code> wurden zurückgesetzt. <em>(save_picks.py — Apr 2026)</em></li>
+          <li><strong>_MIN_PICK_RANK = 12 — Quality Floor für Top-Cards</strong> — <code>buildTopCardsHtml()</code> füllte zuvor immer exakt 7 Karten auf, auch wenn nur schwache Picks verfügbar waren (rank &lt; 12). Neues Mindestschwellen-Konstante: Picks unterhalb von 12 werden ignoriert. Ergebnis: an spielarmen Tagen erscheinen legitim nur 2–4 Picks statt Filler-Karten. Qualität vor Quantität. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>Corner-Picks: Mindestquoten-Filter für geschätzte Odds (@1.55)</strong> — The Odds API liefert keine Corner-Quoten für CRO/HUN/BEL/SCO und weitere Ligen. Poisson-Schätzungen ergeben dort teils @1.45-Quoten ohne echten Value. Fix: <code>_EST_CORNER_MIN_ODDS = 1.55</code> — Corner-Picks mit geschätzten (<code>_cornersOddsEst</code>) Quoten unter dieser Schwelle werden nicht in den Pick-Pool aufgenommen. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>Rank-Penalty (−6) für Picks ohne Bookie-Quoten</strong> — Picks aus Ligen ohne The-Odds-API-Abdeckung (z.B. CRO, HUN) konkurrierten gleichwertig mit gut abgesicherten Picks. Fix: in <code>buildTopCardsHtml()</code> wird <code>rank -= 6</code> angewendet wenn <code>!hasRealOdds &amp;&amp; p.odds == null</code>. Verhindert dass no-odds Picks quotengesicherte Picks aus den Top 7 verdrängen. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>"kein Bookie-Feed" Label für CRO/HUN</strong> — Bisher wurde für alle Picks ohne Quote identisch "keine Quote" angezeigt — egal ob die Quote nur temporär fehlt oder ob die Liga strukturell keinen Bookie-Feed hat. Neu: <code>_noRealOdds</code>-Flag unterscheidet beide Fälle. Ligen ohne Feed (CRO/HUN) zeigen "kein Bookie-Feed" mit Tooltip "Liga ohne Bookie-Feed — Fair Value ist Modellschätzung". Im Fair-Value-Block entsprechend "— kein Bookie-Feed (Modell-Referenz)". <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>BEL + SCO zu The Odds API hinzugefügt</strong> — Belgium Jupiler Pro League (<code>soccer_belgium_first_div_a</code>) und Scotland Premiership (<code>soccer_scotland_premiership</code>) waren bisher nicht in <code>LEAGUE_ODDS_KEYS</code> (Server) und <code>ODDS_SPORT_KEYS</code> (Browser). Nun in beiden Maps eingetragen → Picks aus BEL/SCO erhalten echte Bookie-Quoten. CRO (210) und HUN (271) bleiben ausgeschlossen (The Odds API hat schlicht keine Coverage). <em>(prematch-server.js + season-finish.html — Apr 2026)</em></li>
+          <li><strong>Fair Value — Over/Under mp: fehlende Signale ergänzt</strong> — <code>_h2hAvgGMod</code> (H2H Tore-Schnitt-Modifier) und <code>_apiUO</code> (API Over/Under Prediction) flossen bisher zwar in den Pick-Score <code>sc</code> ein, wurden aber bei der <code>mp</code>-Berechnung (Fair-Value-Wahrscheinlichkeit) vergessen. Fix für Über/Unter 2.5: <code>mp</code> berücksichtigt jetzt beide Signale. <code>_apiUO=Over</code> → <code>mp += 0.05</code> (cap 0.92), <code>_apiUO=Under</code> → <code>mp -= 0.04</code> (min 0.12) und umgekehrt für Under. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>Fair Value — BTTS/BTTS-Nein: Poisson-Formel statt Lookup-Tabelle</strong> — Die <code>mp</code>-Berechnung für "Beide Teams treffen" nutzte früher eine grobe empirische Näherung. Ersetzt durch echte Poisson-Wahrscheinlichkeit: <code>P(BTTS Yes) = P(Heim≥1) × P(Auswärts≥1) = (1−e^−λH) × (1−e^−λA)</code>. Pressure-Boost, H2H-BTTS-Modifier, Clean-Sheet- und Failed-to-Score-Abzüge additiv darüber. BTTS-Nein analog mit <code>P(score=0) = e^−λ</code>. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>Fair Value — Über 3.5 verwendet echte o.o35-Quote als Anker</strong> — Der Market Anchor für Über 3.5 nutzte bisher die Über-2.5-Quote als groben Proxy (<code>mktO35 = mktO25 × 0.55</code>). Fix: wenn The Odds API <code>o.o35</code> liefert, wird dieser direkt de-viggt als Anker verwendet. Fallback auf O2.5-Proxy nur wenn <code>o.o35</code> nicht verfügbar. Ergebnis: weniger Über-3.5-Picks mit überhöhter mp wenn der Markt eigentlich @4.50 steht. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>Over 2.5 Begründungstext zeigt Gegentore-Schnitt</strong> — Der Reason-Text für Über-2.5-Picks zeigte bisher nur Tore/Spiel (Angriff). Ergänzt: beide Defensiven mit "Gegentore: X Ø Y.Y, Z Ø W.W" aus <code>homeDefStr</code> / <code>awayDefStr</code>. Vollständiger Kontext: Angriff UND Abwehr beider Teams → die Basis für "beide Defensiven lassen regelmäßig Gegentore zu" ist jetzt faktisch belegbar. <em>(season-finish.html — Apr 2026)</em></li>
         </ul>
       </div>
     </div>
@@ -3164,10 +3174,11 @@ function getBettingPicks(match, odds, leagueKey) {
   const hMotivLow  = hMotiv === 'low';
   const aMotivLow  = aMotiv === 'low';
 
-  // Must-win only applies when the team is STILL fighting — not already confirmed.
-  // A relegated team that can't escape has nothing to push for.
-  const homeNeedsWin  = urgencyMed && homeHasStake && !hMotivNone;
-  const awayNeedsWin  = urgencyMed && awayHasStake && !aMotivNone;
+  // Must-win only applies when the team is STILL fighting with full motivation.
+  // 'low' teams (mathematically unlikely) and 'none' (confirmed) don't play with real urgency.
+  // Matches Python: mustWin = pressure.mustWin AND motiv == 'full'
+  const homeNeedsWin  = urgencyMed && homeHasStake && hMotiv === 'full';
+  const awayNeedsWin  = urgencyMed && awayHasStake && aMotiv === 'full';
   const bothNeedWin   = homeNeedsWin && awayNeedsWin;
   // Urgency label for pick reason texts — graduated language based on severity
   const urgencyLabel  = _rl <= 1 ? `🚨 LETZTE RUNDE — dieser Sieg kann alles entscheiden`
@@ -4420,7 +4431,12 @@ function getBettingPicks(match, odds, leagueKey) {
         mp = Math.min(0.92, Math.max(0.12, mp));  // hard floor/ceiling after league adjustment
         if (bothNeedWin)       mp = Math.min(0.88 + _lgCap, mp + _pressureBoost * 0.55);
         else if (_anyNeedsWin) mp = Math.min(0.82 + _lgCap, mp + _pressureBoost * 0.30);
+        // H2H goals history: both rate (over25Rate) and average (avgGoals) as signals
         if (_h2hSample && _h2hOver25 != null) mp = Math.min(0.92, mp + _h2hO25Mod * 0.7);
+        if (_h2hSample && _h2hAvgG   != null) mp = Math.min(0.92, mp + _h2hAvgGMod * 0.7); // was missing from FV
+        // API prediction consensus: independent model agrees → small FV boost
+        if (_apiUO === 'Over 2.5')  mp = Math.min(0.92, mp + 0.05); // was missing from FV
+        else if (_apiUO === 'Under 2.5') mp = Math.max(0.12, mp - 0.04);
         // Line movement nudge: steam toward Over = money coming in on goals → boost mp
         mp = Math.min(0.92, Math.max(0.12, mp + _lmO));
         // Market anchor: Pinnacle O2.5/U2.5 already prices in relegation pressure.
@@ -4433,6 +4449,9 @@ function getBettingPicks(match, odds, leagueKey) {
         if (bothNeedWin)       mp = Math.max(0.10 - _lgCap, mp - _pressureBoost * 0.55);
         else if (_anyNeedsWin) mp = Math.max(0.15 - _lgCap, mp - _pressureBoost * 0.30);
         if (_h2hSample && _h2hOver25 != null) mp = Math.min(0.92, Math.max(0.05, mp - _h2hO25Mod * 0.7));
+        if (_h2hSample && _h2hAvgG   != null) mp = Math.min(0.92, Math.max(0.05, mp - _h2hAvgGMod * 0.7)); // was missing from FV
+        if (_apiUO === 'Under 2.5') mp = Math.min(0.92, mp + 0.05);  // was missing from FV
+        else if (_apiUO === 'Over 2.5') mp = Math.max(0.08, mp - 0.04);
         // Line movement nudge: steam toward Under = money on fewer goals → boost mp
         mp = Math.min(0.92, Math.max(0.08, mp + _lmU));
         // Market anchor: cap Under mp at de-vigged market Under prob + 10pp
@@ -4443,24 +4462,35 @@ function getBettingPicks(match, odds, leagueKey) {
         mp = Math.min(0.88, Math.max(0.05, mp));
         if (bothNeedWin)       mp = Math.min(0.78 + _lgCap, mp + _pressureBoost * 0.50);
         else if (_anyNeedsWin) mp = Math.min(0.70 + _lgCap, mp + _pressureBoost * 0.28);
-        // Market anchor for Over 3.5 (use O2.5 as proxy if no O3.5 odds available)
-        if (o.o25 && o.u25) { const _mktO35 = (1/o.o25)/((1/o.o25)+(1/o.u25)) * 0.55; mp = Math.min(_mktO35 + 0.12, mp); }
+        // Market anchor: use real O3.5 odds if available, otherwise derive from O2.5 (less accurate)
+        if (o.o35) { const _mktO35 = 1 / o.o35 / (1/o.o35 + (o.u35 ? 1/o.u35 : (1 - 1/o.o35))); mp = Math.min(_mktO35 + 0.12, mp); }
+        else if (o.o25 && o.u25) { const _mktO35 = (1/o.o25)/((1/o.o25)+(1/o.u25)) * 0.55; mp = Math.min(_mktO35 + 0.12, mp); }
         break;
       case 'Beide Teams treffen':
-        // sc-derived: BTTS Ja base prob from attack strengths, scaled to plausible range
-        { const _bttsMp = Math.min(0.86, Math.max(0.14,
-            (homeAttStr > 1.30 && awayAttStr > 1.10 ? 0.68 : homeAttStr > 1.15 && awayAttStr > 0.95 ? 0.56 : 0.38)
-            + (bothNeedWin ? _pressureBoost * 0.45 : _anyNeedsWin ? _pressureBoost * 0.22 : 0)
-            + (_h2hSample && _h2hBtts != null ? _h2hBttsMod * 0.7 : 0)
-          ));
+        // BTTS Yes: Poisson P(home ≥ 1) × P(away ≥ 1) — independent events
+        { const _pH1 = Math.max(0.05, 1 - Math.exp(-homeAttStr));  // P(home scores ≥ 1)
+          const _pA1 = Math.max(0.05, 1 - Math.exp(-awayAttStr));  // P(away scores ≥ 1)
+          let _bttsMp = Math.min(0.86, Math.max(0.14, _pH1 * _pA1));
+          // Pressure: both need to win → both attack → BTTS more likely
+          if (bothNeedWin)       _bttsMp = Math.min(0.86, _bttsMp + _pressureBoost * 0.45);
+          else if (_anyNeedsWin) _bttsMp = Math.min(0.82, _bttsMp + _pressureBoost * 0.22);
+          // H2H history
+          if (_h2hSample && _h2hBtts != null) _bttsMp = Math.min(0.86, _bttsMp + _h2hBttsMod * 0.7);
+          // Clean sheet / failed-to-score: high home CS rate or high away FTS rate suppresses BTTS
+          if (_hCSHome !== null && _hCSHome >= 0.35) _bttsMp = Math.max(0.12, _bttsMp - 0.06);
+          if (_aFTSAway !== null && _aFTSAway >= 0.35) _bttsMp = Math.max(0.12, _bttsMp - 0.06);
           mp = _bttsMp;
         } break;
       case 'Beide Teams treffen: Nein':
-        { const _bttsNMp = Math.min(0.82, Math.max(0.08,
-            (homeAttStr < 0.88 && awayAttStr < 0.82 ? 0.62 : bttsBad ? 0.42 : 0.24)
-            - (bothNeedWin ? _pressureBoost * 0.45 : _anyNeedsWin ? _pressureBoost * 0.22 : 0)
-            - (_h2hSample && _h2hBtts != null ? _h2hBttsMod * 0.7 : 0)
-          ));
+        { const _pH0 = Math.max(0.05, Math.exp(-homeAttStr));  // P(home scores 0)
+          const _pA0 = Math.max(0.05, Math.exp(-awayAttStr));  // P(away scores 0)
+          // P(BTTS No) = 1 - P(both score): cleaner than lookup table
+          let _bttsNMp = Math.min(0.82, Math.max(0.08, 1 - (1-_pH0)*(1-_pA0)));
+          if (bothNeedWin)       _bttsNMp = Math.max(0.08, _bttsNMp - _pressureBoost * 0.45);
+          else if (_anyNeedsWin) _bttsNMp = Math.max(0.10, _bttsNMp - _pressureBoost * 0.22);
+          if (_h2hSample && _h2hBtts != null) _bttsNMp = Math.min(0.82, _bttsNMp - _h2hBttsMod * 0.7);
+          if (_hCSHome !== null && _hCSHome >= 0.35) _bttsNMp = Math.min(0.82, _bttsNMp + 0.05);
+          if (_aFTSAway !== null && _aFTSAway >= 0.35) _bttsNMp = Math.min(0.82, _bttsNMp + 0.05);
           mp = _bttsNMp;
         } break;
       // ── Corners — model probability from expected corner estimate ─────────────
@@ -7180,7 +7210,9 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       ? p.oddsIsEst
         ? `<span class="pick-odds-tag" style="opacity:.85">@ ~${oddsNum.toFixed(2)}<span style="font-size:9px;opacity:.6;margin-left:2px">(est.)</span></span>`
         : `<span class="pick-odds-tag" style="${oddsNum < 1.40 ? 'opacity:.6' : ''}">@ ${oddsNum.toFixed(2)}</span>`
-      : `<span style="font-size:10px;color:var(--muted);margin-left:4px;font-style:italic">keine Quote</span>`;
+      : _noRealOdds
+        ? `<span style="font-size:10px;color:#8b949e;margin-left:4px;padding:1px 5px;border:1px solid #30363d;border-radius:4px" title="Für diese Liga gibt es keinen Bookie-Feed — Fair Value ist Modellschätzung">kein Bookie-Feed</span>`
+        : `<span style="font-size:10px;color:var(--muted);margin-left:4px;font-style:italic">keine Quote</span>`;
     const lowWarn  = oddsNum != null && !p.oddsIsEst && oddsNum < 1.40
       ? `<span style="font-size:11px;color:#e3b341;margin-left:4px;font-weight:600" title="Quote unter 1.40 — wenig Wert">⚠ niedrig</span>` : '';
     const _injEdgeTeam = (() => {
@@ -7241,11 +7273,14 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
           <span class="fov-edge ${edgeCls}">${edgeTxt}</span>${srcLabel}
         </div>`;
       } else {
-        // No bookie odds — show our fair odds as reference only
+        // No bookie odds — distinguish between no-feed league vs temporarily missing
+        const _noFeedNote = _noRealOdds
+          ? `<span style="font-size:10px;color:#8b949e" title="Liga ohne Bookie-Feed (z.B. CRO/HUN) — Modellschätzung als Referenz">— kein Bookie-Feed (Modell-Referenz)</span>`
+          : `<span style="color:#444d56;font-size:10px">— kein Bookie-Vergleich verfügbar</span>`;
         fairOddsHtml = `<div class="pick-fair-odds">
           <span class="fov-label">Fair Value</span>
           <span class="fov-our">${mo}</span>
-          <span style="color:#444d56;font-size:10px">— kein Bookie-Vergleich verfügbar</span>${srcLabel}
+          ${_noFeedNote}${srcLabel}
         </div>`;
       }
     }
