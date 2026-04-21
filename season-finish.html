@@ -6996,23 +6996,21 @@ function renderSquadBlock(match) {
   const hMiss  = match.homeSquad?.missingStarters ?? hSt?.missingStarters;
   const aMiss  = match.awaySquad?.missingStarters ?? aSt?.missingStarters;
 
-  // Only show squad block for a team when there are confirmed missing players.
-  // If injury data is unavailable (endpoint failed / wrong IDs) the score stays
-  // at 10.0 with no missing entries — showing "Vollbesetzt" in that case would
-  // be misleading, so we suppress the block entirely.
-  const hMissList = (hMiss || []).filter(p => p && p.name);
-  const aMissList = (aMiss || []).filter(p => p && p.name);
-  const hShow = hSq != null && (hMissList.length > 0 || hSq < 10.0);
-  const aShow = aSq != null && (aMissList.length > 0 || aSq < 10.0);
-  if (!hShow && !aShow) return '';
+  if (hSq == null && aSq == null) return '';
+
+  // injuryDataFetched: did we actually receive injury data from the API?
+  // false = no data → show "Keine Daten" instead of misleading "Vollbesetzt"
+  const hInjFetched = match.homeSquad?.injuryDataFetched ?? (hSt != null);
+  const aInjFetched = match.awaySquad?.injuryDataFetched ?? (aSt != null);
 
   const POS = {F:'ST', M:'MF', D:'VER', G:'TW'};
   const barColor  = s => s >= 8.5 ? '#3fb950' : s >= 7.0 ? '#e3b341' : '#f85149';
   const scoreIcon = s => s >= 8.5 ? '⚡' : s >= 7.0 ? '⚠️' : '🏥';
   const scoreCls  = s => s >= 8.5 ? 'sqstr-full' : s >= 7.0 ? 'sqstr-ok' : 'sqstr-low';
 
-  const renderTeam = (name, sq, missingList) => {
+  const renderTeam = (name, sq, missing, injFetched) => {
     if (sq == null) return '';
+    const missingList = (missing || []).filter(p => p && p.name);
     const pct = Math.round(sq / 10 * 100);
     const missingHtml = missingList.length
       ? `<div class="squad-missing">↳ ${
@@ -7022,24 +7020,28 @@ function renderSquadBlock(match) {
             return `${p.name}${posStr ? ` (${posStr}${eta})` : eta ? ` (${eta})` : ''}`;
           }).join(', ')
         } fehlt${missingList.length > 1 ? 'en' : ''}</div>`
-      : `<div class="squad-missing" style="color:var(--muted);opacity:.6">Vollbesetzt</div>`;
+      : injFetched
+        ? `<div class="squad-missing" style="color:var(--muted);opacity:.6">Vollbesetzt</div>`
+        : `<div class="squad-missing" style="color:var(--muted);opacity:.45;font-style:italic">Keine Ausfalls-Daten</div>`;
 
-    // Short team name (last word) for narrow layout
+    // Only show strength bar when we have actual injury data (otherwise 10.0 is meaningless)
+    const metaHtml = injFetched
+      ? `<div class="squad-bar-wrap"><div class="squad-bar-fill" style="width:${pct}%;background:${barColor(sq)}"></div></div>
+         <span class="squad-score ${scoreCls(sq)}">${scoreIcon(sq)} ${sq.toFixed(1)}/10</span>`
+      : `<span class="squad-score" style="color:var(--muted);opacity:.5">–/10</span>`;
+
     const shortName = name.split(' ').slice(-1)[0];
     return `<div class="squad-row">
       <div class="squad-meta">
         <span class="squad-name" title="${name}">${shortName}</span>
-        <div class="squad-bar-wrap">
-          <div class="squad-bar-fill" style="width:${pct}%;background:${barColor(sq)}"></div>
-        </div>
-        <span class="squad-score ${scoreCls(sq)}">${scoreIcon(sq)} ${sq.toFixed(1)}/10</span>
+        ${metaHtml}
       </div>
       ${missingHtml}
     </div>`;
   };
 
-  const hHtml = hShow ? renderTeam(match.home, hSq, hMissList) : '';
-  const aHtml = aShow ? renderTeam(match.away, aSq, aMissList) : '';
+  const hHtml = renderTeam(match.home, hSq, hMiss, hInjFetched);
+  const aHtml = renderTeam(match.away, aSq, aMiss, aInjFetched);
   if (!hHtml && !aHtml) return '';
 
   // Divider between teams only when both shown

@@ -1271,8 +1271,10 @@ def fetch_league(key, cfg, squad_cache=None):
             "homeForm": h_form, "awayForm": a_form,
             "h2h": h2h,
             # Top-level squad data — available for ALL fixture teams (not just stake teams)
-            "homeSquad": {"squadStrength": h_squad_str, "missingStarters": h_missing},
-            "awaySquad": {"squadStrength": a_squad_str, "missingStarters": a_missing},
+            "homeSquad": {"squadStrength": h_squad_str, "missingStarters": h_missing,
+                          "injuryDataFetched": injury_cache.get(ht["teamId"]) is not None},
+            "awaySquad": {"squadStrength": a_squad_str, "missingStarters": a_missing,
+                          "injuryDataFetched": injury_cache.get(at["teamId"]) is not None},
         })
 
     leader = standings[0] if standings else {"team": "?", "pts": 0}
