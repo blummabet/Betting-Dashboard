@@ -929,7 +929,8 @@ def _squad_names_match(a: str, b: str) -> bool:
     return wa[-1] == wb[-1] or wa[-1] in cb or wb[-1] in ca
 
 
-def extract_player_context(team_id: int, squad_cache: dict) -> dict:
+def extract_player_context(team_id: int, squad_cache: dict,
+                           team_name: str = None, league_key: str = None) -> dict:
     """Extract key player stats for pick reasoning texts.
 
     Returns dict with:
@@ -937,7 +938,17 @@ def extract_player_context(team_id: int, squad_cache: dict) -> dict:
       keyDefender: D/G starter with highest importance  {name, pos, rating}
     Both are None if squad data is unavailable or stats are too low to mention.
     """
-    team_data = squad_cache.get("teams", {}).get(str(team_id))
+    teams_map = squad_cache.get("teams", {})
+    team_data = teams_map.get(str(team_id))
+    # Name-based fallback (same as compute_squad_strength)
+    if not team_data and team_name:
+        target = norm(team_name)
+        for _tid, _tdata in teams_map.items():
+            if league_key and _tdata.get("leagueKey") != league_key:
+                continue
+            if norm(_tdata.get("name", "")) == target:
+                team_data = _tdata
+                break
     if not team_data or not team_data.get("starters"):
         return {"topAttacker": None, "keyDefender": None}
 
@@ -971,7 +982,8 @@ def extract_player_context(team_id: int, squad_cache: dict) -> dict:
     }
 
 
-def compute_squad_strength(team_id: int, injury_data, squad_cache: dict) -> tuple:
+def compute_squad_strength(team_id: int, injury_data, squad_cache: dict,
+                           team_name: str = None, league_key: str = None) -> tuple:
     """
     Cross-reference squad starters with current injury/suspension list.
     Returns (strength_score 0-10 or None, missing_starters list).
@@ -979,8 +991,21 @@ def compute_squad_strength(team_id: int, injury_data, squad_cache: dict) -> tupl
     injury_data: dict from fetch_team_injuries() with "notes" list like
                  ["Player Name (ca. 2 Wo.)", ...]
     squad_cache: full loaded cache dict (from load_squad_cache())
+    team_name / league_key: optional fallback for name-based lookup when ID
+                            doesn't match (e.g. if standings vs. players endpoint
+                            return different IDs for the same team)
     """
-    team_data = squad_cache.get("teams", {}).get(str(team_id))
+    teams_map = squad_cache.get("teams", {})
+    team_data = teams_map.get(str(team_id))
+    # Fallback: search by normalised team name within the same league
+    if not team_data and team_name:
+        target = norm(team_name)
+        for _tid, _tdata in teams_map.items():
+            if league_key and _tdata.get("leagueKey") != league_key:
+                continue
+            if norm(_tdata.get("name", "")) == target:
+                team_data = _tdata
+                break
     if not team_data:
         return None, []
 
@@ -1205,11 +1230,19 @@ def fetch_league(key, cfg, squad_cache=None):
         h_ctx = calc_standings_context(ht, h_labels, standings, cfg) if h_labels else {}
         a_ctx = calc_standings_context(at, a_labels, standings, cfg) if a_labels else {}
         # Squad strength — cross-reference starters with current injuries
-        h_squad_str, h_missing = compute_squad_strength(ht["teamId"], injury_cache.get(ht["teamId"]), _squad_cache)
-        a_squad_str, a_missing = compute_squad_strength(at["teamId"], injury_cache.get(at["teamId"]), _squad_cache)
+        # Pass team_name + league_key so the name-based fallback fires when
+        # the standings teamId doesn't match what fetch_squads.py indexed.
+        h_squad_str, h_missing = compute_squad_strength(
+            ht["teamId"], injury_cache.get(ht["teamId"]), _squad_cache,
+            team_name=ht.get("team"), league_key=key)
+        a_squad_str, a_missing = compute_squad_strength(
+            at["teamId"], injury_cache.get(at["teamId"]), _squad_cache,
+            team_name=at.get("team"), league_key=key)
         # Player context for pick reasoning texts
-        h_player_ctx = extract_player_context(ht["teamId"], _squad_cache)
-        a_player_ctx = extract_player_context(at["teamId"], _squad_cache)
+        h_player_ctx = extract_player_context(ht["teamId"], _squad_cache,
+                                              team_name=ht.get("team"), league_key=key)
+        a_player_ctx = extract_player_context(at["teamId"], _squad_cache,
+                                              team_name=at.get("team"), league_key=key)
         home_stake = {"score": calc_score(h_labels, rounds_left, h_form, h_pressure.get("pressureRatio")),
                       "labels": h_labels,
                       "motivationLevel": h_motiv,
