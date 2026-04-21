@@ -57,6 +57,11 @@ LEAGUES = {
     "CRO": dict(apif_id=210, total=10, rounds=36, ucl=1, el=1, uecl=1, rel_playoff=1, rel=1),
 }
 
+# Big-5 leagues fetch ALL teams (not just stake teams) so that opponents of stake
+# teams (e.g. Real Madrid playing vs a relegation side) also have squad data.
+# Smaller leagues fetch stake-teams-only to stay within API call budget.
+FULL_FETCH_LEAGUES = {"ENG", "ESP", "GER", "ITA", "FRA"}
+
 # ── API helpers ───────────────────────────────────────────────────────────────
 
 def apif_get(endpoint: str, params: dict) -> list:
@@ -254,14 +259,16 @@ def identify_starters(players_raw: list) -> list:
         stats_list = item.get("statistics", [])
         if not stats_list:
             continue
-        stats = stats_list[0]   # primary club stats
+        # Use stats entry with MOST minutes (not [0]) — stats[0] is often CL/Cup
+        # stats, not the domestic league where players accumulate most playing time.
+        stats = max(stats_list, key=lambda s: s.get("games", {}).get("minutes") or 0)
 
         minutes  = stats.get("games", {}).get("minutes") or 0
         lineups  = stats.get("games", {}).get("lineups") or 0
         if minutes < 180:   # ignore players with very little game time
             continue
 
-        # Position lives in statistics[0].games.position, NOT in player.position
+        # Position lives in statistics[x].games.position, NOT in player.position
         api_pos = stats.get("games", {}).get("position", "") or player.get("position", "Midfielder")
         # Normalise position to G / D / M / F
         pos_map = {
@@ -337,15 +344,20 @@ def compute_squad_strength(starters: list, missing_names: list) -> tuple[float, 
     Cross-reference starters with missing player names (from injury data).
     Returns (strength_score 0-10, list_of_missing_starters).
 
-    Deduction per missing starter:
-      GK  → 1.5 base + importance × 1.0 (max 2.5)
-      FWD → importance × 1.6 × 3.5 (max 2.5)
-      MID → importance × 1.0 × 3.5 (max 2.0)
-      DEF → importance × 1.2 × 3.5 (max 2.0)
+    Deduction per missing starter (calibrated for importance scores 0.5–0.9):
+      GK  → imp × 2.5, cap 1.2  (any GK absence seriously weakens the team)
+      FWD → imp × 1.6, cap 1.0  (star striker ≈ -1.0, regular ≈ -0.7)
+      MID → imp × 1.0, cap 0.7  (key midfielder ≈ -0.7)
+      DEF → imp × 1.2, cap 0.9  (key defender ≈ -0.8)
+
+    Reference benchmarks (realistic importance ~0.75):
+      1 key player out  → ~8.5–9.0/10
+      3 key players out → ~7.0–7.5/10
+      5 key players out → ~5.5–6.0/10  (genuine squad crisis)
     """
     pos_mult  = {"G": 2.5, "F": 1.6, "M": 1.0, "D": 1.2}
-    pos_floor = {"G": 1.5, "F": 0.4, "M": 0.3, "D": 0.3}
-    pos_ceil  = {"G": 2.5, "F": 2.5, "M": 2.0, "D": 2.0}
+    pos_floor = {"G": 0.4, "F": 0.15, "M": 0.1, "D": 0.15}
+    pos_ceil  = {"G": 1.2, "F": 1.0, "M": 0.7, "D": 0.9}
 
     score   = 10.0
     missing = []
@@ -355,8 +367,10 @@ def compute_squad_strength(starters: list, missing_names: list) -> tuple[float, 
             if names_match(starter["name"], mname):
                 pos    = starter["pos"]
                 imp    = starter["importance"]
+                # No * 3.5 multiplier — importance scores are now realistic (0.5–0.9)
+                # so direct multiplication gives sensible deductions
                 deduct = max(pos_floor[pos],
-                             min(pos_ceil[pos], imp * pos_mult[pos] * 3.5))
+                             min(pos_ceil[pos], imp * pos_mult[pos]))
                 score -= deduct
                 missing.append(starter)
                 break  # don't double-count
@@ -410,12 +424,17 @@ def main():
             print(f"  ⚠ Keine Standings — übersprungen")
             continue
 
-        # ── 2. Identify stake teams ─────────────────────────────────────────
-        stake_teams = [t for t in standings if has_stake_label(t, standings, cfg)]
-        print(f"    {len(standings)} teams, {len(stake_teams)} mit Stake-Label")
+        # ── 2. Identify teams to fetch ─────────────────────────────────────
+        if key in FULL_FETCH_LEAGUES:
+            # Big-5: fetch ALL teams so opponents of stake teams are also covered
+            teams_to_fetch = standings
+            print(f"    {len(standings)} teams, alle werden gefetcht (Big-5-Liga)")
+        else:
+            teams_to_fetch = [t for t in standings if has_stake_label(t, standings, cfg)]
+            print(f"    {len(standings)} teams, {len(teams_to_fetch)} mit Stake-Label")
 
-        # ── 3. Fetch players for each stake team ────────────────────────────
-        for team in stake_teams:
+        # ── 3. Fetch players for each team ─────────────────────────────────
+        for team in teams_to_fetch:
             tid  = team["teamId"]
             name = team["team"]
             print(f"    👥 {name} (ID {tid})… ", end="", flush=True)

@@ -1005,9 +1005,10 @@ def compute_squad_strength(team_id: int, injury_data, squad_cache: dict) -> tupl
                 missing_names.append(note.strip())
 
     # Position-specific deduction parameters (must match fetch_squads.py)
+    # Calibrated for realistic importance scores (0.5–0.9) after stats fix
     pos_mult  = {"G": 2.5, "F": 1.6, "M": 1.0, "D": 1.2}
-    pos_floor = {"G": 1.5, "F": 0.4, "M": 0.3, "D": 0.3}
-    pos_ceil  = {"G": 2.5, "F": 2.5, "M": 2.0, "D": 2.0}
+    pos_floor = {"G": 0.4, "F": 0.15, "M": 0.1, "D": 0.15}
+    pos_ceil  = {"G": 1.2, "F": 1.0, "M": 0.7, "D": 0.9}
 
     score           = 10.0
     missing_starters = []
@@ -1017,9 +1018,9 @@ def compute_squad_strength(team_id: int, injury_data, squad_cache: dict) -> tupl
             if _squad_names_match(starter["name"], mname):
                 pos    = starter.get("pos", "M")
                 imp    = starter.get("importance", 0.5)
-                deduct = max(pos_floor.get(pos, 0.3),
-                             min(pos_ceil.get(pos, 2.0),
-                                 imp * pos_mult.get(pos, 1.0) * 3.5))
+                deduct = max(pos_floor.get(pos, 0.15),
+                             min(pos_ceil.get(pos, 0.9),
+                                 imp * pos_mult.get(pos, 1.0)))
                 score -= deduct
                 eta = missing_etas.get(mname, "")
                 missing_starters.append({
