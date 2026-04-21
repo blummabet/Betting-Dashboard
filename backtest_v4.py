@@ -35,14 +35,15 @@ except ImportError:
 #  CONFIG
 # ──────────────────────────────────────────────────────────────────
 BASE_URL     = "https://www.football-data.co.uk/mmz4281/{season}/{code}.csv"
-SEASONS      = ["2324", "2425"]   # Nur Saisons für die wir lokale CSVs haben
+SEASONS      = ["2122", "2223", "2324", "2425"]   # 4 Saisons = ~22k+ Endphasen-Picks
 LAST_N_ROUNDS = 10      # "Endphase" — wie viele Runden vor Saisonende
 WARMUP_GAMES  = 6       # Spiele pro Team bevor Picks simuliert werden
 
 # Lokale CSV-Dateien im selben Verzeichnis wie dieses Script
-# season "2324" → "CODE.csv", season "2425" → "CODE (1).csv"
 LOCAL_DIR = Path(__file__).parent
 LOCAL_FILE_MAP = {
+    "2122": "{code}_2122.csv",
+    "2223": "{code}_2223.csv",
     "2324": "{code}.csv",
     "2425": "{code} (1).csv",
 }
@@ -408,46 +409,47 @@ def calc_pressure_and_motiv(team: str, snap: list, table: LeagueTable,
     if pos is None:
         return (0.0, False, True, "full")
 
-    rel_start = total - rel + 1            # erste Auto-Abstiegsposition
-    safe_pos  = rel_start - rel_ply - 1    # letzte vollständig sichere Position
-    if safe_pos < 1:
-        safe_pos = total - rel
+    rel_start  = total - rel + 1            # erste Auto-Abstiegsposition
+    rel_buffer = rel + 2                    # Zone mit spürbarem Abstiegsdruck (z.B. 5 Plätze über Abstieg)
+    danger_pos = rel_start - rel_buffer     # ab hier: Abstiegsdruck berechnen
+    if danger_pos < 1: danger_pos = 1
+
+    # Playoff-Zone: zwischen danger_pos und rel_start
+    playoff_pos = rel_start - 1 if league_cfg.get("rel_playoff", 0) > 0 else rel_start - 1
 
     points_needed = 0
     motiv = "full"
 
     # ── Abstiegsgefahr ───────────────────────────────────────────
+    ref_safe_pos = max(1, rel_start - rel - 1)   # Referenz: erste sichere Position
+
     if pos >= rel_start:
-        # In der Abstiegszone
-        pts_safe = table.get_pts(snap, safe_pos)
+        # In der direkten Abstiegszone
+        pts_safe = table.get_pts(snap, ref_safe_pos)
         gap      = pts_safe - team_pts
         if gap > max_gain:
-            # Mathematisch bestätigt abgestiegen
-            return (0.0, False, True, "none")
+            return (0.0, False, True, "none")  # Mathematisch bestätigt
         if gap > max_gain * 0.7:
-            motiv = "low"  # Fast bestätigt
-        comp_gain = min(max_gain, rounds_left * 1.2)
-        points_needed = max(0, gap + round(comp_gain * 0.4))
+            motiv = "low"
+        points_needed = max(0, gap + max(1, round(rounds_left * 0.5)))
 
-    elif pos > safe_pos:
-        # Playoff-Zone (softer)
-        pts_safe = table.get_pts(snap, safe_pos)
-        gap      = pts_safe - team_pts
+    elif pos >= danger_pos:
+        # Im Abstiegs-Gefahrenbereich (z.B. Platz 15-17 in 20er Liga)
+        pts_safe = table.get_pts(snap, ref_safe_pos)
+        gap      = max(0, pts_safe - team_pts)
         if gap > max_gain:
             return (0.0, False, True, "none")
         if gap > max_gain * 0.7:
             motiv = "low"
-        comp_gain = min(max_gain, rounds_left * 1.2)
-        points_needed = max(0, round((gap + round(comp_gain * 0.4)) * 0.6))
+        # Weicher als direkte Abstiegszone
+        points_needed = max(0, gap + max(0, round(rounds_left * 0.3)))
 
     else:
         # Safe — Titelkampf?
         if pos == 1:
-            # Titelverteidigung: check ob bereits gesichert
             pts_2nd = table.get_pts(snap, 2) if len(snap) >= 2 else 0
             if team_pts - pts_2nd > max_gain:
-                # Mathematisch Meister
-                return (0.0, False, True, "none")
+                return (0.0, False, True, "none")  # Mathematisch Meister
             if team_pts - pts_2nd > max_gain * 0.5:
                 motiv = "low"
         elif pos <= cl + 2:
@@ -463,8 +465,8 @@ def calc_pressure_and_motiv(team: str, snap: list, table: LeagueTable,
     if motiv == "none":
         return (0.0, False, True, "none")
 
-    must_win  = pressure_ratio > 0.65 and motiv == "full"
-    can_draw  = pressure_ratio < 0.30
+    must_win  = pressure_ratio > 0.30 and motiv == "full"   # realistischer Schwellenwert
+    can_draw  = pressure_ratio < 0.12
 
     return (pressure_ratio, must_win, can_draw, motiv)
 
