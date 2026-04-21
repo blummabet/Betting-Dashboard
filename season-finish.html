@@ -1526,6 +1526,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <button onclick="showPreMatchDebug()" style="background:#161b22;border:1px solid #444d56;color:#8b949e;border-radius:8px;padding:9px 10px;font-size:12px;cursor:pointer;white-space:nowrap;" title="Pre-Match API Status anzeigen">🔬 API Status</button>
     <button onclick="toggleManualEntry()" style="background:#1a1a2e;border:1px solid #a78bfa;color:#a78bfa;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">✏️ Manuell</button>
     <button onclick="exportPicksJson()" style="background:#1a1a2e;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;white-space:nowrap;">📥 JSON</button>
+    <button onclick="resetPicksHistory(this)" style="background:#1a0d0d;border:1px solid #f85149;color:#f85149;border-radius:8px;padding:9px 14px;font-size:12px;cursor:pointer;white-space:nowrap;" title="Alle gespeicherten Picks löschen (Neustart)">🗑️ Reset</button>
   </div>
 
   <!-- Manual score entry panel -->
@@ -9263,10 +9264,37 @@ function savePicksToday(btn) {
   for (const [key, L] of Object.entries(LEAGUES)) {
     for (const f of L.fixtures) {
       if (!isWithin7Days(f.date)) continue;
+
+      // ── Apply prematch enrichment (same as renderFixtureCard) ──────────────
+      // Ensures saved picks include referee stats, so cards and saved picks match exactly.
+      const _pm = window._preMatchData?.[`${f.home}|${f.away}`];
+      if (_pm?.refereeStats && !f.refereeStats) f.refereeStats = _pm.refereeStats;
+
       const odds = findOdds(key, f.home, f.away);
-      const picks = getBettingPicks(f, odds, key)
+      const picks = getBettingPicks(f, deriveOdds(odds || {}), key)
         .filter(p => p.conf === 'high' || p.conf === 'medium');
       if (!picks.length) continue;
+
+      // ── Sanity guard: max 1 result pick, 1 goals pick, 1 specialist ────────
+      // Prevents corrupt duplicates if algorithm is ever called in an unexpected state.
+      const seenCategories = new Set();
+      const _catOf = m => {
+        const ml = (m || '').toLowerCase();
+        if (ml.includes('heimsieg') || ml.includes('auswärtssieg') || ml.includes('unentschieden') ||
+            ml.includes('dnb') || ml.includes('doppelte chance') || ml.includes('ah heim') || ml.includes('ah ausw'))
+          return 'result';
+        if (ml.includes('tore') || ml.includes('btts') || ml.includes('beide teams') ||
+            ml.includes('over') || ml.includes('under') || ml.includes('über') || ml.includes('unter'))
+          return 'goals';
+        return 'specialist';
+      };
+      const dedupedPicks = picks.filter(p => {
+        const cat = _catOf(p.market);
+        if (seenCategories.has(cat)) return false;
+        seenCategories.add(cat);
+        return true;
+      });
+      if (!dedupedPicks.length) continue;
       const d = parseGermanDate(f.date);
       // Use local date components — toISOString() shifts to UTC and can give the wrong day (e.g. CET midnight = prev day in UTC)
       const dateIso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -9278,7 +9306,7 @@ function savePicksToday(btn) {
         fixtureId: f.fixtureId || null,   // from prematch enrichment — enables direct ID lookup
         cardScore: (typeof _rawCardSc === 'number') ? parseFloat(_rawCardSc.toFixed(1)) : null,
         finalScore: null,
-        picks: picks.map(p => ({
+        picks: dedupedPicks.map(p => ({
           icon: p.icon, market: p.market, conf: p.conf,
           sc: p.sc || null, odds: p.odds || null,
           result: null, finalScore: null
@@ -11015,6 +11043,23 @@ function exportPicksJson() {
   a.href = URL.createObjectURL(blob);
   a.download = 'picks_history.json';
   a.click();
+}
+
+// ── Reset all pick history (localStorage + in-memory) ────────────────────────
+// Use when picks_history.json contains bad legacy data.
+// Server-side file must be reset separately (already done: picks_history.json = []).
+function resetPicksHistory(btn) {
+  if (!confirm('Alle gespeicherten Picks aus dem Arbeitsspeicher löschen? (picks_history.json wurde bereits zurückgesetzt)\n\nDas kann nicht rückgängig gemacht werden.')) return;
+  try {
+    const KEYS = ['sf_picks_v2', 'sf_picks_v1', 'sf_picks', 'tc_history'];
+    KEYS.forEach(k => { try { localStorage.removeItem(k); } catch(_e) {} });
+  } catch(_e) {}
+  _resultsData = [];
+  _resultsLoaded = false;
+  renderResultsAll();
+  if (btn) { btn.textContent = '✅ Resettet'; setTimeout(() => { btn.textContent = '🗑️ Reset'; }, 3000); }
+  const info = document.getElementById('sfTrackerInfo');
+  if (info) info.textContent = 'History geleert. Jetzt "Picks speichern" klicken um neu zu starten.';
 }
 
 // ── Merge localStorage into _resultsData ─────────────
