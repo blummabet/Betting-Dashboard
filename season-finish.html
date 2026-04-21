@@ -7054,12 +7054,14 @@ function renderSquadBlock(match) {
 
   // Read squad data from top-level homeSquad/awaySquad (all teams) with
   // fallback to homeStake/awayStake (legacy path for cached data)
-  const hSq    = match.homeSquad?.squadStrength ?? hSt?.squadStrength ?? null;
-  const aSq    = match.awaySquad?.squadStrength ?? aSt?.squadStrength ?? null;
-  const hMiss  = match.homeSquad?.missingStarters ?? hSt?.missingStarters;
-  const aMiss  = match.awaySquad?.missingStarters ?? aSt?.missingStarters;
-
-  if (hSq == null && aSq == null) return '';
+  const hSq   = match.homeSquad?.squadStrength ?? hSt?.squadStrength ?? null;
+  const aSq   = match.awaySquad?.squadStrength ?? aSt?.squadStrength ?? null;
+  const hMiss = match.homeSquad?.missingStarters ?? hSt?.missingStarters;
+  const aMiss = match.awaySquad?.missingStarters ?? aSt?.missingStarters;
+  const hHasMiss = (hMiss || []).some(p => p && p.name);
+  const aHasMiss = (aMiss || []).some(p => p && p.name);
+  // Skip block only when there is literally nothing to show for either team
+  if (hSq == null && aSq == null && !hHasMiss && !aHasMiss) return '';
 
   // injuryDataFetched: did we actually receive injury data from the API?
   // false = no data → show "Keine Daten" instead of misleading "Vollbesetzt"
@@ -7072,9 +7074,10 @@ function renderSquadBlock(match) {
   const scoreCls  = s => s >= 8.5 ? 'sqstr-full' : s >= 7.0 ? 'sqstr-ok' : 'sqstr-low';
 
   const renderTeam = (name, sq, missing, injFetched) => {
-    if (sq == null) return '';
     const missingList = (missing || []).filter(p => p && p.name);
-    const pct = Math.round(sq / 10 * 100);
+    // Skip only when there is truly nothing to show: no score AND no injury data
+    if (sq == null && !missingList.length && !injFetched) return '';
+    const pct = sq != null ? Math.round(sq / 10 * 100) : 0;
     const missingHtml = missingList.length
       ? `<div class="squad-missing">↳ ${
           missingList.map(p => {
@@ -7087,11 +7090,14 @@ function renderSquadBlock(match) {
         ? `<div class="squad-missing" style="color:var(--muted);opacity:.6">Vollbesetzt</div>`
         : `<div class="squad-missing" style="color:var(--muted);opacity:.45;font-style:italic">Keine Ausfalls-Daten</div>`;
 
-    // Only show strength bar when we have actual injury data (otherwise 10.0 is meaningless)
-    const metaHtml = injFetched
+    // Strength bar: only when sq is known (team in squad_cache) AND injury data was fetched.
+    // When sq == null (team not yet in cache), show missing players but no bar.
+    const metaHtml = (sq != null && injFetched)
       ? `<div class="squad-bar-wrap"><div class="squad-bar-fill" style="width:${pct}%;background:${barColor(sq)}"></div></div>
          <span class="squad-score ${scoreCls(sq)}">${scoreIcon(sq)} ${sq.toFixed(1)}/10</span>`
-      : `<span class="squad-score" style="color:var(--muted);opacity:.5">–/10</span>`;
+      : sq != null
+        ? `<span class="squad-score" style="color:var(--muted);opacity:.5">–/10</span>`
+        : `<span class="squad-score" style="color:var(--muted);opacity:.45;font-size:10px;font-style:italic">kein Cache</span>`;
 
     const shortName = name.split(' ').slice(-1)[0];
     return `<div class="squad-row">
