@@ -2543,6 +2543,29 @@ function computeClientInjuryImpact(inj) {
 }
 
 // ═══════════════════════════════════════════════════════
+//  SQUAD / INJURY DISPLAY HELPER
+//  Converts missingStarters[] → display object compatible with
+//  _igBuildInj / _tgBuildInj / _cpBuildInj renderers.
+//  missingStarters: [{name, pos, imp}, ...] from squad_cache
+// ═══════════════════════════════════════════════════════
+function _missToInjDisplay(missing) {
+  if (!missing || !missing.length) return null;
+  const o = { goalkeeper:0, defense:0, midfield:0, attack:0 };
+  for (const p of missing) {
+    if      (p.pos === 'G') o.goalkeeper++;
+    else if (p.pos === 'D') o.defense++;
+    else if (p.pos === 'M') o.midfield++;
+    else if (p.pos === 'F') o.attack++;
+  }
+  o.total     = missing.length;
+  o.confirmed = missing.length;
+  o.impactScore = Math.min(10, o.goalkeeper*2.5 + o.attack*1.6 + o.defense*1.2 + o.midfield*1.0);
+  // _raw: simulate the API-injury format that the build helpers filter for player names
+  o._raw = missing.map(p => ({ type: 'Missing Fixture', player: p.name }));
+  return o;
+}
+
+// ═══════════════════════════════════════════════════════
 //  DERIVED ODDS HELPER (DNB + Doppelte Chance from 1X2)
 // ═══════════════════════════════════════════════════════
 // DNB Home fair odds: neutral on draw → 1 + P(away)/P(home)  [de-vigged, ~3% Pinnacle margin applied]
@@ -2842,10 +2865,11 @@ function getBettingPicks(match, odds, leagueKey) {
   // ── Player context snippets (from squad_cache via update_dashboard.py) ──────
   // topAttacker/keyDefender are null when squad data unavailable or stats too low.
   // Injected into goal- and result-pick reason texts to make them concrete.
-  const _hTop = match.homeStake?.topAttacker ?? null;
-  const _aTop = match.awayStake?.topAttacker ?? null;
-  const _hDef = match.homeStake?.keyDefender ?? null;
-  const _aDef = match.awayStake?.keyDefender ?? null;
+  // Primary: homeStake (stake teams) — Fallback: homeSquad (all teams incl. non-stake opponents like Real Madrid)
+  const _hTop = match.homeStake?.topAttacker ?? match.homeSquad?.topAttacker ?? null;
+  const _aTop = match.awayStake?.topAttacker ?? match.awaySquad?.topAttacker ?? null;
+  const _hDef = match.homeStake?.keyDefender ?? match.homeSquad?.keyDefender ?? null;
+  const _aDef = match.awayStake?.keyDefender ?? match.awaySquad?.keyDefender ?? null;
 
   const _posDE = {G:'TW', D:'VER', M:'MF', F:'ST'};
   // "Saka 11G+8A" or "Haaland 26G"
@@ -4951,6 +4975,20 @@ function computeMatchScore(match, leagueKey) {
     }
   }
 
+  // ── Squad strength modifier ────────────────────────────────────────────────
+  // When one or both teams are severely depleted, the match outcome becomes more
+  // chaotic and unreliable for betting → small negative for very low squad health.
+  // squadStrength: 10 = full squad, 0 = decimated. Threshold at 6.0 (3+ key absences).
+  {
+    const hSq = match.homeSquad?.squadStrength ?? match.homeStake?.squadStrength ?? null;
+    const aSq = match.awaySquad?.squadStrength ?? match.awayStake?.squadStrength ?? null;
+    if (hSq !== null && aSq !== null) {
+      const worstSq = Math.min(hSq, aSq);
+      if      (worstSq < 4.0) score -= 0.30;  // one team is badly decimated
+      else if (worstSq < 6.0) score -= 0.15;  // notable absences on at least one side
+    }
+  }
+
   // ── Dynamic score ceiling — reserves 12/12 for genuine end-of-season games ──
   // The table-based stake scores (1–10 from Python) already encode HOW dire a team's
   // situation is. roundsLeft controls HOW MUCH TIME remains to fix it.
@@ -5248,8 +5286,10 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   const _igFix   = leagueKey ? (LEAGUES[leagueKey]?.fixtures || []) : [];
   const _igHRest = getRestDays(match.home, match.date, _igFix);
   const _igARest = getRestDays(match.away, match.date, _igFix);
-  const _igHInj  = match.homeForm?.injuries || null;
-  const _igAInj  = match.awayForm?.injuries || null;
+  const _igHInj  = _missToInjDisplay(match.homeSquad?.missingStarters ?? match.homeStake?.missingStarters)
+                   || match.homeForm?.injuries || null;
+  const _igAInj  = _missToInjDisplay(match.awaySquad?.missingStarters ?? match.awayStake?.missingStarters)
+                   || match.awayForm?.injuries || null;
   // ── Context badges (mirrors card logic) ─────────────────
   const _igCtxBadges = [];
   // Fatigue — English text for infographic
@@ -5894,8 +5934,10 @@ function shareTelegram(matchJson, leagueName, leagueFlag, leagueKey) {
   const _tgFix   = leagueKey ? (LEAGUES[leagueKey]?.fixtures||[]) : [];
   const _tgHRest = getRestDays(match.home, match.date, _tgFix);
   const _tgARest = getRestDays(match.away, match.date, _tgFix);
-  const _tgHInj  = match.homeForm?.injuries || null;
-  const _tgAInj  = match.awayForm?.injuries || null;
+  const _tgHInj  = _missToInjDisplay(match.homeSquad?.missingStarters ?? match.homeStake?.missingStarters)
+                   || match.homeForm?.injuries || null;
+  const _tgAInj  = _missToInjDisplay(match.awaySquad?.missingStarters ?? match.awayStake?.missingStarters)
+                   || match.awayForm?.injuries || null;
   const _tgRef   = match.refereeStats || null;
   const _tgBuildInj = (inj, teamName) => {
     if (!inj || (inj.total||0) === 0) return '';
@@ -6167,8 +6209,10 @@ function copyCard(matchJson, leagueName, leagueFlag, leagueKey, btn, lang = 'de'
   const _cpFix   = leagueKey ? (LEAGUES[leagueKey]?.fixtures||[]) : [];
   const _cpHRest = getRestDays(match.home, match.date, _cpFix);
   const _cpARest = getRestDays(match.away, match.date, _cpFix);
-  const _cpHInj  = match.homeForm?.injuries || null;
-  const _cpAInj  = match.awayForm?.injuries || null;
+  const _cpHInj  = _missToInjDisplay(match.homeSquad?.missingStarters ?? match.homeStake?.missingStarters)
+                   || match.homeForm?.injuries || null;
+  const _cpAInj  = _missToInjDisplay(match.awaySquad?.missingStarters ?? match.awayStake?.missingStarters)
+                   || match.awayForm?.injuries || null;
   const _cpRef   = match.refereeStats || null;
   const _cpBuildInj = (inj, teamName) => {
     if (!inj || (inj.total||0) === 0) return '';

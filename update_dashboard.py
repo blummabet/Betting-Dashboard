@@ -1272,10 +1272,16 @@ def fetch_league(key, cfg, squad_cache=None):
             "homeForm": h_form, "awayForm": a_form,
             "h2h": h2h,
             # Top-level squad data — available for ALL fixture teams (not just stake teams)
+            # topAttacker/keyDefender here are fallbacks for non-stake opponents (e.g. Real Madrid)
+            # that have no homeStake object; JS reads homeStake?.topAttacker ?? homeSquad?.topAttacker
             "homeSquad": {"squadStrength": h_squad_str, "missingStarters": h_missing,
-                          "injuryDataFetched": injury_cache.get(ht["teamId"]) is not None},
+                          "injuryDataFetched": injury_cache.get(ht["teamId"]) is not None,
+                          "topAttacker":     h_player_ctx["topAttacker"],
+                          "keyDefender":     h_player_ctx["keyDefender"]},
             "awaySquad": {"squadStrength": a_squad_str, "missingStarters": a_missing,
-                          "injuryDataFetched": injury_cache.get(at["teamId"]) is not None},
+                          "injuryDataFetched": injury_cache.get(at["teamId"]) is not None,
+                          "topAttacker":     a_player_ctx["topAttacker"],
+                          "keyDefender":     a_player_ctx["keyDefender"]},
         })
 
     leader = standings[0] if standings else {"team": "?", "pts": 0}
