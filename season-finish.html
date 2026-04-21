@@ -3239,8 +3239,27 @@ function getBettingPicks(match, odds, leagueKey) {
 
   // ── Injuries: position-specific xG modifiers ──────────────────────────────
   // New format: { goalkeeper, defense, midfield, attack, confirmed, questionable, impactScore }
-  const _hInj      = hF.injuries || null;
-  const _aInj      = aF.injuries || null;
+  // Build injury object from missingStarters array (squad data) → correct player counts per position
+  const _buildInjObj = (missing) => {
+    if (!missing || !missing.length) return null;
+    const o = { goalkeeper: 0, defense: 0, midfield: 0, attack: 0 };
+    for (const p of missing) {
+      if      (p.pos === 'G') o.goalkeeper++;
+      else if (p.pos === 'D') o.defense++;
+      else if (p.pos === 'M') o.midfield++;
+      else if (p.pos === 'F') o.attack++;
+    }
+    const total = o.goalkeeper + o.defense + o.midfield + o.attack;
+    if (total === 0) return null;
+    // Derive impactScore: GK counts 2.5, F=1.6, D=1.2, M=1.0 (matches squad strength weights)
+    o.impactScore = Math.min(10, o.goalkeeper * 2.5 + o.attack * 1.6 + o.defense * 1.2 + o.midfield * 1.0);
+    o.confirmed = total;
+    return o;
+  };
+  const _hMissing = match.homeSquad?.missingStarters ?? match.homeStake?.missingStarters;
+  const _aMissing = match.awaySquad?.missingStarters ?? match.awayStake?.missingStarters;
+  const _hInj      = _buildInjObj(_hMissing) || hF.injuries || null;
+  const _aInj      = _buildInjObj(_aMissing) || aF.injuries || null;
   const _hImpact   = _hInj?.impactScore ?? 0;
   const _aImpact   = _aInj?.impactScore ?? 0;
   // xG attack multiplier: strikers (0.10/player) + midfielders (0.04/player) + compound bonus
@@ -7054,9 +7073,12 @@ function renderSquadBlock(match) {
 }
 
 function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
-  // Enrich match.time + odds_open from prematch-data.json if not already set
+  // Enrich match fields from prematch-data.json when not already set
   const _pm = window._preMatchData?.[`${match.home}|${match.away}`];
   if (!match.time && _pm?.time) match.time = _pm.time;
+  // Referee stats live in prematch-data.json → copy to match object so
+  // getBettingPicks() can read match.refereeStats (was always null before)
+  if (!match.refereeStats && _pm?.refereeStats) match.refereeStats = _pm.refereeStats;
 
   const angle = getBettingAngle(match);
   const ct = cardType(match);
