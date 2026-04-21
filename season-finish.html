@@ -1513,6 +1513,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Fair Value — BTTS/BTTS-Nein: Poisson-Formel statt Lookup-Tabelle</strong> — Die <code>mp</code>-Berechnung für "Beide Teams treffen" nutzte früher eine grobe empirische Näherung. Ersetzt durch echte Poisson-Wahrscheinlichkeit: <code>P(BTTS Yes) = P(Heim≥1) × P(Auswärts≥1) = (1−e^−λH) × (1−e^−λA)</code>. Pressure-Boost, H2H-BTTS-Modifier, Clean-Sheet- und Failed-to-Score-Abzüge additiv darüber. BTTS-Nein analog mit <code>P(score=0) = e^−λ</code>. <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>Fair Value — Über 3.5 verwendet echte o.o35-Quote als Anker</strong> — Der Market Anchor für Über 3.5 nutzte bisher die Über-2.5-Quote als groben Proxy (<code>mktO35 = mktO25 × 0.55</code>). Fix: wenn The Odds API <code>o.o35</code> liefert, wird dieser direkt de-viggt als Anker verwendet. Fallback auf O2.5-Proxy nur wenn <code>o.o35</code> nicht verfügbar. Ergebnis: weniger Über-3.5-Picks mit überhöhter mp wenn der Markt eigentlich @4.50 steht. <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>Over 2.5 Begründungstext zeigt Gegentore-Schnitt</strong> — Der Reason-Text für Über-2.5-Picks zeigte bisher nur Tore/Spiel (Angriff). Ergänzt: beide Defensiven mit "Gegentore: X Ø Y.Y, Z Ø W.W" aus <code>homeDefStr</code> / <code>awayDefStr</code>. Vollständiger Kontext: Angriff UND Abwehr beider Teams → die Basis für "beide Defensiven lassen regelmäßig Gegentore zu" ist jetzt faktisch belegbar. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>H2H-Supplement aus prematch-data.json (_pmH2h)</strong> — <code>getBettingPicks()</code> las <code>match.h2h</code> aus dem HTML-LEAGUES-Config, das von <code>update_dashboard.py</code> nur mit vereinfachten H2H-Feldern befüllt wird (games, homeWins, draws, awayWins, avgGoals, lastMeetingYear) — <strong>ohne</strong> <code>over25Rate</code> / <code>bttsRate</code>. Resultat: <code>_h2hO25Mod</code> und <code>_h2hBttsMod</code> waren immer 0, auch wenn echte Daten in <code>prematch-data.json</code> lagen (z.B. Brighton vs Chelsea: 90% Über-2.5, 80% BTTS). Fix: <code>const _pmH2h = (window._preMatchData?.[…])?.h2h</code> wird direkt vor den H2H-Variablen definiert; alle drei Werte verwenden Nullish-Coalescing: <code>h2h.over25Rate ?? _pmH2h?.over25Rate ?? null</code>. Ab sofort aktivieren vollständige H2H-Goals-Daten aus prematch-data.json die H2H-Modifier (+0.12 Over, +0.10 BTTS bei ≥70%) korrekt. <em>(season-finish.html — Apr 2026)</em></li>
         </ul>
       </div>
     </div>
@@ -2926,9 +2927,13 @@ function getBettingPicks(match, odds, leagueKey) {
   // ── H2H goals patterns (from API, Pro plan) ───────────────────────────────
   // over25Rate / bttsRate from real historical goals data — weighted by recency
   // If API H2H not available, these modifiers are neutral (0).
-  const _h2hOver25  = h2h.over25Rate ?? null;   // 0.0–1.0 or null
-  const _h2hBtts    = h2h.bttsRate   ?? null;
-  const _h2hAvgG    = h2h.avgGoals   ?? null;
+  // Supplement with prematch-data.json H2H when match config lacks over25Rate/bttsRate:
+  // update_dashboard.py writes simplified H2H to HTML (no over25Rate/bttsRate),
+  // while prematch-server.js fetches the full H2H into window._preMatchData.
+  const _pmH2h      = (window._preMatchData?.[`${match.home}|${match.away}`] || null)?.h2h || null;
+  const _h2hOver25  = h2h.over25Rate ?? _pmH2h?.over25Rate ?? null;   // 0.0–1.0 or null
+  const _h2hBtts    = h2h.bttsRate   ?? _pmH2h?.bttsRate   ?? null;
+  const _h2hAvgG    = h2h.avgGoals   ?? _pmH2h?.avgGoals   ?? null;
   const _h2hSample  = h2hN >= 5;  // only apply when ≥5 games for reliability
 
   // Over 2.5 H2H modifier: +0.12 if ≥70%, +0.06 if ≥60%, -0.08 if ≤30%, -0.14 if ≤20%
