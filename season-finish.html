@@ -2059,7 +2059,9 @@ const LEAGUE_SPORT_KEYS = {
   TUR:'soccer_turkey_super_league',
   SUI:'soccer_switzerland_superleague',
   POL:'soccer_poland_ekstraklasa',
-  // SCO / HUN / CRO / BEL: not covered by The Odds API — odds via prematch-data.json fallback
+  SCO:'soccer_scotland_premiership',
+  BEL:'soccer_belgium_first_div_a',
+  // HUN (271) / CRO (210): not covered by The Odds API — no bookmaker odds available for these leagues.
 };
 
 window._oddsData = {};
@@ -6701,6 +6703,12 @@ function buildTopCardsHtml(matchList) {
       // Conf bonus
       if (p.conf === 'high')   rank += 4;
       if (p.conf === 'medium') rank += 1;
+
+      // ── No confirmed bookmaker odds → significant rank penalty ───────────────
+      // Picks from leagues without odds coverage (CRO, HUN) should not displace
+      // real picks from well-covered leagues. Only affects top-cards ranking, not the
+      // per-match pick display.
+      if (!hasRealOdds && p.odds == null) rank -= 6;
 
       // Odds range bonus
       if (inRange)          rank += 3;
