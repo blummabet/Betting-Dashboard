@@ -409,40 +409,46 @@ def calc_pressure_and_motiv(team: str, snap: list, table: LeagueTable,
     if pos is None:
         return (0.0, False, True, "full")
 
-    rel_start  = total - rel + 1            # erste Auto-Abstiegsposition
-    rel_buffer = rel + 2                    # Zone mit spürbarem Abstiegsdruck (z.B. 5 Plätze über Abstieg)
-    danger_pos = rel_start - rel_buffer     # ab hier: Abstiegsdruck berechnen
-    if danger_pos < 1: danger_pos = 1
-
-    # Playoff-Zone: zwischen danger_pos und rel_start
-    playoff_pos = rel_start - 1 if league_cfg.get("rel_playoff", 0) > 0 else rel_start - 1
+    rel_start   = total - rel + 1            # erste Auto-Abstiegsposition (z.B. 18 in PL)
+    # Korrekte sichere Position: knapp über der Playoff/Abstiegszone
+    # rel_ply=0 → Platz 17 ist sicher; rel_ply=1 → Platz 16 ist sicher (15 ist safe)
+    safe_pos    = max(1, rel_start - rel_ply - 1)   # erste vollständig sichere Position
+    # Abstiegs-Gefahrenzone: 4 Plätze über dem ersten gefährdeten Platz
+    danger_pos  = max(1, safe_pos - 3)
 
     points_needed = 0
     motiv = "full"
 
     # ── Abstiegsgefahr ───────────────────────────────────────────
-    ref_safe_pos = max(1, rel_start - rel - 1)   # Referenz: erste sichere Position
-
     if pos >= rel_start:
         # In der direkten Abstiegszone
-        pts_safe = table.get_pts(snap, ref_safe_pos)
+        pts_safe = table.get_pts(snap, safe_pos)
         gap      = pts_safe - team_pts
         if gap > max_gain:
             return (0.0, False, True, "none")  # Mathematisch bestätigt
         if gap > max_gain * 0.7:
             motiv = "low"
-        points_needed = max(0, gap + max(1, round(rounds_left * 0.5)))
+        # Druck = Gap + Puffer (Teams müssen über die Sicherheitszone hinaus)
+        points_needed = max(0, gap + 1 + max(0, round(rounds_left * 0.25)))
 
-    elif pos >= danger_pos:
-        # Im Abstiegs-Gefahrenbereich (z.B. Platz 15-17 in 20er Liga)
-        pts_safe = table.get_pts(snap, ref_safe_pos)
+    elif pos > safe_pos:
+        # In der Playoff-Zone (zwischen safe und direkt-Abstieg)
+        pts_safe = table.get_pts(snap, safe_pos)
         gap      = max(0, pts_safe - team_pts)
         if gap > max_gain:
             return (0.0, False, True, "none")
         if gap > max_gain * 0.7:
             motiv = "low"
-        # Weicher als direkte Abstiegszone
-        points_needed = max(0, gap + max(0, round(rounds_left * 0.3)))
+        points_needed = max(0, gap + max(0, round(rounds_left * 0.20)))
+
+    elif pos >= danger_pos:
+        # Im Gefahrenbereich (bis 4 Plätze über dem sicheren Bereich)
+        pts_safe = table.get_pts(snap, safe_pos)
+        gap      = max(0, pts_safe - team_pts)
+        if gap > max_gain:
+            return (0.0, False, True, "none")
+        # Weicher — echte Bedrohung nur wenn Rückstand vorhanden
+        points_needed = max(0, gap + max(0, round(rounds_left * 0.10)))
 
     else:
         # Safe — Titelkampf?
@@ -769,13 +775,14 @@ def process_league(key: str, df: pd.DataFrame) -> list:
             h2h = h2h_tracker.get(home, away)
 
             # Pre-Match Zustand
-            snap       = table.snapshot()
-            hp_played  = hs.games_played()
-            rounds_left = max(0, total_rounds - hp_played)
+            snap        = table.snapshot()
+            h_rounds_left = max(0, total_rounds - hs.games_played())
+            a_rounds_left = max(0, total_rounds - as_.games_played())
+            rounds_left   = h_rounds_left   # für pressure_boost / is_last_n Referenz
 
-            # Pressure & Motivation
-            h_pr = calc_pressure_and_motiv(home, snap, table, league_cfg, rounds_left)
-            a_pr = calc_pressure_and_motiv(away, snap, table, league_cfg, rounds_left)
+            # Pressure & Motivation — jedes Team mit eigenem rounds_left
+            h_pr = calc_pressure_and_motiv(home, snap, table, league_cfg, h_rounds_left)
+            a_pr = calc_pressure_and_motiv(away, snap, table, league_cfg, a_rounds_left)
 
             is_last_n = game_idx >= last_n_cutoff
 
