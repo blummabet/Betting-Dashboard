@@ -114,9 +114,31 @@ def generate_picks(match: dict) -> list[dict]:
     if both_need_win: sc_btts += 0.12 if urgency_high else 0.07
     picks.append({"market": "Beide Teams treffen", "marketKey": "btts", "icon": "🎯", "sc": round(min(0.85, sc_btts), 3)})
 
-    # Sort by sc descending, keep top 3
+    # ── Category dedup: exactly 1 result pick + 1 goals pick + optional specialist ──
+    # (mirrors JS getBettingPicks category logic to prevent homeWin+awayWin both appearing)
+    RESULT_KEYS = {"homeWin", "awayWin", "draw"}
+    GOALS_KEYS  = {"over25", "under25", "over35", "under35", "btts", "noBtts"}
+
     picks.sort(key=lambda p: -p["sc"])
-    top = picks[:3]
+
+    top = []
+    seen_categories: set = set()
+
+    for p in picks:
+        if p["marketKey"] in RESULT_KEYS:
+            cat = "result"
+        elif p["marketKey"] in GOALS_KEYS:
+            cat = "goals"
+        else:
+            cat = "specialist"
+
+        if cat in seen_categories:
+            continue  # Already have a pick in this category
+        seen_categories.add(cat)
+        top.append(p)
+
+        if len(top) == 3:
+            break
 
     # Assign confidence
     for p in top:
