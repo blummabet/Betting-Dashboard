@@ -669,9 +669,9 @@ THRESHOLDS = {
     "heimsieg":     (1.20, 0.68),
     "auswärtssieg": (1.08, 0.62),
     "draw":         (0.70, 0.45),
-    "over25":       (0.50, 0.20),
-    "over35":       (0.50, 0.25),
-    "under25":      (0.45, 0.18),
+    "over25":       (0.66, 0.46),   # dashboard: sc>0.66→high, sc>0.46→medium (expGoals>3.2 / >2.5)
+    "over35":       (0.68, 0.44),   # dashboard: sc>0.68→high, sc>0.44→medium (expGoals>3.8 / >3.4)
+    "under25":      (0.68, 0.48),   # dashboard: sc>0.68→high, sc>0.48→medium
     "btts":         (0.70, 0.45),
     "cards35":      (0.60, 0.35),
 }

@@ -1512,6 +1512,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Fair Value — Over/Under mp: fehlende Signale ergänzt</strong> — <code>_h2hAvgGMod</code> (H2H Tore-Schnitt-Modifier) und <code>_apiUO</code> (API Over/Under Prediction) flossen bisher zwar in den Pick-Score <code>sc</code> ein, wurden aber bei der <code>mp</code>-Berechnung (Fair-Value-Wahrscheinlichkeit) vergessen. Fix für Über/Unter 2.5: <code>mp</code> berücksichtigt jetzt beide Signale. <code>_apiUO=Over</code> → <code>mp += 0.05</code> (cap 0.92), <code>_apiUO=Under</code> → <code>mp -= 0.04</code> (min 0.12) und umgekehrt für Under. <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>Fair Value — BTTS/BTTS-Nein: Poisson-Formel statt Lookup-Tabelle</strong> — Die <code>mp</code>-Berechnung für "Beide Teams treffen" nutzte früher eine grobe empirische Näherung. Ersetzt durch echte Poisson-Wahrscheinlichkeit: <code>P(BTTS Yes) = P(Heim≥1) × P(Auswärts≥1) = (1−e^−λH) × (1−e^−λA)</code>. Pressure-Boost, H2H-BTTS-Modifier, Clean-Sheet- und Failed-to-Score-Abzüge additiv darüber. BTTS-Nein analog mit <code>P(score=0) = e^−λ</code>. <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>Fair Value — Über 3.5 verwendet echte o.o35-Quote als Anker</strong> — Der Market Anchor für Über 3.5 nutzte bisher die Über-2.5-Quote als groben Proxy (<code>mktO35 = mktO25 × 0.55</code>). Fix: wenn The Odds API <code>o.o35</code> liefert, wird dieser direkt de-viggt als Anker verwendet. Fallback auf O2.5-Proxy nur wenn <code>o.o35</code> nicht verfügbar. Ergebnis: weniger Über-3.5-Picks mit überhöhter mp wenn der Markt eigentlich @4.50 steht. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>BTTS-Boost in MustWin erhöht, Over 2.5 / Over 3.5 Pressure-Boosts reduziert</strong> — Backtest (4 Saisonen, 5 Ligen) zeigt: BTTS hat 67–68% Hit-Rate in MustWin-Spielen (stärkster Markt). Over 2.5 hingegen nur 54% (unterhalb Breakeven bei ~1.80), Over 3.5 nur 37%. BTTS-Boost erhöht auf ×1.30/×0.80 (war ×1.10/×0.55). Over-2.5-Boost reduziert auf ×0.70/×0.45 (war ×1.30/×0.85). Over-3.5-Boost reduziert auf ×0.80/×0.45 (war ×1.20/×0.70). Verhindert Borderline-Over-Picks durch Pressure, stärkt stattdessen BTTS als primären MustWin-Markt. <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>Over 2.5 Begründungstext zeigt Gegentore-Schnitt</strong> — Der Reason-Text für Über-2.5-Picks zeigte bisher nur Tore/Spiel (Angriff). Ergänzt: beide Defensiven mit "Gegentore: X Ø Y.Y, Z Ø W.W" aus <code>homeDefStr</code> / <code>awayDefStr</code>. Vollständiger Kontext: Angriff UND Abwehr beider Teams → die Basis für "beide Defensiven lassen regelmäßig Gegentore zu" ist jetzt faktisch belegbar. <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>H2H-Supplement aus prematch-data.json (_pmH2h)</strong> — <code>getBettingPicks()</code> las <code>match.h2h</code> aus dem HTML-LEAGUES-Config, das von <code>update_dashboard.py</code> nur mit vereinfachten H2H-Feldern befüllt wird (games, homeWins, draws, awayWins, avgGoals, lastMeetingYear) — <strong>ohne</strong> <code>over25Rate</code> / <code>bttsRate</code>. Resultat: <code>_h2hO25Mod</code> und <code>_h2hBttsMod</code> waren immer 0, auch wenn echte Daten in <code>prematch-data.json</code> lagen (z.B. Brighton vs Chelsea: 90% Über-2.5, 80% BTTS). Fix: <code>const _pmH2h = (window._preMatchData?.[…])?.h2h</code> wird direkt vor den H2H-Variablen definiert; alle drei Werte verwenden Nullish-Coalescing: <code>h2h.over25Rate ?? _pmH2h?.over25Rate ?? null</code>. Ab sofort aktivieren vollständige H2H-Goals-Daten aus prematch-data.json die H2H-Modifier (+0.12 Over, +0.10 BTTS bei ≥70%) korrekt. <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>Karten-Picks: Motivation-Guard für bestätigte Absteiger (_cardPressBoost)</strong> — <code>cardsVeryHigh</code>/<code>cardsHigh</code> verwendeten bisher <code>_pressureBoost</code> und "beide Teams unter maximalem Druck" Narrativ auch für Teams mit <code>motivNone</code> (bestätigt abgestiegen). Ein bestätigter Absteiger hat keinen Abstiegsdruck mehr. Fix: neuer <code>_cardPressBoost = _anyRedConf ? _pressureBoost × 0.20 : _pressureBoost</code>; Narrativ-Branches prüfen <code>_bothRedConf</code>/<code>_anyRedConf</code> und verwenden korrekte Formulierungen ("Frust und schlechte Form" statt "maximalem Druck"). <em>(season-finish.html — Apr 2026)</em></li>
@@ -3854,9 +3855,10 @@ function getBettingPicks(match, odds, leagueKey) {
     { let sc = expGoals>3.8?0.82:expGoals>3.4?0.65:expGoals>3.1?0.44:expGoals>2.7?0.20:0.06;
       if (_eBothRed) sc = Math.min(0.88, sc + 0.12);
       if (_favWeak1) sc = Math.max(0, sc - 0.40 * _favWeak);
-      // 🔑 PRESSURE/RUNDEN: Abstiegsteam geht all-in → Angriffsdruck → mehr Tore
-      if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 1.20);
-      else if (_anyNeedsWin) sc = Math.min(0.88, sc + _pressureBoost * 0.70);
+      // 🔑 PRESSURE/RUNDEN: Druck erhöht Toranzahl leicht, aber Over 3.5 braucht primär hohe xG (Backtest: 37% HR).
+      // Boost moderat — reales Edge nur bei genuinen Hochscore-Spielen (expGoals > 3.4 / 3.8).
+      if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 0.80);
+      else if (_anyNeedsWin) sc = Math.min(0.88, sc + _pressureBoost * 0.45);
       // Low-scoring suppression (same logic as Over 2.5)
       { const _bvl = homeAttStr < 0.65 && awayAttStr < 0.65;
         if (_bvl) sc = Math.max(0, sc - 0.40); }
@@ -3875,9 +3877,10 @@ function getBettingPicks(match, odds, leagueKey) {
       if (_eBothRed) sc = Math.min(0.88, sc + 0.16);
       if (bothGold && !anyRed) sc = Math.max(0, sc - 0.10);
       if (_favWeak1) sc = Math.max(0, sc - 0.40 * _favWeak);
-      // 🔑 PRESSURE/RUNDEN: verzweifelte Teams lassen taktische Disziplin fallen → Over profitiert
-      if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 1.30);
-      else if (_anyNeedsWin) sc = Math.min(0.88, sc + _pressureBoost * 0.85);
+      // 🔑 PRESSURE/RUNDEN: Over 2.5 profitiert weniger von Druck als BTTS (Backtest: 54% Hit-Rate in MustWin,
+      // unterhalb Breakeven bei ~1.80er Quoten). Boost reduziert um Borderline-Picks in Medium-Conf zu vermeiden.
+      if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 0.70);
+      else if (_anyNeedsWin) sc = Math.min(0.88, sc + _pressureBoost * 0.45);
       // Titelduell in Crunch-Zeit: kontrolliertes Spiel → leichte Over-Suppression
       if (anyGold && !anyRed && urgencyHigh) sc = Math.max(0, sc - 0.07);
       // 🔑 H2H GOALS HISTORY: over25Rate + avgGoals as independent confirmation
@@ -3980,9 +3983,11 @@ function getBettingPicks(match, odds, leagueKey) {
       if (anyGold && !anyRed) sc = Math.max(0, sc - 0.08);
       if (bttsBad) sc *= 0.35;
       if (_favWeak1) sc *= (1 - _favWeak * 0.65);
-      // 🔑 PRESSURE/RUNDEN: verzweifeltes Team greift an → Gegner nutzt Räume → BTTS sehr wahrscheinlich
-      if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 1.10);
-      else if (_anyNeedsWin) sc = Math.min(0.86, sc + _pressureBoost * 0.55);
+      // 🔑 PRESSURE/RUNDEN: BTTS ist der stärkste MustWin-Markt (Backtest: 67–68% Hit-Rate).
+      // Druckteam öffnet sich → Gegner nutzt Räume → beide treffen fast zwangsläufig.
+      // Boost deutlich erhöht gegenüber Over 2.5 (was: 1.10/0.55).
+      if (bothNeedWin)       sc = Math.min(0.90, sc + _pressureBoost * 1.30);
+      else if (_anyNeedsWin) sc = Math.min(0.86, sc + _pressureBoost * 0.80);
       // 🔑 H2H BTTS HISTORY: real historical BTTS rate from direct meetings
       sc = Math.min(0.92, Math.max(0, sc + _h2hBttsMod));
       sc = Math.min(0.92, sc);
