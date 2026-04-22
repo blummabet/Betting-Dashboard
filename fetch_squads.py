@@ -59,8 +59,9 @@ LEAGUES = {
 
 # Big-5 leagues fetch ALL teams (not just stake teams) so that opponents of stake
 # teams (e.g. Real Madrid playing vs a relegation side) also have squad data.
-# Smaller leagues fetch stake-teams-only to stay within API call budget.
-FULL_FETCH_LEAGUES = {"ENG", "ESP", "GER", "ITA", "FRA"}
+# Secondary leagues (NED, BEL, AUT, CRO) are now also full-fetch so that opponents
+# of stake teams (e.g. Rotterdam away vs a title contender) are also covered.
+FULL_FETCH_LEAGUES = {"ENG", "ESP", "GER", "ITA", "FRA", "NED", "BEL", "AUT", "CRO"}
 
 # ── API helpers ───────────────────────────────────────────────────────────────
 
