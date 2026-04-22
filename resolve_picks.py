@@ -31,7 +31,8 @@ HEADERS = {
 
 def build_cache_index(cache_file: Path) -> dict:
     """
-    Build a lookup dict: eventId → {homeGoals, awayGoals, status}
+    Build a lookup dict: eventId → {homeGoals, awayGoals, status,
+                                     yellowHome, yellowAway, redHome, redAway}
     from results-cache.json (written by fetch_results.py).
     """
     if not cache_file.exists():
@@ -47,9 +48,14 @@ def build_cache_index(cache_file: Path) -> dict:
         status = fix.get("status", "")
         if status == "FT":
             index[eid] = {
-                "homeGoals": fix.get("goalsHome"),
-                "awayGoals": fix.get("goalsAway"),
-                "status": "finished",
+                "homeGoals":  fix.get("goalsHome"),
+                "awayGoals":  fix.get("goalsAway"),
+                "status":     "finished",
+                # Card stats (may be None if fetch_stats returned nothing)
+                "yellowHome": fix.get("yellowHome"),
+                "yellowAway": fix.get("yellowAway"),
+                "redHome":    fix.get("redHome"),
+                "redAway":    fix.get("redAway"),
             }
         elif status in ("POSTP", "CANC", "WO", "AWD"):
             index[eid] = {"status": "postponed", "homeGoals": None, "awayGoals": None}
@@ -85,8 +91,13 @@ def get_match_result_sofascore(event_id: int) -> dict | None:
 
 # ── Win/loss determination ────────────────────────────────────────────────────
 
-def evaluate_pick(market_key: str, home_goals: int, away_goals: int) -> str:
-    """Returns 'win', 'loss', or 'void'."""
+def evaluate_pick(market_key: str, home_goals: int, away_goals: int,
+                  result: dict | None = None) -> str:
+    """Returns 'win', 'loss', or 'void'.
+
+    result is the full cache entry (may contain yellowHome/Away, redHome/Away).
+    Cards markets need result data — if unavailable they return 'void'.
+    """
     total = home_goals + away_goals
     rules = {
         "homeWin":  home_goals > away_goals,
@@ -99,9 +110,24 @@ def evaluate_pick(market_key: str, home_goals: int, away_goals: int) -> str:
         "btts":     home_goals > 0 and away_goals > 0,
         "noBtts":   home_goals == 0 or away_goals == 0,
     }
-    if market_key not in rules:
-        return "void"
-    return "win" if rules[market_key] else "loss"
+    if market_key in rules:
+        return "win" if rules[market_key] else "loss"
+
+    # ── Cards markets ─────────────────────────────────────────────────────────
+    if market_key in ("cards35", "cards45"):
+        if not result:
+            return "void"
+        yh = result.get("yellowHome")
+        ya = result.get("yellowAway")
+        rh = result.get("redHome")  or 0
+        ra = result.get("redAway")  or 0
+        if yh is None or ya is None:
+            return "void"  # No card stats available
+        total_cards = yh + ya + rh + ra
+        threshold = 3.5 if market_key == "cards35" else 4.5
+        return "win" if total_cards > threshold else "loss"
+
+    return "void"
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -186,16 +212,30 @@ def main():
         entry["finalScore"] = f"{hg}:{ag}"
         entry["resolved"]   = True
 
+        # Store card totals if available (for dashboard display)
+        if result.get("yellowHome") is not None:
+            total_c = (result.get("yellowHome") or 0) + (result.get("yellowAway") or 0) + \
+                      (result.get("redHome") or 0) + (result.get("redAway") or 0)
+            entry["totalCards"] = total_c
+        elif "totalCards" in entry:
+            pass  # Keep existing value
+
         wins = losses = voids = 0
         for p in entry["picks"]:
-            outcome = evaluate_pick(p["marketKey"], hg, ag)
+            outcome = evaluate_pick(p["marketKey"], hg, ag, result)
             p["result"] = outcome
             if outcome == "win":    wins += 1
             elif outcome == "loss": losses += 1
             else:                   voids += 1
 
+        # Log card stats if any cards picks were resolved
+        card_info = ""
+        if result.get("yellowHome") is not None:
+            total_c = entry.get("totalCards", 0)
+            card_info = f" | 🟨 {total_c} Karten"
+
         icon = "✅" if wins > 0 else "❌"
-        print(f"    → {hg}:{ag}  {icon}  wins={wins} losses={losses} voids={voids}")
+        print(f"    → {hg}:{ag}  {icon}  wins={wins} losses={losses} voids={voids}{card_info}")
         resolved_count += 1
 
     # Save back
