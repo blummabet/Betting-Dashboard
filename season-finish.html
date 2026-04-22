@@ -594,6 +594,39 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .ps-content{display:flex;flex-direction:column;gap:3px;}
 .ps-rounds{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--text);}
 .ps-team{font-size:11px;color:var(--muted);font-weight:500;}
+/* DO-OR-DIE banner — shown on cards where ≥1 team has absolutely no room for error */
+.dod-banner{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;margin-bottom:10px;
+  background:linear-gradient(135deg,rgba(248,81,73,.22) 0%,rgba(180,30,30,.12) 100%);
+  border:1px solid rgba(248,81,73,.55);animation:dodPulse 2.4s ease-in-out infinite;}
+.dod-banner.gold-dod{background:linear-gradient(135deg,rgba(240,192,64,.22) 0%,rgba(160,120,0,.12) 100%);
+  border-color:rgba(240,192,64,.55);}
+@keyframes dodPulse{0%,100%{box-shadow:0 0 0 0 rgba(248,81,73,.0);}50%{box-shadow:0 0 8px 2px rgba(248,81,73,.18);}}
+.dod-banner.gold-dod{animation:dodPulseGold 2.4s ease-in-out infinite;}
+@keyframes dodPulseGold{0%,100%{box-shadow:0 0 0 0 rgba(240,192,64,.0);}50%{box-shadow:0 0 8px 2px rgba(240,192,64,.18);}}
+.dod-icon{font-size:22px;flex-shrink:0;}
+.dod-body{display:flex;flex-direction:column;gap:2px;}
+.dod-title{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.8px;color:#f85149;}
+.dod-banner.gold-dod .dod-title{color:#f0c040;}
+.dod-sub{font-size:11px;color:var(--muted);font-weight:500;}
+/* DO-OR-DIE overview section */
+.dod-section{margin-bottom:20px;}
+.dod-section-header{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;
+  color:#f85149;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.dod-mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
+.dod-mini-card{background:var(--card);border:1px solid rgba(248,81,73,.40);border-radius:12px;padding:12px 14px;cursor:pointer;
+  transition:border-color .2s,transform .15s;}
+.dod-mini-card:hover{border-color:rgba(248,81,73,.75);transform:translateY(-1px);}
+.dod-mini-card.gold{border-color:rgba(240,192,64,.40);}
+.dod-mini-card.gold:hover{border-color:rgba(240,192,64,.75);}
+.dod-mc-league{font-size:10px;color:var(--muted);margin-bottom:4px;}
+.dod-mc-teams{font-size:13px;font-weight:700;color:var(--text);margin-bottom:5px;}
+.dod-mc-teams .dod-hero{color:#f85149;}
+.dod-mc-teams.gold .dod-hero{color:#f0c040;}
+.dod-mc-stake{font-size:11px;color:var(--muted);line-height:1.4;}
+.dod-mc-meta{display:flex;justify-content:space-between;align-items:center;margin-top:6px;}
+.dod-mc-date{font-size:10px;color:var(--muted);}
+.dod-mc-rl{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(248,81,73,.18);color:#f85149;}
+.dod-mini-card.gold .dod-mc-rl{background:rgba(240,192,64,.18);color:#f0c040;}
 
 /* FATIGUE + INJURY + REFEREE CONTEXT STRIP */
 .context-strip{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:7px 10px;border-radius:7px;margin-bottom:9px;background:#0d1117;border:1px solid #21262d;font-size:11px;}
@@ -7362,6 +7395,81 @@ function renderSquadBlock(match) {
   </div>`;
 }
 
+// ── Do-or-Die detection ───────────────────────────────────────────────────────
+// Returns null or { isGold, teams:[{name,label}], rl } when ≥1 team has no room for error.
+// Criteria: mustWin=true AND rl ≤ 4 AND red/gold label AND motivationLevel !== 'none'
+function isDoOrDie(match) {
+  const rl = match.roundsLeft ?? match._roundsLeft ?? 99;
+  if (rl > 4) return null;
+  const hs = match.homeStake || null;
+  const as = match.awayStake || null;
+  const _check = (stake, name) => {
+    if (!stake || stake.motivationLevel === 'none') return null;
+    if (!stake.mustWin) return null;
+    const cols = (stake.labels || []).map(l => l.c || '');
+    const isRel  = cols.includes('red');
+    const isGold = cols.includes('gold');
+    if (!isRel && !isGold) return null;
+    const label = isRel
+      ? (rl <= 2 ? 'Abstieg steht vor der Tür' : 'Abstiegskampf — Punkte oder Absturz')
+      : (rl <= 2 ? 'Titelchance jetzt oder nie' : 'Titelkampf — Vorsprung sichern');
+    return { name, isGold, label };
+  };
+  const hDod = _check(hs, match.home);
+  const aDod = _check(as, match.away);
+  if (!hDod && !aDod) return null;
+  const teams = [hDod, aDod].filter(Boolean);
+  const isGold = teams.every(t => t.isGold); // pure gold only if both/all are title
+  return { isGold, teams, rl };
+}
+
+// ── Do-or-Die section for Best-of-All tab ────────────────────────────────────
+function buildDoOrDieSection(matchList) {
+  const candidates = matchList
+    .map(m => ({ m, dod: isDoOrDie(m) }))
+    .filter(x => x.dod !== null)
+    .sort((a, b) => a.dod.rl - b.dod.rl); // fewest games left first
+
+  if (!candidates.length) return '';
+
+  const cards = candidates.map(({ m, dod }) => {
+    const leagueStr = `${m.leagueFlag || ''} ${m.leagueName || ''}`.trim();
+    const heroClass = dod.isGold ? 'gold' : '';
+    const teamHtml  = dod.teams.map(t =>
+      `<span class="dod-hero">${t.name}</span>`
+    ).join(' & ');
+    // build vs line: hero teams in colour, other team normal
+    const heroNames = new Set(dod.teams.map(t => t.name));
+    const hSpan = heroNames.has(m.home)
+      ? `<span class="dod-hero">${m.home}</span>` : m.home;
+    const aSpan = heroNames.has(m.away)
+      ? `<span class="dod-hero">${m.away}</span>` : m.away;
+    const stakes = dod.teams.map(t => t.label).join(' · ');
+    const rlLabel = dod.rl <= 1 ? 'LETZTES SPIEL' : `${dod.rl} SPIELE NOCH`;
+    return `<div class="dod-mini-card ${heroClass}" onclick="
+      document.querySelectorAll('.league-btn').forEach(b=>b.classList.remove('active'));
+      const lbtn=document.querySelector('[data-league=\\'${m.leagueKey}\\']');
+      if(lbtn){lbtn.classList.add('active');renderLeague('${m.leagueKey}');}
+    ">
+      <div class="dod-mc-league">${leagueStr}</div>
+      <div class="dod-mc-teams ${heroClass}">${hSpan} <span style="opacity:.5">vs</span> ${aSpan}</div>
+      <div class="dod-mc-stake">${stakes}</div>
+      <div class="dod-mc-meta">
+        <span class="dod-mc-date">${m.date || ''}</span>
+        <span class="dod-mc-rl">${rlLabel}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="dod-section">
+    <div class="dod-section-header">
+      <span>🚨</span><span>Jetzt oder Nie — Letzte-Chance Spiele</span>
+      <span style="font-size:10px;font-weight:500;color:var(--muted);text-transform:none;letter-spacing:0">${candidates.length} Spiele</span>
+    </div>
+    <div class="dod-mini-grid">${cards}</div>
+  </div>`;
+}
+
 function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   // Enrich match fields from prematch-data.json when not already set
   const _pm = window._preMatchData?.[`${match.home}|${match.away}`];
@@ -7533,6 +7641,25 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
   // Telegram share payload (JSON-encoded match data)
   const shareData = encodeURIComponent(JSON.stringify(match)).replace(/'/g,'%27');
+
+  // ── Do-or-Die banner — shown above pressure strip when truly no room for error ──
+  const _dod = isDoOrDie(match);
+  let dodHtml = '';
+  if (_dod) {
+    const dodClass = _dod.isGold ? 'dod-banner gold-dod' : 'dod-banner';
+    const dodIcon  = _dod.rl <= 2 ? '🚨' : '⚡';
+    const dodTitle = _dod.rl <= 1 ? 'LETZTES SPIEL DER SAISON'
+                   : _dod.rl <= 2 ? 'JETZT ODER NIE'
+                   : 'LETZTE CHANCE';
+    const dodSub   = _dod.teams.map(t => `${t.name}: ${t.label}`).join(' · ');
+    dodHtml = `<div class="${dodClass}">
+      <span class="dod-icon">${dodIcon}</span>
+      <div class="dod-body">
+        <span class="dod-title">${dodTitle} · NOCH ${_dod.rl} SPIEL${_dod.rl === 1 ? '' : 'E'}</span>
+        <span class="dod-sub">${dodSub}</span>
+      </div>
+    </div>`;
+  }
 
   // ── Pressure banner ───────────────────────────────────────────────────
   // Shown when ≥1 team has a stake AND there are ≤6 rounds left.
@@ -7742,7 +7869,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       <div class="card-meta">${leagueFlag} <span class="card-league-name">${leagueName}</span><span class="card-meta-sep">·</span><span class="card-date-inline">📅 ${match.date}${match.time ? ' · ' + match.time : ''}</span></div>
       <div class="card-match"><span class="card-home">${match.home}</span><span class="card-vs">vs</span><span class="card-away">${match.away}</span></div>
     </div>
-    ${signalBarHtml}${pressureHtml}${contextHtml}${renderSquadBlock(match)}${lineMovementHtml}
+    ${dodHtml}${signalBarHtml}${pressureHtml}${contextHtml}${renderSquadBlock(match)}${lineMovementHtml}
     <div class="teams-stakes">
       ${renderStakeRow(match.home, match.homeStake, match.homeForm, leagueKey)}
       ${renderStakeRow(match.away, match.awayStake, match.awayForm, leagueKey)}
@@ -7871,6 +7998,7 @@ function renderOverview() {
 
   // Cards des Tages + POTD use only the filtered (day-selected) matches
   // buildTopCardsHtml MUST run before renderFixtureCard so _topPickSet is populated
+  const dodSectionHtml = buildDoOrDieSection(week); // uses full week, not day-filtered
   const potdHtml      = buildPickOfDayHtml(filtered);
   const topCardsHtml  = buildTopCardsHtml(filtered);
   const cards = filtered.map(m=>renderFixtureCard(m, m.leagueName, m.leagueFlag, m.leagueKey)).join('');
@@ -7884,6 +8012,8 @@ function renderOverview() {
     </div>
 
     ${buildDayFilterHtml(week)}
+
+    ${dodSectionHtml}
 
     ${potdHtml}
 
