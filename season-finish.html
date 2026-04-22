@@ -1526,7 +1526,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Corners FV — Verletzungsanpassung für cornersEstAdj</strong> — Corner-Schätzung berücksichtigt jetzt Injury Impact: <code>cornersEstAdj = cornersEst × (1 − homeInjuryImpact×0.08) × (1 − awayInjuryImpact×0.08)</code>. Alle 6 Corner-FV-Fälle (co85/co95/co105/co115/cu85/cu95) nutzen <code>cornersEstAdj</code> statt <code>cornersEst</code>. Wenn ein Team 3+ Schlüsselspieler verletzt hat (impactScore ~1.8), sinkt die Ecken-Erwartung um ~14% → FV-Chip aktualisiert sich entsprechend. <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>fetch_squads.py — NED/BEL/AUT/CRO zu FULL_FETCH_LEAGUES hinzugefügt</strong> — Teams aus Eredivisie, Jupiler Pro League, Österreichischer Bundesliga und HNL hatten keinen Stake-Label und wurden beim Squad-Fetch übersprungen (kein Eintrag in team-squads.json → "kein Cache" im Dashboard). Fix: <code>FULL_FETCH_LEAGUES = {"ENG","ESP","GER","ITA","FRA","NED","BEL","AUT","CRO"}</code> stellt vollständige Squad-Abdeckung für alle gestakten Ligen sicher. <em>(fetch_squads.py — Apr 2026)</em></li>
           <li><strong>isTopCard persistent in picks_history.json (save_picks.py)</strong> — Das "Top Picks Performance"-Block im Results-Tab war verschwunden, weil <code>isTopCard</code> nur in <code>localStorage tc_history</code> gespeichert war und nach Cache-Clear verloren ging. Fix: <code>save_picks.py</code> berechnet nach dem Haupt-Save-Loop die Top-7-Picks (max 2/Match, Mindestrank 12) und setzt <code>isTopCard: True</code> direkt in <code>picks_history.json</code>. <code>_mergeLocalPicks()</code> im Browser liest <code>isTopCard</code> jetzt primär aus dem JSON; localStorage-Fallback bleibt als Ergänzung. Idempotent: bei jedem Run wird neu berechnet. <em>(save_picks.py + season-finish.html — Apr 2026)</em></li>
-          <li><strong>Asian O/U + AH Multi-Line Target-Odds-Filter (Pass 6)</strong> — Neuer <code>loadAllOdds()</code> Pass 6 fetcht <code>alternate_totals</code> (Asian Quarterball-Lines: 1.75, 2.0, 2.25, 2.75, 3.25 usw.) und <code>alternate_spreads</code> (alle verfügbaren AH-Lines pro Team) aus The Odds API. <code>_parseTheOddsEvent()</code> speichert diese in Arrays <code>ao_lines</code>, <code>au_lines</code>, <code>ah_home_lines</code>, <code>ah_away_lines</code> ({pt, price}). Neue Hilfsfunktion <code>_pickBestLine(lines, targetOdds=1.62, minPt, maxPt)</code> wählt die Line mit der Quote am nächsten bei Ziel-Quote ~1.62. Anwendung: <strong>AH Picks</strong> verwenden die beste Line aus <code>ah_home_lines</code>/<code>ah_away_lines</code> (kein Range-Filter — alle Linien werden verglichen). <strong>Over 3.5</strong> wählt beste Line aus <code>ao_lines</code> mit pt ∈ [2.75, 3.5] (nie höher als Standard — niedrigere Linie = sicherer). <strong>Over 2.5</strong> wählt beste Line aus <code>ao_lines</code> mit pt ∈ [2.0, 2.5]. Fallback: Standard <code>o.ah_h</code>/<code>o.o35</code>/<code>o.o25</code> wenn keine Asian Lines vorliegen. Gleiche Logik auch in prematch-server.js (<code>oddsApiFetchAlt</code> + <code>parseTheOddsEvent</code>). Cache-Key: <code>sfOddsCache_v12</code>. <em>(season-finish.html + prematch-server.js — Apr 2026)</em></li>
+          <li><strong>AH Fallback Range-Tightening</strong> — Wenn keine <code>alternate_spreads</code>-Lines verfügbar (z.B. Ligue 1 → API liefert keinen Markt), wurde bisher die Standard-AH-Line mit weitem Odds-Range 1.35–2.05 als Fallback gezeigt. Das führte zu schlechten Picks wie PSG -2.25 @ 1.99. Fix: Fallback-Range auf <strong>1.45–1.80</strong> verengt wenn <code>ah_home_lines === null</code>. Damit werden große Handicaps mit schiefen Quoten gefiltert. Wenn <code>_pickBestLine()</code> eine asian Line findet, gilt weiterhin der breite Range 1.35–2.05. Cache-Key: <code>sfOddsCache_v13</code>. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>Asian O/U + AH Multi-Line Target-Odds-Filter (Pass 6)</strong> — Neuer <code>loadAllOdds()</code> Pass 6 fetcht <code>alternate_totals</code> (Asian Quarterball-Lines: 1.75, 2.0, 2.25, 2.75, 3.25 usw.) und <code>alternate_spreads</code> (alle verfügbaren AH-Lines pro Team) aus The Odds API. <code>_parseTheOddsEvent()</code> speichert diese in Arrays <code>ao_lines</code>, <code>au_lines</code>, <code>ah_home_lines</code>, <code>ah_away_lines</code> ({pt, price}). Neue Hilfsfunktion <code>_pickBestLine(lines, targetOdds=1.62, minPt, maxPt)</code> wählt die Line mit der Quote am nächsten bei Ziel-Quote ~1.62. Anwendung: <strong>AH Picks</strong> verwenden die beste Line aus <code>ah_home_lines</code>/<code>ah_away_lines</code> (kein Range-Filter — alle Linien werden verglichen). <strong>Over 3.5</strong> wählt beste Line aus <code>ao_lines</code> mit pt ∈ [2.75, 3.5] (nie höher als Standard — niedrigere Linie = sicherer). <strong>Over 2.5</strong> wählt beste Line aus <code>ao_lines</code> mit pt ∈ [2.0, 2.5]. Fallback: Standard <code>o.ah_h</code>/<code>o.o35</code>/<code>o.o25</code> wenn keine Asian Lines vorliegen. Gleiche Logik auch in prematch-server.js (<code>oddsApiFetchAlt</code> + <code>parseTheOddsEvent</code>). Cache-Key: <code>sfOddsCache_v13</code>. <em>(season-finish.html + prematch-server.js — Apr 2026)</em></li>
         </ul>
       </div>
     </div>
@@ -2384,7 +2385,7 @@ function findOdds(leagueKey, home, away) {
 
 async function loadAllOdds() {
   // ── Cache: refresh every 2h — odds move more often closer to kickoff ─────
-  const CACHE_KEY = 'sfOddsCache_v12'; // bumped: added Pass6 Asian O/U (alternate_totals) + AH multi-line (alternate_spreads)
+  const CACHE_KEY = 'sfOddsCache_v13'; // bumped: AH fallback range tightened to 1.45–1.80 when no asian lines available
   const CACHE_TTL = 2 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
@@ -3681,9 +3682,12 @@ function getBettingPicks(match, odds, leagueKey) {
       // AH-Kandidat: wenn Heimsieg-Quote zu günstig (< 1.35), beste AH-Line via Ziel-Quote ~1.62
       if (o.hw != null && o.hw < 1.35) {
         const _ahBest  = _pickBestLine(o.ah_home_lines, 1.62);
-        const _ahOdds  = _ahBest ? _ahBest.price : (o.ah_h && o.ah_h >= 1.35 && o.ah_h <= 2.05 ? o.ah_h : null);
+        // Fallback to standard line: tighter range (1.45–1.80) when no asian lines available
+        // → prevents big-handicap picks with skewed odds (e.g. -2.25 @ 1.99)
+        const _ahFbMin = _ahBest ? 1.35 : 1.45, _ahFbMax = _ahBest ? 2.05 : 1.80;
+        const _ahOdds  = _ahBest ? _ahBest.price : (o.ah_h && o.ah_h >= _ahFbMin && o.ah_h <= _ahFbMax ? o.ah_h : null);
         const _ahPoint = _ahBest ? _ahBest.pt    : o.ah_h_point;
-        if (_ahOdds != null && _ahOdds >= 1.35 && _ahOdds <= 2.05) {
+        if (_ahOdds != null && _ahOdds >= _ahFbMin && _ahOdds <= _ahFbMax) {
           const _ahPt = _ahPoint != null ? (_ahPoint >= 0 ? `+${_ahPoint}` : `${_ahPoint}`) : '';
           const _ahMkt = `AH Heim${_ahPt ? ' ' + _ahPt : ''}`;
           const _ahConf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
@@ -3775,9 +3779,11 @@ function getBettingPicks(match, odds, leagueKey) {
       // AH-Kandidat: wenn Auswärtssieg-Quote zu günstig (< 1.35), beste AH-Line via Ziel-Quote ~1.62
       if (o.aw != null && o.aw < 1.35) {
         const _ahBest  = _pickBestLine(o.ah_away_lines, 1.62);
-        const _ahOdds  = _ahBest ? _ahBest.price : (o.ah_a && o.ah_a >= 1.35 && o.ah_a <= 2.05 ? o.ah_a : null);
+        // Fallback to standard line: tighter range (1.45–1.80) when no asian lines available
+        const _ahFbMin = _ahBest ? 1.35 : 1.45, _ahFbMax = _ahBest ? 2.05 : 1.80;
+        const _ahOdds  = _ahBest ? _ahBest.price : (o.ah_a && o.ah_a >= _ahFbMin && o.ah_a <= _ahFbMax ? o.ah_a : null);
         const _ahPoint = _ahBest ? _ahBest.pt    : o.ah_a_point;
-        if (_ahOdds != null && _ahOdds >= 1.35 && _ahOdds <= 2.05) {
+        if (_ahOdds != null && _ahOdds >= _ahFbMin && _ahOdds <= _ahFbMax) {
           const _ahPt = _ahPoint != null ? (_ahPoint >= 0 ? `+${_ahPoint}` : `${_ahPoint}`) : '';
           const _ahMkt = `AH Ausw.${_ahPt ? ' ' + _ahPt : ''}`;
           const _ahConf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
