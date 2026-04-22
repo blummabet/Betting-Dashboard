@@ -2206,10 +2206,18 @@ function _parseTheOddsEvent(g) {
       } else if (mk==='spreads') {
         for (const o of (mkt.outcomes||[])) {
           const nm=norm(o.name);
-          if (!r.ah_h_point&&(nm===hTeam||hTeam.includes(nm)||nm.includes(hTeam))) {
-            r.ah_h_point=o.point; r.ah_h=o.price;
-          } else if (!r.ah_a_point) {
-            r.ah_a_point=o.point; r.ah_a=o.price;
+          const isH=nm===hTeam||hTeam.includes(nm)||nm.includes(hTeam);
+          // First bookmaker (Pinnacle) → standard single values for backward compat
+          if (isH) {
+            if (!r.ah_h_point) { r.ah_h_point=o.point; r.ah_h=o.price; }
+            // Also collect ALL bookmaker spread lines into ah_home_lines array
+            // so _pickBestLine() can find closest-to-1.62 even without alternate_spreads
+            if (!r.ah_home_lines) r.ah_home_lines=[];
+            if (!r.ah_home_lines.find(l=>Math.abs(l.pt-o.point)<0.01)) r.ah_home_lines.push({pt:o.point,price:o.price});
+          } else {
+            if (!r.ah_a_point) { r.ah_a_point=o.point; r.ah_a=o.price; }
+            if (!r.ah_away_lines) r.ah_away_lines=[];
+            if (!r.ah_away_lines.find(l=>Math.abs(l.pt-o.point)<0.01)) r.ah_away_lines.push({pt:o.point,price:o.price});
           }
         }
       } else if (mk==='alternate_totals_corners') {
@@ -2385,7 +2393,7 @@ function findOdds(leagueKey, home, away) {
 
 async function loadAllOdds() {
   // ── Cache: refresh every 2h — odds move more often closer to kickoff ─────
-  const CACHE_KEY = 'sfOddsCache_v13'; // bumped: AH fallback range tightened to 1.45–1.80 when no asian lines available
+  const CACHE_KEY = 'sfOddsCache_v14'; // bumped: spreads market now collects all bookmaker lines into ah_home/away_lines
   const CACHE_TTL = 2 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
@@ -3681,13 +3689,12 @@ function getBettingPicks(match, odds, leagueKey) {
       rC.push({sc, p:{icon:'🏠', market:'Heimsieg', odds:o.hw, conf, reason}});
       // AH-Kandidat: wenn Heimsieg-Quote zu günstig (< 1.35), beste AH-Line via Ziel-Quote ~1.62
       if (o.hw != null && o.hw < 1.35) {
+        // ah_home_lines now contains ALL bookmaker spread lines (from spreads market, Pass 1)
+        // + alternate_spreads lines (Pass 6, if available) — _pickBestLine picks closest to 1.62
         const _ahBest  = _pickBestLine(o.ah_home_lines, 1.62);
-        // Fallback to standard line: tighter range (1.45–1.80) when no asian lines available
-        // → prevents big-handicap picks with skewed odds (e.g. -2.25 @ 1.99)
-        const _ahFbMin = _ahBest ? 1.35 : 1.45, _ahFbMax = _ahBest ? 2.05 : 1.80;
-        const _ahOdds  = _ahBest ? _ahBest.price : (o.ah_h && o.ah_h >= _ahFbMin && o.ah_h <= _ahFbMax ? o.ah_h : null);
+        const _ahOdds  = _ahBest ? _ahBest.price : (o.ah_h && o.ah_h >= 1.35 && o.ah_h <= 2.05 ? o.ah_h : null);
         const _ahPoint = _ahBest ? _ahBest.pt    : o.ah_h_point;
-        if (_ahOdds != null && _ahOdds >= _ahFbMin && _ahOdds <= _ahFbMax) {
+        if (_ahOdds != null && _ahOdds >= 1.35 && _ahOdds <= 2.05) {
           const _ahPt = _ahPoint != null ? (_ahPoint >= 0 ? `+${_ahPoint}` : `${_ahPoint}`) : '';
           const _ahMkt = `AH Heim${_ahPt ? ' ' + _ahPt : ''}`;
           const _ahConf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
@@ -3778,12 +3785,11 @@ function getBettingPicks(match, odds, leagueKey) {
       rC.push({sc, p:{icon:'✈️', market:'Auswärtssieg', odds:o.aw, conf, reason}});
       // AH-Kandidat: wenn Auswärtssieg-Quote zu günstig (< 1.35), beste AH-Line via Ziel-Quote ~1.62
       if (o.aw != null && o.aw < 1.35) {
+        // ah_away_lines contains all bookmaker spread lines + alternate_spreads (Pass 6)
         const _ahBest  = _pickBestLine(o.ah_away_lines, 1.62);
-        // Fallback to standard line: tighter range (1.45–1.80) when no asian lines available
-        const _ahFbMin = _ahBest ? 1.35 : 1.45, _ahFbMax = _ahBest ? 2.05 : 1.80;
-        const _ahOdds  = _ahBest ? _ahBest.price : (o.ah_a && o.ah_a >= _ahFbMin && o.ah_a <= _ahFbMax ? o.ah_a : null);
+        const _ahOdds  = _ahBest ? _ahBest.price : (o.ah_a && o.ah_a >= 1.35 && o.ah_a <= 2.05 ? o.ah_a : null);
         const _ahPoint = _ahBest ? _ahBest.pt    : o.ah_a_point;
-        if (_ahOdds != null && _ahOdds >= _ahFbMin && _ahOdds <= _ahFbMax) {
+        if (_ahOdds != null && _ahOdds >= 1.35 && _ahOdds <= 2.05) {
           const _ahPt = _ahPoint != null ? (_ahPoint >= 0 ? `+${_ahPoint}` : `${_ahPoint}`) : '';
           const _ahMkt = `AH Ausw.${_ahPt ? ' ' + _ahPt : ''}`;
           const _ahConf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';

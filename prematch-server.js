@@ -366,10 +366,16 @@ function parseTheOddsEvent(oddsEvent) {
       } else if (mk === 'spreads') {
         for (const o of (mkt.outcomes || [])) {
           const nm = normTeam(o.name);
-          if (!r.ah_h_point && (nm === hTeam || hTeam.includes(nm) || nm.includes(hTeam))) {
-            r.ah_h_point = o.point; r.ah_h = o.price;
-          } else if (!r.ah_a_point) {
-            r.ah_a_point = o.point; r.ah_a = o.price;
+          const isH = nm === hTeam || hTeam.includes(nm) || nm.includes(hTeam);
+          if (isH) {
+            if (!r.ah_h_point) { r.ah_h_point = o.point; r.ah_h = o.price; }
+            // Collect ALL bookmaker spread lines → _pickBestLine can find closest-to-1.62
+            if (!r.ah_home_lines) r.ah_home_lines = [];
+            if (!r.ah_home_lines.find(l => Math.abs(l.pt - o.point) < 0.01)) r.ah_home_lines.push({ pt: o.point, price: o.price });
+          } else {
+            if (!r.ah_a_point) { r.ah_a_point = o.point; r.ah_a = o.price; }
+            if (!r.ah_away_lines) r.ah_away_lines = [];
+            if (!r.ah_away_lines.find(l => Math.abs(l.pt - o.point) < 0.01)) r.ah_away_lines.push({ pt: o.point, price: o.price });
           }
         }
       } else if (mk === 'alternate_totals_corners') {
