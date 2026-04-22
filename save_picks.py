@@ -398,6 +398,54 @@ def main():
         pick_labels = ", ".join(p["market"] for p in picks)
         print(f"  + {fx.get('_leagueFlag','')} {home} vs {away} ({fx.get('date','')}) → {pick_labels}")
 
+    # ── Mark top picks (isTopCard) for today's fixtures ──────────────────────
+    # Mirrors JS buildTopCardsHtml() ranking: sc*10 + conf bonus + match score bonus.
+    # Top 7 picks (rank ≥ 12, max 2 per match) get isTopCard=True.
+    # Runs every time — resets and recomputes so reruns stay idempotent.
+    today_entries = [e for e in history if e.get("dateIso") == today_iso]
+    if today_entries:
+        # Clear existing flags for today (idempotent reruns)
+        for e in today_entries:
+            for p in e["picks"]:
+                p["isTopCard"] = False
+
+        # Build ranked candidates: (rank, entry_id, pick_idx)
+        candidates = []
+        for e in today_entries:
+            ms = e.get("matchScore") or 0
+            for idx, p in enumerate(e["picks"]):
+                sc   = p.get("sc") or 0
+                conf = p.get("conf", "low")
+                rank = sc * 10
+                rank += 4 if conf == "high" else 1 if conf == "medium" else 0
+                rank += (ms - 6) * 2
+                candidates.append((rank, e["id"], idx))
+
+        # Sort descending, take up to 7 (max 2 per match, min rank 12)
+        candidates.sort(key=lambda x: -x[0])
+        match_counts: dict[str, int] = {}
+        top_count = 0
+        for rank, eid, pidx in candidates:
+            if rank < 12 or top_count >= 7:
+                break
+            if match_counts.get(eid, 0) >= 2:
+                continue
+            # Find entry by id and mark pick
+            for e in today_entries:
+                if e["id"] == eid:
+                    e["picks"][pidx]["isTopCard"] = True
+                    match_counts[eid] = match_counts.get(eid, 0) + 1
+                    top_count += 1
+                    break
+
+        top_labels = [
+            f"{e.get('leagueFlag','')} {e['home']} vs {e['away']} → {p['market']}"
+            for e in today_entries for p in e["picks"] if p.get("isTopCard")
+        ]
+        print(f"\n🃏  Top Picks ({top_count}):")
+        for lbl in top_labels:
+            print(f"   ⭐ {lbl}")
+
     with open(HISTORY_FILE, "w", encoding="utf-8") as f:
         json.dump(history, f, ensure_ascii=False, indent=2)
 

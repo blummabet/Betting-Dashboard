@@ -11221,22 +11221,23 @@ function _mergeLocalPicks() {
       finalScore: e.finalScore,
       picks: e.picks.map(p => ({
         icon: p.icon, market: p.market, conf: p.conf,
-        sc: p.sc || null, odds: p.odds, result: p.result, finalScore: p.finalScore
+        sc: p.sc || null, odds: p.odds, result: p.result, finalScore: p.finalScore,
+        isTopCard: p.isTopCard || false
       }))
     }));
   _resultsData = [..._resultsData, ...toAdd];
 
   // ── Tag isTopCard on picks that were in Cards des Tages ───────────────────
-  // tc_history stores {home, away, market} for every pick that landed in the
-  // top 7 cards. We match by home+away+market — date is not required since
-  // each match pair is unique within a season.
+  // Primary source: picks_history.json already has isTopCard:true set by save_picks.py.
+  // localStorage tc_history is a fallback for picks saved before this field was added.
   try {
     const _tcHistory = JSON.parse(localStorage.getItem('tc_history') || '[]');
     if (_tcHistory.length) {
       const _tcSet = new Set(_tcHistory.map(e => `${e.home}|${e.away}|${e.market}`));
       for (const e of _resultsData) {
         for (const p of e.picks) {
-          if (_tcSet.has(`${e.home}|${e.away}|${p.market}`)) {
+          // Don't override server-set isTopCard; add from localStorage if missing
+          if (!p.isTopCard && _tcSet.has(`${e.home}|${e.away}|${p.market}`)) {
             p.isTopCard = true;
           }
         }
