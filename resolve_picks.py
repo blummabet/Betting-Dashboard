@@ -113,6 +113,27 @@ def evaluate_pick(market_key: str, home_goals: int, away_goals: int,
     if market_key in rules:
         return "win" if rules[market_key] else "loss"
 
+    # ── Asian Handicap — market_key encodes direction + point: "ah_home:-2.25"
+    # pt < 0: favourite gives goals (e.g. -2.25 means home gives 2.25 to away)
+    # AH whole-ball: push on exact margin → void
+    # AH quarter-ball (.25/.75): half win → win, half loss → loss
+    if market_key.startswith("ah_home:") or market_key.startswith("ah_away:"):
+        import re as _re
+        m = _re.search(r':([-+]?\d+\.?\d*)', market_key)
+        if not m:
+            return "void"
+        pt = float(m.group(1))
+        is_home = market_key.startswith("ah_home")
+        margin = home_goals - away_goals if is_home else away_goals - home_goals
+        adjusted = margin + pt  # e.g. margin=3, pt=-2.25 → adjusted=0.75 → win
+        if abs(adjusted) < 0.01:
+            return "void"           # push (whole-ball exact cover)
+        elif abs(adjusted - 0.25) < 0.01:
+            return "win"            # quarter-ball: half win → win
+        elif abs(adjusted + 0.25) < 0.01:
+            return "loss"           # quarter-ball: half loss → loss
+        return "win" if adjusted > 0 else "loss"
+
     # ── Cards markets ─────────────────────────────────────────────────────────
     if market_key in ("cards35", "cards45"):
         if not result:
