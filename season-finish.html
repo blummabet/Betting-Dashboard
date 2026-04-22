@@ -5610,18 +5610,16 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   const _rl_ig  = match.roundsLeft ?? 99;
   const _hasH2H = match.h2h && match.h2h.games >= 3;
   const _anyNW  = (_rl_ig<=6) && (hLabels.length>0 || aLabels.length>0);
-  let _estH = 80   // header bar
-            + 200  // teams + pills
-            + 190  // stats grid
+  let _estH = 80    // header bar
+            + 180   // teams + pills
+            + (odds?.hw ? 74 : 0)  // odds strip (now above stats)
+            + 200   // stats grid
             + (_hasH2H ? 170 : 0)
-            + (_anyNW  ? 100 : 0)
+            + (_anyNW  ? 90 : 0)   // compact stakes
             + (_igCtxBadges.length ? 60 : 0)
-            + 60   // picks header
-            + (picks.length >= 1 ? 220 : 0)
-            + (picks.length >= 2 ? 110 : 0)
-            + (picks.length >= 3 ? 110 : 0)
-            + (odds?.hw ? 70 : 0)
-            + 100; // footer
+            + 60    // picks section header
+            + (picks.length > 0 ? 200 : 0)  // 3-across pick cards (single row)
+            + 100;  // footer
   _estH = Math.max(1080, _estH);
 
   const W=1080, H=_estH;
@@ -5729,50 +5727,81 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
   const ab2=ctx.createLinearGradient(W,0,W/2,0);
   ab2.addColorStop(0,aC.main); ab2.addColorStop(1,'transparent');
   ctx.fillStyle=ab2; ctx.fillRect(W/2,74,W/2-10,3);
-  // League + date text
-  ctx.font='bold 22px system-ui,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillStyle='#e6edf3';
-  ctx.fillText(`${leagueFlag}  ${leagueName}`, W/2, 40);
-  ctx.font='15px system-ui,sans-serif'; ctx.fillStyle='rgba(200,210,220,0.65)';
-  ctx.fillText(`${match.date}  ·  Matchday Analysis`, W/2, 62);
+  // League + date text (adaptive: shrink font if league name is long)
+  ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#e6edf3';
+  const _lgText = `${leagueFlag}  ${leagueName}`;
+  let _lgFz = 20; ctx.font=`bold ${_lgFz}px system-ui,sans-serif`;
+  while (_lgFz > 13 && ctx.measureText(_lgText).width > W-200) { _lgFz--; ctx.font=`bold ${_lgFz}px system-ui,sans-serif`; }
+  ctx.fillText(_lgText, W/2, 38);
+  ctx.font='13px system-ui,sans-serif'; ctx.fillStyle='rgba(200,210,220,0.55)';
+  ctx.fillText(`${match.date}  ·  Matchday Analysis`, W/2, 60);
 
-  // ── TEAMS SECTION (y 80 → ~280) ─────────────────────────────────────
+  // ── TEAMS SECTION ────────────────────────────────────────────────────
   let curY = 90;
+  // Adaptive font: start at 46px, scale down until name fits in 420px column
+  const _tnFit = (text, maxW) => {
+    let sz = 46; ctx.font=`bold ${sz}px system-ui,sans-serif`;
+    while (sz > 22 && ctx.measureText(text).width > maxW) { sz -= 2; ctx.font=`bold ${sz}px system-ui,sans-serif`; }
+    return sz;
+  };
+  const _tnSz = Math.min(_tnFit(match.home, 420), _tnFit(match.away, 420));
   // Home team name
   ctx.save();
   const hTG = ctx.createLinearGradient(40,0,500,0);
   hTG.addColorStop(0,'#ffffff'); hTG.addColorStop(1,hC.main+'bb');
-  ctx.fillStyle=hTG; ctx.font='bold 60px system-ui,sans-serif';
+  ctx.fillStyle=hTG; ctx.font=`bold ${_tnSz}px system-ui,sans-serif`;
   ctx.textAlign='center'; ctx.textBaseline='alphabetic';
-  ctx.fillText(igTrunc(ctx,match.home,430), W*0.25, curY+72);
+  ctx.fillText(igTrunc(ctx,match.home,420), W*0.25, curY+58);
   ctx.restore();
   // Away team name
   ctx.save();
   const aTG = ctx.createLinearGradient(W-40,0,W-500,0);
   aTG.addColorStop(0,'#ffffff'); aTG.addColorStop(1,aC.main+'bb');
-  ctx.fillStyle=aTG; ctx.font='bold 60px system-ui,sans-serif';
+  ctx.fillStyle=aTG; ctx.font=`bold ${_tnSz}px system-ui,sans-serif`;
   ctx.textAlign='center'; ctx.textBaseline='alphabetic';
-  ctx.fillText(igTrunc(ctx,match.away,430), W*0.75, curY+72);
+  ctx.fillText(igTrunc(ctx,match.away,420), W*0.75, curY+58);
   ctx.restore();
-  // VS center circle
-  const vsR=46;
+  // VS center circle (smaller, proportional)
+  const vsR=34;
   ctx.save();
-  const vsG=ctx.createRadialGradient(W/2,curY+42,0,W/2,curY+42,vsR*2.5);
+  const vsG=ctx.createRadialGradient(W/2,curY+32,0,W/2,curY+32,vsR*2.5);
   vsG.addColorStop(0,'rgba(0,212,161,0.14)'); vsG.addColorStop(1,'transparent');
   ctx.fillStyle=vsG; ctx.fillRect(0,0,W,H);
-  igRoundRect(ctx,W/2-vsR,curY+42-vsR,vsR*2,vsR*2,vsR,false,true);
+  igRoundRect(ctx,W/2-vsR,curY+32-vsR,vsR*2,vsR*2,vsR,false,true);
   ctx.strokeStyle='rgba(255,255,255,0.18)'; ctx.lineWidth=1.5;
-  igRoundRect(ctx,W/2-vsR,curY+42-vsR,vsR*2,vsR*2,vsR,false,true);
-  ctx.font='bold 26px system-ui,sans-serif'; ctx.fillStyle='rgba(255,255,255,0.85)';
+  igRoundRect(ctx,W/2-vsR,curY+32-vsR,vsR*2,vsR*2,vsR,false,true);
+  ctx.font='bold 20px system-ui,sans-serif'; ctx.fillStyle='rgba(255,255,255,0.85)';
   ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('VS', W/2, curY+42);
+  ctx.fillText('VS', W/2, curY+32);
   ctx.restore();
-  curY += 88;
+  curY += 72;
   // Pressure pills
   let hPY = curY, aPY = curY;
   for(const lb of hLabels.slice(0,2)) hPY+=pill2(lb,W*0.25,hPY);
   for(const lb of aLabels.slice(0,2)) aPY+=pill2(lb,W*0.75,aPY);
   curY = Math.max(hPY,aPY)+20;
+
+  // ── ODDS STRIP (Home / Draw / Away — moved above stats) ─────────────
+  if (odds?.hw) {
+    curY += 8;
+    const _cw3 = (W-96)/3;
+    const _o3 = [
+      {lbl:'Home Win', val:odds.hw?.toFixed(2)||'–', col:hC.main},
+      {lbl:'Draw',     val:odds.dr?.toFixed(2)||'–', col:'#8b949e'},
+      {lbl:'Away Win', val:odds.aw?.toFixed(2)||'–', col:aC.main},
+    ];
+    _o3.forEach((o,i)=>{
+      const ox=48+i*_cw3+_cw3/2, bx=48+i*_cw3+4;
+      igRoundRect(ctx,bx,curY,_cw3-8,56,10,true,false);
+      ctx.fillStyle='rgba(18,22,30,0.80)'; igRoundRect(ctx,bx,curY,_cw3-8,56,10,true,false);
+      ctx.strokeStyle=o.col+'35'; ctx.lineWidth=1; igRoundRect(ctx,bx,curY,_cw3-8,56,10,false,true);
+      ctx.font='bold 26px system-ui,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle=o.col; ctx.fillText(o.val, ox, curY+24);
+      ctx.font='12px system-ui,sans-serif'; ctx.fillStyle='rgba(139,148,158,0.70)'; ctx.textBaseline='middle';
+      ctx.fillText(o.lbl, ox, curY+44);
+    });
+    curY += 68;
+  }
 
   // ── THIN DIVIDER ────────────────────────────────────────────────────
   ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1;
@@ -5859,33 +5888,67 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
     curY += 34;
   }
 
-  // ── PRESSURE STRIP ──────────────────────────────────────────────────
+  // ── SEASON STAKES (2-column compact badges) ─────────────────────────
   if (_anyNW) {
     curY += 10;
     ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(48,curY); ctx.lineTo(W-48,curY); ctx.stroke();
     curY += 16;
     curY = sec('SEASON STAKES', curY, '#f0c040');
-    curY += 8;
-    const _drawStakeLine = (stake, teamName, tColor) => {
-      if (!stake || !stake.labels?.length) return;
-      const labStr = stake.labels.map(l=>l.l).join(' · ');
-      const mw = stake.mustWin ? '  🔥 MUST WIN' : '';
-      ctx.font = 'bold 16px system-ui,sans-serif'; ctx.textAlign='left';
-      ctx.fillStyle=tColor; ctx.fillText(`${teamName}:`, 60, curY+16);
-      ctx.font = '15px system-ui,sans-serif'; ctx.fillStyle='rgba(200,210,220,0.80)';
-      ctx.fillText(`${labStr}${mw}`, 60+ctx.measureText(teamName+': ').width+6, curY+16);
-      curY += 26;
+    curY += 10;
+
+    const _colHalfW = (W-96)/2 - 8;
+    const _stakeColY0 = curY;
+
+    const _drawStakeCol = (stake, teamName, tColor, isLeft) => {
+      if (!stake || !stake.labels?.length) return 0;
+      const bx0 = isLeft ? 48 : 48 + (W-96)/2 + 8;
+      let sy = _stakeColY0;
+      // Team name header
+      ctx.font='bold 13px system-ui,sans-serif'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+      ctx.fillStyle=tColor;
+      ctx.fillText(igTrunc(ctx,teamName,_colHalfW-4), bx0, sy+13);
+      sy += 20;
+      // Must-win badge (if applicable)
+      let bx = bx0;
+      if (stake.mustWin) {
+        const mwT='🔥 MUST WIN';
+        ctx.font='bold 11px system-ui,sans-serif';
+        const mwW=ctx.measureText(mwT).width+14, mwH=22;
+        igRoundRect(ctx,bx,sy,mwW,mwH,5,true,false);
+        ctx.fillStyle='rgba(248,81,73,0.22)'; igRoundRect(ctx,bx,sy,mwW,mwH,5,true,false);
+        ctx.strokeStyle='#f8514980'; ctx.lineWidth=1; igRoundRect(ctx,bx,sy,mwW,mwH,5,false,true);
+        ctx.fillStyle='#f85149'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(mwT,bx+mwW/2,sy+mwH/2);
+        bx += mwW+6;
+      }
+      // Label badges (inline, wrap to next row if needed)
+      for (const lb of (stake.labels||[]).slice(0,4)) {
+        const pc=_pillColor(lb.c);
+        ctx.font='bold 11px system-ui,sans-serif';
+        const pw=ctx.measureText(lb.l).width+14, ph=22;
+        if (bx+pw > bx0+_colHalfW) { bx=bx0; sy+=28; } // wrap
+        igRoundRect(ctx,bx,sy,pw,ph,5,true,false); ctx.fillStyle=pc.bg;
+        igRoundRect(ctx,bx,sy,pw,ph,5,true,false); ctx.strokeStyle=pc.border; ctx.lineWidth=1;
+        igRoundRect(ctx,bx,sy,pw,ph,5,false,true); ctx.fillStyle=pc.text;
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(lb.l,bx+pw/2,sy+ph/2); ctx.textBaseline='alphabetic';
+        bx+=pw+5;
+      }
+      return (sy+28) - _stakeColY0;
     };
-    _drawStakeLine(match.homeStake, match.home, hC.main);
-    _drawStakeLine(match.awayStake, match.away, aC.main);
-    if (_rl_ig <= 99) {
-      ctx.font='13px system-ui,sans-serif'; ctx.textAlign='left';
-      ctx.fillStyle='rgba(139,148,158,0.7)';
-      ctx.fillText(`${_rl_ig} matchdays remaining in the season`, 60, curY+14);
-      curY += 24;
+
+    const _hSH = _drawStakeCol(match.homeStake, match.home, hC.main, true);
+    const _aSH = _drawStakeCol(match.awayStake, match.away, aC.main, false);
+    const _stakeH = Math.max(_hSH, _aSH, 0);
+
+    // Rounds remaining — subtle center note
+    if (_stakeH > 0 && _rl_ig <= 99) {
+      ctx.font='11px system-ui,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='alphabetic';
+      ctx.fillStyle='rgba(139,148,158,0.55)';
+      ctx.fillText(`${_rl_ig} matchdays remaining`, W/2, _stakeColY0+_stakeH+14);
     }
-    curY += 6;
+    curY = _stakeColY0 + _stakeH + (_stakeH>0 ? 26 : 0);
   }
 
   // ── CONTEXT STRIP (injuries/fatigue/referee) ─────────────────────────
@@ -5903,135 +5966,116 @@ function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
     curY += 6;
   }
 
-  // ── PICKS SECTION ────────────────────────────────────────────────────
+  // ── PICKS SECTION (3-across cards) ──────────────────────────────────
   curY += 10;
   ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(48,curY); ctx.lineTo(W-48,curY); ctx.stroke();
   curY += 16;
   curY = sec('TOP BETS', curY, scoreColor);
-  curY += 14;
+  curY += 16;
 
-  const _pickConf = {high:'★★★',medium:'★★☆',low:'★☆☆'};
   const _pickConfCol = {high:'#3fb950',medium:'#e3b341',low:'#8b949e'};
 
-  picks.forEach((p, pi) => {
-    const isHero = pi===0;
-    const cardH  = isHero ? 200 : 100;
-    const cardX  = 48, cardW = W-96;
-    // Card background
-    ctx.save();
-    const cardBG = ctx.createLinearGradient(cardX,curY,cardX+cardW,curY+cardH);
-    if(isHero){
-      cardBG.addColorStop(0,'rgba(22,27,34,0.95)');
-      cardBG.addColorStop(1,'rgba(13,17,23,0.95)');
-    } else {
-      cardBG.addColorStop(0,'rgba(18,22,28,0.90)');
-      cardBG.addColorStop(1,'rgba(13,17,23,0.90)');
-    }
-    igRoundRect(ctx,cardX,curY,cardW,cardH,14,true,false);
-    ctx.fillStyle=cardBG; igRoundRect(ctx,cardX,curY,cardW,cardH,14,true,false);
-    // Left accent bar
-    const pickCol = p.value==='hot'?'#f85149':p.value==='value'?'#3fb950':scoreColor;
-    ctx.fillStyle=pickCol; ctx.fillRect(cardX,curY+14,3,cardH-28);
-    // Card border
-    ctx.strokeStyle=pickCol+'40'; ctx.lineWidth=1;
-    igRoundRect(ctx,cardX,curY,cardW,cardH,14,false,true);
-    ctx.restore();
+  if (picks.length > 0) {
+    const _nP = picks.length; // 1–3
+    const _pcGap = 12;
+    const _pcW = Math.floor((W - 96 - _pcGap*(_nP-1)) / _nP);
+    const _pcH = 185;
+    const _pcRowY = curY;
 
-    if(isHero) {
-      // Hero pick: large layout
-      const confStr = _pickConf[p.conf]||'★★☆';
-      const confCol = _pickConfCol[p.conf]||'#e3b341';
-      // Confidence ring on right
-      const cRX=cardX+cardW-80, cRY=curY+cardH/2;
-      statRing(cRX,cRY,38, p.conf==='high'?1:p.conf==='medium'?0.67:0.33, confCol, confStr,'CONF',14);
-      // Pick icon
-      ctx.font='36px system-ui,sans-serif'; ctx.textAlign='left'; ctx.textBaseline='middle';
-      ctx.fillText(p.icon||'🎲', cardX+22, curY+50);
-      // Market name
-      ctx.font='bold 28px system-ui,sans-serif'; ctx.fillStyle='#e6edf3';
+    // Abbreviate market name for compact card
+    const _abbrMkt = (market) => {
+      let t = _igT(market);
+      const subs = [
+        ['Beide treffen','BTTS'],['Keine beider','No BTTS'],
+        ['Auswärtssieg','Auswärts'],['Unentschieden','Unentsch.'],
+        ['Torschüsse','Schüsse'],['Strafecke','Ecke'],
+      ];
+      for (const [f,r] of subs) t=t.replace(f,r);
+      return t.length>15 ? t.slice(0,13)+'…' : t;
+    };
+
+    picks.forEach((p, pi) => {
+      const _px = 48 + pi*(_pcW+_pcGap);
+      const _confCol = _pickConfCol[p.conf]||'#e3b341';
+      // POTD = first pick; hot value picks get red accent
+      const _isTopPick = pi===0;
+      const _accent = p.value==='hot' ? '#f85149' : p.value==='value' ? '#3fb950' : _confCol;
+      const _borderAlpha = _isTopPick ? 'aa' : '55';
+
+      // Card bg
+      igRoundRect(ctx,_px,_pcRowY,_pcW,_pcH,14,true,false);
+      ctx.fillStyle='rgba(15,19,26,0.97)'; igRoundRect(ctx,_px,_pcRowY,_pcW,_pcH,14,true,false);
+      // Colored border (green for high conf, yellow for medium)
+      ctx.strokeStyle=_confCol+_borderAlpha; ctx.lineWidth=_isTopPick?2:1.5;
+      igRoundRect(ctx,_px,_pcRowY,_pcW,_pcH,14,false,true);
+      // Top accent bar (full width, 4px)
+      igRoundRect(ctx,_px,_pcRowY,_pcW,4,[14,14,0,0],true,false);
+      ctx.fillStyle=_accent; igRoundRect(ctx,_px,_pcRowY,_pcW,4,[14,14,0,0],true,false);
+
+      // "TOP PICK" floating tab above first card
+      if (_isTopPick) {
+        const _tpLbl='★ TOP PICK';
+        ctx.font='bold 11px system-ui,sans-serif';
+        const _tpW=ctx.measureText(_tpLbl).width+16, _tpH=20;
+        igRoundRect(ctx,_px+12,_pcRowY-_tpH+2,_tpW,_tpH,[4,4,0,0],true,false);
+        ctx.fillStyle=_confCol; igRoundRect(ctx,_px+12,_pcRowY-_tpH+2,_tpW,_tpH,[4,4,0,0],true,false);
+        ctx.fillStyle='#000'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(_tpLbl,_px+12+_tpW/2,_pcRowY-_tpH/2+2);
+      }
+
+      // Confidence ring (top-right corner)
+      const _cRX=_px+_pcW-36, _cRY=_pcRowY+42;
+      const _confPct=p.conf==='high'?1:p.conf==='medium'?0.67:0.33;
+      const _confLbl=p.conf==='high'?'HIGH':p.conf==='medium'?'MED':'LOW';
+      statRing(_cRX,_cRY,26,_confPct,_confCol,_confLbl,'CONF',9);
+
+      // Icon + market name
+      ctx.font='24px system-ui,sans-serif'; ctx.textAlign='left'; ctx.textBaseline='middle';
+      ctx.fillText(p.icon||'🎲',_px+14,_pcRowY+36);
+      ctx.font=`bold ${_pcW<280?14:16}px system-ui,sans-serif`; ctx.fillStyle='#e6edf3';
       ctx.textAlign='left'; ctx.textBaseline='alphabetic';
-      ctx.fillText(igTrunc(ctx,_igT(p.market),580), cardX+72, curY+58);
+      ctx.fillText(igTrunc(ctx,_abbrMkt(p.market),_pcW-80),_px+46,_pcRowY+44);
+
       // Odds badge
-      if(p.odds) {
-        const oddsStr=`@ ${p.odds.toFixed(2)}`;
-        ctx.font='bold 24px system-ui,sans-serif';
-        const oddsW=ctx.measureText(oddsStr).width+22;
-        igRoundRect(ctx,cardX+72,curY+70,oddsW,34,8,true,false);
-        ctx.fillStyle=pickCol+'30'; igRoundRect(ctx,cardX+72,curY+70,oddsW,34,8,true,false);
-        ctx.strokeStyle=pickCol+'60'; ctx.lineWidth=1; igRoundRect(ctx,cardX+72,curY+70,oddsW,34,8,false,true);
-        ctx.fillStyle=pickCol; ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText(oddsStr, cardX+72+oddsW/2, curY+87);
+      if (p.odds) {
+        const _oStr=`@ ${p.odds.toFixed(2)}`;
+        ctx.font='bold 22px system-ui,sans-serif';
+        const _oW=ctx.measureText(_oStr).width+16;
+        igRoundRect(ctx,_px+12,_pcRowY+56,_oW,36,8,true,false);
+        ctx.fillStyle=_accent+'28'; igRoundRect(ctx,_px+12,_pcRowY+56,_oW,36,8,true,false);
+        ctx.strokeStyle=_accent+'60'; ctx.lineWidth=1; igRoundRect(ctx,_px+12,_pcRowY+56,_oW,36,8,false,true);
+        ctx.fillStyle=_accent; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(_oStr,_px+12+_oW/2,_pcRowY+74);
       }
-      // FV chip
-      if(p.modelOdds) {
-        const moStr=`FV ${p.modelOdds}`;
-        const moX=p.odds?cardX+72+(p.odds?ctx.measureText(`@ ${p.odds.toFixed(2)}`).width+44:0):cardX+72;
-        ctx.font='13px system-ui,sans-serif'; ctx.fillStyle='rgba(139,148,158,0.75)';
-        ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(moStr, moX+6, curY+87);
+
+      // FV chip (small, below odds)
+      if (p.modelOdds) {
+        ctx.font='11px system-ui,sans-serif'; ctx.fillStyle='rgba(139,148,158,0.60)';
+        ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+        ctx.fillText(`FV ${p.modelOdds}`,_px+14,_pcRowY+105);
       }
-      // Reason text (truncated to 2 lines, plain text)
-      const reasonText = (p.reason||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-      ctx.font='14px system-ui,sans-serif'; ctx.fillStyle='rgba(180,190,200,0.65)';
-      ctx.textAlign='left'; ctx.textBaseline='alphabetic';
-      igWrapText(ctx, reasonText, cardX+22, curY+138, cardW-130, 20, 2);
-      // Value badge top-right
-      if(p.value==='hot'||p.value==='value') {
-        const vLbl=p.value==='hot'?'🔥 VALUE':'💰 Value';
-        ctx.font='bold 13px system-ui,sans-serif';
-        const vW=ctx.measureText(vLbl).width+16;
-        igRoundRect(ctx,cardX+cardW-vW-90,curY+12,vW,24,6,true,false);
-        ctx.fillStyle=p.value==='hot'?'rgba(248,81,73,0.25)':'rgba(63,185,80,0.20)';
-        igRoundRect(ctx,cardX+cardW-vW-90,curY+12,vW,24,6,true,false);
+
+      // Value badge (hot/value) — bottom-right
+      if (p.value==='hot'||p.value==='value') {
+        const _vLbl=p.value==='hot'?'🔥 HOT':'💰 VALUE';
+        ctx.font='bold 10px system-ui,sans-serif';
+        const _vW=ctx.measureText(_vLbl).width+12, _vH=18;
+        igRoundRect(ctx,_px+_pcW-_vW-10,_pcRowY+_pcH-_vH-10,_vW,_vH,4,true,false);
+        ctx.fillStyle=p.value==='hot'?'rgba(248,81,73,0.22)':'rgba(63,185,80,0.18)';
+        igRoundRect(ctx,_px+_pcW-_vW-10,_pcRowY+_pcH-_vH-10,_vW,_vH,4,true,false);
         ctx.fillStyle=p.value==='hot'?'#f85149':'#3fb950';
         ctx.textAlign='center'; ctx.textBaseline='middle';
-        ctx.fillText(vLbl,cardX+cardW-vW/2-90,curY+24);
+        ctx.fillText(_vLbl,_px+_pcW-_vW/2-10,_pcRowY+_pcH-_vH/2-10);
       }
-    } else {
-      // Secondary picks: compact single row
-      ctx.font='22px system-ui,sans-serif'; ctx.textAlign='left'; ctx.textBaseline='middle';
-      ctx.fillText(p.icon||'🎲', cardX+18, curY+cardH/2);
-      ctx.font='bold 20px system-ui,sans-serif'; ctx.fillStyle='#d0d8e0'; ctx.textBaseline='middle';
-      ctx.fillText(igTrunc(ctx,_igT(p.market),440), cardX+56, curY+cardH/2-6);
-      if(p.odds){
-        ctx.font='bold 20px system-ui,sans-serif'; ctx.fillStyle=pickCol; ctx.textAlign='right';
-        ctx.fillText(`@ ${p.odds.toFixed(2)}`, cardX+cardW-100, curY+cardH/2-6);
-      }
-      const confStr=_pickConf[p.conf]||'★★☆';
-      ctx.font='15px system-ui,sans-serif'; ctx.fillStyle=_pickConfCol[p.conf]||'#e3b341';
-      ctx.textAlign='right'; ctx.textBaseline='middle';
-      ctx.fillText(confStr, cardX+cardW-20, curY+cardH/2-6);
-      // Sub-reason
-      const reasonText=(p.reason||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
-      ctx.font='12px system-ui,sans-serif'; ctx.fillStyle='rgba(139,148,158,0.65)';
-      ctx.textAlign='left'; ctx.textBaseline='alphabetic';
-      ctx.fillText(igTrunc(ctx,reasonText,cardW-40), cardX+56, curY+cardH/2+20);
-    }
-    curY += cardH+10;
-  });
 
-  // ── ODDS STRIP ────────────────────────────────────────────────────────
-  if (odds?.hw) {
-    curY += 10;
-    ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(48,curY); ctx.lineTo(W-48,curY); ctx.stroke();
-    curY += 16;
-    const o3=[
-      {lbl:_igT('Home Win'), val:odds.hw?.toFixed(2)||'–', col:hC.main},
-      {lbl:_igT('Draw'),     val:odds.dr?.toFixed(2)||'–', col:'#8b949e'},
-      {lbl:_igT('Away Win'), val:odds.aw?.toFixed(2)||'–', col:aC.main},
-    ];
-    const cw=(W-96)/3;
-    o3.forEach((o,i)=>{
-      const ox=48+i*cw+cw/2;
-      ctx.font='bold 28px system-ui,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillStyle=o.col; ctx.fillText(o.val, ox, curY+22);
-      ctx.font='13px system-ui,sans-serif'; ctx.fillStyle='rgba(139,148,158,0.75)'; ctx.textBaseline='middle';
-      ctx.fillText(o.lbl, ox, curY+44);
-      if(i<2){ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=1;
-        ctx.beginPath();ctx.moveTo(48+(i+1)*cw,curY+4);ctx.lineTo(48+(i+1)*cw,curY+54);ctx.stroke();}
+      // Bottom confidence label strip
+      ctx.font='11px system-ui,sans-serif';
+      ctx.fillStyle='rgba(139,148,158,0.45)'; ctx.textAlign='left'; ctx.textBaseline='alphabetic';
+      const _cLbl=p.conf==='high'?'Hohe Konfidenz':p.conf==='medium'?'Mittlere Konfidenz':'Niedrig';
+      ctx.fillText(_cLbl,_px+14,_pcRowY+_pcH-12);
     });
-    curY += 66;
+    curY = _pcRowY + _pcH + 20;
   }
 
   // ── FOOTER ────────────────────────────────────────────────────────────
