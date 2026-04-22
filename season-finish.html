@@ -4685,7 +4685,11 @@ function getBettingPicks(match, odds, leagueKey) {
                   : _ahPt >= 2.25 ? 0.44 : _ahPt >= 2.0  ? 0.51 : _ahPt >= 1.75 ? 0.58
                   : _ahPt >= 1.5  ? 0.64 : _ahPt >= 1.25 ? 0.72 : _ahPt >= 1.0  ? 0.80
                   : _ahPt >= 0.75 ? 0.87 : _ahPt >= 0.5  ? 0.93 : 0.97;
-      if (_ahBP > 0.05) mp = Math.min(0.90, Math.max(0.05, _ahBP * _mf));
+      // Strong-favourite boost: teams with >80% win prob win by larger margins more often
+      // than the flat factor assumes. Calibrated: >85% → ×1.35, >80% → ×1.20.
+      const _mfBoost = _ahBP > 0.85 ? 1.35 : _ahBP > 0.80 ? 1.20 : 1.0;
+      const _mfAdj   = Math.min(0.97, _mf * _mfBoost);
+      if (_ahBP > 0.05) mp = Math.min(0.90, Math.max(0.05, _ahBP * _mfAdj));
     }
     // For markets with a proper mp, compute model odds + edge
     if (mp !== null) {
