@@ -6,9 +6,9 @@ save_picks.py — Reads fixture data from season-finish.html and saves
 Uses the real embedded fixture data (pressure, form, H2H, stake labels)
 to generate picks that closely match the JS dashboard cards.
 
-NOTE: Live odds (AH, fair-value) are fetched by the browser at runtime
-and are NOT available here — those picks cannot be replicated server-side.
-Result picks and cards picks are however deterministic from the fixture data.
+Odds enrichment: prematch-data.json is loaded to apply the same AH substitution
+logic as the browser — when hw < 1.35 (home strong favourite), the result pick
+is replaced with the best AH line from ah_home_lines (or standard ah_h fallback).
 """
 
 import json
@@ -16,9 +16,65 @@ import re
 import datetime
 from pathlib import Path
 
-BASE         = Path(__file__).parent
-HTML_FILE    = BASE / "season-finish.html"
-HISTORY_FILE = BASE / "picks_history.json"
+BASE            = Path(__file__).parent
+HTML_FILE       = BASE / "season-finish.html"
+HISTORY_FILE    = BASE / "picks_history.json"
+PREMATCH_FILE   = BASE / "prematch-data.json"
+
+
+# ── Prematch odds lookup (from prematch-data.json) ────────────────────────────
+
+def _norm(s: str) -> str:
+    """Normalize team name for fuzzy matching (same approach as JS norm())."""
+    import unicodedata
+    s = unicodedata.normalize("NFD", s.lower())
+    s = "".join(c for c in s if unicodedata.category(c) != "Mn")  # strip diacritics
+    s = re.sub(r"\b(fc|sv|sc|ac|ss|rc|sk|tsv|rb|vfb|bsc|vfl|as|us|cd|cf)\b", " ", s)
+    s = re.sub(r"[^a-z0-9 ]", " ", s)
+    return re.sub(r"\s+", " ", s).strip()
+
+def load_prematch_odds() -> dict:
+    """
+    Returns a dict keyed by (norm_home, norm_away) → odds dict from prematch-data.json.
+    Includes hw, aw, ah_h, ah_h_point, ah_a, ah_a_point, ah_home_lines, ah_away_lines.
+    """
+    if not PREMATCH_FILE.exists():
+        return {}
+    try:
+        with open(PREMATCH_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+        lookup = {}
+        for fx in data.get("fixtures", []):
+            o = fx.get("odds") or {}
+            if not o:
+                continue
+            h = _norm(fx.get("homeTeamName", ""))
+            a = _norm(fx.get("awayTeamName", ""))
+            if h and a:
+                lookup[(h, a)] = o
+        return lookup
+    except Exception:
+        return {}
+
+def find_prematch_odds(lookup: dict, home: str, away: str) -> dict | None:
+    """Fuzzy-match home/away team names against prematch lookup."""
+    hn, an = _norm(home), _norm(away)
+    # Exact match first
+    if (hn, an) in lookup:
+        return lookup[(hn, an)]
+    # Partial match: one name contains the other
+    for (lh, la), odds in lookup.items():
+        hm = lh == hn or lh in hn or hn in lh
+        am = la == an or la in an or an in la
+        if hm and am:
+            return odds
+    return None
+
+def pick_best_line(lines: list, target: float = 1.62) -> dict | None:
+    """Mirror of JS _pickBestLine — returns {pt, price} closest to target odds."""
+    if not lines:
+        return None
+    return min(lines, key=lambda l: abs(l.get("price", 99) - target))
 
 
 # ── Parse fixture data from season-finish.html ────────────────────────────────
@@ -281,10 +337,12 @@ def score_cards(fx: dict) -> tuple[str, str, float] | None:
     return (mkt_key, label, sc)
 
 
-def generate_picks(fx: dict) -> list[dict]:
+def generate_picks(fx: dict, pm_odds: dict | None = None) -> list[dict]:
     """
     Generate top picks for a fixture, mirroring JS getBettingPicks() category logic:
     1 result pick + 1 goals pick + optional cards pick (specialist).
+
+    pm_odds: odds dict from prematch-data.json — used for AH substitution (hw < 1.35).
     """
     result_key, result_label, result_sc   = score_result(fx)
     goals_key,  goals_label,  goals_sc    = score_goals(fx)
@@ -296,13 +354,49 @@ def generate_picks(fx: dict) -> list[dict]:
     def conf(sc, h=0.68, m=0.48):
         return "high" if sc >= h else "medium" if sc >= m else "low"
 
+    # ── AH substitution (mirrors JS logic: hw/aw < 1.35 → show AH pick) ───────
+    # Also override score_result if odds clearly indicate a different direction
+    # (e.g. aw=1.10 but score_result picked homeWin from fixture data signals)
+    result_odds = None
+    if pm_odds:
+        hw = pm_odds.get("hw")
+        aw = pm_odds.get("aw")
+        # Correct direction if odds strongly disagree with fixture-data result pick
+        if hw and aw:
+            if hw < 1.35 and result_key != "homeWin":
+                result_key, result_label, result_sc = "homeWin", "🏠 Heimsieg", result_sc
+            elif aw < 1.35 and result_key != "awayWin":
+                result_key, result_label, result_sc = "awayWin", "✈️ Auswärtssieg", result_sc
+        # Home favourite → AH Heim
+        if result_key == "homeWin" and hw and hw < 1.35:
+            ah_lines = pm_odds.get("ah_home_lines") or []
+            best     = pick_best_line(ah_lines, 1.62) if ah_lines else None
+            ah_odds  = best["price"] if best else pm_odds.get("ah_h")
+            ah_pt    = best["pt"]    if best else pm_odds.get("ah_h_point")
+            if ah_odds and 1.35 <= ah_odds <= 2.05:
+                pt_str       = f" {'+' if ah_pt >= 0 else ''}{ah_pt}" if ah_pt is not None else ""
+                result_key   = f"ah_home:{ah_pt}" if ah_pt is not None else "ah_home"
+                result_label = f"🏠 AH Heim{pt_str}"
+                result_odds  = round(ah_odds, 2)
+        # Away favourite → AH Ausw.
+        elif result_key == "awayWin" and aw and aw < 1.35:
+            ah_lines = pm_odds.get("ah_away_lines") or []
+            best     = pick_best_line(ah_lines, 1.62) if ah_lines else None
+            ah_odds  = best["price"] if best else pm_odds.get("ah_a")
+            ah_pt    = best["pt"]    if best else pm_odds.get("ah_a_point")
+            if ah_odds and 1.35 <= ah_odds <= 2.05:
+                pt_str       = f" {'+' if ah_pt >= 0 else ''}{ah_pt}" if ah_pt is not None else ""
+                result_key   = f"ah_away:{ah_pt}" if ah_pt is not None else "ah_away"
+                result_label = f"✈️ AH Ausw.{pt_str}"
+                result_odds  = round(ah_odds, 2)
+
     picks.append({
         "market":    result_label,
         "marketKey": result_key,
         "icon":      result_label.split()[0],
         "conf":      conf(result_sc, h=0.72, m=0.58),
         "sc":        round(result_sc, 3),
-        "odds":      None,
+        "odds":      result_odds,
         "result":    None,
     })
 
@@ -355,6 +449,10 @@ def main():
     fixtures = extract_fixtures_from_html(html)
     print(f"  📦 {len(fixtures)} fixtures extracted from HTML")
 
+    # Load prematch odds for AH substitution
+    pm_lookup = load_prematch_odds()
+    print(f"  📊 {len(pm_lookup)} prematch odds entries loaded")
+
     # Load existing history
     history = []
     if HISTORY_FILE.exists():
@@ -373,7 +471,8 @@ def main():
         if mid in saved_ids:
             continue
 
-        picks = generate_picks(fx)
+        pm_odds = find_prematch_odds(pm_lookup, home, away)
+        picks = generate_picks(fx, pm_odds)
         if not picks:
             continue
 
