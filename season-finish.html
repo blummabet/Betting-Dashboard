@@ -2260,10 +2260,52 @@ function _parseTheOddsEvent(g) {
           if (o.name==='Yes'&&!r.ht_bttsY) r.ht_bttsY=o.price;
           if (o.name==='No' &&!r.ht_bttsN) r.ht_bttsN=o.price;
         }
+      } else if (mk==='alternate_totals') {
+        // Asian Over/Under lines (quarter-ball: 1.75, 2.0, 2.25, 2.75, 3.25, etc.)
+        // Collected as arrays — _pickBestLine() picks the line closest to target odds (~1.62)
+        for (const o of (mkt.outcomes||[])) {
+          const pt=o.point; const p=o.price;
+          if (pt<1.0||pt>6.0) continue;
+          if (o.name==='Over') {
+            if (!r.ao_lines) r.ao_lines=[];
+            if (!r.ao_lines.find(l=>Math.abs(l.pt-pt)<0.01)) r.ao_lines.push({pt,price:p});
+          } else if (o.name==='Under') {
+            if (!r.au_lines) r.au_lines=[];
+            if (!r.au_lines.find(l=>Math.abs(l.pt-pt)<0.01)) r.au_lines.push({pt,price:p});
+          }
+        }
+      } else if (mk==='alternate_spreads') {
+        // All available AH lines per team — enables target-odds (~1.62) line selection
+        for (const o of (mkt.outcomes||[])) {
+          const nm=norm(o.name);
+          const pt=o.point; const p=o.price;
+          if (nm===hTeam||hTeam.includes(nm)||nm.includes(hTeam)) {
+            if (!r.ah_home_lines) r.ah_home_lines=[];
+            if (!r.ah_home_lines.find(l=>Math.abs(l.pt-pt)<0.01)) r.ah_home_lines.push({pt,price:p});
+          } else if (nm===aTeam||aTeam.includes(nm)||nm.includes(aTeam)) {
+            if (!r.ah_away_lines) r.ah_away_lines=[];
+            if (!r.ah_away_lines.find(l=>Math.abs(l.pt-pt)<0.01)) r.ah_away_lines.push({pt,price:p});
+          }
+        }
       }
     }
   }
   return r;
+}
+
+// ── Target-odds line picker ──────────────────────────────────────────────────
+// Picks the line from [{pt, price}] whose price is closest to targetOdds.
+// Optional minPt/maxPt restrict the search to a meaningful point range.
+// Returns {pt, price} or null if lines is empty/null/unfiltered-empty.
+function _pickBestLine(lines, targetOdds, minPt, maxPt) {
+  if (!Array.isArray(lines) || !lines.length) return null;
+  targetOdds = targetOdds || 1.62;
+  const pool = (minPt != null || maxPt != null)
+    ? lines.filter(l => (minPt == null || l.pt >= minPt) && (maxPt == null || l.pt <= maxPt))
+    : lines;
+  if (!pool.length) return null;
+  return pool.reduce((best, l) =>
+    !best || Math.abs(l.price - targetOdds) < Math.abs(best.price - targetOdds) ? l : best, null);
 }
 
 function findOdds(leagueKey, home, away) {
@@ -2287,7 +2329,8 @@ function findOdds(leagueKey, home, away) {
         if (_pmO) {
           const _supp = ['bttsY','bttsN','ht_o05','ht_u05','ht_o15','ht_u15','ht_bttsY','ht_bttsN',
                          'ht_hw','ht_dr','ht_aw',  // HT 1X2 — API-Football only; ht_dr needed for AH -0.25 estimate
-                         'hto15','ato15','cards_o35','cards_u35','cards_o45','cards_u45'];
+                         'hto15','ato15','cards_o35','cards_u35','cards_o45','cards_u45',
+                         'ao_lines','au_lines','ah_home_lines','ah_away_lines'];
           for (const k of _supp) if (r[k] == null && _pmO[k] != null) r[k] = _pmO[k];
         }
         return r;
@@ -2332,7 +2375,7 @@ function findOdds(leagueKey, home, away) {
 
 async function loadAllOdds() {
   // ── Cache: refresh every 2h — odds move more often closer to kickoff ─────
-  const CACHE_KEY = 'sfOddsCache_v11'; // bumped: added Pass5 team_totals + findOdds prematch supplement
+  const CACHE_KEY = 'sfOddsCache_v12'; // bumped: added Pass6 Asian O/U (alternate_totals) + AH multi-line (alternate_spreads)
   const CACHE_TTL = 2 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
@@ -2345,6 +2388,8 @@ async function loadAllOdds() {
       window._oddsAltLgs      = '(cache)';
       window._oddsHtLgs       = '(cache)';
       window._oddsHtBttsLgs   = '(cache)';
+      window._oddsTeamTotLgs  = '(cache)';
+      window._oddsAsianLgs    = '(cache)';
       window._oddsRemaining   = null;
       return;
     }
@@ -2538,6 +2583,38 @@ async function loadAllOdds() {
   }));
   window._oddsTeamTotLgs = teamTotOk;
   if (teamTotOk > 0) console.log(`[TheOddsAPI] Team Goals enriched — team_totals: ${teamTotOk} Ligen`);
+
+  // ── Fetch Pass 6: EU region — Asian O/U + Asian Handicap multi-line ───────
+  // alternate_totals = Asian O/U quarter-ball lines (1.75, 2.25, 2.75, etc.)
+  // alternate_spreads = All AH lines per team — enables _pickBestLine() target ~1.62
+  let asianOk = 0;
+  await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
+    if (!window._oddsData[lk]?.length) return;
+    try {
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=alternate_totals,alternate_spreads&oddsFormat=decimal`;
+      const resp = await fetch(url);
+      if (!resp.ok) return;
+      const asianEvents = await resp.json();
+      if (!Array.isArray(asianEvents)) return;
+      for (const ae of asianEvents) {
+        const main = window._oddsData[lk].find(e => e.id === ae.id);
+        if (!main) continue;
+        for (const bkr of (ae.bookmakers || [])) {
+          const existing = main.bookmakers.find(b => b.key === bkr.key);
+          if (existing) {
+            for (const mkt of (bkr.markets || [])) {
+              if (!existing.markets.find(m => m.key === mkt.key)) existing.markets.push(mkt);
+            }
+          } else {
+            main.bookmakers.push(bkr);
+          }
+        }
+      }
+      if (asianEvents.length > 0) asianOk++;
+    } catch(e) { /* silent */ }
+  }));
+  window._oddsAsianLgs = asianOk;
+  if (asianOk > 0) console.log(`[TheOddsAPI] Asian O/U + AH Lines enriched — ${asianOk} Ligen`);
 
   // ── Save to cache ─────────────────────────────────────────────────────────
   try {
@@ -3592,13 +3669,18 @@ function getBettingPicks(match, odds, leagueKey) {
         else if (_apiPoiH <= 32) reason += `<br>⚠️ Statistisches Modell: ${match.home} nur bei ${_apiPoiH}% Siegchance — Modell ist skeptischer.`;
       }
       rC.push({sc, p:{icon:'🏠', market:'Heimsieg', odds:o.hw, conf, reason}});
-      // AH-Kandidat: wenn Heimsieg-Quote zu günstig (< 1.35), AH als werthaltigere Alternative einreihen
-      if (o.hw != null && o.hw < 1.35 && o.ah_h != null && o.ah_h >= 1.35 && o.ah_h <= 2.05) {
-        const _ahPt = o.ah_h_point != null ? (o.ah_h_point >= 0 ? `+${o.ah_h_point}` : `${o.ah_h_point}`) : '';
-        const _ahMkt = `AH Heim${_ahPt ? ' ' + _ahPt : ''}`;
-        const _ahConf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
-        const _ahReason = `${match.home} ist klarer Favorit (1X2-Quote ${o.hw.toFixed(2)} — kein Wert). Asian Handicap${_ahPt ? ' ' + _ahPt : ''} @ ${o.ah_h.toFixed(2)} bietet deutlich besseres Value. ` + reason;
-        rC.push({sc, p:{icon:'🏠', market:_ahMkt, odds:o.ah_h, conf:_ahConf, reason:_ahReason}});
+      // AH-Kandidat: wenn Heimsieg-Quote zu günstig (< 1.35), beste AH-Line via Ziel-Quote ~1.62
+      if (o.hw != null && o.hw < 1.35) {
+        const _ahBest  = _pickBestLine(o.ah_home_lines, 1.62);
+        const _ahOdds  = _ahBest ? _ahBest.price : (o.ah_h && o.ah_h >= 1.35 && o.ah_h <= 2.05 ? o.ah_h : null);
+        const _ahPoint = _ahBest ? _ahBest.pt    : o.ah_h_point;
+        if (_ahOdds != null && _ahOdds >= 1.35 && _ahOdds <= 2.05) {
+          const _ahPt = _ahPoint != null ? (_ahPoint >= 0 ? `+${_ahPoint}` : `${_ahPoint}`) : '';
+          const _ahMkt = `AH Heim${_ahPt ? ' ' + _ahPt : ''}`;
+          const _ahConf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
+          const _ahReason = `${match.home} ist klarer Favorit (1X2-Quote ${o.hw.toFixed(2)} — kein Wert). Asian Handicap${_ahPt ? ' ' + _ahPt : ''} @ ${_ahOdds.toFixed(2)} bietet deutlich besseres Value. ` + reason;
+          rC.push({sc, p:{icon:'🏠', market:_ahMkt, odds:_ahOdds, conf:_ahConf, reason:_ahReason}});
+        }
       }
     }
     // ── Auswärtssieg ──────────────────────────────────────────────────────
@@ -3681,13 +3763,18 @@ function getBettingPicks(match, odds, leagueKey) {
         else if (_apiPoiA <= 32) reason += `<br>⚠️ Statistisches Modell: ${match.away} nur bei ${_apiPoiA}% Siegchance — Modell ist skeptischer.`;
       }
       rC.push({sc, p:{icon:'✈️', market:'Auswärtssieg', odds:o.aw, conf, reason}});
-      // AH-Kandidat: wenn Auswärtssieg-Quote zu günstig (< 1.35), AH als werthaltigere Alternative einreihen
-      if (o.aw != null && o.aw < 1.35 && o.ah_a != null && o.ah_a >= 1.35 && o.ah_a <= 2.05) {
-        const _ahPt = o.ah_a_point != null ? (o.ah_a_point >= 0 ? `+${o.ah_a_point}` : `${o.ah_a_point}`) : '';
-        const _ahMkt = `AH Ausw.${_ahPt ? ' ' + _ahPt : ''}`;
-        const _ahConf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
-        const _ahReason = `${match.away} ist klarer Favorit (1X2-Quote ${o.aw.toFixed(2)} — kein Wert). Asian Handicap${_ahPt ? ' ' + _ahPt : ''} @ ${o.ah_a.toFixed(2)} bietet deutlich besseres Value. ` + reason;
-        rC.push({sc, p:{icon:'✈️', market:_ahMkt, odds:o.ah_a, conf:_ahConf, reason:_ahReason}});
+      // AH-Kandidat: wenn Auswärtssieg-Quote zu günstig (< 1.35), beste AH-Line via Ziel-Quote ~1.62
+      if (o.aw != null && o.aw < 1.35) {
+        const _ahBest  = _pickBestLine(o.ah_away_lines, 1.62);
+        const _ahOdds  = _ahBest ? _ahBest.price : (o.ah_a && o.ah_a >= 1.35 && o.ah_a <= 2.05 ? o.ah_a : null);
+        const _ahPoint = _ahBest ? _ahBest.pt    : o.ah_a_point;
+        if (_ahOdds != null && _ahOdds >= 1.35 && _ahOdds <= 2.05) {
+          const _ahPt = _ahPoint != null ? (_ahPoint >= 0 ? `+${_ahPoint}` : `${_ahPoint}`) : '';
+          const _ahMkt = `AH Ausw.${_ahPt ? ' ' + _ahPt : ''}`;
+          const _ahConf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
+          const _ahReason = `${match.away} ist klarer Favorit (1X2-Quote ${o.aw.toFixed(2)} — kein Wert). Asian Handicap${_ahPt ? ' ' + _ahPt : ''} @ ${_ahOdds.toFixed(2)} bietet deutlich besseres Value. ` + reason;
+          rC.push({sc, p:{icon:'✈️', market:_ahMkt, odds:_ahOdds, conf:_ahConf, reason:_ahReason}});
+        }
       }
     }
     // ── Unentschieden ─────────────────────────────────────────────────────
@@ -3868,7 +3955,11 @@ function getBettingPicks(match, odds, leagueKey) {
       const _o35BaseNote = _o35DefDriven
         ? `${match.home} erzielt Ø ${homeAttStr.toFixed(1)}, ${match.away} Ø ${awayAttStr.toFixed(1)} Tore/Spiel — die Torerwartung kommt vor allem aus defensiver Anfälligkeit (Gegentore: ${match.home} Ø ${homeDefStr.toFixed(1)}, ${match.away} Ø ${awayDefStr.toFixed(1)}). Das Modell erwartet ${expGoals.toFixed(1)} Tore insgesamt: ein Ergebnis mit 4+ Treffern ist trotz moderater Angriffe möglich.`
         : `${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet ${expGoals.toFixed(1)} Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich.`;
-      gC.push({sc, p:{icon:'🔥', market:'Over 3.5 Tore', odds:o.o35,
+      // Asian O/U: pick line ≤ 3.5 closest to ~1.62 (lower threshold = safer bet, similar odds)
+      const _ao35Best = _pickBestLine(o.ao_lines, 1.62, 2.75, 3.5);
+      const _o35Odds  = _ao35Best ? _ao35Best.price : o.o35;
+      const _o35Pt    = _ao35Best ? _ao35Best.pt    : 3.5;
+      gC.push({sc, p:{icon:'🔥', market:`Over ${_o35Pt} Tore`, odds:_o35Odds,
         conf: sc>0.68?'high':sc>0.44?'medium':'low',
         reason:`${_o35BaseNote}${_o35H2hNote}${_bothAttLine}`}}); }
 
@@ -3923,7 +4014,11 @@ function getBettingPicks(match, odds, leagueKey) {
         ? `${match.home} erzielt Ø ${homeAttStr.toFixed(1)}, ${match.away} Ø ${awayAttStr.toFixed(1)} Tore/Spiel — die Torerwartung kommt vor allem aus anfälligen Defensiven (Gegentore: ${match.home} Ø ${homeDefStr.toFixed(1)}, ${match.away} Ø ${awayDefStr.toFixed(1)}). Das Modell erwartet ${expGoals.toFixed(1)} Tore: ${_o25GoalText}.`
         : `${match.home} erzielt Ø ${homeAttStr.toFixed(1)} Tore/Spiel, ${match.away} Ø ${awayAttStr.toFixed(1)} — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: ${match.home} Ø ${homeDefStr.toFixed(1)}, ${match.away} Ø ${awayDefStr.toFixed(1)}). Das Modell erwartet ${expGoals.toFixed(1)} Tore: ${_o25GoalText}.`;
       if (expGoals >= 2.5) {
-        gC.push({sc, p:{icon:'⚽', market:'Over 2.5 Tore', odds:o.o25,
+        // Asian O/U: pick line ≤ 2.5 closest to ~1.62 (lower threshold = safer, same or better odds)
+        const _ao25Best = _pickBestLine(o.ao_lines, 1.62, 2.0, 2.5);
+        const _o25Odds  = _ao25Best ? _ao25Best.price : o.o25;
+        const _o25Pt    = _ao25Best ? _ao25Best.pt    : 2.5;
+        gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
           conf: sc>0.66?'high':sc>0.46?'medium':'low',
           reason:`${_o25BaseNote}${_o25H2hNote}${_o25ApiNote}${_bothAttLine}`}}); } }
 

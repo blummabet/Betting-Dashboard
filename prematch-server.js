@@ -132,13 +132,13 @@ function oddsApiFetch(sportKey) {
   });
 }
 
-// Fetch alternate soccer markets (corners + cards + double chance) via EU region.
+// Fetch alternate soccer markets (corners + cards + Asian lines + double chance) via EU region.
 // These are under "Other soccer betting markets" in The Odds API docs.
 // Returns { data: [...events] } or { data: [] } on error.
 function oddsApiFetchAlt(sportKey) {
   return new Promise((resolve) => {
     const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
-      + `&regions=eu&markets=alternate_totals_corners,alternate_totals_cards,double_chance&oddsFormat=decimal`;
+      + `&regions=eu&markets=alternate_totals_corners,alternate_totals_cards,alternate_totals,alternate_spreads,double_chance&oddsFormat=decimal`;
     const options = { hostname: ODDS_API_HOST, path, method: 'GET',
       headers: { 'User-Agent': 'CocoBet/1.0' } };
     const req = https.request(options, res => {
@@ -427,6 +427,33 @@ function parseTheOddsEvent(oddsEvent) {
         for (const o of (mkt.outcomes || [])) {
           if (o.name === 'Yes' && !r.ht_bttsY) r.ht_bttsY = o.price;
           if (o.name === 'No'  && !r.ht_bttsN) r.ht_bttsN = o.price;
+        }
+      } else if (mk === 'alternate_totals') {
+        // Asian Over/Under lines (quarter-ball: 1.75, 2.0, 2.25, 2.75, 3.25, etc.)
+        // Collected as arrays sorted by pt — picker selects line closest to target odds (~1.62)
+        for (const o of (mkt.outcomes || [])) {
+          const pt = o.point; const p = o.price;
+          if (pt < 1.0 || pt > 6.0) continue;
+          if (o.name === 'Over') {
+            if (!r.ao_lines) r.ao_lines = [];
+            if (!r.ao_lines.find(l => Math.abs(l.pt - pt) < 0.01)) r.ao_lines.push({ pt, price: p });
+          } else if (o.name === 'Under') {
+            if (!r.au_lines) r.au_lines = [];
+            if (!r.au_lines.find(l => Math.abs(l.pt - pt) < 0.01)) r.au_lines.push({ pt, price: p });
+          }
+        }
+      } else if (mk === 'alternate_spreads') {
+        // All available Asian Handicap lines per team — enables target-odds selection (~1.62)
+        for (const o of (mkt.outcomes || [])) {
+          const nm = normTeam(o.name);
+          const pt = o.point; const p = o.price;
+          if (nm === hTeam || hTeam.includes(nm) || nm.includes(hTeam)) {
+            if (!r.ah_home_lines) r.ah_home_lines = [];
+            if (!r.ah_home_lines.find(l => Math.abs(l.pt - pt) < 0.01)) r.ah_home_lines.push({ pt, price: p });
+          } else if (nm === aTeam || aTeam.includes(nm) || nm.includes(aTeam)) {
+            if (!r.ah_away_lines) r.ah_away_lines = [];
+            if (!r.ah_away_lines.find(l => Math.abs(l.pt - pt) < 0.01)) r.ah_away_lines.push({ pt, price: p });
+          }
         }
       }
     }
