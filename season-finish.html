@@ -4403,6 +4403,9 @@ function getBettingPicks(match, odds, leagueKey) {
     // Comparing model vs. model would produce meaningless "edge" — skip value tag for those.
     const ip = (p.odds && !p.oddsIsEst) ? (1 / p.odds) * 1.03 : null;  // ×1.03 strips ~3% bookmaker margin
     let mp = null;           // our model probability estimate
+    // Injury impact reduces expected corners (injured wingers/fullbacks mean less attacking width)
+    const _cInjAdj = Math.max(0, ((_hImpact||0) + (_aImpact||0)) * 0.08);
+    const cornersEstAdj = Math.max(4.0, cornersEst - _cInjAdj);
     switch (p.market) {
       case 'Heimsieg':
         if (_fairPH !== null) {
@@ -4536,13 +4539,37 @@ function getBettingPicks(match, odds, leagueKey) {
           if (_aFTSAway !== null && _aFTSAway >= 0.35) _bttsNMp = Math.min(0.82, _bttsNMp + 0.05);
           mp = _bttsNMp;
         } break;
-      // ── Corners — model probability from expected corner estimate ─────────────
-      case 'Über 11.5 Ecken': mp = Math.min(0.88, Math.max(0.08, 0.35 + (cornersEst - 11.5) * 0.12)); break;
-      case 'Über 10.5 Ecken': mp = Math.min(0.88, Math.max(0.10, 0.40 + (cornersEst - 10.5) * 0.12)); break;
-      case 'Über 9.5 Ecken':  mp = Math.min(0.88, Math.max(0.12, 0.50 + (cornersEst - 9.5)  * 0.10)); break;
-      case 'Über 8.5 Ecken':  mp = Math.min(0.88, Math.max(0.14, 0.60 + (cornersEst - 8.5)  * 0.10)); break;
-      case 'Unter 9.5 Ecken': mp = Math.min(0.85, Math.max(0.08, 0.50 + (9.5 - cornersEst)  * 0.10)); break;
-      case 'Unter 8.5 Ecken': mp = Math.min(0.85, Math.max(0.08, 0.55 + (8.5 - cornersEst)  * 0.12)); break;
+      // ── Cards — Poisson-derived fair probability from estimateCardsOdds() ────────
+      // estimateCardsOdds returns odds with 7% margin: o.cards_o35 = 0.93/P(cards>3.5)
+      // → P(cards>3.5) = 0.93/o.cards_o35  (strips the built-in margin back out)
+      case 'Über 3.5 Karten':
+        if (o.cards_o35) mp = Math.min(0.93, Math.max(0.04, 0.93 / o.cards_o35));
+        break;
+      case 'Über 4.5 Karten':
+        if (o.cards_o45) mp = Math.min(0.90, Math.max(0.02, 0.93 / o.cards_o45));
+        break;
+      // ── Corners — model probability from expected corner estimate (injury-adjusted) ──
+      case 'Über 11.5 Ecken': mp = Math.min(0.88, Math.max(0.08, 0.35 + (cornersEstAdj - 11.5) * 0.12)); break;
+      case 'Über 10.5 Ecken': mp = Math.min(0.88, Math.max(0.10, 0.40 + (cornersEstAdj - 10.5) * 0.12)); break;
+      case 'Über 9.5 Ecken':  mp = Math.min(0.88, Math.max(0.12, 0.50 + (cornersEstAdj - 9.5)  * 0.10)); break;
+      case 'Über 8.5 Ecken':  mp = Math.min(0.88, Math.max(0.14, 0.60 + (cornersEstAdj - 8.5)  * 0.10)); break;
+      case 'Unter 9.5 Ecken': mp = Math.min(0.85, Math.max(0.08, 0.50 + (9.5 - cornersEstAdj)  * 0.10)); break;
+      case 'Unter 8.5 Ecken': mp = Math.min(0.85, Math.max(0.08, 0.55 + (8.5 - cornersEstAdj)  * 0.12)); break;
+    }
+    // ── Asian Handicap FV — win-margin probability instead of raw 1X2 ────────────
+    // Raw win probability (e.g. 0.88 for Man City) is WRONG for AH -2.25:
+    // what matters is P(win by 3+ goals). Win-margin factor converts 1X2 prob → AH coverage prob.
+    // Factors empirically derived: AH -2.25 ≈ 44% of straight-win prob, AH -1.5 ≈ 64%, etc.
+    if (mp === null && p.market && (p.market.startsWith('AH ') || p.market.startsWith('Handicap '))) {
+      const _ahM  = p.market.match(/[-\u2212](\d+\.?\d*)/);
+      const _ahPt = _ahM ? parseFloat(_ahM[1]) : 1.0;
+      const _isH  = p.market.toLowerCase().includes('heim');
+      const _ahBP = (_isH ? (_bkrPH ?? 0) : (_bkrPA ?? 0));
+      const _mf   = _ahPt >= 3.0  ? 0.27 : _ahPt >= 2.75 ? 0.32 : _ahPt >= 2.5  ? 0.37
+                  : _ahPt >= 2.25 ? 0.44 : _ahPt >= 2.0  ? 0.51 : _ahPt >= 1.75 ? 0.58
+                  : _ahPt >= 1.5  ? 0.64 : _ahPt >= 1.25 ? 0.72 : _ahPt >= 1.0  ? 0.80
+                  : _ahPt >= 0.75 ? 0.87 : _ahPt >= 0.5  ? 0.93 : 0.97;
+      if (_ahBP > 0.05) mp = Math.min(0.90, Math.max(0.05, _ahBP * _mf));
     }
     // For markets with a proper mp, compute model odds + edge
     if (mp !== null) {
