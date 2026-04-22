@@ -1043,9 +1043,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         </tr>
         <tr>
           <td>The Odds API <span style="font-size:10px;color:var(--muted)">(primär für Spezial-Märkte)</span></td>
-          <td>5 Fetch-Passes (client-side): <strong>Pass 1</strong> H2H + OU2.5 + Spreads · <strong>Pass 2</strong> BTTS · <strong>Pass 3</strong> Corners + Cards + DC · <strong>Pass 4a/b</strong> HZ-H2H + HZ-Totals + HZ-BTTS · <strong>Pass 5</strong> Team Goals (ü1.5 pro Team) — gecacht 6h · 11 Ligen</td>
+          <td>6 Fetch-Passes (client-side): <strong>Pass 1</strong> H2H + OU2.5 + Spreads · <strong>Pass 2</strong> BTTS · <strong>Pass 3</strong> Corners + Cards + DC · <strong>Pass 4a/b</strong> HZ-H2H + HZ-Totals + HZ-BTTS · <strong>Pass 5</strong> Team Goals · <strong>Pass 6</strong> Asian O/U + AH Multi-Line — gecacht 2h · 11 Ligen</td>
           <td>Browser (client-side) — <code>loadAllOdds()</code></td>
-          <td>Primär für Spezial-Märkte (BTTS, HT Over, Corners, Cards, Team Goals) die api-football nicht liefert oder die CORS-blockiert wären · Supplement für fehlende bt­tsY/ht_o05 wenn Hauptquoten gefunden aber Spezialmärkte fehlen</td>
+          <td>Primär für Spezial-Märkte (BTTS, HT Over, Corners, Cards, Team Goals, Asian O/U, AH Lines) die api-football nicht liefert oder die CORS-blockiert wären · Supplement für fehlende Spezial-Märkte wenn Hauptquoten aus prematch-data.json kommen</td>
         </tr>
         <tr>
           <td>Backtest-CSVs (football-data.co.uk)</td>
@@ -1233,6 +1233,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Unentschieden:</strong> H2H Draw-Rate + Elo-Ausgeglichenheit</li>
           <li><strong>DNB Heim/Auswärts:</strong> Wenn Lean vorhanden aber Draw-Gefahr real (Draw-Rate > 20%)</li>
           <li><strong>Doppelte Chance:</strong> Formquote + Draw-Rate kombiniert</li>
+          <li><strong>Asian Handicap (AH Heim/Ausw.):</strong> Wenn 1X2-Quote &lt; 1.35 → <code>_pickBestLine(ah_lines, 1.62)</code> wählt die AH-Line mit Quote am nächsten bei ~1.62 aus allen <code>alternate_spreads</code>-Lines (Pass 6). Fallback auf Standard-AH-Line aus <code>spreads</code> (Pass 1).</li>
         </ul>
         <p style="margin-top:8px;color:var(--muted);font-size:12px;">Mindestquoten-Filter: sc &lt; 0.73 (impliziert Quote ≥ 1.37) oder reale Odds ≥ 1.30 nötig.</p>
       </div>
@@ -1240,7 +1241,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <h3>⚽ PICK 2 — Tore / Tempo</h3>
         <p style="margin-bottom:8px;">xG-basierter Tormarkt, drucksensitiv:</p>
         <ul>
-          <li><strong>Over/Under 3.5 / 2.5 / 1.5:</strong> Torerwartung + Druck ± favWeak</li>
+          <li><strong>Over/Under 3.5 / 2.5 / 1.5:</strong> Torerwartung + Druck ± favWeak · <em style="color:#e3b341;">Asian O/U: beste Line ≤ Standard mit Quote ~1.62 aus <code>alternate_totals</code> (Pass 6) — z.B. Over 2.25 statt Over 2.5</em></li>
           <li><strong>BTTS Ja/Nein:</strong> Angriffs-/Defensivstärke beider Teams</li>
           <li><strong>Team über 1.5 Tore:</strong> Isolierter Angriff vs. gegnerische Abwehr, backtested</li>
           <li><strong>1HZ Under 0.5:</strong> Nur bei Gold + engen Spielen (supprimiert bei Druck)</li>
@@ -1337,15 +1338,17 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <p style="margin-top:6px;font-size:11px;color:var(--muted);">Strip erscheint nur wenn ≥1 Outcome ≥3pp bewegt hat. Kein Clutter bei stabilen Linien.</p>
       </div>
       <div class="heart-card">
-        <h3>🃏 BTTS + Corners + Cards Enrichment (Step 5b/5c)</h3>
-        <p style="margin-bottom:8px;">Spezial-Märkte werden in separaten Passes nach dem Haupt-Fetch ergänzt:</p>
+        <h3>🃏 Spezial-Markt Enrichment — 6 Passes</h3>
+        <p style="margin-bottom:8px;">Alle Spezial-Märkte werden in separaten Passes nach dem Haupt-Fetch per Event-ID gemergt:</p>
         <ul>
-          <li><strong>Step 5b:</strong> BTTS via UK-Region (Bet365 etc.) — EU-Region liefert 422 für BTTS</li>
-          <li><strong>Step 5c:</strong> Corners + Karten (<code>cards_o35/o45/o55</code>) + Double Chance via Alternate-Markets-Endpoint</li>
-          <li>Mergt nur fehlende Felder — vorhandene Hauptquoten werden nicht überschrieben</li>
-          <li>400ms Delay zwischen Calls → kein Rate-Limit</li>
+          <li><strong>Pass 1 (EU):</strong> H2H + Spreads (AH) + Totals (ü/u 1.5/2.5/3.5)</li>
+          <li><strong>Pass 2 (UK):</strong> BTTS — EU-Region liefert 422</li>
+          <li><strong>Pass 3 (EU):</strong> Corners + Karten (<code>cards_o35/o45/o55</code>) + Double Chance</li>
+          <li><strong>Pass 4a/b (EU+UK):</strong> HZ-H2H + HZ-Totals + HZ-BTTS</li>
+          <li><strong>Pass 5 (EU):</strong> Team Goals ü1.5 per Team (<code>hto15/ato15</code>)</li>
+          <li><strong>Pass 6 (EU):</strong> <em style="color:#e3b341;">Asian O/U Quarterball-Lines</em> (<code>ao_lines/au_lines</code>) + <em style="color:#e3b341;">AH alle verfügbaren Lines</em> (<code>ah_home_lines/ah_away_lines</code>) via <code>alternate_totals</code> + <code>alternate_spreads</code></li>
         </ul>
-        <p style="margin-top:8px;font-size:11px;color:var(--muted);">Resultat: BTTS, Corners und Karten-Picks haben echte Bookie-Quoten für den Value-Check.</p>
+        <p style="margin-top:8px;font-size:11px;color:var(--muted);">Alle Passes mergen nur fehlende Felder — vorhandene Quoten werden nicht überschrieben. Resultat: alle Picks haben echte Bookie-Quoten; Asian-Picks nutzen automatisch die Line mit der besten Quote (~1.62).</p>
       </div>
       <div class="heart-card gold-c">
         <h3>🛑 Over 2.5 Hard Gate</h3>
@@ -1518,6 +1521,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Karten-Picks: Motivation-Guard für bestätigte Absteiger (_cardPressBoost)</strong> — <code>cardsVeryHigh</code>/<code>cardsHigh</code> verwendeten bisher <code>_pressureBoost</code> und "beide Teams unter maximalem Druck" Narrativ auch für Teams mit <code>motivNone</code> (bestätigt abgestiegen). Ein bestätigter Absteiger hat keinen Abstiegsdruck mehr. Fix: neuer <code>_cardPressBoost = _anyRedConf ? _pressureBoost × 0.20 : _pressureBoost</code>; Narrativ-Branches prüfen <code>_bothRedConf</code>/<code>_anyRedConf</code> und verwenden korrekte Formulierungen ("Frust und schlechte Form" statt "maximalem Druck"). <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>Over 2.5 / Over 3.5 Narrativ: Kontext bei schwacher Angriffsreihe</strong> — Wenn <code>homeAttStr &lt; 0.85</code> oder <code>awayAttStr &lt; 0.85</code>, sagte der Reason-Text "beide Defensiven lassen regelmäßig Gegentore zu" — obwohl die eigene Angriffsreihe sehr schwach ist. Widerspruch: 0.6 Tore/Spiel + "beide Defensiven anfällig" klingt falsch. Fix: <code>_o25DefDriven</code>/<code>_o35DefDriven</code> erkennt niedrige Angriffsstärke und wechselt auf "Torerwartung kommt vor allem aus anfälligen Defensiven (Gegentore: X / Y)". Die eigenen Tore/Spiel werden trotzdem gezeigt — vollständiger Kontext ohne Widerspruch. <em>(season-finish.html — Apr 2026)</em></li>
           <li><strong>Heimsieg/Auswärtssieg Narrativ: bestätigte Meister kein "Titel-Pflicht"-Text</strong> — <code>hc.includes('gold')</code>/<code>ac.includes('gold')</code> in den Result-Pick Reason-Texten triggerte "kämpft um den Titel — ein Heimsieg ist Pflicht. Der Druck erhöht die Intensität." auch für Teams die den Titel bereits gewonnen haben (<code>motivNone</code>). Fix: zusätzliche <code>!hMotivNone</code>/<code>!aMotivNone</code>-Checks; bestätigte Meister erhalten neutralen Text "bereits Meister — Pflichtspiel ohne Saisondruck. Rotation möglich." <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>AH Fair Value — Gewinnmargen-Faktoren statt raw 1X2 Wahrscheinlichkeit</strong> — Das AH-FV-Modell konvertierte die 1X2-Siegwahrscheinlichkeit direkt in AH-Coverage-Prob, was zu unrealistischen Model-Odds führte (Man City AH -2.25 → FV 1.14). Fix: Win-Margin-Faktoren je Handicap-Linie: −0.25 → 0.72, −0.5 → 0.62, −0.75 → 0.55, −1.0 → 0.51, −1.25 → 0.48, −1.5 → 0.46, −1.75 → 0.43, −2.0 → 0.41, −2.25 → 0.44, −2.5 → 0.42, −2.75 → 0.40. Model-Odds werden jetzt als <code>1 / (P_win × factor)</code> berechnet, was das echte Verhältnis zwischen Sieg und Handicap-Margin abbildet. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>Cards FV — Neue Fälle 'Über 3.5' und 'Über 4.5 Karten'</strong> — Im Fair-Value-Switch fehlten explizite Cases für die in der Praxis häufigsten Karten-Märkte. <code>case 'Über 3.5 Karten'</code>: <code>mp = 0.93 / o.cards_o35</code> (de-viggte Poisson-basierte Wahrscheinlichkeit). <code>case 'Über 4.5 Karten'</code>: <code>mp = 0.93 / o.cards_o45</code> analog. Vorher: FV-Chip zeigte "–" weil kein Case griff. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>Corners FV — Verletzungsanpassung für cornersEstAdj</strong> — Corner-Schätzung berücksichtigt jetzt Injury Impact: <code>cornersEstAdj = cornersEst × (1 − homeInjuryImpact×0.08) × (1 − awayInjuryImpact×0.08)</code>. Alle 6 Corner-FV-Fälle (co85/co95/co105/co115/cu85/cu95) nutzen <code>cornersEstAdj</code> statt <code>cornersEst</code>. Wenn ein Team 3+ Schlüsselspieler verletzt hat (impactScore ~1.8), sinkt die Ecken-Erwartung um ~14% → FV-Chip aktualisiert sich entsprechend. <em>(season-finish.html — Apr 2026)</em></li>
+          <li><strong>fetch_squads.py — NED/BEL/AUT/CRO zu FULL_FETCH_LEAGUES hinzugefügt</strong> — Teams aus Eredivisie, Jupiler Pro League, Österreichischer Bundesliga und HNL hatten keinen Stake-Label und wurden beim Squad-Fetch übersprungen (kein Eintrag in team-squads.json → "kein Cache" im Dashboard). Fix: <code>FULL_FETCH_LEAGUES = {"ENG","ESP","GER","ITA","FRA","NED","BEL","AUT","CRO"}</code> stellt vollständige Squad-Abdeckung für alle gestakten Ligen sicher. <em>(fetch_squads.py — Apr 2026)</em></li>
+          <li><strong>isTopCard persistent in picks_history.json (save_picks.py)</strong> — Das "Top Picks Performance"-Block im Results-Tab war verschwunden, weil <code>isTopCard</code> nur in <code>localStorage tc_history</code> gespeichert war und nach Cache-Clear verloren ging. Fix: <code>save_picks.py</code> berechnet nach dem Haupt-Save-Loop die Top-7-Picks (max 2/Match, Mindestrank 12) und setzt <code>isTopCard: True</code> direkt in <code>picks_history.json</code>. <code>_mergeLocalPicks()</code> im Browser liest <code>isTopCard</code> jetzt primär aus dem JSON; localStorage-Fallback bleibt als Ergänzung. Idempotent: bei jedem Run wird neu berechnet. <em>(save_picks.py + season-finish.html — Apr 2026)</em></li>
+          <li><strong>Asian O/U + AH Multi-Line Target-Odds-Filter (Pass 6)</strong> — Neuer <code>loadAllOdds()</code> Pass 6 fetcht <code>alternate_totals</code> (Asian Quarterball-Lines: 1.75, 2.0, 2.25, 2.75, 3.25 usw.) und <code>alternate_spreads</code> (alle verfügbaren AH-Lines pro Team) aus The Odds API. <code>_parseTheOddsEvent()</code> speichert diese in Arrays <code>ao_lines</code>, <code>au_lines</code>, <code>ah_home_lines</code>, <code>ah_away_lines</code> ({pt, price}). Neue Hilfsfunktion <code>_pickBestLine(lines, targetOdds=1.62, minPt, maxPt)</code> wählt die Line mit der Quote am nächsten bei Ziel-Quote ~1.62. Anwendung: <strong>AH Picks</strong> verwenden die beste Line aus <code>ah_home_lines</code>/<code>ah_away_lines</code> (kein Range-Filter — alle Linien werden verglichen). <strong>Over 3.5</strong> wählt beste Line aus <code>ao_lines</code> mit pt ∈ [2.75, 3.5] (nie höher als Standard — niedrigere Linie = sicherer). <strong>Over 2.5</strong> wählt beste Line aus <code>ao_lines</code> mit pt ∈ [2.0, 2.5]. Fallback: Standard <code>o.ah_h</code>/<code>o.o35</code>/<code>o.o25</code> wenn keine Asian Lines vorliegen. Gleiche Logik auch in prematch-server.js (<code>oddsApiFetchAlt</code> + <code>parseTheOddsEvent</code>). Cache-Key: <code>sfOddsCache_v12</code>. <em>(season-finish.html + prematch-server.js — Apr 2026)</em></li>
         </ul>
       </div>
     </div>
@@ -8003,7 +8012,7 @@ async function showPreMatchDebug() {
   const withOdds = entries.filter(([,d]) => d.odds).length;
 
   // ── The Odds API live coverage (iterate _oddsData, parse each event) ───────
-  let oddsTotal=0, oddsBtts=0, oddsCorn=0, oddsCards=0, oddsDC=0, oddsAH=0;
+  let oddsTotal=0, oddsBtts=0, oddsCorn=0, oddsCards=0, oddsDC=0, oddsAH=0, oddsAoLines=0, oddsAhLines=0;
   const odData = window._oddsData || {};
   for (const events of Object.values(odData)) {
     for (const ev of events) {
@@ -8014,6 +8023,8 @@ async function showPreMatchDebug() {
       if (r.cards_o35 || r.cards_o45) oddsCards++;
       if (r.dc1X_bkr)           oddsDC++;
       if (r.ah_h)               oddsAH++;
+      if (r.ao_lines?.length)   oddsAoLines++;
+      if (r.ah_home_lines?.length) oddsAhLines++;
     }
   }
   const totalLeagues   = Object.keys(odData).length;
@@ -8022,6 +8033,8 @@ async function showPreMatchDebug() {
   const altLg          = window._oddsAltLgs    ?? '?';
   const htLg           = window._oddsHtLgs     ?? '?';
   const htBttsLg       = window._oddsHtBttsLgs ?? '?';
+  const teamTotLg      = window._oddsTeamTotLgs ?? '?';
+  const asianLg        = window._oddsAsianLgs  ?? '?';
   const remain         = window._oddsRemaining ?? '?';
   const cacheAgeMin    = window._oddsCacheAge;
   const cacheNote      = cacheAgeMin != null ? `aus Cache (${cacheAgeMin}min alt)` : 'Live-Fetch';
@@ -8062,19 +8075,23 @@ async function showPreMatchDebug() {
     `Pass 3 (EU  corners + cards + double_chance): ${altLg} Ligen enriched`,
     `Pass 4a (EU h2h_h1 + totals_h1):             ${htLg} Ligen enriched`,
     `Pass 4b (UK btts_h1):                         ${htBttsLg} Ligen enriched`,
+    `Pass 5 (EU  team_totals):                     ${teamTotLg} Ligen enriched`,
+    `Pass 6 (EU  alternate_totals + spreads):      ${asianLg} Ligen enriched`,
     ``,
     `── The Odds API Feldabdeckung (über alle ${oddsTotal} Events mit h/a-Quoten) ─`,
-    `Events mit BTTS-Quote (bttsY):       ${oddsBtts}`,
-    `Events mit Ecken-Quote (co85+):      ${oddsCorn}`,
-    `Events mit Karten-Quote (cards_o35): ${oddsCards}`,
-    `Events mit Double Chance (dc1X_bkr): ${oddsDC}`,
-    `Events mit Asian Handicap (ah_h):    ${oddsAH}`,
+    `Events mit BTTS-Quote (bttsY):          ${oddsBtts}`,
+    `Events mit Ecken-Quote (co85+):         ${oddsCorn}`,
+    `Events mit Karten-Quote (cards_o35):    ${oddsCards}`,
+    `Events mit Double Chance (dc1X_bkr):    ${oddsDC}`,
+    `Events mit Asian Handicap (ah_h):       ${oddsAH}`,
+    `Events mit Asian O/U Lines (ao_lines):  ${oddsAoLines}`,
+    `Events mit AH Multi-Lines (ah_home):    ${oddsAhLines}`,
     ``,
     `── Markt-Status ──────────────────────────────────────────────────────`,
     `✅  Heimsieg / Auswärtssieg / Unentschieden`,
     `    → h2h  (Pass 1 EU)`,
     `✅  Über/Unter 2.5 / 3.5 Tore`,
-    `    → totals  (Pass 1 EU)`,
+    `    → totals  (Pass 1 EU) · Asian-Line via ao_lines (Pass 6 EU)`,
     `✅  Beide Teams treffen`,
     `    → btts  (Pass 2 UK — EU gibt 422)`,
     `✅  Doppelte Chance 1X / X2`,
@@ -8083,9 +8100,14 @@ async function showPreMatchDebug() {
     `    → alternate_totals_corners  (Pass 3 EU) + Poisson-Fallback`,
     `✅  Über/Unter 3.5–5.5 Karten`,
     `    → alternate_totals_cards  (Pass 3 EU) + Poisson-Fallback`,
-    `⚠️  Handicap Heim/Auswärts -0.5 / -0.75 / -1.0`,
-    `    → spreads gefetcht (ah_h/ah_a), aber Pick-Logik verwendet immer _ahEstO (Modell)`,
-    `❌  Unter 1.5 Tore (Vollzeit)`,
+    `✅  Asian Handicap Heim/Auswärts (Multi-Line)`,
+    `    → alternate_spreads (Pass 6 EU) → ah_home_lines/ah_away_lines`,
+    `    → _pickBestLine(lines, 1.62) wählt Line mit Quote ~1.62`,
+    `    → Fallback: spreads (Pass 1 EU) → ah_h/ah_a`,
+    `✅  Asian Over/Under Quarterball-Lines`,
+    `    → alternate_totals (Pass 6 EU) → ao_lines/au_lines`,
+    `    → _pickBestLine(lines, 1.62, minPt, maxPt) wählt beste Line ≤ Standard`,
+    `✅  Unter 1.5 Tore (Vollzeit)`,
     `    → u15 ← totals Under 1.5  (Pass 1 EU)`,
     `✅  1. HZ: Over 0.5 Tore`,
     `    → ht_o05 ← totals_h1 Over 0.5  (Pass 4a EU)`,
@@ -8122,6 +8144,8 @@ async function showPreMatchDebug() {
     `odds.co85:    ${sO.co85 ?? '–'}   odds.co95: ${sO.co95 ?? '–'}   odds.co105: ${sO.co105 ?? '–'}`,
     `odds.cards35: ${sO.cards_o35 ?? '–'}   odds.cards45: ${sO.cards_o45 ?? '–'}`,
     `odds.ah_h:    ${sO.ah_h ?? '–'}(${sO.ah_h_point ?? '–'})   odds.ah_a: ${sO.ah_a ?? '–'}(${sO.ah_a_point ?? '–'})`,
+    `odds.ah_home_lines: ${sO.ah_home_lines ? sO.ah_home_lines.map(l=>`${l.pt}@${l.price}`).join(', ') : '–'}`,
+    `odds.ao_lines: ${sO.ao_lines ? sO.ao_lines.map(l=>`${l.pt}@${l.price}`).join(', ') : '–'}`,
     `odds.ht_o05:  ${sO.ht_o05 ?? '–'}   odds.ht_u05: ${sO.ht_u05 ?? '–'}   odds.ht_u15: ${sO.ht_u15 ?? '–'}`,
     `odds.ht_bttsY:${sO.ht_bttsY ?? '–'}   odds.ht_hw:  ${sO.ht_hw ?? '–'}   odds.ht_dr: ${sO.ht_dr ?? '–'}`,
     ``,
