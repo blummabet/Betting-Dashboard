@@ -460,6 +460,8 @@ def main():
             history = json.load(f)
     saved_ids = {e["id"] for e in history}
 
+    # Build fx lookup by normalised home+away for re-apply step below
+    fx_by_key: dict[tuple, dict] = {}
     added = 0
     for fx in fixtures:
         date_iso = fixture_date_iso(fx.get("date", ""), today_iso)
@@ -468,6 +470,11 @@ def main():
         away     = fx.get("away", "?")
 
         mid = f"{date_iso}-{league}-{home}-{away}".replace(" ", "_").replace("/", "-")
+
+        # Store for re-apply step regardless of whether already saved
+        key = (_norm(home), _norm(away))
+        fx_by_key[key] = fx
+
         if mid in saved_ids:
             continue
 
@@ -496,6 +503,66 @@ def main():
         added += 1
         pick_labels = ", ".join(p["market"] for p in picks)
         print(f"  + {fx.get('_leagueFlag','')} {home} vs {away} ({fx.get('date','')}) → {pick_labels}")
+
+    # ── Re-apply prematch odds for unresolved upcoming/today entries ─────────
+    # When save_picks runs days before the match, prematch-data.json may not yet
+    # have AH lines. This block re-runs generate_picks() with fresh odds so AH
+    # substitution is applied as soon as the data arrives.
+    today_dt = datetime.date.fromisoformat(today_iso)
+    refreshed = 0
+    if pm_lookup:
+        for e in history:
+            if e.get("resolved"):
+                continue
+            try:
+                e_date = datetime.date.fromisoformat(e["dateIso"])
+            except Exception:
+                continue
+            # Refresh today, future AND yesterday (unresolved overnight matches)
+            # Anything older than 2 days is left alone.
+            if e_date < today_dt - datetime.timedelta(days=2):
+                continue
+            # Skip if result pick already has AH + odds (fully enriched)
+            result_pick = next(
+                (p for p in e["picks"]
+                 if p.get("marketKey", "").startswith("ah_")
+                 or p.get("marketKey") in ("homeWin", "awayWin", "draw")),
+                None
+            )
+            if result_pick and result_pick.get("marketKey", "").startswith("ah_") \
+                    and result_pick.get("odds") is not None:
+                continue  # Already has AH odds — nothing to update
+            # Try to find prematch odds for this entry
+            home, away = e.get("home", ""), e.get("away", "")
+            pm_odds = find_prematch_odds(pm_lookup, home, away)
+            if not pm_odds:
+                continue
+            # Find matching fixture from HTML (needed for full generate_picks)
+            hn, an = _norm(home), _norm(away)
+            fx = fx_by_key.get((hn, an))
+            if fx is None:
+                # Fuzzy search
+                for (fh, fa), candidate in fx_by_key.items():
+                    if (fh in hn or hn in fh) and (fa in an or an in fa):
+                        fx = candidate
+                        break
+            if fx is None:
+                continue
+            new_picks = generate_picks(fx, pm_odds)
+            if not new_picks:
+                continue
+            # Preserve isTopCard flags from existing picks (same order assumed)
+            for i, np in enumerate(new_picks):
+                if i < len(e["picks"]):
+                    np["isTopCard"] = e["picks"][i].get("isTopCard", False)
+            e["picks"] = new_picks
+            refreshed += 1
+            new_labels = ", ".join(p["market"] for p in new_picks)
+            flag = e.get("leagueFlag", "")
+            print(f"  🔄 {flag} {home} vs {away} ({e['dateIso']}) → {new_labels}")
+
+    if refreshed:
+        print(f"\n♻️   {refreshed} Einträge mit frischen Prematch-Odds aktualisiert")
 
     # ── Mark top picks (isTopCard) for today's fixtures ──────────────────────
     # Mirrors JS buildTopCardsHtml() ranking: sc*10 + conf bonus + match score bonus.

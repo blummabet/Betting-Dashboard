@@ -31,20 +31,29 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
       - name: 📊 Ergebnisse von API-Football holen
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         run: python fetch_results.py
 
-      - name: 💾 results-cache.json speichern & pushen
+      # Picks sofort nach dem Ergebnis-Fetch auswerten — nicht auf den nächsten
+      # update-dashboard.yml Lauf (06:00/14:00 UTC) warten.
+      - name: ✅ Picks auswerten (resolve)
+        run: python resolve_picks.py
+        continue-on-error: true
+
+      - name: 💾 Ergebnisse & aufgewertete Picks speichern & pushen
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add results-cache.json
+          git add results-cache.json picks_history.json
           if git diff --staged --quiet; then
             echo "Keine neuen Ergebnisse — kein Commit nötig."
           else
-            git commit -m "📊 Ergebnisse aktualisiert $(date +'%d.%m.%Y %H:%M') UTC"
+            git commit -m "📊 Ergebnisse + Picks aufgelöst $(date +'%d.%m.%Y %H:%M') UTC"
             git pull origin main --no-rebase -X ours
             git push
           fi
