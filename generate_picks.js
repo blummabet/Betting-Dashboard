@@ -171,10 +171,11 @@ function marketToKey(market) {
   if (/^über 3\.5 karten$/i.test(ml)) return 'cards35';
   if (/^über 4\.5 karten$/i.test(ml)) return 'cards45';
 
-  // Asian Handicap — "AH Heim -2.25" / "AH Ausw. 2.25"
-  let ahM = m.match(/AH Heim\s+([-+]?\d+\.?\d*)/i);
+  // Asian Handicap — "AH Heim -2.25" / "AH Ausw. -1.5" / "AH Auswärts +2"
+  let ahM = m.match(/^ah\s+heim\s+([-+]?\d+\.?\d*)/i);
   if (ahM) return `ah_home:${ahM[1]}`;
-  ahM = m.match(/AH Ausw[äa]\w*\.?\s+([-+]?\d+\.?\d*)/i);
+  // Away AH: capture the trailing number (handles "AH Ausw. -1.5", "AH Auswärts +2")
+  ahM = m.match(/^ah\s+ausw[^\s\d+-]*\.?\s+([-+]?\d+\.?\d*)/i);
   if (ahM) return `ah_away:${ahM[1]}`;
 
   // Double Chance
