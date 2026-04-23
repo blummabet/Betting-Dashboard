@@ -48,7 +48,16 @@ jobs:
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
-      # 6. Heutige Picks speichern (matches_today.json → picks_history.json)
+      # 6a. Picks via echte JS-Logik generieren (identisch mit Browser-Cards)
+      - name: 🎯 Picks generieren (JS Engine)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: 🎯 Picks generieren (run)
+        run: node generate_picks.js
+        continue-on-error: true
+
+      # 6b. Picks in History speichern
       - name: 📝 Picks speichern
         run: python save_picks.py
         continue-on-error: true
@@ -63,7 +72,7 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add season-finish.html stats_cache.json picks_history.json squad_cache.json
+          git add season-finish.html stats_cache.json picks_history.json squad_cache.json picks_output.json
           # Nur committen wenn wirklich etwas geändert wurde
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."

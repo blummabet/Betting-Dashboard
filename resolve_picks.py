@@ -48,14 +48,17 @@ def build_cache_index(cache_file: Path) -> dict:
         status = fix.get("status", "")
         if status == "FT":
             index[eid] = {
-                "homeGoals":  fix.get("goalsHome"),
-                "awayGoals":  fix.get("goalsAway"),
-                "status":     "finished",
-                # Card stats (may be None if fetch_stats returned nothing)
-                "yellowHome": fix.get("yellowHome"),
-                "yellowAway": fix.get("yellowAway"),
-                "redHome":    fix.get("redHome"),
-                "redAway":    fix.get("redAway"),
+                "homeGoals":   fix.get("goalsHome"),
+                "awayGoals":   fix.get("goalsAway"),
+                "status":      "finished",
+                "yellowHome":  fix.get("yellowHome"),
+                "yellowAway":  fix.get("yellowAway"),
+                "redHome":     fix.get("redHome"),
+                "redAway":     fix.get("redAway"),
+                "cornersHome": fix.get("cornersHome"),
+                "cornersAway": fix.get("cornersAway"),
+                "htHome":      fix.get("htHome"),
+                "htAway":      fix.get("htAway"),
             }
         elif status in ("POSTP", "CANC", "WO", "AWD"):
             index[eid] = {"status": "postponed", "homeGoals": None, "awayGoals": None}
@@ -143,10 +146,64 @@ def evaluate_pick(market_key: str, home_goals: int, away_goals: int,
         rh = result.get("redHome")  or 0
         ra = result.get("redAway")  or 0
         if yh is None or ya is None:
-            return "void"  # No card stats available
+            return "void"
         total_cards = yh + ya + rh + ra
         threshold = 3.5 if market_key == "cards35" else 4.5
         return "win" if total_cards > threshold else "loss"
+
+    # ── Double Chance ─────────────────────────────────────────────────────────
+    if market_key == "dc1X":   # Home win OR draw
+        return "win" if home_goals >= away_goals else "loss"
+    if market_key == "dcX2":   # Draw OR away win
+        return "win" if away_goals >= home_goals else "loss"
+    if market_key == "dc12":   # Home win OR away win (no draw)
+        return "void" if home_goals == away_goals else "win"
+
+    # ── Corners markets ───────────────────────────────────────────────────────
+    if market_key.startswith("corners_over:") or market_key.startswith("corners_under:"):
+        if not result:
+            return "void"
+        ch = result.get("cornersHome")
+        ca = result.get("cornersAway")
+        if ch is None or ca is None:
+            return "void"
+        total_corners = ch + ca
+        import re as _re2
+        mt = _re2.search(r':([\d.]+)', market_key)
+        if not mt:
+            return "void"
+        threshold = float(mt.group(1))
+        if market_key.startswith("corners_over:"):
+            if abs(total_corners - threshold) < 0.01:
+                return "void"   # push (whole-number)
+            return "win" if total_corners > threshold else "loss"
+        else:
+            if abs(total_corners - threshold) < 0.01:
+                return "void"
+            return "win" if total_corners < threshold else "loss"
+
+    # ── Half-time markets ─────────────────────────────────────────────────────
+    if market_key in ("ht_over05", "ht_over15", "ht_btts", "ht_noBtts"):
+        if not result:
+            return "void"
+        hth = result.get("htHome")
+        hta = result.get("htAway")
+        if hth is None or hta is None:
+            return "void"
+        ht_total = hth + hta
+        if market_key == "ht_over05":
+            return "win" if ht_total > 0 else "loss"
+        if market_key == "ht_over15":
+            return "win" if ht_total > 1 else "loss"
+        if market_key == "ht_btts":
+            return "win" if hth > 0 and hta > 0 else "loss"
+        if market_key == "ht_noBtts":
+            return "win" if hth == 0 or hta == 0 else "loss"
+
+    # ── Team-specific goals (e.g. "team_goals_over:1.5") ─────────────────────
+    # We can't know which team's goals without more context — void for safety
+    if market_key.startswith("team_goals_over:") or market_key.startswith("team_goals_under:"):
+        return "void"
 
     return "void"
 
