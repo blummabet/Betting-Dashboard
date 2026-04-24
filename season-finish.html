@@ -1595,6 +1595,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <button onclick="applyManualScores()" style="margin-top:14px;background:#2d1f4e;border:1px solid #a78bfa;color:#a78bfa;border-radius:8px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;">✅ Ergebnisse übernehmen</button>
   </div>
 
+  <!-- Tipster Headline (screenshot-ready summary) -->
+  <div id="tipsterHeadline" style="margin-bottom:16px;"></div>
+
+  <!-- Monthly P&L Table -->
+  <div id="monthlyPnl" style="margin-bottom:24px;"></div>
+
   <!-- Stats overview -->
   <div id="resultsStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px;"></div>
 
@@ -8849,6 +8855,8 @@ function initResults() {
 }
 
 function renderResultsAll() {
+  renderTipsterHeadline();
+  renderMonthlyPnl();
   renderResultsStats();
   renderResultsCharts();
   renderResultsTable(_activeFilter);
@@ -8871,6 +8879,130 @@ function renderResultsAll() {
       renderResultsTable(_activeFilter);
     };
   });
+}
+
+// ── Tipster Headline ────────────────────────────────────
+function renderTipsterHeadline() {
+  const el = document.getElementById('tipsterHeadline');
+  if (!el) return;
+
+  // Use ALL-TIME data for the headline (ignore date filter — track record is cumulative)
+  const allPicks = _resultsData.flatMap(e => e.picks.map(p => ({...p, dateIso: e.dateIso, isTopCard: p.isTopCard})));
+  const resolved = allPicks.filter(p => p.result && p.result !== 'void')
+                            .sort((a,b) => (a.dateIso||'').localeCompare(b.dateIso||''));
+  if (!resolved.length) { el.innerHTML = ''; return; }
+
+  const won   = resolved.filter(p => p.result === 'win').length;
+  const total = resolved.length;
+  const wr    = Math.round(won / total * 100);
+
+  // Units P&L: 1 unit flat stake
+  let units = 0;
+  resolved.forEach(p => { units += p.result === 'win' ? (p.odds||1.85) - 1 : -1; });
+  const yield_ = units / total * 100;
+
+  // Top picks stats
+  const topRes = resolved.filter(p => p.isTopCard);
+  const topWon = topRes.filter(p => p.result === 'win').length;
+  const topWr  = topRes.length > 0 ? Math.round(topWon / topRes.length * 100) : null;
+
+  // Since date
+  const sinceDate = resolved[0].dateIso || '';
+  const sinceStr  = sinceDate ? new Date(sinceDate).toLocaleDateString('de-AT', {day:'2-digit',month:'2-digit',year:'numeric'}) : '';
+
+  const unitsStr  = (units >= 0 ? '+' : '') + units.toFixed(1) + 'u';
+  const yieldStr  = (yield_ >= 0 ? '+' : '') + yield_.toFixed(1) + '%';
+  const unitColor = units >= 0 ? '#3fb950' : '#f85149';
+  const wrColor   = wr >= 58 ? '#3fb950' : wr >= 48 ? '#e3b341' : '#f85149';
+
+  el.innerHTML = `
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+      <div>
+        <div style="font-size:15px;font-weight:800;letter-spacing:.3px;">📊 BetEdge · Tipster Record</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;">Alle Picks seit ${sinceStr} · ${total} ausgewertete Wetten</div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:5px 10px;">
+        Flat 1u Stake
+      </div>
+    </div>
+    <div style="display:flex;gap:0;flex-wrap:wrap;border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+      ${[
+        { val: total + ' Picks',  lbl: 'Gesamt',     color: 'var(--accent)' },
+        { val: wr + '%',          lbl: 'Win Rate',    color: wrColor },
+        { val: unitsStr,          lbl: 'Units P&L',   color: unitColor },
+        { val: yieldStr,          lbl: 'Yield',       color: unitColor },
+        ...(topWr !== null ? [{ val: topWr + '%', lbl: '⭐ Top Picks (n=' + topRes.length + ')', color: topWr >= 60 ? '#3fb950' : '#e3b341' }] : []),
+      ].map((s, i, arr) => `
+        <div style="flex:1;min-width:100px;padding:14px 16px;${i < arr.length-1 ? 'border-right:1px solid var(--border);' : ''}text-align:center;">
+          <div style="font-size:22px;font-weight:800;color:${s.color};line-height:1.1;">${s.val}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px;">${s.lbl}</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ── Monthly P&L ─────────────────────────────────────────
+function renderMonthlyPnl() {
+  const el = document.getElementById('monthlyPnl');
+  if (!el) return;
+
+  const allPicks = _resultsData.flatMap(e => e.picks.map(p => ({...p, dateIso: e.dateIso})));
+  const resolved = allPicks.filter(p => p.result && p.result !== 'void' && p.dateIso);
+  if (!resolved.length) { el.innerHTML = ''; return; }
+
+  // Group by month
+  const byMonth = {};
+  resolved.forEach(p => {
+    const m = p.dateIso.slice(0, 7); // "2026-04"
+    if (!byMonth[m]) byMonth[m] = { won: 0, lost: 0, units: 0 };
+    byMonth[m].won   += p.result === 'win' ? 1 : 0;
+    byMonth[m].lost  += p.result === 'loss' ? 1 : 0;
+    byMonth[m].units += p.result === 'win' ? (p.odds||1.85) - 1 : -1;
+  });
+
+  const months = Object.keys(byMonth).sort().reverse(); // newest first
+  if (months.length < 2) { el.innerHTML = ''; return; } // only show when ≥2 months
+
+  const rows = months.map(m => {
+    const d    = byMonth[m];
+    const n    = d.won + d.lost;
+    const wr   = n > 0 ? Math.round(d.won / n * 100) : null;
+    const u    = d.units;
+    const uStr = (u >= 0 ? '+' : '') + u.toFixed(1) + 'u';
+    const uCol = u >= 0 ? '#3fb950' : '#f85149';
+    const wrCol = wr >= 58 ? '#3fb950' : wr >= 48 ? '#e3b341' : '#f85149';
+    const [yr, mo] = m.split('-');
+    const moName = new Date(+yr, +mo-1, 1).toLocaleDateString('de-AT', {month:'long', year:'numeric'});
+    const yield_ = n > 0 ? u / n * 100 : null;
+    const yStr  = yield_ !== null ? (yield_ >= 0 ? '+' : '') + yield_.toFixed(1) + '%' : '—';
+    return `<tr>
+      <td style="font-weight:600;white-space:nowrap">${moName}</td>
+      <td style="text-align:center;color:var(--muted)">${n}</td>
+      <td style="text-align:center;color:${wrCol};font-weight:700">${wr !== null ? wr+'%' : '—'}</td>
+      <td style="text-align:center;font-weight:800;color:${uCol}">${uStr}</td>
+      <td style="text-align:center;color:${uCol}">${yStr}</td>
+      <td style="text-align:center">${Array(Math.min(d.won,10)).fill('●').join('<span style="color:#3fb950;font-size:9px">').replace(/●/g,'●</span>').replace(/<\/span>$/,'')}${u >= 0 ? '📈' : '📉'}</td>
+    </tr>`;
+  }).join('');
+
+  el.innerHTML = `
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;">
+    <div style="padding:14px 20px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;">📅 Monatliche P&amp;L</div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead><tr style="background:var(--bg);">
+          <th style="padding:10px 16px;text-align:left;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;">Monat</th>
+          <th style="padding:10px 12px;text-align:center;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;">Picks</th>
+          <th style="padding:10px 12px;text-align:center;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;">Win Rate</th>
+          <th style="padding:10px 12px;text-align:center;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;">Units</th>
+          <th style="padding:10px 12px;text-align:center;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;">Yield</th>
+          <th style="padding:10px 16px;text-align:center;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;">Trend</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </div>`;
 }
 
 // ── Stats overview ──────────────────────────────────────
