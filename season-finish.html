@@ -11617,17 +11617,21 @@ function renderResultsTable(filter) {
   const html = `<table class="res-table">
     <thead><tr>
       <th>Datum</th><th>Spiel</th><th>Liga</th>
-      <th>Wette</th><th>Conf</th><th title="Card-Score zum Zeitpunkt der Pick-Erstellung">Score</th><th>Ergebnis</th><th>Resultat</th>
+      <th>Wette</th><th title="Buchmacher-Quote zum Zeitpunkt der Pick-Erstellung">Quote</th><th>Conf</th><th title="Card-Score zum Zeitpunkt der Pick-Erstellung">Score</th><th>Ergebnis</th><th>Resultat</th>
     </tr></thead>
     <tbody>${rows.map(r => {
       const _cs = r.cardScore != null ? r.cardScore.toFixed(1) : null;
       const _csColor = _cs == null ? 'var(--muted)' : parseFloat(_cs) >= 10 ? '#3fb950' : parseFloat(_cs) >= 7 ? '#e3b341' : '#8b949e';
+      const _odds = r.pick.odds != null ? r.pick.odds.toFixed(2) : '—';
+      const _oddsEst = r.pick.oddsIsEst;
+      const _oddsColor = r.pick.odds == null ? 'var(--muted)' : r.pick.odds >= 2.0 ? '#e3b341' : 'var(--text)';
       return `
       <tr>
         <td style="color:var(--muted);white-space:nowrap">${r.date}</td>
         <td style="font-weight:600">${r.home} <span style="color:var(--muted)">vs</span> ${r.away}</td>
         <td>${r.leagueFlag} ${r.league}</td>
         <td>${r.pick.icon || ''} ${r.pick.market}</td>
+        <td style="font-weight:700;color:${_oddsColor};white-space:nowrap">${_odds}${_oddsEst ? '<span style="color:var(--muted);font-size:10px;font-weight:400"> ~</span>' : ''}</td>
         <td><span style="color:${r.pick.conf==='high'?'#3fb950':r.pick.conf==='medium'?'#e3b341':'#8b949e'};font-weight:700;font-size:12px">${r.pick.conf==='high'?'★★★':r.pick.conf==='medium'?'★★☆':'★☆☆'}</span></td>
         <td style="font-weight:700;color:${_csColor};font-size:12px">${_cs != null ? _cs+'/12' : '—'}</td>
         <td style="font-weight:700;color:var(--accent)">${r.finalScore || '—'}</td>
