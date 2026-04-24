@@ -4371,7 +4371,9 @@ function getBettingPicks(match, odds, leagueKey) {
       if (cardSc > 0 && _cardOdds != null && _cardOdds > 3.20) cardSc = 0;
       if (cardSc > 0) sC.push({sc: cardSc, p:{icon: cardMkt.includes('4.5') ? '🟥' : '🟨',
         market: cardMkt, odds: _cardOdds, oddsIsEst: o._cardsOddsEst||false,
-        conf: cardSc>0.65?'high':cardSc>0.45?'medium':'low',
+        // Cap at 'medium' when no referee data — cardsVeryHigh alone (pure team labels)
+        // is not enough to justify ★★★. Referee history is the single best predictor.
+        conf: cardSc>0.65 && _refAvg != null ? 'high' : cardSc>0.45?'medium':'low',
         reason: cardReason}});
     }
 
