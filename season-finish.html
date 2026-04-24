@@ -4283,7 +4283,12 @@ function getBettingPicks(match, odds, leagueKey) {
       // Real bookmaker odds (oddsIsEst=false) always pass regardless of level.
       const _EST_CORNER_MIN_ODDS = 1.55;
       const _cornSkip = o._cornersOddsEst && _cOOdds != null && _cOOdds < _EST_CORNER_MIN_ODDS;
-      if (!_cornSkip)
+      // Max odds guard: skip if odds > 3.20 (real or estimated).
+      // Odds above 3.20 mean the expected corners are well below the line —
+      // the model has no edge and the pick is low-value noise.
+      const _OVER_MAX_ODD = 3.20;
+      const _cornSkipHigh = _cOOdds != null && _cOOdds > _OVER_MAX_ODD;
+      if (!_cornSkip && !_cornSkipHigh)
       sC.push({sc: scO, p:{icon:'🚩', market:_cOMkt, odds:_cOOdds, oddsIsEst: o._cornersOddsEst||false,
         conf: scO>0.65?'high':scO>0.38?'medium':'low',
         reason:`${cornersDataReal
@@ -4362,6 +4367,8 @@ function getBettingPicks(match, odds, leagueKey) {
       // Suppress card pick if referee is very lenient and situation isn't extreme
       if (cardSc > 0 && _refAvg != null && _refAvg < 2.5 && !cardsVeryHigh) cardSc = 0;
       const _cardOdds = cardMkt.includes('4.5') ? (o.cards_o45||null) : (o.cards_o35||null);
+      // Max odds guard: cards > 3.20 means low card probability — not worth recommending.
+      if (cardSc > 0 && _cardOdds != null && _cardOdds > 3.20) cardSc = 0;
       if (cardSc > 0) sC.push({sc: cardSc, p:{icon: cardMkt.includes('4.5') ? '🟥' : '🟨',
         market: cardMkt, odds: _cardOdds, oddsIsEst: o._cardsOddsEst||false,
         conf: cardSc>0.65?'high':cardSc>0.45?'medium':'low',
