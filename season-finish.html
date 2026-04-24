@@ -3683,6 +3683,10 @@ function getBettingPicks(match, odds, leagueKey) {
       // AVS (0.20 gpg), Konyaspor etc. — urgency ≠ firepower
       if (homeNeedsWin && homeAttStr < 0.50) sc = Math.max(0, sc - 0.40); // very low scorer + must win
       else if (homeNeedsWin && homeAttStr < 0.70) sc = Math.max(0, sc - 0.20); // low scorer + must win
+      // 🔑 RELEGATED HOME: confirmed-relegated home team has no motivation — heavy penalty.
+      // Historical home win rate is meaningless when the squad will rotate and intensity drops.
+      // "Abstieg bestätigt" cards should never recommend betting on that team to win at home.
+      if (hMotivNone && hc.includes('red')) sc = Math.max(0, sc - 0.55);
       // ★★★ threshold 1.50 (multi-signal). ★★☆ lowered 0.72→0.50 so normal home favorites
       // without pressure still show (backtest showed too many good picks hidden at 0.72).
       const conf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
@@ -3785,6 +3789,9 @@ function getBettingPicks(match, odds, leagueKey) {
       // 🔑 MUSTWIN_LOW_GPG: away team must win but structurally can't score
       if (awayNeedsWin && awayAttStr < 0.50) sc = Math.max(0, sc - 0.40);
       else if (awayNeedsWin && awayAttStr < 0.70) sc = Math.max(0, sc - 0.20);
+      // 🔑 RELEGATED AWAY: confirmed-relegated away team has no motivation — heavy penalty.
+      // Auswärts ohne Druck + Abstieg bestätigt = maximale Rotation und Gleichgültigkeit.
+      if (aMotivNone && ac.includes('red')) sc = Math.max(0, sc - 0.55);
       // Threshold: ★★★ at 1.30 (slightly lower than Heimsieg since away wins are rarer/more selective)
       const conf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
       const _xgLblA = xGBased ? 'xG' : 'Tore';
