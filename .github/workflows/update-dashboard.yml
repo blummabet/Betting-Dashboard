@@ -1,10 +1,12 @@
 name: 🔄 Dashboard aktualisieren
 
 on:
-  # Automatisch: täglich um 06:00 und 14:00 Uhr (UTC = 08:00 / 16:00 MEZ)
+  # Automatisch: täglich 06:00, 14:00, 18:00 UTC (08:00 / 16:00 / 20:00 MEZ)
+  # 18:00 UTC = nach dem 17:00 UTC prematch-fetch → Picks mit frischen Quoten synced
   schedule:
     - cron: '0 6 * * *'
     - cron: '0 14 * * *'
+    - cron: '0 18 * * *'
 
   # Manuell: jederzeit per Knopfdruck auf GitHub ausführbar
   workflow_dispatch:

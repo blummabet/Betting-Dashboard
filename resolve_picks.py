@@ -29,41 +29,104 @@ HEADERS = {
 
 # ── results-cache.json lookup ─────────────────────────────────────────────────
 
-def build_cache_index(cache_file: Path) -> dict:
+import re as _re_norm
+
+def _norm_name(s: str) -> str:
+    """Normalize team name for fuzzy matching."""
+    s = s.lower()
+    # Remove common suffixes/prefixes that vary between data sources
+    s = _re_norm.sub(r'\b(fc|sv|sc|ac|as|us|cd|sk|rb|bv|vv|nk|fk|cf|ss|if|kf|pfc)\b', ' ', s)
+    s = _re_norm.sub(r'[^a-z0-9 ]', ' ', s)
+    s = _re_norm.sub(r'\s+', ' ', s).strip()
+    return s
+
+
+def _make_result_entry(fix: dict) -> dict:
+    """Build a result dict from a fixture entry."""
+    status = fix.get("status", "")
+    if status == "FT":
+        return {
+            "homeGoals":   fix.get("goalsHome"),
+            "awayGoals":   fix.get("goalsAway"),
+            "status":      "finished",
+            "yellowHome":  fix.get("yellowHome"),
+            "yellowAway":  fix.get("yellowAway"),
+            "redHome":     fix.get("redHome"),
+            "redAway":     fix.get("redAway"),
+            "cornersHome": fix.get("cornersHome"),
+            "cornersAway": fix.get("cornersAway"),
+            "htHome":      fix.get("htHome"),
+            "htAway":      fix.get("htAway"),
+        }
+    elif status in ("POSTP", "CANC", "WO", "AWD"):
+        return {"status": "postponed", "homeGoals": None, "awayGoals": None}
+    return None
+
+
+def build_cache_index(cache_file: Path) -> tuple[dict, dict]:
     """
-    Build a lookup dict: eventId → {homeGoals, awayGoals, status,
-                                     yellowHome, yellowAway, redHome, redAway}
-    from results-cache.json (written by fetch_results.py).
+    Build two lookup dicts from results-cache.json:
+      id_index:   eventId (API-Football)    → result dict
+      name_index: "date|norm_home|norm_away" → result dict  (fallback)
+
+    NOTE: picks_history uses Sofascore eventIds, while results-cache stores
+    API-Football fixture IDs — they are different number spaces. The id_index
+    will rarely match; the name_index is the primary resolution path.
     """
     if not cache_file.exists():
         print("  ⚠️  results-cache.json not found — will use Sofascore fallback only")
-        return {}
+        return {}, {}
     with open(cache_file, encoding="utf-8") as f:
         data = json.load(f)
-    index = {}
+    id_index   = {}
+    name_index = {}
     for fix in data.get("fixtures", []):
-        eid = fix.get("id")
-        if not eid:
-            continue
         status = fix.get("status", "")
-        if status == "FT":
-            index[eid] = {
-                "homeGoals":   fix.get("goalsHome"),
-                "awayGoals":   fix.get("goalsAway"),
-                "status":      "finished",
-                "yellowHome":  fix.get("yellowHome"),
-                "yellowAway":  fix.get("yellowAway"),
-                "redHome":     fix.get("redHome"),
-                "redAway":     fix.get("redAway"),
-                "cornersHome": fix.get("cornersHome"),
-                "cornersAway": fix.get("cornersAway"),
-                "htHome":      fix.get("htHome"),
-                "htAway":      fix.get("htAway"),
-            }
-        elif status in ("POSTP", "CANC", "WO", "AWD"):
-            index[eid] = {"status": "postponed", "homeGoals": None, "awayGoals": None}
-    print(f"  📦 results-cache.json loaded: {len(index)} finished/cancelled fixtures")
-    return index
+        if status not in ("FT", "POSTP", "CANC", "WO", "AWD"):
+            continue
+        entry = _make_result_entry(fix)
+        if entry is None:
+            continue
+        # ID-based index (API-Football IDs)
+        eid = fix.get("id")
+        if eid:
+            id_index[eid] = entry
+        # Name-based index
+        date_str = (fix.get("date") or "")[:10]
+        nh = _norm_name(fix.get("home", ""))
+        na = _norm_name(fix.get("away", ""))
+        if date_str and nh and na:
+            name_index[f"{date_str}|{nh}|{na}"] = entry
+    print(f"  📦 results-cache.json loaded: {len(id_index)} ID entries, {len(name_index)} name entries")
+    return id_index, name_index
+
+
+def lookup_cache(event_id, date_iso: str, home: str, away: str,
+                 id_index: dict, name_index: dict):
+    """Look up a match in the cache, trying ID first then name+date."""
+    # 1) Direct ID match (rarely works — different ID spaces)
+    result = id_index.get(event_id)
+    if result:
+        return result, "id"
+
+    # 2) Name + date match
+    nh = _norm_name(home)
+    na = _norm_name(away)
+    key = f"{date_iso}|{nh}|{na}"
+    result = name_index.get(key)
+    if result:
+        return result, "name-exact"
+
+    # 3) Fuzzy name match for the same date (handles minor name differences)
+    for k, v in name_index.items():
+        k_date, k_h, k_a = k.split("|", 2)
+        if k_date != date_iso:
+            continue
+        if ((nh in k_h or k_h in nh) and nh and k_h and
+                (na in k_a or k_a in na) and na and k_a):
+            return v, "name-fuzzy"
+
+    return None, None
 
 
 # ── Sofascore fallback ────────────────────────────────────────────────────────
@@ -221,14 +284,25 @@ def main():
     with open(HISTORY_FILE, encoding="utf-8") as f:
         history = json.load(f)
 
-    # Build cache index from results-cache.json (primary source, no rate limits)
-    cache_index = build_cache_index(CACHE_FILE)
+    # ── Cleanup: mark entries as resolved if they already have all results ───────
+    # Handles legacy entries where results were written but resolved flag was missed.
+    auto_resolved = 0
+    for e in history:
+        if e.get("resolved"):
+            continue
+        if e.get("finalScore") and e.get("picks") and all(p.get("result") for p in e["picks"]):
+            e["resolved"] = True
+            auto_resolved += 1
+    if auto_resolved:
+        print(f"  🔧 Auto-fixed {auto_resolved} entries with results but resolved=False")
+
+    # Build cache indexes from results-cache.json (primary source, no rate limits)
+    id_index, name_index = build_cache_index(CACHE_FILE)
 
     # Only process unresolved entries for past matches
     pending = [
         e for e in history
         if not e.get("resolved")
-        and e.get("eventId")
         and datetime.date.fromisoformat(e["dateIso"]) < today
     ]
     print(f"  Pending entries: {len(pending)}")
@@ -239,20 +313,21 @@ def main():
     skipped_count   = 0
 
     for entry in pending:
-        event_id = entry["eventId"]
+        event_id = entry.get("eventId")
         flag     = entry.get("leagueFlag", "")
         home     = entry["home"]
         away     = entry["away"]
         date_iso = entry["dateIso"]
 
-        # ── Primary: results-cache.json ──────────────────────────────────────
-        result = cache_index.get(event_id)
+        # ── Primary: results-cache.json (ID + name fallback) ─────────────────
+        result, match_method = lookup_cache(event_id, date_iso, home, away,
+                                            id_index, name_index)
 
         if result:
             cache_hits += 1
-            print(f"  📦 {flag} {home} vs {away} ({date_iso}) → cache hit")
-        else:
-            # ── Fallback: live Sofascore call ─────────────────────────────
+            print(f"  📦 {flag} {home} vs {away} ({date_iso}) → cache ({match_method})")
+        elif event_id:
+            # ── Fallback: live Sofascore call (only when we have an eventId) ─
             print(f"  🌐 {flag} {home} vs {away} ({date_iso}) → Sofascore fallback …")
             result = get_match_result_sofascore(event_id)
             time.sleep(0.4)
@@ -262,6 +337,10 @@ def main():
                 print(f"    → Could not fetch event {event_id}")
                 skipped_count += 1
                 continue
+        else:
+            print(f"  ⚠️  {flag} {home} vs {away} ({date_iso}) → no eventId + not in cache")
+            skipped_count += 1
+            continue
 
         status = result["status"]
 

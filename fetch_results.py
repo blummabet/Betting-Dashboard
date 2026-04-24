@@ -204,6 +204,21 @@ def main():
             seen.add(fx["id"])
             unique.append(fx)
 
+    # ── Guard: don't overwrite a non-empty cache with 0 fixtures ─────────────
+    # If we got 0 results but the existing cache has data, something went wrong
+    # (rate limit exhausted, transient API error) — preserve old data.
+    if len(unique) == 0 and OUT_FILE.exists():
+        try:
+            with open(OUT_FILE, encoding="utf-8") as f:
+                old = json.load(f)
+            old_count = len(old.get("fixtures", []))
+            if old_count > 0:
+                print(f"\n⚠️  0 Fixtures von API geholt — bestehenden Cache ({old_count} Einträge) wird beibehalten.")
+                print(f"   (Mögliche Ursache: API-Rate-Limit oder temporärer Fehler)")
+                return
+        except Exception:
+            pass  # If we can't read old cache, continue writing empty
+
     print(f"\n📋  {len(unique)} unique finished fixtures — hole jetzt Statistiken…")
 
     # ── Fetch statistics for each finished fixture ────────────────────────────
