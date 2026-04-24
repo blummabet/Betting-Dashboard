@@ -60,11 +60,16 @@ function normTeam(s) {
     .replace(/\s+/g, ' ').trim();
 }
 const pmOddsMap = {};
+const pmH2hMap  = {};
 for (const fx of pmFixtures) {
   const h = normTeam(fx.homeTeamName || fx.home || '');
   const a = normTeam(fx.awayTeamName || fx.away || '');
-  if (h && a) pmOddsMap[`${h}|${a}`] = fx.odds || {};
+  if (h && a) {
+    pmOddsMap[`${h}|${a}`] = fx.odds || {};
+    if (fx.h2h && fx.h2h.games > 0) pmH2hMap[`${h}|${a}`] = fx.h2h;
+  }
 }
+console.log(`H2H fixtures loaded: ${Object.keys(pmH2hMap).length}`);
 
 function findPrematchOdds(home, away) {
   const hn = normTeam(home), an = normTeam(away);
@@ -77,6 +82,19 @@ function findPrematchOdds(home, away) {
         (ka.includes(an) || an.includes(ka))) return v;
   }
   return {};
+}
+
+function findPrematchH2h(home, away) {
+  const hn = normTeam(home), an = normTeam(away);
+  const key = `${hn}|${an}`;
+  if (pmH2hMap[key]) return pmH2hMap[key];
+  // Fuzzy: partial containment
+  for (const [k, v] of Object.entries(pmH2hMap)) {
+    const [kh, ka] = k.split('|');
+    if ((kh.includes(hn) || hn.includes(kh)) &&
+        (ka.includes(an) || an.includes(ka))) return v;
+  }
+  return null;
 }
 
 // ── 5. Build vm sandbox with browser API stubs ────────────────────────────────
@@ -223,6 +241,14 @@ for (const [leagueKey, league] of Object.entries(LEAGUES)) {
 
     // Build odds object from prematch-data.json
     const odds = findPrematchOdds(match.home, match.away);
+
+    // Enrich match with FULL H2H data from prematch-data.json.
+    // LEAGUES already has a simplified h2h (from update_dashboard.py) that lacks
+    // bttsRate, over25Rate, over35Rate, lastResults — the fields that drive BTTS picks.
+    // prematch-server.js fetches the full h2h (identical to what the browser fetches live),
+    // so we always prefer it. This fixes browser↔history pick divergence.
+    const h2h = findPrematchH2h(match.home, match.away);
+    if (h2h) match.h2h = h2h;  // override simplified LEAGUES h2h with full prematch h2h
 
     let picks = [], matchScore = 0;
     try {
