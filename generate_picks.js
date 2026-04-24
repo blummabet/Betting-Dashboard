@@ -14,10 +14,11 @@ const fs   = require('fs');
 const path = require('path');
 const vm   = require('vm');
 
-const BASE         = __dirname;
-const HTML_PATH    = path.join(BASE, 'season-finish.html');
-const PREMATCH_PATH= path.join(BASE, 'prematch-data.json');
-const OUTPUT_PATH  = path.join(BASE, 'picks_output.json');
+const BASE           = __dirname;
+const HTML_PATH      = path.join(BASE, 'season-finish.html');
+const PREMATCH_PATH  = path.join(BASE, 'prematch-data.json');
+const STATS_PATH     = path.join(BASE, 'stats_cache.json');
+const OUTPUT_PATH    = path.join(BASE, 'picks_output.json');
 
 // ── 1. Read HTML and extract <script> block ───────────────────────────────────
 const html = fs.readFileSync(HTML_PATH, 'utf8');
@@ -97,7 +98,18 @@ function findPrematchH2h(home, away) {
   return null;
 }
 
-// ── 5. Build vm sandbox with browser API stubs ────────────────────────────────
+// ── 5. Load stats_cache.json (xG, Elo, corner rates — mirrors window._teamStats) ──
+let teamStats = {};
+try {
+  teamStats = JSON.parse(fs.readFileSync(STATS_PATH, 'utf8'));
+  const leagues = Object.keys(teamStats).length;
+  const teams   = Object.values(teamStats).reduce((n, l) => n + Object.keys(l).length, 0);
+  console.log(`Team stats loaded: ${leagues} leagues, ${teams} teams`);
+} catch (_) {
+  console.warn('stats_cache.json not found — xG/Elo stats unavailable');
+}
+
+// ── 6. Build vm sandbox with browser API stubs ────────────────────────────────
 const mockFetch = () => Promise.resolve({
   json: () => Promise.resolve({}),
   blob: () => Promise.resolve({}),
@@ -108,7 +120,8 @@ const sandbox = {
   // window — must have fetch so _installCorsProxy can reference it even disabled
   window: {
     fetch: mockFetch,
-    _oddsData: {}, _preMatchData: {}, _oddsReady: false, _teamStats: {},
+    _oddsData: {}, _preMatchData: {}, _oddsReady: false,
+    _teamStats: teamStats,   // ← real xG/Elo data from stats_cache.json
     _igDataUrl: '', _igFileName: '',
   },
   // Browser globals
@@ -136,7 +149,7 @@ const sandbox = {
   exports: {},
 };
 
-// ── 6. Append export line and evaluate ───────────────────────────────────────
+// ── 7. Append export line and evaluate ───────────────────────────────────────
 script += `\n
 // ── Node.js export shim ──
 try {
@@ -164,7 +177,7 @@ if (!getBettingPicks || !LEAGUES) {
 }
 console.log(`Leagues found: ${Object.keys(LEAGUES).length}`);
 
-// ── 6b. Market name → marketKey mapping ──────────────────────────────────────
+// ── 7b. Market name → marketKey mapping ──────────────────────────────────────
 // Must match resolve_picks.py evaluate_pick() exactly.
 function marketToKey(market) {
   const m = market.trim();
@@ -229,7 +242,7 @@ function marketToKey(market) {
   return ml.replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') || 'unknown';
 }
 
-// ── 7. Run picks for every fixture ───────────────────────────────────────────
+// ── 8. Run picks for every fixture ───────────────────────────────────────────
 const output = [];
 let total = 0, errors = 0;
 
