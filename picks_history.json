@@ -4884,8 +4884,9 @@
         "conf": "medium",
         "sc": 0.314,
         "odds": null,
-        "result": null,
-        "isTopCard": false
+        "result": "win",
+        "isTopCard": false,
+        "finalScore": "0:0"
       },
       {
         "market": "Over 2.5 Tore",
@@ -4894,8 +4895,9 @@
         "conf": "high",
         "sc": 0.87,
         "odds": null,
-        "result": null,
-        "isTopCard": true
+        "result": "loss",
+        "isTopCard": true,
+        "finalScore": "0:0"
       },
       {
         "market": "Über 3.5 Karten",
@@ -4904,12 +4906,13 @@
         "conf": "high",
         "sc": 0.66,
         "odds": 1.49,
-        "result": null,
-        "isTopCard": true
+        "result": "loss",
+        "isTopCard": true,
+        "finalScore": "0:0"
       }
     ],
-    "finalScore": null,
-    "resolved": false,
+    "finalScore": "0:0",
+    "resolved": true,
     "savedAt": "2026-04-21T16:45:44.627628Z"
   },
   {
@@ -5025,8 +5028,9 @@
         "conf": "low",
         "sc": 0.406,
         "odds": 1.31,
-        "result": null,
-        "isTopCard": false
+        "result": "loss",
+        "isTopCard": false,
+        "finalScore": "1:2"
       },
       {
         "market": "Beide Teams treffen: Nein",
@@ -5035,8 +5039,9 @@
         "conf": "low",
         "sc": 0.48,
         "odds": 1.42,
-        "result": null,
-        "isTopCard": false
+        "result": "loss",
+        "isTopCard": false,
+        "finalScore": "1:2"
       },
       {
         "market": "Über 3.5 Karten",
@@ -5045,12 +5050,13 @@
         "conf": "medium",
         "sc": 0.66,
         "odds": 1.64,
-        "result": null,
-        "isTopCard": false
+        "result": "loss",
+        "isTopCard": false,
+        "finalScore": "1:2"
       }
     ],
-    "finalScore": null,
-    "resolved": false,
+    "finalScore": "1:2",
+    "resolved": true,
     "savedAt": "2026-04-21T16:45:44.627201Z"
   },
   {
@@ -5076,12 +5082,12 @@
         "isTopCard": false
       },
       {
-        "market": "Under 2.5 Tore",
-        "marketKey": "under25",
-        "icon": "🛡️",
+        "market": "Beide Teams treffen: Nein",
+        "marketKey": "noBtts",
+        "icon": "🔒",
         "conf": "low",
-        "sc": 0.34,
-        "odds": null,
+        "sc": 0.38,
+        "odds": 1.32,
         "result": null,
         "isTopCard": false
       }
@@ -5155,7 +5161,7 @@
         "icon": "🏠",
         "conf": "medium",
         "sc": 0.073,
-        "odds": 1.49,
+        "odds": 1.46,
         "result": null,
         "isTopCard": false
       },
@@ -5164,7 +5170,7 @@
         "marketKey": "under25",
         "icon": "🛡️",
         "conf": "low",
-        "sc": 0.756,
+        "sc": 0.676,
         "odds": 2.24,
         "result": null,
         "isTopCard": false
@@ -5234,22 +5240,22 @@
     "matchScore": 8.3,
     "picks": [
       {
-        "market": "Unentschieden",
-        "marketKey": "draw",
-        "icon": "🤝",
-        "conf": "low",
-        "sc": 0.548,
-        "odds": 4.92,
+        "market": "Heimsieg",
+        "marketKey": "homeWin",
+        "icon": "🏠",
+        "conf": "medium",
+        "sc": 0.193,
+        "odds": 1.48,
         "result": null,
         "isTopCard": false
       },
       {
-        "market": "Over 2.5 Tore",
-        "marketKey": "over25",
-        "icon": "⚽",
-        "conf": "medium",
-        "sc": 0.52,
-        "odds": 1.54,
+        "market": "Beide Teams treffen: Nein",
+        "marketKey": "noBtts",
+        "icon": "🔒",
+        "conf": "low",
+        "sc": 0.493,
+        "odds": 1.51,
         "result": null,
         "isTopCard": false
       }
@@ -5271,12 +5277,12 @@
     "matchScore": 7.6,
     "picks": [
       {
-        "market": "Doppelte Chance: 1X",
-        "marketKey": "dc1X",
+        "market": "Doppelte Chance: X2",
+        "marketKey": "dcX2",
         "icon": "🎯",
         "conf": "medium",
-        "sc": 0.348,
-        "odds": 1.45,
+        "sc": 0.418,
+        "odds": 1.69,
         "result": null,
         "isTopCard": false
       },
@@ -5370,17 +5376,17 @@
         "icon": "🎯",
         "conf": "medium",
         "sc": 0.45,
-        "odds": 1.8,
+        "odds": 1.81,
         "result": null,
         "isTopCard": false
       },
       {
-        "market": "Beide Teams treffen",
-        "marketKey": "btts",
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
         "icon": "⚽",
-        "conf": "high",
-        "sc": 0.78,
-        "odds": 1.38,
+        "conf": "low",
+        "sc": 0.83,
+        "odds": 2.14,
         "result": null,
         "isTopCard": false
       },
@@ -5416,8 +5422,8 @@
         "marketKey": "awayWin",
         "icon": "✈️",
         "conf": "medium",
-        "sc": 1.18,
-        "odds": 1.68,
+        "sc": 1.138,
+        "odds": 1.65,
         "result": null,
         "isTopCard": false
       },
@@ -5510,8 +5516,8 @@
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "medium",
-        "sc": 0.63,
-        "odds": 1.64,
+        "sc": 0.619,
+        "odds": 1.63,
         "result": null,
         "isTopCard": false
       },
@@ -5520,7 +5526,7 @@
         "marketKey": "under25",
         "icon": "🛡️",
         "conf": "high",
-        "sc": 0.77,
+        "sc": 0.89,
         "odds": 2.04,
         "result": null,
         "isTopCard": false
@@ -5557,18 +5563,18 @@
         "marketKey": "dcX2",
         "icon": "🎯",
         "conf": "medium",
-        "sc": 0.369,
-        "odds": 1.37,
+        "sc": 0.338,
+        "odds": 1.36,
         "result": null,
         "isTopCard": false
       },
       {
-        "market": "Beide Teams treffen",
-        "marketKey": "btts",
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
         "icon": "⚽",
-        "conf": "high",
-        "sc": 0.7,
-        "odds": 1.51,
+        "conf": "medium",
+        "sc": 0.66,
+        "odds": 1.72,
         "result": null,
         "isTopCard": false
       },
@@ -5688,8 +5694,8 @@
         "marketKey": "awayWin",
         "icon": "✈️",
         "conf": "high",
-        "sc": 1.613,
-        "odds": 1.68,
+        "sc": 1.585,
+        "odds": 1.69,
         "result": null,
         "isTopCard": false
       },
@@ -5698,8 +5704,8 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "high",
-        "sc": 0.92,
-        "odds": 1.41,
+        "sc": 0.83,
+        "odds": 1.47,
         "result": null,
         "isTopCard": false
       },
@@ -5736,7 +5742,7 @@
         "icon": "🎯",
         "conf": "low",
         "sc": 0.332,
-        "odds": 1.31,
+        "odds": 1.3,
         "result": null,
         "isTopCard": false
       },
@@ -5745,7 +5751,7 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "high",
-        "sc": 0.92,
+        "sc": 0.81,
         "odds": 1.47,
         "result": null,
         "isTopCard": false
@@ -6168,8 +6174,8 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "high",
-        "sc": 0.83,
-        "odds": 1.7,
+        "sc": 0.71,
+        "odds": 1.69,
         "result": null,
         "isTopCard": false
       },
@@ -6205,8 +6211,8 @@
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "medium",
-        "sc": 1.398,
-        "odds": 1.93,
+        "sc": 1.37,
+        "odds": 1.83,
         "result": null,
         "isTopCard": false
       },
@@ -6215,7 +6221,7 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "high",
-        "sc": 0.87,
+        "sc": 0.81,
         "odds": 1.4,
         "result": null,
         "isTopCard": false
@@ -6262,8 +6268,8 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "medium",
-        "sc": 0.526,
-        "odds": 1.94,
+        "sc": 0.466,
+        "odds": 1.95,
         "result": null,
         "isTopCard": false
       },
@@ -6300,7 +6306,7 @@
         "icon": "🎯",
         "conf": "medium",
         "sc": 0.287,
-        "odds": 1.75,
+        "odds": 1.74,
         "result": null,
         "isTopCard": false
       },
@@ -6534,18 +6540,18 @@
         "marketKey": "dc1X",
         "icon": "🎯",
         "conf": "medium",
-        "sc": 0.57,
+        "sc": 0.53,
         "odds": null,
         "result": null,
         "isTopCard": false
       },
       {
-        "market": "Beide Teams treffen",
-        "marketKey": "btts",
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
         "icon": "⚽",
         "conf": "high",
-        "sc": 0.799,
-        "odds": 2.25,
+        "sc": 0.79,
+        "odds": null,
         "result": null,
         "isTopCard": false
       },
@@ -6759,8 +6765,8 @@
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "medium",
-        "sc": 0.474,
-        "odds": 1.71,
+        "sc": 0.439,
+        "odds": 1.73,
         "result": null,
         "isTopCard": false
       },
@@ -6769,8 +6775,8 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "medium",
-        "sc": 0.61,
-        "odds": 1.99,
+        "sc": 0.55,
+        "odds": 2,
         "result": null,
         "isTopCard": false
       },
@@ -6896,12 +6902,12 @@
     "matchScore": 8.3,
     "picks": [
       {
-        "market": "Doppelte Chance: 1X",
-        "marketKey": "dc1X",
-        "icon": "🎯",
-        "conf": "medium",
-        "sc": 0.484,
-        "odds": 1.45,
+        "market": "Heimsieg",
+        "marketKey": "homeWin",
+        "icon": "🏠",
+        "conf": "low",
+        "sc": 0.539,
+        "odds": 2.24,
         "result": null,
         "isTopCard": false
       },
@@ -7173,7 +7179,7 @@
         "icon": "🎯",
         "conf": "medium",
         "sc": 0.524,
-        "odds": 1.35,
+        "odds": 1.34,
         "result": null,
         "isTopCard": false
       },
@@ -7304,7 +7310,7 @@
         "icon": "🎯",
         "conf": "medium",
         "sc": 0.408,
-        "odds": 1.34,
+        "odds": 1.33,
         "result": null,
         "isTopCard": false
       },
@@ -7313,8 +7319,8 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "high",
-        "sc": 0.89,
-        "odds": 1.84,
+        "sc": 0.83,
+        "odds": 1.74,
         "result": null,
         "isTopCard": false
       },
@@ -7350,18 +7356,18 @@
         "marketKey": "draw",
         "icon": "🤝",
         "conf": "low",
-        "sc": 0.479,
+        "sc": 0.478,
         "odds": 3.89,
         "result": null,
         "isTopCard": false
       },
       {
-        "market": "Beide Teams treffen: Nein",
-        "marketKey": "noBtts",
-        "icon": "🔒",
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
+        "icon": "⚽",
         "conf": "low",
-        "sc": 0.35,
-        "odds": 1.2,
+        "sc": 0.45,
+        "odds": 1.93,
         "result": null,
         "isTopCard": true
       },
@@ -7397,18 +7403,18 @@
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "medium",
-        "sc": 0.505,
-        "odds": 1.5,
+        "sc": 0.509,
+        "odds": 1.49,
         "result": null,
         "isTopCard": false
       },
       {
-        "market": "Beide Teams treffen",
-        "marketKey": "btts",
-        "icon": "⚽",
+        "market": "Under 2.5 Tore",
+        "marketKey": "under25",
+        "icon": "🛡️",
         "conf": "low",
-        "sc": 0.298,
-        "odds": 2.21,
+        "sc": 0.31,
+        "odds": 2.75,
         "result": null,
         "isTopCard": false
       },
@@ -7443,9 +7449,9 @@
         "market": "Doppelte Chance: X2",
         "marketKey": "dcX2",
         "icon": "🎯",
-        "conf": "low",
+        "conf": "medium",
         "sc": 0.386,
-        "odds": 1.32,
+        "odds": 1.33,
         "result": null,
         "isTopCard": false
       },
@@ -7538,8 +7544,8 @@
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "medium",
-        "sc": 0.595,
-        "odds": 1.54,
+        "sc": 0.599,
+        "odds": 1.56,
         "result": null,
         "isTopCard": false
       },
@@ -7548,8 +7554,8 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "high",
-        "sc": 0.85,
-        "odds": 1.47,
+        "sc": 0.79,
+        "odds": 1.44,
         "result": null,
         "isTopCard": false
       },
@@ -7591,12 +7597,12 @@
         "isTopCard": false
       },
       {
-        "market": "Over 2.5 Tore",
-        "marketKey": "over25",
+        "market": "Beide Teams treffen",
+        "marketKey": "btts",
         "icon": "⚽",
         "conf": "medium",
-        "sc": 0.58,
-        "odds": null,
+        "sc": 0.571,
+        "odds": 1.48,
         "result": null,
         "isTopCard": false
       },
@@ -7685,12 +7691,12 @@
         "isTopCard": false
       },
       {
-        "market": "Beide Teams treffen: Nein",
-        "marketKey": "noBtts",
-        "icon": "🔒",
-        "conf": "low",
-        "sc": 0.384,
-        "odds": 1.56,
+        "market": "Under 2.5 Tore",
+        "marketKey": "under25",
+        "icon": "🛡️",
+        "conf": "medium",
+        "sc": 0.497,
+        "odds": 2.02,
         "result": null,
         "isTopCard": false
       }
@@ -7717,17 +7723,17 @@
         "icon": "🎯",
         "conf": "low",
         "sc": 0.584,
-        "odds": 2.11,
+        "odds": 2.1,
         "result": null,
         "isTopCard": false
       },
       {
-        "market": "Beide Teams treffen",
-        "marketKey": "btts",
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
         "icon": "⚽",
-        "conf": "high",
-        "sc": 0.771,
-        "odds": 1.39,
+        "conf": "low",
+        "sc": 0.78,
+        "odds": 2.06,
         "result": null,
         "isTopCard": false
       },
@@ -8073,7 +8079,7 @@
         "icon": "🎯",
         "conf": "medium",
         "sc": 0.313,
-        "odds": 1.43,
+        "odds": 1.42,
         "result": null,
         "isTopCard": false
       },
@@ -8115,12 +8121,12 @@
     "matchScore": 8.9,
     "picks": [
       {
-        "market": "AH Ausw. -1.25",
-        "marketKey": "ah_away:-1.25",
+        "market": "Auswärtssieg",
+        "marketKey": "awayWin",
         "icon": "✈️",
         "conf": "medium",
-        "sc": 0.453,
-        "odds": 1.81,
+        "sc": 0.404,
+        "odds": 1.33,
         "result": null,
         "isTopCard": false
       },
@@ -8307,18 +8313,18 @@
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "high",
-        "sc": 1.58,
+        "sc": 1.587,
         "odds": null,
         "result": null,
         "isTopCard": false
       },
       {
-        "market": "Beide Teams treffen",
-        "marketKey": "btts",
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
         "icon": "⚽",
         "conf": "high",
-        "sc": 0.816,
-        "odds": 1.48,
+        "sc": 0.78,
+        "odds": null,
         "result": null,
         "isTopCard": false
       },
@@ -8757,8 +8763,8 @@
         "marketKey": "draw",
         "icon": "🤝",
         "conf": "low",
-        "sc": 0.349,
-        "odds": 3.94,
+        "sc": 0.371,
+        "odds": 3.83,
         "result": null,
         "isTopCard": true
       },
@@ -8768,7 +8774,7 @@
         "icon": "🛡️",
         "conf": "low",
         "sc": 0.39,
-        "odds": 1.81,
+        "odds": 1.72,
         "result": null,
         "isTopCard": false
       },
@@ -8776,7 +8782,7 @@
         "market": "Über 3.5 Karten",
         "marketKey": "cards35",
         "icon": "🟨",
-        "conf": "high",
+        "conf": "medium",
         "sc": 0.66,
         "odds": 1.54,
         "result": null,
@@ -8804,8 +8810,8 @@
         "marketKey": "ah_home:-1.25",
         "icon": "🏠",
         "conf": "medium",
-        "sc": 0.837,
-        "odds": 1.75,
+        "sc": 0.795,
+        "odds": 1.76,
         "result": null,
         "isTopCard": true
       },
@@ -8813,8 +8819,8 @@
         "market": "Over 2.5 Tore",
         "marketKey": "over25",
         "icon": "⚽",
-        "conf": "low",
-        "sc": 0.44,
+        "conf": "medium",
+        "sc": 0.52,
         "odds": 1.53,
         "result": null,
         "isTopCard": true
@@ -9208,7 +9214,7 @@
         "icon": "🎯",
         "conf": "medium",
         "sc": 0.453,
-        "odds": null,
+        "odds": 1.38,
         "result": null,
         "isTopCard": false
       },
@@ -9218,7 +9224,7 @@
         "icon": "🛡️",
         "conf": "medium",
         "sc": 0.56,
-        "odds": null,
+        "odds": 1.65,
         "result": null,
         "isTopCard": false
       }
@@ -9888,12 +9894,12 @@
         "isTopCard": false
       },
       {
-        "market": "Beide Teams treffen",
-        "marketKey": "btts",
-        "icon": "⚽",
+        "market": "Over 3.5 Tore",
+        "marketKey": "over35",
+        "icon": "🔥",
         "conf": "high",
         "sc": 0.82,
-        "odds": 1.32,
+        "odds": null,
         "result": null,
         "isTopCard": false
       },
@@ -10163,19 +10169,19 @@
         "market": "Over 2.5 Tore",
         "marketKey": "over25",
         "icon": "⚽",
-        "conf": "high",
-        "sc": 0.78,
+        "conf": "medium",
+        "sc": 0.66,
         "odds": null,
         "result": null,
         "isTopCard": false
       },
       {
-        "market": "1. HZ: Beide Teams treffen",
-        "marketKey": "ht_btts",
-        "icon": "⏱️",
+        "market": "Über 8.5 Ecken",
+        "marketKey": "corners_over:8.5",
+        "icon": "🚩",
         "conf": "medium",
-        "sc": 0.54,
-        "odds": null,
+        "sc": 0.4,
+        "odds": 2.28,
         "result": null,
         "isTopCard": false
       }
@@ -10197,22 +10203,22 @@
     "matchScore": 9.6,
     "picks": [
       {
-        "market": "Heimsieg",
-        "marketKey": "homeWin",
-        "icon": "🏠",
+        "market": "Doppelte Chance: 1X",
+        "marketKey": "dc1X",
+        "icon": "🎯",
         "conf": "medium",
-        "sc": 0.64,
+        "sc": 0.37,
         "odds": null,
         "result": null,
         "isTopCard": false
       },
       {
-        "market": "Beide Teams treffen",
-        "marketKey": "btts",
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
         "icon": "⚽",
         "conf": "high",
-        "sc": 0.851,
-        "odds": 1.78,
+        "sc": 0.85,
+        "odds": null,
         "result": null,
         "isTopCard": false
       },
@@ -10220,7 +10226,7 @@
         "market": "Über 3.5 Karten",
         "marketKey": "cards35",
         "icon": "🟨",
-        "conf": "high",
+        "conf": "medium",
         "sc": 0.66,
         "odds": 1.49,
         "result": null,
@@ -11696,7 +11702,7 @@
         "icon": "🔒",
         "conf": "low",
         "sc": 0.38,
-        "odds": 1.24,
+        "odds": 1.21,
         "result": null,
         "isTopCard": false
       }
@@ -11743,7 +11749,7 @@
         "icon": "🚩",
         "conf": "medium",
         "sc": 0.4,
-        "odds": 2.05,
+        "odds": 2.24,
         "result": null,
         "isTopCard": false
       }
@@ -12151,12 +12157,12 @@
         "isTopCard": false
       },
       {
-        "market": "Over 2.5 Tore",
-        "marketKey": "over25",
+        "market": "Beide Teams treffen",
+        "marketKey": "btts",
         "icon": "⚽",
         "conf": "high",
-        "sc": 0.67,
-        "odds": null,
+        "sc": 0.688,
+        "odds": 1.88,
         "result": null,
         "isTopCard": false
       },
@@ -12166,7 +12172,7 @@
         "icon": "🚩",
         "conf": "medium",
         "sc": 0.4,
-        "odds": 1.89,
+        "odds": 1.8,
         "result": null,
         "isTopCard": false
       }
@@ -12239,7 +12245,7 @@
         "marketKey": "dc1X",
         "icon": "🎯",
         "conf": "medium",
-        "sc": 0.43,
+        "sc": 0.342,
         "odds": null,
         "result": null,
         "isTopCard": false
@@ -12250,7 +12256,7 @@
         "icon": "🔒",
         "conf": "medium",
         "sc": 0.7,
-        "odds": 1.3,
+        "odds": 1.17,
         "result": null,
         "isTopCard": false
       },
@@ -12258,7 +12264,7 @@
         "market": "Über 3.5 Karten",
         "marketKey": "cards35",
         "icon": "🟨",
-        "conf": "high",
+        "conf": "medium",
         "sc": 0.66,
         "odds": 1.64,
         "result": null,
@@ -13302,7 +13308,7 @@
         "icon": "🎯",
         "conf": "medium",
         "sc": 0.303,
-        "odds": 1.4,
+        "odds": 1.39,
         "result": null,
         "isTopCard": false
       },
@@ -13311,7 +13317,7 @@
         "marketKey": "noBtts",
         "icon": "🔒",
         "conf": "low",
-        "sc": 0.54,
+        "sc": 0.38,
         "odds": 1.44,
         "result": null,
         "isTopCard": false
