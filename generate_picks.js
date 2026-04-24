@@ -178,6 +178,14 @@ function marketToKey(market) {
   ahM = m.match(/^ah\s+ausw[^\s\d+-]*\.?\s+([-+]?\d+\.?\d*)/i);
   if (ahM) return `ah_away:${ahM[1]}`;
 
+  // Handicap Heim / Handicap Auswärts (PICK 3 model-estimated AH)
+  // e.g. "Handicap Heim -0.5", "Handicap Heim -0.75", "Handicap Heim -1.0"
+  // Same resolution logic as ah_home / ah_away — map to same key format.
+  let hcM = m.match(/^handicap\s+heim\s+([-+]?\d+\.?\d*)/i);
+  if (hcM) return `ah_home:${hcM[1]}`;
+  hcM = m.match(/^handicap\s+ausw[äa][^\s\d+-]*\.?\s*([-+]?\d+\.?\d*)/i);
+  if (hcM) return `ah_away:${hcM[1]}`;
+
   // Double Chance
   if (/doppelte chance.*1x/i.test(ml)) return 'dc1X';
   if (/doppelte chance.*x2/i.test(ml)) return 'dcX2';

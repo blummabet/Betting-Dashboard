@@ -3936,11 +3936,15 @@ function getBettingPicks(match, odds, leagueKey) {
     // with odds in the right range — strictly better risk profile. Demoting to 'low' here
     // lets the existing fallback logic naturally promote DC/DNB instead.
     rC.forEach(r => { if (r.p.market === 'Unentschieden') r.p.conf = 'low'; });
-    // Cheap ML filter: Heimsieg/Auswärtssieg mit Quote < 1.33 auf 'low' setzen.
-    // Bei so kurzen Quoten ist kaum Wert vorhanden — stattdessen AH-Kandidat bevorzugen (bereits in rC).
+    // Cheap ML filter: Heimsieg/Auswärtssieg mit Quote < 1.35 auf 'low' setzen.
+    // Threshold matched to AH trigger (o.hw < 1.35) so that whenever an AH candidate
+    // was pushed into rC, the plain Heimsieg/Auswärtssieg gets demoted and AH wins.
+    // Previously 1.33 caused a gap (1.33–1.34): browser live odds drifted below 1.33
+    // → AH shown in card, but generate_picks.js had stored odds just above 1.33
+    // → "Heimsieg" saved in history instead of "AH Heim". Aligning to 1.35 closes the gap.
     rC.forEach(r => {
       if ((r.p.market === 'Heimsieg' || r.p.market === 'Auswärtssieg')
-          && r.p.odds != null && r.p.odds < 1.33) r.p.conf = 'low';
+          && r.p.odds != null && r.p.odds < 1.35) r.p.conf = 'low';
     });
     // _topResultMkt is used by PICK 2 consistency guard (awayWinWeak / homeWinWeak).
     // Map DNB/DC/AH back to the underlying directional lean so PICK 2 still works correctly.
