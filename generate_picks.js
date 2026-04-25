@@ -255,6 +255,11 @@ for (const [leagueKey, league] of Object.entries(LEAGUES)) {
     // Build odds object from prematch-data.json
     const odds = findPrematchOdds(match.home, match.away);
 
+    // Inject league-level roundsLeft into match — getBettingPicks() reads match.roundsLeft
+    // to compute urgencyMed, awayNeedsWin, homeNeedsWin, and all pressure boosts.
+    // Without this, _rl=99 → urgencyMed=false → zero pressure signals for ALL matches.
+    if (match.roundsLeft == null) match.roundsLeft = league.roundsLeft ?? 99;
+
     // Enrich match with FULL H2H data from prematch-data.json.
     // LEAGUES already has a simplified h2h (from update_dashboard.py) that lacks
     // bttsRate, over25Rate, over35Rate, lastResults — the fields that drive BTTS picks.
