@@ -3511,8 +3511,9 @@ function getBettingPicks(match, odds, leagueKey) {
   const _cornersFormula = homeAttStr * 3.4 + awayAttStr * 3.0 + _defBonus;
   // Real corner data from fixtures/statistics batch fetch: home avg at home + away avg away
   // Sanity-cap individual team averages before combining (API data can be noisy for smaller leagues)
-  const _hCH = _hCornersHome !== null ? Math.min(_hCornersHome, 9.5) : null;
-  const _aCA = _aCornersAway !== null ? Math.min(_aCornersAway, 8.5) : null;
+  // Quality gate: < 2.0 means the average comes from 0–1 games only → unreliable, fall back to formula.
+  const _hCH = (_hCornersHome !== null && _hCornersHome >= 2.0) ? Math.min(_hCornersHome, 9.5) : null;
+  const _aCA = (_aCornersAway !== null && _aCornersAway >= 2.0) ? Math.min(_aCornersAway, 8.5) : null;
   const _cornersReal = (_hCH !== null && _aCA !== null)
     ? Math.round((_hCH + _aCA) * 10) / 10
     : null;
@@ -3646,9 +3647,13 @@ function getBettingPicks(match, odds, leagueKey) {
       // Red away team boosts home win — BUT only if that away team is NOT under must-win pressure.
       // When awayNeedsWin, desperation overrides demoralisation: they fight hard away, not collapse.
       if (ac.includes('red') && !awayNeedsWin) sc += 0.14;
-      // 🔑 RELEGATED AWAY + FIGHTING HOME: symmetry with the away version above.
-      // Confirmed-relegated away team (rotation, no away pressure) vs home team fighting for survival.
-      if (aMotivNone && ac.includes('red') && homeNeedsWin) sc += 0.30;
+      // 🔑 RELEGATED AWAY + FIGHTING HOME: motivation asymmetry boost.
+      // Full boost when home explicitly needs a win; partial when merely competitive (not relegated).
+      // Fires even without a stake label — any non-relegated home team benefits from facing
+      // a confirmed-relegated away side with no rotation pressure.
+      if (aMotivNone && ac.includes('red') && !hMotivNone) {
+        sc += homeNeedsWin ? 0.30 : 0.18;
+      }
       if (homeInForm && !awayInForm) sc += 0.28;
       if (homePoor) sc -= 0.48;            if (awayInForm && !homeInForm) sc -= 0.20;
       if (eloDiff !== null) sc += Math.min(0.22, Math.max(-0.22, eloDiff / 700));
@@ -3761,10 +3766,13 @@ function getBettingPicks(match, odds, leagueKey) {
       // Red home team boosts away win — BUT only if that home team is NOT under must-win pressure.
       // When homeNeedsWin, desperation at home overrides demoralisation: they fight, not collapse.
       if (hc.includes('red') && !homeNeedsWin) sc += 0.14;
-      // 🔑 RELEGATED HOME + FIGHTING AWAY: maximum motivation asymmetry.
-      // Confirmed-relegated home team (rotation, no pressure) vs away team fighting for survival
-      // → strongest possible signal for away win. Extra boost on top of the +0.14 above.
-      if (hMotivNone && hc.includes('red') && awayNeedsWin) sc += 0.30;
+      // 🔑 RELEGATED HOME + COMPETITIVE AWAY: motivation asymmetry boost.
+      // Full boost when away explicitly needs a win; partial when merely competitive (not relegated).
+      // Fires even without a stake label — any non-relegated away team benefits from playing
+      // a confirmed-relegated home side that has nothing to play for.
+      if (hMotivNone && hc.includes('red') && !aMotivNone) {
+        sc += awayNeedsWin ? 0.30 : 0.18;
+      }
       if (awayInForm && !homeInForm) sc += 0.28;
       if (awayPoor) sc -= 0.48;            if (homeInForm && !awayInForm) sc -= 0.20;
       if (eloDiff !== null) sc += Math.min(0.22, Math.max(-0.22, -eloDiff / 700));
@@ -3997,13 +4005,17 @@ function getBettingPicks(match, odds, leagueKey) {
           const mkt = r.p.market;
           if (_skipHome && (mkt === 'Heimsieg' || mkt === 'Doppelte Chance: 1X' || mkt.startsWith('AH Heim') || mkt.startsWith('DNB: Heimteam'))) return false;
           if (_skipAway && (mkt === 'Auswärtssieg' || mkt === 'Doppelte Chance: X2' || mkt.startsWith('AH Ausw') || mkt.startsWith('DNB: Auswärtsteam'))) return false;
+          // Skip Draw as fallback when: odds > 3.50 (market says it's unlikely) or sc < 0.45.
+          // A draw at 3.50+ with no confident result pick = noise, not a tip.
+          if (mkt === 'Unentschieden' && ((r.p.odds !== null && r.p.odds > 3.50) || r.sc < 0.45)) return false;
           return true;
         };
         const fallback = rC.find(r => _keepable(r) && r.p.market.startsWith('Doppelte Chance'))
                       || rC.find(r => _keepable(r) && r.p.market.startsWith('DNB'))
                       || rC.find(r => _keepable(r))
                       || null; // if every candidate is a relegated side, emit nothing
-        if (fallback) {
+        // Only promote if sc is meaningfully positive — never surface sc ≤ 0 or near-zero picks.
+        if (fallback && fallback.sc > 0.10) {
           fallback.p.conf = 'medium'; // promote: DC/DNB always safer than a raw outright
           _push(fallback.p, fallback.sc);
         }
@@ -4326,7 +4338,9 @@ function getBettingPicks(match, odds, leagueKey) {
       // the model has no edge and the pick is low-value noise.
       const _OVER_MAX_ODD = 3.20;
       const _cornSkipHigh = _cOOdds != null && _cOOdds > _OVER_MAX_ODD;
-      if (!_cornSkip && !_cornSkipHigh)
+      // Minimum signal guard: sc < 0.25 = too weak to show regardless of odds.
+      const _cornSkipLowSc = scO < 0.25;
+      if (!_cornSkip && !_cornSkipHigh && !_cornSkipLowSc)
       sC.push({sc: scO, p:{icon:'🚩', market:_cOMkt, odds:_cOOdds, oddsIsEst: o._cornersOddsEst||false,
         conf: scO>0.65?'high':scO>0.38?'medium':'low',
         reason:`${cornersDataReal
