@@ -2272,6 +2272,7 @@ function _parseTheOddsEvent(g) {
             if (Math.abs(pt-8.5)<0.01&&!r.cu85)  r.cu85=p;
             else if (Math.abs(pt-9.5)<0.01&&!r.cu95)  r.cu95=p;
             else if (Math.abs(pt-10.5)<0.01&&!r.cu105) r.cu105=p;
+            else if (Math.abs(pt-11.5)<0.01&&!r.cu115) r.cu115=p;
           }
         }
       } else if (mk==='alternate_totals_cards') {
@@ -2515,15 +2516,17 @@ async function loadAllOdds() {
   window._oddsBttsLgs = bttsOk;
   if (bttsOk > 0) console.log(`[TheOddsAPI] BTTS enriched — ${bttsOk} Ligen`);
 
-  // ── Fetch Pass 3: EU region — Corners + Cards + Double Chance ────────────
+  // ── Fetch Pass 3: EU+UK region — Corners + Cards + Double Chance ───────────
   // alternate_totals_corners, alternate_totals_cards, double_chance are valid
   // soccer-specific markets in The Odds API (documented under "Other soccer betting markets").
+  // regions=eu,uk: EU alone returns 0 corner quotes; UK bookmakers (Bet365, W.Hill) have full
+  // corner coverage. Adding uk here enables real corner odds for EPL and other leagues.
   // Separate pass so a 404/422 here never affects the core h2h/spreads/totals data.
   let altOk = 0;
   await Promise.allSettled(Object.entries(LEAGUE_SPORT_KEYS).map(async ([lk, sk]) => {
     if (!window._oddsData[lk]?.length) return;
     try {
-      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu&markets=alternate_totals_corners,alternate_totals_cards,double_chance&oddsFormat=decimal`;
+      const url = `https://api.the-odds-api.com/v4/sports/${sk}/odds/?apiKey=${ODDS_API_KEY}&regions=eu,uk&markets=alternate_totals_corners,alternate_totals_cards,double_chance&oddsFormat=decimal`;
       const resp = await fetch(url);
       if (!resp.ok) return;
       const altEvents = await resp.json();

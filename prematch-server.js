@@ -132,13 +132,14 @@ function oddsApiFetch(sportKey) {
   });
 }
 
-// Fetch alternate soccer markets (corners + cards + Asian lines + double chance) via EU region.
-// These are under "Other soccer betting markets" in The Odds API docs.
+// Fetch alternate soccer markets (corners + cards + Asian lines + double chance).
+// Uses regions=eu,uk — EU for spreads/DC, UK for corners/cards (Bet365, W.Hill etc.).
+// EU-only returns 0 corner quotes; UK bookmakers have full alternate_totals_corners coverage.
 // Returns { data: [...events] } or { data: [] } on error.
 function oddsApiFetchAlt(sportKey) {
   return new Promise((resolve) => {
     const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
-      + `&regions=eu&markets=alternate_totals_corners,alternate_totals_cards,alternate_totals,alternate_spreads,double_chance&oddsFormat=decimal`;
+      + `&regions=eu,uk&markets=alternate_totals_corners,alternate_totals_cards,alternate_totals,alternate_spreads,double_chance&oddsFormat=decimal`;
     const options = { hostname: ODDS_API_HOST, path, method: 'GET',
       headers: { 'User-Agent': 'CocoBet/1.0' } };
     const req = https.request(options, res => {
@@ -390,6 +391,7 @@ function parseTheOddsEvent(oddsEvent) {
             if (Math.abs(pt - 8.5)  < 0.01 && !r.cu85)  r.cu85  = p;
             else if (Math.abs(pt - 9.5)  < 0.01 && !r.cu95)  r.cu95  = p;
             else if (Math.abs(pt - 10.5) < 0.01 && !r.cu105) r.cu105 = p;
+            else if (Math.abs(pt - 11.5) < 0.01 && !r.cu115) r.cu115 = p;
           }
         }
       } else if (mk === 'alternate_totals_cards') {
@@ -830,7 +832,8 @@ function parseBets(bookmakers) {
           else if (vl === 'under 8.5' && !r.cu85)  r.cu85  = parseFloat(v.odd);
           else if (vl === 'over 10.5' && !r.co105) r.co105 = parseFloat(v.odd);
           else if (vl === 'under 10.5'&& !r.cu105) r.cu105 = parseFloat(v.odd);
-          else if (vl === 'over 11.5' && !r.co115) r.co115 = parseFloat(v.odd);
+          else if (vl === 'over 11.5'  && !r.co115) r.co115 = parseFloat(v.odd);
+          else if (vl === 'under 11.5' && !r.cu115) r.cu115 = parseFloat(v.odd);
         }
       } else if (bn.includes('card') || bn.includes('booking') || bn === 'total - cards') {
         for (const v of (bet.values || [])) {
