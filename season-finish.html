@@ -3747,12 +3747,15 @@ function getBettingPicks(match, odds, leagueKey) {
     : _h2hOver25 <= 0.40 ? -0.04   // below neutral zone → small negative signal
     : 0;
 
-  // BTTS H2H modifier: +0.10 if ≥70%, +0.05 if ≥60%, -0.10 if ≤25%, -0.16 if ≤15%
+  // BTTS H2H modifier: +0.10 if ≥70%, +0.05 if ≥60%, -0.06 if ≤35%, -0.10 if ≤25%, -0.16 if ≤15%
+  // Extended downside: 26-35% now gets -0.06 (was 0). 30% BTTS in 10 games is a real negative signal
+  // (mirrors the ≤40% fix in _h2hO25Mod). Symmetric: suppresses BTTS Ja, boosts BTTS Nein.
   const _h2hBttsMod = (!_h2hSample || _h2hBtts == null) ? 0
     : _h2hBtts >= 0.70 ?  0.10
     : _h2hBtts >= 0.60 ?  0.05
     : _h2hBtts <= 0.15 ? -0.16
     : _h2hBtts <= 0.25 ? -0.10
+    : _h2hBtts <= 0.35 ? -0.06   // below neutral zone → negative signal (e.g. Galatasaray/Fenerbahçe 30%)
     : 0;
 
   // ── H2H lastResults recency modifier ────────────────────────────────────────
@@ -4430,7 +4433,20 @@ function getBettingPicks(match, odds, leagueKey) {
           const _ahMkt = `AH Heim${_ahPt ? ' ' + _ahPt : ''}`;
           const _ahConf = sc > 1.50 ? 'high' : sc > 0.50 ? 'medium' : 'low';
           const _ahReason = `${match.home} ist klarer Favorit (1X2-Quote ${o.hw.toFixed(2)} — kein Wert). Asian Handicap${_ahPt ? ' ' + _ahPt : ''} @ ${_ahOdds.toFixed(2)} bietet deutlich besseres Value. ` + reason;
-          rC.push({sc, p:{icon:'🏠', market:_ahMkt, odds:_ahOdds, conf:_ahConf, reason:_ahReason}});
+          // FV gate: replicate the margin-factor formula used in computeFairValue (AH section).
+          // Suppress if implied prob exceeds model fair prob by >14pp (wider than goals 12pp — AH
+          // calc is less precise and the line choice adds uncertainty).
+          const _ahPtN   = _ahPoint != null ? Math.abs(_ahPoint) : 0;
+          const _ahMfH   = _ahPtN >= 3.0 ? 0.27 : _ahPtN >= 2.75 ? 0.32 : _ahPtN >= 2.5 ? 0.37
+                         : _ahPtN >= 2.25 ? 0.44 : _ahPtN >= 2.0 ? 0.51 : _ahPtN >= 1.75 ? 0.58
+                         : _ahPtN >= 1.5 ? 0.64 : _ahPtN >= 1.25 ? 0.72 : _ahPtN >= 1.0 ? 0.80
+                         : _ahPtN >= 0.75 ? 0.87 : _ahPtN >= 0.5 ? 0.93 : 0.97;
+          const _ahBoostH  = (_bkrPH ?? 0) > 0.85 ? 1.35 : (_bkrPH ?? 0) > 0.80 ? 1.20 : 1.0;
+          const _ahFairPH  = _bkrPH != null ? Math.min(0.90, _bkrPH * Math.min(0.97, _ahMfH * _ahBoostH)) : null;
+          const _ahNegEdgeH = _ahFairPH != null && !o._isEstimated && (1 / _ahOdds) - _ahFairPH > 0.14;
+          if (!_ahNegEdgeH) {
+            rC.push({sc, p:{icon:'🏠', market:_ahMkt, odds:_ahOdds, conf:_ahConf, reason:_ahReason}});
+          }
         }
       }
     }
@@ -4535,7 +4551,19 @@ function getBettingPicks(match, odds, leagueKey) {
           const _ahMkt = `AH Ausw.${_ahPt ? ' ' + _ahPt : ''}`;
           const _ahConf = sc > 1.30 ? 'high' : sc > 0.45 ? 'medium' : 'low';
           const _ahReason = `${match.away} ist klarer Favorit (1X2-Quote ${o.aw.toFixed(2)} — kein Wert). Asian Handicap${_ahPt ? ' ' + _ahPt : ''} @ ${_ahOdds.toFixed(2)} bietet deutlich besseres Value. ` + reason;
-          rC.push({sc, p:{icon:'✈️', market:_ahMkt, odds:_ahOdds, conf:_ahConf, reason:_ahReason}});
+          // FV gate: same margin-factor formula as computeFairValue (AH section).
+          // Suppress if implied prob exceeds model fair prob by >14pp.
+          const _ahPtN   = _ahPoint != null ? Math.abs(_ahPoint) : 0;
+          const _ahMfA   = _ahPtN >= 3.0 ? 0.27 : _ahPtN >= 2.75 ? 0.32 : _ahPtN >= 2.5 ? 0.37
+                         : _ahPtN >= 2.25 ? 0.44 : _ahPtN >= 2.0 ? 0.51 : _ahPtN >= 1.75 ? 0.58
+                         : _ahPtN >= 1.5 ? 0.64 : _ahPtN >= 1.25 ? 0.72 : _ahPtN >= 1.0 ? 0.80
+                         : _ahPtN >= 0.75 ? 0.87 : _ahPtN >= 0.5 ? 0.93 : 0.97;
+          const _ahBoostA  = (_bkrPA ?? 0) > 0.85 ? 1.35 : (_bkrPA ?? 0) > 0.80 ? 1.20 : 1.0;
+          const _ahFairPA  = _bkrPA != null ? Math.min(0.90, _bkrPA * Math.min(0.97, _ahMfA * _ahBoostA)) : null;
+          const _ahNegEdgeA = _ahFairPA != null && !o._isEstimated && (1 / _ahOdds) - _ahFairPA > 0.14;
+          if (!_ahNegEdgeA) {
+            rC.push({sc, p:{icon:'✈️', market:_ahMkt, odds:_ahOdds, conf:_ahConf, reason:_ahReason}});
+          }
         }
       }
     }
