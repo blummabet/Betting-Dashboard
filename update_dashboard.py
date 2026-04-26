@@ -1583,3 +1583,15 @@ if __name__ == "__main__":
     main()
     print("\n" + "─" * 60)
     resolve_pending_picks()
+    # ── Auto-Validator ────────────────────────────────────────────────────────
+    # Läuft nach jedem Update automatisch und schreibt validator_report.md
+    print("\n" + "─" * 60)
+    print("  🐕 Starte Picks-Validator…")
+    import subprocess
+    validator = os.path.join(SCRIPT_DIR, "check_picks_logic.py")
+    result = subprocess.run(
+        [sys.executable, validator, "--days", "3", "--report"],
+        capture_output=False
+    )
+    if result.returncode != 0:
+        print("  ⚠  Validator hat kritische Fehler gefunden — validator_report.md prüfen!")

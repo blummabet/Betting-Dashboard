@@ -10,19 +10,28 @@ Aufruf:
     python3 check_picks_logic.py --days 1     # nur heute & morgen
     python3 check_picks_logic.py --date 22.04 # bestimmtes Datum
     python3 check_picks_logic.py --errors     # nur kritische Fehler
+    python3 check_picks_logic.py --report     # schreibt validator_report.md (auto-call)
 
 Prüft automatisch auf:
   🔴 FEHLER   — definitive Logik-Bugs (z.B. mustWin auf bestätigtem Abstieg)
   🟡 WARNUNG  — verdächtige Konstellationen (z.B. red-safe mit Panik-Text)
   🔵 HINWEIS  — schwache Pick-Basis (z.B. H2H dominiert aber kein Kontext)
 
-Injury-Checks (neu):
+Injury-Checks:
   🔴 FEHLER   — impactScore fehlt obwohl Ausfälle vorhanden
   🔴 FEHLER   — impactScore > 6.0 (Kappung überschritten)
   🟡 WARNUNG  — posEstimated=True bei hohem Impact (Positionen geraten, nicht bestätigt)
   🟡 WARNUNG  — Auswärtsteam hat kritischen Impact aber Heimsieg klar empfohlen
   🟡 WARNUNG  — Heimteam hat kritischen Impact aber Away-Wette fehlt als Absicherung
   🔵 HINWEIS  — Over 2.5 Empfehlung bei kombinierten Verletzungsausfällen (xG reduziert)
+
+Picks-spezifische Checks (bekannte Fehler April 2026):
+  🔴 FEHLER   — Dead-rubber-Spiel mit hohem Score (beide motiv='none')
+  🟡 WARNUNG  — Karten-Pick-Risiko bei bestätigt abgestiegenem Team
+  🟡 WARNUNG  — H2H Schnitt ≥3.0 → Under 2.5 Pick wäre falsch
+  🟡 WARNUNG  — H2H BTTS ≥65% → Under Pick ist riskant
+  🟡 WARNUNG  — Sehr niedriger kombinierter Torschnitt → Over Pick riskant
+  🔵 HINWEIS  — motiv='low' bei Karten-relevanten Matches
 """
 
 import json
@@ -442,6 +451,80 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
                  f"aber matchScore={ms} ist niedrig. Pick-Richtung trotzdem prüfen — "
                  f"H2H-Signal nicht ausreichend im Score reflektiert?")
 
+    # ─────────────────────────────────────────────────────────────────────────
+    # PICKS-SPEZIFISCHE RISIKO-CHECKS
+    # Basiert auf bekannten Fehlern (April 2026).
+    # Da Picks JS-seitig generiert werden, prüfen wir Rohdaten-Konstellationen
+    # die bekannte Fehler ausgelöst haben — als Frühwarnsystem.
+    # ─────────────────────────────────────────────────────────────────────────
+
+    h_mot = (hs or {}).get("motivationLevel", "full")
+    a_mot = (aws or {}).get("motivationLevel", "full")
+    any_conf_rel  = h_mot == "none" or a_mot == "none"
+    both_conf_rel = h_mot == "none" and a_mot == "none"
+
+    # 🔴 FEHLER: Beide Teams bestätigt abgestiegen + hoher Score → Dead-rubber
+    # Fix April 2026: Dead-Rubber-Penalty (-2.0) + cardSc=0 für beide Teams.
+    # Wenn Score trotzdem > 5.0 ist, hat die Penalty nicht funktioniert.
+    if both_conf_rel and ms > 5.0:
+        flag("ERROR", "DEAD_RUBBER_HIGH_PICKS_RISK",
+             f"Beide Teams bestätigt abgestiegen (motiv='none') aber matchScore={ms}. "
+             f"Dead-Rubber-Penalty (-2.0) greift nicht → Picks wären inhaltsleer. "
+             f"JS: Dead-rubber-Penalty und cardSc=0 prüfen.")
+
+    # 🟡 WARNUNG: Mindestens ein Team bestätigt abgestiegen (Heracles/Volendam-Muster)
+    # Fix April 2026: cardSc=0 wenn _bothRedConf, oder wenn _anyRedConf && refAvg < 3.5.
+    # Validator kann refAvg nicht prüfen, warnt aber generell.
+    if any_conf_rel and not both_conf_rel:
+        rel_team = home if h_mot == "none" else away
+        flag("WARN", "CARDS_RELEGATED_TEAM",
+             f"{rel_team} ist bestätigt abgestiegen (motiv='none'). "
+             f"Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). "
+             f"JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.")
+
+    # 🔵 HINWEIS: motiv='low' → Intensitätsprüfung für Karten sinnvoll
+    if not any_conf_rel and ms >= 7.0:
+        low_teams = []
+        if h_mot == "low": low_teams.append(home)
+        if a_mot == "low": low_teams.append(away)
+        if low_teams:
+            flag("INFO", "LOW_MOTIV_CARDS_CHECK",
+                 f"{', '.join(low_teams)}: motivationLevel='low' — "
+                 f"Karten-Pick nur mit Schiedsrichter-Evidenz oder historischer "
+                 f"Disziplinlosigkeit sinnvoll. Kein Fehler — manuell prüfen.")
+
+    # ── H2H-basierte Goals-Checks ─────────────────────────────────────────────
+    h2h_avg_g = h2h.get("avgGoals")
+    h2h_btts  = h2h.get("btts")   # BTTS-Rate als Dezimal (0.0–1.0)
+
+    # 🟡 WARNUNG: H2H Schnitt hoch → Under 2.5 Pick wäre falsch
+    # Fix April 2026: _h2hAvgG >= 2.8 → sc -= 0.16, >= 3.0 → sc -= 0.30, >= 3.5 → sc -= 0.45
+    # Prüft ob der Guard korrekt feuert (kann Picks selbst nicht lesen).
+    if h2h_avg_g is not None and h2h_avg_g >= 3.0:
+        flag("WARN", "H2H_HIGH_AVG_UNDER_RISK",
+             f"H2H Schnitt={h2h_avg_g:.1f} Tore (≥3.0). "
+             f"Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. "
+             f"Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug.")
+
+    # 🟡 WARNUNG: H2H BTTS-Rate hoch → Under 2.5 Pick riskant
+    # Fix April 2026: _h2hBtts >= 0.60 → sc -= 0.12, >= 0.70 → sc -= 0.20
+    if h2h_btts is not None and h2h_btts >= 0.65:
+        flag("WARN", "H2H_HIGH_BTTS_UNDER_RISK",
+             f"H2H BTTS={h2h_btts:.0%} (≥65%). Under-Pick riskant — "
+             f"JS BTTS-Guard muss sc -= 0.12 bis 0.20 anwenden. "
+             f"Falls Under-Pick trotzdem erscheint: BTTS-Guard-Bug.")
+
+    # 🟡 WARNUNG: H2H Schnitt sehr niedrig + Saisonschnitt niedrig → Over riskant
+    # Under-Bias ist in diesem Fall legitim und kein Fehler.
+    if h2h_avg_g is not None and h2h_avg_g < 1.8:
+        combined_check = None
+        if hf.get("goalsPerGame") is not None and af.get("goalsPerGame") is not None:
+            combined_check = hf["goalsPerGame"] + af["goalsPerGame"]
+        if combined_check is not None and combined_check < 2.2:
+            flag("INFO", "LOW_GOALS_UNDER_EXPECTED",
+                 f"H2H Schnitt={h2h_avg_g:.1f} + Saisonschnitt komb.={combined_check:.1f}/Sp. "
+                 f"Starker Under-Bias legitim — kein Fehler. Over 2.5 Pick hier wäre falsch.")
+
     return issues
 
 
@@ -564,6 +647,8 @@ def main():
     errors_only  = False
     show_ok      = False
 
+    write_report = False
+
     i = 0
     while i < len(args):
         if args[i] == "--days" and i + 1 < len(args):
@@ -574,6 +659,8 @@ def main():
             errors_only = True; i += 1
         elif args[i] == "--ok":
             show_ok = True; i += 1
+        elif args[i] == "--report":
+            write_report = True; i += 1
         else:
             i += 1
 
@@ -585,14 +672,21 @@ def main():
     else:
         cutoff = today + timedelta(days=21)  # max 3 Wochen voraus
 
-    print("=" * 65)
-    print("  🐕 CocoBet — Picks Logik-Check")
-    print(f"  {datetime.now().strftime('%d.%m.%Y %H:%M')}")
+    # Für Report-Modus: alle Ausgaben auch in eine Liste sammeln
+    report_lines = []
+    def rprint(line=""):
+        print(line)
+        if write_report:
+            report_lines.append(line)
+
+    rprint("=" * 65)
+    rprint("  🐕 CocoBet — Picks Logik-Check")
+    rprint(f"  {datetime.now().strftime('%d.%m.%Y %H:%M')}")
     if filter_date:
-        print(f"  Filter: Datum {filter_date}")
+        rprint(f"  Filter: Datum {filter_date}")
     elif filter_days is not None:
-        print(f"  Filter: nächste {filter_days} Tag(e)")
-    print("=" * 65)
+        rprint(f"  Filter: nächste {filter_days} Tag(e)")
+    rprint("=" * 65)
 
     # HTML laden
     if not os.path.exists(HTML_FILE):
@@ -607,7 +701,7 @@ def main():
     total_infos   = 0
     all_issues    = []
 
-    SEVERITY_ICON = {"ERROR": "🔴", "WARN": "🟡", "INFO": "🔵"}
+    SEVERITY_ICON  = {"ERROR": "🔴", "WARN": "🟡", "INFO": "🔵"}
     SEVERITY_LABEL = {"ERROR": "FEHLER", "WARN": "WARNUNG", "INFO": "HINWEIS"}
 
     for key, league in sorted(leagues.items()):
@@ -647,28 +741,44 @@ def main():
                 league_issues.append((date_str, fx["home"], fx["away"], "OK", "OK", "Keine Probleme gefunden"))
 
         if league_issues:
-            print(f"\n{'─' * 65}")
-            print(f"  {league.get('flag','')} {lname}  (rl={rl})")
-            print(f"{'─' * 65}")
+            rprint(f"\n{'─' * 65}")
+            rprint(f"  {league.get('flag','')} {lname}  (rl={rl})")
+            rprint(f"{'─' * 65}")
             for date_str, h, a, sev, code, msg in league_issues:
                 icon = SEVERITY_ICON.get(sev, "⚪")
                 label = SEVERITY_LABEL.get(sev, sev)
-                print(f"  {icon} {label} [{code}]")
-                print(f"     📅 {date_str}  {h} vs {a}")
-                print(f"     {msg}")
+                rprint(f"  {icon} {label} [{code}]")
+                rprint(f"     📅 {date_str}  {h} vs {a}")
+                rprint(f"     {msg}")
 
-    print(f"\n{'═' * 65}")
-    print(f"  Geprüft: {total_checked} Spiele")
+    rprint(f"\n{'═' * 65}")
+    rprint(f"  Geprüft: {total_checked} Spiele")
     if total_errors == 0 and total_warns == 0 and total_infos == 0:
-        print(f"  ✅ Keine Probleme gefunden — alle Picks logisch konsistent!")
+        rprint(f"  ✅ Keine Probleme gefunden — alle Picks logisch konsistent!")
     else:
         if total_errors > 0:
-            print(f"  🔴 {total_errors} Fehler — müssen gefixt werden")
+            rprint(f"  🔴 {total_errors} Fehler — müssen gefixt werden")
         if total_warns > 0:
-            print(f"  🟡 {total_warns} Warnungen — manuelle Prüfung empfohlen")
+            rprint(f"  🟡 {total_warns} Warnungen — manuelle Prüfung empfohlen")
         if not errors_only and total_infos > 0:
-            print(f"  🔵 {total_infos} Hinweise — Pick-Richtung kontrollieren")
-    print(f"{'═' * 65}\n")
+            rprint(f"  🔵 {total_infos} Hinweise — Pick-Richtung kontrollieren")
+    rprint(f"{'═' * 65}\n")
+
+    # ── Report-Datei schreiben ────────────────────────────────────────────────
+    if write_report:
+        report_path = os.path.join(SCRIPT_DIR, "validator_report.md")
+        status_icon = "✅" if total_errors == 0 and total_warns == 0 else ("🔴" if total_errors > 0 else "🟡")
+        with open(report_path, "w", encoding="utf-8") as rf:
+            rf.write(f"# {status_icon} Picks Validator — {datetime.now().strftime('%d.%m.%Y %H:%M')}\n\n")
+            rf.write(f"**{total_checked} Spiele geprüft** · ")
+            rf.write(f"🔴 {total_errors} Fehler · 🟡 {total_warns} Warnungen · 🔵 {total_infos} Hinweise\n\n")
+            if total_errors == 0 and total_warns == 0:
+                rf.write("✅ Alle Picks logisch konsistent — keine Probleme gefunden.\n")
+            else:
+                rf.write("```\n")
+                rf.write("\n".join(report_lines))
+                rf.write("\n```\n")
+        print(f"  📄 Report gespeichert: validator_report.md")
 
     # Exit code: 1 wenn kritische Fehler vorhanden
     sys.exit(1 if total_errors > 0 else 0)
