@@ -7498,12 +7498,21 @@ function isDoOrDie(match) {
     if (!stake || stake.motivationLevel === 'none') return null;
     if (!stake.mustWin) return null;
     const cols = (stake.labels || []).map(l => l.c || '');
-    const isRel  = cols.includes('red');
-    const isGold = cols.includes('gold');
-    if (!isRel && !isGold) return null;
+    const isRel    = cols.includes('red');
+    const isGold   = cols.includes('gold');
+    const isBlue   = cols.includes('blue');    // UCL qualification fight
+    const isOrange = cols.includes('orange');  // Europa League fight
+    const isYellow = cols.includes('yellow');  // Relegation playoff
+    if (!isRel && !isGold && !isBlue && !isOrange && !isYellow) return null;
     const label = isRel
       ? (rl <= 2 ? 'Abstieg steht vor der Tür' : 'Abstiegskampf — Punkte oder Absturz')
-      : (rl <= 2 ? 'Titelchance jetzt oder nie' : 'Titelkampf — Vorsprung sichern');
+      : isGold
+        ? (rl <= 2 ? 'Titelchance jetzt oder nie' : 'Titelkampf — Vorsprung sichern')
+        : isBlue
+          ? (rl <= 2 ? 'UCL-Ticket jetzt oder nie' : 'UCL-Kampf — kein Ausrutschen')
+          : isOrange
+            ? (rl <= 2 ? 'Europa League jetzt oder nie' : 'EL-Kampf — Punkte sind Pflicht')
+            : (rl <= 2 ? 'Playoff droht — alles auf dem Spiel' : 'Rel.-Playoff — Punkte jetzt holen');
     return { name, isGold, label };
   };
   const hDod = _check(hs, match.home);
