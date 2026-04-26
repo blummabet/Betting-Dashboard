@@ -4078,13 +4078,12 @@ function getBettingPicks(match, odds, leagueKey) {
       const _ao35Best = _pickBestLine(o.ao_lines, 1.62, 2.75, 3.5);
       const _o35Odds  = _ao35Best ? _ao35Best.price : o.o35;
       const _o35Pt    = _ao35Best ? _ao35Best.pt    : 3.5;
-      // Negative edge gate: bookie odds significantly below Poisson fair value → suppress.
-      const _o35FairProb = _poissonOver(expGoals, _o35Pt);
-      const _o35NegEdge  = _o35Odds !== null && (1 / _o35Odds) - _o35FairProb > 0.12;
-      if (!_o35NegEdge) {
-        gC.push({sc, p:{icon:'🔥', market:`Over ${_o35Pt} Tore`, odds:_o35Odds,
-          conf: sc>0.68?'high':sc>0.44?'medium':'low',
-          reason:`${_o35BaseNote}${_o35H2hNote}${_bothAttLine}`}}); } }
+      // Note: no negative edge gate for goals — the Hard Gate (expGoals >= threshold) already
+      // prevents the main anomaly case. A goals Poisson gate at 12pp would suppress valid
+      // picks (e.g. Bundesliga Over 3.5 at 1.65 with expGoals=3.2 → 14pp gap → false block).
+      gC.push({sc, p:{icon:'🔥', market:`Over ${_o35Pt} Tore`, odds:_o35Odds,
+        conf: sc>0.68?'high':sc>0.44?'medium':'low',
+        reason:`${_o35BaseNote}${_o35H2hNote}${_bothAttLine}`}}); }
 
     // Over 2.5
     { let sc = expGoals>3.2?0.78:expGoals>2.8?0.66:expGoals>2.5?0.52:expGoals>2.2?0.30:0.10;
@@ -4141,15 +4140,13 @@ function getBettingPicks(match, odds, leagueKey) {
         const _ao25Best = _pickBestLine(o.ao_lines, 1.62, 2.0, 2.5);
         const _o25Odds  = _ao25Best ? _ao25Best.price : o.o25;
         const _o25Pt    = _ao25Best ? _ao25Best.pt    : 2.5;
-        // Negative edge gate: bookie odds significantly below Poisson fair value → suppress.
-        // e.g. Servette Over 2.5 @ 1.38 when FV ≈ 2.00 (-25pp) — bookie has massive edge.
-        // Threshold: >12pp implied gap (slightly wider tolerance than corners = goals model less precise).
-        const _o25FairProb = _poissonOver(expGoals, _o25Pt);
-        const _o25NegEdge  = _o25Odds !== null && (1 / _o25Odds) - _o25FairProb > 0.12;
-        if (!_o25NegEdge) {
-          gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
-            conf: sc>0.66?'high':sc>0.46?'medium':'low',
-            reason:`${_o25BaseNote}${_o25H2hNote}${_o25ApiNote}${_bothAttLine}`}}); } } }
+        // Note: no negative edge gate for goals — the Hard Gate (expGoals >= 2.5) already
+        // prevents the Servette-type anomaly. A Poisson gate at 12pp suppresses valid picks:
+        // e.g. Bundesliga Over 2.5 @ 1.65 with expGoals=2.6 → 12.6pp gap → false block.
+        // Corners gate kept (Poisson more accurate there; market less efficient).
+        gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
+          conf: sc>0.66?'high':sc>0.46?'medium':'low',
+          reason:`${_o25BaseNote}${_o25H2hNote}${_o25ApiNote}${_bothAttLine}`}}); } }
 
     // Under 2.5
     { let sc = expGoals<1.7?0.85:expGoals<2.0?0.72:expGoals<2.3?0.57:expGoals<2.6?0.34:0.12;
