@@ -2323,16 +2323,24 @@ function _parseTheOddsEvent(g) {
         }
       } else if (mk==='alternate_totals') {
         // Asian Over/Under lines (quarter-ball: 1.75, 2.0, 2.25, 2.75, 3.25, etc.)
-        // Collected as arrays — _pickBestLine() picks the line closest to target odds (~1.62)
+        // Collected as arrays — _pickBestLine() picks the line closest to target odds (~1.62).
+        // Also backfills standard keys (u15, u25, u35) if not already set by 'totals' market.
+        // Many bookmakers only list Under 1.5 in alternate_totals, not the main totals market.
         for (const o of (mkt.outcomes||[])) {
           const pt=o.point; const p=o.price;
           if (pt<1.0||pt>6.0) continue;
           if (o.name==='Over') {
             if (!r.ao_lines) r.ao_lines=[];
             if (!r.ao_lines.find(l=>Math.abs(l.pt-pt)<0.01)) r.ao_lines.push({pt,price:p});
+            if (Math.abs(pt-1.5)<0.01&&!r.o15) r.o15=p;
+            if (Math.abs(pt-2.5)<0.01&&!r.o25) r.o25=p;
+            if (Math.abs(pt-3.5)<0.01&&!r.o35) r.o35=p;
           } else if (o.name==='Under') {
             if (!r.au_lines) r.au_lines=[];
             if (!r.au_lines.find(l=>Math.abs(l.pt-pt)<0.01)) r.au_lines.push({pt,price:p});
+            if (Math.abs(pt-1.5)<0.01&&!r.u15) r.u15=p;
+            if (Math.abs(pt-2.5)<0.01&&!r.u25) r.u25=p;
+            if (Math.abs(pt-3.5)<0.01&&!r.u35) r.u35=p;
           }
         }
       } else if (mk==='alternate_spreads') {
@@ -3384,7 +3392,7 @@ function getBettingPicks(match, odds, leagueKey) {
     : (hGoals + aConc + aGoals + hConc) / 2;
   // API Prediction blend: when xGBased=false and API goals available, blend 70/30.
   // Only blend for non-xG path — when Understat xG is available it's already strong.
-  const expGoals = (!xGBased && _apiExpG !== null)
+  let expGoals = (!xGBased && _apiExpG !== null)
     ? Math.round((_expGoalsModel * 0.70 + _apiExpG * 0.30) * 10) / 10
     : _expGoalsModel;
   // Label shown in pick reasons — distinguishes data source for expected goals estimate
@@ -3501,6 +3509,18 @@ function getBettingPicks(match, odds, leagueKey) {
   // Max ±7% so it enhances but never dominates the fatigue/injury signals.
   if (_hFormMod !== 0) { homeAttStr *= (1 + _hFormMod); homeDefStr *= (1 - _hFormMod * 0.5); }
   if (_aFormMod !== 0) { awayAttStr *= (1 + _aFormMod); awayDefStr *= (1 - _aFormMod * 0.5); }
+
+  // ── expGoals sanity floor ────────────────────────────────────────────────
+  // expGoals is computed before fatigue/injury/motivation multipliers are applied
+  // to homeAttStr/awayAttStr. For xG-based paths with sparse Understat data this
+  // can yield physically impossible values (e.g. expGoals=0.1 while homeAttStr=2.3).
+  // Floor: expGoals must be at least 35% of the combined adjusted attack strength.
+  // 35% is conservative — calibrated so it doesn't override real low-scoring games
+  // but catches clearly corrupted xG inputs.
+  {
+    const _expGoalsAttFloor = Math.round((homeAttStr + awayAttStr) * 0.35 * 10) / 10;
+    if (expGoals < _expGoalsAttFloor) expGoals = _expGoalsAttFloor;
+  }
 
   // BTTS signals (refined by xG)
   const bttsXGStrong = homeAttStr > 1.30 && awayAttStr > 1.10 && homeDefStr > 0.90 && awayDefStr > 0.90;
@@ -4070,9 +4090,13 @@ function getBettingPicks(match, odds, leagueKey) {
       const _ao35Best = _pickBestLine(o.ao_lines, 1.62, 2.75, 3.5);
       const _o35Odds  = _ao35Best ? _ao35Best.price : o.o35;
       const _o35Pt    = _ao35Best ? _ao35Best.pt    : 3.5;
-      gC.push({sc, p:{icon:'🔥', market:`Over ${_o35Pt} Tore`, odds:_o35Odds,
-        conf: sc>0.68?'high':sc>0.44?'medium':'low',
-        reason:`${_o35BaseNote}${_o35H2hNote}${_bothAttLine}`}}); }
+      // Negative edge gate: bookie odds significantly below Poisson fair value → suppress.
+      const _o35FairProb = _poissonOver(expGoals, _o35Pt);
+      const _o35NegEdge  = _o35Odds !== null && (1 / _o35Odds) - _o35FairProb > 0.12;
+      if (!_o35NegEdge) {
+        gC.push({sc, p:{icon:'🔥', market:`Over ${_o35Pt} Tore`, odds:_o35Odds,
+          conf: sc>0.68?'high':sc>0.44?'medium':'low',
+          reason:`${_o35BaseNote}${_o35H2hNote}${_bothAttLine}`}}); } }
 
     // Over 2.5
     { let sc = expGoals>3.2?0.78:expGoals>2.8?0.66:expGoals>2.5?0.52:expGoals>2.2?0.30:0.10;
@@ -4129,9 +4153,15 @@ function getBettingPicks(match, odds, leagueKey) {
         const _ao25Best = _pickBestLine(o.ao_lines, 1.62, 2.0, 2.5);
         const _o25Odds  = _ao25Best ? _ao25Best.price : o.o25;
         const _o25Pt    = _ao25Best ? _ao25Best.pt    : 2.5;
-        gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
-          conf: sc>0.66?'high':sc>0.46?'medium':'low',
-          reason:`${_o25BaseNote}${_o25H2hNote}${_o25ApiNote}${_bothAttLine}`}}); } }
+        // Negative edge gate: bookie odds significantly below Poisson fair value → suppress.
+        // e.g. Servette Over 2.5 @ 1.38 when FV ≈ 2.00 (-25pp) — bookie has massive edge.
+        // Threshold: >12pp implied gap (slightly wider tolerance than corners = goals model less precise).
+        const _o25FairProb = _poissonOver(expGoals, _o25Pt);
+        const _o25NegEdge  = _o25Odds !== null && (1 / _o25Odds) - _o25FairProb > 0.12;
+        if (!_o25NegEdge) {
+          gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
+            conf: sc>0.66?'high':sc>0.46?'medium':'low',
+            reason:`${_o25BaseNote}${_o25H2hNote}${_o25ApiNote}${_bothAttLine}`}}); } } }
 
     // Under 2.5
     { let sc = expGoals<1.7?0.85:expGoals<2.0?0.72:expGoals<2.3?0.57:expGoals<2.6?0.34:0.12;
@@ -4144,6 +4174,19 @@ function getBettingPicks(match, odds, leagueKey) {
       else if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 0.65);
       // 🔑 H2H: under 2.5 is inverse of both H2H modifiers
       sc = Math.min(0.92, Math.max(0, sc - _h2hO25Mod - _h2hAvgGMod));
+      // 🔑 H2H HARD GATE: wenn H2H-Durchschnitt deutlich über der Under-2.5-Linie liegt,
+      // ist der Pick strukturell widerlegbar — die Paarung produziert historisch mehr Tore.
+      // z.B. Estrela vs Porto: H2H Ø 2.8 Tore / 67% BTTS → Under 2.5 ist kontraindiziert.
+      // Schwellenwerte: etwas milder als Under 1.5, da Under 2.5 mehr Spielraum hat.
+      if (_h2hSample && _h2hAvgG != null) {
+        if      (_h2hAvgG >= 3.5) sc = Math.max(0, sc - 0.45); // sehr torreich historisch
+        else if (_h2hAvgG >= 3.0) sc = Math.max(0, sc - 0.30); // klar über der Linie
+        else if (_h2hAvgG >= 2.8) sc = Math.max(0, sc - 0.16); // leicht über der Linie
+      }
+      if (_h2hSample && _h2hBtts != null) {
+        if      (_h2hBtts >= 0.70) sc = Math.max(0, sc - 0.20); // beide treffen sehr häufig
+        else if (_h2hBtts >= 0.60) sc = Math.max(0, sc - 0.12); // beide treffen häufig → Under fragwürdig
+      }
       // 🔑 CLEAN SHEET / FAILED TO SCORE: defensive teams at home + struggling away attackers → Under
       if (_hCSHome !== null && _aCSAway !== null) {
         const _csAvg = (_hCSHome + _aCSAway) / 2;
@@ -4355,7 +4398,16 @@ function getBettingPicks(match, odds, leagueKey) {
       const _cornSkipHigh = _cOOdds != null && _cOOdds > _OVER_MAX_ODD;
       // Minimum signal guard: sc < 0.25 = too weak to show regardless of odds.
       const _cornSkipLowSc = scO < 0.25;
-      if (!_cornSkip && !_cornSkipHigh && !_cornSkipLowSc)
+      // Negative edge gate: real bookie odds significantly below Poisson fair value.
+      // When the bookie's implied probability exceeds our model's fair probability by
+      // >10pp, we have no edge — suppress the pick (e.g. Rangers: FV 2.50 → bookie 1.70 = -21pp).
+      // Only fires on REAL (non-estimated) odds so model estimates never trigger this gate.
+      const _cornLineNums = [8.5, 9.5, 10.5, 11.5];
+      const _cornFairProbO = (!o._cornersOddsEst && _cOOdds != null)
+        ? _poissonOver(cornersEst, _cornLineNums[_overIdx])
+        : null;
+      const _cornNegEdge = _cornFairProbO != null && (1 / _cOOdds) - _cornFairProbO > 0.10;
+      if (!_cornSkip && !_cornSkipHigh && !_cornSkipLowSc && !_cornNegEdge)
       sC.push({sc: scO, p:{icon:'🚩', market:_cOMkt, odds:_cOOdds, oddsIsEst: o._cornersOddsEst||false,
         conf: scO>0.65?'high':scO>0.38?'medium':'low',
         reason:`${cornersDataReal
@@ -4433,6 +4485,13 @@ function getBettingPicks(match, odds, leagueKey) {
       }
       // Suppress card pick if referee is very lenient and situation isn't extreme
       if (cardSc > 0 && _refAvg != null && _refAvg < 2.5 && !cardsVeryHigh) cardSc = 0;
+      // Confirmed-relegated teams play with reduced intensity → "Frustration" alone is not enough.
+      // Rule: if ANY confirmed-relegated team is involved, require referee evidence (≥3.5 avg cards)
+      // to justify a cards pick. Without ref data the base rate is unknown — suppress.
+      // If BOTH teams are confirmed relegated (both motiv='none'), kill the pick entirely:
+      // two teams rotating and coasting = no real desperation = fewer cards, not more.
+      if (cardSc > 0 && _bothRedConf) cardSc = 0;
+      else if (cardSc > 0 && _anyRedConf && (_refAvg == null || _refAvg < 3.5)) cardSc = 0;
       const _cardOdds = cardMkt.includes('4.5') ? (o.cards_o45||null) : (o.cards_o35||null);
       // Max odds guard: cards > 3.20 means low card probability — not worth recommending.
       if (cardSc > 0 && _cardOdds != null && _cardOdds > 3.20) cardSc = 0;
