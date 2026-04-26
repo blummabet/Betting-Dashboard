@@ -162,12 +162,13 @@ function oddsApiFetchAlt(sportKey) {
   });
 }
 
-// Fetch 1st-half markets via EU region (h2h_h1 = HT 1X2, totals_h1 = HT over/under).
+// Fetch 1st-half markets via eu,uk regions (h2h_h1 = HT 1X2, totals_h1 = HT over/under).
+// UK region (Bet365, W.Hill) is required for Eredivisie, Scottish, Belgian etc. — EU-only misses them.
 // Returns array of events, or [] on any error/non-200.
 function oddsApiFetchHT(sportKey) {
   return new Promise((resolve) => {
     const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
-      + `&regions=eu&markets=h2h_h1,totals_h1&oddsFormat=decimal`;
+      + `&regions=eu,uk&markets=h2h_h1,totals_h1&oddsFormat=decimal`;
     const options = { hostname: ODDS_API_HOST, path, method: 'GET',
       headers: { 'User-Agent': 'CocoBet/1.0' } };
     const req = https.request(options, res => {
@@ -361,6 +362,7 @@ function parseTheOddsEvent(oddsEvent) {
           else if (o.name === 'Over'  && Math.abs(o.point - 3.5) < 0.01 && !r.o35) r.o35 = o.price;
           else if (o.name === 'Under' && Math.abs(o.point - 3.5) < 0.01 && !r.u35) r.u35 = o.price;
           else if (o.name === 'Over'  && Math.abs(o.point - 1.5) < 0.01 && !r.o15) r.o15 = o.price;
+          else if (o.name === 'Under' && Math.abs(o.point - 1.5) < 0.01 && !r.u15) r.u15 = o.price;
         }
       } else if (mk === 'btts') {
         for (const o of (mkt.outcomes || [])) {
@@ -441,16 +443,26 @@ function parseTheOddsEvent(oddsEvent) {
         }
       } else if (mk === 'alternate_totals') {
         // Asian Over/Under lines (quarter-ball: 1.75, 2.0, 2.25, 2.75, 3.25, etc.)
-        // Collected as arrays sorted by pt — picker selects line closest to target odds (~1.62)
+        // Collected as arrays sorted by pt — picker selects line closest to target odds (~1.62).
+        // Also extracts standard lines (1.5, 2.5, 3.5) as fallback when main totals market omits them.
+        // Many bookmakers (e.g. Unibet, Bet365) only list Under 1.5 in alternate_totals, not totals.
         for (const o of (mkt.outcomes || [])) {
           const pt = o.point; const p = o.price;
           if (pt < 1.0 || pt > 6.0) continue;
           if (o.name === 'Over') {
             if (!r.ao_lines) r.ao_lines = [];
             if (!r.ao_lines.find(l => Math.abs(l.pt - pt) < 0.01)) r.ao_lines.push({ pt, price: p });
+            // Backfill standard keys if not yet set from totals market
+            if (Math.abs(pt - 1.5) < 0.01 && !r.o15) r.o15 = p;
+            if (Math.abs(pt - 2.5) < 0.01 && !r.o25) r.o25 = p;
+            if (Math.abs(pt - 3.5) < 0.01 && !r.o35) r.o35 = p;
           } else if (o.name === 'Under') {
             if (!r.au_lines) r.au_lines = [];
             if (!r.au_lines.find(l => Math.abs(l.pt - pt) < 0.01)) r.au_lines.push({ pt, price: p });
+            // Backfill standard keys if not yet set from totals market
+            if (Math.abs(pt - 1.5) < 0.01 && !r.u15) r.u15 = p;
+            if (Math.abs(pt - 2.5) < 0.01 && !r.u25) r.u25 = p;
+            if (Math.abs(pt - 3.5) < 0.01 && !r.u35) r.u35 = p;
           }
         }
       } else if (mk === 'alternate_spreads') {
