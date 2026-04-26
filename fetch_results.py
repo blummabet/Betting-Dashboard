@@ -49,9 +49,10 @@ LEAGUES = {
     "SCO2": 180, # Scottish Championship
     "TUR2": 204, # TFF 1. Lig
     "HUN": 271,  # NB I (Hungary)
-    "BEL": 55,   # Pro League (Belgium)
+    "BEL": 144,  # Jupiler Pro League (Belgium) — prematch-server.js uses 144, not 55!
     "CRO": 210,  # HNL (Croatia)
     "POL": 106,  # Ekstraklasa (Poland)
+    "SUI": 207,  # Super League (Switzerland)
 }
 
 FINISHED_STATUSES = {"FT", "AET", "PEN", "AWD", "WO"}

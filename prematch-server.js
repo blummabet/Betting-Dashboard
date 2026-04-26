@@ -52,6 +52,7 @@ const LEAGUE_IDS = {
   106: 'Ekstraklasa',
   271: 'NB I',
   210: 'HNL',
+  207: 'Super League (Switzerland)',
 };
 
 // The Odds API sport keys — one call per key fetches ALL upcoming fixtures for that league.
@@ -69,6 +70,7 @@ const LEAGUE_ODDS_KEYS = {
   106: 'soccer_poland_ekstraklasa',
   179: 'soccer_scotland_premiership',    // SCO — added; server has safe error handling if 404
   144: 'soccer_belgium_first_div_a',     // BEL Jupiler Pro League
+  207: 'soccer_switzerland_superleague', // SUI Super League
   // 271 (HUN), 210 (CRO): not covered by The Odds API — no bookmaker odds available.
   // Fair Value for these leagues is derived from API prediction percentages (_isEstimated:true).
 };

@@ -10159,6 +10159,37 @@ const _TEAM_ALIASES = {
   'kasımpaşa': 'kasimpasa',
   'kocaelispor': 'kocaelispor',
   'eyüpspor': 'eyupspor',
+  // Belgian — API-Football uses short/full names differently
+  'stvv': 'st truiden',
+  'sint-truiden': 'st truiden',
+  'sint truiden': 'st truiden',
+  'royale union saint-gilloise': 'union st gilloise',
+  'union saint-gilloise': 'union st gilloise',
+  'union sg': 'union st gilloise',
+  'kaa gent': 'gent',
+  'oh leuven': 'oud-heverlee leuven',
+  'beerschot ac': 'beerschot',
+  'club brugge': 'brugge',
+  'club brugge kv': 'brugge',
+  'cercle brugge': 'cercle brugge',
+  'krc genk': 'genk',
+  'rsc anderlecht': 'anderlecht',
+  // Swiss — Super League
+  'grasshopper club zürich': 'grasshoppers',
+  'grasshopper club zurich': 'grasshoppers',
+  'grasshopper': 'grasshoppers',
+  'fc luzern': 'luzern',
+  'fc zurich': 'zurich',
+  'fc zürich': 'zurich',
+  'bsc young boys': 'young boys',
+  'fc st. gallen': 'st gallen',
+  'fc st gallen': 'st gallen',
+  'servette fc': 'servette',
+  'fc lausanne-sport': 'lausanne',
+  'lausanne sport': 'lausanne',
+  'fc lugano': 'lugano',
+  'fc winterthur': 'winterthur',
+  'fc thun': 'thun',
 };
 
 function _fuzzyTeam(a, b) {
@@ -10167,7 +10198,7 @@ function _fuzzyTeam(a, b) {
     .replace(/[òóôõöø]/g,'o').replace(/[ùúûü]/g,'u').replace(/[ýÿ]/g,'y')
     .replace(/[ñ]/g,'n').replace(/[ç]/g,'c').replace(/[ß]/g,'ss')
     .replace(/[şș]/g,'s').replace(/[ğ]/g,'g').replace(/[ı]/g,'i')
-    .replace(/\b(fc|sc|sv|bv|rb|vfb|vfl|sk|fk|cf|afc|asc)\b/gi,' ')
+    .replace(/\b(fc|sc|sv|bv|rb|vfb|vfl|sk|fk|cf|afc|asc|kv|kaa|krc|oud|heverlee)\b/gi,' ')
     .replace(/[^a-z0-9 ']/g,' ').replace(/\s+/g,' ').trim();
 
   const na = normalize(a), nb = normalize(b);
@@ -10247,7 +10278,11 @@ async function _fetchOddsApiScores(daysFrom = 3) {
 const _RESULT_LEAGUE_IDS = {
   ENG:39, GER:78, ITA:135, ESP:140, FRA:61,
   AUT:218, NED:88, POR:94, SCO:179, TUR:203,  // AUT=218 (Österr. BL), not 144 (=Belgian Jupiler)
-  BEL:55, POL:106, HUN:271, CRO:210
+  BEL:144, POL:106, HUN:271, CRO:210,  // BEL=144 matches prematch-server.js (not 55!)
+  SUI:207,  // Swiss Super League
+  // 2. Ligen (already cached by fetch_results.py — needed for live fallback if cache misses)
+  GER2:79, ENG2:40, ITA2:136, ESP2:141, FRA2:62,
+  NED2:89, POR2:95, SCO2:180, TUR2:204,
 };
 
 // Fetch a single set of fixture IDs directly (max ~20 per call).
@@ -11460,7 +11495,15 @@ async function fetchSofaResults(btn) {
       );
       if (liveFx) {
         const liveStatus = liveFx.fixture?.status?.short || '?';
-        dbg.push(`⏳ Noch läuft: ${entry.home} vs ${entry.away} [${liveStatus}] — warte auf Abpfiff`);
+        if (liveStatus === 'NS') {
+          // Not Started — game is scheduled but hasn't kicked off yet
+          const gameDate = entry.dateIso;
+          const today = new Date().toISOString().slice(0,10);
+          const when = gameDate === today ? 'heute' : gameDate > today ? 'morgen/später' : 'noch ausstehend';
+          dbg.push(`📅 Noch nicht gespielt: ${entry.home} vs ${entry.away} [${gameDate}] — ${when}, Ergebnis ausstehend`);
+        } else {
+          dbg.push(`⏳ Noch läuft: ${entry.home} vs ${entry.away} [${liveStatus}] — warte auf Abpfiff`);
+        }
       } else {
         const candidates = _searchPool
           .filter(f => _FT_STATUSES.includes(f.fixture?.status?.short))
