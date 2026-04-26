@@ -1607,6 +1607,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <!-- Cards des Tages Performance -->
   <div id="tcStats" style="margin-bottom:24px;"></div>
 
+  <!-- Score + Confidence Breakdown -->
+  <div id="scoreBreakdown" style="margin-bottom:24px;"></div>
+
   <!-- Charts row -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;" id="chartsRow">
     <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;">
@@ -9143,7 +9146,7 @@ function renderMonthlyPnl() {
 // ── Stats overview ──────────────────────────────────────
 function renderResultsStats() {
   // Apply same date window as the table
-  let allPicks = _resultsData.flatMap(e => e.picks.map(p => ({...p, dateIso: e.dateIso, league: e.league, leagueFlag: e.leagueFlag})));
+  let allPicks = _resultsData.flatMap(e => e.picks.map(p => ({...p, dateIso: e.dateIso, league: e.league, leagueFlag: e.leagueFlag, matchScore: e.matchScore || 0})));
   const _futureMax = new Date(); _futureMax.setDate(_futureMax.getDate() + 7);
   const _futureMaxIso = _futureMax.toISOString().slice(0, 10);
   allPicks = allPicks.filter(p => (p.dateIso || '') <= _futureMaxIso);
@@ -9272,6 +9275,82 @@ function renderResultsStats() {
           <div class="res-stat-val" style="color:${s.color}">${s.val}${s.extra || ''}</div>
           <div class="res-stat-lbl">${s.lbl}</div>
         </div>`).join('')}
+    </div>`;
+
+  // ── Score + Confidence Breakdown ──────────────────────────────────────────
+  const bdEl = document.getElementById('scoreBreakdown');
+  if (!bdEl) return;
+
+  // Helper: win/loss/pending for a subset
+  const _bd = picks => {
+    const w = picks.filter(p => p.result === 'win').length;
+    const l = picks.filter(p => p.result === 'loss').length;
+    const pnd = picks.filter(p => !p.result).length;
+    const wr = (w + l) > 0 ? Math.round(w / (w + l) * 100) : null;
+    return { w, l, pnd, wr };
+  };
+  const _wrColor = wr => wr === null ? '#8b949e' : wr >= 60 ? '#3fb950' : wr >= 48 ? '#e3b341' : '#f85149';
+
+  // ── By Match Score (9–12) ──
+  const scoreRows = [9, 10, 11, 12].map(ms => {
+    const bucket = allPicks.filter(p => Math.round(p.matchScore || 0) === ms);
+    if (!bucket.length) return null;
+    const { w, l, pnd, wr } = _bd(bucket);
+    const total = w + l + pnd;
+    return { label: `${ms}/12`, w, l, pnd, total, wr };
+  }).filter(Boolean);
+
+  // ── By Confidence Stars ──
+  const confBuckets = [
+    { key: 'high',   label: '★★★',  stars: '★★★' },
+    { key: 'medium', label: '★★☆',  stars: '★★☆' },
+    { key: 'low',    label: '★☆☆',  stars: '★☆☆' },
+  ];
+  const confRows = confBuckets.map(c => {
+    const bucket = allPicks.filter(p => p.conf === c.key);
+    if (!bucket.length) return null;
+    const { w, l, pnd, wr } = _bd(bucket);
+    const total = w + l + pnd;
+    return { label: c.label, stars: c.stars, w, l, pnd, total, wr };
+  }).filter(Boolean);
+
+  const _row = (label, w, l, pnd, total, wr, isConf = false) => {
+    const wrColor = _wrColor(wr);
+    const barW = (w + l) > 0 ? Math.round(w / (w + l) * 100) : 0;
+    const labelStyle = isConf
+      ? 'color:#e3b341;letter-spacing:1px;font-size:13px;'
+      : 'color:var(--accent);font-size:13px;font-weight:700;';
+    return `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--card);border:1px solid var(--border);border-radius:10px;">
+      <div style="min-width:46px;${labelStyle}font-weight:700;">${label}</div>
+      <div style="flex:1;min-width:80px;">
+        <div style="height:6px;background:#21262d;border-radius:3px;overflow:hidden;">
+          <div style="height:100%;width:${barW}%;background:${wrColor};border-radius:3px;transition:width .4s;"></div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:#3fb950;min-width:28px;text-align:right;">✅ ${w}</div>
+      <div style="font-size:12px;color:#f85149;min-width:28px;text-align:right;">❌ ${l}</div>
+      ${pnd > 0 ? `<div style="font-size:11px;color:#8b949e;min-width:28px;text-align:right;">⏳ ${pnd}</div>` : `<div style="min-width:28px;"></div>`}
+      <div style="font-size:13px;font-weight:700;min-width:40px;text-align:right;color:${wrColor};">${wr !== null ? wr + '%' : '—'}</div>
+    </div>`;
+  };
+
+  if (!scoreRows.length && !confRows.length) { bdEl.innerHTML = ''; return; }
+
+  bdEl.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div style="background:#0d1117;border:1px solid var(--border);border-radius:14px;padding:16px;">
+        <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px;">📊 Match Score Breakdown</div>
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          ${scoreRows.length ? scoreRows.map(r => _row(r.label, r.w, r.l, r.pnd, r.total, r.wr)).join('') : '<div style="color:var(--muted);font-size:12px;">Noch keine Daten</div>'}
+        </div>
+      </div>
+      <div style="background:#0d1117;border:1px solid var(--border);border-radius:14px;padding:16px;">
+        <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:12px;">⭐ Konfidenz Breakdown</div>
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          ${confRows.length ? confRows.map(r => _row(r.label, r.w, r.l, r.pnd, r.total, r.wr, true)).join('') : '<div style="color:var(--muted);font-size:12px;">Noch keine Daten</div>'}
+        </div>
+      </div>
     </div>`;
 }
 
