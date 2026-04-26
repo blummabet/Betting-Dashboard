@@ -460,15 +460,20 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
 
     h_mot = (hs or {}).get("motivationLevel", "full")
     a_mot = (aws or {}).get("motivationLevel", "full")
-    any_conf_rel  = h_mot == "none" or a_mot == "none"
-    both_conf_rel = h_mot == "none" and a_mot == "none"
+
+    # "Confirmed relegated" = motiv='none' UND rotes Label
+    # (motiv='none' allein kann auch gesicherte UCL/Titel-Teams bedeuten!)
+    h_conf_rel = h_mot == "none" and "red" in hc
+    a_conf_rel = a_mot == "none" and "red" in ac
+    any_conf_rel  = h_conf_rel or a_conf_rel
+    both_conf_rel = h_conf_rel and a_conf_rel
 
     # 🔴 FEHLER: Beide Teams bestätigt abgestiegen + hoher Score → Dead-rubber
     # Fix April 2026: Dead-Rubber-Penalty (-2.0) + cardSc=0 für beide Teams.
     # Wenn Score trotzdem > 5.0 ist, hat die Penalty nicht funktioniert.
     if both_conf_rel and ms > 5.0:
         flag("ERROR", "DEAD_RUBBER_HIGH_PICKS_RISK",
-             f"Beide Teams bestätigt abgestiegen (motiv='none') aber matchScore={ms}. "
+             f"Beide Teams bestätigt abgestiegen (motiv='none' + rotes Label) aber matchScore={ms}. "
              f"Dead-Rubber-Penalty (-2.0) greift nicht → Picks wären inhaltsleer. "
              f"JS: Dead-rubber-Penalty und cardSc=0 prüfen.")
 
@@ -476,22 +481,21 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
     # Fix April 2026: cardSc=0 wenn _bothRedConf, oder wenn _anyRedConf && refAvg < 3.5.
     # Validator kann refAvg nicht prüfen, warnt aber generell.
     if any_conf_rel and not both_conf_rel:
-        rel_team = home if h_mot == "none" else away
+        rel_team = home if h_conf_rel else away
         flag("WARN", "CARDS_RELEGATED_TEAM",
-             f"{rel_team} ist bestätigt abgestiegen (motiv='none'). "
+             f"{rel_team} ist bestätigt abgestiegen (motiv='none' + rotes Label). "
              f"Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). "
              f"JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.")
 
-    # 🔵 HINWEIS: motiv='low' → Intensitätsprüfung für Karten sinnvoll
+    # 🔵 HINWEIS: motiv='low' bei roten Teams → Intensitätsprüfung für Karten
     if not any_conf_rel and ms >= 7.0:
-        low_teams = []
-        if h_mot == "low": low_teams.append(home)
-        if a_mot == "low": low_teams.append(away)
-        if low_teams:
+        low_red_teams = []
+        if h_mot == "low" and "red" in hc: low_red_teams.append(home)
+        if a_mot == "low" and "red" in ac: low_red_teams.append(away)
+        if low_red_teams:
             flag("INFO", "LOW_MOTIV_CARDS_CHECK",
-                 f"{', '.join(low_teams)}: motivationLevel='low' — "
-                 f"Karten-Pick nur mit Schiedsrichter-Evidenz oder historischer "
-                 f"Disziplinlosigkeit sinnvoll. Kein Fehler — manuell prüfen.")
+                 f"{', '.join(low_red_teams)}: motivationLevel='low' (fast gerettet) — "
+                 f"Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.")
 
     # ── H2H-basierte Goals-Checks ─────────────────────────────────────────────
     h2h_avg_g = h2h.get("avgGoals")
@@ -730,12 +734,17 @@ def main():
             issues = check_fixture(fx, key, lname, rl)
 
             for sev, code, msg in issues:
-                if errors_only and sev != "ERROR":
-                    continue
-                league_issues.append((date_str, fx["home"], fx["away"], sev, code, msg))
+                # always track for JSON (before errors_only filter)
+                all_issues.append({
+                    "date": date_str, "home": fx["home"], "away": fx["away"],
+                    "league": lname, "severity": sev, "code": code, "msg": msg
+                })
                 if sev == "ERROR":   total_errors += 1
                 elif sev == "WARN":  total_warns  += 1
                 elif sev == "INFO":  total_infos  += 1
+                if errors_only and sev != "ERROR":
+                    continue
+                league_issues.append((date_str, fx["home"], fx["away"], sev, code, msg))
 
             if show_ok and not issues:
                 league_issues.append((date_str, fx["home"], fx["away"], "OK", "OK", "Keine Probleme gefunden"))
@@ -764,8 +773,9 @@ def main():
             rprint(f"  🔵 {total_infos} Hinweise — Pick-Richtung kontrollieren")
     rprint(f"{'═' * 65}\n")
 
-    # ── Report-Datei schreiben ────────────────────────────────────────────────
+    # ── Report-Datei + JSON schreiben ────────────────────────────────────────
     if write_report:
+        # Markdown-Report
         report_path = os.path.join(SCRIPT_DIR, "validator_report.md")
         status_icon = "✅" if total_errors == 0 and total_warns == 0 else ("🔴" if total_errors > 0 else "🟡")
         with open(report_path, "w", encoding="utf-8") as rf:
@@ -779,6 +789,20 @@ def main():
                 rf.write("\n".join(report_lines))
                 rf.write("\n```\n")
         print(f"  📄 Report gespeichert: validator_report.md")
+
+        # JSON-Summary für Dashboard-Injection
+        json_path = os.path.join(SCRIPT_DIR, "validator_summary.json")
+        summary = {
+            "timestamp": datetime.now().strftime("%d.%m.%Y %H:%M"),
+            "checked": total_checked,
+            "errors": total_errors,
+            "warnings": total_warns,
+            "infos": total_infos,
+            "issues": all_issues,   # already populated during the loop below
+        }
+        with open(json_path, "w", encoding="utf-8") as jf:
+            json.dump(summary, jf, ensure_ascii=False, indent=2)
+        print(f"  📊 JSON-Summary gespeichert: validator_summary.json")
 
     # Exit code: 1 wenn kritische Fehler vorhanden
     sys.exit(1 if total_errors > 0 else 0)

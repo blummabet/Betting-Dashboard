@@ -1,0 +1,630 @@
+{
+  "timestamp": "26.04.2026 12:49",
+  "checked": 46,
+  "errors": 3,
+  "warnings": 39,
+  "infos": 27,
+  "issues": [
+    {
+      "date": "26.04.2026",
+      "home": "Gent",
+      "away": "Club Brugge KV",
+      "league": "Jupiler Pro League",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.1 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Dinamo Zagreb",
+      "away": "NK Varazdin",
+      "league": "HNL",
+      "severity": "INFO",
+      "code": "STRONG_H2H_LOW_SCORE",
+      "msg": "Dinamo Zagreb dominiert H2H mit ≥80% bei 10 Spielen, aber matchScore=6.5 ist niedrig. Pick-Richtung trotzdem prüfen — H2H-Signal nicht ausreichend im Score reflektiert?"
+    },
+    {
+      "date": "27.04.2026",
+      "home": "HNK Gorica",
+      "away": "Istra 1961",
+      "league": "HNL",
+      "severity": "WARN",
+      "code": "BOTH_LOW_MOTIV_HIGH_SCORE",
+      "msg": "Beide Teams motivationLevel='low' (fast am Ziel) aber matchScore=10.5. Intensitäts-Einschätzung könnte zu hoch sein."
+    },
+    {
+      "date": "27.04.2026",
+      "home": "HNK Gorica",
+      "away": "Istra 1961",
+      "league": "HNL",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=10.5 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "27.04.2026",
+      "home": "HNK Gorica",
+      "away": "Istra 1961",
+      "league": "HNL",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "HNK Gorica, Istra 1961: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "27.04.2026",
+      "home": "Manchester United",
+      "away": "Brentford",
+      "league": "Premier League",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.5 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Oviedo",
+      "away": "Elche",
+      "league": "La Liga",
+      "severity": "WARN",
+      "code": "BOTH_LOW_MOTIV_HIGH_SCORE",
+      "msg": "Beide Teams motivationLevel='low' (fast am Ziel) aber matchScore=10.0. Intensitäts-Einschätzung könnte zu hoch sein."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Oviedo",
+      "away": "Elche",
+      "league": "La Liga",
+      "severity": "ERROR",
+      "code": "PRESSURE_MUSTWINFLAG_MISMATCH",
+      "msg": "Oviedo: pressureRatio=0.87 > 0.65 aber mustWin=False. calc_pressure() hat mustWin-Flag nicht korrekt gesetzt."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Oviedo",
+      "away": "Elche",
+      "league": "La Liga",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=10.0 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Oviedo",
+      "away": "Elche",
+      "league": "La Liga",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "Oviedo, Elche: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Osasuna",
+      "away": "Sevilla",
+      "league": "La Liga",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=9.8 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Villarreal",
+      "away": "Celta Vigo",
+      "league": "La Liga",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.7 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "27.04.2026",
+      "home": "Espanyol",
+      "away": "Levante",
+      "league": "La Liga",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.1 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Rennes",
+      "away": "Nantes",
+      "league": "Ligue 1",
+      "severity": "WARN",
+      "code": "CARDS_RELEGATED_TEAM",
+      "msg": "Nantes ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Le Havre",
+      "away": "Metz",
+      "league": "Ligue 1",
+      "severity": "WARN",
+      "code": "LOW_SCORING_OVER_RISK",
+      "msg": "Beide Teams zusammen nur 0.8 Tore/Spiel (Schnitt), H2H avg=1.6 — Over 2.5 Picks hier sehr riskant."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Le Havre",
+      "away": "Metz",
+      "league": "Ligue 1",
+      "severity": "WARN",
+      "code": "BOTRED_ASYMMETRIC_PRESSURE",
+      "msg": "Kellerduell-Narrativ aber asymmetrischer Druck: Le Havre pressureRatio=0.33 vs Metz pressureRatio=0.00. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Le Havre",
+      "away": "Metz",
+      "league": "Ligue 1",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=10.6 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Le Havre",
+      "away": "Metz",
+      "league": "Ligue 1",
+      "severity": "WARN",
+      "code": "HOME_POOR_FORM_HIGH_SCORE",
+      "msg": "Le Havre: formScore=0.22 (sehr schwach) aber matchScore=10.6. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Le Havre",
+      "away": "Metz",
+      "league": "Ligue 1",
+      "severity": "WARN",
+      "code": "BOTH_DEFENSIVE_OVER_RISK",
+      "msg": "Le Havre (0.8 Tore/Sp) + Metz (0.8 Tore/Sp): kombiniert nur ~1.4 erwartete Tore. Over 2.5 Pick wäre kontraindiziert — Modell prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Le Havre",
+      "away": "Metz",
+      "league": "Ligue 1",
+      "severity": "WARN",
+      "code": "CARDS_RELEGATED_TEAM",
+      "msg": "Metz ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Le Havre",
+      "away": "Metz",
+      "league": "Ligue 1",
+      "severity": "INFO",
+      "code": "LOW_GOALS_UNDER_EXPECTED",
+      "msg": "H2H Schnitt=1.6 + Saisonschnitt komb.=1.6/Sp. Starker Under-Bias legitim — kein Fehler. Over 2.5 Pick hier wäre falsch."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Paris FC",
+      "away": "Lille",
+      "league": "Ligue 1",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=6.0 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Marseille",
+      "away": "Nice",
+      "league": "Ligue 1",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "Nice: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Marseille",
+      "away": "Nice",
+      "league": "Ligue 1",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.2 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "VfB Stuttgart",
+      "away": "Werder Bremen",
+      "league": "Bundesliga",
+      "severity": "ERROR",
+      "code": "PRESSURE_MUSTWINFLAG_MISMATCH",
+      "msg": "VfB Stuttgart: pressureRatio=0.89 > 0.65 aber mustWin=False. calc_pressure() hat mustWin-Flag nicht korrekt gesetzt."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "VfB Stuttgart",
+      "away": "Werder Bremen",
+      "league": "Bundesliga",
+      "severity": "WARN",
+      "code": "CONFIRMED_NONE_WITH_PRESSURE",
+      "msg": "VfB Stuttgart: motivationLevel='none' (bestätigt) aber pressureRatio=0.89 > 0. Bestätigtes Team darf keine Pressure haben — calc_motivation() prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "VfB Stuttgart",
+      "away": "Werder Bremen",
+      "league": "Bundesliga",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=9.1 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "VfB Stuttgart",
+      "away": "Werder Bremen",
+      "league": "Bundesliga",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "Werder Bremen: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Ferencvarosi TC",
+      "away": "Paks",
+      "league": "NB I",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.3 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Fiorentina",
+      "away": "Sassuolo",
+      "league": "Serie A",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.5 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Torino",
+      "away": "Inter",
+      "league": "Serie A",
+      "severity": "INFO",
+      "code": "STRONG_H2H_LOW_SCORE",
+      "msg": "Inter dominiert H2H mit ≥80% bei 10 Spielen, aber matchScore=6.8 ist niedrig. Pick-Richtung trotzdem prüfen — H2H-Signal nicht ausreichend im Score reflektiert?"
+    },
+    {
+      "date": "27.04.2026",
+      "home": "Cagliari",
+      "away": "Atalanta",
+      "league": "Serie A",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "Cagliari: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Excelsior",
+      "away": "Utrecht",
+      "league": "Eredivisie",
+      "severity": "WARN",
+      "code": "HOME_POOR_FORM_HIGH_SCORE",
+      "msg": "Excelsior: formScore=0.11 (sehr schwach) aber matchScore=8.9. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Excelsior",
+      "away": "Utrecht",
+      "league": "Eredivisie",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "Excelsior: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Excelsior",
+      "away": "Utrecht",
+      "league": "Eredivisie",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.1 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Heracles",
+      "away": "FC Volendam",
+      "league": "Eredivisie",
+      "severity": "WARN",
+      "code": "BOTRED_ASYMMETRIC_PRESSURE",
+      "msg": "Kellerduell-Narrativ aber asymmetrischer Druck: FC Volendam pressureRatio=0.44 vs Heracles pressureRatio=0.00. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Heracles",
+      "away": "FC Volendam",
+      "league": "Eredivisie",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=10.7 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Heracles",
+      "away": "FC Volendam",
+      "league": "Eredivisie",
+      "severity": "WARN",
+      "code": "HOME_POOR_FORM_HIGH_SCORE",
+      "msg": "Heracles: formScore=0.11 (sehr schwach) aber matchScore=10.7. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Heracles",
+      "away": "FC Volendam",
+      "league": "Eredivisie",
+      "severity": "WARN",
+      "code": "BOTH_DEFENSIVE_OVER_RISK",
+      "msg": "Heracles (0.5 Tore/Sp) + FC Volendam (0.8 Tore/Sp): kombiniert nur ~1.1 erwartete Tore. Over 2.5 Pick wäre kontraindiziert — Modell prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Heracles",
+      "away": "FC Volendam",
+      "league": "Eredivisie",
+      "severity": "WARN",
+      "code": "CARDS_RELEGATED_TEAM",
+      "msg": "Heracles ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Heracles",
+      "away": "FC Volendam",
+      "league": "Eredivisie",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.2 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Wisla Plock",
+      "away": "Radomiak Radom",
+      "league": "Ekstraklasa",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "Radomiak Radom: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Widzew Łódź",
+      "away": "Motor Lublin",
+      "league": "Ekstraklasa",
+      "severity": "INFO",
+      "code": "LOW_H2H_SAMPLE",
+      "msg": "Nur 4 H2H-Spiele verfügbar bei matchScore=9.4. Pick-Basis ist schwächer — Quoten und Form priorisieren."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Widzew Łódź",
+      "away": "Motor Lublin",
+      "league": "Ekstraklasa",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=4.0 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Lech Poznan",
+      "away": "Legia Warszawa",
+      "league": "Ekstraklasa",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "Legia Warszawa: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Santa Clara",
+      "away": "SC Braga",
+      "league": "Primeira Liga",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.1 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Estrela",
+      "away": "FC Porto",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=9.0 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Estrela",
+      "away": "FC Porto",
+      "league": "Primeira Liga",
+      "severity": "WARN",
+      "code": "HOME_POOR_FORM_HIGH_SCORE",
+      "msg": "Estrela: formScore=0.22 (sehr schwach) aber matchScore=9.0. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Estrela",
+      "away": "FC Porto",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "LOW_MOTIV_CARDS_CHECK",
+      "msg": "Estrela: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "AVS",
+      "away": "Sporting CP",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "LOW_H2H_SAMPLE",
+      "msg": "Nur 4 H2H-Spiele verfügbar bei matchScore=8.0. Pick-Basis ist schwächer — Quoten und Form priorisieren."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "AVS",
+      "away": "Sporting CP",
+      "league": "Primeira Liga",
+      "severity": "WARN",
+      "code": "HOME_POOR_FORM_HIGH_SCORE",
+      "msg": "AVS: formScore=0.22 (sehr schwach) aber matchScore=8.0. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "AVS",
+      "away": "Sporting CP",
+      "league": "Primeira Liga",
+      "severity": "WARN",
+      "code": "CARDS_RELEGATED_TEAM",
+      "msg": "AVS ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "AVS",
+      "away": "Sporting CP",
+      "league": "Primeira Liga",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=4.5 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "27.04.2026",
+      "home": "GIL Vicente",
+      "away": "Casa Pia",
+      "league": "Primeira Liga",
+      "severity": "WARN",
+      "code": "MUSTWIN_LOW_GPG",
+      "msg": "Casa Pia: mustWin=True aber nur 0.3 Tore/Spiel — Pick 'muss gewinnen' bei Teams die kaum treffen ist unrealistisch."
+    },
+    {
+      "date": "27.04.2026",
+      "home": "GIL Vicente",
+      "away": "Casa Pia",
+      "league": "Primeira Liga",
+      "severity": "INFO",
+      "code": "LOW_GOALS_UNDER_EXPECTED",
+      "msg": "H2H Schnitt=1.5 + Saisonschnitt komb.=1.8/Sp. Starker Under-Bias legitim — kein Fehler. Over 2.5 Pick hier wäre falsch."
+    },
+    {
+      "date": "29.04.2026",
+      "home": "Sporting CP",
+      "away": "Tondela",
+      "league": "Primeira Liga",
+      "severity": "WARN",
+      "code": "H2H_DOMINATED_HIGH_SCORE",
+      "msg": "Sporting CP dominiert H2H 8W/1X/1L in 10 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten."
+    },
+    {
+      "date": "29.04.2026",
+      "home": "Sporting CP",
+      "away": "Tondela",
+      "league": "Primeira Liga",
+      "severity": "WARN",
+      "code": "CARDS_RELEGATED_TEAM",
+      "msg": "Tondela ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Rangers",
+      "away": "Motherwell",
+      "league": "Scottish Prem",
+      "severity": "ERROR",
+      "code": "PRESSURE_MUSTWINFLAG_MISMATCH",
+      "msg": "Rangers: pressureRatio=0.87 > 0.65 aber mustWin=False. calc_pressure() hat mustWin-Flag nicht korrekt gesetzt."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Rangers",
+      "away": "Motherwell",
+      "league": "Scottish Prem",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=9.1 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "BSC Young Boys",
+      "away": "FC ST. Gallen",
+      "league": "Swiss SL",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.4 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Servette FC",
+      "away": "FC Winterthur",
+      "league": "Swiss SL",
+      "severity": "WARN",
+      "code": "BOTRED_ASYMMETRIC_PRESSURE",
+      "msg": "Kellerduell-Narrativ aber asymmetrischer Druck: Servette FC pressureRatio=0.56 vs FC Winterthur pressureRatio=0.00. Nur eine Mannschaft kämpft wirklich — Angle zu vereinfacht."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Servette FC",
+      "away": "FC Winterthur",
+      "league": "Swiss SL",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=9.6 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Servette FC",
+      "away": "FC Winterthur",
+      "league": "Swiss SL",
+      "severity": "WARN",
+      "code": "CARDS_RELEGATED_TEAM",
+      "msg": "FC Winterthur ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Servette FC",
+      "away": "FC Winterthur",
+      "league": "Swiss SL",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.0 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Gençlerbirliği S.K.",
+      "away": "Kocaelispor",
+      "league": "Süper Lig",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=9.0 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Gençlerbirliği S.K.",
+      "away": "Kocaelispor",
+      "league": "Süper Lig",
+      "severity": "WARN",
+      "code": "HOME_POOR_FORM_HIGH_SCORE",
+      "msg": "Gençlerbirliği S.K.: formScore=0.17 (sehr schwach) aber matchScore=9.0. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet."
+    },
+    {
+      "date": "26.04.2026",
+      "home": "Galatasaray",
+      "away": "Fenerbahçe",
+      "league": "Süper Lig",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=9.0 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "27.04.2026",
+      "home": "Beşiktaş",
+      "away": "Fatih Karagümrük",
+      "league": "Süper Lig",
+      "severity": "INFO",
+      "code": "HIGH_SCORE_NO_MUSTWИН",
+      "msg": "matchScore=9.0 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden)."
+    },
+    {
+      "date": "27.04.2026",
+      "home": "Konyaspor",
+      "away": "Trabzonspor",
+      "league": "Süper Lig",
+      "severity": "WARN",
+      "code": "H2H_HIGH_AVG_UNDER_RISK",
+      "msg": "H2H Schnitt=3.3 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug."
+    }
+  ]
+}

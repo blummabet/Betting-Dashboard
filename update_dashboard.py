@@ -1584,7 +1584,7 @@ if __name__ == "__main__":
     print("\n" + "─" * 60)
     resolve_pending_picks()
     # ── Auto-Validator ────────────────────────────────────────────────────────
-    # Läuft nach jedem Update automatisch und schreibt validator_report.md
+    # Läuft nach jedem Update automatisch und schreibt validator_report.md + validator_summary.json
     print("\n" + "─" * 60)
     print("  🐕 Starte Picks-Validator…")
     import subprocess
@@ -1595,3 +1595,20 @@ if __name__ == "__main__":
     )
     if result.returncode != 0:
         print("  ⚠  Validator hat kritische Fehler gefunden — validator_report.md prüfen!")
+
+    # Validator-Summary in HTML injizieren (damit Status/Data-Tab sie zeigt)
+    summary_path = os.path.join(SCRIPT_DIR, "validator_summary.json")
+    if os.path.exists(summary_path):
+        with open(summary_path, "r", encoding="utf-8") as sf:
+            summary_data = sf.read().strip()
+        with open(HTML_FILE, "r", encoding="utf-8") as f:
+            html = f.read()
+        new_const = f"const VALIDATOR_SUMMARY = {summary_data};"
+        if "const VALIDATOR_SUMMARY" in html:
+            html = re.sub(r"const VALIDATOR_SUMMARY = \{.*?\};", new_const, html, flags=re.DOTALL)
+        else:
+            # Inject before closing </script> of the LEAGUES block area
+            html = html.replace("const LEAGUES = ", new_const + "\nconst LEAGUES = ", 1)
+        with open(HTML_FILE, "w", encoding="utf-8") as f:
+            f.write(html)
+        print("  ✓ VALIDATOR_SUMMARY in HTML injiziert")

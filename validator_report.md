@@ -1,11 +1,11 @@
-# 🔴 Picks Validator — 26.04.2026 12:09
+# 🔴 Picks Validator — 26.04.2026 12:49
 
-**46 Spiele geprüft** · 🔴 3 Fehler · 🟡 44 Warnungen · 🔵 27 Hinweise
+**46 Spiele geprüft** · 🔴 3 Fehler · 🟡 39 Warnungen · 🔵 27 Hinweise
 
 ```
 =================================================================
   🐕 CocoBet — Picks Logik-Check
-  26.04.2026 12:09
+  26.04.2026 12:49
   Filter: nächste 3 Tag(e)
 =================================================================
 
@@ -22,9 +22,6 @@
   🔵 HINWEIS [STRONG_H2H_LOW_SCORE]
      📅 26.04.2026  Dinamo Zagreb vs NK Varazdin
      Dinamo Zagreb dominiert H2H mit ≥80% bei 10 Spielen, aber matchScore=6.5 ist niedrig. Pick-Richtung trotzdem prüfen — H2H-Signal nicht ausreichend im Score reflektiert?
-  🟡 WARNUNG [CARDS_RELEGATED_TEAM]
-     📅 26.04.2026  Dinamo Zagreb vs NK Varazdin
-     Dinamo Zagreb ist bestätigt abgestiegen (motiv='none'). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
   🟡 WARNUNG [BOTH_LOW_MOTIV_HIGH_SCORE]
      📅 27.04.2026  HNK Gorica vs Istra 1961
      Beide Teams motivationLevel='low' (fast am Ziel) aber matchScore=10.5. Intensitäts-Einschätzung könnte zu hoch sein.
@@ -33,7 +30,7 @@
      matchScore=10.5 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden).
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 27.04.2026  HNK Gorica vs Istra 1961
-     HNK Gorica, Istra 1961: motivationLevel='low' — Karten-Pick nur mit Schiedsrichter-Evidenz oder historischer Disziplinlosigkeit sinnvoll. Kein Fehler — manuell prüfen.
+     HNK Gorica, Istra 1961: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
 
 ─────────────────────────────────────────────────────────────────
   🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League  (rl=4)
@@ -56,7 +53,7 @@
      matchScore=10.0 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden).
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 26.04.2026  Oviedo vs Elche
-     Oviedo, Elche: motivationLevel='low' — Karten-Pick nur mit Schiedsrichter-Evidenz oder historischer Disziplinlosigkeit sinnvoll. Kein Fehler — manuell prüfen.
+     Oviedo, Elche: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [HIGH_SCORE_NO_MUSTWИН]
      📅 26.04.2026  Osasuna vs Sevilla
      matchScore=9.8 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden).
@@ -72,7 +69,7 @@
 ─────────────────────────────────────────────────────────────────
   🟡 WARNUNG [CARDS_RELEGATED_TEAM]
      📅 26.04.2026  Rennes vs Nantes
-     Nantes ist bestätigt abgestiegen (motiv='none'). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
+     Nantes ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
   🟡 WARNUNG [LOW_SCORING_OVER_RISK]
      📅 26.04.2026  Le Havre vs Metz
      Beide Teams zusammen nur 0.8 Tore/Spiel (Schnitt), H2H avg=1.6 — Over 2.5 Picks hier sehr riskant.
@@ -90,7 +87,7 @@
      Le Havre (0.8 Tore/Sp) + Metz (0.8 Tore/Sp): kombiniert nur ~1.4 erwartete Tore. Over 2.5 Pick wäre kontraindiziert — Modell prüfen.
   🟡 WARNUNG [CARDS_RELEGATED_TEAM]
      📅 26.04.2026  Le Havre vs Metz
-     Metz ist bestätigt abgestiegen (motiv='none'). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
+     Metz ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
   🔵 HINWEIS [LOW_GOALS_UNDER_EXPECTED]
      📅 26.04.2026  Le Havre vs Metz
      H2H Schnitt=1.6 + Saisonschnitt komb.=1.6/Sp. Starker Under-Bias legitim — kein Fehler. Over 2.5 Pick hier wäre falsch.
@@ -99,7 +96,7 @@
      H2H Schnitt=6.0 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 26.04.2026  Marseille vs Nice
-     Nice: motivationLevel='low' — Karten-Pick nur mit Schiedsrichter-Evidenz oder historischer Disziplinlosigkeit sinnvoll. Kein Fehler — manuell prüfen.
+     Nice: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 26.04.2026  Marseille vs Nice
      H2H Schnitt=3.2 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug.
@@ -116,16 +113,13 @@
   🔵 HINWEIS [HIGH_SCORE_NO_MUSTWИН]
      📅 26.04.2026  VfB Stuttgart vs Werder Bremen
      matchScore=9.1 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden).
-  🟡 WARNUNG [CARDS_RELEGATED_TEAM]
+  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 26.04.2026  VfB Stuttgart vs Werder Bremen
-     VfB Stuttgart ist bestätigt abgestiegen (motiv='none'). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
+     Werder Bremen: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
 
 ─────────────────────────────────────────────────────────────────
   🇭🇺 NB I  (rl=2)
 ─────────────────────────────────────────────────────────────────
-  🟡 WARNUNG [CARDS_RELEGATED_TEAM]
-     📅 26.04.2026  Ferencvarosi TC vs Paks
-     Ferencvarosi TC ist bestätigt abgestiegen (motiv='none'). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 26.04.2026  Ferencvarosi TC vs Paks
      H2H Schnitt=3.3 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug.
@@ -141,7 +135,7 @@
      Inter dominiert H2H mit ≥80% bei 10 Spielen, aber matchScore=6.8 ist niedrig. Pick-Richtung trotzdem prüfen — H2H-Signal nicht ausreichend im Score reflektiert?
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 27.04.2026  Cagliari vs Atalanta
-     Cagliari: motivationLevel='low' — Karten-Pick nur mit Schiedsrichter-Evidenz oder historischer Disziplinlosigkeit sinnvoll. Kein Fehler — manuell prüfen.
+     Cagliari: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
 
 ─────────────────────────────────────────────────────────────────
   🇳🇱 Eredivisie  (rl=3)
@@ -151,7 +145,7 @@
      Excelsior: formScore=0.11 (sehr schwach) aber matchScore=8.9. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 26.04.2026  Excelsior vs Utrecht
-     Excelsior: motivationLevel='low' — Karten-Pick nur mit Schiedsrichter-Evidenz oder historischer Disziplinlosigkeit sinnvoll. Kein Fehler — manuell prüfen.
+     Excelsior: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 26.04.2026  Excelsior vs Utrecht
      H2H Schnitt=3.1 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug.
@@ -169,7 +163,7 @@
      Heracles (0.5 Tore/Sp) + FC Volendam (0.8 Tore/Sp): kombiniert nur ~1.1 erwartete Tore. Over 2.5 Pick wäre kontraindiziert — Modell prüfen.
   🟡 WARNUNG [CARDS_RELEGATED_TEAM]
      📅 26.04.2026  Heracles vs FC Volendam
-     Heracles ist bestätigt abgestiegen (motiv='none'). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
+     Heracles ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 26.04.2026  Heracles vs FC Volendam
      H2H Schnitt=3.2 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug.
@@ -179,7 +173,7 @@
 ─────────────────────────────────────────────────────────────────
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 26.04.2026  Wisla Plock vs Radomiak Radom
-     Radomiak Radom: motivationLevel='low' — Karten-Pick nur mit Schiedsrichter-Evidenz oder historischer Disziplinlosigkeit sinnvoll. Kein Fehler — manuell prüfen.
+     Radomiak Radom: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [LOW_H2H_SAMPLE]
      📅 26.04.2026  Widzew Łódź vs Motor Lublin
      Nur 4 H2H-Spiele verfügbar bei matchScore=9.4. Pick-Basis ist schwächer — Quoten und Form priorisieren.
@@ -188,7 +182,7 @@
      H2H Schnitt=4.0 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 26.04.2026  Lech Poznan vs Legia Warszawa
-     Legia Warszawa: motivationLevel='low' — Karten-Pick nur mit Schiedsrichter-Evidenz oder historischer Disziplinlosigkeit sinnvoll. Kein Fehler — manuell prüfen.
+     Legia Warszawa: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
 
 ─────────────────────────────────────────────────────────────────
   🇵🇹 Primeira Liga  (rl=3)
@@ -204,7 +198,7 @@
      Estrela: formScore=0.22 (sehr schwach) aber matchScore=9.0. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
   🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
      📅 26.04.2026  Estrela vs FC Porto
-     Estrela: motivationLevel='low' — Karten-Pick nur mit Schiedsrichter-Evidenz oder historischer Disziplinlosigkeit sinnvoll. Kein Fehler — manuell prüfen.
+     Estrela: motivationLevel='low' (fast gerettet) — Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.
   🔵 HINWEIS [LOW_H2H_SAMPLE]
      📅 26.04.2026  AVS vs Sporting CP
      Nur 4 H2H-Spiele verfügbar bei matchScore=8.0. Pick-Basis ist schwächer — Quoten und Form priorisieren.
@@ -213,7 +207,7 @@
      AVS: formScore=0.22 (sehr schwach) aber matchScore=8.0. Pick-Basis könnte überschätzt sein — Formeinbruch nicht ausreichend gewichtet.
   🟡 WARNUNG [CARDS_RELEGATED_TEAM]
      📅 26.04.2026  AVS vs Sporting CP
-     AVS ist bestätigt abgestiegen (motiv='none'). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
+     AVS ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 26.04.2026  AVS vs Sporting CP
      H2H Schnitt=4.5 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug.
@@ -228,7 +222,7 @@
      Sporting CP dominiert H2H 8W/1X/1L in 10 Spielen. matchScore=7.5 — Pick-Richtung sollte klar sein, Angle-Text darf den Underdog nicht überbewerten.
   🟡 WARNUNG [CARDS_RELEGATED_TEAM]
      📅 29.04.2026  Sporting CP vs Tondela
-     Tondela ist bestätigt abgestiegen (motiv='none'). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
+     Tondela ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
 
 ─────────────────────────────────────────────────────────────────
   🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scottish Prem  (rl=5)
@@ -239,9 +233,6 @@
   🔵 HINWEIS [HIGH_SCORE_NO_MUSTWИН]
      📅 26.04.2026  Rangers vs Motherwell
      matchScore=9.1 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden).
-  🔵 HINWEIS [LOW_MOTIV_CARDS_CHECK]
-     📅 26.04.2026  Rangers vs Motherwell
-     Rangers: motivationLevel='low' — Karten-Pick nur mit Schiedsrichter-Evidenz oder historischer Disziplinlosigkeit sinnvoll. Kein Fehler — manuell prüfen.
 
 ─────────────────────────────────────────────────────────────────
   🇨🇭 Swiss SL  (rl=3)
@@ -257,7 +248,7 @@
      matchScore=9.6 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden).
   🟡 WARNUNG [CARDS_RELEGATED_TEAM]
      📅 26.04.2026  Servette FC vs FC Winterthur
-     FC Winterthur ist bestätigt abgestiegen (motiv='none'). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
+     FC Winterthur ist bestätigt abgestiegen (motiv='none' + rotes Label). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 26.04.2026  Servette FC vs FC Winterthur
      H2H Schnitt=3.0 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug.
@@ -274,15 +265,9 @@
   🔵 HINWEIS [HIGH_SCORE_NO_MUSTWИН]
      📅 26.04.2026  Galatasaray vs Fenerbahçe
      matchScore=9.0 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden).
-  🟡 WARNUNG [CARDS_RELEGATED_TEAM]
-     📅 26.04.2026  Galatasaray vs Fenerbahçe
-     Fenerbahçe ist bestätigt abgestiegen (motiv='none'). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
   🔵 HINWEIS [HIGH_SCORE_NO_MUSTWИН]
      📅 27.04.2026  Beşiktaş vs Fatih Karagümrük
      matchScore=9.0 aber kein Team mit mustWin. Prüfe ob Score durch andere Faktoren gerechtfertigt ist (H2H, Form, Runden).
-  🟡 WARNUNG [CARDS_RELEGATED_TEAM]
-     📅 27.04.2026  Konyaspor vs Trabzonspor
-     Trabzonspor ist bestätigt abgestiegen (motiv='none'). Karten-Pick darf nur mit Schiedsrichter-Evidenz erscheinen (refAvg≥3.5). JS: cardSc=0 guard für _anyRedConf ohne Schiri-Evidenz prüfen.
   🟡 WARNUNG [H2H_HIGH_AVG_UNDER_RISK]
      📅 27.04.2026  Konyaspor vs Trabzonspor
      H2H Schnitt=3.3 Tore (≥3.0). Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug.
@@ -290,7 +275,7 @@
 ═════════════════════════════════════════════════════════════════
   Geprüft: 46 Spiele
   🔴 3 Fehler — müssen gefixt werden
-  🟡 44 Warnungen — manuelle Prüfung empfohlen
+  🟡 39 Warnungen — manuelle Prüfung empfohlen
   🔵 27 Hinweise — Pick-Richtung kontrollieren
 ═════════════════════════════════════════════════════════════════
 
