@@ -8794,7 +8794,7 @@ function runPicksValidator() {
         flag('info', 'LOW_SCORING_PROFILE', `Ø gpg=${avgGPG.toFixed(2)}, H2H Ø=${h2hAvgGoals.toFixed(1)} Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt`);
       }
 
-      // ── 🔵 HINWEISE ────────────────────────────────────────────
+      // ── 🔵 HINWEISE (Stake-Daten) ──────────────────────────────
       if (h2hDom && anyGold && anyRed) {
         flag('info', 'H2H_DOM_GOLD_RED', `Gold+Rot Duell mit H2H-Dominanz — Pick-Richtung sollte durch Angle bestätigt werden`);
       }
@@ -8808,6 +8808,107 @@ function runPicksValidator() {
       if (scoreDiff >= 4 && hScore > 0 && aScore > 0) {
         flag('info', 'ASYMMETRIC_STAKE_SCORES', `Score-Differenz ${scoreDiff.toFixed(1)} Punkte (${fx.home}: ${hScore} vs ${fx.away}: ${aScore}) — sehr klarer Favorit`);
       }
+
+      // ── PICKS-BASIERTE CHECKS ─────────────────────────────────────────────────
+      // getBettingPicks() und findOdds() sind synchron — direkt aufrufbar.
+      // Fixture-State vorbereiten: roundsLeft muss am Match stehen (wie generate_picks.js).
+      let _genPicks = [], _picksOk = false;
+      try {
+        const _fxCopy = Object.assign({}, fx);
+        if (_fxCopy.roundsLeft == null) _fxCopy.roundsLeft = rl;
+        const _odds = findOdds(lk, fx.home, fx.away) || {};
+        _genPicks = getBettingPicks(_fxCopy, _odds, lk) || [];
+        _picksOk  = true;
+      } catch(_e) { /* getBettingPicks fehlt oder Odds-Lookup failed */ }
+
+      if (_picksOk && _genPicks.length > 0) {
+        const _p1 = _genPicks[0];
+        const _hc = (fx.homeStake?.labels||[]).map(l=>l.c||'');
+        const _ac = (fx.awayStake?.labels||[]).map(l=>l.c||'');
+        const _hNone = (fx.homeStake?.motivationLevel || 'full') === 'none';
+        const _aNone = (fx.awayStake?.motivationLevel || 'full') === 'none';
+
+        // ── 🔴 FEHLER (Picks) ────────────────────────────────────
+        // Abgestiegenes Heimteam bekommt Heimsieg/AH Heim als Pick 1
+        if (_hNone && _hc.includes('red')) {
+          if (_p1.market === 'Heimsieg' || _p1.market.startsWith('AH Heim') || _p1.market.startsWith('Handicap Heim')) {
+            flag('error', 'RELEGATED_HOME_RESULT_PICK', `${fx.home} motiv=none (abgestiegen) aber Pick 1 = "${_p1.market}" [${_p1.conf}] — System setzt auf ein motivationsloses Team`);
+          }
+        }
+        // Abgestiegenes Auswärtsteam bekommt Auswärtssieg/AH Ausw als Pick 1
+        if (_aNone && _ac.includes('red')) {
+          if (_p1.market === 'Auswärtssieg' || _p1.market.startsWith('AH Ausw') || _p1.market.startsWith('Handicap Ausw')) {
+            flag('error', 'RELEGATED_AWAY_RESULT_PICK', `${fx.away} motiv=none (abgestiegen) aber Pick 1 = "${_p1.market}" [${_p1.conf}] — System setzt auf ein motivationsloses Team`);
+          }
+        }
+        // Negativer sc — darf nie gezeigt werden
+        _genPicks.forEach((p, i) => {
+          if (typeof p.sc === 'number' && p.sc < 0) {
+            flag('error', 'NEGATIVE_SC_PICK', `Pick ${i+1} "${p.market}" hat sc=${p.sc.toFixed(3)} (negativ) — wurde trotzdem angezeigt`);
+          }
+        });
+        // Unentschieden als Fallback bei sehr hoher Quote (> 3.50)
+        if (_p1.market === 'Unentschieden' && _p1.conf === 'medium' && _p1.odds !== null && _p1.odds > 3.50) {
+          flag('error', 'DRAW_FALLBACK_HIGH_ODDS', `Unentschieden [medium] als Fallback-Pick bei Quote ${_p1.odds} — reine Rauschen-Promotion, kein echter Signal`);
+        }
+
+        // ── 🟡 WARNUNGEN (Picks) ─────────────────────────────────
+        // Medium-Pick mit sehr niedrigem sc (Fallback-Promotion)
+        _genPicks.forEach((p, i) => {
+          if (p.conf === 'medium' && typeof p.sc === 'number' && p.sc < 0.15 && p.sc > 0) {
+            flag('warn', 'LOW_SC_MEDIUM_PICK', `Pick ${i+1} "${p.market}" ist [medium] aber sc=${p.sc.toFixed(3)} — Fallback-Promotion mit schwachem Signal`);
+          }
+        });
+        // Under 2.5 für starkes Auswärtsteam (xG_away > 1.8 + AWR > 0.60)
+        const _ts = window._teamStats || {};
+        const _aStatV = _ts[lk]?.[fx.away] || {};
+        const _hStatV = _ts[lk]?.[fx.home] || {};
+        const _under25Pick = _genPicks.find(p => p.market === 'Under 2.5 Tore' || p.market === 'Unter 2.5 Tore');
+        if (_under25Pick && _aStatV.xG_away > 1.8 && _aStatV.awayWinRate > 0.60) {
+          flag('warn', 'UNDER_DOMINANT_AWAY', `Under 2.5 Pick für ${fx.away} (xG=${_aStatV.xG_away?.toFixed(1)} auswärts, ${Math.round(_aStatV.awayWinRate*100)}% AWR) — kontraindiziert für ein dominant torstarkes Auswärtsteam`);
+        }
+        // Sehr kurze Ergebnis-Quote ohne Handicap-Nutzung
+        if ((_p1.market === 'Heimsieg' || _p1.market === 'Auswärtssieg') && _p1.odds !== null && _p1.odds < 1.25) {
+          flag('warn', 'RESULT_VERY_SHORT_NO_AH', `${_p1.market} bei Quote ${_p1.odds} — so kurze Quoten sollten als AH-Pick gezeigt werden (besser Risk/Reward)`);
+        }
+        // Alle 3 Picks sind [low]
+        if (_genPicks.length >= 3 && _genPicks.every(p => p.conf === 'low')) {
+          flag('warn', 'ALL_PICKS_LOW', `Alle ${_genPicks.length} Picks sind [low] — kaum verwertbares Signal, Spiel lieber überspringen`);
+        }
+        // Motivation-Asymmetrie erkannt aber Ergebnis-Pick schwach (< 0.45)
+        if (_hNone && _hc.includes('red') && !_aNone) {
+          const _awaySc = _genPicks.find(p => p.market === 'Auswärtssieg' || p.market.startsWith('AH Ausw'))?.sc ?? null;
+          if (_awaySc !== null && _awaySc < 0.45) {
+            flag('warn', 'ASYMMETRY_WEAK_AWAY_SC', `${fx.home} abgestiegen (none) + ${fx.away} kompetitiv — aber Auswärtssieg sc=${_awaySc.toFixed(2)} noch unter Medium. Stake-Label für ${fx.away} fehlt?`);
+          }
+        }
+        if (_aNone && _ac.includes('red') && !_hNone) {
+          const _homeSc = _genPicks.find(p => p.market === 'Heimsieg' || p.market.startsWith('AH Heim'))?.sc ?? null;
+          if (_homeSc !== null && _homeSc < 0.45) {
+            flag('warn', 'ASYMMETRY_WEAK_HOME_SC', `${fx.away} abgestiegen (none) + ${fx.home} kompetitiv — aber Heimsieg sc=${_homeSc.toFixed(2)} noch unter Medium. Stake-Label für ${fx.home} fehlt?`);
+          }
+        }
+
+        // ── 🔵 HINWEISE (Picks) ───────────────────────────────────
+        // Kein einziger echter Bookie-Quotenfeed
+        if (_genPicks.length > 0 && _genPicks.every(p => p.oddsIsEst || p.odds === null)) {
+          flag('info', 'NO_REAL_ODDS', `Alle ${_genPicks.length} Picks haben geschätzte oder keine Quoten (~) — kein echter Bookmaker-Feed vorhanden`);
+        }
+        // Corner-Pick mit verdächtigen Stats-Daten
+        const _cornerPick = _genPicks.find(p => p.market?.includes('Ecken'));
+        if (_cornerPick) {
+          const _hCornH = _hStatV.cornersHome ?? null;
+          const _aCornA = _aStatV.cornersAway ?? null;
+          if ((_hCornH !== null && _hCornH < 2.0) || (_aCornA !== null && _aCornA < 2.0)) {
+            const who = (_hCornH !== null && _hCornH < 2.0) ? `${fx.home} cornH=${_hCornH}` : `${fx.away} cornA=${_aCornA}`;
+            flag('info', 'CORNER_BAD_DATA', `${_cornerPick.market} Pick aber ${who} <2 (vermutlich <2 gespeicherte Spiele) — Formel-Fallback aktiv, Pick auf Plausibilität prüfen`);
+          }
+        }
+        // Fehlende Stake-Labels bei 0 Picks
+        if (_genPicks.length === 0 && (fx.homeStake || fx.awayStake)) {
+          flag('info', 'NO_PICKS_GENERATED', `Kein einziger Pick generiert — Score=${ms}, roundsLeft=${rl}. Alle Signale unter Schwellwert?`);
+        }
+      } // end _picksOk
     }
   }
 
