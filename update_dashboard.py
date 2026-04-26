@@ -892,7 +892,15 @@ def calc_match_score(home_stake, away_stake, h2h=None, rounds_left=99):
                  10.5 if rl <= 4 else 10.0 if rl <= 5 else  9.5 if rl <= 6 else
                   9.0 if rl <= 7 else  8.5 if rl <= 8 else  8.0 if rl <= 9 else 7.5)
 
-    return round(min(max_score, score) * 10) / 10
+    # ── Final motivation cap (mirrors JS _motCap — applied last so H2H bonuses can't bypass it) ──
+    # Both 'none' = dead rubber → max 6 | One/Both 'none' = coasting → max 8
+    # Both 'low' = nearly done → max 8
+    if   h_mot == "none" and a_mot == "none": mot_cap = 6.0
+    elif h_mot == "none" or  a_mot == "none": mot_cap = 8.0
+    elif h_mot == "low"  and a_mot == "low":  mot_cap = 8.0
+    else:                                      mot_cap = float("inf")
+
+    return round(min(max_score, mot_cap, score) * 10) / 10
 
 # ── Squad cache helpers ───────────────────────────────────────────────────────
 
