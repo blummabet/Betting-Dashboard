@@ -3459,24 +3459,26 @@ function estimateTeamGoalOdds(lambdaTeam) {
 // O/U rows carry label 'O25' / 'U25' and are appended after 1X2 rows.
 function computeLineMovement(oddsOpen, oddsCurrent) {
   if (!oddsOpen || !oddsCurrent) return null;
+  // 1X2 always shown (if data exists); O/U markets only shown when ≥3pp movement.
+  // O3.5/U3.5 tracked in addition to O2.5/U2.5 — large moves on the 3.5 line
+  // (e.g. known high-scoring teams) are informative and were previously invisible.
   const markets = [
-    { label: '1',   key: 'hw'  },
-    { label: 'X',   key: 'dr'  },
-    { label: '2',   key: 'aw'  },
-    { label: 'O25', key: 'o25' },
-    { label: 'U25', key: 'u25' },
+    { label: '1',   key: 'hw',  ou: false },
+    { label: 'X',   key: 'dr',  ou: false },
+    { label: '2',   key: 'aw',  ou: false },
+    { label: 'O25', key: 'o25', ou: true  },
+    { label: 'U25', key: 'u25', ou: true  },
+    { label: 'O35', key: 'o35', ou: true  },
+    { label: 'U35', key: 'u35', ou: true  },
   ];
   const rows = [];
   for (const m of markets) {
     const o = parseFloat(oddsOpen[m.key]);
     const c = parseFloat(oddsCurrent[m.key]);
     if (!o || !c || isNaN(o) || isNaN(c) || o <= 1 || c <= 1) continue;
-    const pOpen = 1 / o;
-    const pCurr = 1 / c;
-    const ppShift = Math.round((pCurr - pOpen) * 100);
-    // O25/U25 are only included when movement is meaningful (≥3pp).
-    // Static O/U prices are already shown via the pills in the strip header.
-    if ((m.label === 'O25' || m.label === 'U25') && Math.abs(ppShift) < 3) continue;
+    const ppShift = Math.round(((1 / c) - (1 / o)) * 100);
+    // O/U lines only shown when movement is meaningful (≥3pp) — static prices shown via pills
+    if (m.ou && Math.abs(ppShift) < 3) continue;
     rows.push({ label: m.label, oddOpen: o, oddCurr: c, ppShift });
   }
   if (!rows.length) return null;
@@ -3507,8 +3509,8 @@ function renderLineMovement(rows, picks, oddsD, isEstimated) {
     else if (mkt.includes('under') || mkt.includes('u2.5') || mkt === 'under 2.5') pickLabels.add('U25');
   }
 
-  // Human-readable labels for display (O25/U25 get nicer names)
-  const _lmDisplayLabel = { '1': '1', 'X': 'X', '2': '2', 'O25': 'O2.5', 'U25': 'U2.5' };
+  // Human-readable labels for display
+  const _lmDisplayLabel = { '1': '1', 'X': 'X', '2': '2', 'O25': 'O2.5', 'U25': 'U2.5', 'O35': 'O3.5', 'U35': 'U3.5' };
 
   const rowsHtml = rows.map(r => {
     const abs = Math.abs(r.ppShift);
@@ -3883,8 +3885,8 @@ function getBettingPicks(match, odds, leagueKey) {
   }
   // O/U 2.5 line movement nudge — used in goals pick mp adjustments
   if (_oOpen && odds?.o25 && odds?.u25 && _oOpen.o25 && _oOpen.u25) {
-    const _ppO = Math.round(((1/odds.o25) - (1/(_oOpen.o25 || odds.o25))) * 100);
-    const _ppU = Math.round(((1/odds.u25) - (1/(_oOpen.u25 || odds.u25))) * 100);
+    const _ppO = Math.round(((1/odds.o25) - (1/_oOpen.o25)) * 100);
+    const _ppU = Math.round(((1/odds.u25) - (1/_oOpen.u25)) * 100);
     _lmO = Math.max(-0.045, Math.min(0.045, _ppO * 0.015));
     _lmU = Math.max(-0.045, Math.min(0.045, _ppU * 0.015));
   }
@@ -4250,15 +4252,27 @@ function getBettingPicks(match, odds, leagueKey) {
     : _refAvg < 3.0  ? `<br>👨‍⚖️ Schiedsrichter ${_refStats.name}: Ø ${_refAvg} Karten/Spiel — ruhiger Pfeifer, Markt kritisch prüfen.`
     : `<br>👨‍⚖️ Schiedsrichter ${_refStats.name}: Ø ${_refAvg} Karten/Spiel.`;
   // ── Poisson-estimated cards odds (injected into o when real quotes absent) ──
-  // Expected total cards: referee average is best predictor; fallback = league base × pressure
+  // Expected total cards: blended from referee avg (primary) + team card profiles (secondary).
+  // Team profiles (homeCardProfile.avgCards + awayCardProfile.avgCards) give per-team
+  // seasonal discipline data — Atlético-style vs. Man City-style tendencies captured.
+  // Fallback chain: refAvg only → blend ref+team → team only → league base + pressure.
   if (!o.cards_o35) {
-    // Base expected cards: referee Ø if known, else 3.5 league average
     const _leagueCardBase = ({ENG:3.8, GER:3.6, ITA:3.5, ESP:3.4, FRA:3.6, AUT:3.7,
                               NED:3.5, POR:3.8, TUR:4.2, SCO:4.0, POL:3.6, SUI:3.4})[leagueKey] || 3.5;
-    const _expCards = _refAvg !== null
-      ? _refAvg                                    // referee avg is single best predictor
-      : _leagueCardBase + (bothRed ? 0.8 : anyRed ? 0.4 : 0)  // fallback: league + stakes
-             + (bothNeedWin ? 0.5 : _anyNeedsWin ? 0.25 : 0);  // pressure bonus
+    // Team card sum: sum of each team's seasonal avg cards (home + away cards received)
+    const _hCP = match.homeCardProfile?.avgCards ?? null;
+    const _aCP = match.awayCardProfile?.avgCards  ?? null;
+    const _teamCardSum = (_hCP !== null && _aCP !== null) ? (_hCP + _aCP) : null;
+    // Blending: ref avg captures referee's control style; team sum captures team discipline.
+    // When both available: 60% ref weight (better predictor) + 40% team profile.
+    const _expCards = _refAvg !== null && _teamCardSum !== null
+      ? _refAvg * 0.60 + _teamCardSum * 0.40          // blend: ref is primary, team secondary
+      : _refAvg !== null
+        ? _refAvg                                      // ref only — single best predictor
+        : _teamCardSum !== null
+          ? _teamCardSum + (bothNeedWin ? 0.3 : _anyNeedsWin ? 0.15 : 0) // team + pressure
+          : _leagueCardBase + (bothRed ? 0.8 : anyRed ? 0.4 : 0)         // pure fallback
+               + (bothNeedWin ? 0.5 : _anyNeedsWin ? 0.25 : 0);
     const _cOdds = estimateCardsOdds(_expCards);
     if (!o.cards_o35) { o.cards_o35 = _cOdds.cards_o35; }
     if (!o.cards_o45) { o.cards_o45 = _cOdds.cards_o45; }
@@ -5224,6 +5238,27 @@ function getBettingPicks(match, odds, leagueKey) {
       const _cardOdds = cardMkt.includes('4.5') ? (o.cards_o45||null) : (o.cards_o35||null);
       // Max odds guard: cards > 3.20 means low card probability — not worth recommending.
       if (cardSc > 0 && _cardOdds != null && _cardOdds > 3.20) cardSc = 0;
+      // FV-Gate for cards: suppress if bookie implied prob exceeds Poisson fair prob by > GATE.GOALS_REAL.
+      // Uses same blended expected-cards formula as estimateCardsOdds() injection above.
+      // SYNC:GATE — threshold === GATE_GOALS_REAL in check_picks_logic.py
+      if (cardSc > 0 && _cardOdds != null) {
+        const _lcbG = ({ENG:3.8,GER:3.6,ITA:3.5,ESP:3.4,FRA:3.6,AUT:3.7,
+                        NED:3.5,POR:3.8,TUR:4.2,SCO:4.0,POL:3.6,SUI:3.4})[leagueKey] || 3.5;
+        const _hCPg = match.homeCardProfile?.avgCards ?? null;
+        const _aCPg = match.awayCardProfile?.avgCards  ?? null;
+        const _tcSumG = (_hCPg !== null && _aCPg !== null) ? (_hCPg + _aCPg) : null;
+        const _expCardsG = _refAvg !== null && _tcSumG !== null
+          ? _refAvg * 0.60 + _tcSumG * 0.40
+          : _refAvg !== null
+            ? _refAvg
+            : _tcSumG !== null
+              ? _tcSumG + (bothNeedWin?0.3:_anyNeedsWin?0.15:0)
+              : _lcbG + (bothRed?0.8:anyRed?0.4:0) + (bothNeedWin?0.5:_anyNeedsWin?0.25:0);
+        const _cardThresh = cardMkt.includes('4.5') ? 4.5 : 3.5;
+        const _fairCardP  = _poissonOver(_expCardsG, _cardThresh);
+        if (_hasNegEdge(_fairCardP, _cardOdds, o._cardsOddsEst||false, GATE.GOALS_REAL, GATE.GOALS_REAL))
+          cardSc = 0;
+      }
       if (cardSc > 0) sC.push({sc: cardSc, p:{icon: cardMkt.includes('4.5') ? '🟥' : '🟨',
         market: cardMkt, odds: _cardOdds, oddsIsEst: o._cardsOddsEst||false,
         // Cap at 'medium' when no referee data — cardsVeryHigh alone (pure team labels)
@@ -5525,6 +5560,14 @@ function getBettingPicks(match, odds, leagueKey) {
         mp = Math.min(0.88, Math.max(0.05, mp));
         if (bothNeedWin)       mp = Math.min(0.78 + _lgCap, mp + _pressureBoost * 0.50);
         else if (_anyNeedsWin) mp = Math.min(0.70 + _lgCap, mp + _pressureBoost * 0.28);
+        // H2H modifiers at ×0.35 (half weight vs O2.5 — same direction, less precision at 3.5 line)
+        if (_h2hSample && _h2hOver25 != null) mp = Math.min(0.88, mp + _h2hO25Mod * 0.35);
+        if (_h2hSample && _h2hAvgG   != null) mp = Math.min(0.88, mp + _h2hAvgGMod * 0.35);
+        // API prediction: halved vs O2.5 signal (API model targets 2.5 line, less precise for 3.5)
+        if (_apiUO === 'Over 2.5')  mp = Math.min(0.88, mp + 0.025);
+        else if (_apiUO === 'Under 2.5') mp = Math.max(0.05, mp - 0.020);
+        // Line movement — same direction as O/U 2.5
+        mp = Math.min(0.88, Math.max(0.05, mp + _lmO));
         // Market anchor: use real O3.5 odds if available, otherwise derive from O2.5 (less accurate)
         if (o.o35) { const _mktO35 = 1 / o.o35 / (1/o.o35 + (o.u35 ? 1/o.u35 : (1 - 1/o.o35))); mp = Math.min(_mktO35 + 0.12, mp); }
         else if (o.o25 && o.u25) { const _mktO35 = (1/o.o25)/((1/o.o25)+(1/o.u25)) * 0.55; mp = Math.min(_mktO35 + 0.12, mp); }
@@ -12238,7 +12281,9 @@ function _injectPreMatchAndRerender() {
       if (!pm) continue;
 
       // Referee
-      if (pm.refereeStats) match.refereeStats = pm.refereeStats;
+      if (pm.refereeStats)     match.refereeStats     = pm.refereeStats;
+      if (pm.homeCardProfile)  match.homeCardProfile  = pm.homeCardProfile;
+      if (pm.awayCardProfile)  match.awayCardProfile  = pm.awayCardProfile;
 
       // API Prediction (goals, percentages, Poisson distribution)
       if (pm.apiPrediction) match.apiPrediction = pm.apiPrediction;

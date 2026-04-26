@@ -522,6 +522,35 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
                  f"{', '.join(low_red_teams)}: motivationLevel='low' (fast gerettet) — "
                  f"Karten-Pick nur mit Schiedsrichter-Evidenz sinnvoll. Kein Fehler — manuell prüfen.")
 
+    # ── Cards FV Gate Plausibilität ─────────────────────────────────────────────
+    # Prüft ob Karten-picks mit sehr niedrigem Poisson-FV trotzdem erscheinen.
+    # JS gate feuert wenn (1/bookie_odds) - fair_prob > GATE.GOALS_REAL (0.12).
+    # SYNC:GATE — gate fires at GATE_GOALS_REAL (0.12) in season-finish.html for cards.
+    # Hinweis: Validator kennt kein refAvg — nutzt Liga-Baserate als konservativen Proxy.
+    # In JS ist refAvg der primäre Predictor; Validator-FV kann davon abweichen.
+    _league_card_base = {
+        'ENG': 3.8, 'GER': 3.6, 'ITA': 3.5, 'ESP': 3.4, 'FRA': 3.6, 'AUT': 3.7,
+        'NED': 3.5, 'POR': 3.8, 'TUR': 4.2, 'SCO': 4.0, 'POL': 3.6, 'SUI': 3.4
+    }.get(league_key, 3.5)
+    _fv_c35 = poisson_over(_league_card_base, 3.5)
+    _fv_c45 = poisson_over(_league_card_base, 4.5)
+    # Typical Über 3.5 odds: ~1.75–1.90 (impl. prob ~53–57%); gate at gap > 0.12
+    # → flag when FV < 0.40 (gap ≥ ~14pp at 1.80 odds)
+    if _fv_c35 < 0.40:
+        flag("WARN", "CARDS35_LOW_FV",
+             f"Liga-Baserate={_league_card_base:.1f} → Poisson FV für Über 3.5 Karten = {_fv_c35:.1%} "
+             f"(typische Quote ~1.80 → impl.Prob ~55.6%; Lücke ~{0.556 - _fv_c35:+.1%}). "
+             f"FV-Gate (GATE_GOALS_REAL=0.12) sollte Karten-3.5-Pick blocken. "
+             f"Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.")
+    # Typical Über 4.5 odds: ~2.10–2.40 (impl. prob ~42–48%); gate at gap > 0.12
+    # → flag when FV < 0.28
+    if _fv_c45 < 0.28:
+        flag("WARN", "CARDS45_LOW_FV",
+             f"Liga-Baserate={_league_card_base:.1f} → Poisson FV für Über 4.5 Karten = {_fv_c45:.1%} "
+             f"(typische Quote ~2.20 → impl.Prob ~45.5%; Lücke ~{0.455 - _fv_c45:+.1%}). "
+             f"FV-Gate (GATE_GOALS_REAL=0.12) sollte Karten-4.5-Pick blocken. "
+             f"Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.")
+
     # ── H2H-basierte Goals-Checks ─────────────────────────────────────────────
     h2h_avg_g = h2h.get("avgGoals")
     h2h_btts  = h2h.get("btts")   # BTTS-Rate als Dezimal (0.0–1.0)

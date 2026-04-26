@@ -691,6 +691,50 @@ function _saveRefereeCache() {
   catch(e) { console.warn('[Referee] Cache speichern fehlgeschlagen:', e.message); }
 }
 
+// ── Team card profile cache (72h TTL, persisted to team-cards-cache.json) ────
+// Stores avgCards/avgYellow/games per team — from /teams/statistics season stats.
+// Key: "{teamId}-{leagueId}" — one call per unique team+league per run.
+// avgCards = (totalYellow + totalRed) / gamesPlayed for current season.
+// Used as additional predictor for expected cards in a match alongside refAvg.
+const TEAM_CARDS_CACHE_FILE = path.join(__dirname, 'team-cards-cache.json');
+const TEAM_CARDS_TTL = 72 * 3600 * 1000;
+let _teamCardsCache = {};
+try {
+  _teamCardsCache = JSON.parse(fs.readFileSync(TEAM_CARDS_CACHE_FILE, 'utf8'));
+  const _alive = Object.keys(_teamCardsCache).filter(k => Date.now() - (_teamCardsCache[k]?.ts||0) < TEAM_CARDS_TTL).length;
+  console.log(`[TeamCards] Cache geladen: ${Object.keys(_teamCardsCache).length} Teams (${_alive} noch gültig)`);
+} catch(e) { /* first run */ }
+
+async function fetchTeamCardProfile(teamId, leagueId) {
+  if (!teamId || !leagueId) return null;
+  const key = `${teamId}-${leagueId}`;
+  const cached = _teamCardsCache[key];
+  if (cached && Date.now() - cached.ts < TEAM_CARDS_TTL) return cached.data;
+  try {
+    const data = await apiFetch(`/teams/statistics?team=${teamId}&season=2025&league=${leagueId}`);
+    const resp = data.response;
+    if (!resp) { _teamCardsCache[key] = { ts: Date.now(), data: null }; return null; }
+    const games = resp.fixtures?.played?.total || 0;
+    if (!games) { _teamCardsCache[key] = { ts: Date.now(), data: null }; return null; }
+    // Sum all time-interval totals for yellow and red cards
+    const _sumCards = (obj) => Object.values(obj || {}).reduce((s, v) => s + (v?.total || 0), 0);
+    const totalYellow = _sumCards(resp.cards?.yellow);
+    const totalRed    = _sumCards(resp.cards?.red);
+    const result = {
+      teamId,
+      avgCards:  Math.round((totalYellow + totalRed) / games * 100) / 100,
+      avgYellow: Math.round(totalYellow / games * 100) / 100,
+      games,
+    };
+    _teamCardsCache[key] = { ts: Date.now(), data: result };
+    return result;
+  } catch(e) { return null; }
+}
+function _saveTeamCardsCache() {
+  try { fs.writeFileSync(TEAM_CARDS_CACHE_FILE, JSON.stringify(_teamCardsCache)); }
+  catch(e) { console.warn('[TeamCards] Cache speichern fehlgeschlagen:', e.message); }
+}
+
 // ── Compute injury impact score (0–6 scale) ──────────────────────────────────
 function computeInjuryImpact(inj) {
   // Weights per position: based on how replaceable each role is
@@ -1197,6 +1241,41 @@ async function fetchAllPrematchData() {
   const refOk = fixtures.filter(d => d.refereeStats).length;
   console.log(`  Step4 fertig: ${refOk}/${uniqueRefs.length} Schiris mit Stats`);
 
+  // ── Step 4.5: Team Card Profiles (72h disk cache, 1 call per unique team) ──
+  // Fetches /teams/statistics for each team (season 2025) to get per-team avgCards.
+  // Used in getBettingPicks() to improve expected-cards estimate alongside refAvg.
+  // Formula in JS: expectedCards = homeCardProfile.avgCards + awayCardProfile.avgCards
+  // Only fetches stale entries — typical run costs ~30–40 calls (teams not yet cached).
+  const _teamCardKeys = new Set();
+  for (const d of upcoming) {
+    if (d.homeTeamId && d.leagueId) _teamCardKeys.add(`${d.homeTeamId}-${d.leagueId}`);
+    if (d.awayTeamId && d.leagueId) _teamCardKeys.add(`${d.awayTeamId}-${d.leagueId}`);
+  }
+  const _staleTeamCards = [..._teamCardKeys].filter(k => {
+    const c = _teamCardsCache[k];
+    return !c || Date.now() - c.ts >= TEAM_CARDS_TTL;
+  });
+  console.log(`[Server] Step4.5: Team-Karten-Profile: ${_teamCardKeys.size} Teams (${_staleTeamCards.length} neu laden, ${_teamCardKeys.size - _staleTeamCards.length} gecacht)...`);
+  for (const k of _staleTeamCards) {
+    const [teamId, leagueId] = k.split('-').map(Number);
+    await fetchTeamCardProfile(teamId, leagueId);
+    await sleep(CALL_DELAY);
+  }
+  if (_staleTeamCards.length) _saveTeamCardsCache();
+  // Enrich fixtures with team card profiles
+  let cardProfileOk = 0;
+  for (const d of upcoming) {
+    if (d.homeTeamId && d.leagueId) {
+      const cp = _teamCardsCache[`${d.homeTeamId}-${d.leagueId}`]?.data;
+      if (cp) { d.homeCardProfile = cp; cardProfileOk++; }
+    }
+    if (d.awayTeamId && d.leagueId) {
+      const cp = _teamCardsCache[`${d.awayTeamId}-${d.leagueId}`]?.data;
+      if (cp) { d.awayCardProfile = cp; }
+    }
+  }
+  console.log(`  Step4.5 fertig: ${cardProfileOk} Heimteams mit Karten-Profil`);
+
   // ── Step 5: The Odds API — Pre-Match Odds ────────────────────────────────
   // One API call per league fetches ALL upcoming fixtures' odds at once.
   // Covers same-day games (unlike API-Football which stops ~4 days before kickoff).
@@ -1355,6 +1434,40 @@ async function fetchAllPrematchData() {
     } else { oddsMiss++; }
   }
   console.log(`  Step5 fertig: ${oddsOk} OK · ${oddsMiss} kein Match (von ${upcoming.length} Spielen)`);
+
+  // ── Step 5e: API-Football /odds fallback for fixtures missed by TheOddsAPI ──
+  // TheOddsAPI doesn't cover every league/fixture (e.g. AUT, HUN, CRO, POL minor rounds).
+  // For fixtures still missing odds, try API-Football /odds with Pinnacle (bookmaker=8).
+  // Returns 1X2 + Goals O/U — enough for the main picks engine to work.
+  // Only runs if there are misses — zero cost when TheOddsAPI covers everything.
+  const _oddsMissing = upcoming.filter(d => !d.odds);
+  if (_oddsMissing.length > 0) {
+    console.log(`[Server] Step5e: API-Football Odds-Fallback für ${_oddsMissing.length} Spiele ohne Quoten...`);
+    let fallbackOk = 0, fallbackMiss = 0;
+    for (const d of _oddsMissing) {
+      await sleep(600);
+      try {
+        const data = await apiFetch(`/odds?fixture=${d.fixtureId}&bookmaker=8`);
+        const resp = (data.response || [])[0];
+        if (!resp) { fallbackMiss++; continue; }
+        // API-Football odds structure: resp.bookmakers[].bets[]
+        const bookmakers = resp.bookmakers || [];
+        if (!bookmakers.length) { fallbackMiss++; continue; }
+        const parsed = parseBets(bookmakers);
+        if (parsed.hw && parsed.dr && parsed.aw) {
+          d.odds = parsed;
+          d.odds._fromApifootball = true; // flag: came from fallback source
+          fallbackOk++;
+        } else {
+          fallbackMiss++;
+        }
+      } catch(e) {
+        console.warn(`  [Step5e] ${d.homeTeamName} vs ${d.awayTeamName}: ${e.message}`);
+        fallbackMiss++;
+      }
+    }
+    console.log(`  Step5e fertig: ${fallbackOk} Fallback-Quoten · ${fallbackMiss} weiterhin ohne`);
+  }
 
   // ── Step 5.5: API Predictions ─────────────────────────────────────────────
   // /predictions returns the API-Football model's expected goals, result percentages
