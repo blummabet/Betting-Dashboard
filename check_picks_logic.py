@@ -43,6 +43,20 @@ from datetime import datetime, timedelta
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_FILE  = os.path.join(SCRIPT_DIR, "season-finish.html")
 
+# ── Poisson-Hilfsfunktion (identisch mit JS _poissonOver) ────────────────────
+import math
+
+def poisson_over(lam, threshold):
+    """P(X > threshold) für Poisson(lambda). Threshold ist die .5-Linie."""
+    if lam <= 0:
+        return 0.5
+    k = int(threshold)  # P(X > k+0.5) = P(X >= k+1) = 1 - CDF(k)
+    cdf, term = 0.0, math.exp(-lam)
+    for i in range(k + 1):
+        cdf += term
+        term *= lam / (i + 1)
+    return max(0.02, min(0.98, 1 - cdf))
+
 # ── Ceiling-Logik (identisch mit JS/Python) ───────────────────────────────────
 def score_ceiling(rounds_left):
     rl = rounds_left
@@ -501,22 +515,27 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
     h2h_avg_g = h2h.get("avgGoals")
     h2h_btts  = h2h.get("btts")   # BTTS-Rate als Dezimal (0.0–1.0)
 
-    # 🟡 WARNUNG: H2H Schnitt hoch → Under 2.5 Pick wäre falsch
-    # Fix April 2026: _h2hAvgG >= 2.8 → sc -= 0.16, >= 3.0 → sc -= 0.30, >= 3.5 → sc -= 0.45
-    # Prüft ob der Guard korrekt feuert (kann Picks selbst nicht lesen).
-    if h2h_avg_g is not None and h2h_avg_g >= 3.0:
+    # 🔴 FEHLER: H2H Schnitt ≥ 3.5 → Under 2.5 HARD BLOCK hätte feuern müssen
+    # Fix April 2026: Hard Block bei H2H avgG ≥ 3.5 (sc=0). Falls Under 2.5 trotzdem erscheint: Bug.
+    if h2h_avg_g is not None and h2h_avg_g >= 3.5:
+        flag("ERROR", "U25_H2H_HARD_BLOCK_MISS",
+             f"H2H Schnitt={h2h_avg_g:.1f} Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. "
+             f"Falls Under 2.5 Pick im Dashboard erscheint: H2H-Hard-Block-Bug prüfen.")
+    # 🟡 WARNUNG: H2H Schnitt 3.0–3.5 → starke Dämpfung aktiv, Under 2.5 prüfen
+    elif h2h_avg_g is not None and h2h_avg_g >= 3.0:
         flag("WARN", "H2H_HIGH_AVG_UNDER_RISK",
-             f"H2H Schnitt={h2h_avg_g:.1f} Tore (≥3.0). "
-             f"Under 2.5 Pick wäre kontraindiziert — JS H2H-Guard muss sc -= 0.30+ anwenden. "
-             f"Falls Under-Pick trotzdem erscheint: H2H-Guard-Bug.")
+             f"H2H Schnitt={h2h_avg_g:.1f} Tore (3.0–3.5). "
+             f"Starke Dämpfung aktiv (sc -= 0.35). Falls Under 2.5 [medium] erscheint: Guard nicht stark genug.")
 
-    # 🟡 WARNUNG: H2H BTTS-Rate hoch → Under 2.5 Pick riskant
-    # Fix April 2026: _h2hBtts >= 0.60 → sc -= 0.12, >= 0.70 → sc -= 0.20
-    if h2h_btts is not None and h2h_btts >= 0.65:
+    # 🟡 WARNUNG: H2H BTTS-Rate ≥ 75% → Under 2.5 HARD BLOCK hätte feuern müssen
+    if h2h_btts is not None and h2h_btts >= 0.75:
+        flag("ERROR", "U25_BTTS_HARD_BLOCK_MISS",
+             f"H2H BTTS={h2h_btts:.0%} (≥75%) — HARD BLOCK sollte Under 2.5 komplett blocken. "
+             f"Falls Under 2.5 Pick erscheint: BTTS-Hard-Block-Bug.")
+    elif h2h_btts is not None and h2h_btts >= 0.65:
         flag("WARN", "H2H_HIGH_BTTS_UNDER_RISK",
-             f"H2H BTTS={h2h_btts:.0%} (≥65%). Under-Pick riskant — "
-             f"JS BTTS-Guard muss sc -= 0.12 bis 0.20 anwenden. "
-             f"Falls Under-Pick trotzdem erscheint: BTTS-Guard-Bug.")
+             f"H2H BTTS={h2h_btts:.0%} (65–75%). Starke Dämpfung aktiv. "
+             f"Falls Under 2.5 [medium] erscheint: BTTS-Guard-Schwellenwert prüfen.")
 
     # 🟡 WARNUNG: H2H Schnitt sehr niedrig + Saisonschnitt niedrig → Over riskant
     # Under-Bias ist in diesem Fall legitim und kein Fehler.
@@ -528,6 +547,29 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
             flag("INFO", "LOW_GOALS_UNDER_EXPECTED",
                  f"H2H Schnitt={h2h_avg_g:.1f} + Saisonschnitt komb.={combined_check:.1f}/Sp. "
                  f"Starker Under-Bias legitim — kein Fehler. Over 2.5 Pick hier wäre falsch.")
+
+    # ── Poisson FV Plausibilitätsprüfung (Daten-Ebene) ───────────────────────
+    # Berechnet den theoretischen Fair-Value-Bereich für Goals-Picks.
+    # Da der Python-Validator keine Bookie-Quoten liest, prüft er nur die FV-Seite:
+    # Wenn expGoals sehr nahe an 2.5 ist, kann FV-Gate einen Over-Pick blocken.
+    h_gpg = hf.get("goalsPerGame") or 0
+    a_gpg = af.get("goalsPerGame") or 0
+    exp_goals_proxy = (h_gpg + a_gpg)   # Summe beider Teams ≈ expGoals
+
+    if exp_goals_proxy > 0:
+        fv_o25 = poisson_over(exp_goals_proxy, 2.5)
+        fv_o35 = poisson_over(exp_goals_proxy, 3.5)
+        # 🟡 HINWEIS: Over 2.5 FV unter 40% → Markt braucht Quoten ≥ 2.50 für Edge
+        # Wenn FV so niedrig ist, sind typische Bookie-Quoten (~1.75–2.00) oft negativ.
+        if exp_goals_proxy < 2.2 and fv_o25 < 0.40:
+            flag("INFO", "LOW_SCORING_PROFILE",
+                 f"Ø gpg={exp_goals_proxy:.2f}, H2H Ø={h2h_avg_g:.1f} Tore — "
+                 f"Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt")
+        # 🟡 WARNUNG: Over 3.5 FV unter 20% → fast immer negativer Edge bei Bookie-Quoten
+        if exp_goals_proxy > 0 and fv_o35 < 0.20:
+            flag("WARN", "OVER35_LOW_FV",
+                 f"Ø gpg={exp_goals_proxy:.2f} → Poisson FV für Over 3.5 = {fv_o35:.1%} "
+                 f"(sehr niedrig). FV-Gate sollte Over 3.5 Pick bei üblichen Quoten (< 4.00) blocken.")
 
     return issues
 

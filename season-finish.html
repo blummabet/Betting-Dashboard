@@ -4739,10 +4739,13 @@ function getBettingPicks(match, odds, leagueKey) {
       const _ao35Best = _pickBestLine(o.ao_lines, 1.62, 2.75, 3.5);
       const _o35Odds  = _ao35Best ? _ao35Best.price : o.o35;
       const _o35Pt    = _ao35Best ? _ao35Best.pt    : 3.5;
-      // Note: no negative edge gate for goals — the Hard Gate (expGoals >= threshold) already
-      // prevents the main anomaly case. A goals Poisson gate at 12pp would suppress valid
-      // picks (e.g. Bundesliga Over 3.5 at 1.65 with expGoals=3.2 → 14pp gap → false block).
-      gC.push({sc, p:{icon:'🔥', market:`Over ${_o35Pt} Tore`, odds:_o35Odds,
+      // 🔑 NEGATIVE EDGE GATE: Poisson-FV-Check — nur bei echten Bookie-Quoten (nicht estimated).
+      // Threshold 12pp: wenn Bookie-Wahrscheinlichkeit unsere FV um >12pp überschreitet → kein Edge.
+      // Schützt vor strukturell negativen Picks (z.B. Over 3.5 @ 1.65 mit expGoals=3.2 → FV=2.50).
+      const _o35FairProb = (!odds?._isEstimated && _o35Odds != null)
+        ? _poissonOver(expGoals, 3.5) : null;
+      const _o35NegEdge = _o35FairProb != null && (1 / _o35Odds) - _o35FairProb > 0.12;
+      if (!_o35NegEdge) gC.push({sc, p:{icon:'🔥', market:`Over ${_o35Pt} Tore`, odds:_o35Odds,
         conf: sc>0.68?'high':sc>0.44?'medium':'low',
         reason:`${_o35BaseNote}${_o35H2hNote}${_bothAttLine}`}}); }
 
@@ -4801,11 +4804,13 @@ function getBettingPicks(match, odds, leagueKey) {
         const _ao25Best = _pickBestLine(o.ao_lines, 1.62, 2.0, 2.5);
         const _o25Odds  = _ao25Best ? _ao25Best.price : o.o25;
         const _o25Pt    = _ao25Best ? _ao25Best.pt    : 2.5;
-        // Note: no negative edge gate for goals — the Hard Gate (expGoals >= 2.5) already
-        // prevents the Servette-type anomaly. A Poisson gate at 12pp suppresses valid picks:
-        // e.g. Bundesliga Over 2.5 @ 1.65 with expGoals=2.6 → 12.6pp gap → false block.
-        // Corners gate kept (Poisson more accurate there; market less efficient).
-        gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
+        // 🔑 NEGATIVE EDGE GATE: Poisson-FV-Check (identisch Corners-Logik).
+        // Bei echter Bookie-Quote: wenn implizierte Wahrscheinlichkeit FV um >12pp überschreitet → kein Edge.
+        // (Frühere Annahme "Hard Gate reicht" war falsch: expGoals=2.5 mit Odds 1.65 hat -15pp Edge)
+        const _o25FairProb = (!odds?._isEstimated && _o25Odds != null)
+          ? _poissonOver(expGoals, 2.5) : null;
+        const _o25NegEdge = _o25FairProb != null && (1 / _o25Odds) - _o25FairProb > 0.12;
+        if (!_o25NegEdge) gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
           conf: sc>0.66?'high':sc>0.46?'medium':'low',
           reason:`${_o25BaseNote}${_o25H2hNote}${_o25ApiNote}${_bothAttLine}`}}); } }
 
@@ -4822,16 +4827,17 @@ function getBettingPicks(match, odds, leagueKey) {
       sc = Math.min(0.92, Math.max(0, sc - _h2hO25Mod - _h2hAvgGMod));
       // 🔑 H2H HARD GATE: wenn H2H-Durchschnitt deutlich über der Under-2.5-Linie liegt,
       // ist der Pick strukturell widerlegbar — die Paarung produziert historisch mehr Tore.
-      // z.B. Estrela vs Porto: H2H Ø 2.8 Tore / 67% BTTS → Under 2.5 ist kontraindiziert.
-      // Schwellenwerte: etwas milder als Under 1.5, da Under 2.5 mehr Spielraum hat.
+      // Analog zu Under 1.5 (HARD BLOCK bei ≥ 2.5 Ø): Under 2.5 HARD BLOCK bei ≥ 3.5 Ø.
+      // Unter diesem Niveau: starke Dämpfung statt Hard Block (da Under 2.5 mehr Spielraum hat).
       if (_h2hSample && _h2hAvgG != null) {
-        if      (_h2hAvgG >= 3.5) sc = Math.max(0, sc - 0.45); // sehr torreich historisch
-        else if (_h2hAvgG >= 3.0) sc = Math.max(0, sc - 0.30); // klar über der Linie
-        else if (_h2hAvgG >= 2.8) sc = Math.max(0, sc - 0.16); // leicht über der Linie
+        if      (_h2hAvgG >= 3.5) sc = 0;                        // HARD BLOCK — H2H widerlegt eindeutig (Ø ≥ 3.5 Tore)
+        else if (_h2hAvgG >= 3.0) sc = Math.max(0, sc - 0.35);  // starke Dämpfung
+        else if (_h2hAvgG >= 2.8) sc = Math.max(0, sc - 0.18);  // moderate Dämpfung
       }
       if (_h2hSample && _h2hBtts != null) {
-        if      (_h2hBtts >= 0.70) sc = Math.max(0, sc - 0.20); // beide treffen sehr häufig
-        else if (_h2hBtts >= 0.60) sc = Math.max(0, sc - 0.12); // beide treffen häufig → Under fragwürdig
+        if      (_h2hBtts >= 0.75) sc = 0;                        // HARD BLOCK — BTTS 75%+ widerlegt Under 2.5
+        else if (_h2hBtts >= 0.65) sc = Math.max(0, sc - 0.22); // beide treffen sehr häufig → starke Dämpfung
+        else if (_h2hBtts >= 0.55) sc = Math.max(0, sc - 0.12); // beide treffen häufig → leichte Dämpfung
       }
       // 🔑 CLEAN SHEET / FAILED TO SCORE: defensive teams at home + struggling away attackers → Under
       if (_hCSHome !== null && _aCSAway !== null) {
@@ -4856,7 +4862,9 @@ function getBettingPicks(match, odds, leagueKey) {
       const _u25Reason = _favWeak > 0.4 && _u25DefTeam
         ? `${_u25DefTeam} dominiert dieses Spiel — der schwächere Angriff (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} Tore/Spiel) kommt kaum zu Chancen. Weniger als 3 Tore sind zu erwarten.${_u25H2hNote}${_u25CSNote}${_pressWarn}${_bothDefLine}`
         : `Das Modell erwartet nur ${expGoals.toFixed(1)} Tore insgesamt — ${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) sind beide offensiv zu schwach für viele Treffer.${_u25H2hNote}${_u25CSNote}${_pressWarn}${_bothDefLine}`;
-      gC.push({sc, p:{icon:'🛡️', market:'Under 2.5 Tore', odds:o.u25,
+      // 🔑 MINIMUM THRESHOLD: Under 2.5 nur pushen wenn sc ≥ 0.38
+      // Verhindert schwache Restpicks (nach H2H-Dämpfung) im Low-Conf-Bereich
+      if (sc >= 0.38) gC.push({sc, p:{icon:'🛡️', market:'Under 2.5 Tore', odds:o.u25,
         conf: sc>0.68?'high':sc>0.48?'medium':'low',
         reason: _u25Reason}}); }
 
@@ -4916,9 +4924,18 @@ function getBettingPicks(match, odds, leagueKey) {
       const _bttsH2hNote = (_h2hSample && _h2hBtts != null)
         ? ` Historisch ${Math.round(_h2hBtts*100)}% der ${h2hN} Duelle mit Toren auf beiden Seiten.`
         : '';
-      gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:o.bttsY||null, oddsIsEst: o._bttsOddsEst||false,
-        conf: sc>0.65?'high':sc>0.44?'medium':'low',
-        reason:`${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu. Beide Teams werden voraussichtlich treffen.${_bttsH2hNote}${_bttsPressNote}${_bothAttLine}`}}); }
+      // 🔑 BTTS NEGATIVE EDGE GATE: Poisson-basiert, getrennte Heim/Auswärts-Erwartungen.
+      // P(BTTS) = P(home≥1) × P(away≥1) = (1 - e^-expH) × (1 - e^-expA)
+      // Nur bei echten BTTS-Quoten (nicht estimated) prüfen.
+      { const _expH = Math.max(0.1, (homeAttStr + awayDefStr) / 2);
+        const _expA = Math.max(0.1, (awayAttStr + homeDefStr) / 2);
+        const _bttsFairProb = (!o._bttsOddsEst && o.bttsY != null)
+          ? (1 - Math.exp(-_expH)) * (1 - Math.exp(-_expA)) : null;
+        const _bttsNegEdge = _bttsFairProb != null && (1 / o.bttsY) - _bttsFairProb > 0.12;
+        if (!_bttsNegEdge) gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:o.bttsY||null, oddsIsEst: o._bttsOddsEst||false,
+          conf: sc>0.65?'high':sc>0.44?'medium':'low',
+          reason:`${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu. Beide Teams werden voraussichtlich treffen.${_bttsH2hNote}${_bttsPressNote}${_bothAttLine}`}}); }
+      }
 
     // BTTS Nein
     { const bothAttWeak = homeAttStr < 0.88 && awayAttStr < 0.82;
@@ -5138,12 +5155,21 @@ function getBettingPicks(match, odds, leagueKey) {
       // to justify a cards pick. Without ref data the base rate is unknown — suppress.
       // If BOTH teams are confirmed relegated (both motiv='none'), kill the pick entirely:
       // two teams rotating and coasting = no real desperation = fewer cards, not more.
-      // 🔑 CONFIRMED RELEGATED SUPPRESSION (Fix Apr 2026, verschärft Apr 2026)
-      // Abgestiegene Teams haben keinen Druckdruck mehr → Karten-Pick nur mit
-      // klarer Schiri-Evidenz erlauben. Threshold auf ≥ 4.5 erhöht (war 3.5):
-      // 3.5 Karten/Spiel ist normal — erst ≥ 4.5 ist echte Karten-Tendenz.
-      if (cardSc > 0 && _bothRedConf) cardSc = 0;
-      else if (cardSc > 0 && _anyRedConf && (_refAvg == null || _refAvg < 4.5)) cardSc = 0;
+      // 🔑 CONFIRMED RELEGATED SUPPRESSION (Fix Apr 2026, verfeinert Apr 2026)
+      // Abgestiegene Teams haben keinen Abstiegsdruck mehr → Karten-Pick reduziert oder geblockt.
+      // Logik: _refAvg == null → kein Cache-Eintrag für diesen Schiri (≠ "kein kartenlastiger Schiri").
+      // Statt Null-Komplett-Suppression: Liga-Baserate (3.5) als konservativer Default.
+      //   < 3.0 Karten/Spiel (leonischer Schiri) → ganz supprimieren
+      //   3.0–4.5 Karten/Spiel (Durchschnitt + kein Ref-Datum) → stark reduzieren (×0.60)
+      //   ≥ 4.5 Karten/Spiel (kartenlastiger Schiri) → nur leicht reduzieren (×0.85)
+      if (cardSc > 0 && _bothRedConf) {
+        cardSc = 0; // beide abgestiegen → kein Druck, kein Pick
+      } else if (cardSc > 0 && _anyRedConf) {
+        const _refForCards = _refAvg ?? 3.5; // null → konservativer Ligadurchschnitt
+        if      (_refForCards < 3.0) cardSc = 0;          // leonischer Schiri → kein Pick
+        else if (_refForCards < 4.5) cardSc *= 0.60;      // Durchschnitt/kein Datum → stark reduzieren
+        // ≥ 4.5: kartenlastiger Schiri → kein Extra-Penalty (Standardreduzierung durch Ligadurchschnitt reicht)
+      }
       const _cardOdds = cardMkt.includes('4.5') ? (o.cards_o45||null) : (o.cards_o35||null);
       // Max odds guard: cards > 3.20 means low card probability — not worth recommending.
       if (cardSc > 0 && _cardOdds != null && _cardOdds > 3.20) cardSc = 0;
@@ -5889,7 +5915,9 @@ function computeMatchScore(match, leagueKey) {
   // ── motivationLevel penalty: secured/confirmed teams rotate & coast ─────
   // 'none' = mathematically confirmed → expect squad rotation, lower intensity.
   // 'low'  = practically decided — team knows it won't make it, going through motions.
-  // Hard caps prevent meaningless end-of-season matches from reaching top-card range.
+  // NOTE: Hard caps are NOT applied here — a final _motCap is enforced at the return statement
+  // after all bonuses (form, goals, H2H) have been applied. Mid-function caps were bypassed
+  // by subsequent bonuses, so only the terminal cap is authoritative.
   {
     const hMot = match.homeStake?.motivationLevel;
     const aMot = match.awayStake?.motivationLevel;
@@ -5897,14 +5925,6 @@ function computeMatchScore(match, leagueKey) {
     else if (hMot === 'none' || aMot === 'none') score -= 1.0; // one team coasting
     else if (hMot === 'low'  && aMot === 'low')  score -= 0.6; // both nearly done
     else if (hMot === 'low'  || aMot === 'low')  score -= 0.3; // one nearly done
-
-    // ── Hard caps: prevent low-interest matches from sneaking into top-card range ──
-    // Both 'low': checked-out teams → max 8 (can't be Top Card at ≥10 threshold)
-    // Both 'none': confirmed dead rubber → max 6
-    // One 'none': one team coasting → max 8
-    if      (hMot === 'none' && aMot === 'none') score = Math.min(score, 6);
-    else if (hMot === 'none' || aMot === 'none') score = Math.min(score, 8);
-    else if (hMot === 'low'  && aMot === 'low')  score = Math.min(score, 8);
   }
 
   // ── Form-based modifier (mirrors Python logic) ──────────────────────────
@@ -9692,11 +9712,16 @@ function runPicksValidator() {
           }
         }
 
-        // 🔴 Under 2.5 Pick aber H2H deutlich zu hoch
+        // 🔴 Under 2.5 Pick aber H2H widerlegt ihn mit Hard Block (≥ 3.5 Ø sollte geblockt haben)
         const _under25PickH2h = _genPicks.find(p => p.market === 'Under 2.5 Tore');
-        if (_under25PickH2h && h2hGames >= 4 && h2hAvgGoals >= 3.0) {
-          flag('error', 'U25_H2H_CONTRADICT',
-            `Under 2.5 Pick [${_under25PickH2h.conf}] aber H2H Ø=${h2hAvgGoals.toFixed(1)} Tore (${h2hGames} Sp.) — H2H-Guard (-0.30) hat Pick nicht blockiert.`);
+        if (_under25PickH2h && h2hGames >= 4) {
+          if (h2hAvgGoals >= 3.5) {
+            flag('error', 'U25_H2H_HARD_BLOCK_MISS',
+              `Under 2.5 Pick [${_under25PickH2h.conf}] aber H2H Ø=${h2hAvgGoals.toFixed(1)} Tore (${h2hGames} Sp.) — HARD BLOCK (≥3.5) hat nicht gegriffen.`);
+          } else if (h2hAvgGoals >= 3.0) {
+            flag('warn', 'U25_H2H_CONTRADICT',
+              `Under 2.5 Pick [${_under25PickH2h.conf}] aber H2H Ø=${h2hAvgGoals.toFixed(1)} Tore (${h2hGames} Sp.) — starke Dämpfung aktiv, Pick prüfen.`);
+          }
         }
 
         // 🔴 Karten-Pick für bestätigt abgestiegenes Team ohne Schiri-Evidenz
@@ -9792,6 +9817,48 @@ function runPicksValidator() {
           const _homeSc = _genPicks.find(p => p.market === 'Heimsieg' || p.market.startsWith('AH Heim'))?.sc ?? null;
           if (_homeSc !== null && _homeSc < 0.45) {
             flag('warn', 'ASYMMETRY_WEAK_HOME_SC', `${fx.away} abgestiegen (none) + ${fx.home} kompetitiv — aber Heimsieg sc=${_homeSc.toFixed(2)} noch unter Medium. Stake-Label für ${fx.home} fehlt?`);
+          }
+        }
+
+        // 🔴 Goals FV Negative Edge — Over 2.5 / Over 3.5 mit negativem Poisson-Edge
+        // Prüft ob FV-Gate (neu Apr 2026) Pick korrekt geblockt hätte
+        { const _o25p = _genPicks.find(p => p.market?.startsWith('Over 2.5') || p.market?.startsWith('Über 2.5'));
+          if (_o25p && _o25p.odds != null && !_o25p.oddsIsEst) {
+            const _fv25 = _poissonOver(fx._expGoals ?? (hGPG + aGPG), 2.5);
+            const _gap25 = (1 / _o25p.odds) - _fv25;
+            if (_gap25 > 0.12) flag('error', 'OVER25_NEG_EDGE',
+              `Over 2.5 Pick [${_o25p.conf}] @ ${_o25p.odds} aber Poisson FV=${(_fv25*100).toFixed(1)}% (Implied=${(100/_o25p.odds).toFixed(1)}%, Gap=${(_gap25*100).toFixed(1)}pp) — FV-Gate sollte geblockt haben.`);
+          }
+          const _o35p = _genPicks.find(p => p.market?.startsWith('Over 3.5') || p.market?.startsWith('Über 3.5'));
+          if (_o35p && _o35p.odds != null && !_o35p.oddsIsEst) {
+            const _fv35 = _poissonOver(fx._expGoals ?? (hGPG + aGPG), 3.5);
+            const _gap35 = (1 / _o35p.odds) - _fv35;
+            if (_gap35 > 0.12) flag('error', 'OVER35_NEG_EDGE',
+              `Over 3.5 Pick [${_o35p.conf}] @ ${_o35p.odds} aber Poisson FV=${(_fv35*100).toFixed(1)}% (Implied=${(100/_o35p.odds).toFixed(1)}%, Gap=${(_gap35*100).toFixed(1)}pp) — FV-Gate sollte geblockt haben.`);
+          }
+        }
+        // 🔴 BTTS FV Negative Edge
+        { const _bttsp = _genPicks.find(p => p.market === 'Beide Teams treffen');
+          if (_bttsp && _bttsp.odds != null && !_bttsp.oddsIsEst) {
+            const _expH = Math.max(0.1, (hGPG + aGPG * 0.5) * 0.65); // rough proxy
+            const _expA = Math.max(0.1, (aGPG + hGPG * 0.5) * 0.65);
+            const _bttsFV = (1 - Math.exp(-_expH)) * (1 - Math.exp(-_expA));
+            const _bttsGap = (1 / _bttsp.odds) - _bttsFV;
+            if (_bttsGap > 0.14) flag('error', 'BTTS_NEG_EDGE',
+              `BTTS Pick [${_bttsp.conf}] @ ${_bttsp.odds} aber Poisson FV≈${(_bttsFV*100).toFixed(1)}% (Implied=${(100/_bttsp.odds).toFixed(1)}%, Gap=${(_bttsGap*100).toFixed(1)}pp) — FV-Gate sollte geblockt haben.`);
+          }
+        }
+        // 🟡 Karten-Pick aber Schiri-Daten fehlen (Ref=null → Fallback auf Liga-Baserate)
+        { const _cp2 = _genPicks.find(p => p.market?.toLowerCase().includes('karten'));
+          const _anyRedConf2 = (_hNone && _hc.includes('red')) || (_aNone && _ac.includes('red'));
+          if (_cp2 && _anyRedConf2) {
+            const _ts2 = window._teamStats || {};
+            const _refStats = window._preMatchData?.[`${fx.home}|${fx.away}`];
+            const _refAvg2 = _refStats?.refereeStats?.cardsPerGame ?? null;
+            if (_refAvg2 === null) {
+              flag('warn', 'CARDS_REL_NO_REF_DATA',
+                `${_cp2.market} Pick [${_cp2.conf}] bei abgestiegenem Team aber keine Schiri-Daten — Fallback auf Liga-Baserate (3.5) aktiv. Pick manuell prüfen.`);
+            }
           }
         }
 
