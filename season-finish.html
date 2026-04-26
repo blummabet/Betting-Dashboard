@@ -6075,7 +6075,17 @@ function computeMatchScore(match, leagueKey) {
                   : _rlCeil <= 9 ?  8.0
                   :                 7.5;
 
-  return Math.round(Math.min(_maxScore, Math.max(1.0, score)) * 10) / 10;
+  // ── Final motivation cap (applied last so form/goal bonuses can't bypass it) ──
+  // The mid-function caps at lines 5905-5907 are overridden by subsequent bonuses.
+  // This ensures the ceiling is truly enforced regardless of what follows.
+  const _hMotFinal = match.homeStake?.motivationLevel;
+  const _aMotFinal = match.awayStake?.motivationLevel;
+  const _motCap = (_hMotFinal === 'none' && _aMotFinal === 'none') ? 6
+                : (_hMotFinal === 'none' || _aMotFinal === 'none') ? 8
+                : (_hMotFinal === 'low'  && _aMotFinal === 'low')  ? 8
+                : Infinity;
+
+  return Math.round(Math.min(_maxScore, _motCap, Math.max(1.0, score)) * 10) / 10;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -8269,10 +8279,32 @@ function isDoOrDie(match) {
 
 // ── Do-or-Die section for Best-of-All tab ────────────────────────────────────
 function buildDoOrDieSection(matchList) {
-  const candidates = matchList
+  // Only show games in the next 3 days
+  const _today = new Date(); _today.setHours(0,0,0,0);
+  const _cutoff = new Date(_today); _cutoff.setDate(_cutoff.getDate() + 3);
+  const next3 = matchList.filter(m => {
+    const d = parseGermanDate(m.date);
+    return d >= _today && d <= _cutoff;
+  });
+
+  // Sort: fewest roundsLeft first, then earliest date (nearest game first)
+  const raw = next3
     .map(m => ({ m, dod: isDoOrDie(m) }))
     .filter(x => x.dod !== null)
-    .sort((a, b) => a.dod.rl - b.dod.rl); // fewest games left first
+    .sort((a, b) => {
+      if (a.dod.rl !== b.dod.rl) return a.dod.rl - b.dod.rl;
+      return parseGermanDate(a.m.date) - parseGermanDate(b.m.date);
+    });
+
+  // Deduplicate: each team appears at most once (their nearest/most urgent game)
+  const seenTeams = new Set();
+  const candidates = [];
+  for (const entry of raw) {
+    const dodTeamNames = entry.dod.teams.map(t => t.name);
+    if (dodTeamNames.some(n => seenTeams.has(n))) continue; // team already shown
+    candidates.push(entry);
+    dodTeamNames.forEach(n => seenTeams.add(n));
+  }
 
   if (!candidates.length) return '';
 
@@ -8842,7 +8874,7 @@ function renderOverview() {
 
   // Cards des Tages + POTD use only the filtered (day-selected) matches
   // buildTopCardsHtml MUST run before renderFixtureCard so _topPickSet is populated
-  const dodSectionHtml = buildDoOrDieSection(week); // uses full week, not day-filtered
+  const dodSectionHtml = buildDoOrDieSection(week); // internally limited to next 3 days + deduped per team
   const potdHtml      = buildPickOfDayHtml(filtered);
   const topCardsHtml  = buildTopCardsHtml(filtered);
   const cards = filtered.map(m=>renderFixtureCard(m, m.leagueName, m.leagueFlag, m.leagueKey)).join('');
