@@ -109,12 +109,13 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ── The Odds API helper ──────────────────────────────────────────────────────
 // Fetches ALL upcoming odds for a given sport in one call.
-// Pass1: EU region, h2h + spreads + totals.
+// Regions: eu,uk — UK bookmakers (Bet365, W.Hill etc.) are essential for SCO/BEL/SUI
+// which have limited EU bookie coverage. EU-only returned empty arrays for those leagues.
 // Returns { data: [...events], remaining: '19950' }
 function oddsApiFetch(sportKey) {
   return new Promise((resolve, reject) => {
     const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
-      + `&regions=eu&markets=h2h,spreads,totals&oddsFormat=decimal`;
+      + `&regions=eu,uk&markets=h2h,spreads,totals&oddsFormat=decimal`;
     const options = { hostname: ODDS_API_HOST, path, method: 'GET',
       headers: { 'User-Agent': 'CocoBet/1.0' } };
     const req = https.request(options, res => {
@@ -1187,9 +1188,10 @@ async function fetchAllPrematchData() {
   // ── Step 5: The Odds API — Pre-Match Odds ────────────────────────────────
   // One API call per league fetches ALL upcoming fixtures' odds at once.
   // Covers same-day games (unlike API-Football which stops ~4 days before kickoff).
-  // Markets: h2h (1X2), spreads (AH), totals (O/U), btts.
+  // Regions: eu,uk — UK bookmakers required for SCO/BEL/SUI (EU-only returns empty array).
+  // Markets: h2h (1X2), spreads (AH), totals (O/U).
   // DC odds (dc1X/X2/12) are derived from fair h2h probabilities.
-  // Note: Cards market not available via The Odds API — Karten picks use model score only.
+  // Note: Cards/corners via Step 5c (alternate markets, eu,uk). BTTS via Step 5b (uk).
   const upcoming = fixtures.filter(d => !d.isFinished && d.fixtureId);
   const _uniqueSportKeys = [...new Set(
     fixtures.filter(d => !d.isFinished && d.leagueId && LEAGUE_ODDS_KEYS[d.leagueId])
