@@ -1566,6 +1566,76 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
   </div>
 
+  <!-- 11. Code-Architektur -->
+  <div class="heart-section">
+    <div class="heart-section-title">🏛️ Code-Architektur &amp; Nachhaltigkeit</div>
+    <div class="heart-card accent" style="margin-bottom:12px;">
+      <h3>🎯 Ziel: Jede Änderung genau einmal machen</h3>
+      <p>Das System besteht aus drei beweglichen Teilen die synchron bleiben müssen: <strong style="color:var(--text)">season-finish.html</strong> (Pick-Engine, 13 000 Zeilen JS), <strong style="color:var(--text)">check_picks_logic.py</strong> (täglicher Validator), und die <strong style="color:var(--text)">inline FV-Prüfung</strong> in renderFixtureCard(). Früher war jeder Threshold ein Magic-Number das an 3–4 verschiedenen Stellen stand — eine Änderung hieß: alle Stellen manuell finden, eine vergessen → stiller Bug.</p>
+      <p style="margin-top:8px;">Drei strukturelle Verbesserungen (Apr 2026) machen fixes nachhaltig:</p>
+    </div>
+    <div class="heart-grid">
+
+      <!-- GATE Block -->
+      <div class="heart-card" style="border-color:rgba(88,166,255,.30);background:rgba(88,166,255,.04);">
+        <h3>① <code style="font-size:13px;">const GATE = {…}</code> — Zentraler Threshold-Block</h3>
+        <p style="margin-bottom:10px;">Alle Negative-Edge-Schwellenwerte stehen an <strong style="color:var(--text)">einer einzigen Stelle</strong> in <code>season-finish.html</code>, direkt vor der Picks-Engine. Änderung = eine Zeile, alle Gates folgen automatisch.</p>
+        <table class="heart-table" style="font-size:11px;">
+          <tr><th>Key</th><th>Wert</th><th>Gilt für</th></tr>
+          <tr><td><code>GOALS_REAL</code></td><td>0.12</td><td>Over 2.5 / 3.5, BTTS (echte Quoten)</td></tr>
+          <tr><td><code>TEAM_REAL</code></td><td>0.12</td><td>Team über 1.5 Tore (echte Quoten)</td></tr>
+          <tr><td><code>TEAM_EST</code></td><td>0.15</td><td>Team über 1.5 Tore (Modell-Schätzung)</td></tr>
+          <tr><td><code>AH_REAL</code></td><td>0.14</td><td>Asian Handicap (Heim + Ausw.)</td></tr>
+          <tr><td><code>CORN_REAL</code></td><td>0.10</td><td>Ecken Over (echte Quoten)</td></tr>
+          <tr><td><code>CORN_EST</code></td><td>0.15</td><td>Ecken Over (Poisson-Schätzung)</td></tr>
+        </table>
+        <p style="margin-top:8px;font-size:11px;color:var(--muted);">Estimated-Schwellen sind weiter als Real-Schwellen: Modellquoten haben mehr Unsicherheit → größerer Puffer vor Unterdrückung. GATE wird auch vom inline Validator in renderFixtureCard() gelesen — beide Seiten sind automatisch synchron.</p>
+      </div>
+
+      <!-- _hasNegEdge helper -->
+      <div class="heart-card" style="border-color:rgba(0,212,161,.30);background:rgba(0,212,161,.04);">
+        <h3>② <code style="font-size:13px;">_hasNegEdge()</code> — Einheitlicher Gate-Helper</h3>
+        <p style="margin-bottom:8px;">Das Muster <code style="font-size:11px;">(1/odds) − fairProb &gt; threshold</code> war früher 8× inline wiederholt. Eine Typo in einer Kopie hätte einen stillen Fehler erzeugt.</p>
+        <p style="margin-bottom:8px;">Jetzt eine einzige Funktion:</p>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:11px;font-family:monospace;color:var(--muted);line-height:1.6;">
+          _hasNegEdge(fairProb, odds,<br>
+          &nbsp;&nbsp;isEst, realGate, estGate)<br>
+          <span style="color:var(--accent);">→ true</span> wenn implied prob zu weit über fair value
+        </div>
+        <p style="margin-top:8px;font-size:11px;color:var(--muted);">Alle 8 Pick-Blöcke (AH, Over 3.5/2.5, BTTS, Team-Over, Corners) rufen dieselbe Funktion. Wenn die Logik verfeinert wird — z.B. Market-Liquidity als dritten Faktor — ändert man sie genau einmal.</p>
+        <p style="margin-top:6px;font-size:11px;color:#e3b341;">⚠️ Bug-Fix entdeckt: BTTS-Validator prüfte &gt;0.14 statt &gt;0.12 (stille Inkonsistenz seit Einführung). Durch GATE-Zentralisierung automatisch korrigiert.</p>
+      </div>
+
+      <!-- SYNC markers -->
+      <div class="heart-card" style="border-color:rgba(240,192,64,.30);background:rgba(240,192,64,.04);">
+        <h3>③ <code style="font-size:13px;">SYNC:GATE</code> — Drift-Früherkennung</h3>
+        <p style="margin-bottom:8px;"><code>check_picks_logic.py</code> hat oben einen eigenen <code>GATE_*</code>-Konstantenblock (Python kann das JS nicht importieren). <strong style="color:var(--text)">Jeder Threshold trägt einen <code># SYNC:GATE</code>-Kommentar</strong> der zeigt wo das Gegenstück steht.</p>
+        <p style="margin-bottom:8px;font-size:11px;color:var(--muted);">Workflow bei Threshold-Änderung:</p>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:11px;line-height:1.8;">
+          1. Wert in <code>GATE</code> (season-finish.html) ändern<br>
+          2. Grep nach <code>SYNC:GATE</code> in check_picks_logic.py<br>
+          3. Matching <code>GATE_*</code>-Konstante dort angleichen<br>
+          4. Syntax-Check: <code>node -e "..."</code> + <code>python3 -c "..."</code>
+        </div>
+        <p style="margin-top:8px;font-size:11px;color:var(--muted);">In der Praxis: 4 Sekunden statt 10 Minuten Suche. Der <code>SYNC:GATE</code>-Tag macht Drift unmöglich zu übersehen.</p>
+      </div>
+
+      <!-- Impact summary -->
+      <div class="heart-card pressure">
+        <h3>📈 Praktischer Impact</h3>
+        <p style="margin-bottom:8px;">Was sich für den täglichen Workflow ändert:</p>
+        <table class="heart-table" style="font-size:11px;">
+          <tr><th>Vorher</th><th>Nachher</th></tr>
+          <tr><td>Over 2.5 Gate anpassen → 4 Stellen suchen (JS + inline Validator + Python-Kommentar + Python-Prüfung)</td><td>1 Zeile: <code>GATE.GOALS_REAL: 0.12</code></td></tr>
+          <tr><td>Neue Markt-Gate hinzufügen → Copy-Paste des 3-Zeilen-Musters, manuell richtig einsetzen</td><td><code>_hasNegEdge(..., GATE.NEUER_KEY, ...)</code> — fertig</td></tr>
+          <tr><td>JS/Python-Drift → stillerBug (war passiert: BTTS 0.12 vs 0.14)</td><td>SYNC:GATE-Kommentar macht Divergenz sofort sichtbar</td></tr>
+          <tr><td>Backtest zeigt: Corners-Threshold zu eng → Suche nach allen Vorkommen</td><td><code>GATE.CORN_REAL: 0.10 → 0.08</code> — eine Zeile, universal</td></tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 </div>
 
