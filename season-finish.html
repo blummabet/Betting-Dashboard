@@ -8978,7 +8978,7 @@ let _activeDaysFilter = '7';
 
 function initResults() {
   if (_resultsLoaded) { renderResultsTable(_activeFilter); return; }
-  fetch('./picks_history.json')
+  fetch('./picks_history.json?t=' + Date.now())
     .then(r => r.ok ? r.json() : [])
     .catch(() => [])
     .then(data => {
@@ -11819,16 +11819,30 @@ function _mergeLocalPicks() {
   // Prefer the picks_history.json version (already has correct dates + resolved results).
   const existingPairs = new Set(_resultsData.map(e => `${e.home}|${e.away}`));
 
-  // Backfill cardScore: picks_history.json entries often lack cardScore (saved before the
-  // field was added). When localStorage has a matching entry WITH cardScore, copy it over.
+  // Backfill from localStorage: copy resolved pick results + cardScore + finalScore
+  // back into existing _resultsData entries (picks_history.json may be unresolved).
+  // This ensures browser-resolved results show immediately without waiting for
+  // the next GitHub Actions run of resolve_picks.py.
   const localByPair = {};
   for (const e of local) {
     localByPair[`${e.home}|${e.away}`] = e;
+    localByPair[`${e.dateIso}|${e.home}|${e.away}`] = e;
   }
   for (const e of _resultsData) {
-    if (e.cardScore == null) {
-      const lc = localByPair[`${e.home}|${e.away}`];
-      if (lc?.cardScore != null) e.cardScore = lc.cardScore;
+    const lc = localByPair[`${e.dateIso}|${e.home}|${e.away}`]
+             || localByPair[`${e.home}|${e.away}`];
+    if (!lc) continue;
+    // Copy cardScore/finalScore if missing in JSON version
+    if (e.cardScore == null && lc.cardScore != null) e.cardScore = lc.cardScore;
+    if (!e.finalScore && lc.finalScore) e.finalScore = lc.finalScore;
+    if (!e.htScore && lc.htScore) e.htScore = lc.htScore;
+    // Patch individual picks: copy resolved result + finalScore from localStorage
+    for (let i = 0; i < e.picks.length && i < (lc.picks || []).length; i++) {
+      const lp = lc.picks[i];
+      if (e.picks[i].result === null && lp?.result != null) {
+        e.picks[i].result    = lp.result;
+        e.picks[i].finalScore = lp.finalScore || e.finalScore || lc.finalScore;
+      }
     }
   }
 
