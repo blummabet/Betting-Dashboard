@@ -4163,6 +4163,18 @@ function getBettingPicks(match, odds, leagueKey) {
     { let sc = expGoals<1.4?0.76:expGoals<1.7?0.54:0.08;
       // 🔑 PRESSURE/RUNDEN: jedes Muss-gewinnen zerstört Under 1.5 komplett
       if (_anyNeedsWin) sc = Math.max(0, sc - _pressureBoost * 1.50);
+      // 🔑 H2H GATE: wenn H2H-Durchschnitt klar über Under 1.5 liegt, ist der Pick
+      // widerlegt — Formmodell unterschätzt echte Torproduktion dieser Paarung.
+      // H2H ≥ 2.5 Ø: sehr wahrscheinlich > 1 Tor → stark unterdrücken
+      // H2H 2.0–2.5: moderate Widerlegung
+      // BTTS-Rate ≥ 60%: beide Teams treffen häufig → Under 1.5 benötigt 0+0 oder 1+0
+      if (_h2hSample && _h2hAvgG != null) {
+        if      (_h2hAvgG >= 2.5) sc = Math.max(0, sc - 0.55); // H2H widerlegt stark
+        else if (_h2hAvgG >= 2.0) sc = Math.max(0, sc - 0.28); // H2H widerlegt moderat
+      }
+      if (_h2hSample && _h2hBtts != null && _h2hBtts >= 0.60) {
+        sc = Math.max(0, sc - 0.25); // Teams treffen oft beidseits → 0 Tore unwahrscheinlich
+      }
       gC.push({sc, p:{icon:'🔒', market:'Under 1.5 Tore', odds:o.u15||null,
         conf: sc>0.65?'medium':'low',
         reason:`Das Modell erwartet nur ${expGoals.toFixed(1)} Tore — beide Teams sind offensiv extrem schwach. Ein einziger Treffer in diesem Spiel wäre schon viel.`}}); }
