@@ -3621,6 +3621,47 @@ function renderLineMovement(rows, picks, oddsD, isEstimated) {
 }
 
 // ═══════════════════════════════════════════════════════
+//  BETTING PICKS ENGINE — NEGATIVE-EDGE GATE THRESHOLDS
+// ═══════════════════════════════════════════════════════
+// Single source of truth for all FV gate thresholds.
+// Referenced in getBettingPicks() pick blocks AND in the
+// renderFixtureCard() inline validator.
+// SYNC: when changing any value here also update check_picks_logic.py
+// (Python validator uses same thresholds in comments — search "SYNC:GATE").
+const GATE = {
+  GOALS_REAL: 0.12,   // Over 2.5 / Over 3.5 / BTTS  (real bookie odds)
+  TEAM_REAL:  0.12,   // Heim/Ausw über 1.5  (real bookie odds)
+  TEAM_EST:   0.15,   // Heim/Ausw über 1.5  (estimated odds — wider, model uncertainty)
+  AH_REAL:    0.14,   // Asian Handicap  (real only; AH model less precise than goals)
+  CORN_REAL:  0.10,   // Ecken Over  (real bookie odds)
+  CORN_EST:   0.15,   // Ecken Over  (estimated odds)
+};
+
+// ─────────────────────────────────────────────────────
+//  _hasNegEdge — negative-edge guard helper
+// ─────────────────────────────────────────────────────
+// Returns true when the implied probability exceeds the
+// model fair probability by more than the gate threshold,
+// meaning the bet has negative expected value and should
+// be suppressed.
+//
+// fairProb  — model fair probability (0–1), or null
+// odds      — decimal bookie odds, or null
+// isEst     — true when odds are model-estimated (not real bookie feed)
+// realGate  — GATE.* key to use for real bookie odds  (e.g. GATE.GOALS_REAL)
+// estGate   — GATE.* key to use for estimated odds    (e.g. GATE.TEAM_EST),
+//             or null to suppress the pick entirely when isEst is true
+//
+// Usage example (replacing inline pattern):
+//   if (!_hasNegEdge(_o25FairProb, _o25Odds, false, GATE.GOALS_REAL, null)) { … }
+function _hasNegEdge(fairProb, odds, isEst, realGate, estGate) {
+  if (fairProb == null || odds == null) return false;
+  if (isEst && estGate == null) return true;          // no est-odds variant → always suppress
+  const thresh = isEst ? estGate : realGate;
+  return (1 / odds) - fairProb > thresh;
+}
+
+// ═══════════════════════════════════════════════════════
 //  BETTING PICKS ENGINE
 // ═══════════════════════════════════════════════════════
 function getBettingPicks(match, odds, leagueKey) {
@@ -4443,7 +4484,7 @@ function getBettingPicks(match, odds, leagueKey) {
                          : _ahPtN >= 0.75 ? 0.87 : _ahPtN >= 0.5 ? 0.93 : 0.97;
           const _ahBoostH  = (_bkrPH ?? 0) > 0.85 ? 1.35 : (_bkrPH ?? 0) > 0.80 ? 1.20 : 1.0;
           const _ahFairPH  = _bkrPH != null ? Math.min(0.90, _bkrPH * Math.min(0.97, _ahMfH * _ahBoostH)) : null;
-          const _ahNegEdgeH = _ahFairPH != null && !o._isEstimated && (1 / _ahOdds) - _ahFairPH > 0.14;
+          const _ahNegEdgeH = !o._isEstimated && _hasNegEdge(_ahFairPH, _ahOdds, false, GATE.AH_REAL, null);
           if (!_ahNegEdgeH) {
             rC.push({sc, p:{icon:'🏠', market:_ahMkt, odds:_ahOdds, conf:_ahConf, reason:_ahReason}});
           }
@@ -4560,7 +4601,7 @@ function getBettingPicks(match, odds, leagueKey) {
                          : _ahPtN >= 0.75 ? 0.87 : _ahPtN >= 0.5 ? 0.93 : 0.97;
           const _ahBoostA  = (_bkrPA ?? 0) > 0.85 ? 1.35 : (_bkrPA ?? 0) > 0.80 ? 1.20 : 1.0;
           const _ahFairPA  = _bkrPA != null ? Math.min(0.90, _bkrPA * Math.min(0.97, _ahMfA * _ahBoostA)) : null;
-          const _ahNegEdgeA = _ahFairPA != null && !o._isEstimated && (1 / _ahOdds) - _ahFairPA > 0.14;
+          const _ahNegEdgeA = !o._isEstimated && _hasNegEdge(_ahFairPA, _ahOdds, false, GATE.AH_REAL, null);
           if (!_ahNegEdgeA) {
             rC.push({sc, p:{icon:'✈️', market:_ahMkt, odds:_ahOdds, conf:_ahConf, reason:_ahReason}});
           }
@@ -4777,7 +4818,7 @@ function getBettingPicks(match, odds, leagueKey) {
       // Schützt vor strukturell negativen Picks (z.B. Over 3.5 @ 1.65 mit expGoals=3.2 → FV=2.50).
       const _o35FairProb = (!odds?._isEstimated && _o35Odds != null)
         ? _poissonOver(expGoals, 3.5) : null;
-      const _o35NegEdge = _o35FairProb != null && (1 / _o35Odds) - _o35FairProb > 0.12;
+      const _o35NegEdge = _hasNegEdge(_o35FairProb, _o35Odds, false, GATE.GOALS_REAL, null);
       if (!_o35NegEdge) gC.push({sc, p:{icon:'🔥', market:`Over ${_o35Pt} Tore`, odds:_o35Odds,
         conf: sc>0.68?'high':sc>0.44?'medium':'low',
         reason:`${_o35BaseNote}${_o35H2hNote}${_bothAttLine}`}}); }
@@ -4842,7 +4883,7 @@ function getBettingPicks(match, odds, leagueKey) {
         // (Frühere Annahme "Hard Gate reicht" war falsch: expGoals=2.5 mit Odds 1.65 hat -15pp Edge)
         const _o25FairProb = (!odds?._isEstimated && _o25Odds != null)
           ? _poissonOver(expGoals, 2.5) : null;
-        const _o25NegEdge = _o25FairProb != null && (1 / _o25Odds) - _o25FairProb > 0.12;
+        const _o25NegEdge = _hasNegEdge(_o25FairProb, _o25Odds, false, GATE.GOALS_REAL, null);
         if (!_o25NegEdge) gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
           conf: sc>0.66?'high':sc>0.46?'medium':'low',
           reason:`${_o25BaseNote}${_o25H2hNote}${_o25ApiNote}${_bothAttLine}`}}); } }
@@ -4964,7 +5005,7 @@ function getBettingPicks(match, odds, leagueKey) {
         const _expA = Math.max(0.1, (awayAttStr + homeDefStr) / 2);
         const _bttsFairProb = (!o._bttsOddsEst && o.bttsY != null)
           ? (1 - Math.exp(-_expH)) * (1 - Math.exp(-_expA)) : null;
-        const _bttsNegEdge = _bttsFairProb != null && (1 / o.bttsY) - _bttsFairProb > 0.12;
+        const _bttsNegEdge = _hasNegEdge(_bttsFairProb, o.bttsY, false, GATE.GOALS_REAL, null);
         if (!_bttsNegEdge) gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:o.bttsY||null, oddsIsEst: o._bttsOddsEst||false,
           conf: sc>0.65?'high':sc>0.44?'medium':'low',
           reason:`${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu. Beide Teams werden voraussichtlich treffen.${_bttsH2hNote}${_bttsPressNote}${_bothAttLine}`}}); }
@@ -5011,8 +5052,7 @@ function getBettingPicks(match, odds, leagueKey) {
         // Real odds: suppress at >12pp gap. Estimated odds: suppress at >15pp (wider, model uncertainty).
         const _hto15Odds = o.hto15 || null;
         const _hto15FV   = _hto15Odds != null ? _poissonOver(expH, 1.5) : null;
-        const _hto15Thresh = (o._hto15Est) ? 0.15 : 0.12;
-        const _hto15NegEdge = _hto15FV != null && (1 / _hto15Odds) - _hto15FV > _hto15Thresh;
+        const _hto15NegEdge = _hasNegEdge(_hto15FV, _hto15Odds, o._hto15Est, GATE.TEAM_REAL, GATE.TEAM_EST);
         if (!_hto15NegEdge) {
           gC.push({sc, p:{icon:'🏠', market:`${match.home} über 1.5 Tore`, odds: _hto15Odds, oddsIsEst: o._hto15Est||false,
             conf: sc > 0.68 ? 'high' : 'medium',
@@ -5032,8 +5072,7 @@ function getBettingPicks(match, odds, leagueKey) {
         // FV gate: Poisson P(A≥2) vs implied odds probability.
         const _ato15Odds = o.ato15 || null;
         const _ato15FV   = _ato15Odds != null ? _poissonOver(expA, 1.5) : null;
-        const _ato15Thresh = (o._ato15Est) ? 0.15 : 0.12;
-        const _ato15NegEdge = _ato15FV != null && (1 / _ato15Odds) - _ato15FV > _ato15Thresh;
+        const _ato15NegEdge = _hasNegEdge(_ato15FV, _ato15Odds, o._ato15Est, GATE.TEAM_REAL, GATE.TEAM_EST);
         if (!_ato15NegEdge) {
           gC.push({sc, p:{icon:'✈️', market:`${match.away} über 1.5 Tore`, odds: _ato15Odds, oddsIsEst: o._ato15Est||false,
             conf: sc > 0.65 ? 'medium' : 'low',
@@ -5121,8 +5160,7 @@ function getBettingPicks(match, odds, leagueKey) {
       const _cornFairProbO = _cOOdds != null
         ? _poissonOver(cornersEst, _cornLineNums[_overIdx])
         : null;
-      const _cornNegEdgeThresh = o._cornersOddsEst ? 0.15 : 0.10;
-      const _cornNegEdge = _cornFairProbO != null && (1 / _cOOdds) - _cornFairProbO > _cornNegEdgeThresh;
+      const _cornNegEdge = _hasNegEdge(_cornFairProbO, _cOOdds, o._cornersOddsEst, GATE.CORN_REAL, GATE.CORN_EST);
       if (!_cornSkip && !_cornSkipHigh && !_cornSkipLowSc && !_cornNegEdge)
       sC.push({sc: scO, p:{icon:'🚩', market:_cOMkt, odds:_cOOdds, oddsIsEst: o._cornersOddsEst||false,
         conf: scO>0.65?'high':scO>0.38?'medium':'low',
@@ -9877,14 +9915,14 @@ function runPicksValidator() {
           if (_o25p && _o25p.odds != null && !_o25p.oddsIsEst) {
             const _fv25 = _poissonOver(fx._expGoals ?? (hGPG + aGPG), 2.5);
             const _gap25 = (1 / _o25p.odds) - _fv25;
-            if (_gap25 > 0.12) flag('error', 'OVER25_NEG_EDGE',
+            if (_gap25 > GATE.GOALS_REAL) flag('error', 'OVER25_NEG_EDGE',
               `Over 2.5 Pick [${_o25p.conf}] @ ${_o25p.odds} aber Poisson FV=${(_fv25*100).toFixed(1)}% (Implied=${(100/_o25p.odds).toFixed(1)}%, Gap=${(_gap25*100).toFixed(1)}pp) — FV-Gate sollte geblockt haben.`);
           }
           const _o35p = _genPicks.find(p => p.market?.startsWith('Over 3.5') || p.market?.startsWith('Über 3.5'));
           if (_o35p && _o35p.odds != null && !_o35p.oddsIsEst) {
             const _fv35 = _poissonOver(fx._expGoals ?? (hGPG + aGPG), 3.5);
             const _gap35 = (1 / _o35p.odds) - _fv35;
-            if (_gap35 > 0.12) flag('error', 'OVER35_NEG_EDGE',
+            if (_gap35 > GATE.GOALS_REAL) flag('error', 'OVER35_NEG_EDGE',
               `Over 3.5 Pick [${_o35p.conf}] @ ${_o35p.odds} aber Poisson FV=${(_fv35*100).toFixed(1)}% (Implied=${(100/_o35p.odds).toFixed(1)}%, Gap=${(_gap35*100).toFixed(1)}pp) — FV-Gate sollte geblockt haben.`);
           }
         }
@@ -9895,7 +9933,7 @@ function runPicksValidator() {
             const _expA = Math.max(0.1, (aGPG + hGPG * 0.5) * 0.65);
             const _bttsFV = (1 - Math.exp(-_expH)) * (1 - Math.exp(-_expA));
             const _bttsGap = (1 / _bttsp.odds) - _bttsFV;
-            if (_bttsGap > 0.14) flag('error', 'BTTS_NEG_EDGE',
+            if (_bttsGap > GATE.GOALS_REAL) flag('error', 'BTTS_NEG_EDGE',
               `BTTS Pick [${_bttsp.conf}] @ ${_bttsp.odds} aber Poisson FV≈${(_bttsFV*100).toFixed(1)}% (Implied=${(100/_bttsp.odds).toFixed(1)}%, Gap=${(_bttsGap*100).toFixed(1)}pp) — FV-Gate sollte geblockt haben.`);
           }
         }

@@ -43,6 +43,17 @@ from datetime import datetime, timedelta
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 HTML_FILE  = os.path.join(SCRIPT_DIR, "season-finish.html")
 
+# ── Negative-edge gate thresholds ────────────────────────────────────────────
+# SYNC:GATE — These values MUST match the GATE object in season-finish.html
+# (search for "const GATE = {" near the top of getBettingPicks engine).
+# When you change a threshold here, change the matching key there — and vice versa.
+GATE_GOALS_REAL = 0.12   # Over 2.5 / Over 3.5 / BTTS  (real bookie odds)
+GATE_TEAM_REAL  = 0.12   # Heim/Ausw über 1.5  (real bookie odds)
+GATE_TEAM_EST   = 0.15   # Heim/Ausw über 1.5  (estimated odds)
+GATE_AH_REAL    = 0.14   # Asian Handicap  (real only)
+GATE_CORN_REAL  = 0.10   # Ecken Over  (real bookie odds)
+GATE_CORN_EST   = 0.15   # Ecken Over  (estimated odds)
+
 # ── Poisson-Hilfsfunktion (identisch mit JS _poissonOver) ────────────────────
 import math
 
@@ -561,11 +572,13 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
         fv_o35 = poisson_over(exp_goals_proxy, 3.5)
         # 🟡 HINWEIS: Over 2.5 FV unter 40% → Markt braucht Quoten ≥ 2.50 für Edge
         # Wenn FV so niedrig ist, sind typische Bookie-Quoten (~1.75–2.00) oft negativ.
+        # SYNC:GATE — gate fires at GATE_GOALS_REAL (0.12) implied gap in season-finish.html
         if exp_goals_proxy < 2.2 and fv_o25 < 0.40:
             flag("INFO", "LOW_SCORING_PROFILE",
                  f"Ø gpg={exp_goals_proxy:.2f}, H2H Ø={h2h_avg_g:.1f} Tore — "
                  f"Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt")
         # 🟡 WARNUNG: Over 3.5 FV unter 20% → fast immer negativer Edge bei Bookie-Quoten
+        # SYNC:GATE — gate fires at GATE_GOALS_REAL (0.12) in season-finish.html
         if exp_goals_proxy > 0 and fv_o35 < 0.20:
             flag("WARN", "OVER35_LOW_FV",
                  f"Ø gpg={exp_goals_proxy:.2f} → Poisson FV für Over 3.5 = {fv_o35:.1%} "
@@ -603,6 +616,7 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
     if exp_h is not None:
         fv_h15 = poisson_over(exp_h, 1.5)
         # Trigger if FV falls below 0.40 — at standard ~1.65 odds implies ~22pp neg gap
+        # SYNC:GATE — gate fires at GATE_TEAM_REAL (0.12) / GATE_TEAM_EST (0.15) in season-finish.html
         if exp_h < 1.6 and fv_h15 < 0.40:
             flag("WARN", "TEAM_OVER_HOME_LOW_FV",
                  f"{home} expH={exp_h:.2f} → Poisson FV über 1.5 = {fv_h15:.1%} "
@@ -611,6 +625,7 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
 
     if exp_a is not None:
         fv_a15 = poisson_over(exp_a, 1.5)
+        # SYNC:GATE — gate fires at GATE_TEAM_REAL (0.12) / GATE_TEAM_EST (0.15) in season-finish.html
         if exp_a < 1.6 and fv_a15 < 0.40:
             flag("WARN", "TEAM_OVER_AWAY_LOW_FV",
                  f"{away} expA={exp_a:.2f} → Poisson FV über 1.5 = {fv_a15:.1%} "
@@ -620,6 +635,7 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
     # ── Ecken FV Gate Plausibilität ───────────────────────────────────────────
     # Prüft ob Corner-picks mit sehr niedrigen erwarteten Ecken trotzdem erscheinen.
     # Validator liest keine Corner-Quoten; warnt wenn das Profil eindeutig "kein Over-Edge" zeigt.
+    # SYNC:GATE — gate fires at GATE_CORN_REAL (0.10) / GATE_CORN_EST (0.15) in season-finish.html
     # Wir prüfen nur grob: wenn beide Teams sehr defensiv (wenig Angriffe) → Corner-Over riskant.
     if h_gpg > 0 and a_gpg > 0:
         # Proxy für Eckenbewegung: Teams mit <1.0 Tor/Spiel spielen auch sehr wenig Corner.
