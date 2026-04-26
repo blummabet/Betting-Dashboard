@@ -9647,7 +9647,46 @@ function runPicksValidator() {
         const _hNone = (fx.homeStake?.motivationLevel || 'full') === 'none';
         const _aNone = (fx.awayStake?.motivationLevel || 'full') === 'none';
 
-        // ── 🔴 FEHLER (Picks) ────────────────────────────────────
+        // ── 🔴 FEHLER (Picks) — direkte Pick-Validierung ─────────
+        // Diese Checks prüfen die tatsächlich generierten Picks gegen bekannte Fehler-Muster.
+        // Findet was der Nutzer bisher täglich manuell gefunden hat.
+
+        // 🔴 Under 1.5 Pick aber H2H widerlegt ihn (Heracles/Volendam-Typ)
+        const _under15Pick = _genPicks.find(p => p.market === 'Under 1.5 Tore');
+        if (_under15Pick && h2hGames >= 4) {
+          if (h2hAvgGoals >= 2.0) {
+            flag('error', 'U15_H2H_CONTRADICT',
+              `Under 1.5 Pick [${_under15Pick.conf}] aber H2H Ø=${h2hAvgGoals.toFixed(1)} Tore (${h2hGames} Sp.) — H2H widerlegt den Pick direkt. H2H-Guard greift nicht oder reicht nicht.`);
+          }
+        }
+
+        // 🔴 Under 2.5 Pick aber H2H deutlich zu hoch
+        const _under25PickH2h = _genPicks.find(p => p.market === 'Under 2.5 Tore');
+        if (_under25PickH2h && h2hGames >= 4 && h2hAvgGoals >= 3.0) {
+          flag('error', 'U25_H2H_CONTRADICT',
+            `Under 2.5 Pick [${_under25PickH2h.conf}] aber H2H Ø=${h2hAvgGoals.toFixed(1)} Tore (${h2hGames} Sp.) — H2H-Guard (-0.30) hat Pick nicht blockiert.`);
+        }
+
+        // 🔴 Karten-Pick für bestätigt abgestiegenes Team ohne Schiri-Evidenz
+        const _cardsPick = _genPicks.find(p =>
+          p.market?.toLowerCase().includes('karten') || p.market?.toLowerCase().includes('cards'));
+        if (_cardsPick) {
+          const _anyConfRel = (_hNone && _hc.includes('red')) || (_aNone && _ac.includes('red'));
+          if (_anyConfRel) {
+            const relTeam = (_hNone && _hc.includes('red')) ? fx.home : fx.away;
+            flag('error', 'CARDS_PICK_RELEGATED',
+              `${_cardsPick.market} Pick [${_cardsPick.conf}] aber ${relTeam} ist bestätigt abgestiegen (motiv='none'). cardSc-Suppression greift nicht — Schiri-Threshold prüfen.`);
+          }
+        }
+
+        // 🔴 Pick ohne Quote UND kein "keine Quote"-Label (wird trotzdem als Pick angezeigt)
+        _genPicks.forEach((p, i) => {
+          if (p.odds === null && !p.oddsIsEst && p.conf !== 'low') {
+            flag('error', 'PICK_NO_ODDS_MEDIUM',
+              `Pick ${i+1} "${p.market}" [${p.conf}] hat keine Quote und ist nicht [low] — wird als relevanter Pick angezeigt ohne Wettmöglichkeit.`);
+          }
+        });
+
         // Abgestiegenes Heimteam bekommt Heimsieg/AH Heim als Pick 1
         if (_hNone && _hc.includes('red')) {
           if (_p1.market === 'Heimsieg' || _p1.market.startsWith('AH Heim') || _p1.market.startsWith('Handicap Heim')) {
@@ -9693,6 +9732,22 @@ function runPicksValidator() {
         // Alle 3 Picks sind [low]
         if (_genPicks.length >= 3 && _genPicks.every(p => p.conf === 'low')) {
           flag('warn', 'ALL_PICKS_LOW', `Alle ${_genPicks.length} Picks sind [low] — kaum verwertbares Signal, Spiel lieber überspringen`);
+        }
+
+        // 🟡 Beide Teams motiv='low' aber trotzdem Medium/High Pick vorhanden
+        if (bothLow) {
+          const _highPick = _genPicks.find(p => p.conf === 'medium' || p.conf === 'high');
+          if (_highPick) {
+            flag('warn', 'BOTH_LOW_MOTIV_MEDIUM_PICK',
+              `Beide Teams motiv='low' aber Pick "${_highPick.market}" ist [${_highPick.conf}] — bei niedrigem Antrieb beider Teams sollten keine Medium/High-Picks erscheinen.`);
+          }
+        }
+
+        // 🟡 Over 2.5 Pick aber beide Teams historisch torarm
+        const _over25Pick = _genPicks.find(p => p.market?.startsWith('Over 2.5') || p.market?.startsWith('Über 2.5'));
+        if (_over25Pick && hGPG > 0 && aGPG > 0 && (hGPG + aGPG) < 1.8 && h2hAvgGoals > 0 && h2hAvgGoals < 2.0) {
+          flag('warn', 'OVER25_LOW_SCORING',
+            `Over 2.5 Pick [${_over25Pick.conf}] aber komb. ${(hGPG+aGPG).toFixed(1)} Tore/Sp und H2H Ø=${h2hAvgGoals.toFixed(1)} — Hard Gate sollte geblockt haben.`);
         }
         // Motivation-Asymmetrie erkannt aber Ergebnis-Pick schwach (< 0.45)
         if (_hNone && _hc.includes('red') && !_aNone) {
