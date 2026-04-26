@@ -5153,7 +5153,8 @@ function computeMatchScore(match, leagueKey) {
 
   // ── motivationLevel penalty: secured/confirmed teams rotate & coast ─────
   // 'none' = mathematically confirmed → expect squad rotation, lower intensity.
-  // This directly reduces match interest for betting (less committed play).
+  // 'low'  = practically decided — team knows it won't make it, going through motions.
+  // Hard caps prevent meaningless end-of-season matches from reaching top-card range.
   {
     const hMot = match.homeStake?.motivationLevel;
     const aMot = match.awayStake?.motivationLevel;
@@ -5161,6 +5162,14 @@ function computeMatchScore(match, leagueKey) {
     else if (hMot === 'none' || aMot === 'none') score -= 1.0; // one team coasting
     else if (hMot === 'low'  && aMot === 'low')  score -= 0.6; // both nearly done
     else if (hMot === 'low'  || aMot === 'low')  score -= 0.3; // one nearly done
+
+    // ── Hard caps: prevent low-interest matches from sneaking into top-card range ──
+    // Both 'low': checked-out teams → max 8 (can't be Top Card at ≥10 threshold)
+    // Both 'none': confirmed dead rubber → max 6
+    // One 'none': one team coasting → max 8
+    if      (hMot === 'none' && aMot === 'none') score = Math.min(score, 6);
+    else if (hMot === 'none' || aMot === 'none') score = Math.min(score, 8);
+    else if (hMot === 'low'  && aMot === 'low')  score = Math.min(score, 8);
   }
 
   // ── Form-based modifier (mirrors Python logic) ──────────────────────────
