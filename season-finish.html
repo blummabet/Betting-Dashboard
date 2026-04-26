@@ -4473,6 +4473,13 @@ function getBettingPicks(match, odds, leagueKey) {
       }
       // Suppress card pick if referee is very lenient and situation isn't extreme
       if (cardSc > 0 && _refAvg != null && _refAvg < 2.5 && !cardsVeryHigh) cardSc = 0;
+      // Confirmed-relegated teams play with reduced intensity → "Frustration" alone is not enough.
+      // Rule: if ANY confirmed-relegated team is involved, require referee evidence (≥3.5 avg cards)
+      // to justify a cards pick. Without ref data the base rate is unknown — suppress.
+      // If BOTH teams are confirmed relegated (both motiv='none'), kill the pick entirely:
+      // two teams rotating and coasting = no real desperation = fewer cards, not more.
+      if (cardSc > 0 && _bothRedConf) cardSc = 0;
+      else if (cardSc > 0 && _anyRedConf && (_refAvg == null || _refAvg < 3.5)) cardSc = 0;
       const _cardOdds = cardMkt.includes('4.5') ? (o.cards_o45||null) : (o.cards_o35||null);
       // Max odds guard: cards > 3.20 means low card probability — not worth recommending.
       if (cardSc > 0 && _cardOdds != null && _cardOdds > 3.20) cardSc = 0;
