@@ -163,6 +163,8 @@ def main():
         candidates = []
         for e in today_entries:
             ms = e.get("matchScore") or 0
+            if ms < 10:
+                continue  # Top Cards only from high-quality matches (matchScore ≥ 10)
             for idx, p in enumerate(e["picks"]):
                 sc   = p.get("sc") or 0
                 conf = p.get("conf", "low")

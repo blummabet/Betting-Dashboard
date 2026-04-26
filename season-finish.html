@@ -6992,7 +6992,7 @@ function buildTopCardsHtml(matchList) {
 
   for (const m of matchList) {
     const matchSc = computeMatchScore(m, m.leagueKey);
-    if (matchSc < 6) continue;
+    if (matchSc < 10) continue;  // Top Cards only from high-quality matches (≥10/12)
     const odds = m.leagueKey ? findOdds(m.leagueKey, m.home, m.away) : null;
     const picks = getBettingPicks(m, odds, m.leagueKey)
       .filter(p => p.conf === 'high' || p.conf === 'medium');
