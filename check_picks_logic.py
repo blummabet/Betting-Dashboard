@@ -571,6 +571,65 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
                  f"Ø gpg={exp_goals_proxy:.2f} → Poisson FV für Over 3.5 = {fv_o35:.1%} "
                  f"(sehr niedrig). FV-Gate sollte Over 3.5 Pick bei üblichen Quoten (< 4.00) blocken.")
 
+        # 🟡 WARNUNG: H2H Over-Rate im Gefahrenbereich 30–45% (H2H Over-Modifier -0.04 bis -0.08)
+        # Neue Schwellenwerte April 2026: ≤40% → -0.04 in _h2hO25Mod.
+        # Wenn gleichzeitig H2H avgG ≤ 2.5 (→ _h2hAvgGMod = -0.04), kumuliert sich -0.08.
+        h2h_over25 = h2h.get("over25Rate")
+        if h2h_over25 is not None and h2h_over25 <= 0.45 and h2h_over25 >= 0.30:
+            avg_g_note = f", H2H Ø={h2h_avg_g:.1f}" if h2h_avg_g is not None else ""
+            combined_mod = 0
+            if h2h_over25 <= 0.20: combined_mod -= 0.14
+            elif h2h_over25 <= 0.30: combined_mod -= 0.08
+            elif h2h_over25 <= 0.40: combined_mod -= 0.04
+            if h2h_avg_g is not None:
+                if h2h_avg_g <= 1.6: combined_mod -= 0.08
+                elif h2h_avg_g <= 2.0: combined_mod -= 0.06
+                elif h2h_avg_g <= 2.5: combined_mod -= 0.04
+            flag("WARN", "H2H_LOW_OVER_RATE",
+                 f"H2H Über-2.5-Rate={h2h_over25:.0%}{avg_g_note} — "
+                 f"kumulierter Modifier={combined_mod:+.2f} auf Over 2.5 Score. "
+                 f"Over-2.5-Pick bei diesen H2H-Werten prüfen ob er trotzdem erscheint.")
+
+    # ── Team-Over FV Gate Plausibilität ───────────────────────────────────────
+    # Prüft ob Team-Over picks (Heimteam/Auswärtsteam über 1.5 Tore) bei negativem FV erscheinen.
+    # Der Validator liest keine Bookie-Quoten, warnt aber wenn das expGoals-Profil sehr niedrig ist.
+    h_gpg = hf.get("goalsPerGame") or 0
+    a_gpg = af.get("goalsPerGame") or 0
+    h_def = hf.get("concededPerGame") or 0
+    a_def = af.get("concededPerGame") or 0
+    exp_h = (h_gpg + a_def) / 2 if h_gpg and a_def else None
+    exp_a = (a_gpg + h_def) / 2 if a_gpg and h_def else None
+
+    if exp_h is not None:
+        fv_h15 = poisson_over(exp_h, 1.5)
+        # Trigger if FV falls below 0.40 — at standard ~1.65 odds implies ~22pp neg gap
+        if exp_h < 1.6 and fv_h15 < 0.40:
+            flag("WARN", "TEAM_OVER_HOME_LOW_FV",
+                 f"{home} expH={exp_h:.2f} → Poisson FV über 1.5 = {fv_h15:.1%} "
+                 f"(FV-Gate sollte Heimteam-Over-1.5-Pick bei üblichen Quoten ~1.65 blocken; "
+                 f"impl.Prob ≈ {1/1.65:.1%}, Lücke ≈ {(1/1.65)-fv_h15:+.1%})")
+
+    if exp_a is not None:
+        fv_a15 = poisson_over(exp_a, 1.5)
+        if exp_a < 1.6 and fv_a15 < 0.40:
+            flag("WARN", "TEAM_OVER_AWAY_LOW_FV",
+                 f"{away} expA={exp_a:.2f} → Poisson FV über 1.5 = {fv_a15:.1%} "
+                 f"(FV-Gate sollte Auswärtsteam-Over-1.5-Pick bei üblichen Quoten ~1.65 blocken; "
+                 f"impl.Prob ≈ {1/1.65:.1%}, Lücke ≈ {(1/1.65)-fv_a15:+.1%})")
+
+    # ── Ecken FV Gate Plausibilität ───────────────────────────────────────────
+    # Prüft ob Corner-picks mit sehr niedrigen erwarteten Ecken trotzdem erscheinen.
+    # Validator liest keine Corner-Quoten; warnt wenn das Profil eindeutig "kein Over-Edge" zeigt.
+    # Wir prüfen nur grob: wenn beide Teams sehr defensiv (wenig Angriffe) → Corner-Over riskant.
+    if h_gpg > 0 and a_gpg > 0:
+        # Proxy für Eckenbewegung: Teams mit <1.0 Tor/Spiel spielen auch sehr wenig Corner.
+        both_low_attack = h_gpg < 0.8 and a_gpg < 0.8
+        if both_low_attack:
+            flag("INFO", "CORNER_LOW_ATTACK_PROFILE",
+                 f"{home} ({h_gpg:.1f} T/Sp) + {away} ({a_gpg:.1f} T/Sp): "
+                 f"Beide Teams sehr angriffsschwach — Corner-Over-Pick hat schwaches Fundament. "
+                 f"FV-Gate (15pp bei geschätzten Quoten) sollte Corner-Pick blocken.")
+
     return issues
 
 

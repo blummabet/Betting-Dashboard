@@ -3737,12 +3737,14 @@ function getBettingPicks(match, odds, leagueKey) {
   const _h2hAvgG    = h2h.avgGoals   ?? _pmH2h?.avgGoals   ?? null;
   const _h2hSample  = h2hN >= 5;  // only apply when ≥5 games for reliability
 
-  // Over 2.5 H2H modifier: +0.12 if ≥70%, +0.06 if ≥60%, -0.08 if ≤30%, -0.14 if ≤20%
+  // Over 2.5 H2H modifier: +0.12 if ≥70%, +0.06 if ≥60%, -0.04 if ≤40%, -0.08 if ≤30%, -0.14 if ≤20%
+  // Extended downside: 40-50% now gets -0.04 (was 0) — e.g. 40% H2H is a real warning signal.
   const _h2hO25Mod  = (!_h2hSample || _h2hOver25 == null) ? 0
     : _h2hOver25 >= 0.70 ?  0.12
     : _h2hOver25 >= 0.60 ?  0.06
     : _h2hOver25 <= 0.20 ? -0.14
     : _h2hOver25 <= 0.30 ? -0.08
+    : _h2hOver25 <= 0.40 ? -0.04   // below neutral zone → small negative signal
     : 0;
 
   // BTTS H2H modifier: +0.10 if ≥70%, +0.05 if ≥60%, -0.10 if ≤25%, -0.16 if ≤15%
@@ -3776,12 +3778,15 @@ function getBettingPicks(match, odds, leagueKey) {
   // Applied IN ADDITION to _h2hO25Mod (which is based on over25Rate).
   // avgGoals provides an independent confirmation: high Ø tore → stronger Over signal.
   // Only applied when _h2hSample (≥5 games) and avgGoals available.
+  // H2H avgGoals modifier — symmetric: positive boosts Over 2.5 / suppresses Under 2.5; negative does the inverse.
+  // Extended downside: 2.0–2.5 range now gets -0.04 (was 0). avgG of 2.1 below the 2.5 line is a real warning.
   const _h2hAvgGMod = (_h2hSample && _h2hAvgG != null)
     ? _h2hAvgG >= 3.5 ?  0.05
     : _h2hAvgG >= 3.0 ?  0.03
     : _h2hAvgG >= 2.8 ?  0.01
-    : _h2hAvgG <= 1.6 ? -0.05
-    : _h2hAvgG <= 2.0 ? -0.03
+    : _h2hAvgG <= 1.6 ? -0.08   // very low scoring H2H
+    : _h2hAvgG <= 2.0 ? -0.06   // clearly below line
+    : _h2hAvgG <= 2.5 ? -0.04   // borderline — below the 2.5 threshold
     : 0
     : 0;
 
@@ -4974,9 +4979,18 @@ function getBettingPicks(match, odds, leagueKey) {
       if (sc > 0) {
         const _xL = xGBased ? 'xG' : 'Tore';
         const _hPN = homeNeedsWin ? `<br><strong>⚡ ${_pHLabel}${_rlSfx} — Heimteam greift voll an, Over 1.5 durch Druckspiel klar verstärkt.</strong>` : '';
-        gC.push({sc, p:{icon:'🏠', market:`${match.home} über 1.5 Tore`, odds: o.hto15||null, oddsIsEst: o._hto15Est||false,
-          conf: sc > 0.68 ? 'high' : 'medium',
-          reason:`${match.home} trifft im Schnitt ${homeAttStr.toFixed(1)} Mal pro Spiel — der Gegner lässt ${awayDefStr.toFixed(1)} Tore zu. Das Modell erwartet ${expH.toFixed(1)} Heimtore: mindestens 2 Treffer für ${match.home} sind gut möglich.${_attLineHome ? '<br>⚽ ' + _attLineHome : ''}`}}); }
+        // FV gate: Poisson P(H≥2) vs implied odds probability.
+        // Real odds: suppress at >12pp gap. Estimated odds: suppress at >15pp (wider, model uncertainty).
+        const _hto15Odds = o.hto15 || null;
+        const _hto15FV   = _hto15Odds != null ? _poissonOver(expH, 1.5) : null;
+        const _hto15Thresh = (o._hto15Est) ? 0.15 : 0.12;
+        const _hto15NegEdge = _hto15FV != null && (1 / _hto15Odds) - _hto15FV > _hto15Thresh;
+        if (!_hto15NegEdge) {
+          gC.push({sc, p:{icon:'🏠', market:`${match.home} über 1.5 Tore`, odds: _hto15Odds, oddsIsEst: o._hto15Est||false,
+            conf: sc > 0.68 ? 'high' : 'medium',
+            reason:`${match.home} trifft im Schnitt ${homeAttStr.toFixed(1)} Mal pro Spiel — der Gegner lässt ${awayDefStr.toFixed(1)} Tore zu. Das Modell erwartet ${expH.toFixed(1)} Heimtore: mindestens 2 Treffer für ${match.home} sind gut möglich.${_attLineHome ? '<br>⚽ ' + _attLineHome : ''}`}});
+        }
+      }
     }
 
     // ── Auswärtsteam Over 1.5 Tore — BACKTEST VALIDATED: 65%+ bei expAway > 1.90 ─
@@ -4987,9 +5001,17 @@ function getBettingPicks(match, odds, leagueKey) {
       if (sc > 0) {
         const _xL = xGBased ? 'xG' : 'Tore';
         const _aPN = awayNeedsWin ? `<br><strong>⚡ ${_pALabel}${_rlSfx} — Auswärtsteam geht volles Risiko, Over 1.5 durch Druckspiel verstärkt.</strong>` : '';
-        gC.push({sc, p:{icon:'✈️', market:`${match.away} über 1.5 Tore`, odds: o.ato15||null, oddsIsEst: o._ato15Est||false,
-          conf: sc > 0.65 ? 'medium' : 'low',
-          reason:`${match.away} trifft im Schnitt ${awayAttStr.toFixed(1)} Mal pro Spiel — der Gegner lässt ${homeDefStr.toFixed(1)} Tore zu. Das Modell erwartet ${expA.toFixed(1)} Auswärtstore: mindestens 2 Treffer für ${match.away} sind gut möglich.${_attLineAway ? '<br>⚽ ' + _attLineAway : ''}`}}); }
+        // FV gate: Poisson P(A≥2) vs implied odds probability.
+        const _ato15Odds = o.ato15 || null;
+        const _ato15FV   = _ato15Odds != null ? _poissonOver(expA, 1.5) : null;
+        const _ato15Thresh = (o._ato15Est) ? 0.15 : 0.12;
+        const _ato15NegEdge = _ato15FV != null && (1 / _ato15Odds) - _ato15FV > _ato15Thresh;
+        if (!_ato15NegEdge) {
+          gC.push({sc, p:{icon:'✈️', market:`${match.away} über 1.5 Tore`, odds: _ato15Odds, oddsIsEst: o._ato15Est||false,
+            conf: sc > 0.65 ? 'medium' : 'low',
+            reason:`${match.away} trifft im Schnitt ${awayAttStr.toFixed(1)} Mal pro Spiel — der Gegner lässt ${homeDefStr.toFixed(1)} Tore zu. Das Modell erwartet ${expA.toFixed(1)} Auswärtstore: mindestens 2 Treffer für ${match.away} sind gut möglich.${_attLineAway ? '<br>⚽ ' + _attLineAway : ''}`}});
+        }
+      }
     }
 
     // 1HZ Under 0.5 (tactical opener — suppressed when any team is under pressure)
@@ -5063,15 +5085,16 @@ function getBettingPicks(match, odds, leagueKey) {
       const _cornSkipHigh = _cOOdds != null && _cOOdds > _OVER_MAX_ODD;
       // Minimum signal guard: sc < 0.25 = too weak to show regardless of odds.
       const _cornSkipLowSc = scO < 0.25;
-      // Negative edge gate: real bookie odds significantly below Poisson fair value.
-      // When the bookie's implied probability exceeds our model's fair probability by
-      // >10pp, we have no edge — suppress the pick (e.g. Rangers: FV 2.50 → bookie 1.70 = -21pp).
-      // Only fires on REAL (non-estimated) odds so model estimates never trigger this gate.
+      // Negative edge gate: Poisson fair value vs bookie/estimated implied probability.
+      // Real bookie odds: suppress if implied prob exceeds FV by >10pp (tight gate, real data).
+      // Estimated odds: suppress if implied prob exceeds FV by >15pp (wider gate, model uncertainty).
+      // This catches cases like Estrela/Porto -21pp or Osasuna/Sevilla -23pp on estimated lines.
       const _cornLineNums = [8.5, 9.5, 10.5, 11.5];
-      const _cornFairProbO = (!o._cornersOddsEst && _cOOdds != null)
+      const _cornFairProbO = _cOOdds != null
         ? _poissonOver(cornersEst, _cornLineNums[_overIdx])
         : null;
-      const _cornNegEdge = _cornFairProbO != null && (1 / _cOOdds) - _cornFairProbO > 0.10;
+      const _cornNegEdgeThresh = o._cornersOddsEst ? 0.15 : 0.10;
+      const _cornNegEdge = _cornFairProbO != null && (1 / _cOOdds) - _cornFairProbO > _cornNegEdgeThresh;
       if (!_cornSkip && !_cornSkipHigh && !_cornSkipLowSc && !_cornNegEdge)
       sC.push({sc: scO, p:{icon:'🚩', market:_cOMkt, odds:_cOOdds, oddsIsEst: o._cornersOddsEst||false,
         conf: scO>0.65?'high':scO>0.38?'medium':'low',
