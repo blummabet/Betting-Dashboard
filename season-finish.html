@@ -9510,8 +9510,9 @@ function runPicksValidator() {
       // getBettingPicks() und findOdds() sind synchron — direkt aufrufbar.
       // Fixture-State vorbereiten: roundsLeft muss am Match stehen (wie generate_picks.js).
       let _genPicks = [], _picksOk = false;
+      let _fxCopy = null; // hoisted so _fxCopy._expGoals is readable after the try/catch
       try {
-        const _fxCopy = Object.assign({}, fx);
+        _fxCopy = Object.assign({}, fx);
         if (_fxCopy.roundsLeft == null) _fxCopy.roundsLeft = rl;
         const _odds = findOdds(lk, fx.home, fx.away) || {};
         _genPicks = getBettingPicks(_fxCopy, _odds, lk) || [];
