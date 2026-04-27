@@ -8606,15 +8606,15 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       ${picksHtml || '<div style="font-size:11px;color:var(--muted);padding:6px 0;font-style:italic">Kein Pick mit ausreichender Konfidenz (★★☆+) für dieses Spiel.</div>'}
       ${!window._oddsReady ? '<div style="font-size:10px;color:var(--muted);padding:3px 0;font-style:italic">⏳ Quoten werden geladen…</div>' : ''}
     </div>
-    <div style="display:flex;gap:7px;margin-top:4px">
+    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:4px">
       <button class="infographic-btn" title="Infografik erstellen" onclick="generateInfographic('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}')">
-        📸 Infografik
+        📸 Info
       </button>
       <button class="infographic-btn" title="Sportschau-Skript für CapCut/ElevenLabs" onclick="generateScript('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}')" style="color:#a78bfa;border-color:#a78bfa55;">
         🎙 Skript
       </button>
-      <button class="share-btn" style="flex:1" onclick="shareTelegram('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}')">
-        📤 Telegram
+      <button class="share-btn" style="flex:1;min-width:60px" onclick="shareTelegram('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}')">
+        📤 TG
       </button>
       <button class="share-btn" style="flex:0 0 auto;width:auto;padding:9px 10px" title="Text kopieren (DE)" onclick="copyCard('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}',this,'de')">
         📋
