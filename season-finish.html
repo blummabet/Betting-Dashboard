@@ -4183,6 +4183,10 @@ function getBettingPicks(match, odds, leagueKey) {
     const _expGoalsAttFloor = Math.round((homeAttStr + awayAttStr) * 0.35 * 10) / 10;
     if (expGoals < _expGoalsAttFloor) expGoals = _expGoalsAttFloor;
   }
+  // Write finalised expGoals back to match so the inline validator can read it.
+  // The validator passes _fxCopy = Object.assign({}, fx) to getBettingPicks(), so
+  // writing to `match` here sets _fxCopy._expGoals which the validator then reads.
+  match._expGoals = expGoals;
 
   // BTTS signals (refined by xG)
   const bttsXGStrong = homeAttStr > 1.30 && awayAttStr > 1.10 && homeDefStr > 0.90 && awayDefStr > 0.90;
@@ -4324,6 +4328,9 @@ function getBettingPicks(match, odds, leagueKey) {
     if (sc !== undefined) p.sc = sc;
     // Auto-flag estimated odds on picks from API prediction fallback (not Poisson — those set it themselves)
     if (_odds1x2IsEst && p.odds != null && !p.oddsIsEst) p.oddsIsEst = true;
+    // Invariant: a pick with no real odds and no estimate flag must be 'low' confidence.
+    // Without this a pick displayed as [medium] or [high] would appear with no bettable quote.
+    if (p.odds == null && !p.oddsIsEst && p.conf !== 'low') p.conf = 'low';
     picks.push(p);
     return true;
   };
@@ -5895,6 +5902,19 @@ function getBettingPicks(match, odds, leagueKey) {
   for (const p of picks) {
     if (p.odds != null && !p.oddsIsEst && p.odds > 2.05) p.conf = 'low';
     if (p.odds != null && !p.oddsIsEst && p.odds < 1.33) p.conf = 'low';
+  }
+
+  // ── Both-teams-low-motivation cap ─────────────────────────────────────────
+  // When neither side has a meaningful stake in the result, picks should never
+  // reach medium/high confidence — a garbage-time match offers no predictive edge.
+  // Exception: cards markets are allowed to stay at their computed level because
+  // low-motivation late-season matches often still produce cards from cynical play.
+  if (hMotivLow && aMotivLow) {
+    for (const p of picks) {
+      if (p.conf === 'medium' || p.conf === 'high') {
+        if (!p.market?.toLowerCase().includes('karte')) p.conf = 'low';
+      }
+    }
   }
 
   return picks;
@@ -9916,16 +9936,19 @@ function runPicksValidator() {
 
         // 🔴 Goals FV Negative Edge — Over 2.5 / Over 3.5 mit negativem Poisson-Edge
         // Prüft ob FV-Gate (neu Apr 2026) Pick korrekt geblockt hätte
+        // NOTE: _fxCopy._expGoals is written by getBettingPicks() after expGoals is finalised.
+        // Do NOT fall back to (hGPG + aGPG) — that uses static config values that are ~10× too small
+        // and cause false positives.  Skip the check entirely if _expGoals wasn't written.
         { const _o25p = _genPicks.find(p => p.market?.startsWith('Over 2.5') || p.market?.startsWith('Über 2.5'));
-          if (_o25p && _o25p.odds != null && !_o25p.oddsIsEst) {
-            const _fv25 = _poissonOver(fx._expGoals ?? (hGPG + aGPG), 2.5);
+          if (_o25p && _o25p.odds != null && !_o25p.oddsIsEst && _fxCopy._expGoals != null) {
+            const _fv25 = _poissonOver(_fxCopy._expGoals, 2.5);
             const _gap25 = (1 / _o25p.odds) - _fv25;
             if (_gap25 > GATE.GOALS_REAL) flag('error', 'OVER25_NEG_EDGE',
               `Over 2.5 Pick [${_o25p.conf}] @ ${_o25p.odds} aber Poisson FV=${(_fv25*100).toFixed(1)}% (Implied=${(100/_o25p.odds).toFixed(1)}%, Gap=${(_gap25*100).toFixed(1)}pp) — FV-Gate sollte geblockt haben.`);
           }
           const _o35p = _genPicks.find(p => p.market?.startsWith('Over 3.5') || p.market?.startsWith('Über 3.5'));
-          if (_o35p && _o35p.odds != null && !_o35p.oddsIsEst) {
-            const _fv35 = _poissonOver(fx._expGoals ?? (hGPG + aGPG), 3.5);
+          if (_o35p && _o35p.odds != null && !_o35p.oddsIsEst && _fxCopy._expGoals != null) {
+            const _fv35 = _poissonOver(_fxCopy._expGoals, 3.5);
             const _gap35 = (1 / _o35p.odds) - _fv35;
             if (_gap35 > GATE.GOALS_REAL) flag('error', 'OVER35_NEG_EDGE',
               `Over 3.5 Pick [${_o35p.conf}] @ ${_o35p.odds} aber Poisson FV=${(_fv35*100).toFixed(1)}% (Implied=${(100/_o35p.odds).toFixed(1)}%, Gap=${(_gap35*100).toFixed(1)}pp) — FV-Gate sollte geblockt haben.`);
