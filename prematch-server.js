@@ -1241,6 +1241,9 @@ async function fetchAllPrematchData() {
   const refOk = fixtures.filter(d => d.refereeStats).length;
   console.log(`  Step4 fertig: ${refOk}/${uniqueRefs.length} Schiris mit Stats`);
 
+  // `upcoming` used by Step 4.5 and Step 5 — declare here so both steps can access it.
+  const upcoming = fixtures.filter(d => !d.isFinished && d.fixtureId);
+
   // ── Step 4.5: Team Card Profiles (72h disk cache, 1 call per unique team) ──
   // Fetches /teams/statistics for each team (season 2025) to get per-team avgCards.
   // Used in getBettingPicks() to improve expected-cards estimate alongside refAvg.
@@ -1283,7 +1286,6 @@ async function fetchAllPrematchData() {
   // Markets: h2h (1X2), spreads (AH), totals (O/U).
   // DC odds (dc1X/X2/12) are derived from fair h2h probabilities.
   // Note: Cards/corners via Step 5c (alternate markets, eu,uk). BTTS via Step 5b (uk).
-  const upcoming = fixtures.filter(d => !d.isFinished && d.fixtureId);
   const _uniqueSportKeys = [...new Set(
     fixtures.filter(d => !d.isFinished && d.leagueId && LEAGUE_ODDS_KEYS[d.leagueId])
             .map(d => LEAGUE_ODDS_KEYS[d.leagueId])
