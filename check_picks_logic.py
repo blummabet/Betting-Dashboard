@@ -545,22 +545,23 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
     # Typical Über 4.5 odds: ~2.10–2.40 (impl. prob ~42–48%); gate at gap > 0.12
     # → flag when FV < 0.28
     if _fv_c45 < 0.28:
-        flag("WARN", "CARDS45_LOW_FV",
-             f"Liga-Baserate={_league_card_base:.1f} → Poisson FV für Über 4.5 Karten = {_fv_c45:.1%} "
-             f"(typische Quote ~2.20 → impl.Prob ~45.5%; Lücke ~{0.455 - _fv_c45:+.1%}). "
-             f"FV-Gate (GATE_GOALS_REAL=0.12) sollte Karten-4.5-Pick blocken. "
-             f"Kein refAvg im Validator — JS-Ergebnis kann durch hohen refAvg abweichen.")
+        flag("INFO", "CARDS45_LOW_FV",
+             f"Liga-Baserate={_league_card_base:.1f} → Poisson FV für Über 4.5 Karten = {_fv_c45:.1%}. "
+             f"JS-FV-Gate blockt falls Bookie-Quote zu kurz — aber refAvg kann das Bild drehen. "
+             f"Kein refAvg im Validator — JS-Ergebnis zählt, dieser Check ist nur Hinweis.")
 
     # ── H2H-basierte Goals-Checks ─────────────────────────────────────────────
     h2h_avg_g = h2h.get("avgGoals")
     h2h_btts  = h2h.get("btts")   # BTTS-Rate als Dezimal (0.0–1.0)
 
-    # 🔴 FEHLER: H2H Schnitt ≥ 3.5 → Under 2.5 HARD BLOCK hätte feuern müssen
-    # Fix April 2026: Hard Block bei H2H avgG ≥ 3.5 (sc=0). Falls Under 2.5 trotzdem erscheint: Bug.
+    # 🟡 WARNUNG: H2H Schnitt ≥ 3.5 → Under 2.5 HARD BLOCK sollte feuern
+    # Python hat keinen Zugriff auf generierte Picks — kann nicht prüfen ob Pick wirklich erscheint.
+    # Das JS-Inline-Validator prüft das gegen echte _genPicks (ERROR dort wenn Pick doch erscheint).
+    # Hier deshalb nur WARN als Erinnerung, kein false-positive ERROR.
     if h2h_avg_g is not None and h2h_avg_g >= 3.5:
-        flag("ERROR", "U25_H2H_HARD_BLOCK_MISS",
+        flag("WARN", "U25_H2H_HARD_BLOCK_MISS",
              f"H2H Schnitt={h2h_avg_g:.1f} Tore (≥3.5) — HARD BLOCK sollte Under 2.5 komplett blocken. "
-             f"Falls Under 2.5 Pick im Dashboard erscheint: H2H-Hard-Block-Bug prüfen.")
+             f"Python kann Picks nicht prüfen — JS-Inline-Validator zeigt ERROR falls Pick trotzdem erscheint.")
     # 🟡 WARNUNG: H2H Schnitt 3.0–3.5 → starke Dämpfung aktiv, Under 2.5 prüfen
     elif h2h_avg_g is not None and h2h_avg_g >= 3.0:
         flag("WARN", "H2H_HIGH_AVG_UNDER_RISK",
@@ -608,10 +609,13 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
                  f"Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt")
         # 🟡 WARNUNG: Over 3.5 FV unter 20% → fast immer negativer Edge bei Bookie-Quoten
         # SYNC:GATE — gate fires at GATE_GOALS_REAL (0.12) in season-finish.html
+        # INFO (nicht WARN): exp_goals_proxy = h_gpg + a_gpg aus dem Config ist ~5–10× kleiner
+        # als der JS-expGoals (der aus xG, homeAttStr, etc. berechnet wird). Deshalb feuert
+        # der Check fast immer, auch wenn der JS-Gate es korrekt handhabt.
         if exp_goals_proxy > 0 and fv_o35 < 0.20:
-            flag("WARN", "OVER35_LOW_FV",
-                 f"Ø gpg={exp_goals_proxy:.2f} → Poisson FV für Over 3.5 = {fv_o35:.1%} "
-                 f"(sehr niedrig). FV-Gate sollte Over 3.5 Pick bei üblichen Quoten (< 4.00) blocken.")
+            flag("INFO", "OVER35_LOW_FV",
+                 f"Ø gpg={exp_goals_proxy:.2f} (statischer Proxy) → Poisson FV für Over 3.5 = {fv_o35:.1%}. "
+                 f"JS nutzt expGoals aus xG/Att-Strength — FV-Gate greift dort zuverlässiger als dieser Proxy.")
 
         # 🟡 WARNUNG: H2H Over-Rate im Gefahrenbereich 30–45% (H2H Over-Modifier -0.04 bis -0.08)
         # Neue Schwellenwerte April 2026: ≤40% → -0.04 in _h2hO25Mod.
@@ -644,22 +648,21 @@ def check_fixture(fixture, league_key, league_name, rounds_left):
 
     if exp_h is not None:
         fv_h15 = poisson_over(exp_h, 1.5)
-        # Trigger if FV falls below 0.40 — at standard ~1.65 odds implies ~22pp neg gap
+        # INFO (nicht WARN): proxy = (h_gpg + a_def) / 2 aus statischen Config-Werten ist zu klein.
+        # JS berechnet expH aus homeAttStr × awayDefStr × leagueMean — deutlich höher.
         # SYNC:GATE — gate fires at GATE_TEAM_REAL (0.12) / GATE_TEAM_EST (0.15) in season-finish.html
         if exp_h < 1.6 and fv_h15 < 0.40:
-            flag("WARN", "TEAM_OVER_HOME_LOW_FV",
-                 f"{home} expH={exp_h:.2f} → Poisson FV über 1.5 = {fv_h15:.1%} "
-                 f"(FV-Gate sollte Heimteam-Over-1.5-Pick bei üblichen Quoten ~1.65 blocken; "
-                 f"impl.Prob ≈ {1/1.65:.1%}, Lücke ≈ {(1/1.65)-fv_h15:+.1%})")
+            flag("INFO", "TEAM_OVER_HOME_LOW_FV",
+                 f"{home} expH≈{exp_h:.2f} (statischer Proxy) → FV über 1.5 = {fv_h15:.1%}. "
+                 f"JS-expH aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.")
 
     if exp_a is not None:
         fv_a15 = poisson_over(exp_a, 1.5)
         # SYNC:GATE — gate fires at GATE_TEAM_REAL (0.12) / GATE_TEAM_EST (0.15) in season-finish.html
         if exp_a < 1.6 and fv_a15 < 0.40:
-            flag("WARN", "TEAM_OVER_AWAY_LOW_FV",
-                 f"{away} expA={exp_a:.2f} → Poisson FV über 1.5 = {fv_a15:.1%} "
-                 f"(FV-Gate sollte Auswärtsteam-Over-1.5-Pick bei üblichen Quoten ~1.65 blocken; "
-                 f"impl.Prob ≈ {1/1.65:.1%}, Lücke ≈ {(1/1.65)-fv_a15:+.1%})")
+            flag("INFO", "TEAM_OVER_AWAY_LOW_FV",
+                 f"{away} expA≈{exp_a:.2f} (statischer Proxy) → FV über 1.5 = {fv_a15:.1%}. "
+                 f"JS-expA aus xG/Att-Strength typischerweise höher — Gate greift dort zuverlässiger.")
 
     # ── Ecken FV Gate Plausibilität ───────────────────────────────────────────
     # Prüft ob Corner-picks mit sehr niedrigen erwarteten Ecken trotzdem erscheinen.
