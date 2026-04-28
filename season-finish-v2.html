@@ -1644,6 +1644,48 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
   </div>
 
+    <!-- ── Modularer Aufbau (Apr 2026) ── -->
+    <div class="heart-card" style="border-color:rgba(163,113,247,.30);background:rgba(163,113,247,.04);margin-top:12px;">
+      <h3>④ Modularer Aufbau — season-finish-v2.html</h3>
+      <p style="margin-bottom:10px;">Die Monodatei <code>season-finish.html</code> wuchs auf ~13 000 Zeilen (Apr 2026). Um Testbarkeit, Orientierung und sichere Änderungen zu garantieren, wurde sie in <strong style="color:var(--text)">season-finish-v2.html</strong> in separate Module aufgeteilt. <code>season-finish.html</code> bleibt als Fallback erhalten.</p>
+
+      <p style="margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text);">Dateistruktur:</p>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:11px;font-family:monospace;color:var(--muted);line-height:2;">
+        <span style="color:var(--accent)">pick-engine.js</span> &nbsp;→ GATE, PICK_CONFIG, _poissonOver, _hasNegEdge, getBettingPicks()<br>
+        <span style="color:#58a6ff">renderer.js</span> &nbsp;&nbsp;&nbsp;&nbsp;→ renderFixtureCard(), renderLeague(), renderOverview(), renderLineMovement()<br>
+        <span style="color:#e3b341">validator.js</span> &nbsp;&nbsp;&nbsp;→ runPicksValidator(), renderValidatorOutput(), buildValidatorDates()<br>
+        <span style="color:#f47067">share.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ shareTelegram(), copyCard(), generateInfographic(), generateScript()<br>
+        <span style="color:#8b949e">ui.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Navigation, Tabs, initStatus(), showView()<br>
+        <span style="color:#8b949e">season-finish-v2.html</span> → HTML-Gerüst + CSS + LEAGUES-Daten + 5× &lt;script src&gt; (~6 700 Zeilen)
+      </div>
+
+      <p style="margin-top:10px;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text);">Refactoring-Steps (alle abgeschlossen):</p>
+      <table class="heart-table" style="font-size:11px;">
+        <tr><th>Step</th><th>Was</th><th>Status</th></tr>
+        <tr><td><strong>1</strong></td><td><code>pick-engine.js</code> extrahieren</td><td>✅ 2 639 Zeilen, Node.js-testbar</td></tr>
+        <tr><td><strong>2</strong></td><td>Unit Tests (<code>test-pick-engine.js</code>)</td><td>✅ 39/39 grün — <code>node test-pick-engine.js</code></td></tr>
+        <tr><td><strong>3</strong></td><td><code>validator.js</code> extrahieren</td><td>✅ 466 Zeilen</td></tr>
+        <tr><td><strong>4</strong></td><td><code>renderer.js</code> extrahieren</td><td>✅ 1 591 Zeilen</td></tr>
+        <tr><td><strong>5</strong></td><td><code>share.js</code> + <code>ui.js</code> extrahieren</td><td>✅ 1 362 + 278 Zeilen</td></tr>
+        <tr><td><strong>6</strong></td><td>Live-Test + v2-Audit</td><td>✅ Browser-Test OK, 0 Duplikate, 0 Syntax-Fehler</td></tr>
+      </table>
+
+      <p style="margin-top:10px;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text);">GitHub Actions — automatisch mitgepflegt:</p>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:8px;"><code>update_dashboard.py</code> aktualisiert LEAGUES in beiden HTML-Dateien gleichzeitig. Das <code>update-dashboard.yml</code> committet <code>season-finish-v2.html</code> mit. Die <code>.js</code>-Module werden nur bei manuellen Code-Änderungen gepusht — sie enthalten keine Daten.</p>
+
+      <p style="margin-top:10px;margin-bottom:6px;font-size:12px;font-weight:700;color:var(--text);">Vorteile:</p>
+      <table class="heart-table" style="font-size:11px;">
+        <tr><th>Bereich</th><th>Konkreter Vorteil</th></tr>
+        <tr><td>🧪 Testbarkeit</td><td><code>node test-pick-engine.js</code> — Picks ohne Browser testen, Regressions sofort sichtbar</td></tr>
+        <tr><td>🔍 Orientierung</td><td>Bug in Karten-Logik → <code>pick-engine.js</code>. Bug im Rendering → <code>renderer.js</code>. Kein 6k-Zeilen-Scrollen</td></tr>
+        <tr><td>🔒 Sicherheit</td><td>Renderer-Änderung kann Pick-Engine nicht treffen. Scope-Fehler fallen in kleinen Files sofort auf</td></tr>
+        <tr><td>🚀 Erweiterbarkeit</td><td><code>pick-engine.js</code> direkt in Telegram-Bot oder API-Endpoint importierbar</td></tr>
+        <tr><td>📦 Wartbarkeit</td><td>Neuer Markt → nur <code>pick-engine.js</code> anfassen. Kein Risiko für UI-Code</td></tr>
+      </table>
+
+      <p style="margin-top:8px;font-size:11px;color:var(--muted);">Status: <strong style="color:#3fb950">✅ Abgeschlossen</strong> — <code>season-finish-v2.html</code> ist die aktive Produktivdatei. <code>season-finish.html</code> bleibt als Fallback-Kopie. Version-Switcher oben in beiden Dateien.</p>
+    </div>
+
 </div>
 </div>
 
