@@ -18,7 +18,8 @@ from pathlib import Path
 # ── Config ────────────────────────────────────────────────────────────────────
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-HTML_FILE  = os.path.join(SCRIPT_DIR, "season-finish.html")
+HTML_FILE    = os.path.join(SCRIPT_DIR, "season-finish.html")
+HTML_FILE_V2 = os.path.join(SCRIPT_DIR, "season-finish-v2.html")
 
 LEAGUES = {
     "ENG": dict(tid=17,  apif_id=39,  name="Premier League",  flag="🏴󠁧󠁢󠁥󠁮󠁧󠁿", total=20, rounds=38, ucl=4, el=2, uecl=1, rel_playoff=0, rel=3),
@@ -1386,6 +1387,16 @@ def update_html(new_leagues_js, today_str):
         f.write(content)
 
     print(f"\n✓ {HTML_FILE} aktualisiert")
+
+    # ── Mirror LEAGUES + date update to v2 ───────────────────────────────────
+    if os.path.exists(HTML_FILE_V2):
+        with open(HTML_FILE_V2, "r", encoding="utf-8") as f:
+            content_v2 = f.read()
+        content_v2 = re.sub(pattern, new_leagues_js, content_v2, flags=re.DOTALL)
+        content_v2 = re.sub(r'Stand \d{1,2}\. \w+ \d{4}', f'Stand {today_str}', content_v2)
+        with open(HTML_FILE_V2, "w", encoding="utf-8") as f:
+            f.write(content_v2)
+        print(f"✓ {HTML_FILE_V2} aktualisiert (mirror)")
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 
