@@ -1642,6 +1642,50 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       </div>
 
     </div>
+
+    <!-- ── Modularer Aufbau (Apr 2026) ── -->
+    <div class="heart-card" style="border-color:rgba(163,113,247,.30);background:rgba(163,113,247,.04);margin-top:12px;">
+      <h3>④ Modularer Aufbau — season-finish-v2.html</h3>
+      <p style="margin-bottom:10px;">Die Monodatei <code>season-finish.html</code> wächst mit jedem Feature (~13 000 Zeilen, Apr 2026). Um Testbarkeit, Orientierung und sichere Änderungen zu garantieren, wird sie in <strong style="color:var(--text)">season-finish-v2.html</strong> schrittweise in separate Module aufgeteilt. <code>season-finish.html</code> bleibt dabei jederzeit produktiv.</p>
+
+      <p style="margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text);">Dateistruktur nach Abschluss:</p>
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:11px;font-family:monospace;color:var(--muted);line-height:2;">
+        <span style="color:var(--accent)">pick-engine.js</span> &nbsp;→ GATE, PICK_CONFIG, _poissonOver, _hasNegEdge, getBettingPicks()<br>
+        <span style="color:#58a6ff">renderer.js</span> &nbsp;&nbsp;&nbsp;&nbsp;→ renderFixtureCard(), renderLeague(), renderOverview(), renderLineMovement()<br>
+        <span style="color:#e3b341">validator.js</span> &nbsp;&nbsp;&nbsp;→ runPicksValidator(), renderValidatorOutput(), buildValidatorDates()<br>
+        <span style="color:#f47067">share.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ shareTelegram(), copyCard(), generateInfographic(), generateScript()<br>
+        <span style="color:#8b949e">ui.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Navigation, Tabs, initStatus(), initResults(), Odds-API-Fetch<br>
+        <span style="color:#8b949e">season-finish-v2.html</span> → HTML-Gerüst + CSS + LEAGUES-Daten + 5× &lt;script src&gt;
+      </div>
+
+      <p style="margin-top:10px;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text);">6-Step Refactoring-Plan:</p>
+      <table class="heart-table" style="font-size:11px;">
+        <tr><th>Step</th><th>Was</th><th>Warum zuerst</th></tr>
+        <tr><td><strong>1</strong></td><td><code>pick-engine.js</code> extrahieren</td><td>Keine DOM-Abhängigkeiten → sofort in Node.js testbar</td></tr>
+        <tr><td><strong>2</strong></td><td>Unit Tests schreiben (<code>test-pick-engine.js</code>)</td><td>Poisson-Mathe + Gate-Logik + 3–4 Fixture-Snapshots absichern</td></tr>
+        <tr><td><strong>3</strong></td><td><code>validator.js</code> extrahieren</td><td>Hängt von pick-engine.js ab, klar abgegrenzte Verantwortung</td></tr>
+        <tr><td><strong>4</strong></td><td><code>renderer.js</code> extrahieren</td><td>renderFixtureCard() + renderLeague() + renderOverview()</td></tr>
+        <tr><td><strong>5</strong></td><td><code>share.js</code> + <code>ui.js</code> extrahieren</td><td>Letzte UI-Blöcke, größte Datei schließlich nur noch Gerüst</td></tr>
+        <tr><td><strong>6</strong></td><td>HTML-Shell ausdünnen, Smoke-Test</td><td>Dashboard im Browser öffnen, alle Tabs + Picks prüfen</td></tr>
+      </table>
+
+      <p style="margin-top:10px;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text);">GitHub Actions — keine Änderung nötig:</p>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:8px;">Python-Scripts (update_dashboard.py, check_picks_logic.py) injizieren LEAGUES und VALIDATOR_SUMMARY weiterhin als <code>&lt;script&gt;</code>-Blöcke direkt in die HTML-Datei. Die .yml-Workflows bleiben unverändert — sie rufen dieselben Python-Scripts auf.</p>
+
+      <p style="margin-top:10px;margin-bottom:6px;font-size:12px;font-weight:700;color:var(--text);">Vorteile nach Abschluss:</p>
+      <table class="heart-table" style="font-size:11px;">
+        <tr><th>Bereich</th><th>Konkreter Vorteil</th></tr>
+        <tr><td>🧪 Testbarkeit</td><td><code>node test-pick-engine.js</code> — Picks ohne Browser testen, Regressions sofort sichtbar</td></tr>
+        <tr><td>🔍 Orientierung</td><td>Bug in Karten-Logik → <code>pick-engine.js</code>. Bug im Rendering → <code>renderer.js</code>. Kein 13k-Zeilen-Scrollen</td></tr>
+        <tr><td>🔒 Sicherheit</td><td>Renderer-Änderung kann Pick-Engine nicht treffen. Scope-Fehler (TDZ, ReferenceError) fallen in kleinen Files sofort auf</td></tr>
+        <tr><td>🚀 Erweiterbarkeit</td><td><code>pick-engine.js</code> direkt in Telegram-Bot oder API-Endpoint importierbar</td></tr>
+        <tr><td>📦 Wartbarkeit</td><td>Neuer Markt → nur <code>pick-engine.js</code> anfassen. Kein Risiko für UI-Code</td></tr>
+      </table>
+
+      <p style="margin-top:8px;font-size:11px;color:var(--muted);">Status: <strong style="color:#e3b341">In Arbeit</strong> — <code>season-finish-v2.html</code> ist die aktive Refactoring-Kopie. <code>season-finish.html</code> bleibt jederzeit produktiv. Version-Switcher oben in beiden Dateien.</p>
+    </div>
+
+  </div>
   </div>
 
 </div>
