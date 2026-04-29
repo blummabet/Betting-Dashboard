@@ -19,6 +19,7 @@ Lokales Setup (optional, zum Testen):
     python3 polymarket_bet.py
 """
 
+import argparse
 import json
 import os
 import sys
@@ -251,87 +252,102 @@ def log_bet_to_history(history: list, order: dict, result: dict) -> None:
 # ── Main ────────────────────────────────────────────────────
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dry-run", action="store_true",
+                        help="Alles durchlaufen aber keine echte Order absenden")
+    args = parser.parse_args()
+    dry_run = args.dry_run or os.environ.get("DRY_RUN", "").lower() in ("1", "true", "yes")
+
     # 1. Read env vars
     private_key = os.environ.get("POLY_PRIVATE_KEY", "").strip()
     orders_raw  = os.environ.get("ORDERS_JSON", "[]").strip()
 
     if not private_key:
-        print("❌ POLY_PRIVATE_KEY not set")
+        print("❌ POLY_PRIVATE_KEY nicht gesetzt")
+        print("   export POLY_PRIVATE_KEY=0x...")
         sys.exit(1)
 
     try:
         orders = json.loads(orders_raw)
     except json.JSONDecodeError as e:
-        print(f"❌ Invalid ORDERS_JSON: {e}")
+        print(f"❌ Ungültiges ORDERS_JSON: {e}")
         sys.exit(1)
 
     if not orders:
-        print("ℹ️  No orders to place.")
+        print("ℹ️  Keine Orders.")
         sys.exit(0)
 
-    print(f"\n🟣 Polymarket Bet Placer — {len(orders)} order(s)\n{'─'*50}")
+    mode = "🔍 DRY-RUN (keine echten Orders)" if dry_run else "🟣 LIVE"
+    print(f"\n{mode} — {len(orders)} Order(s)\n{'─'*50}")
 
     history = load_history()
     placed  = 0
     failed  = 0
 
     for i, order in enumerate(orders, 1):
-        home      = order.get("home", "")
-        away      = order.get("away", "")
-        market    = order.get("market", "")
+        home       = order.get("home", "")
+        away       = order.get("away", "")
+        market     = order.get("market", "")
         poly_price = order.get("polyPrice")
+        stake      = order.get("stake", STAKE_USDC)
 
         print(f"\n[{i}/{len(orders)}] {home} vs {away} — {market}")
 
-        # 2. Find Gamma event
+        # 2. Gamma API: Event suchen
         event = gamma_search_event(home, away)
         if not event:
-            print(f"  ❌ No Polymarket event found — skipping")
+            print(f"  ❌ Kein Polymarket-Event gefunden — übersprungen")
             log_bet_to_history(history, order, {"status": "skipped", "orderId": None, "error": "no event found"})
             failed += 1
             continue
 
         print(f"  ✅ Event: {event.get('title')}")
 
-        # 3. Get CLOB token ID for the outcome
+        # 3. CLOB Token ID für den Outcome finden
         token_id = find_clob_token_id(event, market, home, away)
         if not token_id:
-            print(f"  ❌ CLOB token ID not found for '{market}' — skipping")
+            print(f"  ❌ CLOB Token ID für '{market}' nicht gefunden — übersprungen")
             log_bet_to_history(history, order, {"status": "skipped", "orderId": None, "error": "token_id not found"})
             failed += 1
             continue
 
-        print(f"  📍 Token ID: {token_id}")
+        print(f"  📍 Token ID: {token_id[:16]}…")
         if poly_price:
-            print(f"  💰 Price: {round(poly_price * 100)}¢ (implied {round(1/poly_price, 2):.2f})")
+            print(f"  💰 Preis: {round(poly_price * 100)}¢  |  Einsatz: ${stake:.2f} USDC")
 
-        # 4. Place order
-        stake = order.get("stake", STAKE_USDC)
-        result = place_market_order(token_id, float(stake), private_key)
-
-        if result["status"] == "placed":
-            print(f"  ✅ Order placed — ID: {result['orderId']}")
+        # 4. Order absenden (oder simulieren)
+        if dry_run:
+            print(f"  🔍 DRY-RUN: Order würde jetzt abgesendet werden — übersprungen")
+            result = {"status": "dry-run", "orderId": "dry-run", "error": None}
             placed += 1
         else:
-            print(f"  ❌ Order failed: {result['error']}")
-            failed += 1
+            result = place_market_order(token_id, float(stake), private_key)
+            if result["status"] == "placed":
+                print(f"  ✅ Order platziert — ID: {result['orderId']}")
+                placed += 1
+            else:
+                print(f"  ❌ Order fehlgeschlagen: {result['error']}")
+                failed += 1
 
-        # 5. Log to history
+        # 5. In History loggen
         log_bet_to_history(history, order, result)
 
-        # Rate limit: brief pause between orders
         if i < len(orders):
             time.sleep(1.0)
 
-    # 6. Save updated history
+    # 6. History speichern
     save_history(history)
 
     print(f"\n{'─'*50}")
-    print(f"✅ Placed: {placed}   ❌ Failed/Skipped: {failed}")
-    print(f"📝 picks_history.json updated\n")
+    if dry_run:
+        print(f"🔍 Dry-Run abgeschlossen: {placed}/{len(orders)} würden platziert werden")
+        print(f"   Wenn alles aussieht, nochmal OHNE --dry-run ausführen.\n")
+    else:
+        print(f"✅ Platziert: {placed}   ❌ Fehlgeschlagen: {failed}")
+        print(f"📝 picks_history.json aktualisiert\n")
 
-    if failed > 0 and placed == 0:
-        sys.exit(1)  # Signal error to GitHub Action
+    if not dry_run and failed > 0 and placed == 0:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
