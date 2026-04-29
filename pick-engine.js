@@ -1125,7 +1125,10 @@ function getBettingPicks(match, odds, leagueKey) {
             ? `${match.home} ist bereits Meister — Pflichtspiel ohne Saisondruck. Gewinnt ${Math.round(hFS_home*100)}% der Heimspiele, Rotation möglich. Qualität bleibt strukturell hoch.${_hH2hSnippet}`
           : hc.includes('red') && homeNeedsWin
             ? `${match.home} kämpft gegen den Abstieg und braucht jeden Punkt zu Hause — das steigert die Intensität und Entschlossenheit. ${match.away} kommt mit nur ${Math.round(aFS_away*100)}% Auswärtssieg-Rate.${_hH2hSnippet}`
-            : ac.includes('red') && !awayNeedsWin
+            : ac.includes('red') && aMotivNone
+              // 🔑 FIX: relegated away team has NO Abstiegsdruck — they're already down
+              ? `${match.away} bereits abgestiegen — kein Gegendruck mehr. ${match.home} gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele und kann den fehlenden Auswärtsdruck des Gegners nutzen.${_hH2hSnippet}`
+              : ac.includes('red') && !awayNeedsWin
               ? `${match.away} ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. ${match.home} gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele und kann diesen Vorteil nutzen.${_hH2hSnippet}`
               : `${match.home} gewinnt ${Math.round(hFS_home*100)}% seiner Heimspiele und erzielt dabei Ø ${homeAttStr.toFixed(1)} Tore/Spiel. Der Gegner kassiert Ø ${awayDefStr.toFixed(1)} Tore/Spiel.${_hH2hSnippet}`;
       if (eloAwayFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
@@ -1244,7 +1247,10 @@ function getBettingPicks(match, odds, leagueKey) {
           ? `${match.away} kämpft im Titelkampf um Punkte auswärts. Gewinnt ${Math.round(aFS_away*100)}% der Auswärtsspiele und erzielt Ø ${awayAttStr.toFixed(1)} Tore/Spiel. Titeldruck treibt die Leistung.${_aH2hSnippet}`
           : ac.includes('gold') && aMotivNone
             ? `${match.away} ist bereits Meister — Auswärtsspiel ohne Saisondruck. Gewinnt ${Math.round(aFS_away*100)}% der Auswärtsspiele, Rotation möglich. Qualität bleibt strukturell hoch.${_aH2hSnippet}`
-          : hc.includes('red') && !homeNeedsWin
+          : hc.includes('red') && hMotivNone
+            // 🔑 FIX: relegated home team — "Abstiegskampf" text is wrong, they're already down
+            ? `${match.home} bereits abgestiegen — kein Heimdruck mehr, Rotation wahrscheinlich. ${match.away} mit ${Math.round(aFS_away*100)}% Auswärtssieg-Rate kann den fehlenden Widerstand nutzen.${_aH2hSnippet}`
+            : hc.includes('red') && !homeNeedsWin
             ? `${match.home} steckt im Abstiegskampf und ist defensiv anfällig (kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel). ${match.away} mit ${Math.round(aFS_away*100)}% Auswärtssieg-Rate kann diesen Vorteil nutzen.${_aH2hSnippet}`
             : `${match.away} gewinnt ${Math.round(aFS_away*100)}% seiner Auswärtsspiele und erzielt dabei Ø ${awayAttStr.toFixed(1)} Tore/Spiel. Der Gegner kassiert Ø ${homeDefStr.toFixed(1)} Tore/Spiel.${_aH2hSnippet}`;
       if (eloHomeFav && eloLabel) reason += `<br>⚠️ Elo-Warnung: ${eloLabel}`;
@@ -1600,7 +1606,11 @@ function getBettingPicks(match, odds, leagueKey) {
       // 🔑 API PREDICTION CONSENSUS
       if (_apiUO === 'Under 2.5') sc = Math.min(0.92, sc + 0.07);
       else if (_apiUO === 'Over 2.5') sc = Math.max(0, sc - 0.06);
-      const _u25DefTeam = _topResultMkt==='Heimsieg'?match.home:_topResultMkt==='Auswärtssieg'?match.away:null;
+      // 🔑 FIX: don't say a relegated team "dominiert" — they have no motivation/intensity.
+      // _topResultMkt may still point to a relegated team (score reduced but not zero).
+      const _u25DefTeamRaw = _topResultMkt==='Heimsieg'?match.home:_topResultMkt==='Auswärtssieg'?match.away:null;
+      const _u25DefTeamRelg = (_u25DefTeamRaw===match.home && hMotivNone) || (_u25DefTeamRaw===match.away && aMotivNone);
+      const _u25DefTeam = _u25DefTeamRelg ? null : _u25DefTeamRaw;
       const _pressWarn = _anyNeedsWin
         ? `<br><strong>⚠️ ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — Angriffsdrang erhöht Torrisiko, Under-Signal geschwächt.</strong>` : '';
       const _u25H2hNote = (_h2hSample && _h2hOver25 != null)
