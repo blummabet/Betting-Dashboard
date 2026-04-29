@@ -603,15 +603,104 @@ function _polyRefreshStickyBar() {
   if (lbl) lbl.textContent = `${n} Pick${n !== 1 ? 's'  : ''} ausgewählt · €${stake} Einsatz`;
 }
 
+// ── GitHub PAT helpers ──────────────────────────────────
+
+const POLY_GITHUB_REPO = 'blummabet/Betting-Dashboard';
+
+function _getGithubPAT() {
+  try { return localStorage.getItem('betedge_github_pat') || ''; } catch { return ''; }
+}
+function _saveGithubPAT(token) {
+  try { localStorage.setItem('betedge_github_pat', token.trim()); } catch (e) {}
+}
+
+function polyOpenSettings() {
+  const current = _getGithubPAT();
+  const masked  = current ? '•'.repeat(Math.min(current.length, 20)) : '';
+  document.getElementById('polyModalBody').innerHTML = `
+    <div style="font-size:17px;font-weight:800;margin-bottom:6px;color:#e6edf3">⚙️ Einstellungen</div>
+    <div style="font-size:12px;color:#8b949e;margin-bottom:20px">Einmalig — Token bleibt nur in deinem Browser</div>
+
+    <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8b949e;display:block;margin-bottom:6px">
+      GitHub Personal Access Token
+    </label>
+    <div style="display:flex;gap:8px;margin-bottom:6px">
+      <input id="polyPatInput" type="password" placeholder="${masked || 'ghp_...'}"
+        style="flex:1;background:#0d1117;border:1px solid #30363d;border-radius:8px;color:#e6edf3;font-size:13px;padding:10px 12px;font-family:monospace;outline:none"
+        oninput="this.style.borderColor='#a78bfa'" />
+      <button onclick="polySavePAT()"
+        style="background:#a78bfa;border:none;border-radius:8px;color:#000;font-size:13px;font-weight:700;padding:10px 16px;cursor:pointer;font-family:inherit">
+        Speichern
+      </button>
+    </div>
+    <div style="font-size:11px;color:#8b949e;margin-bottom:20px;line-height:1.5">
+      Scope: <code style="color:#00d4a1;background:#00d4a110;padding:1px 5px;border-radius:3px">repo</code>
+      · Erstellen unter github.com → Settings → Developer settings → Tokens (classic)
+    </div>
+
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:12px 14px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8b949e;margin-bottom:8px">Status</div>
+      <div style="font-size:13px;color:${current ? '#3fb950' : '#f85149'}">
+        ${current ? '✅ Token gespeichert' : '❌ Kein Token — Bets können nicht ausgelöst werden'}
+      </div>
+      <div style="font-size:11px;color:#8b949e;margin-top:4px">Repo: ${POLY_GITHUB_REPO}</div>
+    </div>`;
+  document.getElementById('polyModal').style.display = 'flex';
+}
+
+function polySavePAT() {
+  const val = document.getElementById('polyPatInput')?.value?.trim();
+  if (!val) { _polyToast('❌ Kein Token eingegeben'); return; }
+  if (!val.startsWith('ghp_') && !val.startsWith('github_pat_')) {
+    _polyToast('⚠️ Sieht nicht wie ein GitHub Token aus');
+  }
+  _saveGithubPAT(val);
+  document.getElementById('polyModal').style.display = 'none';
+  _polyToast('✅ GitHub Token gespeichert');
+  // Refresh settings button color
+  const btn = document.getElementById('polySettingsBtn');
+  if (btn) { btn.style.color = '#3fb950'; btn.style.borderColor = '#3fb95055'; }
+}
+
+// ── GitHub dispatch ─────────────────────────────────────
+
+async function _callGitHubDispatch(orders) {
+  const pat = _getGithubPAT();
+  if (!pat) {
+    polyOpenSettings();
+    return false;
+  }
+
+  const resp = await fetch(`https://api.github.com/repos/${POLY_GITHUB_REPO}/dispatches`, {
+    method:  'POST',
+    headers: {
+      'Authorization': `Bearer ${pat}`,
+      'Accept':        'application/vnd.github+json',
+      'Content-Type':  'application/json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+    body: JSON.stringify({
+      event_type:     'place-poly-bets',
+      client_payload: { orders },
+    }),
+  });
+
+  return resp.ok || resp.status === 204; // GitHub returns 204 No Content on success
+}
+
+// ── Confirm modal ───────────────────────────────────────
+
 function polyConfirm() {
   const sel = _polyState.picks.filter(p => _polyState.selected.has(p.id));
   if (sel.length === 0) return;
+
+  const pat = _getGithubPAT();
 
   const rows = sel.map(p => {
     const pd       = _polyState.prices[p.id];
     const priceStr = pd?.found ? `${Math.round(pd.price * 100)}¢` : '—';
     const oddsStr  = pd?.found ? (1 / pd.price).toFixed(2) : '—';
-    return `<tr style="border-bottom:1px solid #30363d">
+    return `<tr style="border-bottom:1px solid #1c2128">
       <td style="padding:9px 12px;font-size:13px">${p.leagueFlag} ${p.home} vs ${p.away}</td>
       <td style="padding:9px 12px;font-size:13px;color:${_marketColor(p.market)}">${_marketIcon(p.market)} ${p.market}</td>
       <td style="padding:9px 12px;font-size:13px;color:#a78bfa;font-weight:700">${priceStr}</td>
@@ -621,28 +710,27 @@ function polyConfirm() {
   }).join('');
 
   const ordersObj = sel.map(p => ({
-    home:       toEnglishName(p.home),
-    away:       toEnglishName(p.away),
-    market:     p.market,
-    league:     p.league,
-    bookyOdds:  p.odds,
-    stake:      POLY_STAKE,
-    polyPrice:  _polyState.prices[p.id]?.found ? _polyState.prices[p.id].price : null,
+    home:      toEnglishName(p.home),
+    away:      toEnglishName(p.away),
+    market:    p.market,
+    league:    p.league,
+    bookyOdds: p.odds,
+    stake:     POLY_STAKE,
+    polyPrice: _polyState.prices[p.id]?.found ? _polyState.prices[p.id].price : null,
   }));
 
-  window._polyOrdersJson = JSON.stringify(ordersObj, null, 2);
-  window._polyOrdersSel  = sel;
+  window._polyOrdersSel = sel;
+  window._polyOrdersObj = ordersObj;
 
-  const modalBody = document.getElementById('polyModalBody');
-  modalBody.innerHTML = `
+  document.getElementById('polyModalBody').innerHTML = `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
       <span style="font-size:24px">🟣</span>
       <div>
         <div style="font-size:17px;font-weight:800;color:#e6edf3">Bestellübersicht</div>
-        <div style="font-size:12px;color:#8b949e">${sel.length} Picks · €${(sel.length * POLY_STAKE).toFixed(2)} Total</div>
+        <div style="font-size:12px;color:#8b949e">${sel.length} Pick${sel.length !== 1 ? 's' : ''} · €${(sel.length * POLY_STAKE).toFixed(2)} Total</div>
       </div>
     </div>
-    <!-- Summary table -->
+
     <div style="background:#0d1117;border-radius:8px;overflow:hidden;margin-bottom:16px">
       <table style="width:100%;border-collapse:collapse">
         <thead style="background:#1c2128">
@@ -657,36 +745,63 @@ function polyConfirm() {
         <tbody>${rows}</tbody>
       </table>
     </div>
-    <!-- Terminal command -->
-    <div style="background:#161b22;border:1px solid #30363d;border-radius:8px;padding:12px 14px;margin-bottom:14px">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8b949e;margin-bottom:8px">Terminal-Befehl</div>
-      <code style="font-size:12px;color:#00d4a1;line-height:1.7;display:block;word-break:break-all">python3 polymarket_bet.py --orders polymarket_orders.json</code>
-      <div style="margin-top:8px;font-size:11px;color:#8b949e">1. JSON herunterladen → 2. Terminal öffnen → 3. Befehl ausführen → 4. Bestätigen</div>
-    </div>
-    <!-- Action buttons -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-      <button onclick="polyDownloadOrders()" style="background:#a78bfa22;border:1px solid #a78bfa55;border-radius:8px;color:#a78bfa;font-size:13px;font-weight:700;padding:12px;cursor:pointer;font-family:inherit">
-        📥 JSON herunterladen
-      </button>
-      <button onclick="polySavePending()" style="background:#3fb95022;border:1px solid #3fb95055;border-radius:8px;color:#3fb950;font-size:13px;font-weight:700;padding:12px;cursor:pointer;font-family:inherit">
-        ✅ Als platziert speichern
-      </button>
-    </div>
-    <div style="text-align:center;font-size:11px;color:#8b949e;margin-top:4px">
-      Wallet: Polygon USDC · Dein Private Key bleibt lokal
+
+    ${!pat ? `<div style="background:#f8514911;border:1px solid #f8514933;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#f85149">
+      ⚠️ Kein GitHub Token gesetzt.
+      <button onclick="polyOpenSettings()" style="background:none;border:none;color:#f85149;cursor:pointer;font-size:12px;font-weight:700;padding:0;margin-left:6px;text-decoration:underline;font-family:inherit">Jetzt einrichten →</button>
+    </div>` : ''}
+
+    <button id="polyDispatchBtn" onclick="polyDispatch()"
+      style="width:100%;background:linear-gradient(135deg,#a78bfa,#7c3aed);border:none;border-radius:10px;color:#fff;font-size:15px;font-weight:800;padding:14px;cursor:pointer;font-family:inherit;letter-spacing:.02em;box-shadow:0 2px 16px #a78bfa44;margin-bottom:10px;${!pat ? 'opacity:.5;' : ''}">
+      🟣 Bets via GitHub auslösen
+    </button>
+    <div style="text-align:center;font-size:11px;color:#8b949e">
+      Wallet: Polygon USDC · Private Key bleibt in GitHub Secrets
     </div>`;
 
   document.getElementById('polyModal').style.display = 'flex';
 }
 
-function polyDownloadOrders() {
-  const blob = new Blob([window._polyOrdersJson || '[]'], { type: 'application/json' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = 'polymarket_orders.json';
-  document.body.appendChild(a); a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+async function polyDispatch() {
+  const orders = window._polyOrdersObj;
+  const sel    = window._polyOrdersSel;
+  if (!orders?.length) return;
+
+  const btn = document.getElementById('polyDispatchBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Wird ausgelöst…'; }
+
+  const ok = await _callGitHubDispatch(orders);
+
+  if (ok) {
+    // Save as pending in localStorage
+    const bets = _getPolyBets();
+    for (const p of sel) {
+      const pd = _polyState.prices[p.id];
+      bets.push({
+        id:        p.id,
+        date:      p.date || _polyState.dateStr,
+        home:      p.home,
+        away:      p.away,
+        market:    p.market,
+        league:    p.league,
+        stake:     POLY_STAKE,
+        polyPrice: pd?.found ? pd.price : null,
+        placed:    new Date().toISOString(),
+        result:    null,
+      });
+    }
+    _savePolyBets(bets);
+    _polyState.selected.clear();
+    _polyRefreshStickyBar();
+    document.getElementById('polyModal').style.display = 'none';
+    document.getElementById('polyPickGrid').innerHTML = renderPolyPickCards();
+    document.getElementById('polyStatsSection').innerHTML = renderPolyStats();
+    _polyToast(`🟣 ${sel.length} Bet${sel.length !== 1 ? 's' : ''} ausgelöst via GitHub Action!`);
+  } else {
+    if (btn) { btn.disabled = false; btn.textContent = '🟣 Bets via GitHub auslösen'; }
+    _polyToast('❌ GitHub API Fehler — Token prüfen');
+    polyOpenSettings();
+  }
 }
 
 function polySavePending() {
@@ -802,6 +917,7 @@ function initPolymarket() {
         <button onclick="polySelectAll()"  style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#30363d'">☑️ Alle</button>
         <button onclick="polySelectNone()" style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#30363d'">⬜ Keine</button>
         <button onclick="initPolymarket()" style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#00d4a1'" onmouseout="this.style.borderColor='#30363d'">🔄 Refresh</button>
+        <button id="polySettingsBtn" onclick="polyOpenSettings()" style="background:none;border:1px solid ${_getGithubPAT() ? '#3fb95055' : '#f8514933'};border-radius:8px;color:${_getGithubPAT() ? '#3fb950' : '#f85149'};font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit">⚙️ Setup</button>
       </div>
     </div>
 

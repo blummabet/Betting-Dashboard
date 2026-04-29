@@ -1,0 +1,43 @@
+name: 🟣 Place Polymarket Bets
+
+# Triggered from the CocoBet dashboard when the user clicks "Jetzt platzieren"
+# Payload: { "orders": [...] } — array of bet orders from the UI
+on:
+  repository_dispatch:
+    types: [place-poly-bets]
+
+jobs:
+  place-bets:
+    name: Place bets on Polymarket CLOB
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --quiet py-clob-client requests
+
+      - name: Place Polymarket orders
+        env:
+          POLY_PRIVATE_KEY: ${{ secrets.POLY_PRIVATE_KEY }}
+          ORDERS_JSON:      ${{ toJson(github.event.client_payload.orders) }}
+        working-directory: "Betting Dashboard"
+        run: python3 polymarket_bet.py
+
+      - name: Commit updated picks_history.json
+        working-directory: "Betting Dashboard"
+        run: |
+          git config user.name  "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add picks_history.json
+          # Only commit if there are actual changes
+          git diff --staged --quiet || git commit -m "poly: log placed bets [skip ci]"
+          git push
