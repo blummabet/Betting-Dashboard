@@ -24,23 +24,31 @@
 //  VIEW SWITCHER
 // ═══════════════════════════════════════════════════════
 function showView(view) {
-  const isSeason  = view === 'season';
-  const isResults = view === 'results';
-  const isHeart   = view === 'heart';
-  const isStatus  = view === 'status';
-  document.getElementById('mainContent').style.display   = isSeason  ? '' : 'none';
-  document.getElementById('resultsPanel').style.display  = isResults ? '' : 'none';
-  document.getElementById('heartPanel').style.display    = isHeart   ? '' : 'none';
-  document.getElementById('statusPanel').style.display   = isStatus  ? '' : 'none';
-  document.querySelector('.league-nav').style.display    = isSeason  ? '' : 'none';
+  const isSeason      = view === 'season';
+  const isResults     = view === 'results';
+  const isHeart       = view === 'heart';
+  const isStatus      = view === 'status';
+  const isPolymarket  = view === 'polymarket';
+
+  document.getElementById('mainContent').style.display        = isSeason     ? '' : 'none';
+  document.getElementById('resultsPanel').style.display       = isResults    ? '' : 'none';
+  document.getElementById('heartPanel').style.display         = isHeart      ? '' : 'none';
+  document.getElementById('statusPanel').style.display        = isStatus     ? '' : 'none';
+  document.getElementById('polymarketPanel').style.display    = isPolymarket ? '' : 'none';
+
+  document.querySelector('.league-nav').style.display         = isSeason     ? '' : 'none';
   const legend = document.querySelector('.legend-section');
   if (legend) legend.style.display = isSeason ? '' : 'none';
-  document.getElementById('navSeason').classList.toggle('active',  isSeason);
-  document.getElementById('navResults').classList.toggle('active', isResults);
-  document.getElementById('navHeart').classList.toggle('active',   isHeart);
-  document.getElementById('navStatus').classList.toggle('active',  isStatus);
-  if (isResults) initResults();
-  if (isStatus)  { initStatus(); buildValidatorDates(); }
+
+  document.getElementById('navSeason').classList.toggle('active',     isSeason);
+  document.getElementById('navResults').classList.toggle('active',    isResults);
+  document.getElementById('navHeart').classList.toggle('active',      isHeart);
+  document.getElementById('navStatus').classList.toggle('active',     isStatus);
+  document.getElementById('navPolymarket').classList.toggle('active', isPolymarket);
+
+  if (isResults)    initResults();
+  if (isStatus)     { initStatus(); buildValidatorDates(); }
+  if (isPolymarket) initPolymarket();
 }
 
 // ═══════════════════════════════════════════════════════
