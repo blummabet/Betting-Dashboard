@@ -361,6 +361,30 @@ function runPicksValidator() {
               `BTTS Pick [${_bttsp.conf}] @ ${_bttsp.odds} aber Poisson FV≈${(_bttsFV*100).toFixed(1)}% (Implied=${(100/_bttsp.odds).toFixed(1)}%, Gap=${(_bttsGap*100).toFixed(1)}pp) — FV-Gate sollte geblockt haben.`);
           }
         }
+        // 🔴 1X2 Result FV Negative Edge — Heimsieg / Auswärtssieg mit negativem Poisson-Edge
+        // Uses _fxCopy._muH / _fxCopy._muA written by getBettingPicks() (Apr 2026 Poisson model).
+        // Gate: GATE.RESULT_REAL = 0.15 — independent Poisson model, not bookie-derived.
+        { const _heimp = _genPicks.find(p => p.market === 'Heimsieg');
+          if (_heimp && _heimp.odds != null && !_heimp.oddsIsEst &&
+              _fxCopy._muH != null && _fxCopy._muA != null) {
+            const _pp = _poisson1x2(_fxCopy._muH, _fxCopy._muA);
+            if (_pp) {
+              const _heimGap = (1 / _heimp.odds) - _pp.pH;
+              if (_heimGap > GATE.RESULT_REAL) flag('error', 'HEIMSIEG_NEG_EDGE',
+                `Heimsieg Pick [${_heimp.conf}] @ ${_heimp.odds} aber Poisson FV=${(_pp.pH*100).toFixed(1)}% (Implied=${(100/_heimp.odds).toFixed(1)}%, Gap=${(_heimGap*100).toFixed(1)}pp) — RESULT_REAL Gate sollte geblockt haben.`);
+            }
+          }
+          const _auswp = _genPicks.find(p => p.market === 'Auswärtssieg');
+          if (_auswp && _auswp.odds != null && !_auswp.oddsIsEst &&
+              _fxCopy._muH != null && _fxCopy._muA != null) {
+            const _pp = _poisson1x2(_fxCopy._muH, _fxCopy._muA);
+            if (_pp) {
+              const _auswGap = (1 / _auswp.odds) - _pp.pA;
+              if (_auswGap > GATE.RESULT_REAL) flag('error', 'AUSWÄRTSSIEG_NEG_EDGE',
+                `Auswärtssieg Pick [${_auswp.conf}] @ ${_auswp.odds} aber Poisson FV=${(_pp.pA*100).toFixed(1)}% (Implied=${(100/_auswp.odds).toFixed(1)}%, Gap=${(_auswGap*100).toFixed(1)}pp) — RESULT_REAL Gate sollte geblockt haben.`);
+            }
+          }
+        }
         // 🟡 Karten-Pick aber Schiri-Daten fehlen (Ref=null → Fallback auf Liga-Baserate)
         { const _cp2 = _genPicks.find(p => p.market?.toLowerCase().includes('karten'));
           const _anyRedConf2 = (_hNone && _hc.includes('red')) || (_aNone && _ac.includes('red'));

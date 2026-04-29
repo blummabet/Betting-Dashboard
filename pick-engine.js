@@ -934,6 +934,8 @@ function getBettingPicks(match, odds, leagueKey) {
   // The validator passes _fxCopy = Object.assign({}, fx) to getBettingPicks(), so
   // writing to `match` here sets _fxCopy._expGoals which the validator then reads.
   match._expGoals = expGoals;
+  // Also expose venue-aware per-team expected goals for the validator's 1X2 neg-edge check.
+  // Written here so they're available even before _muH/_muA are used in FV calculations below.
 
   // ── Venue-aware Poisson 1X2 probabilities ───────────────────────────────────
   // μH = blend of home-team attack and away-team defense (adjusted for fatigue/injury/motivation).
@@ -941,10 +943,15 @@ function getBettingPicks(match, odds, leagueKey) {
   // homeAttStr/homeDefStr/awayAttStr/awayDefStr already include all adjustments — use directly.
   // These probs are a GENUINELY INDEPENDENT signal (not derived from bookie odds).
   // Used as fair-value basis for 1X2 / DC / DNB when bookie prices are absent.
-  const _muH = (homeAttStr + awayDefStr) / 2;
-  const _muA = (awayAttStr + homeDefStr) / 2;
+  // Cap at 4.0 per team — prevents pathological Poisson inputs from corrupted venue data.
+  // Realistic max is ~2.8 (Man City home vs last-place defense), so 4.0 is a wide safety margin.
+  const _muH = Math.min(4.0, (homeAttStr + awayDefStr) / 2);
+  const _muA = Math.min(4.0, (awayAttStr + homeDefStr) / 2);
   const _poissonProbs = _poisson1x2(_muH, _muA);
   const poissonAvail  = _poissonProbs !== null;
+  // Expose venue-aware per-team xG for validator 1X2 neg-edge check
+  match._muH = _muH;
+  match._muA = _muA;
 
   // BTTS signals (refined by xG)
   const bttsXGStrong = homeAttStr > 1.30 && awayAttStr > 1.10 && homeDefStr > 0.90 && awayDefStr > 0.90;
@@ -1214,7 +1221,9 @@ function getBettingPicks(match, odds, leagueKey) {
         : false;
       if (!_heimNegEdge) rC.push({sc, p:{icon:'🏠', market:'Heimsieg', odds:o.hw, conf, reason}});
       // AH-Kandidat: wenn Heimsieg-Quote zu günstig (< 1.35), beste AH-Line via Ziel-Quote ~1.62
-      if (o.hw != null && o.hw < 1.35) {
+      // Guard: AH only considered when Poisson model doesn't fundamentally disagree with home team winning.
+      // If _heimNegEdge fires (model: <62% win chance vs bookie's 77%), the AH premise is also wrong.
+      if (!_heimNegEdge && o.hw != null && o.hw < 1.35) {
         // ah_home_lines now contains ALL bookmaker spread lines (from spreads market, Pass 1)
         // + alternate_spreads lines (Pass 6, if available) — _pickBestLine picks closest to 1.62
         const _ahBest  = _pickBestLine(o.ah_home_lines, 1.62);
@@ -1340,7 +1349,8 @@ function getBettingPicks(match, odds, leagueKey) {
         : false;
       if (!_auswNegEdge) rC.push({sc, p:{icon:'✈️', market:'Auswärtssieg', odds:o.aw, conf, reason}});
       // AH-Kandidat: wenn Auswärtssieg-Quote zu günstig (< 1.35), beste AH-Line via Ziel-Quote ~1.62
-      if (o.aw != null && o.aw < 1.35) {
+      // Guard: same logic as Heimsieg — if Poisson disagrees fundamentally, AH also suppressed.
+      if (!_auswNegEdge && o.aw != null && o.aw < 1.35) {
         // ah_away_lines contains all bookmaker spread lines + alternate_spreads (Pass 6)
         const _ahBest  = _pickBestLine(o.ah_away_lines, 1.62);
         const _ahOdds  = _ahBest ? _ahBest.price : (o.ah_a && o.ah_a >= 1.35 && o.ah_a <= 2.05 ? o.ah_a : null);
