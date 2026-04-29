@@ -353,13 +353,19 @@ function getPolyPicks(dateStr) {
 
 // Fetch a list of Gamma events for a given keyword string.
 // Returns [] on any error.
+//
+// NOTE: We bypass the global CORS-proxy interceptor here and build the proxy URL
+// directly with the ?url= format. The interceptor uses encodeURIComponent() which
+// double-encodes ? and & causing corsproxy.io to lose the query params and return
+// unrelated cached default results.
 async function _gammaSearch(keyword, activeOnly = true) {
   try {
     const params = `keyword=${encodeURIComponent(keyword)}&limit=15` + (activeOnly ? '&active=true' : '');
-    const res = await fetch(
-      `https://gamma-api.polymarket.com/events?${params}`,
-      { signal: AbortSignal.timeout(12000) }
-    );
+    const targetUrl = `https://gamma-api.polymarket.com/events?${params}`;
+    // ?url=<encoded> format: corsproxy.io decodes the url= param and fetches it correctly.
+    // The URL contains 'corsproxy.io' → interceptor's needsProxy check returns false → no double-proxy.
+    const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}`;
+    const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(12000) });
     if (!res.ok) return [];
     return await res.json();
   } catch (e) { return []; }
