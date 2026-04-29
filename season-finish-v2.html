@@ -2508,7 +2508,8 @@ const APISPORTS_BASE = 'https://v3.football.api-sports.io';
   window.fetch = function(resource, init) {
     const url = (typeof resource === 'string') ? resource : (resource?.url || '');
     const needsProxy = (url.includes('api-sports.io') || url.includes('gamma-api.polymarket.com'))
-                       && !url.includes('corsproxy.io');
+                       && !url.includes('corsproxy.io')
+                       && !url.includes('allorigins.win');  // allorigins already proxies gamma-api
     if (needsProxy) {
       const proxied = _PROXY + encodeURIComponent(url);
       console.log('[CORS-Proxy] →', url.split('?')[0]);
