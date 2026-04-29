@@ -38,19 +38,29 @@ jobs:
       #    Läuft täglich damit neue Stammspieler zeitnah erkannt werden.
       - name: 🧬 Squad-Daten fetchen
         run: python fetch_squads.py
+        continue-on-error: true
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
-      # 5. squad_cache.json ins Repo committen
-      - name: 💾 squad_cache.json speichern & pushen
+      # 5. xG-Daten holen (API-Football /teams/statistics → xg_cache.json)
+      #    Fetcht Heim/Auswärts-spezifische Tore-Schnitte pro Team.
+      #    Basis für das einheitliche Poisson-FV-Modell in pick-engine.js.
+      - name: 📐 xG-Statistiken fetchen
+        run: python fetch_xg.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
+      # 6. Caches ins Repo committen
+      - name: 💾 Caches speichern & pushen
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add squad_cache.json
+          git add squad_cache.json xg_cache.json
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
           else
-            git commit -m "🧬 Squad-Cache Update $(date +'%d.%m.%Y') UTC"
+            git commit -m "🧬 Squad+xG Cache Update $(date +'%d.%m.%Y') UTC"
             git pull origin main --no-rebase -X ours
             git push
           fi

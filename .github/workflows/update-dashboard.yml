@@ -74,7 +74,7 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add season-finish.html season-finish-v2.html stats_cache.json picks_history.json squad_cache.json picks_output.json
+          git add season-finish.html season-finish-v2.html stats_cache.json picks_history.json squad_cache.json xg_cache.json picks_output.json
           # Nur committen wenn wirklich etwas geändert wurde
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."

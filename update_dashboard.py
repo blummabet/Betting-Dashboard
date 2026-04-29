@@ -857,6 +857,23 @@ def calc_match_score(home_stake, away_stake, h2h=None, rounds_left=99):
 
 # ── Squad cache helpers ───────────────────────────────────────────────────────
 
+def load_xg_cache() -> dict:
+    """Load xg_cache.json (built daily by fetch_xg.py). Returns {} on miss.
+    Keys are team_id strings. Values contain homeGfAvg/homeGaAvg/awayGfAvg/awayGaAvg etc.
+    """
+    cache_file = os.path.join(SCRIPT_DIR, "xg_cache.json")
+    if not os.path.exists(cache_file):
+        return {}
+    try:
+        with open(cache_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        print(f"  📦 xG-Cache geladen: {len(data)} Teams")
+        return data
+    except Exception as e:
+        print(f"  ⚠ xG-Cache konnte nicht geladen werden: {e}")
+        return {}
+
+
 def load_squad_cache() -> dict:
     """Load squad_cache.json (built weekly by fetch_squads.py). Returns {} on miss."""
     cache_file = os.path.join(SCRIPT_DIR, "squad_cache.json")
@@ -1023,13 +1040,14 @@ def compute_squad_strength(team_id: int, injury_data, squad_cache: dict,
 
 # ── Main fetch loop ───────────────────────────────────────────────────────────
 
-def fetch_league(key, cfg, squad_cache=None):
+def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
     print(f"\n  {cfg['flag']} {cfg['name']}...")
     apif_id = cfg.get("apif_id")
     if not apif_id:
         print(f"  ⚠ Kein apif_id für {key} — übersprungen")
         return None
     _squad_cache = squad_cache or {}
+    _xg_cache    = xg_cache    or {}
 
     # ── Standings ────────────────────────────────────────────────────────────
     standings = []
@@ -1257,6 +1275,29 @@ def fetch_league(key, cfg, squad_cache=None):
         ms = calc_match_score(home_stake, away_stake, h2h, rounds_left)
         if ms < 5:
             continue
+
+        # ── xG venue-specific stats (from xg_cache) ──────────────────────────
+        # homeXgStats: stats for the HOME team playing AT HOME
+        # awayXgStats: stats for the AWAY team playing AWAY
+        home_xg = _xg_cache.get(str(ht["teamId"]), {})
+        away_xg = _xg_cache.get(str(at["teamId"]), {})
+        home_xg_data = {
+            "homeGfAvg":    home_xg.get("homeGfAvg"),    # avg goals scored at home
+            "homeGaAvg":    home_xg.get("homeGaAvg"),    # avg goals conceded at home
+            "homeWinRate":  home_xg.get("homeWinRate"),  # home win rate (home games only)
+            "homeDrawRate": home_xg.get("homeDrawRate"),
+            "csRateHome":   home_xg.get("csRateHome"),
+            "ftsRateHome":  home_xg.get("ftsRateHome"),
+        } if home_xg else None
+        away_xg_data = {
+            "awayGfAvg":    away_xg.get("awayGfAvg"),    # avg goals scored away
+            "awayGaAvg":    away_xg.get("awayGaAvg"),    # avg goals conceded away
+            "awayWinRate":  away_xg.get("awayWinRate"),  # away win rate (away games only)
+            "awayDrawRate": away_xg.get("awayDrawRate"),
+            "csRateAway":   away_xg.get("csRateAway"),
+            "ftsRateAway":  away_xg.get("ftsRateAway"),
+        } if away_xg else None
+
         stake_fixtures.append({
             "date": f["date"], "time": f.get("time"),
             "home": f["home"], "away": f["away"],
@@ -1265,6 +1306,9 @@ def fetch_league(key, cfg, squad_cache=None):
             "homeStake": home_stake, "awayStake": away_stake,
             "homeForm": h_form, "awayForm": a_form,
             "h2h": h2h,
+            # Venue-specific xG data — used by pick-engine.js for unified Poisson FV
+            "homeXg": home_xg_data,  # home team's home stats
+            "awayXg": away_xg_data,  # away team's away stats
             # Top-level squad data — available for ALL fixture teams (not just stake teams)
             # topAttacker/keyDefender here are fallbacks for non-stake opponents (e.g. Real Madrid)
             # that have no homeStake object; JS reads homeStake?.topAttacker ?? homeSquad?.topAttacker
@@ -1359,12 +1403,13 @@ def main():
     print("=" * 60)
     print("\nFetching API-Football data...")
 
-    # Load squad cache once (built weekly by fetch_squads.py)
+    # Load caches once (built daily by fetch_squads.py / fetch_xg.py)
     squad_cache = load_squad_cache()
+    xg_cache    = load_xg_cache()
 
     results = {}
     for key, cfg in LEAGUES.items():
-        data = fetch_league(key, cfg, squad_cache=squad_cache)
+        data = fetch_league(key, cfg, squad_cache=squad_cache, xg_cache=xg_cache)
         if data:
             results[key] = data
 

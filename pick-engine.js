@@ -141,6 +141,38 @@ function estimateTeamGoalOdds(lambdaTeam) {
   };
 }
 
+// Compute 1X2 outcome probabilities from independent Poisson distributions.
+// muH = expected home goals, muA = expected away goals.
+// Uses score matrix up to 8 goals per team (covers >99.9% of probability mass).
+// Returns { pH, pD, pA } normalised to 1, or null if inputs invalid.
+function _poisson1x2(muH, muA) {
+  if (!muH || !muA || muH <= 0 || muA <= 0) return null;
+  const MAX = 8;
+  // PMF: P(X=k) = exp(-mu) * mu^k / k!  — computed iteratively for efficiency
+  const pmfH = [], pmfA = [];
+  let tH = Math.exp(-muH), tA = Math.exp(-muA);
+  for (let k = 0; k <= MAX; k++) {
+    pmfH[k] = tH; pmfA[k] = tA;
+    tH *= muH / (k + 1); tA *= muA / (k + 1);
+  }
+  let pH = 0, pD = 0, pA = 0;
+  for (let h = 0; h <= MAX; h++) {
+    for (let a = 0; a <= MAX; a++) {
+      const p = pmfH[h] * pmfA[a];
+      if      (h > a) pH += p;
+      else if (h < a) pA += p;
+      else             pD += p;
+    }
+  }
+  const tot = pH + pD + pA;
+  if (tot < 0.01) return null;
+  return {
+    pH: Math.max(0.01, pH / tot),
+    pD: Math.max(0.01, pD / tot),
+    pA: Math.max(0.01, pA / tot),
+  };
+}
+
 // ═══════════════════════════════════════════════════════
 //  LINE MOVEMENT — opening vs. current odds analysis
 // ═══════════════════════════════════════════════════════
@@ -626,6 +658,18 @@ function getBettingPicks(match, odds, leagueKey) {
     : null;
   const xGBased = !!(_hXG && _hXGA && _aXG && _aXGA);
 
+  // ── Venue-specific xG cache (from xg_cache.json via update_dashboard.py) ──────
+  // homeXg: stats for the home team playing AT HOME (homeGfAvg / homeGaAvg)
+  // awayXg: stats for the away team playing AWAY    (awayGfAvg / awayGaAvg)
+  // These split season totals by venue → much more precise Poisson inputs than
+  // season-wide averages (a team can be 2.1 gpg at home but 1.1 gpg away).
+  const _hVxg = match.homeXg ?? null;
+  const _aVxg = match.awayXg ?? null;
+  const venueXgAvail = !!(
+    _hVxg?.homeGfAvg != null && _hVxg?.homeGaAvg != null &&
+    _aVxg?.awayGfAvg != null && _aVxg?.awayGaAvg != null
+  );
+
   // ── xG Fairness (from refresh_stats.py — actual goals ÷ expected goals) ──
   // > 1.15 = overperforming xG → likely to regress downward (lucky)
   // < 0.85 = underperforming xG → likely to regress upward (unlucky)
@@ -741,25 +785,30 @@ function getBettingPicks(match, odds, leagueKey) {
     : '';
 
   // ── Derived ───────────────────────────────────────────
-  // Expected goals: prefer real xG model (home xG + away xGA, away xG + home xGA)
-  const _expGoalsModel = xGBased
-    ? (_hXG + _aXGA + _aXG + _hXGA) / 2
-    : (hGoals + aConc + aGoals + hConc) / 2;
-  // API Prediction blend: when xGBased=false and API goals available, blend 70/30.
-  // Only blend for non-xG path — when Understat xG is available it's already strong.
-  let expGoals = (!xGBased && _apiExpG !== null)
+  // Expected goals: venue-specific xg_cache preferred; Understat xG second; goals/game fallback.
+  // Venue-specific: use home team's home-attack vs away team's away-defense (and vice versa).
+  // This gives a truer expected goals estimate than season-wide averages.
+  const _expGoalsModel = venueXgAvail
+    ? (_hVxg.homeGfAvg + _aVxg.awayGaAvg + _aVxg.awayGfAvg + _hVxg.homeGaAvg) / 2
+    : xGBased
+      ? (_hXG + _aXGA + _aXG + _hXGA) / 2
+      : (hGoals + aConc + aGoals + hConc) / 2;
+  // API Prediction blend: only for non-xG path — when venue xG or Understat xG is available it's stronger.
+  let expGoals = (!venueXgAvail && !xGBased && _apiExpG !== null)
     ? Math.round((_expGoalsModel * 0.70 + _apiExpG * 0.30) * 10) / 10
     : _expGoalsModel;
   // Label shown in pick reasons — distinguishes data source for expected goals estimate
-  // Priority: shots-based xG (teams/statistics) > API expGoals blend > goals proxy
+  // Priority: venue-specific xg_cache > shots-based xG > Understat xG > API blend > goals proxy
   const _shotsBased = (_hXGSource === 'shots' || _aXGSource === 'shots');
-  const egPfx = xGBased && _shotsBased
-    ? `🎯 ${expGoals.toFixed(1)} xG (Schüsse)`    // shots-based xG from teams/statistics
-    : xGBased
-      ? `📐 ${expGoals.toFixed(1)} xG (Understat)` // real Understat xG (legacy)
-      : (_apiExpG !== null)
-        ? `🤖 ${expGoals.toFixed(1)} EG (Modell + API)`
-        : `Ø ${expGoals.toFixed(1)} EG`;
+  const egPfx = venueXgAvail
+    ? `🏟️ ${expGoals.toFixed(1)} xG (Heim/Auswärts)`  // venue-specific from xg_cache — best source
+    : xGBased && _shotsBased
+      ? `🎯 ${expGoals.toFixed(1)} xG (Schüsse)`    // shots-based xG from teams/statistics
+      : xGBased
+        ? `📐 ${expGoals.toFixed(1)} xG (Understat)` // real Understat xG (legacy)
+        : (_apiExpG !== null)
+          ? `🤖 ${expGoals.toFixed(1)} EG (Modell + API)`
+          : `Ø ${expGoals.toFixed(1)} EG`;
   // Venue form: blend real home/away win rate (55%) with overall formScore (45%) when available
   // Fallback: proxy formula (home +15%, away -13%)
   const hFS_home = _hHWR != null
@@ -840,12 +889,16 @@ function getBettingPicks(match, odds, leagueKey) {
   const _hInjxGDelta = -(1 - _hInjAtt);   // e.g. -0.22 means team scores 22% less
   const _aInjxGDelta = -(1 - _aInjAtt);
 
-  // ── xG-based profiles (xG preferred, goals as fallback) ─────────────────
+  // ── xG-based profiles (venue-specific preferred, Understat xG second, goals fallback) ──
+  // Source priority for base attack/defense rates:
+  //   1. venueXgAvail: home team's home stats / away team's away stats (most precise)
+  //   2. xGBased:      Understat shot-quality xG (season-wide but shot-quality adjusted)
+  //   3. fallback:     goals-per-game from form (all venues combined)
   // Fatigue + injury multipliers applied at source → flow through ALL pick computations.
-  let homeAttStr = (xGBased ? _hXG  : hGoals) * _hFatigAtt * _hInjAtt;
-  let homeDefStr = (xGBased ? _hXGA : hConc)  * _hFatigDef * _hInjDef;
-  let awayAttStr = (xGBased ? _aXG  : aGoals) * _aFatigAtt * _aInjAtt;
-  let awayDefStr = (xGBased ? _aXGA : aConc)  * _aFatigDef * _aInjDef;
+  let homeAttStr = (venueXgAvail ? _hVxg.homeGfAvg : xGBased ? _hXG  : hGoals) * _hFatigAtt * _hInjAtt;
+  let homeDefStr = (venueXgAvail ? _hVxg.homeGaAvg : xGBased ? _hXGA : hConc)  * _hFatigDef * _hInjDef;
+  let awayAttStr = (venueXgAvail ? _aVxg.awayGfAvg : xGBased ? _aXG  : aGoals) * _aFatigAtt * _aInjAtt;
+  let awayDefStr = (venueXgAvail ? _aVxg.awayGaAvg : xGBased ? _aXGA : aConc)  * _aFatigDef * _aInjDef;
 
   // ── Motivation penalty (applied after fatigue + injury) ───────────────────
   // Confirmed teams (motivationLevel='none') rotate key players and lower intensity:
@@ -880,6 +933,17 @@ function getBettingPicks(match, odds, leagueKey) {
   // The validator passes _fxCopy = Object.assign({}, fx) to getBettingPicks(), so
   // writing to `match` here sets _fxCopy._expGoals which the validator then reads.
   match._expGoals = expGoals;
+
+  // ── Venue-aware Poisson 1X2 probabilities ───────────────────────────────────
+  // μH = blend of home-team attack and away-team defense (adjusted for fatigue/injury/motivation).
+  // μA = blend of away-team attack and home-team defense.
+  // homeAttStr/homeDefStr/awayAttStr/awayDefStr already include all adjustments — use directly.
+  // These probs are a GENUINELY INDEPENDENT signal (not derived from bookie odds).
+  // Used as fair-value basis for 1X2 / DC / DNB when bookie prices are absent.
+  const _muH = (homeAttStr + awayDefStr) / 2;
+  const _muA = (awayAttStr + homeDefStr) / 2;
+  const _poissonProbs = _poisson1x2(_muH, _muA);
+  const poissonAvail  = _poissonProbs !== null;
 
   // BTTS signals (refined by xG)
   const bttsXGStrong = homeAttStr > 1.30 && awayAttStr > 1.10 && homeDefStr > 0.90 && awayDefStr > 0.90;
@@ -2175,6 +2239,14 @@ function getBettingPicks(match, odds, leagueKey) {
           // + line movement nudge: steam toward home shifts mp up
           let _adj = homeNeedsWin ? _pressureBoost * 0.18 : 0;
           mp = Math.min(0.97, Math.max(0.02, _fairPH + Math.min(0.06, Math.max(-0.06, _adj)) + _lmH));
+        } else if (poissonAvail) {
+          // Venue-aware Poisson — genuinely independent model (no bookie anchoring).
+          // pH already incorporates venue, injury, fatigue, and motivation adjustments
+          // (all applied to homeAttStr/awayDefStr before _muH/_muA were computed).
+          let _adj = homeNeedsWin ? _pressureBoost * 0.18 : 0;
+          if (hMotivNone) _adj -= 0.06;  // confirmed-out team: further trim home win prob
+          if (eloHomeFav) _adj += 0.03;  // Elo confirms structural home edge
+          mp = Math.min(0.92, Math.max(0.02, _poissonProbs.pH + _adj + _lmH));
         } else {
           mp = Math.min(0.82, 0.34 + (hFS_home - 0.5) * 0.65 + Math.max(0, hStreak) * 0.03 + homeWinRate * 0.16);
           if (xGBased) mp = Math.min(0.82, mp + Math.max(0, homeAttStr - 1.2) * 0.08 - Math.max(0, awayAttStr - 1.4) * 0.06);
@@ -2186,6 +2258,11 @@ function getBettingPicks(match, odds, leagueKey) {
         if (_fairPA !== null) {
           let _adj = awayNeedsWin ? _pressureBoost * 0.18 : 0;
           mp = Math.min(0.97, Math.max(0.02, _fairPA + Math.min(0.06, Math.max(-0.06, _adj)) + _lmA));
+        } else if (poissonAvail) {
+          let _adj = awayNeedsWin ? _pressureBoost * 0.18 : 0;
+          if (aMotivNone) _adj -= 0.06;
+          if (eloAwayFav) _adj += 0.03;
+          mp = Math.min(0.90, Math.max(0.02, _poissonProbs.pA + _adj + _lmA));
         } else {
           mp = Math.min(0.76, 0.26 + (aFS_away - 0.5) * 0.65 + Math.max(0, aStreak) * 0.03 + awayWinRate * 0.16);
           if (xGBased) mp = Math.min(0.76, mp + Math.max(0, awayAttStr - 1.1) * 0.08 - Math.max(0, homeAttStr - 1.4) * 0.06);
@@ -2198,20 +2275,29 @@ function getBettingPicks(match, odds, leagueKey) {
       // Using bookmaker's own 1X2 odds (most liquid, most efficient market) to de-vig
       // gives the most accurate fair price. Comparing THAT against the DC/DNB quote
       // reveals whether the bookmaker has priced those markets with extra margin.
-      // If no 1X2 odds available, fall back to normalized 3-way model probs.
+      // If no 1X2 odds available, try Poisson model probs; then fall back to form estimate.
       case 'DNB: Heimteam':
       case 'DNB: Auswärtsteam':
       case 'Doppelte Chance: 1X':
       case 'Doppelte Chance: X2': {
         let _pH, _pD, _pA;
         if (o.hw && o.dr && o.aw) {
-          // De-vig Pinnacle 1X2 odds → true probabilities
+          // De-vig Pinnacle 1X2 odds → true probabilities (most accurate)
           const _tot = 1/o.hw + 1/o.dr + 1/o.aw;
           _pH = (1/o.hw) / _tot;
           _pD = (1/o.dr) / _tot;
           _pA = (1/o.aw) / _tot;
+        } else if (poissonAvail) {
+          // Venue-aware Poisson — already adjusted for injury/motivation/venue
+          _pH = _poissonProbs.pH; _pD = _poissonProbs.pD; _pA = _poissonProbs.pA;
+          // Apply pressure/motivation nudges (same as standalone 1X2 cases above)
+          if (homeNeedsWin) { _pH = Math.min(0.92, _pH + _pressureBoost * 0.18); _pD = Math.max(0.03, _pD - _pressureBoost * 0.10); }
+          if (awayNeedsWin) { _pA = Math.min(0.90, _pA + _pressureBoost * 0.18); _pD = Math.max(0.03, _pD - _pressureBoost * 0.10); }
+          // Renormalise after nudges
+          const _pTot = Math.max(0.01, _pH + _pD + _pA);
+          _pH /= _pTot; _pD /= _pTot; _pA /= _pTot;
         } else {
-          // No 1X2 odds — use normalized 3-way model estimate
+          // No 1X2 odds and no Poisson data — use normalized 3-way form estimate
           // IMPORTANT: caps are applied AFTER normalization so relative probabilities are correct
           const _mH = Math.max(0.01, 0.34+(hFS_home-0.5)*0.65+Math.max(0,hStreak)*0.03+homeWinRate*0.16+(xGBased?Math.max(0,homeAttStr-1.2)*0.08-Math.max(0,awayAttStr-1.4)*0.06:0)+(eloHomeFav?0.04:0)+(homeNeedsWin?_pressureBoost*0.18:0));
           const _mA = Math.max(0.01, 0.26+(aFS_away-0.5)*0.65+Math.max(0,aStreak)*0.03+awayWinRate*0.16+(xGBased?Math.max(0,awayAttStr-1.1)*0.08-Math.max(0,homeAttStr-1.4)*0.06:0)+(eloAwayFav?0.04:0)+(awayNeedsWin?_pressureBoost*0.18:0));
@@ -2229,6 +2315,9 @@ function getBettingPicks(match, odds, leagueKey) {
         if (_fairPD !== null) {
           let _adj = (homeNeedsWin || awayNeedsWin) ? -Math.min(0.10, _pressureBoost * 0.30) : 0;
           mp = Math.max(0.03, Math.min(0.65, _fairPD + _adj + _lmD));
+        } else if (poissonAvail) {
+          let _adj = (homeNeedsWin || awayNeedsWin) ? -Math.min(0.10, _pressureBoost * 0.30) : 0;
+          mp = Math.max(0.03, Math.min(0.65, _poissonProbs.pD + _adj + _lmD));
         } else {
           mp = Math.min(0.40, drawRate * 0.72 + 0.10);
           if (homeNeedsWin || awayNeedsWin) mp = Math.max(0.05, mp - _pressureBoost * 0.30);
