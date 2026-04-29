@@ -362,9 +362,11 @@ async function _gammaSearch(keyword, activeOnly = true) {
   try {
     const params = `keyword=${encodeURIComponent(keyword)}&limit=15` + (activeOnly ? '&active=true' : '');
     const targetUrl = `https://gamma-api.polymarket.com/events?${params}`;
-    // ?url=<encoded> format: corsproxy.io decodes the url= param and fetches it correctly.
-    // The URL contains 'corsproxy.io' → interceptor's needsProxy check returns false → no double-proxy.
-    const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}`;
+    // corsproxy.io caches gamma-api responses ignoring query params → returns stale 2022 NBA/NFL junk.
+    // allorigins.win fetches fresh each time and correctly forwards query params.
+    // URL contains neither 'api-sports.io' nor 'gamma-api.polymarket.com' directly in the proxy host,
+    // so the global fetch interceptor won't re-proxy it.
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
     const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(12000) });
     if (!res.ok) return [];
     return await res.json();
