@@ -367,6 +367,7 @@ function getPolyPicks(dateStr) {
 
 let _polyPriceCache = null;   // null = not loaded, {} = loaded (may be empty)
 let _polyPriceFetched = null; // ISO timestamp of last server fetch
+let _polyPriceMissing = false;// true when polymarket_prices.json returned 404
 
 async function _loadPolyPriceCache() {
   if (_polyPriceCache !== null) return;
@@ -380,6 +381,7 @@ async function _loadPolyPriceCache() {
   } catch (e) {
     console.warn('[Poly] polymarket_prices.json not available:', e.message);
     _polyPriceCache = {};
+    _polyPriceMissing = true;
   }
 }
 
@@ -1103,11 +1105,14 @@ async function _fetchAllPricesAsync() {
   }
 
   // Apply cached prices to all picks at once
-  for (const pick of picks) {
-    const result = _getPriceFromCache(pick);
-    _polyState.prices[pick.id] = result
-      ? result
-      : { found: false };
+  // If the JSON file doesn't exist yet, leave prices undefined (show '—') rather than graying out
+  if (!_polyPriceMissing) {
+    for (const pick of picks) {
+      const result = _getPriceFromCache(pick);
+      _polyState.prices[pick.id] = result
+        ? result
+        : { found: false };
+    }
   }
 
   // Single re-render after all prices are set
@@ -1116,10 +1121,13 @@ async function _fetchAllPricesAsync() {
 
   // Update status label
   if (statusEl) {
-    const found = Object.values(_polyState.prices).filter(p => p.found).length;
-    if (picks.length === 0) {
+    if (_polyPriceMissing) {
+      statusEl.textContent = '⚠️ polymarket_prices.json fehlt — GitHub Action ausführen';
+      statusEl.style.color = '#f5c518';
+    } else if (picks.length === 0) {
       statusEl.textContent = '';
     } else {
+      const found = Object.values(_polyState.prices).filter(p => p.found).length;
       statusEl.textContent = `✅ ${found}/${picks.length} Märkte gefunden${statusSuffix}`;
       statusEl.style.color = '#3fb950';
     }
