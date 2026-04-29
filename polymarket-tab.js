@@ -224,6 +224,53 @@ function _todayStr() {
   return `${d}.${m}.${n.getFullYear()}`;
 }
 
+// Returns all fixture dates that have at least one eligible Polymarket pick, sorted ascending
+function _getAvailableDates() {
+  if (typeof LEAGUES === 'undefined') return [];
+  const dateSet = new Set();
+  const today = _todayStr();
+
+  for (const [lk, lg] of Object.entries(LEAGUES)) {
+    if (!POLY_LEAGUES.has(lk)) continue;
+    for (const fx of (lg.fixtures || [])) {
+      if (!fx.date) continue;
+      // Only future / today dates
+      const [d, m, y] = fx.date.split('.');
+      if (new Date(`${y}-${m}-${d}`) < new Date(_todayStr().split('.').reverse().join('-'))) continue;
+      dateSet.add(fx.date);
+    }
+  }
+
+  // Sort DD.MM.YYYY chronologically
+  return [...dateSet].sort((a, b) => {
+    const [ad, am, ay] = a.split('.');
+    const [bd, bm, by] = b.split('.');
+    return new Date(`${ay}-${am}-${ad}`) - new Date(`${by}-${bm}-${bd}`);
+  });
+}
+
+function polyChangeDate(dateStr) {
+  _polyState.dateStr  = dateStr;
+  _polyState.picks    = getPolyPicks(dateStr);
+  _polyState.prices   = {};
+  _polyState.selected = new Set(_polyState.picks.map(p => p.id));
+  _polyRefreshStickyBar();
+
+  // Update subtitle
+  const sub = document.getElementById('polyDateSub');
+  if (sub) sub.textContent = `${dateStr} · ${_polyState.picks.length} eligible pick${_polyState.picks.length !== 1 ? 's' : ''}`;
+
+  // Update status label
+  const status = document.getElementById('polyPriceStatus');
+  if (status) { status.textContent = '⏳ Polymarket-Preise werden geladen…'; status.style.color = ''; }
+
+  const pickSection = document.getElementById('polyPicksLabel');
+  if (pickSection) pickSection.textContent = `Picks — ${_polyState.picks.length} verfügbar`;
+
+  document.getElementById('polyPickGrid').innerHTML = renderPolyPickCards();
+  _fetchAllPricesAsync();
+}
+
 function getPolyPicks(dateStr) {
   if (typeof LEAGUES === 'undefined') return [];
   const results = [];
@@ -966,13 +1013,24 @@ function initPolymarket() {
     <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:20px;flex-wrap:wrap">
       <div>
         <h2 style="margin:0;font-size:22px;font-weight:900;color:#a78bfa;letter-spacing:-.01em">🟣 Polymarket</h2>
-        <div style="font-size:12px;color:#8b949e;margin-top:3px">${dateStr} &nbsp;·&nbsp; ${n} eligible pick${n !== 1 ? 's' : ''}</div>
+        <div id="polyDateSub" style="font-size:12px;color:#8b949e;margin-top:3px">${dateStr} &nbsp;·&nbsp; ${n} eligible pick${n !== 1 ? 's' : ''}</div>
       </div>
       <div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        ${(() => {
+          const dates = _getAvailableDates();
+          const weekdays = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+          const opts = dates.map(d => {
+            const [dd,mm,yy] = d.split('.');
+            const wd = weekdays[new Date(`${yy}-${mm}-${dd}`).getDay()];
+            return `<option value="${d}" ${d === dateStr ? 'selected' : ''}>${wd} ${dd}.${mm}.</option>`;
+          }).join('');
+          return dates.length > 1
+            ? `<select onchange="polyChangeDate(this.value)" style="background:#161b22;border:1px solid #30363d;border-radius:8px;color:#e6edf3;font-size:12px;padding:7px 10px;cursor:pointer;font-family:inherit;outline:none">${opts}</select>`
+            : '';
+        })()}
         <button onclick="polySelectAll()"  style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#30363d'">☑️ Alle</button>
         <button onclick="polySelectNone()" style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#30363d'">⬜ Keine</button>
         <button onclick="initPolymarket()" style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#00d4a1'" onmouseout="this.style.borderColor='#30363d'">🔄 Refresh</button>
-        <button id="polySettingsBtn" onclick="polyOpenSettings()" style="background:none;border:1px solid ${_getGithubPAT() ? '#3fb95055' : '#f8514933'};border-radius:8px;color:${_getGithubPAT() ? '#3fb950' : '#f85149'};font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit">⚙️ Setup</button>
       </div>
     </div>
 
@@ -989,9 +1047,7 @@ function initPolymarket() {
 
     <!-- ── PICKS SECTION ──────────────────────────────── -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#8b949e">
-        Picks — ${n} verfügbar
-      </span>
+      <span id="polyPicksLabel" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#8b949e">Picks — ${n} verfügbar</span>
       <span style="font-size:11px;color:#8b949e" id="polyPriceStatus">⏳ Polymarket-Preise werden geladen…</span>
     </div>
     <div id="polyPickGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-bottom:40px">
