@@ -199,6 +199,37 @@ const TEAM_NAME_MAP = {
   'Ross County':              'Ross County',
   'Kilmarnock':               'Kilmarnock',
   'St Mirren':                'St Mirren',
+  // ── Championship (ENG2) ─────────────────────────────
+  'Leeds':                    'Leeds United',
+  'Leeds United':             'Leeds United',
+  'Burnley':                  'Burnley',
+  'Burnley FC':               'Burnley',
+  'Sheffield United':         'Sheffield United',
+  'West Brom':                'West Bromwich Albion',
+  'West Bromwich Albion':     'West Bromwich Albion',
+  'Sunderland':               'Sunderland',
+  'Middlesbrough':            'Middlesbrough',
+  'Watford':                  'Watford',
+  'Blackburn Rovers':         'Blackburn',
+  'Blackburn':                'Blackburn',
+  'Coventry City':            'Coventry City',
+  'Stoke City':               'Stoke City',
+  'Cardiff City':             'Cardiff City',
+  'Bristol City':             'Bristol City',
+  'Norwich City':             'Norwich City',
+  'Preston North End':        'Preston',
+  'Hull City':                'Hull City',
+  'Millwall':                 'Millwall',
+  'Luton Town':               'Luton Town',
+  'Luton':                    'Luton Town',
+  'Derby County':             'Derby County',
+  'Portsmouth':               'Portsmouth',
+  'Plymouth Argyle':          'Plymouth',
+  'Oxford United':            'Oxford United',
+  'Swansea City':             'Swansea City',
+  'Queens Park Rangers':      'Queens Park Rangers',
+  'QPR':                      'Queens Park Rangers',
+  'Sheffield Wednesday':      'Sheffield Wednesday',
 };
 
 function toEnglishName(name) {
@@ -320,53 +351,107 @@ function getPolyPicks(dateStr) {
 
 // ── 4. GAMMA API ────────────────────────────────────────
 
+// Fetch a list of Gamma events for a given keyword string.
+// Returns [] on any error.
+async function _gammaSearch(keyword) {
+  try {
+    const res = await fetch(
+      `https://gamma-api.polymarket.com/events?keyword=${encodeURIComponent(keyword)}&active=true&limit=15`,
+      { signal: AbortSignal.timeout(8000) }
+    );
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (e) { return []; }
+}
+
+// Extract meaningful match tokens (≥ 3 chars) from an English team name.
+// Using ≥ 3 catches short words like "FC", but skips single-letter initials.
+function _teamTokens(name) {
+  return name.toLowerCase().split(/\s+/).filter(t => t.length >= 3);
+}
+
+// Returns true if ALL of the provided tokens appear somewhere in the text.
+function _allTokensIn(tokens, text) {
+  return tokens.every(t => text.includes(t));
+}
+
+// Returns true if ANY of the provided tokens appear somewhere in the text.
+function _anyTokenIn(tokens, text) {
+  return tokens.some(t => text.includes(t));
+}
+
+// Try to extract the desired price from an event that we believe is the right match.
+function _matchEventPrice(ev, pick, homeEn, awayEn) {
+  for (const mkt of (ev.markets || [])) {
+    const q = (mkt.question || '').toLowerCase();
+    let outcomes, prices;
+    try {
+      outcomes = JSON.parse(mkt.outcomes || '[]');
+      prices   = JSON.parse(mkt.outcomePrices || '[]');
+    } catch (e) { continue; }
+    if (!outcomes.length || outcomes.length !== prices.length) continue;
+
+    const price = _extractOutcomePrice(pick.market, q, outcomes, prices, homeEn, awayEn);
+    if (price !== null) {
+      const slug = ev.slug || null;
+      return {
+        found: true, price,
+        eventTitle: ev.title,
+        marketQ: mkt.question,
+        eventUrl: slug ? `https://polymarket.com/event/${slug}` : `https://polymarket.com/`,
+      };
+    }
+  }
+  return null;
+}
+
 async function fetchGammaPrice(pick) {
   const homeEn = toEnglishName(pick.home);
   const awayEn = toEnglishName(pick.away);
 
-  // Build search keyword — try full names first, fall back to first word of each
-  const keyword = `${homeEn} ${awayEn}`;
+  const homeTokens = _teamTokens(homeEn);
+  const awayTokens = _teamTokens(awayEn);
 
-  let events = [];
-  try {
-    const res = await fetch(
-      `https://gamma-api.polymarket.com/events?keyword=${encodeURIComponent(keyword)}&active=true&limit=12`,
-      { signal: AbortSignal.timeout(8000) }
-    );
-    if (!res.ok) return null;
-    events = await res.json();
-  } catch (e) { return null; }
-
-  // Find best matching event (title contains at least one team name token)
-  const homeTokens = homeEn.toLowerCase().split(/\s+/).filter(t => t.length > 3);
-  const awayTokens = awayEn.toLowerCase().split(/\s+/).filter(t => t.length > 3);
-
-  for (const ev of events) {
+  // ── Strategy 1: search "Home Away" (full names) ──────
+  const evtFull = await _gammaSearch(`${homeEn} ${awayEn}`);
+  for (const ev of evtFull) {
     const title = (ev.title || '').toLowerCase();
-    const homeMatch = homeTokens.some(t => title.includes(t));
-    const awayMatch = awayTokens.some(t => title.includes(t));
-    if (!homeMatch || !awayMatch) continue;
+    if (!_anyTokenIn(homeTokens, title) || !_anyTokenIn(awayTokens, title)) continue;
+    const result = _matchEventPrice(ev, pick, homeEn, awayEn);
+    if (result) return result;
+  }
 
-    // Search markets within this event
-    for (const mkt of (ev.markets || [])) {
-      const q = (mkt.question || '').toLowerCase();
-      let outcomes, prices;
-      try {
-        outcomes = JSON.parse(mkt.outcomes || '[]');
-        prices   = JSON.parse(mkt.outcomePrices || '[]');
-      } catch (e) { continue; }
-      if (!outcomes.length || outcomes.length !== prices.length) continue;
+  // ── Strategy 2: search just home name, verify away in title ──
+  const evtHome = await _gammaSearch(homeEn);
+  for (const ev of evtHome) {
+    const title = (ev.title || '').toLowerCase();
+    if (!_anyTokenIn(homeTokens, title) || !_anyTokenIn(awayTokens, title)) continue;
+    const result = _matchEventPrice(ev, pick, homeEn, awayEn);
+    if (result) return result;
+  }
 
-      const price = _extractOutcomePrice(pick.market, q, outcomes, prices, homeEn, awayEn);
-      if (price !== null) {
-        const slug     = ev.slug || null;
-        const eventUrl = slug
-          ? `https://polymarket.com/event/${slug}`
-          : `https://polymarket.com/`;
-        return { found: true, price, eventTitle: ev.title, marketQ: mkt.question, eventUrl };
-      }
+  // ── Strategy 3: search just away name, verify home in title ──
+  const evtAway = await _gammaSearch(awayEn);
+  for (const ev of evtAway) {
+    const title = (ev.title || '').toLowerCase();
+    if (!_anyTokenIn(homeTokens, title) || !_anyTokenIn(awayTokens, title)) continue;
+    const result = _matchEventPrice(ev, pick, homeEn, awayEn);
+    if (result) return result;
+  }
+
+  // ── Strategy 4: relaxed — first token of each team only ──────
+  const h0 = homeTokens[0];
+  const a0 = awayTokens[0];
+  if (h0 && a0 && h0 !== a0) {
+    const evtRelaxed = await _gammaSearch(`${h0} ${a0}`);
+    for (const ev of evtRelaxed) {
+      const title = (ev.title || '').toLowerCase();
+      if (!title.includes(h0) || !title.includes(a0)) continue;
+      const result = _matchEventPrice(ev, pick, homeEn, awayEn);
+      if (result) return result;
     }
   }
+
   return null;
 }
 
