@@ -312,7 +312,11 @@ async function fetchGammaPrice(pick) {
 
       const price = _extractOutcomePrice(pick.market, q, outcomes, prices, homeEn, awayEn);
       if (price !== null) {
-        return { found: true, price, eventTitle: ev.title, marketQ: mkt.question };
+        const slug     = ev.slug || null;
+        const eventUrl = slug
+          ? `https://polymarket.com/event/${slug}`
+          : `https://polymarket.com/`;
+        return { found: true, price, eventTitle: ev.title, marketQ: mkt.question, eventUrl };
       }
     }
   }
@@ -412,6 +416,26 @@ function _edgeBlock(pick, pickId) {
   return `<span style="color:${col};font-size:13px;font-weight:700">${sign}${edgePp}pp</span>`;
 }
 
+function _openButtonHtml(pickId) {
+  const pd = _polyState.prices[pickId];
+  if (!pd || pd.loading) {
+    return `<div style="height:32px"></div>`;
+  }
+  if (!pd.found || !pd.eventUrl) {
+    return `<div style="text-align:center;font-size:11px;color:#8b949e44;padding:6px 0">kein Polymarket-Markt gefunden</div>`;
+  }
+  return `<a href="${pd.eventUrl}" target="_blank" rel="noopener"
+    onclick="event.stopPropagation()"
+    style="display:flex;align-items:center;justify-content:center;gap:6px;
+           background:#a78bfa22;border:1px solid #a78bfa55;border-radius:8px;
+           color:#a78bfa;font-size:12px;font-weight:700;padding:8px;
+           text-decoration:none;transition:background .15s"
+    onmouseover="this.style.background='#a78bfa33'"
+    onmouseout="this.style.background='#a78bfa22'">
+    🔗 Auf Polymarket öffnen
+  </a>`;
+}
+
 function _renderPickCard(pick) {
   const isSel      = _polyState.selected.has(pick.id);
   const priceData  = _polyState.prices[pick.id];
@@ -438,7 +462,7 @@ function _renderPickCard(pick) {
       ${_confBadge(pick.conf)}
     </div>
     <!-- Price grid -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;background:#0d1117;border-radius:8px;overflow:hidden">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;background:#0d1117;border-radius:8px;overflow:hidden;margin-bottom:10px">
       <div style="padding:10px;text-align:center">
         <div style="font-size:9px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Bookie</div>
         <div style="font-size:15px;font-weight:700;color:#e6edf3">${pick.odds ?? '—'}</div>
@@ -452,6 +476,8 @@ function _renderPickCard(pick) {
         <div>${_edgeBlock(pick, pick.id)}</div>
       </div>
     </div>
+    <!-- Open on Polymarket button -->
+    ${_openButtonHtml(pick.id)}
   </div>`;
 }
 
@@ -566,6 +592,35 @@ function renderPolyStats() {
 }
 
 // ── 7. CONFIRMATION FLOW ────────────────────────────────
+
+function polyMarkPlaced() {
+  // Save all selected picks as "pending" in localStorage — user has placed them manually on Polymarket
+  const sel = _polyState.picks.filter(p => _polyState.selected.has(p.id));
+  if (sel.length === 0) return;
+
+  const bets = _getPolyBets();
+  for (const p of sel) {
+    const pd = _polyState.prices[p.id];
+    bets.push({
+      id:        p.id,
+      date:      p.date || _polyState.dateStr,
+      home:      p.home,
+      away:      p.away,
+      market:    p.market,
+      league:    p.league,
+      stake:     POLY_STAKE,
+      polyPrice: pd?.found ? pd.price : null,
+      placed:    new Date().toISOString(),
+      result:    null,
+    });
+  }
+  _savePolyBets(bets);
+  _polyState.selected.clear();
+  _polyRefreshStickyBar();
+  document.getElementById('polyPickGrid').innerHTML = renderPolyPickCards();
+  document.getElementById('polyStatsSection').innerHTML = renderPolyStats();
+  _polyToast(`✅ ${sel.length} Bet${sel.length !== 1 ? 's' : ''} als platziert gespeichert`);
+}
 
 function polyTogglePick(id) {
   if (_polyState.selected.has(id)) _polyState.selected.delete(id);
@@ -969,9 +1024,9 @@ function initPolymarket() {
     <div id="polyStickyBar"
          style="display:none;position:fixed;bottom:0;left:0;right:0;background:#161b22;border-top:1px solid #30363d;padding:12px 20px;align-items:center;justify-content:space-between;z-index:100;gap:12px">
       <span id="polyStickyCount" style="font-size:13px;color:#e6edf3;font-weight:600"></span>
-      <button onclick="polyConfirm()"
+      <button onclick="polyMarkPlaced()"
               style="background:linear-gradient(135deg,#a78bfa,#7c3aed);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:800;padding:11px 26px;cursor:pointer;font-family:inherit;letter-spacing:.02em;box-shadow:0 2px 12px #a78bfa44">
-        🟣 Jetzt platzieren
+        ✅ Als platziert markieren
       </button>
     </div>`;
 
@@ -993,7 +1048,7 @@ async function _fetchAllPricesAsync() {
     try {
       const result = await fetchGammaPrice(pick);
       _polyState.prices[pick.id] = result
-        ? { found: true, price: result.price, eventTitle: result.eventTitle }
+        ? { found: true, price: result.price, eventTitle: result.eventTitle, eventUrl: result.eventUrl }
         : { found: false };
     } catch (e) {
       _polyState.prices[pick.id] = { found: false };
