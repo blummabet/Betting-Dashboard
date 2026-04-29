@@ -318,12 +318,13 @@ function renderLineMovement(rows, picks, oddsD, isEstimated) {
 // SYNC: when changing any value here also update check_picks_logic.py
 // (Python validator uses same thresholds in comments — search "SYNC:GATE").
 const GATE = {
-  GOALS_REAL: 0.12,   // Over 2.5 / Over 3.5 / BTTS  (real bookie odds)
-  TEAM_REAL:  0.12,   // Heim/Ausw über 1.5  (real bookie odds)
-  TEAM_EST:   0.15,   // Heim/Ausw über 1.5  (estimated odds — wider, model uncertainty)
-  AH_REAL:    0.14,   // Asian Handicap  (real only; AH model less precise than goals)
-  CORN_REAL:  0.10,   // Ecken Over  (real bookie odds)
-  CORN_EST:   0.15,   // Ecken Over  (estimated odds)
+  GOALS_REAL:  0.12,   // Over 2.5 / Over 3.5 / BTTS  (real bookie odds)
+  RESULT_REAL: 0.15,   // 1X2 result markets (wider — 3-way, more variance than 2-way goals)
+  TEAM_REAL:   0.12,   // Heim/Ausw über 1.5  (real bookie odds)
+  TEAM_EST:    0.15,   // Heim/Ausw über 1.5  (estimated odds — wider, model uncertainty)
+  AH_REAL:     0.14,   // Asian Handicap  (real only; AH model less precise than goals)
+  CORN_REAL:   0.10,   // Ecken Over  (real bookie odds)
+  CORN_EST:    0.15,   // Ecken Over  (estimated odds)
 };
 
 // ─────────────────────────────────────────────────────
@@ -1204,7 +1205,14 @@ function getBettingPicks(match, odds, leagueKey) {
         if (_apiPoiH >= 50) reason += `<br>🤖 Statistisches Modell sieht ${match.home} mit ${_apiPoiH}% als Favorit — bestätigt die Analyse.`;
         else if (_apiPoiH <= 32) reason += `<br>⚠️ Statistisches Modell: ${match.home} nur bei ${_apiPoiH}% Siegchance — Modell ist skeptischer.`;
       }
-      rC.push({sc, p:{icon:'🏠', market:'Heimsieg', odds:o.hw, conf, reason}});
+      // 🔑 NEG-EDGE GATE for 1X2: use independent Poisson model as fair prob.
+      // Bookie-derived _fairPH is circular for neg-edge — Poisson is genuinely independent.
+      // Only fires when poissonAvail (venue xG data present) AND real bookie odds exist.
+      // Threshold RESULT_REAL=0.15 (wider than goals 0.12 — 3-way market, more variance).
+      const _heimNegEdge = poissonAvail && o.hw && !o._isEstimated
+        ? _hasNegEdge(_poissonProbs.pH, o.hw, false, GATE.RESULT_REAL, null)
+        : false;
+      if (!_heimNegEdge) rC.push({sc, p:{icon:'🏠', market:'Heimsieg', odds:o.hw, conf, reason}});
       // AH-Kandidat: wenn Heimsieg-Quote zu günstig (< 1.35), beste AH-Line via Ziel-Quote ~1.62
       if (o.hw != null && o.hw < 1.35) {
         // ah_home_lines now contains ALL bookmaker spread lines (from spreads market, Pass 1)
@@ -1326,7 +1334,11 @@ function getBettingPicks(match, odds, leagueKey) {
         if (_apiPoiA >= 50) reason += `<br>🤖 Statistisches Modell sieht ${match.away} mit ${_apiPoiA}% als Favorit — bestätigt die Analyse.`;
         else if (_apiPoiA <= 32) reason += `<br>⚠️ Statistisches Modell: ${match.away} nur bei ${_apiPoiA}% Siegchance — Modell ist skeptischer.`;
       }
-      rC.push({sc, p:{icon:'✈️', market:'Auswärtssieg', odds:o.aw, conf, reason}});
+      // 🔑 NEG-EDGE GATE for 1X2: independent Poisson fair prob check (see Heimsieg block).
+      const _auswNegEdge = poissonAvail && o.aw && !o._isEstimated
+        ? _hasNegEdge(_poissonProbs.pA, o.aw, false, GATE.RESULT_REAL, null)
+        : false;
+      if (!_auswNegEdge) rC.push({sc, p:{icon:'✈️', market:'Auswärtssieg', odds:o.aw, conf, reason}});
       // AH-Kandidat: wenn Auswärtssieg-Quote zu günstig (< 1.35), beste AH-Line via Ziel-Quote ~1.62
       if (o.aw != null && o.aw < 1.35) {
         // ah_away_lines contains all bookmaker spread lines + alternate_spreads (Pass 6)
@@ -1563,7 +1575,7 @@ function getBettingPicks(match, odds, leagueKey) {
       // Threshold 12pp: wenn Bookie-Wahrscheinlichkeit unsere FV um >12pp überschreitet → kein Edge.
       // Schützt vor strukturell negativen Picks (z.B. Over 3.5 @ 1.65 mit expGoals=3.2 → FV=2.50).
       const _o35FairProb = (!odds?._isEstimated && _o35Odds != null)
-        ? _poissonOver(expGoals, 3.5) : null;
+        ? _poissonOver(poissonAvail ? (_muH + _muA) : expGoals, 3.5) : null;
       const _o35NegEdge = _hasNegEdge(_o35FairProb, _o35Odds, false, GATE.GOALS_REAL, null);
       if (!_o35NegEdge) gC.push({sc, p:{icon:'🔥', market:`Over ${_o35Pt} Tore`, odds:_o35Odds,
         conf: sc>0.68?'high':sc>0.44?'medium':'low',
@@ -1628,7 +1640,7 @@ function getBettingPicks(match, odds, leagueKey) {
         // Bei echter Bookie-Quote: wenn implizierte Wahrscheinlichkeit FV um >12pp überschreitet → kein Edge.
         // (Frühere Annahme "Hard Gate reicht" war falsch: expGoals=2.5 mit Odds 1.65 hat -15pp Edge)
         const _o25FairProb = (!odds?._isEstimated && _o25Odds != null)
-          ? _poissonOver(expGoals, 2.5) : null;
+          ? _poissonOver(poissonAvail ? (_muH + _muA) : expGoals, 2.5) : null;
         const _o25NegEdge = _hasNegEdge(_o25FairProb, _o25Odds, false, GATE.GOALS_REAL, null);
         if (!_o25NegEdge) gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
           conf: sc>0.66?'high':sc>0.46?'medium':'low',
@@ -2235,10 +2247,14 @@ function getBettingPicks(match, odds, leagueKey) {
     switch (p.market) {
       case 'Heimsieg':
         if (_fairPH !== null) {
-          // Market-anchored: blended fair prob (dynamic weight consensus + API pct) as base
-          // + line movement nudge: steam toward home shifts mp up
+          // Market-anchored: blended fair prob (dynamic weight consensus + API pct) as base.
+          // When Poisson available: blend in 25% of our independent model (incorporates live
+          // injuries, motivation, venue-specific rates that bookie may lag on).
+          const _bkrBaseH = (poissonAvail && !o._isEstimated)
+            ? _fairPH * 0.75 + _poissonProbs.pH * 0.25
+            : _fairPH;
           let _adj = homeNeedsWin ? _pressureBoost * 0.18 : 0;
-          mp = Math.min(0.97, Math.max(0.02, _fairPH + Math.min(0.06, Math.max(-0.06, _adj)) + _lmH));
+          mp = Math.min(0.97, Math.max(0.02, _bkrBaseH + Math.min(0.06, Math.max(-0.06, _adj)) + _lmH));
         } else if (poissonAvail) {
           // Venue-aware Poisson — genuinely independent model (no bookie anchoring).
           // pH already incorporates venue, injury, fatigue, and motivation adjustments
@@ -2256,8 +2272,11 @@ function getBettingPicks(match, odds, leagueKey) {
         break;
       case 'Auswärtssieg':
         if (_fairPA !== null) {
+          const _bkrBaseA = (poissonAvail && !o._isEstimated)
+            ? _fairPA * 0.75 + _poissonProbs.pA * 0.25
+            : _fairPA;
           let _adj = awayNeedsWin ? _pressureBoost * 0.18 : 0;
-          mp = Math.min(0.97, Math.max(0.02, _fairPA + Math.min(0.06, Math.max(-0.06, _adj)) + _lmA));
+          mp = Math.min(0.97, Math.max(0.02, _bkrBaseA + Math.min(0.06, Math.max(-0.06, _adj)) + _lmA));
         } else if (poissonAvail) {
           let _adj = awayNeedsWin ? _pressureBoost * 0.18 : 0;
           if (aMotivNone) _adj -= 0.06;
@@ -2313,8 +2332,11 @@ function getBettingPicks(match, odds, leagueKey) {
       }
       case 'Unentschieden':
         if (_fairPD !== null) {
+          const _bkrBaseD = (poissonAvail && !o._isEstimated)
+            ? _fairPD * 0.75 + _poissonProbs.pD * 0.25
+            : _fairPD;
           let _adj = (homeNeedsWin || awayNeedsWin) ? -Math.min(0.10, _pressureBoost * 0.30) : 0;
-          mp = Math.max(0.03, Math.min(0.65, _fairPD + _adj + _lmD));
+          mp = Math.max(0.03, Math.min(0.65, _bkrBaseD + _adj + _lmD));
         } else if (poissonAvail) {
           let _adj = (homeNeedsWin || awayNeedsWin) ? -Math.min(0.10, _pressureBoost * 0.30) : 0;
           mp = Math.max(0.03, Math.min(0.65, _poissonProbs.pD + _adj + _lmD));
@@ -2324,57 +2346,76 @@ function getBettingPicks(match, odds, leagueKey) {
         }
         break;
       case 'Over 2.5 Tore':
-        mp = expGoals > 3.2 ? 0.72 + _lgCap : expGoals > 2.8 ? 0.60 + _lgCap : expGoals > 2.4 ? 0.48 + _lgCap * 0.7 : 0.36 + _lgCap * 0.5;
-        mp = Math.min(0.92, Math.max(0.12, mp));  // hard floor/ceiling after league adjustment
+        // Poisson CDF from venue-specific μH+μA when available; stepped table as fallback.
+        // Sum of independent Poisson(μH) + Poisson(μA) = Poisson(μH+μA) → exact P(total ≥ 3).
+        if (poissonAvail) {
+          mp = _poissonOver(_muH + _muA, 2.5);
+          mp = Math.min(0.92, Math.max(0.12, mp + _lgCap));
+        } else {
+          mp = expGoals > 3.2 ? 0.72 + _lgCap : expGoals > 2.8 ? 0.60 + _lgCap : expGoals > 2.4 ? 0.48 + _lgCap * 0.7 : 0.36 + _lgCap * 0.5;
+          mp = Math.min(0.92, Math.max(0.12, mp));
+        }
         if (bothNeedWin)       mp = Math.min(0.88 + _lgCap, mp + _pressureBoost * 0.55);
         else if (_anyNeedsWin) mp = Math.min(0.82 + _lgCap, mp + _pressureBoost * 0.30);
         // H2H goals history: both rate (over25Rate) and average (avgGoals) as signals
         if (_h2hSample && _h2hOver25 != null) mp = Math.min(0.92, mp + _h2hO25Mod * 0.7);
-        if (_h2hSample && _h2hAvgG   != null) mp = Math.min(0.92, mp + _h2hAvgGMod * 0.7); // was missing from FV
+        if (_h2hSample && _h2hAvgG   != null) mp = Math.min(0.92, mp + _h2hAvgGMod * 0.7);
         // API prediction consensus: independent model agrees → small FV boost
-        if (_apiUO === 'Over 2.5')  mp = Math.min(0.92, mp + 0.05); // was missing from FV
+        if (_apiUO === 'Over 2.5')  mp = Math.min(0.92, mp + 0.05);
         else if (_apiUO === 'Under 2.5') mp = Math.max(0.12, mp - 0.04);
-        // Line movement nudge: steam toward Over = money coming in on goals → boost mp
+        // Line movement nudge
         mp = Math.min(0.92, Math.max(0.12, mp + _lmO));
-        // Market anchor: Pinnacle O2.5/U2.5 already prices in relegation pressure.
-        // Allow at most +10pp above de-vigged market probability to prevent double-counting.
-        if (o.o25 && o.u25) { const _mktO = (1/o.o25)/((1/o.o25)+(1/o.u25)); mp = Math.min(_mktO + 0.10, mp); }
+        // Market anchor: cap +10pp above AND floor -12pp below de-vigged market prob.
+        // Floor prevents false neg-edge suppression when our model underestimates a high market.
+        if (o.o25 && o.u25) { const _mktO = (1/o.o25)/((1/o.o25)+(1/o.u25)); mp = Math.min(_mktO + 0.10, Math.max(_mktO - 0.12, mp)); }
         break;
       case 'Under 2.5 Tore':
-        mp = expGoals < 1.8 ? 0.72 - _lgCap : expGoals < 2.2 ? 0.60 - _lgCap : expGoals < 2.6 ? 0.49 - _lgCap * 0.7 : 0.37 - _lgCap * 0.5;
-        mp = Math.min(0.92, Math.max(0.08, mp));  // hard floor/ceiling after league adjustment
+        // Poisson CDF: P(under 2.5) = 1 - P(total ≥ 3) = 1 - _poissonOver(μH+μA, 2.5)
+        if (poissonAvail) {
+          mp = 1 - _poissonOver(_muH + _muA, 2.5);
+          mp = Math.min(0.92, Math.max(0.08, mp - _lgCap));
+        } else {
+          mp = expGoals < 1.8 ? 0.72 - _lgCap : expGoals < 2.2 ? 0.60 - _lgCap : expGoals < 2.6 ? 0.49 - _lgCap * 0.7 : 0.37 - _lgCap * 0.5;
+          mp = Math.min(0.92, Math.max(0.08, mp));
+        }
         if (bothNeedWin)       mp = Math.max(0.10 - _lgCap, mp - _pressureBoost * 0.55);
         else if (_anyNeedsWin) mp = Math.max(0.15 - _lgCap, mp - _pressureBoost * 0.30);
         if (_h2hSample && _h2hOver25 != null) mp = Math.min(0.92, Math.max(0.05, mp - _h2hO25Mod * 0.7));
-        if (_h2hSample && _h2hAvgG   != null) mp = Math.min(0.92, Math.max(0.05, mp - _h2hAvgGMod * 0.7)); // was missing from FV
-        if (_apiUO === 'Under 2.5') mp = Math.min(0.92, mp + 0.05);  // was missing from FV
+        if (_h2hSample && _h2hAvgG   != null) mp = Math.min(0.92, Math.max(0.05, mp - _h2hAvgGMod * 0.7));
+        if (_apiUO === 'Under 2.5') mp = Math.min(0.92, mp + 0.05);
         else if (_apiUO === 'Over 2.5') mp = Math.max(0.08, mp - 0.04);
-        // Line movement nudge: steam toward Under = money on fewer goals → boost mp
         mp = Math.min(0.92, Math.max(0.08, mp + _lmU));
-        // Market anchor: cap Under mp at de-vigged market Under prob + 10pp
-        if (o.o25 && o.u25) { const _mktU = (1/o.u25)/((1/o.o25)+(1/o.u25)); mp = Math.min(_mktU + 0.10, mp); }
+        // Market anchor: cap +10pp above AND floor -12pp below de-vigged market Under prob.
+        if (o.o25 && o.u25) { const _mktU = (1/o.u25)/((1/o.o25)+(1/o.u25)); mp = Math.min(_mktU + 0.10, Math.max(_mktU - 0.12, mp)); }
         break;
       case 'Over 3.5 Tore':
-        mp = expGoals > 3.6 ? 0.60 + _lgCap : expGoals > 3.1 ? 0.42 + _lgCap * 0.8 : expGoals > 2.7 ? 0.28 + _lgCap * 0.5 : 0.18 + _lgCap * 0.3;
-        mp = Math.min(0.88, Math.max(0.05, mp));
+        // Poisson CDF: P(total ≥ 4) = _poissonOver(μH+μA, 3.5)
+        if (poissonAvail) {
+          mp = _poissonOver(_muH + _muA, 3.5);
+          mp = Math.min(0.88, Math.max(0.05, mp + _lgCap));
+        } else {
+          mp = expGoals > 3.6 ? 0.60 + _lgCap : expGoals > 3.1 ? 0.42 + _lgCap * 0.8 : expGoals > 2.7 ? 0.28 + _lgCap * 0.5 : 0.18 + _lgCap * 0.3;
+          mp = Math.min(0.88, Math.max(0.05, mp));
+        }
         if (bothNeedWin)       mp = Math.min(0.78 + _lgCap, mp + _pressureBoost * 0.50);
         else if (_anyNeedsWin) mp = Math.min(0.70 + _lgCap, mp + _pressureBoost * 0.28);
-        // H2H modifiers at ×0.35 (half weight vs O2.5 — same direction, less precision at 3.5 line)
         if (_h2hSample && _h2hOver25 != null) mp = Math.min(0.88, mp + _h2hO25Mod * 0.35);
         if (_h2hSample && _h2hAvgG   != null) mp = Math.min(0.88, mp + _h2hAvgGMod * 0.35);
-        // API prediction: halved vs O2.5 signal (API model targets 2.5 line, less precise for 3.5)
         if (_apiUO === 'Over 2.5')  mp = Math.min(0.88, mp + 0.025);
         else if (_apiUO === 'Under 2.5') mp = Math.max(0.05, mp - 0.020);
-        // Line movement — same direction as O/U 2.5
         mp = Math.min(0.88, Math.max(0.05, mp + _lmO));
-        // Market anchor: use real O3.5 odds if available, otherwise derive from O2.5 (less accurate)
-        if (o.o35) { const _mktO35 = 1 / o.o35 / (1/o.o35 + (o.u35 ? 1/o.u35 : (1 - 1/o.o35))); mp = Math.min(_mktO35 + 0.12, mp); }
+        // Market anchor with floor: cap ±12pp from de-vigged O3.5 market
+        if (o.o35) { const _mktO35 = 1 / o.o35 / (1/o.o35 + (o.u35 ? 1/o.u35 : (1 - 1/o.o35))); mp = Math.min(_mktO35 + 0.12, Math.max(_mktO35 - 0.12, mp)); }
         else if (o.o25 && o.u25) { const _mktO35 = (1/o.o25)/((1/o.o25)+(1/o.u25)) * 0.55; mp = Math.min(_mktO35 + 0.12, mp); }
         break;
       case 'Beide Teams treffen':
         // BTTS Yes: Poisson P(home ≥ 1) × P(away ≥ 1) — independent events
-        { const _pH1 = Math.max(0.05, 1 - Math.exp(-homeAttStr));  // P(home scores ≥ 1)
-          const _pA1 = Math.max(0.05, 1 - Math.exp(-awayAttStr));  // P(away scores ≥ 1)
+        // _muH/_muA = matchup-specific expected goals (blends team attack AND opponent defense).
+        // More accurate than raw homeAttStr (one-sided attack rate, ignores opponent defense).
+        { const _bttsLH = poissonAvail ? _muH : Math.max(0.1, (homeAttStr + awayDefStr) / 2);
+          const _bttsLA = poissonAvail ? _muA : Math.max(0.1, (awayAttStr + homeDefStr) / 2);
+          const _pH1 = Math.max(0.05, 1 - Math.exp(-_bttsLH));  // P(home scores ≥ 1)
+          const _pA1 = Math.max(0.05, 1 - Math.exp(-_bttsLA));  // P(away scores ≥ 1)
           let _bttsMp = Math.min(0.86, Math.max(0.14, _pH1 * _pA1));
           // Pressure: both need to win → both attack → BTTS more likely
           if (bothNeedWin)       _bttsMp = Math.min(0.86, _bttsMp + _pressureBoost * 0.45);
@@ -2387,8 +2428,10 @@ function getBettingPicks(match, odds, leagueKey) {
           mp = _bttsMp;
         } break;
       case 'Beide Teams treffen: Nein':
-        { const _pH0 = Math.max(0.05, Math.exp(-homeAttStr));  // P(home scores 0)
-          const _pA0 = Math.max(0.05, Math.exp(-awayAttStr));  // P(away scores 0)
+        { const _bttsLH0 = poissonAvail ? _muH : Math.max(0.1, (homeAttStr + awayDefStr) / 2);
+          const _bttsLA0 = poissonAvail ? _muA : Math.max(0.1, (awayAttStr + homeDefStr) / 2);
+          const _pH0 = Math.max(0.05, Math.exp(-_bttsLH0));  // P(home scores 0)
+          const _pA0 = Math.max(0.05, Math.exp(-_bttsLA0));  // P(away scores 0)
           // P(BTTS No) = 1 - P(both score): cleaner than lookup table
           let _bttsNMp = Math.min(0.82, Math.max(0.08, 1 - (1-_pH0)*(1-_pA0)));
           if (bothNeedWin)       _bttsNMp = Math.max(0.08, _bttsNMp - _pressureBoost * 0.45);
