@@ -1,9 +1,9 @@
 name: 🧬 Squad-Daten aktualisieren
 
 on:
-  # Automatisch: jeden Montag um 03:00 Uhr Vienna-Zeit (01:00 UTC)
+  # Automatisch: täglich um 03:00 Uhr Vienna-Zeit (01:00 UTC)
   schedule:
-    - cron: '0 1 * * 1'
+    - cron: '0 1 * * *'
 
   # Manuell: jederzeit per Knopfdruck auf GitHub ausführbar
   workflow_dispatch:
@@ -35,7 +35,7 @@ jobs:
 
       # 4. Squad-Daten holen (API-Football /players → squad_cache.json)
       #    Fetcht Starter + Importance-Scores für alle Stake-Teams.
-      #    Läuft wöchentlich statt täglich — spart ~160 API-Calls/Tag.
+      #    Läuft täglich damit neue Stammspieler zeitnah erkannt werden.
       - name: 🧬 Squad-Daten fetchen
         run: python fetch_squads.py
         env:

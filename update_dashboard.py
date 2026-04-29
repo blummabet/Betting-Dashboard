@@ -243,58 +243,10 @@ def fetch_team_injuries(team_id, season=2025):
                     "notes":   notes[:5],
                 }
 
-    # ── Fallback: SofaScore (only works when team_id is a SofaScore ID) ──────
-    candidates = [
-        f"https://api.sofascore.com/api/v1/team/{team_id}/injuries",
-        f"https://api.sofascore.com/api/v1/team/{team_id}/players/missing",
-    ]
-    raw_injuries = None
-    for url in candidates:
-        data = fetch(url, silent_404=True)
-        if data:
-            raw_injuries = data.get("injuries") or data.get("missingPlayers") or []
-            if raw_injuries:
-                break
-
-    if not raw_injuries:
-        return None
-
-    attack_count, defense_count = 0, 0
-    notes = []
-
-    for inj in raw_injuries:
-        player   = inj.get("player") or {}
-        pos      = player.get("position", "")          # F / M / D / G
-        name     = player.get("name", "?")
-        inj_info = (inj.get("playerTeamInjury") or inj.get("injury") or {})
-        ret_ts   = inj_info.get("returnTimestamp") or inj_info.get("returnDate")
-
-        # Skip already-recovered players
-        if ret_ts and isinstance(ret_ts, (int, float)) and ret_ts < now_ts:
-            continue
-
-        if pos in ("F", "M"):
-            attack_count += 1
-        elif pos in ("D", "G"):
-            defense_count += 1
-        else:
-            continue
-
-        if ret_ts and isinstance(ret_ts, (int, float)):
-            weeks_left = max(0, int((ret_ts - now_ts) / 604800))
-            suffix = "bald zurück" if weeks_left == 0 else f"ca. {weeks_left} Wo."
-        else:
-            suffix = "unbekannte Dauer"
-        notes.append(f"{name} ({suffix})")
-
-    if attack_count == 0 and defense_count == 0:
-        return None
-
-    return {
-        "attack":  attack_count,
-        "defense": defense_count,
-        "notes":   notes[:4],
-    }
+    # No Sofascore fallback — API-Football /injuries uses correct team IDs
+    # and is the authoritative source. Sofascore IDs differ from API-Football
+    # IDs, making the fallback unreliable anyway.
+    return None
 
 
 def fetch_h2h(home_id, away_id):
