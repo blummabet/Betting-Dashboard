@@ -455,15 +455,21 @@ async function fetchGammaPrice(pick) {
 
   // ── Strategy 5: retry without active=true (catches upcoming/pre-game markets) ──
   const evtAll = await _gammaSearch(`${homeEn} ${awayEn}`, false);
-  console.log(`[Poly] ${homeEn} vs ${awayEn} — no-active-filter results:`, evtAll.map(e => e.title));
+  console.log(`[Poly] S5 titles for "${homeEn} ${awayEn}": ${evtAll.map(e => e.title).join(' | ')}`);
   for (const ev of evtAll) {
     const title = (ev.title || '').toLowerCase();
-    if (!_anyTokenIn(homeTokens, title) || !_anyTokenIn(awayTokens, title)) continue;
+    const hOk = _anyTokenIn(homeTokens, title);
+    const aOk = _anyTokenIn(awayTokens, title);
+    if (!hOk || !aOk) {
+      console.log(`[Poly] skip "${ev.title}" — home:${hOk} away:${aOk}`);
+      continue;
+    }
     const result = _matchEventPrice(ev, pick, homeEn, awayEn);
+    console.log(`[Poly] matched "${ev.title}" → price:`, result?.price ?? 'no market match');
     if (result) return result;
   }
 
-  console.warn(`[Poly] No market found after all strategies: ${homeEn} vs ${awayEn}`);
+  console.warn(`[Poly] ❌ No market: ${homeEn} vs ${awayEn} | homeTokens:[${homeTokens}] awayTokens:[${awayTokens}]`);
   return null;
 }
 
