@@ -29,11 +29,9 @@ jobs:
         env:
           POLY_PRIVATE_KEY: ${{ secrets.POLY_PRIVATE_KEY }}
           ORDERS_JSON:      ${{ toJson(github.event.client_payload.orders) }}
-        working-directory: "Betting Dashboard"
         run: python3 polymarket_bet.py
 
       - name: Commit updated picks_history.json
-        working-directory: "Betting Dashboard"
         run: |
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
