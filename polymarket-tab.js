@@ -353,10 +353,11 @@ function getPolyPicks(dateStr) {
 
 // Fetch a list of Gamma events for a given keyword string.
 // Returns [] on any error.
-async function _gammaSearch(keyword) {
+async function _gammaSearch(keyword, activeOnly = true) {
   try {
+    const params = `keyword=${encodeURIComponent(keyword)}&limit=15` + (activeOnly ? '&active=true' : '');
     const res = await fetch(
-      `https://gamma-api.polymarket.com/events?keyword=${encodeURIComponent(keyword)}&active=true&limit=15`,
+      `https://gamma-api.polymarket.com/events?${params}`,
       { signal: AbortSignal.timeout(8000) }
     );
     if (!res.ok) return [];
@@ -452,6 +453,17 @@ async function fetchGammaPrice(pick) {
     }
   }
 
+  // ── Strategy 5: retry without active=true (catches upcoming/pre-game markets) ──
+  const evtAll = await _gammaSearch(`${homeEn} ${awayEn}`, false);
+  console.log(`[Poly] ${homeEn} vs ${awayEn} — no-active-filter results:`, evtAll.map(e => e.title));
+  for (const ev of evtAll) {
+    const title = (ev.title || '').toLowerCase();
+    if (!_anyTokenIn(homeTokens, title) || !_anyTokenIn(awayTokens, title)) continue;
+    const result = _matchEventPrice(ev, pick, homeEn, awayEn);
+    if (result) return result;
+  }
+
+  console.warn(`[Poly] No market found after all strategies: ${homeEn} vs ${awayEn}`);
   return null;
 }
 

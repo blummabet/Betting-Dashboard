@@ -74,7 +74,14 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add season-finish.html season-finish-v2.html stats_cache.json picks_history.json squad_cache.json xg_cache.json picks_output.json
+          # Nur existierende Dateien stagen — fehlt eine, kein fataler Abbruch
+          for f in season-finish.html season-finish-v2.html stats_cache.json picks_history.json squad_cache.json xg_cache.json picks_output.json; do
+            if [ -f "$f" ]; then
+              git add "$f"
+            else
+              echo "⚠️  $f nicht vorhanden — übersprungen"
+            fi
+          done
           # Nur committen wenn wirklich etwas geändert wurde
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
