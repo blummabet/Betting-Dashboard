@@ -2507,14 +2507,16 @@ const APISPORTS_BASE = 'https://v3.football.api-sports.io';
   const _PROXY = 'https://corsproxy.io/?';
   window.fetch = function(resource, init) {
     const url = (typeof resource === 'string') ? resource : (resource?.url || '');
-    if (url.includes('api-sports.io') && !url.includes('corsproxy.io')) {
+    const needsProxy = (url.includes('api-sports.io') || url.includes('gamma-api.polymarket.com'))
+                       && !url.includes('corsproxy.io');
+    if (needsProxy) {
       const proxied = _PROXY + encodeURIComponent(url);
       console.log('[CORS-Proxy] →', url.split('?')[0]);
       return _origFetch(proxied, init);
     }
     return _origFetch(resource, init);
   };
-  console.log('[CORS-Proxy] installiert — api-sports.io Requests laufen via corsproxy.io');
+  console.log('[CORS-Proxy] installiert — api-sports.io + gamma-api.polymarket.com via corsproxy.io');
 })();
 const LEAGUE_SPORT_KEYS = {
   ENG:'soccer_epl',

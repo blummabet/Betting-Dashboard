@@ -358,7 +358,7 @@ async function _gammaSearch(keyword, activeOnly = true) {
     const params = `keyword=${encodeURIComponent(keyword)}&limit=15` + (activeOnly ? '&active=true' : '');
     const res = await fetch(
       `https://gamma-api.polymarket.com/events?${params}`,
-      { signal: AbortSignal.timeout(8000) }
+      { signal: AbortSignal.timeout(12000) }
     );
     if (!res.ok) return [];
     return await res.json();
