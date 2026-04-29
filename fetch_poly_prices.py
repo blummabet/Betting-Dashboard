@@ -274,7 +274,12 @@ def gamma_search(keyword: str, active_only: bool = True, retries: int = 3) -> li
             req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=15) as resp:
                 data = json.loads(resp.read().decode('utf-8'))
-                return data if isinstance(data, list) else []
+                result = data if isinstance(data, list) else []
+                if result:
+                    print(f"  [gamma] '{keyword}' → {len(result)} events: {[e.get('title','?') for e in result[:3]]}")
+                else:
+                    print(f"  [gamma] '{keyword}' → 0 events (leere Antwort)")
+                return result
         except Exception as e:
             if attempt < retries - 1:
                 time.sleep(2 ** attempt)  # exponential backoff
