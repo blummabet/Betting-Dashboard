@@ -2502,14 +2502,16 @@ const APISPORTS_BASE = 'https://v3.football.api-sports.io';
 // Dieser Interceptor leitet alle api-sports.io Calls durch corsproxy.io, das
 // die Headers (inkl. x-apisports-key) transparent weiterleitet.
 // Hinweis: corsproxy.io sieht den API-Key im Transit. Für privates Dashboard OK.
+//
+// Polymarket-Preise werden NICHT mehr vom Browser geholt — polymarket-tab.js liest
+// stattdessen aus polymarket_prices.json (server-seitig via fetch_poly_prices.py).
 (function _installCorsProxy() {
   const _origFetch = window.fetch.bind(window);
   const _PROXY = 'https://corsproxy.io/?';
   window.fetch = function(resource, init) {
     const url = (typeof resource === 'string') ? resource : (resource?.url || '');
-    const needsProxy = (url.includes('api-sports.io') || url.includes('gamma-api.polymarket.com'))
-                       && !url.includes('corsproxy.io')
-                       && !url.includes('allorigins.win');  // allorigins already proxies gamma-api
+    const needsProxy = url.includes('api-sports.io')
+                       && !url.includes('corsproxy.io');
     if (needsProxy) {
       const proxied = _PROXY + encodeURIComponent(url);
       console.log('[CORS-Proxy] →', url.split('?')[0]);
@@ -2517,7 +2519,7 @@ const APISPORTS_BASE = 'https://v3.football.api-sports.io';
     }
     return _origFetch(resource, init);
   };
-  console.log('[CORS-Proxy] installiert — api-sports.io + gamma-api.polymarket.com via corsproxy.io');
+  console.log('[CORS-Proxy] installiert — api-sports.io via corsproxy.io');
 })();
 const LEAGUE_SPORT_KEYS = {
   ENG:'soccer_epl',

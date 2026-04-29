@@ -349,175 +349,55 @@ function getPolyPicks(dateStr) {
   return results;
 }
 
-// ── 4. GAMMA API ────────────────────────────────────────
-
-// Fetch a list of Gamma events for a given keyword string.
-// Returns [] on any error.
+// ── 4. POLYMARKET PRICES (from server-cached JSON) ──────
 //
-// NOTE: We bypass the global CORS-proxy interceptor here and build the proxy URL
-// directly with the ?url= format. The interceptor uses encodeURIComponent() which
-// double-encodes ? and & causing corsproxy.io to lose the query params and return
-// unrelated cached default results.
-async function _gammaSearch(keyword, activeOnly = true) {
+// Prices are fetched server-side by fetch_poly_prices.py (GitHub Actions)
+// and stored in polymarket_prices.json — no CORS proxy needed.
+//
+// Cache shape:
+// {
+//   fetched: "2026-05-01T06:00:00Z",
+//   matches: {
+//     "Leeds|Burnley": {
+//       found: true, eventTitle: "...", eventUrl: "...",
+//       markets: { "Heimsieg": 0.62, "Over 2.5 Tore": 0.55, ... }
+//     }
+//   }
+// }
+
+let _polyPriceCache = null;   // null = not loaded, {} = loaded (may be empty)
+let _polyPriceFetched = null; // ISO timestamp of last server fetch
+
+async function _loadPolyPriceCache() {
+  if (_polyPriceCache !== null) return;
   try {
-    const params = `keyword=${encodeURIComponent(keyword)}&limit=15` + (activeOnly ? '&active=true' : '');
-    const targetUrl = `https://gamma-api.polymarket.com/events?${params}`;
-    // corsproxy.io caches gamma-api responses ignoring query params → returns stale 2022 NBA/NFL junk.
-    // allorigins.win fetches fresh each time and correctly forwards query params.
-    // URL contains neither 'api-sports.io' nor 'gamma-api.polymarket.com' directly in the proxy host,
-    // so the global fetch interceptor won't re-proxy it.
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-    const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(12000) });
-    if (!res.ok) return [];
-    return await res.json();
-  } catch (e) { return []; }
+    const res = await fetch('polymarket_prices.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    _polyPriceCache  = data.matches || {};
+    _polyPriceFetched = data.fetched || null;
+    console.log(`[Poly] Cache loaded: ${Object.keys(_polyPriceCache).length} matches, fetched ${_polyPriceFetched}`);
+  } catch (e) {
+    console.warn('[Poly] polymarket_prices.json not available:', e.message);
+    _polyPriceCache = {};
+  }
 }
 
-// Extract meaningful match tokens (≥ 3 chars) from an English team name.
-// Using ≥ 3 catches short words like "FC", but skips single-letter initials.
-function _teamTokens(name) {
-  return name.toLowerCase().split(/\s+/).filter(t => t.length >= 3);
-}
-
-// Returns true if ALL of the provided tokens appear somewhere in the text.
-function _allTokensIn(tokens, text) {
-  return tokens.every(t => text.includes(t));
-}
-
-// Returns true if ANY of the provided tokens appear somewhere in the text.
-function _anyTokenIn(tokens, text) {
-  return tokens.some(t => text.includes(t));
-}
-
-// Try to extract the desired price from an event that we believe is the right match.
-function _matchEventPrice(ev, pick, homeEn, awayEn) {
-  for (const mkt of (ev.markets || [])) {
-    const q = (mkt.question || '').toLowerCase();
-    let outcomes, prices;
-    try {
-      outcomes = JSON.parse(mkt.outcomes || '[]');
-      prices   = JSON.parse(mkt.outcomePrices || '[]');
-    } catch (e) { continue; }
-    if (!outcomes.length || outcomes.length !== prices.length) continue;
-
-    const price = _extractOutcomePrice(pick.market, q, outcomes, prices, homeEn, awayEn);
-    if (price !== null) {
-      const slug = ev.slug || null;
-      return {
-        found: true, price,
-        eventTitle: ev.title,
-        marketQ: mkt.question,
-        eventUrl: slug ? `https://polymarket.com/event/${slug}` : `https://polymarket.com/`,
-      };
-    }
-  }
-  return null;
-}
-
-async function fetchGammaPrice(pick) {
-  const homeEn = toEnglishName(pick.home);
-  const awayEn = toEnglishName(pick.away);
-
-  const homeTokens = _teamTokens(homeEn);
-  const awayTokens = _teamTokens(awayEn);
-
-  // ── Strategy 1: search "Home Away" (full names) ──────
-  const evtFull = await _gammaSearch(`${homeEn} ${awayEn}`);
-  for (const ev of evtFull) {
-    const title = (ev.title || '').toLowerCase();
-    if (!_anyTokenIn(homeTokens, title) || !_anyTokenIn(awayTokens, title)) continue;
-    const result = _matchEventPrice(ev, pick, homeEn, awayEn);
-    if (result) return result;
-  }
-
-  // ── Strategy 2: search just home name, verify away in title ──
-  const evtHome = await _gammaSearch(homeEn);
-  for (const ev of evtHome) {
-    const title = (ev.title || '').toLowerCase();
-    if (!_anyTokenIn(homeTokens, title) || !_anyTokenIn(awayTokens, title)) continue;
-    const result = _matchEventPrice(ev, pick, homeEn, awayEn);
-    if (result) return result;
-  }
-
-  // ── Strategy 3: search just away name, verify home in title ──
-  const evtAway = await _gammaSearch(awayEn);
-  for (const ev of evtAway) {
-    const title = (ev.title || '').toLowerCase();
-    if (!_anyTokenIn(homeTokens, title) || !_anyTokenIn(awayTokens, title)) continue;
-    const result = _matchEventPrice(ev, pick, homeEn, awayEn);
-    if (result) return result;
-  }
-
-  // ── Strategy 4: relaxed — first token of each team only ──────
-  const h0 = homeTokens[0];
-  const a0 = awayTokens[0];
-  if (h0 && a0 && h0 !== a0) {
-    const evtRelaxed = await _gammaSearch(`${h0} ${a0}`);
-    for (const ev of evtRelaxed) {
-      const title = (ev.title || '').toLowerCase();
-      if (!title.includes(h0) || !title.includes(a0)) continue;
-      const result = _matchEventPrice(ev, pick, homeEn, awayEn);
-      if (result) return result;
-    }
-  }
-
-  // ── Strategy 5: retry without active=true (catches upcoming/pre-game markets) ──
-  const evtAll = await _gammaSearch(`${homeEn} ${awayEn}`, false);
-  console.log(`[Poly] S5 titles for "${homeEn} ${awayEn}": ${evtAll.map(e => e.title).join(' | ')}`);
-  for (const ev of evtAll) {
-    const title = (ev.title || '').toLowerCase();
-    const hOk = _anyTokenIn(homeTokens, title);
-    const aOk = _anyTokenIn(awayTokens, title);
-    if (!hOk || !aOk) {
-      console.log(`[Poly] skip "${ev.title}" — home:${hOk} away:${aOk}`);
-      continue;
-    }
-    const result = _matchEventPrice(ev, pick, homeEn, awayEn);
-    console.log(`[Poly] matched "${ev.title}" → price:`, result?.price ?? 'no market match');
-    if (result) return result;
-  }
-
-  console.warn(`[Poly] ❌ No market: ${homeEn} vs ${awayEn} | homeTokens:[${homeTokens}] awayTokens:[${awayTokens}]`);
-  return null;
-}
-
-function _extractOutcomePrice(market, question, outcomes, prices, homeEn, awayEn) {
-  const isGoals = market.includes('2.5 Tore');
-
-  // ── Over/Under 2.5 ──────────────────────────────────
-  if (isGoals) {
-    if (!question.includes('2.5') && !question.includes('goal')) return null;
-    const yIdx = outcomes.findIndex(o => o.toLowerCase() === 'yes');
-    const nIdx = outcomes.findIndex(o => o.toLowerCase() === 'no');
-    if (market.startsWith('Over')  && yIdx >= 0) return parseFloat(prices[yIdx]) || null;
-    if (market.startsWith('Under') && nIdx >= 0) return parseFloat(prices[nIdx]) || null;
-    // Some markets have "Over" / "Under" as outcomes
-    const oIdx = outcomes.findIndex(o => o.toLowerCase().includes('over'));
-    const uIdx = outcomes.findIndex(o => o.toLowerCase().includes('under'));
-    if (market.startsWith('Over')  && oIdx >= 0) return parseFloat(prices[oIdx]) || null;
-    if (market.startsWith('Under') && uIdx >= 0) return parseFloat(prices[uIdx]) || null;
-    return null;
-  }
-
-  // ── 1X2 / Match Winner ──────────────────────────────
-  if (!question.includes('win') && !question.includes('winner') && !question.includes('match')) return null;
-
-  const hFirst = homeEn.toLowerCase().split(' ')[0];
-  const aFirst = awayEn.toLowerCase().split(' ')[0];
-
-  if (market === 'Heimsieg') {
-    const idx = outcomes.findIndex(o => o.toLowerCase().includes(hFirst));
-    return idx >= 0 ? (parseFloat(prices[idx]) || null) : null;
-  }
-  if (market === 'Auswärtssieg') {
-    const idx = outcomes.findIndex(o => o.toLowerCase().includes(aFirst));
-    return idx >= 0 ? (parseFloat(prices[idx]) || null) : null;
-  }
-  if (market === 'Unentschieden') {
-    const idx = outcomes.findIndex(o => o.toLowerCase().includes('draw'));
-    return idx >= 0 ? (parseFloat(prices[idx]) || null) : null;
-  }
-  return null;
+// Retrieve price for a single pick from the cached JSON.
+// Returns { found, price, eventTitle, eventUrl } or null.
+function _getPriceFromCache(pick) {
+  if (!_polyPriceCache) return null;
+  const key = `${pick.home}|${pick.away}`;
+  const entry = _polyPriceCache[key];
+  if (!entry || !entry.found) return null;
+  const price = (entry.markets || {})[pick.market];
+  if (price == null) return null;
+  return {
+    found:      true,
+    price:      price,
+    eventTitle: entry.eventTitle || '',
+    eventUrl:   entry.eventUrl   || 'https://polymarket.com/',
+  };
 }
 
 // ── 5. UI RENDERING ─────────────────────────────────────
@@ -1205,44 +1085,43 @@ function initPolymarket() {
 }
 
 async function _fetchAllPricesAsync() {
-  const picks        = _polyState.picks;
-  const statusEl     = document.getElementById('polyPriceStatus');
-  let   fetchedCount = 0;
+  const picks    = _polyState.picks;
+  const statusEl = document.getElementById('polyPriceStatus');
 
-  for (const pick of picks) {
-    _polyState.prices[pick.id] = { loading: true, found: false };
+  // Load price cache from server-generated JSON (no CORS proxy needed)
+  if (statusEl) { statusEl.textContent = '⏳ Polymarket-Preise werden geladen…'; statusEl.style.color = ''; }
 
+  await _loadPolyPriceCache();
+
+  // Show fetched-at timestamp if available
+  let statusSuffix = '';
+  if (_polyPriceFetched) {
     try {
-      const result = await fetchGammaPrice(pick);
-      _polyState.prices[pick.id] = result
-        ? { found: true, price: result.price, eventTitle: result.eventTitle, eventUrl: result.eventUrl }
-        : { found: false };
-    } catch (e) {
-      _polyState.prices[pick.id] = { found: false };
-    }
-
-    fetchedCount++;
-
-    // Update pick cards after each fetch
-    const grid = document.getElementById('polyPickGrid');
-    if (grid) grid.innerHTML = renderPolyPickCards();
-
-    // Update status label
-    if (statusEl) {
-      if (fetchedCount < picks.length) {
-        statusEl.textContent = `⏳ ${fetchedCount}/${picks.length} Preise geladen…`;
-      } else {
-        const found = Object.values(_polyState.prices).filter(p => p.found).length;
-        statusEl.textContent = `✅ ${found}/${picks.length} Märkte gefunden`;
-        statusEl.style.color = '#3fb950';
-      }
-    }
-
-    // Brief pause to avoid hammering the API
-    await new Promise(r => setTimeout(r, 350));
+      const d = new Date(_polyPriceFetched);
+      statusSuffix = ` (Stand: ${d.toLocaleString('de-DE', { dateStyle: 'short', timeStyle: 'short' })})`;
+    } catch (_) {}
   }
 
-  if (picks.length === 0 && statusEl) {
-    statusEl.textContent = '';
+  // Apply cached prices to all picks at once
+  for (const pick of picks) {
+    const result = _getPriceFromCache(pick);
+    _polyState.prices[pick.id] = result
+      ? result
+      : { found: false };
+  }
+
+  // Single re-render after all prices are set
+  const grid = document.getElementById('polyPickGrid');
+  if (grid) grid.innerHTML = renderPolyPickCards();
+
+  // Update status label
+  if (statusEl) {
+    const found = Object.values(_polyState.prices).filter(p => p.found).length;
+    if (picks.length === 0) {
+      statusEl.textContent = '';
+    } else {
+      statusEl.textContent = `✅ ${found}/${picks.length} Märkte gefunden${statusSuffix}`;
+      statusEl.style.color = '#3fb950';
+    }
   }
 }

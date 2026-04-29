@@ -64,18 +64,23 @@ jobs:
         run: python save_picks.py
         continue-on-error: true
 
-      # 7. Vergangene Picks auswerten (Sofascore Ergebnisse → picks_history.json)
+      # 7. Polymarket-Preise holen (Gamma API → polymarket_prices.json)
+      - name: 🟣 Polymarket-Preise holen
+        run: python fetch_poly_prices.py
+        continue-on-error: true
+
+      # 8. Vergangene Picks auswerten (Sofascore Ergebnisse → picks_history.json)
       - name: ✅ Picks auswerten
         run: python resolve_picks.py
         continue-on-error: true
 
-      # 8. Geänderte Dateien zurück ins Repo committen und pushen
+      # 9. Geänderte Dateien zurück ins Repo committen und pushen
       - name: 💾 Änderungen speichern & pushen
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
           # Nur existierende Dateien stagen — fehlt eine, kein fataler Abbruch
-          for f in season-finish.html season-finish-v2.html stats_cache.json picks_history.json squad_cache.json xg_cache.json picks_output.json; do
+          for f in season-finish.html season-finish-v2.html stats_cache.json picks_history.json squad_cache.json xg_cache.json picks_output.json polymarket_prices.json; do
             if [ -f "$f" ]; then
               git add "$f"
             else
