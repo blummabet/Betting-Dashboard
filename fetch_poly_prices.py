@@ -257,15 +257,50 @@ def any_token_in(tokens: list[str], text: str) -> bool:
     return any(t in text for t in tokens)
 
 
+def _parse_list_field(val) -> list:
+    """Parse a field that might be a JSON string or already a list."""
+    if isinstance(val, list):
+        return val
+    if isinstance(val, str):
+        try:
+            result = json.loads(val)
+            return result if isinstance(result, list) else []
+        except (json.JSONDecodeError, ValueError):
+            return []
+    return []
+
+
+def _extract_events_from_response(data) -> list:
+    """
+    Handle different Gamma API response formats:
+    - Direct list: [event1, event2, ...]
+    - Wrapped: {"data": [...]} or {"events": [...]} or {"results": [...]}
+    """
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict):
+        for key in ('data', 'events', 'results', 'items'):
+            if key in data and isinstance(data[key], list):
+                print(f"  [gamma] ⚠️  Response wrapped in '{key}' key")
+                return data[key]
+        print(f"  [gamma] ⚠️  Unknown dict response keys: {list(data.keys())[:5]}")
+    return []
+
+
+_api_diagnostic_done = False  # print raw dump once per run
+
+
 def gamma_search(keyword: str, active_only: bool = True, retries: int = 3) -> list:
     """Call Gamma API and return list of events. Returns [] on error."""
-    params = f"keyword={urllib.parse.quote(keyword)}&limit=15"
+    global _api_diagnostic_done
+
+    params = f"keyword={urllib.parse.quote(keyword)}&limit=20"
     if active_only:
         params += "&active=true"
     url = f"https://gamma-api.polymarket.com/events?{params}"
 
     headers = {
-        'User-Agent': 'BetEdge-Dashboard/1.0 (GitHub Actions)',
+        'User-Agent': 'Mozilla/5.0 (compatible; BetEdge/1.0)',
         'Accept': 'application/json',
     }
 
@@ -273,26 +308,73 @@ def gamma_search(keyword: str, active_only: bool = True, retries: int = 3) -> li
         try:
             req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=15) as resp:
-                data = json.loads(resp.read().decode('utf-8'))
-                result = data if isinstance(data, list) else []
+                raw = resp.read().decode('utf-8')
+                data = json.loads(raw)
+
+                # First call: print raw diagnostic info
+                if not _api_diagnostic_done:
+                    _api_diagnostic_done = True
+                    print(f"\n  [DIAG] URL: {url}")
+                    print(f"  [DIAG] Response type: {type(data).__name__}")
+                    if isinstance(data, dict):
+                        print(f"  [DIAG] Dict keys: {list(data.keys())}")
+                    print(f"  [DIAG] Raw (first 300 chars): {raw[:300]}")
+                    print()
+
+                result = _extract_events_from_response(data)
+
                 if result:
                     print(f"  [gamma] '{keyword}' → {len(result)} events: {[e.get('title','?') for e in result[:3]]}")
                 else:
-                    print(f"  [gamma] '{keyword}' → 0 events (leere Antwort)")
+                    print(f"  [gamma] '{keyword}' → 0 events")
                 return result
-        except Exception as e:
+
+        except urllib.error.HTTPError as e:
+            body = e.read().decode('utf-8', errors='replace')[:200]
+            print(f"  [gamma] ❌ HTTP {e.code} for '{keyword}': {body}")
             if attempt < retries - 1:
-                time.sleep(2 ** attempt)  # exponential backoff
-            else:
-                print(f"  [gamma] ❌ {keyword!r}: {e}")
+                time.sleep(2 ** attempt)
+        except Exception as e:
+            print(f"  [gamma] ❌ '{keyword}': {type(e).__name__}: {e}")
+            if attempt < retries - 1:
+                time.sleep(2 ** attempt)
+
     return []
+
+
+def gamma_search_markets(keyword: str, active_only: bool = True) -> list:
+    """
+    Alternative: search via /markets endpoint (returns individual markets, not events).
+    Returns list of market dicts.
+    """
+    params = f"keyword={urllib.parse.quote(keyword)}&limit=20"
+    if active_only:
+        params += "&active=true"
+    url = f"https://gamma-api.polymarket.com/markets?{params}"
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (compatible; BetEdge/1.0)',
+        'Accept': 'application/json',
+    }
+
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            result = _extract_events_from_response(data)
+            if result:
+                print(f"  [markets] '{keyword}' → {len(result)} markets: {[m.get('question','?') for m in result[:2]]}")
+            return result
+    except Exception as e:
+        print(f"  [markets] ❌ '{keyword}': {e}")
+        return []
 
 
 def extract_outcome_price(market: str, question: str, outcomes: list, prices: list,
                           home_en: str, away_en: str) -> float | None:
     """
-    Mirror of JS _extractOutcomePrice().
-    Returns probability as float (0–1) or None if no match.
+    Extract the probability for a specific market type from a Polymarket market.
+    Returns float (0–1) or None.
     """
     q = question.lower()
     is_goals = '2.5' in market and 'Tore' in market
@@ -300,16 +382,16 @@ def extract_outcome_price(market: str, question: str, outcomes: list, prices: li
     if is_goals:
         if '2.5' not in q and 'goal' not in q:
             return None
-        # Yes/No style outcomes
-        y_idx = next((i for i, o in enumerate(outcomes) if o.lower() == 'yes'), -1)
-        n_idx = next((i for i, o in enumerate(outcomes) if o.lower() == 'no'), -1)
+        # Yes/No style
+        y_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'), -1)
+        n_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'no'), -1)
         if market.startswith('Over') and y_idx >= 0:
             return _safe_float(prices[y_idx])
         if market.startswith('Under') and n_idx >= 0:
             return _safe_float(prices[n_idx])
-        # Over/Under labelled outcomes
-        o_idx = next((i for i, o in enumerate(outcomes) if 'over' in o.lower()), -1)
-        u_idx = next((i for i, o in enumerate(outcomes) if 'under' in o.lower()), -1)
+        # Over/Under labelled
+        o_idx = next((i for i, o in enumerate(outcomes) if 'over' in str(o).lower()), -1)
+        u_idx = next((i for i, o in enumerate(outcomes) if 'under' in str(o).lower()), -1)
         if market.startswith('Over') and o_idx >= 0:
             return _safe_float(prices[o_idx])
         if market.startswith('Under') and u_idx >= 0:
@@ -324,13 +406,13 @@ def extract_outcome_price(market: str, question: str, outcomes: list, prices: li
     a_first = away_en.lower().split()[0]
 
     if market == 'Heimsieg':
-        idx = next((i for i, o in enumerate(outcomes) if h_first in o.lower()), -1)
+        idx = next((i for i, o in enumerate(outcomes) if h_first in str(o).lower()), -1)
         return _safe_float(prices[idx]) if idx >= 0 else None
     if market == 'Auswärtssieg':
-        idx = next((i for i, o in enumerate(outcomes) if a_first in o.lower()), -1)
+        idx = next((i for i, o in enumerate(outcomes) if a_first in str(o).lower()), -1)
         return _safe_float(prices[idx]) if idx >= 0 else None
     if market == 'Unentschieden':
-        idx = next((i for i, o in enumerate(outcomes) if 'draw' in o.lower()), -1)
+        idx = next((i for i, o in enumerate(outcomes) if 'draw' in str(o).lower()), -1)
         return _safe_float(prices[idx]) if idx >= 0 else None
     return None
 
@@ -346,17 +428,49 @@ def _safe_float(val) -> float | None:
 def match_event_prices(ev: dict, home_en: str, away_en: str) -> dict | None:
     """
     Try to extract prices for all POLY_MARKETS from a Gamma event.
-    Returns dict of {market: price} or None if nothing matched.
+    Returns dict of {market: price} or None.
     """
     found_markets = {}
 
     for mkt in (ev.get('markets') or []):
         q = (mkt.get('question') or '').lower()
-        try:
-            outcomes = json.loads(mkt.get('outcomes') or '[]')
-            prices   = json.loads(mkt.get('outcomePrices') or '[]')
-        except (json.JSONDecodeError, TypeError):
+
+        # Handle both string-encoded and native list formats
+        outcomes = _parse_list_field(mkt.get('outcomes'))
+        prices   = _parse_list_field(mkt.get('outcomePrices'))
+
+        if not outcomes or len(outcomes) != len(prices):
             continue
+
+        for market in POLY_MARKETS:
+            if market in found_markets:
+                continue
+            price = extract_outcome_price(market, q, outcomes, prices, home_en, away_en)
+            if price is not None:
+                found_markets[market] = price
+
+    return found_markets if found_markets else None
+
+
+def match_market_prices(markets_list: list, home_en: str, away_en: str) -> dict | None:
+    """
+    Extract prices from a list of individual market objects (from /markets endpoint).
+    """
+    found_markets = {}
+    home_tokens = team_tokens(home_en)
+    away_tokens = team_tokens(away_en)
+
+    for mkt in markets_list:
+        q = (mkt.get('question') or '').lower()
+        title = q  # markets endpoint has question as title
+
+        # Must mention both teams
+        if not any_token_in(home_tokens, title) or not any_token_in(away_tokens, title):
+            continue
+
+        outcomes = _parse_list_field(mkt.get('outcomes'))
+        prices   = _parse_list_field(mkt.get('outcomePrices'))
+
         if not outcomes or len(outcomes) != len(prices):
             continue
 
@@ -373,7 +487,6 @@ def match_event_prices(ev: dict, home_en: str, away_en: str) -> dict | None:
 def fetch_match_prices(home: str, away: str) -> dict:
     """
     Try multiple search strategies to find Polymarket prices for a match.
-    Returns structured result dict.
     """
     home_en = to_english(home)
     away_en = to_english(away)
@@ -393,19 +506,20 @@ def fetch_match_prices(home: str, away: str) -> dict:
                 url = f"https://polymarket.com/event/{slug}" if slug else "https://polymarket.com/"
                 print(f"  ✅ [{label}] {ev.get('title')}")
                 return {
-                    'found': True,
+                    'found':      True,
                     'eventTitle': ev.get('title', ''),
-                    'eventUrl': url,
-                    'markets': markets,
+                    'eventUrl':   url,
+                    'markets':    markets,
                 }
         return None
 
+    # Strategy 1–4: /events endpoint
     strategies = [
-        (f"{home_en} {away_en}", True,  'S1:combined'),
-        (home_en,                True,  'S2:home-only'),
-        (away_en,                True,  'S3:away-only'),
-        (f"{home_en} {away_en}", False, 'S4:combined-no-active'),
-        (home_en,                False, 'S5:home-no-active'),
+        (f"{home_en} {away_en}", True,  'S1:events-combined'),
+        (home_en,                True,  'S2:events-home'),
+        (away_en,                True,  'S3:events-away'),
+        (f"{home_en} {away_en}", False, 'S4:events-combined-all'),
+        (home_en,                False, 'S5:events-home-all'),
     ]
 
     for keyword, active_only, label in strategies:
@@ -413,9 +527,22 @@ def fetch_match_prices(home: str, away: str) -> dict:
         result = try_events(events, label)
         if result:
             return result
-        time.sleep(0.3)  # gentle throttle between API calls
+        time.sleep(0.2)
 
-    print(f"  ❌ No market found: {home_en} vs {away_en}")
+    # Strategy 5: /markets endpoint (returns individual markets, not events)
+    mkt_list = gamma_search_markets(f"{home_en} {away_en}", active_only=True)
+    if mkt_list:
+        mk = match_market_prices(mkt_list, home_en, away_en)
+        if mk:
+            print(f"  ✅ [S6:markets] {home_en} vs {away_en}")
+            return {
+                'found':      True,
+                'eventTitle': f"{home_en} vs {away_en}",
+                'eventUrl':   'https://polymarket.com/',
+                'markets':    mk,
+            }
+
+    print(f"  ❌ Not found: {home_en} vs {away_en}")
     return {'found': False, 'eventTitle': '', 'eventUrl': '', 'markets': {}}
 
 
@@ -435,7 +562,7 @@ def main():
         return
 
     # Collect unique matches that have at least one POLY_MARKETS pick
-    unique_matches: dict[str, tuple[str, str]] = {}  # key → (home, away)
+    unique_matches: dict[str, tuple[str, str]] = {}
     for fx in picks_list:
         league = fx.get('league', '')
         if league not in POLY_LEAGUES:
@@ -455,18 +582,19 @@ def main():
         key = f"{home}|{away}"
         unique_matches[key] = (home, away)
 
-    print(f"🔍 {len(unique_matches)} matches to fetch from Polymarket Gamma API")
+    print(f"🔍 {len(unique_matches)} matches to check on Polymarket")
+    print("─" * 60)
 
     results: dict[str, dict] = {}
     for i, (key, (home, away)) in enumerate(unique_matches.items(), 1):
-        print(f"[{i}/{len(unique_matches)}] {home} vs {away}")
+        print(f"\n[{i}/{len(unique_matches)}] {home} vs {away}")
         results[key] = fetch_match_prices(home, away)
-        # Small pause between matches to be polite to the API
         if i < len(unique_matches):
-            time.sleep(0.5)
+            time.sleep(0.4)
 
     found_count = sum(1 for v in results.values() if v.get('found'))
-    print(f"\n✅ Done: {found_count}/{len(unique_matches)} matches found on Polymarket")
+    print(f"\n{'─'*60}")
+    print(f"✅ Done: {found_count}/{len(unique_matches)} matches found on Polymarket")
 
     out = {
         'fetched': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
