@@ -30,6 +30,7 @@ jobs:
           fi
           echo "✅ $PYTHON ($($PYTHON --version))"
           echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
+          $PYTHON -m pip uninstall -y py-clob-client 2>/dev/null || true
           $PYTHON -m pip install --break-system-packages --quiet --upgrade py-clob-client-v2 requests
           $PYTHON -c "from py_clob_client.client import ClobClient; print('✅ py-clob-client-v2 ok')"
 
