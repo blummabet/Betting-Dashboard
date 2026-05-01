@@ -205,12 +205,25 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
     # Prüfe ob der Markt neg_risk nutzt (seit 2024 Standard bei Polymarket)
     neg_risk = False
     try:
-        r = requests.get(f"{CLOB_HOST}/markets/{token_id}", timeout=8)
+        r = requests.get(f"{CLOB_HOST}/neg-risk", timeout=8)
         if r.status_code == 200:
-            neg_risk = bool(r.json().get("neg_risk", False))
-            print(f"  ℹ️  neg_risk={neg_risk}")
-    except Exception:
-        pass
+            data = r.json()
+            # Prüfe ob token_id in neg_risk-Liste
+            neg_risk = token_id in str(data)
+        # Fallback: prüfe über Gamma API
+        if not neg_risk:
+            r2 = requests.get(
+                f"https://gamma-api.polymarket.com/markets",
+                params={"clob_token_ids": token_id, "limit": 1},
+                timeout=8,
+            )
+            if r2.status_code == 200:
+                items = r2.json()
+                if isinstance(items, list) and items:
+                    neg_risk = bool(items[0].get("neg_risk", False))
+        print(f"  ℹ️  neg_risk={neg_risk}")
+    except Exception as e:
+        print(f"  ℹ️  neg_risk check fehlgeschlagen: {e}, verwende False")
 
     # Versuche beide signature_types falls einer fehlschlägt
     for sig_type in (0, 2):
