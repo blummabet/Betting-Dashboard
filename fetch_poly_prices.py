@@ -12,11 +12,12 @@ Writes : polymarket_prices.json
 """
 
 import json
+import re
 import time
 import urllib.request
 import urllib.parse
 import urllib.error
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 # ── Markets we extract ────────────────────────────────────
 POLY_MARKETS = {'Heimsieg', 'Auswärtssieg', 'Unentschieden', 'Over 2.5 Tore', 'Under 2.5 Tore'}
@@ -339,19 +340,63 @@ def get_soccer_tag_ids() -> list[str]:
     return soccer_ids
 
 
+# ── Date filter helpers ───────────────────────────────────
+
+# Only match events within this window (days before and after today)
+_MATCH_WINDOW_PAST_DAYS   = 1   # include matches from yesterday (not yet settled)
+_MATCH_WINDOW_FUTURE_DAYS = 14  # include matches up to 2 weeks out
+
+_SLUG_DATE_RE = re.compile(r'(\d{4}-\d{2}-\d{2})')
+
+def _event_date(ev: dict) -> str | None:
+    """Extract YYYY-MM-DD from event fields or slug."""
+    for field in ('startDate', 'endDate', 'start', 'end', 'startDateIso', 'endDateIso'):
+        val = ev.get(field)
+        if val and isinstance(val, str):
+            m = _SLUG_DATE_RE.search(val)
+            if m:
+                return m.group(1)
+    # Fall back to slug
+    slug = ev.get('slug') or ''
+    m = _SLUG_DATE_RE.search(slug)
+    return m.group(1) if m else None
+
+
+def _is_relevant_event(ev: dict) -> bool:
+    """True if the event is for an upcoming or very recent match (within window)."""
+    date_str = _event_date(ev)
+    if not date_str:
+        return True  # No date info → keep (don't filter out)
+    try:
+        ev_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+    except ValueError:
+        return True
+    today = datetime.now(timezone.utc).date()
+    min_date = today - timedelta(days=_MATCH_WINDOW_PAST_DAYS)
+    max_date = today + timedelta(days=_MATCH_WINDOW_FUTURE_DAYS)
+    return min_date <= ev_date <= max_date
+
+
 def fetch_events_by_tag(tag_id: str) -> list[dict]:
-    """Fetch all active events for a given tag ID."""
+    """Fetch all active events for a given tag ID, filtered to the match window."""
+    # Only request events ending after yesterday (avoids downloading thousands of old matches)
+    today = datetime.now(timezone.utc).date()
+    min_end_date = (today - timedelta(days=_MATCH_WINDOW_PAST_DAYS)).strftime('%Y-%m-%dT00:00:00Z')
+
     events = []
     offset = 0
     while True:
         url = (f"https://gamma-api.polymarket.com/events"
-               f"?tag_id={tag_id}&active=true&limit=100&offset={offset}")
+               f"?tag_id={tag_id}&active=true&limit=100&offset={offset}"
+               f"&endDateMin={urllib.parse.quote(min_end_date)}")
         data = api_get(url)
         batch = _extract_list(data)
         if not batch:
             break
-        events.extend(batch)
-        print(f"  [tag={tag_id}] +{len(batch)} events (offset={offset})")
+        # Secondary filter: reject events clearly outside our window
+        relevant = [e for e in batch if _is_relevant_event(e)]
+        events.extend(relevant)
+        print(f"  [tag={tag_id}] +{len(relevant)}/{len(batch)} events (offset={offset})")
         if len(batch) < 100:
             break
         offset += 100
@@ -402,19 +447,24 @@ def fetch_all_events_paginated(max_pages: int = 60) -> list[dict]:
     Paginate ALL active Polymarket events, collect ones that look like soccer.
     Stops after max_pages pages to avoid timeout.
     """
+    today = datetime.now(timezone.utc).date()
+    min_end_date = (today - timedelta(days=_MATCH_WINDOW_PAST_DAYS)).strftime('%Y-%m-%dT00:00:00Z')
+    min_end_encoded = urllib.parse.quote(min_end_date)
+
     soccer_events = []
     offset = 0
     consecutive_empty_soccer = 0
 
     for page in range(max_pages):
         url = (f"https://gamma-api.polymarket.com/events"
-               f"?active=true&limit=100&order=volume&ascending=false&offset={offset}")
+               f"?active=true&limit=100&order=volume&ascending=false&offset={offset}"
+               f"&endDateMin={min_end_encoded}")
         data = api_get(url)
         batch = _extract_list(data)
         if not batch:
             break
 
-        soccer_batch = [e for e in batch if _looks_like_soccer(e)]
+        soccer_batch = [e for e in batch if _looks_like_soccer(e) and _is_relevant_event(e)]
         soccer_events.extend(soccer_batch)
 
         if soccer_batch:
