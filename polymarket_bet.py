@@ -188,10 +188,19 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
     """
     try:
         from py_clob_client.client import ClobClient
-        from py_clob_client.clob_types import MarketOrderArgs, OrderType, BUY
+        from py_clob_client.clob_types import MarketOrderArgs, OrderType
     except ImportError:
         print("  ❌ py-clob-client not installed. Run: pip install py-clob-client")
         sys.exit(1)
+
+    # BUY constant — location varies across py-clob-client versions
+    try:
+        from py_clob_client.clob_types import BUY
+    except ImportError:
+        try:
+            from py_clob_client.constants import BUY
+        except ImportError:
+            BUY = "BUY"  # string fallback (accepted by all versions)
 
     client = ClobClient(
         host=CLOB_HOST,
