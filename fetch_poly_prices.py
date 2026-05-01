@@ -459,24 +459,38 @@ def extract_outcome_price(market: str, question: str, outcomes: list,
         return _safe_float(prices[idx]) if idx >= 0 else None
 
     # 1X2 match winner
-    if not any(kw in q for kw in ('win', 'winner', 'match', 'beat', 'vs', 'v ')):
+    if not any(kw in q for kw in ('win', 'winner', 'match', 'beat', 'vs', 'v ', 'draw')):
         return None
 
     home_tokens = [t for t in home_en.lower().split() if len(t) >= 3]
     away_tokens = [t for t in away_en.lower().split() if len(t) >= 3]
 
+    # Helper: index of Yes outcome (binary markets use Yes/No instead of team names)
+    yes_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'), -1)
+
     if market == 'Heimsieg':
+        # Try named outcome first ("Leeds United FC", "Home", etc.)
         idx = next((i for i, o in enumerate(outcomes)
                     if any(t in str(o).lower() for t in home_tokens)), -1)
+        # Fallback: binary "Will [HomeTeam] win?" → Yes = home win
+        if idx < 0 and yes_idx >= 0 and any(t in q for t in home_tokens):
+            idx = yes_idx
         return _safe_float(prices[idx]) if idx >= 0 else None
+
     if market == 'Auswärtssieg':
         idx = next((i for i, o in enumerate(outcomes)
                     if any(t in str(o).lower() for t in away_tokens)), -1)
+        if idx < 0 and yes_idx >= 0 and any(t in q for t in away_tokens):
+            idx = yes_idx
         return _safe_float(prices[idx]) if idx >= 0 else None
+
     if market == 'Unentschieden':
         idx = next((i for i, o in enumerate(outcomes)
                     if 'draw' in str(o).lower()), -1)
+        if idx < 0 and yes_idx >= 0 and 'draw' in q:
+            idx = yes_idx
         return _safe_float(prices[idx]) if idx >= 0 else None
+
     return None
 
 
