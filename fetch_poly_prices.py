@@ -340,13 +340,15 @@ def get_soccer_tag_ids() -> list[str]:
     return soccer_ids
 
 
-# ── Date filter helpers ───────────────────────────────────
-
-# Only match events within this window (days before and after today)
-_MATCH_WINDOW_PAST_DAYS   = 1   # include matches from yesterday (not yet settled)
-_MATCH_WINDOW_FUTURE_DAYS = 14  # include matches up to 2 weeks out
+# ── Date / settled event helpers ─────────────────────────
 
 _SLUG_DATE_RE = re.compile(r'(\d{4}-\d{2}-\d{2})')
+
+# How many days forward to include (generous — covers full remaining season)
+_MATCH_WINDOW_FUTURE_DAYS = 60
+# How many days in the past to allow (matches from yesterday still open)
+_MATCH_WINDOW_PAST_DAYS   = 3
+
 
 def _event_date(ev: dict) -> str | None:
     """Extract YYYY-MM-DD from event fields or slug."""
@@ -356,17 +358,51 @@ def _event_date(ev: dict) -> str | None:
             m = _SLUG_DATE_RE.search(val)
             if m:
                 return m.group(1)
-    # Fall back to slug
     slug = ev.get('slug') or ''
     m = _SLUG_DATE_RE.search(slug)
     return m.group(1) if m else None
 
 
+def _is_settled(ev: dict) -> bool:
+    """
+    True if this event is already settled (price = 1.0 on any outcome).
+
+    Polymarket keeps resolved markets as active=true in the API but their
+    prices snap to 1.0 once an outcome is known.  A price ≥ 0.999 means
+    the market is done — we must not use it for upcoming fixture matching.
+    """
+    def _any_settled(price_list) -> bool:
+        for p in _parse_list_field(price_list):
+            f = _safe_float(p)
+            if f is not None and f >= 0.999:
+                return True
+        return False
+
+    # Check nested sub-markets
+    for mkt in (ev.get('markets') or []):
+        if _any_settled(mkt.get('outcomePrices')):
+            return True
+    # Check event-level prices
+    if _any_settled(ev.get('outcomePrices')):
+        return True
+    return False
+
+
 def _is_relevant_event(ev: dict) -> bool:
-    """True if the event is for an upcoming or very recent match (within window)."""
+    """
+    True if the event should be considered for matching.
+
+    Rejects:
+      - settled events (price = 1.0) — these are old resolved markets
+      - events whose date (from slug/fields) is clearly too far in the past
+        or future (> window)
+    """
+    if _is_settled(ev):
+        return False  # Old/resolved market — skip
+
     date_str = _event_date(ev)
     if not date_str:
-        return True  # No date info → keep (don't filter out)
+        return True  # No date in slug/fields — keep (can't rule out)
     try:
         ev_date = datetime.strptime(date_str, '%Y-%m-%d').date()
     except ValueError:
@@ -378,29 +414,46 @@ def _is_relevant_event(ev: dict) -> bool:
 
 
 def fetch_events_by_tag(tag_id: str) -> list[dict]:
-    """Fetch all active events for a given tag ID, filtered to the match window."""
-    # Only request events ending after yesterday (avoids downloading thousands of old matches)
-    today = datetime.now(timezone.utc).date()
-    min_end_date = (today - timedelta(days=_MATCH_WINDOW_PAST_DAYS)).strftime('%Y-%m-%dT00:00:00Z')
+    """
+    Fetch active events for a given tag ID, sorted newest-first (endDate DESC).
 
+    Sorting newest-first means upcoming events appear at low offsets and we can
+    stop early once we've passed the date window — no need to scan 20,000+
+    historical events.
+    """
     events = []
     offset = 0
+    consecutive_empty = 0  # consecutive pages with 0 events in our window
+
     while True:
         url = (f"https://gamma-api.polymarket.com/events"
                f"?tag_id={tag_id}&active=true&limit=100&offset={offset}"
-               f"&endDateMin={urllib.parse.quote(min_end_date)}")
+               f"&order=endDate&ascending=false")
         data = api_get(url)
         batch = _extract_list(data)
         if not batch:
             break
-        # Secondary filter: reject events clearly outside our window
+
         relevant = [e for e in batch if _is_relevant_event(e)]
         events.extend(relevant)
         print(f"  [tag={tag_id}] +{len(relevant)}/{len(batch)} events (offset={offset})")
+
         if len(batch) < 100:
             break
+
+        # Early stopping: newest-first means once we start seeing empty pages we've
+        # gone past our window into historical events
+        if relevant:
+            consecutive_empty = 0
+        else:
+            consecutive_empty += 1
+            if consecutive_empty >= 3:
+                print(f"  [tag={tag_id}] Early stop — past date window")
+                break
+
         offset += 100
-        time.sleep(0.25)
+        time.sleep(0.1)
+
     return events
 
 
@@ -447,18 +500,13 @@ def fetch_all_events_paginated(max_pages: int = 60) -> list[dict]:
     Paginate ALL active Polymarket events, collect ones that look like soccer.
     Stops after max_pages pages to avoid timeout.
     """
-    today = datetime.now(timezone.utc).date()
-    min_end_date = (today - timedelta(days=_MATCH_WINDOW_PAST_DAYS)).strftime('%Y-%m-%dT00:00:00Z')
-    min_end_encoded = urllib.parse.quote(min_end_date)
-
     soccer_events = []
     offset = 0
     consecutive_empty_soccer = 0
 
     for page in range(max_pages):
         url = (f"https://gamma-api.polymarket.com/events"
-               f"?active=true&limit=100&order=volume&ascending=false&offset={offset}"
-               f"&endDateMin={min_end_encoded}")
+               f"?active=true&limit=100&order=volume&ascending=false&offset={offset}")
         data = api_get(url)
         batch = _extract_list(data)
         if not batch:
