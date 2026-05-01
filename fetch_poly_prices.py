@@ -3,28 +3,12 @@
 fetch_poly_prices.py — Server-side Polymarket price fetcher
 Runs in GitHub Actions (no CORS restrictions).
 
+Strategy: bulk-fetch ALL active soccer/football events from Polymarket
+(keyword search is broken — returns irrelevant results regardless of query).
+Then match fixtures by team name in event title.
+
 Reads  : picks_output.json
 Writes : polymarket_prices.json
-
-Output format:
-{
-  "fetched": "2026-05-01T06:00:00Z",
-  "matches": {
-    "Leeds|Burnley": {
-      "found": true,
-      "eventTitle": "Leeds United vs Burnley",
-      "eventUrl": "https://polymarket.com/event/...",
-      "markets": {
-        "Heimsieg":       0.62,
-        "Auswärtssieg":   0.21,
-        "Unentschieden":  0.17,
-        "Over 2.5 Tore":  0.55,
-        "Under 2.5 Tore": 0.45
-      }
-    },
-    ...
-  }
-}
 """
 
 import json
@@ -34,22 +18,22 @@ import urllib.parse
 import urllib.error
 from datetime import datetime, timezone
 
-# ── Leagues covered on Polymarket ────────────────────────
-POLY_LEAGUES = {'GER', 'ENG', 'ITA', 'ESP', 'FRA', 'NED', 'POR', 'TUR', 'GER2', 'SCO'}
-
 # ── Markets we extract ────────────────────────────────────
 POLY_MARKETS = {'Heimsieg', 'Auswärtssieg', 'Unentschieden', 'Over 2.5 Tore', 'Under 2.5 Tore'}
 
+# ── Leagues covered on Polymarket ────────────────────────
+POLY_LEAGUES = {'GER', 'ENG', 'ITA', 'ESP', 'FRA', 'NED', 'POR', 'TUR', 'GER2', 'SCO', 'ENG2'}
+
 # ── German → English team name map ───────────────────────
 TEAM_NAME_MAP = {
-    # Bundesliga
     'Bayern München':           'Bayern Munich',
-    'Borussia Dortmund':        'Borussia Dortmund',
-    'Bayer Leverkusen':         'Bayer Leverkusen',
-    'RB Leipzig':               'RB Leipzig',
-    'Eintracht Frankfurt':      'Eintracht Frankfurt',
-    'VfB Stuttgart':            'VfB Stuttgart',
-    'Borussia Mönchengladbach': "Borussia M'gladbach",
+    'Bayern':                   'Bayern Munich',
+    'Borussia Dortmund':        'Dortmund',
+    'Bayer Leverkusen':         'Leverkusen',
+    'RB Leipzig':               'Leipzig',
+    'Eintracht Frankfurt':      'Frankfurt',
+    'VfB Stuttgart':            'Stuttgart',
+    'Borussia Mönchengladbach': 'Gladbach',
     'SC Freiburg':              'Freiburg',
     '1. FC Union Berlin':       'Union Berlin',
     'VfL Wolfsburg':            'Wolfsburg',
@@ -60,33 +44,35 @@ TEAM_NAME_MAP = {
     'Mainz 05':                 'Mainz',
     'VfL Bochum':               'Bochum',
     '1. FC Heidenheim':         'Heidenheim',
-    'Holstein Kiel':            'Holstein Kiel',
+    'Holstein Kiel':            'Kiel',
     'FC St. Pauli':             'St. Pauli',
-    # 2. Bundesliga
     'Hamburger SV':             'Hamburger SV',
-    'Fortuna Düsseldorf':       'Fortuna Dusseldorf',
-    '1. FC Köln':               'FC Koln',
-    'Hannover 96':              'Hannover 96',
+    'Fortuna Düsseldorf':       'Dusseldorf',
+    '1. FC Köln':               'Koln',
+    'Hannover 96':              'Hannover',
     'Karlsruher SC':            'Karlsruhe',
-    'Hertha BSC':               'Hertha Berlin',
-    'SpVgg Greuther Fürth':     'Greuther Furth',
+    'Hertha BSC':               'Hertha',
+    'SpVgg Greuther Fürth':     'Furth',
     'SC Paderborn':             'Paderborn',
     '1. FC Nürnberg':           'Nuremberg',
-    'FC Schalke 04':            'Schalke 04',
+    'FC Schalke 04':            'Schalke',
     'Darmstadt 98':             'Darmstadt',
-    # Premier League
     'Manchester City':          'Manchester City',
     'Arsenal':                  'Arsenal',
     'Liverpool':                'Liverpool',
     'Manchester United':        'Manchester United',
     'Chelsea':                  'Chelsea',
-    'Tottenham Hotspur':        'Tottenham Hotspur',
-    'Newcastle United':         'Newcastle United',
+    'Tottenham Hotspur':        'Tottenham',
+    'Tottenham':                'Tottenham',
+    'Newcastle United':         'Newcastle',
+    'Newcastle':                'Newcastle',
     'Aston Villa':              'Aston Villa',
     'Brighton & Hove Albion':   'Brighton',
     'Brighton':                 'Brighton',
-    'West Ham United':          'West Ham United',
-    'Wolverhampton Wanderers':  'Wolverhampton',
+    'West Ham United':          'West Ham',
+    'West Ham':                 'West Ham',
+    'Wolverhampton Wanderers':  'Wolves',
+    'Wolves':                   'Wolves',
     'Crystal Palace':           'Crystal Palace',
     'Nottingham Forest':        'Nottingham Forest',
     'Brentford':                'Brentford',
@@ -94,17 +80,16 @@ TEAM_NAME_MAP = {
     'Everton':                  'Everton',
     'AFC Bournemouth':          'Bournemouth',
     'Bournemouth':              'Bournemouth',
-    'Leicester City':           'Leicester City',
-    'Ipswich Town':             'Ipswich Town',
+    'Leicester City':           'Leicester',
+    'Ipswich Town':             'Ipswich',
     'Southampton':              'Southampton',
-    # Serie A
     'Inter Mailand':            'Inter Milan',
     'Inter Milan':              'Inter Milan',
     'AC Mailand':               'AC Milan',
     'AC Milan':                 'AC Milan',
     'Juventus':                 'Juventus',
     'Napoli':                   'Napoli',
-    'AS Roma':                  'AS Roma',
+    'AS Roma':                  'Roma',
     'Lazio':                    'Lazio',
     'Atalanta':                 'Atalanta',
     'Fiorentina':               'Fiorentina',
@@ -120,7 +105,6 @@ TEAM_NAME_MAP = {
     'Como':                     'Como',
     'Venezia':                  'Venezia',
     'Parma':                    'Parma',
-    # La Liga
     'Real Madrid':              'Real Madrid',
     'FC Barcelona':             'Barcelona',
     'Barcelona':                'Barcelona',
@@ -144,9 +128,9 @@ TEAM_NAME_MAP = {
     'Real Valladolid':          'Valladolid',
     'CD Leganés':               'Leganes',
     'Espanyol':                 'Espanyol',
-    # Ligue 1
-    'Paris Saint-Germain':      'Paris Saint-Germain',
-    'PSG':                      'Paris Saint-Germain',
+    'Levante':                  'Levante',
+    'Paris Saint-Germain':      'PSG',
+    'PSG':                      'PSG',
     'Marseille':                'Marseille',
     'Monaco':                   'Monaco',
     'RC Lens':                  'Lens',
@@ -164,97 +148,58 @@ TEAM_NAME_MAP = {
     'Auxerre':                  'Auxerre',
     'Angers':                   'Angers',
     'Saint-Étienne':            'Saint-Etienne',
-    # Eredivisie
     'Ajax':                     'Ajax',
-    'PSV Eindhoven':            'PSV Eindhoven',
+    'PSV Eindhoven':            'PSV',
     'Feyenoord':                'Feyenoord',
-    'AZ Alkmaar':               'AZ Alkmaar',
-    'FC Utrecht':               'FC Utrecht',
-    'FC Twente':                'FC Twente',
-    'NEC Nijmegen':             'NEC Nijmegen',
-    'Heerenveen':               'Heerenveen',
-    'Go Ahead Eagles':          'Go Ahead Eagles',
-    'Almere City':              'Almere City',
-    'Fortuna Sittard':          'Fortuna Sittard',
-    # Primeira Liga
+    'AZ Alkmaar':               'AZ',
+    'FC Utrecht':               'Utrecht',
+    'FC Twente':                'Twente',
     'Benfica':                  'Benfica',
     'FC Porto':                 'Porto',
     'Porto':                    'Porto',
-    'Sporting CP':              'Sporting CP',
+    'Sporting CP':              'Sporting',
     'Braga':                    'Braga',
-    'Vitória de Guimarães':     'Guimaraes',
-    'Guimarães':                'Guimaraes',
-    'Famalicão':                'Famalicao',
-    # Süper Lig
     'Galatasaray':              'Galatasaray',
     'Fenerbahçe':               'Fenerbahce',
     'Fenerbahce':               'Fenerbahce',
     'Beşiktaş':                 'Besiktas',
-    'Besiktas':                 'Besiktas',
     'Trabzonspor':              'Trabzonspor',
-    'Başakşehir':               'Istanbul Basaksehir',
-    'Kasımpaşa':                'Kasimpasa',
-    'Antalyaspor':              'Antalyaspor',
-    'Sivasspor':                'Sivasspor',
-    'Rizespor':                 'Rizespor',
-    # Scottish Premiership
     'Celtic':                   'Celtic',
     'Rangers':                  'Rangers',
-    'Hearts':                   'Heart of Midlothian',
-    'Hibernian':                'Hibernian',
-    'Aberdeen':                 'Aberdeen',
-    'Motherwell':               'Motherwell',
-    'Dundee United':            'Dundee United',
-    'Ross County':              'Ross County',
-    'Kilmarnock':               'Kilmarnock',
-    'St Mirren':                'St Mirren',
-    # Championship (ENG2)
-    'Leeds':                    'Leeds United',
-    'Leeds United':             'Leeds United',
+    'Leeds':                    'Leeds',
+    'Leeds United':             'Leeds',
     'Burnley':                  'Burnley',
-    'Burnley FC':               'Burnley',
     'Sheffield United':         'Sheffield United',
-    'West Brom':                'West Bromwich Albion',
-    'West Bromwich Albion':     'West Bromwich Albion',
+    'West Brom':                'West Brom',
+    'West Bromwich Albion':     'West Brom',
     'Sunderland':               'Sunderland',
     'Middlesbrough':            'Middlesbrough',
     'Watford':                  'Watford',
     'Blackburn Rovers':         'Blackburn',
     'Blackburn':                'Blackburn',
-    'Coventry City':            'Coventry City',
-    'Stoke City':               'Stoke City',
-    'Cardiff City':             'Cardiff City',
+    'Coventry City':            'Coventry',
+    'Stoke City':               'Stoke',
+    'Cardiff City':             'Cardiff',
     'Bristol City':             'Bristol City',
-    'Norwich City':             'Norwich City',
+    'Norwich City':             'Norwich',
     'Preston North End':        'Preston',
-    'Hull City':                'Hull City',
+    'Hull City':                'Hull',
     'Millwall':                 'Millwall',
-    'Luton Town':               'Luton Town',
-    'Luton':                    'Luton Town',
-    'Derby County':             'Derby County',
+    'Luton Town':               'Luton',
+    'Luton':                    'Luton',
+    'Derby County':             'Derby',
     'Portsmouth':               'Portsmouth',
     'Plymouth Argyle':          'Plymouth',
-    'Oxford United':            'Oxford United',
-    'Swansea City':             'Swansea City',
-    'Queens Park Rangers':      'Queens Park Rangers',
-    'QPR':                      'Queens Park Rangers',
+    'Oxford United':            'Oxford',
+    'Swansea City':             'Swansea',
+    'QPR':                      'QPR',
+    'Queens Park Rangers':      'QPR',
     'Sheffield Wednesday':      'Sheffield Wednesday',
-    # Newcastle (common alias)
-    'Newcastle':                'Newcastle United',
 }
 
 
 def to_english(name: str) -> str:
     return TEAM_NAME_MAP.get(name, name)
-
-
-def team_tokens(name: str) -> list[str]:
-    """Extract meaningful tokens (≥ 3 chars) from a team name."""
-    return [t for t in name.lower().split() if len(t) >= 3]
-
-
-def any_token_in(tokens: list[str], text: str) -> bool:
-    return any(t in text for t in tokens)
 
 
 def _parse_list_field(val) -> list:
@@ -270,153 +215,6 @@ def _parse_list_field(val) -> list:
     return []
 
 
-def _extract_events_from_response(data) -> list:
-    """
-    Handle different Gamma API response formats:
-    - Direct list: [event1, event2, ...]
-    - Wrapped: {"data": [...]} or {"events": [...]} or {"results": [...]}
-    """
-    if isinstance(data, list):
-        return data
-    if isinstance(data, dict):
-        for key in ('data', 'events', 'results', 'items'):
-            if key in data and isinstance(data[key], list):
-                print(f"  [gamma] ⚠️  Response wrapped in '{key}' key")
-                return data[key]
-        print(f"  [gamma] ⚠️  Unknown dict response keys: {list(data.keys())[:5]}")
-    return []
-
-
-_api_diagnostic_done = False  # print raw dump once per run
-
-
-def gamma_search(keyword: str, active_only: bool = True, retries: int = 3) -> list:
-    """Call Gamma API and return list of events. Returns [] on error."""
-    global _api_diagnostic_done
-
-    params = f"keyword={urllib.parse.quote(keyword)}&limit=20"
-    if active_only:
-        params += "&active=true"
-    url = f"https://gamma-api.polymarket.com/events?{params}"
-
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (compatible; BetEdge/1.0)',
-        'Accept': 'application/json',
-    }
-
-    for attempt in range(retries):
-        try:
-            req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                raw = resp.read().decode('utf-8')
-                data = json.loads(raw)
-
-                # First call: print raw diagnostic info
-                if not _api_diagnostic_done:
-                    _api_diagnostic_done = True
-                    print(f"\n  [DIAG] URL: {url}")
-                    print(f"  [DIAG] Response type: {type(data).__name__}")
-                    if isinstance(data, dict):
-                        print(f"  [DIAG] Dict keys: {list(data.keys())}")
-                    print(f"  [DIAG] Raw (first 300 chars): {raw[:300]}")
-                    print()
-
-                result = _extract_events_from_response(data)
-
-                if result:
-                    print(f"  [gamma] '{keyword}' → {len(result)} events: {[e.get('title','?') for e in result[:3]]}")
-                else:
-                    print(f"  [gamma] '{keyword}' → 0 events")
-                return result
-
-        except urllib.error.HTTPError as e:
-            body = e.read().decode('utf-8', errors='replace')[:200]
-            print(f"  [gamma] ❌ HTTP {e.code} for '{keyword}': {body}")
-            if attempt < retries - 1:
-                time.sleep(2 ** attempt)
-        except Exception as e:
-            print(f"  [gamma] ❌ '{keyword}': {type(e).__name__}: {e}")
-            if attempt < retries - 1:
-                time.sleep(2 ** attempt)
-
-    return []
-
-
-def gamma_search_markets(keyword: str, active_only: bool = True) -> list:
-    """
-    Alternative: search via /markets endpoint (returns individual markets, not events).
-    Returns list of market dicts.
-    """
-    params = f"keyword={urllib.parse.quote(keyword)}&limit=20"
-    if active_only:
-        params += "&active=true"
-    url = f"https://gamma-api.polymarket.com/markets?{params}"
-
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (compatible; BetEdge/1.0)',
-        'Accept': 'application/json',
-    }
-
-    try:
-        req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            data = json.loads(resp.read().decode('utf-8'))
-            result = _extract_events_from_response(data)
-            if result:
-                print(f"  [markets] '{keyword}' → {len(result)} markets: {[m.get('question','?') for m in result[:2]]}")
-            return result
-    except Exception as e:
-        print(f"  [markets] ❌ '{keyword}': {e}")
-        return []
-
-
-def extract_outcome_price(market: str, question: str, outcomes: list, prices: list,
-                          home_en: str, away_en: str) -> float | None:
-    """
-    Extract the probability for a specific market type from a Polymarket market.
-    Returns float (0–1) or None.
-    """
-    q = question.lower()
-    is_goals = '2.5' in market and 'Tore' in market
-
-    if is_goals:
-        if '2.5' not in q and 'goal' not in q:
-            return None
-        # Yes/No style
-        y_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'), -1)
-        n_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'no'), -1)
-        if market.startswith('Over') and y_idx >= 0:
-            return _safe_float(prices[y_idx])
-        if market.startswith('Under') and n_idx >= 0:
-            return _safe_float(prices[n_idx])
-        # Over/Under labelled
-        o_idx = next((i for i, o in enumerate(outcomes) if 'over' in str(o).lower()), -1)
-        u_idx = next((i for i, o in enumerate(outcomes) if 'under' in str(o).lower()), -1)
-        if market.startswith('Over') and o_idx >= 0:
-            return _safe_float(prices[o_idx])
-        if market.startswith('Under') and u_idx >= 0:
-            return _safe_float(prices[u_idx])
-        return None
-
-    # 1X2 / Match Winner
-    if 'win' not in q and 'winner' not in q and 'match' not in q:
-        return None
-
-    h_first = home_en.lower().split()[0]
-    a_first = away_en.lower().split()[0]
-
-    if market == 'Heimsieg':
-        idx = next((i for i, o in enumerate(outcomes) if h_first in str(o).lower()), -1)
-        return _safe_float(prices[idx]) if idx >= 0 else None
-    if market == 'Auswärtssieg':
-        idx = next((i for i, o in enumerate(outcomes) if a_first in str(o).lower()), -1)
-        return _safe_float(prices[idx]) if idx >= 0 else None
-    if market == 'Unentschieden':
-        idx = next((i for i, o in enumerate(outcomes) if 'draw' in str(o).lower()), -1)
-        return _safe_float(prices[idx]) if idx >= 0 else None
-    return None
-
-
 def _safe_float(val) -> float | None:
     try:
         f = float(val)
@@ -425,126 +223,251 @@ def _safe_float(val) -> float | None:
         return None
 
 
-def match_event_prices(ev: dict, home_en: str, away_en: str) -> dict | None:
-    """
-    Try to extract prices for all POLY_MARKETS from a Gamma event.
-    Returns dict of {market: price} or None.
-    """
-    found_markets = {}
+def api_get(url: str, retries: int = 3) -> list | dict | None:
+    """Make a GET request and return parsed JSON."""
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+        'Accept': 'application/json',
+    }
+    for attempt in range(retries):
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                return json.loads(resp.read().decode('utf-8'))
+        except Exception as e:
+            if attempt < retries - 1:
+                time.sleep(2 ** attempt)
+            else:
+                print(f"  ❌ API error {url}: {e}")
+    return None
 
+
+def _extract_list(data) -> list:
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict):
+        for key in ('data', 'events', 'markets', 'results', 'items'):
+            if key in data and isinstance(data[key], list):
+                return data[key]
+    return []
+
+
+# ── Discover soccer tag IDs ───────────────────────────────
+
+def get_soccer_tag_ids() -> list[str]:
+    """
+    Fetch all tags from Gamma API and return IDs that relate to soccer/football.
+    """
+    data = api_get("https://gamma-api.polymarket.com/tags?limit=200")
+    if not data:
+        return []
+    tags = _extract_list(data)
+    soccer_ids = []
+    soccer_keywords = {'soccer', 'football', 'epl', 'bundesliga', 'serie', 'laliga',
+                       'ligue', 'champions', 'premier', 'eredivisie', 'liga'}
+    for tag in tags:
+        label = (tag.get('label') or tag.get('name') or tag.get('slug') or '').lower()
+        if any(kw in label for kw in soccer_keywords):
+            tid = tag.get('id') or tag.get('tag_id')
+            if tid:
+                soccer_ids.append(str(tid))
+                print(f"  [tag] {label!r} → id={tid}")
+    return soccer_ids
+
+
+# ── Bulk-fetch all soccer events ──────────────────────────
+
+def fetch_all_soccer_events(tag_ids: list[str]) -> list[dict]:
+    """
+    Fetch all active soccer events from Gamma API.
+    Uses tag IDs if found, otherwise tries sports/soccer slugs and pagination.
+    """
+    events = []
+
+    # Strategy A: fetch by each soccer tag ID
+    if tag_ids:
+        for tid in tag_ids:
+            offset = 0
+            while True:
+                url = (f"https://gamma-api.polymarket.com/events"
+                       f"?tag_id={tid}&active=true&limit=100&offset={offset}")
+                data = api_get(url)
+                batch = _extract_list(data)
+                if not batch:
+                    break
+                events.extend(batch)
+                print(f"  [tag={tid}] fetched {len(batch)} events (offset={offset})")
+                if len(batch) < 100:
+                    break
+                offset += 100
+                time.sleep(0.3)
+
+    # Strategy B: paginate ALL active events and filter by sport keyword in title
+    # (fallback if tag approach yields nothing)
+    if not events:
+        print("  [bulk] No tag results — paginating all active events")
+        offset = 0
+        max_pages = 20  # limit to avoid too many API calls
+        for page in range(max_pages):
+            url = (f"https://gamma-api.polymarket.com/events"
+                   f"?active=true&limit=100&offset={offset}")
+            data = api_get(url)
+            batch = _extract_list(data)
+            if not batch:
+                break
+            soccer_batch = [e for e in batch if _looks_like_soccer(e)]
+            events.extend(soccer_batch)
+            print(f"  [bulk page {page+1}] {len(batch)} events, {len(soccer_batch)} soccer")
+            if len(batch) < 100:
+                break
+            offset += 100
+            time.sleep(0.3)
+
+    # Strategy C: try sports sub-path slugs
+    if not events:
+        for slug in ('soccer', 'football', 'sports%2Fsoccer'):
+            url = f"https://gamma-api.polymarket.com/events?slug={slug}&active=true&limit=100"
+            data = api_get(url)
+            batch = _extract_list(data)
+            if batch:
+                events.extend(batch)
+                print(f"  [slug={slug}] {len(batch)} events")
+
+    return events
+
+
+def _looks_like_soccer(event: dict) -> bool:
+    """Heuristic: does this event look like a soccer match?"""
+    title = (event.get('title') or '').lower()
+    tags  = event.get('tags') or []
+    tag_labels = ' '.join((t.get('label') or t.get('name') or '') for t in tags).lower()
+    combined = title + ' ' + tag_labels
+    soccer_signals = {'soccer', 'football', 'epl', 'bundesliga', 'serie a', 'la liga',
+                      'ligue', 'premier league', 'eredivisie', 'champions league',
+                      ' fc ', ' vs ', ' united', 'madrid', 'barcelona', 'liverpool',
+                      'arsenal', 'chelsea', 'bayern', 'juventus', 'napoli', 'psg'}
+    return any(s in combined for s in soccer_signals)
+
+
+# ── Price extraction from events ─────────────────────────
+
+def extract_outcome_price(market: str, question: str, outcomes: list,
+                          prices: list, home_en: str, away_en: str) -> float | None:
+    q = question.lower()
+    is_goals = '2.5' in market
+
+    if is_goals:
+        if '2.5' not in q and 'goal' not in q:
+            return None
+        y_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'), -1)
+        n_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'no'), -1)
+        o_idx = next((i for i, o in enumerate(outcomes) if 'over' in str(o).lower()), -1)
+        u_idx = next((i for i, o in enumerate(outcomes) if 'under' in str(o).lower()), -1)
+        if market.startswith('Over'):
+            idx = y_idx if y_idx >= 0 else o_idx
+            return _safe_float(prices[idx]) if idx >= 0 else None
+        else:
+            idx = n_idx if n_idx >= 0 else u_idx
+            return _safe_float(prices[idx]) if idx >= 0 else None
+
+    # 1X2 match winner
+    win_keywords = ('win', 'winner', 'match', 'beat', 'vs', 'v ')
+    if not any(kw in q for kw in win_keywords):
+        return None
+
+    home_tokens = [t for t in home_en.lower().split() if len(t) >= 3]
+    away_tokens = [t for t in away_en.lower().split() if len(t) >= 3]
+
+    if market == 'Heimsieg':
+        idx = next((i for i, o in enumerate(outcomes)
+                    if any(t in str(o).lower() for t in home_tokens)), -1)
+        return _safe_float(prices[idx]) if idx >= 0 else None
+    if market == 'Auswärtssieg':
+        idx = next((i for i, o in enumerate(outcomes)
+                    if any(t in str(o).lower() for t in away_tokens)), -1)
+        return _safe_float(prices[idx]) if idx >= 0 else None
+    if market == 'Unentschieden':
+        idx = next((i for i, o in enumerate(outcomes)
+                    if 'draw' in str(o).lower()), -1)
+        return _safe_float(prices[idx]) if idx >= 0 else None
+    return None
+
+
+def event_prices(ev: dict, home_en: str, away_en: str) -> dict:
+    """Extract all available market prices from a single event."""
+    found = {}
     for mkt in (ev.get('markets') or []):
         q = (mkt.get('question') or '').lower()
-
-        # Handle both string-encoded and native list formats
         outcomes = _parse_list_field(mkt.get('outcomes'))
         prices   = _parse_list_field(mkt.get('outcomePrices'))
-
         if not outcomes or len(outcomes) != len(prices):
             continue
-
         for market in POLY_MARKETS:
-            if market in found_markets:
+            if market in found:
                 continue
-            price = extract_outcome_price(market, q, outcomes, prices, home_en, away_en)
-            if price is not None:
-                found_markets[market] = price
+            p = extract_outcome_price(market, q, outcomes, prices, home_en, away_en)
+            if p is not None:
+                found[market] = p
+    return found
 
-    return found_markets if found_markets else None
+
+# ── Match fixtures against bulk events ───────────────────
+
+def name_tokens(name: str) -> list[str]:
+    """Return meaningful lowercase tokens from a team name."""
+    stopwords = {'fc', 'sc', 'ac', 'united', 'city', 'the', 'afc', 'bv'}
+    tokens = [t for t in name.lower().split() if len(t) >= 3 and t not in stopwords]
+    # Always include the full lowercased name too
+    tokens.append(name.lower())
+    return list(dict.fromkeys(tokens))  # deduplicated
 
 
-def match_market_prices(markets_list: list, home_en: str, away_en: str) -> dict | None:
+def match_score(title_lower: str, home_tokens: list, away_tokens: list) -> int:
+    """Return match quality: 2=both teams found, 1=one team, 0=none."""
+    home_hit = any(t in title_lower for t in home_tokens)
+    away_hit = any(t in title_lower for t in away_tokens)
+    return (2 if home_hit and away_hit else
+            1 if home_hit or away_hit else 0)
+
+
+def find_match_in_events(events: list, home: str, away: str) -> dict | None:
     """
-    Extract prices from a list of individual market objects (from /markets endpoint).
-    """
-    found_markets = {}
-    home_tokens = team_tokens(home_en)
-    away_tokens = team_tokens(away_en)
-
-    for mkt in markets_list:
-        q = (mkt.get('question') or '').lower()
-        title = q  # markets endpoint has question as title
-
-        # Must mention both teams
-        if not any_token_in(home_tokens, title) or not any_token_in(away_tokens, title):
-            continue
-
-        outcomes = _parse_list_field(mkt.get('outcomes'))
-        prices   = _parse_list_field(mkt.get('outcomePrices'))
-
-        if not outcomes or len(outcomes) != len(prices):
-            continue
-
-        for market in POLY_MARKETS:
-            if market in found_markets:
-                continue
-            price = extract_outcome_price(market, q, outcomes, prices, home_en, away_en)
-            if price is not None:
-                found_markets[market] = price
-
-    return found_markets if found_markets else None
-
-
-def fetch_match_prices(home: str, away: str) -> dict:
-    """
-    Try multiple search strategies to find Polymarket prices for a match.
+    Find the best matching event for a home vs away fixture and extract prices.
+    Returns structured result or None.
     """
     home_en = to_english(home)
     away_en = to_english(away)
-    home_tokens = team_tokens(home_en)
-    away_tokens = team_tokens(away_en)
+    h_tokens = name_tokens(home_en)
+    a_tokens = name_tokens(away_en)
 
-    def try_events(events: list, label: str) -> dict | None:
-        for ev in events:
-            title = (ev.get('title') or '').lower()
-            if not any_token_in(home_tokens, title):
-                continue
-            if not any_token_in(away_tokens, title):
-                continue
-            markets = match_event_prices(ev, home_en, away_en)
-            if markets:
-                slug = ev.get('slug') or ''
-                url = f"https://polymarket.com/event/{slug}" if slug else "https://polymarket.com/"
-                print(f"  ✅ [{label}] {ev.get('title')}")
-                return {
-                    'found':      True,
-                    'eventTitle': ev.get('title', ''),
-                    'eventUrl':   url,
-                    'markets':    markets,
-                }
+    best_ev   = None
+    best_score = 0
+
+    for ev in events:
+        title = (ev.get('title') or '').lower()
+        sc = match_score(title, h_tokens, a_tokens)
+        if sc > best_score:
+            best_score = sc
+            best_ev = ev
+
+    if best_score < 2 or best_ev is None:
+        return None  # need both teams in title
+
+    prices = event_prices(best_ev, home_en, away_en)
+    if not prices:
         return None
 
-    # Strategy 1–4: /events endpoint
-    strategies = [
-        (f"{home_en} {away_en}", True,  'S1:events-combined'),
-        (home_en,                True,  'S2:events-home'),
-        (away_en,                True,  'S3:events-away'),
-        (f"{home_en} {away_en}", False, 'S4:events-combined-all'),
-        (home_en,                False, 'S5:events-home-all'),
-    ]
+    slug = best_ev.get('slug') or ''
+    url  = f"https://polymarket.com/event/{slug}" if slug else "https://polymarket.com/"
+    return {
+        'found':      True,
+        'eventTitle': best_ev.get('title', ''),
+        'eventUrl':   url,
+        'markets':    prices,
+    }
 
-    for keyword, active_only, label in strategies:
-        events = gamma_search(keyword, active_only=active_only)
-        result = try_events(events, label)
-        if result:
-            return result
-        time.sleep(0.2)
 
-    # Strategy 5: /markets endpoint (returns individual markets, not events)
-    mkt_list = gamma_search_markets(f"{home_en} {away_en}", active_only=True)
-    if mkt_list:
-        mk = match_market_prices(mkt_list, home_en, away_en)
-        if mk:
-            print(f"  ✅ [S6:markets] {home_en} vs {away_en}")
-            return {
-                'found':      True,
-                'eventTitle': f"{home_en} vs {away_en}",
-                'eventUrl':   'https://polymarket.com/',
-                'markets':    mk,
-            }
-
-    print(f"  ❌ Not found: {home_en} vs {away_en}")
-    return {'found': False, 'eventTitle': '', 'eventUrl': '', 'markets': {}}
-
+# ── Main ─────────────────────────────────────────────────
 
 def main():
     # Load picks
@@ -552,7 +475,7 @@ def main():
         with open('picks_output.json', 'r', encoding='utf-8') as f:
             picks_list = json.load(f)
     except FileNotFoundError:
-        print("⚠️  picks_output.json not found — writing empty polymarket_prices.json")
+        print("⚠️  picks_output.json not found")
         out = {'fetched': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'), 'matches': {}}
         with open('polymarket_prices.json', 'w', encoding='utf-8') as f:
             json.dump(out, f, ensure_ascii=False, indent=2)
@@ -561,7 +484,7 @@ def main():
         print(f"❌ picks_output.json parse error: {e}")
         return
 
-    # Collect unique matches that have at least one POLY_MARKETS pick
+    # Collect unique matches
     unique_matches: dict[str, tuple[str, str]] = {}
     for fx in picks_list:
         league = fx.get('league', '')
@@ -571,30 +494,53 @@ def main():
         away = fx.get('away', '')
         if not home or not away:
             continue
-
-        has_poly_market = any(
-            p.get('market') in POLY_MARKETS
-            for p in (fx.get('picks') or [])
-        )
+        has_poly_market = any(p.get('market') in POLY_MARKETS for p in (fx.get('picks') or []))
         if not has_poly_market:
             continue
+        unique_matches[f"{home}|{away}"] = (home, away)
 
-        key = f"{home}|{away}"
-        unique_matches[key] = (home, away)
+    print(f"🔍 {len(unique_matches)} fixtures to match")
 
-    print(f"🔍 {len(unique_matches)} matches to check on Polymarket")
-    print("─" * 60)
+    # Step 1: discover soccer tag IDs
+    print("\n📌 Discovering soccer tags...")
+    tag_ids = get_soccer_tag_ids()
+    if tag_ids:
+        print(f"  Found {len(tag_ids)} soccer tag(s): {tag_ids}")
+    else:
+        print("  No tags found — will paginate all events")
 
+    # Step 2: bulk-fetch all soccer events
+    print("\n📥 Fetching soccer events from Polymarket...")
+    all_events = fetch_all_soccer_events(tag_ids)
+    print(f"  Total soccer events fetched: {len(all_events)}")
+
+    if not all_events:
+        print("⚠️  No events fetched — check API access")
+        out = {
+            'fetched': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'matches': {k: {'found': False, 'eventTitle': '', 'eventUrl': '', 'markets': {}}
+                        for k in unique_matches}
+        }
+        with open('polymarket_prices.json', 'w', encoding='utf-8') as f:
+            json.dump(out, f, ensure_ascii=False, indent=2)
+        return
+
+    # Step 3: match fixtures against fetched events
+    print(f"\n🔗 Matching {len(unique_matches)} fixtures against {len(all_events)} events...")
     results: dict[str, dict] = {}
-    for i, (key, (home, away)) in enumerate(unique_matches.items(), 1):
-        print(f"\n[{i}/{len(unique_matches)}] {home} vs {away}")
-        results[key] = fetch_match_prices(home, away)
-        if i < len(unique_matches):
-            time.sleep(0.4)
+    found_count = 0
 
-    found_count = sum(1 for v in results.values() if v.get('found'))
+    for key, (home, away) in unique_matches.items():
+        result = find_match_in_events(all_events, home, away)
+        if result:
+            found_count += 1
+            print(f"  ✅ {home} vs {away} → {result['eventTitle']}")
+            results[key] = result
+        else:
+            results[key] = {'found': False, 'eventTitle': '', 'eventUrl': '', 'markets': {}}
+
     print(f"\n{'─'*60}")
-    print(f"✅ Done: {found_count}/{len(unique_matches)} matches found on Polymarket")
+    print(f"✅ {found_count}/{len(unique_matches)} matches found on Polymarket")
 
     out = {
         'fetched': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
