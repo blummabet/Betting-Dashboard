@@ -522,20 +522,39 @@ def extract_outcome_price(market: str, question: str, outcomes: list,
 
 
 def event_prices(ev: dict, home_en: str, away_en: str) -> dict:
-    """Extract all available market prices from a single event."""
+    """
+    Extract market prices from an event.
+    Checks both nested markets[] AND event-level outcomes/outcomePrices,
+    because simple events (e.g. 'EPL: Leeds vs. Burnley') store prices
+    at the event level, not in a nested markets array.
+    """
     found = {}
-    for mkt in (ev.get('markets') or []):
-        q = (mkt.get('question') or '').lower()
-        outcomes = _parse_list_field(mkt.get('outcomes'))
-        prices   = _parse_list_field(mkt.get('outcomePrices'))
-        if not outcomes or len(outcomes) != len(prices):
-            continue
+
+    def _try_extract(question: str, outcomes: list, prices: list):
         for market in POLY_MARKETS:
             if market in found:
                 continue
-            p = extract_outcome_price(market, q, outcomes, prices, home_en, away_en)
+            p = extract_outcome_price(market, question, outcomes, prices, home_en, away_en)
             if p is not None:
                 found[market] = p
+
+    # 1. Check nested markets (multi-market / "More Markets" events)
+    for mkt in (ev.get('markets') or []):
+        q        = (mkt.get('question') or '').lower()
+        outcomes = _parse_list_field(mkt.get('outcomes'))
+        prices   = _parse_list_field(mkt.get('outcomePrices'))
+        if outcomes and len(outcomes) == len(prices):
+            _try_extract(q, outcomes, prices)
+
+    # 2. Check event-level outcomes (simple single-market events)
+    #    e.g. "EPL: Leeds United vs. Burnley" with outcomes/outcomePrices at root
+    if not found:
+        ev_outcomes = _parse_list_field(ev.get('outcomes'))
+        ev_prices   = _parse_list_field(ev.get('outcomePrices'))
+        ev_q        = (ev.get('title') or ev.get('question') or '').lower()
+        if ev_outcomes and len(ev_outcomes) == len(ev_prices):
+            _try_extract(ev_q, ev_outcomes, ev_prices)
+
     return found
 
 
@@ -561,6 +580,8 @@ def match_score(title_lower: str, home_tokens: list, away_tokens: list) -> int:
 def find_match_in_events(events: list, home: str, away: str) -> dict | None:
     """
     Find the best matching event for a home vs away fixture and extract prices.
+    Tries ALL score-2 events (both teams in title) in order, returning the
+    first one from which prices can be extracted.
     Returns structured result or None.
     """
     home_en = to_english(home)
@@ -568,31 +589,35 @@ def find_match_in_events(events: list, home: str, away: str) -> dict | None:
     h_tokens = name_tokens(home_en)
     a_tokens = name_tokens(away_en)
 
-    best_ev   = None
-    best_score = 0
-
+    # Collect all events where both teams appear in the title
+    candidates: list[dict] = []
     for ev in events:
         title = (ev.get('title') or '').lower()
-        sc = match_score(title, h_tokens, a_tokens)
-        if sc > best_score:
-            best_score = sc
-            best_ev = ev
+        if match_score(title, h_tokens, a_tokens) >= 2:
+            candidates.append(ev)
 
-    if best_score < 2 or best_ev is None:
-        return None  # need both teams in title
-
-    prices = event_prices(best_ev, home_en, away_en)
-    if not prices:
+    if not candidates:
         return None
 
-    slug = best_ev.get('slug') or ''
-    url  = f"https://polymarket.com/event/{slug}" if slug else "https://polymarket.com/"
-    return {
-        'found':      True,
-        'eventTitle': best_ev.get('title', ''),
-        'eventUrl':   url,
-        'markets':    prices,
-    }
+    # Try each candidate — prefer "More Markets" events (richer data) first
+    candidates.sort(key=lambda e: (
+        'more market' not in (e.get('title') or '').lower(),  # False < True, so "More Markets" first
+        len(e.get('markets') or []) == 0,                     # events WITH markets first
+    ))
+
+    for ev in candidates:
+        prices = event_prices(ev, home_en, away_en)
+        if prices:
+            slug = ev.get('slug') or ''
+            url  = f"https://polymarket.com/event/{slug}" if slug else "https://polymarket.com/"
+            return {
+                'found':      True,
+                'eventTitle': ev.get('title', ''),
+                'eventUrl':   url,
+                'markets':    prices,
+            }
+
+    return None
 
 
 # ── Main ─────────────────────────────────────────────────
