@@ -16,16 +16,33 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Find Python and install dependencies
         run: |
-          python3 -m pip install --break-system-packages --quiet py-clob-client requests
-          python3 -c "from py_clob_client.client import ClobClient; print('✅ py-clob-client ok')"
+          # Suche Python >= 3.9.10 (Homebrew zuerst)
+          PYTHON=$(
+            /opt/homebrew/bin/python3.13 --version &>/dev/null && echo /opt/homebrew/bin/python3.13 ||
+            /opt/homebrew/bin/python3.12 --version &>/dev/null && echo /opt/homebrew/bin/python3.12 ||
+            /opt/homebrew/bin/python3.11 --version &>/dev/null && echo /opt/homebrew/bin/python3.11 ||
+            /opt/homebrew/bin/python3.10 --version &>/dev/null && echo /opt/homebrew/bin/python3.10 ||
+            /usr/local/bin/python3.11 --version &>/dev/null && echo /usr/local/bin/python3.11 ||
+            /usr/local/bin/python3.10 --version &>/dev/null && echo /usr/local/bin/python3.10 ||
+            echo ""
+          )
+          if [ -z "$PYTHON" ]; then
+            echo "❌ Kein Python >= 3.9.10 gefunden. Bitte Homebrew Python installieren:"
+            echo "   brew install python@3.11"
+            exit 1
+          fi
+          echo "✅ Python: $PYTHON ($($PYTHON --version))"
+          echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
+          $PYTHON -m pip install --break-system-packages --quiet py-clob-client requests
+          $PYTHON -c "from py_clob_client.client import ClobClient; print('✅ py-clob-client ok')"
 
       - name: Place Polymarket orders
         env:
           POLY_PRIVATE_KEY: ${{ secrets.POLY_PRIVATE_KEY }}
           ORDERS_JSON:      ${{ toJson(github.event.client_payload.orders) }}
-        run: python3 polymarket_bet.py
+        run: ${{ env.POLY_PYTHON }} polymarket_bet.py
 
       - name: Commit updated picks_history.json
         run: |
