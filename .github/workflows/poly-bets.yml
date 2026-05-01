@@ -30,10 +30,12 @@ jobs:
           fi
           echo "✅ $PYTHON ($($PYTHON --version))"
           echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
-          $PYTHON -m pip install --break-system-packages --upgrade \
-            "git+https://github.com/Polymarket/py-clob-client.git" \
-            requests
-          $PYTHON -c "from py_clob_client.client import ClobClient; import py_clob_client; v = getattr(py_clob_client, '__version__', '?'); print('✅ py-clob-client', v)"
+          $PYTHON -m pip install --break-system-packages --quiet py-clob-client requests
+          # Polymarket migrierte CLOB auf v2 am 27.04.2026 — CLOB_VERSION patch von "1" → "2"
+          EIP712=$($PYTHON -c "import py_clob_client, os; print(os.path.join(os.path.dirname(py_clob_client.__file__), 'signing', 'eip712.py'))")
+          sed -i '' 's/CLOB_VERSION = "1"/CLOB_VERSION = "2"/' "$EIP712" 2>/dev/null || \
+          sed -i    's/CLOB_VERSION = "1"/CLOB_VERSION = "2"/' "$EIP712"
+          $PYTHON -c "from py_clob_client.signing.eip712 import CLOB_VERSION; print('✅ CLOB_VERSION =', CLOB_VERSION)"
 
       - name: Place Polymarket orders
         env:
