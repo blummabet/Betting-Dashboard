@@ -252,21 +252,80 @@ def _extract_list(data) -> list:
     return []
 
 
-# ── Discover soccer tag IDs ───────────────────────────────
+# ── Fetch all soccer events ───────────────────────────────
+
+# Known soccer-related tag IDs on Polymarket (discovered empirically)
+# Add more here as they're found
+KNOWN_SOCCER_TAG_IDS: list[str] = []  # populated at runtime from tag discovery
+
+# Soccer keywords for title-based filtering
+SOCCER_TITLE_SIGNALS = {
+    'epl', 'premier league', 'bundesliga', 'serie a', 'la liga', 'ligue 1',
+    'champions league', 'europa league', 'eredivisie', 'primeira liga',
+    'süper lig', 'super lig', 'scottish', 'soccer', 'football',
+    # Common team names that appear in match titles
+    'arsenal', 'liverpool', 'chelsea', 'manchester', 'tottenham', 'newcastle',
+    'brentford', 'fulham', 'everton', 'brighton', 'west ham', 'villa',
+    'barcelona', 'real madrid', 'atletico', 'sevilla', 'villarreal',
+    'juventus', 'milan', 'inter', 'napoli', 'roma', 'atalanta',
+    'bayern', 'dortmund', 'leverkusen', 'leipzig', 'frankfurt', 'stuttgart',
+    'psg', 'paris', 'marseille', 'monaco', 'lille', 'lyon',
+    'ajax', 'psv', 'feyenoord', 'porto', 'benfica', 'sporting',
+    'celtic', 'rangers', 'galatasaray', 'fenerbahce', 'besiktas',
+    'leeds', 'burnley', 'sunderland', 'sheffield',
+}
+
+
+def _looks_like_soccer(event: dict) -> bool:
+    """Heuristic: does this event look like a soccer/football event?"""
+    title = (event.get('title') or '').lower()
+    tags  = event.get('tags') or []
+    tag_labels = ' '.join(
+        (t.get('label') or t.get('name') or t.get('slug') or '') for t in tags
+    ).lower()
+    combined = title + ' ' + tag_labels
+    return any(s in combined for s in SOCCER_TITLE_SIGNALS)
+
+
+def discover_all_tags() -> list[dict]:
+    """Paginate through ALL tags from Gamma API."""
+    all_tags = []
+    offset = 0
+    while True:
+        data = api_get(f"https://gamma-api.polymarket.com/tags?limit=200&offset={offset}")
+        batch = _extract_list(data)
+        if not batch:
+            break
+        all_tags.extend(batch)
+        if len(batch) < 200:
+            break
+        offset += 200
+        time.sleep(0.2)
+    return all_tags
+
 
 def get_soccer_tag_ids() -> list[str]:
-    """
-    Fetch all tags from Gamma API and return IDs that relate to soccer/football.
-    """
-    data = api_get("https://gamma-api.polymarket.com/tags?limit=200")
-    if not data:
-        return []
-    tags = _extract_list(data)
+    """Return tag IDs for soccer/football leagues."""
+    soccer_keywords = {
+        'soccer', 'football', 'epl', 'bundesliga', 'serie a', 'la liga', 'laliga',
+        'ligue', 'premier league', 'premier-league', 'eredivisie', 'primeira',
+        'scottish', 'championship', 'liga', 'calcio', 'fussball',
+    }
+    # Exclude non-soccer sports that also match
+    exclude_keywords = {
+        'rugby', 'cricket', 'poker', 'golf', 'college', 'american', 'nfl',
+        'nba', 'mlb', 'nhl', 'tennis', 'mma', 'boxing', 'college football',
+        'motor', 'formula', 'cycling', 'swimming', 'athletics',
+    }
+
+    all_tags = discover_all_tags()
+    print(f"  [tags] Total tags found: {len(all_tags)}")
+
     soccer_ids = []
-    soccer_keywords = {'soccer', 'football', 'epl', 'bundesliga', 'serie', 'laliga',
-                       'ligue', 'champions', 'premier', 'eredivisie', 'liga'}
-    for tag in tags:
+    for tag in all_tags:
         label = (tag.get('label') or tag.get('name') or tag.get('slug') or '').lower()
+        if any(kw in label for kw in exclude_keywords):
+            continue
         if any(kw in label for kw in soccer_keywords):
             tid = tag.get('id') or tag.get('tag_id')
             if tid:
@@ -275,78 +334,147 @@ def get_soccer_tag_ids() -> list[str]:
     return soccer_ids
 
 
-# ── Bulk-fetch all soccer events ──────────────────────────
-
-def fetch_all_soccer_events(tag_ids: list[str]) -> list[dict]:
-    """
-    Fetch all active soccer events from Gamma API.
-    Uses tag IDs if found, otherwise tries sports/soccer slugs and pagination.
-    """
+def fetch_events_by_tag(tag_id: str) -> list[dict]:
+    """Fetch all active events for a given tag ID."""
     events = []
-
-    # Strategy A: fetch by each soccer tag ID
-    if tag_ids:
-        for tid in tag_ids:
-            offset = 0
-            while True:
-                url = (f"https://gamma-api.polymarket.com/events"
-                       f"?tag_id={tid}&active=true&limit=100&offset={offset}")
-                data = api_get(url)
-                batch = _extract_list(data)
-                if not batch:
-                    break
-                events.extend(batch)
-                print(f"  [tag={tid}] fetched {len(batch)} events (offset={offset})")
-                if len(batch) < 100:
-                    break
-                offset += 100
-                time.sleep(0.3)
-
-    # Strategy B: paginate ALL active events and filter by sport keyword in title
-    # (fallback if tag approach yields nothing)
-    if not events:
-        print("  [bulk] No tag results — paginating all active events")
-        offset = 0
-        max_pages = 20  # limit to avoid too many API calls
-        for page in range(max_pages):
-            url = (f"https://gamma-api.polymarket.com/events"
-                   f"?active=true&limit=100&offset={offset}")
-            data = api_get(url)
-            batch = _extract_list(data)
-            if not batch:
-                break
-            soccer_batch = [e for e in batch if _looks_like_soccer(e)]
-            events.extend(soccer_batch)
-            print(f"  [bulk page {page+1}] {len(batch)} events, {len(soccer_batch)} soccer")
-            if len(batch) < 100:
-                break
-            offset += 100
-            time.sleep(0.3)
-
-    # Strategy C: try sports sub-path slugs
-    if not events:
-        for slug in ('soccer', 'football', 'sports%2Fsoccer'):
-            url = f"https://gamma-api.polymarket.com/events?slug={slug}&active=true&limit=100"
-            data = api_get(url)
-            batch = _extract_list(data)
-            if batch:
-                events.extend(batch)
-                print(f"  [slug={slug}] {len(batch)} events")
-
+    offset = 0
+    while True:
+        url = (f"https://gamma-api.polymarket.com/events"
+               f"?tag_id={tag_id}&active=true&limit=100&offset={offset}")
+        data = api_get(url)
+        batch = _extract_list(data)
+        if not batch:
+            break
+        events.extend(batch)
+        print(f"  [tag={tag_id}] +{len(batch)} events (offset={offset})")
+        if len(batch) < 100:
+            break
+        offset += 100
+        time.sleep(0.25)
     return events
 
 
-def _looks_like_soccer(event: dict) -> bool:
-    """Heuristic: does this event look like a soccer match?"""
-    title = (event.get('title') or '').lower()
-    tags  = event.get('tags') or []
-    tag_labels = ' '.join((t.get('label') or t.get('name') or '') for t in tags).lower()
-    combined = title + ' ' + tag_labels
-    soccer_signals = {'soccer', 'football', 'epl', 'bundesliga', 'serie a', 'la liga',
-                      'ligue', 'premier league', 'eredivisie', 'champions league',
-                      ' fc ', ' vs ', ' united', 'madrid', 'barcelona', 'liverpool',
-                      'arsenal', 'chelsea', 'bayern', 'juventus', 'napoli', 'psg'}
-    return any(s in combined for s in soccer_signals)
+def fetch_via_games_category() -> list[dict]:
+    """
+    Try Polymarket's gamesCategory parameter — used internally for the Sports section.
+    Tries multiple likely parameter names.
+    """
+    attempts = [
+        "https://gamma-api.polymarket.com/events?gamesCategory=soccer&active=true&limit=100",
+        "https://gamma-api.polymarket.com/events?gamesCategory=football&active=true&limit=100",
+        "https://gamma-api.polymarket.com/events?sport=soccer&active=true&limit=100",
+        "https://gamma-api.polymarket.com/events?category=soccer&active=true&limit=100",
+        "https://gamma-api.polymarket.com/events?sports=soccer&active=true&limit=100",
+    ]
+    for url in attempts:
+        data = api_get(url)
+        batch = _extract_list(data)
+        if batch and _looks_like_soccer(batch[0]):
+            param = url.split('?')[1].split('&')[0]
+            print(f"  [gamesCategory] ✅ '{param}' returned {len(batch)} events")
+            # Paginate remaining pages
+            events = list(batch)
+            if len(batch) == 100:
+                offset = 100
+                while True:
+                    data2 = api_get(url.replace('limit=100', f'limit=100&offset={offset}'))
+                    b2 = _extract_list(data2)
+                    if not b2:
+                        break
+                    events.extend(b2)
+                    print(f"  [gamesCategory] +{len(b2)} (offset={offset})")
+                    if len(b2) < 100:
+                        break
+                    offset += 100
+                    time.sleep(0.25)
+            return events
+    print("  [gamesCategory] No sport-category endpoint worked")
+    return []
+
+
+def fetch_all_events_paginated(max_pages: int = 60) -> list[dict]:
+    """
+    Paginate ALL active Polymarket events, collect ones that look like soccer.
+    Stops after max_pages pages to avoid timeout.
+    """
+    soccer_events = []
+    offset = 0
+    consecutive_empty_soccer = 0
+
+    for page in range(max_pages):
+        url = (f"https://gamma-api.polymarket.com/events"
+               f"?active=true&limit=100&order=volume&ascending=false&offset={offset}")
+        data = api_get(url)
+        batch = _extract_list(data)
+        if not batch:
+            break
+
+        soccer_batch = [e for e in batch if _looks_like_soccer(e)]
+        soccer_events.extend(soccer_batch)
+
+        if soccer_batch:
+            consecutive_empty_soccer = 0
+            titles = [e.get('title', '')[:40] for e in soccer_batch[:2]]
+            print(f"  [page {page+1}] {len(batch)} total, {len(soccer_batch)} soccer — e.g. {titles}")
+        else:
+            consecutive_empty_soccer += 1
+            print(f"  [page {page+1}] {len(batch)} total, 0 soccer")
+
+        if len(batch) < 100:
+            break
+        # Stop early if many pages with no soccer (sorted by volume, soccer events are high-volume)
+        if consecutive_empty_soccer >= 5 and len(soccer_events) >= 20:
+            print(f"  [page {page+1}] Stopping — 5 consecutive pages without soccer")
+            break
+        offset += 100
+        time.sleep(0.25)
+
+    return soccer_events
+
+
+def fetch_all_soccer_events(tag_ids: list[str]) -> list[dict]:
+    """
+    Fetch all active soccer events from Polymarket using multiple strategies.
+    Returns deduplicated list of event dicts.
+    """
+    all_events: dict[str, dict] = {}  # id → event (for deduplication)
+
+    def add_events(evs: list[dict], source: str):
+        n_new = 0
+        for ev in evs:
+            eid = str(ev.get('id') or ev.get('slug') or id(ev))
+            if eid not in all_events:
+                all_events[eid] = ev
+                n_new += 1
+        print(f"  [{source}] +{n_new} new events (total: {len(all_events)})")
+
+    # Strategy 1: gamesCategory parameter (most targeted)
+    print("\n  Strategy 1: gamesCategory endpoint...")
+    gc_events = fetch_via_games_category()
+    if gc_events:
+        add_events(gc_events, 'gamesCategory')
+
+    # Strategy 2: fetch by soccer tag IDs
+    if tag_ids:
+        print(f"\n  Strategy 2: fetching {len(tag_ids)} tag(s)...")
+        for tid in tag_ids:
+            evs = fetch_events_by_tag(tid)
+            soccer_evs = [e for e in evs if _looks_like_soccer(e)]
+            if soccer_evs:
+                # Show sample titles so we know what we're getting
+                sample = [e.get('title', '')[:50] for e in soccer_evs[:3]]
+                print(f"  [tag={tid}] sample: {sample}")
+                add_events(soccer_evs, f'tag={tid}')
+            else:
+                print(f"  [tag={tid}] {len(evs)} events but none look like soccer — skipped")
+
+    # Strategy 3: paginate all events sorted by volume (soccer is popular = high volume)
+    if len(all_events) < 30:
+        print(f"\n  Strategy 3: paginating all events (have only {len(all_events)} so far)...")
+        paginated = fetch_all_events_paginated(max_pages=60)
+        add_events(paginated, 'pagination')
+
+    return list(all_events.values())
 
 
 # ── Price extraction from events ─────────────────────────
@@ -501,15 +629,12 @@ def main():
 
     print(f"🔍 {len(unique_matches)} fixtures to match")
 
-    # Step 1: discover soccer tag IDs
-    print("\n📌 Discovering soccer tags...")
+    # Step 1: discover soccer tag IDs (paginate all tags)
+    print("\n📌 Discovering soccer tags (all pages)...")
     tag_ids = get_soccer_tag_ids()
-    if tag_ids:
-        print(f"  Found {len(tag_ids)} soccer tag(s): {tag_ids}")
-    else:
-        print("  No tags found — will paginate all events")
+    print(f"  Found {len(tag_ids)} soccer tag(s)")
 
-    # Step 2: bulk-fetch all soccer events
+    # Step 2: bulk-fetch all soccer events via multiple strategies
     print("\n📥 Fetching soccer events from Polymarket...")
     all_events = fetch_all_soccer_events(tag_ids)
     print(f"  Total soccer events fetched: {len(all_events)}")
