@@ -113,8 +113,8 @@ const TEAM_NAME_MAP = {
   'Parma':                    'Parma',
   // ── La Liga ─────────────────────────────────────────
   'Real Madrid':              'Real Madrid',
-  'FC Barcelona':             'Barcelona',
-  'Barcelona':                'Barcelona',
+  'FC Barcelona':             'FC Barcelona',
+  'Barcelona':                'FC Barcelona',
   'Atletico Madrid':          'Atletico Madrid',
   'Villarreal':               'Villarreal',
   'Athletic Club':            'Athletic Club',
@@ -1024,6 +1024,7 @@ function initPolymarket() {
         <button onclick="polySelectAll()"  style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#30363d'">☑️ Alle</button>
         <button onclick="polySelectNone()" style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#30363d'">⬜ Keine</button>
         <button onclick="initPolymarket()" style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#00d4a1'" onmouseout="this.style.borderColor='#30363d'">🔄 Refresh</button>
+        <button id="polySettingsBtn" onclick="polyOpenSettings()" style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#f5c518'" onmouseout="this.style.borderColor='#30363d'">⚙️ PAT</button>
       </div>
     </div>
 
@@ -1073,10 +1074,16 @@ function initPolymarket() {
     <div id="polyStickyBar"
          style="display:none;position:fixed;bottom:0;left:0;right:0;background:#161b22;border-top:1px solid #30363d;padding:12px 20px;align-items:center;justify-content:space-between;z-index:100;gap:12px">
       <span id="polyStickyCount" style="font-size:13px;color:#e6edf3;font-weight:600"></span>
-      <button onclick="polyMarkPlaced()"
-              style="background:linear-gradient(135deg,#a78bfa,#7c3aed);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:800;padding:11px 26px;cursor:pointer;font-family:inherit;letter-spacing:.02em;box-shadow:0 2px 12px #a78bfa44">
-        ✅ Als platziert markieren
-      </button>
+      <div style="display:flex;gap:8px">
+        <button onclick="polyMarkPlaced()"
+                style="background:none;border:1px solid #30363d;border-radius:10px;color:#8b949e;font-size:13px;font-weight:600;padding:11px 18px;cursor:pointer;font-family:inherit">
+          ✅ Manuell
+        </button>
+        <button onclick="polyConfirm()"
+                style="background:linear-gradient(135deg,#a78bfa,#7c3aed);border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:800;padding:11px 26px;cursor:pointer;font-family:inherit;letter-spacing:.02em;box-shadow:0 2px 12px #a78bfa44">
+          🟣 Bets auslösen
+        </button>
+      </div>
     </div>`;
 
   // Init sticky bar

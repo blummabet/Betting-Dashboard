@@ -111,8 +111,8 @@ TEAM_NAME_MAP = {
     'Venezia':                  'Venezia',
     'Parma':                    'Parma',
     'Real Madrid':              'Real Madrid',
-    'FC Barcelona':             'Barcelona',
-    'Barcelona':                'Barcelona',
+    'FC Barcelona':             'FC Barcelona',
+    'Barcelona':                'FC Barcelona',
     'Atletico Madrid':          'Atletico Madrid',
     'Villarreal':               'Villarreal',
     'Athletic Club':            'Athletic Club',
@@ -523,10 +523,18 @@ def find_match_in_events(events: list, home: str, away: str) -> dict | None:
     if not candidates:
         return None
 
-    # Prefer "More Markets" events (richer sub-market data) over simple events
+    # Prefer "More Markets" events (richer sub-market data) over simple events.
+    # Tie-break: home team's full name must appear BEFORE "vs" in the title
+    # (prevents e.g. "RCD Espanyol de Barcelona" matching when looking for "FC Barcelona").
+    def _home_not_in_prefix(title: str, home_full: str) -> bool:
+        vs_pos = title.find(' vs')
+        prefix = title[:vs_pos] if vs_pos > 0 else title
+        return home_full not in prefix
+
     candidates.sort(key=lambda e: (
         'more market' not in (e.get('title') or '').lower(),
         len(e.get('markets') or []) == 0,
+        _home_not_in_prefix((e.get('title') or '').lower(), h_tokens[0]),
     ))
 
     for ev in candidates:
