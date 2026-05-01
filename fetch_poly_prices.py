@@ -514,6 +514,8 @@ def event_prices(ev: dict, home_en: str, away_en: str) -> dict:
             p = extract_outcome_price(market, question, outcomes, prices, home_en, away_en)
             if p is not None:
                 found[market] = p
+                if os.environ.get('POLY_DEBUG'):
+                    print(f"    [debug] {market} ← q='{question[:80]}' outcomes={outcomes} → {p:.2f}")
 
     # 1. Nested sub-markets (e.g. "More Markets" events)
     for mkt in (ev.get('markets') or []):
