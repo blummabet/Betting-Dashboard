@@ -16,15 +16,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
       - name: Install dependencies
         run: |
-          pip install py-clob-client requests
-          python -c "from py_clob_client.client import ClobClient; print('✅ py-clob-client ok')"
+          python3 -m pip install --break-system-packages --quiet py-clob-client requests
+          python3 -c "from py_clob_client.client import ClobClient; print('✅ py-clob-client ok')"
 
       - name: Place Polymarket orders
         env:
