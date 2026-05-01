@@ -30,8 +30,10 @@ jobs:
           fi
           echo "✅ $PYTHON ($($PYTHON --version))"
           echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
-          $PYTHON -m pip install --break-system-packages --upgrade py-clob-client requests
-          $PYTHON -c "import py_clob_client; print('✅ py-clob-client', py_clob_client.__version__)"
+          $PYTHON -m pip install --break-system-packages --upgrade \
+            "git+https://github.com/Polymarket/py-clob-client.git" \
+            requests
+          $PYTHON -c "from py_clob_client.client import ClobClient; import py_clob_client; v = getattr(py_clob_client, '__version__', '?'); print('✅ py-clob-client', v)"
 
       - name: Place Polymarket orders
         env:
