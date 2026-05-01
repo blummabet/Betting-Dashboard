@@ -164,6 +164,11 @@ TEAM_NAME_MAP = {
     'Fenerbahce':               'Fenerbahce',
     'Beşiktaş':                 'Besiktas',
     'Trabzonspor':              'Trabzonspor',
+    'Başakşehir':               'Basaksehir',
+    'Basaksehir':               'Basaksehir',
+    'Istanbul Basaksehir':      'Basaksehir',
+    'Gaziantep FK':             'Gaziantep',
+    'Gaziantep':                'Gaziantep',
     'Celtic':                   'Celtic',
     'Rangers':                  'Rangers',
     'Leeds':                    'Leeds',
@@ -561,18 +566,64 @@ def event_prices(ev: dict, home_en: str, away_en: str) -> dict:
 # ── Match fixtures against bulk events ───────────────────
 
 def name_tokens(name: str) -> list[str]:
-    """Return meaningful lowercase tokens from a team name."""
-    stopwords = {'fc', 'sc', 'ac', 'united', 'city', 'the', 'afc', 'bv'}
+    """Return meaningful lowercase tokens from a team name.
+    Full phrase is always FIRST (highest priority).
+    """
+    stopwords = {'fc', 'sc', 'ac', 'the', 'afc', 'bv'}  # 'united'/'city' kept — needed for disambiguation
     tokens = [t for t in name.lower().split() if len(t) >= 3 and t not in stopwords]
-    # Always include the full lowercased name too
-    tokens.append(name.lower())
-    return list(dict.fromkeys(tokens))  # deduplicated
+    # Full name first, then individual tokens
+    result = [name.lower()] + [t for t in tokens if t != name.lower()]
+    return list(dict.fromkeys(result))  # deduplicated, full name first
+
+
+def _token_conflict(full_name: str, title: str) -> bool:
+    """
+    Returns True if a token-only match is probably the WRONG team.
+
+    Handles teams that share a first word but differ in the second:
+      "Manchester United" vs "Manchester City"
+      "Real Madrid" vs "Real Sociedad" vs "Real Betis"
+      "Atletico Madrid" vs "Atletico" (other leagues)
+
+    Logic: if the full phrase is NOT in the title, but the first word IS,
+    and the remaining word(s) are NOT in the title → likely a different team
+    with the same first word.  Only applied when full_name has exactly 2 words.
+    """
+    if full_name in title:
+        return False  # Exact phrase found — no conflict
+    words = full_name.split()
+    if len(words) == 2:
+        first, second = words
+        if first in title and second not in title:
+            return True  # e.g. "manchester" found but not "united" → probably "manchester city"
+    return False
 
 
 def match_score(title_lower: str, home_tokens: list, away_tokens: list) -> int:
-    """Return match quality: 2=both teams found, 1=one team, 0=none."""
-    home_hit = any(t in title_lower for t in home_tokens)
-    away_hit = any(t in title_lower for t in away_tokens)
+    """Return match quality: 2=both teams found, 1=one team, 0=none.
+
+    home_tokens[0] / away_tokens[0] is always the full lowercased team name.
+    Individual tokens are only used when the full phrase is absent AND no
+    first-word conflict is detected (Manchester City ≠ Manchester United).
+    """
+    home_full = home_tokens[0]
+    away_full = away_tokens[0]
+
+    # Full-phrase match is definitive
+    if home_full in title_lower:
+        home_hit = True
+    elif _token_conflict(home_full, title_lower):
+        home_hit = False  # Partial match but likely wrong team
+    else:
+        home_hit = any(t in title_lower for t in home_tokens[1:])
+
+    if away_full in title_lower:
+        away_hit = True
+    elif _token_conflict(away_full, title_lower):
+        away_hit = False
+    else:
+        away_hit = any(t in title_lower for t in away_tokens[1:])
+
     return (2 if home_hit and away_hit else
             1 if home_hit or away_hit else 0)
 
