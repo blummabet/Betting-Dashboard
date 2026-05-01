@@ -805,13 +805,15 @@ function polyConfirm() {
   }).join('');
 
   const ordersObj = sel.map(p => ({
-    home:      toEnglishName(p.home),
-    away:      toEnglishName(p.away),
+    home:      p.home,
+    away:      p.away,
     market:    p.market,
     league:    p.league,
     bookyOdds: p.odds,
     stake:     POLY_STAKE,
     polyPrice: _polyState.prices[p.id]?.found ? _polyState.prices[p.id].price : null,
+    eventUrl:  _polyState.prices[p.id]?.eventUrl  || null,
+    eventTitle: _polyState.prices[p.id]?.eventTitle || null,
   }));
 
   window._polyOrdersSel = sel;

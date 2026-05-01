@@ -48,8 +48,40 @@ OUTCOME_MAP = {
 
 # ── Gamma API helpers ───────────────────────────────────────
 
-def gamma_search_event(home: str, away: str) -> dict | None:
-    """Search Gamma API for a match event. Returns the best matching event or None."""
+def gamma_fetch_by_slug(slug: str) -> dict | None:
+    """Fetch a single event from Gamma API using its slug. Returns the event or None."""
+    try:
+        resp = requests.get(
+            f"{GAMMA_API}/events",
+            params={"slug": slug, "limit": 1},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        events = data if isinstance(data, list) else data.get("events", [])
+        return events[0] if events else None
+    except Exception as e:
+        print(f"  ⚠️  Gamma API error for slug '{slug}': {e}")
+        return None
+
+
+def gamma_find_event(order: dict) -> dict | None:
+    """
+    Find the Polymarket event for an order.
+    1. Prefer the eventUrl from the pre-fetched JSON cache (most reliable).
+    2. Fallback: keyword search (less reliable, kept as safety net).
+    """
+    event_url = order.get("eventUrl") or ""
+    if event_url and "/event/" in event_url:
+        slug = event_url.rstrip("/").split("/event/")[-1]
+        ev = gamma_fetch_by_slug(slug)
+        if ev:
+            return ev
+        print(f"  ⚠️  Slug lookup failed for '{slug}', trying keyword fallback…")
+
+    # Fallback: keyword search with raw team names
+    home = order.get("home", "")
+    away = order.get("away", "")
     keyword = f"{home} {away}"
     try:
         resp = requests.get(
@@ -59,13 +91,14 @@ def gamma_search_event(home: str, away: str) -> dict | None:
         )
         resp.raise_for_status()
         events = resp.json()
+        if isinstance(events, dict):
+            events = events.get("events", [])
     except Exception as e:
-        print(f"  ⚠️  Gamma API error for '{keyword}': {e}")
+        print(f"  ⚠️  Gamma keyword search error for '{keyword}': {e}")
         return None
 
     home_tokens = [t for t in home.lower().split() if len(t) > 3]
     away_tokens = [t for t in away.lower().split() if len(t) > 3]
-
     for ev in events:
         title = (ev.get("title") or "").lower()
         if any(t in title for t in home_tokens) and any(t in title for t in away_tokens):
@@ -293,8 +326,8 @@ def main():
 
         print(f"\n[{i}/{len(orders)}] {home} vs {away} — {market}")
 
-        # 2. Gamma API: Event suchen
-        event = gamma_search_event(home, away)
+        # 2. Gamma API: Event via Slug (aus Cache-URL) oder Keyword-Fallback
+        event = gamma_find_event(order)
         if not event:
             print(f"  ❌ Kein Polymarket-Event gefunden — übersprungen")
             log_bet_to_history(history, order, {"status": "skipped", "orderId": None, "error": "no event found"})
