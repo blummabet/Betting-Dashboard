@@ -1,0 +1,36 @@
+name: 🧪 Test Polymarket Prices
+
+# Nur manuell ausführen — rein zum Testen von fetch_poly_prices.py
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies
+        run: pip install requests
+
+      - name: 🟣 Polymarket Preise holen
+        run: python fetch_poly_prices.py
+
+      - name: 💾 polymarket_prices.json pushen
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add polymarket_prices.json
+          git diff --staged --quiet || git commit -m "test: polymarket_prices.json update"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
