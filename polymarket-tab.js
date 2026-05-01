@@ -946,6 +946,7 @@ function polyManualResolve() {
           <button onclick="polySetResult(${i},'won')"  style="background:#3fb95022;border:1px solid #3fb95055;border-radius:6px;color:#3fb950;font-size:12px;font-weight:600;padding:6px 10px;cursor:pointer;font-family:inherit">✅ Gewonnen</button>
           <button onclick="polySetResult(${i},'lost')" style="background:#f8514922;border:1px solid #f8514955;border-radius:6px;color:#f85149;font-size:12px;font-weight:600;padding:6px 10px;cursor:pointer;font-family:inherit">❌ Verloren</button>
           <button onclick="polySetResult(${i},'void')" style="background:#8b949e22;border:1px solid #8b949e44;border-radius:6px;color:#8b949e;font-size:12px;font-weight:600;padding:6px 10px;cursor:pointer;font-family:inherit">— Void</button>
+          <button onclick="polyDeleteBet(${i})"        style="background:#f8514911;border:1px solid #f8514933;border-radius:6px;color:#f85149;font-size:12px;font-weight:600;padding:6px 10px;cursor:pointer;font-family:inherit">🗑️</button>
         </div>
       </div>
     </div>`).join('');
@@ -975,6 +976,30 @@ function polySetResult(idx, result) {
       const stats = document.getElementById('polyStatsSection');
       if (stats) stats.innerHTML = renderPolyStats();
     }, 600);
+  }
+}
+
+function polyDeleteBet(idx) {
+  const open = window._polyOpenBets;
+  if (!open?.[idx]) return;
+  const bets   = _getPolyBets();
+  const target = open[idx];
+  const betIdx = bets.findIndex(b => b.id === target.id && b.placed === target.placed);
+  if (betIdx >= 0) {
+    bets.splice(betIdx, 1);
+    _savePolyBets(bets);
+    open.splice(idx, 1);
+    window._polyOpenBets = open;
+    _polyToast('🗑️ Bet gelöscht');
+    setTimeout(() => {
+      if (open.length === 0) {
+        document.getElementById('polyModal').style.display = 'none';
+      } else {
+        polyManualResolve();
+      }
+      const stats = document.getElementById('polyStatsSection');
+      if (stats) stats.innerHTML = renderPolyStats();
+    }, 400);
   }
 }
 
