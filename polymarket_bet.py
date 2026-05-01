@@ -206,7 +206,7 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
         host=CLOB_HOST,
         key=private_key,
         chain_id=CHAIN_ID,
-        signature_type=0,   # EOA (non-Safe wallet)
+        signature_type=2,   # POLY_PROXY (Standard für Polymarket-Wallets)
     )
 
     # Derive or create API credentials (idempotent)
