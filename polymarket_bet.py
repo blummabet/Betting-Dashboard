@@ -202,75 +202,49 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
         except ImportError:
             BUY = "BUY"  # string fallback (accepted by all versions)
 
-    # Prüfe ob der Markt neg_risk nutzt (seit 2024 Standard bei Polymarket)
-    neg_risk = False
+    # API Credentials aus Env (einmalig generiert, als GitHub Secret gespeichert)
+    api_key        = os.environ.get("POLY_API_KEY", "").strip()
+    api_secret     = os.environ.get("POLY_API_SECRET", "").strip()
+    api_passphrase = os.environ.get("POLY_API_PASSPHRASE", "").strip()
+
     try:
-        r = requests.get(f"{CLOB_HOST}/neg-risk", timeout=8)
-        if r.status_code == 200:
-            data = r.json()
-            # Prüfe ob token_id in neg_risk-Liste
-            neg_risk = token_id in str(data)
-        # Fallback: prüfe über Gamma API
-        if not neg_risk:
-            r2 = requests.get(
-                f"https://gamma-api.polymarket.com/markets",
-                params={"clob_token_ids": token_id, "limit": 1},
-                timeout=8,
-            )
-            if r2.status_code == 200:
-                items = r2.json()
-                if isinstance(items, list) and items:
-                    neg_risk = bool(items[0].get("neg_risk", False))
-        print(f"  ℹ️  neg_risk={neg_risk}")
-    except Exception as e:
-        print(f"  ℹ️  neg_risk check fehlgeschlagen: {e}, verwende False")
-
-    # Versuche beide signature_types falls einer fehlschlägt
-    for sig_type in (0, 2):
-        client = ClobClient(
-            host=CLOB_HOST,
-            key=private_key,
-            chain_id=CHAIN_ID,
-            signature_type=sig_type,
+        from py_clob_client.clob_types import ApiCreds
+        creds = ApiCreds(
+            api_key=api_key,
+            api_secret=api_secret,
+            api_passphrase=api_passphrase,
         )
-        creds = client.create_or_derive_api_creds()
-        client.set_api_creds(creds)
+    except ImportError:
+        creds = None
 
-        try:
-            # neg_risk-Parameter nur wenn supported
-            try:
-                order_args = MarketOrderArgs(
-                    token_id=token_id,
-                    amount=amount_usdc,
-                    side=BUY,
-                    neg_risk=neg_risk,
-                )
-            except TypeError:
-                order_args = MarketOrderArgs(
-                    token_id=token_id,
-                    amount=amount_usdc,
-                    side=BUY,
-                )
+    client = ClobClient(
+        host=CLOB_HOST,
+        key=private_key,
+        chain_id=CHAIN_ID,
+        signature_type=2,   # POLY_PROXY — Standard seit CLOB V2 (April 2026)
+        creds=creds,
+    )
 
-            signed_order = client.create_market_order(order_args)
-            resp = client.post_order(signed_order, OrderType.FOK)
+    if not creds:
+        derived = client.create_or_derive_api_creds()
+        client.set_api_creds(derived)
 
-            if resp and resp.get("success"):
-                return {
-                    "status":  "placed",
-                    "orderId": resp.get("orderID") or resp.get("id") or "unknown",
-                    "error":   None,
-                }
-            err = resp.get("errorMsg") or resp.get("error") or str(resp)
-            if "version_mismatch" not in str(err):
-                return {"status": "failed", "orderId": None, "error": err}
-            print(f"  ⚠️  sig_type={sig_type} → version_mismatch, versuche nächsten...")
-        except Exception as e:
-            if "version_mismatch" not in str(e):
-                raise
-            print(f"  ⚠️  sig_type={sig_type} → {e}, versuche nächsten...")
+    order_args = MarketOrderArgs(
+        token_id=token_id,
+        amount=amount_usdc,
+        side=BUY,
+    )
+    signed_order = client.create_market_order(order_args)
+    resp = client.post_order(signed_order, OrderType.FOK)
 
-    return {"status": "failed", "orderId": None, "error": "order_version_mismatch mit beiden signature_types"}
+    if resp and resp.get("success"):
+        return {
+            "status":  "placed",
+            "orderId": resp.get("orderID") or resp.get("id") or "unknown",
+            "error":   None,
+        }
+    err = resp.get("errorMsg") or resp.get("error") or str(resp)
+    return {"status": "failed", "orderId": None, "error": err}
 
 
 # ── picks_history.json logging ──────────────────────────────

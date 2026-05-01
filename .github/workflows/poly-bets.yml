@@ -30,17 +30,16 @@ jobs:
           fi
           echo "✅ $PYTHON ($($PYTHON --version))"
           echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
-          $PYTHON -m pip install --break-system-packages --quiet py-clob-client requests
-          # Polymarket migrierte CLOB auf v2 am 27.04.2026 — CLOB_VERSION patch von "1" → "2"
-          EIP712=$($PYTHON -c "import py_clob_client, os; print(os.path.join(os.path.dirname(py_clob_client.__file__), 'signing', 'eip712.py'))")
-          sed -i '' 's/CLOB_VERSION = "1"/CLOB_VERSION = "2"/' "$EIP712" 2>/dev/null || \
-          sed -i    's/CLOB_VERSION = "1"/CLOB_VERSION = "2"/' "$EIP712"
-          $PYTHON -c "from py_clob_client.signing.eip712 import CLOB_VERSION; print('✅ CLOB_VERSION =', CLOB_VERSION)"
+          $PYTHON -m pip install --break-system-packages --quiet --upgrade py-clob-client-v2 requests
+          $PYTHON -c "from py_clob_client.client import ClobClient; print('✅ py-clob-client-v2 ok')"
 
       - name: Place Polymarket orders
         env:
-          POLY_PRIVATE_KEY: ${{ secrets.POLY_PRIVATE_KEY }}
-          ORDERS_JSON:      ${{ toJson(github.event.client_payload.orders) }}
+          POLY_PRIVATE_KEY:    ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_API_KEY:        ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:     ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
+          ORDERS_JSON:         ${{ toJson(github.event.client_payload.orders) }}
         run: ${{ env.POLY_PYTHON }} polymarket_bet.py
 
       - name: Commit updated picks_history.json
