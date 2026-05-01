@@ -468,25 +468,34 @@ def extract_outcome_price(market: str, question: str, outcomes: list,
     # Helper: index of Yes outcome (binary markets use Yes/No instead of team names)
     yes_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'), -1)
 
+    home_in_q = any(t in q for t in home_tokens)
+    away_in_q = any(t in q for t in away_tokens)
+
     if market == 'Heimsieg':
         # Try named outcome first ("Leeds United FC", "Home", etc.)
         idx = next((i for i, o in enumerate(outcomes)
                     if any(t in str(o).lower() for t in home_tokens)), -1)
         # Fallback: binary "Will [HomeTeam] win?" → Yes = home win
-        if idx < 0 and yes_idx >= 0 and any(t in q for t in home_tokens):
+        # Only if HOME team is in the question but AWAY team is NOT
+        # (prevents general "Leeds vs Burnley" questions matching both)
+        if idx < 0 and yes_idx >= 0 and home_in_q and not away_in_q:
             idx = yes_idx
         return _safe_float(prices[idx]) if idx >= 0 else None
 
     if market == 'Auswärtssieg':
         idx = next((i for i, o in enumerate(outcomes)
                     if any(t in str(o).lower() for t in away_tokens)), -1)
-        if idx < 0 and yes_idx >= 0 and any(t in q for t in away_tokens):
+        # Only if AWAY team is in the question but HOME team is NOT
+        if idx < 0 and yes_idx >= 0 and away_in_q and not home_in_q:
             idx = yes_idx
         return _safe_float(prices[idx]) if idx >= 0 else None
 
     if market == 'Unentschieden':
+        # First try explicit "Draw" / "DRAW" outcome label (3-way moneyline markets)
         idx = next((i for i, o in enumerate(outcomes)
                     if 'draw' in str(o).lower()), -1)
+        # Fallback: binary "Will [X] end in a draw?" → Yes
+        # Don't require team tokens to be absent — draw questions often include both teams
         if idx < 0 and yes_idx >= 0 and 'draw' in q:
             idx = yes_idx
         return _safe_float(prices[idx]) if idx >= 0 else None
