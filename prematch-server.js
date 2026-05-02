@@ -1350,6 +1350,18 @@ async function fetchAllPrematchData() {
     if (!_sportKeyEvents[sk]?.length) continue;
     await sleep(400);
     const { data: altEvents } = await oddsApiFetchAlt(sk);
+    // DEBUG: log how many alt events returned and what market keys they carry
+    const _altMktKeys = new Set();
+    let _altCardsCount = 0;
+    for (const ae of (altEvents || [])) {
+      for (const bkr of (ae.bookmakers || [])) {
+        for (const mkt of (bkr.markets || [])) {
+          _altMktKeys.add(mkt.key);
+          if (mkt.key === 'alternate_totals_cards') _altCardsCount++;
+        }
+      }
+    }
+    console.log(`  [Step5c] ${sk}: ${(altEvents||[]).length} alt events, markets: [${[..._altMktKeys].join(',')}], cards_markets: ${_altCardsCount}`);
     for (const ae of altEvents) {
       const main = _sportKeyEvents[sk].find(e => e.id === ae.id);
       if (!main) continue;
