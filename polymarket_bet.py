@@ -159,6 +159,9 @@ def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> 
     # ── 1. Event-level outcomes (simple moneyline / 3-way markets) ───────────
     ev_outcomes = _parse_json_list(event.get('outcomes') or '[]')
     ev_clob_ids = _parse_json_list(event.get('clobTokenIds') or '[]')
+    if os.environ.get('POLY_DEBUG'):
+        print(f"    [dbg] ev_outcomes={ev_outcomes}  ev_clob_ids={ev_clob_ids[:1] if ev_clob_ids else []}")
+        print(f"    [dbg] markets count={len(event.get('markets') or [])}")
     token = _match_outcome(mkt_type, ev_outcomes, ev_clob_ids)
     if token:
         return token
@@ -227,7 +230,14 @@ def gamma_find_winner_event(order: dict, mm_event: dict) -> dict | None:
         if "more market" in title:
             continue  # skip More Markets events
         if any(t in title for t in home_t) and any(t in title for t in away_t):
-            return ev
+            # Keyword results are lightweight (no clobTokenIds).
+            # Re-fetch by slug to get the full event with market data.
+            slug = (ev.get("slug") or "").rstrip("/")
+            if slug:
+                full_ev = gamma_fetch_by_slug(slug)
+                if full_ev:
+                    return full_ev
+            return ev  # fallback: return lightweight if slug re-fetch fails
     return None
 
 
