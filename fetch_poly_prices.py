@@ -19,6 +19,7 @@ import json
 import os
 import re
 import time
+import unicodedata
 import urllib.request
 import urllib.parse
 import urllib.error
@@ -264,6 +265,72 @@ def _safe_float(val) -> float | None:
         return None
 
 
+# ── Polymarket league slugs (frontend URL pattern) ───────
+# URL: polymarket.com/sports/<league-slug>/<home3>-<away3>-<date>
+LEAGUE_POLY_SLUG: dict[str, str] = {
+    'ENG':  'epl',
+    'ENG2': 'championship',
+    'GER':  'bundesliga',
+    'GER2': 'bundesliga-2',
+    'ESP':  'laliga',
+    'ITA':  'serie-a',
+    'FRA':  'ligue-1',
+    'NED':  'eredivisie',
+    'POR':  'primeira-liga',
+    'TUR':  'super-lig',
+    'SCO':  'scottish-premiership',
+}
+
+_SLUG_DROP = re.compile(r'\b(fc|sc|ac|as|rc|bv|sk|cf|cd|ud|ss|us|sv|if|ik|vfl|vfb|tsv|tsg|bvb|rb|fk|nk|gd|gil|afc|fca|1\.|og|af|sbo)\b')
+
+def _team_abbrev(name: str) -> str:
+    """3-letter slug abbreviation matching Polymarket's pattern (lal, vil, ars …)."""
+    s = name.lower()
+    s = re.sub(r"[''ʼ]", '', s)                           # remove apostrophes
+    s = ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')  # strip diacritics
+    s = _SLUG_DROP.sub(' ', s).strip()                     # remove common FC/SC prefixes
+    parts = [p for p in re.split(r'[^a-z0-9]+', s) if len(p) >= 2]
+    return (parts[0][:3] if parts else s[:3])
+
+
+def gamma_fetch_by_slug(slug: str) -> dict | None:
+    """Fetch a single Gamma event by slug (GET /events/{slug})."""
+    url = f'https://gamma-api.polymarket.com/events/{urllib.parse.quote(slug, safe="/-")}'
+    data = api_get(url)
+    if not data:
+        return None
+    if isinstance(data, list):
+        return data[0] if data else None
+    if isinstance(data, dict) and data.get('id'):
+        return data
+    return None
+
+
+def slug_fetch_event(home: str, away: str, date_str: str, league: str) -> dict | None:
+    """
+    Construct Polymarket event slug from league + team abbreviations + date.
+    Tries both 'home-away' and 'away-home' orders, and 'more-markets' suffix.
+    Pattern from: polymarket.com/sports/<leagueslug>/<h3>-<a3>-<date>
+    """
+    lg = LEAGUE_POLY_SLUG.get(league, '')
+    if not lg:
+        return None
+    home_en = to_english(home)
+    away_en = to_english(away)
+    h3 = _team_abbrev(home_en)
+    a3 = _team_abbrev(away_en)
+    for slug in [
+        f"{lg}/{h3}-{a3}-{date_str}",
+        f"{lg}/{a3}-{h3}-{date_str}",                     # reversed order
+        f"{lg}/{h3}-{a3}-{date_str}-more-markets",
+    ]:
+        ev = gamma_fetch_by_slug(slug)
+        if ev:
+            print(f"    ✅ slug hit: '{slug}' → '{ev.get('title')}'")
+            return ev
+    return None
+
+
 # ── Step 1: get soccer tag IDs via /sports ────────────────
 
 SOCCER_SPORT_KEYWORDS = {
@@ -390,12 +457,25 @@ def name_tokens(name: str) -> list[str]:
     return list(dict.fromkeys(result))
 
 
+# First words that are SHARED across multiple teams → matching on them alone is ambiguous.
+# e.g. "Manchester United" vs "Manchester City" — "Manchester" alone isn't enough.
+# Words NOT in this set are treated as unique identifiers (e.g. "Bayern", "Liverpool").
+_AMBIGUOUS_FIRST_WORDS = {
+    'real', 'manchester', 'inter', 'atletico', 'atletico', 'sporting',
+    'dynamo', 'dinamo', 'lokomotiv', 'west', 'borussia', 'red', 'paris',
+    'union', 'fortuna', 'olympique', 'olympiakos', 'olympiacos',
+}
+
+
 def _token_conflict(full_name: str, title: str) -> bool:
     """
     Returns True if a token-only match is likely the WRONG team.
     Handles 2-word teams that share a first word:
       "Manchester United" vs "Manchester City"
       "Real Madrid" vs "Real Sociedad" vs "Real Betis"
+    DOES NOT fire for unique first-word teams like "Bayern Munich"
+    where "Bayern" alone unambiguously identifies the team — even
+    when the title uses "München" instead of "Munich".
     """
     if full_name in title:
         return False
@@ -403,7 +483,9 @@ def _token_conflict(full_name: str, title: str) -> bool:
     if len(words) == 2:
         first, second = words
         if first in title and second not in title:
-            return True
+            # Only block when the first word is known-ambiguous.
+            # Unique identifiers (Bayern, Liverpool, Chelsea …) are safe alone.
+            return first.lower() in _AMBIGUOUS_FIRST_WORDS
     return False
 
 
@@ -569,7 +651,8 @@ def keyword_fetch_winner_events(home_en: str, away_en: str) -> list[dict]:
     return [ev for ev in events if 'more market' not in (ev.get('title') or '').lower()]
 
 
-def find_match_in_events(events: list, home: str, away: str) -> dict | None:
+def find_match_in_events(events: list, home: str, away: str,
+                         date_str: str = '', league: str = '') -> dict | None:
     home_en  = to_english(home)
     away_en  = to_english(away)
     h_tokens = name_tokens(home_en)
@@ -624,6 +707,18 @@ def find_match_in_events(events: list, home: str, away: str) -> dict | None:
             if first_ev is None and prices:
                 first_ev = ev
 
+    # Last-resort: slug-based fetch using Polymarket URL pattern
+    # polymarket.com/sports/<leagueslug>/<h3>-<a3>-<date>
+    if not merged_prices and date_str and league:
+        print(f"    [{home_en} vs {away_en}] — slug fallback ({league}) …")
+        slug_ev = slug_fetch_event(home, away, date_str, league)
+        if slug_ev:
+            prices = event_prices(slug_ev, home_en, away_en)
+            for k, v in prices.items():
+                merged_prices[k] = v
+            if first_ev is None:
+                first_ev = slug_ev
+
     print(f"    [{home_en} vs {away_en}] → merged markets: {list(merged_prices.keys())}")
 
     if not merged_prices:
@@ -657,7 +752,8 @@ def main():
         return
 
     # Collect unique fixtures that need Polymarket pricing
-    unique_matches: dict[str, tuple[str, str]] = {}
+    # Store (home, away, date_str, league) so we can use slug fallback
+    unique_matches: dict[str, tuple[str, str, str, str]] = {}
     for fx in picks_list:
         league = fx.get('league', '')
         if league not in POLY_LEAGUES:
@@ -669,7 +765,10 @@ def main():
         has_poly = any(p.get('market') in POLY_MARKETS for p in (fx.get('picks') or []))
         if not has_poly:
             continue
-        unique_matches[f"{home}|{away}"] = (home, away)
+        # date_str: YYYY-MM-DD from fixture date field (try common keys)
+        raw_date = fx.get('date') or fx.get('fixture_date') or fx.get('kickoff') or ''
+        date_str = str(raw_date)[:10] if raw_date else ''
+        unique_matches[f"{home}|{away}"] = (home, away, date_str, league)
 
     print(f"🔍 {len(unique_matches)} fixtures to match")
 
@@ -707,8 +806,8 @@ def main():
     results: dict[str, dict] = {}
     found_count = 0
 
-    for key, (home, away) in unique_matches.items():
-        result = find_match_in_events(all_events, home, away)
+    for key, (home, away, date_str, league) in unique_matches.items():
+        result = find_match_in_events(all_events, home, away, date_str=date_str, league=league)
         if result:
             found_count += 1
             print(f"  ✅ {home} vs {away} → {result['eventTitle']}")
