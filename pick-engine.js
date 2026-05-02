@@ -318,7 +318,8 @@ function renderLineMovement(rows, picks, oddsD, isEstimated) {
 // SYNC: when changing any value here also update check_picks_logic.py
 // (Python validator uses same thresholds in comments — search "SYNC:GATE").
 const GATE = {
-  GOALS_REAL:  0.12,   // Over 2.5 / Over 3.5 / BTTS  (real bookie odds)
+  GOALS_REAL:  0.12,   // Over 2.5 / Over 3.5           (real bookie odds)
+  BTTS_REAL:   0.06,   // BTTS Ja — tighter gate: BTTS model less precise than O/U goals
   RESULT_REAL: 0.15,   // 1X2 result markets (wider — 3-way, more variance than 2-way goals)
   TEAM_REAL:   0.12,   // Heim/Ausw über 1.5  (real bookie odds)
   TEAM_EST:    0.15,   // Heim/Ausw über 1.5  (estimated odds — wider, model uncertainty)
@@ -667,8 +668,8 @@ function getBettingPicks(match, odds, leagueKey) {
   const _hVxg = match.homeXg ?? null;
   const _aVxg = match.awayXg ?? null;
   const venueXgAvail = !!(
-    _hVxg?.homeGfAvg != null && _hVxg?.homeGaAvg != null &&
-    _aVxg?.awayGfAvg != null && _aVxg?.awayGaAvg != null
+    _hVxg?.homeGfAvg > 0 && _hVxg?.homeGaAvg != null &&
+    _aVxg?.awayGfAvg > 0 && _aVxg?.awayGaAvg != null
   );
 
   // ── xG Fairness (from refresh_stats.py — actual goals ÷ expected goals) ──
@@ -900,6 +901,11 @@ function getBettingPicks(match, odds, leagueKey) {
   let homeDefStr = (venueXgAvail ? _hVxg.homeGaAvg : xGBased ? _hXGA : hConc)  * _hFatigDef * _hInjDef;
   let awayAttStr = (venueXgAvail ? _aVxg.awayGfAvg : xGBased ? _aXG  : aGoals) * _aFatigAtt * _aInjAtt;
   let awayDefStr = (venueXgAvail ? _aVxg.awayGaAvg : xGBased ? _aXGA : aConc)  * _aFatigDef * _aInjDef;
+  // Sanity floor on attack strength: prevents zero/corrupted xG data (e.g. homeGfAvg=0 in sparse
+  // league caches) from collapsing muH/muA → Poisson pH≈0 → FV=8+ for obvious favourites.
+  // 0.30 xG/game is a conservative minimum — any professional team generates some threat.
+  if (homeAttStr < 0.30) homeAttStr = 0.30;
+  if (awayAttStr < 0.30) awayAttStr = 0.30;
 
   // ── Motivation penalty (applied after fatigue + injury) ───────────────────
   // Confirmed teams (motivationLevel='none') rotate key players and lower intensity:
@@ -975,9 +981,14 @@ function getBettingPicks(match, odds, leagueKey) {
   // Anything beyond 13 expected corners is likely a data artefact (API noise / small sample).
   const cornersEst     = _cornersReal !== null ? Math.min(_cornersReal, 13.0) : Math.min(_cornersFormula, 13.0);
   const cornersDataReal = _cornersReal !== null;
-  const cornersOver8   = cornersEst >= 8.0;
-  const cornersOver9   = cornersEst >= 9.5;
-  const cornersOver11  = cornersEst >= 11.0;
+  // Injury-adjusted corner estimate — compute early so pick generation and modelOdds use same value.
+  // Injured wingers/fullbacks reduce attacking width → fewer corners.
+  // _hImpact/_aImpact already available (computed with injury data above).
+  const _cInjAdj      = Math.max(0, ((_hImpact||0) + (_aImpact||0)) * 0.08);
+  const cornersEstAdj = Math.max(4.0, cornersEst - _cInjAdj);
+  const cornersOver8   = cornersEstAdj >= 8.0;
+  const cornersOver9   = cornersEstAdj >= 9.5;
+  const cornersOver11  = cornersEstAdj >= 11.0;
   // ── Poisson-estimated corners odds (injected into o when real quotes absent) ──
   if (!o.co95 || !o.co85) {
     const _cEst = estimateCornersOdds(cornersEst);
@@ -1777,7 +1788,7 @@ function getBettingPicks(match, odds, leagueKey) {
         const _expA = Math.max(0.1, (awayAttStr + homeDefStr) / 2);
         const _bttsFairProb = (!o._bttsOddsEst && o.bttsY != null)
           ? (1 - Math.exp(-_expH)) * (1 - Math.exp(-_expA)) : null;
-        const _bttsNegEdge = _hasNegEdge(_bttsFairProb, o.bttsY, false, GATE.GOALS_REAL, null);
+        const _bttsNegEdge = _hasNegEdge(_bttsFairProb, o.bttsY, false, GATE.BTTS_REAL, null);
         if (!_bttsNegEdge) gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:o.bttsY||null, oddsIsEst: o._bttsOddsEst||false,
           conf: sc>0.65?'high':sc>0.44?'medium':'low',
           reason:`${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu. Beide Teams werden voraussichtlich treffen.${_bttsH2hNote}${_bttsPressNote}${_bothAttLine}`}}); }
@@ -1897,8 +1908,9 @@ function getBettingPicks(match, odds, leagueKey) {
         { mkt:'Über 10.5 Ecken', odds: o.co105 || null },
         { mkt:'Über 11.5 Ecken', odds: o.co115 || null },
       ];
-      // Starting line: based on cornersEst
-      let _overStartIdx = cornersEst >= 11.5 ? 3 : cornersEst >= 10.5 ? 2 : cornersEst >= 9.5 ? 1 : 0;
+      // Starting line: based on injury-adjusted estimate — prevents "Über 9.5" being selected
+      // when injuries pull the real expectation below the threshold (FV would inflate to 2.5+).
+      let _overStartIdx = cornersEstAdj >= 11.5 ? 3 : cornersEstAdj >= 10.5 ? 2 : cornersEstAdj >= 9.5 ? 1 : 0;
       // Escalate if odds too cheap
       let _overIdx = _overStartIdx;
       while (_overIdx < _overLines.length - 1) {
@@ -2251,9 +2263,6 @@ function getBettingPicks(match, odds, leagueKey) {
     // Comparing model vs. model would produce meaningless "edge" — skip value tag for those.
     const ip = (p.odds && !p.oddsIsEst) ? (1 / p.odds) * 1.03 : null;  // ×1.03 strips ~3% bookmaker margin
     let mp = null;           // our model probability estimate
-    // Injury impact reduces expected corners (injured wingers/fullbacks mean less attacking width)
-    const _cInjAdj = Math.max(0, ((_hImpact||0) + (_aImpact||0)) * 0.08);
-    const cornersEstAdj = Math.max(4.0, cornersEst - _cInjAdj);
     switch (p.market) {
       case 'Heimsieg':
         if (_fairPH !== null) {
