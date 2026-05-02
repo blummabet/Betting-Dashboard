@@ -16,6 +16,7 @@ Writes : polymarket_prices.json
 """
 
 import json
+import os
 import re
 import time
 import urllib.request
