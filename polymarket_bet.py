@@ -106,76 +106,128 @@ def gamma_find_event(order: dict) -> dict | None:
     return None
 
 
+def _parse_json_list(val) -> list:
+    if isinstance(val, list):
+        return val
+    if isinstance(val, str):
+        try:
+            r = json.loads(val)
+            return r if isinstance(r, list) else []
+        except Exception:
+            return []
+    return []
+
+
 def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> str | None:
     """
     Find the CLOB token ID for the specific outcome in an event's markets.
+    Searches both event-level outcomes (moneyline) AND nested sub-markets.
     Returns the token_id string or None if not found.
     """
     mkt_info = OUTCOME_MAP.get(market_label)
     if not mkt_info:
         return None
 
-    mkt_type = mkt_info["type"]
-    is_goals = mkt_type in ("over25", "under25")
-    home_first = home.lower().split()[0]
-    away_first = away.lower().split()[0]
+    mkt_type  = mkt_info["type"]
+    is_goals  = mkt_type in ("over25", "under25")
+    # Use first meaningful token of each team name for fuzzy matching
+    home_tokens = [t for t in home.lower().split() if len(t) >= 3]
+    away_tokens = [t for t in away.lower().split() if len(t) >= 3]
+    home_first  = home_tokens[0] if home_tokens else home.lower()
+    away_first  = away_tokens[0] if away_tokens else away.lower()
 
+    def _match_outcome(mkt_type_: str, outcomes: list, clob_ids: list) -> str | None:
+        """Return CLOB token ID for the desired outcome, or None."""
+        if not outcomes or len(outcomes) != len(clob_ids):
+            return None
+        if mkt_type_ == "home_win":
+            idx = next((i for i, o in enumerate(outcomes) if any(t in o.lower() for t in home_tokens)), None)
+        elif mkt_type_ == "away_win":
+            idx = next((i for i, o in enumerate(outcomes) if any(t in o.lower() for t in away_tokens)), None)
+        elif mkt_type_ == "draw":
+            idx = next((i for i, o in enumerate(outcomes) if "draw" in o.lower()), None)
+        elif mkt_type_ == "over25":
+            idx = next((i for i, o in enumerate(outcomes)
+                        if o.lower() in ("yes", "over") or "over" in o.lower()), None)
+        elif mkt_type_ == "under25":
+            idx = next((i for i, o in enumerate(outcomes)
+                        if o.lower() in ("no", "under") or "under" in o.lower()), None)
+        else:
+            idx = None
+        return clob_ids[idx] if idx is not None else None
+
+    # ── 1. Event-level outcomes (simple moneyline / 3-way markets) ───────────
+    ev_outcomes = _parse_json_list(event.get('outcomes') or '[]')
+    ev_clob_ids = _parse_json_list(event.get('clobTokenIds') or '[]')
+    token = _match_outcome(mkt_type, ev_outcomes, ev_clob_ids)
+    if token:
+        return token
+
+    # ── 2. Nested sub-markets ────────────────────────────────────────────────
     for mkt in event.get("markets", []):
-        q = (mkt.get("question") or "").lower()
-        outcomes_raw    = mkt.get("outcomes") or "[]"
-        clob_ids_raw    = mkt.get("clobTokenIds") or "[]"
-
-        try:
-            outcomes = json.loads(outcomes_raw) if isinstance(outcomes_raw, str) else outcomes_raw
-            clob_ids = json.loads(clob_ids_raw) if isinstance(clob_ids_raw, str) else clob_ids_raw
-        except Exception:
-            continue
+        q        = (mkt.get("question") or "").lower()
+        outcomes = _parse_json_list(mkt.get("outcomes") or "[]")
+        clob_ids = _parse_json_list(mkt.get("clobTokenIds") or "[]")
 
         if not outcomes or len(outcomes) != len(clob_ids):
             continue
 
         if is_goals:
-            # Only match Over/Under 2.5 goals markets
-            if "2.5" not in q and "goals" not in q:
+            if "2.5" not in q and "goal" not in q:
                 continue
-
-            if mkt_type == "over25":
-                # Look for Yes/Over outcome
-                idx = next((i for i, o in enumerate(outcomes)
-                            if o.lower() in ("yes", "over") or "over" in o.lower()), None)
-                if idx is not None:
-                    return clob_ids[idx]
-
-            elif mkt_type == "under25":
-                # Look for No/Under outcome — usually index 1 in a Yes/No market
-                idx = next((i for i, o in enumerate(outcomes)
-                            if o.lower() in ("no", "under") or "under" in o.lower()), None)
-                if idx is not None:
-                    return clob_ids[idx]
-
         else:
-            # 1X2 match winner — need "win" or "winner" or "match" in question
-            if not any(kw in q for kw in ("win", "winner", "match")):
+            # Relaxed filter: pass if question has winner keywords OR outcomes contain draw
+            has_draw = any("draw" in str(o).lower() for o in outcomes)
+            has_kw   = any(kw in q for kw in ("win", "winner", "match", "beat", "draw", "vs", "moneyline"))
+            if not has_kw and not has_draw:
                 continue
 
-            if mkt_type == "home_win":
-                idx = next((i for i, o in enumerate(outcomes)
-                            if home_first in o.lower()), None)
-                if idx is not None:
-                    return clob_ids[idx]
+        token = _match_outcome(mkt_type, outcomes, clob_ids)
+        if token:
+            return token
 
-            elif mkt_type == "away_win":
-                idx = next((i for i, o in enumerate(outcomes)
-                            if away_first in o.lower()), None)
-                if idx is not None:
-                    return clob_ids[idx]
+    return None
 
-            elif mkt_type == "draw":
-                idx = next((i for i, o in enumerate(outcomes)
-                            if "draw" in o.lower()), None)
-                if idx is not None:
-                    return clob_ids[idx]
 
+def gamma_find_winner_event(order: dict, mm_event: dict) -> dict | None:
+    """
+    For a 'More Markets' event, find the corresponding winner/moneyline event.
+    1. Strip '-more-markets' from the slug and try that.
+    2. Keyword search, preferring events without 'More Markets' in title.
+    """
+    import re as _re
+    slug = (mm_event.get('slug') or '').rstrip('/')
+    winner_slug = _re.sub(r'-more-markets?$', '', slug)
+    if winner_slug and winner_slug != slug:
+        ev = gamma_fetch_by_slug(winner_slug)
+        if ev:
+            return ev
+
+    # Keyword search fallback
+    home = order.get("home", "")
+    away = order.get("away", "")
+    try:
+        resp = requests.get(
+            f"{GAMMA_API}/events",
+            params={"keyword": f"{home} {away}", "active": "true", "limit": 20},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        events = resp.json()
+        if isinstance(events, dict):
+            events = events.get("events", [])
+    except Exception as e:
+        print(f"  ⚠️  Winner-Event Keyword-Suche fehlgeschlagen: {e}")
+        return None
+
+    home_t = [t for t in home.lower().split() if len(t) >= 3]
+    away_t = [t for t in away.lower().split() if len(t) >= 3]
+    for ev in events:
+        title = (ev.get("title") or "").lower()
+        if "more market" in title:
+            continue  # skip More Markets events
+        if any(t in title for t in home_t) and any(t in title for t in away_t):
+            return ev
     return None
 
 
@@ -398,6 +450,14 @@ def main():
 
         # 3. CLOB Token ID für den Outcome finden
         token_id = find_clob_token_id(event, market, home, away)
+        if not token_id:
+            # "More Markets" events enthalten keine 1X2/Moneyline Token IDs.
+            # → Separates Winner-Event suchen und nochmal versuchen.
+            print(f"  ⚠️  Token nicht in '{event.get('title')}' — suche Winner-Event …")
+            winner_event = gamma_find_winner_event(order, event)
+            if winner_event:
+                print(f"  🔄 Winner-Event: {winner_event.get('title')}")
+                token_id = find_clob_token_id(winner_event, market, home, away)
         if not token_id:
             print(f"  ❌ CLOB Token ID für '{market}' nicht gefunden — übersprungen")
             log_bet_to_history(history, order, {"status": "skipped", "orderId": None, "error": "token_id not found"})

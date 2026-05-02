@@ -459,8 +459,11 @@ def extract_outcome_price(market: str, question: str, outcomes: list,
             idx = n_idx if n_idx >= 0 else u_idx
         return _safe_float(prices[idx]) if idx >= 0 else None
 
-    # 1X2 match winner
-    if not any(kw in q for kw in ('win', 'winner', 'match', 'beat', 'vs', 'v ', 'draw')):
+    # 1X2 match winner — pass if question has relevant keywords OR outcomes contain team/draw
+    # Relaxed check: some Polymarket markets use "Moneyline" or just the match title as question
+    has_draw_outcome = any('draw' in str(o).lower() for o in outcomes)
+    has_keywords = any(kw in q for kw in ('win', 'winner', 'match', 'beat', 'vs', 'v ', 'draw', 'moneyline'))
+    if not has_keywords and not has_draw_outcome:
         return None
 
     home_tokens = [t for t in home_en.lower().split() if len(t) >= 3]
@@ -571,6 +574,16 @@ def find_match_in_events(events: list, home: str, away: str) -> dict | None:
         _home_not_in_prefix((e.get('title') or '').lower(), h_tokens[0]),
     ))
 
+    # Debug: show all candidate events and their available data
+    print(f"    [{home_en} vs {away_en}] {len(candidates)} candidate(s):")
+    for ev in candidates[:5]:  # limit to first 5
+        title = ev.get('title') or ''
+        sub_mkts = [m.get('question','')[:50] for m in (ev.get('markets') or [])[:3]]
+        ev_out = _parse_list_field(ev.get('outcomes'))
+        print(f"      • {title[:70]}")
+        print(f"        sub-markets({len(ev.get('markets') or [])}): {sub_mkts}")
+        print(f"        ev-outcomes: {ev_out[:5]}")
+
     # Merge prices from ALL candidate events — different events may hold different markets
     # (e.g. "More Markets" events have goals markets, separate events have 1X2 winner markets)
     merged_prices: dict = {}
@@ -583,6 +596,8 @@ def find_match_in_events(events: list, home: str, away: str) -> dict | None:
             for k, v in prices.items():
                 if k not in merged_prices:  # first candidate wins per market
                     merged_prices[k] = v
+
+    print(f"    → merged markets: {list(merged_prices.keys())}")
 
     if not merged_prices:
         return None
