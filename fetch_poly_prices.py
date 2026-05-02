@@ -217,7 +217,7 @@ def to_english(name: str) -> str:
 
 # ── HTTP helper ───────────────────────────────────────────
 
-def api_get(url: str, retries: int = 3) -> list | dict | None:
+def api_get(url: str, retries: int = 3, silent_404: bool = False) -> list | dict | None:
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
         'Accept': 'application/json',
@@ -227,6 +227,15 @@ def api_get(url: str, retries: int = 3) -> list | dict | None:
             req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=20) as resp:
                 return json.loads(resp.read().decode('utf-8'))
+        except urllib.error.HTTPError as e:
+            if e.code == 404:
+                if not silent_404:
+                    pass  # 404 = not found, normal for slug probes
+                return None  # no point retrying a 404
+            if attempt < retries - 1:
+                time.sleep(2 ** attempt)
+            else:
+                print(f"  ❌ API error: {e}  url={url}")
         except Exception as e:
             if attempt < retries - 1:
                 time.sleep(2 ** attempt)
@@ -284,19 +293,34 @@ LEAGUE_POLY_SLUG: dict[str, str] = {
 _SLUG_DROP = re.compile(r'\b(fc|sc|ac|as|rc|bv|sk|cf|cd|ud|ss|us|sv|if|ik|vfl|vfb|tsv|tsg|bvb|rb|fk|nk|gd|gil|afc|fca|1\.|og|af|sbo)\b')
 
 def _team_abbrev(name: str) -> str:
-    """3-letter slug abbreviation matching Polymarket's pattern (lal, vil, ars …)."""
+    """3-letter slug abbreviation matching Polymarket's pattern (vil, ars, bay …)."""
     s = name.lower()
     s = re.sub(r"[''ʼ]", '', s)                           # remove apostrophes
     s = ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')  # strip diacritics
     s = _SLUG_DROP.sub(' ', s).strip()                     # remove common FC/SC prefixes
-    parts = [p for p in re.split(r'[^a-z0-9]+', s) if len(p) >= 2]
-    return (parts[0][:3] if parts else s[:3])
+    # Split, keep words that are NOT pure numbers (skip "1899", "05" etc.)
+    parts = [p for p in re.split(r'[^a-z0-9]+', s)
+             if len(p) >= 2 and not re.fullmatch(r'\d+', p)]
+    return (parts[0][:3] if parts else re.sub(r'[^a-z]', '', name.lower())[:3])
+
+
+def _normalize_date(raw: str) -> str:
+    """Return ISO YYYY-MM-DD from any common date format (DD.MM.YYYY or YYYY-MM-DD)."""
+    s = str(raw).strip()
+    # Already ISO
+    if re.match(r'^\d{4}-\d{2}-\d{2}', s):
+        return s[:10]
+    # German format DD.MM.YYYY or DD.MM.YY
+    m = re.match(r'^(\d{1,2})\.(\d{1,2})\.(\d{4})', s)
+    if m:
+        return f"{m.group(3)}-{int(m.group(2)):02d}-{int(m.group(1)):02d}"
+    return s[:10]
 
 
 def gamma_fetch_by_slug(slug: str) -> dict | None:
-    """Fetch a single Gamma event by slug (GET /events/{slug})."""
+    """Fetch a single Gamma event by slug (GET /events/{slug}). 404 = silently None."""
     url = f'https://gamma-api.polymarket.com/events/{urllib.parse.quote(slug, safe="/-")}'
-    data = api_get(url)
+    data = api_get(url, silent_404=True)
     if not data:
         return None
     if isinstance(data, list):
@@ -765,9 +789,9 @@ def main():
         has_poly = any(p.get('market') in POLY_MARKETS for p in (fx.get('picks') or []))
         if not has_poly:
             continue
-        # date_str: YYYY-MM-DD from fixture date field (try common keys)
+        # date_str: normalize to YYYY-MM-DD regardless of source format (DD.MM.YYYY or ISO)
         raw_date = fx.get('date') or fx.get('fixture_date') or fx.get('kickoff') or ''
-        date_str = str(raw_date)[:10] if raw_date else ''
+        date_str = _normalize_date(raw_date) if raw_date else ''
         unique_matches[f"{home}|{away}"] = (home, away, date_str, league)
 
     print(f"🔍 {len(unique_matches)} fixtures to match")
