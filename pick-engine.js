@@ -2046,6 +2046,10 @@ function getBettingPicks(match, odds, leagueKey) {
       const _cardOdds = cardMkt.includes('4.5') ? (o.cards_o45||null) : (o.cards_o35||null);
       // Max odds guard: cards > 3.20 means low card probability — not worth recommending.
       if (cardSc > 0 && _cardOdds != null && _cardOdds > 3.20) cardSc = 0;
+      // Min odds guard (estimated only): Poisson-only odds < 1.50 means implied ~67%+ probability
+      // with zero bookie confirmation — too risky without independent price validation.
+      // Real bookie quotes are exempt (they've already passed market pricing scrutiny).
+      if (cardSc > 0 && _cardOdds != null && o._cardsOddsEst && _cardOdds < 1.50) cardSc = 0;
       // FV-Gate for cards: suppress if bookie implied prob exceeds Poisson fair prob by > GATE.GOALS_REAL.
       // Uses same blended expected-cards formula as estimateCardsOdds() injection above.
       // SYNC:GATE — threshold === GATE_GOALS_REAL in check_picks_logic.py
