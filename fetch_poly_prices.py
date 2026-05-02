@@ -269,7 +269,9 @@ def _parse_list_field(val) -> list:
 def _safe_float(val) -> float | None:
     try:
         f = float(val)
-        return f if 0 < f < 1 else None  # exclude exactly 0 and 1 (settled)
+        # Exclude settled/near-settled markets: < 2¢ or > 98¢ means outcome
+        # is essentially resolved — showing stale prices would mislead the edge calc.
+        return f if 0.02 <= f <= 0.98 else None
     except (TypeError, ValueError):
         return None
 
