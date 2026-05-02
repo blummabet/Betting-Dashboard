@@ -472,14 +472,37 @@ def fetch_all_soccer_events(tag_ids: list[str], end_date_min: str) -> list[dict]
 
 # ── Step 3: match fixtures to events ─────────────────────
 
+# Extra tokens for teams whose names differ between our system and Polymarket titles.
+# Key = our canonical English name (lowercase).
+# Value = list of tokens that appear in Polymarket event titles for that team.
+_POLY_EXTRA_TOKENS: dict[str, list[str]] = {
+    'rennes':          ['rennais', 'stade rennais'],   # "Stade Rennais FC"
+    'lyon':            ['lyonnais', 'olympique lyonnais'],  # "Olympique Lyonnais"
+    'marseille':       ['olympique de marseille'],
+    'nice':            ['ogc nice'],
+    'monaco':          ['as monaco'],
+    'paris fc':        ['paris'],
+    'psg':             ['paris saint-germain', 'paris saint germain'],
+    'atletico madrid': ['atletico de madrid', 'club atletico'],
+    'barcelona':       ['fc barcelona', 'futbol club barcelona'],
+    'real madrid':     ['real madrid cf'],
+    'wolves':          ['wolverhampton', 'wolverhampton wanderers'],
+    'gladbach':        ['monchengladbach', 'borussia monchengladbach', 'borussia m'],
+    'koln':            ['cologne', '1. fc koln', 'fc koln'],
+}
+
+
 def name_tokens(name: str) -> list[str]:
     """
-    Full name first (highest priority), then individual tokens.
+    Full name first (highest priority), then individual tokens, then Polymarket extras.
     'city' and 'united' are kept (NOT stopwords) so Manchester City ≠ Manchester United.
     """
     stopwords = {'fc', 'sc', 'ac', 'the', 'afc', 'bv', 'sk', 'cf', 'de', 'rcd'}
     tokens = [t for t in name.lower().split() if len(t) >= 3 and t not in stopwords]
     result = [name.lower()] + [t for t in tokens if t != name.lower()]
+    # Add known alternative spellings used in Polymarket event titles
+    extras = _POLY_EXTRA_TOKENS.get(name.lower(), [])
+    result.extend(e for e in extras if e not in result)
     return list(dict.fromkeys(result))
 
 
