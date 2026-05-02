@@ -548,6 +548,27 @@ def event_prices(ev: dict, home_en: str, away_en: str) -> dict:
     return found
 
 
+RESULT_MARKETS = {'Heimsieg', 'Auswärtssieg', 'Unentschieden'}
+
+
+def keyword_fetch_winner_events(home_en: str, away_en: str) -> list[dict]:
+    """
+    Targeted API call for a single fixture to find its 1X2 winner event.
+    Used as fallback when the bulk tag-based fetch didn't include the plain
+    winner event (they're often tagged differently from 'More Markets' events).
+    Excludes 'More Markets' events from results.
+    """
+    keyword = f"{home_en} {away_en}"
+    url = ('https://gamma-api.polymarket.com/events'
+           + '?' + urllib.parse.urlencode({'keyword': keyword, 'active': 'true', 'limit': '20'}))
+    data = api_get(url)
+    if not data:
+        return []
+    events = data if isinstance(data, list) else data.get('events', [])
+    # Exclude 'More Markets' events — we want the plain winner/moneyline event
+    return [ev for ev in events if 'more market' not in (ev.get('title') or '').lower()]
+
+
 def find_match_in_events(events: list, home: str, away: str) -> dict | None:
     home_en  = to_english(home)
     away_en  = to_english(away)
@@ -557,9 +578,6 @@ def find_match_in_events(events: list, home: str, away: str) -> dict | None:
     candidates = [ev for ev in events
                   if match_score((ev.get('title') or '').lower(), h_tokens, a_tokens) >= 2]
 
-    if not candidates:
-        return None
-
     # Prefer "More Markets" events (richer sub-market data) over simple events.
     # Tie-break: home team's full name must appear BEFORE "vs" in the title
     # (prevents e.g. "RCD Espanyol de Barcelona" matching when looking for "FC Barcelona").
@@ -568,21 +586,12 @@ def find_match_in_events(events: list, home: str, away: str) -> dict | None:
         prefix = title[:vs_pos] if vs_pos > 0 else title
         return home_full not in prefix
 
-    candidates.sort(key=lambda e: (
-        'more market' not in (e.get('title') or '').lower(),
-        len(e.get('markets') or []) == 0,
-        _home_not_in_prefix((e.get('title') or '').lower(), h_tokens[0]),
-    ))
-
-    # Debug: show all candidate events and their available data
-    print(f"    [{home_en} vs {away_en}] {len(candidates)} candidate(s):")
-    for ev in candidates[:5]:  # limit to first 5
-        title = ev.get('title') or ''
-        sub_mkts = [m.get('question','')[:50] for m in (ev.get('markets') or [])[:3]]
-        ev_out = _parse_list_field(ev.get('outcomes'))
-        print(f"      • {title[:70]}")
-        print(f"        sub-markets({len(ev.get('markets') or [])}): {sub_mkts}")
-        print(f"        ev-outcomes: {ev_out[:5]}")
+    if candidates:
+        candidates.sort(key=lambda e: (
+            'more market' not in (e.get('title') or '').lower(),
+            len(e.get('markets') or []) == 0,
+            _home_not_in_prefix((e.get('title') or '').lower(), h_tokens[0]),
+        ))
 
     # Merge prices from ALL candidate events — different events may hold different markets
     # (e.g. "More Markets" events have goals markets, separate events have 1X2 winner markets)
@@ -597,7 +606,25 @@ def find_match_in_events(events: list, home: str, away: str) -> dict | None:
                 if k not in merged_prices:  # first candidate wins per market
                     merged_prices[k] = v
 
-    print(f"    → merged markets: {list(merged_prices.keys())}")
+    # Fallback: if 1X2 result markets still missing, do a targeted keyword search
+    # for the winner event — bulk tag-fetch may have missed it (different tag assignment)
+    missing_result = RESULT_MARKETS - set(merged_prices.keys())
+    if missing_result:
+        print(f"    [{home_en} vs {away_en}] 1X2 missing ({missing_result}) — keyword fallback …")
+        extra_events = keyword_fetch_winner_events(home_en, away_en)
+        for ev in extra_events:
+            title = (ev.get('title') or '').lower()
+            if match_score(title, h_tokens, a_tokens) < 2:
+                continue
+            prices = event_prices(ev, home_en, away_en)
+            for k, v in prices.items():
+                if k not in merged_prices:
+                    merged_prices[k] = v
+                    print(f"    [{home_en} vs {away_en}] ✅ keyword fallback found {k} from '{ev.get('title')}'")
+            if first_ev is None and prices:
+                first_ev = ev
+
+    print(f"    [{home_en} vs {away_en}] → merged markets: {list(merged_prices.keys())}")
 
     if not merged_prices:
         return None
