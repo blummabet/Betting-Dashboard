@@ -197,26 +197,59 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
         print(f"  ❌ py-clob-client-v2 import error: {e}")
         sys.exit(1)
 
-    # API Credentials aus Env (einmalig generiert, als GitHub Secret gespeichert)
-    api_key        = os.environ.get("POLY_API_KEY", "").strip()
-    api_secret     = os.environ.get("POLY_API_SECRET", "").strip()
-    api_passphrase = os.environ.get("POLY_API_PASSPHRASE", "").strip()
+    # POLY_FUNDER_ADDRESS = Proxy-Wallet Adresse (optional, wenn auto-Derivierung scheitert)
+    # Zu finden auf polymarket.com/profile → URL enthält die Proxy-Wallet-Adresse
+    funder_addr = os.environ.get("POLY_FUNDER_ADDRESS", "").strip()
 
-    creds = ApiCreds(
-        api_key=api_key,
-        api_secret=api_secret,
-        api_passphrase=api_passphrase,
-    )
-
-    # POLY_PROXY = 1 in v2 (war 2 in v1) — nötig damit der CLOB das Proxy-Wallet
-    # des Users erkennt (dort liegt das USDC-Guthaben, nicht im EOA direkt)
-    client = ClobClient(
+    # POLY_PROXY = 1 in v2 — das Proxy-Wallet des Users (dort liegt das USDC-Guthaben)
+    # funder = Proxy-Wallet-Adresse; wenn nicht gesetzt versucht ClobClient sie selbst zu derivieren
+    client_kwargs: dict = dict(
         host=CLOB_HOST,
         key=private_key,
         chain_id=CHAIN_ID,
         signature_type=SignatureTypeV2.POLY_PROXY,
-        creds=creds,
     )
+    if funder_addr:
+        client_kwargs["funder"] = funder_addr
+
+    client = ClobClient(**client_kwargs)
+
+    # API Credentials für das Proxy-Wallet derivieren (deterministisch aus Private Key)
+    # NICHT gespeicherte EOA-Creds verwenden — die passen nicht zum Proxy-Wallet-Kontext
+    api_key = os.environ.get("POLY_API_KEY", "").strip()
+    creds = None
+
+    if api_key:
+        # Gespeicherte Creds vorhanden — verwenden (müssen für Proxy-Wallet generiert worden sein)
+        api_secret     = os.environ.get("POLY_API_SECRET", "").strip()
+        api_passphrase = os.environ.get("POLY_API_PASSPHRASE", "").strip()
+        creds = ApiCreds(api_key=api_key, api_secret=api_secret, api_passphrase=api_passphrase)
+        print(f"  🔑 Verwende gespeicherte API Creds (Key: {api_key[:8]}…)")
+    else:
+        # Keine gespeicherten Creds → frisch aus Private Key derivieren
+        print(f"  🔑 Deriviere API Creds aus Private Key…")
+        try:
+            creds_raw = client.derive_api_key()
+            if isinstance(creds_raw, ApiCreds):
+                creds = creds_raw
+            elif isinstance(creds_raw, dict):
+                creds = ApiCreds(
+                    api_key=creds_raw.get("key", creds_raw.get("apiKey", "")),
+                    api_secret=creds_raw.get("secret", ""),
+                    api_passphrase=creds_raw.get("passphrase", ""),
+                )
+            if creds:
+                print(f"  ✅ API Creds deriviert (Key: {creds.api_key[:8] if hasattr(creds, 'api_key') else '?'}…)")
+        except Exception as e:
+            print(f"  ⚠️  derive_api_key fehlgeschlagen: {e} — fahre ohne Creds fort")
+
+    if creds:
+        try:
+            client.set_api_creds(creds)
+        except AttributeError:
+            # In einigen v2-Versionen werden Creds direkt im Constructor gesetzt
+            client_kwargs["creds"] = creds
+            client = ClobClient(**client_kwargs)
 
     # create_and_post_market_order — offizieller v2-Weg
     try:
