@@ -192,7 +192,7 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
         from py_clob_client_v2.clob_types import (
             MarketOrderArgs, OrderType, ApiCreds, PartialCreateOrderOptions
         )
-        from py_clob_client_v2 import Side
+        from py_clob_client_v2 import Side, SignatureTypeV2
     except ImportError as e:
         print(f"  ❌ py-clob-client-v2 import error: {e}")
         sys.exit(1)
@@ -208,10 +208,13 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
         api_passphrase=api_passphrase,
     )
 
+    # POLY_PROXY = 1 in v2 (war 2 in v1) — nötig damit der CLOB das Proxy-Wallet
+    # des Users erkennt (dort liegt das USDC-Guthaben, nicht im EOA direkt)
     client = ClobClient(
         host=CLOB_HOST,
         key=private_key,
         chain_id=CHAIN_ID,
+        signature_type=SignatureTypeV2.POLY_PROXY,
         creds=creds,
     )
 
