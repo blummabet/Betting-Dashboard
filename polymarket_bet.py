@@ -215,16 +215,26 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
         creds=creds,
     )
 
-    # create_and_post_market_order — offizieller v2-Weg (kein manuelles sign + post mehr)
-    resp = client.create_and_post_market_order(
-        order_args=MarketOrderArgs(
-            token_id=token_id,
-            amount=amount_usdc,
-            side=Side.BUY,
-            order_type=OrderType.FOK,
-        ),
-        options=PartialCreateOrderOptions(tick_size="0.01"),
-    )
+    # create_and_post_market_order — offizieller v2-Weg
+    try:
+        from py_clob_client_v2.exceptions import PolyApiException
+    except ImportError:
+        PolyApiException = Exception
+
+    try:
+        resp = client.create_and_post_market_order(
+            order_args=MarketOrderArgs(
+                token_id=token_id,
+                amount=amount_usdc,
+                side=Side.BUY,
+                order_type=OrderType.FOK,
+            ),
+            options=PartialCreateOrderOptions(tick_size="0.01"),
+        )
+    except PolyApiException as e:
+        return {"status": "failed", "orderId": None, "error": str(e)}
+    except Exception as e:
+        return {"status": "failed", "orderId": None, "error": str(e)}
 
     if resp and resp.get("success"):
         return {
