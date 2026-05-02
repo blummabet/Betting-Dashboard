@@ -33,7 +33,7 @@ jobs:
           $PYTHON -m pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
           $PYTHON -m pip install --break-system-packages requests 2>&1 | tail -2
           $PYTHON -m pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
-          $PYTHON -c "from py_clob_client.client import ClobClient; print('✅ py-clob-client-v2 ok')"
+          $PYTHON -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
 
       - name: Place Polymarket orders
         env:

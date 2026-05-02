@@ -187,18 +187,18 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
     Returns dict with orderId and status.
     """
     try:
-        from py_clob_client.client import ClobClient
-        from py_clob_client.clob_types import MarketOrderArgs, OrderType
+        from py_clob_client_v2.client import ClobClient
+        from py_clob_client_v2.clob_types import MarketOrderArgs, OrderType
     except ImportError:
-        print("  ❌ py-clob-client not installed. Run: pip install py-clob-client")
+        print("  ❌ py-clob-client-v2 not installed.")
         sys.exit(1)
 
     # BUY constant — location varies across py-clob-client versions
     try:
-        from py_clob_client.clob_types import BUY
+        from py_clob_client_v2.clob_types import BUY
     except ImportError:
         try:
-            from py_clob_client.constants import BUY
+            from py_clob_client_v2.constants import BUY
         except ImportError:
             BUY = "BUY"  # string fallback (accepted by all versions)
 
@@ -208,7 +208,7 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
     api_passphrase = os.environ.get("POLY_API_PASSPHRASE", "").strip()
 
     try:
-        from py_clob_client.clob_types import ApiCreds
+        from py_clob_client_v2.clob_types import ApiCreds
         creds = ApiCreds(
             api_key=api_key,
             api_secret=api_secret,
