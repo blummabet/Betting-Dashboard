@@ -150,14 +150,26 @@ function oddsApiFetchAlt(sportKey) {
       res.on('data', chunk => body += chunk);
       res.on('end', () => {
         try {
-          if (res.statusCode !== 200) { resolve({ data: [] }); return; }
+          if (res.statusCode !== 200) {
+            // Log the actual error so we know WHY markets are missing (422=bad market key, 401=plan, etc.)
+            const errSnippet = body.slice(0, 300).replace(/\n/g, ' ');
+            console.warn(`  [OddsAPI Alt] ${sportKey}: HTTP ${res.statusCode} — ${errSnippet}`);
+            resolve({ data: [] }); return;
+          }
           const data = JSON.parse(body);
-          resolve({ data: Array.isArray(data) ? data : [] });
-        } catch(e) { resolve({ data: [] }); }
+          if (!Array.isArray(data)) {
+            console.warn(`  [OddsAPI Alt] ${sportKey}: non-array response — ${JSON.stringify(data).slice(0,200)}`);
+            resolve({ data: [] }); return;
+          }
+          resolve({ data });
+        } catch(e) {
+          console.warn(`  [OddsAPI Alt] ${sportKey}: parse error — ${e.message}`);
+          resolve({ data: [] });
+        }
       });
     });
-    req.on('error', () => resolve({ data: [] }));
-    req.setTimeout(15000, () => { req.destroy(); resolve({ data: [] }); });
+    req.on('error', (e) => { console.warn(`  [OddsAPI Alt] ${sportKey}: network error — ${e.message}`); resolve({ data: [] }); });
+    req.setTimeout(15000, () => { req.destroy(); console.warn(`  [OddsAPI Alt] ${sportKey}: timeout`); resolve({ data: [] }); });
     req.end();
   });
 }
@@ -182,8 +194,8 @@ function oddsApiFetchHT(sportKey) {
         } catch(e) { resolve([]); }
       });
     });
-    req.on('error', () => resolve([]));
-    req.setTimeout(15000, () => { req.destroy(); resolve([]); });
+    req.on('error', (e) => { console.warn(`  [OddsAPI HT] ${sportKey}: network error — ${e.message}`); resolve([]); });
+    req.setTimeout(15000, () => { req.destroy(); console.warn(`  [OddsAPI HT] ${sportKey}: timeout`); resolve([]); });
     req.end();
   });
 }
@@ -201,14 +213,18 @@ function oddsApiFetchHTBtts(sportKey) {
       res.on('data', chunk => body += chunk);
       res.on('end', () => {
         try {
-          if (res.statusCode !== 200) { resolve([]); return; }
+          if (res.statusCode !== 200) {
+            const errSnippet = body.slice(0, 200).replace(/\n/g, ' ');
+            console.warn(`  [OddsAPI HTBtts] ${sportKey}: HTTP ${res.statusCode} — ${errSnippet}`);
+            resolve([]); return;
+          }
           const data = JSON.parse(body);
           resolve(Array.isArray(data) ? data : []);
         } catch(e) { resolve([]); }
       });
     });
-    req.on('error', () => resolve([]));
-    req.setTimeout(15000, () => { req.destroy(); resolve([]); });
+    req.on('error', (e) => { console.warn(`  [OddsAPI HTBtts] ${sportKey}: network error — ${e.message}`); resolve([]); });
+    req.setTimeout(15000, () => { req.destroy(); console.warn(`  [OddsAPI HTBtts] ${sportKey}: timeout`); resolve([]); });
     req.end();
   });
 }
@@ -226,14 +242,25 @@ function oddsApiFetchBtts(sportKey) {
       res.on('data', chunk => body += chunk);
       res.on('end', () => {
         try {
-          if (res.statusCode !== 200) { resolve([]); return; }
+          if (res.statusCode !== 200) {
+            const errSnippet = body.slice(0, 300).replace(/\n/g, ' ');
+            console.warn(`  [OddsAPI BTTS] ${sportKey}: HTTP ${res.statusCode} — ${errSnippet}`);
+            resolve([]); return;
+          }
           const data = JSON.parse(body);
-          resolve(Array.isArray(data) ? data : []);
-        } catch(e) { resolve([]); }
+          if (!Array.isArray(data)) {
+            console.warn(`  [OddsAPI BTTS] ${sportKey}: non-array — ${JSON.stringify(data).slice(0,200)}`);
+            resolve([]); return;
+          }
+          resolve(data);
+        } catch(e) {
+          console.warn(`  [OddsAPI BTTS] ${sportKey}: parse error — ${e.message}`);
+          resolve([]);
+        }
       });
     });
-    req.on('error', () => resolve([]));
-    req.setTimeout(15000, () => { req.destroy(); resolve([]); });
+    req.on('error', (e) => { console.warn(`  [OddsAPI BTTS] ${sportKey}: network error — ${e.message}`); resolve([]); });
+    req.setTimeout(15000, () => { req.destroy(); console.warn(`  [OddsAPI BTTS] ${sportKey}: timeout`); resolve([]); });
     req.end();
   });
 }
