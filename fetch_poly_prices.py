@@ -468,25 +468,33 @@ def extract_outcome_price(market: str, question: str, outcomes: list,
     # Helper: index of Yes outcome (binary markets use Yes/No instead of team names)
     yes_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'), -1)
 
-    home_in_q = any(t in q for t in home_tokens)
-    away_in_q = any(t in q for t in away_tokens)
+    def _binary_winner(q_str: str) -> str | None:
+        """For 'Will X beat/win/defeat Y?' questions return 'home', 'away', or None."""
+        import re
+        m = re.search(r'\bwill\s+(.{2,40}?)\s+(?:beat|win\b|defeat)', q_str)
+        if m:
+            subject = m.group(1)
+            if any(t in subject for t in home_tokens):
+                return 'home'
+            if any(t in subject for t in away_tokens):
+                return 'away'
+        return None
 
     if market == 'Heimsieg':
         # Try named outcome first ("Leeds United FC", "Home", etc.)
         idx = next((i for i, o in enumerate(outcomes)
                     if any(t in str(o).lower() for t in home_tokens)), -1)
-        # Fallback: binary "Will [HomeTeam] win?" → Yes = home win
-        # Only if HOME team is in the question but AWAY team is NOT
-        # (prevents general "Leeds vs Burnley" questions matching both)
-        if idx < 0 and yes_idx >= 0 and home_in_q and not away_in_q:
+        # Fallback: binary "Will [HomeTeam] beat/win?" → Yes = home win
+        # Use subject-detection so "Will Barcelona beat Osasuna?" matches home only
+        if idx < 0 and yes_idx >= 0 and _binary_winner(q) == 'home':
             idx = yes_idx
         return _safe_float(prices[idx]) if idx >= 0 else None
 
     if market == 'Auswärtssieg':
         idx = next((i for i, o in enumerate(outcomes)
                     if any(t in str(o).lower() for t in away_tokens)), -1)
-        # Only if AWAY team is in the question but HOME team is NOT
-        if idx < 0 and yes_idx >= 0 and away_in_q and not home_in_q:
+        # Fallback: binary "Will [AwayTeam] beat/win?" → Yes = away win
+        if idx < 0 and yes_idx >= 0 and _binary_winner(q) == 'away':
             idx = yes_idx
         return _safe_float(prices[idx]) if idx >= 0 else None
 
@@ -525,13 +533,13 @@ def event_prices(ev: dict, home_en: str, away_en: str) -> dict:
         if outcomes and len(outcomes) == len(prices):
             _try(q, outcomes, prices)
 
-    # 2. Event-level outcomes (simple single-market events)
-    if not found:
-        ev_outcomes = _parse_list_field(ev.get('outcomes'))
-        ev_prices   = _parse_list_field(ev.get('outcomePrices'))
-        ev_q        = (ev.get('title') or ev.get('question') or '').lower()
-        if ev_outcomes and len(ev_outcomes) == len(ev_prices):
-            _try(ev_q, ev_outcomes, ev_prices)
+    # 2. Event-level outcomes (simple single-market events or 1X2 winner events)
+    # Always try event-level — "More Markets" events may not have 1X2 but a sibling event does
+    ev_outcomes = _parse_list_field(ev.get('outcomes'))
+    ev_prices   = _parse_list_field(ev.get('outcomePrices'))
+    ev_q        = (ev.get('title') or ev.get('question') or '').lower()
+    if ev_outcomes and len(ev_outcomes) == len(ev_prices):
+        _try(ev_q, ev_outcomes, ev_prices)
 
     return found
 
@@ -562,19 +570,30 @@ def find_match_in_events(events: list, home: str, away: str) -> dict | None:
         _home_not_in_prefix((e.get('title') or '').lower(), h_tokens[0]),
     ))
 
+    # Merge prices from ALL candidate events — different events may hold different markets
+    # (e.g. "More Markets" events have goals markets, separate events have 1X2 winner markets)
+    merged_prices: dict = {}
+    first_ev = None
     for ev in candidates:
         prices = event_prices(ev, home_en, away_en)
         if prices:
-            slug = ev.get('slug') or ''
-            url  = f"https://polymarket.com/event/{slug}" if slug else "https://polymarket.com/"
-            return {
-                'found':      True,
-                'eventTitle': ev.get('title', ''),
-                'eventUrl':   url,
-                'markets':    prices,
-            }
+            if first_ev is None:
+                first_ev = ev
+            for k, v in prices.items():
+                if k not in merged_prices:  # first candidate wins per market
+                    merged_prices[k] = v
 
-    return None
+    if not merged_prices:
+        return None
+
+    slug = first_ev.get('slug') or ''
+    url  = f"https://polymarket.com/event/{slug}" if slug else "https://polymarket.com/"
+    return {
+        'found':      True,
+        'eventTitle': first_ev.get('title', ''),
+        'eventUrl':   url,
+        'markets':    merged_prices,
+    }
 
 
 # ── Main ─────────────────────────────────────────────────

@@ -588,16 +588,18 @@ function renderPolyStats() {
 
   const recent = [...bets].reverse().slice(0, 15);
   const rows   = recent.length === 0
-    ? `<tr><td colspan="5" style="text-align:center;color:#8b949e;padding:28px;font-size:13px">Noch keine Bets gespeichert</td></tr>`
+    ? `<tr><td colspan="6" style="text-align:center;color:#8b949e;padding:28px;font-size:13px">Noch keine Bets gespeichert</td></tr>`
     : recent.map((b, i) => {
-        const resIcon  = b.result === 'won'  ? '✅' : b.result === 'lost' ? '❌' : b.result === 'void' ? '—' : '⏳';
-        const resColor = b.result === 'won'  ? '#3fb950' : b.result === 'lost' ? '#f85149' : '#8b949e';
-        const pricePct = b.polyPrice ? `${Math.round(b.polyPrice * 100)}¢` : '—';
+        const resIcon   = b.result === 'won'  ? '✅' : b.result === 'lost' ? '❌' : b.result === 'void' ? '—' : '⏳';
+        const resColor  = b.result === 'won'  ? '#3fb950' : b.result === 'lost' ? '#f85149' : '#8b949e';
+        const pricePct  = b.polyPrice ? `${Math.round(b.polyPrice * 100)}¢` : '—';
+        const methIcon  = b.method === 'auto' ? '<span title="Auto via GitHub Action">🤖</span>' : '<span title="Manuell platziert">✋</span>';
         return `<tr style="border-bottom:1px solid #30363d">
           <td style="padding:9px 12px;font-size:11px;color:#8b949e">${b.date}</td>
           <td style="padding:9px 12px;font-size:12px">${b.home} vs ${b.away}</td>
           <td style="padding:9px 12px;font-size:12px;color:${_marketColor(b.market)}">${b.market}</td>
           <td style="padding:9px 12px;font-size:12px;color:#a78bfa">${pricePct}</td>
+          <td style="padding:9px 12px;font-size:14px;text-align:center">${methIcon}</td>
           <td style="padding:9px 12px;color:${resColor};font-weight:700">${resIcon}</td>
         </tr>`;
       }).join('');
@@ -623,6 +625,7 @@ function renderPolyStats() {
             <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Spiel</th>
             <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Markt</th>
             <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Preis</th>
+            <th style="padding:8px 12px;text-align:center;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Via</th>
             <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Result</th>
           </tr>
         </thead>
@@ -651,6 +654,7 @@ function polyMarkPlaced() {
       stake:     POLY_STAKE,
       polyPrice: pd?.found ? pd.price : null,
       placed:    new Date().toISOString(),
+      method:    'manual',
       result:    null,
     });
   }
@@ -884,6 +888,7 @@ async function polyDispatch() {
         stake:     POLY_STAKE,
         polyPrice: pd?.found ? pd.price : null,
         placed:    new Date().toISOString(),
+        method:    'auto',
         result:    null,
       });
     }
@@ -916,6 +921,7 @@ function polySavePending() {
       stake:      POLY_STAKE,
       polyPrice:  pd?.found ? pd.price : null,
       placed:     new Date().toISOString(),
+      method:     'manual',
       result:     null,
     });
   }
