@@ -183,59 +183,48 @@ def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> 
 
 def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> dict:
     """
-    Place a market buy order on Polymarket CLOB.
+    Place a market buy order on Polymarket CLOB v2.
+    Uses create_and_post_market_order (py-clob-client-v2 API).
     Returns dict with orderId and status.
     """
     try:
         from py_clob_client_v2.client import ClobClient
-        from py_clob_client_v2.clob_types import MarketOrderArgs, OrderType
-    except ImportError:
-        print("  ❌ py-clob-client-v2 not installed.")
+        from py_clob_client_v2.clob_types import (
+            MarketOrderArgs, OrderType, ApiCreds, PartialCreateOrderOptions
+        )
+        from py_clob_client_v2 import Side
+    except ImportError as e:
+        print(f"  ❌ py-clob-client-v2 import error: {e}")
         sys.exit(1)
-
-    # BUY constant — location varies across py-clob-client versions
-    try:
-        from py_clob_client_v2.clob_types import BUY
-    except ImportError:
-        try:
-            from py_clob_client_v2.constants import BUY
-        except ImportError:
-            BUY = "BUY"  # string fallback (accepted by all versions)
 
     # API Credentials aus Env (einmalig generiert, als GitHub Secret gespeichert)
     api_key        = os.environ.get("POLY_API_KEY", "").strip()
     api_secret     = os.environ.get("POLY_API_SECRET", "").strip()
     api_passphrase = os.environ.get("POLY_API_PASSPHRASE", "").strip()
 
-    try:
-        from py_clob_client_v2.clob_types import ApiCreds
-        creds = ApiCreds(
-            api_key=api_key,
-            api_secret=api_secret,
-            api_passphrase=api_passphrase,
-        )
-    except ImportError:
-        creds = None
+    creds = ApiCreds(
+        api_key=api_key,
+        api_secret=api_secret,
+        api_passphrase=api_passphrase,
+    )
 
     client = ClobClient(
         host=CLOB_HOST,
         key=private_key,
         chain_id=CHAIN_ID,
-        signature_type=2,   # POLY_PROXY — Standard seit CLOB V2 (April 2026)
         creds=creds,
     )
 
-    if not creds:
-        derived = client.create_or_derive_api_creds()
-        client.set_api_creds(derived)
-
-    order_args = MarketOrderArgs(
-        token_id=token_id,
-        amount=amount_usdc,
-        side=BUY,
+    # create_and_post_market_order — offizieller v2-Weg (kein manuelles sign + post mehr)
+    resp = client.create_and_post_market_order(
+        order_args=MarketOrderArgs(
+            token_id=token_id,
+            amount=amount_usdc,
+            side=Side.BUY,
+            order_type=OrderType.FOK,
+        ),
+        options=PartialCreateOrderOptions(tick_size="0.01"),
     )
-    signed_order = client.create_market_order(order_args)
-    resp = client.post_order(signed_order, OrderType.FOK)
 
     if resp and resp.get("success"):
         return {
@@ -243,7 +232,7 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
             "orderId": resp.get("orderID") or resp.get("id") or "unknown",
             "error":   None,
         }
-    err = resp.get("errorMsg") or resp.get("error") or str(resp)
+    err = (resp or {}).get("errorMsg") or (resp or {}).get("error") or str(resp)
     return {"status": "failed", "orderId": None, "error": err}
 
 
