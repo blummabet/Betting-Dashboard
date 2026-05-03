@@ -1084,6 +1084,52 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
     const modsHtml = (p.mods?.length) ? `<div class="pick-mods">${p.mods.join('')}</div>` : '';
 
+    // ── Opening → Current odds drift per pick ─────────────────────────────────
+    // Maps pick market → odds key in odds_open / current odds object.
+    // Only shows when odds_open exists AND the relevant key is present in both snapshots.
+    // Green = line shortened (market moved our way = positive CLV signal).
+    // Red   = line lengthened (market moved against us = negative CLV signal).
+    let driftHtml = '';
+    if (_oddsOpen && oddsNum != null && !p.oddsIsEst) {
+      const mktL = (p.market || '').toLowerCase();
+      const _oddsKey = mktL.includes('heimsieg') || mktL.includes('dnb: heim') || mktL.includes('1x')  ? 'hw'
+        : mktL.includes('auswärtssieg') || mktL.includes('dnb: ausw') || mktL.includes('x2')           ? 'aw'
+        : mktL.includes('unentschieden') || mktL.includes('remis')                                       ? 'dr'
+        : mktL.includes('over 2.5') || mktL.includes('over 3') || mktL === 'über 2.5'                   ? 'o25'
+        : mktL.includes('under 2.5') || mktL.includes('unter 2.5')                                       ? 'u25'
+        : mktL.includes('over 3.5') || mktL.includes('über 3.5')                                         ? 'o35'
+        : mktL.includes('btts') || mktL.includes('beide teams treffen')                                  ? 'btts'
+        : mktL.startsWith('ah heim')                                                                      ? 'ah_h'
+        : mktL.startsWith('ah ausw')                                                                      ? 'ah_a'
+        : null;
+      const _openOdds = _oddsKey ? parseFloat(_oddsOpen[_oddsKey]) : null;
+      if (_openOdds && _openOdds > 1 && oddsNum > 1 && Math.abs(_openOdds - oddsNum) > 0.01) {
+        const _openImpl = 1 / _openOdds;
+        const _currImpl = 1 / oddsNum;
+        const _ppDrift  = Math.round((_currImpl - _openImpl) * 100);  // +pp = line shortened (bookie raised prob)
+        if (Math.abs(_ppDrift) >= 2) {
+          // Positive ppDrift = implied prob went UP = odds shortened = market moved AGAINST our pick (bad CLV signal)
+          // But for our pick odds: if our odds > opening odds → line shortened → bad. if our odds < opening → good.
+          // CLV: we want OUR odds > closing odds. Here: _openOdds is opening, oddsNum is current (proxy for closing).
+          // If oddsNum > _openOdds → odds LENGTHENED = market disagrees more → BAD for us
+          // If oddsNum < _openOdds → odds SHORTENED = market moved our way → GOOD for us (positive CLV signal)
+          const _clvPositive = oddsNum < _openOdds;  // line shortened = market confirmed our view
+          const _driftColor  = _clvPositive ? '#3fb950' : '#f85149';
+          const _driftArrow  = _clvPositive ? '↘' : '↗';
+          const _ppLabel     = (_ppDrift > 0 ? '+' : '') + _ppDrift + 'pp';
+          const _clvNote     = _clvPositive ? ' CLV+' : '';
+          const _openTs      = _pm?.odds_open_ts ? new Date(_pm.odds_open_ts).toLocaleDateString('de-AT', {day:'2-digit', month:'2-digit'}) : null;
+          const _tsNote      = _openTs ? ` (seit ${_openTs})` : '';
+          driftHtml = `<div class="pick-odds-drift">
+            <span style="color:#8b949e;font-size:10px;">Opening${_tsNote}:</span>
+            <span style="font-size:10px;color:#8b949e;">${_openOdds.toFixed(2)}</span>
+            <span style="color:#444d56;font-size:10px;">→ Aktuell:</span>
+            <span style="font-size:10px;font-weight:600;color:${_driftColor};">${oddsNum.toFixed(2)} ${_driftArrow} <span title="${_ppLabel} Verschiebung seit Opening">${_ppLabel}${_clvNote}</span></span>
+          </div>`;
+        }
+      }
+    }
+
     // ── Tactical booking hint (card picks only) ───────────────────────────────
     // When players are one yellow from suspension, they may play more aggressively
     // in this match — relevant signal for card market picks.
@@ -1132,6 +1178,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
         <div class="pick-market">${_topBadge}<span class="pick-conf ${confClass}">${confLabel}</span><span>${p.market}</span>${oddsTag}${lowWarn}${valueTag}</div>
         ${altHtml}
         ${fairOddsHtml}
+        ${driftHtml}
         ${modsHtml}
         <div class="pick-reason">${p.reason}${_tacBookHint}</div>
       </div>

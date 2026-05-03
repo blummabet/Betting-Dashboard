@@ -521,6 +521,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   letter-spacing:.2px;white-space:nowrap;
 }
 .pick-reason{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.55;}
+.pick-odds-drift{display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap;}
 .pick-alt{font-size:11px;margin-top:6px;padding:5px 8px;border-radius:6px;line-height:1.5;}
 .pick-alt.safer{
   background:rgba(63,185,80,.13);
@@ -1748,6 +1749,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
   <!-- Score + Confidence Breakdown -->
   <div id="scoreBreakdown" style="margin-bottom:24px;"></div>
+
+  <!-- CLV (Closing Line Value) Tracking -->
+  <div id="clvStats" style="margin-bottom:24px;"></div>
 
   <!-- Charts row -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;" id="chartsRow">
@@ -4085,6 +4089,96 @@ function renderResultsStats() {
         </div>
       </div>
     </div>`;
+
+  // ── CLV (Closing Line Value) Section ─────────────────────────────────────
+  const clvEl = document.getElementById('clvStats');
+  if (!clvEl) return;
+
+  // CLV proxy: compare pick.odds (our entry price) vs odds_open from prematch data.
+  // True CLV = entry odds vs CLOSING odds. Since we don't have closing odds in history yet,
+  // we use opening odds (odds_open) as reference: if line shortened since opening,
+  // market confirmed our direction = positive CLV signal.
+  // For resolved picks: we compute whether our pick odds were above/below market opening.
+  //   pick.odds > odds_open  → odds lengthened since opening  = NEGATIVE CLV (market disagrees)
+  //   pick.odds < odds_open  → odds shortened  since opening  = POSITIVE CLV (market confirmed)
+  // Note: This only works for picks where odds_open is stored AND pick.odds is available.
+  // Proper CLV tracking (vs true closing odds) will be added when resolve_picks.py captures closing odds.
+
+  const _clvResolved = resolvedSorted.filter(p => p.odds != null && p.odds_open != null);
+  const _clvPos = _clvResolved.filter(p => p.odds < p.odds_open);   // line shortened = CLV+
+  const _clvNeg = _clvResolved.filter(p => p.odds > p.odds_open);   // line lengthened = CLV-
+  const _clvPosWr = (_clvPos.filter(p => p.result === 'win').length + _clvPos.filter(p => p.result === 'loss').length) > 0
+    ? Math.round(_clvPos.filter(p => p.result === 'win').length / (_clvPos.filter(p => p.result === 'win').length + _clvPos.filter(p => p.result === 'loss').length) * 100)
+    : null;
+  const _clvNegWr = (_clvNeg.filter(p => p.result === 'win').length + _clvNeg.filter(p => p.result === 'loss').length) > 0
+    ? Math.round(_clvNeg.filter(p => p.result === 'win').length / (_clvNeg.filter(p => p.result === 'win').length + _clvNeg.filter(p => p.result === 'loss').length) * 100)
+    : null;
+
+  // Avg CLV pp = avg (implied_prob_entry - implied_prob_open)
+  const _clvVals = _clvResolved.map(p => {
+    const _impEntry = 1 / p.odds;
+    const _impOpen  = 1 / p.odds_open;
+    return Math.round((_impOpen - _impEntry) * 100);  // positive = entry better than open (CLV+)
+  });
+  const _avgClv = _clvVals.length > 0 ? (_clvVals.reduce((a, b) => a + b, 0) / _clvVals.length).toFixed(1) : null;
+
+  // Picks with real bookie odds (quality proxy)
+  const _realOddsPicks = resolvedSorted.filter(p => p.odds != null);
+  const _realOddsWr   = (_realOddsPicks.filter(p => p.result === 'win').length > 0 || _realOddsPicks.filter(p => p.result === 'loss').length > 0)
+    ? Math.round(_realOddsPicks.filter(p => p.result === 'win').length / (_realOddsPicks.filter(p => p.result === 'win').length + _realOddsPicks.filter(p => p.result === 'loss').length) * 100)
+    : null;
+  const _noOddsWr   = resolvedSorted.filter(p => p.odds == null).length > 0 && (resolvedSorted.filter(p => p.odds == null && p.result === 'win').length + resolvedSorted.filter(p => p.odds == null && p.result === 'loss').length) > 0
+    ? Math.round(resolvedSorted.filter(p => p.odds == null && p.result === 'win').length / (resolvedSorted.filter(p => p.odds == null && p.result === 'win').length + resolvedSorted.filter(p => p.odds == null && p.result === 'loss').length) * 100)
+    : null;
+
+  const _hasCLVData = _clvResolved.length > 0;
+  const _clvPct     = _clvResolved.length > 0 ? Math.round(_clvPos.length / _clvResolved.length * 100) : null;
+
+  clvEl.innerHTML = `
+    <div style="background:#0d1117;border:1px solid var(--border);border-radius:14px;padding:18px;">
+      <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.6px;text-transform:uppercase;margin-bottom:14px;">📈 CLV — Closing Line Value</div>
+      ${_hasCLVData ? `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px;">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:${_avgClv >= 0 ? '#3fb950' : '#f85149'};">${_avgClv !== null ? (_avgClv >= 0 ? '+' : '') + _avgClv + 'pp' : '—'}</div>
+            <div style="font-size:11px;color:var(--muted);">Ø CLV (vs Opening)</div>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:${_clvPct >= 50 ? '#3fb950' : '#f85149'};">${_clvPct !== null ? _clvPct + '%' : '—'}</div>
+            <div style="font-size:11px;color:var(--muted);">Picks mit CLV+</div>
+          </div>
+          ${_clvPosWr !== null ? `<div style="background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.3);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:#3fb950;">${_clvPosWr}%</div>
+            <div style="font-size:11px;color:var(--muted);">Win Rate CLV+ (${_clvPos.length} Picks)</div>
+          </div>` : ''}
+          ${_clvNegWr !== null ? `<div style="background:rgba(248,81,73,.07);border:1px solid rgba(248,81,73,.3);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:#f85149;">${_clvNegWr}%</div>
+            <div style="font-size:11px;color:var(--muted);">Win Rate CLV− (${_clvNeg.length} Picks)</div>
+          </div>` : ''}
+        </div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.6;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:8px;">
+          ℹ️ CLV wird berechnet als Differenz: Opening-Wahrscheinlichkeit − Einstiegs-Wahrscheinlichkeit (unsere Quote).<br>
+          CLV+ bedeutet: die Linie ist nach unserem Pick kürzer geworden → Markt hat unsere Einschätzung bestätigt.<br>
+          <strong>Daten mit Opening-Odds:</strong> ${_clvResolved.length} von ${resolvedSorted.length} erledigten Picks. Echtes CLV (vs. Closing) folgt wenn resolve_picks.py Closing-Quoten erfasst.
+        </div>
+      ` : `
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px;">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:${_realOddsWr >= 55 ? '#3fb950' : _realOddsWr >= 45 ? '#e3b341' : _realOddsWr !== null ? '#f85149' : '#8b949e'};">${_realOddsWr !== null ? _realOddsWr + '%' : '—'}</div>
+            <div style="font-size:11px;color:var(--muted);">Win Rate (mit Bookie-Quote)</div>
+          </div>
+          ${_noOddsWr !== null ? `<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:800;color:${_noOddsWr >= 55 ? '#3fb950' : _noOddsWr >= 45 ? '#e3b341' : '#f85149'};">${_noOddsWr}%</div>
+            <div style="font-size:11px;color:var(--muted);">Win Rate (keine Quote)</div>
+          </div>` : ''}
+        </div>
+        <div style="font-size:10px;color:var(--muted);line-height:1.6;padding:8px 12px;background:rgba(255,255,255,.03);border-radius:8px;">
+          ℹ️ CLV-Tracking wird aktiv sobald picks_history Opening-Odds enthält.<br>
+          Aktuell: Picks mit Bookie-Quote zeigen tendenziell bessere Ergebnisse (Marktvalidierung).<br>
+          Echtes CLV (Opening vs. Closing) folgt wenn resolve_picks.py Closing-Quoten erfasst.
+        </div>
+      `}
+    </div>`;
 }
 
 // ── Charts ──────────────────────────────────────────────
@@ -5720,6 +5814,7 @@ async function loadPreMatchData() {
               isFinished:     sf.isFinished     || false,
               odds:           sf.odds           || null,
               odds_open:      sf.odds_open      || null,
+              odds_open_ts:   sf.odds_open_ts   || null,
               time:           sf.time           || null,
               apiPrediction:  sf.apiPrediction  || null
             };
@@ -5777,6 +5872,7 @@ async function loadPreMatchData() {
               isFinished:     sf.isFinished     || false,
               odds:           sf.odds           || null,
               odds_open:      sf.odds_open      || null,
+              odds_open_ts:   sf.odds_open_ts   || null,
               apiPrediction:  sf.apiPrediction  || null
             };
           }

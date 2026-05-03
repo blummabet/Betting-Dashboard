@@ -288,6 +288,47 @@ function parseTheOddsEvent(oddsEvent) {
     r.o25_cn   = _ouSamples.length;
   }
 
+  // ── Pass 1c: Pinnacle-only devigged odds (purest FV signal) ───────────────
+  // Stored separately so pick-engine can prefer them over consensus when available.
+  // pinn_hw_fair / pinn_o25_fair = Pinnacle devigged (no blending with other books)
+  const _pinnBkr = books.find(b => b.key === 'pinnacle');
+  if (_pinnBkr) {
+    const _r2p = x => Math.round(x * 100) / 100;
+    // 1X2
+    const _pinnH2H = (_pinnBkr.markets || []).find(m => m.key === 'h2h');
+    if (_pinnH2H) {
+      let _phw = null, _pdr = null, _paw = null;
+      for (const o of (_pinnH2H.outcomes || [])) {
+        const nm = normTeam(o.name);
+        if      (nm === hTeam || hTeam.includes(nm) || nm.includes(hTeam)) _phw = o.price;
+        else if (nm === aTeam || aTeam.includes(nm) || nm.includes(aTeam)) _paw = o.price;
+        else _pdr = o.price;
+      }
+      if (_phw && _pdr && _paw) {
+        r.pinn_hw = _phw; r.pinn_dr = _pdr; r.pinn_aw = _paw;
+        const _pt = 1/_phw + 1/_pdr + 1/_paw;
+        r.pinn_hw_fair = _r2p(_pt / (1/_phw));
+        r.pinn_dr_fair = _r2p(_pt / (1/_pdr));
+        r.pinn_aw_fair = _r2p(_pt / (1/_paw));
+      }
+    }
+    // O/U 2.5
+    const _pinnTot = (_pinnBkr.markets || []).find(m => m.key === 'totals');
+    if (_pinnTot) {
+      let _po25 = null, _pu25 = null;
+      for (const o of (_pinnTot.outcomes || [])) {
+        if      (o.name === 'Over'  && Math.abs(o.point - 2.5) < 0.01) _po25 = o.price;
+        else if (o.name === 'Under' && Math.abs(o.point - 2.5) < 0.01) _pu25 = o.price;
+      }
+      if (_po25 && _pu25) {
+        r.pinn_o25 = _po25; r.pinn_u25 = _pu25;
+        const _pt2 = 1/_po25 + 1/_pu25;
+        r.pinn_o25_fair = _r2p(_pt2 / (1/_po25));
+        r.pinn_u25_fair = _r2p(_pt2 / (1/_pu25));
+      }
+    }
+  }
+
   // ── Pass 2: primary market values ─────────────────────────────────────────
   for (const bkr of sorted) {
     for (const mkt of (bkr.markets || [])) {
@@ -1509,23 +1550,41 @@ if (WRITE_MODE) {
     .then(fixtures => {
       const outPath = path.join(__dirname, 'prematch-data.json');
 
-      // ── Preserve odds_open from previous run ──────────────────────────────
+      // ── Preserve odds_open + odds_open_ts from previous run ──────────────
       // odds_open is set once (first time we see a fixture with odds) and never overwritten.
-      // This creates a permanent opening-line snapshot for line movement detection.
-      const prevOddsOpen = {};
+      // This creates a permanent opening-line snapshot for CLV + line movement detection.
+      // odds_open_ts = ISO timestamp of when the opening snapshot was first captured.
+      const prevOddsOpen   = {};
+      const prevOddsOpenTs = {};
       try {
         const prev = JSON.parse(fs.readFileSync(outPath, 'utf8'));
         for (const fx of (prev.fixtures || [])) {
-          if (fx.fixtureId && fx.odds_open) prevOddsOpen[fx.fixtureId] = fx.odds_open;
+          if (fx.fixtureId && fx.odds_open) {
+            prevOddsOpen[fx.fixtureId]   = fx.odds_open;
+            prevOddsOpenTs[fx.fixtureId] = fx.odds_open_ts || null;
+          }
         }
         console.log(`[GitHub Actions] odds_open: ${Object.keys(prevOddsOpen).length} Opening-Snapshots aus vorherigem Run geladen`);
       } catch(e) {
         console.log('[GitHub Actions] odds_open: Kein vorheriger Run gefunden (erster Lauf oder Datei fehlt)');
       }
+      const _now = new Date().toISOString();
       for (const fx of fixtures) {
         if (fx.odds && Object.keys(fx.odds).length > 0) {
-          // Keep existing opening snapshot, or set current odds as baseline (first time)
-          fx.odds_open = prevOddsOpen[fx.fixtureId] || { ...fx.odds };
+          if (prevOddsOpen[fx.fixtureId]) {
+            // Restore existing snapshot + timestamp
+            fx.odds_open    = prevOddsOpen[fx.fixtureId];
+            fx.odds_open_ts = prevOddsOpenTs[fx.fixtureId] || _now;
+          } else {
+            // First time we see odds → set opening snapshot with timestamp
+            fx.odds_open    = { ...fx.odds };
+            fx.odds_open_ts = _now;
+            // Also snapshot Pinnacle-specific values if available
+            if (fx.odds.pinn_hw_fair) fx.odds_open.pinn_hw_fair = fx.odds.pinn_hw_fair;
+            if (fx.odds.pinn_o25_fair) fx.odds_open.pinn_o25_fair = fx.odds.pinn_o25_fair;
+            if (fx.odds.pinn_hw) fx.odds_open.pinn_hw = fx.odds.pinn_hw;
+            if (fx.odds.pinn_o25) fx.odds_open.pinn_o25 = fx.odds.pinn_o25;
+          }
         }
       }
       // ─────────────────────────────────────────────────────────────────────

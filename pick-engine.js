@@ -379,12 +379,19 @@ function getBettingPicks(match, odds, leagueKey) {
   // This corrects the single-cap model that was tuned on mid-scoring leagues.
   const _lgCap = ({ENG:0.05, GER:0.05, AUT:0.04, TUR:0.03, SCO:0.03, NED:0.03, BEL:0.02, POR:0.01, POL:0, CRO:0, HUN:0, ESP:0, ITA:-0.04, FRA:-0.04})[leagueKey] || 0;
 
-  // De-vig base probabilities — prefer Konsens-Devig (hw_fair) when available;
-  // fall back to single-source Pinnacle de-vig if consensus is missing.
-  const _cn     = odds?._cn || 0;                                // number of contributing bookmakers
+  // De-vig base probabilities — priority: Pinnacle-only devig > consensus devig > raw devig.
+  // Pinnacle is a sharp book; their margin-free odds are the purest available FV signal.
+  const _cn      = odds?._cn || 0;                               // number of contributing bookmakers
+  const _hasPinn = odds?.pinn_hw_fair && odds?.pinn_dr_fair && odds?.pinn_aw_fair;
   const _hasFair = odds?.hw_fair && odds?.dr_fair && odds?.aw_fair;
   let _bkrPH, _bkrPD, _bkrPA;
-  if (_hasFair) {
+  if (_hasPinn) {
+    // pinn_*_fair are already devigged Pinnacle fair odds.
+    const _pt = 1/odds.pinn_hw_fair + 1/odds.pinn_dr_fair + 1/odds.pinn_aw_fair;
+    _bkrPH = (1/odds.pinn_hw_fair) / _pt;
+    _bkrPD = (1/odds.pinn_dr_fair) / _pt;
+    _bkrPA = (1/odds.pinn_aw_fair) / _pt;
+  } else if (_hasFair) {
     // hw_fair/dr_fair/aw_fair are fair ODDS (e.g. 2.13), NOT probabilities.
     // Convert: prob = 1/odds, then normalise (sum should be ~1.0 since already margin-free).
     const _fairTot = 1/odds.hw_fair + 1/odds.dr_fair + 1/odds.aw_fair;
@@ -595,13 +602,17 @@ function getBettingPicks(match, odds, leagueKey) {
     ? _bkrPA * _wBkr + (_apiPctA / 100) * _wApi
     : (_bkrPA ?? (_apiPctA !== null ? _apiPctA / 100 : null));
 
-  // ── Line movement nudge ─────────────────────────────────────────────────────
+  // ── Line movement nudge + SHARP contradiction penalty ──────────────────────
   // ppShift = (1/current − 1/open) × 100 → positive means market moved toward that outcome.
-  // We apply a small nudge to mp: +0.015 per full pp of steam toward home/away/draw.
-  // Cap at ±3pp to avoid overweighting noisy openers.
+  // Standard nudge: +0.015 per pp of steam. Cap ±4.5pp for regular moves.
+  // SHARP contradiction (≥8pp against our pick direction): extra −0.09 penalty (2× the cap).
+  // This fires when e.g. U2.5 has SHARP money while our pick is Over → kill the Over.
   const _pmEntry = window._preMatchData?.[`${match.home}|${match.away}`] || null;
   const _oOpen   = _pmEntry?.odds_open || null;
+  const _openTs  = _pmEntry?.odds_open_ts || null;  // ISO timestamp of opening snapshot
   let _lmH = 0, _lmD = 0, _lmA = 0, _lmO = 0, _lmU = 0;
+  let _sharpAgainstO = false, _sharpAgainstU = false;
+  let _sharpAgainstH = false, _sharpAgainstA = false;
   if (_oOpen && odds?.hw && odds?.dr && odds?.aw) {
     const _ppH = Math.round(((1/odds.hw)  - (1/(_oOpen.hw  || odds.hw)))  * 100);
     const _ppD = Math.round(((1/odds.dr)  - (1/(_oOpen.dr  || odds.dr)))  * 100);
@@ -609,6 +620,9 @@ function getBettingPicks(match, odds, leagueKey) {
     _lmH = Math.max(-0.045, Math.min(0.045, _ppH * 0.015));
     _lmD = Math.max(-0.045, Math.min(0.045, _ppD * 0.015));
     _lmA = Math.max(-0.045, Math.min(0.045, _ppA * 0.015));
+    // Sharp contradiction: ≥8pp money on AWAY → home pick is contradicted (and vice versa)
+    if (_ppA >= 8) _sharpAgainstH = true;
+    if (_ppH >= 8) _sharpAgainstA = true;
   }
   // O/U 2.5 line movement nudge — used in goals pick mp adjustments
   if (_oOpen && odds?.o25 && odds?.u25 && _oOpen.o25 && _oOpen.u25) {
@@ -616,6 +630,15 @@ function getBettingPicks(match, odds, leagueKey) {
     const _ppU = Math.round(((1/odds.u25) - (1/_oOpen.u25)) * 100);
     _lmO = Math.max(-0.045, Math.min(0.045, _ppO * 0.015));
     _lmU = Math.max(-0.045, Math.min(0.045, _ppU * 0.015));
+    // Sharp contradiction: ≥8pp on Under = sharp money against Over pick (and vice versa)
+    if (_ppU >= 8) { _sharpAgainstO = true; _lmO -= 0.09; }  // SHARP vs Over → heavy penalty
+    if (_ppO >= 8) { _sharpAgainstU = true; _lmU -= 0.09; }  // SHARP vs Under → heavy penalty
+    // Also O3.5/U3.5 SHARP as confirmation signal for O/U 2.5 direction
+    if (_oOpen.o35 && odds?.o35) {
+      const _ppO35 = Math.round(((1/odds.o35) - (1/_oOpen.o35)) * 100);
+      const _ppU35 = Math.round(((1/odds.u35) - (1/(_oOpen.u35 || odds.u35))) * 100);
+      if (_ppU35 >= 8) { _sharpAgainstO = true; _lmO -= 0.05; }  // U3.5 SHARP also penalises Over 2.5
+    }
   }
 
   // ── Comparison signals from API /predictions endpoint ─────────────────────────
@@ -1223,6 +1246,9 @@ function getBettingPicks(match, odds, leagueKey) {
         if (_apiPoiH >= 50) reason += `<br>🤖 Statistisches Modell sieht ${match.home} mit ${_apiPoiH}% als Favorit — bestätigt die Analyse.`;
         else if (_apiPoiH <= 32) reason += `<br>⚠️ Statistisches Modell: ${match.home} nur bei ${_apiPoiH}% Siegchance — Modell ist skeptischer.`;
       }
+      // 🔑 SHARP CONTRADICTION: if ≥8pp sharp money moved on Away side, home pick is suspect.
+      // Apply heavy penalty BEFORE the neg-edge gate (may push sc below threshold).
+      if (_sharpAgainstH) sc = Math.max(0, sc - 0.18);
       // 🔑 NEG-EDGE GATE for 1X2: use independent Poisson model as fair prob.
       // Bookie-derived _fairPH is circular for neg-edge — Poisson is genuinely independent.
       // Only fires when poissonAvail (venue xG data present) AND real bookie odds exist.
@@ -1354,6 +1380,8 @@ function getBettingPicks(match, odds, leagueKey) {
         if (_apiPoiA >= 50) reason += `<br>🤖 Statistisches Modell sieht ${match.away} mit ${_apiPoiA}% als Favorit — bestätigt die Analyse.`;
         else if (_apiPoiA <= 32) reason += `<br>⚠️ Statistisches Modell: ${match.away} nur bei ${_apiPoiA}% Siegchance — Modell ist skeptischer.`;
       }
+      // 🔑 SHARP CONTRADICTION: ≥8pp sharp money on Home side contradicts Away pick.
+      if (_sharpAgainstA) sc = Math.max(0, sc - 0.18);
       // 🔑 NEG-EDGE GATE for 1X2: independent Poisson fair prob check (see Heimsieg block).
       const _auswNegEdge = poissonAvail && o.aw && !o._isEstimated
         ? _hasNegEdge(_poissonProbs.pA, o.aw, false, GATE.RESULT_REAL, null)
@@ -2391,9 +2419,11 @@ function getBettingPicks(match, odds, leagueKey) {
         else if (_apiUO === 'Under 2.5') mp = Math.max(0.12, mp - 0.04);
         // Line movement nudge
         mp = Math.min(0.92, Math.max(0.12, mp + _lmO));
-        // Market anchor: cap +10pp above AND floor -12pp below de-vigged market prob.
-        // Floor prevents false neg-edge suppression when our model underestimates a high market.
-        if (o.o25 && o.u25) { const _mktO = (1/o.o25)/((1/o.o25)+(1/o.u25)); mp = Math.min(_mktO + 0.10, Math.max(_mktO - 0.12, mp)); }
+        // Market anchor: prefer Pinnacle devigged prob (purest FV); fall back to raw devig.
+        // Cap +10pp above AND floor -12pp below anchor to prevent false neg-edge suppression.
+        { const _pinnO25p = odds?.pinn_o25_fair ? (1/odds.pinn_o25_fair) : null;
+          const _mktO = _pinnO25p ?? ((o.o25 && o.u25) ? (1/o.o25)/((1/o.o25)+(1/o.u25)) : null);
+          if (_mktO) mp = Math.min(_mktO + 0.10, Math.max(_mktO - 0.12, mp)); }
         break;
       case 'Under 2.5 Tore':
         // Poisson CDF: P(under 2.5) = 1 - P(total ≥ 3) = 1 - _poissonOver(μH+μA, 2.5)
@@ -2411,8 +2441,10 @@ function getBettingPicks(match, odds, leagueKey) {
         if (_apiUO === 'Under 2.5') mp = Math.min(0.92, mp + 0.05);
         else if (_apiUO === 'Over 2.5') mp = Math.max(0.08, mp - 0.04);
         mp = Math.min(0.92, Math.max(0.08, mp + _lmU));
-        // Market anchor: cap +10pp above AND floor -12pp below de-vigged market Under prob.
-        if (o.o25 && o.u25) { const _mktU = (1/o.u25)/((1/o.o25)+(1/o.u25)); mp = Math.min(_mktU + 0.10, Math.max(_mktU - 0.12, mp)); }
+        // Market anchor: prefer Pinnacle devigged Under prob; fall back to raw devig.
+        { const _pinnU25p = odds?.pinn_u25_fair ? (1/odds.pinn_u25_fair) : null;
+          const _mktU = _pinnU25p ?? ((o.o25 && o.u25) ? (1/o.u25)/((1/o.o25)+(1/o.u25)) : null);
+          if (_mktU) mp = Math.min(_mktU + 0.10, Math.max(_mktU - 0.12, mp)); }
         break;
       case 'Over 3.5 Tore':
         // Poisson CDF: P(total ≥ 4) = _poissonOver(μH+μA, 3.5)
