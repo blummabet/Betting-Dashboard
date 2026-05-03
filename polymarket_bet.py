@@ -136,10 +136,38 @@ def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> 
     home_first  = home_tokens[0] if home_tokens else home.lower()
     away_first  = away_tokens[0] if away_tokens else away.lower()
 
-    def _match_outcome(mkt_type_: str, outcomes: list, clob_ids: list) -> str | None:
+    def _is_binary_yes_no(outcomes: list) -> bool:
+        """True if this is a binary Yes/No market."""
+        return len(outcomes) == 2 and {o.lower() for o in outcomes} == {"yes", "no"}
+
+    def _match_outcome(mkt_type_: str, outcomes: list, clob_ids: list, question: str = "") -> str | None:
         """Return CLOB token ID for the desired outcome, or None."""
         if not outcomes or len(outcomes) != len(clob_ids):
             return None
+
+        q_lower = question.lower()
+
+        # ── Binary Yes/No markets (e.g. "Will Real Betis win?") ─────────────────
+        # Polymarket Winner events use separate binary markets per outcome.
+        # Team names appear in the question, not in outcome labels ("Yes"/"No").
+        if _is_binary_yes_no(outcomes):
+            yes_idx = next((i for i, o in enumerate(outcomes) if o.lower() == "yes"), None)
+            if yes_idx is None:
+                return None
+            if mkt_type_ == "home_win" and any(t in q_lower for t in home_tokens) and any(w in q_lower for w in ("win", "beat", "defeat")):
+                return clob_ids[yes_idx]
+            if mkt_type_ == "away_win" and any(t in q_lower for t in away_tokens) and any(w in q_lower for w in ("win", "beat", "defeat")):
+                return clob_ids[yes_idx]
+            if mkt_type_ == "draw" and "draw" in q_lower:
+                return clob_ids[yes_idx]
+            # Goals binary: "Will there be over 2.5 goals?"
+            if mkt_type_ == "over25" and "over" in q_lower and "2.5" in q_lower:
+                return clob_ids[yes_idx]
+            if mkt_type_ == "under25" and ("under" in q_lower or "fewer" in q_lower) and "2.5" in q_lower:
+                return clob_ids[yes_idx]
+            return None
+
+        # ── Multi-outcome markets (e.g. ["Real Betis", "Draw", "Real Oviedo"]) ──
         if mkt_type_ == "home_win":
             idx = next((i for i, o in enumerate(outcomes) if any(t in o.lower() for t in home_tokens)), None)
         elif mkt_type_ == "away_win":
@@ -162,30 +190,41 @@ def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> 
     if os.environ.get('POLY_DEBUG'):
         print(f"    [dbg] ev_outcomes={ev_outcomes}  ev_clob_ids={ev_clob_ids[:1] if ev_clob_ids else []}")
         print(f"    [dbg] markets count={len(event.get('markets') or [])}")
-    token = _match_outcome(mkt_type, ev_outcomes, ev_clob_ids)
+    ev_question = event.get("question") or event.get("title") or ""
+    token = _match_outcome(mkt_type, ev_outcomes, ev_clob_ids, question=ev_question)
     if token:
         return token
 
     # ── 2. Nested sub-markets ────────────────────────────────────────────────
     for mkt in event.get("markets", []):
-        q        = (mkt.get("question") or "").lower()
+        q        = (mkt.get("question") or "")
         outcomes = _parse_json_list(mkt.get("outcomes") or "[]")
         clob_ids = _parse_json_list(mkt.get("clobTokenIds") or "[]")
 
         if not outcomes or len(outcomes) != len(clob_ids):
             continue
 
+        q_lower = q.lower()
         if is_goals:
-            if "2.5" not in q and "goal" not in q:
+            if "2.5" not in q_lower and "goal" not in q_lower:
                 continue
         else:
-            # Relaxed filter: pass if question has winner keywords OR outcomes contain draw
-            has_draw = any("draw" in str(o).lower() for o in outcomes)
-            has_kw   = any(kw in q for kw in ("win", "winner", "match", "beat", "draw", "vs", "moneyline"))
-            if not has_kw and not has_draw:
-                continue
+            # Binary Yes/No markets: accept if question references a team or winner/draw context
+            if _is_binary_yes_no(outcomes):
+                has_home = any(t in q_lower for t in home_tokens)
+                has_away = any(t in q_lower for t in away_tokens)
+                has_draw_kw = "draw" in q_lower
+                has_win_kw  = any(w in q_lower for w in ("win", "beat", "defeat"))
+                if not ((has_home or has_away) and (has_win_kw or has_draw_kw)) and not has_draw_kw:
+                    continue
+            else:
+                # Multi-outcome: relaxed filter
+                has_draw = any("draw" in str(o).lower() for o in outcomes)
+                has_kw   = any(kw in q_lower for kw in ("win", "winner", "match", "beat", "draw", "vs", "moneyline"))
+                if not has_kw and not has_draw:
+                    continue
 
-        token = _match_outcome(mkt_type, outcomes, clob_ids)
+        token = _match_outcome(mkt_type, outcomes, clob_ids, question=q)
         if token:
             return token
 
@@ -325,7 +364,7 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
                 token_id=token_id,
                 amount=amount_usdc,
                 side=Side.BUY,
-                order_type=OrderType.FOK,
+                order_type=OrderType.GTC,  # GTC statt FOK — erlaubt Teilfüllung wenn Orderbook dünn
             ),
             options=PartialCreateOrderOptions(tick_size="0.01"),
         )
