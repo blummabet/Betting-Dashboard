@@ -26,7 +26,7 @@ import urllib.error
 from datetime import datetime, timezone, timedelta
 
 # ── Markets we extract ────────────────────────────────────
-POLY_MARKETS = {'Heimsieg', 'Auswärtssieg', 'Unentschieden', 'Over 2.5 Tore', 'Under 2.5 Tore'}
+POLY_MARKETS = {'Heimsieg', 'Auswärtssieg', 'Unentschieden', 'Over 2.5 Tore', 'Under 2.5 Tore', 'Beide Teams treffen'}
 
 # ── Leagues covered on Polymarket ────────────────────────
 POLY_LEAGUES = {'GER', 'ENG', 'ITA', 'ESP', 'FRA', 'NED', 'POR', 'TUR', 'GER2', 'SCO', 'ENG2'}
@@ -576,6 +576,15 @@ def extract_outcome_price(market: str, question: str, outcomes: list,
                           prices: list, home_en: str, away_en: str) -> float | None:
     q = question.lower()
     is_goals = '2.5' in market
+
+    # ── BTTS: "Will both teams score?" → Yes price ───────────────
+    if market == 'Beide Teams treffen':
+        btts_kw = ('both teams', 'both score', 'btts', 'both team to score',
+                   'both teams to score', 'will both')
+        if not any(kw in q for kw in btts_kw):
+            return None
+        y_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'), -1)
+        return _safe_float(prices[y_idx]) if y_idx >= 0 else None
 
     if is_goals:
         if '2.5' not in q and 'goal' not in q:

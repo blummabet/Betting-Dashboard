@@ -29,6 +29,7 @@ const POLY_LEAGUES = new Set(['GER','ENG','ITA','ESP','FRA','NED','POR','TUR','G
 const POLY_MARKETS = new Set([
   'Heimsieg', 'Auswärtssieg', 'Unentschieden',
   'Over 2.5 Tore', 'Under 2.5 Tore',
+  'Beide Teams treffen',
 ]);
 
 // German dashboard names → English Polymarket names
@@ -321,7 +322,13 @@ function getPolyPicks(dateStr) {
       for (const p of picks) {
         if (!POLY_MARKETS.has(p.market))          continue;
         if (p.conf === 'low')                     continue;
-        if (p.oddsIsEst || p.odds == null)        continue;
+
+        // For 1X2 and O/U: require real bookie odds (skip estimated — model vs model).
+        // For BTTS: allow estimated odds — modelOdds comes from independent Poisson and is
+        // valid for comparison against Poly price even when no real bookie quote is available.
+        const isBtts = p.market === 'Beide Teams treffen';
+        if (!isBtts && (p.oddsIsEst || p.odds == null)) continue;
+        if (isBtts && p.modelOdds == null)               continue; // need at least modelOdds
 
         const id = `${lk}|${fx.home}|${fx.away}|${p.market}`;
         results.push({
@@ -334,7 +341,9 @@ function getPolyPicks(dateStr) {
           market:      p.market,
           conf:        p.conf,
           sc:          p.sc,
-          odds:        p.odds,
+          odds:        p.odds,        // null/estimated for BTTS — use modelOdds for edge
+          modelOdds:   p.modelOdds,
+          oddsIsEst:   p.oddsIsEst || false,
           date:        fx.date,
         });
       }
@@ -472,8 +481,9 @@ function _priceBlock(pickId) {
 
 function _edgeBlock(pick, pickId) {
   const p = _polyState.prices[pickId];
-  if (!p || !p.found || !pick.odds) return `<span style="color:#8b949e;font-size:12px">—</span>`;
-  const ourImplied = 1 / pick.odds;
+  const refOdds = pick.oddsIsEst ? pick.modelOdds : pick.odds;
+  if (!p || !p.found || !refOdds) return `<span style="color:#8b949e;font-size:12px">—</span>`;
+  const ourImplied = 1 / refOdds;
   // Positive = Poly gibt bessere Odds als der Bookie (niedrigere implizite Wahrsch. = höhere Quoten)
   const edgePp     = Math.round((ourImplied - p.price) * 100);
   if (Math.abs(edgePp) < 1) return `<span style="color:#8b949e;font-size:12px">≈ 0%</span>`;
