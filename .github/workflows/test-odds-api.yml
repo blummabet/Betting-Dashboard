@@ -1,0 +1,18 @@
+name: Test TheOddsAPI Markets
+
+on:
+  workflow_dispatch:  # nur manuell auslösbar
+
+jobs:
+  test-odds:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test TheOddsAPI specialty markets
+        run: node test-cards-api.js
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        timeout-minutes: 2
