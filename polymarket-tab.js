@@ -385,8 +385,27 @@ async function _loadPolyPriceCache() {
   }
 }
 
+// Polymarket price sanity check: AMM rounding errors can produce 1X2 sums far from 1.0
+// or O/U sums far from 1.0. Prices with sum outside 0.95–1.05 are unreliable — skip them.
+// This prevents us from acting on corrupted market data (e.g. PSV 62% underdog at home).
+function _isPolyEntryClean(entry) {
+  const m = entry.markets || {};
+  const h = m['Heimsieg'], x = m['Unentschieden'], a = m['Auswärtssieg'];
+  const o = m['Over 2.5 Tore'], u = m['Under 2.5 Tore'];
+  if (h != null && x != null && a != null) {
+    const sum1x2 = h + x + a;
+    if (sum1x2 < 0.95 || sum1x2 > 1.05) return false;
+  }
+  if (o != null && u != null) {
+    const sumOU = o + u;
+    if (sumOU < 0.96 || sumOU > 1.04) return false;
+  }
+  return true;
+}
+
 // Retrieve price for a single pick from the cached JSON.
 // Returns { found, price, eventTitle, eventUrl } or null.
+// Returns { found: false, corrupted: true } when the match prices fail the sanity check.
 function _getPriceFromCache(pick) {
   if (!_polyPriceCache) return null;
   const key = `${pick.home}|${pick.away}`;
@@ -394,6 +413,8 @@ function _getPriceFromCache(pick) {
   // Key not in cache at all → cache is stale/incomplete, NOT confirmed "kein Markt"
   if (entry === undefined) return { found: false, stale: true };
   if (!entry.found) return { found: false };
+  // Sanity check: reject entries where 1X2 or O/U sums deviate >5pp from 1.0
+  if (!_isPolyEntryClean(entry)) return { found: false, corrupted: true };
   const price = (entry.markets || {})[pick.market];
   if (price == null) return { found: false };
   return {
@@ -441,8 +462,9 @@ function _priceBlock(pickId) {
   const p = _polyState.prices[pickId];
   if (p === undefined)        return `<span style="color:#8b949e;font-size:12px">—</span>`;
   if (p.loading)              return `<span style="color:#8b949e;font-size:12px">⏳</span>`;
-  if (!p.found && p.stale)    return `<span style="color:#e3b341;font-size:12px">⟳ neu laden</span>`;
-  if (!p.found)               return `<span style="color:#8b949e;font-size:12px">kein Markt</span>`;
+  if (!p.found && p.stale)      return `<span style="color:#e3b341;font-size:12px">⟳ neu laden</span>`;
+  if (!p.found && p.corrupted) return `<span style="color:#f85149;font-size:11px" title="Poly-Preise für dieses Spiel summieren nicht auf 100% — AMM-Fehler, nicht handelbar">⚠️ Preise ungültig</span>`;
+  if (!p.found)                return `<span style="color:#8b949e;font-size:12px">kein Markt</span>`;
   const pct      = Math.round(p.price * 100);
   const polyOdds = (1 / p.price).toFixed(2);
   return `<span style="color:#a78bfa;font-weight:700;font-size:15px">${pct}¢</span> <span style="color:#8b949e;font-size:11px">(${polyOdds})</span>`;
@@ -468,6 +490,9 @@ function _openButtonHtml(pickId) {
   if (!pd.found && pd.stale) {
     return `<div style="text-align:center;font-size:11px;color:#e3b34188;padding:6px 0">⟳ Cache veraltet — Preise neu laden</div>`;
   }
+  if (!pd.found && pd.corrupted) {
+    return `<div style="text-align:center;font-size:11px;color:#f8514988;padding:6px 0">⚠️ AMM-Preisfehler — Markt nicht handelbar</div>`;
+  }
   if (!pd.found || !pd.eventUrl) {
     return `<div style="text-align:center;font-size:11px;color:#8b949e44;padding:6px 0">kein Polymarket-Markt gefunden</div>`;
   }
@@ -487,6 +512,7 @@ function _renderPickCard(pick) {
   const isSel      = _polyState.selected.has(pick.id);
   const priceData  = _polyState.prices[pick.id];
   // noMarket = Poly hat dieses Spiel explizit nicht; stale = Cache war veraltet, kein Urteil möglich
+  // corrupted = AMM-Preisfehler (1X2-Summe weit von 1.0) → ebenfalls ausgegraut
   const noMarket   = priceData && !priceData.loading && !priceData.found && !priceData.stale;
   const mktColor   = _marketColor(pick.market);
 
