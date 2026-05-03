@@ -1471,6 +1471,19 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── GET /picks_history — serve picks_history.json for auto-resolve ────────
+  if (url === '/picks_history') {
+    const histPath = path.join(__dirname, 'picks_history.json');
+    if (fs.existsSync(histPath)) {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      fs.createReadStream(histPath).pipe(res);
+    } else {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end('[]');
+    }
+    return;
+  }
+
   // ── GET / or /season-finish.html — serve the dashboard ───────────────────
   if (url === '/' || url === '/season-finish.html') {
     const htmlPath = path.join(__dirname, 'season-finish.html');
