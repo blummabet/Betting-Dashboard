@@ -391,9 +391,11 @@ function _getPriceFromCache(pick) {
   if (!_polyPriceCache) return null;
   const key = `${pick.home}|${pick.away}`;
   const entry = _polyPriceCache[key];
-  if (!entry || !entry.found) return null;
+  // Key not in cache at all → cache is stale/incomplete, NOT confirmed "kein Markt"
+  if (entry === undefined) return { found: false, stale: true };
+  if (!entry.found) return { found: false };
   const price = (entry.markets || {})[pick.market];
-  if (price == null) return null;
+  if (price == null) return { found: false };
   return {
     found:      true,
     price:      price,
@@ -439,6 +441,7 @@ function _priceBlock(pickId) {
   const p = _polyState.prices[pickId];
   if (p === undefined)        return `<span style="color:#8b949e;font-size:12px">—</span>`;
   if (p.loading)              return `<span style="color:#8b949e;font-size:12px">⏳</span>`;
+  if (!p.found && p.stale)    return `<span style="color:#e3b341;font-size:12px">⟳ neu laden</span>`;
   if (!p.found)               return `<span style="color:#8b949e;font-size:12px">kein Markt</span>`;
   const pct      = Math.round(p.price * 100);
   const polyOdds = (1 / p.price).toFixed(2);
@@ -449,7 +452,8 @@ function _edgeBlock(pick, pickId) {
   const p = _polyState.prices[pickId];
   if (!p || !p.found || !pick.odds) return `<span style="color:#8b949e;font-size:12px">—</span>`;
   const ourImplied = 1 / pick.odds;
-  const edgePp     = Math.round((p.price - ourImplied) * 100);
+  // Positive = Poly gibt bessere Odds als der Bookie (niedrigere implizite Wahrsch. = höhere Quoten)
+  const edgePp     = Math.round((ourImplied - p.price) * 100);
   if (Math.abs(edgePp) < 1) return `<span style="color:#8b949e;font-size:12px">≈ 0%</span>`;
   const col  = edgePp > 0 ? '#3fb950' : '#f85149';
   const sign = edgePp > 0 ? '+' : '';
@@ -460,6 +464,9 @@ function _openButtonHtml(pickId) {
   const pd = _polyState.prices[pickId];
   if (!pd || pd.loading) {
     return `<div style="height:32px"></div>`;
+  }
+  if (!pd.found && pd.stale) {
+    return `<div style="text-align:center;font-size:11px;color:#e3b34188;padding:6px 0">⟳ Cache veraltet — Preise neu laden</div>`;
   }
   if (!pd.found || !pd.eventUrl) {
     return `<div style="text-align:center;font-size:11px;color:#8b949e44;padding:6px 0">kein Polymarket-Markt gefunden</div>`;
@@ -479,7 +486,8 @@ function _openButtonHtml(pickId) {
 function _renderPickCard(pick) {
   const isSel      = _polyState.selected.has(pick.id);
   const priceData  = _polyState.prices[pick.id];
-  const noMarket   = priceData && !priceData.loading && !priceData.found;
+  // noMarket = Poly hat dieses Spiel explizit nicht; stale = Cache war veraltet, kein Urteil möglich
+  const noMarket   = priceData && !priceData.loading && !priceData.found && !priceData.stale;
   const mktColor   = _marketColor(pick.market);
 
   return `<div class="poly-pick-card${isSel ? ' poly-selected' : ''}${noMarket ? ' poly-no-market' : ''}"
@@ -1260,9 +1268,7 @@ async function _fetchAllPricesAsync() {
   if (!_polyPriceMissing) {
     for (const pick of picks) {
       const result = _getPriceFromCache(pick);
-      _polyState.prices[pick.id] = result
-        ? result
-        : { found: false };
+      _polyState.prices[pick.id] = result || { found: false };
     }
   }
 
