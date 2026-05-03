@@ -573,15 +573,20 @@ function getBettingPicks(match, odds, leagueKey) {
   const _apiPred    = match.apiPrediction   || null;
   const _apiGoalsH  = _apiPred?.goalsHome   ?? null;  // API-expected goals for home team
   const _apiGoalsA  = _apiPred?.goalsAway   ?? null;  // API-expected goals for away team
-  const _apiUO      = _apiPred?.underOver   ?? null;  // "Over 2.5" | "Under 2.5" | null
-  const _apiPctH    = _apiPred?.pctHome     ?? null;  // 0–100
-  const _apiPctD    = _apiPred?.pctDraw     ?? null;
-  const _apiPctA    = _apiPred?.pctAway     ?? null;
-  const _apiPoiH    = _apiPred?.poissonHome ?? null;  // Poisson win% (0–100)
-  const _apiPoiD    = _apiPred?.poissonDraw ?? null;
-  const _apiPoiA    = _apiPred?.poissonAway ?? null;
+  // Sanity guard: negative expected goals = corrupted API response → discard all pct signals.
+  // This prevents bad API data (e.g. goalsHome: -2.5) from distorting fair probability estimates.
+  const _apiPredValid = _apiPred !== null
+    && (_apiGoalsH === null || _apiGoalsH >= 0)
+    && (_apiGoalsA === null || _apiGoalsA >= 0);
+  const _apiUO      = _apiPredValid ? (_apiPred?.underOver   ?? null) : null;  // "Over 2.5" | "Under 2.5" | null
+  const _apiPctH    = _apiPredValid ? (_apiPred?.pctHome     ?? null) : null;  // 0–100
+  const _apiPctD    = _apiPredValid ? (_apiPred?.pctDraw     ?? null) : null;
+  const _apiPctA    = _apiPredValid ? (_apiPred?.pctAway     ?? null) : null;
+  const _apiPoiH    = _apiPredValid ? (_apiPred?.poissonHome ?? null) : null;  // Poisson win% (0–100)
+  const _apiPoiD    = _apiPredValid ? (_apiPred?.poissonDraw ?? null) : null;
+  const _apiPoiA    = _apiPredValid ? (_apiPred?.poissonAway ?? null) : null;
   // Blended API expected goals — used when xGBased=false (non-Big5 or no refresh_stats run)
-  const _apiExpG = (_apiGoalsH !== null && _apiGoalsA !== null) ? (_apiGoalsH + _apiGoalsA) : null;
+  const _apiExpG = (_apiGoalsH !== null && _apiGoalsA !== null && _apiPredValid) ? (_apiGoalsH + _apiGoalsA) : null;
 
   // ── Dynamic blend ratio: more bookmakers → trust consensus more ──
   // _cn is the number of contributing bookmakers from Konsens-Devig.
@@ -589,18 +594,31 @@ function getBettingPicks(match, odds, leagueKey) {
   const _wBkr = _hasFair ? (_cn >= 5 ? 0.90 : _cn >= 3 ? 0.87 : _cn >= 2 ? 0.83 : 0.80) : 0.80;
   const _wApi = 1 - _wBkr;
 
+  // ── H2H fallback probabilities (Laplace-smoothed, last resort) ──────────────
+  // Used only when both bookie odds AND API prediction are unavailable/invalid.
+  // Laplace smoothing (+2 per outcome) prevents over-confidence on small samples.
+  // e.g. 8A/1D/1H in 10 games → pH=3/16≈0.19, pD=3/16≈0.19, pA=10/16≈0.62 (FV ~1.61)
+  const _h2h = match.h2h || null;
+  let _h2hPH = null, _h2hPD = null, _h2hPA = null;
+  if (_h2h && _h2h.games >= 4) {
+    const _h2hTotal = (_h2h.homeWins || 0) + (_h2h.draws || 0) + (_h2h.awayWins || 0) + 6; // +2 each
+    _h2hPH = ((_h2h.homeWins || 0) + 2) / _h2hTotal;
+    _h2hPD = ((_h2h.draws    || 0) + 2) / _h2hTotal;
+    _h2hPA = ((_h2h.awayWins || 0) + 2) / _h2hTotal;
+  }
+
   // ── Blended fair probabilities: dynamic market weight + API prediction pct ──
   // When both signals available: blend for sharpest estimate.
-  // When only one: use that one. When neither: null (pure formula fallback).
+  // When only one: use that one. When neither: H2H fallback, or null (pure formula fallback).
   const _fairPH = (_bkrPH !== null && _apiPctH !== null)
     ? _bkrPH * _wBkr + (_apiPctH / 100) * _wApi
-    : (_bkrPH ?? (_apiPctH !== null ? _apiPctH / 100 : null));
+    : (_bkrPH ?? (_apiPctH !== null ? _apiPctH / 100 : _h2hPH));
   const _fairPD = (_bkrPD !== null && _apiPctD !== null)
     ? _bkrPD * _wBkr + (_apiPctD / 100) * _wApi
-    : (_bkrPD ?? (_apiPctD !== null ? _apiPctD / 100 : null));
+    : (_bkrPD ?? (_apiPctD !== null ? _apiPctD / 100 : _h2hPD));
   const _fairPA = (_bkrPA !== null && _apiPctA !== null)
     ? _bkrPA * _wBkr + (_apiPctA / 100) * _wApi
-    : (_bkrPA ?? (_apiPctA !== null ? _apiPctA / 100 : null));
+    : (_bkrPA ?? (_apiPctA !== null ? _apiPctA / 100 : _h2hPA));
 
   // ── Line movement nudge + SHARP contradiction penalty ──────────────────────
   // ppShift = (1/current − 1/open) × 100 → positive means market moved toward that outcome.
