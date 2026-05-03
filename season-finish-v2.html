@@ -6826,10 +6826,12 @@ function renderResultsTable(filter) {
     return '<span class="res-badge void">— Void</span>';
   };
 
-  // For rows where cardScore is missing (e.g. old picks_history.json entries without leagueKey),
-  // search all loaded LEAGUES for the matching fixture and compute the score on the fly.
+  // For rows where cardScore is missing: try to compute from current LEAGUES data (upcoming fixtures).
+  // Historical fixtures are no longer in LEAGUES — those fall back to matchScore in the rendering step.
   for (const r of rows) {
     if (r.cardScore != null) continue;
+    // matchScore already covers historical entries (saved by save_picks.py) — no LEAGUES lookup needed.
+    if (r.matchScore != null) continue;
     let _fix = null, _lk = r.leagueKey || null;
     // Fast path: leagueKey is known
     if (_lk) {
@@ -6854,7 +6856,8 @@ function renderResultsTable(filter) {
       <th>Wette</th><th title="Buchmacher-Quote zum Zeitpunkt der Pick-Erstellung">Quote</th><th>Conf</th><th title="Card-Score zum Zeitpunkt der Pick-Erstellung">Score</th><th>Ergebnis</th><th>Resultat</th>
     </tr></thead>
     <tbody>${rows.map(r => {
-      const _cs = r.cardScore != null ? r.cardScore.toFixed(1) : null;
+      const _cs = r.cardScore != null ? r.cardScore.toFixed(1)
+                : r.matchScore != null ? parseFloat(r.matchScore).toFixed(1) : null;
       const _csColor = _cs == null ? 'var(--muted)' : parseFloat(_cs) >= 10 ? '#3fb950' : parseFloat(_cs) >= 7 ? '#e3b341' : '#8b949e';
       const _odds = r.pick.odds != null ? r.pick.odds.toFixed(2) : '—';
       const _oddsEst = r.pick.oddsIsEst;
