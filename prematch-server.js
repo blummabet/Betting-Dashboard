@@ -135,14 +135,15 @@ function oddsApiFetch(sportKey) {
   });
 }
 
-// Fetch alternate soccer markets (corners + cards + Asian lines + double chance).
-// Uses regions=eu,uk — EU for spreads/DC, UK for corners/cards (Bet365, W.Hill etc.).
-// EU-only returns 0 corner quotes; UK bookmakers have full alternate_totals_corners coverage.
+// Fetch alternate soccer markets (corners + Asian lines + double chance).
+// NOTE: alternate_totals_cards intentionally removed — if it's an invalid key it causes
+// a 422 that kills the entire request (including corners). Cards fetched separately in oddsApiFetchCards.
+// Uses regions=eu,uk — UK bookmakers (Bet365, W.Hill) needed for corners coverage.
 // Returns { data: [...events] } or { data: [] } on error.
 function oddsApiFetchAlt(sportKey) {
   return new Promise((resolve) => {
     const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
-      + `&regions=eu,uk&markets=alternate_totals_corners,alternate_totals_cards,alternate_totals,alternate_spreads,double_chance&oddsFormat=decimal`;
+      + `&regions=eu,uk&markets=alternate_totals_corners,alternate_totals,alternate_spreads,double_chance&oddsFormat=decimal`;
     const options = { hostname: ODDS_API_HOST, path, method: 'GET',
       headers: { 'User-Agent': 'CocoBet/1.0' } };
     const req = https.request(options, res => {
@@ -172,6 +173,72 @@ function oddsApiFetchAlt(sportKey) {
     req.setTimeout(15000, () => { req.destroy(); console.warn(`  [OddsAPI Alt] ${sportKey}: timeout`); resolve({ data: [] }); });
     req.end();
   });
+}
+
+// Fetch cards market — tries multiple possible market keys (TheOddsAPI naming is undocumented).
+// Isolated from oddsApiFetchAlt so an invalid key only kills this request, not corners.
+// Returns { data: [], cardsKey: null } or { data: [...events], cardsKey: 'alternate_totals_cards' }.
+const CARDS_MARKET_KEYS = [
+  'alternate_totals_cards',   // guessed naming (follows corners pattern)
+  'totals_cards',             // alternative flat name
+  'player_cards',             // player-prop style naming
+];
+async function oddsApiFetchCards(sportKey) {
+  for (const mktKey of CARDS_MARKET_KEYS) {
+    const result = await new Promise((resolve) => {
+      const path = `/v4/sports/${sportKey}/odds/?apiKey=${ODDS_API_KEY}`
+        + `&regions=uk&markets=${mktKey}&oddsFormat=decimal`;
+      const options = { hostname: ODDS_API_HOST, path, method: 'GET',
+        headers: { 'User-Agent': 'CocoBet/1.0' } };
+      const req = https.request(options, res => {
+        let body = '';
+        res.on('data', chunk => body += chunk);
+        res.on('end', () => {
+          try {
+            if (res.statusCode === 422) {
+              // 422 = invalid market key — try next
+              console.log(`  [OddsAPI Cards] ${sportKey}: ${mktKey} → 422 (key invalid, trying next)`);
+              resolve({ data: [], invalid: true });
+              return;
+            }
+            if (res.statusCode !== 200) {
+              const errSnippet = body.slice(0, 200).replace(/\n/g, ' ');
+              console.warn(`  [OddsAPI Cards] ${sportKey}: ${mktKey} → HTTP ${res.statusCode} — ${errSnippet}`);
+              resolve({ data: [], invalid: false });
+              return;
+            }
+            const data = JSON.parse(body);
+            if (!Array.isArray(data)) {
+              console.warn(`  [OddsAPI Cards] ${sportKey}: ${mktKey} → non-array: ${JSON.stringify(data).slice(0,150)}`);
+              resolve({ data: [], invalid: false });
+              return;
+            }
+            // Check if any bookmaker actually returned cards data
+            const hasCards = data.some(ev =>
+              (ev.bookmakers || []).some(bkr =>
+                (bkr.markets || []).some(m => m.key === mktKey)
+              )
+            );
+            if (!hasCards) {
+              console.log(`  [OddsAPI Cards] ${sportKey}: ${mktKey} → 200 but 0 bookmakers with data`);
+              resolve({ data: [], invalid: false });
+              return;
+            }
+            console.log(`  [OddsAPI Cards] ${sportKey}: ✅ ${mktKey} → ${data.length} events with cards odds`);
+            resolve({ data, cardsKey: mktKey });
+          } catch(e) {
+            resolve({ data: [], invalid: false });
+          }
+        });
+      });
+      req.on('error', (e) => resolve({ data: [], invalid: false }));
+      req.setTimeout(12000, () => { req.destroy(); resolve({ data: [], invalid: false }); });
+      req.end();
+    });
+    if (result.cardsKey) return result;   // found working key
+    if (!result.invalid) break;           // non-422 error — don't try more keys
+  }
+  return { data: [], cardsKey: null };
 }
 
 // Fetch 1st-half markets via eu,uk regions (h2h_h1 = HT 1X2, totals_h1 = HT over/under).
@@ -426,7 +493,8 @@ function parseTheOddsEvent(oddsEvent) {
             else if (Math.abs(pt - 11.5) < 0.01 && !r.cu115) r.cu115 = p;
           }
         }
-      } else if (mk === 'alternate_totals_cards') {
+      } else if (mk === 'alternate_totals_cards' || mk === 'totals_cards' || mk === 'player_cards') {
+        // Accept any of the possible cards market key names (TheOddsAPI naming varies)
         for (const o of (mkt.outcomes || [])) {
           const pt = o.point; const p = o.price;
           if (o.name === 'Over') {
@@ -1371,25 +1439,12 @@ async function fetchAllPrematchData() {
   }
   if (bttsEnriched > 0) console.log(`  [OddsAPI] BTTS enriched: ${bttsEnriched} Events`);
 
-  // ── Step 5c: Alternate markets — Corners + Cards + Double Chance ─────────
-  let altEnriched = 0;
-  for (const sk of _uniqueSportKeys) {
-    if (!_sportKeyEvents[sk]?.length) continue;
-    await sleep(400);
-    const { data: altEvents } = await oddsApiFetchAlt(sk);
-    // DEBUG: log how many alt events returned and what market keys they carry
-    const _altMktKeys = new Set();
-    let _altCardsCount = 0;
-    for (const ae of (altEvents || [])) {
-      for (const bkr of (ae.bookmakers || [])) {
-        for (const mkt of (bkr.markets || [])) {
-          _altMktKeys.add(mkt.key);
-          if (mkt.key === 'alternate_totals_cards') _altCardsCount++;
-        }
-      }
-    }
-    console.log(`  [Step5c] ${sk}: ${(altEvents||[]).length} alt events, markets: [${[..._altMktKeys].join(',')}], cards_markets: ${_altCardsCount}`);
-    for (const ae of altEvents) {
+  // ── Step 5c: Alternate markets — Corners + Asian lines + Double Chance ──────
+  // Cards are fetched separately (Step 5c2) to prevent a 422 from an invalid cards key
+  // killing the whole request and taking corners/DC down with it.
+  function _mergeEvents(sk, events) {
+    let count = 0;
+    for (const ae of events) {
       const main = _sportKeyEvents[sk].find(e => e.id === ae.id);
       if (!main) continue;
       for (const bkr of (ae.bookmakers || [])) {
@@ -1402,10 +1457,40 @@ async function fetchAllPrematchData() {
           main.bookmakers.push(bkr);
         }
       }
-      altEnriched++;
+      count++;
+    }
+    return count;
+  }
+
+  let altEnriched = 0;
+  for (const sk of _uniqueSportKeys) {
+    if (!_sportKeyEvents[sk]?.length) continue;
+    await sleep(400);
+    const { data: altEvents } = await oddsApiFetchAlt(sk);
+    const _altMktKeys = new Set();
+    for (const ae of (altEvents || []))
+      for (const bkr of (ae.bookmakers || []))
+        for (const mkt of (bkr.markets || []))
+          _altMktKeys.add(mkt.key);
+    console.log(`  [Step5c] ${sk}: ${(altEvents||[]).length} events | markets: [${[..._altMktKeys].join(',')}]`);
+    altEnriched += _mergeEvents(sk, altEvents);
+  }
+  if (altEnriched > 0) console.log(`  [OddsAPI] Corners/DC enriched: ${altEnriched} Events`);
+
+  // ── Step 5c2: Cards market — tries multiple possible keys ────────────────
+  // TheOddsAPI's exact key for yellow cards markets is undocumented/uncertain.
+  // oddsApiFetchCards tries alternate_totals_cards, totals_cards, player_cards in order.
+  let cardsEnriched = 0;
+  for (const sk of _uniqueSportKeys) {
+    if (!_sportKeyEvents[sk]?.length) continue;
+    await sleep(400);
+    const { data: cardsEvents, cardsKey } = await oddsApiFetchCards(sk);
+    if (cardsKey && cardsEvents.length > 0) {
+      cardsEnriched += _mergeEvents(sk, cardsEvents);
     }
   }
-  if (altEnriched > 0) console.log(`  [OddsAPI] Corners/Cards/DC enriched: ${altEnriched} Events`);
+  if (cardsEnriched > 0) console.log(`  [OddsAPI] Cards enriched: ${cardsEnriched} Events`);
+  else console.log(`  [OddsAPI] Cards: kein Bookmaker liefert Karten-Quoten (Plan-Einschränkung oder Market existiert nicht)`);
 
   // ── Step 5d: 1st half markets — h2h_h1 + totals_h1 (EU) + btts_h1 (UK) ───
   // Pass 4a: EU region — halftime 1X2 and halftime over/under totals
