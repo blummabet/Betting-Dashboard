@@ -1661,7 +1661,7 @@ function getBettingPicks(match, odds, leagueKey) {
         // Bei echter Bookie-Quote: wenn implizierte Wahrscheinlichkeit FV um >12pp überschreitet → kein Edge.
         // (Frühere Annahme "Hard Gate reicht" war falsch: expGoals=2.5 mit Odds 1.65 hat -15pp Edge)
         const _o25FairProb = (!odds?._isEstimated && _o25Odds != null)
-          ? _poissonOver(poissonAvail ? (_muH + _muA) : expGoals, 2.5) : null;
+          ? _poissonOver(poissonAvail ? (_muH + _muA) : expGoals, _o25Pt) : null;
         const _o25NegEdge = _hasNegEdge(_o25FairProb, _o25Odds, false, GATE.GOALS_REAL, null);
         if (!_o25NegEdge) gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
           conf: sc>0.66?'high':sc>0.46?'medium':'low',
@@ -2038,10 +2038,13 @@ function getBettingPicks(match, odds, leagueKey) {
       if (cardSc > 0 && _bothRedConf) {
         cardSc = 0; // beide abgestiegen → kein Druck, kein Pick
       } else if (cardSc > 0 && _anyRedConf) {
-        const _refForCards = _refAvg ?? 3.5; // null → konservativer Ligadurchschnitt
-        if      (_refForCards < 3.0) cardSc = 0;          // leonischer Schiri → kein Pick
-        else if (_refForCards < 4.5) cardSc *= 0.60;      // Durchschnitt/kein Datum → stark reduzieren
-        // ≥ 4.5: kartenlastiger Schiri → kein Extra-Penalty (Standardreduzierung durch Ligadurchschnitt reicht)
+        // Kein Schiri-Datum + abgestiegenes Team → kein Karten-Pick.
+        // Begründung: ohne Referee-Evidenz haben wir keinen Anker für die Karten-Erwartung.
+        // Ein abgestiegenes Team mit unbekanntem Schiri = keine Basis für den Pick → supprimieren.
+        if      (_refAvg === null)   cardSc = 0;   // kein Schiri-Datum → direkt supprimieren
+        else if (_refAvg < 3.0)     cardSc = 0;   // leonischer Schiri → kein Pick
+        else if (_refAvg < 4.5)     cardSc *= 0.60; // durchschnittlicher Schiri → stark reduzieren
+        // ≥ 4.5: kartenlastiger Schiri → kein Extra-Penalty
       }
       const _cardOdds = cardMkt.includes('4.5') ? (o.cards_o45||null) : (o.cards_o35||null);
       // Max odds guard: cards > 3.20 means low card probability — not worth recommending.
@@ -2499,6 +2502,19 @@ function getBettingPicks(match, odds, leagueKey) {
       const _mfBoost = _ahBP > 0.85 ? 1.35 : _ahBP > 0.80 ? 1.20 : 1.0;
       const _mfAdj   = Math.min(0.97, _mf * _mfBoost);
       if (_ahBP > 0.05) mp = Math.min(0.90, Math.max(0.05, _ahBP * _mfAdj));
+    }
+    // Generic Asian Over/Under lines: "Over 2.25 Tore", "Over 2.0 Tore" etc.
+    // These don't match any named case above → compute Poisson FV directly.
+    if (mp === null && p.market) {
+      const _asianOverM = p.market.match(/^Over (\d+\.?\d*) Tore$/);
+      if (_asianOverM) {
+        const _apt = parseFloat(_asianOverM[1]);
+        if (poissonAvail) {
+          mp = Math.min(0.92, Math.max(0.08, _poissonOver(_muH + _muA, _apt)));
+        } else {
+          mp = Math.min(0.92, Math.max(0.08, _poissonOver(expGoals, _apt)));
+        }
+      }
     }
     // For markets with a proper mp, compute model odds + edge
     if (mp !== null) {

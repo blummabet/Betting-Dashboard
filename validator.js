@@ -164,14 +164,11 @@ function runPicksValidator() {
         flag('warn', 'BOTH_LOW_MOTIV_HIGH_SCORE', `Beide motiv='low', Score trotzdem ${ms} ≥9 — ungewöhnlich hoher Score bei niedrigem Antrieb`);
       }
       const avgGPG = (hGPG + aGPG) / 2;
-      // LOW_SCORING: two-tier check.
-      // 🟡 Warnung nur wenn H2H-Sample ≥5 (zuverlässig) UND beide Teams wirklich schwach (gpg < 0.7)
-      //    → hier könnten Over-Picks trotz Suppression noch durchkommen
-      // 🔵 Hinweis wenn nur eine Bedingung (wenig H2H oder nur einer schwach) — Engine unterdrückt Over automatisch
-      if (avgGPG > 0 && avgGPG < 0.7 && h2hAvgGoals < 2.0 && h2hGames >= 5) {
-        flag('warn', 'LOW_SCORING_OVER_RISK', `Ø gpg=${avgGPG.toFixed(2)}, H2H Ø=${h2hAvgGoals.toFixed(1)} Tore (${h2hGames} Sp.) — Over-Pick prüfen, Hard Gate sollte greifen`);
-      } else if (avgGPG > 0 && avgGPG < 0.9 && h2hAvgGoals < 2.0 && h2hGames >= 3) {
-        flag('info', 'LOW_SCORING_PROFILE', `Ø gpg=${avgGPG.toFixed(2)}, H2H Ø=${h2hAvgGoals.toFixed(1)} Tore — Niedrig-Scoring-Profil, Over-Pick durch Hard Gate automatisch unterdrückt`);
+      // LOW_SCORING_PROFILE — nur als 🔵 Hinweis, unabhängig vom tatsächlichen Pick.
+      // LOW_SCORING_OVER_RISK (🟡) wird weiter unten in der Picks-Sektion geprüft,
+      // dort haben wir Zugriff auf _genPicks und feuern nur wenn wirklich ein Over-Pick vorhanden ist.
+      if (avgGPG > 0 && avgGPG < 0.9 && h2hAvgGoals < 2.0 && h2hGames >= 3) {
+        flag('info', 'LOW_SCORING_PROFILE', `Ø gpg=${avgGPG.toFixed(2)}, H2H Ø=${h2hAvgGoals.toFixed(1)} Tore — Niedrig-Scoring-Profil`);
       }
 
       // ── 🔵 HINWEISE (Stake-Daten) ──────────────────────────────
@@ -275,6 +272,14 @@ function runPicksValidator() {
         // Unentschieden als Fallback bei sehr hoher Quote (> 3.50)
         if (_p1.market === 'Unentschieden' && _p1.conf === 'medium' && _p1.odds !== null && _p1.odds > 3.50) {
           flag('error', 'DRAW_FALLBACK_HIGH_ODDS', `Unentschieden [medium] als Fallback-Pick bei Quote ${_p1.odds} — reine Rauschen-Promotion, kein echter Signal`);
+        }
+
+        // 🔴 LOW_SCORING_OVER_RISK — nur wenn tatsächlich ein Over-Pick generiert wurde
+        // (vorher war der Check im Stake-Abschnitt ohne Zugriff auf _genPicks → Fehlalarm bei Under-Picks)
+        const _hasOverPick = _genPicks.some(p => p.market?.startsWith('Over ') && p.market?.includes('Tore'));
+        if (_hasOverPick && avgGPG > 0 && avgGPG < 0.7 && h2hAvgGoals < 2.0 && h2hGames >= 5) {
+          flag('warn', 'LOW_SCORING_OVER_RISK',
+            `Ø gpg=${avgGPG.toFixed(2)}, H2H Ø=${h2hAvgGoals.toFixed(1)} Tore (${h2hGames} Sp.) — Over-Pick trotz schwachem Scoring-Profil. Hard Gate sollte greifen.`);
         }
 
         // ── 🟡 WARNUNGEN (Picks) ─────────────────────────────────
