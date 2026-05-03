@@ -356,13 +356,17 @@ function runPicksValidator() {
           }
         }
         // 🔴 BTTS FV Negative Edge
+        // Uses _fxCopy._muH / _fxCopy._muA (same Poisson params as pick-engine's BTTS gate).
+        // Do NOT fall back to the rough (hGPG+aGPG)*0.65 proxy — gives false positives when
+        // goalsPerGame is missing (defaults to 0 here but 1.4 in pick-engine). Skip if muH/muA unavailable.
         { const _bttsp = _genPicks.find(p => p.market === 'Beide Teams treffen');
-          if (_bttsp && _bttsp.odds != null && !_bttsp.oddsIsEst) {
-            const _expH = Math.max(0.1, (hGPG + aGPG * 0.5) * 0.65); // rough proxy
-            const _expA = Math.max(0.1, (aGPG + hGPG * 0.5) * 0.65);
+          if (_bttsp && _bttsp.odds != null && !_bttsp.oddsIsEst &&
+              _fxCopy._muH != null && _fxCopy._muA != null) {
+            const _expH = Math.max(0.1, _fxCopy._muH);
+            const _expA = Math.max(0.1, _fxCopy._muA);
             const _bttsFV = (1 - Math.exp(-_expH)) * (1 - Math.exp(-_expA));
             const _bttsGap = (1 / _bttsp.odds) - _bttsFV;
-            if (_bttsGap > GATE.GOALS_REAL) flag('error', 'BTTS_NEG_EDGE',
+            if (_bttsGap > GATE.BTTS_REAL) flag('error', 'BTTS_NEG_EDGE',
               `BTTS Pick [${_bttsp.conf}] @ ${_bttsp.odds} aber Poisson FV≈${(_bttsFV*100).toFixed(1)}% (Implied=${(100/_bttsp.odds).toFixed(1)}%, Gap=${(_bttsGap*100).toFixed(1)}pp) — FV-Gate sollte geblockt haben.`);
           }
         }
