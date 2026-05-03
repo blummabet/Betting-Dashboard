@@ -616,7 +616,10 @@ function renderPolyStats() {
     <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;overflow:hidden">
       <div style="padding:12px 16px;border-bottom:1px solid #30363d;display:flex;align-items:center;justify-content:space-between">
         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8b949e">Letzte Bets</span>
-        <button onclick="polyManualResolve()" style="background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit">✏️ Ergebnisse einpflegen</button>
+        <div style="display:flex;gap:6px">
+          <button onclick="polyAutoResolve()" style="background:none;border:1px solid #3fb95055;border-radius:6px;color:#3fb950;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit">🔄 Auto-auswerten</button>
+          <button onclick="polyManualResolve()" style="background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit">✏️ Manuell</button>
+        </div>
       </div>
       <table style="width:100%;border-collapse:collapse">
         <thead style="background:#1c2128">
@@ -632,6 +635,111 @@ function renderPolyStats() {
         <tbody>${rows}</tbody>
       </table>
     </div>`;
+}
+
+// ── 6b. AUTO-RESOLVE ────────────────────────────────────
+// Fetches picks_history.json from the local server (or GitHub Pages as fallback),
+// matches each pending Polymarket bet to a resolved match entry, and sets result.
+
+function _normTeamResolve(n) {
+  return (n || '').toLowerCase()
+    .replace(/[àáâãäå]/g, 'a').replace(/[èéêë]/g, 'e')
+    .replace(/[ìíîï]/g, 'i').replace(/[òóôõöø]/g, 'o').replace(/[ùúûü]/g, 'u')
+    .replace(/[ß]/g, 'ss').replace(/[şș]/g, 's').replace(/[ğ]/g, 'g').replace(/[ı]/g, 'i')
+    .replace(/\b(fc|sv|sc|ac|ss|rc|sk|vfb|vfl|rb|tsv|as|us|cd|cf|nk|hnk|1\.fc)\b/g, '')
+    .replace(/[^a-z0-9]/g, '').trim();
+}
+
+function _matchHistoryEntry(bet, history) {
+  // bet.date is "DD.MM.YYYY"; history entries have .date "DD.MM.YYYY"
+  const hN = _normTeamResolve(bet.home);
+  const aN = _normTeamResolve(bet.away);
+  for (const entry of history) {
+    if (entry.date !== bet.date) continue;
+    const eH = _normTeamResolve(entry.home);
+    const eA = _normTeamResolve(entry.away);
+    const homeOk = eH === hN || eH.includes(hN) || hN.includes(eH);
+    const awayOk = eA === aN || eA.includes(aN) || aN.includes(eA);
+    if (homeOk && awayOk) return entry;
+  }
+  return null;
+}
+
+function _resolveBetFromEntry(bet, entry) {
+  // 1. Try to find exact match by market name in history picks
+  const pick = (entry.picks || []).find(p => p.market === bet.market);
+  if (pick?.result === 'win')  return 'won';
+  if (pick?.result === 'loss') return 'lost';
+
+  // 2. Fallback: compute from finalScore for basic markets
+  const fs = entry.finalScore;
+  if (!fs) return null;
+  const [h, a] = fs.split(':').map(Number);
+  if (isNaN(h) || isNaN(a)) return null;
+
+  const m = bet.market;
+  if (m === 'Heimsieg')                return h > a  ? 'won' : 'lost';
+  if (m === 'Auswärtssieg')            return a > h  ? 'won' : 'lost';
+  if (m === 'Unentschieden')           return h === a ? 'won' : 'lost';
+  if (m === 'Beide Teams treffen')     return (h > 0 && a > 0) ? 'won' : 'lost';
+  if (m === 'Over 2.5 Tore')          return (h + a) > 2.5 ? 'won' : 'lost';
+  if (m === 'Under 2.5 Tore')         return (h + a) < 2.5 ? 'won' : 'lost';
+  if (m === 'Over 3.5 Tore')          return (h + a) > 3.5 ? 'won' : 'lost';
+  if (m === 'Under 3.5 Tore')         return (h + a) < 3.5 ? 'won' : 'lost';
+  if (m === 'Doppelte Chance: 1X')    return h >= a ? 'won' : 'lost';
+  if (m === 'Doppelte Chance: X2')    return a >= h ? 'won' : 'lost';
+  if (m === 'Doppelte Chance: 12')    return h !== a ? 'won' : 'lost';
+
+  return null; // specialty market not found in history picks
+}
+
+async function polyAutoResolve(silent = false) {
+  const bets    = _getPolyBets();
+  const pending = bets.filter(b => !b.result);
+  if (!pending.length) {
+    if (!silent) _polyToast('Keine offenen Bets');
+    return;
+  }
+
+  // Try local server first, then GitHub Pages
+  let history = null;
+  const urls = [
+    'http://localhost:3001/picks_history',
+    'https://blummabet.github.io/Betting-Dashboard/picks_history.json',
+  ];
+  for (const url of urls) {
+    try {
+      const r = await fetch(url);
+      if (r.ok) { history = await r.json(); break; }
+    } catch (e) { /* try next */ }
+  }
+
+  if (!history || !Array.isArray(history)) {
+    if (!silent) _polyToast('❌ Spielergebnisse nicht erreichbar');
+    return;
+  }
+
+  let resolvedCount = 0;
+  for (const bet of bets) {
+    if (bet.result) continue;
+    const entry  = _matchHistoryEntry(bet, history);
+    if (!entry?.resolved) continue;   // match not yet finished
+    const result = _resolveBetFromEntry(bet, entry);
+    if (result) { bet.result = result; resolvedCount++; }
+  }
+
+  _savePolyBets(bets);
+
+  const stats = document.getElementById('polyStatsSection');
+  if (stats) stats.innerHTML = renderPolyStats();
+
+  if (!silent) {
+    _polyToast(resolvedCount > 0
+      ? `✅ ${resolvedCount} Bet${resolvedCount !== 1 ? 's' : ''} automatisch ausgewertet`
+      : '⏳ Noch keine neuen Ergebnisse verfügbar');
+  } else if (resolvedCount > 0) {
+    _polyToast(`✅ ${resolvedCount} Bet${resolvedCount !== 1 ? 's' : ''} automatisch ausgewertet`);
+  }
 }
 
 // ── 7. CONFIRMATION FLOW ────────────────────────────────
@@ -1121,6 +1229,9 @@ function initPolymarket() {
 
   // Init sticky bar
   _polyRefreshStickyBar();
+
+  // Auto-resolve pending bets silently (only shows toast if something changed)
+  setTimeout(() => polyAutoResolve(true), 800);
 
   // Fetch prices asynchronously
   _fetchAllPricesAsync();
