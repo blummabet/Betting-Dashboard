@@ -312,19 +312,27 @@ function parseTheOddsEvent(oddsEvent) {
         r.pinn_aw_fair = _r2p(_pt / (1/_paw));
       }
     }
-    // O/U 2.5
+    // O/U 2.5 + O/U 3.5 — same totals market, different points
     const _pinnTot = (_pinnBkr.markets || []).find(m => m.key === 'totals');
     if (_pinnTot) {
-      let _po25 = null, _pu25 = null;
+      let _po25 = null, _pu25 = null, _po35 = null, _pu35 = null;
       for (const o of (_pinnTot.outcomes || [])) {
         if      (o.name === 'Over'  && Math.abs(o.point - 2.5) < 0.01) _po25 = o.price;
         else if (o.name === 'Under' && Math.abs(o.point - 2.5) < 0.01) _pu25 = o.price;
+        else if (o.name === 'Over'  && Math.abs(o.point - 3.5) < 0.01) _po35 = o.price;
+        else if (o.name === 'Under' && Math.abs(o.point - 3.5) < 0.01) _pu35 = o.price;
       }
       if (_po25 && _pu25) {
         r.pinn_o25 = _po25; r.pinn_u25 = _pu25;
         const _pt2 = 1/_po25 + 1/_pu25;
         r.pinn_o25_fair = _r2p(_pt2 / (1/_po25));
         r.pinn_u25_fair = _r2p(_pt2 / (1/_pu25));
+      }
+      if (_po35 && _pu35) {
+        r.pinn_o35 = _po35; r.pinn_u35 = _pu35;
+        const _pt3 = 1/_po35 + 1/_pu35;
+        r.pinn_o35_fair = _r2p(_pt3 / (1/_po35));
+        r.pinn_u35_fair = _r2p(_pt3 / (1/_pu35));
       }
     }
   }
@@ -1580,10 +1588,16 @@ if (WRITE_MODE) {
             fx.odds_open    = { ...fx.odds };
             fx.odds_open_ts = _now;
             // Also snapshot Pinnacle-specific values if available
-            if (fx.odds.pinn_hw_fair) fx.odds_open.pinn_hw_fair = fx.odds.pinn_hw_fair;
+            if (fx.odds.pinn_hw_fair)  fx.odds_open.pinn_hw_fair  = fx.odds.pinn_hw_fair;
+            if (fx.odds.pinn_dr_fair)  fx.odds_open.pinn_dr_fair  = fx.odds.pinn_dr_fair;
+            if (fx.odds.pinn_aw_fair)  fx.odds_open.pinn_aw_fair  = fx.odds.pinn_aw_fair;
             if (fx.odds.pinn_o25_fair) fx.odds_open.pinn_o25_fair = fx.odds.pinn_o25_fair;
-            if (fx.odds.pinn_hw) fx.odds_open.pinn_hw = fx.odds.pinn_hw;
+            if (fx.odds.pinn_u25_fair) fx.odds_open.pinn_u25_fair = fx.odds.pinn_u25_fair;
+            if (fx.odds.pinn_o35_fair) fx.odds_open.pinn_o35_fair = fx.odds.pinn_o35_fair;
+            if (fx.odds.pinn_u35_fair) fx.odds_open.pinn_u35_fair = fx.odds.pinn_u35_fair;
+            if (fx.odds.pinn_hw)  fx.odds_open.pinn_hw  = fx.odds.pinn_hw;
             if (fx.odds.pinn_o25) fx.odds_open.pinn_o25 = fx.odds.pinn_o25;
+            if (fx.odds.pinn_o35) fx.odds_open.pinn_o35 = fx.odds.pinn_o35;
           }
         }
       }

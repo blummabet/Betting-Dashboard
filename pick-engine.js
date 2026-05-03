@@ -1440,6 +1440,8 @@ function getBettingPicks(match, odds, leagueKey) {
       // _fairPH/PA = blended Pinnacle (80%) + API pct (20%) — most reliable signal of true win prob
       if (_fairPH != null && _fairPH > 0.55) sc = Math.max(0, sc - (_fairPH - 0.55) * 2.2);
       else if (_fairPA != null && _fairPA > 0.55) sc = Math.max(0, sc - (_fairPA - 0.55) * 2.2);
+      // 🔑 SHARP CONTRADICTION: ≥8pp on Home or Away = market confident in a winner → Draw suppressed.
+      if (_sharpAgainstH || _sharpAgainstA) sc = Math.max(0, sc - 0.14);
       const _drH2h = h2hN >= 3 ? ` In ${h2hN} Duellen: ${h2h.draws||0}× Remis (${Math.round(drawRate*100)}%).` : ` H2H-Remisquote: ${Math.round(drawRate*100)}%.`;
       let reason = bothGold
         ? `Titelduell zweier gleichwertiger Teams — keiner will verlieren.${_drH2h} Form: ${Math.round(hFS_home*100)}% vs ${Math.round(aFS_away*100)}%${eloClose&&eloLabel?' · '+eloLabel:''}.`
@@ -1798,6 +1800,9 @@ function getBettingPicks(match, odds, leagueKey) {
       // In these cases BTTS Nein or a goals pick without that team's contribution is more accurate.
       if ((o.hw && o.hw > 5.0) || (o.aw && o.aw > 5.0)) sc = Math.max(0, sc - 0.30);
       else if ((o.hw && o.hw > 3.5) || (o.aw && o.aw > 3.5)) sc = Math.max(0, sc - 0.10);
+      // 🔑 SHARP CONTRADICTION: ≥8pp sharp money on Under 2.5 = fewer goals expected → BTTS less likely.
+      // Same signal that penalises Over 2.5 applies here: if sharp money says Under, both teams scoring is suspect.
+      if (_sharpAgainstO) sc = Math.max(0, sc - 0.09);  // U2.5 sharp contradicts BTTS Yes
       // 🔑 CLEAN SHEET / FAILED TO SCORE: direct evidence against BTTS
       // If away team often fails to score away AND home team often keeps clean sheets → BTTS very unlikely
       if (_hCSHome !== null && _hCSHome >= 0.40) sc = Math.max(0, sc - 0.10);
@@ -2462,9 +2467,18 @@ function getBettingPicks(match, odds, leagueKey) {
         if (_apiUO === 'Over 2.5')  mp = Math.min(0.88, mp + 0.025);
         else if (_apiUO === 'Under 2.5') mp = Math.max(0.05, mp - 0.020);
         mp = Math.min(0.88, Math.max(0.05, mp + _lmO));
-        // Market anchor with floor: cap ±12pp from de-vigged O3.5 market
-        if (o.o35) { const _mktO35 = 1 / o.o35 / (1/o.o35 + (o.u35 ? 1/o.u35 : (1 - 1/o.o35))); mp = Math.min(_mktO35 + 0.12, Math.max(_mktO35 - 0.12, mp)); }
-        else if (o.o25 && o.u25) { const _mktO35 = (1/o.o25)/((1/o.o25)+(1/o.u25)) * 0.55; mp = Math.min(_mktO35 + 0.12, mp); }
+        // Market anchor: prefer Pinnacle O3.5 devigged → raw bookie devig → O2.5 proxy.
+        { const _pinnO35p = odds?.pinn_o35_fair ? (1/odds.pinn_o35_fair) : null;
+          if (_pinnO35p) {
+            mp = Math.min(_pinnO35p + 0.12, Math.max(_pinnO35p - 0.12, mp));
+          } else if (o.o35) {
+            const _mktO35 = 1/o.o35 / (1/o.o35 + (o.u35 ? 1/o.u35 : (1 - 1/o.o35)));
+            mp = Math.min(_mktO35 + 0.12, Math.max(_mktO35 - 0.12, mp));
+          } else if (o.o25 && o.u25) {
+            const _mktO35 = (1/o.o25)/((1/o.o25)+(1/o.u25)) * 0.55;
+            mp = Math.min(_mktO35 + 0.12, mp);
+          }
+        }
         break;
       case 'Beide Teams treffen':
         // BTTS Yes: Poisson P(home ≥ 1) × P(away ≥ 1) — independent events
