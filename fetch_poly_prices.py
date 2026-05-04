@@ -26,7 +26,19 @@ import urllib.error
 from datetime import datetime, timezone, timedelta
 
 # ── Markets we extract ────────────────────────────────────
-POLY_MARKETS = {'Heimsieg', 'Auswärtssieg', 'Unentschieden', 'Over 2.5 Tore', 'Under 2.5 Tore', 'Beide Teams treffen'}
+POLY_MARKETS = {
+    # Match result
+    'Heimsieg', 'Auswärtssieg', 'Unentschieden',
+    # Goals Over/Under (standard Polymarket lines)
+    'Over 1.5 Tore', 'Over 2.5 Tore', 'Over 3.5 Tore',
+    'Under 1.5 Tore', 'Under 2.5 Tore',
+    # Both Teams to Score (Yes only — No not standard on Polymarket)
+    'Beide Teams treffen',
+    # Corners Over/Under (all pick-engine lines; extracted when Polymarket offers them)
+    'Über 6.5 Ecken', 'Über 7.5 Ecken', 'Über 8.5 Ecken',
+    'Über 9.5 Ecken', 'Über 10.5 Ecken', 'Über 11.5 Ecken',
+    'Unter 6.5 Ecken', 'Unter 7.5 Ecken', 'Unter 8.5 Ecken', 'Unter 9.5 Ecken',
+}
 
 # ── Leagues covered on Polymarket ────────────────────────
 POLY_LEAGUES = {'GER', 'ENG', 'ITA', 'ESP', 'FRA', 'NED', 'POR', 'TUR', 'GER2', 'SCO', 'ENG2'}
@@ -575,9 +587,8 @@ def _parse_list_field(val) -> list:
 def extract_outcome_price(market: str, question: str, outcomes: list,
                           prices: list, home_en: str, away_en: str) -> float | None:
     q = question.lower()
-    is_goals = '2.5' in market
 
-    # ── BTTS: "Will both teams score?" → Yes price ───────────────
+    # ── BTTS: "Will both teams score?" → Yes price ───────────────────────────
     if market == 'Beide Teams treffen':
         btts_kw = ('both teams', 'both score', 'btts', 'both team to score',
                    'both teams to score', 'will both')
@@ -586,17 +597,39 @@ def extract_outcome_price(market: str, question: str, outcomes: list,
         y_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'), -1)
         return _safe_float(prices[y_idx]) if y_idx >= 0 else None
 
-    if is_goals:
-        if '2.5' not in q and 'goal' not in q:
+    # ── Goals Over/Under (1.5 / 2.5 / 3.5) ─────────────────────────────────
+    # Market names: "Over 1.5 Tore", "Under 2.5 Tore", "Over 3.5 Tore", etc.
+    goals_m = re.match(r'^(Over|Under)\s+(\d+\.5)\s+Tore$', market)
+    if goals_m:
+        direction = goals_m.group(1)   # 'Over' or 'Under'
+        line      = goals_m.group(2)   # '1.5', '2.5', '3.5'
+        # Question must reference the line or mention goals/goal
+        if line not in q and 'goal' not in q:
             return None
-        y_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'), -1)
-        n_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'no'),  -1)
+        # For multi-line O/U questions the line itself must appear to avoid cross-market pollution
+        if 'goal' in q and line not in q:
+            return None
+        y_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'),   -1)
+        n_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'no'),    -1)
         o_idx = next((i for i, o in enumerate(outcomes) if 'over'  in str(o).lower()), -1)
         u_idx = next((i for i, o in enumerate(outcomes) if 'under' in str(o).lower()), -1)
-        if market.startswith('Over'):
-            idx = y_idx if y_idx >= 0 else o_idx
-        else:
-            idx = n_idx if n_idx >= 0 else u_idx
+        idx = (y_idx if y_idx >= 0 else o_idx) if direction == 'Over' else (n_idx if n_idx >= 0 else u_idx)
+        return _safe_float(prices[idx]) if idx >= 0 else None
+
+    # ── Corners Over/Under ───────────────────────────────────────────────────
+    # Market names: "Über 9.5 Ecken", "Unter 8.5 Ecken", etc.
+    corners_m = re.match(r'^(Über|Unter)\s+(\d+\.5)\s+Ecken$', market)
+    if corners_m:
+        direction = corners_m.group(1)   # 'Über' or 'Unter'
+        line      = corners_m.group(2)   # '6.5' … '11.5'
+        # Question must mention corners and the specific line
+        if 'corner' not in q or line not in q:
+            return None
+        y_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'),   -1)
+        n_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'no'),    -1)
+        o_idx = next((i for i, o in enumerate(outcomes) if 'over'  in str(o).lower()), -1)
+        u_idx = next((i for i, o in enumerate(outcomes) if 'under' in str(o).lower()), -1)
+        idx = (y_idx if y_idx >= 0 else o_idx) if direction == 'Über' else (n_idx if n_idx >= 0 else u_idx)
         return _safe_float(prices[idx]) if idx >= 0 else None
 
     # 1X2 match winner — pass if question has relevant keywords OR outcomes contain team/draw
