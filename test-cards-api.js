@@ -11,18 +11,20 @@ const https = require('https');
 const ODDS_API_KEY  = process.env.ODDS_API_KEY || '';
 const ODDS_API_HOST = 'api.the-odds-api.com';
 
-// Alle Ligen die wir im Dashboard tracken — sport_key muss exakt mit TheOddsAPI übereinstimmen
+// Alle Ligen die wir im Dashboard tracken — sport_key exakt wie in LEAGUE_ODDS_KEYS (prematch-server.js)
 const LEAGUES = [
-  { name: 'Premier League (ENG)',       key: 'soccer_england_premier_league' },
+  { name: 'Premier League (ENG)',       key: 'soccer_epl'                     },
   { name: 'La Liga (ESP)',              key: 'soccer_spain_la_liga'           },
   { name: 'Bundesliga (GER)',           key: 'soccer_germany_bundesliga'      },
   { name: 'Serie A (ITA)',              key: 'soccer_italy_serie_a'           },
   { name: 'Ligue 1 (FRA)',             key: 'soccer_france_ligue_one'        },
   { name: 'Eredivisie (NED)',           key: 'soccer_netherlands_eredivisie'  },
   { name: 'Austrian BL (AUT)',          key: 'soccer_austria_bundesliga'      },
-  { name: 'Scottish Prem (SCO)',        key: 'soccer_spl'                     },
+  { name: 'Scottish Prem (SCO)',        key: 'soccer_scotland_premiership'    },
   { name: 'Swiss Superleague (SUI)',    key: 'soccer_switzerland_superleague' },
-  { name: 'Belgian Pro League (BEL)',   key: 'soccer_belgium_first_div'       },
+  { name: 'Belgian Pro League (BEL)',   key: 'soccer_belgium_first_div_a'     },
+  { name: 'Primeira Liga (POR)',        key: 'soccer_portugal_primeira_liga'  },
+  { name: 'Süper Lig (TUR)',           key: 'soccer_turkey_super_league'     },
 ];
 
 const SPECIALTY_MARKETS = [
