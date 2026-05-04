@@ -23,13 +23,24 @@
 const POLY_STAKE = 5; // EUR flat stake per pick
 
 // Leagues covered on Polymarket (skip AUT, HUN, CRO, POL)
-const POLY_LEAGUES = new Set(['GER','ENG','ITA','ESP','FRA','NED','POR','TUR','GER2','SCO']);
+const POLY_LEAGUES = new Set(['GER','ENG','ITA','ESP','FRA','NED','POR','TUR','GER2','ENG2','SCO']);
 
-// Markets we can map to Polymarket outcomes
+// Markets we can map to Polymarket outcomes.
+// Over/Under goals: 1.5, 2.5, 3.5 (Polymarket standard lines).
+// Corners: all lines from pick engine (shown when Polymarket offers them; "kein Markt" otherwise).
+// DNB, DC, Asian Handicap, HT, Cards, Team Goals: not on Polymarket → excluded.
 const POLY_MARKETS = new Set([
+  // ── Match result ────────────────────────────────────────
   'Heimsieg', 'Auswärtssieg', 'Unentschieden',
-  'Over 2.5 Tore', 'Under 2.5 Tore',
+  // ── Goals Over/Under ────────────────────────────────────
+  'Over 1.5 Tore', 'Over 2.5 Tore', 'Over 3.5 Tore',
+  'Under 1.5 Tore', 'Under 2.5 Tore',
+  // ── Both Teams to Score ─────────────────────────────────
   'Beide Teams treffen',
+  // ── Corners Over/Under (all pick-engine lines) ──────────
+  'Über 6.5 Ecken', 'Über 7.5 Ecken', 'Über 8.5 Ecken',
+  'Über 9.5 Ecken', 'Über 10.5 Ecken', 'Über 11.5 Ecken',
+  'Unter 6.5 Ecken', 'Unter 7.5 Ecken', 'Unter 8.5 Ecken', 'Unter 9.5 Ecken',
 ]);
 
 // German dashboard names → English Polymarket names
@@ -447,14 +458,16 @@ function _confBadge(conf) {
 }
 
 function _marketIcon(market) {
-  const icons = {
-    'Heimsieg':       '🏠',
-    'Auswärtssieg':   '✈️',
-    'Unentschieden':  '🤝',
-    'Over 2.5 Tore':  '⚽',
-    'Under 2.5 Tore': '🔒',
-  };
-  return icons[market] || '📊';
+  if (!market) return '📊';
+  if (market === 'Heimsieg')             return '🏠';
+  if (market === 'Auswärtssieg')         return '✈️';
+  if (market === 'Unentschieden')        return '🤝';
+  if (market === 'Beide Teams treffen')  return '⚽';
+  if (market.startsWith('Over'))         return '⚽';
+  if (market.startsWith('Under'))        return '🔒';
+  if (market.startsWith('Über'))         return '🚩';  // corners over
+  if (market.startsWith('Unter'))        return '🛡️'; // corners under
+  return '📊';
 }
 
 function _marketColor(market) {
@@ -462,8 +475,11 @@ function _marketColor(market) {
   if (market === 'Heimsieg')          return '#58a6ff';
   if (market === 'Auswärtssieg')      return '#f5c518';
   if (market === 'Unentschieden')     return '#a78bfa';
-  if (market.startsWith('Over'))      return '#3fb950';
-  if (market.startsWith('Under'))     return '#f85149';
+  if (market === 'Beide Teams treffen') return '#a78bfa';
+  if (market.startsWith('Over'))      return '#3fb950';  // goals over
+  if (market.startsWith('Under'))     return '#f85149';  // goals under
+  if (market.startsWith('Über'))      return '#3fb950';  // corners over
+  if (market.startsWith('Unter'))     return '#f85149';  // corners under
   return '#8b949e';
 }
 
