@@ -820,9 +820,10 @@ def main():
         away = fx.get('away', '')
         if not home or not away:
             continue
-        has_poly = any(p.get('market') in POLY_MARKETS for p in (fx.get('picks') or []))
-        if not has_poly:
-            continue
+        # Process ALL supported-league games regardless of current pick markets.
+        # Picks are recomputed live by the browser engine and can differ from picks_output.json
+        # (e.g. new odds unlock an Under 2.5 pick that wasn't there when picks_output was generated).
+        # Filtering by pick-market causes stale "not found" cache entries for those games.
         # date_str: normalize to YYYY-MM-DD regardless of source format (DD.MM.YYYY or ISO)
         raw_date = fx.get('date') or fx.get('fixture_date') or fx.get('kickoff') or ''
         date_str = _normalize_date(raw_date) if raw_date else ''
