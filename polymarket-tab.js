@@ -1531,20 +1531,8 @@ async function _fetchAllPricesAsync() {
       const result = _getPriceFromCache(pick);
       _polyState.prices[pick.id] = result || { found: false };
     }
-    // Remove picks explicitly confirmed as NOT on Polymarket (found:false AND not stale).
-    // Stale = match not in cache → cache may be outdated → keep showing to avoid false negatives.
-    const before = _polyState.picks.length;
-    _polyState.picks = _polyState.picks.filter(pick => {
-      const p = _polyState.prices[pick.id];
-      return !p || p.found || p.stale;   // hide only confirmed-missing
-    });
-    if (_polyState.picks.length !== before) {
-      _polyState.selected = new Set([..._polyState.selected].filter(id =>
-        _polyState.picks.some(p => p.id === id)));
-      _polyRefreshStickyBar();
-      const lbl = document.getElementById('polyPicksLabel');
-      if (lbl) lbl.textContent = `Picks — ${_polyState.picks.length} verfügbar`;
-    }
+    // NOTE: We do NOT filter out picks here — all system picks are valid Polymarket bets.
+    // Stale (⏳) or missing (—) prices just mean the price cache needs a refresh (git pull).
   }
 
   // Single re-render after all prices are set
