@@ -1374,6 +1374,45 @@ async function fetchAllPrematchData() {
   }
   console.log(`  Step5 fertig: ${oddsOk} OK · ${oddsMiss} kein Match (von ${upcoming.length} Spielen)`);
 
+  // ── Step 5c: API-Football corners/cards enrichment ───────────────────────────
+  // TheOddsAPI often doesn't return alternate_totals_corners / alternate_totals_cards
+  // for smaller leagues (AUT, SCO, NED etc.) even via the /events endpoint.
+  // For fixtures that have 1X2 odds (from TheOddsAPI or elsewhere) but still lack
+  // real corners or cards odds, fetch from API-Football /odds (Pinnacle = bookmaker 8)
+  // and extract those specific markets.
+  // Capped at 15 fixtures max to protect daily quota.
+  { const _cornersMissing = upcoming.filter(d => d.odds && !d.odds.co85 && !d.odds.co95);
+    const _toEnrich5c = _cornersMissing.slice(0, 15);
+    if (_toEnrich5c.length > 0) {
+      console.log(`[Server] Step5c: API-Football Ecken/Karten-Enrichment für ${_toEnrich5c.length} Spiele...`);
+      let _enriched5c = 0;
+      for (const d of _toEnrich5c) {
+        await sleep(600);
+        try {
+          const data = await apiFetch(`/odds?fixture=${d.fixtureId}&bookmaker=8`);
+          const resp = (data.response || [])[0];
+          if (!resp) continue;
+          const bkrs = resp.bookmakers || [];
+          if (!bkrs.length) continue;
+          const parsed = parseBets(bkrs);
+          // Only merge specialty fields — never overwrite 1X2/O/U from TheOddsAPI
+          let anyNew = false;
+          for (const key of ['co75','co85','co95','co105','co115','cu75','cu85','cu95','cu105','cu115',
+                             'cards_o35','cards_o45','cards_o55','cards_u35','cards_u45']) {
+            if (parsed[key] != null && !d.odds[key]) { d.odds[key] = parsed[key]; anyNew = true; }
+          }
+          // Also merge BTTS if missing
+          if (parsed.bttsY && !d.odds.bttsY) { d.odds.bttsY = parsed.bttsY; anyNew = true; }
+          if (parsed.bttsN && !d.odds.bttsN) { d.odds.bttsN = parsed.bttsN; anyNew = true; }
+          if (anyNew) _enriched5c++;
+        } catch(e) {
+          console.warn(`  [Step5c] ${d.homeTeamName} vs ${d.awayTeamName}: ${e.message}`);
+        }
+      }
+      console.log(`  Step5c fertig: ${_enriched5c}/${_toEnrich5c.length} Spiele mit Ecken/Karten angereichert`);
+    }
+  }
+
   // ── Step 5e: API-Football /odds fallback for fixtures missed by TheOddsAPI ──
   // TheOddsAPI doesn't cover every league/fixture (e.g. AUT, HUN, CRO, POL minor rounds).
   // For fixtures still missing odds, try API-Football /odds with Pinnacle (bookmaker=8).
