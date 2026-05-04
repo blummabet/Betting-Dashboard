@@ -982,6 +982,9 @@ async function fetchAllPrematchData() {
         `/fixtures?league=${leagueId}&season=2025&from=${dateFrom}&to=${dateTo}&timezone=Europe%2FVienna`
       );
       const fxs = data.response || [];
+      if (data.errors && Object.keys(data.errors).length > 0) {
+        console.warn(`  [Step1] ${leagueName} API-FEHLER: ${JSON.stringify(data.errors)} ← wahrscheinlich Quota erschöpft`);
+      }
       console.log(`  [Step1] ${leagueName} (${leagueId}): ${fxs.length} Spiele`);
       for (const fx of fxs) {
         const id = fx.fixture?.id;
@@ -1614,6 +1617,16 @@ if (WRITE_MODE) {
   fetchAllPrematchData()
     .then(fixtures => {
       const outPath = path.join(__dirname, 'prematch-data.json');
+
+      // ── Kein Fixture zurückgegeben → alte Datei NICHT überschreiben ──────
+      // Mögliche Ursachen: APISPORTS_KEY Quota erschöpft, Netzwerkfehler.
+      // Die alte prematch-data.json bleibt erhalten → Dashboard bleibt funktional.
+      if (fixtures.length === 0) {
+        console.error('\n❌ 0 Fixtures zurückgegeben — prematch-data.json wird NICHT überschrieben.');
+        console.error('   Alter Stand bleibt erhalten. Prüfe Step1-Logs oben auf API-Fehler/Quota.');
+        console.error('   Falls APISPORTS_KEY erschöpft: api-sports.io Dashboard → "My Account" → Quota-Status.');
+        process.exit(1);
+      }
 
       // ── Preserve odds_open + odds_open_ts from previous run ──────────────
       // odds_open is set once (first time we see a fixture with odds) and never overwritten.
