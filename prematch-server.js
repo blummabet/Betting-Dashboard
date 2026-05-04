@@ -623,7 +623,7 @@ function _saveSquadCache() {
 // Stores avgCards/avgYellow/games per referee name — refreshed every 48h.
 // One API call per unique referee name (typically ~10–15 per run).
 const REFEREE_CACHE_FILE = path.join(__dirname, 'referee-cache.json');
-const REFEREE_TTL = 48 * 3600 * 1000;
+const REFEREE_TTL = 7 * 24 * 3600 * 1000; // 7 Tage (wie SQUAD_TTL) — reduziert API-Calls massiv
 let _refereeCache = {};
 try {
   _refereeCache = JSON.parse(fs.readFileSync(REFEREE_CACHE_FILE, 'utf8'));
@@ -955,11 +955,17 @@ async function fetchAllPrematchData() {
     const _req = (_st.response || {}).requests || {};
     _apiRemaining = (_req.limit_day ?? 9999) - (_req.current ?? 0);
     console.log(`[Server] API-Account: Plan="${_sub.plan||'?'}" | Heute: ${_req.current??'?'}/${_req.limit_day??'?'} Requests | Verbleibend: ${_apiRemaining}`);
-    if (_apiRemaining < 200) {
-      console.warn(`[Server] ⚠ Quota knapp (${_apiRemaining} verbleibend) — Step1.6 (Bookings) wird übersprungen um Odds-Fetch zu sichern`);
-    }
     if (_st.errors && Object.keys(_st.errors).length) {
-      console.warn(`[Server] API-Status Fehler:`, JSON.stringify(_st.errors));
+      const errStr = JSON.stringify(_st.errors);
+      console.warn(`[Server] API-Status Fehler:`, errStr);
+      // Quota erschöpft → sofort abbrechen, prematch-data.json NICHT überschreiben
+      if (errStr.toLowerCase().includes('limit') || errStr.toLowerCase().includes('quota')) {
+        console.error('[Server] ❌ Tages-Quota erschöpft — Fetch wird abgebrochen. Alter Stand bleibt erhalten.');
+        return [];
+      }
+    }
+    if (_apiRemaining < 300) {
+      console.warn(`[Server] ⚠ Quota knapp (${_apiRemaining} verbleibend) — Referee-Stats werden übersprungen`);
     }
   } catch(e) { console.warn('[Server] API-Status nicht abrufbar:', e.message); }
 
