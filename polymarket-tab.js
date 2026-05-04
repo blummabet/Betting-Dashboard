@@ -482,6 +482,8 @@ function _priceBlock(pickId) {
 function _edgeBlock(pick, pickId) {
   const p = _polyState.prices[pickId];
   const refOdds = pick.oddsIsEst ? pick.modelOdds : pick.odds;
+  // Stale = match exists in our picks but wasn't in the price cache → cache not yet refreshed
+  if (p && p.stale) return `<span style="color:#8b949e;font-size:11px" title="Polymarket-Preis noch nicht gecheckt — läuft 4x täglich via GitHub Action">⏳ n.v.</span>`;
   if (!p || !p.found || !refOdds) return `<span style="color:#8b949e;font-size:12px">—</span>`;
   const ourImplied = 1 / refOdds;
   // Positive = Poly gibt bessere Odds als der Bookie (niedrigere implizite Wahrsch. = höhere Quoten)
@@ -1528,6 +1530,20 @@ async function _fetchAllPricesAsync() {
     for (const pick of picks) {
       const result = _getPriceFromCache(pick);
       _polyState.prices[pick.id] = result || { found: false };
+    }
+    // Remove picks explicitly confirmed as NOT on Polymarket (found:false AND not stale).
+    // Stale = match not in cache → cache may be outdated → keep showing to avoid false negatives.
+    const before = _polyState.picks.length;
+    _polyState.picks = _polyState.picks.filter(pick => {
+      const p = _polyState.prices[pick.id];
+      return !p || p.found || p.stale;   // hide only confirmed-missing
+    });
+    if (_polyState.picks.length !== before) {
+      _polyState.selected = new Set([..._polyState.selected].filter(id =>
+        _polyState.picks.some(p => p.id === id)));
+      _polyRefreshStickyBar();
+      const lbl = document.getElementById('polyPicksLabel');
+      if (lbl) lbl.textContent = `Picks — ${_polyState.picks.length} verfügbar`;
     }
   }
 
