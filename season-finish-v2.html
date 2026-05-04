@@ -2787,6 +2787,24 @@ function _parseTheOddsEvent(g) {
 function findOdds(leagueKey, home, away) {
   const hn = norm(home), an = norm(away);
 
+  // ── Skip live odds if match has already kicked off ────────────────────────
+  // Once the ball is rolling TheOddsAPI switches to in-play prices (e.g. 1.05 for a
+  // team leading 2-0). Those live prices distort the pick engine: pre-match value
+  // picks disappear and nonsensical in-play picks can appear.
+  // Solution: if current local time > kick-off + 5 min → freeze at pm.odds snapshot.
+  // This keeps the card showing the pre-match analysis the user based their bet on.
+  const _pmLive = window._preMatchData?.[`${home}|${away}`];
+  if (_pmLive?.time) {
+    const [_kh, _km] = _pmLive.time.split(':').map(Number);
+    const _now = new Date();
+    const _nowMin = _now.getHours() * 60 + _now.getMinutes();
+    const _kickMin = _kh * 60 + _km;
+    if (_nowMin > _kickMin + 5) {
+      // Match in progress (or finished today) → use pre-match snapshot
+      if (_pmLive.odds && Object.keys(_pmLive.odds).length >= 2) return _pmLive.odds;
+    }
+  }
+
   // ── Primary: The Odds API live data (loadAllOdds runs on page load) ────────
   const games = window._oddsData[leagueKey] || [];
   for (const g of games) {
