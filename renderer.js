@@ -1092,17 +1092,33 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     let driftHtml = '';
     if (_oddsOpen && oddsNum != null && !p.oddsIsEst) {
       const mktL = (p.market || '').toLowerCase();
-      const _oddsKey = mktL.includes('heimsieg') || mktL.includes('dnb: heim') || mktL.includes('1x')  ? 'hw'
-        : mktL.includes('auswärtssieg') || mktL.includes('dnb: ausw') || mktL.includes('x2')           ? 'aw'
+      // DC picks use dc1X_bkr / dcX2_bkr — NOT the raw Away/Home Win odds.
+      // Using 'aw' for X2 or 'hw' for 1X caused apples-to-oranges drift comparisons.
+      const _oddsKey = mktL.includes('doppelte chance') && mktL.includes('x2')                          ? 'dcX2_bkr'
+        : mktL.includes('doppelte chance') && mktL.includes('1x')                                        ? 'dc1X_bkr'
+        : mktL.includes('heimsieg') || mktL.includes('dnb: heim')                                        ? 'hw'
+        : mktL.includes('auswärtssieg') || mktL.includes('dnb: ausw')                                    ? 'aw'
         : mktL.includes('unentschieden') || mktL.includes('remis')                                       ? 'dr'
-        : mktL.includes('over 2.5') || mktL.includes('over 3') || mktL === 'über 2.5'                   ? 'o25'
+        : mktL.includes('over 2.5') || mktL.includes('über 2.5')                                         ? 'o25'
         : mktL.includes('under 2.5') || mktL.includes('unter 2.5')                                       ? 'u25'
         : mktL.includes('over 3.5') || mktL.includes('über 3.5')                                         ? 'o35'
-        : mktL.includes('btts') || mktL.includes('beide teams treffen')                                  ? 'btts'
+        : mktL.includes('btts') || mktL.includes('beide teams treffen')                                  ? 'bttsY'
         : mktL.startsWith('ah heim')                                                                      ? 'ah_h'
         : mktL.startsWith('ah ausw')                                                                      ? 'ah_a'
         : null;
-      const _openOdds = _oddsKey ? parseFloat(_oddsOpen[_oddsKey]) : null;
+      // For DC picks: if bookmaker DC snapshot not in odds_open, derive from 1X2 opening
+      let _openOdds = _oddsKey ? parseFloat(_oddsOpen[_oddsKey]) : null;
+      if ((!_openOdds || _openOdds <= 1) && _oddsOpen.hw && _oddsOpen.dr && _oddsOpen.aw) {
+        if (_oddsKey === 'dcX2_bkr') {
+          const tot = 1/_oddsOpen.hw + 1/_oddsOpen.dr + 1/_oddsOpen.aw;
+          const pd = (1/_oddsOpen.dr)/tot, pa = (1/_oddsOpen.aw)/tot;
+          _openOdds = Math.round((1/(pd+pa)) * 0.97 * 100) / 100;
+        } else if (_oddsKey === 'dc1X_bkr') {
+          const tot = 1/_oddsOpen.hw + 1/_oddsOpen.dr + 1/_oddsOpen.aw;
+          const ph = (1/_oddsOpen.hw)/tot, pd = (1/_oddsOpen.dr)/tot;
+          _openOdds = Math.round((1/(ph+pd)) * 0.97 * 100) / 100;
+        }
+      }
       if (_openOdds && _openOdds > 1 && oddsNum > 1 && Math.abs(_openOdds - oddsNum) > 0.01) {
         const _openImpl = 1 / _openOdds;
         const _currImpl = 1 / oddsNum;
