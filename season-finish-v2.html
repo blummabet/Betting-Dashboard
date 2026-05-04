@@ -2545,7 +2545,9 @@ const LEAGUE_SPORT_KEYS = {
   // HUN (271) / CRO (210): not covered by The Odds API — no bookmaker odds available for these leagues.
 };
 
-window._oddsData = {};
+window._oddsData   = {};
+window._oddsLoaded = false;   // set to true by loadAllOdds().then()
+window._pendingPolyInit = false; // set true when Polymarket tab opens before odds are ready
 window._oddsReady = false;
 window._teamStats = {};   // populated by stats_cache.json (understat xG + venue rates)
 
@@ -3483,21 +3485,13 @@ setTimeout(() => {
   loadPreMatchData();
   // Fallback: the-odds-api.com — lädt Quoten für alle Ligen; re-rendert wenn fertig
   loadAllOdds().then(() => {
+    window._oddsLoaded = true;           // signal: live market data is ready
     renderLeague(window._currentLeague);
-    // Polymarket tab: picks depend on live odds — refresh if the panel is currently open.
-    // On first open the tab renders before loadAllOdds completes → stale picks.
-    // After this callback runs, re-compute with full live data so picks are consistent.
-    const _polyPanel = document.getElementById('polymarketPanel');
-    if (_polyPanel && _polyPanel.style.display !== 'none' && typeof _polyState !== 'undefined' && _polyState.dateStr) {
-      _polyState.picks    = getPolyPicks(_polyState.dateStr);
-      _polyState.selected = new Set(_polyState.picks.map(p => p.id));
-      if (typeof _polyRefreshStickyBar === 'function') _polyRefreshStickyBar();
-      const _grid  = document.getElementById('polyPickGrid');
-      if (_grid) _grid.innerHTML = renderPolyPickCards();
-      const _label = document.getElementById('polyPicksLabel');
-      if (_label) _label.textContent = `Picks — ${_polyState.picks.length} verfügbar`;
-      const _sub   = document.getElementById('polyDateSub');
-      if (_sub) _sub.textContent = `${_polyState.dateStr} · ${_polyState.picks.length} eligible pick${_polyState.picks.length !== 1 ? 's' : ''}`;
+    // If Polymarket tab was opened before odds finished loading, it showed a spinner.
+    // Now that we have live data, render it properly.
+    if (window._pendingPolyInit) {
+      window._pendingPolyInit = false;
+      if (typeof initPolymarket === 'function') initPolymarket();
     }
   });
 }, 1500);

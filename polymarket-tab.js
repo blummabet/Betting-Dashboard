@@ -1180,14 +1180,31 @@ function _polyToast(msg) {
 // ── 8. ENTRY POINT ──────────────────────────────────────
 
 function initPolymarket() {
-  const dateStr = _todayStr();
+  const panel = document.getElementById('polymarketPanel');
+  if (!panel) return;
+
+  // ── Wait for live odds before computing picks ─────────────────────────────
+  // loadAllOdds() runs async after page load. If it hasn't finished yet,
+  // show a loading state and let the loadAllOdds callback trigger us again.
+  // This prevents a two-phase render (stale picks → live picks) that causes
+  // a jarring flash and may show wrong picks (e.g. ITA instead of ENG).
+  if (!window._oddsLoaded) {
+    _polyState.dateStr = _todayStr();     // remember chosen date for deferred render
+    window._pendingPolyInit = true;       // signal: call initPolymarket() when odds ready
+    panel.innerHTML = `
+      <div style="text-align:center;padding:80px 24px;color:#8b949e">
+        <div style="font-size:36px;margin-bottom:14px">⏳</div>
+        <div style="font-weight:700;font-size:15px;margin-bottom:6px;color:#e6edf3">Live-Quoten werden geladen…</div>
+        <div style="font-size:12px">Picks werden berechnet sobald Marktdaten verfügbar sind</div>
+      </div>`;
+    return;
+  }
+
+  const dateStr = _polyState.dateStr || _todayStr();
   _polyState.dateStr  = dateStr;
   _polyState.picks    = getPolyPicks(dateStr);
   _polyState.prices   = {};
   _polyState.selected = new Set(_polyState.picks.map(p => p.id)); // start: all selected
-
-  const panel = document.getElementById('polymarketPanel');
-  if (!panel) return;
 
   const n = _polyState.picks.length;
 
