@@ -14,7 +14,7 @@ jobs:
   fetch-data:
     runs-on: ubuntu-latest
     permissions:
-      contents: write   # Brauchen wir um prematch-data.json zu commiten
+      contents: write
 
     steps:
       - name: Checkout Repository
@@ -32,13 +32,31 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         timeout-minutes: 10
 
+      # Validierung: Workflow schlägt fehl wenn prematch-data.json leer ist.
+      # Damit löst update-dashboard.yml (workflow_run-Trigger) NICHT aus → keine
+      # Picks werden mit leeren Daten generiert.
+      - name: Prematch-Daten validieren
+        run: |
+          COUNT=$(node -e "
+            try {
+              const d = require('./prematch-data.json');
+              const n = (d.fixtures || []).length;
+              process.stdout.write(String(n));
+            } catch(e) { process.stdout.write('0'); }
+          " 2>/dev/null || echo 0)
+          echo "prematch-data.json: $COUNT Fixtures"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "❌ FEHLER: prematch-data.json hat 0 Fixtures — Fetch fehlgeschlagen oder keine Spiele im Zeitfenster."
+            echo "   Prüfe API-Quota (APISPORTS_KEY / ODDS_API_KEY) und Server-Logs oben."
+            exit 1
+          fi
+          echo "✅ $COUNT Fixtures geladen — Fetch erfolgreich."
+
       - name: Commit & Push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add prematch-data.json squad-cache.json bookings-cache.json referee-cache.json
-          # Nur committen wenn sich tatsächlich etwas geändert hat
           git diff --staged --quiet || git commit -m "chore: update prematch data [skip ci]"
-          # Pull rebase before push to avoid rejection when other commits landed in between
           git pull origin main --no-rebase -X ours
           git push

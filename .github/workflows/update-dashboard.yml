@@ -1,12 +1,17 @@
 name: 🔄 Dashboard aktualisieren
 
 on:
-  # Automatisch: täglich 06:00, 14:00, 18:00 UTC (08:00 / 16:00 / 20:00 MEZ)
-  # 18:00 UTC = nach dem 17:00 UTC prematch-fetch → Picks mit frischen Quoten synced
+  # Läuft automatisch nach jedem erfolgreichen fetch-prematch Lauf.
+  # Damit ist sichergestellt dass generate_picks.js immer frische prematch-data.json liest.
+  workflow_run:
+    workflows: ["Fetch Pre-Match Data"]
+    types: [completed]
+
+  # Zusätzliche geplante Runs für Intra-Tag-Updates (Stats, Results, Poly-Preise)
+  # die NICHT von fresh prematch-data abhängen.
   schedule:
     - cron: '0 6 * * *'
     - cron: '0 14 * * *'
-    - cron: '0 18 * * *'
 
   # Manuell: jederzeit per Knopfdruck auf GitHub ausführbar
   workflow_dispatch:
@@ -18,6 +23,11 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
+    # Bei workflow_run-Trigger: nur ausführen wenn fetch-prematch erfolgreich war.
+    # Bei schedule/dispatch: immer ausführen.
+    if: >
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -50,17 +60,38 @@ jobs:
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
-      # 6a. Picks via echte JS-Logik generieren (identisch mit Browser-Cards)
+      # 6a. Node.js für Picks-Generierung einrichten
       - name: 🎯 Picks generieren (JS Engine)
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: 🎯 Picks generieren (run)
-        run: node generate_picks.js
-        continue-on-error: true
 
-      # 6b. Picks in History speichern
+      # 6b. Prematch-Daten validieren — Picks nur generieren wenn Daten vorhanden
+      - name: 🔍 Prematch-Daten validieren
+        id: prematch_check
+        run: |
+          COUNT=$(node -e "
+            try {
+              const d = require('./prematch-data.json');
+              const n = (d.fixtures || []).length;
+              process.stdout.write(String(n));
+            } catch(e) { process.stdout.write('0'); }
+          " 2>/dev/null || echo 0)
+          echo "fixture_count=$COUNT" >> $GITHUB_OUTPUT
+          echo "prematch-data.json enthält $COUNT Fixtures"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "⚠️  WARNUNG: prematch-data.json ist leer — Picks werden NICHT neu generiert."
+            echo "   Stale picks_output.json bleibt erhalten. Prüfe fetch-prematch Logs."
+          fi
+
+      # 6c. Picks generieren — nur wenn prematch-data.json Fixtures enthält
+      - name: 🎯 Picks generieren (run)
+        if: steps.prematch_check.outputs.fixture_count != '0'
+        run: node generate_picks.js
+
+      # 6d. Picks in History speichern — nur wenn Picks generiert wurden
       - name: 📝 Picks speichern
+        if: steps.prematch_check.outputs.fixture_count != '0'
         run: python save_picks.py
         continue-on-error: true
 
@@ -79,7 +110,6 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          # Nur existierende Dateien stagen — fehlt eine, kein fataler Abbruch
           for f in season-finish.html season-finish-v2.html stats_cache.json picks_history.json squad_cache.json xg_cache.json picks_output.json polymarket_prices.json; do
             if [ -f "$f" ]; then
               git add "$f"
@@ -87,7 +117,6 @@ jobs:
               echo "⚠️  $f nicht vorhanden — übersprungen"
             fi
           done
-          # Nur committen wenn wirklich etwas geändert wurde
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
           else
