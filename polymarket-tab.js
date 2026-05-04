@@ -485,10 +485,15 @@ function _edgeBlock(pick, pickId) {
   if (!p || !p.found || !refOdds) return `<span style="color:#8b949e;font-size:12px">—</span>`;
   const ourImplied = 1 / refOdds;
   // Positive = Poly gibt bessere Odds als der Bookie (niedrigere implizite Wahrsch. = höhere Quoten)
-  const edgePp     = Math.round((ourImplied - p.price) * 100);
+  const edgePp = Math.round((ourImplied - p.price) * 100);
   if (Math.abs(edgePp) < 1) return `<span style="color:#8b949e;font-size:12px">≈ 0%</span>`;
   const col  = edgePp > 0 ? '#3fb950' : '#f85149';
   const sign = edgePp > 0 ? '+' : '';
+  // Distinguish: real bookie edge vs model-only edge (no independent bookie confirmation)
+  if (pick.oddsIsEst) {
+    return `<span style="color:${col};font-size:13px;font-weight:700">${sign}${edgePp}pp</span>`
+         + `<span style="color:#8b949e;font-size:10px;margin-left:3px" title="Edge basiert auf Poisson-Modell, nicht auf Bookie-Quote">~Modell</span>`;
+  }
   return `<span style="color:${col};font-size:13px;font-weight:700">${sign}${edgePp}pp</span>`;
 }
 

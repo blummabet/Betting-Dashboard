@@ -141,9 +141,28 @@ function oddsApiFetch(sportKey) {
 // double_chance, alternate_totals, alternate_spreads, h2h_h1, totals_h1, btts_h1.
 // The batch /sports/{sport}/odds/ endpoint only supports: h2h, spreads, totals, outrights.
 // Returns the event data object (with bookmakers array), or null on error.
-// Low-level HTTPS GET helper for TheOddsAPI — returns { status, headers, data } or null on error.
-function _oddsApiGet(path) {
+// Fetch specialty markets for a single event using the correct /events/{eventId}/odds endpoint.
+// TheOddsAPI docs: "Additional markets need to be accessed one event at a time
+// using the /events/{eventId}/odds endpoint."
+// Confirmed valid market keys (test run 2026-05-03, La Liga, HTTP 200):
+//   btts, alternate_totals_corners, alternate_totals_cards, double_chance,
+//   alternate_totals, alternate_spreads, h2h_h1, totals_h1, btts_h1
+// Returns the event data object (with bookmakers array), or null on error.
+function oddsApiEventFetch(sportKey, eventId) {
   return new Promise((resolve) => {
+    const markets = [
+      'btts',
+      'alternate_totals_corners',
+      'alternate_totals_cards',
+      'double_chance',
+      'alternate_totals',
+      'alternate_spreads',
+      'h2h_h1',
+      'totals_h1',
+      'btts_h1',
+    ].join(',');
+    const path = `/v4/sports/${sportKey}/events/${eventId}/odds?apiKey=${ODDS_API_KEY}`
+      + `&regions=eu,uk&markets=${markets}&oddsFormat=decimal`;
     const options = { hostname: ODDS_API_HOST, path, method: 'GET',
       headers: { 'User-Agent': 'CocoBet/1.0' } };
     const req = https.request(options, res => {
@@ -151,55 +170,23 @@ function _oddsApiGet(path) {
       res.on('data', chunk => body += chunk);
       res.on('end', () => {
         try {
+          if (res.statusCode !== 200) {
+            const errSnippet = body.slice(0, 200).replace(/\n/g, ' ');
+            console.warn(`  [OddsAPI Event] ${sportKey}/${eventId}: HTTP ${res.statusCode} — ${errSnippet}`);
+            resolve(null); return;
+          }
           const data = JSON.parse(body);
-          resolve({ status: res.statusCode, headers: res.headers, data });
+          resolve(data);
         } catch(e) {
-          resolve({ status: res.statusCode, headers: res.headers, data: null });
+          console.warn(`  [OddsAPI Event] ${sportKey}/${eventId}: parse error — ${e.message}`);
+          resolve(null);
         }
       });
     });
-    req.on('error', () => resolve(null));
+    req.on('error', (e) => { resolve(null); });
     req.setTimeout(15000, () => { req.destroy(); resolve(null); });
     req.end();
   });
-}
-
-// Fetch specialty markets for a single event.
-// Split into two requests to avoid a single invalid market key killing the whole call:
-//   Request A: btts, double_chance, alternate_totals, alternate_spreads, h2h_h1, totals_h1
-//   Request B: alternate_totals_corners  (corners — might 422 on leagues without this market)
-// Cards odds come from API-Football Step 5c instead.
-// Returns a merged bookmakers array (same shape as batch endpoint), or null on total failure.
-async function oddsApiEventFetch(sportKey, eventId) {
-  const base = `/v4/sports/${sportKey}/events/${eventId}/odds?apiKey=${ODDS_API_KEY}`
-             + `&regions=eu,uk&oddsFormat=decimal&markets=`;
-
-  // Request A — core specialty markets (reliable, available on all plans)
-  const resA = await _oddsApiGet(base + 'btts,double_chance,alternate_totals,alternate_spreads,h2h_h1,totals_h1');
-  if (!resA) return null;
-  if (resA.status !== 200) {
-    console.warn(`  [OddsAPI Event] ${sportKey}/${eventId}: HTTP ${resA.status} (core) — ${JSON.stringify(resA.data).slice(0,150)}`);
-    return null;
-  }
-  const merged = resA.data;  // { id, bookmakers: [...] }
-
-  // Request B — corners (may 422 for leagues/bookmakers without this market — silent skip)
-  const resB = await _oddsApiGet(base + 'alternate_totals_corners');
-  if (resB && resB.status === 200 && resB.data?.bookmakers) {
-    for (const bkr of resB.data.bookmakers) {
-      const existing = (merged.bookmakers || []).find(b => b.key === bkr.key);
-      if (existing) {
-        for (const mkt of (bkr.markets || [])) {
-          if (!existing.markets.find(m => m.key === mkt.key)) existing.markets.push(mkt);
-        }
-      } else {
-        if (!merged.bookmakers) merged.bookmakers = [];
-        merged.bookmakers.push(bkr);
-      }
-    }
-  }
-
-  return merged;
 }
 
 // Normalize team names for fuzzy matching across APIs (API-Football vs The Odds API)
