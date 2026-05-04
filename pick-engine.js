@@ -89,11 +89,11 @@ function _poissonOdds(prob, margin) {
   return Math.round((1 / prob) * (1 - margin) * 100) / 100;
 }
 // Estimate corners odds from expected corners total (Poisson model, 6% margin).
-// Returns { co85, co95, co105, co115, cu85, cu95, oddsIsEst: true } — same keys as _parseOddsBets.
+// Returns { co65, co75, co85, co95, co105, co115, cu65, cu75, cu85, cu95, cu105, cu115, oddsIsEst: true }.
 function estimateCornersOdds(lambda) {
   if (!lambda || lambda <= 0) return {};
   const r = { oddsIsEst: true };
-  ['8.5','9.5','10.5','11.5'].forEach(line => {
+  ['6.5','7.5','8.5','9.5','10.5','11.5'].forEach(line => {
     const l = parseFloat(line);
     const pOver = _poissonOver(lambda, l);
     const key = 'co' + line.replace('.','');
@@ -1031,13 +1031,20 @@ function getBettingPicks(match, odds, leagueKey) {
   const cornersOver9   = cornersEstAdj >= 9.5;
   const cornersOver11  = cornersEstAdj >= 11.0;
   // ── Poisson-estimated corners odds (injected into o when real quotes absent) ──
-  if (!o.co95 || !o.co85) {
+  // Always fill all missing lines (6.5–11.5) — real bookmaker values are never overwritten.
+  // Small leagues (SCO, SUI, AUT) may only have 6.5/7.5 from bookmakers like VirginBet.
+  {
+    const _co85real = !!o.co85;
+    const _co95real = !!o.co95;
     const _cEst = estimateCornersOdds(cornersEst);
+    if (!o.co65)  { o.co65  = _cEst.co65;  o.cu65  = _cEst.cu65;  }
+    if (!o.co75)  { o.co75  = _cEst.co75;  o.cu75  = _cEst.cu75;  }
     if (!o.co85)  { o.co85  = _cEst.co85;  o.cu85  = _cEst.cu85;  }
     if (!o.co95)  { o.co95  = _cEst.co95;  o.cu95  = _cEst.cu95;  }
     if (!o.co105) { o.co105 = _cEst.co105; o.cu105 = _cEst.cu105; }
     if (!o.co115) { o.co115 = _cEst.co115; o.cu115 = _cEst.cu115; }
-    if (_cEst.oddsIsEst) o._cornersOddsEst = true;  // flag for render
+    // Only mark as estimated when the main 8.5/9.5 lines came from the model, not a bookmaker
+    if (!_co85real && !_co95real && _cEst.oddsIsEst) o._cornersOddsEst = true;
   }
   // Cards — helper flags (anyGold already declared above; anyOrange added here)
   const anyOrange = hc.includes('orange') || ac.includes('orange');
@@ -1954,6 +1961,8 @@ function getBettingPicks(match, odds, leagueKey) {
       // or until no higher line is available (then keep current regardless).
       const _OVER_MIN_ODD = 1.35;
       const _overLines = [
+        { mkt:'Über 6.5 Ecken',  odds: o.co65  || null },
+        { mkt:'Über 7.5 Ecken',  odds: o.co75  || null },
         { mkt:'Über 8.5 Ecken',  odds: o.co85  || null },
         { mkt:'Über 9.5 Ecken',  odds: o.co95  || null },
         { mkt:'Über 10.5 Ecken', odds: o.co105 || null },
@@ -1961,7 +1970,8 @@ function getBettingPicks(match, odds, leagueKey) {
       ];
       // Starting line: based on injury-adjusted estimate — prevents "Über 9.5" being selected
       // when injuries pull the real expectation below the threshold (FV would inflate to 2.5+).
-      let _overStartIdx = cornersEstAdj >= 11.5 ? 3 : cornersEstAdj >= 10.5 ? 2 : cornersEstAdj >= 9.5 ? 1 : 0;
+      // Indices shifted by 2 to account for new 6.5/7.5 entries at front of array.
+      let _overStartIdx = cornersEstAdj >= 11.5 ? 5 : cornersEstAdj >= 10.5 ? 4 : cornersEstAdj >= 9.5 ? 3 : cornersEstAdj >= 8.0 ? 2 : cornersEstAdj >= 7.0 ? 1 : 0;
       // Escalate if odds too cheap
       let _overIdx = _overStartIdx;
       while (_overIdx < _overLines.length - 1) {
@@ -2014,8 +2024,8 @@ function getBettingPicks(match, odds, leagueKey) {
         let scU = cornersEst < 7.0 ? 0.72 : cornersEst < 7.5 ? 0.60 : cornersEst < 8.0 ? 0.47 : 0.34;
         if (cornersDataReal) scU = Math.min(0.88, scU + 0.06);
         if (scU >= 0.32) {
-          const _cUMkt  = cornersEst < 7.5 ? 'Unter 8.5 Ecken' : 'Unter 9.5 Ecken';
-          const _cUOdds = _cUMkt === 'Unter 8.5 Ecken' ? (o.cu85 || null) : (o.cu95 || null);
+          const _cUMkt  = cornersEst < 6.5 ? 'Unter 6.5 Ecken' : cornersEst < 7.0 ? 'Unter 7.5 Ecken' : cornersEst < 7.5 ? 'Unter 8.5 Ecken' : 'Unter 9.5 Ecken';
+          const _cUOdds = _cUMkt === 'Unter 6.5 Ecken' ? (o.cu65 || null) : _cUMkt === 'Unter 7.5 Ecken' ? (o.cu75 || null) : _cUMkt === 'Unter 8.5 Ecken' ? (o.cu85 || null) : (o.cu95 || null);
           // Drop pick when odds are known but below the minimum threshold (1.35).
           // A 1.11 "Unter 8.5" is not a recommendation — it's noise.
           const _UNDER_MIN_ODD = 1.35;

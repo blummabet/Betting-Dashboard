@@ -388,12 +388,16 @@ function parseTheOddsEvent(oddsEvent) {
         for (const o of (mkt.outcomes || [])) {
           const pt = o.point; const p = o.price;
           if (o.name === 'Over') {
-            if (Math.abs(pt - 8.5)  < 0.01 && !r.co85)  r.co85  = p;
+            if      (Math.abs(pt - 6.5)  < 0.01 && !r.co65)  r.co65  = p;
+            else if (Math.abs(pt - 7.5)  < 0.01 && !r.co75)  r.co75  = p;
+            else if (Math.abs(pt - 8.5)  < 0.01 && !r.co85)  r.co85  = p;
             else if (Math.abs(pt - 9.5)  < 0.01 && !r.co95)  r.co95  = p;
             else if (Math.abs(pt - 10.5) < 0.01 && !r.co105) r.co105 = p;
             else if (Math.abs(pt - 11.5) < 0.01 && !r.co115) r.co115 = p;
           } else if (o.name === 'Under') {
-            if (Math.abs(pt - 8.5)  < 0.01 && !r.cu85)  r.cu85  = p;
+            if      (Math.abs(pt - 6.5)  < 0.01 && !r.cu65)  r.cu65  = p;
+            else if (Math.abs(pt - 7.5)  < 0.01 && !r.cu75)  r.cu75  = p;
+            else if (Math.abs(pt - 8.5)  < 0.01 && !r.cu85)  r.cu85  = p;
             else if (Math.abs(pt - 9.5)  < 0.01 && !r.cu95)  r.cu95  = p;
             else if (Math.abs(pt - 10.5) < 0.01 && !r.cu105) r.cu105 = p;
             else if (Math.abs(pt - 11.5) < 0.01 && !r.cu115) r.cu115 = p;
