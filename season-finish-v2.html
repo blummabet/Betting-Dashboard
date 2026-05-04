@@ -3482,7 +3482,24 @@ setTimeout(() => {
   // Primär: api-football Pro Plan (Verletzungen, H2H, Schiri-Stats, Quoten)
   loadPreMatchData();
   // Fallback: the-odds-api.com — lädt Quoten für alle Ligen; re-rendert wenn fertig
-  loadAllOdds().then(() => renderLeague(window._currentLeague));
+  loadAllOdds().then(() => {
+    renderLeague(window._currentLeague);
+    // Polymarket tab: picks depend on live odds — refresh if the panel is currently open.
+    // On first open the tab renders before loadAllOdds completes → stale picks.
+    // After this callback runs, re-compute with full live data so picks are consistent.
+    const _polyPanel = document.getElementById('polymarketPanel');
+    if (_polyPanel && _polyPanel.style.display !== 'none' && typeof _polyState !== 'undefined' && _polyState.dateStr) {
+      _polyState.picks    = getPolyPicks(_polyState.dateStr);
+      _polyState.selected = new Set(_polyState.picks.map(p => p.id));
+      if (typeof _polyRefreshStickyBar === 'function') _polyRefreshStickyBar();
+      const _grid  = document.getElementById('polyPickGrid');
+      if (_grid) _grid.innerHTML = renderPolyPickCards();
+      const _label = document.getElementById('polyPicksLabel');
+      if (_label) _label.textContent = `Picks — ${_polyState.picks.length} verfügbar`;
+      const _sub   = document.getElementById('polyDateSub');
+      if (_sub) _sub.textContent = `${_polyState.dateStr} · ${_polyState.picks.length} eligible pick${_polyState.picks.length !== 1 ? 's' : ''}`;
+    }
+  });
 }, 1500);
 
 // ── Manual Pre-Match reload (clears cache first) ───────────────────────────
