@@ -1,21 +1,48 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//  TheOddsAPI — Test-Script für Specialty Markets via /events/{eventId}/odds
+//  TheOddsAPI — Multi-Liga Specialty Markets Test
 //  node test-cards-api.js
 //
-//  Hintergrund: "Additional markets" (btts, corners, cards, double_chance etc.)
-//  sind NICHT über den Batch-Endpoint /sports/{sport}/odds/ verfügbar.
-//  TheOddsAPI Doku: "additional markets need to be accessed one event at a time
-//  using the new /events/{eventId}/odds endpoint."
+//  Testet alle unsere Ligen auf BTTS / Ecken / Karten / DC Verfügbarkeit.
+//  Pro Liga: 1 Event-List-Call + 1 Specialty-Call = 2 API-Credits.
+//  Bei ~10 Ligen: ~20 Credits gesamt.
 // ═══════════════════════════════════════════════════════════════════════════
 const https = require('https');
 
-const ODDS_API_KEY = process.env.ODDS_API_KEY || 'e33cee8d4ce8d646476115c7d1e3f3e4';
+const ODDS_API_KEY  = process.env.ODDS_API_KEY || '';
 const ODDS_API_HOST = 'api.the-odds-api.com';
-const TEST_SPORT = 'soccer_spain_la_liga';
+
+// Alle Ligen die wir im Dashboard tracken — sport_key muss exakt mit TheOddsAPI übereinstimmen
+const LEAGUES = [
+  { name: 'Premier League (ENG)',       key: 'soccer_england_premier_league' },
+  { name: 'La Liga (ESP)',              key: 'soccer_spain_la_liga'           },
+  { name: 'Bundesliga (GER)',           key: 'soccer_germany_bundesliga'      },
+  { name: 'Serie A (ITA)',              key: 'soccer_italy_serie_a'           },
+  { name: 'Ligue 1 (FRA)',             key: 'soccer_france_ligue_one'        },
+  { name: 'Eredivisie (NED)',           key: 'soccer_netherlands_eredivisie'  },
+  { name: 'Austrian BL (AUT)',          key: 'soccer_austria_bundesliga'      },
+  { name: 'Scottish Prem (SCO)',        key: 'soccer_spl'                     },
+  { name: 'Swiss Superleague (SUI)',    key: 'soccer_switzerland_superleague' },
+  { name: 'Belgian Pro League (BEL)',   key: 'soccer_belgium_first_div'       },
+];
+
+const SPECIALTY_MARKETS = [
+  'btts',
+  'alternate_totals_corners',
+  'alternate_totals_cards',
+  'double_chance',
+  'alternate_totals',
+  'h2h_h1',
+  'totals_h1',
+  'btts_h1',
+].join(',');
+
+// Märkte die wir kritisch brauchen
+const CRITICAL = ['btts', 'alternate_totals_corners', 'alternate_totals_cards', 'double_chance'];
 
 function get(path) {
   return new Promise((resolve) => {
-    const options = { hostname: ODDS_API_HOST, path, method: 'GET', headers: { 'User-Agent': 'BetEdge/1.0' } };
+    const options = { hostname: ODDS_API_HOST, path, method: 'GET',
+      headers: { 'User-Agent': 'BetEdge/1.0' } };
     const req = https.request(options, res => {
       let body = '';
       res.on('data', d => body += d);
@@ -27,95 +54,153 @@ function get(path) {
   });
 }
 
-function parseBody(body) {
-  try { return JSON.parse(body); } catch(e) { return body; }
-}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-(async () => {
-  console.log('═══════════════════════════════════════════════════════');
-  console.log('  TheOddsAPI Specialty Markets Test (Events Endpoint)');
-  console.log(`  Sport: ${TEST_SPORT}`);
-  console.log('═══════════════════════════════════════════════════════');
-
-  // ── Step 1: Get event list ────────────────────────────────────────────────
-  console.log('\n[1] Events abrufen...');
-  const evRes = await get(`/v4/sports/${TEST_SPORT}/events?apiKey=${ODDS_API_KEY}`);
-  const events = parseBody(evRes.body);
-  console.log(`  HTTP: ${evRes.status} | Remaining: ${evRes.headers['x-requests-remaining'] || '?'}`);
-
-  if (evRes.status !== 200 || !Array.isArray(events) || events.length === 0) {
-    console.log('  ❌ Keine Events — kein Spieltag oder Fehler');
-    console.log('  ', typeof events === 'string' ? events.slice(0, 300) : JSON.stringify(events).slice(0, 300));
-    process.exit(0);
+async function testLeague(league) {
+  // Step 1: Erstes verfügbares Event holen
+  const evRes = await get(`/v4/sports/${league.key}/events?apiKey=${ODDS_API_KEY}`);
+  if (evRes.status !== 200) {
+    let errMsg = evRes.body.slice(0, 120);
+    try { errMsg = JSON.parse(evRes.body).message || errMsg; } catch(_) {}
+    return { league, status: 'error', error: `HTTP ${evRes.status}: ${errMsg}`, remaining: null };
   }
 
-  const firstEvent = events[0];
-  console.log(`  ✅ ${events.length} Events | Erstes: ${firstEvent.home_team} vs ${firstEvent.away_team}`);
-  console.log(`  Event ID: ${firstEvent.id} | Anpfiff: ${firstEvent.commence_time}`);
+  let events;
+  try { events = JSON.parse(evRes.body); } catch(_) {
+    return { league, status: 'error', error: 'JSON parse error', remaining: null };
+  }
 
-  // ── Step 2: Test /events/{eventId}/odds mit allen specialty markets ───────
-  console.log('\n[2] /events/{eventId}/odds — alle Specialty Markets auf einmal...');
-  const markets = [
-    'btts',
-    'alternate_totals_corners',
-    'alternate_totals_cards',
-    'double_chance',
-    'alternate_totals',
-    'alternate_spreads',
-    'h2h_h1',
-    'totals_h1',
-    'btts_h1',
-  ].join(',');
+  const remaining = evRes.headers['x-requests-remaining'] || '?';
 
-  const evOddsRes = await get(
-    `/v4/sports/${TEST_SPORT}/events/${firstEvent.id}/odds?apiKey=${ODDS_API_KEY}`
-    + `&regions=eu,uk&markets=${markets}&oddsFormat=decimal`
+  if (!Array.isArray(events) || events.length === 0) {
+    return { league, status: 'no_events', remaining };
+  }
+
+  const ev = events[0];
+
+  // Step 2: Specialty markets für dieses Event abrufen
+  const spRes = await get(
+    `/v4/sports/${league.key}/events/${ev.id}/odds?apiKey=${ODDS_API_KEY}`
+    + `&regions=eu,uk&markets=${SPECIALTY_MARKETS}&oddsFormat=decimal`
   );
-  const evOdds = parseBody(evOddsRes.body);
-  console.log(`  HTTP: ${evOddsRes.status} | Remaining: ${evOddsRes.headers['x-requests-remaining'] || '?'} | Used: ${evOddsRes.headers['x-requests-used'] || '?'}`);
 
-  if (evOddsRes.status !== 200) {
-    console.log(`  ❌ FEHLER: ${typeof evOdds === 'object' ? JSON.stringify(evOdds) : String(evOdds).slice(0, 400)}`);
-    process.exit(1);
+  const remaining2 = spRes.headers['x-requests-remaining'] || remaining;
+
+  if (spRes.status !== 200) {
+    return { league, status: 'specialty_error', event: ev, error: `HTTP ${spRes.status}`, remaining: remaining2 };
   }
 
-  const bookmakers = evOdds.bookmakers || [];
-  if (!bookmakers.length) {
-    console.log('  ⚠️  200 OK aber keine Bookmaker-Daten zurück');
-    process.exit(0);
+  let spData;
+  try { spData = JSON.parse(spRes.body); } catch(_) {
+    return { league, status: 'specialty_error', event: ev, error: 'JSON parse error', remaining: remaining2 };
   }
 
-  // Sammle alle Market-Keys aus der Antwort
-  const allKeys = new Set();
-  for (const bkr of bookmakers)
-    for (const mkt of (bkr.markets || []))
-      allKeys.add(mkt.key);
+  const bookmakers = spData.bookmakers || [];
+  const marketsByBkr = {};     // market_key → [bookmaker_key, ...]
+  const sampleOdds   = {};     // market_key → "Bkr: outcome: price | ..."
 
-  console.log(`  ✅ ${bookmakers.length} Bookmakers | Markets: [${[...allKeys].join(', ')}]`);
-
-  // Sample-Quoten pro Market-Key
-  console.log('\n[3] Sample-Quoten pro Market:');
-  for (const key of allKeys) {
-    for (const bkr of bookmakers) {
-      const mkt = (bkr.markets || []).find(m => m.key === key);
-      if (!mkt) continue;
-      const outcomes = (mkt.outcomes || []).slice(0, 5)
-        .map(o => `${o.name}${o.point != null ? ' '+o.point : ''}: ${o.price}`)
-        .join(' | ');
-      console.log(`  ${key} @ ${bkr.key}: ${outcomes}`);
-      break;
+  for (const bkr of bookmakers) {
+    for (const mkt of (bkr.markets || [])) {
+      if (!marketsByBkr[mkt.key]) marketsByBkr[mkt.key] = [];
+      marketsByBkr[mkt.key].push(bkr.key);
+      if (!sampleOdds[mkt.key]) {
+        const sample = (mkt.outcomes || []).slice(0, 3)
+          .map(o => `${o.name}${o.point != null ? ' '+o.point : ''}: ${o.price}`)
+          .join(' | ');
+        sampleOdds[mkt.key] = `${bkr.key}: ${sample}`;
+      }
     }
   }
 
-  // Prüfe gezielt ob die wichtigsten Märkte da sind
-  console.log('\n[4] Kritische Märkte — Check:');
-  const critical = ['btts', 'alternate_totals_corners', 'alternate_totals_cards', 'double_chance'];
-  for (const k of critical) {
-    const found = [...allKeys].includes(k);
-    console.log(`  ${found ? '✅' : '❌'} ${k}: ${found ? 'VORHANDEN' : 'FEHLT'}`);
+  return {
+    league,
+    status: 'ok',
+    event: ev,
+    bookmakerCount: bookmakers.length,
+    marketsByBkr,
+    sampleOdds,
+    remaining: remaining2,
+  };
+}
+
+(async () => {
+  if (!ODDS_API_KEY) {
+    console.error('❌ ODDS_API_KEY nicht gesetzt — export ODDS_API_KEY=... oder via GitHub Secrets');
+    process.exit(1);
   }
 
-  console.log('\n═══════════════════════════════════════════════════════');
-  console.log('  Fertig');
-  console.log('═══════════════════════════════════════════════════════');
+  console.log('═══════════════════════════════════════════════════════════════');
+  console.log('  TheOddsAPI — Multi-Liga Specialty Markets Test');
+  console.log(`  Ligen: ${LEAGUES.length} | Märkte: btts, corners, cards, dc, ...`);
+  console.log('═══════════════════════════════════════════════════════════════\n');
+
+  const results = [];
+
+  for (const league of LEAGUES) {
+    process.stdout.write(`Teste ${league.name.padEnd(30)} ... `);
+    const r = await testLeague(league);
+    results.push(r);
+    if (r.status === 'ok') {
+      const criticalFound = CRITICAL.filter(k => r.marketsByBkr[k]);
+      const criticalMissing = CRITICAL.filter(k => !r.marketsByBkr[k]);
+      const icon = criticalMissing.length === 0 ? '✅' : criticalMissing.length <= 1 ? '🟡' : '🔴';
+      console.log(`${icon} ${r.bookmakerCount} Bkr | Credits übrig: ${r.remaining}`);
+    } else if (r.status === 'no_events') {
+      console.log(`⬜ Kein aktiver Spieltag`);
+    } else {
+      console.log(`❌ ${r.error}`);
+    }
+    await sleep(500);  // Rate-limit schonen
+  }
+
+  // ── Detailreport ────────────────────────────────────────────────────────────
+  console.log('\n\n══════════════════════════════════════════════════════════════════════');
+  console.log('  DETAILREPORT — Welche Märkte pro Liga verfügbar');
+  console.log('══════════════════════════════════════════════════════════════════════');
+
+  for (const r of results) {
+    console.log(`\n▶ ${r.league.name} (${r.league.key})`);
+    if (r.status === 'no_events') { console.log('   ⬜ Kein aktiver Spieltag — kein Test möglich'); continue; }
+    if (r.status !== 'ok') { console.log(`   ❌ ${r.error}`); continue; }
+    console.log(`   Event: ${r.event.home_team} vs ${r.event.away_team} (${(r.event.commence_time||'').slice(0,10)})`);
+    console.log(`   Bookmakers gesamt: ${r.bookmakerCount}`);
+
+    // Kritische Märkte
+    console.log('   Kritische Märkte:');
+    for (const k of CRITICAL) {
+      const bkrs = r.marketsByBkr[k];
+      if (bkrs) {
+        console.log(`     ✅ ${k.padEnd(28)} → ${bkrs.join(', ')}`);
+        console.log(`        Sample: ${r.sampleOdds[k]}`);
+      } else {
+        console.log(`     ❌ ${k.padEnd(28)} → FEHLT`);
+      }
+    }
+
+    // Sonstige Märkte
+    const other = Object.keys(r.marketsByBkr).filter(k => !CRITICAL.includes(k));
+    if (other.length) {
+      console.log(`   Weitere Märkte: ${other.join(', ')}`);
+    }
+  }
+
+  // ── Zusammenfassung ─────────────────────────────────────────────────────────
+  console.log('\n\n══════════════════════════════════════════════════════════════════════');
+  console.log('  ZUSAMMENFASSUNG');
+  console.log('══════════════════════════════════════════════════════════════════════');
+
+  const okResults = results.filter(r => r.status === 'ok');
+  for (const k of CRITICAL) {
+    const withMarket    = okResults.filter(r => r.marketsByBkr[k]).map(r => r.league.name);
+    const withoutMarket = okResults.filter(r => !r.marketsByBkr[k]).map(r => r.league.name);
+    const icon = withoutMarket.length === 0 ? '✅' : withoutMarket.length <= 2 ? '🟡' : '🔴';
+    console.log(`\n${icon} ${k}`);
+    if (withMarket.length)    console.log(`   Verfügbar:  ${withMarket.join(', ')}`);
+    if (withoutMarket.length) console.log(`   ❌ Fehlt:   ${withoutMarket.join(', ')}`);
+  }
+
+  const lastRemaining = results.filter(r => r.remaining).pop()?.remaining;
+  if (lastRemaining) console.log(`\n💳 TheOddsAPI Credits verbleibend: ${lastRemaining}`);
+
+  console.log('\n══════════════════════════════════════════════════════════════════════\n');
 })();
