@@ -285,8 +285,344 @@ function _igT(s) {
     ;
 }
 
-// ── Infographic generator — 1080×1920px Social Media (9:16) ──
-function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
+// ── Story Card CSS (matches story-servette-lausanne.html design) ────────────
+const _STORY_CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;animation:none!important;transition:none!important}
+:root{--red:#e63946;--orange:#f4a261;--green:#2dc96a;--gold:#ffd166;--bg:#0c0c10;--card:#111117;--border:rgba(255,255,255,0.07);--muted:#3a3a45;--text:#e8e8f0}
+.story-wrap{background:#07070b;display:flex;align-items:center;justify-content:center;padding:0;margin:0}
+.card{width:390px;position:relative;border-radius:20px;overflow:hidden;background:var(--card);box-shadow:0 0 0 1px var(--border),0 0 60px rgba(230,57,70,0.08),0 60px 100px rgba(0,0,0,0.8);display:flex;flex-direction:column}
+.header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}
+.header-left{display:flex;flex-direction:column;gap:3px}
+.brand{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#fff;display:flex;align-items:center;gap:8px}
+.brand-dot{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red)}
+.meta{font-size:11px;color:#555;letter-spacing:1px}
+.score-badge{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}
+.score-badge::before{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--card)}
+.score-inner{position:relative;z-index:1;text-align:center;line-height:1}
+.score-num{font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;display:block}
+.score-denom{font-size:9px;color:#555;display:block}
+.urgency{margin:0 16px 14px;background:linear-gradient(90deg,rgba(230,57,70,0.12),rgba(230,57,70,0.04));border:1px solid rgba(230,57,70,0.25);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;position:relative;z-index:2}
+.urgency-icon{font-size:18px;flex-shrink:0}
+.urgency-text{flex:1}
+.urgency-title{font-size:11px;font-weight:800;color:var(--red);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px}
+.urgency-sub{font-size:12px;color:#888;line-height:1.3}
+.urgency-sub strong{color:#bbb}
+.matchup{padding:4px 20px 16px;display:grid;grid-template-columns:1fr 36px 1fr;align-items:center;gap:8px;position:relative;z-index:2}
+.team-col{display:flex;flex-direction:column;gap:6px}
+.team-col.right{align-items:flex-end}
+.team-name{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:1px;color:#fff;line-height:1}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.team-col.right .tags{justify-content:flex-end}
+.tag{font-size:9px;font-weight:800;padding:2px 7px;border-radius:100px;letter-spacing:.5px;text-transform:uppercase}
+.tag.red{background:rgba(230,57,70,.15);color:#e63946;border:1px solid rgba(230,57,70,.3)}
+.tag.orange{background:rgba(244,162,97,.12);color:#f4a261;border:1px solid rgba(244,162,97,.25)}
+.tag.green{background:rgba(45,201,106,.12);color:#2dc96a;border:1px solid rgba(45,201,106,.25)}
+.tag.blue{background:rgba(88,166,255,.12);color:#58a6ff;border:1px solid rgba(88,166,255,.25)}
+.tag.gold{background:rgba(255,209,102,.12);color:#ffd166;border:1px solid rgba(255,209,102,.25)}
+.squad-bar-wrap{display:flex;flex-direction:column;gap:2px}
+.squad-label{font-size:9px;color:#444;letter-spacing:1px;text-transform:uppercase}
+.squad-bar{height:4px;border-radius:100px;background:var(--muted);overflow:hidden}
+.squad-fill{height:100%;border-radius:100px}
+.vs-node{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.04);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;color:#444;font-weight:800;letter-spacing:1px}
+.divider{height:1px;margin:0 20px 14px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);position:relative;z-index:2}
+.stats-strip{display:grid;grid-template-columns:repeat(4,1fr);padding:0 16px 14px;position:relative;z-index:2}
+.stat{display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
+.stat+.stat::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);height:55%;width:1px;background:var(--border)}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;line-height:1}
+.stat-val.red{color:var(--red)}.stat-val.green{color:var(--green)}.stat-val.orange{color:var(--orange)}
+.stat-lbl{font-size:9px;color:#444;letter-spacing:1.2px;text-transform:uppercase;text-align:center}
+.h2h{margin:0 16px 14px;position:relative;z-index:2}
+.section-label{font-size:9px;color:#444;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.h2h-row{display:flex;align-items:center;gap:8px}
+.h2h-side{font-size:10px;color:#555;width:56px}
+.h2h-side.right{text-align:right}
+.h2h-track{flex:1;height:7px;border-radius:100px;background:var(--muted);overflow:hidden;display:flex}
+.h2h-home{height:100%;background:rgba(255,255,255,0.18);border-radius:100px}
+.h2h-away{height:100%;background:var(--red);border-radius:100px;margin-left:auto}
+.h2h-sub{text-align:center;font-size:10px;color:#3a3a45;margin-top:6px;letter-spacing:.5px}
+.signal{margin:0 16px 14px;background:rgba(244,162,97,0.06);border:1px solid rgba(244,162,97,0.18);border-radius:12px;padding:11px 14px;display:flex;gap:11px;align-items:flex-start;position:relative;z-index:2}
+.signal-icon{font-size:20px;flex-shrink:0;padding-top:1px}
+.signal-title{font-size:10px;font-weight:800;color:var(--orange);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.signal-body{font-size:12px;color:#888;line-height:1.5}
+.signal-body strong{color:#bbb}
+.picks{margin:0 16px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:2}
+.pick-main{background:linear-gradient(135deg,rgba(45,201,106,0.1),rgba(45,201,106,0.04));border:1px solid rgba(45,201,106,0.22);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pick-main-left{flex:1}
+.pick-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(45,201,106,0.15);padding:2px 9px;border-radius:100px;margin-bottom:7px}
+.pick-badge span{font-size:9px;font-weight:800;color:var(--green);letter-spacing:1.5px;text-transform:uppercase}
+.pick-name{font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:1px;line-height:1;margin-bottom:4px}
+.pick-detail{font-size:10px;color:#555}
+.pick-detail strong{color:#888}
+.pick-odds{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--green);letter-spacing:1px;line-height:1;text-align:right}
+.pick-odds-sub{font-size:9px;color:#444;text-align:right;margin-top:2px}
+.pick-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pick-mini{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.pick-mini-name{font-size:12px;font-weight:700;color:#aaa}
+.pick-mini-bottom{display:flex;align-items:center;justify-content:space-between}
+.pick-mini-odds{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#ccc}
+.pick-mini-tag{font-size:9px;color:#444;background:rgba(255,255,255,0.04);padding:2px 7px;border-radius:100px;letter-spacing:.5px}
+.footer{padding:14px 20px 16px;margin-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}
+.footer-left{font-size:9px;color:#2a2a35;letter-spacing:.5px}
+.footer-right{display:flex;align-items:center;gap:5px;font-size:10px;color:#333;letter-spacing:1px;text-transform:uppercase}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green)}
+.glow{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;z-index:0}
+.glow-tl{width:280px;height:280px;top:-100px;left:-80px;background:rgba(230,57,70,0.07)}
+.glow-br{width:220px;height:220px;bottom:-60px;right:-60px;background:rgba(45,201,106,0.05)}
+.card-accent{position:absolute;top:0;right:60px;width:1px;height:100%;background:linear-gradient(180deg,transparent 0%,rgba(230,57,70,0.08) 30%,transparent 70%);pointer-events:none;z-index:1}
+`;
+
+// ── Build story card HTML from match data ────────────────────────────────────
+function _buildStoryCardHtml(match, score, picks, angle, leagueName, leagueFlag) {
+  const home = match.home || '?';
+  const away = match.away || '?';
+  const h2h  = match.h2h || {};
+
+  // Score badge: conic-gradient % of 12
+  const scorePct  = Math.round(Math.min(1, score / 12) * 100);
+  const scoreCol  = score >= 9 ? '#f85149' : score >= 7 ? '#3fb950' : '#e3b341';
+
+  // Date: "2026-05-04" → "04.05.2026", time: "18:30"
+  const dateParts = (match.date || '').split('-');
+  const dateStr   = dateParts.length === 3 ? `${dateParts[2]}.${dateParts[1]}.${dateParts[0]}` : (match.date || '');
+  const timeStr   = match.time ? ` · ${match.time}` : '';
+
+  // Team label → tag class
+  const _tagCls = c => c === 'red' ? 'red' : c === 'gold' ? 'gold' : c === 'blue' ? 'blue' : c === 'orange' ? 'orange' : c === 'green' ? 'green' : 'orange';
+  const _tagsHtml = labels => (labels || []).map(l => `<span class="tag ${_tagCls(l.c)}">${l.t||''}</span>`).join('');
+  const hTags = _tagsHtml(match.homeStake?.labels);
+  const aTags = _tagsHtml(match.awayStake?.labels);
+
+  // Squad bars (use squad score from match data if available, default 7/10)
+  const hSq    = Math.round(Math.min(10, match.homeSquad?.quality ?? match.homeSquadScore ?? 7));
+  const aSq    = Math.round(Math.min(10, match.awaySquad?.quality ?? match.awaySquadScore ?? 7));
+  const hSqPct = Math.round(hSq / 10 * 100);
+  const aSqPct = Math.round(aSq / 10 * 100);
+  const hSqCol = `linear-gradient(90deg,#f4a261,#e63946)`;
+  const aSqCol = `linear-gradient(90deg,#2dc96a,#1aa855)`;
+
+  // Stats strip
+  const h2hGames   = h2h.games || 0;
+  const homeWins   = h2h.homeWins || 0;
+  const draws      = h2h.draws || 0;
+  const awayWins   = h2h.awayWins || 0;
+  const bttsRate   = h2h.bttsRate   != null ? Math.round(h2h.bttsRate   * 100) + '%' : '--';
+  const avgGoals   = h2h.avgGoals   != null ? h2h.avgGoals.toFixed(1) : '--';
+  const h2hRecord  = h2hGames > 0 ? `${homeWins}W${draws}D${awayWins}A` : '--';
+  const over25Rate = h2h.over25Rate != null ? Math.round(h2h.over25Rate * 100) + '%' : '--';
+
+  // H2H bar widths (% of total games)
+  const homePct  = h2hGames > 0 ? Math.round(homeWins / h2hGames * 100) : 0;
+  const awayPct  = h2hGames > 0 ? Math.round(awayWins / h2hGames * 100) : 0;
+  const h2hSub   = h2hGames >= 3
+    ? `${homeWins}W · ${draws}D · ${awayWins}W — ${homeWins > awayWins ? home : awayWins > homeWins ? away : 'Ausgeglichen'} historisch stärker`
+    : 'Keine H2H-Daten verfügbar';
+  const h2hBlock = h2hGames >= 3 ? `
+    <div class="h2h">
+      <div class="section-label">Head to Head Dominanz</div>
+      <div class="h2h-row">
+        <div class="h2h-side">${home}</div>
+        <div class="h2h-track">
+          <div class="h2h-home" style="width:${homePct}%"></div>
+          <div class="h2h-away" style="width:${awayPct}%"></div>
+        </div>
+        <div class="h2h-side right">${away}</div>
+      </div>
+      <div class="h2h-sub">${h2hSub}</div>
+    </div>` : '';
+
+  // Angle / signal
+  const badge      = (angle?.badge || '⭐ Analyse').replace(/^[\s\S]{0,3}(?=\s)/, s => s.trim());
+  const signalBody = angle?.text || 'Modellbasierte Analyse';
+  // Urgency: derive from angle badge + rounds left
+  const rl         = match.roundsLeft;
+  const urgTitle   = badge;
+  const urgSub     = rl != null
+    ? `Noch <strong>${rl} Spieltage</strong> — ${match.home} vs ${match.away}`
+    : `${match.home} vs ${match.away}`;
+
+  // Picks section
+  const mainPick  = picks[0] || null;
+  const miniPicks = picks.slice(1, 3);
+  const _confLbl  = c => c === 'high' ? 'HIGH CONF' : c === 'medium' ? 'MED CONF' : 'LOW CONF';
+
+  const mainHtml = mainPick ? `
+    <div class="pick-main">
+      <div class="pick-main-left">
+        <div class="pick-badge"><span>★★★ Top Pick</span></div>
+        <div class="pick-name">${mainPick.market || ''}</div>
+        <div class="pick-detail">Konfidenz: <strong>${_confLbl(mainPick.conf)}</strong>${mainPick.odds ? ` &nbsp;·&nbsp; Quote <strong>${mainPick.odds.toFixed(2)}</strong>` : ''}</div>
+      </div>
+      <div>
+        <div class="pick-odds">${mainPick.odds ? '@' + mainPick.odds.toFixed(2) : '--'}</div>
+        <div class="pick-odds-sub">${_confLbl(mainPick.conf)}</div>
+      </div>
+    </div>` : '';
+
+  const miniHtml = miniPicks.length > 0 ? `
+    <div class="pick-row">
+      ${miniPicks.map(p => `
+      <div class="pick-mini">
+        <div class="pick-mini-name">${p.market || ''}</div>
+        <div class="pick-mini-bottom">
+          <div class="pick-mini-odds" style="color:var(--orange)">${p.odds ? '@' + p.odds.toFixed(2) : '--'}</div>
+          <span class="pick-mini-tag">${_confLbl(p.conf)}</span>
+        </div>
+      </div>`).join('')}
+    </div>` : '';
+
+  const picksBlock = picks.length > 0 ? `
+    <div class="picks">
+      <div class="section-label">Top Bets</div>
+      ${mainHtml}${miniHtml}
+    </div>` : '';
+
+  return `
+    <div class="story-wrap">
+      <div class="card">
+        <div class="glow glow-tl"></div>
+        <div class="glow glow-br"></div>
+        <div class="card-accent"></div>
+
+        <div class="header">
+          <div class="header-left">
+            <div class="brand"><div class="brand-dot"></div>CocoBet</div>
+            <div class="meta">${leagueFlag} ${leagueName}&nbsp;·&nbsp;${dateStr}${timeStr}</div>
+          </div>
+          <div class="score-badge" style="background:conic-gradient(${scoreCol} 0% ${scorePct}%,#3a3a45 ${scorePct}% 100%)">
+            <div class="score-inner">
+              <span class="score-num">${score.toFixed(1)}</span>
+              <span class="score-denom">/12</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="urgency">
+          <div class="urgency-icon">⚡</div>
+          <div class="urgency-text">
+            <div class="urgency-title">${urgTitle}</div>
+            <div class="urgency-sub">${urgSub}</div>
+          </div>
+        </div>
+
+        <div class="matchup">
+          <div class="team-col">
+            <div class="team-name">${home}</div>
+            <div class="tags">${hTags}</div>
+            <div class="squad-bar-wrap">
+              <div class="squad-label">Squad ${hSq}/10</div>
+              <div class="squad-bar"><div class="squad-fill" style="background:${hSqCol};width:${hSqPct}%"></div></div>
+            </div>
+          </div>
+          <div class="vs-node">VS</div>
+          <div class="team-col right">
+            <div class="team-name">${away}</div>
+            <div class="tags">${aTags}</div>
+            <div class="squad-bar-wrap">
+              <div class="squad-label">Squad ${aSq}/10</div>
+              <div class="squad-bar"><div class="squad-fill" style="background:${aSqCol};width:${aSqPct}%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="stats-strip">
+          <div class="stat"><div class="stat-val orange">${bttsRate}</div><div class="stat-lbl">BTTS Rate</div></div>
+          <div class="stat"><div class="stat-val red">${avgGoals}</div><div class="stat-lbl">Ø Tore H2H</div></div>
+          <div class="stat"><div class="stat-val">${h2hRecord}</div><div class="stat-lbl">H2H (${h2hGames} Sp.)</div></div>
+          <div class="stat"><div class="stat-val green">${over25Rate}</div><div class="stat-lbl">Over 2.5</div></div>
+        </div>
+
+        ${h2hBlock}
+
+        <div class="signal">
+          <div class="signal-icon">⚔️</div>
+          <div>
+            <div class="signal-title">${badge.replace(/^[\p{Emoji}\s]+/u,'').trim()}</div>
+            <div class="signal-body">${signalBody}</div>
+          </div>
+        </div>
+
+        ${picksBlock}
+
+        <div class="footer">
+          <div class="footer-left">18+ · Verantwortungsbewusst wetten</div>
+          <div class="footer-right"><div class="live-dot"></div>AI-Powered</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── Infographic generator — HTML Story Card (390px → captured via html2canvas) ──
+async function generateInfographic(matchJson, leagueName, leagueFlag, leagueKey) {
+  const match  = JSON.parse(decodeURIComponent(matchJson));
+  const score  = computeMatchScore(match, leagueKey);
+  const angle  = getBettingAngle(match);
+  const odds   = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
+  const oddsD  = deriveOdds(odds || {});
+  const picks  = getBettingPicks(match, oddsD, leagueKey)
+    .filter(p => p.conf === 'high' || p.conf === 'medium')
+    .slice(0, 3);
+
+  // Preload fonts
+  if (!document.querySelector('link[href*="Bebas"]')) {
+    const lk = document.createElement('link');
+    lk.rel = 'stylesheet';
+    lk.href = 'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;700;800&display=swap';
+    document.head.appendChild(lk);
+  }
+  try { await Promise.race([document.fonts.ready, new Promise(r => setTimeout(r, 1500))]); } catch(e) {}
+
+  // Build card HTML and inject into hidden container
+  const cardHtml = _buildStoryCardHtml(match, score, picks, angle, leagueName, leagueFlag);
+  const container = document.createElement('div');
+  container.style.cssText = 'position:fixed;top:-9999px;left:-9999px;z-index:-999;pointer-events:none;';
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = `<style>${_STORY_CSS}</style>${cardHtml}`;
+  container.appendChild(wrapper);
+  document.body.appendChild(container);
+
+  // Show modal with loading state
+  const modal = document.getElementById('ig-modal');
+  const img = document.getElementById('ig-preview-img');
+  img.style.opacity = '0.3';
+  modal.classList.add('ig-open');
+
+  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  await new Promise(r => setTimeout(r, 400));
+
+  try {
+    const cardEl = container.querySelector('.card');
+    const canvas = await html2canvas(cardEl, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: '#07070b',
+      logging: false,
+      allowTaint: true,
+    });
+    const dataUrl = canvas.toDataURL('image/png');
+    const slug = `${match.home}-vs-${match.away}`.replace(/\s+/g,'-').replace(/[^a-zA-Z0-9\-]/g,'');
+    const fname = `cocobet-${slug}.png`;
+    img.src = dataUrl; img.style.opacity = '1';
+    const dlBtn = document.getElementById('ig-download-btn');
+    dlBtn.href = dataUrl; dlBtn.download = fname;
+    window._igDataUrl = dataUrl; window._igFileName = fname;
+    const shareBtn = document.getElementById('ig-share-btn');
+    shareBtn.style.display = navigator.canShare && navigator.canShare({files:[new File([],'t.png',{type:'image/png'})]}) ? 'flex' : 'none';
+  } catch(e) {
+    console.error('html2canvas error:', e);
+    img.style.opacity = '1';
+  } finally {
+    document.body.removeChild(container);
+  }
+}
+
+// ── DEAD CODE BELOW — old canvas helpers kept for reference ──────────────────
+// These are no longer called by generateInfographic() but left here temporarily.
+// TODO: remove after confirming html2canvas version works end-to-end.
+function _OLD_generateInfographic_UNUSED(matchJson, leagueName, leagueFlag, leagueKey) {
   const match  = JSON.parse(decodeURIComponent(matchJson));
   const score  = computeMatchScore(match, leagueKey);
   const angle  = getBettingAngle(match);
