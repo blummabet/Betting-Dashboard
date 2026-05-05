@@ -4697,170 +4697,130 @@ function generateScript(matchJson, leagueName, leagueFlag, leagueKey) {
   const match = JSON.parse(decodeURIComponent(matchJson));
   const score = computeMatchScore(match, leagueKey);
   const odds  = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
-  const picks = getBettingPicks(match, odds, leagueKey)
+  const oddsD = deriveOdds(odds || {});
+  const picks = getBettingPicks(match, oddsD, leagueKey)
     .filter(p => p.conf === 'high' || p.conf === 'medium')
     .slice(0, 3);
 
   const hLabels = match.homeStake?.labels || [];
   const aLabels = match.awayStake?.labels || [];
-  const rl      = match.roundsLeft ?? null;
 
-  // ── Helpers ──────────────────────────────────────────
-  const _num = n => {
-    if (n == null) return '';
-    // Spell out small integers for natural TTS
-    const words = ['null','eins','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn',
-                   'elf','zwölf','dreizehn','vierzehn','fünfzehn','sechzehn','siebzehn','achtzehn','neunzehn','zwanzig'];
-    return n <= 20 ? words[n] : String(n);
-  };
-
-  const _oddsSpeak = o => {
-    if (!o) return '';
-    // "1.85" → "eins Komma fünfundachtzig" is complex; just say the number clearly
-    const s = o.toFixed(2).replace('.', ' Komma ');
-    return `Quote ${s}`;
-  };
-
-  const _stakeContext = (labels, team) => {
-    if (!labels.length) return '';
-    const lbl = labels[0];
-    if (lbl.c === 'red')    return `${team} kämpft gegen den Abstieg`;
-    if (lbl.c === 'gold')   return `${team} ist im Titelkampf`;
-    if (lbl.c === 'blue')   return `${team} jagt die Champions League`;
-    if (lbl.c === 'orange') return `${team} kämpft um Europa`;
-    if (lbl.c === 'purple') return `${team} ist in einem wichtigen Saisonabschnitt`;
-    return `${team} steht unter Druck`;
-  };
+  // ── TikTok helpers (~130 wpm → 20s = max 43 Wörter) ──
 
   const _marketSpeak = market => {
     const m = (market || '').toLowerCase();
-    if (m.includes('über 2.5'))             return 'Über zwei Komma fünf Tore';
-    if (m.includes('über 1.5'))             return 'Über ein Komma fünf Tore';
-    if (m.includes('über 3.5'))             return 'Über drei Komma fünf Tore';
-    if (m.includes('unter 2.5'))            return 'Unter zwei Komma fünf Tore';
-    if (m.includes('unter 1.5'))            return 'Unter ein Komma fünf Tore';
-    if (m.includes('beide teams treffen: nein')) return 'Kein Treffer beider Teams';
-    if (m.includes('beide teams treffen'))  return 'Beide Teams treffen';
-    if (m.includes('heimsieg'))             return `Sieg für ${match.home}`;
-    if (m.includes('auswärtssieg'))         return `Sieg für ${match.away}`;
-    if (m.includes('unentschieden'))        return 'Unentschieden';
-    if (m.includes('dnb: heim'))            return `Draw No Bet auf ${match.home}`;
-    if (m.includes('dnb: auswärts'))        return `Draw No Bet auf ${match.away}`;
-    if (m.includes('doppelte chance: 1x'))  return `Doppelte Chance — ${match.home} oder Unentschieden`;
-    if (m.includes('doppelte chance: x2'))  return `Doppelte Chance — ${match.away} oder Unentschieden`;
-    if (m.includes('1. hz') || m.includes('halbzeit')) return 'Treffer in der ersten Halbzeit';
-    if (m.includes('ecken') || m.includes('corner'))   return 'Viele Ecken in diesem Spiel';
-    if (m.includes('karten') || m.includes('card'))    return 'Karten-Wette';
-    if (m.includes('handicap'))             return 'Handicap-Wette';
+    if (m.includes('über 2.5') || m.includes('over 2.5'))   return 'Über 2,5 Tore';
+    if (m.includes('über 1.5') || m.includes('over 1.5'))   return 'Über 1,5 Tore';
+    if (m.includes('über 3.5') || m.includes('over 3.5'))   return 'Über 3,5 Tore';
+    if (m.includes('unter 2.5') || m.includes('under 2.5')) return 'Unter 2,5 Tore';
+    if (m.includes('unter 1.5') || m.includes('under 1.5')) return 'Unter 1,5 Tore';
+    if (m.includes('beide teams treffen'))                   return 'Beide Teams treffen';
+    if (m.includes('heimsieg'))    return `${match.home} gewinnt`;
+    if (m.includes('auswärtssieg')) return `${match.away} gewinnt`;
+    if (m.includes('unentschieden')) return 'Unentschieden';
+    if (m.includes('dnb: heim'))   return `${match.home} — Draw No Bet`;
+    if (m.includes('dnb: auswärts')) return `${match.away} — Draw No Bet`;
+    if (m.includes('doppelte chance: 1x')) return `${match.home} oder Unentschieden`;
+    if (m.includes('doppelte chance: x2')) return `${match.away} oder Unentschieden`;
+    if (m.includes('ecken') || m.includes('corner')) return market.replace('Über','Über').replace('Unter','Unter') + ' Ecken';
     return market;
   };
 
-  const _confSpeak = conf => {
-    if (conf === 'high')   return 'Hohe Konfidenz — drei Sterne';
-    if (conf === 'medium') return 'Mittlere Konfidenz — zwei Sterne';
-    return 'Konfidenz niedrig';
-  };
-
-  const _scoreComment = s => {
-    if (s >= 11) return 'ein absolutes Highlight-Spiel dieser Woche';
-    if (s >= 9)  return 'eine hoch brisante Partie';
-    if (s >= 7)  return 'ein wichtiges Spiel mit echtem Mehrwert';
-    return 'ein interessantes Spiel';
-  };
-
-  const _ordinal = i => ['Erstens','Zweitens','Drittens'][i] || `Pick ${i+1}`;
-
-  // ── Kontext-Sätze ─────────────────────────────────────
-  const contextLines = [];
-  const hCtx = _stakeContext(hLabels, match.home);
-  const aCtx = _stakeContext(aLabels, match.away);
-  if (hCtx && aCtx) {
-    contextLines.push(`${hCtx} — und auf der anderen Seite ${aCtx}. Dieses Spiel hat maximalen Druck auf beiden Seiten.`);
-  } else if (hCtx) {
-    contextLines.push(`${hCtx}. Das Heimteam wird alles geben.`);
-  } else if (aCtx) {
-    contextLines.push(`${aCtx}. Die Gäste kommen mit Vollgas-Mentalität nach ${match.home}.`);
-  }
-  if (rl && rl <= 6) {
-    contextLines.push(`Noch ${_num(rl)} Spieltag${rl === 1 ? '' : 'e'} verbleiben in der Saison. Jeder Punkt zählt.`);
-  }
-
-  // ── xG / Goals Kontext ────────────────────────────────
-  const expG = match.expGoals;
-  let goalsLine = '';
-  if (expG) {
-    goalsLine = `Unsere Modelle erwarten rund ${expG.toFixed(1).replace('.',',')} Tore in diesem Spiel. `;
-  }
-
-  // ── Picks Text ────────────────────────────────────────
-  const pickLines = [];
-  picks.forEach((p, i) => {
-    const marketTxt = _marketSpeak(p.market);
-    const confTxt   = _confSpeak(p.conf);
-    const oddsTxt   = p.odds ? ` — ${_oddsSpeak(p.odds)}` : '';
-    const reasonClean = (p.reason || '')
-      .replace(/<br\s*\/?>/gi, '. ')
+  // Shorten reason to the punchiest 10–12 words
+  const _reasonShort = reason => {
+    if (!reason) return '';
+    const clean = reason
+      .replace(/<br\s*\/?>/gi, ' ')
       .replace(/<strong>/gi, '').replace(/<\/strong>/gi, '')
       .replace(/<[^>]+>/g, '')
-      .replace(/\s+/g, ' ')
-      .trim();
-    const reasonShort = reasonClean.length > 120 ? reasonClean.slice(0, 120) + '...' : reasonClean;
+      .replace(/\s+/g, ' ').trim();
+    // Take only the first sentence, cap at 12 words
+    const firstSentence = clean.split(/[.!?]/)[0].trim();
+    const words = firstSentence.split(' ');
+    return words.length <= 12 ? firstSentence : words.slice(0, 12).join(' ') + '…';
+  };
 
-    let line = `${_ordinal(i)}: ${marketTxt}${oddsTxt}. ${confTxt}.`;
-    if (reasonShort) line += ` ${reasonShort}`;
-    pickLines.push(line);
-  });
+  // Stake pressure in 3 words max
+  const _pressure = labels => {
+    if (!labels.length) return '';
+    const c = labels[0].c;
+    if (c === 'red')    return 'Abstiegskampf';
+    if (c === 'gold')   return 'Titelkampf';
+    if (c === 'blue')   return 'CL-Jagd';
+    if (c === 'orange') return 'Europacup-Rennen';
+    return '';
+  };
 
-  // ── Zusammenbauen ─────────────────────────────────────
-  const intros = [
-    `Guten Abend und herzlich willkommen zur CocoBet Sportschau!`,
-    `Willkommen bei der CocoBet Sportschau — hier kommen eure Wett-Empfehlungen!`,
-    `Hallo und willkommen! Das ist die CocoBet Sportschau mit den besten Picks der Woche.`,
+  const hPress = _pressure(hLabels);
+  const aPress = _pressure(aLabels);
+
+  // ── Hooks (random, short, punchy) ──────────────────────
+  const hooks = [
+    `${match.home} gegen ${match.away} — und ich hab einen Tipp dafür.`,
+    `KI-Analyse fertig: ${match.home} vs. ${match.away}.`,
+    `Dieser Pick läuft: ${match.home} gegen ${match.away}.`,
+    `${leagueName} — ${match.home} vs. ${match.away}. Hört zu.`,
   ];
-  const intro = intros[Math.floor(Math.random() * intros.length)];
+  const hook = hooks[Math.floor(Math.random() * hooks.length)];
 
-  const outros = [
-    `Das war euer CocoBet Tipp für heute. Viel Erfolg — und mögen die Quoten mit euch sein!`,
-    `Das war die CocoBet Sportschau. Spielt verantwortungsvoll, und bis zum nächsten Spieltag!`,
-    `Bleibt dabei, trefft gute Entscheidungen — und bis zum nächsten CocoBet Update!`,
+  // ── CTAs ───────────────────────────────────────────────
+  const ctas = [
+    `Folgt CocoBet für KI-Picks täglich.`,
+    `Mehr Picks gibt's auf CocoBet — täglich kostenlos.`,
+    `Alle Picks auf CocoBet — KI-gestützt, jeden Tag.`,
   ];
-  const outro = outros[Math.floor(Math.random() * outros.length)];
+  const cta = ctas[Math.floor(Math.random() * ctas.length)];
 
-  const lines = [
-    intro,
-    '',
-    `Heute präsentiere ich euch: ${match.home} gegen ${match.away} — ${leagueName}, ${match.date}.`,
-    `Dieser Match hat einen Score von ${score} von zwölf Punkten — das ist ${_scoreComment(score)}.`,
-    '',
-  ];
+  // ── Assemble ───────────────────────────────────────────
+  const lines = [hook, ''];
 
-  if (contextLines.length) {
-    lines.push(...contextLines);
-    lines.push('');
+  // Context: pressure tags (max 1 line)
+  if (hPress && aPress) {
+    lines.push(`${match.home} im ${hPress}, ${match.away} im ${aPress}.`);
+  } else if (hPress) {
+    lines.push(`${match.home} im ${hPress}.`);
+  } else if (aPress) {
+    lines.push(`${match.away} im ${aPress}.`);
   }
 
-  if (goalsLine) {
-    lines.push(goalsLine);
-  }
-
+  // Main pick — always the first (highest-conf) pick
   if (picks.length) {
-    lines.push(`Und jetzt zu den Wettempfehlungen für diese Partie:`);
-    lines.push('');
-    lines.push(...pickLines.map(l => l));
-    lines.push('');
+    const p = picks[0];
+    const mkt  = _marketSpeak(p.market);
+    const odds_ = p.odds ? ` @ ${p.odds.toFixed(2)}` : '';
+    const reason = _reasonShort(p.reason);
+
+    lines.push(`Mein Tipp: ${mkt}${odds_}.`);
+    if (reason) lines.push(`${reason}.`);
+
+    // Second pick in one sentence if space allows
+    if (picks.length >= 2) {
+      const p2   = picks[1];
+      const mkt2 = _marketSpeak(p2.market);
+      const o2   = p2.odds ? ` @ ${p2.odds.toFixed(2)}` : '';
+      lines.push(`Zweiter Pick: ${mkt2}${o2}.`);
+    }
   } else {
-    lines.push(`Für dieses Spiel haben wir aktuell keine Empfehlung mit ausreichender Konfidenz.`);
-    lines.push('');
+    lines.push(`Für dieses Spiel aktuell kein High-Confidence Pick.`);
   }
 
-  lines.push(outro);
+  lines.push('');
+  lines.push(cta);
+  lines.push('');
+  lines.push(`⚠️ 18+ · Keine Gewinngarantie · Verantwortungsvoll wetten.`);
 
-  const fullScript = lines.join('\n');
+  const fullScript = lines.filter(l => l !== undefined).join('\n');
+
+  // Estimate reading time
+  const wordCount = fullScript.replace(/[^\w\s]/g, '').split(/\s+/).filter(Boolean).length;
+  const secEst    = Math.round(wordCount / 130 * 60);
 
   // ── Show modal ────────────────────────────────────────
   document.getElementById('scriptText').value = fullScript;
   document.getElementById('scriptModalTitle').textContent =
-    `${match.home} vs ${match.away} — Sportschau-Skript`;
+    `${match.home} vs ${match.away} — TikTok-Skript (~${secEst}s)`;
+  document.getElementById('scriptTip').innerHTML =
+    `⏱️ ca. <strong style="color:#e6edf3">${secEst} Sekunden</strong> · In CapCut: <strong style="color:#e6edf3">Text → KI-Stimme → Deutsch</strong> · Oder direkt in ElevenLabs einfügen`;
   const modal = document.getElementById('script-modal');
   modal.style.display = 'flex';
 }
