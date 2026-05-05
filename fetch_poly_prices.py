@@ -550,20 +550,28 @@ def _token_conflict(full_name: str, title: str) -> bool:
     return False
 
 
+def _ascii_fold(s: str) -> str:
+    """Strip diacritics: 'beşiktaş' → 'besiktas', 'fenerbahçe' → 'fenerbahce'."""
+    return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
+
+
 def match_score(title_lower: str, home_tokens: list, away_tokens: list) -> int:
     """
     2 = both teams found, 1 = one team, 0 = none.
     home_tokens[0] / away_tokens[0] = full lowercased name.
+    Also checks an ASCII-folded version of the title so that e.g.
+    'besiktas' matches a title containing 'beşiktaş'.
     """
     home_full = home_tokens[0]
     away_full = away_tokens[0]
+    title_ascii = _ascii_fold(title_lower)  # 'beşiktaş vs trabzonspor' → 'besiktas vs trabzonspor'
 
     def team_hit(full: str, tokens: list) -> bool:
-        if full in title_lower:
+        if full in title_lower or full in title_ascii:
             return True
-        if _token_conflict(full, title_lower):
+        if _token_conflict(full, title_lower) and _token_conflict(full, title_ascii):
             return False
-        return any(t in title_lower for t in tokens[1:])
+        return any(t in title_lower or t in title_ascii for t in tokens[1:])
 
     home_hit = team_hit(home_full, home_tokens)
     away_hit = team_hit(away_full, away_tokens)
@@ -724,7 +732,7 @@ def event_prices(ev: dict, home_en: str, away_en: str) -> dict:
 RESULT_MARKETS = {'Heimsieg', 'Auswärtssieg', 'Unentschieden'}
 
 
-def keyword_fetch_winner_events(home_en: str, away_en: str) -> list[dict]:
+def keyword_fetch_winner_events(home_en: str, away_en: str, home: str = '', away: str = '') -> list[dict]:
     """
     Targeted API call for a single fixture to find its 1X2 winner event.
     Used as fallback when the bulk tag-based fetch didn't include the plain
@@ -735,9 +743,17 @@ def keyword_fetch_winner_events(home_en: str, away_en: str) -> list[dict]:
     url = ('https://gamma-api.polymarket.com/events'
            + '?' + urllib.parse.urlencode({'keyword': keyword, 'active': 'true', 'limit': '20'}))
     data = api_get(url)
-    if not data:
-        return []
-    events = data if isinstance(data, list) else data.get('events', [])
+    events = data if isinstance(data, list) else (data or {}).get('events', []) if data else []
+
+    # If the English name differs from the original (e.g. 'Besiktas' ≠ 'Beşiktaş'),
+    # also try a keyword search with the original names — Polymarket may index by native spelling.
+    if not events and (home_en != home or away_en != away):
+        keyword2 = f"{home} {away}"
+        url2 = ('https://gamma-api.polymarket.com/events'
+                + '?' + urllib.parse.urlencode({'keyword': keyword2, 'active': 'true', 'limit': '20'}))
+        data2 = api_get(url2)
+        events = data2 if isinstance(data2, list) else (data2 or {}).get('events', []) if data2 else []
+
     # Exclude 'More Markets' events — we want the plain winner/moneyline event
     return [ev for ev in events if 'more market' not in (ev.get('title') or '').lower()]
 
@@ -785,7 +801,7 @@ def find_match_in_events(events: list, home: str, away: str,
     missing_result = RESULT_MARKETS - set(merged_prices.keys())
     if missing_result:
         print(f"    [{home_en} vs {away_en}] 1X2 missing ({missing_result}) — keyword fallback …")
-        extra_events = keyword_fetch_winner_events(home_en, away_en)
+        extra_events = keyword_fetch_winner_events(home_en, away_en, home, away)
         for ev in extra_events:
             title = (ev.get('title') or '').lower()
             if match_score(title, h_tokens, a_tokens) < 2:
