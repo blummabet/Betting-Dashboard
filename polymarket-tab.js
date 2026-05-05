@@ -426,6 +426,8 @@ function _isPolyEntryClean(entry) {
 // Retrieve price for a single pick from the cached JSON.
 // Returns { found, price, eventTitle, eventUrl } or null.
 // Returns { found: false, corrupted: true } when the match prices fail the sanity check.
+// Returns { found: false, gameFound: true, eventUrl } when the game exists on Poly but
+//   the specific market line isn't available (e.g. pick is Over 2.5 but Poly only has 4.5).
 function _getPriceFromCache(pick) {
   if (!_polyPriceCache) return null;
   const key = `${pick.home}|${pick.away}`;
@@ -433,10 +435,26 @@ function _getPriceFromCache(pick) {
   // Key not in cache at all → cache is stale/incomplete, NOT confirmed "kein Markt"
   if (entry === undefined) return { found: false, stale: true };
   if (!entry.found) return { found: false };
-  // Sanity check: reject entries where 1X2 or O/U sums deviate >5pp from 1.0
-  if (!_isPolyEntryClean(entry)) return { found: false, corrupted: true };
+
+  // Sanity check: AMM rounding errors can corrupt 1X2 / O2.5 prices.
+  // Only apply to 1X2 and goals picks — NOT corners/cards/BTTS (they have separate markets
+  // and an AMM error in the 1X2 prices is irrelevant for those pick types).
+  const isCornerOrCard = pick.market && (
+    pick.market.startsWith('Über ') || pick.market.startsWith('Unter ') ||
+    pick.market.includes('Ecken')   || pick.market.includes('Karten') ||
+    pick.market.includes('Corner')
+  );
+  if (!isCornerOrCard && !_isPolyEntryClean(entry)) {
+    return { found: false, corrupted: true };
+  }
+
   const price = (entry.markets || {})[pick.market];
-  if (price == null) return { found: false };
+  // Game is on Polymarket but this specific market line isn't available
+  // (e.g. pick = Over 2.5 but Poly only offers O/U 4.5).
+  // Don't treat as "kein Markt" — show a link so the user can still open the game.
+  if (price == null) {
+    return { found: false, gameFound: true, eventUrl: entry.eventUrl || 'https://polymarket.com/' };
+  }
   return {
     found:      true,
     price:      price,
@@ -489,6 +507,7 @@ function _priceBlock(pickId) {
   if (p.loading)              return `<span style="color:#8b949e;font-size:12px">⏳</span>`;
   if (!p.found && p.stale)      return `<span style="color:#e3b341;font-size:12px">⟳ neu laden</span>`;
   if (!p.found && p.corrupted) return `<span style="color:#f85149;font-size:11px" title="Poly-Preise für dieses Spiel summieren nicht auf 100% — AMM-Fehler, nicht handelbar">⚠️ Preise ungültig</span>`;
+  if (!p.found && p.gameFound) return `<span style="color:#8b949e;font-size:12px" title="Spiel auf Polymarket, aber diese spezifische Linie nicht verfügbar">andere Linie</span>`;
   if (!p.found)                return `<span style="color:#8b949e;font-size:12px">kein Markt</span>`;
   const pct      = Math.round(p.price * 100);
   const polyOdds = (1 / p.price).toFixed(2);
@@ -526,6 +545,18 @@ function _openButtonHtml(pickId) {
   if (!pd.found && pd.corrupted) {
     return `<div style="text-align:center;font-size:11px;color:#f8514988;padding:6px 0">⚠️ AMM-Preisfehler — Markt nicht handelbar</div>`;
   }
+  if (!pd.found && pd.gameFound && pd.eventUrl) {
+    return `<a href="${pd.eventUrl}" target="_blank" rel="noopener"
+      onclick="event.stopPropagation()"
+      style="display:flex;align-items:center;justify-content:center;gap:6px;
+             background:#8b949e11;border:1px solid #8b949e33;border-radius:8px;
+             color:#8b949e;font-size:12px;font-weight:700;padding:8px;
+             text-decoration:none;transition:background .15s"
+      onmouseover="this.style.background='#8b949e22'"
+      onmouseout="this.style.background='#8b949e11'">
+      🔗 Auf Polymarket öffnen (andere Linie)
+    </a>`;
+  }
   if (!pd.found || !pd.eventUrl) {
     return `<div style="text-align:center;font-size:11px;color:#8b949e44;padding:6px 0">kein Polymarket-Markt gefunden</div>`;
   }
@@ -546,7 +577,8 @@ function _renderPickCard(pick) {
   const priceData  = _polyState.prices[pick.id];
   // noMarket = Poly hat dieses Spiel explizit nicht; stale = Cache war veraltet, kein Urteil möglich
   // corrupted = AMM-Preisfehler (1X2-Summe weit von 1.0) → ebenfalls ausgegraut
-  const noMarket   = priceData && !priceData.loading && !priceData.found && !priceData.stale;
+  // gameFound = Spiel auf Poly, aber spezifische Linie fehlt → NICHT ausgegraut (Link zeigen)
+  const noMarket   = priceData && !priceData.loading && !priceData.found && !priceData.stale && !priceData.gameFound;
   const mktColor   = _marketColor(pick.market);
 
   return `<div class="poly-pick-card${isSel ? ' poly-selected' : ''}${noMarket ? ' poly-no-market' : ''}"
