@@ -5754,7 +5754,7 @@ async function loadPreMatchData() {
   console.log(`[PreMatch] Fetching ${dates.length} fixture dates:`, dates.join(', '));
 
   // Serve from cache (key = today's local date, TTL 3h)
-  const cacheKey = `pmData_v6_${todayIso}`;
+  const cacheKey = `pmData_v7_${todayIso}`;  // v7: bumped to bust cache after PM_DATA_MAX_AGE fix (36h)
   const PM_TTL   = 23 * 3600 * 1000; // 23h — survive the whole day, reset with new key tomorrow
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
@@ -5773,7 +5773,7 @@ async function loadPreMatchData() {
   // Die Datei wird von .github/workflows/fetch-prematch.yml automatisch aktualisiert.
   // Funktioniert nur wenn die Seite per HTTP(S) geladen wird (nicht file://).
   const PM_DATA_URL = 'prematch-data.json';
-  const PM_DATA_MAX_AGE = 14 * 3600 * 1000; // 14h — Actions laufen 2x täglich
+  const PM_DATA_MAX_AGE = 36 * 3600 * 1000; // 36h — toleriert ausgefallene Action-Runs (max. Lücke zwischen 13:00 UTC und 05:00 UTC = 16h)
   try {
     const _jResp = await fetch(PM_DATA_URL, { signal: AbortSignal.timeout(3000) });
     if (_jResp.ok) {
