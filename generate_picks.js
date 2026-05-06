@@ -314,8 +314,128 @@ for (const [leagueKey, league] of Object.entries(LEAGUES)) {
   }
 }
 
+// ── 9. Second pass: prematch-only fixtures (POL, CRO, SUI, BEL, TUR …) ──────────
+// generate_picks.js iterates LEAGUES from season-finish.html, which only includes
+// leagues fetched by update_dashboard.py. prematch-server.js fetches additional leagues
+// (e.g. Ekstraklasa, HNL, Super Lig, Swiss SL) that are NOT in LEAGUES.
+// This pass processes those extra fixtures so they also get picks.
+
+// Build set of already-processed home|away pairs
+const processed = new Set(output.map(e => `${normTeam(e.home)}|${normTeam(e.away)}`));
+
+// League metadata from prematch-data.json fixtures
+const PM_LEAGUE_META = {
+  // leagueId → { key, name, flag }
+  203: { key:'TUR', name:'Süper Lig',        flag:'🇹🇷' },
+  106: { key:'POL', name:'Ekstraklasa',      flag:'🇵🇱' },
+  207: { key:'SUI', name:'Super League',     flag:'🇨🇭' },
+  144: { key:'BEL', name:'First Division A', flag:'🇧🇪' },
+  210: { key:'CRO', name:'HNL',              flag:'🇭🇷' },
+  104: { key:'RUS', name:'Premier Liga',     flag:'🇷🇺' },
+   88: { key:'NED2',name:'Eerste Divisie',   flag:'🇳🇱' },
+  218: { key:'AUT2',name:'2. Liga',          flag:'🇦🇹' },
+};
+
+// Pick the best LEAGUES key to borrow context from (for getBettingPicks league config)
+// Falls back to a neutral similar league key so pick logic still runs.
+const FALLBACK_LEAGUE_KEY = {
+  TUR:  'GER',   // Similar league profile
+  POL:  'GER',
+  SUI:  'GER',
+  BEL:  'GER',
+  CRO:  'NED',
+  NED2: 'NED',
+  AUT2: 'AUT',
+};
+
+let extraTotal = 0, extraErrors = 0;
+
+for (const fx of pmFixtures) {
+  const hn = normTeam(fx.homeTeamName || '');
+  const an = normTeam(fx.awayTeamName || '');
+  if (!hn || !an) continue;
+  if (processed.has(`${hn}|${an}`)) continue;  // already in output
+
+  const meta = PM_LEAGUE_META[fx.leagueId];
+  if (!meta) continue;  // only process known extra leagues
+
+  processed.add(`${hn}|${an}`);
+  extraTotal++;
+
+  const leagueKey = FALLBACK_LEAGUE_KEY[meta.key] || 'GER';
+  const odds  = findPrematchOdds(fx.homeTeamName, fx.awayTeamName);
+  const h2h   = findPrematchH2h(fx.homeTeamName, fx.awayTeamName);
+
+  // Build a match object compatible with getBettingPicks
+  const match = {
+    home:       fx.homeTeamName,
+    away:       fx.awayTeamName,
+    date:       fx.date ? (fx.date.includes('-') ? fx.date.split('-').reverse().join('.') : fx.date) : '',
+    roundsLeft: fx.roundsLeft ?? 99,
+    h2h:        h2h || fx.h2h || null,
+    homeStake:  fx.homeStake  || null,
+    awayStake:  fx.awayStake  || null,
+    homeForm:   fx.homeForm   || null,
+    awayForm:   fx.awayForm   || null,
+    homeSquad:  fx.homeSquad  || null,
+    awaySquad:  fx.awaySquad  || null,
+    refereeStats: fx.refereeStats || null,
+    expGoals:   fx.expGoals   || null,
+    matchScore: fx.matchScore  || null,
+    eventId:    fx.eventId    || null,
+  };
+
+  let picks = [], matchScore = 0;
+  try {
+    picks = getBettingPicks(match, odds, leagueKey) || [];
+  } catch (e) {
+    extraErrors++;
+    if (extraErrors <= 3) console.warn(`  [extra] pick error ${match.home} vs ${match.away}: ${e.message}`);
+  }
+  try {
+    matchScore = computeMatchScore(match, leagueKey) || 0;
+  } catch (_) {}
+
+  const dateStr = match.date || '';
+  const dateIso = (() => {
+    if (!dateStr) return fx.date || '';
+    try {
+      const [d,m,y] = dateStr.split('.');
+      return `${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`;
+    } catch(_) { return fx.date || ''; }
+  })();
+
+  output.push({
+    league:     meta.key,
+    leagueName: meta.name,
+    leagueFlag: meta.flag,
+    roundsLeft: fx.roundsLeft ?? 99,
+    home:       fx.homeTeamName,
+    away:       fx.awayTeamName,
+    date:       dateStr,
+    dateIso,
+    eventId:    fx.eventId || null,
+    matchScore: Math.round(matchScore * 10) / 10,
+    picks: (picks || []).map(p => ({
+      market:    p.market    || '',
+      marketKey: marketToKey(p.market || ''),
+      icon:      p.icon      || '',
+      conf:      p.conf      || 'medium',
+      sc:        typeof p.sc === 'number' ? Math.round(p.sc * 1000) / 1000 : 0,
+      odds:      p.odds != null ? p.odds : null,
+      modelOdds: p.modelOdds != null ? p.modelOdds : null,
+      value:     p.value     || null,
+      oddsIsEst: p.oddsIsEst || false,
+    })),
+  });
+}
+
+if (extraTotal > 0) {
+  console.log(`Extra leagues: +${extraTotal} fixtures (POL/CRO/SUI/BEL/TUR…), ${extraErrors} errors`);
+}
+
 fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
-console.log(`\nDone: ${total} fixtures → ${output.length} entries, ${errors} errors`);
+console.log(`\nDone: ${total + extraTotal} fixtures → ${output.length} entries, ${errors + extraErrors} errors`);
 console.log(`Output: ${OUTPUT_PATH}`);
 
 // Summary of picks
