@@ -1407,17 +1407,47 @@ def main():
     squad_cache = load_squad_cache()
     xg_cache    = load_xg_cache()
 
+    # ── League fallback cache — persists last known good data per league ─────
+    FALLBACK_CACHE_PATH = Path(__file__).parent / "league_fallback_cache.json"
+
+    def load_fallback_cache():
+        try:
+            with open(FALLBACK_CACHE_PATH, encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+
+    def save_fallback_cache(cache):
+        try:
+            with open(FALLBACK_CACHE_PATH, "w", encoding="utf-8") as f:
+                json.dump(cache, f, ensure_ascii=False)
+        except Exception as e:
+            print(f"  ⚠ Konnte Fallback-Cache nicht schreiben: {e}")
+
+    fallback_cache = load_fallback_cache()
+
     results = {}
     for key, cfg in LEAGUES.items():
         data = fetch_league(key, cfg, squad_cache=squad_cache, xg_cache=xg_cache)
         if data:
             results[key] = data
+            # Persist successful result as fallback for future runs
+            fallback_cache[key] = data
+        else:
+            # Fetch failed — use last known good data if available
+            if key in fallback_cache:
+                results[key] = fallback_cache[key]
+                print(f"  ⚠ {cfg['flag']} {cfg['name']}: Fetch fehlgeschlagen → Fallback-Cache verwendet")
+            else:
+                print(f"  ✗ {cfg['flag']} {cfg['name']}: Fetch fehlgeschlagen, kein Fallback verfügbar")
+
+    save_fallback_cache(fallback_cache)
 
     if not results:
         print("\n✗ Keine Daten erhalten. Prüfe deine Internetverbindung.")
         sys.exit(1)
 
-    print(f"\n✓ {len(results)}/{len(LEAGUES)} Ligen erfolgreich geladen")
+    print(f"\n✓ {len(results)}/{len(LEAGUES)} Ligen geladen (inkl. Fallback)")
 
     new_js  = build_leagues_js(results)
     today_s = german_date()
