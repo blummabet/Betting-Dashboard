@@ -55,44 +55,29 @@ APIF_HOST = "v3.football.api-sports.io"
 APIF_KEY  = os.environ.get("APISPORTS_KEY", "")
 APIF_DELAY = 1.2  # seconds between calls (Pro plan rate limit)
 
-def apif_get(endpoint, params, _retries=3):
-    """Fetch from API-Football with rate limiting and retry on transient errors."""
+def apif_get(endpoint, params):
+    """Fetch from API-Football with rate limiting."""
     if not APIF_KEY:
         print("  ⚠ APISPORTS_KEY not set")
         return []
     query = "&".join(f"{k}={v}" for k, v in params.items())
     path = f"/{endpoint}?{query}"
-    for attempt in range(_retries):
-        try:
-            conn = http.client.HTTPSConnection(APIF_HOST, timeout=15)
-            conn.request("GET", path, headers={"x-apisports-key": APIF_KEY})
-            resp = conn.getresponse()
-            raw = resp.read()
-            conn.close()
-            data = json.loads(raw.decode())
-            errors = data.get("errors", {})
-            if isinstance(errors, dict) and errors:
-                err_str = str(errors)
-                # Rate-limit or quota errors → wait and retry
-                if any(k in err_str.lower() for k in ("ratelimit", "requests", "quota")):
-                    wait = APIF_DELAY * (4 ** attempt)
-                    print(f"  ⏳ Rate-limit on /{endpoint}, retry {attempt+1}/{_retries} in {wait:.0f}s…")
-                    time.sleep(wait)
-                    continue
-                print(f"  ⚠ API-Football error on /{endpoint}: {errors}")
-                return []
-            return data.get("response", [])
-        except Exception as e:
-            if attempt < _retries - 1:
-                wait = APIF_DELAY * (2 ** attempt)
-                print(f"  ⏳ apif_get /{endpoint} error ({e}), retry {attempt+1}/{_retries} in {wait:.0f}s…")
-                time.sleep(wait)
-            else:
-                print(f"  ⚠ apif_get /{endpoint} failed after {_retries} attempts: {e}")
-                return []
-        finally:
-            time.sleep(APIF_DELAY)
-    return []
+    try:
+        conn = http.client.HTTPSConnection(APIF_HOST, timeout=15)
+        conn.request("GET", path, headers={"x-apisports-key": APIF_KEY})
+        resp = conn.getresponse()
+        data = json.loads(resp.read().decode())
+        conn.close()
+        errors = data.get("errors", {})
+        if isinstance(errors, dict) and errors:
+            print(f"  ⚠ API-Football error on /{endpoint}: {errors}")
+            return []
+        return data.get("response", [])
+    except Exception as e:
+        print(f"  ⚠ apif_get /{endpoint} error: {e}")
+        return []
+    finally:
+        time.sleep(APIF_DELAY)
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -1065,10 +1050,8 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
     _xg_cache    = xg_cache    or {}
 
     # ── Standings ────────────────────────────────────────────────────────────
-    # Try 2025 first (most European leagues), then 2026 (newly started), then
-    # 2024 as fallback for leagues that use start-year convention (e.g. POL, CRO).
     standings = []
-    for season in [2025, 2026, 2024]:
+    for season in [2025, 2026]:
         resp = apif_get("standings", {"league": apif_id, "season": season})
         if resp:
             rows = resp[0].get("league", {}).get("standings", [[]])[0]
@@ -1424,19 +1407,47 @@ def main():
     squad_cache = load_squad_cache()
     xg_cache    = load_xg_cache()
 
+    # ── League fallback cache — persists last known good data per league ─────
+    FALLBACK_CACHE_PATH = Path(__file__).parent / "league_fallback_cache.json"
+
+    def load_fallback_cache():
+        try:
+            with open(FALLBACK_CACHE_PATH, encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+
+    def save_fallback_cache(cache):
+        try:
+            with open(FALLBACK_CACHE_PATH, "w", encoding="utf-8") as f:
+                json.dump(cache, f, ensure_ascii=False)
+        except Exception as e:
+            print(f"  ⚠ Konnte Fallback-Cache nicht schreiben: {e}")
+
+    fallback_cache = load_fallback_cache()
+
     results = {}
     for key, cfg in LEAGUES.items():
         data = fetch_league(key, cfg, squad_cache=squad_cache, xg_cache=xg_cache)
         if data:
             results[key] = data
+            # Persist successful result as fallback for future runs
+            fallback_cache[key] = data
         else:
-            print(f"  ✗ {cfg['flag']} {cfg['name']}: kein Ergebnis — Liga wird übersprungen")
+            # Fetch failed — use last known good data if available
+            if key in fallback_cache:
+                results[key] = fallback_cache[key]
+                print(f"  ⚠ {cfg['flag']} {cfg['name']}: Fetch fehlgeschlagen → Fallback-Cache verwendet")
+            else:
+                print(f"  ✗ {cfg['flag']} {cfg['name']}: Fetch fehlgeschlagen, kein Fallback verfügbar")
+
+    save_fallback_cache(fallback_cache)
 
     if not results:
         print("\n✗ Keine Daten erhalten. Prüfe deine Internetverbindung.")
         sys.exit(1)
 
-    print(f"\n✓ {len(results)}/{len(LEAGUES)} Ligen erfolgreich geladen")
+    print(f"\n✓ {len(results)}/{len(LEAGUES)} Ligen geladen (inkl. Fallback)")
 
     new_js  = build_leagues_js(results)
     today_s = german_date()
