@@ -1634,46 +1634,66 @@ if (WRITE_MODE) {
         process.exit(1);
       }
 
-      // ── Preserve odds_open + odds_open_ts from previous run ──────────────
-      // odds_open is set once (first time we see a fixture with odds) and never overwritten.
-      // This creates a permanent opening-line snapshot for CLV + line movement detection.
-      // odds_open_ts = ISO timestamp of when the opening snapshot was first captured.
-      const prevOddsOpen   = {};
-      const prevOddsOpenTs = {};
+      // ── Preserve odds_open + odds_closing from previous run ─────────────
+      // odds_open:    set ONCE on first fetch with odds → never overwritten (opening line)
+      // odds_closing: updated on EVERY fetch until kickoff → then frozen (closing line)
+      // Both are used for CLV calculation and line movement display.
+      const prevOddsOpen    = {};
+      const prevOddsOpenTs  = {};
+      const prevOddsClosing = {};
       try {
         const prev = JSON.parse(fs.readFileSync(outPath, 'utf8'));
         for (const fx of (prev.fixtures || [])) {
           if (fx.fixtureId && fx.odds_open) {
-            prevOddsOpen[fx.fixtureId]   = fx.odds_open;
-            prevOddsOpenTs[fx.fixtureId] = fx.odds_open_ts || null;
+            prevOddsOpen[fx.fixtureId]    = fx.odds_open;
+            prevOddsOpenTs[fx.fixtureId]  = fx.odds_open_ts || null;
+          }
+          if (fx.fixtureId && fx.odds_closing) {
+            prevOddsClosing[fx.fixtureId] = fx.odds_closing;
           }
         }
-        console.log(`[GitHub Actions] odds_open: ${Object.keys(prevOddsOpen).length} Opening-Snapshots aus vorherigem Run geladen`);
+        console.log(`[GitHub Actions] odds_open: ${Object.keys(prevOddsOpen).length} Opening-Snapshots | odds_closing: ${Object.keys(prevOddsClosing).length} Closing-Snapshots geladen`);
       } catch(e) {
-        console.log('[GitHub Actions] odds_open: Kein vorheriger Run gefunden (erster Lauf oder Datei fehlt)');
+        console.log('[GitHub Actions] odds_open/closing: Kein vorheriger Run gefunden (erster Lauf oder Datei fehlt)');
       }
+
+      // Helper: is the fixture's kickoff already past (UTC)?
+      const _nowMs = Date.now();
+      function _isKickedOff(fx) {
+        if (!fx.date || !fx.time) return false;
+        try {
+          // fx.date = "YYYY-MM-DD", fx.time = "HH:MM" Vienna local (UTC+2 in summer)
+          const [h, m] = fx.time.split(':').map(Number);
+          const viennaMs = new Date(`${fx.date}T${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00`).getTime() - (2 * 3600000);
+          return _nowMs >= viennaMs;
+        } catch(e) { return false; }
+      }
+
       const _now = new Date().toISOString();
       for (const fx of fixtures) {
         if (fx.odds && Object.keys(fx.odds).length > 0) {
+          // ── Opening: set once, never change ──────────────────────────────
           if (prevOddsOpen[fx.fixtureId]) {
-            // Restore existing snapshot + timestamp
             fx.odds_open    = prevOddsOpen[fx.fixtureId];
             fx.odds_open_ts = prevOddsOpenTs[fx.fixtureId] || _now;
           } else {
-            // First time we see odds → set opening snapshot with timestamp
-            fx.odds_open    = { ...fx.odds };
+            fx.odds_open    = { hw: fx.hw, dr: fx.dr, aw: fx.aw, bttsY: fx.bttsY, o25: fx.o25,
+                                dc1X_bkr: fx.dc1X_bkr, dcX2_bkr: fx.dcX2_bkr,
+                                pinn_hw_fair: fx.odds.pinn_hw_fair, pinn_dr_fair: fx.odds.pinn_dr_fair,
+                                pinn_aw_fair: fx.odds.pinn_aw_fair };
             fx.odds_open_ts = _now;
-            // Also snapshot Pinnacle-specific values if available
-            if (fx.odds.pinn_hw_fair)  fx.odds_open.pinn_hw_fair  = fx.odds.pinn_hw_fair;
-            if (fx.odds.pinn_dr_fair)  fx.odds_open.pinn_dr_fair  = fx.odds.pinn_dr_fair;
-            if (fx.odds.pinn_aw_fair)  fx.odds_open.pinn_aw_fair  = fx.odds.pinn_aw_fair;
-            if (fx.odds.pinn_o25_fair) fx.odds_open.pinn_o25_fair = fx.odds.pinn_o25_fair;
-            if (fx.odds.pinn_u25_fair) fx.odds_open.pinn_u25_fair = fx.odds.pinn_u25_fair;
-            if (fx.odds.pinn_o35_fair) fx.odds_open.pinn_o35_fair = fx.odds.pinn_o35_fair;
-            if (fx.odds.pinn_u35_fair) fx.odds_open.pinn_u35_fair = fx.odds.pinn_u35_fair;
-            if (fx.odds.pinn_hw)  fx.odds_open.pinn_hw  = fx.odds.pinn_hw;
-            if (fx.odds.pinn_o25) fx.odds_open.pinn_o25 = fx.odds.pinn_o25;
-            if (fx.odds.pinn_o35) fx.odds_open.pinn_o35 = fx.odds.pinn_o35;
+          }
+
+          // ── Closing: update every run until kickoff, then freeze ──────────
+          if (_isKickedOff(fx) && prevOddsClosing[fx.fixtureId]) {
+            // Game has started → preserve last pre-kickoff snapshot
+            fx.odds_closing = prevOddsClosing[fx.fixtureId];
+          } else {
+            // Pre-kickoff → update closing with latest odds
+            fx.odds_closing = { hw: fx.hw, dr: fx.dr, aw: fx.aw, bttsY: fx.bttsY, o25: fx.o25,
+                                 dc1X_bkr: fx.dc1X_bkr, dcX2_bkr: fx.dcX2_bkr,
+                                 pinn_hw_fair: fx.odds.pinn_hw_fair, pinn_dr_fair: fx.odds.pinn_dr_fair,
+                                 pinn_aw_fair: fx.odds.pinn_aw_fair };
           }
         }
       }

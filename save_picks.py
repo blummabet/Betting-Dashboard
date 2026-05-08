@@ -69,8 +69,8 @@ def main():
         generated = json.load(f)
     print(f"  📦 {len(generated)} fixtures from picks_output.json")
 
-    # ── Load kick-off times from prematch-data.json ──────────────────────────
-    # Key: "HomeTeamName|AwayTeamName"  →  {date: "YYYY-MM-DD", time: "HH:MM" or None}
+    # ── Load kick-off times + odds snapshots from prematch-data.json ─────────
+    # Key: "HomeTeamName|AwayTeamName"  →  {date, time, odds_open, odds_closing, hw/dr/aw}
     kickoff_map: dict[str, dict] = {}
     if PREMATCH_FILE.exists():
         try:
@@ -79,10 +79,15 @@ def main():
             for fx in pm.get("fixtures", []):
                 key = f"{fx.get('homeTeamName', '')}|{fx.get('awayTeamName', '')}"
                 kickoff_map[key] = {
-                    "date": fx.get("date", ""),
-                    "time": fx.get("time"),   # "HH:MM" Vienna local, or None
+                    "date":         fx.get("date", ""),
+                    "time":         fx.get("time"),
+                    "odds_open":    fx.get("odds_open"),
+                    "odds_closing": fx.get("odds_closing"),
+                    "hw": fx.get("hw"), "dr": fx.get("dr"), "aw": fx.get("aw"),
+                    "bttsY": fx.get("bttsY"), "o25": fx.get("o25"),
+                    "dc1X_bkr": fx.get("dc1X_bkr"), "dcX2_bkr": fx.get("dcX2_bkr"),
                 }
-            print(f"  🕐 {len(kickoff_map)} kick-off times loaded from prematch-data.json")
+            print(f"  🕐 {len(kickoff_map)} kick-off times + odds snapshots loaded from prematch-data.json")
         except Exception as e:
             print(f"  ⚠️  Could not load prematch-data.json: {e}")
 
@@ -112,6 +117,19 @@ def main():
         date_iso = pm.get("date") or fx_or_entry.get("dateIso", "")
         time_str = pm.get("time")   # None if not found → fallback to date-only check
         return date_iso, time_str
+
+    def _get_odds_snapshots(fx_or_entry: dict) -> dict:
+        """Return odds_open and odds_bet snapshots from prematch-data for CLV tracking."""
+        home = fx_or_entry.get("home", "") or fx_or_entry.get("homeTeamName", "")
+        away = fx_or_entry.get("away", "") or fx_or_entry.get("awayTeamName", "")
+        pm   = kickoff_map.get(f"{home}|{away}", {})
+        return {
+            "odds_open":    pm.get("odds_open"),   # first snapshot ever (set once)
+            "odds_bet":     {                       # current odds at pick-save time
+                k: pm.get(k) for k in ("hw", "dr", "aw", "bttsY", "o25", "dc1X_bkr", "dcX2_bkr")
+                if pm.get(k) is not None
+            } or None,
+        }
 
     def _build_pick_entries(picks: list, old_picks: list | None = None) -> list:
         """Convert picks_output picks to history format, preserving isTopCard flags."""
@@ -148,8 +166,23 @@ def main():
         if mid in history_by_id:
             e = history[history_by_id[mid]]
 
-            # Already resolved (result known) or kicked off → FREEZE
-            if e.get("resolved") or frozen:
+            # Already resolved (result known) → skip entirely
+            if e.get("resolved"):
+                frozen_c += 1
+                continue
+
+            # Just kicked off → capture closing odds snapshot (once), then freeze
+            if frozen:
+                if not e.get("odds_closing"):
+                    # First time we see this entry as frozen → save closing line
+                    pm_info = kickoff_map.get(f"{e.get('home','')}|{e.get('away','')}", {})
+                    closing = pm_info.get("odds_closing") or {
+                        k: pm_info.get(k)
+                        for k in ("hw", "dr", "aw", "bttsY", "o25", "dc1X_bkr", "dcX2_bkr")
+                        if pm_info.get(k) is not None
+                    } or None
+                    if closing:
+                        e["odds_closing"] = closing
                 frozen_c += 1
                 continue
 
@@ -176,6 +209,7 @@ def main():
                 frozen_c += 1
                 continue
 
+            odds_snaps = _get_odds_snapshots(fx)
             entry = {
                 "id":         mid,
                 "date":       fx.get("date", ""),
@@ -188,6 +222,8 @@ def main():
                 "eventId":    fx.get("eventId"),
                 "matchScore": fx.get("matchScore"),
                 "picks":      _build_pick_entries(picks),
+                "odds_open":  odds_snaps["odds_open"],   # opening line snapshot
+                "odds_bet":   odds_snaps["odds_bet"],    # odds at time of pick (for CLV)
                 "finalScore": None,
                 "resolved":   False,
                 "savedAt":    now_utc.isoformat() + "Z",

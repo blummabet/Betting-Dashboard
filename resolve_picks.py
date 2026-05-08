@@ -378,12 +378,35 @@ def main():
             pass  # Keep existing value
 
         wins = losses = voids = 0
+
+        # ── CLV: map marketKey → relevant closing odds field ──────────────
+        # Priority: true closing odds (captured at kickoff) > bet odds (at pick save time)
+        MARKET_TO_CLOSING_FIELD = {
+            "homeWin":  "hw",   "awayWin":  "aw",   "draw":    "dr",
+            "btts":     "bttsY", "noBtts":  "bttsN",
+            "over25":   "o25",  "under25":  "u25",
+            "over35":   "o35",  "under35":  "u35",
+            "dc1X":     "dc1X_bkr", "dcX2": "dcX2_bkr",
+        }
+        closing = entry.get("odds_closing") or entry.get("odds_bet") or {}
+
         for p in entry["picks"]:
             outcome = evaluate_pick(p["marketKey"], hg, ag, result)
             p["result"] = outcome
             if outcome == "win":    wins += 1
             elif outcome == "loss": losses += 1
             else:                   voids += 1
+
+            # CLV = how much better/worse were our pick odds vs. market closing line
+            # Formula: (pick_odds / closing_odds - 1) * 100  [positive = value found]
+            if "clv" not in p:   # only compute once (don't overwrite on re-runs)
+                pick_odds    = p.get("odds")
+                closing_key  = MARKET_TO_CLOSING_FIELD.get(p.get("marketKey", ""))
+                closing_odds = closing.get(closing_key) if closing_key else None
+                if pick_odds and closing_odds and pick_odds > 1 and closing_odds > 1:
+                    p["clv"] = round((pick_odds / closing_odds - 1) * 100, 1)
+                else:
+                    p["clv"] = None
 
         # Log card stats if any cards picks were resolved
         card_info = ""
