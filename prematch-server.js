@@ -780,7 +780,7 @@ function parseBets(bookmakers) {
       const bn = (bet.name || '').toLowerCase().trim();
       if (bn === 'match winner' || bn === '1x2' || bn === 'result' || bn === 'fulltime result' || bn === 'winner' || bn === 'match result') {
         for (const v of (bet.values || [])) {
-          const vl = (v.value || '').toLowerCase();
+          const vl = String(v.value ?? '').toLowerCase();
           if (vl === 'home') _hw = parseFloat(v.odd);
           else if (vl === 'away') _aw = parseFloat(v.odd);
           else if (vl === 'draw') _dr = parseFloat(v.odd);
@@ -820,7 +820,7 @@ function parseBets(bookmakers) {
       const bn = (bet.name || '').toLowerCase().trim();
       if (bn === 'goals over/under' || bn === 'total goals' || bn === 'over/under' || bn === 'total - goals' || bn.includes('goals o/u') || (bn.includes('over') && bn.includes('under') && bn.includes('goal'))) {
         for (const v of (bet.values || [])) {
-          const vl = (v.value || '').toLowerCase();
+          const vl = String(v.value ?? '').toLowerCase();
           if (vl === 'over 2.5')  _o25 = parseFloat(v.odd);
           else if (vl === 'under 2.5') _u25 = parseFloat(v.odd);
         }
@@ -855,14 +855,14 @@ function parseBets(bookmakers) {
       const bn = (bet.name || '').toLowerCase().trim();
       if (bn === 'match winner' || bn === '1x2' || bn === 'result' || bn === 'fulltime result' || bn === 'winner' || bn === 'match result') {
         for (const v of (bet.values || [])) {
-          const vl = (v.value || '').toLowerCase();
+          const vl = String(v.value ?? '').toLowerCase();
           if      (vl === 'home' && !r.hw) r.hw = parseFloat(v.odd);
           else if (vl === 'away' && !r.aw) r.aw = parseFloat(v.odd);
           else if (vl === 'draw' && !r.dr) r.dr = parseFloat(v.odd);
         }
       } else if (bn === 'goals over/under' || bn === 'total goals' || bn === 'over/under' || bn === 'total - goals' || bn.includes('goals o/u') || (bn.includes('over') && bn.includes('under') && bn.includes('goal'))) {
         for (const v of (bet.values || [])) {
-          const vl = (v.value || '').toLowerCase();
+          const vl = String(v.value ?? '').toLowerCase();
           if      (vl === 'over 2.5'  && !r.o25) r.o25 = parseFloat(v.odd);
           else if (vl === 'under 2.5' && !r.u25) r.u25 = parseFloat(v.odd);
           else if (vl === 'over 3.5'  && !r.o35) r.o35 = parseFloat(v.odd);
@@ -871,25 +871,25 @@ function parseBets(bookmakers) {
         }
       } else if (bn.includes('both teams') || bn === 'btts' || bn === 'gg/ng') {
         for (const v of (bet.values || [])) {
-          const vl = (v.value || '').toLowerCase();
+          const vl = String(v.value ?? '').toLowerCase();
           if      ((vl === 'yes' || vl === 'gg') && !r.bttsY) r.bttsY = parseFloat(v.odd);
           else if ((vl === 'no'  || vl === 'ng') && !r.bttsN) r.bttsN = parseFloat(v.odd);
         }
       } else if (bn === 'double chance' || bn.includes('double chance')) {
         for (const v of (bet.values || [])) {
-          const vl = (v.value || '').toLowerCase();
+          const vl = String(v.value ?? '').toLowerCase();
           if      ((vl === 'home/draw' || vl === '1x' || vl === 'home or draw') && !r.dc1X_bkr) r.dc1X_bkr = parseFloat(v.odd);
           else if ((vl === 'draw/away' || vl === 'x2' || vl === 'draw or away') && !r.dcX2_bkr) r.dcX2_bkr = parseFloat(v.odd);
         }
       } else if (bn === 'asian handicap' || bn === 'draw no bet' || bn === 'dnb') {
         for (const v of (bet.values || [])) {
-          const vl = (v.value || '').toLowerCase();
+          const vl = String(v.value ?? '').toLowerCase();
           if      (vl === 'home' && !r.dnbH) r.dnbH = parseFloat(v.odd);
           else if (vl === 'away' && !r.dnbA) r.dnbA = parseFloat(v.odd);
         }
       } else if (bn === 'total - corners' || bn === 'corners' || bn === 'corner kicks' || bn.includes('total corners') || (bn.includes('corner') && (bn.includes('over') || bn.includes('under') || bn.includes('total')))) {
         for (const v of (bet.values || [])) {
-          const vl = (v.value || '').toLowerCase();
+          const vl = String(v.value ?? '').toLowerCase();
           if      (vl === 'over 9.5'  && !r.co95)  r.co95  = parseFloat(v.odd);
           else if (vl === 'under 9.5' && !r.cu95)  r.cu95  = parseFloat(v.odd);
           else if (vl === 'over 8.5'  && !r.co85)  r.co85  = parseFloat(v.odd);
@@ -901,7 +901,7 @@ function parseBets(bookmakers) {
         }
       } else if (bn.includes('card') || bn.includes('booking') || bn === 'total - cards') {
         for (const v of (bet.values || [])) {
-          const vl = (v.value || '').toLowerCase();
+          const vl = String(v.value ?? '').toLowerCase();
           if      (vl === 'over 3.5'  && !r.cards_o35) r.cards_o35 = parseFloat(v.odd);
           else if (vl === 'under 3.5' && !r.cards_u35) r.cards_u35 = parseFloat(v.odd);
           else if (vl === 'over 4.5'  && !r.cards_o45) r.cards_o45 = parseFloat(v.odd);
@@ -917,7 +917,7 @@ function parseBets(bookmakers) {
         bn === 'ht goals over/under' || bn === 'half time goals' || bn === 'first half - goals'
       ) {
         for (const v of (bet.values || [])) {
-          const vl = (v.value || '').toLowerCase();
+          const vl = String(v.value ?? '').toLowerCase();
           if      (vl === 'over 0.5'  && !r.ht_o05) r.ht_o05 = parseFloat(v.odd);
           else if (vl === 'under 0.5' && !r.ht_u05) r.ht_u05 = parseFloat(v.odd);
           else if (vl === 'over 1.5'  && !r.ht_o15) r.ht_o15 = parseFloat(v.odd);
@@ -930,7 +930,7 @@ function parseBets(bookmakers) {
         bn.includes('both teams')
       ) {
         for (const v of (bet.values || [])) {
-          const vl = (v.value || '').toLowerCase();
+          const vl = String(v.value ?? '').toLowerCase();
           if      ((vl === 'yes' || vl === 'gg') && !r.ht_bttsY) r.ht_bttsY = parseFloat(v.odd);
           else if ((vl === 'no'  || vl === 'ng') && !r.ht_bttsN) r.ht_bttsN = parseFloat(v.odd);
         }
