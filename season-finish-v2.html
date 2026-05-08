@@ -2829,7 +2829,7 @@ function findOdds(leagueKey, home, away) {
 
 async function loadAllOdds() {
   // ── Cache: refresh every 2h — odds move more often closer to kickoff ─────
-  const CACHE_KEY = 'sfOddsCache_v14'; // bumped: spreads market now collects all bookmaker lines into ah_home/away_lines
+  const CACHE_KEY = 'sfOddsCache_v15'; // bumped: new TheOddsAPI key, force fresh load
   const CACHE_TTL = 2 * 3600 * 1000;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
@@ -5713,7 +5713,7 @@ async function loadPreMatchData() {
   console.log(`[PreMatch] Fetching ${dates.length} fixture dates:`, dates.join(', '));
 
   // Serve from cache (key = today's local date, TTL 3h)
-  const cacheKey = `pmData_v7_${todayIso}`;  // v7: bumped to bust cache after PM_DATA_MAX_AGE fix (36h)
+  const cacheKey = `pmData_v8_${todayIso}`;  // v8: force reload after age-limit removal + new odds key
   const PM_TTL   = 23 * 3600 * 1000; // 23h — survive the whole day, reset with new key tomorrow
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
