@@ -31,7 +31,7 @@ const WRITE_MODE = process.argv.includes('--write');
 const API_KEY   = process.env.APISPORTS_KEY || '9f36726c1bdc9957b4a49f89277b80db';
 const API_HOST  = 'v3.football.api-sports.io';
 // The Odds API key (all pre-match odds incl. same-day — replaces API-Football /odds)
-const ODDS_API_KEY  = process.env.ODDS_API_KEY || 'e33cee8d4ce8d646476115c7d1e3f3e4';
+const ODDS_API_KEY  = process.env.ODDS_API_KEY || '16154a94ee84482dcd5a4af88d521d73';
 const ODDS_API_HOST = 'api.the-odds-api.com';
 
 // Nur diese Ligen fetchen — verhindert 7000+ Spiele pro Tag weltweit
