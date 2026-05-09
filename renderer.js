@@ -425,11 +425,14 @@ function buildTopCardsHtml(matchList) {
       if (p.conf === 'high')   rank += 4;
       if (p.conf === 'medium') rank += 1;
 
-      // ── No confirmed bookmaker odds → significant rank penalty ───────────────
+      // ── No confirmed bookmaker odds → rank penalty ────────────────────────────
       // Picks from leagues without odds coverage (CRO, HUN) should not displace
       // real picks from well-covered leagues. Only affects top-cards ranking, not the
       // per-match pick display.
-      if (!hasRealOdds && p.odds == null) rank -= 6;
+      if (!hasRealOdds) {
+        if (p.odds == null)   rank -= 6;  // no odds at all — heavy penalty
+        else                  rank -= 4;  // estimated odds (oddsIsEst) — still penalise
+      }
 
       // Odds range bonus
       if (inRange)          rank += 3;
@@ -443,11 +446,13 @@ function buildTopCardsHtml(matchList) {
       rank += (matchSc - 6) * 2;
 
       // ── [2] MODEL EDGE ───────────────────────────────────────────────────────
-      if (p.modelOdds != null && hasRealOdds) {
+      if (p.modelOdds != null && p.odds != null) {
         const _edgePp = Math.round((1 / p.modelOdds - (1 / p.odds) * 1.03) * 100);
-        if (_edgePp >= 13)     { rank += 5; sigs.push({ label: 'Edge', score: _norm(_edgePp, 0, 15) }); }
-        else if (_edgePp >= 7) { rank += 3; sigs.push({ label: 'Edge', score: _norm(_edgePp, 0, 15) }); }
-        else if (_edgePp >= 3) { rank += 1; }
+        if (_edgePp >= 13)       { rank += 5; sigs.push({ label: 'Edge', score: _norm(_edgePp, 0, 15) }); }
+        else if (_edgePp >= 7)   { rank += 3; sigs.push({ label: 'Edge', score: _norm(_edgePp, 0, 15) }); }
+        else if (_edgePp >= 3)   { rank += 1; }
+        else if (_edgePp < -5)   { rank -= 6; }  // strong neg edge → hard suppress from top cards
+        else if (_edgePp < -2)   { rank -= 3; }  // mild neg edge → soft penalty
       }
 
       // ── [3] API PREDICTION CONFLUENCE ────────────────────────────────────────
