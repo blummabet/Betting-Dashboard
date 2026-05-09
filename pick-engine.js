@@ -1763,8 +1763,10 @@ function getBettingPicks(match, odds, leagueKey) {
       const _o25H2hNote = (_h2hSample && _h2hOver25 != null)
         ? ` Historisch ${Math.round(_h2hOver25*100)}% der ${h2hN} Duelle über 2.5 Tore${_h2hAvgG!=null?' (Ø '+_h2hAvgG+' Tore/Spiel)':''}.`
         : '';
-      const _o25ApiTotal = (_apiGoalsH !== null && _apiGoalsA !== null && _apiGoalsH > 0 && _apiGoalsA > 0)
-        ? _apiGoalsH + _apiGoalsA : null;
+      // NOTE: API predictions goals fields (goalsHome/goalsAway) are Asian Handicap SPREAD values
+      // (e.g. -1.5 for favorites), NOT expected goals. Removed from parsing in prematch-server.js.
+      // _o25ApiTotal is therefore always null — the API xG signal is no longer available here.
+      const _o25ApiTotal = null;
       const _o25ApiNote = _o25ApiTotal !== null
         ? (_o25ApiTotal >= 2.5
             ? `<br>🤖 API-Modell erwartet ${_o25ApiTotal.toFixed(1)} Tore — bestätigt die Over-Prognose.`
