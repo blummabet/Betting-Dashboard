@@ -318,14 +318,14 @@ function renderLineMovement(rows, picks, oddsD, isEstimated) {
 // SYNC: when changing any value here also update check_picks_logic.py
 // (Python validator uses same thresholds in comments — search "SYNC:GATE").
 const GATE = {
-  GOALS_REAL:  0.12,   // Over 2.5 / Over 3.5           (real bookie odds)
-  BTTS_REAL:   0.06,   // BTTS Ja — tighter gate: BTTS model less precise than O/U goals
+  GOALS_REAL:  0.05,   // Over 2.5 / Over 3.5           (real bookie odds) — was 0.12, tightened
+  BTTS_REAL:   0.04,   // BTTS Ja — tighter gate: BTTS model less precise than O/U goals — was 0.06
   RESULT_REAL: 0.15,   // 1X2 result markets (wider — 3-way, more variance than 2-way goals)
-  TEAM_REAL:   0.12,   // Heim/Ausw über 1.5  (real bookie odds)
-  TEAM_EST:    0.15,   // Heim/Ausw über 1.5  (estimated odds — wider, model uncertainty)
+  TEAM_REAL:   0.07,   // Heim/Ausw über 1.5  (real bookie odds) — was 0.12, tightened
+  TEAM_EST:    0.10,   // Heim/Ausw über 1.5  (estimated odds — wider, model uncertainty) — was 0.15
   AH_REAL:     0.14,   // Asian Handicap  (real only; AH model less precise than goals)
-  CORN_REAL:   0.10,   // Ecken Over  (real bookie odds)
-  CORN_EST:    0.15,   // Ecken Over  (estimated odds)
+  CORN_REAL:   0.06,   // Ecken Over  (real bookie odds) — was 0.10, tightened
+  CORN_EST:    0.06,   // Ecken Over  (estimated odds) — was 0.15, tightened to kill wild proxy FVs
 };
 
 // ─────────────────────────────────────────────────────
@@ -1839,15 +1839,21 @@ function getBettingPicks(match, odds, leagueKey) {
       const _bttsH2hNote = (_h2hSample && _h2hBtts != null)
         ? ` Historisch ${Math.round(_h2hBtts*100)}% der ${h2hN} Duelle mit Toren auf beiden Seiten.`
         : '';
+      // 🔑 H2H BTTS HARD BLOCK: if H2H history consistently shows BTTS < 40%
+      // with ≥5 matches, suppress the pick entirely — the modifier alone isn't enough.
+      const _bttsH2hBlock = (_h2hSample != null && _h2hSample >= 5 && _h2hBtts !== null && _h2hBtts < 0.40);
       // 🔑 BTTS NEGATIVE EDGE GATE: Poisson-basiert, getrennte Heim/Auswärts-Erwartungen.
       // P(BTTS) = P(home≥1) × P(away≥1) = (1 - e^-expH) × (1 - e^-expA)
-      // Nur bei echten BTTS-Quoten (nicht estimated) prüfen.
+      // Fix: always compute fairProb — Poisson inputs _expH/_expA are always available
+      // from attack/defence strings, regardless of whether bookie odds are estimated.
+      // Previously the check was conditional on !o._bttsOddsEst, which bypassed the
+      // gate entirely for estimated odds, letting picks with -10pp neg edge through.
       { const _expH = Math.max(0.1, (homeAttStr + awayDefStr) / 2);
         const _expA = Math.max(0.1, (awayAttStr + homeDefStr) / 2);
-        const _bttsFairProb = (!o._bttsOddsEst && o.bttsY != null)
+        const _bttsFairProb = (o.bttsY != null)
           ? (1 - Math.exp(-_expH)) * (1 - Math.exp(-_expA)) : null;
         const _bttsNegEdge = _hasNegEdge(_bttsFairProb, o.bttsY, false, GATE.BTTS_REAL, null);
-        if (!_bttsNegEdge) gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:o.bttsY||null, oddsIsEst: o._bttsOddsEst||false,
+        if (!_bttsNegEdge && !_bttsH2hBlock) gC.push({sc, p:{icon:'⚽', market:'Beide Teams treffen', odds:o.bttsY||null, oddsIsEst: o._bttsOddsEst||false,
           conf: sc>0.65?'high':sc>0.44?'medium':'low',
           reason:`${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu. Beide Teams werden voraussichtlich treffen.${_bttsH2hNote}${_bttsPressNote}${_bothAttLine}`}}); }
       }

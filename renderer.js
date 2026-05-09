@@ -1000,6 +1000,16 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   if (visiblePicks.length === 0) return '';
   const picksHtml = visiblePicks.map(p => {
     const oddsNum  = p.odds ?? null;
+
+    // ── Negative-edge hard suppression (belt-and-suspenders) ──────────────────
+    // Primary gate is in pick-engine.js (GATE thresholds). This is a secondary
+    // safety net: if a pick slips through with deeply negative edge, kill it here.
+    // Threshold: -8pp. Formula mirrors the edgePp calc below (×1.03 margin strip).
+    if (p.modelOdds != null && oddsNum != null) {
+      const _safetyEdgePp = Math.round(((1 / p.modelOdds) - (1 / oddsNum) * 1.03) * 100);
+      if (_safetyEdgePp < -8) return '';
+    }
+
     // When the whole fixture has no real market odds (_isEstimated), suppress
     // all pick-level estimated quotes too — they're model output, not bookmaker prices.
     const _noRealOdds = !!(odds?._isEstimated);
@@ -1030,7 +1040,9 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     // modelOdds = 1/mp for main markets (calibrated probability model)
     //           = sc-based proxy for specialty markets (corners, cards, HZ etc.)
     // When bookie > modelOdds: their price exceeds our fair value → VALUE territory
+    // _pickNegEdge: set true when neg edge is confirmed → dims the pick card visually
     let fairOddsHtml = '';
+    let _pickNegEdge = false;
     if (p.modelOdds != null) {
       const mo = p.modelOdds.toFixed(2);
       const isScBased = ['Über 8.5 Ecken','Über 9.5 Ecken','Über 11.5 Ecken',
@@ -1049,26 +1061,40 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
         const _impliedProb = (1 / oddsNum) * 1.03;  // ×1.03 strips bookmaker margin, consistent with p.value calc
         const edgePp = _modelProb != null ? Math.round((_modelProb - _impliedProb) * 100) : null;
         let edgeCls, edgeTxt, bookieCls;
+        // _negWarn: true when bookie is notably overpriced vs our model — visual alarm
+        let _negWarn = false;
         if (edgePp != null && edgePp >= 13) {
           edgeCls = 'fov-hot'; bookieCls = 'fov-hot';
           edgeTxt = `↑ +${edgePp}pp Edge`;
         } else if (edgePp != null && edgePp >= 7) {
           edgeCls = 'fov-value'; bookieCls = 'fov-value';
           edgeTxt = `↑ +${edgePp}pp Edge`;
-        } else if (edgePp == null || (edgePp >= -3 && edgePp < 7)) {
+        } else if (edgePp == null || (edgePp >= -2 && edgePp < 7)) {
           edgeCls = ''; bookieCls = 'fov-fair';
           edgeTxt = edgePp != null && edgePp > 0 ? `+${edgePp}pp` : '≈ Fair';
-        } else {
+        } else if (edgePp < -2 && edgePp >= -5) {
+          // Mildly negative: show in orange as caution
           edgeCls = 'fov-below'; bookieCls = 'fov-below';
-          edgeTxt = `↓ ${edgePp}pp`;
+          edgeTxt = `⚠ ${edgePp}pp`;
+          _negWarn = true;
+          _pickNegEdge = true;
+        } else {
+          // Strongly negative (< -5pp): bright red alarm
+          edgeCls = 'fov-below'; bookieCls = 'fov-below';
+          edgeTxt = `❌ ${edgePp}pp Negativ`;
+          _negWarn = true;
+          _pickNegEdge = true;
         }
+        const _negWarnBanner = _negWarn
+          ? `<div style="font-size:10px;color:#f85149;font-weight:600;margin-top:2px;padding:1px 4px;border-radius:3px;background:rgba(248,81,73,0.1);">⚠ Neg. Edge — Bookie billiger als Model-FV</div>`
+          : '';
         fairOddsHtml = `<div class="pick-fair-odds">
           <span class="fov-label">Fair Value</span>
           <span class="fov-our">${mo}</span>
           <span style="color:#444d56">→</span>
           <span>Bookie: <span class="fov-bookie-val ${bookieCls}">${oddsNum.toFixed(2)}</span></span>
           <span class="fov-edge ${edgeCls}">${edgeTxt}</span>${srcLabel}
-        </div>`;
+        </div>${_negWarnBanner}`;
       } else {
         // No bookie odds — distinguish between no-feed league vs temporarily missing
         const _noFeedNote = _noRealOdds
@@ -1188,7 +1214,11 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     const _isTopPick = window._topPickSet?.has(`${match.home}|${match.away}|${p.market}`);
     const _topCls  = _isTopPick ? ' is-top-pick' : '';
     const _topBadge = _isTopPick ? `<span class="top-pick-badge">⭐ Top Pick</span>` : '';
-    return `<div class="pick-item${_ciCls}${_topCls}">
+    // Negative-edge picks get a left red border + reduced opacity as visual warning.
+    const _negEdgeStyle = _pickNegEdge
+      ? ' style="opacity:0.72;border-left:3px solid #f85149;"'
+      : '';
+    return `<div class="pick-item${_ciCls}${_topCls}"${_negEdgeStyle}>
       <span class="pick-icon">${p.icon}</span>
       <div class="pick-body">
         <div class="pick-market">${_topBadge}<span class="pick-conf ${confClass}">${confLabel}</span><span>${p.market}</span>${oddsTag}${lowWarn}${valueTag}</div>
