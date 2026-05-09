@@ -83,6 +83,45 @@ function _poissonOver(lambda, threshold) {
   }
   return Math.max(0.02, Math.min(0.98, 1 - cdf));
 }
+// Poisson PMF: P(X == k) for Poisson(lambda).
+function _poissonPMF(lambda, k) {
+  if (k < 0 || lambda <= 0) return 0;
+  let p = Math.exp(-lambda);
+  for (let i = 0; i < k; i++) p *= lambda / (i + 1);
+  return Math.max(0, p);
+}
+// Asian quarter-ball fair probability: correctly accounts for half-win/push on boundary goal.
+//
+// Asian Over x.25 = half stake on Over x.0 + half stake on Over x.5:
+//   Full win:  X >= x+1  (both constituent bets win)
+//   Half win:  X == x    (Over x.0 pushes, Over x.5 loses → net: half stake returned as win)
+//   Full loss: X < x
+//   → fairProb = P(X >= x+1) + 0.5 × P(X == x)
+//
+// Asian Over x.75 = half stake on Over x.5 + half stake on Over x+1.0:
+//   Full win:  X >= x+2  (both win)
+//   Half win:  X == x+1  (Over x.5 wins, Over x+1.0 pushes)
+//   Full loss: X <= x
+//   → fairProb = P(X >= x+2) + 0.5 × P(X == x+1)
+//
+// This matters a lot: _poissonOver treats 2.25 and 2.5 identically (both → P(X≥3)),
+// making quarter-ball picks look -6pp when they're actually +6pp.
+function _asianOverFairProb(lambda, pt) {
+  const frac = pt - Math.floor(pt);
+  if (Math.abs(frac - 0.25) < 0.01) {
+    const k     = Math.floor(pt);               // boundary (e.g. 2 for Over 2.25)
+    const pFull = _poissonOver(lambda, k + 0.5); // P(X >= k+1)
+    const pHalf = _poissonPMF(lambda, k);        // P(X == k)
+    return Math.min(0.95, Math.max(0.05, pFull + 0.5 * pHalf));
+  }
+  if (Math.abs(frac - 0.75) < 0.01) {
+    const k     = Math.floor(pt) + 1;            // boundary (e.g. 3 for Over 2.75)
+    const pFull = _poissonOver(lambda, k + 0.5); // P(X >= k+1) = P(X >= floor(pt)+2)
+    const pHalf = _poissonPMF(lambda, k);         // P(X == k)
+    return Math.min(0.95, Math.max(0.05, pFull + 0.5 * pHalf));
+  }
+  return _poissonOver(lambda, pt); // standard half or whole ball line — no change
+}
 // Convert fair prob → bookmaker odds with given margin (default 6%).
 function _poissonOdds(prob, margin) {
   margin = margin || 0.06;
@@ -1651,7 +1690,7 @@ function getBettingPicks(match, odds, leagueKey) {
       // Threshold 12pp: wenn Bookie-Wahrscheinlichkeit unsere FV um >12pp überschreitet → kein Edge.
       // Schützt vor strukturell negativen Picks (z.B. Over 3.5 @ 1.65 mit expGoals=3.2 → FV=2.50).
       const _o35FairProb = (!odds?._isEstimated && _o35Odds != null)
-        ? _poissonOver(poissonAvail ? (_muH + _muA) : expGoals, 3.5) : null;
+        ? _asianOverFairProb(poissonAvail ? (_muH + _muA) : expGoals, _o35Pt) : null;
       const _o35NegEdge = _hasNegEdge(_o35FairProb, _o35Odds, false, GATE.GOALS_REAL, null);
       if (!_o35NegEdge) gC.push({sc, p:{icon:'🔥', market:`Over ${_o35Pt} Tore`, odds:_o35Odds,
         conf: sc>0.68?'high':sc>0.44?'medium':'low',
@@ -1716,7 +1755,7 @@ function getBettingPicks(match, odds, leagueKey) {
         // Bei echter Bookie-Quote: wenn implizierte Wahrscheinlichkeit FV um >12pp überschreitet → kein Edge.
         // (Frühere Annahme "Hard Gate reicht" war falsch: expGoals=2.5 mit Odds 1.65 hat -15pp Edge)
         const _o25FairProb = (!odds?._isEstimated && _o25Odds != null)
-          ? _poissonOver(poissonAvail ? (_muH + _muA) : expGoals, _o25Pt) : null;
+          ? _asianOverFairProb(poissonAvail ? (_muH + _muA) : expGoals, _o25Pt) : null;
         const _o25NegEdge = _hasNegEdge(_o25FairProb, _o25Odds, false, GATE.GOALS_REAL, null);
         if (!_o25NegEdge) gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
           conf: sc>0.66?'high':sc>0.46?'medium':'low',
@@ -2619,9 +2658,9 @@ function getBettingPicks(match, odds, leagueKey) {
       if (_asianOverM) {
         const _apt = parseFloat(_asianOverM[1]);
         if (poissonAvail) {
-          mp = Math.min(0.92, Math.max(0.08, _poissonOver(_muH + _muA, _apt)));
+          mp = Math.min(0.92, Math.max(0.08, _asianOverFairProb(_muH + _muA, _apt)));
         } else {
-          mp = Math.min(0.92, Math.max(0.08, _poissonOver(expGoals, _apt)));
+          mp = Math.min(0.92, Math.max(0.08, _asianOverFairProb(expGoals, _apt)));
         }
       }
     }
