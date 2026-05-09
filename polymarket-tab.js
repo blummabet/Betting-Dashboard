@@ -1084,30 +1084,40 @@ async function polyDispatch() {
   const ok = await _callGitHubDispatch(orders);
 
   if (ok) {
-    // Save as pending in localStorage
-    const bets = _getPolyBets();
-    for (const p of sel) {
-      const pd = _polyState.prices[p.id];
-      bets.push({
-        id:        p.id,
-        date:      p.date || _polyState.dateStr,
-        home:      p.home,
-        away:      p.away,
-        market:    p.market,
-        league:    p.league,
-        stake:     POLY_STAKE,
-        polyPrice: pd?.found ? pd.price : null,
-        placed:    new Date().toISOString(),
-        method:    'auto',
-        result:    null,
-      });
+    // Save as pending in localStorage — do this FIRST before any DOM changes
+    try {
+      const bets = _getPolyBets();
+      const beforeCount = bets.length;
+      for (const p of sel) {
+        const pd = _polyState.prices[p.id];
+        bets.push({
+          id:        p.id,
+          date:      p.date || _polyState.dateStr,
+          home:      p.home,
+          away:      p.away,
+          market:    p.market,
+          league:    p.league,
+          stake:     POLY_STAKE,
+          polyPrice: pd?.found ? pd.price : null,
+          placed:    new Date().toISOString(),
+          method:    'auto',
+          result:    null,
+        });
+      }
+      _savePolyBets(bets);
+      const afterCount = _getPolyBets().length;
+      console.log(`[PolyDispatch] bets saved: ${beforeCount} → ${afterCount} (added ${sel.length})`);
+    } catch(saveErr) {
+      console.error('[PolyDispatch] localStorage save failed:', saveErr);
     }
-    _savePolyBets(bets);
     _polyState.selected.clear();
     _polyRefreshStickyBar();
-    document.getElementById('polyModal').style.display = 'none';
-    document.getElementById('polyPickGrid').innerHTML = renderPolyPickCards();
-    document.getElementById('polyStatsSection').innerHTML = renderPolyStats();
+    const modal = document.getElementById('polyModal');
+    if (modal) modal.style.display = 'none';
+    const grid = document.getElementById('polyPickGrid');
+    if (grid) grid.innerHTML = renderPolyPickCards();
+    const stats = document.getElementById('polyStatsSection');
+    if (stats) stats.innerHTML = renderPolyStats();
     _polyToast(`🟣 ${sel.length} Bet${sel.length !== 1 ? 's' : ''} ausgelöst via GitHub Action!`);
   } else {
     if (btn) { btn.disabled = false; btn.textContent = '🟣 Bets via GitHub auslösen'; }
