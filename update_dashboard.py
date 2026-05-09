@@ -358,29 +358,49 @@ def comp_gain_est(standings, pos, rounds_left):
     ppg = max(0.8, min(2.4, get_team_ppg(standings, pos)))
     return round(rounds_left * ppg)
 
-def _finalize_stake_labels(labels, motiv):
+def _finalize_stake_labels(labels, motiv, pos=None):
     """
     Post-process labels after motivation is determined.
-    When an outcome is confirmed (motiv='none'), replace ongoing-chase labels
-    with achieved/secured variants so the UI shows the correct status.
-      'Titelkampf' / 'Titelchance' → '🏆 Meister'  (confirmed champion)
-      'UCL Jagd' → '🔵 UCL gesichert'               (UCL spot locked in)
-      'EL Jagd' / 'EL sichern' → '🟠 EL gesichert'  (EL spot locked in)
-    Teams still fighting ('full') keep their original labels unchanged.
+    When an outcome is confirmed (motiv='none'), replace or remove ongoing-chase
+    labels with accurate status labels so the UI shows the correct situation.
+
+    Gold labels (title):
+      pos=1, motiv=none  → '🏆 Meister'  (they won the title)
+      pos>1, motiv=none  → remove gold label (title race is over; they didn't win)
+
+    Blue labels (UCL):
+      pos in UCL zone, motiv=none → '🔵 UCL gesichert' (spot secured)
+      pos outside UCL zone, motiv=none → remove (missed UCL — team didn't make it)
+
+    Orange labels (EL):
+      pos in EL zone, motiv=none → '🟠 EL gesichert'
+      pos outside EL zone, motiv=none → remove
+
+    Red labels: keep as-is (relegated/danger is factual)
+    Yellow labels: keep as-is (playoff zone is factual)
     """
     if motiv != 'none' or not labels:
         return labels
     out = []
     for l in labels:
         c, txt = l["c"], l["l"]
-        if c == "gold" and ("Titelkampf" in txt or "Titelchance" in txt):
-            out.append({"l": "🏆 Meister", "c": "gold"})
-        elif c == "blue" and ("Jagd" in txt or "sichern" in txt):
-            out.append({"l": "🔵 UCL gesichert", "c": "blue"})
-        elif c == "orange" and ("Jagd" in txt or "sichern" in txt):
-            out.append({"l": "🟠 EL gesichert", "c": "orange"})
+        if c == "gold":
+            if pos == 1:
+                # Actual champion — show "Meister"
+                out.append({"l": "🏆 Meister", "c": "gold"})
+            # pos > 1 and motiv=none: title race is over, they didn't win → drop label
+        elif c == "blue":
+            if "sichern" in txt:
+                # Was in UCL zone fighting to keep it — now secured
+                out.append({"l": "🔵 UCL gesichert", "c": "blue"})
+            # "UCL Jagd" + motiv=none: they missed UCL → drop label
+        elif c == "orange":
+            if "sichern" in txt:
+                # Was in EL zone fighting to keep it — now secured
+                out.append({"l": "🟠 EL gesichert", "c": "orange"})
+            # "EL Jagd" + motiv=none: they missed EL → drop label
         else:
-            out.append(l)
+            out.append(l)  # red, yellow — keep factual relegation labels
     return out
 
 def calc_labels(team, standings, cfg):
@@ -1216,7 +1236,7 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
         if labels:
             motiv    = calc_motivation(t, labels, standings, cfg, rounds_left)
             # Post-process: replace "Titelkampf" with "Meister" when confirmed champion
-            labels   = _finalize_stake_labels(labels, motiv)
+            labels   = _finalize_stake_labels(labels, motiv, pos=t["pos"])
             form     = form_cache.get(t["team"])
             pressure = calc_pressure(t, labels, standings, cfg, rounds_left)
             score    = calc_score(labels, rounds_left, form, pressure["pressureRatio"])
@@ -1258,8 +1278,8 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
         # Post-process labels: when title/UCL/EL is CONFIRMED (motiv='none'), update labels
         # to reflect the secured status rather than the ongoing chase.
         # e.g. Bayern Platz 1 confirmed → "🏆 Titelkampf" → "🏆 Meister"
-        h_labels = _finalize_stake_labels(h_labels, h_motiv)
-        a_labels = _finalize_stake_labels(a_labels, a_motiv)
+        h_labels = _finalize_stake_labels(h_labels, h_motiv, pos=ht.get("pos"))
+        a_labels = _finalize_stake_labels(a_labels, a_motiv, pos=at.get("pos"))
         # Standings context (position, pts, gap to zone boundary) for visual display
         h_ctx = calc_standings_context(ht, h_labels, standings, cfg) if h_labels else {}
         a_ctx = calc_standings_context(at, a_labels, standings, cfg) if a_labels else {}
