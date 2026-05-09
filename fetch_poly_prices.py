@@ -32,8 +32,9 @@ POLY_MARKETS = {
     # Goals Over/Under (standard Polymarket lines)
     'Over 1.5 Tore', 'Over 2.5 Tore', 'Over 3.5 Tore',
     'Under 1.5 Tore', 'Under 2.5 Tore',
-    # Both Teams to Score (Yes only — No not standard on Polymarket)
+    # Both Teams to Score — Yes and No both available on Polymarket
     'Beide Teams treffen',
+    'Beide Teams treffen: Nein',
     # Corners Over/Under (all pick-engine lines; extracted when Polymarket offers them)
     'Über 6.5 Ecken', 'Über 7.5 Ecken', 'Über 8.5 Ecken',
     'Über 9.5 Ecken', 'Über 10.5 Ecken', 'Über 11.5 Ecken',
@@ -596,14 +597,17 @@ def extract_outcome_price(market: str, question: str, outcomes: list,
                           prices: list, home_en: str, away_en: str) -> float | None:
     q = question.lower()
 
-    # ── BTTS: "Will both teams score?" → Yes price ───────────────────────────
-    if market == 'Beide Teams treffen':
+    # ── BTTS: "Will both teams score?" / "Both Teams to Score?" ─────────────
+    if market in ('Beide Teams treffen', 'Beide Teams treffen: Nein'):
         btts_kw = ('both teams', 'both score', 'btts', 'both team to score',
                    'both teams to score', 'will both')
         if not any(kw in q for kw in btts_kw):
             return None
+        want_no = (market == 'Beide Teams treffen: Nein')
         y_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'yes'), -1)
-        return _safe_float(prices[y_idx]) if y_idx >= 0 else None
+        n_idx = next((i for i, o in enumerate(outcomes) if str(o).lower() == 'no'),  -1)
+        idx = n_idx if want_no else y_idx
+        return _safe_float(prices[idx]) if idx >= 0 else None
 
     # ── Goals Over/Under (1.5 / 2.5 / 3.5) ─────────────────────────────────
     # Market names: "Over 1.5 Tore", "Under 2.5 Tore", "Over 3.5 Tore", etc.
