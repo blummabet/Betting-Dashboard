@@ -1517,20 +1517,25 @@ function getBettingPicks(match, odds, leagueKey) {
     // DNB removes draw risk: effective prob = homeWinProb / (homeWinProb + awayWinProb).
     // Scoring is deliberately scaled below outright Heimsieg so it only wins in rC when
     // the outright win signal is medium-strength (high outright → DNB odds too low anyway).
+    // Guard: require real bookie 1X2 feed (o.hw != null) and minimum DNB odds ≥1.28
+    // (FV <1.28 = >78% implied → bet is too short to be meaningful as a DNB).
     {
       const heimsiegSc = rC.find(r => r.p.market === 'Heimsieg')?.sc ?? 0;
       const sc = heimsiegSc * 0.62 + drawRate * 0.28;
-      if (sc > 0.38 && drawRate > 0.20) {
+      const _dnbHOk = o.hw != null && o.dnbH != null && o.dnbH >= 1.28;
+      if (sc > 0.38 && drawRate > 0.20 && _dnbHOk) {
         const conf = sc > 0.50 ? 'medium' : 'low';
         rC.push({sc, p:{icon:'🏠', market:'DNB: Heimteam', odds: o.dnbH||null, conf,
           reason:`${match.home} ist Favorit, aber ein Remis ist zu ${Math.round(drawRate*100)}% möglich. DNB (Draw No Bet) ist eine Absicherung: bei einem Unentschieden bekommst du den Einsatz zurück — nur bei einer Niederlage verlierst du.`}});
       }
     }
     // ── Draw No Bet (DNB) — Auswärts ─────────────────────────────────────
+    // Same guards: real bookie 1X2 feed required, minimum DNB odds ≥1.28.
     {
       const auswSc = rC.find(r => r.p.market === 'Auswärtssieg')?.sc ?? 0;
       const sc = auswSc * 0.62 + drawRate * 0.28;
-      if (sc > 0.38 && drawRate > 0.20) {
+      const _dnbAOk = o.hw != null && o.dnbA != null && o.dnbA >= 1.28;
+      if (sc > 0.38 && drawRate > 0.20 && _dnbAOk) {
         const conf = sc > 0.50 ? 'medium' : 'low';
         rC.push({sc, p:{icon:'✈️', market:'DNB: Auswärtsteam', odds: o.dnbA||null, conf,
           reason:`${match.away} ist klarer Favorit, aber ein Remis ist zu ${Math.round(drawRate*100)}% möglich. DNB (Draw No Bet) ist eine Absicherung: bei einem Unentschieden bekommst du den Einsatz zurück — nur bei einer Niederlage verlierst du.`}});
