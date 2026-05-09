@@ -1440,39 +1440,9 @@ async function fetchAllPrematchData() {
     }
   }
 
-  // ── Step 5e: API-Football /odds fallback for fixtures missed by TheOddsAPI ──
-  // TheOddsAPI doesn't cover every league/fixture (e.g. AUT, HUN, CRO, POL minor rounds).
-  // For fixtures still missing odds, try API-Football /odds with Pinnacle (bookmaker=8).
-  // Returns 1X2 + Goals O/U — enough for the main picks engine to work.
-  // Only runs if there are misses — zero cost when TheOddsAPI covers everything.
-  const _oddsMissing = upcoming.filter(d => !d.odds);
-  if (_oddsMissing.length > 0) {
-    console.log(`[Server] Step5e: API-Football Odds-Fallback für ${_oddsMissing.length} Spiele ohne Quoten...`);
-    let fallbackOk = 0, fallbackMiss = 0;
-    for (const d of _oddsMissing) {
-      await sleep(600);
-      try {
-        const data = await apiFetch(`/odds?fixture=${d.fixtureId}&bookmaker=8`);
-        const resp = (data.response || [])[0];
-        if (!resp) { fallbackMiss++; continue; }
-        // API-Football odds structure: resp.bookmakers[].bets[]
-        const bookmakers = resp.bookmakers || [];
-        if (!bookmakers.length) { fallbackMiss++; continue; }
-        const parsed = parseBets(bookmakers);
-        if (parsed.hw && parsed.dr && parsed.aw) {
-          d.odds = parsed;
-          d.odds._fromApifootball = true; // flag: came from fallback source
-          fallbackOk++;
-        } else {
-          fallbackMiss++;
-        }
-      } catch(e) {
-        console.warn(`  [Step5e] ${d.homeTeamName} vs ${d.awayTeamName}: ${e.message}`);
-        fallbackMiss++;
-      }
-    }
-    console.log(`  Step5e fertig: ${fallbackOk} Fallback-Quoten · ${fallbackMiss} weiterhin ohne`);
-  }
+  // Step5e (API-Football Odds-Fallback) entfernt — spart API-Football Quota.
+  // TheOddsAPI ist primäre und einzige Odds-Quelle. Spiele ohne TheOddsAPI-Quoten
+  // nutzen Poisson-Schätzungen aus den API-Football Predictions (Step5.5).
 
   // ── Step 5.5: API Predictions ─────────────────────────────────────────────
   // /predictions returns the API-Football model's expected goals, result percentages
