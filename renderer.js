@@ -352,6 +352,20 @@ function buildPickOfDayHtml(matchList) {
 //  Selection: real bookie odds + pick model score + conf level.
 //  One card per match, sorted by composite rank score.
 // ═══════════════════════════════════════════════════════
+// ── Match expiry helper ───────────────────────────────────────────────────────
+// Returns true when a match is definitively over: kickoff time + 100 minutes.
+// 100 min covers 90 min play + typical stoppage/extra time.
+// If no time is set, only the date is checked (never hidden on the same day).
+function isMatchOver(dateStr, timeStr) {
+  if (!dateStr) return false;
+  const [d, mo, y] = dateStr.split('.');
+  if (!timeStr) return false;          // no kickoff time → never auto-hide
+  const [h, min] = timeStr.split(':');
+  const kickoff = new Date(+y, +mo - 1, +d, +h, +min, 0);
+  const cutoff  = new Date(kickoff.getTime() + 100 * 60 * 1000);
+  return Date.now() > cutoff.getTime();
+}
+
 // CARDS DES TAGES — composite ranking engine
 // Signals used (in order of weight):
 //   1. Pick model score (p.sc × 10) — primary confidence driver
@@ -368,6 +382,7 @@ function buildTopCardsHtml(matchList) {
   const _ts = window._teamStats || {};
 
   for (const m of matchList) {
+    if (isMatchOver(m.date, m.time)) continue;  // hide after kickoff + 100 min
     const matchSc = computeMatchScore(m, m.leagueKey);
     if (matchSc < 10) continue;  // Top Cards only from high-quality matches (≥10/12)
     const odds = m.leagueKey ? findOdds(m.leagueKey, m.home, m.away) : null;
@@ -1522,8 +1537,10 @@ function renderLeague(key) {
 
   // All games this week (for day chip counts)
   const week = [...L.fixtures].filter(m => isWithin7Days(m.date));
-  // Apply active day filter for actual card display
-  const filtered = applyDayFilter(week).sort((a,b)=>computeMatchScore(b,key)-computeMatchScore(a,key));
+  // Apply active day filter for actual card display, hide finished matches (kickoff + 100 min)
+  const filtered = applyDayFilter(week)
+    .filter(m => !isMatchOver(m.date, m.time))
+    .sort((a,b)=>computeMatchScore(b,key)-computeMatchScore(a,key));
   const cards = filtered.map(m=>renderFixtureCard(m, L.name, L.flag, key)).join('');
   const potdHtml = buildPickOfDayHtml(filtered.map(m=>({...m, leagueKey:key, leagueFlag:L.flag})));
 
@@ -1575,8 +1592,8 @@ function renderOverview() {
   const week = all.filter(f => isWithin7Days(f.date));
   week.sort((a,b)=>computeMatchScore(b,b.leagueKey)-computeMatchScore(a,a.leagueKey));
 
-  // Apply active day filter
-  const filtered = applyDayFilter(week);
+  // Apply active day filter, hide finished matches (kickoff + 100 min)
+  const filtered = applyDayFilter(week).filter(f => !isMatchOver(f.date, f.time));
 
   // Stats on filtered set
   const score11 = filtered.filter(f=>computeMatchScore(f,f.leagueKey)>=11).length;
