@@ -1045,10 +1045,10 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     let _pickNegEdge = false;
     if (p.modelOdds != null) {
       const mo = p.modelOdds.toFixed(2);
+      // isScBased: markets where FV is an sc-signal proxy, not a calibrated model probability.
+      // HT markets removed (now use Poisson for goals, de-vigged bookie for 1X2).
       const isScBased = ['Über 8.5 Ecken','Über 9.5 Ecken','Über 11.5 Ecken',
-        'Über 3.5 Karten','Über 4.5 Karten',
-        '1. HZ: Over 0.5 Tore','1. HZ: Under 0.5 Tore','1. HZ: Under 1.5 Tore',
-        '1. HZ: Beide Teams treffen','1. HZ: Under 0.5 Tore'].includes(p.market)
+        'Über 3.5 Karten','Über 4.5 Karten'].includes(p.market)
         || p.market.startsWith('Handicap Heim') || p.market.startsWith('Handicap Auswärts')
         || p.market.includes(' über 1.5 Tore') || p.market.includes('Karten');
       const srcLabel = isScBased

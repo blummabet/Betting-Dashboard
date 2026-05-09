@@ -2563,6 +2563,35 @@ function getBettingPicks(match, odds, leagueKey) {
       case 'Über 8.5 Ecken':  mp = Math.min(0.88, Math.max(0.14, 0.60 + (cornersEstAdj - 8.5)  * 0.10)); break;
       case 'Unter 9.5 Ecken': mp = Math.min(0.85, Math.max(0.08, 0.50 + (9.5 - cornersEstAdj)  * 0.10)); break;
       case 'Unter 8.5 Ecken': mp = Math.min(0.85, Math.max(0.08, 0.55 + (8.5 - cornersEstAdj)  * 0.12)); break;
+
+      // ── HT Goals markets — Poisson FV from μ_ht = (μH+μA) × 0.45 ─────────────
+      // First-half goals ≈ 45% of full-time expectation (empirical average across leagues).
+      // Eliminates the absurd sc-proxy FV (e.g. FV 4.51 vs Bookie 1.42 = -50pp).
+      case '1. HZ: Over 0.5 Tore': {
+        const _muHTot = (poissonAvail ? (_muH + _muA) : expGoals) * 0.45;
+        mp = Math.min(0.88, Math.max(0.10, 1 - Math.exp(-_muHTot)));
+        break;
+      }
+      case '1. HZ: Under 0.5 Tore': {
+        const _muHTot = (poissonAvail ? (_muH + _muA) : expGoals) * 0.45;
+        mp = Math.min(0.82, Math.max(0.08, Math.exp(-_muHTot)));
+        break;
+      }
+      case '1. HZ: Under 1.5 Tore': {
+        const _muHTot = (poissonAvail ? (_muH + _muA) : expGoals) * 0.45;
+        const _p0HT = Math.exp(-_muHTot);
+        mp = Math.min(0.88, Math.max(0.10, _p0HT * (1 + _muHTot)));  // P(0) + P(1)
+        break;
+      }
+      case '1. HZ: Beide Teams treffen': {
+        const _muHTH = (poissonAvail ? _muH : Math.max(0.1, (homeAttStr + awayDefStr) / 2)) * 0.45;
+        const _muHTA = (poissonAvail ? _muA : Math.max(0.1, (awayAttStr + homeDefStr) / 2)) * 0.45;
+        mp = Math.min(0.80, Math.max(0.06, (1 - Math.exp(-_muHTH)) * (1 - Math.exp(-_muHTA))));
+        break;
+      }
+      // HT 1X2 / AH result picks: no FV shown (handled in else block below via _skipFV).
+      // 3-way de-vig mismatch with renderer's 2% margin strip causes false negative edge.
+      // These are odds-range plays (1.40–2.05), not model-edge picks — FV not meaningful.
     }
     // ── Asian Handicap FV — win-margin probability instead of raw 1X2 ────────────
     // Raw win probability (e.g. 0.88 for Man City) is WRONG for AH -2.25:
@@ -2619,10 +2648,19 @@ function getBettingPicks(match, odds, leagueKey) {
       }
     } else {
       p.value = null;
-      // Specialty markets (corners, cards, HZ, team-over-1.5, handicap): sc-based model odds
+      // HT 1X2 / AH picks: skip FV entirely — these are odds-range plays with no
+      // calibrated model. 3-way de-vig mismatch with renderer margin strip causes
+      // false negative edge; sc-proxy produces absurd FV (FV 4.51 vs bookie 1.42).
+      // HT goals picks (Over/Under 0.5, Under 1.5, BTTS HT) use Poisson above → have mp.
+      const _skipFV = p.market != null && (
+        p.market.startsWith('1. HZ: Heimsieg') ||
+        p.market.startsWith('1. HZ: Auswärtssieg') ||
+        p.market.startsWith('1. HZ: AH ')
+      );
+      // Remaining specialty markets (corners, cards, some HZ goals): sc-based model odds.
       // sc is a raw signal score, not a calibrated prob. Scaling factor 0.86 converts it
       // to a plausible probability range: sc=0.85→p≈0.73, sc=0.65→p≈0.56, sc=0.45→p≈0.39
-      if (p.sc != null) {
+      if (!_skipFV && p.sc != null) {
         const scProb = Math.min(0.88, Math.max(0.12, p.sc < 1 ? p.sc * 0.86 : 0.88));
         p.modelOdds = Math.round((1 / scProb) * 100) / 100;
       }
