@@ -360,6 +360,7 @@ def comp_gain_est(standings, pos, rounds_left):
 
 def validate_league_data(league_key, stake_teams, stake_fixtures, standings, cfg, rounds_left):
     """
+    Automatic sanity check that runs after every league's data is built.
     Catches label/motivation inconsistencies, odds problems, and FV anomalies
     that would otherwise only surface during manual dashboard review.
 
