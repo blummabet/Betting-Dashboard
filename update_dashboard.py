@@ -358,6 +358,31 @@ def comp_gain_est(standings, pos, rounds_left):
     ppg = max(0.8, min(2.4, get_team_ppg(standings, pos)))
     return round(rounds_left * ppg)
 
+def _finalize_stake_labels(labels, motiv):
+    """
+    Post-process labels after motivation is determined.
+    When an outcome is confirmed (motiv='none'), replace ongoing-chase labels
+    with achieved/secured variants so the UI shows the correct status.
+      'Titelkampf' / 'Titelchance' → '🏆 Meister'  (confirmed champion)
+      'UCL Jagd' → '🔵 UCL gesichert'               (UCL spot locked in)
+      'EL Jagd' / 'EL sichern' → '🟠 EL gesichert'  (EL spot locked in)
+    Teams still fighting ('full') keep their original labels unchanged.
+    """
+    if motiv != 'none' or not labels:
+        return labels
+    out = []
+    for l in labels:
+        c, txt = l["c"], l["l"]
+        if c == "gold" and ("Titelkampf" in txt or "Titelchance" in txt):
+            out.append({"l": "🏆 Meister", "c": "gold"})
+        elif c == "blue" and ("Jagd" in txt or "sichern" in txt):
+            out.append({"l": "🔵 UCL gesichert", "c": "blue"})
+        elif c == "orange" and ("Jagd" in txt or "sichern" in txt):
+            out.append({"l": "🟠 EL gesichert", "c": "orange"})
+        else:
+            out.append(l)
+    return out
+
 def calc_labels(team, standings, cfg):
     pos   = team["pos"]
     pts   = team["pts"]
@@ -473,6 +498,8 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
             return 'full'   # actively chasing — don't let UCL/EL security override
         # gap > max_gain: title is gone, fall through to check next objectives
 
+    is_yellow = any(l["c"] == "yellow" for l in labels)  # Rel.-Playoff label
+
     # ── UCL secured ────────────────────────────────────────────────────────────
     if is_blue and pos <= cfg["ucl"]:
         pts_below = pts_at_pos(standings, cfg["ucl"] + 1)
@@ -482,7 +509,10 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
         if (gap - cg) > max_gain * 0.15:  return 'low'
 
     # ── Europa League secured ──────────────────────────────────────────────────
-    if is_orange:
+    # IMPORTANT: Only suppress motivation for EL security when the team is NOT also
+    # chasing UCL (is_blue present means active UCL race — a higher priority goal).
+    # e.g. Stuttgart: EL secured + UCL Jagd → still fighting hard, must return 'full'.
+    if is_orange and not is_blue:
         el_cutoff = cfg["ucl"] + cfg["el"]
         if pos <= el_cutoff:
             pts_below = pts_at_pos(standings, el_cutoff + 1)
@@ -501,14 +531,31 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
         if safe_pos > 0:
             pts_safe      = pts_at_pos(standings, safe_pos)
             gap_to_safety = pts_safe - pts
-            # 'none': we win everything, safe team wins nothing — still can't escape
-            if gap_to_safety > max_gain:  return 'none'
+            # 'none': we win everything, safe team wins nothing — still can't escape danger zone.
+            # BUT: teams in the Rel.-Playoff zone (yellow label) still have active motivation
+            # to hold off direct relegation — their goal is to stay above rel_start, not reach
+            # full safety. Check the gap to direct relegation separately.
+            if gap_to_safety > max_gain:
+                if is_yellow and rel_ply > 0:
+                    # Team is in/near the playoff zone. Check if direct relegation is still avoidable.
+                    pts_direct = pts_at_pos(standings, rel_start)  # pts of first directly-relegated
+                    gap_to_direct_drop = pts - pts_direct           # positive = currently above
+                    # They can still fight to avoid direct relegation — 'full' motivation
+                    if gap_to_direct_drop <= max_gain:
+                        return 'full'
+                return 'none'
             # 'low': already above the safety line — label is residual, no real fear
             if gap_to_safety <= 0:  return 'low'
             cg = comp_gain_est(standings, safe_pos, rounds_left)
             # 'none': competitor-adjusted — even winning everything can't close the gap
             # once the safe team's projected gains are included. Confirmed doomed.
-            if (gap_to_safety + cg) >= max_gain:  return 'none'
+            if (gap_to_safety + cg) >= max_gain:
+                if is_yellow and rel_ply > 0:
+                    pts_direct = pts_at_pos(standings, rel_start)
+                    gap_to_direct_drop = pts - pts_direct
+                    if gap_to_direct_drop <= max_gain:
+                        return 'full'
+                return 'none'
             # 'low': need >75% of max_gain just to match where safe team will likely end up
             if (gap_to_safety + cg) > max_gain * 0.75:  return 'low'
 
@@ -1167,6 +1214,9 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
     for t in standings:
         labels = calc_labels(t, standings, cfg)
         if labels:
+            motiv    = calc_motivation(t, labels, standings, cfg, rounds_left)
+            # Post-process: replace "Titelkampf" with "Meister" when confirmed champion
+            labels   = _finalize_stake_labels(labels, motiv)
             form     = form_cache.get(t["team"])
             pressure = calc_pressure(t, labels, standings, cfg, rounds_left)
             score    = calc_score(labels, rounds_left, form, pressure["pressureRatio"])
@@ -1205,6 +1255,11 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
         # Cache motivation so we can use it for both motivationLevel and mustWin override
         h_motiv = calc_motivation(ht, h_labels, standings, cfg, rounds_left) if h_labels else 'full'
         a_motiv = calc_motivation(at, a_labels, standings, cfg, rounds_left) if a_labels else 'full'
+        # Post-process labels: when title/UCL/EL is CONFIRMED (motiv='none'), update labels
+        # to reflect the secured status rather than the ongoing chase.
+        # e.g. Bayern Platz 1 confirmed → "🏆 Titelkampf" → "🏆 Meister"
+        h_labels = _finalize_stake_labels(h_labels, h_motiv)
+        a_labels = _finalize_stake_labels(a_labels, a_motiv)
         # Standings context (position, pts, gap to zone boundary) for visual display
         h_ctx = calc_standings_context(ht, h_labels, standings, cfg) if h_labels else {}
         a_ctx = calc_standings_context(at, a_labels, standings, cfg) if a_labels else {}
