@@ -41,6 +41,10 @@ LEAGUES = {
     "CRO": dict(tid=0,   apif_id=210, name="HNL",                flag="🇭🇷",       total=10, rounds=36, ucl=1, el=1, uecl=1, rel_playoff=1, rel=1),
 }
 
+# Collects backend validation issues from all leagues during fetch_league() runs.
+# Merged into validator_summary.json after check_picks_logic.py writes it.
+_backend_issues: list = []
+
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     "Accept": "application/json",
@@ -1630,6 +1634,24 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
         print(f"    ⚠️  VALIDATOR: {len(validation_warnings)} Problem(e) gefunden:")
         for w in validation_warnings:
             print(f"      {w}")
+        # Push structured issues into global list for dashboard banner injection
+        today_str = datetime.now().strftime("%d.%m.%Y")
+        for w in validation_warnings:
+            # Classify severity from warning text
+            sev = "ERROR" if any(kw in w for kw in ("Meister.*pos >", "widersprüchlich", "rounds_left=0")) else "WARN"
+            # Extract team name (first token after [KEY]) for the "home" field
+            parts = w.split("]", 1)
+            label = parts[1].strip() if len(parts) > 1 else w
+            team  = label.split(":")[0].strip() if ":" in label else label[:30]
+            _backend_issues.append({
+                "severity": sev,
+                "code":    "BACKEND_DATA",
+                "home":    team,
+                "away":    f"({cfg['name']})",
+                "date":    today_str,
+                "league":  cfg["name"],
+                "msg":     label.strip(),
+            })
     else:
         print(f"    ✅ Validator: keine Probleme gefunden")
 
@@ -1637,6 +1659,7 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
         "name": cfg["name"], "flag": cfg["flag"], "roundsLeft": rounds_left,
         "leader": leader["team"], "leaderPts": leader["pts"],
         "stakeTeams": stake_teams, "fixtures": stake_fixtures,
+        "_backendWarnings": validation_warnings,
     }
 
 # ── Build JS object ───────────────────────────────────────────────────────────
@@ -1950,19 +1973,57 @@ if __name__ == "__main__":
     if result.returncode != 0:
         print("  ⚠  Validator hat kritische Fehler gefunden — validator_report.md prüfen!")
 
-    # Validator-Summary in HTML injizieren (damit Status/Data-Tab sie zeigt)
+    # ── Validator-Summary: merge backend issues + inject into HTML ────────────
     summary_path = os.path.join(SCRIPT_DIR, "validator_summary.json")
+
+    # Start with whatever check_picks_logic.py wrote (pick-level checks),
+    # or create a minimal summary if that script didn't run / crashed.
     if os.path.exists(summary_path):
-        with open(summary_path, "r", encoding="utf-8") as sf:
-            summary_data = sf.read().strip()
+        try:
+            with open(summary_path, "r", encoding="utf-8") as sf:
+                summary = json.load(sf)
+        except Exception as e:
+            print(f"  ⚠ validator_summary.json konnte nicht gelesen werden: {e}")
+            summary = {"timestamp": datetime.now().strftime("%d.%m.%Y %H:%M"),
+                       "checked": 0, "errors": 0, "warnings": 0, "infos": 0, "issues": []}
+    else:
+        summary = {"timestamp": datetime.now().strftime("%d.%m.%Y %H:%M"),
+                   "checked": 0, "errors": 0, "warnings": 0, "infos": 0, "issues": []}
+
+    # Merge backend data-quality issues (label/motivation/UECL/Jagd problems)
+    if _backend_issues:
+        be_errors = sum(1 for i in _backend_issues if i["severity"] == "ERROR")
+        be_warns  = sum(1 for i in _backend_issues if i["severity"] == "WARN")
+        summary["errors"]   = summary.get("errors", 0)   + be_errors
+        summary["warnings"] = summary.get("warnings", 0) + be_warns
+        # Prepend backend issues so data-quality bugs appear first in the list
+        summary["issues"] = _backend_issues + summary.get("issues", [])
+        print(f"  ➕ {len(_backend_issues)} Backend-Issues zur Summary hinzugefügt"
+              f" ({be_errors} Fehler, {be_warns} Warnungen)")
+
+    # Always update the timestamp so the banner shows the current run time
+    summary["timestamp"] = datetime.now().strftime("%d.%m.%Y %H:%M")
+
+    # Write back the merged summary
+    with open(summary_path, "w", encoding="utf-8") as sf:
+        json.dump(summary, sf, ensure_ascii=False)
+
+    # Inject into HTML
+    summary_data = json.dumps(summary, ensure_ascii=False)
+    try:
         with open(HTML_FILE, "r", encoding="utf-8") as f:
             html = f.read()
         new_const = f"const VALIDATOR_SUMMARY = {summary_data};"
         if "const VALIDATOR_SUMMARY" in html:
             html = re.sub(r"const VALIDATOR_SUMMARY = \{.*?\};", new_const, html, flags=re.DOTALL)
         else:
-            # Inject before closing </script> of the LEAGUES block area
             html = html.replace("const LEAGUES = ", new_const + "\nconst LEAGUES = ", 1)
         with open(HTML_FILE, "w", encoding="utf-8") as f:
             f.write(html)
-        print("  ✓ VALIDATOR_SUMMARY in HTML injiziert")
+        err_count  = summary.get("errors", 0)
+        warn_count = summary.get("warnings", 0)
+        status_icon = "🔴" if err_count > 0 else ("🟡" if warn_count > 0 else "✅")
+        print(f"  {status_icon} VALIDATOR_SUMMARY injiziert"
+              f" ({err_count} Fehler · {warn_count} Warnungen)")
+    except Exception as e:
+        print(f"  ⚠ VALIDATOR_SUMMARY Injection fehlgeschlagen: {e}")
