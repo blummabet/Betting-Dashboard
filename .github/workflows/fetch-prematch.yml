@@ -1,11 +1,12 @@
 name: Fetch Pre-Match Data
 
 on:
-  # Automatisch: 2x täglich (7:00, 15:00 Wien-Zeit = 5:00, 13:00 UTC)
-  # Reduziert von 4x auf 2x — spart ~50% APISPORTS-Quota (~1500 Calls/Tag statt ~3000)
+  # Automatisch: 3x täglich (04:00, 12:00, 20:00 Wien-Zeit = 02:00, 10:00, 18:00 UTC)
+  # The Odds API hat genug Quota (100K/Monat) — kein Grund mehr auf 2x zu begrenzen
   schedule:
-    - cron: '0 5 * * *'
-    - cron: '0 13 * * *'
+    - cron: '0 2 * * *'
+    - cron: '0 10 * * *'
+    - cron: '0 18 * * *'
   # Manuell auslösbar (GitHub → Actions → "Run workflow")
   workflow_dispatch:
 
