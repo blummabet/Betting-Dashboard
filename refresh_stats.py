@@ -451,7 +451,7 @@ def process_league(league_key: str, fetch_fixture_stats: bool = True) -> dict:
 
         # ── Step B: fixtures/statistics → corner averages ─────────────────────────
         if fetch_fixture_stats and fixture_info:
-            n_fix = min(25, len(fixture_info))
+            n_fix = min(50, len(fixture_info))  # Business plan: doubled from 25 → 50
             print(f"       Fetching fixture stats for last {n_fix} fixtures (corners)…")
             corner_data = fetch_fixture_stats_batch(fixture_info, max_fixtures=n_fix)
             corners_ok = 0

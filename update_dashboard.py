@@ -255,7 +255,7 @@ def fetch_team_injuries(team_id, season=2025):
 
 def fetch_h2h(home_id, away_id):
     """Fetch H2H stats using API-Football headtohead endpoint."""
-    resp = apif_get("fixtures/headtohead", {"h2h": f"{home_id}-{away_id}", "last": 10})
+    resp = apif_get("fixtures/headtohead", {"h2h": f"{home_id}-{away_id}", "last": 20})
     if not resp:
         return None
 

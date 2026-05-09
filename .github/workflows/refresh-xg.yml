@@ -1,10 +1,10 @@
-name: 📐 xG-Statistiken aktualisieren (wöchentlich)
+name: 📐 xG + Corner-Statistiken aktualisieren (täglich)
 
 on:
-  # Automatisch: jeden Montag um 05:00 UTC (07:00 MEZ)
-  # → läuft VOR dem täglichen Dashboard-Update (06:00 UTC)
+  # Automatisch: täglich um 04:00 UTC (06:00 MEZ)
+  # → läuft VOR dem Dashboard-Update (06:00 UTC) damit corners im selben Tag fließen
   schedule:
-    - cron: '0 5 * * 1'
+    - cron: '0 4 * * *'
 
   # Manuell: jederzeit per Knopfdruck auf GitHub ausführbar
   workflow_dispatch:
@@ -33,10 +33,8 @@ jobs:
       - name: 📦 Dependencies installieren
         run: pip install -r requirements.txt
 
-      # 4. xG-Statistiken via API-Football Fixture-Statistics holen
-      #    Verarbeitet ~560 API-Calls (11 Ligen × ~51 Requests) → ~11 Minuten
-      #    Big-5 (ENG/GER/ITA/ESP/FRA): Native Expected Goals
-      #    Andere Ligen: Shots-on-Goal × 0.32 Proxy
+      # 4. xG via API-Football /fixtures/statistics (shots-xG, 11 Ligen)
+      #    Business Plan: ~750 Calls (50 Fixtures × 15 Ligen) statt früher 25 → besser
       - name: 📐 xG-Statistiken aktualisieren
         run: python refresh_xg.py
         continue-on-error: false
@@ -44,8 +42,18 @@ jobs:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         timeout-minutes: 25
 
-      # 5. Geänderte stats_cache.json zurück ins Repo pushen
-      - name: 💾 xG-Daten speichern & pushen
+      # 5. Vollständige Stats (Understat xG + ClubElo + Corner-Averages via /fixtures/statistics)
+      #    Läuft einmal täglich hier (NICHT in update-dashboard.yml via --fast).
+      #    Business Plan: 50 Fixtures statt 25 → präzisere Corner-Averages.
+      - name: 📊 Vollständige Statistiken (mit Corners)
+        run: python refresh_stats.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        timeout-minutes: 30
+
+      # 6. Geänderte Caches ins Repo pushen
+      - name: 💾 Stats-Daten speichern & pushen
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
@@ -53,7 +61,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
           else
-            git commit -m "📐 xG-Update $(date +'%d.%m.%Y %H:%M') UTC"
+            git commit -m "📐 Stats+Corner Update $(date +'%d.%m.%Y') UTC"
             git pull origin main --no-rebase -X ours
             git push
           fi

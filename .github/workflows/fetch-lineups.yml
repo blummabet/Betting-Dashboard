@@ -1,0 +1,56 @@
+name: 🟢 Lineups holen (stündlich)
+
+on:
+  # Stündlich zwischen 07:00–21:00 UTC (09:00–23:00 MEZ)
+  # Lineups werden ~60–75 Min vor Anstoß freigegeben.
+  # API-Cost: ~30–60 Calls/Tag (nur Spiele im ±2h–12h Fenster)
+  schedule:
+    - cron: '0 7-21 * * *'   # jede Stunde von 07:00 bis 21:00 UTC
+
+  # Manuell auslösbar
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-lineups:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
+      # Lineups fetchen — nur Spiele im Kickoff-Fenster ±2h bis +12h
+      # Bestätigte Lineups werden gecacht und nicht erneut gefetcht.
+      - name: 🟢 Lineups holen
+        run: python fetch_lineups.py
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        timeout-minutes: 10
+
+      # lineup_cache.json ins Repo pushen
+      - name: 💾 Lineup-Cache speichern & pushen
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add lineup_cache.json
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — kein Commit nötig."
+          else
+            git commit -m "🟢 Lineups Update $(date +'%d.%m.%Y %H:%M') UTC"
+            git pull origin main --no-rebase -X ours
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

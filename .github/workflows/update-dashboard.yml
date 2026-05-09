@@ -53,9 +53,11 @@ jobs:
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
-      # 5. Statistiken aktualisieren (API-Football + ClubElo → stats_cache.json)
+      # 5. Statistiken aktualisieren (Understat xG + ClubElo Elo — kein Corner-Fetch)
+      #    --fast überspringt /fixtures/statistics Calls (750 APIF-Credits/Run) da diese
+      #    einmal täglich via refresh-xg.yml aktualisiert werden. Spart ~3.750 Credits/Tag.
       - name: 📈 Statistiken aktualisieren
-        run: python refresh_stats.py
+        run: python refresh_stats.py --fast
         continue-on-error: true
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}

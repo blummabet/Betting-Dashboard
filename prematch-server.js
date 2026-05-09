@@ -1407,9 +1407,9 @@ async function fetchAllPrematchData() {
   // For fixtures that have 1X2 odds (from TheOddsAPI or elsewhere) but still lack
   // real corners or cards odds, fetch from API-Football /odds (Pinnacle = bookmaker 8)
   // and extract those specific markets.
-  // Capped at 15 fixtures max to protect daily quota.
+  // Cap raised: Business plan (75K/day API-Football) — was 15, now 80 (soft safety limit).
   { const _cornersMissing = upcoming.filter(d => d.odds && !d.odds.co85 && !d.odds.co95);
-    const _toEnrich5c = _cornersMissing.slice(0, 15);
+    const _toEnrich5c = _cornersMissing.slice(0, 80);
     if (_toEnrich5c.length > 0) {
       console.log(`[Server] Step5c: API-Football Ecken/Karten-Enrichment für ${_toEnrich5c.length} Spiele...`);
       let _enriched5c = 0;
@@ -1666,6 +1666,31 @@ if (WRITE_MODE) {
                                  pinn_aw_fair: fx.odds.pinn_aw_fair };
           }
         }
+      }
+      // ─────────────────────────────────────────────────────────────────────
+
+      // ── Merge lineup_cache.json into fixtures ────────────────────────────
+      // lineup_cache.json is built hourly by fetch_lineups.py (GitHub Action).
+      // If available, inject lineup data directly into each fixture so pick-engine.js
+      // can use it without a separate fetch.
+      try {
+        const lineupCachePath = path.join(__dirname, 'lineup_cache.json');
+        if (fs.existsSync(lineupCachePath)) {
+          const lineupCache = JSON.parse(fs.readFileSync(lineupCachePath, 'utf8'));
+          let lineupMerged = 0;
+          for (const fx of fixtures) {
+            const entry = fx.fixtureId ? lineupCache[String(fx.fixtureId)] : null;
+            if (entry && entry.confirmed) {
+              fx.lineup = { home: entry.home, away: entry.away, fetchedAt: entry.fetchedAt };
+              lineupMerged++;
+            }
+          }
+          if (lineupMerged > 0) {
+            console.log(`[GitHub Actions] lineup_cache.json: ${lineupMerged} confirmed lineups merged into fixtures`);
+          }
+        }
+      } catch(e) {
+        console.warn('[GitHub Actions] lineup merge error:', e.message);
       }
       // ─────────────────────────────────────────────────────────────────────
 

@@ -607,6 +607,26 @@ function getBettingPicks(match, odds, leagueKey) {
   // xGSource — "shots" if upgraded by teams/statistics, "goals" otherwise
   const _hXGSource = hStat.xgSource ?? 'goals';
   const _aXGSource = aStat.xgSource ?? 'goals';
+
+  // ── Confirmed Lineup data (from lineup_cache.json via prematch-server.js) ────
+  // Available ~60–75 min before kickoff. When present, adjust attack/defense strength
+  // based on actual starters vs expected squad.
+  const _lineup      = match.lineup || null;
+  const _lineupHome  = _lineup?.home || null;
+  const _lineupAway  = _lineup?.away || null;
+  // Count attacking starters (FWD/MID-forward) — fewer attackers = weaker offensive output
+  const _hAttackers  = _lineupHome ? (_lineupHome.startXI || []).filter(p => p.pos === 'F').length : null;
+  const _aAttackers  = _lineupAway ? (_lineupAway.startXI || []).filter(p => p.pos === 'F').length : null;
+  const _hDefenders  = _lineupHome ? (_lineupHome.startXI || []).filter(p => p.pos === 'D').length : null;
+  const _aDefenders  = _lineupAway ? (_lineupAway.startXI || []).filter(p => p.pos === 'D').length : null;
+  // Lineup adj: 0 = normal, negative = weakened (fewer attackers → less goals/corners)
+  // heuristic: standard is 2–3 FWD. Each missing FWD vs expected = -0.06 xG adj
+  const _hAttAdj     = _hAttackers !== null ? Math.max(-0.15, (_hAttackers - 2.5) * 0.05) : 0;
+  const _aAttAdj     = _aAttackers !== null ? Math.max(-0.15, (_aAttackers - 2.5) * 0.05) : 0;
+  const _lineupNote  = _lineup
+    ? `<br>🟢 Lineup bestätigt: ${match.home} ${_lineupHome?.formation || '?'} · ${match.away} ${_lineupAway?.formation || '?'}.`
+    : '';
+
   // ── API Prediction (from prematch-server.js /predictions endpoint) ───────────
   // Independent model signal: expected goals, result %, Poisson distribution
   const _apiPred    = match.apiPrediction   || null;
@@ -1004,6 +1024,14 @@ function getBettingPicks(match, odds, leagueKey) {
   // Max ±7% so it enhances but never dominates the fatigue/injury signals.
   if (_hFormMod !== 0) { homeAttStr *= (1 + _hFormMod); homeDefStr *= (1 - _hFormMod * 0.5); }
   if (_aFormMod !== 0) { awayAttStr *= (1 + _aFormMod); awayDefStr *= (1 - _aFormMod * 0.5); }
+
+  // ── Confirmed Lineup adjustment ─────────────────────────────────────────────
+  // When actual starting XI is known (~60 min before KO), adjust attack strength based
+  // on confirmed forwards count vs typical (2.5). Fewer forwards → lower attack output.
+  // Applied AFTER formation modifier (lineup is ground truth, more reliable than squad cache).
+  // Adj range: −15% (0 FWD) to +7.5% (4+ FWD). Capped to avoid extreme swings.
+  if (_hAttAdj !== 0) { homeAttStr = Math.max(0.30, homeAttStr * (1 + _hAttAdj)); }
+  if (_aAttAdj !== 0) { awayAttStr = Math.max(0.30, awayAttStr * (1 + _aAttAdj)); }
 
   // ── expGoals sanity floor ────────────────────────────────────────────────
   // expGoals is computed before fatigue/injury/motivation multipliers are applied
@@ -1764,7 +1792,7 @@ function getBettingPicks(match, odds, leagueKey) {
         const _o25NegEdge = _hasNegEdge(_o25FairProb, _o25Odds, false, GATE.GOALS_REAL, null);
         if (!_o25NegEdge) gC.push({sc, p:{icon:'⚽', market:`Over ${_o25Pt} Tore`, odds:_o25Odds,
           conf: sc>0.66?'high':sc>0.46?'medium':'low',
-          reason:`${_o25BaseNote}${_o25H2hNote}${_o25ApiNote}${_bothAttLine}`}}); } }
+          reason:`${_o25BaseNote}${_o25H2hNote}${_o25ApiNote}${_bothAttLine}${_lineupNote}`}}); } }
 
     // Under 2.5
     { let sc = expGoals<1.7?0.85:expGoals<2.0?0.72:expGoals<2.3?0.57:expGoals<2.6?0.34:0.12;
@@ -1816,8 +1844,8 @@ function getBettingPicks(match, odds, leagueKey) {
         ? `<br>📊 Saison-Statistiken: ${_hCSHome !== null ? `${match.home} ${Math.round(_hCSHome*100)}% Clean Sheets zuhause` : ''}${_hCSHome !== null && _aFTSAway !== null ? ' · ' : ''}${_aFTSAway !== null ? `${match.away} trifft in ${Math.round(_aFTSAway*100)}% der Auswärtsspiele nicht` : ''}.`
         : '';
       const _u25Reason = _favWeak > 0.4 && _u25DefTeam
-        ? `${_u25DefTeam} dominiert dieses Spiel — der schwächere Angriff (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} Tore/Spiel) kommt kaum zu Chancen. Weniger als 3 Tore sind zu erwarten.${_u25H2hNote}${_u25CSNote}${_pressWarn}${_bothDefLine}`
-        : `Das Modell erwartet nur ${expGoals.toFixed(1)} Tore insgesamt — ${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) sind beide offensiv zu schwach für viele Treffer.${_u25H2hNote}${_u25CSNote}${_pressWarn}${_bothDefLine}`;
+        ? `${_u25DefTeam} dominiert dieses Spiel — der schwächere Angriff (Ø ${Math.min(homeAttStr,awayAttStr).toFixed(1)} Tore/Spiel) kommt kaum zu Chancen. Weniger als 3 Tore sind zu erwarten.${_u25H2hNote}${_u25CSNote}${_pressWarn}${_bothDefLine}${_lineupNote}`
+        : `Das Modell erwartet nur ${expGoals.toFixed(1)} Tore insgesamt — ${match.home} (Ø ${homeAttStr.toFixed(1)} Tore/Spiel) und ${match.away} (Ø ${awayAttStr.toFixed(1)}) sind beide offensiv zu schwach für viele Treffer.${_u25H2hNote}${_u25CSNote}${_pressWarn}${_bothDefLine}${_lineupNote}`;
       // 🔑 MINIMUM THRESHOLD: Under 2.5 nur pushen wenn sc ≥ 0.38
       // Verhindert schwache Restpicks (nach H2H-Dämpfung) im Low-Conf-Bereich
       if (sc >= 0.38) gC.push({sc, p:{icon:'🛡️', market:'Under 2.5 Tore', odds:o.u25,
