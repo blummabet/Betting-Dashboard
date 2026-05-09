@@ -628,24 +628,24 @@ function getBettingPicks(match, odds, leagueKey) {
     : '';
 
   // ── API Prediction (from prematch-server.js /predictions endpoint) ───────────
-  // Independent model signal: expected goals, result %, Poisson distribution
+  // Independent model signal: win probabilities + Poisson distribution + over/under.
+  // NOTE: API-Football's predictions.goals.home/away are Asian-Handicap SPREAD values
+  // (e.g. -1.5 for home favourite), NOT expected goals. They were removed from the
+  // prematch-server.js parsing — only percent/poisson/under_over fields are reliable.
   const _apiPred    = match.apiPrediction   || null;
-  const _apiGoalsH  = _apiPred?.goalsHome   ?? null;  // API-expected goals for home team
-  const _apiGoalsA  = _apiPred?.goalsAway   ?? null;  // API-expected goals for away team
-  // Sanity guard: negative expected goals = corrupted API response → discard all pct signals.
-  // This prevents bad API data (e.g. goalsHome: -2.5) from distorting fair probability estimates.
+  // Validity: prediction is usable when at least the win percentages are present.
   const _apiPredValid = _apiPred !== null
-    && (_apiGoalsH === null || _apiGoalsH >= 0)
-    && (_apiGoalsA === null || _apiGoalsA >= 0);
-  const _apiUO      = _apiPredValid ? (_apiPred?.underOver   ?? null) : null;  // "Over 2.5" | "Under 2.5" | null
+    && (_apiPred.pctHome !== null || _apiPred.pctDraw !== null || _apiPred.pctAway !== null);
+  const _apiUO      = _apiPredValid ? (_apiPred?.underOver   ?? null) : null;  // "Over 2.5" | "Under 2.5"
   const _apiPctH    = _apiPredValid ? (_apiPred?.pctHome     ?? null) : null;  // 0–100
   const _apiPctD    = _apiPredValid ? (_apiPred?.pctDraw     ?? null) : null;
   const _apiPctA    = _apiPredValid ? (_apiPred?.pctAway     ?? null) : null;
   const _apiPoiH    = _apiPredValid ? (_apiPred?.poissonHome ?? null) : null;  // Poisson win% (0–100)
   const _apiPoiD    = _apiPredValid ? (_apiPred?.poissonDraw ?? null) : null;
   const _apiPoiA    = _apiPredValid ? (_apiPred?.poissonAway ?? null) : null;
-  // Blended API expected goals — used when xGBased=false (non-Big5 or no refresh_stats run)
-  const _apiExpG = (_apiGoalsH !== null && _apiGoalsA !== null && _apiPredValid) ? (_apiGoalsH + _apiGoalsA) : null;
+  // _apiExpG is no longer derived from API goals (they are spread values, not xG).
+  // Set to null — xG blending uses only Understat / API-Football /teams/statistics paths.
+  const _apiExpG    = null;
 
   // ── Dynamic blend ratio: more bookmakers → trust consensus more ──
   // _cn is the number of contributing bookmakers from Konsens-Devig.

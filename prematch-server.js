@@ -1464,16 +1464,19 @@ async function fetchAllPrematchData() {
           const h = parseInt(cp[key]?.home); const a = parseInt(cp[key]?.away);
           return (!isNaN(h) && !isNaN(a)) ? { home: h, away: a } : null;
         };
+        // NOTE: p.goals.home/away are Asian-Handicap SPREAD values (e.g. -1.5, +0.5),
+        // NOT expected goals. Do NOT parse them as xG — they will always be negative
+        // for favorites and break the _apiPredValid check in pick-engine.js.
+        // The useful fields are: under_over, percent, and comparison.poisson_distribution.
         d.apiPrediction = {
-          goalsHome:   parseFloat(p.goals?.home)               || null,  // e.g. 1.8
-          goalsAway:   parseFloat(p.goals?.away)               || null,  // e.g. 1.2
           underOver:   p.under_over                            || null,  // "Over 2.5" | "Under 2.5"
-          pctHome:     _pct(p.percent?.home),  // 0–100 (percentage string without %)
+          pctHome:     _pct(p.percent?.home),  // 0–100 win probability
           pctDraw:     _pct(p.percent?.draw),
           pctAway:     _pct(p.percent?.away),
           // Poisson distribution — API's own model result probabilities (0–100)
+          // Note: API uses "draws" (plural) for the draw field.
           poissonHome: _pct(cp.poisson_distribution?.home),
-          poissonDraw: _pct(cp.poisson_distribution?.draws),
+          poissonDraw: _pct(cp.poisson_distribution?.draws ?? cp.poisson_distribution?.draw),
           poissonAway: _pct(cp.poisson_distribution?.away),
           // Comparison signals (0–100 each side, higher = better)
           compForm:    _comp('form'),    // recent form score
