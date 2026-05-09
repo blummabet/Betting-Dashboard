@@ -392,7 +392,10 @@ let _polyPriceMissing = false;// true when polymarket_prices.json returned 404
 async function _loadPolyPriceCache() {
   if (_polyPriceCache !== null) return;
   try {
-    const res = await fetch('polymarket_prices.json', { cache: 'no-store' });
+    // Cache-buster prevents CDN (GitHub Pages) from serving stale JSON.
+    // Date-rounded to the hour so the CDN doesn't get hammered on every second.
+    const _cbv = Math.floor(Date.now() / 3600000);
+    const res = await fetch(`polymarket_prices.json?v=${_cbv}`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     _polyPriceCache  = data.matches || {};
