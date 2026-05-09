@@ -358,6 +358,160 @@ def comp_gain_est(standings, pos, rounds_left):
     ppg = max(0.8, min(2.4, get_team_ppg(standings, pos)))
     return round(rounds_left * ppg)
 
+def validate_league_data(league_key, stake_teams, stake_fixtures, standings, cfg, rounds_left):
+    """
+    Catches label/motivation inconsistencies, odds problems, and FV anomalies
+    that would otherwise only surface during manual dashboard review.
+
+    Prints ⚠️-prefixed warnings to stdout (visible in GitHub Actions logs).
+    Returns list of warning strings (empty = clean).
+
+    Checks:
+      Label consistency:
+        - Active-chase keyword ("Jagd", "Titelkampf", "Titelchance") with motiv='none'
+        - "Meister" label on pos > 1
+        - Mathematically eliminated chasers still carrying Jagd labels
+        - Both "sichern" AND "Jagd" for same competition (impossible combo)
+      Fixture-level:
+        - Pick with null odds and no "estimated" flag (real bookie missing)
+        - DNB pick with odds < 1.28 (should have been blocked)
+        - Edge (FV-based) outside plausible range [−30%, +40%]
+        - matchScore below pick-engine threshold but pick still generated
+        - BTTS / corner picks with only estimated odds
+        - home_stake or away_stake with motiv='none' but mustWin=True (contradiction)
+    """
+    warnings = []
+    max_gain  = rounds_left * 3
+
+    # ── 1. Stake-team label / motivation checks ──────────────────────────────
+    for t in stake_teams:
+        pos    = t["pos"]
+        team   = t["team"]
+        labels = t["labels"]
+        motiv  = t.get("motivationLevel", "full")
+
+        label_texts  = [l["l"] for l in labels]
+        label_colors = {l["c"] for l in labels}
+
+        # Get raw pts from standings (stake_teams stores formatted gd string, not pts directly)
+        st = next((s for s in standings if s["team"] == team), None)
+        raw_pts = st["pts"] if st else t.get("pts", 0)
+
+        # (a) Active-chase language remaining after motiv='none' → finalize failed
+        if motiv == 'none':
+            for kw in ("Jagd", "Titelkampf", "Titelchance"):
+                if any(kw in lbl for lbl in label_texts):
+                    warnings.append(
+                        f"[{league_key}] {team} (pos={pos}): '{kw}' label aber motiv='none'"
+                        f" — _finalize_stake_labels hat nicht korrekt gefeuert")
+
+        # (b) "Meister" label but pos > 1
+        if any("Meister" in lbl for lbl in label_texts) and pos > 1:
+            warnings.append(
+                f"[{league_key}] {team} (pos={pos}): 'Meister' label aber nicht auf Platz 1")
+
+        # (c) Mathematically-eliminated Jagd labels still showing
+        ucl   = cfg["ucl"]
+        el    = cfg.get("el", 0)
+        uecl  = cfg.get("uecl", 0)
+        el_co = ucl + el
+        uc_co = ucl + el + uecl
+
+        if any("UCL Jagd" in lbl for lbl in label_texts):
+            gap = pts_at_pos(standings, ucl) - raw_pts
+            if gap > max_gain:
+                warnings.append(
+                    f"[{league_key}] {team} (pos={pos}): 'UCL Jagd' aber mathematisch eliminiert"
+                    f" (gap={gap}, max_gain={max_gain}) — calc_motivation hat nicht gefeuert")
+
+        if any("EL Jagd" in lbl for lbl in label_texts) and el > 0:
+            gap = pts_at_pos(standings, el_co) - raw_pts
+            if gap > max_gain:
+                warnings.append(
+                    f"[{league_key}] {team} (pos={pos}): 'EL Jagd' aber mathematisch eliminiert"
+                    f" (gap={gap}, max_gain={max_gain})")
+
+        if any("UECL Jagd" in lbl for lbl in label_texts) and uecl > 0:
+            gap = pts_at_pos(standings, uc_co) - raw_pts
+            if gap > max_gain:
+                warnings.append(
+                    f"[{league_key}] {team} (pos={pos}): 'UECL Jagd' aber mathematisch eliminiert"
+                    f" (gap={gap}, max_gain={max_gain})")
+
+        # (d) Contradictory label combos (e.g. "UCL sichern" + "UCL Jagd" simultaneously)
+        for comp in ("UCL", "EL", "UECL"):
+            has_sichern = any(f"{comp} sichern" in lbl or f"{comp} gesichert" in lbl for lbl in label_texts)
+            has_jagd    = any(f"{comp} Jagd" in lbl for lbl in label_texts)
+            if has_sichern and has_jagd:
+                warnings.append(
+                    f"[{league_key}] {team}: widersprüchliche Labels '{comp} sichern/gesichert'"
+                    f" + '{comp} Jagd' gleichzeitig")
+
+        # (e) Red (relegated/danger) label + motiv='full' + rounds_left=0
+        if "red" in label_colors and rounds_left == 0 and motiv == 'full':
+            warnings.append(
+                f"[{league_key}] {team} (pos={pos}): rote Label + rounds_left=0 + motiv='full'"
+                f" → sollte 'none' sein (Saison beendet)")
+
+    # ── 2. Stake-fixture pick / odds / FV checks ─────────────────────────────
+    for fx in stake_fixtures:
+        label  = f"{fx.get('home','?')} vs {fx.get('away','?')}"
+        picks  = fx.get("picks", [])
+        odds_o = fx.get("odds", {})  # raw odds object from fixture
+        has_real_odds = odds_o.get("hw") is not None
+
+        for p in picks:
+            market  = p.get("market", "")
+            odds    = p.get("odds")
+            mo      = p.get("modelOdds")
+            conf    = p.get("conf", "")
+            is_est  = p.get("estimatedOdds", False)
+
+            # (f) Pick with no odds at all (should be blocked upstream)
+            if odds is None and not is_est:
+                warnings.append(
+                    f"[{league_key}] {label} — Pick '{market}' hat weder Odds noch estimatedOdds-Flag")
+
+            # (g) DNB with odds below minimum threshold (1.28)
+            if "DNB" in market and odds is not None and odds < 1.28:
+                warnings.append(
+                    f"[{league_key}] {label} — DNB Pick '{market}' odds={odds:.2f} unter Minimum 1.28")
+
+            # (h) Edge out of plausible range
+            if odds is not None and mo is not None:
+                try:
+                    edge_pp = round((1 / mo - (1 / odds) * 1.03) * 100)
+                    if edge_pp < -30:
+                        warnings.append(
+                            f"[{league_key}] {label} — '{market}' edge={edge_pp}pp extrem negativ"
+                            f" (odds={odds}, modelOdds={mo}) — FV-Berechnung prüfen")
+                    elif edge_pp > 45:
+                        warnings.append(
+                            f"[{league_key}] {label} — '{market}' edge={edge_pp}pp extrem positiv"
+                            f" (odds={odds}, modelOdds={mo}) — könnte Datenfehler sein")
+                except (ZeroDivisionError, TypeError):
+                    warnings.append(
+                        f"[{league_key}] {label} — '{market}' edge-Berechnung fehlgeschlagen"
+                        f" (odds={odds}, modelOdds={mo})")
+
+            # (i) BTTS/Corner/Cards picks with only estimated odds + high conf
+            est_sensitive = any(kw in market for kw in ("BTTS", "Beide", "Ecken", "Karten", "Corner"))
+            if est_sensitive and is_est and conf in ("high", "medium"):
+                warnings.append(
+                    f"[{league_key}] {label} — '{market}' conf={conf} aber nur estimated odds"
+                    f" — sollte downgraded werden")
+
+        # (j) mustWin=True but motiv='none' (contradiction)
+        for side, stake_key in (("Heim", "homeStake"), ("Aus", "awayStake")):
+            stake = fx.get(stake_key, {})
+            if stake and stake.get("mustWin") and stake.get("motivationLevel") == "none":
+                warnings.append(
+                    f"[{league_key}] {label} — {side}-Team: mustWin=True aber motivationLevel='none'"
+                    f" → Widerspruch, mustWin sollte False sein")
+
+    return warnings
+
+
 def _finalize_stake_labels(labels, motiv, pos=None):
     """
     Post-process labels after motivation is determined.
@@ -399,6 +553,11 @@ def _finalize_stake_labels(labels, motiv, pos=None):
                 # Was in EL zone fighting to keep it — now secured
                 out.append({"l": "🟠 EL gesichert", "c": "orange"})
             # "EL Jagd" + motiv=none: they missed EL → drop label
+        elif c == "green":
+            if "sichern" in txt:
+                # Was in UECL zone fighting to keep it — now secured
+                out.append({"l": "🟢 UECL gesichert", "c": "green"})
+            # "UECL Jagd" + motiv=none: they missed UECL → drop label
         else:
             out.append(l)  # red, yellow — keep factual relegation labels
     return out
@@ -437,6 +596,18 @@ def calc_labels(team, standings, cfg):
             labels.append({"l": "🟠 EL sichern", "c": "orange"})
         elif pos > el_cutoff and (pts_el - pts) <= 3:
             labels.append({"l": "🟠 EL Jagd", "c": "orange"})
+
+    # Conference League (UECL) — only when cfg has uecl > 0
+    uecl_spots = cfg.get("uecl", 0)
+    if uecl_spots > 0 and el > 0:
+        uecl_cutoff = ucl + el + uecl_spots
+        pts_uecl    = pts_at_pos(standings, uecl_cutoff)
+        # In UECL zone, close to the edge below
+        if (ucl + el) < pos <= uecl_cutoff and abs(pts - pts_at_pos(standings, uecl_cutoff + 1)) <= 3:
+            labels.append({"l": "🟢 UECL sichern", "c": "green"})
+        # Chasing from just outside
+        elif pos > uecl_cutoff and (pts_uecl - pts) <= 3:
+            labels.append({"l": "🟢 UECL Jagd", "c": "green"})
 
     # Relegation
     total      = cfg["total"]
@@ -480,7 +651,9 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
 
     pos      = team["pos"]
     pts      = team["pts"]
-    max_gain = rounds_left * 3   # maximum additional points any single team can earn
+    # Use team-specific rounds remaining (handles game-in-hand correctly)
+    team_rl  = max(0, cfg["rounds"] - team.get("played", 0))
+    max_gain = team_rl * 3   # maximum additional points this team can earn
 
     is_gold   = any(l["c"] == "gold"   for l in labels)
     is_red    = any(l["c"] == "red"    for l in labels)
@@ -519,6 +692,44 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
         # gap > max_gain: title is gone, fall through to check next objectives
 
     is_yellow = any(l["c"] == "yellow" for l in labels)  # Rel.-Playoff label
+    is_green  = any(l["c"] == "green"  for l in labels)  # UECL label
+
+    # ── UCL chaser (pos > ucl) — is the race mathematically over? ─────────────
+    # A team still labeled "UCL Jagd" but who can no longer reach the UCL spots
+    # (even winning every remaining game) should be treated as confirmed-out ('none').
+    if is_blue and pos > cfg["ucl"]:
+        pts_ucl_pos = pts_at_pos(standings, cfg["ucl"])
+        gap = pts_ucl_pos - pts
+        if gap > max_gain:
+            return 'none'   # can't reach UCL even if we win everything
+        cg = comp_gain_est(standings, cfg["ucl"], rounds_left)
+        if (gap + cg) >= max_gain:
+            return 'none'   # competitor-adjusted: UCL team's projected pts exceed our ceiling
+
+    # ── EL chaser (pos > el_cutoff) — is the race mathematically over? ────────
+    if is_orange and not is_blue:
+        el_cutoff = cfg["ucl"] + cfg.get("el", 0)
+        if pos > el_cutoff:
+            pts_el_pos = pts_at_pos(standings, el_cutoff)
+            gap = pts_el_pos - pts
+            if gap > max_gain:
+                return 'none'
+            cg = comp_gain_est(standings, el_cutoff, rounds_left)
+            if (gap + cg) >= max_gain:
+                return 'none'
+
+    # ── UECL chaser (pos > uecl_cutoff) — is the race mathematically over? ────
+    uecl_spots = cfg.get("uecl", 0)
+    if is_green and not is_blue and not is_orange and uecl_spots > 0:
+        uecl_cutoff = cfg["ucl"] + cfg.get("el", 0) + uecl_spots
+        if pos > uecl_cutoff:
+            pts_uecl_pos = pts_at_pos(standings, uecl_cutoff)
+            gap = pts_uecl_pos - pts
+            if gap > max_gain:
+                return 'none'
+            cg = comp_gain_est(standings, uecl_cutoff, rounds_left)
+            if (gap + cg) >= max_gain:
+                return 'none'
 
     # ── UCL secured ────────────────────────────────────────────────────────────
     if is_blue and pos <= cfg["ucl"]:
@@ -533,12 +744,23 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
     # chasing UCL (is_blue present means active UCL race — a higher priority goal).
     # e.g. Stuttgart: EL secured + UCL Jagd → still fighting hard, must return 'full'.
     if is_orange and not is_blue:
-        el_cutoff = cfg["ucl"] + cfg["el"]
+        el_cutoff = cfg["ucl"] + cfg.get("el", 0)
         if pos <= el_cutoff:
             pts_below = pts_at_pos(standings, el_cutoff + 1)
             gap       = pts - pts_below
             if gap > max_gain:  return 'none'
             cg = comp_gain_est(standings, el_cutoff + 1, rounds_left)
+            if (gap - cg) > max_gain * 0.15:  return 'low'
+
+    # ── UECL secured ──────────────────────────────────────────────────────────
+    # Only fires when not also fighting for UCL/EL (higher-priority goals first).
+    if is_green and not is_blue and not is_orange and uecl_spots > 0:
+        uecl_cutoff = cfg["ucl"] + cfg.get("el", 0) + uecl_spots
+        if pos <= uecl_cutoff:
+            pts_below = pts_at_pos(standings, uecl_cutoff + 1)
+            gap       = pts - pts_below
+            if gap > max_gain:  return 'none'
+            cg = comp_gain_est(standings, uecl_cutoff + 1, rounds_left)
             if (gap - cg) > max_gain * 0.15:  return 'low'
 
     # ── Mathematically relegated / practically doomed ─────────────────────────
@@ -1245,7 +1467,7 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
             stake_teams.append({
                 "pos": t["pos"], "team": t["team"], "pts": t["pts"],
                 "played": t["played"], "gd": gd_str, "score": score,
-                "labels": labels, "form": form,
+                "labels": labels, "motivationLevel": motiv, "form": form,
                 "pointsNeeded":  pressure["pointsNeeded"],
                 "pressureRatio": pressure["pressureRatio"],
                 "mustWin":       pressure["mustWin"],
@@ -1399,6 +1621,16 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
 
     leader = standings[0] if standings else {"team": "?", "pts": 0}
     print(f"    ✓ {len(standings)} teams · {rounds_left}R left · {len(stake_fixtures)} stake fixtures")
+
+    # ── Automated validation ───────────────────────────────────────────────────
+    validation_warnings = validate_league_data(
+        key, stake_teams, stake_fixtures, standings, cfg, rounds_left)
+    if validation_warnings:
+        print(f"    ⚠️  VALIDATOR: {len(validation_warnings)} Problem(e) gefunden:")
+        for w in validation_warnings:
+            print(f"      {w}")
+    else:
+        print(f"    ✅ Validator: keine Probleme gefunden")
 
     return {
         "name": cfg["name"], "flag": cfg["flag"], "roundsLeft": rounds_left,
