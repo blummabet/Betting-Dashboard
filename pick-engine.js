@@ -2047,6 +2047,12 @@ function getBettingPicks(match, odds, leagueKey) {
       const _cornSkipHigh = _cOOdds != null && _cOOdds > _OVER_MAX_ODD;
       // Minimum signal guard: sc < 0.25 = too weak to show regardless of odds.
       const _cornSkipLowSc = scO < 0.25;
+      // Double-estimate guard: when BOTH the corner count AND the odds are model-derived
+      // (no real bookmaker price, no real stats-cache averages), the negative-edge check is
+      // comparing the model against itself — no external validation exists.
+      // In that case require a strong signal (scO >= 0.65, i.e. high confidence) to avoid
+      // flooding picks with low-quality "Über 8.5 Ecken" noise across entire leagues.
+      const _cornSkipDoubleEst = o._cornersOddsEst && !cornersDataReal && scO < 0.65;
       // Negative edge gate: Poisson fair value vs bookie/estimated implied probability.
       // Real bookie odds: suppress if implied prob exceeds FV by >10pp (tight gate, real data).
       // Estimated odds: suppress if implied prob exceeds FV by >15pp (wider gate, model uncertainty).
@@ -2056,7 +2062,7 @@ function getBettingPicks(match, odds, leagueKey) {
         ? _poissonOver(cornersEst, _cornLineNums[_overIdx])
         : null;
       const _cornNegEdge = _hasNegEdge(_cornFairProbO, _cOOdds, o._cornersOddsEst, GATE.CORN_REAL, GATE.CORN_EST);
-      if (!_cornSkip && !_cornSkipHigh && !_cornSkipLowSc && !_cornNegEdge)
+      if (!_cornSkip && !_cornSkipHigh && !_cornSkipLowSc && !_cornSkipDoubleEst && !_cornNegEdge)
       sC.push({sc: scO, p:{icon:'🚩', market:_cOMkt, odds:_cOOdds, oddsIsEst: o._cornersOddsEst||false,
         conf: scO>0.65?'high':scO>0.38?'medium':'low',
         reason:`${cornersDataReal
@@ -2080,7 +2086,9 @@ function getBettingPicks(match, odds, leagueKey) {
           // A 1.11 "Unter 8.5" is not a recommendation — it's noise.
           const _UNDER_MIN_ODD = 1.35;
           const _underOddsOk = _cUOdds == null || _cUOdds >= _UNDER_MIN_ODD;
-          if (_underOddsOk) {
+          // Same double-estimate guard as Over: no real odds + no real stats → require high confidence.
+          const _cornUnderDoubleEst = o._cornersOddsEst && !cornersDataReal && scU < 0.65;
+          if (_underOddsOk && !_cornUnderDoubleEst) {
             const _uDataNote = cornersDataReal
               ? `<br>📊 Echte Ecken-Daten (Saison): ${match.home} Ø ${_hCornersHome} Heim · ${match.away} Ø ${_aCornersAway} Ausw. → nur Ø ${cornersEst.toFixed(1)} erwartet.`
               : ``;
