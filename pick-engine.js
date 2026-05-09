@@ -318,14 +318,14 @@ function renderLineMovement(rows, picks, oddsD, isEstimated) {
 // SYNC: when changing any value here also update check_picks_logic.py
 // (Python validator uses same thresholds in comments — search "SYNC:GATE").
 const GATE = {
-  GOALS_REAL:  0.05,   // Over 2.5 / Over 3.5           (real bookie odds) — was 0.12, tightened
-  BTTS_REAL:   0.04,   // BTTS Ja — tighter gate: BTTS model less precise than O/U goals — was 0.06
+  GOALS_REAL:  0.05,   // Over 2.5 / Over 3.5           (real bookie odds) — kalibriertes Poisson-Modell
+  BTTS_REAL:   0.04,   // BTTS Ja — tighter gate: BTTS model less precise than O/U goals
   RESULT_REAL: 0.15,   // 1X2 result markets (wider — 3-way, more variance than 2-way goals)
-  TEAM_REAL:   0.07,   // Heim/Ausw über 1.5  (real bookie odds) — was 0.12, tightened
-  TEAM_EST:    0.10,   // Heim/Ausw über 1.5  (estimated odds — wider, model uncertainty) — was 0.15
+  TEAM_REAL:   0.07,   // Heim/Ausw über 1.5  (real bookie odds) — Poisson verlässlich mit echten Quoten
+  TEAM_EST:    0.12,   // Heim/Ausw über 1.5  (estimated) — Doppelt-Unsicherheit: Modell + geschätzte Quote
   AH_REAL:     0.14,   // Asian Handicap  (real only; AH model less precise than goals)
-  CORN_REAL:   0.06,   // Ecken Over  (real bookie odds) — was 0.10, tightened
-  CORN_EST:    0.06,   // Ecken Over  (estimated odds) — was 0.15, tightened to kill wild proxy FVs
+  CORN_REAL:   0.06,   // Ecken Over  (real bookie odds) — Bookie anchort, enger Gate ok
+  CORN_EST:    0.10,   // Ecken Over  (estimated) — Ecken-Modell + Schätzquote = doppelte Unsicherheit → weiter
 };
 
 // ─────────────────────────────────────────────────────
