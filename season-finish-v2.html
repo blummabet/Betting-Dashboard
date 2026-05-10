@@ -1038,6 +1038,162 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <p>Hier ist alles dokumentiert was unter der Haube passiert — jede Datenquelle, jede Logik, jeder Score. Kein Black Box. Du siehst exakt warum eine Wette empfohlen wird und was sie von Standard-Portalen unterscheidet.</p>
   </div>
 
+  <!-- ═══ HIGHLIGHTS — schnelle Übersicht der wichtigsten Features ════════ -->
+  <div class="heart-section" id="heartHighlights">
+    <div class="heart-section-title" style="font-size:14px;letter-spacing:.8px;">⭐ System-Highlights auf einen Blick</div>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:14px;">Die wichtigsten Features, Logik-Bausteine und Signalquellen — kompakt zum Zeigen und Diskutieren.</p>
+
+    <!-- Row 1: Core Signals -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px;margin-bottom:10px;">
+
+      <div style="background:rgba(0,212,161,.06);border:1px solid rgba(0,212,161,.30);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">⚡</span>
+          <strong style="color:var(--accent);font-size:13px;">Saisondruckfaktor</strong>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Das Alleinstellungsmerkmal. Standard-Portale ignorieren das. CocoBet quantifiziert es mit:</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li><code>pressureRatio</code> — Punkte benötigt ÷ max. erreichbar (konkurrenz-adjustiert)</li>
+          <li><code>mustWin</code> wenn ratio &gt; 0.65 → Score +0.4–0.8</li>
+          <li><code>motivationLevel: full / low / none</code> → dämpft gesicherte Teams (−18% Angriff)</li>
+          <li>Boost-Skala: 1 Spieltag +0.28 · 2 STs +0.22 · 3 STs +0.16 · …</li>
+          <li>Wirkt in <strong>allen 8 Märkten</strong>: Ergebnis, Tore, BTTS, HZ, Corners, Karten, AH</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(56,139,253,.06);border:1px solid rgba(56,139,253,.30);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">📐</span>
+          <strong style="color:#58a6ff;font-size:13px;">Fair Value (FV) System</strong>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Keine Odds ohne Gegenstück. Jeder Pick hat ein berechnetes Fair Value:</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li><strong>Poisson-Verteilung</strong> → exakte P(X&gt;threshold) für Tore/Ecken/Karten</li>
+          <li><strong>Pinnacle Priority:</strong> pinn_hw/dr/aw_fair → Konsens-Devig → Single Devig</li>
+          <li><strong>GATE-System:</strong> Neg. Edge (implied−fair &gt; Schwelle) → Pick unterdrückt</li>
+          <li><strong>Market Anchor:</strong> mp auf Pinnacle devigged + max 10pp gedeckelt</li>
+          <li>FV-Chip auf jeder Card: zeigt berechnete Fair Odds vs. Markt</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(163,113,247,.06);border:1px solid rgba(163,113,247,.30);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">📈</span>
+          <strong style="color:#a371f7;font-size:13px;">CLV Tracking</strong>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Closing Line Value — der härteste Profitabilitäts-Indikator:</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li><strong>Opening-Quote</strong> beim ersten Fetch eingefroren (<code>odds_open</code>)</li>
+          <li>Drift-Zeile pro Pick-Card: "Opening: 2.10 → Aktuell: 1.87 ↘ −5pp CLV+"</li>
+          <li>🟢 Grün = Quote verkürzt (Markt bestätigt Pick) · 🔴 Rot = widerspricht</li>
+          <li>Results-Tab: Ø CLV in pp, % CLV+ Picks, Win-Rate CLV+ vs. CLV−</li>
+          <li>Sharp Contradiction Penalty: ≥8pp Gegenseite → sc −0.18</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.25);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">🔷</span>
+          <strong style="color:#f85149;font-size:13px;">Sharp Money Radar</strong>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Institutionelles Geld erkennen bevor es zu spät ist:</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li>Line Movement Strip auf jeder Card (ab ≥3pp Bewegung sichtbar)</li>
+          <li>↘ (3–5pp) · ⬇ (5–8pp) · ⬇⬇ + SHARP Badge (≥8pp)</li>
+          <li>SHARP Penalty feuert VOR Neg-Edge-Gate → kann Pick eliminieren</li>
+          <li>Alle 3 Outcomes getrackt: Heim · Auswärts · Over/Under</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(240,192,64,.06);border:1px solid rgba(240,192,64,.25);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">🟢</span>
+          <strong style="color:#f0c040;font-size:13px;">Confirmed Lineups</strong>
+          <span style="font-size:9px;background:#f0c040;color:#0d1117;padding:1px 5px;border-radius:4px;font-weight:700;">NEU Mai 2026</span>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Echte Startelf-Daten ~75 Min vor Anpfiff:</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li>Stündlicher GitHub Action (<code>fetch_lineups.py</code>) holt Startelf per Fixture-ID</li>
+          <li>Formation + 11 Spieler → <code>lineup_cache.json</code> → in Fixtures injiziert</li>
+          <li>Pick-Engine passt <code>homeAttStr/awayAttStr</code> nach bestätigten Stürmern an</li>
+          <li>Lineup-Note auf Over/Under-Cards: "🟢 Lineup: 4-3-3 · 4-2-3-1"</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(63,185,80,.06);border:1px solid rgba(63,185,80,.25);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">🎯</span>
+          <strong style="color:#3fb950;font-size:13px;">Echte xG-Datenbasis</strong>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Kein Bauchgefühl — alles messbar:</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li>Big 5: native xG aus API-Football · Andere: SoT×0.35 + Schüsse×0.055</li>
+          <li>Ecken: echte Saison-Durchschnitte (Heim/Auswärts) aus 50 Spielen</li>
+          <li>H2H: letzte 20 Duelle (erhöht von 10) · Over-Rate · BTTS-Rate · Ø Tore</li>
+          <li>ClubElo-Rating · Formation-Modifier · Streak-Momentum · CS/FTS-Raten</li>
+          <li>API: 75.000 req/day (<span style="color:#f0c040;">10× Upgrade Mai 2026</span>)</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(248,81,73,.04);border:1px solid rgba(48,54,61,.8);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">🚫</span>
+          <strong style="color:var(--text);font-size:13px;">Negative Edge Gates</strong>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Qualitätsfilter — kein Pick ohne positiven Erwartungswert:</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li>GATE.GOALS_REAL = 0.05 · GATE.CORN_REAL = 0.06 · GATE.RESULT_REAL = 0.15</li>
+          <li>Est. Odds immer weiter (mehr Unsicherheit = mehr Puffer nötig)</li>
+          <li><code>_cornSkipDoubleEst</code>: Ecken nur wenn Quoten ODER echte Stats — nie Poisson vs. Poisson</li>
+          <li>Min. Odds Filter: ≥1.30 · Margin-Strip: ×1.03 vor Edge-Berechnung</li>
+          <li>Safety Net in renderer.js: −8pp Hard-Kill als zweite Verteidigungslinie</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(88,166,255,.04);border:1px solid rgba(48,54,61,.8);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">💻</span>
+          <strong style="color:var(--text);font-size:13px;">Modulare Architektur</strong>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">v2.html: 6 separate JS-Module statt 13k-Zeilen Monolith:</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li><code style="color:var(--accent)">pick-engine.js</code> — Picks, GATE, Poisson (2 700 Zeilen)</li>
+          <li><code style="color:#58a6ff">renderer.js</code> — Cards, Layout, FV-Chip, CLV-Drift (1 600 Zeilen)</li>
+          <li><code style="color:#e3b341">validator.js</code> — Logik-Check, 13 Patterns, 3 Schweregrade</li>
+          <li><code style="color:#f47067">share.js</code> · <code style="color:#8b949e">ui.js</code> · <code style="color:#a371f7">polymarket-tab.js</code></li>
+          <li><code>node test-pick-engine.js</code> — 39/39 Unit Tests grün</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- API Budget overview -->
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-top:4px;">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">
+        <div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">API-Football</div>
+          <div style="font-size:18px;font-weight:700;color:var(--accent);">75.000 <span style="font-size:12px;font-weight:400">req/Tag</span></div>
+          <div style="font-size:11px;color:var(--muted);">⬆ 10× Upgrade Mai 2026 · Business Plan</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">The Odds API</div>
+          <div style="font-size:18px;font-weight:700;color:#58a6ff;">100.000 <span style="font-size:12px;font-weight:400">req/Monat</span></div>
+          <div style="font-size:11px;color:var(--muted);">⬆ 5× Upgrade · 6 Fetch-Passes · 11 Ligen</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Pick-Märkte</div>
+          <div style="font-size:18px;font-weight:700;color:#f0c040;">8 <span style="font-size:12px;font-weight:400">Typen</span></div>
+          <div style="font-size:11px;color:var(--muted);">Ergebnis · Tore · BTTS · HZ · AH · Ecken · Karten · Team-Tore</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Ligen abgedeckt</div>
+          <div style="font-size:18px;font-weight:700;color:#a371f7;">15 <span style="font-size:12px;font-weight:400">Ligen</span></div>
+          <div style="font-size:11px;color:var(--muted);">Big 5 + NED/POR/TUR/BEL/SCO/GER2/ENG2/AUT/CRO/POL</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 1. Was macht dieses Tool anders -->
   <div class="heart-section">
     <div class="heart-section-title">🎯 Die drei Killer-Features</div>
@@ -1067,7 +1223,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <table class="heart-table">
         <tr><th>Quelle</th><th>Was geliefert wird</th><th>Script / Trigger</th><th>Verwendet für</th></tr>
         <tr style="background:rgba(0,212,161,.04);border-left:2px solid var(--accent);">
-          <td><strong style="color:var(--accent)">API-Football Pro</strong> <span style="font-size:10px;color:var(--muted)">($19/Mo · 7.500 req/Tag)</span></td>
+          <td><strong style="color:var(--accent)">API-Football Pro</strong> <span style="font-size:10px;color:var(--muted)">($199/Mo · 75.000 req/Tag · 10× Upgrade Mai 2026)</span></td>
           <td>Standings · Fixtures · Form (last 10) · Schiedsrichter · Verletzungen/Sperren · Echtes H2H · <strong>Pinnacle-Quoten</strong> · Fixture-Statistics (Shots + xG) · <strong>Predictions</strong> (expected goals · Over/Under · Poisson %)</td>
           <td><code style="font-size:10px;">update_dashboard.py</code> täglich · <code style="font-size:10px;">refresh_stats.py</code> täglich · <code style="font-size:10px;">refresh_xg.py</code> wöchentlich · <code style="font-size:10px;">prematch-server.js</code> täglich</td>
           <td><strong>Alle Daten</strong> — einzige externe Quelle: Tabellen, Picks, xG, Pre-Match, Quoten</td>
@@ -1133,7 +1289,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li>Alles gecacht: Verletzungen 3h · H2H 24h · Schiedsrichter 48h</li>
           <li>Cards werden automatisch neu gerendert wenn Daten bereit sind</li>
         </ul>
-        <p style="margin-top:8px;color:var(--muted);font-size:12px;">Budget: ~70–100 API-Requests/Tag von 7.500 verfügbaren → &lt;1.5%</p>
+        <p style="margin-top:8px;color:var(--muted);font-size:12px;">Budget: ~70–100 API-Requests/Tag von 75.000 verfügbaren → &lt;0.15% · <code>--fast</code>-Flag spart weitere ~3.750 Credits/Tag</p>
       </div>
       <div class="heart-card">
         <h3>👨‍⚖️ Schiedsrichter-Integration</h3>
@@ -1483,21 +1639,32 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="heart-grid">
       <div class="heart-card" style="opacity:.85;">
         <h3>💡 Mögliche Erweiterungen</h3>
+        <p style="font-size:11px;color:var(--muted);margin-bottom:8px;">Priorisiert nach Impact/Aufwand-Verhältnis:</p>
         <ul>
-          <li><strong>Live Odds-API:</strong> Automatischer Value-Check gegen Pinnacle in Echtzeit</li>
-          <li><strong>Weather-Integration:</strong> Wind/Regen → Under-Boost, Corners-Dämpfung</li>
-          <li><strong>Bankroll-Empfehlung:</strong> Stake-Größe basierend auf Edge × Konfidenz</li>
-          <li><strong>Historischer Backtest (API):</strong> API-Daten für Trefferquoten-Validierung der Pick-Logik nutzen</li>
-          <li><strong>[Tier 2] fixtures/lineups (T−1h):</strong> Offizielle Startelf + Formation ~1h vor Anpfiff → Late-Update-Step in prematch-server.js. Rotation, Schlüsselspieler auf Bank, Formation-Abweichung als Signal. Überschreibt injury-basierte xG-Schätzungen wenn echter Kader bekannt.</li>
-          <li><strong>[Tier 2] players/statistics:</strong> Individuelle Tore, Assists, Shots on Target, Rating pro Spieler → verfeinert Injury-Impact. Statt pauschaler attack_count × 0.95: Topscorer (18 Tore) fehlt vs. Backup (2 Tore) — enormer Unterschied, aktuell nicht sichtbar im Modell.</li>
-          <li><strong>[Tier 3] players/sidelined:</strong> Langzeitausfälle besser als injury-Endpoint, aber Fixture-Injuries decken das bereits weitgehend ab.</li>
-          <li><strong>[Tier 3] fixtures/events:</strong> Torminuten, Karten, Auswechslungen historisch → First-Goal-Rate, Late-Goal-Rate als neue Markt-Signale. Aufwändig zu aggregieren.</li>
-          <li><strong>[Tier 3] coaches:</strong> Coach-Wechsel-Signal (neuer Trainer = oft defensive Phase). Interessant, aber kein direkter Score-Einfluss.</li>
+          <li><strong>[Tier 1] players/statistics:</strong> Individuelle Tore, Assists, Shots on Target, Rating pro Spieler → verfeinert Injury-Impact. Statt pauschaler attack_count × 0.95: Topscorer (18 Tore) fehlt vs. Backup (2 Tore) — enormer Unterschied, aktuell nicht sichtbar im Modell. Direkt auf Lineup-Pipeline aufbauend.</li>
+          <li><strong>[Tier 1] Lineup-Starter-Qualität:</strong> Aktuell zählt pick-engine.js nur die Anzahl Stürmer. Nächster Schritt: Starter-Scoring via player/statistics (Tore + xG per Spieler) → Qualitätsadjustment nicht nur Quantität. Topscorer auf Bank = stärkeres Signal.</li>
+          <li><strong>[Tier 2] Bankroll-Empfehlung:</strong> Stake-Größe basierend auf Edge × Konfidenz × Kelly-Criterion (gecappt). Zeige empfohlene Stake-Größe auf jeder Card. Erfordert historische Hit-Rate pro Markt.</li>
+          <li><strong>[Tier 2] Historischer Backtest (API):</strong> API-Football-Daten für Trefferquoten-Validierung der aktuellen Pick-Logik. Welcher Markt performt wirklich bei mustWin-Spielen? Präzisere Markt-Boosts statt Annahmen.</li>
+          <li><strong>[Tier 2] fixtures/events:</strong> Torminuten, Karten, Auswechslungen historisch → First-Goal-Rate (wichtig für HZ-Picks), Late-Goal-Rate. Aufwändig zu aggregieren aber klar messbarer Impact.</li>
+          <li><strong>[Tier 3] Weather-Integration:</strong> Wind/Regen → Under-Boost, Corners-Dämpfung. API verfügbar (OpenWeather), aber historische Korrelation zu Outcomes schwach.</li>
+          <li><strong>[Tier 3] players/sidelined:</strong> Langzeitausfälle — Fixture-Injuries decken das bereits weitgehend ab, aber sidelined erfasst mehrtägige Ausfälle ohne Fixture-Link.</li>
+          <li><strong>[Tier 3] coaches:</strong> Coach-Wechsel-Signal (neuer Trainer = oft defensive Phase). Interessant, aber kein direkter Score-Einfluss mess- und validierbar.</li>
+          <li><strong>[Tier 3] Live Odds-API:</strong> Automatischer Value-Check gegen Pinnacle in Echtzeit (Closing Line). Aktuell: prematch snapshot + update alle 3h. Echtes Closing via Resolve benötigt.</li>
         </ul>
+        <div style="margin-top:10px;padding:10px;background:rgba(63,185,80,.06);border:1px solid rgba(63,185,80,.20);border-radius:6px;">
+          <p style="font-size:11px;color:#3fb950;font-weight:600;margin-bottom:4px;">✅ Seit letztem Update neu abgeschlossen:</p>
+          <p style="font-size:11px;color:var(--muted);">Confirmed Lineups Pipeline · Corner Double-Estimate Guard · API 10× Upgrade · H2H last=20 · Predictions Fix · --fast Budget-Optimierung · max_fixtures 25→50 · CLV Tracking · SHARP Penalty · Pinnacle Priority FV</p>
+        </div>
       </div>
       <div class="heart-card" style="opacity:.85;">
         <h3>✅ Bereits implementiert</h3>
-        <ul>
+        <!-- Toggle-Button -->
+        <div style="margin-bottom:10px;">
+          <button onclick="(function(btn){var ul=btn.parentElement.nextElementSibling;var open=ul.style.display!=='none';ul.style.display=open?'none':'block';btn.innerHTML=open?'▶ Alle Einträge anzeigen ('+btn.dataset.count+')':'▲ Einklappen';})(this)" data-count="60+" style="background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:6px 14px;font-size:12px;color:var(--muted);cursor:pointer;width:100%;">
+            ▶ Alle Einträge anzeigen (60+)
+          </button>
+        </div>
+        <ul style="display:none;">
           <li><strong>Vollständige API-Football-Migration</strong> — update_dashboard.py, refresh_stats.py und prematch-server.js nutzen ausschließlich api-football. Sofascore und Understat entfernt (blockieren GitHub Actions IPs mit HTTP 403).</li>
           <li><strong>refresh_xg.py</strong> — wöchentliches Script (Montag 05:00 UTC) holt Fixture-Statistics: native xG (Big-5) oder Shots × 0.32 Proxy (andere Ligen). Schreibt xG_home/xGA_home/xG_away/xGA_away + xg_fairness in stats_cache.json.</li>
           <li><strong>pressureRatio / mustWin / canDraw</strong> — neues Score-Fundament in calc_pressure(). mustWin (ratio > 0.65) → +0.4/+0.8 Match Score. canDraw (ratio &lt; 0.30) → dämpft Druck-Signale. Ersetzt bisherige binäre roundsLeft-Logik als primärer Score-Treiber.</li>
@@ -1592,6 +1759,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Pinnacle Fair Value Priority — Pass 1c + 1X2/O/U Markt-Anker</strong> — <code>prematch-server.js</code> neuer Pass 1c (nach Konsens-Pass 1b) extrahiert Pinnacle-exklusive devigged Odds: <code>pinn_hw_fair</code>, <code>pinn_dr_fair</code>, <code>pinn_aw_fair</code> (1X2, alle drei erforderlich) und <code>pinn_o25_fair</code>, <code>pinn_u25_fair</code>, <code>pinn_o35_fair</code>, <code>pinn_u35_fair</code> (Totals-Markt, <code>Math.abs(o.point - 2.5/3.5) &lt; 0.01</code>). Kein Blending mit anderen Büros — reines Pinnacle-Signal. In <code>pick-engine.js getBettingPicks()</code> neue Prioritätskette: <code>_hasPinn</code> (alle drei Pinnacle-FVs vorhanden) → <code>_hasFair</code> (Konsens-Fair-Odds) → raw devig. Für O/U 2.5 und O/U 3.5: Markt-Anker verwendet <code>1/pinn_o25_fair</code> bzw. <code>1/pinn_o35_fair</code> statt raw Bookie-Devig. Öffnungs-Snapshot: Pinnacle FV-Werte (inkl. O3.5) werden beim ersten Fetch in <code>odds_open</code> eingefroren. Guard: <code>_hasPinn</code> erfordert alle 3 Legs — partial Pinnacle-Daten fallen sauber auf Konsens zurück. <em>(prematch-server.js + pick-engine.js — Mai 2026)</em></li>
           <li><strong>SHARP Contradiction Penalty — Alle Ergebnis- und Tore-Märkte</strong> — Wenn ≥8pp Sharp-Money auf die Gegenseite eines Picks geht, wird der Score penalisiert. Signale: <code>_ppH/_ppA/_ppO/_ppU</code> = implied-prob-Shift von Opening zu Current in Prozentpunkten (pick-engine.js ~Zeile 617–640). Heimsieg: <code>if (_sharpAgainstH) sc -= 0.18</code> (≥8pp auf Away, Zeile 1253). Auswärtssieg: <code>if (_sharpAgainstA) sc -= 0.18</code> (≥8pp auf Home, Zeile 1386). Unentschieden: <code>if (_sharpAgainstH || _sharpAgainstA) sc -= 0.14</code> (jede Richtung = Markt sieht Sieger, Draw weniger wahrscheinlich). Over 2.5: <code>_lmO -= 0.09</code> wenn ≥8pp auf Under (Zeile 634); Under 2.5: <code>_lmU -= 0.09</code> wenn ≥8pp auf Over (Zeile 635). BTTS Yes: <code>if (_sharpAgainstO) sc -= 0.09</code> — U2.5-Sharp widerspricht beiden Toren. Over 3.5: <code>_lmO -= 0.05</code> wenn U3.5 ≥8pp (Zeile 640). Penalty feuert VOR dem Neg-Edge-Gate — kann damit auch marginale Picks unterdrücken. <em>(pick-engine.js — Mai 2026)</em></li>
           <li><strong>Opening-Odds Drift pro Pick-Card + CLV-Sektion im Results-Tab</strong> — <code>prematch-server.js</code>: <code>odds_open_ts</code> speichert ISO-Timestamp des ersten Snapshots (eingefroren, nie überschrieben). In <code>renderer.js renderFixtureCard()</code>: Pro Pick-Card Drift-Zeile "Opening (seit TT.MM): X.XX → Aktuell: Y.YY ↘ −Npp CLV+" — berechnet aus <code>_pm.odds_open</code> vs. aktuelle Odds. Markt-Mapping (Zeile ~1095): Heimsieg→<code>hw</code>, Over 2.5→<code>o25</code>, BTTS→<code>btts</code>, AH Heim→<code>ah_h</code> usw. Zeigt nur wenn |Δ| ≥ 2pp (Rauschen unterdrückt). Farbkodierung: 🟢 Linie verkürzt (CLV+, Markt bestätigt Pick) / 🔴 Linie verlängert (CLV−, Markt widerspricht). Spezialist-Märkte (Corners, Cards, HZ) haben keine Opening-Snapshots — kein Drift bewusst ausgelassen. Results-Tab: neuer <code>#clvStats</code>-Block (season-finish-v2.html Zeile ~1754) zeigt Ø CLV in pp, % CLV+ Picks, Win Rate CLV+ vs. CLV−. Proxy: <code>pick.odds_open</code> aus picks_history vs. <code>pick.odds</code> (echtes Closing folgt wenn <code>resolve_picks.py</code> Closing-Quotes erfasst). <em>(prematch-server.js + renderer.js + season-finish-v2.html — Mai 2026)</em></li>
+
+          <!-- ═══ NEU: Mai 2026 ═══════════════════════════════════════ -->
+          <li style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px;"><strong style="color:#f0c040;">🆙 API-Football Business Upgrade — 7.500 → 75.000 req/Tag</strong> — Quota-Upgrade von 7.500 auf 75.000 API-Football-Requests pro Tag (10×). Schaltet neue Möglichkeiten frei: mehr Fixture-Statistics-Coverage (max_fixtures 25→50), H2H-Tiefe auf last=20 erhöht, stündliche Lineup-Fetches möglich, TheOddsAPI Step5c-Cap von 15 auf 80 Fixtures erhöht. The Odds API gleichzeitig von 20K auf 100K req/Monat upgraded. <em>(Mai 2026)</em></li>
+          <li><strong>API-Budget-Optimierung — refresh_stats.py --fast in update-dashboard.yml</strong> — Der tägliche Update-Workflow lief 5× täglich <code>refresh_stats.py</code> ohne <code>--fast</code> und verbrauchte ~3.750 Credits/Tag durch <code>/fixtures/statistics</code>-Calls (750 Calls/Run × 5 Runs). Fix: <code>update-dashboard.yml</code> nutzt jetzt <code>python refresh_stats.py --fast</code> (überspringt Fixture-Stats). Vollständiger <code>refresh_stats.py</code>-Lauf (inkl. Corner-Daten) läuft einmal täglich separat in <code>refresh-xg.yml</code> um 04:00 UTC. Spart ~3.750 APIF-Credits/Tag und ermöglicht echte Corner-Daten täglich statt wöchentlich. <em>(update-dashboard.yml + refresh-xg.yml — Mai 2026)</em></li>
+          <li><strong>Corner Double-Estimate Guard (<code>_cornSkipDoubleEst</code>)</strong> — Wenn weder echte Bookie-Corner-Quoten (<code>!o._cornersOddsEst</code>) noch echte Saison-Corner-Stats (<code>cornersDataReal</code>) vorliegen, vergleicht das Modell Poisson gegen sich selbst — kein unabhängiges Signal. Neue Guards: <code>const _cornSkipDoubleEst = o._cornersOddsEst &amp;&amp; !cornersDataReal &amp;&amp; scO &lt; 0.65</code> (Over) und analog für Under. Unterdrückt systematisch die "Über 8.5 Ecken"-Flut aus TUR/NED/AUT-Ligen wo API keine Corner-Quoten liefert. Nur bei starkem Signal (scO ≥ 0.65) wird der Pick trotzdem angezeigt. <em>(pick-engine.js — Mai 2026)</em></li>
+          <li><strong>Confirmed Lineups Pipeline</strong> — Neues stündliches GitHub Action <code>fetch_lineups.py</code> (07:00–21:00 UTC) holt bestätigte Startaufstellungen ~75 Min vor Anpfiff via <code>/fixtures/lineups?fixture=ID</code>. Nur Fixtures im Fenster −2h bis +12h vom Anpfiff werden geprüft; bereits bestätigte Aufstellungen werden aus dem Cache übersprungen. Schreibt <code>lineup_cache.json</code> mit Formation + 11 Startern + Auswechslungen. <code>prematch-server.js</code> injiziert bestätigte Lineups beim nächsten Prematch-Update direkt in die Fixture-Objekte. In <code>pick-engine.js</code>: Anzahl Stürmer (Pos='F') in der Startelf adjustiert <code>homeAttStr/awayAttStr</code> (±5% pro Stürmer vs. Erwartung 2.5; gecappt bei −15%). Lineup-Note erscheint in Over/Under-Begründungen: "🟢 Lineup bestätigt: Bayern 4-3-3 · Dortmund 4-2-3-1". <em>(fetch_lineups.py + .github/workflows/fetch-lineups.yml + prematch-server.js + pick-engine.js — Mai 2026)</em></li>
+          <li><strong>API-Football Predictions Fix — goalsHome/Away sind AH-Spreads, nicht xG</strong> — Die <code>/predictions</code>-API liefert in <code>predictions.goals.home/away</code> nicht erwartete Tore sondern Asian Handicap Spread-Werte (z.B. −1.5 für Favoriten, +0.5 für Außenseiter). Der alte Code parsete diese als xG und brach am <code>_apiPredValid</code>-Check (<code>goalsHome ≥ 0</code>) — negativer AH-Spread = Rejection → 0 valide Predictions von 135. Fix: <code>goalsHome/Away</code>-Parsing aus prematch-server.js entfernt. <code>_apiPredValid</code> prüft jetzt ob <code>pctHome/pctDraw</code> vorhanden sind (zuverlässige Felder). <code>_apiExpG = null</code> (kein xG-Blend mehr aus Predictions). Prediction-API liefert jetzt zuverlässig <code>pctHome/Draw/Away</code>, Poisson-Verteilung, Under/Over-Signal und Comparison-Felder für alle Spiele. <em>(prematch-server.js + pick-engine.js — Mai 2026)</em></li>
+          <li><strong>H2H-Tiefe erhöht: last=10 → last=20</strong> — <code>prematch-server.js</code> holt via <code>/fixtures/headtohead?h2h=ID-ID&last=20</code> jetzt doppelt so viele historische Duelle (20 statt 10). Führt zu stabileren Over-2.5-Rate, BTTS-Rate und Ø-Tore-Berechnungen, besonders bei Duellen mit historisch wenig Spielen. <em>(prematch-server.js — Mai 2026)</em></li>
+          <li><strong>Negative Edge Warning in renderer.js</strong> — Picks die durch den pick-engine.js GATE-Filter rutschen aber noch einen messbaren negativen Edge haben (−8pp Safety Net) erhalten eine visuelle Warnung: roten linken Rand + reduzierte Opacity (0.72). Der Renderer unterscheidet jetzt sauber zwischen positiven Picks (normal) und grenzwertigen Picks (visuell gedämpft). <em>(renderer.js — Mai 2026)</em></li>
+          <li><strong>Bug Fix: _apiGoalsH ReferenceError → Dashboard komplett leer</strong> — In der Predictions-Fix wurden <code>_apiGoalsH</code> und <code>_apiGoalsA</code> aus dem Parsing entfernt, aber ihre Verwendung in <code>_o25ApiTotal</code> (Zeile ~1766 pick-engine.js) wurde vergessen. Jede <code>getBettingPicks()</code>-Berechnung warf einen <code>ReferenceError</code> → Dashboard zeigte nichts. Fix: <code>const _o25ApiTotal = null</code> (kein xG-Blend aus Predictions mehr, war ohnehin falsch da AH-Spreads keine xG-Werte sind). <em>(pick-engine.js — Mai 2026)</em></li>
         </ul>
       </div>
     </div>
@@ -1674,23 +1851,25 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
       <p style="margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text);">Dateistruktur:</p>
       <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px;font-size:11px;font-family:monospace;color:var(--muted);line-height:2;">
-        <span style="color:var(--accent)">pick-engine.js</span> &nbsp;→ GATE, PICK_CONFIG, _poissonOver, _hasNegEdge, getBettingPicks()<br>
-        <span style="color:#58a6ff">renderer.js</span> &nbsp;&nbsp;&nbsp;&nbsp;→ renderFixtureCard(), renderLeague(), renderOverview(), renderLineMovement()<br>
-        <span style="color:#e3b341">validator.js</span> &nbsp;&nbsp;&nbsp;→ runPicksValidator(), renderValidatorOutput(), buildValidatorDates()<br>
-        <span style="color:#f47067">share.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ shareTelegram(), copyCard(), generateInfographic(), generateScript()<br>
-        <span style="color:#8b949e">ui.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Navigation, Tabs, initStatus(), showView()<br>
-        <span style="color:#8b949e">season-finish-v2.html</span> → HTML-Gerüst + CSS + LEAGUES-Daten + 5× &lt;script src&gt; (~6 700 Zeilen)
+        <span style="color:var(--accent)">pick-engine.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ GATE, PICK_CONFIG, _poissonOver, _hasNegEdge, getBettingPicks()<br>
+        <span style="color:#58a6ff">renderer.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ renderFixtureCard(), renderLeague(), renderOverview(), renderLineMovement()<br>
+        <span style="color:#e3b341">validator.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ runPicksValidator(), renderValidatorOutput(), buildValidatorDates()<br>
+        <span style="color:#f47067">share.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ shareTelegram(), copyCard(), generateInfographic(), generateScript()<br>
+        <span style="color:#8b949e">ui.js</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Navigation, Tabs, initStatus(), showView()<br>
+        <span style="color:#8b6ff0">polymarket-tab.js</span> &nbsp;→ Polymarket Auto-Betting, py-clob-client, €5/Pick, Polygon Wallet <span style="background:#1a1040;border:1px solid #8b6ff0;border-radius:3px;padding:0 4px;font-size:10px;color:#a78bfa;">NEU Mai 2026</span><br>
+        <span style="color:#8b949e">season-finish-v2.html</span> → HTML-Gerüst + CSS + LEAGUES-Daten + 6× &lt;script src&gt; (~6 700 Zeilen)
       </div>
 
       <p style="margin-top:10px;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text);">Refactoring-Steps (alle abgeschlossen):</p>
       <table class="heart-table" style="font-size:11px;">
         <tr><th>Step</th><th>Was</th><th>Status</th></tr>
-        <tr><td><strong>1</strong></td><td><code>pick-engine.js</code> extrahieren</td><td>✅ 2 639 Zeilen, Node.js-testbar</td></tr>
+        <tr><td><strong>1</strong></td><td><code>pick-engine.js</code> extrahieren</td><td>✅ 3 021 Zeilen, Node.js-testbar</td></tr>
         <tr><td><strong>2</strong></td><td>Unit Tests (<code>test-pick-engine.js</code>)</td><td>✅ 39/39 grün — <code>node test-pick-engine.js</code></td></tr>
         <tr><td><strong>3</strong></td><td><code>validator.js</code> extrahieren</td><td>✅ 466 Zeilen</td></tr>
-        <tr><td><strong>4</strong></td><td><code>renderer.js</code> extrahieren</td><td>✅ 1 591 Zeilen</td></tr>
+        <tr><td><strong>4</strong></td><td><code>renderer.js</code> extrahieren</td><td>✅ 1 706 Zeilen</td></tr>
         <tr><td><strong>5</strong></td><td><code>share.js</code> + <code>ui.js</code> extrahieren</td><td>✅ 1 362 + 278 Zeilen</td></tr>
         <tr><td><strong>6</strong></td><td>Live-Test + v2-Audit</td><td>✅ Browser-Test OK, 0 Duplikate, 0 Syntax-Fehler</td></tr>
+        <tr><td><strong>7</strong></td><td><code>polymarket-tab.js</code> hinzugefügt <span style="color:#a78bfa">(Mai 2026)</span></td><td>✅ 1 616 Zeilen — Poly Auto-Betting Tab</td></tr>
       </table>
 
       <p style="margin-top:10px;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text);">GitHub Actions — automatisch mitgepflegt:</p>
