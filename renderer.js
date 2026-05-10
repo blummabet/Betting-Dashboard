@@ -819,8 +819,20 @@ function renderSquadBlock(match) {
   const aSq   = match.awaySquad?.squadStrength ?? aSt?.squadStrength ?? null;
   const hMiss = match.homeSquad?.missingStarters ?? hSt?.missingStarters;
   const aMiss = match.awaySquad?.missingStarters ?? aSt?.missingStarters;
-  const hHasMiss = (hMiss || []).some(p => p && p.name);
-  const aHasMiss = (aMiss || []).some(p => p && p.name);
+
+  // Fallback: if squad cache has no missingStarters, use confirmed missing from form injury data.
+  // This prevents "Vollbesetzt" when the cache is stale but injury API has current data.
+  const _hFormInj = (match.homeForm?.injuries?._raw || [])
+    .filter(p => p.type === 'Missing Fixture')
+    .map(p => ({ name: p.player, pos: (p.position || [''])[0] }));
+  const _aFormInj = (match.awayForm?.injuries?._raw || [])
+    .filter(p => p.type === 'Missing Fixture')
+    .map(p => ({ name: p.player, pos: (p.position || [''])[0] }));
+  const hMissEff = (hMiss?.length) ? hMiss : _hFormInj;
+  const aMissEff = (aMiss?.length) ? aMiss : _aFormInj;
+
+  const hHasMiss = (hMissEff || []).some(p => p && p.name);
+  const aHasMiss = (aMissEff || []).some(p => p && p.name);
   // Skip block only when there is literally nothing to show for either team
   if (hSq == null && aSq == null && !hHasMiss && !aHasMiss) return '';
 
@@ -870,8 +882,8 @@ function renderSquadBlock(match) {
     </div>`;
   };
 
-  const hHtml = renderTeam(match.home, hSq, hMiss, hInjFetched);
-  const aHtml = renderTeam(match.away, aSq, aMiss, aInjFetched);
+  const hHtml = renderTeam(match.home, hSq, hMissEff, hInjFetched);
+  const aHtml = renderTeam(match.away, aSq, aMissEff, aInjFetched);
   if (!hHtml && !aHtml) return '';
 
   // Divider between teams only when both shown
@@ -1074,7 +1086,9 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       const srcLabel = isScBased
         ? '<span style="font-size:9px;color:#444d56;font-style:italic"> (Modell-Näherung)</span>'
         : '';
-      if (oddsNum != null) {
+      // When the fixture has no real market feed AND pick odds are estimated,
+      // skip the "Bookie: X.XX" comparison — it would compare model to itself (meaningless edge).
+      if (oddsNum != null && !(_noRealOdds && p.oddsIsEst)) {
         // Edge = model probability minus implied (bookie) probability — consistent with p.value thresholds
         // edgePp: positive = we have edge (bookie odds too high), negative = no edge
         const _modelProb = p.modelOdds ? 1 / p.modelOdds : null;
@@ -1140,7 +1154,11 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       const mktL = (p.market || '').toLowerCase();
       // DC picks use dc1X_bkr / dcX2_bkr — NOT the raw Away/Home Win odds.
       // Using 'aw' for X2 or 'hw' for 1X caused apples-to-oranges drift comparisons.
-      const _oddsKey = mktL.includes('doppelte chance') && mktL.includes('x2')                          ? 'dcX2_bkr'
+      // Guard: 1HZ / 2HZ picks must NOT use FT opening odds (different markets).
+      // If market contains 'hz:' or 'halbzeit', there's no half-specific opening to compare.
+      const _isHzPick = mktL.includes('hz:') || mktL.includes('halbzeit');
+      const _oddsKey = _isHzPick                                                                          ? null
+        : mktL.includes('doppelte chance') && mktL.includes('x2')                                        ? 'dcX2_bkr'
         : mktL.includes('doppelte chance') && mktL.includes('1x')                                        ? 'dc1X_bkr'
         : mktL.includes('heimsieg') || mktL.includes('dnb: heim')                                        ? 'hw'
         : mktL.includes('auswärtssieg') || mktL.includes('dnb: ausw')                                    ? 'aw'
