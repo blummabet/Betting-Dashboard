@@ -39,11 +39,15 @@ HISTORY_FILE = os.path.join(os.path.dirname(__file__), "picks_history.json")
 
 # Market labels → outcome keyword matching
 OUTCOME_MAP = {
-    "Heimsieg":       {"type": "home_win"},
-    "Auswärtssieg":   {"type": "away_win"},
-    "Unentschieden":  {"type": "draw"},
-    "Over 2.5 Tore":  {"type": "over25"},
-    "Under 2.5 Tore": {"type": "under25"},
+    "Heimsieg":               {"type": "home_win"},
+    "Auswärtssieg":           {"type": "away_win"},
+    "Unentschieden":          {"type": "draw"},
+    "Over 2.5 Tore":          {"type": "over25"},
+    "Under 2.5 Tore":         {"type": "under25"},
+    "Beide Teams treffen":    {"type": "btts_yes"},
+    "BTTS: Ja":               {"type": "btts_yes"},
+    "Beide Teams treffen: Nein": {"type": "btts_no"},
+    "BTTS: Nein":             {"type": "btts_no"},
 }
 
 # ── Gamma API helpers ───────────────────────────────────────
@@ -130,6 +134,7 @@ def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> 
 
     mkt_type  = mkt_info["type"]
     is_goals  = mkt_type in ("over25", "under25")
+    is_btts   = mkt_type in ("btts_yes", "btts_no")
     # Use first meaningful token of each team name for fuzzy matching
     home_tokens = [t for t in home.lower().split() if len(t) >= 3]
     away_tokens = [t for t in away.lower().split() if len(t) >= 3]
@@ -152,6 +157,7 @@ def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> 
         # Team names appear in the question, not in outcome labels ("Yes"/"No").
         if _is_binary_yes_no(outcomes):
             yes_idx = next((i for i, o in enumerate(outcomes) if o.lower() == "yes"), None)
+            no_idx  = next((i for i, o in enumerate(outcomes) if o.lower() == "no"),  None)
             if yes_idx is None:
                 return None
             if mkt_type_ == "home_win" and any(t in q_lower for t in home_tokens) and any(w in q_lower for w in ("win", "beat", "defeat")):
@@ -165,6 +171,12 @@ def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> 
                 return clob_ids[yes_idx]
             if mkt_type_ == "under25" and ("under" in q_lower or "fewer" in q_lower) and "2.5" in q_lower:
                 return clob_ids[yes_idx]
+            # BTTS binary: "Will both teams score?" / "Both Teams to Score?"
+            is_btts_q = any(kw in q_lower for kw in ("both teams", "both team", "btts", "both score"))
+            if mkt_type_ == "btts_yes" and is_btts_q:
+                return clob_ids[yes_idx]
+            if mkt_type_ == "btts_no" and is_btts_q and no_idx is not None:
+                return clob_ids[no_idx]
             return None
 
         # ── Multi-outcome markets (e.g. ["Real Betis", "Draw", "Real Oviedo"]) ──
@@ -207,6 +219,9 @@ def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> 
         q_lower = q.lower()
         if is_goals:
             if "2.5" not in q_lower and "goal" not in q_lower:
+                continue
+        elif is_btts:
+            if not any(kw in q_lower for kw in ("both teams", "both team", "btts", "both score")):
                 continue
         else:
             # Binary Yes/No markets: accept if question references a team or winner/draw context
