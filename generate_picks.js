@@ -326,14 +326,18 @@ const processed = new Set(output.map(e => `${normTeam(e.home)}|${normTeam(e.away
 // League metadata from prematch-data.json fixtures
 const PM_LEAGUE_META = {
   // leagueId → { key, name, flag }
+  // NOTE: leagueId 88 = Eredivisie (NED top flight) — already processed via LEAGUES pass 1. DO NOT add here.
+  // NOTE: leagueId 218 = Österreichische BL (AUT top flight) — already processed via LEAGUES pass 1. DO NOT add here.
+  // Adding these caused duplicate results entries (score 1.0/12) because team names in prematch-data.json
+  // differ slightly from LEAGUES names (e.g. "Feyenoord Rotterdam" vs "Feyenoord") → dedup check fails.
   203: { key:'TUR', name:'Süper Lig',        flag:'🇹🇷' },
   106: { key:'POL', name:'Ekstraklasa',      flag:'🇵🇱' },
   207: { key:'SUI', name:'Super League',     flag:'🇨🇭' },
   144: { key:'BEL', name:'First Division A', flag:'🇧🇪' },
   210: { key:'CRO', name:'HNL',              flag:'🇭🇷' },
   104: { key:'RUS', name:'Premier Liga',     flag:'🇷🇺' },
-   88: { key:'NED2',name:'Eerste Divisie',   flag:'🇳🇱' },
-  218: { key:'AUT2',name:'2. Liga',          flag:'🇦🇹' },
+  // NED2 (Eerste Divisie, leagueId 89) and AUT2 (2.Liga) intentionally omitted —
+  // no stake/standings data available → would generate 1.0/12 noise entries.
 };
 
 // Pick the best LEAGUES key to borrow context from (for getBettingPicks league config)

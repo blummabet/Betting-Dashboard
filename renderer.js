@@ -1035,11 +1035,14 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
     // ── Negative-edge hard suppression (belt-and-suspenders) ──────────────────
     // Primary gate is in pick-engine.js (GATE thresholds). This is a secondary
-    // safety net: if a pick slips through with deeply negative edge, kill it here.
-    // Threshold: -8pp. Formula mirrors the edgePp calc below (×1.03 margin strip).
+    // safety net: suppress picks where the vig-adjusted edge is clearly negative.
+    // Threshold: -3pp for real odds (no ⚠/❌ noise in cards).
+    //            -5pp for estimated odds (model vs model estimate, wider tolerance).
+    // Formula mirrors the edgePp calc below (×1.03 margin strip).
     if (p.modelOdds != null && oddsNum != null) {
       const _safetyEdgePp = Math.round(((1 / p.modelOdds) - (1 / oddsNum) * 1.03) * 100);
-      if (_safetyEdgePp < -8) return '';
+      const _safetyThresh = p.oddsIsEst ? -5 : -3;
+      if (_safetyEdgePp < _safetyThresh) return '';
     }
 
     // When the whole fixture has no real market odds (_isEstimated), suppress
