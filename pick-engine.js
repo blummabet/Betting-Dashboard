@@ -359,12 +359,17 @@ function renderLineMovement(rows, picks, oddsD, isEstimated) {
 const GATE = {
   GOALS_REAL:  0.05,   // Over 2.5 / Over 3.5           (real bookie odds) — kalibriertes Poisson-Modell
   BTTS_REAL:   0.04,   // BTTS Ja — tighter gate: BTTS model less precise than O/U goals
-  RESULT_REAL: 0.15,   // 1X2 result markets (wider — 3-way, more variance than 2-way goals)
+  RESULT_REAL: 0.05,   // 1X2 result markets — same as GOALS_REAL. Previously 0.15 (too wide: -8pp picks slipped
+                       // through). Renderer applies 3% vig → displayed edge ≈ gate_edge + 3pp. At 0.05,
+                       // picks with ≥5pp gate neg-edge (≈ -8pp displayed) are correctly suppressed.
   TEAM_REAL:   0.07,   // Heim/Ausw über 1.5  (real bookie odds) — Poisson verlässlich mit echten Quoten
   TEAM_EST:    0.12,   // Heim/Ausw über 1.5  (estimated) — Doppelt-Unsicherheit: Modell + geschätzte Quote
   AH_REAL:     0.14,   // Asian Handicap  (real only; AH model less precise than goals)
   CORN_REAL:   0.06,   // Ecken Over  (real bookie odds) — Bookie anchort, enger Gate ok
   CORN_EST:    0.10,   // Ecken Over  (estimated) — Ecken-Modell + Schätzquote = doppelte Unsicherheit → weiter
+  CARD_EST:    0.02,   // Karten Over (estimated odds) — Renderer zeigt vig-adjustierten Edge (3pp extra Malus).
+                       // Bei 0.02: estimated Karten-Picks werden suppresst wenn gate_neg_edge >2pp
+                       // (≈ -5pp+ auf Display). Verhindert model-vs-itself Scheinwerte.
 };
 
 // ─────────────────────────────────────────────────────
@@ -2220,7 +2225,13 @@ function getBettingPicks(match, odds, leagueKey) {
               : _lcbG + (bothRed?0.8:anyRed?0.4:0) + (bothNeedWin?0.5:_anyNeedsWin?0.25:0);
         const _cardThresh = cardMkt.includes('4.5') ? 4.5 : 3.5;
         const _fairCardP  = _poissonOver(_expCardsG, _cardThresh);
-        if (_hasNegEdge(_fairCardP, _cardOdds, o._cardsOddsEst||false, GATE.GOALS_REAL, GATE.GOALS_REAL))
+        // CARD_EST (0.02) is much tighter than GOALS_REAL (0.05) because:
+        // 1. Estimated card odds = Poisson model output → model compares against itself (same inputs).
+        //    Any "edge" vs estimated odds is circular, not real.
+        // 2. The renderer applies 1.03 vig when displaying edge, so a 4.6pp gate neg-edge appears
+        //    as -7pp on screen. Using CARD_EST=0.02 ensures picks suppressd at ≥2pp gate neg-edge
+        //    (≈ -5pp+ displayed), eliminating the misleading estimated-odds card picks.
+        if (_hasNegEdge(_fairCardP, _cardOdds, o._cardsOddsEst||false, GATE.GOALS_REAL, GATE.CARD_EST))
           cardSc = 0;
       }
       if (cardSc > 0) sC.push({sc: cardSc, p:{icon: cardMkt.includes('4.5') ? '🟥' : '🟨',
