@@ -1074,7 +1074,9 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       const srcLabel = isScBased
         ? '<span style="font-size:9px;color:#444d56;font-style:italic"> (Modell-Näherung)</span>'
         : '';
-      if (oddsNum != null) {
+      // When the fixture has no real market feed AND pick odds are estimated,
+      // skip the "Bookie: X.XX" comparison — it would compare model to itself (meaningless edge).
+      if (oddsNum != null && !(_noRealOdds && p.oddsIsEst)) {
         // Edge = model probability minus implied (bookie) probability — consistent with p.value thresholds
         // edgePp: positive = we have edge (bookie odds too high), negative = no edge
         const _modelProb = p.modelOdds ? 1 / p.modelOdds : null;
