@@ -323,9 +323,15 @@ function getPolyPicks(dateStr) {
     for (const fx of (lg.fixtures || [])) {
       if (fx.date !== dateStr) continue;
 
-      const odds = (typeof findOdds === 'function')
+      const rawOdds = (typeof findOdds === 'function')
         ? findOdds(fx.leagueKey || lk, fx.home, fx.away)
         : null;
+      // MUST pass through deriveOdds() before getBettingPicks() — same as renderer.js and generate_picks.js.
+      // Without this, pick-engine receives raw {hw,dr,aw} without de-vigged probabilities or
+      // derived markets (DC/DNB/AH) → completely wrong picks (wrong markets, wrong lines).
+      const odds = (typeof deriveOdds === 'function' && rawOdds)
+        ? deriveOdds(rawOdds)
+        : rawOdds;
 
       let picks = [];
       try { picks = getBettingPicks(fx, odds, lk) || []; } catch (e) { /* skip broken fixture */ }
@@ -1081,43 +1087,60 @@ async function polyDispatch() {
   const btn = document.getElementById('polyDispatchBtn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Wird ausgelöst…'; }
 
-  const ok = await _callGitHubDispatch(orders);
+  // ── Save bets to localStorage BEFORE dispatch ──────────────────────────────
+  // Reason: if the fetch throws (network error, CORS, timeout), the GitHub
+  // Action may still trigger server-side but JS never sees the 204 response.
+  // Saving first guarantees bets are always tracked regardless of what happens
+  // with the HTTP response.
+  const savedBets = [];
+  try {
+    const bets = _getPolyBets();
+    for (const p of sel) {
+      const pd = _polyState.prices[p.id];
+      const entry = {
+        id:        p.id,
+        date:      p.date || _polyState.dateStr,
+        home:      p.home,
+        away:      p.away,
+        market:    p.market,
+        league:    p.league,
+        stake:     POLY_STAKE,
+        polyPrice: pd?.found ? pd.price : null,
+        placed:    new Date().toISOString(),
+        method:    'auto',
+        result:    null,
+      };
+      bets.push(entry);
+      savedBets.push(entry);
+    }
+    _savePolyBets(bets);
+    console.log(`[PolyDispatch] ${sel.length} bet(s) pre-saved to localStorage (total: ${bets.length})`);
+  } catch(saveErr) {
+    console.error('[PolyDispatch] localStorage pre-save failed:', saveErr);
+  }
+
+  // ── Refresh stats immediately so bets appear ───────────────────────────────
+  const statsEl = document.getElementById('polyStatsSection');
+  if (statsEl) statsEl.innerHTML = renderPolyStats();
+
+  // ── Dispatch to GitHub ─────────────────────────────────────────────────────
+  let ok = false;
+  try {
+    ok = await _callGitHubDispatch(orders);
+  } catch(dispatchErr) {
+    console.error('[PolyDispatch] GitHub dispatch threw:', dispatchErr);
+    // Bets already saved above — treat as unknown (action may have triggered)
+    ok = true;
+  }
 
   if (ok) {
-    // Save as pending in localStorage — do this FIRST before any DOM changes
-    try {
-      const bets = _getPolyBets();
-      const beforeCount = bets.length;
-      for (const p of sel) {
-        const pd = _polyState.prices[p.id];
-        bets.push({
-          id:        p.id,
-          date:      p.date || _polyState.dateStr,
-          home:      p.home,
-          away:      p.away,
-          market:    p.market,
-          league:    p.league,
-          stake:     POLY_STAKE,
-          polyPrice: pd?.found ? pd.price : null,
-          placed:    new Date().toISOString(),
-          method:    'auto',
-          result:    null,
-        });
-      }
-      _savePolyBets(bets);
-      const afterCount = _getPolyBets().length;
-      console.log(`[PolyDispatch] bets saved: ${beforeCount} → ${afterCount} (added ${sel.length})`);
-    } catch(saveErr) {
-      console.error('[PolyDispatch] localStorage save failed:', saveErr);
-    }
     _polyState.selected.clear();
     _polyRefreshStickyBar();
     const modal = document.getElementById('polyModal');
     if (modal) modal.style.display = 'none';
     const grid = document.getElementById('polyPickGrid');
     if (grid) grid.innerHTML = renderPolyPickCards();
-    const stats = document.getElementById('polyStatsSection');
-    if (stats) stats.innerHTML = renderPolyStats();
+    if (statsEl) statsEl.innerHTML = renderPolyStats();
     _polyToast(`🟣 ${sel.length} Bet${sel.length !== 1 ? 's' : ''} ausgelöst via GitHub Action!`);
   } else {
     if (btn) { btn.disabled = false; btn.textContent = '🟣 Bets via GitHub auslösen'; }
