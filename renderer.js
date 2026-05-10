@@ -1041,7 +1041,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     // Formula mirrors the edgePp calc below (×1.03 margin strip).
     if (p.modelOdds != null && oddsNum != null) {
       const _safetyEdgePp = Math.round(((1 / p.modelOdds) - (1 / oddsNum) * 1.03) * 100);
-      const _safetyThresh = p.oddsIsEst ? -5 : -3;
+      const _safetyThresh = p.oddsIsEst ? -5 : -5;
       if (_safetyEdgePp < _safetyThresh) return '';
     }
 
