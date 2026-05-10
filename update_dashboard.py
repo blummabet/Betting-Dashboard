@@ -352,12 +352,27 @@ def get_team_gd(standings, pos):
             return t.get("gd", 0)
     return 0
 
+def rl_at_pos(standings, pos, cfg):
+    """
+    Rounds left for the team at `pos`, derived from their own played count.
+    Use this instead of the global rounds_left when computing competitor gain,
+    so that game-in-hand differences are correctly reflected.
+    """
+    for t in standings:
+        if t["pos"] == pos:
+            return max(0, cfg["rounds"] - t.get("played", 0))
+    return 0
+
 def comp_gain_est(standings, pos, rounds_left):
     """
     Estimate how many more points the team at `pos` will earn in the
     remaining rounds, based on their current PPG (clamped 0.8–2.4).
     This is used to project where a competitor will likely end up,
     rather than treating their current points as a frozen target.
+
+    IMPORTANT: always pass rl_at_pos(standings, pos, cfg) as rounds_left
+    rather than the global rounds_left, so game-in-hand differences are
+    correctly accounted for.
     """
     ppg = max(0.8, min(2.4, get_team_ppg(standings, pos)))
     return round(rounds_left * ppg)
@@ -669,12 +684,18 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
     if is_gold and pos == 1:
         pts_2nd = pts_at_pos(standings, 2)
         gap     = pts - pts_2nd
+        rl_2nd  = rl_at_pos(standings, 2, cfg)  # competitor's actual rounds remaining
         # 'none': even if 2nd wins ALL remaining games and we win 0, they can't catch us
         if gap > max_gain:  return 'none'
-        # 'low': accounting for 2nd's realistic gain, our adjusted lead is > 15% of max_gain
-        # i.e., even if they run at their average PPG, we'd still be comfortably ahead
-        cg = comp_gain_est(standings, 2, rounds_left)
-        if (gap - cg) > max_gain * 0.15:  return 'low'
+        # 'low': 2nd place CANNOT mathematically overtake even if they win ALL remaining.
+        # Uses rl_2nd * 3 (absolute max, not PPG average) — the title is decided when
+        # no combination of results can change the outcome, not just statistically unlikely.
+        # This correctly handles game-in-hand: if 2nd has played 1 more game than us,
+        # they have fewer remaining → their max gain is lower → title secured sooner.
+        # Example fix: Barcelona 88pts (34 played, rl=4) vs Madrid 77pts (34 played, rl=4):
+        #   old (global rl=3 for comp, PPG-based): cg=7 → gap-cg=4 > 1.8 → 'low' (WRONG)
+        #   new (rl_2nd=4, math max): 11 > 4*3=12? NO → 'full' (correct — Madrid can win all 4!)
+        if gap > rl_2nd * 3:  return 'low'
         # Still defending title — stop here, don't let UCL/EL checks override
         return 'full'
 
@@ -687,7 +708,8 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
         gap        = pts_leader - pts
         if gap <= max_gain:
             # Still mathematically in title contention
-            cg = comp_gain_est(standings, 1, rounds_left)
+            # FIX: use rl_at_pos() for leader to correctly reflect their games remaining
+            cg = comp_gain_est(standings, 1, rl_at_pos(standings, 1, cfg))
             # 'none': competitor-adjusted — even winning everything can't catch leader's
             # projected total. Title is over, treat like secured/confirmed.
             if (gap + cg) >= max_gain:  return 'none'
@@ -707,7 +729,8 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
         gap = pts_ucl_pos - pts
         if gap > max_gain:
             return 'none'   # can't reach UCL even if we win everything
-        cg = comp_gain_est(standings, cfg["ucl"], rounds_left)
+        # FIX: use rl_at_pos() for UCL boundary team
+        cg = comp_gain_est(standings, cfg["ucl"], rl_at_pos(standings, cfg["ucl"], cfg))
         if (gap + cg) >= max_gain:
             return 'none'   # competitor-adjusted: UCL team's projected pts exceed our ceiling
 
@@ -719,7 +742,8 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
             gap = pts_el_pos - pts
             if gap > max_gain:
                 return 'none'
-            cg = comp_gain_est(standings, el_cutoff, rounds_left)
+            # FIX: use rl_at_pos() for EL boundary team
+            cg = comp_gain_est(standings, el_cutoff, rl_at_pos(standings, el_cutoff, cfg))
             if (gap + cg) >= max_gain:
                 return 'none'
 
@@ -732,7 +756,8 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
             gap = pts_uecl_pos - pts
             if gap > max_gain:
                 return 'none'
-            cg = comp_gain_est(standings, uecl_cutoff, rounds_left)
+            # FIX: use rl_at_pos() for UECL boundary team
+            cg = comp_gain_est(standings, uecl_cutoff, rl_at_pos(standings, uecl_cutoff, cfg))
             if (gap + cg) >= max_gain:
                 return 'none'
 
@@ -741,7 +766,8 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
         pts_below = pts_at_pos(standings, cfg["ucl"] + 1)
         gap       = pts - pts_below
         if gap > max_gain:  return 'none'
-        cg = comp_gain_est(standings, cfg["ucl"] + 1, rounds_left)
+        # FIX: use rl_at_pos() for first-out-of-UCL team
+        cg = comp_gain_est(standings, cfg["ucl"] + 1, rl_at_pos(standings, cfg["ucl"] + 1, cfg))
         if (gap - cg) > max_gain * 0.15:  return 'low'
 
     # ── Europa League secured ──────────────────────────────────────────────────
@@ -754,7 +780,8 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
             pts_below = pts_at_pos(standings, el_cutoff + 1)
             gap       = pts - pts_below
             if gap > max_gain:  return 'none'
-            cg = comp_gain_est(standings, el_cutoff + 1, rounds_left)
+            # FIX: use rl_at_pos() for first-out-of-EL team
+            cg = comp_gain_est(standings, el_cutoff + 1, rl_at_pos(standings, el_cutoff + 1, cfg))
             if (gap - cg) > max_gain * 0.15:  return 'low'
 
     # ── UECL secured ──────────────────────────────────────────────────────────
@@ -765,7 +792,8 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
             pts_below = pts_at_pos(standings, uecl_cutoff + 1)
             gap       = pts - pts_below
             if gap > max_gain:  return 'none'
-            cg = comp_gain_est(standings, uecl_cutoff + 1, rounds_left)
+            # FIX: use rl_at_pos() for first-out-of-UECL team
+            cg = comp_gain_est(standings, uecl_cutoff + 1, rl_at_pos(standings, uecl_cutoff + 1, cfg))
             if (gap - cg) > max_gain * 0.15:  return 'low'
 
     # ── Mathematically relegated / practically doomed ─────────────────────────
@@ -793,7 +821,8 @@ def calc_motivation(team, labels, standings, cfg, rounds_left):
                 return 'none'
             # 'low': already above the safety line — label is residual, no real fear
             if gap_to_safety <= 0:  return 'low'
-            cg = comp_gain_est(standings, safe_pos, rounds_left)
+            # FIX: use rl_at_pos() for safety-line team
+            cg = comp_gain_est(standings, safe_pos, rl_at_pos(standings, safe_pos, cfg))
             # 'none': competitor-adjusted — even winning everything can't close the gap
             # once the safe team's projected gains are included. Confirmed doomed.
             if (gap_to_safety + cg) >= max_gain:
