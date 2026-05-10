@@ -170,7 +170,7 @@ try {
   process.exit(1);
 }
 
-const { getBettingPicks, computeMatchScore, LEAGUES } = sandbox.exports;
+const { getBettingPicks, computeMatchScore, LEAGUES, deriveOdds } = sandbox.exports;
 if (!getBettingPicks || !LEAGUES) {
   console.error('Failed to extract getBettingPicks / LEAGUES');
   process.exit(1);
@@ -252,8 +252,10 @@ for (const [leagueKey, league] of Object.entries(LEAGUES)) {
     if (!match.home || !match.away) continue;
     total++;
 
-    // Build odds object from prematch-data.json
-    const odds = findPrematchOdds(match.home, match.away);
+    // Build odds object from prematch-data.json — MUST pass through deriveOdds() first.
+    // The browser calls deriveOdds() before getBettingPicks(); skipping this step causes
+    // completely different picks (no de-vigged probabilities, no DC/DNB/AH derived markets).
+    const odds = deriveOdds ? deriveOdds(findPrematchOdds(match.home, match.away)) : findPrematchOdds(match.home, match.away);
 
     // Inject league-level roundsLeft into match — getBettingPicks() reads match.roundsLeft
     // to compute urgencyMed, awayNeedsWin, homeNeedsWin, and all pressure boosts.
@@ -367,7 +369,7 @@ for (const fx of pmFixtures) {
   extraTotal++;
 
   const leagueKey = FALLBACK_LEAGUE_KEY[meta.key] || 'GER';
-  const odds  = findPrematchOdds(fx.homeTeamName, fx.awayTeamName);
+  const odds  = deriveOdds ? deriveOdds(findPrematchOdds(fx.homeTeamName, fx.awayTeamName)) : findPrematchOdds(fx.homeTeamName, fx.awayTeamName);
   const h2h   = findPrematchH2h(fx.homeTeamName, fx.awayTeamName);
 
   // Build a match object compatible with getBettingPicks
