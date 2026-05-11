@@ -117,15 +117,23 @@ function savePicksV2(matchList) {
   console.log(`[V2] savePicksV2: ${bufferEntries.length} buf entries, ${_skippedEmpty} ohne Picks, +${added} new, ${updated} updated`);
   if (added || updated) {
     try {
-      const serialized = JSON.stringify(store);
-      localStorage.setItem(V2_KEY, serialized);
+      // Cap store at 150 entries (newest first) to avoid QuotaExceededError
+      if (store.length > 150) {
+        store.sort((a, b) => (b.dateIso || '').localeCompare(a.dateIso || ''));
+        store.splice(150);
+        console.log('[V2] Trimmed store to 150 entries');
+      }
+      localStorage.setItem(V2_KEY, JSON.stringify(store));
       console.log(`[V2] ✅ localStorage gespeichert: ${store.length} Einträge`);
     } catch(e) {
-      console.error('[V2] ❌ localStorage.setItem fehlgeschlagen:', e.message);
-      // Try to identify which entry causes serialization error
-      for (let i = 0; i < store.length; i++) {
-        try { JSON.stringify(store[i]); }
-        catch(e2) { console.error('[V2] Serialisierungsfehler bei Entry', i, store[i].home, e2.message); }
+      console.error('[V2] ❌ localStorage error:', e.name, e.message);
+      if (e.name === 'QuotaExceededError') {
+        // Emergency trim: keep only last 60 entries
+        try {
+          store.sort((a, b) => (b.dateIso || '').localeCompare(a.dateIso || ''));
+          localStorage.setItem(V2_KEY, JSON.stringify(store.slice(0, 60)));
+          console.log('[V2] ✅ Emergency-Trim auf 60 Einträge');
+        } catch(_) {}
       }
     }
   }

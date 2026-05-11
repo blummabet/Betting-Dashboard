@@ -709,10 +709,48 @@ function _savePolyBets(bets) {
   try {
     localStorage.setItem('betedge_poly_bets', JSON.stringify(bets));
   } catch(e) {
+    if (e.name === 'QuotaExceededError') {
+      // Try to free space by trimming old V2 tracking entries, then retry
+      _trimLocalStorageQuota();
+      try {
+        localStorage.setItem('betedge_poly_bets', JSON.stringify(bets));
+        console.log('[PolyBets] ✅ Gespeichert nach Quota-Bereinigung');
+        return;
+      } catch(e2) { /* still full — fall through to error */ }
+    }
     console.error('[PolyBets] localStorage error:', e.name, e.message);
-    // Show persistent banner instead of fleeting toast
     _polyShowStorageError(e);
   }
+}
+
+// Free up localStorage space by trimming old/large entries
+function _trimLocalStorageQuota() {
+  // 1. Trim betedge_picks_v2 — keep only last 120 entries
+  try {
+    const v2Raw = localStorage.getItem('betedge_picks_v2');
+    if (v2Raw) {
+      const v2 = JSON.parse(v2Raw);
+      if (v2.length > 120) {
+        // Keep newest 120 (sorted by dateIso desc)
+        v2.sort((a, b) => (b.dateIso || '').localeCompare(a.dateIso || ''));
+        localStorage.setItem('betedge_picks_v2', JSON.stringify(v2.slice(0, 120)));
+        console.log(`[Storage] Trimmed betedge_picks_v2: ${v2.length} → 120 entries`);
+      }
+    }
+  } catch(_) {}
+
+  // 2. Remove any stale large keys we don't recognise
+  try {
+    const keysToCheck = Object.keys(localStorage)
+      .filter(k => !['betedge_picks_v2','betedge_poly_bets','betedge_github_pat'].includes(k));
+    for (const k of keysToCheck) {
+      const size = (localStorage.getItem(k) || '').length;
+      if (size > 50000) {
+        console.log(`[Storage] Removing large stale key: ${k} (${Math.round(size/1024)}KB)`);
+        localStorage.removeItem(k);
+      }
+    }
+  } catch(_) {}
 }
 
 function _polyShowStorageError(e) {
@@ -727,11 +765,23 @@ function _polyShowStorageError(e) {
     color: '#f85149', fontSize: '12px', fontWeight: '600',
     boxShadow: '0 4px 20px rgba(0,0,0,.6)', lineHeight: '1.5',
   });
+  // Compute what's using space
+  let storageInfo = '';
+  try {
+    const keys = Object.keys(localStorage);
+    const sizes = keys.map(k => ({ k, kb: Math.round((localStorage.getItem(k)||'').length / 1024) }));
+    sizes.sort((a,b) => b.kb - a.kb);
+    storageInfo = sizes.slice(0,5).map(x => `${x.k}: ${x.kb}KB`).join(' · ');
+  } catch(_) {}
+
   banner.innerHTML = `
-    <div style="font-size:13px;font-weight:800;margin-bottom:4px">⚠️ localStorage blockiert</div>
-    <div style="color:#e6edf3;font-weight:400">${e.name}: ${e.message}</div>
-    <div style="color:#8b949e;font-size:11px;margin-top:6px">Bets werden via picks_history.json (Repo) getrackt — kein Datenverlust.</div>
-    <button onclick="this.parentElement.remove()" style="margin-top:8px;background:none;border:1px solid #f8514955;border-radius:6px;color:#f85149;font-size:11px;padding:3px 10px;cursor:pointer;font-family:inherit">✕ Schließen</button>
+    <div style="font-size:13px;font-weight:800;margin-bottom:4px">⚠️ localStorage voll (QuotaExceededError)</div>
+    <div style="color:#8b949e;font-size:11px;margin-top:4px">${storageInfo}</div>
+    <div style="color:#8b949e;font-size:11px;margin-top:4px">Bets werden via picks_history.json (Repo) getrackt — kein Datenverlust.</div>
+    <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+      <button onclick="_trimLocalStorageQuota();_savePolyBets(_getPolyBets());this.textContent='✅ Bereinigt';this.disabled=true" style="background:#f8514922;border:1px solid #f8514955;border-radius:6px;color:#f85149;font-size:11px;padding:3px 10px;cursor:pointer;font-family:inherit">🧹 Bereinigen</button>
+      <button onclick="this.parentElement.parentElement.remove()" style="background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;padding:3px 10px;cursor:pointer;font-family:inherit">✕ Schließen</button>
+    </div>
   `;
   document.body.appendChild(banner);
   setTimeout(() => banner?.remove(), 12000);
