@@ -1517,6 +1517,9 @@ function initPolymarket() {
     return;
   }
 
+  // Proactively free localStorage quota before any saves
+  _trimLocalStorageQuota();
+
   const dateStr = _polyState.dateStr || _todayStr();
   _polyState.dateStr  = dateStr;
   _polyState.picks    = getPolyPicks(dateStr);

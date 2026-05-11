@@ -5056,6 +5056,8 @@ function _storedSave(arr) {
 
 // ── Save all current week picks ──────────────────────
 function savePicksToday(btn) {
+  // Free quota before saving
+  if (typeof _trimLocalStorageQuota === 'function') _trimLocalStorageQuota();
   const all = [];
   for (const [key, L] of Object.entries(LEAGUES)) {
     for (const f of L.fixtures) {

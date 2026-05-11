@@ -379,6 +379,9 @@ function initResultsV2() {
   const panel = document.getElementById('trackingV2Panel');
   if (!panel) return;
 
+  // Free up localStorage quota before saving (prevents QuotaExceededError)
+  if (typeof _trimLocalStorageQuota === 'function') _trimLocalStorageQuota();
+
   // If buffer has picks → always save (picks from rendered cards are source of truth)
   if (window._v2PickBuffer && Object.keys(window._v2PickBuffer).length) {
     try { savePicksV2(); } catch(e) { console.warn('[V2 init]', e); }
