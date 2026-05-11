@@ -374,10 +374,29 @@ function _renderV2Tab() {
   const filtered = _applyFilters(all);
   const allPicks = filtered.flatMap(e => e.picks.map(p => ({...p, _entry: e})));
 
+  // Debug info always visible at top
+  const _bufCount  = window._v2PickBuffer ? Object.keys(window._v2PickBuffer).length : 0;
+  const _lsRaw     = localStorage.getItem('betedge_picks_v2');
+  const _lsCount   = (() => { try { return JSON.parse(_lsRaw||'[]').length; } catch(e) { return 'ERR'; } })();
+  const _debugHtml = `
+    <div style="font-size:11px;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-family:monospace;color:#8b949e">
+      🔍 Debug: Buffer=${_bufCount} Cards · localStorage=${_lsCount} Einträge · lsKey=${_lsRaw?'✓':'leer'}
+      <button onclick="
+        const b=window._v2PickBuffer||{};
+        const k=Object.keys(b);
+        alert('Buffer ('+k.length+' cards):\n'+k.slice(0,5).join('\n')+(k.length>5?'\n...':''));
+      " style="margin-left:10px;background:none;border:1px solid #444;border-radius:4px;color:#8b949e;padding:1px 6px;font-size:10px;cursor:pointer">Buffer anzeigen</button>
+      <button onclick="
+        try{savePicksV2();alert('savePicksV2() OK — localStorage jetzt: '+JSON.parse(localStorage.getItem('betedge_picks_v2')||'[]').length+' Einträge');}
+        catch(e){alert('FEHLER: '+e.message);}
+        _renderV2Tab();
+      " style="margin-left:6px;background:none;border:1px solid #444;border-radius:4px;color:#8b949e;padding:1px 6px;font-size:10px;cursor:pointer">Save testen</button>
+    </div>`;
+
   // Empty state with action buttons
   if (!all.length) {
-    const hasLive = window._v2PickBuffer && Object.keys(window._v2PickBuffer).length > 0;
-    panel.innerHTML = `
+    const hasLive = _bufCount > 0;
+    panel.innerHTML = _debugHtml + `
       <div style="max-width:520px;margin:60px auto;text-align:center;padding:0 20px">
         <div style="font-size:48px;margin-bottom:16px">📈</div>
         <div style="font-size:18px;font-weight:700;margin-bottom:8px">Tracking V2 — noch keine Daten</div>
@@ -391,7 +410,7 @@ function _renderV2Tab() {
           ${hasLive ? `
           <button onclick="savePicksV2();_renderV2Tab()"
             style="background:var(--accent);color:#000;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer">
-            📡 Picks aus aktuellen Cards laden
+            📡 Picks aus aktuellen Cards laden (${_bufCount} Cards im Buffer)
           </button>` : ''}
           <button onclick="importLegacyPicks();_renderV2Tab()"
             style="background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer">
