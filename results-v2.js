@@ -357,6 +357,13 @@ let _v2Filters = { league: 'all', market: 'all', source: 'all', days: '90' };
 function initResultsV2() {
   const panel = document.getElementById('trackingV2Panel');
   if (!panel) return;
+
+  // If localStorage is empty AND we have live match data → auto-save now
+  const existing = _v2Load();
+  if (!existing.length && window._v2LastMatchList?.length) {
+    try { savePicksV2(window._v2LastMatchList); } catch(e) {}
+  }
+
   _renderV2Tab();
   // Auto-resolve silently on tab open
   autoResolveV2(true).then(n => { if (n > 0) _renderV2Tab(); });
@@ -369,6 +376,34 @@ function _renderV2Tab() {
   const all = _v2Load();
   const filtered = _applyFilters(all);
   const allPicks = filtered.flatMap(e => e.picks.map(p => ({...p, _entry: e})));
+
+  // Empty state with action buttons
+  if (!all.length) {
+    const hasLive = window._v2LastMatchList?.length > 0;
+    panel.innerHTML = `
+      <div style="max-width:520px;margin:60px auto;text-align:center;padding:0 20px">
+        <div style="font-size:48px;margin-bottom:16px">📈</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:8px">Tracking V2 — noch keine Daten</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:24px">
+          Picks werden automatisch gespeichert wenn die Cards geladen werden.<br>
+          ${hasLive
+            ? 'Live-Daten sind bereit — klick zum Laden:'
+            : 'Gehe zuerst auf <strong>⭐ Best of All</strong> damit die Cards rendern, dann komm hier zurück.'}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:center">
+          ${hasLive ? `
+          <button onclick="savePicksV2(window._v2LastMatchList);_renderV2Tab()"
+            style="background:var(--accent);color:#000;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer">
+            📡 Picks aus Live-Daten laden (${window._v2LastMatchList.length} Spiele)
+          </button>` : ''}
+          <button onclick="importLegacyPicks();_renderV2Tab()"
+            style="background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer">
+            📂 Historische Daten importieren (picks_history.json)
+          </button>
+        </div>
+      </div>`;
+    return;
+  }
 
   panel.innerHTML = `
     <div style="padding:16px 0">

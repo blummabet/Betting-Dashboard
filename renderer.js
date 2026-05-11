@@ -1766,6 +1766,7 @@ function renderOverview() {
   // ── Save browser-computed picks to localStorage (Results V2 tracking) ────────
   // Uses the SAME odds + deriveOdds + getBettingPicks chain as the cards above,
   // so tracked picks ALWAYS match what's shown on screen.
+  window._v2LastMatchList = filtered;  // expose globally so Tracking tab can trigger manually
   if (typeof savePicksV2 === 'function') {
     try { savePicksV2(filtered); } catch(e) { console.warn('[savePicksV2]', e); }
   }
