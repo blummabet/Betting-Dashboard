@@ -31,7 +31,11 @@ function _v2Load() {
 }
 function _v2Save(data) {
   try { localStorage.setItem(V2_KEY, JSON.stringify(data)); }
-  catch(e) { console.error('[V2] _v2Save error:', e.message); }
+  catch(e) {
+    console.error('[V2] localStorage error:', e.name, e.message);
+    // Show once — same banner as Poly tab uses
+    if (typeof _polyShowStorageError === 'function') _polyShowStorageError(e);
+  }
 }
 
 // ── Pick saving (called by renderer.js after renderOverview) ──────────────────

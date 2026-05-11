@@ -709,9 +709,32 @@ function _savePolyBets(bets) {
   try {
     localStorage.setItem('betedge_poly_bets', JSON.stringify(bets));
   } catch(e) {
-    console.error('[PolyBets] localStorage.setItem fehlgeschlagen:', e.message);
-    _polyToast('⚠️ Bets konnten nicht in localStorage gespeichert werden: ' + e.message);
+    console.error('[PolyBets] localStorage error:', e.name, e.message);
+    // Show persistent banner instead of fleeting toast
+    _polyShowStorageError(e);
   }
+}
+
+function _polyShowStorageError(e) {
+  const existing = document.getElementById('polyStorageErrBanner');
+  if (existing) return; // already showing
+  const banner = document.createElement('div');
+  banner.id = 'polyStorageErrBanner';
+  Object.assign(banner.style, {
+    position: 'fixed', top: '60px', right: '16px', zIndex: '9999',
+    background: '#2d1a1a', border: '1px solid #f85149',
+    borderRadius: '10px', padding: '12px 16px', maxWidth: '340px',
+    color: '#f85149', fontSize: '12px', fontWeight: '600',
+    boxShadow: '0 4px 20px rgba(0,0,0,.6)', lineHeight: '1.5',
+  });
+  banner.innerHTML = `
+    <div style="font-size:13px;font-weight:800;margin-bottom:4px">⚠️ localStorage blockiert</div>
+    <div style="color:#e6edf3;font-weight:400">${e.name}: ${e.message}</div>
+    <div style="color:#8b949e;font-size:11px;margin-top:6px">Bets werden via picks_history.json (Repo) getrackt — kein Datenverlust.</div>
+    <button onclick="this.parentElement.remove()" style="margin-top:8px;background:none;border:1px solid #f8514955;border-radius:6px;color:#f85149;font-size:11px;padding:3px 10px;cursor:pointer;font-family:inherit">✕ Schließen</button>
+  `;
+  document.body.appendChild(banner);
+  setTimeout(() => banner?.remove(), 12000);
 }
 
 // ── Import placed bets from picks_history.json ───────────────────────────────
