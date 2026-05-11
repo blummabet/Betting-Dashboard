@@ -29,12 +29,14 @@ function showView(view) {
   const isHeart       = view === 'heart';
   const isStatus      = view === 'status';
   const isPolymarket  = view === 'polymarket';
+  const isTracking    = view === 'tracking';
 
   document.getElementById('mainContent').style.display        = isSeason     ? '' : 'none';
   document.getElementById('resultsPanel').style.display       = isResults    ? '' : 'none';
   document.getElementById('heartPanel').style.display         = isHeart      ? '' : 'none';
   document.getElementById('statusPanel').style.display        = isStatus     ? '' : 'none';
   document.getElementById('polymarketPanel').style.display    = isPolymarket ? '' : 'none';
+  document.getElementById('trackingV2Panel').style.display    = isTracking   ? '' : 'none';
 
   document.querySelector('.league-nav').style.display         = isSeason     ? '' : 'none';
   const legend = document.querySelector('.legend-section');
@@ -45,10 +47,12 @@ function showView(view) {
   document.getElementById('navHeart').classList.toggle('active',      isHeart);
   document.getElementById('navStatus').classList.toggle('active',     isStatus);
   document.getElementById('navPolymarket').classList.toggle('active', isPolymarket);
+  document.getElementById('navTracking').classList.toggle('active',   isTracking);
 
   if (isResults)    initResults();
   if (isStatus)     { initStatus(); buildValidatorDates(); }
   if (isPolymarket) initPolymarket();
+  if (isTracking && typeof initResultsV2 === 'function') initResultsV2();
 }
 
 // ═══════════════════════════════════════════════════════
