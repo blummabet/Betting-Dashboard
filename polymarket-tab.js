@@ -591,8 +591,9 @@ function _renderPickCard(pick) {
   const mktColor   = _marketColor(pick.market);
 
   // ── Already-placed check ─────────────────────────────────────────────────────
-  // A bet is "placed" if it's in localStorage with the same pick id (date+league+home+away+market).
-  const _placedBet = _getPolyBets().find(b => b.id === pick.id);
+  // Check localStorage first, then session memory fallback (in case localStorage failed).
+  const _placedBet = _getPolyBets().find(b => b.id === pick.id)
+                  || (window._polyPlacedThisSession?.[pick.id] || null);
   const isPlaced   = !!_placedBet;
   const _placedResult = _placedBet?.result; // null = pending, 'won'/'lost' etc = resolved
 
@@ -699,12 +700,22 @@ function _getPolyBets() {
 }
 
 function _savePolyBets(bets) {
-  try { localStorage.setItem('betedge_poly_bets', JSON.stringify(bets)); } catch (e) {}
+  try {
+    localStorage.setItem('betedge_poly_bets', JSON.stringify(bets));
+  } catch(e) {
+    console.error('[PolyBets] localStorage.setItem fehlgeschlagen:', e.message);
+    _polyToast('⚠️ Bets konnten nicht in localStorage gespeichert werden: ' + e.message);
+  }
 }
 
 function renderPolyStats() {
-  const bets     = _getPolyBets();
-  const total    = bets.length;
+  // Merge localStorage bets with session-memory fallback (deduped by id)
+  const lsBets  = _getPolyBets();
+  const lsIds   = new Set(lsBets.map(b => b.id));
+  const sessBets = Object.values(window._polyPlacedThisSession || {})
+                    .filter(b => !lsIds.has(b.id));
+  const bets    = [...lsBets, ...sessBets];
+  const total   = bets.length;
   const resolved = bets.filter(b => b.result && b.result !== 'void');
   const won      = bets.filter(b => b.result === 'won').length;
   const lost     = bets.filter(b => b.result === 'lost').length;
@@ -769,6 +780,23 @@ function renderPolyStats() {
           <div style="font-size:11px;color:#8b949e;margin-top:4px">${c.sub}</div>
         </div>`).join('')}
     </div>
+    ${sessBets.length > 0 ? `
+    <div style="background:#1a2340;border:1px solid #a78bfa44;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <span style="color:#a78bfa;font-weight:700">⚡ ${sessBets.length} Bet${sessBets.length!==1?'s':''} nur im Session-Memory (localStorage leer)</span>
+      <button onclick="
+        const sess=Object.values(window._polyPlacedThisSession||{});
+        const bets=_getPolyBets();
+        const ids=new Set(bets.map(b=>b.id));
+        sess.filter(b=>!ids.has(b.id)).forEach(b=>bets.push(b));
+        _savePolyBets(bets);
+        const n=_getPolyBets().length;
+        if(n>0){_polyToast('✅ '+sess.length+' Bet(s) in localStorage gespeichert');}
+        else{_polyToast('❌ localStorage-Save fehlgeschlagen — prüf Browser-Konsole');}
+        document.getElementById('polyStatsSection').innerHTML=renderPolyStats();
+      " style="background:#a78bfa22;border:1px solid #a78bfa55;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:700;padding:4px 12px;cursor:pointer;font-family:inherit">
+        💾 Jetzt in localStorage speichern
+      </button>
+    </div>` : ''}
     <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;overflow:hidden">
       <div style="padding:12px 16px;border-bottom:1px solid #30363d;display:flex;align-items:center;justify-content:space-between">
         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8b949e">Letzte Bets</span>
@@ -905,10 +933,11 @@ function polyMarkPlaced() {
   const sel = _polyState.picks.filter(p => _polyState.selected.has(p.id));
   if (sel.length === 0) return;
 
+  if (!window._polyPlacedThisSession) window._polyPlacedThisSession = {};
   const bets = _getPolyBets();
   for (const p of sel) {
     const pd = _polyState.prices[p.id];
-    bets.push({
+    const entry = {
       id:        p.id,
       date:      p.date || _polyState.dateStr,
       home:      p.home,
@@ -920,7 +949,9 @@ function polyMarkPlaced() {
       placed:    new Date().toISOString(),
       method:    'manual',
       result:    null,
-    });
+    };
+    bets.push(entry);
+    window._polyPlacedThisSession[p.id] = entry;
   }
   _savePolyBets(bets);
   _polyState.selected.clear();
@@ -1136,13 +1167,14 @@ async function polyDispatch() {
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Wird ausgelöst…'; }
 
   // ── Save bets to localStorage BEFORE dispatch ──────────────────────────────
-  // Reason: if the fetch throws (network error, CORS, timeout), the GitHub
-  // Action may still trigger server-side but JS never sees the 204 response.
-  // Saving first guarantees bets are always tracked regardless of what happens
-  // with the HTTP response.
+  // Also track in window._polyPlacedThisSession (session memory) as fallback
+  // in case localStorage fails — picks still show as "placed" within this session.
+  if (!window._polyPlacedThisSession) window._polyPlacedThisSession = {};
+
   const savedBets = [];
   try {
     const bets = _getPolyBets();
+    const countBefore = bets.length;
     for (const p of sel) {
       const pd = _polyState.prices[p.id];
       const entry = {
@@ -1160,11 +1192,23 @@ async function polyDispatch() {
       };
       bets.push(entry);
       savedBets.push(entry);
+      // Session memory fallback — always works, survives localStorage failure
+      window._polyPlacedThisSession[p.id] = entry;
     }
     _savePolyBets(bets);
-    console.log(`[PolyDispatch] ${sel.length} bet(s) pre-saved to localStorage (total: ${bets.length})`);
+    // Verify save actually worked
+    const countAfter = _getPolyBets().length;
+    if (countAfter > countBefore) {
+      console.log(`[PolyDispatch] ✅ ${sel.length} bet(s) in localStorage (total: ${countAfter})`);
+    } else {
+      console.warn('[PolyDispatch] ⚠️ localStorage nicht erhöht — Fallback auf Session-Memory aktiv');
+    }
   } catch(saveErr) {
-    console.error('[PolyDispatch] localStorage pre-save failed:', saveErr);
+    console.error('[PolyDispatch] save error:', saveErr);
+    // Still track in session memory even if localStorage failed
+    for (const p of sel) {
+      window._polyPlacedThisSession[p.id] = { id: p.id, result: null };
+    }
   }
 
   // ── Refresh stats immediately so bets appear ───────────────────────────────
