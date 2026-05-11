@@ -1657,6 +1657,114 @@ function renderOverview() {
     <div class="section-label" style="margin-top:4px">⭐ Alle High-Stakes Spiele${window._selectedDay !== 'all' ? ' · '+dayLabel : ' dieser Woche'} · sortiert nach Score</div>
     <div class="stake-grid">${cards || emptyAll}</div>
   `;
+
+  // ── Push browser-computed picks to local server → picks_history.json ────────
+  // Runs async, fire-and-forget — UI is already rendered and not blocked.
+  // Uses the SAME odds + deriveOdds + getBettingPicks chain as the cards above,
+  // so results ALWAYS match what's shown on screen.
+  _pushPicksToServer(filtered).catch(() => {});
+}
+
+// ═══════════════════════════════════════════════════════
+//  PICKS → SERVER PUSH
+//  Sends browser-computed picks to prematch-server.js (localhost:3001/save_picks)
+//  so picks_history.json is always in sync with what the cards show.
+// ═══════════════════════════════════════════════════════
+function _marketToKey(market) {
+  const m = (market || '').trim();
+  const ml = m.toLowerCase();
+  if (ml === 'heimsieg')                       return 'homeWin';
+  if (ml === 'auswärtssieg')                   return 'awayWin';
+  if (ml === 'unentschieden')                  return 'draw';
+  if (/over 2\.5 tore|über 2\.5 tore/i.test(ml))  return 'over25';
+  if (/under 2\.5 tore|unter 2\.5 tore/i.test(ml))return 'under25';
+  if (/over 3\.5 tore|über 3\.5 tore/i.test(ml))  return 'over35';
+  if (/under 3\.5 tore|unter 3\.5 tore/i.test(ml))return 'under35';
+  if (/over 2\.25 tore/i.test(ml))            return 'over225';
+  if (/over 2 tore/i.test(ml))                return 'over2';
+  if (/beide teams treffen: nein/i.test(ml))  return 'noBtts';
+  if (/beide teams treffen/i.test(ml))        return 'btts';
+  if (/über 4\.5 karten/i.test(ml))           return 'cards45';
+  if (/über 3\.5 karten/i.test(ml))           return 'cards35';
+  if (/doppelte chance.*1x/i.test(ml))        return 'dc1X';
+  if (/doppelte chance.*x2/i.test(ml))        return 'dcX2';
+  if (/doppelte chance.*12/i.test(ml))        return 'dc12';
+  const ahH = m.match(/^ah\s+heim\s+([-+]?\d+\.?\d*)/i);
+  if (ahH) return `ah_home:${ahH[1]}`;
+  const ahA = m.match(/^ah\s+ausw[^\s\d+-]*\.?\s+([-+]?\d+\.?\d*)/i);
+  if (ahA) return `ah_away:${ahA[1]}`;
+  const co = m.match(/[üü]ber\s+(\d+\.?\d*)\s+Ecken/i);
+  if (co) return `corners_over:${co[1]}`;
+  const cu = m.match(/[uu]nter\s+(\d+\.?\d*)\s+Ecken/i);
+  if (cu) return `corners_under:${cu[1]}`;
+  if (/1\.\s*hz.*over 0\.5/i.test(ml) || /1\.\s*hz.*über 0\.5/i.test(ml)) return 'ht_over05';
+  if (/1\.\s*hz.*beide teams treffen: nein/i.test(ml)) return 'ht_noBtts';
+  if (/1\.\s*hz.*beide teams treffen/i.test(ml))       return 'ht_btts';
+  return ml.replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') || 'unknown';
+}
+
+async function _pushPicksToServer(matchList) {
+  const SERVER = 'http://localhost:3001/save_picks';
+
+  // Build payload: one entry per fixture with picks (same logic as renderFixtureCard)
+  const payload = [];
+  for (const match of matchList) {
+    const lk   = match.leagueKey;
+    const odds  = lk ? findOdds(lk, match.home, match.away) : null;
+    const oddsD = deriveOdds(odds || {});
+    const picks = getBettingPicks(match, oddsD, lk) || [];
+    const visible = picks.filter(p => p.conf === 'high' || p.conf === 'medium');
+    if (visible.length === 0) continue;  // no picks → not tracked
+
+    // dateIso from "DD.MM.YYYY"
+    const dateIso = (() => {
+      try {
+        const [d, mo, y] = (match.date || '').split('.');
+        return `${y}-${mo.padStart(2,'0')}-${d.padStart(2,'0')}`;
+      } catch(_) { return ''; }
+    })();
+
+    payload.push({
+      id:         `${dateIso}-${lk}-${match.home}-${match.away}`,
+      date:       match.date || '',
+      dateIso,
+      league:     lk,
+      leagueName: match.leagueName || lk,
+      leagueFlag: match.leagueFlag || '',
+      home:       match.home,
+      away:       match.away,
+      eventId:    match.eventId || null,
+      matchScore: Math.round(computeMatchScore(match, lk) * 10) / 10,
+      picks: visible.map(p => ({
+        market:    p.market    || '',
+        marketKey: _marketToKey(p.market || ''),
+        icon:      p.icon      || '',
+        conf:      p.conf      || 'medium',
+        sc:        typeof p.sc === 'number' ? Math.round(p.sc * 1000) / 1000 : 0,
+        odds:      p.odds      != null ? p.odds      : null,
+        modelOdds: p.modelOdds != null ? p.modelOdds : null,
+        value:     p.value     || null,
+        oddsIsEst: p.oddsIsEst || false,
+        result:    null,
+      })),
+    });
+  }
+
+  if (payload.length === 0) return;
+
+  try {
+    const r = await fetch(SERVER, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(payload),
+    });
+    if (r.ok) {
+      const res = await r.json();
+      console.log(`[PicksSync] ✅ ${res.added} new, ${res.updated} updated → picks_history.json`);
+    }
+  } catch (_) {
+    // Local server not running — silently ignore (GitHub Pages / offline mode)
+  }
 }
 
 // ═══════════════════════════════════════════════════════

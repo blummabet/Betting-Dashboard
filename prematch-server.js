@@ -1572,6 +1572,79 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // ── POST /save_picks — browser pushes computed picks to picks_history.json ──
+  // Body: array of fixture objects matching picks_history.json format.
+  // Merges into existing history: updates fixtures for same date+league+home+away,
+  // preserves resolved results, appends new fixtures.
+  if (req.method === 'POST' && url === '/save_picks') {
+    const CORS_HEADERS = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    };
+    if (req.method === 'OPTIONS') {
+      res.writeHead(204, CORS_HEADERS); res.end(); return;
+    }
+    try {
+      const body = await new Promise((resolve, reject) => {
+        let data = '';
+        req.on('data', chunk => { data += chunk; });
+        req.on('end', () => {
+          try { resolve(JSON.parse(data)); } catch(e) { reject(e); }
+        });
+        req.on('error', reject);
+      });
+
+      if (!Array.isArray(body) || body.length === 0) {
+        res.writeHead(400, { ...CORS_HEADERS, 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Expected non-empty array' }));
+        return;
+      }
+
+      const histPath = path.join(__dirname, 'picks_history.json');
+      let history = [];
+      try {
+        if (fs.existsSync(histPath)) history = JSON.parse(fs.readFileSync(histPath, 'utf8'));
+        if (!Array.isArray(history)) history = [];
+      } catch(_) { history = []; }
+
+      // Build index of existing entries: id → index in history
+      const makeId = e => `${e.dateIso || e.date}-${e.league}-${e.home}-${e.away}`;
+      const idx = {};
+      history.forEach((e, i) => { idx[makeId(e)] = i; });
+
+      let added = 0, updated = 0;
+      for (const fx of body) {
+        const id = makeId(fx);
+        if (idx[id] !== undefined) {
+          const existing = history[idx[id]];
+          // Keep resolved results — only update picks/score if not yet resolved
+          const hasResult = (existing.picks || []).some(p => p.result);
+          if (!hasResult) {
+            existing.picks      = fx.picks;
+            existing.matchScore = fx.matchScore;
+            updated++;
+          }
+        } else {
+          history.push(fx);
+          idx[id] = history.length - 1;
+          added++;
+        }
+      }
+
+      fs.writeFileSync(histPath, JSON.stringify(history, null, 2), 'utf8');
+      console.log(`[/save_picks] +${added} new, ${updated} updated (total: ${history.length})`);
+
+      res.writeHead(200, { ...CORS_HEADERS, 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, added, updated, total: history.length }));
+    } catch(e) {
+      console.error('[/save_picks] Error:', e.message);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: e.message }));
+    }
+    return;
+  }
+
   // ── GET / or /season-finish.html — serve the dashboard ───────────────────
   if (url === '/' || url === '/season-finish.html') {
     const htmlPath = path.join(__dirname, 'season-finish.html');
