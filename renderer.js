@@ -1658,10 +1658,13 @@ function renderOverview() {
     <div class="stake-grid">${cards || emptyAll}</div>
   `;
 
-  // ── Push browser-computed picks to local server → picks_history.json ────────
-  // Runs async, fire-and-forget — UI is already rendered and not blocked.
+  // ── Save browser-computed picks to localStorage (Results V2 tracking) ────────
   // Uses the SAME odds + deriveOdds + getBettingPicks chain as the cards above,
-  // so results ALWAYS match what's shown on screen.
+  // so tracked picks ALWAYS match what's shown on screen.
+  if (typeof savePicksV2 === 'function') {
+    try { savePicksV2(filtered); } catch(e) { console.warn('[savePicksV2]', e); }
+  }
+  // Legacy: also try to push to local server (fire-and-forget, no blocking)
   _pushPicksToServer(filtered).catch(() => {});
 }
 

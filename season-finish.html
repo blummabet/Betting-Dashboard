@@ -917,6 +917,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="results-v2.js"></script>
 </head>
 <body>
 
@@ -987,6 +988,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="top-nav-btn" id="navResults" onclick="showView('results')">📊 Results</button>
   <button class="top-nav-btn" id="navHeart" onclick="showView('heart')">❤️ Heart</button>
   <button class="top-nav-btn" id="navStatus" onclick="showView('status')">🔧 Status/Data</button>
+  <button class="top-nav-btn" id="navTracking" onclick="showView('tracking')">📈 Tracking</button>
   <button class="top-nav-btn" id="navSavePicks" onclick="savePicksToday(this)" title="Heutige Picks in localStorage sichern" style="margin-left:auto;color:#3fb950;border-color:#3fb950;">💾 <span id="navSaveLabel">Picks speichern</span></button>
 </div>
 
@@ -1897,6 +1899,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   </div>
 
 </div>
+
+<!-- TRACKING V2 PANEL -->
+<div id="trackingV2Panel" style="display:none;max-width:1200px;margin:0 auto;padding:20px 16px 80px;"></div>
 
 <!-- LEGEND REMOVED — see ❤️ Heart tab for full documentation -->
 <div style="display:none"><div>
@@ -8912,23 +8917,27 @@ try {
 //  VIEW SWITCHER
 // ═══════════════════════════════════════════════════════
 function showView(view) {
-  const isSeason  = view === 'season';
-  const isResults = view === 'results';
-  const isHeart   = view === 'heart';
-  const isStatus  = view === 'status';
-  document.getElementById('mainContent').style.display   = isSeason  ? '' : 'none';
-  document.getElementById('resultsPanel').style.display  = isResults ? '' : 'none';
-  document.getElementById('heartPanel').style.display    = isHeart   ? '' : 'none';
-  document.getElementById('statusPanel').style.display   = isStatus  ? '' : 'none';
-  document.querySelector('.league-nav').style.display    = isSeason  ? '' : 'none';
+  const isSeason   = view === 'season';
+  const isResults  = view === 'results';
+  const isHeart    = view === 'heart';
+  const isStatus   = view === 'status';
+  const isTracking = view === 'tracking';
+  document.getElementById('mainContent').style.display      = isSeason   ? '' : 'none';
+  document.getElementById('resultsPanel').style.display     = isResults  ? '' : 'none';
+  document.getElementById('heartPanel').style.display       = isHeart    ? '' : 'none';
+  document.getElementById('statusPanel').style.display      = isStatus   ? '' : 'none';
+  document.getElementById('trackingV2Panel').style.display  = isTracking ? '' : 'none';
+  document.querySelector('.league-nav').style.display       = isSeason   ? '' : 'none';
   const legend = document.querySelector('.legend-section');
   if (legend) legend.style.display = isSeason ? '' : 'none';
-  document.getElementById('navSeason').classList.toggle('active',  isSeason);
-  document.getElementById('navResults').classList.toggle('active', isResults);
-  document.getElementById('navHeart').classList.toggle('active',   isHeart);
-  document.getElementById('navStatus').classList.toggle('active',  isStatus);
-  if (isResults) initResults();
-  if (isStatus)  { initStatus(); buildValidatorDates(); }
+  document.getElementById('navSeason').classList.toggle('active',   isSeason);
+  document.getElementById('navResults').classList.toggle('active',  isResults);
+  document.getElementById('navHeart').classList.toggle('active',    isHeart);
+  document.getElementById('navStatus').classList.toggle('active',   isStatus);
+  document.getElementById('navTracking').classList.toggle('active', isTracking);
+  if (isResults)  initResults();
+  if (isStatus)   { initStatus(); buildValidatorDates(); }
+  if (isTracking && typeof initResultsV2 === 'function') initResultsV2();
 }
 
 // ═══════════════════════════════════════════════════════
