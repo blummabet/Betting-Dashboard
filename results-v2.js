@@ -373,11 +373,124 @@ function _renderV2Tab() {
   panel.innerHTML = `
     <div style="padding:16px 0">
       ${_kpiHtml(allPicks)}
+      ${_breakdownHtml(filtered)}
       ${_filtersHtml(all)}
       ${_tableHtml(filtered)}
       ${_actionsHtml(all)}
     </div>
   `;
+}
+
+// ── Analytics Breakdown: Match Score + Konfidenz + CLV ───────────────────────
+function _breakdownHtml(entries) {
+  const allPicks = entries.flatMap(e => e.picks.map(p => ({...p, _sc: e.matchScore || 0})));
+  if (!allPicks.length) return '';
+
+  // helper: win/loss/open + winRate from a pick subset
+  function _stats(picks) {
+    const w = picks.filter(p => p.result === 'won' || p.result === 'halfwon').length;
+    const l = picks.filter(p => p.result === 'lost' || p.result === 'halflost').length;
+    const o = picks.filter(p => !p.result).length;
+    const res = picks.filter(p => p.result && p.result !== 'void');
+    const wr = res.length >= 3 ? Math.round(w / res.length * 100) : null;
+    return { w, l, o, wr, res: res.length };
+  }
+
+  // ── 1. Match Score Breakdown ─────────────────────────────────────────────
+  const scoreBrackets = [
+    { label: '9/12',  min: 9,  max: 9.9  },
+    { label: '10/12', min: 10, max: 10.9 },
+    { label: '11/12', min: 11, max: 11.9 },
+    { label: '12/12', min: 12, max: 12   },
+  ];
+  const scoreRows = scoreBrackets.map(b => {
+    const picks = allPicks.filter(p => p._sc >= b.min && p._sc <= b.max);
+    if (!picks.length) return null;
+    const s = _stats(picks);
+    const wrCol = s.wr == null ? '#8b949e' : s.wr >= 60 ? '#3fb950' : s.wr >= 45 ? '#f0c040' : '#f85149';
+    return `<tr>
+      <td style="font-weight:700;color:var(--accent)">${b.label}</td>
+      <td style="color:#3fb950">✅ ${s.w}</td>
+      <td style="color:#f85149">❌ ${s.l}</td>
+      <td style="color:#8b949e">⏳ ${s.o}</td>
+      <td style="font-weight:800;color:${wrCol}">${s.wr != null ? s.wr + '%' : '—'}</td>
+    </tr>`;
+  }).filter(Boolean).join('');
+
+  // ── 2. Konfidenz Breakdown ───────────────────────────────────────────────
+  const confGroups = [
+    { label: '★★★', key: 'high'   },
+    { label: '★★☆', key: 'medium' },
+    { label: '★☆☆', key: 'low'    },
+  ];
+  const confRows = confGroups.map(g => {
+    const picks = allPicks.filter(p => p.conf === g.key);
+    if (!picks.length) return null;
+    const s = _stats(picks);
+    const wrCol = s.wr == null ? '#8b949e' : s.wr >= 60 ? '#3fb950' : s.wr >= 45 ? '#f0c040' : '#f85149';
+    return `<tr>
+      <td style="font-weight:700;color:var(--yellow)">${g.label}</td>
+      <td style="color:#3fb950">✅ ${s.w}</td>
+      <td style="color:#f85149">❌ ${s.l}</td>
+      <td style="color:#8b949e">⏳ ${s.o}</td>
+      <td style="font-weight:800;color:${wrCol}">${s.wr != null ? s.wr + '%' : '—'}</td>
+    </tr>`;
+  }).filter(Boolean).join('');
+
+  // ── 3. CLV Split ─────────────────────────────────────────────────────────
+  const withOdds    = allPicks.filter(p => p.odds && !p.oddsIsEst);
+  const withoutOdds = allPicks.filter(p => !p.odds || p.oddsIsEst);
+  const sWO  = _stats(withOdds);
+  const sWOO = _stats(withoutOdds);
+
+  const _mkTable = (title, rows) => `
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:10px">${title}</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead><tr style="color:var(--muted);font-size:10px">
+          <th style="text-align:left;padding-bottom:6px">Gruppe</th>
+          <th style="padding-bottom:6px">Gew.</th>
+          <th style="padding-bottom:6px">Verl.</th>
+          <th style="padding-bottom:6px">Offen</th>
+          <th style="padding-bottom:6px">Win%</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+
+  const clvWrCol  = sWO.wr  == null ? '#8b949e' : sWO.wr  >= 55 ? '#3fb950' : '#f0c040';
+  const clvWrCol2 = sWOO.wr == null ? '#8b949e' : sWOO.wr >= 55 ? '#3fb950' : '#f0c040';
+  const clvHtml = `
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px 16px">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:700;margin-bottom:12px">📈 CLV — Closing Line Value</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px">
+        <div style="flex:1;min-width:100px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:${clvWrCol}">${sWO.wr != null ? sWO.wr + '%' : '—'}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">Win Rate<br><span style="color:var(--accent)">mit Bookie-Quote</span></div>
+        </div>
+        <div style="width:1px;background:var(--border)"></div>
+        <div style="flex:1;min-width:100px;text-align:center">
+          <div style="font-size:22px;font-weight:800;color:${clvWrCol2}">${sWOO.wr != null ? sWOO.wr + '%' : '—'}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:3px">Win Rate<br><span style="color:var(--muted)">keine Quote</span></div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:#484f58;padding:6px 8px;background:rgba(0,0,0,.2);border-radius:5px;line-height:1.5">
+        ℹ️ CLV-Tracking aktiv sobald Opening-Odds erfasst sind. Picks mit Bookie-Quote zeigen Marktvalidierung — höhere Win Rate = Modell erkennt echten Edge.
+      </div>
+    </div>`;
+
+  return `
+    <div style="margin-bottom:20px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px">
+        Analytics
+        <span style="flex:1;height:1px;background:var(--border)"></span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+        ${scoreRows ? _mkTable('📊 Match Score Breakdown', scoreRows) : ''}
+        ${confRows  ? _mkTable('⭐ Konfidenz Breakdown', confRows)    : ''}
+        ${clvHtml}
+      </div>
+    </div>`;
 }
 
 function _applyFilters(entries) {
