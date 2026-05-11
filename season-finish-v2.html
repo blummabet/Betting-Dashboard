@@ -1018,6 +1018,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="top-nav-btn" id="navResults" onclick="showView('results')">📊 Results</button>
   <button class="top-nav-btn" id="navHeart" onclick="showView('heart')">❤️ Heart</button>
   <button class="top-nav-btn" id="navStatus" onclick="showView('status')">🔧 Status/Data</button>
+  <button class="top-nav-btn" id="navTracking" onclick="showView('tracking')">📈 Tracking</button>
   <button class="top-nav-btn" id="navSavePicks" onclick="savePicksToday(this)" title="Heutige Picks in localStorage sichern" style="margin-left:auto;color:#3fb950;border-color:#3fb950;">💾 <span id="navSaveLabel">Picks speichern</span></button>
 </div>
 
@@ -2115,6 +2116,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <!-- POLYMARKET PANEL -->
 <div id="polymarketPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 100px;"></div>
 
+<!-- TRACKING V2 PANEL -->
+<div id="trackingV2Panel" style="display:none;max-width:1200px;margin:0 auto;padding:20px 16px 80px;"></div>
+
 <!-- LEGEND REMOVED — see ❤️ Heart tab for full documentation -->
 <div style="display:none"><div>
 
@@ -2224,6 +2228,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <script src="share.js"></script>
 <script src="ui.js"></script>
 <script src="polymarket-tab.js"></script>
+<script src="results-v2.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════
 //  LIVE DATA from Sofascore — fetched 31.03.2026
