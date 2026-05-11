@@ -30,7 +30,8 @@ function _v2Load() {
   catch { return []; }
 }
 function _v2Save(data) {
-  try { localStorage.setItem(V2_KEY, JSON.stringify(data)); } catch(e) {}
+  try { localStorage.setItem(V2_KEY, JSON.stringify(data)); }
+  catch(e) { console.error('[V2] _v2Save error:', e.message); }
 }
 
 // ── Pick saving (called by renderer.js after renderOverview) ──────────────────
@@ -55,10 +56,11 @@ function savePicksV2(matchList) {
   store.forEach((e, i) => { idx[_v2Id(e)] = i; });
 
   let added = 0, updated = 0;
+  let _skippedEmpty = 0;
 
   for (const buf of bufferEntries) {
     const { date, leagueKey: lk, leagueName, leagueFlag, home, away, matchScore, picks: vis } = buf;
-    if (!vis || !vis.length) continue;
+    if (!vis || !vis.length) { _skippedEmpty++; continue; }
 
     const dateIso = _toIso(date || '');
     const id      = `${dateIso}-${lk}-${home}-${away}`;
@@ -108,11 +110,20 @@ function savePicksV2(matchList) {
     }
   }
 
+  console.log(`[V2] savePicksV2: ${bufferEntries.length} buf entries, ${_skippedEmpty} ohne Picks, +${added} new, ${updated} updated`);
   if (added || updated) {
-    _v2Save(store);
-    console.log(`[V2] saved from buffer: +${added} new, ${updated} updated (${bufferEntries.length} cards scanned)`);
-  } else {
-    console.log('[V2] savePicksV2: buffer had entries but no changes to save');
+    try {
+      const serialized = JSON.stringify(store);
+      localStorage.setItem(V2_KEY, serialized);
+      console.log(`[V2] ✅ localStorage gespeichert: ${store.length} Einträge`);
+    } catch(e) {
+      console.error('[V2] ❌ localStorage.setItem fehlgeschlagen:', e.message);
+      // Try to identify which entry causes serialization error
+      for (let i = 0; i < store.length; i++) {
+        try { JSON.stringify(store[i]); }
+        catch(e2) { console.error('[V2] Serialisierungsfehler bei Entry', i, store[i].home, e2.message); }
+      }
+    }
   }
 }
 
@@ -370,7 +381,48 @@ function _renderV2Tab() {
   const panel = document.getElementById('trackingV2Panel');
   if (!panel) return;
 
-  const all = _v2Load();
+  let all = _v2Load();
+
+  // ── Buffer fallback: wenn localStorage leer, direkt aus dem Render-Buffer anzeigen ──
+  // savePicksV2() kann aus versch. Gründen scheitern (Quota, Serialisierung).
+  // Der Buffer hat die exakt gleichen Daten die auf den Cards sichtbar sind → direkt nutzen.
+  let _usingBuffer = false;
+  if (!all.length && window._v2PickBuffer) {
+    const now = new Date().toISOString();
+    const bufAll = Object.values(window._v2PickBuffer)
+      .filter(buf => buf.picks && buf.picks.length)
+      .map(buf => {
+        const dateIso = _toIso(buf.date || '');
+        return {
+          id:         `${dateIso}-${buf.leagueKey}-${buf.home}-${buf.away}`,
+          date:       buf.date || '',
+          dateIso,
+          league:     buf.leagueKey || '',
+          leagueName: buf.leagueName || buf.leagueKey || '',
+          leagueFlag: buf.leagueFlag || '',
+          home:       buf.home,
+          away:       buf.away,
+          matchScore: Math.round((buf.matchScore || 0) * 10) / 10,
+          source:     'v2',
+          savedAt:    now,
+          picks: buf.picks.map(p => ({
+            market:    p.market    || '',
+            marketKey: _mKey(p.market || ''),
+            icon:      p.icon      || '',
+            conf:      p.conf      || 'medium',
+            sc:        typeof p.sc === 'number' ? Math.round(p.sc * 1000) / 1000 : 0,
+            odds:      p.odds      != null ? p.odds      : null,
+            modelOdds: p.modelOdds != null ? p.modelOdds : null,
+            value:     p.value     || null,
+            oddsIsEst: p.oddsIsEst || false,
+            result:    null,
+            resolvedAt:null,
+          })),
+        };
+      });
+    if (bufAll.length) { all = bufAll; _usingBuffer = true; }
+  }
+
   const filtered = _applyFilters(all);
   const allPicks = filtered.flatMap(e => e.picks.map(p => ({...p, _entry: e})));
 
@@ -378,19 +430,31 @@ function _renderV2Tab() {
   const _bufCount  = window._v2PickBuffer ? Object.keys(window._v2PickBuffer).length : 0;
   const _lsRaw     = localStorage.getItem('betedge_picks_v2');
   const _lsCount   = (() => { try { return JSON.parse(_lsRaw||'[]').length; } catch(e) { return 'ERR'; } })();
+  const _srcNote = _usingBuffer
+    ? '<span style="color:#f0c040;margin-left:8px">⚡ Live aus Buffer (localStorage leer)</span>'
+    : '';
   const _debugHtml = `
     <div style="font-size:11px;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-family:monospace;color:#8b949e">
-      🔍 Debug: Buffer=${_bufCount} Cards · localStorage=${_lsCount} Einträge · lsKey=${_lsRaw?'✓':'leer'}
+      🔍 Debug: Buffer=${_bufCount} Cards · localStorage=${_lsCount} Einträge · lsKey=${_lsRaw?'✓':'leer'}${_srcNote}
       <button onclick="
         const b=window._v2PickBuffer||{};
         const k=Object.keys(b);
         alert('Buffer ('+k.length+' cards):\n'+k.slice(0,5).join('\n')+(k.length>5?'\n...':''));
       " style="margin-left:10px;background:none;border:1px solid #444;border-radius:4px;color:#8b949e;padding:1px 6px;font-size:10px;cursor:pointer">Buffer anzeigen</button>
       <button onclick="
-        try{savePicksV2();alert('savePicksV2() OK — localStorage jetzt: '+JSON.parse(localStorage.getItem('betedge_picks_v2')||'[]').length+' Einträge');}
-        catch(e){alert('FEHLER: '+e.message);}
+        const vals=Object.values(window._v2PickBuffer||{});
+        const nonEmpty=vals.filter(b=>b.picks&&b.picks.length);
+        const s=vals.slice(0,3).map(b=>b.home+': picks='+(b.picks?b.picks.length:'UNDEF')+', keys='+JSON.stringify(Object.keys(b)));
+        alert('Buffer: '+vals.length+' total, '+nonEmpty.length+' mit Picks\n\nSample (3):\n'+s.join('\n\n'));
+      " style="margin-left:6px;background:none;border:1px solid #444;border-radius:4px;color:#8b949e;padding:1px 6px;font-size:10px;cursor:pointer">Buffer Inhalt</button>
+      <button onclick="
+        try {
+          savePicksV2();
+          const n=JSON.parse(localStorage.getItem('betedge_picks_v2')||'[]').length;
+          alert('savePicksV2 OK → localStorage: '+n+' Einträge');
+        } catch(e) { alert('FEHLER: '+e.message); }
         _renderV2Tab();
-      " style="margin-left:6px;background:none;border:1px solid #444;border-radius:4px;color:#8b949e;padding:1px 6px;font-size:10px;cursor:pointer">Save testen</button>
+      " style="margin-left:6px;background:none;border:1px solid #2ea043;border-radius:4px;color:#3fb950;padding:1px 6px;font-size:10px;cursor:pointer">💾 In localStorage speichern</button>
     </div>`;
 
   // Empty state with action buttons
