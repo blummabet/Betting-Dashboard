@@ -1030,6 +1030,16 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   // Negative-edge picks are already removed inside getBettingPicks().
   // If nothing survives, there's no value here — don't render a card at all.
   if (visiblePicks.length === 0) return '';
+
+  // ── Buffer picks for V2 Tracking (avoids recomputing with missing match data) ─
+  // savePicksV2() reads from this buffer instead of re-running getBettingPicks().
+  if (!window._v2PickBuffer) window._v2PickBuffer = {};
+  const _bufKey = `${match.date||''}|${leagueKey||''}|${match.home}|${match.away}`;
+  window._v2PickBuffer[_bufKey] = {
+    date: match.date, leagueKey, leagueName, leagueFlag,
+    home: match.home, away: match.away, matchScore: sc,
+    picks: visiblePicks,
+  };
   const picksHtml = visiblePicks.map(p => {
     const oddsNum  = p.odds ?? null;
 

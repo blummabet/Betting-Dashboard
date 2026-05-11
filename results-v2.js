@@ -35,9 +35,19 @@ function _v2Save(data) {
 
 // ── Pick saving (called by renderer.js after renderOverview) ──────────────────
 // matchList: array of match objects from LEAGUES, already filtered to visible range
+// savePicksV2: reads from window._v2PickBuffer (filled by renderFixtureCard)
+// The buffer contains pre-computed picks with full match context — avoids
+// recomputing getBettingPicks() with incomplete data which gives wrong results.
+// matchList param is kept for API compatibility but ignored in favour of buffer.
 function savePicksV2(matchList) {
-  if (!matchList || !matchList.length) return;
-  if (typeof getBettingPicks !== 'function' || typeof deriveOdds !== 'function') return;
+  // Prefer the render-time buffer; fall back to recomputing from matchList
+  const bufferEntries = window._v2PickBuffer ? Object.values(window._v2PickBuffer) : [];
+
+  // If buffer is empty, nothing was rendered yet — nothing to save
+  if (!bufferEntries.length) {
+    console.log('[V2] savePicksV2: no buffered picks yet — cards must render first');
+    return;
+  }
 
   const now   = new Date().toISOString();
   const store = _v2Load();
@@ -46,30 +56,23 @@ function savePicksV2(matchList) {
 
   let added = 0, updated = 0;
 
-  for (const match of matchList) {
-    const lk    = match.leagueKey;
-    const odds  = (typeof findOdds === 'function' && lk)
-                    ? findOdds(lk, match.home, match.away)
-                    : null;
-    const oddsD = deriveOdds(odds || {});
-    const picks = getBettingPicks(match, oddsD, lk) || [];
-    const vis   = picks.filter(p => p.conf === 'high' || p.conf === 'medium');
-    if (!vis.length) continue;
+  for (const buf of bufferEntries) {
+    const { date, leagueKey: lk, leagueName, leagueFlag, home, away, matchScore, picks: vis } = buf;
+    if (!vis || !vis.length) continue;
 
-    const dateIso = _toIso(match.date || '');
-    const id      = `${dateIso}-${lk}-${match.home}-${match.away}`;
+    const dateIso = _toIso(date || '');
+    const id      = `${dateIso}-${lk}-${home}-${away}`;
 
     const entry = {
       id,
-      date:       match.date || '',
+      date:       date || '',
       dateIso,
       league:     lk || '',
-      leagueName: match.leagueName || lk || '',
-      leagueFlag: match.leagueFlag || '',
-      home:       match.home,
-      away:       match.away,
-      matchScore: Math.round((typeof computeMatchScore === 'function'
-                    ? computeMatchScore(match, lk) : 0) * 10) / 10,
+      leagueName: leagueName || lk || '',
+      leagueFlag: leagueFlag || '',
+      home,
+      away,
+      matchScore: Math.round((matchScore || 0) * 10) / 10,
       source:     'v2',
       savedAt:    now,
       picks: vis.map(p => ({
@@ -90,21 +93,14 @@ function savePicksV2(matchList) {
     const existing = idx[id];
     if (existing !== undefined) {
       const old = store[existing];
-      // Don't overwrite resolved results
-      const hasResolved = (old.picks || []).some(p => p.result);
-      if (!hasResolved) {
-        store[existing] = entry;
-        updated++;
-      } else {
-        // Merge: keep resolved picks' results but update everything else
-        entry.picks = entry.picks.map(ep => {
-          const op = (old.picks || []).find(p => p.market === ep.market);
-          if (op && op.result) { ep.result = op.result; ep.resolvedAt = op.resolvedAt; }
-          return ep;
-        });
-        store[existing] = entry;
-        updated++;
-      }
+      // Merge: keep resolved results, update everything else
+      entry.picks = entry.picks.map(ep => {
+        const op = (old.picks || []).find(p => p.market === ep.market);
+        if (op && op.result) { ep.result = op.result; ep.resolvedAt = op.resolvedAt; }
+        return ep;
+      });
+      store[existing] = entry;
+      updated++;
     } else {
       store.push(entry);
       idx[id] = store.length - 1;
@@ -114,7 +110,9 @@ function savePicksV2(matchList) {
 
   if (added || updated) {
     _v2Save(store);
-    console.log(`[V2] picks saved: +${added} new, ${updated} updated`);
+    console.log(`[V2] saved from buffer: +${added} new, ${updated} updated (${bufferEntries.length} cards scanned)`);
+  } else {
+    console.log('[V2] savePicksV2: buffer had entries but no changes to save');
   }
 }
 
@@ -358,10 +356,9 @@ function initResultsV2() {
   const panel = document.getElementById('trackingV2Panel');
   if (!panel) return;
 
-  // If localStorage is empty AND we have live match data → auto-save now
-  const existing = _v2Load();
-  if (!existing.length && window._v2LastMatchList?.length) {
-    try { savePicksV2(window._v2LastMatchList); } catch(e) {}
+  // If buffer has picks → always save (picks from rendered cards are source of truth)
+  if (window._v2PickBuffer && Object.keys(window._v2PickBuffer).length) {
+    try { savePicksV2(); } catch(e) { console.warn('[V2 init]', e); }
   }
 
   _renderV2Tab();
@@ -379,7 +376,7 @@ function _renderV2Tab() {
 
   // Empty state with action buttons
   if (!all.length) {
-    const hasLive = window._v2LastMatchList?.length > 0;
+    const hasLive = window._v2PickBuffer && Object.keys(window._v2PickBuffer).length > 0;
     panel.innerHTML = `
       <div style="max-width:520px;margin:60px auto;text-align:center;padding:0 20px">
         <div style="font-size:48px;margin-bottom:16px">📈</div>
@@ -392,9 +389,9 @@ function _renderV2Tab() {
         </div>
         <div style="display:flex;flex-direction:column;gap:10px;align-items:center">
           ${hasLive ? `
-          <button onclick="savePicksV2(window._v2LastMatchList);_renderV2Tab()"
+          <button onclick="savePicksV2();_renderV2Tab()"
             style="background:var(--accent);color:#000;border:none;border-radius:8px;padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer">
-            📡 Picks aus Live-Daten laden (${window._v2LastMatchList.length} Spiele)
+            📡 Picks aus aktuellen Cards laden
           </button>` : ''}
           <button onclick="importLegacyPicks();_renderV2Tab()"
             style="background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:10px 24px;font-size:13px;font-weight:600;cursor:pointer">
