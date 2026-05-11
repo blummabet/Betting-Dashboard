@@ -590,6 +590,54 @@ function _renderPickCard(pick) {
   const noMarket   = priceData && !priceData.loading && !priceData.found && !priceData.stale && !priceData.gameFound;
   const mktColor   = _marketColor(pick.market);
 
+  // ── Already-placed check ─────────────────────────────────────────────────────
+  // A bet is "placed" if it's in localStorage with the same pick id (date+league+home+away+market).
+  const _placedBet = _getPolyBets().find(b => b.id === pick.id);
+  const isPlaced   = !!_placedBet;
+  const _placedResult = _placedBet?.result; // null = pending, 'won'/'lost' etc = resolved
+
+  if (isPlaced) {
+    const resIcon  = _placedResult === 'won'  ? '✅ Gewonnen'
+                   : _placedResult === 'lost' ? '❌ Verloren'
+                   : _placedResult === 'void' ? '〇 Void'
+                   : '⏳ Ausstehend';
+    const resCol   = _placedResult === 'won'  ? '#3fb950'
+                   : _placedResult === 'lost' ? '#f85149'
+                   : '#8b949e';
+    const polyPriceStr = _placedBet.polyPrice
+      ? `${Math.round(_placedBet.polyPrice * 100)}¢ · ${(1 / _placedBet.polyPrice).toFixed(2)}`
+      : '—';
+    return `<div class="poly-pick-card poly-no-market"
+         data-id="${pick.id}"
+         style="opacity:.75;cursor:default;position:relative">
+      <!-- Placed banner -->
+      <div style="position:absolute;top:10px;right:10px;background:${_placedResult ? (_placedResult==='won'?'#1a3a24':'#3a1a1a') : '#1a2340'};border:1px solid ${_placedResult ? resCol+'55' : '#a78bfa55'};border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;color:${_placedResult ? resCol : '#a78bfa'}">
+        ${_placedResult ? resIcon : '🟣 Platziert'}
+      </div>
+      <!-- League -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <span style="font-size:16px">${pick.leagueFlag}</span>
+        <span style="font-size:10px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">${pick.leagueName}</span>
+      </div>
+      <!-- Match -->
+      <div style="font-size:14px;font-weight:700;margin-bottom:8px;line-height:1.3;color:#e6edf3">
+        ${pick.home} <span style="color:#8b949e;font-weight:400;font-size:12px">vs</span> ${pick.away}
+      </div>
+      <!-- Market + conf -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <span style="font-size:13px">${_marketIcon(pick.market)}</span>
+        <span style="font-size:13px;font-weight:600;color:${mktColor}">${pick.market}</span>
+        ${_confBadge(pick.conf)}
+      </div>
+      <!-- Bet summary row -->
+      <div style="background:#0d1117;border-radius:8px;padding:10px 12px;font-size:12px;color:#8b949e;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span>€${_placedBet.stake ?? POLY_STAKE} gesetzt · Poly: ${polyPriceStr}</span>
+        <span style="color:${resCol};font-weight:700">${_placedResult ? resIcon : '⏳'}</span>
+      </div>
+      ${_openButtonHtml(pick.id)}
+    </div>`;
+  }
+
   return `<div class="poly-pick-card${isSel ? ' poly-selected' : ''}${noMarket ? ' poly-no-market' : ''}"
        data-id="${pick.id}"
        onclick="polyTogglePick('${pick.id.replace(/'/g, "\\'")}')">
