@@ -591,9 +591,15 @@ function _renderPickCard(pick) {
   const mktColor   = _marketColor(pick.market);
 
   // ── Already-placed check ─────────────────────────────────────────────────────
-  // Check localStorage first, then session memory fallback (in case localStorage failed).
-  const _placedBet = _getPolyBets().find(b => b.id === pick.id)
-                  || (window._polyPlacedThisSession?.[pick.id] || null);
+  // Check by ID, then by home|away|market (IDs may differ between save sources),
+  // then session memory fallback.
+  const _norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const _allBets = _getPolyBets();
+  const _placedBet = _allBets.find(b => b.id === pick.id)
+    || _allBets.find(b => _norm(b.home) === _norm(pick.home)
+                       && _norm(b.away) === _norm(pick.away)
+                       && _norm(b.market) === _norm(pick.market))
+    || (window._polyPlacedThisSession?.[pick.id] || null);
   const isPlaced   = !!_placedBet;
   const _placedResult = _placedBet?.result; // null = pending, 'won'/'lost' etc = resolved
 
@@ -708,6 +714,65 @@ function _savePolyBets(bets) {
   }
 }
 
+// ── Import placed bets from picks_history.json ───────────────────────────────
+// picks_history.json is written by polymarket_bet.py (GitHub Action) and contains
+// polyBets arrays embedded in fixture entries. This is the reliable source of truth
+// since it lives in the repo and survives page reloads / localStorage failures.
+const POLY_HISTORY_URLS = [
+  'http://localhost:3001/picks_history',
+  'https://blummabet.github.io/Betting-Dashboard/picks_history.json',
+];
+
+async function _syncBetsFromHistory(silent = true) {
+  let history = null;
+  for (const url of POLY_HISTORY_URLS) {
+    try {
+      const r = await fetch(url, { cache: 'no-store' });
+      if (r.ok) { history = await r.json(); break; }
+    } catch(_) {}
+  }
+  if (!Array.isArray(history)) return 0;
+
+  const existing  = _getPolyBets();
+  // Build dedup index: "home|away|market" (case-insensitive normalised)
+  const _norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const _key  = (home, away, market) => `${_norm(home)}|${_norm(away)}|${_norm(market)}`;
+  const idx   = new Set(existing.map(b => _key(b.home, b.away, b.market)));
+
+  let imported = 0;
+  for (const fx of history) {
+    if (!Array.isArray(fx.polyBets)) continue;
+    for (const pb of fx.polyBets) {
+      if (pb.status === 'failed') continue; // skip failed orders
+      const k = _key(fx.home, fx.away, pb.market);
+      if (idx.has(k)) continue; // already tracked
+
+      existing.push({
+        id:        `${fx.league || ''}|${fx.home}|${fx.away}|${pb.market}`,
+        date:      fx.date || '',
+        home:      fx.home || '',
+        away:      fx.away || '',
+        market:    pb.market || '',
+        league:    fx.league || '',
+        stake:     pb.stake  || 5,
+        polyPrice: pb.polyPrice || null,
+        placed:    pb.placedAt || fx.date || '',
+        method:    'auto',
+        result:    pb.result  || null,
+      });
+      idx.add(k);
+      imported++;
+    }
+  }
+
+  if (imported > 0) {
+    _savePolyBets(existing);
+    console.log(`[PolyBets] ✅ ${imported} Bet(s) aus picks_history.json importiert`);
+    if (!silent) _polyToast(`📥 ${imported} Bet${imported !== 1 ? 's' : ''} aus Repo importiert`);
+  }
+  return imported;
+}
+
 function renderPolyStats() {
   // Merge localStorage bets with session-memory fallback (deduped by id)
   const lsBets  = _getPolyBets();
@@ -801,6 +866,7 @@ function renderPolyStats() {
       <div style="padding:12px 16px;border-bottom:1px solid #30363d;display:flex;align-items:center;justify-content:space-between">
         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8b949e">Letzte Bets</span>
         <div style="display:flex;gap:6px">
+          <button onclick="_syncBetsFromHistory(false).then(()=>{document.getElementById('polyStatsSection').innerHTML=renderPolyStats();const g=document.getElementById('polyPickGrid');if(g)g.innerHTML=renderPolyPickCards();})" style="background:none;border:1px solid #a78bfa55;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit">📥 Sync Repo</button>
           <button onclick="polyAutoResolve()" style="background:none;border:1px solid #3fb95055;border-radius:6px;color:#3fb950;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit">🔄 Auto-auswerten</button>
           <button onclick="polyManualResolve()" style="background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit">✏️ Manuell</button>
         </div>
@@ -1383,6 +1449,17 @@ function initPolymarket() {
   _polyState.picks    = getPolyPicks(dateStr);
   _polyState.prices   = {};
   _polyState.selected = new Set(_polyState.picks.map(p => p.id)); // start: all selected
+
+  // Sync placed bets from picks_history.json (repo-based, survives localStorage failures)
+  _syncBetsFromHistory(true).then(n => {
+    if (n > 0) {
+      // Re-render pick cards to show placed indicator
+      const grid = document.getElementById('polyPickGrid');
+      if (grid) grid.innerHTML = renderPolyPickCards();
+      const stats = document.getElementById('polyStatsSection');
+      if (stats) stats.innerHTML = renderPolyStats();
+    }
+  });
 
   const n = _polyState.picks.length;
 
