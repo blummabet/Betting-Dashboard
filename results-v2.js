@@ -65,6 +65,9 @@ function savePicksV2(matchList) {
   for (const buf of bufferEntries) {
     const { date, leagueKey: lk, leagueName, leagueFlag, home, away, matchScore, picks: vis } = buf;
     if (!vis || !vis.length) { _skippedEmpty++; continue; }
+    // Only track matches that earned a card (matchScore > 0 = at least one team has stake motivation)
+    // Dead-rubber matches (both teams play for nothing) should not appear in tracking.
+    if (!matchScore || matchScore <= 0) { _skippedEmpty++; continue; }
 
     const dateIso = _toIso(date || '');
     const id      = `${dateIso}-${lk}-${home}-${away}`;
