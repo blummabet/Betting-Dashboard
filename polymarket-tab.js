@@ -1025,31 +1025,75 @@ async function polyAutoResolve(silent = false) {
     return;
   }
 
-  // Try local server first, then GitHub Pages
+  // ── 1. Load picks_history.json (primary resolve source) ─────────────────
   let history = null;
-  const urls = [
-    'http://localhost:3001/picks_history',
-    'https://blummabet.github.io/Betting-Dashboard/picks_history.json',
-  ];
-  for (const url of urls) {
+  for (const url of ['http://localhost:3001/picks_history', 'https://blummabet.github.io/Betting-Dashboard/picks_history.json']) {
     try {
       const r = await fetch(url);
       if (r.ok) { history = await r.json(); break; }
     } catch (e) { /* try next */ }
   }
 
-  if (!history || !Array.isArray(history)) {
+  // ── 2. Load results-cache.json (fallback — resolves directly from score) ──
+  let resultsCache = null;
+  for (const url of ['http://localhost:3001/results-cache', 'https://blummabet.github.io/Betting-Dashboard/results-cache.json']) {
+    try {
+      const r = await fetch(url, { cache: 'no-store' });
+      if (r.ok) { const d = await r.json(); resultsCache = d.fixtures || d; break; }
+    } catch (e) { /* try next */ }
+  }
+
+  if (!history && !resultsCache) {
     if (!silent) _polyToast('❌ Spielergebnisse nicht erreichbar');
     return;
+  }
+
+  // Build results-cache lookup: "norm_home|norm_away" → fixture
+  const _cNorm = s => (s||'').toLowerCase().replace(/\b(fc|sv|sc|ac|as|us|cd|sk|rb|bv|vv|nk|fk|cf|ss|if|kf|pfc)\b/g,' ').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+  const cacheLookup = {};
+  if (Array.isArray(resultsCache)) {
+    for (const fx of resultsCache) {
+      if (fx.goalsHome == null) continue;
+      cacheLookup[`${_cNorm(fx.home)}|${_cNorm(fx.away)}`] = fx;
+    }
   }
 
   let resolvedCount = 0;
   for (const bet of bets) {
     if (bet.result) continue;
-    const entry  = _matchHistoryEntry(bet, history);
-    if (!entry?.resolved) continue;   // match not yet finished
-    const result = _resolveBetFromEntry(bet, entry);
-    if (result) { bet.result = result; resolvedCount++; }
+
+    // Try picks_history first (most detailed — has per-market results)
+    if (Array.isArray(history)) {
+      const entry = _matchHistoryEntry(bet, history);
+      if (entry?.resolved) {
+        const result = _resolveBetFromEntry(bet, entry);
+        if (result) { bet.result = result; resolvedCount++; continue; }
+      }
+    }
+
+    // Fallback: resolve directly from results-cache.json score
+    if (Object.keys(cacheLookup).length) {
+      const hN = _cNorm(bet.home);
+      const aN = _cNorm(bet.away);
+      const fx = cacheLookup[`${hN}|${aN}`]
+              || Object.entries(cacheLookup).find(([k]) => {
+                   const [kh, ka] = k.split('|');
+                   return (kh.includes(hN) || hN.includes(kh)) && (ka.includes(aN) || aN.includes(ka));
+                 })?.[1];
+      if (fx) {
+        // Check date match (bet.date is "DD.MM.YYYY", fx.date is "YYYY-MM-DD")
+        const [bd, bm, by] = (bet.date || '').split('.');
+        const betIso = by && bm && bd ? `${by}-${bm}-${bd}` : '';
+        const dateDiff = betIso && fx.date ? Math.abs(new Date(betIso) - new Date(fx.date)) / 86400000 : 99;
+        if (dateDiff <= 1) {
+          const h = fx.goalsHome, a = fx.goalsAway;
+          const score = `${h}:${a}`;
+          const fakeEntry = { resolved: true, finalScore: score, picks: [] };
+          const result = _resolveBetFromEntry(bet, fakeEntry);
+          if (result) { bet.result = result; resolvedCount++; }
+        }
+      }
+    }
   }
 
   _savePolyBets(bets);

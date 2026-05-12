@@ -164,7 +164,9 @@ async function autoResolveV2(silent = false) {
 
   const store = _v2Load();
   let resolved = 0;
+  const now = new Date().toISOString();
 
+  // ── Primary: resolve from localStorage ──────────────────────────────────
   for (const entry of store) {
     const openPicks = entry.picks.filter(p => !p.result);
     if (!openPicks.length) continue;
@@ -174,7 +176,6 @@ async function autoResolveV2(silent = false) {
     // Only resolve if the match date matches (within 1 day tolerance)
     if (!_dateClose(entry.dateIso, fx.date)) continue;
 
-    const now = new Date().toISOString();
     for (const p of openPicks) {
       const res = _resolveMarket(p.market, fx);
       if (res !== null) {
@@ -185,7 +186,32 @@ async function autoResolveV2(silent = false) {
     }
   }
 
-  _v2Save(store);
+  if (store.length) {
+    _v2Save(store);
+  }
+
+  // ── Fallback: resolve directly from window._v2PickBuffer ────────────────
+  // When localStorage is empty (QuotaExceededError), annotate buffer picks
+  // in-memory so the render shows results without needing localStorage.
+  if (!store.length && window._v2PickBuffer) {
+    for (const buf of Object.values(window._v2PickBuffer)) {
+      if (!buf.picks || !buf.picks.length) continue;
+      const fx = lookup[_normPair(buf.home, buf.away)];
+      if (!fx) continue;
+      const dateIso = _toIso(buf.date || '');
+      if (!_dateClose(dateIso, fx.date)) continue;
+      for (const p of buf.picks) {
+        if (p.result) continue;
+        const res = _resolveMarket(p.market, fx);
+        if (res !== null) {
+          p.result     = res;
+          p.resolvedAt = now;
+          resolved++;
+        }
+      }
+    }
+  }
+
   if (!silent && resolved > 0) _v2Toast(`✅ ${resolved} Picks ausgewertet`);
   else if (!silent)            _v2Toast('⏳ Keine neuen Ergebnisse');
   return resolved;
@@ -430,8 +456,8 @@ function _renderV2Tab() {
             modelOdds: p.modelOdds != null ? p.modelOdds : null,
             value:     p.value     || null,
             oddsIsEst: p.oddsIsEst || false,
-            result:    null,
-            resolvedAt:null,
+            result:    p.result    || null,     // preserve if already resolved in-memory
+            resolvedAt:p.resolvedAt || null,
           })),
         };
       });
