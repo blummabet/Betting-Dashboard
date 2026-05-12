@@ -314,56 +314,123 @@ function polyChangeDate(dateStr) {
   _fetchAllPricesAsync();
 }
 
+// leagueId (API-Football) → leagueKey used in LEAGUES / POLY_LEAGUES
+const _APIF_LK = {
+  39:'ENG', 78:'GER', 135:'ITA', 140:'ESP', 61:'FRA',
+  88:'NED', 94:'POR', 203:'TUR', 79:'GER2', 40:'ENG2', 179:'SCO',
+};
+
+// Format DD.MM.YYYY from YYYY-MM-DD
+function _isoToGerman(iso) {
+  if (!iso || iso.length < 10) return '';
+  const [y, m, d] = iso.split('-');
+  return `${d}.${m}.${y}`;
+}
+
+function _processFxPicks(fx, odds, lk, lg, results, seenIds) {
+  // MUST pass through deriveOdds() before getBettingPicks() — same as renderer.js
+  const derivedOdds = (typeof deriveOdds === 'function' && odds)
+    ? deriveOdds(odds)
+    : odds;
+
+  let picks = [];
+  try { picks = getBettingPicks(fx, derivedOdds, lk) || []; } catch (e) { /* skip broken fixture */ }
+
+  for (const p of picks) {
+    if (!POLY_MARKETS.has(p.market))          continue;
+    if (p.conf === 'low')                     continue;
+
+    const isBtts = p.market === 'Beide Teams treffen';
+    if (!isBtts && (p.oddsIsEst || p.odds == null)) continue;
+    if (isBtts && p.modelOdds == null)               continue;
+
+    const id = `${lk}|${fx.home}|${fx.away}|${p.market}`;
+    if (seenIds.has(id)) continue;
+    seenIds.add(id);
+
+    results.push({
+      id,
+      league:      lk,
+      leagueFlag:  (lg && lg.flag) || '🏆',
+      leagueName:  (lg && lg.name) || lk,
+      home:        fx.home,
+      away:        fx.away,
+      market:      p.market,
+      conf:        p.conf,
+      sc:          p.sc,
+      odds:        p.odds,
+      modelOdds:   p.modelOdds,
+      oddsIsEst:   p.oddsIsEst || false,
+      date:        fx.date,
+    });
+  }
+}
+
 function getPolyPicks(dateStr) {
   if (typeof LEAGUES === 'undefined') return [];
   const results = [];
+  const seenIds = new Set(); // dedup by id
 
+  // ── 1. LEAGUES fixtures (stake teams — primary source) ────────────────────
   for (const [lk, lg] of Object.entries(LEAGUES)) {
     if (!POLY_LEAGUES.has(lk)) continue;
     for (const fx of (lg.fixtures || [])) {
       if (fx.date !== dateStr) continue;
-
       const rawOdds = (typeof findOdds === 'function')
         ? findOdds(fx.leagueKey || lk, fx.home, fx.away)
         : null;
-      // MUST pass through deriveOdds() before getBettingPicks() — same as renderer.js and generate_picks.js.
-      // Without this, pick-engine receives raw {hw,dr,aw} without de-vigged probabilities or
-      // derived markets (DC/DNB/AH) → completely wrong picks (wrong markets, wrong lines).
-      const odds = (typeof deriveOdds === 'function' && rawOdds)
-        ? deriveOdds(rawOdds)
-        : rawOdds;
+      _processFxPicks(fx, rawOdds, lk, lg, results, seenIds);
+    }
+  }
 
-      let picks = [];
-      try { picks = getBettingPicks(fx, odds, lk) || []; } catch (e) { /* skip broken fixture */ }
+  // ── 2. prematch-data.json fallback (fixtures missing from LEAGUES) ────────
+  // update_dashboard.py only includes fixtures where at least one team has stake
+  // labels. Fixtures between non-stake teams (e.g. both mid-table) vanish from
+  // LEAGUES after updates — but can still produce valuable Polymarket picks.
+  // window._pmAllFixtures = raw prematch-data.json fixture array, set on load.
+  if (Array.isArray(window._pmAllFixtures)) {
+    // Convert dateStr (DD.MM.YYYY) to ISO for comparison
+    const [dd, mm, yy] = dateStr.split('.');
+    const isoDate = `${yy}-${mm}-${dd}`;
 
-      for (const p of picks) {
-        if (!POLY_MARKETS.has(p.market))          continue;
-        if (p.conf === 'low')                     continue;
+    for (const sf of window._pmAllFixtures) {
+      if (sf.date !== isoDate) continue;
+      const lk = _APIF_LK[sf.leagueId];
+      if (!lk || !POLY_LEAGUES.has(lk)) continue;
 
-        // For 1X2 and O/U: require real bookie odds (skip estimated — model vs model).
-        // For BTTS: allow estimated odds — modelOdds comes from independent Poisson and is
-        // valid for comparison against Poly price even when no real bookie quote is available.
-        const isBtts = p.market === 'Beide Teams treffen';
-        if (!isBtts && (p.oddsIsEst || p.odds == null)) continue;
-        if (isBtts && p.modelOdds == null)               continue; // need at least modelOdds
+      const home = sf.homeTeamName;
+      const away = sf.awayTeamName;
+      if (!home || !away) continue;
 
-        const id = `${lk}|${fx.home}|${fx.away}|${p.market}`;
-        results.push({
-          id,
-          league:      lk,
-          leagueFlag:  lg.flag || '🏆',
-          leagueName:  lg.name || lk,
-          home:        fx.home,
-          away:        fx.away,
-          market:      p.market,
-          conf:        p.conf,
-          sc:          p.sc,
-          odds:        p.odds,        // null/estimated for BTTS — use modelOdds for edge
-          modelOdds:   p.modelOdds,
-          oddsIsEst:   p.oddsIsEst || false,
-          date:        fx.date,
-        });
+      // Build minimal fixture compat object
+      const fxPm = {
+        date:   dateStr,
+        home,
+        away,
+        eventId: sf.fixtureId,
+        h2h:    sf.h2h  || null,
+        homeXg: null, awayXg: null,
+        homeStake: null, awayStake: null,
+        homeForm: null, awayForm: null,
+        homeSquad: null, awaySquad: null,
+        injuries: sf.injuries || null,
+        injurySummary: sf.injurySummary || null,
+        matchScore: 0,
+      };
+
+      // Get odds: prefer findOdds (live) then fall back to sf.odds directly
+      let rawOdds = (typeof findOdds === 'function')
+        ? findOdds(lk, home, away)
+        : null;
+      if (!rawOdds && sf.odds && (sf.odds.hw || sf.odds.pinn_hw)) {
+        rawOdds = sf.odds;
       }
+      if (!rawOdds) continue; // no odds → skip
+
+      // Look up league meta
+      const lg = (typeof LEAGUES !== 'undefined') ? LEAGUES[lk] : null;
+
+      _processFxPicks(fxPm, rawOdds, lk, lg, results, seenIds);
     }
   }
 

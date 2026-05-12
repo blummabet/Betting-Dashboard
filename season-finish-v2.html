@@ -5974,6 +5974,7 @@ async function loadPreMatchData() {
     if (_jResp.ok) {
       const _jData = await _jResp.json();
       const _jFxs  = _jData.fixtures || [];
+      window._pmAllFixtures = _jFxs; // expose all raw fixtures for Polymarket tab fallback
       const _jAge  = Date.now() - (_jData.ts || 0);
       if (_jFxs.length > 0) {
         const _jAgeH = Math.round(_jAge / 3600000);
