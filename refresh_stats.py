@@ -336,9 +336,12 @@ def fetch_fixture_stats_batch(
     """
     Fetch GET /fixtures/statistics for the last `max_fixtures` finished fixtures.
     Extracts per-fixture: corner kicks, shots on goal, total shots for home and away team.
+    Also tracks corners conceded (opponent's corners) and shots off-target per venue.
 
     fixture_info: [(timestamp, fixture_id, home_name, away_name), ...] sorted oldest→newest
     Returns: {team_name: {"home_corners": [list], "away_corners": [list],
+                          "home_corners_against": [list], "away_corners_against": [list],
+                          "home_shots_off_target": [list], "away_shots_off_target": [list],
                           "home_sot": [list], "away_sot": [list],
                           "home_shots": [list], "away_shots": [list]}}
     """
@@ -351,10 +354,22 @@ def fetch_fixture_stats_batch(
     def _ensure_team(name):
         if name not in result:
             result[name] = {
-                "home_corners": [], "away_corners": [],
-                "home_sot": [],     "away_sot": [],
-                "home_shots": [],   "away_shots": [],
+                "home_corners": [],         "away_corners": [],
+                "home_corners_against": [], "away_corners_against": [],
+                "home_shots_off_target": [], "away_shots_off_target": [],
+                "home_sot": [],             "away_sot": [],
+                "home_shots": [],           "away_shots": [],
             }
+
+    def _resolve_side(tname, h_name, a_name):
+        """Return 'home', 'away', or None."""
+        if tname == h_name: return "home"
+        if tname == a_name: return "away"
+        # Fuzzy: first 6 chars prefix match
+        tl = tname.lower(); hl = h_name.lower(); al = a_name.lower()
+        if tl[:6] == hl[:6] or hl[:6] == tl[:6]: return "home"
+        if tl[:6] == al[:6] or al[:6] == tl[:6]: return "away"
+        return None
 
     for ts, fid, h_name, a_name in recent:
         if not fid:
@@ -363,22 +378,14 @@ def fetch_fixture_stats_batch(
         if not stats_resp:
             continue
 
-        # Response: [{team: {id, name}, statistics: [{type, value}, ...]}, ...]
+        # Parse both sides in one pass, then cross-assign corners_against
+        sides: dict[str, dict] = {}  # "home" or "away" → parsed stats
         for team_stat in stats_resp:
             tname = team_stat.get("team", {}).get("name", "")
-            is_home = (tname == h_name)
-            is_away = (tname == a_name)
-            if not (is_home or is_away):
-                # Name mismatch — try fuzzy: check if either name starts with the other
-                hl = h_name.lower(); al = a_name.lower(); tl = tname.lower()
-                if any(tl.startswith(h[:6]) or h[:6].startswith(tl[:6]) for h in [hl]):
-                    is_home = True
-                elif any(tl.startswith(a[:6]) or a[:6].startswith(tl[:6]) for a in [al]):
-                    is_away = True
-                else:
-                    continue
+            side = _resolve_side(tname, h_name, a_name)
+            if not side:
+                continue
 
-            # Parse stats list: [{type: "Corner Kicks", value: "5"}, ...]
             parsed: dict = {}
             for s in team_stat.get("statistics", []):
                 key = STAT_TYPES.get(s.get("type", ""))
@@ -387,16 +394,30 @@ def fetch_fixture_stats_batch(
                         parsed[key] = int(s.get("value") or 0)
                     except (ValueError, TypeError):
                         parsed[key] = 0
+            sides[side] = parsed
 
-            side = "home" if is_home else "away"
-            tgt  = h_name if is_home else a_name
+        # Assign FOR stats to each team, AGAINST stats to the opponent
+        for side, parsed in sides.items():
+            tgt      = h_name if side == "home" else a_name
+            opp      = a_name if side == "home" else h_name
+            opp_side = "away"  if side == "home" else "home"
             _ensure_team(tgt)
+            _ensure_team(opp)
+
             if "corners" in parsed:
                 result[tgt][f"{side}_corners"].append(parsed["corners"])
+                # Opponent concedes these corners at their {opp_side} venue
+                result[opp][f"{opp_side}_corners_against"].append(parsed["corners"])
+
             if "sot" in parsed:
                 result[tgt][f"{side}_sot"].append(parsed["sot"])
+
             if "shots" in parsed:
                 result[tgt][f"{side}_shots"].append(parsed["shots"])
+                # Shots off-target = total shots − shots on goal (corner generation proxy)
+                sot = parsed.get("sot", 0)
+                off_target = max(0, parsed["shots"] - sot)
+                result[tgt][f"{side}_shots_off_target"].append(off_target)
 
     return result
 
@@ -458,18 +479,43 @@ def process_league(league_key: str, fetch_fixture_stats: bool = True) -> dict:
             for tname, cdata in corner_data.items():
                 if tname not in stats:
                     continue
+                enriched = False
+
                 if cdata["home_corners"]:
                     raw_avg = sum(cdata["home_corners"]) / len(cdata["home_corners"])
                     if raw_avg > 9.5:
                         print(f"       ⚠ {tname} cornersHome={raw_avg:.1f} capped at 9.5 (n={len(cdata['home_corners'])})")
                     stats[tname]["cornersHome"] = round(min(raw_avg, 9.5), 1)
-                    corners_ok += 1
+                    enriched = True
+
                 if cdata["away_corners"]:
                     raw_avg = sum(cdata["away_corners"]) / len(cdata["away_corners"])
                     if raw_avg > 8.5:
                         print(f"       ⚠ {tname} cornersAway={raw_avg:.1f} capped at 8.5 (n={len(cdata['away_corners'])})")
                     stats[tname]["cornersAway"] = round(min(raw_avg, 8.5), 1)
-            print(f"       → {corners_ok} teams enriched with corner averages")
+
+                # Corners conceded (opponent earns) at each venue
+                if cdata["home_corners_against"]:
+                    raw_avg = sum(cdata["home_corners_against"]) / len(cdata["home_corners_against"])
+                    stats[tname]["cornersAgainstHome"] = round(min(raw_avg, 9.5), 1)
+
+                if cdata["away_corners_against"]:
+                    raw_avg = sum(cdata["away_corners_against"]) / len(cdata["away_corners_against"])
+                    stats[tname]["cornersAgainstAway"] = round(min(raw_avg, 8.5), 1)
+
+                # Shots off-target per venue (proxy for corner generation rate)
+                if cdata["home_shots_off_target"]:
+                    stats[tname]["shotsOffTargetHome"] = round(
+                        sum(cdata["home_shots_off_target"]) / len(cdata["home_shots_off_target"]), 1)
+
+                if cdata["away_shots_off_target"]:
+                    stats[tname]["shotsOffTargetAway"] = round(
+                        sum(cdata["away_shots_off_target"]) / len(cdata["away_shots_off_target"]), 1)
+
+                if enriched:
+                    corners_ok += 1
+
+            print(f"       → {corners_ok} teams enriched with corner averages (for + against + shots-off-target)")
         else:
             print(f"       ⚙️  Fixture stats skipped (--fast mode)")
 

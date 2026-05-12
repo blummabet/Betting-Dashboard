@@ -603,12 +603,17 @@ function getBettingPicks(match, odds, leagueKey) {
   const _hFTSHome = hStat.failedToScoreHome ?? null;
   const _aFTSAway = aStat.failedToScoreAway ?? null;
   // ── Corner stats (from refresh_stats.py fixture-level batch fetch) ────────────
-  // cornersHome = avg corners when team plays at home  |  cornersAway = avg corners away
-  // Used to replace the formula-based cornersEst when real data is available.
-  const _hCornersHome = hStat.cornersHome ?? null;  // home team: corners per home game
-  const _aCornersHome = aStat.cornersHome ?? null;  // away team: corners when they play at home (not relevant for this match, but cross-ref)
-  const _hCornersAway = hStat.cornersAway ?? null;  // home team: corners per away game
-  const _aCornersAway = aStat.cornersAway ?? null;  // away team: corners per away game
+  // FOR  — corners the team themselves earn at home / away
+  // AGAINST — corners the opponent earns at that venue (= corners the team concedes)
+  // shotsOffTarget — avg shots off target per game at home/away (corner generation proxy)
+  const _hCornersHome        = hStat.cornersHome         ?? null;  // home team: own corners at home
+  const _aCornersHome        = aStat.cornersHome         ?? null;  // away team: own corners when at home (not this match)
+  const _hCornersAway        = hStat.cornersAway         ?? null;  // home team: own corners when away
+  const _aCornersAway        = aStat.cornersAway         ?? null;  // away team: own corners when away
+  const _hCornersAgainstHome = hStat.cornersAgainstHome  ?? null;  // corners opponents earn at home team's ground
+  const _aCornersAgainstAway = aStat.cornersAgainstAway  ?? null;  // corners opponents earn when away team plays away
+  const _hShotsOTHome        = hStat.shotsOffTargetHome  ?? null;  // home team: avg shots off-target in home games
+  const _aShotsOTAway        = aStat.shotsOffTargetAway  ?? null;  // away team: avg shots off-target in away games
   // xGSource — "shots" if upgraded by teams/statistics, "goals" otherwise
   const _hXGSource = hStat.xgSource ?? 'goals';
   const _aXGSource = aStat.xgSource ?? 'goals';
@@ -1077,22 +1082,78 @@ function getBettingPicks(match, odds, leagueKey) {
   const bttsLikely   = homeAttStr > 1.15 && awayAttStr > 0.95 && homeDefStr > 0.85 && awayDefStr > 0.85;
   const bttsBad      = homeAttStr < 0.90 || awayAttStr < 0.80;
   const bttsNoSignal = homeAttStr < 1.00 || awayAttStr < 0.90;
-  // Corners estimate — prefer real stats-cache data over xG formula
-  // cornersEst formula: ~3.4 corners/home-xG-unit + ~3.0/away-xG-unit (calibrated on Big5)
-  // Defensive leakiness bonus: porous defences invite more pressure → more corners
+  // ── Corners estimate ──────────────────────────────────────────────────────────
+  // Three input layers (best → fallback):
+  //   1. Real stats: team's own corners FOR (home/away) blended with opponent's corners AGAINST
+  //   2. Shots off-target supplement: ~18% of shots off-target result in corners
+  //   3. Formula fallback: xG-based formula when no real data
+  //
+  // cornersAgainst blending: home team earns corners against away team's defensive shape,
+  // away team earns corners against home team's defensive shape. Blending FOR + opponent's
+  // AGAINST gives a two-sided view of how many corners each team will actually earn.
+
   const _defBonus = Math.min(1.2, Math.max(0, (homeDefStr + awayDefStr - 2.0) * 0.5));
   const _cornersFormula = homeAttStr * 3.4 + awayAttStr * 3.0 + _defBonus;
-  // Real corner data from fixtures/statistics batch fetch: home avg at home + away avg away
-  // Sanity-cap individual team averages before combining (API data can be noisy for smaller leagues)
-  // Quality gate: < 2.0 means the average comes from 0–1 games only → unreliable, fall back to formula.
-  const _hCH = (_hCornersHome !== null && _hCornersHome >= 2.0) ? Math.min(_hCornersHome, 9.5) : null;
-  const _aCA = (_aCornersAway !== null && _aCornersAway >= 2.0) ? Math.min(_aCornersAway, 8.5) : null;
-  const _cornersReal = (_hCH !== null && _aCA !== null)
-    ? Math.round((_hCH + _aCA) * 10) / 10
+
+  // Quality gate: < 2.0 corners avg means 0–1 home games sampled → too noisy.
+  const _hCH  = (_hCornersHome        !== null && _hCornersHome        >= 2.0) ? Math.min(_hCornersHome,        9.5) : null;
+  const _aCA  = (_aCornersAway        !== null && _aCornersAway        >= 2.0) ? Math.min(_aCornersAway,        8.5) : null;
+  const _hCAg = (_hCornersAgainstHome !== null && _hCornersAgainstHome >= 1.5) ? Math.min(_hCornersAgainstHome, 8.5) : null;
+  const _aCAg = (_aCornersAgainstAway !== null && _aCornersAgainstAway >= 1.5) ? Math.min(_aCornersAgainstAway, 8.5) : null;
+
+  // Per-team corner estimate (home side earns, away side earns):
+  // Blend team's own FOR avg with opponent's AGAINST avg (equal weight when both present).
+  // _hCornEst = corners home team will earn → informed by both home attack & away defense
+  // _aCornEst = corners away team will earn → informed by both away attack & home defense
+  const _hCornEst = (_hCH !== null && _aCAg !== null) ? (_hCH + _aCAg) / 2
+                  : (_hCH  !== null)                   ? _hCH
+                  : (_aCAg !== null)                   ? _aCAg
+                  : null;
+  const _aCornEst = (_aCA !== null && _hCAg !== null) ? (_aCA + _hCAg) / 2
+                  : (_aCA  !== null)                   ? _aCA
+                  : (_hCAg !== null)                   ? _hCAg
+                  : null;
+
+  // Shots off-target supplement: each missed shot has ~18% chance of producing a corner.
+  // Blend 70% stat-based / 30% shots-based when both present; shots-only as standalone.
+  const _hSOT = (_hShotsOTHome !== null && _hShotsOTHome >= 0.5) ? _hShotsOTHome * 0.18 : null;
+  const _aSOT = (_aShotsOTAway !== null && _aShotsOTAway >= 0.5) ? _aShotsOTAway * 0.18 : null;
+  const _hCornBlended = (_hCornEst !== null && _hSOT !== null) ? _hCornEst * 0.70 + _hSOT * 0.30
+                      : (_hCornEst !== null)                    ? _hCornEst
+                      : (_hSOT    !== null)                    ? _hSOT * (1 / 0.30)  // scale up if shots-only
+                      : null;
+  const _aCornBlended = (_aCornEst !== null && _aSOT !== null) ? _aCornEst * 0.70 + _aSOT * 0.30
+                      : (_aCornEst !== null)                    ? _aCornEst
+                      : (_aSOT    !== null)                    ? _aSOT * (1 / 0.30)
+                      : null;
+
+  const _cornersReal = (_hCornBlended !== null && _aCornBlended !== null)
+    ? Math.round((_hCornBlended + _aCornBlended) * 10) / 10
     : null;
-  // Hard cap on total estimate: 13 corners max — keeps Over 11.5 FV above 1.25 even for high-pressing games.
-  // Anything beyond 13 expected corners is likely a data artefact (API noise / small sample).
-  const cornersEst     = _cornersReal !== null ? Math.min(_cornersReal, 13.0) : Math.min(_cornersFormula, 13.0);
+
+  // Formation corner modifier: wide formations with wingers generate more corners;
+  // packed defences or narrow midfields generate fewer wide chances.
+  // Applied as a multiplier on the final estimate (not the per-team blends above).
+  const _formCornerMod = (fStr) => {
+    if (!fStr) return 0;
+    const parts = fStr.split('-').map(Number).filter(n => !isNaN(n));
+    if (parts.length < 2) return 0;
+    const defenders  = parts[0];
+    const forwards   = parts[parts.length - 1];
+    const midTotal   = parts.slice(1, -1).reduce((a, b) => a + b, 0);
+    if (defenders >= 5)   return -0.08;  // back-5 / wing-backs → compact, less open space
+    if (midTotal  >= 5)   return -0.04;  // 5-man midfield → narrow, fewer wide runs
+    if (forwards  >= 3)   return +0.08;  // 3 forwards → wingers wide, more crossing attempts
+    return 0;
+  };
+  const _hFormCornMod = _formCornerMod(_hFormation);
+  const _aFormCornMod = _formCornerMod(_aFormation);
+  const _formCornScale = 1.0 + _hFormCornMod + _aFormCornMod;  // combined formation effect
+
+  // Final estimate: real data wins over formula; formation modifier applied to both paths.
+  // Hard cap 13 corners — prevents Over 11.5 FV dropping below 1.25 on data artefacts.
+  const _baseEst    = _cornersReal !== null ? _cornersReal : _cornersFormula;
+  const cornersEst  = Math.min(13.0, Math.max(4.0, _baseEst * _formCornScale));
   const cornersDataReal = _cornersReal !== null;
   // Injury-adjusted corner estimate — compute early so pick generation and modelOdds use same value.
   // Injured wingers/fullbacks reduce attacking width → fewer corners.
@@ -2068,9 +2129,19 @@ function getBettingPicks(match, odds, leagueKey) {
       const _cOOdds = _overLines[_overIdx].odds;
       const _cornPressNote = _anyNeedsWin
         ? ` ${bothNeedWin ? 'Beide Teams' : homeNeedsWin ? match.home : match.away} unter Druck${_rlSfx} — intensives Pressing erzwingt mehr Ecken.` : '';
-      const _cornDataNote = cornersDataReal
-        ? `<br>📊 Echte Ecken-Daten (Saison): ${match.home} Ø ${_hCornersHome} Heim · ${match.away} Ø ${_aCornersAway} Ausw. → Ø ${cornersEst.toFixed(1)} erwartet.`
-        : ``;
+      // Build data note showing which signals fed the estimate
+      const _cornDataNote = (() => {
+        if (!cornersDataReal) return '';
+        const _hForStr  = _hCornersHome        != null ? `${match.home} Ø ${_hCornersHome} Heim`       : null;
+        const _aForStr  = _aCornersAway        != null ? `${match.away} Ø ${_aCornersAway} Ausw.`      : null;
+        const _hAgStr   = _hCornersAgainstHome != null ? `(konz. Ø ${_hCornersAgainstHome})`           : '';
+        const _aAgStr   = _aCornersAgainstAway != null ? `(konz. Ø ${_aCornersAgainstAway})`           : '';
+        const _formNote = (_hFormCornMod !== 0 || _aFormCornMod !== 0)
+          ? ` · Formation: ${_hFormation||'?'} vs ${_aFormation||'?'} (${_formCornScale >= 1 ? '+' : ''}${Math.round((_formCornScale-1)*100)}%)`
+          : '';
+        const parts = [_hForStr && `${_hForStr} ${_hAgStr}`, _aForStr && `${_aForStr} ${_aAgStr}`].filter(Boolean);
+        return `<br>📊 Ecken-Daten: ${parts.join(' · ')}${_formNote} → Ø ${cornersEst.toFixed(1)} erwartet.`;
+      })();
       // Estimated corner odds below 1.55 offer no real value — skip pick entirely.
       // Real bookmaker odds (oddsIsEst=false) always pass regardless of level.
       const _EST_CORNER_MIN_ODDS = 1.55;
@@ -2125,7 +2196,7 @@ function getBettingPicks(match, odds, leagueKey) {
           const _cornUnderDoubleEst = o._cornersOddsEst && !cornersDataReal && scU < 0.65;
           if (_underOddsOk && !_cornUnderDoubleEst) {
             const _uDataNote = cornersDataReal
-              ? `<br>📊 Echte Ecken-Daten (Saison): ${match.home} Ø ${_hCornersHome} Heim · ${match.away} Ø ${_aCornersAway} Ausw. → nur Ø ${cornersEst.toFixed(1)} erwartet.`
+              ? `<br>📊 Ecken-Daten: ${match.home} Ø ${_hCornersHome||'?'} Heim · ${match.away} Ø ${_aCornersAway||'?'} Ausw.${_hFormCornMod!==0||_aFormCornMod!==0?` · Formation ${_hFormation||'?'} vs ${_aFormation||'?'}`:''}  → nur Ø ${cornersEst.toFixed(1)} erwartet.`
               : ``;
             sC.push({sc: scU, p:{icon:'🚩', market:_cUMkt, odds:_cUOdds, oddsIsEst: o._cornersOddsEst||false,
               conf: scU>0.60?'high':scU>0.38?'medium':'low',
