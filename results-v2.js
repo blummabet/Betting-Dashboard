@@ -65,6 +65,9 @@ function savePicksV2(matchList) {
   for (const buf of bufferEntries) {
     const { date, leagueKey: lk, leagueName, leagueFlag, home, away, matchScore, picks: vis } = buf;
     if (!vis || !vis.length) { _skippedEmpty++; continue; }
+    // Only track matches that earned a card (matchScore > 0 = at least one team has stake motivation)
+    // Dead-rubber matches (both teams play for nothing) should not appear in tracking.
+    if (!matchScore || matchScore <= 0) { _skippedEmpty++; continue; }
 
     const dateIso = _toIso(date || '');
     const id      = `${dateIso}-${lk}-${home}-${away}`;
@@ -422,20 +425,58 @@ function _renderV2Tab() {
   const panel = document.getElementById('trackingV2Panel');
   if (!panel) return;
 
-  let all = _v2Load();
+  // ── Two-source architecture ───────────────────────────────────────────────
+  // TODAY's matches → always from window._v2PickBuffer (live card state).
+  //   The buffer is populated by renderFixtureCard() and mirrors exactly what
+  //   cards are visible right now. If a card disappears before kickoff (e.g.
+  //   both teams lose stake labels after an auto-update), the entry vanishes
+  //   here too. Changes to picks on a card are reflected immediately.
+  //
+  // PAST matches (previous days) → from localStorage (frozen after kickoff day).
+  //   Once a match day has passed, the buffer no longer contains those fixtures.
+  //   localStorage preserves them with resolved results.
+  //
+  // Transition: when autoResolveV2() runs it annotates buffer picks in-memory
+  //   (for buffer path) or localStorage picks (for stored path). Either way the
+  //   resolved results show up here.
 
-  // ── Buffer fallback: wenn localStorage leer, direkt aus dem Render-Buffer anzeigen ──
-  // savePicksV2() kann aus versch. Gründen scheitern (Quota, Serialisierung).
-  // Der Buffer hat die exakt gleichen Daten die auf den Cards sichtbar sind → direkt nutzen.
+  const todayIso = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
+  // ── 1. Past matches from localStorage ────────────────────────────────────
+  const stored  = _v2Load();
+  const pastAll = stored.filter(e => e.dateIso < todayIso && e.matchScore > 0);
+
+  // Also keep future/today resolved entries from localStorage that are no longer
+  // in the buffer (match finished, resolved, card gone).
+  const todayResolvedStored = stored.filter(e =>
+    e.dateIso >= todayIso &&
+    e.matchScore > 0 &&
+    e.picks.some(p => p.result)
+  );
+
+  // ── 2. Today's entries from buffer (live card state) ──────────────────────
+  const now = new Date().toISOString();
+  const bufToday = [];
+  const bufTodayIds = new Set();
   let _usingBuffer = false;
-  if (!all.length && window._v2PickBuffer) {
-    const now = new Date().toISOString();
-    const bufAll = Object.values(window._v2PickBuffer)
-      .filter(buf => buf.picks && buf.picks.length)
-      .map(buf => {
-        const dateIso = _toIso(buf.date || '');
-        return {
-          id:         `${dateIso}-${buf.leagueKey}-${buf.home}-${buf.away}`,
+
+  if (window._v2PickBuffer) {
+    for (const buf of Object.values(window._v2PickBuffer)) {
+      if (!buf.picks || !buf.picks.length) continue;
+      if ((buf.matchScore || 0) <= 0) continue; // skip dead-rubber
+      const dateIso = _toIso(buf.date || '');
+      if (dateIso < todayIso) continue; // past dates are frozen in localStorage
+
+      const id = `${dateIso}-${buf.leagueKey}-${buf.home}-${buf.away}`;
+      bufTodayIds.add(id);
+
+      // Prefer localStorage version if it has resolved picks (autoResolve wrote there)
+      const storedVer = stored.find(e => e.id === id);
+      if (storedVer && storedVer.picks.some(p => p.result)) {
+        bufToday.push(storedVer);
+      } else {
+        bufToday.push({
+          id,
           date:       buf.date || '',
           dateIso,
           league:     buf.leagueKey || '',
@@ -456,12 +497,27 @@ function _renderV2Tab() {
             modelOdds: p.modelOdds != null ? p.modelOdds : null,
             value:     p.value     || null,
             oddsIsEst: p.oddsIsEst || false,
-            result:    p.result    || null,     // preserve if already resolved in-memory
+            result:    p.result    || null,
             resolvedAt:p.resolvedAt || null,
           })),
-        };
-      });
-    if (bufAll.length) { all = bufAll; _usingBuffer = true; }
+        });
+      }
+    }
+    if (bufToday.length) _usingBuffer = true;
+  }
+
+  // Resolved today-entries that are no longer on a card (match finished, card gone)
+  const resolvedNotInBuf = todayResolvedStored.filter(e => !bufTodayIds.has(e.id));
+  // bufTodayIds now contains all ≥ today entries from buffer
+
+  // ── 3. Fall back to full localStorage if buffer is empty and no stored either ──
+  // (page loaded without cards rendered yet — rare edge case)
+  let all;
+  if (!bufToday.length && !pastAll.length && !resolvedNotInBuf.length && stored.length) {
+    // Buffer not populated yet — show stored as interim (filtered for quality)
+    all = stored.filter(e => e.matchScore > 0);
+  } else {
+    all = [...pastAll, ...bufToday, ...resolvedNotInBuf];
   }
 
   const filtered = _applyFilters(all);
@@ -472,7 +528,7 @@ function _renderV2Tab() {
   const _lsRaw     = localStorage.getItem('betedge_picks_v2');
   const _lsCount   = (() => { try { return JSON.parse(_lsRaw||'[]').length; } catch(e) { return 'ERR'; } })();
   const _srcNote = _usingBuffer
-    ? '<span style="color:#f0c040;margin-left:8px">⚡ Live aus Buffer (localStorage leer)</span>'
+    ? `<span style="color:#f0c040;margin-left:8px">⚡ Heute: Live aus Buffer · Vergangen: localStorage</span>`
     : '';
   const _debugHtml = `
     <div style="font-size:11px;background:#0d1117;border:1px solid #30363d;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-family:monospace;color:#8b949e">
