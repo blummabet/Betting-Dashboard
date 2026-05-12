@@ -1676,6 +1676,13 @@ function renderLeague(key) {
   // Apply active day filter for actual card display, hide finished matches (kickoff + 100 min)
   const filtered = applyDayFilter(week)
     .filter(m => !isMatchOver(m.date, m.time))
+    // Skip dead-rubber fixtures: both teams confirmed out of everything (motivationLevel='none')
+    // e.g. both already relegated, both title secured — no meaningful signal for either pick or tracking.
+    .filter(m => {
+      const hm = m.homeStake?.motivationLevel;
+      const am = m.awayStake?.motivationLevel;
+      return !(hm === 'none' && am === 'none');
+    })
     .sort((a,b)=>computeMatchScore(b,key)-computeMatchScore(a,key));
   const cards = filtered.map(m=>renderFixtureCard(m, L.name, L.flag, key)).join('');
   const potdHtml = buildPickOfDayHtml(filtered.map(m=>({...m, leagueKey:key, leagueFlag:L.flag})));

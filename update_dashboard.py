@@ -1531,6 +1531,10 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
         # Cache motivation so we can use it for both motivationLevel and mustWin override
         h_motiv = calc_motivation(ht, h_labels, standings, cfg, rounds_left) if h_labels else 'full'
         a_motiv = calc_motivation(at, a_labels, standings, cfg, rounds_left) if a_labels else 'full'
+        # Skip fixtures where BOTH teams have nothing left to play for.
+        # e.g. both already relegated, both title already secured — pure dead rubber.
+        if h_motiv == 'none' and a_motiv == 'none':
+            continue
         # Post-process labels: when title/UCL/EL is CONFIRMED (motiv='none'), update labels
         # to reflect the secured status rather than the ongoing chase.
         # e.g. Bayern Platz 1 confirmed → "🏆 Titelkampf" → "🏆 Meister"
