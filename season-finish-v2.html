@@ -708,6 +708,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .fov-edge.fov-hot{color:#ff7b00;}
 .fov-edge.fov-below{color:#f85149;}
 
+/* ── Kelly Criterion chip ──────────────────────────────────────── */
+.pick-kelly{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px;
+  color:var(--muted);margin:2px 0 4px 0;padding:3px 8px;background:rgba(0,212,161,0.04);
+  border-radius:5px;border-left:2px solid rgba(0,212,161,0.25);}
+.pk-label{color:#8b949e;font-size:10px;letter-spacing:.3px;text-transform:uppercase;font-weight:700;flex-shrink:0;}
+.pk-dot{color:#444d56;}
+.pk-full{font-size:10px;opacity:.7;}
+.pk-hint{color:#444d56;font-size:10px;cursor:help;margin-left:1px;font-style:normal;}
+
 /* ── BET VERDICT ROW ─────────────────────────────────────────────── */
 .pick-verdict{display:flex;align-items:center;gap:6px;flex-wrap:wrap;
   font-size:11px;margin:4px 0 3px 0;padding:5px 8px;
@@ -1025,6 +1034,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <!-- LEAGUE NAV -->
 <div class="league-nav" id="leagueNav">
   <button class="league-btn active" data-league="overview"><span class="lf">⭐</span><span>Best of All</span></button>
+  <button class="league-btn" data-league="sharp" style="border-bottom-color:rgba(0,212,161,0.4)"><span class="lf">📡</span><span>Sharp Radar</span></button>
   <button class="league-btn urgent" data-league="ENG"><span class="lf">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span>Premier League</span><span class="lr">7R</span></button>
   <button class="league-btn urgent" data-league="GER"><span class="lf">🇩🇪</span><span>Bundesliga</span><span class="lr">7R</span></button>
   <button class="league-btn" data-league="ITA"><span class="lf">🇮🇹</span><span>Serie A</span><span class="lr">8R</span></button>
