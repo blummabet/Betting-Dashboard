@@ -1,14 +1,16 @@
 name: 📊 Ergebnisse holen
 
 on:
-  # Automatisch: 04:00, 18:00, 23:00 Uhr Vienna (CEST = UTC+2)
-  #   04:00 Vienna = 02:00 UTC
-  #   18:00 Vienna = 16:00 UTC
-  #   23:00 Vienna = 21:00 UTC
+  # Automatisch: 04:00, 18:00, 23:00, 01:30 Uhr Vienna (CEST = UTC+2)
+  #   04:00 Vienna = 02:00 UTC  → Nacht-Catch, alle gestrigen Spiele garantiert fertig
+  #   18:00 Vienna = 16:00 UTC  → Nachmittagsspiele (SCO, SUI, frühe Liga-Spiele)
+  #   23:00 Vienna = 21:00 UTC  → Abendspiele (aber 21:00-CEST-Anpfiffe noch live!)
+  #   01:30 Vienna = 23:30 UTC  → Sicherheitsnetz: alle 21:00-CEST-Spiele fertig
   schedule:
     - cron: '0 2 * * *'
     - cron: '0 16 * * *'
     - cron: '0 21 * * *'
+    - cron: '30 23 * * *'
 
   # Manuell ausführbar per Knopfdruck auf GitHub
   workflow_dispatch:
