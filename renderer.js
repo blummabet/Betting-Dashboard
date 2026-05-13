@@ -1157,6 +1157,34 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
     const modsHtml = (p.mods?.length) ? `<div class="pick-mods">${p.mods.join('')}</div>` : '';
 
+    // ── Kelly Criterion stake sizing ──────────────────────────────────────────
+    // Formula: f* = (b·p − q) / b  where b = oddsNum−1, p = 1/modelOdds, q = 1−p
+    // Show ½ Kelly (conservative, capped at 25%) + Full Kelly (capped at 50%)
+    // Only when: real bookie odds present, modelOdds is a calibrated probability (not sc-based proxy)
+    let kellyHtml = '';
+    if (p.modelOdds != null && oddsNum != null && !(_noRealOdds && p.oddsIsEst) && !p.oddsIsEst && oddsNum > 1.01) {
+      const _kB = oddsNum - 1;
+      const _kP = 1 / p.modelOdds;
+      const _kQ = 1 - _kP;
+      const _kFull = (_kB * _kP - _kQ) / _kB;
+      if (_kFull > 0.005) {   // only show when Kelly suggests at least 0.5% stake
+        const _kHalf    = Math.min(_kFull / 2, 0.25);
+        const _kFullCap = Math.min(_kFull, 0.50);
+        const _kHPct    = (_kHalf    * 100).toFixed(1);
+        const _kFPct    = (_kFullCap * 100).toFixed(1);
+        // Colour hint: grey = tiny edge, amber = modest, green = strong
+        const _kColor   = _kHalf < 0.025 ? '#8b949e' : _kHalf < 0.07 ? '#e3b341' : '#00d4a1';
+        const _kCap     = _kFullCap < _kFull ? ' (cap)' : '';
+        kellyHtml = `<div class="pick-kelly">
+          <span class="pk-label">Kelly</span>
+          <span style="color:${_kColor};font-weight:700;font-size:11px;" title="½ Kelly (empfohlen): ${_kHPct}% des Bankrolls setzen">½K: ${_kHPct}%</span>
+          <span class="pk-dot">·</span>
+          <span class="pk-full" title="Full Kelly${_kCap}: ${_kFPct}%">Full: ${_kFPct}%${_kCap}</span>
+          <span class="pk-hint" title="Kelly Criterion: mathematisch optimale Einsatzgröße basierend auf Model-Edge. ½ Kelly ist die konservative Empfehlung (halbes Risiko, ~75% des Erwartungswerts).">ℹ</span>
+        </div>`;
+      }
+    }
+
     // ── Opening → Current odds drift per pick ─────────────────────────────────
     // Maps pick market → odds key in odds_open / current odds object.
     // Only shows when odds_open exists AND the relevant key is present in both snapshots.
@@ -1380,6 +1408,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
         ${verdictHtml}
         ${altHtml}
         ${fairOddsHtml}
+        ${kellyHtml}
         ${driftHtml}
         ${modsHtml}
         <div class="pick-reason">${p.reason}${_tacBookHint}</div>
@@ -1658,9 +1687,287 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   </div>`;
 }
 
+// ═══════════════════════════════════════════════════════
+//  SHARP MONEY RADAR
+//  Aggregates line movement across ALL leagues for today's fixtures.
+//  Four sections:
+//    1. Overview KPIs  — fixtures tracked, avg vig, biggest mover
+//    2. Biggest Movers — top-15 fixtures by max movement magnitude
+//    3. Our Picks      — today's picks enriched with sharp context
+//    4. Market Heatmap — movement by market type across all fixtures
+// ═══════════════════════════════════════════════════════
+function renderSharpRadar() {
+  const mc = document.getElementById('mainContent');
+
+  // ── Collect today's fixtures across all leagues ────────────────────────────
+  const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
+  const isToday = ds => {
+    const d = typeof ds === 'string' ? parseGermanDate(ds) : new Date(ds);
+    d.setHours(0,0,0,0);
+    return d.getTime() === todayMidnight.getTime();
+  };
+
+  // Build enriched fixture list with line movement data
+  const allFixtures = [];
+  for (const [lk, L] of Object.entries(LEAGUES)) {
+    for (const m of (L.fixtures || [])) {
+      if (!isWithin7Days(m.date)) continue;
+      const pmKey = `${m.home}|${m.away}`;
+      const pm    = window._preMatchData?.[pmKey];
+      const oddsOpen    = pm?.odds_open || null;
+      const oddsCurrent = (typeof findOdds === 'function') ? findOdds(lk, m.home, m.away) : null;
+      const mvRows      = (oddsOpen && oddsCurrent) ? computeLineMovement(oddsOpen, oddsCurrent) : null;
+      const maxMov      = mvRows ? Math.max(...mvRows.map(r => Math.abs(r.ppShift))) : 0;
+      allFixtures.push({ m, lk, L, pm, oddsOpen, oddsCurrent, mvRows, maxMov, isToday: isToday(m.date) });
+    }
+  }
+
+  // ── Section 1: KPIs ────────────────────────────────────────────────────────
+  const todayFix   = allFixtures.filter(f => f.isToday);
+  const withOdds   = todayFix.filter(f => f.oddsCurrent != null);
+  const withMovement = todayFix.filter(f => f.mvRows != null);
+  const biggestMover = [...todayFix].sort((a,b) => b.maxMov - a.maxMov)[0];
+
+  // Average vig = 1 - 1/(sumOfImplied) for 1X2
+  let vigSum = 0, vigCount = 0;
+  for (const {oddsCurrent: o} of withOdds) {
+    if (o?.hw && o?.dr && o?.aw && o.hw > 1 && o.dr > 1 && o.aw > 1) {
+      const impl = 1/o.hw + 1/o.dr + 1/o.aw;
+      vigSum += (impl - 1) * 100;
+      vigCount++;
+    }
+  }
+  const avgVig = vigCount ? (vigSum / vigCount).toFixed(1) : '—';
+  const bigMoverLabel = biggestMover
+    ? `${biggestMover.m.home.split(' ').slice(-1)[0]} – ${biggestMover.m.away.split(' ').slice(-1)[0]}: ${biggestMover.maxMov}pp`
+    : '—';
+
+  const kpiHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px;">
+    ${[
+      ['📅', 'Heute (gesamt)', todayFix.length + ' Spiele'],
+      ['📊', 'Mit Quotes', withOdds.length],
+      ['📡', 'Mit Bewegung', withMovement.length],
+      ['📉', 'Ø Bookie-Marge', avgVig !== '—' ? avgVig + '%' : '—'],
+      ['🏃', 'Größter Mover', bigMoverLabel],
+    ].map(([ic, lbl, val]) => `<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 15px;">
+      <div style="font-size:20px;margin-bottom:5px;">${ic}</div>
+      <div style="font-size:18px;font-weight:900;color:var(--text);">${val}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px;">${lbl}</div>
+    </div>`).join('')}
+  </div>`;
+
+  // ── Section 2: Biggest Movers ──────────────────────────────────────────────
+  const movers = allFixtures
+    .filter(f => f.mvRows && f.maxMov >= 3)
+    .sort((a,b) => b.maxMov - a.maxMov)
+    .slice(0, 15);
+
+  const _mvColor = pp => pp >= 8 ? '#f85149' : pp >= 5 ? '#e3b341' : '#3fb950';
+  const _mvArrow = (row) => row.oddCurr < row.oddOpen ? '↘' : '↗';
+  const _mvDir   = (row) => row.ppShift > 0 ? `↗ ${row.ppShift}pp (kürzert)` : `↘ ${Math.abs(row.ppShift)}pp (verlängert)`;
+
+  const moversHtml = movers.length ? movers.map(({m, lk, L, mvRows, maxMov}) => {
+    const rowHtml = mvRows.map(row => {
+      const color = row.ppShift > 0 ? '#3fb950' : '#f85149';
+      const arrow = _mvArrow(row);
+      return `<span style="background:rgba(255,255,255,0.04);border:1px solid #30363d;border-radius:5px;padding:2px 7px;font-size:11px;white-space:nowrap;">
+        <span style="color:#8b949e;font-weight:700;">${row.label}</span>
+        <span style="color:#8b949e;font-size:10px;margin:0 2px">${row.oddOpen.toFixed(2)}→</span>
+        <span style="color:${color};font-weight:700;">${row.oddCurr.toFixed(2)} ${arrow}</span>
+        <span style="color:${color};font-size:10px;">${row.ppShift > 0 ? '+' : ''}${row.ppShift}pp</span>
+      </span>`;
+    }).join('');
+    const maxColor = _mvColor(maxMov);
+    return `<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+        <span style="font-size:15px;">${L.flag}</span>
+        <span style="font-weight:700;font-size:13px;">${m.home} <span style="color:var(--muted)">vs</span> ${m.away}</span>
+        <span style="margin-left:auto;background:rgba(255,255,255,0.05);border:1px solid ${maxColor}40;border-radius:12px;padding:2px 10px;font-size:11px;font-weight:800;color:${maxColor};">⚡ ${maxMov}pp</span>
+      </div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;">${rowHtml}</div>
+    </div>`;
+  }).join('') : `<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Keine signifikante Linienbewegung heute (≥3pp) — Markt ist stabil.</div>`;
+
+  // ── Section 3: Our Picks in Sharp Context ──────────────────────────────────
+  const bufEntries = window._v2PickBuffer ? Object.values(window._v2PickBuffer) : [];
+  const todayPicks = bufEntries.filter(b => isToday(b.date) && b.picks?.length);
+
+  let picksContextHtml = '';
+  if (!todayPicks.length) {
+    picksContextHtml = `<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Noch keine Picks für heute gespeichert. Tabs mit Spielen aufrufen, damit Picks geladen werden.</div>`;
+  } else {
+    const pickRows = [];
+    for (const buf of todayPicks) {
+      const pmKey = `${buf.home}|${buf.away}`;
+      const pm    = window._preMatchData?.[pmKey];
+      const oddsOpen    = pm?.odds_open || null;
+      const oddsCurrent = (typeof findOdds === 'function') ? findOdds(buf.league, buf.home, buf.away) : null;
+      const mvRows      = (oddsOpen && oddsCurrent) ? computeLineMovement(oddsOpen, oddsCurrent) : null;
+
+      for (const pick of buf.picks) {
+        // Determine pick's market alignment with line movement
+        const mktL = (pick.market || '').toLowerCase();
+        const pickMktKey = mktL.includes('heimsieg')||mktL.includes('dnb: heim') ? '1'
+          : mktL.includes('auswärtssieg')||mktL.includes('dnb: ausw') ? '2'
+          : mktL.includes('unentschieden')||mktL.includes('remis') ? 'X'
+          : mktL.includes('over 2.5')||mktL.includes('über 2.5') ? 'O25'
+          : mktL.includes('under 2.5')||mktL.includes('unter 2.5') ? 'U25'
+          : mktL.includes('doppelte chance')&&mktL.includes('1x') ? '1X_DC'
+          : mktL.includes('doppelte chance')&&mktL.includes('x2') ? 'X2_DC'
+          : null;
+
+        // Find relevant line movement for this pick's market
+        let pickMv = null;
+        if (mvRows && pickMktKey) {
+          pickMv = mvRows.find(r =>
+            r.label === pickMktKey ||
+            (pickMktKey === '1X_DC' && (r.label === '1' || r.label === 'X')) ||
+            (pickMktKey === 'X2_DC' && (r.label === 'X' || r.label === '2'))
+          );
+        }
+
+        // CLV: did the line move in our favour since opening?
+        let clvLabel = '—', clvColor = '#8b949e';
+        const oddsNum = pick.odds ?? pick.oddsEst ?? null;
+        if (oddsOpen && oddsNum && pick.market) {
+          const _key = mktL.includes('heimsieg') ? 'hw'
+            : mktL.includes('auswärtssieg') ? 'aw'
+            : mktL.includes('unentschieden') ? 'dr'
+            : mktL.includes('over 2.5') ? 'o25'
+            : mktL.includes('under 2.5') ? 'u25' : null;
+          const _oo = _key ? parseFloat(oddsOpen[_key]) : null;
+          if (_oo && _oo > 1 && Math.abs(_oo - oddsNum) > 0.01) {
+            const ppDrift = Math.round(((1/oddsNum) - (1/_oo)) * 100);
+            if (ppDrift > 0) { clvLabel = `+${ppDrift}pp CLV+`; clvColor = '#3fb950'; }
+            else { clvLabel = `${ppDrift}pp CLV−`; clvColor = '#f85149'; }
+          }
+        }
+
+        // Model edge
+        let edgeLabel = '—', edgeColor = '#8b949e';
+        if (pick.modelOdds && oddsNum) {
+          const ep = Math.round((1/pick.modelOdds - (1/oddsNum)*1.03) * 100);
+          if (ep >= 7)      { edgeLabel = `+${ep}pp Edge`; edgeColor = '#3fb950'; }
+          else if (ep >= 0) { edgeLabel = `+${ep}pp`; edgeColor = '#e3b341'; }
+          else              { edgeLabel = `${ep}pp`; edgeColor = '#f85149'; }
+        }
+
+        // Sharp alignment: does market move confirm our pick?
+        let sharpLabel = '—', sharpColor = '#8b949e', sharpBg = 'rgba(255,255,255,0.03)';
+        if (pickMv) {
+          const confirmed = pickMv.ppShift > 0;  // positive = implied prob rose = odds shortened = market "moved" toward this outcome
+          // For our pick: if odds shortened since open, market is moving our way (CLV+) — confirms pick
+          // ppShift > 0 means implied prob increased = our side is being backed = sharp money on our side
+          if (confirmed && Math.abs(pickMv.ppShift) >= 5) {
+            sharpLabel = `✅ Confirmed ${Math.abs(pickMv.ppShift)}pp`; sharpColor = '#3fb950'; sharpBg = 'rgba(63,185,80,0.07)';
+          } else if (confirmed) {
+            sharpLabel = `↗ Lean ${Math.abs(pickMv.ppShift)}pp`; sharpColor = '#3fb950';
+          } else if (Math.abs(pickMv.ppShift) >= 8) {
+            sharpLabel = `⚠ Contra ${Math.abs(pickMv.ppShift)}pp`; sharpColor = '#f85149'; sharpBg = 'rgba(248,81,73,0.07)';
+          } else {
+            sharpLabel = `↘ Against ${Math.abs(pickMv.ppShift)}pp`; sharpColor = '#e3b341';
+          }
+        } else if (!mvRows) {
+          sharpLabel = 'Kein Opening';
+        }
+
+        pickRows.push(`<div style="background:${sharpBg};border:1px solid var(--border);border-radius:10px;padding:11px 14px;margin-bottom:7px;">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap;">
+            <span style="font-size:13px;">${buf.leagueFlag || ''}</span>
+            <span style="font-size:11px;color:var(--muted);">${buf.home} vs ${buf.away}</span>
+            <span style="font-weight:700;font-size:13px;margin-left:2px;">${pick.market}</span>
+            ${oddsNum ? `<span style="color:#58a6ff;font-weight:700;font-size:12px;">@ ${oddsNum.toFixed(2)}</span>` : ''}
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:11px;">
+            <span style="padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.05);border:1px solid #30363d;">
+              <span style="color:#8b949e;">Edge:</span> <span style="color:${edgeColor};font-weight:700;">${edgeLabel}</span>
+            </span>
+            <span style="padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.05);border:1px solid #30363d;">
+              <span style="color:#8b949e;">CLV:</span> <span style="color:${clvColor};font-weight:700;">${clvLabel}</span>
+            </span>
+            <span style="padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.05);border:1px solid ${sharpColor}40;">
+              <span style="color:#8b949e;">Sharp:</span> <span style="color:${sharpColor};font-weight:700;">${sharpLabel}</span>
+            </span>
+          </div>
+        </div>`);
+      }
+    }
+    picksContextHtml = pickRows.length ? pickRows.join('') :
+      `<div style="padding:20px;text-align:center;color:var(--muted);">Keine Picks für heutige Spiele.</div>`;
+  }
+
+  // ── Section 4: Market Flow Heatmap ────────────────────────────────────────
+  // For each market type, compute: avg pp movement, count of fixtures with movement, direction bias
+  const MARKET_DEFS = [
+    { key: 'hw',  label: 'Heimsieg (1)' },
+    { key: 'dr',  label: 'Remis (X)'    },
+    { key: 'aw',  label: 'Auswärtssieg (2)' },
+    { key: 'o25', label: 'Over 2.5'     },
+    { key: 'u25', label: 'Under 2.5'    },
+    { key: 'o35', label: 'Over 3.5'     },
+  ];
+
+  const heatData = MARKET_DEFS.map(({key, label}) => {
+    let totalPp = 0, count = 0, posCount = 0, negCount = 0;
+    for (const {mvRows} of allFixtures) {
+      if (!mvRows) continue;
+      const labelMap = { hw:'1', dr:'X', aw:'2', o25:'O25', u25:'U25', o35:'O35' };
+      const row = mvRows.find(r => r.label === labelMap[key]);
+      if (row) {
+        totalPp  += Math.abs(row.ppShift);
+        count++;
+        if (row.ppShift > 0) posCount++;
+        else negCount++;
+      }
+    }
+    const avgPp = count ? (totalPp / count).toFixed(1) : null;
+    return { key, label, avgPp, count, posCount, negCount };
+  });
+
+  const heatmapHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;">
+    ${heatData.map(({label, avgPp, count, posCount, negCount}) => {
+      const intensity = !avgPp ? 0 : parseFloat(avgPp) >= 7 ? 3 : parseFloat(avgPp) >= 4 ? 2 : 1;
+      const bg = !avgPp ? 'rgba(255,255,255,0.02)'
+        : intensity === 3 ? 'rgba(248,81,73,0.13)' : intensity === 2 ? 'rgba(227,179,65,0.10)' : 'rgba(63,185,80,0.07)';
+      const col = !avgPp ? '#484f58' : intensity === 3 ? '#f85149' : intensity === 2 ? '#e3b341' : '#3fb950';
+      const dir = !count ? '' : posCount > negCount ? ` · ↗ ${posCount}/${count}` : ` · ↘ ${negCount}/${count}`;
+      return `<div style="background:${bg};border:1px solid ${col}30;border-radius:8px;padding:11px 13px;text-align:center;">
+        <div style="font-size:14px;font-weight:900;color:${col};">${avgPp != null ? avgPp + 'pp' : '—'}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px;">${label}</div>
+        <div style="font-size:9px;color:${col};opacity:.75;margin-top:2px;">${count ? count + ' Spiele' + dir : 'kein Opening'}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+
+  // ── Assemble ───────────────────────────────────────────────────────────────
+  mc.innerHTML = `<div style="max-width:960px;margin:0 auto;padding:0 0 60px;">
+
+    <div style="margin-bottom:22px;padding:18px 20px 14px;background:linear-gradient(135deg,rgba(0,212,161,0.07),rgba(88,166,255,0.04));border:1px solid rgba(0,212,161,0.18);border-radius:14px;">
+      <div style="font-size:18px;font-weight:900;margin-bottom:5px;">📡 Sharp Money Radar</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.55;">Linienbewegungen im Markt — wo bewegt sich Geld, wohin zeigen die Sharps, und wie stehen unsere Picks dazu?</div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:10px;">📊 Heutige Marktübersicht</div>
+    ${kpiHtml}
+
+    <div class="section-label" style="margin-bottom:10px;">🔥 Markt-Flow Heatmap · Ø Bewegung pro Market</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px;">
+      ${heatmapHtml}
+    </div>
+
+    <div class="section-label" style="margin-bottom:10px;">⚡ Größte Marktbewegungen heute</div>
+    <div style="margin-bottom:20px;">${moversHtml}</div>
+
+    <div class="section-label" style="margin-bottom:10px;">🎯 Unsere heutigen Picks im Sharp-Kontext</div>
+    ${picksContextHtml}
+
+  </div>`;
+}
+
 function renderLeague(key) {
   const mc = document.getElementById('mainContent');
   if (key === 'overview') { renderOverview(); return; }
+  if (key === 'sharp')    { renderSharpRadar(); return; }
   const L = LEAGUES[key];
   if (!L) { mc.innerHTML = '<p style="color:var(--muted);padding:20px">Keine Daten verfügbar.</p>'; return; }
 
