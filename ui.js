@@ -48,11 +48,31 @@ function showView(view) {
   document.getElementById('navStatus').classList.toggle('active',     isStatus);
   document.getElementById('navPolymarket').classList.toggle('active', isPolymarket);
   document.getElementById('navTracking').classList.toggle('active',   isTracking);
+  // Sharp Radar uses the season panel — clear its active when another view is picked
+  const _navSharp = document.getElementById('navSharp');
+  if (_navSharp) _navSharp.classList.remove('active');
 
   if (isResults)    initResults();
   if (isStatus)     { initStatus(); buildValidatorDates(); }
   if (isPolymarket) initPolymarket();
   if (isTracking && typeof initResultsV2 === 'function') initResultsV2();
+}
+
+// Navigate directly to Sharp Radar from the top nav
+function showSharpRadar() {
+  // Show the season panel (same container as league views)
+  showView('season');
+  // Activate the sharp sub-tab in league nav
+  document.querySelectorAll('.league-btn').forEach(b => b.classList.remove('active'));
+  const _sharpBtn = document.querySelector('.league-btn[data-league="sharp"]');
+  if (_sharpBtn) _sharpBtn.classList.add('active');
+  window._currentLeague = 'sharp';
+  // Render the radar
+  if (typeof renderSharpRadar === 'function') renderSharpRadar();
+  // Mark Sharp Radar active in top nav (showView de-activated navSeason)
+  const _navSharp = document.getElementById('navSharp');
+  if (_navSharp) _navSharp.classList.add('active');
+  document.getElementById('navSeason').classList.remove('active');
 }
 
 // ═══════════════════════════════════════════════════════

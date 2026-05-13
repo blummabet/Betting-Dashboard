@@ -1699,114 +1699,130 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 function renderSharpRadar() {
   const mc = document.getElementById('mainContent');
 
-  // ── Collect today's fixtures across all leagues ────────────────────────────
+  // ── Helpers ───────────────────────────────────────────────────────────────
   const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
-  const isToday = ds => {
-    const d = typeof ds === 'string' ? parseGermanDate(ds) : new Date(ds);
-    d.setHours(0,0,0,0);
-    return d.getTime() === todayMidnight.getTime();
+  const _isToday = ds => {
+    try { const d = parseGermanDate(ds); d.setHours(0,0,0,0); return d.getTime() === todayMidnight.getTime(); }
+    catch { return false; }
   };
+  // Format date string "DD.MM.YYYY" → short weekday label "Di 13.5."
+  const _fmtDate = ds => {
+    try {
+      const d = parseGermanDate(ds);
+      const days = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+      return `${days[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.`;
+    } catch { return ds || ''; }
+  };
+  const _mvColor = pp => pp >= 8 ? '#f85149' : pp >= 5 ? '#e3b341' : '#3fb950';
 
-  // Build enriched fixture list with line movement data
+  // ── Collect ALL fixtures within 7 days across all leagues ─────────────────
   const allFixtures = [];
   for (const [lk, L] of Object.entries(LEAGUES)) {
     for (const m of (L.fixtures || [])) {
       if (!isWithin7Days(m.date)) continue;
-      const pmKey = `${m.home}|${m.away}`;
-      const pm    = window._preMatchData?.[pmKey];
+      const pmKey       = `${m.home}|${m.away}`;
+      const pm          = window._preMatchData?.[pmKey];
       const oddsOpen    = pm?.odds_open || null;
       const oddsCurrent = (typeof findOdds === 'function') ? findOdds(lk, m.home, m.away) : null;
       const mvRows      = (oddsOpen && oddsCurrent) ? computeLineMovement(oddsOpen, oddsCurrent) : null;
       const maxMov      = mvRows ? Math.max(...mvRows.map(r => Math.abs(r.ppShift))) : 0;
-      allFixtures.push({ m, lk, L, pm, oddsOpen, oddsCurrent, mvRows, maxMov, isToday: isToday(m.date) });
+      allFixtures.push({ m, lk, L, pm, oddsOpen, oddsCurrent, mvRows, maxMov });
     }
   }
 
-  // ── Section 1: KPIs ────────────────────────────────────────────────────────
-  const todayFix   = allFixtures.filter(f => f.isToday);
-  const withOdds   = todayFix.filter(f => f.oddsCurrent != null);
-  const withMovement = todayFix.filter(f => f.mvRows != null);
-  const biggestMover = [...todayFix].sort((a,b) => b.maxMov - a.maxMov)[0];
+  // ── Section 1: KPIs (full week) ───────────────────────────────────────────
+  const withOdds     = allFixtures.filter(f => f.oddsCurrent != null);
+  const withMovement = allFixtures.filter(f => f.mvRows != null);
+  const biggestMover = [...allFixtures].sort((a,b) => b.maxMov - a.maxMov)[0];
 
-  // Average vig = 1 - 1/(sumOfImplied) for 1X2
   let vigSum = 0, vigCount = 0;
   for (const {oddsCurrent: o} of withOdds) {
     if (o?.hw && o?.dr && o?.aw && o.hw > 1 && o.dr > 1 && o.aw > 1) {
-      const impl = 1/o.hw + 1/o.dr + 1/o.aw;
-      vigSum += (impl - 1) * 100;
+      vigSum += (1/o.hw + 1/o.dr + 1/o.aw - 1) * 100;
       vigCount++;
     }
   }
   const avgVig = vigCount ? (vigSum / vigCount).toFixed(1) : '—';
-  const bigMoverLabel = biggestMover
+  const bigMoverLabel = biggestMover && biggestMover.maxMov > 0
     ? `${biggestMover.m.home.split(' ').slice(-1)[0]} – ${biggestMover.m.away.split(' ').slice(-1)[0]}: ${biggestMover.maxMov}pp`
     : '—';
 
   const kpiHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px;">
     ${[
-      ['📅', 'Heute (gesamt)', todayFix.length + ' Spiele'],
-      ['📊', 'Mit Quotes', withOdds.length],
-      ['📡', 'Mit Bewegung', withMovement.length],
-      ['📉', 'Ø Bookie-Marge', avgVig !== '—' ? avgVig + '%' : '—'],
-      ['🏃', 'Größter Mover', bigMoverLabel],
+      ['📅', 'Spiele (7 Tage)',   allFixtures.length + ' gesamt'],
+      ['📊', 'Mit Live-Quotes',   withOdds.length],
+      ['📡', 'Mit Opening-Snap',  withMovement.length],
+      ['📉', 'Ø Bookie-Marge',   avgVig !== '—' ? avgVig + '%' : '—'],
+      ['⚡', 'Größter Mover',     bigMoverLabel],
     ].map(([ic, lbl, val]) => `<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 15px;">
       <div style="font-size:20px;margin-bottom:5px;">${ic}</div>
-      <div style="font-size:18px;font-weight:900;color:var(--text);">${val}</div>
-      <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px;">${lbl}</div>
+      <div style="font-size:16px;font-weight:900;color:var(--text);line-height:1.2;">${val}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.4px;">${lbl}</div>
     </div>`).join('')}
   </div>`;
 
-  // ── Section 2: Biggest Movers ──────────────────────────────────────────────
+  // ── Section 2: Biggest Movers (all week, with date + CLV label) ───────────
   const movers = allFixtures
     .filter(f => f.mvRows && f.maxMov >= 3)
     .sort((a,b) => b.maxMov - a.maxMov)
-    .slice(0, 15);
-
-  const _mvColor = pp => pp >= 8 ? '#f85149' : pp >= 5 ? '#e3b341' : '#3fb950';
-  const _mvArrow = (row) => row.oddCurr < row.oddOpen ? '↘' : '↗';
-  const _mvDir   = (row) => row.ppShift > 0 ? `↗ ${row.ppShift}pp (kürzert)` : `↘ ${Math.abs(row.ppShift)}pp (verlängert)`;
+    .slice(0, 20);
 
   const moversHtml = movers.length ? movers.map(({m, lk, L, mvRows, maxMov}) => {
+    const maxColor  = _mvColor(maxMov);
+    const dateLabel = _fmtDate(m.date);
+    const timeLabel = m.time ? ` · ${m.time}` : '';
+    const isT       = _isToday(m.date);
+
     const rowHtml = mvRows.map(row => {
-      const color = row.ppShift > 0 ? '#3fb950' : '#f85149';
-      const arrow = _mvArrow(row);
-      return `<span style="background:rgba(255,255,255,0.04);border:1px solid #30363d;border-radius:5px;padding:2px 7px;font-size:11px;white-space:nowrap;">
+      // CLV direction: ppShift > 0 means implied prob went UP = odds shortened = MARKET BACKED this outcome
+      // For a bettor holding this outcome: positive ppShift = CLV+ (market confirmed our side)
+      const backed     = row.ppShift > 0;
+      const color      = backed ? '#3fb950' : '#f85149';
+      const arrow      = row.oddCurr < row.oddOpen ? '↘' : '↗';
+      const clvBadge   = Math.abs(row.ppShift) >= 3
+        ? `<span style="font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;background:${backed ? 'rgba(63,185,80,0.15)' : 'rgba(248,81,73,0.12)'};color:${color};border:1px solid ${color}40;">${backed ? 'CLV+' : 'CLV−'}</span>`
+        : '';
+      return `<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.04);border:1px solid #30363d;border-radius:5px;padding:2px 7px;font-size:11px;white-space:nowrap;">
         <span style="color:#8b949e;font-weight:700;">${row.label}</span>
-        <span style="color:#8b949e;font-size:10px;margin:0 2px">${row.oddOpen.toFixed(2)}→</span>
+        <span style="color:#8b949e;font-size:10px;">${row.oddOpen.toFixed(2)}→</span>
         <span style="color:${color};font-weight:700;">${row.oddCurr.toFixed(2)} ${arrow}</span>
         <span style="color:${color};font-size:10px;">${row.ppShift > 0 ? '+' : ''}${row.ppShift}pp</span>
+        ${clvBadge}
       </span>`;
     }).join('');
-    const maxColor = _mvColor(maxMov);
+
     return `<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
         <span style="font-size:15px;">${L.flag}</span>
         <span style="font-weight:700;font-size:13px;">${m.home} <span style="color:var(--muted)">vs</span> ${m.away}</span>
+        <span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:8px;background:${isT ? 'rgba(0,212,161,0.12)' : 'rgba(255,255,255,0.05)'};color:${isT ? '#00d4a1' : '#8b949e'};border:1px solid ${isT ? 'rgba(0,212,161,0.3)' : '#30363d'};">${isT ? '📅 Heute' : dateLabel}${timeLabel}</span>
         <span style="margin-left:auto;background:rgba(255,255,255,0.05);border:1px solid ${maxColor}40;border-radius:12px;padding:2px 10px;font-size:11px;font-weight:800;color:${maxColor};">⚡ ${maxMov}pp</span>
       </div>
       <div style="display:flex;gap:5px;flex-wrap:wrap;">${rowHtml}</div>
     </div>`;
-  }).join('') : `<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Keine signifikante Linienbewegung heute (≥3pp) — Markt ist stabil.</div>`;
+  }).join('') : `<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Noch keine signifikante Linienbewegung diese Woche (≥3pp) — Opening-Snapshots werden täglich geladen.</div>`;
 
-  // ── Section 3: Our Picks in Sharp Context ──────────────────────────────────
+  // ── Section 3: Our Picks in Sharp Context (today's picks) ─────────────────
   const bufEntries = window._v2PickBuffer ? Object.values(window._v2PickBuffer) : [];
-  const todayPicks = bufEntries.filter(b => isToday(b.date) && b.picks?.length);
+  const todayPicks = bufEntries.filter(b => _isToday(b.date) && b.picks?.length);
 
   let picksContextHtml = '';
   if (!todayPicks.length) {
-    picksContextHtml = `<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Noch keine Picks für heute gespeichert. Tabs mit Spielen aufrufen, damit Picks geladen werden.</div>`;
+    picksContextHtml = `<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px;">Noch keine Picks für heute — kurz warten bis Daten geladen sind.</div>`;
   } else {
     const pickRows = [];
     for (const buf of todayPicks) {
-      const pmKey = `${buf.home}|${buf.away}`;
-      const pm    = window._preMatchData?.[pmKey];
+      const pmKey       = `${buf.home}|${buf.away}`;
+      const pm          = window._preMatchData?.[pmKey];
       const oddsOpen    = pm?.odds_open || null;
       const oddsCurrent = (typeof findOdds === 'function') ? findOdds(buf.league, buf.home, buf.away) : null;
       const mvRows      = (oddsOpen && oddsCurrent) ? computeLineMovement(oddsOpen, oddsCurrent) : null;
 
       for (const pick of buf.picks) {
-        // Determine pick's market alignment with line movement
-        const mktL = (pick.market || '').toLowerCase();
+        const mktL      = (pick.market || '').toLowerCase();
+        const oddsNum   = pick.odds ?? null;
+
+        // Map pick market to line-movement label
         const pickMktKey = mktL.includes('heimsieg')||mktL.includes('dnb: heim') ? '1'
           : mktL.includes('auswärtssieg')||mktL.includes('dnb: ausw') ? '2'
           : mktL.includes('unentschieden')||mktL.includes('remis') ? 'X'
@@ -1816,7 +1832,6 @@ function renderSharpRadar() {
           : mktL.includes('doppelte chance')&&mktL.includes('x2') ? 'X2_DC'
           : null;
 
-        // Find relevant line movement for this pick's market
         let pickMv = null;
         if (mvRows && pickMktKey) {
           pickMv = mvRows.find(r =>
@@ -1826,20 +1841,19 @@ function renderSharpRadar() {
           );
         }
 
-        // CLV: did the line move in our favour since opening?
+        // CLV: opening → current odds drift for our pick's exact market
         let clvLabel = '—', clvColor = '#8b949e';
-        const oddsNum = pick.odds ?? pick.oddsEst ?? null;
-        if (oddsOpen && oddsNum && pick.market) {
-          const _key = mktL.includes('heimsieg') ? 'hw'
-            : mktL.includes('auswärtssieg') ? 'aw'
-            : mktL.includes('unentschieden') ? 'dr'
-            : mktL.includes('over 2.5') ? 'o25'
+        if (oddsOpen && oddsNum) {
+          const _okey = mktL.includes('heimsieg') ? 'hw' : mktL.includes('auswärtssieg') ? 'aw'
+            : mktL.includes('unentschieden') ? 'dr' : mktL.includes('over 2.5') ? 'o25'
             : mktL.includes('under 2.5') ? 'u25' : null;
-          const _oo = _key ? parseFloat(oddsOpen[_key]) : null;
+          const _oo = _okey ? parseFloat(oddsOpen[_okey]) : null;
           if (_oo && _oo > 1 && Math.abs(_oo - oddsNum) > 0.01) {
             const ppDrift = Math.round(((1/oddsNum) - (1/_oo)) * 100);
-            if (ppDrift > 0) { clvLabel = `+${ppDrift}pp CLV+`; clvColor = '#3fb950'; }
-            else { clvLabel = `${ppDrift}pp CLV−`; clvColor = '#f85149'; }
+            clvLabel = ppDrift > 0 ? `+${ppDrift}pp CLV+` : `${ppDrift}pp CLV−`;
+            clvColor = ppDrift > 0 ? '#3fb950' : '#f85149';
+          } else if (_oo) {
+            clvLabel = 'Stabil'; clvColor = '#8b949e';
           }
         }
 
@@ -1847,45 +1861,40 @@ function renderSharpRadar() {
         let edgeLabel = '—', edgeColor = '#8b949e';
         if (pick.modelOdds && oddsNum) {
           const ep = Math.round((1/pick.modelOdds - (1/oddsNum)*1.03) * 100);
-          if (ep >= 7)      { edgeLabel = `+${ep}pp Edge`; edgeColor = '#3fb950'; }
-          else if (ep >= 0) { edgeLabel = `+${ep}pp`; edgeColor = '#e3b341'; }
-          else              { edgeLabel = `${ep}pp`; edgeColor = '#f85149'; }
+          edgeLabel = ep >= 0 ? `+${ep}pp` : `${ep}pp`;
+          edgeColor = ep >= 7 ? '#3fb950' : ep >= 0 ? '#e3b341' : '#f85149';
         }
 
-        // Sharp alignment: does market move confirm our pick?
+        // Sharp alignment
         let sharpLabel = '—', sharpColor = '#8b949e', sharpBg = 'rgba(255,255,255,0.03)';
         if (pickMv) {
-          const confirmed = pickMv.ppShift > 0;  // positive = implied prob rose = odds shortened = market "moved" toward this outcome
-          // For our pick: if odds shortened since open, market is moving our way (CLV+) — confirms pick
-          // ppShift > 0 means implied prob increased = our side is being backed = sharp money on our side
-          if (confirmed && Math.abs(pickMv.ppShift) >= 5) {
-            sharpLabel = `✅ Confirmed ${Math.abs(pickMv.ppShift)}pp`; sharpColor = '#3fb950'; sharpBg = 'rgba(63,185,80,0.07)';
-          } else if (confirmed) {
-            sharpLabel = `↗ Lean ${Math.abs(pickMv.ppShift)}pp`; sharpColor = '#3fb950';
-          } else if (Math.abs(pickMv.ppShift) >= 8) {
-            sharpLabel = `⚠ Contra ${Math.abs(pickMv.ppShift)}pp`; sharpColor = '#f85149'; sharpBg = 'rgba(248,81,73,0.07)';
-          } else {
-            sharpLabel = `↘ Against ${Math.abs(pickMv.ppShift)}pp`; sharpColor = '#e3b341';
-          }
+          const pp  = Math.abs(pickMv.ppShift);
+          const pos = pickMv.ppShift > 0;
+          if (pos && pp >= 5)   { sharpLabel = `✅ Bestätigt ${pp}pp`;  sharpColor = '#3fb950'; sharpBg = 'rgba(63,185,80,0.07)'; }
+          else if (pos)          { sharpLabel = `↗ Tendenz ${pp}pp`;    sharpColor = '#3fb950'; }
+          else if (pp >= 8)      { sharpLabel = `⚠ Contra ${pp}pp`;    sharpColor = '#f85149'; sharpBg = 'rgba(248,81,73,0.07)'; }
+          else                   { sharpLabel = `↘ Gegen ${pp}pp`;     sharpColor = '#e3b341'; }
         } else if (!mvRows) {
           sharpLabel = 'Kein Opening';
+        } else {
+          sharpLabel = 'Kein Signal';
         }
 
         pickRows.push(`<div style="background:${sharpBg};border:1px solid var(--border);border-radius:10px;padding:11px 14px;margin-bottom:7px;">
           <div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap;">
-            <span style="font-size:13px;">${buf.leagueFlag || ''}</span>
+            <span>${buf.leagueFlag || ''}</span>
             <span style="font-size:11px;color:var(--muted);">${buf.home} vs ${buf.away}</span>
-            <span style="font-weight:700;font-size:13px;margin-left:2px;">${pick.market}</span>
+            <span style="font-weight:700;font-size:13px;">${pick.market}</span>
             ${oddsNum ? `<span style="color:#58a6ff;font-weight:700;font-size:12px;">@ ${oddsNum.toFixed(2)}</span>` : ''}
           </div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:11px;">
             <span style="padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.05);border:1px solid #30363d;">
-              <span style="color:#8b949e;">Edge:</span> <span style="color:${edgeColor};font-weight:700;">${edgeLabel}</span>
+              <span style="color:#8b949e;">Model Edge:</span> <span style="color:${edgeColor};font-weight:700;">${edgeLabel}</span>
             </span>
             <span style="padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.05);border:1px solid #30363d;">
               <span style="color:#8b949e;">CLV:</span> <span style="color:${clvColor};font-weight:700;">${clvLabel}</span>
             </span>
-            <span style="padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.05);border:1px solid ${sharpColor}40;">
+            <span style="padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.04);border:1px solid ${sharpColor}40;">
               <span style="color:#8b949e;">Sharp:</span> <span style="color:${sharpColor};font-weight:700;">${sharpLabel}</span>
             </span>
           </div>
@@ -1896,66 +1905,58 @@ function renderSharpRadar() {
       `<div style="padding:20px;text-align:center;color:var(--muted);">Keine Picks für heutige Spiele.</div>`;
   }
 
-  // ── Section 4: Market Flow Heatmap ────────────────────────────────────────
-  // For each market type, compute: avg pp movement, count of fixtures with movement, direction bias
+  // ── Section 4: Market Flow Heatmap (full week) ────────────────────────────
   const MARKET_DEFS = [
-    { key: 'hw',  label: 'Heimsieg (1)' },
-    { key: 'dr',  label: 'Remis (X)'    },
-    { key: 'aw',  label: 'Auswärtssieg (2)' },
-    { key: 'o25', label: 'Over 2.5'     },
-    { key: 'u25', label: 'Under 2.5'    },
-    { key: 'o35', label: 'Over 3.5'     },
+    { key: 'hw', label: 'Heimsieg (1)' }, { key: 'dr', label: 'Remis (X)' },
+    { key: 'aw', label: 'Auswärtssieg (2)' }, { key: 'o25', label: 'Over 2.5' },
+    { key: 'u25', label: 'Under 2.5' }, { key: 'o35', label: 'Over 3.5' },
   ];
+  const labelMap = { hw:'1', dr:'X', aw:'2', o25:'O25', u25:'U25', o35:'O35' };
 
   const heatData = MARKET_DEFS.map(({key, label}) => {
     let totalPp = 0, count = 0, posCount = 0, negCount = 0;
     for (const {mvRows} of allFixtures) {
       if (!mvRows) continue;
-      const labelMap = { hw:'1', dr:'X', aw:'2', o25:'O25', u25:'U25', o35:'O35' };
       const row = mvRows.find(r => r.label === labelMap[key]);
       if (row) {
-        totalPp  += Math.abs(row.ppShift);
-        count++;
-        if (row.ppShift > 0) posCount++;
-        else negCount++;
+        totalPp += Math.abs(row.ppShift); count++;
+        if (row.ppShift > 0) posCount++; else negCount++;
       }
     }
-    const avgPp = count ? (totalPp / count).toFixed(1) : null;
-    return { key, label, avgPp, count, posCount, negCount };
+    return { label, avgPp: count ? (totalPp/count).toFixed(1) : null, count, posCount, negCount };
   });
 
-  const heatmapHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;">
+  const heatmapHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;">
     ${heatData.map(({label, avgPp, count, posCount, negCount}) => {
-      const intensity = !avgPp ? 0 : parseFloat(avgPp) >= 7 ? 3 : parseFloat(avgPp) >= 4 ? 2 : 1;
-      const bg = !avgPp ? 'rgba(255,255,255,0.02)'
-        : intensity === 3 ? 'rgba(248,81,73,0.13)' : intensity === 2 ? 'rgba(227,179,65,0.10)' : 'rgba(63,185,80,0.07)';
-      const col = !avgPp ? '#484f58' : intensity === 3 ? '#f85149' : intensity === 2 ? '#e3b341' : '#3fb950';
-      const dir = !count ? '' : posCount > negCount ? ` · ↗ ${posCount}/${count}` : ` · ↘ ${negCount}/${count}`;
+      const v   = avgPp ? parseFloat(avgPp) : 0;
+      const bg  = !avgPp ? 'rgba(255,255,255,0.02)' : v>=7 ? 'rgba(248,81,73,0.13)' : v>=4 ? 'rgba(227,179,65,0.10)' : 'rgba(63,185,80,0.07)';
+      const col = !avgPp ? '#484f58' : v>=7 ? '#f85149' : v>=4 ? '#e3b341' : '#3fb950';
+      const dir = count ? (posCount > negCount ? `↗ ${posCount}/${count}` : `↘ ${negCount}/${count}`) : '';
       return `<div style="background:${bg};border:1px solid ${col}30;border-radius:8px;padding:11px 13px;text-align:center;">
-        <div style="font-size:14px;font-weight:900;color:${col};">${avgPp != null ? avgPp + 'pp' : '—'}</div>
+        <div style="font-size:14px;font-weight:900;color:${col};">${avgPp != null ? avgPp+'pp' : '—'}</div>
         <div style="font-size:10px;color:var(--muted);margin-top:3px;">${label}</div>
-        <div style="font-size:9px;color:${col};opacity:.75;margin-top:2px;">${count ? count + ' Spiele' + dir : 'kein Opening'}</div>
+        <div style="font-size:9px;color:${col};opacity:.75;margin-top:2px;">${count ? count+' Spiele · '+dir : 'kein Opening'}</div>
       </div>`;
     }).join('')}
   </div>`;
 
-  // ── Assemble ───────────────────────────────────────────────────────────────
+  // ── Assemble ──────────────────────────────────────────────────────────────
   mc.innerHTML = `<div style="max-width:960px;margin:0 auto;padding:0 0 60px;">
 
     <div style="margin-bottom:22px;padding:18px 20px 14px;background:linear-gradient(135deg,rgba(0,212,161,0.07),rgba(88,166,255,0.04));border:1px solid rgba(0,212,161,0.18);border-radius:14px;">
       <div style="font-size:18px;font-weight:900;margin-bottom:5px;">📡 Sharp Money Radar</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.55;">Linienbewegungen im Markt — wo bewegt sich Geld, wohin zeigen die Sharps, und wie stehen unsere Picks dazu?</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.55;">Linienbewegungen im Markt · alle 7 Tage · CLV-Orientierung für unsere Picks</div>
     </div>
 
-    <div class="section-label" style="margin-bottom:10px;">📊 Heutige Marktübersicht</div>
+    <div class="section-label" style="margin-bottom:10px;">📊 Marktübersicht · diese Woche</div>
     ${kpiHtml}
 
-    <div class="section-label" style="margin-bottom:10px;">🔥 Markt-Flow Heatmap · Ø Bewegung pro Market</div>
+    <div class="section-label" style="margin-bottom:10px;">🔥 Markt-Flow Heatmap · Ø Bewegung pro Market (7 Tage)</div>
     <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px;">
       ${heatmapHtml}
     </div>
 
-    <div class="section-label" style="margin-bottom:10px;">⚡ Größte Marktbewegungen heute</div>
+    <div class="section-label" style="margin-bottom:10px;">⚡ Größte Marktbewegungen · alle 7 Tage · sortiert nach Magnitude</div>
     <div style="margin-bottom:20px;">${moversHtml}</div>
 
     <div class="section-label" style="margin-bottom:10px;">🎯 Unsere heutigen Picks im Sharp-Kontext</div>
