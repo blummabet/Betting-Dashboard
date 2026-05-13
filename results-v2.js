@@ -157,6 +157,26 @@ async function autoResolveV2(silent = false) {
     return 0;
   }
 
+  // ── Freshness check: warn if cache is > 10 hours old ────────────────────
+  // The Action runs 4× daily. If the cache is stale (e.g. Action failed overnight),
+  // some yesterday picks may still show ⏳ even though games are finished.
+  if (!silent) {
+    try {
+      const _rawCache = results._meta || null;  // not present — checked via separate fetch below
+      const _genUrl = V2_RESULTS_URLS.find(u => u.includes('github.io')) || V2_RESULTS_URLS[1];
+      fetch(_genUrl, { cache: 'no-store' })
+        .then(r => r.json())
+        .then(d => {
+          const gen = d?.generated;
+          if (!gen) return;
+          const ageH = (Date.now() - new Date(gen).getTime()) / 3600000;
+          if (ageH > 10) {
+            _v2Toast(`⚠️ Ergebnis-Cache ist ${Math.round(ageH)}h alt — bitte "Ergebnisse holen" Action manuell starten`, 6000);
+          }
+        }).catch(() => {});
+    } catch(_) {}
+  }
+
   // Build lookup: normalized "home|away" → fixture
   const lookup = {};
   for (const fx of results) {
@@ -970,17 +990,17 @@ function _v2ClearConfirm() {
   }
 }
 
-function _v2Toast(msg) {
+function _v2Toast(msg, duration = 3000) {
   const t = document.createElement('div');
   t.textContent = msg;
   Object.assign(t.style, {
     position:'fixed', bottom:'80px', right:'20px', zIndex:'9999',
     background:'#1c2128', border:'1px solid #30363d', borderRadius:'8px',
     padding:'10px 16px', color:'#e6edf3', fontSize:'13px', fontWeight:'600',
-    boxShadow:'0 4px 16px rgba(0,0,0,.5)',
+    boxShadow:'0 4px 16px rgba(0,0,0,.5)', maxWidth:'320px', lineHeight:'1.4',
   });
   document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3000);
+  setTimeout(() => t.remove(), duration);
 }
 
 function _timeAgo(isoStr) {
