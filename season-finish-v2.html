@@ -3674,6 +3674,68 @@ function computeMatchScore(match, leagueKey) {
   // renderFixtureCard(), renderLeague(), renderOverview(), isWithin7Days(), weekLabel(),
   // getDayLabel(), buildDayFilterHtml(), selectDay(), applyDayFilter()
 
+// ── PICK BUFFER PREFILL ────────────────────────────────────────────────────
+// Problem: _v2PickBuffer is only filled when renderFixtureCard() runs, which
+// only happens for league tabs the user has actually clicked. Fixtures from
+// unvisited tabs are never buffered → tracking tab shows incomplete data.
+//
+// Fix: after BOTH data sources are loaded (odds + prematch), silently call
+// renderFixtureCard() for every today-fixture not yet in the buffer.
+// The HTML output is discarded; we only want the _v2PickBuffer side-effect.
+//
+// _maybeRunPrefill() is called from both load completions — runs only once
+// when both flags (_oddsLoaded + _preMatchLoaded) are true.
+
+window._prefillDone = false;
+
+function prefillPickBuffer() {
+  if (window._prefillDone) return;
+  if (!window._oddsLoaded || !window._preMatchLoaded) return;
+  window._prefillDone = true;
+
+  const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
+  const _isToday = ds => {
+    try { const d = parseGermanDate(ds); d.setHours(0,0,0,0); return d.getTime() === todayMidnight.getTime(); }
+    catch { return false; }
+  };
+
+  let filled = 0;
+  for (const [lk, L] of Object.entries(LEAGUES)) {
+    for (const m of (L.fixtures || [])) {
+      if (!_isToday(m.date)) continue;
+      // Same dead-rubber filter as renderLeague()
+      const hm = m.homeStake?.motivationLevel;
+      const am = m.awayStake?.motivationLevel;
+      if (hm === 'none' && am === 'none') continue;
+      // Skip if already buffered (card was rendered by a tab the user visited)
+      const _bk = `${m.date||''}|${lk||''}|${m.home}|${m.away}`;
+      if (window._v2PickBuffer?.[_bk]) continue;
+      // Silently render to populate buffer — HTML is discarded
+      try { renderFixtureCard(m, L.name, L.flag, lk); filled++; }
+      catch(e) { console.warn('[Prefill] Error for', m.home, 'vs', m.away, e); }
+    }
+  }
+  console.log(`[Tracking] prefillPickBuffer: filled ${filled} fixture(s) not yet rendered.`);
+
+  if (filled > 0) {
+    // Persist the newly buffered picks to localStorage
+    if (typeof savePicksV2 === 'function') {
+      try { savePicksV2(); } catch(e) { console.warn('[Prefill] savePicksV2 error', e); }
+    }
+    // If tracking tab is currently open, refresh it so user sees complete data
+    if (document.getElementById('trackingV2Panel')?.style.display !== 'none' &&
+        typeof _renderV2Tab === 'function') {
+      _renderV2Tab();
+    }
+  }
+}
+
+function _maybeRunPrefill() {
+  if (!window._prefillDone && window._oddsLoaded && window._preMatchLoaded) {
+    prefillPickBuffer();
+  }
+}
+
 // ── NAVIGATION ──
 document.querySelectorAll('.league-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -3705,11 +3767,15 @@ fetch('./stats_cache.json')
 // findOdds() prüft pm.odds zuerst, fällt dann auf _oddsData zurück — beide Quellen ergänzen sich.
 setTimeout(() => {
   // Primär: api-football Pro Plan (Verletzungen, H2H, Schiri-Stats, Quoten)
-  loadPreMatchData();
+  // Chain _maybeRunPrefill so prefillPickBuffer fires when prematch is ready
+  // (it will only actually execute once both _oddsLoaded + _preMatchLoaded are true)
+  loadPreMatchData().then(_maybeRunPrefill).catch(() => {});
   // Fallback: the-odds-api.com — lädt Quoten für alle Ligen; re-rendert wenn fertig
   loadAllOdds().then(() => {
     window._oddsLoaded = true;           // signal: live market data is ready
     renderLeague(window._currentLeague);
+    // Trigger prefill now that odds are ready (prematch may already be loaded)
+    _maybeRunPrefill();
     // If Polymarket tab was opened before odds finished loading, it showed a spinner.
     // Now that we have live data, render it properly.
     if (window._pendingPolyInit) {
