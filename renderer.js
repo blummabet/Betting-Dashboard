@@ -1752,7 +1752,7 @@ function renderSharpRadar() {
     ${[
       ['📅', 'Spiele (7 Tage)',   allFixtures.length + ' gesamt'],
       ['📊', 'Mit Live-Quotes',   withOdds.length],
-      ['📡', 'Mit Opening-Snap',  withMovement.length],
+      ['📡', 'Mit Opening-Snap',  withMovement.length + (withMovement.length < 10 ? ' ⚡ nur mit Opening' : '')],
       ['📉', 'Ø Bookie-Marge',   avgVig !== '—' ? avgVig + '%' : '—'],
       ['⚡', 'Größter Mover',     bigMoverLabel],
     ].map(([ic, lbl, val]) => `<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 15px;">
@@ -1957,7 +1957,10 @@ function renderSharpRadar() {
       ${heatmapHtml}
     </div>
 
-    <div class="section-label" style="margin-bottom:10px;">⚡ Größte Marktbewegungen · alle 7 Tage · sortiert nach Magnitude</div>
+    <div class="section-label" style="margin-bottom:6px;">⚡ Größte Marktbewegungen · sortiert nach Magnitude</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;padding:0 2px;">
+      Opening-Snapshots entstehen täglich beim Prematch-Fetch. Linienbewegungen sind daher typischerweise für <strong style="color:var(--text)">heute</strong> sichtbar — zukünftige Spiele erscheinen ab dem Tag davor automatisch.
+    </div>
     <div style="margin-bottom:20px;">${moversHtml}</div>
 
     <div class="section-label" style="margin-bottom:10px;">🎯 Unsere heutigen Picks im Sharp-Kontext</div>
