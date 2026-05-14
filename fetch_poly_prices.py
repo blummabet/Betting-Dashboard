@@ -970,11 +970,12 @@ TRADER_MARKET_MAP = {
 }
 
 # Minimum bookie move (pp) to flag as SHARP signal
-SHARP_THRESHOLD_PP = 5.0
-# Minimum gap between Pinnacle implied and Poly price (pp) for CLV+ signal
-CLV_THRESHOLD_PP   = 4.0
-# Max days-to-kickoff to show in the tab (don't show matches >10 days out)
-MAX_DAYS_OUT = 10
+SHARP_THRESHOLD_PP  = 5.0   # Min bookie line move (pp) to flag SHARP
+CLV_THRESHOLD_PP    = 4.0   # Min gap Pinnacle-implied vs. Poly (pp) for CLV+
+MIN_GAP_ACTIONABLE  = 2.0   # Gap must still be open ≥2pp for signal to be "actionable"
+MIN_POLY_PRICE      = 15.0  # Filter ultra-low prices (thin liquidity, high spread)
+MAX_POLY_PRICE      = 85.0  # Filter near-certainty prices (same reason)
+MAX_DAYS_OUT        = 10    # Ignore matches >10 days out
 
 
 def _implied(fair_odds: float | None) -> float | None:
@@ -1083,32 +1084,68 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
 
             poly_delta_pp = round(poly_pct - poly_open, 2)
 
+            # ── Remaining gap: Pinnacle current implied vs. Poly current price ──
+            gap_pp = None
+            if bookie_cur_impl is not None:
+                gap_pp = round(bookie_cur_impl - poly_pct, 2)
+
+            # ── Trade direction ───────────────────────────────────────────────
+            # Negative bookie_move_pp = odds shortened = outcome more likely = BUY_YES
+            # Positive bookie_move_pp = odds lengthened = outcome less likely = BUY_NO
+            trade_direction = None
+            if bookie_move_pp is not None and abs(bookie_move_pp) >= SHARP_THRESHOLD_PP:
+                trade_direction = 'BUY_YES' if bookie_move_pp < 0 else 'BUY_NO'
+
             # ── Signal detection ─────────────────────────────────────────────
             signal = None
             signal_strength = 0.0
             signal_detail   = []
 
-            # SHARP: bookie line moved ≥ threshold pp
-            is_sharp = bookie_move_pp is not None and abs(bookie_move_pp) >= SHARP_THRESHOLD_PP
+            # SHARP: bookie line moved ≥ threshold pp AND gap still open ≥ MIN_GAP_ACTIONABLE
+            # (If Poly already repriced, the window is closed → no actionable entry)
+            gap_still_open = gap_pp is not None and abs(gap_pp) >= MIN_GAP_ACTIONABLE
+            is_sharp = (bookie_move_pp is not None
+                        and abs(bookie_move_pp) >= SHARP_THRESHOLD_PP
+                        and gap_still_open)
             if is_sharp:
                 signal_strength = max(signal_strength, abs(bookie_move_pp))
-                signal_detail.append(f"Bookie {bookie_move_pp:+.1f}pp")
+                signal_detail.append(f"Bookie {bookie_move_pp:+.1f}pp, Gap {gap_pp:+.1f}pp offen")
                 signal = 'SHARP'
 
-            # CLV+: Pinnacle implied > current Poly price by ≥ threshold
-            # means Poly hasn't caught up yet → entry opportunity
-            is_clv = (bookie_cur_impl is not None
-                      and abs(bookie_cur_impl - poly_pct) >= CLV_THRESHOLD_PP)
+            # CLV+: Pinnacle current implied > current Poly price by ≥ CLV_THRESHOLD_PP
+            # means Poly hasn't caught up to current bookie level → entry opportunity
+            is_clv = (gap_pp is not None and abs(gap_pp) >= CLV_THRESHOLD_PP)
             if is_clv:
-                gap = round(bookie_cur_impl - poly_pct, 2)
-                signal_strength = max(signal_strength, abs(gap))
-                signal_detail.append(f"CLV gap {gap:+.1f}pp")
+                signal_strength = max(signal_strength, abs(gap_pp))
+                signal_detail.append(f"CLV gap {gap_pp:+.1f}pp")
                 signal = 'BOTH' if is_sharp else 'CLV+'
+
+            # ── Actionability ─────────────────────────────────────────────────
+            # Signal is actionable only if:
+            # (a) gap still open ≥ MIN_GAP_ACTIONABLE
+            # (b) Poly price in liquid range (MIN_POLY_PRICE..MAX_POLY_PRICE)
+            # (c) match is still in the future (days_out ≥ 0)
+            in_liquid_range = MIN_POLY_PRICE <= poly_pct <= MAX_POLY_PRICE
+            is_actionable = bool(signal and gap_still_open and in_liquid_range and days_out >= 0)
+
+            # ── Composite score (for ranking) ─────────────────────────────────
+            # Weights: bookie move strength 60% + remaining gap 40%
+            bm_abs = abs(bookie_move_pp) if bookie_move_pp is not None else 0.0
+            gap_abs = abs(gap_pp) if gap_pp is not None else 0.0
+            signal_score = round(bm_abs * 0.6 + gap_abs * 0.4, 2)
+
+            # ── League liquidity tier ─────────────────────────────────────────
+            # Tier 1 = most liquid on Poly, Tier 3 = thinnest
+            LIQ_TIER = {'ENG': 1, 'ESP': 1, 'GER': 1, 'ITA': 1, 'FRA': 1,
+                        'NED': 2, 'POR': 2, 'GER2': 2, 'ENG2': 2,
+                        'TUR': 3, 'SCO': 3}
+            liq_tier = LIQ_TIER.get(league, 2)
 
             candidates[candidate_key] = {
                 'home':             home,
                 'away':             away,
                 'league':           league,
+                'liq_tier':         liq_tier,
                 'kickoffDate':      date_str,
                 'daysOut':          days_out,
                 'market':           market_name,
@@ -1123,16 +1160,21 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
                 'poly_cur':         poly_pct,
                 'poly_cur_ts':      now_ts,
                 'poly_delta_pp':    poly_delta_pp,
+                # Gap & direction
+                'gap_pp':           gap_pp,
+                'trade_direction':  trade_direction,
                 # Signal
                 'signal':           signal,
-                'signal_strength':  round(signal_strength, 2),
+                'signal_strength':  signal_strength,
+                'signal_score':     signal_score,
                 'signal_detail':    ', '.join(signal_detail),
+                'is_actionable':    is_actionable,
                 # Tracking
                 'first_seen_ts':    candidates.get(candidate_key, {}).get('first_seen_ts', now_ts),
                 'price_history':    history,
-                # Observer P&L (if we "entered" at poly_open and exit at poly_cur)
+                # Observer P&L (entered at poly_open, current exit = poly_cur)
                 'obs_entry':        poly_open,
-                'obs_pnl_pp':       poly_delta_pp,   # pp gain on 100 USDC position
+                'obs_pnl_pp':       poly_delta_pp,
             }
             updated_count += 1
 
