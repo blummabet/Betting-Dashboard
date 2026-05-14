@@ -347,6 +347,14 @@ function getPolyPicks(dateStr) {
         if (!isBtts && (p.oddsIsEst || p.odds == null)) continue;
         if (isBtts && p.modelOdds == null)               continue; // need at least modelOdds
 
+        // ── Negative-edge guard (mirrors renderFixtureCard() belt-and-suspenders) ──
+        // Picks where the vig-adjusted edge is < -5pp are suppressed in the card renderer.
+        // Apply the SAME check here so Polymarket never shows picks the card doesn't show.
+        if (p.modelOdds != null && p.odds != null) {
+          const _ep = Math.round(((1 / p.modelOdds) - (1 / p.odds) * 1.03) * 100);
+          if (_ep < -5) continue;
+        }
+
         const id = `${lk}|${fx.home}|${fx.away}|${p.market}`;
         results.push({
           id,
