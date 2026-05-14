@@ -235,8 +235,16 @@ function marketToKey(market) {
   if (/1\.\s*hz.*over 1\.5/i.test(ml)) return 'ht_over15';
 
   // Team-specific goals — "PSG über 1.5 Tore"
+  // Note: this function is now called as marketToKey(market, home, away) to encode home/away context
   const tgM = m.match(/über\s+(\d+\.?\d*)\s+Tore$/i);
-  if (tgM) return `team_goals_over:${tgM[1]}`;
+  if (tgM) {
+    const thr = tgM[1];
+    const _home = (marketToKey._home || '').toLowerCase();
+    const _away = (marketToKey._away || '').toLowerCase();
+    if (_home && m.includes(_home)) return `team_goals_home_over:${thr}`;
+    if (_away && m.includes(_away)) return `team_goals_away_over:${thr}`;
+    return `team_goals_over:${thr}`;  // fallback (legacy, will void)
+  }
 
   // Fallback slug
   return ml.replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '') || 'unknown';
@@ -303,7 +311,7 @@ for (const [leagueKey, league] of Object.entries(LEAGUES)) {
       matchScore: Math.round(matchScore * 10) / 10,
       picks: (picks || []).map(p => ({
         market:    p.market    || '',
-        marketKey: marketToKey(p.market || ''),
+        marketKey: (marketToKey._home = match.home, marketToKey._away = match.away, marketToKey(p.market || '')),
         icon:      p.icon      || '',
         conf:      p.conf      || 'medium',
         sc:        typeof p.sc === 'number' ? Math.round(p.sc * 1000) / 1000 : 0,
@@ -424,7 +432,7 @@ for (const fx of pmFixtures) {
     matchScore: Math.round(matchScore * 10) / 10,
     picks: (picks || []).map(p => ({
       market:    p.market    || '',
-      marketKey: marketToKey(p.market || ''),
+      marketKey: (marketToKey._home = fx.homeTeamName, marketToKey._away = fx.awayTeamName, marketToKey(p.market || '')),
       icon:      p.icon      || '',
       conf:      p.conf      || 'medium',
       sc:        typeof p.sc === 'number' ? Math.round(p.sc * 1000) / 1000 : 0,

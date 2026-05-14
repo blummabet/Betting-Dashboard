@@ -1180,11 +1180,46 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         </div>
         <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">v2.html: 6 separate JS-Module statt 13k-Zeilen Monolith:</p>
         <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
-          <li><code style="color:var(--accent)">pick-engine.js</code> — Picks, GATE, Poisson (2 700 Zeilen)</li>
-          <li><code style="color:#58a6ff">renderer.js</code> — Cards, Layout, FV-Chip, CLV-Drift (1 600 Zeilen)</li>
+          <li><code style="color:var(--accent)">pick-engine.js</code> — Picks, GATE, Poisson (3 100 Zeilen)</li>
+          <li><code style="color:#58a6ff">renderer.js</code> — Cards, Layout, FV-Chip, CLV-Drift, Sharp Radar (2 300 Zeilen)</li>
           <li><code style="color:#e3b341">validator.js</code> — Logik-Check, 13 Patterns, 3 Schweregrade</li>
-          <li><code style="color:#f47067">share.js</code> · <code style="color:#8b949e">ui.js</code> · <code style="color:#a371f7">polymarket-tab.js</code></li>
-          <li><code>node test-pick-engine.js</code> — 39/39 Unit Tests grün</li>
+          <li><code style="color:#8b9ab0">ui.js</code> — Tab-Routing, Sharp Radar Init, Poly Trader Init/Render</li>
+          <li><code style="color:#a371f7">polymarket-tab.js</code> · <code style="color:#f47067">share.js</code></li>
+          <li><strong>10 GitHub Actions Workflows</strong> — CI/CD, täglich automatisiert</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(0,212,161,.04);border:1px solid rgba(0,212,161,.20);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">📈</span>
+          <strong style="color:#00d4a1;font-size:13px;">Poly Trader — Observer Mode</strong>
+          <span style="font-size:9px;background:#00d4a1;color:#0d1117;padding:1px 5px;border-radius:4px;font-weight:700;">NEU Mai 2026</span>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Polymarket als Arbitrage-Instrument — Timing-Gap zu Pinnacle ausnutzen:</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li><strong style="color:#58a6ff">⚡ SHARP</strong>: Pinnacle-Move ≥5pp + Gap noch offen ≥2pp → BUY YES/NO</li>
+          <li><strong style="color:#a78bfa">📐 CLV+</strong>: Pinnacle-Implied vs. Poly-Preis ≥4pp auseinander</li>
+          <li>Observer Mode (2–3 Wochen): Sim. P&L mit €5/Trade mark-to-market</li>
+          <li>Poly Open → Cur → Close (eingefroren bei Kickoff)</li>
+          <li>Bookie Open → Cur → Close Vergleich für Gap-Analyse</li>
+          <li>T1/T2/T3 Liquiditäts-Tiers · Break-Even bei ≥5pp Poly-Bewegung</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(88,166,255,.04);border:1px solid rgba(88,166,255,.20);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">📄</span>
+          <strong style="color:#58a6ff;font-size:13px;">Event Pages — Template+JSON</strong>
+          <span style="font-size:9px;background:#58a6ff;color:#0d1117;padding:1px 5px;border-radius:4px;font-weight:700;">NEU Mai 2026</span>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Eigene Seite pro Spiel — 1 Template, N JSON-Dateien:</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li><code>matches/match.html</code> — einziges Template, liest <code>?m=slug</code></li>
+          <li><code>generate_match_pages.py</code> → schreibt <code>matches/data/{slug}.json</code></li>
+          <li>Donut-Chart 1X2-Wahrscheinlichkeit · xG-Matchup-Card · Picks mit Edge/EV/Kelly</li>
+          <li>Line-Movement pick-aware (Grün = Sharps für Pick, Rot = dagegen)</li>
+          <li>Polymarket-Sektion: Model vs. Poly Vergleich · Edge-Signal farbig</li>
+          <li>Verknüpft über 🔗 Links in Sharp Radar und Poly Trader</li>
         </ul>
       </div>
 
@@ -1910,6 +1945,109 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
       <p style="margin-top:8px;font-size:11px;color:var(--muted);">Status: <strong style="color:#3fb950">✅ Abgeschlossen</strong> — <code>season-finish-v2.html</code> ist die aktive Produktivdatei. <code>season-finish.html</code> bleibt als Fallback-Kopie. Version-Switcher oben in beiden Dateien.</p>
     </div>
+
+  <!-- ═══ ARCHITECTURE MAP ═══════════════════════════════════════════════════ -->
+  <div class="heart-section">
+    <div class="heart-section-title">🗺️ Architektur-Map — Welches Script tut was</div>
+    <div class="heart-card">
+      <pre style="font-size:11px;color:#8b9ab0;line-height:1.7;overflow-x:auto;background:#0d1117;border-radius:8px;padding:14px;margin:0"><code style="color:#e8edf3"><span style="color:#58a6ff">fetch-prematch.yml</span>  (3×/Tag)
+  └─ <span style="color:#3fb950">prematch-server.js</span> --write
+       reads: TheOddsAPI (H2H odds, OU, BTTS, Corners, Cards, AH) + APIF (predictions, referees, injuries)
+       writes: prematch-data.json · squad_cache.json · bookings-cache.json · referee-cache.json
+
+<span style="color:#58a6ff">fetch-results.yml</span>  (3×/Tag, unabhängig)
+  └─ <span style="color:#3fb950">fetch_results.py</span>
+       reads: APIF /fixtures (vergangene Ergebnisse + Karten + Ecken)
+       writes: results-cache.json
+
+<span style="color:#58a6ff">refresh-xg.yml</span>  (1×/Woche)
+  └─ <span style="color:#3fb950">refresh_xg.py</span> + <span style="color:#3fb950">refresh_stats.py</span> (full — mit /fixtures/statistics)
+       writes: stats_cache.json · xg_cache.json
+
+<span style="color:#58a6ff">update-dashboard.yml</span>  (2×/Tag + nach fetch-prematch)
+  ├─ <span style="color:#3fb950">update_dashboard.py</span>          reads: APIF (standings, fixtures)  →  writes: season-finish.html (LEAGUES injected)
+  ├─ <span style="color:#3fb950">refresh_stats.py --fast</span>      reads: ClubElo + APIF (ohne /statistics)  →  writes: stats_cache.json
+  ├─ <span style="color:#3fb950">generate_picks.js</span>            reads: season-finish.html + prematch-data.json + stats_cache.json
+  │    runs: getBettingPicks() im Node.js vm-context  →  writes: picks_output.json
+  ├─ <span style="color:#3fb950">save_picks.py</span>                reads: picks_output.json + prematch-data.json
+  │    Mirror+Freeze-Architektur  →  writes: picks_history.json
+  ├─ <span style="color:#3fb950">fetch_poly_prices.py</span>         reads: picks_output.json + prematch-data.json (Bookie-Odds)
+  │    calls: Gamma API (Polymarket)  →  writes: polymarket_prices.json · poly_trader_data.json
+  ├─ <span style="color:#3fb950">generate_match_pages.py</span>      reads: picks_output.json + prematch-data.json
+  │    Template+JSON-Arch.  →  writes: matches/data/{slug}.json (match.html ist 1 Template)
+  └─ <span style="color:#3fb950">resolve_picks.py</span>             reads: picks_history.json + results-cache.json
+       calls: Sofascore API (Fallback)  →  writes: picks_history.json (result + CLV)
+
+<span style="color:#a78bfa">Browser Runtime  (season-finish-v2.html)</span>
+  loads: pick-engine.js · renderer.js · ui.js · results-v2.js · polymarket-tab.js · share.js
+  fetches: prematch-data.json · polymarket_prices.json · poly_trader_data.json · picks_history.json
+  live-computes: GATE-Check · FV · CLV-Drift · Sharp Radar · Poly Trader UI</code></pre>
+    </div>
+  </div>
+
+  <!-- ═══ BEKANNTE EINSCHRÄNKUNGEN & ROADMAP ══════════════════════════════════ -->
+  <div class="heart-section">
+    <div class="heart-section-title">⚠️ Bekannte Einschränkungen & Roadmap</div>
+    <div class="heart-card">
+      <table class="heart-table">
+        <tr><th>Status</th><th>Thema</th><th>Details</th><th>Priorität</th></tr>
+        <tr>
+          <td><span style="color:#3fb950;font-weight:700">✅ Gefixt</span></td>
+          <td>team_goals Resolution</td>
+          <td>Picks wie "PSG über 1.5 Tore" wurden immer als <code>void</code> aufgelöst. Fix: marketKey kodiert jetzt <code>team_goals_home_over:1.5</code> vs. <code>team_goals_away_over:1.5</code> — context-aware Resolution.</td>
+          <td>Hoch</td>
+        </tr>
+        <tr>
+          <td><span style="color:#3fb950;font-weight:700">✅ Gefixt</span></td>
+          <td>Poly Trader Trade-Direction</td>
+          <td><code>bookie_move_pp</code> Sign war invertiert — BUY_YES/BUY_NO wurden vertauscht. Fix: positiver <code>bookie_move_pp</code> = Implied gestiegen = BUY_YES.</td>
+          <td>Hoch</td>
+        </tr>
+        <tr>
+          <td><span style="color:#e3b341;font-weight:700">⚠️ Offen</span></td>
+          <td>Sharp Radar Buffer leer bei direkter Navigation</td>
+          <td>Wenn User direkt zum Sharp Radar navigiert ohne Liga-Views gerendert zu haben, ist <code>_v2PickBuffer</code> leer → "Keine Picks heute" erscheint fälschlicherweise. Picks kommen erst beim ersten Liga-Render.</td>
+          <td>Mittel</td>
+        </tr>
+        <tr>
+          <td><span style="color:#e3b341;font-weight:700">⚠️ Offen</span></td>
+          <td>Poly TRADER_MARKET_MAP</td>
+          <td>Für 1X2-Märkte zeigt <code>open_key == cur_key == 'pinn_hw_fair'</code>. Da kein separates Opening-Feld existiert ist <code>bookie_move_pp</code> immer 0 → SHARP-Signal kann nicht feuern. CLV+ funktioniert korrekt.</td>
+          <td>Mittel</td>
+        </tr>
+        <tr>
+          <td><span style="color:#e3b341;font-weight:700">⚠️ Offen</span></td>
+          <td>Corners Shots-Fallback Faktor</td>
+          <td>Bei shots-only Pfad: <code>_hSOT × (1/0.30)</code> sollte <code>_hSOT × (1/0.18)</code> sein. Überschätzt Ecken um ~60% im Fallback-Pfad. Betrifft nur Ligen ohne echte Corner-Stats.</td>
+          <td>Niedrig</td>
+        </tr>
+        <tr>
+          <td><span style="color:#e3b341;font-weight:700">⚠️ Offen</span></td>
+          <td>Verwaiste Debug-Scripts</td>
+          <td><code>bet_server.py</code> · <code>polymarket_bet.py</code> · <code>backtest.py/v3/v4</code> · <code>debug_pressure.py</code> · <code>code_review_test.py</code> — liegen im Root, werden nicht mehr aktiv verwendet.</td>
+          <td>Niedrig</td>
+        </tr>
+        <tr>
+          <td><span style="color:#6b7a8d;font-weight:700">📅 Roadmap</span></td>
+          <td>Poly Trader Phase 2</td>
+          <td>Automatisches Trading mit €1/Signal wenn Observer-Mode ≥3 Wochen positiv. Benötigt: <code>polymarket_trade.py</code> + py-clob-client + GitHub Actions Workflow. Exit-Signal wenn Gap &lt;1pp oder Poly-Delta ≥80% der Bookie-Bewegung.</td>
+          <td>Phase 2</td>
+        </tr>
+        <tr>
+          <td><span style="color:#6b7a8d;font-weight:700">📅 Roadmap</span></td>
+          <td>Poly Trader Bookie Opening Snapshot</td>
+          <td>Separates Opening-Feld für Pinnacle Fair-Odds in prematch-data.json einfrieren (erster Fetch). Damit wird SHARP-Signal für 1X2-Märkte wieder aktiv (nicht nur CLV+).</td>
+          <td>Phase 2</td>
+        </tr>
+        <tr>
+          <td><span style="color:#6b7a8d;font-weight:700">📅 Roadmap</span></td>
+          <td>Neue Saison August 2026</td>
+          <td>Liga-Erweiterung: ES2 (La Liga 2) · ITA2 (Serie B) · FR2 (Ligue 2) in LIQ_TIER T2 aufnehmen. Poly Trader Observer-Daten auswerten und Signalthresholds kalibrieren.</td>
+          <td>August 2026</td>
+        </tr>
+      </table>
+    </div>
+  </div>
 
 </div>
 </div>

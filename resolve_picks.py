@@ -263,8 +263,22 @@ def evaluate_pick(market_key: str, home_goals: int, away_goals: int,
         if market_key == "ht_noBtts":
             return "win" if hth == 0 or hta == 0 else "loss"
 
-    # ── Team-specific goals (e.g. "team_goals_over:1.5") ─────────────────────
-    # We can't know which team's goals without more context — void for safety
+    # ── Team-specific goals ───────────────────────────────────────────────────
+    # New format: team_goals_home_over:1.5 / team_goals_away_over:1.5
+    # Legacy format: team_goals_over:1.5 (can't resolve without home/away context → void)
+    import re as _re3
+    _tg = _re3.search(r':([\d.]+)', market_key)
+    if _tg:
+        _thr = float(_tg.group(1))
+        if market_key.startswith("team_goals_home_over:"):
+            return "win" if home_goals > _thr else "loss"
+        if market_key.startswith("team_goals_home_under:"):
+            return "win" if home_goals < _thr else ("void" if home_goals == _thr else "loss")
+        if market_key.startswith("team_goals_away_over:"):
+            return "win" if away_goals > _thr else "loss"
+        if market_key.startswith("team_goals_away_under:"):
+            return "win" if away_goals < _thr else ("void" if away_goals == _thr else "loss")
+    # Legacy: no home/away context encoded
     if market_key.startswith("team_goals_over:") or market_key.startswith("team_goals_under:"):
         return "void"
 

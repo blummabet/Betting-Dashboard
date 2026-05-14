@@ -1100,11 +1100,12 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
                 gap_pp = round(bookie_cur_impl - poly_pct, 2)
 
             # ── Trade direction ───────────────────────────────────────────────
-            # Negative bookie_move_pp = odds shortened = outcome more likely = BUY_YES
-            # Positive bookie_move_pp = odds lengthened = outcome less likely = BUY_NO
+            # bookie_move_pp = bookie_cur_impl - bookie_open_impl
+            # Positive bookie_move_pp = implied prob rose = odds shortened = outcome more likely = BUY_YES
+            # Negative bookie_move_pp = implied prob fell = odds lengthened = outcome less likely = BUY_NO
             trade_direction = None
             if bookie_move_pp is not None and abs(bookie_move_pp) >= SHARP_THRESHOLD_PP:
-                trade_direction = 'BUY_YES' if bookie_move_pp < 0 else 'BUY_NO'
+                trade_direction = 'BUY_YES' if bookie_move_pp > 0 else 'BUY_NO'
 
             # ── Signal detection ─────────────────────────────────────────────
             signal = None
