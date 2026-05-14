@@ -422,22 +422,43 @@ async function _loadPolyPriceCache() {
   }
 }
 
-// Polymarket price sanity check: AMM rounding errors can produce 1X2 sums far from 1.0
-// or O/U sums far from 1.0. Prices with sum outside 0.95–1.05 are unreliable — skip them.
-// This prevents us from acting on corrupted market data (e.g. PSV 62% underdog at home).
-function _isPolyEntryClean(entry) {
-  const m = entry.markets || {};
+// Polymarket price sanity check + normalisation.
+//
+// Background: Polymarket structures soccer 1X2 as THREE separate binary markets
+// ("Will Home win?", "Draw?", "Will Away win?"). The YES-prices from three
+// independent binary markets don't necessarily sum to 1.0 — they can be up to
+// ~1.30 when markets are lightly traded or not yet arbitraged.
+// This is NOT a data error; the prices are real and tradeable. We normalise them
+// so the displayed implied probability and edge are correct.
+//
+// Truly corrupted data (sum > 1.40 or sum < 0.80) is still rejected.
+//
+// Returns { clean: bool, normalised: object } where normalised is a copy of
+// entry.markets with 1X2 prices divided by their sum (when sum ≠ 1.0).
+function _sanitisePolyEntry(entry) {
+  const m = Object.assign({}, entry.markets || {});
   const h = m['Heimsieg'], x = m['Unentschieden'], a = m['Auswärtssieg'];
   const o = m['Over 2.5 Tore'], u = m['Under 2.5 Tore'];
-  if (h != null && x != null && a != null) {
-    const sum1x2 = h + x + a;
-    if (sum1x2 < 0.95 || sum1x2 > 1.05) return false;
-  }
+
+  // O/U binary markets: must sum exactly to ~1.0 (no normalisation needed/possible)
   if (o != null && u != null) {
     const sumOU = o + u;
-    if (sumOU < 0.96 || sumOU > 1.04) return false;
+    if (sumOU < 0.90 || sumOU > 1.10) return { clean: false };
   }
-  return true;
+
+  // 1X2: normalise if sum is between 0.80 and 1.40 (typical for separate binary markets)
+  if (h != null && x != null && a != null) {
+    const sum1x2 = h + x + a;
+    if (sum1x2 < 0.80 || sum1x2 > 1.40) return { clean: false };  // truly corrupt
+    if (sum1x2 < 0.95 || sum1x2 > 1.05) {
+      // Normalise — prices are from separate binary markets, not arbitraged yet
+      m['Heimsieg']      = h / sum1x2;
+      m['Unentschieden'] = x / sum1x2;
+      m['Auswärtssieg']  = a / sum1x2;
+      return { clean: true, normalised: m, wasNormalised: true };
+    }
+  }
+  return { clean: true, normalised: m, wasNormalised: false };
 }
 
 // Retrieve price for a single pick from the cached JSON.
@@ -453,19 +474,22 @@ function _getPriceFromCache(pick) {
   if (entry === undefined) return { found: false, stale: true };
   if (!entry.found) return { found: false };
 
-  // Sanity check: AMM rounding errors can corrupt 1X2 / O2.5 prices.
-  // Only apply to 1X2 and goals picks — NOT corners/cards/BTTS (they have separate markets
-  // and an AMM error in the 1X2 prices is irrelevant for those pick types).
+  // Sanity check + normalisation: Poly stores 1X2 as 3 separate binary markets → prices
+  // can sum to 1.20+ when not yet arbitraged. Normalise rather than reject.
+  // Skip sanity check for corners/cards (separate Poly markets, 1X2 sum irrelevant).
   const isCornerOrCard = pick.market && (
     pick.market.startsWith('Über ') || pick.market.startsWith('Unter ') ||
     pick.market.includes('Ecken')   || pick.market.includes('Karten') ||
     pick.market.includes('Corner')
   );
-  if (!isCornerOrCard && !_isPolyEntryClean(entry)) {
-    return { found: false, corrupted: true };
+  let _markets = entry.markets || {};
+  if (!isCornerOrCard) {
+    const _san = _sanitisePolyEntry(entry);
+    if (!_san.clean) return { found: false, corrupted: true };
+    _markets = _san.normalised || _markets;
   }
 
-  const price = (entry.markets || {})[pick.market];
+  const price = _markets[pick.market];
   // Game is on Polymarket but this specific market line isn't available
   // (e.g. pick = Over 2.5 but Poly only offers O/U 4.5).
   // Don't treat as "kein Markt" — show a link so the user can still open the game.
