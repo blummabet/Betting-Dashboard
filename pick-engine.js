@@ -226,6 +226,19 @@ function computeLineMovement(oddsOpen, oddsCurrent) {
   // 1X2 always shown (if data exists); O/U markets only shown when ≥3pp movement.
   // O3.5/U3.5 tracked in addition to O2.5/U2.5 — large moves on the 3.5 line
   // (e.g. known high-scoring teams) are informative and were previously invisible.
+  //
+  // Legacy snapshots (before full odds_open) only stored pinn_hw/dr/aw_fair.
+  // We normalise these into a unified lookup so those snapshots still contribute.
+  const _normaliseOpen = (snap) => {
+    if (!snap) return snap;
+    const n = Object.assign({}, snap);
+    // pinn_*_fair → hw/dr/aw fallback (devigged Pinnacle fair odds, same scale)
+    if (!n.hw && n.pinn_hw_fair) n.hw = n.pinn_hw_fair;
+    if (!n.dr && n.pinn_dr_fair) n.dr = n.pinn_dr_fair;
+    if (!n.aw && n.pinn_aw_fair) n.aw = n.pinn_aw_fair;
+    return n;
+  };
+  const _open = _normaliseOpen(oddsOpen);
   const markets = [
     { label: '1',   key: 'hw',  ou: false },
     { label: 'X',   key: 'dr',  ou: false },
@@ -237,7 +250,7 @@ function computeLineMovement(oddsOpen, oddsCurrent) {
   ];
   const rows = [];
   for (const m of markets) {
-    const o = parseFloat(oddsOpen[m.key]);
+    const o = parseFloat(_open[m.key]);
     const c = parseFloat(oddsCurrent[m.key]);
     if (!o || !c || isNaN(o) || isNaN(c) || o <= 1 || c <= 1) continue;
     const ppShift = Math.round(((1 / c) - (1 / o)) * 100);
