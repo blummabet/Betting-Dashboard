@@ -1639,6 +1639,29 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
     ? `<div class="signal-bar">${_signals.slice(0,4).map(s=>`<span class="signal-pill ${s.cls}">${s.txt}</span>`).join('')}</div>`
     : '';
 
+  // ── Event Page Link ───────────────────────────────────────────────────────
+  const _slugify = t => (t||'').toLowerCase()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+    .replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u')
+    .replace(/ñ/g,'n').replace(/ç/g,'c')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const _dateIso = (() => {
+    try { const [d,mo,y]=(match.date||'').split('.'); return `${y}-${mo.padStart(2,'0')}-${d.padStart(2,'0')}`; } catch(_){return '';}
+  })();
+  const _eventSlug = `${_slugify(match.home)}-vs-${_slugify(match.away)}-${_dateIso}`;
+  const _matchPageLink = _eventSlug
+    ? `<a href="matches/${_eventSlug}.html" target="_blank"
+         style="display:flex;align-items:center;justify-content:center;gap:7px;
+                padding:10px 14px;border-radius:8px;width:100%;
+                border:1px solid #00d4a133;background:#00d4a108;
+                color:var(--accent);font-size:12px;font-weight:700;
+                text-decoration:none;transition:all .15s;margin-bottom:8px;"
+         onmouseover="this.style.background='#00d4a118';this.style.borderColor='#00d4a166'"
+         onmouseout="this.style.background='#00d4a108';this.style.borderColor='#00d4a133'">
+         🔍 Spiel-Analyse öffnen
+       </a>`
+    : '';
+
   return `
   <div class="stake-card ${ct}">
     <div class="card-watermark"><img src="cocobet-logo.png" alt="" onerror="this.parentElement.style.display='none'"></div>
@@ -1662,6 +1685,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       ${picksHtml || '<div style="font-size:11px;color:var(--muted);padding:6px 0;font-style:italic">Kein Pick mit ausreichender Konfidenz (★★☆+) für dieses Spiel.</div>'}
       ${!window._oddsReady ? '<div style="font-size:10px;color:var(--muted);padding:3px 0;font-style:italic">⏳ Quoten werden geladen…</div>' : ''}
     </div>
+    <div style="margin-top:8px">${_matchPageLink}</div>
     <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:4px">
       <button class="infographic-btn" title="Infografik erstellen" onclick="generateInfographic('${shareData}','${leagueName.replace(/'/g,"\\'")}','${leagueFlag}','${leagueKey||''}')">
         📸 Info
