@@ -102,6 +102,12 @@ jobs:
         run: python fetch_poly_prices.py
         continue-on-error: true
 
+      # 7b. Match-Seiten generieren (statische HTML pro Spiel → matches/*.html)
+      - name: 📄 Match-Seiten generieren
+        if: steps.prematch_check.outputs.fixture_count != '0'
+        run: python generate_match_pages.py
+        continue-on-error: true
+
       # 8. Vergangene Picks auswerten (Sofascore Ergebnisse → picks_history.json)
       - name: ✅ Picks auswerten
         run: python resolve_picks.py
@@ -119,6 +125,10 @@ jobs:
               echo "⚠️  $f nicht vorhanden — übersprungen"
             fi
           done
+          # Match-Seiten stagen (gesamter matches/ Ordner)
+          if [ -d "matches" ]; then
+            git add matches/
+          fi
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
           else

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>GKS Katowice vs Jagiellonia — CocoBet</title>
+  <style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--card:#161b22;--card2:#1c2128;--border:#30363d;
+  --accent:#00d4a1;--red:#f85149;--yellow:#e3b341;
+  --text:#e6edf3;--muted:#8b949e;
+  --green:#3fb950;--blue:#58a6ff;--purple:#a78bfa;
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:60px}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Nav */
+.top-nav{
+  background:var(--card);border-bottom:1px solid var(--border);
+  padding:12px 20px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.top-nav .back{font-size:13px;color:var(--muted);font-weight:500}
+.top-nav .back:hover{color:var(--text)}
+.top-nav .league-tag{font-size:12px;color:var(--muted)}
+
+/* Match header */
+.match-header{
+  background:linear-gradient(135deg,#0d2a1f 0%,#0d1117 100%);
+  border-bottom:2px solid var(--accent)22;
+  padding:32px 20px 24px;text-align:center;
+}
+.teams-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px}
+.team-name{font-size:22px;font-weight:800;flex:1}
+.team-name.home{text-align:right}
+.team-name.away{text-align:left}
+.vs-badge{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:6px 14px;font-size:13px;color:var(--muted);
+  font-weight:600;white-space:nowrap;flex-shrink:0;
+}
+.match-meta{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.meta-chip{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:4px 12px;font-size:12px;color:var(--muted);
+}
+.score-badge{
+  background:#00d4a122;border:1px solid #00d4a144;
+  border-radius:20px;padding:4px 14px;font-size:12px;
+  color:var(--accent);font-weight:700;
+}
+
+/* Content */
+.content{max-width:900px;margin:0 auto;padding:24px 16px}
+.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
+.section-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* Pick cards */
+.pick-card{
+  background:var(--card2);border:1px solid var(--border);border-radius:10px;
+  padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.pick-icon{font-size:18px;flex-shrink:0}
+.pick-main{flex:1;min-width:0}
+.pick-market{font-size:14px;font-weight:600;color:var(--text)}
+.pick-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.pick-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.odds-pill{
+  background:#ffffff0d;border:1px solid var(--border);
+  border-radius:6px;padding:3px 10px;font-size:13px;font-weight:700;color:var(--text);
+}
+.model-pill{
+  background:#00d4a111;border:1px solid #00d4a133;
+  border-radius:6px;padding:3px 10px;font-size:12px;color:var(--accent);
+}
+.kelly-pill{
+  background:#a78bfa11;border:1px solid #a78bfa33;
+  border-radius:6px;padding:3px 10px;font-size:12px;color:var(--purple);font-weight:700;
+}
+.value-pill{
+  background:#3fb95011;border:1px solid #3fb95033;
+  border-radius:6px;padding:3px 10px;font-size:12px;color:var(--green);font-weight:700;
+}
+
+/* Comparison table */
+.comp-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:0;width:100%}
+.comp-row{display:contents}
+.comp-label{
+  font-size:12px;color:var(--muted);text-align:center;padding:8px 4px;
+  border-bottom:1px solid var(--border);
+}
+.comp-val{
+  font-size:13px;font-weight:600;color:var(--text);
+  padding:8px 12px;border-bottom:1px solid var(--border);
+}
+.comp-val.home{text-align:right}
+.comp-val.away{text-align:left}
+.comp-val.better{color:var(--accent)}
+.comp-header{
+  font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:0.5px;padding:6px 12px;
+}
+
+/* Odds movement */
+.odds-table{width:100%;border-collapse:collapse;font-size:13px}
+.odds-table th{font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:600;padding:6px 8px;text-align:center;border-bottom:1px solid var(--border)}
+.odds-table td{padding:8px;text-align:center;border-bottom:1px solid #30363d55}
+.odds-table tr:last-child td{border-bottom:none}
+.move-up{color:var(--red)}
+.move-down{color:var(--green)}
+.move-neutral{color:var(--muted)}
+
+/* H2H */
+.h2h-summary{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px}
+.h2h-stat{text-align:center;flex:1;min-width:80px}
+.h2h-stat .val{font-size:20px;font-weight:800;color:var(--text)}
+.h2h-stat .lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.h2h-record{height:14px;border-radius:7px;overflow:hidden;display:flex;margin-bottom:12px}
+.h2h-record .hw{background:var(--accent)}
+.h2h-record .dr{background:var(--yellow)}
+.h2h-record .aw{background:var(--purple)}
+.h2h-dots{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.last-results-label{font-size:11px;color:var(--muted);margin-bottom:8px}
+
+/* Prediction bars */
+.pred-bar-wrap{margin-bottom:12px}
+.pred-bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px}
+.pred-bar-track{height:10px;border-radius:5px;background:#ffffff0d;overflow:hidden}
+.pred-bar-fill{height:100%;border-radius:5px;transition:width .3s}
+
+/* Injuries */
+.inj-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:520px){.inj-grid{grid-template-columns:1fr}}
+.inj-team-label{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.inj-player{
+  font-size:12px;color:var(--text);
+  padding:6px 10px;background:var(--card2);border-radius:6px;
+  border-left:3px solid var(--red);margin-bottom:6px;
+}
+.inj-reason{font-size:11px;color:var(--muted)}
+.no-injuries{font-size:12px;color:var(--green);padding:6px 0}
+
+/* Poly */
+.poly-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.poly-card{
+  background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;
+}
+.poly-market-name{font-size:11px;color:var(--muted);margin-bottom:6px}
+.poly-price{font-size:18px;font-weight:800;color:var(--accent)}
+.poly-bar-track{height:6px;border-radius:3px;background:#ffffff0d;overflow:hidden;margin-top:6px}
+.poly-bar-fill{height:100%;border-radius:3px;background:var(--accent)}
+.poly-link{font-size:11px;color:var(--blue);margin-top:12px;display:block}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a class="back" href="../betting-dashboard.html">← Dashboard</a>
+  <span class="league-tag">🇵🇱 Ekstraklasa</span>
+</nav>
+
+<div class="match-header">
+  <div class="teams-row">
+    <div class="team-name home">GKS Katowice</div>
+    <div class="vs-badge">vs</div>
+    <div class="team-name away">Jagiellonia</div>
+  </div>
+  <div class="match-meta"><span class="meta-chip">📅 17.05.2026</span> <span class="meta-chip">🕐 14:45 Uhr</span> <span class="score-badge">Score 1.0</span></div>
+</div>
+
+<div class="content">
+
+  <div class="section">
+    <div class="section-title">🎯 Picks</div>
+    
+        <div class="pick-card">
+          <div class="pick-icon">🎯</div>
+          <div class="pick-main">
+            <div class="pick-market">Doppelte Chance: 1X</div>
+          </div>
+          <div class="pick-meta"><span style="background:#e3b34122;color:#e3b341;border:1px solid #e3b34144;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;">Medium</span> <span class="odds-pill">1.60</span> <span class="model-pill">⚙ 1.57</span> <span class="kelly-pill">🏦 0.8% Bankroll</span></div>
+        </div>
+        <div class="pick-card">
+          <div class="pick-icon">🚩</div>
+          <div class="pick-main">
+            <div class="pick-market">Über 8.5 Ecken</div>
+          </div>
+          <div class="pick-meta"><span style="background:#e3b34122;color:#e3b341;border:1px solid #e3b34144;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;">Medium</span> <span class="odds-pill">1.63</span> <span class="model-pill">⚙ 1.48</span> <span class="kelly-pill">🏦 4.0% Bankroll</span></div>
+        </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📊 Team-Vergleich</div>
+    
+    <div class="comp-grid">
+      <div class="comp-header home" style="text-align:right">GKS Katowice</div>
+      <div class="comp-header" style="text-align:center">Statistik</div>
+      <div class="comp-header away">Jagiellonia</div>
+      
+        <div class="comp-val home better">1.81</div>
+        <div class="comp-label">xG (Heim/Ausw.)</div>
+        <div class="comp-val away">1.25</div>
+      
+        <div class="comp-val home">1.12</div>
+        <div class="comp-label">xGA (Heim/Ausw.)</div>
+        <div class="comp-val away better">0.94</div>
+      
+        <div class="comp-val home better">62%</div>
+        <div class="comp-label">Siegquote (Heim/Ausw.)</div>
+        <div class="comp-val away">38%</div>
+      
+        <div class="comp-val home">31%</div>
+        <div class="comp-label">Clean Sheets (Heim/Ausw.)</div>
+        <div class="comp-val away better">38%</div>
+      
+        <div class="comp-val home">—</div>
+        <div class="comp-label">Elo</div>
+        <div class="comp-val away">1466</div>
+      
+        <div class="comp-val home">3-4-3</div>
+        <div class="comp-label">Formation</div>
+        <div class="comp-val away">4-2-3-1</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">📈 Linien-Bewegung (Opening vs. Aktuell)</div>
+    
+            <table class="odds-table">
+              <thead><tr>
+                <th style="text-align:left">Markt</th>
+                <th>Opening</th>
+                <th>Aktuell</th>
+                <th>Bewegung</th>
+              </tr></thead>
+              <tbody>
+            <tr>
+              <td style="text-align:left;color:var(--text)">1 (Heimsieg)</td>
+              <td>—</td>
+              <td>2.54</td>
+              <td class="move-neutral" style="font-weight:700;font-size:12px">—</td>
+            </tr>
+            <tr>
+              <td style="text-align:left;color:var(--text)">X (Unentschieden)</td>
+              <td>—</td>
+              <td>3.58</td>
+              <td class="move-neutral" style="font-weight:700;font-size:12px">—</td>
+            </tr>
+            <tr>
+              <td style="text-align:left;color:var(--text)">2 (Auswärtssieg)</td>
+              <td>—</td>
+              <td>2.61</td>
+              <td class="move-neutral" style="font-weight:700;font-size:12px">—</td>
+            </tr>
+            <tr>
+              <td style="text-align:left;color:var(--text)">Over 2.5</td>
+              <td>—</td>
+              <td>1.56</td>
+              <td class="move-neutral" style="font-weight:700;font-size:12px">—</td>
+            </tr>
+            <tr>
+              <td style="text-align:left;color:var(--text)">Under 2.5</td>
+              <td>—</td>
+              <td>2.38</td>
+              <td class="move-neutral" style="font-weight:700;font-size:12px">—</td>
+            </tr></tbody>
+            </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🔄 Direktvergleich (H2H)</div>
+    
+        <div class="h2h-summary">
+          <div class="h2h-stat"><div class="val" style="color:var(--accent)">2</div><div class="lbl">GKS Katowice<br>Siege</div></div>
+          <div class="h2h-stat"><div class="val" style="color:var(--yellow)">0</div><div class="lbl">Unent-<br>schieden</div></div>
+          <div class="h2h-stat"><div class="val" style="color:var(--purple)">2</div><div class="lbl">Jagiellonia<br>Siege</div></div>
+          <div class="h2h-stat"><div class="val">3.0</div><div class="lbl">∅ Tore<br>pro Spiel</div></div>
+          <div class="h2h-stat"><div class="val">75%</div><div class="lbl">Over 2.5<br>Rate</div></div>
+          <div class="h2h-stat"><div class="val">75%</div><div class="lbl">BTTS<br>Rate</div></div>
+        </div>
+        <div class="h2h-record">
+          <div class="hw" style="width:50.0%"></div>
+          <div class="dr" style="width:0.0%"></div>
+          <div class="aw" style="width:50.0%"></div>
+        </div>
+        <div class="last-results-label">Letzte 4 Direktbegegnungen (Heimteam-Perspektive)</div>
+        <div class="h2h-dots"><span style="display:inline-block;width:26px;height:26px;border-radius:50%;background:#f85149;color:#0d1117;font-size:11px;font-weight:800;line-height:26px;text-align:center;">L</span> <span style="display:inline-block;width:26px;height:26px;border-radius:50%;background:#00d4a1;color:#0d1117;font-size:11px;font-weight:800;line-height:26px;text-align:center;">W</span> <span style="display:inline-block;width:26px;height:26px;border-radius:50%;background:#f85149;color:#0d1117;font-size:11px;font-weight:800;line-height:26px;text-align:center;">L</span> <span style="display:inline-block;width:26px;height:26px;border-radius:50%;background:#00d4a1;color:#0d1117;font-size:11px;font-weight:800;line-height:26px;text-align:center;">W</span></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🤖 Modell-Prognose</div>
+    
+            <div class="pred-bar-wrap">
+              <div class="pred-bar-label"><span>Heimsieg (GKS Katowice)</span><span style="color:#00d4a1;font-weight:700">33%</span></div>
+              <div class="pred-bar-track"><div class="pred-bar-fill" style="width:33%;background:#00d4a1"></div></div>
+            </div>
+            <div class="pred-bar-wrap">
+              <div class="pred-bar-label"><span>Unentschieden</span><span style="color:#e3b341;font-weight:700">33%</span></div>
+              <div class="pred-bar-track"><div class="pred-bar-fill" style="width:33%;background:#e3b341"></div></div>
+            </div>
+            <div class="pred-bar-wrap">
+              <div class="pred-bar-label"><span>Auswärtssieg (Jagiellonia)</span><span style="color:#a78bfa;font-weight:700">33%</span></div>
+              <div class="pred-bar-track"><div class="pred-bar-fill" style="width:33%;background:#a78bfa"></div></div>
+            </div><div style="margin-top:16px;padding:12px;background:var(--card2);border-radius:8px;font-size:12px;color:var(--muted)">
+              <strong style="color:var(--text)">Poisson-Modell</strong><br>
+              GKS Katowice: 47% · Jagiellonia: 53%
+            </div><div style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px"><div style="background:var(--card2);border-radius:8px;padding:10px;font-size:12px">
+                      <div style="color:var(--muted);margin-bottom:6px">Form</div>
+                      <div style="display:flex;justify-content:space-between;font-weight:700">
+                        <span style="color:#58a6ff">47%</span>
+                        <span style="color:var(--muted)">vs</span>
+                        <span style="color:#58a6ff">53%</span>
+                      </div>
+                    </div><div style="background:var(--card2);border-radius:8px;padding:10px;font-size:12px">
+                      <div style="color:var(--muted);margin-bottom:6px">Angriff</div>
+                      <div style="display:flex;justify-content:space-between;font-weight:700">
+                        <span style="color:#3fb950">55%</span>
+                        <span style="color:var(--muted)">vs</span>
+                        <span style="color:#3fb950">45%</span>
+                      </div>
+                    </div><div style="background:var(--card2);border-radius:8px;padding:10px;font-size:12px">
+                      <div style="color:var(--muted);margin-bottom:6px">Abwehr</div>
+                      <div style="display:flex;justify-content:space-between;font-weight:700">
+                        <span style="color:#f85149">42%</span>
+                        <span style="color:var(--muted)">vs</span>
+                        <span style="color:#f85149">58%</span>
+                      </div>
+                    </div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🏥 Verletzungen & Ausfälle</div>
+    
+        <div class="inj-grid">
+          <div><div class="inj-team-label">GKS Katowice</div><div class="no-injuries">✓ Keine gemeldeten Ausfälle</div></div>
+          <div><div class="inj-team-label">Jagiellonia</div><div class="no-injuries">✓ Keine gemeldeten Ausfälle</div></div>
+        </div>
+  </div>
+
+  
+
+  <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:20px">
+    Generiert: 14.05.2026 10:13 UTC · <a href="../betting-dashboard.html">← Zurück zum Dashboard</a>
+  </div>
+
+</div>
+</body>
+</html>
