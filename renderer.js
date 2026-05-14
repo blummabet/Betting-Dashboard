@@ -1989,11 +1989,25 @@ function renderLeague(key) {
   const filtered = applyDayFilter(week)
     .filter(m => !isMatchOver(m.date, m.time))
     // Skip dead-rubber fixtures: both teams confirmed out of everything (motivationLevel='none')
-    // e.g. both already relegated, both title secured — no meaningful signal for either pick or tracking.
+    // BUT only when there are also no valid picks — a model might still find value in dead rubbers
+    // (e.g. heavy favorite, line movement, etc.) and we shouldn't suppress those cards.
     .filter(m => {
       const hm = m.homeStake?.motivationLevel;
       const am = m.awayStake?.motivationLevel;
-      return !(hm === 'none' && am === 'none');
+      if (!(hm === 'none' && am === 'none')) return true;  // at least one team has stakes → show
+      // Both 'none': only hide if the pick engine also finds nothing
+      const _odds = findOdds(leagueKey || key, m.home, m.away);
+      const _oddsD = deriveOdds(_odds || {});
+      const _picks = getBettingPicks(m, _oddsD, leagueKey || key);
+      const _visible = _picks.filter(p => {
+        if (p.conf !== 'high' && p.conf !== 'medium') return false;
+        if (p.modelOdds != null && p.odds != null) {
+          const _ep = Math.round(((1 / p.modelOdds) - (1 / p.odds) * 1.03) * 100);
+          if (_ep < -5) return false;
+        }
+        return true;
+      });
+      return _visible.length > 0;  // keep card if picks exist despite dead rubber
     })
     .sort((a,b)=>computeMatchScore(b,key)-computeMatchScore(a,key));
   const cards = filtered.map(m=>renderFixtureCard(m, L.name, L.flag, key)).join('');
