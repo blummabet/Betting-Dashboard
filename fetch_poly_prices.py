@@ -938,6 +938,222 @@ def main():
         json.dump(out, f, ensure_ascii=False, indent=2)
     print("💾 polymarket_prices.json saved")
 
+    # ── Poly Trader: update signal tracking ───────────────────────────────────
+    try:
+        update_trader_data(results, unique_matches)
+    except Exception as e:
+        print(f"⚠️  poly_trader_data update failed: {e}")
+
 
 if __name__ == '__main__':
     main()
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# POLY TRADER — Signal Tracking
+# Writes poly_trader_data.json with:
+#   - Opening Poly price (first ever recorded per match-market)
+#   - Price history (snapshot per run)
+#   - Bookie line movement vs. Poly movement → signal detection
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Markets where we can compare Poly price to Pinnacle fair odds
+# Maps Poly market name → (odds_open key, odds_current key)
+TRADER_MARKET_MAP = {
+    'Heimsieg':       ('pinn_hw_fair', 'pinn_hw_fair'),
+    'Auswärtssieg':   ('pinn_aw_fair', 'pinn_aw_fair'),
+    'Unentschieden':  ('pinn_dr_fair', 'pinn_dr_fair'),
+    'Over 2.5 Tore':  ('o25_fair',     'o25_fair'),
+    'Over 1.5 Tore':  (None,           None),   # no Pinnacle fair key → Poly-only tracking
+    'Over 3.5 Tore':  (None,           None),
+    'Beide Teams treffen': (None,       None),
+}
+
+# Minimum bookie move (pp) to flag as SHARP signal
+SHARP_THRESHOLD_PP = 5.0
+# Minimum gap between Pinnacle implied and Poly price (pp) for CLV+ signal
+CLV_THRESHOLD_PP   = 4.0
+# Max days-to-kickoff to show in the tab (don't show matches >10 days out)
+MAX_DAYS_OUT = 10
+
+
+def _implied(fair_odds: float | None) -> float | None:
+    """Convert decimal fair odds to implied probability %."""
+    if fair_odds and fair_odds > 1:
+        return round(100.0 / fair_odds, 2)
+    return None
+
+
+def update_trader_data(poly_results: dict, unique_matches: dict):
+    """
+    Load poly_trader_data.json (or start fresh), then for every match-market
+    that has a Poly price update the signal tracking and save back.
+    """
+    now_ts = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+    # Load existing trader data
+    try:
+        with open('poly_trader_data.json', 'r', encoding='utf-8') as f:
+            trader = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        trader = {'updated': now_ts, 'candidates': {}}
+
+    # Load prematch data for bookie odds
+    try:
+        with open('prematch-data.json', 'r', encoding='utf-8') as f:
+            raw_pm = json.load(f)
+        pm_fixtures = raw_pm if isinstance(raw_pm, list) else raw_pm.get('fixtures', [])
+    except Exception:
+        pm_fixtures = []
+
+    # Build prematch lookup: "home|away" → fixture
+    pm_idx: dict[str, dict] = {}
+    for fx in pm_fixtures:
+        h = fx.get('homeTeamName') or fx.get('home', '')
+        a = fx.get('awayTeamName') or fx.get('away', '')
+        if h and a:
+            pm_idx[f"{h}|{a}"] = fx
+
+    candidates = trader.get('candidates', {})
+    today = datetime.now(timezone.utc).date()
+    updated_count = 0
+
+    for match_key, poly_data in poly_results.items():
+        if not poly_data.get('found'):
+            continue
+        markets = poly_data.get('markets', {})
+        if not markets:
+            continue
+
+        meta = unique_matches.get(match_key, ())
+        if len(meta) < 4:
+            continue
+        home, away, date_str, league = meta
+
+        # Parse kickoff date
+        kickoff_date = None
+        try:
+            kickoff_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        except Exception:
+            pass
+
+        days_out = (kickoff_date - today).days if kickoff_date else 999
+        if days_out < 0 or days_out > MAX_DAYS_OUT:
+            continue   # Past or too far out
+
+        # Get prematch fixture for bookie odds
+        pm_fx = pm_idx.get(match_key) or pm_idx.get(f"{home}|{away}")
+        odds_open = (pm_fx.get('odds_open') or {}) if pm_fx else {}
+        odds_cur  = (pm_fx.get('odds')      or {}) if pm_fx else {}
+
+        for market_name, poly_price in markets.items():
+            if market_name not in TRADER_MARKET_MAP:
+                continue
+            if not isinstance(poly_price, (int, float)):
+                continue
+
+            open_key, cur_key = TRADER_MARKET_MAP[market_name]
+            candidate_key = f"{match_key}|{market_name}"
+
+            # Bookie implied probabilities
+            bookie_open_impl = _implied(odds_open.get(open_key)) if open_key else None
+            bookie_cur_impl  = _implied(odds_cur.get(cur_key))   if cur_key  else None
+            bookie_move_pp   = None
+            if bookie_open_impl is not None and bookie_cur_impl is not None:
+                bookie_move_pp = round(bookie_cur_impl - bookie_open_impl, 2)
+
+            poly_pct = round(poly_price * 100, 2)  # convert 0-1 → 0-100
+
+            # Existing candidate or new?
+            if candidate_key in candidates:
+                cand = candidates[candidate_key]
+                # Preserve opening price
+                poly_open     = cand['poly_open']
+                poly_open_ts  = cand['poly_open_ts']
+                # Append to price history (keep last 48 snapshots ≈ 2 days at hourly)
+                history = cand.get('price_history', [])
+                history.append({'ts': now_ts, 'pct': poly_pct})
+                if len(history) > 48:
+                    history = history[-48:]
+            else:
+                # First time seeing this match-market
+                poly_open    = poly_pct
+                poly_open_ts = now_ts
+                history      = [{'ts': now_ts, 'pct': poly_pct}]
+
+            poly_delta_pp = round(poly_pct - poly_open, 2)
+
+            # ── Signal detection ─────────────────────────────────────────────
+            signal = None
+            signal_strength = 0.0
+            signal_detail   = []
+
+            # SHARP: bookie line moved ≥ threshold pp
+            is_sharp = bookie_move_pp is not None and abs(bookie_move_pp) >= SHARP_THRESHOLD_PP
+            if is_sharp:
+                signal_strength = max(signal_strength, abs(bookie_move_pp))
+                signal_detail.append(f"Bookie {bookie_move_pp:+.1f}pp")
+                signal = 'SHARP'
+
+            # CLV+: Pinnacle implied > current Poly price by ≥ threshold
+            # means Poly hasn't caught up yet → entry opportunity
+            is_clv = (bookie_cur_impl is not None
+                      and abs(bookie_cur_impl - poly_pct) >= CLV_THRESHOLD_PP)
+            if is_clv:
+                gap = round(bookie_cur_impl - poly_pct, 2)
+                signal_strength = max(signal_strength, abs(gap))
+                signal_detail.append(f"CLV gap {gap:+.1f}pp")
+                signal = 'BOTH' if is_sharp else 'CLV+'
+
+            candidates[candidate_key] = {
+                'home':             home,
+                'away':             away,
+                'league':           league,
+                'kickoffDate':      date_str,
+                'daysOut':          days_out,
+                'market':           market_name,
+                'eventUrl':         poly_data.get('eventUrl', ''),
+                # Bookie
+                'bookie_open_impl': bookie_open_impl,
+                'bookie_cur_impl':  bookie_cur_impl,
+                'bookie_move_pp':   bookie_move_pp,
+                # Poly
+                'poly_open':        poly_open,
+                'poly_open_ts':     poly_open_ts,
+                'poly_cur':         poly_pct,
+                'poly_cur_ts':      now_ts,
+                'poly_delta_pp':    poly_delta_pp,
+                # Signal
+                'signal':           signal,
+                'signal_strength':  round(signal_strength, 2),
+                'signal_detail':    ', '.join(signal_detail),
+                # Tracking
+                'first_seen_ts':    candidates.get(candidate_key, {}).get('first_seen_ts', now_ts),
+                'price_history':    history,
+                # Observer P&L (if we "entered" at poly_open and exit at poly_cur)
+                'obs_entry':        poly_open,
+                'obs_pnl_pp':       poly_delta_pp,   # pp gain on 100 USDC position
+            }
+            updated_count += 1
+
+    # Clean up candidates for past matches (>2 days after kickoff)
+    cutoff = today - timedelta(days=2)
+    to_remove = []
+    for k, c in candidates.items():
+        try:
+            kd = datetime.strptime(c.get('kickoffDate', ''), '%Y-%m-%d').date()
+            if kd < cutoff:
+                to_remove.append(k)
+        except Exception:
+            pass
+    for k in to_remove:
+        del candidates[k]
+
+    trader['updated']    = now_ts
+    trader['candidates'] = candidates
+
+    with open('poly_trader_data.json', 'w', encoding='utf-8') as f:
+        json.dump(trader, f, ensure_ascii=False, indent=2)
+
+    print(f"📊 poly_trader_data.json — {updated_count} candidate-markets updated, "
+          f"{len(to_remove)} expired entries removed")

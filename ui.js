@@ -30,32 +30,38 @@ function showView(view) {
   const isStatus      = view === 'status';
   const isPolymarket  = view === 'polymarket';
   const isTracking    = view === 'tracking';
+  const isPolyTrader  = view === 'polytrader';
 
-  document.getElementById('mainContent').style.display        = isSeason     ? '' : 'none';
-  document.getElementById('resultsPanel').style.display       = isResults    ? '' : 'none';
-  document.getElementById('heartPanel').style.display         = isHeart      ? '' : 'none';
-  document.getElementById('statusPanel').style.display        = isStatus     ? '' : 'none';
-  document.getElementById('polymarketPanel').style.display    = isPolymarket ? '' : 'none';
-  document.getElementById('trackingV2Panel').style.display    = isTracking   ? '' : 'none';
+  document.getElementById('mainContent').style.display        = isSeason      ? '' : 'none';
+  document.getElementById('resultsPanel').style.display       = isResults     ? '' : 'none';
+  document.getElementById('heartPanel').style.display         = isHeart       ? '' : 'none';
+  document.getElementById('statusPanel').style.display        = isStatus      ? '' : 'none';
+  document.getElementById('polymarketPanel').style.display    = isPolymarket  ? '' : 'none';
+  document.getElementById('trackingV2Panel').style.display    = isTracking    ? '' : 'none';
+  const _ptPanel = document.getElementById('polyTraderPanel');
+  if (_ptPanel) _ptPanel.style.display = isPolyTrader ? '' : 'none';
 
-  document.querySelector('.league-nav').style.display         = isSeason     ? '' : 'none';
+  document.querySelector('.league-nav').style.display         = isSeason      ? '' : 'none';
   const legend = document.querySelector('.legend-section');
   if (legend) legend.style.display = isSeason ? '' : 'none';
 
-  document.getElementById('navSeason').classList.toggle('active',     isSeason);
-  document.getElementById('navResults').classList.toggle('active',    isResults);
-  document.getElementById('navHeart').classList.toggle('active',      isHeart);
-  document.getElementById('navStatus').classList.toggle('active',     isStatus);
-  document.getElementById('navPolymarket').classList.toggle('active', isPolymarket);
-  document.getElementById('navTracking').classList.toggle('active',   isTracking);
+  document.getElementById('navSeason').classList.toggle('active',      isSeason);
+  document.getElementById('navResults').classList.toggle('active',     isResults);
+  document.getElementById('navHeart').classList.toggle('active',       isHeart);
+  document.getElementById('navStatus').classList.toggle('active',      isStatus);
+  document.getElementById('navPolymarket').classList.toggle('active',  isPolymarket);
+  document.getElementById('navTracking').classList.toggle('active',    isTracking);
+  const _navPT = document.getElementById('navPolyTrader');
+  if (_navPT) _navPT.classList.toggle('active', isPolyTrader);
   // Sharp Radar uses the season panel — clear its active when another view is picked
   const _navSharp = document.getElementById('navSharp');
   if (_navSharp) _navSharp.classList.remove('active');
 
-  if (isResults)    initResults();
-  if (isStatus)     { initStatus(); buildValidatorDates(); }
-  if (isPolymarket) initPolymarket();
+  if (isResults)     initResults();
+  if (isStatus)      { initStatus(); buildValidatorDates(); }
+  if (isPolymarket)  initPolymarket();
   if (isTracking && typeof initResultsV2 === 'function') initResultsV2();
+  if (isPolyTrader)  initPolyTrader();
 }
 
 // Navigate directly to Sharp Radar from the top nav
@@ -306,5 +312,241 @@ async function initStatus() {
 
   // [validator functions] → validator.js
   // buildValidatorDates(), runPicksValidator(), renderValidatorOutput(), copyValidatorOutput()
+
+
+// ═══════════════════════════════════════════════════════
+//  POLY TRADER TAB
+// ═══════════════════════════════════════════════════════
+
+let _polyTraderData = null;
+let _polyTraderFilter = { signal: 'all', market: 'all', minDays: 0, maxDays: 10 };
+let _polyTraderSort = { col: 'signal_strength', dir: -1 };
+
+async function initPolyTrader() {
+  const panel = document.getElementById('polyTraderPanel');
+  if (!panel) return;
+  panel.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#6b7a8d">
+    <div style="width:28px;height:28px;border:3px solid #ffffff10;border-top-color:#00d4a1;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px"></div>
+    Lade Poly-Trader-Daten…
+  </div>`;
+
+  try {
+    const res = await fetch('poly_trader_data.json?_=' + Date.now());
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    _polyTraderData = await res.json();
+  } catch(e) {
+    panel.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#f85149">
+      <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+      <div style="font-weight:700;margin-bottom:6px">Daten nicht gefunden</div>
+      <div style="font-size:12px;color:#6b7a8d">poly_trader_data.json fehlt — läuft nach dem nächsten GitHub Actions Workflow</div>
+    </div>`;
+    return;
+  }
+  renderPolyTrader(panel);
+}
+
+function renderPolyTrader(panel) {
+  if (!_polyTraderData) return;
+  const candidates = Object.values(_polyTraderData.candidates || {});
+  const updated = _polyTraderData.updated || '';
+
+  // ── Summary stats ────────────────────────────────────────────────────────
+  const allSignals  = candidates.filter(c => c.signal);
+  const sharpCount  = candidates.filter(c => c.signal === 'SHARP' || c.signal === 'BOTH').length;
+  const clvCount    = candidates.filter(c => c.signal === 'CLV+' || c.signal === 'BOTH').length;
+  const bothCount   = candidates.filter(c => c.signal === 'BOTH').length;
+  const posDeltas   = candidates.filter(c => c.poly_delta_pp > 0);
+  const avgPosDelta = posDeltas.length ? (posDeltas.reduce((s,c) => s+c.poly_delta_pp,0)/posDeltas.length).toFixed(1) : '—';
+
+  // ── Filter + sort candidates ─────────────────────────────────────────────
+  let rows = candidates.filter(c => {
+    if (_polyTraderFilter.signal !== 'all' && c.signal !== _polyTraderFilter.signal) return false;
+    if (_polyTraderFilter.market !== 'all' && c.market !== _polyTraderFilter.market) return false;
+    if (c.daysOut < _polyTraderFilter.minDays || c.daysOut > _polyTraderFilter.maxDays) return false;
+    return true;
+  });
+  const { col, dir } = _polyTraderSort;
+  rows.sort((a, b) => {
+    let va = a[col] ?? -999, vb = b[col] ?? -999;
+    if (typeof va === 'string') va = va.toLowerCase(), vb = vb.toLowerCase();
+    return va < vb ? dir : va > vb ? -dir : 0;
+  });
+
+  // ── Unique markets for filter ────────────────────────────────────────────
+  const allMarkets = [...new Set(candidates.map(c => c.market))].sort();
+
+  function _signalBadge(sig) {
+    if (!sig) return '<span style="font-size:10px;color:#6b7a8d">—</span>';
+    const cfg = {
+      'BOTH':  { bg:'#00d4a118', bc:'#00d4a135', col:'#00d4a1', lbl:'★ BOTH'  },
+      'SHARP': { bg:'#58a6ff12', bc:'#58a6ff35', col:'#58a6ff', lbl:'⚡ SHARP' },
+      'CLV+':  { bg:'#a78bfa12', bc:'#a78bfa35', col:'#a78bfa', lbl:'📐 CLV+'  },
+    }[sig] || { bg:'#ffffff08', bc:'#ffffff15', col:'#8b9ab0', lbl: sig };
+    return `<span style="background:${cfg.bg};border:1px solid ${cfg.bc};color:${cfg.col};font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap">${cfg.lbl}</span>`;
+  }
+
+  function _deltaCell(pp) {
+    if (pp == null) return '—';
+    const col = pp > 1 ? '#3fb950' : pp < -1 ? '#f85149' : '#8b9ab0';
+    const ico = pp > 0 ? '▲' : pp < 0 ? '▼' : '→';
+    return `<span style="color:${col};font-weight:700">${ico} ${pp > 0?'+':''}${pp.toFixed(1)}pp</span>`;
+  }
+
+  function _bookieMoveCell(pp) {
+    if (pp == null) return '—';
+    const col = Math.abs(pp) >= 8 ? '#58a6ff' : Math.abs(pp) >= 5 ? '#e3b341' : '#8b9ab0';
+    return `<span style="color:${col};font-weight:600">${pp > 0?'+':''}${pp.toFixed(1)}pp</span>`;
+  }
+
+  function _sortTh(label, colKey) {
+    const active = _polyTraderSort.col === colKey;
+    const arrow = active ? (_polyTraderSort.dir === -1 ? ' ↓' : ' ↑') : '';
+    return `<th style="cursor:pointer;user-select:none;${active?'color:#00d4a1':''}" onclick="ptSort('${colKey}')">${label}${arrow}</th>`;
+  }
+
+  const tableRows = rows.map(c => {
+    const kickofFmt = c.kickoffDate ? c.kickoffDate.slice(5).replace('-','.') : '—';
+    const daysLabel = c.daysOut <= 1 ? `<span style="color:#e3b341">Heute/Mor.</span>` : `${c.daysOut}d`;
+    const obsSimPnl = c.obs_pnl_pp != null
+      ? `<span style="color:${c.obs_pnl_pp > 0 ? '#3fb950' : c.obs_pnl_pp < 0 ? '#f85149' : '#8b9ab0'};font-weight:700">${c.obs_pnl_pp > 0?'+':''}${c.obs_pnl_pp.toFixed(1)}pp</span>`
+      : '—';
+    const polyOpenFmt = c.poly_open != null ? `${c.poly_open.toFixed(1)}%` : '—';
+    const polyCurFmt  = c.poly_cur  != null ? `${c.poly_cur.toFixed(1)}%`  : '—';
+    const polyUrl = c.eventUrl
+      ? `<a href="${c.eventUrl}" target="_blank" style="color:#58a6ff;font-size:10px">🔗</a>`
+      : '';
+
+    return `<tr style="border-bottom:1px solid #1e2d3d">
+      <td style="padding:9px 8px;font-weight:600;white-space:nowrap">${c.home} vs ${c.away} ${polyUrl}</td>
+      <td style="padding:9px 8px;color:#8b9ab0;white-space:nowrap">${kickofFmt} <span style="font-size:10px">(${daysLabel})</span></td>
+      <td style="padding:9px 8px;font-size:11px;color:#8b9ab0">${c.market}</td>
+      <td style="padding:9px 8px;text-align:center">${_bookieMoveCell(c.bookie_move_pp)}</td>
+      <td style="padding:9px 8px;text-align:center;color:#8b9ab0">${polyOpenFmt}</td>
+      <td style="padding:9px 8px;text-align:center;font-weight:700">${polyCurFmt}</td>
+      <td style="padding:9px 8px;text-align:center">${_deltaCell(c.poly_delta_pp)}</td>
+      <td style="padding:9px 8px;text-align:center">${_signalBadge(c.signal)}</td>
+      <td style="padding:9px 8px;text-align:center">${obsSimPnl}</td>
+    </tr>`;
+  }).join('');
+
+  const noRows = rows.length === 0
+    ? `<tr><td colspan="9" style="text-align:center;padding:40px;color:#6b7a8d">Keine Kandidaten für aktuelle Filter</td></tr>`
+    : '';
+
+  const marketOptions = allMarkets.map(m =>
+    `<option value="${m}" ${_polyTraderFilter.market===m?'selected':''}>${m}</option>`
+  ).join('');
+
+  panel.innerHTML = `
+<!-- ── Observer Mode Banner ─────────────────────────────────── -->
+<div style="background:linear-gradient(135deg,#0a1f18,#0a1428);border:1px solid #00d4a125;border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
+  <div style="font-size:28px;flex-shrink:0">👁</div>
+  <div>
+    <div style="font-size:13px;font-weight:700;color:#00d4a1;margin-bottom:3px">Observer Mode — Kein echtes Geld</div>
+    <div style="font-size:12px;color:#6b7a8d;line-height:1.5">
+      Alle P&amp;L-Werte sind simuliert. Das System beobachtet Poly-Preis-Bewegungen vs. Bookie-Line-Bewegungen.
+      Nach 2–3 Wochen Daten → Auto-Trade mit €1/Signal.
+    </div>
+  </div>
+  <div style="margin-left:auto;text-align:right;flex-shrink:0">
+    <div style="font-size:10px;color:#6b7a8d">Stand</div>
+    <div style="font-size:12px;color:#8b9ab0;font-weight:600">${updated ? new Date(updated).toLocaleString('de-AT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—'}</div>
+  </div>
+</div>
+
+<!-- ── Summary Stats ─────────────────────────────────────────── -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
+  <div style="background:#0f1419;border:1px solid #1e2d3d;border-radius:12px;padding:14px;text-align:center">
+    <div style="font-size:24px;font-weight:800;color:#00d4a1">${allSignals.length}</div>
+    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">Aktive Signale</div>
+  </div>
+  <div style="background:#0f1419;border:1px solid #58a6ff30;border-radius:12px;padding:14px;text-align:center">
+    <div style="font-size:24px;font-weight:800;color:#58a6ff">${sharpCount}</div>
+    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">⚡ SHARP</div>
+  </div>
+  <div style="background:#0f1419;border:1px solid #a78bfa30;border-radius:12px;padding:14px;text-align:center">
+    <div style="font-size:24px;font-weight:800;color:#a78bfa">${clvCount}</div>
+    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">📐 CLV+</div>
+  </div>
+  <div style="background:#0f1419;border:1px solid #3fb95030;border-radius:12px;padding:14px;text-align:center">
+    <div style="font-size:24px;font-weight:800;color:#3fb950">${avgPosDelta > 0 ? '+' : ''}${avgPosDelta}pp</div>
+    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">∅ Poly-Delta (pos.)</div>
+  </div>
+</div>
+
+<!-- ── Filters ───────────────────────────────────────────────── -->
+<div style="background:#0f1419;border:1px solid #1e2d3d;border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+  <span style="font-size:11px;color:#6b7a8d;text-transform:uppercase;letter-spacing:.5px">Filter</span>
+  <select onchange="ptFilterSignal(this.value)" style="background:#141b22;border:1px solid #243040;color:#e8edf3;border-radius:7px;padding:5px 8px;font-size:12px">
+    <option value="all" ${_polyTraderFilter.signal==='all'?'selected':''}>Alle Signale</option>
+    <option value="BOTH"  ${_polyTraderFilter.signal==='BOTH' ?'selected':''}>★ BOTH</option>
+    <option value="SHARP" ${_polyTraderFilter.signal==='SHARP'?'selected':''}>⚡ SHARP</option>
+    <option value="CLV+"  ${_polyTraderFilter.signal==='CLV+' ?'selected':''}>📐 CLV+</option>
+  </select>
+  <select onchange="ptFilterMarket(this.value)" style="background:#141b22;border:1px solid #243040;color:#e8edf3;border-radius:7px;padding:5px 8px;font-size:12px">
+    <option value="all">Alle Märkte</option>
+    ${marketOptions}
+  </select>
+  <label style="font-size:12px;color:#8b9ab0;display:flex;align-items:center;gap:6px">
+    Kickoff ≤
+    <input type="range" min="1" max="10" value="${_polyTraderFilter.maxDays}" oninput="ptFilterDays(this.value);document.getElementById('ptDaysLbl').textContent=this.value" style="width:80px">
+    <span id="ptDaysLbl" style="color:#00d4a1;font-weight:700;min-width:16px">${_polyTraderFilter.maxDays}</span>d
+  </label>
+  <span style="margin-left:auto;font-size:11px;color:#6b7a8d">${rows.length} / ${candidates.length} Kandidaten</span>
+</div>
+
+<!-- ── Table ─────────────────────────────────────────────────── -->
+<div style="background:#0f1419;border:1px solid #1e2d3d;border-radius:12px;overflow:hidden;margin-bottom:20px">
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead>
+        <tr style="border-bottom:1px solid #1e2d3d;background:#141b22">
+          ${_sortTh('Match', 'home')}
+          ${_sortTh('Kickoff', 'kickoffDate')}
+          ${_sortTh('Markt', 'market')}
+          ${_sortTh('Bookie Move', 'bookie_move_pp')}
+          ${_sortTh('Poly Open', 'poly_open')}
+          ${_sortTh('Poly Aktuell', 'poly_cur')}
+          ${_sortTh('Poly Δ', 'poly_delta_pp')}
+          ${_sortTh('Signal', 'signal')}
+          ${_sortTh('Obs. P&L', 'obs_pnl_pp')}
+        </tr>
+      </thead>
+      <tbody>
+        ${tableRows || noRows}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── Legend ────────────────────────────────────────────────── -->
+<div style="background:#0f1419;border:1px solid #1e2d3d;border-radius:12px;padding:16px 20px;font-size:11px;color:#6b7a8d;line-height:1.8">
+  <div style="font-weight:700;color:#8b9ab0;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Legende</div>
+  <div><span style="color:#58a6ff;font-weight:700">⚡ SHARP</span> — Pinnacle-Linie bewegt sich ≥5pp → Profis haben Geld gesetzt. Poly hinkt typisch 6–36h nach.</div>
+  <div><span style="color:#a78bfa;font-weight:700">📐 CLV+</span> — Aktuelle Pinnacle-Implied &gt; Poly-Preis um ≥4pp → Poly ist noch nicht auf Bookie-Niveau repriced.</div>
+  <div><span style="color:#00d4a1;font-weight:700">★ BOTH</span> — Beide Signale gleichzeitig → Stärkster Entry-Kandidat.</div>
+  <div style="margin-top:6px"><strong style="color:#8b9ab0">Obs. P&L</strong> — Simulierter Gewinn wenn Opening-Entry bei <em>poly_open</em> und aktueller Preis als Exit. Rein beobachtend, kein echtes Trade.</div>
+  <div><strong style="color:#8b9ab0">Bookie Move</strong> — Pinnacle implied probability: Opening → Aktuell (Differenz in Prozentpunkten).</div>
+</div>`;
+}
+
+// ── Poly Trader event handlers (global, called from inline HTML) ────────────
+window.ptSort = function(col) {
+  if (_polyTraderSort.col === col) _polyTraderSort.dir *= -1;
+  else { _polyTraderSort.col = col; _polyTraderSort.dir = -1; }
+  renderPolyTrader(document.getElementById('polyTraderPanel'));
+};
+window.ptFilterSignal = function(val) {
+  _polyTraderFilter.signal = val;
+  renderPolyTrader(document.getElementById('polyTraderPanel'));
+};
+window.ptFilterMarket = function(val) {
+  _polyTraderFilter.market = val;
+  renderPolyTrader(document.getElementById('polyTraderPanel'));
+};
+window.ptFilterDays = function(val) {
+  _polyTraderFilter.maxDays = parseInt(val);
+  renderPolyTrader(document.getElementById('polyTraderPanel'));
+};
 
 
