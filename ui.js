@@ -355,8 +355,9 @@ function renderPolyTrader(panel) {
   const actionable   = candidates.filter(c => c.is_actionable);
   const sharpCount   = candidates.filter(c => c.signal === 'SHARP' || c.signal === 'BOTH').length;
   const clvCount     = candidates.filter(c => c.signal === 'CLV+' || c.signal === 'BOTH').length;
-  const posDeltas    = candidates.filter(c => (c.poly_delta_pp||0) > 0);
-  const avgPosDelta  = posDeltas.length ? (posDeltas.reduce((s,c) => s+(c.poly_delta_pp||0),0)/posDeltas.length).toFixed(1) : '—';
+  // Simulated total P&L across all candidates with obs_pnl_eur
+  const withPnl      = candidates.filter(c => c.obs_pnl_eur != null);
+  const totalPnlEur  = withPnl.length ? withPnl.reduce((s,c) => s+(c.obs_pnl_eur||0), 0) : null;
 
   // ── Filter + sort ────────────────────────────────────────────────────────
   let rows = candidates.filter(c => {
@@ -408,30 +409,71 @@ function renderPolyTrader(panel) {
     return `<th style="padding:10px 8px;cursor:pointer;user-select:none;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:${active?'#00d4a1':'#6b7a8d'};text-align:${center?'center':'left'}" onclick="ptSort('${colKey}')">${label}${arrow}</th>`;
   }
 
+  // ── Price cell helpers ───────────────────────────────────
+  function _priceRow(label, val, bold=false) {
+    if (val == null) return '';
+    return `<div style="display:flex;gap:4px;align-items:baseline"><span style="color:#4a5568;font-size:10px;min-width:30px">${label}</span><span style="color:${bold?'#e8edf3':'#8b9ab0'};font-weight:${bold?'700':'400'}">${val.toFixed(1)}%</span></div>`;
+  }
+  function _priceDelta(val, threshold=0) {
+    if (val == null) return '';
+    const col = val > threshold ? '#3fb950' : val < -threshold ? '#f85149' : '#6b7a8d';
+    return `<div style="color:${col};font-size:10px;margin-top:1px">${val>0?'+':''}${val.toFixed(1)}pp</div>`;
+  }
+  function _closedBadge() {
+    return `<span style="font-size:9px;background:#1e2d3d;color:#6b7a8d;border-radius:4px;padding:1px 5px;margin-left:2px">CLOSED</span>`;
+  }
+
   const tableRows = rows.map(c => {
     const kDate = c.kickoffDate ? c.kickoffDate.slice(5).replace('-','.') : '—';
-    const dLbl  = (c.daysOut||0) <= 1 ? `<span style="color:#e3b341;font-size:10px">Heute/Mor.</span>` : `<span style="font-size:10px;color:#6b7a8d">${c.daysOut}d</span>`;
+    const dLbl  = (c.daysOut||0) <= 0
+      ? `<span style="color:#f85149;font-size:10px">PAST</span>`
+      : (c.daysOut||0) === 1
+        ? `<span style="color:#e3b341;font-size:10px">Morgen</span>`
+        : `<span style="font-size:10px;color:#6b7a8d">${c.daysOut}d</span>`;
     const rowBg = c.is_actionable ? 'background:rgba(0,212,161,.03);border-left:2px solid #00d4a130' : '';
     const polyLink = c.eventUrl ? `<a href="${c.eventUrl}" target="_blank" style="color:#58a6ff;font-size:10px;margin-left:4px;opacity:.7">🔗</a>` : '';
-    const gapCol = (c.gap_pp||0) > 4 ? '#00d4a1' : (c.gap_pp||0) > 2 ? '#e3b341' : '#6b7a8d';
+    const gapCol = Math.abs(c.gap_pp||0) > 4 ? '#00d4a1' : Math.abs(c.gap_pp||0) > 2 ? '#e3b341' : '#6b7a8d';
     const obsCol = (c.obs_pnl_pp||0) > 0 ? '#3fb950' : (c.obs_pnl_pp||0) < 0 ? '#f85149' : '#6b7a8d';
+    const eurCol = (c.obs_pnl_eur||0) > 0 ? '#3fb950' : (c.obs_pnl_eur||0) < 0 ? '#f85149' : '#6b7a8d';
+
+    // Bookie cell: Open → Cur [→ Close] + Δ
+    const bookieCell = `<div style="font-size:11px;line-height:1.5">
+      ${_priceRow('Open', c.bookie_open_impl)}
+      ${_priceRow('Cur', c.bookie_cur_impl, true)}
+      ${c.bookie_close != null ? _priceRow('Close', c.bookie_close) + _closedBadge() : ''}
+      ${_priceDelta(c.bookie_move_pp, 5)}
+    </div>`;
+
+    // Poly cell: Open → Cur [→ Close] + Δ
+    const polyCell = `<div style="font-size:11px;line-height:1.5">
+      ${_priceRow('Open', c.poly_open)}
+      ${_priceRow('Cur', c.poly_cur, true)}
+      ${c.poly_close != null ? _priceRow('Close', c.poly_close) + _closedBadge() : ''}
+      ${_priceDelta(c.poly_delta_pp)}
+    </div>`;
+
+    // Obs P&L: pp + € stacked
+    const obsCell = `<div style="text-align:center;line-height:1.6">
+      <div style="color:${obsCol};font-weight:700;font-size:12px">${c.obs_pnl_pp != null ? (c.obs_pnl_pp>0?'+':'')+c.obs_pnl_pp.toFixed(1)+'pp' : '—'}</div>
+      ${c.obs_pnl_eur != null ? `<div style="color:${eurCol};font-size:11px">${c.obs_pnl_eur>0?'+':''}€${c.obs_pnl_eur.toFixed(2)}</div>` : ''}
+      ${c.obs_closed ? `<div style="font-size:9px;color:#6b7a8d;margin-top:1px">geschlossen</div>` : ''}
+    </div>`;
 
     return `<tr style="border-bottom:1px solid #1a2535;${rowBg}">
       <td style="padding:9px 8px;font-weight:600;white-space:nowrap;font-size:12px">${_tierBadge(c.liq_tier)} ${c.home} vs ${c.away}${polyLink}</td>
       <td style="padding:9px 8px;white-space:nowrap">${kDate} ${dLbl}</td>
       <td style="padding:9px 8px;font-size:11px;color:#8b9ab0">${c.market}</td>
-      <td style="padding:9px 8px;text-align:center">${_pp(c.bookie_move_pp, 5)}</td>
-      <td style="padding:9px 8px;text-align:center;color:#6b7a8d">${c.poly_open != null ? c.poly_open.toFixed(1)+'%' : '—'}</td>
-      <td style="padding:9px 8px;text-align:center;font-weight:700">${c.poly_cur != null ? c.poly_cur.toFixed(1)+'%' : '—'}</td>
+      <td style="padding:9px 8px">${bookieCell}</td>
+      <td style="padding:9px 8px">${polyCell}</td>
       <td style="padding:9px 8px;text-align:center"><span style="color:${gapCol};font-weight:700">${c.gap_pp != null ? (c.gap_pp>0?'+':'')+c.gap_pp.toFixed(1)+'pp' : '—'}</span></td>
       <td style="padding:9px 8px;text-align:center">${_dirBadge(c.trade_direction)}</td>
       <td style="padding:9px 8px;text-align:center">${_signalBadge(c.signal, c.is_actionable)}</td>
-      <td style="padding:9px 8px;text-align:center"><span style="color:${obsCol};font-weight:700">${c.obs_pnl_pp != null ? (c.obs_pnl_pp>0?'+':'')+c.obs_pnl_pp.toFixed(1)+'pp' : '—'}</span></td>
+      <td style="padding:9px 8px">${obsCell}</td>
     </tr>`;
   }).join('');
 
   const noRows = rows.length === 0
-    ? `<tr><td colspan="10" style="text-align:center;padding:40px;color:#6b7a8d">Keine Kandidaten für aktuelle Filter</td></tr>` : '';
+    ? `<tr><td colspan="9" style="text-align:center;padding:40px;color:#6b7a8d">Keine Kandidaten für aktuelle Filter</td></tr>` : '';
 
   const marketOptions = allMarkets.map(m =>
     `<option value="${m}" ${_polyTraderFilter.market===m?'selected':''}>${m}</option>`
@@ -466,8 +508,11 @@ function renderPolyTrader(panel) {
     <div style="font-size:11px;color:#6b7a8d;margin-top:3px">📐 CLV+</div>
   </div>
   <div style="background:#0f1419;border:1px solid #3fb95025;border-radius:12px;padding:14px;text-align:center">
-    <div style="font-size:26px;font-weight:800;color:#3fb950">${typeof avgPosDelta === 'string' && avgPosDelta !== '—' && parseFloat(avgPosDelta) > 0 ? '+' : ''}${avgPosDelta}pp</div>
-    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">∅ Poly-Delta</div>
+    ${totalPnlEur != null
+      ? `<div style="font-size:26px;font-weight:800;color:${totalPnlEur>=0?'#3fb950':'#f85149'}">${totalPnlEur>=0?'+':''}€${totalPnlEur.toFixed(2)}</div>`
+      : `<div style="font-size:26px;font-weight:800;color:#6b7a8d">—</div>`
+    }
+    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">Sim. P&L (€5/Trade)</div>
   </div>
 </div>
 
@@ -504,9 +549,8 @@ function renderPolyTrader(panel) {
           ${_sortTh('Match', 'home')}
           ${_sortTh('Kickoff', 'kickoffDate')}
           ${_sortTh('Markt', 'market')}
-          ${_sortTh('Bookie Δ', 'bookie_move_pp', true)}
-          ${_sortTh('Poly Open', 'poly_open', true)}
-          ${_sortTh('Poly Aktuell', 'poly_cur', true)}
+          ${_sortTh('Bookie Open→Cur→Close', 'bookie_move_pp')}
+          ${_sortTh('Poly Open→Cur→Close', 'poly_delta_pp')}
           ${_sortTh('Gap', 'gap_pp', true)}
           ${_sortTh('Trade', 'trade_direction', true)}
           ${_sortTh('Signal', 'signal', true)}
@@ -623,7 +667,7 @@ function renderPolyTrader(panel) {
     <div style="font-size:11px;font-weight:700;color:#e3b341;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">⚠ Bekannte Limitierungen & nächste Verbesserungen</div>
     <div style="background:#141b22;border:1px solid #e3b34120;border-radius:10px;padding:12px 16px;font-size:11px;color:#8b9ab0;line-height:1.8">
       <div style="display:grid;gap:6px">
-        <div><span style="color:#e3b341;font-weight:600">Poly-Delta = 0</span> — Solange nur 1 Snapshot existiert ist Open = Current. Delta baut sich über Zeit auf. Erst ab ~3 Tagen aussagekräftig.</div>
+        <div><span style="color:#e3b341;font-weight:600">Poly-Delta = 0 / P&amp;L = 0</span> — Solange nur 1 Snapshot existiert ist Open = Current. Delta und P&amp;L bauen sich über Zeit auf. Erst ab ~3 Tagen aussagekräftig. Sim. P&amp;L = €5 × Preisbewegung / Entry-Preis (mark-to-market bis Kickoff, danach eingefroren).</div>
         <div><span style="color:#e3b341;font-weight:600">Keine Zeitstempel für Bookie-Move</span> — Wir wissen nicht wann sich Pinnacle bewegt hat (nur um wie viel). Ideal: Bookie-Move-Zeitpunkt erfassen um Entry-Fenster präziser zu bestimmen.</div>
         <div><span style="color:#e3b341;font-weight:600">Over/Under und BTTS ohne Pinnacle-Fair-Key</span> — CLV+ Signal nur für 1X2 + Over 2.5 möglich (haben pinn_fair). Andere Märkte: nur Poly-Tracking ohne Bookie-Vergleich.</div>
         <div><span style="color:#e3b341;font-weight:600">Kein Exit-Signal</span> — Aktuell kein automatischer "Jetzt verkaufen"-Trigger. Geplant: Exit wenn Gap &lt;1pp oder Poly-Delta ≥ 80% der Bookie-Bewegung.</div>

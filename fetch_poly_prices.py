@@ -1039,8 +1039,9 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
             pass
 
         days_out = (kickoff_date - today).days if kickoff_date else 999
-        if days_out < 0 or days_out > MAX_DAYS_OUT:
-            continue   # Past or too far out
+        # Allow yesterday (-1) to freeze close prices; filter out further past & far future
+        if days_out < -1 or days_out > MAX_DAYS_OUT:
+            continue
 
         # Get prematch fixture for bookie odds
         pm_fx = pm_idx.get(match_key) or pm_idx.get(f"{home}|{away}")
@@ -1066,13 +1067,13 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
             poly_pct = round(poly_price * 100, 2)  # convert 0-1 → 0-100
 
             # Existing candidate or new?
-            if candidate_key in candidates:
-                cand = candidates[candidate_key]
+            existing = candidates.get(candidate_key, {})
+            if existing:
                 # Preserve opening price
-                poly_open     = cand['poly_open']
-                poly_open_ts  = cand['poly_open_ts']
+                poly_open     = existing['poly_open']
+                poly_open_ts  = existing['poly_open_ts']
                 # Append to price history (keep last 48 snapshots ≈ 2 days at hourly)
-                history = cand.get('price_history', [])
+                history = existing.get('price_history', [])
                 history.append({'ts': now_ts, 'pct': poly_pct})
                 if len(history) > 48:
                     history = history[-48:]
@@ -1083,6 +1084,15 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
                 history      = [{'ts': now_ts, 'pct': poly_pct}]
 
             poly_delta_pp = round(poly_pct - poly_open, 2)
+
+            # ── Close prices: freeze on kickoff day (days_out ≤ 0) ──────────────
+            poly_close    = existing.get('poly_close')
+            bookie_close  = existing.get('bookie_close')
+            if days_out <= 0:
+                if poly_close is None:
+                    poly_close = poly_pct          # freeze last known Poly price
+                if bookie_close is None:
+                    bookie_close = bookie_cur_impl  # freeze last known Bookie price
 
             # ── Remaining gap: Pinnacle current implied vs. Poly current price ──
             gap_pp = None
@@ -1134,6 +1144,27 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
             gap_abs = abs(gap_pp) if gap_pp is not None else 0.0
             signal_score = round(bm_abs * 0.6 + gap_abs * 0.4, 2)
 
+            # ── Simulated P&L (€5 stake, sell at kickoff / mark-to-market) ────
+            # Effective direction: from SHARP signal or inferred from gap
+            OBS_STAKE    = 5.0
+            obs_entry    = existing.get('obs_entry', poly_open)
+            eff_dir      = trade_direction
+            if eff_dir is None and gap_pp is not None:
+                eff_dir = 'BUY_YES' if gap_pp > 0 else 'BUY_NO'
+            # Exit price: use frozen close if available, else current
+            exit_pct     = (poly_close if poly_close is not None else poly_pct) / 100.0
+            entry_pct_f  = obs_entry / 100.0 if obs_entry is not None else None
+
+            obs_pnl_eur = None
+            obs_pnl_pp  = round(poly_pct - obs_entry, 2) if obs_entry is not None else poly_delta_pp
+            if entry_pct_f and eff_dir:
+                if eff_dir == 'BUY_YES' and entry_pct_f > 0:
+                    obs_pnl_eur = round(OBS_STAKE * (exit_pct - entry_pct_f) / entry_pct_f, 2)
+                elif eff_dir == 'BUY_NO':
+                    denom = 1.0 - entry_pct_f
+                    if denom > 0:
+                        obs_pnl_eur = round(OBS_STAKE * (entry_pct_f - exit_pct) / denom, 2)
+
             # ── League liquidity tier ─────────────────────────────────────────
             # Tier 1 = most liquid on Poly, Tier 3 = thinnest
             LIQ_TIER = {'ENG': 1, 'ESP': 1, 'GER': 1, 'ITA': 1, 'FRA': 1,
@@ -1153,12 +1184,14 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
                 # Bookie
                 'bookie_open_impl': bookie_open_impl,
                 'bookie_cur_impl':  bookie_cur_impl,
+                'bookie_close':     bookie_close,
                 'bookie_move_pp':   bookie_move_pp,
                 # Poly
                 'poly_open':        poly_open,
                 'poly_open_ts':     poly_open_ts,
                 'poly_cur':         poly_pct,
                 'poly_cur_ts':      now_ts,
+                'poly_close':       poly_close,
                 'poly_delta_pp':    poly_delta_pp,
                 # Gap & direction
                 'gap_pp':           gap_pp,
@@ -1170,11 +1203,13 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
                 'signal_detail':    ', '.join(signal_detail),
                 'is_actionable':    is_actionable,
                 # Tracking
-                'first_seen_ts':    candidates.get(candidate_key, {}).get('first_seen_ts', now_ts),
+                'first_seen_ts':    existing.get('first_seen_ts', now_ts),
                 'price_history':    history,
-                # Observer P&L (entered at poly_open, current exit = poly_cur)
-                'obs_entry':        poly_open,
-                'obs_pnl_pp':       poly_delta_pp,
+                # Observer P&L (€5 stake, sell at kickoff / mark-to-market)
+                'obs_entry':        obs_entry,
+                'obs_pnl_pp':       obs_pnl_pp,
+                'obs_pnl_eur':      obs_pnl_eur,
+                'obs_closed':       poly_close is not None,  # True = position closed at kickoff
             }
             updated_count += 1
 
