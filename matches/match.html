@@ -39,9 +39,12 @@ a{color:var(--accent);text-decoration:none}
 .hero-name{font-size:15px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:4px}
 .hero-elo{font-size:11px;color:var(--muted)}
 .hero-center{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 4px}
-.hero-kickoff{font-size:11px;color:var(--muted);margin-top:2px;text-align:center}
-.prob-pills{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:4px}
-.prob-pill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;border:1px solid}
+.hero-kickoff{font-size:11px;color:var(--muted);margin-top:4px;text-align:center}
+.hero-donut-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;text-align:center;margin-bottom:2px}
+
+/* Prob legend pills row */
+.prob-legend{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.prob-leg{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;border:1px solid}
 .prob-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .pp-h{background:#00d4a110;color:#00d4a1;border-color:#00d4a130}.pp-h .prob-dot{background:#00d4a1}
 .pp-d{background:#e3b34110;color:#e3b341;border-color:#e3b34130}.pp-d .prob-dot{background:#e3b341}
@@ -65,25 +68,43 @@ a{color:var(--accent);text-decoration:none}
 .stitle{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .sticon{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 
-/* Picks */
+/* ── Picks ───────────────────────────────────────── */
 .pick-card{border-radius:12px;padding:14px 16px;margin-bottom:10px;position:relative;overflow:hidden}
 .pick-card.high{background:linear-gradient(135deg,#001a13,#0a1419);border:1px solid #00d4a125}
 .pick-card.medium{background:linear-gradient(135deg,#1a1400,#0f1419);border:1px solid #e3b34125}
 .pick-card.high::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:12px 0 0 12px}
 .pick-card.medium::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--yellow);border-radius:12px 0 0 12px}
-.pick-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.pick-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:12px}
+.pick-left{display:flex;align-items:flex-start;gap:10px}
 .pick-icon{font-size:20px;flex-shrink:0;margin-top:1px}
 .pick-market{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
 .pick-conf{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
 .pick-conf.high{color:var(--accent)}.pick-conf.medium{color:var(--yellow)}
-.pick-pills{display:flex;gap:6px;flex-wrap:wrap}
-.pill{padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid;white-space:nowrap}
-.p-odds{background:#ffffff08;border-color:var(--border2);color:var(--text)}
-.p-model{background:#00d4a108;border-color:#00d4a130;color:var(--accent)}
-.p-kelly{background:#a78bfa08;border-color:#a78bfa30;color:var(--purple)}
-.p-value{background:#3fb95008;border-color:#3fb95030;color:var(--green)}
+.pick-odds-big{text-align:right;flex-shrink:0}
+.pick-odds-num{font-size:22px;font-weight:800;color:var(--text);line-height:1}
+.pick-odds-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 
-/* Stats bars */
+/* Pick probability bar */
+.pick-prob-row{margin-bottom:10px}
+.pick-prob-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.pick-prob-labels{font-size:10px;color:var(--muted)}
+.pick-prob-values{font-size:10px;font-weight:700;display:flex;gap:10px}
+.pick-prob-track{height:6px;border-radius:3px;background:#ffffff08;overflow:hidden;position:relative}
+.pick-prob-fill-model{height:100%;border-radius:3px;background:var(--accent);position:absolute;top:0;left:0;transition:width .4s}
+.pick-prob-fill-mkt{height:100%;border-radius:3px;background:#ffffff20;position:absolute;top:0;left:0}
+.pick-prob-marker{position:absolute;top:-2px;height:10px;width:2px;background:var(--text);border-radius:1px}
+
+/* Pick bottom pills */
+.pick-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pill{padding:4px 9px;border-radius:7px;font-size:11px;font-weight:600;border:1px solid;white-space:nowrap}
+.p-kelly{background:#a78bfa08;border-color:#a78bfa30;color:var(--purple)}
+.p-value{background:#3fb95012;border-color:#3fb95040;color:var(--green)}
+.p-edge-pos{background:#00d4a110;border-color:#00d4a135;color:var(--accent)}
+.p-edge-neg{background:#f8514910;border-color:#f8514930;color:var(--red)}
+.p-ev{background:#58a6ff08;border-color:#58a6ff30;color:var(--blue)}
+.p-bk{background:#ffffff06;border-color:var(--border2);color:var(--muted2)}
+
+/* ── Stats bars ─────────────────────────────────── */
 .sbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .sbar-val{font-size:13px;font-weight:700;min-width:42px;text-align:right;white-space:nowrap}
 .sbar-center{flex:1;min-width:0}
@@ -92,22 +113,28 @@ a{color:var(--accent);text-decoration:none}
 .stats-names{display:flex;justify-content:space-between;margin-bottom:12px}
 .stats-name{font-size:13px;font-weight:700;color:var(--muted2)}
 
-/* Odds */
+/* ── Odds / Line movement ───────────────────────── */
 .odds-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
-.odds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:8px;min-width:280px}
-.ocard{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:11px 12px}
-.ocard-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
-.ocard-vals{display:flex;align-items:flex-end;gap:6px;margin-bottom:6px}
-.ocard-open{font-size:12px;color:var(--muted2);text-decoration:line-through}
-.ocard-cur{font-size:18px;font-weight:800;color:var(--text)}
-.omove{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;display:inline-block}
+.odds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;min-width:280px}
+.ocard{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px}
+.ocard.pick-relevant{border-color:#00d4a135;background:linear-gradient(135deg,#001a13,#141b22)}
+.ocard.sharp-against{border-color:#f8514930;background:linear-gradient(135deg,#1a0008,#141b22)}
+.ocard-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.ocard-top{display:flex;align-items:flex-end;gap:8px;margin-bottom:6px}
+.ocard-cur{font-size:20px;font-weight:800;color:var(--text);line-height:1}
+.ocard-open-lbl{font-size:10px;color:var(--muted);line-height:1;margin-bottom:2px}
+.ocard-open-val{font-size:13px;color:var(--muted2);font-weight:600}
+.ocard-open-wrap{text-align:right}
+.omove{font-size:11px;font-weight:700;padding:3px 7px;border-radius:6px;display:inline-flex;align-items:center;gap:3px}
 .omove-up{background:#f8514915;color:var(--red)}
-.omove-down{background:#3fb95015;color:var(--green)}
+.omove-down-good{background:#3fb95015;color:var(--green)}
+.omove-down-bad{background:#f8514915;color:var(--red)}
 .omove-neutral{background:#ffffff08;color:var(--muted)}
+.sharp-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:5px;display:flex;align-items:center;gap:3px}
 
-/* H2H */
+/* ── H2H ────────────────────────────────────────── */
 .h2h-kpis{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.h2h-kpi{flex:1;min-width:60px;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 6px}
+.h2h-kpi{flex:1;min-width:58px;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 6px}
 .kpi-val{font-size:20px;font-weight:800;color:var(--text);line-height:1}
 .kpi-lbl{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3}
 .h2h-bar{height:10px;border-radius:5px;overflow:hidden;display:flex;margin-bottom:14px}
@@ -118,20 +145,29 @@ a{color:var(--accent);text-decoration:none}
 .h2h-dots{display:flex;gap:5px;flex-wrap:wrap}
 .h2h-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#080c10;flex-shrink:0}
 
-/* Prediction */
-.pred-bar{margin-bottom:12px}
-.pred-bar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.pred-name{font-size:12px;color:var(--muted2)}
-.pred-pct{font-size:14px;font-weight:800}
-.pred-track{height:8px;border-radius:4px;background:#ffffff06;overflow:hidden}
-.pred-fill{height:100%;border-radius:4px}
-.pred-comp{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-top:12px}
-.comp-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
-.comp-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
-.comp-vals{display:flex;justify-content:space-between;align-items:center}
-.comp-v{font-size:16px;font-weight:800}
+/* ── Prediction (redesigned) ────────────────────── */
+.pred-matchup{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;padding:14px;background:var(--card2);border:1px solid var(--border);border-radius:12px}
+.pred-team{text-align:center;flex:1}
+.pred-team-name{font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:4px}
+.pred-team-pct{font-size:26px;font-weight:800;line-height:1}
+.pred-team-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+.pred-vs{font-size:11px;color:var(--muted);font-weight:600;padding:0 4px}
+.pred-goals{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;background:var(--card2);border:1px solid var(--border);border-radius:10px;margin-bottom:12px}
+.pred-goals-val{font-size:20px;font-weight:800;color:var(--accent);text-align:center}
+.pred-goals-sep{font-size:13px;color:var(--muted);font-weight:600}
+.pred-goals-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+.pred-comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pred-comp-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 8px}
+.pred-comp-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;text-align:center;margin-bottom:8px}
+.pred-comp-bar{height:6px;border-radius:3px;background:#ffffff06;overflow:hidden;display:flex;margin-bottom:5px}
+.pred-comp-vals{display:flex;justify-content:space-between;font-size:12px;font-weight:700}
+.pred-draw-row{margin-top:10px;display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--card2);border:1px solid var(--border);border-radius:10px}
+.pred-draw-lbl{font-size:11px;color:var(--muted2);flex:1}
+.pred-draw-pct{font-size:14px;font-weight:700;color:var(--yellow)}
+.pred-draw-bar{flex:2;height:6px;border-radius:3px;background:#ffffff06;overflow:hidden}
+.pred-draw-fill{height:100%;border-radius:3px;background:var(--yellow)}
 
-/* Injuries */
+/* ── Injuries ───────────────────────────────────── */
 .inj-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .inj-team{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px}
 .inj-team-name{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
@@ -139,16 +175,21 @@ a{color:var(--accent);text-decoration:none}
 .inj-pos{font-size:10px;font-weight:700;color:var(--red);margin-bottom:2px}
 .inj-reason{font-size:10px;color:var(--muted);margin-top:2px}
 .inj-clean{font-size:12px;color:var(--green);display:flex;align-items:center;gap:5px;padding:4px 0}
+.inj-nodata{font-size:12px;color:var(--muted);font-style:italic;padding:4px 0}
 
-/* Poly */
+/* ── Polymarket ─────────────────────────────────── */
 .poly-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .poly-link{font-size:11px;color:var(--blue);padding:4px 10px;border-radius:6px;border:1px solid #58a6ff30;background:#58a6ff08}
-.poly-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
-.poly-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px}
+.poly-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.poly-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px;position:relative}
+.poly-card.poly-edge{border-color:#00d4a135;background:linear-gradient(135deg,#001a13,#141b22)}
+.poly-card.poly-against{border-color:#f8514920;opacity:.8}
 .poly-name{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:8px;line-height:1.3}
-.poly-pct{font-size:24px;font-weight:800;color:var(--accent);line-height:1;margin-bottom:6px}
-.poly-btrack{height:4px;border-radius:2px;background:#ffffff08;overflow:hidden}
-.poly-bfill{height:100%;border-radius:2px;background:var(--accent)}
+.poly-pct{font-size:24px;font-weight:800;line-height:1;margin-bottom:4px}
+.poly-btrack{height:4px;border-radius:2px;background:#ffffff08;overflow:hidden;margin-bottom:6px}
+.poly-bfill{height:100%;border-radius:2px}
+.poly-delta{font-size:10px;font-weight:700;display:flex;align-items:center;gap:3px}
+.poly-note{font-size:9px;color:var(--muted);margin-top:3px;line-height:1.3}
 
 /* Loading / Error */
 .state{max-width:480px;margin:80px auto;padding:0 20px;text-align:center}
@@ -168,14 +209,16 @@ a{color:var(--accent);text-decoration:none}
   .team-circle{width:44px;height:44px;font-size:12px}
   .section{padding:14px 12px}
   .pick-market{font-size:13px}
+  .pick-odds-num{font-size:18px}
   .sbar-val{font-size:12px;min-width:34px}
   .kpi-val{font-size:17px}
   .h2h-kpi{min-width:52px;padding:8px 4px}
   .inj-grid{grid-template-columns:1fr}
   .ocard{padding:9px 10px}
-  .ocard-cur{font-size:15px}
+  .ocard-cur{font-size:17px}
+  .prob-leg{font-size:10px;padding:3px 7px}
+  .pred-comp-grid{grid-template-columns:1fr}
   .poly-grid{grid-template-columns:repeat(2,1fr)}
-  .prob-pill{font-size:10px;padding:3px 7px}
 }
 </style>
 </head>
@@ -190,7 +233,7 @@ a{color:var(--accent);text-decoration:none}
 
 <script>
 // ── Donut SVG ──────────────────────────────────────────────────────────────
-function donutSvg(h, d, a, size=140, stroke=13) {
+function donutSvg(h, d, a, size=130, stroke=13) {
   const cx = cy = size/2, r = (size-stroke)/2, gap = 3;
   function arc(startDeg, spanDeg, color) {
     if (spanDeg < 2) return '';
@@ -201,13 +244,34 @@ function donutSvg(h, d, a, size=140, stroke=13) {
     return `<path d="M${x1.toFixed(2)},${y1.toFixed(2)} A${r},${r} 0 ${lg},1 ${x2.toFixed(2)},${y2.toFixed(2)}" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-linecap="round"/>`;
   }
   const hd=h*3.6, dd=d*3.6, ad=a*3.6;
+  // Find dominant outcome for center display
+  const topVal = Math.max(h,d,a);
+  const topColor = topVal===h?'#00d4a1':topVal===d?'#e3b341':'#a78bfa';
+  const topLbl = topVal===h?'Heim':topVal===d?'Unent.':'Ausw.';
   return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0">
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#ffffff0a" stroke-width="${stroke}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#ffffff08" stroke-width="${stroke}"/>
     ${arc(0,hd,'#00d4a1')}${arc(hd,dd,'#e3b341')}${arc(hd+dd,ad,'#a78bfa')}
-    <text x="${cx}" y="${cy-9}" text-anchor="middle" font-size="10" fill="#6b7a8d" font-family="system-ui">Prognose</text>
-    <text x="${cx}" y="${cy+8}" text-anchor="middle" font-size="13" font-weight="800" fill="#e8edf3" font-family="system-ui">${h}–${d}–${a}</text>
+    <text x="${cx}" y="${cy-8}" text-anchor="middle" font-size="9" fill="#6b7a8d" font-family="system-ui,sans-serif">${topLbl}</text>
+    <text x="${cx}" y="${cy+8}" text-anchor="middle" font-size="17" font-weight="800" fill="${topColor}" font-family="system-ui,sans-serif">${topVal}%</text>
   </svg>`;
 }
+
+// ── Pick helpers ───────────────────────────────────────────────────────────
+// Detect which 1X2 outcome a pick covers (for smart odds highlighting)
+function pickOutcome(market) {
+  const m = (market||'').toLowerCase();
+  if (/doppelte.*1x|dc.*1x|1x\b/.test(m)) return ['home','draw'];
+  if (/doppelte.*x2|dc.*x2|x2\b/.test(m)) return ['draw','away'];
+  if (/doppelte.*12|dc.*12|12\b/.test(m)) return ['home','away'];
+  if (/heimsieg|home win|\b1\b/.test(m)) return ['home'];
+  if (/unentschieden|draw|\bx\b/.test(m)) return ['draw'];
+  if (/ausw|away|\b2\b/.test(m)) return ['away'];
+  return [];
+}
+const OUTCOME_MAP = {
+  '1 Heimsieg':'home', 'X Unentsch.':'draw', '2 Auswärts':'away',
+  'Over 2.5':'over25', 'Under 2.5':'under25'
+};
 
 // ── Render sections ────────────────────────────────────────────────────────
 function renderHero(D) {
@@ -231,6 +295,7 @@ function renderHero(D) {
         ${m.homeElo?`<div class="hero-elo">Elo ${m.homeElo}</div>`:''}
       </div>
       <div class="hero-center">
+        <div class="hero-donut-label">1X2-Wahrscheinlichkeit</div>
         ${donutSvg(p.home, p.draw, p.away)}
         <div class="hero-kickoff">${kickoff}</div>
       </div>
@@ -240,10 +305,10 @@ function renderHero(D) {
         ${m.awayElo?`<div class="hero-elo">Elo ${m.awayElo}</div>`:''}
       </div>
     </div>
-    <div class="prob-pills">
-      <div class="prob-pill pp-h"><div class="prob-dot"></div>${m.home.split(' ').at(-1)} ${p.home}%</div>
-      <div class="prob-pill pp-d"><div class="prob-dot"></div>Unent. ${p.draw}%</div>
-      <div class="prob-pill pp-a"><div class="prob-dot"></div>${m.away.split(' ').at(-1)} ${p.away}%</div>
+    <div class="prob-legend">
+      <div class="prob-leg pp-h"><div class="prob-dot"></div>${m.home.split(' ').at(-1)} ${p.home}%</div>
+      <div class="prob-leg pp-d"><div class="prob-dot"></div>Unent. ${p.draw}%</div>
+      <div class="prob-leg pp-a"><div class="prob-dot"></div>${m.away.split(' ').at(-1)} ${p.away}%</div>
     </div>
   </div>
 </div>`;
@@ -264,20 +329,61 @@ function renderAI(D) {
 }
 
 function renderPicks(D) {
-  if (!D.picks.length) return '';
-  const cards = D.picks.map(p => {
-    const confLabel = p.conf==='high'?'★★★ HIGH':'★★ MEDIUM';
-    let pills = p.odds!=='—'?`<span class="pill p-odds">🎯 ${p.odds}</span>`:'';
-    if (p.modelOdds) pills += `<span class="pill p-model">⚙ ${p.modelOdds}</span>`;
-    if (p.kelly)     pills += `<span class="pill p-kelly">🏦 ${p.kelly}%</span>`;
-    if (p.value)     pills += `<span class="pill p-value">✓ Value</span>`;
-    return `<div class="pick-card ${p.conf}">
-  <div class="pick-top"><div class="pick-icon">${p.icon}</div>
-    <div><div class="pick-market">${p.market}</div><div class="pick-conf ${p.conf}">${confLabel}</div></div>
+  if (!D.picks || !D.picks.length) return '';
+
+  const cards = D.picks.map(pick => {
+    const confLabel = pick.conf==='high'?'★★★ HIGH CONFIDENCE':'★★ MEDIUM CONFIDENCE';
+    const odds = parseFloat(pick.odds) || 0;
+    const modelProb = pick.modelProb || 0;
+    const mktProb   = pick.mktProb   || 0;
+    const edge = modelProb - mktProb; // percentage point difference
+
+    // EV: (p_model * odds) - 1
+    const ev = odds > 0 ? ((modelProb/100) * odds - 1) * 100 : null;
+
+    // Probability bar: show model vs market
+    const probBar = (modelProb || mktProb) ? `
+<div class="pick-prob-row">
+  <div class="pick-prob-head">
+    <span class="pick-prob-labels">Modell vs. Markt-Impl.</span>
+    <div class="pick-prob-values">
+      <span style="color:var(--accent)">${modelProb}% Modell</span>
+      <span style="color:var(--muted2)">${mktProb}% Markt</span>
+    </div>
   </div>
-  <div class="pick-pills">${pills}</div>
+  <div class="pick-prob-track" style="height:7px;border-radius:4px;background:#ffffff08;overflow:hidden;position:relative">
+    <div class="pick-prob-fill-mkt" style="width:${mktProb}%;height:100%;background:#ffffff15;position:absolute;top:0;left:0"></div>
+    <div class="pick-prob-fill-model" style="width:${modelProb}%;height:100%;background:var(--accent);opacity:.8;position:absolute;top:0;left:0"></div>
+  </div>
+</div>` : '';
+
+    // Pills row
+    let pills = '';
+    if (pick.kelly) pills += `<span class="pill p-kelly">🏦 Kelly ${pick.kelly}%</span>`;
+    if (edge > 0) pills += `<span class="pill p-edge-pos">⬆ +${edge.toFixed(0)}pp Edge</span>`;
+    else if (edge < 0) pills += `<span class="pill p-edge-neg">⬇ ${edge.toFixed(0)}pp Edge</span>`;
+    if (ev !== null) pills += `<span class="pill p-ev">EV ${ev>0?'+':''}${ev.toFixed(1)}%</span>`;
+    if (pick.value) pills += `<span class="pill p-value">✓ Value</span>`;
+
+    return `<div class="pick-card ${pick.conf}">
+  <div class="pick-header">
+    <div class="pick-left">
+      <div class="pick-icon">${pick.icon}</div>
+      <div>
+        <div class="pick-market">${pick.market}</div>
+        <div class="pick-conf ${pick.conf}">${confLabel}</div>
+      </div>
+    </div>
+    <div class="pick-odds-big">
+      <div class="pick-odds-num">${pick.odds}</div>
+      <div class="pick-odds-lbl">Aktuelle Quote</div>
+    </div>
+  </div>
+  ${probBar}
+  <div class="pick-pills">${pills||'<span class="pill p-bk" style="opacity:.5">Keine Zusatzinfo</span>'}</div>
 </div>`;
   }).join('');
+
   return `<div class="section">
   <div class="stitle"><div class="sticon" style="background:#00d4a115;border:1px solid #00d4a130">🎯</div>Picks</div>
   ${cards}
@@ -285,7 +391,7 @@ function renderPicks(D) {
 }
 
 function renderStats(D) {
-  if (!D.stats.length) return '';
+  if (!D.stats || !D.stats.length) return '';
   const m = D.meta;
   const rows = D.stats.map(s => {
     const hc = s.homeWin?'#00d4a1':'#8b949e', ac = s.awayWin?'#00d4a1':'#8b949e';
@@ -309,18 +415,64 @@ function renderStats(D) {
 }
 
 function renderOdds(D) {
-  if (!D.oddsCards.length) return '';
+  if (!D.oddsCards || !D.oddsCards.length) return '';
+
+  // Collect which 1X2 outcomes our picks cover
+  const pickedOutcomes = new Set();
+  (D.picks||[]).forEach(p => pickOutcome(p.market).forEach(o => pickedOutcomes.add(o)));
+
   const cards = D.oddsCards.map(c => {
-    const mc = c.dir==='up'?'omove-up':c.dir==='down'?'omove-down':'omove-neutral';
-    const openHtml = c.open?`<span class="ocard-open">${c.open}</span>`:'';
-    return `<div class="ocard">
-  <div class="ocard-label">${c.label}</div>
-  <div class="ocard-vals">${openHtml}<span class="ocard-cur">${c.cur}</span></div>
-  <span class="omove ${mc}">${c.move}</span>
+    const outcome = OUTCOME_MAP[c.label] || null;
+    const isRelevant = outcome && pickedOutcomes.has(outcome);
+    const isOpposing = outcome && pickedOutcomes.size > 0 && !pickedOutcomes.has(outcome) && ['home','draw','away'].includes(outcome);
+
+    // Direction logic: down = shorter odds = market thinks more likely
+    // If our pick covers this outcome → dropping is GOOD (market agrees)
+    // If opposing outcome drops → sharps backing opposition = BAD for us
+    let moveClass = 'omove-neutral';
+    let sharpTag = '';
+    const pct = c.move && c.move.includes('%') ? parseFloat(c.move.replace(/[^0-9.\-]/g,'')) : 0;
+    const isSharp = Math.abs(pct) >= 5;
+
+    if (c.dir === 'down') {
+      if (isRelevant) {
+        moveClass = 'omove-down-good';
+        if (isSharp) sharpTag = `<div class="sharp-tag" style="color:var(--green)">✓ Sharps für euren Pick</div>`;
+      } else if (isOpposing) {
+        moveClass = 'omove-down-bad';
+        if (isSharp) sharpTag = `<div class="sharp-tag" style="color:var(--red)">⚠ Sharps gegen Pick</div>`;
+      } else {
+        moveClass = 'omove-down-good';
+      }
+    } else if (c.dir === 'up') {
+      moveClass = 'omove-up';
+      if (isOpposing && isSharp) sharpTag = `<div class="sharp-tag" style="color:var(--green)">↑ Markt öffnet euren Pick</div>`;
+    }
+
+    const openHtml = c.open ? `<div class="ocard-open-wrap">
+      <div class="ocard-open-lbl">Eröffnung</div>
+      <div class="ocard-open-val">${c.open}</div>
+    </div>` : '';
+
+    const cardClass = isRelevant ? 'ocard pick-relevant' : isOpposing && isSharp ? 'ocard sharp-against' : 'ocard';
+
+    return `<div class="${cardClass}">
+  <div class="ocard-label">${c.label}${isRelevant?' 🎯':''}</div>
+  <div class="ocard-top">
+    <span class="ocard-cur">${c.cur}</span>
+    ${openHtml}
+  </div>
+  <span class="omove ${moveClass}">${c.move}</span>
+  ${sharpTag}
 </div>`;
   }).join('');
+
+  const hasPickContext = pickedOutcomes.size > 0;
+  const legend = hasPickContext ? `<div style="font-size:10px;color:var(--muted);margin-bottom:10px">🎯 = Pick-relevante Quote &nbsp;·&nbsp; Grün = Markt bewegt sich für euch &nbsp;·&nbsp; Rot = gegen euch</div>` : '';
+
   return `<div class="section">
   <div class="stitle"><div class="sticon" style="background:#e3b34115;border:1px solid #e3b34130">📈</div>Linien-Bewegung</div>
+  ${legend}
   <div class="odds-scroll"><div class="odds-grid">${cards}</div></div>
 </div>`;
 }
@@ -328,7 +480,7 @@ function renderOdds(D) {
 function renderH2H(D) {
   if (!D.h2h) return '';
   const h = D.h2h, m = D.meta;
-  const dots = h.lastResults.map(r => {
+  const dots = (h.lastResults||[]).map(r => {
     const c = r==='W'?'#00d4a1':r==='D'?'#e3b341':'#f85149';
     return `<div class="h2h-dot" style="background:${c}">${r}</div>`;
   }).join('');
@@ -338,7 +490,7 @@ function renderH2H(D) {
     <div class="h2h-kpi"><div class="kpi-val" style="color:#00d4a1">${h.homeWins}</div><div class="kpi-lbl">${m.home.split(' ').at(-1)}<br>Siege</div></div>
     <div class="h2h-kpi"><div class="kpi-val" style="color:#e3b341">${h.draws}</div><div class="kpi-lbl">Unent-<br>schieden</div></div>
     <div class="h2h-kpi"><div class="kpi-val" style="color:#a78bfa">${h.awayWins}</div><div class="kpi-lbl">${m.away.split(' ').at(-1)}<br>Siege</div></div>
-    <div class="h2h-kpi"><div class="kpi-val">${h.avgGoals.toFixed(1)}</div><div class="kpi-lbl">∅ Tore<br>/Spiel</div></div>
+    <div class="h2h-kpi"><div class="kpi-val">${h.avgGoals!=null?h.avgGoals.toFixed(1):'—'}</div><div class="kpi-lbl">∅ Tore<br>/Spiel</div></div>
     <div class="h2h-kpi"><div class="kpi-val">${h.over25Rate}%</div><div class="kpi-lbl">Over<br>2.5</div></div>
     <div class="h2h-kpi"><div class="kpi-val">${h.bttsRate}%</div><div class="kpi-lbl">BTTS<br>Rate</div></div>
   </div>
@@ -347,7 +499,7 @@ function renderH2H(D) {
     <div class="h2h-bar-d" style="width:${h.drawBar}%"></div>
     <div class="h2h-bar-a" style="width:${h.awayBar}%"></div>
   </div>
-  <div class="h2h-res-label">Letzte ${h.lastResults.length} Direktbegegnungen (Heimteam-Perspektive)</div>
+  <div class="h2h-res-label">Letzte ${(h.lastResults||[]).length} Duelle · Perspektive: ${m.home}</div>
   <div class="h2h-dots">${dots}</div>
 </div>`;
 }
@@ -355,40 +507,92 @@ function renderH2H(D) {
 function renderPrediction(D) {
   if (!D.prediction) return '';
   const p = D.prediction, m = D.meta;
-  function bar(label, val, color) {
-    return `<div class="pred-bar">
-  <div class="pred-bar-head"><span class="pred-name">${label}</span><span class="pred-pct" style="color:${color}">${val||0}%</span></div>
-  <div class="pred-track"><div class="pred-fill" style="width:${val||0}%;background:${color}"></div></div>
-</div>`;
-  }
-  const compCards = Object.entries(p.comp||{}).map(([name, data]) => {
-    const colors = {Form:'#58a6ff',Angriff:'#3fb950',Abwehr:'#f85149'};
+  const hName = m.home.split(' ').at(-1);
+  const aName = m.away.split(' ').at(-1);
+
+  // Determine winner
+  const topVal = Math.max(p.home||0, p.draw||0, p.away||0);
+  const topColor = topVal===p.home?'#00d4a1':topVal===p.draw?'#e3b341':'#a78bfa';
+  const topLabel = topVal===p.home?m.home:topVal===p.draw?'Unentschieden':m.away;
+
+  // Poisson expected goals (poissonHome = win probability from Poisson model %)
+  // Convert to expected goals: rough reverse: xG ≈ from the stats
+  const homeXG = (D.stats||[]).find(s => s.label && s.label.includes('xG') && !s.label.includes('xGA'));
+  const homeXGval = homeXG ? homeXG.homeVal : null;
+  const awayXGval = homeXG ? homeXG.awayVal : null;
+
+  const goalsRow = (homeXGval && awayXGval) ? `
+<div class="pred-goals" style="margin-bottom:12px">
+  <div style="text-align:center">
+    <div class="pred-goals-val">${homeXGval}</div>
+    <div class="pred-goals-lbl">${hName} xG</div>
+  </div>
+  <div class="pred-goals-sep">:</div>
+  <div style="text-align:center">
+    <div class="pred-goals-val">${awayXGval}</div>
+    <div class="pred-goals-lbl">${aName} xG</div>
+  </div>
+</div>` : '';
+
+  const comp = p.comp||{};
+  const compCards = Object.entries(comp).map(([name, data]) => {
+    const colors = {Form:'#58a6ff', Angriff:'#3fb950', Abwehr:'#f85149'};
+    const icons  = {Form:'📈', Angriff:'⚽', Abwehr:'🛡'};
     const c = colors[name]||'#58a6ff';
-    return `<div class="comp-card">
-  <div class="comp-label">${name}</div>
-  <div class="comp-vals">
-    <span class="comp-v" style="color:${c}">${data.home||50}%</span>
-    <span style="font-size:10px;color:#6b7a8d">vs</span>
-    <span class="comp-v" style="color:${c}">${data.away||50}%</span>
+    const hv = data.home||50, av = data.away||50;
+    const winner = hv > av ? hName : hv < av ? aName : '—';
+    const winColor = hv > av ? '#00d4a1' : hv < av ? '#a78bfa' : 'var(--muted)';
+    return `<div class="pred-comp-card">
+  <div class="pred-comp-lbl">${icons[name]||''} ${name}</div>
+  <div class="pred-comp-bar">
+    <div style="width:${hv}%;height:100%;background:${c}50"></div>
+    <div style="width:${av}%;height:100%;background:${c}20"></div>
+  </div>
+  <div class="pred-comp-vals">
+    <span style="color:#00d4a1">${hv}%</span>
+    <span style="font-size:9px;color:${winColor};font-weight:700">${winner}</span>
+    <span style="color:#a78bfa">${av}%</span>
   </div>
 </div>`;
   }).join('');
-  const poissonNote = (p.poissonHome && p.poissonAway)
-    ? `<div style="margin-top:12px;padding:10px 12px;background:var(--card2);border:1px solid var(--border);border-radius:10px;font-size:12px;color:var(--muted2)">Poisson: ${m.home.split(' ').at(-1)} ${p.poissonHome}% · ${m.away.split(' ').at(-1)} ${p.poissonAway}%</div>` : '';
+
   return `<div class="section">
   <div class="stitle"><div class="sticon" style="background:#3fb95015;border:1px solid #3fb95030">🤖</div>Modell-Prognose</div>
-  ${bar(`Heimsieg (${m.home.split(' ').at(-1)})`, p.home, '#00d4a1')}
-  ${bar('Unentschieden', p.draw, '#e3b341')}
-  ${bar(`Auswärtssieg (${m.away.split(' ').at(-1)})`, p.away, '#a78bfa')}
-  ${poissonNote}
-  <div class="pred-comp">${compCards}</div>
+  <div class="pred-matchup">
+    <div class="pred-team">
+      <div class="pred-team-name">${m.home}</div>
+      <div class="pred-team-pct" style="color:#00d4a1">${p.home||0}%</div>
+      <div class="pred-team-lbl">Heimsieg</div>
+    </div>
+    <div style="text-align:center;flex-shrink:0">
+      <div class="pred-vs">vs</div>
+      <div style="font-size:9px;color:var(--muted);margin-top:4px">Favorit</div>
+      <div style="font-size:12px;font-weight:700;color:${topColor};margin-top:2px">${topLabel}</div>
+    </div>
+    <div class="pred-team">
+      <div class="pred-team-name">${m.away}</div>
+      <div class="pred-team-pct" style="color:#a78bfa">${p.away||0}%</div>
+      <div class="pred-team-lbl">Auswärtssieg</div>
+    </div>
+  </div>
+  ${goalsRow}
+  <div class="pred-draw-row">
+    <div class="pred-draw-lbl">⟷ Unentschieden</div>
+    <div class="pred-draw-bar"><div class="pred-draw-fill" style="width:${p.draw||0}%"></div></div>
+    <div class="pred-draw-pct">${p.draw||0}%</div>
+  </div>
+  ${comp && Object.keys(comp).length ? `<div style="font-size:10px;color:var(--muted);margin:12px 0 8px;text-transform:uppercase;letter-spacing:.5px">Stärkenvergleich</div><div class="pred-comp-grid">${compCards}</div>` : ''}
 </div>`;
 }
 
 function renderInjuries(D) {
+  if (!D.injuries) return '';
   const m = D.meta;
   function side(players, teamName) {
-    if (!players.length) return `<div class="inj-clean">✓ Keine gemeldeten Ausfälle</div>`;
+    if (!players || !players.length) {
+      // Check if we even have API data (if injuries object exists but is empty)
+      return `<div class="inj-clean">✅ Keine gemeldeten Ausfälle</div>`;
+    }
     return players.map(p => `<div class="inj-player">
   <div class="inj-pos">${p.pos}</div>
   <strong>${p.name}</strong>
@@ -405,19 +609,62 @@ function renderInjuries(D) {
 }
 
 function renderPoly(D) {
-  if (!D.poly) return '';
-  const cards = D.poly.cards.map(c => `<div class="poly-card">
+  if (!D.poly || !D.poly.cards || !D.poly.cards.length) return '';
+  const m = D.meta, pred = D.prediction||{};
+
+  // Build model probability map for comparison
+  const modelMap = {
+    'Heimsieg': D.probabilities?.home,
+    'Auswärtssieg': D.probabilities?.away,
+    'Unentschieden': D.probabilities?.draw,
+  };
+
+  const cards = D.poly.cards.map(c => {
+    const polyPct = c.pct;
+    const modelPct = modelMap[c.name];
+    const hasModel = modelPct != null;
+    const delta = hasModel ? polyPct - modelPct : null; // positive = poly higher = market pricing it more
+
+    // Color: our model sees more value than Poly? (model > poly = edge)
+    let pctColor = 'var(--accent)';
+    let barColor = 'var(--accent)';
+    let cardClass = 'poly-card';
+    let deltaHtml = '';
+
+    if (delta !== null) {
+      const absDelta = Math.abs(delta);
+      if (delta < -5) {
+        // Our model is higher — we think it's more likely → potential edge
+        pctColor = '#3fb950'; barColor='#3fb950'; cardClass='poly-card poly-edge';
+        deltaHtml = `<div class="poly-delta" style="color:#3fb950">▲ Modell +${absDelta.toFixed(0)}pp <span style="font-weight:400;color:var(--muted)">vs Poly</span></div>`;
+      } else if (delta > 5) {
+        // Poly is higher — market overpricing this
+        pctColor = 'var(--muted2)'; barColor='var(--muted2)'; cardClass='poly-card poly-against';
+        deltaHtml = `<div class="poly-delta" style="color:var(--muted)">▼ Poly +${absDelta.toFixed(0)}pp</div>`;
+      } else {
+        deltaHtml = `<div class="poly-delta" style="color:var(--muted)">≈ Einig</div>`;
+      }
+    }
+
+    return `<div class="${cardClass}">
   <div class="poly-name">${c.name}</div>
-  <div class="poly-pct">${c.pct}%</div>
-  <div class="poly-btrack"><div class="poly-bfill" style="width:${c.pct}%"></div></div>
-</div>`).join('');
-  const link = D.poly.url ? `<a href="${D.poly.url}" target="_blank" class="poly-link">🔗 Polymarket</a>` : '';
+  <div class="poly-pct" style="color:${pctColor}">${polyPct}%</div>
+  <div class="poly-btrack"><div class="poly-bfill" style="width:${polyPct}%;background:${barColor}"></div></div>
+  ${hasModel ? `<div style="font-size:10px;color:var(--muted);margin-bottom:3px">Modell: ${modelPct}%</div>` : ''}
+  ${deltaHtml}
+</div>`;
+  }).join('');
+
+  const link = D.poly.url ? `<a href="${D.poly.url}" target="_blank" class="poly-link">🔗 Auf Polymarket öffnen</a>` : '';
+  const legend = `<div style="font-size:10px;color:var(--muted);margin-top:10px">🟢 Grün = Modell sieht mehr Wahrscheinlichkeit als Poly (mögliche Edge) · Grau = Poly schätzt höher</div>`;
+
   return `<div class="section">
   <div class="poly-head">
-    <div class="stitle" style="margin:0"><div class="sticon" style="background:#a78bfa15;border:1px solid #a78bfa30">🟣</div>Polymarket</div>
+    <div class="stitle" style="margin:0"><div class="sticon" style="background:#a78bfa15;border:1px solid #a78bfa30">🟣</div>Polymarket Preise</div>
     ${link}
   </div>
   <div class="poly-grid">${cards}</div>
+  ${legend}
 </div>`;
 }
 
@@ -450,9 +697,6 @@ async function init() {
   }
 
   document.title = `${D.meta.home} vs ${D.meta.away} — CocoBet`;
-  const meta = document.createElement('meta');
-  meta.name='theme-color'; meta.content='#080c10';
-  document.head.appendChild(meta);
 
   document.getElementById('app').innerHTML = `
 ${renderHero(D)}
