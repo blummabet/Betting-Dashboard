@@ -1,445 +1,616 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Moreirense vs AVS — CocoBet</title>
-  <style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080c10">
+<title>Moreirense vs AVS — CocoBet</title>
+<style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0d1117;--card:#161b22;--card2:#1c2128;--border:#30363d;
-  --accent:#00d4a1;--red:#f85149;--yellow:#e3b341;
-  --text:#e6edf3;--muted:#8b949e;
-  --green:#3fb950;--blue:#58a6ff;--purple:#a78bfa;
+  --bg:#080c10;
+  --card:#0f1419;
+  --card2:#141b22;
+  --card3:#1a2332;
+  --border:#1e2d3d;
+  --border2:#243040;
+  --accent:#00d4a1;
+  --accent2:#00b389;
+  --red:#f85149;
+  --yellow:#e3b341;
+  --text:#e8edf3;
+  --muted:#6b7a8d;
+  --muted2:#8b9ab0;
+  --green:#3fb950;
+  --blue:#58a6ff;
+  --purple:#a78bfa;
 }
-html{-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%}
 body{
-  background:var(--bg);color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  min-height:100vh;padding-bottom:60px;
-  /* prevent horizontal overflow on mobile */
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',sans-serif;
+  min-height:100vh;
+  padding-bottom:80px;
   overflow-x:hidden;
 }
 a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
 
 /* ── Nav ── */
 .top-nav{
-  background:var(--card);border-bottom:1px solid var(--border);
-  padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:100;gap:8px;
+  background:rgba(8,12,16,0.92);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;gap:8px;
 }
-.top-nav .back{font-size:13px;color:var(--muted);font-weight:500;white-space:nowrap}
-.top-nav .back:hover{color:var(--text)}
-.top-nav .league-tag{font-size:12px;color:var(--muted);text-align:right}
+.nav-back{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:500;color:var(--muted2);
+  padding:6px 10px;border-radius:8px;border:1px solid var(--border);
+  background:var(--card);transition:all .15s;
+}
+.nav-back:hover{color:var(--text);border-color:var(--border2)}
+.nav-league{font-size:12px;color:var(--muted);letter-spacing:.2px}
 
-/* ── Match header ── */
-.match-header{
-  background:linear-gradient(135deg,#0d2a1f 0%,#0d1117 100%);
-  border-bottom:2px solid #00d4a122;
-  padding:24px 16px 20px;text-align:center;
-}
-.teams-row{
-  display:flex;align-items:center;justify-content:center;
-  gap:10px;margin-bottom:10px;
-}
-.team-name{font-size:18px;font-weight:800;flex:1;line-height:1.2;word-break:break-word}
-.team-name.home{text-align:right}
-.team-name.away{text-align:left}
-.vs-badge{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:8px;padding:5px 10px;font-size:12px;color:var(--muted);
-  font-weight:600;white-space:nowrap;flex-shrink:0;
-}
-.match-meta{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:10px}
-.meta-chip{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:20px;padding:4px 12px;font-size:12px;color:var(--muted);
-}
-.score-badge{
-  background:#00d4a122;border:1px solid #00d4a144;
-  border-radius:20px;padding:4px 14px;font-size:12px;
-  color:var(--accent);font-weight:700;
-}
-
-/* ── Content wrapper ── */
-.content{max-width:900px;margin:0 auto;padding:16px 12px}
-.section{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:12px;padding:16px;margin-bottom:16px;
-  /* prevent children from overflowing section */
+/* ── Hero ── */
+.hero{
+  position:relative;
+  background:linear-gradient(180deg, #0a1628 0%, #080c10 100%);
+  border-bottom:1px solid var(--border);
   overflow:hidden;
+  padding:32px 16px 24px;
 }
-.section-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 20% 50%, #00d4a108 0%, transparent 60%),
+             radial-gradient(ellipse 60% 60% at 80% 50%, #a78bfa06 0%, transparent 60%);
+  pointer-events:none;
+}
+.hero-inner{position:relative;max-width:860px;margin:0 auto}
+.hero-teams{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:20px}
+.hero-team{flex:1;text-align:center}
+.hero-team.home{text-align:right}
+.hero-team.away{text-align:left}
+.team-circle{
+  width:52px;height:52px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:800;color:#e8edf3;
+  margin-bottom:10px;
+  border:2px solid var(--border2);
+}
+.team-circle.home{background:linear-gradient(135deg,#0a2a1e,#0f1e28);border-color:#00d4a130}
+.team-circle.away{background:linear-gradient(135deg,#1a0a28,#0f1428);border-color:#a78bfa30}
+.hero-team-name{font-size:15px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:4px}
+.hero-team-elo{font-size:11px;color:var(--muted);font-weight:500}
+.hero-center{
+  flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:0 4px;
+}
+.hero-kickoff{font-size:11px;color:var(--muted);margin-top:4px}
+.prob-pills{
+  display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:4px;
+}
+.prob-pill{
+  display:flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;
+  border:1px solid;
+}
+.prob-pill.home{background:#00d4a110;color:#00d4a1;border-color:#00d4a130}
+.prob-pill.draw{background:#e3b34110;color:#e3b341;border-color:#e3b34130}
+.prob-pill.away{background:#a78bfa10;color:#a78bfa;border-color:#a78bfa30}
+.prob-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.prob-pill.home .prob-dot{background:#00d4a1}
+.prob-pill.draw .prob-dot{background:#e3b341}
+.prob-pill.away .prob-dot{background:#a78bfa}
+
+/* ── AI Analysis ── */
+.ai-section{
+  max-width:860px;margin:0 auto;padding:0 12px;
+}
+.ai-card{
+  margin:16px 0;
+  background:linear-gradient(135deg,#0a1f18,#0a1428);
+  border:1px solid #00d4a120;
+  border-radius:14px;padding:18px 20px;
+  position:relative;overflow:hidden;
+}
+.ai-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,#00d4a1,#a78bfa,transparent);
+}
+.ai-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.ai-icon-wrap{
+  width:28px;height:28px;border-radius:8px;
+  background:#00d4a115;border:1px solid #00d4a130;
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;
+}
+.ai-label{font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:1px}
+.ai-text{font-size:13px;color:var(--muted2);line-height:1.7}
+.ai-text strong{color:var(--accent);font-weight:700}
+
+/* ── Content ── */
+.content{max-width:860px;margin:0 auto;padding:0 12px}
+
+/* ── Section ── */
+.section{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:14px;
+  position:relative;overflow:hidden;
+}
+.section::before{
+  content:'';position:absolute;top:0;left:0;width:3px;bottom:0;
+  background:linear-gradient(180deg,var(--accent),transparent);
+  border-radius:16px 0 0 16px;
+}
+.section-title{
+  font-size:13px;font-weight:700;color:var(--text);
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+  text-transform:uppercase;letter-spacing:.6px;
+}
+.section-title .sticon{
+  width:24px;height:24px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;
+}
 
 /* ── Pick cards ── */
 .pick-card{
-  background:var(--card2);border:1px solid var(--border);border-radius:10px;
-  padding:12px 14px;margin-bottom:10px;
-  display:flex;flex-direction:column;gap:8px;
+  position:relative;border-radius:12px;
+  padding:14px 16px;margin-bottom:10px;overflow:hidden;
 }
-.pick-top{display:flex;align-items:center;gap:10px}
-.pick-icon{font-size:18px;flex-shrink:0}
-.pick-market{font-size:14px;font-weight:700;color:var(--text)}
-.pick-meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
-.odds-pill{
-  background:#ffffff0d;border:1px solid var(--border);
-  border-radius:6px;padding:3px 10px;font-size:13px;font-weight:700;color:var(--text);
+.pick-card.high{background:linear-gradient(135deg,#001a13,#0a1419);border:1px solid #00d4a125}
+.pick-card.medium{background:linear-gradient(135deg,#1a1400,#0f1419);border:1px solid #e3b34125}
+.pick-card.high::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:12px 0 0 12px}
+.pick-card.medium::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--yellow);border-radius:12px 0 0 12px}
+.pick-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.pick-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.pick-info{flex:1;min-width:0}
+.pick-market{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
+.pick-conf{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
+.pick-conf.high{color:var(--accent)}
+.pick-conf.medium{color:var(--yellow)}
+.pick-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{
+  padding:4px 10px;border-radius:8px;font-size:12px;font-weight:600;
+  border:1px solid;white-space:nowrap;
 }
-.model-pill{
-  background:#00d4a111;border:1px solid #00d4a133;
-  border-radius:6px;padding:3px 10px;font-size:12px;color:var(--accent);
-}
-.kelly-pill{
-  background:#a78bfa11;border:1px solid #a78bfa33;
-  border-radius:6px;padding:3px 10px;font-size:12px;color:var(--purple);font-weight:700;
-}
-.value-pill{
-  background:#3fb95011;border:1px solid #3fb95033;
-  border-radius:6px;padding:3px 10px;font-size:12px;color:var(--green);font-weight:700;
-}
+.pill-odds{background:#ffffff08;border-color:var(--border2);color:var(--text)}
+.pill-model{background:#00d4a108;border-color:#00d4a130;color:var(--accent)}
+.pill-kelly{background:#a78bfa08;border-color:#a78bfa30;color:var(--purple)}
+.pill-value{background:#3fb95008;border-color:#3fb95030;color:var(--green)}
 
-/* ── Stats comparison ── */
-.comp-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:0;width:100%}
-.comp-label{
-  font-size:11px;color:var(--muted);text-align:center;padding:7px 4px;
-  border-bottom:1px solid var(--border);line-height:1.3;
-}
-.comp-val{
-  font-size:13px;font-weight:600;color:var(--text);
-  padding:7px 10px;border-bottom:1px solid var(--border);
-}
-.comp-val.home{text-align:right}
-.comp-val.away{text-align:left}
-.comp-val.better{color:var(--accent)}
-.comp-header{
-  font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;
-  letter-spacing:0.5px;padding:6px 10px;
-}
+/* ── Stats bars ── */
+.sbar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sbar-val{font-size:13px;font-weight:700;min-width:42px;text-align:right;white-space:nowrap}
+.sbar-center{flex:1;min-width:0}
+.sbar-label{font-size:10px;color:var(--muted);text-align:center;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
+.sbar-track{height:8px;border-radius:4px;overflow:hidden;background:#ffffff06;display:flex}
+.sbar-fill-h{height:100%;transition:width .3s}
+.sbar-fill-a{height:100%;transition:width .3s}
+.stats-header{display:flex;justify-content:space-between;margin-bottom:14px}
+.stats-header-name{font-size:13px;font-weight:700;color:var(--muted2)}
 
-/* ── Odds movement table ── */
-.odds-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.odds-table{width:100%;min-width:280px;border-collapse:collapse;font-size:13px}
-.odds-table th{
-  font-size:11px;color:var(--muted);text-transform:uppercase;font-weight:600;
-  padding:6px 8px;text-align:center;border-bottom:1px solid var(--border);
-  white-space:nowrap;
+/* ── Odds movement ── */
+.odds-scroller{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+.odds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;min-width:300px}
+.odds-card{
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:10px;padding:11px 12px;
 }
-.odds-table td{padding:8px 6px;text-align:center;border-bottom:1px solid #30363d55;white-space:nowrap}
-.odds-table tr:last-child td{border-bottom:none}
-.odds-table td:first-child{text-align:left;color:var(--text)}
-.move-up{color:var(--red)}
-.move-down{color:var(--green)}
-.move-neutral{color:var(--muted)}
+.odds-card-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.odds-values{display:flex;align-items:flex-end;gap:6px;margin-bottom:6px}
+.odds-open{font-size:12px;color:var(--muted2);text-decoration:line-through}
+.odds-cur{font-size:18px;font-weight:800;color:var(--text)}
+.odds-move{font-size:11px;font-weight:700;padding:2px 6px;border-radius:6px;display:inline-block}
+.odds-move.up{background:#f8514915;color:var(--red)}
+.odds-move.down{background:#3fb95015;color:var(--green)}
+.odds-move.neutral{background:#ffffff08;color:var(--muted)}
 
 /* ── H2H ── */
-.h2h-summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;justify-content:space-around}
-.h2h-stat{text-align:center;flex:1;min-width:60px;max-width:90px}
-.h2h-stat .val{font-size:20px;font-weight:800;color:var(--text)}
-.h2h-stat .lbl{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.3}
-.h2h-record{height:14px;border-radius:7px;overflow:hidden;display:flex;margin-bottom:12px}
-.h2h-record .hw{background:var(--accent)}
-.h2h-record .dr{background:var(--yellow)}
-.h2h-record .aw{background:var(--purple)}
-.h2h-dots{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px}
-.last-results-label{font-size:11px;color:var(--muted);margin-bottom:8px}
+.h2h-top{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.h2h-kpi{
+  flex:1;min-width:70px;text-align:center;
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:10px;padding:10px 8px;
+}
+.h2h-kpi .kpi-val{font-size:20px;font-weight:800;color:var(--text);line-height:1}
+.h2h-kpi .kpi-lbl{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3}
+.h2h-bar{height:10px;border-radius:5px;overflow:hidden;display:flex;margin-bottom:14px}
+.h2h-bar-h{background:var(--accent)}
+.h2h-bar-d{background:var(--yellow)}
+.h2h-bar-a{background:var(--purple)}
+.h2h-results-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.h2h-dots{display:flex;gap:5px;flex-wrap:wrap}
+.h2h-dot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#080c10;flex-shrink:0;
+}
 
 /* ── Prediction bars ── */
-.pred-bar-wrap{margin-bottom:12px}
-.pred-bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px}
-.pred-bar-track{height:10px;border-radius:5px;background:#ffffff0d;overflow:hidden}
-.pred-bar-fill{height:100%;border-radius:5px}
-.pred-comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-top:12px}
+.pred-bar{margin-bottom:12px}
+.pred-bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.pred-bar-name{font-size:12px;color:var(--muted2)}
+.pred-bar-pct{font-size:14px;font-weight:800}
+.pred-track{height:8px;border-radius:4px;background:#ffffff06;overflow:hidden}
+.pred-fill{height:100%;border-radius:4px}
 
 /* ── Injuries ── */
-.inj-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.inj-team-label{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.inj-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.inj-team{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px}
+.inj-team-name{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
 .inj-player{
-  font-size:12px;color:var(--text);
-  padding:6px 10px;background:var(--card2);border-radius:6px;
-  border-left:3px solid var(--red);margin-bottom:6px;
+  font-size:12px;padding:7px 10px;border-radius:7px;
+  background:#f8514910;border-left:3px solid #f8514950;
+  margin-bottom:6px;color:var(--text);
 }
-.inj-reason{font-size:11px;color:var(--muted)}
-.no-injuries{font-size:12px;color:var(--green);padding:6px 0}
+.inj-pos{font-size:10px;font-weight:700;color:var(--red);margin-bottom:2px}
+.inj-reason{font-size:10px;color:var(--muted);margin-top:2px}
+.inj-clean{
+  font-size:12px;color:var(--green);
+  display:flex;align-items:center;gap:5px;padding:4px 0;
+}
 
 /* ── Polymarket ── */
-.poly-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-.poly-card{
-  background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:12px;
+.poly-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.poly-link-btn{
+  font-size:11px;color:var(--blue);
+  padding:4px 10px;border-radius:6px;border:1px solid #58a6ff30;
+  background:#58a6ff08;
 }
-.poly-market-name{font-size:11px;color:var(--muted);margin-bottom:6px;line-height:1.3}
-.poly-price{font-size:20px;font-weight:800;color:var(--accent)}
-.poly-bar-track{height:6px;border-radius:3px;background:#ffffff0d;overflow:hidden;margin-top:6px}
-.poly-bar-fill{height:100%;border-radius:3px;background:var(--accent)}
-.poly-link{font-size:12px;color:var(--blue);margin-top:14px;display:block;text-align:center}
+.poly-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.poly-card{
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:10px;padding:12px;
+}
+.poly-name{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:8px;line-height:1.3}
+.poly-pct{font-size:24px;font-weight:800;color:var(--accent);line-height:1;margin-bottom:6px}
+.poly-bar-track{height:4px;border-radius:2px;background:#ffffff08;overflow:hidden}
+.poly-bar-fill{height:100%;border-radius:2px;background:var(--accent)}
 
-/* ── Mobile overrides (≤480px) ── */
+/* ── Footer ── */
+.page-footer{
+  text-align:center;font-size:11px;color:var(--muted);
+  margin-top:24px;padding-top:16px;border-top:1px solid var(--border);
+}
+
+/* ── Mobile ── */
 @media(max-width:480px){
-  .team-name{font-size:15px}
-  .vs-badge{padding:4px 8px;font-size:11px}
+  .hero{padding:20px 12px 18px}
+  .hero-team-name{font-size:13px}
+  .team-circle{width:44px;height:44px;font-size:12px}
   .section{padding:14px 12px}
-  /* Stats: keep 3-column layout but shrink fonts */
-  .comp-val{font-size:12px;padding:6px 6px}
-  .comp-label{font-size:10px;padding:6px 2px}
-  .comp-header{font-size:10px;padding:5px 6px}
-  /* Injuries: stack on very narrow */
+  .pick-market{font-size:13px}
+  .sbar-val{font-size:12px;min-width:36px}
+  .h2h-kpi .kpi-val{font-size:17px}
+  .h2h-kpi{min-width:58px;padding:8px 6px}
   .inj-grid{grid-template-columns:1fr}
-  /* H2H dots smaller */
-  .h2h-stat .val{font-size:17px}
-  .h2h-stat{min-width:48px}
-  /* Pick pills wrap naturally — no change needed, flex-wrap already on */
+  .odds-card{padding:9px 10px}
+  .odds-cur{font-size:15px}
+  .poly-grid{grid-template-columns:repeat(2,1fr)}
+  .prob-pill{font-size:10px;padding:3px 8px}
 }
 </style>
 </head>
 <body>
 
 <nav class="top-nav">
-  <a class="back" href="../betting-dashboard.html">← Dashboard</a>
-  <span class="league-tag">🇵🇹 Primeira Liga</span>
+  <a class="nav-back" href="../betting-dashboard.html">← Dashboard</a>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span style="font-size:11px;font-weight:700;color:#8b949e;background:#8b949e18;border:1px solid #8b949e35;padding:3px 10px;border-radius:20px">Score 5.5</span>
+    <span class="nav-league">🇵🇹 Primeira Liga</span>
+  </div>
 </nav>
 
-<div class="match-header">
-  <div class="teams-row">
-    <div class="team-name home">Moreirense</div>
-    <div class="vs-badge">vs</div>
-    <div class="team-name away">AVS</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-teams">
+      <div class="hero-team home">
+        <div class="team-circle home">MO</div>
+        <div class="hero-team-name">Moreirense</div>
+        <div class="hero-team-elo">Elo 1479</div>
+      </div>
+      <div class="hero-center">
+        <svg width="140" height="140" viewBox="0 0 140 140" style="flex-shrink:0">
+  <circle cx="70.0" cy="70.0" r="63.5" fill="none" stroke="#ffffff0a" stroke-width="13"/>
+  <path d="M70.00,6.50 A63.5,63.5 0 1,1 65.35,133.33" fill="none" stroke="#00d4a1" stroke-width="13" stroke-linecap="round"/>
+  <path d="M62.04,133.00 A63.5,63.5 0 0,1 7.09,61.38" fill="none" stroke="#e3b341" stroke-width="13" stroke-linecap="round"/>
+  <path d="M7.62,58.10 A63.5,63.5 0 0,1 66.68,6.59" fill="none" stroke="#a78bfa" stroke-width="13" stroke-linecap="round"/>
+  <text x="70.0" y="61.0" text-anchor="middle" font-size="10" fill="#8b949e" font-family="system-ui">Prognose</text>
+  <text x="70.0" y="78.0" text-anchor="middle" font-size="13" font-weight="800" fill="#e6edf3" font-family="system-ui">52–26–22</text>
+</svg>
+        <div class="hero-kickoff">📅 16.05.2026 &nbsp;🕐 16:30</div>
+      </div>
+      <div class="hero-team away">
+        <div class="team-circle away">AV</div>
+        <div class="hero-team-name">AVS</div>
+        <div class="hero-team-elo"></div>
+      </div>
+    </div>
+    <div class="prob-pills">
+      <div class="prob-pill home"><div class="prob-dot"></div>Moreirense 52%</div>
+      <div class="prob-pill draw"><div class="prob-dot"></div>Unent. 26%</div>
+      <div class="prob-pill away"><div class="prob-dot"></div>AVS 22%</div>
+    </div>
   </div>
-  <div class="match-meta"><span class="meta-chip">📅 16.05.2026</span> <span class="meta-chip">🕐 16:30 Uhr</span> <span class="score-badge">Score 5.5</span></div>
+</div>
+
+<div class="ai-section">
+  <div class="ai-card">
+    <div class="ai-header">
+      <div class="ai-icon-wrap">🧠</div>
+      <span class="ai-label">Match-Analyse</span>
+      <span style="font-size:10px;color:var(--muted);margin-left:auto">CocoBet Modell</span>
+    </div>
+    <div class="ai-text">Moreirense geht als Favorit in diese Partie — Kurs 1.81 gegenüber 4.25 für AVS. Unser stärkster Pick ist <strong>Beide Teams treffen</strong> @ 1.82: das Modell sieht 53% Wahrscheinlichkeit, der Markt impliziert nur 55% (+-2 Prozentpunkte Vorteil). Sharps haben die Linie bewegt: AVS Auswärtssieg 4.66→4.25 (-8.8%).</div>
+  </div>
 </div>
 
 <div class="content">
 
-  <div class="section">
-    <div class="section-title">🎯 Picks</div>
-    
-        <div class="pick-card">
-          <div class="pick-top">
-            <div class="pick-icon">🏠</div>
-            <div class="pick-market">Heimsieg</div>
-          </div>
-          <div class="pick-meta"><span style="background:#e3b34122;color:#e3b341;border:1px solid #e3b34144;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;">Medium</span> <span class="odds-pill">1.81</span> <span class="model-pill">⚙ 1.93</span></div>
-        </div>
-        <div class="pick-card">
-          <div class="pick-top">
-            <div class="pick-icon">⚽</div>
-            <div class="pick-market">Beide Teams treffen</div>
-          </div>
-          <div class="pick-meta"><span style="background:#00d4a122;color:#00d4a1;border:1px solid #00d4a144;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;">High</span> <span class="odds-pill">1.82</span> <span class="model-pill">⚙ 1.88</span></div>
-        </div>
-        <div class="pick-card">
-          <div class="pick-top">
-            <div class="pick-icon">🚩</div>
-            <div class="pick-market">Über 8.5 Ecken</div>
-          </div>
-          <div class="pick-meta"><span style="background:#e3b34122;color:#e3b341;border:1px solid #e3b34144;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;">Medium</span> <span class="odds-pill">1.75</span> <span class="model-pill">⚙ 1.55</span> <span class="kelly-pill">🏦 4.3% Bankroll</span></div>
-        </div>
+<div class="section">
+  <div class="section-title">
+    <div class="sticon" style="background:#00d4a115;border:1px solid #00d4a130">🎯</div>
+    Picks
   </div>
-
-  <div class="section">
-    <div class="section-title">📊 Team-Vergleich</div>
-    
-    <div class="comp-grid">
-      <div class="comp-header home" style="text-align:right">Moreirense</div>
-      <div class="comp-header" style="text-align:center">Statistik</div>
-      <div class="comp-header away">AVS</div>
-      
-        <div class="comp-val home better">1.25</div>
-        <div class="comp-label">xG (Heim/Ausw.)</div>
-        <div class="comp-val away">0.75</div>
-      
-        <div class="comp-val home better">1.31</div>
-        <div class="comp-label">xGA (Heim/Ausw.)</div>
-        <div class="comp-val away">2.50</div>
-      
-        <div class="comp-val home better">50%</div>
-        <div class="comp-label">Siegquote (Heim/Ausw.)</div>
-        <div class="comp-val away">6%</div>
-      
-        <div class="comp-val home better">25%</div>
-        <div class="comp-label">Clean Sheets (Heim/Ausw.)</div>
-        <div class="comp-val away">12%</div>
-      
-        <div class="comp-val home">1479</div>
-        <div class="comp-label">Elo</div>
-        <div class="comp-val away">—</div>
-      
-        <div class="comp-val home">4-2-3-1</div>
-        <div class="comp-label">Formation</div>
-        <div class="comp-val away">4-2-3-1</div>
+  
+<div class="pick-card medium">
+  <div class="pick-top">
+    <div class="pick-icon">🏠</div>
+    <div class="pick-info">
+      <div class="pick-market">Heimsieg</div>
+      <div class="pick-conf medium">★★ MEDIUM</div>
     </div>
   </div>
-
-  <div class="section">
-    <div class="section-title">📈 Linien-Bewegung (Opening vs. Aktuell)</div>
-    
-            <div class="odds-wrap">
-            <table class="odds-table">
-              <thead><tr>
-                <th style="text-align:left">Markt</th>
-                <th>Opening</th>
-                <th>Aktuell</th>
-                <th>Bewegung</th>
-              </tr></thead>
-              <tbody>
-            <tr>
-              <td style="text-align:left;color:var(--text)">1 (Heimsieg)</td>
-              <td>1.86</td>
-              <td>1.81</td>
-              <td class="move-down" style="font-weight:700;font-size:12px">↓ -2.7%</td>
-            </tr>
-            <tr>
-              <td style="text-align:left;color:var(--text)">X (Unentschieden)</td>
-              <td>4.02</td>
-              <td>3.68</td>
-              <td class="move-down" style="font-weight:700;font-size:12px">↓ -8.5%</td>
-            </tr>
-            <tr>
-              <td style="text-align:left;color:var(--text)">2 (Auswärtssieg)</td>
-              <td>4.66</td>
-              <td>4.25</td>
-              <td class="move-down" style="font-weight:700;font-size:12px">↓ -8.8%</td>
-            </tr>
-            <tr>
-              <td style="text-align:left;color:var(--text)">Over 2.5</td>
-              <td>—</td>
-              <td>1.86</td>
-              <td class="move-neutral" style="font-weight:700;font-size:12px">—</td>
-            </tr>
-            <tr>
-              <td style="text-align:left;color:var(--text)">Under 2.5</td>
-              <td>—</td>
-              <td>1.96</td>
-              <td class="move-neutral" style="font-weight:700;font-size:12px">—</td>
-            </tr></tbody>
-            </table>
-            </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">🔄 Direktvergleich (H2H)</div>
-    
-        <div class="h2h-summary">
-          <div class="h2h-stat"><div class="val" style="color:var(--accent)">2</div><div class="lbl">Moreirense<br>Siege</div></div>
-          <div class="h2h-stat"><div class="val" style="color:var(--yellow)">1</div><div class="lbl">Unent-<br>schieden</div></div>
-          <div class="h2h-stat"><div class="val" style="color:var(--purple)">0</div><div class="lbl">AVS<br>Siege</div></div>
-          <div class="h2h-stat"><div class="val">2.3</div><div class="lbl">∅ Tore<br>pro Spiel</div></div>
-          <div class="h2h-stat"><div class="val">33%</div><div class="lbl">Over 2.5<br>Rate</div></div>
-          <div class="h2h-stat"><div class="val">33%</div><div class="lbl">BTTS<br>Rate</div></div>
-        </div>
-        <div class="h2h-record">
-          <div class="hw" style="width:66.7%"></div>
-          <div class="dr" style="width:33.3%"></div>
-          <div class="aw" style="width:0.0%"></div>
-        </div>
-        <div class="last-results-label">Letzte 3 Direktbegegnungen (Heimteam-Perspektive)</div>
-        <div class="h2h-dots"><span style="display:inline-block;width:26px;height:26px;border-radius:50%;background:#00d4a1;color:#0d1117;font-size:11px;font-weight:800;line-height:26px;text-align:center;">W</span> <span style="display:inline-block;width:26px;height:26px;border-radius:50%;background:#00d4a1;color:#0d1117;font-size:11px;font-weight:800;line-height:26px;text-align:center;">W</span> <span style="display:inline-block;width:26px;height:26px;border-radius:50%;background:#e3b341;color:#0d1117;font-size:11px;font-weight:800;line-height:26px;text-align:center;">D</span></div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">🤖 Modell-Prognose</div>
-    
-            <div class="pred-bar-wrap">
-              <div class="pred-bar-label"><span>Heimsieg (Moreirense)</span><span style="color:#00d4a1;font-weight:700">45%</span></div>
-              <div class="pred-bar-track"><div class="pred-bar-fill" style="width:45%;background:#00d4a1"></div></div>
-            </div>
-            <div class="pred-bar-wrap">
-              <div class="pred-bar-label"><span>Unentschieden</span><span style="color:#e3b341;font-weight:700">45%</span></div>
-              <div class="pred-bar-track"><div class="pred-bar-fill" style="width:45%;background:#e3b341"></div></div>
-            </div>
-            <div class="pred-bar-wrap">
-              <div class="pred-bar-label"><span>Auswärtssieg (AVS)</span><span style="color:#a78bfa;font-weight:700">10%</span></div>
-              <div class="pred-bar-track"><div class="pred-bar-fill" style="width:10%;background:#a78bfa"></div></div>
-            </div><div style="margin-top:16px;padding:12px;background:var(--card2);border-radius:8px;font-size:12px;color:var(--muted)">
-              <strong style="color:var(--text)">Poisson-Modell</strong><br>
-              Moreirense: 72% · AVS: 28%
-            </div><div class="pred-comp-grid"><div style="background:var(--card2);border-radius:8px;padding:10px;font-size:12px">
-                      <div style="color:var(--muted);margin-bottom:6px">Form</div>
-                      <div style="display:flex;justify-content:space-between;font-weight:700">
-                        <span style="color:#58a6ff">44%</span>
-                        <span style="color:var(--muted)">vs</span>
-                        <span style="color:#58a6ff">56%</span>
-                      </div>
-                    </div><div style="background:var(--card2);border-radius:8px;padding:10px;font-size:12px">
-                      <div style="color:var(--muted);margin-bottom:6px">Angriff</div>
-                      <div style="display:flex;justify-content:space-between;font-weight:700">
-                        <span style="color:#3fb950">40%</span>
-                        <span style="color:var(--muted)">vs</span>
-                        <span style="color:#3fb950">60%</span>
-                      </div>
-                    </div><div style="background:var(--card2);border-radius:8px;padding:10px;font-size:12px">
-                      <div style="color:var(--muted);margin-bottom:6px">Abwehr</div>
-                      <div style="display:flex;justify-content:space-between;font-weight:700">
-                        <span style="color:#f85149">40%</span>
-                        <span style="color:var(--muted)">vs</span>
-                        <span style="color:#f85149">60%</span>
-                      </div>
-                    </div></div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">🏥 Verletzungen & Ausfälle</div>
-    
-        <div class="inj-grid">
-          <div><div class="inj-team-label">Moreirense</div><div class="no-injuries">✓ Keine gemeldeten Ausfälle</div></div>
-          <div><div class="inj-team-label">AVS</div><div class="no-injuries">✓ Keine gemeldeten Ausfälle</div></div>
-        </div>
-  </div>
-
-  
-      <div class="section">
-        <div class="section-title">🟣 Polymarket-Preise</div>
-        <div class="poly-grid">
-            <div class="poly-card">
-              <div class="poly-market-name">🟢 Heimsieg</div>
-              <div class="poly-price">85%</div>
-              <div class="poly-bar-track"><div class="poly-bar-fill" style="width:85%"></div></div>
-            </div>
-            <div class="poly-card">
-              <div class="poly-market-name">🟡 Unentschieden</div>
-              <div class="poly-price">26%</div>
-              <div class="poly-bar-track"><div class="poly-bar-fill" style="width:26%"></div></div>
-            </div>
-            <div class="poly-card">
-              <div class="poly-market-name">🟣 Auswärtssieg</div>
-              <div class="poly-price">15%</div>
-              <div class="poly-bar-track"><div class="poly-bar-fill" style="width:15%"></div></div>
-            </div>
-            <div class="poly-card">
-              <div class="poly-market-name">⬆ Over 2.5 Tore</div>
-              <div class="poly-price">52%</div>
-              <div class="poly-bar-track"><div class="poly-bar-fill" style="width:52%"></div></div>
-            </div>
-            <div class="poly-card">
-              <div class="poly-market-name">⬇ Under 2.5 Tore</div>
-              <div class="poly-price">48%</div>
-              <div class="poly-bar-track"><div class="poly-bar-fill" style="width:48%"></div></div>
-            </div>
-            <div class="poly-card">
-              <div class="poly-market-name">⚽ Beide Teams treffen</div>
-              <div class="poly-price">53%</div>
-              <div class="poly-bar-track"><div class="poly-bar-fill" style="width:53%"></div></div>
-            </div>
-            <div class="poly-card">
-              <div class="poly-market-name">🚫 Beide Teams treffen: Nein</div>
-              <div class="poly-price">47%</div>
-              <div class="poly-bar-track"><div class="poly-bar-fill" style="width:47%"></div></div>
-            </div>
-            <div class="poly-card">
-              <div class="poly-market-name">⬆⬆ Over 3.5 Tore</div>
-              <div class="poly-price">28%</div>
-              <div class="poly-bar-track"><div class="poly-bar-fill" style="width:28%"></div></div>
-            </div>
-            <div class="poly-card">
-              <div class="poly-market-name">⬆ Over 1.5 Tore</div>
-              <div class="poly-price">76%</div>
-              <div class="poly-bar-track"><div class="poly-bar-fill" style="width:76%"></div></div>
-            </div></div><a class="poly-link" href="https://polymarket.com/event/por-mor-avs-2026-05-16-more-markets" target="_blank">→ Auf Polymarket ansehen</a>
-      </div>
-
-  <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:20px">
-    Generiert: 14.05.2026 10:26 UTC · <a href="../betting-dashboard.html">← Zurück zum Dashboard</a>
-  </div>
-
+  <div class="pick-pills"><span class="pill pill-odds">🎯 1.81</span><span class="pill pill-model">⚙ 1.93</span></div>
 </div>
+<div class="pick-card high">
+  <div class="pick-top">
+    <div class="pick-icon">⚽</div>
+    <div class="pick-info">
+      <div class="pick-market">Beide Teams treffen</div>
+      <div class="pick-conf high">★★★ HIGH</div>
+    </div>
+  </div>
+  <div class="pick-pills"><span class="pill pill-odds">🎯 1.82</span><span class="pill pill-model">⚙ 1.88</span></div>
+</div>
+<div class="pick-card medium">
+  <div class="pick-top">
+    <div class="pick-icon">🚩</div>
+    <div class="pick-info">
+      <div class="pick-market">Über 8.5 Ecken</div>
+      <div class="pick-conf medium">★★ MEDIUM</div>
+    </div>
+  </div>
+  <div class="pick-pills"><span class="pill pill-odds">🎯 1.75</span><span class="pill pill-model">⚙ 1.55</span><span class="pill pill-kelly">🏦 4.3%</span></div>
+</div>
+</div>
+
+<div class="section">
+  <div class="section-title">
+    <div class="sticon" style="background:#58a6ff15;border:1px solid #58a6ff30">📊</div>
+    Team-Vergleich
+  </div>
+  <div class="stats-header">
+    <span class="stats-header-name">Moreirense</span>
+    <span class="stats-header-name">AVS</span>
+  </div>
+  <div class="sbar-row">
+  <span class="sbar-val" style="color:#00d4a1">1.25</span>
+  <div class="sbar-center">
+    <div class="sbar-label">xG (Heim / Ausw)</div>
+    <div class="sbar-track">
+      <div class="sbar-fill-h" style="width:62%;background:#00d4a120;border-right:2px solid #00d4a1"></div>
+      <div class="sbar-fill-a" style="width:38%;background:#8b949e20;border-left:2px solid #8b949e"></div>
+    </div>
+  </div>
+  <span class="sbar-val" style="color:#8b949e;text-align:left">0.75</span>
+</div><div class="sbar-row">
+  <span class="sbar-val" style="color:#00d4a1">1.31</span>
+  <div class="sbar-center">
+    <div class="sbar-label">xGA (niedriger = besser)</div>
+    <div class="sbar-track">
+      <div class="sbar-fill-h" style="width:34%;background:#00d4a120;border-right:2px solid #00d4a1"></div>
+      <div class="sbar-fill-a" style="width:66%;background:#8b949e20;border-left:2px solid #8b949e"></div>
+    </div>
+  </div>
+  <span class="sbar-val" style="color:#8b949e;text-align:left">2.50</span>
+</div><div class="sbar-row">
+  <span class="sbar-val" style="color:#00d4a1">50%</span>
+  <div class="sbar-center">
+    <div class="sbar-label">Siegquote</div>
+    <div class="sbar-track">
+      <div class="sbar-fill-h" style="width:89%;background:#00d4a120;border-right:2px solid #00d4a1"></div>
+      <div class="sbar-fill-a" style="width:11%;background:#8b949e20;border-left:2px solid #8b949e"></div>
+    </div>
+  </div>
+  <span class="sbar-val" style="color:#8b949e;text-align:left">6%</span>
+</div><div class="sbar-row">
+  <span class="sbar-val" style="color:#00d4a1">25%</span>
+  <div class="sbar-center">
+    <div class="sbar-label">Clean Sheets</div>
+    <div class="sbar-track">
+      <div class="sbar-fill-h" style="width:67%;background:#00d4a120;border-right:2px solid #00d4a1"></div>
+      <div class="sbar-fill-a" style="width:33%;background:#8b949e20;border-left:2px solid #8b949e"></div>
+    </div>
+  </div>
+  <span class="sbar-val" style="color:#8b949e;text-align:left">12%</span>
+</div><div class="sbar-row">
+  <span class="sbar-val" style="color:#8b949e">1479</span>
+  <div class="sbar-center">
+    <div class="sbar-label">Elo-Rating</div>
+    <div class="sbar-track">
+      <div class="sbar-fill-h" style="width:100%;background:#8b949e20;border-right:2px solid #8b949e"></div>
+      <div class="sbar-fill-a" style="width:0%;background:#8b949e20;border-left:2px solid #8b949e"></div>
+    </div>
+  </div>
+  <span class="sbar-val" style="color:#8b949e;text-align:left">—</span>
+</div>
+</div>
+
+<div class="section">
+  <div class="section-title">
+    <div class="sticon" style="background:#e3b34115;border:1px solid #e3b34130">📈</div>
+    Linien-Bewegung
+  </div>
+  <div class="odds-scroller">
+    <div class="odds-grid"><div class="odds-card">
+  <div class="odds-card-label">1 Heimsieg</div>
+  <div class="odds-values"><span class="odds-open">1.86</span><span class="odds-cur">1.81</span></div>
+  <span class="odds-move down">↓ -2.7%</span>
+</div><div class="odds-card">
+  <div class="odds-card-label">X Unentsch.</div>
+  <div class="odds-values"><span class="odds-open">4.02</span><span class="odds-cur">3.68</span></div>
+  <span class="odds-move down">↓ -8.5%</span>
+</div><div class="odds-card">
+  <div class="odds-card-label">2 Auswärts</div>
+  <div class="odds-values"><span class="odds-open">4.66</span><span class="odds-cur">4.25</span></div>
+  <span class="odds-move down">↓ -8.8%</span>
+</div><div class="odds-card">
+  <div class="odds-card-label">Over 2.5</div>
+  <div class="odds-values"><span class="odds-cur">1.86</span></div>
+  <span class="odds-move neutral">—</span>
+</div><div class="odds-card">
+  <div class="odds-card-label">Under 2.5</div>
+  <div class="odds-values"><span class="odds-cur">1.96</span></div>
+  <span class="odds-move neutral">—</span>
+</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">
+    <div class="sticon" style="background:#a78bfa15;border:1px solid #a78bfa30">🔄</div>
+    Direktvergleich (H2H)
+  </div>
+  <div class="h2h-top">
+    <div class="h2h-kpi"><div class="kpi-val" style="color:var(--accent)">2</div><div class="kpi-lbl">Moreirense<br>Siege</div></div>
+    <div class="h2h-kpi"><div class="kpi-val" style="color:var(--yellow)">1</div><div class="kpi-lbl">Unent-<br>schieden</div></div>
+    <div class="h2h-kpi"><div class="kpi-val" style="color:var(--purple)">0</div><div class="kpi-lbl">AVS<br>Siege</div></div>
+    <div class="h2h-kpi"><div class="kpi-val">2.3</div><div class="kpi-lbl">∅ Tore<br>/Spiel</div></div>
+    <div class="h2h-kpi"><div class="kpi-val">33%</div><div class="kpi-lbl">Over<br>2.5</div></div>
+    <div class="h2h-kpi"><div class="kpi-val">33%</div><div class="kpi-lbl">BTTS<br>Rate</div></div>
+  </div>
+  <div class="h2h-bar">
+    <div class="h2h-bar-h" style="width:66.7%"></div>
+    <div class="h2h-bar-d" style="width:33.3%"></div>
+    <div class="h2h-bar-a" style="width:0.0%"></div>
+  </div>
+  <div class="h2h-results-label">Letzte 3 Direktbegegnungen (Heimteam-Perspektive)</div>
+  <div class="h2h-dots"><div class="h2h-dot" style="background:#00d4a1">W</div><div class="h2h-dot" style="background:#00d4a1">W</div><div class="h2h-dot" style="background:#e3b341">D</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">
+    <div class="sticon" style="background:#3fb95015;border:1px solid #3fb95030">🤖</div>
+    Modell-Prognose
+  </div>
+  <div class="pred-bar">
+  <div class="pred-bar-header">
+    <span class="pred-bar-name">Heimsieg (Moreirense)</span>
+    <span class="pred-bar-pct" style="color:#00d4a1">45%</span>
+  </div>
+  <div class="pred-track"><div class="pred-fill" style="width:45%;background:#00d4a1"></div></div>
+</div>
+  <div class="pred-bar">
+  <div class="pred-bar-header">
+    <span class="pred-bar-name">Unentschieden</span>
+    <span class="pred-bar-pct" style="color:#e3b341">45%</span>
+  </div>
+  <div class="pred-track"><div class="pred-fill" style="width:45%;background:#e3b341"></div></div>
+</div>
+  <div class="pred-bar">
+  <div class="pred-bar-header">
+    <span class="pred-bar-name">Auswärtssieg (AVS)</span>
+    <span class="pred-bar-pct" style="color:#a78bfa">10%</span>
+  </div>
+  <div class="pred-track"><div class="pred-fill" style="width:10%;background:#a78bfa"></div></div>
+</div>
+  <div style="margin-top:12px;padding:10px 12px;background:var(--card2);border:1px solid var(--border);border-radius:10px;font-size:12px;color:var(--muted2)">Poisson: Moreirense 72% · AVS 28%</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:12px"><div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px">
+  <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Form</div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:16px;font-weight:800;color:#58a6ff">44%</span>
+    <span style="font-size:10px;color:var(--muted)">vs</span>
+    <span style="font-size:16px;font-weight:800;color:#58a6ff">56%</span>
+  </div>
+</div><div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px">
+  <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Angriff</div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:16px;font-weight:800;color:#3fb950">40%</span>
+    <span style="font-size:10px;color:var(--muted)">vs</span>
+    <span style="font-size:16px;font-weight:800;color:#3fb950">60%</span>
+  </div>
+</div><div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 12px">
+  <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px">Abwehr</div>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:16px;font-weight:800;color:#f85149">40%</span>
+    <span style="font-size:10px;color:var(--muted)">vs</span>
+    <span style="font-size:16px;font-weight:800;color:#f85149">60%</span>
+  </div>
+</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">
+    <div class="sticon" style="background:#f8514915;border:1px solid #f8514930">🏥</div>
+    Verletzungen & Ausfälle
+  </div>
+  <div class="inj-grid">
+    <div class="inj-team"><div class="inj-team-name">Moreirense</div><div class="inj-clean">✓ Keine gemeldeten Ausfälle</div></div>
+    <div class="inj-team"><div class="inj-team-name">AVS</div><div class="inj-clean">✓ Keine gemeldeten Ausfälle</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="poly-header">
+    <div class="section-title" style="margin-bottom:0">
+      <div class="sticon" style="background:#a78bfa15;border:1px solid #a78bfa30">🟣</div>
+      Polymarket-Preise
+    </div>
+    <a href="https://polymarket.com/event/por-mor-avs-2026-05-16-more-markets" target="_blank" class="poly-link-btn">🔗 Polymarket</a>
+  </div>
+  <div class="poly-grid"><div class="poly-card">
+  <div class="poly-name">Heimsieg</div>
+  <div class="poly-pct">85%</div>
+  <div class="poly-bar-track"><div class="poly-bar-fill" style="width:85%"></div></div>
+</div><div class="poly-card">
+  <div class="poly-name">Unentschieden</div>
+  <div class="poly-pct">26%</div>
+  <div class="poly-bar-track"><div class="poly-bar-fill" style="width:26%"></div></div>
+</div><div class="poly-card">
+  <div class="poly-name">Auswärtssieg</div>
+  <div class="poly-pct">15%</div>
+  <div class="poly-bar-track"><div class="poly-bar-fill" style="width:15%"></div></div>
+</div><div class="poly-card">
+  <div class="poly-name">Over 2.5</div>
+  <div class="poly-pct">52%</div>
+  <div class="poly-bar-track"><div class="poly-bar-fill" style="width:52%"></div></div>
+</div><div class="poly-card">
+  <div class="poly-name">Under 2.5</div>
+  <div class="poly-pct">48%</div>
+  <div class="poly-bar-track"><div class="poly-bar-fill" style="width:48%"></div></div>
+</div><div class="poly-card">
+  <div class="poly-name">BTTS</div>
+  <div class="poly-pct">53%</div>
+  <div class="poly-bar-track"><div class="poly-bar-fill" style="width:53%"></div></div>
+</div><div class="poly-card">
+  <div class="poly-name">Over 3.5</div>
+  <div class="poly-pct">28%</div>
+  <div class="poly-bar-track"><div class="poly-bar-fill" style="width:28%"></div></div>
+</div></div>
+</div>
+<div class="page-footer">
+  Generiert: 14.05.2026 10:36 UTC · <a href="../betting-dashboard.html">← Zurück zum Dashboard</a>
+</div>
+</div>
+
 </body>
 </html>
