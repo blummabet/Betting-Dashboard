@@ -1650,7 +1650,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   })();
   const _eventSlug = `${_slugify(match.home)}-vs-${_slugify(match.away)}-${_dateIso}`;
   const _matchPageLink = _eventSlug
-    ? `<a href="matches/${_eventSlug}.html" target="_blank"
+    ? `<a href="matches/match.html?m=${_eventSlug}" target="_blank"
          style="display:flex;align-items:center;justify-content:center;gap:7px;
                 padding:10px 14px;border-radius:8px;width:100%;
                 border:1px solid #00d4a133;background:#00d4a108;
