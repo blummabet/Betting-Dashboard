@@ -1024,7 +1024,17 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
   // Show all high/medium confidence picks — user decides what's worth betting.
   // Low-odds picks get ⚠ label instead of being hidden.
-  const visiblePicks = picks.filter(p => p.conf === 'high' || p.conf === 'medium');
+  // Also apply the same negative-edge safety cut here (belt-and-suspenders),
+  // so _v2PickBuffer and Polymarket never see picks the card actually suppresses.
+  const visiblePicks = picks.filter(p => {
+    if (p.conf !== 'high' && p.conf !== 'medium') return false;
+    // Same -5pp edge threshold as the picksHtml map's `return ''` guard below
+    if (p.modelOdds != null && p.odds != null) {
+      const _ep = Math.round(((1 / p.modelOdds) - (1 / p.odds) * 1.03) * 100);
+      if (_ep < -5) return false;
+    }
+    return true;
+  });
 
   // ── No valid picks → suppress card entirely ───────────────────────────────
   // Negative-edge picks are already removed inside getBettingPicks().
@@ -1043,17 +1053,8 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
   const picksHtml = visiblePicks.map(p => {
     const oddsNum  = p.odds ?? null;
 
-    // ── Negative-edge hard suppression (belt-and-suspenders) ──────────────────
-    // Primary gate is in pick-engine.js (GATE thresholds). This is a secondary
-    // safety net: suppress picks where the vig-adjusted edge is clearly negative.
-    // Threshold: -3pp for real odds (no ⚠/❌ noise in cards).
-    //            -5pp for estimated odds (model vs model estimate, wider tolerance).
-    // Formula mirrors the edgePp calc below (×1.03 margin strip).
-    if (p.modelOdds != null && oddsNum != null) {
-      const _safetyEdgePp = Math.round(((1 / p.modelOdds) - (1 / oddsNum) * 1.03) * 100);
-      const _safetyThresh = p.oddsIsEst ? -5 : -5;
-      if (_safetyEdgePp < _safetyThresh) return '';
-    }
+    // Note: negative-edge picks (-5pp) are already removed from visiblePicks above
+    // (the filter block before the buffer assignment). Nothing reaches here with edge < -5pp.
 
     // When the whole fixture has no real market odds (_isEstimated), suppress
     // all pick-level estimated quotes too — they're model output, not bookmaker prices.
