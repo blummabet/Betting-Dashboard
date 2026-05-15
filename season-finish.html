@@ -12553,9 +12553,7 @@ function _mergeLocalPicks() {
   // Also deduplicate by home|away alone — catches stale localStorage entries where
   // dateIso was wrong (e.g. all saved as "2026-04-13" before the dateIso bug was fixed).
   // Prefer the picks_history.json version (already has correct dates + resolved results).
-  // Use lowercase for case-insensitive dedup (team name capitalization can differ between JS and Python).
   const existingPairs = new Set(_resultsData.map(e => `${e.home}|${e.away}`));
-  const existingPairsLC = new Set(_resultsData.map(e => `${e.home}|${e.away}`.toLowerCase()));
 
   // Backfill from localStorage: copy resolved pick results + cardScore + finalScore
   // back into existing _resultsData entries (picks_history.json may be unresolved).
@@ -12634,13 +12632,14 @@ function _mergeLocalPicks() {
     if (!lc.htScore   && e.htScore)    { lc.htScore    = e.htScore;    _lcPatched = true; }
   }
 
-  // Persist any resolved picks back to localStorage
-  if (_lcPatched) _storedSave(local);
+  // Note: _storedSave intentionally NOT called here — reverse-patch works in-memory
+  // every time the tab is opened (sufficient for display). Writing to localStorage inside
+  // _mergeLocalPicks can cause storage events that re-trigger initResults() before
+  // _resultsLoaded is set, creating a race condition.
 
   const toAdd = local.filter(e =>
     !existingKeys.has(`${e.dateIso}|${e.home}|${e.away}`) &&
-    !existingPairs.has(`${e.home}|${e.away}`) &&
-    !existingPairsLC.has(`${e.home}|${e.away}`.toLowerCase())
+    !existingPairs.has(`${e.home}|${e.away}`)
   )
     .map(e => ({
       dateIso: e.dateIso, date: e.date,
