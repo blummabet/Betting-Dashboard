@@ -947,10 +947,6 @@ def main():
         traceback.print_exc()
 
 
-if __name__ == '__main__':
-    main()
-
-
 # ═══════════════════════════════════════════════════════════════════════════════
 # POLY TRADER — Signal Tracking
 # Writes poly_trader_data.json with:
@@ -1237,3 +1233,7 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
 
     print(f"📊 poly_trader_data.json — {updated_count} candidate-markets updated, "
           f"{len(to_remove)} expired entries removed")
+
+
+if __name__ == '__main__':
+    main()
