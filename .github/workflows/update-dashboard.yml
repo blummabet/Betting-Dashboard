@@ -114,9 +114,9 @@ jobs:
         run: python resolve_picks.py
         continue-on-error: true
 
-      # 8b. Telegram: Picks posten (06:00-Run oder manuell)
+      # 8b. Telegram: Picks posten (nur 06:00 scheduled Run — NICHT bei manuellem Trigger)
       - name: 📤 Telegram Picks
-        if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '0 6 * * *'
         run: python telegram_bot.py
         continue-on-error: true
         env:
