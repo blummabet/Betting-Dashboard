@@ -12553,7 +12553,9 @@ function _mergeLocalPicks() {
   // Also deduplicate by home|away alone — catches stale localStorage entries where
   // dateIso was wrong (e.g. all saved as "2026-04-13" before the dateIso bug was fixed).
   // Prefer the picks_history.json version (already has correct dates + resolved results).
+  // Use lowercase for case-insensitive dedup (team name capitalization can differ between JS and Python).
   const existingPairs = new Set(_resultsData.map(e => `${e.home}|${e.away}`));
+  const existingPairsLC = new Set(_resultsData.map(e => `${e.home}|${e.away}`.toLowerCase()));
 
   // Backfill from localStorage: copy resolved pick results + cardScore + finalScore
   // back into existing _resultsData entries (picks_history.json may be unresolved).
@@ -12582,9 +12584,63 @@ function _mergeLocalPicks() {
     }
   }
 
+  // ── REVERSE PATCH: picks_history.json → localStorage (auto-resolve) ─────────
+  // When picks_history.json has resolved results for a match, automatically resolve
+  // the matching localStorage picks so ⏳ updates without "Ergebnisse holen".
+  let _lcPatched = false;
+  for (const e of _resultsData) {
+    if (!e.resolved || !e.finalScore) continue;
+    const lc = localByPair[`${e.dateIso}|${e.home}|${e.away}`]
+             || localByPair[`${e.home}|${e.away}`]
+             // Case-insensitive fallback
+             || local.find(x => `${x.home}|${x.away}`.toLowerCase() === `${e.home}|${e.away}`.toLowerCase());
+    if (!lc) continue;
+
+    // Build market → result map from JSON picks (for direct market-name match)
+    const jsonByMarket = {};
+    for (const jp of (e.picks || [])) {
+      if (jp.result && jp.market) jsonByMarket[jp.market.toLowerCase()] = jp.result;
+    }
+
+    // Parse finalScore from JSON
+    const [hg, ag] = (e.finalScore || '').split(':').map(Number);
+    const hasScore = !isNaN(hg) && !isNaN(ag);
+
+    for (const lp of (lc.picks || [])) {
+      if (lp.result !== null) continue; // already resolved
+
+      // 1) Try exact market name match (e.g. "Doppelte Chance: X2" matches both JS and Python)
+      const mkey = (lp.market || '').toLowerCase();
+      if (jsonByMarket[mkey] !== undefined) {
+        lp.result    = jsonByMarket[mkey];
+        lp.finalScore = e.finalScore;
+        _lcPatched   = true;
+        continue;
+      }
+
+      // 2) Try _determineOutcome with final score for all other markets
+      if (hasScore && typeof _determineOutcome === 'function') {
+        const outcome = _determineOutcome(lp.market, hg, ag, null);
+        if (outcome !== null) {
+          lp.result    = outcome;
+          lp.finalScore = e.finalScore;
+          _lcPatched   = true;
+        }
+      }
+    }
+
+    // Copy meta from JSON to localStorage entry
+    if (!lc.finalScore && e.finalScore) { lc.finalScore = e.finalScore; _lcPatched = true; }
+    if (!lc.htScore   && e.htScore)    { lc.htScore    = e.htScore;    _lcPatched = true; }
+  }
+
+  // Persist any resolved picks back to localStorage
+  if (_lcPatched) _storedSave(local);
+
   const toAdd = local.filter(e =>
     !existingKeys.has(`${e.dateIso}|${e.home}|${e.away}`) &&
-    !existingPairs.has(`${e.home}|${e.away}`)
+    !existingPairs.has(`${e.home}|${e.away}`) &&
+    !existingPairsLC.has(`${e.home}|${e.away}`.toLowerCase())
   )
     .map(e => ({
       dateIso: e.dateIso, date: e.date,
