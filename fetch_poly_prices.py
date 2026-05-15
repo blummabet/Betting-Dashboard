@@ -942,7 +942,9 @@ def main():
     try:
         update_trader_data(results, unique_matches)
     except Exception as e:
+        import traceback
         print(f"⚠️  poly_trader_data update failed: {e}")
+        traceback.print_exc()
 
 
 if __name__ == '__main__':
