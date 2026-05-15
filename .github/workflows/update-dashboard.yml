@@ -113,12 +113,32 @@ jobs:
         run: python resolve_picks.py
         continue-on-error: true
 
+      # 8b. Telegram: Picks + Watch-Games posten (nur beim 06:00-Run)
+      - name: 📤 Telegram-Posts senden
+        if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+        run: python telegram_bot.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: '-1003819239615'
+          TG_MODE: 'picks'
+
+      # 8c. Telegram: Recap (nur beim 14:00-Run — gestrige Ergebnisse)
+      - name: 📊 Telegram-Recap senden
+        if: github.event.schedule == '0 14 * * *'
+        run: python telegram_bot.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: '-1003819239615'
+          TG_MODE: 'recap'
+
       # 9. Geänderte Dateien zurück ins Repo committen und pushen
       - name: 💾 Änderungen speichern & pushen
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          for f in season-finish.html season-finish-v2.html stats_cache.json picks_history.json squad_cache.json xg_cache.json picks_output.json polymarket_prices.json poly_trader_data.json; do
+          for f in season-finish.html season-finish-v2.html stats_cache.json picks_history.json squad_cache.json xg_cache.json picks_output.json polymarket_prices.json poly_trader_data.json telegram_sent.json; do
             if [ -f "$f" ]; then
               git add "$f"
             else
