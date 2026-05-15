@@ -10,8 +10,9 @@ on:
   # Zusätzliche geplante Runs für Intra-Tag-Updates (Stats, Results, Poly-Preise)
   # die NICHT von fresh prematch-data abhängen.
   schedule:
-    - cron: '0 6 * * *'
-    - cron: '0 14 * * *'
+    - cron: '0 6 * * *'    # 06:00 UTC → Picks posten
+    - cron: '0 11 * * *'   # 11:00 UTC → IM BLICK posten
+    - cron: '0 14 * * *'   # 14:00 UTC → Recap vom Vortag
 
   # Manuell: jederzeit per Knopfdruck auf GitHub ausführbar
   workflow_dispatch:
@@ -113,8 +114,8 @@ jobs:
         run: python resolve_picks.py
         continue-on-error: true
 
-      # 8b. Telegram: Picks + Watch-Games posten (nur beim 06:00-Run)
-      - name: 📤 Telegram-Posts senden
+      # 8b. Telegram: Picks posten (06:00-Run oder manuell)
+      - name: 📤 Telegram Picks
         if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
         run: python telegram_bot.py
         continue-on-error: true
@@ -123,8 +124,18 @@ jobs:
           TELEGRAM_CHAT_ID: '-1003819239615'
           TG_MODE: 'picks'
 
-      # 8c. Telegram: Recap (nur beim 14:00-Run — gestrige Ergebnisse)
-      - name: 📊 Telegram-Recap senden
+      # 8c. Telegram: IM BLICK posten (11:00-Run)
+      - name: 👀 Telegram IM BLICK
+        if: github.event.schedule == '0 11 * * *'
+        run: python telegram_bot.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: '-1003819239615'
+          TG_MODE: 'watch'
+
+      # 8d. Telegram: Recap vom Vortag (14:00-Run)
+      - name: 📊 Telegram Recap
         if: github.event.schedule == '0 14 * * *'
         run: python telegram_bot.py
         continue-on-error: true
