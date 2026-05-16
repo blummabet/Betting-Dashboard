@@ -319,6 +319,7 @@ for (const [leagueKey, league] of Object.entries(LEAGUES)) {
         modelOdds: p.modelOdds != null ? p.modelOdds : null,
         value:     p.value     || null,
         oddsIsEst: p.oddsIsEst || false,
+        reason:    p.reason    || '',
       })),
     });
   }
@@ -440,6 +441,7 @@ for (const fx of pmFixtures) {
       modelOdds: p.modelOdds != null ? p.modelOdds : null,
       value:     p.value     || null,
       oddsIsEst: p.oddsIsEst || false,
+      reason:    p.reason    || '',
     })),
   });
 }

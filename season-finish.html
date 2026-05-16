@@ -8148,6 +8148,65 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 
     const modsHtml = (p.mods?.length) ? `<div class="pick-mods">${p.mods.join('')}</div>` : '';
 
+    // ── Verdict row (BET / ABWÄGEN + Modell & Markt signal) ─────────────────────
+    let verdictHtml = '';
+    {
+      // 1. Modell edge signal (model probability vs bookie implied probability)
+      let modellIcon = '⬜', modellTxt = '—';
+      if (p.modelOdds != null && oddsNum != null) {
+        const _mp = 1 / p.modelOdds;
+        const _ip = (1 / oddsNum) * 1.03;   // ×1.03 strips bookie margin
+        const _edgePp = Math.round((_mp - _ip) * 100);
+        if      (_edgePp >= 7)  { modellIcon = '🟢'; modellTxt = `+${_edgePp}pp`; }
+        else if (_edgePp >= 2)  { modellIcon = '🟠'; modellTxt = `+${_edgePp}pp`; }
+        else if (_edgePp >= -2) { modellIcon = '⬜'; modellTxt = _edgePp > 0 ? `+${_edgePp}pp` : (_edgePp === 0 ? '0pp' : `${_edgePp}pp`); }
+        else                    { modellIcon = '🔴'; modellTxt = `${_edgePp}pp`; }
+      } else if (p.modelOdds != null) {
+        modellIcon = '🟠'; modellTxt = 'kein Bookie';
+      }
+
+      // 2. Markt signal — find line movement row aligned with this pick
+      let marktIcon = '⬜', marktTxt = '—';
+      {
+        const _mkt = (p.market || '').toLowerCase();
+        let _lmLabel = null;
+        if (_mkt.includes('heimsieg'))                                        _lmLabel = '1';
+        else if (_mkt.includes('auswärtssieg'))                               _lmLabel = '2';
+        else if (_mkt.includes('remis') || _mkt.includes('unentschieden'))    _lmLabel = 'X';
+        else if (_mkt.includes('dnb') && _mkt.includes('heim'))               _lmLabel = '1';
+        else if (_mkt.includes('dnb') && _mkt.includes('auswärts'))           _lmLabel = '2';
+        else if (_mkt.includes('doppelte chance') && (_mkt.includes('x2') || _mkt.includes('/2'))) _lmLabel = '2';
+        else if (_mkt.includes('doppelte chance') && (_mkt.includes('1x') || _mkt.includes('1/'))) _lmLabel = '1';
+        else if (_mkt.includes('over') || _mkt.includes('btts'))              _lmLabel = 'O25';
+        else if (_mkt.includes('under'))                                       _lmLabel = 'U25';
+
+        if (_lmLabel && _lmRows) {
+          const _lmRow = _lmRows.find(r => r.label === _lmLabel);
+          if (_lmRow && Math.abs(_lmRow.ppShift) >= 3) {
+            if (_lmRow.ppShift > 0) { marktIcon = '🟢'; marktTxt = `↑${_lmRow.ppShift}pp`; }
+            else                    { marktIcon = '🔴'; marktTxt = `↓${Math.abs(_lmRow.ppShift)}pp`; }
+          }
+        }
+      }
+
+      // 3. Verdict badge: BET (high conf + clear value) / ABWÄGEN (everything else visible)
+      let _verdLabel, _verdStyle;
+      if (p.conf === 'high' && (p.value === 'value' || p.value === 'hot')) {
+        _verdLabel = 'BET';
+        _verdStyle = 'background:#0d2800;color:#7ec800;border:1px solid #3d6a00';
+      } else {
+        _verdLabel = 'ABWÄGEN';
+        _verdStyle = 'background:#2d1a00;color:#e3b341;border:1px solid #7d4a00';
+      }
+
+      verdictHtml = `<div class="pick-verdict">
+        <span class="pv-sig"><span class="pv-lbl">Modell</span><span class="pv-val">&nbsp;${modellIcon}&nbsp;${modellTxt}</span></span>
+        <span class="pv-dot">·</span>
+        <span class="pv-sig"><span class="pv-lbl">Markt</span><span class="pv-val">&nbsp;${marktIcon}&nbsp;${marktTxt}</span></span>
+        <span class="pv-badge" style="${_verdStyle}">${_verdLabel}</span>
+      </div>`;
+    }
+
     // ── Tactical booking hint (card picks only) ───────────────────────────────
     // When players are one yellow from suspension, they may play more aggressively
     // in this match — relevant signal for card market picks.
@@ -8196,6 +8255,7 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
         <div class="pick-market">${_topBadge}<span class="pick-conf ${confClass}">${confLabel}</span><span>${p.market}</span>${oddsTag}${lowWarn}${valueTag}</div>
         ${altHtml}
         ${fairOddsHtml}
+        ${verdictHtml}
         ${modsHtml}
         <div class="pick-reason">${p.reason}${_tacBookHint}</div>
       </div>
