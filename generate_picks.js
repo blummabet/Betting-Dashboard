@@ -241,8 +241,8 @@ function marketToKey(market) {
     const thr = tgM[1];
     const _home = (marketToKey._home || '').toLowerCase();
     const _away = (marketToKey._away || '').toLowerCase();
-    if (_home && m.includes(_home)) return `team_goals_home_over:${thr}`;
-    if (_away && m.includes(_away)) return `team_goals_away_over:${thr}`;
+    if (_home && m.toLowerCase().includes(_home)) return `team_goals_home_over:${thr}`;
+    if (_away && m.toLowerCase().includes(_away)) return `team_goals_away_over:${thr}`;
     return `team_goals_over:${thr}`;  // fallback (legacy, will void)
   }
 
@@ -320,6 +320,9 @@ for (const [leagueKey, league] of Object.entries(LEAGUES)) {
         value:     p.value     || null,
         oddsIsEst: p.oddsIsEst || false,
         reason:    p.reason    || '',
+        mods:      Array.isArray(p.mods) ? p.mods : [],
+        saferAlt:  p.saferAlt  || null,
+        boldAlt:   p.boldAlt   || null,
       })),
     });
   }
@@ -442,6 +445,9 @@ for (const fx of pmFixtures) {
       value:     p.value     || null,
       oddsIsEst: p.oddsIsEst || false,
       reason:    p.reason    || '',
+      mods:      Array.isArray(p.mods) ? p.mods : [],
+      saferAlt:  p.saferAlt  || null,
+      boldAlt:   p.boldAlt   || null,
     })),
   });
 }

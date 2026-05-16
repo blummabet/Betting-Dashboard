@@ -8190,21 +8190,24 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
       }
 
       // 3. Verdict badge: BET (high conf + clear value) / ABWÄGEN (everything else visible)
-      let _verdLabel, _verdStyle;
+      // Only render when we have enough signal (at least modelOdds or bookie odds available)
+      let _verdLabel = '', _verdStyle = '';
       if (p.conf === 'high' && (p.value === 'value' || p.value === 'hot')) {
         _verdLabel = 'BET';
         _verdStyle = 'background:#0d2800;color:#7ec800;border:1px solid #3d6a00';
-      } else {
+      } else if (p.conf === 'high' || p.conf === 'medium') {
         _verdLabel = 'ABWÄGEN';
         _verdStyle = 'background:#2d1a00;color:#e3b341;border:1px solid #7d4a00';
       }
 
-      verdictHtml = `<div class="pick-verdict">
-        <span class="pv-sig"><span class="pv-lbl">Modell</span><span class="pv-val">&nbsp;${modellIcon}&nbsp;${modellTxt}</span></span>
-        <span class="pv-dot">·</span>
-        <span class="pv-sig"><span class="pv-lbl">Markt</span><span class="pv-val">&nbsp;${marktIcon}&nbsp;${marktTxt}</span></span>
-        <span class="pv-badge" style="${_verdStyle}">${_verdLabel}</span>
-      </div>`;
+      if (_verdLabel) {
+        verdictHtml = `<div class="pick-verdict">
+          <span class="pv-sig"><span class="pv-lbl">Modell</span><span class="pv-val">&nbsp;${modellIcon}&nbsp;${modellTxt}</span></span>
+          <span class="pv-dot">·</span>
+          <span class="pv-sig"><span class="pv-lbl">Markt</span><span class="pv-val">&nbsp;${marktIcon}&nbsp;${marktTxt}</span></span>
+          <span class="pv-badge" style="${_verdStyle}">${_verdLabel}</span>
+        </div>`;
+      }
     }
 
     // ── Tactical booking hint (card picks only) ───────────────────────────────

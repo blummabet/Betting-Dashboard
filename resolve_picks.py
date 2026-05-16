@@ -219,8 +219,8 @@ def evaluate_pick(market_key: str, home_goals: int, away_goals: int,
         return "win" if home_goals >= away_goals else "loss"
     if market_key == "dcX2":   # Draw OR away win
         return "win" if away_goals >= home_goals else "loss"
-    if market_key == "dc12":   # Home win OR away win (no draw)
-        return "void" if home_goals == away_goals else "win"
+    if market_key == "dc12":   # Home win OR away win (no draw) — draw = loss, not void
+        return "loss" if home_goals == away_goals else "win"
 
     # ── Corners markets ───────────────────────────────────────────────────────
     if market_key.startswith("corners_over:") or market_key.startswith("corners_under:"):

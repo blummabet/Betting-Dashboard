@@ -203,9 +203,8 @@ def format_pick_post(fx: dict, pick: dict, pm_fx: dict | None) -> str:
 
 
 def format_watch_league_post(league_code: str, games: list, pm_index: dict) -> str:
-    """Ein Post pro Liga mit allen IM BLICK Spielen der Liga."""
-    # Metadaten aus erstem Spiel
-    first = games[0]
+    """Ein Post pro Liga mit allen Jetzt-oder-Nie Spielen — inkl. Picks wo vorhanden."""
+    first  = games[0]
     flag   = first.get('leagueFlag', '')
     league = first.get('leagueName', first.get('league', league_code))
     rl     = first.get('roundsLeft', 1)
@@ -213,6 +212,8 @@ def format_watch_league_post(league_code: str, games: list, pm_index: dict) -> s
     # Situation
     if rl == 1:
         situation = '🚨 <b>Letzter Spieltag der Saison</b>'
+    elif rl <= 2:
+        situation = f'⚡ <b>Vorletzter Spieltag — noch {rl} Runden</b>'
     else:
         situation = f'🔥 <b>Noch {rl} Runden</b>'
 
@@ -232,11 +233,23 @@ def format_watch_league_post(league_code: str, games: list, pm_index: dict) -> s
     sorted_games = sorted(games, key=lambda g: g.get('matchScore', 0), reverse=True)
 
     game_lines = []
+    picks_in_watch = 0
     for g in sorted_games:
         emo    = importance_emoji(g.get('matchScore', 0))
         t      = times[f"{g['home']}|{g['away']}"]
         t_str  = f'<i>{t}</i>  ' if t and not single_time else ''
-        game_lines.append(f'{emo} {t_str}{g["home"]} vs {g["away"]}')
+        line   = f'{emo} {t_str}{g["home"]} vs {g["away"]}'
+
+        # Wenn ein guter Pick vorhanden: inline anhängen
+        p = best_pick(g)
+        if p:
+            odds_str = f' @ {p["odds"]:.2f}' if p.get('odds') else ''
+            ep = edge_pp(p.get('odds', 0), p.get('modelOdds', 0))
+            ep_str = f' +{ep:.0f}pp' if ep >= 1 else ''
+            line += f'\n   → 🎯 <b>{p["market"]}</b>{odds_str}{ep_str}'
+            picks_in_watch += 1
+
+        game_lines.append(line)
 
     # Inplay-Hinweis
     avg_score = sum(g.get('matchScore', 0) for g in games) / len(games)
@@ -246,7 +259,7 @@ def format_watch_league_post(league_code: str, games: list, pm_index: dict) -> s
         hint = 'Letzter Spieltag — Rückständige Teams drücken aufs Gas. Over/BTTS Live interessant.'
 
     lines = [
-        f'👀 <b>IM BLICK</b> · {flag} {league}{time_header}',
+        f'👀 <b>JETZT ODER NIE</b> · {flag} {league}{time_header}',
         situation,
         '',
     ] + game_lines + [
@@ -416,12 +429,13 @@ def main():
                 ep = edge_pp(pick.get('odds', 0), pick.get('modelOdds', 0))
                 print(f'✅ PICK: {fx["home"]} vs {fx["away"]} — {pick["market"]} +{ep:.0f}pp')
 
-    # ── 👀 IM BLICK Posts (gruppiert nach Liga) ───────────────────────────────
+    # ── 👀 JETZT ODER NIE Posts (gruppiert nach Liga) ────────────────────────
     if TG_MODE in ('watch', 'all'):
-        # Spiele ohne guten Pick sammeln
+        # ALLE relevanten Last-Round Spiele — auch solche mit Pick.
+        # Pick-Spiele werden inline angezeigt (→ 🎯 Market @ Odds).
         watch_games = [
             fx for fx in today_fx
-            if not best_pick(fx) and is_watch_game(fx)
+            if is_watch_game(fx)
         ]
 
         # Nach Liga gruppieren
