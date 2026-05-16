@@ -968,12 +968,24 @@ TRADER_MARKET_MAP = {
 }
 
 # Minimum bookie move (pp) to flag as SHARP signal
-SHARP_THRESHOLD_PP  = 5.0   # Min bookie line move (pp) to flag SHARP
-CLV_THRESHOLD_PP    = 4.0   # Min gap Pinnacle-implied vs. Poly (pp) for CLV+
-MIN_GAP_ACTIONABLE  = 2.0   # Gap must still be open ≥2pp for signal to be "actionable"
-MIN_POLY_PRICE      = 15.0  # Filter ultra-low prices (thin liquidity, high spread)
-MAX_POLY_PRICE      = 85.0  # Filter near-certainty prices (same reason)
-MAX_DAYS_OUT        = 10    # Ignore matches >10 days out
+SHARP_THRESHOLD_PP      = 5.0   # Min bookie line move (pp) to flag SHARP
+CLV_THRESHOLD_PP        = 4.0   # Min gap Pinnacle-implied vs. Poly (pp) for CLV+
+MIN_GAP_ACTIONABLE      = 2.0   # Gap must still be open ≥2pp for signal to be "actionable"
+MIN_POLY_PRICE          = 15.0  # Filter ultra-low prices (thin liquidity, high spread)
+MAX_POLY_PRICE          = 85.0  # Filter near-certainty prices (same reason)
+MAX_DAYS_OUT            = 10    # Ignore matches >10 days out
+
+# ── Buy-signal thresholds ────────────────────────────────────────────────────
+# BUY_THRESHOLD_PP: gap ≥ this → Poly significantly underpriced vs Pinnacle → BUY
+# WATCH_THRESHOLD_PP: gap ≥ this → Poly slightly underpriced / worth monitoring
+# SKIP_THRESHOLD_PP: gap ≤ negative this → Poly overpriced → SKIP (or sell)
+# MAX_PLAUSIBLE_GAP: gaps above this almost certainly indicate a bad contract mapping
+# MIN_LIQ_TIER: only leagues with liq_tier ≤ this get BUY/WATCH signals (T1+T2 = top leagues)
+BUY_THRESHOLD_PP        = 5.0   # Poly "Quote" clearly better than Pinnacle → BUY
+WATCH_THRESHOLD_PP      = 2.0   # Poly close to fair → WATCH
+SKIP_THRESHOLD_PP       = 2.0   # Poly overpriced → SKIP
+MAX_PLAUSIBLE_GAP       = 20.0  # >20pp gap = almost certainly bad contract mapping → suspicious
+MIN_LIQ_TIER_SIGNAL     = 2     # Only T1 (top-5 leagues) + T2 get buy signals; T3 = monitor only
 
 
 def _implied(fair_odds: float | None) -> float | None:
@@ -1093,64 +1105,91 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
                     bookie_close = bookie_cur_impl  # freeze last known Bookie price
 
             # ── Remaining gap: Pinnacle current implied vs. Poly current price ──
+            # Positive gap = Pinnacle thinks outcome MORE likely than Poly → Poly underpriced → BUY
+            # Negative gap = Poly thinks outcome MORE likely than Pinnacle → Poly overpriced → SKIP
             gap_pp = None
             if bookie_cur_impl is not None:
                 gap_pp = round(bookie_cur_impl - poly_pct, 2)
 
+            # ── League liquidity tier ─────────────────────────────────────────
+            # Tier 1 = most liquid on Poly, Tier 3 = thinnest
+            LIQ_TIER = {'ENG': 1, 'ESP': 1, 'GER': 1, 'ITA': 1, 'FRA': 1,
+                        'NED': 2, 'POR': 2, 'GER2': 2, 'ENG2': 2,
+                        'TUR': 3, 'SCO': 3}
+            liq_tier = LIQ_TIER.get(league, 2)
+
+            # ── Suspicious gap check ──────────────────────────────────────────
+            # Gaps > MAX_PLAUSIBLE_GAP pp almost certainly indicate a bad Polymarket
+            # contract mapping (wrong game matched) — not a real arbitrage opportunity.
+            # These are flagged but NOT blocked from storage (useful for debugging mapping).
+            suspicious_gap = gap_pp is not None and abs(gap_pp) > MAX_PLAUSIBLE_GAP
+
+            # ── Buy signal (primary action label) ────────────────────────────
+            # Strategy: compare Poly implied probability vs Pinnacle fair price.
+            # When Poly "Quote" (implied odds) is HIGHER than Pinnacle (= Poly price lower),
+            # it means Poly is underpriced relative to sharp money → BUY.
+            # Prerequisite: enough liquidity (liq_tier ≤ MIN_LIQ_TIER_SIGNAL) AND
+            #   plausible gap (not suspicious) AND Poly price in liquid range AND future match.
+            in_liquid_range = MIN_POLY_PRICE <= poly_pct <= MAX_POLY_PRICE
+            buy_prereq = (
+                bookie_cur_impl is not None   # need Pinnacle comparison
+                and not suspicious_gap         # gap must be plausible
+                and liq_tier <= MIN_LIQ_TIER_SIGNAL  # T1 or T2 league only
+                and in_liquid_range            # Poly price in 15–85% range
+                and days_out >= 0              # match is still upcoming
+            )
+            buy_signal = None
+            if buy_prereq:
+                if gap_pp >= BUY_THRESHOLD_PP:
+                    buy_signal = 'BUY'    # Poly clearly underpriced → buy now
+                elif gap_pp >= WATCH_THRESHOLD_PP:
+                    buy_signal = 'WATCH'  # Poly slightly underpriced → monitor
+                elif gap_pp <= -SKIP_THRESHOLD_PP:
+                    buy_signal = 'SKIP'   # Poly overpriced → don't buy / consider NO
+
             # ── Trade direction ───────────────────────────────────────────────
             # bookie_move_pp = bookie_cur_impl - bookie_open_impl
-            # Positive bookie_move_pp = implied prob rose = odds shortened = outcome more likely = BUY_YES
-            # Negative bookie_move_pp = implied prob fell = odds lengthened = outcome less likely = BUY_NO
+            # Positive = implied prob rose = odds shortened = outcome more likely = BUY_YES
+            # Negative = implied prob fell = odds lengthened = outcome less likely = BUY_NO
             trade_direction = None
             if bookie_move_pp is not None and abs(bookie_move_pp) >= SHARP_THRESHOLD_PP:
                 trade_direction = 'BUY_YES' if bookie_move_pp > 0 else 'BUY_NO'
 
-            # ── Signal detection ─────────────────────────────────────────────
+            # ── Legacy signal detection (kept for SHARP/CLV+ badges) ─────────
             signal = None
             signal_strength = 0.0
             signal_detail   = []
 
-            # SHARP: bookie line moved ≥ threshold pp AND gap still open ≥ MIN_GAP_ACTIONABLE
-            # (If Poly already repriced, the window is closed → no actionable entry)
             gap_still_open = gap_pp is not None and abs(gap_pp) >= MIN_GAP_ACTIONABLE
             is_sharp = (bookie_move_pp is not None
                         and abs(bookie_move_pp) >= SHARP_THRESHOLD_PP
-                        and gap_still_open)
+                        and gap_still_open
+                        and not suspicious_gap)
             if is_sharp:
                 signal_strength = max(signal_strength, abs(bookie_move_pp))
                 signal_detail.append(f"Bookie {bookie_move_pp:+.1f}pp, Gap {gap_pp:+.1f}pp offen")
                 signal = 'SHARP'
 
-            # CLV+: Pinnacle current implied > current Poly price by ≥ CLV_THRESHOLD_PP
-            # means Poly hasn't caught up to current bookie level → entry opportunity
-            is_clv = (gap_pp is not None and abs(gap_pp) >= CLV_THRESHOLD_PP)
+            is_clv = (gap_pp is not None and gap_pp >= CLV_THRESHOLD_PP and not suspicious_gap)
             if is_clv:
                 signal_strength = max(signal_strength, abs(gap_pp))
                 signal_detail.append(f"CLV gap {gap_pp:+.1f}pp")
                 signal = 'BOTH' if is_sharp else 'CLV+'
 
-            # ── Actionability ─────────────────────────────────────────────────
-            # Signal is actionable only if:
-            # (a) gap still open ≥ MIN_GAP_ACTIONABLE
-            # (b) Poly price in liquid range (MIN_POLY_PRICE..MAX_POLY_PRICE)
-            # (c) match is still in the future (days_out ≥ 0)
-            in_liquid_range = MIN_POLY_PRICE <= poly_pct <= MAX_POLY_PRICE
-            is_actionable = bool(signal and gap_still_open and in_liquid_range and days_out >= 0)
+            # ── Actionability: aligned with buy_signal ─────────────────────────
+            is_actionable = (buy_signal == 'BUY')
 
             # ── Composite score (for ranking) ─────────────────────────────────
-            # Weights: bookie move strength 60% + remaining gap 40%
             bm_abs = abs(bookie_move_pp) if bookie_move_pp is not None else 0.0
             gap_abs = abs(gap_pp) if gap_pp is not None else 0.0
             signal_score = round(bm_abs * 0.6 + gap_abs * 0.4, 2)
 
             # ── Simulated P&L (€5 stake, sell at kickoff / mark-to-market) ────
-            # Effective direction: from SHARP signal or inferred from gap
             OBS_STAKE    = 5.0
             obs_entry    = existing.get('obs_entry', poly_open)
             eff_dir      = trade_direction
             if eff_dir is None and gap_pp is not None:
                 eff_dir = 'BUY_YES' if gap_pp > 0 else 'BUY_NO'
-            # Exit price: use frozen close if available, else current
             exit_pct     = (poly_close if poly_close is not None else poly_pct) / 100.0
             entry_pct_f  = obs_entry / 100.0 if obs_entry is not None else None
 
@@ -1163,13 +1202,6 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
                     denom = 1.0 - entry_pct_f
                     if denom > 0:
                         obs_pnl_eur = round(OBS_STAKE * (entry_pct_f - exit_pct) / denom, 2)
-
-            # ── League liquidity tier ─────────────────────────────────────────
-            # Tier 1 = most liquid on Poly, Tier 3 = thinnest
-            LIQ_TIER = {'ENG': 1, 'ESP': 1, 'GER': 1, 'ITA': 1, 'FRA': 1,
-                        'NED': 2, 'POR': 2, 'GER2': 2, 'ENG2': 2,
-                        'TUR': 3, 'SCO': 3}
-            liq_tier = LIQ_TIER.get(league, 2)
 
             candidates[candidate_key] = {
                 'home':             home,
@@ -1195,7 +1227,15 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
                 # Gap & direction
                 'gap_pp':           gap_pp,
                 'trade_direction':  trade_direction,
-                # Signal
+                # ── Primary action signal ────────────────────────────────────
+                # buy_signal: 'BUY' | 'WATCH' | 'SKIP' | None
+                #   BUY  = Poly quote > Pinnacle (underpriced ≥ BUY_THRESHOLD_PP), liquid league
+                #   WATCH = gap ≥ WATCH_THRESHOLD_PP but < BUY_THRESHOLD_PP
+                #   SKIP = Poly overpriced vs Pinnacle (gap ≤ −SKIP_THRESHOLD_PP)
+                #   None = no Pinnacle comparison, T3 league, or outside Poly liquid range
+                'buy_signal':       buy_signal,
+                'suspicious_gap':   suspicious_gap,  # True = gap >20pp = likely bad mapping
+                # ── Legacy signals (SHARP / CLV+ / BOTH) ────────────────────
                 'signal':           signal,
                 'signal_strength':  signal_strength,
                 'signal_score':     signal_score,
