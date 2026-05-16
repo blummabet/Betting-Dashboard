@@ -161,8 +161,14 @@ function oddsApiEventFetch(sportKey, eventId) {
       'totals_h1',
       'btts_h1',
     ].join(',');
+    // Use bookmakers= instead of regions= to guarantee Bet365 is always included.
+    // Bet365 offers Over+Under corners for all major leagues — regions=eu,uk is unreliable
+    // because TheOddsAPI may not return Bet365 for every region/market combination.
+    // bookmakers= and regions= are mutually exclusive in TheOddsAPI v4.
+    // Pinnacle: sharp 1X2 + Over corners | Bet365: full Over+Under corner coverage
+    // williamhill / unibet: additional BTTS / DC coverage
     const path = `/v4/sports/${sportKey}/events/${eventId}/odds?apiKey=${ODDS_API_KEY}`
-      + `&regions=eu,uk&markets=${markets}&oddsFormat=decimal`;
+      + `&bookmakers=bet365,pinnacle,williamhill,unibet&markets=${markets}&oddsFormat=decimal`;
     const options = { hostname: ODDS_API_HOST, path, method: 'GET',
       headers: { 'User-Agent': 'CocoBet/1.0' } };
     const req = https.request(options, res => {
@@ -890,12 +896,16 @@ function parseBets(bookmakers) {
       } else if (bn === 'total - corners' || bn === 'corners' || bn === 'corner kicks' || bn.includes('total corners') || (bn.includes('corner') && (bn.includes('over') || bn.includes('under') || bn.includes('total')))) {
         for (const v of (bet.values || [])) {
           const vl = String(v.value ?? '').toLowerCase();
-          if      (vl === 'over 9.5'  && !r.co95)  r.co95  = parseFloat(v.odd);
-          else if (vl === 'under 9.5' && !r.cu95)  r.cu95  = parseFloat(v.odd);
-          else if (vl === 'over 8.5'  && !r.co85)  r.co85  = parseFloat(v.odd);
-          else if (vl === 'under 8.5' && !r.cu85)  r.cu85  = parseFloat(v.odd);
-          else if (vl === 'over 10.5' && !r.co105) r.co105 = parseFloat(v.odd);
-          else if (vl === 'under 10.5'&& !r.cu105) r.cu105 = parseFloat(v.odd);
+          if      (vl === 'over 6.5'   && !r.co65)  r.co65  = parseFloat(v.odd);
+          else if (vl === 'under 6.5'  && !r.cu65)  r.cu65  = parseFloat(v.odd);
+          else if (vl === 'over 7.5'   && !r.co75)  r.co75  = parseFloat(v.odd);
+          else if (vl === 'under 7.5'  && !r.cu75)  r.cu75  = parseFloat(v.odd);
+          else if (vl === 'over 8.5'   && !r.co85)  r.co85  = parseFloat(v.odd);
+          else if (vl === 'under 8.5'  && !r.cu85)  r.cu85  = parseFloat(v.odd);
+          else if (vl === 'over 9.5'   && !r.co95)  r.co95  = parseFloat(v.odd);
+          else if (vl === 'under 9.5'  && !r.cu95)  r.cu95  = parseFloat(v.odd);
+          else if (vl === 'over 10.5'  && !r.co105) r.co105 = parseFloat(v.odd);
+          else if (vl === 'under 10.5' && !r.cu105) r.cu105 = parseFloat(v.odd);
           else if (vl === 'over 11.5'  && !r.co115) r.co115 = parseFloat(v.odd);
           else if (vl === 'under 11.5' && !r.cu115) r.cu115 = parseFloat(v.odd);
         }
