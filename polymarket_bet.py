@@ -297,10 +297,19 @@ def gamma_find_winner_event(order: dict, mm_event: dict) -> dict | None:
 
 # ── CLOB order placement ────────────────────────────────────
 
-def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> dict:
+def place_market_order(token_id: str, amount_usdc: float, private_key: str,
+                       price_hint: float = None) -> dict:
     """
-    Place a market buy order on Polymarket CLOB v2.
-    Uses create_and_post_market_order (py-clob-client-v2 API).
+    Place a BUY order on Polymarket CLOB v2.
+
+    Strategy (FOK-safe):
+      1. Try create_and_post_market_order (GTC market order).
+         NOTE: Polymarket's CLOB engine treats market orders as FOK internally —
+         if there isn't enough liquidity at the current price the order is killed.
+      2. If the market order fails with a FOK/fill error, automatically retry as a
+         GTC *limit* order at price_hint + 2pp buffer (or fetched midpoint + 2pp).
+         A limit order sits in the book until filled — no FOK rejection possible.
+
     Returns dict with orderId and status.
     """
     try:
@@ -367,35 +376,106 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str) -> d
             client_kwargs["creds"] = creds
             client = ClobClient(**client_kwargs)
 
-    # create_and_post_market_order — offizieller v2-Weg
     try:
         from py_clob_client_v2.exceptions import PolyApiException
     except ImportError:
         PolyApiException = Exception
 
+    def _parse_resp(resp):
+        """Extract (orderId, error) from a CLOB API response dict."""
+        if resp and resp.get("success"):
+            return resp.get("orderID") or resp.get("id") or "unknown", None
+        err = (resp or {}).get("errorMsg") or (resp or {}).get("error") or str(resp)
+        return None, err
+
+    def _is_fok_error(err_str: str) -> bool:
+        """True when the error is a FOK/fill rejection (not a creds/network problem)."""
+        s = (err_str or "").lower()
+        return "fok" in s or "fully filled" in s or "fill" in s
+
+    # ── STEP 1: Market order (fast path) ──────────────────────────────────────
+    market_err = None
     try:
         resp = client.create_and_post_market_order(
             order_args=MarketOrderArgs(
                 token_id=token_id,
                 amount=amount_usdc,
                 side=Side.BUY,
-                order_type=OrderType.GTC,  # GTC statt FOK — erlaubt Teilfüllung wenn Orderbook dünn
+                order_type=OrderType.GTC,
             ),
             options=PartialCreateOrderOptions(tick_size="0.01"),
         )
+        oid, err = _parse_resp(resp)
+        if oid:
+            return {"status": "placed", "orderId": oid, "error": None,
+                    "method": "market"}
+        market_err = err
     except PolyApiException as e:
-        return {"status": "failed", "orderId": None, "error": str(e)}
+        market_err = str(e)
     except Exception as e:
-        return {"status": "failed", "orderId": None, "error": str(e)}
+        market_err = str(e)
 
-    if resp and resp.get("success"):
-        return {
-            "status":  "placed",
-            "orderId": resp.get("orderID") or resp.get("id") or "unknown",
-            "error":   None,
-        }
-    err = (resp or {}).get("errorMsg") or (resp or {}).get("error") or str(resp)
-    return {"status": "failed", "orderId": None, "error": err}
+    # ── STEP 2: GTC limit order fallback (FOK-safe) ───────────────────────────
+    # Only retry as limit order if it was a FOK/liquidity problem.
+    # For auth/creds errors we fail immediately so the user knows.
+    if not _is_fok_error(market_err):
+        return {"status": "failed", "orderId": None, "error": market_err}
+
+    print(f"  ⚠️  Market order FOK — retry als GTC Limit Order…")
+
+    # Determine limit price: use price_hint (from dashboard) if available,
+    # otherwise fetch current midpoint from CLOB REST API.
+    limit_price = None
+    if price_hint and 0.01 <= price_hint <= 0.99:
+        limit_price = price_hint
+    else:
+        try:
+            r = requests.get(
+                f"{CLOB_HOST}/midpoint",
+                params={"token_id": token_id},
+                timeout=8,
+            )
+            if r.ok:
+                mid = float(r.json().get("mid", 0))
+                if 0.01 <= mid <= 0.99:
+                    limit_price = mid
+        except Exception:
+            pass
+
+    if not limit_price:
+        return {"status": "failed", "orderId": None,
+                "error": f"Market order failed (FOK) and no price available for limit fallback. "
+                         f"Original: {market_err}"}
+
+    # Add 2pp buffer so the limit order crosses the spread and gets priority in the book.
+    # Round to Polymarket's 0.01 tick size.
+    limit_price_buffered = min(0.99, round(limit_price + 0.02, 2))
+    # Number of YES-tokens to buy = USDC_spend / price_per_token
+    # Round size to 4 decimal places (Polymarket norm).
+    size = round(amount_usdc / limit_price_buffered, 4)
+
+    print(f"  📋 Limit Order: {limit_price_buffered:.2f} (mid {limit_price:.2f} +2pp)  ×  {size} tokens")
+
+    try:
+        from py_clob_client_v2.clob_types import OrderArgs
+        resp2 = client.create_and_post_order(
+            order_args=OrderArgs(
+                token_id=token_id,
+                price=limit_price_buffered,
+                size=size,
+                side=Side.BUY,
+            ),
+            options=PartialCreateOrderOptions(tick_size="0.01"),
+        )
+        oid2, err2 = _parse_resp(resp2)
+        if oid2:
+            return {"status": "placed", "orderId": oid2, "error": None,
+                    "method": "limit_gtc"}
+        return {"status": "failed", "orderId": None,
+                "error": f"Limit fallback fehlgeschlagen: {err2} (ursprüngl: {market_err})"}
+    except Exception as e:
+        return {"status": "failed", "orderId": None,
+                "error": f"Limit fallback Exception: {e} (ursprüngl: {market_err})"}
 
 
 # ── picks_history.json logging ──────────────────────────────
@@ -538,9 +618,14 @@ def main():
             result = {"status": "dry-run", "orderId": "dry-run", "error": None}
             placed += 1
         else:
-            result = place_market_order(token_id, float(stake), private_key)
+            result = place_market_order(
+                token_id, float(stake), private_key,
+                price_hint=float(poly_price) if poly_price else None,
+            )
             if result["status"] == "placed":
-                print(f"  ✅ Order platziert — ID: {result['orderId']}")
+                method = result.get("method", "market")
+                label  = "Limit GTC" if method == "limit_gtc" else "Market"
+                print(f"  ✅ Order platziert ({label}) — ID: {result['orderId']}")
                 placed += 1
             else:
                 print(f"  ❌ Order fehlgeschlagen: {result['error']}")
