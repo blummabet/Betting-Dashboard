@@ -1182,6 +1182,13 @@ function getBettingPicks(match, odds, leagueKey) {
   {
     const _co85real = !!o.co85;
     const _co95real = !!o.co95;
+    // Track Under lines BEFORE estimation fallback — independently of Over lines.
+    // Bug: Pinnacle often has co95 (Over 9.5) but no cu75/cu85 (Under). Without this,
+    // Under picks get oddsIsEst:false because _co95real=true, even though cu85 is estimated.
+    const _cu65real = !!o.cu65;
+    const _cu75real = !!o.cu75;
+    const _cu85real = !!o.cu85;
+    const _cu95real = !!o.cu95;
     const _cEst = estimateCornersOdds(cornersEst);
     if (!o.co65)  { o.co65  = _cEst.co65;  o.cu65  = _cEst.cu65;  }
     if (!o.co75)  { o.co75  = _cEst.co75;  o.cu75  = _cEst.cu75;  }
@@ -1189,8 +1196,11 @@ function getBettingPicks(match, odds, leagueKey) {
     if (!o.co95)  { o.co95  = _cEst.co95;  o.cu95  = _cEst.cu95;  }
     if (!o.co105) { o.co105 = _cEst.co105; o.cu105 = _cEst.cu105; }
     if (!o.co115) { o.co115 = _cEst.co115; o.cu115 = _cEst.cu115; }
-    // Only mark as estimated when the main 8.5/9.5 lines came from the model, not a bookmaker
+    // Over corners: estimated when BOTH 8.5 AND 9.5 were missing from real bookmaker data
     if (!_co85real && !_co95real && _cEst.oddsIsEst) o._cornersOddsEst = true;
+    // Under corners: estimated when ALL key Under lines (7.5, 8.5, 9.5) were missing
+    // (Pinnacle having co95 does NOT mean cu85 is real — they're independent markets)
+    if (!_cu65real && !_cu75real && !_cu85real && !_cu95real && _cEst.oddsIsEst) o._cornersUnderOddsEst = true;
   }
   // Cards — helper flags (anyGold already declared above; anyOrange added here)
   const anyOrange = hc.includes('orange') || ac.includes('orange');
@@ -2206,12 +2216,12 @@ function getBettingPicks(match, odds, leagueKey) {
           const _UNDER_MIN_ODD = 1.35;
           const _underOddsOk = _cUOdds == null || _cUOdds >= _UNDER_MIN_ODD;
           // Same double-estimate guard as Over: no real odds + no real stats → require high confidence.
-          const _cornUnderDoubleEst = o._cornersOddsEst && !cornersDataReal && scU < 0.65;
+          const _cornUnderDoubleEst = o._cornersUnderOddsEst && !cornersDataReal && scU < 0.65;
           if (_underOddsOk && !_cornUnderDoubleEst) {
             const _uDataNote = cornersDataReal
               ? `<br>📊 Ecken-Daten: ${match.home} Ø ${_hCornersHome||'?'} Heim · ${match.away} Ø ${_aCornersAway||'?'} Ausw.${_hFormCornMod!==0||_aFormCornMod!==0?` · Formation ${_hFormation||'?'} vs ${_aFormation||'?'}`:''}  → nur Ø ${cornersEst.toFixed(1)} erwartet.`
               : ``;
-            sC.push({sc: scU, p:{icon:'🚩', market:_cUMkt, odds:_cUOdds, oddsIsEst: o._cornersOddsEst||false,
+            sC.push({sc: scU, p:{icon:'🚩', market:_cUMkt, odds:_cUOdds, oddsIsEst: o._cornersUnderOddsEst||false,
               conf: scU>0.60?'high':scU>0.38?'medium':'low',
               reason:`${cornersDataReal
                 ? `Defensives Spiel — Saisonschnitt ergibt nur ${cornersEst.toFixed(1)} Ecken gesamt.`

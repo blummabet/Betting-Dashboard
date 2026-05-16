@@ -1404,19 +1404,30 @@ async function fetchAllPrematchData() {
   // ── Step 5c: API-Football corners/cards enrichment ───────────────────────────
   // TheOddsAPI often doesn't return alternate_totals_corners / alternate_totals_cards
   // for smaller leagues (AUT, SCO, NED etc.) even via the /events endpoint.
-  // For fixtures that have 1X2 odds (from TheOddsAPI or elsewhere) but still lack
-  // real corners or cards odds, fetch from API-Football /odds (Pinnacle = bookmaker 8)
-  // and extract those specific markets.
-  // Cap raised: Business plan (75K/day API-Football) — was 15, now 80 (soft safety limit).
-  { const _cornersMissing = upcoming.filter(d => d.odds && !d.odds.co85 && !d.odds.co95);
+  // For fixtures still missing corner or card odds, fetch from API-Football /odds
+  // WITHOUT bookmaker filter → returns ALL available bookmakers (parseBets handles
+  // Pinnacle priority for 1X2; for Under corners, Bet365/Bwin fill where Pinnacle
+  // has no market). Previously only bookmaker=8 (Pinnacle) was tried — Pinnacle
+  // typically offers Over 9.5 but NOT Under 7.5/8.5, causing Under corner picks
+  // to get estimated odds even when Bet365 had real quotes available.
+  // Trigger: fire if Over-corners OR Under-corners are missing.
+  // Cap: Business plan (75K/day API-Football) — soft safety limit 80 fixtures.
+  { const _cornersMissing = upcoming.filter(d => {
+      if (!d.odds) return false;
+      const missingOver  = !d.odds.co85 && !d.odds.co95;
+      const missingUnder = !d.odds.cu75 && !d.odds.cu85 && !d.odds.cu95;
+      return missingOver || missingUnder;
+    });
     const _toEnrich5c = _cornersMissing.slice(0, 80);
     if (_toEnrich5c.length > 0) {
-      console.log(`[Server] Step5c: API-Football Ecken/Karten-Enrichment für ${_toEnrich5c.length} Spiele...`);
+      console.log(`[Server] Step5c: API-Football Ecken/Karten-Enrichment für ${_toEnrich5c.length} Spiele (alle Bookmaker)...`);
       let _enriched5c = 0;
       for (const d of _toEnrich5c) {
         await sleep(600);
         try {
-          const data = await apiFetch(`/odds?fixture=${d.fixtureId}&bookmaker=8`);
+          // No &bookmaker= filter → all bookmakers returned; parseBets prioritises Pinnacle
+          // for 1X2 but uses any available bookmaker for corner/card specialty markets.
+          const data = await apiFetch(`/odds?fixture=${d.fixtureId}`);
           const resp = (data.response || [])[0];
           if (!resp) continue;
           const bkrs = resp.bookmakers || [];
@@ -1424,7 +1435,8 @@ async function fetchAllPrematchData() {
           const parsed = parseBets(bkrs);
           // Only merge specialty fields — never overwrite 1X2/O/U from TheOddsAPI
           let anyNew = false;
-          for (const key of ['co75','co85','co95','co105','co115','cu75','cu85','cu95','cu105','cu115',
+          for (const key of ['co65','co75','co85','co95','co105','co115',
+                             'cu65','cu75','cu85','cu95','cu105','cu115',
                              'cards_o35','cards_o45','cards_o55','cards_u35','cards_u45']) {
             if (parsed[key] != null && !d.odds[key]) { d.odds[key] = parsed[key]; anyNew = true; }
           }
