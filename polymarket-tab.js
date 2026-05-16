@@ -620,88 +620,25 @@ function _openButtonHtml(pickId) {
 }
 
 // ── Verdict block (BET / ABWÄGEN / SKIP) ────────────────────────────────────
-// Mirrors the 3-signal verdict in renderer.js exactly.
-// Signal 1 — Model: model edge vs bookie (vig-adjusted)
-// Signal 2 — Market: opening → current line movement
-// Signal 3 — H2H story: head-to-head historical rates
+// Delegates to pick-verdict.js › computeVerdict() — single source of truth.
 function _verdictBlock(pick) {
-  const oddsNum = (pick.oddsIsEst || !pick.odds) ? pick.modelOdds : pick.odds;
-
-  // Signal 1: Model edge
-  let modSig = 0, modEmoji = '⬜', modTxt = '—';
-  if (pick.modelOdds != null && pick.odds != null) {
-    const _ep = Math.round((1/pick.modelOdds - (1/pick.odds)*1.03) * 100);
-    if (_ep >= 7)       { modSig =  1; modEmoji = '🟢'; modTxt = `+${_ep}pp`; }
-    else if (_ep >= 0)  { modSig =  0; modEmoji = '🟡'; modTxt = `+${_ep}pp`; }
-    else if (_ep >= -4) { modSig = -1; modEmoji = '🟠'; modTxt = `${_ep}pp`;  }
-    else                { modSig = -1; modEmoji = '🔴'; modTxt = `${_ep}pp`;  }
-  }
-
-  // Signal 2: Market (line movement from opening odds)
-  let mktSig = 0, mktEmoji = '⬜', mktTxt = '—';
-  if (pick.oddsOpen && oddsNum != null && !pick.oddsIsEst) {
-    const _ml = (pick.market || '').toLowerCase();
-    const _ok = _ml.includes('heimsieg')     ? 'hw'
-      : _ml.includes('auswärtssieg')         ? 'aw'
-      : _ml.includes('unentschieden')        ? 'dr'
-      : _ml.includes('over 2.5')             ? 'o25'
-      : _ml.includes('under 2.5')            ? 'u25'
-      : _ml.includes('beide teams')          ? 'bttsY'
-      : null;
-    const _oo = _ok ? parseFloat(pick.oddsOpen[_ok]) : null;
-    if (_oo && _oo > 1 && Math.abs(_oo - oddsNum) > 0.01) {
-      const _ppD = Math.round(((1/oddsNum) - (1/_oo)) * 100);
-      if (Math.abs(_ppD) >= 2) {
-        if (oddsNum < _oo) { mktSig =  1; mktEmoji = '🟢'; mktTxt = `↘ ${Math.abs(_ppD)}pp`; }
-        else               { mktSig = -1; mktEmoji = '🔴'; mktTxt = `↗ ${Math.abs(_ppD)}pp`; }
-      } else { mktEmoji = '⬜'; mktTxt = 'stabil'; }
-    } else if (_oo) { mktEmoji = '⬜'; mktTxt = 'stabil'; }
-  }
-
-  // Signal 3: H2H story
-  let storySig = 0, storyEmoji = '⬜', storyTxt = '—';
-  const _h = pick.h2h;
-  if (_h && _h.games >= 3) {
-    const _n = _h.games;
-    const _hw2 = _h.homeWins||0, _dw2 = _h.draws||0, _aw2 = _h.awayWins||0;
-    const _ml2 = (pick.market || '').toLowerCase();
-    let _rate = null, _thresh = 0.5, _lbl = '';
-    if      (_ml2.includes('heimsieg'))                                     { _rate=_hw2/_n; _thresh=0.45; _lbl=`${Math.round(_rate*100)}% H`; }
-    else if (_ml2.includes('auswärtssieg'))                                 { _rate=_aw2/_n; _thresh=0.40; _lbl=`${Math.round(_rate*100)}% A`; }
-    else if (_ml2.includes('unentschieden'))                                { _rate=_dw2/_n; _thresh=0.28; _lbl=`${Math.round(_rate*100)}% X`; }
-    else if ((_ml2.includes('under')||_ml2.includes('unter'))&&_h.avgGoals!=null) {
-      const _ag=parseFloat(_h.avgGoals), _ul=parseFloat((_ml2.match(/[\d.]+/)||['2.5'])[0]);
-      if(!isNaN(_ag)&&!isNaN(_ul)){_rate=_ag<_ul?0.70:_ag<_ul+0.5?0.40:0.15;_thresh=0.5;_lbl=`Ø ${_ag} Tore`;}
-    }
-    else if ((_ml2.includes('over')||_ml2.includes('über'))&&_h.over25Rate!=null) { _rate=_h.over25Rate; _thresh=0.50; _lbl=`${Math.round(_rate*100)}% +2.5`; }
-    else if ((_ml2.includes('btts')||_ml2.includes('beide teams'))&&_h.bttsRate!=null) { _rate=_h.bttsRate; _thresh=0.45; _lbl=`BTTS ${Math.round(_rate*100)}%`; }
-    if (_rate !== null && _lbl) {
-      storyTxt = _lbl;
-      if (_rate >= _thresh + 0.10)      { storySig =  1; storyEmoji = '🟢'; }
-      else if (_rate >= _thresh - 0.10) { storySig =  0; storyEmoji = '🟡'; }
-      else                              { storySig = -1; storyEmoji = '🔴'; }
-    }
-  }
-
-  // Final verdict
-  const _score    = modSig + mktSig + storySig;
-  const _hardSkip = modSig === -1 && mktSig === -1;
-  let _vTxt, _vColor, _vBg, _vBorder;
-  if (_hardSkip || _score <= -1) {
-    _vTxt='SKIP';    _vColor='#f85149'; _vBg='rgba(248,81,73,0.10)'; _vBorder='rgba(248,81,73,0.30)';
-  } else if (_score >= 2 || (_score === 1 && modSig === 1)) {
-    _vTxt='BET';     _vColor='#3fb950'; _vBg='rgba(63,185,80,0.10)'; _vBorder='rgba(63,185,80,0.30)';
-  } else {
-    _vTxt='ABWÄGEN'; _vColor='#e3b341'; _vBg='rgba(227,179,65,0.08)'; _vBorder='rgba(227,179,65,0.25)';
-  }
-
+  const _eff = (pick.oddsIsEst || !pick.odds) ? pick.modelOdds : pick.odds;
+  const _vd = computeVerdict({
+    modelOdds: pick.modelOdds,
+    odds:      _eff,
+    oddsIsEst: pick.oddsIsEst,
+    market:    pick.market,
+    oddsOpen:  pick.oddsOpen,
+    h2h:       pick.h2h,
+  });
+  const { modEmoji, modTxt, mktEmoji, mktTxt, storyEmoji, storyTxt, verdict, vColor, vBg, vBorder } = _vd;
   return `<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;font-size:11px;line-height:1.4">
     <span>${modEmoji} <span style="color:#8b949e">Modell</span> <strong style="color:#c9d1d9">${modTxt}</strong></span>
     <span style="color:#30363d">·</span>
     <span>${mktEmoji} <span style="color:#8b949e">Markt</span> <strong style="color:#c9d1d9">${mktTxt}</strong></span>
     <span style="color:#30363d">·</span>
     <span>${storyEmoji} <span style="color:#8b949e">H2H</span> <strong style="color:#c9d1d9">${storyTxt}</strong></span>
-    <span style="margin-left:auto;background:${_vBg};color:${_vColor};border:1px solid ${_vBorder};border-radius:6px;padding:2px 9px;font-weight:800;letter-spacing:.4px">${_vTxt}</span>
+    <span style="margin-left:auto;background:${vBg};color:${vColor};border:1px solid ${vBorder};border-radius:6px;padding:2px 9px;font-weight:800;letter-spacing:.4px">${verdict}</span>
   </div>`;
 }
 
