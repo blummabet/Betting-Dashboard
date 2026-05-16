@@ -597,120 +597,118 @@ function renderPolyTrader(panel) {
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
-     LOGIK & KRITERIEN DOKUMENTATION
+     WAS WIR HIER GENAU MACHEN
      ════════════════════════════════════════════════════════ -->
 <div style="background:#0f1419;border:1px solid #1e2d3d;border-radius:14px;padding:20px 24px;margin-bottom:14px">
   <div style="font-size:13px;font-weight:700;color:#e8edf3;margin-bottom:18px;display:flex;align-items:center;gap:8px">
     <span style="background:#00d4a115;border:1px solid #00d4a130;border-radius:8px;padding:4px 8px;font-size:16px">📋</span>
-    Logik & Kriterien — Wie Signale entstehen
+    Was wir hier genau machen
   </div>
 
-  <!-- Das Konzept -->
-  <div style="margin-bottom:20px">
-    <div style="font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Die Strategie</div>
-    <div style="font-size:12px;color:#8b9ab0;line-height:1.9;background:#141b22;border-radius:10px;padding:14px 16px;border:1px solid #1e2d3d">
-      <div style="margin-bottom:10px"><strong style="color:#e8edf3">Grundidee:</strong> Wenn die Poly-Quote (implizite Odds) höher ist als Pinnacle's Quote, heißt das: Poly bewertet das Outcome günstiger als der schärfste Buchmacher der Welt. Das ist ein Kaufsignal.</div>
-      <div style="background:#0f1419;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:11px">
-        <div style="color:#3fb950;margin-bottom:4px;font-weight:700">Beispiel — Bayern Heimsieg:</div>
-        <div>Pinnacle fair odds: 1.80 → Implied: <strong style="color:#e8edf3">55.6%</strong></div>
-        <div>Poly Preis: <strong style="color:#e8edf3">50%</strong> (= implizite Odds 2.00)</div>
-        <div style="color:#3fb950;margin-top:4px">→ Gap: +5.6pp → Poly "Quote" (2.00) ist HÖHER als Pinnacle (1.80) → <strong>BUY</strong></div>
-      </div>
-      <div><strong style="color:#e8edf3">Voraussetzungen:</strong> Mindest-Liquidität (nur T1/T2 Ligen) · plausibler Gap (≤20pp) · Poly-Preis im Bereich 15–85% · Spiel noch nicht begonnen</div>
-      <div style="margin-top:8px"><strong style="color:#e8edf3">Exit:</strong> Wenn Poly-Preis sich Pinnacle annähert (Gap &lt;2pp) → Position schließen und Gewinn mitnehmen — unabhängig vom Spielausgang.</div>
-    </div>
+  <!-- Die Idee in einem Satz -->
+  <div style="background:linear-gradient(135deg,#0a1f18,#0a1428);border:1px solid #00d4a130;border-radius:12px;padding:16px 18px;margin-bottom:20px;font-size:13px;color:#e8edf3;line-height:1.8">
+    Wir suchen Momente wo <strong style="color:#3fb950">Polymarket ein Spiel günstiger bewertet als Pinnacle</strong> — kaufen den unterbewerteten Token, und verkaufen wenn Poly den Preis nachzieht. <span style="color:#8b9ab0">Kein klassisches Wetten auf den Ausgang — nur Preiskonvergenz zwischen zwei Märkten.</span>
   </div>
 
-  <!-- Signal-Typen -->
+  <!-- Schritt für Schritt -->
   <div style="margin-bottom:20px">
-    <div style="font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Signal-Typen</div>
+    <div style="font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px">So funktioniert es — Schritt für Schritt</div>
     <div style="display:grid;gap:8px">
-      <div style="background:#141b22;border:1px solid #58a6ff25;border-radius:10px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <span style="background:#58a6ff15;border:1px solid #58a6ff35;color:#58a6ff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px">⚡ SHARP</span>
-          <span style="font-size:11px;color:#6b7a8d">Mindest-Bookie-Bewegung: <strong style="color:#e8edf3">≥5pp</strong> · Poly-Gap noch offen: <strong style="color:#e8edf3">≥2pp</strong></span>
+
+      <div style="background:#141b22;border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+        <span style="background:#00d4a120;color:#00d4a1;font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;flex-shrink:0;margin-top:1px">1</span>
+        <div style="font-size:12px;color:#8b9ab0;line-height:1.7">
+          <strong style="color:#e8edf3">Pinnacle setzt einen fairen Preis.</strong> Pinnacle ist der schärfste Buchmacher der Welt — Profis und Algorithmen handeln dort sofort wenn neue Informationen auftauchen. Sein Preis gilt als "wahrer Marktwert".
         </div>
-        <div style="font-size:11px;color:#8b9ab0;line-height:1.6">Pinnacle hat die Linie seit Opening um ≥5pp bewegt. Das bedeutet Sharp Money (Profi-Kapital) hat die Seite gekauft. Poly hinkt nach. <em>Nur wenn der Gap noch ≥2pp offen ist — sonst hat Poly schon repriced und das Fenster ist zu.</em></div>
       </div>
-      <div style="background:#141b22;border:1px solid #a78bfa25;border-radius:10px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <span style="background:#a78bfa15;border:1px solid #a78bfa35;color:#a78bfa;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px">📐 CLV+</span>
-          <span style="font-size:11px;color:#6b7a8d">Gap Pinnacle-Implied vs. Poly-Preis: <strong style="color:#e8edf3">≥4pp</strong></span>
+
+      <div style="background:#141b22;border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+        <span style="background:#00d4a120;color:#00d4a1;font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;flex-shrink:0;margin-top:1px">2</span>
+        <div style="font-size:12px;color:#8b9ab0;line-height:1.7">
+          <strong style="color:#e8edf3">Polymarket hinkt nach.</strong> Polymarket ist ein dezentraler Markt — Preise ändern sich nur wenn jemand aktiv tradet. Bei wenig Volumen bleibt der Preis stehen, auch wenn sich der "echte Wert" schon verändert hat. Dieses Timing-Gap ist 6–36 Stunden.
         </div>
-        <div style="font-size:11px;color:#8b9ab0;line-height:1.6">Die aktuelle Pinnacle-Fair-Quote impliziert eine höhere Wahrscheinlichkeit als der Poly-Preis zeigt. Poly ist gegenüber Pinnacle underpriced. <em>Kein Bookie-Move nötig — der Gap kann auch strukturell seit Opening bestehen.</em></div>
       </div>
-      <div style="background:#141b22;border:1px solid #00d4a125;border-radius:10px;padding:12px 14px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <span style="background:#00d4a115;border:1px solid #00d4a135;color:#00d4a1;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px">★ BOTH</span>
-          <span style="font-size:11px;color:#6b7a8d">SHARP + CLV+ gleichzeitig → stärkster Entry</span>
+
+      <div style="background:#0a1a0a;border:1px solid #3fb95025;border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+        <span style="background:#3fb95020;color:#3fb950;font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;flex-shrink:0;margin-top:1px">3</span>
+        <div style="font-size:12px;color:#8b9ab0;line-height:1.7">
+          <strong style="color:#3fb950">Gap erkannt → BUY Signal.</strong> Wenn Pinnacle 56% impliziert aber Poly noch bei 48% steht: Gap = +8pp. Das bedeutet Poly ist um 8pp "zu billig". Wir kaufen den YES-Token bei 48¢.
+          <div style="background:#0f1419;border-radius:7px;padding:8px 10px;margin-top:8px;font-size:11px">
+            Poly-Quote (1/0.48 = <strong style="color:#e8edf3">2.08</strong>) ist höher als Pinnacle (1/0.56 = <strong style="color:#e8edf3">1.79</strong>) → Poly bietet das bessere Geschäft → <strong style="color:#3fb950">BUY</strong>
+          </div>
         </div>
-        <div style="font-size:11px;color:#8b9ab0;line-height:1.6">Bookie hat sich bewegt UND der Gap ist noch offen. Höchste Priorität — Poly hat noch nicht nachgezogen obwohl der Markt sich bereits bewegt hat.</div>
       </div>
+
+      <div style="background:#141b22;border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start">
+        <span style="background:#00d4a120;color:#00d4a1;font-size:11px;font-weight:800;padding:3px 8px;border-radius:6px;flex-shrink:0;margin-top:1px">4</span>
+        <div style="font-size:12px;color:#8b9ab0;line-height:1.7">
+          <strong style="color:#e8edf3">Poly zieht nach → wir verkaufen.</strong> Sobald andere Trader den Gap erkennen (oder der Markt sich dem Spieltag nähert), steigt der Poly-Preis von 48% auf ~55%. Wir verkaufen bei 55¢ — <strong style="color:#3fb950">+7pp Gewinn unabhängig davon ob Bayern gewinnt oder nicht.</strong>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Actionability-Kriterien -->
+  <!-- Was wir jetzt gerade machen -->
   <div style="margin-bottom:20px">
-    <div style="font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">✓ Actionable — alle 3 müssen zutreffen</div>
-    <div style="background:#141b22;border:1px solid #3fb95020;border-radius:10px;padding:12px 16px">
-      <div style="display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:11px;color:#8b9ab0;line-height:1.7">
-        <span style="color:#3fb950;font-weight:700">① Gap ≥2pp</span><span>Der Abstand zwischen Pinnacle-Implied und Poly-Preis ist noch offen. Wenn Gap &lt;2pp: Poly hat repriced, Fenster zu.</span>
-        <span style="color:#3fb950;font-weight:700">② Preis 15–85%</span><span>Poly-Preis im liquiden Bereich. Preise &lt;15% oder &gt;85% haben hohen Bid-Ask-Spread relativ zur Bewegung und dünne Liquidität.</span>
-        <span style="color:#3fb950;font-weight:700">③ Kickoff ≥0d</span><span>Spiel hat noch nicht stattgefunden. Vergangene Spiele werden automatisch nach 2 Tagen aus dem System entfernt.</span>
+    <div style="font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Aktueller Status — Observer Mode</div>
+    <div style="background:#141b22;border:1px solid #1e2d3d;border-radius:10px;padding:14px 16px;font-size:12px;color:#8b9ab0;line-height:1.8">
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:8px 14px;align-items:start">
+        <span style="color:#3fb950;font-weight:700;white-space:nowrap">✓ Aktiv</span>
+        <span>Poly-Preise werden 5–6× täglich gespeichert. BUY/WATCH Signale werden berechnet. Simulated P&L läuft mit.</span>
+        <span style="color:#e3b341;font-weight:700;white-space:nowrap">⏳ Noch nicht</span>
+        <span>Kein automatisches Trading. Wenn du ein <strong style="color:#3fb950">▲ BUY</strong> Signal siehst: geh manuell auf polymarket.com (🔗 Link in der Zeile), kauf den YES-Token, und verkauf wenn der Gap sich schließt.</span>
+        <span style="color:#6b7a8d;font-weight:700;white-space:nowrap">Ziel</span>
+        <span>Nach 2–3 Wochen Observer-Daten: sehen ob Signale wirklich zu Preisbewegung führen → dann Auto-Trade mit kleinem Betrag einschalten.</span>
       </div>
     </div>
   </div>
 
-  <!-- Trade Direction -->
+  <!-- BUY / WATCH / SKIP erklärt -->
   <div style="margin-bottom:20px">
-    <div style="font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Trade Direction</div>
-    <div style="background:#141b22;border:1px solid #1e2d3d;border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:11px">
-      <div>
-        <span style="color:#3fb950;font-weight:700">BUY YES ▲</span>
-        <div style="color:#8b9ab0;margin-top:4px;line-height:1.6">Bookie-Quote kürzer geworden (Implied gestiegen) = Profis haben das Outcome gekauft. Outcome ist jetzt wahrscheinlicher. → Kaufe den Yes-Token auf Poly.</div>
+    <div style="font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Aktions-Badges erklärt</div>
+    <div style="display:grid;gap:8px">
+      <div style="background:#0a1a0a;border:1px solid #3fb95030;border-radius:10px;padding:11px 14px;display:grid;grid-template-columns:90px 1fr;gap:8px;align-items:center">
+        <span style="background:#3fb95015;border:1px solid #3fb95040;color:#3fb950;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-align:center">▲ BUY</span>
+        <span style="font-size:11px;color:#8b9ab0;line-height:1.6">Gap ≥5pp · T1/T2 Liga · Poly-Preis 15–85% · Spiel noch offen. <strong style="color:#e8edf3">Kaufen auf polymarket.com (🔗).</strong></span>
       </div>
-      <div>
-        <span style="color:#f85149;font-weight:700">BUY NO ▼</span>
-        <div style="color:#8b9ab0;margin-top:4px;line-height:1.6">Bookie-Quote länger geworden (Implied gefallen) = Profis haben die Gegenseite gekauft. Outcome ist jetzt unwahrscheinlicher. → Kaufe den No-Token (oder fade die Position).</div>
+      <div style="background:#141b22;border:1px solid #e3b34125;border-radius:10px;padding:11px 14px;display:grid;grid-template-columns:90px 1fr;gap:8px;align-items:center">
+        <span style="background:#e3b34115;border:1px solid #e3b34140;color:#e3b341;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-align:center">👁 WATCH</span>
+        <span style="font-size:11px;color:#8b9ab0;line-height:1.6">Gap 2–4pp. Etwas da — im Auge behalten. Wenn Gap wächst → wird zu BUY.</span>
       </div>
-    </div>
-  </div>
-
-  <!-- Ligen & Liquiditäts-Tier -->
-  <div style="margin-bottom:20px">
-    <div style="font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Ligen & Liquiditäts-Tier</div>
-    <div style="background:#141b22;border:1px solid #1e2d3d;border-radius:10px;padding:12px 16px;font-size:11px;color:#8b9ab0;line-height:1.8">
-      <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 16px">
-        <span style="color:#3fb950;font-weight:700">T1 — Liquid</span><span>Premier League, Bundesliga, Serie A, La Liga, Ligue 1 — Größte Poly-Märkte, engster Spread, schnellste Repricing.</span>
-        <span style="color:#e3b341;font-weight:700">T2 — Mittel</span><span>Eredivisie, Primeira Liga, 2. Bundesliga, Championship — Mittelgroße Märkte, 1–3pp Spread normal.</span>
-        <span style="color:#f85149;font-weight:700">T3 — Dünn</span><span>Süper Lig, Scottish Premiership — Kleinste Märkte, höchster Slippage-Risiko bei &gt;100 USDC.</span>
+      <div style="background:#141b22;border:1px solid #f8514920;border-radius:10px;padding:11px 14px;display:grid;grid-template-columns:90px 1fr;gap:8px;align-items:center">
+        <span style="background:#f8514915;border:1px solid #f8514935;color:#f85149;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-align:center">▽ SKIP</span>
+        <span style="font-size:11px;color:#8b9ab0;line-height:1.6">Poly ist teurer als Pinnacle. Kein Vorteil — eher short gehen (NO Token) oder nichts tun.</span>
+      </div>
+      <div style="background:#141b22;border:1px solid #e3b34120;border-radius:10px;padding:11px 14px;display:grid;grid-template-columns:90px 1fr;gap:8px;align-items:center">
+        <span style="background:#e3b34110;border:1px solid #e3b34140;color:#e3b341;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-align:center">⚠ PRÜFEN</span>
+        <span style="font-size:11px;color:#8b9ab0;line-height:1.6">Gap &gt;20pp. Wahrscheinlich falsches Contract-Matching — kein echter Trade. Standardmäßig ausgeblendet.</span>
       </div>
     </div>
   </div>
 
-  <!-- Kostenstruktur & Break-Even -->
+  <!-- Kosten & Break-Even kompakt -->
   <div style="margin-bottom:20px">
     <div style="font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Kosten & Break-Even</div>
     <div style="background:#141b22;border:1px solid #1e2d3d;border-radius:10px;padding:12px 16px;font-size:11px;color:#8b9ab0;line-height:1.8">
       <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 16px">
-        <span style="color:#e8edf3;font-weight:600">Bid-Ask Spread</span><span>1–3pp auf Poly (je nach Markt). Größter Kostenfaktor.</span>
+        <span style="color:#e8edf3;font-weight:600">Bid-Ask Spread</span><span>1–3pp auf Poly. Größter Kostenfaktor — deshalb erst ab Gap ≥5pp kaufen.</span>
         <span style="color:#e8edf3;font-weight:600">Slippage</span><span>~0.5pp bei Market-Orders. Limit-Orders auf Best-Bid verwenden.</span>
         <span style="color:#e8edf3;font-weight:600">Gas-Kosten</span><span>~0.01–0.05 USDC/Trade auf Polygon. Vernachlässigbar.</span>
-        <span style="color:#00d4a1;font-weight:700">Break-Even</span><span><strong style="color:#00d4a1">≥5pp Poly-Bewegung</strong> nötig für Profit nach allen Kosten. Unsere Signale (≥4pp Gap) sind knapp im profitablen Bereich. SHARP ≥8pp klar profitabel.</span>
+        <span style="color:#00d4a1;font-weight:700">Break-Even</span><span>Poly muss sich um <strong style="color:#00d4a1">≥5pp</strong> bewegen für Profit nach Kosten. Gap ≥5pp → BUY Schwelle passt genau.</span>
       </div>
     </div>
   </div>
 
-  <!-- Was wir noch verbessern können -->
+  <!-- Limitierungen -->
   <div>
-    <div style="font-size:11px;font-weight:700;color:#e3b341;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">⚠ Bekannte Limitierungen</div>
+    <div style="font-size:11px;font-weight:700;color:#e3b341;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">⚠ Aktuelle Einschränkungen</div>
     <div style="background:#141b22;border:1px solid #e3b34120;border-radius:10px;padding:12px 16px;font-size:11px;color:#8b9ab0;line-height:1.8">
       <div style="display:grid;gap:6px">
-        <div><span style="color:#3fb950;font-weight:600">✓ Verdächtige Gaps gefiltert</span> — Gaps &gt;20pp werden als "⚠ PRÜFEN" markiert und standardmäßig ausgeblendet. Sie entstehen fast immer durch falsches Contract-Matching, nicht durch echte Chancen.</div>
-        <div><span style="color:#e3b341;font-weight:600">Poly-Delta = 0 / P&amp;L = 0</span> — Solange nur 1 Snapshot existiert ist Open = Current. Delta und P&amp;L bauen sich über Zeit auf (ab ~3 Tagen aussagekräftig).</div>
-        <div><span style="color:#e3b341;font-weight:600">Over/Under und BTTS ohne Pinnacle-Vergleich</span> — BUY/WATCH nur für 1X2 + Over 2.5 (haben pinn_fair Key). Andere Märkte: nur Poly-Tracking ohne Gap-Berechnung.</div>
-        <div><span style="color:#e3b341;font-weight:600">Kein Exit-Signal</span> — Kein automatischer "Jetzt verkaufen"-Trigger. Geplant: Exit wenn Gap &lt;1pp oder Poly-Delta ≥ 80% der Bookie-Bewegung.</div>
-        <div><span style="color:#e3b341;font-weight:600">Liquiditäts-Tier ist statisch</span> — T1/T2/T3 nach Liga hardcodiert, kein live Poly-Volume. T3 Ligen (TUR, SCO) erhalten kein BUY Signal.</div>
+        <div><span style="color:#e3b341;font-weight:600">Pinnacle-Vergleich nur für 1X2 + Over 2.5</span> — Andere Märkte (BTTS, Over 1.5, Corners) haben keinen pinn_fair Key → kein BUY Signal möglich, nur Poly-Tracking.</div>
+        <div><span style="color:#e3b341;font-weight:600">Kein Exit-Signal</span> — Aktuell kein automatischer "Jetzt verkaufen"-Trigger. Manuell: verkaufen wenn Gap &lt;1pp oder Poly-Delta ≥80% der initialen Bookie-Bewegung.</div>
+        <div><span style="color:#e3b341;font-weight:600">Liquidity Tier ist statisch</span> — T1/T2/T3 nach Liga, kein live Volume-Check. T3 Ligen (TUR, SCO) bekommen kein BUY Signal da zu dünn.</div>
+        <div><span style="color:#e3b341;font-weight:600">P&L erst ab 3+ Tagen aussagekräftig</span> — Open = Current solange nur 1 Snapshot. Delta und Sim. P&L bauen sich über Zeit auf.</div>
       </div>
     </div>
   </div>
