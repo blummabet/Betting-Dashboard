@@ -1,0 +1,54 @@
+name: 📤 Telegram senden
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Was senden?'
+        required: true
+        default: 'picks'
+        type: choice
+        options:
+          - picks
+          - watch
+          - recap
+
+permissions:
+  contents: write
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
+      - name: 📤 Telegram senden
+        run: python telegram_bot.py
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: '-1003819239615'
+          TG_MODE: ${{ inputs.mode }}
+
+      - name: 💾 telegram_sent.json pushen
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add telegram_sent.json
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen."
+          else
+            git commit -m "📤 Telegram gesendet ($(date +'%d.%m.%Y %H:%M') UTC)"
+            git pull origin main --no-rebase -X ours
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
