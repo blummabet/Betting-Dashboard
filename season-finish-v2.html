@@ -6195,6 +6195,7 @@ async function loadPreMatchData() {
     if (cached && Date.now() - cached.ts < PM_TTL && Object.keys(cached.data).length > 0) {
       window._preMatchData   = cached.data;
       window._preMatchLoaded = true;
+      window._pmTs           = cached.ts || Date.now();   // expose for Sharp Radar
       _injectPreMatchAndRerender();
       // Asynchronously fill in referee stats + odds that were null when the cache was written
       // (e.g. because the API was down at load time). Sub-caches prevent redundant API calls.
@@ -6250,6 +6251,7 @@ async function loadPreMatchData() {
         if (Object.keys(_jResult).length > 0) {
           window._preMatchData   = _jResult;
           window._preMatchLoaded = true;
+          window._pmTs           = _jData.ts || Date.now();   // expose for Sharp Radar freshness display
           try { localStorage.setItem(cacheKey, JSON.stringify({ ts: _jData.ts || Date.now(), data: _jResult })); } catch(e) {}
           _injectPreMatchAndRerender();
           console.log(`[PreMatch] prematch-data.json: ${Object.keys(_jResult).length} Spiele gematcht`);

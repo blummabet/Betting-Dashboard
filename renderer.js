@@ -1673,36 +1673,49 @@ function renderSharpRadar() {
         }
 
         // ── CLV / Opening-Drift ─────────────────────────────────────────────
-        // Before kickoff: "Opening-Drift" — our bet vs. today's opening snapshot
-        //   Measures: did the market move our direction since we first saw it?
+        // Before kickoff: "Opening-Drift" — how much did the market move since opening?
+        //   Positive (↘ shortened) = sharp money confirms our pick direction = GREEN
+        //   Negative (↗ drifted)   = market moved against us = RED
         // After kickoff: "CLV" — our bet odds vs. the actual closing line
-        //   Measures: was our bet price better than the closing market? (+pp = yes)
+        //   Positive = we got BETTER odds than closing = CLV+ = GREEN
+        //   Negative = closing was better = we paid too much = RED
+        // Formula for both: (1/closingOrOpening - 1/ourOdds) * 100
+        //   Positive when the market probability INCREASED after our snapshot/bet — i.e. we beat it.
         let clvLabel = '—', clvColor = '#8b949e', clvTitle = '';
-        const _okey = mktL.includes('heimsieg') ? 'hw' : mktL.includes('auswärtssieg') ? 'aw'
-          : mktL.includes('unentschieden') ? 'dr' : mktL.includes('over 2.5') ? 'o25'
-          : mktL.includes('under 2.5') ? 'u25' : null;
+        // Market key lookup — expanded to cover all pick types
+        const _okey = mktL.includes('heimsieg') || mktL.startsWith('ah heim') || mktL.includes('dnb: heim') ? 'hw'
+          : mktL.includes('auswärtssieg') || mktL.startsWith('ah ausw') || mktL.includes('dnb: ausw') ? 'aw'
+          : mktL.includes('unentschieden') || mktL.includes('remis') ? 'dr'
+          : (mktL.includes('over 2.5') || mktL.includes('über 2.5') || mktL.includes('o2.5')) ? 'o25'
+          : (mktL.includes('under 2.5') || mktL.includes('unter 2.5') || mktL.includes('u2.5')) ? 'u25'
+          : (mktL.includes('over 3.5') || mktL.includes('über 3.5')) ? 'o35'
+          : (mktL.includes('under 3.5') || mktL.includes('unter 3.5')) ? 'u35'
+          : (mktL.includes('beide teams treffen') || mktL.includes('btts') || mktL.includes('gg')) ? 'bttsY'
+          : (mktL.includes('doppelte chance') && (mktL.includes('1x') || mktL.includes('heim'))) ? 'hw'  // DC 1X: proxy via home
+          : (mktL.includes('doppelte chance') && (mktL.includes('x2') || mktL.includes('ausw'))) ? 'aw'  // DC X2: proxy via away
+          : null;
 
         if (matchKicked && oddsClosing && oddsNum && _okey) {
-          // Real CLV: compare our bet price to the closing line
+          // Real CLV: (1/closingOdds - 1/ourOdds) * 100
+          // Positive = closing shorter than our bet = we beat the closing line = CLV+
           const _closingOdds = parseFloat(oddsClosing[_okey]);
           if (_closingOdds && _closingOdds > 1) {
-            const ppCLV = Math.round(((1/oddsNum) - (1/_closingOdds)) * 100);
-            // Positive CLV: we got better odds than closing → beating the market
-            // Negative CLV: market closed better than what we took → we paid too much
-            clvLabel = ppCLV > 0 ? `CLV +${ppCLV}pp ✓` : `CLV ${ppCLV}pp`;
+            const ppCLV = Math.round(((1/_closingOdds) - (1/oddsNum)) * 100);
+            clvLabel = ppCLV >= 3 ? `CLV +${ppCLV}pp ✓` : ppCLV > 0 ? `CLV +${ppCLV}pp` : `CLV ${ppCLV}pp`;
             clvColor = ppCLV >= 3 ? '#3fb950' : ppCLV >= 0 ? '#a8d48a' : '#f85149';
             clvTitle = `Unsere Quote: ${oddsNum.toFixed(2)} | Closing-Quote: ${_closingOdds.toFixed(2)}`;
           }
         } else if (oddsOpen && oddsNum && _okey) {
-          // Pre-kickoff: Opening-Drift (how much has the market moved since opening snapshot)
+          // Pre-kickoff Opening-Drift: (1/openingOdds - 1/currentOdds) * 100
+          // Positive = market shortened since opening (steam toward our pick) = GREEN
+          // Negative = market drifted against us since opening = RED
           const _oo = parseFloat(oddsOpen[_okey]);
           const ageLabel = _openAge(openTs);
           if (_oo && _oo > 1 && Math.abs(_oo - oddsNum) > 0.01) {
-            const ppDrift = Math.round(((1/oddsNum) - (1/_oo)) * 100);
-            // ppDrift < 0 means current odds are shorter (market shortened) = more steam
-            // ppDrift > 0 means current odds are longer (drifted) = less steam
-            clvLabel = ppDrift < 0 ? `Drift ${ppDrift}pp ↘` : ppDrift > 0 ? `Drift +${ppDrift}pp ↗` : 'Stabil';
-            clvColor = ppDrift < -2 ? '#3fb950' : ppDrift > 2 ? '#f85149' : '#8b949e';
+            const ppDrift = Math.round(((1/_oo) - (1/oddsNum)) * 100);
+            // Positive: opening was lower implied prob → market now shorter → sharp confirms
+            clvLabel = ppDrift >= 3 ? `↘ bestätigt +${ppDrift}pp` : ppDrift <= -3 ? `↗ driftet ${ppDrift}pp` : 'Stabil';
+            clvColor = ppDrift >= 3 ? '#3fb950' : ppDrift <= -3 ? '#f85149' : '#8b949e';
             clvTitle = ageLabel ? `Opening-Snapshot: ${ageLabel}` : '';
           } else if (_oo) {
             clvLabel = 'Stabil'; clvColor = '#8b949e';
@@ -1801,7 +1814,18 @@ function renderSharpRadar() {
 
     <div style="margin-bottom:22px;padding:18px 20px 14px;background:linear-gradient(135deg,rgba(0,212,161,0.07),rgba(88,166,255,0.04));border:1px solid rgba(0,212,161,0.18);border-radius:14px;">
       <div style="font-size:18px;font-weight:900;margin-bottom:5px;">📡 Sharp Money Radar</div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.55;">Linienbewegungen im Markt · alle 7 Tage · CLV-Orientierung für unsere Picks</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.55;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <span>Linienbewegungen im Markt · alle 7 Tage · CLV-Orientierung für unsere Picks</span>
+        ${(() => {
+          const _ts = window._pmTs;
+          if (!_ts) return '<span style="color:#8b949e;font-size:11px;">⏱ Daten werden geladen…</span>';
+          const diffM = Math.round((Date.now() - _ts) / 60000);
+          const ago = diffM < 2 ? 'gerade eben' : diffM < 60 ? `vor ${diffM} Min` : `vor ${Math.floor(diffM/60)} Std`;
+          const col = diffM < 90 ? '#3fb950' : diffM < 360 ? '#e3b341' : '#f85149';
+          const isoFmt = new Date(_ts).toLocaleString('de-AT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+          return `<span style="font-size:11px;font-weight:700;color:${col};background:rgba(0,0,0,0.25);border:1px solid ${col}40;border-radius:5px;padding:2px 8px;" title="Prematch-Daten: ${isoFmt}">⏱ ${ago} aktualisiert</span>`;
+        })()}
+      </div>
     </div>
 
     <div class="section-label" style="margin-bottom:10px;">📊 Marktübersicht · diese Woche</div>
