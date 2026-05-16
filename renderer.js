@@ -1740,25 +1740,52 @@ function renderSharpRadar() {
   };
   const _mvColor = pp => pp >= 8 ? '#f85149' : pp >= 5 ? '#e3b341' : '#3fb950';
 
+  // ── Helpers ──────────────────────────────────────────────────────────────
+  // Whether the match has started (kickoff time reached, regardless of 100-min over check)
+  const _isKickedOff = (m) => {
+    if (!m.date || !m.time) return false;
+    try {
+      const [d, mo, y] = m.date.split('.');
+      const [h, min]   = m.time.split(':');
+      return Date.now() >= new Date(+y, +mo - 1, +d, +h, +min, 0).getTime();
+    } catch { return false; }
+  };
+  // Age of opening snapshot in human-readable form
+  const _openAge = (ts) => {
+    if (!ts) return null;
+    const diffH = Math.round((Date.now() - new Date(ts).getTime()) / 3600000);
+    if (diffH < 2)  return '<2h alt';
+    if (diffH < 24) return `${diffH}h alt`;
+    const diffD = Math.floor(diffH / 24);
+    return `${diffD}d alt`;
+  };
+
   // ── Collect ALL fixtures within 7 days across all leagues ─────────────────
   const allFixtures = [];
   for (const [lk, L] of Object.entries(LEAGUES)) {
     for (const m of (L.fixtures || [])) {
       if (!isWithin7Days(m.date)) continue;
-      const pmKey       = `${m.home}|${m.away}`;
-      const pm          = window._preMatchData?.[pmKey];
-      const oddsOpen    = pm?.odds_open || null;
-      const oddsCurrent = (typeof findOdds === 'function') ? findOdds(lk, m.home, m.away) : null;
-      const mvRows      = (oddsOpen && oddsCurrent) ? computeLineMovement(oddsOpen, oddsCurrent) : null;
-      const maxMov      = mvRows ? Math.max(...mvRows.map(r => Math.abs(r.ppShift))) : 0;
-      allFixtures.push({ m, lk, L, pm, oddsOpen, oddsCurrent, mvRows, maxMov });
+      const pmKey        = `${m.home}|${m.away}`;
+      const pm           = window._preMatchData?.[pmKey];
+      const oddsOpen     = pm?.odds_open    || null;
+      const oddsClosing  = pm?.odds_closing || null;
+      const openTs       = pm?.odds_open_ts || null;
+      const kicked       = _isKickedOff(m);
+      // For kicked-off games use closing snapshot; for upcoming games use live odds
+      const oddsRef      = kicked ? oddsClosing : ((typeof findOdds === 'function') ? findOdds(lk, m.home, m.away) : null);
+      const oddsCurrent  = kicked ? ((typeof findOdds === 'function') ? findOdds(lk, m.home, m.away) : null) : oddsRef;
+      const mvRows       = (oddsOpen && oddsRef) ? computeLineMovement(oddsOpen, oddsRef) : null;
+      const maxMov       = mvRows ? Math.max(...mvRows.map(r => Math.abs(r.ppShift))) : 0;
+      allFixtures.push({ m, lk, L, pm, oddsOpen, oddsClosing, oddsCurrent, oddsRef, openTs, kicked, mvRows, maxMov });
     }
   }
 
   // ── Section 1: KPIs (full week) ───────────────────────────────────────────
-  const withOdds     = allFixtures.filter(f => f.oddsCurrent != null);
-  const withMovement = allFixtures.filter(f => f.mvRows != null);
-  const biggestMover = [...allFixtures].sort((a,b) => b.maxMov - a.maxMov)[0];
+  const upcoming      = allFixtures.filter(f => !f.kicked);
+  const withOdds      = allFixtures.filter(f => f.oddsCurrent != null);
+  const withMovement  = allFixtures.filter(f => f.mvRows != null);
+  const closedWithMv  = allFixtures.filter(f => f.kicked && f.mvRows != null);
+  const biggestMover  = [...allFixtures].sort((a,b) => b.maxMov - a.maxMov)[0];
 
   let vigSum = 0, vigCount = 0;
   for (const {oddsCurrent: o} of withOdds) {
@@ -1774,10 +1801,10 @@ function renderSharpRadar() {
 
   const kpiHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px;">
     ${[
-      ['📅', 'Spiele (7 Tage)',   allFixtures.length + ' gesamt'],
-      ['📊', 'Mit Live-Quotes',   withOdds.length],
-      ['📡', 'Mit Opening-Snap',  withMovement.length + (withMovement.length < 10 ? ' ⚡ nur mit Opening' : '')],
-      ['📉', 'Ø Bookie-Marge',   avgVig !== '—' ? avgVig + '%' : '—'],
+      ['📅', 'Spiele gesamt',     allFixtures.length + ' (7 Tage)'],
+      ['⏳', 'Bevorstehend',      upcoming.length + ' offen'],
+      ['📡', 'Mit Linienbeweg.',  withMovement.length + ' Spiele'],
+      ['🔒', 'Closing-Daten',     closedWithMv.length + ' gespielt'],
       ['⚡', 'Größter Mover',     bigMoverLabel],
     ].map(([ic, lbl, val]) => `<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 15px;">
       <div style="font-size:20px;margin-bottom:5px;">${ic}</div>
@@ -1786,33 +1813,42 @@ function renderSharpRadar() {
     </div>`).join('')}
   </div>`;
 
-  // ── Section 2: Biggest Movers (all week, with date + CLV label) ───────────
+  // ── Section 2: Biggest Movers (all week, with date + movement type label) ──
   const movers = allFixtures
     .filter(f => f.mvRows && f.maxMov >= 3)
     .sort((a,b) => b.maxMov - a.maxMov)
     .slice(0, 20);
 
-  const moversHtml = movers.length ? movers.map(({m, lk, L, mvRows, maxMov}) => {
+  const moversHtml = movers.length ? movers.map(({m, lk, L, mvRows, maxMov, kicked, openTs, oddsClosing}) => {
     const maxColor  = _mvColor(maxMov);
     const dateLabel = _fmtDate(m.date);
     const timeLabel = m.time ? ` · ${m.time}` : '';
     const isT       = _isToday(m.date);
 
+    // Label: show if we're comparing to closing or live odds, and opening age
+    const ageLabel  = _openAge(openTs);
+    const snapLabel = kicked
+      ? `<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:rgba(88,166,255,0.12);color:#58a6ff;border:1px solid #58a6ff30;">Opening→Closing</span>`
+      : `<span style="font-size:9px;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,0.05);color:#8b949e;border:1px solid #30363d;">Opening→Aktuell</span>`;
+    const ageBadge  = ageLabel
+      ? `<span style="font-size:9px;color:${ageLabel.includes('<2h') ? '#f85149' : ageLabel.includes('1d') || ageLabel.includes('2d') ? '#e3b341' : '#6b7a8d'};padding:1px 5px;" title="Opening-Snapshot Alter">⏱ ${ageLabel}</span>`
+      : '';
+
     const rowHtml = mvRows.map(row => {
-      // CLV direction: ppShift > 0 means implied prob went UP = odds shortened = MARKET BACKED this outcome
-      // For a bettor holding this outcome: positive ppShift = CLV+ (market confirmed our side)
       const backed     = row.ppShift > 0;
       const color      = backed ? '#3fb950' : '#f85149';
       const arrow      = row.oddCurr < row.oddOpen ? '↘' : '↗';
-      const clvBadge   = Math.abs(row.ppShift) >= 3
-        ? `<span style="font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;background:${backed ? 'rgba(63,185,80,0.15)' : 'rgba(248,81,73,0.12)'};color:${color};border:1px solid ${color}40;">${backed ? 'CLV+' : 'CLV−'}</span>`
+      // After kickoff: "Linienbew." is actually Opening→Closing = real closing-line movement
+      // Before kickoff: it's Opening→Current (line drift, NOT final CLV)
+      const movBadge   = Math.abs(row.ppShift) >= 3
+        ? `<span style="font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;background:${backed ? 'rgba(63,185,80,0.15)' : 'rgba(248,81,73,0.12)'};color:${color};border:1px solid ${color}40;">${backed ? '↑ Markt' : '↓ Markt'}</span>`
         : '';
       return `<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.04);border:1px solid #30363d;border-radius:5px;padding:2px 7px;font-size:11px;white-space:nowrap;">
         <span style="color:#8b949e;font-weight:700;">${row.label}</span>
         <span style="color:#8b949e;font-size:10px;">${row.oddOpen.toFixed(2)}→</span>
         <span style="color:${color};font-weight:700;">${row.oddCurr.toFixed(2)} ${arrow}</span>
         <span style="color:${color};font-size:10px;">${row.ppShift > 0 ? '+' : ''}${row.ppShift}pp</span>
-        ${clvBadge}
+        ${movBadge}
       </span>`;
     }).join('');
 
@@ -1820,7 +1856,8 @@ function renderSharpRadar() {
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
         <span style="font-size:15px;">${L.flag}</span>
         <span style="font-weight:700;font-size:13px;">${m.home} <span style="color:var(--muted)">vs</span> ${m.away}</span>
-        <span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:8px;background:${isT ? 'rgba(0,212,161,0.12)' : 'rgba(255,255,255,0.05)'};color:${isT ? '#00d4a1' : '#8b949e'};border:1px solid ${isT ? 'rgba(0,212,161,0.3)' : '#30363d'};">${isT ? '📅 Heute' : dateLabel}${timeLabel}</span>
+        <span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:8px;background:${isT ? 'rgba(0,212,161,0.12)' : 'rgba(255,255,255,0.05)'};color:${isT ? '#00d4a1' : '#8b949e'};border:1px solid ${isT ? 'rgba(0,212,161,0.3)' : '#30363d'};">${isT ? '📅 Heute' : (kicked ? '🔒 ' : '') + dateLabel}${timeLabel}</span>
+        ${snapLabel}${ageBadge}
         <span style="margin-left:auto;background:rgba(255,255,255,0.05);border:1px solid ${maxColor}40;border-radius:12px;padding:2px 10px;font-size:11px;font-weight:800;color:${maxColor};">⚡ ${maxMov}pp</span>
       </div>
       <div style="display:flex;gap:5px;flex-wrap:wrap;">${rowHtml}</div>
@@ -1837,11 +1874,17 @@ function renderSharpRadar() {
   } else {
     const pickRows = [];
     for (const buf of todayPicks) {
-      const pmKey       = `${buf.home}|${buf.away}`;
-      const pm          = window._preMatchData?.[pmKey];
-      const oddsOpen    = pm?.odds_open || null;
-      const oddsCurrent = (typeof findOdds === 'function') ? findOdds(buf.league, buf.home, buf.away) : null;
-      const mvRows      = (oddsOpen && oddsCurrent) ? computeLineMovement(oddsOpen, oddsCurrent) : null;
+      const pmKey        = `${buf.home}|${buf.away}`;
+      const pm           = window._preMatchData?.[pmKey];
+      const oddsOpen     = pm?.odds_open    || null;
+      const oddsClosing  = pm?.odds_closing || null;
+      const oddsCurrent  = (typeof findOdds === 'function') ? findOdds(buf.league, buf.home, buf.away) : null;
+      const openTs       = pm?.odds_open_ts || null;
+      // For movement: use closing if game kicked off, live odds otherwise
+      // buf.date is German "DD.MM.YYYY", buf.time is "HH:MM" → use isMatchOver()
+      const matchKicked  = buf.date && buf.time ? isMatchOver(buf.date, buf.time) : false;
+      const oddsRef      = matchKicked ? oddsClosing : oddsCurrent;
+      const mvRows       = (oddsOpen && oddsRef) ? computeLineMovement(oddsOpen, oddsRef) : null;
 
       for (const pick of buf.picks) {
         const mktL      = (pick.market || '').toLowerCase();
@@ -1866,21 +1909,44 @@ function renderSharpRadar() {
           );
         }
 
-        // CLV: opening → current odds drift for our pick's exact market
-        let clvLabel = '—', clvColor = '#8b949e';
-        if (oddsOpen && oddsNum) {
-          const _okey = mktL.includes('heimsieg') ? 'hw' : mktL.includes('auswärtssieg') ? 'aw'
-            : mktL.includes('unentschieden') ? 'dr' : mktL.includes('over 2.5') ? 'o25'
-            : mktL.includes('under 2.5') ? 'u25' : null;
-          const _oo = _okey ? parseFloat(oddsOpen[_okey]) : null;
+        // ── CLV / Opening-Drift ─────────────────────────────────────────────
+        // Before kickoff: "Opening-Drift" — our bet vs. today's opening snapshot
+        //   Measures: did the market move our direction since we first saw it?
+        // After kickoff: "CLV" — our bet odds vs. the actual closing line
+        //   Measures: was our bet price better than the closing market? (+pp = yes)
+        let clvLabel = '—', clvColor = '#8b949e', clvTitle = '';
+        const _okey = mktL.includes('heimsieg') ? 'hw' : mktL.includes('auswärtssieg') ? 'aw'
+          : mktL.includes('unentschieden') ? 'dr' : mktL.includes('over 2.5') ? 'o25'
+          : mktL.includes('under 2.5') ? 'u25' : null;
+
+        if (matchKicked && oddsClosing && oddsNum && _okey) {
+          // Real CLV: compare our bet price to the closing line
+          const _closingOdds = parseFloat(oddsClosing[_okey]);
+          if (_closingOdds && _closingOdds > 1) {
+            const ppCLV = Math.round(((1/oddsNum) - (1/_closingOdds)) * 100);
+            // Positive CLV: we got better odds than closing → beating the market
+            // Negative CLV: market closed better than what we took → we paid too much
+            clvLabel = ppCLV > 0 ? `CLV +${ppCLV}pp ✓` : `CLV ${ppCLV}pp`;
+            clvColor = ppCLV >= 3 ? '#3fb950' : ppCLV >= 0 ? '#a8d48a' : '#f85149';
+            clvTitle = `Unsere Quote: ${oddsNum.toFixed(2)} | Closing-Quote: ${_closingOdds.toFixed(2)}`;
+          }
+        } else if (oddsOpen && oddsNum && _okey) {
+          // Pre-kickoff: Opening-Drift (how much has the market moved since opening snapshot)
+          const _oo = parseFloat(oddsOpen[_okey]);
+          const ageLabel = _openAge(openTs);
           if (_oo && _oo > 1 && Math.abs(_oo - oddsNum) > 0.01) {
             const ppDrift = Math.round(((1/oddsNum) - (1/_oo)) * 100);
-            clvLabel = ppDrift > 0 ? `+${ppDrift}pp CLV+` : `${ppDrift}pp CLV−`;
-            clvColor = ppDrift > 0 ? '#3fb950' : '#f85149';
+            // ppDrift < 0 means current odds are shorter (market shortened) = more steam
+            // ppDrift > 0 means current odds are longer (drifted) = less steam
+            clvLabel = ppDrift < 0 ? `Drift ${ppDrift}pp ↘` : ppDrift > 0 ? `Drift +${ppDrift}pp ↗` : 'Stabil';
+            clvColor = ppDrift < -2 ? '#3fb950' : ppDrift > 2 ? '#f85149' : '#8b949e';
+            clvTitle = ageLabel ? `Opening-Snapshot: ${ageLabel}` : '';
           } else if (_oo) {
             clvLabel = 'Stabil'; clvColor = '#8b949e';
+            clvTitle = 'Keine Linienbewegung seit Opening';
           }
         }
+        const clvSectionLabel = matchKicked ? 'CLV' : 'Opening-Drift';
 
         // Model edge
         let edgeLabel = '—', edgeColor = '#8b949e';
@@ -1890,15 +1956,16 @@ function renderSharpRadar() {
           edgeColor = ep >= 7 ? '#3fb950' : ep >= 0 ? '#e3b341' : '#f85149';
         }
 
-        // Sharp alignment
+        // Sharp alignment: did the market move our way?
         let sharpLabel = '—', sharpColor = '#8b949e', sharpBg = 'rgba(255,255,255,0.03)';
         if (pickMv) {
           const pp  = Math.abs(pickMv.ppShift);
-          const pos = pickMv.ppShift > 0;
-          if (pos && pp >= 5)   { sharpLabel = `✅ Bestätigt ${pp}pp`;  sharpColor = '#3fb950'; sharpBg = 'rgba(63,185,80,0.07)'; }
-          else if (pos)          { sharpLabel = `↗ Tendenz ${pp}pp`;    sharpColor = '#3fb950'; }
-          else if (pp >= 8)      { sharpLabel = `⚠ Contra ${pp}pp`;    sharpColor = '#f85149'; sharpBg = 'rgba(248,81,73,0.07)'; }
-          else                   { sharpLabel = `↘ Gegen ${pp}pp`;     sharpColor = '#e3b341'; }
+          const pos = pickMv.ppShift > 0;  // positive = implied prob went up = market backed this outcome
+          const closedSuffix = matchKicked ? ' (Closing)' : '';
+          if (pos && pp >= 5)   { sharpLabel = `✅ Bestätigt ${pp}pp${closedSuffix}`;  sharpColor = '#3fb950'; sharpBg = 'rgba(63,185,80,0.07)'; }
+          else if (pos)          { sharpLabel = `↗ Tendenz ${pp}pp${closedSuffix}`;    sharpColor = '#3fb950'; }
+          else if (pp >= 8)      { sharpLabel = `⚠ Contra ${pp}pp${closedSuffix}`;    sharpColor = '#f85149'; sharpBg = 'rgba(248,81,73,0.07)'; }
+          else                   { sharpLabel = `↘ Gegen ${pp}pp${closedSuffix}`;     sharpColor = '#e3b341'; }
         } else if (!mvRows) {
           sharpLabel = 'Kein Opening';
         } else {
@@ -1911,16 +1978,17 @@ function renderSharpRadar() {
             <span style="font-size:11px;color:var(--muted);">${buf.home} vs ${buf.away}</span>
             <span style="font-weight:700;font-size:13px;">${pick.market}</span>
             ${oddsNum ? `<span style="color:#58a6ff;font-weight:700;font-size:12px;">@ ${oddsNum.toFixed(2)}</span>` : ''}
+            ${matchKicked ? `<span style="font-size:10px;padding:1px 5px;border-radius:4px;background:rgba(88,166,255,0.12);color:#58a6ff;border:1px solid #58a6ff30;">🔒 gespielt</span>` : ''}
           </div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:11px;">
             <span style="padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.05);border:1px solid #30363d;">
               <span style="color:#8b949e;">Model Edge:</span> <span style="color:${edgeColor};font-weight:700;">${edgeLabel}</span>
             </span>
-            <span style="padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.05);border:1px solid #30363d;">
-              <span style="color:#8b949e;">CLV:</span> <span style="color:${clvColor};font-weight:700;">${clvLabel}</span>
+            <span style="padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.05);border:1px solid #30363d;" title="${clvTitle}">
+              <span style="color:#8b949e;">${clvSectionLabel}:</span> <span style="color:${clvColor};font-weight:700;">${clvLabel}</span>
             </span>
             <span style="padding:2px 8px;border-radius:5px;background:rgba(255,255,255,0.04);border:1px solid ${sharpColor}40;">
-              <span style="color:#8b949e;">Sharp:</span> <span style="color:${sharpColor};font-weight:700;">${sharpLabel}</span>
+              <span style="color:#8b949e;">Markt:</span> <span style="color:${sharpColor};font-weight:700;">${sharpLabel}</span>
             </span>
           </div>
         </div>`);
@@ -1983,11 +2051,16 @@ function renderSharpRadar() {
 
     <div class="section-label" style="margin-bottom:6px;">⚡ Größte Marktbewegungen · sortiert nach Magnitude</div>
     <div style="font-size:11px;color:var(--muted);margin-bottom:10px;padding:0 2px;">
-      Opening-Snapshots entstehen täglich beim Prematch-Fetch. Linienbewegungen sind daher typischerweise für <strong style="color:var(--text)">heute</strong> sichtbar — zukünftige Spiele erscheinen ab dem Tag davor automatisch.
+      <strong style="color:var(--text)">Opening→Aktuell</strong> für Spiele vor Anpfiff · <strong style="color:#58a6ff">Opening→Closing</strong> für bereits gespielte Spiele.
+      Opening-Snapshots entstehen beim ersten Prematch-Fetch — das Alter wird in jeder Zeile angezeigt. <span style="color:#f85149">⏱ &lt;2h alt</span> = Opening zu frisch für echte Signale.
     </div>
     <div style="margin-bottom:20px;">${moversHtml}</div>
 
-    <div class="section-label" style="margin-bottom:10px;">🎯 Unsere heutigen Picks im Sharp-Kontext</div>
+    <div class="section-label" style="margin-bottom:4px;">🎯 Unsere heutigen Picks im Sharp-Kontext</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;padding:0 2px;">
+      <strong style="color:var(--text)">Opening-Drift</strong> = Marktbewegung seit unserem ersten Snapshot (vor Kickoff).
+      <strong style="color:#58a6ff">CLV</strong> = Closing Line Value nach Kickoff: unsere Quote vs. Closing-Quote. CLV+ bedeutet wir haben besser als der Markt geschlossen.
+    </div>
     ${picksContextHtml}
 
   </div>`;

@@ -1723,10 +1723,16 @@ if (WRITE_MODE) {
             fx.odds_open    = prevOddsOpen[fx.fixtureId];
             fx.odds_open_ts = prevOddsOpenTs[fx.fixtureId] || _now;
           } else {
-            fx.odds_open    = { hw: fx.hw, dr: fx.dr, aw: fx.aw, bttsY: fx.bttsY, o25: fx.o25,
-                                dc1X_bkr: fx.dc1X_bkr, dcX2_bkr: fx.dcX2_bkr,
-                                pinn_hw_fair: fx.odds.pinn_hw_fair, pinn_dr_fair: fx.odds.pinn_dr_fair,
-                                pinn_aw_fair: fx.odds.pinn_aw_fair };
+            // First time seeing this fixture with odds → set opening snapshot
+            // Include u25/o35/u35 so computeLineMovement() can track all markets
+            fx.odds_open    = {
+              hw: fx.hw, dr: fx.dr, aw: fx.aw,
+              o25: fx.o25, u25: fx.u25, o35: fx.o35, u35: fx.u35,
+              bttsY: fx.bttsY,
+              dc1X_bkr: fx.dc1X_bkr, dcX2_bkr: fx.dcX2_bkr,
+              pinn_hw_fair: fx.odds.pinn_hw_fair, pinn_dr_fair: fx.odds.pinn_dr_fair,
+              pinn_aw_fair: fx.odds.pinn_aw_fair, pinn_o25_fair: fx.odds.pinn_o25_fair,
+            };
             fx.odds_open_ts = _now;
           }
 
@@ -1735,11 +1741,15 @@ if (WRITE_MODE) {
             // Game has started → preserve last pre-kickoff snapshot
             fx.odds_closing = prevOddsClosing[fx.fixtureId];
           } else {
-            // Pre-kickoff → update closing with latest odds
-            fx.odds_closing = { hw: fx.hw, dr: fx.dr, aw: fx.aw, bttsY: fx.bttsY, o25: fx.o25,
-                                 dc1X_bkr: fx.dc1X_bkr, dcX2_bkr: fx.dcX2_bkr,
-                                 pinn_hw_fair: fx.odds.pinn_hw_fair, pinn_dr_fair: fx.odds.pinn_dr_fair,
-                                 pinn_aw_fair: fx.odds.pinn_aw_fair };
+            // Pre-kickoff → update closing with latest odds (same full set as opening)
+            fx.odds_closing = {
+              hw: fx.hw, dr: fx.dr, aw: fx.aw,
+              o25: fx.o25, u25: fx.u25, o35: fx.o35, u35: fx.u35,
+              bttsY: fx.bttsY,
+              dc1X_bkr: fx.dc1X_bkr, dcX2_bkr: fx.dcX2_bkr,
+              pinn_hw_fair: fx.odds.pinn_hw_fair, pinn_dr_fair: fx.odds.pinn_dr_fair,
+              pinn_aw_fair: fx.odds.pinn_aw_fair, pinn_o25_fair: fx.odds.pinn_o25_fair,
+            };
           }
         }
       }
