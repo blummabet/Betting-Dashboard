@@ -370,6 +370,12 @@ function getPolyPicks(dateStr) {
           modelOdds:   p.modelOdds,
           oddsIsEst:   p.oddsIsEst || false,
           date:        fx.date,
+          // ── Verdict & context fields (mirrors renderer.js pick cards) ──────────
+          mods:        p.mods        || [],
+          saferAlt:    p.saferAlt    || null,
+          boldAlt:     p.boldAlt     || null,
+          oddsOpen:    fx.odds_open  || null,   // for market-movement signal
+          h2h:         fx.h2h        || null,   // for H2H story signal
         });
       }
     }
@@ -613,6 +619,113 @@ function _openButtonHtml(pickId) {
   </a>`;
 }
 
+// ── Verdict block (BET / ABWÄGEN / SKIP) ────────────────────────────────────
+// Mirrors the 3-signal verdict in renderer.js exactly.
+// Signal 1 — Model: model edge vs bookie (vig-adjusted)
+// Signal 2 — Market: opening → current line movement
+// Signal 3 — H2H story: head-to-head historical rates
+function _verdictBlock(pick) {
+  const oddsNum = (pick.oddsIsEst || !pick.odds) ? pick.modelOdds : pick.odds;
+
+  // Signal 1: Model edge
+  let modSig = 0, modEmoji = '⬜', modTxt = '—';
+  if (pick.modelOdds != null && pick.odds != null) {
+    const _ep = Math.round((1/pick.modelOdds - (1/pick.odds)*1.03) * 100);
+    if (_ep >= 7)       { modSig =  1; modEmoji = '🟢'; modTxt = `+${_ep}pp`; }
+    else if (_ep >= 0)  { modSig =  0; modEmoji = '🟡'; modTxt = `+${_ep}pp`; }
+    else if (_ep >= -4) { modSig = -1; modEmoji = '🟠'; modTxt = `${_ep}pp`;  }
+    else                { modSig = -1; modEmoji = '🔴'; modTxt = `${_ep}pp`;  }
+  }
+
+  // Signal 2: Market (line movement from opening odds)
+  let mktSig = 0, mktEmoji = '⬜', mktTxt = '—';
+  if (pick.oddsOpen && oddsNum != null && !pick.oddsIsEst) {
+    const _ml = (pick.market || '').toLowerCase();
+    const _ok = _ml.includes('heimsieg')     ? 'hw'
+      : _ml.includes('auswärtssieg')         ? 'aw'
+      : _ml.includes('unentschieden')        ? 'dr'
+      : _ml.includes('over 2.5')             ? 'o25'
+      : _ml.includes('under 2.5')            ? 'u25'
+      : _ml.includes('beide teams')          ? 'bttsY'
+      : null;
+    const _oo = _ok ? parseFloat(pick.oddsOpen[_ok]) : null;
+    if (_oo && _oo > 1 && Math.abs(_oo - oddsNum) > 0.01) {
+      const _ppD = Math.round(((1/oddsNum) - (1/_oo)) * 100);
+      if (Math.abs(_ppD) >= 2) {
+        if (oddsNum < _oo) { mktSig =  1; mktEmoji = '🟢'; mktTxt = `↘ ${Math.abs(_ppD)}pp`; }
+        else               { mktSig = -1; mktEmoji = '🔴'; mktTxt = `↗ ${Math.abs(_ppD)}pp`; }
+      } else { mktEmoji = '⬜'; mktTxt = 'stabil'; }
+    } else if (_oo) { mktEmoji = '⬜'; mktTxt = 'stabil'; }
+  }
+
+  // Signal 3: H2H story
+  let storySig = 0, storyEmoji = '⬜', storyTxt = '—';
+  const _h = pick.h2h;
+  if (_h && _h.games >= 3) {
+    const _n = _h.games;
+    const _hw2 = _h.homeWins||0, _dw2 = _h.draws||0, _aw2 = _h.awayWins||0;
+    const _ml2 = (pick.market || '').toLowerCase();
+    let _rate = null, _thresh = 0.5, _lbl = '';
+    if      (_ml2.includes('heimsieg'))                                     { _rate=_hw2/_n; _thresh=0.45; _lbl=`${Math.round(_rate*100)}% H`; }
+    else if (_ml2.includes('auswärtssieg'))                                 { _rate=_aw2/_n; _thresh=0.40; _lbl=`${Math.round(_rate*100)}% A`; }
+    else if (_ml2.includes('unentschieden'))                                { _rate=_dw2/_n; _thresh=0.28; _lbl=`${Math.round(_rate*100)}% X`; }
+    else if ((_ml2.includes('under')||_ml2.includes('unter'))&&_h.avgGoals!=null) {
+      const _ag=parseFloat(_h.avgGoals), _ul=parseFloat((_ml2.match(/[\d.]+/)||['2.5'])[0]);
+      if(!isNaN(_ag)&&!isNaN(_ul)){_rate=_ag<_ul?0.70:_ag<_ul+0.5?0.40:0.15;_thresh=0.5;_lbl=`Ø ${_ag} Tore`;}
+    }
+    else if ((_ml2.includes('over')||_ml2.includes('über'))&&_h.over25Rate!=null) { _rate=_h.over25Rate; _thresh=0.50; _lbl=`${Math.round(_rate*100)}% +2.5`; }
+    else if ((_ml2.includes('btts')||_ml2.includes('beide teams'))&&_h.bttsRate!=null) { _rate=_h.bttsRate; _thresh=0.45; _lbl=`BTTS ${Math.round(_rate*100)}%`; }
+    if (_rate !== null && _lbl) {
+      storyTxt = _lbl;
+      if (_rate >= _thresh + 0.10)      { storySig =  1; storyEmoji = '🟢'; }
+      else if (_rate >= _thresh - 0.10) { storySig =  0; storyEmoji = '🟡'; }
+      else                              { storySig = -1; storyEmoji = '🔴'; }
+    }
+  }
+
+  // Final verdict
+  const _score    = modSig + mktSig + storySig;
+  const _hardSkip = modSig === -1 && mktSig === -1;
+  let _vTxt, _vColor, _vBg, _vBorder;
+  if (_hardSkip || _score <= -1) {
+    _vTxt='SKIP';    _vColor='#f85149'; _vBg='rgba(248,81,73,0.10)'; _vBorder='rgba(248,81,73,0.30)';
+  } else if (_score >= 2 || (_score === 1 && modSig === 1)) {
+    _vTxt='BET';     _vColor='#3fb950'; _vBg='rgba(63,185,80,0.10)'; _vBorder='rgba(63,185,80,0.30)';
+  } else {
+    _vTxt='ABWÄGEN'; _vColor='#e3b341'; _vBg='rgba(227,179,65,0.08)'; _vBorder='rgba(227,179,65,0.25)';
+  }
+
+  return `<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;font-size:11px;line-height:1.4">
+    <span>${modEmoji} <span style="color:#8b949e">Modell</span> <strong style="color:#c9d1d9">${modTxt}</strong></span>
+    <span style="color:#30363d">·</span>
+    <span>${mktEmoji} <span style="color:#8b949e">Markt</span> <strong style="color:#c9d1d9">${mktTxt}</strong></span>
+    <span style="color:#30363d">·</span>
+    <span>${storyEmoji} <span style="color:#8b949e">H2H</span> <strong style="color:#c9d1d9">${storyTxt}</strong></span>
+    <span style="margin-left:auto;background:${_vBg};color:${_vColor};border:1px solid ${_vBorder};border-radius:6px;padding:2px 9px;font-weight:800;letter-spacing:.4px">${_vTxt}</span>
+  </div>`;
+}
+
+// SaferAlt / BoldAlt — only show when the alternative market exists on Polymarket
+function _altBlock(pick) {
+  if (pick.saferAlt && POLY_MARKETS.has(pick.saferAlt.market)) {
+    return `<div style="background:rgba(63,185,80,0.06);border:1px solid rgba(63,185,80,0.25);border-radius:6px;padding:6px 10px;margin-bottom:8px;font-size:11px">
+      <span style="color:#3fb950;font-weight:700">✓ Sicherer:</span>
+      <span style="color:#e6edf3;margin-left:4px">${pick.saferAlt.market}</span>
+      <span style="color:#8b949e;margin-left:4px">@ ~${pick.saferAlt.estOdds.toFixed(2)}</span>
+      <span style="color:#8b949e;font-size:10px;margin-left:2px">(Modell-Näherung)</span>
+    </div>`;
+  }
+  if (pick.boldAlt && POLY_MARKETS.has(pick.boldAlt.market)) {
+    return `<div style="background:rgba(227,179,65,0.06);border:1px solid rgba(227,179,65,0.25);border-radius:6px;padding:6px 10px;margin-bottom:8px;font-size:11px">
+      <span style="color:#e3b341;font-weight:700">📈 Mehr Value:</span>
+      <span style="color:#e6edf3;margin-left:4px">${pick.boldAlt.market}</span>
+      <span style="color:#8b949e;margin-left:4px">@ ~${pick.boldAlt.estOdds.toFixed(2)}</span>
+      <span style="color:#8b949e;font-size:10px;margin-left:2px">(Modell-Näherung)</span>
+    </div>`;
+  }
+  return '';
+}
+
 function _renderPickCard(pick) {
   const isSel      = _polyState.selected.has(pick.id);
   const priceData  = _polyState.prices[pick.id];
@@ -691,11 +804,17 @@ function _renderPickCard(pick) {
       ${pick.home} <span style="color:#8b949e;font-weight:400;font-size:12px">vs</span> ${pick.away}
     </div>
     <!-- Market + conf -->
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
       <span style="font-size:13px">${_marketIcon(pick.market)}</span>
       <span style="font-size:13px;font-weight:600;color:${mktColor}">${pick.market}</span>
       ${_confBadge(pick.conf)}
     </div>
+    <!-- Verdict (BET / ABWÄGEN / SKIP) — mirrors renderer.js 3-signal logic -->
+    ${_verdictBlock(pick)}
+    <!-- Mods chips -->
+    ${(pick.mods?.length) ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">${pick.mods.join('')}</div>` : ''}
+    <!-- SaferAlt / BoldAlt (only if market is on Polymarket) -->
+    ${_altBlock(pick)}
     <!-- Price grid -->
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;background:#0d1117;border-radius:8px;overflow:hidden;margin-bottom:10px">
       <div style="padding:10px;text-align:center">
