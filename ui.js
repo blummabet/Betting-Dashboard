@@ -319,7 +319,7 @@ async function initStatus() {
 // ═══════════════════════════════════════════════════════
 
 let _polyTraderData = null;
-let _polyTraderFilter = { signal: 'all', market: 'all', maxDays: 10, actionableOnly: false };
+let _polyTraderFilter = { signal: 'all', market: 'all', maxDays: 10, actionableOnly: false, hideSuspicious: true };
 let _polyTraderSort = { col: 'signal_score', dir: -1 };
 
 async function initPolyTrader() {
@@ -351,18 +351,25 @@ function renderPolyTrader(panel) {
   const updated = _polyTraderData.updated || '';
 
   // ── Summary stats ────────────────────────────────────────────────────────
-  const allSignals   = candidates.filter(c => c.signal);
-  const actionable   = candidates.filter(c => c.is_actionable);
-  const sharpCount   = candidates.filter(c => c.signal === 'SHARP' || c.signal === 'BOTH').length;
-  const clvCount     = candidates.filter(c => c.signal === 'CLV+' || c.signal === 'BOTH').length;
-  // Simulated total P&L across all candidates with obs_pnl_eur
+  const buyCount     = candidates.filter(c => c.buy_signal === 'BUY').length;
+  const watchCount   = candidates.filter(c => c.buy_signal === 'WATCH').length;
+  const suspCount    = candidates.filter(c => c.suspicious_gap).length;
   const withPnl      = candidates.filter(c => c.obs_pnl_eur != null);
   const totalPnlEur  = withPnl.length ? withPnl.reduce((s,c) => s+(c.obs_pnl_eur||0), 0) : null;
 
   // ── Filter + sort ────────────────────────────────────────────────────────
   let rows = candidates.filter(c => {
+    if (_polyTraderFilter.hideSuspicious && c.suspicious_gap) return false;
     if (_polyTraderFilter.actionableOnly && !c.is_actionable) return false;
-    if (_polyTraderFilter.signal !== 'all' && c.signal !== _polyTraderFilter.signal) return false;
+    if (_polyTraderFilter.signal !== 'all') {
+      // 'signal' filter now maps to buy_signal values too
+      if (_polyTraderFilter.signal === 'BUY'   && c.buy_signal !== 'BUY')   return false;
+      if (_polyTraderFilter.signal === 'WATCH' && c.buy_signal !== 'WATCH') return false;
+      if (_polyTraderFilter.signal === 'BOTH'  && c.signal !== 'BOTH')      return false;
+      if (_polyTraderFilter.signal === 'SHARP' && c.signal !== 'SHARP' && c.signal !== 'BOTH') return false;
+      if (_polyTraderFilter.signal === 'CLV+'  && c.signal !== 'CLV+'  && c.signal !== 'BOTH') return false;
+      if (_polyTraderFilter.signal === 'SUSP'  && !c.suspicious_gap)        return false;
+    }
     if (_polyTraderFilter.market !== 'all' && c.market !== _polyTraderFilter.market) return false;
     if ((c.daysOut||0) > _polyTraderFilter.maxDays) return false;
     return true;
@@ -377,6 +384,16 @@ function renderPolyTrader(panel) {
   const allMarkets = [...new Set(candidates.map(c => c.market))].sort();
 
   // ── Helpers ──────────────────────────────────────────────────────────────
+  function _buyBadge(buySig, suspicious) {
+    if (suspicious) return `<span style="background:#2d1e0015;border:1px solid #e3b34150;color:#e3b341;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap">⚠ PRÜFEN</span>`;
+    if (!buySig) return '<span style="font-size:10px;color:#6b7a8d">—</span>';
+    const cfg = {
+      'BUY':   { bg:'#3fb95015', bc:'#3fb95040', col:'#3fb950', lbl:'▲ BUY' },
+      'WATCH': { bg:'#e3b34115', bc:'#e3b34140', col:'#e3b341', lbl:'👁 WATCH' },
+      'SKIP':  { bg:'#f8514915', bc:'#f8514940', col:'#f85149', lbl:'▽ SKIP' },
+    }[buySig] || { bg:'#ffffff08', bc:'#ffffff15', col:'#8b9ab0', lbl: buySig };
+    return `<span style="background:${cfg.bg};border:1px solid ${cfg.bc};color:${cfg.col};font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap">${cfg.lbl}</span>`;
+  }
   function _signalBadge(sig, actionable) {
     if (!sig) return '<span style="font-size:10px;color:#6b7a8d">—</span>';
     const cfg = {
@@ -384,8 +401,7 @@ function renderPolyTrader(panel) {
       'SHARP': { bg:'#58a6ff12', bc:'#58a6ff40', col:'#58a6ff', lbl:'⚡ SHARP' },
       'CLV+':  { bg:'#a78bfa12', bc:'#a78bfa40', col:'#a78bfa', lbl:'📐 CLV+'  },
     }[sig] || { bg:'#ffffff08', bc:'#ffffff15', col:'#8b9ab0', lbl: sig };
-    const actTag = actionable ? `<span style="color:#3fb950;font-size:9px;margin-left:4px">✓ ACT</span>` : '';
-    return `<span style="background:${cfg.bg};border:1px solid ${cfg.bc};color:${cfg.col};font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap">${cfg.lbl}${actTag}</span>`;
+    return `<span style="background:${cfg.bg};border:1px solid ${cfg.bc};color:${cfg.col};font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap">${cfg.lbl}</span>`;
   }
   function _pp(pp, threshold=1) {
     if (pp == null) return '—';
@@ -430,9 +446,24 @@ function renderPolyTrader(panel) {
       : (c.daysOut||0) === 1
         ? `<span style="color:#e3b341;font-size:10px">Morgen</span>`
         : `<span style="font-size:10px;color:#6b7a8d">${c.daysOut}d</span>`;
-    const rowBg = c.is_actionable ? 'background:rgba(0,212,161,.03);border-left:2px solid #00d4a130' : '';
+
+    // Row highlighting: BUY = subtle green, suspicious = orange border
+    let rowBg = '';
+    if (c.suspicious_gap) rowBg = 'border-left:2px solid #e3b34150;opacity:.7';
+    else if (c.buy_signal === 'BUY') rowBg = 'background:rgba(63,185,80,.04);border-left:2px solid #3fb95040';
+    else if (c.buy_signal === 'WATCH') rowBg = 'background:rgba(227,179,65,.02);border-left:2px solid #e3b34125';
+
     const polyLink = c.eventUrl ? `<a href="${c.eventUrl}" target="_blank" style="color:#58a6ff;font-size:10px;margin-left:4px;opacity:.7">🔗</a>` : '';
-    const gapCol = Math.abs(c.gap_pp||0) > 4 ? '#00d4a1' : Math.abs(c.gap_pp||0) > 2 ? '#e3b341' : '#6b7a8d';
+
+    // Gap color: green = Poly underpriced (positive gap = BUY), red = overpriced
+    const gapVal = c.gap_pp;
+    const gapCol = gapVal == null ? '#6b7a8d'
+      : c.suspicious_gap ? '#e3b341'
+      : gapVal >= 5  ? '#3fb950'
+      : gapVal >= 2  ? '#a8d48a'
+      : gapVal <= -2 ? '#f85149'
+      : '#6b7a8d';
+
     const obsCol = (c.obs_pnl_pp||0) > 0 ? '#3fb950' : (c.obs_pnl_pp||0) < 0 ? '#f85149' : '#6b7a8d';
     const eurCol = (c.obs_pnl_eur||0) > 0 ? '#3fb950' : (c.obs_pnl_eur||0) < 0 ? '#f85149' : '#6b7a8d';
 
@@ -465,8 +496,8 @@ function renderPolyTrader(panel) {
       <td style="padding:9px 8px;font-size:11px;color:#8b9ab0">${c.market}</td>
       <td style="padding:9px 8px">${bookieCell}</td>
       <td style="padding:9px 8px">${polyCell}</td>
-      <td style="padding:9px 8px;text-align:center"><span style="color:${gapCol};font-weight:700">${c.gap_pp != null ? (c.gap_pp>0?'+':'')+c.gap_pp.toFixed(1)+'pp' : '—'}</span></td>
-      <td style="padding:9px 8px;text-align:center">${_dirBadge(c.trade_direction)}</td>
+      <td style="padding:9px 8px;text-align:center"><span style="color:${gapCol};font-weight:700">${gapVal != null ? (gapVal>0?'+':'')+gapVal.toFixed(1)+'pp' : '—'}${c.suspicious_gap ? ' ⚠' : ''}</span></td>
+      <td style="padding:9px 8px;text-align:center">${_buyBadge(c.buy_signal, c.suspicious_gap)}</td>
       <td style="padding:9px 8px;text-align:center">${_signalBadge(c.signal, c.is_actionable)}</td>
       <td style="padding:9px 8px">${obsCell}</td>
     </tr>`;
@@ -495,17 +526,17 @@ function renderPolyTrader(panel) {
 
 <!-- ── Summary Stats ──────────────────────────────────────── -->
 <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px">
-  <div style="background:#0f1419;border:1px solid #00d4a130;border-radius:12px;padding:14px;text-align:center">
-    <div style="font-size:26px;font-weight:800;color:#00d4a1">${actionable.length}</div>
-    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">✓ Actionable</div>
+  <div style="background:#0a1a0a;border:1px solid #3fb95040;border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="ptFilterBuy('BUY')">
+    <div style="font-size:26px;font-weight:800;color:#3fb950">${buyCount}</div>
+    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">▲ BUY Signale</div>
   </div>
-  <div style="background:#0f1419;border:1px solid #58a6ff25;border-radius:12px;padding:14px;text-align:center">
-    <div style="font-size:26px;font-weight:800;color:#58a6ff">${sharpCount}</div>
-    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">⚡ SHARP</div>
+  <div style="background:#0f1419;border:1px solid #e3b34125;border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="ptFilterBuy('WATCH')">
+    <div style="font-size:26px;font-weight:800;color:#e3b341">${watchCount}</div>
+    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">👁 WATCH</div>
   </div>
-  <div style="background:#0f1419;border:1px solid #a78bfa25;border-radius:12px;padding:14px;text-align:center">
-    <div style="font-size:26px;font-weight:800;color:#a78bfa">${clvCount}</div>
-    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">📐 CLV+</div>
+  <div style="background:#0f1419;border:1px solid #e3b34115;border-radius:12px;padding:14px;text-align:center;cursor:pointer" onclick="ptFilterBuy('SUSP')" title="Verdächtige Gaps (>20pp) — wahrscheinlich falsches Mapping">
+    <div style="font-size:26px;font-weight:800;color:#e3b34180">${suspCount}</div>
+    <div style="font-size:11px;color:#6b7a8d;margin-top:3px">⚠ Verdächtig</div>
   </div>
   <div style="background:#0f1419;border:1px solid #3fb95025;border-radius:12px;padding:14px;text-align:center">
     ${totalPnlEur != null
@@ -519,23 +550,26 @@ function renderPolyTrader(panel) {
 <!-- ── Filters ────────────────────────────────────────────── -->
 <div style="background:#0f1419;border:1px solid #1e2d3d;border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center">
   <span style="font-size:11px;color:#6b7a8d;text-transform:uppercase;letter-spacing:.5px">Filter</span>
-  <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:${_polyTraderFilter.actionableOnly?'#00d4a1':'#8b9ab0'};cursor:pointer;padding:4px 10px;border-radius:7px;border:1px solid ${_polyTraderFilter.actionableOnly?'#00d4a140':'#243040'};background:${_polyTraderFilter.actionableOnly?'#00d4a110':'transparent'}">
-    <input type="checkbox" ${_polyTraderFilter.actionableOnly?'checked':''} onchange="ptFilterActionable(this.checked)" style="accent-color:#00d4a1"> Nur Actionable
-  </label>
   <select onchange="ptFilterSignal(this.value)" style="background:#141b22;border:1px solid #243040;color:#e8edf3;border-radius:7px;padding:5px 8px;font-size:12px">
-    <option value="all" ${_polyTraderFilter.signal==='all'?'selected':''}>Alle Signale</option>
+    <option value="all"   ${_polyTraderFilter.signal==='all'  ?'selected':''}>Alle</option>
+    <option value="BUY"   ${_polyTraderFilter.signal==='BUY'  ?'selected':''}>▲ BUY</option>
+    <option value="WATCH" ${_polyTraderFilter.signal==='WATCH'?'selected':''}>👁 WATCH</option>
     <option value="BOTH"  ${_polyTraderFilter.signal==='BOTH' ?'selected':''}>★ BOTH</option>
     <option value="SHARP" ${_polyTraderFilter.signal==='SHARP'?'selected':''}>⚡ SHARP</option>
     <option value="CLV+"  ${_polyTraderFilter.signal==='CLV+' ?'selected':''}>📐 CLV+</option>
+    <option value="SUSP"  ${_polyTraderFilter.signal==='SUSP' ?'selected':''}>⚠ Verdächtig</option>
   </select>
   <select onchange="ptFilterMarket(this.value)" style="background:#141b22;border:1px solid #243040;color:#e8edf3;border-radius:7px;padding:5px 8px;font-size:12px">
     <option value="all">Alle Märkte</option>
     ${marketOptions}
   </select>
   <label style="font-size:12px;color:#8b9ab0;display:flex;align-items:center;gap:6px">
-    Max. Tage bis Kickoff:
+    Max. Tage:
     <input type="range" min="1" max="10" value="${_polyTraderFilter.maxDays}" oninput="ptFilterDays(this.value);document.getElementById('ptDaysLbl').textContent=this.value" style="width:70px">
     <span id="ptDaysLbl" style="color:#00d4a1;font-weight:700;min-width:16px">${_polyTraderFilter.maxDays}</span>
+  </label>
+  <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:${_polyTraderFilter.hideSuspicious?'#e3b341':'#8b9ab0'};cursor:pointer;padding:4px 10px;border-radius:7px;border:1px solid ${_polyTraderFilter.hideSuspicious?'#e3b34140':'#243040'};background:${_polyTraderFilter.hideSuspicious?'#e3b34110':'transparent'}">
+    <input type="checkbox" ${_polyTraderFilter.hideSuspicious?'checked':''} onchange="ptFilterSuspicious(!this.checked)" style="accent-color:#e3b341"> Verdächtige ausblenden
   </label>
   <span style="margin-left:auto;font-size:11px;color:#6b7a8d">${rows.length} / ${candidates.length} Einträge</span>
 </div>
@@ -549,10 +583,10 @@ function renderPolyTrader(panel) {
           ${_sortTh('Match', 'home')}
           ${_sortTh('Kickoff', 'kickoffDate')}
           ${_sortTh('Markt', 'market')}
-          ${_sortTh('Bookie Open→Cur→Close', 'bookie_move_pp')}
-          ${_sortTh('Poly Open→Cur→Close', 'poly_delta_pp')}
+          ${_sortTh('Pini Open→Cur', 'bookie_move_pp')}
+          ${_sortTh('Poly Open→Cur', 'poly_delta_pp')}
           ${_sortTh('Gap', 'gap_pp', true)}
-          ${_sortTh('Trade', 'trade_direction', true)}
+          ${_sortTh('Aktion', 'buy_signal', true)}
           ${_sortTh('Signal', 'signal', true)}
           ${_sortTh('Obs. P&L', 'obs_pnl_pp', true)}
         </tr>
@@ -573,12 +607,17 @@ function renderPolyTrader(panel) {
 
   <!-- Das Konzept -->
   <div style="margin-bottom:20px">
-    <div style="font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Das Konzept</div>
-    <div style="font-size:12px;color:#8b9ab0;line-height:1.8;background:#141b22;border-radius:10px;padding:14px 16px;border:1px solid #1e2d3d">
-      Polymarket ist ein dezentraler Vorhersagemarkt — Preise bewegen sich nur wenn jemand tradet.
-      Pinnacle (scharfer Buchmacher) repriced sofort durch institutionelles Kapital.
-      Dieses <strong style="color:#e8edf3">Timing-Gap von 6–36 Stunden</strong> ist die Edge: Wir kaufen auf Poly bevor Poly den Pinnacle-Preis widerspiegelt,
-      und verkaufen wenn Poly nachgezogen hat — <strong style="color:#e8edf3">unabhängig vom Spielausgang</strong>.
+    <div style="font-size:11px;font-weight:700;color:#00d4a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Die Strategie</div>
+    <div style="font-size:12px;color:#8b9ab0;line-height:1.9;background:#141b22;border-radius:10px;padding:14px 16px;border:1px solid #1e2d3d">
+      <div style="margin-bottom:10px"><strong style="color:#e8edf3">Grundidee:</strong> Wenn die Poly-Quote (implizite Odds) höher ist als Pinnacle's Quote, heißt das: Poly bewertet das Outcome günstiger als der schärfste Buchmacher der Welt. Das ist ein Kaufsignal.</div>
+      <div style="background:#0f1419;border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:11px">
+        <div style="color:#3fb950;margin-bottom:4px;font-weight:700">Beispiel — Bayern Heimsieg:</div>
+        <div>Pinnacle fair odds: 1.80 → Implied: <strong style="color:#e8edf3">55.6%</strong></div>
+        <div>Poly Preis: <strong style="color:#e8edf3">50%</strong> (= implizite Odds 2.00)</div>
+        <div style="color:#3fb950;margin-top:4px">→ Gap: +5.6pp → Poly "Quote" (2.00) ist HÖHER als Pinnacle (1.80) → <strong>BUY</strong></div>
+      </div>
+      <div><strong style="color:#e8edf3">Voraussetzungen:</strong> Mindest-Liquidität (nur T1/T2 Ligen) · plausibler Gap (≤20pp) · Poly-Preis im Bereich 15–85% · Spiel noch nicht begonnen</div>
+      <div style="margin-top:8px"><strong style="color:#e8edf3">Exit:</strong> Wenn Poly-Preis sich Pinnacle annähert (Gap &lt;2pp) → Position schließen und Gewinn mitnehmen — unabhängig vom Spielausgang.</div>
     </div>
   </div>
 
@@ -664,14 +703,14 @@ function renderPolyTrader(panel) {
 
   <!-- Was wir noch verbessern können -->
   <div>
-    <div style="font-size:11px;font-weight:700;color:#e3b341;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">⚠ Bekannte Limitierungen & nächste Verbesserungen</div>
+    <div style="font-size:11px;font-weight:700;color:#e3b341;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">⚠ Bekannte Limitierungen</div>
     <div style="background:#141b22;border:1px solid #e3b34120;border-radius:10px;padding:12px 16px;font-size:11px;color:#8b9ab0;line-height:1.8">
       <div style="display:grid;gap:6px">
-        <div><span style="color:#e3b341;font-weight:600">Poly-Delta = 0 / P&amp;L = 0</span> — Solange nur 1 Snapshot existiert ist Open = Current. Delta und P&amp;L bauen sich über Zeit auf. Erst ab ~3 Tagen aussagekräftig. Sim. P&amp;L = €5 × Preisbewegung / Entry-Preis (mark-to-market bis Kickoff, danach eingefroren).</div>
-        <div><span style="color:#e3b341;font-weight:600">Keine Zeitstempel für Bookie-Move</span> — Wir wissen nicht wann sich Pinnacle bewegt hat (nur um wie viel). Ideal: Bookie-Move-Zeitpunkt erfassen um Entry-Fenster präziser zu bestimmen.</div>
-        <div><span style="color:#e3b341;font-weight:600">Over/Under und BTTS ohne Pinnacle-Fair-Key</span> — CLV+ Signal nur für 1X2 + Over 2.5 möglich (haben pinn_fair). Andere Märkte: nur Poly-Tracking ohne Bookie-Vergleich.</div>
-        <div><span style="color:#e3b341;font-weight:600">Kein Exit-Signal</span> — Aktuell kein automatischer "Jetzt verkaufen"-Trigger. Geplant: Exit wenn Gap &lt;1pp oder Poly-Delta ≥ 80% der Bookie-Bewegung.</div>
-        <div><span style="color:#e3b341;font-weight:600">Liquiditäts-Tier ist statisch</span> — T1/T2/T3 nach Liga hardcodiert. Besser wäre live Poly-Volume pro Markt. Folgt in Phase 2.</div>
+        <div><span style="color:#3fb950;font-weight:600">✓ Verdächtige Gaps gefiltert</span> — Gaps &gt;20pp werden als "⚠ PRÜFEN" markiert und standardmäßig ausgeblendet. Sie entstehen fast immer durch falsches Contract-Matching, nicht durch echte Chancen.</div>
+        <div><span style="color:#e3b341;font-weight:600">Poly-Delta = 0 / P&amp;L = 0</span> — Solange nur 1 Snapshot existiert ist Open = Current. Delta und P&amp;L bauen sich über Zeit auf (ab ~3 Tagen aussagekräftig).</div>
+        <div><span style="color:#e3b341;font-weight:600">Over/Under und BTTS ohne Pinnacle-Vergleich</span> — BUY/WATCH nur für 1X2 + Over 2.5 (haben pinn_fair Key). Andere Märkte: nur Poly-Tracking ohne Gap-Berechnung.</div>
+        <div><span style="color:#e3b341;font-weight:600">Kein Exit-Signal</span> — Kein automatischer "Jetzt verkaufen"-Trigger. Geplant: Exit wenn Gap &lt;1pp oder Poly-Delta ≥ 80% der Bookie-Bewegung.</div>
+        <div><span style="color:#e3b341;font-weight:600">Liquiditäts-Tier ist statisch</span> — T1/T2/T3 nach Liga hardcodiert, kein live Poly-Volume. T3 Ligen (TUR, SCO) erhalten kein BUY Signal.</div>
       </div>
     </div>
   </div>
@@ -698,6 +737,16 @@ window.ptFilterDays = function(val) {
 };
 window.ptFilterActionable = function(val) {
   _polyTraderFilter.actionableOnly = val;
+  renderPolyTrader(document.getElementById('polyTraderPanel'));
+};
+window.ptFilterSuspicious = function(val) {
+  _polyTraderFilter.hideSuspicious = val;
+  renderPolyTrader(document.getElementById('polyTraderPanel'));
+};
+// Quick-filter by clicking on summary stats tiles
+window.ptFilterBuy = function(val) {
+  _polyTraderFilter.signal = val;
+  if (val === 'SUSP') _polyTraderFilter.hideSuspicious = false;
   renderPolyTrader(document.getElementById('polyTraderPanel'));
 };
 
