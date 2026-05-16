@@ -366,263 +366,84 @@ function isMatchOver(dateStr, timeStr) {
   return Date.now() > cutoff.getTime();
 }
 
-// CARDS DES TAGES — composite ranking engine
-// Signals used (in order of weight):
-//   1. Pick model score (p.sc × 10) — primary confidence driver
-//   2. Match interest score — sc ≥ 6 gate + (sc−6)×2 rank bonus
-//   3. Model edge (modelOdds vs bookie) — up to +5
-//   4. API prediction confluence — up to +4 when API agrees
-//   5. Line movement direction — smart-money signal, up to +4
-//   6. Elo gap — structural quality gap, up to +3
-//   7. Season pressure — high-stakes team fighting, up to +3
-//   8. Conf level + odds range + value tags (original bonuses)
+// TAGES-PICKS ÜBERSICHT — alle wettierbaren Picks des Tages
+// Zeigt ALLE BET + ABWÄGEN Picks (kein SKIP, kein Low-Conf).
+// Keine künstliche Begrenzung auf 7 Picks — alles was sich lohnt, kommt rein.
+// 📨 markiert Telegram-Picks (BET + conf=high + echte Odds + Edge ≥ 4pp).
 // ═══════════════════════════════════════════════════════
 function buildTopCardsHtml(matchList) {
-  const candidates = [];
-  const _ts = window._teamStats || {};
+  // Edge in Prozentpunkten (wie telegram_bot.py: 1/modelOdds - 1/odds)
+  const _edgePp = (modelOdds, odds) => {
+    if (!modelOdds || !odds || modelOdds <= 0 || odds <= 0) return 0;
+    return Math.round((1 / modelOdds - 1 / odds) * 100 * 10) / 10;
+  };
+  const _TG_MIN_EDGE = 4.0;
+
+  const bets      = [];  // verdict = BET
+  const considers = [];  // verdict = ABWÄGEN
 
   for (const m of matchList) {
-    if (isMatchOver(m.date, m.time)) continue;  // hide after kickoff + 100 min
-    const matchSc = computeMatchScore(m, m.leagueKey);
-    if (matchSc < 10) continue;  // Top Cards only from high-quality matches (≥10/12)
+    if (isMatchOver(m.date, m.time)) continue;
+
     const odds = m.leagueKey ? findOdds(m.leagueKey, m.home, m.away) : null;
     const picks = getBettingPicks(m, odds, m.leagueKey)
       .filter(p => p.conf === 'high' || p.conf === 'medium');
     if (!picks.length) continue;
 
-    // ── Pre-compute match-level signals (shared across all picks of this match) ──
-
-    // Line movement: compare opening odds vs current
+    // Fixture snapshot for oddsOpen and h2h (fed into computeVerdict)
     const _fix = m.leagueKey
       ? (LEAGUES[m.leagueKey]?.fixtures || []).find(f => f.home === m.home && f.away === m.away)
       : null;
-    const _lmRows = computeLineMovement(_fix?.odds_open || null, odds);
-    // Build a lookup: label → ppShift  (1=home, X=draw, 2=away)
-    const _lmMap = {};
-    if (_lmRows) for (const r of _lmRows) _lmMap[r.label] = r.ppShift;
+    const _oddsOpen = _fix?.odds_open || null;
+    const _h2h      = m.h2h || null;
 
-    // Elo gap
-    const _hStat  = _ts[m.leagueKey]?.[m.home] || {};
-    const _aStat  = _ts[m.leagueKey]?.[m.away] || {};
-    const _hElo   = _hStat.elo || null;
-    const _aElo   = _aStat.elo || null;
-    const _eloDiff = (_hElo && _aElo) ? (_hElo - _aElo) : null;  // >0 = home stronger
-
-    // Season pressure labels
-    const _hPress = (m.homeStake?.labels || []).map(l => l.c);
-    const _aPress = (m.awayStake?.labels || []).map(l => l.c);
-    const _hMotiv = m.homeStake?.motivationLevel || 'full';
-    const _aMotiv = m.awayStake?.motivationLevel || 'full';
-
-    // API prediction
-    const _api = m.apiPrediction || null;
-
-    // ── Per-pick composite rank ────────────────────────────────────────────────
-    // All qualifying picks are pushed to candidates (not just the best one).
-    // Global sort + max-2-per-match guard applied after: allows a match to contribute
-    // up to 2 top picks if both independently rank highly enough.
-    const _signals = {};  // store signals per-pick for display
-
-    // Helper: normalise a raw value to a 0–10 score
-    const _norm = (v, min, max) => Math.max(0, Math.min(10, Math.round((v - min) / (max - min) * 10)));
+    // _noRealOdds guard: same logic as renderFixtureCard
+    const _noRealOdds = !odds || odds._isEstimated;
 
     for (const p of picks) {
-      const hasRealOdds = p.odds != null && !p.oddsIsEst;
-      const inRange     = hasRealOdds && p.odds >= 1.40 && p.odds <= 1.95;
-      const mktLow      = (p.market || '').toLowerCase();
-      // sigs: array of {label, score} objects shown as "Label score/10"
-      const sigs = [];
+      const oddsNum = (typeof p.odds === 'number') ? p.odds : null;
+      const _vd = computeVerdict({
+        modelOdds: p.modelOdds,
+        odds:      (_noRealOdds && p.oddsIsEst) ? null : oddsNum,
+        oddsIsEst: p.oddsIsEst,
+        market:    p.market,
+        oddsOpen:  _oddsOpen,
+        h2h:       _h2h,
+      });
+      if (_vd.verdict === 'SKIP') continue;
 
-      // ── Base: pick model score ──────────────────────────────────────────────
-      let rank = (p.sc || 0) * 10;
+      const ep      = _edgePp(p.modelOdds, oddsNum);
+      const isTg    = _vd.verdict === 'BET'
+                   && p.conf === 'high'
+                   && !p.oddsIsEst
+                   && oddsNum != null
+                   && ep >= _TG_MIN_EDGE;
 
-      // Conf bonus
-      if (p.conf === 'high')   rank += 4;
-      if (p.conf === 'medium') rank += 1;
+      const entry = { p, m, vd: _vd, ep, isTg };
 
-      // ── No confirmed bookmaker odds → rank penalty ────────────────────────────
-      // Picks from leagues without odds coverage (CRO, HUN) should not displace
-      // real picks from well-covered leagues. Only affects top-cards ranking, not the
-      // per-match pick display.
-      if (!hasRealOdds) {
-        if (p.odds == null)   rank -= 6;  // no odds at all — heavy penalty
-        else                  rank -= 4;  // estimated odds (oddsIsEst) — still penalise
-      }
-
-      // Odds range bonus
-      if (inRange)          rank += 3;
-      else if (hasRealOdds) rank += 1;
-
-      // Value tags
-      if (p.value === 'hot')        rank += 2;
-      else if (p.value === 'value') rank += 1;
-
-      // ── [1] MATCH SCORE MULTIPLIER ──────────────────────────────────────────
-      rank += (matchSc - 6) * 2;
-
-      // ── [2] MODEL EDGE ───────────────────────────────────────────────────────
-      if (p.modelOdds != null && p.odds != null) {
-        const _edgePp = Math.round((1 / p.modelOdds - (1 / p.odds) * 1.03) * 100);
-        if (_edgePp >= 13)       { rank += 5; sigs.push({ label: 'Edge', score: _norm(_edgePp, 0, 15) }); }
-        else if (_edgePp >= 7)   { rank += 3; sigs.push({ label: 'Edge', score: _norm(_edgePp, 0, 15) }); }
-        else if (_edgePp >= 3)   { rank += 1; }
-        else if (_edgePp < -5)   { rank -= 6; }  // strong neg edge → hard suppress from top cards
-        else if (_edgePp < -2)   { rank -= 3; }  // mild neg edge → soft penalty
-      }
-
-      // ── [3] API PREDICTION CONFLUENCE ────────────────────────────────────────
-      // API-Football predictions use a COARSE discrete scale: 0/10/33/45/50.
-      // Values >= 55 never appear — old thresholds (65/55) made this badge dead.
-      // Recalibrated to the actual data:
-      //   45/45/10 pattern = clear directional lean   → strong signal (rank +4, score 8)
-      //   45 with pctAway >= 33 = mild lean only      → weak signal  (rank +2, score 5)
-      //   Signal strength = direction × differential  → score = _norm(pctHome-pctAway, 0, 45)
-      if (_api) {
-        const _isHome  = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
-        const _isAway  = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
-        const _isOver  = mktLow.includes('over') || mktLow.includes('über');
-        const _isUnder = mktLow.includes('under') || mktLow.includes('unter');
-        const _pH = _api.pctHome ?? 0, _pA = _api.pctAway ?? 0;
-        if (_isHome && _pH > _pA) {
-          // Home is API's favoured side — how strongly?
-          const _diff = _pH - _pA;  // e.g. 45−10=35 (strong), 45−33=12 (mild)
-          const _aiScore = Math.min(10, Math.round(_norm(_diff, 0, 40) * 0.9 + 2));
-          if (_diff >= 30)      { rank += 4; sigs.push({ label: 'AI', score: _aiScore }); }
-          else if (_diff >= 10) { rank += 2; sigs.push({ label: 'AI', score: _aiScore }); }
-        }
-        if (_isAway && _pA > _pH) {
-          const _diff = _pA - _pH;
-          const _aiScore = Math.min(10, Math.round(_norm(_diff, 0, 40) * 0.9 + 2));
-          if (_diff >= 30)      { rank += 4; sigs.push({ label: 'AI', score: _aiScore }); }
-          else if (_diff >= 10) { rank += 2; sigs.push({ label: 'AI', score: _aiScore }); }
-        }
-        // O/U: underOver field is often null in current data — keep as bonus when present
-        if (_isOver  && _api.underOver === 'Over 2.5')  { rank += 2; sigs.push({ label: 'AI', score: 6 }); }
-        if (_isUnder && _api.underOver === 'Under 2.5') { rank += 2; sigs.push({ label: 'AI', score: 6 }); }
-      }
-
-      // ── [4] LINE MOVEMENT + BOOKMAKER CONSENSUS WEIGHT ───────────────────────
-      // _cn = number of bookmakers in 1X2 consensus; o25_cn = same for O/U.
-      // More bookmakers agreeing = more reliable signal → higher rank bonus when LM fires.
-      if (Object.keys(_lmMap).length) {
-        const _isHome  = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
-        const _isAway  = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
-        const _isOver  = mktLow.includes('over') || mktLow.includes('über') || mktLow.includes('o2.5');
-        const _isUnder = mktLow.includes('under') || mktLow.includes('unter') || mktLow.includes('u2.5');
-        const _lmH  = _lmMap['1']   || 0;
-        const _lmA  = _lmMap['2']   || 0;
-        const _lmO  = _lmMap['O25'] || 0;
-        const _lmU  = _lmMap['U25'] || 0;
-        // _cn bonus: ≥5 books = +1 rank + higher score; ≥3 books = slight score lift
-        const _cn1x2 = odds?._cn || 0;
-        const _cnOU  = odds?.o25_cn || 0;
-        const _cnBonus1x2 = _cn1x2 >= 5 ? 1 : 0;
-        const _cnBonusOU  = _cnOU  >= 5 ? 1 : 0;
-        // _norm for Money already 0–15pp; add cn-adjusted score capped at 10
-        const _moneyScore1x2 = (v) => Math.min(10, _norm(v, 0, 15) + (_cn1x2 >= 5 ? 1 : 0));
-        const _moneyScoreOU  = (v) => Math.min(10, _norm(v, 0, 15) + (_cnOU  >= 5 ? 1 : 0));
-        if (_isHome) {
-          if (_lmH >= 10)      { rank += 4 + _cnBonus1x2; sigs.push({ label: 'Money', score: _moneyScore1x2(_lmH) }); }
-          else if (_lmH >= 5)  { rank += 2 + _cnBonus1x2; sigs.push({ label: 'Money', score: _moneyScore1x2(_lmH) }); }
-          else if (_lmH <= -5) { rank -= 2; }
-        }
-        if (_isAway) {
-          if (_lmA >= 10)      { rank += 4 + _cnBonus1x2; sigs.push({ label: 'Money', score: _moneyScore1x2(_lmA) }); }
-          else if (_lmA >= 5)  { rank += 2 + _cnBonus1x2; sigs.push({ label: 'Money', score: _moneyScore1x2(_lmA) }); }
-          else if (_lmA <= -5) { rank -= 2; }
-        }
-        // O/U goals line movement — steam toward Over/Under boosts goals picks
-        if (_isOver) {
-          if (_lmO >= 10)      { rank += 4 + _cnBonusOU; sigs.push({ label: 'Money', score: _moneyScoreOU(_lmO) }); }
-          else if (_lmO >= 5)  { rank += 2 + _cnBonusOU; sigs.push({ label: 'Money', score: _moneyScoreOU(_lmO) }); }
-          else if (_lmO <= -5) { rank -= 2; }
-        }
-        if (_isUnder) {
-          if (_lmU >= 10)      { rank += 4 + _cnBonusOU; sigs.push({ label: 'Money', score: _moneyScoreOU(_lmU) }); }
-          else if (_lmU >= 5)  { rank += 2 + _cnBonusOU; sigs.push({ label: 'Money', score: _moneyScoreOU(_lmU) }); }
-          else if (_lmU <= -5) { rank -= 2; }
-        }
-      }
-
-      // ── [5] ELO GAP ──────────────────────────────────────────────────────────
-      if (_eloDiff !== null) {
-        const _isHome = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim');
-        const _isAway = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw');
-        const _eloAbs = Math.abs(_eloDiff);
-        if (_isHome && _eloDiff > 250)       { rank += 3; sigs.push({ label: 'Elo', score: _norm(_eloAbs, 0, 400) }); }
-        else if (_isHome && _eloDiff > 150)  { rank += 2; sigs.push({ label: 'Elo', score: _norm(_eloAbs, 0, 400) }); }
-        else if (_isHome && _eloDiff < -150) { rank -= 1; }
-        if (_isAway && _eloDiff < -250)      { rank += 3; sigs.push({ label: 'Elo', score: _norm(_eloAbs, 0, 400) }); }
-        else if (_isAway && _eloDiff < -150) { rank += 2; sigs.push({ label: 'Elo', score: _norm(_eloAbs, 0, 400) }); }
-        else if (_isAway && _eloDiff > 150)  { rank -= 1; }
-      }
-
-      // ── [6] SEASON PRESSURE ──────────────────────────────────────────────────
-      const _isHomeP = mktLow.includes('heimsieg') || mktLow.startsWith('ah heim') || mktLow.includes('dnb: heim') || mktLow.includes('1x');
-      const _isAwayP = mktLow.includes('auswärtssieg') || mktLow.startsWith('ah ausw') || mktLow.includes('dnb: ausw') || mktLow.includes('x2');
-      if (_isHomeP && _hMotiv !== 'none') {
-        if (_hPress.includes('gold') || _hPress.includes('red'))         { rank += 3; sigs.push({ label: 'Pressure', score: 9 }); }
-        else if (_hPress.includes('blue'))                                { rank += 2; sigs.push({ label: 'Pressure', score: 7 }); }
-        else if (_hPress.includes('orange') || _hPress.includes('yellow')) { rank += 1; sigs.push({ label: 'Pressure', score: 5 }); }
-      }
-      if (_isAwayP && _aMotiv !== 'none') {
-        if (_aPress.includes('gold') || _aPress.includes('red'))         { rank += 3; sigs.push({ label: 'Pressure', score: 9 }); }
-        else if (_aPress.includes('blue'))                                { rank += 2; sigs.push({ label: 'Pressure', score: 7 }); }
-        else if (_aPress.includes('orange') || _aPress.includes('yellow')) { rank += 1; sigs.push({ label: 'Pressure', score: 5 }); }
-      }
-
-      // Store rank + sigs for every pick — all go into candidates pool
-      _signals[p.market] = { rank, sigs };
-    }
-
-    // Push all picks from this match into the global candidates pool
-    for (const p of picks) {
-      const _ps = _signals[p.market];
-      if (_ps) candidates.push({ p, rank: _ps.rank, sc: matchSc, m, sigs: _ps.sigs });
+      if (_vd.verdict === 'BET') bets.push(entry);
+      else                       considers.push(entry);
     }
   }
 
-  if (!candidates.length) return '';
+  // Sort BET by edge desc (best value first), ABWÄGEN by pick-score desc
+  bets.sort((a, b) => b.ep - a.ep);
+  considers.sort((a, b) => (b.p.sc || 0) - (a.p.sc || 0));
 
-  candidates.sort((a, b) => b.rank - a.rank);
+  const allPicks = [...bets, ...considers];
+  if (!allPicks.length) return '';
 
-  // Quality floor: picks below this rank are not shown even if it means fewer than 7 cards.
-  // Prevents weak filler picks from appearing just to hit a fixed count.
-  // Tune this constant to control strictness: higher = fewer but stronger picks.
-  const _MIN_PICK_RANK = 12;
+  // ── Expose BET + high-conf picks globally so renderFixtureCard can mark ⭐ ──
+  window._topPickSet = new Set(
+    bets.filter(e => e.p.conf === 'high').map(e => `${e.m.home}|${e.m.away}|${e.p.market}`)
+  );
 
-  // Max-2-per-match guard: take top 7 globally but cap each match at 2 picks.
-  // This allows a high-value match to contribute 2 top picks while preventing
-  // one dominant match from flooding all 7 slots.
-  const top = [];
-  const _matchPickCount = {};
-  for (const c of candidates) {
-    if (c.rank < _MIN_PICK_RANK) break;  // sorted desc — everything below is weaker
-    const _mk = `${c.m.home}|${c.m.away}`;
-    const _cnt = _matchPickCount[_mk] || 0;
-    if (_cnt >= 2) continue;   // already 2 picks from this match
-    _matchPickCount[_mk] = _cnt + 1;
-    top.push(c);
-    if (top.length >= 7) break;
-  }
-
-  // ── Expose top picks globally so renderFixtureCard can highlight them ──────
-  // Set rebuilt on every Cards render (handles page refreshes and date changes).
-  window._topPickSet = new Set(top.map(c => `${c.m.home}|${c.m.away}|${c.p.market}`));
-
-  const scoreBadgeClass = s => s >= 9 ? 'tc-score-high' : s >= 7 ? 'tc-score-mid' : 'tc-score-low';
-  const confStr         = c => c === 'high' ? '★★★' : '★★☆';
-  const oddsClass       = (p) => {
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  const confStr   = c => c === 'high' ? '★★★' : '★★☆';
+  const oddsClass = (p) => {
     if (!p.odds || p.oddsIsEst) return 'tc-odds-est';
     return (p.odds >= 1.40 && p.odds <= 1.95) ? 'tc-odds-sweet' : 'tc-odds-ok';
   };
-  // Render a {label, score} signal as "Label score/10" pill
-  const sigHtml = ({ label, score }) => {
-    const cls = score >= 8 ? 'tc-sig-8' : score >= 6 ? 'tc-sig-6' : 'tc-sig-4';
-    return `<span class="tc-sig ${cls}">${label} <span class="tc-sig-val">${score}/10</span></span>`;
-  };
-
-  // Squad strength circle helper
   const _sqCircle = (stake) => {
     const sq = stake?.squadStrength ?? null;
     if (sq == null) return '';
@@ -630,54 +451,48 @@ function buildTopCardsHtml(matchList) {
     return `<span class="sqc ${cls}" title="Squad-Stärke: ${sq}/10">${Math.round(sq)}</span>`;
   };
 
-  const rows = top.map(({ p, sc, m, sigs }) => {
-    const time     = m.time ? ` · ${m.time}` : '';
-    const oddsLbl  = p.odds
-      ? `<span class="tc-odds-pill ${oddsClass(p)}">@ ${p.odds.toFixed(2)}${p.oddsIsEst ? ' ~' : ''}</span>`
+  const renderRow = ({ p, m, vd, ep, isTg }) => {
+    const time      = m.time ? ` · ${m.time}` : '';
+    const oddsLbl   = p.odds
+      ? `<span class="tc-odds-pill ${oddsClass(p)}">@ ${p.odds.toFixed(2)}${p.oddsIsEst ? ' ~est' : ''}</span>`
       : '';
-    const vTag     = p.value === 'hot'      ? '<span class="value-tag hot" style="font-size:10px">🔥 VALUE</span>'
-                   : p.value === 'value'    ? '<span class="value-tag val" style="font-size:10px">💰 Value</span>'
-                   : p.value === 'inj-edge' ? '<span class="value-tag inj" style="font-size:10px">🏥 Edge</span>' : '';
-    // Short reason: strip HTML tags, take first sentence, cap at 110 chars
+    const vTag      = p.value === 'hot'      ? '<span class="value-tag hot" style="font-size:10px">🔥 VALUE</span>'
+                    : p.value === 'value'    ? '<span class="value-tag val" style="font-size:10px">💰 Value</span>'
+                    : p.value === 'inj-edge' ? '<span class="value-tag inj" style="font-size:10px">🏥 Edge</span>' : '';
+    const tgBadge   = isTg ? '<span class="tc-tg-badge">📨 TG</span>' : '';
+    const epLabel   = ep > 0 ? `<span class="tc-ep-pill">+${ep.toFixed(1)}pp</span>` : '';
+    // Verdict badge — reuse colours from computeVerdict
+    const vBadge    = `<span class="pick-verdict-mini" style="background:${vd.vBg};color:${vd.vColor};border:1px solid ${vd.vBorder};border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700">${vd.verdict}</span>`;
+    // Short reason (strip HTML, first ~100 chars)
     const _rawReason = (p.reason || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-    const _shortReason = _rawReason.length > 110 ? _rawReason.slice(0, 107) + '…' : _rawReason;
-    // Signals — deduplicate by label, show up to 4
-    const _uniqSigs = [];
-    const _seenLabels = new Set();
-    for (const s of sigs) { if (!_seenLabels.has(s.label)) { _uniqSigs.push(s); _seenLabels.add(s.label); } }
-    const sigsHtml = _uniqSigs.length
-      ? `<div class="tc-signals">${_uniqSigs.slice(0, 4).map(sigHtml).join('')}</div>`
-      : '';
-    // Squad circles — only shown when data available (after first fetch_squads.py run)
-    const _hCircle = _sqCircle(m.homeStake);
-    const _aCircle = _sqCircle(m.awayStake);
+    const _short     = _rawReason.length > 100 ? _rawReason.slice(0, 97) + '…' : _rawReason;
+    const _hCircle   = _sqCircle(m.homeStake);
+    const _aCircle   = _sqCircle(m.awayStake);
 
     return `<div class="topcards-row">
       <div class="tc-top">
         <div class="tc-matchline">${m.leagueFlag || ''} ${m.home}${_hCircle} vs ${m.away}${_aCircle} · ${m.date}${time}</div>
-        <span class="tc-score-badge ${scoreBadgeClass(sc)}">${sc}/12</span>
+        ${vBadge}${tgBadge}
       </div>
       <div class="tc-pick-row">
         <span class="tc-icon">${p.icon}</span>
         <span class="tc-market">${p.market}</span>
-        ${oddsLbl}${vTag}
+        ${oddsLbl}${epLabel}${vTag}
         <span class="tc-conf">${confStr(p.conf)}</span>
       </div>
-      ${sigsHtml}
-      ${_shortReason ? `<div class="tc-reason">${_shortReason}</div>` : ''}
+      ${_short ? `<div class="tc-reason">${_short}</div>` : ''}
     </div>`;
-  }).join('');
+  };
 
-  const realOddsCount = top.filter(c => c.p.odds && !c.p.oddsIsEst).length;
-  const highConfCount = top.filter(c => c.p.conf === 'high').length;
+  const tgCount   = bets.filter(e => e.isTg).length;
+  const betCount  = bets.length;
+  const abwCount  = considers.length;
 
-  // ── Persist today's top cards to localStorage for Results tracking ────────
-  // Key: home|away|market — used by _mergeLocalPicks to tag isTopCard on picks.
-  // We overwrite today's entries on each render (handles page refreshes correctly).
+  // ── Persist to localStorage for Results tracking ──────────────────────────
   try {
     const _tcHistory = JSON.parse(localStorage.getItem('tc_history') || '[]');
-    const _todayDate = top[0]?.m?.date || '';
-    const _newEntries = top.map(({ p, m }) => ({
+    const _todayDate = allPicks[0]?.m?.date || '';
+    const _newEntries = allPicks.map(({ p, m, vd }) => ({
       date: m.date || '',
       dateIso: m.dateIso || '',
       home: m.home,
@@ -685,21 +500,28 @@ function buildTopCardsHtml(matchList) {
       market: p.market,
       odds: p.odds || null,
       conf: p.conf,
+      verdict: vd.verdict,
     }));
-    // Remove today's previous entries (refresh case), then append fresh ones
-    const _kept = _todayDate ? _tcHistory.filter(e => e.date !== _todayDate) : _tcHistory;
-    // Keep only last 90 days worth of entries to avoid unbounded growth
-    const _pruned = _kept.slice(-630); // 7 cards × 90 days
+    const _kept   = _todayDate ? _tcHistory.filter(e => e.date !== _todayDate) : _tcHistory;
+    const _pruned = _kept.slice(-2700); // ~30 picks × 90 days
     localStorage.setItem('tc_history', JSON.stringify([..._pruned, ..._newEntries]));
   } catch(_e) { /* localStorage unavailable */ }
 
+  // ── Render two sections ───────────────────────────────────────────────────
+  const betSection = bets.length ? `
+    <div class="tc-section-header tc-bet-header">🟢 BET (${betCount})</div>
+    <div class="topcards-grid">${bets.map(renderRow).join('')}</div>` : '';
+
+  const abwSection = considers.length ? `
+    <div class="tc-section-header tc-abw-header">🟡 ABWÄGEN (${abwCount})</div>
+    <div class="topcards-grid">${considers.map(renderRow).join('')}</div>` : '';
+
   return `<div class="topcards-section">
     <div class="topcards-header">
-      <span>🃏 Top Picks · ${top.length} Picks Today</span>
-      <span class="topcards-header-right">${highConfCount}× ★★★ · ${realOddsCount} confirmed odds</span>
+      <span>📋 Tages-Picks · ${betCount} BET · ${abwCount} ABWÄGEN</span>
+      <span class="topcards-header-right">${tgCount > 0 ? `${tgCount}× 📨 TG` : 'Kein TG heute'}</span>
     </div>
-    <div class="topcards-grid">${rows}</div>
-    <div class="topcards-note">Ranked by: Pick confidence · Match score · Edge · AI forecast · Smart money · Elo · Season pressure</div>
+    ${betSection}${abwSection}
   </div>`;
 }
 
