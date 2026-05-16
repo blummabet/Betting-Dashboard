@@ -45,7 +45,7 @@ def tg_send(text: str) -> bool:
         print('⚠️  Kein TELEGRAM_TOKEN — Vorschau:')
         print(text)
         print()
-        return True   # im Testmodus als Erfolg werten
+        return False  # kein Token → nicht gesendet → NICHT als sent markieren
     url  = f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage'
     body = json.dumps({
         'chat_id':    CHAT_ID,
