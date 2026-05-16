@@ -26,7 +26,8 @@ CHAT_ID               = os.environ.get('TELEGRAM_CHAT_ID', '-1003819239615')
 TG_MODE               = os.environ.get('TG_MODE', 'all')
 SENT_LOG              = 'telegram_sent.json'
 
-MIN_EDGE_PP           = 4.0   # Mindest-Edge für PICK-Post
+MIN_EDGE_PP           = 4.0   # Mindest-Edge für PICK-Post (conf=high)
+MIN_EDGE_PP_MEDIUM    = 12.0  # Mindest-Edge für medium-conf Ausnahme-Picks
 MIN_MATCH_SCORE_WATCH = 6.0   # Mindest-Score für IM BLICK
 MAX_ROUNDS_LEFT_WATCH = 1     # Nur letzte Runde(n) für IM BLICK
 MIN_CONF_PICK         = 'high'
@@ -118,15 +119,21 @@ def importance_emoji(score: float) -> str:
 
 # ── Pick-Selektion ────────────────────────────────────────────────────────────
 def best_pick(fx: dict) -> dict | None:
-    """Bester Pick: conf=high, echte Odds, edge ≥ MIN_EDGE_PP."""
+    """Bester Pick nach Edge.
+    Primary:   conf=high + echte Odds + edge ≥ MIN_EDGE_PP (4pp)
+    Exception: conf=medium + echte Odds + edge ≥ MIN_EDGE_PP_MEDIUM (12pp)
+    Bei mehreren qualifizierenden Picks: höchster Edge gewinnt.
+    """
     best, best_ep = None, 0.0
     for p in fx.get('picks', []):
-        if p.get('conf') != MIN_CONF_PICK: continue
+        conf = p.get('conf', '')
         if p.get('oddsIsEst', False): continue
         odds = p.get('odds')
         if not odds: continue
         ep = edge_pp(odds, p.get('modelOdds', 0))
-        if ep >= MIN_EDGE_PP and ep > best_ep:
+        qualifies = (conf == 'high'   and ep >= MIN_EDGE_PP) or \
+                    (conf == 'medium' and ep >= MIN_EDGE_PP_MEDIUM)
+        if qualifies and ep > best_ep:
             best, best_ep = p, ep
     return best
 
@@ -272,29 +279,43 @@ def format_watch_league_post(league_code: str, games: list, pm_index: dict) -> s
 
 
 def format_recap_post(yesterday_entries: list) -> str:
-    """Tagesrückblick aus picks_history.json."""
-    yesterday = (date.today() - timedelta(days=1)).strftime('%d.%m.%Y')
+    """Tagesrückblick aus picks_history.json.
+    Priorisiert den Markt der tatsächlich via Telegram gesendet wurde (aus sent_log).
+    Falls kein sent_log-Eintrag vorhanden: Fallback auf win zuerst / höchste Quote.
+    """
+    yesterday     = (date.today() - timedelta(days=1)).strftime('%d.%m.%Y')
+    yesterday_iso = (date.today() - timedelta(days=1)).isoformat()
+    sent_log      = load_sent_log()   # { fkey: {market, ...} }
     wins = losses = voids = 0
     lines = [f'📊 <b>Rückblick {yesterday}</b>', '']
 
     for entry in yesterday_entries:
-        home  = entry.get('home', '')
-        away  = entry.get('away', '')
-        flag  = entry.get('leagueFlag', '')
-        score = entry.get('finalScore', '')
+        home    = entry.get('home', '')
+        away    = entry.get('away', '')
+        flag    = entry.get('leagueFlag', '')
+        score   = entry.get('finalScore', '')
         score_s = f' <i>({score})</i>' if score else ''
 
-        # Besten Pick mit echten Odds + Ergebnis
-        top_picks = [
+        all_picks = [
             p for p in entry.get('picks', [])
             if p.get('result') in ('win', 'loss', 'void') and p.get('odds')
         ]
-        if not top_picks:
+        if not all_picks:
             continue
 
-        # Sortiert: win zuerst, dann nach odds
-        top_picks.sort(key=lambda p: (p.get('result') != 'win', -(p.get('odds') or 0)))
-        p = top_picks[0]
+        # ── Priorisiere den tatsächlich gesendeten Markt ──────────────────────
+        # sent_log-Key entspricht fkey(fx, 'pick') = "{dateIso}|{home}|{away}|pick"
+        sent_key    = f"{yesterday_iso}|{home}|{away}|pick"
+        sent_market = sent_log.get(sent_key, {}).get('market', '')
+        sent_picks  = [p for p in all_picks if p.get('market') == sent_market] if sent_market else []
+
+        if sent_picks:
+            # Genau der gesendete Pick — Ergebnis zeigen wie es ist
+            p = sent_picks[0]
+        else:
+            # Fallback: kein sent_log-Eintrag → win zuerst, höchste Quote
+            all_picks.sort(key=lambda p: (p.get('result') != 'win', -(p.get('odds') or 0)))
+            p = all_picks[0]
 
         result  = p.get('result', '')
         market  = p.get('market', '?')
@@ -424,9 +445,15 @@ def main():
             pm_fx = pm_index.get(f"{fx['home']}|{fx['away']}")
             msg   = format_pick_post(fx, pick, pm_fx)
             if tg_send(msg):
-                sent_log[k] = {'ts': datetime.now(timezone.utc).isoformat(), 'type': 'pick'}
-                picks_count += 1
                 ep = edge_pp(pick.get('odds', 0), pick.get('modelOdds', 0))
+                sent_log[k] = {
+                    'ts':     datetime.now(timezone.utc).isoformat(),
+                    'type':   'pick',
+                    'market': pick.get('market', ''),   # ← welcher Markt gesendet wurde
+                    'odds':   pick.get('odds'),
+                    'ep':     round(ep, 1),
+                }
+                picks_count += 1
                 print(f'✅ PICK: {fx["home"]} vs {fx["away"]} — {pick["market"]} +{ep:.0f}pp')
 
     # ── 👀 JETZT ODER NIE Posts (gruppiert nach Liga) ────────────────────────

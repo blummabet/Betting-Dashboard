@@ -413,11 +413,15 @@ function buildTopCardsHtml(matchList) {
       if (_vd.verdict === 'SKIP') continue;
 
       const ep      = _edgePp(p.modelOdds, oddsNum);
+      // TG criteria (mirrors telegram_bot.py best_pick logic):
+      //   Primary:   conf=high + real odds + edge ≥ 4pp
+      //   Exception: conf=medium + real odds + edge ≥ 12pp (exceptional value plays)
+      const _tgHighConf   = p.conf === 'high'   && ep >= _TG_MIN_EDGE;
+      const _tgMediumConf = p.conf === 'medium' && ep >= 12.0;
       const isTg    = _vd.verdict === 'BET'
-                   && p.conf === 'high'
                    && !p.oddsIsEst
                    && oddsNum != null
-                   && ep >= _TG_MIN_EDGE;
+                   && (_tgHighConf || _tgMediumConf);
 
       const entry = { p, m, vd: _vd, ep, isTg };
 
@@ -432,6 +436,21 @@ function buildTopCardsHtml(matchList) {
 
   const allPicks = [...bets, ...considers];
   if (!allPicks.length) return '';
+
+  // ── 📨 TG badge: only the ONE pick per match Telegram actually sends ─────
+  // Mirrors telegram_bot.py best_pick(): highest edge among conf=high, real odds, ep≥4pp.
+  // Multiple picks from same match may qualify, but Telegram sends exactly one.
+  // Without this guard, two picks from the same match could both show 📨 — misleading.
+  const _tgBestPerMatch = new Map();
+  for (const entry of bets) {
+    if (!entry.isTg) continue;
+    const mk = `${entry.m.home}|${entry.m.away}`;
+    const prev = _tgBestPerMatch.get(mk);
+    if (!prev || entry.ep > prev.ep) _tgBestPerMatch.set(mk, entry);
+  }
+  // Clear isTg on all entries, then re-set only on the winner per match
+  for (const entry of bets) entry.isTg = false;
+  for (const entry of _tgBestPerMatch.values()) entry.isTg = true;
 
   // ── Expose BET + high-conf picks globally so renderFixtureCard can mark ⭐ ──
   window._topPickSet = new Set(
