@@ -436,7 +436,20 @@ function initResultsV2() {
     try { savePicksV2(); } catch(e) { console.warn('[V2 init]', e); }
   }
 
-  _renderV2Tab();
+  // Load picks_history.json if Results tab hasn't loaded it yet —
+  // needed for the localStorage-gap fallback in _renderV2Tab().
+  if (!window._resultsData || !window._resultsData.length) {
+    fetch('./picks_history.json?t=' + Date.now())
+      .then(r => r.ok ? r.json() : []).catch(() => [])
+      .then(data => {
+        if (!window._resultsData || !window._resultsData.length) {
+          window._resultsData = data || [];
+        }
+        _renderV2Tab();
+      });
+  } else {
+    _renderV2Tab();
+  }
   // Auto-resolve silently on tab open
   autoResolveV2(true).then(n => { if (n > 0) _renderV2Tab(); });
 }
@@ -464,7 +477,47 @@ function _renderV2Tab() {
 
   // ── 1. Past matches from localStorage ────────────────────────────────────
   const stored  = _v2Load();
-  const pastAll = stored.filter(e => e.dateIso < todayIso && e.matchScore > 0);
+  let pastAll = stored.filter(e => e.dateIso < todayIso && e.matchScore > 0);
+
+  // ── Fallback: picks_history.json → fill gaps in localStorage ─────────────
+  // If localStorage was trimmed (data loss), recover from picks_history.json
+  // which the Results tab has already fetched into window._resultsData.
+  if (Array.isArray(window._resultsData) && window._resultsData.length) {
+    const storedPairDates = new Set(pastAll.map(e => `${e.dateIso}|${e.home}|${e.away}`));
+    const cutoffIso = new Date(Date.now() - 60 * 86400000).toISOString().slice(0, 10);
+    for (const e of window._resultsData) {
+      if (!e.dateIso || e.dateIso >= todayIso || e.dateIso < cutoffIso) continue;
+      if (storedPairDates.has(`${e.dateIso}|${e.home}|${e.away}`)) continue;
+      if (!e.picks || !e.picks.length) continue;
+      // Convert picks_history format to V2 format
+      const v2Entry = {
+        id:         `${e.dateIso}-${e.league||''}-${e.home}-${e.away}`,
+        date:       e.date || e.dateIso,
+        dateIso:    e.dateIso,
+        league:     e.league || '',
+        leagueName: e.leagueName || e.league || '',
+        leagueFlag: e.leagueFlag || '',
+        home:       e.home,
+        away:       e.away,
+        matchScore: e.cardScore ?? 5,  // fallback: show if no score
+        finalScore: e.finalScore || '',
+        picks:      e.picks.map(p => ({
+          icon:    p.icon || '🎯',
+          market:  p.market || '',
+          conf:    p.conf || 'medium',
+          sc:      p.sc ?? null,
+          odds:    p.odds ?? null,
+          result:  p.result ?? null,
+          isTopCard: p.isTopCard || false,
+        })),
+        _fromHistory: true,  // mark as imported
+      };
+      pastAll.push(v2Entry);
+      storedPairDates.add(`${e.dateIso}|${e.home}|${e.away}`);
+    }
+    // Re-sort after merge
+    pastAll.sort((a, b) => (b.dateIso || '').localeCompare(a.dateIso || ''));
+  }
 
   // Also keep future/today resolved entries from localStorage that are no longer
   // in the buffer (match finished, resolved, card gone).

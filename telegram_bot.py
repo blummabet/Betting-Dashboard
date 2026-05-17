@@ -296,6 +296,13 @@ def format_recap_post(yesterday_entries: list) -> str:
         score   = entry.get('finalScore', '')
         score_s = f' <i>({score})</i>' if score else ''
 
+        # ── Nur Spiele zeigen wo ein Pick tatsächlich gesendet wurde ─────────
+        # sent_log-Key entspricht fkey(fx, 'pick') = "{dateIso}|{home}|{away}|pick"
+        sent_key   = f"{yesterday_iso}|{home}|{away}|pick"
+        sent_entry = sent_log.get(sent_key)
+        if not sent_entry:
+            continue  # Kein Pick gesendet → nicht im Recap zeigen
+
         all_picks = [
             p for p in entry.get('picks', [])
             if p.get('result') in ('win', 'loss', 'void') and p.get('odds')
@@ -304,16 +311,15 @@ def format_recap_post(yesterday_entries: list) -> str:
             continue
 
         # ── Priorisiere den tatsächlich gesendeten Markt ──────────────────────
-        # sent_log-Key entspricht fkey(fx, 'pick') = "{dateIso}|{home}|{away}|pick"
-        sent_key    = f"{yesterday_iso}|{home}|{away}|pick"
-        sent_market = sent_log.get(sent_key, {}).get('market', '')
+        sent_market = sent_entry.get('market', '')
         sent_picks  = [p for p in all_picks if p.get('market') == sent_market] if sent_market else []
 
         if sent_picks:
             # Genau der gesendete Pick — Ergebnis zeigen wie es ist
             p = sent_picks[0]
         else:
-            # Fallback: kein sent_log-Eintrag → win zuerst, höchste Quote
+            # Fallback: market nicht im sent_log (altes Format) oder kein Match
+            # → win zuerst, höchste Quote
             all_picks.sort(key=lambda p: (p.get('result') != 'win', -(p.get('odds') or 0)))
             p = all_picks[0]
 

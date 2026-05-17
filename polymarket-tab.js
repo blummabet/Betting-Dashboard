@@ -813,16 +813,23 @@ function _savePolyBets(bets) {
 
 // Free up localStorage space by trimming old/large entries
 function _trimLocalStorageQuota() {
-  // 1. Trim betedge_picks_v2 — keep only last 120 entries
+  // 1. Trim betedge_picks_v2 — keep last 60 days (date-based, not count-based)
+  // ~30–50 fixtures/day × 60 days = up to 3000 entries, but localStorage has ~5MB.
+  // Date-based trim avoids data loss when many fixtures are tracked in a day.
   try {
     const v2Raw = localStorage.getItem('betedge_picks_v2');
     if (v2Raw) {
       const v2 = JSON.parse(v2Raw);
-      if (v2.length > 120) {
-        // Keep newest 120 (sorted by dateIso desc)
-        v2.sort((a, b) => (b.dateIso || '').localeCompare(a.dateIso || ''));
-        localStorage.setItem('betedge_picks_v2', JSON.stringify(v2.slice(0, 120)));
-        console.log(`[Storage] Trimmed betedge_picks_v2: ${v2.length} → 120 entries`);
+      if (v2.length > 500) {
+        // Keep last 60 days of data
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - 60);
+        const cutoffIso = cutoff.toISOString().slice(0, 10);
+        const trimmed = v2.filter(e => (e.dateIso || '') >= cutoffIso);
+        if (trimmed.length < v2.length) {
+          localStorage.setItem('betedge_picks_v2', JSON.stringify(trimmed));
+          console.log(`[Storage] Trimmed betedge_picks_v2: ${v2.length} → ${trimmed.length} entries (kept ≥${cutoffIso})`);
+        }
       }
     }
   } catch(_) {}
