@@ -858,6 +858,114 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .kombi-total-val{font-size:18px;font-weight:700;color:var(--accent);}
 .kombi-note{font-size:10px;color:var(--muted);margin-top:7px;font-style:italic;line-height:1.5;}
 
+/* ── WM 2026 INTERNATIONAL CARDS ─────────────────────── */
+.wm-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:20px 0 14px;}
+.wm-header-left{}.wm-title{font-size:24px;font-weight:900;letter-spacing:-.4px;}
+.wm-subtitle{font-size:12px;color:var(--muted);margin-top:3px;}
+.wm-header-right{display:flex;align-items:center;gap:8px;}
+.wm-countdown{display:inline-block;background:rgba(0,212,161,.10);border:1px solid rgba(0,212,161,.25);border-radius:10px;padding:5px 12px;font-size:11px;font-weight:700;color:var(--accent);}
+.wm-countdown-live{background:rgba(248,81,73,.10);border-color:rgba(248,81,73,.30);color:var(--red);}
+
+.wm-group-filter{display:flex;gap:6px;flex-wrap:wrap;padding:10px 0 12px;border-bottom:1px solid var(--border);margin-bottom:4px;}
+.wm-gf-btn{display:inline-flex;align-items:center;padding:5px 13px;border-radius:18px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .12s;}
+.wm-gf-btn:hover{color:var(--text);border-color:rgba(0,212,161,.4);}
+.wm-gf-btn.active{background:rgba(0,212,161,.12);border-color:var(--accent);color:var(--accent);}
+
+.wm-md-filter{display:flex;gap:6px;flex-wrap:wrap;padding:8px 0 10px;}
+.wm-md-btn{display:inline-flex;align-items:center;padding:4px 11px;border-radius:14px;border:1px solid var(--border);background:none;color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .12s;}
+.wm-md-btn:hover{color:var(--text);border-color:rgba(0,212,161,.3);}
+.wm-md-btn.active{background:rgba(0,212,161,.10);border-color:var(--accent);color:var(--accent);}
+
+.wm-date-divider{display:flex;align-items:center;gap:10px;padding:16px 0 8px;}
+.wm-date-divider-text{font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;}
+.wm-date-divider-line{flex:1;height:1px;background:var(--border);}
+.wm-date-today{font-size:9px;font-weight:800;letter-spacing:1px;color:var(--yellow);background:rgba(227,179,65,.10);border:1px solid rgba(227,179,65,.25);border-radius:6px;padding:2px 7px;}
+.wm-date-upcoming{font-size:9px;font-weight:700;color:var(--muted);background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:2px 7px;}
+
+.wm-cards-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px;padding-bottom:40px;}
+
+/* WM CARD */
+.wm-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;display:flex;flex-direction:column;
+  position:relative;transition:transform .16s,box-shadow .16s;
+}
+.wm-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.40);}
+.wm-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-accent,transparent);z-index:1;}
+
+/* Group bar */
+.wm-card-groupbar{
+  display:flex;align-items:center;gap:7px;flex-wrap:wrap;
+  padding:10px 14px 8px;background:var(--card2);border-bottom:1px solid var(--border);
+}
+.wm-group-tag{font-size:10px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;}
+.wm-matchday-tag{font-size:10px;font-weight:700;color:var(--muted);background:var(--border);border-radius:6px;padding:1px 6px;}
+.wm-groupbar-sep{color:var(--border);font-size:11px;}
+.wm-date-tag{font-size:10px;color:var(--muted);font-weight:600;}
+.wm-live-badge{font-size:9px;font-weight:800;color:var(--yellow);letter-spacing:.4px;margin-left:auto;}
+
+/* Card body: teams + odds side by side */
+.wm-card-body{display:flex;align-items:stretch;padding:12px 14px 10px;gap:10px;}
+.wm-teams{flex:1;display:flex;flex-direction:column;gap:0;}
+.wm-team-row{display:flex;align-items:center;gap:8px;padding:5px 0;}
+.wm-draw-separator{padding:2px 0;display:flex;align-items:center;}
+.wm-draw-separator span{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.3px;}
+.wm-standing-pos{font-size:10px;font-weight:800;color:var(--muted);min-width:14px;}
+.wm-flag{font-size:20px;flex-shrink:0;}
+.wm-name{font-size:14px;font-weight:700;color:var(--text);flex:1;min-width:0;}
+.wm-elo-badge{font-size:10px;font-weight:700;color:var(--muted);background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:1px 5px;flex-shrink:0;}
+
+/* Odds column */
+.wm-odds-col{display:flex;flex-direction:column;align-items:stretch;gap:3px;min-width:72px;flex-shrink:0;}
+.wm-odds-cell{display:flex;justify-content:space-between;align-items:center;gap:5px;background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:5px 8px;}
+.wm-odds-cell.wm-odds-hl{border-color:rgba(0,212,161,.4);background:rgba(0,212,161,.06);}
+.wm-odds-lbl{font-size:9px;font-weight:700;color:var(--muted);}
+.wm-odds-val{font-size:12px;font-weight:800;color:var(--text);}
+.wm-odds-empty{display:flex;flex-direction:column;gap:3px;}
+.wm-odds-na{background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:6px 8px;font-size:11px;color:var(--muted);text-align:center;}
+.wm-odds-hint{font-size:8px;color:var(--muted);text-align:center;letter-spacing:.3px;margin-top:2px;}
+
+/* Odds strip */
+.wm-odds-strip{display:flex;align-items:center;gap:7px;padding:5px 14px;background:rgba(0,0,0,.15);border-top:1px solid var(--border);font-size:10px;}
+.wm-strip-label{font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+.wm-strip-sep{color:var(--border);}
+.wm-strip-open{color:var(--muted);}
+
+/* Venue */
+.wm-venue{padding:3px 14px 8px;font-size:10px;color:var(--muted);letter-spacing:.15px;}
+
+/* Scenario */
+.wm-scenario{margin:0 12px 10px;padding:9px 12px;background:rgba(0,212,161,.05);border:1px solid rgba(0,212,161,.18);border-radius:9px;font-size:12px;color:var(--muted);line-height:1.5;}
+.wm-scenario strong{color:var(--text);}
+
+/* Picks section */
+.wm-picks-section{padding:10px 14px 12px;border-top:1px solid var(--border);}
+.wm-player-section{background:rgba(167,139,250,.03);}
+.wm-section-header{font-size:9px;font-weight:800;letter-spacing:.8px;color:var(--accent);text-transform:uppercase;margin-bottom:8px;}
+.wm-pick-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid rgba(48,54,61,.5);}
+.wm-pick-row:last-child{border-bottom:none;padding-bottom:0;}
+.wm-verdict{font-size:9px;font-weight:800;letter-spacing:.5px;padding:3px 7px;border-radius:7px;border:1px solid;flex-shrink:0;}
+.wm-pick-icon{font-size:14px;flex-shrink:0;}
+.wm-pick-main{flex:1;min-width:0;}
+.wm-pick-market{font-size:12px;font-weight:700;color:var(--text);}
+.wm-pick-info{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4;}
+.wm-pick-stars{font-size:11px;flex-shrink:0;}
+.wm-pick-odds{font-size:13px;font-weight:800;color:var(--accent);flex-shrink:0;min-width:36px;text-align:right;}
+
+/* Squad spotlight */
+.wm-squad-spotlight{padding:10px 14px 12px;border-top:1px solid var(--border);background:rgba(88,166,255,.02);}
+.wm-squad-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
+.wm-squad-player{display:flex;align-items:center;gap:7px;flex:1;min-width:140px;}
+.wm-squad-flag{font-size:16px;}
+.wm-squad-name{font-size:12px;font-weight:700;color:var(--text);}
+.wm-squad-meta{font-size:10px;color:var(--muted);margin-top:1px;}
+
+@media(max-width:640px){
+  .wm-cards-wrap{grid-template-columns:1fr;}
+  .wm-name{font-size:13px;}
+  .wm-flag{font-size:18px;}
+}
+
 /* DAY FILTER */
 .day-filter{
   display:flex;gap:6px;flex-wrap:wrap;
@@ -2313,17 +2421,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div id="trackingV2Panel" style="display:none;max-width:1200px;margin:0 auto;padding:20px 16px 80px;"></div>
 
 <!-- INTERNATIONAL PANELS (WM 2026) -->
-<div id="intlCardsPanel" style="display:none;max-width:1100px;margin:0 auto;padding:60px 16px 80px;">
-  <div style="text-align:center;color:var(--muted);">
-    <div style="font-size:56px;margin-bottom:20px;">🌍</div>
-    <div style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-.3px;">WM 2026 — Coming Soon</div>
-    <div style="font-size:14px;line-height:1.7;max-width:480px;margin:0 auto;">
-      FIFA Weltmeisterschaft startet am <strong style="color:var(--accent)">11. Juni 2026</strong><br>
-      USA · Canada · Mexico · 48 Teams · 104 Spiele<br><br>
-      <span style="font-size:12px;opacity:.7">Cards, Gruppen-Szenarien, Squad-Infos und Picks erscheinen hier sobald das System bereit ist.</span>
-    </div>
-  </div>
-</div>
+<div id="intlCardsPanel" style="display:none;max-width:1100px;margin:0 auto;padding:0 16px 80px;"></div>
 <div id="intlTrackingPanel" style="display:none;max-width:1200px;margin:0 auto;padding:60px 16px 80px;">
   <div style="text-align:center;color:var(--muted);">
     <div style="font-size:56px;margin-bottom:20px;">📈</div>
@@ -2446,6 +2544,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <script src="ui.js"></script>
 <script src="polymarket-tab.js"></script>
 <script src="results-v2.js"></script>
+<script src="wm2026-renderer.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════
 //  LIVE DATA from Sofascore — fetched 31.03.2026
