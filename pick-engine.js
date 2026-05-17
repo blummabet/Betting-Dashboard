@@ -2124,11 +2124,11 @@ function getBettingPicks(match, odds, leagueKey) {
       // Real corner data → slight confidence boost (better estimate than formula)
       if (cornersDataReal) scO = Math.min(0.92, scO + 0.05);
       // Choose market line closest to estimate from below.
-      // MIN_ODD escalation: if the chosen Over line is too cheap (< 1.35) because
+      // MIN_ODD escalation: if the chosen Over line is too cheap (< 1.40) because
       // cornersEst greatly exceeds the threshold, step up to a higher line.
-      // Higher Over line = harder to hit = better odds.  Keep stepping until >= 1.35
+      // Higher Over line = harder to hit = better odds.  Keep stepping until >= 1.40
       // or until no higher line is available (then keep current regardless).
-      const _OVER_MIN_ODD = 1.35;
+      const _OVER_MIN_ODD = 1.40;
       const _overLines = [
         { mkt:'Über 6.5 Ecken',  odds: o.co65  || null },
         { mkt:'Über 7.5 Ecken',  odds: o.co75  || null },
@@ -2186,13 +2186,16 @@ function getBettingPicks(match, odds, leagueKey) {
       // Real bookie odds: suppress if implied prob exceeds FV by >10pp (tight gate, real data).
       // Estimated odds: suppress if implied prob exceeds FV by >15pp (wider gate, model uncertainty).
       // This catches cases like Estrela/Porto -21pp or Osasuna/Sevilla -23pp on estimated lines.
-      const _cornLineNums = [8.5, 9.5, 10.5, 11.5];
-      const _cornFairProbO = _cOOdds != null
-        ? _poissonOver(cornersEst, _cornLineNums[_overIdx])
-        : null;
+      // Extract exact line number from selected market label (e.g. "Über 9.5 Ecken" → 9.5).
+      // Fixes prior index-offset bug where _cornLineNums[_overIdx] was misaligned by 2 positions.
+      const _cOLineNum = parseFloat(_cOMkt.replace('Über ', '').replace(' Ecken', ''));
+      const _cornFairProbO = _cOOdds != null ? _poissonOver(cornersEst, _cOLineNum) : null;
+      const _cornModelOdds = _cornFairProbO != null && _cornFairProbO > 0
+        ? Math.round((1 / _cornFairProbO) * 100) / 100 : null;
       const _cornNegEdge = _hasNegEdge(_cornFairProbO, _cOOdds, o._cornersOddsEst, GATE.CORN_REAL, GATE.CORN_EST);
       if (!_cornSkip && !_cornSkipHigh && !_cornSkipLowSc && !_cornSkipDoubleEst && !_cornNegEdge)
       sC.push({sc: scO, p:{icon:'🚩', market:_cOMkt, odds:_cOOdds, oddsIsEst: o._cornersOddsEst||false,
+        modelOdds: _cornModelOdds,
         conf: scO>0.65?'high':scO>0.38?'medium':'low',
         reason:`${cornersDataReal
           ? `Saisonstatistik: ${cornersEst.toFixed(1)} Ecken erwartet (${match.home} Ø ${_hCornersHome} Heim + ${match.away} Ø ${_aCornersAway} Ausw.).`
@@ -2201,19 +2204,40 @@ function getBettingPicks(match, odds, leagueKey) {
 
       // ── Under ────────────────────────────────────────────────────────────────
       // Only meaningful when estimate clearly below the chosen threshold.
-      // MIN_ODD guard: Under-Ecken odds fall as the line rises (higher Under = even more
-      // certain = even cheaper). So if the chosen line has odds < 1.35 there is no
-      // meaningful value on ANY Under line — drop the pick entirely rather than
-      // suggesting a higher line that would be even shorter.
+      // MIN_ODD target: ~1.40 (matches user target of 1.40–1.60 for all corner picks).
+      // Escalation: for Under, HIGHER odds require a HARDER (lower) line.
+      // Start at the softest line that's still above the estimate; step DOWN to a harder
+      // line (lower threshold) if the selected line's odds fall below 1.40.
+      // Drop the pick entirely if even the hardest sensible line is below 1.40.
       if (cornersEst < 9.0 && !_anyNeedsWin) {
         let scU = cornersEst < 7.0 ? 0.72 : cornersEst < 7.5 ? 0.60 : cornersEst < 8.0 ? 0.47 : 0.34;
         if (cornersDataReal) scU = Math.min(0.88, scU + 0.06);
         if (scU >= 0.32) {
-          const _cUMkt  = cornersEst < 6.5 ? 'Unter 6.5 Ecken' : cornersEst < 7.0 ? 'Unter 7.5 Ecken' : cornersEst < 7.5 ? 'Unter 8.5 Ecken' : 'Unter 9.5 Ecken';
-          const _cUOdds = _cUMkt === 'Unter 6.5 Ecken' ? (o.cu65 || null) : _cUMkt === 'Unter 7.5 Ecken' ? (o.cu75 || null) : _cUMkt === 'Unter 8.5 Ecken' ? (o.cu85 || null) : (o.cu95 || null);
-          // Drop pick when odds are known but below the minimum threshold (1.35).
-          // A 1.11 "Unter 8.5" is not a recommendation — it's noise.
-          const _UNDER_MIN_ODD = 1.35;
+          // Under lines ordered softest→hardest (lower line = harder = better odds).
+          const _UNDER_MIN_ODD = 1.40;
+          const _underLines = [
+            { mkt: 'Unter 9.5 Ecken', odds: o.cu95 || null },
+            { mkt: 'Unter 8.5 Ecken', odds: o.cu85 || null },
+            { mkt: 'Unter 7.5 Ecken', odds: o.cu75 || null },
+            { mkt: 'Unter 6.5 Ecken', odds: o.cu65 || null },
+          ];
+          // Starting index: softest line that's above the estimate.
+          let _underStartIdx = cornersEst < 6.5 ? 3 : cornersEst < 7.0 ? 2 : cornersEst < 7.5 ? 1 : 0;
+          // Escalate to harder lines if selected odds too cheap (< 1.40).
+          let _underIdx = _underStartIdx;
+          while (_underIdx < _underLines.length - 1) {
+            const _chk = _underLines[_underIdx].odds;
+            if (_chk !== null && _chk < _UNDER_MIN_ODD) _underIdx++;
+            else break;
+          }
+          const _cUMkt  = _underLines[_underIdx].mkt;
+          const _cUOdds = _underLines[_underIdx].odds;
+          // Poisson fair prob for Under line → modelOdds enables Signal 1 in computeVerdict.
+          const _cULineNum    = parseFloat(_cUMkt.replace('Unter ', '').replace(' Ecken', ''));
+          const _cornFairProbU = _cUOdds != null ? Math.max(0.02, 1 - _poissonOver(cornersEst, _cULineNum)) : null;
+          const _cornModelOddsU = _cornFairProbU != null && _cornFairProbU > 0
+            ? Math.round((1 / _cornFairProbU) * 100) / 100 : null;
+          // Drop pick when odds are known but below the minimum threshold (1.40).
           const _underOddsOk = _cUOdds == null || _cUOdds >= _UNDER_MIN_ODD;
           // Same double-estimate guard as Over: no real odds + no real stats → require high confidence.
           const _cornUnderDoubleEst = o._cornersUnderOddsEst && !cornersDataReal && scU < 0.65;
@@ -2222,6 +2246,7 @@ function getBettingPicks(match, odds, leagueKey) {
               ? `<br>📊 Ecken-Daten: ${match.home} Ø ${_hCornersHome||'?'} Heim · ${match.away} Ø ${_aCornersAway||'?'} Ausw.${_hFormCornMod!==0||_aFormCornMod!==0?` · Formation ${_hFormation||'?'} vs ${_aFormation||'?'}`:''}  → nur Ø ${cornersEst.toFixed(1)} erwartet.`
               : ``;
             sC.push({sc: scU, p:{icon:'🚩', market:_cUMkt, odds:_cUOdds, oddsIsEst: o._cornersUnderOddsEst||false,
+              modelOdds: _cornModelOddsU,
               conf: scU>0.60?'high':scU>0.38?'medium':'low',
               reason:`${cornersDataReal
                 ? `Defensives Spiel — Saisonschnitt ergibt nur ${cornersEst.toFixed(1)} Ecken gesamt.`
