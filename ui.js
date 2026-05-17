@@ -21,65 +21,121 @@
 // ═══════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════
-//  VIEW SWITCHER
+//  VIEW SWITCHER — Two-level navigation
+//  Top level:  national | intl | sharp | polytrading | polybetting | heart | status
+//  Sub level:  cards | tracking  (only for national + intl)
 // ═══════════════════════════════════════════════════════
+
+// Track current top-level section so showSubView() knows where to navigate
+let _activeSection = 'national';
+
+// All panel IDs — hidden when switching views
+const _ALL_PANELS = [
+  'mainContent', 'trackingV2Panel', 'resultsPanel',
+  'intlCardsPanel', 'intlTrackingPanel',
+  'polymarketPanel', 'polyTraderPanel',
+  'heartPanel', 'statusPanel',
+];
+
+// Top-nav button IDs
+const _TOP_NAV_IDS = [
+  'navNational', 'navIntl', 'navSharp',
+  'navPolyTrader', 'navPolymarket', 'navHeart', 'navStatus',
+];
+
 function showView(view) {
-  const isSeason      = view === 'season';
-  const isResults     = view === 'results';
-  const isHeart       = view === 'heart';
-  const isStatus      = view === 'status';
-  const isPolymarket  = view === 'polymarket';
-  const isTracking    = view === 'tracking';
-  const isPolyTrader  = view === 'polytrader';
+  // ── Determine section ────────────────────────────────
+  _activeSection = view.startsWith('national') ? 'national'
+                 : view.startsWith('intl')     ? 'intl'
+                 : view;  // sharp | polytrading | polybetting | heart | status
 
-  document.getElementById('mainContent').style.display        = isSeason      ? '' : 'none';
-  document.getElementById('resultsPanel').style.display       = isResults     ? '' : 'none';
-  document.getElementById('heartPanel').style.display         = isHeart       ? '' : 'none';
-  document.getElementById('statusPanel').style.display        = isStatus      ? '' : 'none';
-  document.getElementById('polymarketPanel').style.display    = isPolymarket  ? '' : 'none';
-  document.getElementById('trackingV2Panel').style.display    = isTracking    ? '' : 'none';
-  const _ptPanel = document.getElementById('polyTraderPanel');
-  if (_ptPanel) _ptPanel.style.display = isPolyTrader ? '' : 'none';
+  // ── Hide all panels ──────────────────────────────────
+  _ALL_PANELS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
 
-  document.querySelector('.league-nav').style.display         = isSeason      ? '' : 'none';
-  const legend = document.querySelector('.legend-section');
-  if (legend) legend.style.display = isSeason ? '' : 'none';
+  // ── Show correct panel ───────────────────────────────
+  const panelMap = {
+    'national-cards':    'mainContent',
+    'national-tracking': 'trackingV2Panel',
+    'intl-cards':        'intlCardsPanel',
+    'intl-tracking':     'intlTrackingPanel',
+    'sharp':             'mainContent',
+    'polytrading':       'polyTraderPanel',
+    'polybetting':       'polymarketPanel',
+    'heart':             'heartPanel',
+    'status':            'statusPanel',
+  };
+  const panelId = panelMap[view];
+  if (panelId) {
+    const panel = document.getElementById(panelId);
+    if (panel) panel.style.display = '';
+  }
 
-  document.getElementById('navSeason').classList.toggle('active',      isSeason);
-  document.getElementById('navResults').classList.toggle('active',     isResults);
-  document.getElementById('navHeart').classList.toggle('active',       isHeart);
-  document.getElementById('navStatus').classList.toggle('active',      isStatus);
-  document.getElementById('navPolymarket').classList.toggle('active',  isPolymarket);
-  document.getElementById('navTracking').classList.toggle('active',    isTracking);
-  const _navPT = document.getElementById('navPolyTrader');
-  if (_navPT) _navPT.classList.toggle('active', isPolyTrader);
-  // Sharp Radar uses the season panel — clear its active when another view is picked
-  const _navSharp = document.getElementById('navSharp');
-  if (_navSharp) _navSharp.classList.remove('active');
+  // ── League nav: visible for National Cards + Sharp ───
+  const leagueNav = document.querySelector('.league-nav');
+  const legend    = document.querySelector('.legend-section');
+  const showLeague = view === 'national-cards' || view === 'sharp';
+  if (leagueNav) leagueNav.style.display = showLeague ? '' : 'none';
+  if (legend)    legend.style.display    = view === 'national-cards' ? '' : 'none';
 
-  if (isResults)     initResults();
-  if (isStatus)      { initStatus(); buildValidatorDates(); }
-  if (isPolymarket)  initPolymarket();
-  if (isTracking && typeof initResultsV2 === 'function') initResultsV2();
-  if (isPolyTrader)  initPolyTrader();
+  // ── Sub-nav: visible for National + International ────
+  const subNav = document.getElementById('subNav');
+  const hasSubNav = _activeSection === 'national' || _activeSection === 'intl';
+  if (subNav) subNav.style.display = hasSubNav ? '' : 'none';
+
+  // Sub-nav active buttons
+  const isCards    = view.endsWith('-cards');
+  const isTracking = view.endsWith('-tracking');
+  const subCards    = document.getElementById('subCards');
+  const subTracking = document.getElementById('subTracking');
+  if (subCards)    subCards.classList.toggle('active',    isCards);
+  if (subTracking) subTracking.classList.toggle('active', isTracking);
+
+  // ── Top-nav active state ─────────────────────────────
+  _TOP_NAV_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+  const topNavMap = {
+    'national':    'navNational',
+    'intl':        'navIntl',
+    'sharp':       'navSharp',
+    'polytrading': 'navPolyTrader',
+    'polybetting': 'navPolymarket',
+    'heart':       'navHeart',
+    'status':      'navStatus',
+  };
+  const activeNavId = topNavMap[_activeSection];
+  if (activeNavId) {
+    const el = document.getElementById(activeNavId);
+    if (el) el.classList.add('active');
+  }
+
+  // ── Sharp Radar: activate sharp league button ────────
+  if (view === 'sharp') {
+    document.querySelectorAll('.league-btn').forEach(b => b.classList.remove('active'));
+    const sharpBtn = document.querySelector('.league-btn[data-league="sharp"]');
+    if (sharpBtn) sharpBtn.classList.add('active');
+    window._currentLeague = 'sharp';
+    if (typeof renderSharpRadar === 'function') renderSharpRadar();
+  }
+
+  // ── Callbacks ────────────────────────────────────────
+  if (view === 'status')            { initStatus(); buildValidatorDates(); }
+  if (view === 'polybetting')       initPolymarket();
+  if (view === 'polytrading')       initPolyTrader();
+  if (view === 'national-tracking' && typeof initResultsV2 === 'function') initResultsV2();
 }
 
-// Navigate directly to Sharp Radar from the top nav
-function showSharpRadar() {
-  // Show the season panel (same container as league views)
-  showView('season');
-  // Activate the sharp sub-tab in league nav
-  document.querySelectorAll('.league-btn').forEach(b => b.classList.remove('active'));
-  const _sharpBtn = document.querySelector('.league-btn[data-league="sharp"]');
-  if (_sharpBtn) _sharpBtn.classList.add('active');
-  window._currentLeague = 'sharp';
-  // Render the radar
-  if (typeof renderSharpRadar === 'function') renderSharpRadar();
-  // Mark Sharp Radar active in top nav (showView de-activated navSeason)
-  const _navSharp = document.getElementById('navSharp');
-  if (_navSharp) _navSharp.classList.add('active');
-  document.getElementById('navSeason').classList.remove('active');
+// Sub-nav click: navigate within current section
+function showSubView(sub) {
+  showView(_activeSection + '-' + sub);
 }
+
+// Backward compat (called from some league-btn click handlers)
+function showSharpRadar() { showView('sharp'); }
 
 // ═══════════════════════════════════════════════════════
 //  STATUS / DATA TAB

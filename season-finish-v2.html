@@ -115,6 +115,22 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .top-nav-btn:hover{color:var(--text);}
 .top-nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
 
+/* SUB NAV (National / International) */
+.sub-nav{
+  background:var(--card);border-bottom:1px solid var(--border);
+  padding:0 20px;display:flex;align-items:stretch;gap:0;
+}
+.sub-nav-btn{
+  display:flex;align-items:center;gap:7px;padding:9px 18px;background:none;border:none;
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;
+  text-transform:uppercase;letter-spacing:.5px;
+  transition:color .15s,border-color .15s;font-family:inherit;
+}
+.sub-nav-btn:hover{color:var(--text);}
+.sub-nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.sub-nav-badge{font-size:10px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:1px 6px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:600;}
+
 /* LEAGUE NAV */
 .league-nav{
   background:var(--card);border-bottom:2px solid var(--border);
@@ -136,6 +152,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   border-radius:10px;padding:1px 6px;margin-left:2px;color:var(--muted);
 }
 .league-btn.urgent .lr{background:#2d1500;border-color:#5d3000;color:var(--orange);}
+.league-btn.ending .lr{background:#1a1200;border-color:#4a3500;color:var(--yellow);}
+.league-btn.done .lr{background:transparent;border-color:var(--border);color:#444;text-decoration:line-through;}
 
 /* MAIN */
 .container{max-width:980px;margin:0 auto;padding:20px;}
@@ -1041,32 +1059,37 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="logo-fallback" style="display:none">🐕</div>
     <span class="lt">CocoBet</span>
   </div>
-  <button class="top-nav-btn" id="navSharp" onclick="showSharpRadar()">📡 Sharp Radar</button>
-  <button class="top-nav-btn" id="navPolyTrader" onclick="showView('polytrader')" style="color:#00d4a1;border-color:#00d4a144">📈 Poly Trader</button>
-  <button class="top-nav-btn active" id="navSeason" onclick="showView('season')">🏁 Season Finish</button>
-  <button class="top-nav-btn" id="navPolymarket" onclick="showView('polymarket')" style="color:#a78bfa;border-color:#a78bfa44">🟣 Polymarket</button>
-  <button class="top-nav-btn" id="navResults" onclick="showView('results')">📊 Results</button>
+  <button class="top-nav-btn active" id="navNational" onclick="showView('national-cards')">🇪🇺 National</button>
+  <button class="top-nav-btn" id="navIntl" onclick="showView('intl-cards')">🌍 International</button>
+  <button class="top-nav-btn" id="navSharp" onclick="showView('sharp')">📡 Sharp Radar</button>
+  <button class="top-nav-btn" id="navPolyTrader" onclick="showView('polytrading')" style="color:#00d4a1">📈 Polymarket Trading</button>
+  <button class="top-nav-btn" id="navPolymarket" onclick="showView('polybetting')" style="color:#a78bfa">🟣 Polymarket Betting</button>
   <button class="top-nav-btn" id="navHeart" onclick="showView('heart')">❤️ Heart</button>
-  <button class="top-nav-btn" id="navStatus" onclick="showView('status')">🔧 Status/Data</button>
-  <button class="top-nav-btn" id="navTracking" onclick="showView('tracking')">📈 Tracking</button>
-  <button class="top-nav-btn" id="navSavePicks" onclick="savePicksToday(this)" title="Heutige Picks in localStorage sichern" style="margin-left:auto;color:#3fb950;border-color:#3fb950;">💾 <span id="navSaveLabel">Picks speichern</span></button>
+  <button class="top-nav-btn" id="navStatus" onclick="showView('status')">🔧 Status</button>
+  <button class="top-nav-btn" id="navSavePicks" onclick="savePicksToday(this)" title="Heutige Picks in localStorage sichern" style="margin-left:auto;color:#3fb950;">💾 <span id="navSaveLabel">Picks speichern</span></button>
+</div>
+
+<!-- SUB NAV (Cards / Tracking — für National und International) -->
+<div class="sub-nav" id="subNav">
+  <button class="sub-nav-btn active" id="subCards" onclick="showSubView('cards')">🃏 Cards</button>
+  <button class="sub-nav-btn" id="subTracking" onclick="showSubView('tracking')">📈 Tracking</button>
 </div>
 
 <!-- LEAGUE NAV -->
 <div class="league-nav" id="leagueNav">
   <button class="league-btn active" data-league="overview"><span class="lf">⭐</span><span>Best of All</span></button>
   <button class="league-btn" data-league="sharp" style="border-bottom-color:rgba(0,212,161,0.4)"><span class="lf">📡</span><span>Sharp Radar</span></button>
-  <button class="league-btn urgent" data-league="ENG"><span class="lf">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span>Premier League</span><span class="lr">7R</span></button>
-  <button class="league-btn urgent" data-league="GER"><span class="lf">🇩🇪</span><span>Bundesliga</span><span class="lr">7R</span></button>
-  <button class="league-btn" data-league="ITA"><span class="lf">🇮🇹</span><span>Serie A</span><span class="lr">8R</span></button>
-  <button class="league-btn" data-league="ESP"><span class="lf">🇪🇸</span><span>La Liga</span><span class="lr">9R</span></button>
-  <button class="league-btn urgent" data-league="FRA"><span class="lf">🇫🇷</span><span>Ligue 1</span><span class="lr">7R</span></button>
-  <button class="league-btn" data-league="AUT"><span class="lf">🇦🇹</span><span>Österreich</span><span class="lr">8R</span></button>
-  <button class="league-btn urgent" data-league="NED"><span class="lf">🇳🇱</span><span>Eredivisie</span><span class="lr">6R</span></button>
-  <button class="league-btn urgent" data-league="POR"><span class="lf">🇵🇹</span><span>Primeira Liga</span><span class="lr">7R</span></button>
-  <button class="league-btn urgent" data-league="SCO"><span class="lf">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span><span>Scottish Prem</span><span class="lr">7R</span></button>
-  <button class="league-btn" data-league="TUR"><span class="lf">🇹🇷</span><span>Süper Lig</span><span class="lr">11R</span></button>
-  <button class="league-btn urgent" data-league="SUI"><span class="lf">🇨🇭</span><span>Swiss SL</span><span class="lr">5R</span></button>
+  <button class="league-btn" data-league="ENG"><span class="lf">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span>Premier League</span><span class="lr">…</span></button>
+  <button class="league-btn" data-league="GER"><span class="lf">🇩🇪</span><span>Bundesliga</span><span class="lr">…</span></button>
+  <button class="league-btn" data-league="ITA"><span class="lf">🇮🇹</span><span>Serie A</span><span class="lr">…</span></button>
+  <button class="league-btn" data-league="ESP"><span class="lf">🇪🇸</span><span>La Liga</span><span class="lr">…</span></button>
+  <button class="league-btn" data-league="FRA"><span class="lf">🇫🇷</span><span>Ligue 1</span><span class="lr">…</span></button>
+  <button class="league-btn" data-league="AUT"><span class="lf">🇦🇹</span><span>Österreich</span><span class="lr">…</span></button>
+  <button class="league-btn" data-league="NED"><span class="lf">🇳🇱</span><span>Eredivisie</span><span class="lr">…</span></button>
+  <button class="league-btn" data-league="POR"><span class="lf">🇵🇹</span><span>Primeira Liga</span><span class="lr">…</span></button>
+  <button class="league-btn" data-league="SCO"><span class="lf">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span><span>Scottish Prem</span><span class="lr">…</span></button>
+  <button class="league-btn" data-league="TUR"><span class="lf">🇹🇷</span><span>Süper Lig</span><span class="lr">…</span></button>
+  <button class="league-btn" data-league="SUI"><span class="lf">🇨🇭</span><span>Swiss SL</span><span class="lr">…</span></button>
 </div>
 
 <div class="container" id="mainContent"></div>
@@ -2289,6 +2312,28 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <!-- TRACKING V2 PANEL -->
 <div id="trackingV2Panel" style="display:none;max-width:1200px;margin:0 auto;padding:20px 16px 80px;"></div>
 
+<!-- INTERNATIONAL PANELS (WM 2026) -->
+<div id="intlCardsPanel" style="display:none;max-width:1100px;margin:0 auto;padding:60px 16px 80px;">
+  <div style="text-align:center;color:var(--muted);">
+    <div style="font-size:56px;margin-bottom:20px;">🌍</div>
+    <div style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-.3px;">WM 2026 — Coming Soon</div>
+    <div style="font-size:14px;line-height:1.7;max-width:480px;margin:0 auto;">
+      FIFA Weltmeisterschaft startet am <strong style="color:var(--accent)">11. Juni 2026</strong><br>
+      USA · Canada · Mexico · 48 Teams · 104 Spiele<br><br>
+      <span style="font-size:12px;opacity:.7">Cards, Gruppen-Szenarien, Squad-Infos und Picks erscheinen hier sobald das System bereit ist.</span>
+    </div>
+  </div>
+</div>
+<div id="intlTrackingPanel" style="display:none;max-width:1200px;margin:0 auto;padding:60px 16px 80px;">
+  <div style="text-align:center;color:var(--muted);">
+    <div style="font-size:56px;margin-bottom:20px;">📈</div>
+    <div style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-.3px;">WM Tracking — Coming Soon</div>
+    <div style="font-size:14px;line-height:1.7;max-width:480px;margin:0 auto;">
+      Pick-Tracking und Auswertung für die Weltmeisterschaft 2026.
+    </div>
+  </div>
+</div>
+
 <!-- LEGEND REMOVED — see ❤️ Heart tab for full documentation -->
 <div style="display:none"><div>
 
@@ -2701,6 +2746,25 @@ const LEAGUES = {
     fixtures:[{"date": "17.05.2026", "time": "16:00", "home": "NK Slaven Belupo", "away": "Dinamo Zagreb", "eventId": 1384092, "matchScore": 8.0, "bothStakes": true, "homeStake": {"score": 7.8, "labels": [{"l": "🔴 Abstiegsgefahr", "c": "red"}], "motivationLevel": "low", "pointsNeeded": 2, "pressureRatio": 0.667, "mustWin": false, "canDraw": false, "pos": 8, "pts": 41, "played": 34, "teamGD": -10, "gapToLine": 0, "lineName": "Platz 8", "linePos": 8, "squadStrength": 10.0, "missingStarters": [], "topAttacker": {"name": "J. Mitrović", "pos": "F", "goals": 7, "assists": 2, "rating": 6.83}, "keyDefender": {"name": "D. Kovačić", "pos": "D", "rating": 6.76}}, "awayStake": {"score": 6.0, "labels": [{"l": "🏆 Meister", "c": "gold"}], "motivationLevel": "none", "pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": false, "canDraw": true, "pos": 1, "pts": 82, "played": 34, "teamGD": 62, "gapToLine": 17, "lineName": "Platz 2", "linePos": 2, "squadStrength": 9.0, "missingStarters": [{"name": "Sergi Domínguez", "pos": "D", "eta": "unbekannt", "imp": 0.866}], "topAttacker": {"name": "D. Beljo", "pos": "F", "goals": 30, "assists": 5, "rating": 7.25}, "keyDefender": {"name": "S. McKenna", "pos": "D", "rating": 7.25}}, "homeForm": {"form": "LDLDLW", "formScore": 0.28, "streak": 1, "goalsPerGame": 1.3, "concededPerGame": 1.8}, "awayForm": {"form": "DWWWWW", "formScore": 0.89, "streak": 5, "goalsPerGame": 2.0, "concededPerGame": 0.7}, "h2h": {"games": 20, "homeWins": 2, "draws": 2, "awayWins": 16, "avgGoals": 3.9, "lastMeetingYear": 2026}, "homeXg": {"homeGfAvg": 1.5, "homeGaAvg": 1.2, "homeWinRate": 0.471, "homeDrawRate": 0.294, "csRateHome": 0.294, "ftsRateHome": 0.235}, "awayXg": {"awayGfAvg": 2.4, "awayGaAvg": 0.7, "awayWinRate": 0.706, "awayDrawRate": 0.118, "csRateAway": 0.529, "ftsRateAway": 0.118}, "homeSquad": {"squadStrength": 10.0, "missingStarters": [], "injuryDataFetched": false, "topAttacker": {"name": "J. Mitrović", "pos": "F", "goals": 7, "assists": 2, "rating": 6.83}, "keyDefender": {"name": "D. Kovačić", "pos": "D", "rating": 6.76}}, "awaySquad": {"squadStrength": 9.0, "missingStarters": [{"name": "Sergi Domínguez", "pos": "D", "eta": "unbekannt", "imp": 0.866}], "injuryDataFetched": true, "topAttacker": {"name": "D. Beljo", "pos": "F", "goals": 30, "assists": 5, "rating": 7.25}, "keyDefender": {"name": "S. McKenna", "pos": "D", "rating": 7.25}}}, {"date": "17.05.2026", "time": "18:45", "home": "Istra 1961", "away": "HNK Rijeka", "eventId": 1384090, "matchScore": 6.8, "bothStakes": true, "homeStake": {"score": 6.2, "labels": [{"l": "🔴 Abstiegsgefahr", "c": "red"}], "motivationLevel": "low", "pointsNeeded": 1, "pressureRatio": 0.333, "mustWin": false, "canDraw": false, "pos": 6, "pts": 42, "played": 34, "teamGD": -9, "gapToLine": 1, "lineName": "Platz 8", "linePos": 8, "squadStrength": 10.0, "missingStarters": [], "topAttacker": {"name": "S. Prevljak", "pos": "F", "goals": 14, "assists": 3, "rating": 6.89}, "keyDefender": {"name": "F. Kolić", "pos": "G", "rating": 7.01}}, "awayStake": {"score": 4.5, "labels": [{"l": "🟢 UECL Jagd", "c": "green"}], "motivationLevel": "full", "pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": false, "canDraw": true, "pos": 4, "pts": 49, "played": 34, "teamGD": 11, "gapToLine": null, "lineName": null, "linePos": null, "squadStrength": 10.0, "missingStarters": [], "topAttacker": {"name": "Tiago Dantas", "pos": "M", "goals": 7, "assists": 6, "rating": 7.21}, "keyDefender": {"name": "M. Zlomislić", "pos": "G", "rating": 6.83}}, "homeForm": {"form": "LLLLWW", "formScore": 0.33, "streak": 2, "goalsPerGame": 0.8, "concededPerGame": 1.3}, "awayForm": {"form": "DLDWWL", "formScore": 0.44, "streak": -1, "goalsPerGame": 1.3, "concededPerGame": 0.8}, "h2h": {"games": 20, "homeWins": 4, "draws": 4, "awayWins": 12, "avgGoals": 2.5, "lastMeetingYear": 2026}, "homeXg": {"homeGfAvg": 1.1, "homeGaAvg": 1.4, "homeWinRate": 0.353, "homeDrawRate": 0.235, "csRateHome": 0.118, "ftsRateHome": 0.235}, "awayXg": {"awayGfAvg": 1.2, "awayGaAvg": 1.2, "awayWinRate": 0.294, "awayDrawRate": 0.294, "csRateAway": 0.235, "ftsRateAway": 0.353}, "homeSquad": {"squadStrength": 10.0, "missingStarters": [], "injuryDataFetched": false, "topAttacker": {"name": "S. Prevljak", "pos": "F", "goals": 14, "assists": 3, "rating": 6.89}, "keyDefender": {"name": "F. Kolić", "pos": "G", "rating": 7.01}}, "awaySquad": {"squadStrength": 10.0, "missingStarters": [], "injuryDataFetched": false, "topAttacker": {"name": "Tiago Dantas", "pos": "M", "goals": 7, "assists": 6, "rating": 7.21}, "keyDefender": {"name": "M. Zlomislić", "pos": "G", "rating": 6.83}}}, {"date": "23.05.2026", "time": "17:00", "home": "HNK Rijeka", "away": "HNK Gorica", "eventId": 1384097, "matchScore": 8.4, "bothStakes": true, "homeStake": {"score": 4.5, "labels": [{"l": "🟢 UECL Jagd", "c": "green"}], "motivationLevel": "full", "pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": false, "canDraw": true, "pos": 4, "pts": 49, "played": 34, "teamGD": 11, "gapToLine": null, "lineName": null, "linePos": null, "squadStrength": 10.0, "missingStarters": [], "topAttacker": {"name": "Tiago Dantas", "pos": "M", "goals": 7, "assists": 6, "rating": 7.21}, "keyDefender": {"name": "M. Zlomislić", "pos": "G", "rating": 6.83}}, "awayStake": {"score": 7.8, "labels": [{"l": "🔴 Abstiegsgefahr", "c": "red"}], "motivationLevel": "low", "pointsNeeded": 2, "pressureRatio": 0.667, "mustWin": false, "canDraw": false, "pos": 7, "pts": 41, "played": 35, "teamGD": -6, "gapToLine": 0, "lineName": "Platz 8", "linePos": 8, "squadStrength": 10.0, "missingStarters": [], "topAttacker": {"name": "J. Pršir", "pos": "M", "goals": 7, "assists": 3, "rating": 6.88}, "keyDefender": {"name": "Ž. Trontelj", "pos": "D", "rating": 7.0}}, "homeForm": {"form": "DLDWWL", "formScore": 0.44, "streak": -1, "goalsPerGame": 1.3, "concededPerGame": 0.8}, "awayForm": {"form": "LWWLLW", "formScore": 0.5, "streak": 1, "goalsPerGame": 1.0, "concededPerGame": 1.0}, "h2h": {"games": 20, "homeWins": 13, "draws": 3, "awayWins": 4, "avgGoals": 2.25, "lastMeetingYear": 2026}, "homeXg": {"homeGfAvg": 1.6, "homeGaAvg": 0.9, "homeWinRate": 0.471, "homeDrawRate": 0.294, "csRateHome": 0.471, "ftsRateHome": 0.353}, "awayXg": {"awayGfAvg": 1.0, "awayGaAvg": 1.4, "awayWinRate": 0.235, "awayDrawRate": 0.294, "csRateAway": 0.118, "ftsRateAway": 0.412}, "homeSquad": {"squadStrength": 10.0, "missingStarters": [], "injuryDataFetched": false, "topAttacker": {"name": "Tiago Dantas", "pos": "M", "goals": 7, "assists": 6, "rating": 7.21}, "keyDefender": {"name": "M. Zlomislić", "pos": "G", "rating": 6.83}}, "awaySquad": {"squadStrength": 10.0, "missingStarters": [], "injuryDataFetched": false, "topAttacker": {"name": "J. Pršir", "pos": "M", "goals": 7, "assists": 3, "rating": 6.88}, "keyDefender": {"name": "Ž. Trontelj", "pos": "D", "rating": 7.0}}}, {"date": "23.05.2026", "time": "17:00", "home": "NK Osijek", "away": "NK Slaven Belupo", "eventId": 1384096, "matchScore": 8.0, "bothStakes": true, "homeStake": {"score": 6.5, "labels": [{"l": "🟡 Rel.-Playoff", "c": "yellow"}, {"l": "🔴 Abstiegsgefahr", "c": "red"}], "motivationLevel": "none", "pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": false, "canDraw": true, "pos": 9, "pts": 32, "played": 35, "teamGD": -24, "gapToLine": -9, "lineName": "Platz 8", "linePos": 8, "squadStrength": 10.0, "missingStarters": [], "topAttacker": {"name": "N. Omerović", "pos": "M", "goals": 5, "assists": 1, "rating": 6.81}, "keyDefender": {"name": "M. Malenica", "pos": "G", "rating": 7.12}}, "awayStake": {"score": 7.8, "labels": [{"l": "🔴 Abstiegsgefahr", "c": "red"}], "motivationLevel": "low", "pointsNeeded": 2, "pressureRatio": 0.667, "mustWin": false, "canDraw": false, "pos": 8, "pts": 41, "played": 34, "teamGD": -10, "gapToLine": 0, "lineName": "Platz 8", "linePos": 8, "squadStrength": 10.0, "missingStarters": [], "topAttacker": {"name": "J. Mitrović", "pos": "F", "goals": 7, "assists": 2, "rating": 6.83}, "keyDefender": {"name": "D. Kovačić", "pos": "D", "rating": 6.76}}, "homeForm": {"form": "LWDLLL", "formScore": 0.22, "streak": -3, "goalsPerGame": 0.2, "concededPerGame": 1.0}, "awayForm": {"form": "LDLDLW", "formScore": 0.28, "streak": 1, "goalsPerGame": 1.3, "concededPerGame": 1.8}, "h2h": {"games": 20, "homeWins": 9, "draws": 4, "awayWins": 7, "avgGoals": 2.15, "lastMeetingYear": 2026}, "homeXg": {"homeGfAvg": 0.6, "homeGaAvg": 1.1, "homeWinRate": 0.176, "homeDrawRate": 0.412, "csRateHome": 0.471, "ftsRateHome": 0.647}, "awayXg": {"awayGfAvg": 1.2, "awayGaAvg": 2.0, "awayWinRate": 0.118, "awayDrawRate": 0.353, "csRateAway": 0.059, "ftsRateAway": 0.235}, "homeSquad": {"squadStrength": 10.0, "missingStarters": [], "injuryDataFetched": true, "topAttacker": {"name": "N. Omerović", "pos": "M", "goals": 5, "assists": 1, "rating": 6.81}, "keyDefender": {"name": "M. Malenica", "pos": "G", "rating": 7.12}}, "awaySquad": {"squadStrength": 10.0, "missingStarters": [], "injuryDataFetched": false, "topAttacker": {"name": "J. Mitrović", "pos": "F", "goals": 7, "assists": 2, "rating": 6.83}, "keyDefender": {"name": "D. Kovačić", "pos": "D", "rating": 6.76}}}, {"date": "23.05.2026", "time": "17:00", "home": "Dinamo Zagreb", "away": "NK Lokomotiva Zagreb", "eventId": 1384094, "matchScore": 6.0, "bothStakes": false, "homeStake": {"score": 6.0, "labels": [{"l": "🏆 Meister", "c": "gold"}], "motivationLevel": "none", "pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": false, "canDraw": true, "pos": 1, "pts": 82, "played": 34, "teamGD": 62, "gapToLine": 17, "lineName": "Platz 2", "linePos": 2, "squadStrength": 9.0, "missingStarters": [{"name": "Sergi Domínguez", "pos": "D", "eta": "unbekannt", "imp": 0.866}], "topAttacker": {"name": "D. Beljo", "pos": "F", "goals": 30, "assists": 5, "rating": 7.25}, "keyDefender": {"name": "S. McKenna", "pos": "D", "rating": 7.25}}, "awayStake": null, "homeForm": {"form": "DWWWWW", "formScore": 0.89, "streak": 5, "goalsPerGame": 2.0, "concededPerGame": 0.7}, "awayForm": null, "h2h": {"games": 20, "homeWins": 12, "draws": 4, "awayWins": 4, "avgGoals": 2.9, "lastMeetingYear": 2026}, "homeXg": {"homeGfAvg": 2.9, "homeGaAvg": 0.9, "homeWinRate": 0.824, "homeDrawRate": 0.118, "csRateHome": 0.353, "ftsRateHome": 0.0}, "awayXg": {"awayGfAvg": 0.9, "awayGaAvg": 1.6, "awayWinRate": 0.118, "awayDrawRate": 0.471, "csRateAway": 0.118, "ftsRateAway": 0.294}, "homeSquad": {"squadStrength": 9.0, "missingStarters": [{"name": "Sergi Domínguez", "pos": "D", "eta": "unbekannt", "imp": 0.866}], "injuryDataFetched": true, "topAttacker": {"name": "D. Beljo", "pos": "F", "goals": 30, "assists": 5, "rating": 7.25}, "keyDefender": {"name": "S. McKenna", "pos": "D", "rating": 7.25}}, "awaySquad": {"squadStrength": 10.0, "missingStarters": [], "injuryDataFetched": false, "topAttacker": {"name": "M. Pajač", "pos": "M", "goals": 6, "assists": 5, "rating": 7.15}, "keyDefender": {"name": "J. Posavec", "pos": "G", "rating": 6.98}}}, {"date": "23.05.2026", "time": "17:00", "home": "NK Varazdin", "away": "Istra 1961", "eventId": 1384098, "matchScore": 7.1, "bothStakes": true, "homeStake": {"score": 4.5, "labels": [{"l": "🟢 UECL sichern", "c": "green"}], "motivationLevel": "full", "pointsNeeded": 0, "pressureRatio": 0.0, "mustWin": false, "canDraw": true, "pos": 3, "pts": 51, "played": 35, "teamGD": -1, "gapToLine": null, "lineName": null, "linePos": null, "squadStrength": 10.0, "missingStarters": [], "topAttacker": {"name": "A. Latković", "pos": "M", "goals": 8, "assists": 6, "rating": 6.89}, "keyDefender": {"name": "O. Zelenika", "pos": "G", "rating": 7.09}}, "awayStake": {"score": 6.2, "labels": [{"l": "🔴 Abstiegsgefahr", "c": "red"}], "motivationLevel": "low", "pointsNeeded": 1, "pressureRatio": 0.333, "mustWin": false, "canDraw": false, "pos": 6, "pts": 42, "played": 34, "teamGD": -9, "gapToLine": 1, "lineName": "Platz 8", "linePos": 8, "squadStrength": 10.0, "missingStarters": [], "topAttacker": {"name": "S. Prevljak", "pos": "F", "goals": 14, "assists": 3, "rating": 6.89}, "keyDefender": {"name": "F. Kolić", "pos": "G", "rating": 7.01}}, "homeForm": {"form": "WWLLDW", "formScore": 0.56, "streak": 1, "goalsPerGame": 1.3, "concededPerGame": 1.0}, "awayForm": {"form": "LLLLWW", "formScore": 0.33, "streak": 2, "goalsPerGame": 0.8, "concededPerGame": 1.3}, "h2h": {"games": 20, "homeWins": 6, "draws": 8, "awayWins": 6, "avgGoals": 1.85, "lastMeetingYear": 2026}, "homeXg": {"homeGfAvg": 1.4, "homeGaAvg": 1.2, "homeWinRate": 0.471, "homeDrawRate": 0.353, "csRateHome": 0.294, "ftsRateHome": 0.118}, "awayXg": {"awayGfAvg": 1.2, "awayGaAvg": 1.4, "awayWinRate": 0.353, "awayDrawRate": 0.118, "csRateAway": 0.176, "ftsRateAway": 0.412}, "homeSquad": {"squadStrength": 10.0, "missingStarters": [], "injuryDataFetched": true, "topAttacker": {"name": "A. Latković", "pos": "M", "goals": 8, "assists": 6, "rating": 6.89}, "keyDefender": {"name": "O. Zelenika", "pos": "G", "rating": 7.09}}, "awaySquad": {"squadStrength": 10.0, "missingStarters": [], "injuryDataFetched": false, "topAttacker": {"name": "S. Prevljak", "pos": "F", "goals": 14, "assists": 3, "rating": 6.89}, "keyDefender": {"name": "F. Kolić", "pos": "G", "rating": 7.01}}}]
   }
 };
+
+// sync nav badges from LEAGUES.roundsLeft
+function _syncNavRounds() {
+  document.querySelectorAll('.league-btn[data-league]').forEach(btn => {
+    const key = btn.dataset.league;
+    if (key === 'overview' || key === 'sharp') return;
+    const league = LEAGUES[key];
+    if (!league) return;
+    const rl = league.roundsLeft ?? 0;
+    const span = btn.querySelector('.lr');
+    if (!span) return;
+    span.textContent = rl === 0 ? '✓' : rl + 'R';
+    btn.classList.remove('urgent', 'ending', 'done');
+    if (rl === 0)      btn.classList.add('done');
+    else if (rl === 1) btn.classList.add('urgent');
+    else if (rl <= 3)  btn.classList.add('ending');
+  });
+}
+_syncNavRounds();
 
 // ═══════════════════════════════════════════════════════
 //  BETTING ANGLE ENGINE
