@@ -1,0 +1,69 @@
+name: 🌍 WM 2026 Daten aktualisieren
+
+on:
+  # Täglich ab 1. Juni 2026 — 08:00 Vienna (06:00 UTC)
+  # Vor dem Tournament: einmal täglich für Squad-Updates
+  # Während des Tournaments: odds werden live aktualisiert
+  schedule:
+    - cron: '0 6 * * *'
+
+  # Manuell jederzeit auslösbar (z.B. für ersten Test)
+  workflow_dispatch:
+    inputs:
+      force_squads:
+        description: 'Squad-Daten neu fetchen (überschreibt bestehende)'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-wm-data:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
+      # ── Squad Spotlight (API-Football, läuft die ganze Tournier-Phase) ──
+      - name: 🧬 WM Squad-Spotlight fetchen
+        run: python fetch_wm_squads.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
+      # ── Odds (TheOddsAPI, silently no-op wenn WM noch nicht gelistet) ──
+      - name: 💰 WM Odds fetchen
+        run: python fetch_wm_odds.py
+        continue-on-error: true
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+
+      # ── Commit wm2026-data.json wenn geändert ──────────────────────────
+      - name: 💾 wm2026-data.json speichern
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add wm2026-data.json
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen in wm2026-data.json — kein Commit nötig."
+          else
+            TIMESTAMP=$(date +'%d.%m.%Y %H:%M')
+            git commit -m "🌍 WM 2026 Data Update ${TIMESTAMP} UTC"
+            git pull origin main --no-rebase -X ours
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
