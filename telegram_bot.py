@@ -28,7 +28,7 @@ SENT_LOG              = 'telegram_sent.json'
 
 MIN_EDGE_PP           = 4.0   # Mindest-Edge für PICK-Post (conf=high)
 MIN_EDGE_PP_MEDIUM    = 12.0  # Mindest-Edge für medium-conf Ausnahme-Picks
-MIN_MATCH_SCORE_WATCH = 6.0   # Mindest-Score für IM BLICK
+MIN_MATCH_SCORE_WATCH = 8.0   # Mindest-Score für IM BLICK (erhöht: dead rubbers filtern)
 MAX_ROUNDS_LEFT_WATCH = 1     # Nur letzte Runde(n) für IM BLICK
 MIN_CONF_PICK         = 'high'
 
