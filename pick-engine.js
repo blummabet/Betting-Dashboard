@@ -2165,9 +2165,10 @@ function getBettingPicks(match, odds, leagueKey) {
         const parts = [_hForStr && `${_hForStr} ${_hAgStr}`, _aForStr && `${_aForStr} ${_aAgStr}`].filter(Boolean);
         return `<br>📊 Ecken-Daten: ${parts.join(' · ')}${_formNote} → Ø ${cornersEst.toFixed(1)} erwartet.`;
       })();
-      // Estimated corner odds below 1.55 offer no real value — skip pick entirely.
+      // Estimated corner odds minimum: when real stats back the estimate, 1.40 is enough.
+      // Without real corner data (pure formula), require 1.55 to avoid noise picks.
       // Real bookmaker odds (oddsIsEst=false) always pass regardless of level.
-      const _EST_CORNER_MIN_ODDS = 1.55;
+      const _EST_CORNER_MIN_ODDS = cornersDataReal ? 1.40 : 1.55;
       const _cornSkip = o._cornersOddsEst && _cOOdds != null && _cOOdds < _EST_CORNER_MIN_ODDS;
       // Max odds guard: skip if odds > 3.20 (real or estimated).
       // Odds above 3.20 mean the expected corners are well below the line —
@@ -2179,9 +2180,9 @@ function getBettingPicks(match, odds, leagueKey) {
       // Double-estimate guard: when BOTH the corner count AND the odds are model-derived
       // (no real bookmaker price, no real stats-cache averages), the negative-edge check is
       // comparing the model against itself — no external validation exists.
-      // In that case require a strong signal (scO >= 0.65, i.e. high confidence) to avoid
-      // flooding picks with low-quality "Über 8.5 Ecken" noise across entire leagues.
-      const _cornSkipDoubleEst = o._cornersOddsEst && !cornersDataReal && scO < 0.65;
+      // In that case require a decent signal (scO >= 0.55) to avoid low-quality noise.
+      // When real corner stats exist (cornersDataReal), the guard is already bypassed above.
+      const _cornSkipDoubleEst = o._cornersOddsEst && !cornersDataReal && scO < 0.55;
       // Negative edge gate: Poisson fair value vs bookie/estimated implied probability.
       // Real bookie odds: suppress if implied prob exceeds FV by >10pp (tight gate, real data).
       // Estimated odds: suppress if implied prob exceeds FV by >15pp (wider gate, model uncertainty).
@@ -2239,8 +2240,8 @@ function getBettingPicks(match, odds, leagueKey) {
             ? Math.round((1 / _cornFairProbU) * 100) / 100 : null;
           // Drop pick when odds are known but below the minimum threshold (1.40).
           const _underOddsOk = _cUOdds == null || _cUOdds >= _UNDER_MIN_ODD;
-          // Same double-estimate guard as Over: no real odds + no real stats → require high confidence.
-          const _cornUnderDoubleEst = o._cornersUnderOddsEst && !cornersDataReal && scU < 0.65;
+          // Same double-estimate guard as Over: no real odds + no real stats → require decent signal.
+          const _cornUnderDoubleEst = o._cornersUnderOddsEst && !cornersDataReal && scU < 0.55;
           if (_underOddsOk && !_cornUnderDoubleEst) {
             const _uDataNote = cornersDataReal
               ? `<br>📊 Ecken-Daten: ${match.home} Ø ${_hCornersHome||'?'} Heim · ${match.away} Ø ${_aCornersAway||'?'} Ausw.${_hFormCornMod!==0||_aFormCornMod!==0?` · Formation ${_hFormation||'?'} vs ${_aFormation||'?'}`:''}  → nur Ø ${cornersEst.toFixed(1)} erwartet.`
