@@ -55,6 +55,41 @@ const LEAGUE_IDS = {
   207: 'Super League (Switzerland)',
 };
 
+// Team name aliases: API-Football short names → The Odds API full names.
+// Used in matchOddsEvent to prevent misses when naming conventions differ.
+const TEAM_ALIASES = {
+  'wolves':             'wolverhampton wanderers',
+  'wolverhampton':      'wolverhampton wanderers',
+  'spurs':              'tottenham hotspur',
+  'tottenham':          'tottenham hotspur',
+  'man united':         'manchester united',
+  'man utd':            'manchester united',
+  'man city':           'manchester city',
+  'west brom':          'west bromwich albion',
+  'qpr':                'queens park rangers',
+  'brighton':           'brighton and hove albion',
+  'sheffield utd':      'sheffield united',
+  'sheffield wednesday': 'sheffield wednesday',
+  'nottingham forest':  'nottingham forest',
+  'inter':              'inter milan',
+  'atletico':           'atletico madrid',
+  'sociedad':           'real sociedad',
+  'betis':              'real betis',
+  'vfb':                'vfb stuttgart',
+  'leverkusen':         'bayer leverkusen',
+  'dortmund':           'borussia dortmund',
+  'monchengladbach':    'borussia monchengladbach',
+  'frankfurt':          'eintracht frankfurt',
+  'paris saint germain': 'paris saint-germain',
+  'psg':                'paris saint-germain',
+  // Turkish special chars — Turkish dotless ı/ş/ğ etc. cause normalization mismatches
+  'kasimpaşa':          'kasimpaşa sk',
+  'başakşehir':         'istanbul basaksehir',
+  'trabzonspor':        'trabzonspor',
+  'lyon':               'olympique lyonnais',
+  'marseille':          'olympique marseille',
+};
+
 // The Odds API sport keys — one call per key fetches ALL upcoming fixtures for that league.
 // Far more efficient than API-Football (15 calls vs 136 per run) + covers same-day games.
 const LEAGUE_ODDS_KEYS = {
@@ -207,12 +242,17 @@ function normTeam(n) {
 
 // Find the matching Odds API event for a fixture by team names + date
 function matchOddsEvent(fixtureHome, fixtureAway, fixtureDate, oddsEvents) {
-  const hN = normTeam(fixtureHome), aN = normTeam(fixtureAway);
+  // Resolve aliases: "Wolves" → "wolverhampton wanderers" before matching
+  const resolveAlias = (name) => {
+    const n = normTeam(name);
+    return TEAM_ALIASES[n] || n;
+  };
+  const hN = resolveAlias(fixtureHome), aN = resolveAlias(fixtureAway);
   for (const e of oddsEvents) {
     // compare YYYY-MM-DD (UTC) — Odds API uses ISO8601 commence_time
     const eDate = (e.commence_time || '').slice(0, 10);
     if (eDate !== fixtureDate) continue;
-    const ehN = normTeam(e.home_team), eaN = normTeam(e.away_team);
+    const ehN = resolveAlias(e.home_team), eaN = resolveAlias(e.away_team);
     // Bidirectional contains-check + word-level match (handles "Inter" ↔ "Inter Milan")
     const homeOk = ehN.includes(hN) || hN.includes(ehN)
                  || hN.split(' ').some(w => w.length > 3 && ehN.includes(w));
