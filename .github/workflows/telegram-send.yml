@@ -1,6 +1,14 @@
 name: 📤 Telegram senden
 
 on:
+  # Automatischer Tagesplan (UTC-Zeiten = Wien Sommer CEST -2h):
+  #   07:00 UTC = 09:00 Wien → 🎯 Picks
+  #   09:00 UTC = 11:00 Wien → 📊 Recap
+  #   11:00 UTC = 13:00 Wien → 👀 Jetzt oder Nie
+  schedule:
+    - cron: '0 7 * * *'
+    - cron: '0 9 * * *'
+    - cron: '0 11 * * *'
   workflow_dispatch:
     inputs:
       mode:
@@ -10,8 +18,9 @@ on:
         type: choice
         options:
           - picks
-          - watch
           - recap
+          - watch
+          - all
 
 permissions:
   contents: write
@@ -31,12 +40,26 @@ jobs:
       - name: 📦 Dependencies installieren
         run: pip install -r requirements.txt
 
+      - name: 🕐 Modus bestimmen
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            HOUR=$(date -u +%H)
+            if   [ "$HOUR" = "07" ]; then echo "tg_mode=picks"  >> $GITHUB_OUTPUT
+            elif [ "$HOUR" = "09" ]; then echo "tg_mode=recap"  >> $GITHUB_OUTPUT
+            elif [ "$HOUR" = "11" ]; then echo "tg_mode=watch"  >> $GITHUB_OUTPUT
+            else                          echo "tg_mode=picks"  >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "tg_mode=${{ inputs.mode }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: 📤 Telegram senden
         run: python telegram_bot.py
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: '-1003819239615'
-          TG_MODE: ${{ inputs.mode }}
+          TG_MODE: ${{ steps.mode.outputs.tg_mode }}
 
       - name: 💾 telegram_sent.json pushen
         run: |
