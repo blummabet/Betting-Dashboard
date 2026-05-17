@@ -2557,7 +2557,11 @@ function findOdds(leagueKey, home, away) {
           const _supp = ['bttsY','bttsN','ht_o05','ht_u05','ht_o15','ht_u15','ht_bttsY','ht_bttsN',
                          'ht_hw','ht_dr','ht_aw',  // HT 1X2 — API-Football only; ht_dr needed for AH -0.25 estimate
                          'hto15','ato15','cards_o35','cards_u35','cards_o45','cards_u45',
-                         'ao_lines','au_lines','ah_home_lines','ah_away_lines'];
+                         'ao_lines','au_lines','ah_home_lines','ah_away_lines',
+                         // Corner odds from prematch-data.json (fetched server-side via per-event endpoint)
+                         // Browser batch API never returns these — prematch-data.json is the only reliable source
+                         'co65','co75','co85','co95','co105','co115',
+                         'cu65','cu75','cu85','cu95','cu105','cu115'];
           for (const k of _supp) if (r[k] == null && _pmO[k] != null) r[k] = _pmO[k];
         }
         return r;
