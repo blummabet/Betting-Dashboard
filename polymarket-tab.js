@@ -979,7 +979,8 @@ function renderPolyStats() {
     },
   ];
 
-  const recent = [...bets].reverse().slice(0, 15);
+  const _toTs = s => { const [d,m,y] = (s||'00.00.0000').split('.'); return new Date(`${y}-${m}-${d}`); };
+  const recent = [...bets].sort((a,b) => _toTs(b.date) - _toTs(a.date)).slice(0, 15);
   const rows   = recent.length === 0
     ? `<tr><td colspan="6" style="text-align:center;color:#8b949e;padding:28px;font-size:13px">Noch keine Bets gespeichert</td></tr>`
     : recent.map((b, i) => {
