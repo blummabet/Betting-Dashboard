@@ -12,6 +12,9 @@
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const V2_KEY        = 'betedge_picks_v2';
+// Hard cutoff: Mirror+Freeze system started 2026-05-05. Entries before this
+// date used a different format and must not appear in the tracking tab.
+const TRACKING_START = '2026-05-05';
 const V2_RESULTS_URLS = [
   'http://localhost:3001/results-cache',
   'https://blummabet.github.io/Betting-Dashboard/results-cache.json',
@@ -381,6 +384,7 @@ function importLegacyPicks() {
         if (!picks.length) continue;
 
         const dateIso = e.dateIso || _toIso(e.date || '');
+        if (dateIso < TRACKING_START) continue;  // skip pre-Mirror+Freeze data
         const id = `${dateIso}-${e.league}-${e.home}-${e.away}`;
         if (idx.has(id)) continue;
 
@@ -477,16 +481,15 @@ function _renderV2Tab() {
 
   // ── 1. Past matches from localStorage ────────────────────────────────────
   const stored  = _v2Load();
-  let pastAll = stored.filter(e => e.dateIso < todayIso && e.matchScore > 0);
+  let pastAll = stored.filter(e => e.dateIso < todayIso && e.dateIso >= TRACKING_START && e.matchScore > 0);
 
   // ── Fallback: picks_history.json → fill gaps in localStorage ─────────────
   // If localStorage was trimmed (data loss), recover from picks_history.json
   // which the Results tab has already fetched into window._resultsData.
   if (Array.isArray(window._resultsData) && window._resultsData.length) {
     const storedPairDates = new Set(pastAll.map(e => `${e.dateIso}|${e.home}|${e.away}`));
-    const cutoffIso = new Date(Date.now() - 60 * 86400000).toISOString().slice(0, 10);
     for (const e of window._resultsData) {
-      if (!e.dateIso || e.dateIso >= todayIso || e.dateIso < cutoffIso) continue;
+      if (!e.dateIso || e.dateIso >= todayIso || e.dateIso < TRACKING_START) continue;
       if (storedPairDates.has(`${e.dateIso}|${e.home}|${e.away}`)) continue;
       if (!e.picks || !e.picks.length) continue;
       // Convert picks_history format to V2 format
