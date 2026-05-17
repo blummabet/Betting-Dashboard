@@ -3761,13 +3761,27 @@ function getBettingPicks(match, odds, leagueKey) {
   const cornersOver9   = cornersEst >= 9.5;
   const cornersOver11  = cornersEst >= 11.0;
   // ── Poisson-estimated corners odds (injected into o when real quotes absent) ──
-  if (!o.co95 || !o.co85) {
+  // Record which lines are real BEFORE estimation fill-in.
+  // _cornersOddsEst is only set when BOTH key Over lines (8.5 AND 9.5) are absent.
+  // Having co95 but no co85 is normal (many bookmakers only quote the most popular line).
+  {
+    const _co85real = !!o.co85;
+    const _co95real = !!o.co95;
+    const _cu65real = !!o.cu65;
+    const _cu75real = !!o.cu75;
+    const _cu85real = !!o.cu85;
+    const _cu95real = !!o.cu95;
     const _cEst = estimateCornersOdds(cornersEst);
+    if (!o.co65)  { o.co65  = _cEst.co65;  o.cu65  = _cEst.cu65;  }
+    if (!o.co75)  { o.co75  = _cEst.co75;  o.cu75  = _cEst.cu75;  }
     if (!o.co85)  { o.co85  = _cEst.co85;  o.cu85  = _cEst.cu85;  }
     if (!o.co95)  { o.co95  = _cEst.co95;  o.cu95  = _cEst.cu95;  }
     if (!o.co105) { o.co105 = _cEst.co105; o.cu105 = _cEst.cu105; }
     if (!o.co115) { o.co115 = _cEst.co115; o.cu115 = _cEst.cu115; }
-    if (_cEst.oddsIsEst) o._cornersOddsEst = true;  // flag for render
+    // Over: estimated only when BOTH 8.5 AND 9.5 were absent (having one real line is enough)
+    if (!_co85real && !_co95real && _cEst.oddsIsEst) o._cornersOddsEst = true;
+    // Under: estimated only when ALL key Under lines (6.5–9.5) were absent
+    if (!_cu65real && !_cu75real && !_cu85real && !_cu95real && _cEst.oddsIsEst) o._cornersUnderOddsEst = true;
   }
   // Cards — helper flags (anyGold already declared above; anyOrange added here)
   const anyOrange = hc.includes('orange') || ac.includes('orange');
@@ -4719,7 +4733,7 @@ function getBettingPicks(match, odds, leagueKey) {
             const _uDataNote = cornersDataReal
               ? `<br>📊 Echte Ecken-Daten (Saison): ${match.home} Ø ${_hCornersHome} Heim · ${match.away} Ø ${_aCornersAway} Ausw. → nur Ø ${cornersEst.toFixed(1)} erwartet.`
               : ``;
-            sC.push({sc: scU, p:{icon:'🚩', market:_cUMkt, odds:_cUOdds, oddsIsEst: o._cornersOddsEst||false,
+            sC.push({sc: scU, p:{icon:'🚩', market:_cUMkt, odds:_cUOdds, oddsIsEst: o._cornersUnderOddsEst||false,
               conf: scU>0.60?'high':scU>0.38?'medium':'low',
               reason:`${cornersDataReal
                 ? `Defensives Spiel — Saisonschnitt ergibt nur ${cornersEst.toFixed(1)} Ecken gesamt.`
