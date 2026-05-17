@@ -7356,8 +7356,10 @@ function buildPickOfDayHtml(matchList) {
   for (const m of matchList) {
     const sc = computeMatchScore(m, m.leagueKey);
     if (sc < 7) continue;
-    const odds = m.leagueKey ? findOdds(m.leagueKey, m.home, m.away) : null;
-    const picks = getBettingPicks(m, odds, m.leagueKey);
+    // Use stable picks from picks_output.json (_picksIndex) — same source as renderFixtureCard
+    // and Telegram. Avoids BET-label flickering caused by live-odds re-renders.
+    const _idxEntry = window._picksIndex?.[`${m.home}|${m.away}`];
+    const picks = _idxEntry?.picks || [];
     for (const p of picks) {
       if (p.conf === 'high' || p.conf === 'medium') candidates.push({p, sc, m});
     }
@@ -7450,10 +7452,13 @@ function buildTopCardsHtml(matchList) {
   for (const m of matchList) {
     const matchSc = computeMatchScore(m, m.leagueKey);
     if (matchSc < 10) continue;  // Top Cards only from high-quality matches (≥10/12)
-    const odds = m.leagueKey ? findOdds(m.leagueKey, m.home, m.away) : null;
-    const picks = getBettingPicks(m, odds, m.leagueKey)
+    // Use stable picks from picks_output.json (_picksIndex) — same source as renderFixtureCard.
+    // Prevents pick/BET-label from changing on every re-render due to live-odds variance.
+    const _idxEntry = window._picksIndex?.[`${m.home}|${m.away}`];
+    const picks = (_idxEntry?.picks || [])
       .filter(p => p.conf === 'high' || p.conf === 'medium');
     if (!picks.length) continue;
+    const odds = m.leagueKey ? findOdds(m.leagueKey, m.home, m.away) : null;  // still used for ranking signals
 
     // ── Pre-compute match-level signals (shared across all picks of this match) ──
 
