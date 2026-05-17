@@ -1,14 +1,10 @@
-name: 📤 Telegram senden
+name: 📤 Telegram senden (DEAKTIVIERT — Telegram läuft jetzt über update-dashboard.yml)
 
 on:
-  # Automatischer Tagesplan (UTC-Zeiten = Wien Sommer CEST -2h):
-  #   07:00 UTC = 09:00 Wien → 🎯 Picks
-  #   09:00 UTC = 11:00 Wien → 📊 Recap
-  #   11:00 UTC = 13:00 Wien → 👀 Jetzt oder Nie
-  schedule:
-    - cron: '0 7 * * *'
-    - cron: '0 9 * * *'
-    - cron: '0 11 * * *'
+  # DEAKTIVIERT: Cron läuft jetzt in update-dashboard.yml (dort werden Picks
+  # zuerst frisch generiert, dann erst gesendet). Dieser Workflow hat stale
+  # picks_output.json verwendet → falsche Picks gesendet.
+  # Für manuelle Tests: update-dashboard.yml → "Run workflow" verwenden.
   workflow_dispatch:
     inputs:
       mode:

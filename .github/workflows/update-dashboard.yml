@@ -7,12 +7,14 @@ on:
     workflows: ["Fetch Pre-Match Data"]
     types: [completed]
 
-  # Zusätzliche geplante Runs für Intra-Tag-Updates (Stats, Results, Poly-Preise)
-  # die NICHT von fresh prematch-data abhängen.
+  # Tägliche Telegram-Runs (Wien Sommer CEST = UTC+2):
+  #   07:00 UTC = 09:00 Wien → 🎯 Picks
+  #   09:00 UTC = 11:00 Wien → 📊 Recap vom Vortag
+  #   11:00 UTC = 13:00 Wien → 👀 Jetzt oder Nie
   schedule:
-    - cron: '0 6 * * *'    # 06:00 UTC → Picks posten
-    - cron: '0 11 * * *'   # 11:00 UTC → IM BLICK posten
-    - cron: '0 14 * * *'   # 14:00 UTC → Recap vom Vortag
+    - cron: '0 7 * * *'    # 07:00 UTC = 09:00 Wien → Picks
+    - cron: '0 9 * * *'    # 09:00 UTC = 11:00 Wien → Recap
+    - cron: '0 11 * * *'   # 11:00 UTC = 13:00 Wien → IM BLICK
 
   # Manuell: jederzeit per Knopfdruck auf GitHub ausführbar
   workflow_dispatch:
@@ -114,9 +116,9 @@ jobs:
         run: python resolve_picks.py
         continue-on-error: true
 
-      # 8b. Telegram: Picks posten (06:00 Run ODER manueller Trigger)
+      # 8b. Telegram: Picks posten (09:00 Wien = 07:00 UTC ODER manueller Trigger)
       - name: 📤 Telegram Picks
-        if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '0 7 * * *' || github.event_name == 'workflow_dispatch'
         run: python telegram_bot.py
         continue-on-error: true
         env:
@@ -124,7 +126,17 @@ jobs:
           TELEGRAM_CHAT_ID: '-1003819239615'
           TG_MODE: 'picks'
 
-      # 8c. Telegram: IM BLICK posten (11:00-Run)
+      # 8c. Telegram: Recap vom Vortag (11:00 Wien = 09:00 UTC)
+      - name: 📊 Telegram Recap
+        if: github.event.schedule == '0 9 * * *'
+        run: python telegram_bot.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: '-1003819239615'
+          TG_MODE: 'recap'
+
+      # 8d. Telegram: IM BLICK posten (13:00 Wien = 11:00 UTC)
       - name: 👀 Telegram IM BLICK
         if: github.event.schedule == '0 11 * * *'
         run: python telegram_bot.py
@@ -133,16 +145,6 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: '-1003819239615'
           TG_MODE: 'watch'
-
-      # 8d. Telegram: Recap vom Vortag (14:00-Run)
-      - name: 📊 Telegram Recap
-        if: github.event.schedule == '0 14 * * *'
-        run: python telegram_bot.py
-        continue-on-error: true
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: '-1003819239615'
-          TG_MODE: 'recap'
 
       # 9. Geänderte Dateien zurück ins Repo committen und pushen
       - name: 💾 Änderungen speichern & pushen
