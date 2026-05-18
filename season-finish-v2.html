@@ -960,6 +960,34 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm-squad-name{font-size:12px;font-weight:700;color:var(--text);}
 .wm-squad-meta{font-size:10px;color:var(--muted);margin-top:1px;}
 
+/* ── WM Tracking Tab ──────────────────────────────────────── */
+.wm-trk-kpi-strip{display:flex;flex-wrap:wrap;gap:8px;background:var(--surface1);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:14px;}
+.wm-trk-kpi{display:flex;flex-direction:column;align-items:center;min-width:64px;flex:1;}
+.wm-trk-kpi-val{font-size:18px;font-weight:800;line-height:1.1;}
+.wm-trk-kpi-lbl{font-size:9px;color:var(--muted);margin-top:3px;text-align:center;text-transform:uppercase;letter-spacing:.04em;}
+.wm-trk-vrd-filter{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.wm-trk-section-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:8px;}
+.wm-trk-count{background:var(--surface2);color:var(--text);border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;}
+.wm-trk-top-section{margin-top:16px;}
+.wm-trk-table{display:flex;flex-direction:column;gap:0;margin-top:10px;}
+.wm-trk-date-block{margin-bottom:6px;}
+.wm-trk-fx-block{background:var(--surface1);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;}
+.wm-trk-fx-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px;padding:9px 12px 7px;background:var(--surface2);border-bottom:1px solid var(--border);}
+.wm-trk-fx-teams{font-size:12px;font-weight:700;color:var(--text);}
+.wm-trk-fx-meta{font-size:10px;color:var(--muted);}
+.wm-trk-score{text-align:center;font-size:20px;font-weight:800;padding:6px 12px;color:var(--text);letter-spacing:.08em;border-bottom:1px solid var(--border);}
+.wm-trk-row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface1);}
+.wm-trk-row:last-child{border-bottom:none;}
+.wm-trk-row-main{flex:1;min-width:0;}
+.wm-trk-row-market{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wm-trk-row-info{font-size:10px;color:var(--muted);margin-top:1px;}
+.wm-trk-row-odds{font-size:11px;font-weight:700;color:var(--text);white-space:nowrap;}
+.wm-trk-result{font-size:10px;font-weight:700;white-space:nowrap;border-radius:6px;padding:2px 7px;}
+.wm-trk-result.won{background:rgba(63,185,80,.15);color:#3fb950;}
+.wm-trk-result.lost{background:rgba(248,81,73,.15);color:#f85149;}
+.wm-trk-result.push{background:rgba(139,148,158,.15);color:#8b949e;}
+.wm-trk-result.pending{color:var(--muted);background:none;}
+
 @media(max-width:640px){
   .wm-cards-wrap{grid-template-columns:1fr;}
   .wm-name{font-size:13px;}
@@ -2545,6 +2573,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <script src="polymarket-tab.js"></script>
 <script src="results-v2.js"></script>
 <script src="wm2026-renderer.js"></script>
+<script src="wm2026-tracking.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════
 //  LIVE DATA from Sofascore — fetched 31.03.2026

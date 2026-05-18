@@ -126,8 +126,9 @@ function showView(view) {
   if (view === 'status')            { initStatus(); buildValidatorDates(); }
   if (view === 'polybetting')       initPolymarket();
   if (view === 'polytrading')       initPolyTrader();
-  if (view === 'national-tracking' && typeof initResultsV2    === 'function') initResultsV2();
-  if (view === 'intl-cards'        && typeof initIntlCards    === 'function') initIntlCards();
+  if (view === 'national-tracking' && typeof initResultsV2      === 'function') initResultsV2();
+  if (view === 'intl-cards'        && typeof initIntlCards     === 'function') initIntlCards();
+  if (view === 'intl-tracking'     && typeof initIntlTracking  === 'function') initIntlTracking();
 }
 
 // Sub-nav click: navigate within current section
