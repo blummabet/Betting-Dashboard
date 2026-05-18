@@ -510,7 +510,7 @@ function _renderV2Tab() {
           conf:    p.conf || 'medium',
           sc:      p.sc ?? null,
           odds:    p.odds ?? null,
-          result:  p.result ?? null,
+          result:  p.result === 'win' ? 'won' : p.result === 'loss' ? 'lost' : p.result ?? null,
           isTopCard: p.isTopCard || false,
         })),
         _fromHistory: true,  // mark as imported
