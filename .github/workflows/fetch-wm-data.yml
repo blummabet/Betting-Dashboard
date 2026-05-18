@@ -51,6 +51,18 @@ jobs:
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
 
+      # ── Form + H2H (API-Football, täglich) ───────────────────────────
+      - name: 📊 WM Form & H2H fetchen
+        run: python fetch_wm_form.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
+      # ── Pick-Generator (nach Form + Odds) ────────────────────────────
+      - name: 🎯 WM Picks generieren
+        run: python generate_wm_picks.py
+        continue-on-error: true
+
       # ── Commit wm2026-data.json wenn geändert ──────────────────────────
       - name: 💾 wm2026-data.json speichern
         run: |
