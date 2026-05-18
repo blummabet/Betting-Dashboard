@@ -218,7 +218,7 @@ def format_watch_league_post(league_code: str, games: list, pm_index: dict) -> s
 
     # Situation
     if rl == 1:
-        situation = '🚨 <b>Letzter Spieltag der Saison</b>'
+        situation = '🚨 <b>Saisonfinale — letzte Spieltage entscheiden alles</b>'
     elif rl <= 2:
         situation = f'⚡ <b>Vorletzter Spieltag — noch {rl} Runden</b>'
     else:
@@ -262,8 +262,10 @@ def format_watch_league_post(league_code: str, games: list, pm_index: dict) -> s
     avg_score = sum(g.get('matchScore', 0) for g in games) / len(games)
     if avg_score >= 9:
         hint = 'Hochspannung — wer zurückliegt muss kommen. Over/BTTS Live prüfen wenn ein Team pusht.'
-    else:
+    elif rl == 1:
         hint = 'Letzter Spieltag — Rückständige Teams drücken aufs Gas. Over/BTTS Live interessant.'
+    else:
+        hint = 'Entscheidende Phase — Teams mit Saisonzielen unter Druck. Over/BTTS Live interessant.'
 
     lines = [
         f'👀 <b>JETZT ODER NIE</b> · {flag} {league}{time_header}',
@@ -289,7 +291,26 @@ def format_recap_post(yesterday_entries: list) -> str:
     wins = losses = voids = 0
     lines = [f'📊 <b>Rückblick {yesterday}</b>', '']
 
+    # ── Dedupliziere Einträge: picks_history kann dasselbe Spiel mehrfach enthalten
+    # (z.B. wenn mehrere Picks für dasselbe Spiel zu verschiedenen Zeiten gespeichert wurden).
+    # Alle Picks aus Duplikaten zusammenführen, damit der gesendete Markt immer gefunden wird.
+    merged: dict[str, dict] = {}
+    order: list[str] = []
     for entry in yesterday_entries:
+        gkey = f"{entry.get('home', '')}|{entry.get('away', '')}"
+        if gkey not in merged:
+            merged[gkey] = dict(entry)
+            order.append(gkey)
+        else:
+            # Picks aus Duplikat hinzufügen (keine Doubletten auf Market-Ebene)
+            existing_markets = {p.get('market') for p in merged[gkey].get('picks', [])}
+            for p in entry.get('picks', []):
+                if p.get('market') not in existing_markets:
+                    merged[gkey].setdefault('picks', []).append(p)
+                    existing_markets.add(p.get('market'))
+    deduped_entries = [merged[k] for k in order]
+
+    for entry in deduped_entries:
         home    = entry.get('home', '')
         away    = entry.get('away', '')
         flag    = entry.get('leagueFlag', '')
