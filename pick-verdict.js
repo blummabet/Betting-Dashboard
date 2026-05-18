@@ -107,14 +107,16 @@ function computeVerdict(pick) {
       _rate = (_dw2 + _aw2) / _n; _thresh = 0.50; _lbl = `${Math.round(_rate * 100)}% X2`;
     } else if (_ml2.includes('doppelte chance') && _ml2.includes('1x')) {
       _rate = (_hw2 + _dw2) / _n; _thresh = 0.50; _lbl = `${Math.round(_rate * 100)}% 1X`;
-    } else if ((_ml2.includes('under') || _ml2.includes('unter')) && _h.avgGoals != null) {
+    } else if ((_ml2.includes('under') || _ml2.includes('unter')) && !_ml2.includes('ecken') && !_ml2.includes('karten') && _h.avgGoals != null) {
+      // Goals-Under (NOT corners/cards — those have no H2H equivalent)
       const _ag = parseFloat(_h.avgGoals);
       const _ul = parseFloat((_ml2.match(/[\d.]+/) || ['2.5'])[0]);
       if (!isNaN(_ag) && !isNaN(_ul)) {
         _rate = _ag < _ul ? 0.70 : _ag < _ul + 0.5 ? 0.40 : 0.15;
         _thresh = 0.5; _lbl = `Ø ${_ag} Tore`;
       }
-    } else if ((_ml2.includes('over') || _ml2.includes('über')) && _h.over25Rate != null) {
+    } else if ((_ml2.includes('over') || _ml2.includes('über')) && !_ml2.includes('ecken') && !_ml2.includes('karten') && _h.over25Rate != null) {
+      // Goals-Over (NOT corners/cards)
       _rate = _h.over25Rate; _thresh = 0.50; _lbl = `${Math.round(_rate * 100)}% +2.5`;
     } else if ((_ml2.includes('btts') || _ml2.includes('beide teams')) && _h.bttsRate != null) {
       _rate = _h.bttsRate; _thresh = 0.45; _lbl = `BTTS ${Math.round(_rate * 100)}%`;
