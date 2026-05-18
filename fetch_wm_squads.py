@@ -1,274 +1,105 @@
 #!/usr/bin/env python3
-"""
-fetch_wm_squads.py — WM 2026 Squad Spotlight fetcher.
-
-Fetches key attacking players for all 48 WM 2026 teams from API-Football
-and writes them to wm2026-data.json under the "squads" key.
-
-Each entry: { name, position, goals, assists, caps }
-Position: "ST", "CAM", "LW", "RW", "MF" etc.
-
-The "squad spotlight" shows in WM cards — one key attacker per team.
-
-API-Football:
-  - League 1 = FIFA World Cup
-  - Season 2026
-  - Endpoint: GET /teams?league=1&season=2026  → get all team IDs
-  - Endpoint: GET /players?team={id}&season=2024&page=1  → get player stats
-
-Run:   python3 fetch_wm_squads.py
-Cron:  Once before WM starts, then weekly during tournament
-"""
-
-import json
-import os
-import sys
-import time
-import http.client
+"""fetch_wm_squads.py v2 — WM 2026 Squad Spotlight"""
+import json, os, sys, time, http.client
 from pathlib import Path
 
-BASE        = Path(__file__).parent
-WM_FILE     = BASE / "wm2026-data.json"
-APIF_HOST   = "v3.football.api-sports.io"
-APIF_KEY    = os.environ.get("APISPORTS_KEY", "9f36726c1bdc9957b4a49f89277b80db")
-APIF_DELAY  = 1.5   # seconds between API calls (rate limit: 10/min on free plan)
+BASE = Path(__file__).parent
+WM_FILE = BASE / "wm2026-data.json"
+APIF_HOST = "v3.football.api-sports.io"
+APIF_KEY = os.environ.get("APISPORTS_KEY", "")
+APIF_DELAY = 1.2
+MAX_PAGES = 6
+FORCE = "--force" in sys.argv
 
-# ── Our 3-letter IDs → API-Football team names (fuzzy matching fallbacks) ──────
-# Primary match: normalize name → check if API name contains/equals ours.
-# Secondary:     manual override for edge cases.
 APIF_NAME_OVERRIDE = {
-    # Our ID  : exact API-Football team name (as returned by /teams endpoint)
-    "USA":  "United States",
-    "KOR":  "South Korea",
-    "ZAF":  "South Africa",
-    "CZE":  "Czech Republic",
-    "BIH":  "Bosnia and Herzegovina",
-    "QAT":  "Qatar",
-    "HTI":  "Haiti",
-    "SCO":  "Scotland",
-    "PRY":  "Paraguay",
-    "AUS":  "Australia",
-    "TUR":  "Turkey",
-    "BRA":  "Brazil",
-    "MAR":  "Morocco",
-    "COD":  "DR Congo",
-    "CPV":  "Cape Verde",
-    "SAU":  "Saudi Arabia",
-    "URU":  "Uruguay",
-    "SEN":  "Senegal",
-    "IRQ":  "Iraq",
-    "NOR":  "Norway",
-    "DZA":  "Algeria",
-    "AUT":  "Austria",
-    "JOR":  "Jordan",
-    "POR":  "Portugal",
-    "UZB":  "Uzbekistan",
-    "COL":  "Colombia",
-    "ENG":  "England",
-    "CRO":  "Croatia",
-    "GHA":  "Ghana",
-    "PAN":  "Panama",
-    "GER":  "Germany",
-    "CUW":  "Curaçao",
-    "CIV":  "Ivory Coast",
-    "ECU":  "Ecuador",
-    "NED":  "Netherlands",
-    "JPN":  "Japan",
-    "SWE":  "Sweden",
-    "TUN":  "Tunisia",
-    "BEL":  "Belgium",
-    "EGY":  "Egypt",
-    "IRN":  "Iran",
-    "NZL":  "New Zealand",
-    "ESP":  "Spain",
-    "FRA":  "France",
-    "ARG":  "Argentina",
-    "MEX":  "Mexico",
-    "CAN":  "Canada",
-    "SUI":  "Switzerland",
+    "ARG":"Argentina","AUS":"Australia","AUT":"Austria","BEL":"Belgium",
+    "BIH":"Bosnia","BRA":"Brazil","CAN":"Canada","CIV":"Ivory Coast",
+    "COD":"Congo DR","COL":"Colombia","CPV":"Cape Verde","CRO":"Croatia",
+    "CUW":"Curacao","CZE":"Czech Republic","DZA":"Algeria","ECU":"Ecuador",
+    "EGY":"Egypt","ENG":"England","ESP":"Spain","FRA":"France",
+    "GER":"Germany","GHA":"Ghana","HTI":"Haiti","IRN":"Iran","IRQ":"Iraq",
+    "JOR":"Jordan","JPN":"Japan","KOR":"South Korea","MAR":"Morocco",
+    "MEX":"Mexico","NED":"Netherlands","NOR":"Norway","NZL":"New Zealand",
+    "PAN":"Panama","POR":"Portugal","PRY":"Paraguay","QAT":"Qatar",
+    "SAU":"Saudi Arabia","SCO":"Scotland","SEN":"Senegal","SUI":"Switzerland",
+    "SWE":"Sweden","TUN":"Tunisia","TUR":"Türkiye","URU":"Uruguay",
+    "USA":"United States","UZB":"Uzbekistan","ZAF":"South Africa",
 }
 
-# ── API-Football position mapping → our simplified position labels ─────────────
-def _simplify_pos(pos_raw: str) -> str:
-    p = (pos_raw or "").upper()
-    if p in ("ATTACKER",): return "ST"
-    if p in ("MIDFIELDER",): return "CAM"
-    if p in ("DEFENDER",): return "DEF"
-    if p in ("GOALKEEPER",): return "GK"
-    return pos_raw or "—"
-
-
-def apif_get(endpoint: str, params: dict) -> list:
-    """Single API-Football request. Returns response[] or []."""
-    if not APIF_KEY:
-        print("  ⚠️  APISPORTS_KEY not set — skipping API calls")
-        return []
-    query = "&".join(f"{k}={v}" for k, v in params.items())
-    path  = f"/{endpoint}?{query}"
+def apif_get(endpoint, params):
+    if not APIF_KEY: return [], 0
+    q = "&".join(f"{k}={v}" for k,v in params.items())
     try:
         conn = http.client.HTTPSConnection(APIF_HOST, timeout=20)
-        conn.request("GET", path, headers={"x-apisports-key": APIF_KEY})
+        conn.request("GET", f"/{endpoint}?{q}", headers={"x-apisports-key": APIF_KEY})
         resp = conn.getresponse()
-        raw  = resp.read().decode()
+        data = json.loads(resp.read().decode())
         conn.close()
-        data = json.loads(raw)
-        if data.get("errors"):
-            errs = data["errors"]
-            if errs:
-                print(f"  ⚠️  API error on /{endpoint}: {errs}")
-                return []
-        return data.get("response", [])
+        return data.get("response",[]), data.get("paging",{}).get("total",1)
     except Exception as e:
-        print(f"  ❌  Request failed /{endpoint}: {e}")
-        return []
+        print(f"  ERR {endpoint}: {e}"); return [], 0
 
+def normalize(s):
+    return s.lower().strip().replace("é","e").replace("ü","u").replace("ô","o").replace("ö","o")
 
-def _normalize(name: str) -> str:
-    """Lowercase, remove accents-ish, strip whitespace for fuzzy matching."""
-    return name.lower().strip().replace("é", "e").replace("ô", "o").replace("ü", "u")
-
-
-def _match_team(our_id: str, apif_teams: list) -> dict | None:
-    """Find the API-Football team entry for a given 3-letter ID."""
-    target_name = _normalize(APIF_NAME_OVERRIDE.get(our_id, our_id))
-    for t in apif_teams:
-        apif_name = _normalize(t.get("team", {}).get("name", ""))
-        if apif_name == target_name or target_name in apif_name or apif_name in target_name:
-            return t
+def match_team(our_id, teams):
+    target = normalize(APIF_NAME_OVERRIDE.get(our_id, our_id))
+    for t in teams:
+        n = normalize(t.get("team",{}).get("name",""))
+        if n == target or target in n or n in target: return t
     return None
 
-
-def _best_attacker(players: list) -> dict | None:
-    """
-    From a list of player-stat objects, find the best attacking player:
-    Priority: goals*4 + assists*2 + shots. Prefer ATT/MID positions.
-    """
-    best     = None
-    best_sc  = -1
-    for p_obj in players:
-        player = p_obj.get("player", {})
-        stats  = (p_obj.get("statistics") or [{}])[0]
-        pos    = (stats.get("games", {}).get("position") or "").upper()
-
-        # Skip keepers and defenders
-        if pos in ("GOALKEEPER", "DEFENDER"):
-            continue
-
-        goals   = stats.get("goals", {}).get("total") or 0
-        assists = stats.get("goals", {}).get("assists") or 0
-        shots   = stats.get("shots", {}).get("total") or 0
-        minutes = stats.get("games", {}).get("minutes") or 0
-
-        # Require at least 200 minutes played to count
-        if minutes < 200:
-            continue
-
-        score = goals * 4 + assists * 2 + shots * 0.1
-        # Bonus for attackers
-        if pos == "ATTACKER":
-            score += 5
-
-        if score > best_sc:
-            best_sc = score
-            best = {
-                "name":     player.get("name", "—"),
-                "position": _simplify_pos(pos),
-                "goals":    goals,
-                "assists":  assists,
-                "minutes":  minutes,
-            }
-
-    return best
-
+def best_attacker(players):
+    cands = []
+    for p in players:
+        s = (p.get("statistics") or [{}])[0]
+        pos = (s.get("games",{}).get("position") or "").upper()
+        if pos == "GOALKEEPER": continue
+        g = s.get("goals",{}).get("total") or 0
+        a = s.get("goals",{}).get("assists") or 0
+        sh = s.get("shots",{}).get("total") or 0
+        m = s.get("games",{}).get("minutes") or 0
+        if g == 0 and a == 0 and m < 60: continue
+        sc = g*6 + a*3 + sh*0.2 + (8 if pos=="ATTACKER" else 2 if pos=="MIDFIELDER" else 0)
+        cands.append({"name":p["player"].get("name","?"),"position":pos,"goals":g,"assists":a,"minutes":m,"sc":sc})
+    if not cands: return None
+    cands.sort(key=lambda x:-x["sc"])
+    best = cands[0]
+    lbl = {"ATTACKER":"ST","MIDFIELDER":"CAM","DEFENDER":"DEF"}.get(best["position"],best["position"])
+    return {"name":best["name"],"position":lbl,"goals":best["goals"],"assists":best["assists"],"minutes":best["minutes"]}
 
 def main():
-    print("⚽  fetch_wm_squads.py — WM 2026 Squad Spotlight")
-    print(f"    Key: {'✅ set' if APIF_KEY else '❌ missing'}")
-
-    # ── Load wm2026-data.json ─────────────────────────────────
-    if not WM_FILE.exists():
-        print("  ❌  wm2026-data.json not found")
-        sys.exit(1)
-
-    with open(WM_FILE, encoding="utf-8") as f:
-        wm = json.load(f)
-
-    squads_out: dict[str, dict] = wm.get("squads") or {}
-    all_team_ids = set()
-    for g in wm.get("groups", {}).values():
-        for t in g.get("teams", []):
-            all_team_ids.add(t["id"])
-
-    print(f"    Teams to process: {len(all_team_ids)}")
-
-    # ── Step 1: Get all WM 2026 teams from API-Football ───────
-    print("\n  📡  Fetching WM 2026 teams from API-Football (league=1, season=2026)…")
+    print(f"fetch_wm_squads.py v2  key={'set' if APIF_KEY else 'MISSING'}  force={FORCE}")
+    if not APIF_KEY: sys.exit(0)
+    with open(WM_FILE) as f: wm = json.load(f)
+    squads = {} if FORCE else (wm.get("squads") or {})
+    ids = sorted(t["id"] for g in wm["groups"].values() for t in g["teams"])
     time.sleep(APIF_DELAY)
-    apif_teams = apif_get("teams", {"league": 1, "season": 2026})
-    print(f"  → {len(apif_teams)} teams returned by API")
-
-    if not apif_teams:
-        print("  ⚠️  No teams returned — will try to use existing squad data")
-        print("      (WM 2026 fixtures may not be in API-Football yet before tournament)")
-
-    # ── Step 2: For each of our 48 teams, fetch players ───────
-    found = 0
-    skipped = 0
-    for our_id in sorted(all_team_ids):
-        # Already have fresh data → skip (unless --force)
-        existing = squads_out.get(our_id)
-        if existing and existing.get("name"):
-            print(f"  ⏭  {our_id} already has squad data: {existing['name']} ({existing.get('position','?')})")
-            skipped += 1
-            continue
-
-        # Find API-Football team entry
-        apif_entry = _match_team(our_id, apif_teams) if apif_teams else None
-        if not apif_entry:
-            if apif_teams:
-                print(f"  ⚠️  {our_id} — no match in API-Football team list")
-            continue
-
-        apif_team_id = apif_entry.get("team", {}).get("id")
-        apif_team_name = apif_entry.get("team", {}).get("name", "")
-        print(f"  🔍  {our_id} → {apif_team_name} (ID {apif_team_id})")
-
-        # Fetch players — try 2026 first, fall back to 2025, then 2024
-        players = []
-        for season in (2026, 2025, 2024):
-            time.sleep(APIF_DELAY)
-            players = apif_get("players", {
-                "team":   apif_team_id,
-                "season": season,
-                "page":   1,
-            })
-            if players:
-                print(f"      → {len(players)} players (season {season})")
-                break
-            print(f"      → season {season}: no data")
-
-        if not players:
-            print(f"      ⚠️  No player data found for {our_id}")
-            continue
-
-        # Pick best attacker
-        attacker = _best_attacker(players)
-        if attacker:
-            squads_out[our_id] = attacker
-            print(f"      ⭐ {attacker['name']} ({attacker['position']}) — "
-                  f"{attacker['goals']}G {attacker['assists']}A {attacker['minutes']}min")
+    apif_teams, _ = apif_get("teams", {"league":1,"season":2026})
+    print(f"API teams: {len(apif_teams)}")
+    found = skipped = 0
+    for tid in ids:
+        if not FORCE and squads.get(tid,{}).get("name"):
+            skipped += 1; continue
+        entry = match_team(tid, apif_teams)
+        if not entry:
+            print(f"  NOMATCH {tid}"); continue
+        aid = entry["team"]["id"]
+        all_p = []
+        for season in (2026,2025,2024):
+            for pg in range(1,MAX_PAGES+1):
+                time.sleep(APIF_DELAY)
+                pl, tp = apif_get("players", {"team":aid,"season":season,"page":pg})
+                all_p.extend(pl)
+                if not pl or pg >= tp: break
+            if all_p: break
+        best = best_attacker(all_p) if all_p else None
+        if best:
+            squads[tid] = best
+            print(f"  {tid}: {best['name']} {best['goals']}G {best['assists']}A")
             found += 1
-        else:
-            print(f"      ⚠️  No attacker with ≥200 min found for {our_id}")
+    wm["squads"] = squads
+    with open(WM_FILE,"w") as f: json.dump(wm, f, ensure_ascii=False, indent=2)
+    print(f"Done: {found} fetched, {skipped} skipped, total {len(squads)}/48")
 
-    # ── Step 3: Write back ────────────────────────────────────
-    wm["squads"] = squads_out
-    with open(WM_FILE, "w", encoding="utf-8") as f:
-        json.dump(wm, f, ensure_ascii=False, indent=2)
-
-    print(f"\n✅  Done — {found} new entries, {skipped} skipped (total: {len(squads_out)})")
-    print(f"   Saved: {WM_FILE}")
-
-
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": main()
