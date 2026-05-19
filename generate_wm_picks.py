@@ -467,10 +467,23 @@ def main():
     total_frozen     = 0
     total_past       = 0
 
+    wm.setdefault("upsetScores", {})
+
     for gkey, gdata in groups.items():
+        teams_map = {t["id"]: t for t in gdata.get("teams", [])}
+
         for fx in gdata.get("fixtures", []):
             pick_key = f"{gkey}-{fx['matchday']}-{fx['home']}-{fx['away']}"
             fx_date  = fx["date"]
+
+            # Upset Score für jedes Fixture berechnen (immer, auch ohne Picks)
+            elo_h = teams_map.get(fx["home"], {}).get("elo")
+            elo_a = teams_map.get(fx["away"], {}).get("elo")
+            if elo_h and elo_a:
+                gap = abs(elo_h - elo_a)
+                us  = (9 if gap < 50 else 7 if gap < 100 else 6 if gap < 150
+                       else 4 if gap < 200 else 2 if gap < 300 else 1)
+                wm["upsetScores"][pick_key] = us
 
             # Vergangene Spiele — eingefroren
             if fx_date < today:

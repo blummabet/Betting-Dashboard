@@ -1,0 +1,36 @@
+name: 📊 WM 2026 Telegram Recap
+
+on:
+  # 23:30 Vienna (21:30 UTC) — nach den Abendspielen (Anstoß 21:00)
+  schedule:
+    - cron: '30 21 * * *'
+
+  workflow_dispatch:
+    inputs:
+      recap_date:
+        description: 'Datum für Recap (YYYY-MM-DD, leer = gestern)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  wm-recap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📊 WM Recap senden
+        run: python telegram_wm.py
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TG_WM_MODE:       recap
