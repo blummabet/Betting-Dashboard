@@ -14,6 +14,22 @@ const fs   = require('fs');
 const path = require('path');
 const vm   = require('vm');
 
+// ── Window shim — pick-engine.js was written for browser context; ─────────────
+// it references window._oddsData, window._teamStats, window._oddsReady etc.
+// A global shim prevents "window is not defined" in Node.js.
+// _teamStats is updated after stats_cache.json loads (see engine.setTeamStats below).
+if (typeof window === 'undefined') {
+  global.window = {
+    _oddsData: {}, _preMatchData: {}, _oddsReady: false,
+    _teamStats: {},
+    _igDataUrl: '', _igFileName: '',
+  };
+}
+
+// ── Pick engine (canonical Node.js path — no VM extraction needed) ────────────
+const engine = require('./pick-engine.js');
+const { getBettingPicks, computeMatchScore, deriveOdds } = engine;
+
 const BASE           = __dirname;
 const HTML_PATH      = path.join(BASE, 'season-finish.html');
 const PREMATCH_PATH  = path.join(BASE, 'prematch-data.json');
@@ -108,6 +124,8 @@ try {
 } catch (_) {
   console.warn('stats_cache.json not found — xG/Elo stats unavailable');
 }
+engine.setTeamStats(teamStats);
+if (typeof global.window !== 'undefined') global.window._teamStats = teamStats;
 
 // ── 6. Build vm sandbox with browser API stubs ────────────────────────────────
 const mockFetch = () => Promise.resolve({
@@ -149,16 +167,9 @@ const sandbox = {
   exports: {},
 };
 
-// ── 7. Append export line and evaluate ───────────────────────────────────────
-script += `\n
-// ── Node.js export shim ──
-try {
-  exports.getBettingPicks  = getBettingPicks;
-  exports.computeMatchScore= computeMatchScore;
-  exports.deriveOdds       = deriveOdds;
-  exports.LEAGUES          = LEAGUES;
-} catch(_e) {}
-`;
+// ── 7. Append LEAGUES export and evaluate ────────────────────────────────────
+// Pick functions come from pick-engine.js (require above). VM only needed for LEAGUES data.
+script += `\ntry { exports.LEAGUES = LEAGUES; } catch(_e) {}`;
 
 try {
   vm.runInNewContext(script, sandbox);
@@ -170,11 +181,16 @@ try {
   process.exit(1);
 }
 
-const { getBettingPicks, computeMatchScore, LEAGUES, deriveOdds } = sandbox.exports;
-if (!getBettingPicks || !LEAGUES) {
-  console.error('Failed to extract getBettingPicks / LEAGUES');
+const LEAGUES = sandbox.exports.LEAGUES;
+if (!LEAGUES) {
+  console.error('Failed to extract LEAGUES from season-finish.html');
   process.exit(1);
 }
+// pick-engine.js references the global LEAGUES for rest-day calculations (line 954).
+// Expose it so getBettingPicks() can find it regardless of require() scope.
+global.LEAGUES = LEAGUES;
+// getBettingPicks, computeMatchScore, deriveOdds come from pick-engine.js (required above)
+console.log(`pick-engine.js: ${typeof getBettingPicks}, ${typeof computeMatchScore}, ${typeof deriveOdds}`);
 console.log(`Leagues found: ${Object.keys(LEAGUES).length}`);
 
 // ── 7b. Market name → marketKey mapping ──────────────────────────────────────

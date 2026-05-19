@@ -3150,3 +3150,238 @@ function getRestDays(teamName, matchDate, allFixtures) {
   prev.sort((a, b) => b - a);
   return Math.round((matchDt.getTime() - prev[0].getTime()) / 864e5);
 }
+
+// ═══════════════════════════════════════════════════════
+//  computeMatchScore — Match interest / priority score
+//  Continuous 1–12 scale, differentiates matches granularly.
+//
+//  NOTE: This is the canonical copy of computeMatchScore().
+//        The identical function in season-finish.html exists for
+//        browser rendering only. Logic changes must be applied here
+//        (pick-engine.js) first; the HTML copy follows.
+// ═══════════════════════════════════════════════════════
+
+// Node.js path: inject stats_cache.json data before running picks.
+// Browser path: window._teamStats is used directly inside computeMatchScore.
+let _engineTeamStats = {};
+function setTeamStats(stats) { _engineTeamStats = stats || {}; }
+
+function computeMatchScore(match, leagueKey) {
+  const hc = (match.homeStake?.labels||[]).map(l=>l.c);
+  const ac = (match.awayStake?.labels||[]).map(l=>l.c);
+  const hs  = match.homeStake?.score  || 0;
+  const as_ = match.awayStake ? (match.awayStake.score || 0) : 0;
+  const maxS = Math.max(hs, as_);
+  const minS = Math.min(hs, as_);
+
+  const bothRed  = hc.includes('red')  && ac.includes('red');
+  const bothGold = hc.includes('gold') && ac.includes('gold');
+  const bothBlue = hc.includes('blue') && ac.includes('blue');
+  const anyRed   = hc.includes('red')  || ac.includes('red');
+  const anyGold  = hc.includes('gold') || ac.includes('gold');
+
+  // ── Red-safe: in red zone but already mathematically rescued ──
+  const _hMotCS = match.homeStake?.motivationLevel;
+  const _aMotCS = match.awayStake?.motivationLevel;
+  const _hPRcs  = match.homeStake?.pressureRatio ?? null;
+  const _aPRcs  = match.awayStake?.pressureRatio ?? null;
+  const _hPNcs  = match.homeStake?.pointsNeeded  ?? null;
+  const _aPNcs  = match.awayStake?.pointsNeeded  ?? null;
+  const _hRScs  = hc.includes('red') && (_hMotCS === 'low' || _hMotCS === 'none') && _hPRcs === 0 && _hPNcs === 0;
+  const _aRScs  = ac.includes('red') && (_aMotCS === 'low' || _aMotCS === 'none') && _aPRcs === 0 && _aPNcs === 0;
+  const _anyRScs = _hRScs || _aRScs;
+
+  let score;
+
+  // ── Zone-based base + graduated second-team bonus ──────────────────────
+  if (bothRed && _hRScs && _aRScs) {
+    score = maxS + 0.2;
+  } else if (bothRed) {
+    score = maxS + 1.0 + (minS / 10) * 1.5;
+  } else if (bothGold) {
+    score = maxS + 0.75 + (minS / 10) * 1.5;
+  } else if (anyGold && anyRed && _anyRScs) {
+    score = maxS + 0.2 + (minS / 10) * 0.2;
+  } else if (anyGold && anyRed) {
+    score = maxS + 0.5 + (minS / 10) * 0.5;
+  } else if (bothBlue) {
+    score = maxS + 0.5 + (minS / 10) * 0.5;
+  } else if (anyRed && _anyRScs && match.bothStakes) {
+    score = maxS + 0.15;
+  } else if (anyRed && match.bothStakes) {
+    score = maxS + 0.4 + (minS / 10) * 0.4;
+  } else if (anyGold && match.bothStakes) {
+    score = maxS + 0.3 + (minS / 10) * 0.3;
+  } else if (match.bothStakes) {
+    score = maxS + 0.2;
+  } else {
+    score = maxS;
+  }
+
+  // ── mustWin amplifier ──────────────────────────────────────────────────
+  {
+    const hMot = match.homeStake?.motivationLevel;
+    const aMot = match.awayStake?.motivationLevel;
+    const hMW = (match.homeStake?.mustWin || false) && hMot === 'full';
+    const aMW = (match.awayStake?.mustWin || false) && aMot === 'full';
+    if (hMW && aMW) score += 0.8;
+    else if (hMW || aMW) score += 0.4;
+  }
+
+  // ── motivationLevel penalty ────────────────────────────────────────────
+  {
+    const hMot = match.homeStake?.motivationLevel;
+    const aMot = match.awayStake?.motivationLevel;
+    if      (hMot === 'none' && aMot === 'none') score -= 2.0;
+    else if (hMot === 'none' || aMot === 'none') score -= 1.0;
+    else if (hMot === 'low'  && aMot === 'low')  score -= 0.6;
+    else if (hMot === 'low'  || aMot === 'low')  score -= 0.3;
+  }
+
+  // ── Form-based modifier ────────────────────────────────────────────────
+  function _formMod(fd, isRed, isStake) {
+    if (!fd) return 0;
+    const fs = fd.formScore || 0.5, streak = fd.streak || 0;
+    if (isRed) {
+      if (streak <= -4) return  2.0;
+      if (streak <= -2) return  1.0;
+      if (fs < 0.25)    return  1.5;
+      if (streak >= 4)  return -1.0;
+      if (streak >= 2)  return -0.5;
+      if (fs > 0.72)    return -0.5;
+      return 0;
+    } else if (isStake) {
+      if (streak <= -4) return  1.2;
+      if (streak <= -2) return  0.6;
+      if (fs < 0.25)    return  0.8;
+      if (streak >= 4)  return -0.6;
+      if (streak >= 2)  return -0.3;
+      if (fs > 0.72)    return -0.3;
+      return 0;
+    } else {
+      if (streak >= 5)  return  0.5;
+      if (streak >= 3)  return  0.3;
+      if (streak <= -4) return -0.5;
+      if (streak <= -2) return -0.3;
+      return 0;
+    }
+  }
+  if (match.homeForm) score += _formMod(match.homeForm, hc.includes('red'), hc.length > 0) * 0.35;
+  if (match.awayForm) score += _formMod(match.awayForm, ac.includes('red'), ac.length > 0) * 0.35;
+
+  // ── Goals-per-game bonus ───────────────────────────────────────────────
+  {
+    const hGpg = match.homeForm?.goalsPerGame   ?? null;
+    const aCpg = match.awayForm?.concededPerGame ?? null;
+    const aGpg = match.awayForm?.goalsPerGame   ?? null;
+    const hCpg = match.homeForm?.concededPerGame ?? null;
+
+    const attacking = [hGpg, aGpg].filter(v => v != null);
+    const defending = [hCpg, aCpg].filter(v => v != null);
+    if (attacking.length && defending.length) {
+      const avgAtk = attacking.reduce((a,b) => a+b, 0) / attacking.length;
+      const avgDef = defending.reduce((a,b) => a+b, 0) / defending.length;
+      const goalProxy = (avgAtk + avgDef) / 2;
+      if      (goalProxy >= 2.8) score += 0.35;
+      else if (goalProxy >= 2.2) score += 0.20;
+      else if (goalProxy >= 1.8) score += 0.10;
+      else if (goalProxy <  1.0) score -= 0.10;
+    }
+  }
+
+  // ── Season urgency multiplier ──────────────────────────────────────────
+  {
+    const _rl = match.roundsLeft ?? 99;
+    const anyOrange = hc.includes('orange') || ac.includes('orange');
+    const anyPurple = hc.includes('purple') || ac.includes('purple');
+    if (_rl <= 8 && (anyRed || anyGold || bothBlue || anyOrange || anyPurple)) {
+      const _urgency = Math.max(0, Math.min(1.5, (10 - _rl) / 7));
+      const _urgWeight = (anyRed || anyGold || bothBlue) ? 1.0
+                       : anyOrange ? 0.70
+                       : 0.55;
+      score += _urgency * 0.51 * _urgWeight;
+    }
+  }
+
+  // ── H2H historical bonus ───────────────────────────────────────────────
+  if (match.h2h && match.h2h.games >= 5) {
+    const n  = match.h2h.games;
+    const h2hAge = match.h2h.lastMeetingYear ? (2026 - match.h2h.lastMeetingYear) : 1;
+    const recW   = Math.max(0.30, 1 - h2hAge * 0.12);
+    const balance  = 1 - Math.abs(match.h2h.homeWins - match.h2h.awayWins) / n;
+    const h2hDrawR = match.h2h.draws / n;
+    const bonusRaw = (balance >= 0.9 && h2hDrawR >= 0.3) ? 0.3 : balance >= 0.8 ? 0.15 : 0;
+    score += bonusRaw * recW;
+  }
+
+  // ── Elo quality bonus ──────────────────────────────────────────────────
+  // Uses _engineTeamStats in Node.js, window._teamStats in browser.
+  if (leagueKey) {
+    const _tsE  = (typeof window !== 'undefined' ? window._teamStats : null) || _engineTeamStats;
+    const _hSE  = _tsE[leagueKey]?.[match.home] || {};
+    const _aSE  = _tsE[leagueKey]?.[match.away] || {};
+    const _hEloM = _hSE.elo || null;
+    const _aEloM = _aSE.elo || null;
+    if (_hEloM && _aEloM) {
+      const avgElo = (_hEloM + _aEloM) / 2;
+      const eloDiffM = Math.abs(_hEloM - _aEloM);
+      if (avgElo > 1900) score += 0.30;
+      else if (avgElo > 1800) score += 0.15;
+      if (eloDiffM < 30) score += 0.10;
+    }
+  }
+
+  // ── Odds-based market validation bonus (browser only) ─────────────────
+  // window._oddsReady is always false in Node.js — this block never runs server-side.
+  if (typeof window !== 'undefined' && window._oddsReady) {
+    const odds = leagueKey ? findOdds(leagueKey, match.home, match.away) : null;
+    if (odds) {
+      if (odds.o25 && odds.o25 < 1.65) score += 0.3;
+      else if (odds.o25 && odds.o25 < 1.75) score += 0.15;
+      if (odds.hw && odds.aw) {
+        const spread = Math.abs(1/odds.hw - 1/odds.aw);
+        if (spread < 0.05) score += 0.2;
+        else if (spread < 0.12) score += 0.1;
+      }
+    }
+  }
+
+  // ── Squad strength modifier ────────────────────────────────────────────
+  {
+    const hSq = match.homeSquad?.squadStrength ?? match.homeStake?.squadStrength ?? null;
+    const aSq = match.awaySquad?.squadStrength ?? match.awayStake?.squadStrength ?? null;
+    if (hSq !== null && aSq !== null) {
+      const worstSq = Math.min(hSq, aSq);
+      if      (worstSq < 4.0) score -= 0.30;
+      else if (worstSq < 6.0) score -= 0.15;
+    }
+  }
+
+  // ── Dynamic score ceiling ──────────────────────────────────────────────
+  const _rlCeil   = match.roundsLeft ?? 99;
+  const _maxScore = _rlCeil <= 1 ? 12.0
+                  : _rlCeil <= 2 ? 11.5
+                  : _rlCeil <= 3 ? 11.0
+                  : _rlCeil <= 4 ? 10.5
+                  : _rlCeil <= 5 ? 10.0
+                  : _rlCeil <= 6 ?  9.5
+                  : _rlCeil <= 7 ?  9.0
+                  : _rlCeil <= 8 ?  8.5
+                  : _rlCeil <= 9 ?  8.0
+                  :                 7.5;
+
+  // ── Final motivation cap ───────────────────────────────────────────────
+  const _hMotFinal = match.homeStake?.motivationLevel;
+  const _aMotFinal = match.awayStake?.motivationLevel;
+  const _motCap = (_hMotFinal === 'none' && _aMotFinal === 'none') ? 6
+                : (_hMotFinal === 'none' || _aMotFinal === 'none') ? 8
+                : (_hMotFinal === 'low'  && _aMotFinal === 'low')  ? 8
+                : Infinity;
+
+  return Math.round(Math.min(_maxScore, _motCap, Math.max(1.0, score)) * 10) / 10;
+}
+
+// ── Node.js module export ──────────────────────────────────────────────────────
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { getBettingPicks, computeMatchScore, deriveOdds, parseGermanDate, getRestDays, setTeamStats };
+}
