@@ -292,6 +292,13 @@ def main():
     odds_out: dict[str, dict] = wm.get("odds") or {}
     groups = wm.get("groups", {})
 
+    # Build teams Elo map for sanity checks
+    teams_elo: dict[str, float] = {}
+    for gdata in groups.values():
+        for t in gdata.get("teams", []):
+            if t.get("elo"):
+                teams_elo[t["id"]] = t["elo"]
+
     # Collect all fixtures
     all_fixtures: list[dict] = []
     for gkey, gdata in groups.items():
@@ -355,6 +362,25 @@ def main():
 
         ev, h2h = matched_event
         matched += 1
+
+        # ── Elo sanity check: detect reversed hw/aw ──────────────────────
+        # If Elo strongly favors the home team (diff > 200 pts) but market
+        # has them as a big underdog (hw > 2.5× aw), the odds are reversed.
+        # This happens when TheOddsAPI lists the match in the wrong direction.
+        elo_h = teams_elo.get(home_id)
+        elo_a = teams_elo.get(away_id)
+        if elo_h and elo_a and h2h.get("hw") and h2h.get("aw"):
+            elo_diff = elo_h - elo_a
+            hw_raw, aw_raw = h2h["hw"], h2h["aw"]
+            if elo_diff > 200 and hw_raw > 2.5 * aw_raw:
+                h2h["hw"], h2h["aw"] = h2h["aw"], h2h["hw"]
+                print(f"  ⚠️  Elo-Sanity: {home_id}-{away_id} hw/aw korrigiert "
+                      f"(Elo Δ={elo_diff:.0f}, {hw_raw}→{h2h['hw']} / {aw_raw}→{h2h['aw']})")
+            elif elo_diff < -200 and aw_raw > 2.5 * hw_raw:
+                # Away team strongly favored by Elo but market has it backward
+                h2h["hw"], h2h["aw"] = h2h["aw"], h2h["hw"]
+                print(f"  ⚠️  Elo-Sanity: {home_id}-{away_id} hw/aw korrigiert "
+                      f"(Elo Δ={elo_diff:.0f}, {hw_raw}→{h2h['hw']} / {aw_raw}→{h2h['aw']})")
 
         existing = odds_out.get(key, {})
 

@@ -56,6 +56,7 @@ EDGE_MIN_OU    = 4    # Minimum pp für Over/Under + BTTS
 EDGE_MIN_DNB   = 5    # Minimum pp für DNB (braucht mehr Edge, da abgeleitet)
 EDGE_HIGH      = 10   # ≥10pp → high confidence
 EDGE_MED       = 6    # ≥6pp  → medium confidence
+EDGE_MAX_SANE  = 20   # >20pp → suspect (wrong/reversed odds) — pick verworfen
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -423,6 +424,21 @@ def generate_picks_for_fixture(
         if v["edgePP"] < min_edge:
             continue
 
+        # Sanity: Edge > EDGE_MAX_SANE deutet auf falsche/invertierte Quoten hin
+        if v["edgePP"] > EDGE_MAX_SANE:
+            if VERBOSE:
+                print(f"     ⚠️  {label}: Edge {v['edgePP']}pp > {EDGE_MAX_SANE}pp-Limit "
+                      f"— vermutl. fehlerhafte Quoten, übersprungen")
+            continue
+
+        # Sanity: Modell stark favorisiert (m_odds<1.55) aber Markt zeigt Außenseiter (bk>3.5)
+        # → Quoten wahrscheinlich invertiert / falsche Daten
+        if m_odds < 1.55 and bk > 3.5:
+            if VERBOSE:
+                print(f"     ⚠️  {label}: Modell={m_odds:.2f} vs Markt={bk:.2f} "
+                      f"— Richtungskonflikt, übersprungen")
+            continue
+
         conf = edge_to_conf(v["edgePP"], v["verdict"])
         info = build_info(elo_diff, form_h, form_a, h2h or None, mkey, lam_h, lam_a)
 
@@ -499,8 +515,10 @@ def main():
 
             new_picks = generate_picks_for_fixture(fx, gdata, mkt, form, h2h_data, today)
 
+            # Immer überschreiben — auch leere Liste löscht veraltete Picks
+            wm["picks"][pick_key] = new_picks
+
             if new_picks:
-                wm["picks"][pick_key] = new_picks
                 total_with_picks += 1
                 print(f"  ✅ {fx['home']} vs {fx['away']} (ST{fx['matchday']}, {fx_date}): "
                       f"{len(new_picks)} Pick(s)")
