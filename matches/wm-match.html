@@ -158,6 +158,11 @@ a{color:var(--accent);text-decoration:none}
 .gt-flag{font-size:14px;margin-right:4px}
 .gt-elo{font-size:10px;color:var(--muted);font-weight:400}
 
+/* ── AI Preview ──────────────────────────────────────── */
+.ai-preview{font-size:13px;color:var(--muted2);line-height:1.7;position:relative;padding-left:14px}
+.ai-preview::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:2px;background:linear-gradient(180deg,var(--accent),transparent);border-radius:2px}
+.ai-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;padding:3px 8px;border-radius:6px;background:#00d4a110;border:1px solid #00d4a125}
+
 /* ── Odds grid ───────────────────────────────────────── */
 .odds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
 .ocard{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px}
@@ -612,6 +617,24 @@ function renderGroupTable(D) {
 </div>`;
 }
 
+// ── Render: AI Preview ────────────────────────────────────────────────────
+function renderAIPreview(D) {
+  const text = D.aiPreview;
+  if (!text) return '';
+  // Escape HTML entities
+  const safe = text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+  return `
+<div class="content">
+<div class="section">
+  <div class="stitle"><div class="sticon" style="background:#00d4a115;border:1px solid #00d4a130">🤖</div>CocoBet Analyse</div>
+  <div class="ai-badge">✦ KI-Analyse</div>
+  <div class="ai-preview">${safe}</div>
+</div>
+</div>`;
+}
+
 // ── Render: Sharp Radar ────────────────────────────────────────────────────
 function renderSharpRadar(D) {
   const history = D.oddsHistory || [];
@@ -746,6 +769,7 @@ async function init() {
   document.getElementById('app').innerHTML = `
 ${renderHero(D)}
 ${renderUpsetScore(D)}
+${renderAIPreview(D)}
 ${renderContext(D)}
 ${renderPicks(D)}
 ${renderSharpRadar(D)}

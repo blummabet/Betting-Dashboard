@@ -120,7 +120,7 @@ def build_odds_history(history: dict, odds_key: str) -> list[dict]:
     return result
 
 
-def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None):
+def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, ai_previews=None):
     home_id = fixture["home"]
     away_id = fixture["away"]
     home_team = team_lookup[home_id]
@@ -231,6 +231,9 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None):
         "modHome":   mod_home,
         "modDraw":   mod_draw,
         "modAway":   mod_away,
+        # AI Preview
+        "aiPreview":     (ai_previews or {}).get(pick_key, {}).get("text"),
+        "aiTgSnippet":   (ai_previews or {}).get(pick_key, {}).get("tgSnippet"),
         # Data sections
         "picks":         picks_raw,
         "odds":          odds_out,
@@ -255,8 +258,10 @@ def main():
         print(f"ERROR: {WM_FILE} not found.")
         return
 
-    history = load_json(HISTORY_FILE) or {}
+    history     = load_json(HISTORY_FILE) or {}
+    ai_previews = wm.get("aiPreviews", {})
     print(f"  Odds history: {len(history)} Fixtures mit Snapshots")
+    print(f"  AI Previews: {len(ai_previews)} gecacht")
 
     # Build flat team lookup {id -> team_dict}
     team_lookup = {}
@@ -277,7 +282,7 @@ def main():
                 print(f"  SKIP: unknown team {home_id} or {away_id}")
                 continue
 
-            slug, payload = build_payload(group_id, group_data, fixture, team_lookup, wm, history)
+            slug, payload = build_payload(group_id, group_data, fixture, team_lookup, wm, history, ai_previews)
             out_path = os.path.join(DATA_DIR, f"{slug}.json")
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))

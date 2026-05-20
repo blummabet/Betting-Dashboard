@@ -125,6 +125,7 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
     groups      = wm.get("groups", {})
     all_picks   = wm.get("picks", {})
     upset_scores = wm.get("upsetScores", {})
+    ai_previews  = wm.get("aiPreviews", {})
 
     # Alle Fixtures am target_date sammeln
     matches_today = []
@@ -151,6 +152,7 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                     "picks":      all_picks.get(pick_key, []),
                     "pick_key":   pick_key,
                     "upsetScore": upset_scores.get(pick_key, 0),
+                    "aiSnippet":  ai_previews.get(pick_key, {}).get("tgSnippet"),
                 })
 
     if not matches_today:
@@ -194,6 +196,10 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
             elo_diff = m["homeElo"] - m["awayElo"]
             fav = m["homeName"] if elo_diff > 0 else m["awayName"]
             lines.append(f"⚡ Elo: {m['homeElo']} vs {m['awayElo']} → Favorit: {fav}")
+
+        # AI Snippet (1-2 Sätze Vorschau)
+        if m.get("aiSnippet"):
+            lines.append(f"\n✦ <i>{m['aiSnippet']}</i>")
 
         if not bet_picks and not abw_picks:
             lines.append("🔇 Kein Pick mit ausreichend Edge")

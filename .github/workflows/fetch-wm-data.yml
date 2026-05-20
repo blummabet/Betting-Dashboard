@@ -71,6 +71,13 @@ jobs:
         run: python generate_wm_picks.py
         continue-on-error: true
 
+      # ── AI Match Previews (gecacht per Hash — kein API-Call wenn keine Änderung) ──
+      - name: 🤖 WM AI Match Previews generieren
+        run: python generate_wm_ai_preview.py
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
       # ── Event Pages (matches/data/wm-*.json) ─────────────────────────────
       - name: 📄 WM Event Pages generieren
         run: python generate_wm_match_pages.py
