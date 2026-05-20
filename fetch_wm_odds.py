@@ -260,6 +260,67 @@ def _save_history(history: dict) -> None:
         json.dump(history, f, ensure_ascii=False, indent=2)
 
 
+def _extract_totals_btts(bookmakers: list, our_book_prio: list) -> dict:
+    """
+    Extract Over/Under 2.5 and BTTS odds from event bookmakers.
+    Prefers same bookmaker priority as h2h.
+    Returns {"o25": float|None, "u25": float|None, "bttsY": float|None, "bttsN": float|None}
+    """
+    # Collect per-bookmaker candidates
+    totals_cands: dict[str, tuple] = {}   # bk_key → (over_price, under_price)
+    btts_cands:   dict[str, tuple] = {}   # bk_key → (yes_price, no_price)
+
+    for bk in bookmakers:
+        bk_key = bk.get("key", "")
+        for market in bk.get("markets", []):
+            mkey = market.get("key", "")
+
+            if mkey == "totals":
+                over = under = None
+                for o in market.get("outcomes", []):
+                    point = o.get("point", 0)
+                    name  = o.get("name", "").lower()
+                    price = o.get("price")
+                    # Only the 2.5 line
+                    if price and abs(point - 2.5) < 0.01:
+                        if name == "over":
+                            over = price
+                        elif name == "under":
+                            under = price
+                if over and under:
+                    totals_cands[bk_key] = (over, under)
+
+            elif mkey in ("btts", "both_teams_to_score"):
+                yes = no = None
+                for o in market.get("outcomes", []):
+                    name  = o.get("name", "").lower()
+                    price = o.get("price")
+                    if price and name in ("yes", "ja"):
+                        yes = price
+                    elif price and name in ("no", "nein"):
+                        no = price
+                if yes:
+                    btts_cands[bk_key] = (yes, no)
+
+    def _pick(cands: dict) -> tuple | None:
+        for prio in our_book_prio:
+            if prio in cands:
+                return cands[prio]
+        for v in cands.values():
+            return v
+        return None
+
+    t = _pick(totals_cands)
+    b = _pick(btts_cands)
+
+    return {
+        "o25":   round(t[0], 3) if t else None,
+        "u25":   round(t[1], 3) if t else None,
+        "bttsY": round(b[0], 3) if b else None,
+        "bttsN": round(b[1], 3) if b and b[1] else None,
+    }
+
+
 def _snap_changed(last: dict | None, new_hw: float, new_dr: float | None, new_aw: float) -> bool:
     """True wenn sich mindestens eine Odds um SNAP_MIN_DELTA geändert hat."""
     if last is None:
@@ -321,12 +382,12 @@ def main():
             json.dump(wm, f, ensure_ascii=False, indent=2)
         return
 
-    # ── Fetch all odds ────────────────────────────────────────
+    # ── Fetch all odds (h2h + totals + btts in one call) ─────
     print(f"\n  📥  Fetching odds for {sport_key}…")
     path = (f"/v4/sports/{sport_key}/odds"
             f"?apiKey={ODDS_KEY}"
             f"&regions=eu,uk"
-            f"&markets=h2h"
+            f"&markets=h2h,totals,btts"
             f"&oddsFormat=decimal"
             f"&bookmakers={','.join(BOOKMAKERS)}")
     events = odds_get(path)
@@ -363,6 +424,9 @@ def main():
         ev, h2h = matched_event
         matched += 1
 
+        # ── Extract Totals + BTTS from same event ──────────────────────
+        tb = _extract_totals_btts(ev.get("bookmakers", []), BOOKMAKERS)
+
         # ── Elo sanity check: detect reversed hw/aw ──────────────────────
         # If Elo strongly favors the home team (diff > 200 pts) but market
         # has them as a big underdog (hw > 2.5× aw), the odds are reversed.
@@ -387,7 +451,20 @@ def main():
         # Preserve opening line (first-ever snapshot) — never overwrite
         odds_open = existing.get("odds_open")
         if not odds_open and h2h:
-            odds_open = {"hw": h2h["hw"], "dr": h2h["dr"], "aw": h2h["aw"]}
+            odds_open = {
+                "hw": h2h["hw"], "dr": h2h["dr"], "aw": h2h["aw"],
+                **({"o25": tb["o25"]} if tb["o25"] else {}),
+                **({"u25": tb["u25"]} if tb["u25"] else {}),
+                **({"bttsY": tb["bttsY"]} if tb["bttsY"] else {}),
+            }
+        elif odds_open:
+            # Backfill totals/btts into existing odds_open if not yet set
+            if tb["o25"] and not odds_open.get("o25"):
+                odds_open["o25"] = tb["o25"]
+            if tb["u25"] and not odds_open.get("u25"):
+                odds_open["u25"] = tb["u25"]
+            if tb["bttsY"] and not odds_open.get("bttsY"):
+                odds_open["bttsY"] = tb["bttsY"]
 
         new_entry = {
             "hw":         h2h["hw"],
@@ -397,6 +474,15 @@ def main():
             "odds_open":  odds_open,
             "updatedAt":  now_iso,
         }
+        # Add totals/btts if available
+        if tb["o25"]:
+            new_entry["o25"]   = tb["o25"]
+            new_entry["u25"]   = tb["u25"]
+        if tb["bttsY"]:
+            new_entry["bttsY"] = tb["bttsY"]
+            if tb["bttsN"]:
+                new_entry["bttsN"] = tb["bttsN"]
+
         # Preserve closing odds if already set
         if existing.get("odds_closing"):
             new_entry["odds_closing"] = existing["odds_closing"]
@@ -408,18 +494,30 @@ def main():
         snaps = history.setdefault(key, [])
         last_snap = snaps[-1] if snaps else None
         if _snap_changed(last_snap, h2h["hw"], h2h["dr"], h2h["aw"]):
-            snaps.append({
+            snap_entry = {
                 "ts":  now_iso,
                 "hw":  h2h["hw"],
                 "dr":  h2h["dr"],
                 "aw":  h2h["aw"],
                 "bk":  h2h["bookmaker"],
-            })
-            snaps_added += 1
+            }
+            if tb["o25"]:
+                snap_entry["o25"]   = tb["o25"]
+                snap_entry["u25"]   = tb["u25"]
+            if tb["bttsY"]:
+                snap_entry["bttsY"] = tb["bttsY"]
+            snaps.append(snap_entry)
 
-        home_names = TEAM_NAMES.get(home_id, [home_id])
-        print(f"  ✅  {home_names[0]} vs {TEAM_NAMES.get(away_id, [away_id])[0]}: "
-              f"H {h2h['hw']} / X {h2h['dr']} / A {h2h['aw']} [{h2h['bookmaker']}]")
+        # Track snapshot count + log
+        if snaps and snaps[-1].get("ts") == now_iso:
+            snaps_added += 1
+        ou_str   = f" | O/U {tb['o25']}/{tb['u25']}" if tb["o25"] else ""
+        btts_str = f" | BTTS {tb['bttsY']}" if tb["bttsY"] else ""
+        home_display = TEAM_NAMES.get(home_id, [home_id])[0]
+        away_display = TEAM_NAMES.get(away_id, [away_id])[0]
+        print(f"  ✅  {home_display} vs {away_display}: "
+              f"H {h2h['hw']} / X {h2h['dr']} / A {h2h['aw']}"
+              f"{ou_str}{btts_str} [{h2h['bookmaker']}]")
 
     # ── Write back ────────────────────────────────────────────
     wm["odds"] = odds_out
