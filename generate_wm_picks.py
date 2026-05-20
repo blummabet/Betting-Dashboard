@@ -57,7 +57,8 @@ EDGE_MIN_DNB   = 5    # Minimum pp für DNB (braucht mehr Edge, da abgeleitet)
 EDGE_HIGH      = 10   # ≥10pp → high confidence
 EDGE_MED       = 6    # ≥6pp  → medium confidence
 EDGE_MAX_SANE  = 20   # >20pp → suspect (wrong/reversed odds) — pick verworfen
-ODDS_MAX       = 15.0 # >15.0 → Softbook Payout-Cap Artefakt (kein echter Markt)
+ODDS_MAX       = 7.0  # >7.0  → zu viel Unsicherheit/Noise, komplett raus
+ODDS_BET_MAX   = 5.5  # >5.5  → max ABWÄGEN, nie BET (zu viel Rauschen bei hohen Quoten)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -432,13 +433,19 @@ def generate_picks_for_fixture(
                       f"— vermutl. fehlerhafte Quoten, übersprungen")
             continue
 
-        # Sanity: Marktquote > 15.0 → Softbook Payout-Cap (WilliamHill/Unibet bei Außenseitern)
-        # Diese Quoten sind kein echter Markt und führen zu falschen BET-Empfehlungen
+        # Sanity: Marktquote > ODDS_MAX → kein liquider Markt, kein echter Preis
         if bk > ODDS_MAX:
             if VERBOSE:
                 print(f"     ⚠️  {label}: Marktquote {bk:.2f} > {ODDS_MAX}-Limit "
-                      f"— Softbook-Payout-Cap, kein echter Markt, übersprungen")
+                      f"— kein liquider Markt, übersprungen")
             continue
+
+        # Bei hohen Quoten (>ODDS_BET_MAX): BET auf ABWÄGEN zurückstufen
+        # Zu viel Rauschen bei >6.0 um zuverlässig BET zu empfehlen
+        if bk > ODDS_BET_MAX and v["verdict"] == "BET":
+            v["verdict"] = "ABWÄGEN"
+            if VERBOSE:
+                print(f"     ℹ️  {label}: Quote {bk:.2f} > {ODDS_BET_MAX} → BET→ABWÄGEN")
 
         # Sanity: Modell stark favorisiert (m_odds<1.55) aber Markt zeigt Außenseiter (bk>3.5)
         # → Quoten wahrscheinlich invertiert / falsche Daten
