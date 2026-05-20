@@ -16,8 +16,8 @@ from pathlib import Path
 BASE    = Path(__file__).parent
 WM_FILE = BASE / "wm2026-data.json"
 
-CO_HOSTS    = {"MEX", "USA", "CAN"}
-PREVIEW_DAYS = 21   # Generiere für nächste 3 Wochen
+CO_HOSTS     = {"MEX", "USA", "CAN"}
+PREVIEW_DAYS = 60   # Abdeckung für gesamte WM inkl. KO-Runden (bis 19. Juli)
 
 
 # ── Textbausteine ──────────────────────────────────────────────────────────────

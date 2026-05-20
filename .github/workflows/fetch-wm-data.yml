@@ -100,17 +100,10 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           MAX_SPOTLIGHTS:   "2"
 
-      # ── Rule-Based Match Previews (kein API-Key, immer aktiv) ─────────────
-      - name: 📝 WM Rule-Based Previews generieren
+      # ── Match Previews (regelbasiert, kein API-Key nötig) ────────────────
+      - name: 📝 WM Match Previews generieren
         run: python generate_wm_rule_preview.py
         continue-on-error: true
-
-      # ── AI Match Previews (überschreibt Rule-Previews wenn ANTHROPIC_API_KEY gesetzt) ──
-      - name: 🤖 WM AI Match Previews generieren
-        run: python generate_wm_ai_preview.py
-        continue-on-error: true
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
       # ── Event Pages (matches/data/wm-*.json) ─────────────────────────────
       - name: 📄 WM Event Pages generieren
