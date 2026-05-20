@@ -259,8 +259,16 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         # AI Preview
         "aiPreview":     (ai_previews or {}).get(pick_key, {}).get("text"),
         "aiTgSnippet":   (ai_previews or {}).get(pick_key, {}).get("tgSnippet"),
-        # Player Spotlights (alle die für home- oder away-Team in dieser Woche gepostet wurden)
+        # Player Spotlights
         "playerSpotlights": _match_player_spotlights(wm, home_id, away_id),
+        # Squad key players (with extended stats: shots, cards, rating, etc.)
+        "squads": {
+            home_id: wm.get("squads", {}).get(home_id),
+            away_id: wm.get("squads", {}).get(away_id),
+        },
+        # Corner averages per team (from fetch_wm_corners.py)
+        "cornersHome": wm.get("cornersForm", {}).get(home_id),
+        "cornersAway": wm.get("cornersForm", {}).get(away_id),
         # Data sections
         "picks":         picks_raw,
         "odds":          odds_out,

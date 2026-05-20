@@ -184,27 +184,55 @@ def _best_attacker(players: list) -> dict | None:
 
         score = _score_player(stats, pos)
 
+        shots_on    = stats.get("shots", {}).get("on")              or 0
+        key_passes  = stats.get("passes", {}).get("key")            or 0
+        yellow      = stats.get("cards", {}).get("yellow")          or 0
+        red         = stats.get("cards", {}).get("red")             or 0
+        fouls       = stats.get("fouls", {}).get("committed")       or 0
+        rating      = float(stats.get("games", {}).get("rating")    or 0)
+        dribbles    = stats.get("dribbles", {}).get("success")      or 0
+        appearances = stats.get("games", {}).get("appearences")     or 1
+
         # Require at least one contribution (goal or assist) OR 60+ minutes
         if goals == 0 and assists == 0 and minutes < 60:
             continue
 
         candidates.append({
-            "name":     player.get("name", "—"),
-            "position": pos,
-            "goals":    goals,
-            "assists":  assists,
-            "shots":    shots,
-            "minutes":  minutes,
-            "score":    score,
+            "name":        player.get("name", "—"),
+            "position":    pos,
+            "goals":       goals,
+            "assists":     assists,
+            "shots":       shots,
+            "shotsOn":     shots_on,
+            "keyPasses":   key_passes,
+            "yellowCards": yellow,
+            "redCards":    red,
+            "fouls":       fouls,
+            "rating":      rating,
+            "dribbles":    dribbles,
+            "appearances": appearances,
+            "minutes":     minutes,
+            "score":       score,
         })
 
         # Track fallback: most minutes regardless of contribution
         if fallback_minutes is None or minutes > fallback_minutes:
             fallback_minutes = minutes
             fallback_player  = {
-                "name": player.get("name", "—"),
-                "position": pos, "goals": goals,
-                "assists": assists, "minutes": minutes,
+                "name":        player.get("name", "—"),
+                "position":    pos,
+                "goals":       goals,
+                "assists":     assists,
+                "shots":       shots,
+                "shotsOn":     shots_on,
+                "keyPasses":   key_passes,
+                "yellowCards": yellow,
+                "redCards":    red,
+                "fouls":       fouls,
+                "rating":      rating,
+                "dribbles":    dribbles,
+                "appearances": appearances,
+                "minutes":     minutes,
             }
 
     if not candidates:
@@ -222,13 +250,32 @@ def _best_attacker(players: list) -> dict | None:
     best = candidates[0]
     pos_label = {"ATTACKER": "ST", "MIDFIELDER": "CAM",
                  "DEFENDER": "DEF", "FORWARD": "ST"}.get(best["position"], best["position"])
-    return {
-        "name":     best["name"],
-        "position": pos_label,
-        "goals":    best["goals"],
-        "assists":  best["assists"],
-        "minutes":  best["minutes"],
-    }
+
+    def _fmt(c: dict) -> dict:
+        """Return a clean extended player dict (no internal score field)."""
+        lbl = {"ATTACKER": "ST", "MIDFIELDER": "CAM",
+               "DEFENDER": "DEF", "FORWARD": "ST"}.get(c["position"], c["position"])
+        return {
+            "name":        c["name"],
+            "position":    lbl,
+            "goals":       c["goals"],
+            "assists":     c["assists"],
+            "shots":       c["shots"],
+            "shotsOn":     c["shotsOn"],
+            "keyPasses":   c["keyPasses"],
+            "yellowCards": c["yellowCards"],
+            "redCards":    c["redCards"],
+            "fouls":       c["fouls"],
+            "rating":      c["rating"],
+            "dribbles":    c["dribbles"],
+            "appearances": c["appearances"],
+            "minutes":     c["minutes"],
+        }
+
+    top3 = [_fmt(c) for c in candidates[:3]]
+    result = _fmt(best)
+    result["top3"] = top3
+    return result
 
 
 def fetch_all_players(apif_team_id: int) -> list:

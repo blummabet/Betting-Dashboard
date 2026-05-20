@@ -146,6 +146,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm26-verdict{font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;}
 .wm26-verdict.bet{background:var(--accent);color:#0d1117;}
 .wm26-verdict.abw{background:#f0c040;color:#0d1117;}
+.wm26-preview{font-size:11px;color:var(--muted2,#8b949e);line-height:1.65;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:6px;border-left:2px solid var(--accent);cursor:pointer;position:relative;}
+.wm26-preview-collapsed{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.wm26-preview-full{display:block;}
+.wm26-preview-toggle{font-size:10px;color:var(--accent);margin-top:3px;display:block;user-select:none;}
+.wm26-squad-pill{display:inline-flex;align-items:center;gap:5px;font-size:10px;padding:3px 7px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25);border-radius:20px;color:var(--muted2,#aaa);}
+.wm26-squad-pill strong{color:var(--text);font-size:11px;}
+.wm26-stat-bar{display:flex;gap:12px;font-size:10px;color:var(--muted);flex-wrap:wrap;padding:4px 0;}
+.wm26-stat-bar span{display:flex;align-items:center;gap:3px;}
 .wm26-link{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--accent);text-decoration:none;margin-top:2px;opacity:.7;transition:.15s;}
 .wm26-link:hover{opacity:1;}
 /* TELEGRAM PANEL */
@@ -7894,6 +7902,21 @@ function filterWm26(btn) {
   renderWm26Grid(btn.dataset.g);
 }
 
+function toggleWm26Preview(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const toggle = el.querySelector('.wm26-preview-toggle');
+  if (el.classList.contains('wm26-preview-collapsed')) {
+    el.classList.remove('wm26-preview-collapsed');
+    el.classList.add('wm26-preview-full');
+    if (toggle) toggle.textContent = '▲ weniger';
+  } else {
+    el.classList.remove('wm26-preview-full');
+    el.classList.add('wm26-preview-collapsed');
+    if (toggle) toggle.textContent = '▼ mehr anzeigen';
+  }
+}
+
 function renderWm26Grid(group) {
   const grid = document.getElementById('wm26grid');
   if (!grid) return;
@@ -7931,6 +7954,46 @@ function renderWm26Grid(group) {
            <span>${m.probHome}%</span><span>X ${m.probDraw}%</span><span>${m.probAway}%</span>
          </div>` : '';
 
+    // AI Preview (collapsible)
+    const previewId = `prev_${m.slug?.replace(/-/g,'_')}`;
+    const previewHtml = m.aiPreview ? `
+      <div class="wm26-preview wm26-preview-collapsed" id="${previewId}"
+           onclick="toggleWm26Preview('${previewId}')">
+        ${m.aiPreview}
+        <span class="wm26-preview-toggle">▼ mehr anzeigen</span>
+      </div>` : '';
+
+    // Squad spotlight pills (home + away key player)
+    const sq = m.homeTeams || [];
+    const hSq = m.squads?.[m.homeId];
+    const aSq = m.squads?.[m.awayId];
+    const squadHtml = (hSq || aSq) ? `
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+        ${hSq ? `<div class="wm26-squad-pill">
+          ${m.homeFlag||''} <strong>${hSq.name}</strong>
+          <span>${hSq.goals}G ${hSq.assists}A</span>
+          ${hSq.shots ? `<span style="color:var(--muted)">· ${hSq.shots}💥</span>` : ''}
+          ${hSq.yellowCards ? `<span style="color:#f0c040">🟨${hSq.yellowCards}</span>` : ''}
+        </div>` : ''}
+        ${aSq ? `<div class="wm26-squad-pill">
+          ${m.awayFlag||''} <strong>${aSq.name}</strong>
+          <span>${aSq.goals}G ${aSq.assists}A</span>
+          ${aSq.shots ? `<span style="color:var(--muted)">· ${aSq.shots}💥</span>` : ''}
+          ${aSq.yellowCards ? `<span style="color:#f0c040">🟨${aSq.yellowCards}</span>` : ''}
+        </div>` : ''}
+      </div>` : '';
+
+    // Corner averages (if available)
+    const hCorners = m.cornersHome;
+    const aCorners = m.cornersAway;
+    const cornersHtml = (hCorners || aCorners) ? `
+      <div class="wm26-stat-bar">
+        🚩 Ecken: <span>${m.home} ⌀${hCorners?.forAvg ?? '?'}</span>
+        <span style="color:var(--muted)">·</span>
+        <span>${m.away} ⌀${aCorners?.forAvg ?? '?'}</span>
+        ${(hCorners?.forAvg && aCorners?.forAvg) ? `<span style="color:var(--muted)">(Ges. ⌀${((hCorners.forAvg||0)+(aCorners.forAvg||0)).toFixed(1)})</span>` : ''}
+      </div>` : '';
+
     return `<div class="wm26-card">
       <div class="wm26-teams">
         <span class="wm26-flag">${m.homeFlag||'🏳'}</span>
@@ -7947,6 +8010,9 @@ function renderWm26Grid(group) {
       </div>
       ${probsHtml}
       ${pickHtml}
+      ${previewHtml}
+      ${squadHtml}
+      ${cornersHtml}
       <a class="wm26-link" href="./matches/wm-match.html?m=${m.slug}" target="_blank">
         🔗 Event Page öffnen ↗
       </a>

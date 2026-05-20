@@ -66,7 +66,14 @@ jobs:
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
-      # ── Pick-Generator (nach Form + Odds, schreibt auch upsetScores) ───────
+      # ── Corner Stats (API-Football, täglich, max 10 Spiele pro Team) ────
+      - name: 📐 WM Corner Stats fetchen
+        run: python fetch_wm_corners.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
+      # ── Pick-Generator (nach Form + Odds + Corners, schreibt auch upsetScores) ───────
       - name: 🎯 WM Picks + Upset Scores generieren
         run: python generate_wm_picks.py
         continue-on-error: true
