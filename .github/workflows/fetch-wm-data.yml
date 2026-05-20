@@ -71,7 +71,34 @@ jobs:
         run: python generate_wm_picks.py
         continue-on-error: true
 
-      # ── AI Match Previews (gecacht per Hash — kein API-Call wenn keine Änderung) ──
+      # ── Player Props (TheOddsAPI, nur Spiele der nächsten 7 Tage) ───────────
+      - name: ⚽ WM Player Props fetchen
+        run: python fetch_wm_player_props.py
+        continue-on-error: true
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+
+      # ── Player Spotlight (2-3x pro Woche, Di/Do/Sa) ──────────────────────
+      - name: 🌟 WM Player Spotlight generieren & senden
+        run: |
+          DOW=$(date +%u)
+          if [ "$DOW" = "2" ] || [ "$DOW" = "4" ] || [ "$DOW" = "6" ]; then
+            python generate_wm_player_spotlight.py
+          else
+            echo "Heute kein Spotlight-Tag (Mo/Mi/Fr/So)"
+          fi
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MAX_SPOTLIGHTS:   "2"
+
+      # ── Rule-Based Match Previews (kein API-Key, immer aktiv) ─────────────
+      - name: 📝 WM Rule-Based Previews generieren
+        run: python generate_wm_rule_preview.py
+        continue-on-error: true
+
+      # ── AI Match Previews (überschreibt Rule-Previews wenn ANTHROPIC_API_KEY gesetzt) ──
       - name: 🤖 WM AI Match Previews generieren
         run: python generate_wm_ai_preview.py
         continue-on-error: true

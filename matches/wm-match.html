@@ -170,6 +170,26 @@ a{color:var(--accent);text-decoration:none}
 .ocard-cur{font-size:20px;font-weight:800;color:var(--text);line-height:1;margin-bottom:4px}
 .ocard-impl{font-size:10px;color:var(--muted2)}
 
+/* ── Player Spotlight ────────────────────────────────── */
+.player-card{border-radius:14px;padding:16px 18px;margin-bottom:10px;background:linear-gradient(135deg,#0d1a2e,#0f1419);border:1px solid #58a6ff25;position:relative;overflow:hidden}
+.player-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#58a6ff,transparent)}
+.player-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.player-flag{font-size:28px;flex-shrink:0}
+.player-info{flex:1;min-width:0}
+.player-name{font-size:16px;font-weight:800;color:var(--text);line-height:1.2}
+.player-meta{font-size:11px;color:var(--muted2);margin-top:2px}
+.player-prob{text-align:right;flex-shrink:0}
+.player-prob-num{font-size:24px;font-weight:900;color:var(--blue);line-height:1}
+.player-prob-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.player-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.pstat{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;text-align:center;flex:1;min-width:55px}
+.pstat-val{font-size:15px;font-weight:800;color:var(--text);line-height:1}
+.pstat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.player-bet{border-radius:10px;padding:11px 14px;margin-top:8px}
+.player-bet.has-bet{background:#58a6ff0e;border:1px solid #58a6ff25}
+.player-bet.no-props{background:#ffffff05;border:1px solid var(--border)}
+.player-narrative{font-size:12px;color:var(--muted2);line-height:1.6;font-style:italic;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+
 /* ── Sharp Radar ─────────────────────────────────────── */
 .radar-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .radar-pill{padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1px solid}
@@ -635,6 +655,85 @@ function renderAIPreview(D) {
 </div>`;
 }
 
+// ── Render: Player Spotlight ───────────────────────────────────────────────
+function renderPlayerSpotlight(D) {
+  const spots = D.playerSpotlights;
+  if (!spots || spots.length === 0) return '';
+
+  const pos_labels = {
+    ST:'Stürmer',CF:'Stürmer',LW:'Linksaußen',RW:'Rechtsaußen',
+    CAM:'Offensives MF',AM:'Offensives MF',MF:'Mittelfeld',
+    CM:'Mittelfeld',DM:'Def. Mittelfeld',DF:'Abwehr',CB:'Innenverteidiger',
+    LB:'Linksverteidiger',RB:'Rechtsverteidiger'
+  };
+
+  const cards = spots.map(s => {
+    const p       = s.player || {};
+    const posLbl  = pos_labels[p.position] || p.position || '';
+    const apps    = p.minutes ? Math.round(p.minutes / 90) : '?';
+    const rate    = s.scoringRate ? s.scoringRate.toFixed(2) : '?';
+    const modP    = s.modelProb ? Math.round(s.modelProb) : null;
+    const hasBet  = s.hasBet && s.betOdds;
+    const edge    = s.edgePP;
+    const verdict = hasBet && edge != null
+      ? (edge >= 5 ? '🎯 BET' : edge >= 2 ? '⚖️ ABWÄGEN' : '🔇 Kein klarer Edge')
+      : null;
+    const edgeColor = hasBet && edge != null
+      ? (edge >= 5 ? 'var(--accent)' : edge >= 2 ? 'var(--yellow)' : 'var(--muted)')
+      : 'var(--muted)';
+
+    const betBlock = hasBet ? `
+<div class="player-bet has-bet">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+    <span style="font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px">Anytime Scorer</span>
+    <span style="font-size:18px;font-weight:900;color:var(--text)">@${s.betOdds.toFixed(2)}</span>
+  </div>
+  <div style="display:flex;gap:10px;font-size:11px;color:var(--muted2)">
+    <span>Markt: ${Math.round(100/s.betOdds)}%</span>
+    <span>Modell: ${modP}%</span>
+    ${edge != null ? `<span style="color:${edgeColor};font-weight:700">Edge: ${edge > 0 ? '+':''}${edge.toFixed(1)}pp</span>` : ''}
+  </div>
+  ${verdict ? `<div style="margin-top:8px;font-size:12px;font-weight:700;color:${edgeColor}">${verdict}: Anytime Scorer @${s.betOdds.toFixed(2)}</div>` : ''}
+</div>` : `
+<div class="player-bet no-props">
+  <span style="font-size:11px;color:var(--muted)">⏳ Player Props noch nicht verfügbar · Modell-Prob: ${modP}%</span>
+</div>`;
+
+    const narrative = s.narrative
+      ? `<div class="player-narrative">${s.narrative}</div>` : '';
+
+    return `<div class="player-card">
+  <div class="player-header">
+    <div class="player-flag">${s.teamFlag || '🏳'}</div>
+    <div class="player-info">
+      <div class="player-name">${p.name || s.playerName}</div>
+      <div class="player-meta">${s.teamName} · ${posLbl}</div>
+    </div>
+    ${modP != null ? `<div class="player-prob">
+      <div class="player-prob-num">${modP}%</div>
+      <div class="player-prob-lbl">Scorer-Prob</div>
+    </div>` : ''}
+  </div>
+  <div class="player-stats">
+    <div class="pstat"><div class="pstat-val">${p.goals ?? '?'}</div><div class="pstat-lbl">Tore</div></div>
+    <div class="pstat"><div class="pstat-val">${p.assists ?? '?'}</div><div class="pstat-lbl">Assists</div></div>
+    <div class="pstat"><div class="pstat-val">~${apps}</div><div class="pstat-lbl">Spiele</div></div>
+    <div class="pstat"><div class="pstat-val">${rate}</div><div class="pstat-lbl">Tore/90</div></div>
+  </div>
+  ${betBlock}
+  ${narrative}
+</div>`;
+  }).join('');
+
+  return `
+<div class="content">
+<div class="section">
+  <div class="stitle"><div class="sticon" style="background:#58a6ff15;border:1px solid #58a6ff30">⚽</div>Player Spotlight</div>
+  ${cards}
+</div>
+</div>`;
+}
+
 // ── Render: Sharp Radar ────────────────────────────────────────────────────
 function renderSharpRadar(D) {
   const history = D.oddsHistory || [];
@@ -772,6 +871,7 @@ ${renderUpsetScore(D)}
 ${renderAIPreview(D)}
 ${renderContext(D)}
 ${renderPicks(D)}
+${renderPlayerSpotlight(D)}
 ${renderSharpRadar(D)}
 ${renderForm(D)}
 ${renderH2H(D)}

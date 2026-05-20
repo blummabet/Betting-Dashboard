@@ -84,6 +84,31 @@ def fmt_rate(v):
 
 # ── Build one JSON payload ─────────────────────────────────────────────────────
 
+def _match_player_spotlights(wm: dict, home_id: str, away_id: str) -> list[dict]:
+    """
+    Gibt Player Spotlights zurück die zu diesem Spiel gehören.
+    Schaut in wm["playerSpotlights"] nach Spielern beider Teams.
+    """
+    all_spots = wm.get("playerSpotlights", {})
+    result = []
+    for week_spots in all_spots.values():
+        for spot in week_spots:
+            if spot.get("teamId") in (home_id, away_id):
+                # Vollständige Spotlight-Daten aus wm["squads"] anreichern
+                player = wm.get("squads", {}).get(spot["teamId"])
+                if player:
+                    spot = dict(spot)
+                    spot["player"] = player
+                    # Flag + Name aus Gruppe
+                    for gdata in wm.get("groups", {}).values():
+                        for t in gdata.get("teams", []):
+                            if t["id"] == spot["teamId"]:
+                                spot["teamFlag"] = t.get("flag", "🏳")
+                                spot["teamName"] = t.get("name", spot["teamId"])
+                    result.append(spot)
+    return result
+
+
 def build_odds_history(history: dict, odds_key: str) -> list[dict]:
     """
     Gibt die letzten 20 Snapshots für ein Fixture zurück.
@@ -234,6 +259,8 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         # AI Preview
         "aiPreview":     (ai_previews or {}).get(pick_key, {}).get("text"),
         "aiTgSnippet":   (ai_previews or {}).get(pick_key, {}).get("tgSnippet"),
+        # Player Spotlights (alle die für home- oder away-Team in dieser Woche gepostet wurden)
+        "playerSpotlights": _match_player_spotlights(wm, home_id, away_id),
         # Data sections
         "picks":         picks_raw,
         "odds":          odds_out,
