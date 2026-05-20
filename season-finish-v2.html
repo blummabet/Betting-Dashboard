@@ -131,6 +131,31 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .sub-nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
 .sub-nav-badge{font-size:10px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:1px 6px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:600;}
 
+/* WM 2026 PANEL */
+.wm26-gf{background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:4px 11px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:.15s;}
+.wm26-gf:hover,.wm26-gf.active{background:var(--accent);border-color:var(--accent);color:#0d1117;}
+.wm26-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s;}
+.wm26-card:hover{border-color:var(--accent);}
+.wm26-teams{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700;}
+.wm26-flag{font-size:20px;}
+.wm26-vs{font-size:11px;color:var(--muted);font-weight:400;margin:0 4px;}
+.wm26-meta{font-size:10px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;}
+.wm26-pick{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:8px;font-size:11px;}
+.wm26-pick.bet{background:rgba(0,212,161,.12);border:1px solid rgba(0,212,161,.3);}
+.wm26-pick.abw{background:rgba(240,192,64,.08);border:1px solid rgba(240,192,64,.2);}
+.wm26-verdict{font-size:10px;font-weight:700;padding:1px 6px;border-radius:5px;}
+.wm26-verdict.bet{background:var(--accent);color:#0d1117;}
+.wm26-verdict.abw{background:#f0c040;color:#0d1117;}
+.wm26-link{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--accent);text-decoration:none;margin-top:2px;opacity:.7;transition:.15s;}
+.wm26-link:hover{opacity:1;}
+/* TELEGRAM PANEL */
+.tg-trigger-btn{border:1px solid;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s;}
+.tg-trigger-btn:hover{opacity:.8;}
+.tg-log-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:8px;font-size:11px;}
+.tg-log-type{width:100px;flex-shrink:0;font-weight:700;}
+.tg-log-time{color:var(--muted);flex-shrink:0;width:80px;}
+.tg-log-preview{color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+
 /* LEAGUE NAV */
 .league-nav{
   background:var(--card);border-bottom:2px solid var(--border);
@@ -1205,10 +1230,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="top-nav-btn" id="navSavePicks" onclick="savePicksToday(this)" title="Heutige Picks in localStorage sichern" style="margin-left:auto;color:#3fb950;">💾 <span id="navSaveLabel">Picks speichern</span></button>
 </div>
 
-<!-- SUB NAV (Cards / Tracking — für National und International) -->
+<!-- SUB NAV (Cards / Tracking / WM2026 / Telegram) -->
 <div class="sub-nav" id="subNav">
   <button class="sub-nav-btn active" id="subCards" onclick="showSubView('cards')">🃏 Cards</button>
+  <button class="sub-nav-btn" id="subWm2026" onclick="showSubView('wm2026')" style="display:none">🌍 WM 2026</button>
   <button class="sub-nav-btn" id="subTracking" onclick="showSubView('tracking')">📈 Tracking</button>
+  <button class="sub-nav-btn" id="subTelegram" onclick="showSubView('telegram')" style="display:none">📱 Telegram</button>
 </div>
 
 <!-- LEAGUE NAV -->
@@ -2652,6 +2679,109 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-.3px;">WM Tracking — Coming Soon</div>
     <div style="font-size:14px;line-height:1.7;max-width:480px;margin:0 auto;">
       Pick-Tracking und Auswertung für die Weltmeisterschaft 2026.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     WM 2026 PANEL — Gruppenphase Übersicht
+     ══════════════════════════════════════════════════════════════════ -->
+<div id="intlWm2026Panel" style="display:none;max-width:1120px;margin:0 auto;padding:20px 16px 80px;">
+
+  <!-- Header -->
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap;">
+    <div style="font-size:36px">🌍</div>
+    <div>
+      <div style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.3px;">WM 2026 · Gruppenphase</div>
+      <div id="wm26meta" style="font-size:12px;color:var(--muted);margin-top:3px;">Lade Spieldaten…</div>
+    </div>
+    <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;" id="wm26groupFilter">
+      <button class="wm26-gf active" data-g="all">Alle</button>
+    </div>
+  </div>
+
+  <!-- Match grid -->
+  <div id="wm26grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     TELEGRAM CONTROL PANEL
+     ══════════════════════════════════════════════════════════════════ -->
+<div id="intlTelegramPanel" style="display:none;max-width:900px;margin:0 auto;padding:20px 16px 80px;">
+
+  <!-- Header -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+    <div style="font-size:32px">📱</div>
+    <div>
+      <div style="font-size:20px;font-weight:800;color:var(--text);">Telegram Control</div>
+      <div style="font-size:12px;color:var(--muted);">Versandplan · Verlauf · Manuell auslösen</div>
+    </div>
+  </div>
+
+  <!-- Schedule -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;">
+    <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px;">📅 Automatischer Versandplan</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">🌅</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Morning Card</div>
+          <div style="font-size:11px;color:var(--muted);">Täglich 08:00 Wien (06:00 UTC) · Nur wenn WM-Spieltag · Picks + Elo + Upset-Score</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(0,212,161,.15);color:#00d4a1;padding:2px 8px;border-radius:6px;white-space:nowrap;">täglich</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">📡</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Sharp Move Alert</div>
+          <div style="font-size:11px;color:var(--muted);">Nach Odds-Fetch · Bei ≥5pp implied-prob Shift · Steam Move bei ≥10pp</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(255,140,0,.15);color:#ff8c00;padding:2px 8px;border-radius:6px;white-space:nowrap;">event-driven</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">🌟</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Player Spotlight</div>
+          <div style="font-size:11px;color:var(--muted);">Di / Do / Sa · Max. 2 Spieler · Scoring-Rate + Elo-Factor + Player Props Edge</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:6px;white-space:nowrap;">Di/Do/Sa</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">📊</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Recap Card</div>
+          <div style="font-size:11px;color:var(--muted);">Nach Spieltag · Ergebnisse + ROI · Benötigt resolve_wm_results.py (ab 11. Jun)</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(100,100,100,.2);color:var(--muted);padding:2px 8px;border-radius:6px;white-space:nowrap;">ab Juni</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manual Trigger -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;">
+    <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">🎮 Manuell auslösen</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Benötigt einen GitHub Personal Access Token (PAT) mit <code style="color:var(--accent)">repo</code>-Scope.</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+      <input id="tgPatInput" type="password" placeholder="ghp_…  (GitHub PAT)" autocomplete="off"
+        style="flex:1;min-width:200px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:12px;outline:none;" />
+      <button onclick="tgSavePat()" style="background:rgba(0,212,161,.15);border:1px solid rgba(0,212,161,.3);color:#00d4a1;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;">Speichern</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button onclick="tgTrigger('morning_card')" class="tg-trigger-btn" style="background:rgba(0,212,161,.1);border-color:rgba(0,212,161,.3);color:#00d4a1;">🌅 Morning Card</button>
+      <button onclick="tgTrigger('player_spotlight')" class="tg-trigger-btn" style="background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.3);color:#a78bfa;">🌟 Spotlight</button>
+      <button onclick="tgTrigger('recap')" class="tg-trigger-btn" style="background:rgba(240,192,64,.08);border-color:rgba(240,192,64,.25);color:#f0c040;">📊 Recap</button>
+    </div>
+    <div id="tgTriggerStatus" style="margin-top:10px;font-size:12px;color:var(--muted);min-height:20px;"></div>
+  </div>
+
+  <!-- Send Log -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;">
+    <div style="display:flex;align-items:center;margin-bottom:14px;">
+      <div style="font-size:13px;font-weight:700;color:var(--text);">📋 Verlauf</div>
+      <button onclick="initTelegramPanel(true)" style="margin-left:auto;background:none;border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;">↻ Reload</button>
+    </div>
+    <div id="tgLog" style="display:flex;flex-direction:column;gap:6px;">
+      <div style="color:var(--muted);font-size:12px;text-align:center;padding:20px;">Lade Verlauf…</div>
     </div>
   </div>
 </div>
@@ -7705,6 +7835,209 @@ function renderResultsTable(filter) {
   </table>`;
   document.getElementById('resultsTable').innerHTML = html;
 }
+
+
+// ═══════════════════════════════════════════════════════
+//  WM 2026 PANEL — initWm2026()
+// ═══════════════════════════════════════════════════════
+let _wm26loaded = false;
+let _wm26data   = [];   // [{slug, home, homeFlag, away, awayFlag, date, time, group, picks, odds, probHome, probAway}]
+
+function initWm2026() {
+  if (_wm26loaded) { renderWm26Grid('all'); return; }
+  fetch('./matches/wm-index.json?t=' + Date.now())
+    .then(r => r.ok ? r.json() : null)
+    .catch(() => null)
+    .then(idx => {
+      if (!idx || !idx.slugs || !idx.slugs.length) {
+        document.getElementById('wm26meta').textContent = 'Keine Spieldaten verfügbar.';
+        return;
+      }
+      document.getElementById('wm26meta').textContent = `${idx.count} Spiele · Lade Details…`;
+      // Load all match JSONs in parallel (batched)
+      const fetches = idx.slugs.map(slug =>
+        fetch(`./matches/data/${slug}.json?t=${Date.now()}`)
+          .then(r => r.ok ? r.json() : null)
+          .catch(() => null)
+      );
+      return Promise.all(fetches);
+    })
+    .then(results => {
+      if (!results) return;
+      _wm26data = results.filter(Boolean);
+      _wm26loaded = true;
+      // Build group filter buttons
+      const groups = [...new Set(_wm26data.map(m => m.group))].sort();
+      const filter = document.getElementById('wm26groupFilter');
+      filter.innerHTML = '<button class="wm26-gf active" data-g="all" onclick="filterWm26(this)">Alle</button>'
+        + groups.map(g => `<button class="wm26-gf" data-g="${g}" onclick="filterWm26(this)">Gruppe ${g}</button>`).join('');
+      document.getElementById('wm26meta').textContent =
+        `${_wm26data.length} Spiele · ${groups.length} Gruppen · Stand: ${_wm26data[0]?.generatedAt || ''}`;
+      renderWm26Grid('all');
+    })
+    .catch(e => {
+      document.getElementById('wm26meta').textContent = 'Fehler beim Laden der Spieldaten.';
+      console.error(e);
+    });
+}
+
+function filterWm26(btn) {
+  document.querySelectorAll('.wm26-gf').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderWm26Grid(btn.dataset.g);
+}
+
+function renderWm26Grid(group) {
+  const grid = document.getElementById('wm26grid');
+  if (!grid) return;
+  const matches = group === 'all' ? _wm26data : _wm26data.filter(m => m.group === group);
+  if (!matches.length) { grid.innerHTML = '<div style="color:var(--muted);text-align:center;padding:40px;">Keine Spiele</div>'; return; }
+
+  grid.innerHTML = matches.map(m => {
+    // Best pick for display
+    const bets = (m.picks || []).filter(p => p.verdict === 'BET');
+    const abws = (m.picks || []).filter(p => p.verdict === 'ABWÄGEN');
+    const topPick = bets[0] || abws[0];
+    const pickHtml = topPick ? `
+      <div class="wm26-pick ${topPick.verdict === 'BET' ? 'bet' : 'abw'}">
+        <span class="wm26-verdict ${topPick.verdict === 'BET' ? 'bet' : 'abw'}">${topPick.verdict}</span>
+        <span style="color:var(--text);font-weight:600">${topPick.market}</span>
+        <span style="color:var(--muted);margin-left:auto">@${topPick.odds?.toFixed(2) || '?'}</span>
+        ${topPick.edgePP ? `<span style="color:#00d4a1;font-size:10px">+${topPick.edgePP.toFixed(1)}pp</span>` : ''}
+      </div>` : `<div style="font-size:11px;color:var(--muted);padding:4px 0">Noch keine Picks / Odds ausstehend</div>`;
+
+    // Date display
+    const dt = m.date ? new Date(m.date + 'T' + (m.time || '12:00') + ':00') : null;
+    const dtStr = dt ? dt.toLocaleDateString('de-AT', {weekday:'short', day:'numeric', month:'short'})
+                        + (m.time ? ' · ' + m.time : '') : m.date;
+
+    // Probs display
+    const probsHtml = (m.probHome && m.probDraw && m.probAway)
+      ? `<div style="display:flex;gap:4px;margin-top:4px;">
+           <div style="flex:${m.probHome};background:var(--accent);height:4px;border-radius:2px 0 0 2px;" title="Home ${m.probHome}%"></div>
+           <div style="flex:${m.probDraw};background:var(--muted);height:4px;" title="Draw ${m.probDraw}%"></div>
+           <div style="flex:${m.probAway};background:#a78bfa;height:4px;border-radius:0 2px 2px 0;" title="Away ${m.probAway}%"></div>
+         </div>
+         <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted);margin-top:2px;">
+           <span>${m.probHome}%</span><span>X ${m.probDraw}%</span><span>${m.probAway}%</span>
+         </div>` : '';
+
+    return `<div class="wm26-card">
+      <div class="wm26-teams">
+        <span class="wm26-flag">${m.homeFlag||'🏳'}</span>
+        <span>${m.home}</span>
+        <span class="wm26-vs">vs</span>
+        <span>${m.away}</span>
+        <span class="wm26-flag">${m.awayFlag||'🏳'}</span>
+      </div>
+      <div class="wm26-meta">
+        <span>📅 ${dtStr}</span>
+        <span>🏟 Gr. ${m.group} · MD${m.matchday}</span>
+        ${m.venue ? `<span>📍 ${m.venue}</span>` : ''}
+        ${m.upsetScore >= 6 ? `<span style="color:#ff8c00">🔥 Upset ${m.upsetScore}/10</span>` : ''}
+      </div>
+      ${probsHtml}
+      ${pickHtml}
+      <a class="wm26-link" href="./matches/wm-match.html?m=${m.slug}" target="_blank">
+        🔗 Event Page öffnen ↗
+      </a>
+    </div>`;
+  }).join('');
+}
+
+
+// ═══════════════════════════════════════════════════════
+//  TELEGRAM PANEL — initTelegramPanel() + helpers
+// ═══════════════════════════════════════════════════════
+const TG_REPO = 'blummabet/Betting-Dashboard';
+const TG_WORKFLOW = 'telegram-manual.yml';
+
+function initTelegramPanel(force = false) {
+  // Restore saved PAT
+  try {
+    const saved = localStorage.getItem('tg_pat');
+    if (saved) document.getElementById('tgPatInput').value = saved;
+  } catch(_) {}
+
+  // Load send log
+  fetch('./telegram-log.json?t=' + Date.now())
+    .then(r => r.ok ? r.json() : [])
+    .catch(() => [])
+    .then(log => renderTgLog(log));
+}
+
+function tgSavePat() {
+  const val = document.getElementById('tgPatInput').value.trim();
+  if (!val) return;
+  try { localStorage.setItem('tg_pat', val); } catch(_) {}
+  document.getElementById('tgTriggerStatus').innerHTML =
+    '<span style="color:#00d4a1">✓ PAT gespeichert</span>';
+  setTimeout(() => { document.getElementById('tgTriggerStatus').textContent = ''; }, 2000);
+}
+
+function tgTrigger(type) {
+  const pat = (document.getElementById('tgPatInput').value || '').trim();
+  if (!pat) {
+    document.getElementById('tgTriggerStatus').innerHTML =
+      '<span style="color:#f85149">⚠️ GitHub PAT eingeben und speichern</span>';
+    return;
+  }
+  const status = document.getElementById('tgTriggerStatus');
+  status.innerHTML = '<span style="color:var(--muted)">⏳ Auslösen…</span>';
+
+  const labels = {morning_card:'Morning Card', player_spotlight:'Player Spotlight', recap:'Recap'};
+  fetch(`https://api.github.com/repos/${TG_REPO}/actions/workflows/${TG_WORKFLOW}/dispatches`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${pat}`,
+      'Accept': 'application/vnd.github+json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ ref: 'main', inputs: { type } }),
+  })
+  .then(r => {
+    if (r.status === 204) {
+      status.innerHTML = `<span style="color:#00d4a1">✅ ${labels[type]} wird jetzt gesendet (GitHub Action läuft)</span>`;
+    } else {
+      return r.text().then(t => { throw new Error(`${r.status}: ${t.slice(0,120)}`); });
+    }
+  })
+  .catch(e => {
+    status.innerHTML = `<span style="color:#f85149">❌ Fehler: ${e.message}</span>`;
+  });
+}
+
+function renderTgLog(log) {
+  const el = document.getElementById('tgLog');
+  if (!el) return;
+  if (!log || !log.length) {
+    el.innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center;padding:20px;">Noch keine Sends geloggt</div>';
+    return;
+  }
+  const typeIcon = {
+    morning_card: '🌅', recap: '📊', sharp_alert: '📡',
+    steam_alert: '🔥', player_spotlight: '🌟',
+  };
+  const typeColor = {
+    morning_card: '#00d4a1', recap: '#f0c040', sharp_alert: '#ff8c00',
+    steam_alert: '#f85149', player_spotlight: '#a78bfa',
+  };
+  const rows = [...log].reverse().slice(0, 50).map(e => {
+    const icon  = typeIcon[e.type]  || '📱';
+    const color = typeColor[e.type] || 'var(--muted)';
+    const dt    = e.sentAt ? new Date(e.sentAt).toLocaleString('de-AT', {
+      day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'
+    }) : '?';
+    return `<div class="tg-log-row">
+      <span style="font-size:16px;flex-shrink:0">${icon}</span>
+      <span class="tg-log-type" style="color:${color}">${e.type.replace('_',' ')}</span>
+      <span class="tg-log-time">${dt}</span>
+      <span class="tg-log-preview">${e.preview || ''}</span>
+    </div>`;
+  });
+  el.innerHTML = rows.join('');
+}
+
 </script>
 </body>
 </html>

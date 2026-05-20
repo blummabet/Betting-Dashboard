@@ -115,7 +115,7 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add wm2026-data.json wm2026-odds-history.json matches/data/wm-*.json matches/wm-index.json
+          git add wm2026-data.json wm2026-odds-history.json matches/data/wm-*.json matches/wm-index.json telegram-log.json 2>/dev/null; true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
           else

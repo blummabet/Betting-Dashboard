@@ -32,7 +32,7 @@ let _activeSection = 'national';
 // All panel IDs — hidden when switching views
 const _ALL_PANELS = [
   'mainContent', 'trackingV2Panel', 'resultsPanel',
-  'intlCardsPanel', 'intlTrackingPanel',
+  'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
   'polymarketPanel', 'polyTraderPanel',
   'heartPanel', 'statusPanel',
 ];
@@ -61,6 +61,8 @@ function showView(view) {
     'national-tracking': 'trackingV2Panel',
     'intl-cards':        'intlCardsPanel',
     'intl-tracking':     'intlTrackingPanel',
+    'intl-wm2026':       'intlWm2026Panel',
+    'intl-telegram':     'intlTelegramPanel',
     'sharp':             'mainContent',
     'polytrading':       'polyTraderPanel',
     'polybetting':       'polymarketPanel',
@@ -88,10 +90,20 @@ function showView(view) {
   // Sub-nav active buttons
   const isCards    = view.endsWith('-cards');
   const isTracking = view.endsWith('-tracking');
+  const isWm2026   = view === 'intl-wm2026';
+  const isTelegram = view === 'intl-telegram';
   const subCards    = document.getElementById('subCards');
   const subTracking = document.getElementById('subTracking');
+  const subWm2026   = document.getElementById('subWm2026');
+  const subTelegram = document.getElementById('subTelegram');
   if (subCards)    subCards.classList.toggle('active',    isCards);
   if (subTracking) subTracking.classList.toggle('active', isTracking);
+  if (subWm2026)   subWm2026.classList.toggle('active',   isWm2026);
+  if (subTelegram) subTelegram.classList.toggle('active', isTelegram);
+  // WM2026 + Telegram sub-nav only visible under International
+  const intlOnly = _activeSection === 'intl';
+  if (subWm2026)   subWm2026.style.display   = intlOnly ? '' : 'none';
+  if (subTelegram) subTelegram.style.display  = intlOnly ? '' : 'none';
 
   // ── Top-nav active state ─────────────────────────────
   _TOP_NAV_IDS.forEach(id => {
@@ -129,6 +141,8 @@ function showView(view) {
   if (view === 'national-tracking' && typeof initResultsV2      === 'function') initResultsV2();
   if (view === 'intl-cards'        && typeof initIntlCards     === 'function') initIntlCards();
   if (view === 'intl-tracking'     && typeof initIntlTracking  === 'function') initIntlTracking();
+  if (view === 'intl-wm2026'       && typeof initWm2026        === 'function') initWm2026();
+  if (view === 'intl-telegram'     && typeof initTelegramPanel === 'function') initTelegramPanel();
 }
 
 // Sub-nav click: navigate within current section

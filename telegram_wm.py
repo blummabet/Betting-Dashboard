@@ -32,12 +32,36 @@ CHAT_ID        = os.environ.get("TELEGRAM_CHAT_ID", "-1003819239615")
 TG_WM_MODE     = os.environ.get("TG_WM_MODE", "morning")
 
 WM_FILE        = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wm2026-data.json")
+LOG_FILE       = os.path.join(os.path.dirname(os.path.abspath(__file__)), "telegram-log.json")
 
 # Minimaler Edge für Pick-Aufnahme im Telegram
 MIN_BET_EDGE   = 4   # pp
 MIN_ABW_EDGE   = 4   # pp
 
 # ── Telegram API ───────────────────────────────────────────────────────────────
+def _log_send(type_: str, preview: str, meta: dict = None):
+    """Append a send event to telegram-log.json (max 200 entries)."""
+    try:
+        existing = []
+        if os.path.exists(LOG_FILE):
+            with open(LOG_FILE, encoding="utf-8") as f:
+                existing = json.load(f)
+        entry = {
+            "type":    type_,
+            "sentAt":  datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "preview": preview[:160],
+            "chatId":  CHAT_ID,
+        }
+        if meta:
+            entry.update(meta)
+        existing.append(entry)
+        existing = existing[-200:]
+        with open(LOG_FILE, "w", encoding="utf-8") as f:
+            json.dump(existing, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"  ⚠️  Log failed: {e}")
+
+
 def tg_send(text: str) -> bool:
     if not TELEGRAM_TOKEN:
         print("⚠️  Kein TELEGRAM_TOKEN — Vorschau:")
@@ -325,6 +349,8 @@ def main():
         if card:
             ok = tg_send(card)
             print(f"  {'✅ Gesendet' if ok else '❌ Fehler'}")
+            if ok:
+                _log_send("morning_card", card.split("\n")[0], {"date": today, "mode": mode})
         else:
             print(f"  ○ Keine WM-Spiele am {today}")
 
@@ -334,6 +360,8 @@ def main():
         if card:
             ok = tg_send(card)
             print(f"  {'✅ Gesendet' if ok else '❌ Fehler'}")
+            if ok:
+                _log_send("recap", card.split("\n")[0], {"date": yesterday, "mode": mode})
         else:
             print(f"  ○ Keine Picks mit Ergebnissen am {yesterday}")
 

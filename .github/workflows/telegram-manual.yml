@@ -1,0 +1,75 @@
+name: 📱 Telegram Manuell
+
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: 'Was senden?'
+        required: true
+        default: 'morning_card'
+        type: choice
+        options:
+          - morning_card
+          - recap
+          - player_spotlight
+
+permissions:
+  contents: write
+
+jobs:
+  telegram-manual:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
+      - name: 📱 Morning Card senden
+        if: ${{ github.event.inputs.type == 'morning_card' }}
+        run: python telegram_wm.py
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TG_WM_MODE:       morning
+
+      - name: 📊 Recap senden
+        if: ${{ github.event.inputs.type == 'recap' }}
+        run: python telegram_wm.py
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TG_WM_MODE:       recap
+
+      - name: 🌟 Player Spotlight senden
+        if: ${{ github.event.inputs.type == 'player_spotlight' }}
+        run: python generate_wm_player_spotlight.py
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MAX_SPOTLIGHTS:   "2"
+          SPOTLIGHT_DAYS:   "14"
+
+      - name: 💾 Log speichern
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add telegram-log.json wm2026-data.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Keine Log-Änderungen."
+          else
+            git commit -m "📱 Telegram Manual Send — ${{ github.event.inputs.type }}"
+            git pull origin main --no-rebase -X ours
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -27,12 +27,36 @@ from pathlib import Path
 BASE         = Path(__file__).parent
 HISTORY_FILE = BASE / "wm2026-odds-history.json"
 WM_FILE      = BASE / "wm2026-data.json"
+LOG_FILE     = BASE / "telegram-log.json"
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
 CHAT_ID        = os.environ.get("TELEGRAM_CHAT_ID", "-1003819239615")
 
 ALERT_PP     = 5    # pp implied prob shift → Alert
 ALERT_PP_BIG = 10   # pp → Steam Move
+
+
+# ── Send Log ──────────────────────────────────────────────────────────────────
+def _log_send(type_: str, preview: str, meta: dict = None):
+    try:
+        existing = []
+        if LOG_FILE.exists():
+            with open(LOG_FILE, encoding="utf-8") as f:
+                existing = json.load(f)
+        entry = {
+            "type":    type_,
+            "sentAt":  datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "preview": preview[:160],
+            "chatId":  CHAT_ID,
+        }
+        if meta:
+            entry.update(meta)
+        existing.append(entry)
+        existing = existing[-200:]
+        with open(LOG_FILE, "w", encoding="utf-8") as f:
+            json.dump(existing, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"  ⚠️  Log failed: {e}")
 
 
 # ── Telegram ──────────────────────────────────────────────────────────────────
@@ -296,6 +320,11 @@ def main():
         ok = tg_send(card)
         if ok:
             sent += 1
+            _log_send(
+                "sharp_alert" if not m["is_steam"] else "steam_alert",
+                card.split("\n")[0],
+                {"match": m["key"], "shift": round(m["max_shift"], 1), "steam": m["is_steam"]},
+            )
 
     print(f"\n  ✅  {sent}/{len(moves)} Alerts gesendet")
 
