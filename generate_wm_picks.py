@@ -57,6 +57,7 @@ EDGE_MIN_DNB   = 5    # Minimum pp für DNB (braucht mehr Edge, da abgeleitet)
 EDGE_HIGH      = 10   # ≥10pp → high confidence
 EDGE_MED       = 6    # ≥6pp  → medium confidence
 EDGE_MAX_SANE  = 20   # >20pp → suspect (wrong/reversed odds) — pick verworfen
+ODDS_MAX       = 15.0 # >15.0 → Softbook Payout-Cap Artefakt (kein echter Markt)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -429,6 +430,14 @@ def generate_picks_for_fixture(
             if VERBOSE:
                 print(f"     ⚠️  {label}: Edge {v['edgePP']}pp > {EDGE_MAX_SANE}pp-Limit "
                       f"— vermutl. fehlerhafte Quoten, übersprungen")
+            continue
+
+        # Sanity: Marktquote > 15.0 → Softbook Payout-Cap (WilliamHill/Unibet bei Außenseitern)
+        # Diese Quoten sind kein echter Markt und führen zu falschen BET-Empfehlungen
+        if bk > ODDS_MAX:
+            if VERBOSE:
+                print(f"     ⚠️  {label}: Marktquote {bk:.2f} > {ODDS_MAX}-Limit "
+                      f"— Softbook-Payout-Cap, kein echter Markt, übersprungen")
             continue
 
         # Sanity: Modell stark favorisiert (m_odds<1.55) aber Markt zeigt Außenseiter (bk>3.5)

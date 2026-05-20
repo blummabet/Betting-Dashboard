@@ -54,25 +54,37 @@ def devig(h, d, a):
         return None, None, None
 
 
-def model_probs_from_picks(picks):
+def model_probs_from_elo(home_elo: float, away_elo: float, home_is_cohost: bool = False):
     """
-    Extract model-implied probabilities from pick entries.
-    Looks for picks whose market covers home/draw/away.
-    Returns (probHome, probDraw, probAway) or (None, None, None).
+    Berechnet Modell-Wahrscheinlichkeiten direkt aus Elo-Ratings.
+    Identische Logik wie generate_wm_picks.py:elo_probabilities().
+    Returns (probHome%, probDraw%, probAway%).
     """
-    home_prob = draw_prob = away_prob = None
-    for p in (picks or []):
-        market = (p.get("market") or "").lower()
-        mo = p.get("modelOdds")
-        if mo and mo > 0:
-            prob = round(100 / mo, 1)
-            if any(kw in market for kw in ("heimsieg", "home win", "1x2 home")):
-                home_prob = prob
-            elif any(kw in market for kw in ("unentschieden", "draw", "1x2 draw")):
-                draw_prob = prob
-            elif any(kw in market for kw in ("auswärtssieg", "away win", "1x2 away")):
-                away_prob = prob
-    return home_prob, draw_prob, away_prob
+    import math
+    DRAW_BASE = 0.24
+    DRAW_MAX  = 0.30
+    DRAW_MIN  = 0.10
+    HOME_BONUS_PP = 0.03
+
+    diff       = home_elo - away_elo
+    p_expected = 1.0 / (1.0 + 10.0 ** (-diff / 400.0))
+    if home_is_cohost:
+        p_expected = min(0.93, p_expected + HOME_BONUS_PP)
+
+    abs_diff = abs(diff)
+    p_draw   = DRAW_BASE * max(0.35, 1.0 - abs_diff / 600.0)
+    p_draw   = max(DRAW_MIN, min(DRAW_MAX, p_draw))
+
+    p_no_draw = 1.0 - p_draw
+    p_home    = p_expected * p_no_draw
+    p_away    = (1.0 - p_expected) * p_no_draw
+
+    total = p_home + p_draw + p_away
+    return (
+        round(p_home / total * 100, 1),
+        round(p_draw / total * 100, 1),
+        round(p_away / total * 100, 1),
+    )
 
 
 def fmt_rate(v):
@@ -183,8 +195,9 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
     if odds_raw and odds_raw.get("hw") and odds_raw.get("dr") and odds_raw.get("aw"):
         prob_home, prob_draw, prob_away = devig(odds_raw["hw"], odds_raw["dr"], odds_raw["aw"])
 
-    # Model probabilities from picks
-    mod_home, mod_draw, mod_away = model_probs_from_picks(picks_raw)
+    # Model probabilities — direkt aus Elo-Modell (konsistent und vollständig)
+    co_host = home_id in CO_HOSTS
+    mod_home, mod_draw, mod_away = model_probs_from_elo(home_elo, away_elo, co_host)
 
     # Form
     form = wm.get("form", {})
