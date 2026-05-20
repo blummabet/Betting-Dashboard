@@ -7844,7 +7844,14 @@ let _wm26loaded = false;
 let _wm26data   = [];   // [{slug, home, homeFlag, away, awayFlag, date, time, group, picks, odds, probHome, probAway}]
 
 function initWm2026() {
-  if (_wm26loaded) { renderWm26Grid('all'); return; }
+  if (_wm26loaded) {
+    // Reset group filter to "Alle"
+    document.querySelectorAll('.wm26-gf').forEach(b => b.classList.remove('active'));
+    const alleBtn = document.querySelector('.wm26-gf[data-g="all"]');
+    if (alleBtn) alleBtn.classList.add('active');
+    renderWm26Grid('all');
+    return;
+  }
   fetch('./matches/wm-index.json?t=' + Date.now())
     .then(r => r.ok ? r.json() : null)
     .catch(() => null)
@@ -7890,7 +7897,9 @@ function filterWm26(btn) {
 function renderWm26Grid(group) {
   const grid = document.getElementById('wm26grid');
   if (!grid) return;
-  const matches = group === 'all' ? _wm26data : _wm26data.filter(m => m.group === group);
+  let matches = group === 'all' ? [..._wm26data] : _wm26data.filter(m => m.group === group);
+  // Sort by date ascending (chronological order for "Alle" view)
+  matches.sort((a, b) => (a.date || '').localeCompare(b.date || '') || (a.time || '').localeCompare(b.time || ''));
   if (!matches.length) { grid.innerHTML = '<div style="color:var(--muted);text-align:center;padding:40px;">Keine Spiele</div>'; return; }
 
   grid.innerHTML = matches.map(m => {
