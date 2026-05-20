@@ -17,7 +17,8 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE, "matches", "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
-WM_FILE = os.path.join(BASE, "wm2026-data.json")
+WM_FILE      = os.path.join(BASE, "wm2026-data.json")
+HISTORY_FILE = os.path.join(BASE, "wm2026-odds-history.json")
 
 CO_HOSTS = {"MEX", "USA", "CAN"}
 
@@ -83,7 +84,43 @@ def fmt_rate(v):
 
 # ── Build one JSON payload ─────────────────────────────────────────────────────
 
-def build_payload(group_id, group_data, fixture, team_lookup, wm):
+def build_odds_history(history: dict, odds_key: str) -> list[dict]:
+    """
+    Gibt die letzten 20 Snapshots für ein Fixture zurück.
+    Format: [{ts, hw, dr, aw, hwShift, awShift}]
+    hwShift/awShift = implied prob shift vs vorheriger Snapshot.
+    """
+    snaps = history.get(odds_key, [])
+    if not snaps:
+        return []
+
+    # Maximale 20 Einträge (letzte zuerst für Chart)
+    subset = snaps[-20:]
+    result = []
+    for i, s in enumerate(subset):
+        entry = {
+            "ts":  s.get("ts", ""),
+            "hw":  s.get("hw"),
+            "dr":  s.get("dr"),
+            "aw":  s.get("aw"),
+        }
+        # Shift zum vorherigen Snapshot
+        if i > 0:
+            prev = subset[i - 1]
+            def _pp(o):
+                return round(100 / o, 2) if o and o > 0 else None
+            ph, nh = _pp(prev.get("hw")), _pp(s.get("hw"))
+            pa, na = _pp(prev.get("aw")), _pp(s.get("aw"))
+            entry["hwShift"] = round(nh - ph, 2) if ph and nh else 0
+            entry["awShift"] = round(na - pa, 2) if pa and na else 0
+        else:
+            entry["hwShift"] = 0
+            entry["awShift"] = 0
+        result.append(entry)
+    return result
+
+
+def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None):
     home_id = fixture["home"]
     away_id = fixture["away"]
     home_team = team_lookup[home_id]
@@ -197,6 +234,8 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm):
         # Data sections
         "picks":         picks_raw,
         "odds":          odds_out,
+        "oddsOpen":      odds_raw.get("odds_open") if odds_raw else None,
+        "oddsHistory":   build_odds_history(history or {}, odds_key),
         "homeForm":      home_form,
         "awayForm":      away_form,
         "h2h":           h2h_out,
@@ -215,6 +254,9 @@ def main():
     if not wm:
         print(f"ERROR: {WM_FILE} not found.")
         return
+
+    history = load_json(HISTORY_FILE) or {}
+    print(f"  Odds history: {len(history)} Fixtures mit Snapshots")
 
     # Build flat team lookup {id -> team_dict}
     team_lookup = {}
@@ -235,7 +277,7 @@ def main():
                 print(f"  SKIP: unknown team {home_id} or {away_id}")
                 continue
 
-            slug, payload = build_payload(group_id, group_data, fixture, team_lookup, wm)
+            slug, payload = build_payload(group_id, group_data, fixture, team_lookup, wm, history)
             out_path = os.path.join(DATA_DIR, f"{slug}.json")
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))

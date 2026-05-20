@@ -29,8 +29,12 @@ import ssl
 from datetime import datetime, timezone
 from pathlib import Path
 
-BASE       = Path(__file__).parent
-WM_FILE    = BASE / "wm2026-data.json"
+BASE         = Path(__file__).parent
+WM_FILE      = BASE / "wm2026-data.json"
+HISTORY_FILE = BASE / "wm2026-odds-history.json"
+
+# Minimale Änderung (in absoluten Odds), damit ein neuer Snapshot geschrieben wird
+SNAP_MIN_DELTA = 0.02
 
 ODDS_KEY   = os.environ.get("ODDS_API_KEY", "16154a94ee84482dcd5a4af88d521d73")
 ODDS_HOST  = "api.the-odds-api.com"
@@ -240,6 +244,33 @@ def _extract_h2h(event: dict, home_id: str, away_id: str) -> dict | None:
     }
 
 
+def _load_history() -> dict:
+    """Lädt wm2026-odds-history.json oder gibt leeres Dict zurück."""
+    if HISTORY_FILE.exists():
+        try:
+            with open(HISTORY_FILE, encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+
+def _save_history(history: dict) -> None:
+    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+        json.dump(history, f, ensure_ascii=False, indent=2)
+
+
+def _snap_changed(last: dict | None, new_hw: float, new_dr: float | None, new_aw: float) -> bool:
+    """True wenn sich mindestens eine Odds um SNAP_MIN_DELTA geändert hat."""
+    if last is None:
+        return True
+    return (
+        abs((last.get("hw") or 0) - new_hw) >= SNAP_MIN_DELTA
+        or abs((last.get("aw") or 0) - new_aw) >= SNAP_MIN_DELTA
+        or (new_dr is not None and abs((last.get("dr") or 0) - new_dr) >= SNAP_MIN_DELTA)
+    )
+
+
 def main():
     now_iso = datetime.now(timezone.utc).isoformat()
     print(f"💰  fetch_wm_odds.py — WM 2026 Odds")
@@ -299,6 +330,10 @@ def main():
 
     print(f"  → {len(events)} events fetched")
 
+    # ── Load odds history ─────────────────────────────────────
+    history = _load_history()
+    snaps_added = 0
+
     # ── Match fixtures to events ──────────────────────────────
     matched = 0
     updated = 0
@@ -343,6 +378,19 @@ def main():
         odds_out[key] = new_entry
         updated += 1
 
+        # ── Odds History Snapshot ─────────────────────────────
+        snaps = history.setdefault(key, [])
+        last_snap = snaps[-1] if snaps else None
+        if _snap_changed(last_snap, h2h["hw"], h2h["dr"], h2h["aw"]):
+            snaps.append({
+                "ts":  now_iso,
+                "hw":  h2h["hw"],
+                "dr":  h2h["dr"],
+                "aw":  h2h["aw"],
+                "bk":  h2h["bookmaker"],
+            })
+            snaps_added += 1
+
         home_names = TEAM_NAMES.get(home_id, [home_id])
         print(f"  ✅  {home_names[0]} vs {TEAM_NAMES.get(away_id, [away_id])[0]}: "
               f"H {h2h['hw']} / X {h2h['dr']} / A {h2h['aw']} [{h2h['bookmaker']}]")
@@ -353,6 +401,13 @@ def main():
 
     with open(WM_FILE, "w", encoding="utf-8") as f:
         json.dump(wm, f, ensure_ascii=False, indent=2)
+
+    # ── Write history ─────────────────────────────────────────
+    if snaps_added > 0:
+        _save_history(history)
+        print(f"   📸  {snaps_added} neue Snapshots → {HISTORY_FILE.name}")
+    else:
+        print(f"   📸  Keine Odds-Änderung — kein neuer Snapshot")
 
     remaining = len(all_fixtures) - matched
     print(f"\n✅  {updated} fixtures priced, {remaining} not yet available")

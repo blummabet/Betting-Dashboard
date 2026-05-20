@@ -165,6 +165,31 @@ a{color:var(--accent);text-decoration:none}
 .ocard-cur{font-size:20px;font-weight:800;color:var(--text);line-height:1;margin-bottom:4px}
 .ocard-impl{font-size:10px;color:var(--muted2)}
 
+/* ── Sharp Radar ─────────────────────────────────────── */
+.radar-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.radar-pill{padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1px solid}
+.radar-pill.open{background:#58a6ff10;border-color:#58a6ff30;color:var(--blue)}
+.radar-pill.current{background:#00d4a110;border-color:#00d4a130;color:var(--accent)}
+.radar-pill.move-up{background:#f8514910;border-color:#f8514930;color:var(--red)}
+.radar-pill.move-down{background:#3fb95010;border-color:#3fb95030;color:var(--green)}
+.radar-pill.neutral{background:#ffffff06;border-color:var(--border2);color:var(--muted2)}
+.radar-markets{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.radar-market{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.radar-market-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.radar-market-name{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px}
+.radar-market-shift{font-size:11px;font-weight:700}
+.radar-market-shift.up{color:var(--red)}
+.radar-market-shift.down{color:var(--green)}
+.radar-market-shift.flat{color:var(--muted)}
+.radar-sparkline{height:36px;width:100%;position:relative}
+.radar-sparkline svg{width:100%;height:100%;display:block;overflow:visible}
+.radar-odds-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px}
+.radar-odds-open{font-size:10px;color:var(--muted)}
+.radar-odds-cur{font-size:13px;font-weight:700;color:var(--text)}
+.radar-odds-impl{font-size:10px;color:var(--muted2)}
+.radar-snap-count{font-size:10px;color:var(--muted);margin-top:10px;text-align:right;font-style:italic}
+.radar-nodata{font-size:12px;color:var(--muted);font-style:italic}
+
 /* Loading / Error */
 .state{max-width:480px;margin:80px auto;padding:0 20px;text-align:center}
 .state-icon{font-size:40px;margin-bottom:16px}
@@ -587,6 +612,107 @@ function renderGroupTable(D) {
 </div>`;
 }
 
+// ── Render: Sharp Radar ────────────────────────────────────────────────────
+function renderSharpRadar(D) {
+  const history = D.oddsHistory || [];
+  const oddsOpen = D.oddsOpen;
+  const oddsCur  = D.odds;
+
+  if (!oddsCur && (!history || history.length === 0)) return '';
+
+  function implProb(o) {
+    if (!o || o <= 0) return null;
+    return Math.round(100 / o * 10) / 10;
+  }
+
+  function sparkline(values, width=280, height=36) {
+    if (!values || values.length < 2) return '';
+    const min = Math.min(...values) * 0.99;
+    const max = Math.max(...values) * 1.01;
+    const range = max - min || 1;
+    const pts = values.map((v, i) => {
+      const x = i / (values.length - 1) * width;
+      const y = height - ((v - min) / range) * height;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    const first = values[0], last = values[values.length - 1];
+    const color = last < first ? '#f85149' : last > first ? '#3fb950' : '#8b9ab0';
+    return `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+  <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
+  <circle cx="${values.map((v,i)=>i/(values.length-1)*width).at(-1).toFixed(1)}" cy="${(height-((last-min)/range)*height).toFixed(1)}" r="3" fill="${color}"/>
+</svg>`;
+  }
+
+  function shiftPill(totalShift) {
+    if (Math.abs(totalShift) < 1) return '<span class="radar-pill neutral">➡️ Stabil</span>';
+    if (totalShift > 5) return `<span class="radar-pill move-up">⬆️ +${totalShift.toFixed(1)}pp Sharp</span>`;
+    if (totalShift < -5) return `<span class="radar-pill move-down">⬇️ ${totalShift.toFixed(1)}pp Gestiegen</span>`;
+    if (totalShift > 0) return `<span class="radar-pill move-up">⬆️ +${totalShift.toFixed(1)}pp</span>`;
+    return `<span class="radar-pill move-down">⬇️ ${totalShift.toFixed(1)}pp</span>`;
+  }
+
+  // Total shift seit Open
+  function totalShift(openO, curO) {
+    const op = implProb(openO), cp = implProb(curO);
+    if (!op || !cp) return 0;
+    return parseFloat((cp - op).toFixed(1));
+  }
+
+  // Market blocks
+  const markets = [
+    { key: 'hw', label: 'Heimsieg',      openO: oddsOpen?.hw, curO: oddsCur?.home },
+    { key: 'dr', label: 'Unentschieden', openO: oddsOpen?.dr, curO: oddsCur?.draw },
+    { key: 'aw', label: 'Auswärtssieg',  openO: oddsOpen?.aw, curO: oddsCur?.away },
+  ].filter(m => m.curO);
+
+  const marketHtml = markets.map(m => {
+    const histVals = history.map(s => s[m.key]).filter(Boolean);
+    const spark = sparkline(histVals);
+    const ts = totalShift(m.openO, m.curO);
+    const tsClass = ts > 0 ? 'up' : ts < 0 ? 'down' : 'flat';
+    const tsStr = ts > 0 ? `+${ts.toFixed(1)}pp` : `${ts.toFixed(1)}pp`;
+    const curImpl = implProb(m.curO);
+    const openImpl = implProb(m.openO);
+
+    return `<div class="radar-market">
+  <div class="radar-market-head">
+    <span class="radar-market-name">${m.label}</span>
+    <span class="radar-market-shift ${tsClass}">${m.openO ? tsStr : '—'}</span>
+  </div>
+  ${histVals.length >= 2 ? `<div class="radar-sparkline">${spark}</div>` : ''}
+  <div class="radar-odds-row">
+    <span class="radar-odds-open">${m.openO ? `Open: ${m.openO.toFixed(2)} (${openImpl}%)` : 'Kein Open'}</span>
+    <div style="text-align:right">
+      <div class="radar-odds-cur">${m.curO ? m.curO.toFixed(2) : '—'}</div>
+      <div class="radar-odds-impl">${curImpl ? curImpl + '%' : ''}</div>
+    </div>
+  </div>
+</div>`;
+  }).join('');
+
+  // Overall status pill
+  const hwShift = totalShift(oddsOpen?.hw, oddsCur?.home);
+  const awShift = totalShift(oddsOpen?.aw, oddsCur?.away);
+  const biggestShift = Math.abs(hwShift) > Math.abs(awShift) ? hwShift : awShift;
+
+  const openPill = oddsOpen
+    ? `<span class="radar-pill open">📍 Open ${oddsOpen.hw?.toFixed(2)} / ${oddsOpen.dr?.toFixed(2)} / ${oddsOpen.aw?.toFixed(2)}</span>`
+    : '';
+
+  return `
+<div class="content">
+<div class="section">
+  <div class="stitle"><div class="sticon" style="background:#f8514915;border:1px solid #f8514930">📡</div>Sharp Radar</div>
+  <div class="radar-meta">
+    ${openPill}
+    ${shiftPill(biggestShift)}
+  </div>
+  <div class="radar-markets">${marketHtml || '<div class="radar-nodata">Noch keine Odds-Daten verfügbar.</div>'}</div>
+  ${history.length > 0 ? `<div class="radar-snap-count">${history.length} Snapshot${history.length !== 1 ? 's' : ''} · Powered by TheOddsAPI</div>` : ''}
+</div>
+</div>`;
+}
+
 // ── Bootstrap ──────────────────────────────────────────────────────────────
 async function init() {
   const slug = new URLSearchParams(location.search).get('m');
@@ -622,6 +748,7 @@ ${renderHero(D)}
 ${renderUpsetScore(D)}
 ${renderContext(D)}
 ${renderPicks(D)}
+${renderSharpRadar(D)}
 ${renderForm(D)}
 ${renderH2H(D)}
 ${renderGroupTable(D)}
