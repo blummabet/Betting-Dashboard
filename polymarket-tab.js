@@ -294,7 +294,10 @@ function _getAvailableDates() {
 
 function polyChangeDate(dateStr) {
   _polyState.dateStr  = dateStr;
-  _polyState.picks    = getPolyPicks(dateStr);
+  // Merge club league picks + WM 2026 picks
+  const clubPicks = getPolyPicks(dateStr);
+  const wmPicks   = getWmPolyPicks(dateStr);
+  _polyState.picks = [...wmPicks, ...clubPicks];  // WM first
   _polyState.prices   = {};
   _polyState.selected = new Set(_polyState.picks.map(p => p.id));
   _polyRefreshStickyBar();
@@ -384,6 +387,92 @@ function getPolyPicks(dateStr) {
   // Sort: high conf first, then by sc descending
   results.sort((a, b) => {
     if (a.conf !== b.conf) return a.conf === 'high' ? -1 : 1;
+    return b.sc - a.sc;
+  });
+  return results;
+}
+
+// ── WM 2026 PICKS für Polymarket ────────────────────────────────────────────────
+// Liest WM Picks aus window.WM2026_PICKS_FOR_POLY (von season-finish-v2.html befüllt)
+// Format pro Entry: { pickKey, home, away, homeFlag, awayFlag, date, market, odds,
+//                    modelOdds, verdict, edgePP, clvPP, dataQuality, conf }
+
+const WM_MARKET_TO_POLY = {
+  'Heimsieg':                 'Heimsieg',
+  'Auswärtssieg':             'Auswärtssieg',
+  'Unentschieden':            'Unentschieden',
+  'Über 2.5 Tore':            'Over 2.5 Tore',
+  'Unter 2.5 Tore':           'Under 2.5 Tore',
+  'Beide Teams treffen — Ja': 'Beide Teams treffen',
+};
+
+function getWmPolyPicks(dateStr) {
+  const raw = (typeof window !== 'undefined' && window.WM2026_PICKS_FOR_POLY) || [];
+  if (!raw.length) return [];
+
+  const results = [];
+
+  for (const entry of raw) {
+    // Date filter (WM dates are YYYY-MM-DD, Poly tab uses DD.MM.YYYY)
+    const [y, m, d] = (entry.date || '').split('-');
+    const entryDateFmt = (y && m && d) ? `${d}.${m}.${y}` : null;
+    if (dateStr && entryDateFmt && entryDateFmt !== dateStr) continue;
+
+    // Only BET and ABWÄGEN
+    if (!['BET', 'ABWÄGEN'].includes(entry.verdict)) continue;
+
+    // Map market name to Polymarket equivalent
+    const polyMarket = WM_MARKET_TO_POLY[entry.market];
+    if (!polyMarket) continue;   // DNB, etc. — not on Polymarket
+
+    // Edge vs Pinnacle (not model): (1/pinnacleOdds) - polyPrice
+    // Shown in _edgeBlock() using pick.odds (Pinnacle quote from TheOddsAPI)
+    const id = `WM2026|${entry.home}|${entry.away}|${polyMarket}`;
+
+    // CLV badge text
+    const clvPP = entry.clvPP || 0;
+    const clvBadge = clvPP >= 3
+      ? `<span title="Pinnacle Line Movement: Sharp Money bestätigt" style="background:#3fb95022;border:1px solid #3fb95044;color:#3fb950;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:700">CLV +${clvPP}pp ↑</span>`
+      : clvPP <= -3
+        ? `<span title="Linie gegen Pick-Richtung bewegt" style="background:#f8514922;border:1px solid #f8514944;color:#f85149;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:700">CLV ${clvPP}pp ↓</span>`
+        : '';
+
+    const dataWarning = entry.dataQuality === 'elo_only'
+      ? `<span title="Nur Elo-Daten — Form/H2H fehlen" style="background:#e3b34122;border:1px solid #e3b34144;color:#e3b341;font-size:9px;padding:1px 5px;border-radius:8px">⚠️ Elo only</span>`
+      : '';
+
+    results.push({
+      id,
+      league:      'WM2026',
+      leagueFlag:  '🏆',
+      leagueName:  'WM 2026',
+      home:        entry.home,
+      away:        entry.away,
+      homeFlag:    entry.homeFlag || '',
+      awayFlag:    entry.awayFlag || '',
+      market:      polyMarket,
+      conf:        entry.verdict === 'BET' ? 'high' : 'medium',
+      sc:          entry.edgePP || 0,
+      odds:        entry.odds,          // Pinnacle odds — used for edge vs Poly
+      modelOdds:   entry.modelOdds,
+      oddsIsEst:   false,
+      date:        entry.date,
+      dateFmt:     entryDateFmt,
+      clvPP:       clvPP,
+      dataQuality: entry.dataQuality || 'elo_only',
+      verdict:     entry.verdict,
+      edgePP:      entry.edgePP || 0,
+      mods:        [clvBadge, dataWarning].filter(Boolean),
+      saferAlt:    null,
+      boldAlt:     null,
+      oddsOpen:    null,
+      h2h:         null,
+      isWm:        true,
+    });
+  }
+
+  results.sort((a, b) => {
+    if (a.verdict !== b.verdict) return a.verdict === 'BET' ? -1 : 1;
     return b.sc - a.sc;
   });
   return results;

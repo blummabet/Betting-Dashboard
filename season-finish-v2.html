@@ -7881,6 +7881,34 @@ function initWm2026() {
       if (!results) return;
       _wm26data = results.filter(Boolean);
       _wm26loaded = true;
+
+      // ── Expose WM picks für Polymarket Tab ────────────────────────────────
+      // Format: [{home, away, homeFlag, awayFlag, date, market, odds, modelOdds,
+      //           verdict, edgePP, clvPP, dataQuality}]
+      window.WM2026_PICKS_FOR_POLY = [];
+      const WM_TEAM_FLAGS = {};  // built from match data
+      for (const m of _wm26data) {
+        WM_TEAM_FLAGS[m.homeId] = m.homeFlag;
+        WM_TEAM_FLAGS[m.awayId] = m.awayFlag;
+        for (const p of (m.picks || [])) {
+          if (!['BET', 'ABWÄGEN'].includes(p.verdict)) continue;
+          window.WM2026_PICKS_FOR_POLY.push({
+            home:        m.home,
+            away:        m.away,
+            homeFlag:    m.homeFlag || '',
+            awayFlag:    m.awayFlag || '',
+            date:        m.date,
+            market:      p.market,
+            odds:        p.odds,
+            modelOdds:   p.modelOdds,
+            verdict:     p.verdict,
+            edgePP:      p.edgePP || 0,
+            clvPP:       p.clvPP  || 0,
+            dataQuality: p.dataQuality || 'elo_only',
+          });
+        }
+      }
+
       // Build group filter buttons
       const groups = [...new Set(_wm26data.map(m => m.group))].sort();
       const filter = document.getElementById('wm26groupFilter');

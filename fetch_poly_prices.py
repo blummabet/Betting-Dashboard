@@ -44,6 +44,26 @@ POLY_MARKETS = {
 # ── Leagues covered on Polymarket ────────────────────────
 POLY_LEAGUES = {'GER', 'ENG', 'ITA', 'ESP', 'FRA', 'NED', 'POR', 'TUR', 'GER2', 'SCO', 'ENG2'}
 
+# ── WM 2026 team ID → English name (for Polymarket matching) ─────────────────
+WM_TEAM_EN = {
+    "ARG": "Argentina",   "AUS": "Australia",    "AUT": "Austria",
+    "BEL": "Belgium",     "BIH": "Bosnia",        "BRA": "Brazil",
+    "CAN": "Canada",      "CIV": "Ivory Coast",   "COD": "DR Congo",
+    "COL": "Colombia",    "CPV": "Cape Verde",    "CRO": "Croatia",
+    "CUW": "Curacao",     "CZE": "Czech Republic","DZA": "Algeria",
+    "ECU": "Ecuador",     "EGY": "Egypt",         "ENG": "England",
+    "ESP": "Spain",       "FRA": "France",        "GER": "Germany",
+    "GHA": "Ghana",       "HTI": "Haiti",         "IRN": "Iran",
+    "IRQ": "Iraq",        "JOR": "Jordan",        "JPN": "Japan",
+    "KOR": "South Korea", "MAR": "Morocco",       "MEX": "Mexico",
+    "NED": "Netherlands", "NOR": "Norway",        "NZL": "New Zealand",
+    "PAN": "Panama",      "POR": "Portugal",      "PRY": "Paraguay",
+    "QAT": "Qatar",       "SAU": "Saudi Arabia",  "SCO": "Scotland",
+    "SEN": "Senegal",     "SUI": "Switzerland",   "SWE": "Sweden",
+    "TUN": "Tunisia",     "TUR": "Turkey",        "URU": "Uruguay",
+    "USA": "United States","UZB": "Uzbekistan",   "ZAF": "South Africa",
+}
+
 # ── German / local → English team name map ───────────────
 TEAM_NAME_MAP = {
     'Bayern München':           'Bayern Munich',
@@ -882,7 +902,47 @@ def main():
         date_str = _normalize_date(raw_date) if raw_date else ''
         unique_matches[f"{home}|{away}"] = (home, away, date_str, league)
 
-    print(f"🔍 {len(unique_matches)} fixtures to match")
+    # ── WM 2026: add fixtures with picks to unique_matches ───────────────────
+    wm_added = 0
+    try:
+        with open('wm2026-data.json', 'r', encoding='utf-8') as f:
+            wm_data = json.load(f)
+
+        wm_picks = wm_data.get('picks', {})
+        wm_groups = wm_data.get('groups', {})
+
+        # Build fixture date lookup: "homeId-awayId" → "YYYY-MM-DD"
+        fx_dates: dict[str, str] = {}
+        for gdata in wm_groups.values():
+            for fx in gdata.get('fixtures', []):
+                h, a = fx.get('home', ''), fx.get('away', '')
+                if h and a:
+                    fx_dates[f"{h}-{a}"] = fx.get('date', '')
+
+        for pick_key, picks in wm_picks.items():
+            if not picks:
+                continue
+            # pick_key format: "A-1-MEX-ZAF" (group-matchday-homeId-awayId)
+            parts = pick_key.split('-')
+            if len(parts) < 4:
+                continue
+            home_id = parts[-2]
+            away_id = parts[-1]
+            home_en = WM_TEAM_EN.get(home_id, home_id)
+            away_en = WM_TEAM_EN.get(away_id, away_id)
+            date_str = fx_dates.get(f"{home_id}-{away_id}", '')
+            match_key = f"{home_en}|{away_en}"
+            if match_key not in unique_matches:
+                unique_matches[match_key] = (home_en, away_en, date_str, 'WM2026')
+                wm_added += 1
+
+        print(f"  [WM2026] +{wm_added} fixtures mit Picks hinzugefügt")
+    except FileNotFoundError:
+        print("  [WM2026] wm2026-data.json nicht gefunden — übersprungen")
+    except Exception as e:
+        print(f"  [WM2026] Fehler beim Laden: {e}")
+
+    print(f"🔍 {len(unique_matches)} fixtures to match (inkl. WM)")
 
     # end_date_min: only events that haven't ended yet (allow 1 day grace)
     today = datetime.now(timezone.utc).date()
@@ -1009,7 +1069,7 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
     except (FileNotFoundError, json.JSONDecodeError):
         trader = {'updated': now_ts, 'candidates': {}}
 
-    # Load prematch data for bookie odds
+    # Load prematch data for bookie odds (club leagues)
     try:
         with open('prematch-data.json', 'r', encoding='utf-8') as f:
             raw_pm = json.load(f)
@@ -1024,6 +1084,29 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
         a = fx.get('awayTeamName') or fx.get('away', '')
         if h and a:
             pm_idx[f"{h}|{a}"] = fx
+
+    # Load WM 2026 odds for Pinnacle-implied probabilities
+    wm_odds_idx: dict[str, dict] = {}   # "HomeEN|AwayEN" → {pinn_hw_fair, pinn_dr_fair, pinn_aw_fair}
+    try:
+        with open('wm2026-data.json', 'r', encoding='utf-8') as f:
+            _wmd = json.load(f)
+        for odds_key, odds in _wmd.get('odds', {}).items():
+            parts = odds_key.split('-')
+            if len(parts) != 2:
+                continue
+            h_en = WM_TEAM_EN.get(parts[0], parts[0])
+            a_en = WM_TEAM_EN.get(parts[1], parts[1])
+            hw, dr, aw = odds.get('hw'), odds.get('dr'), odds.get('aw')
+            if hw and dr and aw and hw > 1 and dr > 1 and aw > 1:
+                # Devig: compute Pinnacle fair odds (remove ~3-4% margin)
+                margin = 1/hw + 1/dr + 1/aw
+                wm_odds_idx[f"{h_en}|{a_en}"] = {
+                    "pinn_hw_fair": round(hw * margin, 3),
+                    "pinn_dr_fair": round(dr * margin, 3),
+                    "pinn_aw_fair": round(aw * margin, 3),
+                }
+    except Exception:
+        pass
 
     candidates = trader.get('candidates', {})
     today = datetime.now(timezone.utc).date()
@@ -1057,6 +1140,14 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
         pm_fx = pm_idx.get(match_key) or pm_idx.get(f"{home}|{away}")
         odds_open = (pm_fx.get('odds_open') or {}) if pm_fx else {}
         odds_cur  = (pm_fx.get('odds')      or {}) if pm_fx else {}
+
+        # WM 2026: inject Pinnacle fair odds when no prematch-data.json entry
+        if league == 'WM2026' and not pm_fx:
+            wm_fair = wm_odds_idx.get(match_key) or wm_odds_idx.get(f"{home}|{away}")
+            if wm_fair:
+                # Use current Pinnacle odds as both open and current (no open history yet)
+                odds_open = wm_fair
+                odds_cur  = wm_fair
 
         for market_name, poly_price in markets.items():
             if market_name not in TRADER_MARKET_MAP:

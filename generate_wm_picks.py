@@ -199,12 +199,17 @@ def compute_verdict(model_odds: float | None, market_odds: float | None,
         elif edge_pp >= -4: mod_sig = -1
         else:               mod_sig = -1
 
-    # ── Signal 2: Line Movement ───────────────────────────────────────────
+    # ── Signal 2: Pinnacle Line Movement (CLV-Proxy) ─────────────────────
+    # Positive clv_pp = Quote kürzer geworden = Markt glaubt mehr daran = Sharp Money bestätigt
     mkt_sig = 0
+    clv_pp  = 0.0
     if odds_open and market_odds and odds_open > 1 and market_odds > 1:
-        pp_d = round(((1/market_odds) - (1/odds_open)) * 100)
-        if abs(pp_d) >= 2:
-            mkt_sig = 1 if market_odds < odds_open else -1
+        clv_pp = round(((1/market_odds) - (1/odds_open)) * 100, 1)
+        if   clv_pp >= 5:   mkt_sig =  2   # Starke Bestätigung durch Sharp Money
+        elif clv_pp >= 2:   mkt_sig =  1   # Moderate Bestätigung
+        elif clv_pp >= -2:  mkt_sig =  0   # Neutrale Bewegung
+        elif clv_pp >= -5:  mkt_sig = -1   # Bewegung gegen Pick-Richtung
+        else:               mkt_sig = -2   # Starke Bewegung gegen Pick
 
     # ── Signal 3: H2H Story ───────────────────────────────────────────────
     story_sig = 0
@@ -229,21 +234,25 @@ def compute_verdict(model_odds: float | None, market_odds: float | None,
             elif rate >= thresh - 0.10: story_sig =  0
             else:                       story_sig = -1
 
-    # ── Finale Entscheidung (exakt wie JS) ───────────────────────────────
+    # ── Finale Entscheidung ──────────────────────────────────────────────
     score     = mod_sig + mkt_sig + story_sig
-    hard_skip = mod_sig == -1 and mkt_sig == -1
+    # Hard skip: Modell UND Markt zeigen stark gegen Pick
+    hard_skip = mod_sig <= -1 and mkt_sig <= -1
 
-    if hard_skip or score <= -1:
+    if hard_skip or score <= -2:
         verdict = "SKIP"
-    elif score >= 2 or (score == 1 and mod_sig == 1):
+    elif score >= 3 or (score >= 2 and mod_sig >= 1):
         verdict = "BET"
-    else:
+    elif score >= 1 or (mod_sig == 1 and mkt_sig >= 0):
         verdict = "ABWÄGEN"
+    else:
+        verdict = "SKIP"
 
     return {
         "modSig":   mod_sig,
         "mktSig":   mkt_sig,
         "storySig": story_sig,
+        "clvPP":    clv_pp,
         "verdict":  verdict,
         "edgePP":   edge_pp,
     }
@@ -366,6 +375,19 @@ def generate_picks_for_fixture(
             bk_dnb_h = round((1 / (ph_mkt / denom)) * 0.97, 2)
             bk_dnb_a = round((1 / (pa_mkt / denom)) * 0.97, 2)
 
+    # ── Data Quality Assessment ───────────────────────────────────────────
+    form_games_h = (form_h or {}).get("games", 0)
+    form_games_a = (form_a or {}).get("games", 0)
+    h2h_games    = (h2h or {}).get("games", 0)
+    odds_present = bool(bk_hw and bk_dr and bk_aw)
+
+    if form_games_h >= 5 and form_games_a >= 5 and odds_present and h2h_games >= 3:
+        data_quality = "full"       # Elo + Form + H2H + Odds
+    elif form_games_h >= 3 or form_games_a >= 3:
+        data_quality = "elo+form"   # Elo + Form vorhanden
+    else:
+        data_quality = "elo_only"   # Nur Elo, sehr unsicher
+
     # Marktquoten je Market-Key
     market_odds: dict[str, float | None] = {
         "home":    bk_hw,
@@ -471,6 +493,8 @@ def generate_picks_for_fixture(
             "info":      info,
             "icon":      "🎯",
             "result":    None,
+            "clvPP":       round(v.get("clvPP", 0.0), 1),
+            "dataQuality": data_quality,
         })
 
     return picks
@@ -542,7 +566,9 @@ def main():
                     for p in new_picks:
                         edge = p.get("edgePP", "?")
                         print(f"     [{p['verdict']:8s}] {p['market']:35s} "
-                              f"@ {p['odds']:.2f}  edge +{edge}pp  conf={p['conf']}")
+                              f"@ {p['odds']:.2f}  edge +{edge}pp  "
+                              f"clv {p.get('clvPP',0):+.1f}pp  "
+                              f"data={p.get('dataQuality','?')}  conf={p['conf']}")
             else:
                 total_no_picks += 1
                 if VERBOSE:
