@@ -916,14 +916,201 @@ function _renderPickCard(pick) {
   </div>`;
 }
 
+// ── WM 2026 Position Logger (localStorage-backed) ─────────────────────────
+// Positions survive page reloads. Export to JSON for the GitHub Action to pick up.
+const _WM_POS_KEY = 'wmPolyPositions_v2';
+function _loadWmPos()    { try { return JSON.parse(localStorage.getItem(_WM_POS_KEY)||'[]'); } catch(_){ return []; } }
+function _saveWmPos(arr) { localStorage.setItem(_WM_POS_KEY, JSON.stringify(arr)); }
+function _addWmPos(pos)  {
+  const a = _loadWmPos();
+  a.push({ ...pos, id: Date.now(), status: 'open', openedAt: new Date().toISOString() });
+  _saveWmPos(a);
+}
+function _closeWmPos(id) {
+  _saveWmPos(_loadWmPos().map(p => p.id === id
+    ? { ...p, status: 'closed', closedAt: new Date().toISOString() }
+    : p));
+}
+
+function _openLogPositionModal(data) {
+  // data: { home, away, market, priceKey, polyPrice, pinnFair, slug }
+  let overlay = document.getElementById('wmPosModal');
+  if (!overlay) return;
+  overlay._posData = data;
+  document.getElementById('wmPosTitle').textContent = `${data.home} vs ${data.away} — ${data.market}`;
+  document.getElementById('wmPosEntry').value   = data.polyPrice.toFixed(4);
+  document.getElementById('wmPosStake').value   = String(POLY_STAKE);
+  document.getElementById('wmPosPinnFair').value = data.pinnFair.toFixed(4);
+  document.getElementById('wmPosSlug').value    = data.slug;
+  document.getElementById('wmPosPriceKey').value = data.priceKey;
+  overlay.style.display = 'flex';
+  document.getElementById('wmPosStake').focus();
+}
+
+function _closeWmPosModal() {
+  const o = document.getElementById('wmPosModal');
+  if (o) o.style.display = 'none';
+}
+
+function _confirmWmPosition() {
+  const overlay = document.getElementById('wmPosModal');
+  if (!overlay || !overlay._posData) return;
+  const data       = overlay._posData;
+  const entryPrice = parseFloat(document.getElementById('wmPosEntry').value);
+  const stake      = parseFloat(document.getElementById('wmPosStake').value);
+  const pinnFair   = parseFloat(document.getElementById('wmPosPinnFair').value);
+  if (!entryPrice || entryPrice <= 0 || !stake || stake <= 0) {
+    alert('Bitte Einstiegspreis und Einsatz eingeben.'); return;
+  }
+  _addWmPos({
+    home: data.home, away: data.away, market: data.market,
+    slug:       document.getElementById('wmPosSlug').value,
+    priceKey:   document.getElementById('wmPosPriceKey').value,
+    entryPrice, pinnFair, stake,
+  });
+  _closeWmPosModal();
+  const grid = document.getElementById('polyPickGrid');
+  if (grid) grid.innerHTML = renderPolyPickCards();
+}
+
+function _wmExportJson() {
+  const positions = _loadWmPos().filter(p => p.status === 'open');
+  const out = JSON.stringify({
+    positions: positions.map(p => ({
+      home: p.home, away: p.away, market: p.market,
+      slug: p.slug, priceKey: p.priceKey,
+      entryPrice: p.entryPrice, pinnFair: p.pinnFair,
+      stake: p.stake, status: 'open', openedAt: p.openedAt,
+    })),
+    updatedAt: '',
+  }, null, 2);
+  try {
+    navigator.clipboard.writeText(out).catch(() => {});
+  } catch (_) {}
+  const btn = document.getElementById('wmExportBtn');
+  if (btn) { const orig = btn.textContent; btn.textContent = '✅ Kopiert!'; setTimeout(() => { btn.textContent = orig; }, 2200); }
+}
+
+function _renderWmOpenPositions() {
+  const positions = _loadWmPos().filter(p => p.status === 'open');
+  if (positions.length === 0) return '';
+
+  const rows = positions.map(pos => {
+    let currentPrice = null;
+    let pnlPct = null;
+    if (_wmPolyPriceCache) {
+      const entry = Object.values(_wmPolyPriceCache).find(e => e.slug === pos.slug);
+      if (entry && pos.priceKey && entry[pos.priceKey]) {
+        currentPrice = entry[pos.priceKey];
+        if (pos.entryPrice > 0) pnlPct = ((currentPrice - pos.entryPrice) / pos.entryPrice * 100).toFixed(1);
+      }
+    }
+    const isProfit  = pnlPct !== null && parseFloat(pnlPct) >= 0;
+    const pnlColor  = pnlPct === null ? '#8b949e' : isProfit ? '#3fb950' : '#f85149';
+    const pnlStr    = pnlPct !== null
+      ? `<strong style="color:${pnlColor}">${parseFloat(pnlPct)>=0?'+':''}${pnlPct}%</strong>`
+      : `<span style="color:#8b949e">—</span>`;
+    const currStr   = currentPrice
+      ? `<span style="color:#a78bfa">${(currentPrice*100).toFixed(1)}¢</span> (${(1/currentPrice).toFixed(2)}x)`
+      : '<span style="color:#8b949e">—</span>';
+    const polyUrl   = pos.slug ? `https://polymarket.com/de/sports/fifa-world-cup/${pos.slug}` : '#';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;
+                        background:#161b22;border-radius:6px;margin-bottom:4px;font-size:12px;flex-wrap:wrap">
+      <span style="color:#e6edf3;min-width:180px">${pos.home} vs ${pos.away} — ${pos.market}</span>
+      <span style="color:#8b949e">Entry <strong style="color:#c9d1d9">${(pos.entryPrice*100).toFixed(1)}¢</strong></span>
+      <span style="color:#8b949e">Aktuell ${currStr}</span>
+      <span>${pnlStr}</span>
+      <span style="color:#8b949e">€${pos.stake}</span>
+      <a href="${polyUrl}" target="_blank" rel="noopener"
+         style="margin-left:auto;background:#a78bfa22;border:1px solid #a78bfa44;border-radius:5px;
+                color:#a78bfa;font-size:10px;font-weight:700;padding:2px 8px;text-decoration:none;white-space:nowrap">
+        🔗 Verkaufen
+      </a>
+      <button onclick="_closeWmPos(${pos.id});const g=document.getElementById('polyPickGrid');if(g)g.innerHTML=renderPolyPickCards();"
+              style="background:#f8514912;border:1px solid #f8514933;border-radius:5px;
+                     color:#f85149;font-size:10px;padding:2px 6px;cursor:pointer">✕</button>
+    </div>`;
+  }).join('');
+
+  return `<div style="background:#0d1117;border:1px solid #3fb95044;border-radius:10px;
+                      padding:12px 14px;margin-bottom:14px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span style="font-size:13px;font-weight:700;color:#3fb950">📊 Offene Positionen (${positions.length})</span>
+      <button id="wmExportBtn" onclick="_wmExportJson()"
+              style="margin-left:auto;background:#21262d;border:1px solid #30363d;border-radius:6px;
+                     color:#c9d1d9;font-size:11px;padding:3px 10px;cursor:pointer">
+        📋 JSON kopieren
+      </button>
+    </div>
+    <div style="font-size:10px;color:#8b949e;margin-bottom:8px">
+      JSON in <code>wm_poly_positions.json</code> einfügen &amp; committen → GitHub Action übernimmt das Monitoring
+    </div>
+    ${rows}
+  </div>`;
+}
+
+function _ensureWmPosModal() {
+  if (document.getElementById('wmPosModal')) return;
+  const m = document.createElement('div');
+  m.id = 'wmPosModal';
+  m.style.cssText = 'display:none;position:fixed;inset:0;background:#00000099;z-index:9999;' +
+    'align-items:center;justify-content:center';
+  m.innerHTML = `
+    <div style="background:#161b22;border:1px solid #30363d;border-radius:12px;padding:24px 28px;
+                min-width:340px;max-width:480px;width:90%">
+      <div style="font-size:14px;font-weight:700;color:#e6edf3;margin-bottom:4px">✏️ Position loggen</div>
+      <div id="wmPosTitle" style="font-size:12px;color:#a78bfa;margin-bottom:16px"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+        <label style="font-size:11px;color:#8b949e">
+          Einstiegspreis (Wahrsch.)
+          <input id="wmPosEntry" type="number" step="0.0001" min="0.01" max="1"
+                 style="display:block;width:100%;margin-top:4px;background:#0d1117;border:1px solid #30363d;
+                        border-radius:6px;color:#e6edf3;padding:6px 8px;font-size:13px"/>
+        </label>
+        <label style="font-size:11px;color:#8b949e">
+          Einsatz (€)
+          <input id="wmPosStake" type="number" step="1" min="1"
+                 style="display:block;width:100%;margin-top:4px;background:#0d1117;border:1px solid #30363d;
+                        border-radius:6px;color:#e6edf3;padding:6px 8px;font-size:13px"/>
+        </label>
+        <label style="font-size:11px;color:#8b949e">
+          Pinnacle Fair (devigged)
+          <input id="wmPosPinnFair" type="number" step="0.0001" min="0" max="1" readonly
+                 style="display:block;width:100%;margin-top:4px;background:#0d1117;border:1px solid #30363d;
+                        border-radius:6px;color:#8b949e;padding:6px 8px;font-size:13px"/>
+        </label>
+        <div></div>
+      </div>
+      <input type="hidden" id="wmPosSlug"/>
+      <input type="hidden" id="wmPosPriceKey"/>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button onclick="_closeWmPosModal()"
+                style="background:#21262d;border:1px solid #30363d;border-radius:6px;
+                       color:#8b949e;font-size:13px;padding:7px 16px;cursor:pointer">
+          Abbrechen
+        </button>
+        <button onclick="_confirmWmPosition()"
+                style="background:#3fb95022;border:1px solid #3fb95066;border-radius:6px;
+                       color:#3fb950;font-size:13px;font-weight:700;padding:7px 16px;cursor:pointer">
+          ✅ Position speichern
+        </button>
+      </div>
+    </div>`;
+  m.addEventListener('click', e => { if (e.target === m) _closeWmPosModal(); });
+  document.body.appendChild(m);
+}
+
 // ── WM 2026 CLV Radar ──────────────────────────────────────────────────────
 // Shows all WM fixtures where Pinnacle devigged probability > Polymarket price.
 // Positive edge = Polymarket hasn't caught up with sharp money → BET on Poly.
 function _renderWmClvRadar() {
-  if (!_wmClvRadar || _wmClvRadar.length === 0) return '';
+  _ensureWmPosModal();   // lazy-inject the modal into <body> if not yet present
 
-  // Filter: only show fixtures for today's date or upcoming
-  const today = _polyState.dateStr; // DD.MM.YYYY
+  const openPosHtml = _renderWmOpenPositions();
+
+  if (!_wmClvRadar || _wmClvRadar.length === 0) {
+    return openPosHtml ? `<div style="grid-column:1/-1;margin-bottom:20px">${openPosHtml}</div>` : '';
+  }
 
   // Color by edge
   function edgeColor(pp) {
@@ -954,6 +1141,14 @@ function _renderWmClvRadar() {
       const label = o.edgePP >= 5 ? `<strong style="color:${col}">+${o.edgePP}pp ↑↑</strong>`
                   : o.edgePP >= 3 ? `<strong style="color:${col}">+${o.edgePP}pp ↑</strong>`
                   :                 `<span style="color:${col}">+${o.edgePP}pp</span>`;
+      // Serialise modal data safely (no quotes in team names to worry about normally,
+      // but use JSON.stringify to be safe)
+      const modalData = JSON.stringify({
+        home: fix.home, away: fix.away,
+        market: o.market, priceKey: o.priceKey,
+        polyPrice: o.polyPrice, pinnFair: o.pinnFair,
+        slug: fix.slug,
+      }).replace(/'/g, '&#39;');
       return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;
                           background:${bg};border-radius:6px;margin-bottom:4px">
         <span style="font-size:13px">${marketIcon(o.market)}</span>
@@ -967,16 +1162,26 @@ function _renderWmClvRadar() {
           / <span style="color:#8b949e">${o.polyOdds}</span>
         </span>
         <span style="font-size:12px">${label}</span>
-        <a href="${polyUrl}" target="_blank" rel="noopener"
-           onclick="event.stopPropagation()"
-           style="margin-left:auto;background:#a78bfa22;border:1px solid #a78bfa44;
-                  border-radius:6px;color:#a78bfa;font-size:11px;font-weight:700;
-                  padding:4px 10px;text-decoration:none;white-space:nowrap;
-                  transition:background .15s"
-           onmouseover="this.style.background='#a78bfa33'"
-           onmouseout="this.style.background='#a78bfa22'">
-          🔗 Auf Polymarket setzen
-        </a>
+        <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
+          <a href="${polyUrl}" target="_blank" rel="noopener"
+             onclick="event.stopPropagation()"
+             style="background:#a78bfa22;border:1px solid #a78bfa44;
+                    border-radius:6px;color:#a78bfa;font-size:11px;font-weight:700;
+                    padding:4px 10px;text-decoration:none;white-space:nowrap;
+                    transition:background .15s"
+             onmouseover="this.style.background='#a78bfa33'"
+             onmouseout="this.style.background='#a78bfa22'">
+            🔗 Auf Polymarket setzen
+          </a>
+          <button onclick="event.stopPropagation();_openLogPositionModal(JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify({home:fix.home,away:fix.away,market:o.market,priceKey:o.priceKey,polyPrice:o.polyPrice,pinnFair:o.pinnFair,slug:fix.slug}))}')))"
+                  style="background:#21262d;border:1px solid #30363d;border-radius:6px;
+                         color:#c9d1d9;font-size:11px;padding:4px 10px;cursor:pointer;
+                         white-space:nowrap;transition:background .15s"
+                  onmouseover="this.style.background='#2d333b'"
+                  onmouseout="this.style.background='#21262d'">
+            ✏️ Position loggen
+          </button>
+        </div>
       </div>`;
     }).join('');
 
@@ -1014,6 +1219,7 @@ function _renderWmClvRadar() {
     <div style="font-size:11px;color:#8b949e;margin-bottom:12px;line-height:1.5">
       Positiver Edge = Pinnacle bewertet Outcome höher als Polymarket → Unterpreist auf Poly → BUY
     </div>
+    ${openPosHtml}
     ${rows}
   </div>`;
 }

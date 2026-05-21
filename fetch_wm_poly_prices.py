@@ -320,9 +320,35 @@ def main():
         # Sort radar by best edge descending
         clv_radar.sort(key=lambda x: -x["bestEdge"])
 
+    # ── Apply entry filters to CLV Radar ─────────────────────────────────────
+    # Only include opportunities worth trading:
+    #   Edge ≥ 5pp       — below this it's market noise / Pinnacle margin artifact
+    #   Poly odds ≥ 1.25 — price < 0.80 (don't trade extreme favorites, no upside)
+    #   Volume ≥ $5,000  — ensure liquidity for entry AND exit
+    MIN_EDGE_PP    = 5.0
+    MIN_POLY_ODDS  = 1.25   # polyPrice < 0.80
+    MIN_VOLUME     = 5_000
+
+    for fix in clv_radar:
+        fix["opportunities"] = [
+            o for o in fix["opportunities"]
+            if (o["edgePP"] >= MIN_EDGE_PP
+                and (o["polyOdds"] or 0) >= MIN_POLY_ODDS
+                and fix.get("vol", 0) >= MIN_VOLUME)
+        ]
+        fix["opportunities"].sort(key=lambda x: -x["edgePP"])
+        if fix["opportunities"]:
+            fix["bestEdge"] = fix["opportunities"][0]["edgePP"]
+
+    clv_radar = [f for f in clv_radar if f["opportunities"]]
+    clv_radar.sort(key=lambda x: -x["bestEdge"])
+
+    print(f"  CLV Radar (nach Filter): {len(clv_radar)} handelbare Fixtures "
+          f"(Edge≥{MIN_EDGE_PP}pp, Odds≥{MIN_POLY_ODDS}, Vol≥${MIN_VOLUME:,.0f})")
+
+    if wm is not None:
         with open(WM_FILE, "w", encoding="utf-8") as f:
             json.dump(wm, f, ensure_ascii=False, separators=(",", ":"))
-
         print(f"  Patched {patched} fixtures in wm2026-data.json (poly_hw/dr/aw fields)")
         print(f"  CLV Radar: {len(clv_radar)} fixtures with Pinnacle edge vs Polymarket")
 

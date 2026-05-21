@@ -1,0 +1,68 @@
+name: 💹 WM Poly Positionen überwachen
+
+on:
+  # 5x täglich — morgens, mittags, nachmittags, abends, nachts (UTC)
+  # Wien: +2h (CEST) → entspricht 08:00, 12:00, 16:00, 20:00, 00:00 CEST
+  schedule:
+    - cron: '0 6 * * *'
+    - cron: '0 10 * * *'
+    - cron: '0 14 * * *'
+    - cron: '0 18 * * *'
+    - cron: '0 22 * * *'
+
+  # Manuell auslösbar (z.B. direkt nach einer neuen Position)
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Grund für manuellen Run (optional)'
+        required: false
+        default: 'manual check'
+
+permissions:
+  contents: write
+
+jobs:
+  monitor-positions:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Kein pip install nötig — manage_wm_poly_positions.py nutzt nur stdlib
+
+      # ── Erst Poly-Preise frisch holen (Gamma API, kein Key) ──────────────────
+      - name: 💹 WM Polymarket Preise aktualisieren
+        run: python fetch_wm_poly_prices.py
+        continue-on-error: true
+
+      # ── Dann Positionen prüfen & Sell-Alerts senden ───────────────────────────
+      - name: 📊 WM Poly Positionen prüfen
+        run: python manage_wm_poly_positions.py
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      # ── Aktualisierte Positions-Datei + Preise zurückschreiben ────────────────
+      - name: 💾 Status speichern
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add wm_poly_positions.json wm_poly_prices.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — kein Commit."
+          else
+            TIMESTAMP=$(date +'%d.%m.%Y %H:%M')
+            git commit -m "💹 WM Poly Position Update ${TIMESTAMP} UTC"
+            git pull origin main --no-rebase -X ours
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
