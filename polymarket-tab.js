@@ -448,12 +448,14 @@ function getWmPolyPicks(dateStr) {
       leagueName:  'WM 2026',
       home:        entry.home,
       away:        entry.away,
+      homeId:      entry.homeId || null,
+      awayId:      entry.awayId || null,
       homeFlag:    entry.homeFlag || '',
       awayFlag:    entry.awayFlag || '',
       market:      polyMarket,
       conf:        entry.verdict === 'BET' ? 'high' : 'medium',
       sc:          entry.edgePP || 0,
-      odds:        entry.odds,          // Pinnacle odds — used for edge vs Poly
+      odds:        entry.odds,          // Pinnacle/bookmaker odds — edge reference
       modelOdds:   entry.modelOdds,
       oddsIsEst:   false,
       date:        entry.date,
@@ -515,6 +517,57 @@ async function _loadPolyPriceCache() {
     _polyPriceCache = {};
     _polyPriceMissing = true;
   }
+}
+
+// ── WM 2026 Polymarket Prices (from fetch_wm_poly_prices.py → wm_poly_prices.json) ──
+// Keyed by "{HOME_ID}-{AWAY_ID}" e.g. "GER-CUW"
+// hw/dr/aw are probabilities (0-1), convert to odds with 1/p
+let _wmPolyPriceCache = null;   // null = not loaded
+let _wmPolyPriceMissing = false;
+
+async function _loadWmPolyPriceCache() {
+  if (_wmPolyPriceCache !== null) return;
+  try {
+    const _cbv = Math.floor(Date.now() / 3600000);
+    const res = await fetch(`wm_poly_prices.json?v=${_cbv}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    _wmPolyPriceCache = data.prices || {};
+    console.log(`[Poly] WM prices loaded: ${Object.keys(_wmPolyPriceCache).length} fixtures, ${data.generatedAt || ''}`);
+  } catch (e) {
+    console.warn('[Poly] wm_poly_prices.json not available:', e.message);
+    _wmPolyPriceCache = {};
+    _wmPolyPriceMissing = true;
+  }
+}
+
+// Maps our WM market label → which price field in wm_poly_prices.json
+const WM_MARKET_TO_PRICE_KEY = {
+  'Heimsieg':      'hw',
+  'Auswärtssieg':  'aw',
+  'Unentschieden': 'dr',
+};
+
+function _getWmPolyPrice(pick) {
+  // pick.homeId, pick.awayId, pick.market must be set
+  if (!_wmPolyPriceCache || !pick.homeId || !pick.awayId) return null;
+  const key    = `${pick.homeId}-${pick.awayId}`;
+  const entry  = _wmPolyPriceCache[key];
+  if (!entry) return { found: false, stale: true };
+
+  const mkey   = WM_MARKET_TO_PRICE_KEY[pick.market];
+  if (!mkey) return { found: false };  // O/U, BTTS etc. — not on Poly 1X2
+
+  const price  = entry[mkey];
+  if (price == null || price <= 0) return { found: false };
+
+  return {
+    found:      true,
+    price,                           // probability 0-1
+    eventUrl:   `https://polymarket.com/de/sports/fifa-world-cup/${entry.slug}`,
+    eventTitle: entry.title || `${pick.home} vs ${pick.away}`,
+    vol:        entry.vol,
+  };
 }
 
 // Polymarket price sanity check + normalisation.
@@ -2073,6 +2126,7 @@ async function _fetchAllPricesAsync() {
   if (statusEl) { statusEl.textContent = '⏳ Polymarket-Preise werden geladen…'; statusEl.style.color = ''; }
 
   await _loadPolyPriceCache();
+  await _loadWmPolyPriceCache();
 
   // Show fetched-at timestamp if available
   let statusSuffix = '';
@@ -2087,8 +2141,14 @@ async function _fetchAllPricesAsync() {
   // If the JSON file doesn't exist yet, leave prices undefined (show '—') rather than graying out
   if (!_polyPriceMissing) {
     for (const pick of picks) {
-      const result = _getPriceFromCache(pick);
-      _polyState.prices[pick.id] = result || { found: false };
+      if (pick.isWm) {
+        // WM 2026: use wm_poly_prices.json (Gamma API prices)
+        const result = _getWmPolyPrice(pick);
+        _polyState.prices[pick.id] = result || { found: false, stale: _wmPolyPriceMissing };
+      } else {
+        const result = _getPriceFromCache(pick);
+        _polyState.prices[pick.id] = result || { found: false };
+      }
     }
     // NOTE: We do NOT filter out picks here — all system picks are valid Polymarket bets.
     // Stale (⏳) or missing (—) prices just mean the price cache needs a refresh (git pull).
