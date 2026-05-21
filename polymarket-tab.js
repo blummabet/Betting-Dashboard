@@ -524,6 +524,7 @@ async function _loadPolyPriceCache() {
 // hw/dr/aw are probabilities (0-1), convert to odds with 1/p
 let _wmPolyPriceCache = null;   // null = not loaded
 let _wmPolyPriceMissing = false;
+let _wmClvRadar = [];           // CLV opportunities: Pinnacle fair > Polymarket price
 
 async function _loadWmPolyPriceCache() {
   if (_wmPolyPriceCache !== null) return;
@@ -533,7 +534,8 @@ async function _loadWmPolyPriceCache() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     _wmPolyPriceCache = data.prices || {};
-    console.log(`[Poly] WM prices loaded: ${Object.keys(_wmPolyPriceCache).length} fixtures, ${data.generatedAt || ''}`);
+    _wmClvRadar       = data.clvRadar || [];
+    console.log(`[Poly] WM prices loaded: ${Object.keys(_wmPolyPriceCache).length} fixtures, CLV radar: ${_wmClvRadar.length} opportunities, ${data.generatedAt || ''}`);
   } catch (e) {
     console.warn('[Poly] wm_poly_prices.json not available:', e.message);
     _wmPolyPriceCache = {};
@@ -914,10 +916,115 @@ function _renderPickCard(pick) {
   </div>`;
 }
 
+// ── WM 2026 CLV Radar ──────────────────────────────────────────────────────
+// Shows all WM fixtures where Pinnacle devigged probability > Polymarket price.
+// Positive edge = Polymarket hasn't caught up with sharp money → BET on Poly.
+function _renderWmClvRadar() {
+  if (!_wmClvRadar || _wmClvRadar.length === 0) return '';
+
+  // Filter: only show fixtures for today's date or upcoming
+  const today = _polyState.dateStr; // DD.MM.YYYY
+
+  // Color by edge
+  function edgeColor(pp) {
+    if (pp >= 5) return '#3fb950';
+    if (pp >= 3) return '#e3b341';
+    return '#8b949e';
+  }
+  function edgeBg(pp) {
+    if (pp >= 5) return '#3fb95018';
+    if (pp >= 3) return '#e3b34118';
+    return '#8b949e11';
+  }
+  function marketIcon(m) {
+    if (m === 'Heimsieg')      return '🏠';
+    if (m === 'Auswärtssieg')  return '✈️';
+    if (m === 'Unentschieden') return '🤝';
+    return '⚽';
+  }
+
+  const rows = _wmClvRadar.map(fix => {
+    const [fy, fm, fd] = (fix.date || '').split('-');
+    const dateFmt = fy ? `${fd}.${fm}.${fy}` : fix.date || '';
+    const polyUrl = `https://polymarket.com/de/sports/fifa-world-cup/${fix.slug}`;
+
+    const oppHtml = fix.opportunities.map(o => {
+      const col   = edgeColor(o.edgePP);
+      const bg    = edgeBg(o.edgePP);
+      const label = o.edgePP >= 5 ? `<strong style="color:${col}">+${o.edgePP}pp ↑↑</strong>`
+                  : o.edgePP >= 3 ? `<strong style="color:${col}">+${o.edgePP}pp ↑</strong>`
+                  :                 `<span style="color:${col}">+${o.edgePP}pp</span>`;
+      return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;
+                          background:${bg};border-radius:6px;margin-bottom:4px">
+        <span style="font-size:13px">${marketIcon(o.market)}</span>
+        <span style="font-size:12px;color:#c9d1d9;min-width:90px">${o.market}</span>
+        <span style="font-size:11px;color:#8b949e;min-width:90px">
+          Pinn fair: <strong style="color:#c9d1d9">${(o.pinnFair*100).toFixed(1)}%</strong>
+          / <span style="color:#8b949e">${o.pinnOdds}</span>
+        </span>
+        <span style="font-size:11px;color:#8b949e;min-width:90px">
+          Poly: <strong style="color:#a78bfa">${(o.polyPrice*100).toFixed(1)}¢</strong>
+          / <span style="color:#8b949e">${o.polyOdds}</span>
+        </span>
+        <span style="font-size:12px">${label}</span>
+        <a href="${polyUrl}" target="_blank" rel="noopener"
+           onclick="event.stopPropagation()"
+           style="margin-left:auto;background:#a78bfa22;border:1px solid #a78bfa44;
+                  border-radius:6px;color:#a78bfa;font-size:11px;font-weight:700;
+                  padding:4px 10px;text-decoration:none;white-space:nowrap;
+                  transition:background .15s"
+           onmouseover="this.style.background='#a78bfa33'"
+           onmouseout="this.style.background='#a78bfa22'">
+          🔗 Auf Polymarket setzen
+        </a>
+      </div>`;
+    }).join('');
+
+    const bestEdge   = fix.bestEdge || 0;
+    const headerCol  = edgeColor(bestEdge);
+
+    return `<div style="background:#0d1117;border:1px solid ${bestEdge >= 5 ? '#3fb95044' : bestEdge >= 3 ? '#e3b34144' : '#30363d'};
+                        border-radius:10px;padding:12px 14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:14px;font-weight:700;color:#e6edf3">
+          ${fix.home} vs ${fix.away}
+        </span>
+        <span style="font-size:11px;color:#8b949e;margin-left:4px">${dateFmt}</span>
+        <span style="font-size:11px;color:#8b949e;margin-left:auto">Vol $${(fix.vol || 0).toLocaleString('de-DE', {maximumFractionDigits:0})}</span>
+        <span style="font-size:11px;font-weight:700;color:${headerCol};background:${edgeBg(bestEdge)};
+                     padding:2px 7px;border-radius:8px;border:1px solid ${headerCol}44">
+          max +${bestEdge}pp
+        </span>
+      </div>
+      ${oppHtml}
+    </div>`;
+  }).join('');
+
+  const strongCount = _wmClvRadar.filter(f => f.bestEdge >= 3).length;
+
+  return `<div style="grid-column:1/-1;margin-bottom:20px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+      <span style="font-size:15px;font-weight:700;color:#e6edf3">📡 WM 2026 — Pinnacle vs Polymarket</span>
+      <span style="font-size:11px;background:#a78bfa22;border:1px solid #a78bfa44;color:#a78bfa;
+                   padding:2px 8px;border-radius:8px;font-weight:700">${_wmClvRadar.length} Spiele</span>
+      ${strongCount > 0 ? `<span style="font-size:11px;background:#3fb95022;border:1px solid #3fb95044;color:#3fb950;
+                   padding:2px 8px;border-radius:8px;font-weight:700">${strongCount} mit Edge ≥3pp</span>` : ''}
+      <span style="font-size:10px;color:#8b949e;margin-left:auto">Pinnacle fair (devigged) vs Polymarket-Preis</span>
+    </div>
+    <div style="font-size:11px;color:#8b949e;margin-bottom:12px;line-height:1.5">
+      Positiver Edge = Pinnacle bewertet Outcome höher als Polymarket → Unterpreist auf Poly → BUY
+    </div>
+    ${rows}
+  </div>`;
+}
+
 function renderPolyPickCards() {
   const picks = _polyState.picks;
+  // CLV radar always shown at top when WM data is available
+  const radarHtml = _renderWmClvRadar();
+
   if (picks.length === 0) {
-    return `<div style="grid-column:1/-1;text-align:center;padding:60px 24px;color:#8b949e">
+    return radarHtml + `<div style="grid-column:1/-1;text-align:center;padding:60px 24px;color:#8b949e">
       <div style="font-size:40px;margin-bottom:14px">🟣</div>
       <div style="font-size:16px;font-weight:600;margin-bottom:6px;color:#e6edf3">Keine Picks verfügbar</div>
       <div style="font-size:13px;line-height:1.6">Für <strong>${_polyState.dateStr}</strong> gibt es keine high/medium Picks
@@ -925,7 +1032,7 @@ function renderPolyPickCards() {
         Versuche einen anderen Tag oder prüfe ob Quoten geladen sind.</div>
     </div>`;
   }
-  return picks.map(_renderPickCard).join('');
+  return radarHtml + picks.map(_renderPickCard).join('');
 }
 
 // ── 6. STATS ────────────────────────────────────────────

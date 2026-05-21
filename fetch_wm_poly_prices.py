@@ -235,9 +235,101 @@ def main():
         else:
             skip += 1
 
-    # Write output
+    # ── Patch wm2026-data.json + compute CLV Radar ───────────────────────────
+    clv_radar = []
+    wm = None
+
+    if ok > 0 and os.path.exists(WM_FILE):
+        with open(WM_FILE, encoding="utf-8") as f:
+            wm = json.load(f)
+
+        wm_odds = wm.setdefault("odds", {})
+
+        # Build team name lookup: id → German name
+        team_names: dict[str, str] = {}
+        for gdata in wm.get("groups", {}).values():
+            for t in gdata.get("teams", []):
+                team_names[t["id"]] = t.get("name", t["id"])
+
+        patched = 0
+        for key, p in prices.items():
+            existing = wm_odds.get(key, {})
+            existing["poly_hw"]   = p["hw"]
+            existing["poly_dr"]   = p["dr"]
+            existing["poly_aw"]   = p["aw"]
+            existing["poly_vol"]  = p["vol"]
+            existing["poly_slug"] = p["slug"]
+            wm_odds[key] = existing
+            patched += 1
+
+            # ── CLV Radar: Pinnacle fair odds vs Polymarket price ─────────────
+            # Edge = pinnacle_devigged_prob - polymarket_prob (in pp)
+            # Positive edge → Polymarket underpriced vs sharp Pinnacle line
+            pinn_hw = existing.get("hw")
+            pinn_dr = existing.get("dr")
+            pinn_aw = existing.get("aw")
+
+            if pinn_hw and pinn_dr and pinn_aw and pinn_hw > 1:
+                margin = 1/pinn_hw + 1/pinn_dr + 1/pinn_aw
+                fair_hw = (1/pinn_hw) / margin
+                fair_dr = (1/pinn_dr) / margin
+                fair_aw = (1/pinn_aw) / margin
+
+                home_id, away_id = key.split("-", 1)
+                opportunities = []
+
+                for label, mkey, fair, poly in [
+                    ("Heimsieg",      "hw", fair_hw, p["hw"]),
+                    ("Unentschieden", "dr", fair_dr, p.get("dr")),
+                    ("Auswärtssieg",  "aw", fair_aw, p["aw"]),
+                ]:
+                    if poly is None:
+                        continue
+                    edge_pp = round((fair - poly) * 100, 1)
+                    if edge_pp > 0:   # Any positive edge vs Pinnacle fair
+                        opportunities.append({
+                            "market":     label,
+                            "priceKey":   mkey,
+                            "polyPrice":  round(poly, 4),
+                            "polyOdds":   round(1 / poly, 2) if poly > 0 else None,
+                            "pinnFair":   round(fair, 4),
+                            "pinnOdds":   round(pinn_hw if mkey == "hw" else
+                                               pinn_dr if mkey == "dr" else pinn_aw, 2),
+                            "edgePP":     edge_pp,
+                        })
+
+                if opportunities:
+                    # Sort by edge descending
+                    opportunities.sort(key=lambda x: -x["edgePP"])
+                    clv_radar.append({
+                        "key":       key,
+                        "homeId":    home_id,
+                        "awayId":    away_id,
+                        "home":      team_names.get(home_id, p["homeName"]),
+                        "away":      team_names.get(away_id, p["awayName"]),
+                        "homeName":  p["homeName"],
+                        "awayName":  p["awayName"],
+                        "date":      p["date"],
+                        "slug":      p["slug"],
+                        "vol":       p["vol"],
+                        "opportunities": opportunities,
+                        # Best edge of this fixture
+                        "bestEdge":  opportunities[0]["edgePP"],
+                    })
+
+        # Sort radar by best edge descending
+        clv_radar.sort(key=lambda x: -x["bestEdge"])
+
+        with open(WM_FILE, "w", encoding="utf-8") as f:
+            json.dump(wm, f, ensure_ascii=False, separators=(",", ":"))
+
+        print(f"  Patched {patched} fixtures in wm2026-data.json (poly_hw/dr/aw fields)")
+        print(f"  CLV Radar: {len(clv_radar)} fixtures with Pinnacle edge vs Polymarket")
+
+    # ── Write output JSON ─────────────────────────────────────────────────────
     out = {
         "prices":      prices,
+        "clvRadar":    clv_radar,   # Sorted by edge — ready for dashboard display
         "count":       ok,
         "generatedAt": datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC"),
     }
@@ -245,38 +337,6 @@ def main():
         json.dump(out, f, ensure_ascii=False, indent=2)
 
     print(f"\n✅ {ok} matches written → wm_poly_prices.json  ({skip} skipped)")
-
-    # ── Patch wm2026-data.json so pick generator sees Polymarket prices ────────
-    if ok == 0:
-        print("  No prices to patch into wm2026-data.json")
-        return
-
-    if not os.path.exists(WM_FILE):
-        print("  wm2026-data.json not found — skipping patch")
-        return
-
-    with open(WM_FILE, encoding="utf-8") as f:
-        wm = json.load(f)
-
-    patched = 0
-    wm_odds = wm.setdefault("odds", {})
-    for key, p in prices.items():
-        existing = wm_odds.get(key, {})
-        # Only set hw/dr/aw from Polymarket if no bookmaker odds present yet
-        # (bookmaker odds = odds_open is set from Pinnacle via TheOddsAPI)
-        # Keep bookmaker odds as primary; store Poly prices separately
-        existing["poly_hw"] = p["hw"]
-        existing["poly_dr"] = p["dr"]
-        existing["poly_aw"] = p["aw"]
-        existing["poly_vol"] = p["vol"]
-        existing["poly_slug"] = p["slug"]
-        wm_odds[key] = existing
-        patched += 1
-
-    with open(WM_FILE, "w", encoding="utf-8") as f:
-        json.dump(wm, f, ensure_ascii=False, separators=(",", ":"))
-
-    print(f"  Patched {patched} fixtures in wm2026-data.json (poly_hw/dr/aw fields)")
 
 
 if __name__ == "__main__":
