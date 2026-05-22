@@ -1280,6 +1280,85 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="heart-section-title" style="font-size:14px;letter-spacing:.8px;">⭐ System-Highlights auf einen Blick</div>
     <p style="color:var(--muted);font-size:12px;margin-bottom:14px;">Die wichtigsten Features, Logik-Bausteine und Signalquellen — kompakt zum Zeigen und Diskutieren.</p>
 
+    <!-- Row -1: WM Polymarket Trading System (newest, at very top) -->
+    <div style="background:linear-gradient(135deg,rgba(163,113,247,.10),rgba(0,212,161,.07));border:2px solid rgba(163,113,247,.45);border-radius:12px;padding:18px;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="font-size:22px">🟣</span>
+        <strong style="color:#a371f7;font-size:15px;">WM 2026 — Polymarket Trading System</strong>
+        <span style="font-size:9px;background:#a371f7;color:#0d1117;padding:2px 7px;border-radius:5px;font-weight:700;">NEU Jun 2026</span>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Vollautomatisches Prediction-Market-Trading auf Polymarket — von der Edge-Berechnung bis zum P&amp;L-Tracking nach Spielende. Alles in einem System.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;">
+
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(163,113,247,.30);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:700;color:#a371f7;margin-bottom:6px;">⚡ Alert Zone &amp; Auto-Trigger</div>
+          <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.8;">
+            <li>Edge-Schwelle: <strong>≥ 3pp Pinnacle-Implied vs. Poly-Preis</strong></li>
+            <li>Stake-Tiers: €5 (≥3pp) · €10 (≥5pp) · €15 (≥7pp)</li>
+            <li><code>auto_wm_poly_trigger.py</code> — prüft 5× täglich via GitHub Actions</li>
+            <li>DRY_RUN=true im Toggle · Live-Schalter im Workflow</li>
+            <li>Manueller Bet-Button im Dashboard mit Bestätigungsdialog</li>
+          </ul>
+        </div>
+
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(0,212,161,.30);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:6px;">💰 Balance &amp; P&amp;L Dashboard</div>
+          <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.8;">
+            <li>Live USDC-Balance via <strong>Polymarket CLOB API</strong> (nicht on-chain)</li>
+            <li><code>wm_poly_balance.json</code> — 5× täglich aktualisiert</li>
+            <li>P&amp;L nach Spielende: WIN = (1/polyPrice − 1) × stake · LOSS = −stake</li>
+            <li>ROI · Win-Rate · Ø CLV — alles in <code>wm_results.json</code></li>
+            <li>Performance-Section im Trading Tab mit Bet-Tabelle (CLV · Score · Link)</li>
+          </ul>
+        </div>
+
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(88,166,255,.30);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:700;color:#58a6ff;margin-bottom:6px;">📈 CLV-Tracking nach Spielende</div>
+          <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.8;">
+            <li>Entry <code>polyPrice</code> gespeichert in <code>wm_auto_bets_placed.json</code></li>
+            <li>Closing Odds auto-eingefroren in <code>wm2026-data.json</code> beim Kickoff</li>
+            <li><strong>CLV = (pinnClose − polyPrice) × 100 pp</strong> — positiv = edge</li>
+            <li><code>resolve_wm_results.py</code> — P&amp;L + CLV nach Spielende berechnet</li>
+            <li>Ø CLV im Dashboard: zeigt ob Bets langfristig profitabel</li>
+          </ul>
+        </div>
+
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(248,81,73,.30);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:700;color:#f85149;margin-bottom:6px;">📲 Trades Telegram Channel</div>
+          <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.8;">
+            <li>Separater Channel (≠ WM-Betrieb-Channel) nur für Trades</li>
+            <li><code>telegram_trades.py</code> — shared helper für alle Notifications</li>
+            <li>🟢 Auto-Bet placed · 👤 Manual Bet · 📉 Sell Alert · ✅ Trade Closed</li>
+            <li>Flag-Emojis · Entry/Closing Odds · Edge pp · P&amp;L · CLV</li>
+            <li>Testbar via GitHub Actions Workflow (kein Terminal nötig)</li>
+          </ul>
+        </div>
+
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(240,192,64,.30);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:700;color:#f0c040;margin-bottom:6px;">📊 Result-Tracking Pipeline</div>
+          <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.8;">
+            <li><code>fetch_wm_match_results.py</code> — API-Football Ergebnisse post-Spiel</li>
+            <li>MARKET_WIN_CONDITIONS: Heimsieg · Auswärtssieg · Draw · O2.5 · BTTS</li>
+            <li>Bets in <code>wm_auto_bets_placed.json</code> → resolved in <code>wm_results.json</code></li>
+            <li>Status: WIN · LOSS · VOID (z.B. kein Markt-Abgleich)</li>
+            <li>Summary: totalBets · winRate · totalPnl · roi · avgCLV · sharpeEst</li>
+          </ul>
+        </div>
+
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(63,185,80,.25);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:700;color:#3fb950;margin-bottom:6px;">🔧 Technische Architektur</div>
+          <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.8;">
+            <li><code>py_clob_client_v2</code> — Market + Limit GTC Orders (FOK-safe)</li>
+            <li>Gamma API: Event-Lookup via Slug → Token-ID Matching</li>
+            <li>5× täglicher Monitoring-Cycle (manage-wm-poly.yml)</li>
+            <li>Sell Alerts wenn Position ≥ Profit-Target oder ≤ Stop-Loss</li>
+            <li>Alles ohne localStorage — JSON-Dateien im Repo als State</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Row 0: Newest Features (most recent at top) -->
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px;margin-bottom:10px;">
 
@@ -2101,29 +2180,116 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
   </div>
 
-  <!-- 10. Was kommt als nächstes -->
+  <!-- 10. Geplante Features + Neue Ideen -->
   <div class="heart-section">
-    <div class="heart-section-title">🔮 Roadmap / Ideen</div>
-    <div class="heart-grid">
-      <div class="heart-card" style="opacity:.85;">
-        <h3>💡 Mögliche Erweiterungen</h3>
-        <p style="font-size:11px;color:var(--muted);margin-bottom:8px;">Priorisiert nach Impact/Aufwand-Verhältnis:</p>
-        <ul>
-          <li><strong>[Tier 1] players/statistics:</strong> Individuelle Tore, Assists, Shots on Target, Rating pro Spieler → verfeinert Injury-Impact. Statt pauschaler attack_count × 0.95: Topscorer (18 Tore) fehlt vs. Backup (2 Tore) — enormer Unterschied, aktuell nicht sichtbar im Modell. Direkt auf Lineup-Pipeline aufbauend.</li>
-          <li><strong>[Tier 1] Lineup-Starter-Qualität:</strong> Aktuell zählt pick-engine.js nur die Anzahl Stürmer. Nächster Schritt: Starter-Scoring via player/statistics (Tore + xG per Spieler) → Qualitätsadjustment nicht nur Quantität. Topscorer auf Bank = stärkeres Signal.</li>
-          <li><strong>[Tier 2] Bankroll-Empfehlung:</strong> Stake-Größe basierend auf Edge × Konfidenz × Kelly-Criterion (gecappt). Zeige empfohlene Stake-Größe auf jeder Card. Erfordert historische Hit-Rate pro Markt.</li>
-          <li><strong>[Tier 2] Historischer Backtest (API):</strong> API-Football-Daten für Trefferquoten-Validierung der aktuellen Pick-Logik. Welcher Markt performt wirklich bei mustWin-Spielen? Präzisere Markt-Boosts statt Annahmen.</li>
-          <li><strong>[Tier 2] fixtures/events:</strong> Torminuten, Karten, Auswechslungen historisch → First-Goal-Rate (wichtig für HZ-Picks), Late-Goal-Rate. Aufwändig zu aggregieren aber klar messbarer Impact.</li>
-          <li><strong>[Tier 3] Weather-Integration:</strong> Wind/Regen → Under-Boost, Corners-Dämpfung. API verfügbar (OpenWeather), aber historische Korrelation zu Outcomes schwach.</li>
-          <li><strong>[Tier 3] players/sidelined:</strong> Langzeitausfälle — Fixture-Injuries decken das bereits weitgehend ab, aber sidelined erfasst mehrtägige Ausfälle ohne Fixture-Link.</li>
-          <li><strong>[Tier 3] coaches:</strong> Coach-Wechsel-Signal (neuer Trainer = oft defensive Phase). Interessant, aber kein direkter Score-Einfluss mess- und validierbar.</li>
-          <li><strong>[Tier 3] Live Odds-API:</strong> Automatischer Value-Check gegen Pinnacle in Echtzeit (Closing Line). Aktuell: prematch snapshot + update alle 3h. Echtes Closing via Resolve benötigt.</li>
-        </ul>
-        <div style="margin-top:10px;padding:10px;background:rgba(63,185,80,.06);border:1px solid rgba(63,185,80,.20);border-radius:6px;">
-          <p style="font-size:11px;color:#3fb950;font-weight:600;margin-bottom:4px;">✅ Seit letztem Update neu abgeschlossen:</p>
-          <p style="font-size:11px;color:var(--muted);">Confirmed Lineups Pipeline · Corner Double-Estimate Guard · API 10× Upgrade · H2H last=20 · Predictions Fix · --fast Budget-Optimierung · max_fixtures 25→50 · CLV Tracking · SHARP Penalty · Pinnacle Priority FV</p>
+    <div class="heart-section-title">🚀 Geplante Features &amp; Neue Ideen</div>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:14px;">Features die noch fehlen, Verbesserungen die sich aufgedrängt haben, und Ideen für nach der WM — damit nichts vergessen geht.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:16px;">
+
+      <!-- WM Polymarket: pending features -->
+      <div style="background:rgba(163,113,247,.06);border:1px solid rgba(163,113,247,.35);border-radius:10px;padding:14px;">
+        <div style="font-size:12px;font-weight:700;color:#a371f7;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+          🟣 WM Polymarket — Offene Punkte
+          <span style="font-size:9px;background:rgba(163,113,247,.2);padding:1px 5px;border-radius:4px;color:#a371f7;">Prio 1</span>
         </div>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.9;">
+          <li><strong>Sell-Execution:</strong> Aktuell nur Alert — automatisch verkaufen wenn Profit-Target erreicht (Limit-Order zum aktuellen Poly-Preis)</li>
+          <li><strong>BTTS/O2.5 Closing Odds:</strong> Pinnacle hat diese Märkte für WM noch nicht gelistet → CLV für diese Märkte fehlt noch; füllt sich auto wenn Pinnacle listet</li>
+          <li><strong>Position-Matching:</strong> resolve_wm_results.py muss wm_poly_positions.json gegen wm_auto_bets_placed.json abgleichen (verschiedene Quellen)</li>
+          <li><strong>Partial Fills tracken:</strong> Wenn Limit-Order nur teilgefüllt → tatsächliche Stake in History schreiben</li>
+          <li><strong>Multi-Leg Bets:</strong> Mehrere Märkte zum selben Spiel kombinieren (Parlay-Equivalent auf Poly)</li>
+        </ul>
       </div>
+
+      <!-- WM Tab: UX improvements -->
+      <div style="background:rgba(240,192,64,.05);border:1px solid rgba(240,192,64,.30);border-radius:10px;padding:14px;">
+        <div style="font-size:12px;font-weight:700;color:#f0c040;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+          🏆 WM Tab — UX / Features
+          <span style="font-size:9px;background:rgba(240,192,64,.15);padding:1px 5px;border-radius:4px;color:#f0c040;">Prio 1</span>
+        </div>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.9;">
+          <li><strong>Turnierbaum (KO-Phase):</strong> Achtelfinale bis Finale visualisieren — Bracket-View wenn Gruppen fertig (ab ~27. Jun)</li>
+          <li><strong>Gruppen-Live-Tabelle:</strong> Punkte · Tordiff · Qualifiziert/Raus-Status in Echtzeit nach Ergebnis-Update</li>
+          <li><strong>Top-Scorer Tracking:</strong> Torschützen der WM aus API-Football Events einlesen</li>
+          <li><strong>Spieler-Spotlight auf WM-Event-Page:</strong> Player Props (Anytime Scorer Odds) + AI Preview schon gebaut, noch nicht eingebunden</li>
+          <li><strong>WM + Telegram-Tab im International Menü:</strong> Separate Sub-Nav Tabs für WM und Telegram</li>
+        </ul>
+      </div>
+
+      <!-- Poly Trading: next season -->
+      <div style="background:rgba(0,212,161,.05);border:1px solid rgba(0,212,161,.25);border-radius:10px;padding:14px;">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+          🔄 Poly-Trading: Nach WM / Ligen
+          <span style="font-size:9px;background:rgba(0,212,161,.12);padding:1px 5px;border-radius:4px;color:var(--accent);">Prio 2</span>
+        </div>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.9;">
+          <li><strong>Liga-Picks auf Polymarket:</strong> WM-System auf Klub-Ligen übertragen — pick-engine Edge → Poly Alert (gleiche Logik)</li>
+          <li><strong>Sharp Radar Integration:</strong> Sharp-Moves ≥5pp auf Pinnacle → sofortiger Poly-Alert wenn Gap ≥2pp offen</li>
+          <li><strong>Portfolio-View:</strong> Alle offenen Positionen (Poly + WM) in einem Tab mit Mark-to-Market PnL</li>
+          <li><strong>Kelly-Stake-Sizing:</strong> Stake = f(edge, Odds, Bankroll, Kelly-Fraction) statt fixer Tiers</li>
+          <li><strong>Closing Line Report:</strong> Wöchentlicher Telegram-Bericht: Ø CLV, Hit-Rate, ROI nach Markt</li>
+        </ul>
+      </div>
+
+      <!-- Pick Engine improvements -->
+      <div style="background:rgba(88,166,255,.05);border:1px solid rgba(88,166,255,.25);border-radius:10px;padding:14px;">
+        <div style="font-size:12px;font-weight:700;color:#58a6ff;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+          🧠 Pick Engine — Modell-Verbesserungen
+          <span style="font-size:9px;background:rgba(88,166,255,.12);padding:1px 5px;border-radius:4px;color:#58a6ff;">Prio 2</span>
+        </div>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.9;">
+          <li><strong>players/statistics:</strong> Topscorer-Ausfall vs. Backup — Injury-Impact personenbasiert statt pauschal</li>
+          <li><strong>Lineup-Starter-Qualität:</strong> Stürmer-Score via xG per Spieler (nicht nur Anzahl Stürmer)</li>
+          <li><strong>fixtures/events historisch:</strong> First-Goal-Rate, Late-Goal-Rate → HZ-Picks präziser</li>
+          <li><strong>API-Football Backtest:</strong> Trefferquoten der Pick-Logik validieren auf 2 Saisons × 15 Ligen</li>
+          <li><strong>Weather-API:</strong> Wind/Regen → Under-Boost · Ecken-Dämpfung (OpenWeather verfügbar)</li>
+        </ul>
+      </div>
+
+      <!-- Dashboard UX -->
+      <div style="background:rgba(63,185,80,.04);border:1px solid rgba(63,185,80,.20);border-radius:10px;padding:14px;">
+        <div style="font-size:12px;font-weight:700;color:#3fb950;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+          💻 Dashboard — UX &amp; Infra
+          <span style="font-size:9px;background:rgba(63,185,80,.10);padding:1px 5px;border-radius:4px;color:#3fb950;">Prio 3</span>
+        </div>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.9;">
+          <li><strong>Mobile Layout:</strong> Cards zu 1-Spalten-Grid auf &lt;640px — aktuell Desktop-first</li>
+          <li><strong>PWA / App-Icon:</strong> Installierbar als Home-Screen-App (manifest.json)</li>
+          <li><strong>Dark/Light Mode Toggle:</strong> Aktuell nur Dark</li>
+          <li><strong>GitHub Actions Rule Preview:</strong> generate_wm_rule_preview.py noch nicht eingebunden (Workflow-Step fehlt)</li>
+          <li><strong>Notifications Web Push:</strong> Browser-Push wenn neuer BET Pick kommt (ServiceWorker)</li>
+        </ul>
+      </div>
+
+      <!-- New ideas box -->
+      <div style="background:rgba(251,146,60,.04);border:1px solid rgba(251,146,60,.25);border-radius:10px;padding:14px;">
+        <div style="font-size:12px;font-weight:700;color:#fb923c;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+          💡 Neue Ideen / Offen
+          <span style="font-size:9px;background:rgba(251,146,60,.12);padding:1px 5px;border-radius:4px;color:#fb923c;">Ideen</span>
+        </div>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.9;">
+          <li><strong>WM AI-Pick Summary:</strong> Claude Haiku fasst täglich die Top-3 WM BET-Picks zusammen + Risiko-Einschätzung → Telegram Morning Card</li>
+          <li><strong>Poly Liquidity Alert:</strong> Wenn Poly-Market &lt;$500 Liquidität → kein Auto-Bet (Slippage zu groß)</li>
+          <li><strong>Sharp Composite Score:</strong> Kombinierter Sharp-Signal aus Pinnacle Move + Poly-Drift + Volume → ein Score</li>
+          <li><strong>Value Bet Scanner:</strong> Alle WM-Märkte täglich auf ≥5pp Edge scannen → Ranked Liste im Dashboard</li>
+          <li><strong>Post-WM Liga-Season 26/27:</strong> Erkenntnisse aus WM-System (CLV, Stake-Sizing, Auto-Trigger) direkt auf neue Liga-Saison übertragen</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Recently completed callout -->
+    <div style="padding:12px 16px;background:rgba(63,185,80,.06);border:1px solid rgba(63,185,80,.20);border-radius:8px;font-size:11px;">
+      <strong style="color:#3fb950;">✅ Kürzlich abgeschlossen (Mai–Jun 2026):</strong>
+      <span style="color:var(--muted);margin-left:8px;">WM Polymarket Trading System · Auto-Trigger · Stake-Tiers · CLOB Balance · P&amp;L + CLV Tracking · Trades Telegram Channel · Result-Pipeline · Confirmed Lineups · AI Match Previews · Player Spotlight · Sharp Radar · Event Pages · pick-verdict.js · API 10× Upgrade</span>
+    </div>
+  </div>
+
+  <!-- 10b. Was bereits implementiert ist -->
+  <div class="heart-section">
+    <div class="heart-section-title">📜 Vollständige Feature-Liste</div>
+    <div class="heart-grid">
       <div class="heart-card" style="opacity:.85;">
         <h3>✅ Bereits implementiert</h3>
         <!-- Toggle-Button -->

@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
 """
-fetch_wm_poly_balance.py — Polymarket USDC Balance auf Polygon
+fetch_wm_poly_balance.py — Polymarket USDC Balance via CLOB API
 
-Liest POLY_FUNDER_ADDRESS und fragt BEIDE USDC-Verträge auf Polygon ab:
-  · Native USDC:   0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359  (Polymarket seit 2024)
-  · Bridged USDC.e: 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174  (ältere Einlagen)
+Polymarket hält Gelder im CLOB-Exchange-Vertrag (nicht direkt im Proxy-Wallet
+on-chain). Deshalb liefert ein direkter Blockchain-Query immer 0 — wir fragen
+stattdessen die offizielle Polymarket CLOB API via py_clob_client_v2 ab.
+
+Env-Variablen:
+    POLY_PRIVATE_KEY      — Polygon EOA private key (aus GitHub Secret)
+    POLY_FUNDER_ADDRESS   — Proxy-Wallet-Adresse (optional, verbessert Auth)
+    POLY_API_KEY          — Optional: gespeicherte API Creds (sonst auto-deriviert)
+    POLY_API_SECRET
+    POLY_API_PASSPHRASE
 
 Schreibt wm_poly_balance.json:
   {
-    "usdc":       123.45,   ← native USDC
-    "usdc_e":     0.00,     ← bridged USDC.e
-    "total":      123.45,   ← Summe (was Dashboard zeigt)
+    "usdc":       123.45,
+    "usdc_e":     0.00,
+    "total":      123.45,
     "address":    "0x...",
     "updatedAt":  "2026-06-12T08:00:00+00:00"
   }
@@ -21,148 +28,229 @@ Wird aufgerufen von: manage-wm-poly.yml (5x täglich)
 import json
 import os
 import sys
-import http.client
-import ssl
 from datetime import datetime, timezone
 from pathlib import Path
 
-BASE     = Path(__file__).parent
-OUT_FILE = BASE / "wm_poly_balance.json"
-
-# ── USDC Verträge auf Polygon (Mainnet, Chain-ID 137) ──────────────────────
-USDC_NATIVE  = "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359"  # native USDC
-USDC_BRIDGED = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"  # USDC.e
-USDC_DECIMALS = 6  # beide Verträge haben 6 Dezimalstellen
-
-# ERC-20 balanceOf(address) selector
-BALANCE_OF_SELECTOR = "0x70a08231"
-
-# ── Zuverlässige öffentliche Polygon JSON-RPC Endpunkte ────────────────────
-# Format: (host, path)
-RPC_ENDPOINTS = [
-    ("rpc.ankr.com",           "/polygon"),       # Ankr Public — sehr zuverlässig
-    ("polygon-rpc.com",        "/"),               # Polygon Official
-    ("polygon.llamarpc.com",   "/"),               # LlamaRPC
-    ("rpc-mainnet.matic.network", "/"),            # Matic Network
-]
+BASE      = Path(__file__).parent
+OUT_FILE  = BASE / "wm_poly_balance.json"
+CLOB_HOST = "https://clob.polymarket.com"
+CHAIN_ID  = 137  # Polygon
 
 
-def _pad_address(address: str) -> str:
-    """Ethereum-Adresse auf 32 Bytes (ABI-Encoding) auffüllen."""
-    addr = address.lower().replace("0x", "")
-    return "0" * (64 - len(addr)) + addr
+# ── Cache helper ────────────────────────────────────────────────────────────
+
+def _load_existing() -> dict | None:
+    """Bestehende Balance-Datei laden falls vorhanden und frisch genug (< 2h)."""
+    if not OUT_FILE.exists():
+        return None
+    try:
+        with open(OUT_FILE) as f:
+            existing = json.load(f)
+        updated = existing.get("updatedAt")
+        if updated:
+            age_s = (datetime.now(timezone.utc) - datetime.fromisoformat(updated)).total_seconds()
+            if age_s < 7200:  # 2h Cache
+                return existing
+    except Exception:
+        pass
+    return None
 
 
-def _eth_call(host: str, path: str, contract: str, data: str) -> str | None:
+# ── CLOB API Balance ────────────────────────────────────────────────────────
+
+def fetch_clob_balance(private_key: str, funder_addr: str) -> dict | None:
     """
-    Einzelner eth_call JSON-RPC Request.
-    Gibt den hex-encodierten Rückgabewert zurück oder None bei Fehler.
+    Holt die handelbare USDC-Balance aus der Polymarket CLOB API.
+    Identisches Auth-Pattern wie polymarket_bet.py.
+    Gibt {"usdc": float, "usdc_e": 0.0, "total": float} zurück oder None bei Fehler.
     """
-    payload = json.dumps({
-        "jsonrpc": "2.0",
-        "method":  "eth_call",
-        "params":  [{"to": contract, "data": data}, "latest"],
-        "id":      1,
-    }).encode()
+    try:
+        from py_clob_client_v2.client import ClobClient
+        from py_clob_client_v2.clob_types import ApiCreds
+        from py_clob_client_v2 import SignatureTypeV2
+    except ImportError as e:
+        print(f"  ❌ py-clob-client-v2 Import-Fehler: {e}")
+        print(f"     Bitte: pip install py-clob-client-v2")
+        return None
+
+    # ── Client initialisieren (gleiche Logik wie polymarket_bet.py) ───────────
+    client_kwargs: dict = dict(
+        host=CLOB_HOST,
+        key=private_key,
+        chain_id=CHAIN_ID,
+        signature_type=SignatureTypeV2.POLY_PROXY,
+    )
+    if funder_addr:
+        client_kwargs["funder"] = funder_addr
+
+    client = ClobClient(**client_kwargs)
+
+    # ── API Creds derivieren oder aus Env lesen ───────────────────────────────
+    api_key = os.environ.get("POLY_API_KEY", "").strip()
+    creds   = None
+
+    if api_key:
+        api_secret     = os.environ.get("POLY_API_SECRET", "").strip()
+        api_passphrase = os.environ.get("POLY_API_PASSPHRASE", "").strip()
+        creds = ApiCreds(api_key=api_key, api_secret=api_secret, api_passphrase=api_passphrase)
+        print(f"  🔑 Verwende gespeicherte API Creds (Key: {api_key[:8]}…)")
+    else:
+        print(f"  🔑 Deriviere API Creds aus Private Key…")
+        try:
+            creds_raw = client.derive_api_key()
+            if isinstance(creds_raw, ApiCreds):
+                creds = creds_raw
+            elif isinstance(creds_raw, dict):
+                creds = ApiCreds(
+                    api_key=creds_raw.get("key", creds_raw.get("apiKey", "")),
+                    api_secret=creds_raw.get("secret", ""),
+                    api_passphrase=creds_raw.get("passphrase", ""),
+                )
+            if creds:
+                key_preview = getattr(creds, "api_key", "?")[:8]
+                print(f"  ✅ API Creds deriviert (Key: {key_preview}…)")
+        except Exception as e:
+            print(f"  ⚠️  derive_api_key fehlgeschlagen: {e}")
+
+    if creds:
+        try:
+            client.set_api_creds(creds)
+        except AttributeError:
+            client_kwargs["creds"] = creds
+            client = ClobClient(**client_kwargs)
+
+    # ── Balance abrufen ───────────────────────────────────────────────────────
+    # Versuche mehrere Methoden der py_clob_client_v2 API
+    balance_usdc = None
+
+    # Methode 1: get_balance_allowance mit asset_type Parameter
+    try:
+        result = client.get_balance_allowance(params={"asset_type": "USDC"})
+        if isinstance(result, dict):
+            raw = result.get("balance", result.get("available", None))
+            if raw is not None:
+                balance_usdc = float(raw)
+                print(f"  ✅ CLOB Balance (Methode 1): ${balance_usdc:.4f} USDC")
+    except Exception as e:
+        print(f"  ⚠️  get_balance_allowance fehlgeschlagen: {e}")
+
+    # Methode 2: get_balance_allowance ohne Parameter
+    if balance_usdc is None:
+        try:
+            result = client.get_balance_allowance()
+            if isinstance(result, dict):
+                raw = result.get("balance", result.get("available", None))
+                if raw is not None:
+                    balance_usdc = float(raw)
+                    print(f"  ✅ CLOB Balance (Methode 2): ${balance_usdc:.4f} USDC")
+        except Exception as e:
+            print(f"  ⚠️  get_balance_allowance() fehlgeschlagen: {e}")
+
+    # Methode 3: Direkter HTTP Request an /balance-allowance mit L1-Auth
+    if balance_usdc is None:
+        balance_usdc = _http_balance_direct(funder_addr)
+
+    if balance_usdc is None:
+        return None
+
+    total = round(balance_usdc, 4)
+    return {"usdc": total, "usdc_e": 0.0, "total": total}
+
+
+def _http_balance_direct(funder_addr: str) -> float | None:
+    """
+    Direkter HTTP GET an /balance-allowance?asset_type=USDC — public endpoint
+    der die Balance für die gegebene Proxy-Wallet-Adresse zurückgibt.
+    """
+    import http.client
+    import ssl
+    import urllib.parse
+
+    if not funder_addr:
+        return None
+
+    print(f"  🔄 Versuche direkten HTTP Balance-Request für {funder_addr[:16]}…")
+    params = urllib.parse.urlencode({
+        "asset_type": "USDC",
+        "signature_type": "2",  # POLY_PROXY
+    })
+    path = f"/balance-allowance?{params}"
 
     try:
         ctx  = ssl.create_default_context()
-        conn = http.client.HTTPSConnection(host, timeout=12, context=ctx)
-        conn.request(
-            "POST", path,
-            body=payload,
-            headers={
-                "Content-Type":   "application/json",
-                "Content-Length": str(len(payload)),
-                "User-Agent":     "CocoBet/1.0",
-                "Accept":         "application/json",
-            },
-        )
+        conn = http.client.HTTPSConnection("clob.polymarket.com", timeout=15, context=ctx)
+        conn.request("GET", path, headers={
+            "User-Agent": "CocoBet/1.0",
+            "Accept":     "application/json",
+            "POLY_ADDRESS": funder_addr,
+        })
         resp = conn.getresponse()
         raw  = resp.read().decode()
         conn.close()
 
-        if resp.status not in (200, 201):
-            return None
-
-        data_resp = json.loads(raw)
-        if "error" in data_resp:
-            return None
-        result = data_resp.get("result", "")
-        return result if result and result != "0x" else None
-
+        if resp.status in (200, 201):
+            data = json.loads(raw)
+            raw_bal = data.get("balance", data.get("available"))
+            if raw_bal is not None:
+                bal = float(raw_bal)
+                print(f"  ✅ HTTP Balance: ${bal:.4f} USDC")
+                return bal
+        print(f"  ⚠️  HTTP Balance: Status {resp.status}")
     except Exception as e:
-        print(f"    RPC {host}{path}: {e}")
-        return None
+        print(f"  ⚠️  HTTP Balance Fehler: {e}")
 
-
-def _hex_to_usdc(hex_result: str) -> float:
-    """Hex uint256 → USDC float (6 Dezimalstellen)."""
-    try:
-        raw = hex_result.replace("0x", "").lstrip("0") or "0"
-        return int(raw, 16) / (10 ** USDC_DECIMALS)
-    except Exception:
-        return 0.0
-
-
-def fetch_balance(wallet: str, contract: str, label: str) -> float | None:
-    """Holt USDC-Balance für wallet_address via Polygon RPC. Versucht alle Endpunkte."""
-    call_data = BALANCE_OF_SELECTOR + _pad_address(wallet)
-
-    for host, path in RPC_ENDPOINTS:
-        result = _eth_call(host, path, contract, call_data)
-        if result:
-            usdc = _hex_to_usdc(result)
-            print(f"  ✅  {label}: ${usdc:.4f} USDC  [{host}]")
-            return usdc
-
-    print(f"  ⚠️   {label}: Alle RPC-Endpunkte fehlgeschlagen")
     return None
 
 
+# ── Main ─────────────────────────────────────────────────────────────────────
+
 def main():
-    now_iso = datetime.now(timezone.utc).isoformat()
-    print(f"💰  fetch_wm_poly_balance.py")
+    now_iso     = datetime.now(timezone.utc).isoformat()
+    print(f"💰  fetch_wm_poly_balance.py — CLOB API")
     print(f"    Zeit: {now_iso[:19]} UTC\n")
 
-    wallet = os.environ.get("POLY_FUNDER_ADDRESS", "").strip()
-    if not wallet:
-        # Bestehende Datei behalten wenn frisch genug (< 3h)
+    private_key = os.environ.get("POLY_PRIVATE_KEY", "").strip()
+    funder_addr = os.environ.get("POLY_FUNDER_ADDRESS", "").strip()
+
+    if not private_key:
+        # Kein Private Key → Cache behalten falls frisch genug
+        cached = _load_existing()
+        if cached:
+            age = (datetime.now(timezone.utc) - datetime.fromisoformat(cached["updatedAt"])).total_seconds()
+            print(f"  ⚠️   POLY_PRIVATE_KEY nicht gesetzt — behalte Cache ({age/3600:.1f}h alt)")
+            print(f"      Balance: ${cached.get('total', 0):.2f} USDC")
+            return
+        print("  ❌  POLY_PRIVATE_KEY nicht gesetzt — Balance übersprungen")
+        sys.exit(0)
+
+    if funder_addr:
+        print(f"  Funder: {funder_addr}")
+    else:
+        print(f"  Funder: (auto-deriviert aus Private Key)")
+    print(f"  Frage Polymarket CLOB API ab...\n")
+
+    result = fetch_clob_balance(private_key, funder_addr)
+
+    if result is None:
+        # CLOB fehlgeschlagen — bestehende Datei wenn vorhanden behalten
         if OUT_FILE.exists():
             try:
                 with open(OUT_FILE) as f:
                     existing = json.load(f)
-                updated = existing.get("updatedAt")
-                if updated:
-                    age_s = (datetime.now(timezone.utc) - datetime.fromisoformat(updated)).total_seconds()
-                    if age_s < 10800:
-                        print("  ⚠️   POLY_FUNDER_ADDRESS nicht gesetzt — behalte gecachte Balance")
-                        return
+                print(f"\n⚠️   CLOB-Abfrage fehlgeschlagen — behalte gespeicherte Balance")
+                print(f"    Letzte bekannte Balance: ${existing.get('total', 0):.2f} USDC")
+                return
             except Exception:
                 pass
-        print("  ❌  POLY_FUNDER_ADDRESS nicht gesetzt — Balance übersprungen")
-        sys.exit(0)
-
-    if not wallet.startswith("0x") or len(wallet) < 40:
-        print(f"  ❌  Ungültige Wallet-Adresse: {wallet!r}")
-        sys.exit(0)
-
-    print(f"  Wallet: {wallet}")
-    print(f"  Prüfe beide USDC-Verträge auf Polygon...\n")
-
-    usdc_native  = fetch_balance(wallet, USDC_NATIVE,  "Native USDC")
-    usdc_bridged = fetch_balance(wallet, USDC_BRIDGED, "USDC.e (bridged)")
-
-    # Falls ein Contract nicht geantwortet hat, 0 annehmen (nicht None)
-    usdc_n = usdc_native  if usdc_native  is not None else 0.0
-    usdc_e = usdc_bridged if usdc_bridged is not None else 0.0
-    total  = round(usdc_n + usdc_e, 4)
+        # Keine bestehende Datei — leer schreiben
+        result = {"usdc": 0.0, "usdc_e": 0.0, "total": 0.0}
+        print(f"\n⚠️   CLOB-Abfrage fehlgeschlagen — schreibe 0.00 USDC")
 
     out = {
-        "usdc":      round(usdc_n, 4),
-        "usdc_e":    round(usdc_e, 4),
-        "total":     total,
-        "address":   wallet,
+        "usdc":      result.get("usdc",   0.0),
+        "usdc_e":    result.get("usdc_e", 0.0),
+        "total":     result.get("total",  0.0),
+        "address":   funder_addr or "",
         "updatedAt": now_iso,
     }
 
@@ -170,9 +258,9 @@ def main():
         json.dump(out, f, indent=2)
 
     print(f"\n✅  wm_poly_balance.json geschrieben")
-    print(f"    Native USDC:    ${usdc_n:.2f}")
-    print(f"    Bridged USDC.e: ${usdc_e:.2f}")
-    print(f"    Total:          ${total:.2f}")
+    print(f"    Handelbare CLOB Balance: ${out['total']:.2f} USDC")
+    if out.get("usdc_e", 0) > 0.01:
+        print(f"    (USDC: ${out['usdc']:.2f} + USDC.e: ${out['usdc_e']:.2f})")
 
 
 if __name__ == "__main__":
