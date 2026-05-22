@@ -265,7 +265,26 @@ def main():
     ok = 0
     skip = 0
 
+    # ── Filter: only process pure moneyline events (negRisk=true, no suffix in slug) ──
+    # The Gamma batch API can return exact-score, halftime-result, more-markets
+    # child events mixed in. We only want the root 1X2 moneyline events.
+    SLUG_SUFFIXES_TO_SKIP = (
+        "-exact-score", "-halftime-result", "-more-markets",
+        "-exact-goals", "-both-teams-to-score",
+    )
+
     for ev in events:
+        slug_raw = ev.get("slug", "")
+        if any(slug_raw.endswith(sfx) for sfx in SLUG_SUFFIXES_TO_SKIP):
+            print(f"  SKIP non-moneyline event: {slug_raw}")
+            skip += 1
+            continue
+        # Also skip events without negRisk (= they're child/more-markets events)
+        if ev.get("negRisk") is False:
+            print(f"  SKIP negRisk=False event: {slug_raw}")
+            skip += 1
+            continue
+
         result = parse_event(ev)
         if result:
             key  = f"{result['homeId']}-{result['awayId']}"
