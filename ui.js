@@ -402,18 +402,28 @@ async function initPolyTrader() {
     Lade Poly-Trader-Daten…
   </div>`;
 
+  // Load WM prices in parallel with poly_trader_data.json
+  const wmPromise = (typeof _loadWmPolyPriceCache === 'function')
+    ? _loadWmPolyPriceCache()
+    : Promise.resolve();
+
   try {
     const res = await fetch('poly_trader_data.json?_=' + Date.now());
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     _polyTraderData = await res.json();
   } catch(e) {
-    panel.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#f85149">
+    // Still show WM table even if poly_trader_data.json fails
+    await wmPromise;
+    const wmHtml = (typeof _renderWmMarketTable === 'function') ? _renderWmMarketTable() : '';
+    panel.innerHTML = wmHtml + `<div style="text-align:center;padding:40px 20px;color:#f85149">
       <div style="font-size:32px;margin-bottom:12px">⚠️</div>
-      <div style="font-weight:700;margin-bottom:6px">Daten nicht gefunden</div>
+      <div style="font-weight:700;margin-bottom:6px">Club-Daten nicht gefunden</div>
       <div style="font-size:12px;color:#6b7a8d">poly_trader_data.json fehlt — läuft nach dem nächsten GitHub Actions Workflow</div>
     </div>`;
     return;
   }
+
+  await wmPromise;
   renderPolyTrader(panel);
 }
 
@@ -582,7 +592,12 @@ function renderPolyTrader(panel) {
     `<option value="${m}" ${_polyTraderFilter.market===m?'selected':''}>${m}</option>`
   ).join('');
 
-  panel.innerHTML = `
+  // ── WM 2026 Market Table (top section of Trading tab) ──────────────────
+  const wmTableHtml = (typeof _renderWmMarketTable === 'function')
+    ? `<div id="wmMarketSection" style="margin-bottom:28px">${_renderWmMarketTable()}</div>`
+    : '';
+
+  panel.innerHTML = wmTableHtml + `
 <!-- ── Observer Mode Banner ─────────────────────────────── -->
 <div style="background:linear-gradient(135deg,#0a1f18,#0a1428);border:1px solid #00d4a125;border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
   <div style="font-size:28px;flex-shrink:0">👁</div>

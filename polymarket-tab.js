@@ -552,8 +552,11 @@ async function _loadWmPolyPriceCache() {
 
 function _setWmFilter(f) {
   _wmTableFilter = f;
-  const grid = document.getElementById('polyPickGrid');
-  if (grid) grid.innerHTML = renderPolyPickCards();
+  // WM table lives in the Trading tab — re-render the WM section there
+  const wmSection = document.getElementById('wmMarketSection');
+  if (wmSection) {
+    wmSection.innerHTML = _renderWmMarketTable();
+  }
 }
 
 // Maps our WM market label → which price field in wm_poly_prices.json
@@ -982,8 +985,9 @@ function _confirmWmPosition() {
     entryPrice, pinnFair, stake,
   });
   _closeWmPosModal();
-  const grid = document.getElementById('polyPickGrid');
-  if (grid) grid.innerHTML = renderPolyPickCards();
+  // Refresh WM section in Trading tab
+  const wmSection = document.getElementById('wmMarketSection');
+  if (wmSection) wmSection.innerHTML = _renderWmMarketTable();
 }
 
 function _wmExportJson() {
@@ -1039,7 +1043,7 @@ function _renderWmOpenPositions() {
                 color:#a78bfa;font-size:10px;font-weight:700;padding:2px 8px;text-decoration:none;white-space:nowrap">
         🔗 Verkaufen
       </a>
-      <button onclick="_closeWmPos(${pos.id});const g=document.getElementById('polyPickGrid');if(g)g.innerHTML=renderPolyPickCards();"
+      <button onclick="_closeWmPos(${pos.id});const s=document.getElementById('wmMarketSection');if(s)s.innerHTML=_renderWmMarketTable();"
               style="background:#f8514912;border:1px solid #f8514933;border-radius:5px;
                      color:#f85149;font-size:10px;padding:2px 6px;cursor:pointer">✕</button>
     </div>`;
@@ -1346,27 +1350,21 @@ function _renderWmClvRadar() { return _renderWmMarketTable(); }
 
 function renderPolyPickCards() {
   const picks = _polyState.picks;
-  // WM market table always shown at top (all 72 fixtures with Pinnacle comparison)
-  const tableHtml = _renderWmMarketTable();
 
   if (picks.length === 0) {
-    // During WM season, the table above has all the action — no extra message needed
-    const hasWm = _wmAllFixtures.length > 0;
-    return tableHtml + (hasWm ? '' : `<div style="grid-column:1/-1;text-align:center;padding:60px 24px;color:#8b949e">
+    return `<div style="grid-column:1/-1;text-align:center;padding:60px 24px;color:#8b949e">
       <div style="font-size:40px;margin-bottom:14px">🟣</div>
       <div style="font-size:16px;font-weight:600;margin-bottom:6px;color:#e6edf3">Keine Picks verfügbar</div>
-      <div style="font-size:13px;line-height:1.6">Für <strong>${_polyState.dateStr}</strong> gibt es keine Picks.
-        <br>Warte auf WM-Daten oder prüfe ob wm_poly_prices.json aktuell ist.</div>
-    </div>`);
+      <div style="font-size:13px;line-height:1.6">Für <strong>${_polyState.dateStr}</strong> gibt es keine Picks.</div>
+    </div>`;
   }
 
-  // Club picks appear below the WM table (WM season = they're usually empty)
   const clubPicks = picks.filter(p => !p.isWm);
   const wmPicks   = picks.filter(p => p.isWm);
 
   const wmPickHtml = wmPicks.length > 0
     ? `<div style="grid-column:1/-1;font-size:11px;color:#6e7681;margin-bottom:8px;padding-top:4px">
-         WM System-Picks (${wmPicks.length}) — Picks des Pick-Engines für heute:
+         WM System-Picks (${wmPicks.length}):
        </div>` + wmPicks.map(_renderPickCard).join('')
     : '';
 
@@ -1376,7 +1374,7 @@ function renderPolyPickCards() {
        </div>` + clubPicks.map(_renderPickCard).join('')
     : '';
 
-  return tableHtml + wmPickHtml + clubHtml;
+  return wmPickHtml + clubHtml;
 }
 
 // ── 6. STATS ────────────────────────────────────────────
