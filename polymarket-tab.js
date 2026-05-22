@@ -1125,7 +1125,14 @@ function _ensureWmPosModal() {
 
 function _wmBetConfirm(orderJson) {
   // orderJson is a JSON string passed via onclick to avoid closure issues
-  const order = typeof orderJson === 'string' ? JSON.parse(decodeURIComponent(orderJson)) : orderJson;
+  let order;
+  try {
+    order = typeof orderJson === 'string' ? JSON.parse(decodeURIComponent(orderJson)) : orderJson;
+  } catch (e) {
+    console.error('[WMBet] Failed to parse order JSON:', e);
+    alert('Fehler: Bet-Order konnte nicht gelesen werden. Bitte Seite neu laden.');
+    return;
+  }
   const pat = _getGithubPAT();
 
   const polyOddsStr = order.polyPrice ? (1 / order.polyPrice).toFixed(2) : '—';
@@ -1134,9 +1141,6 @@ function _wmBetConfirm(orderJson) {
   const potentialWin = order.polyPrice > 0
     ? ((stakeEur / order.polyPrice) - stakeEur).toFixed(2)
     : '?';
-
-  // Store order for dispatch
-  window._wmPendingOrder = order;
 
   // Reuse polyModal if it exists, otherwise create one inline
   let modal = document.getElementById('polyModal');
@@ -1148,6 +1152,8 @@ function _wmBetConfirm(orderJson) {
     modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
     document.body.appendChild(modal);
   }
+  // Store order in modal dataset to avoid conflicts from rapid multi-clicks
+  modal.dataset.pendingOrder = JSON.stringify(order);
   modal.style.display = 'flex';
 
   document.getElementById('polyModalBody').innerHTML = `
@@ -1198,7 +1204,14 @@ function _wmBetConfirm(orderJson) {
 }
 
 async function _wmBetDispatch() {
-  const order = window._wmPendingOrder;
+  const modal = document.getElementById('polyModal');
+  let order;
+  try {
+    order = modal && modal.dataset.pendingOrder ? JSON.parse(modal.dataset.pendingOrder) : null;
+  } catch (e) {
+    console.error('[WMBet] Failed to read pending order from modal:', e);
+    order = null;
+  }
   if (!order) return;
 
   const btn = document.getElementById('wmBetDispatchBtn');
@@ -1225,7 +1238,6 @@ async function _wmBetDispatch() {
     ok = true; // action may have triggered despite error
   }
 
-  const modal = document.getElementById('polyModal');
   const body  = document.getElementById('polyModalBody');
 
   if (ok) {
@@ -1435,7 +1447,7 @@ function _renderWmMarketTable() {
               {home:fix.home,away:fix.away,market:'Over 1.5 Tore',polyPrice:fix.poly_o15,slug:ouSlug,edge:null}) : ''}
           ${fix.poly_o35 ? outcomeChip('Ü3.5', null, fix.poly_o35, null, null,
               {home:fix.home,away:fix.away,market:'Over 3.5 Tore',polyPrice:fix.poly_o35,slug:ouSlug,edge:null}) : ''}
-          ${fix.poly_btts ? outcomeChip('BTTS', null, fix.poly_btts, null, null,
+          ${fix.poly_btts ? outcomeChip('BTTS', null, fix.poly_btts, null,
               {home:fix.home,away:fix.away,market:'BTTS',priceKey:'btts',polyPrice:fix.poly_btts,slug:ouSlug,edge:null},
               {home:fix.home,away:fix.away,market:'Beide Teams treffen',polyPrice:fix.poly_btts,slug:ouSlug,edge:null}) : ''}
         </div>
@@ -1522,7 +1534,7 @@ function _renderWmMarketTable() {
     return diff < 1 ? `in ${Math.round(diff*60)}min` : `in ~${Math.floor(diff)}h`;
   })();
 
-  return `<div>
+  const _html = `<div>
 
     <!-- Header -->
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
@@ -1574,7 +1586,51 @@ function _renderWmMarketTable() {
            </table>
          </div>`
     }
+
+    <!-- System Info -->
+    <div id="wmSystemInfo" style="margin-top:18px;padding:12px 16px;background:#161b22;border:1px solid #21262d;border-radius:10px;font-size:11px;color:#6e7681;line-height:1.7">
+      <div style="font-size:10px;font-weight:700;color:#484f58;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🤖 System Info</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px">
+        <div>
+          <span style="color:#484f58">Auto-Trigger:</span>
+          <span style="color:#f85149;font-weight:700">DEAKTIVIERT</span>
+          <span style="color:#484f58"> (ENABLED=False)</span>
+        </div>
+        <div>
+          <span style="color:#484f58">Edge-Schwelle:</span>
+          <span style="color:#e3b341;font-weight:700">${ALERT_EDGE_PP}pp</span>
+          <span style="color:#484f58"> → ${counts.alert} Kandidat${counts.alert !== 1 ? 'en' : ''} jetzt</span>
+        </div>
+        <div>
+          <span style="color:#484f58">Bereits platziert:</span>
+          <span id="wmAutoBetsCount" style="color:#8b949e;font-weight:700">…</span>
+        </div>
+        <div>
+          <span style="color:#484f58">Kelly:</span>
+          <span style="color:#8b949e">f* = (edge/odds) — Flats €${POLY_STAKE} pro Bet</span>
+        </div>
+      </div>
+    </div>
   </div>`;
+
+  // Async: fetch wm_auto_bets_placed.json to show placed-bet count in System Info
+  // Must run AFTER the HTML is injected into the DOM, so we defer via setTimeout
+  setTimeout(() => {
+    fetch('wm_auto_bets_placed.json?' + Date.now())
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        const el = document.getElementById('wmAutoBetsCount');
+        if (!el) return;
+        const count = d && Array.isArray(d.bets) ? d.bets.length : 0;
+        el.textContent = count + ' Bet' + (count !== 1 ? 's' : '');
+      })
+      .catch(() => {
+        const el = document.getElementById('wmAutoBetsCount');
+        if (el) el.textContent = '—';
+      });
+  }, 0);
+
+  return _html;
 }
 
 // Alias — kept so old references still work

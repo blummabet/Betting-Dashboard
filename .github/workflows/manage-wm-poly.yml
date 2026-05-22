@@ -43,6 +43,15 @@ jobs:
         run: python fetch_wm_poly_prices.py
         continue-on-error: true
 
+      # ── Auto-Trigger (aktivieren wenn bereit) ─────────────────────────────────
+      # - name: 🤖 Auto-Trigger WM Bets
+      #   run: python auto_wm_poly_trigger.py
+      #   env:
+      #     TELEGRAM_TOKEN:       ${{ secrets.TELEGRAM_TOKEN }}
+      #     TELEGRAM_CHAT_ID:     ${{ secrets.TELEGRAM_CHAT_ID }}
+      #     POLY_PRIVATE_KEY:     ${{ secrets.POLY_PRIVATE_KEY }}
+      #     AUTO_TRIGGER_ENABLED: "false"  # auf "true" setzen um live zu gehen
+
       # ── Dann Positionen prüfen & Sell-Alerts senden ───────────────────────────
       - name: 📊 WM Poly Positionen prüfen
         run: python manage_wm_poly_positions.py
@@ -55,7 +64,7 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add wm_poly_positions.json wm_poly_prices.json 2>/dev/null || true
+          git add wm_poly_positions.json wm_poly_prices.json wm_auto_bets_placed.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."
           else
