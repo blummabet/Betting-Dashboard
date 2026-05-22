@@ -153,6 +153,24 @@ def build_result_lookup(wm: dict) -> dict:
                 pinn_close_dr = round((1/c_dr) / margin, 4)
                 pinn_close_aw = round((1/c_aw) / margin, 4)
 
+            # Devigg O/U 2.5 closing odds
+            pinn_close_o25 = pinn_close_u25 = None
+            c_o25 = closing.get("o25"); c_u25 = closing.get("u25")
+            if c_o25 and c_u25 and c_o25 > 1 and c_u25 > 1:
+                ou_margin      = 1 / c_o25 + 1 / c_u25
+                pinn_close_o25 = round((1 / c_o25) / ou_margin, 4)
+                pinn_close_u25 = round((1 / c_u25) / ou_margin, 4)
+
+            # Devigg BTTS closing odds
+            pinn_close_btts = None
+            c_bttsY = closing.get("bttsY"); c_bttsN = closing.get("bttsN")
+            if c_bttsY and c_bttsN and c_bttsY > 1 and c_bttsN > 1:
+                btts_margin     = 1 / c_bttsY + 1 / c_bttsN
+                pinn_close_btts = round((1 / c_bttsY) / btts_margin, 4)
+            elif c_bttsY and c_bttsY > 1:
+                # Fallback: kein bttsN verfügbar — rohe Wahrscheinlichkeit als Näherung
+                pinn_close_btts = round(1 / c_bttsY, 4)
+
             lookup[key] = {
                 **result,
                 "_home_id":         home_id,
@@ -160,9 +178,9 @@ def build_result_lookup(wm: dict) -> dict:
                 "_pinn_close_hw":   pinn_close_hw,
                 "_pinn_close_dr":   pinn_close_dr,
                 "_pinn_close_aw":   pinn_close_aw,
-                "_pinn_close_o25":  closing.get("o25"),
-                "_pinn_close_u25":  closing.get("u25"),
-                "_pinn_close_btts": closing.get("bttsY"),
+                "_pinn_close_o25":  pinn_close_o25,   # devigged fair prob
+                "_pinn_close_u25":  pinn_close_u25,   # devigged fair prob
+                "_pinn_close_btts": pinn_close_btts,  # devigged fair prob
             }
     return lookup
 
@@ -180,14 +198,11 @@ def get_pinn_close_for_market(res: dict, market: str) -> float | None:
     if "unentschieden" in m:
         return res.get("_pinn_close_dr")
     if "over 2.5" in m or "über 2.5" in m:
-        p = res.get("_pinn_close_o25")
-        return round(1/p, 4) if p and p > 1 else None   # o25 ist Dezimalquotient → umrechnen
+        return res.get("_pinn_close_o25")   # bereits devigged fair prob
     if "under 2.5" in m:
-        p = res.get("_pinn_close_u25")
-        return round(1/p, 4) if p and p > 1 else None
+        return res.get("_pinn_close_u25")   # bereits devigged fair prob
     if "beide teams" in m and "nein" not in m:
-        p = res.get("_pinn_close_btts")
-        return round(1/p, 4) if p and p > 1 else None
+        return res.get("_pinn_close_btts")  # bereits devigged fair prob
     return None
 
 

@@ -26,9 +26,19 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 
-BASE          = os.path.dirname(os.path.abspath(__file__))
+BASE           = os.path.dirname(os.path.abspath(__file__))
 POSITIONS_FILE = os.path.join(BASE, "wm_poly_positions.json")
+AUTO_BETS_FILE = os.path.join(BASE, "wm_auto_bets_placed.json")
 PRICES_FILE    = os.path.join(BASE, "wm_poly_prices.json")
+
+# Auto-Bet market label → Gamma API price key
+MARKET_TO_PRICE_KEY = {
+    "Heimsieg":        "hw",
+    "Auswärtssieg":    "aw",
+    "Unentschieden":   "dr",
+    "Over 2.5 Tore":   "o25",
+    "Under 2.5 Tore":  "u25",
+}
 
 TELEGRAM_TOKEN   = os.getenv("TELEGRAM_TOKEN", "")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
@@ -179,7 +189,8 @@ def format_sell_alert(pos: dict) -> str:
     entry    = pos.get("entryPrice", 0)
     current  = pos.get("currentPrice", 0)
     pnl_pct  = pos.get("pnlPct", 0)
-    pnl_eur  = round(stake * pos.get("pnlPP", 0) / 100, 2) if pos.get("pnlPP") else 0
+    entry_p  = pos.get("entryPrice") or 0
+    pnl_eur  = round(stake * (current / entry_p - 1), 2) if (entry_p > 0 and current) else 0
     reason   = pos.get("sellReason", "")
     slug     = pos.get("slug", "")
     url      = f"https://polymarket.com/de/sports/fifa-world-cup/{slug}" if slug else ""
@@ -198,6 +209,46 @@ def format_sell_alert(pos: dict) -> str:
     )
 
 
+def load_auto_bets_as_positions() -> list:
+    """
+    Lädt wm_auto_bets_placed.json und konvertiert 'placed'-Bets
+    in das Positions-Format (kompatibel mit check_position).
+    Nur Bets mit status='placed' werden mitgezogen (nicht dry-run).
+    """
+    if not os.path.exists(AUTO_BETS_FILE):
+        return []
+    try:
+        with open(AUTO_BETS_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"  ⚠️  Fehler beim Laden von wm_auto_bets_placed.json: {e}")
+        return []
+
+    positions = []
+    for bet in data.get("bets", []):
+        if bet.get("status") != "placed":
+            continue
+        market = bet.get("market", "")
+        price_key = MARKET_TO_PRICE_KEY.get(market, "hw")
+        positions.append({
+            "home":       bet.get("home", ""),
+            "away":       bet.get("away", ""),
+            "homeId":     bet.get("homeId", ""),
+            "awayId":     bet.get("awayId", ""),
+            "market":     market,
+            "slug":       bet.get("slug", ""),
+            "priceKey":   price_key,
+            "entryPrice": bet.get("polyPrice", 0),
+            "pinnFair":   bet.get("pinnFair"),
+            "stake":      bet.get("stake", 0),
+            "status":     "open",
+            "source":     "auto",
+            "_betKey":    bet.get("betKey", ""),
+            "placedAt":   bet.get("placedAt", ""),
+        })
+    return positions
+
+
 def main():
     print("=== manage_wm_poly_positions.py ===")
     now = datetime.now(timezone.utc)
@@ -206,11 +257,18 @@ def main():
     data = load_positions()
     positions = data.get("positions", [])
 
-    if not positions:
+    # Auto-Bets aus wm_auto_bets_placed.json dazuladen
+    auto_positions = load_auto_bets_as_positions()
+    if auto_positions:
+        print(f"  {len(auto_positions)} Auto-Bet(s) aus wm_auto_bets_placed.json geladen")
+
+    all_positions = positions + auto_positions
+
+    if not all_positions:
         print("  Keine offenen Positionen.")
         return
 
-    open_pos = [p for p in positions if p.get("status") == "open"]
+    open_pos = [p for p in all_positions if p.get("status") == "open"]
     print(f"  {len(open_pos)} offene Positionen gefunden")
 
     alerts_sent = 0
@@ -242,7 +300,7 @@ def main():
                 current = pos.get("currentPrice", 0)
                 stake   = pos.get("stake", 0)
                 pnl_pct = pos.get("pnlPct", 0) or 0
-                pnl_eur = round(stake * (pos.get("pnlPP", 0) or 0) / 100, 2)
+                pnl_eur = round(stake * (current / entry - 1), 2) if (entry and entry > 0 and current) else 0
                 notify_sell_alert(
                     home=pos.get("home", ""), away=pos.get("away", ""),
                     market=pos.get("market", ""),
@@ -259,7 +317,7 @@ def main():
 
             pos["status"] = "sell_signaled"
 
-    # Update file
+    # Update file — nur manuelle Positionen zurückschreiben (auto-bets kommen aus eigenem File)
     save_positions(data)
 
     print(f"\n✅ Fertig — {alerts_sent} Sell-Alert(s) gesendet")

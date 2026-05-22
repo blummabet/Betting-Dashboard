@@ -550,6 +550,50 @@ def main():
               f"H {h2h['hw']} / X {h2h['dr']} / A {h2h['aw']}"
               f"{ou_str}{btts_str} [{h2h['bookmaker']}]")
 
+    # ── Fallback-Freeze: post-kickoff Spiele die TheOddsAPI nicht mehr listet ──
+    # Wenn ein Spiel bereits angepfiffen wurde und odds_closing noch nicht gesetzt ist
+    # (weil TheOddsAPI das Event schon entfernt hat), frieren wir die zuletzt bekannten
+    # Odds ein — gekennzeichnet mit frozenFrom: "last_known".
+    freeze_count = 0
+    for fx in all_fixtures:
+        home_id = fx["home"]
+        away_id = fx["away"]
+        key     = f"{home_id}-{away_id}"
+        entry   = odds_out.get(key)
+        if not entry or entry.get("odds_closing"):
+            continue  # kein Eintrag oder bereits eingefroren
+
+        fx_date = fx.get("date", "")
+        fx_time = fx.get("time", "21:00")
+        if not fx_date:
+            continue
+
+        try:
+            from datetime import datetime as _dt, timezone as _tz
+            kickoff_str = f"{fx_date}T{fx_time}:00+02:00"
+            kickoff_dt  = _dt.fromisoformat(kickoff_str)
+            now_dt      = _dt.now(_tz.utc).astimezone(kickoff_dt.tzinfo)
+            if now_dt >= kickoff_dt and entry.get("hw") and entry.get("aw"):
+                entry["odds_closing"] = {
+                    "hw":  entry["hw"],
+                    "dr":  entry.get("dr"),
+                    "aw":  entry["aw"],
+                    **({"o25": entry["o25"]} if entry.get("o25") else {}),
+                    **({"u25": entry["u25"]} if entry.get("u25") else {}),
+                    **({"bttsY": entry["bttsY"]} if entry.get("bttsY") else {}),
+                    "frozenAt":   now_iso,
+                    "frozenFrom": "last_known",  # TheOddsAPI hat Event nicht mehr geliefert
+                }
+                freeze_count += 1
+                home_display = TEAM_NAMES.get(home_id, [home_id])[0]
+                away_display = TEAM_NAMES.get(away_id, [away_id])[0]
+                print(f"  🔒  Fallback-Freeze (last_known): {home_display} vs {away_display}")
+        except Exception:
+            pass
+
+    if freeze_count:
+        print(f"   → {freeze_count} Closing(s) via Fallback eingefroren")
+
     # ── Write back ────────────────────────────────────────────
     wm["odds"] = odds_out
     wm["_meta"]["oddsUpdatedAt"] = now_iso
