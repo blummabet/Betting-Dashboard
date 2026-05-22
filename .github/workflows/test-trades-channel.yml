@@ -1,0 +1,27 @@
+name: 🧪 Test Trades-Channel
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'Optionale Testnachricht (leer = Standard-Test)'
+        required: false
+        default: ''
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 🧪 Trades-Channel testen
+        env:
+          TELEGRAM_TOKEN:           ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID:  ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+        run: python test_trades_channel.py
