@@ -23,31 +23,34 @@ permissions:
 
 jobs:
   monitor-positions:
-    runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    # Self-hosted Runner (Mac) — gleiche Umgebung wie poly-bets.yml
+    # py-clob-client-v2 wird frisch von GitHub installiert (nicht auf PyPI verfügbar)
+    runs-on: self-hosted
 
     steps:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
 
-      - name: 🐍 Python einrichten
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      # py-clob-client-v2 existiert nicht auf PyPI — direkt von GitHub installieren
-      # (gleiche Logik wie poly-bets.yml)
-      - name: 📦 Python Pakete installieren
+      - name: 🐍 Python + py-clob-client-v2 einrichten
         run: |
-          pip install requests --break-system-packages --quiet
-          pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
-          pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
-          python -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
+          PYTHON=""
+          for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11; do
+            if "$PY" --version &>/dev/null 2>&1; then
+              PYTHON="$PY"
+              break
+            fi
+          done
+          if [ -z "$PYTHON" ]; then echo "❌ Kein Python >= 3.11 gefunden"; exit 1; fi
+          echo "✅ $PYTHON ($($PYTHON --version))"
+          echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
+          $PYTHON -m pip install --break-system-packages requests --quiet
+          $PYTHON -m pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
+          $PYTHON -m pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
+          $PYTHON -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
 
       # ── Erst Poly-Preise frisch holen (Gamma API, kein Key) ──────────────────
       - name: 💹 WM Polymarket Preise aktualisieren
-        run: python fetch_wm_poly_prices.py
+        run: ${{ env.POLY_PYTHON }} fetch_wm_poly_prices.py
         continue-on-error: true
 
       # ── Auto-Trigger (aktivieren wenn bereit) ─────────────────────────────────
@@ -64,7 +67,7 @@ jobs:
       # Hinweis: Polymarket hält Gelder im CLOB-Vertrag (nicht on-chain im Wallet)
       # → POLY_PRIVATE_KEY nötig um CLOB API zu authentifizieren
       - name: 💰 Polymarket Balance fetchen
-        run: python fetch_wm_poly_balance.py
+        run: ${{ env.POLY_PYTHON }} fetch_wm_poly_balance.py
         continue-on-error: true
         env:
           POLY_PRIVATE_KEY:    ${{ secrets.POLY_PRIVATE_KEY }}
@@ -72,7 +75,7 @@ jobs:
 
       # ── Dann Positionen prüfen & Sell-Alerts senden ───────────────────────────
       - name: 📊 WM Poly Positionen prüfen
-        run: python manage_wm_poly_positions.py
+        run: ${{ env.POLY_PYTHON }} manage_wm_poly_positions.py
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:           ${{ secrets.TELEGRAM_TOKEN }}
@@ -81,7 +84,7 @@ jobs:
 
       # ── Bets gegen Ergebnisse resolven: P&L + CLV berechnen ──────────────────
       - name: 📈 WM Bets resolven (P&L + CLV)
-        run: python resolve_wm_results.py
+        run: ${{ env.POLY_PYTHON }} resolve_wm_results.py
         continue-on-error: true
 
       # ── Aktualisierte Positions-Datei + Preise zurückschreiben ────────────────
