@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """
-fetch_wm_poly_balance.py — Fetch Polymarket USDC balance from Polygon.
+fetch_wm_poly_balance.py — Polymarket USDC Balance auf Polygon
 
-Reads the POLY_FUNDER_ADDRESS env var and queries the USDC contract on
-Polygon via a public JSON-RPC endpoint (no API key required).
+Liest POLY_FUNDER_ADDRESS und fragt BEIDE USDC-Verträge auf Polygon ab:
+  · Native USDC:   0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359  (Polymarket seit 2024)
+  · Bridged USDC.e: 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174  (ältere Einlagen)
 
-Writes wm_poly_balance.json:
+Schreibt wm_poly_balance.json:
   {
-    "usdc":       123.45,
+    "usdc":       123.45,   ← native USDC
+    "usdc_e":     0.00,     ← bridged USDC.e
+    "total":      123.45,   ← Summe (was Dashboard zeigt)
     "address":    "0x...",
-    "updatedAt":  "2026-05-22T08:00:00+00:00"
+    "updatedAt":  "2026-06-12T08:00:00+00:00"
   }
 
-Run: python fetch_wm_poly_balance.py
-Triggered by: manage-wm-poly.yml (5x daily)
+Wird aufgerufen von: manage-wm-poly.yml (5x täglich)
 """
 
 import json
@@ -27,25 +29,35 @@ from pathlib import Path
 BASE     = Path(__file__).parent
 OUT_FILE = BASE / "wm_poly_balance.json"
 
-# USDC contract on Polygon (bridged USDC used by Polymarket)
-USDC_CONTRACT = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"
+# ── USDC Verträge auf Polygon (Mainnet, Chain-ID 137) ──────────────────────
+USDC_NATIVE  = "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359"  # native USDC
+USDC_BRIDGED = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"  # USDC.e
+USDC_DECIMALS = 6  # beide Verträge haben 6 Dezimalstellen
 
-# Polygon JSON-RPC endpoints (tried in order until one works)
-RPC_ENDPOINTS = [
-    "polygon-rpc.com",
-    "rpc-mainnet.matic.network",
-    "polygon-mainnet.g.alchemy.com",  # may require key — skip silently on 401
-]
-
-# ERC-20 balanceOf(address) selector = first 4 bytes of keccak256("balanceOf(address)")
+# ERC-20 balanceOf(address) selector
 BALANCE_OF_SELECTOR = "0x70a08231"
 
-# USDC on Polygon has 6 decimals
-USDC_DECIMALS = 6
+# ── Zuverlässige öffentliche Polygon JSON-RPC Endpunkte ────────────────────
+# Format: (host, path)
+RPC_ENDPOINTS = [
+    ("rpc.ankr.com",           "/polygon"),       # Ankr Public — sehr zuverlässig
+    ("polygon-rpc.com",        "/"),               # Polygon Official
+    ("polygon.llamarpc.com",   "/"),               # LlamaRPC
+    ("rpc-mainnet.matic.network", "/"),            # Matic Network
+]
 
 
-def _eth_call(rpc_host: str, contract: str, data: str) -> str | None:
-    """Make a single eth_call JSON-RPC request. Returns hex result string or None."""
+def _pad_address(address: str) -> str:
+    """Ethereum-Adresse auf 32 Bytes (ABI-Encoding) auffüllen."""
+    addr = address.lower().replace("0x", "")
+    return "0" * (64 - len(addr)) + addr
+
+
+def _eth_call(host: str, path: str, contract: str, data: str) -> str | None:
+    """
+    Einzelner eth_call JSON-RPC Request.
+    Gibt den hex-encodierten Rückgabewert zurück oder None bei Fehler.
+    """
     payload = json.dumps({
         "jsonrpc": "2.0",
         "method":  "eth_call",
@@ -55,14 +67,15 @@ def _eth_call(rpc_host: str, contract: str, data: str) -> str | None:
 
     try:
         ctx  = ssl.create_default_context()
-        conn = http.client.HTTPSConnection(rpc_host, timeout=10, context=ctx)
+        conn = http.client.HTTPSConnection(host, timeout=12, context=ctx)
         conn.request(
-            "POST", "/",
+            "POST", path,
             body=payload,
             headers={
                 "Content-Type":   "application/json",
                 "Content-Length": str(len(payload)),
                 "User-Agent":     "CocoBet/1.0",
+                "Accept":         "application/json",
             },
         )
         resp = conn.getresponse()
@@ -75,71 +88,80 @@ def _eth_call(rpc_host: str, contract: str, data: str) -> str | None:
         data_resp = json.loads(raw)
         if "error" in data_resp:
             return None
-        return data_resp.get("result")
+        result = data_resp.get("result", "")
+        return result if result and result != "0x" else None
 
     except Exception as e:
-        print(f"  RPC {rpc_host}: {e}")
+        print(f"    RPC {host}{path}: {e}")
         return None
 
 
-def _pad_address(address: str) -> str:
-    """Pad an Ethereum address to 32 bytes for ABI encoding."""
-    addr = address.lower().replace("0x", "")
-    return "0" * (64 - len(addr)) + addr
+def _hex_to_usdc(hex_result: str) -> float:
+    """Hex uint256 → USDC float (6 Dezimalstellen)."""
+    try:
+        raw = hex_result.replace("0x", "").lstrip("0") or "0"
+        return int(raw, 16) / (10 ** USDC_DECIMALS)
+    except Exception:
+        return 0.0
 
 
-def fetch_usdc_balance(wallet_address: str) -> float | None:
-    """
-    Fetch USDC balance for wallet_address on Polygon.
-    Returns balance in USDC (float) or None on failure.
-    """
-    if not wallet_address or not wallet_address.startswith("0x"):
-        print(f"  ❌  Invalid wallet address: {wallet_address!r}")
-        return None
+def fetch_balance(wallet: str, contract: str, label: str) -> float | None:
+    """Holt USDC-Balance für wallet_address via Polygon RPC. Versucht alle Endpunkte."""
+    call_data = BALANCE_OF_SELECTOR + _pad_address(wallet)
 
-    # ABI-encode: balanceOf(address) call
-    call_data = BALANCE_OF_SELECTOR + _pad_address(wallet_address)
-
-    for rpc_host in RPC_ENDPOINTS:
-        print(f"  → Trying RPC: {rpc_host}")
-        result = _eth_call(rpc_host, USDC_CONTRACT, call_data)
-        if result and result != "0x":
-            # Result is a hex-encoded uint256 (32 bytes)
-            hex_val = result.replace("0x", "").lstrip("0") or "0"
-            raw_balance = int(hex_val, 16)
-            usdc = raw_balance / (10 ** USDC_DECIMALS)
-            print(f"  ✅  USDC balance: ${usdc:.2f} USDC")
+    for host, path in RPC_ENDPOINTS:
+        result = _eth_call(host, path, contract, call_data)
+        if result:
+            usdc = _hex_to_usdc(result)
+            print(f"  ✅  {label}: ${usdc:.4f} USDC  [{host}]")
             return usdc
 
-    print("  ⚠️  All RPC endpoints failed or returned empty")
+    print(f"  ⚠️   {label}: Alle RPC-Endpunkte fehlgeschlagen")
     return None
 
 
 def main():
     now_iso = datetime.now(timezone.utc).isoformat()
     print(f"💰  fetch_wm_poly_balance.py")
-    print(f"    Time: {now_iso[:19]} UTC\n")
+    print(f"    Zeit: {now_iso[:19]} UTC\n")
 
     wallet = os.environ.get("POLY_FUNDER_ADDRESS", "").strip()
     if not wallet:
-        # Check if there's an existing balance file — keep it if fresh (< 2h)
+        # Bestehende Datei behalten wenn frisch genug (< 3h)
         if OUT_FILE.exists():
             try:
                 with open(OUT_FILE) as f:
                     existing = json.load(f)
-                age_s = (datetime.now(timezone.utc) - datetime.fromisoformat(existing["updatedAt"])).total_seconds()
-                if age_s < 7200:
-                    print("  ⚠️  POLY_FUNDER_ADDRESS not set — keeping cached balance")
-                    return
+                updated = existing.get("updatedAt")
+                if updated:
+                    age_s = (datetime.now(timezone.utc) - datetime.fromisoformat(updated)).total_seconds()
+                    if age_s < 10800:
+                        print("  ⚠️   POLY_FUNDER_ADDRESS nicht gesetzt — behalte gecachte Balance")
+                        return
             except Exception:
                 pass
-        print("  ❌  POLY_FUNDER_ADDRESS not set — skipping")
-        sys.exit(0)   # Non-fatal: balance display is optional
+        print("  ❌  POLY_FUNDER_ADDRESS nicht gesetzt — Balance übersprungen")
+        sys.exit(0)
 
-    usdc = fetch_usdc_balance(wallet)
+    if not wallet.startswith("0x") or len(wallet) < 40:
+        print(f"  ❌  Ungültige Wallet-Adresse: {wallet!r}")
+        sys.exit(0)
+
+    print(f"  Wallet: {wallet}")
+    print(f"  Prüfe beide USDC-Verträge auf Polygon...\n")
+
+    usdc_native  = fetch_balance(wallet, USDC_NATIVE,  "Native USDC")
+    usdc_bridged = fetch_balance(wallet, USDC_BRIDGED, "USDC.e (bridged)")
+
+    # Falls ein Contract nicht geantwortet hat, 0 annehmen (nicht None)
+    usdc_n = usdc_native  if usdc_native  is not None else 0.0
+    usdc_e = usdc_bridged if usdc_bridged is not None else 0.0
+    total  = round(usdc_n + usdc_e, 4)
 
     out = {
-        "usdc":      usdc,
+        "usdc":      round(usdc_n, 4),
+        "usdc_e":    round(usdc_e, 4),
+        "total":     total,
         "address":   wallet,
         "updatedAt": now_iso,
     }
@@ -147,8 +169,10 @@ def main():
     with open(OUT_FILE, "w") as f:
         json.dump(out, f, indent=2)
 
-    status = f"${usdc:.2f} USDC" if usdc is not None else "fetch failed"
-    print(f"\n✅  wm_poly_balance.json written — {status}")
+    print(f"\n✅  wm_poly_balance.json geschrieben")
+    print(f"    Native USDC:    ${usdc_n:.2f}")
+    print(f"    Bridged USDC.e: ${usdc_e:.2f}")
+    print(f"    Total:          ${total:.2f}")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,230 @@
+#!/usr/bin/env python3
+"""
+fetch_wm_match_results.py — WM 2026 Spielergebnisse via API-Football
+
+Holt abgeschlossene WM-Spielergebnisse und schreibt sie in wm2026-data.json:
+
+  fixture.result = {
+    "home_score": 2,
+    "away_score": 1,
+    "winner":     "MEX",      # oder "ZAF" oder "draw"
+    "status":     "FT",       # FT | AET | PEN | LIVE | NS (Not Started)
+    "statusShort": "FT",
+    "elapsed":    90,
+    "resolvedAt": "2026-06-12T..."
+  }
+
+Wird aufgerufen von: fetch-wm-data.yml (täglich)
+Benötigt: APISPORTS_KEY
+"""
+
+import json
+import os
+import sys
+import http.client
+import ssl
+from datetime import datetime, timezone
+from pathlib import Path
+
+BASE    = Path(__file__).parent
+WM_FILE = BASE / "wm2026-data.json"
+
+APISPORTS_KEY = os.environ.get("APISPORTS_KEY", "")
+API_HOST      = "v3.football.api-sports.io"
+
+# FIFA WM 2026 League ID bei API-Football
+# Wird als Fallback gesucht wenn nicht gesetzt (typisch: 1 = WM)
+WM_LEAGUE_ID  = int(os.environ.get("WM_LEAGUE_ID", "1"))
+WM_SEASON     = 2026
+
+# Spielstatus die als "abgeschlossen" gelten
+FINISHED_STATUSES = {"FT", "AET", "PEN"}
+LIVE_STATUSES     = {"1H", "HT", "2H", "ET", "BT", "P", "LIVE", "INT"}
+
+
+def api_get(path: str) -> dict | None:
+    """API-Football GET Request."""
+    if not APISPORTS_KEY:
+        return None
+    try:
+        ctx  = ssl.create_default_context()
+        conn = http.client.HTTPSConnection(API_HOST, timeout=20, context=ctx)
+        conn.request("GET", path, headers={
+            "x-apisports-key": APISPORTS_KEY,
+            "User-Agent":      "CocoBet/1.0",
+        })
+        resp = conn.getresponse()
+        raw  = resp.read().decode()
+        conn.close()
+        if resp.status == 200:
+            return json.loads(raw)
+        print(f"  ⚠️  API-Football {resp.status}: {raw[:200]}")
+        return None
+    except Exception as e:
+        print(f"  ❌  API-Football Fehler: {e}")
+        return None
+
+
+def find_wm_league_id() -> int | None:
+    """Sucht die WM 2026 League-ID bei API-Football."""
+    data = api_get(f"/leagues?name=FIFA+World+Cup&season={WM_SEASON}")
+    if not data:
+        return None
+    leagues = data.get("response", [])
+    if leagues:
+        lid = leagues[0]["league"]["id"]
+        print(f"  Gefunden: WM League-ID = {lid}")
+        return lid
+    return None
+
+
+def fetch_all_fixtures(league_id: int) -> list:
+    """Holt alle WM-Fixtures (inkl. Ergebnisse) von API-Football."""
+    data = api_get(f"/fixtures?league={league_id}&season={WM_SEASON}")
+    if not data:
+        return []
+    return data.get("response", [])
+
+
+def match_fixture(api_fixture: dict, home_id: str, away_id: str,
+                  team_ids: dict) -> bool:
+    """Prüft ob ein API-Football-Spiel zu unserem Fixture passt."""
+    api_home_id = str(api_fixture["teams"]["home"]["id"])
+    api_away_id = str(api_fixture["teams"]["away"]["id"])
+
+    our_home_api = str(team_ids.get(home_id, {}).get("apiFootball", ""))
+    our_away_api = str(team_ids.get(away_id, {}).get("apiFootball", ""))
+
+    if our_home_api and our_away_api:
+        return api_home_id == our_home_api and api_away_id == our_away_api
+
+    # Fallback: Namensvergleich
+    from fetch_wm_odds import TEAM_NAMES  # type: ignore
+    def names_match(api_name: str, our_id: str) -> bool:
+        api_l = api_name.lower()
+        for n in TEAM_NAMES.get(our_id, [our_id]):
+            if n.lower() in api_l or api_l in n.lower():
+                return True
+        return False
+
+    return (names_match(api_fixture["teams"]["home"]["name"], home_id)
+            and names_match(api_fixture["teams"]["away"]["name"], away_id))
+
+
+def main():
+    now_iso = datetime.now(timezone.utc).isoformat()
+    print(f"⚽  fetch_wm_match_results.py — WM 2026 Ergebnisse")
+    print(f"    Zeit: {now_iso[:19]} UTC")
+
+    if not APISPORTS_KEY:
+        print("  ❌  APISPORTS_KEY nicht gesetzt — übersprungen")
+        sys.exit(0)
+
+    if not WM_FILE.exists():
+        print("  ❌  wm2026-data.json nicht gefunden")
+        sys.exit(1)
+
+    with open(WM_FILE, encoding="utf-8") as f:
+        wm = json.load(f)
+
+    groups   = wm.get("groups", {})
+    team_ids = wm.get("teamIds", {})  # {"MEX": {"apiFootball": 123}, ...}
+
+    # Alle Fixtures sammeln
+    all_fixtures: list[dict] = []
+    for gkey, gdata in groups.items():
+        for fx in gdata.get("fixtures", []):
+            all_fixtures.append({"gkey": gkey, **fx})
+
+    print(f"  Fixtures gesamt: {len(all_fixtures)}")
+
+    # WM League-ID finden
+    league_id = WM_LEAGUE_ID or find_wm_league_id()
+    if not league_id:
+        print("  ❌  WM League-ID konnte nicht bestimmt werden")
+        sys.exit(1)
+
+    print(f"\n  Lade API-Football Fixtures für League {league_id} / Saison {WM_SEASON}…")
+    api_fixtures = fetch_all_fixtures(league_id)
+    if not api_fixtures:
+        print("  ⚠️  Keine Fixtures von API-Football — WM möglicherweise noch nicht gelistet")
+        sys.exit(0)
+
+    print(f"  → {len(api_fixtures)} Fixtures von API-Football")
+
+    # Map: date+teams → API result
+    updated = 0
+    skipped = 0
+
+    for our_fx in all_fixtures:
+        home_id = our_fx["home"]
+        away_id = our_fx["away"]
+        gkey    = our_fx["gkey"]
+
+        # Passendes API-Fixture suchen
+        api_match = None
+        for af in api_fixtures:
+            try:
+                if match_fixture(af, home_id, away_id, team_ids):
+                    api_match = af
+                    break
+            except Exception:
+                continue
+
+        if not api_match:
+            skipped += 1
+            continue
+
+        status_obj = api_match.get("fixture", {}).get("status", {})
+        status_short = status_obj.get("short", "NS")
+        status_long  = status_obj.get("long",  "Not Started")
+        elapsed      = status_obj.get("elapsed")
+
+        goals = api_match.get("goals", {})
+        home_score = goals.get("home")
+        away_score = goals.get("away")
+
+        # Winner bestimmen
+        winner = None
+        if status_short in FINISHED_STATUSES and home_score is not None and away_score is not None:
+            if home_score > away_score:
+                winner = home_id
+            elif away_score > home_score:
+                winner = away_id
+            else:
+                winner = "draw"
+
+        result_entry = {
+            "status":      status_short,
+            "statusLong":  status_long,
+            "home_score":  home_score,
+            "away_score":  away_score,
+        }
+        if winner is not None:
+            result_entry["winner"] = winner
+        if elapsed is not None:
+            result_entry["elapsed"] = elapsed
+        if status_short in FINISHED_STATUSES:
+            result_entry["resolvedAt"] = now_iso
+
+        # In wm2026-data.json schreiben
+        for fx in wm["groups"][gkey]["fixtures"]:
+            if fx["home"] == home_id and fx["away"] == away_id:
+                fx["result"] = result_entry
+                break
+
+        score_str = f"{home_score}:{away_score}" if home_score is not None else "—"
+        print(f"  ✅  {home_id} vs {away_id}: {score_str} [{status_short}]")
+        updated += 1
+
+    # Schreiben
+    wm["_meta"]["resultsUpdatedAt"] = now_iso
+    with open(WM_FILE, "w", encoding="utf-8") as f:
+        json.dump(wm, f, ensure_ascii=False, indent=2)
+
+    print(f"\n✅  {updated} Fixtures aktualisiert, {skipped} nicht gemappt")
+    print(f"   Gespeichert: {WM_FILE}")
+
+
+if __name__ == "__main__":
+    main()

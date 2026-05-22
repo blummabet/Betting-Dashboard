@@ -1659,6 +1659,9 @@ function _renderWmMarketTable() {
       ${noPinnCount > 0 ? `<span style="color:#484f58">${noPinnCount} Spiele noch ohne Pinnacle.</span>` : ''}
     </div>
 
+    <!-- Performance / P&L / CLV Section (async-filled) -->
+    <div id="wmPerformanceSection"></div>
+
     <!-- Alert Zone (always visible when alerts exist) -->
     ${alertZoneHtml}
 
@@ -1745,16 +1748,31 @@ function _renderWmMarketTable() {
       .then(d => {
         const el = document.getElementById('wmPolyBalance');
         if (!el) return;
-        if (!d || d.usdc == null) { el.textContent = '—'; return; }
+        const total = d?.total ?? d?.usdc;
+        if (total == null) { el.textContent = '—'; return; }
         const updStr = d.updatedAt
           ? ` <span style="color:#484f58;font-size:10px;font-weight:400">(${new Date(d.updatedAt).toLocaleTimeString('de-AT', {hour:'2-digit',minute:'2-digit'})})</span>`
           : '';
-        el.innerHTML = `$${d.usdc.toFixed(2)} USDC${updStr}`;
+        const breakdown = (d.usdc_e > 0.01)
+          ? ` <span style="color:#484f58;font-size:10px">(+$${d.usdc_e.toFixed(2)} USDC.e)</span>`
+          : '';
+        el.innerHTML = `$${total.toFixed(2)} USDC${breakdown}${updStr}`;
       })
       .catch(() => {
         const el = document.getElementById('wmPolyBalance');
         if (el) el.textContent = '—';
       });
+
+    // P&L / CLV Performance section
+    fetch('wm_results.json?' + Date.now())
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        const el = document.getElementById('wmPerformanceSection');
+        if (!el) return;
+        if (!d) { el.innerHTML = ''; return; }
+        el.innerHTML = _buildPerformanceHtml(d);
+      })
+      .catch(() => {});
   }, 0);
 
   return _html;
@@ -1762,6 +1780,140 @@ function _renderWmMarketTable() {
 
 // Alias — kept so old references still work
 function _renderWmClvRadar() { return _renderWmMarketTable(); }
+
+// ── WM 2026 Performance / P&L / CLV Section ───────────────────────────────
+// Gebaut aus wm_results.json, wird async nach dem Rendern injiziert.
+
+function _buildPerformanceHtml(data) {
+  const s     = data.summary || {};
+  const bets  = data.bets    || [];
+
+  // Noch keine Bets → nichts anzeigen
+  if (!s.totalBets || s.totalBets === 0) return '';
+
+  const pnlColor  = s.totalPnl >= 0 ? '#3fb950' : '#f85149';
+  const roiColor  = s.roi       >= 0 ? '#3fb950' : '#f85149';
+  const clvColor  = (s.avgCLV  ?? 0) >= 0 ? '#3fb950' : '#f85149';
+
+  const fmtPct  = v  => v != null  ? `${v >= 0 ? '+' : ''}${v.toFixed(1)}%` : '—';
+  const fmtPP   = v  => v != null  ? `${v >= 0 ? '+' : ''}${v.toFixed(1)}pp` : '—';
+  const fmtEur  = v  => v != null  ? `${v >= 0 ? '+' : ''}€${Math.abs(v).toFixed(2)}` : '—';
+  const fmtSign = (v, fmt) => v != null ? (v >= 0 ? `+${fmt(Math.abs(v))}` : `-${fmt(Math.abs(v))}`) : '—';
+
+  // Stat-Karten
+  const statCard = (label, value, color, sub = '') => `
+    <div style="background:#0d1117;border:1px solid #21262d;border-radius:10px;padding:14px 16px;text-align:center">
+      <div style="font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${label}</div>
+      <div style="font-size:20px;font-weight:800;color:${color}">${value}</div>
+      ${sub ? `<div style="font-size:10px;color:#6e7681;margin-top:3px">${sub}</div>` : ''}
+    </div>`;
+
+  const winRate   = s.winRate != null ? `${s.winRate.toFixed(0)}%` : '—';
+  const clvStr    = fmtPP(s.avgCLV);
+  const roiStr    = fmtPct(s.roi);
+  const pnlStr    = s.totalPnl >= 0
+    ? `+€${s.totalPnl.toFixed(2)}`
+    : `-€${Math.abs(s.totalPnl).toFixed(2)}`;
+
+  const statsHtml = `
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+      ${statCard('Bets', `${s.wins ?? 0}W / ${s.losses ?? 0}L`, '#e6edf3',
+        `${s.resolved ?? 0} resolved · ${s.pending ?? 0} offen`)}
+      ${statCard('Win Rate', winRate, s.winRate >= 50 ? '#3fb950' : '#f85149',
+        `${s.totalBets} Bets gesamt`)}
+      ${statCard('P&L', pnlStr, pnlColor,
+        `€${(s.totalStaked ?? 0).toFixed(0)} gesetzt`)}
+      ${statCard('ROI', roiStr, roiColor,
+        `Ø CLV: ${clvStr}`)}
+    </div>`;
+
+  // Bet-Tabelle
+  const resolved = bets.filter(b => b.result !== 'PENDING');
+  const pending  = bets.filter(b => b.result === 'PENDING');
+  const sorted   = [...resolved, ...pending];
+
+  if (!sorted.length) return `
+    <div style="margin:16px 0;padding:16px;background:#0d1117;border:1px solid #21262d;border-radius:12px">
+      <div style="font-size:11px;font-weight:700;color:#484f58;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">📈 Performance</div>
+      ${statsHtml}
+    </div>`;
+
+  const rows = sorted.map(b => {
+    const resultIcon = {WIN:'✅',LOSS:'❌',VOID:'⬜',PENDING:'⏳'}[b.result] ?? '?';
+    const resultCol  = {WIN:'#3fb950',LOSS:'#f85149',VOID:'#8b949e',PENDING:'#e3b341'}[b.result] ?? '#8b949e';
+    const pnlStr2    = b.result === 'WIN'  ? `+€${b.pnl.toFixed(2)}`
+                     : b.result === 'LOSS' ? `-€${Math.abs(b.pnl).toFixed(2)}`
+                     : b.result === 'VOID' ? '—'
+                     : '⏳';
+    const pnlCol     = b.pnl > 0 ? '#3fb950' : b.pnl < 0 ? '#f85149' : '#8b949e';
+    const clvCell    = b.clvPP != null
+      ? `<span style="color:${b.clvPP >= 0 ? '#3fb950' : '#f85149'}">${b.clvPP >= 0 ? '+' : ''}${b.clvPP.toFixed(1)}pp</span>`
+      : '<span style="color:#484f58">—</span>';
+    const scoreCell  = b.score
+      ? `<span style="color:#8b949e;font-size:11px">${b.score}</span>`
+      : '<span style="color:#484f58">—</span>';
+    const polyOddsStr = b.polyOdds ? b.polyOdds.toFixed(2) : '—';
+    const edgeStr     = b.pinnFair && b.polyPrice
+      ? `${((b.pinnFair - b.polyPrice) * 100).toFixed(1)}pp`
+      : '—';
+    const slug        = b.slug;
+    const polyLink    = slug
+      ? `<a href="https://polymarket.com/sports/fifa-world-cup/${slug}" target="_blank"
+           style="color:#a78bfa;font-size:10px;text-decoration:none">↗</a>`
+      : '';
+
+    return `<tr style="border-top:1px solid #161b22">
+      <td style="padding:8px 10px;font-size:12px;color:${resultCol};font-weight:700;white-space:nowrap">
+        ${resultIcon} ${b.result}
+      </td>
+      <td style="padding:8px 10px;font-size:12px;color:#e6edf3;white-space:nowrap">
+        ${b.home} vs ${b.away}
+      </td>
+      <td style="padding:8px 10px;font-size:11px;color:#8b949e">${b.market}</td>
+      <td style="padding:8px 10px;font-size:12px;color:#a78bfa;text-align:center">${polyOddsStr}</td>
+      <td style="padding:8px 10px;font-size:11px;color:#e3b341;text-align:center">${edgeStr}</td>
+      <td style="padding:8px 10px;font-size:11px;text-align:center">${clvCell}</td>
+      <td style="padding:8px 10px;font-size:12px;font-weight:700;color:${pnlCol};text-align:right">${pnlStr2}</td>
+      <td style="padding:8px 10px;font-size:11px;text-align:center">${scoreCell}</td>
+      <td style="padding:8px 10px;text-align:center">${polyLink}</td>
+    </tr>`;
+  }).join('');
+
+  return `
+    <div style="margin:16px 0;padding:16px;background:#0d1117;border:1px solid #21262d;border-radius:12px">
+      <div style="font-size:11px;font-weight:700;color:#484f58;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">
+        📈 Performance — WM 2026
+        ${s.sharpeEst != null ? `<span style="color:#6e7681;font-size:10px;margin-left:8px;font-weight:400">Sharpe ~${s.sharpeEst.toFixed(2)}</span>` : ''}
+      </div>
+      ${statsHtml}
+
+      <!-- Bet-Tabelle -->
+      <div style="overflow-x:auto;border-radius:8px;border:1px solid #21262d">
+        <table style="width:100%;border-collapse:collapse;font-family:inherit">
+          <thead>
+            <tr style="background:#161b22">
+              <th style="padding:8px 10px;font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:.5px;text-align:left;font-weight:600">Result</th>
+              <th style="padding:8px 10px;font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:.5px;text-align:left;font-weight:600">Spiel</th>
+              <th style="padding:8px 10px;font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:.5px;text-align:left;font-weight:600">Markt</th>
+              <th style="padding:8px 10px;font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:.5px;text-align:center;font-weight:600">Odds</th>
+              <th style="padding:8px 10px;font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:.5px;text-align:center;font-weight:600">Edge</th>
+              <th style="padding:8px 10px;font-size:10px;color:#3fb950;text-transform:uppercase;letter-spacing:.5px;text-align:center;font-weight:600">CLV</th>
+              <th style="padding:8px 10px;font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:.5px;text-align:right;font-weight:600">P&L</th>
+              <th style="padding:8px 10px;font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:.5px;text-align:center;font-weight:600">Score</th>
+              <th style="padding:8px 10px;font-size:10px;color:#484f58;text-transform:uppercase;letter-spacing:.5px;text-align:center;font-weight:600">Link</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+
+      <!-- CLV Erklärung -->
+      <div style="margin-top:10px;font-size:10px;color:#484f58;line-height:1.6">
+        <strong style="color:#3fb950">CLV</strong> (Closing Line Value) = Pinnacle-Fair-Prob beim Anpfiff minus Entry-Preis auf Polymarket.
+        Positiv = wir haben zum richtigen Zeitpunkt besser als der Marktschluss gewettet → zeigt echten Edge.
+      </div>
+    </div>`;
+}
 
 function renderPolyPickCards() {
   const picks = _polyState.picks;

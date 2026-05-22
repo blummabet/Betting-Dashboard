@@ -62,21 +62,28 @@ jobs:
       # ── Dann Positionen prüfen & Sell-Alerts senden ───────────────────────────
       - name: 📊 WM Poly Positionen prüfen
         run: python manage_wm_poly_positions.py
+        continue-on-error: true
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      # ── Bets gegen Ergebnisse resolven: P&L + CLV berechnen ──────────────────
+      - name: 📈 WM Bets resolven (P&L + CLV)
+        run: python resolve_wm_results.py
+        continue-on-error: true
 
       # ── Aktualisierte Positions-Datei + Preise zurückschreiben ────────────────
       - name: 💾 Status speichern
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add wm_poly_positions.json wm_poly_prices.json wm_auto_bets_placed.json wm_poly_balance.json 2>/dev/null || true
+          git add wm_poly_positions.json wm_poly_prices.json wm_auto_bets_placed.json \
+                  wm_poly_balance.json wm_results.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."
           else
             TIMESTAMP=$(date +'%d.%m.%Y %H:%M')
-            git commit -m "💹 WM Poly Position Update ${TIMESTAMP} UTC"
+            git commit -m "💹 WM Poly Update ${TIMESTAMP} UTC"
             git pull origin main --no-rebase -X ours
             git push
           fi

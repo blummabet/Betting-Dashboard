@@ -483,9 +483,40 @@ def main():
             if tb["bttsN"]:
                 new_entry["bttsN"] = tb["bttsN"]
 
-        # Preserve closing odds if already set
-        if existing.get("odds_closing"):
-            new_entry["odds_closing"] = existing["odds_closing"]
+        # ── Closing Odds einfrieren wenn Anpfiff vorbei ──────────────────────
+        # CLV-Basis: die letzten Pinnacle-Odds VOR dem Anpfiff.
+        # Sobald fx["date"] + fx["time"] in der Vergangenheit liegt →
+        # aktuelle Odds als Closing einfrieren (einmalig, nie überschreiben).
+        existing_closing = existing.get("odds_closing")
+        if existing_closing:
+            # Bereits eingefroren — nie überschreiben
+            new_entry["odds_closing"] = existing_closing
+        else:
+            # Prüfen ob Anpfiff schon vorbei
+            fx_date = fx.get("date", "")
+            fx_time = fx.get("time", "21:00")
+            if fx_date:
+                try:
+                    from datetime import datetime as _dt, timezone as _tz
+                    # Spiele laufen in der Zeitzone des Austragungsortes, aber für die
+                    # Closing-Linie reicht UTC-Annäherung: +2h buffer (CEST / UTC+2)
+                    kickoff_str = f"{fx_date}T{fx_time}:00+02:00"
+                    kickoff_dt  = _dt.fromisoformat(kickoff_str)
+                    now_dt      = _dt.now(_tz.utc).astimezone(kickoff_dt.tzinfo)
+                    if now_dt >= kickoff_dt:
+                        # Anpfiff vorbei → aktuelle Odds als Closing einfrieren
+                        new_entry["odds_closing"] = {
+                            "hw":  h2h["hw"],
+                            "dr":  h2h["dr"],
+                            "aw":  h2h["aw"],
+                            **({"o25": tb["o25"]} if tb.get("o25") else {}),
+                            **({"u25": tb["u25"]} if tb.get("u25") else {}),
+                            **({"bttsY": tb["bttsY"]} if tb.get("bttsY") else {}),
+                            "frozenAt": now_iso,
+                        }
+                        print(f"  🔒  Closing eingefroren: {home_id} vs {away_id}")
+                except Exception:
+                    pass
 
         odds_out[key] = new_entry
         updated += 1
