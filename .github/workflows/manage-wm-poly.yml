@@ -72,6 +72,9 @@ jobs:
         env:
           POLY_PRIVATE_KEY:    ${{ secrets.POLY_PRIVATE_KEY }}
           POLY_FUNDER_ADDRESS: ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:        ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:     ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
 
       # ── Dann Positionen prüfen & Sell-Alerts senden ───────────────────────────
       - name: 📊 WM Poly Positionen prüfen
