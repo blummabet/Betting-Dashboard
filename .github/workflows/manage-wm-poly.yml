@@ -36,9 +36,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      # py-clob-client-v2 für Balance-Abfrage und Auto-Trigger
+      # py-clob-client-v2 existiert nicht auf PyPI — direkt von GitHub installieren
+      # (gleiche Logik wie poly-bets.yml)
       - name: 📦 Python Pakete installieren
-        run: pip install py-clob-client-v2 requests --break-system-packages --quiet
+        run: |
+          pip install requests --break-system-packages --quiet
+          pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
+          pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
+          python -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
 
       # ── Erst Poly-Preise frisch holen (Gamma API, kein Key) ──────────────────
       - name: 💹 WM Polymarket Preise aktualisieren

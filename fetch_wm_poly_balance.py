@@ -70,7 +70,7 @@ def fetch_clob_balance(private_key: str, funder_addr: str) -> dict | None:
         from py_clob_client_v2 import SignatureTypeV2
     except ImportError as e:
         print(f"  ❌ py-clob-client-v2 Import-Fehler: {e}")
-        print(f"     Bitte: pip install py-clob-client-v2")
+        print(f"     Bitte: pip install 'git+https://github.com/Polymarket/py-clob-client-v2.git@main'")
         return None
 
     # ── Client initialisieren (gleiche Logik wie polymarket_bet.py) ───────────
