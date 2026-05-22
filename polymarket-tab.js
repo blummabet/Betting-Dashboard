@@ -522,9 +522,12 @@ async function _loadPolyPriceCache() {
 // ── WM 2026 Polymarket Prices (from fetch_wm_poly_prices.py → wm_poly_prices.json) ──
 // Keyed by "{HOME_ID}-{AWAY_ID}" e.g. "GER-CUW"
 // hw/dr/aw are probabilities (0-1), convert to odds with 1/p
-let _wmPolyPriceCache = null;   // null = not loaded
+let _wmPolyPriceCache   = null;  // null = not loaded; keyed by "HOME-AWAY"
 let _wmPolyPriceMissing = false;
-let _wmClvRadar = [];           // CLV opportunities: Pinnacle fair > Polymarket price
+let _wmClvRadar         = [];    // filtered ≥5pp — kept for legacy position logger
+let _wmAllFixtures      = [];    // all 72 games with Pinnacle + Poly + edge
+let _wmGeneratedAt      = '';    // timestamp from wm_poly_prices.json
+let _wmTableFilter      = 'edge3'; // default filter: show edge ≥ 3pp
 
 async function _loadWmPolyPriceCache() {
   if (_wmPolyPriceCache !== null) return;
@@ -533,14 +536,24 @@ async function _loadWmPolyPriceCache() {
     const res = await fetch(`wm_poly_prices.json?v=${_cbv}`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    _wmPolyPriceCache = data.prices || {};
-    _wmClvRadar       = data.clvRadar || [];
-    console.log(`[Poly] WM prices loaded: ${Object.keys(_wmPolyPriceCache).length} fixtures, CLV radar: ${_wmClvRadar.length} opportunities, ${data.generatedAt || ''}`);
+    _wmPolyPriceCache = data.prices       || {};
+    _wmClvRadar       = data.clvRadar     || [];
+    _wmAllFixtures    = data.allFixtures  || [];
+    _wmGeneratedAt    = data.generatedAt  || '';
+    console.log(`[Poly] WM prices loaded: ${_wmAllFixtures.length} fixtures, ` +
+      `${_wmAllFixtures.filter(f=>f.hasPinnacle).length} with Pinnacle, ` +
+      `${data.generatedAt || ''}`);
   } catch (e) {
     console.warn('[Poly] wm_poly_prices.json not available:', e.message);
     _wmPolyPriceCache = {};
     _wmPolyPriceMissing = true;
   }
+}
+
+function _setWmFilter(f) {
+  _wmTableFilter = f;
+  const grid = document.getElementById('polyPickGrid');
+  if (grid) grid.innerHTML = renderPolyPickCards();
 }
 
 // Maps our WM market label → which price field in wm_poly_prices.json
@@ -1100,145 +1113,221 @@ function _ensureWmPosModal() {
   document.body.appendChild(m);
 }
 
-// ── WM 2026 CLV Radar ──────────────────────────────────────────────────────
-// Shows all WM fixtures where Pinnacle devigged probability > Polymarket price.
-// Positive edge = Polymarket hasn't caught up with sharp money → BET on Poly.
-function _renderWmClvRadar() {
-  _ensureWmPosModal();   // lazy-inject the modal into <body> if not yet present
+// ── WM 2026 Market Table ───────────────────────────────────────────────────
+// Shows all 72 WM fixtures with Pinnacle vs Polymarket 1X2 comparison.
+// Replaces the old CLV radar — includes ALL games, not just edge ≥5pp.
+function _renderWmMarketTable() {
+  _ensureWmPosModal();
 
   const openPosHtml = _renderWmOpenPositions();
 
-  if (!_wmClvRadar || _wmClvRadar.length === 0) {
-    return openPosHtml ? `<div style="grid-column:1/-1;margin-bottom:20px">${openPosHtml}</div>` : '';
+  if (!_wmAllFixtures || _wmAllFixtures.length === 0) {
+    // If no allFixtures yet, fall back to old radar logic briefly
+    if (!_wmClvRadar || _wmClvRadar.length === 0) {
+      return openPosHtml
+        ? `<div style="grid-column:1/-1;margin-bottom:20px">${openPosHtml}</div>`
+        : '';
+    }
   }
 
-  // Color by edge
-  function edgeColor(pp) {
-    if (pp >= 5) return '#3fb950';
-    if (pp >= 3) return '#e3b341';
-    return '#8b949e';
-  }
-  function edgeBg(pp) {
-    if (pp >= 5) return '#3fb95018';
-    if (pp >= 3) return '#e3b34118';
-    return '#8b949e11';
-  }
-  function marketIcon(m) {
-    if (m === 'Heimsieg')      return '🏠';
-    if (m === 'Auswärtssieg')  return '✈️';
-    if (m === 'Unentschieden') return '🤝';
-    return '⚽';
-  }
+  // ── helpers ──────────────────────────────────────────────────────────────
+  const ec = pp => pp >= 5 ? '#3fb950' : pp >= 3 ? '#e3b341' : pp > 0 ? '#6e7681' : '#484f58';
+  const eb = pp => pp >= 5 ? '#3fb95018' : pp >= 3 ? '#e3b34118' : 'transparent';
+  const fmt = odds => odds ? odds.toFixed(2) : '—';
+  const polyOdds = p => (p && p > 0) ? (1/p).toFixed(2) : '—';
 
-  const rows = _wmClvRadar.map(fix => {
+  // ── filter ────────────────────────────────────────────────────────────────
+  const f = _wmTableFilter;
+  const fixtures = (_wmAllFixtures.length > 0 ? _wmAllFixtures : []).filter(fix => {
+    if (f === 'edge5') return (fix.bestEdge || 0) >= 5;
+    if (f === 'edge3') return (fix.bestEdge || 0) >= 3;
+    if (f === 'pinn')  return fix.hasPinnacle;
+    return true; // 'all'
+  });
+
+  const counts = {
+    all:   _wmAllFixtures.length,
+    edge3: _wmAllFixtures.filter(x => (x.bestEdge||0) >= 3).length,
+    edge5: _wmAllFixtures.filter(x => (x.bestEdge||0) >= 5).length,
+    pinn:  _wmAllFixtures.filter(x => x.hasPinnacle).length,
+  };
+
+  // ── filter bar ────────────────────────────────────────────────────────────
+  const filterBtn = (key, label, count) => {
+    const active = _wmTableFilter === key;
+    return `<button onclick="_setWmFilter('${key}')"
+      style="background:${active ? '#a78bfa33' : '#21262d'};
+             border:1px solid ${active ? '#a78bfa88' : '#30363d'};
+             border-radius:20px;color:${active ? '#a78bfa' : '#8b949e'};
+             font-size:11px;font-weight:${active ? '700' : '500'};
+             padding:4px 12px;cursor:pointer;transition:all .15s">
+      ${label} <span style="opacity:.7">${count}</span>
+    </button>`;
+  };
+
+  // ── fixture rows ──────────────────────────────────────────────────────────
+  const rows = fixtures.map(fix => {
     const [fy, fm, fd] = (fix.date || '').split('-');
-    const dateFmt = fy ? `${fd}.${fm}.${fy}` : fix.date || '';
-    const polyUrl = `https://polymarket.com/de/sports/fifa-world-cup/${fix.slug}`;
+    const dateFmt = fy ? `${fd}.${fm}.` : '';
+    const polyUrl = fix.slug ? `https://polymarket.com/de/sports/fifa-world-cup/${fix.slug}` : '#';
+    const be      = fix.bestEdge || 0;
 
-    const oppHtml = fix.opportunities.map(o => {
-      const col   = edgeColor(o.edgePP);
-      const bg    = edgeBg(o.edgePP);
-      const label = o.edgePP >= 5 ? `<strong style="color:${col}">+${o.edgePP}pp ↑↑</strong>`
-                  : o.edgePP >= 3 ? `<strong style="color:${col}">+${o.edgePP}pp ↑</strong>`
-                  :                 `<span style="color:${col}">+${o.edgePP}pp</span>`;
-      // Serialise modal data safely (no quotes in team names to worry about normally,
-      // but use JSON.stringify to be safe)
-      const modalData = JSON.stringify({
-        home: fix.home, away: fix.away,
-        market: o.market, priceKey: o.priceKey,
-        polyPrice: o.polyPrice, pinnFair: o.pinnFair,
-        slug: fix.slug,
-      }).replace(/'/g, '&#39;');
-      return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;
-                          background:${bg};border-radius:6px;margin-bottom:4px">
-        <span style="font-size:13px">${marketIcon(o.market)}</span>
-        <span style="font-size:12px;color:#c9d1d9;min-width:90px">${o.market}</span>
-        <span style="font-size:11px;color:#8b949e;min-width:90px">
-          Pinn fair: <strong style="color:#c9d1d9">${(o.pinnFair*100).toFixed(1)}%</strong>
-          / <span style="color:#8b949e">${o.pinnOdds}</span>
-        </span>
-        <span style="font-size:11px;color:#8b949e;min-width:90px">
-          Poly: <strong style="color:#a78bfa">${(o.polyPrice*100).toFixed(1)}¢</strong>
-          / <span style="color:#8b949e">${o.polyOdds}</span>
-        </span>
-        <span style="font-size:12px">${label}</span>
-        <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
-          <a href="${polyUrl}" target="_blank" rel="noopener"
-             onclick="event.stopPropagation()"
-             style="background:#a78bfa22;border:1px solid #a78bfa44;
-                    border-radius:6px;color:#a78bfa;font-size:11px;font-weight:700;
-                    padding:4px 10px;text-decoration:none;white-space:nowrap;
-                    transition:background .15s"
-             onmouseover="this.style.background='#a78bfa33'"
-             onmouseout="this.style.background='#a78bfa22'">
-            🔗 Auf Polymarket setzen
-          </a>
-          <button onclick="event.stopPropagation();_openLogPositionModal(JSON.parse(decodeURIComponent('${encodeURIComponent(JSON.stringify({home:fix.home,away:fix.away,market:o.market,priceKey:o.priceKey,polyPrice:o.polyPrice,pinnFair:o.pinnFair,slug:fix.slug}))}')))"
-                  style="background:#21262d;border:1px solid #30363d;border-radius:6px;
-                         color:#c9d1d9;font-size:11px;padding:4px 10px;cursor:pointer;
-                         white-space:nowrap;transition:background .15s"
-                  onmouseover="this.style.background='#2d333b'"
-                  onmouseout="this.style.background='#21262d'">
-            ✏️ Position loggen
-          </button>
+    // Outcome columns: Home | Draw | Away
+    const outcomes = [
+      { label: 'H', key: 'hw', pinn: fix.pinn_hw, poly: fix.poly_hw, edge: fix.edge_hw,
+        fair: fix.fair_hw, market: 'Heimsieg' },
+      { label: 'X', key: 'dr', pinn: fix.pinn_dr, poly: fix.poly_dr, edge: fix.edge_dr,
+        fair: fix.fair_dr, market: 'Unentschieden' },
+      { label: 'A', key: 'aw', pinn: fix.pinn_aw, poly: fix.poly_aw, edge: fix.edge_aw,
+        fair: fix.fair_aw, market: 'Auswärtssieg' },
+    ];
+
+    const outcomeHtml = outcomes.map(o => {
+      const edge    = o.edge;
+      const col     = edge !== null ? ec(edge) : '#484f58';
+      const bg      = edge !== null && edge > 0 ? eb(edge) : 'transparent';
+      const edgeStr = edge === null ? '' :
+        edge > 0  ? `<span style="color:${col};font-size:10px;font-weight:700">+${edge}pp${edge>=3?'↑':''}</span>` :
+                   `<span style="color:#484f58;font-size:10px">${edge}pp</span>`;
+
+      // "Position loggen" only for outcomes with meaningful positive edge
+      const logBtn = (o.poly && o.fair && edge !== null && edge >= 1)
+        ? `<button title="Position loggen"
+             onclick="event.stopPropagation();_openLogPositionModal(JSON.parse(decodeURIComponent('${
+               encodeURIComponent(JSON.stringify({
+                 home: fix.home, away: fix.away,
+                 market: o.market, priceKey: o.key,
+                 polyPrice: o.poly, pinnFair: o.fair,
+                 slug: fix.slug,
+               }))
+             }')))"
+             style="background:none;border:none;color:#8b949e;font-size:11px;
+                    cursor:pointer;padding:0;opacity:.6;transition:opacity .15s"
+             onmouseover="this.style.opacity='1'"
+             onmouseout="this.style.opacity='.6'">✏️</button>`
+        : '';
+
+      return `<div style="background:${bg};border-radius:6px;padding:5px 8px;
+                          min-width:80px;text-align:center;border:1px solid ${bg==='transparent'?'#30363d22':'transparent'}">
+        <div style="font-size:10px;color:#6e7681;margin-bottom:2px;font-weight:600">${o.label}</div>
+        <div style="font-size:11px;color:#6e7681">Pinn: <strong style="color:#8b949e">${fmt(o.pinn)}</strong></div>
+        <div style="font-size:11px;color:#6e7681">Poly: <strong style="color:#a78bfa">${polyOdds(o.poly)}</strong></div>
+        <div style="margin-top:3px;display:flex;align-items:center;justify-content:center;gap:4px">
+          ${edgeStr}${logBtn}
         </div>
       </div>`;
     }).join('');
 
-    const bestEdge   = fix.bestEdge || 0;
-    const headerCol  = edgeColor(bestEdge);
+    // Pinnacle O/U reference (when available)
+    const ouHtml = fix.pinn_o25
+      ? `<span style="font-size:10px;color:#6e7681;margin-left:8px">
+           Ü2.5: <strong style="color:#8b949e">${fix.pinn_o25}</strong> /
+           U2.5: <strong style="color:#8b949e">${fix.pinn_u25 || '—'}</strong>
+         </span>`
+      : '';
 
-    return `<div style="background:#0d1117;border:1px solid ${bestEdge >= 5 ? '#3fb95044' : bestEdge >= 3 ? '#e3b34144' : '#30363d'};
-                        border-radius:10px;padding:12px 14px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:14px;font-weight:700;color:#e6edf3">
-          ${fix.home} vs ${fix.away}
+    const borderCol = be >= 5 ? '#3fb95055' : be >= 3 ? '#e3b34155' : '#21262d';
+    const badgeHtml = be > 0
+      ? `<span style="font-size:10px;font-weight:700;color:${ec(be)};
+                      background:${eb(be)};padding:2px 7px;border-radius:8px;
+                      border:1px solid ${ec(be)}44">+${be}pp</span>`
+      : (fix.hasPinnacle ? `<span style="font-size:10px;color:#484f58">—</span>` : '');
+
+    return `<div style="background:#0d1117;border:1px solid ${borderCol};border-radius:10px;
+                        padding:10px 14px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+        <span style="font-size:13px;font-weight:700;color:#e6edf3">${fix.home} vs ${fix.away}</span>
+        <span style="font-size:11px;color:#6e7681">${dateFmt}</span>
+        ${badgeHtml}
+        <span style="font-size:10px;color:#484f58;margin-left:auto">
+          Vol $${(fix.vol||0).toLocaleString('de-DE',{maximumFractionDigits:0})}
+          ${ouHtml}
         </span>
-        <span style="font-size:11px;color:#8b949e;margin-left:4px">${dateFmt}</span>
-        <span style="font-size:11px;color:#8b949e;margin-left:auto">Vol $${(fix.vol || 0).toLocaleString('de-DE', {maximumFractionDigits:0})}</span>
-        <span style="font-size:11px;font-weight:700;color:${headerCol};background:${edgeBg(bestEdge)};
-                     padding:2px 7px;border-radius:8px;border:1px solid ${headerCol}44">
-          max +${bestEdge}pp
-        </span>
+        <a href="${polyUrl}" target="_blank" rel="noopener"
+           style="background:#a78bfa22;border:1px solid #a78bfa44;border-radius:5px;
+                  color:#a78bfa;font-size:10px;font-weight:700;padding:3px 8px;
+                  text-decoration:none;white-space:nowrap">
+          🔗 Poly
+        </a>
       </div>
-      ${oppHtml}
+      ${fix.hasPinnacle
+        ? `<div style="display:flex;gap:6px;flex-wrap:wrap">${outcomeHtml}</div>`
+        : `<div style="font-size:11px;color:#484f58;padding:4px 0">
+             Kein Pinnacle — Polymarket: H ${polyOdds(fix.poly_hw)} / X ${polyOdds(fix.poly_dr)} / A ${polyOdds(fix.poly_aw)}
+           </div>`
+      }
     </div>`;
   }).join('');
 
-  const strongCount = _wmClvRadar.filter(f => f.bestEdge >= 3).length;
+  const noPinnCount = _wmAllFixtures.filter(x => !x.hasPinnacle).length;
+  const standStr    = _wmGeneratedAt ? `Stand: ${_wmGeneratedAt}` : '';
 
   return `<div style="grid-column:1/-1;margin-bottom:20px">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-      <span style="font-size:15px;font-weight:700;color:#e6edf3">📡 WM 2026 — Pinnacle vs Polymarket</span>
-      <span style="font-size:11px;background:#a78bfa22;border:1px solid #a78bfa44;color:#a78bfa;
-                   padding:2px 8px;border-radius:8px;font-weight:700">${_wmClvRadar.length} Spiele</span>
-      ${strongCount > 0 ? `<span style="font-size:11px;background:#3fb95022;border:1px solid #3fb95044;color:#3fb950;
-                   padding:2px 8px;border-radius:8px;font-weight:700">${strongCount} mit Edge ≥3pp</span>` : ''}
-      <span style="font-size:10px;color:#8b949e;margin-left:auto">Pinnacle fair (devigged) vs Polymarket-Preis</span>
+
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <span style="font-size:15px;font-weight:700;color:#e6edf3">🏆 WM 2026 — Polymarket 1X2</span>
+      <span style="font-size:10px;color:#6e7681;margin-left:auto">${standStr}</span>
     </div>
-    <div style="font-size:11px;color:#8b949e;margin-bottom:12px;line-height:1.5">
-      Positiver Edge = Pinnacle bewertet Outcome höher als Polymarket → Unterpreist auf Poly → BUY
+
+    <div style="font-size:11px;color:#6e7681;margin-bottom:10px">
+      Pinnacle devigged fair-Wahrsch. vs Polymarket-Preis — positiver Edge = Poly unterbewertet → Kaufen.
+      ${noPinnCount > 0 ? `<span style="color:#484f58">${noPinnCount} Spiele noch ohne Pinnacle-Quoten.</span>` : ''}
     </div>
+
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+      ${filterBtn('edge5', '⭐ Edge ≥5pp', counts.edge5)}
+      ${filterBtn('edge3', '📈 Edge ≥3pp', counts.edge3)}
+      ${filterBtn('pinn',  '🔷 Hat Pinnacle', counts.pinn)}
+      ${filterBtn('all',   '📋 Alle', counts.all)}
+    </div>
+
     ${openPosHtml}
-    ${rows}
+
+    ${fixtures.length === 0
+      ? `<div style="text-align:center;padding:30px;color:#484f58;font-size:13px">
+           Keine Fixtures für diesen Filter.
+         </div>`
+      : rows
+    }
   </div>`;
 }
 
+// Alias — kept so old references still work
+function _renderWmClvRadar() { return _renderWmMarketTable(); }
+
 function renderPolyPickCards() {
   const picks = _polyState.picks;
-  // CLV radar always shown at top when WM data is available
-  const radarHtml = _renderWmClvRadar();
+  // WM market table always shown at top (all 72 fixtures with Pinnacle comparison)
+  const tableHtml = _renderWmMarketTable();
 
   if (picks.length === 0) {
-    return radarHtml + `<div style="grid-column:1/-1;text-align:center;padding:60px 24px;color:#8b949e">
+    // During WM season, the table above has all the action — no extra message needed
+    const hasWm = _wmAllFixtures.length > 0;
+    return tableHtml + (hasWm ? '' : `<div style="grid-column:1/-1;text-align:center;padding:60px 24px;color:#8b949e">
       <div style="font-size:40px;margin-bottom:14px">🟣</div>
       <div style="font-size:16px;font-weight:600;margin-bottom:6px;color:#e6edf3">Keine Picks verfügbar</div>
-      <div style="font-size:13px;line-height:1.6">Für <strong>${_polyState.dateStr}</strong> gibt es keine high/medium Picks
-        mit echten Quoten in Polymarket-Ligen.<br>
-        Versuche einen anderen Tag oder prüfe ob Quoten geladen sind.</div>
-    </div>`;
+      <div style="font-size:13px;line-height:1.6">Für <strong>${_polyState.dateStr}</strong> gibt es keine Picks.
+        <br>Warte auf WM-Daten oder prüfe ob wm_poly_prices.json aktuell ist.</div>
+    </div>`);
   }
-  return radarHtml + picks.map(_renderPickCard).join('');
+
+  // Club picks appear below the WM table (WM season = they're usually empty)
+  const clubPicks = picks.filter(p => !p.isWm);
+  const wmPicks   = picks.filter(p => p.isWm);
+
+  const wmPickHtml = wmPicks.length > 0
+    ? `<div style="grid-column:1/-1;font-size:11px;color:#6e7681;margin-bottom:8px;padding-top:4px">
+         WM System-Picks (${wmPicks.length}) — Picks des Pick-Engines für heute:
+       </div>` + wmPicks.map(_renderPickCard).join('')
+    : '';
+
+  const clubHtml = clubPicks.length > 0
+    ? `<div style="grid-column:1/-1;font-size:11px;color:#6e7681;margin:12px 0 8px">
+         Club-Liga Picks (${clubPicks.length}):
+       </div>` + clubPicks.map(_renderPickCard).join('')
+    : '';
+
+  return tableHtml + wmPickHtml + clubHtml;
 }
 
 // ── 6. STATS ────────────────────────────────────────────

@@ -352,10 +352,102 @@ def main():
         print(f"  Patched {patched} fixtures in wm2026-data.json (poly_hw/dr/aw fields)")
         print(f"  CLV Radar: {len(clv_radar)} fixtures with Pinnacle edge vs Polymarket")
 
+    # ── Build allFixtures (all 72 games, Pinnacle + Poly + Edge — for dashboard table) ──
+    # Unlike clvRadar (filtered ≥5pp), allFixtures shows everything so the
+    # dashboard can apply its own filters and display all markets.
+    all_fixtures: list[dict] = []
+
+    wm_odds_ref = wm.get("odds", {}) if wm is not None else {}
+    team_names_ref: dict[str, str] = {}
+    if wm is not None:
+        for gdata in wm.get("groups", {}).values():
+            for t in gdata.get("teams", []):
+                team_names_ref[t["id"]] = t.get("name", t["id"])
+
+    for key, p in prices.items():
+        home_id, away_id = key.split("-", 1)
+        pinn = wm_odds_ref.get(key, {})
+
+        pinn_hw  = pinn.get("hw")
+        pinn_dr  = pinn.get("dr")
+        pinn_aw  = pinn.get("aw")
+        pinn_o25 = pinn.get("o25")   # available once TheOddsAPI lists WM totals
+        pinn_u25 = pinn.get("u25")
+
+        fair_hw = fair_dr = fair_aw = None
+        edge_hw = edge_dr = edge_aw = None
+        best_edge      = None
+        best_edge_key  = None
+
+        if pinn_hw and pinn_dr and pinn_aw and pinn_hw > 1:
+            margin  = 1/pinn_hw + 1/pinn_dr + 1/pinn_aw
+            fair_hw = round((1/pinn_hw) / margin, 4)
+            fair_dr = round((1/pinn_dr) / margin, 4)
+            fair_aw = round((1/pinn_aw) / margin, 4)
+            edge_hw = round((fair_hw - p["hw"]) * 100, 1)
+            edge_dr = round((fair_dr - (p["dr"] or 0)) * 100, 1) if p["dr"] else None
+            edge_aw = round((fair_aw - p["aw"]) * 100, 1)
+            # Best positive edge across outcomes
+            edges = {
+                "hw": edge_hw,
+                "dr": edge_dr,
+                "aw": edge_aw,
+            }
+            pos_edges = {k: v for k, v in edges.items() if v is not None and v > 0}
+            if pos_edges:
+                best_edge_key = max(pos_edges, key=pos_edges.get)
+                best_edge     = pos_edges[best_edge_key]
+
+        all_fixtures.append({
+            "key":          key,
+            "homeId":       home_id,
+            "awayId":       away_id,
+            "home":         team_names_ref.get(home_id, p["homeName"]),
+            "away":         team_names_ref.get(away_id, p["awayName"]),
+            "homeName":     p["homeName"],
+            "awayName":     p["awayName"],
+            "date":         p["date"],
+            "slug":         p["slug"],
+            "vol":          round(p["vol"], 0),
+            # Polymarket 1X2 (probability 0-1, convert to decimal odds with 1/p)
+            "poly_hw":      p["hw"],
+            "poly_dr":      p.get("dr"),
+            "poly_aw":      p["aw"],
+            # Pinnacle 1X2 (decimal odds, e.g. 1.85)
+            "pinn_hw":      pinn_hw,
+            "pinn_dr":      pinn_dr,
+            "pinn_aw":      pinn_aw,
+            # Pinnacle O/U reference (when TheOddsAPI provides WM totals)
+            "pinn_o25":     pinn_o25,
+            "pinn_u25":     pinn_u25,
+            # Pinnacle devigged fair probabilities
+            "fair_hw":      fair_hw,
+            "fair_dr":      fair_dr,
+            "fair_aw":      fair_aw,
+            # Edge per outcome in percentage points (positive = Poly underpriced)
+            "edge_hw":      edge_hw,
+            "edge_dr":      edge_dr,
+            "edge_aw":      edge_aw,
+            # Best positive edge of this fixture
+            "bestEdge":     best_edge,
+            "bestEdgeKey":  best_edge_key,
+            "hasPinnacle":  bool(pinn_hw),
+        })
+
+    # Sort: fixtures with positive edge first (desc), then by date
+    all_fixtures.sort(key=lambda x: (
+        -(x["bestEdge"] or -999),
+        x["date"] or ""
+    ))
+    print(f"  allFixtures: {len(all_fixtures)} total "
+          f"({sum(1 for f in all_fixtures if f['hasPinnacle'])} with Pinnacle, "
+          f"{sum(1 for f in all_fixtures if (f['bestEdge'] or 0) >= 3)} with edge ≥3pp)")
+
     # ── Write output JSON ─────────────────────────────────────────────────────
     out = {
         "prices":      prices,
-        "clvRadar":    clv_radar,   # Sorted by edge — ready for dashboard display
+        "clvRadar":    clv_radar,    # Filtered ≥5pp — for quick radar view
+        "allFixtures": all_fixtures, # All 72 games — for full dashboard table
         "count":       ok,
         "generatedAt": datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC"),
     }
