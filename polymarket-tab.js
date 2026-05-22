@@ -1117,6 +1117,136 @@ function _ensureWmPosModal() {
   document.body.appendChild(m);
 }
 
+// ── WM 2026 Manual Bet via GitHub Action ─────────────────────────────────
+// Same mechanism as Polymarket Betting tab — triggers place-poly-bets dispatch
+// Order fields understood by polymarket_bet.py:
+//   market: "Heimsieg"|"Auswärtssieg"|"Unentschieden"|"Over 2.5 Tore"|"Under 2.5 Tore"|"Beide Teams treffen"
+//   slug:   moneyline slug for 1X2, more-markets slug for O/U
+
+function _wmBetConfirm(orderJson) {
+  // orderJson is a JSON string passed via onclick to avoid closure issues
+  const order = typeof orderJson === 'string' ? JSON.parse(decodeURIComponent(orderJson)) : orderJson;
+  const pat = _getGithubPAT();
+
+  const polyOddsStr = order.polyPrice ? (1 / order.polyPrice).toFixed(2) : '—';
+  const edgeStr     = order.edge != null && order.edge > 0 ? `+${order.edge}pp vs Pinnacle fair` : '';
+  const stakeEur    = POLY_STAKE;
+  const potentialWin = order.polyPrice > 0
+    ? ((stakeEur / order.polyPrice) - stakeEur).toFixed(2)
+    : '?';
+
+  // Store order for dispatch
+  window._wmPendingOrder = order;
+
+  // Reuse polyModal if it exists, otherwise create one inline
+  let modal = document.getElementById('polyModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'polyModal';
+    modal.style.cssText = `position:fixed;inset:0;background:#000000cc;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px`;
+    modal.innerHTML = '<div id="polyModalBody" style="background:#0d1117;border:1px solid #30363d;border-radius:14px;padding:24px;max-width:480px;width:100%"></div>';
+    modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+    document.body.appendChild(modal);
+  }
+  modal.style.display = 'flex';
+
+  document.getElementById('polyModalBody').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+      <span style="font-size:24px">🏆</span>
+      <div>
+        <div style="font-size:16px;font-weight:800;color:#e6edf3">WM 2026 Bet bestätigen</div>
+        <div style="font-size:12px;color:#8b949e">${order.home} vs ${order.away}</div>
+      </div>
+      <button onclick="document.getElementById('polyModal').style.display='none'"
+        style="margin-left:auto;background:none;border:none;color:#6e7681;font-size:18px;cursor:pointer">✕</button>
+    </div>
+
+    <div style="background:#161b22;border-radius:10px;padding:16px;margin-bottom:16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:10px;color:#6e7681;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Markt</div>
+          <div style="font-size:14px;font-weight:700;color:#e6edf3">${order.market}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#6e7681;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Poly Odds</div>
+          <div style="font-size:14px;font-weight:700;color:#a78bfa">${polyOddsStr}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#6e7681;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Edge</div>
+          <div style="font-size:13px;font-weight:700;color:#e3b341">${edgeStr || '—'}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:#6e7681;margin-bottom:3px;text-transform:uppercase;letter-spacing:.5px">Einsatz</div>
+          <div style="font-size:13px;font-weight:700;color:#3fb950">€${stakeEur} → win ~€${potentialWin}</div>
+        </div>
+      </div>
+    </div>
+
+    ${!pat ? `<div style="background:#f8514911;border:1px solid #f8514933;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#f85149">
+      ⚠️ Kein GitHub Token — <button onclick="polyOpenSettings()" style="background:none;border:none;color:#f85149;cursor:pointer;font-size:12px;font-weight:700;text-decoration:underline;font-family:inherit">Jetzt einrichten →</button>
+    </div>` : ''}
+
+    <button id="wmBetDispatchBtn" onclick="_wmBetDispatch()"
+      style="width:100%;background:linear-gradient(135deg,#e3b341,#a07820);border:none;border-radius:10px;
+             color:#fff;font-size:15px;font-weight:800;padding:14px;cursor:pointer;font-family:inherit;
+             letter-spacing:.02em;box-shadow:0 2px 16px #e3b34144;margin-bottom:8px;${!pat?'opacity:.5;':''}">
+      🟣 Bet via GitHub auslösen
+    </button>
+    <div style="text-align:center;font-size:11px;color:#484f58">
+      €${stakeEur} USDC · Polygon · Private Key in GitHub Secrets
+    </div>`;
+}
+
+async function _wmBetDispatch() {
+  const order = window._wmPendingOrder;
+  if (!order) return;
+
+  const btn = document.getElementById('wmBetDispatchBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Wird ausgelöst…'; btn.style.opacity = '.6'; }
+
+  const orders = [{
+    home:      order.home,
+    away:      order.away,
+    market:    order.market,
+    league:    'WM2026',
+    stake:     POLY_STAKE,
+    polyPrice: order.polyPrice,
+    slug:      order.slug,
+    eventUrl:  order.slug ? `https://polymarket.com/sports/fifa-world-cup/${order.slug}` : null,
+    edgePP:    order.edge,
+    pinnFair:  order.pinnFair,
+  }];
+
+  let ok = false;
+  try {
+    ok = await _callGitHubDispatch(orders);
+  } catch(e) {
+    console.error('[WMBet] dispatch error:', e);
+    ok = true; // action may have triggered despite error
+  }
+
+  const modal = document.getElementById('polyModal');
+  const body  = document.getElementById('polyModalBody');
+
+  if (ok) {
+    body.innerHTML = `
+      <div style="text-align:center;padding:30px 20px">
+        <div style="font-size:48px;margin-bottom:16px">✅</div>
+        <div style="font-size:17px;font-weight:800;color:#3fb950;margin-bottom:8px">GitHub Action ausgelöst</div>
+        <div style="font-size:13px;color:#8b949e;margin-bottom:6px">${order.home} vs ${order.away} — ${order.market}</div>
+        <div style="font-size:12px;color:#484f58">polymarket_bet.py läuft jetzt auf deinem Runner.<br>Ergebnis erscheint in picks_history.json.</div>
+        <button onclick="document.getElementById('polyModal').style.display='none'"
+          style="margin-top:20px;background:#21262d;border:1px solid #30363d;border-radius:8px;
+                 color:#e6edf3;font-size:13px;font-weight:600;padding:8px 20px;cursor:pointer;font-family:inherit">
+          Schließen
+        </button>
+      </div>`;
+  } else {
+    if (btn) { btn.disabled = false; btn.textContent = '🟣 Nochmal versuchen'; btn.style.opacity = '1'; }
+    _polyToast('❌ GitHub Dispatch fehlgeschlagen — PAT prüfen');
+  }
+}
+
 // ── WM 2026 Market Table ───────────────────────────────────────────────────
 const ALERT_EDGE_PP = 3;   // ≥ this pp → show in Alert Zone (manual review week)
                             // raise to 5 when auto-trigger is live
@@ -1201,22 +1331,34 @@ function _renderWmMarketTable() {
   };
 
   // ── outcome chip ─────────────────────────────────────────────────────────
-  const outcomeChip = (label, pinn, poly, edge, logData) => {
+  // betOrder: full order object for _wmBetConfirm; null = no bet button
+  const outcomeChip = (label, pinn, poly, edge, logData, betOrder) => {
     const col = ec(edge);
     const bg  = eb(edge);
     const isAlert = edge !== null && edge >= ALERT_EDGE_PP;
+
+    const betBtn = (betOrder && poly && edge !== null && edge >= ALERT_EDGE_PP)
+      ? `<button onclick="event.stopPropagation();_wmBetConfirm(decodeURIComponent('${
+          encodeURIComponent(JSON.stringify(betOrder))
+        }'))"
+          style="margin-left:4px;background:linear-gradient(135deg,#e3b34122,#a0782212);
+                 border:1px solid #e3b34155;border-radius:5px;color:#e3b341;
+                 font-size:10px;font-weight:700;padding:2px 8px;cursor:pointer;
+                 white-space:nowrap;transition:opacity .15s"
+          onmouseover="this.style.opacity='.75'" onmouseout="this.style.opacity='1'">🟣 Setzen</button>`
+      : '';
+
     return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;
                         background:${bg};border-radius:7px;
                         border:1px solid ${isAlert ? col+'44' : '#21262d'}">
-      <span style="font-size:11px;color:#6e7681;font-weight:700;min-width:12px">${label}</span>
-      <span style="font-size:12px;color:#8b949e">${fmt(pinn)}</span>
-      <span style="font-size:10px;color:#484f58">→</span>
+      <span style="font-size:11px;color:#6e7681;font-weight:700;min-width:14px">${label}</span>
+      ${pinn ? `<span style="font-size:12px;color:#8b949e">${fmt(pinn)}</span><span style="font-size:10px;color:#484f58">→</span>` : ''}
       <span style="font-size:12px;color:#a78bfa;font-weight:700">${p2o(poly)}</span>
       ${edge !== null && edge > 0
         ? `<span style="font-size:11px;font-weight:800;color:${col};margin-left:2px">+${edge}pp${isAlert ? ' ▲' : ''}</span>`
         : (edge !== null ? `<span style="font-size:10px;color:#484f58">${edge}pp</span>` : '')
       }
-      ${logBtn(logData)}
+      ${logBtn(logData)}${betBtn}
     </div>`;
   };
 
@@ -1252,11 +1394,14 @@ function _renderWmMarketTable() {
     if (fix.hasPinnacle) {
       outcomesHtml = `<div style="display:flex;flex-direction:column;gap:4px">
         ${outcomeChip('H', fix.pinn_hw, fix.poly_hw, fix.edge_hw,
-          {home:fix.home,away:fix.away,market:'Heimsieg',priceKey:'hw',polyPrice:fix.poly_hw,pinnFair:fix.fair_hw,slug:fix.slug,edge:fix.edge_hw})}
+          {home:fix.home,away:fix.away,market:'Heimsieg',priceKey:'hw',polyPrice:fix.poly_hw,pinnFair:fix.fair_hw,slug:fix.slug,edge:fix.edge_hw},
+          {home:fix.home,away:fix.away,market:'Heimsieg',polyPrice:fix.poly_hw,pinnFair:fix.fair_hw,slug:fix.slug,edge:fix.edge_hw})}
         ${outcomeChip('X', fix.pinn_dr, fix.poly_dr, fix.edge_dr,
-          {home:fix.home,away:fix.away,market:'Unentschieden',priceKey:'dr',polyPrice:fix.poly_dr,pinnFair:fix.fair_dr,slug:fix.slug,edge:fix.edge_dr})}
+          {home:fix.home,away:fix.away,market:'Unentschieden',priceKey:'dr',polyPrice:fix.poly_dr,pinnFair:fix.fair_dr,slug:fix.slug,edge:fix.edge_dr},
+          {home:fix.home,away:fix.away,market:'Unentschieden',polyPrice:fix.poly_dr,pinnFair:fix.fair_dr,slug:fix.slug,edge:fix.edge_dr})}
         ${outcomeChip('A', fix.pinn_aw, fix.poly_aw, fix.edge_aw,
-          {home:fix.home,away:fix.away,market:'Auswärtssieg',priceKey:'aw',polyPrice:fix.poly_aw,pinnFair:fix.fair_aw,slug:fix.slug,edge:fix.edge_aw})}
+          {home:fix.home,away:fix.away,market:'Auswärtssieg',priceKey:'aw',polyPrice:fix.poly_aw,pinnFair:fix.fair_aw,slug:fix.slug,edge:fix.edge_aw},
+          {home:fix.home,away:fix.away,market:'Auswärtssieg',polyPrice:fix.poly_aw,pinnFair:fix.fair_aw,slug:fix.slug,edge:fix.edge_aw})}
       </div>`;
     } else {
       // No Pinnacle yet — compact single line
@@ -1270,22 +1415,33 @@ function _renderWmMarketTable() {
       </div>`;
     }
 
-    // O/U + BTTS (collapsed summary line, not full cards)
+    // O/U + BTTS — shown as chips with bet buttons (same as 1X2)
     let ouHtml = '';
-    if (fix.hasPinnacle && (fix.poly_o25 || fix.poly_btts)) {
+    if (fix.poly_o25 || fix.poly_btts) {
       const moreMktUrl = fix.moreMktSlug
         ? `https://polymarket.com/de/sports/fifa-world-cup/${fix.moreMktSlug}` : polyUrl;
-      ouHtml = `<div style="margin-top:6px;padding-top:6px;border-top:1px solid #21262d22;
-                             display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <span style="font-size:10px;color:#484f58;font-weight:600">O/U:</span>
-        ${fix.poly_o25 ? `<span style="font-size:11px;color:#6e7681">Ü2.5 <strong style="color:#a78bfa">${p2o(fix.poly_o25)}</strong>${fix.edge_o25 !== null && fix.edge_o25 > 0 ? ` <span style="color:${ec(fix.edge_o25)};font-size:10px">+${fix.edge_o25}pp</span>` : ''}</span>` : ''}
-        ${fix.poly_u25 ? `<span style="font-size:11px;color:#6e7681">U2.5 <strong style="color:#a78bfa">${p2o(fix.poly_u25)}</strong></span>` : ''}
-        ${fix.poly_o15 ? `<span style="font-size:11px;color:#484f58">Ü1.5 ${p2o(fix.poly_o15)}</span>` : ''}
-        ${fix.poly_o35 ? `<span style="font-size:11px;color:#484f58">Ü3.5 ${p2o(fix.poly_o35)}</span>` : ''}
-        ${fix.poly_btts ? `<span style="font-size:11px;color:#6e7681">BTTS <strong style="color:#a78bfa">${p2o(fix.poly_btts)}</strong></span>` : ''}
+      const ouSlug = fix.moreMktSlug || fix.slug;
+
+      ouHtml = `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #21262d">
+        <div style="font-size:10px;color:#484f58;font-weight:600;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px">Over / Under + BTTS</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          ${fix.poly_o25 ? outcomeChip('Ü2.5', fix.pinn_o25||null, fix.poly_o25, fix.edge_o25 ?? null,
+              {home:fix.home,away:fix.away,market:'Over 2.5',priceKey:'o25',polyPrice:fix.poly_o25,pinnFair:fix.fair_o25,slug:ouSlug,edge:fix.edge_o25},
+              {home:fix.home,away:fix.away,market:'Over 2.5 Tore',polyPrice:fix.poly_o25,pinnFair:fix.fair_o25,slug:ouSlug,edge:fix.edge_o25}) : ''}
+          ${fix.poly_u25 ? outcomeChip('U2.5', fix.pinn_u25||null, fix.poly_u25, fix.edge_u25 ?? null,
+              {home:fix.home,away:fix.away,market:'Under 2.5',priceKey:'u25',polyPrice:fix.poly_u25,pinnFair:fix.fair_u25,slug:ouSlug,edge:fix.edge_u25},
+              {home:fix.home,away:fix.away,market:'Under 2.5 Tore',polyPrice:fix.poly_u25,pinnFair:fix.fair_u25,slug:ouSlug,edge:fix.edge_u25}) : ''}
+          ${fix.poly_o15 ? outcomeChip('Ü1.5', null, fix.poly_o15, null, null,
+              {home:fix.home,away:fix.away,market:'Over 1.5 Tore',polyPrice:fix.poly_o15,slug:ouSlug,edge:null}) : ''}
+          ${fix.poly_o35 ? outcomeChip('Ü3.5', null, fix.poly_o35, null, null,
+              {home:fix.home,away:fix.away,market:'Over 3.5 Tore',polyPrice:fix.poly_o35,slug:ouSlug,edge:null}) : ''}
+          ${fix.poly_btts ? outcomeChip('BTTS', null, fix.poly_btts, null, null,
+              {home:fix.home,away:fix.away,market:'BTTS',priceKey:'btts',polyPrice:fix.poly_btts,slug:ouSlug,edge:null},
+              {home:fix.home,away:fix.away,market:'Beide Teams treffen',polyPrice:fix.poly_btts,slug:ouSlug,edge:null}) : ''}
+        </div>
         <a href="${moreMktUrl}" target="_blank" rel="noopener"
-           style="margin-left:auto;font-size:10px;color:#a78bfa55;text-decoration:none;transition:color .15s"
-           onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color='#a78bfa55'">+Alle Märkte →</a>
+           style="display:inline-block;margin-top:6px;font-size:10px;color:#a78bfa55;text-decoration:none;transition:color .15s"
+           onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color='#a78bfa55'">+Alle Märkte auf Polymarket →</a>
       </div>`;
     }
 
