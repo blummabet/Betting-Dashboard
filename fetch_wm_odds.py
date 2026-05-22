@@ -398,22 +398,32 @@ def main():
 
     print(f"  → {len(events)} h2h events fetched")
 
-    # ── Fetch 2: totals + btts ohne Bookmaker-Filter ──────────
-    # Pinnacle liefert WM-Totals nicht immer via TheOddsAPI — daher
-    # separate Anfrage ohne Bookmaker-Einschränkung (alle verfügbaren Büros).
-    print(f"  📥  Fetching totals+btts (all bookmakers)…")
-    path_totals = (f"/v4/sports/{sport_key}/odds"
+    # ── Fetch 2: totals + btts per Event-ID ──────────────────
+    # Der Batch-Endpoint (/odds?markets=totals) gibt für WM 0 Events zurück,
+    # weil TheOddsAPI den WM-Totals-Batch nicht befüllt (Coverage-Lücke).
+    # Lösung: per-Event-Endpoint /events/{id}/odds — gleicher Ansatz wie
+    # test-cards-api.js für Cards/Corners. Pinnacle O/U ist dort verfügbar.
+    print(f"\n  📥  Fetching totals+btts per event (per-event endpoint)…")
+    event_ids = [ev["id"] for ev in events if ev.get("id")]
+    totals_by_id: dict[str, dict] = {}
+
+    for i, eid in enumerate(event_ids):
+        path_ev = (f"/v4/sports/{sport_key}/events/{eid}/odds"
                    f"?apiKey={ODDS_KEY}"
                    f"&regions=eu,uk,us"
                    f"&markets=totals,btts"
                    f"&oddsFormat=decimal")
-    events_totals = odds_get(path_totals) or []
-    print(f"  → {len(events_totals)} totals events fetched")
+        ev_data = odds_get(path_ev)
+        if isinstance(ev_data, dict) and ev_data.get("bookmakers"):
+            totals_by_id[eid] = ev_data
+        # Rate limit: kurze Pause zwischen Calls
+        if i < len(event_ids) - 1:
+            time.sleep(0.25)
 
-    # Totals-Events als Lookup by ID für schnellen Zugriff
-    totals_by_id: dict[str, dict] = {ev["id"]: ev for ev in events_totals if ev.get("id")}
-    # Auch by home+away team für Fallback-Matching
-    totals_by_teams: list[dict] = events_totals
+    t_ok = sum(1 for v in totals_by_id.values() if v.get("bookmakers"))
+    print(f"  → {len(event_ids)} events abgefragt, {t_ok} mit Totals-Daten")
+    # Kein teams-Fallback nötig da wir per ID matchen
+    totals_by_teams: list[dict] = []
 
     # ── Load odds history ─────────────────────────────────────
     history = _load_history()
