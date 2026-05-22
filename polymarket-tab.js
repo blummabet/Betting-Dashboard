@@ -955,7 +955,7 @@ function _openLogPositionModal(data) {
   overlay._posData = data;
   document.getElementById('wmPosTitle').textContent = `${data.home} vs ${data.away} — ${data.market}`;
   document.getElementById('wmPosEntry').value   = data.polyPrice.toFixed(4);
-  document.getElementById('wmPosStake').value   = String(POLY_STAKE);
+  document.getElementById('wmPosStake').value   = String(_getStakeForEdge(data.edge ?? 0));
   document.getElementById('wmPosPinnFair').value = data.pinnFair.toFixed(4);
   document.getElementById('wmPosSlug').value    = data.slug;
   document.getElementById('wmPosPriceKey').value = data.priceKey;
@@ -1137,7 +1137,7 @@ function _wmBetConfirm(orderJson) {
 
   const polyOddsStr = order.polyPrice ? (1 / order.polyPrice).toFixed(2) : '—';
   const edgeStr     = order.edge != null && order.edge > 0 ? `+${order.edge}pp vs Pinnacle fair` : '';
-  const stakeEur    = POLY_STAKE;
+  const stakeEur    = _getStakeForEdge(order.edge ?? 0);
   const potentialWin = order.polyPrice > 0
     ? ((stakeEur / order.polyPrice) - stakeEur).toFixed(2)
     : '?';
@@ -1222,7 +1222,7 @@ async function _wmBetDispatch() {
     away:      order.away,
     market:    order.market,
     league:    'WM2026',
-    stake:     POLY_STAKE,
+    stake:     _getStakeForEdge(order.edge ?? 0),
     polyPrice: order.polyPrice,
     slug:      order.slug,
     eventUrl:  order.slug ? `https://polymarket.com/sports/fifa-world-cup/${order.slug}` : null,
@@ -1262,6 +1262,113 @@ async function _wmBetDispatch() {
 // ── WM 2026 Market Table ───────────────────────────────────────────────────
 const ALERT_EDGE_PP = 3;   // ≥ this pp → show in Alert Zone (manual review week)
                             // raise to 5 when auto-trigger is live
+
+// ── Stake config per edge threshold (stored in localStorage) ──────────────
+// Tiers: [{minEdge: 3, stake: 5}, {minEdge: 5, stake: 10}, {minEdge: 7, stake: 15}]
+// _getStakeForEdge picks the highest matching tier.
+const _WM_STAKE_CONFIG_KEY = 'wmStakeConfig';
+const _WM_STAKE_DEFAULTS = [
+  { minEdge: 3, stake: 5  },
+  { minEdge: 5, stake: 10 },
+  { minEdge: 7, stake: 15 },
+];
+
+function _getWmStakeConfig() {
+  try {
+    const raw = localStorage.getItem(_WM_STAKE_CONFIG_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length) return parsed;
+    }
+  } catch(e) {}
+  return _WM_STAKE_DEFAULTS.map(t => ({...t})); // return copies
+}
+
+function _saveWmStakeConfig(tiers) {
+  try { localStorage.setItem(_WM_STAKE_CONFIG_KEY, JSON.stringify(tiers)); } catch(e) {}
+}
+
+function _getStakeForEdge(edgePP) {
+  const tiers = _getWmStakeConfig();
+  // Sort highest minEdge first, pick first tier where edgePP qualifies
+  const sorted = [...tiers].sort((a, b) => b.minEdge - a.minEdge);
+  for (const t of sorted) {
+    if (edgePP >= t.minEdge) return t.stake;
+  }
+  return POLY_STAKE; // fallback to flat constant
+}
+
+function _renderWmStakeConfig() {
+  const tiers = _getWmStakeConfig();
+  const rows = tiers.map((t, i) => `
+    <div style="display:grid;grid-template-columns:auto 1fr auto 1fr auto;gap:4px 8px;align-items:center;margin-bottom:6px">
+      <span style="font-size:11px;color:#6e7681">ab</span>
+      <input type="number" min="1" max="20" step="0.5" value="${t.minEdge}"
+        id="wmStakeTierEdge${i}"
+        style="background:#0d1117;border:1px solid #30363d;border-radius:5px;color:#e6edf3;font-size:12px;padding:4px 8px;width:60px;font-family:inherit">
+      <span style="font-size:11px;color:#6e7681">pp → €</span>
+      <input type="number" min="1" max="500" step="1" value="${t.stake}"
+        id="wmStakeTierStake${i}"
+        style="background:#0d1117;border:1px solid #30363d;border-radius:5px;color:#3fb950;font-size:12px;padding:4px 8px;width:60px;font-family:inherit;font-weight:700">
+      <button onclick="_wmRemoveStakeTier(${i})"
+        style="background:none;border:none;color:#484f58;cursor:pointer;font-size:13px;padding:2px 4px" title="Entfernen">×</button>
+    </div>`).join('');
+
+  return `
+    <div id="wmStakeConfigPanel" style="background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:12px 14px;margin-top:10px">
+      <div style="font-size:10px;font-weight:700;color:#484f58;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">💰 Stake-Konfiguration</div>
+      <div id="wmStakeTierRows">${rows}</div>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button onclick="_wmAddStakeTier()"
+          style="background:#161b22;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;padding:4px 10px;cursor:pointer;font-family:inherit">
+          + Tier
+        </button>
+        <button onclick="_wmSaveStakeConfig()"
+          style="background:#3fb95022;border:1px solid #3fb95055;border-radius:6px;color:#3fb950;font-size:11px;font-weight:700;padding:4px 12px;cursor:pointer;font-family:inherit">
+          ✓ Speichern
+        </button>
+        <button onclick="_wmResetStakeConfig()"
+          style="background:none;border:none;color:#484f58;font-size:11px;padding:4px 6px;cursor:pointer;font-family:inherit">
+          Reset
+        </button>
+      </div>
+      <div id="wmStakeConfigMsg" style="font-size:10px;color:#3fb950;margin-top:5px;min-height:14px"></div>
+    </div>`;
+}
+
+function _wmSaveStakeConfig() {
+  const tiers = _getWmStakeConfig();
+  const saved = tiers.map((_, i) => ({
+    minEdge: parseFloat(document.getElementById(`wmStakeTierEdge${i}`)?.value ?? _.minEdge),
+    stake:   parseFloat(document.getElementById(`wmStakeTierStake${i}`)?.value ?? _.stake),
+  })).filter(t => !isNaN(t.minEdge) && !isNaN(t.stake) && t.stake > 0);
+  _saveWmStakeConfig(saved);
+  const msg = document.getElementById('wmStakeConfigMsg');
+  if (msg) { msg.textContent = '✓ Gespeichert'; setTimeout(() => { if(msg) msg.textContent = ''; }, 2000); }
+}
+
+function _wmRemoveStakeTier(i) {
+  const tiers = _getWmStakeConfig();
+  tiers.splice(i, 1);
+  _saveWmStakeConfig(tiers);
+  const panel = document.getElementById('wmStakeConfigPanel');
+  if (panel) panel.outerHTML = _renderWmStakeConfig();
+}
+
+function _wmAddStakeTier() {
+  const tiers = _getWmStakeConfig();
+  const maxEdge = tiers.reduce((m, t) => Math.max(m, t.minEdge), 5);
+  tiers.push({ minEdge: maxEdge + 2, stake: 20 });
+  _saveWmStakeConfig(tiers);
+  const panel = document.getElementById('wmStakeConfigPanel');
+  if (panel) panel.outerHTML = _renderWmStakeConfig();
+}
+
+function _wmResetStakeConfig() {
+  _saveWmStakeConfig(_WM_STAKE_DEFAULTS.map(t => ({...t})));
+  const panel = document.getElementById('wmStakeConfigPanel');
+  if (panel) panel.outerHTML = _renderWmStakeConfig();
+}
 
 function _renderWmMarketTable() {
   _ensureWmPosModal();
@@ -1602,30 +1709,50 @@ function _renderWmMarketTable() {
           <span style="color:#484f58"> → ${counts.alert} Kandidat${counts.alert !== 1 ? 'en' : ''} jetzt</span>
         </div>
         <div>
-          <span style="color:#484f58">Bereits platziert:</span>
+          <span style="color:#484f58">Platziert:</span>
           <span id="wmAutoBetsCount" style="color:#8b949e;font-weight:700">…</span>
         </div>
         <div>
-          <span style="color:#484f58">Kelly:</span>
-          <span style="color:#8b949e">f* = (edge/odds) — Flats €${POLY_STAKE} pro Bet</span>
+          <span style="color:#484f58">Poly Balance:</span>
+          <span id="wmPolyBalance" style="color:#a78bfa;font-weight:700">…</span>
         </div>
       </div>
+      ${_renderWmStakeConfig()}
     </div>
   </div>`;
 
-  // Async: fetch wm_auto_bets_placed.json to show placed-bet count in System Info
-  // Must run AFTER the HTML is injected into the DOM, so we defer via setTimeout
+  // Async: fetch stats for System Info (deferred so DOM is ready)
   setTimeout(() => {
+    // Placed bet count
     fetch('wm_auto_bets_placed.json?' + Date.now())
       .then(r => r.ok ? r.json() : null)
       .then(d => {
         const el = document.getElementById('wmAutoBetsCount');
         if (!el) return;
-        const count = d && Array.isArray(d.bets) ? d.bets.length : 0;
-        el.textContent = count + ' Bet' + (count !== 1 ? 's' : '');
+        const bets  = d && Array.isArray(d.bets) ? d.bets : [];
+        const count = bets.length;
+        const total = bets.reduce((s, b) => s + (b.stake ?? 0), 0);
+        el.textContent = `${count} Bet${count !== 1 ? 's' : ''} · €${total.toFixed(0)} gesamt`;
       })
       .catch(() => {
         const el = document.getElementById('wmAutoBetsCount');
+        if (el) el.textContent = '—';
+      });
+
+    // Polymarket USDC balance
+    fetch('wm_poly_balance.json?' + Date.now())
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        const el = document.getElementById('wmPolyBalance');
+        if (!el) return;
+        if (!d || d.usdc == null) { el.textContent = '—'; return; }
+        const updStr = d.updatedAt
+          ? ` <span style="color:#484f58;font-size:10px;font-weight:400">(${new Date(d.updatedAt).toLocaleTimeString('de-AT', {hour:'2-digit',minute:'2-digit'})})</span>`
+          : '';
+        el.innerHTML = `$${d.usdc.toFixed(2)} USDC${updStr}`;
+      })
+      .catch(() => {
+        const el = document.getElementById('wmPolyBalance');
         if (el) el.textContent = '—';
       });
   }, 0);

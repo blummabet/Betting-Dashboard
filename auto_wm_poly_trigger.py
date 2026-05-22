@@ -38,7 +38,22 @@ ENABLED = False
 AUTO_TRIGGER_EDGE_PP = 5.0   # Mindest-Edge in Prozentpunkten
 MIN_VOL              = 10000  # Mindest-Volumen auf Polymarket (USDC)
 MIN_DAYS_UNTIL_GAME  = 1      # Nicht am Spieltag selbst — zu wenig Zeit für Human Review
-STAKE_USDC           = 5.5    # Einsatz pro Bet (entspricht ~€5)
+
+# Stake-Tiers: Edge ≥ minEdge → stake in USDC
+# Spiegelt die Dashboard-Konfiguration (wmStakeConfig in localStorage).
+# Manuell hier anpassen wenn Dashboard-Config geändert wird.
+STAKE_TIERS = [
+    {"minEdge": 7.0, "stake": 15.0},
+    {"minEdge": 5.0, "stake": 10.0},
+    {"minEdge": 3.0, "stake":  5.0},
+]
+
+def _get_stake_for_edge(edge_pp: float) -> float:
+    """Gibt den Einsatz für den gegebenen Edge-Wert zurück (höchster passender Tier)."""
+    for tier in sorted(STAKE_TIERS, key=lambda t: -t["minEdge"]):
+        if edge_pp >= tier["minEdge"]:
+            return tier["stake"]
+    return STAKE_TIERS[-1]["stake"] if STAKE_TIERS else 5.0  # fallback
 
 BASE_DIR              = os.path.dirname(os.path.abspath(__file__))
 PRICES_FILE           = os.path.join(BASE_DIR, "wm_poly_prices.json")
@@ -154,7 +169,7 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                 "away":      fix["away"],
                 "market":    market_label,
                 "league":    "WM2026",
-                "stake":     STAKE_USDC,
+                "stake":     _get_stake_for_edge(edge),
                 "polyPrice": poly_price,
                 "slug":      slug,
                 "eventUrl":  event_url,
@@ -232,7 +247,7 @@ def main():
             load_history,
             save_history,
             log_bet_to_history,
-            STAKE_USDC as _STAKE,
+            # STAKE_USDC unused (per-bet stake comes from _get_stake_for_edge)
         )
     except ImportError as e:
         print(f"❌ Konnte polymarket_bet.py nicht importieren: {e}")

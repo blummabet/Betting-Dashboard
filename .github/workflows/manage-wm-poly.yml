@@ -52,6 +52,13 @@ jobs:
       #     POLY_PRIVATE_KEY:     ${{ secrets.POLY_PRIVATE_KEY }}
       #     AUTO_TRIGGER_ENABLED: "false"  # auf "true" setzen um live zu gehen
 
+      # ── Polymarket USDC Balance von Polygon holen ────────────────────────────
+      - name: 💰 Polymarket Balance fetchen
+        run: python fetch_wm_poly_balance.py
+        continue-on-error: true
+        env:
+          POLY_FUNDER_ADDRESS: ${{ secrets.POLY_FUNDER_ADDRESS }}
+
       # ── Dann Positionen prüfen & Sell-Alerts senden ───────────────────────────
       - name: 📊 WM Poly Positionen prüfen
         run: python manage_wm_poly_positions.py
@@ -64,7 +71,7 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add wm_poly_positions.json wm_poly_prices.json wm_auto_bets_placed.json 2>/dev/null || true
+          git add wm_poly_positions.json wm_poly_prices.json wm_auto_bets_placed.json wm_poly_balance.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."
           else
