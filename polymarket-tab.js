@@ -1118,229 +1118,305 @@ function _ensureWmPosModal() {
 }
 
 // ── WM 2026 Market Table ───────────────────────────────────────────────────
-// Shows all 72 WM fixtures with Pinnacle vs Polymarket 1X2 comparison.
-// Replaces the old CLV radar — includes ALL games, not just edge ≥5pp.
+const ALERT_EDGE_PP = 3;   // ≥ this pp → show in Alert Zone (manual review week)
+                            // raise to 5 when auto-trigger is live
+
 function _renderWmMarketTable() {
   _ensureWmPosModal();
-
   const openPosHtml = _renderWmOpenPositions();
 
   if (!_wmAllFixtures || _wmAllFixtures.length === 0) {
-    // If no allFixtures yet, fall back to old radar logic briefly
-    if (!_wmClvRadar || _wmClvRadar.length === 0) {
-      return openPosHtml
-        ? `<div style="grid-column:1/-1;margin-bottom:20px">${openPosHtml}</div>`
-        : '';
-    }
+    return openPosHtml
+      ? `<div style="margin-bottom:20px">${openPosHtml}</div>`
+      : `<div style="text-align:center;padding:60px 20px;color:#484f58">
+           <div style="font-size:32px;margin-bottom:10px">⏳</div>
+           <div style="font-weight:600">WM-Daten werden geladen…</div>
+           <div style="font-size:12px;margin-top:6px">wm_poly_prices.json nicht gefunden oder leer</div>
+         </div>`;
   }
 
   // ── helpers ──────────────────────────────────────────────────────────────
-  const ec = pp => pp >= 5 ? '#3fb950' : pp >= 3 ? '#e3b341' : pp > 0 ? '#6e7681' : '#484f58';
-  const eb = pp => pp >= 5 ? '#3fb95018' : pp >= 3 ? '#e3b34118' : 'transparent';
+  const ec  = pp => pp >= 5 ? '#3fb950' : pp >= 3 ? '#e3b341' : pp > 0 ? '#8b949e' : '#484f58';
+  const eb  = pp => pp >= 5 ? '#3fb95018' : pp >= 3 ? '#e3b34112' : 'transparent';
   const fmt = odds => odds ? odds.toFixed(2) : '—';
-  const polyOdds = p => (p && p > 0) ? (1/p).toFixed(2) : '—';
+  const p2o = p  => (p && p > 0) ? (1/p).toFixed(2) : '—';  // probability → decimal odds
+
+  // Days until match
+  const daysUntil = dateStr => {
+    if (!dateStr) return null;
+    const diff = Math.ceil((new Date(dateStr) - new Date()) / 86400000);
+    return diff;
+  };
+  const daysBadge = dateStr => {
+    const d = daysUntil(dateStr);
+    if (d === null) return '';
+    if (d <= 0)  return `<span style="color:#f85149;font-size:10px;font-weight:700">HEUTE</span>`;
+    if (d === 1) return `<span style="color:#e3b341;font-size:10px;font-weight:700">MORGEN</span>`;
+    if (d <= 7)  return `<span style="color:#e3b341;font-size:10px">in ${d}d</span>`;
+    return `<span style="color:#484f58;font-size:10px">in ${d}d</span>`;
+  };
 
   // ── filter ────────────────────────────────────────────────────────────────
   const f = _wmTableFilter;
-  const fixtures = (_wmAllFixtures.length > 0 ? _wmAllFixtures : []).filter(fix => {
-    if (f === 'edge5') return (fix.bestEdge || 0) >= 5;
-    if (f === 'edge3') return (fix.bestEdge || 0) >= 3;
-    if (f === 'pinn')  return fix.hasPinnacle;
-    return true; // 'all'
-  });
-
+  const allFix = _wmAllFixtures;
   const counts = {
-    all:   _wmAllFixtures.length,
-    edge3: _wmAllFixtures.filter(x => (x.bestEdge||0) >= 3).length,
-    edge5: _wmAllFixtures.filter(x => (x.bestEdge||0) >= 5).length,
-    pinn:  _wmAllFixtures.filter(x => x.hasPinnacle).length,
+    alert: allFix.filter(x => (x.bestEdge||0) >= ALERT_EDGE_PP).length,
+    pinn:  allFix.filter(x => x.hasPinnacle).length,
+    all:   allFix.length,
   };
 
+  const alertFix = allFix.filter(x => (x.bestEdge||0) >= ALERT_EDGE_PP)
+                         .sort((a,b) => (b.bestEdge||0) - (a.bestEdge||0));
+
+  const tableFix = (() => {
+    if (f === 'alert') return alertFix;
+    if (f === 'pinn')  return allFix.filter(x => x.hasPinnacle);
+    return allFix; // 'all'
+  })();
+
   // ── filter bar ────────────────────────────────────────────────────────────
-  const filterBtn = (key, label, count) => {
+  const filterBtn = (key, label, count, color) => {
     const active = _wmTableFilter === key;
+    const baseCol = color || '#a78bfa';
     return `<button onclick="_setWmFilter('${key}')"
-      style="background:${active ? '#a78bfa33' : '#21262d'};
-             border:1px solid ${active ? '#a78bfa88' : '#30363d'};
-             border-radius:20px;color:${active ? '#a78bfa' : '#8b949e'};
+      style="background:${active ? baseCol+'28' : '#161b22'};
+             border:1px solid ${active ? baseCol+'99' : '#30363d'};
+             border-radius:20px;color:${active ? baseCol : '#8b949e'};
              font-size:11px;font-weight:${active ? '700' : '500'};
-             padding:4px 12px;cursor:pointer;transition:all .15s">
-      ${label} <span style="opacity:.7">${count}</span>
+             padding:5px 14px;cursor:pointer;transition:all .15s;white-space:nowrap">
+      ${label}${count !== undefined ? ` <span style="opacity:.7;font-size:10px">${count}</span>` : ''}
     </button>`;
   };
 
-  // ── fixture rows ──────────────────────────────────────────────────────────
-  const rows = fixtures.map(fix => {
+  // ── log-position button ────────────────────────────────────────────────────
+  const logBtn = (data, minEdge = 1) => {
+    if (!data || !data.polyPrice || !data.pinnFair || (data.edge||0) < minEdge) return '';
+    return `<button title="Position loggen" onclick="event.stopPropagation();_openLogPositionModal(JSON.parse(decodeURIComponent('${
+      encodeURIComponent(JSON.stringify(data))
+    }')))"
+      style="background:#a78bfa18;border:1px solid #a78bfa44;border-radius:5px;
+             color:#a78bfa;font-size:10px;font-weight:700;padding:2px 7px;
+             cursor:pointer;white-space:nowrap;transition:opacity .15s"
+      onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">✏️ loggen</button>`;
+  };
+
+  // ── outcome chip ─────────────────────────────────────────────────────────
+  const outcomeChip = (label, pinn, poly, edge, logData) => {
+    const col = ec(edge);
+    const bg  = eb(edge);
+    const isAlert = edge !== null && edge >= ALERT_EDGE_PP;
+    return `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;
+                        background:${bg};border-radius:7px;
+                        border:1px solid ${isAlert ? col+'44' : '#21262d'}">
+      <span style="font-size:11px;color:#6e7681;font-weight:700;min-width:12px">${label}</span>
+      <span style="font-size:12px;color:#8b949e">${fmt(pinn)}</span>
+      <span style="font-size:10px;color:#484f58">→</span>
+      <span style="font-size:12px;color:#a78bfa;font-weight:700">${p2o(poly)}</span>
+      ${edge !== null && edge > 0
+        ? `<span style="font-size:11px;font-weight:800;color:${col};margin-left:2px">+${edge}pp${isAlert ? ' ▲' : ''}</span>`
+        : (edge !== null ? `<span style="font-size:10px;color:#484f58">${edge}pp</span>` : '')
+      }
+      ${logBtn(logData)}
+    </div>`;
+  };
+
+  // ── single fixture card ───────────────────────────────────────────────────
+  const fixtureCard = (fix, compact=false) => {
     const [fy, fm, fd] = (fix.date || '').split('-');
-    const dateFmt = fy ? `${fd}.${fm}.` : '';
+    const dateFmt = fy ? `${fd}.${fm}.${fy.slice(2)}` : '—';
     const polyUrl = fix.slug ? `https://polymarket.com/de/sports/fifa-world-cup/${fix.slug}` : '#';
-    const be      = fix.bestEdge || 0;
+    const be = fix.bestEdge || 0;
 
-    // Outcome columns: Home | Draw | Away
-    const outcomes = [
-      { label: 'H', key: 'hw', pinn: fix.pinn_hw, poly: fix.poly_hw, edge: fix.edge_hw,
-        fair: fix.fair_hw, market: 'Heimsieg' },
-      { label: 'X', key: 'dr', pinn: fix.pinn_dr, poly: fix.poly_dr, edge: fix.edge_dr,
-        fair: fix.fair_dr, market: 'Unentschieden' },
-      { label: 'A', key: 'aw', pinn: fix.pinn_aw, poly: fix.poly_aw, edge: fix.edge_aw,
-        fair: fix.fair_aw, market: 'Auswärtssieg' },
-    ];
+    const borderCol = be >= 5 ? '#3fb95066' : be >= ALERT_EDGE_PP ? '#e3b34166' : '#21262d';
+    const bgCol     = be >= 5 ? '#0d1a0d'   : be >= ALERT_EDGE_PP ? '#1a160a'   : '#0d1117';
 
-    const outcomeHtml = outcomes.map(o => {
-      const edge    = o.edge;
-      const col     = edge !== null ? ec(edge) : '#484f58';
-      const bg      = edge !== null && edge > 0 ? eb(edge) : 'transparent';
-      const edgeStr = edge === null ? '' :
-        edge > 0  ? `<span style="color:${col};font-size:10px;font-weight:700">+${edge}pp${edge>=3?'↑':''}</span>` :
-                   `<span style="color:#484f58;font-size:10px">${edge}pp</span>`;
+    // Header row
+    const header = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+      <span style="font-size:13px;font-weight:700;color:#e6edf3">${fix.home} <span style="color:#484f58;font-weight:400">vs</span> ${fix.away}</span>
+      <span style="font-size:11px;color:#6e7681">${dateFmt}</span>
+      ${daysBadge(fix.date)}
+      ${be > 0 ? `<span style="font-size:11px;font-weight:800;color:${ec(be)};background:${eb(be)};
+                               padding:2px 8px;border-radius:8px;border:1px solid ${ec(be)}44">
+                    +${be}pp</span>` : ''}
+      <span style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <span style="font-size:10px;color:#484f58">Vol $${(fix.vol||0).toLocaleString('de-DE',{maximumFractionDigits:0})}</span>
+        <a href="${polyUrl}" target="_blank" rel="noopener"
+           style="background:#a78bfa22;border:1px solid #a78bfa55;border-radius:5px;
+                  color:#a78bfa;font-size:10px;font-weight:700;padding:3px 10px;
+                  text-decoration:none;white-space:nowrap">🔗 Poly</a>
+      </span>
+    </div>`;
 
-      // "Position loggen" only for outcomes with meaningful positive edge
-      const logBtn = (o.poly && o.fair && edge !== null && edge >= 1)
-        ? `<button title="Position loggen"
-             onclick="event.stopPropagation();_openLogPositionModal(JSON.parse(decodeURIComponent('${
-               encodeURIComponent(JSON.stringify({
-                 home: fix.home, away: fix.away,
-                 market: o.market, priceKey: o.key,
-                 polyPrice: o.poly, pinnFair: o.fair,
-                 slug: fix.slug,
-               }))
-             }')))"
-             style="background:none;border:none;color:#8b949e;font-size:11px;
-                    cursor:pointer;padding:0;opacity:.6;transition:opacity .15s"
-             onmouseover="this.style.opacity='1'"
-             onmouseout="this.style.opacity='.6'">✏️</button>`
-        : '';
-
-      return `<div style="background:${bg};border-radius:6px;padding:5px 8px;
-                          min-width:80px;text-align:center;border:1px solid ${bg==='transparent'?'#30363d22':'transparent'}">
-        <div style="font-size:10px;color:#6e7681;margin-bottom:2px;font-weight:600">${o.label}</div>
-        <div style="font-size:11px;color:#6e7681">Pinn: <strong style="color:#8b949e">${fmt(o.pinn)}</strong></div>
-        <div style="font-size:11px;color:#6e7681">Poly: <strong style="color:#a78bfa">${polyOdds(o.poly)}</strong></div>
-        <div style="margin-top:3px;display:flex;align-items:center;justify-content:center;gap:4px">
-          ${edgeStr}${logBtn}
-        </div>
+    // Outcomes
+    let outcomesHtml;
+    if (fix.hasPinnacle) {
+      outcomesHtml = `<div style="display:flex;flex-direction:column;gap:4px">
+        ${outcomeChip('H', fix.pinn_hw, fix.poly_hw, fix.edge_hw,
+          {home:fix.home,away:fix.away,market:'Heimsieg',priceKey:'hw',polyPrice:fix.poly_hw,pinnFair:fix.fair_hw,slug:fix.slug,edge:fix.edge_hw})}
+        ${outcomeChip('X', fix.pinn_dr, fix.poly_dr, fix.edge_dr,
+          {home:fix.home,away:fix.away,market:'Unentschieden',priceKey:'dr',polyPrice:fix.poly_dr,pinnFair:fix.fair_dr,slug:fix.slug,edge:fix.edge_dr})}
+        ${outcomeChip('A', fix.pinn_aw, fix.poly_aw, fix.edge_aw,
+          {home:fix.home,away:fix.away,market:'Auswärtssieg',priceKey:'aw',polyPrice:fix.poly_aw,pinnFair:fix.fair_aw,slug:fix.slug,edge:fix.edge_aw})}
       </div>`;
-    }).join('');
-
-    // ── O/U 2.5 + BTTS row (from -more-markets child event) ──────────────────
-    const buildMktCard = (label, polyP, pinnOdds, fairP, edgePP, logData) => {
-      const col    = edgePP !== null ? ec(edgePP) : '#484f58';
-      const bg     = (edgePP !== null && edgePP > 0) ? eb(edgePP) : 'transparent';
-      const border = bg === 'transparent' ? '#30363d22' : 'transparent';
-      const edgeStr = edgePP === null ? '' :
-        edgePP > 0 ? `<span style="color:${col};font-size:10px;font-weight:700">+${edgePP}pp${edgePP>=3?'↑':''}</span>`
-                   : `<span style="color:#484f58;font-size:10px">${edgePP}pp</span>`;
-      const logBtn = (polyP && fairP && edgePP !== null && edgePP >= 1 && logData)
-        ? `<button title="Position loggen"
-             onclick="event.stopPropagation();_openLogPositionModal(JSON.parse(decodeURIComponent('${
-               encodeURIComponent(JSON.stringify(logData))
-             }')))"
-             style="background:none;border:none;color:#8b949e;font-size:11px;
-                    cursor:pointer;padding:0;opacity:.6;transition:opacity .15s"
-             onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">✏️</button>`
-        : '';
-      return `<div style="background:${bg};border-radius:6px;padding:5px 8px;
-                          min-width:80px;text-align:center;border:1px solid ${border}">
-        <div style="font-size:10px;color:#6e7681;margin-bottom:2px;font-weight:600">${label}</div>
-        ${pinnOdds ? `<div style="font-size:11px;color:#6e7681">Pinn: <strong style="color:#8b949e">${fmt(pinnOdds)}</strong></div>` : ''}
-        <div style="font-size:11px;color:#6e7681">Poly: <strong style="color:#a78bfa">${polyOdds(polyP)}</strong></div>
-        <div style="margin-top:3px;display:flex;align-items:center;justify-content:center;gap:4px">
-          ${edgeStr}${logBtn}
-        </div>
+    } else {
+      // No Pinnacle yet — compact single line
+      outcomesHtml = `<div style="font-size:11px;color:#484f58;padding:2px 0;display:flex;gap:12px;flex-wrap:wrap">
+        <span>⏳ Pinnacle noch nicht gelistet</span>
+        <span style="color:#6e7681">H <strong style="color:#a78bfa">${p2o(fix.poly_hw)}</strong></span>
+        <span style="color:#6e7681">X <strong style="color:#a78bfa">${p2o(fix.poly_dr)}</strong></span>
+        <span style="color:#6e7681">A <strong style="color:#a78bfa">${p2o(fix.poly_aw)}</strong></span>
+        ${fix.poly_o25 ? `<span style="color:#6e7681">Ü2.5 <strong style="color:#a78bfa">${p2o(fix.poly_o25)}</strong></span>` : ''}
+        ${fix.poly_btts ? `<span style="color:#6e7681">BTTS <strong style="color:#a78bfa">${p2o(fix.poly_btts)}</strong></span>` : ''}
       </div>`;
-    };
+    }
 
-    const hasMoreMkts = fix.poly_o25 || fix.poly_btts;
-    const moreRow = hasMoreMkts ? (() => {
-      const moreParts = [];
+    // O/U + BTTS (collapsed summary line, not full cards)
+    let ouHtml = '';
+    if (fix.hasPinnacle && (fix.poly_o25 || fix.poly_btts)) {
       const moreMktUrl = fix.moreMktSlug
         ? `https://polymarket.com/de/sports/fifa-world-cup/${fix.moreMktSlug}` : polyUrl;
+      ouHtml = `<div style="margin-top:6px;padding-top:6px;border-top:1px solid #21262d22;
+                             display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <span style="font-size:10px;color:#484f58;font-weight:600">O/U:</span>
+        ${fix.poly_o25 ? `<span style="font-size:11px;color:#6e7681">Ü2.5 <strong style="color:#a78bfa">${p2o(fix.poly_o25)}</strong>${fix.edge_o25 !== null && fix.edge_o25 > 0 ? ` <span style="color:${ec(fix.edge_o25)};font-size:10px">+${fix.edge_o25}pp</span>` : ''}</span>` : ''}
+        ${fix.poly_u25 ? `<span style="font-size:11px;color:#6e7681">U2.5 <strong style="color:#a78bfa">${p2o(fix.poly_u25)}</strong></span>` : ''}
+        ${fix.poly_o15 ? `<span style="font-size:11px;color:#484f58">Ü1.5 ${p2o(fix.poly_o15)}</span>` : ''}
+        ${fix.poly_o35 ? `<span style="font-size:11px;color:#484f58">Ü3.5 ${p2o(fix.poly_o35)}</span>` : ''}
+        ${fix.poly_btts ? `<span style="font-size:11px;color:#6e7681">BTTS <strong style="color:#a78bfa">${p2o(fix.poly_btts)}</strong></span>` : ''}
+        <a href="${moreMktUrl}" target="_blank" rel="noopener"
+           style="margin-left:auto;font-size:10px;color:#a78bfa55;text-decoration:none;transition:color .15s"
+           onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color='#a78bfa55'">+Alle Märkte →</a>
+      </div>`;
+    }
 
-      if (fix.poly_o25 !== undefined && fix.poly_o25 !== null) {
-        moreParts.push(buildMktCard('Ü2.5', fix.poly_o25, fix.pinn_o25, fix.fair_o25, fix.edge_o25,
-          { home: fix.home, away: fix.away, market: 'Over 2.5', priceKey: 'o25',
-            polyPrice: fix.poly_o25, pinnFair: fix.fair_o25, slug: fix.moreMktSlug || fix.slug }));
-        moreParts.push(buildMktCard('U2.5', fix.poly_u25, fix.pinn_u25, fix.fair_u25, fix.edge_u25,
-          { home: fix.home, away: fix.away, market: 'Under 2.5', priceKey: 'u25',
-            polyPrice: fix.poly_u25, pinnFair: fix.fair_u25, slug: fix.moreMktSlug || fix.slug }));
-      }
-      if (fix.poly_btts !== undefined && fix.poly_btts !== null) {
-        moreParts.push(buildMktCard('BTTS', fix.poly_btts, null, null, null, null));
-      }
-      return moreParts.length
-        ? `<div style="margin-top:6px;padding-top:6px;border-top:1px solid #21262d">
-             <span style="font-size:10px;color:#6e7681;font-weight:600;margin-right:6px">More:</span>
-             <span style="display:inline-flex;gap:6px;flex-wrap:wrap">${moreParts.join('')}</span>
-             ${fix.moreMktSlug ? `<a href="${moreMktUrl}" target="_blank" rel="noopener"
-               style="float:right;font-size:10px;color:#a78bfa44;text-decoration:none"
-               onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color='#a78bfa44'">+Alle →</a>` : ''}
-           </div>`
-        : '';
-    })() : '';
-
-    const borderCol = be >= 5 ? '#3fb95055' : be >= 3 ? '#e3b34155' : '#21262d';
-    const badgeHtml = be > 0
-      ? `<span style="font-size:10px;font-weight:700;color:${ec(be)};
-                      background:${eb(be)};padding:2px 7px;border-radius:8px;
-                      border:1px solid ${ec(be)}44">+${be}pp</span>`
-      : (fix.hasPinnacle ? `<span style="font-size:10px;color:#484f58">—</span>` : '');
-
-    return `<div style="background:#0d1117;border:1px solid ${borderCol};border-radius:10px;
-                        padding:10px 14px;margin-bottom:8px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
-        <span style="font-size:13px;font-weight:700;color:#e6edf3">${fix.home} vs ${fix.away}</span>
-        <span style="font-size:11px;color:#6e7681">${dateFmt}</span>
-        ${badgeHtml}
-        <span style="font-size:10px;color:#484f58;margin-left:auto">
-          Vol $${(fix.vol||0).toLocaleString('de-DE',{maximumFractionDigits:0})}
-        </span>
-        <a href="${polyUrl}" target="_blank" rel="noopener"
-           style="background:#a78bfa22;border:1px solid #a78bfa44;border-radius:5px;
-                  color:#a78bfa;font-size:10px;font-weight:700;padding:3px 8px;
-                  text-decoration:none;white-space:nowrap">
-          🔗 Poly
-        </a>
-      </div>
-      ${fix.hasPinnacle
-        ? `<div style="display:flex;gap:6px;flex-wrap:wrap">${outcomeHtml}</div>`
-        : `<div style="font-size:11px;color:#484f58;padding:4px 0">
-             Kein Pinnacle — Polymarket: H ${polyOdds(fix.poly_hw)} / X ${polyOdds(fix.poly_dr)} / A ${polyOdds(fix.poly_aw)}
-           </div>`
-      }
-      ${moreRow}
+    return `<div style="background:${bgCol};border:1px solid ${borderCol};border-radius:10px;
+                        padding:10px 14px;margin-bottom:6px">
+      ${header}${outcomesHtml}${ouHtml}
     </div>`;
+  };
+
+  // ── Alert Zone ────────────────────────────────────────────────────────────
+  let alertZoneHtml = '';
+  if (alertFix.length > 0) {
+    alertZoneHtml = `
+    <div style="background:linear-gradient(135deg,#1a1600,#12180a);
+                border:1px solid #e3b34144;border-radius:12px;
+                padding:14px 16px;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <span style="font-size:15px">🎯</span>
+        <span style="font-size:13px;font-weight:700;color:#e3b341">Alert Zone — Edge ≥${ALERT_EDGE_PP}pp</span>
+        <span style="font-size:11px;color:#6e7681;margin-left:4px">${alertFix.length} Spiel${alertFix.length!==1?'e':''} · manuell prüfen</span>
+        <span style="margin-left:auto;font-size:10px;color:#484f58">Pinnacle fair vs Poly-Preis</span>
+      </div>
+      ${alertFix.map(fix => fixtureCard(fix)).join('')}
+    </div>`;
+  }
+
+  // ── Full table ─────────────────────────────────────────────────────────────
+  // Compact table view for all fixtures
+  const tableRows = tableFix.map(fix => {
+    const [fy, fm, fd] = (fix.date || '').split('-');
+    const dateFmt = fy ? `${fd}.${fm}.` : '—';
+    const d = daysUntil(fix.date);
+    const dStr = d === null ? '' : d <= 0 ? '🔴' : d <= 7 ? `<span style="color:#e3b341">${d}d</span>` : `<span style="color:#484f58">${d}d</span>`;
+    const be = fix.bestEdge || 0;
+    const polyUrl = fix.slug ? `https://polymarket.com/de/sports/fifa-world-cup/${fix.slug}` : '#';
+
+    const pinnStr = fix.hasPinnacle
+      ? `${fmt(fix.pinn_hw)} / ${fmt(fix.pinn_dr)} / ${fmt(fix.pinn_aw)}`
+      : `<span style="color:#484f58;font-style:italic">—</span>`;
+    const polyStr = `<span style="color:#a78bfa">${p2o(fix.poly_hw)}</span> / <span style="color:#a78bfa">${p2o(fix.poly_dr)}</span> / <span style="color:#a78bfa">${p2o(fix.poly_aw)}</span>`;
+
+    const edgeTd = be > 0
+      ? `<span style="color:${ec(be)};font-weight:700">+${be}pp</span>`
+      : (fix.hasPinnacle ? `<span style="color:#484f58">—</span>` : `<span style="color:#21262d">n/a</span>`);
+
+    const ouStr = fix.poly_o25
+      ? `<span style="color:#6e7681">${p2o(fix.poly_o25)}</span>/<span style="color:#6e7681">${p2o(fix.poly_u25)}</span>`
+      : `<span style="color:#21262d">—</span>`;
+
+    const rowBg = be >= 5 ? 'background:#0d1a0d' : be >= ALERT_EDGE_PP ? 'background:#1a160a' : '';
+
+    return `<tr style="border-bottom:1px solid #161b22;${rowBg}">
+      <td style="padding:7px 10px;white-space:nowrap">
+        <div style="font-size:12px;font-weight:600;color:#c9d1d9">${fix.home} vs ${fix.away}</div>
+      </td>
+      <td style="padding:7px 8px;white-space:nowrap;font-size:11px;color:#6e7681">${dateFmt} ${dStr}</td>
+      <td style="padding:7px 8px;font-size:11px;color:#8b949e">${pinnStr}</td>
+      <td style="padding:7px 8px;font-size:11px">${polyStr}</td>
+      <td style="padding:7px 8px;text-align:center">${edgeTd}</td>
+      <td style="padding:7px 8px;font-size:11px;text-align:center">${ouStr}</td>
+      <td style="padding:7px 8px;text-align:center">
+        <a href="${polyUrl}" target="_blank" rel="noopener"
+           style="color:#a78bfa55;font-size:11px;text-decoration:none;transition:color .15s"
+           onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color='#a78bfa55'">🔗</a>
+      </td>
+    </tr>`;
   }).join('');
 
-  const noPinnCount = _wmAllFixtures.filter(x => !x.hasPinnacle).length;
-  const standStr    = _wmGeneratedAt ? `Stand: ${_wmGeneratedAt}` : '';
+  const noPinnCount = allFix.filter(x => !x.hasPinnacle).length;
+  const standStr = _wmGeneratedAt ? _wmGeneratedAt : '';
+  // Next update times (UTC → CEST +2h): 06,10,14,18,22 UTC
+  const nextUpdate = (() => {
+    const now = new Date();
+    const hrs = [8,12,16,20,24]; // CEST
+    const nowH = now.getHours() + now.getMinutes()/60;
+    const next = hrs.find(h => h > nowH) || 8;
+    const diff = next > nowH ? next - nowH : (24 - nowH + 8);
+    return diff < 1 ? `in ${Math.round(diff*60)}min` : `in ~${Math.floor(diff)}h`;
+  })();
 
-  return `<div style="grid-column:1/-1;margin-bottom:20px">
+  return `<div>
 
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-      <span style="font-size:15px;font-weight:700;color:#e6edf3">🏆 WM 2026 — Polymarket 1X2 + O/U</span>
-      <span style="font-size:10px;color:#6e7681;margin-left:auto">${standStr}</span>
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <span style="font-size:16px;font-weight:800;color:#e6edf3">🏆 WM 2026 — Polymarket</span>
+      <div style="display:flex;flex-direction:column;margin-left:auto;text-align:right">
+        <span style="font-size:10px;color:#484f58">Stand: ${standStr}</span>
+        <span style="font-size:10px;color:#484f58">Nächstes Update: ${nextUpdate}</span>
+      </div>
     </div>
 
-    <div style="font-size:11px;color:#6e7681;margin-bottom:10px">
-      Pinnacle devigged fair-Wahrsch. vs Polymarket-Preis — positiver Edge = Poly unterbewertet → Kaufen.
-      O/U + BTTS via Polymarket More Markets.
-      ${noPinnCount > 0 ? `<span style="color:#484f58">${noPinnCount} Spiele noch ohne Pinnacle-Quoten.</span>` : ''}
+    <!-- Info bar -->
+    <div style="font-size:11px;color:#6e7681;margin-bottom:12px;line-height:1.6">
+      Pinnacle devigged fair-Prob. vs Polymarket — positiver Edge = Poly unterbewertet.
+      5× täglich aktualisiert (08/12/16/20/00 Uhr CEST).
+      ${noPinnCount > 0 ? `<span style="color:#484f58">${noPinnCount} Spiele noch ohne Pinnacle.</span>` : ''}
     </div>
 
-    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
-      ${filterBtn('edge5', '⭐ Edge ≥5pp', counts.edge5)}
-      ${filterBtn('edge3', '📈 Edge ≥3pp', counts.edge3)}
-      ${filterBtn('pinn',  '🔷 Hat Pinnacle', counts.pinn)}
-      ${filterBtn('all',   '📋 Alle', counts.all)}
+    <!-- Alert Zone (always visible when alerts exist) -->
+    ${alertZoneHtml}
+
+    <!-- Filter bar -->
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:11px;color:#484f58;margin-right:4px">Tabelle:</span>
+      ${filterBtn('alert', `🎯 Alert ≥${ALERT_EDGE_PP}pp`, counts.alert, '#e3b341')}
+      ${filterBtn('pinn',  '🔷 Mit Pinnacle', counts.pinn)}
+      ${filterBtn('all',   '📋 Alle 72', counts.all)}
     </div>
 
+    <!-- Open positions -->
     ${openPosHtml}
 
-    ${fixtures.length === 0
-      ? `<div style="text-align:center;padding:30px;color:#484f58;font-size:13px">
-           Keine Fixtures für diesen Filter.
+    <!-- Compact table -->
+    ${tableFix.length === 0
+      ? `<div style="text-align:center;padding:30px;color:#484f58;font-size:13px">Keine Fixtures für diesen Filter.</div>`
+      : `<div style="overflow-x:auto;border-radius:10px;border:1px solid #21262d">
+           <table style="width:100%;border-collapse:collapse;font-family:inherit">
+             <thead>
+               <tr style="background:#161b22;border-bottom:1px solid #21262d">
+                 <th style="padding:8px 10px;text-align:left;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Spiel</th>
+                 <th style="padding:8px 8px;text-align:left;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Datum</th>
+                 <th style="padding:8px 8px;text-align:left;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Pinnacle H/X/A</th>
+                 <th style="padding:8px 8px;text-align:left;font-size:10px;color:#a78bfa;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Poly H/X/A</th>
+                 <th style="padding:8px 8px;text-align:center;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Edge</th>
+                 <th style="padding:8px 8px;text-align:center;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Ü/U 2.5</th>
+                 <th style="padding:8px 8px;text-align:center;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px"></th>
+               </tr>
+             </thead>
+             <tbody>${tableRows}</tbody>
+           </table>
          </div>`
-      : rows
     }
   </div>`;
 }

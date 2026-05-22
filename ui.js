@@ -592,10 +592,14 @@ function renderPolyTrader(panel) {
     `<option value="${m}" ${_polyTraderFilter.market===m?'selected':''}>${m}</option>`
   ).join('');
 
-  // ── WM 2026 Market Table (top section of Trading tab) ──────────────────
+  // ── WM 2026 Market Table — Trading tab shows ONLY WM during WM season ──
   const wmTableHtml = (typeof _renderWmMarketTable === 'function')
-    ? `<div id="wmMarketSection" style="margin-bottom:28px">${_renderWmMarketTable()}</div>`
+    ? `<div id="wmMarketSection">${_renderWmMarketTable()}</div>`
     : '';
+
+  // During WM season: show only WM table, skip club candidates
+  panel.innerHTML = wmTableHtml;
+  return; // ← remove this line after WM season to restore club table
 
   panel.innerHTML = wmTableHtml + `
 <!-- ── Observer Mode Banner ─────────────────────────────── -->
