@@ -298,7 +298,7 @@ def main():
         if result["status"] in ("placed", "dry-run"):
             print(f"    ✅ Platziert — Order ID: {result.get('orderId')}")
 
-            # Telegram-Benachrichtigung
+            # 1. Bestehender WM-Channel (Operations-Info)
             if telegram_token and telegram_chat_id:
                 odds_str = f"{1/poly_p:.2f}" if poly_p else "?"
                 msg = (
@@ -309,7 +309,25 @@ def main():
                 )
                 sent = send_telegram(telegram_token, telegram_chat_id, msg)
                 if not sent:
-                    print(f"    ⚠️  Telegram-Nachricht konnte nicht gesendet werden")
+                    print(f"    ⚠️  WM-Channel Nachricht konnte nicht gesendet werden")
+
+            # 2. Dedizierter Trades-Channel (detailliert)
+            try:
+                from telegram_trades import notify_trade_opened
+                notify_trade_opened(
+                    home=home, away=away, market=market,
+                    stake=stake, poly_price=poly_p,
+                    edge_pp=order.get("edgePP"),
+                    pinn_fair=order.get("pinnFair"),
+                    order_id=result.get("orderId"),
+                    source="auto",
+                    home_id=order.get("home", ""),
+                    away_id=order.get("away", ""),
+                    slug=order.get("slug", ""),
+                    dry_run=(result["status"] == "dry-run"),
+                )
+            except Exception as e:
+                print(f"    ⚠️  Trades-Channel Fehler: {e}")
 
             new_placed.append({
                 "betKey":    bet_key_val,

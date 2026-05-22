@@ -228,10 +228,35 @@ def main():
 
         if pos.get("sellSignal"):
             print(f"    🚨 SELL SIGNAL: {pos['sellReason']}")
+
+            # 1. Bestehender WM-Channel (Operations)
             alert = format_sell_alert(pos)
             if send_telegram(alert):
                 pos["alertSentAt"] = now.isoformat()
                 alerts_sent += 1
+
+            # 2. Dedizierter Trades-Channel (detailliert formatiert)
+            try:
+                from telegram_trades import notify_sell_alert
+                entry   = pos.get("entryPrice", 0)
+                current = pos.get("currentPrice", 0)
+                stake   = pos.get("stake", 0)
+                pnl_pct = pos.get("pnlPct", 0) or 0
+                pnl_eur = round(stake * (pos.get("pnlPP", 0) or 0) / 100, 2)
+                notify_sell_alert(
+                    home=pos.get("home", ""), away=pos.get("away", ""),
+                    market=pos.get("market", ""),
+                    entry_price=entry, current_price=current,
+                    profit_pct=pnl_pct, estimated_profit=pnl_eur,
+                    stake=stake,
+                    reason=pos.get("sellReason", "Sell Signal"),
+                    home_id=pos.get("homeId", ""),
+                    away_id=pos.get("awayId", ""),
+                    slug=pos.get("slug", ""),
+                )
+            except Exception as e:
+                print(f"    ⚠️  Trades-Channel Fehler: {e}")
+
             pos["status"] = "sell_signaled"
 
     # Update file

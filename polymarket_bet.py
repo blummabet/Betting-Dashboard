@@ -627,6 +627,26 @@ def main():
                 label  = "Limit GTC" if method == "limit_gtc" else "Market"
                 print(f"  ✅ Order platziert ({label}) — ID: {result['orderId']}")
                 placed += 1
+
+                # Trades-Channel: Manuellen Bet melden
+                try:
+                    from telegram_trades import notify_trade_opened
+                    notify_trade_opened(
+                        home=order.get("home", ""), away=order.get("away", ""),
+                        market=order.get("market", ""),
+                        stake=float(order.get("stake", 0)),
+                        poly_price=float(order.get("polyPrice") or poly_price or 0),
+                        edge_pp=order.get("edgePP"),
+                        pinn_fair=order.get("pinnFair"),
+                        order_id=result.get("orderId"),
+                        source="manual",
+                        home_id=order.get("homeId", ""),
+                        away_id=order.get("awayId", ""),
+                        slug=order.get("slug", ""),
+                        dry_run=False,
+                    )
+                except Exception as _te:
+                    print(f"  ⚠️  Trades-Channel: {_te}")
             else:
                 print(f"  ❌ Order fehlgeschlagen: {result['error']}")
                 failed += 1

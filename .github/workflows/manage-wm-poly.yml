@@ -47,10 +47,11 @@ jobs:
       # - name: 🤖 Auto-Trigger WM Bets
       #   run: python auto_wm_poly_trigger.py
       #   env:
-      #     TELEGRAM_TOKEN:       ${{ secrets.TELEGRAM_TOKEN }}
-      #     TELEGRAM_CHAT_ID:     ${{ secrets.TELEGRAM_CHAT_ID }}
-      #     POLY_PRIVATE_KEY:     ${{ secrets.POLY_PRIVATE_KEY }}
-      #     AUTO_TRIGGER_ENABLED: "false"  # auf "true" setzen um live zu gehen
+      #     TELEGRAM_TOKEN:            ${{ secrets.TELEGRAM_TOKEN }}
+      #     TELEGRAM_CHAT_ID:          ${{ secrets.TELEGRAM_CHAT_ID }}
+      #     TELEGRAM_TRADES_CHAT_ID:   ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+      #     POLY_PRIVATE_KEY:          ${{ secrets.POLY_PRIVATE_KEY }}
+      #     AUTO_TRIGGER_ENABLED:      "false"  # auf "true" setzen um live zu gehen
 
       # ── Polymarket USDC Balance von Polygon holen ────────────────────────────
       - name: 💰 Polymarket Balance fetchen
@@ -64,8 +65,9 @@ jobs:
         run: python manage_wm_poly_positions.py
         continue-on-error: true
         env:
-          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_TOKEN:           ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID:         ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_TRADES_CHAT_ID:  ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
       # ── Bets gegen Ergebnisse resolven: P&L + CLV berechnen ──────────────────
       - name: 📈 WM Bets resolven (P&L + CLV)
