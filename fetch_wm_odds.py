@@ -382,21 +382,38 @@ def main():
             json.dump(wm, f, ensure_ascii=False, indent=2)
         return
 
-    # ── Fetch all odds (h2h + totals + btts in one call) ─────
-    print(f"\n  📥  Fetching odds for {sport_key}…")
-    path = (f"/v4/sports/{sport_key}/odds"
-            f"?apiKey={ODDS_KEY}"
-            f"&regions=eu,uk"
-            f"&markets=h2h,totals,btts"
-            f"&oddsFormat=decimal"
-            f"&bookmakers={','.join(BOOKMAKERS)}")
-    events = odds_get(path)
+    # ── Fetch 1: h2h von Pinnacle & Co (bevorzugte Bookmaker) ───
+    print(f"\n  📥  Fetching h2h odds for {sport_key}…")
+    path_h2h = (f"/v4/sports/{sport_key}/odds"
+                f"?apiKey={ODDS_KEY}"
+                f"&regions=eu,uk"
+                f"&markets=h2h"
+                f"&oddsFormat=decimal"
+                f"&bookmakers={','.join(BOOKMAKERS)}")
+    events = odds_get(path_h2h)
 
     if not events or not isinstance(events, list):
         print("  ⚠️  No events returned from TheOddsAPI")
         return
 
-    print(f"  → {len(events)} events fetched")
+    print(f"  → {len(events)} h2h events fetched")
+
+    # ── Fetch 2: totals + btts ohne Bookmaker-Filter ──────────
+    # Pinnacle liefert WM-Totals nicht immer via TheOddsAPI — daher
+    # separate Anfrage ohne Bookmaker-Einschränkung (alle verfügbaren Büros).
+    print(f"  📥  Fetching totals+btts (all bookmakers)…")
+    path_totals = (f"/v4/sports/{sport_key}/odds"
+                   f"?apiKey={ODDS_KEY}"
+                   f"&regions=eu,uk,us"
+                   f"&markets=totals,btts"
+                   f"&oddsFormat=decimal")
+    events_totals = odds_get(path_totals) or []
+    print(f"  → {len(events_totals)} totals events fetched")
+
+    # Totals-Events als Lookup by ID für schnellen Zugriff
+    totals_by_id: dict[str, dict] = {ev["id"]: ev for ev in events_totals if ev.get("id")}
+    # Auch by home+away team für Fallback-Matching
+    totals_by_teams: list[dict] = events_totals
 
     # ── Load odds history ─────────────────────────────────────
     history = _load_history()
@@ -424,8 +441,25 @@ def main():
         ev, h2h = matched_event
         matched += 1
 
-        # ── Extract Totals + BTTS from same event ──────────────────────
-        tb = _extract_totals_btts(ev.get("bookmakers", []), BOOKMAKERS)
+        # ── Totals + BTTS: erst im selben Event suchen, dann im Totals-Fetch ──
+        # Merge Bookmakers: Pinnacle-Event (h2h) + separater Totals-Fetch
+        merged_bks = list(ev.get("bookmakers", []))
+        # Totals-Event by ID (gleiche Event-ID falls TheOddsAPI matcht)
+        if ev.get("id") and ev["id"] in totals_by_id:
+            t_ev = totals_by_id[ev["id"]]
+            for bk in t_ev.get("bookmakers", []):
+                if not any(b.get("key") == bk.get("key") for b in merged_bks):
+                    merged_bks.append(bk)
+        else:
+            # Fallback: Team-Namen Matching im Totals-Fetch
+            for t_ev in totals_by_teams:
+                t_h2h = _extract_h2h(t_ev, home_id, away_id)
+                if t_h2h:
+                    for bk in t_ev.get("bookmakers", []):
+                        if not any(b.get("key") == bk.get("key") for b in merged_bks):
+                            merged_bks.append(bk)
+                    break
+        tb = _extract_totals_btts(merged_bks, BOOKMAKERS)
 
         # ── Elo sanity check: detect reversed hw/aw ──────────────────────
         # If Elo strongly favors the home team (diff > 200 pts) but market
