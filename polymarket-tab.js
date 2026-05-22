@@ -1218,13 +1218,61 @@ function _renderWmMarketTable() {
       </div>`;
     }).join('');
 
-    // Pinnacle O/U reference (when available)
-    const ouHtml = fix.pinn_o25
-      ? `<span style="font-size:10px;color:#6e7681;margin-left:8px">
-           Ü2.5: <strong style="color:#8b949e">${fix.pinn_o25}</strong> /
-           U2.5: <strong style="color:#8b949e">${fix.pinn_u25 || '—'}</strong>
-         </span>`
-      : '';
+    // ── O/U 2.5 + BTTS row (from -more-markets child event) ──────────────────
+    const buildMktCard = (label, polyP, pinnOdds, fairP, edgePP, logData) => {
+      const col    = edgePP !== null ? ec(edgePP) : '#484f58';
+      const bg     = (edgePP !== null && edgePP > 0) ? eb(edgePP) : 'transparent';
+      const border = bg === 'transparent' ? '#30363d22' : 'transparent';
+      const edgeStr = edgePP === null ? '' :
+        edgePP > 0 ? `<span style="color:${col};font-size:10px;font-weight:700">+${edgePP}pp${edgePP>=3?'↑':''}</span>`
+                   : `<span style="color:#484f58;font-size:10px">${edgePP}pp</span>`;
+      const logBtn = (polyP && fairP && edgePP !== null && edgePP >= 1 && logData)
+        ? `<button title="Position loggen"
+             onclick="event.stopPropagation();_openLogPositionModal(JSON.parse(decodeURIComponent('${
+               encodeURIComponent(JSON.stringify(logData))
+             }')))"
+             style="background:none;border:none;color:#8b949e;font-size:11px;
+                    cursor:pointer;padding:0;opacity:.6;transition:opacity .15s"
+             onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'">✏️</button>`
+        : '';
+      return `<div style="background:${bg};border-radius:6px;padding:5px 8px;
+                          min-width:80px;text-align:center;border:1px solid ${border}">
+        <div style="font-size:10px;color:#6e7681;margin-bottom:2px;font-weight:600">${label}</div>
+        ${pinnOdds ? `<div style="font-size:11px;color:#6e7681">Pinn: <strong style="color:#8b949e">${fmt(pinnOdds)}</strong></div>` : ''}
+        <div style="font-size:11px;color:#6e7681">Poly: <strong style="color:#a78bfa">${polyOdds(polyP)}</strong></div>
+        <div style="margin-top:3px;display:flex;align-items:center;justify-content:center;gap:4px">
+          ${edgeStr}${logBtn}
+        </div>
+      </div>`;
+    };
+
+    const hasMoreMkts = fix.poly_o25 || fix.poly_btts;
+    const moreRow = hasMoreMkts ? (() => {
+      const moreParts = [];
+      const moreMktUrl = fix.moreMktSlug
+        ? `https://polymarket.com/de/sports/fifa-world-cup/${fix.moreMktSlug}` : polyUrl;
+
+      if (fix.poly_o25 !== undefined && fix.poly_o25 !== null) {
+        moreParts.push(buildMktCard('Ü2.5', fix.poly_o25, fix.pinn_o25, fix.fair_o25, fix.edge_o25,
+          { home: fix.home, away: fix.away, market: 'Over 2.5', priceKey: 'o25',
+            polyPrice: fix.poly_o25, pinnFair: fix.fair_o25, slug: fix.moreMktSlug || fix.slug }));
+        moreParts.push(buildMktCard('U2.5', fix.poly_u25, fix.pinn_u25, fix.fair_u25, fix.edge_u25,
+          { home: fix.home, away: fix.away, market: 'Under 2.5', priceKey: 'u25',
+            polyPrice: fix.poly_u25, pinnFair: fix.fair_u25, slug: fix.moreMktSlug || fix.slug }));
+      }
+      if (fix.poly_btts !== undefined && fix.poly_btts !== null) {
+        moreParts.push(buildMktCard('BTTS', fix.poly_btts, null, null, null, null));
+      }
+      return moreParts.length
+        ? `<div style="margin-top:6px;padding-top:6px;border-top:1px solid #21262d">
+             <span style="font-size:10px;color:#6e7681;font-weight:600;margin-right:6px">More:</span>
+             <span style="display:inline-flex;gap:6px;flex-wrap:wrap">${moreParts.join('')}</span>
+             ${fix.moreMktSlug ? `<a href="${moreMktUrl}" target="_blank" rel="noopener"
+               style="float:right;font-size:10px;color:#a78bfa44;text-decoration:none"
+               onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color='#a78bfa44'">+Alle →</a>` : ''}
+           </div>`
+        : '';
+    })() : '';
 
     const borderCol = be >= 5 ? '#3fb95055' : be >= 3 ? '#e3b34155' : '#21262d';
     const badgeHtml = be > 0
@@ -1241,7 +1289,6 @@ function _renderWmMarketTable() {
         ${badgeHtml}
         <span style="font-size:10px;color:#484f58;margin-left:auto">
           Vol $${(fix.vol||0).toLocaleString('de-DE',{maximumFractionDigits:0})}
-          ${ouHtml}
         </span>
         <a href="${polyUrl}" target="_blank" rel="noopener"
            style="background:#a78bfa22;border:1px solid #a78bfa44;border-radius:5px;
@@ -1256,6 +1303,7 @@ function _renderWmMarketTable() {
              Kein Pinnacle — Polymarket: H ${polyOdds(fix.poly_hw)} / X ${polyOdds(fix.poly_dr)} / A ${polyOdds(fix.poly_aw)}
            </div>`
       }
+      ${moreRow}
     </div>`;
   }).join('');
 
@@ -1265,12 +1313,13 @@ function _renderWmMarketTable() {
   return `<div style="grid-column:1/-1;margin-bottom:20px">
 
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-      <span style="font-size:15px;font-weight:700;color:#e6edf3">🏆 WM 2026 — Polymarket 1X2</span>
+      <span style="font-size:15px;font-weight:700;color:#e6edf3">🏆 WM 2026 — Polymarket 1X2 + O/U</span>
       <span style="font-size:10px;color:#6e7681;margin-left:auto">${standStr}</span>
     </div>
 
     <div style="font-size:11px;color:#6e7681;margin-bottom:10px">
       Pinnacle devigged fair-Wahrsch. vs Polymarket-Preis — positiver Edge = Poly unterbewertet → Kaufen.
+      O/U + BTTS via Polymarket More Markets.
       ${noPinnCount > 0 ? `<span style="color:#484f58">${noPinnCount} Spiele noch ohne Pinnacle-Quoten.</span>` : ''}
     </div>
 

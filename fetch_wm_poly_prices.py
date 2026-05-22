@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
 fetch_wm_poly_prices.py
-Fetches all 72 WM 2026 Moneyline prices from the Polymarket Gamma API.
+Fetches all WM 2026 Polymarket prices from the Gamma API.
+  - Moneyline (1X2) via series_slug=soccer-fifwc
+  - Totals (O/U) + BTTS + Spreads via {slug}-more-markets child events
 Output: wm_poly_prices.json  — keyed by "{HOME_ID}-{AWAY_ID}"
 
 Runs daily via GitHub Action to keep Polymarket prices current.
@@ -23,6 +25,7 @@ GAMMA_URL = (
     "https://gamma-api.polymarket.com/events"
     "?series_slug=soccer-fifwc&limit=100&active=true"
 )
+GAMMA_SLUG_URL = "https://gamma-api.polymarket.com/events?slug={slug}&markets=true"
 
 # ── Polymarket English team name → our WM team ID ─────────────────────────────
 POLY_NAME_TO_ID = {
@@ -207,6 +210,45 @@ def parse_event(event: dict) -> dict | None:
     }
 
 
+def fetch_more_markets(slug: str) -> dict:
+    """
+    Fetch the {slug}-more-markets child event and return extracted prices.
+    Returns dict with keys: totals (by line), btts, spreads. Empty dict on failure.
+    """
+    mm_slug = f"{slug}-more-markets"
+    url = GAMMA_SLUG_URL.format(slug=mm_slug)
+    try:
+        data = fetch_gamma(url)
+    except Exception:
+        return {}
+
+    if not data or not isinstance(data, list):
+        return {}
+
+    event = data[0]
+    result = {"totals": {}, "btts": None, "btts_no": None, "spreads": {}}
+
+    for m in event.get("markets", []):
+        smt    = m.get("sportsMarketType", "")
+        line   = m.get("line")
+        prices = json.loads(m.get("outcomePrices", "[]") or "[]")
+        if len(prices) < 2:
+            continue
+        over_price = float(prices[0])
+        under_price = float(prices[1])
+
+        if smt == "totals" and line is not None:
+            result["totals"][float(line)] = {
+                "over":  round(over_price, 4),
+                "under": round(under_price, 4),
+            }
+        elif smt == "both_teams_to_score":
+            result["btts"]    = round(over_price, 4)   # Yes price
+            result["btts_no"] = round(under_price, 4)  # No price
+
+    return result
+
+
 def main():
     print("=== fetch_wm_poly_prices.py ===")
 
@@ -226,11 +268,29 @@ def main():
     for ev in events:
         result = parse_event(ev)
         if result:
-            key = f"{result['homeId']}-{result['awayId']}"
+            key  = f"{result['homeId']}-{result['awayId']}"
+            slug = result["slug"]
+
+            # Fetch more-markets (O/U, BTTS, Spreads) — separate child event
+            mm = fetch_more_markets(slug)
+            totals = mm.get("totals", {})
+
+            # Standard soccer totals — O/U 2.5 is the reference market
+            result["poly_o25"]    = totals.get(2.5, {}).get("over")
+            result["poly_u25"]    = totals.get(2.5, {}).get("under")
+            result["poly_o15"]    = totals.get(1.5, {}).get("over")
+            result["poly_u15"]    = totals.get(1.5, {}).get("under")
+            result["poly_o35"]    = totals.get(3.5, {}).get("over")
+            result["poly_u35"]    = totals.get(3.5, {}).get("under")
+            result["poly_btts"]   = mm.get("btts")
+            result["poly_btts_no"] = mm.get("btts_no")
+            result["moreMktSlug"] = f"{slug}-more-markets" if mm else None
+
             prices[key] = result
+            ou_str = f" | O2.5={result['poly_o25']}" if result["poly_o25"] else ""
             print(f"  ✓ {result['homeName']} vs {result['awayName']}  [{key}]"
                   f"  hw={result['hw']:.3f} dr={result['dr']} aw={result['aw']:.3f}"
-                  f"  vol=${result['vol']:,.0f}")
+                  f"  vol=${result['vol']:,.0f}{ou_str}")
             ok += 1
         else:
             skip += 1
@@ -398,6 +458,21 @@ def main():
                 best_edge_key = max(pos_edges, key=pos_edges.get)
                 best_edge     = pos_edges[best_edge_key]
 
+        # ── O/U Pinnacle edge vs Polymarket (when pinn_o25 available) ──────────
+        poly_o25   = p.get("poly_o25")
+        poly_u25   = p.get("poly_u25")
+        edge_o25   = None
+        edge_u25   = None
+        fair_o25   = None
+        fair_u25   = None
+
+        if pinn_o25 and pinn_u25 and pinn_o25 > 1 and poly_o25:
+            ou_margin  = 1/pinn_o25 + 1/pinn_u25
+            fair_o25   = round((1/pinn_o25) / ou_margin, 4)
+            fair_u25   = round((1/pinn_u25) / ou_margin, 4)
+            edge_o25   = round((fair_o25 - poly_o25) * 100, 1)
+            edge_u25   = round((fair_u25 - (poly_u25 or 0)) * 100, 1) if poly_u25 else None
+
         all_fixtures.append({
             "key":          key,
             "homeId":       home_id,
@@ -408,11 +483,21 @@ def main():
             "awayName":     p["awayName"],
             "date":         p["date"],
             "slug":         p["slug"],
+            "moreMktSlug":  p.get("moreMktSlug"),
             "vol":          round(p["vol"], 0),
             # Polymarket 1X2 (probability 0-1, convert to decimal odds with 1/p)
             "poly_hw":      p["hw"],
             "poly_dr":      p.get("dr"),
             "poly_aw":      p["aw"],
+            # Polymarket O/U + BTTS (from -more-markets child event)
+            "poly_o25":     poly_o25,
+            "poly_u25":     poly_u25,
+            "poly_o15":     p.get("poly_o15"),
+            "poly_u15":     p.get("poly_u15"),
+            "poly_o35":     p.get("poly_o35"),
+            "poly_u35":     p.get("poly_u35"),
+            "poly_btts":    p.get("poly_btts"),
+            "poly_btts_no": p.get("poly_btts_no"),
             # Pinnacle 1X2 (decimal odds, e.g. 1.85)
             "pinn_hw":      pinn_hw,
             "pinn_dr":      pinn_dr,
@@ -420,18 +505,24 @@ def main():
             # Pinnacle O/U reference (when TheOddsAPI provides WM totals)
             "pinn_o25":     pinn_o25,
             "pinn_u25":     pinn_u25,
-            # Pinnacle devigged fair probabilities
+            # Pinnacle devigged fair probabilities (1X2)
             "fair_hw":      fair_hw,
             "fair_dr":      fair_dr,
             "fair_aw":      fair_aw,
+            # Pinnacle devigged fair probabilities (O/U)
+            "fair_o25":     fair_o25,
+            "fair_u25":     fair_u25,
             # Edge per outcome in percentage points (positive = Poly underpriced)
             "edge_hw":      edge_hw,
             "edge_dr":      edge_dr,
             "edge_aw":      edge_aw,
+            "edge_o25":     edge_o25,
+            "edge_u25":     edge_u25,
             # Best positive edge of this fixture
             "bestEdge":     best_edge,
             "bestEdgeKey":  best_edge_key,
             "hasPinnacle":  bool(pinn_hw),
+            "hasMoreMarkets": bool(p.get("poly_o25")),
         })
 
     # Sort: fixtures with positive edge first (desc), then by date
@@ -439,9 +530,13 @@ def main():
         -(x["bestEdge"] or -999),
         x["date"] or ""
     ))
-    print(f"  allFixtures: {len(all_fixtures)} total "
-          f"({sum(1 for f in all_fixtures if f['hasPinnacle'])} with Pinnacle, "
-          f"{sum(1 for f in all_fixtures if (f['bestEdge'] or 0) >= 3)} with edge ≥3pp)")
+    n_pinn = sum(1 for f in all_fixtures if f['hasPinnacle'])
+    n_edge = sum(1 for f in all_fixtures if (f['bestEdge'] or 0) >= 3)
+    n_ou   = sum(1 for f in all_fixtures if f.get('poly_o25'))
+    n_btts = sum(1 for f in all_fixtures if f.get('poly_btts'))
+    print(f"  allFixtures: {len(all_fixtures)} total"
+          f" | {n_pinn} with Pinnacle | edge≥3pp: {n_edge}"
+          f" | O/U 2.5: {n_ou} | BTTS: {n_btts}")
 
     # ── Write output JSON ─────────────────────────────────────────────────────
     out = {
