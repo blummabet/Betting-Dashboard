@@ -52,7 +52,8 @@ def apif_get(endpoint: str, params: dict) -> list:
     """Single API-Football GET. Returns response list or []."""
     if not APIF_KEY:
         return []
-    query = "&".join(f"{k}={v}" for k, v in params.items())
+    import urllib.parse
+    query = urllib.parse.urlencode(params)
     try:
         conn = http.client.HTTPSConnection(APIF_HOST, timeout=20)
         conn.request("GET", f"/{endpoint}?{query}",
@@ -108,7 +109,7 @@ def resolve_team_ids(wm: dict) -> dict:
         name = APIF_NAME.get(tid, tid)
         print(f"  🔍 {tid} ({name})…", end=" ", flush=True)
 
-        resp = apif_get("teams", {"name": name, "type": "national"})
+        resp = apif_get("teams", {"name": name})
         time.sleep(DELAY)
 
         if not resp:

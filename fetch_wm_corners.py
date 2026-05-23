@@ -31,7 +31,8 @@ def apif_get(endpoint: str, params: dict) -> list:
     """Single API-Football GET. Returns response list or []."""
     if not APIF_KEY:
         return []
-    query = "&".join(f"{k}={v}" for k, v in params.items())
+    import urllib.parse
+    query = urllib.parse.urlencode(params)
     try:
         conn = http.client.HTTPSConnection(APIF_HOST, timeout=20)
         conn.request("GET", f"/{endpoint}?{query}",
@@ -73,14 +74,9 @@ def fetch_fixtures(api_id: int) -> list:
     Fetch last MAX_FIXTURES completed fixtures for a team.
     Tries international type first, falls back to all competitions.
     """
-    # Try with type=international first
-    resp = apif_get("fixtures", {"team": api_id, "last": MAX_FIXTURES, "status": "FT", "type": "international"})
+    # Fetch last fixtures — kein type-Filter (API-Football unterstützt type nicht)
+    resp = apif_get("fixtures", {"team": api_id, "last": MAX_FIXTURES, "status": "FT"})
     time.sleep(DELAY)
-
-    if not resp:
-        # Fallback: any competition, no type filter
-        resp = apif_get("fixtures", {"team": api_id, "last": MAX_FIXTURES, "status": "FT"})
-        time.sleep(DELAY)
 
     return resp
 
