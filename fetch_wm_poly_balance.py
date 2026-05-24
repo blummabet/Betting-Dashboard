@@ -47,34 +47,47 @@ def _build_l2_headers(api_key: str, api_secret: str, api_passphrase: str,
                       address: str, method: str, path: str, body: str = "") -> dict:
     """
     Erzeugt die HMAC-signierten Headers für Polymarket CLOB L2-Authentifizierung.
-    Quelle: https://docs.polymarket.com/#authentication
+    Quelle: py-clob-client-v2 Quellcode + https://docs.polymarket.com/#authentication
 
-    Signature message: timestamp + METHOD + path (ohne Query-String) + body
-    Signature: HMAC-SHA256(api_secret, message) → Base64-encoded
+    Wichtig:
+    - api_secret ist Base64-encoded → muss decoded werden vor HMAC
+    - Signature message: timestamp + METHOD.upper() + path (ohne Query-String) + body
+    - POLY-PASSPHRASE Header ist Pflicht
+    - Header-Name: POLY_ADDRESS (Underscore, nicht Bindestrich)
     """
     ts  = str(int(time.time()))
     msg = ts + method.upper() + path + body
 
+    # api_secret ist base64-encoded → zuerst decodieren
+    try:
+        secret_bytes = base64.b64decode(api_secret)
+    except Exception:
+        # Falls nicht base64-encoded: raw bytes verwenden
+        secret_bytes = api_secret.encode("utf-8")
+
     sig_bytes = hmac.new(
-        api_secret.encode("utf-8"),
+        secret_bytes,
         msg=msg.encode("utf-8"),
         digestmod=hashlib.sha256,
     ).digest()
     sig_b64 = base64.b64encode(sig_bytes).decode("utf-8")
 
     return {
-        "POLY-ADDRESS":   address,
-        "POLY-API-KEY":   api_key,
-        "POLY-TIMESTAMP": ts,
-        "POLY-NONCE":     "0",
-        "POLY-SIGNATURE": sig_b64,
-        "Content-Type":   "application/json",
-        "Accept":         "application/json",
-        "User-Agent":     "CocoBet/1.0",
+        "POLY_ADDRESS":    address,        # Underscore (nicht Bindestrich)
+        "POLY-API-KEY":    api_key,
+        "POLY-TIMESTAMP":  ts,
+        "POLY-NONCE":      "0",
+        "POLY-SIGNATURE":  sig_b64,
+        "POLY-PASSPHRASE": api_passphrase, # Pflichtfeld!
+        "Content-Type":    "application/json",
+        "Accept":          "application/json",
+        "User-Agent":      "CocoBet/1.0",
     }
 
 
 # ── Balance Fetch ─────────────────────────────────────────────────────────────
+
+_last_error_detail: str = ""   # module-level für Debugging
 
 def fetch_balance(api_key: str, api_secret: str, api_passphrase: str,
                   funder_addr: str) -> float | None:
@@ -108,20 +121,22 @@ def fetch_balance(api_key: str, api_secret: str, api_passphrase: str,
             print(f"  ⚠️  Kein 'balance'-Feld in Response: {data}")
             return None
 
-        elif resp.status_code == 401:
-            print(f"  ❌ 401 Unauthorized — Auth fehlgeschlagen")
-            print(f"     Body: {resp.text[:300]}")
-            return None
-
         else:
-            print(f"  ❌ HTTP {resp.status_code}: {resp.text[:300]}")
+            body_preview = resp.text[:400]
+            print(f"  ❌ HTTP {resp.status_code}: {body_preview}")
+            global _last_error_detail
+            _last_error_detail = f"HTTP {resp.status_code}: {body_preview}"
             return None
 
     except requests.Timeout:
         print("  ❌ Timeout nach 20s")
+        global _last_error_detail
+        _last_error_detail = "timeout"
         return None
     except Exception as e:
         print(f"  ❌ Request-Fehler: {e}")
+        global _last_error_detail
+        _last_error_detail = str(e)
         return None
 
 
@@ -216,7 +231,7 @@ def main():
             "address":     funder_addr,
             "updatedAt":   existing.get("updatedAt", now_iso),  # behalte alten Timestamp
             "lastAttempt": now_iso,
-            "error":       "fetch_failed",
+            "error":       _last_error_detail or "fetch_failed",
         }
         with open(OUT_FILE, "w") as f:
             json.dump(out, f, indent=2)
