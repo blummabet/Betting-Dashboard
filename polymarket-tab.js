@@ -1408,19 +1408,26 @@ function _renderWmMarketTable() {
   // ── filter ────────────────────────────────────────────────────────────────
   const f = _wmTableFilter;
   const allFix = _wmAllFixtures;
+  const steamFix  = allFix.filter(x => x.steamLag === true);
+  const growFix   = allFix.filter(x => x.edgeTrend === 'growing' && (x.bestEdge||0) >= 2);
   const counts = {
+    steam: steamFix.length,
+    grow:  growFix.length,
     alert: allFix.filter(x => (x.bestEdge||0) >= ALERT_EDGE_PP).length,
     pinn:  allFix.filter(x => x.hasPinnacle).length,
     all:   allFix.length,
   };
 
   const alertFix = allFix.filter(x => (x.bestEdge||0) >= ALERT_EDGE_PP)
-                         .sort((a,b) => (b.bestEdge||0) - (a.bestEdge||0));
+                         .sort((a,b) => (b.momentumScore||0) - (a.momentumScore||0));
 
   const tableFix = (() => {
-    if (f === 'alert') return alertFix;
-    if (f === 'pinn')  return allFix.filter(x => x.hasPinnacle);
-    return allFix; // 'all'
+    if (f === 'steam')  return steamFix;
+    if (f === 'grow')   return growFix;
+    if (f === 'alert')  return alertFix;
+    if (f === 'pinn')   return allFix.filter(x => x.hasPinnacle);
+    // Default 'all': sorted by momentum score (already sorted from Python)
+    return allFix;
   })();
 
   // ── filter bar ────────────────────────────────────────────────────────────
@@ -1491,6 +1498,36 @@ function _renderWmMarketTable() {
     const borderCol = be >= 5 ? '#3fb95066' : be >= ALERT_EDGE_PP ? '#e3b34166' : '#21262d';
     const bgCol     = be >= 5 ? '#0d1a0d'   : be >= ALERT_EDGE_PP ? '#1a160a'   : '#0d1117';
 
+    // ── Edge momentum badges ──────────────────────────────────────────────────
+    const trend      = fix.edgeTrend || '';
+    const bestDeltaKey = fix.bestEdgeKey ? `edgeDelta_${fix.bestEdgeKey}` : null;
+    const bestDelta  = bestDeltaKey ? (fix[bestDeltaKey] ?? null) : null;
+    const steamLag   = fix.steamLag === true;
+
+    const trendBadge = (() => {
+      if (steamLag)
+        return `<span title="Steam Lag: Pinnacle hat sich bewegt, Poly hat noch nicht reagiert — höchste Priorität!"
+                      style="background:#f8514922;border:1px solid #f8514966;border-radius:8px;
+                             color:#f85149;font-size:10px;font-weight:800;padding:2px 9px;white-space:nowrap;
+                             cursor:default">🔥 Steam Lag</span>`;
+      if (trend === 'growing')
+        return `<span title="Edge wächst seit 24h — Poly hinkt Pinnacle hinterher. Jetzt handeln."
+                      style="background:#3fb95018;border:1px solid #3fb95055;border-radius:8px;
+                             color:#3fb950;font-size:10px;font-weight:700;padding:2px 9px;white-space:nowrap">
+                  📈 ${bestDelta !== null ? '+' + bestDelta + 'pp ↑' : 'wächst'}</span>`;
+      if (trend === 'closing')
+        return `<span title="Edge schrumpft — Poly holt auf. Kritisch prüfen ob noch Wert vorhanden."
+                      style="background:#e3b34112;border:1px solid #e3b34144;border-radius:8px;
+                             color:#e3b341;font-size:10px;font-weight:700;padding:2px 9px;white-space:nowrap">
+                  📉 ${bestDelta !== null ? bestDelta + 'pp ↓' : 'schließt'}</span>`;
+      if (trend === 'new' && be > 0)
+        return `<span title="Neue Edge — erstmals in diesem Run aufgetaucht."
+                      style="background:#60a5fa18;border:1px solid #60a5fa44;border-radius:8px;
+                             color:#60a5fa;font-size:10px;font-weight:700;padding:2px 9px;white-space:nowrap">
+                  🆕 neu</span>`;
+      return '';
+    })();
+
     // Header row
     const header = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
       <span style="font-size:13px;font-weight:700;color:#e6edf3">${fix.home} <span style="color:#484f58;font-weight:400">vs</span> ${fix.away}</span>
@@ -1499,6 +1536,7 @@ function _renderWmMarketTable() {
       ${be > 0 ? `<span style="font-size:11px;font-weight:800;color:${ec(be)};background:${eb(be)};
                                padding:2px 8px;border-radius:8px;border:1px solid ${ec(be)}44">
                     +${be}pp</span>` : ''}
+      ${trendBadge}
       <span style="margin-left:auto;display:flex;align-items:center;gap:8px">
         <span style="font-size:10px;color:#484f58">Vol $${(fix.vol||0).toLocaleString('de-DE',{maximumFractionDigits:0})}</span>
         <a href="${polyUrl}" target="_blank" rel="noopener"
@@ -1606,6 +1644,15 @@ function _renderWmMarketTable() {
       ? `<span style="color:${ec(be)};font-weight:700">+${be}pp</span>`
       : (fix.hasPinnacle ? `<span style="color:#484f58">—</span>` : `<span style="color:#21262d">n/a</span>`);
 
+    // Edge momentum indicator for compact table
+    const trendTd = (() => {
+      if (fix.steamLag)              return `<span title="Steam Lag" style="color:#f85149;font-weight:800">🔥</span>`;
+      if (fix.edgeTrend==='growing') return `<span title="Edge wächst" style="color:#3fb950;font-weight:700">↑</span>`;
+      if (fix.edgeTrend==='closing') return `<span title="Edge schließt" style="color:#e3b341;font-weight:700">↓</span>`;
+      if (fix.edgeTrend==='new')     return `<span title="Neue Edge" style="color:#60a5fa;font-weight:700">★</span>`;
+      return `<span style="color:#21262d">—</span>`;
+    })();
+
     let ouStr;
     if (fix.pinn_o25 && fix.poly_o25) {
       const eo  = fix.edge_o25 ?? 0;
@@ -1631,6 +1678,7 @@ function _renderWmMarketTable() {
       <td style="padding:7px 8px;font-size:11px;color:#8b949e">${pinnStr}</td>
       <td style="padding:7px 8px;font-size:11px">${polyStr}</td>
       <td style="padding:7px 8px;text-align:center">${edgeTd}</td>
+      <td style="padding:7px 8px;text-align:center">${trendTd}</td>
       <td style="padding:7px 8px;font-size:11px;text-align:center">${ouStr}</td>
       <td style="padding:7px 8px;text-align:center">
         <a href="${polyUrl}" target="_blank" rel="noopener"
@@ -1679,10 +1727,21 @@ function _renderWmMarketTable() {
     <!-- Filter bar -->
     <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
       <span style="font-size:11px;color:#484f58;margin-right:4px">Tabelle:</span>
+      ${counts.steam > 0 ? filterBtn('steam', '🔥 Steam Lag', counts.steam, '#f85149') : ''}
+      ${counts.grow  > 0 ? filterBtn('grow',  '📈 Wächst', counts.grow, '#3fb950') : ''}
       ${filterBtn('alert', `🎯 Alert ≥${ALERT_EDGE_PP}pp`, counts.alert, '#e3b341')}
       ${filterBtn('pinn',  '🔷 Mit Pinnacle', counts.pinn)}
       ${filterBtn('all',   '📋 Alle 72', counts.all)}
     </div>
+    ${(counts.steam > 0 || counts.grow > 0) ? `
+    <div style="background:rgba(63,185,80,0.06);border:1px solid #3fb95030;border-radius:8px;
+                padding:8px 12px;margin-bottom:12px;font-size:11px;color:#6e7681;line-height:1.6">
+      <span style="color:#3fb950;font-weight:700">Momentum-Ranking aktiv:</span>
+      Spiele sind sortiert nach Handlungsdringlichkeit —
+      ${counts.steam > 0 ? `<strong style="color:#f85149">${counts.steam}× 🔥 Steam Lag</strong> (höchste Priorität) · ` : ''}
+      ${counts.grow > 0  ? `<strong style="color:#3fb950">${counts.grow}× 📈 wachsende Edge</strong> ·` : ''}
+      je früher desto besser.
+    </div>` : ''}
 
     <!-- Open positions -->
     ${openPosHtml}
@@ -1699,6 +1758,7 @@ function _renderWmMarketTable() {
                  <th style="padding:8px 8px;text-align:left;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Pinnacle H/X/A</th>
                  <th style="padding:8px 8px;text-align:left;font-size:10px;color:#a78bfa;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Poly H/X/A</th>
                  <th style="padding:8px 8px;text-align:center;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Edge</th>
+                 <th style="padding:8px 8px;text-align:center;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px" title="🔥 Steam Lag · ↑ wächst · ↓ schließt">Trend</th>
                  <th style="padding:8px 8px;text-align:center;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Ü/U 2.5</th>
                  <th style="padding:8px 8px;text-align:center;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px"></th>
                </tr>

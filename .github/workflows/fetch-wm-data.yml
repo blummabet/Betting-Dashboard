@@ -128,6 +128,7 @@ jobs:
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
           git add wm2026-data.json wm2026-odds-history.json wm_poly_prices.json \
+                  wm2026-poly-history.json \
                   wm_results.json matches/data/wm-*.json matches/wm-index.json
           git add telegram-log.json 2>/dev/null || true
           if git diff --staged --quiet; then

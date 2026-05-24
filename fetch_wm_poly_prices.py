@@ -17,9 +17,14 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 
-BASE = os.path.dirname(os.path.abspath(__file__))
-OUT_FILE  = os.path.join(BASE, "wm_poly_prices.json")
-WM_FILE   = os.path.join(BASE, "wm2026-data.json")
+BASE         = os.path.dirname(os.path.abspath(__file__))
+OUT_FILE     = os.path.join(BASE, "wm_poly_prices.json")
+WM_FILE      = os.path.join(BASE, "wm2026-data.json")
+POLY_HIST    = os.path.join(BASE, "wm2026-poly-history.json")  # Poly price snapshots over time
+ODDS_HIST    = os.path.join(BASE, "wm2026-odds-history.json")  # Pinnacle odds snapshots
+
+# Edge-Momentum: Snapshot-Alter in Stunden für Vergleich (24h-Fenster)
+DELTA_WINDOW_H = 24
 
 GAMMA_URL = (
     "https://gamma-api.polymarket.com/events"
@@ -579,24 +584,174 @@ def main():
             ),
         })
 
-    # Sort: fixtures with positive edge first (desc), then by date
+    # ── Edge-Momentum: Load Poly price history + Pinnacle history ────────────────
+    # wm2026-poly-history.json: {matchKey: [{ts, poly_hw, poly_aw, poly_dr, poly_o25, edge_hw, ...}]}
+    # Used to compute edge delta (growing/shrinking) and detect steam-lag situations.
+
+    poly_hist: dict = {}
+    if os.path.exists(POLY_HIST):
+        try:
+            with open(POLY_HIST, encoding="utf-8") as f:
+                poly_hist = json.load(f)
+        except Exception as e:
+            print(f"  ⚠️  Poly-History laden fehlgeschlagen: {e}")
+
+    pinn_hist: dict = {}
+    if os.path.exists(ODDS_HIST):
+        try:
+            with open(ODDS_HIST, encoding="utf-8") as f:
+                pinn_hist = json.load(f)
+        except Exception as e:
+            print(f"  ⚠️  Pinnacle-History laden fehlgeschlagen: {e}")
+
+    now_ts = datetime.now(timezone.utc)
+    now_iso = now_ts.isoformat()
+    delta_cutoff = (now_ts.timestamp() - DELTA_WINDOW_H * 3600)
+
+    # ── Append current Poly snapshot to history + compute edge momentum ───────
+    for fx in all_fixtures:
+        key = fx["key"]
+
+        # Current snapshot to store
+        snap = {
+            "ts":       now_iso,
+            "poly_hw":  fx.get("poly_hw"),
+            "poly_dr":  fx.get("poly_dr"),
+            "poly_aw":  fx.get("poly_aw"),
+            "poly_o25": fx.get("poly_o25"),
+            "poly_u25": fx.get("poly_u25"),
+            "edge_hw":  fx.get("edge_hw"),
+            "edge_dr":  fx.get("edge_dr"),
+            "edge_aw":  fx.get("edge_aw"),
+            "edge_o25": fx.get("edge_o25"),
+            "edge_u25": fx.get("edge_u25"),
+        }
+
+        # Append to history (keep max 200 snapshots per match = ~40 days @ 5/day)
+        hist = poly_hist.setdefault(key, [])
+        hist.append(snap)
+        if len(hist) > 200:
+            hist[:] = hist[-200:]
+
+        # ── Find comparison snapshot ~24h ago ─────────────────────────────────
+        prev = None
+        for old in reversed(hist[:-1]):  # skip the one we just appended
+            try:
+                old_ts = datetime.fromisoformat(old["ts"].replace("Z", "+00:00")).timestamp()
+                if old_ts <= delta_cutoff:
+                    prev = old
+                    break
+            except Exception:
+                continue
+
+        # ── Edge delta (pp change since ~24h ago) ─────────────────────────────
+        def _delta(field: str) -> float | None:
+            cur = fx.get(field)
+            if prev is None or cur is None:
+                return None
+            old_v = prev.get(field)
+            if old_v is None:
+                return None
+            return round(cur - old_v, 1)
+
+        fx["edgeDelta_hw"]  = _delta("edge_hw")
+        fx["edgeDelta_aw"]  = _delta("edge_aw")
+        fx["edgeDelta_dr"]  = _delta("edge_dr")
+        fx["edgeDelta_o25"] = _delta("edge_o25")
+        fx["edgeDelta_u25"] = _delta("edge_u25")
+
+        # ── Edge trend label ──────────────────────────────────────────────────
+        # Based on the best-edge market's delta
+        best_key = fx.get("bestEdgeKey")
+        best_delta = fx.get(f"edgeDelta_{best_key}") if best_key else None
+        if best_delta is None:
+            fx["edgeTrend"] = "new"      # No history yet — appeared for first time
+        elif best_delta >= 1.5:
+            fx["edgeTrend"] = "growing"  # Edge increasing → Poly lagging behind Pinnacle
+        elif best_delta <= -1.5:
+            fx["edgeTrend"] = "closing"  # Edge shrinking → Poly catching up → act or skip
+        else:
+            fx["edgeTrend"] = "stable"   # Edge stable
+
+        # ── Steam-Lag detection ───────────────────────────────────────────────
+        # A "steam lag" is when:
+        #   1. Pinnacle had a meaningful line move in the last 24h (≥2pp on any outcome)
+        #   2. Poly hasn't caught up yet (edge_delta is growing or this is a new edge)
+        # This is the highest-quality trade: fresh information, Poly hasn't reacted.
+        steam_lag = False
+        pinn_snaps = pinn_hist.get(key, [])
+        if len(pinn_snaps) >= 2:
+            latest_pinn  = pinn_snaps[-1]
+            # Find a Pinnacle snapshot that's ≥1h old but ≤48h old for comparison
+            pinn_prev = None
+            for ps in reversed(pinn_snaps[:-1]):
+                try:
+                    ps_ts = datetime.fromisoformat(ps["ts"].replace("Z", "+00:00")).timestamp()
+                    age_h = (now_ts.timestamp() - ps_ts) / 3600
+                    if 1 <= age_h <= 48:
+                        pinn_prev = ps
+                        break
+                except Exception:
+                    continue
+
+            if pinn_prev:
+                # Check if any 1X2 market moved ≥2pp on Pinnacle
+                def _pinn_pp(odds_new, odds_old):
+                    if not odds_new or not odds_old or odds_new <= 1 or odds_old <= 1:
+                        return 0
+                    return abs(round((1/odds_new - 1/odds_old) * 100, 1))
+
+                pinn_move = max(
+                    _pinn_pp(latest_pinn.get("hw"), pinn_prev.get("hw")),
+                    _pinn_pp(latest_pinn.get("dr"), pinn_prev.get("dr")),
+                    _pinn_pp(latest_pinn.get("aw"), pinn_prev.get("aw")),
+                )
+                # Steam lag: Pinnacle moved AND Poly edge is new or growing
+                if pinn_move >= 2.0 and fx.get("edgeTrend") in ("growing", "new"):
+                    steam_lag = True
+
+        fx["steamLag"]      = steam_lag
+        fx["pinnSteamMove"] = round(pinn_move, 1) if 'pinn_move' in dir() else None
+
+    # ── Compute momentum score for sorting ────────────────────────────────────
+    # Prioritises: steam-lag > growing edge > high raw edge > stable edge > closing edge
+    for fx in all_fixtures:
+        base_edge = fx.get("bestEdge") or 0
+        trend     = fx.get("edgeTrend", "stable")
+        steam     = fx.get("steamLag", False)
+        trend_bonus = {"growing": 3, "new": 2, "stable": 0, "closing": -2}.get(trend, 0)
+        steam_bonus = 5 if steam else 0
+        fx["momentumScore"] = round(base_edge + trend_bonus + steam_bonus, 1)
+
+    # ── Sort: momentum score first (best opportunities top), then date ─────────
     all_fixtures.sort(key=lambda x: (
-        -(x["bestEdge"] or -999),
-        x["date"] or ""
+        -x.get("momentumScore", 0),
+        x.get("date") or ""
     ))
-    n_pinn = sum(1 for f in all_fixtures if f['hasPinnacle'])
-    n_edge = sum(1 for f in all_fixtures if (f['bestEdge'] or 0) >= 3)
-    n_ou   = sum(1 for f in all_fixtures if f.get('poly_o25'))
-    n_btts = sum(1 for f in all_fixtures if f.get('poly_btts'))
+
+    # Save updated poly history
+    try:
+        with open(POLY_HIST, "w", encoding="utf-8") as f:
+            json.dump(poly_hist, f, ensure_ascii=False, separators=(",", ":"))
+        print(f"  📊 Poly-History aktualisiert: {sum(len(v) for v in poly_hist.values())} Snapshots total")
+    except Exception as e:
+        print(f"  ⚠️  Poly-History schreiben fehlgeschlagen: {e}")
+
+    n_pinn   = sum(1 for f in all_fixtures if f['hasPinnacle'])
+    n_edge   = sum(1 for f in all_fixtures if (f['bestEdge'] or 0) >= 3)
+    n_steam  = sum(1 for f in all_fixtures if f.get('steamLag'))
+    n_grow   = sum(1 for f in all_fixtures if f.get('edgeTrend') == 'growing')
+    n_ou     = sum(1 for f in all_fixtures if f.get('poly_o25'))
     print(f"  allFixtures: {len(all_fixtures)} total"
-          f" | {n_pinn} with Pinnacle | edge≥3pp: {n_edge}"
-          f" | O/U 2.5: {n_ou} | BTTS: {n_btts}")
+          f" | {n_pinn} Pinnacle | edge≥3pp: {n_edge}"
+          f" | 🔥 SteamLag: {n_steam} | 📈 growing: {n_grow}"
+          f" | O/U: {n_ou}")
 
     # ── Write output JSON ─────────────────────────────────────────────────────
     out = {
         "prices":      prices,
         "clvRadar":    clv_radar,    # Filtered ≥5pp — for quick radar view
-        "allFixtures": all_fixtures, # All 72 games — for full dashboard table
+        "allFixtures": all_fixtures, # All 72 games — with momentum scores + edge trends
         "count":       ok,
         "generatedAt": datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC"),
     }
