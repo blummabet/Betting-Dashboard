@@ -102,6 +102,7 @@ jobs:
           else
             TIMESTAMP=$(date +'%d.%m.%Y %H:%M')
             git commit -m "💹 WM Poly Update ${TIMESTAMP} UTC"
+            git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
             git pull origin main --no-rebase -X ours
             git push
           fi

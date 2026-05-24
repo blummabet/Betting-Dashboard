@@ -1606,9 +1606,20 @@ function _renderWmMarketTable() {
       ? `<span style="color:${ec(be)};font-weight:700">+${be}pp</span>`
       : (fix.hasPinnacle ? `<span style="color:#484f58">—</span>` : `<span style="color:#21262d">n/a</span>`);
 
-    const ouStr = fix.poly_o25
-      ? `<span style="color:#6e7681">${p2o(fix.poly_o25)}</span>/<span style="color:#6e7681">${p2o(fix.poly_u25)}</span>`
-      : `<span style="color:#21262d">—</span>`;
+    let ouStr;
+    if (fix.pinn_o25 && fix.poly_o25) {
+      const eo  = fix.edge_o25 ?? 0;
+      const eoc = eo >= 3 ? '#3fb950' : eo >= 1.5 ? '#d29922' : eo > 0 ? '#6e9e6e' : '#484f58';
+      const eos = eo > 0 ? '+' : '';
+      ouStr = `<div style="line-height:1.4">
+        <div style="font-size:11px;color:#8b949e">${fix.pinn_o25.toFixed(2)} <span style="color:#484f58">/</span> ${(fix.pinn_u25||0).toFixed(2)}</div>
+        <div style="font-size:11px;font-weight:700;color:${eoc}">${eos}${eo}pp</div>
+      </div>`;
+    } else if (fix.poly_o25) {
+      ouStr = `<span style="color:#6e7681">${p2o(fix.poly_o25)}/${p2o(fix.poly_u25)}</span>`;
+    } else {
+      ouStr = `<span style="color:#21262d">—</span>`;
+    }
 
     const rowBg = be >= 5 ? 'background:#0d1a0d' : be >= ALERT_EDGE_PP ? 'background:#1a160a' : '';
 
