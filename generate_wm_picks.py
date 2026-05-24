@@ -51,14 +51,20 @@ CO_HOSTS       = {"MEX", "USA", "CAN"}
 HOME_BONUS_PP  = 0.03   # +3pp auf Heimsieg-Wahrscheinlichkeit
 
 # Edge-Schwellen
-EDGE_MIN_1X2   = 4    # Minimum pp für 1X2-Picks
+EDGE_MIN_1X2   = 5    # Minimum pp für 1X2-Picks (erhöht von 4 → weniger Rauschen)
 EDGE_MIN_OU    = 4    # Minimum pp für Over/Under + BTTS
-EDGE_MIN_DNB   = 5    # Minimum pp für DNB (braucht mehr Edge, da abgeleitet)
+EDGE_MIN_DNB   = 6    # Minimum pp für DNB
+EDGE_BET_1X2   = 8    # ≥8pp → BET für 1X2 (ohne CLV-Bestätigung)
+EDGE_BET_OU    = 6    # ≥6pp → BET für O/U + BTTS
 EDGE_HIGH      = 10   # ≥10pp → high confidence
 EDGE_MED       = 6    # ≥6pp  → medium confidence
-EDGE_MAX_SANE  = 20   # >20pp → suspect (wrong/reversed odds) — pick verworfen
-ODDS_MAX       = 7.0  # >7.0  → zu viel Unsicherheit/Noise, komplett raus
-ODDS_BET_MAX   = 5.5  # >5.5  → max ABWÄGEN, nie BET (zu viel Rauschen bei hohen Quoten)
+EDGE_MAX_SANE  = 18   # >18pp → suspect (wrong/reversed odds) — pick verworfen
+ODDS_MAX       = 6.5  # >6.5  → zu viel Unsicherheit/Noise, komplett raus (war 7.0)
+ODDS_BET_MAX   = 4.5  # >4.5  → max ABWÄGEN, nie BET (war 5.5)
+
+# Underdog-Filter: wenn das Team laut Elo deutlich schlechter ist, höherer Beweisbedarf
+UNDERDOG_ELO_SOFT = 100   # >100 Elo-Diff gegen Pick → kein BET, nur ABWÄGEN wenn Form zeigt Stärke
+UNDERDOG_ELO_HARD = 200   # >200 Elo-Diff gegen Pick → immer SKIP
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -239,9 +245,17 @@ def compute_verdict(model_odds: float | None, market_odds: float | None,
     # Hard skip: Modell UND Markt zeigen stark gegen Pick
     hard_skip = mod_sig <= -1 and mkt_sig <= -1
 
+    # BET: mind. 3 Wege
+    # (1) Klassisch: alle 3 Signale positiv
+    # (2) Starker Modell-Edge + kein Gegenwind von Markt + kein H2H-Widerspruch
+    # (3) Sharp Money bestätigt stark (CLV ≥5pp) + Modell auch positiv
+    bet_classic   = score >= 3 or (score >= 2 and mod_sig >= 1)
+    bet_edge_only = (mod_sig >= 1 and edge_pp >= 8 and mkt_sig >= 0 and story_sig >= 0)
+    bet_sharp     = (mod_sig >= 1 and mkt_sig >= 2)
+
     if hard_skip or score <= -2:
         verdict = "SKIP"
-    elif score >= 3 or (score >= 2 and mod_sig >= 1):
+    elif bet_classic or bet_edge_only or bet_sharp:
         verdict = "BET"
     elif score >= 1 or (mod_sig == 1 and mkt_sig >= 0):
         verdict = "ABWÄGEN"
@@ -430,6 +444,16 @@ def generate_picks_for_fixture(
         "dnbA":    dnb_a_mod,
     }
 
+    # ── Underdog-Stärke: ist das gepickte Team laut Elo deutlich schlechter? ─
+    # Wird pro-Pick berechnet (Heimsieg vs Auswärtssieg haben entgegengesetzte Logik)
+    def underdog_elo_gap(mkey: str) -> int:
+        """Wie viele Elo-Punkte ist das gepickte Team schwächer? 0 = Favorit gepickt."""
+        if mkey in ("home", "dnbH"):
+            return max(0, -elo_diff)   # positiv wenn Heim schwächer
+        if mkey in ("away", "dnbA"):
+            return max(0, elo_diff)    # positiv wenn Auswärts schwächer
+        return 0  # O/U, BTTS, Draw: kein Underdog-Konzept
+
     picks = []
     for mkey, label, min_edge in MARKET_CFG:
         m_odds  = model_odds.get(mkey)
@@ -448,33 +472,74 @@ def generate_picks_for_fixture(
         if v["edgePP"] < min_edge:
             continue
 
-        # Sanity: Edge > EDGE_MAX_SANE deutet auf falsche/invertierte Quoten hin
+        # ── Underdog-Sanity-Filter ────────────────────────────────────────
+        elo_gap = underdog_elo_gap(mkey)
+
+        # Hard: Elo-Gap >200 → immer SKIP (niemand wettet auf 200-Punkte-Underdog)
+        if elo_gap > UNDERDOG_ELO_HARD:
+            if VERBOSE:
+                print(f"     ⛔  {label}: Elo-Gap {elo_gap} > {UNDERDOG_ELO_HARD} "
+                      f"— Underdog zu schwach, übersprungen")
+            continue
+
+        # Soft: Elo-Gap >100 → kein BET, nur ABWÄGEN wenn Form-Stärke des Underdogs belegt
+        if elo_gap > UNDERDOG_ELO_SOFT:
+            # Underdog-Form prüfen: scored mehr als conceded in letzten Spielen?
+            underdog_form = form_a if mkey in ("away", "dnbA") else form_h
+            scored   = (underdog_form or {}).get("avgScored",   0)
+            conceded = (underdog_form or {}).get("avgConceded", 9)
+            form_ok  = scored > conceded * 0.85  # zumindest nicht viel schlechter als Schnitt
+
+            # BET zurückstufen zu ABWÄGEN
+            if v["verdict"] == "BET":
+                v["verdict"] = "ABWÄGEN"
+                if VERBOSE:
+                    print(f"     ℹ️  {label}: Elo-Gap {elo_gap} > {UNDERDOG_ELO_SOFT} "
+                          f"— BET→ABWÄGEN (Underdog {elo_gap}Elo schwächer)")
+
+            # Wenn Form auch schwach: SKIP
+            if not form_ok and (underdog_form or {}).get("games", 0) >= 5:
+                if VERBOSE:
+                    print(f"     ⛔  {label}: Elo-Gap {elo_gap} + schwache Underdog-Form "
+                          f"({scored:.2f}:{conceded:.2f}) — SKIP")
+                continue
+
+        # ── BTTS-Spezialfilter: kein BTTS wenn ein Team 0 Form + Elo-Gap >150 ──
+        # Ohne Form-Daten des schwächeren Teams schätzt das Modell dessen Torerfolg
+        # über die Defensiv-Stats des Gegners — das ist für BTTS irreführend.
+        if mkey == "btts":
+            a_games = (form_a or {}).get("games", 0)
+            h_games = (form_h or {}).get("games", 0)
+            if (a_games == 0 and elo_diff > 150) or (h_games == 0 and elo_diff < -150):
+                if VERBOSE:
+                    print(f"     ⚠️  BTTS: Kein Form-Daten für Underdog + Elo-Gap > 150 — SKIP")
+                continue
+
+        # ── Globale Sanity-Checks ─────────────────────────────────────────
+
+        # Edge > EDGE_MAX_SANE → suspect (falsche/invertierte Quoten)
         if v["edgePP"] > EDGE_MAX_SANE:
             if VERBOSE:
-                print(f"     ⚠️  {label}: Edge {v['edgePP']}pp > {EDGE_MAX_SANE}pp-Limit "
-                      f"— vermutl. fehlerhafte Quoten, übersprungen")
+                print(f"     ⚠️  {label}: Edge {v['edgePP']}pp > {EDGE_MAX_SANE}pp — SKIP")
             continue
 
-        # Sanity: Marktquote > ODDS_MAX → kein liquider Markt, kein echter Preis
+        # Marktquote > ODDS_MAX → kein liquider Markt
         if bk > ODDS_MAX:
             if VERBOSE:
-                print(f"     ⚠️  {label}: Marktquote {bk:.2f} > {ODDS_MAX}-Limit "
-                      f"— kein liquider Markt, übersprungen")
+                print(f"     ⚠️  {label}: Quote {bk:.2f} > {ODDS_MAX} — kein Markt, SKIP")
             continue
 
-        # Bei hohen Quoten (>ODDS_BET_MAX): BET auf ABWÄGEN zurückstufen
-        # Zu viel Rauschen bei >6.0 um zuverlässig BET zu empfehlen
+        # BET bei hohen Quoten (>ODDS_BET_MAX) → ABWÄGEN
         if bk > ODDS_BET_MAX and v["verdict"] == "BET":
             v["verdict"] = "ABWÄGEN"
             if VERBOSE:
                 print(f"     ℹ️  {label}: Quote {bk:.2f} > {ODDS_BET_MAX} → BET→ABWÄGEN")
 
-        # Sanity: Modell stark favorisiert (m_odds<1.55) aber Markt zeigt Außenseiter (bk>3.5)
-        # → Quoten wahrscheinlich invertiert / falsche Daten
+        # Modell stark favorisiert aber Markt gibt Außenseiter → invertierte Quoten
         if m_odds < 1.55 and bk > 3.5:
             if VERBOSE:
                 print(f"     ⚠️  {label}: Modell={m_odds:.2f} vs Markt={bk:.2f} "
-                      f"— Richtungskonflikt, übersprungen")
+                      f"— Richtungskonflikt, SKIP")
             continue
 
         conf = edge_to_conf(v["edgePP"], v["verdict"])
