@@ -157,6 +157,45 @@ def build_odds_history(history: dict, odds_key: str) -> list[dict]:
     return result
 
 
+def poisson_xg(home_form, away_form, home_elo: float, away_elo: float, home_is_cohost: bool = False):
+    """
+    Schätzt Expected Goals (xG) via Poisson-Modell aus Form-Daten.
+    Fallback auf Elo-basierte Schätzung wenn Form-Daten fehlen.
+    Returns (xg_home, xg_away) als float.
+    """
+    WM_AVG = 2.3  # historischer WM-Schnitt: ~2.3 Tore/Spiel
+
+    h_scored = h_conceded = a_scored = a_conceded = None
+
+    if home_form and home_form.get('played', 0) >= 3:
+        hp = home_form['played']
+        h_scored   = home_form.get('goalsFor',     0) / hp
+        h_conceded = home_form.get('goalsAgainst', 0) / hp
+
+    if away_form and away_form.get('played', 0) >= 3:
+        ap = away_form['played']
+        a_scored   = away_form.get('goalsFor',     0) / ap
+        a_conceded = away_form.get('goalsAgainst', 0) / ap
+
+    import math
+    p_home = 1.0 / (1.0 + 10.0 ** (-(home_elo - away_elo) / 400.0))
+    if home_is_cohost:
+        p_home = min(0.90, p_home + 0.04)
+    p_away = 1.0 - p_home
+
+    if h_scored is not None and a_conceded is not None:
+        xg_home = round((h_scored + a_conceded) / 2, 2)
+    else:
+        xg_home = round(WM_AVG * p_home * 0.95, 2)
+
+    if a_scored is not None and h_conceded is not None:
+        xg_away = round((a_scored + h_conceded) / 2, 2)
+    else:
+        xg_away = round(WM_AVG * p_away * 1.05, 2)
+
+    return xg_home, xg_away
+
+
 def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, ai_previews=None):
     home_id = fixture["home"]
     away_id = fixture["away"]
@@ -217,6 +256,9 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
     home_form = normalise_form(home_form)
     away_form = normalise_form(away_form)
 
+    # xG via Poisson-Modell
+    xg_home, xg_away = poisson_xg(home_form, away_form, home_elo, away_elo, home_id in CO_HOSTS)
+
     # H2H
     h2h_raw = wm.get("h2h", {}).get(h2h_key)
     h2h_out = None
@@ -257,6 +299,8 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         "homeElo":    home_elo,
         "awayElo":    away_elo,
         "eloDiff":    elo_diff,
+        "xgHome":     xg_home,
+        "xgAway":     xg_away,
         "upsetScore": upset_score(home_elo, away_elo),
         "homeConf":   home_team.get("confederation", ""),
         "awayConf":   away_team.get("confederation", ""),

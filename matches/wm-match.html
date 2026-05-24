@@ -1,890 +1,1247 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080c10">
-<title>WM 2026 — Match-Analyse</title>
+<meta name="theme-color" content="#05080f">
+<title id="page-title">WM 2026 · CocoBet</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+/* ═══════════════════════════════════════
+   RESET & VARIABLES
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#080c10;--card:#0f1419;--card2:#141b22;--card3:#1a2332;
-  --border:#1e2d3d;--border2:#243040;
-  --accent:#00d4a1;--red:#f85149;--yellow:#e3b341;
-  --text:#e8edf3;--muted:#6b7a8d;--muted2:#8b9ab0;
-  --green:#3fb950;--blue:#58a6ff;--purple:#a78bfa;
-  --gold:#f0c040;--gold-dim:#f0c04018;--gold-border:#f0c04030;
+  --gold:#f5c518;--green:#22c55e;--red:#ef4444;--blue:#38bdf8;
+  --orange:#f97316;--purple:#a78bfa;
+  --bg:#05080f;--surface:#0c1018;--card:#111827;--card2:#141d2b;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#f0f4ff;--sub:#6b7a99;--muted:#1e293b;
 }
-html{-webkit-text-size-adjust:100%}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding-bottom:80px;overflow-x:hidden}
-a{color:var(--accent);text-decoration:none}
-
-/* ── Nav ─────────────────────────────────────────────── */
-.top-nav{background:rgba(8,12,16,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;gap:8px}
-.nav-back{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--muted2);padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--card);transition:all .15s}
-.nav-back:hover{color:var(--text);border-color:var(--border2)}
-.nav-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.nav-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-border)}
-.nav-matchday{font-size:11px;color:var(--muted);white-space:nowrap}
-
-/* ── Hero ────────────────────────────────────────────── */
-.hero{position:relative;background:linear-gradient(180deg,#0d1420 0%,#080c10 100%);border-bottom:1px solid var(--border);overflow:hidden;padding:28px 16px 20px}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 50%,#00d4a108 0%,transparent 60%),radial-gradient(ellipse 60% 60% at 80% 50%,#f0c04006 0%,transparent 60%);pointer-events:none}
-.hero-inner{position:relative;max-width:860px;margin:0 auto}
-.hero-teams{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:16px}
-.hero-team{flex:1;text-align:center}
-.hero-team.home{text-align:right}.hero-team.away{text-align:left}
-.team-flag{font-size:38px;display:block;margin-bottom:6px;line-height:1}
-.hero-name{font-size:15px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:3px}
-.hero-elo{font-size:11px;color:var(--muted)}
-.hero-center{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 4px}
-.hero-kickoff{font-size:11px;color:var(--muted);margin-top:4px;text-align:center;line-height:1.5}
-.hero-donut-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;text-align:center;margin-bottom:2px}
-
-/* Prob legend */
-.prob-legend{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-.prob-leg{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;border:1px solid}
-.prob-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.pp-h{background:#00d4a110;color:#00d4a1;border-color:#00d4a130}.pp-h .prob-dot{background:#00d4a1}
-.pp-d{background:#e3b34110;color:#e3b341;border-color:#e3b34130}.pp-d .prob-dot{background:#e3b341}
-.pp-a{background:#a78bfa10;color:#a78bfa;border-color:#a78bfa30}.pp-a .prob-dot{background:#a78bfa}
-
-/* ── Content wrapper ─────────────────────────────────── */
-.content{max-width:860px;margin:0 auto;padding:0 12px}
-.section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
-.section::before{content:'';position:absolute;top:0;left:0;width:3px;bottom:0;background:linear-gradient(180deg,var(--accent),transparent);border-radius:16px 0 0 16px}
-.section.wm-gold::before{background:linear-gradient(180deg,var(--gold),transparent)}
-.stitle{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.sticon{width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-
-/* ── Upset Score ─────────────────────────────────────── */
-.upset-card{border-radius:16px;padding:18px 20px;margin-bottom:14px;position:relative;overflow:hidden}
-.upset-card.high{background:linear-gradient(135deg,#1a0800,#0f1419);border:1px solid #f8514930}
-.upset-card.high::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#f85149,#e3b341,transparent)}
-.upset-card.medium{background:linear-gradient(135deg,#140a00,#0f1419);border:1px solid #e3b34130}
-.upset-card.medium::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#e3b341,transparent)}
-.upset-inner{display:flex;align-items:center;gap:16px}
-.upset-score-num{font-size:40px;font-weight:900;line-height:1;flex-shrink:0}
-.upset-score-num.high{color:#f85149}
-.upset-score-num.medium{color:#e3b341}
-.upset-right{flex:1}
-.upset-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
-.upset-label.high{color:#f85149}
-.upset-label.medium{color:#e3b341}
-.upset-sub{font-size:12px;color:var(--muted2);line-height:1.5}
-.upset-dots{display:flex;gap:3px;margin-top:10px}
-.upset-dot{width:18px;height:6px;border-radius:3px;background:#ffffff08}
-.upset-dot.filled.high{background:#f85149}
-.upset-dot.filled.medium{background:#e3b341}
-.upset-dot.filled.low{background:#3fb950}
-
-/* ── Tournament context ──────────────────────────────── */
-.ctx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:12px}
-.ctx-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px}
-.ctx-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
-.ctx-val{font-size:14px;font-weight:700;color:var(--text)}
-.cohost-note{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:var(--gold-dim);border:1px solid var(--gold-border);font-size:12px;color:var(--gold);font-weight:600}
-
-/* ── Pick cards ──────────────────────────────────────── */
-.pick-card{border-radius:12px;padding:14px 16px;margin-bottom:10px;position:relative;overflow:hidden}
-.pick-card.bet{background:linear-gradient(135deg,#001a13,#0a1419);border:1px solid #00d4a125}
-.pick-card.bet::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);border-radius:12px 0 0 12px}
-.pick-card.abwaegen{background:linear-gradient(135deg,#1a1400,#0f1419);border:1px solid #e3b34125}
-.pick-card.abwaegen::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--yellow);border-radius:12px 0 0 12px}
-.pick-card.skip{background:var(--card2);border:1px solid var(--border);opacity:.65}
-.pick-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:12px}
-.pick-left{display:flex;align-items:flex-start;gap:10px}
-.pick-icon{font-size:20px;flex-shrink:0;margin-top:1px}
-.pick-market{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
-.pick-verdict-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}
-.pick-verdict-label.bet{color:var(--accent)}
-.pick-verdict-label.abwaegen{color:var(--yellow)}
-.pick-verdict-label.skip{color:var(--muted)}
-.pick-odds-big{text-align:right;flex-shrink:0}
-.pick-odds-num{font-size:22px;font-weight:800;color:var(--text);line-height:1}
-.pick-odds-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
-
-/* Pick probability bar */
-.pick-prob-row{margin-bottom:10px}
-.pick-prob-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
-.pick-prob-labels{font-size:10px;color:var(--muted)}
-.pick-prob-values{font-size:10px;font-weight:700;display:flex;gap:10px}
-.pick-prob-track{height:7px;border-radius:4px;background:#ffffff08;overflow:hidden;position:relative}
-.pick-prob-fill-mkt{height:100%;background:#ffffff15;position:absolute;top:0;left:0}
-.pick-prob-fill-model{height:100%;background:var(--accent);opacity:.85;position:absolute;top:0;left:0}
-
-/* Pick pills */
-.pick-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.pill{padding:4px 9px;border-radius:7px;font-size:11px;font-weight:600;border:1px solid;white-space:nowrap}
-.p-bet{background:#00d4a110;border-color:#00d4a135;color:var(--accent)}
-.p-edge{background:#3fb95012;border-color:#3fb95040;color:var(--green)}
-.p-conf{background:#a78bfa08;border-color:#a78bfa30;color:var(--purple)}
-.p-info{background:#ffffff06;border-color:var(--border2);color:var(--muted2)}
-
-/* ── Stats / Form comparison ─────────────────────────── */
-.stats-names{display:flex;justify-content:space-between;margin-bottom:12px}
-.stats-name{font-size:13px;font-weight:700;color:var(--muted2);display:flex;align-items:center;gap:5px}
-.sbar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.sbar-val{font-size:13px;font-weight:700;min-width:42px;text-align:right;white-space:nowrap}
-.sbar-center{flex:1;min-width:0}
-.sbar-label{font-size:10px;color:var(--muted);text-align:center;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
-.sbar-track{height:8px;border-radius:4px;overflow:hidden;background:#ffffff06;display:flex}
-
-/* Last-5 form dots */
-.form-dots{display:flex;gap:4px;flex-wrap:wrap}
-.form-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#080c10;flex-shrink:0}
-.form-dot.W{background:var(--accent)}
-.form-dot.D{background:var(--yellow)}
-.form-dot.L{background:var(--red)}
-
-/* ── H2H ─────────────────────────────────────────────── */
-.h2h-kpis{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.h2h-kpi{flex:1;min-width:58px;text-align:center;background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px 6px}
-.kpi-val{font-size:20px;font-weight:800;color:var(--text);line-height:1}
-.kpi-lbl{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3}
-.h2h-bar{height:10px;border-radius:5px;overflow:hidden;display:flex;margin-bottom:14px}
-.h2h-bar-h{background:var(--accent)}
-.h2h-bar-d{background:var(--yellow)}
-.h2h-bar-a{background:var(--purple)}
-
-/* ── Group table ─────────────────────────────────────── */
-.group-table{width:100%;border-collapse:collapse;font-size:12px}
-.group-table th{color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-size:10px;font-weight:700;padding:6px 8px;border-bottom:1px solid var(--border);text-align:right}
-.group-table th:first-child{text-align:left}
-.group-table td{padding:8px 8px;border-bottom:1px solid var(--border);text-align:right;color:var(--muted2)}
-.group-table td:first-child{text-align:left;color:var(--text);font-weight:600}
-.group-table tr:last-child td{border-bottom:none}
-.group-table tr.highlight td{color:var(--text)}
-.gt-flag{font-size:14px;margin-right:4px}
-.gt-elo{font-size:10px;color:var(--muted);font-weight:400}
-
-/* ── AI Preview ──────────────────────────────────────── */
-.ai-preview{font-size:13px;color:var(--muted2);line-height:1.7;position:relative;padding-left:14px}
-.ai-preview::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:2px;background:linear-gradient(180deg,var(--accent),transparent);border-radius:2px}
-.ai-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;padding:3px 8px;border-radius:6px;background:#00d4a110;border:1px solid #00d4a125}
-
-/* ── Odds grid ───────────────────────────────────────── */
-.odds-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
-.ocard{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px}
-.ocard-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
-.ocard-cur{font-size:20px;font-weight:800;color:var(--text);line-height:1;margin-bottom:4px}
-.ocard-impl{font-size:10px;color:var(--muted2)}
-
-/* ── Player Spotlight ────────────────────────────────── */
-.player-card{border-radius:14px;padding:16px 18px;margin-bottom:10px;background:linear-gradient(135deg,#0d1a2e,#0f1419);border:1px solid #58a6ff25;position:relative;overflow:hidden}
-.player-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#58a6ff,transparent)}
-.player-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.player-flag{font-size:28px;flex-shrink:0}
-.player-info{flex:1;min-width:0}
-.player-name{font-size:16px;font-weight:800;color:var(--text);line-height:1.2}
-.player-meta{font-size:11px;color:var(--muted2);margin-top:2px}
-.player-prob{text-align:right;flex-shrink:0}
-.player-prob-num{font-size:24px;font-weight:900;color:var(--blue);line-height:1}
-.player-prob-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
-.player-stats{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.pstat{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:7px 10px;text-align:center;flex:1;min-width:55px}
-.pstat-val{font-size:15px;font-weight:800;color:var(--text);line-height:1}
-.pstat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
-.player-bet{border-radius:10px;padding:11px 14px;margin-top:8px}
-.player-bet.has-bet{background:#58a6ff0e;border:1px solid #58a6ff25}
-.player-bet.no-props{background:#ffffff05;border:1px solid var(--border)}
-.player-narrative{font-size:12px;color:var(--muted2);line-height:1.6;font-style:italic;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
-
-/* ── Sharp Radar ─────────────────────────────────────── */
-.radar-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.radar-pill{padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1px solid}
-.radar-pill.open{background:#58a6ff10;border-color:#58a6ff30;color:var(--blue)}
-.radar-pill.current{background:#00d4a110;border-color:#00d4a130;color:var(--accent)}
-.radar-pill.move-up{background:#f8514910;border-color:#f8514930;color:var(--red)}
-.radar-pill.move-down{background:#3fb95010;border-color:#3fb95030;color:var(--green)}
-.radar-pill.neutral{background:#ffffff06;border-color:var(--border2);color:var(--muted2)}
-.radar-markets{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-.radar-market{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
-.radar-market-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.radar-market-name{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.5px}
-.radar-market-shift{font-size:11px;font-weight:700}
-.radar-market-shift.up{color:var(--red)}
-.radar-market-shift.down{color:var(--green)}
-.radar-market-shift.flat{color:var(--muted)}
-.radar-sparkline{height:36px;width:100%;position:relative}
-.radar-sparkline svg{width:100%;height:100%;display:block;overflow:visible}
-.radar-odds-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px}
-.radar-odds-open{font-size:10px;color:var(--muted)}
-.radar-odds-cur{font-size:13px;font-weight:700;color:var(--text)}
-.radar-odds-impl{font-size:10px;color:var(--muted2)}
-.radar-snap-count{font-size:10px;color:var(--muted);margin-top:10px;text-align:right;font-style:italic}
-.radar-nodata{font-size:12px;color:var(--muted);font-style:italic}
-
-/* Loading / Error */
-.state{max-width:480px;margin:80px auto;padding:0 20px;text-align:center}
-.state-icon{font-size:40px;margin-bottom:16px}
-.state-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px}
-.state-sub{font-size:13px;color:var(--muted);line-height:1.6}
-.spinner{width:32px;height:32px;border:3px solid #ffffff10;border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* Footer */
-.page-footer{text-align:center;font-size:11px;color:var(--muted);margin-top:24px;padding-top:16px;border-top:1px solid var(--border)}
-
-/* Mobile */
-@media(max-width:480px){
-  .hero{padding:18px 12px}
-  .hero-name{font-size:13px}
-  .team-flag{font-size:30px}
-  .section{padding:14px 12px}
-  .pick-market{font-size:13px}
-  .pick-odds-num{font-size:18px}
-  .sbar-val{font-size:12px;min-width:34px}
-  .kpi-val{font-size:17px}
-  .h2h-kpi{min-width:52px;padding:8px 4px}
-  .ctx-grid{grid-template-columns:repeat(2,1fr)}
-  .odds-grid{grid-template-columns:repeat(3,1fr)}
-  .prob-leg{font-size:10px;padding:3px 7px}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;overflow-x:hidden;
+  max-width:800px;margin:0 auto;
 }
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:200;
+  background:rgba(5,8,15,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  height:48px;display:flex;align-items:center;
+  padding:0 16px;gap:12px;
+}
+.tb-back{
+  display:flex;align-items:center;gap:5px;
+  font-size:12px;color:var(--sub);letter-spacing:.5px;
+  text-decoration:none;transition:color .2s;
+}
+.tb-back:hover{color:var(--text);}
+.tb-badge{
+  margin-left:auto;
+  background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.25);
+  color:var(--gold);font-size:10px;font-weight:800;
+  letter-spacing:1.5px;text-transform:uppercase;
+  padding:4px 12px;border-radius:100px;
+  display:flex;align-items:center;gap:6px;
+}
+.tb-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold);animation:tbpulse 2s ease-in-out infinite;}
+@keyframes tbpulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.tb-spieltag{font-size:11px;color:var(--sub);letter-spacing:1px;white-space:nowrap;}
+
+/* ── HERO ── */
+.hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(170deg,#0a1a0a 0%,#05080f 40%,#0a0515 100%);
+  padding:28px 20px 0;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 50%,rgba(34,197,94,.08) 0%,transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 50%,rgba(239,68,68,.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-bg-word{
+  position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
+  font-family:'Bebas Neue',sans-serif;font-size:140px;
+  color:rgba(255,255,255,.022);letter-spacing:8px;
+  white-space:nowrap;pointer-events:none;line-height:1;
+}
+.hero-matchup{
+  position:relative;z-index:2;
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;gap:12px;
+  animation:fadeUp .6s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.hero-team{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;}
+.hero-flag{font-size:48px;line-height:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5));}
+.hero-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:30px;letter-spacing:2px;color:#fff;line-height:1;
+}
+.hero-elo{
+  font-size:10px;color:var(--sub);letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+.hero-center{display:flex;flex-direction:column;align-items:center;gap:6px;}
+/* DONUT */
+.donut{position:relative;width:80px;height:80px;}
+.donut svg{width:80px;height:80px;transform:rotate(-90deg);}
+.dt{fill:none;stroke:rgba(255,255,255,.07);stroke-width:7;}
+.donut-inner{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.donut-pct{font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;line-height:1;}
+.donut-lbl{font-size:8px;color:var(--sub);letter-spacing:1px;text-transform:uppercase;}
+.hero-vs{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:14px;color:#333;letter-spacing:2px;
+}
+.hero-time{font-size:9px;color:var(--sub);letter-spacing:1px;text-transform:uppercase;text-align:center;}
+/* PROB BAR */
+.prob-bar{
+  position:relative;z-index:2;
+  margin:16px 0 0;
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;gap:0;
+  border-radius:0;overflow:hidden;
+  animation:fadeUp .6s .15s ease both;
+}
+.pb-home,.pb-away{
+  padding:9px 14px;display:flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:800;
+}
+.pb-home{background:rgba(34,197,94,.12);color:#22c55e;justify-content:flex-start;}
+.pb-away{background:rgba(239,68,68,.1);color:#ef4444;justify-content:flex-end;}
+.pb-draw{
+  background:rgba(245,197,24,.09);color:var(--gold);
+  padding:9px 12px;font-size:11px;font-weight:700;
+  text-align:center;white-space:nowrap;
+}
+.pb-pct{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;}
+
+/* venue strip */
+.venue-strip{
+  background:rgba(255,255,255,.03);
+  border-top:1px solid var(--border);
+  padding:8px 20px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:10px;color:var(--sub);letter-spacing:.5px;
+  position:relative;z-index:2;
+}
+.venue-ico{font-size:13px;}
+
+/* ── SECTION ── */
+.section{padding:14px 16px 0;}
+.sec-head{
+  display:flex;align-items:center;gap:10px;
+  padding-bottom:10px;margin-bottom:12px;
+  border-bottom:1px solid var(--border);
+}
+.sec-ico{font-size:15px;}
+.sec-title{font-size:9px;color:var(--sub);letter-spacing:2.5px;text-transform:uppercase;font-weight:700;}
+.sec-tag{
+  margin-left:auto;font-size:8px;font-weight:800;
+  padding:2px 9px;border-radius:100px;letter-spacing:1px;text-transform:uppercase;
+}
+.sec-tag.gold{background:rgba(245,197,24,.12);color:var(--gold);border:1px solid rgba(245,197,24,.22);}
+.sec-tag.green{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.22);}
+.sec-tag.blue{background:rgba(56,189,248,.1);color:var(--blue);border:1px solid rgba(56,189,248,.2);}
+
+/* ── BOX ── */
+.box{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:16px;margin-bottom:10px;
+  animation:fadeUp .5s ease both;
+}
+
+/* ── KONTEXT-CARDS ── */
+.ctx-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.ctx-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;
+}
+.ctx-lbl{font-size:8px;color:var(--sub);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.ctx-val{font-size:15px;font-weight:800;color:var(--text);}
+.ctx-sub{font-size:10px;color:var(--sub);margin-top:2px;}
+.venue-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:10px;
+}
+.venue-card-ico{font-size:20px;}
+.venue-card-name{font-size:13px;font-weight:700;color:var(--text);}
+.venue-card-sub{font-size:10px;color:var(--sub);}
+.host-bonus{
+  background:linear-gradient(90deg,rgba(245,197,24,.1),rgba(245,197,24,.03));
+  border:1px solid rgba(245,197,24,.22);
+  border-radius:8px;padding:9px 14px;
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;color:var(--gold);font-weight:700;
+  margin-bottom:10px;
+}
+
+/* ── AI ANALYSE ── */
+.ai-box{
+  background:linear-gradient(135deg,rgba(56,189,248,.07),rgba(167,139,250,.05));
+  border:1px solid rgba(56,189,248,.15);
+  border-radius:12px;padding:16px;margin-bottom:10px;
+  animation:fadeUp .5s .1s ease both;
+}
+.ai-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.ai-badge{
+  font-size:8px;font-weight:800;color:var(--blue);letter-spacing:2px;text-transform:uppercase;
+  background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.2);
+  padding:3px 10px;border-radius:100px;
+}
+.ai-title{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:16px;color:#fff;
+}
+.ai-text{font-size:12px;color:#8899bb;line-height:1.7;white-space:pre-wrap;}
+.ai-text strong{color:#bbc8e0;}
+
+/* DATA PILLS */
+.data-pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
+.dp{font-size:9px;font-weight:700;padding:3px 9px;border-radius:100px;letter-spacing:.5px;}
+.dp.g{background:rgba(34,197,94,.1);color:#22c55e;border:1px solid rgba(34,197,94,.2);}
+.dp.b{background:rgba(56,189,248,.1);color:var(--blue);border:1px solid rgba(56,189,248,.18);}
+.dp.o{background:rgba(249,115,22,.1);color:var(--orange);border:1px solid rgba(249,115,22,.18);}
+.dp.gray{background:rgba(255,255,255,.06);color:#888;border:1px solid rgba(255,255,255,.1);}
+
+/* ── THE PICK ── */
+.pick-hero{
+  background:linear-gradient(135deg,rgba(34,197,94,.13),rgba(34,197,94,.04));
+  border:1px solid rgba(34,197,94,.3);
+  border-radius:14px;padding:18px 16px;
+  margin-bottom:10px;
+  position:relative;overflow:hidden;
+  animation:fadeUp .5s .15s ease both;
+}
+.pick-hero::before{
+  content:'BET';
+  position:absolute;right:-8px;top:-8px;
+  font-family:'Bebas Neue',sans-serif;font-size:80px;
+  color:rgba(34,197,94,.06);letter-spacing:2px;
+  pointer-events:none;line-height:1;
+}
+.ph-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px;}
+.ph-badges{display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap;}
+.ph-badge{
+  font-size:8px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  padding:3px 9px;border-radius:100px;
+}
+.ph-badge.bet{background:rgba(34,197,94,.2);color:#22c55e;border:1px solid rgba(34,197,94,.35);}
+.ph-badge.abwaegen{background:rgba(249,115,22,.15);color:var(--orange);border:1px solid rgba(249,115,22,.3);}
+.ph-badge.stars{background:rgba(255,255,255,.06);color:#aaa;border:1px solid rgba(255,255,255,.1);}
+.ph-badge.edge{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.25);}
+.ph-name{
+  font-family:'Bebas Neue',sans-serif;font-size:32px;
+  color:#fff;letter-spacing:2px;line-height:1;margin-bottom:5px;
+}
+.ph-detail{font-size:11px;color:#668866;}
+.ph-detail strong{color:#aaccaa;}
+.ph-odds-block{text-align:right;flex-shrink:0;}
+.ph-odds{
+  font-family:'Bebas Neue',sans-serif;font-size:52px;
+  color:#22c55e;letter-spacing:1px;line-height:1;
+  text-shadow:0 0 30px rgba(34,197,94,.3);
+}
+.ph-conf{font-size:9px;color:#446644;text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.signal-bar{
+  display:flex;align-items:center;gap:0;
+  background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;
+  margin-bottom:10px;
+}
+.sb-seg{
+  flex:1;padding:6px 8px;text-align:center;font-size:9px;font-weight:700;
+  letter-spacing:.5px;border-right:1px solid rgba(255,255,255,.06);
+}
+.sb-seg:last-child{border-right:none;}
+.sb-seg .sb-lbl{color:var(--sub);font-size:8px;display:block;margin-bottom:2px;}
+.sb-seg .sb-val{color:var(--text);}
+.sb-seg.green .sb-val{color:#22c55e;}
+.sb-seg.blue .sb-val{color:var(--blue);}
+.sb-seg.orange .sb-val{color:var(--orange);}
+.model-bar-wrap{margin-bottom:12px;}
+.model-bar-labels{display:flex;justify-content:space-between;margin-bottom:4px;}
+.model-bar-lbl{font-size:9px;color:var(--sub);letter-spacing:1px;}
+.model-bar{height:6px;background:rgba(255,255,255,.07);border-radius:100px;overflow:hidden;position:relative;margin-bottom:4px;}
+.mb-model{height:100%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:100px;position:absolute;top:0;left:0;}
+.mb-market{height:100%;background:rgba(255,255,255,.2);border-radius:100px;position:absolute;top:0;left:0;}
+.ph-rationale{
+  font-size:11px;color:#668866;line-height:1.6;
+  border-top:1px solid rgba(34,197,94,.1);padding-top:10px;margin-top:8px;
+}
+.ph-rationale strong{color:#aaccaa;}
+.bet-btn{
+  width:100%;margin-top:12px;
+  padding:14px;border-radius:10px;border:none;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:800;
+  letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;
+  background:linear-gradient(90deg,#22c55e,#16a34a);
+  color:#000;transition:all .2s;
+  box-shadow:0 4px 20px rgba(34,197,94,.25);
+}
+.bet-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(34,197,94,.35);}
+.pick-sec{
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  margin-bottom:8px;
+  animation:fadeUp .5s .2s ease both;
+}
+.ps-badge{font-size:8px;font-weight:800;letter-spacing:1px;margin-bottom:4px;}
+.ps-badge.bet{color:var(--green);}
+.ps-badge.abwaegen{color:var(--orange);}
+.ps-name{font-size:13px;font-weight:700;color:#ccc;}
+.ps-detail{font-size:10px;color:var(--sub);}
+.ps-odds{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--orange);letter-spacing:1px;}
+
+/* ── ODDS + SHARP RADAR ── */
+.odds-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;}
+.odds-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:12px 10px;text-align:center;
+  transition:all .2s;
+}
+.odds-card.highlight{
+  background:rgba(34,197,94,.08);
+  border-color:rgba(34,197,94,.3);
+}
+.oc-outcome{font-size:9px;color:var(--sub);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.oc-odds{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;line-height:1;}
+.odds-card.highlight .oc-odds{color:#22c55e;}
+.oc-impl{font-size:9px;color:var(--sub);margin-top:3px;}
+.oc-arrow{font-size:9px;margin-left:2px;}
+.oc-arrow.up{color:#22c55e;}
+.oc-arrow.down{color:#ef4444;}
+.odds-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.sharp-row{
+  display:grid;grid-template-columns:90px 1fr 70px;
+  align-items:center;gap:10px;
+  padding:8px 0;border-bottom:1px solid var(--border);
+}
+.sharp-row:last-child{border-bottom:none;}
+.sr-market{font-size:11px;font-weight:700;color:#aaa;}
+.sr-bar-wrap{height:5px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden;position:relative;}
+.sr-bar{height:100%;border-radius:100px;position:absolute;}
+.sr-bar.stable{background:rgba(255,255,255,.2);width:50%;}
+.sr-bar.sharp-in{background:linear-gradient(90deg,#22c55e,#16a34a);}
+.sr-bar.sharp-out{background:linear-gradient(90deg,#ef4444,#b91c1c);right:0;}
+.sr-change{text-align:right;font-size:11px;font-weight:700;}
+.sr-change.up{color:#22c55e;}
+.sr-change.down{color:#ef4444;}
+.sr-change.flat{color:var(--sub);}
+.sr-current{font-family:'Bebas Neue',sans-serif;font-size:14px;display:block;}
+.sr-move{font-size:9px;display:block;}
+.sharp-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.22);
+  border-radius:6px;padding:5px 10px;
+  font-size:10px;font-weight:700;color:#22c55e;
+  margin-bottom:10px;
+}
+.live-dot{width:5px;height:5px;border-radius:50%;background:#22c55e;box-shadow:0 0 5px #22c55e;animation:tbpulse 1.8s ease-in-out infinite;}
+
+/* ── ELO + xG ── */
+.elo-matchup{
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;gap:8px;margin-bottom:10px;
+}
+.em-team{display:flex;flex-direction:column;gap:3px;}
+.em-team.right{align-items:flex-end;text-align:right;}
+.em-name{font-size:12px;font-weight:700;color:#aaa;letter-spacing:.5px;}
+.em-elo{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;line-height:1;}
+.em-vs{font-size:10px;color:#333;font-weight:700;letter-spacing:2px;}
+.xg-bar-section{margin-bottom:10px;}
+.xg-lbl{font-size:9px;color:var(--sub);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.xg-bar-wrap{display:flex;align-items:center;gap:8px;}
+.xg-val{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;width:36px;flex-shrink:0;}
+.xg-val.right{text-align:right;}
+.xg-track{flex:1;height:7px;background:rgba(255,255,255,.07);border-radius:100px;overflow:hidden;display:flex;}
+.xg-home-bar{height:100%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:100px;}
+.xg-away-bar{height:100%;background:linear-gradient(90deg,#ef4444,#b91c1c);border-radius:100px;margin-left:auto;}
+
+/* ── FORM ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;}
+.form-team{font-size:11px;font-weight:700;color:#aaa;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.form-dots{display:flex;gap:4px;}
+.fd{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;}
+.fd.w{background:rgba(34,197,94,.15);color:#22c55e;}
+.fd.d{background:rgba(255,255,255,.07);color:#666;}
+.fd.l{background:rgba(239,68,68,.15);color:#ef4444;}
+.form-stats{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+.fs{font-size:9px;color:var(--sub);}
+.fs strong{color:#aaa;}
+
+/* ── H2H ── */
+.h2h-bar{display:flex;height:8px;border-radius:100px;overflow:hidden;margin:8px 0 6px;}
+.h2h-home{background:linear-gradient(90deg,#22c55e,#16a34a);height:100%;}
+.h2h-draw{background:rgba(255,255,255,.18);height:100%;}
+.h2h-away{background:linear-gradient(90deg,#ef4444,#b91c1c);height:100%;}
+.h2h-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--sub);}
+.h2h-stats{display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;}
+.hs{font-size:9px;color:var(--sub);}
+.hs strong{color:#aaa;}
+
+/* ── GRUPPE ── */
+.gruppe-table{width:100%;border-collapse:collapse;}
+.gt-head th{
+  font-size:8px;color:var(--sub);letter-spacing:1.5px;text-transform:uppercase;
+  padding:5px 8px;text-align:left;border-bottom:1px solid var(--border);
+}
+.gt-head th:not(:first-child){text-align:right;}
+.gt-row td{
+  padding:9px 8px;font-size:12px;color:#ccc;
+  border-bottom:1px solid var(--border);
+}
+.gt-row:last-child td{border-bottom:none;}
+.gt-row td:not(:first-child){text-align:right;font-family:'Bebas Neue',sans-serif;font-size:14px;color:#fff;}
+.gt-row.highlight td{color:#fff;}
+.gt-row.highlight td:first-child{color:#22c55e;font-weight:700;}
+.gt-team{display:flex;align-items:center;gap:7px;}
+.gt-flag{font-size:16px;}
+.gt-elo{font-size:9px;color:var(--sub);}
+
+/* ── FOOTER ── */
+.page-footer{
+  padding:16px;margin-top:8px;
+  border-top:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  margin-bottom:80px;
+}
+.pf-brand{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:3px;color:#22c55e;}
+.pf-meta{font-size:9px;color:#2a3a2a;text-align:center;line-height:1.6;}
+.pf-back{
+  font-size:11px;color:var(--sub);text-decoration:none;
+  display:flex;align-items:center;gap:4px;margin-top:4px;
+  transition:color .2s;
+}
+.pf-back:hover{color:var(--text);}
+
+/* STICKY BET BAR */
+.sticky{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:800px;z-index:300;
+  background:rgba(12,16,24,.96);backdrop-filter:blur(16px);
+  border-top:1px solid rgba(34,197,94,.2);
+  padding:10px 16px;
+  display:flex;align-items:center;gap:10px;
+}
+.sticky.hidden{display:none;}
+.sticky-info{flex:1;}
+.sticky-name{font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;letter-spacing:1px;}
+.sticky-sub{font-size:9px;color:#446644;}
+.sticky-odds{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#22c55e;flex-shrink:0;}
+.sticky-btn{
+  background:linear-gradient(90deg,#22c55e,#16a34a);
+  color:#000;font-size:11px;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;
+  padding:11px 18px;border-radius:8px;border:none;
+  cursor:pointer;flex-shrink:0;font-family:'DM Sans',sans-serif;
+  transition:all .2s;
+}
+.sticky-btn:hover{transform:translateY(-1px);}
+
+/* ── LOADING / ERROR ── */
+.loading-screen{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:80vh;gap:12px;
+}
+.loading-spinner{
+  width:40px;height:40px;border:3px solid rgba(255,255,255,.08);
+  border-top-color:#22c55e;border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:12px;color:var(--sub);letter-spacing:1px;}
+.error-box{
+  margin:40px 20px;padding:24px;
+  background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);
+  border-radius:12px;text-align:center;
+}
+.error-box h2{font-size:18px;color:#ef4444;margin-bottom:8px;}
+.error-box p{font-size:12px;color:var(--sub);line-height:1.6;}
 </style>
 </head>
 <body>
 
 <div id="app">
-  <div class="state">
-    <div class="spinner"></div>
-    <div class="state-title">WM-Analyse wird geladen…</div>
+  <div class="loading-screen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Lade Spieldaten…</div>
   </div>
 </div>
 
 <script>
-// ── Donut SVG ──────────────────────────────────────────────────────────────
-function donutSvg(h, d, a, size=130, stroke=13) {
-  if (h == null || d == null || a == null) {
-    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size/2}" cy="${size/2}" r="${(size-stroke)/2}" fill="none" stroke="#ffffff08" stroke-width="${stroke}"/><text x="${size/2}" y="${size/2+5}" text-anchor="middle" font-size="11" fill="#6b7a8d" font-family="system-ui,sans-serif">n/a</text></svg>`;
-  }
-  const cx = cy = size/2, r = (size-stroke)/2, gap = 3;
-  function arc(startDeg, spanDeg, color) {
-    if (spanDeg < 2) return '';
-    const s = (startDeg-90)*Math.PI/180, e = (startDeg+spanDeg-gap-90)*Math.PI/180;
-    const x1=cx+r*Math.cos(s), y1=cy+r*Math.sin(s);
-    const x2=cx+r*Math.cos(e), y2=cy+r*Math.sin(e);
-    const lg = (spanDeg-gap)>180?1:0;
-    return `<path d="M${x1.toFixed(2)},${y1.toFixed(2)} A${r},${r} 0 ${lg},1 ${x2.toFixed(2)},${y2.toFixed(2)}" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-linecap="round"/>`;
-  }
-  const hd=h*3.6, dd=d*3.6, ad=a*3.6;
-  const topVal=Math.max(h,d,a);
-  const topColor=topVal===h?'#00d4a1':topVal===d?'#e3b341':'#a78bfa';
-  const topLbl=topVal===h?'Heim':topVal===d?'Unent.':'Ausw.';
-  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="flex-shrink:0">
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#ffffff08" stroke-width="${stroke}"/>
-    ${arc(0,hd,'#00d4a1')}${arc(hd,dd,'#e3b341')}${arc(hd+dd,ad,'#a78bfa')}
-    <text x="${cx}" y="${cy-8}" text-anchor="middle" font-size="9" fill="#6b7a8d" font-family="system-ui,sans-serif">${topLbl}</text>
-    <text x="${cx}" y="${cy+8}" text-anchor="middle" font-size="17" font-weight="800" fill="${topColor}" font-family="system-ui,sans-serif">${topVal}%</text>
-  </svg>`;
+// ═══════════════════════════════════════════════════════════
+//  WM MATCH PAGE  ·  Dynamic Renderer
+//  Loads: data/{slug}.json  where slug = ?m= URL param
+// ═══════════════════════════════════════════════════════════
+
+const params = new URLSearchParams(location.search);
+const slug   = params.get('m') || '';
+
+/* ── Utility helpers ─────────────────────────────────────── */
+function safe(v, fallback) {
+  fallback = fallback !== undefined ? fallback : '—';
+  return (v !== null && v !== undefined && v !== '') ? v : fallback;
+}
+function escHtml(s) {
+  if (typeof s !== 'string') return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function fmtOdds(v) {
+  if (v === null || v === undefined || v === '') return '—';
+  return parseFloat(v).toFixed(2);
+}
+function impliedProb(odds) {
+  if (!odds || parseFloat(odds) <= 0) return '—';
+  return (100 / parseFloat(odds)).toFixed(1);
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  const p = String(d).split('-');
+  if (p.length === 3) return p[2] + '.' + p[1] + '.' + p[0].slice(-2);
+  return d;
+}
+function starsStr(n) {
+  if (!n || n < 1) return '';
+  return '★'.repeat(Math.min(5, Math.max(1, parseInt(n))));
+}
+function signStr(v) {
+  if (v === null || v === undefined) return '—';
+  const n = parseFloat(v);
+  return (n > 0 ? '+' : '') + n.toFixed(1);
 }
 
-// ── Render: Nav + Hero ────────────────────────────────────────────────────
-function renderHero(D) {
-  const h = D.probHome, dr = D.probDraw, a = D.probAway;
-  const hLabel = D.home.split(' ').at(-1);
-  const aLabel = D.away.split(' ').at(-1);
-  const kickoff = [D.date, D.time].filter(Boolean).join(' · ');
-  const probLegend = (h != null) ? `
-<div class="prob-legend">
-  <div class="prob-leg pp-h"><div class="prob-dot"></div>${hLabel} ${h}%</div>
-  <div class="prob-leg pp-d"><div class="prob-dot"></div>Unent. ${dr}%</div>
-  <div class="prob-leg pp-a"><div class="prob-dot"></div>${aLabel} ${a}%</div>
-</div>` : '';
+/* ── Donut SVG builder ───────────────────────────────────── */
+function buildDonut(pH, pD, pA) {
+  const R = 32;
+  const C = 2 * Math.PI * R; // ~201.06
+
+  if (pH == null) {
+    return '<svg viewBox="0 0 80 80"><circle class="dt" cx="40" cy="40" r="32"/></svg>';
+  }
+
+  const hF = parseFloat(pH) / 100;
+  const dF = parseFloat(pD || 0) / 100;
+  const aF = parseFloat(pA || 0) / 100;
+
+  const hLen = hF * C;
+  const dLen = dF * C;
+  const aLen = aF * C;
+
+  const dRot = hF * 360;
+  const aRot = (hF + dF) * 360;
 
   return `
-<nav class="top-nav">
-  <a class="nav-back" href="../betting-dashboard.html">← Dashboard</a>
-  <div class="nav-right">
-    <span class="nav-badge">⚽ WM 2026 · ${D.groupName}</span>
-    <span class="nav-matchday">Spieltag ${D.matchday}</span>
-  </div>
-</nav>
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-teams">
-      <div class="hero-team home">
-        <span class="team-flag">${D.homeFlag}</span>
-        <div class="hero-name">${D.home}</div>
-        <div class="hero-elo">Elo ${D.homeElo}</div>
-      </div>
-      <div class="hero-center">
-        <div class="hero-donut-label">Markt-Wahrsch.</div>
-        ${donutSvg(h, dr, a)}
-        <div class="hero-kickoff">${kickoff}${D.venue ? '<br><span style="font-size:10px">' + D.venue + '</span>' : ''}</div>
-      </div>
-      <div class="hero-team away">
-        <span class="team-flag">${D.awayFlag}</span>
-        <div class="hero-name">${D.away}</div>
-        <div class="hero-elo">Elo ${D.awayElo}</div>
-      </div>
-    </div>
-    ${probLegend}
-  </div>
-</div>`;
+    <svg viewBox="0 0 80 80" style="transform:rotate(-90deg);">
+      <circle class="dt" cx="40" cy="40" r="${R}"/>
+      <circle style="fill:none;stroke:#22c55e;stroke-width:7;stroke-linecap:round;stroke-dasharray:${C.toFixed(2)};stroke-dashoffset:${(C - hLen).toFixed(2)};filter:drop-shadow(0 0 5px #22c55e);" cx="40" cy="40" r="${R}"/>
+      <circle style="fill:none;stroke:#f5c518;stroke-width:7;stroke-linecap:round;stroke-dasharray:${C.toFixed(2)};stroke-dashoffset:${(C - dLen).toFixed(2)};" cx="40" cy="40" r="${R}" transform="rotate(${dRot.toFixed(2)} 40 40)"/>
+      <circle style="fill:none;stroke:#ef4444;stroke-width:7;stroke-linecap:round;stroke-dasharray:${C.toFixed(2)};stroke-dashoffset:${(C - aLen).toFixed(2)};" cx="40" cy="40" r="${R}" transform="rotate(${aRot.toFixed(2)} 40 40)"/>
+    </svg>`;
 }
 
-// ── Render: Upset Score ───────────────────────────────────────────────────
-function renderUpsetScore(D) {
-  const score = D.upsetScore || 0;
-  if (score < 3) return '';
-  const isHigh = score >= 6;
-  const cls = isHigh ? 'high' : 'medium';
-  const label = isHigh ? '🔥 Hohes Upset-Potenzial' : '⚠️ Moderates Upset-Potenzial';
-  const gapAbs = Math.abs(D.eloDiff);
-  const sub = `Elo-Differenz: ${gapAbs} Punkte (${D.home} ${D.homeElo} · ${D.away} ${D.awayElo})`;
-  const dots = Array.from({length:10}, (_,i) =>
-    `<div class="upset-dot${i < score ? ' filled '+cls : ''}"></div>`
-  ).join('');
-  return `
-<div class="content">
-<div class="upset-card ${cls}">
-  <div class="upset-inner">
-    <div class="upset-score-num ${cls}">${score}</div>
-    <div class="upset-right">
-      <div class="upset-label ${cls}">${label}</div>
-      <div class="upset-sub">${sub}</div>
-      <div class="upset-dots">${dots}</div>
-    </div>
-  </div>
-</div>
-</div>`;
-}
-
-// ── Render: Tournament Context ────────────────────────────────────────────
+/* ── Tournament Context section ──────────────────────────── */
 function renderContext(D) {
-  const cohostHtml = D.coHostBonus ? `
-<div class="cohost-note">🏟️ Co-Host-Bonus: ${D.coHostTeam} spielt im Heimstadion</div>` : '';
-  const oddsHtml = D.odds ? (() => {
-    const o = D.odds;
-    const cards = [
-      o.home  != null ? {l:'Heimsieg',  v:o.home}  : null,
-      o.draw  != null ? {l:'Unentsch.', v:o.draw}  : null,
-      o.away  != null ? {l:'Auswärts',  v:o.away}  : null,
-      o.over25  != null ? {l:'Over 2.5',   v:o.over25}  : null,
-      o.under25 != null ? {l:'Under 2.5',  v:o.under25} : null,
-      o.btts    != null ? {l:'BTTS',       v:o.btts}    : null,
-    ].filter(Boolean);
-    if (!cards.length) return '';
-    return `<div class="stitle" style="margin-top:14px"><div class="sticon" style="background:#e3b34115;border:1px solid #e3b34130">📈</div>Aktuelle Quoten</div>
-<div class="odds-grid">${cards.map(c => {
-      const impl = c.v > 1 ? Math.round(100/c.v) + '%' : '';
-      return `<div class="ocard">
-  <div class="ocard-label">${c.l}</div>
-  <div class="ocard-cur">${c.v.toFixed(2)}</div>
-  ${impl ? `<div class="ocard-impl">→ ${impl} impl.</div>` : ''}
-</div>`;
-    }).join('')}</div>`;
-  })() : '';
-
+  const teamNames = (D.homeTeams || []).map(t => escHtml(t.name || t.id)).join(' · ');
   return `
-<div class="content">
-<div class="section wm-gold">
-  <div class="stitle"><div class="sticon" style="background:var(--gold-dim);border:1px solid var(--gold-border)">🏆</div>Turnier-Kontext</div>
-  <div class="ctx-grid">
-    <div class="ctx-card"><div class="ctx-label">Gruppe</div><div class="ctx-val">${D.groupName}</div></div>
-    <div class="ctx-card"><div class="ctx-label">Spieltag</div><div class="ctx-val">${D.matchday} / 3</div></div>
-    <div class="ctx-card"><div class="ctx-label">Datum</div><div class="ctx-val">${D.date}</div></div>
-    <div class="ctx-card"><div class="ctx-label">Anstoß</div><div class="ctx-val">${D.time || '—'}</div></div>
-  </div>
-  ${D.venue ? `<div style="font-size:12px;color:var(--muted2);margin-bottom:10px">📍 ${D.venue}</div>` : ''}
-  ${cohostHtml}
-  ${oddsHtml}
-</div>
-</div>`;
+    <div class="section">
+      <div class="sec-head">
+        <span class="sec-ico">🏆</span>
+        <span class="sec-title">Turnier-Kontext</span>
+        <span class="sec-tag gold">WM 2026</span>
+      </div>
+
+      <div class="ctx-grid">
+        <div class="ctx-card">
+          <div class="ctx-lbl">Gruppe</div>
+          <div class="ctx-val">${escHtml(D.groupName || D.group || '—')}</div>
+          ${teamNames ? `<div class="ctx-sub">${teamNames}</div>` : ''}
+        </div>
+        <div class="ctx-card">
+          <div class="ctx-lbl">Spieltag</div>
+          <div class="ctx-val">${safe(D.matchday, '?')} / 3</div>
+          <div class="ctx-sub">Gruppenphase</div>
+        </div>
+        <div class="ctx-card">
+          <div class="ctx-lbl">Datum</div>
+          <div class="ctx-val">${fmtDate(D.date)}</div>
+        </div>
+        <div class="ctx-card">
+          <div class="ctx-lbl">Anstoss</div>
+          <div class="ctx-val">${safe(D.time, '—')}</div>
+          <div class="ctx-sub">Lokalzeit</div>
+        </div>
+      </div>
+
+      ${D.venue ? `
+      <div class="venue-card">
+        <div class="venue-card-ico">🏟️</div>
+        <div>
+          <div class="venue-card-name">${escHtml(D.venue)}</div>
+          <div class="venue-card-sub">Spielort</div>
+        </div>
+      </div>` : ''}
+
+      ${D.coHostBonus ? `
+      <div class="host-bonus">
+        🏠 Co-Host-Bonus: ${escHtml(D.coHostTeam || D.home || '')} spielt im Heimstadion — signifikanter Heimvorteil einberechnet
+      </div>` : ''}
+    </div>`;
 }
 
-// ── Render: Picks ─────────────────────────────────────────────────────────
+/* ── AI Analysis section ─────────────────────────────────── */
+function renderAI(D) {
+  if (!D.aiPreview) return '';
+  return `
+    <div class="section">
+      <div class="sec-head">
+        <span class="sec-ico">🤖</span>
+        <span class="sec-title">CocoBet Analyse</span>
+        <span class="sec-tag blue">KI-Analyse</span>
+      </div>
+      <div class="ai-box">
+        <div class="ai-header">
+          <span class="ai-badge">AI Powered</span>
+          <span class="ai-title">${escHtml(D.home || '')} vs ${escHtml(D.away || '')}</span>
+        </div>
+        <div class="ai-text">${escHtml(D.aiPreview)}</div>
+        <div class="data-pills">
+          ${D.eloDiff != null ? `<span class="dp g">Elo ${D.eloDiff >= 0 ? '+' : ''}${Math.round(D.eloDiff)}</span>` : ''}
+          ${(D.xgHome != null && D.xgAway != null) ? `<span class="dp b">xG ${D.xgHome}:${D.xgAway}</span>` : ''}
+          ${D.coHostBonus ? `<span class="dp o">Co-Host-Heimvorteil</span>` : ''}
+          ${D.probHome != null ? `<span class="dp gray">Markt ${D.probHome}% Heim</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── Picks section ───────────────────────────────────────── */
 function renderPicks(D) {
   const picks = D.picks || [];
-  const ordered = [
-    ...picks.filter(p => (p.verdict||'').toUpperCase() === 'BET'),
-    ...picks.filter(p => (p.verdict||'').toUpperCase() === 'ABWÄGEN' || (p.verdict||'').toUpperCase() === 'ABWAEGEN'),
-    ...picks.filter(p => !['BET','ABWÄGEN','ABWAEGEN'].includes((p.verdict||'').toUpperCase())),
-  ];
-  if (!ordered.length) return '';
+  if (picks.length === 0) return '';
 
-  const cards = ordered.map(pick => {
-    const verdict = (pick.verdict || '').toUpperCase();
-    const isbet   = verdict === 'BET';
-    const isabw   = verdict === 'ABWÄGEN' || verdict === 'ABWAEGEN';
-    const cls     = isbet ? 'bet' : isabw ? 'abwaegen' : 'skip';
-    const vLabel  = isbet ? '⚡ BET' : isabw ? '⚖️ ABWÄGEN' : '— SKIP';
-    const odds    = pick.odds;
-    const mo      = pick.modelOdds;
+  const betPicks = picks.filter(p => p.verdict === 'BET');
+  const abwPicks = picks.filter(p => p.verdict === 'ABWÄGEN');
 
-    let mktProb = null, modProb = null;
-    if (odds && odds > 1) mktProb = Math.round(100 / odds);
-    if (mo   && mo   > 1) modProb = Math.round(100 / mo);
+  const primary = betPicks[0] || abwPicks[0] || null;
+  if (!primary) return '';
 
-    const probBar = (modProb || mktProb) ? `
-<div class="pick-prob-row">
-  <div class="pick-prob-head">
-    <span class="pick-prob-labels">Modell vs. Markt-impl.</span>
-    <div class="pick-prob-values">
-      ${modProb != null ? `<span style="color:var(--accent)">${modProb}% Modell</span>` : ''}
-      ${mktProb != null ? `<span style="color:var(--muted2)">${mktProb}% Markt</span>` : ''}
-    </div>
-  </div>
-  <div class="pick-prob-track">
-    ${mktProb != null ? `<div class="pick-prob-fill-mkt" style="width:${mktProb}%"></div>` : ''}
-    ${modProb != null ? `<div class="pick-prob-fill-model" style="width:${modProb}%"></div>` : ''}
-  </div>
-</div>` : '';
+  const isBet         = primary.verdict === 'BET';
+  const badgeClass    = isBet ? 'bet' : 'abwaegen';
+  const badgeLabel    = isBet ? '⚡ BET' : '📈 ABWÄGEN';
+  const tagClass      = isBet ? 'green' : 'gold';
+  const tagLabel      = isBet ? 'BET' : 'ABWÄGEN';
 
-    let pills = '';
-    if (isbet) pills += `<span class="pill p-bet">⚡ BET</span>`;
-    if (pick.edgePP != null && pick.edgePP > 0) pills += `<span class="pill p-edge">+${pick.edgePP}pp Edge</span>`;
-    const confLabel = pick.conf === 'high' ? '★★★ HIGH' : pick.conf === 'medium' ? '★★ MEDIUM' : pick.conf || '';
-    if (confLabel) pills += `<span class="pill p-conf">${confLabel}</span>`;
-    if (pick.info) pills += `<span class="pill p-info">${pick.info}</span>`;
+  // edge string
+  const edgePp = primary.edge != null ? parseFloat(primary.edge) : null;
+  const edgeStr = edgePp != null ? (edgePp >= 0 ? '+' : '') + edgePp.toFixed(1) + 'pp' : '';
 
-    return `<div class="pick-card ${cls}">
-  <div class="pick-header">
-    <div class="pick-left">
-      <div class="pick-icon">${pick.icon || '🎯'}</div>
-      <div>
-        <div class="pick-market">${pick.market || ''}</div>
-        <div class="pick-verdict-label ${cls}">${vLabel}</div>
-      </div>
-    </div>
-    <div class="pick-odds-big">
-      <div class="pick-odds-num">${odds != null ? odds.toFixed(2) : '—'}</div>
-      <div class="pick-odds-lbl">Quote</div>
-    </div>
-  </div>
-  ${probBar}
-  <div class="pick-pills">${pills || '<span class="pill p-info" style="opacity:.5">Keine Zusatzinfo</span>'}</div>
-</div>`;
-  }).join('');
+  const fairVal = primary.fairValue ? parseFloat(primary.fairValue).toFixed(2) : null;
+
+  // Model vs Market bar for this pick's market
+  let modPct = null, mktPct = null;
+  const mktLow = (primary.market || '').toLowerCase();
+  if (mktLow.includes('heim') || mktLow.includes('home') || mktLow === '1') {
+    modPct = D.modHome;  mktPct = D.probHome;
+  } else if (mktLow.includes('auswärts') || mktLow.includes('away') || mktLow === '2') {
+    modPct = D.modAway;  mktPct = D.probAway;
+  } else if (mktLow.includes('unentsch') || mktLow.includes('draw') || mktLow === 'x') {
+    modPct = D.modDraw;  mktPct = D.probDraw;
+  }
+
+  let modelBarHtml = '';
+  if (modPct != null && mktPct != null) {
+    const topV = Math.max(parseFloat(modPct), parseFloat(mktPct), 10);
+    const mW   = Math.min(100, (parseFloat(modPct) / topV * 100)).toFixed(1);
+    const kW   = Math.min(100, (parseFloat(mktPct) / topV * 100)).toFixed(1);
+    modelBarHtml = `
+      <div class="model-bar-wrap">
+        <div class="model-bar-labels">
+          <span class="model-bar-lbl">Modell-Wahrsch.</span>
+          <span class="model-bar-lbl">Markt-Impl.</span>
+        </div>
+        <div class="model-bar" style="height:6px;">
+          <div class="mb-model" style="width:${mW}%;"></div>
+          <div class="mb-market" style="width:${kW}%;opacity:.45;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:3px;">
+          <span style="font-size:10px;color:#22c55e;font-weight:700;">${modPct}% Modell</span>
+          <span style="font-size:10px;color:#888;">${mktPct}% Markt</span>
+        </div>
+      </div>`;
+  }
+
+  // Secondary picks: remaining BETs, then ABWÄGEN (up to 3)
+  const secBet  = isBet ? betPicks.slice(1) : betPicks;
+  const secAbw  = isBet ? abwPicks : abwPicks.slice(1);
+  const secList = [...secBet, ...secAbw].slice(0, 4);
+
+  let secHtml = '';
+  for (const sp of secList) {
+    const spVerdict = sp.verdict === 'BET' ? 'bet' : 'abwaegen';
+    const spLabel   = sp.verdict === 'BET' ? '📈 BET' : '📊 ABWÄGEN';
+    const spEdge    = sp.edge != null ? (parseFloat(sp.edge) >= 0 ? '+' : '') + parseFloat(sp.edge).toFixed(1) + 'pp' : '';
+    const spFV      = sp.fairValue ? 'FV ' + parseFloat(sp.fairValue).toFixed(2) : '';
+    const spDetail  = [spFV, spEdge ? spEdge + ' Edge' : ''].filter(Boolean).join(' · ');
+    secHtml += `
+      <div class="pick-sec">
+        <div>
+          <div class="ps-badge ${spVerdict}">${spLabel}</div>
+          <div class="ps-name">${escHtml(sp.market || '')}</div>
+          <div class="ps-detail">${escHtml(spDetail)}</div>
+        </div>
+        <div class="ps-odds">${sp.odds ? '@' + fmtOdds(sp.odds) : '—'}</div>
+      </div>`;
+  }
 
   return `
-<div class="content">
-<div class="section">
-  <div class="stitle"><div class="sticon" style="background:#00d4a115;border:1px solid #00d4a130">🎯</div>Picks</div>
-  ${cards}
-</div>
-</div>`;
+    <div class="section" id="picks-section">
+      <div class="sec-head">
+        <span class="sec-ico">🎯</span>
+        <span class="sec-title">Top Pick</span>
+        <span class="sec-tag ${tagClass}">${tagLabel}</span>
+      </div>
+
+      <div class="pick-hero">
+        <div class="ph-top">
+          <div class="ph-left">
+            <div class="ph-badges">
+              <span class="ph-badge ${badgeClass}">${badgeLabel}</span>
+              ${primary.stars ? `<span class="ph-badge stars">${starsStr(primary.stars)}</span>` : ''}
+              ${edgeStr ? `<span class="ph-badge edge">${edgeStr} Edge</span>` : ''}
+            </div>
+            <div class="ph-name">${escHtml(primary.market || '')}</div>
+            <div class="ph-detail">
+              ${fairVal ? `FV <strong>${fairVal}</strong>` : ''}
+              ${primary.odds ? (fairVal ? ' · ' : '') + 'Markt ' + fmtOdds(primary.odds) : ''}
+              ${edgeStr ? ' · ' + edgeStr : ''}
+            </div>
+          </div>
+          <div class="ph-odds-block">
+            <div class="ph-odds">${primary.odds ? '@' + fmtOdds(primary.odds) : '—'}</div>
+            ${primary.stars >= 3 ? '<div class="ph-conf">HIGH CONF</div>' : ''}
+          </div>
+        </div>
+
+        <div class="signal-bar">
+          <div class="sb-seg ${edgePp != null && edgePp > 0 ? 'green' : ''}">
+            <span class="sb-lbl">Edge</span>
+            <span class="sb-val">${edgeStr || '—'}</span>
+          </div>
+          <div class="sb-seg blue">
+            <span class="sb-lbl">Verdikt</span>
+            <span class="sb-val">${escHtml(primary.verdict || '—')}</span>
+          </div>
+          <div class="sb-seg orange">
+            <span class="sb-lbl">Sterne</span>
+            <span class="sb-val">${starsStr(primary.stars) || '—'}</span>
+          </div>
+        </div>
+
+        ${modelBarHtml}
+
+        ${primary.rationale ? `<div class="ph-rationale">${escHtml(primary.rationale)}</div>` : ''}
+
+        <button class="bet-btn">Jetzt Wetten →</button>
+      </div>
+
+      ${secHtml}
+    </div>`;
 }
 
-// ── Render: Form comparison ───────────────────────────────────────────────
+/* ── Odds & Sharp Radar section ──────────────────────────── */
+function renderOdds(D) {
+  if (!D.odds) return '';
+  const o    = D.odds;
+  const hist = D.oddsHistory || [];
+
+  // Determine which outcome to highlight based on top BET pick
+  const betPick = (D.picks || []).find(p => p.verdict === 'BET');
+  const mktLow  = betPick ? (betPick.market || '').toLowerCase() : '';
+  const hlHome  = mktLow.includes('heim') || mktLow.includes('home');
+  const hlDraw  = mktLow.includes('unentsch') || mktLow.includes('draw');
+  const hlAway  = mktLow.includes('auswärts') || mktLow.includes('away');
+
+  // Cumulative shifts from oddsHistory
+  let homeShift = 0, awayShift = 0;
+  if (hist.length >= 2) {
+    hist.forEach(e => {
+      homeShift += (e.hwShift || 0);
+      awayShift += (e.awShift || 0);
+    });
+    homeShift = Math.round(homeShift * 10) / 10;
+    awayShift = Math.round(awayShift * 10) / 10;
+  }
+
+  function arrowTag(shift) {
+    if (Math.abs(shift) < 0.1) return '';
+    return shift > 0
+      ? '<span class="oc-arrow up">↑</span>'
+      : '<span class="oc-arrow down">↓</span>';
+  }
+  function barClass(shift) {
+    if (Math.abs(shift) < 0.3) return 'stable';
+    return shift > 0 ? 'sharp-in' : 'sharp-out';
+  }
+  function barWidth(shift) {
+    return Math.min(88, 50 + Math.abs(shift) * 8);
+  }
+  function changeClass(shift) {
+    if (Math.abs(shift) < 0.1) return 'flat';
+    return shift > 0 ? 'up' : 'down';
+  }
+  function ppStr(shift) {
+    if (Math.abs(shift) < 0.05) return '0.0pp';
+    return (shift > 0 ? '+' : '') + shift.toFixed(1) + 'pp';
+  }
+
+  const snapCount = hist.length;
+  const openLine  = snapCount > 0 && hist[0].hw
+    ? `Open ${fmtOdds(hist[0].hw)} / ${fmtOdds(hist[0].dr)} / ${fmtOdds(hist[0].aw)}`
+    : 'Kein Opening-Snapshot';
+
+  // Secondary markets
+  let secondaryHtml = '';
+  if (o.over25 || o.under25 || o.btts) {
+    secondaryHtml = '<div class="odds-grid-2">';
+    if (o.over25) {
+      secondaryHtml += `
+        <div class="odds-card">
+          <div class="oc-outcome">Over 2.5</div>
+          <div class="oc-odds">${fmtOdds(o.over25)}</div>
+          <div class="oc-impl">→ ${impliedProb(o.over25)}% impl.</div>
+        </div>`;
+    }
+    if (o.btts) {
+      secondaryHtml += `
+        <div class="odds-card">
+          <div class="oc-outcome">BTTS Ja</div>
+          <div class="oc-odds">${fmtOdds(o.btts)}</div>
+          <div class="oc-impl">→ ${impliedProb(o.btts)}% impl.</div>
+        </div>`;
+    }
+    if (o.under25 && !o.over25) {
+      secondaryHtml += `
+        <div class="odds-card">
+          <div class="oc-outcome">Under 2.5</div>
+          <div class="oc-odds">${fmtOdds(o.under25)}</div>
+          <div class="oc-impl">→ ${impliedProb(o.under25)}% impl.</div>
+        </div>`;
+    }
+    secondaryHtml += '</div>';
+  }
+
+  return `
+    <div class="section">
+      <div class="sec-head">
+        <span class="sec-ico">📡</span>
+        <span class="sec-title">Quoten &amp; Sharp Radar</span>
+        <span class="sec-tag green"><span class="live-dot"></span>&nbsp;Live</span>
+      </div>
+
+      <div class="odds-grid">
+        <div class="odds-card ${hlHome ? 'highlight' : ''}">
+          <div class="oc-outcome">Heimsieg${hlHome ? ' ★' : ''}</div>
+          <div class="oc-odds">${fmtOdds(o.home)}${arrowTag(homeShift)}</div>
+          <div class="oc-impl">→ ${impliedProb(o.home)}% impl.</div>
+        </div>
+        <div class="odds-card ${hlDraw ? 'highlight' : ''}">
+          <div class="oc-outcome">Unentsch.${hlDraw ? ' ★' : ''}</div>
+          <div class="oc-odds">${fmtOdds(o.draw)}</div>
+          <div class="oc-impl">→ ${impliedProb(o.draw)}% impl.</div>
+        </div>
+        <div class="odds-card ${hlAway ? 'highlight' : ''}">
+          <div class="oc-outcome">Auswärts${hlAway ? ' ★' : ''}</div>
+          <div class="oc-odds">${fmtOdds(o.away)}${arrowTag(awayShift)}</div>
+          <div class="oc-impl">→ ${impliedProb(o.away)}% impl.</div>
+        </div>
+      </div>
+
+      ${secondaryHtml}
+
+      <div class="box">
+        <div class="sharp-badge"><span class="live-dot"></span>&nbsp;${escHtml(openLine)} · ${snapCount} Snapshot${snapCount !== 1 ? 's' : ''}</div>
+        <div class="sharp-row">
+          <div class="sr-market">Heimsieg</div>
+          <div class="sr-bar-wrap"><div class="sr-bar ${barClass(homeShift)}" style="width:${barWidth(homeShift)}%;"></div></div>
+          <div class="sr-change ${changeClass(homeShift)}">
+            <span class="sr-current">${fmtOdds(o.home)}</span>
+            <span class="sr-move">${ppStr(homeShift)}</span>
+          </div>
+        </div>
+        <div class="sharp-row">
+          <div class="sr-market">Unentsch.</div>
+          <div class="sr-bar-wrap"><div class="sr-bar stable" style="width:50%;"></div></div>
+          <div class="sr-change flat">
+            <span class="sr-current">${fmtOdds(o.draw)}</span>
+            <span class="sr-move">—</span>
+          </div>
+        </div>
+        <div class="sharp-row">
+          <div class="sr-market">Auswärts</div>
+          <div class="sr-bar-wrap"><div class="sr-bar ${barClass(awayShift)}" style="width:${barWidth(awayShift)}%;"></div></div>
+          <div class="sr-change ${changeClass(awayShift)}">
+            <span class="sr-current">${fmtOdds(o.away)}</span>
+            <span class="sr-move">${ppStr(awayShift)}</span>
+          </div>
+        </div>
+        <div style="font-size:9px;color:#333;margin-top:10px;text-align:right;">${snapCount} Snapshot${snapCount !== 1 ? 's' : ''} · Powered by TheOddsAPI</div>
+      </div>
+    </div>`;
+}
+
+/* ── Elo & xG Matchup section ────────────────────────────── */
+function renderEloXg(D) {
+  const xgH = D.xgHome;
+  const xgA = D.xgAway;
+  const diff = D.eloDiff;
+
+  const diffColor = diff > 0 ? '#22c55e' : diff < 0 ? '#ef4444' : '#aaa';
+  const diffStr   = diff != null ? (diff >= 0 ? '+' : '') + Math.round(diff) : '—';
+
+  const totalXg   = (xgH || 0) + (xgA || 0) || 1;
+  const xgHPct    = ((xgH || 0) / totalXg * 100).toFixed(1);
+  const xgAPct    = ((xgA || 0) / totalXg * 100).toFixed(1);
+
+  return `
+    <div class="section">
+      <div class="sec-head">
+        <span class="sec-ico">📊</span>
+        <span class="sec-title">Elo &amp; xG Matchup</span>
+      </div>
+
+      <div class="box">
+        <div class="elo-matchup">
+          <div class="em-team">
+            <div class="em-name">${safe(D.homeFlag,'')} ${escHtml(D.home || '')}</div>
+            <div class="em-elo">${safe(D.homeElo, '—')}</div>
+          </div>
+          <div class="em-vs">ELO</div>
+          <div class="em-team right">
+            <div class="em-name">${escHtml(D.away || '')} ${safe(D.awayFlag,'')}</div>
+            <div class="em-elo">${safe(D.awayElo, '—')}</div>
+          </div>
+        </div>
+
+        <div style="text-align:center;margin-bottom:12px;">
+          <span style="font-size:11px;color:var(--sub);">Elo-Differenz&nbsp;</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:${diffColor};">${diffStr}</span>
+          ${D.probHome != null ? `<span style="font-size:11px;color:var(--sub);"> → ${D.probHome}% Heimsieg-Wahrsch.</span>` : ''}
+        </div>
+
+        ${xgH != null || xgA != null ? `
+        <div class="xg-bar-section">
+          <div class="xg-lbl">Erwartete Tore (xG Poisson-Modell)</div>
+          <div class="xg-bar-wrap">
+            <div class="xg-val">${xgH != null ? xgH : '—'}</div>
+            <div class="xg-track">
+              <div class="xg-home-bar" style="width:${xgHPct}%;"></div>
+              <div class="xg-away-bar" style="width:${xgAPct}%;"></div>
+            </div>
+            <div class="xg-val right">${xgA != null ? xgA : '—'}</div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;">
+            <span style="font-size:9px;color:#22c55e;">${escHtml(D.home || '')} xG</span>
+            <span style="font-size:9px;color:#ef4444;">${escHtml(D.away || '')} xG</span>
+          </div>
+        </div>` : ''}
+      </div>
+    </div>`;
+}
+
+/* ── Form section ────────────────────────────────────────── */
 function renderForm(D) {
-  const hf = D.homeForm, af = D.awayForm;
+  const hf = D.homeForm;
+  const af = D.awayForm;
   if (!hf && !af) return '';
 
-  function formDots(last5) {
-    return (last5 || []).map(r =>
-      `<div class="form-dot ${r}">${r}</div>`
-    ).join('');
+  function formCard(name, flag, f) {
+    if (!f) return `
+      <div class="form-card">
+        <div class="form-team">${flag} ${escHtml(name)}</div>
+        <div style="font-size:11px;color:var(--sub);">Keine Form-Daten</div>
+      </div>`;
+
+    const last5 = (f.last5 || []).slice(0, 5);
+    const dots  = last5.map(r => {
+      const c = r === 'W' ? 'w' : r === 'L' ? 'l' : 'd';
+      return `<div class="fd ${c}">${r}</div>`;
+    }).join('') || '<span style="color:var(--sub);font-size:11px;">—</span>';
+
+    const stats = [
+      f.goalsFor     != null ? `<span class="fs">Tore: <strong>${f.goalsFor}</strong></span>` : '',
+      f.goalsAgainst != null ? `<span class="fs">Geg.: <strong>${f.goalsAgainst}</strong></span>` : '',
+      f.played       != null ? `<span class="fs">Sp.: <strong>${f.played}</strong></span>` : '',
+      f.over25Rate   != null ? `<span class="fs">O2.5: <strong>${f.over25Rate}%</strong></span>` : '',
+      f.bttsRate     != null ? `<span class="fs">BTTS: <strong>${f.bttsRate}%</strong></span>` : '',
+    ].filter(Boolean).join('');
+
+    return `
+      <div class="form-card">
+        <div class="form-team">${flag} ${escHtml(name)}</div>
+        <div class="form-dots">${dots}</div>
+        ${stats ? `<div class="form-stats">${stats}</div>` : ''}
+      </div>`;
   }
 
-  function sbar(label, hv, av, higherBetter=true) {
-    if (hv == null && av == null) return '';
-    const tot = (hv||0) + (av||0);
-    const hBar = tot > 0 ? Math.round((hv||0)/tot*100) : 50;
-    const hWin = hv != null && av != null && (higherBetter ? hv > av : hv < av);
-    const aWin = hv != null && av != null && !hWin && hv !== av;
-    const hc = hWin ? 'var(--accent)' : '#8b949e';
-    const ac = aWin ? 'var(--accent)' : '#8b949e';
-    const fmt = v => v == null ? '—' : (Number.isInteger(v) ? v : parseFloat(v).toFixed(1));
-    return `<div class="sbar">
-  <span class="sbar-val" style="color:${hc}">${fmt(hv)}</span>
-  <div class="sbar-center">
-    <div class="sbar-label">${label}</div>
-    <div class="sbar-track">
-      <div style="width:${hBar}%;height:100%;background:${hc === 'var(--accent)' ? '#00d4a120' : '#ffffff08'};border-right:2px solid ${hc}"></div>
-      <div style="width:${100-hBar}%;height:100%;background:${ac === 'var(--accent)' ? '#00d4a120' : '#ffffff08'};border-left:2px solid ${ac}"></div>
-    </div>
-  </div>
-  <span class="sbar-val" style="color:${ac};text-align:left">${fmt(av)}</span>
-</div>`;
-  }
+  return `
+    <div class="section">
+      <div class="sec-head">
+        <span class="sec-ico">📈</span>
+        <span class="sec-title">Form (letzte 5 Spiele)</span>
+      </div>
+      <div class="form-grid">
+        ${formCard(D.home || '', D.homeFlag || '', hf)}
+        ${formCard(D.away || '', D.awayFlag || '', af)}
+      </div>
+    </div>`;
+}
 
-  const hLast5 = hf ? formDots(hf.last5) : '';
-  const aLast5 = af ? formDots(af.last5) : '';
+/* ── H2H section ─────────────────────────────────────────── */
+function renderH2h(D) {
+  const h = D.h2h;
+  if (!h || !h.games) return '';
 
-  const barsHtml = [
-    sbar('∅ Tore/Spiel',      hf?.avgGoals,     af?.avgGoals),
-    sbar('∅ Geschossen',      hf?.avgScored,    af?.avgScored),
-    sbar('∅ Kassiert',        hf?.avgConceded,  af?.avgConceded, false),
-    sbar('Over 2.5 Rate (%)', hf?.over25Rate,   af?.over25Rate),
-    sbar('BTTS Rate (%)',     hf?.bttsRate,     af?.bttsRate),
+  const g    = h.games || 1;
+  const hW   = h.homeWins || 0;
+  const dr   = h.draws    || 0;
+  const aW   = h.awayWins || 0;
+
+  const hPct = ((hW / g) * 100).toFixed(0);
+  const dPct = ((dr / g) * 100).toFixed(0);
+  const aPct = ((aW / g) * 100).toFixed(0);
+
+  const stats = [
+    h.avgGoals   != null ? `<span class="hs">Ø Tore/Spiel: <strong>${parseFloat(h.avgGoals).toFixed(1)}</strong></span>` : '',
+    h.over25Rate != null ? `<span class="hs">Over 2.5: <strong>${h.over25Rate}%</strong></span>` : '',
+    h.bttsRate   != null ? `<span class="hs">BTTS: <strong>${h.bttsRate}%</strong></span>` : '',
   ].filter(Boolean).join('');
 
   return `
-<div class="content">
-<div class="section">
-  <div class="stitle"><div class="sticon" style="background:#58a6ff15;border:1px solid #58a6ff30">📊</div>Form-Vergleich</div>
-  <div class="stats-names">
-    <span class="stats-name">${D.homeFlag} ${D.home}</span>
-    <span class="stats-name">${D.away} ${D.awayFlag}</span>
-  </div>
-  ${(hLast5 || aLast5) ? `
-<div style="display:flex;justify-content:space-between;margin-bottom:14px;gap:8px">
-  <div>
-    <div style="font-size:10px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px">Letzte 5</div>
-    <div class="form-dots">${hLast5 || '<span style="color:var(--muted);font-size:11px">keine Daten</span>'}</div>
-  </div>
-  <div style="text-align:right">
-    <div style="font-size:10px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px">Letzte 5</div>
-    <div class="form-dots" style="justify-content:flex-end">${aLast5 || '<span style="color:var(--muted);font-size:11px">keine Daten</span>'}</div>
-  </div>
-</div>` : ''}
-  ${barsHtml || '<div style="font-size:12px;color:var(--muted);font-style:italic">Formdaten noch nicht verfügbar.</div>'}
-  ${hf?.games ? `<div style="font-size:10px;color:var(--muted);margin-top:8px">Datenbasis: ${hf.games} Spiele</div>` : ''}
-</div>
-</div>`;
+    <div class="section">
+      <div class="sec-head">
+        <span class="sec-ico">🔁</span>
+        <span class="sec-title">Head-to-Head</span>
+        <span class="sec-tag gold">${h.games} Spiele</span>
+      </div>
+      <div class="box">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:11px;">
+          <span style="color:#22c55e;font-weight:700;">${safe(D.homeFlag,'')} ${escHtml(D.home||'')} <strong>${hW}W</strong></span>
+          <span style="color:var(--gold);">Unentsch. <strong>${dr}</strong></span>
+          <span style="color:#ef4444;font-weight:700;"><strong>${aW}W</strong> ${escHtml(D.away||'')} ${safe(D.awayFlag,'')}</span>
+        </div>
+        <div class="h2h-bar">
+          <div class="h2h-home" style="width:${hPct}%;"></div>
+          <div class="h2h-draw" style="width:${dPct}%;"></div>
+          <div class="h2h-away" style="width:${aPct}%;"></div>
+        </div>
+        <div class="h2h-labels">
+          <span>${hPct}%</span>
+          <span>${dPct}%</span>
+          <span>${aPct}%</span>
+        </div>
+        ${stats ? `<div class="h2h-stats">${stats}</div>` : ''}
+      </div>
+    </div>`;
 }
 
-// ── Render: H2H ───────────────────────────────────────────────────────────
-function renderH2H(D) {
-  const h = D.h2h;
-  if (!h || !h.games) return '';
-  const g = h.games || 1;
-  return `
-<div class="content">
-<div class="section">
-  <div class="stitle"><div class="sticon" style="background:#a78bfa15;border:1px solid #a78bfa30">🔄</div>Direktvergleich (H2H)</div>
-  <div class="h2h-kpis">
-    <div class="h2h-kpi"><div class="kpi-val" style="color:#00d4a1">${h.homeWins}</div><div class="kpi-lbl">${D.home.split(' ').at(-1)}<br>Siege</div></div>
-    <div class="h2h-kpi"><div class="kpi-val" style="color:#e3b341">${h.draws}</div><div class="kpi-lbl">Unent-<br>schieden</div></div>
-    <div class="h2h-kpi"><div class="kpi-val" style="color:#a78bfa">${h.awayWins}</div><div class="kpi-lbl">${D.away.split(' ').at(-1)}<br>Siege</div></div>
-    <div class="h2h-kpi"><div class="kpi-val">${h.avgGoals != null ? parseFloat(h.avgGoals).toFixed(1) : '—'}</div><div class="kpi-lbl">∅ Tore<br>/Spiel</div></div>
-    ${h.over25Rate != null ? `<div class="h2h-kpi"><div class="kpi-val">${h.over25Rate}%</div><div class="kpi-lbl">Over<br>2.5</div></div>` : ''}
-    ${h.bttsRate   != null ? `<div class="h2h-kpi"><div class="kpi-val">${h.bttsRate}%</div><div class="kpi-lbl">BTTS<br>Rate</div></div>` : ''}
-  </div>
-  <div class="h2h-bar">
-    <div class="h2h-bar-h" style="width:${h.homeBar}%"></div>
-    <div class="h2h-bar-d" style="width:${h.drawBar}%"></div>
-    <div class="h2h-bar-a" style="width:${h.awayBar}%"></div>
-  </div>
-  <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
-    <span style="color:#00d4a1">${Math.round(h.homeWins/g*100)}% ${D.home.split(' ').at(-1)}</span>
-    <span style="color:#e3b341">${Math.round(h.draws/g*100)}% X</span>
-    <span style="color:#a78bfa">${Math.round(h.awayWins/g*100)}% ${D.away.split(' ').at(-1)}</span>
-  </div>
-  <div style="font-size:10px;color:var(--muted);margin-top:8px">Aus ${h.games} Direktduellen · Perspektive: ${D.home}</div>
-</div>
-</div>`;
-}
+/* ── Group Table section ─────────────────────────────────── */
+function renderGroup(D) {
+  const teams = D.homeTeams;
+  if (!teams || teams.length === 0) return '';
 
-// ── Render: Group Table ───────────────────────────────────────────────────
-function renderGroupTable(D) {
-  const teams = D.homeTeams || [];
-  const fixtures = D.groupFixtures || [];
-  if (!teams.length) return '';
+  const sorted = [...teams].sort((a, b) => (b.elo || 0) - (a.elo || 0));
 
-  // Calculate standings from fixture results
-  const pts = {}, played = {}, gf = {}, ga = {}, wins = {}, draws = {}, losses = {};
-  teams.forEach(t => {
-    pts[t.id] = 0; played[t.id] = 0;
-    gf[t.id] = 0; ga[t.id] = 0;
-    wins[t.id] = 0; draws[t.id] = 0; losses[t.id] = 0;
-  });
-
-  fixtures.forEach(fx => {
-    const r = fx.result;
-    if (!r || r.home == null || r.away == null) return;
-    const h = fx.home, a = fx.away;
-    played[h] = (played[h]||0)+1; played[a] = (played[a]||0)+1;
-    gf[h] = (gf[h]||0)+r.home;   ga[h] = (ga[h]||0)+r.away;
-    gf[a] = (gf[a]||0)+r.away;   ga[a] = (ga[a]||0)+r.home;
-    if (r.home > r.away)       { pts[h]=(pts[h]||0)+3; wins[h]=(wins[h]||0)+1; losses[a]=(losses[a]||0)+1; }
-    else if (r.home < r.away)  { pts[a]=(pts[a]||0)+3; wins[a]=(wins[a]||0)+1; losses[h]=(losses[h]||0)+1; }
-    else                       { pts[h]=(pts[h]||0)+1; pts[a]=(pts[a]||0)+1; draws[h]=(draws[h]||0)+1; draws[a]=(draws[a]||0)+1; }
-  });
-
-  // Sort by pts → goal diff → goals for → elo
-  const sorted = [...teams].sort((a, b) => {
-    const pdiff = (pts[b.id]||0) - (pts[a.id]||0);
-    if (pdiff !== 0) return pdiff;
-    const gdA = (gf[a.id]||0) - (ga[a.id]||0);
-    const gdB = (gf[b.id]||0) - (ga[b.id]||0);
-    if (gdB !== gdA) return gdB - gdA;
-    const gfDiff = (gf[b.id]||0) - (gf[a.id]||0);
-    if (gfDiff !== 0) return gfDiff;
-    return (b.elo||0) - (a.elo||0);
-  });
-
-  const hasResults = fixtures.some(fx => fx.result && fx.result.home != null);
-  const tbody = sorted.map((t, i) => {
-    const isMatch = t.id === D.homeId || t.id === D.awayId;
-    const gdVal = (gf[t.id]||0) - (ga[t.id]||0);
-    const gdStr = gdVal > 0 ? `+${gdVal}` : `${gdVal}`;
-    return `<tr${isMatch ? ' class="highlight"' : ''}>
-  <td><span class="gt-flag">${t.flag}</span>${t.name} <span class="gt-elo">${t.elo}</span></td>
-  ${hasResults ? `<td>${played[t.id]||0}</td><td>${wins[t.id]||0}</td><td>${draws[t.id]||0}</td><td>${losses[t.id]||0}</td><td>${gdStr}</td>` : ''}
-  <td style="color:var(--gold);font-weight:700">${pts[t.id]||0}</td>
-</tr>`;
+  const rows = sorted.map(t => {
+    const hi = (t.id === D.homeId || t.id === D.awayId);
+    return `
+      <tr class="gt-row ${hi ? 'highlight' : ''}">
+        <td>
+          <div class="gt-team">
+            <span class="gt-flag">${t.flag || '🏳'}</span>
+            <div>
+              <div>${escHtml(t.name || t.id)}</div>
+              <div class="gt-elo">Elo ${t.elo || '—'}</div>
+            </div>
+          </div>
+        </td>
+        <td>0</td><td>0</td><td>0</td>
+      </tr>`;
   }).join('');
 
   return `
-<div class="content">
-<div class="section wm-gold">
-  <div class="stitle"><div class="sticon" style="background:var(--gold-dim);border:1px solid var(--gold-border)">🏅</div>${D.groupName} — Tabelle</div>
-  <div style="overflow-x:auto">
-  <table class="group-table">
-    <thead><tr>
-      <th>Team</th>
-      ${hasResults ? '<th>Sp</th><th>S</th><th>U</th><th>N</th><th>TD</th>' : ''}
-      <th>Pkt</th>
-    </tr></thead>
-    <tbody>${tbody}</tbody>
-  </table>
-  </div>
-  ${!hasResults ? '<div style="font-size:10px;color:var(--muted);margin-top:8px;font-style:italic">Turnier noch nicht gestartet — Elo-Reihenfolge</div>' : ''}
-</div>
-</div>`;
+    <div class="section">
+      <div class="sec-head">
+        <span class="sec-ico">📋</span>
+        <span class="sec-title">${escHtml(D.groupName || D.group || 'Gruppe')} — Tabelle</span>
+      </div>
+      <div class="box">
+        <table class="gruppe-table">
+          <thead class="gt-head">
+            <tr><th>Team</th><th>Sp</th><th>Pkt</th><th>GD</th></tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div style="font-size:9px;color:#2a3a2a;margin-top:8px;text-align:center;">Turnier noch nicht gestartet · Elo-Reihenfolge</div>
+      </div>
+    </div>`;
 }
 
-// ── Render: AI Preview ────────────────────────────────────────────────────
-function renderAIPreview(D) {
-  const text = D.aiPreview;
-  if (!text) return '';
-  // Escape HTML entities
-  const safe = text
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
+/* ── Sticky bar ──────────────────────────────────────────── */
+function renderStickyBar(D) {
+  const betPick = (D.picks || []).find(p => p.verdict === 'BET');
+  if (!betPick) return '';
+
+  const edgePp  = betPick.edge != null ? parseFloat(betPick.edge) : null;
+  const edgeStr = edgePp != null ? (edgePp >= 0 ? '+' : '') + edgePp.toFixed(1) + 'pp Edge' : '';
+
   return `
-<div class="content">
-<div class="section">
-  <div class="stitle"><div class="sticon" style="background:#00d4a115;border:1px solid #00d4a130">🤖</div>CocoBet Analyse</div>
-  <div class="ai-badge">✦ KI-Analyse</div>
-  <div class="ai-preview">${safe}</div>
-</div>
-</div>`;
+    <div class="sticky" id="sticky-bar">
+      <div class="sticky-info">
+        <div class="sticky-name">${escHtml(betPick.market || '')}</div>
+        <div class="sticky-sub">⚡ BET${betPick.stars ? ' · ' + starsStr(betPick.stars) : ''}${edgeStr ? ' · ' + edgeStr : ''}</div>
+      </div>
+      <div class="sticky-odds">${betPick.odds ? '@' + fmtOdds(betPick.odds) : '—'}</div>
+      <button class="sticky-btn">Wetten →</button>
+    </div>`;
 }
 
-// ── Render: Player Spotlight ───────────────────────────────────────────────
-function renderPlayerSpotlight(D) {
-  const spots = D.playerSpotlights;
-  if (!spots || spots.length === 0) return '';
+/* ── Master render ───────────────────────────────────────── */
+function render(D) {
+  // Page title
+  const pageTitle = (D.home || '') + ' vs ' + (D.away || '') + ' · WM 2026 · CocoBet';
+  document.title = pageTitle;
 
-  const pos_labels = {
-    ST:'Stürmer',CF:'Stürmer',LW:'Linksaußen',RW:'Rechtsaußen',
-    CAM:'Offensives MF',AM:'Offensives MF',MF:'Mittelfeld',
-    CM:'Mittelfeld',DM:'Def. Mittelfeld',DF:'Abwehr',CB:'Innenverteidiger',
-    LB:'Linksverteidiger',RB:'Rechtsverteidiger'
-  };
+  // Probabilities for hero: prefer pinnacle devigged, else model
+  const pH = D.probHome != null ? D.probHome : D.modHome;
+  const pD = D.probDraw != null ? D.probDraw : D.modDraw;
+  const pA = D.probAway != null ? D.probAway : D.modAway;
 
-  const cards = spots.map(s => {
-    const p       = s.player || {};
-    const posLbl  = pos_labels[p.position] || p.position || '';
-    const apps    = p.minutes ? Math.round(p.minutes / 90) : '?';
-    const rate    = s.scoringRate ? s.scoringRate.toFixed(2) : '?';
-    const modP    = s.modelProb ? Math.round(s.modelProb) : null;
-    const hasBet  = s.hasBet && s.betOdds;
-    const edge    = s.edgePP;
-    const verdict = hasBet && edge != null
-      ? (edge >= 5 ? '🎯 BET' : edge >= 2 ? '⚖️ ABWÄGEN' : '🔇 Kein klarer Edge')
-      : null;
-    const edgeColor = hasBet && edge != null
-      ? (edge >= 5 ? 'var(--accent)' : edge >= 2 ? 'var(--yellow)' : 'var(--muted)')
-      : 'var(--muted)';
+  const heroDate = [fmtDate(D.date), D.time].filter(Boolean).join(' · ');
 
-    const betBlock = hasBet ? `
-<div class="player-bet has-bet">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-    <span style="font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.5px">Anytime Scorer</span>
-    <span style="font-size:18px;font-weight:900;color:var(--text)">@${s.betOdds.toFixed(2)}</span>
-  </div>
-  <div style="display:flex;gap:10px;font-size:11px;color:var(--muted2)">
-    <span>Markt: ${Math.round(100/s.betOdds)}%</span>
-    <span>Modell: ${modP}%</span>
-    ${edge != null ? `<span style="color:${edgeColor};font-weight:700">Edge: ${edge > 0 ? '+':''}${edge.toFixed(1)}pp</span>` : ''}
-  </div>
-  ${verdict ? `<div style="margin-top:8px;font-size:12px;font-weight:700;color:${edgeColor}">${verdict}: Anytime Scorer @${s.betOdds.toFixed(2)}</div>` : ''}
-</div>` : `
-<div class="player-bet no-props">
-  <span style="font-size:11px;color:var(--muted)">⏳ Player Props noch nicht verfügbar · Modell-Prob: ${modP}%</span>
-</div>`;
+  const html = `
+    <nav class="topbar">
+      <a class="tb-back" href="../index.html">← Dashboard</a>
+      <div class="tb-badge">
+        <div class="tb-dot"></div>
+        WM 2026 · ${escHtml(D.groupName || D.group || '')}
+      </div>
+      <span class="tb-spieltag">Spieltag ${safe(D.matchday, '?')}</span>
+    </nav>
 
-    const narrative = s.narrative
-      ? `<div class="player-narrative">${s.narrative}</div>` : '';
+    <section class="hero">
+      <div class="hero-bg-word">${escHtml((D.homeId||'').toUpperCase())} ${escHtml((D.awayId||'').toUpperCase())}</div>
 
-    return `<div class="player-card">
-  <div class="player-header">
-    <div class="player-flag">${s.teamFlag || '🏳'}</div>
-    <div class="player-info">
-      <div class="player-name">${p.name || s.playerName}</div>
-      <div class="player-meta">${s.teamName} · ${posLbl}</div>
-    </div>
-    ${modP != null ? `<div class="player-prob">
-      <div class="player-prob-num">${modP}%</div>
-      <div class="player-prob-lbl">Scorer-Prob</div>
+      <div class="hero-matchup">
+        <div class="hero-team">
+          <div class="hero-flag">${D.homeFlag || '🏳'}</div>
+          <div class="hero-name">${escHtml(D.home || '')}</div>
+          <div class="hero-elo">Elo ${safe(D.homeElo,'—')}</div>
+        </div>
+
+        <div class="hero-center">
+          <div class="donut">
+            ${buildDonut(pH, pD, pA)}
+            <div class="donut-inner">
+              <span class="donut-pct">${pH != null ? pH + '%' : '—'}</span>
+              <span class="donut-lbl">Heim</span>
+            </div>
+          </div>
+          <div class="hero-vs">vs</div>
+          <div class="hero-time">${heroDate}</div>
+        </div>
+
+        <div class="hero-team">
+          <div class="hero-flag">${D.awayFlag || '🏳'}</div>
+          <div class="hero-name">${escHtml(D.away || '')}</div>
+          <div class="hero-elo">Elo ${safe(D.awayElo,'—')}</div>
+        </div>
+      </div>
+
+      <div class="prob-bar">
+        <div class="pb-home">
+          <span class="pb-pct">${pH != null ? pH + '%' : '—'}</span>
+          <span>${escHtml(D.home || '')}</span>
+        </div>
+        <div class="pb-draw">
+          <span class="pb-pct">${pD != null ? pD + '%' : '—'}</span>
+          <span style="font-size:9px;display:block;opacity:.7;">Unent.</span>
+        </div>
+        <div class="pb-away">
+          <span>${escHtml(D.away || '')}</span>
+          <span class="pb-pct">${pA != null ? pA + '%' : '—'}</span>
+        </div>
+      </div>
+    </section>
+
+    ${D.venue ? `
+    <div class="venue-strip">
+      <span class="venue-ico">🏟️</span>
+      <span>${escHtml(D.venue)}</span>
     </div>` : ''}
-  </div>
-  <div class="player-stats">
-    <div class="pstat"><div class="pstat-val">${p.goals ?? '?'}</div><div class="pstat-lbl">Tore</div></div>
-    <div class="pstat"><div class="pstat-val">${p.assists ?? '?'}</div><div class="pstat-lbl">Assists</div></div>
-    <div class="pstat"><div class="pstat-val">~${apps}</div><div class="pstat-lbl">Spiele</div></div>
-    <div class="pstat"><div class="pstat-val">${rate}</div><div class="pstat-lbl">Tore/90</div></div>
-  </div>
-  ${betBlock}
-  ${narrative}
-</div>`;
-  }).join('');
 
-  return `
-<div class="content">
-<div class="section">
-  <div class="stitle"><div class="sticon" style="background:#58a6ff15;border:1px solid #58a6ff30">⚽</div>Player Spotlight</div>
-  ${cards}
-</div>
-</div>`;
-}
+    ${renderContext(D)}
+    ${renderAI(D)}
+    ${renderPicks(D)}
+    ${renderOdds(D)}
+    ${renderEloXg(D)}
+    ${renderForm(D)}
+    ${renderH2h(D)}
+    ${renderGroup(D)}
 
-// ── Render: Sharp Radar ────────────────────────────────────────────────────
-function renderSharpRadar(D) {
-  const history = D.oddsHistory || [];
-  const oddsOpen = D.oddsOpen;
-  const oddsCur  = D.odds;
-
-  if (!oddsCur && (!history || history.length === 0)) return '';
-
-  function implProb(o) {
-    if (!o || o <= 0) return null;
-    return Math.round(100 / o * 10) / 10;
-  }
-
-  function sparkline(values, width=280, height=36) {
-    if (!values || values.length < 2) return '';
-    const min = Math.min(...values) * 0.99;
-    const max = Math.max(...values) * 1.01;
-    const range = max - min || 1;
-    const pts = values.map((v, i) => {
-      const x = i / (values.length - 1) * width;
-      const y = height - ((v - min) / range) * height;
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    }).join(' ');
-    const first = values[0], last = values[values.length - 1];
-    const color = last < first ? '#f85149' : last > first ? '#3fb950' : '#8b9ab0';
-    return `<svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-  <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>
-  <circle cx="${values.map((v,i)=>i/(values.length-1)*width).at(-1).toFixed(1)}" cy="${(height-((last-min)/range)*height).toFixed(1)}" r="3" fill="${color}"/>
-</svg>`;
-  }
-
-  function shiftPill(totalShift) {
-    if (Math.abs(totalShift) < 1) return '<span class="radar-pill neutral">➡️ Stabil</span>';
-    if (totalShift > 5) return `<span class="radar-pill move-up">⬆️ +${totalShift.toFixed(1)}pp Sharp</span>`;
-    if (totalShift < -5) return `<span class="radar-pill move-down">⬇️ ${totalShift.toFixed(1)}pp Gestiegen</span>`;
-    if (totalShift > 0) return `<span class="radar-pill move-up">⬆️ +${totalShift.toFixed(1)}pp</span>`;
-    return `<span class="radar-pill move-down">⬇️ ${totalShift.toFixed(1)}pp</span>`;
-  }
-
-  // Total shift seit Open
-  function totalShift(openO, curO) {
-    const op = implProb(openO), cp = implProb(curO);
-    if (!op || !cp) return 0;
-    return parseFloat((cp - op).toFixed(1));
-  }
-
-  // Market blocks
-  const markets = [
-    { key: 'hw', label: 'Heimsieg',      openO: oddsOpen?.hw, curO: oddsCur?.home },
-    { key: 'dr', label: 'Unentschieden', openO: oddsOpen?.dr, curO: oddsCur?.draw },
-    { key: 'aw', label: 'Auswärtssieg',  openO: oddsOpen?.aw, curO: oddsCur?.away },
-  ].filter(m => m.curO);
-
-  const marketHtml = markets.map(m => {
-    const histVals = history.map(s => s[m.key]).filter(Boolean);
-    const spark = sparkline(histVals);
-    const ts = totalShift(m.openO, m.curO);
-    const tsClass = ts > 0 ? 'up' : ts < 0 ? 'down' : 'flat';
-    const tsStr = ts > 0 ? `+${ts.toFixed(1)}pp` : `${ts.toFixed(1)}pp`;
-    const curImpl = implProb(m.curO);
-    const openImpl = implProb(m.openO);
-
-    return `<div class="radar-market">
-  <div class="radar-market-head">
-    <span class="radar-market-name">${m.label}</span>
-    <span class="radar-market-shift ${tsClass}">${m.openO ? tsStr : '—'}</span>
-  </div>
-  ${histVals.length >= 2 ? `<div class="radar-sparkline">${spark}</div>` : ''}
-  <div class="radar-odds-row">
-    <span class="radar-odds-open">${m.openO ? `Open: ${m.openO.toFixed(2)} (${openImpl}%)` : 'Kein Open'}</span>
-    <div style="text-align:right">
-      <div class="radar-odds-cur">${m.curO ? m.curO.toFixed(2) : '—'}</div>
-      <div class="radar-odds-impl">${curImpl ? curImpl + '%' : ''}</div>
+    <div class="page-footer">
+      <div class="pf-brand">CocoBet</div>
+      <div class="pf-meta">
+        WM 2026 · ${escHtml(D.groupName || D.group || '')} · Spieltag ${safe(D.matchday,'?')}<br>
+        Generiert: ${safe(D.generatedAt,'—')}<br>
+        18+ · Verantwortungsbewusst spielen
+      </div>
+      <a class="pf-back" href="../index.html">← Zurück zum Dashboard</a>
     </div>
-  </div>
-</div>`;
-  }).join('');
 
-  // Overall status pill
-  const hwShift = totalShift(oddsOpen?.hw, oddsCur?.home);
-  const awShift = totalShift(oddsOpen?.aw, oddsCur?.away);
-  const biggestShift = Math.abs(hwShift) > Math.abs(awShift) ? hwShift : awShift;
+    ${renderStickyBar(D)}
+  `;
 
-  const openPill = oddsOpen
-    ? `<span class="radar-pill open">📍 Open ${oddsOpen.hw?.toFixed(2)} / ${oddsOpen.dr?.toFixed(2)} / ${oddsOpen.aw?.toFixed(2)}</span>`
-    : '';
-
-  return `
-<div class="content">
-<div class="section">
-  <div class="stitle"><div class="sticon" style="background:#f8514915;border:1px solid #f8514930">📡</div>Sharp Radar</div>
-  <div class="radar-meta">
-    ${openPill}
-    ${shiftPill(biggestShift)}
-  </div>
-  <div class="radar-markets">${marketHtml || '<div class="radar-nodata">Noch keine Odds-Daten verfügbar.</div>'}</div>
-  ${history.length > 0 ? `<div class="radar-snap-count">${history.length} Snapshot${history.length !== 1 ? 's' : ''} · Powered by TheOddsAPI</div>` : ''}
-</div>
-</div>`;
+  document.getElementById('app').innerHTML = html;
 }
 
-// ── Bootstrap ──────────────────────────────────────────────────────────────
-async function init() {
-  const slug = new URLSearchParams(location.search).get('m');
-  if (!slug) {
-    document.getElementById('app').innerHTML = `<div class="state">
-      <div class="state-icon">⚠️</div>
-      <div class="state-title">Kein Match angegeben</div>
-      <div class="state-sub">URL-Parameter <code>?m=slug</code> fehlt.<br>
-        <a href="../betting-dashboard.html">← Zurück zum Dashboard</a></div>
-    </div>`;
-    return;
-  }
-
-  let D;
-  try {
-    const res = await fetch(`data/${slug}.json`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    D = await res.json();
-  } catch(e) {
-    document.getElementById('app').innerHTML = `<div class="state">
-      <div class="state-icon">🔍</div>
-      <div class="state-title">Daten nicht gefunden</div>
-      <div class="state-sub">Für <strong>${slug}</strong> liegt noch keine WM-Analyse vor.<br>
-        <a href="../betting-dashboard.html">← Zurück zum Dashboard</a></div>
-    </div>`;
-    return;
-  }
-
-  document.title = `${D.home} vs ${D.away} · WM 2026 — CocoBet`;
-
+/* ── Error state ─────────────────────────────────────────── */
+function renderError(msg) {
   document.getElementById('app').innerHTML = `
-${renderHero(D)}
-${renderUpsetScore(D)}
-${renderAIPreview(D)}
-${renderContext(D)}
-${renderPicks(D)}
-${renderPlayerSpotlight(D)}
-${renderSharpRadar(D)}
-${renderForm(D)}
-${renderH2H(D)}
-${renderGroupTable(D)}
-<div class="content">
-<div class="page-footer">
-  WM 2026 · ${D.groupName} · Spieltag ${D.matchday} · Generiert: ${D.generatedAt}<br>
-  <a href="../betting-dashboard.html">← Zurück zum Dashboard</a>
-</div>
-</div>`;
+    <div class="error-box">
+      <h2>Fehler beim Laden</h2>
+      <p>${escHtml(String(msg))}</p>
+      <p style="margin-top:10px;">
+        <a href="../index.html" style="color:var(--blue);font-size:12px;">← Zurück zum Dashboard</a>
+      </p>
+    </div>`;
 }
 
-init();
+/* ── Boot ────────────────────────────────────────────────── */
+if (!slug) {
+  renderError('Kein Spiel-Slug in der URL angegeben. Bitte ?m=wm-xxx-vs-yyy-DATUM verwenden.');
+} else {
+  fetch('data/' + slug + '.json')
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status + ' – ' + r.statusText);
+      return r.json();
+    })
+    .then(function(D) { render(D); })
+    .catch(function(err) { renderError(err.message || String(err)); });
+}
 </script>
 </body>
 </html>
