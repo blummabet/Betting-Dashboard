@@ -136,7 +136,18 @@ jobs:
             TIMESTAMP=$(date +'%d.%m.%Y %H:%M')
             git commit -m "🌍 WM 2026 Data Update ${TIMESTAMP} UTC"
             git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-            git pull origin main --no-rebase -X ours
+            git pull origin main --no-rebase -X ours || true
+            # Auto-resolve any remaining conflict markers (generated files always use ours)
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "⚠️ Löse verbleibende Konflikte (ours):"
+              echo "$CONFLICTS" | while read f; do
+                echo "  → $f"
+                git checkout --ours -- "$f"
+                git add "$f"
+              done
+              git commit -m "🔧 Auto-resolve merge conflicts in generated data files"
+            fi
             git push
           fi
         env:

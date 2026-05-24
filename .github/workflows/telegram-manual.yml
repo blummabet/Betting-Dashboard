@@ -69,7 +69,13 @@ jobs:
           else
             git commit -m "📱 Telegram Manual Send — ${{ github.event.inputs.type }}"
             git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-            git pull origin main --no-rebase -X ours
+            git pull origin main --no-rebase -X ours || true
+            # Auto-resolve any remaining conflict markers
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git commit -m "🔧 auto-resolve merge conflicts"
+            fi
             git push
           fi
         env:
