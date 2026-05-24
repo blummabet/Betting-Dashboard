@@ -8309,6 +8309,24 @@ function renderTgLog(log) {
   el.innerHTML = rows.join('');
 }
 
+// ═══════════════════════════════════════════════════════
+//  PRE-LOAD: WM 2026 Sharp Radar data
+//  Fetches wm2026-data.json + wm2026-odds-history.json on page init
+//  so renderSharpRadar() can show WM fixtures immediately when clicked.
+// ═══════════════════════════════════════════════════════
+(async function _preloadWmSharpData() {
+  try {
+    const [wmD, wmH] = await Promise.all([
+      fetch('wm2026-data.json?t=' + Date.now())
+        .then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('wm2026-odds-history.json?t=' + Date.now())
+        .then(r => r.ok ? r.json() : null).catch(() => null)
+    ]);
+    if (wmD) window.WM2026_DATA = wmD;
+    if (wmH) window.WM2026_ODDS_HISTORY = wmH;
+  } catch(e) { /* silent — Sharp Radar falls back to league-only mode */ }
+})();
+
 </script>
 </body>
 </html>

@@ -443,6 +443,30 @@ def main():
             for t in gdata.get("teams", []):
                 team_names_ref[t["id"]] = t.get("name", t["id"])
 
+    # ── Build picks lookup: {match_key: {market_label: {verdict, edgePP, dataQuality}}} ──
+    # Used to enrich allFixtures with pick verdicts so auto-trigger respects pick logic.
+    picks_lookup: dict[str, dict] = {}
+    if wm is not None:
+        for match_key, pick_list in wm.get("picks", {}).items():
+            picks_lookup[match_key] = {}
+            for pk in pick_list:
+                mkt = pk.get("market", "")
+                picks_lookup[match_key][mkt] = {
+                    "verdict":     pk.get("verdict"),
+                    "edgePP":      pk.get("edgePP"),
+                    "dataQuality": pk.get("dataQuality", "elo_only"),
+                }
+
+    # Market label → edge_key / allFixtures field name
+    _MARKET_TO_FIELD = {
+        "Heimsieg":       "hw",
+        "Unentschieden":  "dr",
+        "Auswärtssieg":   "aw",
+        "Over 2.5 Tore":  "o25",
+        "Under 2.5 Tore": "u25",
+        "Beide Teams treffen": "btts",
+    }
+
     for key, p in prices.items():
         home_id, away_id = key.split("-", 1)
         pinn = wm_odds_ref.get(key, {})
@@ -542,6 +566,17 @@ def main():
             "bestEdgeKey":  best_edge_key,
             "hasPinnacle":  bool(pinn_hw),
             "hasMoreMarkets": bool(p.get("poly_o25")),
+            # ── Pick verdicts from generate_wm_picks.py ─────────────────────────
+            # verdict_hw/dr/aw/o25/u25: "BET" | "ABWÄGEN" | "SKIP" | null
+            # auto_wm_poly_trigger.py filters to BET/ABWÄGEN only
+            **{
+                f"verdict_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("verdict")
+                for mkt_label, field in _MARKET_TO_FIELD.items()
+                if field in ("hw", "dr", "aw", "o25", "u25")
+            },
+            "dataQuality": next(
+                (v.get("dataQuality") for v in picks_lookup.get(key, {}).values()), "elo_only"
+            ),
         })
 
     # Sort: fixtures with positive edge first (desc), then by date

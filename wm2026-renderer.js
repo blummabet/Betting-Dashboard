@@ -48,6 +48,7 @@
       const resp = await fetch('wm2026-data.json?t=' + Date.now());
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       _wmData = await resp.json();
+      window.WM2026_DATA = _wmData;   // expose for Sharp Radar + other modules
       _loaded = true;
       _render();
     } catch (e) {
