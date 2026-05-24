@@ -32,6 +32,7 @@ jobs:
           git add polymarket_prices.json
           git diff --staged --quiet || git commit -m "test: polymarket_prices.json update"
           git pull --rebase origin main
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
