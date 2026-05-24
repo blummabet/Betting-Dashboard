@@ -1,7 +1,7 @@
 name: 🚀 Deploy to GitHub Pages
 
 on:
-  # Nur deployen wenn sich HTML/JS/CSS-Dateien geändert haben — nicht bei Daten-Updates
+  # Deployen wenn sich HTML/JS/CSS oder WM-Spieldaten geändert haben
   push:
     branches: [main]
     paths:
@@ -9,6 +9,10 @@ on:
       - '**.js'
       - '**.css'
       - '.nojekyll'
+      - 'matches/wm-index.json'
+      - 'matches/data/wm-*.json'
+      - 'wm2026-data.json'
+      - 'wm_poly_prices.json'
 
   # Manuell jederzeit ausführbar
   workflow_dispatch:

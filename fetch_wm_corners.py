@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
 """
-fetch_wm_corners.py — WM 2026 Team Corner Statistics fetcher via API-Football.
+fetch_wm_corners.py — WM 2026 Corner Statistics + xG Fetcher via API-Football.
 
 Writes to wm2026-data.json:
   "cornersForm" → {
       "MEX": { "forAvg": 5.2, "againstAvg": 4.1, "games": 10, "updatedAt": "ISO" },
       …
   }
+  "xgStats" → {
+      "MEX": { "xgForAvg": 1.42, "xgAgainstAvg": 0.91, "games": 7, "updatedAt": "ISO" },
+      …
+  }
+
+xG is extracted from the same /fixtures/statistics calls as corners — no extra API cost.
+API-Football returns "expected_goals" for many international competitions (World Cup
+qualifiers, Nations League, major friendlies). If unavailable for a fixture, that
+fixture is simply skipped for xG (corners may still count).
 
 Run:   python3 fetch_wm_corners.py [--force]
 """
@@ -83,100 +92,148 @@ def fetch_fixtures(api_id: int) -> list:
 
 # ── Extract corner data from fixture statistics ───────────────────────────
 
-def fetch_corner_stats(fixture_id: int, team_api_id: int) -> tuple[int | None, int | None]:
+def _parse_float(val) -> float | None:
+    """Safely parse a stat value to float. Returns None if not numeric."""
+    if val is None:
+        return None
+    try:
+        f = float(str(val).replace(",", "."))
+        return f if f >= 0 else None
+    except (ValueError, TypeError):
+        return None
+
+
+def fetch_fixture_stats(fixture_id: int, team_api_id: int) -> dict:
     """
-    Fetch fixture statistics and extract corner kicks for the given team.
-    Returns (corners_for, corners_against) or (None, None) if not available.
+    Fetch /fixtures/statistics for one fixture.
+    Extracts for the given team (and its opponent):
+      - Corner Kicks  → c_for, c_against
+      - expected_goals → xg_for, xg_against  (None if not in response)
+
+    Returns dict with keys: c_for, c_against, xg_for, xg_against
+    All values are int/float or None if unavailable.
     """
     resp = apif_get("fixtures/statistics", {"fixture": fixture_id})
     time.sleep(DELAY)
 
-    if not resp:
-        return None, None
+    result = {"c_for": None, "c_against": None, "xg_for": None, "xg_against": None}
 
-    # resp is a list of team stats objects: [{"team": {...}, "statistics": [...]}, ...]
-    corners: dict[int, int] = {}
-    teams_in_fixture: list[int] = []
+    if not resp:
+        return result
+
+    # resp: [{"team": {"id": ...}, "statistics": [{"type": "...", "value": ...}, ...]}, ...]
+    corners: dict[int, int]   = {}
+    xg:      dict[int, float] = {}
+    team_ids: list[int]       = []
 
     for team_stats in resp:
         t_id = team_stats.get("team", {}).get("id")
         if t_id is None:
             continue
-        teams_in_fixture.append(t_id)
+        team_ids.append(t_id)
+
         for stat in team_stats.get("statistics", []):
-            if stat.get("type") == "Corner Kicks":
-                val = stat.get("value")
+            stype = stat.get("type", "")
+            val   = stat.get("value")
+
+            if stype == "Corner Kicks":
                 try:
                     corners[t_id] = int(val) if val is not None else 0
                 except (ValueError, TypeError):
                     corners[t_id] = 0
+
+            elif stype == "expected_goals":
+                # API-Football returns e.g. "1.42" or null
+                parsed = _parse_float(val)
+                if parsed is not None:
+                    xg[t_id] = parsed
+
+    # Corners for our team
+    if team_api_id in corners:
+        result["c_for"] = corners[team_api_id]
+        for opp_id in team_ids:
+            if opp_id != team_api_id and opp_id in corners:
+                result["c_against"] = corners[opp_id]
                 break
 
-    if team_api_id not in corners:
-        return None, None
+    # xG for our team
+    if team_api_id in xg:
+        result["xg_for"] = xg[team_api_id]
+        for opp_id in team_ids:
+            if opp_id != team_api_id and opp_id in xg:
+                result["xg_against"] = xg[opp_id]
+                break
 
-    corners_for = corners[team_api_id]
-
-    # Find the opponent's corners
-    opponent_corners: int | None = None
-    for t_id in teams_in_fixture:
-        if t_id != team_api_id and t_id in corners:
-            opponent_corners = corners[t_id]
-            break
-
-    if opponent_corners is None:
-        return None, None
-
-    return corners_for, opponent_corners
+    return result
 
 
-# ── Main corner computation per team ─────────────────────────────────────
+# ── Main computation per team (corners + xG) ────────────────────────────
 
-def compute_corners_for_team(tid: str, api_id: int) -> dict | None:
+def compute_stats_for_team(tid: str, api_id: int) -> tuple[dict | None, dict | None]:
     """
-    Fetch fixtures and their corner statistics for one team.
-    Returns a cornersForm dict or None if no data found.
+    Fetch fixtures and their statistics for one team.
+    Returns (corners_form, xg_stats) — either may be None if no data found.
+    Both are computed from the same /fixtures/statistics API calls.
     """
     print(f"  Fixtures {tid} (ID {api_id})...", end=" ", flush=True)
     fixtures = fetch_fixtures(api_id)
 
     if not fixtures:
         print("keine Fixtures")
-        return None
+        return None, None
 
-    print(f"{len(fixtures)} Fixtures gefunden, hole Corner-Stats...", flush=True)
+    print(f"{len(fixtures)} Fixtures, hole Stats...", flush=True)
 
-    totals_for: list[int] = []
-    totals_against: list[int] = []
+    c_for_list:    list[int]   = []
+    c_against_list: list[int]  = []
+    xg_for_list:   list[float] = []
+    xg_against_list: list[float] = []
 
     for fx in fixtures[:MAX_FIXTURES]:
         fx_id = fx.get("fixture", {}).get("id")
         if not fx_id:
             continue
 
-        c_for, c_against = fetch_corner_stats(fx_id, api_id)
-        if c_for is None or c_against is None:
-            continue
+        stats = fetch_fixture_stats(fx_id, api_id)
 
-        totals_for.append(c_for)
-        totals_against.append(c_against)
+        # Corners (both sides must be present)
+        if stats["c_for"] is not None and stats["c_against"] is not None:
+            c_for_list.append(stats["c_for"])
+            c_against_list.append(stats["c_against"])
 
-    games = len(totals_for)
-    if games == 0:
-        print(f"  -> {tid}: keine Corner-Daten in Fixtures")
-        return None
+        # xG (both sides must be present)
+        if stats["xg_for"] is not None and stats["xg_against"] is not None:
+            xg_for_list.append(stats["xg_for"])
+            xg_against_list.append(stats["xg_against"])
 
-    for_avg     = round(sum(totals_for)     / games, 2)
-    against_avg = round(sum(totals_against) / games, 2)
+    # ── Build cornersForm ─────────────────────────────────────────────────
+    corners_result = None
+    c_games = len(c_for_list)
+    if c_games > 0:
+        corners_result = {
+            "forAvg":     round(sum(c_for_list)     / c_games, 2),
+            "againstAvg": round(sum(c_against_list) / c_games, 2),
+            "games":      c_games,
+            "updatedAt":  now_iso(),
+        }
 
-    print(f"  -> {tid}: {games} Spiele | Ecken fuer={for_avg:.2f}, gegen={against_avg:.2f}")
+    # ── Build xgStats ─────────────────────────────────────────────────────
+    xg_result = None
+    xg_games = len(xg_for_list)
+    if xg_games > 0:
+        xg_result = {
+            "xgForAvg":     round(sum(xg_for_list)     / xg_games, 3),
+            "xgAgainstAvg": round(sum(xg_against_list) / xg_games, 3),
+            "games":        xg_games,
+            "updatedAt":    now_iso(),
+        }
 
-    return {
-        "forAvg":     for_avg,
-        "againstAvg": against_avg,
-        "games":      games,
-        "updatedAt":  now_iso(),
-    }
+    # Log
+    corner_str = f"Ecken {corners_result['forAvg']:.1f}/{corners_result['againstAvg']:.1f} ({c_games}G)" if corners_result else "keine Ecken"
+    xg_str     = f"xG {xg_result['xgForAvg']:.2f}/{xg_result['xgAgainstAvg']:.2f} ({xg_games}G)"     if xg_result     else "kein xG"
+    print(f"  -> {tid}: {corner_str} | {xg_str}")
+
+    return corners_result, xg_result
 
 
 # ── MAIN ──────────────────────────────────────────────────────────────────
@@ -198,38 +255,54 @@ def main():
         return
 
     wm.setdefault("cornersForm", {})
+    wm.setdefault("xgStats",     {})
     corners_form: dict = wm["cornersForm"]
+    xg_stats:     dict = wm["xgStats"]
 
-    updated  = 0
-    skipped  = 0
-    no_data  = 0
+    c_updated = c_skipped = c_no_data = 0
+    x_updated = x_no_data = 0
 
     for tid in sorted(team_ids.keys()):
         api_id = team_ids[tid]
 
-        existing = corners_form.get(tid, {})
-        if not is_stale(existing.get("updatedAt"), STALE_H):
-            skipped += 1
+        # Skip if both corners AND xG are fresh
+        c_stale = is_stale(corners_form.get(tid, {}).get("updatedAt"), STALE_H)
+        x_stale = is_stale(xg_stats.get(tid,     {}).get("updatedAt"), STALE_H)
+
+        if not c_stale and not x_stale:
+            c_skipped += 1
             continue
 
         try:
-            result = compute_corners_for_team(tid, api_id)
-            if result:
-                corners_form[tid] = result
-                updated += 1
+            corners_result, xg_result = compute_stats_for_team(tid, api_id)
+
+            if corners_result:
+                corners_form[tid] = corners_result
+                c_updated += 1
             else:
-                no_data += 1
+                c_no_data += 1
+
+            if xg_result:
+                xg_stats[tid] = xg_result
+                x_updated += 1
+            else:
+                x_no_data += 1
+
         except Exception as e:
             print(f"  Fehler bei {tid}: {e}")
-            no_data += 1
+            c_no_data += 1
+            x_no_data += 1
 
     wm["cornersForm"] = corners_form
+    wm["xgStats"]     = xg_stats
     wm.setdefault("_meta", {})["cornersUpdatedAt"] = now_iso()
+    wm["_meta"]["xgUpdatedAt"] = now_iso()
 
     with open(WM_FILE, "w", encoding="utf-8") as f:
         json.dump(wm, f, ensure_ascii=False, indent=2)
 
-    print(f"\n[cornersForm] {updated} aktualisiert, {skipped} uebersprungen, {no_data} ohne Daten.")
+    print(f"\n[cornersForm] {c_updated} aktualisiert, {c_skipped} uebersprungen, {c_no_data} ohne Daten.")
+    print(f"[xgStats]     {x_updated} aktualisiert, {c_skipped} uebersprungen, {x_no_data} ohne Daten.")
     print("wm2026-data.json gespeichert.")
 
 

@@ -944,7 +944,12 @@ function renderEloXg(D) {
 
         ${xgH != null || xgA != null ? `
         <div class="xg-bar-section">
-          <div class="xg-lbl">Erwartete Tore (xG Poisson-Modell)</div>
+          <div class="xg-lbl" style="display:flex;align-items:center;gap:6px;">
+            <span>Erwartete Tore (xG)</span>
+            ${D.xgSource === 'api_football' ? `<span style="font-size:9px;background:#1a3a2a;color:#22c55e;border:1px solid #22c55e44;border-radius:4px;padding:1px 5px;">API-Football ✓</span>` :
+              D.xgSource === 'partial'      ? `<span style="font-size:9px;background:#1a2a3a;color:#60a5fa;border:1px solid #60a5fa44;border-radius:4px;padding:1px 5px;">Teilweise API</span>` :
+                                              `<span style="font-size:9px;background:#2a2a2a;color:#888;border:1px solid #44444466;border-radius:4px;padding:1px 5px;">Poisson-Schätzung</span>`}
+          </div>
           <div class="xg-bar-wrap">
             <div class="xg-val">${xgH != null ? xgH : '—'}</div>
             <div class="xg-track">

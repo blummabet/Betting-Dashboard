@@ -256,8 +256,31 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
     home_form = normalise_form(home_form)
     away_form = normalise_form(away_form)
 
-    # xG via Poisson-Modell
-    xg_home, xg_away = poisson_xg(home_form, away_form, home_elo, away_elo, home_id in CO_HOSTS)
+    # xG: echte API-Football Werte wenn vorhanden, sonst Poisson-Fallback
+    xg_stats   = wm.get("xgStats", {})
+    home_xg_d  = xg_stats.get(home_id)
+    away_xg_d  = xg_stats.get(away_id)
+
+    if home_xg_d and away_xg_d and home_xg_d.get("games", 0) >= 3 and away_xg_d.get("games", 0) >= 3:
+        # Blend: (home_attack + away_defence) / 2 — same logic as Poisson but with real xG rates
+        xg_home = round((home_xg_d["xgForAvg"] + away_xg_d["xgAgainstAvg"]) / 2, 2)
+        xg_away = round((away_xg_d["xgForAvg"] + home_xg_d["xgAgainstAvg"]) / 2, 2)
+        xg_source = "api_football"
+    elif home_xg_d and home_xg_d.get("games", 0) >= 3:
+        # Only home xG available — mix with Poisson for away
+        _, xg_away_fb = poisson_xg(home_form, away_form, home_elo, away_elo, home_id in CO_HOSTS)
+        xg_home = round(home_xg_d["xgForAvg"], 2)
+        xg_away = xg_away_fb
+        xg_source = "partial"
+    elif away_xg_d and away_xg_d.get("games", 0) >= 3:
+        # Only away xG available — mix with Poisson for home
+        xg_home_fb, _ = poisson_xg(home_form, away_form, home_elo, away_elo, home_id in CO_HOSTS)
+        xg_home = xg_home_fb
+        xg_away = round(away_xg_d["xgForAvg"], 2)
+        xg_source = "partial"
+    else:
+        xg_home, xg_away = poisson_xg(home_form, away_form, home_elo, away_elo, home_id in CO_HOSTS)
+        xg_source = "poisson"
 
     # H2H
     h2h_raw = wm.get("h2h", {}).get(h2h_key)
@@ -301,6 +324,7 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         "eloDiff":    elo_diff,
         "xgHome":     xg_home,
         "xgAway":     xg_away,
+        "xgSource":   xg_source,  # "api_football" | "partial" | "poisson"
         "upsetScore": upset_score(home_elo, away_elo),
         "homeConf":   home_team.get("confederation", ""),
         "awayConf":   away_team.get("confederation", ""),
