@@ -61,12 +61,20 @@ PLACED_FILE           = os.path.join(BASE_DIR, "wm_auto_bets_placed.json")
 
 # Welche Edge-Keys → Polymarket-Market-Label (muss OUTCOME_MAP in polymarket_bet.py matchen)
 EDGE_MARKET_MAP = {
-    "edge_hw":  ("poly_hw",  "Heimsieg",           "fair_hw"),
-    "edge_dr":  ("poly_dr",  "Unentschieden",       "fair_dr"),
-    "edge_aw":  ("poly_aw",  "Auswärtssieg",        "fair_aw"),
-    "edge_o25": ("poly_o25", "Over 2.5 Tore",       "fair_o25"),
-    "edge_u25": ("poly_u25", "Under 2.5 Tore",      "fair_u25"),
+    "edge_hw":  ("poly_hw",  "Heimsieg",           "fair_hw",  "verdict_hw"),
+    "edge_dr":  ("poly_dr",  "Unentschieden",       "fair_dr",  "verdict_dr"),
+    "edge_aw":  ("poly_aw",  "Auswärtssieg",        "fair_aw",  "verdict_aw"),
+    "edge_o25": ("poly_o25", "Over 2.5 Tore",       "fair_o25", "verdict_o25"),
+    "edge_u25": ("poly_u25", "Under 2.5 Tore",      "fair_u25", "verdict_u25"),
 }
+
+# Nur diese Verdicts lösen Auto-Bets aus
+# SKIP und None (kein Pick für diesen Markt) werden übersprungen
+AUTO_TRIGGER_VERDICTS = {"BET", "ABWÄGEN"}
+
+# elo_only = noch keine Form-/H2H-Daten (Pre-Tournament) → konservativerer Edge-Schwellenwert
+# Erhöhter Schwellenwert verhindert Bets auf schwache Datenbasis
+AUTO_TRIGGER_EDGE_ELO_ONLY = 8.0  # Strengerer Schwellenwert wenn nur Elo vorhanden
 
 
 # ── Hilfsfunktionen ────────────────────────────────────────────────────────────
@@ -141,10 +149,21 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
         if d is None or d < MIN_DAYS_UNTIL_GAME:
             continue
 
+        # Data quality: elo_only → strengerer Edge-Schwellenwert
+        is_elo_only = fix.get("dataQuality") == "elo_only"
+        effective_edge_threshold = AUTO_TRIGGER_EDGE_ELO_ONLY if is_elo_only else AUTO_TRIGGER_EDGE_PP
+
         # Edge-Check für jeden Markt
-        for edge_key, (price_key, market_label, fair_key) in EDGE_MARKET_MAP.items():
+        for edge_key, (price_key, market_label, fair_key, verdict_key) in EDGE_MARKET_MAP.items():
             edge = fix.get(edge_key)
-            if edge is None or edge < AUTO_TRIGGER_EDGE_PP:
+            if edge is None or edge < effective_edge_threshold:
+                continue
+
+            # Verdict-Check: nur BET und ABWÄGEN — kein SKIP, kein None (kein Pick)
+            verdict = fix.get(verdict_key)
+            if verdict not in AUTO_TRIGGER_VERDICTS:
+                if verdict is not None:
+                    print(f"  🚫 Verdict={verdict} für {fix['home']} vs {fix['away']} — {market_label} (kein Trigger)")
                 continue
 
             poly_price = fix.get(price_key)
@@ -165,19 +184,21 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
             )
 
             candidates.append({
-                "home":      fix["home"],
-                "away":      fix["away"],
-                "homeId":    fix.get("homeId", ""),
-                "awayId":    fix.get("awayId", ""),
-                "market":    market_label,
-                "league":    "WM2026",
-                "stake":     _get_stake_for_edge(edge),
-                "polyPrice": poly_price,
-                "slug":      slug,
-                "eventUrl":  event_url,
-                "edgePP":    edge,
-                "pinnFair":  fix.get(fair_key),
-                "_betKey":   key,   # intern, wird vor Übergabe an polymarket_bet entfernt
+                "home":        fix["home"],
+                "away":        fix["away"],
+                "homeId":      fix.get("homeId", ""),
+                "awayId":      fix.get("awayId", ""),
+                "market":      market_label,
+                "league":      "WM2026",
+                "stake":       _get_stake_for_edge(edge),
+                "polyPrice":   poly_price,
+                "slug":        slug,
+                "eventUrl":    event_url,
+                "edgePP":      edge,
+                "pinnFair":    fix.get(fair_key),
+                "verdict":     verdict,
+                "dataQuality": fix.get("dataQuality", "elo_only"),
+                "_betKey":     key,   # intern, wird vor Übergabe an polymarket_bet entfernt
             })
 
     return candidates

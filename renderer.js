@@ -1543,6 +1543,46 @@ function renderSharpRadar() {
     }
   }
 
+  // ── WM 2026: Add fixtures from wm2026-odds-history.json ───────────────────
+  const _wmSharpData = window.WM2026_DATA;
+  const _wmOddsHist  = window.WM2026_ODDS_HISTORY;
+  if (_wmSharpData && _wmOddsHist) {
+    // Build team lookup table
+    const _wmTeams = {};
+    for (const grp of Object.values(_wmSharpData.groups || {})) {
+      for (const t of (grp.teams || [])) _wmTeams[t.id] = t;
+    }
+    const now = Date.now();
+    const WM_WINDOW_MS = 60 * 24 * 3600 * 1000;  // show up to 60 days ahead
+    for (const grp of Object.values(_wmSharpData.groups || {})) {
+      for (const fx of (grp.fixtures || [])) {
+        const matchKey  = `${fx.home}-${fx.away}`;
+        const snapshots = _wmOddsHist[matchKey];
+        if (!snapshots || snapshots.length < 1) continue;
+        // Date filter: -7 days to +60 days (covers full tournament)
+        const fxDate = new Date(`${fx.date}T00:00:00`);
+        if (fxDate < new Date(now - 7 * 86400000) || fxDate > new Date(now + WM_WINDOW_MS)) continue;
+        const oddsOpen    = snapshots[0];
+        const oddsCurrent = snapshots[snapshots.length - 1];
+        const openTs      = snapshots[0].ts;
+        // Convert ISO date (YYYY-MM-DD) → DD.MM.YYYY for existing helpers
+        const [yr, mo, dy] = fx.date.split('-');
+        const dateDE = `${dy}.${mo}.${yr}`;
+        const homeT  = _wmTeams[fx.home] || { name: fx.home, flag: '🏳' };
+        const awayT  = _wmTeams[fx.away] || { name: fx.away, flag: '🏳' };
+        const mFake  = { date: dateDE, time: fx.time || '', home: `${homeT.flag} ${homeT.name}`, away: `${awayT.flag} ${awayT.name}` };
+        const kicked = _isKickedOff(mFake);
+        const mvRows = snapshots.length >= 2 ? computeLineMovement(oddsOpen, oddsCurrent) : null;
+        const maxMov = mvRows ? Math.max(...mvRows.map(r => Math.abs(r.ppShift))) : 0;
+        allFixtures.push({
+          m: mFake, lk: 'WM2026', L: { name: '🌍 WM 2026', flag: '🌍' },
+          pm: null, oddsOpen, oddsClosing: null, oddsCurrent,
+          oddsRef: oddsCurrent, openTs, kicked, mvRows, maxMov
+        });
+      }
+    }
+  }
+
   // ── Section 1: KPIs (full week) ───────────────────────────────────────────
   const upcoming      = allFixtures.filter(f => !f.kicked);
   const withOdds      = allFixtures.filter(f => f.oddsCurrent != null);
