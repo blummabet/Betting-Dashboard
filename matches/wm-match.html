@@ -1063,6 +1063,71 @@ function renderH2h(D) {
     </div>`;
 }
 
+/* ── Squad Spotlight section ─────────────────────────────── */
+function renderSquads(D) {
+  const squads = D.squads;
+  if (!squads || Object.keys(squads).length === 0) return '';
+
+  const homeS = squads[D.homeId];
+  const awayS = squads[D.awayId];
+  if (!homeS && !awayS) return '';
+
+  const posLabel = (pos) => {
+    const map = { ST:'Stürmer', CF:'Stürmer', FW:'Stürmer', LW:'Linksaußen', RW:'Rechtsaußen',
+                  CAM:'Offensives Mittelfeld', AM:'Angreifer', CM:'Mittelfeld', MF:'Mittelfeld',
+                  DM:'Defensives MF', CDM:'Defensives MF', LB:'Linksverteidiger', RB:'Rechtsverteidiger',
+                  CB:'Innenverteidiger', DF:'Verteidiger', GK:'Torwart' };
+    return map[(pos || '').toUpperCase()] || pos || '';
+  };
+
+  const playerCard = (team, flag, player) => {
+    if (!player) return '';
+    const goals   = player.goals   ?? '—';
+    const assists = player.assists  ?? '—';
+    const mins    = player.minutes;
+    const per90   = (mins && player.goals != null && mins > 0)
+      ? (player.goals / (mins / 90)).toFixed(2) : null;
+    return `
+      <div style="flex:1;min-width:140px;background:var(--bg-alt,rgba(255,255,255,0.04));border:1px solid var(--border,#30363d);border-radius:10px;padding:12px 14px;">
+        <div style="font-size:10px;color:var(--muted,#8b949e);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">${escHtml(flag || '')} ${escHtml(team || '')} — Schlüsselspieler</div>
+        <div style="font-size:15px;font-weight:800;color:var(--text,#e6edf3);margin-bottom:2px;">${escHtml(player.name || '?')}</div>
+        <div style="font-size:11px;color:var(--muted,#8b949e);margin-bottom:8px;">${escHtml(posLabel(player.position))}</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="font-size:17px;font-weight:900;color:#22c55e;">${goals}</div>
+            <div style="font-size:9px;color:var(--muted,#8b949e);text-transform:uppercase;">Tore</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:17px;font-weight:900;color:#60a5fa;">${assists}</div>
+            <div style="font-size:9px;color:var(--muted,#8b949e);text-transform:uppercase;">Assists</div>
+          </div>
+          ${per90 ? `<div style="text-align:center;">
+            <div style="font-size:17px;font-weight:900;color:#f0c040;">${per90}</div>
+            <div style="font-size:9px;color:var(--muted,#8b949e);text-transform:uppercase;">Tore/90</div>
+          </div>` : ''}
+          ${mins ? `<div style="text-align:center;">
+            <div style="font-size:14px;font-weight:700;color:var(--muted,#8b949e);">${mins}'</div>
+            <div style="font-size:9px;color:var(--muted,#8b949e);text-transform:uppercase;">Minuten</div>
+          </div>` : ''}
+        </div>
+      </div>`;
+  };
+
+  return `
+    <div class="section">
+      <div class="sec-head">
+        <span class="sec-ico">⭐</span>
+        <span class="sec-title">Schlüsselspieler</span>
+        <span class="sec-tag gray">Stamm-Spieler</span>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        ${playerCard(D.home, D.homeFlag, homeS)}
+        ${playerCard(D.away, D.awayFlag, awayS)}
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:var(--muted,#8b949e);">Stats aus letzter Saison (Klub + Nationalteam)</div>
+    </div>`;
+}
+
 /* ── Group Table section ─────────────────────────────────── */
 function renderGroup(D) {
   const teams = D.homeTeams;
@@ -1200,6 +1265,7 @@ function render(D) {
 
     ${renderContext(D)}
     ${renderAI(D)}
+    ${renderSquads(D)}
     ${renderPicks(D)}
     ${renderOdds(D)}
     ${renderEloXg(D)}

@@ -82,15 +82,19 @@ def claude_complete(prompt: str) -> str | None:
 
 # ── Input-Hash für Cache ──────────────────────────────────────────────────────
 def compute_hash(data: dict) -> str:
-    """SHA-256 über die relevanten Felder — ändert sich wenn Picks/Odds aktualisiert."""
+    """SHA-256 über die relevanten Felder — ändert sich wenn Picks/Odds/xG aktualisiert."""
     relevant = {
-        "picks":  [(p.get("market"), p.get("verdict"), p.get("edgePP"), p.get("odds"))
-                   for p in data.get("picks", [])],
-        "hw":     data.get("hw"),
-        "aw":     data.get("aw"),
+        "picks":   [(p.get("market"), p.get("verdict"), p.get("edgePP"), p.get("odds"))
+                    for p in data.get("picks", [])],
+        "hw":      data.get("hw"),
+        "aw":      data.get("aw"),
         "homeElo": data.get("homeElo"),
         "awayElo": data.get("awayElo"),
         "upsetScore": data.get("upsetScore"),
+        "xgHome":  data.get("xgHome"),
+        "xgAway":  data.get("xgAway"),
+        # v2: richer prompt — force regeneration of old 3-sentence previews
+        "_promptVersion": 2,
     }
     return hashlib.sha256(json.dumps(relevant, sort_keys=True).encode()).hexdigest()[:16]
 
@@ -100,7 +104,8 @@ def build_prompt(info: dict) -> str:
     """
     Baut den strukturierten Prompt aus den Match-Daten.
     info enthält: home, away, date, group, matchday, homeElo, awayElo,
-                  upsetScore, picks, homeForm, awayForm, h2h, coHostBonus
+                  upsetScore, picks, homeForm, awayForm, h2h, coHostBonus,
+                  xgHome, xgAway, xgSource, cornersHome, cornersAway
     """
     home     = info["home"]
     away     = info["away"]
@@ -111,80 +116,129 @@ def build_prompt(info: dict) -> str:
     a_elo    = info.get("awayElo", 1500)
     elo_diff = abs(h_elo - a_elo)
     fav      = home if h_elo > a_elo else away
-    underdog = away if h_elo > a_elo else home
     upset    = info.get("upsetScore", 2)
 
-    picks    = info.get("picks", [])
+    picks     = info.get("picks", [])
     bet_picks = [p for p in picks if p.get("verdict") == "BET"]
     abw_picks = [p for p in picks if p.get("verdict") == "ABWÄGEN"]
 
-    home_form = info.get("homeForm")
-    away_form = info.get("awayForm")
-    h2h       = info.get("h2h")
-    co_host   = info.get("coHostBonus", False)
+    home_form    = info.get("homeForm") or {}
+    away_form    = info.get("awayForm") or {}
+    h2h          = info.get("h2h") or {}
+    co_host      = info.get("coHostBonus", False)
+    xg_home      = info.get("xgHome")
+    xg_away      = info.get("xgAway")
+    xg_source    = info.get("xgSource", "poisson")
+    corners_home = info.get("cornersHome") or {}
+    corners_away = info.get("cornersAway") or {}
 
-    # Picks-Zusammenfassung
-    picks_text = ""
-    if bet_picks:
-        p = bet_picks[0]
-        picks_text = (f"Unser Modell sieht Edge bei {p['market']} @{p.get('odds','?')} "
-                      f"(+{p.get('edgePP','?')}pp). ")
-    elif abw_picks:
-        p = abw_picks[0]
-        picks_text = f"Möglicher Wert bei {p['market']} @{p.get('odds','?')} — abwägen. "
+    lines = []
 
-    # Form-Zusammenfassung
-    form_text = ""
-    if home_form and away_form:
-        h_pts = home_form.get("avgGoals", "?")
-        a_pts = away_form.get("avgGoals", "?")
-        form_text = (f"{home} erzielt im Schnitt {h_pts} Tore/Spiel, "
-                     f"{away} {a_pts}. ")
+    # ── Spielinfo ─────────────────────────────────────────────────────────────
+    lines.append(f"Spiel: {home} vs {away} | WM 2026 Gruppe {group}, Spieltag {matchday} | {date_str}")
+    lines.append(f"Elo-Rating: {home} {h_elo} vs {away} {a_elo} | Favorit: {fav} (Differenz: {elo_diff})")
 
-    # H2H
-    h2h_text = ""
-    if h2h and h2h.get("games", 0) >= 3:
-        g = h2h["games"]
+    if co_host:
+        lines.append(f"WICHTIG: {home} ist Co-Gastgeber — spielt praktisch zuhause (Heimvorteil).")
+
+    # ── Formcheck ─────────────────────────────────────────────────────────────
+    if home_form.get("games", 0) >= 3:
+        h_scored  = home_form.get("avgScored", home_form.get("avgGoals", "?"))
+        h_conc    = home_form.get("avgConceded", "?")
+        h_o25     = home_form.get("over25Rate")
+        h_btts    = home_form.get("bttsRate")
+        h_last5   = home_form.get("last5", "")
+        h_games   = home_form.get("games", "?")
+        form_parts = [f"{home} (letzte {h_games} Spiele): {h_scored} Tore/Spiel erzielt, {h_conc} kassiert"]
+        if h_last5:
+            form_parts.append(f"Form: {h_last5}")
+        if h_o25 is not None:
+            form_parts.append(f"Over 2.5: {round(h_o25*100)}% der Spiele")
+        if h_btts is not None:
+            form_parts.append(f"BTTS: {round(h_btts*100)}%")
+        lines.append(" | ".join(form_parts))
+
+    if away_form.get("games", 0) >= 3:
+        a_scored  = away_form.get("avgScored", away_form.get("avgGoals", "?"))
+        a_conc    = away_form.get("avgConceded", "?")
+        a_o25     = away_form.get("over25Rate")
+        a_btts    = away_form.get("bttsRate")
+        a_last5   = away_form.get("last5", "")
+        a_games   = away_form.get("games", "?")
+        form_parts = [f"{away} (letzte {a_games} Spiele): {a_scored} Tore/Spiel erzielt, {a_conc} kassiert"]
+        if a_last5:
+            form_parts.append(f"Form: {a_last5}")
+        if a_o25 is not None:
+            form_parts.append(f"Over 2.5: {round(a_o25*100)}% der Spiele")
+        lines.append(" | ".join(form_parts))
+
+    # ── xG ────────────────────────────────────────────────────────────────────
+    if xg_home is not None and xg_away is not None:
+        xg_label = "API-Football xG" if xg_source == "api_football" else "Modell-xG"
+        lines.append(f"{xg_label}: {home} {xg_home} — {away} {xg_away} erwartet")
+
+    # ── Ecken ─────────────────────────────────────────────────────────────────
+    h_c_for   = corners_home.get("forAvg")
+    h_c_games = corners_home.get("games", 0)
+    a_c_for   = corners_away.get("forAvg")
+    if h_c_for and a_c_for and h_c_games >= 3:
+        total_c = round((h_c_for or 0) + (a_c_for or 0), 1)
+        lines.append(f"Ecken-Schnitt: {home} {h_c_for}/Spiel, {away} {a_c_for}/Spiel → Summe ~{total_c}/Spiel")
+
+    # ── H2H ───────────────────────────────────────────────────────────────────
+    if h2h.get("games", 0) >= 3:
+        g  = h2h["games"]
         hw = h2h.get("homeWins", 0)
         dr = h2h.get("draws", 0)
         aw = h2h.get("awayWins", 0)
-        h2h_text = f"Direktvergleich ({g} Spiele): {hw}W-{dr}U-{aw}A für {home}. "
+        ag = h2h.get("avgGoals")
+        h2h_str = f"H2H ({g} Spiele): {home} {hw}S-{dr}U-{aw}N"
+        if ag:
+            h2h_str += f" | Schnitt {ag} Tore/Spiel"
+        lines.append(h2h_str)
 
-    # Co-Host
-    cohost_text = f"{home} genießt als Co-Gastgeber Heimvorteil. " if co_host else ""
-
-    # Upset
-    upset_text = ""
+    # ── Upset-Wahrscheinlichkeit ───────────────────────────────────────────────
     if upset >= 7:
-        upset_text = (f"Trotz des Elo-Unterschieds von {elo_diff} Punkten ist ein Upset möglich "
-                      f"(Upset Score: {upset}/10). ")
+        lines.append(f"Upset-Score: {upset}/10 — Überraschung trotz {elo_diff} Elo-Differenz möglich")
     elif upset >= 5:
-        upset_text = f"Ausgeglichenes Spiel auf dem Papier (Elo-Gap: {elo_diff}). "
+        lines.append(f"Ausgeglichener als Elo nahelegt — Upset-Score {upset}/10")
 
-    context = (
-        f"Spiel: {home} vs {away} | Gruppe {group}, Spieltag {matchday} | {date_str}\n"
-        f"Elo: {home} {h_elo} vs {away} {a_elo} | Favorit: {fav} (Gap {elo_diff})\n"
-        f"{cohost_text}"
-        f"{form_text}"
-        f"{h2h_text}"
-        f"{picks_text}"
-        f"{upset_text}"
-    ).strip()
+    # ── Picks ─────────────────────────────────────────────────────────────────
+    pick_lines = []
+    for p in (bet_picks + abw_picks)[:3]:
+        v     = p.get("verdict", "")
+        mkt   = p.get("market", "")
+        odds  = p.get("odds", "?")
+        edge  = p.get("edgePP", "?")
+        dq    = p.get("dataQuality", "")
+        dq_note = " [nur Elo-Daten]" if dq == "elo_only" else ""
+        pick_lines.append(f"{v}: {mkt} @{odds} (Edge +{edge}pp){dq_note}")
+    if pick_lines:
+        lines.append("Picks/Edge: " + " | ".join(pick_lines))
+    else:
+        lines.append("Picks: Kein klarer Edge identifiziert — kein aktiver Pick.")
 
-    return f"""Du bist CocoBet, ein deutschsprachiger Sportwetten-Analyst. Schreibe eine prägnante Match-Vorschau für die WM 2026.
+    context = "\n".join(lines)
 
-Daten:
+    return f"""Du bist CocoBet, ein deutschsprachiger Sportwetten-Analyst für die WM 2026. Schreibe eine prägnante Match-Vorschau.
+
+MATCH-DATEN:
 {context}
 
-Regeln:
-- Genau 3 Sätze, kein Mehr, kein Weniger
-- Deutsch, journalistischer Stil, sachlich und direkt
-- Kein Hype, keine Emojis, kein Clickbait
-- Erwähne den Favoritstatus, einen taktischen Aspekt, und einen konkreten Wetthinweis (falls vorhanden)
-- Kein "Laut unserem Modell" — schreibe aus Analysten-Perspektive
-- Maximal 80 Wörter gesamt
+AUFGABE:
+Schreibe exakt 4 Sätze auf Deutsch. Stil: journalistisch, sachlich, konkret — wie ein erfahrener Tipster, nicht ein Nachrichtenreporter.
 
-Schreibe nur die 3 Sätze, nichts davor oder danach."""
+SATZ 1: Kräfteverhältnis — Wer ist Favorit, wie groß ist der Abstand, was sagen Elo und Form?
+SATZ 2: Spielcharakter — Was erwarten wir taktisch/statistisch? (Tore, Ecken, BTTS, Stil basierend auf Form)
+SATZ 3: Wetthinweis — Konkreter Pick mit Begründung WENN Edge vorhanden; sonst ehrlich "kein klarer Value heute"
+SATZ 4: Kontext — Co-Gastgeber-Vorteil, H2H-Besonderheit, Upset-Risiko, oder Gruppenrelevanz
+
+REGELN:
+- Kein "Laut Modell" oder "Laut Daten" — schreibe aus Analysten-Perspektive
+- Kein Hype, keine Emojis, kein Clickbait
+- Wenn kein Pick: trotzdem interessanten Aspekt über das Spiel erwähnen
+- Maximal 110 Wörter gesamt
+- Nur die 4 Sätze, nichts davor oder danach"""
 
 
 def build_tg_snippet(full_text: str) -> str:
@@ -209,12 +263,14 @@ def main():
         wm = json.load(f)
 
     previews: dict = wm.setdefault("aiPreviews", {})
-    groups = wm.get("groups", {})
-    picks_all = wm.get("picks", {})
-    odds_all  = wm.get("odds", {})
+    groups       = wm.get("groups", {})
+    picks_all    = wm.get("picks", {})
+    odds_all     = wm.get("odds", {})
     upset_scores = wm.get("upsetScores", {})
-    form_all  = wm.get("form", {})
-    h2h_all   = wm.get("h2h", {})
+    form_all     = wm.get("form", {})
+    h2h_all      = wm.get("h2h", {})
+    xg_stats     = wm.get("xgStats", {})       # from fetch_wm_corners.py
+    corners_form = wm.get("cornersForm", {})    # from fetch_wm_corners.py
 
     now = datetime.now(timezone.utc)
     cutoff = (now + timedelta(days=PREVIEW_DAYS)).date()
@@ -247,22 +303,39 @@ def main():
             fx_picks = picks_all.get(pick_key, [])
             fx_odds  = odds_all.get(odds_key, {})
 
+            # xG: compute expected goals from xgStats (API-Football) if available
+            xg_h_data = xg_stats.get(home_id, {})
+            xg_a_data = xg_stats.get(away_id, {})
+            xg_home = xg_away = None
+            xg_source = "poisson"
+            if (xg_h_data.get("games", 0) >= 3 and xg_a_data.get("games", 0) >= 3):
+                xg_home   = round((xg_h_data["xgForAvg"] + xg_a_data["xgAgainstAvg"]) / 2, 2)
+                xg_away   = round((xg_a_data["xgForAvg"] + xg_h_data["xgAgainstAvg"]) / 2, 2)
+                xg_source = "api_football"
+
             info = {
-                "home":       home_t.get("name", home_id),
-                "away":       away_t.get("name", away_id),
-                "date":       fx["date"],
-                "group":      gkey,
-                "matchday":   fx["matchday"],
-                "homeElo":    home_t.get("elo", 1500),
-                "awayElo":    away_t.get("elo", 1500),
-                "upsetScore": upset_scores.get(pick_key, 2),
-                "picks":      fx_picks,
-                "hw":         fx_odds.get("hw"),
-                "aw":         fx_odds.get("aw"),
-                "homeForm":   form_all.get(home_id),
-                "awayForm":   form_all.get(away_id),
-                "h2h":        h2h_all.get(f"{home_id}-{away_id}"),
-                "coHostBonus": home_id in CO_HOSTS,
+                "home":         home_t.get("name", home_id),
+                "away":         away_t.get("name", away_id),
+                "date":         fx["date"],
+                "group":        gkey,
+                "matchday":     fx["matchday"],
+                "homeElo":      home_t.get("elo", 1500),
+                "awayElo":      away_t.get("elo", 1500),
+                "upsetScore":   upset_scores.get(pick_key, 2),
+                "picks":        fx_picks,
+                "hw":           fx_odds.get("hw"),
+                "aw":           fx_odds.get("aw"),
+                "homeForm":     form_all.get(home_id),
+                "awayForm":     form_all.get(away_id),
+                "h2h":          h2h_all.get(f"{home_id}-{away_id}"),
+                "coHostBonus":  home_id in CO_HOSTS,
+                # xG (API-Football when available, else None)
+                "xgHome":       xg_home,
+                "xgAway":       xg_away,
+                "xgSource":     xg_source,
+                # Corner averages per team
+                "cornersHome":  corners_form.get(home_id),
+                "cornersAway":  corners_form.get(away_id),
             }
 
             new_hash = compute_hash(info)
