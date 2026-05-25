@@ -679,6 +679,7 @@ def main():
         #   2. Poly hasn't caught up yet (edge_delta is growing or this is a new edge)
         # This is the highest-quality trade: fresh information, Poly hasn't reacted.
         steam_lag = False
+        pinn_move = 0  # reset per fixture — avoids bleed-through from previous iteration
         pinn_snaps = pinn_hist.get(key, [])
         if len(pinn_snaps) >= 2:
             latest_pinn  = pinn_snaps[-1]
@@ -711,7 +712,7 @@ def main():
                     steam_lag = True
 
         fx["steamLag"]      = steam_lag
-        fx["pinnSteamMove"] = round(pinn_move, 1) if 'pinn_move' in dir() else None
+        fx["pinnSteamMove"] = round(pinn_move, 1) if pinn_move > 0 else None
 
     # ── Compute momentum score for sorting ────────────────────────────────────
     # Prioritises: steam-lag > growing edge > high raw edge > stable edge > closing edge

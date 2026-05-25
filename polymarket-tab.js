@@ -561,9 +561,14 @@ function _setWmFilter(f) {
 
 // Maps our WM market label → which price field in wm_poly_prices.json
 const WM_MARKET_TO_PRICE_KEY = {
-  'Heimsieg':      'hw',
-  'Auswärtssieg':  'aw',
-  'Unentschieden': 'dr',
+  'Heimsieg':              'hw',
+  'Auswärtssieg':          'aw',
+  'Unentschieden':         'dr',
+  'Over 2.5 Tore':         'poly_o25',
+  'Under 2.5 Tore':        'poly_u25',
+  'Over 1.5 Tore':         'poly_o15',
+  'Over 3.5 Tore':         'poly_o35',
+  'Beide Teams treffen':   'poly_btts',
 };
 
 function _getWmPolyPrice(pick) {
@@ -574,15 +579,19 @@ function _getWmPolyPrice(pick) {
   if (!entry) return { found: false, stale: true };
 
   const mkey   = WM_MARKET_TO_PRICE_KEY[pick.market];
-  if (!mkey) return { found: false };  // O/U, BTTS etc. — not on Poly 1X2
+  if (!mkey) return { found: false };  // unmapped market
 
   const price  = entry[mkey];
   if (price == null || price <= 0) return { found: false };
 
+  // O/U and BTTS markets live in the -more-markets slug
+  const isOuBtts = ['poly_o25','poly_u25','poly_o15','poly_o35','poly_btts'].includes(mkey);
+  const slug = isOuBtts && entry.moreMktSlug ? entry.moreMktSlug : entry.slug;
+
   return {
     found:      true,
     price,                           // probability 0-1
-    eventUrl:   `https://polymarket.com/de/sports/fifa-world-cup/${entry.slug}`,
+    eventUrl:   `https://polymarket.com/de/sports/fifa-world-cup/${slug}`,
     eventTitle: entry.title || `${pick.home} vs ${pick.away}`,
     vol:        entry.vol,
   };
