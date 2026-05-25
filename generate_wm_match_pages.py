@@ -122,6 +122,109 @@ def _match_player_spotlights(wm: dict, home_id: str, away_id: str) -> list[dict]
     return result
 
 
+def generate_bet_insights(home_id, away_id, home_form, away_form, h2h, home_team, away_team) -> list[dict]:
+    """
+    Generiert kontextuelle Wett-Insights aus Form/H2H-Daten.
+    Returns list of {icon, text, type} — max 6 Insights.
+    form fields already normalised: over25Rate/bttsRate in %, avgScored/avgConceded as per-game floats.
+    """
+    insights = []
+
+    def add(icon, text, kind):
+        insights.append({"icon": icon, "text": text, "type": kind})
+
+    for team_id, form, team in [(home_id, home_form, home_team), (away_id, away_form, away_team)]:
+        if not form:
+            continue
+        name = team.get("name", team_id)
+        last5  = form.get("last5",  [])
+        last10 = form.get("last10", [])
+
+        # Unbeaten streak (W or D in a row from most recent)
+        unbeaten = 0
+        for r in reversed(last10):
+            if r in ("W", "D"):
+                unbeaten += 1
+            else:
+                break
+        if unbeaten >= 5:
+            add("🔥", f"{name} seit {unbeaten} Spielen ungeschlagen", "streak")
+        elif unbeaten >= 3:
+            add("📈", f"{name} seit {unbeaten} Spielen ohne Niederlage", "streak")
+
+        # Win streak
+        wins = 0
+        for r in reversed(last5):
+            if r == "W":
+                wins += 1
+            else:
+                break
+        if wins >= 3:
+            add("⚡", f"{name} – {wins} Siege in Folge", "streak")
+
+        # Loss streak (red flag)
+        losses = 0
+        for r in reversed(last5):
+            if r == "L":
+                losses += 1
+            else:
+                break
+        if losses >= 3:
+            add("⚠️", f"{name} zuletzt {losses} Niederlagen in Folge", "warning")
+
+        # Over 2.5 rate
+        o25 = form.get("over25Rate")
+        if o25 is not None and o25 >= 65:
+            add("⚽", f"{name}: Over 2.5 in {round(o25)}% der letzten Spiele", "goals")
+        elif o25 is not None and o25 <= 30:
+            add("🛡️", f"{name}: Nur {round(o25)}% der Spiele über 2.5 Tore", "defense")
+
+        # BTTS rate
+        btts = form.get("bttsRate")
+        if btts is not None and btts >= 65:
+            add("🔄", f"{name}: Beide Teams trafen in {round(btts)}% der Spiele", "btts")
+
+        # Scoring average — high or low
+        avg_s = form.get("avgScored")
+        avg_c = form.get("avgConceded")
+        if avg_s is not None and avg_s >= 2.2:
+            add("🎯", f"{name}: Ø {avg_s:.1f} Tore/Spiel — starke Offensive", "goals")
+        elif avg_s is not None and avg_s < 0.9:
+            add("😴", f"{name}: Nur Ø {avg_s:.1f} Tore/Spiel — schwache Offensive", "warning")
+        if avg_c is not None and avg_c <= 0.6:
+            add("🏰", f"{name}: Ø nur {avg_c:.1f} Gegentore — defensive Mauer", "defense")
+
+    # H2H insights
+    if h2h:
+        games = h2h.get("games", 0)
+        hn    = home_team.get("name", home_id)
+        an    = away_team.get("name", away_id)
+        if games >= 3:
+            hw = h2h.get("homeWins", 0)
+            dr = h2h.get("draws",    0)
+            aw = h2h.get("awayWins", 0)
+
+            if hw >= round(games * 0.6):
+                add("📊", f"H2H: {hn} gewann {hw}/{games} Direktbegegnungen", "h2h")
+            elif aw >= round(games * 0.6):
+                add("📊", f"H2H: {an} dominiert – {aw} von {games} Siegen", "h2h")
+            elif dr >= round(games * 0.4):
+                add("🤝", f"H2H: {dr} Unentschieden in {games} Direktbegegnungen — Remis-Tendenz", "h2h")
+
+            avg_g = h2h.get("avgGoals")
+            if avg_g:
+                if float(avg_g) >= 3.2:
+                    add("🔥", f"H2H: Ø {float(avg_g):.1f} Tore/Spiel — torhungrige Partien", "goals")
+                elif float(avg_g) < 1.8:
+                    add("🛡️", f"H2H: Ø {float(avg_g):.1f} Tore/Spiel — taktische Duelle", "defense")
+
+            o25_h = h2h.get("over25Rate")
+            if o25_h is not None and float(o25_h) >= 70:
+                add("⚽", f"H2H: Over 2.5 in {round(float(o25_h))}% der Direktbegegnungen", "goals")
+
+    return insights[:6]
+
+
 def build_odds_history(history: dict, odds_key: str) -> list[dict]:
     """
     Gibt die letzten 20 Snapshots für ein Fixture zurück.
@@ -331,6 +434,14 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
             "awayBar":    round(h2h_raw.get("awayWins", 0) / g * 100),
         }
 
+    # Bet Insights (rule-based, from form + H2H — must be after h2h_out is set)
+    bet_insights = generate_bet_insights(
+        home_id, away_id,
+        home_form, away_form,
+        h2h_out,
+        home_team, away_team,
+    )
+
     # Group teams + fixtures (for group table / context)
     group_teams = group_data.get("teams", [])
     group_fixtures = group_data.get("fixtures", [])
@@ -381,7 +492,8 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         # Corner averages per team (from fetch_wm_corners.py)
         "cornersHome": wm.get("cornersForm", {}).get(home_id),
         "cornersAway": wm.get("cornersForm", {}).get(away_id),
-        # Polymarket + Player Props
+        # Bet Insights + Polymarket + Player Props
+        "betInsights":   bet_insights,
         "polyData":      poly_out,
         "playerProps":   player_props_out,
         # Data sections
