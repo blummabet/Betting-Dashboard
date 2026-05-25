@@ -1,11 +1,11 @@
 name: 🌍 WM 2026 Daten aktualisieren
 
 on:
-  # Täglich ab 1. Juni 2026 — 08:00 Vienna (06:00 UTC)
-  # Vor dem Tournament: einmal täglich für Squad-Updates
-  # Während des Tournaments: odds werden live aktualisiert
+  # 3× täglich: 08:00, 14:00, 20:00 Vienna (06:00, 12:00, 18:00 UTC)
+  # Vor dem Tournament: Squad-Updates 1× täglich (12:00 UTC run)
+  # Während des Tournaments: Odds + Edge-Momentum alle 6h aktuell
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '0 6,12,18 * * *'
 
   # Manuell jederzeit auslösbar (z.B. für ersten Test)
   workflow_dispatch:
@@ -107,10 +107,13 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           MAX_SPOTLIGHTS:   "2"
 
-      # ── Polymarket Preise (Gamma API, kein Key nötig) ────────────────────
-      - name: 💹 WM Polymarket Preise fetchen
+      # ── Polymarket Preise (Gamma API + CLOB Depth + Edge Alerts) ────────
+      - name: 💹 WM Polymarket Preise + Edge Alerts
         run: python fetch_wm_poly_prices.py
         continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
       # ── Match Previews (regelbasiert, kein API-Key nötig) ────────────────
       - name: 📝 WM Match Previews generieren

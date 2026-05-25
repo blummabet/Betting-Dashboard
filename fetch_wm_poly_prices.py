@@ -26,11 +26,15 @@ ODDS_HIST    = os.path.join(BASE, "wm2026-odds-history.json")  # Pinnacle odds s
 # Edge-Momentum: Snapshot-Alter in Stunden für Vergleich (24h-Fenster)
 DELTA_WINDOW_H = 24
 
+# Edge-Alerts: Minimum Edge für Telegram-Notification
+ALERT_EDGE_MIN_PP = 5.0
+
 GAMMA_URL = (
     "https://gamma-api.polymarket.com/events"
     "?series_slug=soccer-fifwc&limit=100&active=true"
 )
 GAMMA_SLUG_URL = "https://gamma-api.polymarket.com/events?slug={slug}&markets=true"
+CLOB_URL = "https://clob.polymarket.com/books?token_id={token_id}"
 
 # ── Polymarket English team name → our WM team ID ─────────────────────────────
 POLY_NAME_TO_ID = {
@@ -111,6 +115,41 @@ def fetch_gamma(url: str) -> list:
     except urllib.error.URLError as e:
         print(f"  URL error: {e.reason}")
         raise
+
+
+def fetch_clob_depth(token_id: str) -> dict | None:
+    """
+    Fetches top-of-book bid/ask from Polymarket CLOB API.
+    Returns dict with bid, ask, spreadPP, topLiqUSD — or None on failure.
+    Only called for high-priority fixtures (bestEdge >= 3pp) to limit API load.
+    """
+    if not token_id:
+        return None
+    url = CLOB_URL.format(token_id=token_id)
+    try:
+        req = urllib.request.Request(
+            url, headers={"User-Agent": "BetEdge/1.0", "Accept": "application/json"}
+        )
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            data = json.loads(resp.read())
+        bids = data.get("bids") or []
+        asks = data.get("asks") or []
+        if not bids or not asks:
+            return None
+        # Poly returns bids sorted desc, asks sorted asc — first item is best
+        best_bid = float(bids[0]["price"])
+        best_ask = float(asks[0]["price"])
+        bid_liq  = float(bids[0].get("size", 0))
+        ask_liq  = float(asks[0].get("size", 0))
+        return {
+            "bid":       round(best_bid, 4),
+            "ask":       round(best_ask, 4),
+            "spreadPP":  round((best_ask - best_bid) * 100, 1),
+            "topLiqUSD": round(bid_liq + ask_liq, 0),
+        }
+    except Exception as e:
+        print(f"  ⚠️  CLOB depth fehlgeschlagen ({str(token_id)[:12]}…): {e}")
+        return None
 
 
 def resolve_team_id(name: str) -> str | None:
@@ -319,8 +358,7 @@ def main():
         else:
             skip += 1
 
-    # ── Patch wm2026-data.json + compute CLV Radar ───────────────────────────
-    clv_radar = []
+    # ── Patch wm2026-data.json mit aktuellen Poly-Preisen ────────────────────
     wm = None
 
     if ok > 0 and os.path.exists(WM_FILE):
@@ -346,98 +384,13 @@ def main():
             wm_odds[key] = existing
             patched += 1
 
-            # ── CLV Radar: Pinnacle fair odds vs Polymarket price ─────────────
-            # Edge = pinnacle_devigged_prob - polymarket_prob (in pp)
-            # Positive edge → Polymarket underpriced vs sharp Pinnacle line
-            pinn_hw = existing.get("hw")
-            pinn_dr = existing.get("dr")
-            pinn_aw = existing.get("aw")
-
-            if pinn_hw and pinn_dr and pinn_aw and pinn_hw > 1:
-                margin = 1/pinn_hw + 1/pinn_dr + 1/pinn_aw
-                fair_hw = (1/pinn_hw) / margin
-                fair_dr = (1/pinn_dr) / margin
-                fair_aw = (1/pinn_aw) / margin
-
-                home_id, away_id = key.split("-", 1)
-                opportunities = []
-
-                for label, mkey, fair, poly in [
-                    ("Heimsieg",      "hw", fair_hw, p["hw"]),
-                    ("Unentschieden", "dr", fair_dr, p.get("dr")),
-                    ("Auswärtssieg",  "aw", fair_aw, p["aw"]),
-                ]:
-                    if poly is None:
-                        continue
-                    edge_pp = round((fair - poly) * 100, 1)
-                    if edge_pp > 0:   # Any positive edge vs Pinnacle fair
-                        opportunities.append({
-                            "market":     label,
-                            "priceKey":   mkey,
-                            "polyPrice":  round(poly, 4),
-                            "polyOdds":   round(1 / poly, 2) if poly > 0 else None,
-                            "pinnFair":   round(fair, 4),
-                            "pinnOdds":   round(pinn_hw if mkey == "hw" else
-                                               pinn_dr if mkey == "dr" else pinn_aw, 2),
-                            "edgePP":     edge_pp,
-                        })
-
-                if opportunities:
-                    # Sort by edge descending
-                    opportunities.sort(key=lambda x: -x["edgePP"])
-                    clv_radar.append({
-                        "key":       key,
-                        "homeId":    home_id,
-                        "awayId":    away_id,
-                        "home":      team_names.get(home_id, p["homeName"]),
-                        "away":      team_names.get(away_id, p["awayName"]),
-                        "homeName":  p["homeName"],
-                        "awayName":  p["awayName"],
-                        "date":      p["date"],
-                        "slug":      p["slug"],
-                        "vol":       p["vol"],
-                        "opportunities": opportunities,
-                        # Best edge of this fixture
-                        "bestEdge":  opportunities[0]["edgePP"],
-                    })
-
-        # Sort radar by best edge descending
-        clv_radar.sort(key=lambda x: -x["bestEdge"])
-
-    # ── Apply entry filters to CLV Radar ─────────────────────────────────────
-    # Only include opportunities worth trading:
-    #   Edge ≥ 5pp       — below this it's market noise / Pinnacle margin artifact
-    #   Poly odds ≥ 1.25 — price < 0.80 (don't trade extreme favorites, no upside)
-    #   Volume ≥ $5,000  — ensure liquidity for entry AND exit
-    MIN_EDGE_PP    = 5.0
-    MIN_POLY_ODDS  = 1.25   # polyPrice < 0.80
-    MIN_VOLUME     = 5_000
-
-    for fix in clv_radar:
-        fix["opportunities"] = [
-            o for o in fix["opportunities"]
-            if (o["edgePP"] >= MIN_EDGE_PP
-                and (o["polyOdds"] or 0) >= MIN_POLY_ODDS
-                and fix.get("vol", 0) >= MIN_VOLUME)
-        ]
-        fix["opportunities"].sort(key=lambda x: -x["edgePP"])
-        if fix["opportunities"]:
-            fix["bestEdge"] = fix["opportunities"][0]["edgePP"]
-
-    clv_radar = [f for f in clv_radar if f["opportunities"]]
-    clv_radar.sort(key=lambda x: -x["bestEdge"])
-
-    print(f"  CLV Radar (nach Filter): {len(clv_radar)} handelbare Fixtures "
-          f"(Edge≥{MIN_EDGE_PP}pp, Odds≥{MIN_POLY_ODDS}, Vol≥${MIN_VOLUME:,.0f})")
-
     if wm is not None:
         with open(WM_FILE, "w", encoding="utf-8") as f:
             json.dump(wm, f, ensure_ascii=False, separators=(",", ":"))
         print(f"  Patched {patched} fixtures in wm2026-data.json (poly_hw/dr/aw fields)")
-        print(f"  CLV Radar: {len(clv_radar)} fixtures with Pinnacle edge vs Polymarket")
 
     # ── Build allFixtures (all 72 games, Pinnacle + Poly + Edge — for dashboard table) ──
-    # Unlike clvRadar (filtered ≥5pp), allFixtures shows everything so the
+    # allFixtures shows everything so the
     # dashboard can apply its own filters and display all markets.
     all_fixtures: list[dict] = []
 
@@ -571,6 +524,11 @@ def main():
             "bestEdgeKey":  best_edge_key,
             "hasPinnacle":  bool(pinn_hw),
             "hasMoreMarkets": bool(p.get("poly_o25")),
+            # ── CLOB token IDs (for market depth fetching) ───────────────────────
+            # First token in each pair is the YES token (used for bid/ask lookup)
+            "hwTokens":     p.get("hwTokens", []),
+            "drTokens":     p.get("drTokens", []),
+            "awTokens":     p.get("awTokens", []),
             # ── Pick verdicts from generate_wm_picks.py ─────────────────────────
             # verdict_hw/dr/aw/o25/u25: "BET" | "ABWÄGEN" | "SKIP" | null
             # auto_wm_poly_trigger.py filters to BET/ABWÄGEN only
@@ -748,11 +706,116 @@ def main():
           f" | 🔥 SteamLag: {n_steam} | 📈 growing: {n_grow}"
           f" | O/U: {n_ou}")
 
+    # ── Market Depth: CLOB bid/ask für Top-Edge-Fixtures ─────────────────────
+    # Nur Fixtures mit bestEdge ≥ 3pp → max 15 CLOB-Requests pro Run
+    _CLOB_EDGE_MIN = 3.0
+    _CLOB_MAX_FIXTURES = 15
+    _TOKEN_FIELD_MAP = {"hw": "hwTokens", "dr": "drTokens", "aw": "awTokens"}
+
+    depth_candidates = [
+        fx for fx in all_fixtures
+        if (fx.get("bestEdge") or 0) >= _CLOB_EDGE_MIN and fx.get("bestEdgeKey") in _TOKEN_FIELD_MAP
+    ][:_CLOB_MAX_FIXTURES]
+
+    if depth_candidates:
+        print(f"  📊 CLOB Depth fetching für {len(depth_candidates)} Fixtures…")
+        for fx in depth_candidates:
+            best_key    = fx["bestEdgeKey"]
+            token_field = _TOKEN_FIELD_MAP[best_key]
+            tokens      = fx.get(token_field, [])
+            yes_token   = tokens[0] if tokens else None
+            if not yes_token:
+                continue
+            depth = fetch_clob_depth(yes_token)
+            if depth:
+                fx["clobBid"]      = depth["bid"]
+                fx["clobAsk"]      = depth["ask"]
+                fx["clobSpreadPP"] = depth["spreadPP"]
+                fx["clobTopLiq"]   = depth["topLiqUSD"]
+                fx["clobMarket"]   = best_key
+
+    # ── Telegram Edge Alerts — neue Edges über Schwellenwert ─────────────────
+    # Feuert nur für edgeTrend='new' (= erstmals in diesem Run aufgetaucht).
+    # Keine Tracking-Datei nötig — 'new' tritt genau einmal pro Fixture auf.
+    _ALERT_MARKET_LABELS = {
+        "hw": "Heimsieg", "dr": "Unentschieden", "aw": "Auswärtssieg",
+        "o25": "Over 2.5", "u25": "Under 2.5",
+    }
+    _tg_token  = os.environ.get("TELEGRAM_TOKEN", "").strip()
+    _tg_chat   = os.environ.get("TELEGRAM_TRADES_CHAT_ID", "").strip()
+
+    if _tg_token and _tg_chat:
+        alert_queue = [
+            fx for fx in all_fixtures
+            if fx.get("edgeTrend") == "new" and (fx.get("bestEdge") or 0) >= ALERT_EDGE_MIN_PP
+        ]
+        # Also alert for confirmed steam lags (growing + steam, not just new)
+        steam_alerts = [
+            fx for fx in all_fixtures
+            if fx.get("steamLag") and fx.get("edgeTrend") in ("growing",)
+               and (fx.get("bestEdge") or 0) >= ALERT_EDGE_MIN_PP
+               and fx not in alert_queue  # don't double-alert
+        ]
+        alert_queue = (alert_queue + steam_alerts)[:4]  # max 4 Alerts pro Run
+
+        for fx in alert_queue:
+            is_steam   = fx.get("steamLag") and fx.get("edgeTrend") == "growing"
+            signal     = "🔥 Steam Lag" if is_steam else "🆕 Neue Edge"
+            best_key   = fx.get("bestEdgeKey", "hw")
+            market     = _ALERT_MARKET_LABELS.get(best_key, best_key)
+            edge       = fx.get("bestEdge") or 0
+            poly_field = f"poly_{best_key}"
+            poly_p     = fx.get(poly_field)
+            poly_odds  = f"{1/poly_p:.2f}" if poly_p and poly_p > 0 else "?"
+            slug       = fx.get("slug", "")
+            poly_url   = f"https://polymarket.com/sports/fifa-world-cup/{slug}" if slug else ""
+            pinn_field = f"pinn_{best_key}"
+            pinn_raw   = fx.get(pinn_field)
+            pinn_str   = f" | Pinn {pinn_raw:.2f}" if pinn_raw else ""
+            clob_str   = ""
+            if fx.get("clobBid") and fx.get("clobMarket") == best_key:
+                clob_str = (f"\n📋 Orderbook: Bid {round(fx['clobBid']*100)}¢"
+                            f" | Ask {round(fx['clobAsk']*100)}¢"
+                            f" | Spread {fx['clobSpreadPP']}pp"
+                            f" | Liq ${fx.get('clobTopLiq',0):,.0f}")
+            mom = fx.get("momentumScore", 0)
+
+            msg = (
+                f"⚡ <b>WM Edge Alert — {signal}</b>\n"
+                f"━━━━━━━━━━━━━━━━━━━\n"
+                f"🏆 {fx.get('home')} vs {fx.get('away')}\n"
+                f"📋 Markt: <b>{market}</b>\n"
+                f"🎯 Edge: <b>+{edge:.1f}pp</b> vs Pinnacle fair\n"
+                f"📊 Poly: {poly_odds}{pinn_str}\n"
+                f"⚡ Momentum: {mom:.1f}"
+                f"{clob_str}"
+                + (f"\n🔗 {poly_url}" if poly_url else "")
+            )
+
+            try:
+                import urllib.parse
+                tg_payload = json.dumps({
+                    "chat_id": _tg_chat, "text": msg,
+                    "parse_mode": "HTML", "disable_web_page_preview": True,
+                }).encode()
+                tg_req = urllib.request.Request(
+                    f"https://api.telegram.org/bot{_tg_token}/sendMessage",
+                    data=tg_payload, headers={"Content-Type": "application/json"},
+                )
+                with urllib.request.urlopen(tg_req, timeout=10):
+                    pass
+                print(f"  📱 Edge Alert: {fx.get('home')} vs {fx.get('away')} "
+                      f"+{edge:.1f}pp [{signal}]")
+            except Exception as e_tg:
+                print(f"  ⚠️  Telegram Edge Alert fehlgeschlagen: {e_tg}")
+    else:
+        if not _tg_chat:
+            print("  📵 TELEGRAM_TRADES_CHAT_ID nicht gesetzt — Edge Alerts deaktiviert")
+
     # ── Write output JSON ─────────────────────────────────────────────────────
     out = {
         "prices":      prices,
-        "clvRadar":    clv_radar,    # Filtered ≥5pp — for quick radar view
-        "allFixtures": all_fixtures, # All 72 games — with momentum scores + edge trends
+        "allFixtures": all_fixtures, # All 72 games — momentum scores, edge trends, CLOB depth
         "count":       ok,
         "generatedAt": datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC"),
     }

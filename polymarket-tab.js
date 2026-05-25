@@ -524,10 +524,9 @@ async function _loadPolyPriceCache() {
 // hw/dr/aw are probabilities (0-1), convert to odds with 1/p
 let _wmPolyPriceCache   = null;  // null = not loaded; keyed by "HOME-AWAY"
 let _wmPolyPriceMissing = false;
-let _wmClvRadar         = [];    // filtered ≥5pp — kept for legacy position logger
 let _wmAllFixtures      = [];    // all 72 games with Pinnacle + Poly + edge
 let _wmGeneratedAt      = '';    // timestamp from wm_poly_prices.json
-let _wmTableFilter      = 'edge3'; // default filter: show edge ≥ 3pp
+let _wmTableFilter      = 'all';   // default: alle Fixtures, sorted by momentum
 
 async function _loadWmPolyPriceCache() {
   if (_wmPolyPriceCache !== null) return;
@@ -537,7 +536,6 @@ async function _loadWmPolyPriceCache() {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     _wmPolyPriceCache = data.prices       || {};
-    _wmClvRadar       = data.clvRadar     || [];
     _wmAllFixtures    = data.allFixtures  || [];
     _wmGeneratedAt    = data.generatedAt  || '';
     console.log(`[Poly] WM prices loaded: ${_wmAllFixtures.length} fixtures, ` +
@@ -1611,9 +1609,25 @@ function _renderWmMarketTable() {
       </div>`;
     }
 
+    // ── CLOB Market Depth (nur für Best-Edge Markt, wenn verfügbar) ─────────
+    let depthHtml = '';
+    if (fix.clobBid != null && fix.clobAsk != null) {
+      const mktLabel  = {hw:'H',dr:'X',aw:'A',o25:'Ü2.5',u25:'U2.5'}[fix.clobMarket||''] || '';
+      const spreadCol = fix.clobSpreadPP <= 2 ? '#3fb950' : fix.clobSpreadPP <= 4 ? '#e3b341' : '#f85149';
+      const liqCol    = (fix.clobTopLiq||0) >= 1000 ? '#3fb950' : (fix.clobTopLiq||0) >= 300 ? '#e3b341' : '#8b949e';
+      depthHtml = `<div style="margin-top:6px;padding-top:6px;border-top:1px solid #21262d;
+                               display:flex;gap:14px;flex-wrap:wrap;font-size:10px;color:#6e7681;align-items:center">
+        <span style="color:#484f58;font-weight:600">${mktLabel} Orderbook:</span>
+        <span>Bid <strong style="color:#3fb950">${Math.round(fix.clobBid*100)}¢</strong></span>
+        <span>Ask <strong style="color:#f85149">${Math.round(fix.clobAsk*100)}¢</strong></span>
+        <span>Spread <strong style="color:${spreadCol}">${fix.clobSpreadPP}pp</strong></span>
+        <span>Liq <strong style="color:${liqCol}">$${(fix.clobTopLiq||0).toLocaleString('de-DE',{maximumFractionDigits:0})}</strong></span>
+      </div>`;
+    }
+
     return `<div style="background:${bgCol};border:1px solid ${borderCol};border-radius:10px;
                         padding:10px 14px;margin-bottom:6px">
-      ${header}${outcomesHtml}${ouHtml}
+      ${header}${outcomesHtml}${ouHtml}${depthHtml}
     </div>`;
   };
 
