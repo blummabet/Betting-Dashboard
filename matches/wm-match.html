@@ -153,6 +153,7 @@ body{
 .sec-tag.gold{background:rgba(245,197,24,.12);color:var(--gold);border:1px solid rgba(245,197,24,.22);}
 .sec-tag.green{background:rgba(34,197,94,.12);color:#22c55e;border:1px solid rgba(34,197,94,.22);}
 .sec-tag.blue{background:rgba(56,189,248,.1);color:var(--blue);border:1px solid rgba(56,189,248,.2);}
+.sec-tag.gray{background:rgba(255,255,255,.06);color:#888;border:1px solid rgba(255,255,255,.1);}
 
 /* ── BOX ── */
 .box{
@@ -518,6 +519,14 @@ function starsStr(n) {
   if (!n || n < 1) return '';
   return '★'.repeat(Math.min(5, Math.max(1, parseInt(n))));
 }
+function starsFromConf(conf) {
+  if (!conf) return 0;
+  const c = String(conf).toLowerCase();
+  if (c === 'high')   return 5;
+  if (c === 'medium') return 3;
+  if (c === 'low')    return 1;
+  return 0;
+}
 function signStr(v) {
   if (v === null || v === undefined) return '—';
   const n = parseFloat(v);
@@ -645,9 +654,11 @@ function renderPicks(D) {
   const tagClass      = isBet ? 'green' : 'gold';
   const tagLabel      = isBet ? 'BET' : 'ABWÄGEN';
 
-  // edge string
-  const edgePp = primary.edge != null ? parseFloat(primary.edge) : null;
+  // edge string (field is edgePP, not edge)
+  const edgePp = primary.edgePP != null ? parseFloat(primary.edgePP) : null;
   const edgeStr = edgePp != null ? (edgePp >= 0 ? '+' : '') + edgePp.toFixed(1) + 'pp' : '';
+  // stars derived from conf field
+  const primaryStars = starsFromConf(primary.conf);
 
   const fairVal = primary.fairValue ? parseFloat(primary.fairValue).toFixed(2) : null;
 
@@ -693,7 +704,7 @@ function renderPicks(D) {
   for (const sp of secList) {
     const spVerdict = sp.verdict === 'BET' ? 'bet' : 'abwaegen';
     const spLabel   = sp.verdict === 'BET' ? '📈 BET' : '📊 ABWÄGEN';
-    const spEdge    = sp.edge != null ? (parseFloat(sp.edge) >= 0 ? '+' : '') + parseFloat(sp.edge).toFixed(1) + 'pp' : '';
+    const spEdge    = sp.edgePP != null ? (parseFloat(sp.edgePP) >= 0 ? '+' : '') + parseFloat(sp.edgePP).toFixed(1) + 'pp' : '';
     const spFV      = sp.fairValue ? 'FV ' + parseFloat(sp.fairValue).toFixed(2) : '';
     const spDetail  = [spFV, spEdge ? spEdge + ' Edge' : ''].filter(Boolean).join(' · ');
     secHtml += `
@@ -720,7 +731,7 @@ function renderPicks(D) {
           <div class="ph-left">
             <div class="ph-badges">
               <span class="ph-badge ${badgeClass}">${badgeLabel}</span>
-              ${primary.stars ? `<span class="ph-badge stars">${starsStr(primary.stars)}</span>` : ''}
+              ${primaryStars ? `<span class="ph-badge stars">${starsStr(primaryStars)}</span>` : ''}
               ${edgeStr ? `<span class="ph-badge edge">${edgeStr} Edge</span>` : ''}
             </div>
             <div class="ph-name">${escHtml(primary.market || '')}</div>
@@ -732,7 +743,7 @@ function renderPicks(D) {
           </div>
           <div class="ph-odds-block">
             <div class="ph-odds">${primary.odds ? '@' + fmtOdds(primary.odds) : '—'}</div>
-            ${primary.stars >= 3 ? '<div class="ph-conf">HIGH CONF</div>' : ''}
+            ${primaryStars >= 3 ? '<div class="ph-conf">HIGH CONF</div>' : ''}
           </div>
         </div>
 
@@ -747,7 +758,7 @@ function renderPicks(D) {
           </div>
           <div class="sb-seg orange">
             <span class="sb-lbl">Sterne</span>
-            <span class="sb-val">${starsStr(primary.stars) || '—'}</span>
+            <span class="sb-val">${starsStr(primaryStars) || '—'}</span>
           </div>
         </div>
 
@@ -776,8 +787,14 @@ function renderOdds(D) {
   const hlAway  = mktLow.includes('auswärts') || mktLow.includes('away');
 
   // Cumulative shifts from oddsHistory
-  let homeShift = 0, awayShift = 0;
+  let homeShift = 0, drawShift = 0, awayShift = 0;
   if (hist.length >= 2) {
+    // Compute draw shift from opening vs current implied prob
+    const first = hist[0], last = hist[hist.length - 1];
+    const drFirst = first.dr && first.dr > 0 ? 100 / first.dr : null;
+    const drLast  = last.dr  && last.dr  > 0 ? 100 / last.dr  : null;
+    drawShift = (drFirst != null && drLast != null)
+      ? Math.round((drLast - drFirst) * 10) / 10 : 0;
     hist.forEach(e => {
       homeShift += (e.hwShift || 0);
       awayShift += (e.awShift || 0);
@@ -833,7 +850,7 @@ function renderOdds(D) {
           <div class="oc-impl">→ ${impliedProb(o.btts)}% impl.</div>
         </div>`;
     }
-    if (o.under25 && !o.over25) {
+    if (o.under25) {
       secondaryHtml += `
         <div class="odds-card">
           <div class="oc-outcome">Under 2.5</div>
@@ -884,10 +901,10 @@ function renderOdds(D) {
         </div>
         <div class="sharp-row">
           <div class="sr-market">Unentsch.</div>
-          <div class="sr-bar-wrap"><div class="sr-bar stable" style="width:50%;"></div></div>
-          <div class="sr-change flat">
+          <div class="sr-bar-wrap"><div class="sr-bar ${barClass(drawShift)}" style="width:${barWidth(drawShift)}%;"></div></div>
+          <div class="sr-change ${changeClass(drawShift)}">
             <span class="sr-current">${fmtOdds(o.draw)}</span>
-            <span class="sr-move">—</span>
+            <span class="sr-move">${ppStr(drawShift)}</span>
           </div>
         </div>
         <div class="sharp-row">
@@ -987,9 +1004,9 @@ function renderForm(D) {
     }).join('') || '<span style="color:var(--sub);font-size:11px;">—</span>';
 
     const stats = [
-      f.goalsFor     != null ? `<span class="fs">Tore: <strong>${f.goalsFor}</strong></span>` : '',
-      f.goalsAgainst != null ? `<span class="fs">Geg.: <strong>${f.goalsAgainst}</strong></span>` : '',
-      f.played       != null ? `<span class="fs">Sp.: <strong>${f.played}</strong></span>` : '',
+      f.avgScored    != null ? `<span class="fs">Ø Tore: <strong>${parseFloat(f.avgScored).toFixed(1)}</strong></span>` : '',
+      f.avgConceded  != null ? `<span class="fs">Ø Geg.: <strong>${parseFloat(f.avgConceded).toFixed(1)}</strong></span>` : '',
+      f.games        != null ? `<span class="fs">Sp.: <strong>${f.games}</strong></span>` : '',
       f.over25Rate   != null ? `<span class="fs">O2.5: <strong>${f.over25Rate}%</strong></span>` : '',
       f.bttsRate     != null ? `<span class="fs">BTTS: <strong>${f.bttsRate}%</strong></span>` : '',
     ].filter(Boolean).join('');
@@ -1175,14 +1192,15 @@ function renderStickyBar(D) {
   const betPick = (D.picks || []).find(p => p.verdict === 'BET');
   if (!betPick) return '';
 
-  const edgePp  = betPick.edge != null ? parseFloat(betPick.edge) : null;
+  const edgePp  = betPick.edgePP != null ? parseFloat(betPick.edgePP) : null;
   const edgeStr = edgePp != null ? (edgePp >= 0 ? '+' : '') + edgePp.toFixed(1) + 'pp Edge' : '';
+  const stickyStars = starsFromConf(betPick.conf);
 
   return `
     <div class="sticky" id="sticky-bar">
       <div class="sticky-info">
         <div class="sticky-name">${escHtml(betPick.market || '')}</div>
-        <div class="sticky-sub">⚡ BET${betPick.stars ? ' · ' + starsStr(betPick.stars) : ''}${edgeStr ? ' · ' + edgeStr : ''}</div>
+        <div class="sticky-sub">⚡ BET${stickyStars ? ' · ' + starsStr(stickyStars) : ''}${edgeStr ? ' · ' + edgeStr : ''}</div>
       </div>
       <div class="sticky-odds">${betPick.odds ? '@' + fmtOdds(betPick.odds) : '—'}</div>
       <button class="sticky-btn">Wetten →</button>
@@ -1204,7 +1222,7 @@ function render(D) {
 
   const html = `
     <nav class="topbar">
-      <a class="tb-back" href="../index.html">← Dashboard</a>
+      <a class="tb-back" href="../betting-dashboard.html">← Dashboard</a>
       <div class="tb-badge">
         <div class="tb-dot"></div>
         WM 2026 · ${escHtml(D.groupName || D.group || '')}
@@ -1280,7 +1298,7 @@ function render(D) {
         Generiert: ${safe(D.generatedAt,'—')}<br>
         18+ · Verantwortungsbewusst spielen
       </div>
-      <a class="pf-back" href="../index.html">← Zurück zum Dashboard</a>
+      <a class="pf-back" href="../betting-dashboard.html">← Zurück zum Dashboard</a>
     </div>
 
     ${renderStickyBar(D)}
@@ -1296,7 +1314,7 @@ function renderError(msg) {
       <h2>Fehler beim Laden</h2>
       <p>${escHtml(String(msg))}</p>
       <p style="margin-top:10px;">
-        <a href="../index.html" style="color:var(--blue);font-size:12px;">← Zurück zum Dashboard</a>
+        <a href="../betting-dashboard.html" style="color:var(--blue);font-size:12px;">← Zurück zum Dashboard</a>
       </p>
     </div>`;
 }

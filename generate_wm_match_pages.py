@@ -167,15 +167,13 @@ def poisson_xg(home_form, away_form, home_elo: float, away_elo: float, home_is_c
 
     h_scored = h_conceded = a_scored = a_conceded = None
 
-    if home_form and home_form.get('played', 0) >= 3:
-        hp = home_form['played']
-        h_scored   = home_form.get('goalsFor',     0) / hp
-        h_conceded = home_form.get('goalsAgainst', 0) / hp
+    if home_form and home_form.get('games', 0) >= 3:
+        h_scored   = home_form.get('avgScored',   0)
+        h_conceded = home_form.get('avgConceded', 0)
 
-    if away_form and away_form.get('played', 0) >= 3:
-        ap = away_form['played']
-        a_scored   = away_form.get('goalsFor',     0) / ap
-        a_conceded = away_form.get('goalsAgainst', 0) / ap
+    if away_form and away_form.get('games', 0) >= 3:
+        a_scored   = away_form.get('avgScored',   0)
+        a_conceded = away_form.get('avgConceded', 0)
 
     import math
     p_home = 1.0 / (1.0 + 10.0 ** (-(home_elo - away_elo) / 400.0))
