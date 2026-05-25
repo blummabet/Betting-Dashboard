@@ -18,6 +18,7 @@
   let _polyLookup  = {};   // key: "HOME-AWAY" → poly fixture object
   let _activeGroup = 'all';
   let _activeMd    = 'all';   // matchday filter: 'all' | 1 | 2 | 3
+  let _activeSort  = 'date';  // 'date' | 'edge' | 'upset'
   let _loaded      = false;
 
   const CO_HOSTS = new Set(['MEX', 'USA', 'CAN']);
@@ -77,6 +78,10 @@
   };
   window.wmSetMd = function (md) {
     _activeMd = md;
+    _render();
+  };
+  window.wmSetSort = function (s) {
+    _activeSort = s;
     _render();
   };
 
@@ -162,14 +167,39 @@
     }
     html += `</div>`;
 
-    // ─── Matchday Filter ──────────────────────────────
-    if (_activeGroup !== 'all') {
-      html += `<div class="wm-md-filter">`;
-      html += `<button class="wm-md-btn${_activeMd === 'all' ? ' active' : ''}" onclick="wmSetMd('all')">Alle Spieltage</button>`;
-      html += `<button class="wm-md-btn${_activeMd === 1 ? ' active' : ''}" onclick="wmSetMd(1)">Spieltag 1</button>`;
-      html += `<button class="wm-md-btn${_activeMd === 2 ? ' active' : ''}" onclick="wmSetMd(2)">Spieltag 2</button>`;
-      html += `<button class="wm-md-btn${_activeMd === 3 ? ' active' : ''}" onclick="wmSetMd(3)">Spieltag 3</button>`;
-      html += `</div>`;
+    // ─── Matchday Filter ─────────────────────────────
+    html += `<div class="wm-md-filter">`;
+    html += `<button class="wm-md-btn${_activeMd === 'all' ? ' active' : ''}" onclick="wmSetMd('all')">Alle Spieltage</button>`;
+    html += `<button class="wm-md-btn${_activeMd === 1 ? ' active' : ''}" onclick="wmSetMd(1)">Spieltag 1</button>`;
+    html += `<button class="wm-md-btn${_activeMd === 2 ? ' active' : ''}" onclick="wmSetMd(2)">Spieltag 2</button>`;
+    html += `<button class="wm-md-btn${_activeMd === 3 ? ' active' : ''}" onclick="wmSetMd(3)">Spieltag 3</button>`;
+    html += `</div>`;
+
+    // ─── Sort control ────────────────────────────────
+    html += `
+    <div class="wm-sort-bar">
+      <span class="wm-sort-lbl">Sortierung:</span>
+      <button class="wm-sort-btn${_activeSort==='date'?' active':''}" onclick="wmSetSort('date')">📅 Datum</button>
+      <button class="wm-sort-btn${_activeSort==='edge'?' active':''}" onclick="wmSetSort('edge')">⚡ Edge</button>
+      <button class="wm-sort-btn${_activeSort==='upset'?' active':''}" onclick="wmSetSort('upset')">💥 Upset</button>
+    </div>`;
+
+    // Apply sort
+    if (_activeSort === 'edge') {
+      filtered = [...filtered].sort((a, b) => {
+        const pa = picks[`${a.groupKey}-${a.matchday}-${a.home}-${a.away}`] || [];
+        const pb = picks[`${b.groupKey}-${b.matchday}-${b.home}-${b.away}`] || [];
+        const ea = Math.max(...pa.map(p => p.edgePP || 0), 0);
+        const eb = Math.max(...pb.map(p => p.edgePP || 0), 0);
+        return eb - ea;
+      });
+    } else if (_activeSort === 'upset') {
+      const us = _wmData.upsetScores || {};
+      filtered = [...filtered].sort((a, b) => {
+        const ua = us[`${a.groupKey}-${a.matchday}-${a.home}-${a.away}`] || 0;
+        const ub = us[`${b.groupKey}-${b.matchday}-${b.home}-${b.away}`] || 0;
+        return ub - ua;
+      });
     }
 
     // ─── Cards ───────────────────────────────────────
@@ -227,16 +257,33 @@
     const eloDiff  = (home.elo && away.elo) ? (home.elo - away.elo) : null;
     const isPlayed = fx.date < todayIso;
     const isToday  = fx.date === todayIso;
+
+    // Sort picks: BET first, then by edgePP desc
+    const sortedPicks = [...fxPicks].sort((a, b) => {
+      if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
+      if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
+      return (b.edgePP || 0) - (a.edgePP || 0);
+    });
+    const hasBet    = fxPicks.some(p => p.verdict === 'BET');
     const hasPicks  = fxPicks.length > 0;
     const hasPlayer = fxPPicks.length > 0;
 
-    // Card accent
-    const accentColor = hasPicks ? '#3fb950'
+    // Card accent — green only for BET, yellow for ABWÄGEN, purple for player, amber for today
+    const accentColor = hasBet ? '#3fb950'
+                      : hasPicks ? '#e3b341'
                       : hasPlayer ? '#a78bfa'
                       : isToday ? '#e3b341'
                       : 'transparent';
 
-    let html = `<div class="wm-card" style="--card-accent:${accentColor}">`;
+    const xgStats = _wmData.xgStats || {};
+    const homeXg  = xgStats[fx.home] || null;
+    const awayXg  = xgStats[fx.away] || null;
+    const upsetScores = _wmData.upsetScores || {};
+    const upsetScore  = upsetScores[`${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}`] || 0;
+    const aiPreviews  = _wmData.aiPreviews || {};
+    const aiSnippet   = (aiPreviews[`${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}`] || {}).tgSnippet || null;
+
+    let html = `<div class="wm-card${isPlayed ? ' wm-card-played' : ''}" style="--card-accent:${accentColor}">`;
 
     // ─── Group bar ────────────────────────────────────
     html += `
@@ -286,30 +333,40 @@
       <div class="wm-prob-bar">
         <div class="wm-prob-h">
           <span class="wm-prob-pct">${prob.h}%</span>
-          <span class="wm-prob-lbl">Modell</span>
+          <span class="wm-prob-lbl">${home.flag}</span>
         </div>
         <div class="wm-prob-d">
+          <span class="wm-prob-lbl-center">ELO-MODELL</span>
           <span class="wm-prob-pct">${prob.d}%</span>
         </div>
         <div class="wm-prob-a">
-          <span class="wm-prob-lbl">Modell</span>
+          <span class="wm-prob-lbl">${away.flag}</span>
           <span class="wm-prob-pct">${prob.a}%</span>
         </div>
       </div>`;
     }
 
-    // ─── Odds strip (pp shift from opening) ───────────
-    if (fxOdds && fxOdds.odds_open && fxOdds.hw != null && fxOdds.odds_open.hw != null) {
-      const ppShift = (100 / fxOdds.hw) - (100 / fxOdds.odds_open.hw);
-      if (Math.abs(ppShift) >= 1.0) {
-        const dir = ppShift > 0 ? '▲' : '▼';
-        const clr = ppShift > 0 ? 'var(--green)' : 'var(--red)';
+    // ─── Odds strip — sharpest pp move across all markets ──
+    if (fxOdds && fxOdds.odds_open) {
+      const open = fxOdds.odds_open;
+      const moves = [];
+      if (fxOdds.hw  != null && open.hw  != null) moves.push({ pp: (100/fxOdds.hw)  - (100/open.hw),  label: 'Heimsieg',  cur: fxOdds.hw.toFixed(2) });
+      if (fxOdds.dr  != null && open.dr  != null) moves.push({ pp: (100/fxOdds.dr)  - (100/open.dr),  label: 'Unentsch.', cur: fxOdds.dr.toFixed(2) });
+      if (fxOdds.aw  != null && open.aw  != null) moves.push({ pp: (100/fxOdds.aw)  - (100/open.aw),  label: 'Auswärts',  cur: fxOdds.aw.toFixed(2) });
+      if (fxOdds.o25 != null && open.o25 != null) moves.push({ pp: (100/fxOdds.o25) - (100/open.o25), label: 'Über 2.5',  cur: fxOdds.o25.toFixed(2) });
+      if (fxOdds.u25 != null && open.u25 != null) moves.push({ pp: (100/fxOdds.u25) - (100/open.u25), label: 'Unter 2.5', cur: fxOdds.u25.toFixed(2) });
+      // Find sharpest move
+      moves.sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp));
+      const best = moves[0];
+      if (best && Math.abs(best.pp) >= 1.0) {
+        const dir = best.pp > 0 ? '▲' : '▼';
+        const clr = best.pp > 0 ? 'var(--green)' : 'var(--red)';
         html += `
         <div class="wm-odds-strip">
           <span class="wm-strip-label">LINIE</span>
-          <span style="color:${clr};font-weight:700;">${dir} ${Math.abs(ppShift).toFixed(1)}pp Heimsieg</span>
+          <span style="color:${clr};font-weight:700;">${dir} ${Math.abs(best.pp).toFixed(1)}pp ${best.label}</span>
           <span class="wm-strip-sep">·</span>
-          <span class="wm-strip-open">Eröffnung ${fxOdds.odds_open.hw.toFixed(2)}</span>
+          <span class="wm-strip-open">Kurs ${best.cur}</span>
         </div>`;
       }
     }
@@ -319,17 +376,61 @@
       html += `<div class="wm-venue">📍 ${fx.venue}</div>`;
     }
 
+    // ─── Upset Score badge ────────────────────────────
+    if (upsetScore >= 6) {
+      html += `<div class="wm-upset-badge">💥 Upset-Potential ${upsetScore}/10</div>`;
+    }
+
     // ─── Scenario banner ──────────────────────────────
     const scenario = _buildScenario(home, away, eloDiff, fx.matchday, standing, fx, isPlayed);
     if (scenario) {
       html += `<div class="wm-scenario">${scenario}</div>`;
     }
 
+    // ─── xG + Form Stats strip ────────────────────────
+    const hasXg   = homeXg || awayXg;
+    const hasForm = homeForm || awayForm;
+    if (hasXg || hasForm) {
+      html += `<div class="wm-stats-strip">`;
+      // Home side
+      html += `<div class="wm-stats-team">`;
+      if (homeXg) html += `<span class="wm-stat-pill wm-stat-xg" title="xG Attack / Defense">⚽ ${homeXg.xgForAvg.toFixed(1)} · 🛡 ${homeXg.xgAgainstAvg.toFixed(1)}</span>`;
+      if (homeForm) {
+        if (homeForm.over25Rate != null) html += `<span class="wm-stat-pill wm-stat-ou">O2.5 ${Math.round(homeForm.over25Rate * 100)}%</span>`;
+        if (homeForm.bttsRate != null)   html += `<span class="wm-stat-pill wm-stat-btts">BTTS ${Math.round(homeForm.bttsRate * 100)}%</span>`;
+      }
+      html += `</div>`;
+      // Away side
+      html += `<div class="wm-stats-team wm-stats-team-away">`;
+      if (awayXg) html += `<span class="wm-stat-pill wm-stat-xg" title="xG Attack / Defense">⚽ ${awayXg.xgForAvg.toFixed(1)} · 🛡 ${awayXg.xgAgainstAvg.toFixed(1)}</span>`;
+      if (awayForm) {
+        if (awayForm.over25Rate != null) html += `<span class="wm-stat-pill wm-stat-ou">O2.5 ${Math.round(awayForm.over25Rate * 100)}%</span>`;
+        if (awayForm.bttsRate != null)   html += `<span class="wm-stat-pill wm-stat-btts">BTTS ${Math.round(awayForm.bttsRate * 100)}%</span>`;
+      }
+      html += `</div>`;
+      html += `</div>`; // wm-stats-strip
+    }
+
+    // ─── O2.5 / BTTS Odds row ────────────────────────
+    if (fxOdds && (fxOdds.o25 || fxOdds.bttsY)) {
+      html += `<div class="wm-ou-row">`;
+      if (fxOdds.o25)   html += `<div class="wm-ou-cell"><span class="wm-ou-lbl">O2.5</span><span class="wm-ou-val">${fxOdds.o25.toFixed(2)}</span></div>`;
+      if (fxOdds.u25)   html += `<div class="wm-ou-cell"><span class="wm-ou-lbl">U2.5</span><span class="wm-ou-val">${fxOdds.u25.toFixed(2)}</span></div>`;
+      if (fxOdds.bttsY) html += `<div class="wm-ou-cell"><span class="wm-ou-lbl">BTTS J</span><span class="wm-ou-val">${fxOdds.bttsY.toFixed(2)}</span></div>`;
+      if (fxOdds.bttsN) html += `<div class="wm-ou-cell"><span class="wm-ou-lbl">BTTS N</span><span class="wm-ou-val">${fxOdds.bttsN.toFixed(2)}</span></div>`;
+      html += `</div>`;
+    }
+
+    // ─── AI Snippet ───────────────────────────────────
+    if (aiSnippet && !isPlayed) {
+      html += `<div class="wm-ai-snippet">🤖 ${aiSnippet}</div>`;
+    }
+
     // ─── Match Picks ──────────────────────────────────
     if (hasPicks) {
       html += `<div class="wm-picks-section">`;
       html += `<div class="wm-section-header">🎯 PICKS</div>`;
-      for (const pick of fxPicks) {
+      for (const pick of sortedPicks) {
         html += _buildPickRow(pick, false);
       }
       html += `</div>`;
@@ -362,7 +463,7 @@
 
     // ─── Event Page Link ──────────────────────────────
     const slug = `wm-${fx.home.toLowerCase()}-vs-${fx.away.toLowerCase()}-${fx.date}`;
-    html += `<a class="wm-event-link" href="matches/wm-match.html?m=${slug}" target="_blank">↗ Vollanalyse · Elo · xG · AI-Preview · Polymarket</a>`;
+    html += `<a class="wm-event-link wm-event-link-btn" href="matches/wm-match.html?m=${slug}" target="_blank">↗ Vollanalyse · Elo · xG · AI-Preview · Polymarket</a>`;
 
     html += `</div>`; // wm-card
     return html;
@@ -415,12 +516,23 @@
       edgeHtml = `<span class="wm-pick-edge ${ep >= 3 ? 'pos' : 'neu'}">${epStr}</span>`;
     }
 
+    // Model odds comparison
+    let modelHtml = '';
+    if (pick.modelOdds != null && pick.odds != null) {
+      modelHtml = `<div class="wm-pick-model">Modell: ${pick.modelOdds.toFixed(2)}</div>`;
+    }
+
+    // dataQuality badge
+    const dqBadge = pick.dataQuality && pick.dataQuality !== 'elo+form'
+      ? `<span class="wm-dq-badge">${pick.dataQuality}</span>` : '';
+
     return `
     <div class="wm-pick-row">
       <span class="wm-verdict" style="color:${vClr};background:${vBg};border-color:${vBorder};">${verdict}</span>
       <span class="wm-pick-icon">${icon}</span>
       <div class="wm-pick-main">
-        <div class="wm-pick-market">${market}</div>
+        <div class="wm-pick-market">${market}${dqBadge}</div>
+        ${modelHtml}
         ${pick.info ? `<div class="wm-pick-info">${pick.info}</div>` : ''}
       </div>
       <span class="wm-pick-stars" style="color:${starsClr}">${stars}</span>

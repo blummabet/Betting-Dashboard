@@ -995,7 +995,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 /* Probability bar */
 .wm-prob-bar{display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin:2px 14px 8px;border-radius:7px;overflow:hidden;border:1px solid var(--border);}
 .wm-prob-h{padding:5px 8px;background:rgba(63,185,80,.08);text-align:left;display:flex;align-items:center;gap:4px;}
-.wm-prob-d{padding:5px 8px;background:rgba(227,179,65,.07);text-align:center;display:flex;align-items:center;justify-content:center;gap:3px;border-left:1px solid var(--border);border-right:1px solid var(--border);}
+.wm-prob-d{padding:5px 8px;background:rgba(227,179,65,.07);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;border-left:1px solid var(--border);border-right:1px solid var(--border);}
 .wm-prob-a{padding:5px 8px;background:rgba(248,81,73,.07);text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:4px;}
 .wm-prob-pct{font-size:13px;font-weight:900;line-height:1;}
 .wm-prob-h .wm-prob-pct{color:#3fb950;}
@@ -1032,6 +1032,51 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm-squad-stat{text-align:center;min-width:28px;}
 .wm-squad-stat-val{font-size:13px;font-weight:800;color:var(--text);line-height:1;}
 .wm-squad-stat-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;}
+
+/* ── WM Card — Played state ──────────────────────────────── */
+.wm-card-played{opacity:.72;filter:saturate(.55);}
+.wm-card-played:hover{transform:none;box-shadow:none;}
+.wm-card-played::before{background:var(--muted)!important;}
+
+/* ── WM Sort bar ─────────────────────────────────────────── */
+.wm-sort-bar{display:flex;align-items:center;gap:6px;padding:6px 0 10px;flex-wrap:wrap;}
+.wm-sort-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.wm-sort-btn{display:inline-flex;align-items:center;padding:3px 10px;border-radius:12px;border:1px solid var(--border);background:none;color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .12s;}
+.wm-sort-btn:hover{color:var(--text);border-color:rgba(0,212,161,.4);}
+.wm-sort-btn.active{background:rgba(0,212,161,.10);border-color:var(--accent);color:var(--accent);}
+
+/* ── WM Upset badge ─────────────────────────────────────── */
+.wm-upset-badge{margin:0 12px 8px;padding:5px 10px;background:rgba(248,81,73,.08);border:1px solid rgba(248,81,73,.22);border-radius:8px;font-size:11px;font-weight:700;color:#f85149;display:inline-block;}
+
+/* ── WM Stats strip (xG + form) ─────────────────────────── */
+.wm-stats-strip{display:flex;justify-content:space-between;padding:4px 14px 6px;gap:6px;border-top:1px solid var(--border);}
+.wm-stats-team{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.wm-stats-team-away{justify-content:flex-end;}
+.wm-stat-pill{font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;white-space:nowrap;}
+.wm-stat-xg{background:rgba(88,166,255,.10);color:#58a6ff;border:1px solid rgba(88,166,255,.2);}
+.wm-stat-ou{background:rgba(0,212,161,.09);color:var(--accent);border:1px solid rgba(0,212,161,.2);}
+.wm-stat-btts{background:rgba(167,139,250,.09);color:#a78bfa;border:1px solid rgba(167,139,250,.2);}
+
+/* ── WM O2.5/BTTS odds row ──────────────────────────────── */
+.wm-ou-row{display:flex;align-items:center;gap:5px;padding:5px 14px 6px;border-top:1px solid var(--border);flex-wrap:wrap;}
+.wm-ou-cell{display:flex;align-items:center;gap:4px;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;}
+.wm-ou-lbl{font-size:9px;font-weight:700;color:var(--muted);}
+.wm-ou-val{font-size:11px;font-weight:800;color:var(--text);}
+
+/* ── WM AI Snippet ───────────────────────────────────────── */
+.wm-ai-snippet{margin:0 12px 8px;padding:7px 10px;background:rgba(240,192,64,.05);border-left:2px solid rgba(240,192,64,.35);border-radius:0 7px 7px 0;font-size:11px;color:var(--muted);line-height:1.45;font-style:italic;}
+
+/* ── WM Prob bar — center label ─────────────────────────── */
+.wm-prob-lbl-center{font-size:7px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:1px;}
+.wm-prob-d{flex-direction:column;}
+
+/* ── WM Pick — model odds + dq badge ───────────────────── */
+.wm-pick-model{font-size:9px;color:var(--muted);margin-top:1px;}
+.wm-dq-badge{font-size:8px;font-weight:700;background:rgba(248,81,73,.10);color:#f85149;border-radius:4px;padding:0 4px;margin-left:5px;vertical-align:middle;}
+
+/* ── WM Event link — button style ───────────────────────── */
+.wm-event-link-btn{padding:10px 14px 11px;font-size:11px;background:rgba(0,212,161,.05);letter-spacing:.2px;}
+.wm-event-link-btn:hover{background:rgba(0,212,161,.12);}
 
 /* ── WM Tracking Tab ──────────────────────────────────────── */
 .wm-trk-kpi-strip{display:flex;flex-wrap:wrap;gap:8px;background:var(--surface1);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:14px;}
