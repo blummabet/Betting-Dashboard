@@ -1849,6 +1849,227 @@ function renderSharpRadar() {
     }).join('')}
   </div>`;
 
+  // ── Section WM: Pinnacle Line Movement Sparklines + Total Movement Table ──
+  let wmSparklineHtml = '';
+  let wmTotalMoveHtml = '';
+  if (_wmSharpData && _wmOddsHist) {
+    // Build team lookup
+    const _wmT = {};
+    for (const grp of Object.values(_wmSharpData.groups || {}))
+      for (const t of (grp.teams || [])) _wmT[t.id] = t;
+
+    // Helper: implied probability
+    const _ip = o => (o && o > 0) ? Math.round(100 / o * 10) / 10 : null;
+    const _ppShift = (o1, o2) => {
+      const p1 = _ip(o1), p2 = _ip(o2);
+      return (p1 != null && p2 != null) ? Math.round((p2 - p1) * 10) / 10 : null;
+    };
+    const _shiftCol = pp => pp == null ? '#484f58' : Math.abs(pp) >= 8 ? '#f85149' : Math.abs(pp) >= 4 ? '#e3b341' : Math.abs(pp) >= 2 ? '#3fb950' : '#484f58';
+    const _sign = pp => pp > 0 ? '+' : '';
+
+    // ── Sparkline SVG builder ───────────────────────────────────────────────
+    const _drawPinnSparkline = (snaps, matchKey) => {
+      if (!snaps || snaps.length < 2) return '';
+      const W = 320, H = 56, PAD = 6;
+      const last = Math.min(snaps.length, 20); // max 20 points
+      const pts  = snaps.slice(-last);
+
+      // Collect all implied probs
+      const lines = [
+        { key: 'hw',  col: '#3fb950', label: 'H' },
+        { key: 'dr',  col: '#8b949e', label: 'X' },
+        { key: 'aw',  col: '#f85149', label: 'A' },
+      ];
+      // Only include a line if first AND last snapshot have data
+      const activeLines = lines.filter(l => pts[0][l.key] && pts[pts.length-1][l.key]);
+      if (!activeLines.length) return '';
+
+      // All valid ip values for y-scale
+      const allVals = activeLines.flatMap(l => pts.map(s => _ip(s[l.key])).filter(v => v != null));
+      if (!allVals.length) return '';
+      const yMin = Math.max(0, Math.min(...allVals) - 4);
+      const yMax = Math.min(100, Math.max(...allVals) + 4);
+      const yRange = yMax - yMin || 1;
+
+      const xScale = i  => PAD + (i / (pts.length - 1)) * (W - PAD * 2);
+      const yScale = ip => H - PAD - ((ip - yMin) / yRange) * (H - PAD * 2);
+
+      let svgParts = [`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:${H}px;overflow:visible">`];
+
+      // Grid line at 50%
+      if (yMin < 50 && yMax > 50) {
+        const y50 = yScale(50);
+        svgParts.push(`<line x1="${PAD}" y1="${y50}" x2="${W-PAD}" y2="${y50}" stroke="#30363d" stroke-width="1" stroke-dasharray="3,3"/>`);
+        svgParts.push(`<text x="${PAD}" y="${y50-2}" font-size="7" fill="#484f58">50%</text>`);
+      }
+
+      // Draw lines
+      for (const {key, col} of activeLines) {
+        const coords = pts.map((s, i) => {
+          const ip = _ip(s[key]);
+          return ip != null ? `${xScale(i).toFixed(1)},${yScale(ip).toFixed(1)}` : null;
+        }).filter(Boolean);
+        if (coords.length < 2) continue;
+
+        // Gradient fill under line for biggest mover
+        const fillId = `fill_${matchKey}_${key}`;
+        svgParts.push(`<defs>
+          <linearGradient id="${fillId}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="${col}" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="${col}" stop-opacity="0.02"/>
+          </linearGradient>
+        </defs>`);
+
+        // Fill area
+        const firstX = xScale(pts.findIndex(s => _ip(s[key]) != null));
+        const lastX  = xScale(pts.length - 1);
+        const fillPoints = `${firstX},${H-PAD} ${coords.join(' ')} ${lastX},${H-PAD}`;
+        svgParts.push(`<polygon points="${fillPoints}" fill="url(#${fillId})"/>`);
+
+        // Line
+        svgParts.push(`<polyline points="${coords.join(' ')}" fill="none" stroke="${col}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`);
+
+        // Last point dot
+        const lastCoord = coords[coords.length - 1].split(',');
+        svgParts.push(`<circle cx="${lastCoord[0]}" cy="${lastCoord[1]}" r="3" fill="${col}" stroke="#0d1117" stroke-width="1.5"/>`);
+      }
+
+      svgParts.push('</svg>');
+      return svgParts.join('');
+    };
+
+    // ── Build fixture data with total movement ──────────────────────────────
+    const wmFxData = [];
+    for (const grp of Object.values(_wmSharpData.groups || {})) {
+      for (const fx of (grp.fixtures || [])) {
+        const key   = `${fx.home}-${fx.away}`;
+        const snaps = _wmOddsHist[key];
+        if (!snaps || snaps.length < 1) continue;
+        const homeT = _wmT[fx.home] || { name: fx.home, flag: '🏳' };
+        const awayT = _wmT[fx.away] || { name: fx.away, flag: '🏳' };
+        const first = snaps[0];
+        const last  = snaps[snaps.length - 1];
+        const fields = [
+          { key: 'hw',    label: 'H'    },
+          { key: 'dr',    label: 'X'    },
+          { key: 'aw',    label: 'A'    },
+          { key: 'o25',   label: 'Ü2.5' },
+          { key: 'u25',   label: 'U2.5' },
+          { key: 'bttsY', label: 'BTTS' },
+        ];
+        const shifts = {};
+        let maxAbsShift = 0;
+        for (const {key: fk, label} of fields) {
+          const s = _ppShift(first[fk], last[fk]);
+          shifts[fk] = s;
+          if (s != null && Math.abs(s) > maxAbsShift) maxAbsShift = Math.abs(s);
+        }
+        wmFxData.push({
+          key, fx, homeT, awayT, snaps, first, last, shifts, maxAbsShift,
+          snapCount: snaps.length,
+        });
+      }
+    }
+
+    // Sort by max cumulative shift (biggest movers first)
+    wmFxData.sort((a, b) => b.maxAbsShift - a.maxAbsShift);
+
+    // ── Section A: Sparkline Cards (top movers + all fixtures with ≥2 snaps) ──
+    const sparkFx = wmFxData.filter(d => d.snapCount >= 2);
+    if (sparkFx.length > 0) {
+      wmSparklineHtml = sparkFx.map(({key, fx, homeT, awayT, snaps, shifts, maxAbsShift, snapCount}) => {
+        const [yr, mo, dy] = fx.date.split('-');
+        const dateFmt = `${dy}.${mo}.${yr.slice(2)}`;
+        const moveCol = _shiftCol(maxAbsShift);
+        const sparkSvg = _drawPinnSparkline(snaps, key.replace('-','_'));
+
+        // Shift chips for each market
+        const chipFields = [
+          { fk: 'hw', label: 'H' }, { fk: 'dr', label: 'X' }, { fk: 'aw', label: 'A' },
+          { fk: 'o25', label: 'Ü2.5' }, { fk: 'u25', label: 'U2.5' }, { fk: 'bttsY', label: 'BTTS' },
+        ];
+        const chips = chipFields.map(({fk, label}) => {
+          const s = shifts[fk];
+          if (s == null) return '';
+          if (Math.abs(s) < 0.5) return `<span style="padding:2px 7px;border-radius:5px;background:#161b22;border:1px solid #21262d;font-size:10px;color:#484f58">${label} —</span>`;
+          const col = _shiftCol(s);
+          const sign = _sign(s);
+          return `<span style="padding:2px 7px;border-radius:5px;background:${col}18;border:1px solid ${col}44;font-size:10px;font-weight:700;color:${col}">${label} ${sign}${s}pp</span>`;
+        }).join('');
+
+        const bk = snaps[snaps.length-1].bk || '?';
+        const bgCard = maxAbsShift >= 8 ? '#1a0d0d' : maxAbsShift >= 5 ? '#1a160a' : '#0d1117';
+        const borderCard = maxAbsShift >= 8 ? '#f8514933' : maxAbsShift >= 5 ? '#e3b34133' : '#21262d';
+
+        return `<div style="background:${bgCard};border:1px solid ${borderCard};border-radius:10px;padding:12px 14px;margin-bottom:8px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+            <span style="font-size:13px;font-weight:700;color:#e6edf3">${homeT.flag} ${homeT.name} <span style="color:#484f58;font-weight:400">vs</span> ${awayT.flag} ${awayT.name}</span>
+            <span style="font-size:10px;color:#6e7681">${dateFmt}</span>
+            <span style="margin-left:auto;font-size:11px;font-weight:800;color:${moveCol};background:${moveCol}18;border:1px solid ${moveCol}44;border-radius:8px;padding:2px 8px">⚡ Max ${maxAbsShift}pp</span>
+          </div>
+          <div style="margin-bottom:8px;border-radius:6px;overflow:hidden;background:#0a0d10;padding:4px 6px">
+            ${sparkSvg}
+            <div style="display:flex;gap:12px;font-size:9px;color:#6e7681;margin-top:2px;padding-left:2px">
+              <span style="display:flex;align-items:center;gap:3px"><span style="display:inline-block;width:14px;height:2px;background:#3fb950"></span> H</span>
+              <span style="display:flex;align-items:center;gap:3px"><span style="display:inline-block;width:14px;height:2px;background:#8b949e"></span> X</span>
+              <span style="display:flex;align-items:center;gap:3px"><span style="display:inline-block;width:14px;height:2px;background:#f85149"></span> A</span>
+              <span style="color:#484f58">${snapCount} Snapshots · ${bk}</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap">${chips}</div>
+        </div>`;
+      }).join('');
+    }
+
+    // ── Section B: Gesamtbewegung Tabelle (alle WM Fixtures) ───────────────
+    const allFxSorted = [...wmFxData].sort((a, b) => b.maxAbsShift - a.maxAbsShift);
+    if (allFxSorted.length > 0) {
+      const tRows = allFxSorted.map(({fx, homeT, awayT, shifts, maxAbsShift, snapCount}) => {
+        const [yr, mo, dy] = fx.date.split('-');
+        const dateFmt = `${dy}.${mo}.`;
+        const maxCol = _shiftCol(maxAbsShift);
+
+        const tdShift = (fk) => {
+          const s = shifts[fk];
+          if (s == null) return '<td style="padding:5px 6px;text-align:center;font-size:10px;color:#30363d;">—</td>';
+          if (Math.abs(s) < 0.5) return '<td style="padding:5px 6px;text-align:center;font-size:10px;color:#484f58;">±0</td>';
+          const col = _shiftCol(s);
+          const sign = _sign(s);
+          return `<td style="padding:5px 6px;text-align:center;font-size:10px;font-weight:700;color:${col}">${sign}${s}</td>`;
+        };
+
+        return `<tr style="border-bottom:1px solid #21262d">
+          <td style="padding:5px 8px;font-size:11px;white-space:nowrap;color:#e6edf3">${homeT.flag} ${homeT.name.split(' ').slice(-1)[0]} – ${awayT.flag} ${awayT.name.split(' ').slice(-1)[0]}</td>
+          <td style="padding:5px 6px;font-size:10px;color:#6e7681">${dateFmt}</td>
+          ${tdShift('hw')}${tdShift('dr')}${tdShift('aw')}
+          ${tdShift('o25')}${tdShift('u25')}${tdShift('bttsY')}
+          <td style="padding:5px 8px;text-align:center;font-size:11px;font-weight:800;color:${maxCol}">${maxAbsShift > 0 ? maxAbsShift+'pp' : '—'}</td>
+          <td style="padding:5px 8px;font-size:10px;color:#484f58;text-align:center">${snapCount}</td>
+        </tr>`;
+      }).join('');
+
+      wmTotalMoveHtml = `<div style="overflow-x:auto;border-radius:10px;border:1px solid #21262d">
+        <table style="width:100%;border-collapse:collapse;font-family:inherit">
+          <thead>
+            <tr style="background:#161b22;border-bottom:1px solid #21262d">
+              <th style="padding:8px 8px;text-align:left;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Spiel</th>
+              <th style="padding:8px 6px;font-size:10px;color:#6e7681;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Datum</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;color:#3fb950;font-weight:700">H Δpp</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;color:#8b949e;font-weight:700">X Δpp</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;color:#f85149;font-weight:700">A Δpp</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;color:#a78bfa;font-weight:700">Ü2.5</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;color:#60a5fa;font-weight:700">U2.5</th>
+              <th style="padding:8px 6px;text-align:center;font-size:10px;color:#f0c040;font-weight:700">BTTS</th>
+              <th style="padding:8px 8px;text-align:center;font-size:10px;color:#e6edf3;font-weight:700">Max Δ</th>
+              <th style="padding:8px 8px;text-align:center;font-size:10px;color:#484f58;font-weight:700;letter-spacing:.3px">Snaps</th>
+            </tr>
+          </thead>
+          <tbody>${tRows}</tbody>
+        </table>
+      </div>`;
+    }
+  }
+
   // ── Assemble ──────────────────────────────────────────────────────────────
   mc.innerHTML = `<div style="max-width:960px;margin:0 auto;padding:0 0 60px;">
 
@@ -1882,6 +2103,24 @@ function renderSharpRadar() {
       Opening-Snapshots entstehen beim ersten Prematch-Fetch — das Alter wird in jeder Zeile angezeigt. <span style="color:#f85149">⏱ &lt;2h alt</span> = Opening zu frisch für echte Signale.
     </div>
     <div style="margin-bottom:20px;">${moversHtml}</div>
+
+    ${wmSparklineHtml ? `
+    <div class="section-label" style="margin-bottom:10px;">📈 WM 2026 — Pinnacle Quoten-Verlauf (Opening → Aktuell)</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;padding:0 2px;">
+      Grün = Heimsieg · Grau = Remis · Rot = Auswärtssieg · Implied Probability aus Pinnacle-Snapshots.
+      Starke Bewegung = Sharp Money oder neue Information im Markt.
+    </div>
+    <div style="margin-bottom:20px;">${wmSparklineHtml}</div>
+    ` : ''}
+
+    ${wmTotalMoveHtml ? `
+    <div class="section-label" style="margin-bottom:8px;">📋 WM 2026 — Gesamtbewegung seit Erstnotiz (alle Fixtures)</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;padding:0 2px;">
+      Δpp = Veränderung der Implied Probability von Opening-Snapshot bis aktuell.
+      Positiv = Markt sieht Ergebnis wahrscheinlicher · Sortiert nach stärkster Gesamtbewegung.
+    </div>
+    <div style="margin-bottom:20px;">${wmTotalMoveHtml}</div>
+    ` : ''}
 
     <div class="section-label" style="margin-bottom:4px;">🎯 Unsere heutigen Picks im Sharp-Kontext</div>
     <div style="font-size:11px;color:var(--muted);margin-bottom:10px;padding:0 2px;">

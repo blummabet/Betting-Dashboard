@@ -344,19 +344,26 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
         prev = recent_snaps[-2]
         curr = recent_snaps[-1]
 
-        # ── Modus 1: Snapshot-zu-Snapshot ──────────────────────────────────
-        hw_shift = pp_shift(prev.get("hw"), curr.get("hw"))
-        dr_shift = pp_shift(prev.get("dr"), curr.get("dr"))
-        aw_shift = pp_shift(prev.get("aw"), curr.get("aw"))
-        max_shift = max(abs(hw_shift), abs(dr_shift), abs(aw_shift))
+        # ── Modus 1: Snapshot-zu-Snapshot (1X2 + O/U + BTTS) ──────────────
+        hw_shift   = pp_shift(prev.get("hw"),    curr.get("hw"))
+        dr_shift   = pp_shift(prev.get("dr"),    curr.get("dr"))
+        aw_shift   = pp_shift(prev.get("aw"),    curr.get("aw"))
+        o25_shift  = pp_shift(prev.get("o25"),   curr.get("o25"))
+        u25_shift  = pp_shift(prev.get("u25"),   curr.get("u25"))
+        btts_shift = pp_shift(prev.get("bttsY"), curr.get("bttsY"))
+        max_shift  = max(abs(hw_shift), abs(dr_shift), abs(aw_shift),
+                         abs(o25_shift), abs(u25_shift), abs(btts_shift))
 
         # ── Modus 2: Kumulativer Drift (Opening → Aktuell) ─────────────────
-        # Erste saubere Snapshot als Opening-Basis (ggf. aus odds_open in wm)
         opening_snap = snaps[0]
-        cumul_hw = pp_shift(opening_snap.get("hw"), curr.get("hw"))
-        cumul_dr = pp_shift(opening_snap.get("dr"), curr.get("dr"))
-        cumul_aw = pp_shift(opening_snap.get("aw"), curr.get("aw"))
-        cumul_max = max(abs(cumul_hw), abs(cumul_dr), abs(cumul_aw))
+        cumul_hw   = pp_shift(opening_snap.get("hw"),    curr.get("hw"))
+        cumul_dr   = pp_shift(opening_snap.get("dr"),    curr.get("dr"))
+        cumul_aw   = pp_shift(opening_snap.get("aw"),    curr.get("aw"))
+        cumul_o25  = pp_shift(opening_snap.get("o25"),   curr.get("o25"))
+        cumul_u25  = pp_shift(opening_snap.get("u25"),   curr.get("u25"))
+        cumul_btts = pp_shift(opening_snap.get("bttsY"), curr.get("bttsY"))
+        cumul_max  = max(abs(cumul_hw), abs(cumul_dr), abs(cumul_aw),
+                         abs(cumul_o25), abs(cumul_u25), abs(cumul_btts))
         is_cumul = (cumul_max >= CUMUL_PP and max_shift < ALERT_PP)  # nur wenn nicht bereits snap-alert
 
         if max_shift < ALERT_PP and not is_cumul:
@@ -402,9 +409,15 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
             "hw_shift":     hw_shift,
             "dr_shift":     dr_shift,
             "aw_shift":     aw_shift,
+            "o25_shift":    o25_shift,
+            "u25_shift":    u25_shift,
+            "btts_shift":   btts_shift,
             "cumul_hw":     cumul_hw,
             "cumul_dr":     cumul_dr,
             "cumul_aw":     cumul_aw,
+            "cumul_o25":    cumul_o25,
+            "cumul_u25":    cumul_u25,
+            "cumul_btts":   cumul_btts,
             "cumul_shift":  cumul_max,
             "max_shift":    max_shift,
             "effective_shift": effective_shift,
@@ -461,12 +474,15 @@ def build_alert_card(move: dict, wm: dict) -> str:
         "",
     ]
 
-    # Märkte mit signifikanter Snapshot-Bewegung
+    # Märkte mit signifikanter Snapshot-Bewegung (1X2 + O/U + BTTS)
     snap_shown = False
     for field, label, old_o, new_o, shift, cumul in [
-        ("hw", "Heimsieg",        prev.get("hw"), curr.get("hw"), move["hw_shift"],  move["cumul_hw"]),
-        ("dr", "Unentschieden",   prev.get("dr"), curr.get("dr"), move["dr_shift"],  move["cumul_dr"]),
-        ("aw", "Auswärtssieg",    prev.get("aw"), curr.get("aw"), move["aw_shift"],  move["cumul_aw"]),
+        ("hw",    "Heimsieg",       prev.get("hw"),    curr.get("hw"),    move["hw_shift"],   move["cumul_hw"]),
+        ("dr",    "Unentschieden",  prev.get("dr"),    curr.get("dr"),    move["dr_shift"],   move["cumul_dr"]),
+        ("aw",    "Auswärtssieg",   prev.get("aw"),    curr.get("aw"),    move["aw_shift"],   move["cumul_aw"]),
+        ("o25",   "Over 2.5",       prev.get("o25"),   curr.get("o25"),   move["o25_shift"],  move["cumul_o25"]),
+        ("u25",   "Under 2.5",      prev.get("u25"),   curr.get("u25"),   move["u25_shift"],  move["cumul_u25"]),
+        ("bttsY", "BTTS Ja",        prev.get("bttsY"), curr.get("bttsY"), move["btts_shift"], move["cumul_btts"]),
     ]:
         if old_o and new_o and (abs(shift) >= ALERT_PP or abs(cumul) >= CUMUL_PP):
             lines.append(format_odds_change(
@@ -479,9 +495,12 @@ def build_alert_card(move: dict, wm: dict) -> str:
     if is_cumul and not snap_shown:
         op = move["opening_snap"]
         for field, label, old_o, new_o, cumul in [
-            ("hw", "Heimsieg",        op.get("hw"), curr.get("hw"), move["cumul_hw"]),
-            ("dr", "Unentschieden",   op.get("dr"), curr.get("dr"), move["cumul_dr"]),
-            ("aw", "Auswärtssieg",    op.get("aw"), curr.get("aw"), move["cumul_aw"]),
+            ("hw",    "Heimsieg",      op.get("hw"),    curr.get("hw"),    move["cumul_hw"]),
+            ("dr",    "Unentschieden", op.get("dr"),    curr.get("dr"),    move["cumul_dr"]),
+            ("aw",    "Auswärtssieg",  op.get("aw"),    curr.get("aw"),    move["cumul_aw"]),
+            ("o25",   "Over 2.5",      op.get("o25"),   curr.get("o25"),   move["cumul_o25"]),
+            ("u25",   "Under 2.5",     op.get("u25"),   curr.get("u25"),   move["cumul_u25"]),
+            ("bttsY", "BTTS Ja",       op.get("bttsY"), curr.get("bttsY"), move["cumul_btts"]),
         ]:
             if old_o and new_o and abs(cumul) >= CUMUL_PP:
                 sign = f"+{cumul:.1f}" if cumul > 0 else f"{cumul:.1f}"
