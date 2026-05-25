@@ -985,13 +985,53 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm-pick-stars{font-size:11px;flex-shrink:0;}
 .wm-pick-odds{font-size:13px;font-weight:800;color:var(--accent);flex-shrink:0;min-width:36px;text-align:right;}
 
+/* Form dots */
+.wm-form-dots{display:flex;gap:3px;margin-left:auto;flex-shrink:0;}
+.wm-fd{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;}
+.wm-fd-w{background:rgba(63,185,80,.18);color:#3fb950;}
+.wm-fd-d{background:rgba(139,148,158,.15);color:#8b949e;}
+.wm-fd-l{background:rgba(248,81,73,.15);color:#f85149;}
+
+/* Probability bar */
+.wm-prob-bar{display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin:2px 14px 8px;border-radius:7px;overflow:hidden;border:1px solid var(--border);}
+.wm-prob-h{padding:5px 8px;background:rgba(63,185,80,.08);text-align:left;display:flex;align-items:center;gap:4px;}
+.wm-prob-d{padding:5px 8px;background:rgba(227,179,65,.07);text-align:center;display:flex;align-items:center;justify-content:center;gap:3px;border-left:1px solid var(--border);border-right:1px solid var(--border);}
+.wm-prob-a{padding:5px 8px;background:rgba(248,81,73,.07);text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:4px;}
+.wm-prob-pct{font-size:13px;font-weight:900;line-height:1;}
+.wm-prob-h .wm-prob-pct{color:#3fb950;}
+.wm-prob-d .wm-prob-pct{color:var(--yellow);}
+.wm-prob-a .wm-prob-pct{color:#f85149;}
+.wm-prob-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+
+/* Poly mini row */
+.wm-poly-row{display:flex;align-items:center;gap:7px;padding:5px 14px 6px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);flex-wrap:wrap;}
+.wm-poly-tag{font-size:8px;font-weight:800;color:#a78bfa;text-transform:uppercase;letter-spacing:.5px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.2);border-radius:4px;padding:1px 5px;}
+.wm-poly-val{font-size:10px;font-weight:700;color:var(--text);}
+.wm-poly-edge{font-size:9px;}
+.wm-poly-edge.pos{color:#3fb950;}
+.wm-poly-edge.neg{color:#f85149;}
+.wm-steam-mini{font-size:8px;font-weight:800;color:#f85149;background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.25);border-radius:4px;padding:1px 5px;letter-spacing:.3px;}
+
+/* Pick edge badge */
+.wm-pick-edge{font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px;flex-shrink:0;}
+.wm-pick-edge.pos{background:rgba(63,185,80,.12);color:#3fb950;border:1px solid rgba(63,185,80,.25);}
+.wm-pick-edge.neu{background:rgba(139,148,158,.1);color:#8b949e;}
+
+/* Event page link */
+.wm-event-link{display:block;text-align:center;padding:8px 14px 10px;font-size:10px;font-weight:700;color:var(--accent);text-decoration:none;border-top:1px solid var(--border);letter-spacing:.3px;transition:background .15s;}
+.wm-event-link:hover{background:rgba(0,212,161,.06);color:#fff;}
+
 /* Squad spotlight */
-.wm-squad-spotlight{padding:10px 14px 12px;border-top:1px solid var(--border);background:rgba(88,166,255,.02);}
+.wm-squad-spotlight{padding:10px 14px 8px;border-top:1px solid var(--border);background:rgba(88,166,255,.02);}
 .wm-squad-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
 .wm-squad-player{display:flex;align-items:center;gap:7px;flex:1;min-width:140px;}
 .wm-squad-flag{font-size:16px;}
 .wm-squad-name{font-size:12px;font-weight:700;color:var(--text);}
 .wm-squad-meta{font-size:10px;color:var(--muted);margin-top:1px;}
+.wm-squad-stats{display:flex;gap:7px;margin-top:4px;}
+.wm-squad-stat{text-align:center;min-width:28px;}
+.wm-squad-stat-val{font-size:13px;font-weight:800;color:var(--text);line-height:1;}
+.wm-squad-stat-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;}
 
 /* ── WM Tracking Tab ──────────────────────────────────────── */
 .wm-trk-kpi-strip{display:flex;flex-wrap:wrap;gap:8px;background:var(--surface1);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:14px;}
