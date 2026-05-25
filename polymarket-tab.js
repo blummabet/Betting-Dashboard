@@ -526,7 +526,8 @@ let _wmPolyPriceCache   = null;  // null = not loaded; keyed by "HOME-AWAY"
 let _wmPolyPriceMissing = false;
 let _wmAllFixtures      = [];    // all 72 games with Pinnacle + Poly + edge
 let _wmGeneratedAt      = '';    // timestamp from wm_poly_prices.json
-let _wmTableFilter      = 'all';   // default: alle Fixtures, sorted by momentum
+let _wmTableFilter      = 'all'; // default: alle Fixtures, sorted by momentum
+let _wmPolyHistoryData  = null;  // wm2026-poly-history.json — {matchKey: [{ts, poly_hw, edge_hw, ...}]}
 
 async function _loadWmPolyPriceCache() {
   if (_wmPolyPriceCache !== null) return;
@@ -535,17 +536,197 @@ async function _loadWmPolyPriceCache() {
     const res = await fetch(`wm_poly_prices.json?v=${_cbv}`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    _wmPolyPriceCache = data.prices       || {};
-    _wmAllFixtures    = data.allFixtures  || [];
-    _wmGeneratedAt    = data.generatedAt  || '';
+    _wmPolyPriceCache = data.prices      || {};
+    _wmAllFixtures    = data.allFixtures || [];
+    _wmGeneratedAt    = data.generatedAt || '';
     console.log(`[Poly] WM prices loaded: ${_wmAllFixtures.length} fixtures, ` +
-      `${_wmAllFixtures.filter(f=>f.hasPinnacle).length} with Pinnacle, ` +
-      `${data.generatedAt || ''}`);
+      `${_wmAllFixtures.filter(f=>f.hasPinnacle).length} with Pinnacle`);
   } catch (e) {
     console.warn('[Poly] wm_poly_prices.json not available:', e.message);
     _wmPolyPriceCache = {};
     _wmPolyPriceMissing = true;
   }
+  // Load poly price history in parallel (needed for sparklines + action badges)
+  if (_wmPolyHistoryData === null) {
+    try {
+      const hr = await fetch('wm2026-poly-history.json?t=' + Date.now(), { cache: 'no-store' });
+      if (hr.ok) {
+        _wmPolyHistoryData = await hr.json();
+        console.log(`[Poly] History loaded: ${Object.keys(_wmPolyHistoryData).length} fixtures`);
+      }
+    } catch(e) { _wmPolyHistoryData = {}; }
+  }
+}
+
+// ── Fixture Sparkline ─────────────────────────────────────────────────────
+// Zeichnet Pinn fair prob (grau) vs Poly price (lila) der letzten N Snapshots.
+// Datenquelle: _wmPolyHistoryData — enthält poly_hw + edge_hw pro Snapshot.
+// Pinnacle fair prob = poly_hw + edge_hw/100 (rückgerechnet aus dem gespeicherten Edge).
+function _drawFixtureSparkline(matchKey, edgeKey) {
+  if (!_wmPolyHistoryData || !edgeKey) return '';
+  const snaps = (_wmPolyHistoryData[matchKey] || []).slice(-18); // max 18 Punkte = ~6 Tage @ 3x/Tag
+  if (snaps.length < 3) return '<div style="font-size:10px;color:#484f58;padding:4px 0">📊 Noch zu wenig Verlauf — ab morgen sichtbar</div>';
+
+  const edgeField = `edge_${edgeKey}`;
+  const polyField = `poly_${edgeKey}`;
+
+  const polyVals = snaps.map(s => (s[polyField] != null && s[polyField] > 0) ? s[polyField] : null);
+  const edgeVals = snaps.map((s, i) => s[edgeField] ?? null);
+  // Pinnacle fair prob = poly + edge/100 (rückgerechnet)
+  const pinnVals = snaps.map((s, i) => {
+    const p = polyVals[i], e = edgeVals[i];
+    if (p == null || e == null) return null;
+    return Math.min(Math.max(p + e / 100, 0.01), 0.99);
+  });
+
+  const allProbs = [...polyVals, ...pinnVals].filter(x => x !== null);
+  if (allProbs.length < 3) return '';
+
+  const W = 500, H = 58;
+  const minP = Math.min(...allProbs) - 0.015;
+  const maxP = Math.max(...allProbs) + 0.015;
+  const toX = i => 2 + (i / (snaps.length - 1)) * (W - 4);
+  const toY = p => H - 2 - ((p - minP) / (maxP - minP)) * (H - 6);
+
+  // Build point arrays (skip nulls)
+  const pinnPts = pinnVals.map((p, i) => p !== null ? [toX(i), toY(p)] : null).filter(Boolean);
+  const polyPts = polyVals.map((p, i) => p !== null ? [toX(i), toY(p)] : null).filter(Boolean);
+
+  if (pinnPts.length < 2 || polyPts.length < 2) return '';
+
+  // Edge fill polygon: pinn top → poly bottom (reversed)
+  const fillPoly = [...pinnPts, ...[...polyPts].reverse()]
+    .map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+
+  const pinnLine  = pinnPts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  const polyLine  = polyPts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+
+  // Steam marker: find biggest Pinnacle jump (>= 1.5pp = 0.015 prob) in last 6 snaps
+  let steamX = null;
+  for (let i = Math.max(1, snaps.length - 6); i < snaps.length; i++) {
+    const p1 = pinnVals[i], p0 = pinnVals[i-1];
+    if (p1 !== null && p0 !== null && Math.abs(p1 - p0) >= 0.015) {
+      steamX = ((toX(i-1) + toX(i)) / 2).toFixed(1);
+      break;
+    }
+  }
+
+  // Y-axis labels (min and max probability as %)
+  const yLabelTop = Math.round(maxP * 100);
+  const yLabelBot = Math.round(minP * 100);
+
+  // Last point dot positions
+  const [lxP, lyP] = pinnPts[pinnPts.length - 1];
+  const [lxO, lyO] = polyPts[polyPts.length - 1];
+
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:${H}px;display:block;overflow:visible">
+    <polygon points="${fillPoly}" fill="#3fb950" opacity="0.12"/>
+    ${steamX ? `<line x1="${steamX}" y1="0" x2="${steamX}" y2="${H}" stroke="#f85149" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/>
+      <text x="${parseFloat(steamX)+4}" y="11" fill="#f85149" font-size="8" font-family="monospace">steam</text>` : ''}
+    <polyline points="${pinnLine}" stroke="#6e7681" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="${polyLine}" stroke="#a78bfa" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${lxP.toFixed(1)}" cy="${lyP.toFixed(1)}" r="2.5" fill="#6e7681"/>
+    <circle cx="${lxO.toFixed(1)}" cy="${lyO.toFixed(1)}" r="2.5" fill="#a78bfa"/>
+    <text x="2" y="10" fill="#484f58" font-size="8" font-family="monospace">${yLabelTop}%</text>
+    <text x="2" y="${H-2}" fill="#484f58" font-size="8" font-family="monospace">${yLabelBot}%</text>
+  </svg>`;
+}
+
+// ── Action Badge ──────────────────────────────────────────────────────────
+// Analysiert Edge, Volume, Trend, Steam und History → klare Handlungsempfehlung.
+// Beide Szenarien (stabiler Gap / frischer Steam) sind valide Trades — der
+// Unterschied ist nur die Dringlichkeit und Stake-Größe.
+function _computeActionBadge(fix) {
+  const edge  = fix.bestEdge || 0;
+  const vol   = fix.vol || 0;
+  const steam = fix.steamLag === true;
+  const trend = fix.edgeTrend || 'stable';
+  const key   = fix.key;
+
+  // Wie lange existiert dieser Edge schon? (aus History)
+  let edgeDays = 0;
+  if (_wmPolyHistoryData && key && fix.bestEdgeKey) {
+    const field = `edge_${fix.bestEdgeKey}`;
+    const snaps = _wmPolyHistoryData[key] || [];
+    edgeDays = snaps.filter(s => (s[field] || 0) >= 3).length;
+    // @ 3 runs/day: 3 snaps = 1 Tag, 9 snaps = 3 Tage
+    edgeDays = Math.round(edgeDays / 3);
+  }
+  const edgeIsEstablished = edgeDays >= 3;
+
+  // ── Entscheidungsbaum ────────────────────────────────────────────────────
+  if (edge < 2 || !fix.hasPinnacle) {
+    return {
+      icon: '—', label: 'Kein Signal', col: '#484f58', bg: '#161b22',
+      reason: fix.hasPinnacle
+        ? 'Edge unter 2pp — zu gering für einen Trade.'
+        : 'Kein Pinnacle-Kurs verfügbar. Abwarten bis Pinnacle das Spiel listet.',
+    };
+  }
+
+  if (trend === 'closing' && edge < 5) {
+    return {
+      icon: '⏸', label: 'Edge schließt', col: '#e3b341', bg: '#1a160a',
+      reason: `Edge schrumpft auf ${edge.toFixed(1)}pp — Poly holt auf. Kein günstiger Einstieg mehr, außer du glaubst der Edge stabilisiert sich.`,
+    };
+  }
+
+  // Steam-Lag: höchste Priorität — Poly hat Pinnacle-Move noch nicht eingepreist
+  if (steam && edge >= 5) {
+    const volNote = vol >= 5000 ? 'Volume gut' : vol >= 1500 ? `Vol $${vol.toLocaleString()} (ok)` : `Vol $${vol.toLocaleString()} — kleine Position`;
+    return {
+      icon: '🔥', label: 'Jetzt handeln', col: '#f85149', bg: '#200a0a',
+      reason: `Pinnacle hat sich bewegt, Poly hat noch nicht reagiert → frischer Edge. ${volNote}. Je früher desto besser — Poly wird aufholen.`,
+    };
+  }
+
+  // Hoher Edge + gutes Volume
+  if (edge >= 7 && vol >= 5000) {
+    return {
+      icon: '✅', label: 'Starker Trade', col: '#3fb950', bg: '#091409',
+      reason: `Edge +${edge.toFixed(1)}pp — deutlich über Conviction-Schwelle. Volume ausreichend. Volle Stake-Größe.${edgeIsEstablished ? ` Etabliert seit ~${edgeDays} Tagen.` : ''}`,
+    };
+  }
+
+  if (edge >= 5 && vol >= 5000) {
+    const stability = edgeIsEstablished
+      ? `Edge stabil seit ~${edgeDays} Tagen — strukturelle Unterbewertung.`
+      : `Neuer Edge — beobachte ob er sich hält.`;
+    return {
+      icon: '✅', label: 'Handeln', col: '#3fb950', bg: '#0d1a0d',
+      reason: `Edge +${edge.toFixed(1)}pp, Volume $${vol.toLocaleString()}. ${stability} Stake gemäß Tier-Konfiguration.`,
+    };
+  }
+
+  // Gut aber Liquidität begrenzt
+  if (edge >= 5 && vol >= 1000) {
+    return {
+      icon: '🟡', label: 'Handeln (klein)', col: '#e3b341', bg: '#1a160a',
+      reason: `Edge solide (+${edge.toFixed(1)}pp), aber Vol $${vol.toLocaleString()} begrenzt Liquidität. Kleine Position oder Limit-Order setzen.`,
+    };
+  }
+
+  // Edge da aber zu wenig Volume
+  if (edge >= 5 && vol < 1000) {
+    return {
+      icon: '👁', label: 'Beobachten', col: '#e3b341', bg: '#1a160a',
+      reason: `Edge +${edge.toFixed(1)}pp ist gut, aber Vol $${vol.toLocaleString()} zu gering für sinnvollen Einstieg. Warten bis Volume steigt (Spiel näher rückt).`,
+    };
+  }
+
+  // Edge 3-5pp: unter Conviction-Schwelle, aber im Auge behalten
+  if (edge >= 3) {
+    const growNote = trend === 'growing' ? ' Edge wächst — könnte bald über 5pp.' : '';
+    return {
+      icon: '👁', label: 'Beobachten', col: '#6e7681', bg: '#161b22',
+      reason: `Edge +${edge.toFixed(1)}pp liegt unter der 5pp-Conviction-Schwelle.${growNote} Warten bis Edge ≥5pp oder Volume steigt.`,
+    };
+  }
+
+  return {
+    icon: '—', label: 'Abwarten', col: '#484f58', bg: '#161b22',
+    reason: 'Kein klares Signal. Edge-Entwicklung abwarten.',
+  };
 }
 
 function _setWmFilter(f) {
@@ -1502,6 +1683,33 @@ function _renderWmMarketTable() {
     const polyUrl = fix.slug ? `https://polymarket.com/de/sports/fifa-world-cup/${fix.slug}` : '#';
     const be = fix.bestEdge || 0;
 
+    // ── Action Badge ──────────────────────────────────────────────────────────
+    const badge = _computeActionBadge(fix);
+    const showBadge = badge.label !== 'Kein Signal';
+    const actionHtml = showBadge ? `<div style="background:${badge.bg};border:1px solid ${badge.col}44;
+                                                border-radius:8px;padding:8px 12px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+        <span style="font-size:15px">${badge.icon}</span>
+        <span style="font-size:12px;font-weight:800;color:${badge.col};letter-spacing:.3px">${badge.label}</span>
+      </div>
+      <div style="font-size:11px;color:#8b949e;line-height:1.5">${badge.reason}</div>
+    </div>` : '';
+
+    // ── Sparkline chart ───────────────────────────────────────────────────────
+    const sparklineSvg = _drawFixtureSparkline(fix.key, fix.bestEdgeKey);
+    const chartHtml = sparklineSvg ? `<div style="margin-bottom:8px">
+      ${sparklineSvg}
+      <div style="display:flex;gap:14px;font-size:10px;color:#6e7681;margin-top:3px;padding-left:2px">
+        <span style="display:flex;align-items:center;gap:4px">
+          <span style="display:inline-block;width:18px;height:2px;background:#6e7681;vertical-align:middle"></span>
+          Pinnacle fair</span>
+        <span style="display:flex;align-items:center;gap:4px">
+          <span style="display:inline-block;width:18px;height:2px;background:#a78bfa;vertical-align:middle"></span>
+          Polymarket</span>
+        ${fix.steamLag ? '<span style="color:#f85149;font-weight:700">| 🔥 Steam-Move erkannt</span>' : ''}
+      </div>
+    </div>` : '';
+
     const borderCol = be >= 5 ? '#3fb95066' : be >= ALERT_EDGE_PP ? '#e3b34166' : '#21262d';
     const bgCol     = be >= 5 ? '#0d1a0d'   : be >= ALERT_EDGE_PP ? '#1a160a'   : '#0d1117';
 
@@ -1627,7 +1835,7 @@ function _renderWmMarketTable() {
 
     return `<div style="background:${bgCol};border:1px solid ${borderCol};border-radius:10px;
                         padding:10px 14px;margin-bottom:6px">
-      ${header}${outcomesHtml}${ouHtml}${depthHtml}
+      ${header}${actionHtml}${chartHtml}${outcomesHtml}${ouHtml}${depthHtml}
     </div>`;
   };
 
