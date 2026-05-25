@@ -19,6 +19,7 @@ os.makedirs(DATA_DIR, exist_ok=True)
 
 WM_FILE      = os.path.join(BASE, "wm2026-data.json")
 HISTORY_FILE = os.path.join(BASE, "wm2026-odds-history.json")
+POLY_FILE    = os.path.join(BASE, "wm_poly_prices.json")
 
 CO_HOSTS = {"MEX", "USA", "CAN"}
 
@@ -194,7 +195,7 @@ def poisson_xg(home_form, away_form, home_elo: float, away_elo: float, home_is_c
     return xg_home, xg_away
 
 
-def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, ai_previews=None):
+def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, ai_previews=None, poly_lookup=None):
     home_id = fixture["home"]
     away_id = fixture["away"]
     home_team = team_lookup[home_id]
@@ -280,6 +281,38 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         xg_home, xg_away = poisson_xg(home_form, away_form, home_elo, away_elo, home_id in CO_HOSTS)
         xg_source = "poisson"
 
+    # Polymarket data (from wm_poly_prices.json)
+    poly_fix = (poly_lookup or {}).get(odds_key)
+    poly_out = None
+    if poly_fix:
+        poly_out = {
+            "hw":          poly_fix.get("poly_hw"),
+            "dr":          poly_fix.get("poly_dr"),
+            "aw":          poly_fix.get("poly_aw"),
+            "o25":         poly_fix.get("poly_o25"),
+            "u25":         poly_fix.get("poly_u25"),
+            "btts":        poly_fix.get("poly_btts"),
+            "vol":         poly_fix.get("vol"),
+            "edge_hw":     poly_fix.get("edge_hw"),
+            "edge_dr":     poly_fix.get("edge_dr"),
+            "edge_aw":     poly_fix.get("edge_aw"),
+            "edge_o25":    poly_fix.get("edge_o25"),
+            "edge_u25":    poly_fix.get("edge_u25"),
+            "bestEdge":    poly_fix.get("bestEdge"),
+            "bestEdgeKey": poly_fix.get("bestEdgeKey"),
+            "steamLag":    poly_fix.get("steamLag"),
+            "hasPinnacle": poly_fix.get("hasPinnacle"),
+            "slug":        poly_fix.get("slug"),
+            "moreMktSlug": poly_fix.get("moreMktSlug"),
+        }
+
+    # Player props (anytime scorer etc.) keyed by teamId
+    props_raw = wm.get("playerProps", {})
+    player_props_out = {
+        home_id: props_raw.get(home_id),
+        away_id: props_raw.get(away_id),
+    }
+
     # H2H
     h2h_raw = wm.get("h2h", {}).get(h2h_key)
     h2h_out = None
@@ -348,6 +381,9 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         # Corner averages per team (from fetch_wm_corners.py)
         "cornersHome": wm.get("cornersForm", {}).get(home_id),
         "cornersAway": wm.get("cornersForm", {}).get(away_id),
+        # Polymarket + Player Props
+        "polyData":      poly_out,
+        "playerProps":   player_props_out,
         # Data sections
         "picks":         picks_raw,
         "odds":          odds_out,
@@ -374,8 +410,11 @@ def main():
 
     history     = load_json(HISTORY_FILE) or {}
     ai_previews = wm.get("aiPreviews", {})
+    poly_raw    = load_json(POLY_FILE) or {}
+    poly_lookup = {f["key"]: f for f in poly_raw.get("allFixtures", [])}
     print(f"  Odds history: {len(history)} Fixtures mit Snapshots")
     print(f"  AI Previews: {len(ai_previews)} gecacht")
+    print(f"  Polymarket:  {len(poly_lookup)} Fixtures geladen")
 
     # Build flat team lookup {id -> team_dict}
     team_lookup = {}
@@ -396,7 +435,7 @@ def main():
                 print(f"  SKIP: unknown team {home_id} or {away_id}")
                 continue
 
-            slug, payload = build_payload(group_id, group_data, fixture, team_lookup, wm, history, ai_previews)
+            slug, payload = build_payload(group_id, group_data, fixture, team_lookup, wm, history, ai_previews, poly_lookup)
             out_path = os.path.join(DATA_DIR, f"{slug}.json")
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))

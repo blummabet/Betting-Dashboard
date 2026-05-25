@@ -413,6 +413,96 @@ body{
 .gt-flag{font-size:16px;}
 .gt-elo{font-size:9px;color:var(--sub);}
 
+/* ── SIGNAL TABLE ── */
+.signal-table{width:100%;border-collapse:collapse;margin-bottom:6px;}
+.st-head th{
+  font-size:8px;color:var(--sub);letter-spacing:1.5px;text-transform:uppercase;
+  padding:5px 8px;text-align:left;border-bottom:1px solid var(--border);
+}
+.st-head th:not(:first-child){text-align:right;}
+.st-row td{
+  padding:9px 8px;font-size:12px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.st-row:last-child td{border-bottom:none;}
+.st-row td:not(:first-child){text-align:right;font-family:'Bebas Neue',sans-serif;font-size:15px;}
+.st-market{font-size:11px;font-weight:700;color:#aaa;}
+.st-model{color:#22c55e;}
+.st-market-val{color:#fff;}
+.st-edge{font-size:13px;}
+.st-edge.pos{color:#22c55e;}
+.st-edge.neg{color:#ef4444;}
+.st-edge.flat{color:var(--sub);}
+.verdict-banner{
+  padding:11px 14px;border-radius:8px;
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:10px;
+}
+.verdict-banner.bet{
+  background:linear-gradient(90deg,rgba(34,197,94,.15),rgba(34,197,94,.05));
+  border:1px solid rgba(34,197,94,.3);
+}
+.verdict-banner.abw{
+  background:linear-gradient(90deg,rgba(249,115,22,.1),rgba(249,115,22,.03));
+  border:1px solid rgba(249,115,22,.25);
+}
+.verdict-banner.skip{background:rgba(255,255,255,.04);border:1px solid var(--border);}
+.vb-icon{font-size:22px;}
+.vb-body{flex:1;}
+.vb-label{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;}
+.verdict-banner.bet .vb-label{color:#22c55e;}
+.verdict-banner.abw .vb-label{color:var(--orange);}
+.verdict-banner.skip .vb-label{color:var(--sub);}
+.vb-reason{font-size:11px;color:#668;margin-top:2px;}
+.vb-badge{
+  font-family:'Bebas Neue',sans-serif;font-size:24px;
+  text-align:right;flex-shrink:0;
+}
+.verdict-banner.bet .vb-badge{color:#22c55e;}
+.verdict-banner.abw .vb-badge{color:var(--orange);}
+
+/* ── POLY SECTION ── */
+.poly-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
+.poly-card{
+  background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.15);
+  border-radius:9px;padding:10px 8px;text-align:center;
+}
+.poly-label{font-size:8px;color:var(--sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.poly-price{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--purple);}
+.poly-edge{font-size:9px;margin-top:2px;}
+.poly-edge.pos{color:#22c55e;}
+.poly-edge.neg{color:#ef4444;}
+.poly-edge.flat{color:var(--sub);}
+.poly-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:9px;color:var(--sub);margin-top:6px;
+  padding-top:6px;border-top:1px solid var(--border);
+}
+.steam-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(248,81,73,.12);border:1px solid rgba(248,81,73,.3);
+  border-radius:4px;padding:2px 8px;font-size:9px;color:#f85149;font-weight:700;
+}
+
+/* ── PLAYER BETS ── */
+.player-bets-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.pb-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:12px 14px;
+}
+.pb-team-label{font-size:8px;color:var(--sub);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.pb-player-name{font-size:15px;font-weight:800;color:#fff;margin-bottom:2px;}
+.pb-position{font-size:10px;color:var(--sub);margin-bottom:8px;}
+.pb-stats{display:flex;gap:10px;margin-bottom:8px;}
+.pb-stat{text-align:center;}
+.pb-stat-val{font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;line-height:1;}
+.pb-stat-lbl{font-size:8px;color:var(--sub);text-transform:uppercase;}
+.pb-hint{
+  background:rgba(245,197,24,.07);border:1px solid rgba(245,197,24,.15);
+  border-radius:5px;padding:5px 8px;
+  font-size:9px;color:var(--gold);font-weight:700;letter-spacing:.5px;
+}
+
 /* ── FOOTER ── */
 .page-footer{
   padding:16px;margin-top:8px;
@@ -1187,6 +1277,240 @@ function renderGroup(D) {
     </div>`;
 }
 
+/* ── Signal / Prediction table ───────────────────────────── */
+function renderSignal(D) {
+  const picks = D.picks || [];
+  if (!picks.length && D.modHome == null) return '';
+
+  // Primary verdict
+  const bet  = picks.find(p => p.verdict === 'BET');
+  const abw  = picks.find(p => p.verdict === 'ABWÄGEN');
+  const best = bet || abw || null;
+
+  let bannerHtml = '';
+  if (best) {
+    const isBet = best.verdict === 'BET';
+    const cls   = isBet ? 'bet' : 'abw';
+    const icon  = isBet ? '⚡' : '📈';
+    const stars = starsFromConf(best.conf);
+    const edge  = best.edgePP != null ? (best.edgePP >= 0 ? '+' : '') + parseFloat(best.edgePP).toFixed(0) + 'pp Edge' : '';
+    bannerHtml = `
+      <div class="verdict-banner ${cls}">
+        <div class="vb-icon">${icon}</div>
+        <div class="vb-body">
+          <div class="vb-label">${escHtml(best.verdict)}</div>
+          <div class="vb-reason">${escHtml(best.market || '')}${edge ? ' · ' + edge : ''}${stars ? ' · ' + starsStr(stars) : ''}</div>
+        </div>
+        ${best.odds ? `<div class="vb-badge">@${fmtOdds(best.odds)}</div>` : ''}
+      </div>`;
+  }
+
+  // Model vs Market rows — 1X2
+  const rows1x2 = [
+    { lbl: 'Heimsieg',  mod: D.modHome, mkt: D.probHome },
+    { lbl: 'Unentsch.', mod: D.modDraw, mkt: D.probDraw },
+    { lbl: 'Auswärts',  mod: D.modAway, mkt: D.probAway },
+  ].filter(r => r.mod != null);
+
+  function edgePP(mod, mkt) {
+    if (mod == null || mkt == null) return null;
+    return Math.round((parseFloat(mod) - parseFloat(mkt)) * 10) / 10;
+  }
+  function edgeCls(e) {
+    if (e == null || Math.abs(e) < 0.3) return 'flat';
+    return e > 0 ? 'pos' : 'neg';
+  }
+
+  const tableRows = rows1x2.map(r => {
+    const e = edgePP(r.mod, r.mkt);
+    const eStr = e != null
+      ? (Math.abs(e) < 0.3 ? '—' : (e > 0 ? '+' : '') + e.toFixed(1) + 'pp')
+      : '—';
+    return `
+      <tr class="st-row">
+        <td class="st-market">${r.lbl}</td>
+        <td class="st-model">${r.mod != null ? r.mod + '%' : '—'}</td>
+        <td class="st-market-val">${r.mkt != null ? r.mkt + '%' : '—'}</td>
+        <td class="st-edge ${edgeCls(e)}">${eStr}</td>
+      </tr>`;
+  }).join('');
+
+  // O/U picks from picks array
+  let ouRows = '';
+  for (const p of picks) {
+    const ml = (p.market || '').toLowerCase();
+    const isOU = ml.includes('über') || ml.includes('unter') || ml.includes('2.5');
+    if (!isOU) continue;
+    const e  = p.edgePP != null ? parseFloat(p.edgePP) : null;
+    const eStr = e != null ? (e >= 0 ? '+' : '') + e.toFixed(1) + 'pp' : '—';
+    ouRows += `
+      <tr class="st-row">
+        <td class="st-market">${escHtml(p.market)}</td>
+        <td class="st-model">${p.modelOdds ? 'FV ' + fmtOdds(p.modelOdds) : '—'}</td>
+        <td class="st-market-val">${p.odds ? '@' + fmtOdds(p.odds) : '—'}</td>
+        <td class="st-edge ${edgeCls(e)}">${eStr}</td>
+      </tr>`;
+  }
+
+  const hasTable = tableRows || ouRows;
+
+  return `
+    <div class="section">
+      <div class="sec-head">
+        <span class="sec-ico">🎯</span>
+        <span class="sec-title">Wett-Signal</span>
+        <span class="sec-tag gold">CocoBet Modell</span>
+      </div>
+
+      ${bannerHtml}
+
+      ${hasTable ? `
+      <div class="box" style="padding:12px;">
+        <div style="font-size:9px;color:var(--sub);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">Modell vs. Markt — alle Märkte</div>
+        <table class="signal-table">
+          <thead class="st-head">
+            <tr><th>Markt</th><th>Modell</th><th>Pinn.</th><th>Edge</th></tr>
+          </thead>
+          <tbody>
+            ${tableRows}
+            ${ouRows}
+          </tbody>
+        </table>
+        <div style="font-size:9px;color:#1a2a1a;margin-top:6px;">Modell = Elo-Wahrsch. · Markt = Pinnacle devigged · Edge in Prozentpunkten</div>
+      </div>` : ''}
+    </div>`;
+}
+
+/* ── Polymarket section ──────────────────────────────────── */
+function renderPoly(D) {
+  const p = D.polyData;
+  if (!p) return '';
+
+  function pct(v) { return v != null ? Math.round(v * 100) + '%' : '—'; }
+  function edgeLabel(e) {
+    if (e == null || Math.abs(e) < 0.3) return '<span class="poly-edge flat">—</span>';
+    const s = (e > 0 ? '+' : '') + e.toFixed(1) + 'pp';
+    return `<span class="poly-edge ${e > 0 ? 'pos' : 'neg'}">${s}</span>`;
+  }
+
+  const markets = [
+    { lbl: 'Heimsieg',  price: p.hw,  edge: p.edge_hw },
+    { lbl: 'Unentsch.', price: p.dr,  edge: p.edge_dr },
+    { lbl: 'Auswärts',  price: p.aw,  edge: p.edge_aw },
+    { lbl: 'Over 2.5',  price: p.o25, edge: p.edge_o25 },
+    { lbl: 'Under 2.5', price: p.u25, edge: p.edge_u25 },
+    { lbl: 'BTTS',      price: p.btts, edge: null },
+  ].filter(m => m.price != null);
+
+  const cards = markets.map(m => `
+    <div class="poly-card">
+      <div class="poly-label">${m.lbl}</div>
+      <div class="poly-price">${pct(m.price)}</div>
+      ${edgeLabel(m.edge)}
+    </div>`).join('');
+
+  const vol = p.vol ? '$' + (p.vol / 1000).toFixed(0) + 'K' : '—';
+  const pinnTag = p.hasPinnacle
+    ? '<span style="background:#1a2a3a;color:#60a5fa;border:1px solid #60a5fa44;border-radius:4px;padding:1px 5px;font-size:8px;">Pinnacle ✓</span>'
+    : '<span style="font-size:8px;color:#555;">kein Pinn-Vergleich</span>';
+
+  const steamHtml = p.steamLag
+    ? '<span class="steam-badge">🔥 STEAM-LAG</span>'
+    : '';
+
+  return `
+    <div class="section">
+      <div class="sec-head">
+        <span class="sec-ico">💹</span>
+        <span class="sec-title">Polymarket Märkte</span>
+        <span class="sec-tag" style="background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.2);">Prediction Market</span>
+      </div>
+
+      ${p.steamLag ? `
+      <div style="margin-bottom:10px;">
+        <div class="steam-badge" style="font-size:11px;padding:7px 12px;">🔥 STEAM-LAG — Pinnacle bewegte sich, Polymarket hat noch nicht reagiert → potenzielle Arbitrage-Window</div>
+      </div>` : ''}
+
+      <div class="poly-grid">${cards}</div>
+
+      <div class="poly-footer">
+        <span>Volumen: <strong style="color:#aaa;">${vol}</strong></span>
+        ${pinnTag}
+        ${steamHtml}
+        ${p.slug ? `<a href="https://polymarket.com/event/${p.slug}" target="_blank" rel="noopener" style="color:var(--purple);font-size:9px;text-decoration:none;">→ Polymarket</a>` : ''}
+      </div>
+      <div style="font-size:9px;color:#333;margin-top:6px;">Edge vs. Pinnacle Fair Value · Positiv = Polymarket zu günstig</div>
+    </div>`;
+}
+
+/* ── Player Bets section ─────────────────────────────────── */
+function renderPlayerBets(D) {
+  const homeSquad = D.squads ? D.squads[D.homeId] : null;
+  const awaySquad = D.squads ? D.squads[D.awayId] : null;
+  const homeProps = D.playerProps ? D.playerProps[D.homeId] : null;
+  const awayProps = D.playerProps ? D.playerProps[D.awayId] : null;
+
+  if (!homeSquad && !awaySquad) return '';
+
+  const posLabel = (pos) => {
+    const m = { ST:'Stürmer', CF:'Stürmer', FW:'Stürmer', LW:'Flügel', RW:'Flügel',
+                CAM:'Off. MF', AM:'Off. MF', CM:'Mittelfeld', MF:'Mittelfeld',
+                DM:'Def. MF', CDM:'Def. MF', LB:'Verteidiger', RB:'Verteidiger',
+                CB:'Verteidiger', DF:'Verteidiger', GK:'Torwart' };
+    return m[(pos||'').toUpperCase()] || pos || '';
+  };
+
+  function playerCard(squad, props, teamName, teamFlag, teamId) {
+    if (!squad) return '';
+    const isAttacker = ['ST','CF','FW','LW','RW','CAM','AM'].includes((squad.position||'').toUpperCase());
+    const per90 = squad.minutes && squad.goals != null && squad.minutes > 0
+      ? (squad.goals / (squad.minutes / 90)).toFixed(2) : null;
+
+    // Best prop if available
+    let propHtml = '';
+    if (props && props.anytime) {
+      propHtml = `
+        <div style="margin-top:8px;background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.18);border-radius:6px;padding:6px 10px;">
+          <div style="font-size:8px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px;">Anytime Scorer</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;">@${fmtOdds(props.anytime)}</div>
+        </div>`;
+    } else if (isAttacker) {
+      propHtml = `
+        <div class="pb-hint">🎯 Tipp: Anytime Scorer beobachten</div>`;
+    }
+
+    return `
+      <div class="pb-card">
+        <div class="pb-team-label">${escHtml(teamFlag||'')} ${escHtml(teamName||'')}</div>
+        <div class="pb-player-name">${escHtml(squad.name || '?')}</div>
+        <div class="pb-position">${posLabel(squad.position)}</div>
+        <div class="pb-stats">
+          ${squad.goals   != null ? `<div class="pb-stat"><div class="pb-stat-val" style="color:#22c55e;">${squad.goals}</div><div class="pb-stat-lbl">Tore</div></div>` : ''}
+          ${squad.assists != null ? `<div class="pb-stat"><div class="pb-stat-val" style="color:#60a5fa;">${squad.assists}</div><div class="pb-stat-lbl">Assists</div></div>` : ''}
+          ${per90 ? `<div class="pb-stat"><div class="pb-stat-val" style="color:#f0c040;">${per90}</div><div class="pb-stat-lbl">Tore/90</div></div>` : ''}
+        </div>
+        ${propHtml}
+      </div>`;
+  }
+
+  const homeCard = playerCard(homeSquad, homeProps, D.home, D.homeFlag, D.homeId);
+  const awayCard = playerCard(awaySquad, awayProps, D.away, D.awayFlag, D.awayId);
+
+  return `
+    <div class="section">
+      <div class="sec-head">
+        <span class="sec-ico">⚽</span>
+        <span class="sec-title">Spieler-Wetten</span>
+        <span class="sec-tag gray">Schlüsselspieler</span>
+      </div>
+      <div class="player-bets-grid">
+        ${homeCard}
+        ${awayCard}
+      </div>
+      <div style="font-size:9px;color:#333;margin-top:-4px;margin-bottom:10px;">Stats letzte Saison (Klub + Nationalteam) · Prop-Quoten live wenn verfügbar</div>
+    </div>`;
+}
+
 /* ── Sticky bar ──────────────────────────────────────────── */
 function renderStickyBar(D) {
   const betPick = (D.picks || []).find(p => p.verdict === 'BET');
@@ -1282,10 +1606,12 @@ function render(D) {
     </div>` : ''}
 
     ${renderContext(D)}
+    ${renderSignal(D)}
     ${renderAI(D)}
-    ${renderSquads(D)}
+    ${renderPlayerBets(D)}
     ${renderPicks(D)}
     ${renderOdds(D)}
+    ${renderPoly(D)}
     ${renderEloXg(D)}
     ${renderForm(D)}
     ${renderH2h(D)}
