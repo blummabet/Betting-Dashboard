@@ -1558,18 +1558,149 @@ function _wmResetStakeConfig() {
   if (panel) panel.outerHTML = _renderWmStakeConfig();
 }
 
+// ── System Guide — Pipeline-Anleitung oben im WM Tab ──────────────────────
+function _renderWmSystemGuide() {
+  // Status: auto-trigger active? (check local config)
+  const autoEnabled = localStorage.getItem('wmAutoTriggerLive') === 'true';
+  const manualPhase = !autoEnabled;
+
+  const phase = (num, icon, title, status, statusCol, statusBg, lines) => `
+    <div style="flex:1;min-width:180px;background:${statusBg};border:1px solid ${statusCol}33;
+                border-radius:10px;padding:14px 16px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:10px;right:12px;font-size:9px;font-weight:800;
+                  color:${statusCol};background:${statusCol}22;border:1px solid ${statusCol}44;
+                  border-radius:10px;padding:2px 7px;letter-spacing:.5px">${status}</div>
+      <div style="font-size:22px;margin-bottom:6px">${icon}</div>
+      <div style="font-size:10px;font-weight:800;color:#484f58;letter-spacing:.8px;
+                  text-transform:uppercase;margin-bottom:3px">Phase ${num}</div>
+      <div style="font-size:13px;font-weight:800;color:#e6edf3;margin-bottom:10px">${title}</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${lines.map(l => `<div style="font-size:11px;color:#8b949e;line-height:1.4;
+                                      display:flex;gap:7px;align-items:flex-start">
+          <span style="color:${statusCol};margin-top:1px;flex-shrink:0">▸</span>
+          <span>${l}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+
+  const arrow = `<div style="color:#30363d;font-size:18px;font-weight:300;
+                              align-self:center;flex-shrink:0;padding:0 4px">→</div>`;
+
+  const criteriaRow = (icon, label, value, col) =>
+    `<div style="display:flex;align-items:center;gap:6px;padding:5px 10px;
+                 background:#0d1117;border-radius:6px;border:1px solid #21262d">
+      <span style="font-size:13px">${icon}</span>
+      <span style="font-size:10px;color:#6e7681;flex:1">${label}</span>
+      <span style="font-size:11px;font-weight:700;color:${col||'#e6edf3'}">${value}</span>
+    </div>`;
+
+  return `
+  <div style="margin-bottom:20px">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <span style="font-size:15px">⚙️</span>
+      <span style="font-size:13px;font-weight:800;color:#e6edf3">Trading System — Wie es funktioniert</span>
+      <span style="font-size:10px;color:#484f58;margin-left:auto">
+        ${autoEnabled
+          ? `<span style="color:#3fb950;font-weight:700">🤖 Auto-Modus AKTIV</span>`
+          : `<span style="color:#e3b341;font-weight:700">✋ Manueller Modus</span>`}
+      </span>
+    </div>
+
+    <!-- 3-Phase Pipeline -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:stretch">
+      ${phase(1, '📡', 'Signal erkennen', 'LIVE · 3×/Tag', '#60a5fa', '#0a0f1a', [
+        'Gamma API holt Polymarket-Preise',
+        'Pinnacle devigged → fairer Wert berechnet',
+        'Edge = Pinn fair − Poly · in %p',
+        'steamLag wenn Pinnacle zieht, Poly schläft',
+        'Telegram-Alert bei Edge ≥ 5pp (neu/steam)',
+      ])}
+      ${arrow}
+      ${phase(2, manualPhase ? '✋' : '🤖', manualPhase ? 'Manuell setzen' : 'Auto-Bet', manualPhase ? 'JETZT' : 'AKTIV', manualPhase ? '#e3b341' : '#3fb950', manualPhase ? '#1a160a' : '#0d1a0d', manualPhase ? [
+        'Badge zeigt: Jetzt handeln / Handeln / Beobachten',
+        'Auf Polymarket öffnen → Bet platzieren',
+        '<strong style="color:#a78bfa">✏️ loggen</strong> klicken → Position in Dashboard erfassen',
+        'JSON exportieren → in wm_poly_positions.json einfügen → GitHub Desktop commiten',
+        'GitHub Action übernimmt ab da das Monitoring',
+      ] : [
+        'Edge ≥ 5pp + Vol ≥ 10.000 USDC + Pinnacle gelistet',
+        'Verdict BET oder ABWÄGEN erforderlich',
+        'Nicht am Spieltag selbst (mind. 1 Tag vorher)',
+        'Stake: €5 (3pp), €10 (5pp), €15 (7pp+)',
+        'Telegram-Benachrichtigung im Trades-Channel',
+      ])}
+      ${arrow}
+      ${phase(3, '📊', 'Position schließen', '5×/Tag', '#a78bfa', '#0f0d1a', [
+        'manage_wm_poly_positions.py überwacht Preise',
+        '<strong style="color:#3fb950">Sell-Ziel</strong>: Poly steigt +20% über Entry-Preis',
+        '<strong style="color:#e3b341">Konvergenz</strong>: Poly innerhalb 2pp von Pinn fair',
+        'Telegram-Sell-Alert mit direktem Link',
+        'Nach Spielende: CLV + P&L automatisch berechnet',
+      ])}
+    </div>
+
+    <!-- Trigger-Kriterien Box -->
+    <div style="background:#0d1117;border:1px solid #21262d;border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="font-size:10px;font-weight:800;color:#484f58;letter-spacing:.8px;
+                  text-transform:uppercase;margin-bottom:10px">Auto-Trigger Kriterien (ab 1. Juni)</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px">
+        ${criteriaRow('🎯', 'Mindest-Edge', '≥ 5pp vs Pinnacle fair', '#3fb950')}
+        ${criteriaRow('💧', 'Liquidität', '≥ $10.000 Vol', '#3fb950')}
+        ${criteriaRow('📅', 'Timing', 'Mind. 1 Tag vor Spielbeginn', '#e3b341')}
+        ${criteriaRow('✅', 'Verdict', 'BET oder ABWÄGEN', '#3fb950')}
+        ${criteriaRow('📊', 'Datenqualität', 'Form + H2H vorhanden (≥5pp) oder ELO-only (≥8pp)', '#e3b341')}
+        ${criteriaRow('💰', 'Max. Stake', '€5–€15 je nach Edge-Tier', '#a78bfa')}
+      </div>
+    </div>
+
+    <!-- Was fehlt noch / Roadmap -->
+    <details style="background:#0d1117;border:1px solid #21262d;border-radius:10px;
+                    padding:12px 16px;cursor:pointer">
+      <summary style="font-size:11px;font-weight:700;color:#6e7681;user-select:none;list-style:none;
+                      display:flex;align-items:center;gap:6px">
+        <span>🗺️</span>
+        <span>Roadmap — was noch kommt</span>
+        <span style="margin-left:auto;color:#484f58;font-size:10px">▼ ausklappen</span>
+      </summary>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
+        ${[
+          ['🔴', 'offen',     'Position-Sync: localStorage → GitHub direkt, ohne manuellen Commit-Schritt'],
+          ['🔴', 'offen',     'Bankroll-Tracker: Gesamtexposure + freies Kapital live im Tab'],
+          ['🔴', 'offen',     'Multi-Market-Guard: max. 1 Bet pro Spiel (korreliertes Risiko)'],
+          ['🟡', 'Jun 11+',   'CLV-Live: Closing-Odds-Freeze aktiviert sobald WM startet'],
+          ['🟡', 'Jun 11+',   'Live P&L: nach jedem Spielergebnis auto-updated'],
+          ['🟡', 'Jun 11+',   'Auto-Schließen: Position nach Spielende automatisch resolved'],
+          ['🟢', 'bereit',    'Telegram Edge Alert (≥5pp neue/steam Edges) → Trades-Channel'],
+          ['🟢', 'bereit',    'Sparkline + Action Badge pro Fixture'],
+          ['🟢', 'bereit',    'CLOB Orderbook Bid/Ask/Spread/Liquidität'],
+          ['🟢', 'bereit',    'Sharp Radar in Fixture integriert (steamLag-Badge)'],
+        ].map(([dot, status, text]) =>
+          `<div style="display:flex;align-items:flex-start;gap:8px;font-size:11px">
+            <span style="flex-shrink:0;margin-top:1px">${dot}</span>
+            <span style="color:#484f58;font-weight:700;min-width:48px;flex-shrink:0">${status}</span>
+            <span style="color:#8b949e">${text}</span>
+          </div>`
+        ).join('')}
+      </div>
+    </details>
+
+  </div>`;
+}
+
 function _renderWmMarketTable() {
   _ensureWmPosModal();
   const openPosHtml = _renderWmOpenPositions();
 
   if (!_wmAllFixtures || _wmAllFixtures.length === 0) {
-    return openPosHtml
+    return _renderWmSystemGuide() + (openPosHtml
       ? `<div style="margin-bottom:20px">${openPosHtml}</div>`
       : `<div style="text-align:center;padding:60px 20px;color:#484f58">
            <div style="font-size:32px;margin-bottom:10px">⏳</div>
            <div style="font-weight:600">WM-Daten werden geladen…</div>
            <div style="font-size:12px;margin-top:6px">wm_poly_prices.json nicht gefunden oder leer</div>
-         </div>`;
+         </div>`);
   }
 
   // ── helpers ──────────────────────────────────────────────────────────────
@@ -1948,6 +2079,9 @@ function _renderWmMarketTable() {
       5× täglich aktualisiert (08/12/16/20/00 Uhr CEST).
       ${noPinnCount > 0 ? `<span style="color:#484f58">${noPinnCount} Spiele noch ohne Pinnacle.</span>` : ''}
     </div>
+
+    <!-- System Guide -->
+    ${_renderWmSystemGuide()}
 
     <!-- Performance / P&L / CLV Section (async-filled) -->
     <div id="wmPerformanceSection"></div>
