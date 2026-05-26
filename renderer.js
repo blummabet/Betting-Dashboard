@@ -1602,17 +1602,24 @@ function renderSharpRadar() {
     ? `${biggestMover.m.home.split(' ').slice(-1)[0]} – ${biggestMover.m.away.split(' ').slice(-1)[0]}: ${biggestMover.maxMov}pp`
     : '—';
 
+  // KPI semantic left-border colors
+  const mvRate      = allFixtures.length > 0 ? (withMovement.length / allFixtures.length * 100) : 0;
+  const mvRateCol   = mvRate >= 5 ? '#f85149' : mvRate >= 2 ? '#e3b341' : '#3fb950';
+  const bigMoverPP  = biggestMover?.maxMov || 0;
+  const bigMoverCol = bigMoverPP >= 4 ? '#f85149' : bigMoverPP >= 2 ? '#e3b341' : '#3fb950';
+  const kpiCards = [
+    { ic: '📅', lbl: 'Spiele gesamt',    val: allFixtures.length + ' (7 Tage)', col: '#484f58', sub: '' },
+    { ic: '⏳', lbl: 'Bevorstehend',     val: upcoming.length + ' offen',       col: '#484f58', sub: '' },
+    { ic: '📡', lbl: 'Mit Linienbeweg.', val: withMovement.length + ' Spiele',  col: mvRateCol, sub: mvRate.toFixed(1) + '% aller Spiele' },
+    { ic: '🔒', lbl: 'Closing-Daten',    val: closedWithMv.length + ' gespielt',col: '#484f58', sub: '' },
+    { ic: '⚡', lbl: 'Größter Mover',    val: bigMoverLabel,                     col: bigMoverCol, sub: bigMoverPP >= 4 ? '→ ACT' : bigMoverPP >= 2 ? '→ WATCH' : '' },
+  ];
   const kpiHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px;">
-    ${[
-      ['📅', 'Spiele gesamt',     allFixtures.length + ' (7 Tage)'],
-      ['⏳', 'Bevorstehend',      upcoming.length + ' offen'],
-      ['📡', 'Mit Linienbeweg.',  withMovement.length + ' Spiele'],
-      ['🔒', 'Closing-Daten',     closedWithMv.length + ' gespielt'],
-      ['⚡', 'Größter Mover',     bigMoverLabel],
-    ].map(([ic, lbl, val]) => `<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 15px;">
+    ${kpiCards.map(({ic, lbl, val, col, sub}) => `<div style="background:var(--card);border:1px solid var(--border);border-left:3px solid ${col};border-radius:10px;padding:13px 15px;">
       <div style="font-size:20px;margin-bottom:5px;">${ic}</div>
       <div style="font-size:16px;font-weight:900;color:var(--text);line-height:1.2;">${val}</div>
       <div style="font-size:10px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.4px;">${lbl}</div>
+      ${sub ? `<div style="font-size:10px;font-weight:700;color:${col};margin-top:4px;">${sub}</div>` : ''}
     </div>`).join('')}
   </div>`;
 
@@ -1835,18 +1842,42 @@ function renderSharpRadar() {
     return { label, avgPp: count ? (totalPp/count).toFixed(1) : null, count, posCount, negCount };
   });
 
-  const heatmapHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;">
+  const heatmapHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin-bottom:12px;">
     ${heatData.map(({label, avgPp, count, posCount, negCount}) => {
-      const v   = avgPp ? parseFloat(avgPp) : 0;
-      const bg  = !avgPp ? 'rgba(255,255,255,0.02)' : v>=7 ? 'rgba(248,81,73,0.13)' : v>=4 ? 'rgba(227,179,65,0.10)' : 'rgba(63,185,80,0.07)';
-      const col = !avgPp ? '#484f58' : v>=7 ? '#f85149' : v>=4 ? '#e3b341' : '#3fb950';
-      const dir = count ? (posCount > negCount ? `↗ ${posCount}/${count}` : `↘ ${negCount}/${count}`) : '';
+      const v    = avgPp ? parseFloat(avgPp) : 0;
+      const bg   = !avgPp ? 'rgba(255,255,255,0.02)' : v>=7 ? 'rgba(248,81,73,0.13)' : v>=4 ? 'rgba(227,179,65,0.10)' : 'rgba(63,185,80,0.07)';
+      const col  = !avgPp ? '#484f58' : v>=7 ? '#f85149' : v>=4 ? '#e3b341' : '#3fb950';
+      const tier = !avgPp ? '' : v>=4 ? 'SHARP' : v>=1 ? 'WATCH' : 'FLAT';
+      const dir  = count ? (posCount > negCount ? `↗ ${posCount}/${count}` : `↘ ${negCount}/${count}`) : '';
       return `<div style="background:${bg};border:1px solid ${col}30;border-radius:8px;padding:11px 13px;text-align:center;">
         <div style="font-size:14px;font-weight:900;color:${col};">${avgPp != null ? avgPp+'pp' : '—'}</div>
         <div style="font-size:10px;color:var(--muted);margin-top:3px;">${label}</div>
-        <div style="font-size:9px;color:${col};opacity:.75;margin-top:2px;">${count ? count+' Spiele · '+dir : 'kein Opening'}</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-top:4px;">
+          ${count ? `<span style="font-size:9px;color:${col};opacity:.75">${count} Spiele · ${dir}</span>` : `<span style="font-size:9px;color:#484f58">kein Opening</span>`}
+          ${tier ? `<span style="font-size:8px;font-weight:800;color:${col};background:${col}20;border-radius:4px;padding:0 4px">${tier}</span>` : ''}
+        </div>
       </div>`;
     }).join('')}
+  </div>
+  <div style="padding-top:10px;border-top:1px solid #21262d;">
+    <div style="font-size:9px;font-weight:700;color:#484f58;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Schwellenwerte &amp; Handlungsregeln</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="flex:1;min-width:150px;display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:rgba(63,185,80,.06);border:1px solid rgba(63,185,80,.18);border-radius:8px">
+        <span style="font-size:14px;flex-shrink:0">🟢</span>
+        <div><div style="font-size:10px;font-weight:800;color:#3fb950">0–0.9pp — Kein Signal</div>
+        <div style="font-size:10px;color:#484f58;margin-top:2px;line-height:1.4">Markt effizient. Kein Handlungsbedarf — blind vertrauen.</div></div>
+      </div>
+      <div style="flex:1;min-width:150px;display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:rgba(227,179,65,.06);border:1px solid rgba(227,179,65,.18);border-radius:8px">
+        <span style="font-size:14px;flex-shrink:0">🟡</span>
+        <div><div style="font-size:10px;font-weight:800;color:#e3b341">1–3.9pp — Beobachten</div>
+        <div style="font-size:10px;color:#484f58;margin-top:2px;line-height:1.4">CLV-Alignment prüfen. Pick-Richtung validieren bevor Einsatz erhöht wird.</div></div>
+      </div>
+      <div style="flex:1;min-width:150px;display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.18);border-radius:8px">
+        <span style="font-size:14px;flex-shrink:0">🔴</span>
+        <div><div style="font-size:10px;font-weight:800;color:#f85149">≥4pp — Sharp Signal</div>
+        <div style="font-size:10px;color:#484f58;margin-top:2px;line-height:1.4">Pick-Richtung bestätigen. Gegen Sharp-Richtung: meiden oder Stake reduzieren.</div></div>
+      </div>
+    </div>
   </div>`;
 
   // ── Section WM: Pinnacle Line Movement Sparklines + Total Movement Table ──
@@ -1929,9 +1960,19 @@ function renderSharpRadar() {
         // Line
         svgParts.push(`<polyline points="${coords.join(' ')}" fill="none" stroke="${col}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>`);
 
-        // Last point dot
+        // Last point dot + probability label
         const lastCoord = coords[coords.length - 1].split(',');
+        const lastPt    = pts[pts.length - 1];
+        const lastIp    = _ip(lastPt[key]);
         svgParts.push(`<circle cx="${lastCoord[0]}" cy="${lastCoord[1]}" r="3" fill="${col}" stroke="#0d1117" stroke-width="1.5"/>`);
+        if (lastIp != null) {
+          const lx = parseFloat(lastCoord[0]);
+          const ly = parseFloat(lastCoord[1]);
+          const anchor = lx > W * 0.75 ? 'end' : 'start';
+          const dx = anchor === 'end' ? -5 : 5;
+          const dy = ly < H * 0.35 ? 10 : -4;
+          svgParts.push(`<text x="${(lx+dx).toFixed(1)}" y="${(ly+dy).toFixed(1)}" font-size="9" font-weight="700" fill="${col}" text-anchor="${anchor}" opacity="0.9">${lastIp}%</text>`);
+        }
       }
 
       svgParts.push('</svg>');
@@ -1977,7 +2018,30 @@ function renderSharpRadar() {
     // ── Section A: Sparkline Cards (top movers + all fixtures with ≥2 snaps) ──
     const sparkFx = wmFxData.filter(d => d.snapCount >= 2);
     if (sparkFx.length > 0) {
-      wmSparklineHtml = sparkFx.map(({key, fx, homeT, awayT, snaps, shifts, maxAbsShift, snapCount}) => {
+      // Count ACT/WATCH fixtures for section header badges
+      const actCount  = sparkFx.filter(d => d.maxAbsShift >= 4).length;
+      const watchCount = sparkFx.filter(d => d.maxAbsShift >= 2).length;
+
+      // Filter state (default ≥2pp — only show meaningful signals)
+      window._wmSparkFilter = window._wmSparkFilter ?? 2;
+      const filteredSparkFx = sparkFx.filter(d => d.maxAbsShift >= window._wmSparkFilter);
+
+      const sparkFilterBar = `<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        ${actCount  > 0 ? `<span style="background:rgba(248,81,73,.12);border:1px solid rgba(248,81,73,.3);border-radius:10px;padding:1px 8px;font-size:10px;font-weight:800;color:#f85149">🚨 ${actCount} ACT ≥4pp</span>` : ''}
+        ${watchCount > 0 ? `<span style="background:rgba(227,179,65,.10);border:1px solid rgba(227,179,65,.25);border-radius:10px;padding:1px 8px;font-size:10px;font-weight:700;color:#e3b341">👁 ${watchCount} WATCH ≥2pp</span>` : ''}
+        <span style="font-size:10px;color:#484f58;margin-left:auto">Filter:</span>
+        ${[['Alle', 0], ['≥2pp', 2], ['≥4pp', 4]].map(([lbl, thr]) => {
+          const active = window._wmSparkFilter === thr;
+          return `<button onclick="window._wmSparkFilter=${thr};renderSharpRadar()"
+            style="background:${active ? 'rgba(0,212,161,.12)' : 'rgba(255,255,255,.03)'};border:1px solid ${active ? 'rgba(0,212,161,.4)' : '#30363d'};
+                   border-radius:10px;color:${active ? '#00d4a1' : '#6e7681'};font-size:10px;font-weight:${active ? '800' : '500'};
+                   padding:3px 10px;cursor:pointer;font-family:inherit;transition:all .12s">${lbl}</button>`;
+        }).join('')}
+      </div>`;
+
+      const sparkCardsHtml = filteredSparkFx.length === 0
+        ? `<div style="padding:20px;text-align:center;color:#484f58;font-size:12px">Keine Bewegung über ${window._wmSparkFilter}pp — Filter ändern um alle Spiele zu sehen</div>`
+        : filteredSparkFx.map(({key, fx, homeT, awayT, snaps, shifts, maxAbsShift, snapCount}) => {
         const [yr, mo, dy] = fx.date.split('-');
         const dateFmt = `${dy}.${mo}.${yr.slice(2)}`;
         const moveCol = _shiftCol(maxAbsShift);
@@ -1998,14 +2062,41 @@ function renderSharpRadar() {
         }).join('');
 
         const bk = snaps[snaps.length-1].bk || '?';
-        const bgCard = maxAbsShift >= 8 ? '#1a0d0d' : maxAbsShift >= 5 ? '#1a160a' : '#0d1117';
-        const borderCard = maxAbsShift >= 8 ? '#f8514933' : maxAbsShift >= 5 ? '#e3b34133' : '#21262d';
+        const bgCard    = maxAbsShift >= 8 ? '#1a0d0d' : maxAbsShift >= 5 ? '#1a160a' : maxAbsShift >= 2 ? '#0d1117' : '#0d1117';
+        const borderCard = maxAbsShift >= 8 ? '#f8514933' : maxAbsShift >= 5 ? '#e3b34133' : maxAbsShift >= 2 ? '#30363d' : '#21262d';
+        const accentBorder = maxAbsShift >= 4 ? '#f85149' : maxAbsShift >= 2 ? '#e3b341' : 'transparent';
 
-        return `<div style="background:${bgCard};border:1px solid ${borderCard};border-radius:10px;padding:12px 14px;margin-bottom:8px;">
+        // Actionable badge: ACT / WATCH / flat
+        const moveBadge = maxAbsShift >= 4
+          ? `<span style="font-size:11px;font-weight:800;color:#f85149;background:rgba(248,81,73,.15);border:1px solid rgba(248,81,73,.4);border-radius:8px;padding:2px 10px">🚨 ACT ${maxAbsShift}pp</span>`
+          : maxAbsShift >= 2
+          ? `<span style="font-size:11px;font-weight:800;color:#e3b341;background:rgba(227,179,65,.12);border:1px solid rgba(227,179,65,.35);border-radius:8px;padding:2px 10px">👁 WATCH ${maxAbsShift}pp</span>`
+          : `<span style="font-size:11px;font-weight:700;color:#484f58;background:rgba(255,255,255,.03);border:1px solid #21262d;border-radius:8px;padding:2px 10px">${maxAbsShift}pp</span>`;
+
+        // Action bar — plain-language guidance for user
+        const actionBar = (() => {
+          if (maxAbsShift < 2) return '';
+          // Find biggest mover market
+          const entries = Object.entries(shifts).filter(([,v]) => v != null && Math.abs(v) >= 0.5);
+          if (!entries.length) return '';
+          entries.sort(([,a],[,b]) => Math.abs(b) - Math.abs(a));
+          const [fk, fpp] = entries[0];
+          const mktNames = { hw: 'Heimsieg (H)', dr: 'Remis (X)', aw: 'Auswärtssieg (A)', o25: 'Über 2.5 Tore', u25: 'Unter 2.5 Tore', bttsY: 'BTTS Ja' };
+          const mktName = mktNames[fk] || fk;
+          const dir = fpp > 0 ? 'gewinnt Wahrscheinlichkeit' : 'verliert Wahrscheinlichkeit';
+          const sign = fpp > 0 ? '+' : '';
+          const barCol = maxAbsShift >= 4 ? '#f85149' : '#e3b341';
+          const actionText = maxAbsShift >= 4
+            ? `🚨 Sharp-Signal: <strong>${mktName}</strong> ${dir} (${sign}${fpp}pp) — Pick in diese Richtung bestätigen, gegen diese Richtung meiden`
+            : `👁 Beobachten: <strong>${mktName}</strong> ${dir} (${sign}${fpp}pp) — Entwicklung verfolgen, kein sofortiger Handlungsbedarf`;
+          return `<div style="margin-top:8px;padding:7px 10px;border-radius:7px;background:${barCol}10;border-left:3px solid ${barCol};font-size:11px;color:${barCol};line-height:1.5">${actionText}</div>`;
+        })();
+
+        return `<div style="background:${bgCard};border:1px solid ${borderCard};border-left:3px solid ${accentBorder};border-radius:10px;padding:12px 14px;margin-bottom:8px;">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
             <span style="font-size:13px;font-weight:700;color:#e6edf3">${homeT.flag} ${homeT.name} <span style="color:#484f58;font-weight:400">vs</span> ${awayT.flag} ${awayT.name}</span>
             <span style="font-size:10px;color:#6e7681">${dateFmt}</span>
-            <span style="margin-left:auto;font-size:11px;font-weight:800;color:${moveCol};background:${moveCol}18;border:1px solid ${moveCol}44;border-radius:8px;padding:2px 8px">⚡ Max ${maxAbsShift}pp</span>
+            <span style="margin-left:auto">${moveBadge}</span>
           </div>
           <div style="margin-bottom:8px;border-radius:6px;overflow:hidden;background:#0a0d10;padding:4px 6px">
             ${sparkSvg}
@@ -2017,8 +2108,11 @@ function renderSharpRadar() {
             </div>
           </div>
           <div style="display:flex;gap:5px;flex-wrap:wrap">${chips}</div>
+          ${actionBar}
         </div>`;
-      }).join('');
+        }).join('');
+
+      wmSparklineHtml = sparkFilterBar + sparkCardsHtml;
     }
 
     // ── Section B: Gesamtbewegung Tabelle (alle WM Fixtures) ───────────────
