@@ -299,9 +299,12 @@
     // ─── Teams + Form + Odds ──────────────────────────
     html += `<div class="wm-card-body">`;
     html += `<div class="wm-teams">`;
-    html += _teamRow(home, standing, fx.home, 'home', homeForm);
+    // eloDiff > 0 means home stronger; show delta for the stronger side, negative for weaker
+    const homeEloDelta = eloDiff != null ? eloDiff : null;
+    const awayEloDelta = eloDiff != null ? -eloDiff : null;
+    html += _teamRow(home, standing, fx.home, 'home', homeForm, homeEloDelta);
     html += `<div class="wm-draw-separator"><span>— vs —</span></div>`;
-    html += _teamRow(away, standing, fx.away, 'away', awayForm);
+    html += _teamRow(away, standing, fx.away, 'away', awayForm, awayEloDelta);
     html += `</div>`;
 
     // Odds column
@@ -325,6 +328,26 @@
     }
     html += `</div>`; // wm-odds-col
     html += `</div>`; // wm-card-body
+
+    // ─── Match Picks — Zone 2 (immediately after teams) ──
+    if (hasPicks) {
+      html += `<div class="wm-picks-section">`;
+      html += `<div class="wm-section-header">🎯 PICKS</div>`;
+      for (const pick of sortedPicks) {
+        html += _buildPickRow(pick, false);
+      }
+      html += `</div>`;
+    }
+
+    // ─── Player Picks ─────────────────────────────────
+    if (hasPlayer) {
+      html += `<div class="wm-picks-section wm-player-section">`;
+      html += `<div class="wm-section-header" style="color:#a78bfa;">⚽ SPIELER-WETTEN</div>`;
+      for (const pp of fxPPicks) {
+        html += _buildPickRow(pp, true);
+      }
+      html += `</div>`;
+    }
 
     // ─── Model Probability Bar ────────────────────────
     if (home.elo && away.elo) {
@@ -392,20 +415,23 @@
     const hasForm = homeForm || awayForm;
     if (hasXg || hasForm) {
       html += `<div class="wm-stats-strip">`;
+      // Threshold-colored pill helper: over25Rate/bttsRate > 60% → green, < 40% → red
+      const ouPillCls = r => r > 0.60 ? 'wm-stat-pill wm-stat-ou-high' : r < 0.40 ? 'wm-stat-pill wm-stat-ou-low' : 'wm-stat-pill wm-stat-ou';
+      const bttsPillCls = r => r > 0.55 ? 'wm-stat-pill wm-stat-btts-high' : r < 0.35 ? 'wm-stat-pill wm-stat-btts-low' : 'wm-stat-pill wm-stat-btts';
       // Home side
       html += `<div class="wm-stats-team">`;
       if (homeXg) html += `<span class="wm-stat-pill wm-stat-xg" title="xG Attack / Defense">⚽ ${homeXg.xgForAvg.toFixed(1)} · 🛡 ${homeXg.xgAgainstAvg.toFixed(1)}</span>`;
       if (homeForm) {
-        if (homeForm.over25Rate != null) html += `<span class="wm-stat-pill wm-stat-ou">O2.5 ${Math.round(homeForm.over25Rate * 100)}%</span>`;
-        if (homeForm.bttsRate != null)   html += `<span class="wm-stat-pill wm-stat-btts">BTTS ${Math.round(homeForm.bttsRate * 100)}%</span>`;
+        if (homeForm.over25Rate != null) html += `<span class="${ouPillCls(homeForm.over25Rate)}">O2.5 ${Math.round(homeForm.over25Rate * 100)}%</span>`;
+        if (homeForm.bttsRate != null)   html += `<span class="${bttsPillCls(homeForm.bttsRate)}">BTTS ${Math.round(homeForm.bttsRate * 100)}%</span>`;
       }
       html += `</div>`;
       // Away side
       html += `<div class="wm-stats-team wm-stats-team-away">`;
       if (awayXg) html += `<span class="wm-stat-pill wm-stat-xg" title="xG Attack / Defense">⚽ ${awayXg.xgForAvg.toFixed(1)} · 🛡 ${awayXg.xgAgainstAvg.toFixed(1)}</span>`;
       if (awayForm) {
-        if (awayForm.over25Rate != null) html += `<span class="wm-stat-pill wm-stat-ou">O2.5 ${Math.round(awayForm.over25Rate * 100)}%</span>`;
-        if (awayForm.bttsRate != null)   html += `<span class="wm-stat-pill wm-stat-btts">BTTS ${Math.round(awayForm.bttsRate * 100)}%</span>`;
+        if (awayForm.over25Rate != null) html += `<span class="${ouPillCls(awayForm.over25Rate)}">O2.5 ${Math.round(awayForm.over25Rate * 100)}%</span>`;
+        if (awayForm.bttsRate != null)   html += `<span class="${bttsPillCls(awayForm.bttsRate)}">BTTS ${Math.round(awayForm.bttsRate * 100)}%</span>`;
       }
       html += `</div>`;
       html += `</div>`; // wm-stats-strip
@@ -424,26 +450,6 @@
     // ─── AI Snippet ───────────────────────────────────
     if (aiSnippet && !isPlayed) {
       html += `<div class="wm-ai-snippet">🤖 ${aiSnippet}</div>`;
-    }
-
-    // ─── Match Picks ──────────────────────────────────
-    if (hasPicks) {
-      html += `<div class="wm-picks-section">`;
-      html += `<div class="wm-section-header">🎯 PICKS</div>`;
-      for (const pick of sortedPicks) {
-        html += _buildPickRow(pick, false);
-      }
-      html += `</div>`;
-    }
-
-    // ─── Player Picks ─────────────────────────────────
-    if (hasPlayer) {
-      html += `<div class="wm-picks-section wm-player-section">`;
-      html += `<div class="wm-section-header" style="color:#a78bfa;">⚽ SPIELER-WETTEN</div>`;
-      for (const pp of fxPPicks) {
-        html += _buildPickRow(pp, true);
-      }
-      html += `</div>`;
     }
 
     // ─── Polymarket mini row ──────────────────────────
@@ -470,10 +476,18 @@
   }
 
   // ── Team row with form dots ───────────────────────────
-  function _teamRow(team, standing, teamId, side, form) {
+  function _teamRow(team, standing, teamId, side, form, eloDelta) {
     const pos    = standing ? standing.findIndex(s => s.id === teamId) + 1 : 0;
     const posStr = pos > 0 ? `<span class="wm-standing-pos">${pos}.</span>` : '';
-    const eloStr = team.elo ? `<span class="wm-elo-badge">${team.elo}</span>` : '';
+    // Show Elo as delta (advantage over opponent), not raw number
+    let eloStr = '';
+    if (eloDelta != null) {
+      const sign   = eloDelta > 0 ? '+' : '';
+      const clr    = eloDelta > 0 ? '#3fb950' : eloDelta < 0 ? '#f85149' : 'var(--muted)';
+      eloStr = `<span class="wm-elo-badge" style="color:${clr};border-color:${clr}44">${sign}${eloDelta} Elo</span>`;
+    } else if (team.elo) {
+      eloStr = `<span class="wm-elo-badge">${team.elo}</span>`;
+    }
     const formDots = form && form.last5 ? _formDots(form.last5) : '';
     return `
     <div class="wm-team-row wm-team-${side}">
