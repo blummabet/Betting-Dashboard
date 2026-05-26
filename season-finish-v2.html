@@ -1387,6 +1387,17 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Vollautomatisches Prediction-Market-Trading auf Polymarket — von der Edge-Berechnung bis zum P&amp;L-Tracking nach Spielende. Alles in einem System.</p>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;">
 
+        <div style="background:rgba(0,0,0,.25);border:1px solid rgba(248,81,73,.35);border-radius:8px;padding:12px;">
+          <div style="font-size:11px;font-weight:700;color:#f85149;margin-bottom:6px;">🔥 Steam Lag Monitor — Trade Simulator</div>
+          <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.8;">
+            <li><code>steam_lag_monitor.py</code> — läuft alle 2h lokal via Cowork Scheduled Task</li>
+            <li>Fetcht frische Poly-Preise (Gamma API) + liest Pinnacle Fair Probs</li>
+            <li>Loggt Steam Lag Signale ≥ 3pp in <code>steam_lag_log.json</code></li>
+            <li>Trackt Konvergenz: wie schnell schließt Poly die Lücke?</li>
+            <li><code>steam-lag-log.html</code> — Dashboard mit Convergence-Charts · Edge-Decay-Bars · Zeitlinie</li>
+          </ul>
+        </div>
+
         <div style="background:rgba(0,0,0,.25);border:1px solid rgba(163,113,247,.30);border-radius:8px;padding:12px;">
           <div style="font-size:11px;font-weight:700;color:#a371f7;margin-bottom:6px;">⚡ Alert Zone &amp; Auto-Trigger</div>
           <ul style="font-size:11px;color:var(--text);margin:0;padding-left:14px;line-height:1.8;">
@@ -1504,6 +1515,54 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <li><strong>Signal 3 — H2H Rate:</strong> historische Trefferquote vs. marktimplizierter Wahrscheinlichkeit</li>
           <li>Verwendet von: <code>renderer.js</code> · <code>polymarket-tab.js</code></li>
           <li>Python-Port in <code>generate_wm_picks.py</code> — identische Thresholds</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(240,136,62,.06);border:1px solid rgba(240,136,62,.35);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">🌍</span>
+          <strong style="color:#f0883e;font-size:13px;">WM 2026 — Venue &amp; Travel Burden</strong>
+          <span style="font-size:9px;background:#f0883e;color:#0d1117;padding:1px 5px;border-radius:4px;font-weight:700;">NEU Jun 2026</span>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Strukturvorteil durch Reise-Analyse — welches Team spielt unter welchen Bedingungen?</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li><code>compute_wm_travel_burden.py</code> — Haversine km · Ruhetage · Border Crossings · Burden Score 0–10</li>
+          <li>16 Venues mit Koordinaten, Altitude, Temp/Humidity — inkl. Empower Field Denver (1609m!)</li>
+          <li>11 Teams spielen alle 3 Gruppenspiele am selben Ort (Score 0) → struktureller Vorteil</li>
+          <li>Paraguay: 8.470km Total-Reise (schlechtester Wert aller 48 Teams)</li>
+          <li>Travel Burden Pills auf WM-Overview-Cards + Reisekontext auf Event Pages</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(88,166,255,.06);border:1px solid rgba(88,166,255,.30);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">🌡️</span>
+          <strong style="color:#58a6ff;font-size:13px;">WM 2026 — Venue Weather &amp; Klima</strong>
+          <span style="font-size:9px;background:#58a6ff;color:#0d1117;padding:1px 5px;border-radius:4px;font-weight:700;">NEU Jun 2026</span>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Echte Wettervorhersage pro Spiel — dynamisch von Open-Meteo (kein API-Key, CORS-safe):</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li>16-Tage-Forecast: Temp · Regen · Wind + stündl. Luftfeuchtigkeit (Mittag-Avg 10–15h)</li>
+          <li>Freshness-Badge: ● Live (≤3d) · ● 16T-Prognose (4–16d) · Baseline-Fallback</li>
+          <li>Klima-Pills auf Event Pages: 🏔 Höhe · 🌡 Hitze · 🌧 Regen · 🏟 Dach</li>
+          <li>Denver 1609m → Altitude-Warnung · Miami 33°C 76% Hum → Hitze-Warnung</li>
+          <li>Pick-Env-Modifikator zeigt Wetter-Impact auf Picks (z.B. höheres BTTS in Hitze)</li>
+        </ul>
+      </div>
+
+      <div style="background:rgba(167,139,250,.06);border:1px solid rgba(167,139,250,.30);border-radius:10px;padding:14px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+          <span style="font-size:20px">📊</span>
+          <strong style="color:#a78bfa;font-size:13px;">Polymarket Sparkline — Redesign</strong>
+          <span style="font-size:9px;background:#a78bfa;color:#0d1117;padding:1px 5px;border-radius:4px;font-weight:700;">NEU Jun 2026</span>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Vollständig neu gebaut — Preisverlauf Pinnacle vs. Polymarket visuell verständlich:</p>
+        <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
+          <li>Pinnacle: durchgezogen blau · Polymarket: gestrichelt lila — sofort unterscheidbar</li>
+          <li>Markt-Label links + Edge-Badge rechts im Header (z.B. <code>+3.8pp ↑</code>)</li>
+          <li>Edge-Direction-Annotation: ↑ Edge wächst · ↓ schrumpft · → stabil</li>
+          <li>Zeitachse: <code>vor Xh</code> links · <code>jetzt</code> rechts + Hairline-Ticks</li>
+          <li>Start/End-Labels: faded Entry · bold Current mit Kontrast-Dot</li>
         </ul>
       </div>
 
@@ -1659,12 +1718,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         </div>
         <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Eigene Seite pro Spiel — 1 Template, N JSON-Dateien:</p>
         <ul style="font-size:11px;color:var(--text);margin:0;padding-left:16px;line-height:1.8;">
-          <li><code>matches/match.html</code> — einziges Template, liest <code>?m=slug</code></li>
-          <li><code>generate_match_pages.py</code> → schreibt <code>matches/data/{slug}.json</code></li>
-          <li>Donut-Chart 1X2-Wahrscheinlichkeit · xG-Matchup-Card · Picks mit Edge/EV/Kelly</li>
-          <li>Line-Movement pick-aware (Grün = Sharps für Pick, Rot = dagegen)</li>
-          <li>Polymarket-Sektion: Model vs. Poly Vergleich · Edge-Signal farbig</li>
-          <li>Verknüpft über 🔗 Links in Sharp Radar und Poly Trader</li>
+          <li><code>matches/match.html</code> + <code>matches/wm-match.html</code> — je ein Template, liest <code>?m=slug</code></li>
+          <li><code>generate_wm_match_pages.py</code> → schreibt <code>matches/data/wm-*.json</code></li>
+          <li>Decision Strip — kompakter Pick-Header mit Kelly-Fraktion direkt unter Venue</li>
+          <li>Environment Section — Venue &amp; Klima links · Reisekontext rechts (Travel Burden)</li>
+          <li>Async Weather Injection — Open-Meteo live oder 16T-Prognose via <code>injectWeather()</code></li>
+          <li>Sharp Radar · AI Preview · Player Spotlight · Odds · Poly · ELO/xG · Form · H2H</li>
         </ul>
       </div>
 
@@ -1763,18 +1822,25 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
               <th style="text-align:left;padding:2px 4px;font-weight:600;">Output</th>
             </tr>
             <tr><td style="padding:3px 4px;color:#f0c040">fetch_wm_squads.py</td><td style="padding:3px 4px;color:var(--muted)">tägl. 06:00</td><td style="padding:3px 4px;color:var(--text)">wm2026-data.json (Squads)</td></tr>
-            <tr><td style="padding:3px 4px;color:#f0c040">fetch_wm_odds.py</td><td style="padding:3px 4px;color:var(--muted)">tägl. 06:00</td><td style="padding:3px 4px;color:var(--text)">wm2026-data.json (Odds)</td></tr>
+            <tr><td style="padding:3px 4px;color:#f0c040">fetch_wm_odds.py</td><td style="padding:3px 4px;color:var(--muted)">tägl. 06:00</td><td style="padding:3px 4px;color:var(--text)">wm2026-odds-history.json</td></tr>
+            <tr><td style="padding:3px 4px;color:#f0c040">detect_wm_sharp_moves.py</td><td style="padding:3px 4px;color:var(--muted)">nach odds</td><td style="padding:3px 4px;color:var(--text)">wm_sharp_moves_log.json → Telegram</td></tr>
             <tr><td style="padding:3px 4px;color:#f0c040">fetch_wm_form.py</td><td style="padding:3px 4px;color:var(--muted)">tägl. 06:00</td><td style="padding:3px 4px;color:var(--text)">wm2026-data.json (Form+H2H)</td></tr>
+            <tr><td style="padding:3px 4px;color:#f0c040">fetch_wm_corners.py</td><td style="padding:3px 4px;color:var(--muted)">tägl. 06:00</td><td style="padding:3px 4px;color:var(--text)">wm2026-data.json (Corners)</td></tr>
             <tr><td style="padding:3px 4px;color:#f0c040">generate_wm_picks.py</td><td style="padding:3px 4px;color:var(--muted)">nach form</td><td style="padding:3px 4px;color:var(--text)">wm2026-data.json (Picks)</td></tr>
+            <tr><td style="padding:3px 4px;color:#f0c040">fetch_wm_poly_prices.py</td><td style="padding:3px 4px;color:var(--muted)">3× tägl.</td><td style="padding:3px 4px;color:var(--text)">wm_poly_prices.json · wm2026-poly-history.json</td></tr>
+            <tr><td style="padding:3px 4px;color:#f85149">steam_lag_monitor.py</td><td style="padding:3px 4px;color:var(--muted)">alle 2h lokal</td><td style="padding:3px 4px;color:var(--text)">steam_lag_log.json (Konvergenz-Tracking)</td></tr>
+            <tr><td style="padding:3px 4px;color:#f0883e">compute_wm_travel_burden.py</td><td style="padding:3px 4px;color:var(--muted)">einmalig</td><td style="padding:3px 4px;color:var(--text)">wm_travel_burden.json (48 Teams)</td></tr>
+            <tr><td style="padding:3px 4px;color:#f0c040">generate_wm_match_pages.py</td><td style="padding:3px 4px;color:var(--muted)">tägl.</td><td style="padding:3px 4px;color:var(--text)">matches/data/wm-*.json</td></tr>
             <tr style="border-top:1px solid var(--border);">
               <td colspan="3" style="padding:4px 4px;color:var(--muted);font-size:10px;">
                 <code>wm2026-data.json</code> = single source of truth:<br>
-                Teams · Gruppen · Fixtures · Odds · Form · H2H · Picks · Results
+                Teams · Gruppen · Fixtures · Odds · Form · H2H · Picks · Results · Poly
               </td>
             </tr>
           </table>
           <div style="margin-top:8px;padding:6px 8px;background:rgba(163,113,247,.08);border-radius:5px;font-size:10px;color:var(--muted);">
-            ⚖️ <code>generate_wm_picks.py</code> ist Python-Port von <code>pick-verdict.js</code> — identische 3-Signal-Logik, identische Thresholds, kein Drift.
+            ⚖️ <code>generate_wm_picks.py</code> ist Python-Port von <code>pick-verdict.js</code> — identische 3-Signal-Logik, identische Thresholds, kein Drift.<br>
+            🔥 <code>steam_lag_monitor.py</code> läuft lokal via Cowork Scheduled Task (alle 2h) — kein GitHub Action nötig.
           </div>
         </div>
       </div>
@@ -1822,9 +1888,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
           <div style="background:rgba(48,54,61,.6);border:1px solid rgba(0,212,161,.15);border-radius:6px;padding:8px 10px;">
             <div style="color:#00d4a1;font-weight:700;font-size:11px;">polymarket-tab.js</div>
-            <div style="color:var(--muted);font-size:10px;margin-top:2px;">Poly Trader · Observer Mode</div>
+            <div style="color:var(--muted);font-size:10px;margin-top:2px;">WM Market Table · Steam Lag Explainer · Sparkline · P&amp;L</div>
             <div style="color:#f47067;font-weight:700;font-size:11px;margin-top:4px;">share.js</div>
             <div style="color:var(--muted);font-size:10px;margin-top:2px;">Infographic · Canvas · Share</div>
+          </div>
+          <div style="background:rgba(248,81,73,.05);border:1px solid rgba(248,81,73,.20);border-radius:6px;padding:8px 10px;">
+            <div style="color:#f85149;font-weight:700;font-size:11px;">steam_lag_monitor.py</div>
+            <div style="color:var(--muted);font-size:10px;margin-top:2px;">Lokal · alle 2h · Cowork Scheduled Task</div>
+            <div style="color:var(--muted);font-size:10px;">Gamma API → Edge → steam_lag_log.json</div>
+            <div style="color:#f0883e;font-weight:700;font-size:11px;margin-top:4px;">compute_wm_travel_burden.py</div>
+            <div style="color:var(--muted);font-size:10px;margin-top:2px;">Haversine · 48 Teams · wm_travel_burden.json</div>
           </div>
 
         </div>
