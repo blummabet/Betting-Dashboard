@@ -566,6 +566,85 @@ body{
 }
 .sticky-btn:hover{transform:translateY(-1px);}
 
+/* ── CARD ELEVATION SYSTEM ── */
+:root{
+  --surface-1:#0c1018;
+  --surface-2:#111827;
+  --surface-3:#161f2e;
+}
+
+/* ── DECISION STRIP ── */
+.decision-strip{
+  margin:12px 16px;
+  border-radius:10px;
+  padding:14px 16px;
+  border-left:5px solid;
+  position:relative;overflow:hidden;
+}
+.decision-strip.bet{
+  background:rgba(34,197,94,.07);
+  border-color:#22c55e;
+  border-right-color:rgba(34,197,94,.25);
+  border-top-color:rgba(34,197,94,.25);
+  border-bottom-color:rgba(34,197,94,.25);
+}
+.decision-strip.abw{
+  background:rgba(249,115,22,.05);
+  border-color:#f97316;
+  border-right-color:rgba(249,115,22,.2);
+  border-top-color:rgba(249,115,22,.2);
+  border-bottom-color:rgba(249,115,22,.2);
+}
+.ds-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.ds-badge{font-size:11px;font-weight:800;letter-spacing:.08em;padding:3px 10px;border-radius:5px;}
+.ds-badge.bet{color:#22c55e;background:rgba(34,197,94,.15);}
+.ds-badge.abw{color:#f97316;background:rgba(249,115,22,.12);}
+.ds-market{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#f0f4ff;flex:1;min-width:0;}
+.ds-odds{font-family:'Bebas Neue',sans-serif;font-size:30px;flex-shrink:0;}
+.ds-odds.bet{color:#22c55e;}
+.ds-odds.abw{color:#f97316;}
+.ds-meta{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center;font-size:11px;}
+.ds-edge{font-weight:700;}
+.ds-edge.bet{color:#22c55e;}
+.ds-edge.abw{color:#f97316;}
+.ds-kelly{font-size:10px;color:var(--sub);margin-top:3px;padding-top:6px;border-top:1px solid rgba(255,255,255,.05);}
+
+/* ── SECTION GRADIENT DIVIDER ── */
+.sec-divider{
+  display:flex;align-items:center;gap:10px;
+  margin:22px 16px 8px;
+}
+.sec-divider-lbl{
+  font-size:9px;font-weight:700;color:var(--sub);
+  letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;
+}
+.sec-divider-rule{
+  flex:1;height:1px;
+  background:linear-gradient(to right,rgba(255,255,255,.08),transparent);
+}
+
+/* ── PICK HERO UPGRADE ── */
+.pick-hero{background:var(--surface-3)!important;border-color:rgba(34,197,94,.3)!important;}
+
+/* ── INSIGHT UPGRADE ── */
+.insight-row{transition:transform .15s;}
+.insight-row:hover{transform:translateX(3px);}
+
+/* ── MOBILE FIXES ── */
+@media (max-width:600px){
+  .odds-grid{grid-template-columns:1fr 1fr;}
+  .odds-grid>*:first-child{grid-column:1/3;}
+  .hero-name{font-size:22px;}
+  .hero-flag{font-size:38px;}
+  .signal-table{display:none;}
+  .signal-cards-mobile{display:flex;flex-direction:column;gap:8px;}
+  .gruppe-table thead th.gt-hide,
+  .gruppe-table tbody td.gt-hide{display:none;}
+}
+@media (min-width:601px){
+  .signal-cards-mobile{display:none;}
+}
+
 /* ── LOADING / ERROR ── */
 .loading-screen{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -1558,6 +1637,61 @@ function renderPlayerBets(D) {
 }
 
 /* ── Sticky bar ──────────────────────────────────────────── */
+/* ── Decision Strip — compact top pick summary ───────────── */
+function renderDecisionStrip(D) {
+  const picks  = D.picks || [];
+  const primary = picks.find(p => p.verdict === 'BET') || picks.find(p => p.verdict === 'ABWÄGEN') || null;
+  if (!primary) return '';
+
+  const isBet      = primary.verdict === 'BET';
+  const cls        = isBet ? 'bet' : 'abw';
+  const badgeLabel = isBet ? '⚡ BET' : '📈 ABWÄGEN';
+  const starsN     = starsFromConf(primary.conf);
+
+  const edgePp  = primary.edgePP != null ? parseFloat(primary.edgePP) : null;
+  const edgeStr = edgePp != null ? (edgePp >= 0 ? '+' : '') + edgePp.toFixed(1) + 'pp Edge' : '';
+  const fvStr   = primary.fairValue ? 'FV ' + parseFloat(primary.fairValue).toFixed(2) : '';
+
+  // Kelly fraction: (p_model * odds - 1) / (odds - 1) * 100
+  let kellyHtml = '';
+  if (primary.odds && D.modHome != null) {
+    // Pick which model prob to use based on market string
+    const mktLow = (primary.market || '').toLowerCase();
+    let pModel = null;
+    if (mktLow.includes('heim') || mktLow.includes('home') || mktLow === '1') pModel = D.modHome / 100;
+    else if (mktLow.includes('auswärts') || mktLow.includes('away') || mktLow === '2') pModel = D.modAway / 100;
+    else if (mktLow.includes('unentsch') || mktLow.includes('draw') || mktLow === 'x') pModel = D.modDraw / 100;
+
+    if (pModel != null && primary.odds > 1) {
+      const o = parseFloat(primary.odds);
+      const fullKelly = ((pModel * o - 1) / (o - 1) * 100);
+      const halfKelly = fullKelly / 2;
+      if (fullKelly > 0) {
+        kellyHtml = `<div class="ds-kelly">Kelly: <strong>${fullKelly.toFixed(1)}%</strong> · Konservativ: <strong>${halfKelly.toFixed(1)}%</strong> des Bankrolls</div>`;
+      }
+    }
+  }
+
+  const metaParts = [
+    starsN ? starsStr(starsN) : '',
+    fvStr,
+    edgeStr,
+  ].filter(Boolean);
+
+  return `
+    <div class="decision-strip ${cls}">
+      <div class="ds-row">
+        <span class="ds-badge ${cls}">${badgeLabel}</span>
+        <span class="ds-market">${escHtml(primary.market || '')}</span>
+        <span class="ds-odds ${cls}">${primary.odds ? '@' + fmtOdds(primary.odds) : '—'}</span>
+      </div>
+      ${metaParts.length > 0 ? `<div class="ds-meta">
+        ${metaParts.map(m => `<span class="ds-edge ${cls}">${escHtml(m)}</span>`).join('<span style="color:rgba(255,255,255,.15)">·</span>')}
+      </div>` : ''}
+      ${kellyHtml}
+    </div>`;
+}
+
 function renderStickyBar(D) {
   const betPick = (D.picks || []).find(p => p.verdict === 'BET');
   if (!betPick) return '';
@@ -1651,18 +1785,19 @@ function render(D) {
       <span>${escHtml(D.venue)}</span>
     </div>` : ''}
 
+    ${renderDecisionStrip(D)}
     ${renderContext(D)}
+    ${renderPicks(D)}
     ${renderSignal(D)}
     ${renderAI(D)}
     ${renderInsights(D)}
-    ${renderPlayerBets(D)}
-    ${renderPicks(D)}
     ${renderOdds(D)}
     ${renderPoly(D)}
     ${renderEloXg(D)}
     ${renderForm(D)}
     ${renderH2h(D)}
     ${renderGroup(D)}
+    ${renderPlayerBets(D)}
 
     <div class="page-footer">
       <div class="pf-brand">CocoBet</div>
