@@ -2344,6 +2344,16 @@ function _renderWmMarketTable() {
         <span style="font-size:10px;color:#484f58">Stand: ${standStr}</span>
         <span style="font-size:10px;color:#484f58">Nächstes Update: ${nextUpdate}</span>
       </div>
+      <a href="steam-lag-log.html" target="_blank"
+         style="display:inline-flex;align-items:center;gap:6px;
+                background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.35);
+                border-radius:8px;padding:6px 12px;text-decoration:none;
+                font-size:11px;font-weight:700;color:#f85149;
+                transition:background .15s;white-space:nowrap"
+         onmouseover="this.style.background='rgba(248,81,73,.18)'"
+         onmouseout="this.style.background='rgba(248,81,73,.1)'">
+        🔥 Steam Lag Log
+      </a>
     </div>
 
     <!-- Info bar -->
