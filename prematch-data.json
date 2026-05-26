@@ -1,5 +1,5 @@
 {
-  "ts": 1779775723234,
+  "ts": 1779826144699,
   "fixtures": [
     {
       "fixtureId": 1545235,
@@ -519,7 +519,24 @@
         ],
         "away": []
       },
-      "h2h": null,
+      "h2h": {
+        "games": 5,
+        "homeWins": 2,
+        "draws": 2,
+        "awayWins": 1,
+        "lastMeetingYear": 2026,
+        "avgGoals": 3.2,
+        "over25Rate": 0.6,
+        "over35Rate": 0.2,
+        "bttsRate": 0.6,
+        "lastResults": [
+          "D",
+          "L",
+          "D",
+          "W",
+          "W"
+        ]
+      },
       "isFinished": false,
       "odds": null,
       "apiPrediction": {
@@ -567,7 +584,7 @@
       "awayTeamName": "Nice",
       "homeTeamId": 1063,
       "awayTeamId": 84,
-      "referee": "B. Bastien",
+      "referee": "Benoît Bastien, France",
       "refereeStats": null,
       "date": "2026-05-26",
       "time": "20:45",
@@ -583,19 +600,25 @@
             "player": "P. Eymard",
             "position": "M",
             "type": "Missing Fixture",
-            "reason": "Inactive"
+            "reason": "Foot Injury"
           },
           {
             "player": "M. Jaber",
             "position": "M",
             "type": "Missing Fixture",
-            "reason": "Inactive"
+            "reason": "Surgery"
           },
           {
             "player": "C. Lamba",
             "position": "D",
             "type": "Missing Fixture",
             "reason": "Injury"
+          },
+          {
+            "player": "D. N'Guessan",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Inactive"
           },
           {
             "player": "M. Paalberg",
@@ -615,19 +638,19 @@
             "player": "M. Abdelmonem",
             "position": "D",
             "type": "Missing Fixture",
-            "reason": "Injury"
-          },
-          {
-            "player": "S. Abdul Samed",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Inactive"
+            "reason": "Knee Injury"
           },
           {
             "player": "M. Bombito",
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Leg Injury"
+          },
+          {
+            "player": "M. Dupe",
+            "position": "G",
+            "type": "Missing Fixture",
+            "reason": "Inactive"
           },
           {
             "player": "T. Ndombele",
@@ -640,6 +663,12 @@
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Ankle Injury"
+          },
+          {
+            "player": "E. Wahi",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Yellow Cards"
           }
         ]
       },
@@ -647,16 +676,17 @@
         "home": {
           "goalkeeper": 0,
           "defense": 1,
-          "midfield": 5,
+          "midfield": 6,
           "attack": 0,
-          "confirmed": 6,
+          "confirmed": 7,
           "questionable": 0,
-          "total": 6,
+          "total": 7,
           "notes": [
             "N. El Jamali (Gesperrt/Verletzt — Knee Injury)",
-            "P. Eymard (Gesperrt/Verletzt — Inactive)",
-            "M. Jaber (Gesperrt/Verletzt — Inactive)",
+            "P. Eymard (Gesperrt/Verletzt — Foot Injury)",
+            "M. Jaber (Gesperrt/Verletzt — Surgery)",
             "C. Lamba (Gesperrt/Verletzt — Injury)",
+            "D. N'Guessan (Gesperrt/Verletzt — Inactive)",
             "M. Paalberg (Gesperrt/Verletzt — Inactive)",
             "L. Traore (Gesperrt/Verletzt — Inactive)"
           ],
@@ -671,19 +701,25 @@
               "player": "P. Eymard",
               "position": "M",
               "type": "Missing Fixture",
-              "reason": "Inactive"
+              "reason": "Foot Injury"
             },
             {
               "player": "M. Jaber",
               "position": "M",
               "type": "Missing Fixture",
-              "reason": "Inactive"
+              "reason": "Surgery"
             },
             {
               "player": "C. Lamba",
               "position": "D",
               "type": "Missing Fixture",
               "reason": "Injury"
+            },
+            {
+              "player": "D. N'Guessan",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Inactive"
             },
             {
               "player": "M. Paalberg",
@@ -701,38 +737,39 @@
           "impactScore": 2.1
         },
         "away": {
-          "goalkeeper": 0,
+          "goalkeeper": 1,
           "defense": 1,
           "midfield": 4,
           "attack": 0,
-          "confirmed": 5,
+          "confirmed": 6,
           "questionable": 0,
-          "total": 5,
+          "total": 6,
           "notes": [
-            "M. Abdelmonem (Gesperrt/Verletzt — Injury)",
-            "S. Abdul Samed (Gesperrt/Verletzt — Inactive)",
+            "M. Abdelmonem (Gesperrt/Verletzt — Knee Injury)",
             "M. Bombito (Gesperrt/Verletzt — Leg Injury)",
+            "M. Dupe (Gesperrt/Verletzt — Inactive)",
             "T. Ndombele (Gesperrt/Verletzt — Inactive)",
-            "E. Pereira (Gesperrt/Verletzt — Ankle Injury)"
+            "E. Pereira (Gesperrt/Verletzt — Ankle Injury)",
+            "E. Wahi (Gesperrt/Verletzt — Yellow Cards)"
           ],
           "_raw": [
             {
               "player": "M. Abdelmonem",
               "position": "D",
               "type": "Missing Fixture",
-              "reason": "Injury"
-            },
-            {
-              "player": "S. Abdul Samed",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Inactive"
+              "reason": "Knee Injury"
             },
             {
               "player": "M. Bombito",
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Leg Injury"
+            },
+            {
+              "player": "M. Dupe",
+              "position": "G",
+              "type": "Missing Fixture",
+              "reason": "Inactive"
             },
             {
               "player": "T. Ndombele",
@@ -745,9 +782,15 @@
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Ankle Injury"
+            },
+            {
+              "player": "E. Wahi",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Yellow Cards"
             }
           ],
-          "impactScore": 1.8
+          "impactScore": 2.9
         }
       },
       "bookings": {
@@ -795,201 +838,94 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.41,
-        "dr_fair": 3.66,
-        "aw_fair": 3.21,
-        "_cn": 26,
-        "dc1X_bkr": 1.45,
-        "dcX2_bkr": 1.71,
-        "dc12_bkr": 1.38,
-        "o25_fair": 1.86,
-        "u25_fair": 2.17,
-        "o25_cn": 10,
-        "pinn_hw": 2.37,
-        "pinn_dr": 3.42,
-        "pinn_aw": 3.08,
-        "pinn_hw_fair": 2.46,
-        "pinn_dr_fair": 3.55,
-        "pinn_aw_fair": 3.2,
-        "pinn_o25": 1.85,
-        "pinn_u25": 2.02,
-        "pinn_o25_fair": 1.92,
-        "pinn_u25_fair": 2.09,
-        "aw": 3.08,
-        "hw": 2.37,
-        "dr": 3.42,
-        "ah_a_point": 0.25,
-        "ah_a": 1.85,
+        "hw_fair": 4.09,
+        "dr_fair": 1.93,
+        "aw_fair": 4.19,
+        "_cn": 21,
+        "dc1X_bkr": 1.31,
+        "dcX2_bkr": 1.32,
+        "dc12_bkr": 2.07,
+        "pinn_hw": 4.14,
+        "pinn_dr": 1.78,
+        "pinn_aw": 3.91,
+        "pinn_hw_fair": 4.38,
+        "pinn_dr_fair": 1.89,
+        "pinn_aw_fair": 4.14,
+        "aw": 3.91,
+        "hw": 4.14,
+        "dr": 1.78,
+        "ah_a_point": 0,
+        "ah_a": 1.88,
         "ah_away_lines": [
           {
+            "pt": 0,
+            "price": 1.88
+          },
+          {
+            "pt": 0.5,
+            "price": 1.25
+          },
+          {
             "pt": 0.25,
-            "price": 1.85
+            "price": 1.4
+          },
+          {
+            "pt": -0.25,
+            "price": 2.93
+          },
+          {
+            "pt": -0.5,
+            "price": 3.87
+          }
+        ],
+        "ah_h_point": 0,
+        "ah_h": 2,
+        "ah_home_lines": [
+          {
+            "pt": 0,
+            "price": 2
+          },
+          {
+            "pt": -0.5,
+            "price": 4.1
+          },
+          {
+            "pt": -0.25,
+            "price": 3.11
+          },
+          {
+            "pt": 0.25,
+            "price": 1.44
+          },
+          {
+            "pt": 0.5,
+            "price": 1.27
+          }
+        ],
+        "ao_lines": [
+          {
+            "pt": 1,
+            "price": 3.2
+          },
+          {
+            "pt": 1.25,
+            "price": 3.91
+          }
+        ],
+        "au_lines": [
+          {
+            "pt": 1,
+            "price": 1.36
           },
           {
             "pt": 1.25,
             "price": 1.24
-          },
-          {
-            "pt": 1,
-            "price": 1.29
-          },
-          {
-            "pt": 0.75,
-            "price": 1.46
-          },
-          {
-            "pt": 0.5,
-            "price": 1.62
-          },
-          {
-            "pt": 0,
-            "price": 2.22
-          },
-          {
-            "pt": -0.25,
-            "price": 2.64
-          },
-          {
-            "pt": -0.5,
-            "price": 3.05
-          },
-          {
-            "pt": -0.75,
-            "price": 3.82
           }
         ],
-        "ah_h_point": -0.25,
-        "ah_h": 2.05,
-        "ah_home_lines": [
-          {
-            "pt": -0.25,
-            "price": 2.05
-          },
-          {
-            "pt": -1.25,
-            "price": 4.2
-          },
-          {
-            "pt": -1,
-            "price": 3.74
-          },
-          {
-            "pt": -0.75,
-            "price": 2.83
-          },
-          {
-            "pt": -0.5,
-            "price": 2.36
-          },
-          {
-            "pt": 0,
-            "price": 1.7
-          },
-          {
-            "pt": 0.25,
-            "price": 1.51
-          },
-          {
-            "pt": 0.5,
-            "price": 1.4
-          },
-          {
-            "pt": 0.75,
-            "price": 1.28
-          }
-        ],
-        "o25": 1.85,
-        "u25": 2.02,
-        "ao_lines": [
-          {
-            "pt": 2.5,
-            "price": 1.85
-          },
-          {
-            "pt": 1.5,
-            "price": 1.25
-          },
-          {
-            "pt": 1.75,
-            "price": 1.3
-          },
-          {
-            "pt": 2,
-            "price": 1.39
-          },
-          {
-            "pt": 2.25,
-            "price": 1.61
-          },
-          {
-            "pt": 2.75,
-            "price": 2.06
-          },
-          {
-            "pt": 3,
-            "price": 2.43
-          },
-          {
-            "pt": 3.25,
-            "price": 2.73
-          },
-          {
-            "pt": 3.5,
-            "price": 3.03
-          }
-        ],
-        "o15": 1.25,
-        "o35": 3.03,
-        "au_lines": [
-          {
-            "pt": 2.5,
-            "price": 2.02
-          },
-          {
-            "pt": 1.5,
-            "price": 4.02
-          },
-          {
-            "pt": 1.75,
-            "price": 3.55
-          },
-          {
-            "pt": 2,
-            "price": 3.1
-          },
-          {
-            "pt": 2.25,
-            "price": 2.36
-          },
-          {
-            "pt": 2.75,
-            "price": 1.79
-          },
-          {
-            "pt": 3,
-            "price": 1.58
-          },
-          {
-            "pt": 3.25,
-            "price": 1.47
-          },
-          {
-            "pt": 3.5,
-            "price": 1.39
-          }
-        ],
-        "u15": 4.02,
-        "u35": 1.39,
-        "co95": 1.9,
-        "co85": 1.51,
-        "co105": 2.32,
-        "cu95": 1.92,
-        "cu85": 2.47,
-        "cu105": 1.57,
-        "bttsY": 1.66,
-        "bttsN": 2.26,
-        "ht_aw": 3.66,
-        "ht_dr": 2.96
+        "co85": 1.71,
+        "co95": 2.51,
+        "cu85": 2.15,
+        "cu95": 1.53
       },
       "apiPrediction": {
         "underOver": "-3.5",
@@ -1108,13 +1044,13 @@
         "homeWins": 6,
         "draws": 2,
         "awayWins": 2,
-        "lastMeetingYear": 2025,
+        "lastMeetingYear": 2026,
         "avgGoals": 3.4,
         "over25Rate": 0.7,
         "over35Rate": 0.5,
         "bttsRate": 0.5,
         "lastResults": [
-          "W",
+          "D",
           "W",
           "W",
           "W",
@@ -1303,6 +1239,42 @@
         "threshold": 5,
         "home": [
           {
+            "id": 163078,
+            "name": "L. Curda",
+            "yellows": 7,
+            "threshold": 5,
+            "position": "M",
+            "atThreshold": true,
+            "oneAway": false
+          },
+          {
+            "id": 334331,
+            "name": "M. Hansen",
+            "yellows": 6,
+            "threshold": 5,
+            "position": "D",
+            "atThreshold": true,
+            "oneAway": false
+          },
+          {
+            "id": 363156,
+            "name": "S. Castañeda",
+            "yellows": 5,
+            "threshold": 5,
+            "position": "M",
+            "atThreshold": true,
+            "oneAway": false
+          },
+          {
+            "id": 24826,
+            "name": "S. Michel",
+            "yellows": 5,
+            "threshold": 5,
+            "position": "M",
+            "atThreshold": true,
+            "oneAway": false
+          },
+          {
             "id": 328035,
             "name": "M. Baur",
             "yellows": 5,
@@ -1314,6 +1286,51 @@
           {
             "id": 7592,
             "name": "R. Obermair",
+            "yellows": 4,
+            "threshold": 5,
+            "position": "M",
+            "atThreshold": false,
+            "oneAway": true
+          },
+          {
+            "id": 25289,
+            "name": "F. Götze",
+            "yellows": 4,
+            "threshold": 5,
+            "position": "D",
+            "atThreshold": false,
+            "oneAway": true
+          },
+          {
+            "id": 125726,
+            "name": "F. Bilbija",
+            "yellows": 4,
+            "threshold": 5,
+            "position": "M",
+            "atThreshold": false,
+            "oneAway": true
+          },
+          {
+            "id": 203015,
+            "name": "T. Scheller",
+            "yellows": 4,
+            "threshold": 5,
+            "position": "D",
+            "atThreshold": false,
+            "oneAway": true
+          },
+          {
+            "id": 260780,
+            "name": "N. Bätzner",
+            "yellows": 4,
+            "threshold": 5,
+            "position": "M",
+            "atThreshold": false,
+            "oneAway": true
+          },
+          {
+            "id": 413122,
+            "name": "K. Okpala",
             "yellows": 4,
             "threshold": 5,
             "position": "M",
@@ -1339,15 +1356,6 @@
             "position": "D",
             "atThreshold": true,
             "oneAway": false
-          },
-          {
-            "id": 174,
-            "name": "C. Eriksen",
-            "yellows": 4,
-            "threshold": 5,
-            "position": "M",
-            "atThreshold": false,
-            "oneAway": true
           }
         ]
       },
@@ -1799,24 +1807,7 @@
           }
         ]
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 5,
-        "draws": 1,
-        "awayWins": 4,
-        "lastMeetingYear": 2026,
-        "avgGoals": 2.6,
-        "over25Rate": 0.7,
-        "over35Rate": 0.1,
-        "bttsRate": 0.4,
-        "lastResults": [
-          "W",
-          "L",
-          "L",
-          "L",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": true,
       "odds": null,
       "apiPrediction": null,
