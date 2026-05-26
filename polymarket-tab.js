@@ -559,20 +559,19 @@ async function _loadWmPolyPriceCache() {
 }
 
 // ── Fixture Sparkline ─────────────────────────────────────────────────────
-// Zeichnet Pinn fair prob (grau) vs Poly price (lila) der letzten N Snapshots.
-// Datenquelle: _wmPolyHistoryData — enthält poly_hw + edge_hw pro Snapshot.
-// Pinnacle fair prob = poly_hw + edge_hw/100 (rückgerechnet aus dem gespeicherten Edge).
+// Zeichnet Pinn fair prob (blau/solid) vs Poly price (lila/gestrichelt).
+// Rec 01-06 implemented: market label, start/end labels, line styles,
+// edge badge, timestamp axis, direction annotation.
 function _drawFixtureSparkline(matchKey, edgeKey) {
   if (!_wmPolyHistoryData || !edgeKey) return '';
-  const snaps = (_wmPolyHistoryData[matchKey] || []).slice(-18); // max 18 Punkte = ~6 Tage @ 3x/Tag
+  const snaps = (_wmPolyHistoryData[matchKey] || []).slice(-18);
   if (snaps.length < 3) return '<div style="font-size:10px;color:#484f58;padding:4px 0">📊 Noch zu wenig Verlauf — ab morgen sichtbar</div>';
 
   const edgeField = `edge_${edgeKey}`;
   const polyField = `poly_${edgeKey}`;
 
   const polyVals = snaps.map(s => (s[polyField] != null && s[polyField] > 0) ? s[polyField] : null);
-  const edgeVals = snaps.map((s, i) => s[edgeField] ?? null);
-  // Pinnacle fair prob = poly + edge/100 (rückgerechnet)
+  const edgeVals = snaps.map(s => s[edgeField] ?? null);
   const pinnVals = snaps.map((s, i) => {
     const p = polyVals[i], e = edgeVals[i];
     if (p == null || e == null) return null;
@@ -582,26 +581,24 @@ function _drawFixtureSparkline(matchKey, edgeKey) {
   const allProbs = [...polyVals, ...pinnVals].filter(x => x !== null);
   if (allProbs.length < 3) return '';
 
-  const W = 500, H = 58;
-  const minP = Math.min(...allProbs) - 0.015;
-  const maxP = Math.max(...allProbs) + 0.015;
-  const toX = i => 2 + (i / (snaps.length - 1)) * (W - 4);
-  const toY = p => H - 2 - ((p - minP) / (maxP - minP)) * (H - 6);
+  // SVG dimensions: data area 0-56, axis band 58-74
+  const W = 500, H = 76, dataH = 54;
+  const axisY = 64;
+  const minP = Math.min(...allProbs) - 0.018;
+  const maxP = Math.max(...allProbs) + 0.018;
+  const toX = i => 28 + (i / (snaps.length - 1)) * (W - 56); // left/right margin 28px for labels
+  const toY = p => 4 + dataH - 4 - ((p - minP) / (maxP - minP)) * (dataH - 8);
 
-  // Build point arrays (skip nulls)
   const pinnPts = pinnVals.map((p, i) => p !== null ? [toX(i), toY(p)] : null).filter(Boolean);
   const polyPts = polyVals.map((p, i) => p !== null ? [toX(i), toY(p)] : null).filter(Boolean);
-
   if (pinnPts.length < 2 || polyPts.length < 2) return '';
 
-  // Edge fill polygon: pinn top → poly bottom (reversed)
   const fillPoly = [...pinnPts, ...[...polyPts].reverse()]
     .map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  const pinnLine = pinnPts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
+  const polyLine = polyPts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
 
-  const pinnLine  = pinnPts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
-  const polyLine  = polyPts.map(([x,y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
-
-  // Steam marker: find biggest Pinnacle jump (>= 1.5pp = 0.015 prob) in last 6 snaps
+  // Steam marker
   let steamX = null;
   for (let i = Math.max(1, snaps.length - 6); i < snaps.length; i++) {
     const p1 = pinnVals[i], p0 = pinnVals[i-1];
@@ -611,24 +608,79 @@ function _drawFixtureSparkline(matchKey, edgeKey) {
     }
   }
 
-  // Y-axis labels (min and max probability as %)
-  const yLabelTop = Math.round(maxP * 100);
-  const yLabelBot = Math.round(minP * 100);
-
-  // Last point dot positions
+  // ── Rec 02: Start + end value labels ───────────────────────────────────
+  const [sxP, syP] = pinnPts[0];
+  const [sxO, syO] = polyPts[0];
   const [lxP, lyP] = pinnPts[pinnPts.length - 1];
   const [lxO, lyO] = polyPts[polyPts.length - 1];
+  const startPinnPct = Math.round((pinnVals.find(v=>v!==null)||0)*100);
+  const startPolyPct = Math.round((polyVals.find(v=>v!==null)||0)*100);
+  const endPinnPct   = Math.round((pinnVals.filter(v=>v!==null).at(-1)||0)*100);
+  const endPolyPct   = Math.round((polyVals.filter(v=>v!==null).at(-1)||0)*100);
+
+  // ── Rec 06: Edge direction annotation ──────────────────────────────────
+  const edgeStart = (pinnVals.find(v=>v!==null)||0) - (polyVals.find(v=>v!==null)||0);
+  const edgeEnd   = (pinnVals.filter(v=>v!==null).at(-1)||0) - (polyVals.filter(v=>v!==null).at(-1)||0);
+  const edgeDeltaPP = (edgeEnd - edgeStart) * 100;
+  let dirLabel, dirCol, dirArrow;
+  if (edgeDeltaPP > 0.8) {
+    dirLabel = 'Edge wächst'; dirCol = '#3fb950'; dirArrow = '↑';
+  } else if (edgeDeltaPP < -0.8) {
+    dirLabel = 'Edge schrumpft'; dirCol = '#f85149'; dirArrow = '↓';
+  } else {
+    dirLabel = 'Edge stabil'; dirCol = '#e3b341'; dirArrow = '→';
+  }
+  const annotText = `${dirArrow} ${dirLabel}`;
+  const annotW = annotText.length * 5.8 + 16;
+
+  // ── Rec 05: Timestamp axis ──────────────────────────────────────────────
+  // ~8h per snap interval
+  const hoursAgo = Math.round((snaps.length - 1) * 8);
+  const timeLabel = hoursAgo >= 48 ? `vor ${Math.round(hoursAgo/24)}T` : `vor ${hoursAgo}h`;
+  const firstX = toX(0).toFixed(1);
+  const lastX  = toX(snaps.length - 1).toFixed(1);
 
   return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:${H}px;display:block;overflow:visible">
-    <polygon points="${fillPoly}" fill="#3fb950" opacity="0.12"/>
-    ${steamX ? `<line x1="${steamX}" y1="0" x2="${steamX}" y2="${H}" stroke="#f85149" stroke-width="1" stroke-dasharray="3,2" opacity="0.7"/>
-      <text x="${parseFloat(steamX)+4}" y="11" fill="#f85149" font-size="8" font-family="monospace">steam</text>` : ''}
-    <polyline points="${pinnLine}" stroke="#6e7681" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <polyline points="${polyLine}" stroke="#a78bfa" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="${lxP.toFixed(1)}" cy="${lyP.toFixed(1)}" r="2.5" fill="#6e7681"/>
-    <circle cx="${lxO.toFixed(1)}" cy="${lyO.toFixed(1)}" r="2.5" fill="#a78bfa"/>
-    <text x="2" y="10" fill="#484f58" font-size="8" font-family="monospace">${yLabelTop}%</text>
-    <text x="2" y="${H-2}" fill="#484f58" font-size="8" font-family="monospace">${yLabelBot}%</text>
+
+    <!-- edge fill -->
+    <polygon points="${fillPoly}" fill="#3fb950" opacity="0.10"/>
+
+    <!-- steam marker -->
+    ${steamX ? `<line x1="${steamX}" y1="2" x2="${steamX}" y2="${dataH+2}" stroke="#f85149" stroke-width="1" stroke-dasharray="3,2" opacity="0.6"/>
+      <text x="${parseFloat(steamX)+4}" y="12" fill="#f85149" font-size="8" font-family="monospace" font-weight="700">🔥</text>` : ''}
+
+    <!-- Rec 03: Pinnacle — solid blue -->
+    <polyline points="${pinnLine}" stroke="#58a6ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Rec 03: Polymarket — dashed purple -->
+    <polyline points="${polyLine}" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="5 3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Rec 02: Start dots (faded) -->
+    <circle cx="${sxP.toFixed(1)}" cy="${syP.toFixed(1)}" r="2.5" fill="#58a6ff" opacity="0.35"/>
+    <circle cx="${sxO.toFixed(1)}" cy="${syO.toFixed(1)}" r="2.5" fill="#a78bfa" opacity="0.35"/>
+
+    <!-- Rec 02: Start value labels (left, faded) -->
+    <text x="${(sxP - 4).toFixed(1)}" y="${(syP + 3.5).toFixed(1)}" font-size="9" font-family="monospace" fill="#58a6ff" text-anchor="end" opacity="0.45">${startPinnPct}%</text>
+    <text x="${(sxO - 4).toFixed(1)}" y="${(syO + 3.5).toFixed(1)}" font-size="9" font-family="monospace" fill="#a78bfa" text-anchor="end" opacity="0.45">${startPolyPct}%</text>
+
+    <!-- Rec 02: End dots (solid) -->
+    <circle cx="${lxP.toFixed(1)}" cy="${lyP.toFixed(1)}" r="3" fill="#58a6ff" stroke="#0d1117" stroke-width="1.5"/>
+    <circle cx="${lxO.toFixed(1)}" cy="${lyO.toFixed(1)}" r="3" fill="#a78bfa" stroke="#0d1117" stroke-width="1.5"/>
+
+    <!-- Rec 02: End value labels (right, full opacity) -->
+    <text x="${(lxP + 5).toFixed(1)}" y="${(lyP + 3.5).toFixed(1)}" font-size="9" font-weight="700" font-family="monospace" fill="#58a6ff" text-anchor="start">${endPinnPct}%</text>
+    <text x="${(lxO + 5).toFixed(1)}" y="${(lyO + 3.5).toFixed(1)}" font-size="9" font-weight="700" font-family="monospace" fill="#a78bfa" text-anchor="start">${endPolyPct}%</text>
+
+    <!-- Rec 06: Edge-direction annotation pill -->
+    <rect x="${((W - annotW) / 2).toFixed(1)}" y="6" width="${annotW.toFixed(1)}" height="16" rx="3" fill="#161b22" stroke="#30363d" stroke-width="0.5"/>
+    <text x="${(W/2).toFixed(1)}" y="17.5" font-size="9" font-family="monospace" fill="${dirCol}" text-anchor="middle" font-weight="700">${annotText}</text>
+
+    <!-- Rec 05: Timestamp axis -->
+    <line x1="${firstX}" y1="${axisY}" x2="${lastX}" y2="${axisY}" stroke="#21262d" stroke-width="0.5"/>
+    <line x1="${firstX}" y1="${axisY - 3}" x2="${firstX}" y2="${axisY + 3}" stroke="#30363d" stroke-width="1"/>
+    <line x1="${lastX}" y1="${axisY - 3}" x2="${lastX}" y2="${axisY + 3}" stroke="#30363d" stroke-width="1"/>
+    <text x="${firstX}" y="${H - 2}" font-size="8.5" font-family="monospace" fill="#484f58" text-anchor="middle">${timeLabel}</text>
+    <text x="${lastX}" y="${H - 2}" font-size="8.5" font-family="monospace" fill="#484f58" text-anchor="middle">jetzt</text>
+
   </svg>`;
 }
 
@@ -1907,16 +1959,47 @@ function _renderWmMarketTable() {
 
     // ── Zone 4: Sparkline ────────────────────────────────────────────────────
     const sparklineSvg = _drawFixtureSparkline(fix.key, fix.bestEdgeKey);
+
+    // Rec 01: Market label pill
+    const _edgeKeyToLabel = { hw:'🏠 Heimsieg', aw:'✈️ Auswärtssieg', dr:'⚖️ Unentschieden',
+      draw:'⚖️ Unentschieden', o25:'📈 Over 2.5 Tore', u25:'📉 Under 2.5 Tore',
+      o15:'📈 Over 1.5 Tore', o35:'📈 Over 3.5 Tore', btts:'⚽ BTTS' };
+    const _mktLabel = _edgeKeyToLabel[fix.bestEdgeKey] || fix.bestEdgeKey || '';
+
+    // Rec 04: Edge badge + trend icon
+    const _edgePP = fix.bestEdge || 0;
+    const _trend  = fix.edgeTrend || 'stable';
+    const _trendIcon  = _trend === 'widening' ? '↑' : _trend === 'narrowing' ? '↓' : '→';
+    const _trendCol   = _trend === 'widening' ? '#3fb950' : _trend === 'narrowing' ? '#f85149' : '#e3b341';
+    const _edgeSign   = _edgePP >= 0 ? '+' : '';
+
     const chartHtml = sparklineSvg ? `<div style="margin-bottom:10px">
+      <!-- Rec 01+04: Header row — market label left, edge badge right -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span style="display:inline-flex;align-items:center;gap:5px;
+                     background:#21262d;border:0.5px solid #30363d;border-radius:5px;
+                     padding:3px 9px;font-size:11px;font-weight:700;color:#c9d1d9">
+          📊 ${_mktLabel}
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:5px;
+                     background:${_trend==='widening'?'#0d2818':_trend==='narrowing'?'#2d0f0f':'#1c1a0e'};
+                     border:0.5px solid ${_trendCol}44;border-radius:5px;
+                     padding:3px 9px;font-size:11px;font-weight:800;color:${_trendCol}">
+          ${_edgeSign}${_edgePP.toFixed(1)}pp ${_trendIcon}
+        </span>
+      </div>
       ${sparklineSvg}
-      <div style="display:flex;gap:14px;font-size:10px;color:#484f58;margin-top:3px;padding-left:2px">
-        <span style="display:flex;align-items:center;gap:4px">
-          <span style="display:inline-block;width:16px;height:2px;background:#6e7681;vertical-align:middle"></span>
-          Pinnacle fair</span>
-        <span style="display:flex;align-items:center;gap:4px">
-          <span style="display:inline-block;width:16px;height:2px;background:#a78bfa;vertical-align:middle"></span>
-          Polymarket</span>
-        ${steamLag ? '<span style="color:#f85149;font-weight:700">| 🔥 Steam-Move</span>' : ''}
+      <!-- Rec 03: Updated legend with line styles -->
+      <div style="display:flex;align-items:center;gap:16px;font-size:10px;color:#6e7681;margin-top:4px;padding-left:2px">
+        <span style="display:flex;align-items:center;gap:5px">
+          <svg width="20" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="20" y2="5" stroke="#58a6ff" stroke-width="2"/></svg>
+          Pinnacle fair
+        </span>
+        <span style="display:flex;align-items:center;gap:5px">
+          <svg width="20" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="20" y2="5" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4 3"/></svg>
+          Polymarket
+        </span>
+        ${steamLag ? '<span style="color:#f85149;font-weight:700;margin-left:4px">🔥 Steam-Move</span>' : ''}
       </div>
     </div>` : '';
 
