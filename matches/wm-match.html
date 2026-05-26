@@ -896,22 +896,51 @@ function getEnvModifiers(venue, weather) {
 /* cache for live weather (avoid repeated fetches) */
 const _wxCache = {};
 
+/* ── Weather fetch — Open-Meteo forecast API (16-day window) ── */
 async function fetchWeather(lat, lon, dateStr) {
   const key = `${lat},${lon},${dateStr}`;
   if (_wxCache[key]) return _wxCache[key];
+
+  // Check how many days until match — Open-Meteo forecasts up to 16 days
+  const today    = new Date(); today.setHours(0,0,0,0);
+  const matchDay = new Date(dateStr); matchDay.setHours(0,0,0,0);
+  const daysAway = Math.round((matchDay - today) / 86400000);
+
+  if (daysAway > 16) {
+    // Beyond forecast window — return sentinel so caller can show "available in X days"
+    _wxCache[key] = { tooFar: true, daysAway };
+    return _wxCache[key];
+  }
+
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
-      `&daily=temperature_2m_max,precipitation_probability_max,windspeed_10m_max,relativehumidity_2m_max` +
-      `&timezone=auto&start_date=${dateStr}&end_date=${dateStr}`;
-    const r = await fetch(url);
-    if (!r.ok) return null;
-    const j = await r.json();
-    const d = j.daily || {};
+    // Daily: temp, rain, wind
+    // Hourly: relative_humidity_2m — we fetch and average midday values (hours 11-14)
+    const base = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&timezone=auto`;
+    const dailyUrl  = `${base}&daily=temperature_2m_max,precipitation_probability_max,windspeed_10m_max` +
+                      `&start_date=${dateStr}&end_date=${dateStr}`;
+    const hourlyUrl = `${base}&hourly=relative_humidity_2m` +
+                      `&start_date=${dateStr}&end_date=${dateStr}`;
+
+    const [dr, hr] = await Promise.all([fetch(dailyUrl), fetch(hourlyUrl)]);
+    if (!dr.ok) return null;
+    const dj = await dr.json();
+    const dd = dj.daily || {};
+
+    // Humidity: average hours 10-15 (midday) from hourly data
+    let hum = null;
+    if (hr.ok) {
+      const hj = await hr.json();
+      const humArr = (hj.hourly || {}).relative_humidity_2m || [];
+      const midday = humArr.slice(10, 16).filter(v => v != null);
+      if (midday.length > 0) hum = Math.round(midday.reduce((a,b) => a+b, 0) / midday.length);
+    }
+
     const wx = {
-      temp: d.temperature_2m_max   ? Math.round(d.temperature_2m_max[0])   : null,
-      rain: d.precipitation_probability_max ? Math.round(d.precipitation_probability_max[0]) : null,
-      wind: d.windspeed_10m_max    ? Math.round(d.windspeed_10m_max[0])    : null,
-      hum:  d.relativehumidity_2m_max ? Math.round(d.relativehumidity_2m_max[0]) : null,
+      temp: dd.temperature_2m_max           ? Math.round(dd.temperature_2m_max[0])           : null,
+      rain: dd.precipitation_probability_max ? Math.round(dd.precipitation_probability_max[0]) : null,
+      wind: dd.windspeed_10m_max             ? Math.round(dd.windspeed_10m_max[0])             : null,
+      hum,
+      daysAway,
     };
     _wxCache[key] = wx;
     return wx;
@@ -922,24 +951,45 @@ async function fetchWeather(lat, lon, dateStr) {
 async function injectWeather(venue, dateStr) {
   const block = document.getElementById('env-wx-block');
   if (!block) return;
-  const wx = await fetchWeather(venue.lat, venue.lon, dateStr);
-  if (!wx) { block.innerHTML = '<span class="env-loading">Wetterdaten nicht verfügbar</span>'; return; }
 
-  // Temp pill: update or add
+  const wx = await fetchWeather(venue.lat, venue.lon, dateStr);
+
+  if (!wx) {
+    block.innerHTML = '<span class="env-loading">⚠️ Wetterdienst nicht erreichbar</span>';
+    return;
+  }
+
+  // Match too far in future (>16 days) — show baseline + countdown
+  if (wx.tooFar) {
+    const remainDays = wx.daysAway - 16;
+    block.innerHTML = `<div class="env-wrow">
+      <span class="env-wchip">📅 Live-Vorhersage in ~${remainDays}d verfügbar</span>
+      <span class="env-wchip" style="color:#6e7681">Baseline: 🌡️ ~${venue.temp}°C · 💧 ~${venue.hum}% Luftfeuchte</span>
+    </div>`;
+    return;
+  }
+
   const temp = wx.temp != null ? wx.temp : venue.temp;
   const rain = wx.rain != null ? wx.rain : 0;
   const wind = wx.wind != null ? wx.wind : null;
   const hum  = wx.hum  != null ? wx.hum  : venue.hum;
   const isDome = venue.type === 'dome';
 
+  // Freshness label
+  const daysAway = wx.daysAway || 0;
+  const freshnessLabel = daysAway <= 3
+    ? `<span class="env-wchip" style="color:#3fb950;font-size:9px">● Live</span>`
+    : `<span class="env-wchip" style="color:#e3b341;font-size:9px">● ${daysAway}T-Prognose</span>`;
+
   let chips = '';
   if (isDome) {
-    chips = `<span class="env-wchip">🏛️ <strong>Klimatisiert</strong> · kontrollierte Bedingungen</span>`;
+    chips = `<span class="env-wchip">🏛️ <strong>Klimatisiert</strong> · kontrollierte Bedingungen</span>${freshnessLabel}`;
   } else {
     if (temp != null) chips += `<span class="env-wchip">🌡️ <strong>${temp}°C</strong></span>`;
-    if (hum  != null) chips += `<span class="env-wchip">💧 <strong>${hum}%</strong> Luftfeuchte</span>`;
+    if (hum  != null) chips += `<span class="env-wchip">💧 <strong>${hum}%</strong></span>`;
     if (rain != null) chips += `<span class="env-wchip">🌧️ <strong>${rain}%</strong> Regen</span>`;
     if (wind != null) chips += `<span class="env-wchip">💨 <strong>${wind} km/h</strong></span>`;
+    chips += freshnessLabel;
   }
   block.innerHTML = `<div class="env-wrow">${chips}</div>`;
 
