@@ -416,13 +416,18 @@ def main():
                 }
 
     # Market label → edge_key / allFixtures field name
+    # Both English and German label variants are accepted — generate_wm_picks.py
+    # writes German labels ("Über 2.5 Tore") while legacy data may use English.
     _MARKET_TO_FIELD = {
-        "Heimsieg":       "hw",
-        "Unentschieden":  "dr",
-        "Auswärtssieg":   "aw",
-        "Over 2.5 Tore":  "o25",
-        "Under 2.5 Tore": "u25",
-        "Beide Teams treffen": "btts",
+        "Heimsieg":                  "hw",
+        "Unentschieden":             "dr",
+        "Auswärtssieg":              "aw",
+        "Over 2.5 Tore":             "o25",
+        "Über 2.5 Tore":             "o25",   # German alias (generate_wm_picks.py)
+        "Under 2.5 Tore":            "u25",
+        "Unter 2.5 Tore":            "u25",   # German alias
+        "Beide Teams treffen":       "btts",
+        "Beide Teams treffen — Ja":  "btts",  # German alias with suffix
     }
 
     for key, p in prices.items():

@@ -240,27 +240,21 @@ def compute_verdict(model_odds: float | None, market_odds: float | None,
             elif rate >= thresh - 0.10: story_sig =  0
             else:                       story_sig = -1
 
-    # ── Finale Entscheidung ──────────────────────────────────────────────
+    # ── Finale Entscheidung — exakter Port von pick-verdict.js computeVerdict() ──
+    # WICHTIG: Logik muss 1:1 mit pick-verdict.js übereinstimmen (Single Source of Truth).
     score     = mod_sig + mkt_sig + story_sig
     # Hard skip: Modell UND Markt zeigen stark gegen Pick
     hard_skip = mod_sig <= -1 and mkt_sig <= -1
 
-    # BET: mind. 3 Wege
-    # (1) Klassisch: alle 3 Signale positiv
-    # (2) Starker Modell-Edge + kein Gegenwind von Markt + kein H2H-Widerspruch
-    # (3) Sharp Money bestätigt stark (CLV ≥5pp) + Modell auch positiv
-    bet_classic   = score >= 3 or (score >= 2 and mod_sig >= 1)
-    bet_edge_only = (mod_sig >= 1 and edge_pp >= 8 and mkt_sig >= 0 and story_sig >= 0)
-    bet_sharp     = (mod_sig >= 1 and mkt_sig >= 2)
-
-    if hard_skip or score <= -2:
+    # JS: if (_hardSkip || _score <= -1) → SKIP
+    # JS: else if (_score >= 2 || (_score === 1 && modSig === 1)) → BET
+    # JS: else → ABWÄGEN
+    if hard_skip or score <= -1:
         verdict = "SKIP"
-    elif bet_classic or bet_edge_only or bet_sharp:
+    elif score >= 2 or (score == 1 and mod_sig == 1):
         verdict = "BET"
-    elif score >= 1 or (mod_sig == 1 and mkt_sig >= 0):
-        verdict = "ABWÄGEN"
     else:
-        verdict = "SKIP"
+        verdict = "ABWÄGEN"
 
     return {
         "modSig":   mod_sig,

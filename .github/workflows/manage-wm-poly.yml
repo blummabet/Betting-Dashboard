@@ -52,6 +52,9 @@ jobs:
       - name: 💹 WM Polymarket Preise aktualisieren
         run: ${{ env.POLY_PYTHON }} fetch_wm_poly_prices.py
         continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
       # ── Auto-Trigger (aktivieren wenn bereit) ─────────────────────────────────
       # - name: 🤖 Auto-Trigger WM Bets
@@ -96,7 +99,7 @@ jobs:
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
           git add wm_poly_positions.json wm_poly_prices.json wm_auto_bets_placed.json \
-                  wm_poly_balance.json wm_results.json 2>/dev/null || true
+                  wm_poly_balance.json wm_results.json wm2026-poly-history.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."
           else
