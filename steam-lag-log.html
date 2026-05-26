@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 Steam Lag Log — BetEdge WM 2026</title>
+<style>
+  :root {
+    --bg:      #0d1117;
+    --surface: #161b22;
+    --card:    #21262d;
+    --border:  #30363d;
+    --text:    #e6edf3;
+    --sub:     #8b949e;
+    --blue:    #58a6ff;
+    --green:   #3fb950;
+    --yellow:  #d29922;
+    --red:     #f85149;
+    --purple:  #a78bfa;
+    --orange:  #f0883e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.5; }
+
+  /* ── Header ── */
+  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 20px; display: flex; align-items: center; gap: 12px; }
+  .header h1 { font-size: 18px; font-weight: 600; }
+  .header .sub { color: var(--sub); font-size: 13px; }
+  .header .spacer { flex: 1; }
+  .refresh-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; transition: background 0.15s; }
+  .refresh-btn:hover { background: var(--border); }
+  .last-update { color: var(--sub); font-size: 12px; }
+
+  /* ── Stats bar ── */
+  .stats-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; background: var(--border); border-bottom: 1px solid var(--border); }
+  .stat { background: var(--surface); padding: 14px 20px; text-align: center; }
+  .stat-val { font-size: 26px; font-weight: 700; line-height: 1; }
+  .stat-label { font-size: 11px; color: var(--sub); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat.open .stat-val    { color: var(--yellow); }
+  .stat.conv .stat-val    { color: var(--green); }
+  .stat.steam .stat-val   { color: var(--orange); }
+  .stat.rate .stat-val    { color: var(--blue); }
+  .stat.time .stat-val    { color: var(--purple); }
+
+  /* ── Filters ── */
+  .filters { padding: 14px 20px; display: flex; gap: 8px; align-items: center; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .filter-btn { padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--sub); cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s; }
+  .filter-btn:hover { border-color: var(--blue); color: var(--text); }
+  .filter-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .filter-sep { color: var(--border); }
+  .sort-label { color: var(--sub); font-size: 12px; margin-left: auto; }
+  .sort-btn { padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--sub); cursor: pointer; font-size: 12px; }
+  .sort-btn.active { color: var(--text); border-color: var(--sub); }
+
+  /* ── Main layout ── */
+  .main { padding: 20px; max-width: 1100px; margin: 0 auto; }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--sub); }
+  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state h2 { font-size: 16px; color: var(--text); margin-bottom: 8px; }
+
+  /* ── Signal Card ── */
+  .signal-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .signal-card:hover { border-color: var(--sub); }
+  .signal-card.steam-lag { border-left: 3px solid var(--orange); }
+  .signal-card.status-converged { border-left: 3px solid var(--green); }
+  .signal-card.status-resolved  { opacity: 0.6; }
+
+  /* Card header */
+  .card-header { padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+  .match-title { font-weight: 600; font-size: 15px; flex: 1; }
+  .match-date  { color: var(--sub); font-size: 12px; }
+  .market-pill { padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; background: #1f2937; border: 1px solid var(--border); }
+  .market-pill.hw  { color: var(--blue); border-color: var(--blue); }
+  .market-pill.dr  { color: var(--purple); border-color: var(--purple); }
+  .market-pill.aw  { color: var(--orange); border-color: var(--orange); }
+  .market-pill.o25 { color: var(--green); border-color: var(--green); }
+  .market-pill.u25 { color: var(--yellow); border-color: var(--yellow); }
+  .status-badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; }
+  .status-badge.open      { background: rgba(210,153,34,0.15); color: var(--yellow); border: 1px solid var(--yellow); }
+  .status-badge.converged { background: rgba(63,185,80,0.15);  color: var(--green);  border: 1px solid var(--green); }
+  .status-badge.resolved  { background: rgba(139,148,158,0.15); color: var(--sub);   border: 1px solid var(--sub); }
+
+  /* Card body */
+  .card-body { padding: 14px 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 700px) { .card-body { grid-template-columns: 1fr; } }
+
+  /* Edge section */
+  .edge-section {}
+  .edge-label { font-size: 11px; color: var(--sub); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+  .edge-compare { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+  .edge-entry { font-size: 22px; font-weight: 700; color: var(--text); }
+  .edge-arrow { color: var(--sub); font-size: 14px; }
+  .edge-current { font-size: 18px; font-weight: 600; }
+  .edge-current.positive { color: var(--green); }
+  .edge-current.negative { color: var(--red); }
+  .edge-current.neutral  { color: var(--sub); }
+
+  /* Edge decay bar */
+  .edge-bar-wrap { background: var(--surface); border-radius: 4px; height: 8px; position: relative; overflow: hidden; margin-bottom: 6px; }
+  .edge-bar-entry { position: absolute; left: 0; top: 0; height: 100%; background: var(--blue); opacity: 0.3; border-radius: 4px; }
+  .edge-bar-current { position: absolute; left: 0; top: 0; height: 100%; background: var(--blue); border-radius: 4px; transition: width 0.5s; }
+  .edge-bar-current.converging { background: var(--green); }
+  .edge-bar-pct { font-size: 11px; color: var(--sub); }
+
+  /* Odds row */
+  .odds-row { display: flex; gap: 16px; margin-top: 8px; }
+  .odds-item { }
+  .odds-item-label { font-size: 10px; color: var(--sub); text-transform: uppercase; }
+  .odds-item-val   { font-size: 13px; font-weight: 600; }
+
+  /* Convergence section */
+  .conv-section {}
+  .mini-chart { width: 100%; height: 64px; }
+
+  /* Timeline section */
+  .timeline-section {}
+  .timeline-item { display: flex; gap: 8px; align-items: baseline; margin-bottom: 4px; }
+  .timeline-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .timeline-dot.high { background: var(--orange); }
+  .timeline-dot.med  { background: var(--yellow); }
+  .timeline-dot.low  { background: var(--green); }
+  .timeline-dot.gone { background: var(--sub); }
+  .timeline-time { font-size: 11px; color: var(--sub); min-width: 38px; }
+  .timeline-edge { font-size: 12px; font-weight: 600; }
+  .timeline-note { font-size: 11px; color: var(--sub); }
+
+  /* Card footer */
+  .card-footer { padding: 10px 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; background: rgba(0,0,0,0.15); }
+  .footer-tag  { font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+  .footer-tag.steam { background: rgba(240,136,62,0.15); color: var(--orange); }
+  .footer-tag.trend { background: rgba(88,166,255,0.12); color: var(--blue); }
+  .footer-spacer { flex: 1; }
+  .footer-signal-ts { font-size: 11px; color: var(--sub); }
+  .conv-result { font-size: 12px; font-weight: 600; }
+  .conv-result.fast   { color: var(--green); }
+  .conv-result.medium { color: var(--yellow); }
+  .conv-result.slow   { color: var(--orange); }
+
+  /* Info banner */
+  .info-banner { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.2); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: var(--sub); line-height: 1.6; }
+  .info-banner strong { color: var(--text); }
+  .info-banner .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .info-banner .info-item { display: flex; gap: 6px; align-items: flex-start; }
+
+  /* Loading */
+  .loading { text-align: center; padding: 60px; color: var(--sub); }
+  .loading-spinner { font-size: 32px; animation: spin 1s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* No signal overlay */
+  .no-data { text-align: center; padding: 60px 20px; }
+  .no-data-icon { font-size: 48px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>🔥 Steam Lag Log</h1>
+    <div class="sub">Polymarket Konvergenz-Simulation · WM 2026</div>
+  </div>
+  <div class="spacer"></div>
+  <div id="last-update" class="last-update">Lädt…</div>
+  <button class="refresh-btn" onclick="loadData()">↻ Aktualisieren</button>
+</div>
+
+<div class="stats-bar" id="stats-bar">
+  <div class="stat open"><div class="stat-val" id="s-open">—</div><div class="stat-label">🟡 Offen</div></div>
+  <div class="stat conv"><div class="stat-val" id="s-conv">—</div><div class="stat-label">✅ Konvergiert</div></div>
+  <div class="stat steam"><div class="stat-val" id="s-steam">—</div><div class="stat-label">🔥 Steam Lag</div></div>
+  <div class="stat rate"><div class="stat-val" id="s-rate">—</div><div class="stat-label">⚡ Konvergenzrate</div></div>
+  <div class="stat time"><div class="stat-val" id="s-time">—</div><div class="stat-label">⏱ Ø Konvergenzzeit</div></div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="setFilter('all', this)">Alle</button>
+  <button class="filter-btn" onclick="setFilter('open', this)">🟡 Offen</button>
+  <button class="filter-btn" onclick="setFilter('converged', this)">✅ Konvergiert</button>
+  <button class="filter-btn" onclick="setFilter('resolved', this)">⚫ Aufgelöst</button>
+  <span class="filter-sep">|</span>
+  <button class="filter-btn" onclick="setFilter('steam', this)">🔥 Steam Lag only</button>
+  <span class="sort-label">Sortierung:</span>
+  <button class="sort-btn active" id="sort-ts" onclick="setSort('ts')">Neueste zuerst</button>
+  <button class="sort-btn" id="sort-edge" onclick="setSort('edge')">Edge ↓</button>
+</div>
+
+<div class="main">
+  <div class="info-banner">
+    <strong>Was wird hier simuliert?</strong> Jedes Mal wenn Pinnacle eine Linie bewegt und Polymarket noch nicht reagiert hat (Steam Lag), wird das Signal erfasst. Wir messen: Wie schnell schließt sich der Preisunterschied? Das gibt uns die Grundlage für echte WM-Trades ab 11. Juni.
+    <div class="info-grid">
+      <div class="info-item">🟡 <span><strong>OFFEN</strong> — Edge existiert noch, Polymarket hat nicht adjustiert</span></div>
+      <div class="info-item">✅ <span><strong>KONVERGIERT</strong> — Polymarket hat die Lücke geschlossen (vor dem Spiel)</span></div>
+      <div class="info-item">🔥 <span><strong>Steam Lag</strong> — Pinnacle hat sich bewegt, Poly noch nicht reagiert</span></div>
+      <div class="info-item">⚡ <span><strong>Edge in pp</strong> — Preisunterschied in Prozentpunkten zur Pinnacle-Fair-Prob</span></div>
+    </div>
+  </div>
+  <div id="cards-container"><div class="loading"><div class="loading-spinner">⟳</div><br>Lade Log…</div></div>
+</div>
+
+<script>
+let allSignals = [];
+let currentFilter = 'all';
+let currentSort   = 'ts';
+
+async function loadData() {
+  try {
+    const ts  = Date.now();
+    const res = await fetch(`steam_lag_log.json?t=${ts}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    allSignals = data.signals || [];
+    const upd  = data.updatedAt || '';
+    const runs  = data.runCount || 0;
+
+    document.getElementById('last-update').textContent =
+      upd ? `Letzter Run: ${fmtTs(upd)} · ${runs} Runs` : 'Noch kein Run';
+
+    updateStats();
+    renderCards();
+  } catch(e) {
+    if (e.message.includes('404') || e.message.includes('Failed')) {
+      document.getElementById('cards-container').innerHTML = `
+        <div class="no-data">
+          <div class="no-data-icon">📊</div>
+          <h2 style="color:var(--text);margin-bottom:8px">Noch keine Daten</h2>
+          <p style="color:var(--sub)">Der Monitor läuft alle 2 Stunden automatisch.<br>
+          Beim ersten Run wird <code>steam_lag_log.json</code> erstellt.</p>
+        </div>`;
+      document.getElementById('last-update').textContent = 'Kein Log vorhanden';
+    } else {
+      document.getElementById('cards-container').innerHTML =
+        `<div class="loading" style="color:var(--red)">Fehler: ${e.message}</div>`;
+    }
+  }
+}
+
+function updateStats() {
+  const n_open    = allSignals.filter(s => s.status === 'OPEN').length;
+  const n_conv    = allSignals.filter(s => s.status === 'CONVERGED').length;
+  const n_steam   = allSignals.filter(s => s.steamLagAtSignal).length;
+  const conv_times = allSignals.filter(s => s.convergenceHours != null).map(s => s.convergenceHours);
+  const total_trackable = n_open + n_conv;
+  const rate = total_trackable > 0 ? Math.round(n_conv / total_trackable * 100) : 0;
+  const avgT = conv_times.length > 0 ? (conv_times.reduce((a,b)=>a+b,0)/conv_times.length).toFixed(1) : null;
+
+  document.getElementById('s-open').textContent  = n_open;
+  document.getElementById('s-conv').textContent  = n_conv;
+  document.getElementById('s-steam').textContent = n_steam;
+  document.getElementById('s-rate').textContent  = total_trackable > 0 ? `${rate}%` : '—';
+  document.getElementById('s-time').textContent  = avgT ? `${avgT}h` : '—';
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards();
+}
+
+function setSort(s) {
+  currentSort = s;
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`sort-${s}`).classList.add('active');
+  renderCards();
+}
+
+function filteredSignals() {
+  let list = [...allSignals];
+  if (currentFilter === 'open')      list = list.filter(s => s.status === 'OPEN');
+  if (currentFilter === 'converged') list = list.filter(s => s.status === 'CONVERGED');
+  if (currentFilter === 'resolved')  list = list.filter(s => s.status === 'RESOLVED');
+  if (currentFilter === 'steam')     list = list.filter(s => s.steamLagAtSignal);
+
+  if (currentSort === 'ts') {
+    list.sort((a,b) => (b.signalTs || '').localeCompare(a.signalTs || ''));
+  } else {
+    list.sort((a,b) => (b.entryEdgePp || 0) - (a.entryEdgePp || 0));
+  }
+  return list;
+}
+
+function renderCards() {
+  const list = filteredSignals();
+  const container = document.getElementById('cards-container');
+
+  if (list.length === 0) {
+    container.innerHTML = `<div class="empty-state">
+      <div class="icon">🔍</div>
+      <h2>Keine Signale in diesem Filter</h2>
+      <p style="color:var(--sub);margin-top:8px">Andere Filtereinstellung wählen oder auf den nächsten Monitor-Run warten.</p>
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = list.map(s => renderCard(s)).join('');
+}
+
+function renderCard(s) {
+  const entry    = s.entryEdgePp || 0;
+  const current  = s.currentEdgePp ?? entry;
+  const pct      = calcConvergence(entry, current);
+  const status   = (s.status || 'OPEN').toLowerCase();
+  const isSteam  = s.steamLagAtSignal;
+  const mkt      = s.market || 'hw';
+  const snaps    = s.snapshots || [];
+
+  // Status badge
+  const statusLabels = { open: '🟡 OFFEN', converged: '✅ KONVERGIERT', resolved: '⚫ AUFGELÖST' };
+  const statusBadge  = `<span class="status-badge ${status}">${statusLabels[status] || status}</span>`;
+
+  // Market pill
+  const mktLabels = { hw:'Heimsieg', dr:'Unentschieden', aw:'Auswärtssieg', o25:'Over 2.5', u25:'Under 2.5', btts:'BTTS' };
+  const mktPill   = `<span class="market-pill ${mkt}">${mktLabels[mkt] || mkt}</span>`;
+
+  // Edge bar
+  const barPct    = Math.min(100, (current / Math.max(entry, 0.01)) * 100);
+  const isConv    = pct > 50;
+  const edgeColor = current >= 5 ? 'var(--orange)' : current >= 3 ? 'var(--yellow)' : 'var(--green)';
+  const edgeCls   = current >= 2 ? 'positive' : current <= 0 ? 'negative' : 'neutral';
+
+  // Edge decay bar SVG
+  const barHtml = `
+    <div class="edge-bar-wrap">
+      <div class="edge-bar-entry" style="width:100%"></div>
+      <div class="edge-bar-current ${isConv?'converging':''}" style="width:${barPct}%"></div>
+    </div>
+    <div class="edge-bar-pct">${pct.toFixed(0)}% der Lücke geschlossen</div>`;
+
+  // Mini sparkline
+  const sparkHtml = buildSparkline(snaps, entry);
+
+  // Timeline (last 5 snapshots)
+  const timelineSnaps = snaps.slice(-5).reverse();
+  const timelineHtml  = timelineSnaps.length < 2 ? '<div style="color:var(--sub);font-size:12px">Warte auf weitere Datenpunkte…</div>' :
+    timelineSnaps.map((snap, i) => {
+      const ep   = snap.edgePp ?? 0;
+      const dot  = ep >= 5 ? 'high' : ep >= 3 ? 'med' : ep >= 1 ? 'low' : 'gone';
+      const note = snap.steamLag ? '🔥' : (i === timelineSnaps.length - 1 ? '← Entry' : '');
+      return `<div class="timeline-item">
+        <div class="timeline-dot ${dot}"></div>
+        <div class="timeline-time">${fmtAge(snap.ts)}</div>
+        <div class="timeline-edge" style="color:${edgePpColor(ep)}">${ep > 0 ? '+' : ''}${ep?.toFixed(1)}pp</div>
+        <div class="timeline-note">${note}</div>
+      </div>`;
+    }).join('');
+
+  // Odds row
+  const polyPrice = s.currentPolyPrice ?? s.entryPolyPrice;
+  const fairProb  = s.entryPinnFair;
+  const oddsHtml  = `
+    <div class="odds-row">
+      <div class="odds-item">
+        <div class="odds-item-label">Poly jetzt</div>
+        <div class="odds-item-val">${polyPrice != null ? (polyPrice*100).toFixed(1)+'¢' : '—'}</div>
+      </div>
+      <div class="odds-item">
+        <div class="odds-item-label">Pinn Fair</div>
+        <div class="odds-item-val">${fairProb != null ? (fairProb*100).toFixed(1)+'¢' : '—'}</div>
+      </div>
+      ${polyPrice && fairProb ? `<div class="odds-item">
+        <div class="odds-item-label">Lücke</div>
+        <div class="odds-item-val" style="color:${edgePpColor(current)}">${current > 0 ? '+' : ''}${current.toFixed(1)}pp</div>
+      </div>` : ''}
+    </div>`;
+
+  // Footer tags
+  const tags = [];
+  if (isSteam) {
+    const mv = s.pinnMoveAtSignal;
+    tags.push(`<span class="footer-tag steam">🔥 Steam Lag${mv ? ` +${mv}pp Pinn-Move` : ''}</span>`);
+  }
+  const trendLabels = { growing: '📈 Edge wächst', closing: '📉 Edge schrumpft', stable: '→ Stabil', new: '🆕 Neu erkannt' };
+  if (s.edgeTrendAtSignal) tags.push(`<span class="footer-tag trend">${trendLabels[s.edgeTrendAtSignal] || s.edgeTrendAtSignal}</span>`);
+
+  // Convergence result footer
+  let convResult = '';
+  if (s.status === 'CONVERGED' && s.convergenceHours != null) {
+    const h = s.convergenceHours;
+    const cls = h <= 4 ? 'fast' : h <= 12 ? 'medium' : 'slow';
+    const speed = h <= 4 ? '⚡ Schnell' : h <= 12 ? '🕐 Moderat' : '🐢 Langsam';
+    convResult = `<span class="conv-result ${cls}">${speed} · ${h}h bis Konvergenz</span>`;
+  }
+
+  const matchDateFmt = s.matchDate ? new Date(s.matchDate + 'T12:00:00Z').toLocaleDateString('de-AT', { day: 'numeric', month: 'short' }) : '';
+
+  return `
+  <div class="signal-card ${isSteam ? 'steam-lag' : ''} status-${status}">
+    <div class="card-header">
+      <div class="match-title">${s.homeFlag || ''} ${s.home || s.homeId} vs ${s.away || s.awayId} ${s.awayFlag || ''}</div>
+      ${matchDateFmt ? `<div class="match-date">📅 ${matchDateFmt}</div>` : ''}
+      ${mktPill}
+      ${statusBadge}
+    </div>
+    <div class="card-body">
+      <div class="edge-section">
+        <div class="edge-label">Edge-Entwicklung</div>
+        <div class="edge-compare">
+          <div class="edge-entry">+${entry.toFixed(1)}pp</div>
+          <div class="edge-arrow">→</div>
+          <div class="edge-current ${edgeCls}">
+            ${current > 0 ? '+' : ''}${current.toFixed(1)}pp
+          </div>
+        </div>
+        ${barHtml}
+        ${oddsHtml}
+      </div>
+      <div class="conv-section">
+        <div class="edge-label">Preisverlauf</div>
+        ${sparkHtml}
+      </div>
+      <div class="timeline-section">
+        <div class="edge-label">Letzte Datenpunkte</div>
+        ${timelineHtml}
+      </div>
+    </div>
+    <div class="card-footer">
+      ${tags.join('')}
+      <div class="footer-spacer"></div>
+      ${convResult}
+      <div class="footer-signal-ts">Signal: ${fmtTs(s.signalTs)}</div>
+    </div>
+  </div>`;
+}
+
+function buildSparkline(snaps, entryEdge) {
+  if (snaps.length < 2) {
+    return `<div style="color:var(--sub);font-size:12px;padding-top:8px">Warte auf mehr Datenpunkte…<br><span style="font-size:11px">Nächster Run in ~2h</span></div>`;
+  }
+  const W = 260, H = 64, pad = { l: 8, r: 8, t: 6, b: 18 };
+  const dW = W - pad.l - pad.r;
+  const dH = H - pad.t - pad.b;
+  const vals  = snaps.map(s => s.edgePp ?? 0);
+  const maxV  = Math.max(entryEdge, ...vals, 1);
+  const n     = snaps.length;
+  const xOf   = i => pad.l + (i / Math.max(n-1,1)) * dW;
+  const yOf   = v => pad.t + dH - Math.max(0, Math.min(1, v / maxV)) * dH;
+  const pts   = snaps.map((s, i) => `${xOf(i).toFixed(1)},${yOf(s.edgePp ?? 0).toFixed(1)}`).join(' ');
+
+  // Area fill
+  const areaPath = `M${xOf(0)},${yOf(snaps[0].edgePp??0)} `
+    + snaps.slice(1).map((s,i)=>`L${xOf(i+1)},${yOf(s.edgePp??0)}`).join(' ')
+    + ` L${xOf(n-1)},${H-pad.b} L${xOf(0)},${H-pad.b} Z`;
+
+  // Color by trend
+  const lastV = vals[vals.length - 1];
+  const color = lastV <= 1 ? '#3fb950' : lastV <= 3 ? '#d29922' : '#f0883e';
+
+  // Axis labels
+  const tsFirst = snaps[0].ts ? fmtAge(snaps[0].ts) : '';
+  const tsLast  = 'jetzt';
+
+  // Zero line
+  const y0 = yOf(0);
+
+  return `
+  <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible">
+    <defs>
+      <linearGradient id="spark-grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${color}" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0.02"/>
+      </linearGradient>
+    </defs>
+    <!-- zero baseline -->
+    <line x1="${pad.l}" y1="${y0}" x2="${W-pad.r}" y2="${y0}" stroke="var(--border)" stroke-width="1" stroke-dasharray="3 3"/>
+    <!-- area -->
+    <path d="${areaPath}" fill="url(#spark-grad)"/>
+    <!-- line -->
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <!-- end dot -->
+    <circle cx="${xOf(n-1)}" cy="${yOf(lastV)}" r="3" fill="${color}" stroke="var(--bg)" stroke-width="1.5"/>
+    <!-- axis labels -->
+    <text x="${pad.l}" y="${H}" font-size="10" fill="var(--sub)">${tsFirst}</text>
+    <text x="${W-pad.r}" y="${H}" font-size="10" fill="var(--sub)" text-anchor="end">${tsLast}</text>
+    <!-- max label -->
+    <text x="${pad.l}" y="${pad.t + 9}" font-size="10" fill="var(--sub)">+${maxV.toFixed(1)}pp</text>
+  </svg>`;
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function calcConvergence(entry, current) {
+  if (entry <= 0) return 0;
+  return Math.min(100, Math.max(0, (entry - Math.max(current, 0)) / entry * 100));
+}
+
+function edgePpColor(pp) {
+  if (pp >= 5) return 'var(--orange)';
+  if (pp >= 3) return 'var(--yellow)';
+  if (pp >= 1) return 'var(--blue)';
+  if (pp <= 0) return 'var(--sub)';
+  return 'var(--green)';
+}
+
+function fmtTs(ts) {
+  if (!ts) return '—';
+  try {
+    const d = new Date(ts);
+    return d.toLocaleDateString('de-AT', { day:'2-digit', month:'2-digit' })
+      + ' ' + d.toLocaleTimeString('de-AT', { hour:'2-digit', minute:'2-digit' });
+  } catch { return ts; }
+}
+
+function fmtAge(ts) {
+  if (!ts) return '';
+  try {
+    const diff = (Date.now() - new Date(ts).getTime()) / 1000;
+    if (diff < 3600)   return `vor ${Math.round(diff/60)}m`;
+    if (diff < 86400)  return `vor ${Math.round(diff/3600)}h`;
+    return `vor ${Math.round(diff/86400)}T`;
+  } catch { return ''; }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+loadData();
+// Auto-refresh alle 5 Minuten (falls das Dashboard offen bleibt)
+setInterval(loadData, 5 * 60 * 1000);
+</script>
+</body>
+</html>

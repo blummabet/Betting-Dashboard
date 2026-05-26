@@ -1,0 +1,567 @@
+#!/usr/bin/env python3
+"""
+steam_lag_monitor.py — CocoBet Steam Lag Simulator / Trade Logger
+===================================================================
+Läuft alle 2 Stunden (Cowork Scheduled Task) und:
+  1. Fetcht frische Polymarket-Preise (Gamma API, kein API-Key)
+  2. Liest aktuelle Pinnacle Fair Probs aus wm_poly_prices.json
+  3. Erkennt Steam Lag Signale + Edges ≥ 3pp
+  4. Schreibt/aktualisiert steam_lag_log.json
+  5. Trackt Konvergenz: schließt sich der Edge? Wann? Wie schnell?
+
+Das Ziel der nächsten 7-10 Tage VOR der WM:
+  → Verstehen ob/wann Polymarket nach Pinnacle-Move adjustiert
+  → Datenbasierte Grundlage für echte Trades ab 11. Juni
+
+Keine echten Bets — reine Datensimulation.
+"""
+
+import json
+import os
+import math
+import urllib.request
+import urllib.error
+from datetime import datetime, timezone, date
+from pathlib import Path
+
+# ── Config ────────────────────────────────────────────────────────────────────
+BASE          = Path(__file__).parent
+LOG_FILE      = BASE / "steam_lag_log.json"
+POLY_FILE     = BASE / "wm_poly_prices.json"   # Written by GitHub Action (latest known state)
+POLY_HIST     = BASE / "wm2026-poly-history.json"
+ODDS_HIST     = BASE / "wm2026-odds-history.json"
+
+# Schwellenwerte
+MIN_EDGE_PP       = 2.0    # Mindest-Edge für Log-Eintrag (inkl. watching-Signale)
+SIGNAL_EDGE_PP    = 3.0    # Mindest-Edge für echtes Signal
+CONVERGED_EDGE_PP = 1.0    # Edge gilt als geschlossen wenn < 1pp
+MAX_SNAPSHOTS     = 50     # Snapshots pro Signal-Entry im Log
+SIGNAL_TTL_DAYS   = 30     # Alte aufgelöste Signale nach N Tagen bereinigen
+
+# Gamma API (kein API-Key, public)
+GAMMA_URL = (
+    "https://gamma-api.polymarket.com/events"
+    "?series_slug=soccer-fifwc&limit=100&active=true"
+)
+SLUG_SUFFIXES_TO_SKIP = (
+    "-exact-score", "-halftime-result", "-more-markets",
+    "-exact-goals", "-both-teams-to-score",
+)
+
+# Polymarket Teamname → WM Team-ID (gleich wie in fetch_wm_poly_prices.py)
+POLY_NAME_TO_ID = {
+    "Germany":             "GER", "Curaçao":             "CUW",
+    "Curacao":             "CUW", "Mexico":              "MEX",
+    "South Africa":        "ZAF", "Korea Republic":      "KOR",
+    "Czechia":             "CZE", "Czech Republic":      "CZE",
+    "Canada":              "CAN", "Bosnia-Herzegovina":  "BIH",
+    "Bosnia Herzegovina":  "BIH", "United States":       "USA",
+    "USA":                 "USA", "Paraguay":            "PRY",
+    "Qatar":               "QAT", "Switzerland":         "SUI",
+    "Brazil":              "BRA", "Morocco":             "MAR",
+    "Haiti":               "HTI", "Scotland":            "SCO",
+    "Australia":           "AUS", "Türkiye":             "TUR",
+    "Turkey":              "TUR", "Netherlands":         "NED",
+    "Japan":               "JPN", "Côte d'Ivoire":       "CIV",
+    "Cote d'Ivoire":       "CIV", "Ivory Coast":         "CIV",
+    "Ecuador":             "ECU", "Sweden":              "SWE",
+    "Tunisia":             "TUN", "Spain":               "ESP",
+    "Cabo Verde":          "CPV", "Cape Verde":          "CPV",
+    "Belgium":             "BEL", "Egypt":               "EGY",
+    "Saudi Arabia":        "SAU", "Uruguay":             "URU",
+    "Argentina":           "ARG", "France":              "FRA",
+    "England":             "ENG", "Portugal":            "POR",
+    "Algeria":             "DZA", "DR Congo":            "COD",
+    "Democratic Republic of Congo": "COD",
+    "Croatia":             "CRO", "Norway":              "NOR",
+    "New Zealand":         "NZL", "Iran":                "IRN",
+    "IR Iran":             "IRN", "Iraq":                "IRQ",
+    "Jordan":              "JOR", "Ghana":               "GHA",
+    "Senegal":             "SEN", "Colombia":            "COL",
+    "Panama":              "PAN", "Uzbekistan":          "UZB",
+    "Austria":             "AUT", "Indonesia":           "IDN",
+}
+
+MARKET_LABELS = {
+    "hw": "Heimsieg", "dr": "Unentschieden", "aw": "Auswärtssieg",
+    "o25": "Over 2.5", "u25": "Under 2.5", "btts": "BTTS",
+}
+
+
+# ── Gamma API Fetch ───────────────────────────────────────────────────────────
+def fetch_gamma(url: str) -> list:
+    req = urllib.request.Request(url, headers={
+        "User-Agent": "BetEdge/1.0",
+        "Accept": "application/json",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            return json.loads(resp.read())
+    except Exception as e:
+        print(f"  ⚠️  Gamma fetch fehlgeschlagen: {e}")
+        return []
+
+
+def resolve_team(name: str) -> str | None:
+    tid = POLY_NAME_TO_ID.get(name) or POLY_NAME_TO_ID.get(name.strip())
+    if tid:
+        return tid
+    nl = name.lower()
+    for k, v in POLY_NAME_TO_ID.items():
+        if k.lower() in nl or nl in k.lower():
+            return v
+    return None
+
+
+def fetch_fresh_poly() -> dict:
+    """
+    Fetcht aktuelle 1X2 Poly-Preise für alle WM-Spiele.
+    Gibt dict zurück: {matchKey → {hw, dr, aw, slug, date, homeName, awayName}}
+    """
+    events = fetch_gamma(GAMMA_URL)
+    result = {}
+    for ev in events:
+        slug = ev.get("slug", "")
+        if any(slug.endswith(sfx) for sfx in SLUG_SUFFIXES_TO_SKIP):
+            continue
+        if ev.get("negRisk") is False:
+            continue
+
+        teams_arr = ev.get("teams", [])
+        if len(teams_arr) < 2:
+            continue
+        home_name = teams_arr[0].get("name", "")
+        away_name = teams_arr[1].get("name", "")
+        home_id   = resolve_team(home_name)
+        away_id   = resolve_team(away_name)
+        if not home_id or not away_id:
+            continue
+
+        hw = dr = aw = None
+        for m in ev.get("markets", []):
+            gt     = m.get("groupItemTitle", "")
+            prices = json.loads(m.get("outcomePrices", "[]") or "[]")
+            yes_p  = float(prices[0]) if prices else None
+            if yes_p is None:
+                continue
+            gt_l = gt.lower()
+            if "draw" in gt_l:
+                dr = yes_p
+            elif resolve_team(gt) == home_id:
+                hw = yes_p
+            elif resolve_team(gt) == away_id:
+                aw = yes_p
+            else:
+                thr = str(m.get("groupItemThreshold", ""))
+                if thr == "0": hw = yes_p
+                elif thr == "1": dr = yes_p
+                elif thr == "2": aw = yes_p
+
+        if hw is None or aw is None:
+            continue
+
+        key = f"{home_id}-{away_id}"
+        result[key] = {
+            "hw": round(hw, 4),
+            "dr": round(dr, 4) if dr else None,
+            "aw": round(aw, 4),
+            "slug":     slug,
+            "date":     ev.get("eventDate", ""),
+            "homeName": home_name,
+            "awayName": away_name,
+            "homeId":   home_id,
+            "awayId":   away_id,
+        }
+    print(f"  🌐 Gamma API: {len(result)} WM-Fixtures geladen")
+    return result
+
+
+# ── Pinnacle Fair Probs aus wm_poly_prices.json ───────────────────────────────
+def load_pinn_fair() -> dict:
+    """
+    Liest wm_poly_prices.json (vom letzten GitHub Action Run) und gibt
+    pro matchKey die Pinnacle-devigged Fair Probs zurück.
+    Auch: steamLag, pinnSteamMove, edgeTrend aus letztem Run.
+    """
+    if not POLY_FILE.exists():
+        print("  ⚠️  wm_poly_prices.json nicht gefunden — kein Pinnacle-Kontext")
+        return {}
+    try:
+        with open(POLY_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+        result = {}
+        for fx in data.get("allFixtures", []):
+            key = fx.get("key", "")
+            if not key:
+                continue
+            result[key] = {
+                "fair_hw":      fx.get("fair_hw"),
+                "fair_dr":      fx.get("fair_dr"),
+                "fair_aw":      fx.get("fair_aw"),
+                "fair_o25":     fx.get("fair_o25"),
+                "fair_u25":     fx.get("fair_u25"),
+                "steamLag":     fx.get("steamLag", False),
+                "pinnSteamMove": fx.get("pinnSteamMove"),
+                "edgeTrend":    fx.get("edgeTrend", "stable"),
+                "hasPinnacle":  fx.get("hasPinnacle", False),
+                "generatedAt":  data.get("generatedAt", ""),
+            }
+        print(f"  📁 Pinnacle-Daten geladen: {len(result)} Fixtures "
+              f"(Stand: {data.get('generatedAt', '?')})")
+        return result
+    except Exception as e:
+        print(f"  ⚠️  wm_poly_prices.json lesen fehlgeschlagen: {e}")
+        return {}
+
+
+# ── Team-Infos aus wm2026-data.json ──────────────────────────────────────────
+def load_team_info() -> dict:
+    """Gibt {teamId → {name, flag}} zurück."""
+    wm_file = BASE / "wm2026-data.json"
+    if not wm_file.exists():
+        return {}
+    try:
+        with open(wm_file, encoding="utf-8") as f:
+            wm = json.load(f)
+        result = {}
+        for gdata in wm.get("groups", {}).values():
+            for t in gdata.get("teams", []):
+                result[t["id"]] = {
+                    "name": t.get("name", t["id"]),
+                    "flag": t.get("flag", "🏳"),
+                }
+        return result
+    except Exception:
+        return {}
+
+
+# ── Edge-Berechnung ───────────────────────────────────────────────────────────
+def compute_edges(poly: dict, pinn: dict) -> list[dict]:
+    """
+    Vergleicht frische Poly-Preise mit Pinnacle Fair Probs.
+    Gibt Liste von Fixtures zurück mit allen Edge-Feldern.
+    """
+    signals = []
+    for key, p in poly.items():
+        pf = pinn.get(key, {})
+        if not pf.get("hasPinnacle") and not pf.get("fair_hw"):
+            continue
+
+        fair_hw = pf.get("fair_hw")
+        fair_dr = pf.get("fair_dr")
+        fair_aw = pf.get("fair_aw")
+
+        edges = {}
+        if fair_hw and p.get("hw"):
+            edges["hw"] = round((fair_hw - p["hw"]) * 100, 1)
+        if fair_dr and p.get("dr"):
+            edges["dr"] = round((fair_dr - p["dr"]) * 100, 1)
+        if fair_aw and p.get("aw"):
+            edges["aw"] = round((fair_aw - p["aw"]) * 100, 1)
+
+        pos_edges = {k: v for k, v in edges.items() if v is not None and v > 0}
+        best_key  = max(pos_edges, key=pos_edges.get) if pos_edges else None
+        best_edge = pos_edges.get(best_key, 0) if best_key else 0
+
+        signals.append({
+            "key":          key,
+            "homeId":       p["homeId"],
+            "awayId":       p["awayId"],
+            "homeName":     p["homeName"],
+            "awayName":     p["awayName"],
+            "matchDate":    p["date"][:10] if p.get("date") else "",
+            "slug":         p.get("slug", ""),
+            "poly_hw":      p.get("hw"),
+            "poly_dr":      p.get("dr"),
+            "poly_aw":      p.get("aw"),
+            "fair_hw":      fair_hw,
+            "fair_dr":      fair_dr,
+            "fair_aw":      fair_aw,
+            "edge_hw":      edges.get("hw"),
+            "edge_dr":      edges.get("dr"),
+            "edge_aw":      edges.get("aw"),
+            "bestEdge":     best_edge,
+            "bestEdgeKey":  best_key,
+            "steamLag":     pf.get("steamLag", False),
+            "pinnSteamMove": pf.get("pinnSteamMove"),
+            "edgeTrend":    pf.get("edgeTrend", "stable"),
+        })
+    return signals
+
+
+# ── Signal-ID generieren ──────────────────────────────────────────────────────
+def make_signal_id(key: str, market: str, ts: str) -> str:
+    date_tag = ts[:10].replace("-", "")
+    return f"{key}_{market}_{date_tag}"
+
+
+# ── Log laden/speichern ───────────────────────────────────────────────────────
+def load_log() -> dict:
+    if not LOG_FILE.exists():
+        return {"signals": [], "updatedAt": "", "runCount": 0}
+    try:
+        with open(LOG_FILE, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return {"signals": [], "updatedAt": "", "runCount": 0}
+
+
+def save_log(log: dict) -> None:
+    with open(LOG_FILE, "w", encoding="utf-8") as f:
+        json.dump(log, f, ensure_ascii=False, indent=2)
+
+
+# ── Konvergenz berechnen ──────────────────────────────────────────────────────
+def calc_convergence(entry_edge: float, current_edge: float) -> float:
+    """Wie viel % der ursprünglichen Lücke ist geschlossen?"""
+    if entry_edge <= 0:
+        return 0.0
+    closed = entry_edge - max(current_edge, 0)
+    return round(min(100.0, max(0.0, closed / entry_edge * 100)), 1)
+
+
+# ── Hauptlogik: Log aktualisieren ────────────────────────────────────────────
+def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> dict:
+    """
+    1. Für jedes Signal mit edge >= MIN_EDGE_PP: prüfe ob bereits im Log
+       - Neu → neuen Entry anlegen
+       - Vorhanden → Snapshot anhängen, Konvergenz prüfen
+    2. Für Entries im Log die nicht mehr in den Signalen → als aufgelöst markieren
+    """
+    existing = {e["id"]: e for e in log.get("signals", [])}
+    now_dt   = datetime.fromisoformat(now_ts.replace("Z", "+00:00"))
+
+    for fx in signals:
+        if (fx["bestEdge"] or 0) < MIN_EDGE_PP and not fx["steamLag"]:
+            continue
+
+        best_key = fx["bestEdgeKey"]
+        if not best_key:
+            continue
+
+        sig_id = make_signal_id(fx["key"], best_key, now_ts)
+        # Find existing open entry for same match + market (any date)
+        open_entry = None
+        for e in log.get("signals", []):
+            if (e["matchKey"] == fx["key"]
+                    and e["market"] == best_key
+                    and e["status"] == "OPEN"):
+                open_entry = e
+                break
+
+        current_edge = fx["bestEdge"] or 0
+        current_poly = fx.get(f"poly_{best_key}")
+        current_fair = fx.get(f"fair_{best_key}")
+
+        snap = {
+            "ts":        now_ts,
+            "edgePp":    current_edge,
+            "polyPrice": current_poly,
+            "pinnFair":  current_fair,
+            "steamLag":  fx["steamLag"],
+        }
+
+        if open_entry is None:
+            # ── Neues Signal ──────────────────────────────────────────────
+            if current_edge < SIGNAL_EDGE_PP and not fx["steamLag"]:
+                continue   # Zu klein für echten Log-Eintrag
+
+            home_info = team_info.get(fx["homeId"], {})
+            away_info = team_info.get(fx["awayId"], {})
+            new_entry = {
+                "id":               make_signal_id(fx["key"], best_key, now_ts),
+                "matchKey":         fx["key"],
+                "homeId":           fx["homeId"],
+                "awayId":           fx["awayId"],
+                "home":             home_info.get("name", fx["homeName"]),
+                "away":             away_info.get("name", fx["awayName"]),
+                "homeFlag":         home_info.get("flag", "🏳"),
+                "awayFlag":         away_info.get("flag", "🏳"),
+                "matchDate":        fx["matchDate"],
+                "market":           best_key,
+                "marketLabel":      MARKET_LABELS.get(best_key, best_key),
+                "signalTs":         now_ts,
+                "entryEdgePp":      current_edge,
+                "entryPolyPrice":   current_poly,
+                "entryPinnFair":    current_fair,
+                "steamLagAtSignal": fx["steamLag"],
+                "pinnMoveAtSignal": fx.get("pinnSteamMove"),
+                "edgeTrendAtSignal":fx.get("edgeTrend", "stable"),
+                "snapshots":        [snap],
+                "currentEdgePp":    current_edge,
+                "currentPolyPrice": current_poly,
+                "convergencePct":   0.0,
+                "convergenceTs":    None,
+                "convergenceHours": None,
+                "status":           "OPEN",
+                "outcome":          None,
+            }
+            log.setdefault("signals", []).append(new_entry)
+            flag = "🔥" if fx["steamLag"] else "🆕"
+            print(f"  {flag} NEU: {new_entry['home']} vs {new_entry['away']}"
+                  f" · {new_entry['marketLabel']} · +{current_edge:.1f}pp")
+
+        else:
+            # ── Existierendes offenes Signal updaten ─────────────────────
+            snaps = open_entry.setdefault("snapshots", [])
+            snaps.append(snap)
+            if len(snaps) > MAX_SNAPSHOTS:
+                snaps[:] = snaps[-MAX_SNAPSHOTS:]
+
+            open_entry["currentEdgePp"]    = current_edge
+            open_entry["currentPolyPrice"] = current_poly
+            open_entry["convergencePct"]   = calc_convergence(
+                open_entry["entryEdgePp"], current_edge)
+
+            # Konvergenz erreicht?
+            if (current_edge < CONVERGED_EDGE_PP
+                    and open_entry["status"] == "OPEN"
+                    and not open_entry.get("convergenceTs")):
+                sig_dt = datetime.fromisoformat(
+                    open_entry["signalTs"].replace("Z", "+00:00"))
+                hours = round((now_dt - sig_dt).total_seconds() / 3600, 1)
+                open_entry["convergenceTs"]    = now_ts
+                open_entry["convergenceHours"] = hours
+                open_entry["status"]           = "CONVERGED"
+                print(f"  ✅ KONVERGIERT nach {hours}h: "
+                      f"{open_entry['home']} vs {open_entry['away']}"
+                      f" · {open_entry['marketLabel']}")
+            else:
+                print(f"  📊 UPDATE: {open_entry['home']} vs {open_entry['away']}"
+                      f" · {open_entry['marketLabel']}"
+                      f" · {open_entry['entryEdgePp']:+.1f}pp → {current_edge:+.1f}pp"
+                      f" · {open_entry['convergencePct']:.0f}% geschlossen")
+
+    # ── Aufgelöste Spiele markieren (Spieldatum vorbei) ───────────────────────
+    today = date.today()
+    current_keys = {fx["key"] for fx in signals}
+
+    for entry in log.get("signals", []):
+        if entry["status"] != "OPEN":
+            continue
+        match_date_str = entry.get("matchDate", "")
+        if match_date_str:
+            try:
+                match_dt = date.fromisoformat(match_date_str)
+                if match_dt < today and entry["matchKey"] not in current_keys:
+                    entry["status"] = "RESOLVED"
+                    entry["resolvedAt"] = now_ts
+                    print(f"  ⚽ AUFGELÖST: {entry['home']} vs {entry['away']}"
+                          f" · {entry['marketLabel']}")
+            except ValueError:
+                pass
+
+    # ── Alte aufgelöste Signale bereinigen (> SIGNAL_TTL_DAYS) ───────────────
+    cutoff_dt = datetime.now(timezone.utc).timestamp() - SIGNAL_TTL_DAYS * 86400
+    before = len(log.get("signals", []))
+    log["signals"] = [
+        e for e in log.get("signals", [])
+        if not (e["status"] in ("RESOLVED", "CONVERGED")
+                and _parse_ts(e.get("signalTs", "")) is not None
+                and _parse_ts(e["signalTs"]).timestamp() < cutoff_dt)
+    ]
+    cleaned = before - len(log["signals"])
+    if cleaned:
+        print(f"  🧹 {cleaned} alte Einträge bereinigt")
+
+    log["updatedAt"] = now_ts
+    log["runCount"]  = log.get("runCount", 0) + 1
+    return log
+
+
+def _parse_ts(ts: str | None) -> datetime | None:
+    if not ts:
+        return None
+    try:
+        return datetime.fromisoformat(ts.replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
+# ── Summary ausgeben ──────────────────────────────────────────────────────────
+def print_summary(log: dict) -> None:
+    signals = log.get("signals", [])
+    n_open      = sum(1 for s in signals if s["status"] == "OPEN")
+    n_conv      = sum(1 for s in signals if s["status"] == "CONVERGED")
+    n_resolved  = sum(1 for s in signals if s["status"] == "RESOLVED")
+    n_steam     = sum(1 for s in signals if s.get("steamLagAtSignal"))
+    conv_times  = [s["convergenceHours"] for s in signals
+                   if s["status"] == "CONVERGED" and s.get("convergenceHours")]
+
+    avg_conv = round(sum(conv_times) / len(conv_times), 1) if conv_times else None
+    conv_rate = round(n_conv / max(1, n_conv + n_open) * 100) if (n_conv + n_open) > 0 else 0
+
+    print()
+    print("╔══════════════════════════════════════════════════╗")
+    print("║  🔥 Steam Lag Monitor — Zusammenfassung          ║")
+    print("╠══════════════════════════════════════════════════╣")
+    print(f"║  Signale gesamt:    {len(signals):<30}║")
+    print(f"║  🟡 OFFEN:          {n_open:<30}║")
+    print(f"║  ✅ KONVERGIERT:    {n_conv:<30}║")
+    print(f"║  ⚫ AUFGELÖST:      {n_resolved:<30}║")
+    print(f"║  🔥 Steam Lag:      {n_steam:<30}║")
+    print(f"║  Konvergenzrate:    {conv_rate}%{'':<28}║")
+    if avg_conv:
+        print(f"║  Ø Konvergenzzeit: {avg_conv}h{'':<28}║")
+    print("╚══════════════════════════════════════════════════╝")
+
+    if n_open > 0:
+        print("\n🟡 Offene Signale:")
+        for s in signals:
+            if s["status"] != "OPEN":
+                continue
+            steam_tag = " 🔥" if s.get("steamLagAtSignal") else ""
+            delta = s["currentEdgePp"] - s["entryEdgePp"]
+            delta_str = f"+{delta:.1f}pp" if delta >= 0 else f"{delta:.1f}pp"
+            print(f"   {s['homeFlag']} {s['home']} vs {s['away']} {s['awayFlag']}"
+                  f" · {s['marketLabel']}"
+                  f" · Entry: +{s['entryEdgePp']:.1f}pp → Now: +{s['currentEdgePp']:.1f}pp"
+                  f" ({delta_str}){steam_tag}")
+
+
+# ── Main ──────────────────────────────────────────────────────────────────────
+def main():
+    print("=== steam_lag_monitor.py ===")
+    print(f"    {datetime.now(timezone.utc).strftime('%d.%m.%Y %H:%M UTC')}")
+    print()
+
+    now_ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    # 1. Frische Poly-Preise holen
+    print("📡 Fetche Polymarket-Preise…")
+    fresh_poly = fetch_fresh_poly()
+    if not fresh_poly:
+        print("  ❌ Keine Poly-Preise — Abbruch")
+        return
+
+    # 2. Pinnacle Fair Probs + Steam Lag Kontext laden
+    print("📁 Lade Pinnacle-Kontext…")
+    pinn_fair = load_pinn_fair()
+
+    # 3. Team-Infos
+    team_info = load_team_info()
+
+    # 4. Edges berechnen
+    print("⚡ Berechne Edges…")
+    signals = compute_edges(fresh_poly, pinn_fair)
+    n_edge  = sum(1 for s in signals if (s["bestEdge"] or 0) >= SIGNAL_EDGE_PP)
+    n_steam = sum(1 for s in signals if s["steamLag"])
+    print(f"  Fixtures analysiert: {len(signals)}"
+          f" | Edge≥{SIGNAL_EDGE_PP}pp: {n_edge}"
+          f" | 🔥 Steam Lag: {n_steam}")
+
+    # 5. Log laden und aktualisieren
+    print("\n📝 Aktualisiere Log…")
+    log = load_log()
+    log = update_log(log, signals, team_info, now_ts)
+
+    # 6. Speichern
+    save_log(log)
+    print(f"\n✅ steam_lag_log.json gespeichert ({len(log.get('signals', []))} Einträge)")
+
+    # 7. Summary
+    print_summary(log)
+
+
+if __name__ == "__main__":
+    main()
