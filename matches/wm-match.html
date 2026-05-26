@@ -645,6 +645,49 @@ body{
   .signal-cards-mobile{display:none;}
 }
 
+/* ── ENVIRONMENT SECTION ── */
+.env-section{margin:0 0 2px;padding:14px 16px 12px;background:linear-gradient(135deg,rgba(13,17,23,.9),rgba(16,22,36,.9));border-bottom:1px solid var(--border);}
+.env-section-title{font-size:9px;font-weight:700;color:var(--sub);letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px;}
+.env-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.env-card{background:var(--card);border-radius:10px;padding:12px 14px;border:1px solid var(--border);position:relative;}
+.env-card-label{font-size:8px;font-weight:700;color:var(--sub);letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px;}
+.env-venue-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;line-height:1.2;}
+.env-venue-city{font-size:10px;color:var(--sub);margin-bottom:8px;}
+.env-pills{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;}
+.env-pill{font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;border:1px solid;}
+.env-pill-normal{color:#3fb950;background:rgba(63,185,80,.1);border-color:rgba(63,185,80,.3);}
+.env-pill-mid{color:#e3b341;background:rgba(227,179,65,.1);border-color:rgba(227,179,65,.3);}
+.env-pill-high{color:#f85149;background:rgba(248,81,73,.1);border-color:rgba(248,81,73,.3);}
+.env-pill-dome{color:#58a6ff;background:rgba(88,166,255,.08);border-color:rgba(88,166,255,.25);}
+.env-pill-heat{color:#f97316;background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.3);}
+.env-pill-rain{color:#38bdf8;background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.25);}
+.env-pill-mild{color:#6e7681;background:rgba(110,118,129,.08);border-color:rgba(110,118,129,.2);}
+.env-wrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.env-wchip{font-size:11px;color:var(--sub);}
+.env-wchip strong{color:var(--text);font-weight:700;}
+.env-loading{font-size:10px;color:var(--sub);font-style:italic;}
+.env-travel-rows{display:flex;flex-direction:column;gap:7px;}
+.env-trow{display:flex;align-items:center;gap:8px;}
+.env-trow-flag{font-size:18px;line-height:1;}
+.env-trow-info{flex:1;min-width:0;}
+.env-trow-name{font-size:11px;font-weight:700;color:var(--text);}
+.env-trow-detail{font-size:10px;color:var(--sub);}
+.env-tbadge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;white-space:nowrap;}
+.env-tbadge-home{color:#3fb950;background:rgba(63,185,80,.12);border:1px solid rgba(63,185,80,.3);}
+.env-tbadge-cross1{color:#e3b341;background:rgba(227,179,65,.1);border:1px solid rgba(227,179,65,.3);}
+.env-tbadge-cross2{color:#f85149;background:rgba(248,81,73,.1);border:1px solid rgba(248,81,73,.3);}
+.env-tbadge-neutral{color:#6e7681;background:rgba(110,118,129,.08);border:1px solid rgba(110,118,129,.2);}
+.env-modifier{margin:6px 16px 0;padding:9px 12px 9px 13px;border-radius:8px;border-left:3px solid;font-size:11px;line-height:1.55;}
+.env-modifier-alt{background:rgba(248,81,73,.07);border-color:#f85149;color:#f0f4ff;}
+.env-modifier-heat{background:rgba(249,115,22,.07);border-color:#f97316;color:#f0f4ff;}
+.env-modifier-rain{background:rgba(56,189,248,.07);border-color:#38bdf8;color:#f0f4ff;}
+/* pick modifier inline */
+.pick-env-mod{margin-top:8px;padding:7px 10px 7px 12px;border-radius:7px;border-left:3px solid;font-size:10px;line-height:1.5;color:var(--sub);}
+.pick-env-mod-alt{background:rgba(248,81,73,.06);border-color:#f85149;}
+.pick-env-mod-heat{background:rgba(249,115,22,.06);border-color:#f97316;}
+.pick-env-mod-rain{background:rgba(56,189,248,.06);border-color:#38bdf8;}
+@media(max-width:500px){.env-grid{grid-template-columns:1fr;}}
+
 /* ── LOADING / ERROR ── */
 .loading-screen{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -752,6 +795,278 @@ function buildDonut(pH, pD, pA) {
       <circle style="fill:none;stroke:#f5c518;stroke-width:7;stroke-linecap:round;stroke-dasharray:${C.toFixed(2)};stroke-dashoffset:${(C - dLen).toFixed(2)};" cx="40" cy="40" r="${R}" transform="rotate(${dRot.toFixed(2)} 40 40)"/>
       <circle style="fill:none;stroke:#ef4444;stroke-width:7;stroke-linecap:round;stroke-dasharray:${C.toFixed(2)};stroke-dashoffset:${(C - aLen).toFixed(2)};" cx="40" cy="40" r="${R}" transform="rotate(${aRot.toFixed(2)} 40 40)"/>
     </svg>`;
+}
+
+
+/* ══════════════════════════════════════════════════════
+   WM 2026 — VENUE DATABASE
+   All 16 confirmed venues. alt = meters, temp = °C June/July typical.
+   type: 'outdoor' | 'dome' | 'open-roof'
+══════════════════════════════════════════════════════ */
+const VENUES = (function(){
+  const V = {
+    /* ── MEXIKO ── */
+    'estadio azteca':    { name:'Estadio Azteca',         city:'Mexico City',    country:'Mexiko', flag:'🇲🇽', lat:19.303,  lon:-99.151,  alt:2200, temp:18, hum:55, type:'outdoor'  },
+    'azteca':            { name:'Estadio Azteca',         city:'Mexico City',    country:'Mexiko', flag:'🇲🇽', lat:19.303,  lon:-99.151,  alt:2200, temp:18, hum:55, type:'outdoor'  },
+    'mexico city':       { name:'Estadio Azteca',         city:'Mexico City',    country:'Mexiko', flag:'🇲🇽', lat:19.303,  lon:-99.151,  alt:2200, temp:18, hum:55, type:'outdoor'  },
+    'estadio akron':     { name:'Estadio Akron',          city:'Guadalajara',    country:'Mexiko', flag:'🇲🇽', lat:20.687,  lon:-103.467, alt:1566, temp:25, hum:68, type:'outdoor'  },
+    'akron':             { name:'Estadio Akron',          city:'Guadalajara',    country:'Mexiko', flag:'🇲🇽', lat:20.687,  lon:-103.467, alt:1566, temp:25, hum:68, type:'outdoor'  },
+    'guadalajara':       { name:'Estadio Akron',          city:'Guadalajara',    country:'Mexiko', flag:'🇲🇽', lat:20.687,  lon:-103.467, alt:1566, temp:25, hum:68, type:'outdoor'  },
+    'estadio bbva':      { name:'Estadio BBVA',           city:'Monterrey',      country:'Mexiko', flag:'🇲🇽', lat:25.669,  lon:-100.312, alt:540,  temp:36, hum:45, type:'outdoor'  },
+    'bbva':              { name:'Estadio BBVA',           city:'Monterrey',      country:'Mexiko', flag:'🇲🇽', lat:25.669,  lon:-100.312, alt:540,  temp:36, hum:45, type:'outdoor'  },
+    'monterrey':         { name:'Estadio BBVA',           city:'Monterrey',      country:'Mexiko', flag:'🇲🇽', lat:25.669,  lon:-100.312, alt:540,  temp:36, hum:45, type:'outdoor'  },
+    /* ── KANADA ── */
+    'bc place':          { name:'BC Place',               city:'Vancouver',      country:'Kanada', flag:'🇨🇦', lat:49.277,  lon:-123.112, alt:5,    temp:22, hum:60, type:'dome'     },
+    'vancouver':         { name:'BC Place',               city:'Vancouver',      country:'Kanada', flag:'🇨🇦', lat:49.277,  lon:-123.112, alt:5,    temp:22, hum:60, type:'dome'     },
+    'bmo field':         { name:'BMO Field',              city:'Toronto',        country:'Kanada', flag:'🇨🇦', lat:43.633,  lon:-79.419,  alt:76,   temp:28, hum:65, type:'outdoor'  },
+    'toronto':           { name:'BMO Field',              city:'Toronto',        country:'Kanada', flag:'🇨🇦', lat:43.633,  lon:-79.419,  alt:76,   temp:28, hum:65, type:'outdoor'  },
+    /* ── USA ── */
+    'metlife stadium':   { name:'MetLife Stadium',        city:'New York/NJ',    country:'USA',    flag:'🇺🇸', lat:40.813,  lon:-74.074,  alt:10,   temp:27, hum:62, type:'outdoor'  },
+    'metlife':           { name:'MetLife Stadium',        city:'New York/NJ',    country:'USA',    flag:'🇺🇸', lat:40.813,  lon:-74.074,  alt:10,   temp:27, hum:62, type:'outdoor'  },
+    'new york':          { name:'MetLife Stadium',        city:'New York/NJ',    country:'USA',    flag:'🇺🇸', lat:40.813,  lon:-74.074,  alt:10,   temp:27, hum:62, type:'outdoor'  },
+    "at&t stadium":      { name:"AT&T Stadium",           city:'Dallas',         country:'USA',    flag:'🇺🇸', lat:32.748,  lon:-97.093,  alt:170,  temp:22, hum:50, type:'dome'     },
+    'att stadium':       { name:"AT&T Stadium",           city:'Dallas',         country:'USA',    flag:'🇺🇸', lat:32.748,  lon:-97.093,  alt:170,  temp:22, hum:50, type:'dome'     },
+    'dallas':            { name:"AT&T Stadium",           city:'Dallas',         country:'USA',    flag:'🇺🇸', lat:32.748,  lon:-97.093,  alt:170,  temp:22, hum:50, type:'dome'     },
+    'sofi stadium':      { name:'SoFi Stadium',           city:'Los Angeles',    country:'USA',    flag:'🇺🇸', lat:33.953,  lon:-118.339, alt:55,   temp:27, hum:55, type:'open-roof'},
+    'sofi':              { name:'SoFi Stadium',           city:'Los Angeles',    country:'USA',    flag:'🇺🇸', lat:33.953,  lon:-118.339, alt:55,   temp:27, hum:55, type:'open-roof'},
+    'los angeles':       { name:'SoFi Stadium',           city:'Los Angeles',    country:'USA',    flag:'🇺🇸', lat:33.953,  lon:-118.339, alt:55,   temp:27, hum:55, type:'open-roof'},
+    'hard rock stadium': { name:'Hard Rock Stadium',      city:'Miami',          country:'USA',    flag:'🇺🇸', lat:25.958,  lon:-80.239,  alt:2,    temp:33, hum:76, type:'outdoor'  },
+    'hard rock':         { name:'Hard Rock Stadium',      city:'Miami',          country:'USA',    flag:'🇺🇸', lat:25.958,  lon:-80.239,  alt:2,    temp:33, hum:76, type:'outdoor'  },
+    'miami':             { name:'Hard Rock Stadium',      city:'Miami',          country:'USA',    flag:'🇺🇸', lat:25.958,  lon:-80.239,  alt:2,    temp:33, hum:76, type:'outdoor'  },
+    "levi's stadium":    { name:"Levi's Stadium",         city:'San Francisco',  country:'USA',    flag:'🇺🇸', lat:37.403,  lon:-121.970, alt:10,   temp:23, hum:55, type:'outdoor'  },
+    'levis stadium':     { name:"Levi's Stadium",         city:'San Francisco',  country:'USA',    flag:'🇺🇸', lat:37.403,  lon:-121.970, alt:10,   temp:23, hum:55, type:'outdoor'  },
+    'san francisco':     { name:"Levi's Stadium",         city:'San Francisco',  country:'USA',    flag:'🇺🇸', lat:37.403,  lon:-121.970, alt:10,   temp:23, hum:55, type:'outdoor'  },
+    'arrowhead stadium': { name:'Arrowhead Stadium',      city:'Kansas City',    country:'USA',    flag:'🇺🇸', lat:39.049,  lon:-94.484,  alt:320,  temp:33, hum:62, type:'outdoor'  },
+    'arrowhead':         { name:'Arrowhead Stadium',      city:'Kansas City',    country:'USA',    flag:'🇺🇸', lat:39.049,  lon:-94.484,  alt:320,  temp:33, hum:62, type:'outdoor'  },
+    'kansas city':       { name:'Arrowhead Stadium',      city:'Kansas City',    country:'USA',    flag:'🇺🇸', lat:39.049,  lon:-94.484,  alt:320,  temp:33, hum:62, type:'outdoor'  },
+    'nrg stadium':       { name:'NRG Stadium',            city:'Houston',        country:'USA',    flag:'🇺🇸', lat:29.685,  lon:-95.411,  alt:15,   temp:22, hum:50, type:'dome'     },
+    'nrg':               { name:'NRG Stadium',            city:'Houston',        country:'USA',    flag:'🇺🇸', lat:29.685,  lon:-95.411,  alt:15,   temp:22, hum:50, type:'dome'     },
+    'houston':           { name:'NRG Stadium',            city:'Houston',        country:'USA',    flag:'🇺🇸', lat:29.685,  lon:-95.411,  alt:15,   temp:22, hum:50, type:'dome'     },
+    'lumen field':       { name:'Lumen Field',            city:'Seattle',        country:'USA',    flag:'🇺🇸', lat:47.595,  lon:-122.332, alt:20,   temp:23, hum:65, type:'outdoor'  },
+    'lumen':             { name:'Lumen Field',            city:'Seattle',        country:'USA',    flag:'🇺🇸', lat:47.595,  lon:-122.332, alt:20,   temp:23, hum:65, type:'outdoor'  },
+    'seattle':           { name:'Lumen Field',            city:'Seattle',        country:'USA',    flag:'🇺🇸', lat:47.595,  lon:-122.332, alt:20,   temp:23, hum:65, type:'outdoor'  },
+    'gillette stadium':  { name:'Gillette Stadium',       city:'Boston',         country:'USA',    flag:'🇺🇸', lat:42.091,  lon:-71.264,  alt:10,   temp:26, hum:60, type:'outdoor'  },
+    'gillette':          { name:'Gillette Stadium',       city:'Boston',         country:'USA',    flag:'🇺🇸', lat:42.091,  lon:-71.264,  alt:10,   temp:26, hum:60, type:'outdoor'  },
+    'boston':            { name:'Gillette Stadium',       city:'Boston',         country:'USA',    flag:'🇺🇸', lat:42.091,  lon:-71.264,  alt:10,   temp:26, hum:60, type:'outdoor'  },
+    'lincoln financial': { name:'Lincoln Financial Field',city:'Philadelphia',   country:'USA',    flag:'🇺🇸', lat:39.901,  lon:-75.168,  alt:10,   temp:28, hum:64, type:'outdoor'  },
+    'philadelphia':      { name:'Lincoln Financial Field',city:'Philadelphia',   country:'USA',    flag:'🇺🇸', lat:39.901,  lon:-75.168,  alt:10,   temp:28, hum:64, type:'outdoor'  },
+  };
+  return V;
+})();
+
+function lookupVenue(venueStr) {
+  if (!venueStr) return null;
+  const k = String(venueStr).toLowerCase().trim();
+  if (VENUES[k]) return VENUES[k];
+  for (const [key, v] of Object.entries(VENUES)) {
+    if (k.includes(key) || key.includes(k)) return v;
+  }
+  return null;
+}
+
+/* env modifiers — returns array of {type, icon, cls, pickCls, text} */
+function getEnvModifiers(venue, weather) {
+  if (!venue) return [];
+  const mods = [];
+  const isDome      = venue.type === 'dome';
+  const alt         = venue.alt || 0;
+  const temp        = (weather && weather.temp != null) ? weather.temp : venue.temp;
+  const hum         = (weather && weather.hum  != null) ? weather.hum  : venue.hum;
+  const rainChance  = (weather && weather.rain != null) ? weather.rain  : 0;
+
+  if (!isDome && alt >= 1200) {
+    const severity = alt >= 2000 ? 'Extrem' : 'Moderat';
+    const pct      = alt >= 2000 ? '~20%' : '~12%';
+    mods.push({ type:'altitude', icon:'🏔️', cls:'env-modifier-alt', pickCls:'pick-env-mod-alt',
+      text:`${severity}e Höhenluft (${alt}m) — Over 2.5 Goals historisch ${pct} seltener, BTTS-Rate sinkt. Under & BTTS-Nein bevorzugen.` });
+  }
+  if (!isDome && temp >= 31) {
+    const sev  = temp >= 36 ? 'Extreme' : 'Starke';
+    const humStr = hum >= 65 ? ` · ${hum}% Luftfeuchte` : '';
+    mods.push({ type:'heat', icon:'🌡️', cls:'env-modifier-heat', pickCls:'pick-env-mod-heat',
+      text:`${sev} Hitze: ${temp}°C${humStr} — Pressing-Systeme degradieren ab Min. 60. Konditionsstärkere Teams profitieren. Späte Goals wahrscheinlicher.` });
+  }
+  if (!isDome && rainChance >= 55) {
+    mods.push({ type:'rain', icon:'🌧️', cls:'env-modifier-rain', pickCls:'pick-env-mod-rain',
+      text:`Regen erwartet (${rainChance}%) — flaches Passspiel leidet, Standards & Direktschüsse gewinnen an Bedeutung. BTTS-Rate tendenziell erhöht.` });
+  }
+  return mods;
+}
+
+/* cache for live weather (avoid repeated fetches) */
+const _wxCache = {};
+
+async function fetchWeather(lat, lon, dateStr) {
+  const key = `${lat},${lon},${dateStr}`;
+  if (_wxCache[key]) return _wxCache[key];
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
+      `&daily=temperature_2m_max,precipitation_probability_max,windspeed_10m_max,relativehumidity_2m_max` +
+      `&timezone=auto&start_date=${dateStr}&end_date=${dateStr}`;
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    const j = await r.json();
+    const d = j.daily || {};
+    const wx = {
+      temp: d.temperature_2m_max   ? Math.round(d.temperature_2m_max[0])   : null,
+      rain: d.precipitation_probability_max ? Math.round(d.precipitation_probability_max[0]) : null,
+      wind: d.windspeed_10m_max    ? Math.round(d.windspeed_10m_max[0])    : null,
+      hum:  d.relativehumidity_2m_max ? Math.round(d.relativehumidity_2m_max[0]) : null,
+    };
+    _wxCache[key] = wx;
+    return wx;
+  } catch(e) { return null; }
+}
+
+/* inject live weather into the already-rendered env section */
+async function injectWeather(venue, dateStr) {
+  const block = document.getElementById('env-wx-block');
+  if (!block) return;
+  const wx = await fetchWeather(venue.lat, venue.lon, dateStr);
+  if (!wx) { block.innerHTML = '<span class="env-loading">Wetterdaten nicht verfügbar</span>'; return; }
+
+  // Temp pill: update or add
+  const temp = wx.temp != null ? wx.temp : venue.temp;
+  const rain = wx.rain != null ? wx.rain : 0;
+  const wind = wx.wind != null ? wx.wind : null;
+  const hum  = wx.hum  != null ? wx.hum  : venue.hum;
+  const isDome = venue.type === 'dome';
+
+  let chips = '';
+  if (isDome) {
+    chips = `<span class="env-wchip">🏛️ <strong>Klimatisiert</strong> · kontrollierte Bedingungen</span>`;
+  } else {
+    if (temp != null) chips += `<span class="env-wchip">🌡️ <strong>${temp}°C</strong></span>`;
+    if (hum  != null) chips += `<span class="env-wchip">💧 <strong>${hum}%</strong> Luftfeuchte</span>`;
+    if (rain != null) chips += `<span class="env-wchip">🌧️ <strong>${rain}%</strong> Regen</span>`;
+    if (wind != null) chips += `<span class="env-wchip">💨 <strong>${wind} km/h</strong></span>`;
+  }
+  block.innerHTML = `<div class="env-wrow">${chips}</div>`;
+
+  // Update env modifier section with live data (re-render modifiers with real wx)
+  const modBlock = document.getElementById('env-modifiers-block');
+  if (modBlock) {
+    const mods = getEnvModifiers(venue, wx);
+    modBlock.innerHTML = mods.map(m =>
+      `<div class="env-modifier ${m.cls}">${m.icon} ${m.text}</div>`
+    ).join('');
+  }
+  // Update pick modifiers
+  document.querySelectorAll('.pick-env-placeholder').forEach(el => {
+    const mods = getEnvModifiers(venue, wx);
+    const relevant = mods.filter(m => {
+      const mkt = el.dataset.market || '';
+      if (m.type === 'altitude') return mkt.includes('2.5') || mkt.toLowerCase().includes('btts') || mkt.toLowerCase().includes('both');
+      return true; // heat and rain always relevant
+    });
+    el.innerHTML = relevant.map(m =>
+      `<div class="pick-env-mod ${m.pickCls}">${m.icon} ${m.text}</div>`
+    ).join('');
+  });
+}
+
+/* ── Environment & Travel section ───────────────────────── */
+function renderEnvironment(D) {
+  const venue = lookupVenue(D.venue || D.venueCity || '');
+
+  // ── Venue card ──────────────────────────────────────
+  let venueName = venue ? venue.name : (D.venue || '—');
+  let venueCity = venue ? `${venue.city} · ${venue.country}` : '';
+
+  // Altitude pill
+  let altPill = '';
+  if (venue) {
+    const a = venue.alt;
+    if (a >= 2000)      altPill = `<span class="env-pill env-pill-high">🏔️ ${a}m</span>`;
+    else if (a >= 1000) altPill = `<span class="env-pill env-pill-mid">🏔️ ${a}m</span>`;
+    else if (a >= 300)  altPill = `<span class="env-pill env-pill-mild">⛰️ ${a}m</span>`;
+  }
+  // Type pill
+  let typePill = '';
+  if (venue) {
+    if (venue.type === 'dome')      typePill = `<span class="env-pill env-pill-dome">🏛️ Dome/AC</span>`;
+    else if (venue.type === 'open-roof') typePill = `<span class="env-pill env-pill-dome">🌤️ Offenes Dach</span>`;
+    else                             typePill = `<span class="env-pill env-pill-mild">🌿 Outdoor</span>`;
+  }
+  // Temp pill (static baseline, updated live by injectWeather)
+  let tempPill = '';
+  if (venue && venue.type !== 'dome') {
+    const t = venue.temp;
+    if (t >= 33)      tempPill = `<span class="env-pill env-pill-heat">🌡️ ~${t}°C</span>`;
+    else if (t >= 28) tempPill = `<span class="env-pill env-pill-mid">🌡️ ~${t}°C</span>`;
+    else              tempPill = `<span class="env-pill env-pill-normal">🌡️ ~${t}°C</span>`;
+  }
+
+  // ── Travel / home advantage block ──────────────────
+  const venueCountry = venue ? venue.country : '';
+  const homeNations  = ['USA', 'Kanada', 'Mexiko'];
+
+  function travelRow(teamName, teamFlag, teamId) {
+    const isHomeNation = homeNations.includes(venueCountry);
+    // rough home team match: check if team country matches venue country
+    const teamCountry = (teamId || '').toLowerCase();
+    const venCo       = venueCountry.toLowerCase();
+    const isHomeTeam  = (venCo === 'usa' && (teamCountry === 'usa' || teamCountry === 'united states'))
+                     || (venCo === 'mexiko' && teamCountry === 'mexico')
+                     || (venCo === 'kanada' && teamCountry === 'canada');
+
+    let badge = '';
+    if (isHomeTeam) {
+      badge = `<span class="env-tbadge env-tbadge-home">🏠 Heimvorteil</span>`;
+    } else if (venue && ['MX','CA','US'].filter((c,i) => ['mexiko','kanada','usa'][i] !== venCo).length > 0) {
+      // simple heuristic: if crossing into a different host country
+      const crosses = D.matchday >= 2 ? 1 : 0;
+      if (crosses >= 2)   badge = `<span class="env-tbadge env-tbadge-cross2">✈️ 2+ Länderwechsel</span>`;
+      else if (crosses === 1) badge = `<span class="env-tbadge env-tbadge-cross1">✈️ Länderwechsel</span>`;
+      else                badge = `<span class="env-tbadge env-tbadge-neutral">Neutral</span>`;
+    } else {
+      badge = `<span class="env-tbadge env-tbadge-neutral">Neutral</span>`;
+    }
+
+    const playingIn = venue ? `Spielt in ${venueCountry}` : '';
+    return `
+      <div class="env-trow">
+        <div class="env-trow-flag">${teamFlag || '🏳'}</div>
+        <div class="env-trow-info">
+          <div class="env-trow-name">${escHtml(teamName || '')}</div>
+          <div class="env-trow-detail">${playingIn}${D.matchday ? ` · Spieltag ${D.matchday}` : ''}</div>
+        </div>
+        ${badge}
+      </div>`;
+  }
+
+  // ── Initial modifiers (static baseline, no live weather yet) ──
+  const staticMods = getEnvModifiers(venue, null);
+
+  const dateStr = D.date || '';
+
+  return `
+    <div class="env-section">
+      <div class="env-section-title">🌍 Spielort & Umgebung</div>
+      <div class="env-grid">
+
+        <div class="env-card">
+          <div class="env-card-label">Venue & Klima</div>
+          <div class="env-venue-name">${escHtml(venueName)}</div>
+          <div class="env-venue-city">${escHtml(venueCity)}</div>
+          <div class="env-pills">${altPill}${typePill}${tempPill}</div>
+          <div id="env-wx-block"><span class="env-loading">⟳ Lade Wettervorhersage…</span></div>
+        </div>
+
+        <div class="env-card">
+          <div class="env-card-label">Teams · Reisekontext</div>
+          <div class="env-travel-rows">
+            ${travelRow(D.home, D.homeFlag, D.homeId)}
+            ${travelRow(D.away, D.awayFlag, D.awayId)}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="env-modifiers-block">
+      ${staticMods.map(m => `<div class="env-modifier ${m.cls}">${m.icon} ${m.text}</div>`).join('')}
+    </div>`;
 }
 
 /* ── Tournament Context section ──────────────────────────── */
@@ -981,6 +1296,7 @@ function renderPicks(D) {
 
         ${primary.rationale ? `<div class="ph-rationale">${escHtml(primary.rationale)}</div>` : ''}
 
+        <div class="pick-env-placeholder" data-market="${escHtml(primary.market||'')}"></div>
         <button class="bet-btn">Jetzt Wetten →</button>
       </div>
 
@@ -1689,6 +2005,7 @@ function renderDecisionStrip(D) {
         ${metaParts.map(m => `<span class="ds-edge ${cls}">${escHtml(m)}</span>`).join('<span style="color:rgba(255,255,255,.15)">·</span>')}
       </div>` : ''}
       ${kellyHtml}
+      <div class="pick-env-placeholder" data-market="${escHtml(primary.market||'')}"></div>
     </div>`;
 }
 
@@ -1785,6 +2102,7 @@ function render(D) {
       <span>${escHtml(D.venue)}</span>
     </div>` : ''}
 
+    ${renderEnvironment(D)}
     ${renderDecisionStrip(D)}
     ${renderContext(D)}
     ${renderPicks(D)}
@@ -1813,6 +2131,10 @@ function render(D) {
   `;
 
   document.getElementById('app').innerHTML = html;
+
+  // async: inject live weather + recompute modifiers
+  const _venue = lookupVenue(D.venue || D.venueCity || '');
+  if (_venue && D.date) injectWeather(_venue, D.date);
 }
 
 /* ── Error state ─────────────────────────────────────────── */

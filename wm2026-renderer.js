@@ -394,9 +394,57 @@
       }
     }
 
-    // ─── Venue ───────────────────────────────────────
+    // ─── Venue + Climate pills ───────────────────────
     if (fx.venue) {
-      html += `<div class="wm-venue">📍 ${fx.venue}</div>`;
+      // quick inline venue lookup for cards
+      const _vk = (fx.venue || '').toLowerCase().trim();
+      const _vmap = {
+        'estadio azteca':2200,'mexico city':2200,'azteca':2200,
+        'estadio akron':1566,'guadalajara':1566,'akron':1566,
+        'estadio bbva':540,'monterrey':540,'bbva':540,
+        'hard rock stadium':2,'miami':2,'hard rock':2,
+        "at&t stadium":170,'att stadium':170,'dallas':170,
+        'nrg stadium':15,'nrg':15,'houston':15,
+        'arrowhead stadium':320,'arrowhead':320,'kansas city':320,
+        'bc place':5,'vancouver':5,'bmo field':76,'toronto':76,
+      };
+      const _vtmap = {
+        'estadio azteca':'outdoor','mexico city':'outdoor','azteca':'outdoor',
+        'estadio akron':'outdoor','guadalajara':'outdoor','akron':'outdoor',
+        'estadio bbva':'outdoor','monterrey':'outdoor','bbva':'outdoor',
+        'hard rock stadium':'outdoor','miami':'outdoor','hard rock':'outdoor',
+        "at&t stadium":'dome','att stadium':'dome','dallas':'dome',
+        'nrg stadium':'dome','nrg':'dome','houston':'dome',
+        'bc place':'dome','vancouver':'dome',
+        'sofi stadium':'open-roof','sofi':'open-roof',
+      };
+      const _vtempmap = {
+        'estadio azteca':18,'mexico city':18,'azteca':18,
+        'estadio akron':25,'guadalajara':25,'akron':25,
+        'estadio bbva':36,'monterrey':36,'bbva':36,
+        'hard rock stadium':33,'miami':33,'hard rock':33,
+        'arrowhead stadium':33,'arrowhead':33,'kansas city':33,
+      };
+      // find matching key
+      let _matchKey = null;
+      for (const k of Object.keys(_vmap)) { if (_vk.includes(k)||k.includes(_vk)){_matchKey=k;break;} }
+      const _alt  = _matchKey ? _vmap[_matchKey]  : null;
+      const _vtyp = _matchKey ? (_vtmap[_matchKey]||'outdoor') : 'outdoor';
+      const _temp = _matchKey ? (_vtempmap[_matchKey]||null) : null;
+
+      let _envPills = '';
+      if (_alt != null) {
+        if      (_alt >= 2000) _envPills += `<span class="wm-env-pill wm-env-alt-high">🏔️ ${_alt}m</span>`;
+        else if (_alt >= 1000) _envPills += `<span class="wm-env-pill wm-env-alt-mid">🏔️ ${_alt}m</span>`;
+        else if (_alt >= 300)  _envPills += `<span class="wm-env-pill wm-env-alt-low">⛰️ ${_alt}m</span>`;
+      }
+      if (_vtyp === 'dome')      _envPills += `<span class="wm-env-pill wm-env-dome">🏛️ Dome</span>`;
+      else if (_vtyp==='open-roof') _envPills += `<span class="wm-env-pill wm-env-dome">🌤️ Offen</span>`;
+      if (_temp != null && _vtyp !== 'dome') {
+        if      (_temp >= 33) _envPills += `<span class="wm-env-pill wm-env-heat">🌡️ ${_temp}°C</span>`;
+        else if (_temp >= 28) _envPills += `<span class="wm-env-pill wm-env-warm">🌡️ ${_temp}°C</span>`;
+      }
+      html += `<div class="wm-venue">📍 ${fx.venue}${_envPills ? '<span class="wm-env-pills">' + _envPills + '</span>' : ''}</div>`;
     }
 
     // ─── Upset Score badge ────────────────────────────
