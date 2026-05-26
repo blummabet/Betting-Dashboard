@@ -1945,7 +1945,6 @@ function _renderWmMarketTable() {
     })() : '';
 
     // ── Zone 3: Signal strip ─────────────────────────────────────────────────
-    // Narrow, informational — does NOT compete with hero
     const badge = _computeActionBadge(fix);
     const signalHtml = (badge.label !== 'Kein Signal') ? `
     <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;padding:7px 10px;
@@ -1956,6 +1955,48 @@ function _renderWmMarketTable() {
         <div style="font-size:11px;color:#6e7681;margin-top:1px;line-height:1.45">${badge.reason}</div>
       </div>
     </div>` : '';
+
+    // ── Zone 3b: Steam Lag Explainer ─────────────────────────────────────────
+    // Shown whenever steamLag is true — explains what happened and what to do.
+    const steamExplainerHtml = steamLag ? (() => {
+      const moveStr  = fix.pinnSteamMove ? `+${fix.pinnSteamMove}pp` : 'signifikant';
+      const mktLabel = ({ hw:'Heimsieg', aw:'Auswärtssieg', dr:'Unentschieden',
+                          o25:'Over 2.5 Tore', u25:'Under 2.5 Tore', btts:'BTTS' })[fix.bestEdgeKey] || fix.bestEdgeKey || 'diesen Markt';
+      const be = fix.bestEdge || 0;
+
+      // Action recommendation based on edge size
+      let actionLine = '';
+      if (be >= 5) {
+        actionLine = `<div style="margin-top:8px;padding:7px 10px;border-radius:6px;background:rgba(248,81,73,.12);border:1px solid rgba(248,81,73,.3);font-size:11px;font-weight:700;color:#f85149">
+          ⚡ Zeitkritisch — jetzt auf <strong>${mktLabel}</strong> bei Polymarket wetten, bevor der Kurs aufholt. Edge schliesst sich in Minuten bis Stunden.
+        </div>`;
+      } else if (be >= 2) {
+        actionLine = `<div style="margin-top:8px;padding:7px 10px;border-radius:6px;background:rgba(227,179,65,.08);border:1px solid rgba(227,179,65,.25);font-size:11px;color:#e3b341">
+          👁 Edge aktuell +${be.toFixed(1)}pp — noch unter Conviction-Schwelle (5pp). Beobachten: wenn Pinnacle weiter zieht und Poly nicht folgt, steigt die Edge auf handelbar. Kurs im Auge behalten.
+        </div>`;
+      } else {
+        actionLine = `<div style="margin-top:8px;font-size:11px;color:#6e7681">
+          Edge noch zu klein (+${be.toFixed(1)}pp). Steam-Signal im Auge behalten — wenn Poly weiter schläft, wird diese Situation interessant.
+        </div>`;
+      }
+
+      return `<div style="margin-bottom:10px;padding:10px 12px;border-radius:8px;
+                           background:rgba(248,81,73,.06);border:1px solid rgba(248,81,73,.25);
+                           border-left:3px solid #f85149">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
+          <span style="font-size:14px">🔥</span>
+          <span style="font-size:11px;font-weight:800;color:#f85149;letter-spacing:.02em">STEAM LAG — Was ist passiert?</span>
+        </div>
+        <div style="font-size:11px;color:#c9d1d9;line-height:1.6">
+          <strong>Pinnacle</strong> hat den Kurs für <strong>${mktLabel}</strong> gerade um <strong style="color:#f85149">${moveStr}</strong> bewegt.
+          Das bedeutet: informierte Wetter (Sharps) haben massiv auf diese Seite gesetzt —
+          Pinnacle hat das sofort eingepreist. <strong>Polymarket reagiert verzögert</strong>,
+          weil der Preis dort dezentral durch Liquidity Provider angepasst wird.
+          Dieses Zeitfenster ist die Opportunity.
+        </div>
+        ${actionLine}
+      </div>`;
+    })() : '';
 
     // ── Zone 4: Sparkline ────────────────────────────────────────────────────
     const sparklineSvg = _drawFixtureSparkline(fix.key, fix.bestEdgeKey);
@@ -2103,7 +2144,7 @@ function _renderWmMarketTable() {
 
     return `<div style="background:${bgCol};border:1px solid ${borderCol};border-left:3px solid ${borderCol};
                         border-radius:10px;padding:12px 16px;margin-bottom:8px">
-      ${header}${heroHtml}${signalHtml}${chartHtml}${outcomesHtml}${ouHtml}${depthHtml}
+      ${header}${heroHtml}${steamExplainerHtml}${signalHtml}${chartHtml}${outcomesHtml}${ouHtml}${depthHtml}
     </div>`;
   };
 
