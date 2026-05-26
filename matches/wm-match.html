@@ -850,6 +850,20 @@ const VENUES = (function(){
     'boston':            { name:'Gillette Stadium',       city:'Boston',         country:'USA',    flag:'🇺🇸', lat:42.091,  lon:-71.264,  alt:10,   temp:26, hum:60, type:'outdoor'  },
     'lincoln financial': { name:'Lincoln Financial Field',city:'Philadelphia',   country:'USA',    flag:'🇺🇸', lat:39.901,  lon:-75.168,  alt:10,   temp:28, hum:64, type:'outdoor'  },
     'philadelphia':      { name:'Lincoln Financial Field',city:'Philadelphia',   country:'USA',    flag:'🇺🇸', lat:39.901,  lon:-75.168,  alt:10,   temp:28, hum:64, type:'outdoor'  },
+    /* ── Previously missing — added after travel-burden audit ── */
+    'mercedes-benz stadium': { name:'Mercedes-Benz Stadium', city:'Atlanta',       country:'USA',    flag:'🇺🇸', lat:33.755,  lon:-84.401,  alt:309,  temp:31, hum:68, type:'dome'     },
+    'mercedes-benz':         { name:'Mercedes-Benz Stadium', city:'Atlanta',       country:'USA',    flag:'🇺🇸', lat:33.755,  lon:-84.401,  alt:309,  temp:31, hum:68, type:'dome'     },
+    'mercedes':              { name:'Mercedes-Benz Stadium', city:'Atlanta',       country:'USA',    flag:'🇺🇸', lat:33.755,  lon:-84.401,  alt:309,  temp:31, hum:68, type:'dome'     },
+    'atlanta':               { name:'Mercedes-Benz Stadium', city:'Atlanta',       country:'USA',    flag:'🇺🇸', lat:33.755,  lon:-84.401,  alt:309,  temp:31, hum:68, type:'dome'     },
+    'empower field':         { name:'Empower Field',         city:'Denver',        country:'USA',    flag:'🇺🇸', lat:39.744,  lon:-105.020, alt:1609, temp:29, hum:38, type:'outdoor'  },
+    'empower':               { name:'Empower Field',         city:'Denver',        country:'USA',    flag:'🇺🇸', lat:39.744,  lon:-105.020, alt:1609, temp:29, hum:38, type:'outdoor'  },
+    'mile high':             { name:'Empower Field',         city:'Denver',        country:'USA',    flag:'🇺🇸', lat:39.744,  lon:-105.020, alt:1609, temp:29, hum:38, type:'outdoor'  },
+    'denver':                { name:'Empower Field',         city:'Denver',        country:'USA',    flag:'🇺🇸', lat:39.744,  lon:-105.020, alt:1609, temp:29, hum:38, type:'outdoor'  },
+    'camping world stadium': { name:'Camping World Stadium', city:'Orlando',       country:'USA',    flag:'🇺🇸', lat:28.540,  lon:-81.403,  alt:29,   temp:34, hum:72, type:'outdoor'  },
+    'camping world':         { name:'Camping World Stadium', city:'Orlando',       country:'USA',    flag:'🇺🇸', lat:28.540,  lon:-81.403,  alt:29,   temp:34, hum:72, type:'outdoor'  },
+    'orlando':               { name:'Camping World Stadium', city:'Orlando',       country:'USA',    flag:'🇺🇸', lat:28.540,  lon:-81.403,  alt:29,   temp:34, hum:72, type:'outdoor'  },
+    'rose bowl':             { name:'Rose Bowl',             city:'Los Angeles',   country:'USA',    flag:'🇺🇸', lat:34.162,  lon:-118.168, alt:260,  temp:30, hum:52, type:'outdoor'  },
+    'pasadena':              { name:'Rose Bowl',             city:'Los Angeles',   country:'USA',    flag:'🇺🇸', lat:34.162,  lon:-118.168, alt:260,  temp:30, hum:52, type:'outdoor'  },
   };
   return V;
 })();
@@ -1047,39 +1061,66 @@ function renderEnvironment(D) {
     else              tempPill = `<span class="env-pill env-pill-normal">🌡️ ~${t}°C</span>`;
   }
 
-  // ── Travel / home advantage block ──────────────────
+  // ── Travel burden — loaded from wm_travel_burden.json (cached globally) ──
   const venueCountry = venue ? venue.country : '';
   const homeNations  = ['USA', 'Kanada', 'Mexiko'];
 
   function travelRow(teamName, teamFlag, teamId) {
-    const isHomeNation = homeNations.includes(venueCountry);
-    // rough home team match: check if team country matches venue country
-    const teamCountry = (teamId || '').toLowerCase();
-    const venCo       = venueCountry.toLowerCase();
-    const isHomeTeam  = (venCo === 'usa' && (teamCountry === 'usa' || teamCountry === 'united states'))
-                     || (venCo === 'mexiko' && teamCountry === 'mexico')
-                     || (venCo === 'kanada' && teamCountry === 'canada');
+    // Home advantage check
+    const venCo = venueCountry.toLowerCase();
+    const isHomeTeam = (venCo === 'usa' && teamId === 'USA')
+                    || (venCo === 'mexiko' && teamId === 'MEX')
+                    || (venCo === 'kanada' && teamId === 'CAN');
 
+    const tb = (window._wmTravelBurden || {})[teamId];
+
+    // Build leg context for THIS matchday transition
+    let legHtml = '';
+    if (tb && tb.legs) {
+      const leg = tb.legs.find(l => l.matchday_to === D.matchday);
+      if (leg && !leg.same_venue) {
+        const bCol = leg.burden === 'critical'    ? '#f85149'
+                   : leg.burden === 'significant' ? '#f97316'
+                   : leg.burden === 'moderate'    ? '#e3b341' : '#6e7681';
+        const crossStr = leg.border_crossing ? ' · 🛂 Grenzüberquerung' : '';
+        legHtml = `<div style="margin-top:4px;padding:4px 7px;border-radius:5px;border-left:2px solid ${bCol};background:${bCol}10;font-size:10px;color:${bCol};line-height:1.45">
+          ${leg.from_city} → ${leg.to_city} · ${leg.km.toLocaleString('de')} km · ${leg.rest_days}T Pause${crossStr}
+        </div>`;
+      } else if (leg && leg.same_venue) {
+        legHtml = `<div style="margin-top:4px;font-size:10px;color:#3fb950">✓ Gleiches Stadion wie Spiel ${D.matchday - 1}</div>`;
+      }
+    }
+
+    // Overall burden badge
     let badge = '';
     if (isHomeTeam) {
       badge = `<span class="env-tbadge env-tbadge-home">🏠 Heimvorteil</span>`;
-    } else if (venue && ['MX','CA','US'].filter((c,i) => ['mexiko','kanada','usa'][i] !== venCo).length > 0) {
-      // simple heuristic: if crossing into a different host country
-      const crosses = D.matchday >= 2 ? 1 : 0;
-      if (crosses >= 2)   badge = `<span class="env-tbadge env-tbadge-cross2">✈️ 2+ Länderwechsel</span>`;
-      else if (crosses === 1) badge = `<span class="env-tbadge env-tbadge-cross1">✈️ Länderwechsel</span>`;
-      else                badge = `<span class="env-tbadge env-tbadge-neutral">Neutral</span>`;
+    } else if (tb) {
+      const sc = tb.burden_score;
+      if (sc === 0)      badge = `<span class="env-tbadge env-tbadge-neutral">✓ Kein Reise</span>`;
+      else if (sc >= 7)  badge = `<span class="env-tbadge env-tbadge-cross2">⚠️ ${tb.burden_label}</span>`;
+      else if (sc >= 4)  badge = `<span class="env-tbadge env-tbadge-cross1">~ ${tb.burden_label}</span>`;
+      else               badge = `<span class="env-tbadge env-tbadge-neutral">${tb.burden_label}</span>`;
     } else {
       badge = `<span class="env-tbadge env-tbadge-neutral">Neutral</span>`;
     }
 
-    const playingIn = venue ? `Spielt in ${venueCountry}` : '';
+    // Games route overview
+    let routeHtml = '';
+    if (tb && tb.games && tb.games.length > 0) {
+      const cities = tb.games.map(g => g.city);
+      routeHtml = `<div style="font-size:9px;color:#6e7681;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+        ${cities.join(' → ')}
+      </div>`;
+    }
+
     return `
       <div class="env-trow">
         <div class="env-trow-flag">${teamFlag || '🏳'}</div>
         <div class="env-trow-info">
           <div class="env-trow-name">${escHtml(teamName || '')}</div>
-          <div class="env-trow-detail">${playingIn}${D.matchday ? ` · Spieltag ${D.matchday}` : ''}</div>
+          ${routeHtml}
+          ${legHtml}
         </div>
         ${badge}
       </div>`;
@@ -2200,6 +2241,16 @@ function renderError(msg) {
 }
 
 /* ── Boot ────────────────────────────────────────────────── */
+window._wmTravelBurden = null;
+
+// Load travel burden data in background (non-blocking)
+fetch('../wm_travel_burden.json')
+  .then(r => r.ok ? r.json() : null)
+  .then(tb => {
+    if (tb) window._wmTravelBurden = tb;
+  })
+  .catch(() => {});
+
 if (!slug) {
   renderError('Kein Spiel-Slug in der URL angegeben. Bitte ?m=wm-xxx-vs-yyy-DATUM verwenden.');
 } else {

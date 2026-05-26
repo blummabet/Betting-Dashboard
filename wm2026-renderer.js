@@ -444,7 +444,27 @@
         if      (_temp >= 33) _envPills += `<span class="wm-env-pill wm-env-heat">🌡️ ${_temp}°C</span>`;
         else if (_temp >= 28) _envPills += `<span class="wm-env-pill wm-env-warm">🌡️ ${_temp}°C</span>`;
       }
-      html += `<div class="wm-venue">📍 ${fx.venue}${_envPills ? '<span class="wm-env-pills">' + _envPills + '</span>' : ''}</div>`;
+      // Travel burden pills (needs window._wmTravelBurden loaded by betting-dashboard.html)
+      const _tb = window._wmTravelBurden || {};
+      const _homeTb = _tb[fx.home], _awayTb = _tb[fx.away];
+      let _travelPills = '';
+      if (_homeTb || _awayTb) {
+        const _tbPill = (tb, flag) => {
+          if (!tb) return '';
+          const sc = tb.burden_score;
+          if (sc === 0) return '';
+          const col  = sc >= 7 ? '#f85149' : sc >= 4 ? '#f97316' : '#e3b341';
+          const bg   = sc >= 7 ? 'rgba(248,81,73,.10)' : sc >= 4 ? 'rgba(249,115,22,.10)' : 'rgba(227,179,65,.10)';
+          const brd  = sc >= 7 ? 'rgba(248,81,73,.30)' : sc >= 4 ? 'rgba(249,115,22,.28)' : 'rgba(227,179,65,.28)';
+          // find the relevant leg for this matchday
+          const leg = (tb.legs || []).find(l => l.matchday_to === fx.matchday);
+          const legStr = leg && !leg.same_venue ? ` ${leg.km.toLocaleString('de')}km` : '';
+          return `<span class="wm-env-pill" style="color:${col};background:${bg};border-color:${brd}">✈️ ${flag}${legStr}</span>`;
+        };
+        _travelPills = _tbPill(_homeTb, _homeTb?.flag||'') + _tbPill(_awayTb, _awayTb?.flag||'');
+      }
+      const _allPills = (_envPills || '') + (_travelPills || '');
+      html += `<div class="wm-venue">📍 ${fx.venue}${_allPills ? '<span class="wm-env-pills">' + _allPills + '</span>' : ''}</div>`;
     }
 
     // ─── Upset Score badge ────────────────────────────
