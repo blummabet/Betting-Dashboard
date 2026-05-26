@@ -919,12 +919,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 /* WM CARD */
 .wm-card{
-  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  background:var(--card);border:1px solid var(--border);border-left:4px solid var(--card-accent,var(--border));border-radius:14px;
   overflow:hidden;display:flex;flex-direction:column;
   position:relative;transition:transform .16s,box-shadow .16s;
 }
 .wm-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.40);}
-.wm-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-accent,transparent);z-index:1;}
+.wm-card::before{display:none;}
 
 /* Group bar */
 .wm-card-groupbar{
@@ -1018,8 +1018,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm-pick-edge.neu{background:rgba(139,148,158,.1);color:#8b949e;}
 
 /* Event page link */
-.wm-event-link{display:block;text-align:center;padding:8px 14px 10px;font-size:10px;font-weight:700;color:var(--accent);text-decoration:none;border-top:1px solid var(--border);letter-spacing:.3px;transition:background .15s;}
-.wm-event-link:hover{background:rgba(0,212,161,.06);color:#fff;}
+.wm-event-link{display:block;text-align:center;padding:10px 14px;font-size:11px;font-weight:700;color:var(--accent);text-decoration:none;border-top:1px solid var(--border);border:1px solid rgba(0,212,161,.35);border-radius:0 0 10px 10px;letter-spacing:.3px;transition:background .15s,color .15s;background:rgba(0,212,161,.03);}
+.wm-event-link:hover{background:rgba(0,212,161,.10);color:#fff;border-color:var(--accent);}
 
 /* Squad spotlight */
 .wm-squad-spotlight{padding:10px 14px 8px;border-top:1px solid var(--border);background:rgba(88,166,255,.02);}
@@ -1034,9 +1034,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm-squad-stat-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;}
 
 /* ── WM Card — Played state ──────────────────────────────── */
-.wm-card-played{opacity:.72;filter:saturate(.55);}
+.wm-card-played{opacity:.72;filter:saturate(.55);border-left-color:var(--border)!important;}
 .wm-card-played:hover{transform:none;box-shadow:none;}
-.wm-card-played::before{background:var(--muted)!important;}
+.wm-card-played::before{display:none;}
 
 /* ── WM Sort bar ─────────────────────────────────────────── */
 .wm-sort-bar{display:flex;align-items:center;gap:6px;padding:6px 0 10px;flex-wrap:wrap;}
@@ -1055,7 +1055,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm-stat-pill{font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;white-space:nowrap;}
 .wm-stat-xg{background:rgba(88,166,255,.10);color:#58a6ff;border:1px solid rgba(88,166,255,.2);}
 .wm-stat-ou{background:rgba(0,212,161,.09);color:var(--accent);border:1px solid rgba(0,212,161,.2);}
+.wm-stat-ou-high{background:rgba(63,185,80,.14);color:#3fb950;border:1px solid rgba(63,185,80,.35);font-weight:800;}
+.wm-stat-ou-low{background:rgba(248,81,73,.08);color:#f85149;border:1px solid rgba(248,81,73,.25);}
 .wm-stat-btts{background:rgba(167,139,250,.09);color:#a78bfa;border:1px solid rgba(167,139,250,.2);}
+.wm-stat-btts-high{background:rgba(167,139,250,.16);color:#a78bfa;border:1px solid rgba(167,139,250,.4);font-weight:800;}
+.wm-stat-btts-low{background:rgba(110,118,129,.08);color:#6e7681;border:1px solid rgba(110,118,129,.2);}
 
 /* ── WM O2.5/BTTS odds row ──────────────────────────────── */
 .wm-ou-row{display:flex;align-items:center;gap:5px;padding:5px 14px 6px;border-top:1px solid var(--border);flex-wrap:wrap;}
