@@ -32,8 +32,8 @@ POLY_HIST     = BASE / "wm2026-poly-history.json"
 ODDS_HIST     = BASE / "wm2026-odds-history.json"
 
 # Schwellenwerte
-MIN_EDGE_PP       = 2.0    # Mindest-Edge für Log-Eintrag (inkl. watching-Signale)
-SIGNAL_EDGE_PP    = 3.0    # Mindest-Edge für echtes Signal
+MIN_EDGE_PP       = 1.5    # Mindest-Edge für Log-Eintrag (inkl. watching-Signale)
+SIGNAL_EDGE_PP    = 2.0    # Mindest-Edge für echtes Signal (war 3.0 — vor WM-Start gesenkt)
 CONVERGED_EDGE_PP = 1.0    # Edge gilt als geschlossen wenn < 1pp
 MAX_SNAPSHOTS     = 50     # Snapshots pro Signal-Entry im Log
 SIGNAL_TTL_DAYS   = 30     # Alte aufgelöste Signale nach N Tagen bereinigen
