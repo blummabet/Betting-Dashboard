@@ -235,6 +235,47 @@ def load_team_info() -> dict:
         return {}
 
 
+# ── Cache-Fallback: Poly-Preise aus wm_poly_prices.json ──────────────────────
+def fetch_poly_from_cache() -> dict:
+    """
+    Fallback wenn Gamma API nicht erreichbar (z.B. Proxy-Block im Sandbox).
+    Liest wm_poly_prices.json (letzter GitHub Action Run) und gibt Poly-Preise
+    im gleichen Format wie fetch_fresh_poly() zurück.
+    Kein neues Fetch — nutzt den Stand des letzten GitHub Action Runs (3x/Tag).
+    """
+    if not POLY_FILE.exists():
+        print("  ⚠️  Cache-Fallback: wm_poly_prices.json nicht gefunden")
+        return {}
+    try:
+        with open(POLY_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+        result = {}
+        for fx in data.get("allFixtures", []):
+            key = fx.get("key", "")
+            if not key:
+                continue
+            # Brauchen Poly-Preise UND Pinnacle Fair Probs
+            if not fx.get("poly_hw") or not fx.get("fair_hw"):
+                continue
+            result[key] = {
+                "hw":       fx.get("poly_hw"),
+                "dr":       fx.get("poly_dr"),
+                "aw":       fx.get("poly_aw"),
+                "slug":     fx.get("slug", ""),
+                "date":     fx.get("date", ""),
+                "homeName": fx.get("homeName") or fx.get("home", ""),
+                "awayName": fx.get("awayName") or fx.get("away", ""),
+                "homeId":   fx.get("homeId", ""),
+                "awayId":   fx.get("awayId", ""),
+            }
+        age = data.get("generatedAt", "?")
+        print(f"  📦 Cache-Fallback: {len(result)} Fixtures geladen (Stand: {age})")
+        return result
+    except Exception as e:
+        print(f"  ⚠️  Cache-Fallback fehlgeschlagen: {e}")
+        return {}
+
+
 # ── Edge-Berechnung ───────────────────────────────────────────────────────────
 def compute_edges(poly: dict, pinn: dict) -> list[dict]:
     """
@@ -527,11 +568,14 @@ def main():
 
     now_ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    # 1. Frische Poly-Preise holen
+    # 1. Frische Poly-Preise holen (Gamma API → Fallback: wm_poly_prices.json)
     print("📡 Fetche Polymarket-Preise…")
     fresh_poly = fetch_fresh_poly()
     if not fresh_poly:
-        print("  ❌ Keine Poly-Preise — Abbruch")
+        print("  🔄 Fallback: verwende Poly-Preise aus wm_poly_prices.json …")
+        fresh_poly = fetch_poly_from_cache()
+    if not fresh_poly:
+        print("  ❌ Keine Poly-Preise (weder Gamma noch Cache) — Abbruch")
         return
 
     # 2. Pinnacle Fair Probs + Steam Lag Kontext laden
