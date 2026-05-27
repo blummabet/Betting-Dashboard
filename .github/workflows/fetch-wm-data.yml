@@ -115,6 +115,11 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # ── Steam Lag Monitor (nach Poly-Preise, damit frische Edges) ───────────
+      - name: 🔥 Steam Lag Monitor — Signale loggen
+        run: python steam_lag_monitor.py
+        continue-on-error: true
+
       # ── Match Previews (regelbasiert, kein API-Key nötig) ────────────────
       - name: 📝 WM Match Previews generieren
         run: python generate_wm_rule_preview.py
@@ -133,7 +138,7 @@ jobs:
           git add wm2026-data.json wm2026-odds-history.json wm_poly_prices.json \
                   wm2026-poly-history.json \
                   wm_results.json matches/data/wm-*.json matches/wm-index.json
-          git add telegram-log.json wm_sharp_dedup.json wm_sharp_moves_log.json 2>/dev/null || true
+          git add telegram-log.json wm_sharp_dedup.json wm_sharp_moves_log.json steam_lag_log.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
           else
