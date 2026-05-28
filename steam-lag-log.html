@@ -209,12 +209,23 @@ let allSignals = [];
 let currentFilter = 'all';
 let currentSort   = 'ts';
 
+async function fetchLog() {
+  const ts = Date.now();
+  // 1. Relative URL (GitHub Pages CDN — deployed copy)
+  try {
+    const res = await fetch(`steam_lag_log.json?t=${ts}`, { cache: 'no-store' });
+    if (res.ok) return res.json();
+  } catch(e) {}
+  // 2. Raw GitHub fallback (always reflects latest commit, CORS: *)
+  const raw = `https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main/steam_lag_log.json?t=${ts}`;
+  const res2 = await fetch(raw, { cache: 'no-store' });
+  if (!res2.ok) throw new Error(`HTTP ${res2.status}`);
+  return res2.json();
+}
+
 async function loadData() {
   try {
-    const ts  = Date.now();
-    const res = await fetch(`steam_lag_log.json?t=${ts}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const data = await fetchLog();
 
     allSignals = data.signals || [];
     const upd  = data.updatedAt || '';
