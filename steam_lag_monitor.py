@@ -28,6 +28,19 @@ from pathlib import Path
 BASE          = Path(__file__).parent
 LOG_FILE      = BASE / "steam_lag_log.json"
 POLY_FILE     = BASE / "wm_poly_prices.json"   # Written by GitHub Action (latest known state)
+SELL_DEDUP_FILE = BASE / "steam_lag_sell_dedup.json"
+
+# Telegram
+TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_TOKEN", "").strip()
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+
+# Sell-alert thresholds
+SELL_VELOCITY_PP_H  = 0.3   # Edge closing ≥ 0.3pp/h → sell alert
+SELL_EDGE_THRESHOLD = 1.5   # Only alert when edge already below this (= most of move captured)
+SELL_MIN_ENTRY_EDGE = 2.5   # Only alert for signals that had meaningful entry edge
+
+# High-confidence threshold
+HIGH_CONF_EDGE_MIN = 3.0    # Entry edge ≥ 3pp + steamLagAtSignal → high confidence
 POLY_HIST     = BASE / "wm2026-poly-history.json"
 ODDS_HIST     = BASE / "wm2026-odds-history.json"
 
@@ -167,6 +180,7 @@ def fetch_fresh_poly() -> dict:
             "aw": round(aw, 4),
             "slug":     slug,
             "date":     ev.get("eventDate", ""),
+            "vol":      round(float(ev.get("volume", 0)), 0),
             "homeName": home_name,
             "awayName": away_name,
             "homeId":   home_id,
@@ -263,6 +277,7 @@ def fetch_poly_from_cache() -> dict:
                 "aw":       fx.get("poly_aw"),
                 "slug":     fx.get("slug", ""),
                 "date":     fx.get("date", ""),
+                "vol":      fx.get("vol", 0),
                 "homeName": fx.get("homeName") or fx.get("home", ""),
                 "awayName": fx.get("awayName") or fx.get("away", ""),
                 "homeId":   fx.get("homeId", ""),
@@ -274,6 +289,43 @@ def fetch_poly_from_cache() -> dict:
     except Exception as e:
         print(f"  ⚠️  Cache-Fallback fehlgeschlagen: {e}")
         return {}
+
+
+# ── Telegram ─────────────────────────────────────────────────────────────────
+def tg_send(text: str) -> bool:
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        print("  ℹ️  Kein TELEGRAM_TOKEN/CHAT_ID — Vorschau:")
+        print(f"  {text[:200]}")
+        return False
+    url  = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    body = json.dumps({
+        "chat_id":    TELEGRAM_CHAT_ID,
+        "text":       text,
+        "parse_mode": "HTML",
+    }).encode("utf-8")
+    req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read()).get("ok", False)
+    except Exception as e:
+        print(f"  ⚠️  Telegram fehlgeschlagen: {e}")
+        return False
+
+
+# ── Sell-Alert Dedup ──────────────────────────────────────────────────────────
+def load_sell_dedup() -> dict:
+    try:
+        if SELL_DEDUP_FILE.exists():
+            with open(SELL_DEDUP_FILE, encoding="utf-8") as f:
+                return json.load(f)
+    except Exception:
+        pass
+    return {}
+
+
+def save_sell_dedup(store: dict) -> None:
+    with open(SELL_DEDUP_FILE, "w", encoding="utf-8") as f:
+        json.dump(store, f, ensure_ascii=False, indent=2)
 
 
 # ── Edge-Berechnung ───────────────────────────────────────────────────────────
@@ -409,6 +461,10 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
 
             home_info = team_info.get(fx["homeId"], {})
             away_info = team_info.get(fx["awayId"], {})
+            is_high_conf = (
+                fx["steamLag"] and
+                current_edge >= HIGH_CONF_EDGE_MIN
+            )
             new_entry = {
                 "id":               make_signal_id(fx["key"], best_key, now_ts),
                 "matchKey":         fx["key"],
@@ -425,12 +481,15 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
                 "entryEdgePp":      current_edge,
                 "entryPolyPrice":   current_poly,
                 "entryPinnFair":    current_fair,
+                "entryVol":         fx.get("vol", 0),
                 "steamLagAtSignal": fx["steamLag"],
                 "pinnMoveAtSignal": fx.get("pinnSteamMove"),
                 "edgeTrendAtSignal":fx.get("edgeTrend", "stable"),
+                "highConfidence":   is_high_conf,
                 "snapshots":        [snap],
                 "currentEdgePp":    current_edge,
                 "currentPolyPrice": current_poly,
+                "edgeVelocityPPH":  None,
                 "convergencePct":   0.0,
                 "convergenceTs":    None,
                 "convergenceHours": None,
@@ -453,6 +512,19 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
             open_entry["currentPolyPrice"] = current_poly
             open_entry["convergencePct"]   = calc_convergence(
                 open_entry["entryEdgePp"], current_edge)
+
+            # ── Edge velocity: pp/h over last 2+ snapshots ───────────────────
+            snaps_for_vel = open_entry.get("snapshots", [])
+            if len(snaps_for_vel) >= 2:
+                snap_old = snaps_for_vel[-2]
+                try:
+                    t_old = datetime.fromisoformat(snap_old["ts"].replace("Z", "+00:00"))
+                    t_new = datetime.fromisoformat(now_ts.replace("Z", "+00:00"))
+                    hours_diff = max(0.1, (t_new - t_old).total_seconds() / 3600)
+                    vel = round((current_edge - (snap_old.get("edgePp") or current_edge)) / hours_diff, 3)
+                    open_entry["edgeVelocityPPH"] = vel   # negative = closing
+                except Exception:
+                    pass
 
             # Konvergenz erreicht?
             if (current_edge < CONVERGED_EDGE_PP
@@ -605,6 +677,83 @@ def main():
 
     # 7. Summary
     print_summary(log)
+
+    # 8. Telegram Alerts ──────────────────────────────────────────────────────
+    print("\n📱 Prüfe Telegram Alerts…")
+    sell_dedup = load_sell_dedup()
+    signals    = log.get("signals", [])
+    alerts_sent = 0
+
+    for sig in signals:
+        home  = sig.get("home", sig.get("homeId", "?"))
+        away  = sig.get("away", sig.get("awayId", "?"))
+        hf    = sig.get("homeFlag", "")
+        af    = sig.get("awayFlag", "")
+        mkt   = sig.get("marketLabel", sig.get("market", ""))
+        entry = sig.get("entryEdgePp", 0)
+        curr  = sig.get("currentEdgePp", 0)
+        vel   = sig.get("edgeVelocityPPH")
+        sig_id = sig.get("id", "")
+
+        # ── Neu: High-Confidence Signal-Alert ────────────────────────────────
+        hc_key = f"hc::{sig_id}"
+        if (sig.get("highConfidence")
+                and sig.get("status") == "OPEN"
+                and hc_key not in sell_dedup):
+            steam_pp = sig.get("pinnMoveAtSignal", 0) or 0
+            vol_str  = f"${sig.get('entryVol', 0):,.0f}" if sig.get("entryVol") else "?"
+            msg = (
+                f"⭐ <b>HIGH CONFIDENCE Steam Lag</b>\n"
+                f"{hf} <b>{home}</b> vs {af} <b>{away}</b>\n"
+                f"Markt: <b>{mkt}</b>\n"
+                f"\n"
+                f"🔥 Pinn-Move: <b>+{steam_pp:.1f}pp</b> (Pinnacle hat sich bewegt)\n"
+                f"💹 Poly-Edge: <b>+{entry:.1f}pp</b> (Poly noch nicht reagiert)\n"
+                f"Vol: {vol_str}\n"
+                f"\n"
+                f"✅ Beide Bedingungen erfüllt: Pinn-Move + Poly-Lag\n"
+                f"📅 Spiel: {sig.get('matchDate', '?')}\n"
+                f"\n🤖 CocoBet Steam Lag Monitor"
+            )
+            ok = tg_send(msg)
+            if ok:
+                sell_dedup[hc_key] = {"ts": now_ts, "type": "high_conf"}
+                alerts_sent += 1
+                print(f"  ⭐ HIGH CONF Alert: {home} vs {away} · {mkt}")
+
+        # ── Sell Alert: Edge schließt sich schnell ────────────────────────────
+        sell_key = f"sell::{sig_id}"
+        if (sig.get("status") == "OPEN"
+                and entry >= SELL_MIN_ENTRY_EDGE
+                and curr <= SELL_EDGE_THRESHOLD
+                and vel is not None
+                and vel <= -SELL_VELOCITY_PP_H
+                and sell_key not in sell_dedup):
+            captured = round(100 * (entry - curr) / entry) if entry > 0 else 0
+            msg = (
+                f"📉 <b>EXIT SIGNAL — Edge konvergiert!</b>\n"
+                f"{hf} <b>{home}</b> vs {af} <b>{away}</b>\n"
+                f"Markt: <b>{mkt}</b>\n"
+                f"\n"
+                f"Entry: <b>+{entry:.1f}pp</b> → Jetzt: <b>+{curr:.1f}pp</b>\n"
+                f"⚡ Velocity: <b>{vel:+.2f}pp/h</b> (schließt sich)\n"
+                f"✅ {captured}% der Lücke geschlossen\n"
+                f"\n"
+                f"💡 Erwäge Position zu verkaufen — Konvergenz läuft\n"
+                f"📅 Spiel: {sig.get('matchDate', '?')}\n"
+                f"\n🤖 CocoBet Steam Lag Monitor"
+            )
+            ok = tg_send(msg)
+            if ok:
+                sell_dedup[sell_key] = {"ts": now_ts, "type": "sell", "vel": vel, "curr": curr}
+                alerts_sent += 1
+                print(f"  📉 SELL Alert: {home} vs {away} · {mkt} · {vel:+.2f}pp/h")
+
+    save_sell_dedup(sell_dedup)
+    if alerts_sent:
+        print(f"  ✅ {alerts_sent} Alert(s) gesendet")
+    else:
+        print(f"  ℹ️  Keine neuen Alerts (alle bereits gesendet oder Schwellen nicht erreicht)")
 
 
 if __name__ == "__main__":
