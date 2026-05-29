@@ -157,6 +157,34 @@
   /* No signal overlay */
   .no-data { text-align: center; padding: 60px 20px; }
   .no-data-icon { font-size: 48px; margin-bottom: 12px; }
+
+  /* ── Simulated Portfolio Bar ── */
+  .portfolio-bar {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 1px; background: var(--border);
+    border-bottom: 2px solid var(--border);
+  }
+  .portfolio-bar .stat { background: #1a1f27; }
+  .portfolio-bar .stat-val { font-size: 20px; }
+  .portfolio-bar .stat-val.pos { color: var(--green); }
+  .portfolio-bar .stat-val.neg { color: var(--red); }
+  .portfolio-bar .stat-val.neu { color: var(--sub); }
+  .portfolio-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--purple); font-weight: 700; margin-bottom: 2px; }
+
+  /* Per-card position badge */
+  .pos-badge { display: flex; align-items: center; gap: 10px; padding: 8px 16px; border-top: 1px solid var(--border); background: rgba(0,0,0,0.1); font-size: 12px; }
+  .pos-stake { color: var(--sub); }
+  .pos-arrow { color: var(--border); }
+  .pos-value { font-weight: 700; }
+  .pos-value.pos { color: var(--green); }
+  .pos-value.neg { color: var(--red); }
+  .pos-value.neu { color: var(--sub); }
+  .pos-pnl { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+  .pos-pnl.pos { background: rgba(63,185,80,0.12); color: var(--green); }
+  .pos-pnl.neg { background: rgba(248,81,73,0.12); color: var(--red); }
+  .pos-pnl.neu { background: transparent; color: var(--sub); }
+  .pos-shares { color: var(--sub); margin-left: auto; }
+  @media (max-width: 600px) { .portfolio-bar { grid-template-columns: 1fr 1fr 1fr; } }
 </style>
 </head>
 <body>
@@ -177,6 +205,15 @@
   <div class="stat steam"><div class="stat-val" id="s-steam">—</div><div class="stat-label">🔥 Steam Lag</div></div>
   <div class="stat rate"><div class="stat-val" id="s-rate">—</div><div class="stat-label">⚡ Konvergenzrate</div></div>
   <div class="stat time"><div class="stat-val" id="s-time">—</div><div class="stat-label">⏱ Ø Konvergenzzeit</div></div>
+</div>
+
+<div class="portfolio-bar" id="portfolio-bar">
+  <div class="stat"><div class="portfolio-label">💼 Simulated Portfolio · $5/Entry</div><div class="stat-val neu" id="p-note" style="font-size:13px;color:var(--sub)">Wird geladen…</div></div>
+  <div class="stat"><div class="stat-val" id="p-invested" style="color:var(--sub)">—</div><div class="stat-label">Investiert</div></div>
+  <div class="stat"><div class="stat-val" id="p-value">—</div><div class="stat-label">Aktueller Wert</div></div>
+  <div class="stat"><div class="stat-val" id="p-pnl">—</div><div class="stat-label">P&amp;L gesamt</div></div>
+  <div class="stat"><div class="stat-val" id="p-roi">—</div><div class="stat-label">ROI %</div></div>
+  <div class="stat"><div class="stat-val" id="p-winrate">—</div><div class="stat-label">⚡ Win Rate</div></div>
 </div>
 
 <div class="filters">
@@ -208,6 +245,7 @@
 let allSignals = [];
 let currentFilter = 'all';
 let currentSort   = 'ts';
+const STAKE = 5; // $ per entry signal
 
 async function fetchLog() {
   const ts = Date.now();
@@ -235,6 +273,7 @@ async function loadData() {
       upd ? `Letzter Run: ${fmtTs(upd)} · ${runs} Runs` : 'Noch kein Run';
 
     updateStats();
+    updatePortfolio();
     renderCards();
   } catch(e) {
     if (e.message.includes('404') || e.message.includes('Failed')) {
@@ -267,6 +306,52 @@ function updateStats() {
   document.getElementById('s-steam').textContent = n_steam;
   document.getElementById('s-rate').textContent  = total_trackable > 0 ? `${rate}%` : '—';
   document.getElementById('s-time').textContent  = avgT ? `${avgT}h` : '—';
+}
+
+// ── Portfolio simulation ──────────────────────────────────────────────────────
+function calcPosition(s) {
+  const entryP   = s.entryPolyPrice;
+  const currentP = s.currentPolyPrice ?? s.entryPolyPrice;
+  if (!entryP || entryP <= 0) return null;
+  const shares       = STAKE / entryP;
+  const currentValue = shares * currentP;
+  const pnl          = currentValue - STAKE;
+  const pnlPct       = (pnl / STAKE) * 100;
+  return { shares, currentValue, pnl, pnlPct, entryP, currentP };
+}
+
+function updatePortfolio() {
+  const validSigs = allSignals.filter(s => s.entryPolyPrice > 0);
+  if (validSigs.length === 0) return;
+
+  const positions  = validSigs.map(s => ({ ...calcPosition(s), status: s.status })).filter(Boolean);
+  const invested   = STAKE * positions.length;
+  const totalVal   = positions.reduce((a, p) => a + p.currentValue, 0);
+  const totalPnl   = totalVal - invested;
+  const roi        = (totalPnl / invested) * 100;
+  const winners    = positions.filter(p => p.pnl > 0.05).length;
+  const winRate    = Math.round(winners / positions.length * 100);
+
+  const fmt  = (v, d=2) => (v >= 0 ? '+' : '') + v.toFixed(d);
+  const fmtD = v => `$${Math.abs(v).toFixed(2)}`;
+
+  // Update DOM
+  document.getElementById('p-note').textContent = `${positions.length} Positionen simuliert`;
+  document.getElementById('p-invested').textContent = `$${invested.toFixed(0)}`;
+
+  const valEl = document.getElementById('p-value');
+  valEl.textContent = `$${totalVal.toFixed(2)}`;
+  valEl.className = `stat-val ${totalPnl >= 0 ? 'pos' : 'neg'}`;
+
+  const pnlEl = document.getElementById('p-pnl');
+  pnlEl.textContent = `${totalPnl >= 0 ? '+' : ''}$${totalPnl.toFixed(2)}`;
+  pnlEl.className = `stat-val ${totalPnl >= 0.01 ? 'pos' : totalPnl <= -0.01 ? 'neg' : 'neu'}`;
+
+  const roiEl = document.getElementById('p-roi');
+  roiEl.textContent = `${roi >= 0 ? '+' : ''}${roi.toFixed(1)}%`;
+  roiEl.className = `stat-val ${roi >= 0.1 ? 'pos' : roi <= -0.1 ? 'neg' : 'neu'}`;
+
+  document.getElementById('p-winrate').textContent = `${winRate}%`;
 }
 
 function setFilter(f, btn) {
@@ -402,6 +487,24 @@ function renderCard(s) {
 
   const matchDateFmt = s.matchDate ? new Date(s.matchDate + 'T12:00:00Z').toLocaleDateString('de-AT', { day: 'numeric', month: 'short' }) : '';
 
+  // Simulated position
+  const pos = calcPosition(s);
+  let posBadgeHtml = '';
+  if (pos) {
+    const cls = pos.pnl > 0.05 ? 'pos' : pos.pnl < -0.05 ? 'neg' : 'neu';
+    const sign = pos.pnl >= 0 ? '+' : '';
+    const pnlStr = `${sign}$${pos.pnl.toFixed(2)} (${sign}${pos.pnlPct.toFixed(1)}%)`;
+    const sharesStr = `${pos.shares.toFixed(1)} Shares · @${(pos.entryP*100).toFixed(1)}¢→${(pos.currentP*100).toFixed(1)}¢`;
+    posBadgeHtml = `
+      <div class="pos-badge">
+        <span class="pos-stake">💼 $${STAKE.toFixed(0)}</span>
+        <span class="pos-arrow">→</span>
+        <span class="pos-value ${cls}">$${pos.currentValue.toFixed(2)}</span>
+        <span class="pos-pnl ${cls}">${pnlStr}</span>
+        <span class="pos-shares">${sharesStr}</span>
+      </div>`;
+  }
+
   return `
   <div class="signal-card ${isSteam ? 'steam-lag' : ''} status-${status}">
     <div class="card-header">
@@ -432,6 +535,7 @@ function renderCard(s) {
         ${timelineHtml}
       </div>
     </div>
+    ${posBadgeHtml}
     <div class="card-footer">
       ${tags.join('')}
       <div class="footer-spacer"></div>
