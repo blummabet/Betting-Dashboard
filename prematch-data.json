@@ -1,5 +1,5 @@
 {
-  "ts": 1780058282788,
+  "ts": 1780086325609,
   "fixtures": [
     {
       "fixtureId": 1545404,
@@ -82,6 +82,15 @@
             "oneAway": false
           },
           {
+            "id": 10470,
+            "name": "Cassiano",
+            "yellows": 5,
+            "threshold": 5,
+            "position": "M",
+            "atThreshold": true,
+            "oneAway": false
+          },
+          {
             "id": 134822,
             "name": "Rafael Brito",
             "yellows": 5,
@@ -91,11 +100,11 @@
             "oneAway": false
           },
           {
-            "id": 10470,
-            "name": "Cassiano",
+            "id": 163481,
+            "name": "João Goulart",
             "yellows": 5,
             "threshold": 5,
-            "position": "M",
+            "position": "D",
             "atThreshold": true,
             "oneAway": false
           },
@@ -109,11 +118,20 @@
             "oneAway": false
           },
           {
-            "id": 163481,
-            "name": "João Goulart",
+            "id": 20834,
+            "name": "J. Livolant",
             "yellows": 4,
             "threshold": 5,
-            "position": "D",
+            "position": "M",
+            "atThreshold": false,
+            "oneAway": true
+          },
+          {
+            "id": 135148,
+            "name": "P. Sequeira",
+            "yellows": 4,
+            "threshold": 5,
+            "position": "G",
             "atThreshold": false,
             "oneAway": true
           },
@@ -127,7 +145,80 @@
             "oneAway": true
           }
         ],
-        "away": []
+        "away": [
+          {
+            "id": 415070,
+            "name": "Léo Azevedo",
+            "yellows": 11,
+            "threshold": 5,
+            "position": "M",
+            "atThreshold": true,
+            "oneAway": false
+          },
+          {
+            "id": 237292,
+            "name": "D. Jean",
+            "yellows": 8,
+            "threshold": 5,
+            "position": "M",
+            "atThreshold": true,
+            "oneAway": false
+          },
+          {
+            "id": 332315,
+            "name": "Alejandro Alfaro",
+            "yellows": 7,
+            "threshold": 5,
+            "position": "M",
+            "atThreshold": true,
+            "oneAway": false
+          },
+          {
+            "id": 379974,
+            "name": "André Simões",
+            "yellows": 7,
+            "threshold": 5,
+            "position": null,
+            "atThreshold": true,
+            "oneAway": false
+          },
+          {
+            "id": 392656,
+            "name": "M. Diadie",
+            "yellows": 6,
+            "threshold": 5,
+            "position": "D",
+            "atThreshold": true,
+            "oneAway": false
+          },
+          {
+            "id": 329726,
+            "name": "Arnau Casas",
+            "yellows": 5,
+            "threshold": 5,
+            "position": "D",
+            "atThreshold": true,
+            "oneAway": false
+          },
+          {
+            "id": 2046,
+            "name": "Javi Vázquez",
+            "yellows": 4,
+            "threshold": 5,
+            "position": "D",
+            "atThreshold": false,
+            "oneAway": true
+          },
+          {
+            "id": 195092,
+            "name": "Guilherme Liberato",
+            "yellows": 4,
+            "threshold": 5,
+            "position": "M",
+            "atThreshold": false,
+            "oneAway": true
+          }
+        ]
       },
       "h2h": {
         "games": 6,
@@ -419,17 +510,35 @@
       "awayTeamName": "Saint Etienne",
       "homeTeamId": 84,
       "awayTeamId": 1063,
-      "referee": "R. Buquet",
+      "referee": "Benoît Bastien, France",
       "refereeStats": null,
       "date": "2026-05-29",
       "time": "20:45",
       "injuries": {
         "home": [
           {
-            "player": "M. Dupe",
-            "position": "G",
+            "player": "M. Abdelmonem",
+            "position": "D",
             "type": "Missing Fixture",
-            "reason": "Inactive"
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "A. Abdi",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "International duty"
+          },
+          {
+            "player": "M. Bombito",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Leg Injury"
+          },
+          {
+            "player": "H. Boudaoui",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
           },
           {
             "player": "T. Ndombele",
@@ -442,18 +551,6 @@
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Ankle Injury"
-          },
-          {
-            "player": "M. Bombito",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Leg Injury"
-          },
-          {
-            "player": "H. Boudaoui",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Injury"
           }
         ],
         "away": [
@@ -488,12 +585,6 @@
             "reason": "Inactive"
           },
           {
-            "player": "B. Old",
-            "position": "M",
-            "type": "Missing Fixture",
-            "reason": "Thigh Injury"
-          },
-          {
             "player": "M. Paalberg",
             "position": "M",
             "type": "Missing Fixture",
@@ -504,37 +595,50 @@
             "position": "M",
             "type": "Missing Fixture",
             "reason": "Inactive"
-          },
-          {
-            "player": "I. Cardona",
-            "position": "M",
-            "type": "Questionable",
-            "reason": "Injury"
           }
         ]
       },
       "injurySummary": {
         "home": {
-          "goalkeeper": 1,
-          "defense": 0,
-          "midfield": 2,
+          "goalkeeper": 0,
+          "defense": 1,
+          "midfield": 5,
           "attack": 0,
-          "confirmed": 3,
-          "questionable": 2,
-          "total": 5,
+          "confirmed": 6,
+          "questionable": 0,
+          "total": 6,
           "notes": [
-            "M. Dupe (Gesperrt/Verletzt — Inactive)",
+            "M. Abdelmonem (Gesperrt/Verletzt — Knee Injury)",
+            "A. Abdi (Gesperrt/Verletzt — International duty)",
+            "M. Bombito (Gesperrt/Verletzt — Leg Injury)",
+            "H. Boudaoui (Gesperrt/Verletzt — Injury)",
             "T. Ndombele (Gesperrt/Verletzt — Inactive)",
-            "E. Pereira (Gesperrt/Verletzt — Ankle Injury)",
-            "M. Bombito (Fraglich — Leg Injury)",
-            "H. Boudaoui (Fraglich — Injury)"
+            "E. Pereira (Gesperrt/Verletzt — Ankle Injury)"
           ],
           "_raw": [
             {
-              "player": "M. Dupe",
-              "position": "G",
+              "player": "M. Abdelmonem",
+              "position": "D",
               "type": "Missing Fixture",
-              "reason": "Inactive"
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "A. Abdi",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "International duty"
+            },
+            {
+              "player": "M. Bombito",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Leg Injury"
+            },
+            {
+              "player": "H. Boudaoui",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
             },
             {
               "player": "T. Ndombele",
@@ -547,40 +651,26 @@
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Ankle Injury"
-            },
-            {
-              "player": "M. Bombito",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Leg Injury"
-            },
-            {
-              "player": "H. Boudaoui",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Injury"
             }
           ],
-          "impactScore": 2.2
+          "impactScore": 2.1
         },
         "away": {
           "goalkeeper": 0,
           "defense": 1,
-          "midfield": 7,
+          "midfield": 6,
           "attack": 0,
-          "confirmed": 8,
-          "questionable": 1,
-          "total": 9,
+          "confirmed": 7,
+          "questionable": 0,
+          "total": 7,
           "notes": [
             "N. El Jamali (Gesperrt/Verletzt — Knee Injury)",
             "P. Eymard (Gesperrt/Verletzt — Foot Injury)",
             "M. Jaber (Gesperrt/Verletzt — Surgery)",
             "C. Lamba (Gesperrt/Verletzt — Injury)",
             "D. N'Guessan (Gesperrt/Verletzt — Inactive)",
-            "B. Old (Gesperrt/Verletzt — Thigh Injury)",
             "M. Paalberg (Gesperrt/Verletzt — Inactive)",
-            "L. Traore (Gesperrt/Verletzt — Inactive)",
-            "I. Cardona (Fraglich — Injury)"
+            "L. Traore (Gesperrt/Verletzt — Inactive)"
           ],
           "_raw": [
             {
@@ -614,12 +704,6 @@
               "reason": "Inactive"
             },
             {
-              "player": "B. Old",
-              "position": "M",
-              "type": "Missing Fixture",
-              "reason": "Thigh Injury"
-            },
-            {
               "player": "M. Paalberg",
               "position": "M",
               "type": "Missing Fixture",
@@ -630,15 +714,9 @@
               "position": "M",
               "type": "Missing Fixture",
               "reason": "Inactive"
-            },
-            {
-              "player": "I. Cardona",
-              "position": "M",
-              "type": "Questionable",
-              "reason": "Injury"
             }
           ],
-          "impactScore": 2.4
+          "impactScore": 2.1
         }
       },
       "bookings": {
@@ -668,16 +746,16 @@
       "h2h": {
         "games": 10,
         "homeWins": 6,
-        "draws": 2,
-        "awayWins": 2,
+        "draws": 3,
+        "awayWins": 1,
         "lastMeetingYear": 2026,
-        "avgGoals": 3.4,
-        "over25Rate": 0.7,
-        "over35Rate": 0.5,
+        "avgGoals": 3.1,
+        "over25Rate": 0.6,
+        "over35Rate": 0.4,
         "bttsRate": 0.5,
         "lastResults": [
           "D",
-          "W",
+          "D",
           "W",
           "W",
           "W"
@@ -685,195 +763,137 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.1,
-        "dr_fair": 3.32,
-        "aw_fair": 4.49,
-        "_cn": 27,
-        "dc1X_bkr": 1.29,
-        "dcX2_bkr": 1.91,
-        "dc12_bkr": 1.43,
-        "o25_fair": 2.54,
-        "u25_fair": 1.65,
-        "o25_cn": 10,
-        "pinn_hw": 2.04,
-        "pinn_dr": 3.2,
-        "pinn_aw": 4.33,
-        "pinn_hw_fair": 2.11,
-        "pinn_dr_fair": 3.31,
-        "pinn_aw_fair": 4.48,
-        "hw": 2.04,
-        "aw": 4.33,
-        "dr": 3.2,
+        "hw_fair": 3.22,
+        "dr_fair": 1.78,
+        "aw_fair": 7.89,
+        "_cn": 22,
+        "dc1X_bkr": 1.15,
+        "dcX2_bkr": 1.45,
+        "dc12_bkr": 2.29,
+        "o25_fair": 2.68,
+        "u25_fair": 1.6,
+        "o25_cn": 7,
+        "pinn_hw": 1.22,
+        "pinn_dr": 5.03,
+        "pinn_aw": 23.05,
+        "pinn_hw_fair": 1.3,
+        "pinn_dr_fair": 5.34,
+        "pinn_aw_fair": 24.48,
+        "hw": 1.22,
+        "aw": 23.05,
+        "dr": 5.03,
         "ah_h_point": -0.5,
-        "ah_h": 2.04,
+        "ah_h": 4.4,
         "ah_home_lines": [
           {
-            "pt": -0.5,
-            "price": 2.04
-          },
-          {
-            "pt": -1.5,
-            "price": 4.13
-          },
-          {
-            "pt": -1.25,
-            "price": 3.64
-          },
-          {
-            "pt": -1,
-            "price": 3.16
+            "pt": 0,
+            "price": 1.66
           },
           {
             "pt": -0.75,
-            "price": 2.4
-          },
-          {
-            "pt": -0.25,
-            "price": 1.72
-          },
-          {
-            "pt": 0,
-            "price": 1.42
-          },
-          {
-            "pt": 0.25,
-            "price": 1.31
-          },
-          {
-            "pt": 0.5,
-            "price": 1.25
-          }
-        ],
-        "ah_a_point": 0.5,
-        "ah_a": 1.87,
-        "ah_away_lines": [
-          {
-            "pt": 0.5,
-            "price": 1.87
-          },
-          {
-            "pt": 1.5,
-            "price": 1.26
-          },
-          {
-            "pt": 1.25,
-            "price": 1.31
-          },
-          {
-            "pt": 1,
-            "price": 1.39
-          },
-          {
-            "pt": 0.75,
-            "price": 1.62
-          },
-          {
-            "pt": 0.25,
-            "price": 2.21
-          },
-          {
-            "pt": 0,
-            "price": 3.04
-          },
-          {
-            "pt": -0.25,
-            "price": 3.65
+            "price": 4.31
           },
           {
             "pt": -0.5,
-            "price": 4.27
+            "price": 3.2
+          },
+          {
+            "pt": -0.25,
+            "price": 2.47
+          },
+          {
+            "pt": 0.25,
+            "price": 1.34
+          },
+          {
+            "pt": 0.5,
+            "price": 1.22
+          }
+        ],
+        "ah_a_point": 0.5,
+        "ah_a": 1.27,
+        "ah_away_lines": [
+          {
+            "pt": 0,
+            "price": 2.29
+          },
+          {
+            "pt": 0.75,
+            "price": 1.2
+          },
+          {
+            "pt": 0.5,
+            "price": 1.36
+          },
+          {
+            "pt": 0.25,
+            "price": 1.58
+          },
+          {
+            "pt": -0.25,
+            "price": 3.39
+          },
+          {
+            "pt": -0.5,
+            "price": 4.34
           }
         ],
         "ao_lines": [
           {
-            "pt": 2,
-            "price": 1.87
-          },
-          {
-            "pt": 1,
-            "price": 1.15
-          },
-          {
-            "pt": 1.25,
-            "price": 1.32
+            "pt": 1.75,
+            "price": 2
           },
           {
             "pt": 1.5,
-            "price": 1.49
+            "price": 1.67
           },
           {
-            "pt": 1.75,
-            "price": 1.62
+            "pt": 2,
+            "price": 2.86
           },
           {
             "pt": 2.25,
-            "price": 2.2
+            "price": 3.6
           },
           {
             "pt": 2.5,
-            "price": 2.53
-          },
-          {
-            "pt": 2.75,
-            "price": 3.03
-          },
-          {
-            "pt": 3,
-            "price": 4.07
+            "price": 4.24
           }
         ],
-        "o15": 1.49,
-        "o25": 2.53,
+        "o15": 1.67,
+        "o25": 4.24,
         "au_lines": [
           {
-            "pt": 2,
-            "price": 2.02
-          },
-          {
-            "pt": 1,
-            "price": 5.74
-          },
-          {
-            "pt": 1.25,
-            "price": 3.51
+            "pt": 1.75,
+            "price": 1.85
           },
           {
             "pt": 1.5,
-            "price": 2.72
+            "price": 2.25
           },
           {
-            "pt": 1.75,
-            "price": 2.37
+            "pt": 2,
+            "price": 1.44
           },
           {
             "pt": 2.25,
-            "price": 1.71
+            "price": 1.29
           },
           {
             "pt": 2.5,
-            "price": 1.56
-          },
-          {
-            "pt": 2.75,
-            "price": 1.4
-          },
-          {
-            "pt": 3,
-            "price": 1.25
+            "price": 1.21
           }
         ],
-        "u15": 2.72,
-        "u25": 1.56,
-        "co95": 1.81,
-        "co85": 1.47,
-        "co105": 2.28,
-        "cu95": 2.02,
-        "cu85": 2.56,
-        "cu105": 1.59,
-        "bttsY": 2.17,
-        "bttsN": 1.73,
-        "ht_hw": 2.77,
-        "ht_dr": 4.99
+        "u15": 2.25,
+        "u25": 1.21,
+        "co95": 1.94,
+        "co85": 1.34,
+        "co105": 3.14,
+        "cu95": 1.88,
+        "cu85": 3.19,
+        "cu105": 1.35,
+        "bttsY": 3.25,
+        "bttsN": 1.33
       },
       "apiPrediction": {
         "underOver": "-2.5",
