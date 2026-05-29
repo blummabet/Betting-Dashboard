@@ -1,11 +1,11 @@
 name: 🌍 WM 2026 Daten aktualisieren
 
 on:
-  # 3× täglich: 08:00, 14:00, 20:00 Vienna (06:00, 12:00, 18:00 UTC)
-  # Vor dem Tournament: Squad-Updates 1× täglich (12:00 UTC run)
-  # Während des Tournaments: Odds + Edge-Momentum alle 6h aktuell
+  # 5× täglich: 06:00, 10:00, 14:00, 18:00, 22:00 Vienna (04:00, 08:00, 12:00, 16:00, 20:00 UTC)
+  # Vor dem Tournament: feineres Edge-Tracking + frühere Steam-Lag-Erkennung
+  # TheOddsAPI-Budget: ~5 Requests/Run × 5 Runs/Tag = 25 Requests/Tag (von ~400 täglichem Kontingent)
   schedule:
-    - cron: '0 6,12,18 * * *'
+    - cron: '0 4,8,12,16,20 * * *'
 
   # Manuell jederzeit auslösbar (z.B. für ersten Test)
   workflow_dispatch:
@@ -116,9 +116,12 @@ jobs:
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
       # ── Steam Lag Monitor (nach Poly-Preise, damit frische Edges) ───────────
-      - name: 🔥 Steam Lag Monitor — Signale loggen
+      - name: 🔥 Steam Lag Monitor — Signale loggen + Sell Alerts
         run: python steam_lag_monitor.py
         continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
       # ── Match Previews (regelbasiert, kein API-Key nötig) ────────────────
       - name: 📝 WM Match Previews generieren
@@ -138,7 +141,7 @@ jobs:
           git add wm2026-data.json wm2026-odds-history.json wm_poly_prices.json \
                   wm2026-poly-history.json \
                   wm_results.json matches/data/wm-*.json matches/wm-index.json
-          git add telegram-log.json wm_sharp_dedup.json wm_sharp_moves_log.json steam_lag_log.json 2>/dev/null || true
+          git add telegram-log.json wm_sharp_dedup.json wm_sharp_moves_log.json steam_lag_log.json steam_lag_sell_dedup.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
           else
