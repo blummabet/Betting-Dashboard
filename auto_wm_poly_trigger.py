@@ -35,9 +35,11 @@ from datetime import datetime, timezone, date
 # Auf True setzen (oder AUTO_TRIGGER_ENABLED=true in Env) wenn bereit für Live-Trading
 ENABLED = False
 
-AUTO_TRIGGER_EDGE_PP = 5.0   # Mindest-Edge in Prozentpunkten
+AUTO_TRIGGER_EDGE_PP  = 5.0   # Mindest-Edge in Prozentpunkten (normale Signale)
+STEAM_LAG_EDGE_PP    = 3.0   # Niedrigerer Schwellenwert wenn steamLag=True (Pinn bereits bewegt)
 MIN_VOL              = 10000  # Mindest-Volumen auf Polymarket (USDC)
 MIN_DAYS_UNTIL_GAME  = 1      # Nicht am Spieltag selbst — zu wenig Zeit für Human Review
+MIN_HOURS_BEFORE_MATCH = 4   # Kein Kauf wenn Anpfiff in weniger als N Stunden
 
 # Stake-Tiers: Edge ≥ minEdge → stake in USDC
 # Spiegelt die Dashboard-Konfiguration (wmStakeConfig in localStorage).
@@ -106,6 +108,30 @@ def days_until(date_str: str) -> int | None:
         return None
 
 
+def hours_until(date_str: str) -> float | None:
+    """Stunden bis zum Anpfiff (negativ = bereits angepfiffen)."""
+    if not date_str:
+        return None
+    try:
+        # Try full ISO datetime first (e.g. "2026-06-11T15:00:00Z")
+        s = date_str.replace("Z", "+00:00")
+        dt = datetime.fromisoformat(s)
+        if dt.tzinfo is None:
+            # Assume UTC if no timezone
+            from datetime import timezone as _tz
+            dt = dt.replace(tzinfo=_tz.utc)
+        now = datetime.now(timezone.utc)
+        return (dt - now).total_seconds() / 3600
+    except Exception:
+        # Fallback: date-only string → treat as midnight UTC
+        try:
+            game_date = date.fromisoformat(date_str[:10])
+            days = (game_date - date.today()).days
+            return days * 24.0
+        except Exception:
+            return None
+
+
 def bet_key(fix: dict, market: str) -> str:
     """Eindeutiger Schlüssel für Fixture+Markt-Kombination."""
     return f"{fix.get('homeId','')}-{fix.get('awayId','')}-{market}"
@@ -144,14 +170,31 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
         if not fix.get("hasPinnacle"):
             continue
 
-        # Timing-Check
+        # Timing-Check: kein Kauf am Spieltag selbst
         d = days_until(fix.get("date", ""))
         if d is None or d < MIN_DAYS_UNTIL_GAME:
             continue
 
+        # Feineres Timing: kein Kauf wenn Anpfiff in < MIN_HOURS_BEFORE_MATCH Stunden
+        h = hours_until(fix.get("date", ""))
+        if h is not None and h < MIN_HOURS_BEFORE_MATCH:
+            print(f"  ⏰ Zu nah am Anpfiff ({h:.1f}h): {fix.get('home')} vs {fix.get('away')} — übersprungen")
+            continue
+
         # Data quality: elo_only → strengerer Edge-Schwellenwert
         is_elo_only = fix.get("dataQuality") == "elo_only"
-        effective_edge_threshold = AUTO_TRIGGER_EDGE_ELO_ONLY if is_elo_only else AUTO_TRIGGER_EDGE_PP
+        has_steam_lag = bool(fix.get("steamLag"))
+
+        # Effektiver Edge-Schwellenwert:
+        #  - steamLag=True: niedrigere Hürde (Pinn hat bereits bewegt → Signal ist valide)
+        #  - elo_only: höhere Hürde (schwache Datenbasis)
+        #  - normal: AUTO_TRIGGER_EDGE_PP
+        if has_steam_lag:
+            effective_edge_threshold = STEAM_LAG_EDGE_PP
+        elif is_elo_only:
+            effective_edge_threshold = AUTO_TRIGGER_EDGE_ELO_ONLY
+        else:
+            effective_edge_threshold = AUTO_TRIGGER_EDGE_PP
 
         # Edge-Check für jeden Markt
         for edge_key, (price_key, market_label, fair_key, verdict_key) in EDGE_MARKET_MAP.items():
@@ -198,6 +241,8 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                 "pinnFair":    fix.get(fair_key),
                 "verdict":     verdict,
                 "dataQuality": fix.get("dataQuality", "elo_only"),
+                "isSteamLag":  has_steam_lag,
+                "matchDate":   (fix.get("date") or "")[:10],
                 "_betKey":     key,   # intern, wird vor Übergabe an polymarket_bet entfernt
             })
 
@@ -310,6 +355,9 @@ def main():
 
         print(f"    📍 Token: {token_id[:16]}…  |  Preis: {round(poly_p*100)}¢")
 
+        # Schätze Anzahl der YES-Tokens (Stake / Preis) — wird für Sell gebraucht
+        shares_estimate = round(stake / poly_p, 4) if poly_p > 0 else 0.0
+
         # Order platzieren
         result = place_market_order(
             token_id, float(stake), private_key,
@@ -318,14 +366,17 @@ def main():
 
         log_bet_to_history(history, order, result)
 
+        is_steam = order.get("isSteamLag", False)
+        steam_tag = " 🔥 SteamLag" if is_steam else ""
+
         if result["status"] in ("placed", "dry-run"):
-            print(f"    ✅ Platziert — Order ID: {result.get('orderId')}")
+            print(f"    ✅ Platziert — Order ID: {result.get('orderId')}{steam_tag}")
 
             # 1. Bestehender WM-Channel (Operations-Info)
             if telegram_token and telegram_chat_id:
                 odds_str = f"{1/poly_p:.2f}" if poly_p else "?"
                 msg = (
-                    f"🤖 <b>Auto-Bet ausgelöst</b>\n"
+                    f"🤖 <b>Auto-Bet ausgelöst{steam_tag}</b>\n"
                     f"{home} vs {away} — {market}\n"
                     f"@ {odds_str} (edge +{order['edgePP']}pp)\n"
                     f"Einsatz: ${stake:.2f} USDC  |  Order: {result.get('orderId','?')}"
@@ -343,7 +394,7 @@ def main():
                     edge_pp=order.get("edgePP"),
                     pinn_fair=order.get("pinnFair"),
                     order_id=result.get("orderId"),
-                    source="auto",
+                    source="auto_steam" if is_steam else "auto",
                     home_id=order.get("homeId", ""),
                     away_id=order.get("awayId", ""),
                     slug=order.get("slug", ""),
@@ -353,19 +404,24 @@ def main():
                 print(f"    ⚠️  Trades-Channel Fehler: {e}")
 
             new_placed.append({
-                "betKey":    bet_key_val,
-                "home":      home,
-                "away":      away,
-                "homeId":    order.get("homeId", ""),
-                "awayId":    order.get("awayId", ""),
-                "market":    market,
-                "polyPrice": poly_p,
-                "pinnFair":  order.get("pinnFair"),
-                "edgePP":    order["edgePP"],
-                "stake":     stake,
-                "orderId":   result.get("orderId"),
-                "status":    result["status"],
-                "placedAt":  datetime.now(timezone.utc).isoformat(),
+                "betKey":         bet_key_val,
+                "home":           home,
+                "away":           away,
+                "homeId":         order.get("homeId", ""),
+                "awayId":         order.get("awayId", ""),
+                "market":         market,
+                "polyPrice":      poly_p,
+                "pinnFair":       order.get("pinnFair"),
+                "edgePP":         order["edgePP"],
+                "stake":          stake,
+                "orderId":        result.get("orderId"),
+                "status":         result["status"],
+                "placedAt":       datetime.now(timezone.utc).isoformat(),
+                # ── Fields needed for auto-sell ──────────────────────
+                "tokenId":        token_id,
+                "matchDate":      order.get("matchDate", ""),
+                "sharesEstimate": shares_estimate,
+                "isSteamLag":     is_steam,
             })
         else:
             print(f"    ❌ Fehlgeschlagen: {result.get('error')}")

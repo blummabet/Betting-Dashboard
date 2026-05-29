@@ -478,6 +478,169 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str,
                 "error": f"Limit fallback Exception: {e} (ursprüngl: {market_err})"}
 
 
+def place_sell_order(token_id: str, size: float, private_key: str,
+                     price_hint: float = None) -> dict:
+    """
+    Place a SELL order on Polymarket CLOB v2.
+
+    Args:
+        token_id:    CLOB token ID (stored at buy time).
+        size:        Number of YES tokens to sell (NOT USDC).
+        private_key: Polygon EOA private key.
+        price_hint:  Current Poly price for the outcome (0-1). Used to anchor
+                     the limit fallback. Fetched from CLOB midpoint if None.
+
+    Strategy (FOK-safe, mirror of place_market_order):
+      1. Try create_and_post_market_order with Side.SELL (GTC market order).
+      2. If FOK-rejected → GTC limit at price_hint - 0.02 (lower = more aggressive,
+         ensures fill even when spread is wide).
+
+    Returns dict: {"status": "placed"/"failed", "orderId": ..., "error": ..., "method": ...}
+    """
+    try:
+        from py_clob_client_v2.client import ClobClient
+        from py_clob_client_v2.clob_types import (
+            MarketOrderArgs, OrderType, ApiCreds, PartialCreateOrderOptions
+        )
+        from py_clob_client_v2 import Side, SignatureTypeV2
+    except ImportError as e:
+        print(f"  ❌ py-clob-client-v2 import error: {e}")
+        return {"status": "failed", "orderId": None, "error": str(e)}
+
+    funder_addr = os.environ.get("POLY_FUNDER_ADDRESS", "").strip()
+    client_kwargs: dict = dict(
+        host=CLOB_HOST,
+        key=private_key,
+        chain_id=CHAIN_ID,
+        signature_type=SignatureTypeV2.POLY_PROXY,
+    )
+    if funder_addr:
+        client_kwargs["funder"] = funder_addr
+
+    client = ClobClient(**client_kwargs)
+
+    api_key = os.environ.get("POLY_API_KEY", "").strip()
+    creds = None
+    if api_key:
+        api_secret     = os.environ.get("POLY_API_SECRET", "").strip()
+        api_passphrase = os.environ.get("POLY_API_PASSPHRASE", "").strip()
+        creds = ApiCreds(api_key=api_key, api_secret=api_secret, api_passphrase=api_passphrase)
+        print(f"  🔑 SELL — gespeicherte API Creds (Key: {api_key[:8]}…)")
+    else:
+        print(f"  🔑 SELL — deriviere API Creds aus Private Key…")
+        try:
+            creds_raw = client.derive_api_key()
+            if isinstance(creds_raw, ApiCreds):
+                creds = creds_raw
+            elif isinstance(creds_raw, dict):
+                creds = ApiCreds(
+                    api_key=creds_raw.get("key", creds_raw.get("apiKey", "")),
+                    api_secret=creds_raw.get("secret", ""),
+                    api_passphrase=creds_raw.get("passphrase", ""),
+                )
+            if creds:
+                print(f"  ✅ API Creds deriviert (Key: {creds.api_key[:8] if hasattr(creds, 'api_key') else '?'}…)")
+        except Exception as e:
+            print(f"  ⚠️  derive_api_key fehlgeschlagen: {e}")
+
+    if creds:
+        try:
+            client.set_api_creds(creds)
+        except AttributeError:
+            client_kwargs["creds"] = creds
+            client = ClobClient(**client_kwargs)
+
+    try:
+        from py_clob_client_v2.exceptions import PolyApiException
+    except ImportError:
+        PolyApiException = Exception
+
+    def _parse_resp(resp):
+        if resp and resp.get("success"):
+            return resp.get("orderID") or resp.get("id") or "unknown", None
+        err = (resp or {}).get("errorMsg") or (resp or {}).get("error") or str(resp)
+        return None, err
+
+    def _is_fok_error(err_str: str) -> bool:
+        s = (err_str or "").lower()
+        return "fok" in s or "fully filled" in s or "fill" in s
+
+    # ── STEP 1: Market SELL order ─────────────────────────────────────────────
+    market_err = None
+    try:
+        resp = client.create_and_post_market_order(
+            order_args=MarketOrderArgs(
+                token_id=token_id,
+                amount=size,          # For SELL: amount = tokens (not USDC)
+                side=Side.SELL,
+                order_type=OrderType.GTC,
+            ),
+            options=PartialCreateOrderOptions(tick_size="0.01"),
+        )
+        oid, err = _parse_resp(resp)
+        if oid:
+            return {"status": "placed", "orderId": oid, "error": None, "method": "market_sell"}
+        market_err = err
+    except PolyApiException as e:
+        market_err = str(e)
+    except Exception as e:
+        market_err = str(e)
+
+    # ── STEP 2: GTC limit SELL fallback ──────────────────────────────────────
+    if not _is_fok_error(market_err):
+        return {"status": "failed", "orderId": None, "error": market_err}
+
+    print(f"  ⚠️  SELL market order FOK — retry als GTC Limit Sell…")
+
+    # Determine limit price for sell: use price_hint or fetch midpoint.
+    limit_price = None
+    if price_hint and 0.01 <= price_hint <= 0.99:
+        limit_price = price_hint
+    else:
+        try:
+            r = requests.get(
+                f"{CLOB_HOST}/midpoint",
+                params={"token_id": token_id},
+                timeout=8,
+            )
+            if r.ok:
+                mid = float(r.json().get("mid", 0))
+                if 0.01 <= mid <= 0.99:
+                    limit_price = mid
+        except Exception:
+            pass
+
+    if not limit_price:
+        return {"status": "failed", "orderId": None,
+                "error": f"SELL market order FOK und kein Preis für Limit-Fallback. Original: {market_err}"}
+
+    # Subtract 2pp so our limit order sits just below mid — gets priority over other sellers.
+    # Round to 0.01 tick size.
+    limit_price_buffered = max(0.01, round(limit_price - 0.02, 2))
+
+    print(f"  📋 Limit SELL: {limit_price_buffered:.2f} (mid {limit_price:.2f} -2pp)  ×  {size} tokens")
+
+    try:
+        from py_clob_client_v2.clob_types import OrderArgs
+        resp2 = client.create_and_post_order(
+            order_args=OrderArgs(
+                token_id=token_id,
+                price=limit_price_buffered,
+                size=size,
+                side=Side.SELL,
+            ),
+            options=PartialCreateOrderOptions(tick_size="0.01"),
+        )
+        oid2, err2 = _parse_resp(resp2)
+        if oid2:
+            return {"status": "placed", "orderId": oid2, "error": None, "method": "limit_sell_gtc"}
+        return {"status": "failed", "orderId": None,
+                "error": f"Limit SELL fallback fehlgeschlagen: {err2} (ursprüngl: {market_err})"}
+    except Exception as e:
+        return {"status": "failed", "orderId": None,
+                "error": f"Limit SELL Exception: {e} (ursprüngl: {market_err})"}
+
+
 # ── picks_history.json logging ──────────────────────────────
 
 def load_history() -> list:

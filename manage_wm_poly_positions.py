@@ -24,7 +24,7 @@ import os
 import sys
 import urllib.request
 import urllib.error
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
 
 BASE           = os.path.dirname(os.path.abspath(__file__))
 POSITIONS_FILE = os.path.join(BASE, "wm_poly_positions.json")
@@ -48,8 +48,32 @@ PROFIT_TARGET   = 0.20   # +20% Profit auf Einstiegspreis → Sell
 PINN_GAP_PP     = 2.0    # Poly ist innerhalb 2pp von Pinnacle Fair → Sell (konvergiert)
 MIN_PROFIT_PP   = 0.03   # Minimaler absoluter Profit (+3pp) bevor Secondary-Regel greift
 
+# ── Auto-Sell Konfiguration ───────────────────────────────────────────────────
+# Sicherheitsschalter: False = nur Alerts, keine echten Sells
+# Auf True setzen (oder AUTO_SELL_ENABLED=true in Env) wenn bereit für live Sells
+AUTO_SELL_ENABLED     = False
+PRE_MATCH_CLOSE_HOURS = 6  # Schließe alle offenen Positionen N Stunden vor Anpfiff
+
 # ── Gamma API ────────────────────────────────────────────────────────────────
 GAMMA_URL = "https://gamma-api.polymarket.com/events?slug={slug}"
+
+
+def hours_until_match(match_date_str: str) -> float | None:
+    """Stunden bis zum Anpfiff. Negativ = bereits gespielt."""
+    if not match_date_str:
+        return None
+    try:
+        s = match_date_str.replace("Z", "+00:00")
+        dt = datetime.fromisoformat(s)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return (dt - datetime.now(timezone.utc)).total_seconds() / 3600
+    except Exception:
+        try:
+            game_date = date.fromisoformat(match_date_str[:10])
+            return (game_date - date.today()).days * 24.0
+        except Exception:
+            return None
 
 
 def _http_get(url: str) -> dict | list | None:
@@ -231,28 +255,110 @@ def load_auto_bets_as_positions() -> list:
         market = bet.get("market", "")
         price_key = MARKET_TO_PRICE_KEY.get(market, "hw")
         positions.append({
-            "home":       bet.get("home", ""),
-            "away":       bet.get("away", ""),
-            "homeId":     bet.get("homeId", ""),
-            "awayId":     bet.get("awayId", ""),
-            "market":     market,
-            "slug":       bet.get("slug", ""),
-            "priceKey":   price_key,
-            "entryPrice": bet.get("polyPrice", 0),
-            "pinnFair":   bet.get("pinnFair"),
-            "stake":      bet.get("stake", 0),
-            "status":     "open",
-            "source":     "auto",
-            "_betKey":    bet.get("betKey", ""),
-            "placedAt":   bet.get("placedAt", ""),
+            "home":           bet.get("home", ""),
+            "away":           bet.get("away", ""),
+            "homeId":         bet.get("homeId", ""),
+            "awayId":         bet.get("awayId", ""),
+            "market":         market,
+            "slug":           bet.get("slug", ""),
+            "priceKey":       price_key,
+            "entryPrice":     bet.get("polyPrice", 0),
+            "pinnFair":       bet.get("pinnFair"),
+            "stake":          bet.get("stake", 0),
+            "status":         "open",
+            "source":         "auto",
+            "_betKey":        bet.get("betKey", ""),
+            "placedAt":       bet.get("placedAt", ""),
+            # ── Auto-sell fields ─────────────────────────────────
+            "tokenId":        bet.get("tokenId", ""),
+            "sharesEstimate": bet.get("sharesEstimate", 0.0),
+            "matchDate":      bet.get("matchDate", ""),
+            "isSteamLag":     bet.get("isSteamLag", False),
         })
     return positions
+
+
+def execute_auto_sell(pos: dict, private_key: str, reason: str) -> dict:
+    """
+    Führt einen automatischen Sell-Order via CLOB aus.
+    Nutzt place_sell_order() aus polymarket_bet.py.
+    Gibt result-dict zurück: {"status": "placed"/"failed", "orderId": ..., "error": ...}
+    """
+    token_id = pos.get("tokenId", "")
+    shares   = pos.get("sharesEstimate", 0.0)
+    current  = pos.get("currentPrice") or pos.get("entryPrice") or 0.0
+
+    if not token_id:
+        return {"status": "failed", "orderId": None,
+                "error": "tokenId fehlt — kann nicht verkaufen"}
+    if shares <= 0:
+        return {"status": "failed", "orderId": None,
+                "error": f"sharesEstimate ungültig ({shares})"}
+
+    try:
+        from polymarket_bet import place_sell_order
+    except ImportError as e:
+        return {"status": "failed", "orderId": None,
+                "error": f"polymarket_bet import fehlgeschlagen: {e}"}
+
+    print(f"    💸 AUTO-SELL: {shares} Tokens @ {current:.3f} — Grund: {reason}")
+    result = place_sell_order(
+        token_id=token_id,
+        size=shares,
+        private_key=private_key,
+        price_hint=float(current) if current else None,
+    )
+    return result
+
+
+def update_auto_bet_status(bet_key: str, new_status: str,
+                           sell_result: dict, current_price: float,
+                           sell_reason: str) -> None:
+    """
+    Aktualisiert den Status eines Auto-Bets in wm_auto_bets_placed.json nach einem Sell.
+    """
+    if not os.path.exists(AUTO_BETS_FILE):
+        return
+    try:
+        with open(AUTO_BETS_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"  ⚠️  Fehler beim Lesen von wm_auto_bets_placed.json: {e}")
+        return
+
+    for bet in data.get("bets", []):
+        if bet.get("betKey") == bet_key:
+            bet["status"]      = new_status
+            bet["soldAt"]      = datetime.now(timezone.utc).isoformat()
+            bet["sellPrice"]   = current_price
+            bet["sellOrderId"] = sell_result.get("orderId")
+            bet["sellError"]   = sell_result.get("error")
+            bet["sellReason"]  = sell_reason
+            break
+
+    data["updatedAt"] = datetime.now(timezone.utc).isoformat()
+    with open(AUTO_BETS_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
 
 def main():
     print("=== manage_wm_poly_positions.py ===")
     now = datetime.now(timezone.utc)
     print(f"  {now.strftime('%d.%m.%Y %H:%M UTC')}")
+
+    # Sicherheitsschalter: Auto-Sell aktiviert?
+    env_sell = os.getenv("AUTO_SELL_ENABLED", "").strip().lower()
+    auto_sell_on = AUTO_SELL_ENABLED or env_sell in ("true", "1", "yes")
+
+    private_key = os.getenv("POLY_PRIVATE_KEY", "").strip()
+    if auto_sell_on and not private_key:
+        print("⚠️  AUTO_SELL_ENABLED=true aber POLY_PRIVATE_KEY fehlt — Auto-Sell deaktiviert!")
+        auto_sell_on = False
+
+    if auto_sell_on:
+        print(f"  🟢 Auto-Sell AKTIV (Pre-Match Close ≤ {PRE_MATCH_CLOSE_HOURS}h)")
+    else:
+        print(f"  🔴 Auto-Sell INAKTIV (nur Alerts)")
 
     data = load_positions()
     positions = data.get("positions", [])
@@ -272,10 +378,13 @@ def main():
     print(f"  {len(open_pos)} offene Positionen gefunden")
 
     alerts_sent = 0
+    sells_executed = 0
+
     for pos in open_pos:
         home   = pos.get("home", "?")
         away   = pos.get("away", "?")
         market = pos.get("market", "?")
+        is_auto = pos.get("source") == "auto"
         print(f"\n  Prüfe: {home} vs {away} — {market}")
 
         check_position(pos)
@@ -284,16 +393,58 @@ def main():
         pnl     = pos.get("pnlPct")
         print(f"    Entry: {pos.get('entryPrice')} | Aktuell: {current} | P&L: {pnl}%")
 
-        if pos.get("sellSignal"):
-            print(f"    🚨 SELL SIGNAL: {pos['sellReason']}")
+        # ── Pre-match close check ─────────────────────────────────────────────
+        match_date = pos.get("matchDate", "")
+        h_until = hours_until_match(match_date) if match_date else None
+        is_pre_match_close = (
+            h_until is not None and 0 <= h_until <= PRE_MATCH_CLOSE_HOURS
+        )
+        if is_pre_match_close:
+            print(f"    ⏰ PRE-MATCH CLOSE: Anpfiff in {h_until:.1f}h — schließe Position")
 
-            # 1. Bestehender WM-Channel (Operations)
+        # Sell-Signal oder Pre-Match Close → handeln
+        should_sell = pos.get("sellSignal") or is_pre_match_close
+        sell_reason = pos.get("sellReason") or (
+            f"Pre-Match Close ({h_until:.1f}h vor Anpfiff)" if is_pre_match_close else ""
+        )
+
+        if should_sell:
+            print(f"    🚨 SELL: {sell_reason}")
+
+            # ── Auto-Sell ausführen (wenn aktiviert + tokenId vorhanden) ─────
+            sell_executed = False
+            if auto_sell_on and is_auto and pos.get("tokenId"):
+                sell_result = execute_auto_sell(pos, private_key, sell_reason)
+                if sell_result["status"] == "placed":
+                    print(f"    ✅ AUTO-SELL ausgeführt — Order: {sell_result.get('orderId')}")
+                    sell_executed = True
+                    sells_executed += 1
+                    pos["status"] = "sold"
+                    update_auto_bet_status(
+                        bet_key=pos.get("_betKey", ""),
+                        new_status="sold",
+                        sell_result=sell_result,
+                        current_price=current or 0,
+                        sell_reason=sell_reason,
+                    )
+                else:
+                    print(f"    ❌ AUTO-SELL fehlgeschlagen: {sell_result.get('error')}")
+                    pos["status"] = "sell_signaled"
+            else:
+                pos["status"] = "sell_signaled"
+
+            # ── Telegram Alert (immer, auch wenn Auto-Sell ausgeführt) ───────
             alert = format_sell_alert(pos)
+            # Augment alert with execution status
+            if sell_executed:
+                alert += f"\n\n✅ <b>Auto-Sell ausgeführt</b>"
+            elif auto_sell_on and is_auto and not pos.get("tokenId"):
+                alert += f"\n\n⚠️ tokenId fehlt — manueller Sell nötig!"
             if send_telegram(alert):
                 pos["alertSentAt"] = now.isoformat()
                 alerts_sent += 1
 
-            # 2. Dedizierter Trades-Channel (detailliert formatiert)
+            # ── Dedizierter Trades-Channel ────────────────────────────────────
             try:
                 from telegram_trades import notify_sell_alert
                 entry   = pos.get("entryPrice", 0)
@@ -307,7 +458,7 @@ def main():
                     entry_price=entry, current_price=current,
                     profit_pct=pnl_pct, estimated_profit=pnl_eur,
                     stake=stake,
-                    reason=pos.get("sellReason", "Sell Signal"),
+                    reason=sell_reason,
                     home_id=pos.get("homeId", ""),
                     away_id=pos.get("awayId", ""),
                     slug=pos.get("slug", ""),
@@ -315,13 +466,11 @@ def main():
             except Exception as e:
                 print(f"    ⚠️  Trades-Channel Fehler: {e}")
 
-            pos["status"] = "sell_signaled"
-
     # Update file — nur manuelle Positionen zurückschreiben (auto-bets kommen aus eigenem File)
     save_positions(data)
 
-    print(f"\n✅ Fertig — {alerts_sent} Sell-Alert(s) gesendet")
-    if alerts_sent == 0 and open_pos:
+    print(f"\n✅ Fertig — {alerts_sent} Alert(s) | {sells_executed} Auto-Sell(s) ausgeführt")
+    if alerts_sent == 0 and sells_executed == 0 and open_pos:
         best = max(open_pos, key=lambda p: p.get("pnlPct") or -999)
         print(f"   Beste Position: {best.get('home')} vs {best.get('away')} "
               f"— {best.get('market')} @ {best.get('pnlPct', '?')}%")

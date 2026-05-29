@@ -56,15 +56,20 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
-      # ── Auto-Trigger (aktivieren wenn bereit) ─────────────────────────────────
-      # - name: 🤖 Auto-Trigger WM Bets
-      #   run: python auto_wm_poly_trigger.py
-      #   env:
-      #     TELEGRAM_TOKEN:            ${{ secrets.TELEGRAM_TOKEN }}
-      #     TELEGRAM_CHAT_ID:          ${{ secrets.TELEGRAM_CHAT_ID }}
-      #     TELEGRAM_TRADES_CHAT_ID:   ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
-      #     POLY_PRIVATE_KEY:          ${{ secrets.POLY_PRIVATE_KEY }}
-      #     AUTO_TRIGGER_ENABLED:      "false"  # auf "true" setzen um live zu gehen
+      # ── Auto-Trigger: erkennt Steam Lag + Edge Signale und kauft automatisch ─────
+      - name: 🤖 Auto-Trigger WM Bets
+        run: ${{ env.POLY_PYTHON }} auto_wm_poly_trigger.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:            ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID:          ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_TRADES_CHAT_ID:   ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          POLY_PRIVATE_KEY:          ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS:       ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:              ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:           ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE:       ${{ secrets.POLY_API_PASSPHRASE }}
+          AUTO_TRIGGER_ENABLED:      "false"  # auf "true" setzen wenn live bereit!
 
       # ── Polymarket USDC Balance via CLOB API holen ───────────────────────────
       # Hinweis: Polymarket hält Gelder im CLOB-Vertrag (nicht on-chain im Wallet)
@@ -80,13 +85,19 @@ jobs:
           POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
 
       # ── Dann Positionen prüfen & Sell-Alerts senden ───────────────────────────
-      - name: 📊 WM Poly Positionen prüfen
+      - name: 📊 WM Poly Positionen prüfen + Auto-Sell
         run: ${{ env.POLY_PYTHON }} manage_wm_poly_positions.py
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:           ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID:         ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_TRADES_CHAT_ID:  ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          POLY_PRIVATE_KEY:         ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS:      ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:             ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:          ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE:      ${{ secrets.POLY_API_PASSPHRASE }}
+          AUTO_SELL_ENABLED:        "false"  # auf "true" setzen wenn live bereit!
 
       # ── Bets gegen Ergebnisse resolven: P&L + CLV berechnen ──────────────────
       - name: 📈 WM Bets resolven (P&L + CLV)
