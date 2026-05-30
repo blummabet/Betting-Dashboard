@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """
-fetch_wm_poly_balance.py — Polymarket USDC Balance via CLOB L2 Auth (kein py-clob-client)
-
-Polymarket hält Gelder im CLOB-Exchange-Vertrag — nicht on-chain im Wallet.
-Diese Version verwendet direkte HMAC-Authentifizierung mit requests + Python-Stdlib.
-Keine Abhängigkeit von py-clob-client-v2, eth_account oder web3.
+fetch_wm_poly_balance.py — Polymarket USDC Balance via py-clob-client-v2
+=========================================================================
+Verwendet dieselbe ClobClient-Initialisierung wie polymarket_bet.py —
+die einzige Version die wir wissen dass sie mit dem Self-hosted Runner funktioniert.
 
 Env-Variablen (alle als GitHub Secret hinterlegt):
-    POLY_PRIVATE_KEY      — (nicht mehr benötigt, nur zur Rückwärtskompatibilität)
-    POLY_FUNDER_ADDRESS   — Proxy-Wallet-Adresse (z.B. 0x02e0B17Da6...)
-    POLY_API_KEY          — Polymarket CLOB API Key
-    POLY_API_SECRET       — Polymarket CLOB API Secret
-    POLY_API_PASSPHRASE   — Polymarket CLOB API Passphrase (wird für Header gesendet)
+    POLY_PRIVATE_KEY      — EOA Private Key
+    POLY_FUNDER_ADDRESS   — Proxy-Wallet-Adresse
+    POLY_API_KEY          — CLOB API Key
+    POLY_API_SECRET       — CLOB API Secret
+    POLY_API_PASSPHRASE   — CLOB API Passphrase
 
 Schreibt wm_poly_balance.json:
   {
@@ -21,15 +20,11 @@ Schreibt wm_poly_balance.json:
     "address":    "0x...",
     "updatedAt":  "2026-06-12T08:00:00+00:00"
   }
-
-Wird aufgerufen von: manage-wm-poly.yml (5x täglich, self-hosted runner)
 """
 
-import base64
-import hashlib
-import hmac
 import json
 import os
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -39,223 +34,194 @@ import requests
 BASE      = Path(__file__).parent
 OUT_FILE  = BASE / "wm_poly_balance.json"
 CLOB_HOST = "https://clob.polymarket.com"
+CHAIN_ID  = 137  # Polygon
 
 
-# ── HMAC L2 Auth ─────────────────────────────────────────────────────────────
-
-def _build_l2_headers(api_key: str, api_secret: str, api_passphrase: str,
-                      address: str, method: str, path: str, body: str = "") -> dict:
-    """
-    Erzeugt die HMAC-signierten Headers für Polymarket CLOB L2-Authentifizierung.
-    Quelle: py-clob-client-v2 Quellcode + https://docs.polymarket.com/#authentication
-
-    Wichtig:
-    - api_secret ist Base64-encoded → muss decoded werden vor HMAC
-    - Signature message: timestamp + METHOD.upper() + path (ohne Query-String) + body
-    - POLY-PASSPHRASE Header ist Pflicht
-    - Header-Name: POLY_ADDRESS (Underscore, nicht Bindestrich)
-    """
-    ts  = str(int(time.time()))
-    msg = ts + method.upper() + path + body
-
-    # api_secret ist base64-encoded → zuerst decodieren
-    try:
-        secret_bytes = base64.b64decode(api_secret)
-    except Exception:
-        # Falls nicht base64-encoded: raw bytes verwenden
-        secret_bytes = api_secret.encode("utf-8")
-
-    sig_bytes = hmac.new(
-        secret_bytes,
-        msg=msg.encode("utf-8"),
-        digestmod=hashlib.sha256,
-    ).digest()
-    sig_b64 = base64.b64encode(sig_bytes).decode("utf-8")
-
-    return {
-        "POLY_ADDRESS":    address,        # Underscore (nicht Bindestrich)
-        "POLY-API-KEY":    api_key,
-        "POLY-TIMESTAMP":  ts,
-        "POLY-NONCE":      "0",
-        "POLY-SIGNATURE":  sig_b64,
-        "POLY-PASSPHRASE": api_passphrase, # Pflichtfeld!
-        "Content-Type":    "application/json",
-        "Accept":          "application/json",
-        "User-Agent":      "CocoBet/1.0",
+def _save(usdc: float, usdc_e: float, address: str, error: str | None = None):
+    now = datetime.now(timezone.utc).isoformat()
+    out = {
+        "usdc":      round(usdc,   4),
+        "usdc_e":    round(usdc_e, 4),
+        "total":     round(usdc + usdc_e, 4),
+        "address":   address,
+        "updatedAt": now,
     }
+    if error:
+        out["error"] = error
+    with open(OUT_FILE, "w") as f:
+        json.dump(out, f, indent=2)
+    return out
 
 
-# ── Balance Fetch ─────────────────────────────────────────────────────────────
+def _load_existing() -> dict:
+    if OUT_FILE.exists():
+        try:
+            return json.loads(OUT_FILE.read_text())
+        except Exception:
+            pass
+    return {"usdc": 0.0, "usdc_e": 0.0, "total": 0.0}
 
-_last_error_detail: str = ""   # module-level für Debugging
 
-def fetch_balance(api_key: str, api_secret: str, api_passphrase: str,
-                  funder_addr: str) -> float | None:
+def fetch_balance_via_clob_client(private_key: str, funder_addr: str,
+                                   api_key: str, api_secret: str,
+                                   api_passphrase: str) -> float | None:
     """
-    Fragt /balance-allowance?asset_type=USDC mit L2-Auth ab.
-    Gibt die USDC-Balance als float zurück, oder None bei Fehler.
+    Verwendet py-clob-client-v2 ClobClient — genau wie polymarket_bet.py.
+    Ruft /balance-allowance?asset_type=USDC via authentifizierte Session ab.
     """
-    path = "/balance-allowance"
-    url  = f"{CLOB_HOST}{path}?asset_type=USDC"
-
-    headers = _build_l2_headers(api_key, api_secret, api_passphrase,
-                                 funder_addr, "GET", path)
-
-    print(f"  🔑 L2-Auth: Key={api_key[:8]}… Addr={funder_addr[:16]}…")
-    print(f"  📡 GET {url}")
-
     try:
-        resp = requests.get(url, headers=headers, timeout=20)
-        print(f"  📬 Status: {resp.status_code}")
-
-        if resp.status_code == 200:
-            data = resp.json()
-            print(f"  📦 Response: {json.dumps(data)[:200]}")
-            # API returns: {"balance": "123.456789", ...}
-            raw = data.get("balance", data.get("available", data.get("allowance")))
-            if raw is not None:
-                bal = float(raw)
-                print(f"  ✅ Balance: ${bal:.4f} USDC")
-                return bal
-            # Falls Response direkt ein Array oder andere Struktur
-            print(f"  ⚠️  Kein 'balance'-Feld in Response: {data}")
-            return None
-
-        else:
-            body_preview = resp.text[:400]
-            print(f"  ❌ HTTP {resp.status_code}: {body_preview}")
-            global _last_error_detail
-            _last_error_detail = f"HTTP {resp.status_code}: {body_preview}"
-            return None
-
-    except requests.Timeout:
-        print("  ❌ Timeout nach 20s")
-        global _last_error_detail
-        _last_error_detail = "timeout"
+        from py_clob_client_v2.client import ClobClient
+        from py_clob_client_v2.clob_types import ApiCreds
+        from py_clob_client_v2 import SignatureTypeV2
+    except ImportError as e:
+        print(f"  ❌ py-clob-client-v2 nicht verfügbar: {e}")
         return None
+
+    client_kwargs = dict(
+        host=CLOB_HOST,
+        key=private_key,
+        chain_id=CHAIN_ID,
+        signature_type=SignatureTypeV2.POLY_PROXY,
+    )
+    if funder_addr:
+        client_kwargs["funder"] = funder_addr
+
+    client = ClobClient(**client_kwargs)
+
+    # API Creds setzen (genau wie polymarket_bet.py)
+    creds = ApiCreds(
+        api_key=api_key,
+        api_secret=api_secret,
+        api_passphrase=api_passphrase,
+    )
+    print(f"  🔑 API Creds: Key={api_key[:8]}… Addr={funder_addr[:16]}…")
+    try:
+        client.set_api_creds(creds)
+    except AttributeError:
+        client_kwargs["creds"] = creds
+        client = ClobClient(**client_kwargs)
+
+    # ── Versuch 1: client.get_balance_allowance() ─────────────────────────────
+    for method_name in ["get_balance_allowance", "get_balance", "get_allowance"]:
+        method = getattr(client, method_name, None)
+        if method is None:
+            continue
+        try:
+            print(f"  📡 Versuche client.{method_name}(asset_type='USDC')…")
+            resp = method(asset_type="USDC")
+            if resp is None:
+                resp = method()
+            print(f"  📦 Response: {str(resp)[:200]}")
+            if isinstance(resp, (int, float)):
+                return float(resp)
+            if isinstance(resp, dict):
+                for key in ("balance", "available", "allowance"):
+                    if key in resp:
+                        return float(resp[key])
+        except TypeError:
+            # Falls kein asset_type Parameter unterstützt
+            try:
+                resp = method()
+                print(f"  📦 Response (no args): {str(resp)[:200]}")
+                if isinstance(resp, (int, float)):
+                    return float(resp)
+                if isinstance(resp, dict):
+                    for key in ("balance", "available", "allowance"):
+                        if key in resp:
+                            return float(resp[key])
+            except Exception as e2:
+                print(f"  ⚠️  {method_name}() fehlgeschlagen: {e2}")
+        except Exception as e:
+            print(f"  ⚠️  client.{method_name}() fehlgeschlagen: {e}")
+
+    # ── Versuch 2: Authenticated requests Session aus dem Client ──────────────
+    print("  📡 Fallback: direkte L2-Auth Session aus ClobClient…")
+    try:
+        # py-clob-client-v2 hat intern eine Session — wir extrahieren die Headers
+        # indem wir einen minimalen Request damit bauen
+        session = getattr(client, "_session", None) or getattr(client, "session", None)
+        if session and hasattr(session, "get"):
+            url = f"{CLOB_HOST}/balance-allowance?asset_type=USDC"
+            resp = session.get(url, timeout=20)
+            print(f"  📬 Status: {resp.status_code}")
+            if resp.status_code == 200:
+                data = resp.json()
+                print(f"  📦 {json.dumps(data)[:200]}")
+                for key in ("balance", "available", "allowance"):
+                    if key in data:
+                        return float(data[key])
+            else:
+                print(f"  ❌ HTTP {resp.status_code}: {resp.text[:200]}")
     except Exception as e:
-        print(f"  ❌ Request-Fehler: {e}")
-        global _last_error_detail
-        _last_error_detail = str(e)
-        return None
+        print(f"  ⚠️  Session-Fallback fehlgeschlagen: {e}")
 
-
-def fetch_balance_usdc_e(api_key: str, api_secret: str, api_passphrase: str,
-                          funder_addr: str) -> float:
-    """
-    Fragt /balance-allowance?asset_type=USDC_E für Bridged USDC ab.
-    Gibt 0.0 bei Fehler (nicht kritisch).
-    """
-    path = "/balance-allowance"
-    url  = f"{CLOB_HOST}{path}?asset_type=USDC_E"
-
-    headers = _build_l2_headers(api_key, api_secret, api_passphrase,
-                                 funder_addr, "GET", path)
+    # ── Versuch 3: L2 Headers direkt aus ClobClient-Methode ──────────────────
+    print("  📡 Fallback: L2 Headers via client.create_l2_headers()…")
     try:
-        resp = requests.get(url, headers=headers, timeout=15)
-        if resp.status_code == 200:
-            data = resp.json()
-            raw = data.get("balance", data.get("available", 0))
-            return float(raw) if raw is not None else 0.0
-    except Exception:
-        pass
-    return 0.0
+        for header_method in ["create_l2_headers", "get_l2_headers", "_get_auth_headers"]:
+            fn = getattr(client, header_method, None)
+            if fn is None:
+                continue
+            try:
+                headers = fn(method="GET", request_path="/balance-allowance")
+                if not headers:
+                    continue
+                url = f"{CLOB_HOST}/balance-allowance?asset_type=USDC"
+                r = requests.get(url, headers=headers, timeout=20)
+                print(f"  📬 {header_method} → Status: {r.status_code}")
+                if r.status_code == 200:
+                    data = r.json()
+                    print(f"  📦 {json.dumps(data)[:200]}")
+                    for key in ("balance", "available", "allowance"):
+                        if key in data:
+                            return float(data[key])
+            except Exception as e2:
+                print(f"  ⚠️  {header_method} fehlgeschlagen: {e2}")
+    except Exception as e:
+        print(f"  ⚠️  L2 Header Fallback fehlgeschlagen: {e}")
 
+    return None
 
-# ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
     now_utc = datetime.now(timezone.utc)
-    now_iso = now_utc.isoformat()
-    print(f"💰  fetch_wm_poly_balance.py — CLOB L2 Auth (kein py-clob-client)")
-    print(f"    Zeit: {now_iso[:19]} UTC\n")
+    print(f"💰  fetch_wm_poly_balance.py — py-clob-client-v2")
+    print(f"    Zeit: {now_utc.isoformat()[:19]} UTC\n")
 
-    # ── Env-Variablen lesen ───────────────────────────────────────────────────
+    private_key    = os.environ.get("POLY_PRIVATE_KEY",    "").strip()
+    funder_addr    = os.environ.get("POLY_FUNDER_ADDRESS", "").strip()
     api_key        = os.environ.get("POLY_API_KEY",        "").strip()
     api_secret     = os.environ.get("POLY_API_SECRET",     "").strip()
     api_passphrase = os.environ.get("POLY_API_PASSPHRASE", "").strip()
-    funder_addr    = os.environ.get("POLY_FUNDER_ADDRESS", "").strip()
 
-    # Fallback: aus Private Key ableiten (nur Adresse)
-    if not funder_addr:
-        funder_addr = os.environ.get("POLY_PRIVATE_KEY", "").strip()
-        if funder_addr:
-            print("  ⚠️  POLY_FUNDER_ADDRESS nicht gesetzt — verwende POLY_PRIVATE_KEY (nur Adresse)")
-
-    # ── Validierung ───────────────────────────────────────────────────────────
-    missing = []
-    if not api_key:        missing.append("POLY_API_KEY")
-    if not api_secret:     missing.append("POLY_API_SECRET")
-    if not funder_addr:    missing.append("POLY_FUNDER_ADDRESS")
+    missing = [k for k, v in {
+        "POLY_PRIVATE_KEY": private_key,
+        "POLY_FUNDER_ADDRESS": funder_addr,
+        "POLY_API_KEY": api_key,
+    }.items() if not v]
 
     if missing:
         print(f"  ❌ Fehlende Env-Variablen: {', '.join(missing)}")
-        print(f"     Balance-Fetch übersprungen — bestehende Datei bleibt erhalten")
-        # Timestamp aktualisieren damit wir wissen wann zuletzt versucht
-        if OUT_FILE.exists():
-            try:
-                with open(OUT_FILE) as f:
-                    existing = json.load(f)
-                existing["lastAttempt"] = now_iso
-                existing["error"] = f"Missing env: {', '.join(missing)}"
-                with open(OUT_FILE, "w") as f:
-                    json.dump(existing, f, indent=2)
-            except Exception:
-                pass
+        existing = _load_existing()
+        _save(existing.get("usdc", 0.0), existing.get("usdc_e", 0.0),
+              funder_addr or existing.get("address", ""),
+              error=f"Missing env: {', '.join(missing)}")
         return
 
-    print(f"  Funder:  {funder_addr}")
-    print(f"  API Key: {api_key[:8]}…\n")
+    balance = fetch_balance_via_clob_client(
+        private_key, funder_addr, api_key, api_secret, api_passphrase
+    )
 
-    # ── Balance abrufen ───────────────────────────────────────────────────────
-    balance_usdc = fetch_balance(api_key, api_secret, api_passphrase, funder_addr)
-
-    if balance_usdc is None:
-        print(f"\n⚠️   Balance-Fetch fehlgeschlagen")
-
-        # Bestehende Datei behalten aber Timestamp + Error aktualisieren
-        existing = {}
-        if OUT_FILE.exists():
-            try:
-                with open(OUT_FILE) as f:
-                    existing = json.load(f)
-                print(f"    Letzte bekannte Balance: ${existing.get('total', 0):.2f} USDC")
-            except Exception:
-                pass
-
-        # Schreibe updated file with error info so we can debug
-        out = {
-            "usdc":        existing.get("usdc", 0.0),
-            "usdc_e":      existing.get("usdc_e", 0.0),
-            "total":       existing.get("total", 0.0),
-            "address":     funder_addr,
-            "updatedAt":   existing.get("updatedAt", now_iso),  # behalte alten Timestamp
-            "lastAttempt": now_iso,
-            "error":       _last_error_detail or "fetch_failed",
-        }
-        with open(OUT_FILE, "w") as f:
-            json.dump(out, f, indent=2)
+    if balance is None:
+        print(f"\n⚠️   Balance-Fetch fehlgeschlagen — bestehende Balance wird behalten")
+        existing = _load_existing()
+        _save(existing.get("usdc", 0.0), existing.get("usdc_e", 0.0),
+              funder_addr, error="fetch_failed")
         return
 
-    # USDC.e (Bridged) — optional, 0 wenn nicht verfügbar
-    balance_usdc_e = fetch_balance_usdc_e(api_key, api_secret, api_passphrase, funder_addr)
-    total = round(balance_usdc + balance_usdc_e, 4)
-
-    out = {
-        "usdc":      round(balance_usdc,   4),
-        "usdc_e":    round(balance_usdc_e, 4),
-        "total":     total,
-        "address":   funder_addr,
-        "updatedAt": now_iso,
-    }
-
-    with open(OUT_FILE, "w") as f:
-        json.dump(out, f, indent=2)
-
+    out = _save(balance, 0.0, funder_addr)
     print(f"\n✅  wm_poly_balance.json geschrieben")
-    print(f"    Handelbare CLOB Balance: ${total:.2f} USDC")
-    if balance_usdc_e > 0.01:
-        print(f"    (USDC: ${balance_usdc:.2f} + USDC.e: ${balance_usdc_e:.2f})")
+    print(f"    Handelbare CLOB Balance: ${out['total']:.2f} USDC")
 
 
 if __name__ == "__main__":
