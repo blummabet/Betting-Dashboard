@@ -20,6 +20,7 @@ os.makedirs(DATA_DIR, exist_ok=True)
 WM_FILE      = os.path.join(BASE, "wm2026-data.json")
 HISTORY_FILE = os.path.join(BASE, "wm2026-odds-history.json")
 POLY_FILE    = os.path.join(BASE, "wm_poly_prices.json")
+PROPS_FILE   = os.path.join(BASE, "wm2026-player-props.json")
 
 CO_HOSTS = {"MEX", "USA", "CAN"}
 
@@ -409,12 +410,23 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
             "moreMktSlug": poly_fix.get("moreMktSlug"),
         }
 
-    # Player props (anytime scorer etc.) keyed by teamId
-    props_raw = wm.get("playerProps", {})
-    player_props_out = {
-        home_id: props_raw.get(home_id),
-        away_id: props_raw.get(away_id),
-    }
+    # Player props (anytime scorer) — aus wm2026-player-props.json (keyed by matchKey)
+    # fetch_wm_player_props.py schreibt: { "MEX-ZAF": { "players": [{name, teamId, odds}, ...] } }
+    # Wir transformieren zu { "MEX": {"anytime": 2.50}, "ZAF": {"anytime": 3.50} }
+    player_props_out = {home_id: None, away_id: None}
+    props_file_data = load_json(PROPS_FILE) or {}
+    match_props = props_file_data.get(h2h_key)  # h2h_key = "MEX-ZAF"
+    if match_props and isinstance(match_props.get("players"), list):
+        team_best: dict[str, float] = {}
+        for p in match_props["players"]:
+            tid  = p.get("teamId")
+            odds = p.get("odds")
+            if tid and odds:
+                # Beste (niedrigste) Quote pro Team behalten
+                if tid not in team_best or odds < team_best[tid]:
+                    team_best[tid] = float(odds)
+        for tid, best_odds in team_best.items():
+            player_props_out[tid] = {"anytime": best_odds}
 
     # H2H
     h2h_raw = wm.get("h2h", {}).get(h2h_key)
