@@ -165,64 +165,41 @@ def fetch_balance_via_clob_client(private_key: str, funder_addr: str,
 
     client = _build_client(private_key, funder_addr, api_key, api_secret, api_passphrase)
 
-    # ── Versuch 1: AssetType.USDC direkt (kein list() → kein Crash) ──────────
-    try:
-        from py_clob_client_v2.clob_types import AssetType
-        # Zeige alle class-Attribute (für Debugging)
-        attrs = {k: getattr(AssetType, k) for k in dir(AssetType)
-                 if not k.startswith("_")}
-        print(f"  📡 AssetType Attribute: {attrs}")
+    import types
 
-        # Direkt AssetType.USDC verwenden
-        usdc_val = getattr(AssetType, "USDC", None)
-        if usdc_val is not None:
-            print(f"  📡 Versuche get_balance_allowance(params=AssetType.USDC={usdc_val!r})…")
-            resp = client.get_balance_allowance(params=usdc_val)
+    # ── Versuch 1: BalanceAllowanceParams aus der Library (falls vorhanden) ───
+    try:
+        from py_clob_client_v2.clob_types import AssetType, BalanceAllowanceParams
+        params = BalanceAllowanceParams(asset_type=AssetType.COLLATERAL)
+        print(f"  📡 Versuche get_balance_allowance(BalanceAllowanceParams(COLLATERAL))…")
+        resp = client.get_balance_allowance(params=params)
+        print(f"  📦 Response: {str(resp)[:300]}")
+        bal = _extract_balance(resp)
+        if bal is not None:
+            print(f"  ✅ Balance via BalanceAllowanceParams: ${bal:.4f}")
+            return bal
+    except ImportError:
+        pass  # BalanceAllowanceParams existiert nicht → weiter mit SimpleNamespace
+    except Exception as e:
+        print(f"  ⚠️  BalanceAllowanceParams fehlgeschlagen: {e}")
+
+    # ── Versuch 2: SimpleNamespace mit asset_type Attribut ────────────────────
+    # get_balance_allowance macht intern params.asset_type → wir simulieren das
+    from py_clob_client_v2.clob_types import AssetType
+
+    for asset_val in [AssetType.COLLATERAL, AssetType.CONDITIONAL,
+                      "COLLATERAL", "CONDITIONAL", "USDC"]:
+        try:
+            params = types.SimpleNamespace(asset_type=asset_val)
+            print(f"  📡 Versuche SimpleNamespace(asset_type={asset_val!r})…")
+            resp = client.get_balance_allowance(params=params)
             print(f"  📦 Response: {str(resp)[:300]}")
             bal = _extract_balance(resp)
             if bal is not None:
-                print(f"  ✅ Balance via AssetType.USDC: ${bal:.4f}")
+                print(f"  ✅ Balance via SimpleNamespace({asset_val!r}): ${bal:.4f}")
                 return bal
-    except Exception as e:
-        print(f"  ⚠️  AssetType.USDC fehlgeschlagen: {e}")
-
-    # ── Versuch 2: Alle anderen AssetType-Attribute durchprobieren ────────────
-    try:
-        from py_clob_client_v2.clob_types import AssetType
-        for attr_name in [a for a in dir(AssetType) if not a.startswith("_")]:
-            val = getattr(AssetType, attr_name)
-            try:
-                print(f"  📡 Versuche get_balance_allowance(params=AssetType.{attr_name}={val!r})…")
-                resp = client.get_balance_allowance(params=val)
-                print(f"  📦 Response: {str(resp)[:200]}")
-                bal = _extract_balance(resp)
-                if bal is not None:
-                    print(f"  ✅ Balance via AssetType.{attr_name}: ${bal:.4f}")
-                    return bal
-            except Exception as e2:
-                print(f"  ⚠️  AssetType.{attr_name} fehlgeschlagen: {e2}")
-    except Exception as e:
-        print(f"  ⚠️  AssetType-Iteration fehlgeschlagen: {e}")
-
-    # ── Versuch 3: Direkte L2-Auth Requests (eigen implementiert) ─────────────
-    # Probiere alle bekannten asset_type Werte + kein Parameter
-    print("  📡 Direkte L2-Auth Requests mit verschiedenen asset_type Werten…")
-    h = _l2_headers(api_key, api_secret, api_passphrase, funder_addr, "GET", "/balance-allowance")
-    for asset_type_val in [None, "USDC", "USDC_E", "COLLATERAL", "0", "1", "usdc", "usdc_e"]:
-        params_dict = {} if asset_type_val is None else {"asset_type": asset_type_val}
-        label = f"asset_type={asset_type_val!r}" if asset_type_val else "kein asset_type"
-        try:
-            r = requests.get(f"{CLOB_HOST}/balance-allowance",
-                             params=params_dict, headers=h, timeout=20)
-            print(f"  📬 {label} → {r.status_code} | {r.text[:150]}")
-            if r.status_code == 200:
-                data = r.json()
-                bal = _extract_balance(data)
-                if bal is not None:
-                    print(f"  ✅ Balance via direkte L2-Auth: ${bal:.4f}")
-                    return bal
         except Exception as e:
-            print(f"  ⚠️  Direkte Request ({label}): {e}")
+            print(f"  ⚠️  SimpleNamespace({asset_val!r}) fehlgeschlagen: {e}")
 
     return None
 
