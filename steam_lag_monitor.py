@@ -137,8 +137,10 @@ def fetch_fresh_poly() -> dict:
         slug = ev.get("slug", "")
         if any(slug.endswith(sfx) for sfx in SLUG_SUFFIXES_TO_SKIP):
             continue
-        if ev.get("negRisk") is False:
-            continue
+        # negRisk=False = separate Binary-Markets (kein Neg-Risk-Pool).
+        # Polymarket kann das je nach Marktstruktur wechseln — wir akzeptieren beide.
+        # Einzige Ausnahme: explizit als "More Markets" oder Spezialmarkt gelabelt
+        # → wird bereits durch SLUG_SUFFIXES_TO_SKIP gefiltert.
 
         teams_arr = ev.get("teams", [])
         if len(teams_arr) < 2:
@@ -268,8 +270,10 @@ def fetch_poly_from_cache() -> dict:
             key = fx.get("key", "")
             if not key:
                 continue
-            # Brauchen Poly-Preise UND Pinnacle Fair Probs
-            if not fx.get("poly_hw") or not fx.get("fair_hw"):
+            # Brauchen Poly-Preise — fair_hw wird separat von load_pinn_fair() geladen.
+            # fair_hw NICHT hier prüfen: wenn Pinnacle-Daten fehlen (API-Limit etc.),
+            # würde der Cache leer zurückgeben → früher Abbruch → kein Commit.
+            if not fx.get("poly_hw"):
                 continue
             result[key] = {
                 "hw":       fx.get("poly_hw"),
@@ -647,7 +651,14 @@ def main():
         print("  🔄 Fallback: verwende Poly-Preise aus wm_poly_prices.json …")
         fresh_poly = fetch_poly_from_cache()
     if not fresh_poly:
-        print("  ❌ Keine Poly-Preise (weder Gamma noch Cache) — Abbruch")
+        # Kein frühes Abbrechen — Log trotzdem speichern (runCount + updatedAt müssen sich
+        # ändern damit der GitHub Action Commit immer etwas zu committen hat).
+        print("  ⚠️  Keine Poly-Preise — speichere leeren Log-Update (Heartbeat)")
+        log = load_log()
+        log["updatedAt"] = now_ts
+        log["runCount"]  = log.get("runCount", 0) + 1
+        log["lastError"] = "no_poly_prices"
+        save_log(log)
         return
 
     # 2. Pinnacle Fair Probs + Steam Lag Kontext laden
