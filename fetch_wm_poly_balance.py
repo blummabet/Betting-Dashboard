@@ -62,20 +62,12 @@ def _load_existing() -> dict:
     return {"usdc": 0.0, "usdc_e": 0.0, "total": 0.0}
 
 
-def fetch_balance_via_clob_client(private_key: str, funder_addr: str,
-                                   api_key: str, api_secret: str,
-                                   api_passphrase: str) -> float | None:
-    """
-    Verwendet py-clob-client-v2 ClobClient — genau wie polymarket_bet.py.
-    Ruft /balance-allowance?asset_type=USDC via authentifizierte Session ab.
-    """
-    try:
-        from py_clob_client_v2.client import ClobClient
-        from py_clob_client_v2.clob_types import ApiCreds
-        from py_clob_client_v2 import SignatureTypeV2
-    except ImportError as e:
-        print(f"  ❌ py-clob-client-v2 nicht verfügbar: {e}")
-        return None
+def _build_client(private_key: str, funder_addr: str,
+                   api_key: str, api_secret: str, api_passphrase: str):
+    """Baut ClobClient genau wie polymarket_bet.py."""
+    from py_clob_client_v2.client import ClobClient
+    from py_clob_client_v2.clob_types import ApiCreds
+    from py_clob_client_v2 import SignatureTypeV2
 
     client_kwargs = dict(
         host=CLOB_HOST,
@@ -87,13 +79,8 @@ def fetch_balance_via_clob_client(private_key: str, funder_addr: str,
         client_kwargs["funder"] = funder_addr
 
     client = ClobClient(**client_kwargs)
-
-    # API Creds setzen (genau wie polymarket_bet.py)
-    creds = ApiCreds(
-        api_key=api_key,
-        api_secret=api_secret,
-        api_passphrase=api_passphrase,
-    )
+    creds  = ApiCreds(api_key=api_key, api_secret=api_secret,
+                      api_passphrase=api_passphrase)
     print(f"  🔑 API Creds: Key={api_key[:8]}… Addr={funder_addr[:16]}…")
     try:
         client.set_api_creds(creds)
@@ -101,84 +88,156 @@ def fetch_balance_via_clob_client(private_key: str, funder_addr: str,
         client_kwargs["creds"] = creds
         client = ClobClient(**client_kwargs)
 
-    # ── Versuch 1: client.get_balance_allowance() ─────────────────────────────
-    for method_name in ["get_balance_allowance", "get_balance", "get_allowance"]:
+    return client
+
+
+def _extract_balance(resp) -> float | None:
+    """Extrahiert float-Balance aus verschiedenen Response-Formaten."""
+    if resp is None:
+        return None
+    if isinstance(resp, (int, float)):
+        return float(resp)
+    if isinstance(resp, dict):
+        for key in ("balance", "available", "allowance", "amount"):
+            if key in resp and resp[key] is not None:
+                return float(resp[key])
+        # Falls Response ein Array ist: summieren
+        for key in ("balances", "items"):
+            if key in resp and isinstance(resp[key], list):
+                total = sum(float(x.get("balance", 0)) for x in resp[key])
+                return total
+    if isinstance(resp, list):
+        return sum(float(x.get("balance", 0)) for x in resp if isinstance(x, dict))
+    return None
+
+
+def fetch_balance_via_clob_client(private_key: str, funder_addr: str,
+                                   api_key: str, api_secret: str,
+                                   api_passphrase: str) -> float | None:
+    """
+    Verwendet py-clob-client-v2 ClobClient — genau wie polymarket_bet.py.
+    """
+    try:
+        from py_clob_client_v2.client import ClobClient
+        from py_clob_client_v2.clob_types import ApiCreds
+        from py_clob_client_v2 import SignatureTypeV2
+    except ImportError as e:
+        print(f"  ❌ py-clob-client-v2 nicht verfügbar: {e}")
+        return None
+
+    client = _build_client(private_key, funder_addr, api_key, api_secret, api_passphrase)
+
+    # ── Versuch 1: AssetType Enum aus der Library ─────────────────────────────
+    # Die Library erwartet wahrscheinlich einen Enum, keinen String
+    try:
+        from py_clob_client_v2.clob_types import AssetType
+        print(f"  📡 AssetType Enum-Werte: {list(AssetType)}")
+
+        # Finde den USDC Enum-Wert (egal wie er heißt)
+        usdc_type = None
+        for member in AssetType:
+            name = member.name.upper()
+            if "USDC" in name and "E" not in name:
+                usdc_type = member
+                break
+        if usdc_type is None:
+            usdc_type = list(AssetType)[0]  # nimm ersten Wert als Fallback
+
+        print(f"  📡 Versuche get_balance_allowance(params={usdc_type})…")
+        resp = client.get_balance_allowance(params=usdc_type)
+        print(f"  📦 Response: {str(resp)[:300]}")
+        bal = _extract_balance(resp)
+        if bal is not None:
+            print(f"  ✅ Balance via AssetType Enum: ${bal:.4f}")
+            return bal
+    except Exception as e:
+        print(f"  ⚠️  AssetType Enum fehlgeschlagen: {e}")
+
+    # ── Versuch 2: get_balance_allowance() ohne Parameter ─────────────────────
+    try:
+        print(f"  📡 Versuche get_balance_allowance() ohne params…")
+        resp = client.get_balance_allowance()
+        print(f"  📦 Response: {str(resp)[:300]}")
+        bal = _extract_balance(resp)
+        if bal is not None:
+            print(f"  ✅ Balance ohne params: ${bal:.4f}")
+            return bal
+    except Exception as e:
+        print(f"  ⚠️  get_balance_allowance() ohne params fehlgeschlagen: {e}")
+
+    # ── Versuch 3: Andere Balance-Methoden probieren ───────────────────────────
+    for method_name in ["get_balance", "get_usdc_balance", "get_collateral_balance"]:
         method = getattr(client, method_name, None)
         if method is None:
             continue
         try:
-            print(f"  📡 Versuche client.{method_name}(asset_type='USDC')…")
-            resp = method(asset_type="USDC")
-            if resp is None:
-                resp = method()
+            print(f"  📡 Versuche client.{method_name}()…")
+            resp = method()
             print(f"  📦 Response: {str(resp)[:200]}")
-            if isinstance(resp, (int, float)):
-                return float(resp)
-            if isinstance(resp, dict):
-                for key in ("balance", "available", "allowance"):
-                    if key in resp:
-                        return float(resp[key])
-        except TypeError:
-            # Falls kein asset_type Parameter unterstützt
-            try:
-                resp = method()
-                print(f"  📦 Response (no args): {str(resp)[:200]}")
-                if isinstance(resp, (int, float)):
-                    return float(resp)
-                if isinstance(resp, dict):
-                    for key in ("balance", "available", "allowance"):
-                        if key in resp:
-                            return float(resp[key])
-            except Exception as e2:
-                print(f"  ⚠️  {method_name}() fehlgeschlagen: {e2}")
+            bal = _extract_balance(resp)
+            if bal is not None:
+                print(f"  ✅ Balance via {method_name}: ${bal:.4f}")
+                return bal
         except Exception as e:
-            print(f"  ⚠️  client.{method_name}() fehlgeschlagen: {e}")
+            print(f"  ⚠️  {method_name}() fehlgeschlagen: {e}")
 
-    # ── Versuch 2: Authenticated requests Session aus dem Client ──────────────
-    print("  📡 Fallback: direkte L2-Auth Session aus ClobClient…")
-    try:
-        # py-clob-client-v2 hat intern eine Session — wir extrahieren die Headers
-        # indem wir einen minimalen Request damit bauen
-        session = getattr(client, "_session", None) or getattr(client, "session", None)
-        if session and hasattr(session, "get"):
-            url = f"{CLOB_HOST}/balance-allowance?asset_type=USDC"
-            resp = session.get(url, timeout=20)
-            print(f"  📬 Status: {resp.status_code}")
-            if resp.status_code == 200:
-                data = resp.json()
-                print(f"  📦 {json.dumps(data)[:200]}")
-                for key in ("balance", "available", "allowance"):
-                    if key in data:
-                        return float(data[key])
+    # ── Versuch 4: Direkte API-Calls ohne asset_type / mit Integer-Typ ─────────
+    # Polymarket API: asset_type kann 0 (USDC) oder 1 (USDC_E) als Integer sein
+    print("  📡 Fallback: direkte Requests ohne/mit Integer asset_type…")
+    for asset_type_param in [None, "0", "1", "COLLATERAL"]:
+        try:
+            url = f"{CLOB_HOST}/balance-allowance"
+            params_dict = {}
+            if asset_type_param is not None:
+                params_dict["asset_type"] = asset_type_param
+                label = f"asset_type={asset_type_param}"
             else:
-                print(f"  ❌ HTTP {resp.status_code}: {resp.text[:200]}")
-    except Exception as e:
-        print(f"  ⚠️  Session-Fallback fehlgeschlagen: {e}")
+                label = "kein asset_type"
 
-    # ── Versuch 3: L2 Headers direkt aus ClobClient-Methode ──────────────────
-    print("  📡 Fallback: L2 Headers via client.create_l2_headers()…")
-    try:
-        for header_method in ["create_l2_headers", "get_l2_headers", "_get_auth_headers"]:
-            fn = getattr(client, header_method, None)
-            if fn is None:
-                continue
-            try:
-                headers = fn(method="GET", request_path="/balance-allowance")
-                if not headers:
-                    continue
-                url = f"{CLOB_HOST}/balance-allowance?asset_type=USDC"
-                r = requests.get(url, headers=headers, timeout=20)
-                print(f"  📬 {header_method} → Status: {r.status_code}")
+            # L2 Headers aus Client holen (verschiedene Attribute probieren)
+            headers = None
+            for attr in ["session", "_session", "http_session", "_http"]:
+                sess = getattr(client, attr, None)
+                if sess and hasattr(sess, "headers"):
+                    headers = dict(sess.headers)
+                    break
+
+            if headers is None:
+                # Fallback: minimalen L2-Header manuell konstruieren
+                # via clob_client interne Methode
+                for fn_name in ["_get_headers", "_build_headers", "get_headers"]:
+                    fn = getattr(client, fn_name, None)
+                    if fn:
+                        try:
+                            headers = fn("GET", "/balance-allowance")
+                            break
+                        except Exception:
+                            pass
+
+            if headers:
+                r = requests.get(url, params=params_dict, headers=headers, timeout=20)
+                print(f"  📬 {label} → Status: {r.status_code} | {r.text[:200]}")
                 if r.status_code == 200:
                     data = r.json()
-                    print(f"  📦 {json.dumps(data)[:200]}")
-                    for key in ("balance", "available", "allowance"):
-                        if key in data:
-                            return float(data[key])
-            except Exception as e2:
-                print(f"  ⚠️  {header_method} fehlgeschlagen: {e2}")
-    except Exception as e:
-        print(f"  ⚠️  L2 Header Fallback fehlgeschlagen: {e}")
+                    bal = _extract_balance(data)
+                    if bal is not None:
+                        return bal
+        except Exception as e:
+            print(f"  ⚠️  Direkte Requests ({label}) fehlgeschlagen: {e}")
+
+    # ── Versuch 5: Gamma API Fallback (öffentlich, kein Auth nötig) ───────────
+    # Zeigt open positions / Portfolio wenn CLOB-Balance nicht abrufbar
+    print("  📡 Letzter Fallback: Gamma API Portfolio…")
+    try:
+        url = f"https://gamma-api.polymarket.com/portfolio?user={funder_addr}"
+        r = requests.get(url, timeout=15)
+        if r.status_code == 200:
+            data = r.json()
+            print(f"  📦 Gamma Portfolio: {str(data)[:300]}")
+            # Gamma gibt keine USDC-Balance zurück, nur Positionen
+            # Aber wir können zumindest bestätigen dass die Adresse korrekt ist
+    except Exception:
+        pass
 
     return None
 
