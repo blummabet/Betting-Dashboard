@@ -100,9 +100,9 @@ def apif_get(endpoint: str, params: dict) -> tuple[list, int]:
     path  = f"/{endpoint}?{query}"
     try:
         conn = http.client.HTTPSConnection(APIF_HOST, timeout=20)
-        conn.request("GET", f"/{endpoint}?{q}", headers={"x-apisports-key": APIF_KEY})
+        conn.request("GET", f"/{endpoint}?{query}", headers={"x-apisports-key": APIF_KEY})
         resp = conn.getresponse()
-        data = json.loads(resp.read().decode())
+        raw  = resp.read().decode()
         conn.close()
         data = json.loads(raw)
         if data.get("errors"):
