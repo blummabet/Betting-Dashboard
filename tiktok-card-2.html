@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>TikTok Card 2 — Haaland vs Kane vs Mbappé</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #05080f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.card {
+  width: 360px;
+  height: 640px;
+  background: #080d18;
+  border-radius: 24px;
+  padding: 28px 26px 24px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.top-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.brand { font-size:13px; font-weight:800; color:#f5c518; letter-spacing:2px; }
+.badge { font-size:10px; background:rgba(245,197,24,.10); border:1px solid rgba(245,197,24,.22); color:#f5c518; padding:3px 10px; border-radius:20px; letter-spacing:.5px; }
+.hook { font-size:20px; font-weight:900; color:#fff; line-height:1.2; margin-bottom:4px; }
+.hook span { color:#f5c518; }
+.sub { font-size:10px; color:rgba(255,255,255,.35); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:18px; }
+
+.player { background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.07); border-radius:12px; padding:12px 14px; margin-bottom:8px; }
+.player.gold { border-color:rgba(245,197,24,.25); }
+.player-top { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.flag { font-size:22px; line-height:1; }
+.pname { font-size:15px; font-weight:800; color:#fff; }
+.nation { font-size:9px; color:rgba(255,255,255,.35); letter-spacing:.8px; margin-top:1px; }
+.crown { margin-left:auto; font-size:16px; }
+.stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
+.stat { text-align:center; }
+.stat-val { font-size:17px; font-weight:900; line-height:1; }
+.stat-lbl { font-size:8px; color:rgba(255,255,255,.3); letter-spacing:.8px; text-transform:uppercase; margin-top:2px; }
+.bar-row { margin-top:8px; }
+.bar-label { display:flex; justify-content:space-between; font-size:8px; color:rgba(255,255,255,.3); margin-bottom:3px; }
+.bar-bg { height:3px; background:rgba(255,255,255,.07); border-radius:2px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:2px; }
+
+.twist { margin-top:10px; padding:9px 12px; background:rgba(239,68,68,.07); border:1px solid rgba(239,68,68,.18); border-radius:8px; }
+.twist-text { font-size:10px; color:rgba(255,255,255,.45); line-height:1.5; }
+.twist-text strong { color:#f87171; }
+
+.footer { margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,.05); display:flex; justify-content:space-between; }
+.ft { font-size:9px; color:rgba(255,255,255,.22); }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="top-bar">
+    <div class="brand">COCOBET</div>
+    <div class="badge">WM 2026</div>
+  </div>
+
+  <div class="hook">Haaland, Kane oder Mbappé — <span>wer trifft mehr?</span></div>
+  <div class="sub">Tore · Assists · Tore pro 90min</div>
+
+  <!-- Haaland -->
+  <div class="player gold">
+    <div class="player-top">
+      <div class="flag">🇳🇴</div>
+      <div>
+        <div class="pname">E. Haaland</div>
+        <div class="nation">NORWEGEN · ST</div>
+      </div>
+      <div class="crown">👑</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-val" style="color:#f5c518">12</div><div class="stat-lbl">Tore</div></div>
+      <div class="stat"><div class="stat-val" style="color:rgba(255,255,255,.4)">3</div><div class="stat-lbl">Assists</div></div>
+      <div class="stat"><div class="stat-val" style="color:#f5c518">1.19</div><div class="stat-lbl">Tore/90'</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label"><span>Tore/90min</span><span style="color:#f5c518">Bester Wert aller WM-Stürmer</span></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:100%;background:#f5c518;"></div></div>
+    </div>
+  </div>
+
+  <!-- Kane -->
+  <div class="player">
+    <div class="player-top">
+      <div class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+      <div>
+        <div class="pname">H. Kane</div>
+        <div class="nation">ENGLAND · ST</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-val" style="color:#60a5fa">11</div><div class="stat-lbl">Tore</div></div>
+      <div class="stat"><div class="stat-val" style="color:rgba(255,255,255,.4)">2</div><div class="stat-lbl">Assists</div></div>
+      <div class="stat"><div class="stat-val" style="color:#60a5fa">1.05</div><div class="stat-lbl">Tore/90'</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-bg"><div class="bar-fill" style="width:88%;background:#60a5fa;"></div></div>
+    </div>
+  </div>
+
+  <!-- Mbappé -->
+  <div class="player">
+    <div class="player-top">
+      <div class="flag">🇫🇷</div>
+      <div>
+        <div class="pname">K. Mbappé</div>
+        <div class="nation">FRANKREICH · ST</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-val" style="color:#f87171">10</div><div class="stat-lbl">Tore</div></div>
+      <div class="stat"><div class="stat-val" style="color:rgba(255,255,255,.4)">4</div><div class="stat-lbl">Assists</div></div>
+      <div class="stat"><div class="stat-val" style="color:#f87171">0.94</div><div class="stat-lbl">Tore/90'</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-bg"><div class="bar-fill" style="width:79%;background:#f87171;"></div></div>
+    </div>
+  </div>
+
+  <div class="twist">
+    <div class="twist-text">⚠️ Haaland hat die besten Stats — aber Norwegen trifft in der Gruppe auf <strong>Frankreich mit Mbappé.</strong> Wer kommt überhaupt weiter?</div>
+  </div>
+
+  <div class="footer">
+    <div class="ft">Daten: Qualifikation 2024/25</div>
+    <div class="ft">cocobet</div>
+  </div>
+
+</div>
+</body>
+</html>
