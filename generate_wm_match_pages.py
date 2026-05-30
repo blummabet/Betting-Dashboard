@@ -504,6 +504,9 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         # Corner averages per team (from fetch_wm_corners.py)
         "cornersHome": wm.get("cornersForm", {}).get(home_id),
         "cornersAway": wm.get("cornersForm", {}).get(away_id),
+        # Injuries & Suspensions (from fetch_wm_injuries.py, ab WM-Start)
+        "injuriesHome": wm.get("injuries", {}).get(home_id, {}).get("players"),
+        "injuriesAway": wm.get("injuries", {}).get(away_id, {}).get("players"),
         # Bet Insights + Polymarket + Player Props
         "betInsights":   bet_insights,
         "polyData":      poly_out,

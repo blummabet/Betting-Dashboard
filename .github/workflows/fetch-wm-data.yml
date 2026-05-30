@@ -59,6 +59,13 @@ jobs:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
+      # ── Verletzungen & Sperren (API-Football, täglich) ───────────────────────
+      - name: 🏥 WM Verletzungen & Sperren fetchen
+        run: python fetch_wm_injuries.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
       # ── Form + H2H (API-Football, täglich) ───────────────────────────
       - name: 📊 WM Form & H2H fetchen
         run: python fetch_wm_form.py
@@ -164,6 +171,20 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── Pre-Season Content (D-11 bis D-1, täglich beim 08:00 UTC Run) ────────
+      - name: 📣 WM Pre-Season Telegram Post
+        run: |
+          HOUR=$(date +%H)
+          if [ "$HOUR" = "08" ]; then
+            python telegram_wm_preseason.py
+          else
+            echo "Kein Pre-Season Run außerhalb 08:00 UTC (aktuell ${HOUR}:xx UTC)"
+          fi
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
       # ── Telegram Morning Card (nur wenn WM Spieltag) ─────────────────────
       - name: 📱 WM Telegram Morning Card
