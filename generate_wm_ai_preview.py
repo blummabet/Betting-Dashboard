@@ -60,7 +60,7 @@ def claude_complete(prompt: str) -> str | None:
     url  = "https://api.anthropic.com/v1/messages"
     body = json.dumps({
         "model":      MODEL,
-        "max_tokens": 300,
+        "max_tokens": 400,
         "messages":   [{"role": "user", "content": prompt}],
     }).encode("utf-8")
     req = urllib.request.Request(url, data=body, headers={
@@ -94,7 +94,7 @@ def compute_hash(data: dict) -> str:
         "xgHome":  data.get("xgHome"),
         "xgAway":  data.get("xgAway"),
         # v2: richer prompt — force regeneration of old 3-sentence previews
-        "_promptVersion": 2,
+        "_promptVersion": 3,   # v3: injuries in prompt, 400 tokens, better tgSnippet
     }
     return hashlib.sha256(json.dumps(relevant, sort_keys=True).encode()).hexdigest()[:16]
 
@@ -172,10 +172,30 @@ def build_prompt(info: dict) -> str:
             form_parts.append(f"Over 2.5: {round(a_o25*100)}% der Spiele")
         lines.append(" | ".join(form_parts))
 
+    # ── Verletzungen & Sperren ────────────────────────────────────────────────
+    injuries_home = info.get("injuriesHome") or []
+    injuries_away = info.get("injuriesAway") or []
+    inj_lines = []
+    for inj in injuries_home[:3]:
+        name   = inj.get("name", "?")
+        reason = inj.get("reason", inj.get("type", ""))
+        inj_lines.append(f"{name} ({home}, {reason})")
+    for inj in injuries_away[:3]:
+        name   = inj.get("name", "?")
+        reason = inj.get("reason", inj.get("type", ""))
+        inj_lines.append(f"{name} ({away}, {reason})")
+    if inj_lines:
+        lines.append(f"WICHTIG — Verletzungen/Sperren: {'; '.join(inj_lines)}. "
+                     f"Das muss in der Vorschau erwähnt werden.")
+
     # ── xG ────────────────────────────────────────────────────────────────────
     if xg_home is not None and xg_away is not None:
-        xg_label = "API-Football xG" if xg_source == "api_football" else "Modell-xG"
-        lines.append(f"{xg_label}: {home} {xg_home} — {away} {xg_away} erwartet")
+        if xg_source == "api_football":
+            lines.append(f"xG (API-Football, echte Daten): {home} {xg_home} — {away} {xg_away} erwartet")
+        else:
+            # Poisson = Schätzung, nicht als echte xG präsentieren
+            lines.append(f"Torerwartung (Modell-Schätzung, kein API-Football xG verfügbar): "
+                         f"{home} ca. {xg_home} — {away} ca. {xg_away}")
 
     # ── Ecken ─────────────────────────────────────────────────────────────────
     h_c_for   = corners_home.get("forAvg")
@@ -242,9 +262,33 @@ REGELN:
 
 
 def build_tg_snippet(full_text: str) -> str:
-    """Kürzt auf max 2 Sätze für Telegram (kompakter Intro)."""
-    sentences = [s.strip() for s in full_text.split(".") if s.strip()]
-    return ". ".join(sentences[:2]) + ("." if len(sentences) >= 2 else "")
+    """
+    Wählt den informativen Satz für Telegram aus.
+    Strategie: Satz 3 (Wetthinweis/Pick) ist am wertvollsten.
+    Falls kein Pick → Satz 1 (Kräfteverhältnis) + Satz 2 (Spielcharakter).
+    """
+    sentences = [s.strip() for s in full_text.split(".") if len(s.strip()) > 10]
+    if not sentences:
+        return full_text[:200]
+
+    # Satz 3 = Wetthinweis (Index 2) bevorzugen wenn er Pick-Keywords enthält
+    pick_keywords = ("BET", "ABWÄGEN", "@", "Edge", "Value", "Quote", "Pick",
+                     "kein klarer", "kein Value", "empfehlen", "setzen", "Tipp")
+    pick_sentence = None
+    for s in sentences:
+        if any(kw.lower() in s.lower() for kw in pick_keywords):
+            pick_sentence = s.strip()
+            break
+
+    if pick_sentence:
+        # Pick-Satz + Kontext-Satz (Satz 1 als Einleitung)
+        intro = sentences[0].strip() if sentences else ""
+        if intro and intro != pick_sentence:
+            return intro + ". " + pick_sentence + "."
+        return pick_sentence + "."
+
+    # Kein Pick: Satz 1 + 2
+    return ". ".join(sentences[:2]) + "."
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -336,6 +380,9 @@ def main():
                 # Corner averages per team
                 "cornersHome":  corners_form.get(home_id),
                 "cornersAway":  corners_form.get(away_id),
+                # Verletzungen & Sperren (ab WM-Start via fetch_wm_injuries.py)
+                "injuriesHome": wm.get("injuries", {}).get(home_id, {}).get("players"),
+                "injuriesAway": wm.get("injuries", {}).get(away_id, {}).get("players"),
             }
 
             new_hash = compute_hash(info)

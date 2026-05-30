@@ -2926,6 +2926,153 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div id="resultsTable" style="overflow-x:auto;"></div>
   </div>
 
+  <!-- ═══ TELEGRAM WM 2026 — VOLLSTÄNDIGE DOKUMENTATION ══════════════════ -->
+  <div class="heart-section" id="heartTelegram" style="margin-top:36px;">
+    <div class="heart-section-title" style="font-size:14px;letter-spacing:.8px;">📱 Telegram WM 2026 — Vollständiger Ablauf</div>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:18px;">Alle automatischen Telegram-Posts, Trigger, Scripts und Uhrzeiten dokumentiert. Stand: Mai 2026.</p>
+
+    <!-- Channel-Übersicht -->
+    <div class="heart-grid" style="margin-bottom:16px;">
+      <div class="heart-card accent">
+        <h3>📢 Haupt-Channel <code style="font-size:10px;font-weight:400;">TELEGRAM_CHAT_ID</code></h3>
+        <p>Der öffentliche CocoBet Channel für alle Follower. Empfängt: Morning Card, Pre-Season Posts, Sharp Move Alerts, Steam Lag Alerts, Player Spotlight, Recap.</p>
+      </div>
+      <div class="heart-card gold-c">
+        <h3>🔒 Trades-Channel <code style="font-size:10px;font-weight:400;">TELEGRAM_TRADES_CHAT_ID</code></h3>
+        <p>Privater Channel nur für ausgeführte Trades. Empfängt: Auto-Bet Bestätigungen, Sell-Alerts, P&amp;L nach Spielende, Positions-Summary.</p>
+      </div>
+    </div>
+
+    <!-- PRE-SEASON CONTENT -->
+    <div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px;margin-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:#f5c518;margin-bottom:10px;letter-spacing:.5px;">📅 PRE-SEASON (31. Mai – 10. Juni) · Täglich 10:00 Wien</div>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Script: <code>telegram_wm_preseason.py</code> · GitHub Action: <code>fetch-wm-data.yml</code> · Dedup via <code>wm_preseason_sent.json</code></p>
+      <table class="heart-table">
+        <thead><tr><th>Tag</th><th>Datum</th><th>Content</th></tr></thead>
+        <tbody>
+          <tr><td>D-11</td><td>31. Mai</td><td>🌍 Countdown — 48 Teams, 12 Gruppen, Turnier-Format</td></tr>
+          <tr><td>D-10</td><td>1. Jun</td><td>🏆 Top-5 Favoriten mit Elo-Ranking (FRA/BRA/ENG/ESP/ARG)</td></tr>
+          <tr><td>D-9</td><td>2. Jun</td><td>💎 Geheimfavoriten &amp; Außenseiter</td></tr>
+          <tr><td>D-8</td><td>3. Jun</td><td>🇺🇸🇲🇽🇨🇦 Co-Gastgeber im Check — Heimvorteil quantifiziert</td></tr>
+          <tr><td>D-7</td><td>4. Jun</td><td>💀 Gruppe des Todes (Gruppe F: NED/JPN/SWE/TUN, Ø Elo 1774)</td></tr>
+          <tr><td>D-6</td><td>5. Jun</td><td>⚽ Top-Torjäger — Haaland, Kane, Mbappé, Ronaldo mit Tore/90min</td></tr>
+          <tr><td>D-5</td><td>6. Jun</td><td>📊 Wett-Strategie erklärt — Elo, Edge, BET/ABWÄGEN/SKIP</td></tr>
+          <tr><td>D-4</td><td>7. Jun</td><td>💹 Steam Lag &amp; Polymarket erklärt — wie wir Preis-Verzögerungen traden</td></tr>
+          <tr><td>D-3</td><td>8. Jun</td><td>🎯 Erste Picks Vorschau — Spieltag 1 Vorab-Analyse</td></tr>
+          <tr><td>D-2</td><td>9. Jun</td><td>👀 Einstimmung — was erwartet uns, was senden wir ab WM-Start</td></tr>
+          <tr><td>D-1</td><td>10. Jun</td><td>🚀 Morgen geht's los! — Hype-Post mit Favorit + Channel-Teaser</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- WÄHREND WM -->
+    <div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px;margin-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:#22c55e;margin-bottom:10px;letter-spacing:.5px;">🔴 WÄHREND DER WM (ab 11. Juni) · Tagesplan</div>
+      <table class="heart-table">
+        <thead><tr><th>Uhrzeit</th><th>Post-Typ</th><th>Script</th><th>Trigger</th><th>Channel</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>09:00 Wien</td>
+            <td>⚡ <strong>Morning Card</strong><br><span style="font-size:10px;color:var(--muted)">Alle Picks des Tages, Elo, Edge, Quoten, AI-Snippet, Bilanz-Footer</span></td>
+            <td><code>telegram_wm.py</code></td>
+            <td>GitHub Action 08:00 UTC (5×/Tag, nur wenn WM-Spieltag)</td>
+            <td>Haupt</td>
+          </tr>
+          <tr>
+            <td>Ereignis</td>
+            <td>📡 <strong>Sharp Move Alert</strong><br><span style="font-size:10px;color:var(--muted)">Wenn Pinnacle Quote ≥5% kürzt innerhalb 30min — professionelles Geld erkannt</span></td>
+            <td><code>detect_wm_sharp_moves.py</code></td>
+            <td>GitHub Action 5×/Tag nach Odds-Fetch · Dedup via <code>wm_sharp_dedup.json</code></td>
+            <td>Haupt</td>
+          </tr>
+          <tr>
+            <td>Ereignis</td>
+            <td>🔥 <strong>Steam Lag Alert</strong><br><span style="font-size:10px;color:var(--muted)">Wenn Pinnacle ≥2pp bewegt + Polymarket noch nicht angepasst → Edge ≥3pp</span></td>
+            <td><code>steam_lag_monitor.py</code></td>
+            <td>Cowork Scheduled Task alle 2h (lokal) + GitHub Action 5×/Tag · Dedup via <code>steam_lag_sell_dedup.json</code></td>
+            <td>Haupt</td>
+          </tr>
+          <tr>
+            <td>Di/Do/Sa</td>
+            <td>🌟 <strong>Player Spotlight</strong><br><span style="font-size:10px;color:var(--muted)">2 Spieler mit bestem Scoring-Rate × Position-Bonus × Star-Bonus · mit Anytime-Scorer-Odds wenn verfügbar</span></td>
+            <td><code>generate_wm_player_spotlight.py</code></td>
+            <td>GitHub Action · MAX_SPOTLIGHTS=2 · Dedup verhindert Wiederholung</td>
+            <td>Haupt</td>
+          </tr>
+          <tr>
+            <td>Nach Spiel</td>
+            <td>✅ <strong>Pick Recap</strong><br><span style="font-size:10px;color:var(--muted)">Ergebnisse der heutigen Picks — WIN/LOSS/PUSH + P&amp;L · nur wenn result gesetzt</span></td>
+            <td><code>telegram_wm.py</code> (recap mode)</td>
+            <td>GitHub Action nach Spielende wenn <code>result.status</code> ≠ "NS"</td>
+            <td>Haupt</td>
+          </tr>
+          <tr>
+            <td>Ereignis</td>
+            <td>🤖 <strong>Auto-Bet Bestätigung</strong><br><span style="font-size:10px;color:var(--muted)">CLOB Market Order ausgeführt: Team, Einsatz, tokenId, sharesEstimate, Poly-Preis</span></td>
+            <td><code>auto_wm_poly_trigger.py</code></td>
+            <td>GitHub Action 5×/Tag wenn AUTO_TRIGGER_ENABLED=true · Dedup via <code>wm_auto_bets_placed.json</code></td>
+            <td>Trades</td>
+          </tr>
+          <tr>
+            <td>Ereignis</td>
+            <td>💸 <strong>Sell Alert</strong><br><span style="font-size:10px;color:var(--muted)">Position verkauft: +20% Profit ODER Poly konvergiert auf Pinnacle-Fair (Gap &lt;2pp) ODER Pre-Match-Close 6h vor Anpfiff</span></td>
+            <td><code>manage_wm_poly_positions.py</code></td>
+            <td>GitHub Action 5×/Tag (self-hosted Runner) wenn AUTO_SELL_ENABLED=true</td>
+            <td>Trades</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- AI PREVIEW -->
+    <div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px;margin-bottom:14px;">
+      <div style="font-size:12px;font-weight:700;color:#a78bfa;margin-bottom:10px;letter-spacing:.5px;">🤖 AI MATCH PREVIEWS (Claude Haiku)</div>
+      <div class="heart-grid">
+        <div>
+          <p style="font-size:12px;color:var(--muted);line-height:1.8;margin:0;">
+            Script: <code>generate_wm_ai_preview.py</code><br>
+            Modell: <strong>claude-haiku-4-5-20251001</strong><br>
+            max_tokens: <strong>400</strong> · Cache via SHA-256-Hash<br>
+            Prompt v3: 4 Sätze, 110 Wörter, journalistisch<br><br>
+            <strong>Input-Daten:</strong> Elo, Form, xG (API-Football oder Modell-Schätzung — klar getrennt), Corners, H2H, Picks mit Edge, Co-Host-Flag, Verletzungen/Sperren (ab WM-Start)<br><br>
+            <strong>Wo erscheinen sie?</strong><br>
+            · Event Page (vollständig, 4 Sätze)<br>
+            · Morning Card Telegram (tgSnippet: Intro-Satz + Pick-Satz, max 2 Sätze)
+          </p>
+        </div>
+        <div>
+          <p style="font-size:12px;color:var(--muted);line-height:1.8;margin:0;">
+            <strong>Satz 1:</strong> Kräfteverhältnis (Elo, Favorit, Abstand)<br>
+            <strong>Satz 2:</strong> Spielcharakter (Tore, BTTS, Ecken, Stil)<br>
+            <strong>Satz 3:</strong> Wetthinweis (Pick + Begründung, oder "kein Value")<br>
+            <strong>Satz 4:</strong> Kontext (Co-Host, H2H, Upset-Risiko, Gruppe)<br><br>
+            <strong>tgSnippet:</strong> Pick-Satz bevorzugt (Satz 3 wenn Pick vorhanden) + Intro-Satz. Sonst Satz 1+2.<br><br>
+            <strong>Cache:</strong> Regenerierung nur wenn Picks/Odds/Elo sich ändert. Prompt-Version-Bump erzwingt Neu-Generierung aller 72 Spiele.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TECHNISCHE DETAILS -->
+    <div style="background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px;">
+      <div style="font-size:12px;font-weight:700;color:#60a5fa;margin-bottom:10px;letter-spacing:.5px;">⚙️ TECHNISCHE DETAILS</div>
+      <table class="heart-table">
+        <thead><tr><th>Variable / Secret</th><th>Verwendung</th></tr></thead>
+        <tbody>
+          <tr><td><code>TELEGRAM_TOKEN</code></td><td>Bot-Token — beide Channels verwenden denselben Bot</td></tr>
+          <tr><td><code>TELEGRAM_CHAT_ID</code></td><td>Haupt-Channel ID: <code>-1003819239615</code></td></tr>
+          <tr><td><code>TELEGRAM_TRADES_CHAT_ID</code></td><td>Trades-Channel ID (privat, nur Auto-Bets + P&amp;L)</td></tr>
+          <tr><td><code>TG_WM_MODE=morning</code></td><td>Env-Variable für telegram_wm.py → sendet Morning Card</td></tr>
+          <tr><td><code>MAX_SPOTLIGHTS=2</code></td><td>Anzahl Player Spotlights pro Lauf (Di/Do/Sa)</td></tr>
+          <tr><td>Parse Mode</td><td>HTML überall — Tags: &lt;b&gt;, &lt;i&gt;, &lt;code&gt;, &amp;amp; etc.</td></tr>
+          <tr><td>Dedup-Mechanismus</td><td>Jeder Script schreibt ein Dedup-JSON (Datum/Hash) → kein Doppel-Post</td></tr>
+          <tr><td>continue-on-error</td><td>Alle Telegram-Steps im GitHub Action haben <code>continue-on-error: true</code> → Ausfall blockiert nichts</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- ── END TELEGRAM DOKU ─────────────────────────────────────────────── -->
+
 </div>
 
 <!-- STATUS PANEL -->
