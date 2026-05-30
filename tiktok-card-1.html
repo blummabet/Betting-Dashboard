@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TikTok Card 1 — WM 2026 Ranking</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #05080f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* 9:16 = 1080×1920 — screenshot bei 3× für Full-HD */
+.card {
+  width: 360px;
+  height: 640px;
+  background: linear-gradient(160deg, #08111f 0%, #0a0e1a 60%, #080d16 100%);
+  border-radius: 24px;
+  padding: 32px 28px 28px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Subtle glow top-left */
+.card::before {
+  content: '';
+  position: absolute;
+  top: -80px; left: -80px;
+  width: 280px; height: 280px;
+  background: radial-gradient(circle, rgba(245,197,24,.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* TOP BAR */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.brand {
+  font-size: 14px;
+  font-weight: 800;
+  color: #f5c518;
+  letter-spacing: 2px;
+}
+.wm-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(245,197,24,.10);
+  border: 1px solid rgba(245,197,24,.25);
+  color: #f5c518;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+}
+
+/* HOOK */
+.hook {
+  font-size: 22px;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.hook span { color: #f5c518; }
+.sub {
+  font-size: 10px;
+  color: rgba(255,255,255,.35);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 26px;
+}
+
+/* ROWS */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.row:last-of-type { border-bottom: none; }
+
+.medal { font-size: 20px; width: 28px; text-align: center; flex-shrink: 0; }
+.rank-num { font-size: 16px; font-weight: 700; color: rgba(255,255,255,.2); width: 28px; text-align: center; flex-shrink: 0; }
+.flag { font-size: 30px; flex-shrink: 0; line-height: 1; }
+.info { flex: 1; }
+.name { font-size: 16px; font-weight: 800; color: #ffffff; }
+.elo { font-size: 10px; color: rgba(255,255,255,.35); margin-top: 2px; letter-spacing: .5px; }
+
+/* BAR */
+.bar-col { width: 70px; flex-shrink: 0; }
+.bar-bg { height: 3px; background: rgba(255,255,255,.08); border-radius: 2px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 2px; background: #f5c518; }
+
+/* PILL */
+.pill {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .8px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  margin-top: 4px;
+  text-align: center;
+  display: inline-block;
+}
+.pill-gold { background: rgba(245,197,24,.15); color: #f5c518; }
+.pill-red  { background: rgba(239,68,68,.15); color: #f87171; }
+
+/* DIVIDER */
+.divider {
+  height: 1px;
+  background: rgba(255,255,255,.05);
+  margin: 6px 0;
+}
+
+/* FOOTER */
+.footer {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer-hint {
+  font-size: 10px;
+  color: rgba(255,255,255,.3);
+  font-style: italic;
+  max-width: 200px;
+  line-height: 1.4;
+}
+.footer-url {
+  font-size: 10px;
+  color: rgba(245,197,24,.5);
+  letter-spacing: .5px;
+}
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="top-bar">
+    <div class="brand">COCOBET</div>
+    <div class="wm-badge">WM 2026</div>
+  </div>
+
+  <div class="hook">Das WM-Ranking das <span>niemand</span> erwartet hat</div>
+  <div class="sub">Elo-Modell · 48 Teams · Mai 2026</div>
+
+  <!-- #1 Frankreich -->
+  <div class="row">
+    <div class="medal">🥇</div>
+    <div class="flag">🇫🇷</div>
+    <div class="info">
+      <div class="name">Frankreich</div>
+      <div class="elo">ELO 1974</div>
+    </div>
+    <div class="bar-col">
+      <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
+    </div>
+  </div>
+
+  <!-- #2 Brasilien -->
+  <div class="row">
+    <div class="medal">🥈</div>
+    <div class="flag">🇧🇷</div>
+    <div class="info">
+      <div class="name">Brasilien</div>
+      <div class="elo">ELO 1959</div>
+    </div>
+    <div class="bar-col">
+      <div class="bar-bg"><div class="bar-fill" style="width:97%"></div></div>
+    </div>
+  </div>
+
+  <!-- #3 England -->
+  <div class="row">
+    <div class="medal">🥉</div>
+    <div class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</div>
+    <div class="info">
+      <div class="name">England</div>
+      <div class="elo">ELO 1944</div>
+    </div>
+    <div class="bar-col">
+      <div class="bar-bg"><div class="bar-fill" style="width:93%"></div></div>
+    </div>
+  </div>
+
+  <!-- #4 Spanien -->
+  <div class="row">
+    <div class="rank-num">4.</div>
+    <div class="flag">🇪🇸</div>
+    <div class="info">
+      <div class="name">Spanien</div>
+      <div class="elo">ELO 1941</div>
+    </div>
+    <div class="bar-col">
+      <div class="bar-bg"><div class="bar-fill" style="width:92%"></div></div>
+      <div class="pill pill-gold">EM 2024 ★</div>
+    </div>
+  </div>
+
+  <!-- #5 Argentinien -->
+  <div class="row">
+    <div class="rank-num">5.</div>
+    <div class="flag">🇦🇷</div>
+    <div class="info">
+      <div class="name">Argentinien</div>
+      <div class="elo">ELO 1936</div>
+    </div>
+    <div class="bar-col">
+      <div class="bar-bg"><div class="bar-fill" style="width:90%"></div></div>
+      <div class="pill pill-red">TITELVERT. ★</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-hint">Titelverteidiger Argentinien auf Platz 5 — was denkt ihr?</div>
+    <div class="footer-url">cocobet</div>
+  </div>
+
+</div>
+</body>
+</html>
