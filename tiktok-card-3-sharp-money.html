@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>TikTok Card 3 — Sharp Money erklärt</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #05080f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.card {
+  width: 360px;
+  height: 640px;
+  background: #080d18;
+  border-radius: 24px;
+  padding: 28px 26px 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.top-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.brand { font-size:13px; font-weight:800; color:#f5c518; letter-spacing:2px; }
+.badge { font-size:10px; background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.25); color:#f87171; padding:3px 10px; border-radius:20px; letter-spacing:.5px; font-weight:700; }
+.hook { font-size:21px; font-weight:900; color:#fff; line-height:1.2; margin-bottom:4px; }
+.hook span { color:#f5c518; }
+.sub { font-size:10px; color:rgba(255,255,255,.3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:20px; }
+
+.flow { display:flex; flex-direction:column; gap:0; }
+.step { display:flex; gap:14px; align-items:flex-start; }
+.step-left { display:flex; flex-direction:column; align-items:center; width:38px; flex-shrink:0; }
+.dot { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
+.line { width:2px; flex:1; min-height:14px; background:rgba(255,255,255,.06); }
+.step-body { flex:1; padding-bottom:14px; }
+.step-title { font-size:13px; font-weight:800; color:#fff; margin-bottom:3px; }
+.step-desc { font-size:11px; color:rgba(255,255,255,.38); line-height:1.5; }
+
+.odds-box { display:inline-flex; align-items:center; gap:10px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:8px; padding:6px 12px; margin-top:6px; }
+.odds-old { font-size:19px; font-weight:900; color:rgba(255,255,255,.9); }
+.odds-arrow { font-size:13px; color:rgba(255,255,255,.25); }
+.odds-new { font-size:19px; font-weight:900; color:#f87171; }
+
+.sharp-pill { display:inline-block; background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.2); color:#f87171; font-size:9px; font-weight:800; letter-spacing:1px; padding:2px 9px; border-radius:6px; margin-top:5px; }
+
+.insight { margin-top:8px; padding:10px 13px; background:rgba(245,197,24,.06); border:1px solid rgba(245,197,24,.15); border-radius:9px; }
+.insight-text { font-size:10px; color:rgba(255,255,255,.45); line-height:1.55; }
+.insight-text strong { color:#f5c518; }
+
+.footer { margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,.05); display:flex; justify-content:space-between; }
+.ft { font-size:9px; color:rgba(255,255,255,.2); }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="top-bar">
+    <div class="brand">COCOBET</div>
+    <div class="badge">SHARP MONEY</div>
+  </div>
+
+  <div class="hook">Warum Quoten plötzlich <span>fallen</span></div>
+  <div class="sub">Das steckt dahinter · Erklärt in 60 Sek.</div>
+
+  <div class="flow">
+
+    <div class="step">
+      <div class="step-left">
+        <div class="dot" style="background:rgba(255,255,255,.06)">🎰</div>
+        <div class="line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-title">Buchmacher setzt die Quote</div>
+        <div class="step-desc">Frankreich gewinnt gegen Norwegen:</div>
+        <div class="odds-box"><span class="odds-old">2.10</span></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-left">
+        <div class="dot" style="background:rgba(239,68,68,.12)">📡</div>
+        <div class="line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-title">Sharp Money kommt rein</div>
+        <div class="step-desc">Profis mit Datenzugang setzen hohe Beträge. Sie wissen: die Quote ist zu hoch.</div>
+        <div class="sharp-pill">⚡ SHARP ACTION DETECTED</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-left">
+        <div class="dot" style="background:rgba(239,68,68,.12)">📉</div>
+        <div class="line"></div>
+      </div>
+      <div class="step-body">
+        <div class="step-title">Quote fällt sofort</div>
+        <div class="step-desc">Buchmacher reagiert und baut Risiko ab:</div>
+        <div class="odds-box">
+          <span class="odds-old" style="color:rgba(255,255,255,.35)">2.10</span>
+          <span class="odds-arrow">→</span>
+          <span class="odds-new">1.75</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-left">
+        <div class="dot" style="background:rgba(245,197,24,.10)">👁</div>
+      </div>
+      <div class="step-body">
+        <div class="step-title">Wer es zuerst sieht — gewinnt</div>
+        <div class="step-desc">Wer früh erkennt dass Profis wetten, bekommt noch <strong style="color:#fff">2.10</strong> — bevor alle auf <strong style="color:#f87171">1.75</strong> umstellen.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="insight">
+    <div class="insight-text">Das nennt man <strong>Steam Move</strong> — und wir tracken das automatisch für jedes WM-Spiel in Echtzeit.</div>
+  </div>
+
+  <div class="footer">
+    <div class="ft">Educational · Kein Wettaufruf</div>
+    <div class="ft">cocobet</div>
+  </div>
+
+</div>
+</body>
+</html>
