@@ -229,20 +229,25 @@ def main():
               error=f"Missing env: {', '.join(missing)}")
         return
 
-    balance = fetch_balance_via_clob_client(
+    balance_raw = fetch_balance_via_clob_client(
         private_key, funder_addr, api_key, api_secret, api_passphrase
     )
 
-    if balance is None:
+    if balance_raw is None:
         print(f"\n⚠️   Balance-Fetch fehlgeschlagen — bestehende Balance wird behalten")
         existing = _load_existing()
         _save(existing.get("usdc", 0.0), existing.get("usdc_e", 0.0),
               funder_addr, error="fetch_failed")
         return
 
+    # USDC hat 6 Dezimalstellen — API gibt Rohwert in kleinster Einheit zurück
+    # z.B. 501624 → $0.501624 USDC
+    USDC_DECIMALS = 1_000_000
+    balance = balance_raw / USDC_DECIMALS
+
     out = _save(balance, 0.0, funder_addr)
     print(f"\n✅  wm_poly_balance.json geschrieben")
-    print(f"    Handelbare CLOB Balance: ${out['total']:.2f} USDC")
+    print(f"    Handelbare CLOB Balance: ${out['total']:.2f} USDC  (Rohwert: {int(balance_raw)})")
 
 
 if __name__ == "__main__":
