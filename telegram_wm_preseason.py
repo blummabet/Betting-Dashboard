@@ -35,8 +35,8 @@ BASE         = Path(__file__).parent
 WM_FILE      = BASE / "wm2026-data.json"
 SENT_FILE    = BASE / "wm_preseason_sent.json"
 
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
-CHAT_ID        = os.environ.get("TELEGRAM_CHAT_ID", "-1003819239615")
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip()
+CHAT_ID        = os.environ.get("TELEGRAM_CHAT_ID", "").strip() or "-1003819239615"
 DRY_RUN        = os.environ.get("DRY_RUN", "").lower() == "true"
 
 WM_START = date(2026, 6, 11)   # Erster WM-Spieltag
