@@ -3211,40 +3211,92 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
   <!-- Schedule -->
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;">
-    <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px;">📅 Automatischer Versandplan</div>
+    <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">📅 Automatischer Versandplan</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:14px;">Haupt-Channel = CocoBet · Trades-Channel = privat (nur Auto-Bets &amp; P&amp;L)</div>
     <div style="display:flex;flex-direction:column;gap:10px;">
+
+      <!-- Pre-Season -->
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px;background:rgba(245,197,24,.05);border:1px solid rgba(245,197,24,.15);border-radius:8px;">
+        <span style="font-size:20px;flex-shrink:0">📣</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Pre-Season Posts <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">31. Mai – 10. Jun (D-11 bis D-1) · Einmal täglich beim ersten Action-Run · Dedup via wm_preseason_sent.json · Script: telegram_wm_preseason.py</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(245,197,24,.15);color:#f5c518;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">bis 10. Jun</span>
+      </div>
+
+      <!-- Morning Card -->
       <div style="display:flex;align-items:flex-start;gap:12px;">
         <span style="font-size:20px;flex-shrink:0">🌅</span>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--text);">Morning Card</div>
-          <div style="font-size:11px;color:var(--muted);">Täglich 08:00 Wien (06:00 UTC) · Nur wenn WM-Spieltag · Picks + Elo + Upset-Score</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Morning Card <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">5× täglich geprüft · Nur wenn WM-Spieltag (ab 11. Jun) · Picks + Elo + Edge + AI-Snippet + Bilanz · Script: telegram_wm.py</div>
         </div>
-        <span style="margin-left:auto;font-size:10px;background:rgba(0,212,161,.15);color:#00d4a1;padding:2px 8px;border-radius:6px;white-space:nowrap;">täglich</span>
+        <span style="margin-left:auto;font-size:10px;background:rgba(0,212,161,.15);color:#00d4a1;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">ab 11. Jun</span>
       </div>
+
+      <!-- Sharp Move Alert -->
       <div style="display:flex;align-items:flex-start;gap:12px;">
         <span style="font-size:20px;flex-shrink:0">📡</span>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--text);">Sharp Move Alert</div>
-          <div style="font-size:11px;color:var(--muted);">Nach Odds-Fetch · Bei ≥5pp implied-prob Shift · Steam Move bei ≥10pp</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Sharp Move Alert <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Nach Odds-Fetch · Pinnacle Quote fällt ≥5% in &lt;30min · Dedup via wm_sharp_dedup.json · Script: detect_wm_sharp_moves.py</div>
         </div>
-        <span style="margin-left:auto;font-size:10px;background:rgba(255,140,0,.15);color:#ff8c00;padding:2px 8px;border-radius:6px;white-space:nowrap;">event-driven</span>
+        <span style="margin-left:auto;font-size:10px;background:rgba(255,140,0,.15);color:#ff8c00;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">ereignis</span>
       </div>
+
+      <!-- Steam Lag Alert -->
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">🔥</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Steam Lag Alert <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Pinnacle ≥2pp bewegt + Polymarket noch nicht angepasst + Edge ≥3pp · Cowork Task alle 2h + GitHub Action 5×/Tag · Script: steam_lag_monitor.py</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(239,68,68,.15);color:#f87171;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">ereignis</span>
+      </div>
+
+      <!-- Player Spotlight -->
       <div style="display:flex;align-items:flex-start;gap:12px;">
         <span style="font-size:20px;flex-shrink:0">🌟</span>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--text);">Player Spotlight</div>
-          <div style="font-size:11px;color:var(--muted);">Di / Do / Sa · Max. 2 Spieler · Scoring-Rate + Elo-Factor + Player Props Edge</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Player Spotlight <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Di / Do / Sa · Max. 2 Spieler · Scoring-Rate × Position-Bonus × Star-Bonus · Mit Anytime-Scorer-Odds wenn verfügbar · Script: generate_wm_player_spotlight.py</div>
         </div>
-        <span style="margin-left:auto;font-size:10px;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:6px;white-space:nowrap;">Di/Do/Sa</span>
+        <span style="margin-left:auto;font-size:10px;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">Di/Do/Sa</span>
       </div>
+
+      <!-- Recap -->
       <div style="display:flex;align-items:flex-start;gap:12px;">
-        <span style="font-size:20px;flex-shrink:0">📊</span>
-        <div>
-          <div style="font-size:13px;font-weight:600;color:var(--text);">Recap Card</div>
-          <div style="font-size:11px;color:var(--muted);">Nach Spieltag · Ergebnisse + ROI · Benötigt resolve_wm_results.py (ab 11. Jun)</div>
+        <span style="font-size:20px;flex-shrink:0">✅</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Pick Recap <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Nach Spielende wenn result ≠ NS · WIN/LOSS/PUSH + P&amp;L · Script: telegram_wm.py (recap mode)</div>
         </div>
-        <span style="margin-left:auto;font-size:10px;background:rgba(100,100,100,.2);color:var(--muted);padding:2px 8px;border-radius:6px;white-space:nowrap;">ab Juni</span>
+        <span style="margin-left:auto;font-size:10px;background:rgba(100,100,100,.2);color:var(--muted);padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">ab 11. Jun</span>
       </div>
+
+      <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
+
+      <!-- Auto-Bet -->
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">🤖</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Auto-Bet Bestätigung <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">CLOB Order ausgeführt · Team, Einsatz €5–15, tokenId, Poly-Preis · Nur wenn AUTO_TRIGGER_ENABLED=true · Script: auto_wm_poly_trigger.py</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(163,113,247,.15);color:#a371f7;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">off (soon)</span>
+      </div>
+
+      <!-- Sell Alert -->
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">💸</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Sell Alert <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Position verkauft: +20% Profit · Poly konvergiert (Gap &lt;2pp) · Pre-Match-Close 6h vor Anpfiff · Nur wenn AUTO_SELL_ENABLED=true · Script: manage_wm_poly_positions.py</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(163,113,247,.15);color:#a371f7;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">off (soon)</span>
+      </div>
+
     </div>
   </div>
 

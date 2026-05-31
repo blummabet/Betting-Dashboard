@@ -37,6 +37,16 @@ jobs:
       - name: 📦 Dependencies installieren
         run: pip install -r requirements.txt
 
+      # ── Pre-Season Content (D-11 bis D-1, einmal täglich beim ersten Run) ──
+      # Läuft direkt nach Setup — bevor andere Steps Zeit brauchen.
+      # Dedup via wm_preseason_sent.json (wird commitet → persistiert über Runs)
+      - name: 📣 WM Pre-Season Telegram Post
+        run: python telegram_wm_preseason.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
       # ── Squad Spotlight (API-Football, läuft die ganze Tournier-Phase) ──
       - name: 🧬 WM Squad-Spotlight fetchen
         run: python fetch_wm_squads.py
@@ -148,7 +158,7 @@ jobs:
           git add wm2026-data.json wm2026-odds-history.json wm_poly_prices.json \
                   wm2026-poly-history.json \
                   wm_results.json matches/data/wm-*.json matches/wm-index.json
-          git add telegram-log.json wm_sharp_dedup.json wm_sharp_moves_log.json steam_lag_log.json steam_lag_sell_dedup.json 2>/dev/null || true
+          git add telegram-log.json wm_sharp_dedup.json wm_sharp_moves_log.json steam_lag_log.json steam_lag_sell_dedup.json wm_preseason_sent.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
           else
@@ -171,20 +181,6 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # ── Pre-Season Content (D-11 bis D-1, täglich beim 08:00 UTC Run) ────────
-      - name: 📣 WM Pre-Season Telegram Post
-        run: |
-          HOUR=$(date +%H)
-          if [ "$HOUR" = "08" ]; then
-            python telegram_wm_preseason.py
-          else
-            echo "Kein Pre-Season Run außerhalb 08:00 UTC (aktuell ${HOUR}:xx UTC)"
-          fi
-        continue-on-error: true
-        env:
-          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
       # ── Telegram Morning Card (nur wenn WM Spieltag) ─────────────────────
       - name: 📱 WM Telegram Morning Card
