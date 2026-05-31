@@ -60,6 +60,7 @@ def haiku(prompt: str, max_tokens: int = 250) -> str | None:
 BASE         = Path(__file__).parent
 WM_FILE      = BASE / "wm2026-data.json"
 SENT_FILE    = BASE / "wm_preseason_sent.json"
+LOG_FILE     = BASE / "telegram-log.json"
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip()
 CHAT_ID        = os.environ.get("TELEGRAM_CHAT_ID", "").strip() or "-1003819239615"
@@ -593,6 +594,19 @@ def main():
     ok = tg_send(text)
     if ok and not DRY_RUN:
         mark_sent()
+        # Ins telegram-log.json schreiben damit der Verlauf-Tab es anzeigt
+        try:
+            existing = json.loads(LOG_FILE.read_text()) if LOG_FILE.exists() else []
+            existing.append({
+                "type":    "preseason",
+                "sentAt":  datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "preview": text.split("\n")[0].replace("<b>","").replace("</b>","")[:160],
+                "chatId":  CHAT_ID,
+                "day":     f"D-{days_left}",
+            })
+            LOG_FILE.write_text(json.dumps(existing[-200:], ensure_ascii=False, indent=2))
+        except Exception as e:
+            print(f"  ⚠️  Log fehlgeschlagen: {e}")
         print(f"  ✅ Gesendet und als gesent markiert.")
 
 
