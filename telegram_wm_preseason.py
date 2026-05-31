@@ -31,6 +31,32 @@ import urllib.error
 from datetime import date, datetime, timezone
 from pathlib import Path
 
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+HAIKU_MODEL       = "claude-haiku-4-5-20251001"
+
+
+def haiku(prompt: str, max_tokens: int = 250) -> str | None:
+    """Kurzer Claude Haiku Call — gibt None zurück wenn kein Key oder Fehler."""
+    if not ANTHROPIC_API_KEY:
+        return None
+    url  = "https://api.anthropic.com/v1/messages"
+    body = json.dumps({
+        "model":      HAIKU_MODEL,
+        "max_tokens": max_tokens,
+        "messages":   [{"role": "user", "content": prompt}],
+    }).encode("utf-8")
+    req = urllib.request.Request(url, data=body, headers={
+        "Content-Type":      "application/json",
+        "x-api-key":         ANTHROPIC_API_KEY,
+        "anthropic-version": "2023-06-01",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            return json.loads(resp.read())["content"][0]["text"].strip()
+    except Exception as e:
+        print(f"  ⚠️  Haiku fehlgeschlagen: {e}")
+        return None
+
 BASE         = Path(__file__).parent
 WM_FILE      = BASE / "wm2026-data.json"
 SENT_FILE    = BASE / "wm_preseason_sent.json"
@@ -232,29 +258,39 @@ def post_d10(wm: dict, days_left: int) -> str:
 
 
 def post_d9(wm: dict, days_left: int) -> str:
-    """D-9: Geheimfavoriten & Außenseiter"""
+    """D-9: Geheimfavoriten & Außenseiter — mit Haiku-Analyse"""
     teams = get_teams_sorted(wm)
-    # Geheimfavoriten: Elo 1800-1900, nicht die Top-5
-    dark_horses = [t for t in teams if 1800 <= t["elo"] < 1940][2:6]  # Skip bereits Top
-    # Außenseiter mit hohem Upset-Potential
-    underdogs = [t for t in teams if t["elo"] < 1600][:4]
+    dark_horses = [t for t in teams if 1800 <= t["elo"] < 1940][2:6]
+    underdogs   = [t for t in teams if t["elo"] < 1600][:3]
+    squads      = wm.get("squads", {})
 
-    dh_lines = [f"{t['flag']} <b>{t['name']}</b> (Elo {t['elo']}, Gruppe {t['group']})"
-                for t in dark_horses]
+    # Haiku: kurze Begründung pro Dark Horse
+    dh_lines = []
+    for t in dark_horses:
+        squad  = squads.get(t["id"], {})
+        player = squad.get("name", "") if isinstance(squad, dict) else ""
+        ai_reason = haiku(
+            f"WM 2026: Warum ist {t['name']} (Elo {t['elo']}, Gruppe {t['group']}) "
+            f"ein Geheimfavorit?{f' Schlüsselspieler: {player}.' if player else ''} "
+            f"Schreib 1 prägnanten deutschen Satz (max 20 Wörter), journalistisch, kein Hype."
+        )
+        reason = ai_reason or "Starke Defensive, unterschätzte Offensive — gefährlicher als die Quoten zeigen."
+        dh_lines.append(
+            f"{t['flag']} <b>{t['name']}</b> (Elo {t['elo']})\n"
+            f"   <i>{reason}</i>"
+        )
+
     ud_lines = [f"{t['flag']} {t['name']} (Elo {t['elo']})" for t in underdogs]
 
     return (
         f"💎 <b>WM 2026 — Geheimfavoriten & Außenseiter</b>\n"
         f"<i>Noch {days_left} Tage bis zum Anpfiff</i>\n\n"
-        f"🔍 <b>Dark Horses — Teams die überraschend weit kommen können:</b>\n"
-        + "\n".join(dh_lines) +
-        f"\n\n Diese Teams haben die Qualität für das Viertelfinale — "
-        f"und die Quoten unterschätzen sie oft.\n\n"
-        f"🎲 <b>Die größten Außenseiter:</b>\n"
+        f"🔍 <b>Dark Horses — wer überrascht das Turnier?</b>\n\n"
+        + "\n\n".join(dh_lines) +
+        f"\n\n🎲 <b>Die größten Außenseiter:</b>\n"
         + "\n".join(ud_lines) +
-        f"\n\n Bei Upset-Spielen (Favorit ≥150 Elo Vorsprung) entstehen die "
-        f"interessantesten Wett-Edges. Unser Modell erkennt sie automatisch.\n\n"
-        f"💡 Morgen: <b>Co-Gastgeber USA, Mexiko, Kanada</b> — wie groß ist der Heimvorteil?\n\n"
+        f"\n\nBei Upset-Spielen entstehen die interessantesten Wett-Edges — unser Modell erkennt sie automatisch.\n\n"
+        f"💡 Morgen: <b>Co-Gastgeber USA, Mexiko, Kanada</b>\n\n"
         f"<i>CocoBet · WM 2026</i>"
     )
 
@@ -398,45 +434,52 @@ def post_d4(wm: dict, days_left: int) -> str:
 
 
 def post_d3(wm: dict, days_left: int) -> str:
-    """D-3: Erste Picks Vorschau Spieltag 1"""
+    """D-3: Erste Picks Vorschau Spieltag 1 — mit Haiku-Kommentar"""
     picks = get_june11_picks(wm)
 
     if not picks:
-        # Fallback wenn keine Picks verfügbar
+        ai_text = haiku(
+            "WM 2026 startet in 3 Tagen. Schreib 2 packende deutsche Sätze über die Vorfreude "
+            "auf das Turnier und was Fußballfans erwartet. Journalistisch, keine Emojis, max 40 Wörter."
+        ) or "In drei Tagen beginnt das größte Fußball-Turnier aller Zeiten. 48 Nationen, ein Ziel."
         return (
-            f"🎯 <b>WM 2026 — Spieltag 1 startet in {days_left} Tagen</b>\n\n"
-            f"Am 11. Juni geht es endlich los! Unsere vollständige Pick-Analyse "
-            f"für alle Eröffnungsspiele erscheint am Spieltag selbst — "
-            f"dann mit den aktuellsten Quoten und Modell-Daten.\n\n"
-            f"🔔 Morgen: letzte Einstimmung vor dem WM-Start.\n\n"
+            f"🎯 <b>WM 2026 — Spieltag 1 in {days_left} Tagen</b>\n\n"
+            f"{ai_text}\n\n"
+            f"Unsere vollständige Pick-Analyse erscheint am Spieltag selbst "
+            f"— dann mit aktuellen Quoten und Modell-Daten.\n\n"
+            f"🔔 Morgen: letzte Einstimmung.\n\n"
             f"<i>CocoBet · WM 2026</i>"
         )
 
     lines = []
     for p in picks:
-        verdict = p.get("verdict", "?")
-        icon = "⚡" if verdict == "BET" else "📈"
-        market = p.get("market", p.get("label", "?"))
-        edge   = p.get("edgePP")
-        odds   = p.get("odds")
+        verdict  = p.get("verdict", "?")
+        icon     = "⚡" if verdict == "BET" else "📈"
+        market   = p.get("market", p.get("label", "?"))
+        edge     = p.get("edgePP")
+        odds     = p.get("odds")
         edge_str = f" · +{edge:.1f}pp Edge" if edge else ""
         odds_str = f" @ {odds:.2f}" if odds else ""
-        home = p.get("home", "?")
-        away = p.get("away", "?")
-        lines.append(
-            f"{icon} <b>{verdict}</b> — {home} vs {away}\n"
-            f"   {market}{odds_str}{edge_str}"
-        )
+        home     = p.get("home", "?")
+        away     = p.get("away", "?")
+        lines.append(f"{icon} <b>{verdict}</b> — {home} vs {away}\n   {market}{odds_str}{edge_str}")
+
+    # Haiku fasst die Picks in einem Satz zusammen
+    picks_summary = "; ".join([f"{p.get('home')} vs {p.get('away')} ({p.get('market')})" for p in picks[:3]])
+    ai_comment = haiku(
+        f"WM 2026 Spieltag 1. Unsere Picks: {picks_summary}. "
+        f"Schreib 1-2 deutsche Sätze die erklären warum das Modell Edges in diesen Spielen sieht. "
+        f"Sachlich, tipster-Stil, max 35 Wörter."
+    ) or "Das Modell hat mehrere Spiele mit positivem Edge identifiziert — die Eröffnungsspiele bieten oft Overreactions der Buchmacher."
 
     return (
         f"🎯 <b>WM 2026 — Spieltag 1 Vorschau</b>\n"
         f"<i>Noch {days_left} Tage bis zum Anpfiff</i>\n\n"
-        f"Das Modell hat alle Eröffnungsspiele analysiert. "
-        f"Erste Picks mit positivem Edge:\n\n"
+        f"{ai_comment}\n\n"
+        f"<b>Erste Picks mit positivem Edge:</b>\n\n"
         + "\n\n".join(lines) +
-        f"\n\n⚠️ <i>Vorläufige Picks — finale Analyse erscheint am Spieltag "
-        f"mit aktuellen Quoten und Aufstellungen.</i>\n\n"
-        f"Morgen: <b>Finale Einstimmung</b> — was erwartet uns bei der WM 2026?\n\n"
+        f"\n\n⚠️ <i>Vorläufige Picks — finale Analyse am Spieltag mit aktuellen Quoten.</i>\n\n"
+        f"Morgen: <b>Finale Einstimmung</b>\n\n"
         f"<i>CocoBet · WM 2026</i>"
     )
 
@@ -467,23 +510,35 @@ def post_d2(wm: dict, days_left: int) -> str:
 
 
 def post_d1(wm: dict, days_left: int) -> str:
-    """D-1: Morgen geht's los!"""
+    """D-1: Morgen geht's los! — mit Haiku-Eröffnungstext"""
     teams = get_teams_sorted(wm)
     champ = teams[0] if teams else {}
+    top3  = teams[:3]
+    top3_str = ", ".join(f"{t['flag']} {t['name']}" for t in top3)
+
+    # Haiku schreibt den Eröffnungstext
+    ai_opener = haiku(
+        f"WM 2026 startet morgen. Top-Favoriten laut Elo-Modell: {top3_str}. "
+        f"Schreib 2-3 packende deutsche Sätze die die Vorfreude und Spannung einfangen. "
+        f"Journalistisch, mitreißend, keine Emojis, max 55 Wörter.",
+        max_tokens=150,
+    ) or (
+        "104 Spiele. 48 Nationen. Drei Gastgeberländer. Und ein einziger Weltmeister am Ende. "
+        "Das größte Fußball-Turnier der Geschichte beginnt morgen — "
+        "und das Modell hat alle Spiele bereits analysiert."
+    )
 
     return (
         f"🚀 <b>MORGEN GEHT'S LOS — WM 2026!</b>\n\n"
-        f"104 Spiele. 48 Nationen. 3 Länder. 1 Weltmeister.\n\n"
-        f"In weniger als 24 Stunden pfeifen die Schiedsrichter ab — "
-        f"und wir sind bereit.\n\n"
+        f"{ai_opener}\n\n"
         f"🏆 Favorit Nr. 1: {champ.get('flag','')} <b>{champ.get('name','?')}</b> "
         f"(Elo {champ.get('elo','?')})\n\n"
-        f"<b>Ab morgen früh:</b>\n"
-        f"⚡ Morning Card mit allen Picks um 09:00\n"
-        f"📡 Sharp Alerts wenn sich die Quoten bewegen\n"
+        f"<b>Ab morgen früh in diesem Channel:</b>\n"
+        f"⚡ Morning Card mit allen Picks\n"
+        f"📡 Sharp Move Alerts wenn Profis wetten\n"
         f"💹 Polymarket Steam Lag Signals\n"
+        f"🌟 Player Spotlight Di/Do/Sa\n"
         f"✅ Recap nach jedem Spieltag\n\n"
-        f"Wir wünschen allen Followern gute Quoten — und dem Modell recht!\n\n"
         f"<b>LET'S GO! ⚽🌍</b>\n\n"
         f"<i>CocoBet · WM 2026</i>"
     )
