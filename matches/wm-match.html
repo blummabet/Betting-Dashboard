@@ -1408,21 +1408,18 @@ function renderOdds(D) {
   const hlDraw  = mktLow.includes('unentsch') || mktLow.includes('draw');
   const hlAway  = mktLow.includes('auswärts') || mktLow.includes('away');
 
-  // Cumulative shifts from oddsHistory
+  // Alle drei Shifts als implied-probability-Änderung (pp) von Opening zu aktuell.
+  // Einheitliche Basis: positiv = wahrscheinlicher geworden, negativ = unwahrscheinlicher.
   let homeShift = 0, drawShift = 0, awayShift = 0;
   if (hist.length >= 2) {
-    // Compute draw shift from opening vs current implied prob
     const first = hist[0], last = hist[hist.length - 1];
-    const drFirst = first.dr && first.dr > 0 ? 100 / first.dr : null;
-    const drLast  = last.dr  && last.dr  > 0 ? 100 / last.dr  : null;
-    drawShift = (drFirst != null && drLast != null)
-      ? Math.round((drLast - drFirst) * 10) / 10 : 0;
-    hist.forEach(e => {
-      homeShift += (e.hwShift || 0);
-      awayShift += (e.awShift || 0);
-    });
-    homeShift = Math.round(homeShift * 10) / 10;
-    awayShift = Math.round(awayShift * 10) / 10;
+    const toProb = (odds) => (odds && odds > 0) ? 100 / odds : null;
+    const hwFirst = toProb(first.hw), hwLast = toProb(last.hw);
+    const drFirst = toProb(first.dr), drLast = toProb(last.dr);
+    const awFirst = toProb(first.aw), awLast = toProb(last.aw);
+    homeShift = (hwFirst != null && hwLast != null) ? Math.round((hwLast - hwFirst) * 10) / 10 : 0;
+    drawShift = (drFirst != null && drLast != null) ? Math.round((drLast - drFirst) * 10) / 10 : 0;
+    awayShift = (awFirst != null && awLast != null) ? Math.round((awLast - awFirst) * 10) / 10 : 0;
   }
 
   function arrowTag(shift) {
@@ -2162,7 +2159,19 @@ function render(D) {
           </div>
           <div class="hero-vs">vs</div>
           <div class="hero-time">${heroDate}</div>
-        </div>
+          ${(()=>{
+            // Model-Delta: zeigt Differenz Modell vs Markt wenn beide vorhanden
+            if (D.modHome != null && D.probHome != null) {
+              const delta = Math.round(D.modHome - D.probHome);
+              if (Math.abs(delta) >= 2) {
+                const sign  = delta > 0 ? '+' : '';
+                const col   = delta > 0 ? 'var(--green)' : 'var(--red)';
+                const label = delta > 0 ? 'Modell bullish Heim' : 'Modell bearish Heim';
+                return `<div title="${label}" style="font-size:10px;color:${col};letter-spacing:.5px;font-weight:700;margin-top:2px;">${sign}${delta}pp vs Markt</div>`;
+              }
+            }
+            return '';
+          })()}</div>
 
         <div class="hero-team">
           <div class="hero-flag">${D.awayFlag || '🏳'}</div>
@@ -2195,15 +2204,15 @@ function render(D) {
 
     ${renderEnvironment(D)}
     ${renderDecisionStrip(D)}
-    ${renderContext(D)}
     ${renderPicks(D)}
-    ${renderSignal(D)}
-    ${renderAI(D)}
-    ${renderInsights(D)}
     ${renderOdds(D)}
+    ${renderSignal(D)}
     ${renderPoly(D)}
     ${renderEloXg(D)}
     ${renderForm(D)}
+    ${renderContext(D)}
+    ${renderAI(D)}
+    ${renderInsights(D)}
     ${renderH2h(D)}
     ${renderGroup(D)}
     ${renderPlayerBets(D)}
