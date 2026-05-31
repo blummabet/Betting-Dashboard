@@ -63,14 +63,24 @@ jobs:
           else
             git commit -m "📐 Stats+Corner Update $(date +'%d.%m.%Y') UTC"
             git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-            git pull origin main --no-rebase -X ours || true
-            # Auto-resolve any remaining conflict markers
-            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
-            if [ -n "$CONFLICTS" ]; then
-              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
-              git commit -m "🔧 auto-resolve merge conflicts"
-            fi
-            git push
+            # Robust pull+push mit Retry — --autostash schützt vor Race Conditions
+            PUSHED=0
+            for attempt in 1 2 3 4 5; do
+              git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+              CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+              if [ -n "$CONFLICTS" ]; then
+                echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+                git diff --staged --quiet || git commit -m "🔧 auto-resolve merge conflicts"
+              fi
+              if git push 2>&1; then
+                echo "✅ Push erfolgreich nach Versuch $attempt"
+                PUSHED=1
+                break
+              fi
+              echo "⚠️ Push $attempt fehlgeschlagen — retry in $((attempt * 3))s..."
+              sleep $((attempt * 3))
+            done
+            if [ "$PUSHED" = "0" ]; then echo "❌ Push fehlgeschlagen"; exit 1; fi
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
