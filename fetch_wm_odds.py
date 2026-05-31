@@ -262,13 +262,17 @@ def _save_history(history: dict) -> None:
 
 def _extract_totals_btts(bookmakers: list, our_book_prio: list) -> dict:
     """
-    Extract Over/Under 2.5 and BTTS odds from event bookmakers.
+    Extract Over/Under 2.5, BTTS and Corner totals from event bookmakers.
     Prefers same bookmaker priority as h2h.
-    Returns {"o25": float|None, "u25": float|None, "bttsY": float|None, "bttsN": float|None}
+    Returns {o25, u25, bttsY, bttsN, cornerLine, cOver, cUnder}
     """
-    # Collect per-bookmaker candidates
     totals_cands: dict[str, tuple] = {}   # bk_key → (over_price, under_price)
     btts_cands:   dict[str, tuple] = {}   # bk_key → (yes_price, no_price)
+    # Corner totals: bk_key → (line, over_price, under_price)
+    corner_cands: dict[str, tuple] = {}
+
+    # Bevorzugte Corner-Linien (Pinnacle hat meist 9.5 oder 10.5)
+    CORNER_PREFERRED_LINES = [9.5, 10.5, 9.0, 10.0, 8.5, 11.5]
 
     for bk in bookmakers:
         bk_key = bk.get("key", "")
@@ -281,7 +285,6 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list) -> dict:
                     point = o.get("point", 0)
                     name  = o.get("name", "").lower()
                     price = o.get("price")
-                    # Only the 2.5 line
                     if price and abs(point - 2.5) < 0.01:
                         if name == "over":
                             over = price
@@ -302,6 +305,38 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list) -> dict:
                 if yes:
                     btts_cands[bk_key] = (yes, no)
 
+            elif mkey in ("corners", "alternate_totals"):
+                # Sammle alle verfügbaren Linien, wähle bevorzugte
+                lines: dict[float, tuple] = {}  # line → (over, under)
+                for o in market.get("outcomes", []):
+                    point = o.get("point")
+                    name  = o.get("name", "").lower()
+                    price = o.get("price")
+                    if point is None or not price:
+                        continue
+                    if point not in lines:
+                        lines[point] = [None, None]
+                    if name == "over":
+                        lines[point][0] = price
+                    elif name == "under":
+                        lines[point][1] = price
+                # Wähle bevorzugte Linie
+                best_line = best_over = best_under = None
+                for preferred in CORNER_PREFERRED_LINES:
+                    if preferred in lines and lines[preferred][0] and lines[preferred][1]:
+                        best_line  = preferred
+                        best_over  = lines[preferred][0]
+                        best_under = lines[preferred][1]
+                        break
+                # Fallback: erste vollständige Linie
+                if not best_line:
+                    for line, (ov, un) in sorted(lines.items()):
+                        if ov and un:
+                            best_line, best_over, best_under = line, ov, un
+                            break
+                if best_line and best_over:
+                    corner_cands[bk_key] = (best_line, best_over, best_under)
+
     def _pick(cands: dict) -> tuple | None:
         for prio in our_book_prio:
             if prio in cands:
@@ -312,12 +347,16 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list) -> dict:
 
     t = _pick(totals_cands)
     b = _pick(btts_cands)
+    c = _pick(corner_cands)
 
-    return {
+    result = {
         "o25":   round(t[0], 3) if t else None,
         "u25":   round(t[1], 3) if t else None,
         "bttsY": round(b[0], 3) if b else None,
-        "bttsN": round(b[1], 3) if b and b[1] else None,
+        "bttsN":      round(b[1], 3) if b and b[1] else None,
+        "cornerLine": c[0] if c else None,
+        "cOver":      round(c[1], 3) if c and c[1] else None,
+        "cUnder":     round(c[2], 3) if c and c[2] else None,
     }
 
 
@@ -403,7 +442,7 @@ def main():
     # weil TheOddsAPI den WM-Totals-Batch nicht befüllt (Coverage-Lücke).
     # Lösung: per-Event-Endpoint /events/{id}/odds — gleicher Ansatz wie
     # test-cards-api.js für Cards/Corners. Pinnacle O/U ist dort verfügbar.
-    print(f"\n  📥  Fetching totals+btts per event (per-event endpoint)…")
+    print(f"\n  📥  Fetching totals+btts+corners per event (per-event endpoint)…")
     event_ids = [ev["id"] for ev in events if ev.get("id")]
     totals_by_id: dict[str, dict] = {}
 
@@ -411,7 +450,7 @@ def main():
         path_ev = (f"/v4/sports/{sport_key}/events/{eid}/odds"
                    f"?apiKey={ODDS_KEY}"
                    f"&regions=eu,uk,us"
-                   f"&markets=totals,btts"
+                   f"&markets=totals,btts,corners,alternate_totals"
                    f"&oddsFormat=decimal")
         ev_data = odds_get(path_ev)
         if isinstance(ev_data, dict) and ev_data.get("bookmakers"):
@@ -526,6 +565,12 @@ def main():
             new_entry["bttsY"] = tb["bttsY"]
             if tb["bttsN"]:
                 new_entry["bttsN"] = tb["bttsN"]
+        if tb["cOver"]:
+            new_entry["cornerLine"] = tb["cornerLine"]
+            new_entry["cOver"]      = tb["cOver"]
+            new_entry["cUnder"]     = tb["cUnder"]
+            print(f"    🟦 Corners {home_id}-{away_id}: "
+                  f"O{tb['cornerLine']} {tb['cOver']} / U{tb['cornerLine']} {tb['cUnder']}")
 
         # ── Closing Odds einfrieren wenn Anpfiff vorbei ──────────────────────
         # CLV-Basis: die letzten Pinnacle-Odds VOR dem Anpfiff.
