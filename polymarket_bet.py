@@ -36,6 +36,14 @@ CLOB_HOST    = "https://clob.polymarket.com"
 CHAIN_ID     = 137        # Polygon
 STAKE_USDC   = 5.5        # €5 ≈ $5.50 USDC flat per bet
 HISTORY_FILE = os.path.join(os.path.dirname(__file__), "picks_history.json")
+BALANCE_FILE = os.path.join(os.path.dirname(__file__), "wm_poly_balance.json")
+PLACED_FILE  = os.path.join(os.path.dirname(__file__), "wm_auto_bets_placed.json")
+
+# Bankroll-Schutz — gleiche Limits wie in auto_wm_poly_trigger.py.
+# Schützt sowohl manuelle ("Jetzt platzieren") als auch Auto-Bets.
+DAILY_BET_CAP        = 8       # max Bets pro UTC-Tag (manuell + auto kombiniert)
+DAILY_STAKE_CAP_USDC = 50.0    # max kumulativer Stake pro UTC-Tag
+MIN_BALANCE_BUFFER   = 1.0     # USDC die nach Bet im Wallet bleiben müssen
 
 # Market labels → outcome keyword matching
 OUTCOME_MAP = {
@@ -743,6 +751,33 @@ def main():
     history = load_history()
     placed  = 0
     failed  = 0
+    skipped_bankroll = 0
+
+    # ── Bankroll-Schutz vorbereiten ───────────────────────────────────────────
+    # Heutige Bets aus wm_auto_bets_placed.json zählen (deckt Auto + Manual ab).
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    try:
+        with open(PLACED_FILE, encoding="utf-8") as f:
+            placed_db = json.load(f)
+        placed_bets_today = [b for b in placed_db.get("bets", [])
+                             if (b.get("placedAt") or "")[:10] == today_str]
+    except Exception:
+        placed_bets_today = []
+    bets_today_count = len(placed_bets_today)
+    stake_today      = sum(float(b.get("stake") or 0) for b in placed_bets_today)
+
+    # Balance laden (kann veraltet sein — fetch_wm_poly_balance.py läuft via Cron)
+    try:
+        with open(BALANCE_FILE, encoding="utf-8") as f:
+            balance_data = json.load(f)
+        available_balance = float(balance_data.get("usdc") or 0)
+    except Exception:
+        available_balance = 0.0
+
+    running_count   = bets_today_count
+    running_stake   = stake_today
+    running_balance = available_balance
+    print(f"  💰 Heute bereits: {bets_today_count} Bet(s), ${stake_today:.2f} | Balance: ${available_balance:.2f}")
 
     for i, order in enumerate(orders, 1):
         home       = order.get("home", "")
@@ -752,6 +787,24 @@ def main():
         stake      = order.get("stake", STAKE_USDC)
 
         print(f"\n[{i}/{len(orders)}] {home} vs {away} — {market}")
+
+        # ── Bankroll-Schutz pro Order ─────────────────────────────────────────
+        if not dry_run:
+            if running_count >= DAILY_BET_CAP:
+                print(f"  🛑 Tages-Bet-Cap erreicht ({running_count}/{DAILY_BET_CAP}) — Rest übersprungen")
+                log_bet_to_history(history, order, {"status": "skipped", "orderId": None, "error": f"daily bet cap {DAILY_BET_CAP}"})
+                skipped_bankroll += 1
+                continue
+            if running_stake + stake > DAILY_STAKE_CAP_USDC:
+                print(f"  🛑 Stake-Cap überschritten (${running_stake + stake:.2f} > ${DAILY_STAKE_CAP_USDC:.2f}) — übersprungen")
+                log_bet_to_history(history, order, {"status": "skipped", "orderId": None, "error": f"daily stake cap ${DAILY_STAKE_CAP_USDC}"})
+                skipped_bankroll += 1
+                continue
+            if running_balance - stake < MIN_BALANCE_BUFFER:
+                print(f"  🛑 Balance zu niedrig (${running_balance:.2f} - ${stake:.2f} < ${MIN_BALANCE_BUFFER:.2f}) — Abbruch")
+                log_bet_to_history(history, order, {"status": "skipped", "orderId": None, "error": "balance insufficient"})
+                skipped_bankroll += 1
+                break
 
         # 2. Gamma API: Event via Slug (aus Cache-URL) oder Keyword-Fallback
         event = gamma_find_event(order)
@@ -799,6 +852,11 @@ def main():
                 print(f"  ✅ Order platziert ({label}) — ID: {result['orderId']}")
                 placed += 1
 
+                # Bankroll-Tally updaten
+                running_count   += 1
+                running_stake   += stake
+                running_balance -= stake
+
                 # Trades-Channel: Manuellen Bet melden
                 try:
                     from telegram_trades import notify_trade_opened
@@ -836,7 +894,7 @@ def main():
         print(f"🔍 Dry-Run abgeschlossen: {placed}/{len(orders)} würden platziert werden")
         print(f"   Wenn alles aussieht, nochmal OHNE --dry-run ausführen.\n")
     else:
-        print(f"✅ Platziert: {placed}   ❌ Fehlgeschlagen: {failed}")
+        print(f"✅ Platziert: {placed}   ❌ Fehlgeschlagen: {failed}   🛑 Bankroll-Skip: {skipped_bankroll}")
         print(f"📝 picks_history.json aktualisiert\n")
 
     if not dry_run and failed > 0 and placed == 0:

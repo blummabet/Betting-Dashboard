@@ -44,23 +44,17 @@ jobs:
 
       # ── Pre-Season Content (D-11 bis D-1, einmal täglich beim ersten Run) ──
       # Läuft direkt nach Setup — bevor andere Steps Zeit brauchen.
-      # Dedup via wm_preseason_sent.json (wird commitet → persistiert über Runs)
+      # Dedup via wm_preseason_sent.json (wird via LATE commit step persistiert).
+      # WICHTIG: KEIN separater git push hier — das hat dauerhaft zu Race Conditions
+      # mit parallelen Workflows geführt und Errors wurden via 2>/dev/null geschluckt.
+      # Single source of persistence: der "💾 WM Daten speichern" Step unten.
       - name: 📣 WM Pre-Season Telegram Post
-        run: |
-          python telegram_wm_preseason.py
-          # Dedup-File sofort pushen damit parallele Runs ihn sehen
-          git config user.name "Dashboard Bot" 2>/dev/null || true
-          git config user.email "actions@github.com" 2>/dev/null || true
-          git add wm_preseason_sent.json telegram-log.json 2>/dev/null || true
-          git diff --staged --quiet || git commit -m "📣 preseason dedup"
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" 2>/dev/null || true
-          git push 2>/dev/null || true
+        run: python telegram_wm_preseason.py
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:    ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID:  ${{ secrets.TELEGRAM_CHAT_ID }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
 
       # ── Squad Spotlight (API-Football, läuft die ganze Tournier-Phase) ──
       - name: 🧬 WM Squad-Spotlight fetchen
@@ -181,7 +175,16 @@ jobs:
           git add wm2026-data.json wm2026-odds-history.json wm_poly_prices.json \
                   wm2026-poly-history.json \
                   wm_results.json matches/data/wm-*.json matches/wm-index.json
-          git add telegram-log.json wm_sharp_dedup.json wm_sharp_moves_log.json steam_lag_log.json steam_lag_sell_dedup.json wm_preseason_sent.json 2>/dev/null || true
+          # Dedup / Log Dateien — ALLE existieren als Seed im Repo, also kein 2>/dev/null
+          # nötig. Wenn add fehlschlägt → Fehler sichtbar machen statt schlucken.
+          for f in telegram-log.json wm_sharp_dedup.json wm_sharp_moves_log.json \
+                   steam_lag_log.json steam_lag_sell_dedup.json wm_preseason_sent.json; do
+            if [ -f "$f" ]; then
+              git add "$f"
+            else
+              echo "⚠️  $f fehlt lokal — sollte als Seed im Repo sein!"
+            fi
+          done
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
           else
