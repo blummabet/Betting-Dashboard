@@ -76,12 +76,20 @@ def gamma_find_event(order: dict) -> dict | None:
     2. Fallback: keyword search (less reliable, kept as safety net).
     """
     event_url = order.get("eventUrl") or ""
-    if event_url and "/event/" in event_url:
-        slug = event_url.rstrip("/").split("/event/")[-1]
-        ev = gamma_fetch_by_slug(slug)
-        if ev:
-            return ev
-        print(f"  ⚠️  Slug lookup failed for '{slug}', trying keyword fallback…")
+    # Unterstützt beide URL-Formate:
+    #   /event/{slug}  (klassisch)
+    #   /sports/fifa-world-cup/{slug}  (WM 2026)
+    if event_url:
+        slug = None
+        for marker in ("/event/", "/sports/fifa-world-cup/", "/sports/"):
+            if marker in event_url:
+                slug = event_url.rstrip("/").split(marker)[-1].split("/")[0]
+                break
+        if slug:
+            ev = gamma_fetch_by_slug(slug)
+            if ev:
+                return ev
+            print(f"  ⚠️  Slug lookup failed for '{slug}', trying keyword fallback…")
 
     # Fallback: keyword search with raw team names
     home = order.get("home", "")

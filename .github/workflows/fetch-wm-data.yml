@@ -46,12 +46,21 @@ jobs:
       # Läuft direkt nach Setup — bevor andere Steps Zeit brauchen.
       # Dedup via wm_preseason_sent.json (wird commitet → persistiert über Runs)
       - name: 📣 WM Pre-Season Telegram Post
-        run: python telegram_wm_preseason.py
+        run: |
+          python telegram_wm_preseason.py
+          # Dedup-File sofort pushen damit parallele Runs ihn sehen
+          git config user.name "Dashboard Bot" 2>/dev/null || true
+          git config user.email "actions@github.com" 2>/dev/null || true
+          git add wm_preseason_sent.json telegram-log.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "📣 preseason dedup"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" 2>/dev/null || true
+          git push 2>/dev/null || true
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:    ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID:  ${{ secrets.TELEGRAM_CHAT_ID }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN:      ${{ secrets.GITHUB_TOKEN }}
 
       # ── Squad Spotlight (API-Football, läuft die ganze Tournier-Phase) ──
       - name: 🧬 WM Squad-Spotlight fetchen

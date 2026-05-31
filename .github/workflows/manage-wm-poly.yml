@@ -69,7 +69,7 @@ jobs:
           POLY_API_KEY:              ${{ secrets.POLY_API_KEY }}
           POLY_API_SECRET:           ${{ secrets.POLY_API_SECRET }}
           POLY_API_PASSPHRASE:       ${{ secrets.POLY_API_PASSPHRASE }}
-          AUTO_TRIGGER_ENABLED:      "false"  # auf "true" setzen wenn live bereit!
+          AUTO_TRIGGER_ENABLED:      ${{ secrets.AUTO_TRIGGER_ENABLED || 'false' }}
 
       # ── Polymarket USDC Balance via CLOB API holen ───────────────────────────
       # Hinweis: Polymarket hält Gelder im CLOB-Vertrag (nicht on-chain im Wallet)
@@ -97,7 +97,7 @@ jobs:
           POLY_API_KEY:             ${{ secrets.POLY_API_KEY }}
           POLY_API_SECRET:          ${{ secrets.POLY_API_SECRET }}
           POLY_API_PASSPHRASE:      ${{ secrets.POLY_API_PASSPHRASE }}
-          AUTO_SELL_ENABLED:        "false"  # auf "true" setzen wenn live bereit!
+          AUTO_SELL_ENABLED:        ${{ secrets.AUTO_SELL_ENABLED || 'false' }}
 
       # ── Bets gegen Ergebnisse resolven: P&L + CLV berechnen ──────────────────
       - name: 📈 WM Bets resolven (P&L + CLV)
