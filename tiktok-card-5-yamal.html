@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>TikTok Card 5 — Lamine Yamal die nächste Ära</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #05080f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.card {
+  width: 360px;
+  height: 640px;
+  background: #080d18;
+  border-radius: 24px;
+  padding: 28px 26px 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.top-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.brand { font-size:13px; font-weight:800; color:#f5c518; letter-spacing:2px; }
+.badge { font-size:10px; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.3); color:#4ade80; padding:3px 10px; border-radius:20px; font-weight:700; letter-spacing:.5px; }
+
+.hero { text-align:center; padding:14px 0 14px; border-bottom:1px solid rgba(255,255,255,.06); margin-bottom:16px; }
+.flag { font-size:42px; line-height:1; margin-bottom:6px; }
+.pname { font-size:24px; font-weight:900; color:#fff; letter-spacing:.5px; }
+.nation { font-size:10px; color:rgba(255,255,255,.3); letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
+.age-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:12px; }
+.age-val { font-size:40px; font-weight:900; color:#4ade80; line-height:1; }
+.age-text { text-align:left; }
+.age-main { font-size:14px; font-weight:800; color:#fff; }
+.age-sub { font-size:10px; color:rgba(255,255,255,.3); margin-top:2px; }
+
+.stats { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px; }
+.stat { background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:10px; padding:10px 8px; text-align:center; }
+.stat-val { font-size:20px; font-weight:900; line-height:1; }
+.stat-lbl { font-size:8px; color:rgba(255,255,255,.28); letter-spacing:.8px; text-transform:uppercase; margin-top:3px; line-height:1.3; }
+
+.wmcount { font-size:9px; color:rgba(255,255,255,.22); text-align:center; margin-bottom:12px; letter-spacing:1.5px; }
+
+.timeline { display:flex; justify-content:space-between; align-items:center; padding:0 4px; margin-bottom:14px; }
+.tl-item { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.tl-yr { font-size:8px; color:rgba(255,255,255,.22); letter-spacing:.5px; }
+.tl-evt { font-size:7px; color:rgba(255,255,255,.35); letter-spacing:.3px; margin-top:2px; text-align:center; }
+.tl-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.12); }
+.tl-dot.first { width:10px; height:10px; background:#4ade80; box-shadow:0 0 8px rgba(74,222,128,.5); }
+.tl-line { flex:1; height:1px; background:rgba(255,255,255,.06); margin-bottom:4px; }
+
+.callout { background:rgba(74,222,128,.06); border:1px solid rgba(74,222,128,.18); border-radius:9px; padding:11px 13px; margin-bottom:12px; }
+.callout-text { font-size:11px; color:rgba(255,255,255,.45); line-height:1.6; }
+.callout-text strong { color:#4ade80; }
+
+.question { font-size:14px; font-weight:800; color:#fff; text-align:center; margin-bottom:12px; }
+
+.footer { padding-top:10px; border-top:1px solid rgba(255,255,255,.05); display:flex; justify-content:space-between; }
+.ft { font-size:9px; color:rgba(255,255,255,.2); }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="top-bar">
+    <div class="brand">COCOBET</div>
+    <div class="badge">🟢 NÄCHSTE ÄRA</div>
+  </div>
+
+  <div class="hero">
+    <div class="flag">🇪🇸</div>
+    <div class="pname">L. Yamal</div>
+    <div class="nation">Spanien · Flügel</div>
+    <div class="age-row">
+      <div class="age-val">19</div>
+      <div class="age-text">
+        <div class="age-main">Jahre alt</div>
+        <div class="age-sub">Erste WM seiner Karriere</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val" style="color:#4ade80">5</div>
+      <div class="stat-lbl">Tore Spanien</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:#60a5fa">9</div>
+      <div class="stat-lbl">Assists Spanien</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:#f5c518">1.37</div>
+      <div class="stat-lbl">Scorer / 90min</div>
+    </div>
+  </div>
+
+  <div class="wmcount">SPANIEN · NR. 4 WELT · ELO 1941</div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-yr" style="color:#4ade80;font-weight:700;">2024</div>
+      <div class="tl-dot first"></div>
+      <div class="tl-evt">EM-Tor<br>mit 16</div>
+    </div>
+    <div class="tl-line"></div>
+    <div class="tl-item">
+      <div class="tl-yr">2026</div>
+      <div class="tl-dot"></div>
+      <div class="tl-evt">WM<br>Debüt</div>
+    </div>
+    <div class="tl-line"></div>
+    <div class="tl-item">
+      <div class="tl-yr">2030</div>
+      <div class="tl-dot"></div>
+      <div class="tl-evt">Peak<br>Alter 23</div>
+    </div>
+    <div class="tl-line"></div>
+    <div class="tl-item">
+      <div class="tl-yr">2034</div>
+      <div class="tl-dot"></div>
+      <div class="tl-evt">3.<br>WM</div>
+    </div>
+    <div class="tl-line"></div>
+    <div class="tl-item">
+      <div class="tl-yr">2038</div>
+      <div class="tl-dot"></div>
+      <div class="tl-evt">4.<br>WM</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-text">Mit 16 <strong>jüngster EM-Torschütze</strong> der Geschichte. Gruppe H gegen Saudi · Kap Verde · Uruguay — <strong>er bekommt seine Tore.</strong></div>
+  </div>
+
+  <div class="question">Ronaldo's letzte. Yamal's erste. 🌱</div>
+
+  <div class="footer">
+    <div class="ft">Daten: Spanien 2024/25</div>
+    <div class="ft">cocobet</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>TikTok Card 6 — Marokko Geheimfavorit</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #05080f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.card {
+  width: 360px;
+  height: 640px;
+  background: #080d18;
+  border-radius: 24px;
+  padding: 28px 26px 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.top-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.brand { font-size:13px; font-weight:800; color:#f5c518; letter-spacing:2px; }
+.badge { font-size:10px; background:rgba(168,85,247,.12); border:1px solid rgba(168,85,247,.3); color:#c084fc; padding:3px 10px; border-radius:20px; font-weight:700; letter-spacing:.5px; }
+
+.hero { text-align:center; padding:14px 0 14px; border-bottom:1px solid rgba(255,255,255,.06); margin-bottom:16px; }
+.flag { font-size:46px; line-height:1; margin-bottom:6px; }
+.pname { font-size:24px; font-weight:900; color:#fff; letter-spacing:.5px; }
+.nation { font-size:10px; color:rgba(255,255,255,.3); letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
+.tag-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:12px; }
+.tag-val { font-size:32px; font-weight:900; color:#c084fc; line-height:1; }
+.tag-text { text-align:left; }
+.tag-main { font-size:13px; font-weight:800; color:#fff; }
+.tag-sub { font-size:10px; color:rgba(255,255,255,.3); margin-top:2px; }
+
+.victims-title { font-size:9px; color:rgba(255,255,255,.32); text-align:center; letter-spacing:1.5px; margin-bottom:8px; text-transform:uppercase; }
+.victims { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:14px; }
+.victim { background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:10px; padding:10px 6px; text-align:center; }
+.victim-flag { font-size:22px; line-height:1; margin-bottom:2px; }
+.victim-name { font-size:9px; font-weight:800; color:#fff; }
+.victim-score { font-size:9px; color:#c084fc; font-weight:700; margin-top:1px; }
+
+.elo-row { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:10px; margin-bottom:12px; }
+.elo-lbl { font-size:10px; color:rgba(255,255,255,.45); }
+.elo-val { font-size:18px; font-weight:900; color:#f5c518; }
+.elo-rank { font-size:9px; color:rgba(255,255,255,.35); }
+
+.group-info { font-size:9px; color:rgba(255,255,255,.22); text-align:center; margin-bottom:12px; letter-spacing:1.5px; }
+.group-info strong { color:#c084fc; }
+
+.callout { background:rgba(168,85,247,.06); border:1px solid rgba(168,85,247,.18); border-radius:9px; padding:11px 13px; margin-bottom:12px; }
+.callout-text { font-size:11px; color:rgba(255,255,255,.45); line-height:1.6; }
+.callout-text strong { color:#c084fc; }
+
+.question { font-size:14px; font-weight:800; color:#fff; text-align:center; margin-bottom:12px; }
+
+.footer { padding-top:10px; border-top:1px solid rgba(255,255,255,.05); display:flex; justify-content:space-between; }
+.ft { font-size:9px; color:rgba(255,255,255,.2); }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="top-bar">
+    <div class="brand">COCOBET</div>
+    <div class="badge">🟣 GEHEIMFAVORIT 1/3</div>
+  </div>
+
+  <div class="hero">
+    <div class="flag">🇲🇦</div>
+    <div class="pname">Marokko</div>
+    <div class="nation">Afrika · Atlas-Löwen</div>
+    <div class="tag-row">
+      <div class="tag-val">4.</div>
+      <div class="tag-text">
+        <div class="tag-main">Platz WM 2022</div>
+        <div class="tag-sub">1. Halbfinale Afrikas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="victims-title">2022 RAUSGEWORFEN</div>
+  <div class="victims">
+    <div class="victim">
+      <div class="victim-flag">🇧🇪</div>
+      <div class="victim-name">Belgien</div>
+      <div class="victim-score">2 : 0</div>
+    </div>
+    <div class="victim">
+      <div class="victim-flag">🇪🇸</div>
+      <div class="victim-name">Spanien</div>
+      <div class="victim-score">3 : 0 i.E.</div>
+    </div>
+    <div class="victim">
+      <div class="victim-flag">🇵🇹</div>
+      <div class="victim-name">Portugal</div>
+      <div class="victim-score">1 : 0</div>
+    </div>
+  </div>
+
+  <div class="elo-row">
+    <div>
+      <div class="elo-lbl">Elo-Wert</div>
+      <div class="elo-rank">vor Schweiz · vor Kroatien</div>
+    </div>
+    <div class="elo-val">1778</div>
+  </div>
+
+  <div class="group-info">GRUPPE C · GEGEN <strong>🇧🇷 BRASILIEN</strong> · <strong>12. JUNI</strong></div>
+
+  <div class="callout">
+    <div class="callout-text">2022 als <strong>Außenseiter</strong> ins Halbfinale. Heute gleiches Gerüst um Hakimi + Amrabat. Wer sie <strong>jetzt</strong> unterschätzt, fällt zweimal rein.</div>
+  </div>
+
+  <div class="question">Wieder so weit? Oder weiter? 🦁</div>
+
+  <div class="footer">
+    <div class="ft">Elo nach WM-Quali 2025</div>
+    <div class="ft">cocobet</div>
+  </div>
+
+</div>
+</body>
+</html>

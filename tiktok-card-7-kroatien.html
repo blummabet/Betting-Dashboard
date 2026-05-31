@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>TikTok Card 7 — Kroatien Geheimfavorit Teil 2</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #05080f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.card {
+  width: 360px;
+  height: 640px;
+  background: #080d18;
+  border-radius: 24px;
+  padding: 28px 26px 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.top-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.brand { font-size:13px; font-weight:800; color:#f5c518; letter-spacing:2px; }
+.badge { font-size:10px; background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.3); color:#f87171; padding:3px 10px; border-radius:20px; font-weight:700; letter-spacing:.5px; }
+
+.hero { text-align:center; padding:14px 0 14px; border-bottom:1px solid rgba(255,255,255,.06); margin-bottom:14px; }
+.flag { font-size:42px; line-height:1; margin-bottom:6px; }
+.pname { font-size:24px; font-weight:900; color:#fff; letter-spacing:.5px; }
+.nation { font-size:10px; color:rgba(255,255,255,.3); letter-spacing:2px; text-transform:uppercase; margin-top:2px; }
+.cap-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:10px; }
+.cap-val { font-size:36px; font-weight:900; color:#f87171; line-height:1; }
+.cap-text { text-align:left; }
+.cap-main { font-size:13px; font-weight:800; color:#fff; }
+.cap-sub { font-size:10px; color:rgba(255,255,255,.3); margin-top:2px; }
+
+.placements-title { font-size:9px; color:rgba(255,255,255,.32); text-align:center; letter-spacing:1.5px; margin-bottom:8px; text-transform:uppercase; }
+.placements { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:12px; }
+.place { background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:10px; padding:11px 6px; text-align:center; }
+.place-yr { font-size:9px; color:rgba(255,255,255,.4); font-weight:700; letter-spacing:.5px; }
+.place-rank { font-size:24px; font-weight:900; line-height:1; margin-top:4px; }
+.place-rank-lbl { font-size:8px; color:rgba(255,255,255,.3); margin-top:2px; }
+
+.elo-row { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06); border-radius:10px; margin-bottom:12px; }
+.elo-lbl { font-size:10px; color:rgba(255,255,255,.45); }
+.elo-val { font-size:18px; font-weight:900; color:#f5c518; }
+.elo-rank { font-size:9px; color:rgba(255,255,255,.35); }
+
+.group-info { font-size:9px; color:rgba(255,255,255,.22); text-align:center; margin-bottom:12px; letter-spacing:1.5px; }
+.group-info strong { color:#f87171; }
+
+.callout { background:rgba(239,68,68,.06); border:1px solid rgba(239,68,68,.18); border-radius:9px; padding:11px 13px; margin-bottom:12px; }
+.callout-text { font-size:11px; color:rgba(255,255,255,.45); line-height:1.6; }
+.callout-text strong { color:#f87171; }
+
+.question { font-size:13px; font-weight:800; color:#fff; text-align:center; margin-bottom:10px; line-height:1.4; }
+
+.footer { padding-top:10px; border-top:1px solid rgba(255,255,255,.05); display:flex; justify-content:space-between; }
+.ft { font-size:9px; color:rgba(255,255,255,.2); }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <div class="top-bar">
+    <div class="brand">COCOBET</div>
+    <div class="badge">🔴 GEHEIMFAVORIT 2/3</div>
+  </div>
+
+  <div class="hero">
+    <div class="flag">🇭🇷</div>
+    <div class="pname">Kroatien</div>
+    <div class="nation">Modric · Die alten Hasen</div>
+    <div class="cap-row">
+      <div class="cap-val">40</div>
+      <div class="cap-text">
+        <div class="cap-main">Kapitän Modric</div>
+        <div class="cap-sub">Möglicher Rekord-Senior</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="placements-title">DIE LETZTEN 3 WMs</div>
+  <div class="placements">
+    <div class="place">
+      <div class="place-yr">2018</div>
+      <div class="place-rank" style="color:#94a3b8">🥈</div>
+      <div class="place-rank-lbl">Vize</div>
+    </div>
+    <div class="place">
+      <div class="place-yr">2022</div>
+      <div class="place-rank" style="color:#fb923c">🥉</div>
+      <div class="place-rank-lbl">3. Platz</div>
+    </div>
+    <div class="place">
+      <div class="place-yr" style="color:#f87171;font-weight:800;">2026</div>
+      <div class="place-rank" style="color:#f87171">?</div>
+      <div class="place-rank-lbl">Letzter Tanz</div>
+    </div>
+  </div>
+
+  <div class="elo-row">
+    <div>
+      <div class="elo-lbl">Elo-Wert</div>
+      <div class="elo-rank">Top 16 weltweit</div>
+    </div>
+    <div class="elo-val">1781</div>
+  </div>
+
+  <div class="group-info">GRUPPE L · GEGEN <strong>🏴󠁧󠁢󠁥󠁮󠁧󠁿 ENGLAND</strong> · 🇬🇭 GHANA · 🇵🇦 PANAMA</div>
+
+  <div class="callout">
+    <div class="callout-text">Kein Land lieferte die letzten 2 WMs konstanter. Mit <strong>Modric 40, Brozovic 33, Perisic 37</strong> ist es <strong>jetzt oder nie.</strong></div>
+  </div>
+
+  <div class="question">Yamal hat 22 Jahre Karriere.<br>Modric vielleicht 22 Tage. 🕰️</div>
+
+  <div class="footer">
+    <div class="ft">Elo nach WM-Quali 2025</div>
+    <div class="ft">cocobet</div>
+  </div>
+
+</div>
+</body>
+</html>
