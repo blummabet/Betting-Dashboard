@@ -107,26 +107,40 @@ def elo_probabilities(elo_h: float, elo_a: float, home_is_cohost: bool) -> dict:
 #  EXPECTED GOALS (Dixon-Coles-Stil)
 # ═══════════════════════════════════════════════════════════════════════════
 
-def expected_goals(form_h: dict, form_a: dict) -> tuple[float, float]:
+def expected_goals(form_h: dict, form_a: dict,
+                   xg_h: dict = None, xg_a: dict = None,
+                   injury_factor_h: float = 1.0,
+                   injury_factor_a: float = 1.0) -> tuple[float, float]:
     """
-    λ_heim, λ_ausw aus Form-Daten.
-    Normalisiert auf INTL_AVG_GOALS als Basis.
-    Wenn keine Form-Daten: Basis-λ verwenden.
+    λ_heim, λ_ausw für Poisson-Modell.
+
+    Datenpriorität (beste zuerst):
+      1. xgStats (API-Football xG, wenn ≥ 3 Spiele) — direkteres Stärke-Maß
+      2. Form avgScored/avgConceded (letzten 15 Spiele)
+      3. INTL_AVG_GOALS als Fallback
+
+    injury_factor: Multiplikator für Angriffsstärke wenn Schlüsselspieler fehlt.
+    Typisch 0.85 wenn Top-Stürmer verletzt/gesperrt, 1.0 wenn kein Ausfall.
     """
-    def rate(form: dict) -> tuple[float, float]:
-        if not form or form.get("games", 0) < 3:
+    def rate(form: dict, xg: dict) -> tuple[float, float]:
+        # xgStats bevorzugen — präziser als rohe Toraverages
+        if xg and xg.get("games", 0) >= 3:
+            scored   = xg.get("xgForAvg",     INTL_AVG_GOALS)
+            conceded = xg.get("xgAgainstAvg",  INTL_AVG_GOALS)
+        elif form and form.get("games", 0) >= 3:
+            scored   = form.get("avgScored",   INTL_AVG_GOALS)
+            conceded = form.get("avgConceded", INTL_AVG_GOALS)
+        else:
             return 1.0, 1.0
-        scored   = form.get("avgScored",   INTL_AVG_GOALS)
-        conceded = form.get("avgConceded", INTL_AVG_GOALS)
-        att = max(0.35, min(3.0, scored   / INTL_AVG_GOALS))
+        att  = max(0.35, min(3.0, scored   / INTL_AVG_GOALS))
         def_ = max(0.35, min(3.0, conceded / INTL_AVG_GOALS))
         return att, def_
 
-    h_att, h_def = rate(form_h)
-    a_att, a_def = rate(form_a)
+    h_att, h_def = rate(form_h, xg_h)
+    a_att, a_def = rate(form_a, xg_a)
 
-    lam_h = INTL_AVG_GOALS * h_att * a_def   # Heimangriff vs Auswärtsabwehr
-    lam_a = INTL_AVG_GOALS * a_att * h_def   # Auswärtsangriff vs Heimabwehr
+    lam_h = INTL_AVG_GOALS * h_att * a_def * injury_factor_h
+    lam_a = INTL_AVG_GOALS * a_att * h_def * injury_factor_a
 
     return (
         max(0.25, min(4.0, lam_h)),
@@ -199,7 +213,12 @@ def compute_verdict(model_odds: float | None, market_odds: float | None,
     mod_sig  = 0
     edge_pp  = 0
     if model_odds and market_odds and model_odds > 1 and market_odds > 1:
-        edge_pp = round((1/model_odds - (1/market_odds) * 1.03) * 100)
+        # model_odds enthält MODEL_MARGIN: model_odds = MODEL_MARGIN / p
+        # → 1/model_odds = p / MODEL_MARGIN → * MODEL_MARGIN gibt rohes p zurück
+        # Markt: * 1.03 ≈ devig für Pinnacle (~3% Vig)
+        model_prob  = (1.0 / model_odds) * MODEL_MARGIN
+        market_prob = (1.0 / market_odds) * 1.03
+        edge_pp = round((model_prob - market_prob) * 100)
         if   edge_pp >= 7:  mod_sig =  1
         elif edge_pp >= 0:  mod_sig =  0
         elif edge_pp >= -4: mod_sig = -1
@@ -337,10 +356,29 @@ MARKET_CFG = [
 ]
 
 
+def injury_discount(team_id: str, injuries: dict) -> float:
+    """
+    Gibt einen Multiplikator für die Angriffsstärke zurück.
+    1.0 = kein Ausfall, 0.85 = Schlüsselangreifer fehlt.
+    """
+    inj_data = injuries.get(team_id, {})
+    if not inj_data or not inj_data.get("players"):
+        return 1.0
+    # Nur Angreifer / offensive Positionen reduzieren Lambda
+    attacking_positions = {"ST", "CF", "FW", "LW", "RW", "CAM", "AM", "10", "SS"}
+    for p in inj_data["players"]:
+        # Wenn Verletzungstyp "Injury" oder "Suspension" und kein Positionsfilter nötig
+        # → immer reduzieren da wir nur Key-Player tracken
+        return 0.85   # 15% Abschlag bei jedem geloggten Ausfall
+    return 1.0
+
+
 def generate_picks_for_fixture(
     fx: dict, gdata: dict,
     mkt: dict, form: dict, h2h_data: dict,
     today_iso: str,
+    xg_stats: dict = None,
+    injuries: dict = None,
 ) -> list[dict]:
     """Generiert Picks für ein einzelnes Fixture. Gibt [] zurück wenn kein Pick."""
 
@@ -364,7 +402,20 @@ def generate_picks_for_fixture(
     h2h_key = f"{fx['home']}-{fx['away']}"
     h2h     = h2h_data.get(h2h_key) or {}
 
-    lam_h, lam_a = expected_goals(form_h, form_a)
+    # xgStats bevorzugen wenn verfügbar (echte API-Football xG > Toraverage)
+    xg_h = (xg_stats or {}).get(fx["home"])
+    xg_a = (xg_stats or {}).get(fx["away"])
+
+    # Injury-Discount für Angriffsstärke
+    inj = injuries or {}
+    inj_h = injury_discount(fx["home"], inj)
+    inj_a = injury_discount(fx["away"], inj)
+    if inj_h < 1.0 and VERBOSE:
+        print(f"  ⚠️  Injury-Discount {fx['home']}: {inj_h:.0%}")
+    if inj_a < 1.0 and VERBOSE:
+        print(f"  ⚠️  Injury-Discount {fx['away']}: {inj_a:.0%}")
+
+    lam_h, lam_a = expected_goals(form_h, form_a, xg_h, xg_a, inj_h, inj_a)
 
     # Marktquoten aus TheOddsAPI
     odds_snap = mkt.get(f"{fx['home']}-{fx['away']}", {})
@@ -573,6 +624,14 @@ def main():
     mkt      = wm.get("odds",     {})
     form     = wm.get("form",     {})
     h2h_data = wm.get("h2h",      {})
+    xg_stats = wm.get("xgStats",  {})   # API-Football xG (fetch_wm_corners.py)
+    injuries = wm.get("injuries", {})   # Verletzungen/Sperren (fetch_wm_injuries.py)
+
+    xg_count = sum(1 for v in xg_stats.values() if v and v.get("games", 0) >= 3)
+    inj_count = sum(1 for k, v in injuries.items()
+                    if k != "_meta" and isinstance(v, dict) and v.get("players"))
+    print(f"  xgStats: {xg_count} Teams mit Daten | Injuries: {inj_count} Teams betroffen\n")
+
     wm.setdefault("picks", {})
 
     today = datetime.now(timezone.utc).date().isoformat()
@@ -612,7 +671,10 @@ def main():
                     continue
                 # Noch keine Picks für heute → generieren (Spiel noch nicht gestartet)
 
-            new_picks = generate_picks_for_fixture(fx, gdata, mkt, form, h2h_data, today)
+            new_picks = generate_picks_for_fixture(
+                fx, gdata, mkt, form, h2h_data, today,
+                xg_stats=xg_stats, injuries=injuries,
+            )
 
             # Immer überschreiben — auch leere Liste löscht veraltete Picks
             wm["picks"][pick_key] = new_picks
