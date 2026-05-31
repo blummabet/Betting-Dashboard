@@ -41,25 +41,25 @@ MIN_VOL              = 10000  # Mindest-Volumen auf Polymarket (USDC)
 MIN_DAYS_UNTIL_GAME  = 1      # Nicht am Spieltag selbst — zu wenig Zeit für Human Review
 MIN_HOURS_BEFORE_MATCH = 4   # Kein Kauf wenn Anpfiff in weniger als N Stunden
 
-# Stake-Tiers: Edge ≥ minEdge → stake in USDC
-# Spiegelt die Dashboard-Konfiguration (wmStakeConfig in localStorage).
-# Manuell hier anpassen wenn Dashboard-Config geändert wird.
-STAKE_TIERS = [
-    {"minEdge": 7.0, "stake": 15.0},
-    {"minEdge": 5.0, "stake": 10.0},
-    {"minEdge": 3.0, "stake":  5.0},
-]
+# Stake: flat €5 ≈ $5.50 USDC pro Pick (entspricht STAKE_USDC in polymarket_bet.py).
+# Memory-Eintrag project_poly_integration.md: "€5/Pick, flat" — keine Edge-basierte
+# Tier-Logik mehr. Bankroll-Schutz via DAILY_BET_CAP + DAILY_STAKE_CAP_USDC unten.
+FLAT_STAKE_USDC = 5.5
 
 def _get_stake_for_edge(edge_pp: float) -> float:
-    """Gibt den Einsatz für den gegebenen Edge-Wert zurück (höchster passender Tier)."""
-    for tier in sorted(STAKE_TIERS, key=lambda t: -t["minEdge"]):
-        if edge_pp >= tier["minEdge"]:
-            return tier["stake"]
-    return STAKE_TIERS[-1]["stake"] if STAKE_TIERS else 5.0  # fallback
+    """Flat €5 ≈ $5.50 USDC pro Bet — Edge ist Schwellwert, nicht Sizing-Faktor."""
+    return FLAT_STAKE_USDC
+
+# ── Bankroll-Schutz ────────────────────────────────────────────────────────────
+# Tageslimits verhindern dass viele Edges am Spieltag die ganze Bank durchfeuern.
+DAILY_BET_CAP        = 8       # max Anzahl Bets pro UTC-Tag
+DAILY_STAKE_CAP_USDC = 50.0    # max kumulativer Stake pro UTC-Tag in USDC
+MIN_BALANCE_BUFFER   = 1.0     # USDC die nach Bet noch im Wallet bleiben müssen
 
 BASE_DIR              = os.path.dirname(os.path.abspath(__file__))
 PRICES_FILE           = os.path.join(BASE_DIR, "wm_poly_prices.json")
 PLACED_FILE           = os.path.join(BASE_DIR, "wm_auto_bets_placed.json")
+BALANCE_FILE          = os.path.join(BASE_DIR, "wm_poly_balance.json")
 
 # Welche Edge-Keys → Polymarket-Market-Label (muss OUTCOME_MAP in polymarket_bet.py matchen)
 EDGE_MARKET_MAP = {
@@ -276,7 +276,26 @@ def main():
     placed_data = load_json(PLACED_FILE, {"bets": [], "updatedAt": ""})
     placed_bets = placed_data.get("bets", [])
     placed_keys = {b["betKey"] for b in placed_bets if b.get("betKey")}
-    print(f"  ✅ {len(placed_keys)} bereits platzierte Bets geladen\n")
+    print(f"  ✅ {len(placed_keys)} bereits platzierte Bets geladen")
+
+    # 2b. Bankroll-Schutz: heutige Bets zählen + Balance prüfen
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    bets_today = [b for b in placed_bets if (b.get("placedAt") or "")[:10] == today_str]
+    stake_today = sum(float(b.get("stake") or 0) for b in bets_today)
+    print(f"  💰 Heute bereits platziert: {len(bets_today)} Bet(s), ${stake_today:.2f} USDC")
+
+    if len(bets_today) >= DAILY_BET_CAP:
+        print(f"  🛑 Tageslimit erreicht ({len(bets_today)}/{DAILY_BET_CAP} Bets) — Abbruch.\n")
+        return
+    if stake_today >= DAILY_STAKE_CAP_USDC:
+        print(f"  🛑 Stake-Cap erreicht (${stake_today:.2f}/${DAILY_STAKE_CAP_USDC:.2f}) — Abbruch.\n")
+        return
+
+    # Aktuelle Balance laden (wird vor diesem Skript via fetch_wm_poly_balance.py geholt)
+    balance_data = load_json(BALANCE_FILE, {"usdc": 0.0})
+    available_balance = float(balance_data.get("usdc") or 0)
+    print(f"  💼 Verfügbare Balance: ${available_balance:.2f} USDC\n")
+
 
     # 3. Kandidaten finden
     print(f"  🔍 Suche nach Edge ≥ {AUTO_TRIGGER_EDGE_PP}pp, Vol ≥ {MIN_VOL:,}, Tage ≥ {MIN_DAYS_UNTIL_GAME}…")
@@ -324,6 +343,11 @@ def main():
     history = load_history()
     new_placed = []
 
+    # Running tally für Bankroll-Schutz innerhalb dieses Runs
+    running_count = len(bets_today)
+    running_stake = stake_today
+    running_balance = available_balance
+
     for order in candidates:
         bet_key_val = order.pop("_betKey")  # intern, nicht an CLOB übergeben
         home   = order["home"]
@@ -333,6 +357,24 @@ def main():
         poly_p = order["polyPrice"]
 
         print(f"\n  ▶ {home} vs {away} — {market}")
+
+        # ── Bankroll-Schutz pro Iteration ────────────────────────────────────
+        if running_count >= DAILY_BET_CAP:
+            print(f"    🛑 Tages-Bet-Cap erreicht ({running_count}/{DAILY_BET_CAP}) — Rest übersprungen")
+            break
+        if running_stake + stake > DAILY_STAKE_CAP_USDC:
+            print(f"    🛑 Stake-Cap würde überschritten (${running_stake + stake:.2f} > ${DAILY_STAKE_CAP_USDC:.2f}) — übersprungen")
+            continue
+        if running_balance - stake < MIN_BALANCE_BUFFER:
+            print(f"    🛑 Balance zu niedrig (${running_balance:.2f} - ${stake:.2f} < ${MIN_BALANCE_BUFFER:.2f}) — Abbruch")
+            if telegram_token and telegram_chat_id:
+                send_telegram(
+                    telegram_token, telegram_chat_id,
+                    f"⚠️ <b>Polymarket Bankroll niedrig</b>\n"
+                    f"Balance: ${running_balance:.2f} USDC — bitte nachladen.\n"
+                    f"{len(candidates) - len(new_placed)} Bet(s) übersprungen."
+                )
+            break
 
         # Gamma Event finden
         event = gamma_find_event(order)
@@ -371,6 +413,11 @@ def main():
 
         if result["status"] in ("placed", "dry-run"):
             print(f"    ✅ Platziert — Order ID: {result.get('orderId')}{steam_tag}")
+
+            # Bankroll-Tally updaten
+            running_count   += 1
+            running_stake   += stake
+            running_balance -= stake
 
             # 1. Bestehender WM-Channel (Operations-Info)
             if telegram_token and telegram_chat_id:
