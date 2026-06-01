@@ -249,14 +249,16 @@ const STAKE = 5; // $ per entry signal
 
 async function fetchLog() {
   const ts = Date.now();
-  // 1. Relative URL (GitHub Pages CDN — deployed copy)
+  // PRIMÄR: raw.githubusercontent.com — cached nicht, immer aktueller main-Stand.
+  // Grund: GitHub Pages CDN ignoriert ?t=... Cache-Buster bei statischen Files
+  // und liefert teilweise stundenalte Versionen ohne 304-Check.
+  const raw = `https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main/steam_lag_log.json?t=${ts}`;
   try {
-    const res = await fetch(`steam_lag_log.json?t=${ts}`, { cache: 'no-store' });
+    const res = await fetch(raw, { cache: 'no-store' });
     if (res.ok) return res.json();
   } catch(e) {}
-  // 2. Raw GitHub fallback (always reflects latest commit, CORS: *)
-  const raw = `https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main/steam_lag_log.json?t=${ts}`;
-  const res2 = await fetch(raw, { cache: 'no-store' });
+  // FALLBACK: relative URL (z.B. lokal getestet oder raw blockiert)
+  const res2 = await fetch(`steam_lag_log.json?t=${ts}`, { cache: 'no-store' });
   if (!res2.ok) throw new Error(`HTTP ${res2.status}`);
   return res2.json();
 }
