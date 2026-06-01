@@ -35,8 +35,12 @@ from datetime import datetime, timezone, date
 # Auf True setzen (oder AUTO_TRIGGER_ENABLED=true in Env) wenn bereit für Live-Trading
 ENABLED = False
 
-AUTO_TRIGGER_EDGE_PP  = 5.0   # Mindest-Edge in Prozentpunkten (normale Signale)
+AUTO_TRIGGER_EDGE_PP  = 4.0   # Mindest-Edge in Prozentpunkten (normale Signale)
+                              # 01.06.2026: 5.0 → 4.0 nach Backtest (Sweet Spot 3-5pp lag bei +14% ROI)
 STEAM_LAG_EDGE_PP    = 3.0   # Niedrigerer Schwellenwert wenn steamLag=True (Pinn bereits bewegt)
+                              # 01.06.2026: Backtest zeigt Steam Lag schwächer als Normal, ABER:
+                              # Sample n=7 zu klein für definitive Aussage. Lucas-Entscheidung:
+                              # bei 3.0 lassen → mit Live-Daten nach 2-3 Wochen WM neu bewerten.
 MIN_VOL              = 10000  # Mindest-Volumen auf Polymarket (USDC)
 MIN_DAYS_UNTIL_GAME  = 1      # Nicht am Spieltag selbst — zu wenig Zeit für Human Review
 MIN_HOURS_BEFORE_MATCH = 4   # Kein Kauf wenn Anpfiff in weniger als N Stunden
@@ -55,8 +59,10 @@ def _get_stake_for_edge(edge_pp: float) -> float:
 DAILY_BET_CAP        = 8       # max Anzahl Bets pro UTC-Tag
 DAILY_STAKE_CAP_USDC = 50.0    # max kumulativer Stake pro UTC-Tag in USDC
 MIN_BALANCE_BUFFER   = 1.0     # USDC die nach Bet noch im Wallet bleiben müssen
-MAX_POSITIONS_PER_MATCH = 1    # max Bets pro Match (egal welcher Markt) — vermeidet
-                               # gegenläufige Positionen wie Heimsieg + Auswärtssieg
+MAX_POSITIONS_PER_MATCH = 2    # max Bets pro Match (egal welcher Markt)
+                               # 2 = z.B. Über 2.5 + Heimsieg sind kompatible Wetten erlaubt.
+                               # 1X2-gegenläufige Kombis (Heim+Auswärts) sollten in der
+                               # Praxis nicht entstehen weil unterschiedliche edge_keys nötig.
 
 BASE_DIR              = os.path.dirname(os.path.abspath(__file__))
 PRICES_FILE           = os.path.join(BASE_DIR, "wm_poly_prices.json")
