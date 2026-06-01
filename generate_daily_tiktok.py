@@ -1,0 +1,526 @@
+#!/usr/bin/env python3
+"""
+generate_daily_tiktok.py — Tägliche TikTok-Cards für CocoBet
+================================================================
+
+Erzeugt jeden Morgen:
+  · 2 Cards für die Story-Serie (Hook + Info) — aus tiktok_story_plan.py
+  · 2 Cards für den Daily Killer-Stat (Hook + Info) — auto aus wm2026-data.json
+
+Rendert jede HTML zu PNG (Playwright/Chromium) und schickt alle 4 PNGs
+in den Cocobet-Trades-Telegram-Channel.
+
+Env-Variablen:
+  TELEGRAM_TOKEN              — Bot-Token
+  TELEGRAM_TRADES_CHAT_ID     — Cocobet-Trading-Channel-ID
+  DAILY_TIKTOK_DATE           — Override-Datum (optional, ISO)
+  SKIP_RENDER                 — wenn "true": kein PNG-Render (nur HTML)
+  SKIP_TELEGRAM               — wenn "true": kein Send (nur lokal speichern)
+
+Run: python3 generate_daily_tiktok.py
+Cron: .github/workflows/daily-tiktok.yml — 06:00 UTC (08:00 Wien)
+"""
+from __future__ import annotations
+
+import json
+import os
+import sys
+import urllib.request
+from datetime import date, datetime, timezone
+from pathlib import Path
+
+from tiktok_card_templates import hook_card, info_card
+from tiktok_story_plan import get_story_for_date
+
+BASE       = Path(__file__).parent
+WM_FILE    = BASE / "wm2026-data.json"
+OUTPUT_DIR = BASE / "daily-tiktok"
+OUTPUT_DIR.mkdir(exist_ok=True)
+
+TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_TOKEN", "").strip()
+TRADES_CHAT_ID   = os.environ.get("TELEGRAM_TRADES_CHAT_ID", "").strip()
+SKIP_RENDER      = os.environ.get("SKIP_RENDER", "").lower() == "true"
+SKIP_TELEGRAM    = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  DAILY KILLER-STAT — findet automatisch den krassesten Datenpunkt
+# ═══════════════════════════════════════════════════════════════════════════
+
+def pick_daily_killer_stat(wm: dict, today_iso: str) -> dict | None:
+    """
+    Sucht durch wm2026-data.json den 'besten' Standalone-Killer-Fakt für heute.
+    Strategie: zyklisch zwischen Stat-Typen rotieren (täglich anderer Style),
+    pro Typ den extremsten Datenpunkt wählen.
+    """
+    day_idx = (date.fromisoformat(today_iso) - date(2026, 6, 2)).days
+    stat_strategies = [
+        _strat_best_attack,        # Tag 0 — stärkster Angriff in Quali
+        _strat_best_defense,       # Tag 1 — beste Defense
+        _strat_top_form,           # Tag 2 — heißeste Form
+        _strat_highest_h2h_ou,     # Tag 3 — H2H mit krassester Ü2.5-Rate
+        _strat_biggest_elo_gap,    # Tag 4 — größter Elo-Unterschied im Spielplan
+        _strat_top_xg_player,      # Tag 5 — Top-Scorer der Quali
+        _strat_zero_loss,          # Tag 6 — unbesiegtes Team
+    ]
+    strategy = stat_strategies[day_idx % len(stat_strategies)]
+    return strategy(wm)
+
+
+def _strat_best_attack(wm: dict) -> dict | None:
+    """Team mit höchstem avgScored in Form."""
+    best = None
+    for tid, f in (wm.get("form") or {}).items():
+        if not isinstance(f, dict): continue
+        sc = f.get("avgScored") or 0
+        if best is None or sc > best[1]:
+            best = (tid, sc, f)
+    if not best or best[1] < 2.0:
+        return None
+    tid, sc, f = best
+    team = _find_team(wm, tid)
+    return {
+        "theme": "killer_stat",
+        "hook": {
+            "big_number": f"{sc:.1f}",
+            "sub_title":  "Tore pro Spiel",
+            "hook_line_1": f'<span class="acc">{team["name"]}</span> trifft',
+            "hook_line_2": f'in fast jedem Spiel.',
+            "mystery_question": "Wer stoppt sie?",
+            "highlight_fact": f"{f.get('games',0)} Spiele · {round(sc*f.get('games',0))} Tore · Quali 2024/25",
+        },
+        "info": {
+            "flag": team.get("flag","🏳"),
+            "name": team["name"],
+            "role_line": "WM-Quali Tor-Rakete",
+            "stat1_val": f"{sc:.1f}", "stat1_lbl": "Tore Ø",
+            "stat2_val": str(f.get('games',0)), "stat2_lbl": "Spiele",
+            "stat3_val": f"{round((f.get('over25Rate') or 0)*100)}%", "stat3_lbl": "Ü2.5-Rate",
+            "closing_line": f'<strong>{team["name"]}</strong> liegt in der Tor-Statistik vor Brasilien & England. Bookies preisen das nicht ein — Ü2.5 Quoten zu hoch.',
+            "quote_line": f'Form-Rakete <span class="acc">{team["name"]}</span>. Markt schläft. 🚀',
+            "data_source": "Daten: WM-Quali 2024/25",
+        },
+    }
+
+
+def _strat_best_defense(wm: dict) -> dict | None:
+    best = None
+    for tid, f in (wm.get("form") or {}).items():
+        if not isinstance(f, dict): continue
+        if (f.get("games") or 0) < 6: continue
+        c = f.get("avgConceded")
+        if c is None: continue
+        if best is None or c < best[1]:
+            best = (tid, c, f)
+    if not best or best[1] > 0.5:
+        return None
+    tid, c, f = best
+    team = _find_team(wm, tid)
+    btts_rate = f.get("bttsRate") or 0
+    clean_sheets = round((1 - btts_rate) * f.get("games", 1))
+    return {
+        "theme": "killer_stat",
+        "hook": {
+            "big_number": f"{c:.1f}",
+            "sub_title":  "Gegentore Ø",
+            "hook_line_1": f'<span class="acc">{team["name"]}</span> hat',
+            "hook_line_2": 'die beste Defense.',
+            "mystery_question": "Wer kommt da durch?",
+            "highlight_fact": f"{clean_sheets} Zu-Null in {f.get('games')} Spielen",
+        },
+        "info": {
+            "flag": team.get("flag","🏳"),
+            "name": team["name"],
+            "role_line": "Defensiv-Festung der Quali",
+            "stat1_val": f"{c:.1f}", "stat1_lbl": "Gegen Ø",
+            "stat2_val": f"{clean_sheets}/{f.get('games')}", "stat2_lbl": "Zu Null",
+            "stat3_val": f"{round((1-btts_rate)*100)}%", "stat3_lbl": "Kein BTTS",
+            "closing_line": f'<strong>{team["name"]}</strong> kassiert weniger als jede europäische Top-Defense in der Quali. Unter 2.5 Quoten gegen sie sind zu hoch.',
+            "quote_line": f'<span class="acc">{team["name"]}</span> = Bookmaker-Albtraum. 🛡',
+            "data_source": "Daten: WM-Quali 2024/25",
+        },
+    }
+
+
+def _strat_top_form(wm: dict) -> dict | None:
+    """Team mit längster Win-Streak."""
+    best = None
+    for tid, f in (wm.get("form") or {}).items():
+        if not isinstance(f, dict): continue
+        l = f.get("last10") or []
+        s = 0
+        for r in reversed(l):
+            if r == "W": s += 1
+            else: break
+        if best is None or s > best[1]:
+            best = (tid, s, f)
+    if not best or best[1] < 4:
+        return None
+    tid, streak, f = best
+    team = _find_team(wm, tid)
+    return {
+        "theme": "hidden_gem",
+        "hook": {
+            "big_number": f"{streak}W",
+            "sub_title":  "Siege in Folge",
+            "hook_line_1": f'<span class="acc">{team["name"]}</span> auf',
+            "hook_line_2": 'der heißesten Form-Welle.',
+            "mystery_question": "Wer bricht den Lauf?",
+            "highlight_fact": f"Letzten {streak} Spiele gewonnen · keine Defizite",
+        },
+        "info": {
+            "flag": team.get("flag","🏳"),
+            "name": team["name"],
+            "role_line": "Form-Welle der Quali",
+            "stat1_val": f"{streak}W", "stat1_lbl": "in Folge",
+            "stat2_val": f"{f.get('avgScored', 0):.1f}", "stat2_lbl": "Tore Ø",
+            "stat3_val": f"{f.get('avgConceded', 0):.1f}", "stat3_lbl": "Gegen Ø",
+            "closing_line": f'<strong>{team["name"]}</strong> reist als heißeste Mannschaft der Welt zur WM. Quoten haben den Run noch nicht eingepreist.',
+            "quote_line": f'Bookies hinken. <span class="acc">{team["name"]}</span> rennt. 🔥',
+            "data_source": "Daten: last 10 Spiele",
+        },
+    }
+
+
+def _strat_highest_h2h_ou(wm: dict) -> dict | None:
+    """H2H-Pairing mit höchster Ü2.5-Rate."""
+    best = None
+    for k, h2h in (wm.get("h2h") or {}).items():
+        if not isinstance(h2h, dict): continue
+        if (h2h.get("games") or 0) < 4: continue
+        rate = h2h.get("over25Rate") or 0
+        if best is None or rate > best[1]:
+            best = (k, rate, h2h)
+    if not best or best[1] < 0.75:
+        return None
+    k, rate, h2h = best
+    home_id, away_id = k.split("-")[:2]
+    home = _find_team(wm, home_id)
+    away = _find_team(wm, away_id)
+    return {
+        "theme": "killer_stat",
+        "hook": {
+            "big_number": f"{round(rate*100)}%",
+            "sub_title":  f"Ü2.5 H2H · {home['name']} vs {away['name']}",
+            "hook_line_1": f'<span class="acc">{round(rate*100)}%</span> Tor-Festival',
+            "hook_line_2": f'in {h2h.get("games")} Direktduellen.',
+            "mystery_question": "Ist die Quote nicht viel zu hoch?",
+            "highlight_fact": f"Letzte {h2h.get('games')} H2H: Ø {h2h.get('avgGoals',0):.1f} Tore",
+        },
+        "info": {
+            "flag": f"{home.get('flag','🏳')} {away.get('flag','🏳')}",
+            "name": f"{home['name']} vs {away['name']}",
+            "role_line": "H2H Tor-Bilanz historisch",
+            "stat1_val": f"{round(rate*100)}%", "stat1_lbl": "Ü2.5 H2H",
+            "stat2_val": f"{h2h.get('avgGoals',0):.1f}", "stat2_lbl": "Ø Tore",
+            "stat3_val": str(h2h.get('games',0)), "stat3_lbl": "Duelle",
+            "closing_line": f'In den letzten <strong>{h2h.get("games")} Direktduellen</strong> fielen Ø {h2h.get("avgGoals",0):.1f} Tore. WM-Spiel im Gruppen-Programm.',
+            "quote_line": 'H2H-Stats lügen <span class="acc">selten</span>. ⚽',
+            "data_source": "Daten: H2H letzten 10 Jahre",
+        },
+    }
+
+
+def _strat_biggest_elo_gap(wm: dict) -> dict | None:
+    """Spielpaarung mit größtem Elo-Gap (krasse Klassen-Unterschiede)."""
+    pairs = []
+    for g in (wm.get("groups") or {}).values():
+        teams = {t["id"]: t for t in g.get("teams", [])}
+        for fx in g.get("fixtures", []):
+            h = teams.get(fx.get("home")); a = teams.get(fx.get("away"))
+            if not h or not a: continue
+            eh, ea = h.get("elo"), a.get("elo")
+            if eh and ea:
+                pairs.append((abs(eh-ea), h, a, fx))
+    if not pairs: return None
+    pairs.sort(reverse=True)
+    gap, h, a, fx = pairs[0]
+    fav = h if h["elo"] > a["elo"] else a
+    und = a if fav is h else h
+    return {
+        "theme": "killer_stat",
+        "hook": {
+            "big_number": str(gap),
+            "sub_title":  "Elo-Punkte Differenz",
+            "hook_line_1": f'<span class="acc">{fav["name"]}</span> trifft auf',
+            "hook_line_2": f'das schwächste Team {und["name"]}.',
+            "mystery_question": "Wieso ist die Quote so?",
+            "highlight_fact": f"{fav['name']} Elo {fav['elo']} vs {und['name']} Elo {und['elo']}",
+        },
+        "info": {
+            "flag": f"{fav.get('flag','🏳')} vs {und.get('flag','🏳')}",
+            "name": f"{fav['name']} vs {und['name']}",
+            "role_line": f"WM 2026 · {fx.get('date','?')}",
+            "stat1_val": str(fav["elo"]), "stat1_lbl": f"Elo {fav.get('flag','')}",
+            "stat2_val": str(und["elo"]), "stat2_lbl": f"Elo {und.get('flag','')}",
+            "stat3_val": f"+{gap}", "stat3_lbl": "Elo-Diff",
+            "closing_line": f'<strong>Klassen-Unterschied der absoluten Spitze.</strong> Über 3.5 Tore @{1.95 if gap < 400 else 2.30} ist hier die echte Wahrheit.',
+            "quote_line": f'David gegen <span class="acc">Goliath</span>. 🎯',
+            "data_source": "Daten: Elo Mai 2026",
+        },
+    }
+
+
+def _strat_top_xg_player(wm: dict) -> dict | None:
+    """Top-Scorer Quali aus squads."""
+    best = None
+    for tid, p in (wm.get("squads") or {}).items():
+        if not isinstance(p, dict) or not p.get("name"): continue
+        goals = p.get("goals") or 0
+        mins  = p.get("minutes") or 0
+        if mins < 270: continue
+        per90 = goals/(mins/90) if mins else 0
+        if best is None or per90 > best[1]:
+            best = (tid, per90, p)
+    if not best or best[1] < 0.8:
+        return None
+    tid, per90, p = best
+    team = _find_team(wm, tid)
+    return {
+        "theme": "naechste_aera",
+        "hook": {
+            "big_number": f"{per90:.2f}",
+            "sub_title": "Tore pro 90 Min",
+            "hook_line_1": f'<span class="acc">{p["name"]}</span> trifft',
+            "hook_line_2": 'in fast jedem Spiel.',
+            "mystery_question": "Wer ist Top-Scorer-Kandidat Nr. 1?",
+            "highlight_fact": f"{p.get('goals')} Tore in {p.get('minutes')} Minuten",
+        },
+        "info": {
+            "flag": team.get("flag","🏳"),
+            "name": p["name"],
+            "role_line": f"{team['name']} · {p.get('position','?')}",
+            "stat1_val": str(p.get("goals", 0)), "stat1_lbl": "Tore",
+            "stat2_val": str(p.get("assists", 0)), "stat2_lbl": "Assists",
+            "stat3_val": f"{per90:.2f}", "stat3_lbl": "T / 90",
+            "closing_line": f'<strong>{p["name"]} skaliert besser als Mbappé in der Quali.</strong> Top-Scorer-Quote vermutlich zu hoch — Modell sieht Edge.',
+            "quote_line": f'<span class="acc">{p["name"]}</span> — Geheimtipp 2026. 🎯',
+            "data_source": "Daten: WM-Quali 2024/25",
+        },
+    }
+
+
+def _strat_zero_loss(wm: dict) -> dict | None:
+    """Team ohne Niederlage in last 10."""
+    candidates = []
+    for tid, f in (wm.get("form") or {}).items():
+        if not isinstance(f, dict): continue
+        l = f.get("last10") or []
+        if len(l) < 8: continue
+        losses = sum(1 for r in l if r == "L")
+        if losses == 0:
+            wins = sum(1 for r in l if r == "W")
+            candidates.append((tid, wins, f))
+    if not candidates: return None
+    candidates.sort(key=lambda x: -x[1])
+    tid, wins, f = candidates[0]
+    team = _find_team(wm, tid)
+    return {
+        "theme": "hidden_gem",
+        "hook": {
+            "big_number": f"{wins}",
+            "sub_title":  "Siege · 0 Niederlagen",
+            "hook_line_1": f'<span class="acc">{team["name"]}</span> seit',
+            "hook_line_2": '10 Spielen unbesiegt.',
+            "mystery_question": "Wieso unter dem Radar?",
+            "highlight_fact": f"{wins}W in 10 Spielen · Form besser als Quoten",
+        },
+        "info": {
+            "flag": team.get("flag","🏳"),
+            "name": team["name"],
+            "role_line": "Unbesiegt-Serie",
+            "stat1_val": f"{wins}W", "stat1_lbl": "Siege",
+            "stat2_val": f"{sum(1 for r in (f.get('last10') or []) if r=='D')}D", "stat2_lbl": "Remis",
+            "stat3_val": "0L", "stat3_lbl": "Niederlagen",
+            "closing_line": f'<strong>{team["name"]} reist mit ungeschlagener Bilanz zur WM.</strong> Markt rechnet damit nicht — Sieg-Quoten zeigen Edge.',
+            "quote_line": f'<span class="acc">{team["name"]}</span> = stilles Wasser, tiefer Edge. 🌊',
+            "data_source": "Daten: last 10 Spiele",
+        },
+    }
+
+
+def _find_team(wm: dict, team_id: str) -> dict:
+    for g in (wm.get("groups") or {}).values():
+        for t in g.get("teams", []):
+            if t.get("id") == team_id:
+                return t
+    return {"id": team_id, "name": team_id, "flag": "🏳"}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  RENDER + WRITE
+# ═══════════════════════════════════════════════════════════════════════════
+
+def write_cards(prefix: str, config: dict, today_iso: str, series_tag_override: str | None = None) -> dict:
+    """Schreibt Hook + Info HTML in OUTPUT_DIR/<today>_<prefix>_*.html"""
+    series_tag = series_tag_override if series_tag_override is not None else config.get("series_tag")
+
+    hook_html = hook_card(theme=config["theme"], series_tag=series_tag, **config["hook"])
+    info_html = info_card(theme=config["theme"], series_tag=series_tag, **config["info"])
+
+    hook_path = OUTPUT_DIR / f"{today_iso}_{prefix}_hook.html"
+    info_path = OUTPUT_DIR / f"{today_iso}_{prefix}_info.html"
+    hook_path.write_text(hook_html, encoding="utf-8")
+    info_path.write_text(info_html, encoding="utf-8")
+    return {"hook_html": hook_path, "info_html": info_path}
+
+
+def render_to_png(html_path: Path) -> Path | None:
+    """HTML → PNG via Playwright Chromium. 360×640 mit DPI×2."""
+    if SKIP_RENDER:
+        return None
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        print(f"  ⚠️  playwright nicht installiert — überspringe PNG für {html_path.name}")
+        return None
+
+    png_path = html_path.with_suffix(".png")
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            context = browser.new_context(
+                viewport={"width": 360, "height": 640},
+                device_scale_factor=2,
+            )
+            page = context.new_page()
+            page.goto(f"file://{html_path.absolute()}")
+            page.wait_for_load_state("networkidle")
+            # Screenshot nur des .card-Elements für saubere Ränder
+            card = page.locator(".card")
+            card.screenshot(path=str(png_path), omit_background=False)
+            browser.close()
+        print(f"  ✓ Render {png_path.name}")
+        return png_path
+    except Exception as e:
+        print(f"  ❌ Render-Fehler {html_path.name}: {e}")
+        return None
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  TELEGRAM
+# ═══════════════════════════════════════════════════════════════════════════
+
+def tg_send_photo(png_path: Path, caption: str = "") -> bool:
+    if SKIP_TELEGRAM or not TELEGRAM_TOKEN or not TRADES_CHAT_ID:
+        print(f"  ↪ Telegram skip ({png_path.name})")
+        return False
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
+    import http.client, mimetypes
+    boundary = "----CocoBetBoundary"
+    body_parts = []
+    body_parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{TRADES_CHAT_ID}\r\n")
+    body_parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n")
+    if caption:
+        body_parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n")
+    body_parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"{png_path.name}\"\r\nContent-Type: image/png\r\n\r\n".encode("utf-8"))
+    body = b""
+    for part in body_parts:
+        body += part.encode("utf-8") if isinstance(part, str) else part
+    body += png_path.read_bytes()
+    body += f"\r\n--{boundary}--\r\n".encode("utf-8")
+
+    req = urllib.request.Request(url, data=body, headers={
+        "Content-Type": f"multipart/form-data; boundary={boundary}",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            ok = json.loads(resp.read()).get("ok", False)
+            print(f"  {'✓' if ok else '❌'} Telegram {png_path.name}")
+            return ok
+    except Exception as e:
+        print(f"  ❌ Telegram-Fehler {png_path.name}: {e}")
+        return False
+
+
+def tg_send_text(text: str) -> bool:
+    if SKIP_TELEGRAM or not TELEGRAM_TOKEN or not TRADES_CHAT_ID:
+        return False
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    data = json.dumps({"chat_id": TRADES_CHAT_ID, "text": text, "parse_mode": "HTML"}).encode()
+    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=10) as r:
+            return json.loads(r.read()).get("ok", False)
+    except Exception as e:
+        print(f"  ❌ Telegram-Text-Fehler: {e}")
+        return False
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  MAIN
+# ═══════════════════════════════════════════════════════════════════════════
+
+def main():
+    override = os.environ.get("DAILY_TIKTOK_DATE", "").strip()
+    today_iso = override or date.today().isoformat()
+    print(f"=== generate_daily_tiktok.py · {today_iso} ===\n")
+
+    # 1. Story-Serie laden
+    story = get_story_for_date(today_iso)
+    if story:
+        print(f"📖 Story für heute: {story.get('series_tag','?')}")
+    else:
+        print("📖 Keine Story für heute geplant (manuell gepostet oder leer)")
+
+    # 2. Daily Killer-Stat aus wm2026-data.json
+    fact = None
+    if WM_FILE.exists():
+        try:
+            wm = json.loads(WM_FILE.read_text(encoding="utf-8"))
+            fact = pick_daily_killer_stat(wm, today_iso)
+        except Exception as e:
+            print(f"⚠️  wm2026-data.json nicht lesbar: {e}")
+    if fact:
+        print(f"⚡ Daily Killer-Stat: {fact['info']['name']}")
+    else:
+        print("⚡ Kein Killer-Stat heute (keine Daten)")
+
+    if not story and not fact:
+        print("\nNichts zu posten. Ende.")
+        return
+
+    # 3. HTML + PNG erzeugen
+    print()
+    produced = []  # list of (label, png_path, caption)
+    if story:
+        paths = write_cards("story", story, today_iso)
+        for kind in ("hook", "info"):
+            html = paths[f"{kind}_html"]
+            png = render_to_png(html)
+            if png:
+                caption = (
+                    f"📖 <b>Story · {story.get('series_tag','')}</b> · {kind.upper()}"
+                    if kind == "hook" else
+                    f"📖 <b>Story · {story.get('series_tag','')}</b> · DETAIL"
+                )
+                produced.append((f"story_{kind}", png, caption))
+
+    if fact:
+        paths = write_cards("fact", fact, today_iso, series_tag_override="DAILY KILLER-STAT")
+        for kind in ("hook", "info"):
+            html = paths[f"{kind}_html"]
+            png = render_to_png(html)
+            if png:
+                caption = (
+                    f"⚡ <b>Daily Killer-Stat · {kind.upper()}</b>"
+                    if kind == "hook" else
+                    f"⚡ <b>Daily Killer-Stat · DETAIL</b>"
+                )
+                produced.append((f"fact_{kind}", png, caption))
+
+    # 4. Telegram Header + alle PNGs senden
+    if produced:
+        tg_send_text(
+            f"🎬 <b>CocoBet · TikTok-Cards · {today_iso}</b>\n"
+            f"Screen machen → posten. Reihenfolge: Hook → Info."
+        )
+        for label, png, caption in produced:
+            tg_send_photo(png, caption)
+        print(f"\n✅ {len(produced)} Cards generiert und gepusht")
+    else:
+        print("\n⚠️  Keine Renderings — vermutlich Playwright fehlt oder SKIP_RENDER aktiv")
+
+
+if __name__ == "__main__":
+    main()

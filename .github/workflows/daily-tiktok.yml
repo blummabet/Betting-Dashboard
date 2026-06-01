@@ -1,0 +1,83 @@
+name: 🎬 Daily TikTok-Cards
+
+on:
+  # 06:00 UTC = 08:00 Wien (Sommerzeit). Liefert dir die Cards bevor du frühstückst.
+  schedule:
+    - cron: '0 6 * * *'
+
+  # Manuell auslösbar — optional anderes Datum reinpushen
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Datum (YYYY-MM-DD, leer = heute)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-tiktok
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies + Playwright + Chromium
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          # Chromium für headless screenshot — nur Chromium, kein Firefox/WebKit
+          playwright install chromium --with-deps
+
+      - name: 🎬 TikTok-Cards generieren + pushen
+        run: python generate_daily_tiktok.py
+        env:
+          TELEGRAM_TOKEN:           ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID:  ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          DAILY_TIKTOK_DATE:        ${{ github.event.inputs.date }}
+
+      - name: 💾 HTML + PNG ins Repo zurückschreiben
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          mkdir -p daily-tiktok
+          git add daily-tiktok/ 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Keine neuen Files."
+          else
+            TIMESTAMP=$(date +'%d.%m.%Y')
+            git commit -m "🎬 Daily TikTok-Cards ${TIMESTAMP}"
+            git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            # Robust push mit Retry (siehe fetch-wm-data.yml für Doku)
+            PUSHED=0
+            for attempt in 1 2 3 4 5; do
+              git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+              CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+              if [ -n "$CONFLICTS" ]; then
+                echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+                git diff --staged --quiet || git commit -m "🔧 auto-resolve merge conflicts"
+              fi
+              if git push 2>&1; then
+                echo "✅ Push erfolgreich"
+                PUSHED=1
+                break
+              fi
+              sleep $((attempt * 3))
+            done
+            if [ "$PUSHED" = "0" ]; then exit 1; fi
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
