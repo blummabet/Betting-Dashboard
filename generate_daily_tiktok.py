@@ -35,7 +35,40 @@ from tiktok_story_plan import get_story_for_date
 BASE       = Path(__file__).parent
 WM_FILE    = BASE / "wm2026-data.json"
 OUTPUT_DIR = BASE / "daily-tiktok"
+DEDUP_FILE = BASE / "tiktok_sent.json"   # Tracking was schon gepostet wurde
 OUTPUT_DIR.mkdir(exist_ok=True)
+
+# Dedup-Fenster: ein Team das in den letzten N Tagen Killer-Stat war,
+# wird nicht erneut gewählt (auch nicht von einer anderen Strategie).
+DEDUP_WINDOW_DAYS = 7
+
+# Hand-Override: Teams die du manuell auf TikTok schon abgehandelt hast
+# und die NIE als Daily-Killer-Stat triggern sollen.
+# Wird beim Setup einmal befüllt, dann automatisch via DEDUP_FILE.
+MANUAL_POSTED_TEAMS = {"MAR", "ESP", "CRO"}   # Marokko, Spanien (Yamal), Kroatien (Modric)
+
+
+def load_dedup() -> dict:
+    if DEDUP_FILE.exists():
+        try:
+            return json.loads(DEDUP_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"history": []}
+
+
+def save_dedup(state: dict) -> None:
+    DEDUP_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def recently_sent_team_ids(state: dict, today_iso: str) -> set[str]:
+    """Liefert Team-IDs die in den letzten DEDUP_WINDOW_DAYS gepostet wurden."""
+    from datetime import timedelta
+    cutoff = date.fromisoformat(today_iso) - timedelta(days=DEDUP_WINDOW_DAYS)
+    return {
+        h["teamId"] for h in state.get("history", [])
+        if h.get("teamId") and date.fromisoformat(h.get("date", "1900-01-01")) >= cutoff
+    }
 
 TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_TOKEN", "").strip()
 TRADES_CHAT_ID   = os.environ.get("TELEGRAM_TRADES_CHAT_ID", "").strip()
@@ -47,12 +80,16 @@ SKIP_TELEGRAM    = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
 #  DAILY KILLER-STAT — findet automatisch den krassesten Datenpunkt
 # ═══════════════════════════════════════════════════════════════════════════
 
-def pick_daily_killer_stat(wm: dict, today_iso: str) -> dict | None:
+def pick_daily_killer_stat(wm: dict, today_iso: str, exclude_team_ids: set[str] = None) -> dict | None:
     """
     Sucht durch wm2026-data.json den 'besten' Standalone-Killer-Fakt für heute.
     Strategie: zyklisch zwischen Stat-Typen rotieren (täglich anderer Style),
     pro Typ den extremsten Datenpunkt wählen.
+
+    exclude_team_ids: Teams die NICHT als Killer-Stat verwendet werden sollen
+    (z.B. schon manuell gepostet oder in den letzten 7 Tagen schon Daily).
     """
+    exclude = exclude_team_ids or set()
     day_idx = (date.fromisoformat(today_iso) - date(2026, 6, 2)).days
     stat_strategies = [
         _strat_best_attack,        # Tag 0 — stärkster Angriff in Quali
@@ -63,11 +100,19 @@ def pick_daily_killer_stat(wm: dict, today_iso: str) -> dict | None:
         _strat_top_xg_player,      # Tag 5 — Top-Scorer der Quali
         _strat_zero_loss,          # Tag 6 — unbesiegtes Team
     ]
-    strategy = stat_strategies[day_idx % len(stat_strategies)]
-    return strategy(wm)
+    # Erst Primary-Strategie, dann andere als Fallback wenn Primary auf
+    # ausgeschlossenes Team trifft.
+    primary_idx = day_idx % len(stat_strategies)
+    order = [primary_idx] + [(primary_idx + i) % len(stat_strategies) for i in range(1, len(stat_strategies))]
+    for idx in order:
+        result = stat_strategies[idx](wm, exclude)
+        if result:
+            return result
+    return None
 
 
-def _strat_best_attack(wm: dict) -> dict | None:
+def _strat_best_attack(wm: dict, exclude: set = None) -> dict | None:
+    exclude = exclude or set()
     """Team mit höchstem avgScored in Form."""
     best = None
     for tid, f in (wm.get("form") or {}).items():
@@ -78,8 +123,10 @@ def _strat_best_attack(wm: dict) -> dict | None:
     if not best or best[1] < 2.0:
         return None
     tid, sc, f = best
+    if tid in exclude: return None
     team = _find_team(wm, tid)
     return {
+        "teamId": tid,
         "theme": "killer_stat",
         "hook": {
             "big_number": f"{sc:.1f}",
@@ -103,7 +150,8 @@ def _strat_best_attack(wm: dict) -> dict | None:
     }
 
 
-def _strat_best_defense(wm: dict) -> dict | None:
+def _strat_best_defense(wm: dict, exclude: set = None) -> dict | None:
+    exclude = exclude or set()
     best = None
     for tid, f in (wm.get("form") or {}).items():
         if not isinstance(f, dict): continue
@@ -115,10 +163,12 @@ def _strat_best_defense(wm: dict) -> dict | None:
     if not best or best[1] > 0.5:
         return None
     tid, c, f = best
+    if tid in exclude: return None
     team = _find_team(wm, tid)
     btts_rate = f.get("bttsRate") or 0
     clean_sheets = round((1 - btts_rate) * f.get("games", 1))
     return {
+        "teamId": tid,
         "theme": "killer_stat",
         "hook": {
             "big_number": f"{c:.1f}",
@@ -142,7 +192,8 @@ def _strat_best_defense(wm: dict) -> dict | None:
     }
 
 
-def _strat_top_form(wm: dict) -> dict | None:
+def _strat_top_form(wm: dict, exclude: set = None) -> dict | None:
+    exclude = exclude or set()
     """Team mit längster Win-Streak."""
     best = None
     for tid, f in (wm.get("form") or {}).items():
@@ -157,8 +208,10 @@ def _strat_top_form(wm: dict) -> dict | None:
     if not best or best[1] < 4:
         return None
     tid, streak, f = best
+    if tid in exclude: return None
     team = _find_team(wm, tid)
     return {
+        "teamId": tid,
         "theme": "hidden_gem",
         "hook": {
             "big_number": f"{streak}W",
@@ -182,7 +235,8 @@ def _strat_top_form(wm: dict) -> dict | None:
     }
 
 
-def _strat_highest_h2h_ou(wm: dict) -> dict | None:
+def _strat_highest_h2h_ou(wm: dict, exclude: set = None) -> dict | None:
+    exclude = exclude or set()
     """H2H-Pairing mit höchster Ü2.5-Rate."""
     best = None
     for k, h2h in (wm.get("h2h") or {}).items():
@@ -195,9 +249,11 @@ def _strat_highest_h2h_ou(wm: dict) -> dict | None:
         return None
     k, rate, h2h = best
     home_id, away_id = k.split("-")[:2]
+    if home_id in exclude or away_id in exclude: return None
     home = _find_team(wm, home_id)
     away = _find_team(wm, away_id)
     return {
+        "teamIds": [home_id, away_id],
         "theme": "killer_stat",
         "hook": {
             "big_number": f"{round(rate*100)}%",
@@ -221,7 +277,8 @@ def _strat_highest_h2h_ou(wm: dict) -> dict | None:
     }
 
 
-def _strat_biggest_elo_gap(wm: dict) -> dict | None:
+def _strat_biggest_elo_gap(wm: dict, exclude: set = None) -> dict | None:
+    exclude = exclude or set()
     """Spielpaarung mit größtem Elo-Gap (krasse Klassen-Unterschiede)."""
     pairs = []
     for g in (wm.get("groups") or {}).values():
@@ -234,10 +291,13 @@ def _strat_biggest_elo_gap(wm: dict) -> dict | None:
                 pairs.append((abs(eh-ea), h, a, fx))
     if not pairs: return None
     pairs.sort(reverse=True)
+    pairs = [p for p in pairs if p[1]["id"] not in exclude and p[2]["id"] not in exclude]
+    if not pairs: return None
     gap, h, a, fx = pairs[0]
     fav = h if h["elo"] > a["elo"] else a
     und = a if fav is h else h
     return {
+        "teamIds": [h["id"], a["id"]],
         "theme": "killer_stat",
         "hook": {
             "big_number": str(gap),
@@ -261,7 +321,8 @@ def _strat_biggest_elo_gap(wm: dict) -> dict | None:
     }
 
 
-def _strat_top_xg_player(wm: dict) -> dict | None:
+def _strat_top_xg_player(wm: dict, exclude: set = None) -> dict | None:
+    exclude = exclude or set()
     """Top-Scorer Quali aus squads."""
     best = None
     for tid, p in (wm.get("squads") or {}).items():
@@ -275,8 +336,10 @@ def _strat_top_xg_player(wm: dict) -> dict | None:
     if not best or best[1] < 0.8:
         return None
     tid, per90, p = best
+    if tid in exclude: return None
     team = _find_team(wm, tid)
     return {
+        "teamId": tid,
         "theme": "naechste_aera",
         "hook": {
             "big_number": f"{per90:.2f}",
@@ -300,7 +363,8 @@ def _strat_top_xg_player(wm: dict) -> dict | None:
     }
 
 
-def _strat_zero_loss(wm: dict) -> dict | None:
+def _strat_zero_loss(wm: dict, exclude: set = None) -> dict | None:
+    exclude = exclude or set()
     """Team ohne Niederlage in last 10."""
     candidates = []
     for tid, f in (wm.get("form") or {}).items():
@@ -314,8 +378,10 @@ def _strat_zero_loss(wm: dict) -> dict | None:
     if not candidates: return None
     candidates.sort(key=lambda x: -x[1])
     tid, wins, f = candidates[0]
+    if tid in exclude: return None
     team = _find_team(wm, tid)
     return {
+        "teamId": tid,
         "theme": "hidden_gem",
         "hook": {
             "big_number": f"{wins}",
@@ -463,18 +529,22 @@ def main():
     else:
         print("📖 Keine Story für heute geplant (manuell gepostet oder leer)")
 
-    # 2. Daily Killer-Stat aus wm2026-data.json
+    # 2. Daily Killer-Stat aus wm2026-data.json (mit Dedup-Schutz)
     fact = None
+    dedup = load_dedup()
+    excluded = MANUAL_POSTED_TEAMS | recently_sent_team_ids(dedup, today_iso)
+    print(f"🚫 Ausgeschlossen (manuell + letzte {DEDUP_WINDOW_DAYS} Tage): {sorted(excluded)}")
+
     if WM_FILE.exists():
         try:
             wm = json.loads(WM_FILE.read_text(encoding="utf-8"))
-            fact = pick_daily_killer_stat(wm, today_iso)
+            fact = pick_daily_killer_stat(wm, today_iso, exclude_team_ids=excluded)
         except Exception as e:
             print(f"⚠️  wm2026-data.json nicht lesbar: {e}")
     if fact:
         print(f"⚡ Daily Killer-Stat: {fact['info']['name']}")
     else:
-        print("⚡ Kein Killer-Stat heute (keine Daten)")
+        print("⚡ Kein Killer-Stat heute (alle Top-Kandidaten gefiltert oder keine Daten)")
 
     if not story and not fact:
         print("\nNichts zu posten. Ende.")
@@ -510,16 +580,39 @@ def main():
                 produced.append((f"fact_{kind}", png, caption))
 
     # 4. Telegram Header + alle PNGs senden
+    sent_to_telegram = False
     if produced:
-        tg_send_text(
-            f"🎬 <b>CocoBet · TikTok-Cards · {today_iso}</b>\n"
-            f"Screen machen → posten. Reihenfolge: Hook → Info."
-        )
-        for label, png, caption in produced:
-            tg_send_photo(png, caption)
-        print(f"\n✅ {len(produced)} Cards generiert und gepusht")
+        if not SKIP_TELEGRAM and TELEGRAM_TOKEN and TRADES_CHAT_ID:
+            tg_send_text(
+                f"🎬 <b>CocoBet · TikTok-Cards · {today_iso}</b>\n"
+                f"Screen machen → posten. Reihenfolge: Hook → Info."
+            )
+            for label, png, caption in produced:
+                tg_send_photo(png, caption)
+            sent_to_telegram = True
+            print(f"\n✅ {len(produced)} Cards generiert und gepusht")
+        else:
+            print(f"\n✅ {len(produced)} Cards generiert (Telegram skip — SKIP_TELEGRAM oder Token fehlt)")
     else:
         print("\n⚠️  Keine Renderings — vermutlich Playwright fehlt oder SKIP_RENDER aktiv")
+
+    # 5. Dedup-State updaten — NUR wenn auch wirklich auf Telegram gesendet wurde.
+    # Damit Smoketests (SKIP_TELEGRAM=true) keinen falschen Eintrag erzeugen
+    # der nachher den nächsten Live-Lauf blockt.
+    if fact and sent_to_telegram:
+        if fact.get("teamId"):
+            dedup.setdefault("history", []).append({"date": today_iso, "teamId": fact["teamId"]})
+        elif fact.get("teamIds"):
+            for tid in fact["teamIds"]:
+                dedup.setdefault("history", []).append({"date": today_iso, "teamId": tid})
+        # Trim auf letzte 30 Tage
+        from datetime import timedelta
+        cutoff = (date.fromisoformat(today_iso) - timedelta(days=30)).isoformat()
+        dedup["history"] = [h for h in dedup["history"] if h.get("date", "") >= cutoff]
+        save_dedup(dedup)
+        print(f"💾 Dedup-State aktualisiert ({len(dedup['history'])} Einträge)")
+    elif fact:
+        print(f"↪ Dedup NICHT aktualisiert (kein echter Telegram-Send)")
 
 
 if __name__ == "__main__":
