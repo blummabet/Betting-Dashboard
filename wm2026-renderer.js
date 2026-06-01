@@ -14,12 +14,13 @@
   'use strict';
 
   // ── Module state ──────────────────────────────────────
-  let _wmData      = null;
-  let _polyLookup  = {};   // key: "HOME-AWAY" → poly fixture object
-  let _activeGroup = 'all';
-  let _activeMd    = 'all';   // matchday filter: 'all' | 1 | 2 | 3
-  let _activeSort  = 'date';  // 'date' | 'edge' | 'upset'
-  let _loaded      = false;
+  let _wmData       = null;
+  let _polyLookup   = {};   // key: "HOME-AWAY" → poly fixture object
+  let _travelLookup = {};   // key: TEAM_ID → travel burden object
+  let _activeGroup  = 'all';
+  let _activeMd     = 'all';   // matchday filter: 'all' | 1 | 2 | 3
+  let _activeSort   = 'date';  // 'date' | 'edge' | 'upset'
+  let _loaded       = false;
 
   const CO_HOSTS = new Set(['MEX', 'USA', 'CAN']);
 
@@ -42,9 +43,10 @@
       </div>`;
 
     try {
-      const [wmResp, polyResp] = await Promise.all([
+      const [wmResp, polyResp, travelResp] = await Promise.all([
         fetch('wm2026-data.json?t=' + Date.now()),
         fetch('wm_poly_prices.json?t=' + Date.now()).catch(() => null),
+        fetch('wm_travel_burden.json?t=' + Date.now()).catch(() => null),
       ]);
       if (!wmResp.ok) throw new Error('HTTP ' + wmResp.status);
       _wmData = await wmResp.json();
@@ -56,6 +58,13 @@
         for (const f of (polyRaw.allFixtures || [])) {
           _polyLookup[f.key] = f;
         }
+      }
+
+      if (travelResp && travelResp.ok) {
+        const travelRaw = await travelResp.json();
+        // travelRaw ist {TEAM_ID: {...}} — direkt als Lookup nutzbar
+        _travelLookup = travelRaw || {};
+        window._wmTravelBurden = _travelLookup;   // backward compat mit altem Code
       }
 
       _loaded = true;
@@ -576,7 +585,14 @@
     }
     else if (m.includes('heim') || m.includes('home') || /^1$/.test(m)) {
       const favDiff = eloDiff || 0;
-      if (favDiff >= 200) {
+      // Sieg-/Niederlage-Serien zuerst — narrative Schärfe
+      const homeStreak = _winStreak(homeForm);
+      const homeLossSt = _lossStreak(awayForm);
+      if (homeStreak >= 4) {
+        sentence1 = `<strong>${home.name} ${homeStreak} Siege in Folge</strong> — Form heißer als Quoten zeigen.`;
+      } else if (homeLossSt >= 3) {
+        sentence1 = `<strong>${away.name} ${homeLossSt} Niederlagen in Folge</strong> — Krise wird vom Markt unterschätzt.`;
+      } else if (favDiff >= 200) {
         sentence1 = `<strong>${home.name} Elo +${favDiff}</strong> über ${away.name} — klassische Heim-Pflichtaufgabe.`;
       } else if (favDiff >= 80) {
         sentence1 = `<strong>${home.name}</strong> favorisiert${homeForm && homeForm.last5 ? ` (Form ${homeForm.last5.join('')})` : ''}.`;
@@ -589,7 +605,13 @@
     }
     else if (m.includes('auswärt') || m.includes('away') || /^2$/.test(m)) {
       const favDiff = -(eloDiff || 0);
-      if (favDiff >= 200) {
+      const awayStreak = _winStreak(awayForm);
+      const homeLossSt = _lossStreak(homeForm);
+      if (awayStreak >= 4) {
+        sentence1 = `<strong>${away.name} ${awayStreak} Siege in Folge</strong> — Quoten haben Form-Lauf nicht eingepreist.`;
+      } else if (homeLossSt >= 3) {
+        sentence1 = `<strong>${home.name} ${homeLossSt} Niederlagen in Folge</strong> — Markt traut der Krise nicht.`;
+      } else if (favDiff >= 200) {
         sentence1 = `<strong>${away.name} Elo +${favDiff}</strong> über ${home.name} — Pflichtsieg-Favorit auswärts.`;
       } else {
         const wins = awayForm?.last5 ? awayForm.last5.filter(r => r === 'W').length : 0;
@@ -611,17 +633,81 @@
       sentence1 = pick.info ? `<strong>${pick.info.split('·')[0].trim()}</strong>.` : 'Edge in der Quote erkannt.';
     }
 
+    // ── Zusatz-Sätze: Travel, Verletzung, Standings-Druck ─────────────────
+    const sentences = [sentence1];
+
+    // 1) Travel Burden — kritische Anreise als Pick-Verstärker
+    const homeLeg = _teamLegForMatch(fx.home, fx.matchday);
+    const awayLeg = _teamLegForMatch(fx.away, fx.matchday);
+    const burdenSentence = (leg, teamName, teamFlag) => {
+      if (!leg || leg.same_venue || (leg.km || 0) < 2500) return null;
+      const km = Math.round(leg.km).toLocaleString('de');
+      const rest = leg.rest_days || 0;
+      const altShift = leg.alt_shift || 0;
+      if ((leg.burden || '').toLowerCase() === 'critical') {
+        return `<strong>${teamFlag} ${teamName} fliegt ${km} km</strong> mit nur ${rest} Ruhetagen` + (altShift >= 1500 ? ` und ${altShift}m Höhenwechsel` : '');
+      }
+      if ((leg.burden || '').toLowerCase() === 'high' || (leg.km || 0) >= 3000) {
+        return `${teamFlag} ${teamName} mit ${km} km Anreise (${rest} Ruhetage)`;
+      }
+      return null;
+    };
+    const homeBurd = burdenSentence(homeLeg, home.name, home.flag);
+    const awayBurd = burdenSentence(awayLeg, away.name, away.flag);
+    // Nur der/die kritischere(n) — meist nur 1, max beide
+    const burdens = [homeBurd, awayBurd].filter(Boolean);
+    if (burdens.length) {
+      sentences.push(burdens.join(' · ') + '.');
+    }
+
+    // 2) Verletzungen — Top-Stürmer raus als Markt-Edge-Verstärker
+    const homeOut = _topInjuredScorer(fx.home);
+    const awayOut = _topInjuredScorer(fx.away);
+    const injSentences = [];
+    if (homeOut) injSentences.push(`<strong>${home.flag} ${home.name} ohne ${homeOut.name}</strong> (${homeOut.position || '?'}, ${homeOut.status})`);
+    if (awayOut) injSentences.push(`<strong>${away.flag} ${away.name} ohne ${awayOut.name}</strong> (${awayOut.position || '?'}, ${awayOut.status})`);
+    if (injSentences.length) {
+      sentences.push(injSentences.join(' · ') + '.');
+    }
+
+    // 3) ST3 Standings-Druck (Aufstiegs-Kontext)
+    if (fx.matchday >= 3 && standing && standing.length) {
+      const hRow = standing.find(s => s.id === fx.home);
+      const aRow = standing.find(s => s.id === fx.away);
+      const hPos = standing.findIndex(s => s.id === fx.home) + 1;
+      const aPos = standing.findIndex(s => s.id === fx.away) + 1;
+      if (hRow && aRow) {
+        const hSafe = hPos <= 2;
+        const aSafe = aPos <= 2;
+        const hOut  = hPos > 3;
+        const aOut  = aPos > 3;
+        if (hSafe && aSafe) {
+          sentences.push(`<strong>Beide schon Achtelfinale</strong> — Rotation + Schonung wahrscheinlich.`);
+        } else if (hOut && aOut) {
+          sentences.push(`<strong>Beide ausgeschieden</strong> — Friendly-Charakter, beide ohne Druck.`);
+        } else if (hOut && aSafe) {
+          sentences.push(`<strong>${home.flag} ${home.name} braucht zwingend Sieg + Schützenhilfe</strong>, ${away.name} bereits sicher.`);
+        } else if (aOut && hSafe) {
+          sentences.push(`<strong>${away.flag} ${away.name} muss alles riskieren</strong>, ${home.name} bereits sicher.`);
+        } else if (hOut) {
+          sentences.push(`<strong>${home.flag} ${home.name} im Aufstiegs-Modus</strong> — Sieg Pflicht.`);
+        } else if (aOut) {
+          sentences.push(`<strong>${away.flag} ${away.name} im Aufstiegs-Modus</strong> — Sieg Pflicht.`);
+        }
+      }
+    }
+
     // Sentence 2 — Modell vs Markt
-    let sentence2 = '';
+    let modelSentence = '';
     if (pick.modelOdds != null && pick.odds != null) {
       const epp = pick.edgePP != null ? pick.edgePP : 0;
       const tier = epp >= 12 ? 'massiv' : epp >= 6 ? 'solide' : epp >= 3 ? 'dünn' : 'minimal';
-      sentence2 = `<em>Modell sagt ${pick.modelOdds.toFixed(2)}, Markt ${pick.odds.toFixed(2)} — Edge ${tier} (+${epp}pp).</em>`;
+      modelSentence = `<em>Modell sagt ${pick.modelOdds.toFixed(2)}, Markt ${pick.odds.toFixed(2)} — Edge ${tier} (+${epp}pp).</em>`;
     } else if (pick.info) {
-      sentence2 = `<em>${pick.info}</em>`;
+      modelSentence = `<em>${pick.info}</em>`;
     }
 
-    return sentence1 + (sentence2 ? '<br>' + sentence2 : '');
+    return sentences.join(' ') + (modelSentence ? '<br>' + modelSentence : '');
   }
 
   // ─────────────────────────────────────────────────────
@@ -641,15 +727,7 @@
       if (!form || form.bttsRate == null || !form.games) return null;
       return Math.round((1 - form.bttsRate) * form.games);
     };
-    const winStreak = (form) => {
-      if (!form?.last10) return 0;
-      let streak = 0;
-      for (let i = form.last10.length - 1; i >= 0; i--) {
-        if (form.last10[i] === 'W') streak++;
-        else break;
-      }
-      return streak;
-    };
+    // _winStreak / _lossStreak sind module-scoped (oben definiert)
     const winsInLast = (form, n) => {
       const arr = (form?.last10 || form?.last5 || []).slice(-n);
       return arr.filter(r => r === 'W').length;
@@ -704,8 +782,8 @@
     else if (m.includes('heim') || m.includes('home') || m.includes('auswärt') || m.includes('away')) {
       if (eloDiff != null) signals.push({ label: 'Elo-Diff', value: (eloDiff > 0 ? '+' : '') + eloDiff, cls: Math.abs(eloDiff) >= 200 ? 'cc-val-hot' : '' });
       // Sieg-Serie zuerst (narrative Schärfe)
-      const homeStreak = winStreak(homeForm);
-      const awayStreak = winStreak(awayForm);
+      const homeStreak = _winStreak(homeForm);
+      const awayStreak = _winStreak(awayForm);
       if (homeStreak >= 3) {
         signals.push({ label: `${home.flag} Sieg-Serie`, value: `${homeStreak} in Folge`, cls: 'cc-val-hot' });
       }
@@ -743,6 +821,27 @@
     if (polyFix?.bestEdge != null && Math.abs(polyFix.bestEdge) >= 3) {
       const cls = polyFix.bestEdge >= 5 ? 'cc-val-hot' : '';
       signals.push({ label: 'Poly-Edge', value: '+' + polyFix.bestEdge.toFixed(1) + 'pp', cls });
+    }
+
+    // Travel-Burden — wenn signifikant (>= 3000km oder critical/high) als Signal mit aufnehmen
+    const homeLeg = _teamLegForMatch(fx.home, fx.matchday);
+    const awayLeg = _teamLegForMatch(fx.away, fx.matchday);
+    const relLeg = (leg) => leg && !leg.same_venue && ((leg.km || 0) >= 3000 || ['critical','high'].includes((leg.burden||'').toLowerCase()));
+    if (relLeg(homeLeg) && signals.length < 4) {
+      signals.push({ label: `${home.flag} Anreise`, value: `${Math.round(homeLeg.km).toLocaleString('de')} km`, cls: 'cc-val-hot' });
+    }
+    if (relLeg(awayLeg) && signals.length < 4) {
+      signals.push({ label: `${away.flag} Anreise`, value: `${Math.round(awayLeg.km).toLocaleString('de')} km`, cls: 'cc-val-hot' });
+    }
+
+    // Top-Stürmer-Verletzung — sobald injuries-Daten kommen
+    const homeOut = _topInjuredScorer(fx.home);
+    const awayOut = _topInjuredScorer(fx.away);
+    if (homeOut && signals.length < 4) {
+      signals.push({ label: `${home.flag} ohne ${homeOut.position || 'Star'}`, value: homeOut.name.split(' ').pop(), cls: 'cc-val-cool' });
+    }
+    if (awayOut && signals.length < 4) {
+      signals.push({ label: `${away.flag} ohne ${awayOut.position || 'Star'}`, value: awayOut.name.split(' ').pop(), cls: 'cc-val-cool' });
     }
 
     return signals.slice(0, 4);
@@ -796,6 +895,74 @@
     if (v.includes('seattle') || v.includes('lumen'))                                   return { off: -7, city: 'Seattle', tzShort: 'PDT' };
     if (v.includes("levi's") || v.includes('santa clara') || v.includes('san francisco')) return { off: -7, city: 'SF', tzShort: 'PDT' };
     return null;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  Form-Helpers — Streaks aus last10/last5 ableiten
+  // ─────────────────────────────────────────────────────
+  function _winStreak(form) {
+    const arr = form?.last10 || form?.last5;
+    if (!arr) return 0;
+    let s = 0;
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (arr[i] === 'W') s++; else break;
+    }
+    return s;
+  }
+  function _lossStreak(form) {
+    const arr = form?.last10 || form?.last5;
+    if (!arr) return 0;
+    let s = 0;
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (arr[i] === 'L') s++; else break;
+    }
+    return s;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  Travel-Burden für ein Team beim Anflug auf diesen Spieltag
+  //  Liefert das passende `leg` (matchday_from = matchday-1)
+  //  oder null wenn kein Anflug nötig (Spieltag 1 oder gleiche Stadt)
+  // ─────────────────────────────────────────────────────
+  function _teamLegForMatch(teamId, matchday) {
+    const tb = _travelLookup[teamId];
+    if (!tb || !tb.legs) return null;
+    return tb.legs.find(l => l.matchday_to === matchday) || null;
+  }
+
+  // Liefert die Burden-Pille für ein Team — knapp, nur wenn relevant
+  function _travelPill(teamFlag, leg) {
+    if (!leg || leg.same_venue || (leg.km || 0) < 1500) return '';
+    const burden = (leg.burden || '').toLowerCase();
+    if (burden === 'none' || burden === 'low') return '';
+    const km = Math.round(leg.km).toLocaleString('de');
+    const cls = burden === 'critical' ? 'cc-env-heat'
+              : burden === 'high'     ? 'cc-env-alt'
+              :                          'cc-env-pill';
+    const icon = burden === 'critical' ? '⚠️' : '✈️';
+    return `<span class="cc-env-pill ${cls}">${icon} ${teamFlag} ${km} km</span>`;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  Verletzungs-Info für ein Team — nutzt `injuries`-Feld
+  //  Schema (sobald fetch_wm_injuries.py voll läuft):
+  //    injuries[teamId] = { players: [{name, position, status, severity, missMatch}] }
+  //  status = "out" | "doubtful" | "back"
+  //  severity = 1-3 (3 = Top-Star, 1 = Reservist)
+  //  Aktuell: nur _meta gefüllt → graceful return
+  // ─────────────────────────────────────────────────────
+  function _topInjuredScorer(teamId) {
+    const inj = (_wmData.injuries || {})[teamId];
+    if (!inj || !inj.players) return null;
+    // Top-Star raus: severity 3 OR Position ST/CAM/RW/LW + status "out"
+    const outAttackers = (inj.players || []).filter(p =>
+      p.status === 'out' &&
+      (p.severity >= 3 || ['ST','CF','CAM','RW','LW','LM','RM'].includes(p.position))
+    );
+    if (!outAttackers.length) return null;
+    // Severity-sortiert
+    outAttackers.sort((a, b) => (b.severity || 0) - (a.severity || 0));
+    return outAttackers[0];
   }
 
   // ─────────────────────────────────────────────────────

@@ -26,7 +26,7 @@ Run:   python3 generate_wm_picks.py [--verbose]
 Cron:  Täglich via fetch-wm-data.yml (nach fetch_wm_form.py)
 """
 
-import json, math, sys
+import json, math, os, sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -107,10 +107,67 @@ def elo_probabilities(elo_h: float, elo_a: float, home_is_cohost: bool) -> dict:
 #  EXPECTED GOALS (Dixon-Coles-Stil)
 # ═══════════════════════════════════════════════════════════════════════════
 
+def travel_factor(team_id: str, matchday: int, travel_data: dict) -> tuple[float, str]:
+    """
+    Berechnet xG-Discount basierend auf Anreise für DIESEN Spieltag.
+
+    Returns (factor, label):
+      factor:  Multiplikator auf λ (Angriffsstärke). 0.85-1.0.
+      label:   Kurzbeschreibung für Story/Logging ("3942km · 4d rest" o.ä.)
+
+    Discount-Skala (basiert auf Sportwissenschafts-Studien zu Long-Haul-Travel
+    bei Fußball-Nationalteams: -5% bis -15% xG in den ersten 90 Min):
+      - critical (≥ 3000km UND rest ≤ 3 Tage):       factor 0.85 (-15%)
+      - high     (≥ 3000km ODER rest ≤ 3 Tage):     factor 0.90 (-10%)
+      - medium   (≥ 1500km):                         factor 0.95 (-5%)
+      - low/none: 1.0
+    Plus +5% Penalty wenn alt_shift ≥ 1500m (Höhenwechsel).
+    """
+    if not travel_data:
+        return 1.0, ""
+    tb = travel_data.get(team_id, {})
+    if not tb or not tb.get("legs"):
+        return 1.0, ""
+
+    leg = next((l for l in tb["legs"] if l.get("matchday_to") == matchday), None)
+    if not leg or leg.get("same_venue"):
+        return 1.0, ""
+
+    km        = leg.get("km", 0) or 0
+    rest_days = leg.get("rest_days", 99) or 99
+    alt_shift = abs(leg.get("alt_shift", 0) or 0)
+    burden    = (leg.get("burden", "") or "").lower()
+
+    # Basis-Discount aus burden-Label (vorberechnet von compute_wm_travel_burden.py)
+    if burden == "critical":
+        factor = 0.85
+    elif burden == "high":
+        factor = 0.90
+    elif burden == "medium":
+        factor = 0.95
+    else:
+        # Fallback: km/rest_days selbst beurteilen
+        if km >= 3000 and rest_days <= 3:   factor = 0.85
+        elif km >= 3000 or rest_days <= 3:  factor = 0.90
+        elif km >= 1500:                    factor = 0.95
+        else:                               factor = 1.0
+
+    # Höhen-Penalty zusätzlich (Mexico City 2200m etc.)
+    if alt_shift >= 1500:
+        factor = max(0.80, factor - 0.03)
+
+    label = f"{km}km/{rest_days}d"
+    if alt_shift >= 1500:
+        label += f"/+{alt_shift}m"
+    return factor, label
+
+
 def expected_goals(form_h: dict, form_a: dict,
                    xg_h: dict = None, xg_a: dict = None,
                    injury_factor_h: float = 1.0,
-                   injury_factor_a: float = 1.0) -> tuple[float, float]:
+                   injury_factor_a: float = 1.0,
+                   travel_factor_h: float = 1.0,
+                   travel_factor_a: float = 1.0) -> tuple[float, float]:
     """
     λ_heim, λ_ausw für Poisson-Modell.
 
@@ -121,6 +178,9 @@ def expected_goals(form_h: dict, form_a: dict,
 
     injury_factor: Multiplikator für Angriffsstärke wenn Schlüsselspieler fehlt.
     Typisch 0.85 wenn Top-Stürmer verletzt/gesperrt, 1.0 wenn kein Ausfall.
+
+    travel_factor: Multiplikator für Anreise-Last (Long-Haul + Höhe + wenig Rest).
+    0.85 bei critical (z.B. 4000km + Höhenwechsel), 1.0 bei minimaler Anreise.
     """
     def rate(form: dict, xg: dict) -> tuple[float, float]:
         # xgStats bevorzugen — präziser als rohe Toraverages
@@ -139,8 +199,9 @@ def expected_goals(form_h: dict, form_a: dict,
     h_att, h_def = rate(form_h, xg_h)
     a_att, a_def = rate(form_a, xg_a)
 
-    lam_h = INTL_AVG_GOALS * h_att * a_def * injury_factor_h
-    lam_a = INTL_AVG_GOALS * a_att * h_def * injury_factor_a
+    # Travel + Injury werden als unabhängige Multiplier auf die Angriffsstärke angewandt
+    lam_h = INTL_AVG_GOALS * h_att * a_def * injury_factor_h * travel_factor_h
+    lam_a = INTL_AVG_GOALS * a_att * h_def * injury_factor_a * travel_factor_a
 
     return (
         max(0.25, min(4.0, lam_h)),
@@ -303,7 +364,9 @@ def edge_to_conf(edge_pp: int, verdict: str) -> str:
 
 def build_info(elo_diff: int, form_h: dict, form_a: dict,
                h2h: dict | None, mkey: str,
-               lam_h: float, lam_a: float) -> str:
+               lam_h: float, lam_a: float,
+               travel_h: tuple = None, travel_a: tuple = None,
+               home_flag: str = "", away_flag: str = "") -> str:
     parts = []
 
     # Elo
@@ -335,6 +398,12 @@ def build_info(elo_diff: int, form_h: dict, form_a: dict,
 
     # xG
     parts.append(f"xG {lam_h:.1f}:{lam_a:.1f}")
+
+    # Travel-Anreise (nur wenn signifikant — Discount aktiv)
+    if travel_h and travel_h[0] < 1.0:
+        parts.append(f"✈️ {home_flag or 'H'} {travel_h[1]} ({int((1-travel_h[0])*100)}%-xG)")
+    if travel_a and travel_a[0] < 1.0:
+        parts.append(f"✈️ {away_flag or 'A'} {travel_a[1]} ({int((1-travel_a[0])*100)}%-xG)")
 
     return " · ".join(parts)
 
@@ -379,6 +448,7 @@ def generate_picks_for_fixture(
     today_iso: str,
     xg_stats: dict = None,
     injuries: dict = None,
+    travel_data: dict = None,
 ) -> list[dict]:
     """Generiert Picks für ein einzelnes Fixture. Gibt [] zurück wenn kein Pick."""
 
@@ -415,7 +485,15 @@ def generate_picks_for_fixture(
     if inj_a < 1.0 and VERBOSE:
         print(f"  ⚠️  Injury-Discount {fx['away']}: {inj_a:.0%}")
 
-    lam_h, lam_a = expected_goals(form_h, form_a, xg_h, xg_a, inj_h, inj_a)
+    # Travel-Discount für Angriffsstärke (Anreise zu DIESEM Spieltag)
+    trv_h, trv_h_lbl = travel_factor(fx["home"], fx["matchday"], travel_data)
+    trv_a, trv_a_lbl = travel_factor(fx["away"], fx["matchday"], travel_data)
+    if trv_h < 1.0 and VERBOSE:
+        print(f"  ✈️  Travel-Discount {fx['home']}: {trv_h:.0%} ({trv_h_lbl})")
+    if trv_a < 1.0 and VERBOSE:
+        print(f"  ✈️  Travel-Discount {fx['away']}: {trv_a:.0%} ({trv_a_lbl})")
+
+    lam_h, lam_a = expected_goals(form_h, form_a, xg_h, xg_a, inj_h, inj_a, trv_h, trv_a)
 
     # Marktquoten aus TheOddsAPI
     odds_snap = mkt.get(f"{fx['home']}-{fx['away']}", {})
@@ -588,7 +666,9 @@ def generate_picks_for_fixture(
             continue
 
         conf = edge_to_conf(v["edgePP"], v["verdict"])
-        info = build_info(elo_diff, form_h, form_a, h2h or None, mkey, lam_h, lam_a)
+        info = build_info(elo_diff, form_h, form_a, h2h or None, mkey, lam_h, lam_a,
+                          travel_h=(trv_h, trv_h_lbl), travel_a=(trv_a, trv_a_lbl),
+                          home_flag=home_t.get("flag",""), away_flag=away_t.get("flag",""))
 
         picks.append({
             "market":    label,
@@ -627,10 +707,25 @@ def main():
     xg_stats = wm.get("xgStats",  {})   # API-Football xG (fetch_wm_corners.py)
     injuries = wm.get("injuries", {})   # Verletzungen/Sperren (fetch_wm_injuries.py)
 
+    # Travel-Burden (compute_wm_travel_burden.py) — separates File
+    travel_data = {}
+    travel_file = os.path.join(os.path.dirname(WM_FILE), "wm_travel_burden.json")
+    if os.path.exists(travel_file):
+        try:
+            with open(travel_file, encoding="utf-8") as tf:
+                travel_data = json.load(tf)
+        except Exception as e:
+            print(f"  ⚠️  Travel-Burden nicht ladbar: {e}")
+
     xg_count = sum(1 for v in xg_stats.values() if v and v.get("games", 0) >= 3)
     inj_count = sum(1 for k, v in injuries.items()
                     if k != "_meta" and isinstance(v, dict) and v.get("players"))
-    print(f"  xgStats: {xg_count} Teams mit Daten | Injuries: {inj_count} Teams betroffen\n")
+    travel_critical = sum(1 for k, v in travel_data.items()
+                          if isinstance(v, dict) and any(
+                              (l.get("burden") or "").lower() in ("critical", "high")
+                              for l in v.get("legs", [])))
+    print(f"  xgStats: {xg_count} Teams | Injuries: {inj_count} Teams | "
+          f"Travel: {travel_critical} Teams mit kritischer Anreise\n")
 
     wm.setdefault("picks", {})
 
@@ -674,6 +769,7 @@ def main():
             new_picks = generate_picks_for_fixture(
                 fx, gdata, mkt, form, h2h_data, today,
                 xg_stats=xg_stats, injuries=injuries,
+                travel_data=travel_data,
             )
 
             # Immer überschreiben — auch leere Liste löscht veraltete Picks
