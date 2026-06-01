@@ -303,12 +303,15 @@
       <div class="cc-team"><span class="cc-flag">${away.flag}</span>${away.name}</div>
     </div>`;
     const groupLabel = (gData.name || ('Gruppe ' + fx.groupKey));
+    const dateMain   = _fmtDate(fx.date, fx.time);   // "Fr 12. Jun · 18:00 Uhr"
+    const localTime  = _venueLocalTime(fx.venue, fx.time);  // " · 12:00 NY" oder ""
     html += `<div class="cc-meta">
       <span>${groupLabel} · ST ${fx.matchday}</span>
       <span class="cc-dot"></span>
-      <span>${_fmtDate(fx.date, fx.time)}</span>
+      <span>${dateMain}${localTime ? `<span class="cc-local-tz">${localTime}</span>` : ''}</span>
       ${fx.venue ? `<span class="cc-dot"></span><span class="cc-venue">📍 ${fx.venue}</span>` : ''}
       ${_venueEnvPill(fx.venue)}
+      ${_weatherPill(fx)}
     </div></div>`;
 
     // ─── PICK HERO ─────────────────────────────────────
@@ -498,6 +501,10 @@
     const m = (pick.market || '').toLowerCase();
     const h2hRaw = (_wmData.h2h || {});
     const h2h = h2hRaw[`${fx.home}-${fx.away}`] || h2hRaw[`${fx.away}-${fx.home}`] || null;
+    // Bezugsgröße: wie viele Spiele die Form umfasst — gibt der Story Tiefe
+    // ("in letzten 15") statt nur "pro Spiel"
+    const refN = Math.max(homeForm?.games || 0, awayForm?.games || 0) || 10;
+    const refStr = `in letzten ${refN}`;
 
     let sentence1 = '';
 
@@ -508,10 +515,10 @@
       const homeScored = (homeForm && homeForm.avgScored) || 0;
       const awayScored = (awayForm && awayForm.avgScored) || 0;
       if (awayScored >= 2.0 && awayScored >= homeScored) {
-        parts.push(`<strong>${away.name} trifft ${awayScored.toFixed(1)} Tore pro Spiel</strong>`);
+        parts.push(`<strong>${away.name} trifft ${awayScored.toFixed(1)} Tore ${refStr}</strong>`);
         primaryTeamId = fx.away;
       } else if (homeScored >= 2.0) {
-        parts.push(`<strong>${home.name} trifft ${homeScored.toFixed(1)} Tore pro Spiel</strong>`);
+        parts.push(`<strong>${home.name} trifft ${homeScored.toFixed(1)} Tore ${refStr}</strong>`);
         primaryTeamId = fx.home;
       }
       // Secondary: der ANDERE Team
@@ -534,13 +541,18 @@
       const homeConc = (homeForm && homeForm.avgConceded) != null ? homeForm.avgConceded : 99;
       const awayConc = (awayForm && awayForm.avgConceded) != null ? awayForm.avgConceded : 99;
       if (awayConc < 0.7 && awayConc <= homeConc) {
-        parts.push(`<strong>${away.name} kassiert nur ${awayConc.toFixed(1)} Gegentore</strong>`);
+        parts.push(`<strong>${away.name} kassiert nur ${awayConc.toFixed(1)} Gegentore ${refStr}</strong>`);
         primaryTeamId = fx.away;
       } else if (homeConc < 0.7) {
-        parts.push(`<strong>${home.name} kassiert nur ${homeConc.toFixed(1)} Gegentore</strong>`);
+        parts.push(`<strong>${home.name} kassiert nur ${homeConc.toFixed(1)} Gegentore ${refStr}</strong>`);
         primaryTeamId = fx.home;
       }
-      if (homeForm && homeConc < 1.0 && primaryTeamId !== fx.home) {
+      // Sekundär: anderer Team — entweder schwache Offensive oder eigener Defense-Wert
+      const otherScored = primaryTeamId === fx.away ? homeForm?.avgScored : awayForm?.avgScored;
+      const otherName   = primaryTeamId === fx.away ? home.name : away.name;
+      if (otherScored != null && otherScored < 1.2) {
+        parts.push(`<strong>${otherName} nur ${otherScored.toFixed(1)} Tore Ø</strong>`);
+      } else if (homeForm && homeConc < 1.0 && primaryTeamId !== fx.home) {
         parts.push(`${home.name} ${homeConc.toFixed(1)} Gegen Ø`);
       } else if (awayForm && awayConc < 1.0 && primaryTeamId !== fx.away) {
         parts.push(`${away.name} ${awayConc.toFixed(1)} Gegen Ø`);
@@ -549,7 +561,7 @@
         parts.push(`H2H ${Math.round((1-h2h.over25Rate)*100)}% Unter 2.5`);
       }
       sentence1 = parts.length
-        ? parts.slice(0, 2).join(' · ') + '.'
+        ? parts.slice(0, 2).join(' · ') + '. Wenig Offensiv-Druck erwartet.'
         : 'Tor-armes Spiel zu erwarten — beide Teams kontrolliert.';
     }
     else if (m.includes('beide teams') || m.includes('btts')) {
@@ -622,48 +634,94 @@
     const h2h = h2hRaw[`${fx.home}-${fx.away}`] || h2hRaw[`${fx.away}-${fx.home}`] || null;
     const cornersForm = _wmData.cornersForm || {};
 
+    // Hilfs-Schätzungen aus Form-Daten
+    const cleanSheets = (form) => {
+      // bttsRate = "beide trafen" → Clean Sheet ≈ Anteil ohne BTTS + Spiele zu 0:x
+      // Approx: cleanSheets ≈ (1 - bttsRate) * games — konservative Schätzung
+      if (!form || form.bttsRate == null || !form.games) return null;
+      return Math.round((1 - form.bttsRate) * form.games);
+    };
+    const winStreak = (form) => {
+      if (!form?.last10) return 0;
+      let streak = 0;
+      for (let i = form.last10.length - 1; i >= 0; i--) {
+        if (form.last10[i] === 'W') streak++;
+        else break;
+      }
+      return streak;
+    };
+    const winsInLast = (form, n) => {
+      const arr = (form?.last10 || form?.last5 || []).slice(-n);
+      return arr.filter(r => r === 'W').length;
+    };
+
     // Pick-specific signals
     if ((m.includes('über') || m.includes('over')) && m.includes('2.5')) {
-      if (homeForm?.over25Rate != null) {
+      // Stärkste Offensive zuerst
+      if (homeForm?.avgScored != null && homeForm.avgScored >= 2.0) {
+        signals.push({ label: `${home.flag} Tor-Schnitt`, value: homeForm.avgScored.toFixed(1), cls: 'cc-val-hot' });
+      }
+      if (awayForm?.avgScored != null && awayForm.avgScored >= 2.0) {
+        signals.push({ label: `${away.flag} Tor-Schnitt`, value: awayForm.avgScored.toFixed(1), cls: 'cc-val-hot' });
+      }
+      if (homeForm?.over25Rate != null && signals.length < 3) {
         const v = Math.round(homeForm.over25Rate * 100);
         signals.push({ label: `Ü2.5 ${home.flag}`, value: v + '%', cls: v >= 55 ? 'cc-val-hot' : '' });
       }
-      if (awayForm?.over25Rate != null) {
+      if (awayForm?.over25Rate != null && signals.length < 3) {
         const v = Math.round(awayForm.over25Rate * 100);
         signals.push({ label: `Ü2.5 ${away.flag}`, value: v + '%', cls: v >= 55 ? 'cc-val-hot' : '' });
       }
-      if (h2h?.over25Rate != null) {
+      if (h2h?.over25Rate != null && signals.length < 4) {
         const v = Math.round(h2h.over25Rate * 100);
-        signals.push({ label: 'Ü2.5 H2H', value: v + '%', cls: v >= 50 ? 'cc-val-hot' : '' });
+        signals.push({ label: `Ü2.5 H2H (${h2h.games || '?'})`, value: v + '%', cls: v >= 50 ? 'cc-val-hot' : '' });
       }
-      if (homeForm?.avgGoals != null && awayForm?.avgGoals != null) {
-        const avg = ((homeForm.avgGoals + awayForm.avgGoals) / 2).toFixed(1);
-        signals.push({ label: 'Ø Tore', value: avg, cls: parseFloat(avg) > 2.5 ? 'cc-val-hot' : '' });
+      if (homeForm?.bttsRate != null && awayForm?.bttsRate != null && signals.length < 4) {
+        const v = Math.round(((homeForm.bttsRate + awayForm.bttsRate) / 2) * 100);
+        signals.push({ label: 'BTTS-Trend', value: v + '%', cls: v >= 55 ? 'cc-val-hot' : '' });
       }
     }
     else if ((m.includes('unter') || m.includes('under')) && m.includes('2.5')) {
-      if (homeForm?.avgConceded != null) {
-        signals.push({ label: `Gegen ${home.flag}`, value: homeForm.avgConceded.toFixed(1), cls: homeForm.avgConceded < 0.7 ? 'cc-val-cool' : '' });
+      // Clean Sheets — viel narrativer als "Gegen 0.3"
+      const homeCS = cleanSheets(homeForm);
+      const awayCS = cleanSheets(awayForm);
+      if (awayCS != null && homeForm?.games) {
+        signals.push({ label: `${away.flag} Clean Sheets`, value: `${awayCS}/${awayForm.games}`, cls: awayCS / awayForm.games >= 0.5 ? 'cc-val-cool' : '' });
       }
-      if (awayForm?.avgConceded != null) {
-        signals.push({ label: `Gegen ${away.flag}`, value: awayForm.avgConceded.toFixed(1), cls: awayForm.avgConceded < 0.7 ? 'cc-val-cool' : '' });
+      if (homeCS != null && homeForm?.games) {
+        signals.push({ label: `${home.flag} Clean Sheets`, value: `${homeCS}/${homeForm.games}`, cls: homeCS / homeForm.games >= 0.5 ? 'cc-val-cool' : '' });
       }
-      if (h2h?.avgGoals != null) {
-        signals.push({ label: 'H2H Ø Tore', value: h2h.avgGoals.toFixed(1), cls: h2h.avgGoals < 2.5 ? 'cc-val-cool' : '' });
+      if (homeForm?.avgConceded != null && signals.length < 3) {
+        signals.push({ label: `${home.flag} Gegen Ø`, value: homeForm.avgConceded.toFixed(1), cls: homeForm.avgConceded < 0.7 ? 'cc-val-cool' : '' });
+      }
+      if (awayForm?.avgConceded != null && signals.length < 3) {
+        signals.push({ label: `${away.flag} Gegen Ø`, value: awayForm.avgConceded.toFixed(1), cls: awayForm.avgConceded < 0.7 ? 'cc-val-cool' : '' });
+      }
+      if (h2h?.avgGoals != null && signals.length < 4) {
+        signals.push({ label: `H2H Ø Tore (${h2h.games})`, value: h2h.avgGoals.toFixed(1), cls: h2h.avgGoals < 2.5 ? 'cc-val-cool' : '' });
       }
     }
     else if (m.includes('heim') || m.includes('home') || m.includes('auswärt') || m.includes('away')) {
-      if (eloDiff != null) signals.push({ label: 'Elo-Diff', value: (eloDiff > 0 ? '+' : '') + eloDiff });
-      if (homeForm?.last5) {
+      if (eloDiff != null) signals.push({ label: 'Elo-Diff', value: (eloDiff > 0 ? '+' : '') + eloDiff, cls: Math.abs(eloDiff) >= 200 ? 'cc-val-hot' : '' });
+      // Sieg-Serie zuerst (narrative Schärfe)
+      const homeStreak = winStreak(homeForm);
+      const awayStreak = winStreak(awayForm);
+      if (homeStreak >= 3) {
+        signals.push({ label: `${home.flag} Sieg-Serie`, value: `${homeStreak} in Folge`, cls: 'cc-val-hot' });
+      }
+      if (awayStreak >= 3) {
+        signals.push({ label: `${away.flag} Sieg-Serie`, value: `${awayStreak} in Folge`, cls: 'cc-val-hot' });
+      }
+      if (signals.length < 3 && homeForm?.last5) {
         const w = homeForm.last5.filter(r => r === 'W').length;
         signals.push({ label: `${home.flag} Siege /5`, value: w, cls: w >= 4 ? 'cc-val-hot' : '' });
       }
-      if (awayForm?.last5) {
+      if (signals.length < 3 && awayForm?.last5) {
         const w = awayForm.last5.filter(r => r === 'W').length;
         signals.push({ label: `${away.flag} Siege /5`, value: w, cls: w >= 4 ? 'cc-val-hot' : '' });
       }
-      if (h2h && h2h.games > 0) {
-        signals.push({ label: 'H2H Spiele', value: h2h.games });
+      if (signals.length < 4 && h2h && h2h.games > 0) {
+        signals.push({ label: `H2H (${h2h.games})`, value: `${h2h.homeWins}-${h2h.draws}-${h2h.awayWins}` });
       }
     }
     else {
@@ -707,6 +765,80 @@
     // Heat
     if (v.includes('miami') || v.includes('monterrey') || v.includes('bbva')) return `<span class="cc-dot"></span><span class="cc-env-pill cc-env-heat">🌡 30°C+</span>`;
     return '';
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  VENUE TZ — Anstoßzeit am Spielort (UTC-Offset für die
+  //  16 Host-Cities). "21:00 Berlin · 15:00 NY" Format.
+  // ─────────────────────────────────────────────────────
+  // CEST = UTC+2 (Sommer) — fix für WM-Zeitraum Juni/Juli.
+  // Liefert Offset in Stunden gegenüber UTC für jede Stadt.
+  function _venueTz(venue) {
+    if (!venue) return null;
+    const v = venue.toLowerCase();
+    // EST/EDT = UTC-4 im Sommer (Boston, NY, Philly, Miami, Atlanta, Toronto)
+    if (v.includes('metlife') || v.includes('new york') || v.includes('east rutherford')) return { off: -4, city: 'NY', tzShort: 'EDT' };
+    if (v.includes('gillette') || v.includes('foxborough') || v.includes('boston'))    return { off: -4, city: 'Boston', tzShort: 'EDT' };
+    if (v.includes('hard rock') || v.includes('miami'))                                 return { off: -4, city: 'Miami', tzShort: 'EDT' };
+    if (v.includes('mercedes-benz') || v.includes('atlanta'))                           return { off: -4, city: 'Atlanta', tzShort: 'EDT' };
+    if (v.includes('bmo field') || v.includes('toronto'))                               return { off: -4, city: 'Toronto', tzShort: 'EDT' };
+    if (v.includes('philly') || v.includes('philadelphia') || v.includes('lincoln'))   return { off: -4, city: 'Philly', tzShort: 'EDT' };
+    // CST/CDT = UTC-5 (Dallas, Houston, KC, Mexiko-City, Guadalajara, Monterrey)
+    if (v.includes("at&t") || v.includes('dallas'))                                     return { off: -5, city: 'Dallas', tzShort: 'CDT' };
+    if (v.includes('nrg') || v.includes('houston'))                                     return { off: -5, city: 'Houston', tzShort: 'CDT' };
+    if (v.includes('arrowhead') || v.includes('kansas'))                                return { off: -5, city: 'KC', tzShort: 'CDT' };
+    if (v.includes('azteca') || v.includes('mexico city'))                              return { off: -6, city: 'Mexico City', tzShort: 'CST' }; // Mexico nicht DST
+    if (v.includes('akron') || v.includes('guadalajara'))                               return { off: -6, city: 'Guadalajara', tzShort: 'CST' };
+    if (v.includes('bbva') || v.includes('monterrey'))                                  return { off: -6, city: 'Monterrey', tzShort: 'CST' };
+    // PST/PDT = UTC-7 (Vancouver, LA, Seattle, SF)
+    if (v.includes('bc place') || v.includes('vancouver'))                              return { off: -7, city: 'Vancouver', tzShort: 'PDT' };
+    if (v.includes('sofi') || v.includes('los angeles') || v.includes('inglewood'))    return { off: -7, city: 'LA', tzShort: 'PDT' };
+    if (v.includes('seattle') || v.includes('lumen'))                                   return { off: -7, city: 'Seattle', tzShort: 'PDT' };
+    if (v.includes("levi's") || v.includes('santa clara') || v.includes('san francisco')) return { off: -7, city: 'SF', tzShort: 'PDT' };
+    return null;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  Wetter-Pille — liest fx.weather wenn vorhanden.
+  //  Schema (sobald fetch_wm_weather.py Daten schreibt):
+  //    fx.weather = { temp: 22, condition: "rain" | "sun" | "cloud" | "snow", windKph: 18, humidity: 70 }
+  //  Aktuell graceful: zeigt nichts wenn keine Daten.
+  // ─────────────────────────────────────────────────────
+  function _weatherPill(fx) {
+    const w = fx && fx.weather;
+    if (!w || w.temp == null) return '';
+    const cond = (w.condition || '').toLowerCase();
+    let icon = '🌤';
+    if (cond.includes('rain') || cond.includes('shower')) icon = '🌧';
+    else if (cond.includes('storm') || cond.includes('thunder')) icon = '⛈';
+    else if (cond.includes('snow')) icon = '❄️';
+    else if (cond.includes('clear') || cond.includes('sun')) icon = '☀️';
+    else if (cond.includes('cloud') || cond.includes('overcast')) icon = '☁️';
+    const wind = w.windKph && w.windKph >= 30 ? ` · 💨 ${Math.round(w.windKph)}` : '';
+    const cls = w.temp >= 32 ? 'cc-env-heat' : 'cc-env-pill';
+    return `<span class="cc-dot"></span><span class="cc-env-pill ${cls === 'cc-env-heat' ? 'cc-env-heat' : ''}">${icon} ${Math.round(w.temp)}°C${wind}</span>`;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  Lokale Spielort-Zeit aus fx.time (HH:MM, Berlin/CEST)
+  //  Wenn Venue in US/MX/CA: liefert ", 15:00 NY" (oder ähnlich).
+  //  Sonst leer (z.B. wenn Berlin-Lokal sowieso passt).
+  // ─────────────────────────────────────────────────────
+  function _venueLocalTime(venue, berlinTime) {
+    if (!venue || !berlinTime) return '';
+    const tz = _venueTz(venue);
+    if (!tz) return '';
+    // berlinTime ist "HH:MM" — CEST = UTC+2
+    const m = /^(\d{1,2}):(\d{2})$/.exec(berlinTime.trim());
+    if (!m) return '';
+    let totalMin = parseInt(m[1], 10) * 60 + parseInt(m[2], 10);
+    // Berlin → UTC: -2h. UTC → Venue: + tz.off (negativ).
+    totalMin += (-2 + tz.off) * 60;
+    // Normalisieren (0-1439)
+    totalMin = ((totalMin % 1440) + 1440) % 1440;
+    const h = String(Math.floor(totalMin / 60)).padStart(2, '0');
+    const min = String(totalMin % 60).padStart(2, '0');
+    return ` · ${h}:${min} ${tz.city}`;
   }
 
   // ── Team row with form dots ───────────────────────────
