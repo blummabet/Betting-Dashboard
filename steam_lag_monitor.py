@@ -45,11 +45,30 @@ POLY_HIST     = BASE / "wm2026-poly-history.json"
 ODDS_HIST     = BASE / "wm2026-odds-history.json"
 
 # Schwellenwerte
-MIN_EDGE_PP       = 1.5    # Mindest-Edge für Log-Eintrag (inkl. watching-Signale)
-SIGNAL_EDGE_PP    = 2.0    # Mindest-Edge für echtes Signal (war 3.0 — vor WM-Start gesenkt)
-CONVERGED_EDGE_PP = 1.0    # Edge gilt als geschlossen wenn < 1pp
+MIN_EDGE_PP            = 1.5   # Mindest-Edge für Log-Eintrag (inkl. watching-Signale)
+SIGNAL_EDGE_PP         = 2.0   # Mindest-Edge für echtes Signal (war 3.0 — vor WM-Start gesenkt)
+CONVERGED_EDGE_PP      = 1.0   # Edge gilt als geschlossen wenn < 1pp
+# Trackable: muss VOR Konvergenz-Schwelle starten, sonst keine echte Konvergenz möglich.
+# Verhindert "Steam Lag mit 0.4pp Entry → sofort CONVERGED mit 0% closed"-Artefakte.
+MIN_TRACKABLE_ENTRY    = CONVERGED_EDGE_PP + 1.0   # = 2.0pp absolute Untergrenze auch bei Steam Lag
+
+# Edge-Tier-Klassifikation für Trading-Entscheidungen
+# - "trade"   = Auto-Trigger-fähig (>= 5pp) → wird wirklich gewettet
+# - "track"   = Beobachtungs-Signal (2-5pp) → wird geloggt aber nicht autotraded
+# - "sub_threshold" = unter Tracking-Untergrenze → wird gar nicht erfasst
+TRADE_TIER_EDGE_PP     = 5.0   # entspricht AUTO_TRIGGER_EDGE_PP in auto_wm_poly_trigger.py
+
 MAX_SNAPSHOTS     = 50     # Snapshots pro Signal-Entry im Log
 SIGNAL_TTL_DAYS   = 30     # Alte aufgelöste Signale nach N Tagen bereinigen
+
+
+def _classify_entry_tier(entry_edge: float, steam_lag: bool) -> str:
+    """Tier-Klassifikation für ein Entry-Signal."""
+    if entry_edge >= TRADE_TIER_EDGE_PP:
+        return "trade"
+    if entry_edge >= MIN_TRACKABLE_ENTRY:
+        return "track"
+    return "sub_threshold"
 
 # Gamma API (kein API-Key, public)
 GAMMA_URL = (
@@ -463,8 +482,18 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
             if current_edge < SIGNAL_EDGE_PP and not fx["steamLag"]:
                 continue   # Zu klein für echten Log-Eintrag
 
+            # Tracking-Untergrenze: auch bei Steam Lag muss ein Signal über
+            # CONVERGED_EDGE_PP starten, sonst keine echte Konvergenz möglich.
+            # Verhindert das "0% closed → CONVERGED"-Artefakt im Dashboard.
+            if current_edge < MIN_TRACKABLE_ENTRY:
+                if fx["steamLag"]:
+                    print(f"  ⏭️  Steam Lag aber Entry {current_edge:.1f}pp < {MIN_TRACKABLE_ENTRY}pp "
+                          f"→ nicht trackbar (kein Konvergenz-Raum)")
+                continue
+
             home_info = team_info.get(fx["homeId"], {})
             away_info = team_info.get(fx["awayId"], {})
+            entry_tier = _classify_entry_tier(current_edge, fx["steamLag"])
             is_high_conf = (
                 fx["steamLag"] and
                 current_edge >= HIGH_CONF_EDGE_MIN
@@ -490,6 +519,7 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
                 "pinnMoveAtSignal": fx.get("pinnSteamMove"),
                 "edgeTrendAtSignal":fx.get("edgeTrend", "stable"),
                 "highConfidence":   is_high_conf,
+                "entryTier":        entry_tier,   # "trade" / "track" / "sub_threshold"
                 "snapshots":        [snap],
                 "currentEdgePp":    current_edge,
                 "currentPolyPrice": current_poly,

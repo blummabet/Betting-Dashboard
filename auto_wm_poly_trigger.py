@@ -55,6 +55,8 @@ def _get_stake_for_edge(edge_pp: float) -> float:
 DAILY_BET_CAP        = 8       # max Anzahl Bets pro UTC-Tag
 DAILY_STAKE_CAP_USDC = 50.0    # max kumulativer Stake pro UTC-Tag in USDC
 MIN_BALANCE_BUFFER   = 1.0     # USDC die nach Bet noch im Wallet bleiben müssen
+MAX_POSITIONS_PER_MATCH = 1    # max Bets pro Match (egal welcher Markt) — vermeidet
+                               # gegenläufige Positionen wie Heimsieg + Auswärtssieg
 
 BASE_DIR              = os.path.dirname(os.path.abspath(__file__))
 PRICES_FILE           = os.path.join(BASE_DIR, "wm_poly_prices.json")
@@ -276,7 +278,14 @@ def main():
     placed_data = load_json(PLACED_FILE, {"bets": [], "updatedAt": ""})
     placed_bets = placed_data.get("bets", [])
     placed_keys = {b["betKey"] for b in placed_bets if b.get("betKey")}
-    print(f"  ✅ {len(placed_keys)} bereits platzierte Bets geladen")
+    # Match-Level Dedup: zähle wie viele Bets schon auf jedes Match liegen
+    # (egal welcher Markt). Verhindert gegenläufige Heim+Auswärts-Positionen.
+    match_position_count = {}
+    for b in placed_bets:
+        mkey = f"{b.get('homeId','')}-{b.get('awayId','')}"
+        match_position_count[mkey] = match_position_count.get(mkey, 0) + 1
+    print(f"  ✅ {len(placed_keys)} bereits platzierte Bets geladen "
+          f"(auf {len(match_position_count)} verschiedenen Matches)")
 
     # 2b. Bankroll-Schutz: heutige Bets zählen + Balance prüfen
     today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -358,6 +367,14 @@ def main():
 
         print(f"\n  ▶ {home} vs {away} — {market}")
 
+        # ── Match-Level Dedup ────────────────────────────────────────────────
+        # Prüft ob auf dieses Match (egal welcher Markt) bereits genug Positionen
+        # liegen. Verhindert z.B. Heimsieg+Auswärtssieg auf dasselbe Match.
+        match_key = f"{order.get('homeId','')}-{order.get('awayId','')}"
+        if match_position_count.get(match_key, 0) >= MAX_POSITIONS_PER_MATCH:
+            print(f"    🚫 Bereits {match_position_count[match_key]}/{MAX_POSITIONS_PER_MATCH} Position(en) auf diesem Match — übersprungen")
+            continue
+
         # ── Bankroll-Schutz pro Iteration ────────────────────────────────────
         if running_count >= DAILY_BET_CAP:
             print(f"    🛑 Tages-Bet-Cap erreicht ({running_count}/{DAILY_BET_CAP}) — Rest übersprungen")
@@ -414,10 +431,11 @@ def main():
         if result["status"] in ("placed", "dry-run"):
             print(f"    ✅ Platziert — Order ID: {result.get('orderId')}{steam_tag}")
 
-            # Bankroll-Tally updaten
+            # Bankroll-Tally + Match-Position-Tally updaten
             running_count   += 1
             running_stake   += stake
             running_balance -= stake
+            match_position_count[match_key] = match_position_count.get(match_key, 0) + 1
 
             # 1. Bestehender WM-Channel (Operations-Info)
             if telegram_token and telegram_chat_id:

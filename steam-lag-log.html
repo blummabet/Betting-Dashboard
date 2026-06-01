@@ -83,9 +83,10 @@
   .market-pill.o25 { color: var(--green); border-color: var(--green); }
   .market-pill.u25 { color: var(--yellow); border-color: var(--yellow); }
   .status-badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; }
-  .status-badge.open      { background: rgba(210,153,34,0.15); color: var(--yellow); border: 1px solid var(--yellow); }
-  .status-badge.converged { background: rgba(63,185,80,0.15);  color: var(--green);  border: 1px solid var(--green); }
-  .status-badge.resolved  { background: rgba(139,148,158,0.15); color: var(--sub);   border: 1px solid var(--sub); }
+  .status-badge.open           { background: rgba(210,153,34,0.15); color: var(--yellow); border: 1px solid var(--yellow); }
+  .status-badge.converged      { background: rgba(63,185,80,0.15);  color: var(--green);  border: 1px solid var(--green); }
+  .status-badge.pre_converged  { background: rgba(139,148,158,0.10); color: var(--sub);   border: 1px solid var(--sub); opacity: .75; }
+  .status-badge.resolved       { background: rgba(139,148,158,0.15); color: var(--sub);   border: 1px solid var(--sub); }
 
   /* Card body */
   .card-body { padding: 14px 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
@@ -220,8 +221,11 @@
   <button class="filter-btn active" onclick="setFilter('all', this)">Alle</button>
   <button class="filter-btn" onclick="setFilter('open', this)">🟡 Offen</button>
   <button class="filter-btn" onclick="setFilter('converged', this)">✅ Konvergiert</button>
+  <button class="filter-btn" onclick="setFilter('pre_converged', this)">⚪ Pre-Konv.</button>
   <button class="filter-btn" onclick="setFilter('resolved', this)">⚫ Aufgelöst</button>
   <span class="filter-sep">|</span>
+  <button class="filter-btn" onclick="setFilter('trade', this)">💰 Trade-fähig (≥5pp)</button>
+  <button class="filter-btn" onclick="setFilter('track', this)">👁 Track (2-5pp)</button>
   <button class="filter-btn" onclick="setFilter('steam', this)">🔥 Steam Lag only</button>
   <span class="sort-label">Sortierung:</span>
   <button class="sort-btn active" id="sort-ts" onclick="setSort('ts')">Neueste zuerst</button>
@@ -372,10 +376,13 @@ function setSort(s) {
 
 function filteredSignals() {
   let list = [...allSignals];
-  if (currentFilter === 'open')      list = list.filter(s => s.status === 'OPEN');
-  if (currentFilter === 'converged') list = list.filter(s => s.status === 'CONVERGED');
-  if (currentFilter === 'resolved')  list = list.filter(s => s.status === 'RESOLVED');
-  if (currentFilter === 'steam')     list = list.filter(s => s.steamLagAtSignal);
+  if (currentFilter === 'open')           list = list.filter(s => s.status === 'OPEN');
+  if (currentFilter === 'converged')      list = list.filter(s => s.status === 'CONVERGED');
+  if (currentFilter === 'pre_converged')  list = list.filter(s => s.status === 'PRE_CONVERGED');
+  if (currentFilter === 'resolved')       list = list.filter(s => s.status === 'RESOLVED');
+  if (currentFilter === 'steam')          list = list.filter(s => s.steamLagAtSignal);
+  if (currentFilter === 'trade')          list = list.filter(s => (s.entryTier === 'trade') || (s.entryEdgePp || 0) >= 5);
+  if (currentFilter === 'track')          list = list.filter(s => (s.entryTier === 'track') || ((s.entryEdgePp || 0) >= 2 && (s.entryEdgePp || 0) < 5));
 
   if (currentSort === 'ts') {
     list.sort((a,b) => (b.signalTs || '').localeCompare(a.signalTs || ''));
@@ -411,8 +418,14 @@ function renderCard(s) {
   const snaps    = s.snapshots || [];
 
   // Status badge
-  const statusLabels = { open: '🟡 OFFEN', converged: '✅ KONVERGIERT', resolved: '⚫ AUFGELÖST' };
+  const statusLabels = { open: '🟡 OFFEN', converged: '✅ KONVERGIERT', pre_converged: '⚪ PRE-KONV.', resolved: '⚫ AUFGELÖST' };
   const statusBadge  = `<span class="status-badge ${status}">${statusLabels[status] || status}</span>`;
+
+  // Tier badge — zeigt ob Auto-Trigger-fähig oder nur Beobachtung
+  const tier = s.entryTier || (entry >= 5 ? 'trade' : entry >= 2 ? 'track' : 'sub_threshold');
+  const tierLabels = { trade: '💰 TRADE', track: '👁 TRACK', sub_threshold: '⊘ SUB' };
+  const tierColors = { trade: 'var(--green)', track: 'var(--yellow)', sub_threshold: 'var(--sub)' };
+  const tierBadge  = `<span class="status-badge" style="background:${tierColors[tier]}22;color:${tierColors[tier]};border:1px solid ${tierColors[tier]}55;font-size:9px;letter-spacing:.5px;">${tierLabels[tier]}</span>`;
 
   // Market pill
   const mktLabels = { hw:'Heimsieg', dr:'Unentschieden', aw:'Auswärtssieg', o25:'Over 2.5', u25:'Under 2.5', btts:'BTTS' };
@@ -513,6 +526,7 @@ function renderCard(s) {
       <div class="match-title">${s.homeFlag || ''} ${s.home || s.homeId} vs ${s.away || s.awayId} ${s.awayFlag || ''}</div>
       ${matchDateFmt ? `<div class="match-date">📅 ${matchDateFmt}</div>` : ''}
       ${mktPill}
+      ${tierBadge}
       ${statusBadge}
     </div>
     <div class="card-body">
