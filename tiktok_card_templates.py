@@ -25,6 +25,38 @@ Theme-Mapping (Angle → Farbe + Badge-Text):
 """
 from __future__ import annotations
 
+import base64
+from pathlib import Path
+
+# ── Logo als base64-Data-URL einbetten ────────────────────────────────────────
+# So sind die HTMLs self-contained — Playwright braucht keinen extra file-Pfad
+# und der TikTok-Card-Look hängt nicht von einem Asset-Ordner ab.
+_LOGO_PATH = Path(__file__).parent / "cocobet-logo.png"
+_LOGO_DATA_URL = ""
+try:
+    if _LOGO_PATH.exists():
+        _b64 = base64.b64encode(_LOGO_PATH.read_bytes()).decode("ascii")
+        _LOGO_DATA_URL = f"data:image/png;base64,{_b64}"
+except Exception:
+    _LOGO_DATA_URL = ""
+
+
+def _logo_block(size: int = 54) -> str:
+    """Liefert <img>-Tag oder Fallback-Kreis."""
+    if _LOGO_DATA_URL:
+        return (
+            f'<img src="{_LOGO_DATA_URL}" alt="CocoBet" '
+            f'style="width:{size}px;height:{size}px;border-radius:50%;'
+            f'object-fit:cover;box-shadow:0 0 24px rgba(245,197,24,0.20);'
+            f'display:block;">'
+        )
+    return (
+        f'<div style="width:{size}px;height:{size}px;border-radius:50%;'
+        f'background:#f5c518;display:flex;align-items:center;justify-content:center;'
+        f'font-size:9px;font-weight:900;color:#000;letter-spacing:1px;'
+        f'box-shadow:0 0 24px rgba(245,197,24,0.25);">COCO<br>BET</div>'
+    )
+
 # ── Theme-Definitionen ────────────────────────────────────────────────────────
 THEMES = {
     "naechste_aera": {
@@ -152,14 +184,6 @@ body {{
 .logo {{
   display:flex; justify-content:center; margin-bottom:24px;
 }}
-.logo-circle {{
-  width:54px; height:54px; border-radius:50%;
-  background:#f5c518;
-  display:flex; align-items:center; justify-content:center;
-  font-size:9px; font-weight:900; color:#000;
-  letter-spacing:1px;
-  box-shadow: 0 0 24px rgba(245,197,24,0.25);
-}}
 
 .badge {{
   display:flex; justify-content:center; margin-bottom:30px;
@@ -248,7 +272,7 @@ body {{
 <body>
 <div class="card">
   {series_html}
-  <div class="logo"><div class="logo-circle">COCO<br>BET</div></div>
+  <div class="logo">{_logo_block(54)}</div>
   <div class="badge"><div class="badge-inner">{t["badge"]}</div></div>
 
   <div class="number-box">
