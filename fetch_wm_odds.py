@@ -152,7 +152,9 @@ def _best_odds(bookmakers: list, our_book_prio: list) -> dict | None:
     """
     Extract h2h odds from event bookmaker list.
     Prefers pinnacle, then bet365, then any available.
-    Returns {"hw": float, "dr": float, "aw": float, "bookmaker": str}
+    Returns {"_oc": {...}, "bookmaker": str, "_public_oc": {...}, "_public_bk": str}
+    Wenn pinnacle gewählt wird, wird bet365 als public-Bookie zusätzlich extrahiert
+    (für Public-vs-Sharp Bias-Berechnung).
     """
     candidates = {}
     for bk in bookmakers:
@@ -166,19 +168,37 @@ def _best_odds(bookmakers: list, our_book_prio: list) -> dict | None:
             candidates[bk_key] = outcomes
     if not candidates:
         return None
-    # Pick preferred bookmaker
+
+    # Public-Proxy: bet365 wenn vorhanden, sonst williamhill/unibet/betfair
+    PUBLIC_PRIO = ["bet365", "williamhill", "unibet", "betfair"]
+    public_oc = None
+    public_bk = None
+    for pp in PUBLIC_PRIO:
+        if pp in candidates:
+            public_oc = candidates[pp]
+            public_bk = pp
+            break
+
+    # Pick preferred bookmaker (Pinnacle als Sharp)
     for prio in our_book_prio:
         if prio in candidates:
             oc = candidates[prio]
-            vals = list(oc.values())
-            if len(vals) == 3:
-                # Sort by value: lowest = favourite (home win usually listed first by API)
-                return {"_oc": oc, "bookmaker": prio}
-            elif len(vals) == 2:
-                return {"_oc": oc, "bookmaker": prio}
+            # Public-Bookie sollte nicht derselbe wie Sharp sein
+            if public_bk == prio:
+                public_oc = None
+                public_bk = None
+                for pp in PUBLIC_PRIO:
+                    if pp != prio and pp in candidates:
+                        public_oc = candidates[pp]
+                        public_bk = pp
+                        break
+            return {
+                "_oc": oc, "bookmaker": prio,
+                "_public_oc": public_oc, "_public_bk": public_bk,
+            }
     # Fall back to any
     for bk_key, oc in candidates.items():
-        return {"_oc": oc, "bookmaker": bk_key}
+        return {"_oc": oc, "bookmaker": bk_key, "_public_oc": None, "_public_bk": None}
     return None
 
 
@@ -236,12 +256,37 @@ def _extract_h2h(event: dict, home_id: str, away_id: str) -> dict | None:
     if home_win is None or away_win is None:
         return None
 
-    return {
+    out = {
         "hw": round(home_win, 3),
         "dr": round(draw, 3) if draw else None,
         "aw": round(away_win, 3),
         "bookmaker": bk_result["bookmaker"],
     }
+
+    # Public-Bookie (bet365 oder Fallback) für Public-vs-Sharp-Vergleich
+    public_oc = bk_result.get("_public_oc")
+    if public_oc:
+        p_home = p_draw = p_away = None
+        for name, price in public_oc.items():
+            name_id = _name_to_id(name)
+            if name_id == home_id:
+                p_home = price
+            elif name_id == away_id:
+                p_away = price
+            elif name.lower() in ("draw", "tie", "x"):
+                p_draw = price
+        if p_draw is None and len(public_oc) == 3:
+            prices = sorted(public_oc.values())
+            remaining = [p for p in prices if p != p_home and p != p_away]
+            if remaining:
+                p_draw = remaining[0]
+        if p_home is not None and p_away is not None:
+            out["public_hw"] = round(p_home, 3)
+            out["public_dr"] = round(p_draw, 3) if p_draw else None
+            out["public_aw"] = round(p_away, 3)
+            out["public_bookmaker"] = bk_result["_public_bk"]
+
+    return out
 
 
 def _load_history() -> dict:

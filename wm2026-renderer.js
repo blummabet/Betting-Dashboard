@@ -14,13 +14,14 @@
   'use strict';
 
   // ── Module state ──────────────────────────────────────
-  let _wmData       = null;
-  let _polyLookup   = {};   // key: "HOME-AWAY" → poly fixture object
-  let _travelLookup = {};   // key: TEAM_ID → travel burden object
-  let _activeGroup  = 'all';
-  let _activeMd     = 'all';   // matchday filter: 'all' | 1 | 2 | 3
-  let _activeSort   = 'date';  // 'date' | 'edge' | 'upset'
-  let _loaded       = false;
+  let _wmData         = null;
+  let _polyLookup     = {};   // key: "HOME-AWAY" → poly fixture object
+  let _travelLookup   = {};   // key: TEAM_ID → travel burden object
+  let _confidenceStats = null;  // pick_confidence_stats.json
+  let _activeGroup    = 'all';
+  let _activeMd       = 'all';   // matchday filter: 'all' | 1 | 2 | 3
+  let _activeSort     = 'date';  // 'date' | 'edge' | 'upset'
+  let _loaded         = false;
 
   const CO_HOSTS = new Set(['MEX', 'USA', 'CAN']);
 
@@ -43,10 +44,11 @@
       </div>`;
 
     try {
-      const [wmResp, polyResp, travelResp] = await Promise.all([
+      const [wmResp, polyResp, travelResp, confResp] = await Promise.all([
         fetch('wm2026-data.json?t=' + Date.now()),
         fetch('wm_poly_prices.json?t=' + Date.now()).catch(() => null),
         fetch('wm_travel_burden.json?t=' + Date.now()).catch(() => null),
+        fetch('pick_confidence_stats.json?t=' + Date.now()).catch(() => null),
       ]);
       if (!wmResp.ok) throw new Error('HTTP ' + wmResp.status);
       _wmData = await wmResp.json();
@@ -65,6 +67,10 @@
         // travelRaw ist {TEAM_ID: {...}} — direkt als Lookup nutzbar
         _travelLookup = travelRaw || {};
         window._wmTravelBurden = _travelLookup;   // backward compat mit altem Code
+      }
+
+      if (confResp && confResp.ok) {
+        _confidenceStats = await confResp.json();
       }
 
       _loaded = true;
@@ -413,10 +419,24 @@
     if (!isPlayed && heroPick) {
       const dq    = heroPick.dataQuality || 'elo';
       const dqCls = dq === 'full' ? 'cc-tier-full' : '';
+      // Confidence-Backtest: zeige Hit-Rate vergleichbarer Picks
+      const conf = _confidenceFor(heroPick);
+      let confHtml = '';
+      if (conf && conf.n >= 3) {
+        const scopeLabel = {
+          cluster: 'identische Picks',
+          market:  `auf ${heroPick.market}`,
+          angle:   `auf ${_angleKeyFromMarket(heroPick.market)}-Picks`,
+          global:  'WM-Picks gesamt',
+        }[conf.scope] || 'Vergleich';
+        const cls = conf.rate >= 60 ? 'cc-val-hot' : conf.rate < 40 ? 'cc-val-cool' : '';
+        confHtml = `<span class="cc-conf-backtest"><span class="cc-conf-rate ${cls}">${conf.rate}%</span> · n=${conf.n} ${scopeLabel}</span>`;
+      }
       html += `<div class="cc-actions">
         <div class="cc-data-tier">
           <span class="cc-tier-pill ${dqCls}">${dq}</span>
           <span class="cc-conf-text">· conf ${heroPick.conf || 'medium'}</span>
+          ${confHtml}
         </div>
         <a class="cc-detail-btn" href="matches/wm-match.html?m=${slug}" target="_blank">↗ Analyse</a>
         <button class="cc-share-btn" onclick="window.wmSharePick && window.wmSharePick('${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}')">📤 Posten</button>
@@ -670,6 +690,16 @@
       sentences.push(injSentences.join(' · ') + '.');
     }
 
+    // 2b) Public-vs-Sharp Bias — wenn das Massenpublikum eine Seite stark anders preist als Pinnacle
+    if (pick.publicBias && pick.publicBias.pp >= 4) {
+      const pb = pick.publicBias;
+      const ocName = { hw: 'Heimsieg', dr: 'Unentschieden', aw: 'Auswärtssieg' }[pb.outcome] || pb.outcome;
+      const ocTeam = pb.outcome === 'hw' ? home.name : pb.outcome === 'aw' ? away.name : null;
+      const verb = pb.direction === 'over' ? '<strong>über-bettet</strong>' : '<strong>unter-bettet</strong>';
+      const target = ocTeam ? `${ocTeam} (${ocName})` : ocName;
+      sentences.push(`💸 <strong>${pb.bookmaker}</strong> ${verb} ${target} um <strong>${pb.pp}pp</strong> vs Pinnacle — Sharps sehen das Public-Money gegenläufig.`);
+    }
+
     // 3) ST3 Standings-Druck (Aufstiegs-Kontext)
     if (fx.matchday >= 3 && standing && standing.length) {
       const hRow = standing.find(s => s.id === fx.home);
@@ -844,6 +874,14 @@
       signals.push({ label: `${away.flag} ohne ${awayOut.position || 'Star'}`, value: awayOut.name.split(' ').pop(), cls: 'cc-val-cool' });
     }
 
+    // Public-vs-Sharp Bias als prominentes Signal (knallt — zeigt wo das Volumen-Geld irrt)
+    if (pick?.publicBias && pick.publicBias.pp >= 4) {
+      const pb = pick.publicBias;
+      const ocShort = { hw: 'HW', dr: 'X', aw: 'AW' }[pb.outcome] || pb.outcome;
+      const sign = pb.direction === 'over' ? '+' : '-';
+      signals.unshift({ label: `💸 Public-Bias ${ocShort}`, value: `${sign}${pb.pp}pp`, cls: 'cc-val-hot' });
+    }
+
     return signals.slice(0, 4);
   }
 
@@ -895,6 +933,47 @@
     if (v.includes('seattle') || v.includes('lumen'))                                   return { off: -7, city: 'Seattle', tzShort: 'PDT' };
     if (v.includes("levi's") || v.includes('santa clara') || v.includes('san francisco')) return { off: -7, city: 'SF', tzShort: 'PDT' };
     return null;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  Pick-Confidence Lookup — historische Hit-Rate für einen Pick
+  //  Versucht zuerst engsten Cluster, fällt dann auf Markt/Angle zurück.
+  // ─────────────────────────────────────────────────────
+  function _confidenceFor(pick) {
+    if (!_confidenceStats || !pick) return null;
+    const angleKey = _angleKeyFromMarket(pick.market);
+    const edgeBkt  = (pick.edgePP == null) ? 'n/a'
+                   : pick.edgePP < 5  ? '0-5pp'
+                   : pick.edgePP < 10 ? '5-10pp'
+                   : '10pp+';
+    const dq       = pick.dataQuality || '?';
+    const clusterKey = `${pick.market}|${angleKey}|${edgeBkt}|${dq}`;
+    // 1. Exakter 4-dim Cluster
+    const cluster = (_confidenceStats.byCluster || {})[clusterKey];
+    if (cluster && cluster.n >= 3) return { ...cluster, scope: 'cluster' };
+    // 2. byMarket
+    const m = (_confidenceStats.byMarket || {})[pick.market];
+    if (m && m.n >= 5) return { ...m, scope: 'market' };
+    // 3. byAngle
+    const a = (_confidenceStats.byAngle || {})[angleKey];
+    if (a && a.n >= 8) return { ...a, scope: 'angle' };
+    // 4. Global
+    const g = _confidenceStats.global || {};
+    if (g.n >= 15) return { ...g, scope: 'global' };
+    return null;
+  }
+  function _angleKeyFromMarket(market) {
+    const m = (market || '').toLowerCase();
+    if (m.includes('über') || m.includes('over')) return m.includes('2.5') ? 'torfest' : 'other';
+    if (m.includes('unter') || m.includes('under')) return m.includes('2.5') ? 'defshow' : 'other';
+    if (m.includes('beide teams treffen') || m.includes('btts')) {
+      return (m.includes('nein') || m.includes('no')) ? 'defshow' : 'torfest';
+    }
+    if (m.includes('heim') || m.includes('home') || m === '1') return 'pflicht';
+    if (m.includes('auswärt') || m.includes('away') || m === '2') return 'pflicht';
+    if (m.includes('unentsch') || m.includes('draw')) return 'duell';
+    if (m.includes('dnb')) return 'pflicht';
+    return 'other';
   }
 
   // ─────────────────────────────────────────────────────

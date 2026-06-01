@@ -254,6 +254,49 @@ def devig_1x2(hw: float, dr: float, aw: float) -> tuple[float, float, float]:
     return (1/hw)/tot, (1/dr)/tot, (1/aw)/tot
 
 
+def compute_public_bias(odds_snap: dict) -> dict | None:
+    """
+    Vergleicht Sharp (Pinnacle) vs Public (bet365) implied probability.
+
+    Returns:
+        None wenn Public-Daten fehlen
+        {
+            "hw": +X (pp),   # positiv = Public überbettet Heimsieg
+            "dr": +X,
+            "aw": +X,
+            "max_abs": X,    # absoluter Max-Bias über alle 3 Outcomes
+            "max_outcome": "hw" | "dr" | "aw",
+            "max_direction": "over" | "under",   # Public über- oder unter-bettet
+            "public_bk": str,
+        }
+    """
+    # Sharp: Pinnacle aus den Standard-Feldern
+    s_hw, s_dr, s_aw = odds_snap.get("hw"), odds_snap.get("dr"), odds_snap.get("aw")
+    p_hw, p_dr, p_aw = odds_snap.get("public_hw"), odds_snap.get("public_dr"), odds_snap.get("public_aw")
+    if not all([s_hw, s_dr, s_aw, p_hw, p_dr, p_aw]):
+        return None
+
+    sharp = devig_1x2(s_hw, s_dr, s_aw)
+    public = devig_1x2(p_hw, p_dr, p_aw)
+
+    # Public - Sharp in pp (positiv = Public sieht höhere Wahrscheinlichkeit)
+    diff_hw = round((public[0] - sharp[0]) * 100, 1)
+    diff_dr = round((public[1] - sharp[1]) * 100, 1)
+    diff_aw = round((public[2] - sharp[2]) * 100, 1)
+
+    diffs = {"hw": diff_hw, "dr": diff_dr, "aw": diff_aw}
+    max_oc = max(diffs, key=lambda k: abs(diffs[k]))
+    max_val = diffs[max_oc]
+
+    return {
+        "hw": diff_hw, "dr": diff_dr, "aw": diff_aw,
+        "max_abs": round(abs(max_val), 1),
+        "max_outcome": max_oc,
+        "max_direction": "over" if max_val > 0 else "under",
+        "public_bk": odds_snap.get("public_bookmaker", "?"),
+    }
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 #  3-SIGNAL VERDICT — Python-Port von pick-verdict.js computeVerdict()
 # ═══════════════════════════════════════════════════════════════════════════
@@ -366,7 +409,8 @@ def build_info(elo_diff: int, form_h: dict, form_a: dict,
                h2h: dict | None, mkey: str,
                lam_h: float, lam_a: float,
                travel_h: tuple = None, travel_a: tuple = None,
-               home_flag: str = "", away_flag: str = "") -> str:
+               home_flag: str = "", away_flag: str = "",
+               pub_bias: dict = None) -> str:
     parts = []
 
     # Elo
@@ -404,6 +448,12 @@ def build_info(elo_diff: int, form_h: dict, form_a: dict,
         parts.append(f"✈️ {home_flag or 'H'} {travel_h[1]} ({int((1-travel_h[0])*100)}%-xG)")
     if travel_a and travel_a[0] < 1.0:
         parts.append(f"✈️ {away_flag or 'A'} {travel_a[1]} ({int((1-travel_a[0])*100)}%-xG)")
+
+    # Public-vs-Sharp Bias (nur wenn signifikant ≥4pp)
+    if pub_bias and pub_bias.get("max_abs", 0) >= 4:
+        oc_de = {"hw":"HW","dr":"X","aw":"AW"}.get(pub_bias["max_outcome"], pub_bias["max_outcome"])
+        sign = "+" if pub_bias["max_direction"] == "over" else "-"
+        parts.append(f"💸 Public {sign}{pub_bias['max_abs']}pp {oc_de}")
 
     return " · ".join(parts)
 
@@ -502,6 +552,13 @@ def generate_picks_for_fixture(
     bk_hw = odds_snap.get("hw")
     bk_dr = odds_snap.get("dr")
     bk_aw = odds_snap.get("aw")
+
+    # Public-vs-Sharp Bias (Pinnacle vs bet365) — wenn beide Bookies verfügbar
+    pub_bias = compute_public_bias(odds_snap)
+    if pub_bias and pub_bias["max_abs"] >= 4 and VERBOSE:
+        oc_de = {"hw":"Heimsieg","dr":"Unentsch.","aw":"Auswärts"}[pub_bias["max_outcome"]]
+        dir_de = "ÜBER-bettet" if pub_bias["max_direction"] == "over" else "UNTER-bettet"
+        print(f"  💸 Public-Bias {pub_bias['public_bk']}: {oc_de} {dir_de} um {pub_bias['max_abs']}pp")
 
     # DNB aus devigged 1X2 ableiten (wenn Marktquoten vorhanden)
     bk_dnb_h = bk_dnb_a = None
@@ -668,9 +725,10 @@ def generate_picks_for_fixture(
         conf = edge_to_conf(v["edgePP"], v["verdict"])
         info = build_info(elo_diff, form_h, form_a, h2h or None, mkey, lam_h, lam_a,
                           travel_h=(trv_h, trv_h_lbl), travel_a=(trv_a, trv_a_lbl),
-                          home_flag=home_t.get("flag",""), away_flag=away_t.get("flag",""))
+                          home_flag=home_t.get("flag",""), away_flag=away_t.get("flag",""),
+                          pub_bias=pub_bias)
 
-        picks.append({
+        pick_dict = {
             "market":    label,
             "odds":      round(bk, 2),
             "modelOdds": m_odds,
@@ -685,7 +743,16 @@ def generate_picks_for_fixture(
             "result":    None,
             "clvPP":       round(v.get("clvPP", 0.0), 1),
             "dataQuality": data_quality,
-        })
+        }
+        # Public-Bias als strukturiertes Feld — Renderer kann's für Story nutzen
+        if pub_bias and pub_bias.get("max_abs", 0) >= 4:
+            pick_dict["publicBias"] = {
+                "outcome":   pub_bias["max_outcome"],
+                "direction": pub_bias["max_direction"],
+                "pp":        pub_bias["max_abs"],
+                "bookmaker": pub_bias.get("public_bk"),
+            }
+        picks.append(pick_dict)
 
     return picks
 
