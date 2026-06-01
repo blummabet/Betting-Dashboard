@@ -1090,6 +1090,119 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm-event-link-btn{padding:10px 14px 11px;font-size:11px;background:rgba(0,212,161,.05);letter-spacing:.2px;}
 .wm-event-link-btn:hover{background:rgba(0,212,161,.12);}
 
+/* ═══════════════════════════════════════════════════════════════
+   WM 2026 COMMUNITY CARDS — Pick-Hero / Story / Confidence
+   ═══════════════════════════════════════════════════════════════ */
+.cc-card{position:relative;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .2s;}
+.cc-card:hover{transform:translateY(-2px);border-color:rgba(0,212,161,.3);}
+.cc-card.cc-tier-bet{border-color:rgba(0,212,161,.25);}
+.cc-card.cc-tier-abw{border-color:rgba(227,179,65,.25);}
+.cc-card.cc-tier-watch{opacity:.7;}
+.cc-card.cc-played{opacity:.55;}
+.cc-card.cc-today{box-shadow:0 0 0 1px rgba(227,179,65,.4) inset;}
+
+/* Hot edge badge — pulsing */
+.cc-hot-badge{position:absolute;top:12px;right:12px;background:linear-gradient(135deg,#ff6b35,#f85149);color:#fff;font-size:10px;font-weight:800;padding:4px 8px;border-radius:6px;letter-spacing:.5px;z-index:2;box-shadow:0 4px 12px rgba(255,107,53,.4);animation:cc-pulse 2s infinite;}
+@keyframes cc-pulse{0%,100%{box-shadow:0 4px 12px rgba(255,107,53,.4);}50%{box-shadow:0 4px 20px rgba(255,107,53,.7);}}
+
+/* Top: Angle + teams + meta */
+.cc-top{padding:18px 20px 14px;background:linear-gradient(180deg,rgba(255,255,255,.025),transparent);}
+.cc-angle{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:5px 10px;border-radius:6px;letter-spacing:.3px;margin-bottom:14px;}
+.cc-a-torfest{background:rgba(248,81,73,.12);color:#ff8484;border:1px solid rgba(248,81,73,.3);}
+.cc-a-defshow{background:rgba(76,201,240,.12);color:#4cc9f0;border:1px solid rgba(76,201,240,.3);}
+.cc-a-pflicht{background:rgba(245,197,24,.12);color:#f5c518;border:1px solid rgba(245,197,24,.3);}
+.cc-a-underdog{background:rgba(163,113,247,.12);color:#a371f7;border:1px solid rgba(163,113,247,.3);}
+.cc-a-duell{background:rgba(0,212,161,.12);color:var(--accent);border:1px solid rgba(0,212,161,.3);}
+.cc-a-eroeff{background:rgba(240,136,62,.12);color:#f0883e;border:1px solid rgba(240,136,62,.3);}
+.cc-a-druck{background:rgba(248,81,73,.18);color:#f85149;border:1px solid rgba(248,81,73,.4);}
+.cc-a-titel{background:rgba(245,197,24,.16);color:#f5c518;border:1px solid rgba(245,197,24,.4);}
+.cc-a-dead{background:rgba(139,148,158,.10);color:var(--muted);border:1px solid rgba(139,148,158,.25);}
+
+.cc-teams{display:flex;align-items:center;gap:12px;margin-bottom:6px;flex-wrap:wrap;}
+.cc-team{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700;color:var(--text);}
+.cc-team .cc-flag{font-size:26px;line-height:1;}
+.cc-flag-sm{font-size:13px;}
+.cc-vs{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:1px;}
+
+.cc-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--muted);}
+.cc-meta .cc-dot{width:3px;height:3px;border-radius:50%;background:var(--muted);display:inline-block;}
+.cc-meta .cc-venue{font-weight:600;color:var(--text);}
+.cc-env-pill{background:var(--card2);border:1px solid var(--border);padding:2px 7px;border-radius:10px;font-size:10px;}
+.cc-env-alt{color:#a78bfa;border-color:rgba(163,113,247,.3);}
+.cc-env-dome{color:#4cc9f0;border-color:rgba(76,201,240,.3);}
+.cc-env-heat{color:#f85149;border-color:rgba(248,81,73,.3);}
+
+/* Pick HERO */
+.cc-pick{margin:16px 20px;background:linear-gradient(135deg,rgba(0,212,161,.08),rgba(0,212,161,.02));border:1px solid rgba(0,212,161,.25);border-radius:12px;padding:18px 16px 16px;text-align:center;position:relative;}
+.cc-pick-abw{background:linear-gradient(135deg,rgba(227,179,65,.08),rgba(227,179,65,.02));border-color:rgba(227,179,65,.25);}
+.cc-pick-result{background:rgba(139,148,158,.08);border-color:rgba(139,148,158,.25);}
+.cc-pick-watch{background:rgba(139,148,158,.04);border-color:rgba(139,148,158,.15);}
+.cc-pick-label{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.cc-pick-abw .cc-pick-label{color:var(--yellow);}
+.cc-pick-result .cc-pick-label,.cc-pick-watch .cc-pick-label{color:var(--muted);}
+.cc-pick-market{font-size:21px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:6px;letter-spacing:-.3px;}
+.cc-pick-watch-text{font-size:12px;color:var(--muted);font-style:italic;}
+.cc-pick-odds{display:inline-flex;align-items:baseline;gap:4px;font-family:'SF Mono','Menlo',monospace;}
+.cc-pick-odds .cc-at{font-size:12px;color:var(--muted);}
+.cc-pick-odds .cc-num{font-size:32px;font-weight:900;color:var(--accent);letter-spacing:-1px;}
+.cc-pick-abw .cc-pick-odds .cc-num{color:var(--yellow);}
+.cc-pick-conf{margin-top:10px;display:flex;justify-content:center;gap:4px;}
+.cc-star{font-size:14px;color:rgba(255,255,255,.15);}
+.cc-star-full{color:var(--accent);}
+.cc-star-abw.cc-star-full{color:var(--yellow);}
+
+/* Story block */
+.cc-story{padding:0 20px 16px;font-size:13px;color:var(--text);line-height:1.55;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.cc-story strong{color:var(--accent);font-weight:700;}
+.cc-story-abw strong{color:var(--yellow);}
+.cc-story em{color:var(--muted);font-style:normal;font-size:12px;}
+
+/* Evidence grid */
+.cc-evidence{padding:0 20px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.cc-ev-block{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.cc-ev-label{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;}
+.cc-form{display:flex;gap:4px;align-items:center;margin-bottom:4px;}
+.cc-form-dot{width:16px;height:16px;border-radius:4px;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.cc-fd-w{background:var(--accent);color:#00261d;}
+.cc-fd-d{background:var(--muted);color:#1a1d22;}
+.cc-fd-l{background:var(--red);color:#310606;}
+.cc-form-team{font-size:10px;color:var(--muted);font-weight:600;display:flex;justify-content:space-between;margin-top:6px;}
+
+.cc-headstat{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.cc-headstat:last-child{margin-bottom:0;}
+.cc-headstat .cc-key{font-size:10px;color:var(--muted);flex:1;}
+.cc-headstat .cc-val{font-size:13px;font-weight:800;color:var(--text);font-family:'SF Mono',monospace;}
+.cc-val-hot{color:#ff6b35;}
+.cc-val-cool{color:#4cc9f0;}
+
+/* Other picks */
+.cc-otherpicks{padding:0 20px 14px;}
+.cc-op-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--card2);border-radius:6px;font-size:11px;margin-bottom:4px;border-left:2px solid transparent;}
+.cc-op-bet{border-left-color:var(--accent);}
+.cc-op-abw{border-left-color:var(--yellow);}
+.cc-op-verdict{font-size:9px;font-weight:800;letter-spacing:.4px;color:var(--muted);min-width:54px;}
+.cc-op-bet .cc-op-verdict{color:var(--accent);}
+.cc-op-abw .cc-op-verdict{color:var(--yellow);}
+.cc-op-market{flex:1;color:var(--text);font-weight:600;}
+.cc-op-odds{font-family:'SF Mono',monospace;font-weight:700;color:var(--text);}
+.cc-op-edge{font-size:10px;color:var(--accent);font-weight:700;}
+
+/* Actions */
+.cc-actions{display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:12px 20px 18px;border-top:1px solid var(--border);align-items:center;}
+.cc-data-tier{font-size:9px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.cc-tier-pill{background:rgba(240,136,62,.1);color:#f0883e;padding:2px 7px;border-radius:8px;font-weight:700;letter-spacing:.5px;}
+.cc-tier-pill.cc-tier-full{background:rgba(0,212,161,.1);color:var(--accent);}
+.cc-conf-text{color:var(--muted);}
+.cc-detail-btn,.cc-share-btn{background:var(--card2);border:1px solid var(--border);color:var(--muted);border-radius:8px;font-size:11px;font-weight:600;padding:6px 12px;cursor:pointer;transition:all .15s;font-family:inherit;text-decoration:none;display:inline-block;}
+.cc-share-btn:hover{background:var(--accent);color:#00261d;border-color:var(--accent);}
+.cc-detail-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+@media(max-width:640px){
+  .cc-evidence{grid-template-columns:1fr;}
+  .cc-pick-market{font-size:18px;}
+  .cc-pick-odds .cc-num{font-size:28px;}
+}
+
 /* ── WM Tracking Tab ──────────────────────────────────────── */
 .wm-trk-kpi-strip{display:flex;flex-wrap:wrap;gap:8px;background:var(--surface1);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:14px;}
 .wm-trk-kpi{display:flex;flex-direction:column;align-items:center;min-width:64px;flex:1;}

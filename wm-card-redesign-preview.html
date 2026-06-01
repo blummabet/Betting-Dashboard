@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>WM Card Redesign — Vorschau</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg:#0d1117; --card:#161b22; --card2:#1c2128; --border:#30363d;
+  --accent:#00d4a1; --red:#f85149; --yellow:#e3b341; --orange:#f0883e;
+  --text:#e6edf3; --muted:#8b949e; --purple:#a371f7; --blue:#58a6ff;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  padding: 30px 24px 80px;
+  min-height: 100vh;
+}
+.container { max-width: 1280px; margin: 0 auto; }
+.page-title { font-size: 26px; font-weight: 800; margin-bottom: 4px; }
+.page-sub { font-size: 13px; color: var(--muted); margin-bottom: 30px; }
+
+.section-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.2px; color: var(--muted);
+  margin: 30px 0 14px; display: flex; align-items: center; gap: 10px;
+}
+.section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.compare-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  margin-bottom: 12px;
+}
+.compare-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+}
+.compare-label.bad { color: #ef4444; }
+.compare-label.good { color: var(--accent); }
+
+/* ───────────────────────────────────────────────
+   OLD CARD STYLE (simulation of current renderer)
+   ─────────────────────────────────────────────── */
+.old-card {
+  background: var(--card); border: 2px solid #2d8a6a;
+  border-radius: 14px; padding: 16px;
+}
+.old-groupbar {
+  display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+  font-size:11px; color:var(--muted); margin-bottom:12px;
+}
+.old-groupbar .pill { background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:2px 8px; }
+.old-teams { display:grid; grid-template-columns: 1fr auto auto; gap:6px; align-items:center; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+.old-team { display:flex; align-items:center; gap:8px; font-size:13px; }
+.old-flag { font-size:18px; }
+.old-elo-delta { font-size:10px; font-weight:700; padding:2px 6px; border-radius:6px; background:rgba(0,212,161,.15); color:var(--accent); }
+.old-form-dots { display:flex; gap:2px; }
+.old-form-dot { width:6px; height:6px; border-radius:50%; }
+.old-dot-w { background:var(--accent); } .old-dot-d { background:var(--muted); } .old-dot-l { background:var(--red); }
+.old-odds { display:flex; gap:8px; }
+.old-odd { font-size:13px; font-weight:800; min-width:36px; text-align:center; padding:4px 6px; border-radius:6px; background:var(--card2); }
+.old-odd.highlight { background:rgba(0,212,161,.15); color:var(--accent); border:1px solid var(--accent); }
+.old-picks { background:var(--card2); border-radius:8px; padding:10px; margin-bottom:10px; }
+.old-pick-row { display:flex; gap:8px; align-items:center; font-size:11px; flex-wrap:wrap; padding:6px 0; }
+.old-verdict { background:var(--accent); color:#000; padding:2px 8px; border-radius:10px; font-size:9px; font-weight:800; }
+.old-verdict.abw { background:var(--yellow); }
+.old-pick-text { color:var(--text); font-weight:600; }
+.old-pick-meta { color:var(--muted); font-size:10px; }
+.old-edge-badge { background:rgba(0,212,161,.15); color:var(--accent); padding:2px 6px; border-radius:6px; font-size:10px; font-weight:700; }
+.old-prob-bar { display:flex; height:18px; border-radius:6px; overflow:hidden; margin-bottom:10px; font-size:10px; font-weight:700; }
+.old-prob-bar > div { display:flex; align-items:center; justify-content:center; }
+.old-strip { background:var(--card2); border-radius:6px; padding:6px 10px; font-size:10px; color:var(--muted); margin-bottom:10px; }
+.old-strip span.up { color:var(--accent); }
+.old-strip span.dn { color:var(--red); }
+.old-venue { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; font-size:10px; color:var(--muted); }
+.old-venue-pill { background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:2px 8px; }
+.old-xg { display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:10px; color:var(--muted); margin-bottom:10px; padding:8px; background:var(--card2); border-radius:6px; }
+.old-ai { font-size:10px; color:var(--muted); font-style:italic; margin-bottom:10px; line-height:1.5; }
+.old-poly-row { display:flex; gap:8px; font-size:10px; margin-bottom:8px; padding:6px; background:rgba(123,90,200,.08); border:1px solid rgba(123,90,200,.2); border-radius:6px; }
+
+/* ───────────────────────────────────────────────
+   NEW SHARP HEADER CARD
+   ─────────────────────────────────────────────── */
+.new-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  transition: all .15s;
+}
+.new-card.tier-hot {
+  border: 2px solid var(--red);
+  box-shadow: 0 0 24px rgba(248,81,73,.18);
+}
+.new-card.tier-strong { border: 2px solid var(--accent); }
+.new-card.tier-thin { border: 1px solid var(--border); }
+.new-card.tier-cold { opacity: .5; }
+
+.new-mini-meta {
+  display:flex; align-items:center; gap:10px;
+  font-size:10px; color:var(--muted); letter-spacing:.5px;
+  padding: 10px 16px 0;
+}
+.new-mini-meta .pill {
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:10px; padding:2px 7px; font-weight:600;
+}
+.new-mini-meta .live { color: var(--red); font-weight:700; }
+.new-mini-meta .tz { margin-left:auto; color: var(--muted); }
+
+/* SHARP HEADER — 3 columns */
+.sharp-header {
+  display: grid;
+  grid-template-columns: 1fr 130px 110px;
+  gap: 0;
+  padding: 14px 16px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Left column — teams */
+.sh-teams { padding-right:14px; border-right: 1px solid var(--border); }
+.sh-team-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.sh-team-row:last-child { margin-bottom:0; }
+.sh-flag { font-size:22px; line-height:1; }
+.sh-name { font-size:15px; font-weight:700; color:var(--text); }
+.sh-elo {
+  font-size:10px; font-weight:700;
+  padding:2px 6px; border-radius:5px; margin-left:auto;
+}
+.sh-elo.strong { background:rgba(0,212,161,.15); color:var(--accent); }
+.sh-elo.weak { background:rgba(248,81,73,.12); color:var(--red); }
+
+.sh-kickoff {
+  display:flex; gap:8px; align-items:center;
+  margin-top:10px; padding-top:10px; border-top:1px solid var(--border);
+  font-size:10px; color:var(--muted);
+}
+.sh-kickoff .days { color:var(--yellow); font-weight:700; }
+.sh-kickoff .when { color:var(--text); font-weight:600; }
+.sh-kickoff .local { color:var(--muted); font-style:italic; }
+
+/* Middle column — Edge headline */
+.sh-edge {
+  text-align:center;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  padding: 0 12px;
+  border-right: 1px solid var(--border);
+}
+.sh-edge-label {
+  font-size:9px; color:var(--muted);
+  text-transform:uppercase; letter-spacing:1.2px;
+  margin-bottom: 4px;
+}
+.sh-edge-num {
+  font-size:36px; font-weight:900; line-height:1;
+  color: var(--accent);
+}
+.sh-edge-num.thin { color: var(--yellow); }
+.sh-edge-num.cold { color: var(--muted); }
+.sh-edge-trend { font-size:11px; margin-top:2px; }
+.sh-edge-trend.up { color:var(--accent); }
+.sh-edge-trend.stable { color:var(--muted); }
+.sh-edge-trend.down { color:var(--red); }
+.sh-edge-market {
+  font-size:10px; color:var(--text); font-weight:600;
+  margin-top:6px;
+}
+.sh-edge-sub {
+  font-size:9px; color:var(--muted);
+  margin-top:1px;
+}
+
+/* Right column — Status stack */
+.sh-status { padding-left:12px; display:flex; flex-direction:column; gap:8px; justify-content:center; }
+.sh-mom-label {
+  font-size:8px; color:var(--muted);
+  text-transform:uppercase; letter-spacing:1px;
+}
+.sh-mom-bar { display:flex; gap:2px; height:6px; margin-top:3px; }
+.sh-mom-seg { flex:1; background:var(--card2); border-radius:1px; }
+.sh-mom-seg.fill { background:var(--accent); }
+.sh-mom-num { font-size:11px; color:var(--text); font-weight:700; margin-top:3px; }
+.sh-quality-pill {
+  font-size:9px; font-weight:700; text-align:center;
+  padding:3px 6px; border-radius:5px; letter-spacing:.4px;
+}
+.sh-quality-pill.elo { background:rgba(240,136,62,.15); color:var(--orange); border:1px solid rgba(240,136,62,.3); }
+.sh-quality-pill.pinn { background:rgba(0,212,161,.15); color:var(--accent); border:1px solid rgba(0,212,161,.3); }
+.sh-vol {
+  font-size:10px; color:var(--text); font-weight:700; text-align:center;
+}
+.sh-vol .lbl { color:var(--muted); font-weight:500; font-size:8px;
+  display:block; letter-spacing:.6px; text-transform:uppercase;
+}
+.sh-steam {
+  background: rgba(248,81,73,.18);
+  border: 1px solid var(--red);
+  border-radius: 6px;
+  padding: 4px 6px;
+  text-align:center;
+  font-size:9px;
+  font-weight:800;
+  color:var(--red);
+  letter-spacing:.5px;
+  animation: pulse 1.6s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; }
+  50% { opacity:.5; }
+}
+
+/* Body — collapsed */
+.new-body {
+  padding: 12px 16px;
+  display:grid; grid-template-columns: auto 1fr auto; gap:14px;
+  align-items:center; font-size:11px;
+}
+.nb-verdict {
+  font-size:10px; font-weight:800;
+  padding:4px 9px; border-radius:5px;
+  letter-spacing:.4px;
+}
+.nb-verdict.bet { background:rgba(0,212,161,.18); color:var(--accent); border:1px solid var(--accent); }
+.nb-verdict.abw { background:rgba(227,179,65,.15); color:var(--yellow); border:1px solid var(--yellow); }
+.nb-verdict.skip { background:rgba(248,81,73,.12); color:var(--red); border:1px solid var(--red); }
+
+.nb-quick-stats { display:flex; gap:14px; color:var(--muted); font-size:10px; }
+.nb-quick-stats .kv strong { color:var(--text); font-weight:700; }
+
+.nb-expand {
+  font-size:10px; color:var(--muted); padding:3px 9px;
+  border:1px solid var(--border); border-radius:6px; cursor:pointer;
+  background:var(--card2);
+}
+.nb-expand:hover { color:var(--accent); border-color:var(--accent); }
+
+/* GRID PREVIEW */
+.grid-demo {
+  display:grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.grid-card-mini {
+  background:var(--card); border-radius:10px; padding:10px 14px;
+  font-size:11px; display:flex; align-items:center; gap:12px;
+}
+.grid-card-mini .gm-flags { font-size:18px; min-width:50px; }
+.grid-card-mini .gm-teams { flex:1; font-weight:600; color:var(--text); }
+.grid-card-mini .gm-edge { font-size:18px; font-weight:900; min-width:64px; text-align:center; }
+.grid-card-mini .gm-mom { width:50px; }
+.grid-card-mini .gm-mom-bar { display:flex; gap:1px; height:4px; }
+.grid-card-mini .gm-mom-seg { flex:1; background:var(--card2); }
+.grid-card-mini .gm-mom-seg.fill { background:var(--accent); }
+.grid-card-mini.tier-hot { border:2px solid var(--red); box-shadow:0 0 18px rgba(248,81,73,.15); }
+.grid-card-mini.tier-strong { border:2px solid var(--accent); }
+.grid-card-mini.tier-thin { border:1px solid var(--border); }
+.grid-card-mini.tier-cold { opacity:.4; border:1px solid var(--border); }
+.grid-card-mini .gm-edge.hot { color:var(--red); }
+.grid-card-mini .gm-edge.strong { color:var(--accent); }
+.grid-card-mini .gm-edge.thin { color:var(--yellow); }
+.grid-card-mini .gm-edge.cold { color:var(--muted); }
+
+.notes {
+  background:var(--card); border:1px solid var(--border); border-radius:10px;
+  padding:18px 22px; margin-top:20px; font-size:13px; color:var(--text);
+  line-height:1.7;
+}
+.notes ul { padding-left:20px; }
+.notes li { margin-bottom:8px; }
+.notes strong { color:var(--accent); }
+.notes .red { color: var(--red); }
+.notes .yellow { color: var(--yellow); }
+.notes .orange { color: var(--orange); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="page-title">WM 2026 — Card Redesign Vorschau</div>
+  <div class="page-sub">Beispiel-Match: Brasilien vs Marokko · 13. Juni 2026 · Echte Daten aus wm_poly_prices.json</div>
+
+  <div class="section-title">Einzelkarte — Alt vs Neu</div>
+
+  <div class="compare-grid">
+    <div>
+      <div class="compare-label bad">▼ AKTUELL — 16 Zonen, keine Hierarchie, „0815"</div>
+
+      <div class="old-card">
+        <div class="old-groupbar">
+          <span class="pill">🌍 Gruppe C</span>
+          <span class="pill">ST 1</span>
+          <span>Fr 13.06 · 21:00 Uhr</span>
+        </div>
+
+        <div class="old-teams">
+          <div class="old-team">
+            <span class="old-flag">🇧🇷</span>
+            <span>Brasilien</span>
+            <span class="old-elo-delta">Elo +181</span>
+          </div>
+          <div class="old-form-dots">
+            <div class="old-form-dot old-dot-w"></div>
+            <div class="old-form-dot old-dot-w"></div>
+            <div class="old-form-dot old-dot-d"></div>
+            <div class="old-form-dot old-dot-w"></div>
+            <div class="old-form-dot old-dot-l"></div>
+          </div>
+          <div class="old-odds">
+            <span class="old-odd">1.65</span>
+            <span class="old-odd highlight">4.00</span>
+            <span class="old-odd">5.71</span>
+          </div>
+        </div>
+
+        <div class="old-teams">
+          <div class="old-team">
+            <span class="old-flag">🇲🇦</span>
+            <span>Marokko</span>
+          </div>
+          <div class="old-form-dots">
+            <div class="old-form-dot old-dot-w"></div>
+            <div class="old-form-dot old-dot-d"></div>
+            <div class="old-form-dot old-dot-w"></div>
+            <div class="old-form-dot old-dot-l"></div>
+            <div class="old-form-dot old-dot-w"></div>
+          </div>
+          <div></div>
+        </div>
+
+        <div class="old-picks">
+          <div class="old-pick-row">
+            <span class="old-verdict abw">ABWÄGEN</span>
+            <span class="old-pick-text">Unentschieden</span>
+            <span class="old-pick-meta">⭐⭐ · Elo +181 · xG 2.1:1.4</span>
+            <span class="old-edge-badge">+2.4pp</span>
+            <span class="old-pick-meta">@4.00</span>
+          </div>
+        </div>
+
+        <div class="old-prob-bar">
+          <div style="width:58%; background:rgba(0,212,161,.3);">58% 🇧🇷</div>
+          <div style="width:25%; background:rgba(139,148,158,.3);">25% X</div>
+          <div style="width:17%; background:rgba(248,81,73,.3);">17% 🇲🇦</div>
+        </div>
+
+        <div class="old-strip">
+          ▲ Unentschieden: 4.20 → 4.00 (<span class="up">+0.6pp</span>)
+        </div>
+
+        <div class="old-venue">
+          <span class="old-venue-pill">📍 SoFi Stadium</span>
+          <span class="old-venue-pill">🏛️ Dome</span>
+          <span class="old-venue-pill">🌤️ 22°C</span>
+          <span class="old-venue-pill">✈️ Marokko +9h Reise</span>
+        </div>
+
+        <div class="old-xg">
+          <div>🇧🇷 ⚽ 2.1 · 🛡 0.9</div>
+          <div>🇲🇦 ⚽ 1.4 · 🛡 1.1</div>
+          <div>O2.5: 58%</div>
+          <div>BTTS: 51%</div>
+        </div>
+
+        <div class="old-ai">
+          🤖 Auf dem Papier ist Brasilien klar überlegen, aber Marokko hat 2022 bewiesen…
+        </div>
+
+        <div class="old-poly-row">
+          <span style="color:var(--purple);font-weight:700;">Poly</span>
+          <span>HW 60.5%</span>
+          <span>X 22.5%</span>
+          <span>AW 17.5%</span>
+          <span style="margin-left:auto;color:var(--accent);">edge +2.4 · $37k</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="compare-label good">▲ NEU — Sharp Header, eine Aussage, sofort handelbar</div>
+
+      <div class="new-card tier-thin">
+        <div class="new-mini-meta">
+          <span class="pill">Gruppe C</span>
+          <span class="pill">Spieltag 1</span>
+          <span>Eröffnung</span>
+          <span class="tz">Fr 13.06 · 21:00 Berlin · 14:00 Dallas</span>
+        </div>
+
+        <div class="sharp-header">
+          <div class="sh-teams">
+            <div class="sh-team-row">
+              <span class="sh-flag">🇧🇷</span>
+              <span class="sh-name">Brasilien</span>
+              <span class="sh-elo strong">Elo 1959</span>
+            </div>
+            <div class="sh-team-row">
+              <span class="sh-flag">🇲🇦</span>
+              <span class="sh-name">Marokko</span>
+              <span class="sh-elo weak">−181</span>
+            </div>
+            <div class="sh-kickoff">
+              <span class="days">D−13</span>
+              <span>·</span>
+              <span class="when">Eröffnungsspiel</span>
+            </div>
+          </div>
+
+          <div class="sh-edge">
+            <div class="sh-edge-label">EDGE</div>
+            <div class="sh-edge-num">+2.4<span style="font-size:18px;">pp</span></div>
+            <div class="sh-edge-trend stable">― stabil</div>
+            <div class="sh-edge-market">Unentschieden</div>
+            <div class="sh-edge-sub">Poly 22.5 % vs Fair 24.9 %</div>
+          </div>
+
+          <div class="sh-status">
+            <div>
+              <div class="sh-mom-label">Momentum</div>
+              <div class="sh-mom-bar">
+                <div class="sh-mom-seg fill"></div>
+                <div class="sh-mom-seg fill"></div>
+                <div class="sh-mom-seg"></div>
+                <div class="sh-mom-seg"></div>
+                <div class="sh-mom-seg"></div>
+              </div>
+              <div class="sh-mom-num">2.4 / 10</div>
+            </div>
+            <div class="sh-quality-pill elo">elo_only</div>
+            <div class="sh-vol">
+              <span class="lbl">Liquidität</span>
+              $37 k
+            </div>
+          </div>
+        </div>
+
+        <div class="new-body">
+          <div class="nb-verdict abw">ABWÄGEN</div>
+          <div class="nb-quick-stats">
+            <div class="kv">Modell <strong>4.00</strong></div>
+            <div class="kv">Form <strong>WWDWL · WDWLW</strong></div>
+            <div class="kv">xG-Diff <strong>+0.7</strong></div>
+          </div>
+          <div class="nb-expand">+ Details</div>
+        </div>
+      </div>
+
+      <div class="new-card tier-hot" style="margin-top:20px;">
+        <div class="new-mini-meta">
+          <span class="pill">Gruppe H</span>
+          <span class="pill">Spieltag 2</span>
+          <span class="tz">Mo 15.06 · 02:00 Berlin · 19:00 Vancouver</span>
+        </div>
+        <div class="sharp-header">
+          <div class="sh-teams">
+            <div class="sh-team-row">
+              <span class="sh-flag">🇪🇸</span>
+              <span class="sh-name">Spanien</span>
+              <span class="sh-elo strong">Elo 1941</span>
+            </div>
+            <div class="sh-team-row">
+              <span class="sh-flag">🇨🇻</span>
+              <span class="sh-name">Kap Verde</span>
+              <span class="sh-elo weak">−372</span>
+            </div>
+            <div class="sh-kickoff">
+              <span class="days">D−15</span>
+              <span>·</span>
+              <span class="when">Auto-Bet Kandidat</span>
+            </div>
+          </div>
+
+          <div class="sh-edge">
+            <div class="sh-edge-label">EDGE</div>
+            <div class="sh-edge-num" style="color:var(--red);">+3.7<span style="font-size:18px;">pp</span></div>
+            <div class="sh-edge-trend up">▲ wächst</div>
+            <div class="sh-edge-market">Unentschieden</div>
+            <div class="sh-edge-sub">Poly 7.4 % vs Fair 11.1 %</div>
+          </div>
+
+          <div class="sh-status">
+            <div>
+              <div class="sh-mom-label">Momentum</div>
+              <div class="sh-mom-bar">
+                <div class="sh-mom-seg fill"></div>
+                <div class="sh-mom-seg fill"></div>
+                <div class="sh-mom-seg fill"></div>
+                <div class="sh-mom-seg fill"></div>
+                <div class="sh-mom-seg"></div>
+              </div>
+              <div class="sh-mom-num">3.7 / 10</div>
+            </div>
+            <div class="sh-steam">🔥 STEAM LAG</div>
+            <div class="sh-vol">
+              <span class="lbl">Liquidität</span>
+              $77 k
+            </div>
+          </div>
+        </div>
+        <div class="new-body">
+          <div class="nb-verdict bet">BET</div>
+          <div class="nb-quick-stats">
+            <div class="kv">Modell <strong>9.02</strong></div>
+            <div class="kv">Form <strong>WWWDD · WLWWL</strong></div>
+            <div class="kv">xG-Diff <strong>+1.4</strong></div>
+          </div>
+          <div class="nb-expand">+ Details</div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;font-style:italic;">
+        Zweite Karte zeigt eine „Hot Tier"-Karte mit Steam-Lag-Pulse (Auto-Trigger-Kandidat)
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Grid-Sortierung nach Momentum (statt nach Datum)</div>
+
+  <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">
+    Default-Sort = momentumScore desc. Im Grid stehen die Action-Karten oben, der Rest dimmt visuell zurück. Auf einen Blick weißt du wo du arbeitest.
+  </div>
+
+  <div class="grid-demo">
+    <div class="grid-card-mini tier-hot">
+      <div class="gm-flags">🇪🇸 🇨🇻</div>
+      <div class="gm-teams">Spanien vs Kap Verde</div>
+      <div class="gm-mom">
+        <div class="gm-mom-bar">
+          <div class="gm-mom-seg fill"></div><div class="gm-mom-seg fill"></div>
+          <div class="gm-mom-seg fill"></div><div class="gm-mom-seg fill"></div>
+          <div class="gm-mom-seg"></div>
+        </div>
+      </div>
+      <div class="gm-edge hot">+3.7pp</div>
+    </div>
+
+    <div class="grid-card-mini tier-strong">
+      <div class="gm-flags">🇪🇨 🇨🇼</div>
+      <div class="gm-teams">Ecuador vs Curaçao</div>
+      <div class="gm-mom">
+        <div class="gm-mom-bar">
+          <div class="gm-mom-seg fill"></div><div class="gm-mom-seg fill"></div>
+          <div class="gm-mom-seg fill"></div><div class="gm-mom-seg"></div>
+          <div class="gm-mom-seg"></div>
+        </div>
+      </div>
+      <div class="gm-edge strong">+3.3pp</div>
+    </div>
+
+    <div class="grid-card-mini tier-thin">
+      <div class="gm-flags">🇧🇷 🇲🇦</div>
+      <div class="gm-teams">Brasilien vs Marokko</div>
+      <div class="gm-mom">
+        <div class="gm-mom-bar">
+          <div class="gm-mom-seg fill"></div><div class="gm-mom-seg fill"></div>
+          <div class="gm-mom-seg"></div><div class="gm-mom-seg"></div>
+          <div class="gm-mom-seg"></div>
+        </div>
+      </div>
+      <div class="gm-edge thin">+2.4pp</div>
+    </div>
+
+    <div class="grid-card-mini tier-thin">
+      <div class="gm-flags">🇳🇱 🇸🇪</div>
+      <div class="gm-teams">Niederlande vs Schweden</div>
+      <div class="gm-mom">
+        <div class="gm-mom-bar">
+          <div class="gm-mom-seg fill"></div><div class="gm-mom-seg fill"></div>
+          <div class="gm-mom-seg"></div><div class="gm-mom-seg"></div>
+          <div class="gm-mom-seg"></div>
+        </div>
+      </div>
+      <div class="gm-edge thin">+2.3pp</div>
+    </div>
+
+    <div class="grid-card-mini tier-thin">
+      <div class="gm-flags">🇮🇶 🇳🇴</div>
+      <div class="gm-teams">Irak vs Norwegen</div>
+      <div class="gm-mom">
+        <div class="gm-mom-bar">
+          <div class="gm-mom-seg fill"></div><div class="gm-mom-seg fill"></div>
+          <div class="gm-mom-seg"></div><div class="gm-mom-seg"></div>
+          <div class="gm-mom-seg"></div>
+        </div>
+      </div>
+      <div class="gm-edge thin">+2.2pp</div>
+    </div>
+
+    <div class="grid-card-mini tier-cold">
+      <div class="gm-flags">🇩🇪 🇨🇮</div>
+      <div class="gm-teams">Deutschland vs Elfenbeinküste</div>
+      <div class="gm-mom">
+        <div class="gm-mom-bar">
+          <div class="gm-mom-seg fill"></div>
+          <div class="gm-mom-seg"></div><div class="gm-mom-seg"></div>
+          <div class="gm-mom-seg"></div><div class="gm-mom-seg"></div>
+        </div>
+      </div>
+      <div class="gm-edge cold">+0.6pp</div>
+    </div>
+
+    <div class="grid-card-mini tier-cold">
+      <div class="gm-flags">🇫🇷 🇸🇳</div>
+      <div class="gm-teams">Frankreich vs Senegal</div>
+      <div class="gm-mom">
+        <div class="gm-mom-bar">
+          <div class="gm-mom-seg"></div>
+          <div class="gm-mom-seg"></div><div class="gm-mom-seg"></div>
+          <div class="gm-mom-seg"></div><div class="gm-mom-seg"></div>
+        </div>
+      </div>
+      <div class="gm-edge cold">— kein Edge</div>
+    </div>
+
+    <div class="grid-card-mini tier-cold">
+      <div class="gm-flags">🏴󠁧󠁢󠁥󠁮󠁧󠁿 🇭🇷</div>
+      <div class="gm-teams">England vs Kroatien</div>
+      <div class="gm-mom">
+        <div class="gm-mom-bar">
+          <div class="gm-mom-seg"></div>
+          <div class="gm-mom-seg"></div><div class="gm-mom-seg"></div>
+          <div class="gm-mom-seg"></div><div class="gm-mom-seg"></div>
+        </div>
+      </div>
+      <div class="gm-edge cold">— kein Edge</div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <strong>Was sich geändert hat</strong>
+    <ul>
+      <li><strong>Eine Headline-Zahl</strong> — <strong>+2.4pp Edge auf Unentschieden</strong> in 36px fett, zentral. Das ist die <em>einzige</em> Frage die zählt: gibt's einen Edge, wo, wie groß.</li>
+      <li><strong>Momentum-Balken (0–10)</strong> — visuelle Konfidenz statt Sterne. 2.4 = thin tier (gelb), 3.7 = strong (grün), &gt;5 + Steam = <span class="red">hot (rot, pulst)</span>.</li>
+      <li><span class="orange"><strong>elo_only-Pille</strong></span> oben rechts — zeigt sofort dass die Daten noch dünn sind (alle 72 WM-Fixtures sind aktuell elo_only). Wird automatisch grün <strong>pinnacle</strong> sobald echte Buchmacher-Linien da sind.</li>
+      <li><strong>Liquidität direkt sichtbar</strong> — $37k oder $77k bestimmt deinen Stake-Cap. Heute versteckt in 10px Schrift.</li>
+      <li><strong>Zeit in 2 Zeitzonen</strong> — Berlin + Spielort. Bei US-Spielen relevant (02:00 Berlin = 19:00 Vancouver). Heute fehlt's komplett.</li>
+      <li><strong>Card-Border = echter Edge-Tier</strong>, nicht Pick-Verdict. Du siehst im Grid <em>sofort</em> wo Action ist.</li>
+      <li><strong>Body collapsed</strong> — Pick-Verdict + 3 Quick-Stats in einer Zeile. Detailansicht per Klick. Mobile-Höhe halbiert.</li>
+      <li><strong>Sortier-Default</strong> = momentumScore desc. Hot oben, kalt unten (gedimmt). Datums-Divider bleibt erhalten als Sub-Sort.</li>
+    </ul>
+    <strong>Was raus oder klein:</strong>
+    <ul>
+      <li>Elo-Prob-Bar (redundant mit Bookie-Odds)</li>
+      <li>3 separate Odds-Notationen (Bookie / Elo-Prob / Poly-Probs zeigen das Gleiche)</li>
+      <li>Venue-Pills (Höhe/Klima/Reise) — nur wenn relevant (≥1500m oder ≥30°C oder Dome), sonst in Detail-View</li>
+      <li>Generischer AI-Snippet — nur im Detail-View, nicht als Headline</li>
+      <li>Emoji-Spam (war 8–12 pro Karte, neu: 2 Flaggen + max 1 Status-Icon)</li>
+    </ul>
+  </div>
+
+  <div style="font-size:11px;color:var(--muted);margin-top:30px;text-align:center;">
+    cocobet · wm 2026 redesign-vorschau · echte daten aus wm_poly_prices.json (stand 31.05.26 13:25 utc)
+  </div>
+
+</div>
+</body>
+</html>

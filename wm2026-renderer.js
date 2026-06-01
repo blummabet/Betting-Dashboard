@@ -251,296 +251,462 @@
   }
 
   // ─────────────────────────────────────────────────────
-  //  CARD BUILDER
+  //  CARD BUILDER — Community-First Layout (Pick/Story/Confidence)
   // ─────────────────────────────────────────────────────
   function _buildCard(fx, gData, home, away, fxOdds, fxPicks, fxPPicks, standing, homeSquad, awaySquad, homeForm, awayForm, polyFix, todayIso) {
-    const eloDiff  = (home.elo && away.elo) ? (home.elo - away.elo) : null;
-    const isPlayed = fx.date < todayIso;
-    const isToday  = fx.date === todayIso;
+    const eloDiff   = (home.elo && away.elo) ? (home.elo - away.elo) : null;
+    const isPlayed  = fx.date < todayIso;
+    const isToday   = fx.date === todayIso;
 
-    // Sort picks: BET first, then by edgePP desc
-    const sortedPicks = [...fxPicks].sort((a, b) => {
+    // Pick selection: pick BET/ABWÄGEN with highest edge as hero
+    const livePicks = fxPicks.filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN');
+    const sortedPicks = [...livePicks].sort((a, b) => {
       if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
       if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
       return (b.edgePP || 0) - (a.edgePP || 0);
     });
-    const hasBet    = fxPicks.some(p => p.verdict === 'BET');
-    const hasPicks  = fxPicks.length > 0;
-    const hasPlayer = fxPPicks.length > 0;
+    const heroPick   = sortedPicks[0] || null;
+    const otherPicks = sortedPicks.slice(1);
 
-    // Card accent — green only for BET, yellow for ABWÄGEN, purple for player, amber for today
-    const accentColor = hasBet ? '#3fb950'
-                      : hasPicks ? '#e3b341'
-                      : hasPlayer ? '#a78bfa'
-                      : isToday ? '#e3b341'
-                      : 'transparent';
+    // Hot badge: high poly edge OR steam lag — only when relevant
+    const showHotBadge = !!polyFix && (
+      (polyFix.bestEdge != null && polyFix.bestEdge >= 10) ||
+      polyFix.steamLag === true
+    );
 
-    const xgStats = _wmData.xgStats || {};
-    const homeXg  = xgStats[fx.home] || null;
-    const awayXg  = xgStats[fx.away] || null;
-    const upsetScores = _wmData.upsetScores || {};
-    const upsetScore  = upsetScores[`${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}`] || 0;
-    const aiPreviews  = _wmData.aiPreviews || {};
-    const aiSnippet   = (aiPreviews[`${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}`] || {}).tgSnippet || null;
+    // Card tier class
+    let cardCls = 'cc-card';
+    if (isPlayed)                              cardCls += ' cc-played';
+    else if (heroPick && heroPick.verdict === 'BET')      cardCls += ' cc-tier-bet';
+    else if (heroPick && heroPick.verdict === 'ABWÄGEN')  cardCls += ' cc-tier-abw';
+    else                                       cardCls += ' cc-tier-watch';
+    if (isToday) cardCls += ' cc-today';
 
-    let html = `<div class="wm-card${isPlayed ? ' wm-card-played' : ''}" style="--card-accent:${accentColor}">`;
+    let html = `<div class="${cardCls}">`;
 
-    // ─── Group bar ────────────────────────────────────
-    html += `
-    <div class="wm-card-groupbar">
-      <span class="wm-group-tag">🌍 ${gData.name || ('Gruppe ' + fx.groupKey)}</span>
-      <span class="wm-matchday-tag">ST ${fx.matchday}</span>
-      <span class="wm-groupbar-sep">·</span>
-      <span class="wm-date-tag">${_fmtDate(fx.date, fx.time)}</span>
-      ${isToday ? '<span class="wm-live-badge">● HEUTE</span>' : ''}
-      ${polyFix && polyFix.steamLag ? '<span class="wm-steam-mini">🔥 STEAM</span>' : ''}
+    // ─── Hot Edge Badge (only when massive edge / steam) ──
+    if (showHotBadge && polyFix.bestEdge != null) {
+      html += `<div class="cc-hot-badge">🔥 +${Math.round(polyFix.bestEdge)}pp Edge</div>`;
+    } else if (polyFix && polyFix.steamLag) {
+      html += `<div class="cc-hot-badge">🔥 Steam Lag</div>`;
+    }
+
+    // ─── TOP — Angle + Teams + Meta ───────────────────
+    const angle = _deriveAngle(heroPick, fx, eloDiff, polyFix, homeForm, awayForm, standing);
+    html += `<div class="cc-top">`;
+    if (angle) {
+      html += `<div class="cc-angle ${angle.cls}">${angle.icon} ${angle.label}</div>`;
+    }
+    html += `<div class="cc-teams">
+      <div class="cc-team"><span class="cc-flag">${home.flag}</span>${home.name}</div>
+      <div class="cc-vs">VS</div>
+      <div class="cc-team"><span class="cc-flag">${away.flag}</span>${away.name}</div>
     </div>`;
+    const groupLabel = (gData.name || ('Gruppe ' + fx.groupKey));
+    html += `<div class="cc-meta">
+      <span>${groupLabel} · ST ${fx.matchday}</span>
+      <span class="cc-dot"></span>
+      <span>${_fmtDate(fx.date, fx.time)}</span>
+      ${fx.venue ? `<span class="cc-dot"></span><span class="cc-venue">📍 ${fx.venue}</span>` : ''}
+      ${_venueEnvPill(fx.venue)}
+    </div></div>`;
 
-    // ─── Teams + Form + Odds ──────────────────────────
-    html += `<div class="wm-card-body">`;
-    html += `<div class="wm-teams">`;
-    // eloDiff > 0 means home stronger; show delta for the stronger side, negative for weaker
-    const homeEloDelta = eloDiff != null ? eloDiff : null;
-    const awayEloDelta = eloDiff != null ? -eloDiff : null;
-    html += _teamRow(home, standing, fx.home, 'home', homeForm, homeEloDelta);
-    html += `<div class="wm-draw-separator"><span>— vs —</span></div>`;
-    html += _teamRow(away, standing, fx.away, 'away', awayForm, awayEloDelta);
+    // ─── PICK HERO ─────────────────────────────────────
+    if (!isPlayed && heroPick) {
+      const isAbw = heroPick.verdict === 'ABWÄGEN';
+      const stars = heroPick.conf === 'high' ? 3 : heroPick.conf === 'medium' ? 2 : 1;
+      const oddsStr = heroPick.odds != null ? heroPick.odds.toFixed(2) : '—';
+      html += `<div class="cc-pick${isAbw ? ' cc-pick-abw' : ''}">
+        <div class="cc-pick-label">${isAbw ? 'Vorsichtiger Pick' : 'Unser Pick'}</div>
+        <div class="cc-pick-market">${heroPick.market}</div>
+        <div class="cc-pick-odds"><span class="cc-at">@</span><span class="cc-num">${oddsStr}</span></div>
+        <div class="cc-pick-conf">
+          ${[1,2,3].map(n => `<span class="cc-star${isAbw ? ' cc-star-abw' : ''} ${n <= stars ? 'cc-star-full' : 'cc-star-empty'}">★</span>`).join('')}
+        </div>
+      </div>`;
+    } else if (isPlayed && fx.result) {
+      html += `<div class="cc-pick cc-pick-result">
+        <div class="cc-pick-label">Endstand</div>
+        <div class="cc-pick-market">${fx.result.home}:${fx.result.away}</div>
+      </div>`;
+    } else if (!isPlayed && !heroPick) {
+      html += `<div class="cc-pick cc-pick-watch">
+        <div class="cc-pick-label">Beobachtungs-Spiel</div>
+        <div class="cc-pick-watch-text">Kein Pick mit Edge — Spielverlauf abwarten</div>
+      </div>`;
+    }
+
+    // ─── STORY block ──────────────────────────────────
+    if (!isPlayed && heroPick) {
+      const story = _buildStory(heroPick, fx, home, away, homeForm, awayForm, polyFix, eloDiff, standing);
+      if (story) {
+        html += `<div class="cc-story${heroPick.verdict === 'ABWÄGEN' ? ' cc-story-abw' : ''}">${story}</div>`;
+      }
+    }
+
+    // ─── EVIDENCE — Form + Key Signals ────────────────
+    html += `<div class="cc-evidence">`;
+    // Block A: Form last 5 with goals avg
+    html += `<div class="cc-ev-block">
+      <div class="cc-ev-label">Form letzten 5</div>`;
+    if (homeForm && homeForm.last5) {
+      html += `<div class="cc-form">${(homeForm.last5||[]).slice(0,5).map(r =>
+        `<div class="cc-form-dot cc-fd-${(r||'').toLowerCase()}">${r}</div>`).join('')}</div>`;
+      const homeAvg = homeForm.avgScored != null ? `${homeForm.avgScored.toFixed(1)} Tore Ø` : '';
+      html += `<div class="cc-form-team"><span><span class="cc-flag-sm">${home.flag}</span> ${home.name}</span><span>${homeAvg}</span></div>`;
+    }
+    if (awayForm && awayForm.last5) {
+      html += `<div class="cc-form" style="margin-top:8px;">${(awayForm.last5||[]).slice(0,5).map(r =>
+        `<div class="cc-form-dot cc-fd-${(r||'').toLowerCase()}">${r}</div>`).join('')}</div>`;
+      const awayAvg = awayForm.avgScored != null ? `${awayForm.avgScored.toFixed(1)} Tore Ø` : '';
+      html += `<div class="cc-form-team"><span><span class="cc-flag-sm">${away.flag}</span> ${away.name}</span><span>${awayAvg}</span></div>`;
+    }
+    if (!homeForm && !awayForm) {
+      html += `<div style="font-size:11px;color:var(--muted);font-style:italic;">Form-Daten ab Tournament-Start</div>`;
+    }
     html += `</div>`;
-
-    // Odds column
-    html += `<div class="wm-odds-col">`;
-    if (fxOdds && (fxOdds.hw || fxOdds.dr || fxOdds.aw)) {
-      // Highlight odds matching BET picks
-      const betMarkets = fxPicks.filter(p => p.verdict === 'BET').map(p => (p.market||'').toLowerCase());
-      const hlHome = betMarkets.some(m => m.includes('heim') || m.includes('home') || m === '1');
-      const hlDraw = betMarkets.some(m => m.includes('unentsch') || m.includes('draw') || m === 'x');
-      const hlAway = betMarkets.some(m => m.includes('auswärts') || m.includes('away') || m === '2');
-      html += _oddsCell(fxOdds.hw, 'H', hlHome);
-      html += _oddsCell(fxOdds.dr, 'X', hlDraw);
-      html += _oddsCell(fxOdds.aw, 'A', hlAway);
+    // Block B: Key signals based on pick angle
+    html += `<div class="cc-ev-block">
+      <div class="cc-ev-label">Schlüssel-Signale</div>`;
+    const signals = _buildSignals(heroPick, fx, home, away, homeForm, awayForm, polyFix, eloDiff);
+    if (signals.length) {
+      signals.forEach(s => {
+        html += `<div class="cc-headstat"><span class="cc-key">${s.label}</span><span class="cc-val ${s.cls || ''}">${s.value}</span></div>`;
+      });
     } else {
-      html += `<div class="wm-odds-empty">
-        <div class="wm-odds-na">—</div>
-        <div class="wm-odds-na">—</div>
-        <div class="wm-odds-na">—</div>
-        <div class="wm-odds-hint">Odds ab Jun</div>
-      </div>`;
+      html += `<div style="font-size:11px;color:var(--muted);font-style:italic;">Weitere Signale nach Daten-Vervollständigung</div>`;
     }
-    html += `</div>`; // wm-odds-col
-    html += `</div>`; // wm-card-body
+    html += `</div>`;
+    html += `</div>`; // cc-evidence
 
-    // ─── Match Picks — Zone 2 (immediately after teams) ──
-    if (hasPicks) {
-      html += `<div class="wm-picks-section">`;
-      html += `<div class="wm-section-header">🎯 PICKS</div>`;
-      for (const pick of sortedPicks) {
-        html += _buildPickRow(pick, false);
-      }
-      html += `</div>`;
-    }
-
-    // ─── Player Picks ─────────────────────────────────
-    if (hasPlayer) {
-      html += `<div class="wm-picks-section wm-player-section">`;
-      html += `<div class="wm-section-header" style="color:#a78bfa;">⚽ SPIELER-WETTEN</div>`;
-      for (const pp of fxPPicks) {
-        html += _buildPickRow(pp, true);
-      }
-      html += `</div>`;
-    }
-
-    // ─── Model Probability Bar ────────────────────────
-    if (home.elo && away.elo) {
-      const prob = _eloProbs(home.elo, away.elo, CO_HOSTS.has(fx.home));
-      html += `
-      <div class="wm-prob-bar">
-        <div class="wm-prob-h">
-          <span class="wm-prob-pct">${prob.h}%</span>
-          <span class="wm-prob-lbl">${home.flag}</span>
-        </div>
-        <div class="wm-prob-d">
-          <span class="wm-prob-lbl-center">ELO-MODELL</span>
-          <span class="wm-prob-pct">${prob.d}%</span>
-        </div>
-        <div class="wm-prob-a">
-          <span class="wm-prob-lbl">${away.flag}</span>
-          <span class="wm-prob-pct">${prob.a}%</span>
-        </div>
-      </div>`;
-    }
-
-    // ─── Odds strip — sharpest pp move across all markets ──
-    if (fxOdds && fxOdds.odds_open) {
-      const open = fxOdds.odds_open;
-      const moves = [];
-      if (fxOdds.hw  != null && open.hw  != null) moves.push({ pp: (100/fxOdds.hw)  - (100/open.hw),  label: 'Heimsieg',  cur: fxOdds.hw.toFixed(2) });
-      if (fxOdds.dr  != null && open.dr  != null) moves.push({ pp: (100/fxOdds.dr)  - (100/open.dr),  label: 'Unentsch.', cur: fxOdds.dr.toFixed(2) });
-      if (fxOdds.aw  != null && open.aw  != null) moves.push({ pp: (100/fxOdds.aw)  - (100/open.aw),  label: 'Auswärts',  cur: fxOdds.aw.toFixed(2) });
-      if (fxOdds.o25 != null && open.o25 != null) moves.push({ pp: (100/fxOdds.o25) - (100/open.o25), label: 'Über 2.5',  cur: fxOdds.o25.toFixed(2) });
-      if (fxOdds.u25 != null && open.u25 != null) moves.push({ pp: (100/fxOdds.u25) - (100/open.u25), label: 'Unter 2.5', cur: fxOdds.u25.toFixed(2) });
-      // Find sharpest move
-      moves.sort((a, b) => Math.abs(b.pp) - Math.abs(a.pp));
-      const best = moves[0];
-      if (best && Math.abs(best.pp) >= 1.0) {
-        const dir = best.pp > 0 ? '▲' : '▼';
-        const clr = best.pp > 0 ? 'var(--green)' : 'var(--red)';
-        html += `
-        <div class="wm-odds-strip">
-          <span class="wm-strip-label">LINIE</span>
-          <span style="color:${clr};font-weight:700;">${dir} ${Math.abs(best.pp).toFixed(1)}pp ${best.label}</span>
-          <span class="wm-strip-sep">·</span>
-          <span class="wm-strip-open">Kurs ${best.cur}</span>
+    // ─── Other picks compact (if more than hero) ─────────
+    if (otherPicks.length) {
+      html += `<div class="cc-otherpicks">
+        <div class="cc-ev-label" style="padding:0 0 6px 0;">Weitere Picks</div>`;
+      for (const op of otherPicks.slice(0, 3)) {
+        const cls = op.verdict === 'BET' ? 'cc-op-bet' : 'cc-op-abw';
+        const oddsStr = op.odds != null ? op.odds.toFixed(2) : '—';
+        const epp = op.edgePP != null ? ` <span class="cc-op-edge">+${op.edgePP}pp</span>` : '';
+        html += `<div class="cc-op-row ${cls}">
+          <span class="cc-op-verdict">${op.verdict}</span>
+          <span class="cc-op-market">${op.market}</span>
+          <span class="cc-op-odds">@${oddsStr}</span>${epp}
         </div>`;
       }
-    }
-
-    // ─── Venue + Climate pills ───────────────────────
-    if (fx.venue) {
-      // quick inline venue lookup for cards
-      const _vk = (fx.venue || '').toLowerCase().trim();
-      const _vmap = {
-        'estadio azteca':2200,'mexico city':2200,'azteca':2200,
-        'estadio akron':1566,'guadalajara':1566,'akron':1566,
-        'estadio bbva':540,'monterrey':540,'bbva':540,
-        'hard rock stadium':2,'miami':2,'hard rock':2,
-        "at&t stadium":170,'att stadium':170,'dallas':170,
-        'nrg stadium':15,'nrg':15,'houston':15,
-        'arrowhead stadium':320,'arrowhead':320,'kansas city':320,
-        'bc place':5,'vancouver':5,'bmo field':76,'toronto':76,
-      };
-      const _vtmap = {
-        'estadio azteca':'outdoor','mexico city':'outdoor','azteca':'outdoor',
-        'estadio akron':'outdoor','guadalajara':'outdoor','akron':'outdoor',
-        'estadio bbva':'outdoor','monterrey':'outdoor','bbva':'outdoor',
-        'hard rock stadium':'outdoor','miami':'outdoor','hard rock':'outdoor',
-        "at&t stadium":'dome','att stadium':'dome','dallas':'dome',
-        'nrg stadium':'dome','nrg':'dome','houston':'dome',
-        'bc place':'dome','vancouver':'dome',
-        'sofi stadium':'open-roof','sofi':'open-roof',
-      };
-      const _vtempmap = {
-        'estadio azteca':18,'mexico city':18,'azteca':18,
-        'estadio akron':25,'guadalajara':25,'akron':25,
-        'estadio bbva':36,'monterrey':36,'bbva':36,
-        'hard rock stadium':33,'miami':33,'hard rock':33,
-        'arrowhead stadium':33,'arrowhead':33,'kansas city':33,
-      };
-      // find matching key
-      let _matchKey = null;
-      for (const k of Object.keys(_vmap)) { if (_vk.includes(k)||k.includes(_vk)){_matchKey=k;break;} }
-      const _alt  = _matchKey ? _vmap[_matchKey]  : null;
-      const _vtyp = _matchKey ? (_vtmap[_matchKey]||'outdoor') : 'outdoor';
-      const _temp = _matchKey ? (_vtempmap[_matchKey]||null) : null;
-
-      let _envPills = '';
-      if (_alt != null) {
-        if      (_alt >= 2000) _envPills += `<span class="wm-env-pill wm-env-alt-high">🏔️ ${_alt}m</span>`;
-        else if (_alt >= 1000) _envPills += `<span class="wm-env-pill wm-env-alt-mid">🏔️ ${_alt}m</span>`;
-        else if (_alt >= 300)  _envPills += `<span class="wm-env-pill wm-env-alt-low">⛰️ ${_alt}m</span>`;
-      }
-      if (_vtyp === 'dome')      _envPills += `<span class="wm-env-pill wm-env-dome">🏛️ Dome</span>`;
-      else if (_vtyp==='open-roof') _envPills += `<span class="wm-env-pill wm-env-dome">🌤️ Offen</span>`;
-      if (_temp != null && _vtyp !== 'dome') {
-        if      (_temp >= 33) _envPills += `<span class="wm-env-pill wm-env-heat">🌡️ ${_temp}°C</span>`;
-        else if (_temp >= 28) _envPills += `<span class="wm-env-pill wm-env-warm">🌡️ ${_temp}°C</span>`;
-      }
-      // Travel burden pills (needs window._wmTravelBurden loaded by betting-dashboard.html)
-      const _tb = window._wmTravelBurden || {};
-      const _homeTb = _tb[fx.home], _awayTb = _tb[fx.away];
-      let _travelPills = '';
-      if (_homeTb || _awayTb) {
-        const _tbPill = (tb, flag) => {
-          if (!tb) return '';
-          const sc = tb.burden_score;
-          if (sc === 0) return '';
-          const col  = sc >= 7 ? '#f85149' : sc >= 4 ? '#f97316' : '#e3b341';
-          const bg   = sc >= 7 ? 'rgba(248,81,73,.10)' : sc >= 4 ? 'rgba(249,115,22,.10)' : 'rgba(227,179,65,.10)';
-          const brd  = sc >= 7 ? 'rgba(248,81,73,.30)' : sc >= 4 ? 'rgba(249,115,22,.28)' : 'rgba(227,179,65,.28)';
-          // find the relevant leg for this matchday
-          const leg = (tb.legs || []).find(l => l.matchday_to === fx.matchday);
-          const legStr = leg && !leg.same_venue ? ` ${leg.km.toLocaleString('de')}km` : '';
-          return `<span class="wm-env-pill" style="color:${col};background:${bg};border-color:${brd}">✈️ ${flag}${legStr}</span>`;
-        };
-        _travelPills = _tbPill(_homeTb, _homeTb?.flag||'') + _tbPill(_awayTb, _awayTb?.flag||'');
-      }
-      const _allPills = (_envPills || '') + (_travelPills || '');
-      html += `<div class="wm-venue">📍 ${fx.venue}${_allPills ? '<span class="wm-env-pills">' + _allPills + '</span>' : ''}</div>`;
-    }
-
-    // ─── Upset Score badge ────────────────────────────
-    if (upsetScore >= 6) {
-      html += `<div class="wm-upset-badge">💥 Upset-Potential ${upsetScore}/10</div>`;
-    }
-
-    // ─── Scenario banner ──────────────────────────────
-    const scenario = _buildScenario(home, away, eloDiff, fx.matchday, standing, fx, isPlayed);
-    if (scenario) {
-      html += `<div class="wm-scenario">${scenario}</div>`;
-    }
-
-    // ─── xG + Form Stats strip ────────────────────────
-    const hasXg   = homeXg || awayXg;
-    const hasForm = homeForm || awayForm;
-    if (hasXg || hasForm) {
-      html += `<div class="wm-stats-strip">`;
-      // Threshold-colored pill helper: over25Rate/bttsRate > 60% → green, < 40% → red
-      const ouPillCls = r => r > 0.60 ? 'wm-stat-pill wm-stat-ou-high' : r < 0.40 ? 'wm-stat-pill wm-stat-ou-low' : 'wm-stat-pill wm-stat-ou';
-      const bttsPillCls = r => r > 0.55 ? 'wm-stat-pill wm-stat-btts-high' : r < 0.35 ? 'wm-stat-pill wm-stat-btts-low' : 'wm-stat-pill wm-stat-btts';
-      // Home side
-      html += `<div class="wm-stats-team">`;
-      if (homeXg) html += `<span class="wm-stat-pill wm-stat-xg" title="xG Attack / Defense">⚽ ${homeXg.xgForAvg.toFixed(1)} · 🛡 ${homeXg.xgAgainstAvg.toFixed(1)}</span>`;
-      if (homeForm) {
-        if (homeForm.over25Rate != null) html += `<span class="${ouPillCls(homeForm.over25Rate)}">O2.5 ${Math.round(homeForm.over25Rate * 100)}%</span>`;
-        if (homeForm.bttsRate != null)   html += `<span class="${bttsPillCls(homeForm.bttsRate)}">BTTS ${Math.round(homeForm.bttsRate * 100)}%</span>`;
-      }
-      html += `</div>`;
-      // Away side
-      html += `<div class="wm-stats-team wm-stats-team-away">`;
-      if (awayXg) html += `<span class="wm-stat-pill wm-stat-xg" title="xG Attack / Defense">⚽ ${awayXg.xgForAvg.toFixed(1)} · 🛡 ${awayXg.xgAgainstAvg.toFixed(1)}</span>`;
-      if (awayForm) {
-        if (awayForm.over25Rate != null) html += `<span class="${ouPillCls(awayForm.over25Rate)}">O2.5 ${Math.round(awayForm.over25Rate * 100)}%</span>`;
-        if (awayForm.bttsRate != null)   html += `<span class="${bttsPillCls(awayForm.bttsRate)}">BTTS ${Math.round(awayForm.bttsRate * 100)}%</span>`;
-      }
-      html += `</div>`;
-      html += `</div>`; // wm-stats-strip
-    }
-
-    // ─── O2.5 / BTTS Odds row ────────────────────────
-    if (fxOdds && (fxOdds.o25 || fxOdds.bttsY)) {
-      html += `<div class="wm-ou-row">`;
-      if (fxOdds.o25)   html += `<div class="wm-ou-cell"><span class="wm-ou-lbl">O2.5</span><span class="wm-ou-val">${fxOdds.o25.toFixed(2)}</span></div>`;
-      if (fxOdds.u25)   html += `<div class="wm-ou-cell"><span class="wm-ou-lbl">U2.5</span><span class="wm-ou-val">${fxOdds.u25.toFixed(2)}</span></div>`;
-      if (fxOdds.bttsY) html += `<div class="wm-ou-cell"><span class="wm-ou-lbl">BTTS J</span><span class="wm-ou-val">${fxOdds.bttsY.toFixed(2)}</span></div>`;
-      if (fxOdds.bttsN) html += `<div class="wm-ou-cell"><span class="wm-ou-lbl">BTTS N</span><span class="wm-ou-val">${fxOdds.bttsN.toFixed(2)}</span></div>`;
       html += `</div>`;
     }
 
-    // ─── AI Snippet ───────────────────────────────────
-    if (aiSnippet && !isPlayed) {
-      html += `<div class="wm-ai-snippet">🤖 ${aiSnippet}</div>`;
-    }
-
-    // ─── Polymarket mini row ──────────────────────────
-    if (polyFix) {
-      html += _buildPolyRow(polyFix);
-    }
-
-    // ─── Squad Spotlight ──────────────────────────────
-    if (homeSquad || awaySquad) {
-      html += `<div class="wm-squad-spotlight">`;
-      html += `<div class="wm-section-header" style="color:var(--blue);font-size:9px;">👥 SCHLÜSSELSPIELER</div>`;
-      html += `<div class="wm-squad-row">`;
-      if (homeSquad) html += _squadPlayer(home, homeSquad);
-      if (awaySquad) html += _squadPlayer(away, awaySquad);
-      html += `</div></div>`;
-    }
-
-    // ─── Event Page Link ──────────────────────────────
+    // ─── ACTIONS row ──────────────────────────────────
     const slug = `wm-${fx.home.toLowerCase()}-vs-${fx.away.toLowerCase()}-${fx.date}`;
-    html += `<a class="wm-event-link wm-event-link-btn" href="matches/wm-match.html?m=${slug}" target="_blank">↗ Vollanalyse · Elo · xG · AI-Preview · Polymarket</a>`;
+    if (!isPlayed && heroPick) {
+      const dq    = heroPick.dataQuality || 'elo';
+      const dqCls = dq === 'full' ? 'cc-tier-full' : '';
+      html += `<div class="cc-actions">
+        <div class="cc-data-tier">
+          <span class="cc-tier-pill ${dqCls}">${dq}</span>
+          <span class="cc-conf-text">· conf ${heroPick.conf || 'medium'}</span>
+        </div>
+        <a class="cc-detail-btn" href="matches/wm-match.html?m=${slug}" target="_blank">↗ Analyse</a>
+        <button class="cc-share-btn" onclick="window.wmSharePick && window.wmSharePick('${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}')">📤 Posten</button>
+      </div>`;
+    } else {
+      html += `<div class="cc-actions">
+        <div class="cc-data-tier">
+          ${isPlayed ? '<span class="cc-tier-pill">gespielt</span>' : '<span class="cc-tier-pill">beobachten</span>'}
+        </div>
+        <a class="cc-detail-btn" href="matches/wm-match.html?m=${slug}" target="_blank">↗ Analyse</a>
+        <span></span>
+      </div>`;
+    }
 
-    html += `</div>`; // wm-card
+    html += `</div>`; // cc-card
     return html;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  ANGLE DERIVATION — übersetzt Pick + Daten in eine
+  //  semantische "Angle"-Kategorie (wie National-Labels)
+  // ─────────────────────────────────────────────────────
+  function _deriveAngle(pick, fx, eloDiff, polyFix, homeForm, awayForm, standing) {
+    // Special: WM-Eröffnungsspiel (BRA vs MAR, Gruppe C, ST 1, 12.06.2026)
+    if (fx.groupKey === 'C' && fx.matchday === 1 && fx.home === 'BRA' && fx.away === 'MAR') {
+      return { cls: 'cc-a-eroeff', icon: '🎬', label: 'WM-Eröffnungsspiel' };
+    }
+    // Special: standings-based scenarios (ST 2/3)
+    if (standing && standing.length && fx.matchday >= 3) {
+      const homePos = standing.findIndex(s => s.id === fx.home) + 1;
+      const awayPos = standing.findIndex(s => s.id === fx.away) + 1;
+      if (homePos > 3 && awayPos > 3) return { cls: 'cc-a-dead', icon: '❌', label: 'Beide ausgeschieden' };
+      if ((homePos > 3 || awayPos > 3) && fx.matchday === 3) {
+        return { cls: 'cc-a-druck', icon: '🔥', label: 'Aufstiegs-Druck' };
+      }
+      if (homePos <= 2 && awayPos <= 2 && fx.matchday === 3) {
+        return { cls: 'cc-a-titel', icon: '🏆', label: 'Spiel um Gruppensieg' };
+      }
+    }
+
+    if (!pick) {
+      if (eloDiff != null && Math.abs(eloDiff) >= 250) return { cls: 'cc-a-pflicht', icon: '🏆', label: 'Klassen-Unterschied' };
+      return { cls: 'cc-a-duell', icon: '⚖️', label: 'Gruppenspiel' };
+    }
+
+    const m = (pick.market || '').toLowerCase();
+
+    // Über X.5 Tore → Tor-Fest
+    if ((m.includes('über') || m.includes('over')) && (m.includes('2.5') || m.includes('1.5') || m.includes('3.5'))) {
+      return { cls: 'cc-a-torfest', icon: '⚽', label: 'Tor-Fest erwartet' };
+    }
+    // Unter X.5 Tore → Defensiv-Schlacht
+    if ((m.includes('unter') || m.includes('under')) && (m.includes('2.5') || m.includes('1.5') || m.includes('3.5'))) {
+      return { cls: 'cc-a-defshow', icon: '🛡', label: 'Defensiv-Schlacht' };
+    }
+    // BTTS
+    if (m.includes('beide teams') || m.includes('btts') || m.includes('both teams')) {
+      if (m.includes('nein') || m.includes('no')) return { cls: 'cc-a-defshow', icon: '🛡', label: 'Zu Null möglich' };
+      return { cls: 'cc-a-torfest', icon: '⚽', label: 'Beide treffen' };
+    }
+    // Heimsieg / Auswärtssieg
+    const isHomeWin = m.includes('heim') || m.includes('home') || /^1$/.test(m);
+    const isAwayWin = m.includes('auswärt') || m.includes('away') || /^2$/.test(m);
+    if (isHomeWin || isAwayWin) {
+      const favoringDiff = isHomeWin ? (eloDiff || 0) : -(eloDiff || 0);
+      if (favoringDiff >= 200) return { cls: 'cc-a-pflicht', icon: '🏆', label: 'Pflichtsieg-Favorit' };
+      // Pick against Elo + good form = Underdog
+      if (favoringDiff < 0) {
+        const checkForm = isHomeWin ? homeForm : awayForm;
+        const wins = checkForm?.last5 ? checkForm.last5.filter(r => r === 'W').length : 0;
+        if (wins >= 3) return { cls: 'cc-a-underdog', icon: '⚡', label: 'Underdog mit Form' };
+      }
+      return { cls: 'cc-a-pflicht', icon: '🎯', label: 'Sieg-Pick mit Edge' };
+    }
+    // Unentschieden / DNB
+    if (m.includes('unentsch') || m.includes('draw')) {
+      if (eloDiff != null && Math.abs(eloDiff) < 80) return { cls: 'cc-a-duell', icon: '⚖️', label: 'Ausgeglichenes Duell' };
+      return { cls: 'cc-a-duell', icon: '⚖️', label: 'Punkteteilung wahrscheinlich' };
+    }
+    if (m.includes('dnb')) return { cls: 'cc-a-pflicht', icon: '🛡', label: 'Draw-No-Bet Sicherung' };
+
+    return { cls: 'cc-a-duell', icon: '🎯', label: 'Pick mit Edge' };
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  STORY BUILDER — 2 Sätze aus Daten
+  //  Satz 1: Hauptbehauptung (Form/xG/Defense/Elo)
+  //  Satz 2: Modell-vs-Markt-Argument
+  // ─────────────────────────────────────────────────────
+  function _buildStory(pick, fx, home, away, homeForm, awayForm, polyFix, eloDiff, standing) {
+    const m = (pick.market || '').toLowerCase();
+    const h2hRaw = (_wmData.h2h || {});
+    const h2h = h2hRaw[`${fx.home}-${fx.away}`] || h2hRaw[`${fx.away}-${fx.home}`] || null;
+
+    let sentence1 = '';
+
+    if ((m.includes('über') || m.includes('over')) && m.includes('2.5')) {
+      const parts = [];
+      // Primary: stärkster Angriff — vermeidet doppelte Team-Erwähnung
+      let primaryTeamId = null;
+      const homeScored = (homeForm && homeForm.avgScored) || 0;
+      const awayScored = (awayForm && awayForm.avgScored) || 0;
+      if (awayScored >= 2.0 && awayScored >= homeScored) {
+        parts.push(`<strong>${away.name} trifft ${awayScored.toFixed(1)} Tore pro Spiel</strong>`);
+        primaryTeamId = fx.away;
+      } else if (homeScored >= 2.0) {
+        parts.push(`<strong>${home.name} trifft ${homeScored.toFixed(1)} Tore pro Spiel</strong>`);
+        primaryTeamId = fx.home;
+      }
+      // Secondary: der ANDERE Team
+      if (homeForm && homeForm.over25Rate != null && homeForm.over25Rate >= 0.55 && primaryTeamId !== fx.home) {
+        parts.push(`${home.name} ${Math.round(homeForm.over25Rate*100)}% Ü2.5`);
+      } else if (awayForm && awayForm.over25Rate != null && awayForm.over25Rate >= 0.55 && primaryTeamId !== fx.away) {
+        parts.push(`${away.name} ${Math.round(awayForm.over25Rate*100)}% Ü2.5`);
+      }
+      // H2H-Trend
+      if (h2h && h2h.over25Rate != null && h2h.over25Rate >= 0.6 && parts.length < 2) {
+        parts.push(`H2H ${Math.round(h2h.over25Rate*100)}% Ü2.5`);
+      }
+      sentence1 = parts.length
+        ? parts.slice(0, 2).join(', ') + '. Beide Defensiven offen.'
+        : 'Beide Offensiv-Reihen produktiv genug für 3+ Tore.';
+    }
+    else if ((m.includes('unter') || m.includes('under')) && m.includes('2.5')) {
+      const parts = [];
+      let primaryTeamId = null;
+      const homeConc = (homeForm && homeForm.avgConceded) != null ? homeForm.avgConceded : 99;
+      const awayConc = (awayForm && awayForm.avgConceded) != null ? awayForm.avgConceded : 99;
+      if (awayConc < 0.7 && awayConc <= homeConc) {
+        parts.push(`<strong>${away.name} kassiert nur ${awayConc.toFixed(1)} Gegentore</strong>`);
+        primaryTeamId = fx.away;
+      } else if (homeConc < 0.7) {
+        parts.push(`<strong>${home.name} kassiert nur ${homeConc.toFixed(1)} Gegentore</strong>`);
+        primaryTeamId = fx.home;
+      }
+      if (homeForm && homeConc < 1.0 && primaryTeamId !== fx.home) {
+        parts.push(`${home.name} ${homeConc.toFixed(1)} Gegen Ø`);
+      } else if (awayForm && awayConc < 1.0 && primaryTeamId !== fx.away) {
+        parts.push(`${away.name} ${awayConc.toFixed(1)} Gegen Ø`);
+      }
+      if (h2h && h2h.over25Rate != null && h2h.over25Rate < 0.5 && parts.length < 2) {
+        parts.push(`H2H ${Math.round((1-h2h.over25Rate)*100)}% Unter 2.5`);
+      }
+      sentence1 = parts.length
+        ? parts.slice(0, 2).join(' · ') + '.'
+        : 'Tor-armes Spiel zu erwarten — beide Teams kontrolliert.';
+    }
+    else if (m.includes('beide teams') || m.includes('btts')) {
+      const wantYes = !(m.includes('nein') || m.includes('no'));
+      if (wantYes) {
+        sentence1 = (homeForm && awayForm)
+          ? `<strong>${home.name} bttsRate ${Math.round((homeForm.bttsRate||0)*100)}%</strong> · ${away.name} ${Math.round((awayForm.bttsRate||0)*100)}%. Beide trafen zuletzt regelmäßig.`
+          : 'Beide Teams trafen in Form-Spielen regelmäßig.';
+      } else {
+        sentence1 = 'Eines der Teams defensiv überlegen — Clean Sheet realistisch.';
+      }
+    }
+    else if (m.includes('heim') || m.includes('home') || /^1$/.test(m)) {
+      const favDiff = eloDiff || 0;
+      if (favDiff >= 200) {
+        sentence1 = `<strong>${home.name} Elo +${favDiff}</strong> über ${away.name} — klassische Heim-Pflichtaufgabe.`;
+      } else if (favDiff >= 80) {
+        sentence1 = `<strong>${home.name}</strong> favorisiert${homeForm && homeForm.last5 ? ` (Form ${homeForm.last5.join('')})` : ''}.`;
+      } else {
+        const wins = homeForm?.last5 ? homeForm.last5.filter(r => r === 'W').length : 0;
+        sentence1 = wins >= 3
+          ? `<strong>${home.name} ${wins} Siege in 5</strong> — Form schlägt Elo.`
+          : `<strong>${home.name}</strong> Heim-Bonus + Quoten-Edge.`;
+      }
+    }
+    else if (m.includes('auswärt') || m.includes('away') || /^2$/.test(m)) {
+      const favDiff = -(eloDiff || 0);
+      if (favDiff >= 200) {
+        sentence1 = `<strong>${away.name} Elo +${favDiff}</strong> über ${home.name} — Pflichtsieg-Favorit auswärts.`;
+      } else {
+        const wins = awayForm?.last5 ? awayForm.last5.filter(r => r === 'W').length : 0;
+        sentence1 = wins >= 3
+          ? `<strong>${away.name} ${wins} Siege in 5</strong> — Form besser als Quoten suggerieren.`
+          : `<strong>${away.name}</strong> Auswärts-Form unterschätzt vom Markt.`;
+      }
+    }
+    else if (m.includes('unentsch') || m.includes('draw')) {
+      const absD = Math.abs(eloDiff || 0);
+      sentence1 = absD < 80
+        ? `<strong>Elo-Differenz nur ${absD}</strong> — beide Teams auf Augenhöhe, Remis realistisch.`
+        : 'Quoten-Edge auf Unentschieden — Modell sieht engeres Spiel als Markt.';
+    }
+    else if (m.includes('dnb')) {
+      sentence1 = 'Draw-No-Bet als Absicherung — Einsatz zurück bei Unentschieden.';
+    }
+    else {
+      sentence1 = pick.info ? `<strong>${pick.info.split('·')[0].trim()}</strong>.` : 'Edge in der Quote erkannt.';
+    }
+
+    // Sentence 2 — Modell vs Markt
+    let sentence2 = '';
+    if (pick.modelOdds != null && pick.odds != null) {
+      const epp = pick.edgePP != null ? pick.edgePP : 0;
+      const tier = epp >= 12 ? 'massiv' : epp >= 6 ? 'solide' : epp >= 3 ? 'dünn' : 'minimal';
+      sentence2 = `<em>Modell sagt ${pick.modelOdds.toFixed(2)}, Markt ${pick.odds.toFixed(2)} — Edge ${tier} (+${epp}pp).</em>`;
+    } else if (pick.info) {
+      sentence2 = `<em>${pick.info}</em>`;
+    }
+
+    return sentence1 + (sentence2 ? '<br>' + sentence2 : '');
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  SIGNALS — bis zu 4 KPIs passend zum Pick
+  // ─────────────────────────────────────────────────────
+  function _buildSignals(pick, fx, home, away, homeForm, awayForm, polyFix, eloDiff) {
+    const signals = [];
+    const m = (pick?.market || '').toLowerCase();
+    const h2hRaw = (_wmData.h2h || {});
+    const h2h = h2hRaw[`${fx.home}-${fx.away}`] || h2hRaw[`${fx.away}-${fx.home}`] || null;
+    const cornersForm = _wmData.cornersForm || {};
+
+    // Pick-specific signals
+    if ((m.includes('über') || m.includes('over')) && m.includes('2.5')) {
+      if (homeForm?.over25Rate != null) {
+        const v = Math.round(homeForm.over25Rate * 100);
+        signals.push({ label: `Ü2.5 ${home.flag}`, value: v + '%', cls: v >= 55 ? 'cc-val-hot' : '' });
+      }
+      if (awayForm?.over25Rate != null) {
+        const v = Math.round(awayForm.over25Rate * 100);
+        signals.push({ label: `Ü2.5 ${away.flag}`, value: v + '%', cls: v >= 55 ? 'cc-val-hot' : '' });
+      }
+      if (h2h?.over25Rate != null) {
+        const v = Math.round(h2h.over25Rate * 100);
+        signals.push({ label: 'Ü2.5 H2H', value: v + '%', cls: v >= 50 ? 'cc-val-hot' : '' });
+      }
+      if (homeForm?.avgGoals != null && awayForm?.avgGoals != null) {
+        const avg = ((homeForm.avgGoals + awayForm.avgGoals) / 2).toFixed(1);
+        signals.push({ label: 'Ø Tore', value: avg, cls: parseFloat(avg) > 2.5 ? 'cc-val-hot' : '' });
+      }
+    }
+    else if ((m.includes('unter') || m.includes('under')) && m.includes('2.5')) {
+      if (homeForm?.avgConceded != null) {
+        signals.push({ label: `Gegen ${home.flag}`, value: homeForm.avgConceded.toFixed(1), cls: homeForm.avgConceded < 0.7 ? 'cc-val-cool' : '' });
+      }
+      if (awayForm?.avgConceded != null) {
+        signals.push({ label: `Gegen ${away.flag}`, value: awayForm.avgConceded.toFixed(1), cls: awayForm.avgConceded < 0.7 ? 'cc-val-cool' : '' });
+      }
+      if (h2h?.avgGoals != null) {
+        signals.push({ label: 'H2H Ø Tore', value: h2h.avgGoals.toFixed(1), cls: h2h.avgGoals < 2.5 ? 'cc-val-cool' : '' });
+      }
+    }
+    else if (m.includes('heim') || m.includes('home') || m.includes('auswärt') || m.includes('away')) {
+      if (eloDiff != null) signals.push({ label: 'Elo-Diff', value: (eloDiff > 0 ? '+' : '') + eloDiff });
+      if (homeForm?.last5) {
+        const w = homeForm.last5.filter(r => r === 'W').length;
+        signals.push({ label: `${home.flag} Siege /5`, value: w, cls: w >= 4 ? 'cc-val-hot' : '' });
+      }
+      if (awayForm?.last5) {
+        const w = awayForm.last5.filter(r => r === 'W').length;
+        signals.push({ label: `${away.flag} Siege /5`, value: w, cls: w >= 4 ? 'cc-val-hot' : '' });
+      }
+      if (h2h && h2h.games > 0) {
+        signals.push({ label: 'H2H Spiele', value: h2h.games });
+      }
+    }
+    else {
+      if (eloDiff != null) signals.push({ label: 'Elo-Diff', value: (eloDiff > 0 ? '+' : '') + eloDiff });
+      if (homeForm?.last5) {
+        const w = homeForm.last5.filter(r => r === 'W').length;
+        signals.push({ label: `${home.flag} Siege /5`, value: w });
+      }
+      if (awayForm?.last5) {
+        const w = awayForm.last5.filter(r => r === 'W').length;
+        signals.push({ label: `${away.flag} Siege /5`, value: w });
+      }
+      if (h2h && h2h.games > 0) {
+        signals.push({ label: 'H2H Spiele', value: h2h.games });
+      }
+    }
+
+    // Poly-Edge als Bonus (nur wenn substantiell)
+    if (polyFix?.bestEdge != null && Math.abs(polyFix.bestEdge) >= 3) {
+      const cls = polyFix.bestEdge >= 5 ? 'cc-val-hot' : '';
+      signals.push({ label: 'Poly-Edge', value: '+' + polyFix.bestEdge.toFixed(1) + 'pp', cls });
+    }
+
+    return signals.slice(0, 4);
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  VENUE ENV — gibt eine kompakte Pille (Höhe/Hitze/Dome)
+  //  nur wenn relevant (>1500m, >30°C, Dome). Sonst nichts.
+  // ─────────────────────────────────────────────────────
+  function _venueEnvPill(venue) {
+    if (!venue) return '';
+    const v = venue.toLowerCase();
+    // High altitude
+    if (v.includes('azteca') || v.includes('mexico city')) return `<span class="cc-dot"></span><span class="cc-env-pill cc-env-alt">🏔 2200m</span>`;
+    if (v.includes('akron') || v.includes('guadalajara')) return `<span class="cc-dot"></span><span class="cc-env-pill cc-env-alt">🏔 1566m</span>`;
+    // Dome
+    if (v.includes("at&t") || v.includes('att stadium') || v.includes('dallas')) return `<span class="cc-dot"></span><span class="cc-env-pill cc-env-dome">🏛 Dome</span>`;
+    if (v.includes('nrg') || v.includes('houston')) return `<span class="cc-dot"></span><span class="cc-env-pill cc-env-dome">🏛 Dome</span>`;
+    if (v.includes('bc place') || v.includes('vancouver')) return `<span class="cc-dot"></span><span class="cc-env-pill cc-env-dome">🏛 Dome</span>`;
+    // Heat
+    if (v.includes('miami') || v.includes('monterrey') || v.includes('bbva')) return `<span class="cc-dot"></span><span class="cc-env-pill cc-env-heat">🌡 30°C+</span>`;
+    return '';
   }
 
   // ── Team row with form dots ───────────────────────────
