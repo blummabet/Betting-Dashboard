@@ -61,8 +61,21 @@ DAILY_STAKE_CAP_USDC = 50.0    # max kumulativer Stake pro UTC-Tag in USDC
 MIN_BALANCE_BUFFER   = 1.0     # USDC die nach Bet noch im Wallet bleiben müssen
 MAX_POSITIONS_PER_MATCH = 2    # max Bets pro Match (egal welcher Markt)
                                # 2 = z.B. Über 2.5 + Heimsieg sind kompatible Wetten erlaubt.
-                               # 1X2-gegenläufige Kombis (Heim+Auswärts) sollten in der
-                               # Praxis nicht entstehen weil unterschiedliche edge_keys nötig.
+
+# Open-Exposure-Cap: max kumulativer Stake in OFFENEN (nicht resolvierten) Positionen.
+# Schützt gegen "Pre-Tournament Wallet-Lock": ohne diesen Cap würden Positionen aus 5-7 Tagen
+# vor WM-Start die gesamte Bankroll binden, bevor erste Spielergebnisse Liquidität freigeben.
+MAX_OPEN_EXPOSURE_USDC = 80.0  # 40% von $200 Test-Wallet bleibt immer als Reserve
+
+# Pre-Tournament-Schwelle: für Spiele >5 Tage entfernt höhere Edge-Schwelle.
+# Frühe Linien sind oft noch unsicher — Sharps geben dem Markt Zeit zur Korrektur.
+PRE_TOURNAMENT_DAYS         = 5       # ab welcher Distanz zum Spiel "früh" gilt
+PRE_TOURNAMENT_EDGE_PP      = 6.0     # höhere Schwelle für frühe Picks (statt 4.0)
+
+# Adaptive Daily-Cap: skaliert mit verfügbarer Balance.
+# effective_cap = min(DAILY_STAKE_CAP_USDC, available_balance × ADAPTIVE_DAILY_FRACTION)
+# Bei $200 → $50 Cap. Bei $40 Balance → $16 Cap. Verhindert Restbankroll-Burn.
+ADAPTIVE_DAILY_FRACTION     = 0.40    # max 40% der verfügbaren Balance pro Tag
 
 BASE_DIR              = os.path.dirname(os.path.abspath(__file__))
 PRICES_FILE           = os.path.join(BASE_DIR, "wm_poly_prices.json")
@@ -204,6 +217,10 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
         else:
             effective_edge_threshold = AUTO_TRIGGER_EDGE_PP
 
+        # Pre-Tournament Edge-Verschärfung: wenn Spiel >5 Tage entfernt → höhere Schwelle
+        if d is not None and d > PRE_TOURNAMENT_DAYS:
+            effective_edge_threshold = max(effective_edge_threshold, PRE_TOURNAMENT_EDGE_PP)
+
         # Edge-Check für jeden Markt
         for edge_key, (price_key, market_label, fair_key, verdict_key) in EDGE_MARKET_MAP.items():
             edge = fix.get(edge_key)
@@ -299,17 +316,33 @@ def main():
     stake_today = sum(float(b.get("stake") or 0) for b in bets_today)
     print(f"  💰 Heute bereits platziert: {len(bets_today)} Bet(s), ${stake_today:.2f} USDC")
 
-    if len(bets_today) >= DAILY_BET_CAP:
-        print(f"  🛑 Tageslimit erreicht ({len(bets_today)}/{DAILY_BET_CAP} Bets) — Abbruch.\n")
-        return
-    if stake_today >= DAILY_STAKE_CAP_USDC:
-        print(f"  🛑 Stake-Cap erreicht (${stake_today:.2f}/${DAILY_STAKE_CAP_USDC:.2f}) — Abbruch.\n")
-        return
+    # Open-Exposure: kumulativer Stake aller noch nicht aufgelösten Positionen
+    open_bets = [b for b in placed_bets
+                 if not b.get("resolved") and not b.get("soldAt")]
+    open_exposure = sum(float(b.get("stake") or 0) for b in open_bets)
+    print(f"  📈 Open Exposure: {len(open_bets)} Position(en), ${open_exposure:.2f} USDC")
 
     # Aktuelle Balance laden (wird vor diesem Skript via fetch_wm_poly_balance.py geholt)
     balance_data = load_json(BALANCE_FILE, {"usdc": 0.0})
     available_balance = float(balance_data.get("usdc") or 0)
-    print(f"  💼 Verfügbare Balance: ${available_balance:.2f} USDC\n")
+    print(f"  💼 Verfügbare Balance: ${available_balance:.2f} USDC")
+
+    # Adaptive Daily-Cap: skaliert mit Balance — schützt letzte Reserven
+    adaptive_daily_cap = min(
+        DAILY_STAKE_CAP_USDC,
+        available_balance * ADAPTIVE_DAILY_FRACTION
+    )
+    print(f"  ⚙️  Adaptive Daily-Cap: ${adaptive_daily_cap:.2f} USDC ({int(ADAPTIVE_DAILY_FRACTION*100)}% × Balance)\n")
+
+    if len(bets_today) >= DAILY_BET_CAP:
+        print(f"  🛑 Tageslimit erreicht ({len(bets_today)}/{DAILY_BET_CAP} Bets) — Abbruch.\n")
+        return
+    if stake_today >= adaptive_daily_cap:
+        print(f"  🛑 Adaptive Stake-Cap erreicht (${stake_today:.2f}/${adaptive_daily_cap:.2f}) — Abbruch.\n")
+        return
+    if open_exposure >= MAX_OPEN_EXPOSURE_USDC:
+        print(f"  🛑 Open-Exposure-Cap erreicht (${open_exposure:.2f}/${MAX_OPEN_EXPOSURE_USDC:.2f}) — warte auf Close.\n")
+        return
 
 
     # 3. Kandidaten finden
@@ -359,9 +392,10 @@ def main():
     new_placed = []
 
     # Running tally für Bankroll-Schutz innerhalb dieses Runs
-    running_count = len(bets_today)
-    running_stake = stake_today
-    running_balance = available_balance
+    running_count    = len(bets_today)
+    running_stake    = stake_today
+    running_balance  = available_balance
+    running_exposure = open_exposure
 
     for order in candidates:
         bet_key_val = order.pop("_betKey")  # intern, nicht an CLOB übergeben
@@ -385,8 +419,11 @@ def main():
         if running_count >= DAILY_BET_CAP:
             print(f"    🛑 Tages-Bet-Cap erreicht ({running_count}/{DAILY_BET_CAP}) — Rest übersprungen")
             break
-        if running_stake + stake > DAILY_STAKE_CAP_USDC:
-            print(f"    🛑 Stake-Cap würde überschritten (${running_stake + stake:.2f} > ${DAILY_STAKE_CAP_USDC:.2f}) — übersprungen")
+        if running_stake + stake > adaptive_daily_cap:
+            print(f"    🛑 Adaptive Stake-Cap würde überschritten (${running_stake + stake:.2f} > ${adaptive_daily_cap:.2f}) — übersprungen")
+            continue
+        if running_exposure + stake > MAX_OPEN_EXPOSURE_USDC:
+            print(f"    🛑 Open-Exposure-Cap würde überschritten (${running_exposure + stake:.2f} > ${MAX_OPEN_EXPOSURE_USDC:.2f}) — übersprungen")
             continue
         if running_balance - stake < MIN_BALANCE_BUFFER:
             print(f"    🛑 Balance zu niedrig (${running_balance:.2f} - ${stake:.2f} < ${MIN_BALANCE_BUFFER:.2f}) — Abbruch")
@@ -438,9 +475,10 @@ def main():
             print(f"    ✅ Platziert — Order ID: {result.get('orderId')}{steam_tag}")
 
             # Bankroll-Tally + Match-Position-Tally updaten
-            running_count   += 1
-            running_stake   += stake
-            running_balance -= stake
+            running_count    += 1
+            running_stake    += stake
+            running_balance  -= stake
+            running_exposure += stake
             match_position_count[match_key] = match_position_count.get(match_key, 0) + 1
 
             # 1. Bestehender WM-Channel (Operations-Info)

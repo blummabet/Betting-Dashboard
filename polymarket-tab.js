@@ -2802,6 +2802,154 @@ async function _syncBetsFromHistory(silent = true) {
   return imported;
 }
 
+// ═══════════════════════════════════════════════════════════════
+// Auto-Trader Config & Live-Status — alles auf einen Blick
+// Spiegelt die Werte in auto_wm_poly_trigger.py + manage_wm_poly_positions.py
+// (bei Code-Änderungen auch hier nachziehen!)
+// ═══════════════════════════════════════════════════════════════
+const AUTO_TRADER_CONFIG = {
+  trigger: {
+    title:    'Auto-Trigger (auto_wm_poly_trigger.py)',
+    enabled:  'via GitHub Secret AUTO_TRIGGER_ENABLED',
+    rows: [
+      { lbl: 'Edge-Schwelle Normal',         val: '≥ 4.0pp',          note: '01.06.26: von 5.0 auf 4.0 gesenkt (Sweet Spot 3-5pp)' },
+      { lbl: 'Edge-Schwelle Steam Lag',      val: '≥ 3.0pp',          note: 'Bonus bei Pinn-Move ohne Poly-Reaktion' },
+      { lbl: 'Edge-Schwelle elo_only',       val: '≥ 8.0pp',          note: 'Strenger bei dünner Datenbasis' },
+      { lbl: 'Pre-Tournament-Schwelle',      val: '≥ 6.0pp',          note: 'Wenn Match > 5 Tage entfernt — frühe Linien sind unsicher' },
+      { lbl: 'Min Liquidität (Vol)',         val: '≥ $10.000',        note: 'Schützt vor dünnen Märkten' },
+      { lbl: 'Min Stunden bis Anpfiff',      val: '≥ 4h',             note: 'Kein Kauf zu nah am Spiel' },
+      { lbl: 'Min Tage bis Spiel',           val: '≥ 1 Tag',          note: 'Kein Kauf am Spieltag selbst' },
+    ],
+  },
+  stake: {
+    title: 'Stake & Bankroll',
+    rows: [
+      { lbl: 'Stake pro Bet',                val: '$5.50 USDC',        note: '€5 flat — keine Edge-Tiers (01.06.26 bestätigt)' },
+      { lbl: 'Max Bets / UTC-Tag',           val: '8',                 note: 'Harte Obergrenze' },
+      { lbl: 'Max Stake / UTC-Tag',          val: '$50',               note: 'Statisch — siehe Adaptive Cap unten' },
+      { lbl: 'Adaptive Daily-Cap',           val: '40% × Balance',     note: 'Bei $40 Balance → $16/Tag · bei $200 → volle $50' },
+      { lbl: 'Max Open Exposure',            val: '$80 USDC',          note: 'NEU: Cap auf kumulierter Stake in offenen Positionen' },
+      { lbl: 'Min Restbalance nach Bet',     val: '$1',                note: 'Sicherheitspuffer' },
+      { lbl: 'Max Positionen / Match',       val: '2',                 note: 'z.B. Über 2.5 + Heimsieg auf gleiches Spiel ok' },
+    ],
+  },
+  sell: {
+    title: 'Auto-Sell (manage_wm_poly_positions.py)',
+    enabled:  'via GitHub Secret AUTO_SELL_ENABLED',
+    rows: [
+      { lbl: 'Profit-Target',                val: '+10%',              note: '01.06.26: von +20% gesenkt — schneller Cash-Cycle' },
+      { lbl: 'Pinn-Konvergenz-Gap',          val: '≤ 1.5pp',           note: '01.06.26: von 2.0 strenger gemacht' },
+      { lbl: 'Min Profit vor Konvergenz',    val: '+3pp',              note: 'Sekundär-Schwelle nicht-bei-0 schließen' },
+      { lbl: 'Age-Decay-Schwelle',           val: '+5% nach 48h',      note: 'NEU: alte Positionen mit kleinem Profit schließen' },
+      { lbl: 'Pre-Match-Close',              val: '6h vor Anpfiff',    note: 'Notbremse — alle offenen schließen' },
+    ],
+  },
+};
+
+function renderConfigSection(section) {
+  const cfg = AUTO_TRADER_CONFIG[section];
+  if (!cfg) return '';
+  return `
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:11px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.6px">${cfg.title}</div>
+        ${cfg.enabled ? `<span style="font-size:9px;color:#8b949e;font-style:italic">${cfg.enabled}</span>` : ''}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:6px">
+        ${cfg.rows.map(r => `
+          <div style="display:flex;align-items:flex-start;gap:10px;padding:6px 0;border-bottom:1px dashed #21262d">
+            <div style="flex:1;min-width:0">
+              <div style="font-size:12px;color:#e6edf3;font-weight:600">${r.lbl}</div>
+              <div style="font-size:10px;color:#8b949e;margin-top:2px;line-height:1.4">${r.note}</div>
+            </div>
+            <div style="font-size:13px;font-weight:800;color:#00d4a1;font-family:'SF Mono',Menlo,monospace;white-space:nowrap">${r.val}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderAutoTraderLiveStatus() {
+  // Berechnungen aus localStorage / window-State
+  const bets = (typeof _getPolyBets === 'function') ? _getPolyBets() : [];
+  const today = new Date().toISOString().slice(0, 10);
+
+  const todayBets    = bets.filter(b => (b.placedAt || '').slice(0, 10) === today);
+  const todayStake   = todayBets.reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
+  const openBets     = bets.filter(b => !b.resolved && b.result == null && !b.soldAt);
+  const openExposure = openBets.reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
+  const balance      = (typeof window._wmPolyBalance === 'object' && window._wmPolyBalance)
+                       ? (parseFloat(window._wmPolyBalance.usdc) || 0)
+                       : null;
+  const adaptiveCap  = balance != null ? Math.min(50, balance * 0.40) : null;
+
+  const fmtUsd = (v) => v == null ? '—' : '$' + v.toFixed(2);
+  const ratio  = (cur, cap) => cap ? Math.min(100, Math.round(cur / cap * 100)) : 0;
+
+  const status = [
+    {
+      lbl: 'Bets heute',
+      val: `${todayBets.length} / 8`,
+      bar: ratio(todayBets.length, 8),
+      cls: todayBets.length >= 8 ? 'hot' : todayBets.length >= 6 ? 'warm' : 'ok',
+    },
+    {
+      lbl: 'Stake heute',
+      val: `${fmtUsd(todayStake)} / ${fmtUsd(adaptiveCap)}`,
+      bar: ratio(todayStake, adaptiveCap),
+      cls: adaptiveCap && todayStake >= adaptiveCap ? 'hot' : adaptiveCap && todayStake / adaptiveCap >= 0.75 ? 'warm' : 'ok',
+    },
+    {
+      lbl: 'Open Exposure',
+      val: `${fmtUsd(openExposure)} / $80`,
+      bar: ratio(openExposure, 80),
+      cls: openExposure >= 80 ? 'hot' : openExposure >= 60 ? 'warm' : 'ok',
+    },
+    {
+      lbl: 'Verfügbare Balance',
+      val: fmtUsd(balance),
+      bar: balance != null ? Math.min(100, Math.round(balance / 200 * 100)) : 0,
+      cls: balance == null || balance < 10 ? 'hot' : balance < 50 ? 'warm' : 'ok',
+    },
+  ];
+  const clrMap = { hot: '#f85149', warm: '#e3b341', ok: '#3fb950' };
+
+  return `
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;color:#a78bfa;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Live-Status (aus localStorage)</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+        ${status.map(s => `
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:11px;margin-bottom:4px">
+              <span style="color:#8b949e;font-weight:600;text-transform:uppercase;letter-spacing:.4px">${s.lbl}</span>
+              <span style="color:${clrMap[s.cls]};font-weight:800;font-family:'SF Mono',Menlo,monospace">${s.val}</span>
+            </div>
+            <div style="height:5px;background:#21262d;border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:${s.bar}%;background:${clrMap[s.cls]};transition:width .3s"></div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderAutoTraderConfig() {
+  return `
+    <details style="background:#161b22;border:1px solid #30363d;border-radius:12px;padding:14px 18px;margin-bottom:16px" open>
+      <summary style="cursor:pointer;font-size:14px;font-weight:800;color:#e6edf3;outline:none;list-style:none;display:flex;align-items:center;justify-content:space-between">
+        <span>🤖 Auto-Trader · Config &amp; Live-Status</span>
+        <span style="font-size:11px;color:#8b949e;font-weight:600">▾ ein-/ausklappen</span>
+      </summary>
+      <div style="margin-top:14px">
+        ${renderAutoTraderLiveStatus()}
+        ${renderConfigSection('trigger')}
+        ${renderConfigSection('stake')}
+        ${renderConfigSection('sell')}
+        <div style="font-size:10px;color:#8b949e;font-style:italic;margin-top:10px;text-align:right">
+          Stand 01.06.2026 · bei Code-Änderung in auto_wm_poly_trigger.py / manage_wm_poly_positions.py auch hier nachziehen
+        </div>
+      </div>
+    </details>`;
+}
+
 function renderPolyStats() {
   // Merge localStorage bets with session-memory fallback (deduped by id)
   const lsBets  = _getPolyBets();
@@ -2875,6 +3023,9 @@ function renderPolyStats() {
           <div style="font-size:11px;color:#8b949e;margin-top:4px">${c.sub}</div>
         </div>`).join('')}
     </div>
+
+    ${renderAutoTraderConfig()}
+
     ${sessBets.length > 0 ? `
     <div style="background:#1a2340;border:1px solid #a78bfa44;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <span style="color:#a78bfa;font-weight:700">⚡ ${sessBets.length} Bet${sessBets.length!==1?'s':''} nur im Session-Memory (localStorage leer)</span>

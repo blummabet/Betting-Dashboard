@@ -44,9 +44,13 @@ TELEGRAM_TOKEN   = os.getenv("TELEGRAM_TOKEN", "")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
 
 # ── Sell-Schwellwerte ─────────────────────────────────────────────────────────
-PROFIT_TARGET   = 0.20   # +20% Profit auf Einstiegspreis → Sell
-PINN_GAP_PP     = 2.0    # Poly ist innerhalb 2pp von Pinnacle Fair → Sell (konvergiert)
+PROFIT_TARGET   = 0.10   # +10% Profit → Sell (war 0.20 — gesenkt 01.06.2026 für schnelleren Cash-Cycle)
+PINN_GAP_PP     = 1.5    # Poly innerhalb 1.5pp Pinnacle Fair → Sell (war 2.0)
 MIN_PROFIT_PP   = 0.03   # Minimaler absoluter Profit (+3pp) bevor Secondary-Regel greift
+
+# Age-Decay: ältere Positionen sollen Cash freimachen — auch bei kleinem Profit schließen
+AGE_DECAY_HOURS         = 48     # ab welcher Halte-Dauer kleinerer Profit akzeptiert wird
+AGE_DECAY_PROFIT_TARGET = 0.05   # +5% reicht zum Schließen nach 48h+
 
 # ── Auto-Sell Konfiguration ───────────────────────────────────────────────────
 # Sicherheitsschalter: False = nur Alerts, keine echten Sells
@@ -188,7 +192,7 @@ def check_position(pos: dict) -> dict:
     sell  = False
     reason = ""
 
-    # PRIMARY: +20% Profit
+    # PRIMARY: +10% Profit (Cash-Cycle Optimierung)
     if entry > 0 and current >= entry * (1 + PROFIT_TARGET):
         sell = True
         reason = f"Profit +{round(pnl_pct, 1)}% ≥ +{PROFIT_TARGET*100:.0f}% Ziel"
@@ -199,6 +203,23 @@ def check_position(pos: dict) -> dict:
         if gap <= PINN_GAP_PP:
             sell = True
             reason = f"Markt konvergiert: Poly {current:.3f} ≈ Pinn fair {pinn_fair:.3f} (Δ{gap:.1f}pp)"
+
+    # TERTIARY: Age-Decay — alte Position + kleiner Profit reicht
+    if not sell and entry > 0:
+        placed_at = pos.get("placedAt") or ""
+        age_h = None
+        if placed_at:
+            try:
+                from datetime import datetime as _dt
+                placed_dt = _dt.fromisoformat(placed_at.replace("Z", "+00:00"))
+                now_dt    = _dt.now(timezone.utc)
+                age_h     = (now_dt - placed_dt).total_seconds() / 3600
+            except Exception:
+                age_h = None
+        if age_h is not None and age_h >= AGE_DECAY_HOURS:
+            if current >= entry * (1 + AGE_DECAY_PROFIT_TARGET):
+                sell = True
+                reason = f"Age-Decay: Position {age_h:.0f}h alt, +{round(pnl_pct, 1)}% ≥ +{AGE_DECAY_PROFIT_TARGET*100:.0f}% reicht"
 
     pos["sellSignal"] = sell
     pos["sellReason"] = reason if sell else ""
