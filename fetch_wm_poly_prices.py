@@ -401,15 +401,26 @@ def main():
             for t in gdata.get("teams", []):
                 team_names_ref[t["id"]] = t.get("name", t["id"])
 
-    # ── Build picks lookup: {match_key: {market_label: {verdict, edgePP, dataQuality}}} ──
+    # ── Build picks lookup: {HOME-AWAY: {market_label: {verdict, edgePP, dataQuality}}} ──
     # Used to enrich allFixtures with pick verdicts so auto-trigger respects pick logic.
+    #
+    # KRITISCH: picks-Keys in wm2026-data.json sind "GROUP-MATCHDAY-HOME-AWAY"
+    # (z.B. "A-1-MEX-ZAF"), aber allFixtures-Keys sind "HOME-AWAY" (z.B. "MEX-ZAF").
+    # Wir bauen den Lookup mit "HOME-AWAY"-Keys damit der nachfolgende Zugriff matched.
+    # Vorher: alle verdict_xx waren None → Auto-Trigger feuerte NIE einen Bet.
     picks_lookup: dict[str, dict] = {}
     if wm is not None:
         for match_key, pick_list in wm.get("picks", {}).items():
-            picks_lookup[match_key] = {}
+            # Extract HOME-AWAY aus "GROUP-MATCHDAY-HOME-AWAY"
+            parts = match_key.split("-", 3)
+            if len(parts) < 4:
+                continue
+            ha_key = f"{parts[2]}-{parts[3]}"
+            if ha_key not in picks_lookup:
+                picks_lookup[ha_key] = {}
             for pk in pick_list:
                 mkt = pk.get("market", "")
-                picks_lookup[match_key][mkt] = {
+                picks_lookup[ha_key][mkt] = {
                     "verdict":     pk.get("verdict"),
                     "edgePP":      pk.get("edgePP"),
                     "dataQuality": pk.get("dataQuality", "elo_only"),
