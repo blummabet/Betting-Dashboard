@@ -81,6 +81,24 @@ BASE_DIR              = os.path.dirname(os.path.abspath(__file__))
 PRICES_FILE           = os.path.join(BASE_DIR, "wm_poly_prices.json")
 PLACED_FILE           = os.path.join(BASE_DIR, "wm_auto_bets_placed.json")
 BALANCE_FILE          = os.path.join(BASE_DIR, "wm_poly_balance.json")
+KILL_SWITCH_FILE      = os.path.join(BASE_DIR, "wm_kill_switch.json")
+
+
+def is_kill_switch_active() -> tuple[bool, str]:
+    """Liest wm_kill_switch.json. Returns (paused, reason).
+    paused=True wenn Trading pausiert ist (enabled: false)."""
+    if not os.path.exists(KILL_SWITCH_FILE):
+        return False, ""
+    try:
+        with open(KILL_SWITCH_FILE, encoding="utf-8") as f:
+            ks = json.load(f)
+        if ks.get("enabled") is False:
+            return True, ks.get("reason", "manuell pausiert")
+        return False, ""
+    except Exception as e:
+        # Bei Lese-Fehler safer fallback: NICHT pausieren (sonst totes System bei Korruption)
+        print(f"  ⚠️  Kill-Switch lesefehler: {e} — laufe trotzdem")
+        return False, ""
 
 # Welche Edge-Keys → Polymarket-Market-Label (muss OUTCOME_MAP in polymarket_bet.py matchen)
 EDGE_MARKET_MAP = {
@@ -278,6 +296,14 @@ def main():
     print(f"\n{'='*55}")
     print(f"  🤖 WM 2026 Auto-Trigger — {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')} UTC")
     print(f"{'='*55}\n")
+
+    # Kill-Switch zuerst prüfen — hat Vorrang vor allen anderen Schaltern
+    killed, kill_reason = is_kill_switch_active()
+    if killed:
+        print(f"🛑 KILL-SWITCH AKTIV — Trading pausiert.")
+        print(f"   Grund: {kill_reason}")
+        print(f"   Resume via GitHub Action 'Kill-Switch' → action=resume\n")
+        return
 
     # Sicherheitsschalter: Env-Variable hat Vorrang vor ENABLED-Konstante
     env_enabled = os.environ.get("AUTO_TRIGGER_ENABLED", "").strip().lower()

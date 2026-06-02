@@ -2931,6 +2931,294 @@ function renderAutoTraderLiveStatus() {
     </div>`;
 }
 
+// ═══════════════════════════════════════════════════════════════
+// Trading Cockpit — Live-Übersicht für Polymarket Auto-Trader
+// ═══════════════════════════════════════════════════════════════
+async function loadCockpitData() {
+  // Holt vier JSON-Files parallel via raw.githubusercontent (kein CDN-Cache)
+  const base = 'https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main';
+  const t = Date.now();
+  const urls = [
+    `${base}/wm_auto_bets_placed.json?t=${t}`,
+    `${base}/wm_poly_balance.json?t=${t}`,
+    `${base}/wm_kill_switch.json?t=${t}`,
+    `${base}/wm_poly_prices.json?t=${t}`,
+  ];
+  const fallbacks = [
+    'wm_auto_bets_placed.json',
+    'wm_poly_balance.json',
+    'wm_kill_switch.json',
+    'wm_poly_prices.json',
+  ];
+  const results = await Promise.all(urls.map(async (u, i) => {
+    try {
+      const r = await fetch(u, { cache: 'no-store' });
+      if (r.ok) return r.json();
+    } catch {}
+    try {
+      const r = await fetch(fallbacks[i] + '?t=' + t, { cache: 'no-store' });
+      if (r.ok) return r.json();
+    } catch {}
+    return null;
+  }));
+  return { placed: results[0], balance: results[1], kill: results[2], poly: results[3] };
+}
+
+function _polyCurrentPrice(bet, polyData) {
+  if (!polyData?.allFixtures) return null;
+  const key = `${bet.homeId || ''}-${bet.awayId || ''}`;
+  const fx = polyData.allFixtures.find(f => f.key === key);
+  if (!fx) return null;
+  const map = { 'Heimsieg':'hw', 'Auswärtssieg':'aw', 'Unentschieden':'dr', 'Über 2.5 Tore':'o25', 'Unter 2.5 Tore':'u25' };
+  const fld = map[bet.market];
+  return fld ? fx[`poly_${fld}`] : null;
+}
+
+function _polyHoursSince(iso) {
+  if (!iso) return null;
+  try { return (Date.now() - new Date(iso).getTime()) / 3600000; } catch { return null; }
+}
+
+function _polyHoursUntil(iso) {
+  if (!iso) return null;
+  try { return (new Date(iso).getTime() - Date.now()) / 3600000; } catch { return null; }
+}
+
+function renderTradingCockpit(data) {
+  const { placed, balance: bal, kill, poly } = (data || {});
+  const bets = (placed?.bets) || [];
+  const balanceUsd = parseFloat(bal?.usdc || 0);
+  const killEnabled = (kill?.enabled !== false);
+  const killReason = kill?.reason || '';
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Heute
+  const betsToday = bets.filter(b => (b.placedAt || '').slice(0, 10) === today);
+  const stakeToday = betsToday.reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
+
+  // Open Positions
+  const openBets = bets.filter(b => !b.resolved && b.result == null && !b.soldAt);
+  const openExposure = openBets.reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
+
+  // Live P&L offene Positionen
+  let openPnl = 0, openPnlCount = 0;
+  for (const b of openBets) {
+    const entry = parseFloat(b.polyPrice || 0);
+    if (entry <= 0) continue;
+    const cur = _polyCurrentPrice(b, poly);
+    if (cur == null) continue;
+    const stake = parseFloat(b.stake || 0);
+    openPnl += (stake / entry) * cur - stake;
+    openPnlCount++;
+  }
+
+  // 7-Tage Stats
+  const cutoff7d = Date.now() - 7 * 86400000;
+  const resolved7d = bets.filter(b => {
+    if (!['WIN','LOSS','VOID'].includes(b.result)) return false;
+    const ts = b.resolvedAt || b.placedAt || '';
+    return ts && new Date(ts).getTime() > cutoff7d;
+  });
+  const wins7d = resolved7d.filter(b => b.result === 'WIN').length;
+  const losses7d = resolved7d.filter(b => b.result === 'LOSS').length;
+  const winRate7d = (wins7d + losses7d) > 0 ? Math.round(wins7d / (wins7d + losses7d) * 100) : null;
+  const pnl7d = resolved7d.reduce((s, b) => s + (parseFloat(b.pnl) || 0), 0);
+  const stake7d = resolved7d.reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
+  const roi7d = stake7d > 0 ? (pnl7d / stake7d * 100) : null;
+
+  // Caps
+  const DAILY_BET_CAP = 8, MAX_OPEN_EXP = 80, ADAPTIVE_FRAC = 0.40, DAILY_STAKE_HARD = 50;
+  const adaptiveCap = Math.min(DAILY_STAKE_HARD, balanceUsd * ADAPTIVE_FRAC);
+
+  const fmtUsd = v => '$' + (v ?? 0).toFixed(2);
+  const fmtPct = v => (v == null ? '—' : (v > 0 ? '+' : '') + v.toFixed(1) + '%');
+  const pctOf = (cur, cap) => Math.min(100, cap > 0 ? Math.round(cur / cap * 100) : 0);
+
+  // Last Trade
+  const lastTrade = bets.length ? bets.slice().sort((a,b) => (b.placedAt || '').localeCompare(a.placedAt || ''))[0] : null;
+  const lastTradeHrs = lastTrade ? _polyHoursSince(lastTrade.placedAt) : null;
+
+  // ── Hero KPI Cards ──────────────────────────────────────────
+  const heroKpis = [
+    {
+      label: 'Balance',
+      value: fmtUsd(balanceUsd),
+      sub: balanceUsd < 50 ? 'auflаden empfohlen' : `${(balanceUsd / 200 * 100).toFixed(0)}% von Ziel-Bankroll`,
+      color: balanceUsd < 10 ? '#f85149' : balanceUsd < 50 ? '#e3b341' : '#00d4a1',
+      icon: '💼',
+    },
+    {
+      label: 'Open Exposure',
+      value: fmtUsd(openExposure),
+      sub: `${openBets.length} Pos. · ${openPnlCount > 0 ? `Live ${fmtPct(openExposure > 0 ? openPnl / openExposure * 100 : 0)}` : 'keine Live-Daten'}`,
+      color: openExposure > MAX_OPEN_EXP * 0.85 ? '#f85149' : openExposure > MAX_OPEN_EXP * 0.5 ? '#e3b341' : '#a371f7',
+      icon: '📈',
+    },
+    {
+      label: 'P&L Heute',
+      value: fmtUsd(openPnl),
+      sub: openPnlCount > 0 ? `aus ${openPnlCount} live getrackten Positionen` : 'noch keine Live-Preise',
+      color: openPnl > 0 ? '#00d4a1' : openPnl < 0 ? '#f85149' : '#8b949e',
+      icon: openPnl >= 0 ? '🟢' : '🔴',
+    },
+    {
+      label: 'Win-Rate 7d',
+      value: winRate7d != null ? winRate7d + '%' : '—',
+      sub: resolved7d.length > 0 ? `${wins7d}W / ${losses7d}L · ROI ${fmtPct(roi7d)}` : 'noch keine aufgelösten Bets',
+      color: winRate7d == null ? '#8b949e' : winRate7d >= 60 ? '#00d4a1' : winRate7d >= 50 ? '#e3b341' : '#f85149',
+      icon: '🎯',
+    },
+  ];
+
+  const heroHtml = heroKpis.map(k => `
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:10px;color:#8b949e;text-transform:uppercase;letter-spacing:.8px;font-weight:700">${k.label}</span>
+        <span style="font-size:14px">${k.icon}</span>
+      </div>
+      <div style="font-size:28px;font-weight:900;color:${k.color};line-height:1;font-family:'SF Mono',Menlo,monospace">${k.value}</div>
+      <div style="font-size:11px;color:#8b949e">${k.sub}</div>
+    </div>`).join('');
+
+  // ── Cap-Bars (heutiger Stand) ──────────────────────────────
+  const capBars = [
+    { label: 'Bets heute', cur: betsToday.length, max: DAILY_BET_CAP, display: `${betsToday.length} / ${DAILY_BET_CAP}` },
+    { label: 'Stake heute', cur: stakeToday, max: adaptiveCap, display: `${fmtUsd(stakeToday)} / ${fmtUsd(adaptiveCap)}` },
+    { label: 'Open Exposure', cur: openExposure, max: MAX_OPEN_EXP, display: `${fmtUsd(openExposure)} / $${MAX_OPEN_EXP}` },
+  ];
+
+  const capHtml = capBars.map(b => {
+    const pct = pctOf(b.cur, b.max);
+    const clr = pct >= 90 ? '#f85149' : pct >= 70 ? '#e3b341' : '#00d4a1';
+    return `
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px">
+        <span style="color:#8b949e;font-weight:600;text-transform:uppercase;letter-spacing:.4px">${b.label}</span>
+        <span style="color:${clr};font-weight:800;font-family:'SF Mono',Menlo,monospace">${b.display}</span>
+      </div>
+      <div style="height:6px;background:#21262d;border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${clr};transition:width .3s"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── Live Open Positions Tabelle ────────────────────────────
+  let positionsHtml = `<div style="font-size:12px;color:#8b949e;font-style:italic;text-align:center;padding:14px">Keine offenen Positionen</div>`;
+  if (openBets.length > 0) {
+    const rows = openBets.slice().sort((a,b) => (b.placedAt || '').localeCompare(a.placedAt || '')).map(b => {
+      const entry = parseFloat(b.polyPrice || 0);
+      const cur = _polyCurrentPrice(b, poly);
+      const stake = parseFloat(b.stake || 0);
+      let pnl = null, pnlPct = null;
+      if (cur != null && entry > 0) {
+        pnl = (stake / entry) * cur - stake;
+        pnlPct = pnl / stake * 100;
+      }
+      const hrsUntil = _polyHoursUntil(b.matchDate);
+      const matchStatus = hrsUntil != null ? (hrsUntil < 0 ? '🔴 läuft' : hrsUntil < 6 ? `⚠️ in ${hrsUntil.toFixed(1)}h` : `${hrsUntil.toFixed(1)}h`) : '—';
+      const pnlColor = pnl == null ? '#8b949e' : pnl > 0.05 ? '#00d4a1' : pnl < -0.05 ? '#f85149' : '#e3b341';
+      const slug = b.slug || '';
+      const polyLink = slug ? `https://polymarket.com/sports/fifa-world-cup/${slug}` : '#';
+      return `
+      <tr style="border-bottom:1px solid #30363d">
+        <td style="padding:8px 12px;font-size:12px;color:#e6edf3">${b.home || b.homeId} <span style="color:#8b949e">vs</span> ${b.away || b.awayId}</td>
+        <td style="padding:8px 12px;font-size:11px;color:#8b949e">${b.market || '?'}</td>
+        <td style="padding:8px 12px;font-size:11px;color:#e6edf3;font-family:'SF Mono',Menlo,monospace">${(entry * 100).toFixed(1)}¢</td>
+        <td style="padding:8px 12px;font-size:11px;color:#e6edf3;font-family:'SF Mono',Menlo,monospace">${cur != null ? (cur * 100).toFixed(1) + '¢' : '—'}</td>
+        <td style="padding:8px 12px;font-size:11px;color:${pnlColor};font-weight:700;font-family:'SF Mono',Menlo,monospace;text-align:right">${pnl != null ? fmtPct(pnlPct) : '—'}</td>
+        <td style="padding:8px 12px;font-size:10px;color:#8b949e">${matchStatus}</td>
+        <td style="padding:8px 12px;font-size:10px"><a href="${polyLink}" target="_blank" style="color:#a371f7;text-decoration:none">🔗</a></td>
+      </tr>`;
+    }).join('');
+    positionsHtml = `
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr style="background:#1c2128">
+        <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Match</th>
+        <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Markt</th>
+        <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Entry</th>
+        <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Aktuell</th>
+        <th style="padding:8px 12px;text-align:right;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">P&amp;L</th>
+        <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Anpfiff</th>
+        <th style="padding:8px 12px;font-size:9px"></th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  // ── System-Health ──────────────────────────────────────────
+  const killHtml = killEnabled
+    ? `<span style="color:#00d4a1;font-weight:800">🟢 ACTIVE</span>`
+    : `<span style="color:#f85149;font-weight:800">🛑 PAUSED</span><div style="font-size:10px;color:#8b949e;margin-top:2px">${killReason}</div>`;
+  const balanceTs = bal?.updatedAt || bal?.ts || '—';
+  const balanceFresh = balanceTs !== '—' ? (() => { try { const h = _polyHoursSince(balanceTs); return h != null ? h.toFixed(1) + 'h alt' : balanceTs; } catch { return balanceTs; } })() : '—';
+  const lastTradeHtml = lastTrade ? `${lastTrade.home || lastTrade.homeId} vs ${lastTrade.away || lastTrade.awayId} · vor ${lastTradeHrs != null ? lastTradeHrs.toFixed(1) + 'h' : '—'}` : 'noch keine Trades';
+
+  // ── Final Cockpit-Layout ───────────────────────────────────
+  return `
+  <div style="background:linear-gradient(135deg,#161b22 0%,#161b22 50%,#1c2128 100%);border:1px solid rgba(0,212,161,.18);border-radius:14px;padding:18px 20px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div>
+        <div style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#00d4a1;text-transform:uppercase">🎮 Trading Cockpit</div>
+        <div style="font-size:10px;color:#8b949e;margin-top:2px">Live aus GitHub · zuletzt geladen ${new Date().toLocaleTimeString('de-AT', {hour:'2-digit',minute:'2-digit'})}</div>
+      </div>
+      <button onclick="refreshCockpit()" style="background:rgba(0,212,161,.1);border:1px solid rgba(0,212,161,.3);color:#00d4a1;border-radius:8px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">↻ Refresh</button>
+    </div>
+
+    <!-- Hero KPI 4-Grid -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px">
+      ${heroHtml}
+    </div>
+
+    <!-- Cap-Status Bars -->
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:14px 16px;margin-bottom:14px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#8b949e;text-transform:uppercase;margin-bottom:12px">Live Cap-Status</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+        ${capHtml}
+      </div>
+    </div>
+
+    <!-- Open Positions Tabelle -->
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden;margin-bottom:14px">
+      <div style="padding:10px 16px;border-bottom:1px solid #30363d;display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#8b949e;text-transform:uppercase">📊 Offene Positionen · Live</span>
+        <span style="font-size:11px;color:${openPnl >= 0 ? '#00d4a1' : '#f85149'};font-weight:800;font-family:'SF Mono',Menlo,monospace">${openBets.length > 0 ? `${openBets.length} · ${fmtUsd(openPnl)}` : '0'}</span>
+      </div>
+      ${positionsHtml}
+    </div>
+
+    <!-- System-Health Footer -->
+    <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;font-size:11px">
+      <div>
+        <div style="font-size:9px;color:#8b949e;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">Trading Status</div>
+        ${killHtml}
+      </div>
+      <div>
+        <div style="font-size:9px;color:#8b949e;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">Balance gefetcht</div>
+        <div style="color:#e6edf3">${balanceFresh}</div>
+      </div>
+      <div>
+        <div style="font-size:9px;color:#8b949e;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">Letzter Trade</div>
+        <div style="color:#e6edf3">${lastTradeHtml}</div>
+      </div>
+      <div>
+        <div style="font-size:9px;color:#8b949e;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">Aktionen</div>
+        <a href="https://github.com/blummabet/Betting-Dashboard/actions/workflows/kill-switch.yml" target="_blank" style="color:#f85149;text-decoration:none;font-weight:700">🛑 Kill-Switch</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/blummabet/Betting-Dashboard/actions/workflows/daily-heartbeat.yml" target="_blank" style="color:#a371f7;text-decoration:none;font-weight:700">🤖 Heartbeat</a>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function refreshCockpit() {
+  const el = document.getElementById('tradingCockpit');
+  if (!el) return;
+  el.innerHTML = `<div style="text-align:center;padding:30px;color:#8b949e">⚙️ Lade Cockpit-Daten…</div>`;
+  const data = await loadCockpitData();
+  el.innerHTML = renderTradingCockpit(data);
+}
+
 function renderAutoTraderConfig() {
   return `
     <details style="background:#161b22;border:1px solid #30363d;border-radius:12px;padding:14px 18px;margin-bottom:16px" open>
@@ -3023,6 +3311,16 @@ function renderPolyStats() {
           <div style="font-size:11px;color:#8b949e;margin-top:4px">${c.sub}</div>
         </div>`).join('')}
     </div>
+
+    <!-- TRADING COCKPIT — wird async geladen via refreshCockpit() -->
+    <div id="tradingCockpit">
+      <div style="background:#161b22;border:1px solid #30363d;border-radius:14px;padding:30px;margin-bottom:16px;text-align:center;color:#8b949e;font-size:13px">
+        ⚙️ Cockpit lädt Live-Daten…
+      </div>
+    </div>
+    <!-- Auto-Trigger via SVG onload — feuert sobald HTML ins DOM gehängt wird -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" style="display:none" onload="if(window.refreshCockpit && !window._cockpitLoading){window._cockpitLoading=true;refreshCockpit().finally(()=>{window._cockpitLoading=false;});}"></svg>
+
 
     ${renderAutoTraderConfig()}
 

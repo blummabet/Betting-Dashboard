@@ -1,0 +1,90 @@
+name: 🛑 Kill-Switch · Auto-Trigger pausieren/fortsetzen
+
+# Mobile-fähig: GitHub-App auf Phone → Actions → "Kill-Switch" → Run workflow.
+# Schreibt wm_kill_switch.json — auto_wm_poly_trigger.py checkt das vor jedem Lauf.
+#
+# WICHTIG: Pausiert NUR den Auto-Trigger (neue Bets). Der Auto-Sell läuft weiter,
+# damit Risikomanagement / Profit-Mitnahme bei offenen Positionen bestehen bleibt.
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Was tun?'
+        required: true
+        default: 'kill'
+        type: choice
+        options:
+          - kill
+          - resume
+      reason:
+        description: 'Grund (optional, wird im Log gespeichert)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  toggle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🛑 / ▶️ Kill-Switch umschalten
+        run: |
+          ACTION="${{ github.event.inputs.action }}"
+          REASON="${{ github.event.inputs.reason }}"
+          TS=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          if [ "$ACTION" = "kill" ]; then
+            ENABLED="false"
+            DEFAULT_REASON="manuell pausiert via GH Actions"
+            EMOJI="🛑"
+            STATE="PAUSED"
+          else
+            ENABLED="true"
+            DEFAULT_REASON="manuell fortgesetzt via GH Actions"
+            EMOJI="▶️"
+            STATE="ACTIVE"
+          fi
+
+          REASON_FINAL="${REASON:-$DEFAULT_REASON}"
+          cat > wm_kill_switch.json <<EOF
+          {
+            "enabled": $ENABLED,
+            "ts": "$TS",
+            "reason": "$REASON_FINAL"
+          }
+          EOF
+
+          echo "$EMOJI Auto-Trigger ist jetzt $STATE"
+          echo "Reason: $REASON_FINAL"
+
+          # Auf Telegram benachrichtigen
+          if [ -n "${{ secrets.TELEGRAM_TOKEN }}" ] && [ -n "${{ secrets.TELEGRAM_TRADES_CHAT_ID }}" ]; then
+            MSG="$EMOJI <b>Auto-Trigger $STATE</b>%0A%0AGrund: $REASON_FINAL%0AZeit: $TS UTC"
+            curl -s -X POST \
+              "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage" \
+              -d "chat_id=${{ secrets.TELEGRAM_TRADES_CHAT_ID }}" \
+              -d "text=$MSG" \
+              -d "parse_mode=HTML" > /dev/null
+          fi
+
+      - name: 💾 Pushen
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add wm_kill_switch.json
+          if ! git diff --staged --quiet; then
+            git commit -m "${{ github.event.inputs.action == 'kill' && '🛑' || '▶️' }} Kill-Switch ${{ github.event.inputs.action }}"
+            git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            for attempt in 1 2 3; do
+              git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+              if git push; then echo "✓ pushed"; break; fi
+              sleep $((attempt * 3))
+            done
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
