@@ -1733,9 +1733,21 @@ if (WRITE_MODE) {
       const outPath = path.join(__dirname, 'prematch-data.json');
 
       // ── Kein Fixture zurückgegeben → alte Datei NICHT überschreiben ──────
-      // Mögliche Ursachen: APISPORTS_KEY Quota erschöpft, Netzwerkfehler.
-      // Die alte prematch-data.json bleibt erhalten → Dashboard bleibt funktional.
+      // Zwei legitime Gründe für 0 Fixtures:
+      //  1) Liga-Sommerpause (Jun–Aug): europäische Top-Ligen pausieren, keine Spiele
+      //  2) API-Problem: Quota erschöpft, Netzwerkfehler — DAS wäre ein echter Fehler
+      //
+      // Heuristik: aktuelle Date in Juni/Juli (Mid-Summer) → Sommerpause = Exit 0 mit Warning.
+      // Sonst (Sept-Mai = Saison läuft) → Exit 1, ist echtes Problem.
       if (fixtures.length === 0) {
+        const month = new Date().getUTCMonth() + 1;   // 1-12
+        const isSummerBreak = (month >= 6 && month <= 7);
+        if (isSummerBreak) {
+          console.warn('\n⚠️  0 Fixtures — Sommerpause (Jun-Jul) in europäischen Top-Ligen.');
+          console.warn('   prematch-data.json bleibt unverändert. Saison startet ~August.');
+          console.warn('   Kein Workflow-Fail — das ist erwartet.');
+          process.exit(0);   // Soft-Exit, GitHub Actions zeigt grün
+        }
         console.error('\n❌ 0 Fixtures zurückgegeben — prematch-data.json wird NICHT überschrieben.');
         console.error('   Alter Stand bleibt erhalten. Prüfe Step1-Logs oben auf API-Fehler/Quota.');
         console.error('   Falls APISPORTS_KEY erschöpft: api-sports.io Dashboard → "My Account" → Quota-Status.');
