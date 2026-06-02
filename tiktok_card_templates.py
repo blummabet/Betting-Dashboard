@@ -108,6 +108,13 @@ THEMES = {
         "badgeBg": "rgba(245,197,24,0.10)",
         "badgeBorder": "rgba(245,197,24,0.35)",
     },
+    "bizarre": {
+        "accent": "#ec4899",         # pink-magenta für die Fun-Rubrik
+        "accentRgb": "236,72,153",
+        "badge": "🤡 BIZARRE-QUOTE",
+        "badgeBg": "rgba(236,72,153,0.10)",
+        "badgeBorder": "rgba(236,72,153,0.40)",
+    },
 }
 
 
@@ -145,7 +152,7 @@ def hook_card(
     series_html = ""
     if series_tag:
         series_html = (
-            f'<div style="position:absolute;top:18px;right:18px;font-size:9px;'
+            f'<div style="position:absolute;top:14px;left:18px;font-size:9px;'
             f'font-weight:800;letter-spacing:1.5px;color:{accent};opacity:.7;'
             f'border:1px solid rgba({rgb},.3);border-radius:6px;padding:3px 8px;">'
             f'{series_tag}</div>'
@@ -299,6 +306,140 @@ body {{
 """
 
 
+def bizarre_info_card(
+    theme: str,
+    flag: str,
+    team_name: str,
+    quote_str: str,         # z.B. "1 : 3.501"
+    chance_pct: str,        # z.B. "0,029 %"
+    comparisons: list,      # [(emoji, text, "0,2 %"), ...]
+    closing_line: str,
+    quote_line: str,
+    series_tag: str | None = None,
+) -> str:
+    """
+    Spezielles Layout für Bizarre-Quoten-Karten:
+    - Hero: riesige Chance-% + Quote
+    - Liste von 5-6 absurden Vergleichen mit Probability-Pill rechts
+    - Closing-Hook + Quote
+    """
+    t = THEMES.get(theme, THEMES["bizarre"])
+    accent = t["accent"]
+    rgb = t["accentRgb"]
+
+    series_html = ""
+    if series_tag:
+        series_html = (
+            f'<div style="position:absolute;top:14px;left:18px;font-size:9px;'
+            f'font-weight:800;letter-spacing:1.5px;color:{accent};opacity:.7;'
+            f'border:1px solid rgba({rgb},.3);border-radius:6px;padding:3px 8px;">'
+            f'{series_tag}</div>'
+        )
+
+    comp_html = ""
+    for emoji, text, prob in comparisons:
+        comp_html += (
+            f'<div style="display:flex;align-items:center;gap:8px;padding:8px 4px;'
+            f'border-bottom:1px solid rgba(255,255,255,0.05);">'
+            f'<div style="font-size:18px;flex-shrink:0;width:24px;text-align:center;">{emoji}</div>'
+            f'<div style="font-size:11px;color:rgba(255,255,255,.82);line-height:1.4;flex:1;">{text}</div>'
+            f'<div style="font-size:11px;font-weight:800;color:{accent};font-family:\'SF Mono\',Menlo,monospace;'
+            f'background:rgba({rgb},0.10);border:1px solid rgba({rgb},0.25);'
+            f'border-radius:5px;padding:2px 7px;flex-shrink:0;">{prob}</div>'
+            f'</div>'
+        )
+
+    return f"""<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"><title>Bizarre Info</title>
+<style>
+* {{ margin:0; padding:0; box-sizing:border-box; }}
+body {{ background:#0a0e18; display:flex; align-items:center; justify-content:center; min-height:100vh;
+       font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }}
+.card {{
+  width:360px; height:640px;
+  background:
+    radial-gradient(circle at 50% 22%, rgba({rgb},0.10) 0%, transparent 50%),
+    linear-gradient(180deg, #0a0e18 0%, #080d18 100%);
+  background-image:
+    radial-gradient(circle at 50% 22%, rgba({rgb},0.10) 0%, transparent 50%),
+    linear-gradient(rgba(255,255,255,0.014) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.014) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
+  border-radius:24px; padding:24px 22px 20px;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column;
+  border:1px solid rgba(255,255,255,0.04);
+}}
+.top {{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }}
+.brand-top {{ font-size:11px; font-weight:800; letter-spacing:3px; color:#f5c518; }}
+.badge-top {{ font-size:10px; font-weight:700; letter-spacing:1px; color:{accent};
+  background:{t["badgeBg"]}; border:1px solid {t["badgeBorder"]}; border-radius:18px; padding:5px 12px; }}
+
+.flag {{ font-size:42px; text-align:center; line-height:1; margin-bottom:4px; }}
+.name {{ font-size:18px; font-weight:800; color:#fff; text-align:center; letter-spacing:-.3px; margin-bottom:10px; }}
+
+.hero-box {{ border:1px solid rgba({rgb},0.30); background:rgba({rgb},0.05);
+  border-radius:12px; padding:14px 16px 12px; text-align:center; margin-bottom:14px;
+  box-shadow: inset 0 0 28px rgba({rgb},0.06); }}
+.hero-pct {{ font-size:46px; font-weight:900; color:{accent}; line-height:1; letter-spacing:-2px;
+  text-shadow: 0 0 22px rgba({rgb},0.40); }}
+.hero-quote {{ font-size:11px; color:rgba(255,255,255,.40); margin-top:5px; letter-spacing:1.5px;
+  text-transform:uppercase; font-weight:600; }}
+.hero-quote strong {{ color:rgba(255,255,255,.75); }}
+
+.list-title {{ font-size:9px; color:rgba(255,255,255,.32); text-align:center; letter-spacing:1.8px;
+  text-transform:uppercase; margin-bottom:6px; font-weight:700; }}
+.comp-list {{ margin-bottom:14px; }}
+
+.closing-box {{ border:1px solid rgba({rgb},0.25); background:rgba({rgb},0.05);
+  border-radius:9px; padding:10px 12px; margin-bottom:12px; }}
+.closing-text {{ font-size:11px; color:rgba(255,255,255,.78); line-height:1.55; }}
+.closing-text strong {{ color:{accent}; }}
+
+.quote {{ font-size:14px; font-weight:800; color:#fff; text-align:center; line-height:1.35;
+  margin-bottom:auto; }}
+.quote .acc {{ color:{accent}; }}
+
+.footer {{ display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.05);
+  padding-top:10px; margin-top:14px; }}
+.footer .ft {{ font-size:9px; color:rgba(255,255,255,.22); }}
+</style></head>
+<body>
+<div class="card">
+  {series_html}
+  <div class="top">
+    <div class="brand-top">COCOBET</div>
+    <div class="badge-top">{t["badge"]}</div>
+  </div>
+
+  <div class="flag">{flag}</div>
+  <div class="name">{team_name} wird Weltmeister</div>
+
+  <div class="hero-box">
+    <div class="hero-pct">{chance_pct}</div>
+    <div class="hero-quote">Quote <strong>{quote_str}</strong></div>
+  </div>
+
+  <div class="list-title">Was eher passiert</div>
+  <div class="comp-list">{comp_html}</div>
+
+  <div class="closing-box">
+    <div class="closing-text">{closing_line}</div>
+  </div>
+
+  <div class="quote">{quote_line}</div>
+
+  <div class="footer">
+    <div class="ft">Quote: Polymarket Outrights · 02.06.26</div>
+    <div class="ft">cocobet</div>
+  </div>
+</div>
+</body>
+</html>
+"""
+
+
 def info_card(
     theme: str,
     flag: str,
@@ -334,7 +475,7 @@ def info_card(
     series_html = ""
     if series_tag:
         series_html = (
-            f'<div style="position:absolute;top:18px;right:18px;font-size:9px;'
+            f'<div style="position:absolute;top:14px;left:18px;font-size:9px;'
             f'font-weight:800;letter-spacing:1.5px;color:{accent};opacity:.7;'
             f'border:1px solid rgba({rgb},.3);border-radius:6px;padding:3px 8px;">'
             f'{series_tag}</div>'
