@@ -899,6 +899,29 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm-countdown{display:inline-block;background:rgba(0,212,161,.10);border:1px solid rgba(0,212,161,.25);border-radius:10px;padding:5px 12px;font-size:11px;font-weight:700;color:var(--accent);}
 .wm-countdown-live{background:rgba(248,81,73,.10);border-color:rgba(248,81,73,.30);color:var(--red);}
 
+/* ── Pick Odds-Strip (Opening → Aktuell + Sparkline) ────────────── */
+.cc-odds-strip{margin:8px 18px 0;padding:8px 12px;display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:8px;}
+.cc-os-drift{display:flex;align-items:center;gap:6px;font-size:10.5px;flex-shrink:0;}
+.cc-os-label{color:var(--muted);letter-spacing:.5px;font-weight:600;text-transform:uppercase;font-size:9px;}
+.cc-os-open{color:var(--muted);font-family:'SF Mono',Menlo,monospace;font-size:11px;}
+.cc-os-arrow{font-size:10px;color:#444;}
+.cc-os-now{font-weight:700;font-family:'SF Mono',Menlo,monospace;font-size:11px;}
+.cc-os-now.up{color:#00d4a1;}
+.cc-os-now.down{color:#f85149;}
+.cc-os-pp{font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;}
+.cc-os-pp.up{background:rgba(0,212,161,.12);color:#00d4a1;}
+.cc-os-pp.down{background:rgba(248,81,73,.12);color:#f85149;}
+.cc-os-clv{font-size:9px;font-weight:800;letter-spacing:.5px;margin-left:4px;}
+.cc-os-clv.cc-clv-up{color:#00d4a1;}
+.cc-os-clv.cc-clv-down{color:#f85149;}
+.cc-os-spark{flex:1;height:24px;display:flex;align-items:center;justify-content:flex-end;min-width:0;}
+.cc-os-spark svg{max-width:140px;width:100%;height:24px;}
+@media(max-width:560px){
+  .cc-odds-strip{flex-direction:column;align-items:flex-start;gap:6px;}
+  .cc-os-spark{width:100%;justify-content:flex-start;}
+  .cc-os-spark svg{max-width:100%;}
+}
+
 /* ── Pick-Changes Banner ────────────────────────────────────────── */
 .pick-changes-banner{margin:8px 0 10px;background:linear-gradient(180deg,rgba(0,212,161,0.05),rgba(0,212,161,0.02));border:1px solid rgba(0,212,161,0.18);border-radius:10px;overflow:hidden;}
 .pcb-head{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;cursor:pointer;gap:10px;}
@@ -1246,6 +1269,44 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 }
 
 /* ── WM Tracking Tab ──────────────────────────────────────── */
+
+/* HERO BLOCK — die EINE Zahl die Vertrauen erzeugt */
+.wm-trk-hero{background:linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0.005));border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin:14px 0 0;position:relative;overflow:hidden;}
+.wm-trk-hero.wm-trk-hero-pos{border-color:rgba(63,185,80,0.35);background:linear-gradient(180deg,rgba(63,185,80,0.07),rgba(63,185,80,0.01));box-shadow:0 0 0 1px rgba(63,185,80,0.05),inset 0 0 40px rgba(63,185,80,0.04);}
+.wm-trk-hero.wm-trk-hero-neg{border-color:rgba(248,81,73,0.35);background:linear-gradient(180deg,rgba(248,81,73,0.07),rgba(248,81,73,0.01));}
+.wm-trk-hero-row{display:grid;grid-template-columns:1fr 2fr 1fr;gap:18px;align-items:center;}
+.wm-trk-hero-side{text-align:center;}
+.wm-trk-hero-center{text-align:center;}
+.wm-trk-hero-label{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:4px;}
+.wm-trk-hero-num{font-size:56px;font-weight:900;letter-spacing:-2px;line-height:1;font-family:-apple-system,sans-serif;}
+.wm-trk-hero.wm-trk-hero-pos .wm-trk-hero-num{color:#3fb950;text-shadow:0 0 32px rgba(63,185,80,0.30);}
+.wm-trk-hero.wm-trk-hero-neg .wm-trk-hero-num{color:#f85149;text-shadow:0 0 32px rgba(248,81,73,0.30);}
+.wm-trk-hero-sub{font-size:11px;color:var(--muted);margin-top:6px;letter-spacing:.2px;}
+.wm-trk-hero-mini-num{font-size:24px;font-weight:800;color:var(--text);line-height:1;letter-spacing:-.5px;}
+.wm-trk-hero-mini-num.wm-trk-hero-pos{color:#3fb950;}
+.wm-trk-hero-mini-num.wm-trk-hero-neg{color:#f85149;}
+.wm-trk-hero-mini-lbl{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-top:5px;}
+
+/* Pre-WM (kein Live-Resultat) — leerer Hero mit "Bereit"-Hinweis */
+.wm-trk-hero-pending{border-color:var(--border);background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.005));}
+.wm-trk-hero-pending-icon{font-size:32px;margin-bottom:6px;opacity:.7;}
+.wm-trk-hero-pending-txt{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.2px;}
+.wm-trk-hero-pending-sub{font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.2px;}
+
+@media(max-width:640px){
+  .wm-trk-hero{padding:18px 14px;}
+  .wm-trk-hero-row{grid-template-columns:1fr;gap:18px;}
+  .wm-trk-hero-num{font-size:48px;}
+}
+
+/* EQUITY CURVE */
+.wm-trk-curve{background:var(--surface1);border:1px solid var(--border);border-radius:10px;padding:14px 16px 10px;margin-top:10px;}
+.wm-trk-curve.wm-trk-curve-empty{padding:20px;text-align:center;background:rgba(255,255,255,0.01);}
+.wm-trk-curve-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.wm-trk-curve-title{font-size:11px;font-weight:700;color:var(--text);letter-spacing:.3px;}
+.wm-trk-curve-sub{font-size:10px;color:var(--muted);}
+.wm-trk-curve-svg{width:100%;height:140px;display:block;}
+
 .wm-trk-kpi-strip{display:flex;flex-wrap:wrap;gap:8px;background:var(--surface1);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:14px;}
 .wm-trk-kpi{display:flex;flex-direction:column;align-items:center;min-width:64px;flex:1;}
 .wm-trk-kpi-val{font-size:18px;font-weight:800;line-height:1.1;}

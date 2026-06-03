@@ -1,0 +1,49 @@
+name: 📊 Track-Record-Card (Daily Telegram)
+
+on:
+  # 1× täglich 19:00 UTC = 21:00 Wien (nach Abendspielen)
+  schedule:
+    - cron: '0 19 * * *'
+
+  # Manuell auslösbar via "Run workflow" Button — auch ohne Trigger-Schwellen (FORCE)
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Trigger-Schwellen ignorieren (immer senden)'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: track-record-card
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Playwright + Chromium
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: 📊 Track-Record-Card generieren + posten
+        run: python generate_track_record_card.py
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          FORCE:                   ${{ github.event.inputs.force || 'false' }}
+          TRACK_RECORD_MIN_RESOLVED: "5"
+          TRACK_RECORD_MIN_NEW:      "3"

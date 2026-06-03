@@ -161,6 +161,12 @@
       </div>
     </div>`;
 
+    // ─── HERO BLOCK — die EINE Zahl die alles erzählt ────
+    html += _buildHeroBlock(flatPicks);
+
+    // ─── EQUITY CURVE — Bankroll-Verlauf seit Start ───────
+    html += _buildEquityCurve(flatPicks);
+
     // ─── Global KPI strip ─────────────────────────────
     html += _buildKpiStrip(flatPicks, 'Alle Picks');
 
@@ -233,6 +239,176 @@
   }
 
   // ─────────────────────────────────────────────────────
+  //  KPI-Math als Shared-Helper (Hero + Strip + Card teilen ihn)
+  // ─────────────────────────────────────────────────────
+  function _computeKpis(picks) {
+    const resolved = picks.filter(p => p.result != null);
+    const won      = resolved.filter(p => p.result === 'won');
+    const lost     = resolved.filter(p => p.result === 'lost');
+    const push     = resolved.filter(p => p.result === 'push');
+    const decided  = resolved.length - push.length;
+
+    const winRate = decided > 0 ? Math.round(won.length / decided * 100) : null;
+    const avgOdds = resolved.length > 0
+      ? +(resolved.reduce((s, p) => s + (p.odds || 1), 0) / resolved.length).toFixed(2)
+      : null;
+
+    let pnl = null, roi = null;
+    if (resolved.length > 0) {
+      pnl = +(won.reduce((s, p) => s + ((p.odds || 1) - 1) * STAKE, 0)
+            - lost.length * STAKE).toFixed(2);
+      roi = +(pnl / (resolved.length * STAKE) * 100).toFixed(1);
+    }
+
+    // Avg CLV — pro-Pick CLV in pp, gewichtet nur über resolved (sonst statistisch zappelig)
+    const clvPicks = resolved.filter(p => typeof p.clvPP === 'number');
+    const avgClv = clvPicks.length > 0
+      ? +(clvPicks.reduce((s, p) => s + p.clvPP, 0) / clvPicks.length).toFixed(1)
+      : null;
+
+    return {
+      total: picks.length,
+      bet:   picks.filter(p => p.verdict === 'BET').length,
+      pending: picks.length - resolved.length,
+      resolved: resolved.length,
+      won:   won.length,
+      lost:  lost.length,
+      push:  push.length,
+      winRate, avgOdds, pnl, roi, avgClv,
+    };
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  HERO BLOCK — die EINE Zahl die Vertrauen erzeugt
+  // ─────────────────────────────────────────────────────
+  function _buildHeroBlock(picks) {
+    const k = _computeKpis(picks);
+    const isLive = k.resolved > 0;
+
+    if (!isLive) {
+      // Pre-WM-State: zeige "Bereit für ST1" statt leere KPIs
+      return `<div class="wm-trk-hero wm-trk-hero-pending">
+        <div class="wm-trk-hero-row">
+          <div class="wm-trk-hero-side">
+            <div class="wm-trk-hero-mini-num">${k.total}</div>
+            <div class="wm-trk-hero-mini-lbl">Picks bereit</div>
+          </div>
+          <div class="wm-trk-hero-center">
+            <div class="wm-trk-hero-pending-icon">⏳</div>
+            <div class="wm-trk-hero-pending-txt">Track-Record startet mit Spieltag 1</div>
+            <div class="wm-trk-hero-pending-sub">${k.bet} BET · ${k.total - k.bet} ABWÄGEN — eingefroren bei Kickoff</div>
+          </div>
+          <div class="wm-trk-hero-side">
+            <div class="wm-trk-hero-mini-num">11.06.</div>
+            <div class="wm-trk-hero-mini-lbl">Anpfiff</div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    const roiSign  = k.roi >= 0 ? '+' : '';
+    const roiCls   = k.roi >= 0 ? 'wm-trk-hero-pos' : 'wm-trk-hero-neg';
+    const clvSign  = k.avgClv != null && k.avgClv >= 0 ? '+' : '';
+    const clvVal   = k.avgClv != null ? `${clvSign}${k.avgClv}pp` : '—';
+    const clvCls   = k.avgClv != null ? (k.avgClv >= 0 ? 'wm-trk-hero-pos' : 'wm-trk-hero-neg') : '';
+    const hitRate  = k.winRate != null ? `${k.winRate}%` : '—';
+
+    return `<div class="wm-trk-hero ${roiCls}">
+      <div class="wm-trk-hero-row">
+        <div class="wm-trk-hero-side">
+          <div class="wm-trk-hero-mini-num">${hitRate}</div>
+          <div class="wm-trk-hero-mini-lbl">Trefferquote · ${k.won}/${k.resolved - k.push}</div>
+        </div>
+        <div class="wm-trk-hero-center">
+          <div class="wm-trk-hero-label">Return on Investment</div>
+          <div class="wm-trk-hero-num">${roiSign}${k.roi}%</div>
+          <div class="wm-trk-hero-sub">${k.pnl >= 0 ? '+' : '−'}€${Math.abs(k.pnl).toFixed(2)} bei €${STAKE}/Pick · ${k.resolved} resolvierte</div>
+        </div>
+        <div class="wm-trk-hero-side">
+          <div class="wm-trk-hero-mini-num ${clvCls}">${clvVal}</div>
+          <div class="wm-trk-hero-mini-lbl">Ø CLV · n=${k.resolved}</div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  EQUITY CURVE — kumulatives P&L pro resolvierten Pick
+  // ─────────────────────────────────────────────────────
+  function _buildEquityCurve(picks) {
+    const resolved = picks.filter(p => p.result != null);
+    if (resolved.length === 0) {
+      return `<div class="wm-trk-curve wm-trk-curve-empty">
+        <span style="color:var(--muted);font-size:11px;letter-spacing:.5px;">📈 Bankroll-Verlauf — Erste Resultate ab 11. Juni</span>
+      </div>`;
+    }
+
+    // Sortiere chronologisch nach kickoff (fx date + time)
+    const sortable = resolved.map(p => ({
+      pick: p,
+      ts: `${p._row?.fx?.date || '9999-99-99'}T${p._row?.fx?.time || '23:59'}`,
+    })).sort((a, b) => a.ts.localeCompare(b.ts));
+
+    // Kumuliere PnL Pick für Pick
+    let cum = 0;
+    const points = [{ x: 0, y: 0, pnl: 0 }];   // Startpunkt
+    sortable.forEach((s, i) => {
+      const p = s.pick;
+      let delta = 0;
+      if (p.result === 'won')  delta = ((p.odds || 1) - 1) * STAKE;
+      else if (p.result === 'lost') delta = -STAKE;
+      cum += delta;
+      points.push({ x: i + 1, y: cum, pnl: cum, market: p.market, result: p.result, odds: p.odds });
+    });
+
+    const n = points.length;
+    const W = 800, H = 140, padL = 40, padR = 30, padT = 12, padB = 24;
+    const minY = Math.min(0, ...points.map(p => p.y));
+    const maxY = Math.max(0, ...points.map(p => p.y));
+    const rangeY = (maxY - minY) || 1;
+
+    const xPos = i => padL + (i / Math.max(1, n - 1)) * (W - padL - padR);
+    const yPos = v => padT + (1 - (v - minY) / rangeY) * (H - padT - padB);
+
+    const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${xPos(i).toFixed(1)} ${yPos(p.y).toFixed(1)}`).join(' ');
+    const areaPath = `${linePath} L ${xPos(n - 1).toFixed(1)} ${yPos(0).toFixed(1)} L ${xPos(0).toFixed(1)} ${yPos(0).toFixed(1)} Z`;
+    const isPositive = cum >= 0;
+    const color = isPositive ? '#3fb950' : '#f85149';
+
+    // Zero-Line nur wenn 0 im Range
+    const zeroY = yPos(0);
+    const zeroLine = (minY <= 0 && maxY >= 0)
+      ? `<line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${W - padR}" y2="${zeroY.toFixed(1)}" stroke="rgba(255,255,255,0.12)" stroke-dasharray="3,3" stroke-width="1"/>`
+      : '';
+
+    // Last point + label
+    const lastX = xPos(n - 1);
+    const lastY = yPos(cum);
+    const sign = cum >= 0 ? '+' : '−';
+    const labelTxt = `${sign}€${Math.abs(cum).toFixed(2)}`;
+
+    return `<div class="wm-trk-curve">
+      <div class="wm-trk-curve-head">
+        <span class="wm-trk-curve-title">📈 Bankroll-Verlauf · €${STAKE}/Pick</span>
+        <span class="wm-trk-curve-sub">${resolved.length} resolvierte Picks</span>
+      </div>
+      <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="wm-trk-curve-svg">
+        <defs>
+          <linearGradient id="trkCurveGrad" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="${color}" stop-opacity="0.30"/>
+            <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        ${zeroLine}
+        <path d="${areaPath}" fill="url(#trkCurveGrad)"/>
+        <path d="${linePath}" stroke="${color}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="4" fill="${color}"/>
+        <text x="${lastX.toFixed(1)}" y="${(lastY - 8).toFixed(1)}" text-anchor="end" fill="${color}" font-size="13" font-weight="800" font-family="-apple-system,sans-serif">${labelTxt}</text>
+      </svg>
+    </div>`;
+  }
+
+  // ─────────────────────────────────────────────────────
   //  KPI STRIP
   // ─────────────────────────────────────────────────────
   function _buildKpiStrip(picks, label) {
@@ -280,6 +456,14 @@
       ${_kpi('Ø Quoten', avgOdds || '—', 'var(--text)')}
       ${_kpi('ROI', roi != null ? (roi >= 0 ? '+' : '') + roi + '%' : '—', roiColor)}
       ${_kpi('P&L', pnl != null ? (pnl >= 0 ? '+' : '') + '€' + Math.abs(pnl).toFixed(2) : '—', pnlColor)}
+      ${(() => {
+        const clvPicks = resolved.filter(p => typeof p.clvPP === 'number');
+        if (!clvPicks.length) return _kpi('Ø CLV', '—', 'var(--muted)');
+        const avg = +(clvPicks.reduce((s, p) => s + p.clvPP, 0) / clvPicks.length).toFixed(1);
+        const sign = avg >= 0 ? '+' : '';
+        const col = avg >= 0 ? '#3fb950' : '#f85149';
+        return _kpi('Ø CLV', `${sign}${avg}pp`, col);
+      })()}
     </div>`;
   }
 
