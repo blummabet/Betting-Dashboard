@@ -122,6 +122,20 @@ THEMES = {
         "badgeBg": "rgba(0,212,161,0.10)",
         "badgeBorder": "rgba(0,212,161,0.40)",
     },
+    "track_record": {
+        "accent": "#3fb950",          # echtes GitHub-Grün
+        "accentRgb": "63,185,80",
+        "badge": "📊 TRACK-RECORD",
+        "badgeBg": "rgba(63,185,80,0.10)",
+        "badgeBorder": "rgba(63,185,80,0.40)",
+    },
+    "track_record_neg": {
+        "accent": "#f85149",
+        "accentRgb": "248,81,73",
+        "badge": "📊 TRACK-RECORD",
+        "badgeBg": "rgba(248,81,73,0.10)",
+        "badgeBorder": "rgba(248,81,73,0.40)",
+    },
 }
 
 
@@ -795,4 +809,176 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
 </body>
 </html>
 """
+
+
+def track_record_card(
+    roi_pct: float,             # z.B. +14.2  (negativ → rote Variante)
+    hit_rate_pct: int,          # z.B. 58
+    total_picks: int,           # z.B. 47
+    resolved_picks: int,        # z.B. 27
+    won: int,
+    lost: int,
+    push: int,
+    pnl_eur: float,             # z.B. +127.50
+    avg_clv_pp: float | None,   # z.B. +3.2  (None wenn nicht verfügbar)
+    stake_eur: int = 10,
+    equity_curve_points: list[float] | None = None,   # kumulativer P&L pro Pick
+    period_label: str = "WM 2026 Gruppenphase",
+    stand_label: str = "",      # "Stand: 16.06.26 · 18:00"
+) -> str:
+    """
+    Screenshot-taugliche Track-Record-Card für TikTok-Teilen.
+    360×640 vertical. Hero-ROI dominiert, Equity-Curve unten,
+    Stats-Strip rechts (Hit-Rate, n=Picks, CLV).
+    """
+    is_pos = roi_pct >= 0
+    t = THEMES["track_record" if is_pos else "track_record_neg"]
+    accent = t["accent"]
+    rgb = t["accentRgb"]
+
+    roi_sign = "+" if roi_pct >= 0 else "−"
+    pnl_sign = "+" if pnl_eur >= 0 else "−"
+    clv_str = "—"
+    if avg_clv_pp is not None:
+        clv_sign = "+" if avg_clv_pp >= 0 else ""
+        clv_str = f"{clv_sign}{avg_clv_pp:.1f}pp"
+
+    # Mini Equity-Curve SVG
+    curve_svg = ""
+    if equity_curve_points and len(equity_curve_points) >= 2:
+        W, H = 312, 80
+        pts = [0.0] + list(equity_curve_points)
+        min_v = min(min(pts), 0.0)
+        max_v = max(max(pts), 0.0)
+        rng = (max_v - min_v) or 1.0
+        n = len(pts)
+        def xp(i): return 4 + (i / max(1, n - 1)) * (W - 8)
+        def yp(v): return 4 + (1 - (v - min_v) / rng) * (H - 8)
+        path = "M " + " L ".join(f"{xp(i):.1f} {yp(v):.1f}" for i, v in enumerate(pts))
+        area = path + f" L {xp(n-1):.1f} {yp(0):.1f} L {xp(0):.1f} {yp(0):.1f} Z"
+        zero_y = yp(0)
+        last_x, last_y = xp(n-1), yp(pts[-1])
+        curve_svg = f"""
+        <svg viewBox="0 0 {W} {H}" preserveAspectRatio="none" style="width:100%;height:{H}px;">
+          <defs><linearGradient id="trkg" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="{accent}" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="{accent}" stop-opacity="0"/>
+          </linearGradient></defs>
+          <line x1="4" y1="{zero_y:.1f}" x2="{W-4}" y2="{zero_y:.1f}"
+                stroke="rgba(255,255,255,0.10)" stroke-dasharray="3,3" stroke-width="1"/>
+          <path d="{area}" fill="url(#trkg)"/>
+          <path d="{path}" stroke="{accent}" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="{last_x:.1f}" cy="{last_y:.1f}" r="3.5" fill="{accent}"/>
+        </svg>"""
+    else:
+        curve_svg = (
+            f'<div style="text-align:center;font-size:10px;color:rgba(255,255,255,.35);'
+            f'padding:20px 0;letter-spacing:1px;">Bankroll-Verlauf folgt mit ersten Picks</div>'
+        )
+
+    return f"""<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"><title>Track-Record</title>
+<style>
+* {{ margin:0; padding:0; box-sizing:border-box; }}
+body {{ background:#0a0e18; display:flex; align-items:center; justify-content:center;
+       min-height:100vh; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }}
+.card {{
+  width:360px; height:640px;
+  background:
+    radial-gradient(circle at 50% 32%, rgba({rgb},0.14) 0%, transparent 55%),
+    linear-gradient(180deg, #0a0e18 0%, #080d18 100%);
+  background-image:
+    radial-gradient(circle at 50% 32%, rgba({rgb},0.14) 0%, transparent 55%),
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
+  border-radius:24px; padding:24px 22px 20px;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column;
+  border:1px solid rgba(255,255,255,0.04);
+}}
+.top {{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }}
+.brand-top {{ font-size:11px; font-weight:800; letter-spacing:3px; color:#f5c518; }}
+.badge-top {{ font-size:10px; font-weight:700; letter-spacing:1px; color:{accent};
+  background:{t["badgeBg"]}; border:1px solid {t["badgeBorder"]}; border-radius:18px; padding:5px 12px; }}
+
+.period {{ font-size:10px; color:rgba(255,255,255,.40); text-align:center;
+  letter-spacing:1.8px; text-transform:uppercase; font-weight:700; margin-bottom:18px; }}
+
+.hero {{ text-align:center; margin-bottom:18px; }}
+.hero-label {{ font-size:10px; color:rgba(255,255,255,.45); letter-spacing:2.2px;
+  text-transform:uppercase; font-weight:800; margin-bottom:6px; }}
+.hero-num {{ font-size:84px; font-weight:900; color:{accent}; line-height:1;
+  letter-spacing:-3.5px; text-shadow: 0 0 38px rgba({rgb},0.50); }}
+.hero-num .unit {{ font-size:36px; font-weight:700; vertical-align:top; margin-left:3px; }}
+.hero-sub {{ font-size:11px; color:rgba(255,255,255,.55); margin-top:7px;
+  letter-spacing:.3px; font-weight:600; }}
+
+.stats-row {{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
+  margin-bottom:16px; padding:14px 4px;
+  border-top:1px solid rgba(255,255,255,0.05);
+  border-bottom:1px solid rgba(255,255,255,0.05); }}
+.stat {{ text-align:center; }}
+.stat-num {{ font-size:18px; font-weight:900; color:#fff; line-height:1;
+  letter-spacing:-.5px; }}
+.stat-num.acc {{ color:{accent}; }}
+.stat-lbl {{ font-size:8.5px; color:rgba(255,255,255,.42); letter-spacing:1.3px;
+  text-transform:uppercase; font-weight:700; margin-top:4px; }}
+
+.curve-wrap {{ background:rgba(255,255,255,0.02); border-radius:10px;
+  padding:10px 8px 4px; margin-bottom:auto; }}
+.curve-label {{ font-size:9px; color:rgba(255,255,255,.45); letter-spacing:1.5px;
+  text-transform:uppercase; font-weight:800; margin-bottom:4px; padding:0 6px; }}
+
+.footer {{ display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; margin-top:14px; }}
+.footer .ft {{ font-size:9px; color:rgba(255,255,255,.30); letter-spacing:.5px; }}
+.footer .ft-stand {{ color:rgba(255,255,255,.55); font-weight:700; }}
+</style></head>
+<body>
+<div class="card">
+  <div class="top">
+    <div class="brand-top">COCOBET</div>
+    <div class="badge-top">{t["badge"]}</div>
+  </div>
+
+  <div class="period">{period_label}</div>
+
+  <div class="hero">
+    <div class="hero-label">Return on Investment</div>
+    <div class="hero-num">{roi_sign}{abs(roi_pct):.1f}<span class="unit">%</span></div>
+    <div class="hero-sub">{pnl_sign}€{abs(pnl_eur):.2f} bei €{stake_eur}/Pick</div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-num acc">{hit_rate_pct}%</div>
+      <div class="stat-lbl">Trefferquote</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">{resolved_picks}<span style="font-size:11px;color:rgba(255,255,255,.40);">/{total_picks}</span></div>
+      <div class="stat-lbl">Picks resolved</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num acc">{clv_str}</div>
+      <div class="stat-lbl">Ø CLV</div>
+    </div>
+  </div>
+
+  <div class="curve-wrap">
+    <div class="curve-label">Bankroll-Verlauf</div>
+    {curve_svg}
+  </div>
+
+  <div class="footer">
+    <div class="ft ft-stand">{stand_label}</div>
+    <div class="ft">cocobet · transparent</div>
+  </div>
+</div>
+</body>
+</html>
+"""
+
 

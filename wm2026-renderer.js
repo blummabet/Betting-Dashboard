@@ -18,6 +18,7 @@
   let _polyLookup     = {};   // key: "HOME-AWAY" → poly fixture object
   let _travelLookup   = {};   // key: TEAM_ID → travel burden object
   let _confidenceStats = null;  // pick_confidence_stats.json
+  let _oddsHistoryLookup = {};  // key: "HOME-AWAY" → [ {ts, hw, dr, aw, o25, ...}, ... ]
   let _activeGroup    = 'all';
   let _activeMd       = 'all';   // matchday filter: 'all' | 1 | 2 | 3
   let _activeSort     = 'date';  // 'date' | 'edge' | 'upset'
@@ -44,13 +45,14 @@
       </div>`;
 
     try {
-      const [wmResp, polyResp, travelResp, confResp, ppResp, chgResp] = await Promise.all([
+      const [wmResp, polyResp, travelResp, confResp, ppResp, chgResp, histResp] = await Promise.all([
         fetch('wm2026-data.json?t=' + Date.now()),
         fetch('wm_poly_prices.json?t=' + Date.now()).catch(() => null),
         fetch('wm_travel_burden.json?t=' + Date.now()).catch(() => null),
         fetch('pick_confidence_stats.json?t=' + Date.now()).catch(() => null),
         fetch('wm2026-player-picks.json?t=' + Date.now()).catch(() => null),
         fetch('pick_changes_log.json?t=' + Date.now()).catch(() => null),
+        fetch('wm2026-odds-history.json?t=' + Date.now()).catch(() => null),
       ]);
       if (!wmResp.ok) throw new Error('HTTP ' + wmResp.status);
       _wmData = await wmResp.json();
@@ -73,6 +75,13 @@
 
       if (confResp && confResp.ok) {
         _confidenceStats = await confResp.json();
+      }
+
+      // Odds-History (Sparkline-Quelle für Pick-Cards)
+      if (histResp && histResp.ok) {
+        try {
+          _oddsHistoryLookup = await histResp.json();
+        } catch (e) { _oddsHistoryLookup = {}; }
       }
 
       // Pick-Änderungen (Rolling-Log, max 200 Einträge / 7 Tage)
@@ -398,6 +407,10 @@
           ${[1,2,3].map(n => `<span class="cc-star${isAbw ? ' cc-star-abw' : ''} ${n <= stars ? 'cc-star-full' : 'cc-star-empty'}">★</span>`).join('')}
         </div>
       </div>`;
+
+      // Odds-Strip: Opening → Now Drift + Mini-Sparkline (zwischen Pick und Story)
+      const stripHtml = _buildOddsStrip(heroPick, fxOdds, fx);
+      if (stripHtml) html += stripHtml;
     } else if (isPlayed && fx.result) {
       html += `<div class="cc-pick cc-pick-result">
         <div class="cc-pick-label">Endstand</div>
@@ -916,6 +929,108 @@
     }
 
     return sentences.join(' ') + (modelSentence ? '<br>' + modelSentence : '');
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  ODDS-STRIP — Opening → Aktuell Drift + Mini-Sparkline
+  //  Gleiches Markt-Key-Mapping wie in National-Cards (renderer.js).
+  //  Versteckt sich automatisch bei <2pp Delta = kein Lärm.
+  // ─────────────────────────────────────────────────────
+  function _pickToOddsKey(market) {
+    const m = (market || '').toLowerCase();
+    // DNB-Picks ausschließen: opening dnbH/dnbA wird nicht gespeichert,
+    // hw/aw als Fallback wäre apples-to-oranges → Strip falsch.
+    if (m.includes('dnb')) return null;
+    if (m.includes('heimsieg'))                                return 'hw';
+    if (m.includes('auswärtssieg'))                            return 'aw';
+    if (m.includes('unentschieden') || m.includes('remis'))    return 'dr';
+    if (m.includes('über 2.5')   || m.includes('over 2.5'))    return 'o25';
+    if (m.includes('unter 2.5')  || m.includes('under 2.5'))   return 'u25';
+    if (m.includes('beide teams treffen') || m.includes('btts')) return 'bttsY';
+    return null;
+  }
+
+  function _buildOddsStrip(pick, fxOdds, fx) {
+    if (!pick || !fxOdds || pick.odds == null) return '';
+    const key = _pickToOddsKey(pick.market);
+    if (!key) return '';   // Markt nicht mappbar (DC, AH, etc.) — kein Strip
+
+    const openSnap = fxOdds.odds_open || {};
+    const openOdds = parseFloat(openSnap[key]);
+    const nowOdds  = parseFloat(pick.odds);
+    if (!openOdds || !nowOdds || openOdds <= 1 || nowOdds <= 1) return '';
+
+    // pp-Drift: positive Delta = implied prob gestiegen = Quote gefallen
+    const openImpl = 1 / openOdds;
+    const nowImpl  = 1 / nowOdds;
+    const ppDrift  = Math.round((nowImpl - openImpl) * 100);
+    if (Math.abs(ppDrift) < 2) return '';   // Kein nennenswerter Move → kein Strip
+
+    // Quote gefallen = Markt confirmt unseren Pick = CLV+ für uns
+    const clvPositive = nowOdds < openOdds;
+    const cls         = clvPositive ? 'up' : 'down';
+    const arrow       = clvPositive ? '↘' : '↗';
+    const ppLabel     = (ppDrift > 0 ? '+' : '') + ppDrift + 'pp';
+    const clvLabel    = clvPositive ? 'CLV+' : 'CLV−';
+
+    // Sparkline aus History (window._oddsHistoryLookup[matchKey])
+    const matchKey = `${fx.home}-${fx.away}`;
+    const hist     = (_oddsHistoryLookup[matchKey] || [])
+      .filter(s => typeof s[key] === 'number' && s[key] > 1);
+
+    let sparkSvg = '';
+    if (hist.length >= 3) {
+      sparkSvg = _renderSparkline(hist.map(s => s[key]), clvPositive);
+    } else if (openOdds && nowOdds) {
+      // Fallback: 2-Punkt-Linie zwischen Opening + Aktuell
+      sparkSvg = _renderSparkline([openOdds, nowOdds], clvPositive);
+    }
+
+    return `<div class="cc-odds-strip">
+      <div class="cc-os-drift">
+        <span class="cc-os-label">Quote</span>
+        <span class="cc-os-open">${openOdds.toFixed(2)}</span>
+        <span class="cc-os-arrow">→</span>
+        <span class="cc-os-now ${cls}">${nowOdds.toFixed(2)} ${arrow}</span>
+        <span class="cc-os-pp ${cls}">${ppLabel}</span>
+        <span class="cc-os-clv cc-clv-${cls}">${clvLabel}</span>
+      </div>
+      <div class="cc-os-spark">${sparkSvg}</div>
+    </div>`;
+  }
+
+  function _renderSparkline(values, clvPositive) {
+    if (!values || values.length < 2) return '';
+    const W = 120, H = 24, pad = 2;
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const range = (max - min) || 1;
+    const dx = (W - pad * 2) / (values.length - 1);
+
+    const pts = values.map((v, i) => {
+      const x = pad + i * dx;
+      // höhere Quote = oben → 1 - normalized
+      const y = pad + (1 - (v - min) / range) * (H - pad * 2);
+      return `${x.toFixed(1)} ${y.toFixed(1)}`;
+    });
+    const linePath = `M ${pts.join(' L ')}`;
+    const areaPath = `${linePath} L ${pad + (values.length - 1) * dx} ${H} L ${pad} ${H} Z`;
+    const lastX = pad + (values.length - 1) * dx;
+    const lastY = pad + (1 - (values[values.length - 1] - min) / range) * (H - pad * 2);
+    const firstY = pad + (1 - (values[0] - min) / range) * (H - pad * 2);
+    const color = clvPositive ? '#00d4a1' : '#f85149';
+    const gradId = `cc-os-g-${Math.random().toString(36).slice(2,8)}`;
+
+    return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+      <defs><linearGradient id="${gradId}" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="${color}" stop-opacity="0.30"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+      </linearGradient></defs>
+      <path d="${areaPath}" fill="url(#${gradId})"/>
+      <path d="${linePath}" stroke="${color}" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="${pad}" cy="${firstY.toFixed(1)}" r="1.8" fill="rgba(255,255,255,0.25)"/>
+      <circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="2.5" fill="${color}"/>
+    </svg>`;
   }
 
   // ─────────────────────────────────────────────────────
