@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
 """
-fetch_wm_player_props.py — WM 2026 Player Props (Anytime Scorer)
+fetch_wm_player_props.py — WM 2026 Player Props (Multi-Market)
 
-Fetcht Anytime Scorer Quoten von TheOddsAPI für alle WM-Matches
-der nächsten DAYS_AHEAD Tage und speichert sie in wm2026-player-props.json.
+Fetcht 6 Spieler-Märkte von TheOddsAPI für alle WM-Matches der
+nächsten DAYS_AHEAD Tage und speichert sie in wm2026-player-props.json.
 
-Graceful no-op wenn Player Props noch nicht gelistet sind
-(TheOddsAPI listet diese typischerweise 1-7 Tage vor dem Spiel).
+Märkte:
+  • player_goal_scorer_anytime   → Anytime Scorer
+  • player_goal_scorer_first     → First Goalscorer
+  • player_shots                 → Total Shots (Over/Under)
+  • player_shots_on_target       → Shots on Target (Over/Under)
+  • player_assists               → Assists
+  • player_to_receive_card       → Card (Yes)
+
+Graceful no-op wenn Märkte noch nicht gelistet sind
+(TheOddsAPI öffnet Player-Props bei Fußball typischerweise 1-3 Tage vor Anpfiff).
 
 Struktur wm2026-player-props.json:
 {
@@ -14,16 +22,22 @@ Struktur wm2026-player-props.json:
     "eventId":   "...",
     "date":      "2026-06-11",
     "updatedAt": "ISO",
-    "players": [
-      {"name": "R. Jiménez", "teamId": "MEX", "odds": 2.50, "bookmaker": "pinnacle"},
-      ...
-    ]
+    "markets": {
+      "anytime_scorer":  [{"name": "...", "odds": 2.50, "bookmaker": "pinnacle"}, ...],
+      "first_scorer":    [...],
+      "player_shots":    [{"name": "...", "line": 1.5, "over": 1.85, "under": 2.10,
+                            "bookmaker": "..."}, ...],
+      "player_sot":      [...],
+      "player_assists":  [...],
+      "player_cards":    [...]
+    }
   }
 }
 
 Umgebungsvariablen:
   ODDS_API_KEY   — TheOddsAPI Key
-  DAYS_AHEAD     — wie viele Tage voraus fetchen (Standard: 7)
+  DAYS_AHEAD     — wie viele Tage voraus fetchen (Standard: 4 — Props öffnen sich erst spät)
+  POLL_MIN_DAYS  — nur Matches fetchen die in <= N Tagen sind (Standard: 4)
 """
 
 import json
@@ -41,35 +55,50 @@ PROPS_FILE  = BASE / "wm2026-player-props.json"
 
 ODDS_KEY    = os.environ.get("ODDS_API_KEY", "16154a94ee84482dcd5a4af88d521d73")
 ODDS_HOST   = "api.the-odds-api.com"
-DAYS_AHEAD  = int(os.environ.get("DAYS_AHEAD", "7"))
+DAYS_AHEAD  = int(os.environ.get("DAYS_AHEAD", "4"))
 
 WM_SPORT_KEYS = ["soccer_fifa_world_cup", "soccer_world_cup"]
 
-# Bevorzugte Bookmaker für Player Props
-PROP_BOOKS = ["pinnacle", "bet365", "williamhill", "unibet"]
+# Bevorzugte Bookmaker für Player Props (Reihenfolge = Präferenz)
+PROP_BOOKS = ["pinnacle", "bet365", "williamhill", "betmgm", "draftkings",
+              "fanduel", "unibet_uk", "skybet", "paddypower", "ladbrokes_uk",
+              "betfair_ex_uk", "betfair_ex_eu", "betsson", "leovegas"]
+
+# Markt-Definitionen: API-Key → unser internes Key + Typ
+# typ = "single" (1 Outcome pro Spieler) oder "ou" (Over/Under mit Line)
+PLAYER_MARKETS = [
+    {"api": "player_goal_scorer_anytime", "key": "anytime_scorer",  "type": "single"},
+    {"api": "player_goal_scorer_first",   "key": "first_scorer",    "type": "single"},
+    {"api": "player_shots",               "key": "player_shots",    "type": "ou"},
+    {"api": "player_shots_on_target",     "key": "player_sot",      "type": "ou"},
+    {"api": "player_assists",             "key": "player_assists",  "type": "single"},
+    {"api": "player_to_receive_card",     "key": "player_cards",    "type": "single"},
+]
+API_KEYS_CSV = ",".join(m["api"] for m in PLAYER_MARKETS)
+API_TO_INTERNAL = {m["api"]: m for m in PLAYER_MARKETS}
 
 # Fuzzy name matching: unser ID → TheOddsAPI Teamnamen
 TEAM_NAMES: dict[str, list[str]] = {
     "MEX": ["Mexico"], "ZAF": ["South Africa"], "KOR": ["South Korea"],
     "CZE": ["Czech Republic", "Czechia"], "CAN": ["Canada"],
-    "BIH": ["Bosnia", "Bosnia and Herzegovina"], "QAT": ["Qatar"],
-    "SUI": ["Switzerland"], "BRA": ["Brazil"], "MAR": ["Morocco"],
-    "HTI": ["Haiti"], "SCO": ["Scotland"], "USA": ["United States", "USA"],
-    "PRY": ["Paraguay"], "AUS": ["Australia"], "TUR": ["Turkey", "Türkiye"],
-    "GER": ["Germany"], "CUW": ["Curaçao", "Curacao"], "CIV": ["Ivory Coast"],
-    "ECU": ["Ecuador"], "NED": ["Netherlands"], "JPN": ["Japan"],
-    "SWE": ["Sweden"], "TUN": ["Tunisia"], "BEL": ["Belgium"],
-    "EGY": ["Egypt"], "IRN": ["Iran"], "NZL": ["New Zealand"],
-    "ESP": ["Spain"], "CPV": ["Cape Verde"], "SAU": ["Saudi Arabia"],
-    "URU": ["Uruguay"], "FRA": ["France"], "SEN": ["Senegal"],
-    "IRQ": ["Iraq"], "NOR": ["Norway"], "ARG": ["Argentina"],
-    "DZA": ["Algeria"], "AUT": ["Austria"], "JOR": ["Jordan"],
-    "POR": ["Portugal"], "COD": ["DR Congo", "Congo DR"],
-    "UZB": ["Uzbekistan"], "COL": ["Colombia"], "ENG": ["England"],
-    "CRO": ["Croatia"], "GHA": ["Ghana"], "PAN": ["Panama"],
+    "BIH": ["Bosnia", "Bosnia and Herzegovina", "Bosnia & Herzegovina"],
+    "QAT": ["Qatar"], "SUI": ["Switzerland"], "BRA": ["Brazil"],
+    "MAR": ["Morocco"], "HTI": ["Haiti"], "SCO": ["Scotland"],
+    "USA": ["United States", "USA"], "PRY": ["Paraguay"], "AUS": ["Australia"],
+    "TUR": ["Turkey", "Türkiye"], "GER": ["Germany"],
+    "CUW": ["Curaçao", "Curacao"], "CIV": ["Ivory Coast"], "ECU": ["Ecuador"],
+    "NED": ["Netherlands"], "JPN": ["Japan"], "SWE": ["Sweden"],
+    "TUN": ["Tunisia"], "BEL": ["Belgium"], "EGY": ["Egypt"],
+    "IRN": ["Iran"], "NZL": ["New Zealand"], "ESP": ["Spain"],
+    "CPV": ["Cape Verde"], "SAU": ["Saudi Arabia"], "URU": ["Uruguay"],
+    "FRA": ["France"], "SEN": ["Senegal"], "IRQ": ["Iraq"],
+    "NOR": ["Norway"], "ARG": ["Argentina"], "DZA": ["Algeria"],
+    "AUT": ["Austria"], "JOR": ["Jordan"], "POR": ["Portugal"],
+    "COD": ["DR Congo", "Congo DR"], "UZB": ["Uzbekistan"],
+    "COL": ["Colombia"], "ENG": ["England"], "CRO": ["Croatia"],
+    "GHA": ["Ghana"], "PAN": ["Panama"],
 }
 
-# Reverse map: name fragment → team ID
 _NAME_TO_ID: dict[str, str] = {}
 for tid, names in TEAM_NAMES.items():
     for n in names:
@@ -113,66 +142,137 @@ def _find_sport_key() -> str | None:
     return None
 
 
-def _best_price(bookmakers: list, player_name: str) -> tuple[float | None, str]:
-    """Extrahiert besten Anytime-Scorer-Preis für einen Spieler."""
-    best_price = None
-    best_book  = ""
-    for bk in bookmakers:
-        bk_key = bk.get("key", "")
-        for mkt in bk.get("markets", []):
-            if mkt.get("key") not in ("player_goal_scorer", "player_anytime_scorer",
-                                       "player_to_score_anytime"):
-                continue
-            for outcome in mkt.get("outcomes", []):
-                if outcome.get("description", "").lower() == player_name.lower():
-                    price = outcome.get("price")
-                    if price and (best_price is None or
-                                  (bk_key in PROP_BOOKS and price > best_price)):
-                        best_price = price
-                        best_book  = bk_key
-    return best_price, best_book
+def _book_priority(book_key: str) -> int:
+    """Niedrigerer Wert = bessere Bookie. Unbekannt = 999."""
+    try:
+        return PROP_BOOKS.index(book_key)
+    except ValueError:
+        return 999
 
 
-def fetch_event_player_props(event_id: str, sport_key: str) -> list[dict]:
+def _parse_single_market(market: dict, book_key: str) -> dict[str, dict]:
     """
-    Fetcht alle Anytime-Scorer-Quoten für ein Event.
-    Gibt Liste von {name, odds, bookmaker} zurück.
+    Parst einen 'single'-Markt (Anytime Scorer, First Scorer, Assists, Cards).
+    Outcome-Struktur: {description=player_name, name="Yes"/player, price=odds}
+    """
+    out: dict[str, dict] = {}
+    for o in market.get("outcomes", []):
+        pname = (o.get("description") or o.get("name") or "").strip()
+        price = o.get("price")
+        if not pname or not price or pname.lower() in ("yes", "no"):
+            # Manche APIs liefern "Yes" für Card-Markt — dann steckt Name in description
+            if o.get("description"):
+                pname = o["description"].strip()
+            else:
+                continue
+        if not pname or not price:
+            continue
+        out[pname] = {"name": pname, "odds": float(price), "bookmaker": book_key}
+    return out
+
+
+def _parse_ou_market(market: dict, book_key: str) -> dict[str, dict]:
+    """
+    Parst einen 'ou'-Markt (Player Shots, Shots on Target).
+    Outcome-Struktur: {description=player_name, name="Over"|"Under", price, point=line}
+    """
+    out: dict[str, dict] = {}
+    # Erst nach (player, line) gruppieren
+    grouped: dict[tuple[str, float], dict] = {}
+    for o in market.get("outcomes", []):
+        pname = (o.get("description") or "").strip()
+        side  = (o.get("name") or "").strip().lower()
+        price = o.get("price")
+        line  = o.get("point")
+        if not pname or not price or line is None or side not in ("over", "under"):
+            continue
+        try:
+            line_f = float(line)
+            price_f = float(price)
+        except (TypeError, ValueError):
+            continue
+        gkey = (pname, line_f)
+        if gkey not in grouped:
+            grouped[gkey] = {"name": pname, "line": line_f, "bookmaker": book_key}
+        grouped[gkey][side] = price_f
+
+    # Pro Spieler: nimm die Hauptlinie (die mit beiden Seiten + niedrigster Spread)
+    by_player: dict[str, dict] = {}
+    for (pname, line_f), entry in grouped.items():
+        if "over" not in entry or "under" not in entry:
+            continue
+        if pname not in by_player:
+            by_player[pname] = entry
+        else:
+            # Wähle Linie näher an 1.85/2.0 (Standard-Markt-Liquidität)
+            existing_line = by_player[pname]["line"]
+            if abs(line_f - 1.5) < abs(existing_line - 1.5):
+                by_player[pname] = entry
+    return by_player
+
+
+def fetch_event_player_props(event_id: str, sport_key: str) -> dict:
+    """
+    Fetcht alle 6 Player-Märkte für ein Event.
+    Gibt dict zurück mit Schlüsseln "anytime_scorer" usw.
     """
     path = (f"/v4/sports/{sport_key}/events/{event_id}/odds"
             f"?apiKey={ODDS_KEY}"
-            f"&regions=eu,uk"
-            f"&markets=player_goal_scorer,player_anytime_scorer"
+            f"&regions=eu,uk,us"
+            f"&markets={API_KEYS_CSV}"
             f"&oddsFormat=decimal")
     data = _odds_get(path)
     if not data or not isinstance(data, dict):
-        return []
+        return {}
 
-    players: dict[str, dict] = {}
+    # Pro internem Markt: dict[player_name → entry]
+    # Bei Konflikten: bevorzugte Bookie gewinnt
+    results: dict[str, dict[str, dict]] = {m["key"]: {} for m in PLAYER_MARKETS}
 
     for bk in data.get("bookmakers", []):
         bk_key = bk.get("key", "")
+        bk_prio = _book_priority(bk_key)
         for mkt in bk.get("markets", []):
-            if mkt.get("key") not in ("player_goal_scorer", "player_anytime_scorer",
-                                       "player_to_score_anytime"):
+            api_key = mkt.get("key")
+            if api_key not in API_TO_INTERNAL:
                 continue
-            for outcome in mkt.get("outcomes", []):
-                pname = outcome.get("description") or outcome.get("name", "")
-                price = outcome.get("price")
-                if not pname or not price:
-                    continue
-                if pname not in players or (
-                    bk_key in PROP_BOOKS and
-                    PROP_BOOKS.index(bk_key) < PROP_BOOKS.index(players[pname].get("bookmaker", PROP_BOOKS[-1]))
-                ):
-                    players[pname] = {"name": pname, "odds": price, "bookmaker": bk_key}
+            meta = API_TO_INTERNAL[api_key]
+            ikey = meta["key"]
+            if meta["type"] == "single":
+                new_entries = _parse_single_market(mkt, bk_key)
+            else:
+                new_entries = _parse_ou_market(mkt, bk_key)
 
-    return sorted(players.values(), key=lambda x: x["odds"])
+            for pname, entry in new_entries.items():
+                if pname not in results[ikey]:
+                    results[ikey][pname] = entry
+                else:
+                    existing_prio = _book_priority(results[ikey][pname].get("bookmaker", ""))
+                    if bk_prio < existing_prio:
+                        results[ikey][pname] = entry
+
+    # Auf Listen sortieren
+    out: dict[str, list[dict]] = {}
+    for ikey, entries in results.items():
+        if not entries:
+            continue
+        items = list(entries.values())
+        # Single-Märkte: nach odds aufsteigend (Favoriten oben)
+        # OU-Märkte: nach line absteigend (höchste Erwartung oben)
+        if "line" in items[0]:
+            items.sort(key=lambda x: -x["line"])
+        else:
+            items.sort(key=lambda x: x["odds"])
+        out[ikey] = items
+
+    return out
 
 
 def main():
     now_iso = datetime.now(timezone.utc).isoformat()
-    print(f"⚽  fetch_wm_player_props.py — WM 2026 Player Props")
-    print(f"    Key: {'✅' if ODDS_KEY else '❌'} | Window: +{DAYS_AHEAD} Tage\n")
+    print(f"⚽  fetch_wm_player_props.py — WM 2026 Player Props (Multi-Markt)")
+    print(f"    Key: {'✅' if ODDS_KEY else '❌'} | Fenster: +{DAYS_AHEAD} Tage")
+    print(f"    Märkte: {', '.join(m['key'] for m in PLAYER_MARKETS)}\n")
 
     if not ODDS_KEY:
         print("  ❌ ODDS_API_KEY nicht gesetzt")
@@ -181,19 +281,22 @@ def main():
     with open(WM_FILE, encoding="utf-8") as f:
         wm = json.load(f)
 
-    # Lade bestehende Props
     props_out: dict = {}
     if PROPS_FILE.exists():
         with open(PROPS_FILE, encoding="utf-8") as f:
-            props_out = json.load(f)
+            try:
+                props_out = json.load(f)
+            except json.JSONDecodeError:
+                props_out = {}
 
-    # Sport Key finden
     sport_key = _find_sport_key()
     if not sport_key:
         print("  ℹ️  WM noch nicht in TheOddsAPI — kein Fetch")
+        # Trotzdem leeres File schreiben damit Renderer/Pipeline existiert
+        if not PROPS_FILE.exists():
+            PROPS_FILE.write_text("{}", encoding="utf-8")
         return
 
-    # Alle Events holen
     events_data = _odds_get(f"/v4/sports/{sport_key}/events?apiKey={ODDS_KEY}")
     if not events_data or not isinstance(events_data, list):
         print("  ⚠️  Keine Events gefunden")
@@ -201,10 +304,8 @@ def main():
 
     print(f"  {len(events_data)} Events in TheOddsAPI\n")
 
-    # Cutoff: nur Spiele in den nächsten DAYS_AHEAD Tagen
     cutoff = (datetime.now(timezone.utc) + timedelta(days=DAYS_AHEAD)).date()
 
-    # Gruppen → Fixture-Map aufbauen
     fixture_map: dict[str, dict] = {}
     for gkey, gdata in wm.get("groups", {}).items():
         for fx in gdata.get("fixtures", []):
@@ -219,9 +320,11 @@ def main():
 
     if not fixture_map:
         print(f"  ℹ️  Keine Fixtures in den nächsten {DAYS_AHEAD} Tagen")
+        # Leeres File anlegen falls noch nicht da
+        if not PROPS_FILE.exists():
+            PROPS_FILE.write_text("{}", encoding="utf-8")
         return
 
-    # Events mit Fixtures matchen
     matched_events: list[dict] = []
     for ev in events_data:
         ev_home = ev.get("home_team", "")
@@ -233,7 +336,6 @@ def main():
         key = f"{h_id}-{a_id}"
         if key in fixture_map:
             matched_events.append({"odds_key": key, "event_id": ev["id"], "fx": fixture_map[key]})
-        # Auch reversed versuchen
         key_rev = f"{a_id}-{h_id}"
         if key_rev in fixture_map:
             matched_events.append({"odds_key": key_rev, "event_id": ev["id"], "fx": fixture_map[key_rev]})
@@ -241,16 +343,17 @@ def main():
     print(f"  {len(matched_events)} Matches im Fenster gefunden\n")
 
     fetched = 0
+    total_props = 0
     for ev in matched_events:
         odds_key = ev["odds_key"]
         event_id = ev["event_id"]
         fx       = ev["fx"]
 
         print(f"  🔍 {odds_key} (Event {event_id[:8]}…)…", end="", flush=True)
-        players = fetch_event_player_props(event_id, sport_key)
-        time.sleep(1.0)   # Rate limit
+        markets = fetch_event_player_props(event_id, sport_key)
+        time.sleep(1.0)
 
-        if not players:
+        if not markets:
             print(" ○ keine Props verfügbar")
             continue
 
@@ -258,20 +361,42 @@ def main():
             "eventId":   event_id,
             "date":      fx["date"],
             "updatedAt": now_iso,
-            "players":   players,
+            "markets":   markets,
         }
+        n_entries = sum(len(v) for v in markets.values())
+        total_props += n_entries
         fetched += 1
-        print(f" ✅ {len(players)} Spieler")
-        for p in players[:5]:
-            print(f"     {p['name']}: @{p['odds']} [{p['bookmaker']}]")
+        active = [k for k, v in markets.items() if v]
+        print(f" ✅ {len(active)} Märkte / {n_entries} Outcomes")
+        for mkey in active:
+            top = markets[mkey][:3]
+            print(f"     [{mkey}]")
+            for p in top:
+                if "line" in p:
+                    print(f"       {p['name']}: O{p['line']} @{p['over']} / U @{p['under']} [{p['bookmaker']}]")
+                else:
+                    print(f"       {p['name']}: @{p['odds']} [{p['bookmaker']}]")
 
-    # Speichern
+    # Alte Einträge aufräumen (älter als 7 Tage)
+    cutoff_old = (datetime.now(timezone.utc) - timedelta(days=7)).date()
+    purged = 0
+    for key in list(props_out.keys()):
+        try:
+            d = datetime.strptime(props_out[key].get("date", ""), "%Y-%m-%d").date()
+            if d < cutoff_old:
+                del props_out[key]
+                purged += 1
+        except Exception:
+            pass
+
     with open(PROPS_FILE, "w", encoding="utf-8") as f:
         json.dump(props_out, f, ensure_ascii=False, indent=2)
 
-    print(f"\n✅ {fetched} Events mit Player Props → {PROPS_FILE.name}")
+    print(f"\n✅ {fetched} Events fetched, {total_props} Outcomes total → {PROPS_FILE.name}")
+    if purged:
+        print(f"   🧹 {purged} alte Einträge entfernt")
     if fetched == 0:
-        print("   ℹ️  Props erscheinen typischerweise 1-7 Tage vor dem Spiel")
+        print("   ℹ️  Props erscheinen typischerweise 1-3 Tage vor dem Spiel")
 
 
 if __name__ == "__main__":

@@ -44,11 +44,12 @@
       </div>`;
 
     try {
-      const [wmResp, polyResp, travelResp, confResp] = await Promise.all([
+      const [wmResp, polyResp, travelResp, confResp, ppResp] = await Promise.all([
         fetch('wm2026-data.json?t=' + Date.now()),
         fetch('wm_poly_prices.json?t=' + Date.now()).catch(() => null),
         fetch('wm_travel_burden.json?t=' + Date.now()).catch(() => null),
         fetch('pick_confidence_stats.json?t=' + Date.now()).catch(() => null),
+        fetch('wm2026-player-picks.json?t=' + Date.now()).catch(() => null),
       ]);
       if (!wmResp.ok) throw new Error('HTTP ' + wmResp.status);
       _wmData = await wmResp.json();
@@ -71,6 +72,30 @@
 
       if (confResp && confResp.ok) {
         _confidenceStats = await confResp.json();
+      }
+
+      // Spieler-Picks (separates File — kommt erst T-3 vor Anpfiff)
+      // Format: { lastUpdate, picks: { "MEX-ZAF": [...] } }
+      // Renderer erwartet aber Key-Format "GROUP-MD-HOME-AWAY" → mappen via Fixture-Liste
+      if (ppResp && ppResp.ok) {
+        try {
+          const ppRaw = await ppResp.json();
+          const ppByHa = ppRaw.picks || {};
+          // Map ha-keys auf fixture-keys
+          const mapped = {};
+          for (const gkey of Object.keys(_wmData.groups || {})) {
+            const gdata = _wmData.groups[gkey];
+            for (const fx of (gdata.fixtures || [])) {
+              const haKey = `${fx.home}-${fx.away}`;
+              const list = ppByHa[haKey];
+              if (list && list.length) {
+                const fixKey = `${gkey}-${fx.matchday}-${fx.home}-${fx.away}`;
+                mapped[fixKey] = list;
+              }
+            }
+          }
+          _wmData.playerPicks = mapped;
+        } catch (e) { console.warn('player-picks parse failed', e); }
       }
 
       _loaded = true;
@@ -412,6 +437,29 @@
         </div>`;
       }
       html += `</div>`;
+    }
+
+    // ─── PLAYER PICKS (Spieler-Märkte aus TheOddsAPI, T-3 vor Anpfiff) ──
+    if (!isPlayed && fxPPicks && fxPPicks.length) {
+      const ppActive = fxPPicks.filter(p => p.verdict === 'PICK').slice(0, 3);
+      if (ppActive.length) {
+        const teamFlag = (tid) => tid === fx.home ? home.flag : tid === fx.away ? away.flag : '🏳️';
+        const kindIcon = { HERO: '⭐', STAT: '📊', VALUE: '💎', FIRST: '🎲' };
+        const kindLabel = { HERO: 'Star-Pick', STAT: 'Schuss-Volumen', VALUE: 'Geheimtipp', FIRST: 'Viral-Quote' };
+        html += `<div class="cc-otherpicks">
+          <div class="cc-ev-label" style="padding:0 0 6px 0;">🎯 Spieler-Picks</div>`;
+        for (const pp of ppActive) {
+          const icon = kindIcon[pp.kind] || '🎯';
+          const label = kindLabel[pp.kind] || 'Pick';
+          const oddsStr = pp.odds != null ? (+pp.odds).toFixed(2) : '—';
+          html += `<div class="cc-op-row cc-op-bet">
+            <span class="cc-op-verdict" style="background:rgba(0,212,161,0.12);color:#00d4a1;">${icon} ${label}</span>
+            <span class="cc-op-market">${teamFlag(pp.teamId)} <strong>${pp.player}</strong> · ${pp.market}</span>
+            <span class="cc-op-odds">@${oddsStr}</span>
+          </div>`;
+        }
+        html += `</div>`;
+      }
     }
 
     // ─── ACTIONS row ──────────────────────────────────

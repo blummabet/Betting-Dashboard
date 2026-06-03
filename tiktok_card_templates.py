@@ -115,6 +115,13 @@ THEMES = {
         "badgeBg": "rgba(236,72,153,0.10)",
         "badgeBorder": "rgba(236,72,153,0.40)",
     },
+    "player_pick": {
+        "accent": "#00d4a1",          # mintgrün — wie Lucas-Yamal-Hook
+        "accentRgb": "0,212,161",
+        "badge": "🎯 SPIELER-PICK",
+        "badgeBg": "rgba(0,212,161,0.10)",
+        "badgeBorder": "rgba(0,212,161,0.40)",
+    },
 }
 
 
@@ -626,3 +633,166 @@ body {{
 </body>
 </html>
 """
+
+
+def player_pick_card(
+    player_name: str,
+    team_flag: str,
+    team_name: str,
+    opponent_flag: str,
+    opponent_name: str,
+    market_label: str,         # "Anytime Scorer", "Schüsse aufs Tor Over 1.5"
+    odds: float,               # z.B. 2.50
+    bookmaker: str,            # "Pinnacle", "bet365" — wird kapitalisiert
+    reason_line: str,          # 1-Liner Begründung, max ~80 Zeichen
+    confidence: str = "high",  # "high" | "medium" | "low"
+    series_tag: str | None = None,
+    kickoff_label: str = "",   # "Do 11.06. · 21:00"
+) -> str:
+    """
+    Player-Pick-Card im Lucas-Yamal-Style:
+    - Top: Liga-Badge, Anpfiff
+    - Hero: Spielername riesig + Markt
+    - Hero-Box: Quote als große Zahl + Confidence-Pill
+    - Match-Zeile: Flag vs Flag mit Namen
+    - Reason: 1-Zeiler in Akzentbox
+    - Closing-Hook + Footer
+
+    Output: 360×640 vertical HTML (TikTok-Format).
+    """
+    t = THEMES["player_pick"]
+    accent = t["accent"]
+    rgb = t["accentRgb"]
+
+    conf_label = {"high": "HOHE KONFIDENZ", "medium": "MITTLERE KONFIDENZ",
+                  "low": "BEOBACHTEN"}.get(confidence, "PICK")
+
+    book_disp = (bookmaker or "").replace("_", " ").title() or "Markt"
+
+    series_html = ""
+    if series_tag:
+        series_html = (
+            f'<div style="position:absolute;top:14px;left:18px;font-size:9px;'
+            f'font-weight:800;letter-spacing:1.5px;color:{accent};opacity:.7;'
+            f'border:1px solid rgba({rgb},.3);border-radius:6px;padding:3px 8px;">'
+            f'{series_tag}</div>'
+        )
+
+    return f"""<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"><title>Spieler-Pick</title>
+<style>
+* {{ margin:0; padding:0; box-sizing:border-box; }}
+body {{ background:#0a0e18; display:flex; align-items:center; justify-content:center; min-height:100vh;
+       font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }}
+.card {{
+  width:360px; height:640px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba({rgb},0.12) 0%, transparent 55%),
+    linear-gradient(180deg, #0a0e18 0%, #080d18 100%);
+  background-image:
+    radial-gradient(circle at 50% 30%, rgba({rgb},0.12) 0%, transparent 55%),
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
+  border-radius:24px; padding:24px 22px 20px;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column;
+  border:1px solid rgba(255,255,255,0.04);
+}}
+.top {{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }}
+.brand-top {{ font-size:11px; font-weight:800; letter-spacing:3px; color:#f5c518; }}
+.badge-top {{ font-size:10px; font-weight:700; letter-spacing:1px; color:{accent};
+  background:{t["badgeBg"]}; border:1px solid {t["badgeBorder"]}; border-radius:18px; padding:5px 12px; }}
+
+.kickoff-line {{ font-size:9px; color:rgba(255,255,255,.32); letter-spacing:1.5px;
+  text-transform:uppercase; text-align:center; margin-bottom:14px; font-weight:600; }}
+
+.player-name {{ font-size:30px; font-weight:900; color:#fff; text-align:center;
+  letter-spacing:-1px; line-height:1.05; margin-bottom:8px; }}
+.player-team {{ font-size:13px; color:rgba(255,255,255,.55); text-align:center;
+  letter-spacing:0.3px; margin-bottom:18px; }}
+.player-team .flag {{ font-size:17px; vertical-align:middle; margin-right:5px; }}
+
+.market-pill {{ display:inline-block; font-size:10px; font-weight:800; letter-spacing:1.2px;
+  color:rgba(255,255,255,.7); background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.10); border-radius:14px; padding:5px 12px;
+  margin:0 auto 10px; }}
+.market-row {{ text-align:center; }}
+
+.hero-box {{ border:1px solid rgba({rgb},0.35); background:rgba({rgb},0.06);
+  border-radius:14px; padding:18px 16px 14px; text-align:center; margin-bottom:14px;
+  box-shadow: inset 0 0 32px rgba({rgb},0.07); }}
+.hero-label {{ font-size:9px; color:rgba(255,255,255,.40); letter-spacing:1.8px;
+  text-transform:uppercase; font-weight:700; margin-bottom:4px; }}
+.hero-odds {{ font-size:56px; font-weight:900; color:{accent}; line-height:1;
+  letter-spacing:-2px; text-shadow: 0 0 28px rgba({rgb},0.45); }}
+.hero-book {{ font-size:10px; color:rgba(255,255,255,.45); margin-top:6px; letter-spacing:1.2px;
+  text-transform:uppercase; font-weight:600; }}
+.hero-book strong {{ color:rgba(255,255,255,.78); }}
+
+.match-row {{ display:flex; align-items:center; justify-content:center; gap:10px;
+  margin-bottom:14px; padding:10px 6px;
+  border-top:1px solid rgba(255,255,255,0.05);
+  border-bottom:1px solid rgba(255,255,255,0.05); }}
+.match-side {{ display:flex; align-items:center; gap:6px; }}
+.match-side .flag {{ font-size:18px; }}
+.match-side .name {{ font-size:11px; color:rgba(255,255,255,.72); font-weight:600; }}
+.match-vs {{ font-size:9px; color:rgba(255,255,255,.30); letter-spacing:2px; font-weight:700; }}
+
+.reason-box {{ border:1px solid rgba({rgb},0.22); background:rgba({rgb},0.05);
+  border-radius:9px; padding:12px 14px; margin-bottom:auto; }}
+.reason-label {{ font-size:8.5px; color:{accent}; letter-spacing:1.8px;
+  text-transform:uppercase; font-weight:800; margin-bottom:4px; }}
+.reason-text {{ font-size:11.5px; color:rgba(255,255,255,.82); line-height:1.5; }}
+
+.conf-pill {{ display:inline-block; font-size:9px; font-weight:800; letter-spacing:1.5px;
+  color:{accent}; background:rgba({rgb},0.10); border:1px solid rgba({rgb},0.30);
+  border-radius:5px; padding:3px 9px; text-transform:uppercase;
+  position:absolute; top:14px; right:18px; }}
+
+.footer {{ display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.05);
+  padding-top:10px; margin-top:14px; }}
+.footer .ft {{ font-size:9px; color:rgba(255,255,255,.22); letter-spacing:.5px; }}
+</style></head>
+<body>
+<div class="card">
+  {series_html}
+  <div class="top">
+    <div class="brand-top">COCOBET</div>
+    <div class="badge-top">{t["badge"]}</div>
+  </div>
+
+  <div class="kickoff-line">{kickoff_label}</div>
+
+  <div class="player-name">{player_name}</div>
+  <div class="player-team"><span class="flag">{team_flag}</span>{team_name}</div>
+
+  <div class="market-row"><div class="market-pill">{market_label}</div></div>
+
+  <div class="hero-box">
+    <div class="hero-label">Quote</div>
+    <div class="hero-odds">{odds:.2f}</div>
+    <div class="hero-book">bei <strong>{book_disp}</strong></div>
+  </div>
+
+  <div class="match-row">
+    <div class="match-side"><span class="flag">{team_flag}</span><span class="name">{team_name}</span></div>
+    <div class="match-vs">VS</div>
+    <div class="match-side"><span class="flag">{opponent_flag}</span><span class="name">{opponent_name}</span></div>
+  </div>
+
+  <div class="reason-box">
+    <div class="reason-label">{conf_label}</div>
+    <div class="reason-text">{reason_line}</div>
+  </div>
+
+  <div class="footer">
+    <div class="ft">Quote: TheOddsAPI · live</div>
+    <div class="ft">cocobet</div>
+  </div>
+</div>
+</body>
+</html>
+"""
+

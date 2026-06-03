@@ -29,9 +29,10 @@ import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from tiktok_card_templates import hook_card, info_card, bizarre_info_card
+from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card
 from tiktok_story_plan import get_story_for_date
 from bizarre_quote_picker import get_daily_bizarre_card
+from player_pick_picker import get_daily_player_pick, save_dedup as save_player_dedup, _load_dedup as _load_player_dedup
 
 BASE       = Path(__file__).parent
 WM_FILE    = BASE / "wm2026-data.json"
@@ -605,7 +606,30 @@ def main():
     else:
         print("🤡 Keine Bizarre-Card heute (Targets-File leer oder fehlt)")
 
-    # 4. Telegram Header + alle PNGs senden
+    # ── 4. Spieler-Pick (TheOddsAPI Player Props — kommt erst 1-3 Tage vor Anpfiff) ──
+    player_pick = None
+    try:
+        player_pick = get_daily_player_pick(today_iso)
+    except Exception as e:
+        print(f"⚠️  Spieler-Pick-Picker fehlgeschlagen: {e}")
+
+    if player_pick:
+        cfg = player_pick["config"]
+        print(f"🎯 Spieler-Pick: {cfg['player_name']} · {cfg['market_label']} @{cfg['odds']}")
+        pp_html = player_pick_card(series_tag="SPIELER-PICK", **cfg)
+        pp_path = OUTPUT_DIR / f"{today_iso}_player_pick.html"
+        pp_path.write_text(pp_html, encoding="utf-8")
+        png = render_to_png(pp_path)
+        if png:
+            caption = (
+                f"🎯 <b>Spieler-Pick · {cfg['player_name']}</b>\n"
+                f"{cfg['market_label']} @{cfg['odds']:.2f} ({cfg['bookmaker'].title()})"
+            )
+            produced.append(("player_pick", png, caption))
+    else:
+        print("🎯 Kein Spieler-Pick heute (Props noch nicht offen oder kein PICK-verdict)")
+
+    # 5. Telegram Header + alle PNGs senden
     sent_to_telegram = False
     if produced:
         if not SKIP_TELEGRAM and TELEGRAM_TOKEN and TRADES_CHAT_ID:
@@ -639,6 +663,21 @@ def main():
         print(f"💾 Dedup-State aktualisiert ({len(dedup['history'])} Einträge)")
     elif fact:
         print(f"↪ Dedup NICHT aktualisiert (kein echter Telegram-Send)")
+
+    # 6. Player-Pick Dedup (Spielername, 14 Tage)
+    if player_pick and sent_to_telegram:
+        pdedup = _load_player_dedup()
+        pdedup.setdefault("history", []).append({
+            "date":   today_iso,
+            "player": player_pick["player"],
+            "match":  player_pick["match_key"],
+        })
+        # Trim auf letzte 30 Tage
+        from datetime import timedelta as _td
+        cutoff = (date.fromisoformat(today_iso) - _td(days=30)).isoformat()
+        pdedup["history"] = [h for h in pdedup["history"] if h.get("date", "") >= cutoff]
+        save_player_dedup(pdedup)
+        print(f"💾 Player-Pick-Dedup aktualisiert ({len(pdedup['history'])} Einträge)")
 
 
 if __name__ == "__main__":

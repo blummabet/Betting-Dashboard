@@ -121,12 +121,20 @@ jobs:
         run: python compute_pick_confidence.py
         continue-on-error: true
 
-      # ── Player Props (TheOddsAPI, nur Spiele der nächsten 7 Tage) ───────────
+      # ── Player Props (TheOddsAPI, nur Spiele der nächsten 4 Tage) ───────────
+      # Props öffnen sich bei Soccer typischerweise erst 1-3 Tage vor Anpfiff.
+      # 4 Tage Fenster ist konservativ — verschwendet keine API-Credits auf leere Picks.
       - name: ⚽ WM Player Props fetchen
         run: python fetch_wm_player_props.py
         continue-on-error: true
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          DAYS_AHEAD: "4"
+
+      # ── Spieler-Picks kuratieren (HERO/VALUE/STAT/FIRST) ────────────────
+      - name: 🎯 WM Spieler-Picks generieren
+        run: python generate_wm_player_picks.py
+        continue-on-error: true
 
       # ── Player Spotlight (2-3x pro Woche, Di/Do/Sa) ──────────────────────
       - name: 🌟 WM Player Spotlight generieren & senden
