@@ -3312,18 +3312,6 @@ function renderPolyStats() {
         </div>`).join('')}
     </div>
 
-    <!-- TRADING COCKPIT — wird async geladen via refreshCockpit() -->
-    <div id="tradingCockpit">
-      <div style="background:#161b22;border:1px solid #30363d;border-radius:14px;padding:30px;margin-bottom:16px;text-align:center;color:#8b949e;font-size:13px">
-        ⚙️ Cockpit lädt Live-Daten…
-      </div>
-    </div>
-    <!-- Auto-Trigger via SVG onload — feuert sobald HTML ins DOM gehängt wird -->
-    <svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" style="display:none" onload="if(window.refreshCockpit && !window._cockpitLoading){window._cockpitLoading=true;refreshCockpit().finally(()=>{window._cockpitLoading=false;});}"></svg>
-
-
-    ${renderAutoTraderConfig()}
-
     ${sessBets.length > 0 ? `
     <div style="background:#1a2340;border:1px solid #a78bfa44;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <span style="color:#a78bfa;font-weight:700">⚡ ${sessBets.length} Bet${sessBets.length!==1?'s':''} nur im Session-Memory (localStorage leer)</span>
