@@ -22,6 +22,7 @@
   let _wmMatchPages = {};       // slug → match-page-data (aus matches/data/wm-{slug}.json)
   let _wmPagesLoaded = false;
   const _expandedPreviews = new Set();  // Set of match-keys mit ausgeklapptem AI-Preview
+  let _whyModalKey = null;              // wenn !== null: Modal ist offen für diesen matchKey
   let _activeGroup    = 'all';
   let _activeMd       = 'all';   // matchday filter: 'all' | 1 | 2 | 3
   let _activeSort     = 'date';  // 'date' | 'edge' | 'upset'
@@ -156,6 +157,25 @@
   let _bannerExpanded = false;
   window.wmToggleChangesBanner = function () {
     _bannerExpanded = !_bannerExpanded;
+    _render();
+  };
+
+  // Pick "Warum?" Modal — Open/Close
+  window.wmOpenWhy = function (matchKey) {
+    _whyModalKey = matchKey;
+    _render();
+    document.body.style.overflow = 'hidden';
+    // ESC + Backdrop binden
+    if (!window._wmEscBound) {
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && _whyModalKey) window.wmCloseWhy();
+      });
+      window._wmEscBound = true;
+    }
+  };
+  window.wmCloseWhy = function () {
+    _whyModalKey = null;
+    document.body.style.overflow = '';
     _render();
   };
 
@@ -340,7 +360,54 @@
       html += `</div>`;
     }
 
+    // ─── PICK "WARUM?" Modal-Overlay (über allem) ──────
+    if (_whyModalKey) {
+      html += _renderWhyModalOverlay();
+    }
+
     panel.innerHTML = html;
+  }
+
+  // Rendert das Modal-Overlay basierend auf _whyModalKey
+  function _renderWhyModalOverlay() {
+    const mk = _whyModalKey;
+    if (!mk) return '';
+    const parts = mk.split('-');
+    if (parts.length < 4) return '';
+    const [gKey, mdStr, homeId, awayId] = parts;
+    const gData = (_wmData.groups || {})[gKey];
+    if (!gData) return '';
+    const md = +mdStr;
+    const fx = (gData.fixtures || []).find(f => f.matchday === md && f.home === homeId && f.away === awayId);
+    if (!fx) return '';
+    fx.groupKey = gKey;
+    const teamsMap = Object.fromEntries((gData.teams || []).map(t => [t.id, t]));
+    const home = teamsMap[homeId] || { id: homeId, name: homeId, flag: '🏳️' };
+    const away = teamsMap[awayId] || { id: awayId, name: awayId, flag: '🏳️' };
+    const fxOdds = (_wmData.odds || {})[`${homeId}-${awayId}`] || null;
+    const fxPicks = (_wmData.picks || {})[mk] || [];
+    const livePicks = fxPicks.filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN');
+    const sortedPicks = [...livePicks].sort((a, b) => {
+      if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
+      if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
+      return (b.edgePP || 0) - (a.edgePP || 0);
+    });
+    const heroPick = sortedPicks[0];
+    if (!heroPick) return '';
+
+    const homeForm = (_wmData.form || {})[homeId];
+    const awayForm = (_wmData.form || {})[awayId];
+    const eloDiff = (home.elo && away.elo) ? (home.elo - away.elo) : null;
+    const matchPage = _findMatchPage(fx);
+
+    const body = _buildPickWhyModal(heroPick, fx, home, away, homeForm, awayForm, eloDiff, fxOdds, matchPage);
+    return `
+      <div class="wm-why-backdrop" onclick="wmCloseWhy()"></div>
+      <div class="wm-why-modal" role="dialog" aria-modal="true">
+        <button class="wm-why-close" onclick="wmCloseWhy()" aria-label="Schließen">✕</button>
+        ${body}
+      </div>
+    `;
   }
 
   // ─────────────────────────────────────────────────────
@@ -429,6 +496,9 @@
         <div class="cc-pick-conf">
           ${[1,2,3].map(n => `<span class="cc-star${isAbw ? ' cc-star-abw' : ''} ${n <= stars ? 'cc-star-full' : 'cc-star-empty'}">★</span>`).join('')}
         </div>
+        <button class="cc-why-btn" onclick="wmOpenWhy('${matchKey.replace(/['"\\\\]/g,'')}')" title="Modell-Rechnung, Insights, CLV, Risiko, Stake-Empfehlung">
+          🔍 Warum?
+        </button>
       </div>`;
 
       // Odds-Strip: Opening → Now Drift + Mini-Sparkline (zwischen Pick und Story)
@@ -1157,6 +1227,432 @@
       <circle cx="${pad}" cy="${firstY.toFixed(1)}" r="1.8" fill="rgba(255,255,255,0.25)"/>
       <circle cx="${lastX.toFixed(1)}" cy="${lastY.toFixed(1)}" r="2.5" fill="${color}"/>
     </svg>`;
+  }
+
+  // ═══════════════════════════════════════════════════════
+  //  PICK "WARUM?" MODAL — Transparente Begründung pro Pick
+  //  (Differenzierungs-Feature: zeigt Modell-Mathematik statt
+  //   AI-Phantasie wie die Konkurrenz-Tools)
+  // ═══════════════════════════════════════════════════════
+
+  // ── Konfidenz-Score 0-10 aus Verdict + Edge ableiten ─────
+  function _confidenceScore(pick) {
+    if (!pick) return 0;
+    const v = pick.verdict;
+    const e = pick.edgePP || 0;
+    const conf = pick.conf || 'medium';
+    if (v === 'BET') {
+      if (conf === 'high' || e >= 12) return Math.min(10, 7 + Math.floor(e / 6));
+      if (conf === 'medium' || e >= 6) return 7;
+      return 6;
+    }
+    if (v === 'ABWÄGEN') {
+      if (e >= 5) return 5;
+      return 4;
+    }
+    return 3;
+  }
+
+  function _confidenceLabel(score, pick) {
+    const v = (pick && pick.verdict) || '?';
+    const c = (pick && pick.conf) || '?';
+    return `${score}/10 · ${v} ${c}`;
+  }
+
+  // ── Kelly-Criterion Stake-Range ──────────────────────────
+  // Standard: ½ Kelly für konservative Risiko-Management
+  function _kellyStake(odds, modelOdds) {
+    if (!odds || !modelOdds || odds <= 1 || modelOdds <= 1) return null;
+    const p = 1 / modelOdds;           // Modell-Wahrscheinlichkeit
+    const q = 1 - p;
+    const b = odds - 1;                // Net-Payout-Ratio
+    const f = (b * p - q) / b;         // Vollkelly
+    if (f <= 0) return null;           // Kein positiver Edge → kein Stake
+    const halfKelly = f * 0.5;         // Konservativ
+    return {
+      full:    +(f * 100).toFixed(1),       // % Bankroll
+      half:    +(halfKelly * 100).toFixed(1),
+      // Empfohlene Range = ¼ Kelly bis ½ Kelly
+      lowPct:  +(halfKelly * 50).toFixed(1),
+      highPct: +(halfKelly * 100).toFixed(1),
+    };
+  }
+
+  function _stakeRange(pick) {
+    // Hybrid: Konvention (1-5% Cap mit Verdict-Stufung) + ½-Kelly als Untergrenze-Sanity
+    // Profi-Range: BET high=3-5%, BET medium=2-3%, BET low/ABWÄGEN=1-2%
+    const k = _kellyStake(pick.odds, pick.modelOdds);
+    if (!k) return { label: '0.5–1%', sub: 'minimal · kein klarer Edge' };
+
+    const v = pick.verdict;
+    const e = pick.edgePP || 0;
+    const c = pick.conf || 'medium';
+
+    let lo, hi;
+    if (v === 'BET' && (c === 'high' || e >= 12)) {
+      lo = 3.0; hi = 5.0;
+    } else if (v === 'BET' && (c === 'medium' || e >= 6)) {
+      lo = 2.0; hi = 3.0;
+    } else if (v === 'BET') {
+      lo = 1.5; hi = 2.5;
+    } else if (v === 'ABWÄGEN') {
+      lo = 1.0; hi = 2.0;
+    } else {
+      lo = 0.5; hi = 1.0;
+    }
+    // Sanity-Override: wenn ½ Kelly unter Lo liegt, runter (zb sehr knapper Edge)
+    if (k.half < lo) {
+      const half = Math.max(0.5, k.half);
+      lo = Math.max(0.5, half * 0.7);
+      hi = Math.min(hi, half * 1.3);
+    }
+    return {
+      label: `${lo.toFixed(1)}–${hi.toFixed(1)}%`,
+      sub:   `½ Kelly ${k.half.toFixed(1)}% · Edge ${e}pp`,
+    };
+  }
+
+  // ── Risk-Assessment auto ─────────────────────────────────
+  function _riskAssessment(pick, fx, eloDiff, homeForm, awayForm) {
+    const dq = (pick && pick.dataQuality) || 'elo_only';
+    const factors = [];
+
+    // 1. Data-Quality
+    if (dq === 'elo_only') {
+      factors.push({ severity: 2, txt: 'Nur Elo-Daten verfügbar — keine Form/H2H-Bestätigung' });
+    } else if (dq === 'elo+form') {
+      factors.push({ severity: 1, txt: 'Form vorhanden aber H2H-Daten fehlen' });
+    }
+
+    // 2. Underdog-Gap
+    if (eloDiff != null) {
+      const m = (pick.market || '').toLowerCase();
+      const pickedHome = m.includes('heim');
+      const pickedAway = m.includes('ausw');
+      let gap = 0;
+      if (pickedHome && eloDiff < 0) gap = -eloDiff;
+      else if (pickedAway && eloDiff > 0) gap = eloDiff;
+      if (gap > 150) factors.push({ severity: 2, txt: `Pick auf Underdog mit Elo-Gap ${gap.toFixed(0)}` });
+      else if (gap > 75) factors.push({ severity: 1, txt: `Schwächeres Team (Elo-Gap ${gap.toFixed(0)})` });
+    }
+
+    // 3. Form-Volatilität
+    const allForms = [homeForm, awayForm].filter(f => f && f.last5);
+    for (const f of allForms) {
+      const wld = (f.last5 || []).join('');
+      // Hochvolatil wenn W und L in last5
+      if (wld.includes('W') && wld.includes('L') && f.games >= 5) {
+        // Volatil ist Risk-Note für BTTS/Over picks
+        const m = (pick.market || '').toLowerCase();
+        if (m.includes('beide') || m.includes('über') || m.includes('over')) {
+          factors.push({ severity: 1, txt: 'Form-Volatilität in einem Team (W/L-Mix)' });
+          break;
+        }
+      }
+    }
+
+    // 4. Hohe Edge → wirkt suspekt
+    if ((pick.edgePP || 0) > 20) {
+      factors.push({ severity: 2, txt: `Sehr hoher Edge (${pick.edgePP}pp) — sanity-prüfen` });
+    }
+
+    // 5. ABWÄGEN-Status
+    if (pick.verdict === 'ABWÄGEN') {
+      factors.push({ severity: 1, txt: 'ABWÄGEN-Status — kleinerer Stake empfohlen' });
+    }
+
+    const totalSev = factors.reduce((s, f) => s + f.severity, 0);
+    const level = totalSev >= 3 ? 'high'
+                : totalSev >= 1 ? 'med'
+                : 'low';
+    const label = level === 'high' ? 'Hoch' : level === 'med' ? 'Mittel' : 'Niedrig';
+    const text = factors.length
+      ? factors.slice(0, 2).map(f => f.txt).join('. ') + '.'
+      : 'Keine erkennbaren zusätzlichen Risiken über Standard-Spielunsicherheit hinaus.';
+    return { level, label, text };
+  }
+
+  // ── Insights auto-extrahieren (3 stärkste Signale) ───────
+  function _extractInsights(pick, fx, home, away, homeForm, awayForm, eloDiff, fxOdds) {
+    const m = (pick.market || '').toLowerCase();
+    const isOver  = m.includes('über') || m.includes('over');
+    const isUnder = m.includes('unter') || m.includes('under');
+    const isBtts  = m.includes('beide') || m.includes('btts');
+    const isHome  = m.includes('heim') || m.includes('dnb: heim');
+    const isAway  = m.includes('ausw') || m.includes('dnb: ausw');
+
+    const candidates = [];
+
+    // ── Form-basierte Insights ──
+    if (homeForm && homeForm.games >= 3) {
+      if (isHome) {
+        candidates.push({
+          score: (homeForm.avgScored || 0) * 10,
+          txt: `${home.name} erzielte in letzten ${homeForm.games} Spielen <strong>${(homeForm.avgScored||0).toFixed(1)} Tore/Spiel</strong> bei <strong>${(homeForm.avgConceded||0).toFixed(1)} Gegentoren</strong>.`,
+          tag: `Form n=${homeForm.games}`, tagCls: 'wm-tag-data',
+        });
+      }
+      if (isOver || isBtts) {
+        candidates.push({
+          score: (homeForm.over25Rate || 0) * 30,
+          txt: `${home.name} traf in <strong>${Math.round((homeForm.bttsRate||0)*100)}% der Spiele BTTS</strong> und scored Ø ${(homeForm.avgScored||0).toFixed(1)}.`,
+          tag: `Form n=${homeForm.games}`, tagCls: 'wm-tag-data',
+        });
+      }
+      if (isUnder) {
+        candidates.push({
+          score: 30 - (homeForm.over25Rate || 0) * 30,
+          txt: `${home.name} hatte in <strong>${Math.round((1-(homeForm.over25Rate||0))*100)}% der Spiele unter 2.5 Tore</strong> — defensiv-getrieben.`,
+          tag: `Form n=${homeForm.games}`, tagCls: 'wm-tag-data',
+        });
+      }
+    }
+    if (awayForm && awayForm.games >= 3) {
+      if (isAway) {
+        candidates.push({
+          score: (awayForm.avgScored || 0) * 10,
+          txt: `${away.name} kommt mit <strong>${(awayForm.avgScored||0).toFixed(1)} Tore/Spiel</strong> in der Form, ${(awayForm.avgConceded||0).toFixed(1)} hinten.`,
+          tag: `Form n=${awayForm.games}`, tagCls: 'wm-tag-data',
+        });
+      }
+      if (isOver || isBtts) {
+        candidates.push({
+          score: (awayForm.bttsRate || 0) * 30,
+          txt: `${away.name} traf in <strong>${Math.round((awayForm.bttsRate||0)*100)}% BTTS</strong> und kassiert Ø ${(awayForm.avgConceded||0).toFixed(1)} Tore.`,
+          tag: `Form n=${awayForm.games}`, tagCls: 'wm-tag-data',
+        });
+      }
+    }
+
+    // ── Elo-Diff Insight ──
+    if (eloDiff != null && Math.abs(eloDiff) >= 100 && (isHome || isAway)) {
+      const stronger = eloDiff > 0 ? home : away;
+      candidates.push({
+        score: Math.abs(eloDiff) / 5,
+        txt: `Elo-Differenz <strong>${eloDiff > 0 ? '+' : ''}${eloDiff.toFixed(0)}</strong> zugunsten ${stronger.name} — historisch klares Klassenmerkmal.`,
+        tag: 'Elo', tagCls: 'wm-tag-data',
+      });
+    }
+
+    // ── CLV Insight (Sharps) ──
+    if (typeof pick.clvPP === 'number' && Math.abs(pick.clvPP) >= 2) {
+      const positive = pick.clvPP > 0;
+      candidates.push({
+        score: Math.abs(pick.clvPP) * 4 + 20,
+        txt: positive
+          ? `Pinnacle hat die Quote seit Eröffnung um <strong>${Math.abs(pick.clvPP).toFixed(1)}pp Richtung unser Pick</strong> bewegt — <strong style="color:var(--accent);">CLV+</strong>.`
+          : `Pinnacle bewegte die Quote um <strong>${Math.abs(pick.clvPP).toFixed(1)}pp gegen uns</strong> seit Eröffnung — <strong style="color:var(--red);">CLV-</strong>, Markt sieht es anders.`,
+        tag: 'Pinnacle', tagCls: positive ? 'wm-tag-sharp' : 'wm-tag-warn',
+      });
+    }
+
+    // ── Public-Bias Insight ──
+    if (pick.publicBias && pick.publicBias.pp >= 4) {
+      const dir = pick.publicBias.direction === 'over' ? 'überschätzt' : 'unterschätzt';
+      candidates.push({
+        score: pick.publicBias.pp * 3,
+        txt: `Public-Bookies <strong>${dir}</strong> dieses Outcome um <strong>${pick.publicBias.pp}pp</strong> — Sharps vs. Square-Money divergiert.`,
+        tag: 'Public-Bias', tagCls: 'wm-tag-edge',
+      });
+    }
+
+    // ── Edge-Magnitude Insight (Fallback wenn nichts anderes) ──
+    if (candidates.length < 3 && pick.edgePP) {
+      candidates.push({
+        score: 5,
+        txt: `Unser Modell sieht <strong>${pick.edgePP}pp Edge</strong> ggü. dem Bookie-Preis — Modell-Wahrscheinlichkeit ${Math.round(100/(pick.modelOdds||1))}% vs. Markt ${Math.round(100/(pick.odds||1))}%.`,
+        tag: 'Edge', tagCls: 'wm-tag-edge',
+      });
+    }
+
+    // Top-3 nach Score auswählen + dedup
+    candidates.sort((a, b) => b.score - a.score);
+    const seen = new Set();
+    const top = [];
+    for (const c of candidates) {
+      const key = c.txt.substring(0, 40);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      top.push(c);
+      if (top.length >= 3) break;
+    }
+    return top;
+  }
+
+  // ── Modal-Body bauen ─────────────────────────────────────
+  function _buildPickWhyModal(pick, fx, home, away, homeForm, awayForm, eloDiff, fxOdds, matchPage) {
+    if (!pick) return '';
+    const score      = _confidenceScore(pick);
+    const scoreLabel = _confidenceLabel(score, pick);
+    const scorePct   = score * 10;
+    const isAbw      = pick.verdict === 'ABWÄGEN';
+    const accent     = isAbw ? '#f5c518' : '#00d4a1';
+    const oddsStr    = pick.odds != null ? pick.odds.toFixed(2) : '—';
+
+    // Time-Label
+    let timeLabel = '';
+    try {
+      const dt = new Date(`${fx.date}T${fx.time || '19:00'}:00`);
+      const wd = ['So','Mo','Di','Mi','Do','Fr','Sa'][dt.getDay()];
+      timeLabel = `${wd} ${dt.getDate().toString().padStart(2,'0')}.${(dt.getMonth()+1).toString().padStart(2,'0')}. · ${fx.time || ''}`;
+    } catch (e) {}
+
+    // ── 1. MODELL-RECHNUNG ──
+    const elo_h = matchPage?.homeElo || home.elo;
+    const elo_a = matchPage?.awayElo || away.elo;
+    const xg_h  = matchPage?.xgHome;
+    const xg_a  = matchPage?.xgAway;
+    const probMarket  = pick.odds      ? Math.round(100 / pick.odds)      : null;
+    const probModel   = pick.modelOdds ? Math.round(100 / pick.modelOdds) : null;
+    let calcRows = '';
+    if (elo_h && elo_a) {
+      calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">Elo (${home.name} / ${away.name})</span><span class="wm-calc-val">${elo_h} / ${elo_a} (${eloDiff > 0 ? '+' : ''}${eloDiff})</span></div>`;
+    }
+    if (xg_h != null && xg_a != null) {
+      calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">xG Erwartung (H / A)</span><span class="wm-calc-val">${xg_h.toFixed(2)} / ${xg_a.toFixed(2)}</span></div>`;
+    }
+    // Travel-Mod
+    const travel_h = _teamLegForMatch && _teamLegForMatch(fx.home, fx.matchday);
+    if (travel_h && travel_h.discount != null && travel_h.discount < 1.0) {
+      const pp = Math.round((1 - travel_h.discount) * 100);
+      calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">Travel-Mod ${home.flag}</span><span class="wm-calc-val">−${pp}% xG</span></div>`;
+    }
+    if (probModel != null) {
+      calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">P(${pick.market}) Modell</span><span class="wm-calc-val">${probModel}%</span></div>`;
+    }
+    if (probModel != null && probMarket != null) {
+      calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">Modell-Quote → Markt-Quote</span><span class="wm-calc-val acc">${(pick.modelOdds||0).toFixed(2)} → ${oddsStr} = +${pick.edgePP}pp Edge</span></div>`;
+    }
+
+    // ── 2. KEY INSIGHTS ──
+    const insights = _extractInsights(pick, fx, home, away, homeForm, awayForm, eloDiff, fxOdds);
+    const insightHtml = insights.map((i, idx) => `
+      <div class="wm-insight">
+        <div class="wm-insight-num">${(idx+1).toString().padStart(2,'0')}</div>
+        <div class="wm-insight-txt">${i.txt}<span class="wm-insight-tag ${i.tagCls}">${i.tag}</span></div>
+      </div>`).join('');
+
+    // ── 3. CLV-Block ──
+    let clvBlock = '';
+    if (typeof pick.clvPP === 'number' && Math.abs(pick.clvPP) >= 1) {
+      const pos = pick.clvPP > 0;
+      const sign = pos ? '+' : '';
+      // Opening-Quote aus Markt-Open ableiten
+      let openOdds = null;
+      const oddsKey = _pickToOddsKey(pick.market);
+      if (oddsKey && fxOdds?.odds_open?.[oddsKey]) openOdds = fxOdds.odds_open[oddsKey];
+      const driftStr = openOdds ? `${openOdds.toFixed(2)} → ${oddsStr}` : `${sign}${pick.clvPP.toFixed(1)}pp`;
+      clvBlock = `<div class="wm-section">
+        <div class="wm-section-label">💎 Closing-Line-Value</div>
+        <div class="wm-clv ${pos ? '' : 'wm-clv-neg'}">
+          <div class="wm-clv-head">
+            <span class="wm-clv-title">Quote-Bewegung seit Eröffnung</span>
+            <span class="wm-clv-pp">${driftStr} · ${pos ? 'CLV+' : 'CLV-'} (${sign}${pick.clvPP.toFixed(1)}pp)</span>
+          </div>
+          <div class="wm-clv-explanation">
+            ${pos
+              ? `Sharps verteuern unsere Seite — <strong style="color:var(--accent);">Markt bestätigt unsere Sicht</strong>.`
+              : `Sharps bewegen die Quote gegen uns — Markt sieht es anders. Pick mit Vorsicht behandeln.`}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // ── 4. Backtest aus _confidenceStats ──
+    let backtestBlock = '';
+    if (_confidenceFor) {
+      const conf = _confidenceFor(pick);
+      if (conf && conf.n >= 3) {
+        const scopeLabel = {
+          cluster: 'identischen Picks',
+          market:  `${pick.market}-Picks`,
+          angle:   'ähnlichen Picks',
+          global:  'allen WM-Picks',
+        }[conf.scope] || 'vergleichbaren Picks';
+        backtestBlock = `<div class="wm-section">
+          <div class="wm-section-label">📊 Historischer Backtest</div>
+          <div class="wm-backtest">
+            <div class="wm-bt-num">${conf.rate}%</div>
+            <div class="wm-bt-text">
+              Trefferquote bei <strong>${scopeLabel}</strong> (n=${conf.n}).
+              ${conf.rate >= 55 ? 'Solide Validierung des Modells.' : conf.rate >= 45 ? 'Mittlere Validierung — Edge nicht garantiert.' : 'Underperformance — Pick mit Vorsicht.'}
+            </div>
+          </div>
+        </div>`;
+      }
+    }
+
+    // ── 5. Risk + Stake ──
+    const risk  = _riskAssessment(pick, fx, eloDiff, homeForm, awayForm);
+    const stake = _stakeRange(pick);
+    const dq    = pick.dataQuality || 'elo';
+
+    // ── 6. Data-Footer ──
+    const formN = (homeForm?.games || 0) + (awayForm?.games || 0);
+    const updatedAt = matchPage?.generatedAt
+      ? `vor ${Math.max(1, Math.round((Date.now() - new Date(matchPage.generatedAt).getTime()) / 60000))}m`
+      : 'kürzlich';
+
+    return `
+      <div class="wm-header">
+        <div class="wm-confidence-label">
+          <span>KONFIDENZ</span>
+          <span class="wm-confidence-score" style="color:${accent};">${scoreLabel}</span>
+        </div>
+        <div class="wm-confidence-bar">
+          <div class="wm-confidence-fill" style="width:${scorePct}%;background:${accent};"></div>
+        </div>
+        <div class="wm-match-row">
+          <div class="wm-team">
+            <span class="wm-team-flag">${home.flag}</span>
+            <div class="wm-team-name">${home.name}</div>
+          </div>
+          <div class="wm-pick-col">
+            <div class="wm-time">${timeLabel}</div>
+            <div class="wm-pick-odds" style="color:${accent};">${oddsStr}</div>
+            <div class="wm-pick-market">${isAbw ? 'Vorsichtiger Pick' : 'Unser Pick'}<strong>${pick.market}</strong></div>
+          </div>
+          <div class="wm-team">
+            <span class="wm-team-flag">${away.flag}</span>
+            <div class="wm-team-name">${away.name}</div>
+          </div>
+        </div>
+      </div>
+
+      ${calcRows ? `<div class="wm-section">
+        <div class="wm-section-label">📐 Modell-Rechnung — woher kommt die Quote</div>
+        <div class="wm-calc">${calcRows}</div>
+      </div>` : ''}
+
+      ${insights.length ? `<div class="wm-section">
+        <div class="wm-section-label">🎯 Schlüssel-Signale</div>
+        ${insightHtml}
+      </div>` : ''}
+
+      ${clvBlock}
+      ${backtestBlock}
+
+      <div class="wm-section">
+        <div class="wm-section-label">⚖️ Risiko & Stake-Empfehlung</div>
+        <div class="wm-risk-stake">
+          <div class="wm-risk">
+            <div class="wm-risk-val ${risk.level}">${risk.label}</div>
+            <div class="wm-risk-txt">${risk.text} Daten-Tier: <strong style="color:var(--text);">${dq}</strong>.</div>
+          </div>
+          <div class="wm-stake">
+            <div class="wm-stake-val">${stake.label}</div>
+            <div class="wm-stake-lbl">Bankroll</div>
+            <div class="wm-stake-sub">${stake.sub}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wm-data-footer">
+        <span><strong>Bookie:</strong> Pinnacle</span>
+        <span><strong>Form:</strong> ${formN} Spiele${homeForm || awayForm ? '' : ' (fehlt)'}</span>
+        <span><strong>Aktualisiert:</strong> ${updatedAt}</span>
+      </div>
+    `;
   }
 
   // ─────────────────────────────────────────────────────
