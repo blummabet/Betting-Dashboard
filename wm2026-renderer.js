@@ -19,6 +19,9 @@
   let _travelLookup   = {};   // key: TEAM_ID → travel burden object
   let _confidenceStats = null;  // pick_confidence_stats.json
   let _oddsHistoryLookup = {};  // key: "HOME-AWAY" → [ {ts, hw, dr, aw, o25, ...}, ... ]
+  let _wmMatchPages = {};       // slug → match-page-data (aus matches/data/wm-{slug}.json)
+  let _wmPagesLoaded = false;
+  const _expandedPreviews = new Set();  // Set of match-keys mit ausgeklapptem AI-Preview
   let _activeGroup    = 'all';
   let _activeMd       = 'all';   // matchday filter: 'all' | 1 | 2 | 3
   let _activeSort     = 'date';  // 'date' | 'edge' | 'upset'
@@ -120,6 +123,10 @@
 
       _loaded = true;
       _render();
+
+      // Stage 2: WM-Match-Pages im Hintergrund laden (für Probability-Bar, Squad-Pills, AI-Preview)
+      // Erstes Render zeigt Cards schon, zweites Render hat dann die Extra-Daten
+      _loadWmMatchPages();
     } catch (e) {
       panel.innerHTML = `
         <div style="text-align:center;padding:60px 16px;color:var(--muted);">
@@ -149,6 +156,13 @@
   let _bannerExpanded = false;
   window.wmToggleChangesBanner = function () {
     _bannerExpanded = !_bannerExpanded;
+    _render();
+  };
+
+  // AI-Preview expand toggle
+  window.wmTogglePreview = function (matchKey) {
+    if (_expandedPreviews.has(matchKey)) _expandedPreviews.delete(matchKey);
+    else _expandedPreviews.add(matchKey);
     _render();
   };
 
@@ -394,6 +408,15 @@
       ${_weatherPill(fx)}
     </div></div>`;
 
+    // ── Lade Match-Page (für Probability-Bar, Squad-Pills, AI-Preview) ──
+    const matchPage = _findMatchPage(fx);
+
+    // ── PROBABILITY-BAR (1X2 visuell) ──
+    if (matchPage && !isPlayed) {
+      const pb = _buildProbBar(matchPage, home, away);
+      if (pb) html += pb;
+    }
+
     // ─── PICK HERO ─────────────────────────────────────
     if (!isPlayed && heroPick) {
       const isAbw = heroPick.verdict === 'ABWÄGEN';
@@ -481,6 +504,18 @@
         </div>`;
       }
       html += `</div>`;
+    }
+
+    // ─── SQUAD PILLS (Top-Spieler je Team mit G/A) ──
+    if (matchPage && !isPlayed) {
+      const sp = _buildSquadPills(matchPage, home, away);
+      if (sp) html += sp;
+    }
+
+    // ─── AI-PREVIEW (collapsible) ──
+    if (matchPage && !isPlayed) {
+      const aip = _buildAiPreview(matchPage, matchKey);
+      if (aip) html += aip;
     }
 
     // ─── PLAYER PICKS (Spieler-Märkte aus TheOddsAPI, T-3 vor Anpfiff) ──
@@ -929,6 +964,97 @@
     }
 
     return sentences.join(' ') + (modelSentence ? '<br>' + modelSentence : '');
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  WM-MATCH-PAGES — lazy load (Probability-Bar, Squad-Pills, AI-Preview)
+  // ─────────────────────────────────────────────────────
+  async function _loadWmMatchPages() {
+    if (_wmPagesLoaded) return;
+    try {
+      const idxResp = await fetch('matches/wm-index.json?t=' + Date.now());
+      if (!idxResp.ok) return;
+      const idx = await idxResp.json();
+      const slugs = idx.slugs || [];
+      if (!slugs.length) return;
+      const results = await Promise.all(slugs.map(slug =>
+        fetch(`matches/data/${slug}.json`).then(r => r.ok ? r.json() : null).catch(() => null)
+      ));
+      for (const d of results) {
+        if (d && d.slug) _wmMatchPages[d.slug] = d;
+      }
+      _wmPagesLoaded = true;
+      _render();   // Re-render mit den neuen Daten
+    } catch (e) { console.warn('wm-match-pages load failed', e); }
+  }
+
+  function _findMatchPage(fx) {
+    if (!_wmPagesLoaded) return null;
+    // Slug-Format wie in generate_wm_match_pages.py: wm-{home_lower}-vs-{away_lower}-{date}
+    const slug = `wm-${(fx.home||'').toLowerCase()}-vs-${(fx.away||'').toLowerCase()}-${fx.date}`;
+    return _wmMatchPages[slug] || null;
+  }
+
+  // ── Probability-Bar (1X2 als 3-Farb-Balken) ─────────────────
+  function _buildProbBar(page, home, away) {
+    if (!page) return '';
+    const ph = page.probHome, pd = page.probDraw, pa = page.probAway;
+    if (ph == null || pd == null || pa == null) return '';
+    return `<div class="cc-probbar-wrap" title="Modell-Wahrscheinlichkeit (Elo + Form + Travel)">
+      <div class="cc-probbar">
+        <div class="cc-pb-h" style="flex:${ph};" title="${home.name} ${ph}%"></div>
+        <div class="cc-pb-d" style="flex:${pd};" title="Unentschieden ${pd}%"></div>
+        <div class="cc-pb-a" style="flex:${pa};" title="${away.name} ${pa}%"></div>
+      </div>
+      <div class="cc-probbar-lbl">
+        <span>${home.flag} ${ph}%</span>
+        <span>X ${pd}%</span>
+        <span>${pa}% ${away.flag}</span>
+      </div>
+    </div>`;
+  }
+
+  // ── Squad-Pills (Top-Spieler beider Teams mit G/A/Min) ──────
+  function _buildSquadPills(page, home, away) {
+    if (!page) return '';
+    const sq = page.squads || {};
+    const h = sq[home.id || ''] || sq[page.homeId];
+    const a = sq[away.id || ''] || sq[page.awayId];
+    if (!h && !a) return '';
+    const pill = (player, flag) => {
+      if (!player || !player.name) return '';
+      const goals = player.goals != null ? `${player.goals}G` : '';
+      const ast   = player.assists != null ? ` ${player.assists}A` : '';
+      const pos   = player.position ? `<span class="cc-sq-pos">${player.position}</span>` : '';
+      return `<span class="cc-sq-pill" title="Top-Spieler aus WMQ + letzten Klubspielen">
+        <span class="cc-sq-flag">${flag}</span>
+        <strong>${player.name}</strong>
+        ${pos}
+        <span class="cc-sq-stats">${goals}${ast}</span>
+      </span>`;
+    };
+    const hp = pill(h, home.flag);
+    const ap = pill(a, away.flag);
+    if (!hp && !ap) return '';
+    return `<div class="cc-squad-row">${hp}${ap}</div>`;
+  }
+
+  // ── AI-Preview (collapsible) ────────────────────────────────
+  function _buildAiPreview(page, matchKey) {
+    if (!page || !page.aiPreview) return '';
+    const expanded = _expandedPreviews.has(matchKey);
+    const safeKey = matchKey.replace(/['"\\]/g, '');
+    if (!expanded) {
+      return `<div class="cc-ai-collapsed" onclick="wmTogglePreview('${safeKey}')">
+        🤖 <span>AI-Analyse</span> <span class="cc-ai-toggle">▼ aufklappen</span>
+      </div>`;
+    }
+    return `<div class="cc-ai-expanded">
+      <div class="cc-ai-head" onclick="wmTogglePreview('${safeKey}')">
+        🤖 <span>AI-Analyse</span> <span class="cc-ai-toggle">▲ einklappen</span>
+      </div>
+      <div class="cc-ai-body">${page.aiPreview}</div>
+    </div>`;
   }
 
   // ─────────────────────────────────────────────────────

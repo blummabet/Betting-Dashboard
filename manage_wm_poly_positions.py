@@ -52,6 +52,27 @@ MIN_PROFIT_PP   = 0.03   # Minimaler absoluter Profit (+3pp) bevor Secondary-Reg
 AGE_DECAY_HOURS         = 48     # ab welcher Halte-Dauer kleinerer Profit akzeptiert wird
 AGE_DECAY_PROFIT_TARGET = 0.05   # +5% reicht zum Schließen nach 48h+
 
+# ── LOSS-Trigger ──────────────────────────────────────────────────────────────
+# Eingebaut 03.06.2026 — verhindert dass Positionen ins Minus aussgesessen werden.
+# Profi-Konsens: event-getriebene Loss-Stops, keine Panik bei normalem Marktrauschen.
+
+# 1. SHARP-AGAINST: Pinnacle pricet die Wahrscheinlichkeit ≥7pp UNTER unserem Entry
+#    → Sharps denken das Outcome ist deutlich unwahrscheinlicher als wir gekauft haben
+#    → wahrscheinlich gibt's neue Info die wir nicht eingepreist haben → raus
+SHARP_AGAINST_GAP_PP    = 7.0
+
+# 2. DEEP-LOSS + viel Zeit: Position 40% unter Entry, Match noch ≥12h weg
+#    → Opportunitätskosten: Bankroll besser anderswo allokieren
+LOSS_DEEP_PCT           = 0.40
+LOSS_DEEP_HOURS_AHEAD   = 12.0
+
+# 3. AGE-LOSS: alte Position + im Minus → realisieren bevor Spread alles frisst
+AGE_LOSS_HOURS          = 36.0
+AGE_LOSS_THRESHOLD_PCT  = 0.10   # ≥10% Verlust nach 36h+
+
+# 4. NEVER IN-PLAY: Live-Phase = kein Loss-Trigger (Polymarket-Live-Liquidität zu mies)
+NO_INPLAY_LOSS_SELL     = True
+
 # ── Auto-Sell Konfiguration ───────────────────────────────────────────────────
 # Sicherheitsschalter: False = nur Alerts, keine echten Sells
 # Auf True setzen (oder AUTO_SELL_ENABLED=true in Env) wenn bereit für live Sells
@@ -192,6 +213,24 @@ def check_position(pos: dict) -> dict:
     sell  = False
     reason = ""
 
+    # ── Hilfs-Variablen für alle Trigger ──────────────────────────────────────
+    # Age (Stunden seit placed)
+    age_h = None
+    placed_at = pos.get("placedAt") or ""
+    if placed_at:
+        try:
+            from datetime import datetime as _dt
+            placed_dt = _dt.fromisoformat(placed_at.replace("Z", "+00:00"))
+            age_h = (_dt.now(timezone.utc) - placed_dt).total_seconds() / 3600
+        except Exception:
+            age_h = None
+
+    # Hours bis Kickoff (negativ = bereits gestartet)
+    hours_left = hours_until_match(pos.get("matchDate", ""))
+    in_play = hours_left is not None and hours_left <= 0
+
+    # ── PROFIT-Trigger (PRIMARY/SECONDARY/TERTIARY) ───────────────────────────
+
     # PRIMARY: +10% Profit (Cash-Cycle Optimierung)
     if entry > 0 and current >= entry * (1 + PROFIT_TARGET):
         sell = True
@@ -205,21 +244,43 @@ def check_position(pos: dict) -> dict:
             reason = f"Markt konvergiert: Poly {current:.3f} ≈ Pinn fair {pinn_fair:.3f} (Δ{gap:.1f}pp)"
 
     # TERTIARY: Age-Decay — alte Position + kleiner Profit reicht
-    if not sell and entry > 0:
-        placed_at = pos.get("placedAt") or ""
-        age_h = None
-        if placed_at:
-            try:
-                from datetime import datetime as _dt
-                placed_dt = _dt.fromisoformat(placed_at.replace("Z", "+00:00"))
-                now_dt    = _dt.now(timezone.utc)
-                age_h     = (now_dt - placed_dt).total_seconds() / 3600
-            except Exception:
-                age_h = None
-        if age_h is not None and age_h >= AGE_DECAY_HOURS:
-            if current >= entry * (1 + AGE_DECAY_PROFIT_TARGET):
-                sell = True
-                reason = f"Age-Decay: Position {age_h:.0f}h alt, +{round(pnl_pct, 1)}% ≥ +{AGE_DECAY_PROFIT_TARGET*100:.0f}% reicht"
+    if not sell and entry > 0 and age_h is not None and age_h >= AGE_DECAY_HOURS:
+        if current >= entry * (1 + AGE_DECAY_PROFIT_TARGET):
+            sell = True
+            reason = f"Age-Decay: Position {age_h:.0f}h alt, +{round(pnl_pct, 1)}% ≥ +{AGE_DECAY_PROFIT_TARGET*100:.0f}% reicht"
+
+    # ── LOSS-Trigger (NUR wenn kein Profit-Sell + nicht In-Play) ──────────────
+    skip_loss = sell or (NO_INPLAY_LOSS_SELL and in_play) or entry <= 0
+    if not skip_loss:
+        loss_pct = (current / entry - 1)   # negativ wenn underwater
+
+        # LOSS 1: SHARP-AGAINST
+        # Pinnacle pricet jetzt ≥7pp UNTER unserem Entry-Preis
+        # → Sharps haben ihre Erwartung deutlich gesenkt → neue Info
+        if pinn_fair and (entry - pinn_fair) * 100 >= SHARP_AGAINST_GAP_PP and current < entry:
+            sell = True
+            gap = (entry - pinn_fair) * 100
+            reason = (f"Sharps gegen uns: Pinnacle fair {pinn_fair:.3f} "
+                      f"ist {gap:.1f}pp UNTER unserem Entry {entry:.3f} "
+                      f"({round(pnl_pct,1)}% PnL)")
+
+        # LOSS 2: DEEP-LOSS + viel Zeit zum Kickoff
+        # → Position ist 40%+ underwater UND noch genug Zeit zur Re-Allokation
+        elif (loss_pct <= -LOSS_DEEP_PCT
+              and hours_left is not None
+              and hours_left >= LOSS_DEEP_HOURS_AHEAD):
+            sell = True
+            reason = (f"Deep-Loss: {round(pnl_pct,1)}% ≤ -{LOSS_DEEP_PCT*100:.0f}%, "
+                      f"noch {hours_left:.1f}h bis Kickoff — Bankroll re-allokieren")
+
+        # LOSS 3: AGE-LOSS — alte Position + im Minus
+        # → Spread frisst sonst Buchwert, lieber realisieren
+        elif (age_h is not None
+              and age_h >= AGE_LOSS_HOURS
+              and loss_pct <= -AGE_LOSS_THRESHOLD_PCT):
+            sell = True
+            reason = (f"Age-Loss: Position {age_h:.0f}h alt, "
+                      f"{round(pnl_pct,1)}% im Minus — Spread frisst Buchwert")
 
     pos["sellSignal"] = sell
     pos["sellReason"] = reason if sell else ""

@@ -88,21 +88,18 @@ function showView(view) {
   if (subNav) subNav.style.display = hasSubNav ? '' : 'none';
 
   // Sub-nav active buttons
+  // (WM2026-Tab entfernt 03.06.2026 — Inhalt jetzt direkt in Community-Cards)
   const isCards    = view.endsWith('-cards');
   const isTracking = view.endsWith('-tracking');
-  const isWm2026   = view === 'intl-wm2026';
   const isTelegram = view === 'intl-telegram';
   const subCards    = document.getElementById('subCards');
   const subTracking = document.getElementById('subTracking');
-  const subWm2026   = document.getElementById('subWm2026');
   const subTelegram = document.getElementById('subTelegram');
   if (subCards)    subCards.classList.toggle('active',    isCards);
   if (subTracking) subTracking.classList.toggle('active', isTracking);
-  if (subWm2026)   subWm2026.classList.toggle('active',   isWm2026);
   if (subTelegram) subTelegram.classList.toggle('active', isTelegram);
-  // WM2026 + Telegram sub-nav only visible under International
+  // Telegram sub-nav only visible under International
   const intlOnly = _activeSection === 'intl';
-  if (subWm2026)   subWm2026.style.display   = intlOnly ? '' : 'none';
   if (subTelegram) subTelegram.style.display  = intlOnly ? '' : 'none';
 
   // ── Top-nav active state ─────────────────────────────

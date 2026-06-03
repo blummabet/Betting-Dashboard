@@ -899,6 +899,33 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm-countdown{display:inline-block;background:rgba(0,212,161,.10);border:1px solid rgba(0,212,161,.25);border-radius:10px;padding:5px 12px;font-size:11px;font-weight:700;color:var(--accent);}
 .wm-countdown-live{background:rgba(248,81,73,.10);border-color:rgba(248,81,73,.30);color:var(--red);}
 
+/* ── Probability-Bar (1X2 als 3-Farb-Balken) ─────────────────── */
+.cc-probbar-wrap{margin:6px 18px 0;cursor:help;}
+.cc-probbar{display:flex;height:5px;border-radius:3px;overflow:hidden;background:rgba(255,255,255,0.04);}
+.cc-pb-h{background:linear-gradient(90deg,#00d4a1,#3fb950);transition:flex .3s;}
+.cc-pb-d{background:rgba(139,148,158,.55);transition:flex .3s;}
+.cc-pb-a{background:linear-gradient(90deg,#a78bfa,#7c5cf0);transition:flex .3s;}
+.cc-probbar-lbl{display:flex;justify-content:space-between;font-size:9.5px;color:var(--muted);margin-top:3px;letter-spacing:.2px;font-weight:600;}
+
+/* ── Squad-Spotlight-Pills (Top-Spieler pro Team) ──────────────── */
+.cc-squad-row{display:flex;gap:6px;margin:8px 18px 0;flex-wrap:wrap;}
+.cc-sq-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:7px;padding:4px 9px;font-size:10.5px;color:rgba(255,255,255,.85);}
+.cc-sq-pill strong{color:var(--text);font-weight:700;}
+.cc-sq-flag{font-size:13px;}
+.cc-sq-pos{font-size:9px;color:var(--muted);background:rgba(255,255,255,.04);padding:1px 5px;border-radius:3px;letter-spacing:.5px;font-weight:700;}
+.cc-sq-stats{color:var(--accent);font-family:'SF Mono',Menlo,monospace;font-size:10px;font-weight:700;letter-spacing:.3px;}
+
+/* ── AI-Preview (collapsible) ───────────────────────────────────── */
+.cc-ai-collapsed{margin:8px 18px 0;padding:7px 12px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.18);border-radius:8px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11px;color:#a78bfa;font-weight:600;transition:background .15s;}
+.cc-ai-collapsed:hover{background:rgba(167,139,250,.08);}
+.cc-ai-collapsed span{color:var(--text);}
+.cc-ai-toggle{margin-left:auto;font-size:9.5px;color:#a78bfa;letter-spacing:.5px;font-weight:700;}
+.cc-ai-expanded{margin:8px 18px 0;background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.20);border-radius:8px;overflow:hidden;}
+.cc-ai-head{padding:7px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:11px;color:#a78bfa;font-weight:600;border-bottom:1px solid rgba(167,139,250,.12);}
+.cc-ai-head:hover{background:rgba(167,139,250,.06);}
+.cc-ai-head span{color:var(--text);}
+.cc-ai-body{padding:10px 14px 12px;font-size:11.5px;color:rgba(255,255,255,.80);line-height:1.55;}
+
 /* ── Pick Odds-Strip (Opening → Aktuell + Sparkline) ────────────── */
 .cc-odds-strip{margin:8px 18px 0;padding:8px 12px;display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);border-radius:8px;}
 .cc-os-drift{display:flex;align-items:center;gap:6px;font-size:10.5px;flex-shrink:0;}
@@ -1581,10 +1608,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="top-nav-btn" id="navSavePicks" onclick="savePicksToday(this)" title="Heutige Picks in localStorage sichern" style="margin-left:auto;color:#3fb950;">💾 <span id="navSaveLabel">Picks speichern</span></button>
 </div>
 
-<!-- SUB NAV (Cards / Tracking / WM2026 / Telegram) -->
+<!-- SUB NAV (Cards / Tracking / Telegram)
+     "🌍 WM 2026"-Tab entfernt 03.06.2026 — Inhalt (Probability-Bar, Squad-Pills, AI-Preview)
+     in Community-Cards (Cards-Tab) integriert. -->
 <div class="sub-nav" id="subNav">
   <button class="sub-nav-btn active" id="subCards" onclick="showSubView('cards')">🃏 Cards</button>
-  <button class="sub-nav-btn" id="subWm2026" onclick="showSubView('wm2026')" style="display:none">🌍 WM 2026</button>
   <button class="sub-nav-btn" id="subTracking" onclick="showSubView('tracking')">📈 Tracking</button>
   <button class="sub-nav-btn" id="subTelegram" onclick="showSubView('telegram')" style="display:none">📱 Telegram</button>
 </div>
