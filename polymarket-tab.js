@@ -384,11 +384,125 @@ function getPolyPicks(dateStr) {
     }
   }
 
-  // Sort: high conf first, then by sc descending
+  // ── WM 2026 BET-Picks für dieses Datum dazu ──────────────────────────────
+  // Nur "die besten" — Lucas-Filter: verdict=BET + edge ≥ 5pp.
+  // Quelle: window.WM2026_DATA (von wm2026-renderer.js gesetzt) oder _wmDataCache
+  // (eigener async Fetch in initPolymarket falls noch nicht geladen).
+  const wmSrc = window.WM2026_DATA || window._wmDataCache;
+  if (wmSrc) {
+    const wmPicks = _extractWmPicksForDate(wmSrc, dateStr);
+    for (const p of wmPicks) results.push(p);
+  }
+
+  // Sort: WM-Picks oben (per `isWm` Flag), dann high conf first, dann sc desc
   results.sort((a, b) => {
+    if (!!a.isWm !== !!b.isWm) return a.isWm ? -1 : 1;
     if (a.conf !== b.conf) return a.conf === 'high' ? -1 : 1;
     return b.sc - a.sc;
   });
+  return results;
+}
+
+
+// ── WM 2026 Pick-Loader ────────────────────────────────────────────────────────
+// Cache: nach erstem Async-Load steht es auch für synchrone getPolyPicks() bereit.
+let _wmDataLoading = false;
+async function _loadWmDataAsync() {
+  if (window.WM2026_DATA || window._wmDataCache || _wmDataLoading) return;
+  _wmDataLoading = true;
+  try {
+    const r = await fetch('wm2026-data.json?t=' + Date.now(), { cache: 'no-store' });
+    if (r.ok) window._wmDataCache = await r.json();
+  } catch {}
+  _wmDataLoading = false;
+}
+
+// Filter-Schwellen für WM BET-Picks im Polymarket-Tab
+const WM_POLY_MIN_EDGE_PP   = 5;        // mindestens +5pp Edge
+const WM_POLY_BET_ONLY      = true;     // nur verdict=BET, ABWÄGEN raus
+const WM_POLY_DAYS_AHEAD    = 7;        // nicht nur heute — Tag-für-Tag-Filter macht Lucas mit Datums-Picker
+
+function _extractWmPicksForDate(wm, dateStr) {
+  const results = [];
+  const picks = wm.picks || {};
+  const groups = wm.groups || {};
+
+  // Build group/team Lookup für Flag + Name
+  const teamLookup = {};
+  for (const [gKey, gData] of Object.entries(groups)) {
+    for (const t of (gData.teams || [])) {
+      teamLookup[t.id] = { name: t.name || t.id, flag: t.flag || '🏳' };
+    }
+  }
+
+  for (const [pickKey, pickList] of Object.entries(picks)) {
+    if (!Array.isArray(pickList) || pickList.length === 0) continue;
+    // pickKey = "GRP-MD-HOME-AWAY"
+    const parts = pickKey.split('-');
+    if (parts.length < 4) continue;
+    const gKey = parts[0], md = parseInt(parts[1]), hId = parts[2], aId = parts[3];
+    const g = groups[gKey];
+    if (!g) continue;
+    const fx = (g.fixtures || []).find(f => f.home === hId && f.away === aId && f.matchday === md);
+    if (!fx || fx.date !== dateStr) continue;
+
+    const hInfo = teamLookup[hId] || { name: hId, flag: '🏳' };
+    const aInfo = teamLookup[aId] || { name: aId, flag: '🏳' };
+
+    for (const p of pickList) {
+      const edge = parseFloat(p.edgePP) || 0;
+      const verdict = p.verdict;
+
+      // Filter: BET-only + Edge-Schwelle (Lucas: "nur die besten Bets")
+      if (WM_POLY_BET_ONLY && verdict !== 'BET') continue;
+      if (edge < WM_POLY_MIN_EDGE_PP) continue;
+
+      // Nur Märkte die Polymarket auch listet (POLY_MARKETS Set)
+      // — generate_wm_picks.py schreibt deutsche Labels, müssen ggf. gemappt werden
+      const market = p.market;
+      const mappedMarket =
+        market === 'Über 2.5 Tore'      ? 'Over 2.5 Tore' :
+        market === 'Unter 2.5 Tore'     ? 'Under 2.5 Tore' :
+        market === 'Beide Teams treffen — Ja' ? 'Beide Teams treffen' :
+        market;
+      if (!POLY_MARKETS.has(mappedMarket)) continue;
+
+      // Confidence-Score (sc) — leihen wir aus edgePP für Sortierung
+      const sc = Math.min(99, 50 + Math.round(edge));
+
+      results.push({
+        id: `WM|${pickKey}|${market}`,
+        league: 'WM2026',
+        leagueFlag: '🌍',
+        leagueName: 'WM 2026',
+        home: hInfo.name,
+        away: aInfo.name,
+        homeFlag: hInfo.flag,    // for badge enhancement
+        awayFlag: aInfo.flag,
+        homeId: hId, awayId: aId,
+        market: mappedMarket,
+        conf: p.conf || 'medium',
+        sc: sc,
+        odds: p.odds,
+        modelOdds: p.modelOdds,
+        oddsIsEst: false,
+        date: fx.date,
+        edgePP: edge,
+        dataQuality: p.dataQuality || 'elo_only',
+        mods: [],
+        saferAlt: null,
+        boldAlt: null,
+        oddsOpen: null,
+        h2h: null,
+        // ── WM-spezifische Felder für Card-Rendering ──
+        isWm: true,
+        wmGroup: gKey,
+        wmMatchday: md,
+        wmInfo: p.info || '',
+        wmVenue: fx.venue || '',
+      });
+    }
+  }
   return results;
 }
 
@@ -3312,18 +3426,6 @@ function renderPolyStats() {
         </div>`).join('')}
     </div>
 
-    <!-- TRADING COCKPIT — wird async geladen via refreshCockpit() -->
-    <div id="tradingCockpit">
-      <div style="background:#161b22;border:1px solid #30363d;border-radius:14px;padding:30px;margin-bottom:16px;text-align:center;color:#8b949e;font-size:13px">
-        ⚙️ Cockpit lädt Live-Daten…
-      </div>
-    </div>
-    <!-- Auto-Trigger via SVG onload — feuert sobald HTML ins DOM gehängt wird -->
-    <svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" style="display:none" onload="if(window.refreshCockpit && !window._cockpitLoading){window._cockpitLoading=true;refreshCockpit().finally(()=>{window._cockpitLoading=false;});}"></svg>
-
-
-    ${renderAutoTraderConfig()}
-
     ${sessBets.length > 0 ? `
     <div style="background:#1a2340;border:1px solid #a78bfa44;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <span style="color:#a78bfa;font-weight:700">⚡ ${sessBets.length} Bet${sessBets.length!==1?'s':''} nur im Session-Memory (localStorage leer)</span>
@@ -3976,6 +4078,23 @@ function initPolymarket() {
   _polyState.picks    = getPolyPicks(dateStr);
   _polyState.prices   = {};
   _polyState.selected = new Set(_polyState.picks.map(p => p.id)); // start: all selected
+
+  // ── WM 2026 Picks async dazuladen ───────────────────────────────────────
+  // Falls window.WM2026_DATA noch nicht gesetzt (User hat WM-Tab noch nie geöffnet),
+  // fetchen wir wm2026-data.json einmalig in den Background-Cache. Sobald geladen
+  // re-rendert das Grid mit den WM-Picks zusätzlich zu den National-Picks.
+  if (!window.WM2026_DATA && !window._wmDataCache) {
+    _loadWmDataAsync().then(() => {
+      if (window._wmDataCache) {
+        _polyState.picks = getPolyPicks(_polyState.dateStr || dateStr);
+        _polyState.selected = new Set(_polyState.picks.map(p => p.id));
+        const grid = document.getElementById('polyPickGrid');
+        if (grid) grid.innerHTML = renderPolyPickCards();
+        const stats = document.getElementById('polyStatsSection');
+        if (stats) stats.innerHTML = renderPolyStats();
+      }
+    });
+  }
 
   // Sync placed bets from picks_history.json (repo-based, survives localStorage failures)
   _syncBetsFromHistory(true).then(n => {

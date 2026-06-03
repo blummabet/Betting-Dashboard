@@ -598,7 +598,24 @@ function renderPolyTrader(panel) {
     : '';
 
   // During WM season: show only WM table, skip club candidates
-  panel.innerHTML = wmTableHtml;
+  // ─────────────────────────────────────────────────────────────
+  // Trading-Cockpit + Auto-Trader-Config OBEN ANZEIGEN (kommt aus polymarket-tab.js
+  // — die Funktionen renderTradingCockpit/renderAutoTraderConfig sind global verfügbar
+  // weil polymarket-tab.js vor ui.js geladen wird). Cockpit lädt sich async via
+  // SVG-onload-Trigger sobald HTML im DOM ist.
+  const cockpitBlock = (typeof renderAutoTraderConfig === 'function')
+    ? `
+    <div id="tradingCockpit">
+      <div style="background:#161b22;border:1px solid #30363d;border-radius:14px;padding:30px;margin-bottom:16px;text-align:center;color:#8b949e;font-size:13px">
+        ⚙️ Cockpit lädt Live-Daten…
+      </div>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" style="display:none" onload="if(window.refreshCockpit && !window._cockpitLoading){window._cockpitLoading=true;refreshCockpit().finally(()=>{window._cockpitLoading=false;});}"></svg>
+    ${renderAutoTraderConfig()}
+    `
+    : '';
+
+  panel.innerHTML = cockpitBlock + wmTableHtml;
   return; // ← remove this line after WM season to restore club table
 
   panel.innerHTML = wmTableHtml + `
