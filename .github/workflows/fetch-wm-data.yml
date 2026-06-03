@@ -111,6 +111,26 @@ jobs:
         run: python generate_wm_picks.py
         continue-on-error: true
 
+      # ── Pick-Änderungen erkennen (Snapshot-Diff gegen letzten Run) ─────────
+      - name: 🔄 WM Pick-Änderungen erkennen
+        run: python detect_pick_changes.py
+        continue-on-error: true
+
+      # ── Pick-Changes Telegram-Digest (nur 1× täglich um 12:00 UTC = 14:00 Wien) ────
+      - name: 📨 Pick-Changes Telegram-Digest
+        if: github.event.schedule == '0 4,8,12,16,20 * * *'
+        run: |
+          HOUR=$(date -u +%H)
+          if [ "$HOUR" = "12" ]; then
+            python send_pick_changes_digest.py
+          else
+            echo "ℹ️  Nicht 12:00 UTC — Digest geskippt (läuft 1× täglich)"
+          fi
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:           ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID:  ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
       # ── Picks gegen Spielergebnisse auflösen (WIN/LOSS/VOID) ─────────
       - name: 📊 WM Picks resolven
         run: python resolve_wm_picks.py

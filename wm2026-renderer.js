@@ -44,12 +44,13 @@
       </div>`;
 
     try {
-      const [wmResp, polyResp, travelResp, confResp, ppResp] = await Promise.all([
+      const [wmResp, polyResp, travelResp, confResp, ppResp, chgResp] = await Promise.all([
         fetch('wm2026-data.json?t=' + Date.now()),
         fetch('wm_poly_prices.json?t=' + Date.now()).catch(() => null),
         fetch('wm_travel_burden.json?t=' + Date.now()).catch(() => null),
         fetch('pick_confidence_stats.json?t=' + Date.now()).catch(() => null),
         fetch('wm2026-player-picks.json?t=' + Date.now()).catch(() => null),
+        fetch('pick_changes_log.json?t=' + Date.now()).catch(() => null),
       ]);
       if (!wmResp.ok) throw new Error('HTTP ' + wmResp.status);
       _wmData = await wmResp.json();
@@ -72,6 +73,16 @@
 
       if (confResp && confResp.ok) {
         _confidenceStats = await confResp.json();
+      }
+
+      // Pick-Änderungen (Rolling-Log, max 200 Einträge / 7 Tage)
+      if (chgResp && chgResp.ok) {
+        try {
+          const chgRaw = await chgResp.json();
+          _wmData.pickChanges = chgRaw.changes || [];
+        } catch (e) { _wmData.pickChanges = []; }
+      } else {
+        _wmData.pickChanges = [];
       }
 
       // Spieler-Picks (separates File — kommt erst T-3 vor Anpfiff)
@@ -123,6 +134,22 @@
   window.wmSetSort = function (s) {
     _activeSort = s;
     _render();
+  };
+
+  // Banner: Toggle expand/collapse
+  let _bannerExpanded = false;
+  window.wmToggleChangesBanner = function () {
+    _bannerExpanded = !_bannerExpanded;
+    _render();
+  };
+
+  // Scroll zu einer Match-Card und kurz highlighten
+  window.wmJumpToCard = function (matchKey) {
+    const el = document.querySelector(`[data-match-key="${matchKey}"]`);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el.classList.add('cc-card-pulse');
+    setTimeout(() => el.classList.remove('cc-card-pulse'), 2500);
   };
 
   // ─────────────────────────────────────────────────────
@@ -192,6 +219,9 @@
         ${polyCount > 0 ? `<span style="font-size:10px;font-weight:700;color:#a78bfa;">${polyCount} Poly-Märkte</span>` : ''}
       </div>
     </div>`;
+
+    // ─── Pick-Changes Banner (last 24h, only relevant ones) ──
+    html += _buildChangesBanner();
 
     // ─── Group Filter ─────────────────────────────────
     html += `<div class="wm-group-filter">`;
@@ -322,7 +352,8 @@
     else                                       cardCls += ' cc-tier-watch';
     if (isToday) cardCls += ' cc-today';
 
-    let html = `<div class="${cardCls}">`;
+    const matchKey = `${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}`;
+    let html = `<div class="${cardCls}" data-match-key="${matchKey}">`;
 
     // ─── Hot Edge Badge (only when massive edge / steam) ──
     if (showHotBadge && polyFix.bestEdge != null) {
@@ -501,6 +532,105 @@
 
     html += `</div>`; // cc-card
     return html;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  CHANGES BANNER — Pick-Updates der letzten 24h
+  //  Nicht-blockierend: Banner verschwindet wenn keine Changes
+  // ─────────────────────────────────────────────────────
+  function _buildChangesBanner() {
+    const all = (_wmData && _wmData.pickChanges) || [];
+    if (!all.length) return '';
+
+    // Nur Changes der letzten 24h zeigen
+    const cutoffMs = Date.now() - 24 * 3600 * 1000;
+    const recent = all.filter(c => {
+      try { return new Date(c.ts).getTime() >= cutoffMs; }
+      catch (e) { return false; }
+    });
+    if (!recent.length) return '';
+
+    // Deduplizieren auf neueste Version pro (matchKey + market)
+    const byKey = {};
+    for (const c of recent) {
+      const k = `${c.matchKey}::${c.market}`;
+      if (!byKey[k] || c.ts > byKey[k].ts) byKey[k] = c;
+    }
+    const list = Object.values(byKey).sort((a, b) => (b.ts || '').localeCompare(a.ts || ''));
+    if (!list.length) return '';
+
+    // Counts nach Typ
+    const counts = { upgrade: 0, downgrade: 0, new_pick: 0, removed: 0, edge_up: 0, edge_down: 0 };
+    for (const c of list) counts[c.deltaKind] = (counts[c.deltaKind] || 0) + 1;
+    const totalLabel = `${list.length} Pick-Update${list.length === 1 ? '' : 's'} heute`;
+
+    const chips = [];
+    if (counts.upgrade)    chips.push(`<span class="pcb-chip pcb-up">▲ ${counts.upgrade} aufgewertet</span>`);
+    if (counts.new_pick)   chips.push(`<span class="pcb-chip pcb-new">🆕 ${counts.new_pick} neu</span>`);
+    if (counts.downgrade)  chips.push(`<span class="pcb-chip pcb-down">▼ ${counts.downgrade} zurückgestuft</span>`);
+    if (counts.removed)    chips.push(`<span class="pcb-chip pcb-rem">✕ ${counts.removed} entfernt</span>`);
+    if (counts.edge_up)    chips.push(`<span class="pcb-chip pcb-up">↑ ${counts.edge_up} Edge gestiegen</span>`);
+    if (counts.edge_down)  chips.push(`<span class="pcb-chip pcb-down">↓ ${counts.edge_down} Edge gefallen</span>`);
+
+    const head = `
+      <div class="pcb-head" onclick="wmToggleChangesBanner()">
+        <div class="pcb-head-left">
+          <span class="pcb-icon">🔄</span>
+          <span class="pcb-title">${totalLabel}</span>
+          <span class="pcb-chips">${chips.join(' ')}</span>
+        </div>
+        <div class="pcb-toggle">${_bannerExpanded ? '▲ Schließen' : '▼ Details'}</div>
+      </div>`;
+
+    if (!_bannerExpanded) {
+      return `<div class="pick-changes-banner">${head}</div>`;
+    }
+
+    const items = list.slice(0, 12).map(c => {
+      const kindCls = {
+        upgrade:   'pcb-row-up',
+        new_pick:  'pcb-row-new',
+        downgrade: 'pcb-row-down',
+        removed:   'pcb-row-rem',
+        edge_up:   'pcb-row-up',
+        edge_down: 'pcb-row-down',
+      }[c.deltaKind] || '';
+      const kindIcon = {
+        upgrade:   '▲',
+        new_pick:  '🆕',
+        downgrade: '▼',
+        removed:   '✕',
+        edge_up:   '↑',
+        edge_down: '↓',
+      }[c.deltaKind] || '·';
+      const timeAgo = _timeAgo(c.ts);
+      const safeKey = c.matchKey.replace(/['"\\]/g, '');
+      return `
+        <div class="pcb-row ${kindCls}" onclick="wmJumpToCard('${safeKey}')" title="Klick: springt zur Card">
+          <span class="pcb-row-icon">${kindIcon}</span>
+          <span class="pcb-row-fixture">${c.fixture || c.matchKey}</span>
+          <span class="pcb-row-market">${c.market}</span>
+          <span class="pcb-row-reason">${c.reason}</span>
+          <span class="pcb-row-time">${timeAgo}</span>
+        </div>`;
+    }).join('');
+
+    return `<div class="pick-changes-banner">
+      ${head}
+      <div class="pcb-list">${items}</div>
+    </div>`;
+  }
+
+  function _timeAgo(iso) {
+    if (!iso) return '';
+    try {
+      const diffMin = (Date.now() - new Date(iso).getTime()) / 60000;
+      if (diffMin < 1) return 'gerade';
+      if (diffMin < 60) return `vor ${Math.floor(diffMin)}m`;
+      const h = Math.floor(diffMin / 60);
+      if (h < 24) return `vor ${h}h`;
+      return `vor ${Math.floor(h / 24)}d`;
+    } catch (e) { return ''; }
   }
 
   // ─────────────────────────────────────────────────────

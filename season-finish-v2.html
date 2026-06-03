@@ -899,6 +899,43 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm-countdown{display:inline-block;background:rgba(0,212,161,.10);border:1px solid rgba(0,212,161,.25);border-radius:10px;padding:5px 12px;font-size:11px;font-weight:700;color:var(--accent);}
 .wm-countdown-live{background:rgba(248,81,73,.10);border-color:rgba(248,81,73,.30);color:var(--red);}
 
+/* ── Pick-Changes Banner ────────────────────────────────────────── */
+.pick-changes-banner{margin:8px 0 10px;background:linear-gradient(180deg,rgba(0,212,161,0.05),rgba(0,212,161,0.02));border:1px solid rgba(0,212,161,0.18);border-radius:10px;overflow:hidden;}
+.pcb-head{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;cursor:pointer;gap:10px;}
+.pcb-head:hover{background:rgba(0,212,161,0.04);}
+.pcb-head-left{display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap;}
+.pcb-icon{font-size:14px;}
+.pcb-title{font-size:12px;font-weight:800;color:var(--text);letter-spacing:-.2px;}
+.pcb-chips{display:flex;gap:5px;flex-wrap:wrap;}
+.pcb-chip{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;letter-spacing:.2px;}
+.pcb-chip.pcb-up{background:rgba(0,212,161,.10);color:#00d4a1;border:1px solid rgba(0,212,161,.25);}
+.pcb-chip.pcb-down{background:rgba(248,81,73,.10);color:#f85149;border:1px solid rgba(248,81,73,.25);}
+.pcb-chip.pcb-new{background:rgba(245,197,24,.10);color:#f5c518;border:1px solid rgba(245,197,24,.25);}
+.pcb-chip.pcb-rem{background:rgba(139,148,158,.10);color:#8b949e;border:1px solid rgba(139,148,158,.25);}
+.pcb-toggle{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;flex-shrink:0;}
+.pcb-list{border-top:1px solid rgba(255,255,255,.05);max-height:340px;overflow-y:auto;}
+.pcb-row{display:grid;grid-template-columns:22px 1.4fr 1fr 1.4fr 60px;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.03);cursor:pointer;font-size:11px;transition:background .12s;}
+.pcb-row:hover{background:rgba(0,212,161,0.06);}
+.pcb-row:last-child{border-bottom:none;}
+.pcb-row-icon{font-size:12px;font-weight:800;text-align:center;}
+.pcb-row.pcb-row-up .pcb-row-icon{color:#00d4a1;}
+.pcb-row.pcb-row-down .pcb-row-icon{color:#f85149;}
+.pcb-row.pcb-row-new .pcb-row-icon{color:#f5c518;}
+.pcb-row.pcb-row-rem .pcb-row-icon{color:#8b949e;}
+.pcb-row-fixture{color:var(--text);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pcb-row-market{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pcb-row-reason{color:rgba(255,255,255,.78);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10.5px;}
+.pcb-row-time{color:var(--muted);font-size:10px;text-align:right;font-family:'SF Mono',Menlo,monospace;}
+@media(max-width:768px){
+  .pcb-row{grid-template-columns:18px 1fr 50px;gap:6px;font-size:11px;}
+  .pcb-row-market,.pcb-row-reason{display:none;}
+  .pcb-chips{display:none;}
+}
+
+/* Highlight-Pulse wenn aus Banner zu einer Card gesprungen wird */
+@keyframes ccCardPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,212,161,0);}50%{box-shadow:0 0 0 4px rgba(0,212,161,0.45);}}
+.cc-card-pulse{animation:ccCardPulse 1.2s ease-out 2;}
+
 .wm-group-filter{display:flex;gap:6px;flex-wrap:wrap;padding:10px 0 12px;border-bottom:1px solid var(--border);margin-bottom:4px;}
 .wm-gf-btn{display:inline-flex;align-items:center;padding:5px 13px;border-radius:18px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .12s;}
 .wm-gf-btn:hover{color:var(--text);border-color:rgba(0,212,161,.4);}
