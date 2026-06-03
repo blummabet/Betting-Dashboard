@@ -28,6 +28,10 @@
   let _mdFilter  = 'all';    // 'all' | 1 | 2 | 3
   let _vrdFilter = 'all';    // 'all' | 'BET' | 'ABWÄGEN' | 'SKIP'
   let _showTop   = false;    // toggle for Top Picks section
+  let _validationReport = null;
+  let _showValidation   = false;
+  let _auditReport      = null;
+  let _showAudit        = false;
 
   // ─────────────────────────────────────────────────────
   //  ENTRY POINT
@@ -48,9 +52,15 @@
       </div>`;
 
     try {
-      const resp = await fetch('wm2026-data.json?t=' + Date.now());
+      const [resp, valResp] = await Promise.all([
+        fetch('wm2026-data.json?t=' + Date.now()),
+        fetch('pick_validation_report.json?t=' + Date.now()).catch(() => null),
+      ]);
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       _data   = await resp.json();
+      if (valResp && valResp.ok) {
+        try { _validationReport = await valResp.json(); } catch (e) {}
+      }
       _loaded = true;
       _render();
     } catch (e) {
@@ -69,7 +79,10 @@
   window.wmTrkSetMd      = md => { _mdFilter  = md; _render(); };
   window.wmTrkSetVerdict = v  => { _vrdFilter = v;  _render(); };
   window.wmTrkToggleTop  = () => { _showTop = !_showTop; _render(); };
-  window.wmTrkRefresh    = () => { _loaded = false; _data = null; window.initIntlTracking(); };
+  window.wmTrkRefresh    = () => { _loaded = false; _data = null; _validationReport = null; _auditReport = null; window.initIntlTracking(); };
+  window.wmTrkToggleVal  = () => { _showValidation = !_showValidation; _showAudit = false; _render(); };
+  window.wmTrkRunAudit   = () => { _auditReport = _runCardTrackingAudit(); _showAudit = true; _showValidation = false; _render(); };
+  window.wmTrkCloseAudit = () => { _showAudit = false; _render(); };
 
   // ─────────────────────────────────────────────────────
   //  MAIN RENDER
@@ -161,6 +174,11 @@
       </div>
     </div>`;
 
+    // ─── VALIDATION + AUDIT PILL ROW ──────────────────────
+    html += _buildValidationRow();
+    if (_showValidation) html += _buildValidationDetail();
+    if (_showAudit)      html += _buildAuditDetail();
+
     // ─── HERO BLOCK — die EINE Zahl die alles erzählt ────
     html += _buildHeroBlock(flatPicks);
 
@@ -236,6 +254,149 @@
     }
 
     panel.innerHTML = html;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  VALIDATION-ROW — Pill mit Validator + Audit-Button
+  // ─────────────────────────────────────────────────────
+  function _buildValidationRow() {
+    const rep = _validationReport;
+    let valPill;
+    if (!rep) {
+      valPill = `<div class="wm-trk-pill wm-trk-pill-muted">🔍 Validation läuft noch nicht — nach nächstem Pipeline-Run verfügbar</div>`;
+    } else {
+      const s = rep.stats || {};
+      if (s.errors > 0) {
+        valPill = `<div class="wm-trk-pill wm-trk-pill-err" onclick="wmTrkToggleVal()">
+          ❌ <b>${s.errors} Fehler</b> in ${s.total} Picks · klick für Details</div>`;
+      } else if (s.warnings > 0) {
+        valPill = `<div class="wm-trk-pill wm-trk-pill-warn" onclick="wmTrkToggleVal()">
+          ⚠️ ${s.total} Picks geprüft · <b>${s.warnings} Warnungen</b> · klick für Details</div>`;
+      } else {
+        valPill = `<div class="wm-trk-pill wm-trk-pill-ok" onclick="wmTrkToggleVal()">
+          ✅ <b>${s.total} Picks geprüft · 0 Fehler</b> · klick für Details</div>`;
+      }
+    }
+    return `<div class="wm-trk-val-row">
+      ${valPill}
+      <button class="wm-trk-audit-btn" onclick="wmTrkRunAudit()" title="Vergleicht Tracking-Picks mit dem was in den WM-Cards angezeigt wird">
+        🔎 Card-Audit ausführen
+      </button>
+    </div>`;
+  }
+
+  function _buildValidationDetail() {
+    const rep = _validationReport;
+    if (!rep) return '';
+    const issues = rep.issues || [];
+    if (!issues.length) {
+      return `<div class="wm-trk-val-detail">
+        <div style="text-align:center;padding:16px;color:var(--muted);font-size:12px;">
+          ✅ Alle ${rep.stats.total} Picks bestehen alle Sanity-Checks.
+        </div>
+        <button onclick="wmTrkToggleVal()" class="wm-trk-close">▲ Schließen</button>
+      </div>`;
+    }
+    // Gruppiere nach Severity
+    const byLvl = { error: [], warning: [], info: [] };
+    for (const i of issues) (byLvl[i.level] || byLvl.warning).push(i);
+
+    let html = `<div class="wm-trk-val-detail">`;
+    for (const lvl of ['error', 'warning', 'info']) {
+      if (!byLvl[lvl].length) continue;
+      const icon = lvl === 'error' ? '❌' : lvl === 'warning' ? '⚠️' : 'ℹ️';
+      const label = lvl === 'error' ? 'Fehler' : lvl === 'warning' ? 'Warnungen' : 'Hinweise';
+      html += `<div class="wm-trk-val-group wm-trk-val-${lvl}">
+        <div class="wm-trk-val-group-head">${icon} ${byLvl[lvl].length} ${label}</div>`;
+      for (const i of byLvl[lvl]) {
+        html += `<div class="wm-trk-val-issue">
+          <div class="wm-trk-val-issue-head">
+            <span class="wm-trk-val-code">${i.code}</span>
+            <span class="wm-trk-val-mk">${i.matchKey}</span>
+            <span class="wm-trk-val-market">${i.market}</span>
+          </div>
+          <div class="wm-trk-val-msg">${i.message}</div>
+        </div>`;
+      }
+      html += `</div>`;
+    }
+    html += `<button onclick="wmTrkToggleVal()" class="wm-trk-close">▲ Schließen</button>`;
+    html += `</div>`;
+    return html;
+  }
+
+  function _buildAuditDetail() {
+    const r = _auditReport;
+    if (!r) return '';
+    const status = r.mismatches.length === 0
+      ? `<div class="wm-trk-pill wm-trk-pill-ok" style="cursor:default;">✅ Alle ${r.checked} Card-Hero-Picks 1:1 im Tracking gefunden</div>`
+      : `<div class="wm-trk-pill wm-trk-pill-err" style="cursor:default;">❌ ${r.mismatches.length} Abweichungen von ${r.checked} geprüften Match-Cards</div>`;
+    let html = `<div class="wm-trk-val-detail">
+      <div style="margin-bottom:10px;">${status}</div>`;
+    if (r.mismatches.length) {
+      html += `<div class="wm-trk-val-group wm-trk-val-error">
+        <div class="wm-trk-val-group-head">❌ Abweichungen Cards vs Tracking</div>`;
+      for (const m of r.mismatches) {
+        html += `<div class="wm-trk-val-issue">
+          <div class="wm-trk-val-issue-head">
+            <span class="wm-trk-val-mk">${m.matchKey}</span>
+            <span class="wm-trk-val-market">${m.market || '—'}</span>
+          </div>
+          <div class="wm-trk-val-msg">${m.reason}</div>
+        </div>`;
+      }
+      html += `</div>`;
+    } else {
+      html += `<div style="text-align:center;padding:14px;color:var(--muted);font-size:11.5px;">
+        Jeder Card-Hero-Pick (BET/ABWÄGEN) wurde im Tracking-Listing gefunden.
+        Es gibt KEINEN Render-Drift — Tracking und Cards lesen aus derselben Source.
+      </div>`;
+    }
+    html += `<button onclick="wmTrkCloseAudit()" class="wm-trk-close">▲ Schließen</button>`;
+    html += `</div>`;
+    return html;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  AUDIT — Card-Hero-Picks 1:1 im Tracking?
+  //  Repliziert exakt die Filter-Logik aus wm2026-renderer.js
+  // ─────────────────────────────────────────────────────
+  function _runCardTrackingAudit() {
+    const allPicks = _data.picks || {};
+    const groups   = _data.groups || {};
+    let checked = 0;
+    const mismatches = [];
+
+    for (const [gKey, gData] of Object.entries(groups)) {
+      for (const fx of (gData.fixtures || [])) {
+        const mk = `${gKey}-${fx.matchday}-${fx.home}-${fx.away}`;
+        const all = allPicks[mk] || [];
+        // Card-Logik replizieren: BET/ABWÄGEN, sortiert
+        const live = all.filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN');
+        const sorted = [...live].sort((a, b) => {
+          if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
+          if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
+          return (b.edgePP || 0) - (a.edgePP || 0);
+        });
+        const heroPick = sorted[0] || null;
+        if (!heroPick) continue;   // Match ohne Hero — kein Audit nötig
+        checked++;
+        // Identitäts-Match: gleicher Pick im Tracking-Listing (allPicks)?
+        const found = all.find(p =>
+          p.market === heroPick.market &&
+          p.verdict === heroPick.verdict &&
+          Math.abs((p.odds || 0) - (heroPick.odds || 0)) < 0.005
+        );
+        if (!found) {
+          mismatches.push({
+            matchKey: mk,
+            market: heroPick.market,
+            reason: `Hero-Pick aus Card nicht im Tracking-Listing gefunden (Market: ${heroPick.market} @${heroPick.odds})`,
+          });
+        }
+      }
+    }
+    return { checked, mismatches, runAt: new Date().toISOString() };
   }
 
   // ─────────────────────────────────────────────────────

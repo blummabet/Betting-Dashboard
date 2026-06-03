@@ -111,6 +111,11 @@ jobs:
         run: python generate_wm_picks.py
         continue-on-error: true
 
+      # ── Pick-Validator (Sanity-Checks, schreibt pick_validation_report.json) ─────
+      - name: 🔍 WM Picks validieren
+        run: python validate_wm_picks.py
+        continue-on-error: true
+
       # ── Pick-Änderungen erkennen (Snapshot-Diff gegen letzten Run) ─────────
       - name: 🔄 WM Pick-Änderungen erkennen
         run: python detect_pick_changes.py
