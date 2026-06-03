@@ -269,22 +269,63 @@ function _todayStr() {
 
 // Returns all fixture dates that have at least one eligible Polymarket pick, sorted ascending
 function _getAvailableDates() {
-  if (typeof LEAGUES === 'undefined') return [];
   const dateSet = new Set();
-  const today = _todayStr();
+  const todayStr = _todayStr();
+  const [td, tm, ty] = todayStr.split('.');
+  const todayDate = new Date(`${ty}-${tm}-${td}`);
 
-  for (const [lk, lg] of Object.entries(LEAGUES)) {
-    if (!POLY_LEAGUES.has(lk)) continue;
-    for (const fx of (lg.fixtures || [])) {
-      if (!fx.date) continue;
-      // Only future / today dates
-      const [d, m, y] = fx.date.split('.');
-      if (new Date(`${y}-${m}-${d}`) < new Date(_todayStr().split('.').reverse().join('-'))) continue;
-      dateSet.add(fx.date);
+  // ── 1. Liga-Fixtures (DD.MM.YYYY-Format) ────────────────────────
+  if (typeof LEAGUES !== 'undefined') {
+    for (const [lk, lg] of Object.entries(LEAGUES)) {
+      if (!POLY_LEAGUES.has(lk)) continue;
+      for (const fx of (lg.fixtures || [])) {
+        if (!fx.date) continue;
+        const [d, m, y] = fx.date.split('.');
+        if (new Date(`${y}-${m}-${d}`) < todayDate) continue;
+        dateSet.add(fx.date);
+      }
     }
   }
 
-  // Sort DD.MM.YYYY chronologically
+  // ── 2. WM 2026 Fixtures (YYYY-MM-DD-Format → DD.MM.YYYY konvertieren) ──
+  // Wichtig: ohne diesen Block würde während Sommerpause das Datum-Dropdown verschwinden,
+  // weil LEAGUES leer ist. WM-Tage müssen mit rein.
+  const wmSrc = (typeof window !== 'undefined')
+    ? (window.WM2026_DATA || window._wmDataCache)
+    : null;
+  if (wmSrc && wmSrc.groups) {
+    for (const gdata of Object.values(wmSrc.groups)) {
+      for (const fx of (gdata.fixtures || [])) {
+        if (!fx.date) continue;   // ISO YYYY-MM-DD
+        const [y, m, d] = fx.date.split('-');
+        if (!d) continue;
+        const ddmm = `${d}.${m}.${y}`;
+        if (new Date(`${y}-${m}-${d}`) < todayDate) continue;
+        dateSet.add(ddmm);
+      }
+    }
+  }
+
+  // ── 3. Polymarket-Lookup (für Liga-Spiele die nicht in LEAGUES sind) ──
+  if (typeof _polyLookup === 'object' && _polyLookup) {
+    for (const fx of Object.values(_polyLookup)) {
+      const d = fx && fx.date;
+      if (!d) continue;
+      // Akzeptiere beide Formate
+      if (d.includes('-')) {
+        const [yy, mm, dd] = d.split('-');
+        if (!dd) continue;
+        if (new Date(`${yy}-${mm}-${dd}`) < todayDate) continue;
+        dateSet.add(`${dd}.${mm}.${yy}`);
+      } else if (d.includes('.')) {
+        const [dd, mm, yy] = d.split('.');
+        if (!yy) continue;
+        if (new Date(`${yy}-${mm}-${dd}`) < todayDate) continue;
+        dateSet.add(d);
+      }
+    }
+  }
+
   return [...dateSet].sort((a, b) => {
     const [ad, am, ay] = a.split('.');
     const [bd, bm, by] = b.split('.');
