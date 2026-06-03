@@ -57,7 +57,7 @@ jobs:
           git config user.email "actions@github.com"
           mkdir -p daily-tiktok
           git add daily-tiktok/ 2>/dev/null || true
-          git add tiktok_sent.json 2>/dev/null || true
+          git add tiktok_sent.json bizarre_quote_sent.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine neuen Files."
           else

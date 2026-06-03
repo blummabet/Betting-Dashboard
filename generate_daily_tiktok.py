@@ -29,8 +29,9 @@ import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from tiktok_card_templates import hook_card, info_card
+from tiktok_card_templates import hook_card, info_card, bizarre_info_card
 from tiktok_story_plan import get_story_for_date
+from bizarre_quote_picker import get_daily_bizarre_card
 
 BASE       = Path(__file__).parent
 WM_FILE    = BASE / "wm2026-data.json"
@@ -578,6 +579,31 @@ def main():
                     f"⚡ <b>Daily Killer-Stat · DETAIL</b>"
                 )
                 produced.append((f"fact_{kind}", png, caption))
+
+    # ── 3. Bizarre-Quote (3. tägliche Card — automatisch aus bizarre_quote_targets.json) ──
+    bizarre = get_daily_bizarre_card(today_iso)
+    if bizarre:
+        print(f"🤡 Bizarre Quote: {bizarre['target']['name']} ({bizarre['info']['quote_str']} = {bizarre['info']['chance_pct']})")
+        # Bizarre nutzt eigenes bizarre_info_card statt info_card
+        # Hook nutzt das gleiche hook_card-Template
+        b_hook_html = hook_card(series_tag="BIZARRE-QUOTE", **bizarre["hook"])
+        b_info_html = bizarre_info_card(series_tag="BIZARRE-QUOTE", **bizarre["info"])
+        b_hook_path = OUTPUT_DIR / f"{today_iso}_bizarre_hook.html"
+        b_info_path = OUTPUT_DIR / f"{today_iso}_bizarre_info.html"
+        b_hook_path.write_text(b_hook_html, encoding="utf-8")
+        b_info_path.write_text(b_info_html, encoding="utf-8")
+
+        for kind, path in (("hook", b_hook_path), ("info", b_info_path)):
+            png = render_to_png(path)
+            if png:
+                caption = (
+                    f"🤡 <b>Bizarre-Quote · {bizarre['target']['name']}</b> · {kind.upper()}"
+                    if kind == "hook" else
+                    f"🤡 <b>Bizarre-Quote · {bizarre['target']['name']}</b> · DETAIL"
+                )
+                produced.append((f"bizarre_{kind}", png, caption))
+    else:
+        print("🤡 Keine Bizarre-Card heute (Targets-File leer oder fehlt)")
 
     # 4. Telegram Header + alle PNGs senden
     sent_to_telegram = False
