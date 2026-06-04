@@ -45,6 +45,14 @@ MIN_VOL              = 10000  # Mindest-Volumen auf Polymarket (USDC)
 MIN_DAYS_UNTIL_GAME  = 1      # Nicht am Spieltag selbst — zu wenig Zeit für Human Review
 MIN_HOURS_BEFORE_MATCH = 4   # Kein Kauf wenn Anpfiff in weniger als N Stunden
 
+# ── Quote/Entry-Price Filter (eingebaut 03.06.2026) ───────────────────────────
+# Schützt gegen Extrem-Quoten wo Variance + Spread den theoretischen Edge auffressen:
+#   • Entry < 0.15 USD (Quote > 6.67): hohe Variance, 5+ Loser in Folge normal
+#   • Entry > 0.85 USD (Quote < 1.18): nur 17% max Upside, ein Loser frisst 5 Wins
+# Sweet Spot 0.15-0.85 = Quote 1.18-6.67 — Liquidität dicht, Spread klein.
+MIN_ENTRY_PRICE      = 0.15
+MAX_ENTRY_PRICE      = 0.85
+
 # Stake: flat €5 ≈ $5.50 USDC pro Pick (entspricht STAKE_USDC in polymarket_bet.py).
 # Memory-Eintrag project_poly_integration.md: "€5/Pick, flat" — keine Edge-basierte
 # Tier-Logik mehr. Bankroll-Schutz via DAILY_BET_CAP + DAILY_STAKE_CAP_USDC unten.
@@ -254,6 +262,18 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
 
             poly_price = fix.get(price_key)
             if not poly_price or poly_price <= 0:
+                continue
+
+            # ── Entry-Price-Filter ────────────────────────────────────────
+            # Schutz gegen Extrem-Quoten: < 0.15 = zu viel Variance,
+            # > 0.85 = zu wenig Upside, Spread frisst Edge.
+            if poly_price < MIN_ENTRY_PRICE:
+                print(f"  🚫 Entry-Price {poly_price:.3f} < {MIN_ENTRY_PRICE} (zu hohe Variance) "
+                      f"— {fix['home']} vs {fix['away']} {market_label}")
+                continue
+            if poly_price > MAX_ENTRY_PRICE:
+                print(f"  🚫 Entry-Price {poly_price:.3f} > {MAX_ENTRY_PRICE} (Upside zu klein) "
+                      f"— {fix['home']} vs {fix['away']} {market_label}")
                 continue
 
             key = bet_key(fix, market_label)

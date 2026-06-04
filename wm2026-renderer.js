@@ -420,10 +420,17 @@
 
     // Pick selection: pick BET/ABWÄGEN with highest edge as hero
     // WATCH-Picks (z.B. Corner-Picks ohne Markt-Quote) sind keine Hero-Kandidaten
+    // Smart-Substitution: saferAlt-Picks (Doppelte Chance / AH-Alternative für riskante Picks)
+    //   werden bei gleicher Verdict-Klasse bevorzugt — niedrigere Quote = höhere Hit-Rate
     const livePicks = fxPicks.filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN');
     const sortedPicks = [...livePicks].sort((a, b) => {
       if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
       if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
+      // SAFER-ALT-Picks (saferAltFor gesetzt) leicht bevorzugen
+      const aSafer = !!a.saferAltFor;
+      const bSafer = !!b.saferAltFor;
+      if (aSafer && !bSafer) return -1;
+      if (bSafer && !aSafer) return 1;
       return (b.edgePP || 0) - (a.edgePP || 0);
     });
     const heroPick   = sortedPicks[0] || null;

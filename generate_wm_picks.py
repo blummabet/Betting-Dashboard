@@ -54,6 +54,8 @@ HOME_BONUS_PP  = 0.03   # +3pp auf Heimsieg-Wahrscheinlichkeit
 EDGE_MIN_1X2   = 5    # Minimum pp für 1X2-Picks (erhöht von 4 → weniger Rauschen)
 EDGE_MIN_OU    = 4    # Minimum pp für Over/Under + BTTS
 EDGE_MIN_DNB   = 6    # Minimum pp für DNB
+EDGE_MIN_DC    = 4    # Minimum pp für Doppelte Chance (sicherer Markt → niedrigere Schwelle)
+EDGE_MIN_AH    = 4    # Minimum pp für Asian Handicap
 EDGE_BET_1X2   = 8    # ≥8pp → BET für 1X2 (ohne CLV-Bestätigung)
 EDGE_BET_OU    = 6    # ≥6pp → BET für O/U + BTTS
 EDGE_HIGH      = 10   # ≥10pp → high confidence
@@ -247,6 +249,24 @@ def derive_dnb(ph: float, pd: float, pa: float) -> tuple[float | None, float | N
     if denom <= 0:
         return None, None
     return prob_to_odds(ph / denom), prob_to_odds(pa / denom)
+
+
+def derive_dc(ph: float, pd: float, pa: float) -> tuple[float | None, float | None, float | None]:
+    """
+    Doppelte Chance (DC) Modell-Quoten aus devigged 1X2.
+    Liefert (dc1X, dc12, dcX2):
+      • 1X = Heim oder Remis     → P = ph + pd
+      • 12 = Heim oder Auswärts  → P = ph + pa
+      • X2 = Remis oder Auswärts → P = pd + pa
+    Margin-Abschlag 3% (typisch für Bookies bei DC-Märkten).
+    Sicheres Pick-Format: niedrigere Quoten = höhere Hit-Rate-Erwartung.
+    """
+    if not (ph and pd and pa):
+        return None, None, None
+    dc1x = (ph + pd) * 0.97   # 3% Margin-Discount
+    dc12 = (ph + pa) * 0.97
+    dcx2 = (pd + pa) * 0.97
+    return (prob_to_odds(dc1x), prob_to_odds(dc12), prob_to_odds(dcx2))
 
 def devig_1x2(hw: float, dr: float, aw: float) -> tuple[float, float, float]:
     """Devigged Wahrscheinlichkeiten aus Marktquoten."""
@@ -469,12 +489,26 @@ MARKET_CFG = [
     ("away",      "Auswärtssieg",               EDGE_MIN_1X2),
     ("dnbH",      "DNB: Heimteam",              EDGE_MIN_DNB),
     ("dnbA",      "DNB: Auswärtsteam",          EDGE_MIN_DNB),
+    # ── Doppelte Chance (sicherer Markt — höhere Hit-Rate-Erwartung) ──
+    ("dc1X",      "Doppelte Chance — 1X",       EDGE_MIN_DC),
+    ("dc12",      "Doppelte Chance — 12",       EDGE_MIN_DC),
+    ("dcX2",      "Doppelte Chance — X2",       EDGE_MIN_DC),
+    # ── Tor-Märkte ──
+    ("over15",    "Über 1.5 Tore",              EDGE_MIN_OU),
     ("over25",    "Über 2.5 Tore",              EDGE_MIN_OU),
+    ("over35",    "Über 3.5 Tore",              EDGE_MIN_OU),
+    ("under15",   "Unter 1.5 Tore",             EDGE_MIN_OU),
     ("under25",   "Unter 2.5 Tore",             EDGE_MIN_OU),
+    ("under35",   "Unter 3.5 Tore",             EDGE_MIN_OU),
     ("btts",      "Beide Teams treffen — Ja",   EDGE_MIN_OU),
-    # ── Corner-Picks (neu 03.06.2026) — gleicher Edge-Filter wie O/U ──
-    # Pinnacle listet Corner-Quoten typischerweise 1-3 Tage vor Anpfiff.
-    # Modell nutzt cornersForm (forAvg + againstAvg) — Poisson auf Total.
+    # ── Asian Handicap (sicherer Markt für Underdogs) ──
+    ("ahH_n050",  "AH Heim −0.5",               EDGE_MIN_AH),
+    ("ahA_p050",  "AH Auswärts +0.5",           EDGE_MIN_AH),
+    ("ahH_n075",  "AH Heim −0.75",              EDGE_MIN_AH),
+    ("ahA_p075",  "AH Auswärts +0.75",          EDGE_MIN_AH),
+    ("ahH_n100",  "AH Heim −1.0",               EDGE_MIN_AH),
+    ("ahA_p100",  "AH Auswärts +1.0",           EDGE_MIN_AH),
+    # ── Corner-Picks (Pinnacle listet 1-3 Tage vor Anpfiff) ──
     ("o_corners85",  "Über 8.5 Ecken",          EDGE_MIN_OU),
     ("o_corners95",  "Über 9.5 Ecken",          EDGE_MIN_OU),
     ("o_corners105", "Über 10.5 Ecken",         EDGE_MIN_OU),
@@ -651,14 +685,29 @@ def generate_picks_for_fixture(
         "btts":    odds_snap.get("bttsY"),
         "dnbH":    bk_dnb_h,
         "dnbA":    bk_dnb_a,
-        # Corner-Markets: Pinnacle liefert pro Match EINE Linie + Over-Quote.
-        # Wir mappen die gespeicherte Linie auf das passende Modell-Markt.
+        # Doppelte Chance (gespeichert in fetch_wm_odds.py)
+        "dc1X":    odds_snap.get("dc1X"),
+        "dc12":    odds_snap.get("dc12"),
+        "dcX2":    odds_snap.get("dcX2"),
+        # Über/Unter weitere Linien
+        "over15":  odds_snap.get("o15"),
+        "over35":  odds_snap.get("o35"),
+        "under15": odds_snap.get("u15"),
+        "under35": odds_snap.get("u35"),
+        # Asian Handicap (Heim = negative Linie für Favorit, Auswärts = positive für Underdog)
+        "ahH_n050": odds_snap.get("ahH_n050"),
+        "ahA_p050": odds_snap.get("ahA_p050"),
+        "ahH_n075": odds_snap.get("ahH_n075"),
+        "ahA_p075": odds_snap.get("ahA_p075"),
+        "ahH_n100": odds_snap.get("ahH_n100"),
+        "ahA_p100": odds_snap.get("ahA_p100"),
+        # Corner-Markets
         "o_corners85":  odds_snap.get("cOver") if odds_snap.get("cornerLine") == 8.5  else None,
         "o_corners95":  odds_snap.get("cOver") if odds_snap.get("cornerLine") == 9.5  else None,
         "o_corners105": odds_snap.get("cOver") if odds_snap.get("cornerLine") == 10.5 else None,
     }
 
-    # Eröffnungsquoten
+    # Eröffnungsquoten (für CLV/Drift-Tracking)
     open_odds: dict[str, float | None] = {
         "home":    open_snap.get("hw"),
         "draw":    open_snap.get("dr"),
@@ -668,6 +717,19 @@ def generate_picks_for_fixture(
         "btts":    open_snap.get("bttsY"),
         "dnbH":    open_snap.get("dnbH"),
         "dnbA":    open_snap.get("dnbA"),
+        "dc1X":    open_snap.get("dc1X"),
+        "dc12":    open_snap.get("dc12"),
+        "dcX2":    open_snap.get("dcX2"),
+        "over15":  open_snap.get("o15"),
+        "over35":  open_snap.get("o35"),
+        "under15": open_snap.get("u15"),
+        "under35": open_snap.get("u35"),
+        "ahH_n050": open_snap.get("ahH_n050"),
+        "ahA_p050": open_snap.get("ahA_p050"),
+        "ahH_n075": open_snap.get("ahH_n075"),
+        "ahA_p075": open_snap.get("ahA_p075"),
+        "ahH_n100": open_snap.get("ahH_n100"),
+        "ahA_p100": open_snap.get("ahA_p100"),
         "o_corners85":  open_snap.get("cOver") if open_snap.get("cornerLine") == 8.5  else None,
         "o_corners95":  open_snap.get("cOver") if open_snap.get("cornerLine") == 9.5  else None,
         "o_corners105": open_snap.get("cOver") if open_snap.get("cornerLine") == 10.5 else None,
@@ -675,20 +737,57 @@ def generate_picks_for_fixture(
 
     # Modell-Quoten (Elo + Poisson)
     lam_total = lam_h + lam_a
-    p_over    = poisson_over(lam_total, 2.5)
-    p_under   = 1.0 - p_over
-    p_b       = p_btts(lam_h, lam_a)
+    p_o15 = poisson_over(lam_total, 1.5)
+    p_o25 = poisson_over(lam_total, 2.5)
+    p_o35 = poisson_over(lam_total, 3.5)
+    p_b   = p_btts(lam_h, lam_a)
     dnb_h_mod, dnb_a_mod = derive_dnb(probs["pH"], probs["pD"], probs["pA"])
+
+    # Doppelte Chance Modell-Quoten
+    dc1x_mod, dc12_mod, dcx2_mod = derive_dc(probs["pH"], probs["pD"], probs["pA"])
+
+    # Asian Handicap Modell-Quoten — basieren auf Skellam-Verteilung (Goal Difference)
+    # Vereinfacht: P(home_goals - away_goals > line) für Heim-AH
+    def _p_ah_home(line: float) -> float:
+        """P(Heim deckt AH-Linie). line=-0.5 → P(home wins by ≥1)."""
+        # Approximation via Poisson-Differenz mit lam_h vs lam_a
+        # P(home_g - away_g >= ceil(-line)) für line < 0
+        import math
+        p = 0.0
+        max_g = max(8, int(lam_total) + 5)
+        for h_g in range(max_g):
+            ph = math.exp(-lam_h) * (lam_h ** h_g) / math.factorial(h_g)
+            for a_g in range(max_g):
+                pa = math.exp(-lam_a) * (lam_a ** a_g) / math.factorial(a_g)
+                diff = h_g - a_g
+                # Quarter-Lines: 0.25-Schritte ergeben Halb-Stake-Push
+                if line == -0.5 and diff >= 1: p += ph * pa
+                elif line == -0.75 and diff >= 1: p += ph * pa * (1.0 if diff >= 2 else 0.5)
+                elif line == -1.0 and diff >= 2: p += ph * pa
+                elif line == -1.0 and diff == 1: p += ph * pa * 0.5  # Push-Anteil
+                elif line == 0.5 and diff >= 0: p += ph * pa
+                elif line == 0.75 and diff >= 0: p += ph * pa * (1.0 if diff >= 1 else 0.5)
+                elif line == 1.0 and diff >= -1 and diff != 0: p += ph * pa
+                elif line == 1.0 and diff == 0: p += ph * pa * 0.5
+        return min(1.0, max(0.0, p))
+
+    p_ah_h_n050 = _p_ah_home(-0.5)
+    p_ah_a_p050 = 1.0 - _p_ah_home(-0.5)   # AH +0.5 Away ist Komplement von -0.5 Heim
+    p_ah_h_n075 = _p_ah_home(-0.75)
+    p_ah_a_p075 = 1.0 - p_ah_h_n075
+    p_ah_h_n100 = _p_ah_home(-1.0)
+    p_ah_a_p100 = 1.0 - p_ah_h_n100
+
+    # Margin-Discount 3% (typisch für AH-Märkte)
+    def _ah_odds(p: float) -> float | None:
+        return prob_to_odds(p * 0.97) if p > 0.05 else None
 
     # Modell-Quoten für Corner-Märkte
     if corners_exp:
         total_c = corners_exp[2]
-        p_c_85  = poisson_over_int(total_c, 8.5)
-        p_c_95  = poisson_over_int(total_c, 9.5)
-        p_c_105 = poisson_over_int(total_c, 10.5)
-        m_c_85  = prob_to_odds(p_c_85)
-        m_c_95  = prob_to_odds(p_c_95)
-        m_c_105 = prob_to_odds(p_c_105)
+        m_c_85  = prob_to_odds(poisson_over_int(total_c, 8.5))
+        m_c_95  = prob_to_odds(poisson_over_int(total_c, 9.5))
+        m_c_105 = prob_to_odds(poisson_over_int(total_c, 10.5))
     else:
         m_c_85 = m_c_95 = m_c_105 = None
 
@@ -696,11 +795,24 @@ def generate_picks_for_fixture(
         "home":    prob_to_odds(probs["pH"]),
         "draw":    prob_to_odds(probs["pD"]),
         "away":    prob_to_odds(probs["pA"]),
-        "over25":  prob_to_odds(p_over),
-        "under25": prob_to_odds(p_under),
+        "over15":  prob_to_odds(p_o15),
+        "over25":  prob_to_odds(p_o25),
+        "over35":  prob_to_odds(p_o35),
+        "under15": prob_to_odds(1.0 - p_o15),
+        "under25": prob_to_odds(1.0 - p_o25),
+        "under35": prob_to_odds(1.0 - p_o35),
         "btts":    prob_to_odds(p_b),
         "dnbH":    dnb_h_mod,
         "dnbA":    dnb_a_mod,
+        "dc1X":    dc1x_mod,
+        "dc12":    dc12_mod,
+        "dcX2":    dcx2_mod,
+        "ahH_n050": _ah_odds(p_ah_h_n050),
+        "ahA_p050": _ah_odds(p_ah_a_p050),
+        "ahH_n075": _ah_odds(p_ah_h_n075),
+        "ahA_p075": _ah_odds(p_ah_a_p075),
+        "ahH_n100": _ah_odds(p_ah_h_n100),
+        "ahA_p100": _ah_odds(p_ah_a_p100),
         "o_corners85":  m_c_85,
         "o_corners95":  m_c_95,
         "o_corners105": m_c_105,
@@ -845,6 +957,71 @@ def generate_picks_for_fixture(
             pick_dict["icon"] = "🚩"
 
         picks.append(pick_dict)
+
+    # ═══════════════════════════════════════════════════════════════════════
+    #  SMART-SUBSTITUTION — sicherere Variante bevorzugen
+    # ═══════════════════════════════════════════════════════════════════════
+    # Profi-Logik: bei BET-Picks mit hoher Quote (>2.50) prüfen ob es eine
+    # niedrigere Variante mit gleichem Outcome-Sentiment gibt UND positiv Edge.
+    # → Niedrigere Quote = höhere Hit-Rate-Erwartung = besser für Community-Cards.
+    #
+    # Substitutions-Regeln (von risky → sicher):
+    #   DNB Heim       → Doppelte Chance 1X (Heim oder Remis)
+    #   DNB Auswärts   → Doppelte Chance X2 (Remis oder Auswärts)
+    #   Heimsieg       → Doppelte Chance 1X    (wenn dort Edge da)
+    #   Auswärtssieg   → Doppelte Chance X2    (wenn dort Edge da)
+    #   Heimsieg       → AH Heim −0.5/−0.75    (wenn Edge da, niedrigere Quote)
+    #   Auswärtssieg   → AH Auswärts +0.5/+0.75
+    #   Über 2.5       → Über 1.5              (sicherer wenn beide Edge haben)
+    #   Unter 2.5      → Unter 3.5             (sicherer)
+    #
+    # Substitution erfolgt NUR wenn:
+    #   • Original-Pick verdict ∈ {BET, ABWÄGEN}
+    #   • Original-Quote > 2.30 (sonst nicht "risky")
+    #   • Safer-Pick existiert und hat verdict ∈ {BET, ABWÄGEN}
+    #   • Safer-Quote < Original-Quote × 0.80 (mind. 20% niedriger)
+    SUBSTITUTION_MAP = {
+        "DNB: Heimteam":      ["Doppelte Chance — 1X", "AH Heim −0.5", "AH Heim −0.75"],
+        "DNB: Auswärtsteam":  ["Doppelte Chance — X2", "AH Auswärts +0.5", "AH Auswärts +0.75"],
+        "Heimsieg":           ["Doppelte Chance — 1X", "AH Heim −0.5"],
+        "Auswärtssieg":       ["Doppelte Chance — X2", "AH Auswärts +0.5"],
+        "Über 2.5 Tore":      ["Über 1.5 Tore"],
+        "Unter 2.5 Tore":     ["Unter 3.5 Tore"],
+    }
+
+    market_to_pick = {p["market"]: p for p in picks}
+    safer_picks_to_add = []
+    for p in picks:
+        if p["verdict"] not in ("BET", "ABWÄGEN"):
+            continue
+        if (p.get("odds") or 0) <= 2.30:
+            continue
+        alternatives = SUBSTITUTION_MAP.get(p["market"], [])
+        for alt_market in alternatives:
+            alt_pick = market_to_pick.get(alt_market)
+            if not alt_pick:
+                continue
+            if alt_pick["verdict"] not in ("BET", "ABWÄGEN"):
+                continue
+            if (alt_pick.get("odds") or 0) >= (p["odds"] * 0.80):
+                continue   # nicht signifikant niedriger
+            # Substitution: markiere Original als "boldAlt" der safer Variante
+            alt_pick["saferAltFor"] = p["market"]
+            alt_pick["icon"] = "🛡️"
+            # Falls nicht bereits drin: zur safer-Liste hinzufügen
+            # (alt_pick ist ja schon in picks, wir markieren nur)
+            p["boldAlt"] = {
+                "market": alt_pick["market"],
+                "odds":   alt_pick["odds"],
+                "edgePP": alt_pick["edgePP"],
+            }
+            # Auch im saferAlt-Feld speichern (bidirektional)
+            alt_pick["riskierAlt"] = {
+                "market": p["market"],
+                "odds":   p["odds"],
+                "edgePP": p["edgePP"],
+            }
+            break   # erstbeste safer Variante reicht
 
     # ── Corner-Beobachtungs-Marker: Falls Modell eine starke Erwartung hat
     # aber noch KEINE Markt-Quoten verfügbar sind, schreibe einen Info-Eintrag

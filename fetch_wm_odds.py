@@ -305,43 +305,50 @@ def _save_history(history: dict) -> None:
         json.dump(history, f, ensure_ascii=False, indent=2)
 
 
-def _extract_totals_btts(bookmakers: list, our_book_prio: list) -> dict:
+def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_name: str = "", away_name: str = "") -> dict:
     """
-    Extract Over/Under 2.5, BTTS and Corner totals from event bookmakers.
+    Extract Over/Under (1.5/2.5/3.5), BTTS, Corner totals, Asian Handicap und Double Chance.
     Prefers same bookmaker priority as h2h.
-    Returns {o25, u25, bttsY, bttsN, cornerLine, cOver, cUnder}
+    Returns {o15, o25, o35, u15, u25, u35, bttsY, bttsN, cornerLine, cOver, cUnder,
+             dc1X, dc12, dcX2, ahH_n050, ahA_p050, ahH_n075, ahA_p075, ahH_n100, ahA_p100}
     """
-    totals_cands: dict[str, tuple] = {}   # bk_key → (over_price, under_price)
-    btts_cands:   dict[str, tuple] = {}   # bk_key → (yes_price, no_price)
-    # Corner totals: bk_key → (line, over_price, under_price)
+    # totals lines: bk_key → {line: (over, under)}
+    totals_lines_by_bk: dict[str, dict] = {}
+    btts_cands:   dict[str, tuple] = {}
     corner_cands: dict[str, tuple] = {}
+    dc_cands:     dict[str, tuple] = {}    # bk_key → (1X, 12, X2)
+    ah_lines_by_bk: dict[str, dict] = {}   # bk_key → {line: (home_price, away_price)}
 
-    # Bevorzugte Corner-Linien (Pinnacle hat meist 9.5 oder 10.5)
     CORNER_PREFERRED_LINES = [9.5, 10.5, 9.0, 10.0, 8.5, 11.5]
+    home_l = (home_name or "").lower()
+    away_l = (away_name or "").lower()
 
     for bk in bookmakers:
         bk_key = bk.get("key", "")
         for market in bk.get("markets", []):
             mkey = market.get("key", "")
 
-            if mkey == "totals":
-                over = under = None
+            if mkey in ("totals", "alternate_totals"):
+                # Sammle alle Linien
+                if bk_key not in totals_lines_by_bk:
+                    totals_lines_by_bk[bk_key] = {}
                 for o in market.get("outcomes", []):
-                    point = o.get("point", 0)
-                    name  = o.get("name", "").lower()
+                    point = o.get("point")
+                    name  = (o.get("name", "") or "").lower()
                     price = o.get("price")
-                    if price and abs(point - 2.5) < 0.01:
-                        if name == "over":
-                            over = price
-                        elif name == "under":
-                            under = price
-                if over and under:
-                    totals_cands[bk_key] = (over, under)
+                    if point is None or not price:
+                        continue
+                    if point not in totals_lines_by_bk[bk_key]:
+                        totals_lines_by_bk[bk_key][point] = [None, None]
+                    if name == "over":
+                        totals_lines_by_bk[bk_key][point][0] = price
+                    elif name == "under":
+                        totals_lines_by_bk[bk_key][point][1] = price
 
             elif mkey in ("btts", "both_teams_to_score"):
                 yes = no = None
                 for o in market.get("outcomes", []):
-                    name  = o.get("name", "").lower()
+                    name  = (o.get("name", "") or "").lower()
                     price = o.get("price")
                     if price and name in ("yes", "ja"):
                         yes = price
@@ -350,12 +357,11 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list) -> dict:
                 if yes:
                     btts_cands[bk_key] = (yes, no)
 
-            elif mkey in ("corners", "alternate_totals"):
-                # Sammle alle verfügbaren Linien, wähle bevorzugte
-                lines: dict[float, tuple] = {}  # line → (over, under)
+            elif mkey == "corners":
+                lines: dict[float, list] = {}
                 for o in market.get("outcomes", []):
                     point = o.get("point")
-                    name  = o.get("name", "").lower()
+                    name  = (o.get("name", "") or "").lower()
                     price = o.get("price")
                     if point is None or not price:
                         continue
@@ -365,15 +371,11 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list) -> dict:
                         lines[point][0] = price
                     elif name == "under":
                         lines[point][1] = price
-                # Wähle bevorzugte Linie
                 best_line = best_over = best_under = None
                 for preferred in CORNER_PREFERRED_LINES:
                     if preferred in lines and lines[preferred][0] and lines[preferred][1]:
-                        best_line  = preferred
-                        best_over  = lines[preferred][0]
-                        best_under = lines[preferred][1]
+                        best_line, best_over, best_under = preferred, lines[preferred][0], lines[preferred][1]
                         break
-                # Fallback: erste vollständige Linie
                 if not best_line:
                     for line, (ov, un) in sorted(lines.items()):
                         if ov and un:
@@ -382,7 +384,51 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list) -> dict:
                 if best_line and best_over:
                     corner_cands[bk_key] = (best_line, best_over, best_under)
 
-    def _pick(cands: dict) -> tuple | None:
+            elif mkey == "double_chance":
+                # Outcomes: "Home or Draw" (1X), "Away or Draw" (X2), "Home or Away" (12)
+                dc_1x = dc_x2 = dc_12 = None
+                for o in market.get("outcomes", []):
+                    name  = (o.get("name", "") or "").lower()
+                    price = o.get("price")
+                    if not price:
+                        continue
+                    has_home = home_l and home_l in name
+                    has_away = away_l and away_l in name
+                    has_draw = "draw" in name or "remis" in name or "unentsch" in name
+                    if has_home and has_draw:
+                        dc_1x = price
+                    elif has_away and has_draw:
+                        dc_x2 = price
+                    elif has_home and has_away:
+                        dc_12 = price
+                if dc_1x or dc_x2 or dc_12:
+                    dc_cands[bk_key] = (dc_1x, dc_12, dc_x2)
+
+            elif mkey == "spreads":
+                # Asian Handicap: jedes Outcome hat name=Team + point=Line
+                if bk_key not in ah_lines_by_bk:
+                    ah_lines_by_bk[bk_key] = {}
+                for o in market.get("outcomes", []):
+                    name  = (o.get("name", "") or "").lower()
+                    point = o.get("point")
+                    price = o.get("price")
+                    if point is None or not price:
+                        continue
+                    is_home = home_l and home_l in name
+                    is_away = away_l and away_l in name
+                    if not is_home and not is_away:
+                        continue
+                    # Speichere Heim-Linie (negativ = Heim-Favorit)
+                    # AH-Heim -0.5 ↔ AH-Auswärts +0.5 ist dieselbe Linie, andere Seite
+                    line_key = round(point, 2) if is_home else round(-point, 2)
+                    if line_key not in ah_lines_by_bk[bk_key]:
+                        ah_lines_by_bk[bk_key][line_key] = [None, None]
+                    if is_home:
+                        ah_lines_by_bk[bk_key][line_key][0] = price
+                    elif is_away:
+                        ah_lines_by_bk[bk_key][line_key][1] = price
+
+    def _pick_bk(cands: dict):
         for prio in our_book_prio:
             if prio in cands:
                 return cands[prio]
@@ -390,18 +436,63 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list) -> dict:
             return v
         return None
 
-    t = _pick(totals_cands)
-    b = _pick(btts_cands)
-    c = _pick(corner_cands)
+    # Total-Linien aus bevorzugtem Bookie
+    def _pick_total_line(line: float) -> tuple | None:
+        for prio in our_book_prio:
+            if prio in totals_lines_by_bk and line in totals_lines_by_bk[prio]:
+                ov, un = totals_lines_by_bk[prio][line]
+                if ov and un:
+                    return (ov, un)
+        for bk_data in totals_lines_by_bk.values():
+            if line in bk_data and bk_data[line][0] and bk_data[line][1]:
+                return tuple(bk_data[line])
+        return None
 
-    result = {
-        "o25":   round(t[0], 3) if t else None,
-        "u25":   round(t[1], 3) if t else None,
-        "bttsY": round(b[0], 3) if b else None,
-        "bttsN":      round(b[1], 3) if b and b[1] else None,
+    t15 = _pick_total_line(1.5)
+    t25 = _pick_total_line(2.5)
+    t35 = _pick_total_line(3.5)
+
+    # AH-Linien aus bevorzugtem Bookie
+    def _pick_ah(line: float) -> tuple | None:
+        for prio in our_book_prio:
+            if prio in ah_lines_by_bk and line in ah_lines_by_bk[prio]:
+                hm, aw = ah_lines_by_bk[prio][line]
+                if hm and aw:
+                    return (hm, aw)
+        for bk_data in ah_lines_by_bk.values():
+            if line in bk_data and bk_data[line][0] and bk_data[line][1]:
+                return tuple(bk_data[line])
+        return None
+
+    ah_05 = _pick_ah(-0.5)
+    ah_075 = _pick_ah(-0.75)
+    ah_10 = _pick_ah(-1.0)
+
+    b = _pick_bk(btts_cands)
+    c = _pick_bk(corner_cands)
+    dc = _pick_bk(dc_cands)
+
+    return {
+        "o15":     round(t15[0], 3) if t15 else None,
+        "u15":     round(t15[1], 3) if t15 else None,
+        "o25":     round(t25[0], 3) if t25 else None,
+        "u25":     round(t25[1], 3) if t25 else None,
+        "o35":     round(t35[0], 3) if t35 else None,
+        "u35":     round(t35[1], 3) if t35 else None,
+        "bttsY":   round(b[0], 3) if b else None,
+        "bttsN":   round(b[1], 3) if b and b[1] else None,
         "cornerLine": c[0] if c else None,
-        "cOver":      round(c[1], 3) if c and c[1] else None,
-        "cUnder":     round(c[2], 3) if c and c[2] else None,
+        "cOver":   round(c[1], 3) if c and c[1] else None,
+        "cUnder":  round(c[2], 3) if c and c[2] else None,
+        "dc1X":    round(dc[0], 3) if dc and dc[0] else None,
+        "dc12":    round(dc[1], 3) if dc and dc[1] else None,
+        "dcX2":    round(dc[2], 3) if dc and dc[2] else None,
+        "ahH_n050": round(ah_05[0], 3)  if ah_05  else None,
+        "ahA_p050": round(ah_05[1], 3)  if ah_05  else None,
+        "ahH_n075": round(ah_075[0], 3) if ah_075 else None,
+        "ahA_p075": round(ah_075[1], 3) if ah_075 else None,
+        "ahH_n100": round(ah_10[0], 3)  if ah_10  else None,
+        "ahA_p100": round(ah_10[1], 3)  if ah_10  else None,
     }
 
 
@@ -437,12 +528,15 @@ def main():
     odds_out: dict[str, dict] = wm.get("odds") or {}
     groups = wm.get("groups", {})
 
-    # Build teams Elo map for sanity checks
-    teams_elo: dict[str, float] = {}
+    # Build teams Elo map for sanity checks + Team-Name-Map für DC/AH-Parsing
+    teams_elo:   dict[str, float] = {}
+    team_names:  dict[str, str]   = {}
     for gdata in groups.values():
         for t in gdata.get("teams", []):
             if t.get("elo"):
                 teams_elo[t["id"]] = t["elo"]
+            if t.get("name"):
+                team_names[t["id"]] = t["name"]
 
     # Collect all fixtures
     all_fixtures: list[dict] = []
@@ -487,7 +581,7 @@ def main():
     # weil TheOddsAPI den WM-Totals-Batch nicht befüllt (Coverage-Lücke).
     # Lösung: per-Event-Endpoint /events/{id}/odds — gleicher Ansatz wie
     # test-cards-api.js für Cards/Corners. Pinnacle O/U ist dort verfügbar.
-    print(f"\n  📥  Fetching totals+btts+corners per event (per-event endpoint)…")
+    print(f"\n  📥  Fetching totals+btts+corners+DC+spreads per event…")
     event_ids = [ev["id"] for ev in events if ev.get("id")]
     totals_by_id: dict[str, dict] = {}
 
@@ -495,7 +589,7 @@ def main():
         path_ev = (f"/v4/sports/{sport_key}/events/{eid}/odds"
                    f"?apiKey={ODDS_KEY}"
                    f"&regions=eu,uk,us"
-                   f"&markets=totals,btts,corners,alternate_totals"
+                   f"&markets=totals,btts,corners,alternate_totals,double_chance,spreads"
                    f"&oddsFormat=decimal")
         ev_data = odds_get(path_ev)
         if isinstance(ev_data, dict) and ev_data.get("bookmakers"):
@@ -553,7 +647,11 @@ def main():
                         if not any(b.get("key") == bk.get("key") for b in merged_bks):
                             merged_bks.append(bk)
                     break
-        tb = _extract_totals_btts(merged_bks, BOOKMAKERS)
+        # Team-Namen mitgeben für DC/AH-Outcome-Parsing
+        # TheOddsAPI verwendet Klar-Namen (z.B. "Mexico", "South Africa")
+        tb = _extract_totals_btts(merged_bks, BOOKMAKERS,
+                                   home_name=team_names.get(home_id, ""),
+                                   away_name=team_names.get(away_id, ""))
 
         # ── Elo sanity check: detect reversed hw/aw ──────────────────────
         # If Elo strongly favors the home team (diff > 200 pts) but market
@@ -603,19 +701,27 @@ def main():
             "updatedAt":  now_iso,
         }
         # Add totals/btts if available
-        if tb["o25"]:
-            new_entry["o25"]   = tb["o25"]
-            new_entry["u25"]   = tb["u25"]
-        if tb["bttsY"]:
+        for k in ("o15", "u15", "o25", "u25", "o35", "u35"):
+            if tb.get(k):
+                new_entry[k] = tb[k]
+        if tb.get("bttsY"):
             new_entry["bttsY"] = tb["bttsY"]
-            if tb["bttsN"]:
+            if tb.get("bttsN"):
                 new_entry["bttsN"] = tb["bttsN"]
-        if tb["cOver"]:
+        if tb.get("cOver"):
             new_entry["cornerLine"] = tb["cornerLine"]
             new_entry["cOver"]      = tb["cOver"]
             new_entry["cUnder"]     = tb["cUnder"]
             print(f"    🟦 Corners {home_id}-{away_id}: "
                   f"O{tb['cornerLine']} {tb['cOver']} / U{tb['cornerLine']} {tb['cUnder']}")
+        # Doppelte Chance
+        for k in ("dc1X", "dc12", "dcX2"):
+            if tb.get(k):
+                new_entry[k] = tb[k]
+        # Asian Handicap (alle 3 Linien wenn verfügbar)
+        for k in ("ahH_n050", "ahA_p050", "ahH_n075", "ahA_p075", "ahH_n100", "ahA_p100"):
+            if tb.get(k):
+                new_entry[k] = tb[k]
 
         # ── Closing Odds einfrieren wenn Anpfiff vorbei ──────────────────────
         # CLV-Basis: die letzten Pinnacle-Odds VOR dem Anpfiff.
