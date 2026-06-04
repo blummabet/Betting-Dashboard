@@ -47,7 +47,9 @@ DEDUP_WINDOW_DAYS = 7
 # Hand-Override: Teams die du manuell auf TikTok schon abgehandelt hast
 # und die NIE als Daily-Killer-Stat triggern sollen.
 # Wird beim Setup einmal befüllt, dann automatisch via DEDUP_FILE.
-MANUAL_POSTED_TEAMS = {"MAR", "ESP", "CRO"}   # Marokko, Spanien (Yamal), Kroatien (Modric)
+MANUAL_POSTED_TEAMS = {"MAR", "ESP", "CRO", "BEL", "BRA", "ARG", "POR"}
+# Marokko, Spanien (Yamal), Kroatien (Modric), Belgien (manuell 03.06.),
+# Brasilien (Endrick 03.06.), Argentinien (manuell 04.06.), Portugal (Ronaldo)
 
 
 def load_dedup() -> dict:
