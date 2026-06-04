@@ -69,28 +69,35 @@ STORY_PLAN = {
         },
     },
 
-    # ─────────────── Do 2026-06-04 — Lewandowski letzte WM ──────────────
+    # ─────────────── Do 2026-06-04 — Argentinien Titel-Verteidigung ──────────────
+    # KORRIGIERT 04.06.2026 (3x):
+    #   1. Lewandowski/Polen war ursprünglich geplant — Polen NICHT qualifiziert
+    #   2. Ronaldo war Backup — von Lucas früh schon manuell gepostet
+    #   3. Argentinien als finale Wahl — am 04.06. Mittag MANUELL gepostet
+    # → posted_manually=True verhindert dass Auto-Pipeline morgen Argentinien nochmal sendet.
     "2026-06-04": {
-        "theme": "letzte_wm",
+        "posted_manually": True,
+        "topic": "Argentinien Titel-Verteidigung",
+        "theme": "geheimfavorit",
         "series_tag": "STORY 6 / 10",
         "hook": {
-            "big_number":      "37",
-            "sub_title":       "Jahre · Letzte WM",
-            "hook_line_1":     'Sein <span class="acc">letzter Lauf</span>',
-            "hook_line_2":     'mit dem polnischen Adler.',
-            "mystery_question":"Schafft er es ein letztes Mal?",
-            "highlight_fact":  "84 Länderspiel-Tore — Rekord seit 1939",
+            "big_number":      "1962",
+            "sub_title":       "Jahr · zuletzt Titel verteidigt",
+            "hook_line_1":     'Seit <span class="acc">64 Jahren</span>',
+            "hook_line_2":     'hat es niemand geschafft.',
+            "mystery_question":"Kann Argentinien Geschichte schreiben?",
+            "highlight_fact":  "Brasilien 1958+1962 — der einzige Back-to-Back-Champion",
         },
         "info": {
-            "flag":         "🇵🇱",
-            "name":         "R. Lewandowski",
-            "role_line":    "Polen · Stürmer · Barcelona",
-            "stat1_val":    "37",   "stat1_lbl": "Jahre alt",
-            "stat2_val":    "84",   "stat2_lbl": "Länderspiel-Tore",
-            "stat3_val":    "0.92", "stat3_lbl": "Tore / Spiel",
-            "closing_line": 'Polen <strong>scheiterte 2022 im Achtelfinale an Frankreich</strong>. Diese WM ist Lewys realistisch letzte Chance auf den großen Knall.',
-            "quote_line":   'Mit 41 spielt Ronaldo. Mit 37 holt <span class="acc">Lewy</span> seinen Frieden. 🦅',
-            "data_source":  "Daten: Polen 2018-2025",
+            "flag":         "🇦🇷",
+            "name":         "Argentinien",
+            "role_line":    "Argentinien · Gruppe O · Titel-Verteidigung",
+            "stat1_val":    "1962", "stat1_lbl": "letzte B2B-Verteidigung",
+            "stat2_val":    "38",   "stat2_lbl": "Lautaro Tore Inter",
+            "stat3_val":    "0.6",  "stat3_lbl": "Quali-Gegen-Ø",
+            "closing_line": 'Messi 39 in einer Bayer-Generation: <strong>Lautaro Martínez und Julián Álvarez führen jetzt.</strong> Gruppe O mit Algerien, Österreich und Jordanien — auf dem Papier dankbar. Quote auf Titel: 4.50 (Polymarket: 23%).',
+            "quote_line":   'Verteidigung ist <span class="acc">schwerer</span> als Erobern. 🏆',
+            "data_source":  "Daten: Argentinien-Quali 2024/25",
         },
     },
 
@@ -246,11 +253,104 @@ STORY_PLAN = {
 }
 
 
+def _qualified_team_flags() -> tuple[set[str], set[str]]:
+    """
+    Lädt die qualifizierten WM-Teams aus wm2026-data.json.
+    Liefert (names_lower, flag_emojis).
+    """
+    import json
+    from pathlib import Path
+    wm_file = Path(__file__).parent / "wm2026-data.json"
+    if not wm_file.exists():
+        return set(), set()
+    try:
+        wm = json.loads(wm_file.read_text(encoding="utf-8"))
+        names = set()
+        flags = set()
+        for gdata in (wm.get("groups") or {}).values():
+            for t in gdata.get("teams", []):
+                if t.get("name"):
+                    names.add(t["name"].lower())
+                if t.get("id"):
+                    names.add(t["id"].lower())
+                if t.get("flag"):
+                    flags.add(t["flag"])
+        return names, flags
+    except Exception:
+        return set(), set()
+
+
+# Whitelist von Story-Konzepten die NICHT auf einem spezifischen Team basieren
+# (Vergleichs-Stories, Markt-Analysen, Top-Scorer-Races etc.)
+_TEAM_AGNOSTIC_NAMES = {
+    "top-scorer-race", "wm bilanz", "bra vs mar",
+    "marokko travel",   # Travel-Story bezieht sich auf qualifiziertes Team
+}
+
+
+def _story_uses_phantom_team(entry: dict) -> str | None:
+    """
+    Prüft ob die Story ein Team referenziert das NICHT bei der WM 2026 ist.
+    Liefert den Namen des Phantom-Teams oder None wenn alles OK.
+
+    Validation in 2 Stufen:
+      1. flag-Emoji muss qualifiziertes WM-Team-Flag sein
+      2. Mindestens 1 Token aus name+role_line muss in Team-Namen sein
+
+    Eingebaut 04.06.2026 nachdem eine Lewandowski/Polen-Card rausging —
+    Polen hatte sich nicht qualifiziert.
+    """
+    info = entry.get("info") or {}
+    name_lower = (info.get("name") or "").lower()
+    if name_lower in _TEAM_AGNOSTIC_NAMES:
+        return None   # bewusst team-agnostische Story
+
+    qualified_names, qualified_flags = _qualified_team_flags()
+    if not qualified_names:
+        return None   # keine WM-Daten verfügbar — kein Check möglich
+
+    # Flag-Check: wenn flag gesetzt UND nicht in qualifizierten Flags → Phantom
+    flag = (info.get("flag") or "").strip()
+    flag_known = flag and flag in qualified_flags
+    flag_generic = flag in ("⚽", "🏳️", "")   # Top-Scorer-Race nutzt generisches Flag
+    if flag and not flag_known and not flag_generic:
+        return f"Flag {flag} nicht in WM 2026"
+
+    # Token-Check: irgendein Token aus name+role_line muss qualifiziert sein
+    full_text = f"{info.get('name','')} {info.get('role_line','')}".lower()
+    # Lookup-Tokens — replace separators
+    for sep in ("·", ",", "(", ")", "/", "-"):
+        full_text = full_text.replace(sep, " ")
+    tokens = [t.strip() for t in full_text.split() if len(t) >= 2]
+
+    for tok in tokens:
+        if tok in qualified_names:
+            return None   # ein Token matched → OK
+
+    # Tokens wie "Lewandowski" sind nicht in qualified_names (das sind Team-Namen)
+    # → Fallback: wenn flag bekannt ist UND kein klarer Bruch im Text → OK
+    if flag_known:
+        return None
+
+    return name_lower or "unknown"
+
+
 def get_story_for_date(date_str: str) -> dict | None:
-    """Liefert Story-Config für ein Datum, oder None wenn nichts geplant."""
+    """
+    Liefert Story-Config für ein Datum, oder None wenn nichts geplant.
+
+    Phantom-Team-Guard: wenn die Story auf ein Team verweist das NICHT in
+    wm2026-data.json::groups[*].teams steht (z.B. Polen 2026), wird die Story
+    NICHT ausgeliefert + Warning geloggt. Verhindert peinliche Cards.
+    """
     entry = STORY_PLAN.get(date_str)
     if not entry:
         return None
     if entry.get("posted_manually"):
+        return None
+    phantom = _story_uses_phantom_team(entry)
+    if phantom:
+        print(f"⚠️  Story für {date_str} referenziert nicht-qualifiziertes Team "
+              f"'{phantom}' — Card wird NICHT generiert. Plan korrigieren!")
         return None
     return entry
