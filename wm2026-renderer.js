@@ -419,6 +419,7 @@
     const isToday   = fx.date === todayIso;
 
     // Pick selection: pick BET/ABWÄGEN with highest edge as hero
+    // WATCH-Picks (z.B. Corner-Picks ohne Markt-Quote) sind keine Hero-Kandidaten
     const livePicks = fxPicks.filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN');
     const sortedPicks = [...livePicks].sort((a, b) => {
       if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
@@ -586,6 +587,41 @@
     if (matchPage && !isPlayed) {
       const aip = _buildAiPreview(matchPage, matchKey);
       if (aip) html += aip;
+    }
+
+    // ─── CORNER-PICKS (Eckball-Erwartung + Pick wenn Quote vorhanden) ──
+    if (!isPlayed && fxPicks && fxPicks.length) {
+      const cornerPicks = fxPicks.filter(p => {
+        const m = (p.market || '').toLowerCase();
+        return m.includes('ecken') || m.includes('corner');
+      });
+      if (cornerPicks.length) {
+        // Zeige erst aktive Picks (BET/ABWÄGEN), sonst WATCH-Eintrag
+        const active = cornerPicks.filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN');
+        const watch  = cornerPicks.filter(p => p.verdict === 'WATCH');
+        const display = active.length ? active.slice(0, 2) : watch.slice(0, 1);
+        if (display.length) {
+          html += `<div class="cc-otherpicks">
+            <div class="cc-ev-label" style="padding:0 0 6px 0;">🚩 Eckball-Markt</div>`;
+          for (const cp of display) {
+            const ce = cp.cornersExpected;
+            const isBet = cp.verdict === 'BET';
+            const isAbw = cp.verdict === 'ABWÄGEN';
+            const isWatch = cp.verdict === 'WATCH';
+            const cls = isBet ? 'cc-op-bet' : isAbw ? 'cc-op-abw' : 'cc-op-watch';
+            const verdictLabel = isWatch ? '🚩 Erwartung' : cp.verdict;
+            const oddsStr = cp.odds != null ? `@${(+cp.odds).toFixed(2)}` : '<span style="color:var(--muted);">Quote folgt</span>';
+            const eppStr = cp.edgePP ? ` <span class="cc-op-edge">+${cp.edgePP}pp</span>` : '';
+            const expStr = ce ? ` <span style="font-size:10px;color:var(--muted);">· Ø ${ce.total} Total</span>` : '';
+            html += `<div class="cc-op-row ${cls}">
+              <span class="cc-op-verdict" style="${isWatch ? 'background:rgba(245,197,24,.10);color:#f5c518;' : ''}">${verdictLabel}</span>
+              <span class="cc-op-market">${cp.market}${expStr}</span>
+              <span class="cc-op-odds">${oddsStr}</span>${eppStr}
+            </div>`;
+          }
+          html += `</div>`;
+        }
+      }
     }
 
     // ─── PLAYER PICKS (Spieler-Märkte aus TheOddsAPI, T-3 vor Anpfiff) ──
@@ -1454,6 +1490,29 @@
         txt: `Public-Bookies <strong>${dir}</strong> dieses Outcome um <strong>${pick.publicBias.pp}pp</strong> — Sharps vs. Square-Money divergiert.`,
         tag: 'Public-Bias', tagCls: 'wm-tag-edge',
       });
+    }
+
+    // ── Corner-Insight (wenn das Match Corner-Picks hat oder Hero-Pick BTTS/OU ist) ──
+    // Pulls Eckenerwartung aus dem cornersExpected-Feld der Corner-Picks im Match
+    const allMatchPicks = ((_wmData && _wmData.picks) || {})[`${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}`] || [];
+    const cornerPick = allMatchPicks.find(p => p.cornersExpected);
+    if (cornerPick && cornerPick.cornersExpected) {
+      const ce = cornerPick.cornersExpected;
+      const isCornerHero = (pick.market || '').toLowerCase().includes('ecken');
+      if (isCornerHero) {
+        candidates.push({
+          score: 50,
+          txt: `Modell-Erwartung: <strong>${ce.total} Ecken Total</strong> (${ce.home} ${home.flag} / ${ce.away} ${away.flag}). Basis: Form-Ø (forAvg + Gegner againstAvg).`,
+          tag: 'Ecken-Modell', tagCls: 'wm-tag-data',
+        });
+      } else if (isOver || isBtts || isUnder) {
+        // Bonus-Insight für Tor-Picks: hohe Eckenzahl korreliert oft mit Tor-Aktivität
+        candidates.push({
+          score: 15,
+          txt: `Eckenerwartung des Modells: <strong>${ce.total} Total</strong> — ${ce.total >= 9.5 ? 'offene Partie mit viel Volumen vor dem Tor' : 'kontrollierter Spielfluss'}.`,
+          tag: 'Ecken', tagCls: 'wm-tag-data',
+        });
+      }
     }
 
     // ── Edge-Magnitude Insight (Fallback wenn nichts anderes) ──

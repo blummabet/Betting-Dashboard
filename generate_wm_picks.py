@@ -464,15 +464,70 @@ def build_info(elo_diff: int, form_h: dict, form_a: dict,
 
 MARKET_CFG = [
     # (key, label, min_edge)
-    ("home",    "Heimsieg",                   EDGE_MIN_1X2),
-    ("draw",    "Unentschieden",              EDGE_MIN_1X2),
-    ("away",    "Auswärtssieg",               EDGE_MIN_1X2),
-    ("dnbH",    "DNB: Heimteam",              EDGE_MIN_DNB),
-    ("dnbA",    "DNB: Auswärtsteam",          EDGE_MIN_DNB),
-    ("over25",  "Über 2.5 Tore",              EDGE_MIN_OU),
-    ("under25", "Unter 2.5 Tore",             EDGE_MIN_OU),
-    ("btts",    "Beide Teams treffen — Ja",   EDGE_MIN_OU),
+    ("home",      "Heimsieg",                   EDGE_MIN_1X2),
+    ("draw",      "Unentschieden",              EDGE_MIN_1X2),
+    ("away",      "Auswärtssieg",               EDGE_MIN_1X2),
+    ("dnbH",      "DNB: Heimteam",              EDGE_MIN_DNB),
+    ("dnbA",      "DNB: Auswärtsteam",          EDGE_MIN_DNB),
+    ("over25",    "Über 2.5 Tore",              EDGE_MIN_OU),
+    ("under25",   "Unter 2.5 Tore",             EDGE_MIN_OU),
+    ("btts",      "Beide Teams treffen — Ja",   EDGE_MIN_OU),
+    # ── Corner-Picks (neu 03.06.2026) — gleicher Edge-Filter wie O/U ──
+    # Pinnacle listet Corner-Quoten typischerweise 1-3 Tage vor Anpfiff.
+    # Modell nutzt cornersForm (forAvg + againstAvg) — Poisson auf Total.
+    ("o_corners85",  "Über 8.5 Ecken",          EDGE_MIN_OU),
+    ("o_corners95",  "Über 9.5 Ecken",          EDGE_MIN_OU),
+    ("o_corners105", "Über 10.5 Ecken",         EDGE_MIN_OU),
 ]
+
+
+def expected_corners(home_id: str, away_id: str, corners_form: dict) -> tuple[float, float, float] | None:
+    """
+    Schätzt erwartete Eckball-Anzahl basierend auf Form-Daten.
+    Liefert (home_corners, away_corners, total) oder None wenn Daten unvollständig.
+
+    Mathematik:
+      home_corners ≈ (home.forAvg + away.againstAvg) / 2
+      away_corners ≈ (away.forAvg + home.againstAvg) / 2
+      → Mittelt das Angriffs-Volumen mit der Defense-Anfälligkeit des Gegners
+    """
+    h = (corners_form or {}).get(home_id) or {}
+    a = (corners_form or {}).get(away_id) or {}
+    # Min-Games Schwelle: 5 Spiele beidseitig sonst unzuverlässig
+    if h.get("games", 0) < 5 or a.get("games", 0) < 5:
+        return None
+    h_for  = h.get("forAvg")
+    h_ag   = h.get("againstAvg")
+    a_for  = a.get("forAvg")
+    a_ag   = a.get("againstAvg")
+    if not all(isinstance(x, (int, float)) for x in (h_for, h_ag, a_for, a_ag)):
+        return None
+    home_c = (h_for + a_ag) / 2
+    away_c = (a_for + h_ag) / 2
+    total  = home_c + away_c
+    return (home_c, away_c, total)
+
+
+def poisson_over_int(lam: float, threshold: float) -> float:
+    """
+    Wahrscheinlichkeit dass eine Poisson-Variable mit Erwartungswert lam
+    STRIKT größer als threshold (typisch X.5) ist.
+    Direkt einsetzbar für Corner-Märkte: P(Corners > 8.5).
+    """
+    if lam <= 0:
+        return 0.0
+    import math
+    cutoff = int(threshold)   # 8.5 → cutoff=8: sum P(0..8), then 1 - sum
+    p_le_cutoff = 0.0
+    log_lam = math.log(lam) if lam > 0 else 0
+    log_fact = 0.0
+    p_k = math.exp(-lam)   # k=0
+    p_le_cutoff += p_k
+    for k in range(1, cutoff + 1):
+        # P(k) = P(k-1) * lam / k
+        p_k = p_k * lam / k
+        p_le_cutoff += p_k
+    return max(0.0, min(1.0, 1.0 - p_le_cutoff))
 
 
 def injury_discount(team_id: str, injuries: dict) -> float:
@@ -499,6 +554,7 @@ def generate_picks_for_fixture(
     xg_stats: dict = None,
     injuries: dict = None,
     travel_data: dict = None,
+    corners_form: dict = None,
 ) -> list[dict]:
     """Generiert Picks für ein einzelnes Fixture. Gibt [] zurück wenn kein Pick."""
 
@@ -582,6 +638,9 @@ def generate_picks_for_fixture(
     else:
         data_quality = "elo_only"   # Nur Elo, sehr unsicher
 
+    # ── Corner-Erwartung (fließt in Markt-Quoten o_corners* ein) ─────
+    corners_exp  = expected_corners(fx["home"], fx["away"], corners_form or {})
+
     # Marktquoten je Market-Key
     market_odds: dict[str, float | None] = {
         "home":    bk_hw,
@@ -592,6 +651,11 @@ def generate_picks_for_fixture(
         "btts":    odds_snap.get("bttsY"),
         "dnbH":    bk_dnb_h,
         "dnbA":    bk_dnb_a,
+        # Corner-Markets: Pinnacle liefert pro Match EINE Linie + Over-Quote.
+        # Wir mappen die gespeicherte Linie auf das passende Modell-Markt.
+        "o_corners85":  odds_snap.get("cOver") if odds_snap.get("cornerLine") == 8.5  else None,
+        "o_corners95":  odds_snap.get("cOver") if odds_snap.get("cornerLine") == 9.5  else None,
+        "o_corners105": odds_snap.get("cOver") if odds_snap.get("cornerLine") == 10.5 else None,
     }
 
     # Eröffnungsquoten
@@ -604,6 +668,9 @@ def generate_picks_for_fixture(
         "btts":    open_snap.get("bttsY"),
         "dnbH":    open_snap.get("dnbH"),
         "dnbA":    open_snap.get("dnbA"),
+        "o_corners85":  open_snap.get("cOver") if open_snap.get("cornerLine") == 8.5  else None,
+        "o_corners95":  open_snap.get("cOver") if open_snap.get("cornerLine") == 9.5  else None,
+        "o_corners105": open_snap.get("cOver") if open_snap.get("cornerLine") == 10.5 else None,
     }
 
     # Modell-Quoten (Elo + Poisson)
@@ -612,6 +679,18 @@ def generate_picks_for_fixture(
     p_under   = 1.0 - p_over
     p_b       = p_btts(lam_h, lam_a)
     dnb_h_mod, dnb_a_mod = derive_dnb(probs["pH"], probs["pD"], probs["pA"])
+
+    # Modell-Quoten für Corner-Märkte
+    if corners_exp:
+        total_c = corners_exp[2]
+        p_c_85  = poisson_over_int(total_c, 8.5)
+        p_c_95  = poisson_over_int(total_c, 9.5)
+        p_c_105 = poisson_over_int(total_c, 10.5)
+        m_c_85  = prob_to_odds(p_c_85)
+        m_c_95  = prob_to_odds(p_c_95)
+        m_c_105 = prob_to_odds(p_c_105)
+    else:
+        m_c_85 = m_c_95 = m_c_105 = None
 
     model_odds: dict[str, float | None] = {
         "home":    prob_to_odds(probs["pH"]),
@@ -622,6 +701,9 @@ def generate_picks_for_fixture(
         "btts":    prob_to_odds(p_b),
         "dnbH":    dnb_h_mod,
         "dnbA":    dnb_a_mod,
+        "o_corners85":  m_c_85,
+        "o_corners95":  m_c_95,
+        "o_corners105": m_c_105,
     }
 
     # ── Underdog-Stärke: ist das gepickte Team laut Elo deutlich schlechter? ─
@@ -752,7 +834,55 @@ def generate_picks_for_fixture(
                 "pp":        pub_bias["max_abs"],
                 "bookmaker": pub_bias.get("public_bk"),
             }
+
+        # Corner-Erwartung anhängen wenn es sich um einen Corner-Pick handelt
+        if mkey.startswith("o_corners") and corners_exp:
+            pick_dict["cornersExpected"] = {
+                "home":   round(corners_exp[0], 1),
+                "away":   round(corners_exp[1], 1),
+                "total":  round(corners_exp[2], 1),
+            }
+            pick_dict["icon"] = "🚩"
+
         picks.append(pick_dict)
+
+    # ── Corner-Beobachtungs-Marker: Falls Modell eine starke Erwartung hat
+    # aber noch KEINE Markt-Quoten verfügbar sind, schreibe einen Info-Eintrag
+    # damit Card/Modal das anzeigen können. Verdict="WATCH" → kein BET, kein ABWÄGEN.
+    if corners_exp:
+        any_corner_pick = any(p["market"].lower().startswith("über") and "ecken" in p["market"].lower() for p in picks)
+        if not any_corner_pick:
+            # Bestimme welche Linie das Modell am stärksten sieht (P closest to 0.55)
+            total_c = corners_exp[2]
+            best_line = 9.5  # Default
+            best_p = 0
+            for line, p_val in ((8.5, poisson_over_int(total_c, 8.5)),
+                                  (9.5, poisson_over_int(total_c, 9.5)),
+                                  (10.5, poisson_over_int(total_c, 10.5))):
+                # 0.55-0.65 ist Sweet-Spot für Pick-Qualität
+                if 0.50 <= p_val <= 0.70 and p_val > best_p:
+                    best_p = p_val; best_line = line
+            picks.append({
+                "market":    f"Über {best_line} Ecken",
+                "odds":      None,
+                "modelOdds": prob_to_odds(poisson_over_int(total_c, best_line)),
+                "conf":      "low",
+                "verdict":   "WATCH",
+                "modSig":    1,
+                "mktSig":    0,
+                "storySig":  0,
+                "edgePP":    0,
+                "info":      f"Ø {total_c:.1f} Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+                "icon":      "🚩",
+                "result":    None,
+                "clvPP":     0.0,
+                "dataQuality": data_quality,
+                "cornersExpected": {
+                    "home":  round(corners_exp[0], 1),
+                    "away":  round(corners_exp[1], 1),
+                    "total": round(corners_exp[2], 1),
+                },
+            })
 
     return picks
 
@@ -769,10 +899,11 @@ def main():
 
     groups   = wm.get("groups",   {})
     mkt      = wm.get("odds",     {})
-    form     = wm.get("form",     {})
-    h2h_data = wm.get("h2h",      {})
-    xg_stats = wm.get("xgStats",  {})   # API-Football xG (fetch_wm_corners.py)
-    injuries = wm.get("injuries", {})   # Verletzungen/Sperren (fetch_wm_injuries.py)
+    form         = wm.get("form",        {})
+    h2h_data     = wm.get("h2h",         {})
+    xg_stats     = wm.get("xgStats",     {})   # API-Football xG
+    injuries     = wm.get("injuries",    {})   # Verletzungen/Sperren
+    corners_form = wm.get("cornersForm", {})   # Eckball-Stats pro Team (fetch_wm_corners.py)
 
     # Travel-Burden (compute_wm_travel_burden.py) — separates File
     travel_data = {}
@@ -837,6 +968,7 @@ def main():
                 fx, gdata, mkt, form, h2h_data, today,
                 xg_stats=xg_stats, injuries=injuries,
                 travel_data=travel_data,
+                corners_form=corners_form,
             )
 
             # Immer überschreiben — auch leere Liste löscht veraltete Picks
