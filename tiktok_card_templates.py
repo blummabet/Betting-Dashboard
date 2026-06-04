@@ -136,6 +136,13 @@ THEMES = {
         "badgeBg": "rgba(248,81,73,0.10)",
         "badgeBorder": "rgba(248,81,73,0.40)",
     },
+    "daily_picks": {
+        "accent": "#00d4a1",
+        "accentRgb": "0,212,161",
+        "badge": "⚡ DAILY PICKS",
+        "badgeBg": "rgba(0,212,161,0.10)",
+        "badgeBorder": "rgba(0,212,161,0.40)",
+    },
 }
 
 
@@ -974,6 +981,174 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
 
   <div class="footer">
     <div class="ft ft-stand">{stand_label}</div>
+    <div class="ft">cocobet · transparent</div>
+  </div>
+</div>
+</body>
+</html>
+"""
+
+
+def daily_picks_card(
+    date_label: str,
+    n_matches: int,
+    hero_pick: dict,
+    other_picks: list,
+    closing_line: str = "",
+    season_phase: str = "WM 2026 Gruppenphase",
+    series_tag: str | None = None,
+) -> str:
+    """Tägliche Picks-Card im CocoBet-Style — 360×640. Hero-Pick + bis 3 weitere."""
+    t = THEMES["daily_picks"]
+    accent = t["accent"]
+    rgb = t["accentRgb"]
+
+    is_bet = hero_pick.get("verdict") == "BET"
+    verdict_label = "UNSER PICK" if is_bet else "VORSICHTIGER PICK"
+    verdict_color = accent if is_bet else "#f5c518"
+    verdict_rgb   = rgb if is_bet else "245,197,24"
+
+    series_html = ""
+    if series_tag:
+        series_html = (
+            f'<div style="position:absolute;top:14px;left:18px;font-size:9px;'
+            f'font-weight:800;letter-spacing:1.5px;color:{accent};opacity:.7;'
+            f'border:1px solid rgba({rgb},.3);border-radius:6px;padding:3px 8px;">'
+            f'{series_tag}</div>'
+        )
+
+    other_html = ""
+    for op in (other_picks or [])[:3]:
+        op_verdict = op.get("verdict", "ABWÄGEN")
+        op_color = accent if op_verdict == "BET" else "#f5c518"
+        op_rgb   = rgb if op_verdict == "BET" else "245,197,24"
+        edge_str = f"+{op.get('edge_pp', 0)}pp" if op.get('edge_pp') else ""
+        other_html += f"""
+        <div class="op-row">
+          <div class="op-match">
+            <span class="op-flags">{op.get("flag_h","")} {op.get("flag_a","")}</span>
+            <span class="op-teams">{op.get("name_h","?")} – {op.get("name_a","?")}</span>
+          </div>
+          <div class="op-pick-row">
+            <span class="op-vrd" style="color:{op_color};background:rgba({op_rgb},0.10);border:1px solid rgba({op_rgb},0.30);">{op_verdict}</span>
+            <span class="op-market">{op.get("market","?")}</span>
+            <span class="op-odds">@{op.get("odds",0):.2f}</span>
+            <span class="op-edge">{edge_str}</span>
+          </div>
+        </div>"""
+
+    return f"""<!DOCTYPE html>
+<html lang="de">
+<head><meta charset="UTF-8"><title>Daily Picks</title>
+<style>
+* {{ margin:0; padding:0; box-sizing:border-box; }}
+body {{ background:#0a0e18; display:flex; align-items:center; justify-content:center;
+       min-height:100vh; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }}
+.card {{
+  width:360px; height:640px;
+  background:
+    radial-gradient(circle at 50% 25%, rgba({rgb},0.10) 0%, transparent 55%),
+    linear-gradient(180deg, #0a0e18 0%, #080d18 100%);
+  background-image:
+    radial-gradient(circle at 50% 25%, rgba({rgb},0.10) 0%, transparent 55%),
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
+  border-radius:24px; padding:22px 20px 18px;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column;
+  border:1px solid rgba(255,255,255,0.04);
+}}
+.top {{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }}
+.brand-top {{ font-size:11px; font-weight:800; letter-spacing:3px; color:#f5c518; }}
+.badge-top {{ font-size:10px; font-weight:700; letter-spacing:1px; color:{accent};
+  background:{t["badgeBg"]}; border:1px solid {t["badgeBorder"]}; border-radius:18px; padding:5px 12px; }}
+.date-row {{ display:flex; justify-content:space-between; align-items:baseline;
+  padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:14px; }}
+.date-main {{ font-size:18px; font-weight:900; color:#fff; letter-spacing:-0.3px; }}
+.date-sub {{ font-size:10px; color:rgba(255,255,255,0.45); font-weight:600;
+  text-transform:uppercase; letter-spacing:1.2px; }}
+.hero {{ background:rgba({verdict_rgb},0.06); border:1px solid rgba({verdict_rgb},0.30);
+  border-radius:12px; padding:14px 14px 12px; margin-bottom:14px; }}
+.hero-verdict {{ font-size:9px; font-weight:800; letter-spacing:1.8px; color:{verdict_color};
+  text-transform:uppercase; margin-bottom:6px; }}
+.hero-match {{ display:flex; align-items:center; gap:8px; margin-bottom:8px; }}
+.hero-flag {{ font-size:22px; }}
+.hero-teams {{ font-size:14px; font-weight:800; color:#fff; line-height:1.25; flex:1; }}
+.hero-meta {{ font-size:10px; color:rgba(255,255,255,0.55); margin-bottom:10px;
+  letter-spacing:0.3px; }}
+.hero-pick-row {{ display:flex; align-items:baseline; gap:8px; margin-bottom:8px; }}
+.hero-market {{ font-size:13px; font-weight:700; color:#fff; flex:1; }}
+.hero-odds {{ font-size:26px; font-weight:900; color:{verdict_color};
+  font-family:-apple-system,sans-serif; letter-spacing:-0.5px; line-height:1; }}
+.hero-edge-row {{ display:flex; gap:6px; align-items:center; padding-top:8px;
+  border-top:1px solid rgba(255,255,255,0.05); }}
+.hero-edge {{ font-size:11px; font-weight:800; color:{verdict_color};
+  background:rgba({verdict_rgb},0.10); border:1px solid rgba({verdict_rgb},0.25);
+  border-radius:5px; padding:2px 7px; }}
+.hero-story {{ font-size:10.5px; color:rgba(255,255,255,0.65); line-height:1.45;
+  flex:1; }}
+.other-label {{ font-size:9px; color:rgba(255,255,255,0.40); letter-spacing:1.5px;
+  text-transform:uppercase; font-weight:700; margin-bottom:8px; }}
+.op-row {{ background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04);
+  border-radius:9px; padding:9px 11px; margin-bottom:6px; }}
+.op-match {{ display:flex; align-items:center; gap:7px; margin-bottom:5px; }}
+.op-flags {{ font-size:14px; }}
+.op-teams {{ font-size:11.5px; font-weight:700; color:rgba(255,255,255,0.85); }}
+.op-pick-row {{ display:flex; align-items:center; gap:7px; }}
+.op-vrd {{ font-size:8.5px; font-weight:800; letter-spacing:0.5px;
+  padding:1px 5px; border-radius:3px; }}
+.op-market {{ font-size:10.5px; color:rgba(255,255,255,0.75); flex:1; line-height:1.3; }}
+.op-odds {{ font-size:11px; font-weight:800; color:#fff;
+  font-family:'SF Mono',Menlo,monospace; }}
+.op-edge {{ font-size:9px; font-weight:800; color:{accent}; letter-spacing:0.3px; }}
+.closing {{ margin:auto 0 12px; padding:10px 12px; background:rgba({rgb},0.05);
+  border:1px solid rgba({rgb},0.18); border-radius:8px; }}
+.closing-txt {{ font-size:11px; color:rgba(255,255,255,0.78); line-height:1.45;
+  text-align:center; }}
+.closing-txt strong {{ color:{accent}; }}
+.footer {{ display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; }}
+.footer .ft {{ font-size:9px; color:rgba(255,255,255,0.30); letter-spacing:0.5px; }}
+.footer .ft-stand {{ color:rgba(255,255,255,0.55); font-weight:700; }}
+</style></head>
+<body>
+<div class="card">
+  {series_html}
+  <div class="top">
+    <div class="brand-top">COCOBET</div>
+    <div class="badge-top">{t["badge"]}</div>
+  </div>
+  <div class="date-row">
+    <div>
+      <div class="date-main">{date_label}</div>
+      <div class="date-sub">{season_phase}</div>
+    </div>
+    <div class="date-sub">{n_matches} {"Spiel" if n_matches == 1 else "Spiele"}</div>
+  </div>
+  <div class="hero">
+    <div class="hero-verdict">{verdict_label}</div>
+    <div class="hero-match">
+      <span class="hero-flag">{hero_pick.get("flag_h","")}</span>
+      <div class="hero-teams">{hero_pick.get("name_h","?")} <span style="color:rgba(255,255,255,0.45);font-weight:400;">vs</span> {hero_pick.get("name_a","?")}</div>
+      <span class="hero-flag">{hero_pick.get("flag_a","")}</span>
+    </div>
+    <div class="hero-meta">{hero_pick.get("time","")} · {hero_pick.get("venue","")}</div>
+    <div class="hero-pick-row">
+      <div class="hero-market">{hero_pick.get("market","?")}</div>
+      <div class="hero-odds">{hero_pick.get("odds",0):.2f}</div>
+    </div>
+    <div class="hero-edge-row">
+      <span class="hero-edge">+{hero_pick.get("edge_pp",0)}pp Edge</span>
+      <span class="hero-story">{hero_pick.get("story","")}</span>
+    </div>
+  </div>
+  {f'<div class="other-label">Weitere im Blick</div>{other_html}' if other_html else ''}
+  <div class="closing">
+    <div class="closing-txt">{closing_line or 'Picks aus eigenem Modell · jeder mit Edge-Begründung. <strong>cocobet.</strong>'}</div>
+  </div>
+  <div class="footer">
+    <div class="ft ft-stand">Modell · Pinnacle · Devig</div>
     <div class="ft">cocobet · transparent</div>
   </div>
 </div>
