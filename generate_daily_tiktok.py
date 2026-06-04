@@ -29,7 +29,7 @@ import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card
+from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card, daily_picks_card
 from tiktok_story_plan import get_story_for_date
 from bizarre_quote_picker import get_daily_bizarre_card
 from player_pick_picker import get_daily_player_pick, save_dedup as save_player_dedup, _load_dedup as _load_player_dedup
@@ -608,7 +608,93 @@ def main():
     else:
         print("🤡 Keine Bizarre-Card heute (Targets-File leer oder fehlt)")
 
-    # ── 4. Spieler-Pick (TheOddsAPI Player Props — kommt erst 1-3 Tage vor Anpfiff) ──
+    # ── 4. Daily-Picks-Card (Top-Pick + bis zu 3 weitere) ──
+    # Sammelt alle Picks für today_iso aus wm2026-data.json und rendert
+    # eine zusammenfassende Card im CocoBet-Style (360×640).
+    # Nur wenn mind. 1 BET oder ABWÄGEN vorhanden — sonst kein Posting.
+    daily_picks_data = None
+    if WM_FILE.exists():
+        try:
+            wm = json.loads(WM_FILE.read_text(encoding="utf-8"))
+            collected = []
+            for gkey, gdata in (wm.get("groups") or {}).items():
+                teams = {t["id"]: t for t in gdata.get("teams", [])}
+                for fx in gdata.get("fixtures", []):
+                    if fx.get("date") != today_iso:
+                        continue
+                    pkey = f"{gkey}-{fx['matchday']}-{fx['home']}-{fx['away']}"
+                    plist = (wm.get("picks") or {}).get(pkey, [])
+                    bets = [p for p in plist if p.get("verdict") == "BET"]
+                    abws = [p for p in plist if p.get("verdict") == "ABWÄGEN"]
+                    bets.sort(key=lambda p: -(p.get("edgePP") or 0))
+                    abws.sort(key=lambda p: -(p.get("edgePP") or 0))
+                    best = (bets + abws)[:1]
+                    if not best:
+                        continue
+                    h = teams.get(fx["home"], {})
+                    a = teams.get(fx["away"], {})
+                    p = best[0]
+                    collected.append({
+                        "flag_h": h.get("flag", "🏳️"),
+                        "name_h": h.get("name", fx["home"]),
+                        "flag_a": a.get("flag", "🏳️"),
+                        "name_a": a.get("name", fx["away"]),
+                        "time": fx.get("time", "21:00") + " Uhr",
+                        "venue": (fx.get("venue") or "").split("·")[0].strip()[:30],
+                        "market": p.get("market", "?"),
+                        "odds": float(p.get("odds") or 0),
+                        "edge_pp": p.get("edgePP", 0),
+                        "verdict": p.get("verdict"),
+                        "_edge_score": (p.get("edgePP") or 0) + (10 if p.get("verdict") == "BET" else 0),
+                    })
+            if collected:
+                collected.sort(key=lambda p: -p["_edge_score"])
+                hero = collected[0]
+                # Story-Snippet aus Edge ableiten
+                if hero["edge_pp"] >= 10:
+                    hero["story"] = "Modell sieht klar Edge auf den Underdog."
+                elif hero["edge_pp"] >= 5:
+                    hero["story"] = "Solider Edge mit guten Daten."
+                else:
+                    hero["story"] = "Vorsichtig — Edge knapp."
+                daily_picks_data = {
+                    "hero": hero,
+                    "others": collected[1:4],
+                    "n_matches": len(collected),
+                }
+        except Exception as e:
+            print(f"⚠️  Daily-Picks-Card-Daten konnten nicht geladen werden: {e}")
+
+    if daily_picks_data:
+        from datetime import datetime as _dt
+        date_obj = _dt.fromisoformat(today_iso)
+        wd = ["Mo","Di","Mi","Do","Fr","Sa","So"][date_obj.weekday()]
+        date_label = f"{wd} · {date_obj.strftime('%d.%m.%Y')}"
+        dp_html = daily_picks_card(
+            date_label=date_label,
+            n_matches=daily_picks_data["n_matches"],
+            hero_pick=daily_picks_data["hero"],
+            other_picks=daily_picks_data["others"],
+            closing_line='Picks aus eigenem Modell · jeder mit Edge-Begründung. <strong>cocobet.</strong>',
+            season_phase="WM 2026 · Gruppenphase",
+            series_tag="DAILY PICKS",
+        )
+        dp_path = OUTPUT_DIR / f"{today_iso}_daily_picks.html"
+        dp_path.write_text(dp_html, encoding="utf-8")
+        png = render_to_png(dp_path)
+        if png:
+            hero = daily_picks_data["hero"]
+            caption = (
+                f"⚡ <b>Daily Picks · {date_label}</b>\n"
+                f"Top-Pick: {hero['name_h']} vs {hero['name_a']} — {hero['market']} @{hero['odds']:.2f} (+{hero['edge_pp']}pp)\n"
+                f"{daily_picks_data['n_matches']} Spiele heute · weitere im Blick"
+            )
+            produced.append(("daily_picks", png, caption))
+        print(f"⚡ Daily-Picks-Card: {daily_picks_data['hero']['name_h']} vs {daily_picks_data['hero']['name_a']} (+{daily_picks_data['hero']['edge_pp']}pp)")
+    else:
+        print("⚡ Keine Daily-Picks-Card heute (keine BET/ABWÄGEN für today_iso)")
+
+    # ── 5. Spieler-Pick (TheOddsAPI Player Props — kommt erst 1-3 Tage vor Anpfiff) ──
     player_pick = None
     try:
         player_pick = get_daily_player_pick(today_iso)

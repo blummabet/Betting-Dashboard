@@ -581,7 +581,12 @@ def main():
     # weil TheOddsAPI den WM-Totals-Batch nicht befüllt (Coverage-Lücke).
     # Lösung: per-Event-Endpoint /events/{id}/odds — gleicher Ansatz wie
     # test-cards-api.js für Cards/Corners. Pinnacle O/U ist dort verfügbar.
-    print(f"\n  📥  Fetching totals+btts+corners+DC+spreads per event…")
+    # WICHTIG (Fix 04.06.2026): TheOddsAPI liefert für WM-Events leere bookmakers wenn
+    # zu viele Markets in einem Call. 4 Markets pro Call ist das Limit. Daher 2 Calls:
+    #   Call 1: totals,btts,double_chance,spreads (Standard + DC + AH)
+    #   Call 2: alternate_totals (für O1.5/O3.5/U1.5/U3.5)
+    # corners wird raus weil TheOddsAPI für WM noch keine Corner-Quoten listet.
+    print(f"\n  📥  Fetching totals+btts+DC+spreads per event (Call 1/2)…")
     event_ids = [ev["id"] for ev in events if ev.get("id")]
     totals_by_id: dict[str, dict] = {}
 
@@ -589,14 +594,42 @@ def main():
         path_ev = (f"/v4/sports/{sport_key}/events/{eid}/odds"
                    f"?apiKey={ODDS_KEY}"
                    f"&regions=eu,uk,us"
-                   f"&markets=totals,btts,corners,alternate_totals,double_chance,spreads"
+                   f"&markets=totals,btts,double_chance,spreads"
                    f"&oddsFormat=decimal")
         ev_data = odds_get(path_ev)
         if isinstance(ev_data, dict) and ev_data.get("bookmakers"):
             totals_by_id[eid] = ev_data
-        # Rate limit: kurze Pause zwischen Calls
         if i < len(event_ids) - 1:
             time.sleep(0.25)
+
+    # ── Call 2: alternate_totals (für O1.5/O3.5/U1.5/U3.5) — mergen ──
+    print(f"  📥  Fetching alternate_totals per event (Call 2/2)…")
+    alt_added = 0
+    for i, eid in enumerate(event_ids):
+        path_alt = (f"/v4/sports/{sport_key}/events/{eid}/odds"
+                    f"?apiKey={ODDS_KEY}"
+                    f"&regions=eu,uk,us"
+                    f"&markets=alternate_totals"
+                    f"&oddsFormat=decimal")
+        alt_data = odds_get(path_alt)
+        if isinstance(alt_data, dict) and alt_data.get("bookmakers"):
+            # Bookmaker-Markets in das Haupt-Event mergen
+            existing = totals_by_id.get(eid)
+            if existing:
+                existing_bk_keys = {b["key"]: b for b in existing.get("bookmakers", [])}
+                for new_bk in alt_data["bookmakers"]:
+                    bk_key = new_bk.get("key")
+                    if bk_key in existing_bk_keys:
+                        # Markets in bestehendem Bookmaker anhängen
+                        existing_bk_keys[bk_key]["markets"].extend(new_bk.get("markets", []))
+                    else:
+                        existing["bookmakers"].append(new_bk)
+                alt_added += 1
+            else:
+                totals_by_id[eid] = alt_data
+        if i < len(event_ids) - 1:
+            time.sleep(0.25)
+    print(f"  → alternate_totals: {alt_added} events mit zusätzlichen O/U-Linien")
 
     t_ok = sum(1 for v in totals_by_id.values() if v.get("bookmakers"))
     print(f"  → {len(event_ids)} events abgefragt, {t_ok} mit Totals-Daten")
