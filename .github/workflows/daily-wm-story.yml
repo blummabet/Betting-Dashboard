@@ -1,0 +1,77 @@
+name: 🎬 WM Live-Story Engine
+
+on:
+  # 06:00 UTC = 08:00 Wien — vor Lucas am Schreibtisch sitzt
+  schedule:
+    - cron: '0 6 * * *'
+
+  workflow_dispatch:
+    inputs:
+      force_angle:
+        description: 'Nur diese Angle laufen lassen (matchOfDay/killerStat/underdogRecap/playerSpotlight)'
+        required: false
+        default: ''
+      dry_run:
+        description: 'Vorschau anzeigen, nichts persistieren'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wm-live-story
+  cancel-in-progress: false
+
+jobs:
+  generate-story:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Playwright + Chromium installieren
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: 🎬 Story-Engine ausführen
+        run: python generate_wm_live_story.py
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          FORCE_ANGLE:             ${{ github.event.inputs.force_angle }}
+          DRY_RUN:                 ${{ github.event.inputs.dry_run || 'false' }}
+
+      - name: 💾 Card + State + Telegram-Log persistieren
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          # telegram-log.json wird vom Engine angereichert → für UI-Tracking
+          # wm_live_story_outputs/ enthält Hook+Info HTMLs + PNGs (Audit + Re-Download)
+          git add wm_live_story_state.json wm_story_proposals.json \
+                  telegram-log.json wm_live_story_outputs/ 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — kein Commit."
+          else
+            TIMESTAMP=$(date +'%d.%m.%Y %H:%M')
+            git commit -m "🎬 WM Live-Story ${TIMESTAMP} UTC [skip ci]"
+            git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            for attempt in 1 2 3; do
+              git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+              if git push 2>&1; then
+                echo "✅ Push erfolgreich (Versuch $attempt)"
+                break
+              fi
+              sleep $((attempt * 3))
+            done
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
