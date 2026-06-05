@@ -14,8 +14,12 @@ on:
         default: 'false'
         type: boolean
 
+# K7 Fix 05.06.2026 — write-Permission nötig für State-Persistenz:
+# Ohne contents:write konnte track_record_state.json nie committet werden →
+# Trigger-Schwellen (MIN_RESOLVED/MIN_NEW) griffen nie, weil State leer war
+# → tägliche Card wurde unbegrenzt gepostet, auch wenn nichts Neues vorlag.
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: track-record-card
@@ -47,3 +51,32 @@ jobs:
           FORCE:                   ${{ github.event.inputs.force || 'false' }}
           TRACK_RECORD_MIN_RESOLVED: "5"
           TRACK_RECORD_MIN_NEW:      "3"
+
+      # K7 Fix 05.06.2026 — State committen, sonst werden Trigger-Schwellen ignoriert
+      - name: 💾 Track-Record-State persistieren
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          if [ -f track_record_state.json ]; then
+            git add track_record_state.json
+            if ! git diff --staged --quiet; then
+              TIMESTAMP=$(date +'%d.%m.%Y %H:%M')
+              git commit -m "📊 Track-Record-State ${TIMESTAMP} UTC [skip ci]"
+              git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+              # Pull+Push mit Retry (parallele Workflows tolerieren)
+              for attempt in 1 2 3; do
+                git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+                if git push 2>&1; then
+                  echo "✅ State-Commit erfolgreich (Versuch $attempt)"
+                  break
+                fi
+                sleep $((attempt * 3))
+              done
+            else
+              echo "Keine State-Änderung — kein Commit."
+            fi
+          else
+            echo "ℹ️  track_record_state.json existiert nicht (Card wurde nicht gesendet)"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

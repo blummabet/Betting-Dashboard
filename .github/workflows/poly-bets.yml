@@ -6,6 +6,14 @@ on:
   repository_dispatch:
     types: [place-poly-bets]
 
+# K3 Fix 05.06.2026 — Concurrency-Gruppe verhindert doppelte Bets:
+# Teilt sich die Gruppe mit manage-wm-poly.yml. Wenn ein Cron-Run gerade
+# läuft und der User parallel im UI "Jetzt platzieren" klickt, wartet
+# der UI-Trigger statt parallel zu laufen → keine doppelten Orders.
+concurrency:
+  group: poly-trading
+  cancel-in-progress: false
+
 jobs:
   place-bets:
     name: Place bets on Polymarket CLOB

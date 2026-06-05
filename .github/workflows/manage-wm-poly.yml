@@ -21,6 +21,17 @@ on:
 permissions:
   contents: write
 
+# K3 Fix 05.06.2026 — Concurrency-Gruppe verhindert doppelte Bets:
+# Wenn der Cron-Run (auto_wm_poly_trigger) und der manuelle UI-Trigger
+# (poly-bets.yml via repository_dispatch) gleichzeitig laufen, kann
+# dieselbe Order doppelt platziert werden. Beide Workflows teilen sich
+# jetzt die Gruppe "poly-trading" und warten aufeinander.
+# cancel-in-progress: false — laufende Trades NIEMALS abbrechen,
+# sonst entstehen orphan-Orders auf der CLOB die niemand getrackt hat.
+concurrency:
+  group: poly-trading
+  cancel-in-progress: false
+
 jobs:
   monitor-positions:
     # Self-hosted Runner (Mac) — gleiche Umgebung wie poly-bets.yml
@@ -56,6 +67,23 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # ── Polymarket USDC Balance via CLOB API holen ───────────────────────────
+      # K4 Fix 05.06.2026 — Balance MUSS vor Auto-Trigger gefetcht werden,
+      # damit auto_wm_poly_trigger.py die aktuelle Bankroll kennt und nicht
+      # mehr riskiert als verfügbar. Vorher: Balance lief NACH Trigger →
+      # Trigger arbeitete mit veralteter Balance-Datei vom letzten Run.
+      # Hinweis: Polymarket hält Gelder im CLOB-Vertrag (nicht on-chain im Wallet)
+      # → POLY_PRIVATE_KEY nötig um CLOB API zu authentifizieren
+      - name: 💰 Polymarket Balance fetchen
+        run: ${{ env.POLY_PYTHON }} fetch_wm_poly_balance.py
+        continue-on-error: true
+        env:
+          POLY_PRIVATE_KEY:    ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS: ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:        ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:     ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
+
       # ── Auto-Trigger: erkennt Steam Lag + Edge Signale und kauft automatisch ─────
       - name: 🤖 Auto-Trigger WM Bets
         run: ${{ env.POLY_PYTHON }} auto_wm_poly_trigger.py
@@ -70,19 +98,6 @@ jobs:
           POLY_API_SECRET:           ${{ secrets.POLY_API_SECRET }}
           POLY_API_PASSPHRASE:       ${{ secrets.POLY_API_PASSPHRASE }}
           AUTO_TRIGGER_ENABLED:      ${{ secrets.AUTO_TRIGGER_ENABLED || 'false' }}
-
-      # ── Polymarket USDC Balance via CLOB API holen ───────────────────────────
-      # Hinweis: Polymarket hält Gelder im CLOB-Vertrag (nicht on-chain im Wallet)
-      # → POLY_PRIVATE_KEY nötig um CLOB API zu authentifizieren
-      - name: 💰 Polymarket Balance fetchen
-        run: ${{ env.POLY_PYTHON }} fetch_wm_poly_balance.py
-        continue-on-error: true
-        env:
-          POLY_PRIVATE_KEY:    ${{ secrets.POLY_PRIVATE_KEY }}
-          POLY_FUNDER_ADDRESS: ${{ secrets.POLY_FUNDER_ADDRESS }}
-          POLY_API_KEY:        ${{ secrets.POLY_API_KEY }}
-          POLY_API_SECRET:     ${{ secrets.POLY_API_SECRET }}
-          POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
 
       # ── Dann Positionen prüfen & Sell-Alerts senden ───────────────────────────
       - name: 📊 WM Poly Positionen prüfen + Auto-Sell

@@ -94,7 +94,15 @@ KILL_SWITCH_FILE      = os.path.join(BASE_DIR, "wm_kill_switch.json")
 
 def is_kill_switch_active() -> tuple[bool, str]:
     """Liest wm_kill_switch.json. Returns (paused, reason).
-    paused=True wenn Trading pausiert ist (enabled: false)."""
+    paused=True wenn Trading pausiert ist (enabled: false).
+
+    K5 Fix 05.06.2026 — FAIL-CLOSED:
+    Bei Lese-/Parse-Fehler wird Trading PAUSIERT (paused=True), nicht weitergelaufen.
+    Begründung: Wenn ein Angreifer oder Bug die Kill-Switch-Datei korrumpieren würde,
+    war der alte Code zahnlos — Korruption = grünes Licht. Jetzt: Korruption = Stop.
+    Lucas muss die Datei dann manuell reparieren (= bewusste Entscheidung), bevor
+    Trading wieder läuft. Fehlende Datei != Korruption — leer/fehlend ist "aktiv erlaubt".
+    """
     if not os.path.exists(KILL_SWITCH_FILE):
         return False, ""
     try:
@@ -104,9 +112,9 @@ def is_kill_switch_active() -> tuple[bool, str]:
             return True, ks.get("reason", "manuell pausiert")
         return False, ""
     except Exception as e:
-        # Bei Lese-Fehler safer fallback: NICHT pausieren (sonst totes System bei Korruption)
-        print(f"  ⚠️  Kill-Switch lesefehler: {e} — laufe trotzdem")
-        return False, ""
+        # FAIL-CLOSED: Bei Lese-Fehler PAUSIEREN, nicht weiterlaufen.
+        print(f"  🚨  Kill-Switch lesefehler: {e} — fail-closed, Trading PAUSIERT")
+        return True, f"Kill-Switch-Datei korrupt ({e}) — manuelle Prüfung nötig"
 
 # Welche Edge-Keys → Polymarket-Market-Label (muss OUTCOME_MAP in polymarket_bet.py matchen)
 EDGE_MARKET_MAP = {
