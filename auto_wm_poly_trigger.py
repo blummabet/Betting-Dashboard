@@ -415,8 +415,10 @@ def main():
         print("❌ POLY_PRIVATE_KEY nicht gesetzt — kann keine Bets platzieren.")
         sys.exit(1)
 
-    telegram_token   = os.environ.get("TELEGRAM_TOKEN", "").strip()
-    telegram_chat_id = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+    telegram_token   = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
+    # Privacy-Fix 05.06.2026 (K2): Auto-Bet-Alerts mit Stake-Größen + Order-IDs
+    # gehen NUR an den Trades-Channel (privat), nicht an den öffentlichen Channel.
+    telegram_chat_id = (os.environ.get("TELEGRAM_TRADES_CHAT_ID") or "").strip()
 
     # Import der Betting-Funktionen aus polymarket_bet.py
     try:
@@ -527,20 +529,9 @@ def main():
             running_exposure += stake
             match_position_count[match_key] = match_position_count.get(match_key, 0) + 1
 
-            # 1. Bestehender WM-Channel (Operations-Info)
-            if telegram_token and telegram_chat_id:
-                odds_str = f"{1/poly_p:.2f}" if poly_p else "?"
-                msg = (
-                    f"🤖 <b>Auto-Bet ausgelöst{steam_tag}</b>\n"
-                    f"{home} vs {away} — {market}\n"
-                    f"@ {odds_str} (edge +{order['edgePP']}pp)\n"
-                    f"Einsatz: ${stake:.2f} USDC  |  Order: {result.get('orderId','?')}"
-                )
-                sent = send_telegram(telegram_token, telegram_chat_id, msg)
-                if not sent:
-                    print(f"    ⚠️  WM-Channel Nachricht konnte nicht gesendet werden")
-
-            # 2. Dedizierter Trades-Channel (detailliert)
+            # Privacy-Fix 05.06.2026 (K2): Der frühere doppelte Push an Haupt+Trades
+            # ist entfernt. Auto-Bet-Bestätigungen gehen NUR über telegram_trades
+            # an den privaten Trades-Channel. Keine Stake/Order-Daten im Public-Channel.
             try:
                 from telegram_trades import notify_trade_opened
                 notify_trade_opened(

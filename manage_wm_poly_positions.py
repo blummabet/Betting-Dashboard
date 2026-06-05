@@ -40,8 +40,12 @@ MARKET_TO_PRICE_KEY = {
     "Under 2.5 Tore":  "u25",
 }
 
-TELEGRAM_TOKEN   = os.getenv("TELEGRAM_TOKEN", "")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
+TELEGRAM_TOKEN          = (os.getenv("TELEGRAM_TOKEN") or "").strip()
+# WICHTIG: Sell-Alerts mit P&L-Daten gehen NUR an Trades-Channel (privat),
+# NICHT an den öffentlichen CocoBet-Hauptchannel. Privacy-Fix 05.06.2026 (K1).
+TELEGRAM_TRADES_CHAT_ID = (os.getenv("TELEGRAM_TRADES_CHAT_ID") or "").strip()
+# Legacy-Alias für Code der noch TELEGRAM_CHAT_ID liest — beide zeigen auf Trades.
+TELEGRAM_CHAT_ID        = TELEGRAM_TRADES_CHAT_ID
 
 # ── Sell-Schwellwerte ─────────────────────────────────────────────────────────
 PROFIT_TARGET   = 0.10   # +10% Profit → Sell (war 0.20 — gesenkt 01.06.2026 für schnelleren Cash-Cycle)
@@ -118,12 +122,17 @@ def _http_get(url: str) -> dict | list | None:
 
 
 def send_telegram(text: str) -> bool:
-    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
-        print(f"  [Telegram] {text[:120]}")
+    """
+    Sendet eine Nachricht an den TRADES-Channel (privat).
+    Sell-Alerts enthalten P&L-Daten — diese DÜRFEN NIE an den öffentlichen
+    CocoBet-Hauptchannel gehen. Privacy-Fix 05.06.2026 (K1).
+    """
+    if not TELEGRAM_TOKEN or not TELEGRAM_TRADES_CHAT_ID:
+        print(f"  [Telegram-Trades] {text[:120]}")
         return False
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = json.dumps({
-        "chat_id": TELEGRAM_CHAT_ID,
+        "chat_id": TELEGRAM_TRADES_CHAT_ID,
         "text": text,
         "parse_mode": "HTML",
         "disable_web_page_preview": True,
