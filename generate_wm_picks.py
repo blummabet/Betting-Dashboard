@@ -70,6 +70,12 @@ EDGE_OU_BET_MAX  = 10  # >10pp Edge auf O/U → kein BET, max ABWÄGEN (Modell-B
 EDGE_AH_BET_MAX  = 12  # >12pp Edge auf AH → analog (AH-Modelle systematisch wackliger)
 ODDS_MAX       = 6.5  # >6.5  → zu viel Unsicherheit/Noise, komplett raus (war 7.0)
 ODDS_BET_MAX   = 4.5  # >4.5  → max ABWÄGEN, nie BET (war 5.5)
+# AUDIT-Fix 05.06.2026: spezifische BET-Quoten-Caps für riskantere Markttypen.
+# O/U mit Quote >3.0 sind statistisch wackelig (heißt: Modell ist sehr sicher,
+# Markt aber nicht — bei Tor-Märkten oft Modell-Bias). Beispiel HTI-SCO
+# Über 3.5 @3.40 hat +7pp Edge aber die Realität sagt "extreme Wette".
+ODDS_BET_MAX_OU  = 3.0  # O/U Quote >3.0 → max ABWÄGEN, nie BET
+ODDS_BET_MAX_DNB = 4.0  # DNB Quote >4.0 → max ABWÄGEN (Underdog-DNB-Falle)
 
 # Underdog-Filter: wenn das Team laut Elo deutlich schlechter ist, höherer Beweisbedarf
 UNDERDOG_ELO_SOFT = 100   # >100 Elo-Diff gegen Pick → kein BET, nur ABWÄGEN wenn Form zeigt Stärke
@@ -974,6 +980,20 @@ def generate_picks_for_fixture(
             if VERBOSE:
                 print(f"     ℹ️  {label}: Quote {bk:.2f} > {ODDS_BET_MAX} → BET→ABWÄGEN")
 
+        # AUDIT-Fix 05.06.2026: Marktspezifische Quoten-Caps
+        # O/U mit Quote >3.0 ist statistisch wackelig (z.B. HTI-SCO Über 3.5 @3.40)
+        # DNB mit Quote >4.0 = klassische Underdog-DNB-Falle
+        is_ou_market = mkey in ("over15", "over25", "over35", "under15", "under25", "under35", "btts")
+        is_dnb_market = mkey in ("dnbH", "dnbA")
+        if is_ou_market and bk > ODDS_BET_MAX_OU and v["verdict"] == "BET":
+            v["verdict"] = "ABWÄGEN"
+            if VERBOSE:
+                print(f"     ℹ️  {label}: O/U-Quote {bk:.2f} > {ODDS_BET_MAX_OU} → BET→ABWÄGEN")
+        elif is_dnb_market and bk > ODDS_BET_MAX_DNB and v["verdict"] == "BET":
+            v["verdict"] = "ABWÄGEN"
+            if VERBOSE:
+                print(f"     ℹ️  {label}: DNB-Quote {bk:.2f} > {ODDS_BET_MAX_DNB} → BET→ABWÄGEN")
+
         # Modell stark favorisiert aber Markt gibt Außenseiter → invertierte Quoten
         if m_odds < 1.55 and bk > 3.5:
             if VERBOSE:
@@ -1050,7 +1070,13 @@ def generate_picks_for_fixture(
         "DNB: Auswärtsteam":  ["Doppelte Chance — X2", "AH Auswärts +0.5", "AH Auswärts +0.75"],
         "Heimsieg":           ["Doppelte Chance — 1X", "AH Heim −0.5"],
         "Auswärtssieg":       ["Doppelte Chance — X2", "AH Auswärts +0.5"],
+        # AUDIT-Fix 05.06.2026: O/U-Substitution erweitert.
+        # Vorher fehlte z.B. "Über 3.5 → Über 2.5" → Haiti-Schottland Über 3.5 @3.40
+        # hatte keine Alternative. Jetzt: jede hohe O/U-Quote bekommt sicherere
+        # Linien als Alternative angeboten.
+        "Über 3.5 Tore":      ["Über 2.5 Tore", "Über 1.5 Tore"],
         "Über 2.5 Tore":      ["Über 1.5 Tore"],
+        "Unter 1.5 Tore":     ["Unter 2.5 Tore", "Unter 3.5 Tore"],
         "Unter 2.5 Tore":     ["Unter 3.5 Tore"],
     }
 

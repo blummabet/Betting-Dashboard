@@ -10,7 +10,7 @@
     "updatedAt": null,
     "oddsUpdatedAt": "2026-06-05T14:26:49.866941+00:00",
     "formUpdatedAt": "2026-06-05T14:27:47.323506+00:00",
-    "picksUpdatedAt": "2026-06-05T15:43:38.120361+00:00",
+    "picksUpdatedAt": "2026-06-05T18:23:17.744786+00:00",
     "resultsUpdatedAt": "2026-06-05T14:35:53.087035+00:00",
     "cornersUpdatedAt": "2026-06-05T14:35:53.016485+00:00",
     "xgUpdatedAt": "2026-06-05T14:35:53.016491+00:00"
@@ -1380,7 +1380,7 @@
         "market": "Unter 1.5 Tore",
         "odds": 3.25,
         "modelOdds": 2.074,
-        "conf": "high",
+        "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
@@ -1391,7 +1391,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 15pp > 10pp Modell-Bias-Schwelle"
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.74,
+          "edgePP": 14
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -1404,11 +1408,17 @@
         "storySig": 0,
         "edgePP": 14,
         "info": "Elo +267 · Form WWDDW·DLDLW · xG 0.9:0.9",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": 1.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 14pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 14pp > 10pp Modell-Bias-Schwelle",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 3.25,
+          "edgePP": 15
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -1545,7 +1555,12 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "full",
-        "downgradedReason": "O/U Edge 11pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 11pp > 10pp Modell-Bias-Schwelle",
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.62,
+          "edgePP": 9
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -1558,10 +1573,16 @@
         "storySig": -1,
         "edgePP": 9,
         "info": "Elo +57 · Form WWDDW·WWLLW · H2H 100% Ü2.5 · xG 0.9:0.9 · ✈️ 🇰🇷 2500km/2d/+2145m (18%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -0.4,
-        "dataQuality": "full"
+        "dataQuality": "full",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 2.88,
+          "edgePP": 11
+        }
       },
       {
         "market": "AH Auswärts +0.5",
@@ -1652,7 +1673,7 @@
         "market": "Unter 1.5 Tore",
         "odds": 3.25,
         "modelOdds": 2.074,
-        "conf": "high",
+        "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
@@ -1663,7 +1684,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 15pp > 10pp Modell-Bias-Schwelle"
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.72,
+          "edgePP": 13
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -1676,11 +1701,17 @@
         "storySig": 0,
         "edgePP": 13,
         "info": "Elo +114 · Form WWDDW·WWWLD · xG 0.8:1.0 · ✈️ 🇨🇿 1509km/2d/+2030m (13%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -0.7,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 13pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 13pp > 10pp Modell-Bias-Schwelle",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 3.25,
+          "edgePP": 15
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -1759,7 +1790,7 @@
         "odds": 3.2,
         "modelOdds": 2.328,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -1768,7 +1799,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.74,
+          "edgePP": 9
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -1781,10 +1817,16 @@
         "storySig": 0,
         "edgePP": 9,
         "info": "Elo -210 · Form DLDLW·WWLLW · xG 0.9:1.1 · ✈️ 🇿🇦 1958km/2d (9%-xG) · ✈️ 🇰🇷 2501km/3d/+1940m (18%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -1.4,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 3.2,
+          "edgePP": 9
+        }
       },
       {
         "market": "Über 9.5 Ecken",
@@ -1904,10 +1946,16 @@
         "storySig": 0,
         "edgePP": 10,
         "info": "Elo -244 · Form LLDLL·WDLDW · xG 0.8:3.1",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": 1.5,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "saferAltFor": "Über 3.5 Tore",
+        "riskierAlt": {
+          "market": "Über 3.5 Tore",
+          "odds": 2.7,
+          "edgePP": 16
+        }
       },
       {
         "market": "Über 3.5 Tore",
@@ -1924,7 +1972,12 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 16pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 16pp > 10pp Modell-Bias-Schwelle",
+        "boldAlt": {
+          "market": "Über 2.5 Tore",
+          "odds": 1.6,
+          "edgePP": 10
+        }
       },
       {
         "market": "Über 9.5 Ecken",
@@ -2199,7 +2252,7 @@
         "odds": 3.4,
         "modelOdds": 2.587,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -2409,7 +2462,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 2.16,
+          "edgePP": 7
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -2422,10 +2480,16 @@
         "storySig": 0,
         "edgePP": 7,
         "info": "Elo +237 · Form WWWDW·WDLWW · xG 2.0:0.5 · ✈️ 🇭🇹 3918km/3d (15%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -2.5,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 4.5,
+          "edgePP": 6
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -2637,7 +2701,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo_only"
+        "dataQuality": "elo_only",
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.78,
+          "edgePP": 5
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -2650,10 +2719,16 @@
         "storySig": 0,
         "edgePP": 5,
         "info": "Elo +186 · xG 1.1:1.1 · ✈️ 🇺🇸 3942km/3d (15%-xG) · ✈️ 🇹🇷 274km/3d (9%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo_only"
+        "dataQuality": "elo_only",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 3.45,
+          "edgePP": 6
+        }
       }
     ],
     "D-3-PRY-AUS": [
@@ -2687,7 +2762,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.62,
+          "edgePP": 5
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -2700,10 +2780,16 @@
         "storySig": 0,
         "edgePP": 5,
         "info": "Elo -87 · Form LWWLL·LWWLL · xG 0.7:1.2 · ✈️ 🇵🇾 4303km/3d (15%-xG) · ✈️ 🇦🇺 505km/3d (9%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -2.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 2.96,
+          "edgePP": 6
+        }
       },
       {
         "market": "AH Auswärts +0.5",
@@ -2988,7 +3074,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 2.2,
+          "edgePP": 7
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -3001,10 +3092,16 @@
         "storySig": 0,
         "edgePP": 7,
         "info": "Elo -81 · Form LLLDW·WWLWW · xG 0.7:1.9 · ✈️ 🇨🇼 641km/2d (9%-xG) · ✈️ 🇨🇮 2124km/3d (9%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -3.1,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 4.6,
+          "edgePP": 6
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -3050,7 +3147,7 @@
         "odds": 3.7,
         "modelOdds": 2.611,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -3059,7 +3156,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.91,
+          "edgePP": 10
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -3072,10 +3174,16 @@
         "storySig": 0,
         "edgePP": 10,
         "info": "Elo +115 · Form LDWWD·WWWWW · xG 1.1:1.1",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -1.1,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 3.7,
+          "edgePP": 9
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -3391,10 +3499,16 @@
         "storySig": 0,
         "edgePP": 4,
         "info": "Elo +226 · Form LDWWD·LDWDL · xG 2.1:0.9 · ✈️ 🇹🇳 955km/3d (9%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -0.3,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "saferAltFor": "Über 3.5 Tore",
+        "riskierAlt": {
+          "market": "Über 3.5 Tore",
+          "odds": 3.35,
+          "edgePP": 5
+        }
       },
       {
         "market": "Über 3.5 Tore",
@@ -3410,7 +3524,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Über 2.5 Tore",
+          "odds": 1.89,
+          "edgePP": 4
+        }
       },
       {
         "market": "Über 9.5 Ecken",
@@ -3684,7 +3803,7 @@
         "market": "Unter 1.5 Tore",
         "odds": 3.7,
         "modelOdds": 2.074,
-        "conf": "high",
+        "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
@@ -3695,7 +3814,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 18pp > 10pp Modell-Bias-Schwelle"
+        "boldAlt": {
+          "market": "Unter 3.5 Tore",
+          "odds": 1.35,
+          "edgePP": 13
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -3708,11 +3831,17 @@
         "storySig": 0,
         "edgePP": 13,
         "info": "Elo -182 · Form LLLLL·DDLDW · xG 0.7:1.1",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 13pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 13pp > 10pp Modell-Bias-Schwelle",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 3.7,
+          "edgePP": 18
+        }
       },
       {
         "market": "Über 9.5 Ecken",
@@ -3796,7 +3925,7 @@
         "market": "Unter 1.5 Tore",
         "odds": 3.5,
         "modelOdds": 2.074,
-        "conf": "high",
+        "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
@@ -3807,7 +3936,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form_asym",
-        "downgradedReason": "BET→ABWÄGEN: dataQuality=elo+form_asym (Form-Daten fehlen ein Team)"
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.75,
+          "edgePP": 14
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -3820,11 +3953,17 @@
         "storySig": 0,
         "edgePP": 14,
         "info": "Elo +250 · Form DDLDW·? · xG 0.9:0.9 · ✈️ 🇺🇾 2074km/4d/+2198m (8%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": 1.0,
         "dataQuality": "elo+form_asym",
-        "downgradedReason": "BET→ABWÄGEN: dataQuality=elo+form_asym (Form-Daten fehlen ein Team)"
+        "downgradedReason": "BET→ABWÄGEN: dataQuality=elo+form_asym (Form-Daten fehlen ein Team)",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 3.5,
+          "edgePP": 17
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -3946,16 +4085,22 @@
         "storySig": 0,
         "edgePP": 15,
         "info": "Elo +207 · Form WWWWD·LWWWW · xG 1.3:2.3",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -3.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "saferAltFor": "Über 3.5 Tore",
+        "riskierAlt": {
+          "market": "Über 3.5 Tore",
+          "odds": 3.2,
+          "edgePP": 17
+        }
       },
       {
         "market": "Über 3.5 Tore",
         "odds": 3.2,
         "modelOdds": 1.969,
-        "conf": "high",
+        "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
@@ -3966,7 +4111,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 17pp > 10pp Modell-Bias-Schwelle"
+        "boldAlt": {
+          "market": "Über 2.5 Tore",
+          "odds": 1.87,
+          "edgePP": 15
+        }
       },
       {
         "market": "Beide Teams treffen — Ja",
@@ -4023,7 +4172,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 2.5,
+          "edgePP": 17
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -4036,10 +4190,16 @@
         "storySig": 0,
         "edgePP": 17,
         "info": "Elo +403 · Form WWWWD·WWLLW · xG 1.5:0.8 · ✈️ 🇮🇶 3399km/4d (9%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -2.6,
         "dataQuality": "elo+form",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 5.4,
+          "edgePP": 13
+        },
         "boldAlt": {
           "market": "Unter 3.5 Tore",
           "odds": 1.51,
@@ -4141,17 +4301,23 @@
         "storySig": 0,
         "edgePP": 6,
         "info": "Elo -69 · Form WDLWW·LWWWW · xG 1.8:1.3 · ✈️ 🇸🇳 3100km/4d (9%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": 1.4,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "saferAltFor": "Über 3.5 Tore",
+        "riskierAlt": {
+          "market": "Über 3.5 Tore",
+          "odds": 3.3,
+          "edgePP": 8
+        }
       },
       {
         "market": "Über 3.5 Tore",
         "odds": 3.3,
         "modelOdds": 2.467,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -4160,7 +4326,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Über 2.5 Tore",
+          "odds": 1.88,
+          "edgePP": 6
+        }
       },
       {
         "market": "Über 9.5 Ecken",
@@ -4310,8 +4481,8 @@
         "market": "Unter 1.5 Tore",
         "odds": 3.6,
         "modelOdds": 2.485,
-        "conf": "high",
-        "verdict": "BET",
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -4320,7 +4491,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.87,
+          "edgePP": 11
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -4333,11 +4509,17 @@
         "storySig": 0,
         "edgePP": 11,
         "info": "Elo +196 · Form LWWWW·WWLLW · xG 1.6:0.5 · ✈️ 🇸🇳 497km/3d (9%-xG) · ✈️ 🇮🇶 3399km/3d (15%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 11pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 11pp > 10pp Modell-Bias-Schwelle",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 3.6,
+          "edgePP": 10
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -4361,7 +4543,7 @@
         "market": "Unter 1.5 Tore",
         "odds": 3.7,
         "modelOdds": 2.074,
-        "conf": "high",
+        "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
@@ -4372,7 +4554,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 18pp > 10pp Modell-Bias-Schwelle"
+        "boldAlt": {
+          "market": "Unter 3.5 Tore",
+          "odds": 1.35,
+          "edgePP": 13
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -4385,11 +4571,17 @@
         "storySig": 0,
         "edgePP": 13,
         "info": "Elo +305 · Form WWWWW·WDWLW · xG 0.9:0.9",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 13pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 13pp > 10pp Modell-Bias-Schwelle",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 3.7,
+          "edgePP": 18
+        }
       },
       {
         "market": "Über 9.5 Ecken",
@@ -4436,7 +4628,7 @@
         "market": "Unter 1.5 Tore",
         "odds": 3.45,
         "modelOdds": 2.214,
-        "conf": "high",
+        "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
@@ -4447,7 +4639,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 14pp > 10pp Modell-Bias-Schwelle"
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.73,
+          "edgePP": 11
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -4460,11 +4656,17 @@
         "storySig": 0,
         "edgePP": 11,
         "info": "Elo +205 · Form WWWWW·WWWDW · xG 1.1:0.8 · ✈️ 🇦🇹 2229km/4d (5%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -1.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 11pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 11pp > 10pp Modell-Bias-Schwelle",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 3.45,
+          "edgePP": 14
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -4604,7 +4806,7 @@
         "market": "Unter 1.5 Tore",
         "odds": 3.15,
         "modelOdds": 2.074,
-        "conf": "high",
+        "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
@@ -4615,7 +4817,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 14pp > 10pp Modell-Bias-Schwelle"
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.66,
+          "edgePP": 11
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -4628,11 +4834,17 @@
         "storySig": 0,
         "edgePP": 11,
         "info": "Elo -100 · Form WDWLW·WWWDW · xG 1.0:0.8 · ✈️ 🇩🇿 1053km/3d (9%-xG) · ✈️ 🇦🇹 2229km/3d (9%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": 2.1,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 11pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 11pp > 10pp Modell-Bias-Schwelle",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 3.15,
+          "edgePP": 14
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -4687,7 +4899,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 2.28,
+          "edgePP": 18
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -4700,11 +4917,17 @@
         "storySig": 0,
         "edgePP": 18,
         "info": "Elo +320 · Form WDWLD·DWWDW · xG 1.1:1.1",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -0.6,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 18pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 18pp > 10pp Modell-Bias-Schwelle",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 4.75,
+          "edgePP": 14
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -4757,17 +4980,23 @@
         "storySig": 0,
         "edgePP": 8,
         "info": "Elo -210 · Form LWWDW·WLLWW · xG 1.8:1.3",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -2.2,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "saferAltFor": "Über 3.5 Tore",
+        "riskierAlt": {
+          "market": "Über 3.5 Tore",
+          "odds": 3.4,
+          "edgePP": 9
+        }
       },
       {
         "market": "Über 3.5 Tore",
         "odds": 3.4,
         "modelOdds": 2.463,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -4776,7 +5005,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Über 2.5 Tore",
+          "odds": 1.93,
+          "edgePP": 8
+        }
       },
       {
         "market": "Beide Teams treffen — Ja",
@@ -4940,7 +5174,12 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 12pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 12pp > 10pp Modell-Bias-Schwelle",
+        "boldAlt": {
+          "market": "Unter 2.5 Tore",
+          "odds": 1.62,
+          "edgePP": 9
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -4953,10 +5192,16 @@
         "storySig": 0,
         "edgePP": 9,
         "info": "Elo +10 · Form DWWDW·LWWDW · xG 1.0:0.8 · ✈️ 🇨🇩 1678km/3d (9%-xG) · ✈️ 🇺🇿 1657km/3d (9%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "saferAltFor": "Unter 1.5 Tore",
+        "riskierAlt": {
+          "market": "Unter 1.5 Tore",
+          "odds": 2.98,
+          "edgePP": 12
+        }
       },
       {
         "market": "Unter 3.5 Tore",
@@ -5275,17 +5520,23 @@
         "storySig": 0,
         "edgePP": 15,
         "info": "Elo +170 · Form LLWWW·DLLLL · xG 2.1:1.2 · ✈️ 🇭🇷 1973km/3d (9%-xG) · ✈️ 🇬🇭 2494km/3d (9%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": -1.9,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 15pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 15pp > 10pp Modell-Bias-Schwelle",
+        "saferAltFor": "Über 3.5 Tore",
+        "riskierAlt": {
+          "market": "Über 3.5 Tore",
+          "odds": 4.1,
+          "edgePP": 17
+        }
       },
       {
         "market": "Über 3.5 Tore",
         "odds": 4.1,
         "modelOdds": 2.254,
-        "conf": "high",
+        "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
@@ -5296,7 +5547,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 17pp > 10pp Modell-Bias-Schwelle"
+        "boldAlt": {
+          "market": "Über 2.5 Tore",
+          "odds": 2.08,
+          "edgePP": 15
+        }
       },
       {
         "market": "Beide Teams treffen — Ja",

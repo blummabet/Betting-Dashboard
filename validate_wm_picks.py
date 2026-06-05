@@ -197,6 +197,68 @@ def validate_pick(mk: str, p: dict, wm: dict, issues: list) -> None:
              f"oder Modell-Bug", p)
 
 
+# ──────────────────────────────────────────────────────────────────────────────
+#  CROSS-MARKET KONFLIKT-CHECK
+#  Zweite Sicherheits-Schicht: prüft per-Match ob zwei BETs in unvereinbaren
+#  Richtungen sind. Spiegelt die Logik in generate_wm_picks.py:DIRECTION_MAP.
+#  Wenn das hier feuert, ist im Generator etwas durchgerutscht.
+# ──────────────────────────────────────────────────────────────────────────────
+DIRECTION_MAP = {
+    "Heimsieg":               "homeStrong",
+    "Doppelte Chance — 1X":   "homeBias",
+    "Doppelte Chance — 12":   "decisive",
+    "AH Heim −0.5":           "homeStrong",
+    "AH Heim −0.75":          "homeStrong",
+    "AH Heim −1.0":           "homeStrong",
+    "DNB: Heimteam":          "homeStrong",
+    "Auswärtssieg":           "awayStrong",
+    "Doppelte Chance — X2":   "awayBias",
+    "AH Auswärts +0.5":       "awayStrong",
+    "AH Auswärts +0.75":      "awayStrong",
+    "AH Auswärts +1.0":       "awayStrong",
+    "DNB: Auswärtsteam":      "awayStrong",
+    "Unentschieden":          "drawOnly",
+    "Über 1.5 Tore":          "over",
+    "Über 2.5 Tore":          "over",
+    "Über 3.5 Tore":          "over",
+    "Unter 1.5 Tore":         "under",
+    "Unter 2.5 Tore":         "under",
+    "Unter 3.5 Tore":         "under",
+    "Beide Teams treffen":    "over",
+    "Beide Teams treffen: Nein": "under",
+}
+INCOMPATIBLE = {
+    ("homeStrong", "awayStrong"), ("homeStrong", "awayBias"), ("homeStrong", "drawOnly"),
+    ("homeBias",   "awayStrong"), ("awayStrong", "drawOnly"), ("awayBias",   "homeStrong"),
+    ("decisive",   "drawOnly"),   ("over",       "under"),
+}
+
+
+def _incompatible(d1: str, d2: str) -> bool:
+    return (d1, d2) in INCOMPATIBLE or (d2, d1) in INCOMPATIBLE
+
+
+def validate_cross_market(mk: str, plist: list, issues: list) -> None:
+    """E_CROSS_MARKET — feuert wenn zwei BETs in unvereinbaren Richtungen.
+
+    Sollte NIE feuern wenn generate_wm_picks korrekt läuft. Wenn doch:
+    Generator-Bug oder Race-Condition zwischen Generator und Validator.
+    """
+    bets = [p for p in plist if p.get("verdict") == "BET"]
+    for i, a in enumerate(bets):
+        d_a = DIRECTION_MAP.get(a.get("market"))
+        if not d_a:
+            continue
+        for b in bets[i+1:]:
+            d_b = DIRECTION_MAP.get(b.get("market"))
+            if not d_b:
+                continue
+            if _incompatible(d_a, d_b):
+                _add(issues, mk, a.get("market", "?"), "error", "E_CROSS_MARKET",
+                     f"BET '{a.get('market')}' ({d_a}) ⚔ BET '{b.get('market')}' ({d_b}) "
+                     f"— logisch unvereinbar (Generator-Bug oder Race-Condition)", a)
+
+
 def main():
     if not WM_FILE.exists():
         print("❌ wm2026-data.json fehlt")
@@ -211,6 +273,8 @@ def main():
         for p in plist:
             total += 1
             validate_pick(mk, p, wm, issues)
+        # Cross-Market-Check pro Match (nicht pro Pick)
+        validate_cross_market(mk, plist, issues)
 
     errors = [i for i in issues if i["level"] == "error"]
     warns  = [i for i in issues if i["level"] == "warning"]
