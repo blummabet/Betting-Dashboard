@@ -71,9 +71,21 @@ def _save(path: Path, data):
 
 
 def tg_send(text: str) -> bool:
-    if SKIP_SEND or not TELEGRAM_TOKEN or not CHAT_ID:
-        print("ℹ️  Telegram-Send geskippt (SKIP_SEND oder Token/ChatID fehlt)")
+    # M3 Fix 05.06.2026 — explizit auflisten was fehlt, statt silent skip.
+    # Vorher: Digest scheiterte still wenn TELEGRAM_TRADES_CHAT_ID nicht gesetzt war,
+    # Lucas hätte sich gewundert wieso der 14:00-Digest nicht ankommt. Jetzt:
+    # konkreter Hinweis welches Secret fehlt.
+    if SKIP_SEND:
+        print("ℹ️  Telegram-Send geskippt (SKIP_SEND=true)")
         print(text)
+        return False
+    missing = []
+    if not TELEGRAM_TOKEN: missing.append("TELEGRAM_TOKEN")
+    if not CHAT_ID:        missing.append("TELEGRAM_TRADES_CHAT_ID")
+    if missing:
+        print(f"⚠️  Telegram-Send NICHT möglich — fehlende Secrets: {', '.join(missing)}")
+        print(f"    → Setze sie in GitHub Actions Secrets (Settings → Secrets and variables)")
+        print(f"--- Digest-Inhalt (würde gesendet werden) ---\n{text}")
         return False
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     data = urllib.parse.urlencode({

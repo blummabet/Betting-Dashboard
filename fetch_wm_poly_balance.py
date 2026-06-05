@@ -176,7 +176,9 @@ def fetch_balance_via_clob_client(private_key: str, funder_addr: str,
         print(f"  📦 Response: {str(resp)[:300]}")
         bal = _extract_balance(resp)
         if bal is not None:
-            print(f"  ✅ Balance via BalanceAllowanceParams: ${bal:.4f}")
+            # M1 Fix 05.06.2026: bal ist Roh-Wert (6 Dezimalstellen USDC) — als
+            # decimal anzeigen damit Log-Ausgabe nicht "$307261984" sondern "$307.26" zeigt
+            print(f"  ✅ Balance via BalanceAllowanceParams: ${bal/1_000_000:.2f} USDC  (raw: {int(bal)})")
             return bal
     except ImportError:
         pass  # BalanceAllowanceParams existiert nicht → weiter mit SimpleNamespace
@@ -196,7 +198,8 @@ def fetch_balance_via_clob_client(private_key: str, funder_addr: str,
             print(f"  📦 Response: {str(resp)[:300]}")
             bal = _extract_balance(resp)
             if bal is not None:
-                print(f"  ✅ Balance via SimpleNamespace({asset_val!r}): ${bal:.4f}")
+                # M1 Fix: decimal-USDC anzeigen statt Roh-Mikrowert
+                print(f"  ✅ Balance via SimpleNamespace({asset_val!r}): ${bal/1_000_000:.2f} USDC  (raw: {int(bal)})")
                 return bal
         except Exception as e:
             print(f"  ⚠️  SimpleNamespace({asset_val!r}) fehlgeschlagen: {e}")

@@ -61,6 +61,27 @@ def _pick_key(p: dict) -> str:
     return (p.get("market") or "?").strip()
 
 
+def _sorted_picks(picks_by_match: dict) -> dict:
+    """M5 Fix 05.06.2026 — kanonische Reihenfolge für Snapshot-Persistenz.
+
+    Vorher: picks_snapshot.json speicherte die Picks-Liste in der Reihenfolge
+    wie generate_wm_picks.py sie ausgab. Smart-Substitution + dict-iteration
+    konnten die Reihenfolge zwischen Runs verändern → git diff zeigte volle
+    Reorder-Diffs obwohl Inhalt identisch war. Diff-Logik selbst war korrekt
+    (set-basiert), aber der Snapshot-Commit wurde sinnlos groß.
+
+    Jetzt: Match-Keys + jeweils Pick-Markets alphabetisch sortiert.
+    """
+    out = {}
+    for mk in sorted(picks_by_match.keys()):
+        plist = picks_by_match[mk]
+        if isinstance(plist, list):
+            out[mk] = sorted(plist, key=lambda p: ((p or {}).get("market") or "").lower())
+        else:
+            out[mk] = plist
+    return out
+
+
 def _fixture_label(wm: dict, match_key: str) -> tuple[str, str]:
     """Liefert (label, kickoff_iso) für ein match_key wie G-3-IRN-NZL."""
     parts = match_key.split("-", 3)
@@ -204,7 +225,7 @@ def main():
     # Erster Lauf: kein Snapshot → nur Baseline anlegen, KEIN Log
     # (verhindert dass beim allerersten Workflow-Run alle 60+ Picks als "neu" gemeldet werden)
     if not SNAPSHOT.exists():
-        _save(SNAPSHOT, {"savedAt": _now_iso(), "picks": new_picks})
+        _save(SNAPSHOT, {"savedAt": _now_iso(), "picks": _sorted_picks(new_picks)})
         # Leeres Log-File sicherstellen
         if not CHANGES_LOG.exists():
             _save(CHANGES_LOG, {"lastUpdate": _now_iso(), "changes": []})
@@ -236,10 +257,10 @@ def main():
         "changes":    log,
     })
 
-    # Aktuellen Picks-State als neuen Snapshot speichern
+    # Aktuellen Picks-State als neuen Snapshot speichern (M5: kanonisch sortiert)
     _save(SNAPSHOT, {
         "savedAt": _now_iso(),
-        "picks":   new_picks,
+        "picks":   _sorted_picks(new_picks),
     })
 
     print(f"💾 {len(log)} Changes im Rolling-Log ({LOG_TTL_DAYS}-Tage-Fenster)")

@@ -61,12 +61,19 @@ OUTCOME_MAP = {
 # ── Gamma API helpers ───────────────────────────────────────
 
 def gamma_fetch_by_slug(slug: str) -> dict | None:
-    """Fetch a single event from Gamma API using its slug. Returns the event or None."""
+    """Fetch a single event from Gamma API using its slug. Returns the event or None.
+
+    M4 Fix 05.06.2026: Timeouts in Trade-Pfad von 10s/8s auf 20s/15s erhöht.
+    Gamma-API hat gelegentliche Latency-Spikes (5-12s). Bei timeout=10s könnte
+    der Lookup fehlschlagen kurz vor Kickoff → kein Trade obwohl Edge vorhanden.
+    20s gibt mehr Headroom, ohne das Auto-Trigger-Workflow (max 15min/Job)
+    zu gefährden.
+    """
     try:
         resp = requests.get(
             f"{GAMMA_API}/events",
             params={"slug": slug, "limit": 1},
-            timeout=10,
+            timeout=20,
         )
         resp.raise_for_status()
         data = resp.json()
@@ -107,7 +114,7 @@ def gamma_find_event(order: dict) -> dict | None:
         resp = requests.get(
             f"{GAMMA_API}/events",
             params={"keyword": keyword, "active": "true", "limit": 12},
-            timeout=10,
+            timeout=20,
         )
         resp.raise_for_status()
         events = resp.json()
@@ -327,7 +334,7 @@ def gamma_find_winner_event(order: dict, mm_event: dict) -> dict | None:
         resp = requests.get(
             f"{GAMMA_API}/events",
             params={"keyword": f"{home} {away}", "active": "true", "limit": 20},
-            timeout=10,
+            timeout=20,
         )
         resp.raise_for_status()
         events = resp.json()
@@ -493,7 +500,7 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str,
             r = requests.get(
                 f"{CLOB_HOST}/midpoint",
                 params={"token_id": token_id},
-                timeout=8,
+                timeout=15,
             )
             if r.ok:
                 mid = float(r.json().get("mid", 0))
@@ -661,7 +668,7 @@ def place_sell_order(token_id: str, size: float, private_key: str,
             r = requests.get(
                 f"{CLOB_HOST}/midpoint",
                 params={"token_id": token_id},
-                timeout=8,
+                timeout=15,
             )
             if r.ok:
                 mid = float(r.json().get("mid", 0))

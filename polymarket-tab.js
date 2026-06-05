@@ -4510,7 +4510,12 @@ window.loadPositionHealth = async function () {
   if (!block) return;
   try {
     const ts = Date.now();
-    let raw = `https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main/position_health.json?t=${ts}`;
+    // M2 Fix 05.06.2026 — POLY_GITHUB_REPO statt hardcoded blummabet-URL
+    // (verhindert kaputten Fetch wenn Repo umbenannt oder Fork verwendet wird)
+    const repo = (typeof POLY_GITHUB_REPO !== 'undefined' && POLY_GITHUB_REPO)
+      ? POLY_GITHUB_REPO
+      : 'blummabet/Betting-Dashboard';
+    let raw = `https://raw.githubusercontent.com/${repo}/main/position_health.json?t=${ts}`;
     let res = await fetch(raw).catch(() => null);
     if (!res || !res.ok) {
       res = await fetch(`position_health.json?t=${ts}`, { cache: 'no-store' }).catch(() => null);
