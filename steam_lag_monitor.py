@@ -579,6 +579,75 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
                       f" · {open_entry['entryEdgePp']:+.1f}pp → {current_edge:+.1f}pp"
                       f" · {open_entry['convergencePct']:.0f}% geschlossen")
 
+    # ── Stale-Snapshot-Pass für OPEN-Signale die NICHT in find_signals() landen ──
+    # Bug-Fix 05.06.2026: Wenn ein Match seinen Edge unter MIN_EDGE_PP verliert,
+    # wird es in find_signals() gefiltert und das OPEN-Signal bleibt forever auf
+    # altem currentEdgePp hängen. Dashboard zeigt dann veraltete Werte als aktuell.
+    # → Wir hängen einen frischen Snapshot mit dem aktuellen (niedrigeren) Edge an
+    #   und markieren bei Edge < CONVERGED_EDGE_PP als CONVERGED.
+    signal_keys_market = {(fx["key"], fx["bestEdgeKey"]) for fx in signals if fx.get("bestEdgeKey")}
+    # Lade alle aktuellen Fixtures aus wm_poly_prices.json für Stale-Check
+    fx_lookup: dict = {}
+    try:
+        if POLY_FILE.exists():
+            with open(POLY_FILE, encoding="utf-8") as _f:
+                _poly_data = json.load(_f)
+            for _fx in _poly_data.get("allFixtures", []):
+                _k = _fx.get("key")
+                if _k:
+                    fx_lookup[_k] = _fx
+    except Exception as _e:
+        print(f"  ⚠️  Stale-Pass: poly_lookup laden fehlgeschlagen: {_e}")
+    stale_updated = 0
+    stale_converged = 0
+    for entry in log.get("signals", []):
+        if entry["status"] != "OPEN":
+            continue
+        mk_key = entry["matchKey"]
+        market_key = entry["market"]
+        if (mk_key, market_key) in signal_keys_market:
+            continue   # bereits durch reguläre Loop aktualisiert
+        # Such aktuellen Stand für diesen Markt
+        fx_now = fx_lookup.get(mk_key)
+        if not fx_now:
+            continue
+        cur_edge = fx_now.get(f"edge_{market_key}")
+        cur_poly = fx_now.get(f"poly_{market_key}")
+        cur_fair = fx_now.get(f"fair_{market_key}")
+        if cur_edge is None:
+            continue
+        # Snapshot anhängen
+        snaps = entry.setdefault("snapshots", [])
+        snaps.append({
+            "ts": now_ts,
+            "edgePp": cur_edge,
+            "polyPrice": cur_poly,
+            "pinnFair": cur_fair,
+            "steamLag": fx_now.get("steamLag", False),
+        })
+        if len(snaps) > MAX_SNAPSHOTS:
+            snaps[:] = snaps[-MAX_SNAPSHOTS:]
+        entry["currentEdgePp"]    = cur_edge
+        entry["currentPolyPrice"] = cur_poly
+        entry["convergencePct"]   = calc_convergence(entry["entryEdgePp"], cur_edge)
+        stale_updated += 1
+
+        # Bei Edge < CONVERGED_EDGE_PP als KONVERGIERT markieren
+        if cur_edge < CONVERGED_EDGE_PP and not entry.get("convergenceTs"):
+            sig_dt = datetime.fromisoformat(entry["signalTs"].replace("Z", "+00:00"))
+            hours = round((now_dt - sig_dt).total_seconds() / 3600, 1)
+            entry["convergenceTs"]    = now_ts
+            entry["convergenceHours"] = hours
+            entry["status"]           = "CONVERGED"
+            stale_converged += 1
+            print(f"  ✅ KONVERGIERT (stale-pass) nach {hours}h: "
+                  f"{entry['home']} vs {entry['away']} · {entry['marketLabel']} "
+                  f"· {entry['entryEdgePp']:+.1f}pp → {cur_edge:+.1f}pp")
+
+    if stale_updated:
+        print(f"  🔄 Stale-Pass: {stale_updated} Signale aktualisiert "
+              f"({stale_converged} als KONVERGIERT markiert)")
+
     # ── Aufgelöste Spiele markieren (Spieldatum vorbei) ───────────────────────
     today = date.today()
     current_keys = {fx["key"] for fx in signals}
