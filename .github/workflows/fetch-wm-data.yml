@@ -71,12 +71,13 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
 
       # ── Sharp Move Detection (direkt nach Odds-Fetch) ─────────────────
+      # Channel-Fix 05.06.2026: Alerts gehen jetzt an TRADES-Channel (privat)
       - name: 📡 WM Sharp Moves detektieren
         run: python detect_wm_sharp_moves.py
         continue-on-error: true
         env:
-          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_TOKEN:           ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID:  ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
       # ── Verletzungen & Sperren (API-Football, täglich) ───────────────────────
       - name: 🏥 WM Verletzungen & Sperren fetchen
@@ -185,12 +186,13 @@ jobs:
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
       # ── Steam Lag Monitor (nach Poly-Preise, damit frische Edges) ───────────
+      # Channel-Fix 05.06.2026: Alerts gehen jetzt an TRADES-Channel (privat)
       - name: 🔥 Steam Lag Monitor — Signale loggen + Sell Alerts
         run: python steam_lag_monitor.py
         continue-on-error: true
         env:
-          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_TOKEN:           ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID:  ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
       # ── AI Match Previews (Claude Haiku, nach Picks damit Edges bekannt) ────
       - name: 🤖 WM AI Match Previews generieren

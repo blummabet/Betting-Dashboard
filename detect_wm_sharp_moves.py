@@ -17,8 +17,8 @@ Schwellenwerte:
   SNAP_WINDOW_DAYS  7     — wie viele Tage Snapshots in letzten N Tagen ansehen
 
 Umgebungsvariablen:
-  TELEGRAM_TOKEN     — Bot-Token (optional, ohne = Vorschau-Modus)
-  TELEGRAM_CHAT_ID   — Channel-ID
+  TELEGRAM_TOKEN          — Bot-Token (optional, ohne = Vorschau-Modus)
+  TELEGRAM_TRADES_CHAT_ID — Privater Trades-Channel
 """
 
 import json
@@ -38,9 +38,11 @@ MOVES_LOG    = BASE / "wm_sharp_moves_log.json"
 DEDUP_FILE   = BASE / "wm_sharp_dedup.json"
 
 TELEGRAM_TOKEN = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
-# GitHub Actions setzt fehlende Secrets als leeren String → `os.environ.get("X", default)`
-# greift dann NICHT zum Default, sondern gibt "" zurück. Daher `or "default"` Pattern.
-CHAT_ID        = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()
+# CHANNEL-FIX 05.06.2026: Sharp-Move-Alerts wurden vom PUBLIC CocoBet-Channel
+# in den privaten Trades-Channel verschoben — Pinnacle-Drift ist Trade-Info,
+# nicht Community-Content. Folgt dem gleichen Pattern wie Auto-Bets/Sell-Alerts.
+# GitHub Actions setzt fehlende Secrets als leeren String → `or "default"` Pattern.
+CHAT_ID        = (os.environ.get("TELEGRAM_TRADES_CHAT_ID") or "").strip()
 
 ALERT_PP         = 5    # pp vs. letztem Snapshot → normaler Alert
 ALERT_PP_BIG     = 10   # pp vs. letztem Snapshot → Steam Move
