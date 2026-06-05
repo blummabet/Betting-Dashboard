@@ -31,8 +31,11 @@ POLY_FILE     = BASE / "wm_poly_prices.json"   # Written by GitHub Action (lates
 SELL_DEDUP_FILE = BASE / "steam_lag_sell_dedup.json"
 
 # Telegram
-TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_TOKEN", "").strip()
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+# CHANNEL-FIX 05.06.2026: Steam-Lag-Signale (Pinnacle-vs-Polymarket-Edges)
+# in privaten Trades-Channel verschoben — Edge-Alerts gehören zu Lucas'
+# Trade-Pipeline, nicht zur öffentlichen Community.
+TELEGRAM_TOKEN   = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
+TELEGRAM_CHAT_ID = (os.environ.get("TELEGRAM_TRADES_CHAT_ID") or "").strip()
 
 # Sell-alert thresholds
 SELL_VELOCITY_PP_H  = 0.3   # Edge closing ≥ 0.3pp/h → sell alert
