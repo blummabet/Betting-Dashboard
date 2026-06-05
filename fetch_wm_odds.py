@@ -695,14 +695,27 @@ def main():
         if elo_h and elo_a and h2h.get("hw") and h2h.get("aw"):
             elo_diff = elo_h - elo_a
             hw_raw, aw_raw = h2h["hw"], h2h["aw"]
+            # Sanity-Check 1 (strikt): bei >200 Elo-Diff sollte Favorit klar im Markt sein
+            # Sanity-Check 2 (mild): bei >150 Elo-Diff darf der Favorit nicht der Underdog im Markt sein
+            #   Threshold: aw < 0.85 × hw bedeutet Auswärts ist klarer Markt-Favorit als Heim
+            #   Bei FRA(1972)-NOR(1709) ist hw=4.28/aw=1.80 — Verhältnis 0.42 — eindeutig invertiert.
             if elo_diff > 200 and hw_raw > 2.5 * aw_raw:
                 h2h["hw"], h2h["aw"] = h2h["aw"], h2h["hw"]
-                print(f"  ⚠️  Elo-Sanity: {home_id}-{away_id} hw/aw korrigiert "
+                print(f"  ⚠️  Elo-Sanity[strikt]: {home_id}-{away_id} hw/aw korrigiert "
+                      f"(Elo Δ={elo_diff:.0f}, {hw_raw}→{h2h['hw']} / {aw_raw}→{h2h['aw']})")
+            elif elo_diff > 150 and aw_raw < 0.85 * hw_raw:
+                # Heimteam laut Elo deutlich stärker, aber Markt sieht Auswärts klar als Favorit
+                h2h["hw"], h2h["aw"] = h2h["aw"], h2h["hw"]
+                print(f"  ⚠️  Elo-Sanity[mild]: {home_id}-{away_id} hw/aw korrigiert "
                       f"(Elo Δ={elo_diff:.0f}, {hw_raw}→{h2h['hw']} / {aw_raw}→{h2h['aw']})")
             elif elo_diff < -200 and aw_raw > 2.5 * hw_raw:
-                # Away team strongly favored by Elo but market has it backward
                 h2h["hw"], h2h["aw"] = h2h["aw"], h2h["hw"]
-                print(f"  ⚠️  Elo-Sanity: {home_id}-{away_id} hw/aw korrigiert "
+                print(f"  ⚠️  Elo-Sanity[strikt]: {home_id}-{away_id} hw/aw korrigiert "
+                      f"(Elo Δ={elo_diff:.0f}, {hw_raw}→{h2h['hw']} / {aw_raw}→{h2h['aw']})")
+            elif elo_diff < -150 and hw_raw < 0.85 * aw_raw:
+                # Auswärts laut Elo deutlich stärker, aber Markt sieht Heim klar als Favorit
+                h2h["hw"], h2h["aw"] = h2h["aw"], h2h["hw"]
+                print(f"  ⚠️  Elo-Sanity[mild]: {home_id}-{away_id} hw/aw korrigiert "
                       f"(Elo Δ={elo_diff:.0f}, {hw_raw}→{h2h['hw']} / {aw_raw}→{h2h['aw']})")
 
         existing = odds_out.get(key, {})
