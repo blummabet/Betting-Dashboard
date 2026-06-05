@@ -21,8 +21,8 @@ from datetime import datetime, timezone, date, timedelta
 from collections import defaultdict
 
 # ── Konfiguration ─────────────────────────────────────────────────────────────
-TELEGRAM_TOKEN        = os.environ.get('TELEGRAM_TOKEN', '')
-CHAT_ID               = os.environ.get('TELEGRAM_CHAT_ID', '-1003819239615')
+TELEGRAM_TOKEN        = (os.environ.get('TELEGRAM_TOKEN') or '').strip()
+CHAT_ID               = (os.environ.get('TELEGRAM_CHAT_ID') or '-1003819239615').strip()
 TG_MODE               = os.environ.get('TG_MODE', 'all')
 SENT_LOG              = 'telegram_sent.json'
 
