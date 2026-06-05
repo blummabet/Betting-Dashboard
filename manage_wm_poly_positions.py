@@ -77,7 +77,12 @@ NO_INPLAY_LOSS_SELL     = True
 # Sicherheitsschalter: False = nur Alerts, keine echten Sells
 # Auf True setzen (oder AUTO_SELL_ENABLED=true in Env) wenn bereit für live Sells
 AUTO_SELL_ENABLED     = False
-PRE_MATCH_CLOSE_HOURS = 6  # Schließe alle offenen Positionen N Stunden vor Anpfiff
+PRE_MATCH_CLOSE_HOURS = 2  # Schließe alle offenen Positionen N Stunden vor Anpfiff
+                            # 05.06.2026: von 6 → 2 verschoben — Profi-Konsens:
+                            #   Lineups kommen 60-90min vor Anpfiff, größte Edge-Moves danach.
+                            #   Sharps fahren Polymarket in den letzten 2-4h am stärksten.
+                            #   Bei 6h verkaufen wir vor den Sharp-Moves → suboptimaler Exit.
+                            #   2h = letzter sicherer Schließ-Zeitpunkt mit guter Liquidität.
 
 # ── Gamma API ────────────────────────────────────────────────────────────────
 GAMMA_URL = "https://gamma-api.polymarket.com/events?slug={slug}"
