@@ -1,12 +1,27 @@
 {
-  "lastRun": "2026-06-05T14:35:53.375112+00:00",
+  "lastRun": "2026-06-05T17:59:30.231044+00:00",
   "stats": {
-    "total": 201,
+    "total": 217,
     "errors": 0,
-    "warnings": 2,
-    "ok": 199
+    "warnings": 3,
+    "ok": 214
   },
   "issues": [
+    {
+      "matchKey": "E-2-GER-CIV",
+      "market": "AH Auswärts +1.0",
+      "level": "warning",
+      "code": "W_UNDERDOG_LEAK",
+      "message": "BET auf Underdog mit Elo-Gap 312 > 200 (Sanity-Filter sollte das fangen)",
+      "pickSnapshot": {
+        "verdict": "BET",
+        "odds": 1.86,
+        "modelOdds": 1.308,
+        "edgePP": 18,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form"
+      }
+    },
     {
       "matchKey": "E-3-GER-ECU",
       "market": "AH Auswärts +0.5",

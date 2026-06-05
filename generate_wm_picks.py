@@ -61,6 +61,13 @@ EDGE_BET_OU    = 6    # ≥6pp → BET für O/U + BTTS
 EDGE_HIGH      = 10   # ≥10pp → high confidence
 EDGE_MED       = 6    # ≥6pp  → medium confidence
 EDGE_MAX_SANE  = 18   # >18pp → suspect (wrong/reversed odds) — pick verworfen
+# AUDIT-FIX 05.06.2026: Markt-Konsens-Cap für O/U + BTTS Picks
+# Pinnacle hat strength-of-schedule + xG-Calibration die unser Modell nicht hat.
+# Wenn unser Modell systematisch >10pp Edge auf O/U sieht (z.B. SWE-TUN Über 1.5
+# mit 91% Modell vs 79% Markt-Devig), ist das wahrscheinlich Modell-Bias, kein
+# echter Edge. Diese Picks werden BET → ABWÄGEN gedowngraded.
+EDGE_OU_BET_MAX  = 10  # >10pp Edge auf O/U → kein BET, max ABWÄGEN (Modell-Bias-Schutz)
+EDGE_AH_BET_MAX  = 12  # >12pp Edge auf AH → analog (AH-Modelle systematisch wackliger)
 ODDS_MAX       = 6.5  # >6.5  → zu viel Unsicherheit/Noise, komplett raus (war 7.0)
 ODDS_BET_MAX   = 4.5  # >4.5  → max ABWÄGEN, nie BET (war 5.5)
 
@@ -173,42 +180,88 @@ def expected_goals(form_h: dict, form_a: dict,
     """
     λ_heim, λ_ausw für Poisson-Modell.
 
-    Datenpriorität (beste zuerst):
-      1. xgStats (API-Football xG, wenn ≥ 3 Spiele) — direkteres Stärke-Maß
-      2. Form avgScored/avgConceded (letzten 15 Spiele)
-      3. INTL_AVG_GOALS als Fallback
+    AUDIT-FIX 05.06.2026 — 3 kritische Bugs gefixt:
+      M1) xG-Mindestspiele 3 → 8. Bei nur 6 xG-Spielen (z.B. SUI) wurden Werte
+          akzeptiert die massiv von form (15 Spiele) abwichen → Modell-Output
+          unzuverlässig. Beispiel CAN-SUI: lam_total=1.47 → Modell sagt 98.7%
+          Unter 3.5 → +12pp Edge artifiziell.
+      M2) Konsistente Quelle für BEIDE Teams. Vorher: ein Team form, anderes xG
+          → asymmetrische Stärke-Bewertung. Jetzt: wenn xG nur für ein Team
+          verfügbar → fallback auf form für beide.
+      M3) lam_total Sanity-Bounds: WM-Spiele liegen historisch zwischen 2.0
+          und 4.0 expected goals. Cap auf [1.8, 4.2] verhindert Extremwerte.
 
-    injury_factor: Multiplikator für Angriffsstärke wenn Schlüsselspieler fehlt.
-    Typisch 0.85 wenn Top-Stürmer verletzt/gesperrt, 1.0 wenn kein Ausfall.
-
-    travel_factor: Multiplikator für Anreise-Last (Long-Haul + Höhe + wenig Rest).
-    0.85 bei critical (z.B. 4000km + Höhenwechsel), 1.0 bei minimaler Anreise.
+    Datenpriorität (nach Fix):
+      1. xgStats wenn BEIDE Teams ≥ 8 Spiele haben
+      2. Form avgScored/avgConceded für beide Teams (letzten 15 Spiele)
+      3. INTL_AVG_GOALS als Fallback (asymmetrisch markiert)
     """
-    def rate(form: dict, xg: dict) -> tuple[float, float]:
-        # xgStats bevorzugen — präziser als rohe Toraverages
-        if xg and xg.get("games", 0) >= 3:
-            scored   = xg.get("xgForAvg",     INTL_AVG_GOALS)
-            conceded = xg.get("xgAgainstAvg",  INTL_AVG_GOALS)
-        elif form and form.get("games", 0) >= 3:
+    XG_MIN_GAMES   = 8   # M1: vorher 3
+    FORM_MIN_GAMES = 3
+
+    def rate_from_form(form: dict) -> tuple[float, float] | None:
+        if form and form.get("games", 0) >= FORM_MIN_GAMES and form.get("avgScored") is not None:
             scored   = form.get("avgScored",   INTL_AVG_GOALS)
             conceded = form.get("avgConceded", INTL_AVG_GOALS)
-        else:
-            return 1.0, 1.0
-        att  = max(0.35, min(3.0, scored   / INTL_AVG_GOALS))
-        def_ = max(0.35, min(3.0, conceded / INTL_AVG_GOALS))
-        return att, def_
+            return (
+                max(0.35, min(3.0, scored   / INTL_AVG_GOALS)),
+                max(0.35, min(3.0, conceded / INTL_AVG_GOALS)),
+            )
+        return None
 
-    h_att, h_def = rate(form_h, xg_h)
-    a_att, a_def = rate(form_a, xg_a)
+    def rate_from_xg(xg: dict) -> tuple[float, float] | None:
+        if xg and xg.get("games", 0) >= XG_MIN_GAMES:
+            scored   = xg.get("xgForAvg",     INTL_AVG_GOALS)
+            conceded = xg.get("xgAgainstAvg",  INTL_AVG_GOALS)
+            return (
+                max(0.35, min(3.0, scored   / INTL_AVG_GOALS)),
+                max(0.35, min(3.0, conceded / INTL_AVG_GOALS)),
+            )
+        return None
+
+    # M2: Konsistente Quelle — beide xG ODER beide form. Kein Mix.
+    h_xg = rate_from_xg(xg_h)
+    a_xg = rate_from_xg(xg_a)
+    if h_xg and a_xg:
+        h_att, h_def = h_xg
+        a_att, a_def = a_xg
+    else:
+        # Fallback: form für beide
+        h_form = rate_from_form(form_h)
+        a_form = rate_from_form(form_a)
+        if h_form and a_form:
+            h_att, h_def = h_form
+            a_att, a_def = a_form
+        elif h_form:
+            h_att, h_def = h_form
+            a_att, a_def = 1.0, 1.0   # neutral (INTL_AVG_GOALS)
+        elif a_form:
+            a_att, a_def = a_form
+            h_att, h_def = 1.0, 1.0
+        else:
+            h_att, h_def = 1.0, 1.0
+            a_att, a_def = 1.0, 1.0
 
     # Travel + Injury werden als unabhängige Multiplier auf die Angriffsstärke angewandt
     lam_h = INTL_AVG_GOALS * h_att * a_def * injury_factor_h * travel_factor_h
     lam_a = INTL_AVG_GOALS * a_att * h_def * injury_factor_a * travel_factor_a
 
-    return (
-        max(0.25, min(4.0, lam_h)),
-        max(0.25, min(4.0, lam_a)),
-    )
+    # M3: lam_total Sanity-Bounds für WM-Kontext (2-4 Tore historisch)
+    lam_h = max(0.50, min(3.5, lam_h))
+    lam_a = max(0.50, min(3.5, lam_a))
+    total = lam_h + lam_a
+    if total < 1.8:
+        # Skalieren um auf min 1.8 zu kommen — proportional anheben
+        factor = 1.8 / total
+        lam_h *= factor
+        lam_a *= factor
+    elif total > 4.2:
+        # Skalieren um auf max 4.2 zu reduzieren
+        factor = 4.2 / total
+        lam_h *= factor
+        lam_a *= factor
+
+    return (lam_h, lam_a)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1078,6 +1131,34 @@ def generate_picks_for_fixture(
               f"(asymmetrische Form-Daten)")
         for m in asym_downgrades[:5]:
             print(f"     · {m}")
+
+    # ── Modell-Bias-Schutz für O/U + AH ──────────────────────────────────────
+    # Edge > 10pp auf O/U bzw. >12pp auf AH ist meist Modell-Bias gegen
+    # Pinnacle's xG-Calibration, kein echter Edge. Auf ABWÄGEN downgraden.
+    bias_downgrades = []
+    for p in picks:
+        if p.get("verdict") != "BET":
+            continue
+        m = (p.get("market") or "").lower()
+        edge = float(p.get("edgePP") or 0)
+        is_ou   = ("über" in m or "unter" in m or "beide teams" in m)
+        is_ah   = ("ah " in m or "handicap" in m)
+        if is_ou and edge > EDGE_OU_BET_MAX:
+            p["verdict"] = "ABWÄGEN"
+            p["downgradedReason"] = (
+                f"O/U Edge {edge:.0f}pp > {EDGE_OU_BET_MAX}pp Modell-Bias-Schwelle"
+            )
+            bias_downgrades.append((p.get("market"), edge))
+        elif is_ah and edge > EDGE_AH_BET_MAX:
+            p["verdict"] = "ABWÄGEN"
+            p["downgradedReason"] = (
+                f"AH Edge {edge:.0f}pp > {EDGE_AH_BET_MAX}pp Modell-Bias-Schwelle"
+            )
+            bias_downgrades.append((p.get("market"), edge))
+    if bias_downgrades:
+        print(f"  🎯 Modell-Bias-Schutz: {len(bias_downgrades)} O/U+AH BETs→ABWÄGEN")
+        for m, e in bias_downgrades[:5]:
+            print(f"     · {m}: {e:+.0f}pp")
 
     # Iteriere alle BET-Pick-Paare und löse Konflikte
     bet_picks = [p for p in picks if p.get("verdict") == "BET"]
