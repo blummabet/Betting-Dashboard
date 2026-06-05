@@ -660,15 +660,27 @@ def generate_picks_for_fixture(
             bk_dnb_a = round((1 / (pa_mkt / denom)) * 0.97, 2)
 
     # ── Data Quality Assessment ───────────────────────────────────────────
+    # Bug-Fix 05.06.2026: Vorher OR → reichte wenn EIN Team Form-Daten hatte,
+    # dann wurde "elo+form" gelabelt obwohl der GEGNER unbekannt war.
+    # Beispiel: CAN hat 15 Games Form, BIH hat 0 → Label "elo+form" → BET-Picks
+    # mit künstlichen +14pp Edges weil Modell BIH-Default-Werte vs CAN-Live-Form
+    # gegenüberstellt. Jetzt: BEIDE Teams müssen Mindest-Form haben.
     form_games_h = (form_h or {}).get("games", 0)
     form_games_a = (form_a or {}).get("games", 0)
     h2h_games    = (h2h or {}).get("games", 0)
     odds_present = bool(bk_hw and bk_dr and bk_aw)
+    has_h_form   = (form_h or {}).get("avgScored") is not None and form_games_h >= 3
+    has_a_form   = (form_a or {}).get("avgScored") is not None and form_games_a >= 3
 
-    if form_games_h >= 5 and form_games_a >= 5 and odds_present and h2h_games >= 3:
-        data_quality = "full"       # Elo + Form + H2H + Odds
-    elif form_games_h >= 3 or form_games_a >= 3:
-        data_quality = "elo+form"   # Elo + Form vorhanden
+    if form_games_h >= 5 and form_games_a >= 5 and odds_present and h2h_games >= 3 \
+            and (form_h or {}).get("avgScored") is not None \
+            and (form_a or {}).get("avgScored") is not None:
+        data_quality = "full"       # Elo + Form (beide) + H2H + Odds
+    elif has_h_form and has_a_form:
+        data_quality = "elo+form"   # Elo + Form für BEIDE Teams
+    elif has_h_form or has_a_form:
+        # Asymmetrisch — höhere Edge-Schwelle nötig, kennzeichnen
+        data_quality = "elo+form_asym"
     else:
         data_quality = "elo_only"   # Nur Elo, sehr unsicher
 
@@ -990,6 +1002,118 @@ def generate_picks_for_fixture(
     }
 
     market_to_pick = {p["market"]: p for p in picks}
+
+    # ── B2 Fix 05.06.2026: Cross-Market-Konsistenz-Check ──
+    # Verhindert dass widersprüchliche Picks gleichzeitig BET sind.
+    # Beispiel CAN-BIH 11.06.: "AH Heim −0.5" (Kanada gewinnt mit 1+) UND
+    # "DNB: Auswärtsteam" (Bosnien gewinnt oder Remis) waren BEIDE BET → logisch
+    # unmöglich. Ursache: jeder Markt rechnet isoliert ohne globale Sicht.
+    # Lösung: Jeder Markt wird einer DIRECTION zugeordnet (homeBias/awayBias/
+    # over/under). Wenn zwei BET-Picks in entgegengesetzten Directions → der
+    # mit der schwächeren Edge × dataQuality-Konfidenz wird auf ABWÄGEN gedowngraded.
+    DIRECTION_MAP = {
+        "Heimsieg":               "homeStrong",
+        "Doppelte Chance — 1X":   "homeBias",
+        "Doppelte Chance — 12":   "decisive",   # nicht draw
+        "AH Heim −0.5":           "homeStrong",
+        "AH Heim −0.75":          "homeStrong",
+        "AH Heim −1.0":           "homeStrong",
+        "DNB: Heimteam":          "homeStrong",
+        "Auswärtssieg":           "awayStrong",
+        "Doppelte Chance — X2":   "awayBias",
+        "AH Auswärts +0.5":       "awayStrong",
+        "AH Auswärts +0.75":      "awayStrong",
+        "AH Auswärts +1.0":       "awayStrong",
+        "DNB: Auswärtsteam":      "awayStrong",
+        "Unentschieden":          "drawOnly",
+        "Über 1.5 Tore":          "over",
+        "Über 2.5 Tore":          "over",
+        "Über 3.5 Tore":          "over",
+        "Unter 1.5 Tore":         "under",
+        "Unter 2.5 Tore":         "under",
+        "Unter 3.5 Tore":         "under",
+        "Beide Teams treffen":    "over",        # btts impliziert Tore
+        "Beide Teams treffen: Nein": "under",
+    }
+    INCOMPATIBLE = {
+        # (Direction A, Direction B) können nicht beide BET sein
+        ("homeStrong", "awayStrong"),
+        ("homeStrong", "awayBias"),
+        ("homeStrong", "drawOnly"),
+        ("homeBias",   "awayStrong"),
+        ("awayStrong", "drawOnly"),
+        ("awayBias",   "homeStrong"),
+        ("decisive",   "drawOnly"),
+        ("over",       "under"),
+    }
+
+    def _is_incompatible(d1: str, d2: str) -> bool:
+        return (d1, d2) in INCOMPATIBLE or (d2, d1) in INCOMPATIBLE
+
+    def _pick_confidence(p: dict) -> float:
+        """Konfidenz-Score für Konflikt-Auflösung: Edge × dataQ × Konfidenz-Label."""
+        edge = float(p.get("edgePP") or 0)
+        dq   = p.get("dataQuality", "elo_only")
+        dq_mult = {"full": 1.0, "elo+form": 0.8, "elo+form_asym": 0.5, "elo_only": 0.3}.get(dq, 0.5)
+        conf_label = p.get("conf", "low")
+        conf_mult = {"high": 1.0, "medium": 0.75, "low": 0.5}.get(conf_label, 0.5)
+        return edge * dq_mult * conf_mult
+
+    # ── B3 Fix 05.06.2026: BET nur bei vollständiger Datenbasis ──
+    # Wenn dataQuality == "elo+form_asym" (nur EIN Team hat Form-Daten), ist das
+    # Modell systematisch unzuverlässig — der fehlende Team-Datensatz wird mit
+    # Default-Werten ersetzt, was künstliche Edges erzeugt. CAN-BIH zeigte +14pp
+    # Edge auf DNB-Aus, obwohl BIH komplett unbekannt war.
+    # Regel: BET nur bei dataQuality in {"full", "elo+form"}. "elo+form_asym"
+    # und "elo_only" können maximal ABWÄGEN sein.
+    asym_downgrades = []
+    for p in picks:
+        dq = p.get("dataQuality", "")
+        if p.get("verdict") == "BET" and dq in ("elo+form_asym", "elo_only"):
+            p["verdict"] = "ABWÄGEN"
+            p["downgradedReason"] = f"BET→ABWÄGEN: dataQuality={dq} (Form-Daten fehlen ein Team)"
+            asym_downgrades.append(p.get("market"))
+    if asym_downgrades:
+        print(f"  📉 Datenbasis-Sicherung: {len(asym_downgrades)} BETs→ABWÄGEN "
+              f"(asymmetrische Form-Daten)")
+        for m in asym_downgrades[:5]:
+            print(f"     · {m}")
+
+    # Iteriere alle BET-Pick-Paare und löse Konflikte
+    bet_picks = [p for p in picks if p.get("verdict") == "BET"]
+    downgraded = []
+    for i, p_a in enumerate(bet_picks):
+        if p_a.get("verdict") != "BET":
+            continue   # könnte schon downgegraded sein
+        dir_a = DIRECTION_MAP.get(p_a.get("market", ""))
+        if not dir_a:
+            continue
+        for p_b in bet_picks[i+1:]:
+            if p_b.get("verdict") != "BET":
+                continue
+            dir_b = DIRECTION_MAP.get(p_b.get("market", ""))
+            if not dir_b:
+                continue
+            if not _is_incompatible(dir_a, dir_b):
+                continue
+            # Konflikt — schwächeren downgrade
+            conf_a = _pick_confidence(p_a)
+            conf_b = _pick_confidence(p_b)
+            if conf_a >= conf_b:
+                loser = p_b
+            else:
+                loser = p_a
+            loser["verdict"] = "ABWÄGEN"
+            loser["downgradedReason"] = (
+                f"Konflikt mit '{(p_a if loser is p_b else p_b).get('market')}' "
+                f"(unvereinbare Direction)"
+            )
+            downgraded.append((loser.get("market"), loser["downgradedReason"]))
+    if downgraded:
+        print(f"  ⚖️  Cross-Market-Konsistenz: {len(downgraded)} Picks downgegraded")
+        for m, r in downgraded[:5]:
+            print(f"     · {m}: {r}")
+
     safer_picks_to_add = []
     for p in picks:
         if p["verdict"] not in ("BET", "ABWÄGEN"):

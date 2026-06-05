@@ -102,37 +102,52 @@ def resolve_team_ids(wm: dict) -> dict:
         for t in gdata.get("teams", []):
             all_ids.add(t["id"])
 
+    # B3 Fix 05.06.2026: Alternative Namen für API-Football-Resolution.
+    # 4 Teams (BIH, CPV, TUR, USA) wurden nicht aufgelöst weil API-Football
+    # andere Schreibweisen verwendet. Liste mehrere Kandidaten und nimm
+    # ersten erfolgreichen Match.
+    ALT_NAMES = {
+        "BIH": ["Bosnia and Herzegovina", "Bosnia", "Bosnia-Herzegovina"],
+        "CPV": ["Cape Verde Islands", "Cabo Verde", "Cape Verde"],
+        "TUR": ["Turkey", "Türkiye", "Turkiye"],
+        "USA": ["USA", "United States", "United States of America"],
+    }
+
     new_found = 0
     for tid in sorted(all_ids):
         if tid in existing and not FORCE:
             continue
-        name = APIF_NAME.get(tid, tid)
-        print(f"  🔍 {tid} ({name})…", end=" ", flush=True)
-
-        resp = apif_get("teams", {"name": name})
-        time.sleep(DELAY)
-
-        if not resp:
-            print("keine Ergebnisse")
-            continue
-
-        # Try exact match first, then any
+        # Probiere alle Namens-Varianten — erste die etwas liefert gewinnt
+        candidates = ALT_NAMES.get(tid, [APIF_NAME.get(tid, tid)])
         match_team = None
-        name_low   = name.lower()
-        for r in resp:
-            t = r.get("team", {})
-            if name_low in t.get("name", "").lower():
-                match_team = t
+        used_name  = None
+        for name in candidates:
+            print(f"  🔍 {tid} ({name})…", end=" ", flush=True)
+            resp = apif_get("teams", {"name": name})
+            time.sleep(DELAY)
+            if not resp:
+                print("0 Treffer")
+                continue
+            # Try exact match first, then any
+            name_low = name.lower()
+            for r in resp:
+                t = r.get("team", {})
+                if name_low in t.get("name", "").lower():
+                    match_team = t
+                    used_name  = name
+                    break
+            if not match_team:
+                match_team = resp[0].get("team", {}) if resp else None
+                used_name  = name
+            if match_team:
                 break
-        if not match_team:
-            match_team = resp[0].get("team", {}) if resp else None
 
         if match_team and match_team.get("id"):
             existing[tid] = match_team["id"]
-            print(f"→ {match_team['id']} ({match_team.get('name')})")
+            print(f"→ {match_team['id']} ({match_team.get('name')}) [via '{used_name}']")
             new_found += 1
         else:
-            print("nicht gefunden")
+            print(f"  ❌ {tid} nicht aufgelöst (alle {len(candidates)} Namens-Varianten leer)")
 
     print(f"  [TeamIDs] {new_found} neu, {len(existing)} total cached.")
     return wm

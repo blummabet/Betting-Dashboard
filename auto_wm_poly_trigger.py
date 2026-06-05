@@ -238,15 +238,18 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
 
         # Data quality: elo_only → strengerer Edge-Schwellenwert
         is_elo_only = fix.get("dataQuality") == "elo_only"
+        # B1 Fix 05.06.2026: elo+form_asym = nur ein Team hat Form-Daten →
+        # genauso unsicher wie elo_only, höhere Edge-Schwelle anwenden.
+        is_asym = fix.get("dataQuality") == "elo+form_asym"
         has_steam_lag = bool(fix.get("steamLag"))
 
         # Effektiver Edge-Schwellenwert:
         #  - steamLag=True: niedrigere Hürde (Pinn hat bereits bewegt → Signal ist valide)
-        #  - elo_only: höhere Hürde (schwache Datenbasis)
+        #  - elo_only / asym: höhere Hürde (schwache/asymmetrische Datenbasis)
         #  - normal: AUTO_TRIGGER_EDGE_PP
         if has_steam_lag:
             effective_edge_threshold = STEAM_LAG_EDGE_PP
-        elif is_elo_only:
+        elif is_elo_only or is_asym:
             effective_edge_threshold = AUTO_TRIGGER_EDGE_ELO_ONLY
         else:
             effective_edge_threshold = AUTO_TRIGGER_EDGE_PP
