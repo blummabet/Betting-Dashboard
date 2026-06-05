@@ -305,10 +305,50 @@ def _save_history(history: dict) -> None:
         json.dump(history, f, ensure_ascii=False, indent=2)
 
 
-def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_name: str = "", away_name: str = "") -> dict:
+# ── Team-Name Aliases (DE → EN/Alt für TheOddsAPI Matching) ──────────────────
+# TheOddsAPI nutzt englische Namen ("Canada"), unser wm2026-data.json deutsche ("Kanada").
+# Beim DC/AH-Parsing müssen wir BEIDE Varianten prüfen.
+TEAM_NAME_ALIASES = {
+    "MEX": ["mexiko", "mexico"], "ZAF": ["südafrika", "south africa"],
+    "KOR": ["südkorea", "south korea"], "CZE": ["tschechien", "czech republic", "czechia"],
+    "CAN": ["kanada", "canada"], "BIH": ["bosnien", "bosnia", "bosnia and herzegovina", "bosnia & herzegovina"],
+    "QAT": ["katar", "qatar"], "SUI": ["schweiz", "switzerland"],
+    "BRA": ["brasilien", "brazil"], "MAR": ["marokko", "morocco"],
+    "HTI": ["haiti"], "SCO": ["schottland", "scotland"],
+    "USA": ["usa", "united states"], "PRY": ["paraguay"], "AUS": ["australien", "australia"],
+    "TUR": ["türkei", "turkey", "türkiye"], "GER": ["deutschland", "germany"],
+    "CUW": ["curaçao", "curacao"], "CIV": ["elfenbeinküste", "ivory coast", "cote d'ivoire"],
+    "ECU": ["ecuador"], "NED": ["niederlande", "netherlands"], "JPN": ["japan"],
+    "SWE": ["schweden", "sweden"], "TUN": ["tunesien", "tunisia"],
+    "BEL": ["belgien", "belgium"], "EGY": ["ägypten", "egypt"],
+    "IRN": ["iran"], "NZL": ["neuseeland", "new zealand"],
+    "ESP": ["spanien", "spain"], "CPV": ["kap verde", "cabo verde", "cape verde"],
+    "SAU": ["saudi-arabien", "saudi arabia"], "URU": ["uruguay"],
+    "FRA": ["frankreich", "france"], "SEN": ["senegal"], "IRQ": ["irak", "iraq"],
+    "NOR": ["norwegen", "norway"], "ARG": ["argentinien", "argentina"],
+    "DZA": ["algerien", "algeria"], "AUT": ["österreich", "austria"], "JOR": ["jordanien", "jordan"],
+    "POR": ["portugal"], "COD": ["dr kongo", "dr congo", "congo dr"],
+    "UZB": ["usbekistan", "uzbekistan"], "COL": ["kolumbien", "colombia"],
+    "ENG": ["england"], "CRO": ["kroatien", "croatia"], "GHA": ["ghana"], "PAN": ["panama"],
+}
+
+
+def _name_matches(name_lower: str, team_id: str) -> bool:
+    """Prüft ob ein TheOddsAPI-Outcome-Name zu unserem team_id passt (alle Aliases)."""
+    if not team_id: return False
+    aliases = TEAM_NAME_ALIASES.get(team_id, [])
+    for a in aliases:
+        if a and a in name_lower:
+            return True
+    return False
+
+
+def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "", away_id: str = "") -> dict:
     """
     Extract Over/Under (1.5/2.5/3.5), BTTS, Corner totals, Asian Handicap und Double Chance.
     Prefers same bookmaker priority as h2h.
+    NB: home_id/away_id (3-letter codes wie 'CAN'/'BIH') werden via TEAM_NAME_ALIASES gegen die
+    TheOddsAPI-Outcome-Namen geprüft, die in jeder Sprachvariante existieren können.
     Returns {o15, o25, o35, u15, u25, u35, bttsY, bttsN, cornerLine, cOver, cUnder,
              dc1X, dc12, dcX2, ahH_n050, ahA_p050, ahH_n075, ahA_p075, ahH_n100, ahA_p100}
     """
@@ -320,8 +360,6 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_name: str =
     ah_lines_by_bk: dict[str, dict] = {}   # bk_key → {line: (home_price, away_price)}
 
     CORNER_PREFERRED_LINES = [9.5, 10.5, 9.0, 10.0, 8.5, 11.5]
-    home_l = (home_name or "").lower()
-    away_l = (away_name or "").lower()
 
     for bk in bookmakers:
         bk_key = bk.get("key", "")
@@ -392,8 +430,8 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_name: str =
                     price = o.get("price")
                     if not price:
                         continue
-                    has_home = home_l and home_l in name
-                    has_away = away_l and away_l in name
+                    has_home = _name_matches(name, home_id)
+                    has_away = _name_matches(name, away_id)
                     has_draw = "draw" in name or "remis" in name or "unentsch" in name
                     if has_home and has_draw:
                         dc_1x = price
@@ -414,8 +452,8 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_name: str =
                     price = o.get("price")
                     if point is None or not price:
                         continue
-                    is_home = home_l and home_l in name
-                    is_away = away_l and away_l in name
+                    is_home = _name_matches(name, home_id)
+                    is_away = _name_matches(name, away_id)
                     if not is_home and not is_away:
                         continue
                     # Speichere Heim-Linie (negativ = Heim-Favorit)
@@ -680,11 +718,9 @@ def main():
                         if not any(b.get("key") == bk.get("key") for b in merged_bks):
                             merged_bks.append(bk)
                     break
-        # Team-Namen mitgeben für DC/AH-Outcome-Parsing
-        # TheOddsAPI verwendet Klar-Namen (z.B. "Mexico", "South Africa")
+        # Team-IDs mitgeben — der Parser nutzt TEAM_NAME_ALIASES für DE/EN Matching
         tb = _extract_totals_btts(merged_bks, BOOKMAKERS,
-                                   home_name=team_names.get(home_id, ""),
-                                   away_name=team_names.get(away_id, ""))
+                                   home_id=home_id, away_id=away_id)
 
         # ── Elo sanity check: detect reversed hw/aw ──────────────────────
         # If Elo strongly favors the home team (diff > 200 pts) but market
