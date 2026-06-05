@@ -529,38 +529,61 @@ def main():
             else:
                 pos["status"] = "sell_signaled"
 
-            # ── Telegram Alert (immer, auch wenn Auto-Sell ausgeführt) ───────
-            alert = format_sell_alert(pos)
-            # Augment alert with execution status
-            if sell_executed:
-                alert += f"\n\n✅ <b>Auto-Sell ausgeführt</b>"
-            elif auto_sell_on and is_auto and not pos.get("tokenId"):
-                alert += f"\n\n⚠️ tokenId fehlt — manueller Sell nötig!"
-            if send_telegram(alert):
-                pos["alertSentAt"] = now.isoformat()
-                alerts_sent += 1
+            # ── Telegram Alert mit H3-Dedup ───────────────────────────────────
+            # H3 Fix 05.06.2026: Sell-Alert wurde alle 4h erneut gesendet wenn
+            # Position weiterhin sell_signaled war → Telegram-Spam.
+            # Jetzt: Dedup auf (sellReason, sellExecuted) — nur erneut senden
+            # wenn (a) > SELL_ALERT_DEDUP_H Stunden vergangen UND Position
+            # weiterhin offen, ODER (b) sellReason sich materiell geändert hat
+            # (z.B. von "DEEP_LOSS" zu "PRE_MATCH_CLOSE"), ODER (c) Auto-Sell
+            # gerade ausgeführt wurde (das ist eine neue Info, immer senden).
+            SELL_ALERT_DEDUP_H = 6
+            last_alert_at  = pos.get("alertSentAt")
+            last_alert_for = pos.get("alertSentForReason")
+            should_alert   = True
+            if last_alert_at and not sell_executed:
+                try:
+                    last_dt = datetime.fromisoformat(last_alert_at.replace("Z", "+00:00"))
+                    hours_since = (now - last_dt).total_seconds() / 3600
+                    if hours_since < SELL_ALERT_DEDUP_H and last_alert_for == sell_reason:
+                        should_alert = False
+                        print(f"    🔇 Alert-Dedup: bereits vor {hours_since:.1f}h gesendet "
+                              f"(reason='{sell_reason}')")
+                except Exception:
+                    pass
 
-            # ── Dedizierter Trades-Channel ────────────────────────────────────
-            try:
-                from telegram_trades import notify_sell_alert
-                entry   = pos.get("entryPrice", 0)
-                current = pos.get("currentPrice", 0)
-                stake   = pos.get("stake", 0)
-                pnl_pct = pos.get("pnlPct", 0) or 0
-                pnl_eur = round(stake * (current / entry - 1), 2) if (entry and entry > 0 and current) else 0
-                notify_sell_alert(
-                    home=pos.get("home", ""), away=pos.get("away", ""),
-                    market=pos.get("market", ""),
-                    entry_price=entry, current_price=current,
-                    profit_pct=pnl_pct, estimated_profit=pnl_eur,
-                    stake=stake,
-                    reason=sell_reason,
-                    home_id=pos.get("homeId", ""),
-                    away_id=pos.get("awayId", ""),
-                    slug=pos.get("slug", ""),
-                )
-            except Exception as e:
-                print(f"    ⚠️  Trades-Channel Fehler: {e}")
+            if should_alert:
+                alert = format_sell_alert(pos)
+                if sell_executed:
+                    alert += f"\n\n✅ <b>Auto-Sell ausgeführt</b>"
+                elif auto_sell_on and is_auto and not pos.get("tokenId"):
+                    alert += f"\n\n⚠️ tokenId fehlt — manueller Sell nötig!"
+                if send_telegram(alert):
+                    pos["alertSentAt"]        = now.isoformat()
+                    pos["alertSentForReason"] = sell_reason
+                    alerts_sent += 1
+
+                # ── Dedizierter Trades-Channel — nur wenn Alert gesendet ─────
+                try:
+                    from telegram_trades import notify_sell_alert
+                    entry   = pos.get("entryPrice", 0)
+                    current = pos.get("currentPrice", 0)
+                    stake   = pos.get("stake", 0)
+                    pnl_pct = pos.get("pnlPct", 0) or 0
+                    pnl_eur = round(stake * (current / entry - 1), 2) if (entry and entry > 0 and current) else 0
+                    notify_sell_alert(
+                        home=pos.get("home", ""), away=pos.get("away", ""),
+                        market=pos.get("market", ""),
+                        entry_price=entry, current_price=current,
+                        profit_pct=pnl_pct, estimated_profit=pnl_eur,
+                        stake=stake,
+                        reason=sell_reason,
+                        home_id=pos.get("homeId", ""),
+                        away_id=pos.get("awayId", ""),
+                        slug=pos.get("slug", ""),
+                    )
+                except Exception as e:
+                    print(f"    ⚠️  Trades-Channel Fehler: {e}")
 
     # Update file — nur manuelle Positionen zurückschreiben (auto-bets kommen aus eigenem File)
     save_positions(data)

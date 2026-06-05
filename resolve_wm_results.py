@@ -111,6 +111,54 @@ def _total_goals(result: dict) -> float | None:
     return float(h + a)
 
 
+# H2 Fix 05.06.2026 — Power-Devig statt Proportional-Devig:
+# Proportional teilt Margin gleichmäßig auf alle Outcomes → systematisch
+# Underdog-bias (Underdogs bekommen zu viel Wahrscheinlichkeit zugewiesen).
+# Power-Devig findet k mit sum((1/odd)^k) = 1 — die Standard-Methode für
+# Pinnacle-CLV in Sharp-Betting-Literatur (Joseph Buchdahl, Bet Bind).
+# Bei niedriger Margin (<3%) ist Unterschied minimal; bei 5%+ Margin
+# unterscheiden sich Power vs Proportional um 0.5-1.5pp je Outcome.
+def power_devig(*decimal_odds: float, iterations: int = 50) -> tuple[float, ...]:
+    """Bisection-Power-Devig.
+
+    Findet k sodass sum((1/odd)^k) ≈ 1, gibt fair_probs zurück.
+    Funktioniert für 2-, 3- und mehr Outcomes.
+    """
+    odds = [float(o) for o in decimal_odds if o and o > 1]
+    if len(odds) < 2:
+        return tuple()
+    inv = [1.0 / o for o in odds]
+    raw_sum = sum(inv)
+    # Falls quasi keine Margin (raw_sum ≈ 1), proportional reicht völlig
+    if abs(raw_sum - 1.0) < 0.005:
+        return tuple(v / raw_sum for v in inv)
+    # Bisection auf k ∈ [0.5, 1.5]
+    lo, hi = 0.5, 1.5
+    for _ in range(iterations):
+        k = (lo + hi) / 2
+        s = sum(v ** k for v in inv)
+        if s > 1.0:
+            lo = k   # k zu klein → Summe zu groß → k erhöhen
+        else:
+            hi = k
+        if abs(s - 1.0) < 1e-6:
+            break
+    k_final = (lo + hi) / 2
+    return tuple(v ** k_final for v in inv)
+
+
+def fair_prob_single_pinnacle(odd: float, assumed_vig: float = 0.025) -> float | None:
+    """H2 Fix: Single-Outcome Fair-Prob mit Pinnacle-Standardvig (~2.5%).
+
+    Wird verwendet wenn die Gegenseite eines 2-way Marktes fehlt (z.B. nur bttsY
+    ohne bttsN). Vorher: rohes 1/odd (overestimates probability, ignoriert Vig).
+    Jetzt: konservative Pinnacle-Vig-Annahme abziehen.
+    """
+    if not odd or odd <= 1:
+        return None
+    return round((1.0 / odd) / (1.0 + assumed_vig), 4)
+
+
 def load_json(path: Path, default):
     if not path.exists():
         return default
@@ -144,43 +192,117 @@ def build_result_lookup(wm: dict) -> dict:
             odds_entry = odds_map.get(key, {})
             closing    = odds_entry.get("odds_closing", {})
 
-            # Fair probability aus Closing Odds berechnen
+            # Fair probability aus Closing Odds berechnen — H2: Power-Devig
             pinn_close_hw = pinn_close_dr = pinn_close_aw = None
             if closing.get("hw") and closing.get("dr") and closing.get("aw"):
-                c_hw = closing["hw"]; c_dr = closing["dr"]; c_aw = closing["aw"]
-                margin = 1/c_hw + 1/c_dr + 1/c_aw
-                pinn_close_hw = round((1/c_hw) / margin, 4)
-                pinn_close_dr = round((1/c_dr) / margin, 4)
-                pinn_close_aw = round((1/c_aw) / margin, 4)
+                probs = power_devig(closing["hw"], closing["dr"], closing["aw"])
+                if len(probs) == 3:
+                    pinn_close_hw = round(probs[0], 4)
+                    pinn_close_dr = round(probs[1], 4)
+                    pinn_close_aw = round(probs[2], 4)
 
-            # Devigg O/U 2.5 closing odds
+            # Devigg O/U 2.5 closing odds (Power-Devig)
             pinn_close_o25 = pinn_close_u25 = None
             c_o25 = closing.get("o25"); c_u25 = closing.get("u25")
             if c_o25 and c_u25 and c_o25 > 1 and c_u25 > 1:
-                ou_margin      = 1 / c_o25 + 1 / c_u25
-                pinn_close_o25 = round((1 / c_o25) / ou_margin, 4)
-                pinn_close_u25 = round((1 / c_u25) / ou_margin, 4)
+                probs = power_devig(c_o25, c_u25)
+                if len(probs) == 2:
+                    pinn_close_o25, pinn_close_u25 = round(probs[0], 4), round(probs[1], 4)
 
-            # Devigg BTTS closing odds
-            pinn_close_btts = None
+            # Devigg BTTS closing odds (Power-Devig + Pinnacle-Vig-Fallback)
+            pinn_close_btts   = None
+            pinn_close_bttsN  = None
             c_bttsY = closing.get("bttsY"); c_bttsN = closing.get("bttsN")
             if c_bttsY and c_bttsN and c_bttsY > 1 and c_bttsN > 1:
-                btts_margin     = 1 / c_bttsY + 1 / c_bttsN
-                pinn_close_btts = round((1 / c_bttsY) / btts_margin, 4)
+                probs = power_devig(c_bttsY, c_bttsN)
+                if len(probs) == 2:
+                    pinn_close_btts, pinn_close_bttsN = round(probs[0], 4), round(probs[1], 4)
             elif c_bttsY and c_bttsY > 1:
-                # Fallback: kein bttsN verfügbar — rohe Wahrscheinlichkeit als Näherung
-                pinn_close_btts = round(1 / c_bttsY, 4)
+                # H2 Fix: nicht rohes 1/odd (overestimates) — Pinnacle-Vig-Annahme abziehen
+                pinn_close_btts = fair_prob_single_pinnacle(c_bttsY)
+
+            # H1 Fix 05.06.2026 — CLV-Backfill für DC/AH/DNB/O15/O35/Corners:
+            # Vorher wurden CLV-Werte nur für 1X2/O25/U25/BTTS berechnet,
+            # alle anderen Picks (DC/DNB/Corners/AH) bekamen clvPP=None →
+            # Avg-CLV-Statistik war systematisch zu klein und für diese
+            # Marktarten gar nicht trackbar. Jetzt: vollständige Devig-Pipeline.
+
+            # O/U 1.5 (Power-Devig)
+            pinn_close_o15 = pinn_close_u15 = None
+            c_o15 = closing.get("o15"); c_u15 = closing.get("u15")
+            if c_o15 and c_u15 and c_o15 > 1 and c_u15 > 1:
+                probs = power_devig(c_o15, c_u15)
+                if len(probs) == 2:
+                    pinn_close_o15, pinn_close_u15 = round(probs[0], 4), round(probs[1], 4)
+
+            # O/U 3.5 (Power-Devig)
+            pinn_close_o35 = pinn_close_u35 = None
+            c_o35 = closing.get("o35"); c_u35 = closing.get("u35")
+            if c_o35 and c_u35 and c_o35 > 1 and c_u35 > 1:
+                probs = power_devig(c_o35, c_u35)
+                if len(probs) == 2:
+                    pinn_close_o35, pinn_close_u35 = round(probs[0], 4), round(probs[1], 4)
+
+            # DC: aus deviggten 1X2-Wahrscheinlichkeiten ableiten
+            # (akkurater als c_dc1X/c_dc12/c_dcX2 deviggen, weil 1X2-Closing
+            # tighter ist — Pinnacle macht 1X2 als Hauptmarkt)
+            pinn_close_dc1X = pinn_close_dc12 = pinn_close_dcX2 = None
+            if pinn_close_hw is not None and pinn_close_dr is not None and pinn_close_aw is not None:
+                pinn_close_dc1X = round(pinn_close_hw + pinn_close_dr, 4)
+                pinn_close_dc12 = round(pinn_close_hw + pinn_close_aw, 4)
+                pinn_close_dcX2 = round(pinn_close_dr + pinn_close_aw, 4)
+
+            # DNB: aus deviggten 1X2-Wahrscheinlichkeiten ableiten
+            # (Draw No Bet = Sieg-Wahrscheinlichkeit / nicht-draw-Wahrscheinlichkeit)
+            pinn_close_dnbH = pinn_close_dnbA = None
+            if pinn_close_hw is not None and pinn_close_aw is not None:
+                nondraw = pinn_close_hw + pinn_close_aw
+                if nondraw > 0:
+                    pinn_close_dnbH = round(pinn_close_hw / nondraw, 4)
+                    pinn_close_dnbA = round(pinn_close_aw / nondraw, 4)
+
+            # Asian Handicap -0.5 (Power-Devig)
+            pinn_close_ahH_n050 = pinn_close_ahA_p050 = None
+            c_ahHn050 = closing.get("ahH_n050"); c_ahAp050 = closing.get("ahA_p050")
+            if c_ahHn050 and c_ahAp050 and c_ahHn050 > 1 and c_ahAp050 > 1:
+                probs = power_devig(c_ahHn050, c_ahAp050)
+                if len(probs) == 2:
+                    pinn_close_ahH_n050, pinn_close_ahA_p050 = round(probs[0], 4), round(probs[1], 4)
+
+            # Corners (Power-Devig) — cornerLine gibt die Linie an
+            pinn_close_cOver = pinn_close_cUnder = None
+            corner_line      = closing.get("cornerLine")
+            c_cOver          = closing.get("cOver"); c_cUnder = closing.get("cUnder")
+            if c_cOver and c_cUnder and c_cOver > 1 and c_cUnder > 1:
+                probs = power_devig(c_cOver, c_cUnder)
+                if len(probs) == 2:
+                    pinn_close_cOver, pinn_close_cUnder = round(probs[0], 4), round(probs[1], 4)
 
             lookup[key] = {
                 **result,
-                "_home_id":         home_id,
-                "_away_id":         away_id,
-                "_pinn_close_hw":   pinn_close_hw,
-                "_pinn_close_dr":   pinn_close_dr,
-                "_pinn_close_aw":   pinn_close_aw,
-                "_pinn_close_o25":  pinn_close_o25,   # devigged fair prob
-                "_pinn_close_u25":  pinn_close_u25,   # devigged fair prob
-                "_pinn_close_btts": pinn_close_btts,  # devigged fair prob
+                "_home_id":            home_id,
+                "_away_id":            away_id,
+                "_pinn_close_hw":      pinn_close_hw,
+                "_pinn_close_dr":      pinn_close_dr,
+                "_pinn_close_aw":      pinn_close_aw,
+                "_pinn_close_o15":     pinn_close_o15,
+                "_pinn_close_u15":     pinn_close_u15,
+                "_pinn_close_o25":     pinn_close_o25,
+                "_pinn_close_u25":     pinn_close_u25,
+                "_pinn_close_o35":     pinn_close_o35,
+                "_pinn_close_u35":     pinn_close_u35,
+                "_pinn_close_btts":    pinn_close_btts,
+                "_pinn_close_bttsN":   pinn_close_bttsN,
+                "_pinn_close_dc1X":    pinn_close_dc1X,
+                "_pinn_close_dc12":    pinn_close_dc12,
+                "_pinn_close_dcX2":    pinn_close_dcX2,
+                "_pinn_close_dnbH":    pinn_close_dnbH,
+                "_pinn_close_dnbA":    pinn_close_dnbA,
+                "_pinn_close_ahH_n050": pinn_close_ahH_n050,
+                "_pinn_close_ahA_p050": pinn_close_ahA_p050,
+                "_pinn_close_cOver":   pinn_close_cOver,
+                "_pinn_close_cUnder":  pinn_close_cUnder,
+                "_pinn_corner_line":   corner_line,
             }
     return lookup
 
@@ -189,20 +311,70 @@ def get_pinn_close_for_market(res: dict, market: str) -> float | None:
     """
     Gibt die Pinnacle-Closing-Fair-Probability für den gegebenen Markt zurück.
     Wird für CLV-Berechnung verwendet.
+
+    H1 Fix 05.06.2026 — vollständige Marktabdeckung:
+    1X2, O/U 1.5+2.5+3.5, BTTS Ja/Nein, DC (1X/X2/12), DNB, Corners, AH -0.5
     """
     m = market.lower()
+
+    # 1X2
     if "heimsieg" in m:
         return res.get("_pinn_close_hw")
     if "auswärtssieg" in m or "auswartssieg" in m:
         return res.get("_pinn_close_aw")
     if "unentschieden" in m:
         return res.get("_pinn_close_dr")
-    if "over 2.5" in m or "über 2.5" in m:
-        return res.get("_pinn_close_o25")   # bereits devigged fair prob
-    if "under 2.5" in m:
-        return res.get("_pinn_close_u25")   # bereits devigged fair prob
-    if "beide teams" in m and "nein" not in m:
-        return res.get("_pinn_close_btts")  # bereits devigged fair prob
+
+    # Doppelte Chance (vor O/U prüfen wegen "1X"/"X2"/"12" Substrings)
+    if "doppelte chance" in m or m.endswith(" 1x") or m.endswith(" x2") or m.endswith(" 12"):
+        if "1x" in m:
+            return res.get("_pinn_close_dc1X")
+        if "x2" in m:
+            return res.get("_pinn_close_dcX2")
+        if "12" in m:
+            return res.get("_pinn_close_dc12")
+
+    # DNB
+    if "dnb" in m or "draw no bet" in m:
+        if "heim" in m:
+            return res.get("_pinn_close_dnbH")
+        if "auswärt" in m or "auswart" in m:
+            return res.get("_pinn_close_dnbA")
+
+    # Over/Under Tore — alle Linien
+    if "über 1.5" in m or "over 1.5" in m:
+        return res.get("_pinn_close_o15")
+    if "unter 1.5" in m or "under 1.5" in m:
+        return res.get("_pinn_close_u15")
+    if "über 2.5" in m or "over 2.5" in m:
+        return res.get("_pinn_close_o25")
+    if "unter 2.5" in m or "under 2.5" in m:
+        return res.get("_pinn_close_u25")
+    if "über 3.5" in m or "over 3.5" in m:
+        return res.get("_pinn_close_o35")
+    if "unter 3.5" in m or "under 3.5" in m:
+        return res.get("_pinn_close_u35")
+
+    # BTTS
+    if "beide teams" in m or "btts" in m:
+        if "nein" in m or "no" in m:
+            return res.get("_pinn_close_bttsN")
+        return res.get("_pinn_close_btts")
+
+    # Asian Handicap -0.5 (Heimteam -0.5 entspricht effektiv Heimsieg ohne Draw)
+    if "handicap" in m or "ah " in m or m.startswith("ah"):
+        if "heim" in m and ("-0.5" in m or "-0,5" in m):
+            return res.get("_pinn_close_ahH_n050")
+        if ("auswärt" in m or "auswart" in m) and ("+0.5" in m or "+0,5" in m):
+            return res.get("_pinn_close_ahA_p050")
+
+    # Corners
+    if "corner" in m or "eck" in m:
+        if "über" in m or "over" in m:
+            return res.get("_pinn_close_cOver")
+        if "unter" in m or "under" in m:
+            return res.get("_pinn_close_cUnder")
+
     return None
 
 

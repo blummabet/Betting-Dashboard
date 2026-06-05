@@ -82,21 +82,48 @@ def claude_complete(prompt: str) -> str | None:
 
 # ── Input-Hash für Cache ──────────────────────────────────────────────────────
 def compute_hash(data: dict) -> str:
-    """SHA-256 über die relevanten Felder — ändert sich wenn Picks/Odds/xG aktualisiert."""
+    """SHA-256 über die relevanten Felder — ändert sich wenn Picks/Odds/xG aktualisiert.
+
+    H6 Fix 05.06.2026 — Cache-Buster erweitert:
+    Vorher fehlten modelOdds, injuries, h2h, form_games, corners_exp im Hash →
+    wenn das Modell sich änderte (z.B. neue Devig-Math, neue Travel-Discount-
+    Faktoren), wurden ALTE AI-Previews ausgespielt obwohl der Pick-Inhalt
+    eigentlich umgewichtet werden müsste. Jetzt: alle Input-Signale die der
+    Prompt verwendet, gehen in den Hash.
+    """
     relevant = {
-        "picks":   [(p.get("market"), p.get("verdict"), p.get("edgePP"), p.get("odds"))
-                    for p in data.get("picks", [])],
-        "hw":      data.get("hw"),
-        "aw":      data.get("aw"),
-        "homeElo": data.get("homeElo"),
-        "awayElo": data.get("awayElo"),
-        "upsetScore": data.get("upsetScore"),
-        "xgHome":  data.get("xgHome"),
-        "xgAway":  data.get("xgAway"),
-        # v2: richer prompt — force regeneration of old 3-sentence previews
-        "_promptVersion": 3,   # v3: injuries in prompt, 400 tokens, better tgSnippet
+        "picks":   [
+            (
+                p.get("market"),
+                p.get("verdict"),
+                p.get("edgePP"),
+                p.get("odds"),
+                p.get("modelOdds"),     # H6: model-only Änderungen erkennen
+                p.get("dataQuality"),   # H6: dataQ-Wechsel = neue Konfidenz
+            )
+            for p in data.get("picks", [])
+        ],
+        "hw":          data.get("hw"),
+        "aw":          data.get("aw"),
+        "dr":          data.get("dr"),
+        "homeElo":     data.get("homeElo"),
+        "awayElo":     data.get("awayElo"),
+        "upsetScore":  data.get("upsetScore"),
+        "xgHome":      data.get("xgHome"),
+        "xgAway":      data.get("xgAway"),
+        # H6: weitere Modell-Inputs die Prompt v3 referenziert
+        "injuries":    sorted([
+            (i.get("playerId") or i.get("name", ""), i.get("status", ""))
+            for i in (data.get("injuries") or [])
+        ]),
+        "h2hGames":    (data.get("h2h") or {}).get("games"),
+        "formHGames":  (data.get("formHome") or {}).get("games"),
+        "formAGames":  (data.get("formAway") or {}).get("games"),
+        "cornersExp":  data.get("cornersExp"),
+        # Prompt-Version erhöht → erzwingt globale Regeneration aller alten Previews
+        "_promptVersion": 4,   # v4: erweiterter Cache-Key + Power-Devig-Korrekturen
     }
-    return hashlib.sha256(json.dumps(relevant, sort_keys=True).encode()).hexdigest()[:16]
+    return hashlib.sha256(json.dumps(relevant, sort_keys=True, default=str).encode()).hexdigest()[:16]
 
 
 # ── Prompt Builder ────────────────────────────────────────────────────────────

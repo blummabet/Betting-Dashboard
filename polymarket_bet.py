@@ -176,11 +176,25 @@ def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> 
             no_idx  = next((i for i, o in enumerate(outcomes) if o.lower() == "no"),  None)
             if yes_idx is None:
                 return None
-            if mkt_type_ == "home_win" and any(t in q_lower for t in home_tokens) and any(w in q_lower for w in ("win", "beat", "defeat")):
-                return clob_ids[yes_idx]
-            if mkt_type_ == "away_win" and any(t in q_lower for t in away_tokens) and any(w in q_lower for w in ("win", "beat", "defeat")):
-                return clob_ids[yes_idx]
-            if mkt_type_ == "draw" and "draw" in q_lower:
+            # H4 Fix: home/away/draw binary muss BEIDE Team-Tokens im Question haben
+            # (sonst matchen z.B. "Will Brazil win vs Morocco?" und "Will Brazil
+            # win vs Argentina?" beide für home="Brazil" — eindeutige Spielzuordnung)
+            both_teams_in_q = (
+                any(t in q_lower for t in home_tokens)
+                and any(t in q_lower for t in away_tokens)
+            )
+            if mkt_type_ == "home_win" and both_teams_in_q and any(w in q_lower for w in ("win", "beat", "defeat")):
+                # Außerdem: home muss VOR "win/beat/defeat" stehen (Brazil beat Argentina != Argentina beat Brazil)
+                home_pos = min((q_lower.find(t) for t in home_tokens if t in q_lower), default=999)
+                away_pos = min((q_lower.find(t) for t in away_tokens if t in q_lower), default=999)
+                if home_pos < away_pos:
+                    return clob_ids[yes_idx]
+            if mkt_type_ == "away_win" and both_teams_in_q and any(w in q_lower for w in ("win", "beat", "defeat")):
+                home_pos = min((q_lower.find(t) for t in home_tokens if t in q_lower), default=999)
+                away_pos = min((q_lower.find(t) for t in away_tokens if t in q_lower), default=999)
+                if away_pos < home_pos:
+                    return clob_ids[yes_idx]
+            if mkt_type_ == "draw" and "draw" in q_lower and both_teams_in_q:
                 return clob_ids[yes_idx]
             # Goals binary: "Will there be over 2.5 goals?"
             if mkt_type_ == "over25" and "over" in q_lower and "2.5" in q_lower:
@@ -196,10 +210,40 @@ def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> 
             return None
 
         # ── Multi-outcome markets (e.g. ["Real Betis", "Draw", "Real Oviedo"]) ──
+        # H4 Fix 05.06.2026 — AND-match statt OR-Match:
+        # Vorher: Heimsieg matched ERSTES Outcome mit ANY home_token →
+        # Bei Outcomes ["Real Betis", "Draw", "Real Oviedo"] mit home="Real Betis"
+        # und home_tokens=["real","betis"] hätte das Outcome "Real Oviedo"
+        # genauso gematched, weil "real" auch dort vorkommt. Wenn die Outcomes-
+        # Reihenfolge zufällig Oviedo zuerst hat → falscher Token gekauft.
+        # Jetzt: Outcome muss ALLE home_tokens enthalten UND keine away_tokens.
+        def _outcome_score(outcome: str, my_tokens: list, other_tokens: list) -> int:
+            """Higher = better match. Negative wenn other_tokens drin sind."""
+            o_lower = outcome.lower()
+            my_hits    = sum(1 for t in my_tokens if t in o_lower)
+            other_hits = sum(1 for t in other_tokens if t in o_lower)
+            # Wenn beide Token-Sets matchen, geht's nicht eindeutig → -1
+            if my_hits > 0 and other_hits > 0:
+                # Wenn other_hits ≥ my_hits → eindeutig falsches Outcome
+                if other_hits >= my_hits:
+                    return -1
+            return my_hits - other_hits
+
         if mkt_type_ == "home_win":
-            idx = next((i for i, o in enumerate(outcomes) if any(t in o.lower() for t in home_tokens)), None)
+            # Score jedes Outcome — wähle das mit höchstem Score (>0)
+            best = max(
+                enumerate(outcomes),
+                key=lambda io: _outcome_score(io[1], home_tokens, away_tokens),
+                default=None,
+            )
+            idx = best[0] if best and _outcome_score(best[1], home_tokens, away_tokens) > 0 else None
         elif mkt_type_ == "away_win":
-            idx = next((i for i, o in enumerate(outcomes) if any(t in o.lower() for t in away_tokens)), None)
+            best = max(
+                enumerate(outcomes),
+                key=lambda io: _outcome_score(io[1], away_tokens, home_tokens),
+                default=None,
+            )
+            idx = best[0] if best and _outcome_score(best[1], away_tokens, home_tokens) > 0 else None
         elif mkt_type_ == "draw":
             idx = next((i for i, o in enumerate(outcomes) if "draw" in o.lower()), None)
         elif mkt_type_ == "over25":

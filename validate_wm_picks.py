@@ -69,6 +69,32 @@ def _add(issues, mk, market, level, code, message, snap):
 def validate_pick(mk: str, p: dict, wm: dict, issues: list) -> None:
     market = p.get("market", "?")
 
+    # H5 Fix 05.06.2026 — WATCH/STAT-Picks aus Validation ausnehmen:
+    # WATCH-Picks (Corner-Beobachter ohne Markt-Quote) und STAT-Picks (Player-
+    # Info-Cards) haben absichtlich keine "odds" / "edgePP" / "clvPP" Felder.
+    # Vorher: jeder WATCH-Pick warf E_MISSING_FIELD-Error → Tracking-Tab zeigte
+    # rote Pill obwohl alles korrekt. Jetzt: für nicht-aktive Verdicts nur
+    # Light-Check (market + verdict + parse-key).
+    verdict_raw = p.get("verdict", "")
+    NON_ACTIVE_VERDICTS = {"WATCH", "STAT", "SKIP"}
+    if verdict_raw in NON_ACTIVE_VERDICTS:
+        # Light-Check: nur market + parse-key + orphan-match
+        if not market or market == "?":
+            _add(issues, mk, market, "warning", "W_WATCH_NO_MARKET",
+                 f"{verdict_raw}-Pick ohne market-Feld", p)
+        parts = mk.split("-", 3)
+        if len(parts) >= 4:
+            gkey, _, home, away = parts
+            gdata = (wm.get("groups") or {}).get(gkey) or {}
+            match_exists = any(
+                fx.get("home") == home and fx.get("away") == away
+                for fx in gdata.get("fixtures", [])
+            )
+            if not match_exists:
+                _add(issues, mk, market, "error", "E_ORPHAN_MATCH",
+                     f"{verdict_raw}-Pick existiert aber Match {home}-{away} nicht in {gkey}", p)
+        return  # Light-check fertig
+
     # ── E_MISSING_FIELD ────────────────────────────────────
     for field in ("market", "odds", "verdict"):
         if not p.get(field):
