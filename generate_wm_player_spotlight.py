@@ -45,8 +45,8 @@ WM_FILE      = BASE / "wm2026-data.json"
 PROPS_FILE   = BASE / "wm2026-player-props.json"
 LOG_FILE     = BASE / "telegram-log.json"
 
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
-CHAT_ID        = os.environ.get("TELEGRAM_CHAT_ID", "-1003819239615")
+TELEGRAM_TOKEN = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
+CHAT_ID        = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()
 SPOTLIGHT_DAYS = int(os.environ.get("SPOTLIGHT_DAYS", "7"))
 MAX_SPOTLIGHTS = int(os.environ.get("MAX_SPOTLIGHTS", "3"))
 DRY_RUN        = os.environ.get("DRY_RUN", "").lower() == "true"

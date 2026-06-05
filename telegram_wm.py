@@ -27,8 +27,8 @@ import urllib.error
 from datetime import datetime, timezone, timedelta
 
 # ── Config ────────────────────────────────────────────────────────────────────
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
-CHAT_ID        = os.environ.get("TELEGRAM_CHAT_ID", "-1003819239615")
+TELEGRAM_TOKEN = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
+CHAT_ID        = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()
 TG_WM_MODE     = os.environ.get("TG_WM_MODE", "morning")
 
 WM_FILE        = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wm2026-data.json")

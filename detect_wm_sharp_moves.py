@@ -37,8 +37,10 @@ LOG_FILE     = BASE / "telegram-log.json"
 MOVES_LOG    = BASE / "wm_sharp_moves_log.json"
 DEDUP_FILE   = BASE / "wm_sharp_dedup.json"
 
-TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "")
-CHAT_ID        = os.environ.get("TELEGRAM_CHAT_ID", "-1003819239615")
+TELEGRAM_TOKEN = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
+# GitHub Actions setzt fehlende Secrets als leeren String → `os.environ.get("X", default)`
+# greift dann NICHT zum Default, sondern gibt "" zurück. Daher `or "default"` Pattern.
+CHAT_ID        = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()
 
 ALERT_PP         = 5    # pp vs. letztem Snapshot → normaler Alert
 ALERT_PP_BIG     = 10   # pp vs. letztem Snapshot → Steam Move
