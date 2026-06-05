@@ -1,0 +1,518 @@
+{
+  "today": "2026-06-05T12:41:45.114385+00:00",
+  "chosen": {
+    "angle_id": "killerStat",
+    "entity_key": "defensiveWall:MAR",
+    "theme": "killer_stat",
+    "score": 0.733,
+    "hook_slots": {
+      "big_number": {
+        "value": "0.3",
+        "source": "form.MAR.avgConceded",
+        "source_file": "wm2026-data.json",
+        "derived": false,
+        "raw": 0.267
+      },
+      "sub_title": {
+        "value": "Gegentore pro Spiel · Marokko",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "hook_line_1": {
+        "value": "<span class=\"acc\">Marokko</span> 🇲🇦 kassiert",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "hook_line_2": {
+        "value": "<span class=\"yellow\">fast keine Tore.</span>",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "mystery_question": {
+        "value": "Wer durchbricht die Mauer?",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "highlight_fact": {
+        "value": "0.3 Tore/Spiel kassiert — Ø 2.2 eigene",
+        "source": "form.MAR.avgConceded + form.MAR.avgScored",
+        "source_file": "wm2026-data.json",
+        "derived": true,
+        "raw": null
+      }
+    },
+    "info_slots": {
+      "flag": {
+        "value": "🇲🇦",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "name": {
+        "value": "Marokko",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "role_line": {
+        "value": "Bestes Defensivteam laut Form · 15 Spiele Datenbasis",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "stat1_val": {
+        "value": "0.3",
+        "source": "form.MAR.avgConceded",
+        "source_file": "wm2026-data.json",
+        "derived": false,
+        "raw": 0.267
+      },
+      "stat1_lbl": {
+        "value": "Gegen Ø",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "stat2_val": {
+        "value": "2.2",
+        "source": "form.MAR.avgScored",
+        "source_file": "wm2026-data.json",
+        "derived": false,
+        "raw": 2.2
+      },
+      "stat2_lbl": {
+        "value": "Tore Ø",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "stat3_val": {
+        "value": "47%",
+        "source": "form.MAR.over25Rate",
+        "source_file": "wm2026-data.json",
+        "derived": false,
+        "raw": 0.467
+      },
+      "stat3_lbl": {
+        "value": "Ü 2.5 Quote",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "closing_line": {
+        "value": "<strong>Beste Defensiv-Quote</strong> aller 44 qualifizierten Teams. Ø 0.3 Tore über 15 Spiele.",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "quote_line": {
+        "value": "Wer hier <span class=\"acc\">zwei Tore</span> macht, gewinnt. 🛡️",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "data_source": {
+        "value": "Daten: WM-Quali + Tests 2024/25",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      }
+    },
+    "series_tag": "",
+    "reason": "avgConceded=0.3 (15 games) — niedrigster aller Teams"
+  },
+  "verifier": {
+    "angle_id": "killerStat",
+    "entity": "defensiveWall:MAR",
+    "ok": true,
+    "failures": [],
+    "details": [
+      [
+        "big_number",
+        true,
+        "ok (0.0% drift, threshold 5.0%)"
+      ],
+      [
+        "sub_title",
+        true,
+        "static"
+      ],
+      [
+        "hook_line_1",
+        true,
+        "static"
+      ],
+      [
+        "hook_line_2",
+        true,
+        "static"
+      ],
+      [
+        "mystery_question",
+        true,
+        "static"
+      ],
+      [
+        "highlight_fact",
+        true,
+        "derived (plausibility ok)"
+      ],
+      [
+        "flag",
+        true,
+        "static"
+      ],
+      [
+        "name",
+        true,
+        "static"
+      ],
+      [
+        "role_line",
+        true,
+        "static"
+      ],
+      [
+        "stat1_val",
+        true,
+        "ok (0.0% drift, threshold 5.0%)"
+      ],
+      [
+        "stat1_lbl",
+        true,
+        "static"
+      ],
+      [
+        "stat2_val",
+        true,
+        "ok (0.0% drift, threshold 5.0%)"
+      ],
+      [
+        "stat2_lbl",
+        true,
+        "static"
+      ],
+      [
+        "stat3_val",
+        true,
+        "ok (0.0% drift, threshold 5.0%)"
+      ],
+      [
+        "stat3_lbl",
+        true,
+        "static"
+      ],
+      [
+        "closing_line",
+        true,
+        "static"
+      ],
+      [
+        "quote_line",
+        true,
+        "static"
+      ],
+      [
+        "data_source",
+        true,
+        "static"
+      ]
+    ],
+    "checked": 18
+  },
+  "all": [
+    {
+      "angle_id": "killerStat",
+      "entity_key": "avgScored:NOR",
+      "theme": "killer_stat",
+      "score": 0.85,
+      "hook_slots": {
+        "big_number": {
+          "value": "3.5",
+          "source": "form.NOR.avgScored",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 3.467
+        },
+        "sub_title": {
+          "value": "Tore pro Spiel · Norwegen",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_1": {
+          "value": "<span class=\"acc\">Norwegen</span> 🇳🇴 trifft",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_2": {
+          "value": "<span class=\"yellow\">jeden Gegner.</span>",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "mystery_question": {
+          "value": "Wer stoppt diese Maschine?",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "highlight_fact": {
+          "value": "Ø 3.5 Tore in 15 Spielen — Gegen Ø 0.7",
+          "source": "form.NOR.avgScored + form.NOR.games + form.NOR.avgConceded",
+          "source_file": "wm2026-data.json",
+          "derived": true,
+          "raw": null
+        }
+      },
+      "info_slots": {
+        "flag": {
+          "value": "🇳🇴",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "name": {
+          "value": "Norwegen",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "role_line": {
+          "value": "Ø 3.5 Tore/Spiel · 15 Spiele Datenbasis",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_val": {
+          "value": "3.5",
+          "source": "form.NOR.avgScored",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 3.467
+        },
+        "stat1_lbl": {
+          "value": "Tore Ø",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_val": {
+          "value": "0.7",
+          "source": "form.NOR.avgConceded",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 0.667
+        },
+        "stat2_lbl": {
+          "value": "Gegen Ø",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_val": {
+          "value": "15",
+          "source": "form.NOR.games",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 15
+        },
+        "stat3_lbl": {
+          "value": "Spiele",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "closing_line": {
+          "value": "<strong>Höchste Ø-Tore-Quote</strong> aller 44 qualifizierten WM-Teams. Form-Datenbasis: 15 Spiele.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "quote_line": {
+          "value": "Tor-Maschine ohne <span class=\"acc\">Stopper</span> in Sicht. ⚽",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "data_source": {
+          "value": "Daten: WM-Quali + Tests 2024/25",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "series_tag": "",
+      "reason": "avgScored=3.5 (15 games) — höchster aller 44 Teams"
+    },
+    {
+      "angle_id": "killerStat",
+      "entity_key": "defensiveWall:MAR",
+      "theme": "killer_stat",
+      "score": 0.733,
+      "hook_slots": {
+        "big_number": {
+          "value": "0.3",
+          "source": "form.MAR.avgConceded",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 0.267
+        },
+        "sub_title": {
+          "value": "Gegentore pro Spiel · Marokko",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_1": {
+          "value": "<span class=\"acc\">Marokko</span> 🇲🇦 kassiert",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_2": {
+          "value": "<span class=\"yellow\">fast keine Tore.</span>",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "mystery_question": {
+          "value": "Wer durchbricht die Mauer?",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "highlight_fact": {
+          "value": "0.3 Tore/Spiel kassiert — Ø 2.2 eigene",
+          "source": "form.MAR.avgConceded + form.MAR.avgScored",
+          "source_file": "wm2026-data.json",
+          "derived": true,
+          "raw": null
+        }
+      },
+      "info_slots": {
+        "flag": {
+          "value": "🇲🇦",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "name": {
+          "value": "Marokko",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "role_line": {
+          "value": "Bestes Defensivteam laut Form · 15 Spiele Datenbasis",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_val": {
+          "value": "0.3",
+          "source": "form.MAR.avgConceded",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 0.267
+        },
+        "stat1_lbl": {
+          "value": "Gegen Ø",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_val": {
+          "value": "2.2",
+          "source": "form.MAR.avgScored",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 2.2
+        },
+        "stat2_lbl": {
+          "value": "Tore Ø",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_val": {
+          "value": "47%",
+          "source": "form.MAR.over25Rate",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 0.467
+        },
+        "stat3_lbl": {
+          "value": "Ü 2.5 Quote",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "closing_line": {
+          "value": "<strong>Beste Defensiv-Quote</strong> aller 44 qualifizierten Teams. Ø 0.3 Tore über 15 Spiele.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "quote_line": {
+          "value": "Wer hier <span class=\"acc\">zwei Tore</span> macht, gewinnt. 🛡️",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "data_source": {
+          "value": "Daten: WM-Quali + Tests 2024/25",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "series_tag": "",
+      "reason": "avgConceded=0.3 (15 games) — niedrigster aller Teams"
+    }
+  ]
+}

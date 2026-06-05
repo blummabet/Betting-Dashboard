@@ -102,7 +102,14 @@ STORY_PLAN = {
     },
 
     # ─────────────── Fr 2026-06-05 — Senegal Form ──────────────
+    # ⚠️ Senegal-Story "5W/5" war falsch: USA-Niederlage 31.05.2026 fehlte im
+    # hartkodierten Wert. Auto-Pipeline hat die Card am 05.06. vormittag schon
+    # gesendet — daher posted_manually=True damit kein Re-Post nach dem Fix passiert.
+    # FOLLOW-UP: tiktok_story_plan Form-Werte sollten aus wm_form.json live gezogen
+    # werden statt hartkodiert (Phantom-Team-Guard fängt nur Existenz, nicht Aktualität).
     "2026-06-05": {
+        "posted_manually": True,
+        "topic": "Senegal Form (5W/5 war stale — USA-Niederlage 31.5 nicht reflektiert)",
         "theme": "hidden_gem",
         "series_tag": "STORY 7 / 10",
         "hook": {

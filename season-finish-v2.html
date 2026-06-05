@@ -8282,10 +8282,23 @@ function renderTgLog(log) {
   const typeIcon = {
     morning_card: '🌅', recap: '📊', sharp_alert: '📡',
     steam_alert: '🔥', player_spotlight: '🌟',
+    // WM Live-Story-Engine — täglich morgens 06:00 UTC
+    wm_live_story: '🎬',
+    cumul_alert: '📈',
+    pick_changes_digest: '🔄',
+    track_record: '🏆',
+    auto_bet: '🤖',
+    sell_alert: '💰',
   };
   const typeColor = {
     morning_card: '#00d4a1', recap: '#f0c040', sharp_alert: '#ff8c00',
     steam_alert: '#f85149', player_spotlight: '#a78bfa',
+    wm_live_story: '#4cc9f0',   // türkis wie hidden_gem Theme
+    cumul_alert: '#ff8c00',
+    pick_changes_digest: '#a78bfa',
+    track_record: '#3fb950',
+    auto_bet: '#3fb950',
+    sell_alert: '#e3b341',
   };
   const rows = [...log].reverse().slice(0, 50).map(e => {
     const icon  = typeIcon[e.type]  || '📱';
