@@ -612,7 +612,17 @@ function renderPolyTrader(panel) {
     `
     : '';
 
-  panel.innerHTML = cockpitBlock + wmTableHtml;
+  // Position-Health-Block (lädt async, rendert oben über Cockpit)
+  const healthBlock = `
+    <div id="positionHealthBlock">
+      <div style="background:#161b22;border:1px solid #30363d;border-radius:14px;padding:14px;margin-bottom:14px;color:#8b949e;font-size:12px;text-align:center;">
+        🩺 Position-Health-Monitor lädt…
+      </div>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" style="display:none" onload="if(window.loadPositionHealth && !window._healthLoading){window._healthLoading=true;loadPositionHealth().finally(()=>{window._healthLoading=false;});}"></svg>
+  `;
+
+  panel.innerHTML = healthBlock + cockpitBlock + wmTableHtml;
   return; // ← remove this line after WM season to restore club table
 
   panel.innerHTML = wmTableHtml + `

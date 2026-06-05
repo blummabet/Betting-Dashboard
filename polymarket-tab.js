@@ -4500,3 +4500,117 @@ async function _fetchAllPricesAsync() {
     }
   }
 }
+
+// ═══════════════════════════════════════════════════════════════════
+//  POSITION-HEALTH-MONITOR
+//  Lädt position_health.json und rendert Status-Cards für offene Trades
+// ═══════════════════════════════════════════════════════════════════
+window.loadPositionHealth = async function () {
+  const block = document.getElementById('positionHealthBlock');
+  if (!block) return;
+  try {
+    const ts = Date.now();
+    let raw = `https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main/position_health.json?t=${ts}`;
+    let res = await fetch(raw).catch(() => null);
+    if (!res || !res.ok) {
+      res = await fetch(`position_health.json?t=${ts}`, { cache: 'no-store' }).catch(() => null);
+    }
+    if (!res || !res.ok) {
+      block.innerHTML = renderHealthPlaceholder('Position-Health-Daten nicht verfügbar');
+      return;
+    }
+    const data = await res.json();
+    block.innerHTML = renderPositionHealth(data);
+  } catch (e) {
+    block.innerHTML = renderHealthPlaceholder('Fehler beim Laden: ' + e.message);
+  }
+};
+
+function renderHealthPlaceholder(msg) {
+  return `<div style="background:#161b22;border:1px solid #30363d;border-radius:14px;padding:14px;margin-bottom:14px;color:#8b949e;font-size:12px;text-align:center;">🩺 ${msg}</div>`;
+}
+
+function renderPositionHealth(data) {
+  const positions = (data && data.positions) || [];
+  const lastRun = data && data.lastRun;
+  if (!positions.length) {
+    return `<div class="ph-empty">
+      <div class="ph-empty-icon">🩺</div>
+      <div class="ph-empty-title">Position-Health-Monitor</div>
+      <div class="ph-empty-text">Aktuell keine offenen Polymarket-Positionen. Bei ersten Trades zeigt dieser Block je Position einen Health-Score (0-100) basierend auf Edge-Persistenz, Pinnacle-Drift, CLV und Time-Pressure.</div>
+      ${lastRun ? `<div class="ph-empty-time">Letzter Check: ${_phFmtTime(lastRun)}</div>` : ''}
+    </div>`;
+  }
+
+  // Sort by score asc (kritischste zuerst)
+  positions.sort((a, b) => (a.score || 0) - (b.score || 0));
+
+  // Summary-Stats
+  const counts = { ok: 0, watch: 0, warning: 0, critical: 0 };
+  for (const p of positions) counts[p.status] = (counts[p.status] || 0) + 1;
+
+  const cards = positions.map(p => _phCard(p)).join('');
+
+  return `
+    <div class="ph-wrap">
+      <div class="ph-header">
+        <div class="ph-header-left">
+          <span class="ph-header-icon">🩺</span>
+          <span class="ph-header-title">Position-Health-Monitor</span>
+          <span class="ph-header-count">${positions.length} offene Position${positions.length === 1 ? '' : 'en'}</span>
+        </div>
+        <div class="ph-header-right">
+          ${counts.critical ? `<span class="ph-chip ph-chip-critical">🔴 ${counts.critical}</span>` : ''}
+          ${counts.warning  ? `<span class="ph-chip ph-chip-warning">🟠 ${counts.warning}</span>` : ''}
+          ${counts.watch    ? `<span class="ph-chip ph-chip-watch">🟡 ${counts.watch}</span>` : ''}
+          ${counts.ok       ? `<span class="ph-chip ph-chip-ok">🟢 ${counts.ok}</span>` : ''}
+          <span class="ph-header-time">${lastRun ? _phFmtTime(lastRun) : ''}</span>
+        </div>
+      </div>
+      <div class="ph-cards">${cards}</div>
+    </div>
+  `;
+}
+
+function _phCard(p) {
+  const statusClass = `ph-status-${p.status}`;
+  const score = Math.round(p.score || 0);
+  const factors = (p.factors || []).map(f => {
+    const fScore = Math.round(f.score || 0);
+    const fEmoji = fScore >= 80 ? '✅' : fScore >= 60 ? '🟡' : fScore >= 40 ? '🟠' : '🔴';
+    return `<div class="ph-factor"><span class="ph-factor-emoji">${fEmoji}</span><span class="ph-factor-name">${f.name}</span><span class="ph-factor-score">${fScore}</span><span class="ph-factor-note">${f.note || ''}</span></div>`;
+  }).join('');
+  const hoursLeft = p.hoursLeft != null ? `${p.hoursLeft.toFixed(1)}h bis Anpfiff` : 'Anpfiff-Zeit unbekannt';
+  const safeKey = (p.key || '').replace(/['"\\]/g, '');
+  return `
+    <details class="ph-card ${statusClass}">
+      <summary class="ph-card-head">
+        <div class="ph-card-left">
+          <span class="ph-card-flags">${p.homeFlag || '🏳'} ${p.awayFlag || '🏳'}</span>
+          <div class="ph-card-match">
+            <div class="ph-card-teams">${p.home || '?'} vs ${p.away || '?'}</div>
+            <div class="ph-card-market">${p.market || '?'} · ${hoursLeft}</div>
+          </div>
+        </div>
+        <div class="ph-card-score-block">
+          <div class="ph-card-score-num">${score}</div>
+          <div class="ph-card-score-lbl">/100</div>
+        </div>
+      </summary>
+      <div class="ph-card-body">
+        <div class="ph-card-factors">${factors}</div>
+        <div class="ph-card-reco">💡 ${p.recommendation || ''}</div>
+      </div>
+    </details>
+  `;
+}
+
+function _phFmtTime(iso) {
+  try {
+    const d = new Date(iso);
+    const mins = Math.round((Date.now() - d.getTime()) / 60000);
+    if (mins < 60) return `vor ${mins}m`;
+    if (mins < 1440) return `vor ${Math.round(mins/60)}h`;
+    return d.toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+  } catch (e) { return ''; }
+}
