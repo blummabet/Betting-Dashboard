@@ -386,7 +386,12 @@
     const away = teamsMap[awayId] || { id: awayId, name: awayId, flag: '🏳️' };
     const fxOdds = (_wmData.odds || {})[`${homeId}-${awayId}`] || null;
     const fxPicks = (_wmData.picks || {})[mk] || [];
-    const livePicks = fxPicks.filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN');
+    // Audit-Fix 06.06.2026: trackingExcluded Picks komplett raus aus der Card.
+    // Diese werden vom Tracker (resolve_wm_picks.py) als VOID markiert wenn sie
+    // direktional widersprüchlich sind — wir wollen sie nirgends anzeigen.
+    const livePicks = fxPicks.filter(p =>
+      !p.trackingExcluded && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN')
+    );
     const sortedPicks = [...livePicks].sort((a, b) => {
       if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
       if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
@@ -422,7 +427,12 @@
     // WATCH-Picks (z.B. Corner-Picks ohne Markt-Quote) sind keine Hero-Kandidaten
     // Smart-Substitution: saferAlt-Picks (Doppelte Chance / AH-Alternative für riskante Picks)
     //   werden bei gleicher Verdict-Klasse bevorzugt — niedrigere Quote = höhere Hit-Rate
-    const livePicks = fxPicks.filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN');
+    // Audit-Fix 06.06.2026: trackingExcluded Picks komplett raus aus der Card.
+    // Diese werden vom Tracker (resolve_wm_picks.py) als VOID markiert wenn sie
+    // direktional widersprüchlich sind — wir wollen sie nirgends anzeigen.
+    const livePicks = fxPicks.filter(p =>
+      !p.trackingExcluded && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN')
+    );
     const sortedPicks = [...livePicks].sort((a, b) => {
       if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
       if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;

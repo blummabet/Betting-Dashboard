@@ -1441,8 +1441,14 @@ function renderPicks(D) {
   const picks = D.picks || [];
   if (picks.length === 0) return '';
 
-  const betPicks = picks.filter(p => p.verdict === 'BET');
-  const abwPicks = picks.filter(p => p.verdict === 'ABWÄGEN');
+  // Audit-Fix 06.06.2026: trackingExcluded Picks komplett raus.
+  // Diese werden vom Tracker (resolve_wm_picks.py) bewusst als VOID markiert
+  // wenn sie direktional widersprüchlich zum Hero sind — sie sollen NIRGENDS
+  // angezeigt werden, weder Hero noch Secondary.
+  const visiblePicks = picks.filter(p => !p.trackingExcluded);
+
+  const betPicks = visiblePicks.filter(p => p.verdict === 'BET');
+  const abwPicks = visiblePicks.filter(p => p.verdict === 'ABWÄGEN');
 
   // Sortieren nach Edge (innerhalb BET/ABWÄGEN)
   betPicks.sort((a,b) => (parseFloat(b.edgePP)||0) - (parseFloat(a.edgePP)||0));
