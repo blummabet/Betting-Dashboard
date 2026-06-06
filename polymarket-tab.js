@@ -502,10 +502,12 @@ function _extractWmPicksForDate(wm, dateStr) {
     const aInfo = teamLookup[aId] || { name: aId, flag: '🏳' };
 
     for (const p of pickList) {
-      // AUDIT-Fix 06.06.2026: trackingExcluded raus — diese Picks sind
-      // direktional widersprüchlich zum Hero, sollen nicht für manuelle
-      // Trades vorgeschlagen werden.
-      if (p.trackingExcluded) continue;
+      // Refactor 2026-06-06: trackingExcluded-Check via shared Helper.
+      // _pick_helpers.js isLegitimatePick spiegelt pick_helpers.is_legitimate_pick.
+      const isLegit = (window.CocoBetPicks && window.CocoBetPicks.isLegitimatePick)
+        ? window.CocoBetPicks.isLegitimatePick(p)
+        : !p.trackingExcluded;   // Fallback wenn Helper fehlt
+      if (!isLegit) continue;
 
       const edge = parseFloat(p.edgePP) || 0;
       const verdict = p.verdict;

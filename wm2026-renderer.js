@@ -480,49 +480,16 @@
     // (z.B. CAN-BIH X2 @2.05), aber "Weitere Picks" enthalten AH Heim −0.5
     // (homeStrong) → User sieht logisch widersprüchliche Empfehlungen
     // nebeneinander. Hier in UI ausfiltern.
-    if (heroPick) {
-      const DIRECTION_MAP = {
-        'Heimsieg':                'homeStrong',
-        'Doppelte Chance — 1X':    'homeBias',
-        'Doppelte Chance — 12':    'decisive',
-        'AH Heim −0.5':            'homeStrong',
-        'AH Heim −0.75':           'homeStrong',
-        'AH Heim −1.0':            'homeStrong',
-        'DNB: Heimteam':           'homeStrong',
-        'Auswärtssieg':            'awayStrong',
-        'Doppelte Chance — X2':    'awayBias',
-        'AH Auswärts +0.5':        'awayStrong',
-        'AH Auswärts +0.75':       'awayStrong',
-        'AH Auswärts +1.0':        'awayStrong',
-        'DNB: Auswärtsteam':       'awayStrong',
-        'Unentschieden':           'drawOnly',
-        'Über 1.5 Tore':           'over',
-        'Über 2.5 Tore':           'over',
-        'Über 3.5 Tore':           'over',
-        'Unter 1.5 Tore':          'under',
-        'Unter 2.5 Tore':          'under',
-        'Unter 3.5 Tore':          'under',
-        'Beide Teams treffen':     'over',
-        'Beide Teams treffen — Ja': 'over',
-        'Beide Teams treffen — Nein': 'under',
-      };
-      const INCOMPATIBLE = new Set([
-        'homeStrong|awayStrong', 'awayStrong|homeStrong',
-        'homeStrong|awayBias',   'awayBias|homeStrong',
-        'homeStrong|drawOnly',   'drawOnly|homeStrong',
-        'homeBias|awayStrong',   'awayStrong|homeBias',
-        'awayStrong|drawOnly',   'drawOnly|awayStrong',
-        'decisive|drawOnly',     'drawOnly|decisive',
-        'over|under',            'under|over',
-      ]);
-      const heroDir = DIRECTION_MAP[heroPick.market];
-      if (heroDir) {
-        otherPicks = otherPicks.filter(p => {
-          const d = DIRECTION_MAP[p.market];
-          if (!d) return true;   // unbekannter Markt → durchlassen
-          return !INCOMPATIBLE.has(`${heroDir}|${d}`);
-        });
-      }
+    // Refactor 2026-06-06: DIRECTION_MAP + INCOMPATIBLE jetzt aus _pick_helpers.js
+    // (window.CocoBetPicks). Spiegelt pick_constants.json (Python-Master).
+    if (heroPick && window.CocoBetPicks) {
+      otherPicks = otherPicks.filter(p =>
+        !window.CocoBetPicks.arePicksConflicting(heroPick, p)
+      );
+    } else if (heroPick) {
+      // Fallback: wenn _pick_helpers.js noch nicht geladen, keine UI-Filterung.
+      // Server-seitiges trackingExcluded fängt 99% der Fälle ab.
+      console.warn('CocoBetPicks helpers nicht geladen — UI-Konflikt-Filter inaktiv');
     }
 
     // Hot badge: high poly edge OR steam lag — only when relevant

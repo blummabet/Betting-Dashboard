@@ -777,6 +777,10 @@ body{
   </div>
 </div>
 
+<!-- Shared Pick-Helpers — DIRECTION_MAP, INCOMPATIBLE, isLegitimatePick, heroSort.
+     Spiegelt pick_constants.json (Python-Master). MUSS vor dem inline-Script geladen sein. -->
+<script src="../_pick_helpers.js"></script>
+
 <script>
 // ═══════════════════════════════════════════════════════════
 //  WM MATCH PAGE  ·  Dynamic Renderer
@@ -1319,33 +1323,13 @@ function renderAI(D) {
 
 /* ── Picks section ───────────────────────────────────────── */
 
-// AUDIT-Fix 06.06.2026: Direction-Map für Cross-Market-Konsistenz
-// Spiegelt die Logik aus wm2026-renderer.js + generate_wm_picks.py
-const _PICK_DIRECTION_MAP = {
-  'Heimsieg': 'homeStrong', 'Doppelte Chance — 1X': 'homeBias',
-  'Doppelte Chance — 12': 'decisive', 'AH Heim −0.5': 'homeStrong',
-  'AH Heim −0.75': 'homeStrong', 'AH Heim −1.0': 'homeStrong',
-  'DNB: Heimteam': 'homeStrong', 'Auswärtssieg': 'awayStrong',
-  'Doppelte Chance — X2': 'awayBias', 'AH Auswärts +0.5': 'awayStrong',
-  'AH Auswärts +0.75': 'awayStrong', 'AH Auswärts +1.0': 'awayStrong',
-  'DNB: Auswärtsteam': 'awayStrong', 'Unentschieden': 'drawOnly',
-  'Über 1.5 Tore': 'over', 'Über 2.5 Tore': 'over', 'Über 3.5 Tore': 'over',
-  'Unter 1.5 Tore': 'under', 'Unter 2.5 Tore': 'under', 'Unter 3.5 Tore': 'under',
-  'Beide Teams treffen': 'over', 'Beide Teams treffen — Ja': 'over',
-  'Beide Teams treffen — Nein': 'under',
-};
-const _PICK_INCOMPATIBLE = new Set([
-  'homeStrong|awayStrong', 'awayStrong|homeStrong',
-  'homeStrong|awayBias',   'awayBias|homeStrong',
-  'homeStrong|drawOnly',   'drawOnly|homeStrong',
-  'homeBias|awayStrong',   'awayStrong|homeBias',
-  'awayStrong|drawOnly',   'drawOnly|awayStrong',
-  'decisive|drawOnly',     'drawOnly|decisive',
-  'over|under',            'under|over',
-]);
+// Refactor 2026-06-06: DIRECTION_MAP + INCOMPATIBLE jetzt aus _pick_helpers.js
+// (window.CocoBetPicks). Spiegelt pick_constants.json (Python-Master).
+// Lokale Aliases mit Fallback, falls Helper noch nicht geladen.
+const _PICK_DIRECTION_MAP = (window.CocoBetPicks && window.CocoBetPicks.DIRECTION_MAP) || {};
 function _picksIncompatible(d1, d2) {
-  if (!d1 || !d2) return false;
-  return _PICK_INCOMPATIBLE.has(`${d1}|${d2}`);
+  if (!window.CocoBetPicks) return false;
+  return window.CocoBetPicks.areDirectionsIncompatible(d1, d2);
 }
 
 // Pick-Why-Modal: schlanke Version für Event-Pages (großes Format, lesbarer)
