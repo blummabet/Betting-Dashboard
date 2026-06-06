@@ -35,28 +35,43 @@ from datetime import datetime, timezone, date
 # Auf True setzen (oder AUTO_TRIGGER_ENABLED=true in Env) wenn bereit für Live-Trading
 ENABLED = False
 
-AUTO_TRIGGER_EDGE_PP  = 4.0   # Mindest-Edge in Prozentpunkten (normale Signale)
-                              # 01.06.2026: 5.0 → 4.0 nach Backtest (Sweet Spot 3-5pp lag bei +14% ROI)
-STEAM_LAG_EDGE_PP    = 3.0   # Niedrigerer Schwellenwert wenn steamLag=True (Pinn bereits bewegt)
-                              # 01.06.2026: Backtest zeigt Steam Lag schwächer als Normal, ABER:
-                              # Sample n=7 zu klein für definitive Aussage. Lucas-Entscheidung:
-                              # bei 3.0 lassen → mit Live-Daten nach 2-3 Wochen WM neu bewerten.
-MIN_VOL              = 10000  # Mindest-Volumen auf Polymarket (USDC)
-MIN_DAYS_UNTIL_GAME  = 1      # Nicht am Spieltag selbst — zu wenig Zeit für Human Review
-MIN_HOURS_BEFORE_MATCH = 4   # Kein Kauf wenn Anpfiff in weniger als N Stunden
+# ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
+# Backwards-compatible: wenn cocobet_config fehlt, greift der Fallback-Default
+# pro Konstante — Verhalten bleibt identisch zur Pre-Refactor-Version.
+# WICHTIG: bei jeder Konstante ist der Default-Wert == aktueller hardcoded-Wert.
+try:
+    from cocobet_config import CONFIG as _CFG
+except Exception:
+    _CFG = {}
+
+def _cfg(section: str, key: str, default):
+    """Sicherer Config-Lookup mit Default-Fallback (=aktueller Hardcode-Wert)."""
+    if isinstance(_CFG, dict):
+        return _CFG.get(section, {}).get(key, default)
+    return default
+
+# ── Edge-Schwellen ────────────────────────────────────────────────────────────
+# Backtest 01.06.2026: AUTO_TRIGGER 5.0→4.0 (Sweet Spot 3-5pp = +14% ROI)
+# STEAM_LAG 3.0: Backtest n=7 zu klein — bei 3.0 lassen, mit Live-Daten nachjustieren
+AUTO_TRIGGER_EDGE_PP   = _cfg("trade", "auto_trigger_edge_pp",   4.0)
+STEAM_LAG_EDGE_PP      = _cfg("trade", "steam_lag_edge_pp",      3.0)
+
+# ── Match-Filter ──────────────────────────────────────────────────────────────
+MIN_VOL                = _cfg("trade", "min_vol_usdc",          10000)
+MIN_DAYS_UNTIL_GAME    = _cfg("trade", "min_days_until_game",       1)
+MIN_HOURS_BEFORE_MATCH = _cfg("trade", "min_hours_before_match",    4)
 
 # ── Quote/Entry-Price Filter (eingebaut 03.06.2026) ───────────────────────────
 # Schützt gegen Extrem-Quoten wo Variance + Spread den theoretischen Edge auffressen:
 #   • Entry < 0.15 USD (Quote > 6.67): hohe Variance, 5+ Loser in Folge normal
 #   • Entry > 0.85 USD (Quote < 1.18): nur 17% max Upside, ein Loser frisst 5 Wins
 # Sweet Spot 0.15-0.85 = Quote 1.18-6.67 — Liquidität dicht, Spread klein.
-MIN_ENTRY_PRICE      = 0.15
-MAX_ENTRY_PRICE      = 0.85
+MIN_ENTRY_PRICE        = _cfg("trade", "min_entry_price",        0.15)
+MAX_ENTRY_PRICE        = _cfg("trade", "max_entry_price",        0.85)
 
-# Stake: flat €5 ≈ $5.50 USDC pro Pick (entspricht STAKE_USDC in polymarket_bet.py).
-# Memory-Eintrag project_poly_integration.md: "€5/Pick, flat" — keine Edge-basierte
-# Tier-Logik mehr. Bankroll-Schutz via DAILY_BET_CAP + DAILY_STAKE_CAP_USDC unten.
-FLAT_STAKE_USDC = 5.5
+# ── Stake (flat) ──────────────────────────────────────────────────────────────
+# €5 ≈ $5.50 USDC pro Pick. Bankroll-Schutz via DAILY_BET_CAP + DAILY_STAKE_CAP_USDC.
+FLAT_STAKE_USDC        = _cfg("trade", "stake_usdc_flat",         5.5)
 
 def _get_stake_for_edge(edge_pp: float) -> float:
     """Flat €5 ≈ $5.50 USDC pro Bet — Edge ist Schwellwert, nicht Sizing-Faktor."""
@@ -64,26 +79,26 @@ def _get_stake_for_edge(edge_pp: float) -> float:
 
 # ── Bankroll-Schutz ────────────────────────────────────────────────────────────
 # Tageslimits verhindern dass viele Edges am Spieltag die ganze Bank durchfeuern.
-DAILY_BET_CAP        = 8       # max Anzahl Bets pro UTC-Tag
-DAILY_STAKE_CAP_USDC = 50.0    # max kumulativer Stake pro UTC-Tag in USDC
-MIN_BALANCE_BUFFER   = 1.0     # USDC die nach Bet noch im Wallet bleiben müssen
-MAX_POSITIONS_PER_MATCH = 2    # max Bets pro Match (egal welcher Markt)
+DAILY_BET_CAP          = _cfg("trade", "daily_bet_cap",             8)
+DAILY_STAKE_CAP_USDC   = _cfg("trade", "daily_stake_cap_usdc",   50.0)
+MIN_BALANCE_BUFFER     = _cfg("trade", "min_balance_buffer",      1.0)
+MAX_POSITIONS_PER_MATCH = _cfg("trade", "max_positions_per_match",  2)
                                # 2 = z.B. Über 2.5 + Heimsieg sind kompatible Wetten erlaubt.
 
 # Open-Exposure-Cap: max kumulativer Stake in OFFENEN (nicht resolvierten) Positionen.
 # Schützt gegen "Pre-Tournament Wallet-Lock": ohne diesen Cap würden Positionen aus 5-7 Tagen
 # vor WM-Start die gesamte Bankroll binden, bevor erste Spielergebnisse Liquidität freigeben.
-MAX_OPEN_EXPOSURE_USDC = 80.0  # 40% von $200 Test-Wallet bleibt immer als Reserve
+MAX_OPEN_EXPOSURE_USDC  = _cfg("trade", "max_open_exposure_usdc", 80.0)
 
 # Pre-Tournament-Schwelle: für Spiele >5 Tage entfernt höhere Edge-Schwelle.
 # Frühe Linien sind oft noch unsicher — Sharps geben dem Markt Zeit zur Korrektur.
-PRE_TOURNAMENT_DAYS         = 5       # ab welcher Distanz zum Spiel "früh" gilt
-PRE_TOURNAMENT_EDGE_PP      = 6.0     # höhere Schwelle für frühe Picks (statt 4.0)
+PRE_TOURNAMENT_DAYS    = _cfg("trade", "pre_tournament_days",       5)
+PRE_TOURNAMENT_EDGE_PP = _cfg("trade", "pre_tournament_edge_pp",  6.0)
 
 # Adaptive Daily-Cap: skaliert mit verfügbarer Balance.
 # effective_cap = min(DAILY_STAKE_CAP_USDC, available_balance × ADAPTIVE_DAILY_FRACTION)
 # Bei $200 → $50 Cap. Bei $40 Balance → $16 Cap. Verhindert Restbankroll-Burn.
-ADAPTIVE_DAILY_FRACTION     = 0.40    # max 40% der verfügbaren Balance pro Tag
+ADAPTIVE_DAILY_FRACTION = _cfg("trade", "adaptive_daily_fraction", 0.40)
 
 BASE_DIR              = os.path.dirname(os.path.abspath(__file__))
 PRICES_FILE           = os.path.join(BASE_DIR, "wm_poly_prices.json")
@@ -131,7 +146,7 @@ AUTO_TRIGGER_VERDICTS = {"BET", "ABWÄGEN"}
 
 # elo_only = noch keine Form-/H2H-Daten (Pre-Tournament) → konservativerer Edge-Schwellenwert
 # Erhöhter Schwellenwert verhindert Bets auf schwache Datenbasis
-AUTO_TRIGGER_EDGE_ELO_ONLY = 8.0  # Strengerer Schwellenwert wenn nur Elo vorhanden
+AUTO_TRIGGER_EDGE_ELO_ONLY = _cfg("trade", "auto_trigger_edge_elo_only", 8.0)
 
 
 # ── Hilfsfunktionen ────────────────────────────────────────────────────────────

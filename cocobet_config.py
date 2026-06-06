@@ -44,11 +44,16 @@ DEFAULT_FALLBACK = {
     "underdog": {"elo_soft_threshold": 100, "elo_hard_threshold": 200},
     "trade": {
         "auto_trigger_edge_pp": 4.0, "auto_trigger_edge_elo_only": 8.0,
-        "steam_lag_edge_pp": 2.0,
+        "steam_lag_edge_pp": 3.0,
         "pre_tournament_edge_pp": 6.0, "pre_tournament_days": 5,
         "pre_match_close_hours": 2,
         "daily_bet_cap": 8, "daily_stake_cap_usdc": 50.0,
         "min_balance_buffer": 1.0, "stake_usdc_flat": 5.5,
+        "min_vol_usdc": 10000, "min_days_until_game": 1,
+        "min_hours_before_match": 4,
+        "min_entry_price": 0.15, "max_entry_price": 0.85,
+        "max_positions_per_match": 2, "max_open_exposure_usdc": 80.0,
+        "adaptive_daily_fraction": 0.40,
     },
     "dedup_hours": {
         "sell_alert": 6, "edge_alert": 12,
