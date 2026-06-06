@@ -1939,13 +1939,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="top-nav-btn" id="navSavePicks" onclick="savePicksToday(this)" title="Heutige Picks in localStorage sichern" style="margin-left:auto;color:#3fb950;">💾 <span id="navSaveLabel">Picks speichern</span></button>
 </div>
 
-<!-- SUB NAV (Cards / Tracking / Telegram)
+<!-- SUB NAV (Cards / Tracking / Telegram / TikTok Studio)
      "🌍 WM 2026"-Tab entfernt 03.06.2026 — Inhalt (Probability-Bar, Squad-Pills, AI-Preview)
      in Community-Cards (Cards-Tab) integriert. -->
 <div class="sub-nav" id="subNav">
   <button class="sub-nav-btn active" id="subCards" onclick="showSubView('cards')">🃏 Cards</button>
   <button class="sub-nav-btn" id="subTracking" onclick="showSubView('tracking')">📈 Tracking</button>
   <button class="sub-nav-btn" id="subTelegram" onclick="showSubView('telegram')" style="display:none">📱 Telegram</button>
+  <button class="sub-nav-btn" id="subStudio" onclick="showSubView('studio')">🎬 TikTok Studio</button>
 </div>
 
 <!-- LEAGUE NAV -->
@@ -3120,6 +3121,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <!-- ══════════════════════════════════════════════════════════════════
      TELEGRAM CONTROL PANEL
      ══════════════════════════════════════════════════════════════════ -->
+<!-- TikTok Studio Panel — eigene Sub-Section unter International -->
+<div id="tiktokStudioPanel" style="display:none;padding:20px 16px 80px;"></div>
+
 <div id="intlTelegramPanel" style="display:none;max-width:900px;margin:0 auto;padding:20px 16px 80px;">
 
   <!-- Header -->
@@ -3406,6 +3410,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <script src="results-v2.js"></script>
 <script src="wm2026-renderer.js"></script>
 <script src="wm2026-tracking.js"></script>
+<!-- TikTok Studio — manueller Card-Generator. Strikt getrennt vom Daily-Cron. -->
+<link rel="stylesheet" href="tiktok-studio.css">
+<script src="tiktok-studio.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════
 //  LIVE DATA from Sofascore — fetched 31.03.2026

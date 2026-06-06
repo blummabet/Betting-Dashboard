@@ -33,6 +33,7 @@ let _activeSection = 'national';
 const _ALL_PANELS = [
   'mainContent', 'trackingV2Panel', 'resultsPanel',
   'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
+  'tiktokStudioPanel',
   'polymarketPanel', 'polyTraderPanel',
   'heartPanel', 'statusPanel',
 ];
@@ -63,6 +64,7 @@ function showView(view) {
     'intl-tracking':     'intlTrackingPanel',
     'intl-wm2026':       'intlWm2026Panel',
     'intl-telegram':     'intlTelegramPanel',
+    'intl-studio':       'tiktokStudioPanel',
     'sharp':             'mainContent',
     'polytrading':       'polyTraderPanel',
     'polybetting':       'polymarketPanel',
@@ -92,15 +94,19 @@ function showView(view) {
   const isCards    = view.endsWith('-cards');
   const isTracking = view.endsWith('-tracking');
   const isTelegram = view === 'intl-telegram';
+  const isStudio   = view === 'intl-studio';
   const subCards    = document.getElementById('subCards');
   const subTracking = document.getElementById('subTracking');
   const subTelegram = document.getElementById('subTelegram');
+  const subStudio   = document.getElementById('subStudio');
   if (subCards)    subCards.classList.toggle('active',    isCards);
   if (subTracking) subTracking.classList.toggle('active', isTracking);
   if (subTelegram) subTelegram.classList.toggle('active', isTelegram);
-  // Telegram sub-nav only visible under International
+  if (subStudio)   subStudio.classList.toggle('active',   isStudio);
+  // Telegram + Studio sub-nav only visible under International
   const intlOnly = _activeSection === 'intl';
   if (subTelegram) subTelegram.style.display  = intlOnly ? '' : 'none';
+  if (subStudio)   subStudio.style.display    = intlOnly ? '' : 'none';
 
   // ── Top-nav active state ─────────────────────────────
   _TOP_NAV_IDS.forEach(id => {
@@ -140,6 +146,7 @@ function showView(view) {
   if (view === 'intl-tracking'     && typeof initIntlTracking  === 'function') initIntlTracking();
   if (view === 'intl-wm2026'       && typeof initWm2026        === 'function') initWm2026();
   if (view === 'intl-telegram'     && typeof initTelegramPanel === 'function') initTelegramPanel();
+  if (view === 'intl-studio'       && typeof initTiktokStudio  === 'function') initTiktokStudio();
 }
 
 // Sub-nav click: navigate within current section
