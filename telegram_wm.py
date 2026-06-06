@@ -38,6 +38,33 @@ LOG_FILE       = os.path.join(os.path.dirname(os.path.abspath(__file__)), "teleg
 MIN_BET_EDGE   = 4   # pp
 MIN_ABW_EDGE   = 4   # pp
 
+
+# ── Tages-Dedup (Audit-Fix 06.06.2026) ────────────────────────────────────────
+# Verhindert dass Morning/Recap-Cards mehrfach pro Tag verschickt werden,
+# wenn der Workflow 5×/Tag triggert.
+def _already_sent_today(type_: str, target_date: str) -> bool:
+    """True wenn type_ heute schon mit target_date als 'date'-meta gesendet wurde."""
+    if not os.path.exists(LOG_FILE):
+        return False
+    try:
+        with open(LOG_FILE, encoding="utf-8") as f:
+            log = json.load(f)
+    except Exception:
+        return False
+    if not isinstance(log, list):
+        return False
+    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    for entry in reversed(log):
+        if entry.get("type") != type_:
+            continue
+        # Prüfen: heute gesendet UND für target_date
+        sent_at = (entry.get("sentAt") or "")[:10]
+        date_meta = entry.get("date") or ""
+        if sent_at == today_str and date_meta == target_date:
+            return True
+    return False
+
+
 # ── Telegram API ───────────────────────────────────────────────────────────────
 def _log_send(type_: str, preview: str, meta: dict = None):
     """Append a send event to telegram-log.json (max 200 entries)."""
@@ -344,26 +371,34 @@ def main():
     mode = TG_WM_MODE.lower()
 
     if mode in ("morning", "all"):
-        print(f"\n📅 Morning Card für {today}…")
-        card = build_morning_card(wm, today)
-        if card:
-            ok = tg_send(card)
-            print(f"  {'✅ Gesendet' if ok else '❌ Fehler'}")
-            if ok:
-                _log_send("morning_card", card.split("\n")[0], {"date": today, "mode": mode})
+        # AUDIT-Fix 06.06.2026: Tages-Dedup — Morning-Card max 1× pro Tag
+        if _already_sent_today("morning_card", today):
+            print(f"\n⛔ Morning Card für {today} heute schon gesendet — geskippt")
         else:
-            print(f"  ○ Keine WM-Spiele am {today}")
+            print(f"\n📅 Morning Card für {today}…")
+            card = build_morning_card(wm, today)
+            if card:
+                ok = tg_send(card)
+                print(f"  {'✅ Gesendet' if ok else '❌ Fehler'}")
+                if ok:
+                    _log_send("morning_card", card.split("\n")[0], {"date": today, "mode": mode})
+            else:
+                print(f"  ○ Keine WM-Spiele am {today}")
 
     if mode in ("recap", "all"):
-        print(f"\n📊 Recap für {yesterday}…")
-        card = build_recap_card(wm, yesterday)
-        if card:
-            ok = tg_send(card)
-            print(f"  {'✅ Gesendet' if ok else '❌ Fehler'}")
-            if ok:
-                _log_send("recap", card.split("\n")[0], {"date": yesterday, "mode": mode})
+        # AUDIT-Fix 06.06.2026: Tages-Dedup — Recap max 1× pro Tag
+        if _already_sent_today("recap", yesterday):
+            print(f"\n⛔ Recap für {yesterday} heute schon gesendet — geskippt")
         else:
-            print(f"  ○ Keine Picks mit Ergebnissen am {yesterday}")
+            print(f"\n📊 Recap für {yesterday}…")
+            card = build_recap_card(wm, yesterday)
+            if card:
+                ok = tg_send(card)
+                print(f"  {'✅ Gesendet' if ok else '❌ Fehler'}")
+                if ok:
+                    _log_send("recap", card.split("\n")[0], {"date": yesterday, "mode": mode})
+            else:
+                print(f"  ○ Keine Picks mit Ergebnissen am {yesterday}")
 
 
 if __name__ == "__main__":

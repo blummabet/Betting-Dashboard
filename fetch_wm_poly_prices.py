@@ -761,16 +761,38 @@ def main():
     _tg_chat   = os.environ.get("TELEGRAM_TRADES_CHAT_ID", "").strip()
 
     if _tg_token and _tg_chat:
+        # AUDIT-Fix 06.06.2026: Per-Match-per-Day-Dedup für Edge-Alerts.
+        # Vorher: alle 4h würde derselbe Edge erneut gemeldet → 5×/Tag Spam.
+        # Jetzt: jede (matchKey × bestEdgeKey) max 1× pro 12h via dedup-state file.
+        from datetime import datetime, timezone, timedelta
+        EDGE_ALERT_DEDUP_FILE = BASE_DIR / "wm_edge_alert_dedup.json"
+        EDGE_DEDUP_HOURS = 12
+        dedup_state = {}
+        if EDGE_ALERT_DEDUP_FILE.exists():
+            try:
+                with open(EDGE_ALERT_DEDUP_FILE) as f:
+                    dedup_state = json.load(f)
+            except Exception:
+                dedup_state = {}
+        now_iso = datetime.now(timezone.utc).isoformat()
+        cutoff = (datetime.now(timezone.utc) - timedelta(hours=EDGE_DEDUP_HOURS)).isoformat()
+
+        def _was_alerted_recently(fx) -> bool:
+            dedup_key = f"{fx.get('key', '?')}|{fx.get('bestEdgeKey', '?')}"
+            last = dedup_state.get(dedup_key)
+            return bool(last) and last >= cutoff
+
         alert_queue = [
             fx for fx in all_fixtures
             if fx.get("edgeTrend") == "new" and (fx.get("bestEdge") or 0) >= ALERT_EDGE_MIN_PP
+               and not _was_alerted_recently(fx)
         ]
-        # Also alert for confirmed steam lags (growing + steam, not just new)
         steam_alerts = [
             fx for fx in all_fixtures
             if fx.get("steamLag") and fx.get("edgeTrend") in ("growing",)
                and (fx.get("bestEdge") or 0) >= ALERT_EDGE_MIN_PP
-               and fx not in alert_queue  # don't double-alert
+               and fx not in alert_queue
+               and not _was_alerted_recently(fx)
         ]
         alert_queue = (alert_queue + steam_alerts)[:4]  # max 4 Alerts pro Run
 
@@ -824,6 +846,18 @@ def main():
                       f"+{edge:.1f}pp [{signal}]")
             except Exception as e_tg:
                 print(f"  ⚠️  Telegram Edge Alert fehlgeschlagen: {e_tg}")
+            else:
+                # AUDIT-Fix 06.06.2026: Dedup-State updaten nach erfolgreichem Send
+                dedup_key = f"{fx.get('key', '?')}|{fx.get('bestEdgeKey', '?')}"
+                dedup_state[dedup_key] = now_iso
+
+        # Dedup-State persistieren (alte Einträge wegmüllen)
+        dedup_state = {k: v for k, v in dedup_state.items() if v >= cutoff}
+        try:
+            with open(EDGE_ALERT_DEDUP_FILE, "w") as f:
+                json.dump(dedup_state, f, indent=2)
+        except Exception as e:
+            print(f"  ⚠️  Konnte Edge-Dedup-State nicht speichern: {e}")
     else:
         if not _tg_chat:
             print("  📵 TELEGRAM_TRADES_CHAT_ID nicht gesetzt — Edge Alerts deaktiviert")
