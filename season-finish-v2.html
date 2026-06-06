@@ -109,6 +109,92 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .heart-collapse-meta{font-size:10px;color:var(--muted);letter-spacing:.5px;font-weight:600;}
 .heart-collapse-body{padding:0 20px 18px;border-top:1px solid var(--border);padding-top:18px;}
 
+/* ── Pitch-One-Pager (Marketing-Showcase, screenshot-bereit) ── */
+.pitch-intro{
+  font-size:15px;line-height:1.65;color:rgba(255,255,255,0.85);
+  padding:18px 22px;margin-bottom:20px;
+  background:linear-gradient(180deg,rgba(0,212,161,0.08),rgba(0,212,161,0.02));
+  border:1px solid rgba(0,212,161,0.25);border-radius:12px;
+}
+.pitch-intro strong{color:#fff;font-weight:800;}
+.pitch-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:14px;margin-bottom:22px;
+}
+.pitch-card{
+  --pc-accent:#00d4a1;
+  background:linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+  border:1px solid var(--border);border-radius:14px;
+  padding:18px 20px;display:flex;flex-direction:column;gap:14px;
+  position:relative;overflow:hidden;
+  transition:transform .15s, border-color .15s, box-shadow .2s;
+}
+.pitch-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg, var(--pc-accent), transparent 80%);
+  opacity:0.8;
+}
+.pitch-card:hover{
+  transform:translateY(-2px);
+  border-color:var(--pc-accent);
+  box-shadow:0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px var(--pc-accent);
+}
+.pitch-card[data-accent="#00d4a1"]{--pc-accent:#00d4a1;}
+.pitch-card[data-accent="#a78bfa"]{--pc-accent:#a78bfa;}
+.pitch-card[data-accent="#4cc9f0"]{--pc-accent:#4cc9f0;}
+.pitch-card[data-accent="#f5c518"]{--pc-accent:#f5c518;}
+.pitch-card[data-accent="#3fb950"]{--pc-accent:#3fb950;}
+.pitch-card[data-accent="#f85149"]{--pc-accent:#f85149;}
+.pitch-head{display:flex;align-items:center;gap:14px;}
+.pitch-icon{
+  font-size:32px;line-height:1;flex-shrink:0;
+  width:54px;height:54px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;
+}
+.pitch-meta{flex:1;min-width:0;}
+.pitch-title{
+  font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.2px;
+  line-height:1.2;margin-bottom:3px;
+}
+.pitch-stat{
+  font-size:11px;font-weight:700;color:var(--pc-accent);
+  letter-spacing:0.5px;text-transform:uppercase;
+}
+.pitch-body{
+  font-size:13px;line-height:1.55;color:rgba(255,255,255,0.78);
+}
+.pitch-body strong{color:#fff;}
+.pitch-bullets{
+  list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;
+}
+.pitch-bullets li{
+  font-size:12px;line-height:1.5;color:rgba(255,255,255,0.72);
+  padding-left:18px;position:relative;
+}
+.pitch-bullets li::before{
+  content:'';position:absolute;left:0;top:8px;
+  width:8px;height:8px;border-radius:2px;
+  background:var(--pc-accent);opacity:0.55;
+}
+.pitch-bullets li strong{color:#fff;font-weight:700;}
+.pitch-footer{
+  font-size:14px;line-height:1.65;color:rgba(255,255,255,0.82);text-align:center;
+  padding:18px 22px;
+  background:linear-gradient(135deg,rgba(0,212,161,0.06),rgba(167,139,250,0.06));
+  border:1px solid rgba(255,255,255,0.08);border-radius:12px;
+}
+.pitch-footer strong{
+  display:block;color:#fff;font-weight:800;font-size:15px;margin-bottom:6px;
+  background:linear-gradient(90deg,#00d4a1 0%, #4cc9f0 50%, #a78bfa 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+@media(max-width:680px){
+  .pitch-grid{grid-template-columns:1fr;}
+  .pitch-card{padding:16px 18px;}
+  .pitch-icon{font-size:28px;width:48px;height:48px;}
+}
+
 /* Feature-Card (kompakt + Mini-Mockup) */
 .h2-feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-top:14px;}
 .h2-feature{background:#161b22;border:1px solid var(--border);border-radius:10px;padding:14px 16px;transition:border-color .15s;display:flex;flex-direction:column;gap:8px;}
@@ -1901,6 +1987,159 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div class="heart-stat"><div class="heart-stat-num gold">11.06.</div><div class="heart-stat-lbl">WM-Start</div></div>
     </div>
   </div>
+
+  <!-- ════════════════ PITCH-ONE-PAGER ════════════════ -->
+  <!-- Marketing-tauglicher Feature-Showcase. Screenshot-bereit für Pitches/Werbung. -->
+  <details class="heart-collapse" open>
+    <summary>
+      <span class="heart-collapse-icon">🚀</span>
+      <span class="heart-collapse-title">Was CocoBet macht — in 60 Sekunden</span>
+      <span class="heart-collapse-meta">PITCH</span>
+    </summary>
+    <div class="heart-collapse-body">
+
+      <div class="pitch-intro">
+        <strong>CocoBet ist ein vollautomatisches Sport-Trading-System mit eigenem Pick-Modell, Live-Polymarket-Auto-Trading, datengetriebenem Content und transparentem Track-Record.</strong>
+        Keine AI-Phantasie. Keine "Tipp X @2.50"-Liste. Jede Empfehlung zeigt ihre Mathematik.
+      </div>
+
+      <div class="pitch-grid">
+
+        <!-- 1. Picks-Generierung -->
+        <div class="pitch-card" data-accent="#00d4a1">
+          <div class="pitch-head">
+            <div class="pitch-icon">🎯</div>
+            <div class="pitch-meta">
+              <div class="pitch-title">Eigene Pick-Engine</div>
+              <div class="pitch-stat">21+ Datensignale</div>
+            </div>
+          </div>
+          <div class="pitch-body">
+            Elo + Form + xG + H2H + Travel-Burden + Verletzungen + Public-Bias →
+            Modell-Wahrscheinlichkeit vs Markt-Quote = Edge in Prozentpunkten.
+          </div>
+          <ul class="pitch-bullets">
+            <li>3-Signal-Verdict-Engine: BET / ABWÄGEN / SKIP</li>
+            <li>4 Datenqualitäts-Tiers — kein BET bei dünner Datenbasis</li>
+            <li>Cross-Market-Konsistenz (kein "Heim &amp; Auswärts" gleichzeitig)</li>
+            <li><strong>Self-Learning:</strong> Hit-Rate pro Cluster nach jedem Spiel</li>
+          </ul>
+        </div>
+
+        <!-- 2. Polymarket Auto-Trading -->
+        <div class="pitch-card" data-accent="#a78bfa">
+          <div class="pitch-head">
+            <div class="pitch-icon">💹</div>
+            <div class="pitch-meta">
+              <div class="pitch-title">Polymarket Auto-Trading</div>
+              <div class="pitch-stat">5×/Tag Cron</div>
+            </div>
+          </div>
+          <div class="pitch-body">
+            Echtes Geld auf Polymarket via CLOB-API. Edge-Quelle: <strong>Pinnacle</strong>
+            (Sharp-Markt) hat sich bewegt → Polymarket hängt nach → wir kaufen.
+          </div>
+          <ul class="pitch-bullets">
+            <li>7 unabhängige Schutz-Layer (Bankroll / Kill-Switch / Pre-Match-Close)</li>
+            <li>Position-Health-Monitor: 4-Faktor-Score pro offenem Trade</li>
+            <li>Auto-Sell-Trigger: Profit / Loss / Time / Sharp-Against</li>
+            <li><strong>Closing-Line-Value</strong> wird pro Trade gemessen</li>
+          </ul>
+        </div>
+
+        <!-- 3. Cards-Generierung -->
+        <div class="pitch-card" data-accent="#4cc9f0">
+          <div class="pitch-head">
+            <div class="pitch-icon">📱</div>
+            <div class="pitch-meta">
+              <div class="pitch-title">Live-Content-Engine</div>
+              <div class="pitch-stat">4 Story-Angles</div>
+            </div>
+          </div>
+          <div class="pitch-body">
+            Tägliche TikTok-Cards aus Live-Daten — Spiel-des-Tages, Underdog-Recap,
+            Killer-Stat, Spieler-Spotlight. Fact-Verifier prüft jede Zahl.
+          </div>
+          <ul class="pitch-bullets">
+            <li>Hook + Info als 720×1280 PNG, ready für TikTok-Upload</li>
+            <li>Slot-System mit Source-Path-Tracking pro Wert</li>
+            <li>Drift-Check &gt; 5% → automatische ERROR, kein Post</li>
+            <li><strong>Bizarre-Quote-Karten</strong> mit 60+ kuratierten Vergleichen</li>
+          </ul>
+        </div>
+
+        <!-- 4. Telegram Notifications -->
+        <div class="pitch-card" data-accent="#f5c518">
+          <div class="pitch-head">
+            <div class="pitch-icon">🔔</div>
+            <div class="pitch-meta">
+              <div class="pitch-title">Telegram Live-Notifications</div>
+              <div class="pitch-stat">2 Channels</div>
+            </div>
+          </div>
+          <div class="pitch-body">
+            Öffentlicher Community-Channel (Picks, Recaps, Player-Spotlight) und
+            privater Trades-Channel (Edges, P&amp;L, Position-Health).
+          </div>
+          <ul class="pitch-bullets">
+            <li>Morning Card + Liga-Picks + Recap (öffentlich, automatisch)</li>
+            <li>Sharp-Move-Alerts &amp; Steam-Lag-Signale (privat, 5×/Tag)</li>
+            <li>Auto-Bet-Bestätigung mit Order-ID (privat)</li>
+            <li><strong>Pick-Changes-Digest</strong> täglich 14:00 mit Reasoning</li>
+          </ul>
+        </div>
+
+        <!-- 5. Tracking -->
+        <div class="pitch-card" data-accent="#3fb950">
+          <div class="pitch-head">
+            <div class="pitch-icon">📊</div>
+            <div class="pitch-meta">
+              <div class="pitch-title">Transparentes Tracking</div>
+              <div class="pitch-stat">Hit-Rate live</div>
+            </div>
+          </div>
+          <div class="pitch-body">
+            Jeder Pick wird automatisch nach Spielende aufgelöst — WIN / LOSS / VOID.
+            ROI, CLV-Trend, Sharpe-Estimate in Echtzeit sichtbar.
+          </div>
+          <ul class="pitch-bullets">
+            <li>Equity-Curve als Linechart über Saison-Verlauf</li>
+            <li>Validator mit 7 Error/Warning-Codes (Sanity-Checks)</li>
+            <li>Audit-Diff: Card-Stand vs Tracking-Stand vergleichen</li>
+            <li><strong>Track-Record-Card</strong> 21:00 täglich an Trades-Channel</li>
+          </ul>
+        </div>
+
+        <!-- 6. Sharp Radar -->
+        <div class="pitch-card" data-accent="#f85149">
+          <div class="pitch-head">
+            <div class="pitch-icon">🔥</div>
+            <div class="pitch-meta">
+              <div class="pitch-title">Sharp Radar</div>
+              <div class="pitch-stat">≥5pp Trigger</div>
+            </div>
+          </div>
+          <div class="pitch-body">
+            Pinnacle-Linien-Bewegungen in Echtzeit. Wenn der schärfste Buchmacher
+            seine Quote kürzt, folgt Sharp Money — wir reagieren sofort.
+          </div>
+          <ul class="pitch-bullets">
+            <li>Opening vs Closing pro Markt seit Snapshot</li>
+            <li>Kumulativer Drift-Alert (≥8pp gegen Opening)</li>
+            <li>Steam-Move-Erkennung (≥10pp vs letzter Snapshot)</li>
+            <li><strong>Pinnacle vs Polymarket-Edge</strong> für Live-Trades</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pitch-footer">
+        <strong>Wir bauen ein vollautomatisches Sport-Trading-System mit Self-Learning, transparentem Track-Record und Live-Content-Pipeline.</strong>
+        Kein Tipster-Konto. Ein System.
+      </div>
+
+    </div>
+  </details>
 
   <!-- ════════════════ 1. KILLER-FEATURES ════════════════ -->
   <details class="heart-collapse" open>
