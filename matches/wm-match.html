@@ -282,6 +282,65 @@ body{
   border-top:1px solid rgba(34,197,94,.1);padding-top:10px;margin-top:8px;
 }
 .ph-rationale strong{color:#aaccaa;}
+/* Why-Modal-Button + Modal — Audit Fix 06.06.2026 */
+.pwm-btn{
+  display:block;width:100%;
+  background:#161b22;border:1px solid rgba(0,212,161,0.4);
+  color:#00d4a1;border-radius:8px;
+  padding:11px 14px;font-size:13px;font-weight:700;
+  cursor:pointer;font-family:inherit;
+  margin:14px 0 10px;
+  transition:background 0.15s, border-color 0.15s;
+}
+.pwm-btn:hover{ background:rgba(0,212,161,0.08); border-color:#00d4a1; }
+.pwm-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.75);
+  z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  backdrop-filter:blur(4px);
+}
+.pwm-content{
+  background:#0d1117;border:1px solid #30363d;
+  border-radius:14px;padding:24px;
+  max-width:560px;width:100%;max-height:90vh;
+  overflow-y:auto;position:relative;
+}
+.pwm-close{
+  position:absolute;top:14px;right:14px;
+  background:none;border:none;color:#8b949e;
+  font-size:20px;cursor:pointer;line-height:1;
+  padding:6px;border-radius:4px;
+}
+.pwm-close:hover{ background:rgba(255,255,255,0.06); color:#e6edf3; }
+.pwm-head{ margin-bottom:18px; padding-right:30px; }
+.pwm-conf-badge{
+  display:inline-block;font-size:10px;font-weight:700;
+  letter-spacing:.5px;padding:4px 10px;border-radius:6px;
+  margin-bottom:8px;
+}
+.pwm-title{ font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.3px;margin-bottom:3px; }
+.pwm-sub{ font-size:12px;color:#8b949e; }
+.pwm-section{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;padding:14px;
+  margin-bottom:12px;
+}
+.pwm-section-title{
+  font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:#8b949e;margin-bottom:10px;
+}
+.pwm-table{ width:100%;font-size:13px;border-collapse:collapse; }
+.pwm-table td{ padding:5px 0; }
+.pwm-table td:first-child{ color:#8b949e; }
+.pwm-table td:nth-child(2){ text-align:right;color:#e6edf3; }
+.pwm-text{ font-size:13px;color:#e6edf3;line-height:1.55; }
+.pwm-foot{
+  font-size:10px;color:#8b949e;text-align:center;
+  border-top:1px solid #30363d;padding-top:10px;margin-top:8px;
+}
 .bet-btn{
   width:100%;margin-top:12px;
   padding:14px;border-radius:10px;border:none;
@@ -1259,6 +1318,125 @@ function renderAI(D) {
 }
 
 /* ── Picks section ───────────────────────────────────────── */
+
+// AUDIT-Fix 06.06.2026: Direction-Map für Cross-Market-Konsistenz
+// Spiegelt die Logik aus wm2026-renderer.js + generate_wm_picks.py
+const _PICK_DIRECTION_MAP = {
+  'Heimsieg': 'homeStrong', 'Doppelte Chance — 1X': 'homeBias',
+  'Doppelte Chance — 12': 'decisive', 'AH Heim −0.5': 'homeStrong',
+  'AH Heim −0.75': 'homeStrong', 'AH Heim −1.0': 'homeStrong',
+  'DNB: Heimteam': 'homeStrong', 'Auswärtssieg': 'awayStrong',
+  'Doppelte Chance — X2': 'awayBias', 'AH Auswärts +0.5': 'awayStrong',
+  'AH Auswärts +0.75': 'awayStrong', 'AH Auswärts +1.0': 'awayStrong',
+  'DNB: Auswärtsteam': 'awayStrong', 'Unentschieden': 'drawOnly',
+  'Über 1.5 Tore': 'over', 'Über 2.5 Tore': 'over', 'Über 3.5 Tore': 'over',
+  'Unter 1.5 Tore': 'under', 'Unter 2.5 Tore': 'under', 'Unter 3.5 Tore': 'under',
+  'Beide Teams treffen': 'over', 'Beide Teams treffen — Ja': 'over',
+  'Beide Teams treffen — Nein': 'under',
+};
+const _PICK_INCOMPATIBLE = new Set([
+  'homeStrong|awayStrong', 'awayStrong|homeStrong',
+  'homeStrong|awayBias',   'awayBias|homeStrong',
+  'homeStrong|drawOnly',   'drawOnly|homeStrong',
+  'homeBias|awayStrong',   'awayStrong|homeBias',
+  'awayStrong|drawOnly',   'drawOnly|awayStrong',
+  'decisive|drawOnly',     'drawOnly|decisive',
+  'over|under',            'under|over',
+]);
+function _picksIncompatible(d1, d2) {
+  if (!d1 || !d2) return false;
+  return _PICK_INCOMPATIBLE.has(`${d1}|${d2}`);
+}
+
+// Pick-Why-Modal: schlanke Version für Event-Pages (großes Format, lesbarer)
+function _renderPickWhyButton(D, primary) {
+  const md = D.modHome, ma = D.modAway, mdr = D.modDraw;
+  const probH = D.probHome, probA = D.probAway, probDr = D.probDraw;
+  const edge = primary.edgePP || 0;
+  const ml = (primary.market || '').toLowerCase();
+
+  // P(Markt) Modell aus Pick selbst (falls vorhanden), sonst aus 1X2-Bar
+  let pModel = null, pMarket = null;
+  if (primary.modelOdds && primary.odds) {
+    pModel = (1 / parseFloat(primary.modelOdds)) * 100;
+    pMarket = (1 / parseFloat(primary.odds)) * 100;
+  }
+
+  // Kelly-Empfehlung — halb-Kelly auf Bankroll
+  let kellyPct = null;
+  if (pModel && primary.odds) {
+    const b = parseFloat(primary.odds) - 1;
+    const p = pModel / 100;
+    const q = 1 - p;
+    const k = (b * p - q) / b;
+    if (k > 0) kellyPct = (k * 0.5 * 100).toFixed(1);  // half-Kelly
+  }
+
+  // Risiko-Tier basierend auf dataQuality
+  const riskTier = primary.dataQuality === 'full' ? 'NIEDRIG'
+                 : primary.dataQuality === 'elo+form' ? 'MITTEL'
+                 : primary.dataQuality === 'elo+form_asym' ? 'HOCH'
+                 : 'EXTREM';
+  const riskColor = riskTier === 'NIEDRIG' ? '#3fb950'
+                  : riskTier === 'MITTEL' ? '#e3b341'
+                  : riskTier === 'HOCH' ? '#ff8c00' : '#f85149';
+
+  const cornersExp = primary.cornersExpected;
+  const cornerInfo = cornersExp
+    ? `Ø ${cornersExp.total} Ecken erwartet (H ${cornersExp.home} / A ${cornersExp.away})`
+    : null;
+
+  // Modal-HTML (initial hidden)
+  const modalId = 'pickWhyModal_' + Math.random().toString(36).slice(2, 8);
+  const modalHtml = `
+    <div id="${modalId}" class="pwm-overlay" onclick="if(event.target===this)this.style.display='none';" style="display:none;">
+      <div class="pwm-content">
+        <button class="pwm-close" onclick="document.getElementById('${modalId}').style.display='none';">✕</button>
+        <div class="pwm-head">
+          <div class="pwm-conf-badge" style="background:rgba(${primary.verdict==='BET'?'63,185,80':'227,179,65'},.15);border:1px solid rgba(${primary.verdict==='BET'?'63,185,80':'227,179,65'},.4);color:${primary.verdict==='BET'?'#3fb950':'#e3b341'};">
+            ${primary.verdict} ${primary.conf || 'medium'}
+          </div>
+          <div class="pwm-title">${escHtml(primary.market || '')}</div>
+          <div class="pwm-sub">${escHtml(D.home)} vs ${escHtml(D.away)} · ${D.date}</div>
+        </div>
+
+        <div class="pwm-section">
+          <div class="pwm-section-title">📐 Modell-Rechnung — woher kommt die Quote</div>
+          <table class="pwm-table">
+            <tr><td>Elo (${escHtml(D.home)} / ${escHtml(D.away)})</td><td><strong>${D.homeElo} / ${D.awayElo} (${D.eloDiff>0?'+':''}${D.eloDiff})</strong></td></tr>
+            <tr><td>xG-Erwartung (H / A)</td><td><strong>${D.xgHome} / ${D.xgAway}</strong></td></tr>
+            ${pModel !== null ? `<tr><td>P(${escHtml(primary.market)}) Modell</td><td><strong>${pModel.toFixed(1)}%</strong></td></tr>` : ''}
+            ${primary.modelOdds && primary.odds ? `<tr><td>Modell-Quote → Markt-Quote</td><td><strong>${parseFloat(primary.modelOdds).toFixed(2)} → ${parseFloat(primary.odds).toFixed(2)} = ${edge>=0?'+':''}${edge}pp Edge</strong></td></tr>` : ''}
+          </table>
+        </div>
+
+        ${cornerInfo ? `<div class="pwm-section">
+          <div class="pwm-section-title">📐 Eckenerwartung</div>
+          <div class="pwm-text">${cornerInfo}</div>
+        </div>` : ''}
+
+        <div class="pwm-section">
+          <div class="pwm-section-title">⚖️ Risiko & Stake-Empfehlung</div>
+          <table class="pwm-table">
+            <tr><td>Risiko-Tier</td><td><strong style="color:${riskColor};">${riskTier}</strong></td></tr>
+            <tr><td>Daten-Basis</td><td><strong>${primary.dataQuality || 'elo'}</strong></td></tr>
+            ${kellyPct ? `<tr><td>½ Kelly Empfehlung</td><td><strong>${kellyPct}% der Bankroll</strong></td></tr>` : ''}
+            ${primary.downgradedReason ? `<tr><td>Hinweis</td><td><span style="color:#e3b341;">${escHtml(primary.downgradedReason)}</span></td></tr>` : ''}
+          </table>
+        </div>
+
+        <div class="pwm-foot">
+          Bookie: ${primary.bookmaker || 'Pinnacle'} · Generiert: ${D.generatedAt || D.generatedAtHuman || '—'}
+        </div>
+      </div>
+    </div>`;
+
+  return {
+    button: `<button class="pwm-btn" onclick="document.getElementById('${modalId}').style.display='flex';">🔍 Warum? — Modell-Rechnung anzeigen</button>${modalHtml}`,
+    modalId,
+  };
+}
+
 function renderPicks(D) {
   const picks = D.picks || [];
   if (picks.length === 0) return '';
@@ -1266,8 +1444,33 @@ function renderPicks(D) {
   const betPicks = picks.filter(p => p.verdict === 'BET');
   const abwPicks = picks.filter(p => p.verdict === 'ABWÄGEN');
 
+  // Sortieren nach Edge (innerhalb BET/ABWÄGEN)
+  betPicks.sort((a,b) => (parseFloat(b.edgePP)||0) - (parseFloat(a.edgePP)||0));
+  abwPicks.sort((a,b) => (parseFloat(b.edgePP)||0) - (parseFloat(a.edgePP)||0));
+
   const primary = betPicks[0] || abwPicks[0] || null;
   if (!primary) return '';
+
+  // ── Asym-Datenbasis-Check (Fix #2) ──
+  const isAsym = primary.dataQuality === 'elo+form_asym' || primary.dataQuality === 'elo_only';
+  const heroIsRisky = (parseFloat(primary.odds)||0) > 3.0;
+  const allAsym = picks.every(p => p.verdict === 'WATCH'
+    || p.dataQuality === 'elo+form_asym' || p.dataQuality === 'elo_only');
+
+  // Wenn asym + Hero-Quote >3.0 + alle asym → als "Beobachtungs-Spiel" rendern
+  if (allAsym && isAsym && heroIsRisky) {
+    return `
+      <div class="section" id="picks-section">
+        <div class="sec-head">
+          <span class="sec-ico">⏳</span>
+          <span class="sec-title">Beobachtungs-Spiel</span>
+          <span class="sec-tag" style="background:rgba(139,148,158,.12);border:1px solid rgba(139,148,158,.4);color:#8b949e;">DATEN UNVOLLSTÄNDIG</span>
+        </div>
+        <div style="background:rgba(255,165,0,.06);border:1px solid rgba(255,165,0,.30);border-radius:10px;padding:14px 18px;color:#e3b341;font-size:13px;line-height:1.55;">
+          ⚠️ <strong>Form-Daten eines Teams fehlen.</strong> Das Modell stützt sich nur auf Elo + Form-Daten des Gegners — keine verlässliche Pick-Empfehlung. Sobald die fehlenden Form-Daten via API-Football reinkommen, wird das Spiel aktualisiert.
+        </div>
+      </div>`;
+  }
 
   const isBet         = primary.verdict === 'BET';
   const badgeClass    = isBet ? 'bet' : 'abwaegen';
@@ -1283,15 +1486,21 @@ function renderPicks(D) {
 
   const fairVal = primary.fairValue ? parseFloat(primary.fairValue).toFixed(2) : null;
 
-  // Model vs Market bar for this pick's market
+  // Fix #4: Model vs Market bar — erweitert auf O/U, BTTS, DC, AH
+  // Berechnet pModel + pMarket aus primary.modelOdds/odds wenn keine spezifischen
+  // Probabilities verfügbar sind (z.B. für O/U-Markt)
   let modPct = null, mktPct = null;
   const mktLow = (primary.market || '').toLowerCase();
-  if (mktLow.includes('heim') || mktLow.includes('home') || mktLow === '1') {
+  if (mktLow.includes('heim') && !mktLow.includes('dnb') && !mktLow.includes('ah')) {
     modPct = D.modHome;  mktPct = D.probHome;
-  } else if (mktLow.includes('auswärts') || mktLow.includes('away') || mktLow === '2') {
+  } else if (mktLow.includes('auswärts') && !mktLow.includes('dnb') && !mktLow.includes('ah')) {
     modPct = D.modAway;  mktPct = D.probAway;
-  } else if (mktLow.includes('unentsch') || mktLow.includes('draw') || mktLow === 'x') {
+  } else if (mktLow.includes('unentsch')) {
     modPct = D.modDraw;  mktPct = D.probDraw;
+  } else if (primary.modelOdds && primary.odds) {
+    // Generischer Fallback für O/U, BTTS, DC, AH, DNB
+    modPct = ((1 / parseFloat(primary.modelOdds)) * 100).toFixed(1);
+    mktPct = ((1 / parseFloat(primary.odds)) * 100).toFixed(1);
   }
 
   let modelBarHtml = '';
@@ -1316,10 +1525,18 @@ function renderPicks(D) {
       </div>`;
   }
 
-  // Secondary picks: remaining BETs, then ABWÄGEN (up to 3)
-  const secBet  = isBet ? betPicks.slice(1) : betPicks;
-  const secAbw  = isBet ? abwPicks : abwPicks.slice(1);
-  const secList = [...secBet, ...secAbw].slice(0, 4);
+  // Fix #3: Cross-Market-Filter — widersprüchliche Secondary-Picks ausfiltern
+  const primaryDir = _PICK_DIRECTION_MAP[primary.market];
+  const secBetAll = isBet ? betPicks.slice(1) : betPicks;
+  const secAbwAll = isBet ? abwPicks : abwPicks.slice(1);
+  const secAll    = [...secBetAll, ...secAbwAll];
+  const secFiltered = secAll.filter(sp => {
+    const dir = _PICK_DIRECTION_MAP[sp.market];
+    if (!dir || !primaryDir) return true;
+    return !_picksIncompatible(primaryDir, dir);
+  });
+  const secList = secFiltered.slice(0, 4);
+  const filteredOutCount = secAll.length - secFiltered.length;
 
   let secHtml = '';
   for (const sp of secList) {
@@ -1328,16 +1545,43 @@ function renderPicks(D) {
     const spEdge    = sp.edgePP != null ? (parseFloat(sp.edgePP) >= 0 ? '+' : '') + parseFloat(sp.edgePP).toFixed(1) + 'pp' : '';
     const spFV      = sp.fairValue ? 'FV ' + parseFloat(sp.fairValue).toFixed(2) : '';
     const spDetail  = [spFV, spEdge ? spEdge + ' Edge' : ''].filter(Boolean).join(' · ');
+    // Smart-Sub-Badge: 🛡️ wenn safer-alt
+    const saferBadge = sp.saferAltFor
+      ? `<span style="background:rgba(76,201,240,.12);border:1px solid rgba(76,201,240,.4);color:#4cc9f0;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px;">🛡️ SAFER zu ${escHtml(sp.saferAltFor)}</span>`
+      : '';
+    // Downgraded-Reason-Hinweis
+    const dgr = sp.downgradedReason
+      ? `<div style="font-size:10px;color:#e3b341;margin-top:3px;opacity:.85;">⤷ ${escHtml(sp.downgradedReason)}</div>`
+      : '';
     secHtml += `
       <div class="pick-sec">
         <div>
-          <div class="ps-badge ${spVerdict}">${spLabel}</div>
+          <div class="ps-badge ${spVerdict}">${spLabel}${saferBadge}</div>
           <div class="ps-name">${escHtml(sp.market || '')}</div>
           <div class="ps-detail">${escHtml(spDetail)}</div>
+          ${dgr}
         </div>
         <div class="ps-odds">${sp.odds ? '@' + fmtOdds(sp.odds) : '—'}</div>
       </div>`;
   }
+  if (filteredOutCount > 0) {
+    secHtml += `<div style="font-size:10px;color:var(--sub);margin-top:8px;opacity:.6;text-align:center;">
+      ${filteredOutCount} weitere ${filteredOutCount === 1 ? 'Pick wurde' : 'Picks wurden'} ausgeblendet
+      (Konflikt mit Top-Pick-Richtung)
+    </div>`;
+  }
+
+  // Fix #2: Asym-Pill + DowngradedReason für Primary-Pick
+  const asymPill = isAsym
+    ? `<span style="background:rgba(255,165,0,.10);border:1px solid rgba(255,165,0,.4);color:#ff8c00;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:.3px;margin-left:8px;">⚠️ DATEN ASYM</span>`
+    : '';
+  const downgradedHtml = primary.downgradedReason
+    ? `<div style="background:rgba(227,179,65,.07);border-left:3px solid #e3b341;padding:8px 12px;margin:10px 0;border-radius:4px;font-size:11px;color:#e3b341;line-height:1.5;">
+         ⤷ ${escHtml(primary.downgradedReason)}
+       </div>` : '';
+
+  // Fix #1: Why-Modal-Button
+  const why = _renderPickWhyButton(D, primary);
 
   return `
     <div class="section" id="picks-section">
@@ -1345,6 +1589,7 @@ function renderPicks(D) {
         <span class="sec-ico">🎯</span>
         <span class="sec-title">Top Pick</span>
         <span class="sec-tag ${tagClass}">${tagLabel}</span>
+        ${asymPill}
       </div>
 
       <div class="pick-hero">
@@ -1385,9 +1630,14 @@ function renderPicks(D) {
 
         ${modelBarHtml}
 
+        ${downgradedHtml}
+
         ${primary.rationale ? `<div class="ph-rationale">${escHtml(primary.rationale)}</div>` : ''}
 
         <div class="pick-env-placeholder" data-market="${escHtml(primary.market||'')}"></div>
+
+        ${why.button}
+
         <button class="bet-btn">Jetzt Wetten →</button>
       </div>
 
