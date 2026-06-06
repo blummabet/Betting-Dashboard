@@ -31,19 +31,33 @@ import requests
 
 # ── Constants ──────────────────────────────────────────────
 
+# ── Refactor 2026-06-06: Stake + Bankroll-Limits aus cocobet_config.json ──
+# Bewusst dieselbe Profile-Quelle wie auto_wm_poly_trigger.py, damit manuell
+# platzierte Bets und Auto-Bets garantiert dieselben Limits sehen.
+try:
+    from cocobet_config import CONFIG as _CFG
+except Exception:
+    _CFG = {}
+
+def _cfg(section: str, key: str, default):
+    """Sicherer Config-Lookup mit Default-Fallback (=aktueller Hardcode-Wert)."""
+    if isinstance(_CFG, dict):
+        return _CFG.get(section, {}).get(key, default)
+    return default
+
 GAMMA_API    = "https://gamma-api.polymarket.com"
 CLOB_HOST    = "https://clob.polymarket.com"
-CHAIN_ID     = 137        # Polygon
-STAKE_USDC   = 5.5        # €5 ≈ $5.50 USDC flat per bet
+CHAIN_ID     = 137        # Polygon — Netzwerk-Konstante, bleibt hardcoded
+STAKE_USDC   = _cfg("trade", "stake_usdc_flat", 5.5)  # €5 ≈ $5.50 USDC flat per bet
 HISTORY_FILE = os.path.join(os.path.dirname(__file__), "picks_history.json")
 BALANCE_FILE = os.path.join(os.path.dirname(__file__), "wm_poly_balance.json")
 PLACED_FILE  = os.path.join(os.path.dirname(__file__), "wm_auto_bets_placed.json")
 
 # Bankroll-Schutz — gleiche Limits wie in auto_wm_poly_trigger.py.
 # Schützt sowohl manuelle ("Jetzt platzieren") als auch Auto-Bets.
-DAILY_BET_CAP        = 8       # max Bets pro UTC-Tag (manuell + auto kombiniert)
-DAILY_STAKE_CAP_USDC = 50.0    # max kumulativer Stake pro UTC-Tag
-MIN_BALANCE_BUFFER   = 1.0     # USDC die nach Bet im Wallet bleiben müssen
+DAILY_BET_CAP        = _cfg("trade", "daily_bet_cap",         8)     # max Bets pro UTC-Tag
+DAILY_STAKE_CAP_USDC = _cfg("trade", "daily_stake_cap_usdc",  50.0)  # max kumulativer Stake pro UTC-Tag
+MIN_BALANCE_BUFFER   = _cfg("trade", "min_balance_buffer",     1.0)  # USDC die nach Bet im Wallet bleiben müssen
 
 # Market labels → outcome keyword matching
 OUTCOME_MAP = {
