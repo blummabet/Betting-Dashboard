@@ -521,8 +521,10 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         "h2h":           h2h_out,
         "homeTeams":     group_teams,
         "groupFixtures": group_fixtures,
-        # Meta
-        "generatedAt": datetime.utcnow().strftime("%d.%m.%Y %H:%M UTC"),
+        # Meta — ISO 8601 für browser-kompatibles Parsing (Safari/Firefox sind strikt).
+        # Vorher "06.06.2026 06:57 UTC" → Safari gab Invalid Date → "Aktualisiert vor 43866m" Bug.
+        "generatedAt":      datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generatedAtHuman": datetime.utcnow().strftime("%d.%m.%Y %H:%M UTC"),  # für Anzeige falls gebraucht
     }
     return slug, payload
 
