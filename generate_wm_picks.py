@@ -35,10 +35,24 @@ WM_FILE = BASE / "wm2026-data.json"
 VERBOSE = "--verbose" in sys.argv or "-v" in sys.argv
 
 # ── Modell-Parameter ──────────────────────────────────────────────────────
-# Internationaler Durchschnitt Tore pro Team pro Spiel (WM-Gruppenphase ~2.5 gesamt)
-INTL_AVG_GOALS = 1.25   # pro Team/Spiel
+# ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
+# Backwards-compatible: wenn cocobet_config fehlt, greift der Fallback-Default
+# pro Konstante — Output bleibt identisch zur Pre-Refactor-Version.
+try:
+    from cocobet_config import CONFIG as _CFG
+except Exception:
+    _CFG = {}
 
-# WM-spezifische Draw-Baseline (historisch ~22-24% im Turnier)
+def _cfg(section: str, key: str, default):
+    """Sicherer Config-Lookup mit Default-Fallback."""
+    if isinstance(_CFG, dict):
+        return _CFG.get(section, {}).get(key, default)
+    return default
+
+# Internationaler Durchschnitt Tore pro Team pro Spiel (WM-Gruppenphase ~2.5 gesamt)
+INTL_AVG_GOALS = 1.25   # pro Team/Spiel — Naturkonstante, nicht in Config
+
+# Draw-Baseline (historisch ~22-24% in Länderspielen)
 DRAW_BASE      = 0.24
 DRAW_MAX       = 0.30
 DRAW_MIN       = 0.10
@@ -46,40 +60,31 @@ DRAW_MIN       = 0.10
 # Margin auf Modellquoten (~4% = zwischen Pinnacle 3% und Softbook)
 MODEL_MARGIN   = 0.96
 
-# Co-Gastgeber Heimvorteil (neutrales Gelände, aber Heimkurve)
+# Co-Gastgeber Heimvorteil (WM-spezifisch — neutrales Gelände, aber Heimkurve)
 CO_HOSTS       = {"MEX", "USA", "CAN"}
 HOME_BONUS_PP  = 0.03   # +3pp auf Heimsieg-Wahrscheinlichkeit
 
-# Edge-Schwellen
-EDGE_MIN_1X2   = 5    # Minimum pp für 1X2-Picks (erhöht von 4 → weniger Rauschen)
-EDGE_MIN_OU    = 4    # Minimum pp für Over/Under + BTTS
-EDGE_MIN_DNB   = 6    # Minimum pp für DNB
-EDGE_MIN_DC    = 4    # Minimum pp für Doppelte Chance (sicherer Markt → niedrigere Schwelle)
-EDGE_MIN_AH    = 4    # Minimum pp für Asian Handicap
-EDGE_BET_1X2   = 8    # ≥8pp → BET für 1X2 (ohne CLV-Bestätigung)
-EDGE_BET_OU    = 6    # ≥6pp → BET für O/U + BTTS
-EDGE_HIGH      = 10   # ≥10pp → high confidence
-EDGE_MED       = 6    # ≥6pp  → medium confidence
-EDGE_MAX_SANE  = 18   # >18pp → suspect (wrong/reversed odds) — pick verworfen
-# AUDIT-FIX 05.06.2026: Markt-Konsens-Cap für O/U + BTTS Picks
-# Pinnacle hat strength-of-schedule + xG-Calibration die unser Modell nicht hat.
-# Wenn unser Modell systematisch >10pp Edge auf O/U sieht (z.B. SWE-TUN Über 1.5
-# mit 91% Modell vs 79% Markt-Devig), ist das wahrscheinlich Modell-Bias, kein
-# echter Edge. Diese Picks werden BET → ABWÄGEN gedowngraded.
-EDGE_OU_BET_MAX  = 10  # >10pp Edge auf O/U → kein BET, max ABWÄGEN (Modell-Bias-Schutz)
-EDGE_AH_BET_MAX  = 12  # >12pp Edge auf AH → analog (AH-Modelle systematisch wackliger)
-ODDS_MAX       = 6.5  # >6.5  → zu viel Unsicherheit/Noise, komplett raus (war 7.0)
-ODDS_BET_MAX   = 4.5  # >4.5  → max ABWÄGEN, nie BET (war 5.5)
-# AUDIT-Fix 05.06.2026: spezifische BET-Quoten-Caps für riskantere Markttypen.
-# O/U mit Quote >3.0 sind statistisch wackelig (heißt: Modell ist sehr sicher,
-# Markt aber nicht — bei Tor-Märkten oft Modell-Bias). Beispiel HTI-SCO
-# Über 3.5 @3.40 hat +7pp Edge aber die Realität sagt "extreme Wette".
-ODDS_BET_MAX_OU  = 3.0  # O/U Quote >3.0 → max ABWÄGEN, nie BET
-ODDS_BET_MAX_DNB = 4.0  # DNB Quote >4.0 → max ABWÄGEN (Underdog-DNB-Falle)
+# Edge-Schwellen (aus Config — siehe cocobet_config.json profiles.<active>.edge)
+EDGE_MIN_1X2     = _cfg("edge", "min_1x2_for_pick",        5)
+EDGE_MIN_OU      = _cfg("edge", "min_ou_for_pick",         4)
+EDGE_MIN_DNB     = _cfg("edge", "min_dnb_for_pick",        6)
+EDGE_MIN_DC      = _cfg("edge", "min_dc_for_pick",         4)
+EDGE_MIN_AH      = _cfg("edge", "min_ah_for_pick",         4)
+EDGE_BET_1X2     = _cfg("edge", "bet_threshold_1x2",       8)
+EDGE_BET_OU      = _cfg("edge", "bet_threshold_ou",        6)
+EDGE_HIGH        = 10   # confidence-Tier — UI-Indicator, kein Risk-Knopf
+EDGE_MED         = 6
+EDGE_MAX_SANE    = _cfg("edge", "max_edge_sane",          18)
+EDGE_OU_BET_MAX  = _cfg("edge", "ou_bet_max",             10)
+EDGE_AH_BET_MAX  = _cfg("edge", "ah_bet_max",             12)
+ODDS_MAX         = _cfg("odds", "max_for_pick",          6.5)
+ODDS_BET_MAX     = _cfg("odds", "max_for_bet",           4.5)
+ODDS_BET_MAX_OU  = _cfg("odds", "max_for_bet_ou",        3.0)
+ODDS_BET_MAX_DNB = _cfg("odds", "max_for_bet_dnb",       4.0)
 
-# Underdog-Filter: wenn das Team laut Elo deutlich schlechter ist, höherer Beweisbedarf
-UNDERDOG_ELO_SOFT = 100   # >100 Elo-Diff gegen Pick → kein BET, nur ABWÄGEN wenn Form zeigt Stärke
-UNDERDOG_ELO_HARD = 200   # >200 Elo-Diff gegen Pick → immer SKIP
+# Underdog-Filter
+UNDERDOG_ELO_SOFT = _cfg("underdog", "elo_soft_threshold", 100)
+UNDERDOG_ELO_HARD = _cfg("underdog", "elo_hard_threshold", 200)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1087,47 +1092,13 @@ def generate_picks_for_fixture(
     # Beispiel CAN-BIH 11.06.: "AH Heim −0.5" (Kanada gewinnt mit 1+) UND
     # "DNB: Auswärtsteam" (Bosnien gewinnt oder Remis) waren BEIDE BET → logisch
     # unmöglich. Ursache: jeder Markt rechnet isoliert ohne globale Sicht.
-    # Lösung: Jeder Markt wird einer DIRECTION zugeordnet (homeBias/awayBias/
-    # over/under). Wenn zwei BET-Picks in entgegengesetzten Directions → der
-    # mit der schwächeren Edge × dataQuality-Konfidenz wird auf ABWÄGEN gedowngraded.
-    DIRECTION_MAP = {
-        "Heimsieg":               "homeStrong",
-        "Doppelte Chance — 1X":   "homeBias",
-        "Doppelte Chance — 12":   "decisive",   # nicht draw
-        "AH Heim −0.5":           "homeStrong",
-        "AH Heim −0.75":          "homeStrong",
-        "AH Heim −1.0":           "homeStrong",
-        "DNB: Heimteam":          "homeStrong",
-        "Auswärtssieg":           "awayStrong",
-        "Doppelte Chance — X2":   "awayBias",
-        "AH Auswärts +0.5":       "awayStrong",
-        "AH Auswärts +0.75":      "awayStrong",
-        "AH Auswärts +1.0":       "awayStrong",
-        "DNB: Auswärtsteam":      "awayStrong",
-        "Unentschieden":          "drawOnly",
-        "Über 1.5 Tore":          "over",
-        "Über 2.5 Tore":          "over",
-        "Über 3.5 Tore":          "over",
-        "Unter 1.5 Tore":         "under",
-        "Unter 2.5 Tore":         "under",
-        "Unter 3.5 Tore":         "under",
-        "Beide Teams treffen":    "over",        # btts impliziert Tore
-        "Beide Teams treffen: Nein": "under",
-    }
-    INCOMPATIBLE = {
-        # (Direction A, Direction B) können nicht beide BET sein
-        ("homeStrong", "awayStrong"),
-        ("homeStrong", "awayBias"),
-        ("homeStrong", "drawOnly"),
-        ("homeBias",   "awayStrong"),
-        ("awayStrong", "drawOnly"),
-        ("awayBias",   "homeStrong"),
-        ("decisive",   "drawOnly"),
-        ("over",       "under"),
-    }
+    # Lösung: pick_constants.DIRECTION_MAP + are_directions_incompatible.
+    # Single Source of Truth — keine Inline-Duplikate mehr.
+    from pick_constants import get_pick_direction as _get_dir
+    from pick_constants import are_directions_incompatible as _is_incompatible_dir
 
     def _is_incompatible(d1: str, d2: str) -> bool:
-        return (d1, d2) in INCOMPATIBLE or (d2, d1) in INCOMPATIBLE
+        return _is_incompatible_dir(d1, d2)
 
     def _pick_confidence(p: dict) -> float:
         """Konfidenz-Score für Konflikt-Auflösung: Edge × dataQ × Konfidenz-Label."""
@@ -1192,13 +1163,13 @@ def generate_picks_for_fixture(
     for i, p_a in enumerate(bet_picks):
         if p_a.get("verdict") != "BET":
             continue   # könnte schon downgegraded sein
-        dir_a = DIRECTION_MAP.get(p_a.get("market", ""))
+        dir_a = _get_dir(p_a.get("market", ""))
         if not dir_a:
             continue
         for p_b in bet_picks[i+1:]:
             if p_b.get("verdict") != "BET":
                 continue
-            dir_b = DIRECTION_MAP.get(p_b.get("market", ""))
+            dir_b = _get_dir(p_b.get("market", ""))
             if not dir_b:
                 continue
             if not _is_incompatible(dir_a, dir_b):
