@@ -58,6 +58,19 @@
         "max_open_exposure_usdc": 80.0,
         "adaptive_daily_fraction": 0.40
       },
+      "sell": {
+        "profit_target":          0.10,
+        "pinn_gap_pp":            1.5,
+        "min_profit_pp":          0.03,
+        "age_decay_hours":        48,
+        "age_decay_profit_target": 0.05,
+        "sharp_against_gap_pp":   7.0,
+        "loss_deep_pct":          0.40,
+        "loss_deep_hours_ahead":  12.0,
+        "age_loss_hours":         36.0,
+        "age_loss_threshold_pct": 0.10,
+        "no_inplay_loss_sell":    true
+      },
       "dedup_hours": {
         "sell_alert":             6,
         "edge_alert":             12,
@@ -118,6 +131,19 @@
         "max_positions_per_match": 3,
         "max_open_exposure_usdc": 120.0,
         "adaptive_daily_fraction": 0.50
+      },
+      "sell": {
+        "profit_target":          0.08,
+        "pinn_gap_pp":            1.5,
+        "min_profit_pp":          0.03,
+        "age_decay_hours":        36,
+        "age_decay_profit_target": 0.04,
+        "sharp_against_gap_pp":   6.0,
+        "loss_deep_pct":          0.35,
+        "loss_deep_hours_ahead":  10.0,
+        "age_loss_hours":         30.0,
+        "age_loss_threshold_pct": 0.10,
+        "no_inplay_loss_sell":    true
       },
       "dedup_hours": {
         "sell_alert":             6,

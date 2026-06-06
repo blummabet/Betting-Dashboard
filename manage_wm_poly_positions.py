@@ -47,46 +47,61 @@ TELEGRAM_TRADES_CHAT_ID = (os.getenv("TELEGRAM_TRADES_CHAT_ID") or "").strip()
 # Legacy-Alias für Code der noch TELEGRAM_CHAT_ID liest — beide zeigen auf Trades.
 TELEGRAM_CHAT_ID        = TELEGRAM_TRADES_CHAT_ID
 
+# ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
+# Backwards-compatible: Code-Defaults greifen wenn cocobet_config crash.
+# WM2026-Profil liefert exakt die Pre-Refactor-Werte — verifiziert per Test.
+try:
+    from cocobet_config import CONFIG as _CFG
+except Exception:
+    _CFG = {}
+
+def _cfg(section: str, key: str, default):
+    """Sicherer Config-Lookup mit Default-Fallback (=aktueller Hardcode-Wert)."""
+    if isinstance(_CFG, dict):
+        return _CFG.get(section, {}).get(key, default)
+    return default
+
 # ── Sell-Schwellwerte ─────────────────────────────────────────────────────────
-PROFIT_TARGET   = 0.10   # +10% Profit → Sell (war 0.20 — gesenkt 01.06.2026 für schnelleren Cash-Cycle)
-PINN_GAP_PP     = 1.5    # Poly innerhalb 1.5pp Pinnacle Fair → Sell (war 2.0)
-MIN_PROFIT_PP   = 0.03   # Minimaler absoluter Profit (+3pp) bevor Secondary-Regel greift
+# 01.06.2026: PROFIT_TARGET 0.20 → 0.10 (schnellerer Cash-Cycle, gemessen).
+# PINN_GAP von 2.0 → 1.5 angepasst, MIN_PROFIT_PP als Schutz für Secondary.
+PROFIT_TARGET   = _cfg("sell", "profit_target", 0.10)
+PINN_GAP_PP     = _cfg("sell", "pinn_gap_pp",   1.5)
+MIN_PROFIT_PP   = _cfg("sell", "min_profit_pp", 0.03)
 
 # Age-Decay: ältere Positionen sollen Cash freimachen — auch bei kleinem Profit schließen
-AGE_DECAY_HOURS         = 48     # ab welcher Halte-Dauer kleinerer Profit akzeptiert wird
-AGE_DECAY_PROFIT_TARGET = 0.05   # +5% reicht zum Schließen nach 48h+
+AGE_DECAY_HOURS         = _cfg("sell", "age_decay_hours",         48)
+AGE_DECAY_PROFIT_TARGET = _cfg("sell", "age_decay_profit_target", 0.05)
 
 # ── LOSS-Trigger ──────────────────────────────────────────────────────────────
-# Eingebaut 03.06.2026 — verhindert dass Positionen ins Minus aussgesessen werden.
+# Eingebaut 03.06.2026 — verhindert dass Positionen ins Minus ausgesessen werden.
 # Profi-Konsens: event-getriebene Loss-Stops, keine Panik bei normalem Marktrauschen.
 
 # 1. SHARP-AGAINST: Pinnacle pricet die Wahrscheinlichkeit ≥7pp UNTER unserem Entry
 #    → Sharps denken das Outcome ist deutlich unwahrscheinlicher als wir gekauft haben
 #    → wahrscheinlich gibt's neue Info die wir nicht eingepreist haben → raus
-SHARP_AGAINST_GAP_PP    = 7.0
+SHARP_AGAINST_GAP_PP   = _cfg("sell", "sharp_against_gap_pp", 7.0)
 
 # 2. DEEP-LOSS + viel Zeit: Position 40% unter Entry, Match noch ≥12h weg
 #    → Opportunitätskosten: Bankroll besser anderswo allokieren
-LOSS_DEEP_PCT           = 0.40
-LOSS_DEEP_HOURS_AHEAD   = 12.0
+LOSS_DEEP_PCT          = _cfg("sell", "loss_deep_pct",         0.40)
+LOSS_DEEP_HOURS_AHEAD  = _cfg("sell", "loss_deep_hours_ahead", 12.0)
 
 # 3. AGE-LOSS: alte Position + im Minus → realisieren bevor Spread alles frisst
-AGE_LOSS_HOURS          = 36.0
-AGE_LOSS_THRESHOLD_PCT  = 0.10   # ≥10% Verlust nach 36h+
+AGE_LOSS_HOURS         = _cfg("sell", "age_loss_hours",         36.0)
+AGE_LOSS_THRESHOLD_PCT = _cfg("sell", "age_loss_threshold_pct", 0.10)
 
 # 4. NEVER IN-PLAY: Live-Phase = kein Loss-Trigger (Polymarket-Live-Liquidität zu mies)
-NO_INPLAY_LOSS_SELL     = True
+NO_INPLAY_LOSS_SELL    = _cfg("sell", "no_inplay_loss_sell", True)
 
 # ── Auto-Sell Konfiguration ───────────────────────────────────────────────────
-# Sicherheitsschalter: False = nur Alerts, keine echten Sells
-# Auf True setzen (oder AUTO_SELL_ENABLED=true in Env) wenn bereit für live Sells
+# AUTO_SELL_ENABLED bleibt bewusst HARDCODE: Safety-Master-Switch, nur per
+# explizitem Code-Edit oder ENV=true aktivierbar (verhindert versehentliches
+# Live-Trading durch Config-Tippfehler). Verhalten unverändert.
 AUTO_SELL_ENABLED     = False
-PRE_MATCH_CLOSE_HOURS = 2  # Schließe alle offenen Positionen N Stunden vor Anpfiff
-                            # 05.06.2026: von 6 → 2 verschoben — Profi-Konsens:
-                            #   Lineups kommen 60-90min vor Anpfiff, größte Edge-Moves danach.
-                            #   Sharps fahren Polymarket in den letzten 2-4h am stärksten.
-                            #   Bei 6h verkaufen wir vor den Sharp-Moves → suboptimaler Exit.
-                            #   2h = letzter sicherer Schließ-Zeitpunkt mit guter Liquidität.
+
+# Hard-Close Stunden vor Anpfiff — bereits in trade-section (von auto_trigger).
+# 05.06.2026: von 6 → 2 verschoben (Lineups 60-90min vor Anpfiff, Sharp-Moves 2-4h vor KO).
+PRE_MATCH_CLOSE_HOURS = _cfg("trade", "pre_match_close_hours", 2)
 
 # ── Gamma API ────────────────────────────────────────────────────────────────
 GAMMA_URL = "https://gamma-api.polymarket.com/events?slug={slug}"

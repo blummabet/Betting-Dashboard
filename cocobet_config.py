@@ -55,6 +55,14 @@ DEFAULT_FALLBACK = {
         "max_positions_per_match": 2, "max_open_exposure_usdc": 80.0,
         "adaptive_daily_fraction": 0.40,
     },
+    "sell": {
+        "profit_target": 0.10, "pinn_gap_pp": 1.5, "min_profit_pp": 0.03,
+        "age_decay_hours": 48, "age_decay_profit_target": 0.05,
+        "sharp_against_gap_pp": 7.0,
+        "loss_deep_pct": 0.40, "loss_deep_hours_ahead": 12.0,
+        "age_loss_hours": 36.0, "age_loss_threshold_pct": 0.10,
+        "no_inplay_loss_sell": True,
+    },
     "dedup_hours": {
         "sell_alert": 6, "edge_alert": 12,
         "sharp_move": 24, "position_health": 6, "spotlight_per_day": 2,
