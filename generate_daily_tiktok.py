@@ -40,9 +40,20 @@ OUTPUT_DIR = BASE / "daily-tiktok"
 DEDUP_FILE = BASE / "tiktok_sent.json"   # Tracking was schon gepostet wurde
 OUTPUT_DIR.mkdir(exist_ok=True)
 
+# ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
+try:
+    from cocobet_config import CONFIG as _CFG
+except Exception:
+    _CFG = {}
+
+def _cfg(section: str, key: str, default):
+    if isinstance(_CFG, dict):
+        return _CFG.get(section, {}).get(key, default)
+    return default
+
 # Dedup-Fenster: ein Team das in den letzten N Tagen Killer-Stat war,
 # wird nicht erneut gewählt (auch nicht von einer anderen Strategie).
-DEDUP_WINDOW_DAYS = 7
+DEDUP_WINDOW_DAYS = _cfg("tiktok", "dedup_window_days", 7)
 
 # Hand-Override: Teams die du manuell auf TikTok schon abgehandelt hast
 # und die NIE als Daily-Killer-Stat triggern sollen.

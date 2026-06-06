@@ -37,20 +37,32 @@ SELL_DEDUP_FILE = BASE / "steam_lag_sell_dedup.json"
 TELEGRAM_TOKEN   = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
 TELEGRAM_CHAT_ID = (os.environ.get("TELEGRAM_TRADES_CHAT_ID") or "").strip()
 
+# ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
+try:
+    from cocobet_config import CONFIG as _CFG
+except Exception:
+    _CFG = {}
+
+def _cfg(section: str, key: str, default):
+    """Sicherer Config-Lookup mit Default-Fallback (=aktueller Hardcode-Wert)."""
+    if isinstance(_CFG, dict):
+        return _CFG.get(section, {}).get(key, default)
+    return default
+
 # Sell-alert thresholds
-SELL_VELOCITY_PP_H  = 0.3   # Edge closing ≥ 0.3pp/h → sell alert
-SELL_EDGE_THRESHOLD = 1.5   # Only alert when edge already below this (= most of move captured)
-SELL_MIN_ENTRY_EDGE = 2.5   # Only alert for signals that had meaningful entry edge
+SELL_VELOCITY_PP_H  = _cfg("steam", "sell_velocity_pp_h",  0.3)   # Edge closing ≥ 0.3pp/h → sell alert
+SELL_EDGE_THRESHOLD = _cfg("steam", "sell_edge_threshold", 1.5)   # Only alert when edge already below this
+SELL_MIN_ENTRY_EDGE = _cfg("steam", "sell_min_entry_edge", 2.5)   # Only alert for signals with meaningful entry edge
 
 # High-confidence threshold
-HIGH_CONF_EDGE_MIN = 3.0    # Entry edge ≥ 3pp + steamLagAtSignal → high confidence
+HIGH_CONF_EDGE_MIN  = _cfg("steam", "high_conf_edge_min", 3.0)    # Entry edge ≥ 3pp + steamLag → high confidence
 POLY_HIST     = BASE / "wm2026-poly-history.json"
 ODDS_HIST     = BASE / "wm2026-odds-history.json"
 
 # Schwellenwerte
-MIN_EDGE_PP            = 1.5   # Mindest-Edge für Log-Eintrag (inkl. watching-Signale)
-SIGNAL_EDGE_PP         = 2.0   # Mindest-Edge für echtes Signal (war 3.0 — vor WM-Start gesenkt)
-CONVERGED_EDGE_PP      = 1.0   # Edge gilt als geschlossen wenn < 1pp
+MIN_EDGE_PP            = _cfg("steam", "min_edge_pp",        1.5)  # Mindest-Edge für Log-Eintrag
+SIGNAL_EDGE_PP         = _cfg("steam", "signal_edge_pp",     2.0)  # Mindest-Edge für echtes Signal
+CONVERGED_EDGE_PP      = _cfg("steam", "converged_edge_pp",  1.0)  # Edge gilt als geschlossen wenn < 1pp
 # Trackable: muss VOR Konvergenz-Schwelle starten, sonst keine echte Konvergenz möglich.
 # Verhindert "Steam Lag mit 0.4pp Entry → sofort CONVERGED mit 0% closed"-Artefakte.
 MIN_TRACKABLE_ENTRY    = CONVERGED_EDGE_PP + 1.0   # = 2.0pp absolute Untergrenze auch bei Steam Lag
@@ -59,10 +71,10 @@ MIN_TRACKABLE_ENTRY    = CONVERGED_EDGE_PP + 1.0   # = 2.0pp absolute Untergrenz
 # - "trade"   = Auto-Trigger-fähig (>= 5pp) → wird wirklich gewettet
 # - "track"   = Beobachtungs-Signal (2-5pp) → wird geloggt aber nicht autotraded
 # - "sub_threshold" = unter Tracking-Untergrenze → wird gar nicht erfasst
-TRADE_TIER_EDGE_PP     = 5.0   # entspricht AUTO_TRIGGER_EDGE_PP in auto_wm_poly_trigger.py
+TRADE_TIER_EDGE_PP     = _cfg("steam", "trade_tier_edge_pp", 5.0)  # entspricht AUTO_TRIGGER_EDGE_PP
 
-MAX_SNAPSHOTS     = 50     # Snapshots pro Signal-Entry im Log
-SIGNAL_TTL_DAYS   = 30     # Alte aufgelöste Signale nach N Tagen bereinigen
+MAX_SNAPSHOTS     = _cfg("steam", "max_snapshots",   50)   # Snapshots pro Signal-Entry im Log
+SIGNAL_TTL_DAYS   = _cfg("steam", "signal_ttl_days", 30)   # Alte aufgelöste Signale nach N Tagen bereinigen
 
 
 def _classify_entry_tier(entry_edge: float, steam_lag: bool) -> str:
