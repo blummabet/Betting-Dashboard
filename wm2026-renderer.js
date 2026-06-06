@@ -433,8 +433,29 @@
       if (bSafer && !aSafer) return 1;
       return (b.edgePP || 0) - (a.edgePP || 0);
     });
-    const heroPick   = sortedPicks[0] || null;
-    const otherPicks = sortedPicks.slice(1);
+    let heroPick   = sortedPicks[0] || null;
+    let otherPicks = sortedPicks.slice(1);
+
+    // ── UI-Convention-Fix 05.06.2026 ──────────────────────────────────────
+    // Bei dataQuality=elo+form_asym (ein Team hat keine Form-Daten):
+    //   - Kein BET kann durchkommen (B4-Fix bereits aktiv)
+    //   - ABER auch ABWÄGEN-Picks mit hohen Quoten (>3.0) oder ohne
+    //     andere unterstützende Daten sind irreführend als "Main Pick".
+    // Regel: Wenn ALLE Live-Picks dataQuality=elo+form_asym haben UND
+    //   der beste Pick eine Quote >3.0 hat → Card als Beobachtungs-Spiel
+    //   rendern statt "Vorsichtiger Pick" zu zeigen.
+    if (heroPick) {
+      const allAsym = livePicks.every(p =>
+        p.dataQuality === 'elo+form_asym' || p.dataQuality === 'elo_only'
+      );
+      const heroIsRisky = (heroPick.odds || 0) > 3.0;
+      const heroIsAsym = heroPick.dataQuality === 'elo+form_asym' || heroPick.dataQuality === 'elo_only';
+      if (allAsym && heroIsRisky && heroIsAsym) {
+        // Card als Beobachtungs-Spiel rendern (kein Main-Pick)
+        heroPick = null;
+        otherPicks = []; // andere Picks ausblenden — Datenbasis fehlt
+      }
+    }
 
     // Hot badge: high poly edge OR steam lag — only when relevant
     const showHotBadge = !!polyFix && (
@@ -518,9 +539,14 @@
         <div class="cc-pick-market">${fx.result.home}:${fx.result.away}</div>
       </div>`;
     } else if (!isPlayed && !heroPick) {
+      // Check ob die Picks wegen asymmetrischer Datenbasis ausgeblendet wurden
+      const hasAsymPicks = livePicks.length > 0;
+      const watchMsg = hasAsymPicks
+        ? 'Datenbasis unvollständig — Form-Daten eines Teams fehlen'
+        : 'Kein Pick mit Edge — Spielverlauf abwarten';
       html += `<div class="cc-pick cc-pick-watch">
         <div class="cc-pick-label">Beobachtungs-Spiel</div>
-        <div class="cc-pick-watch-text">Kein Pick mit Edge — Spielverlauf abwarten</div>
+        <div class="cc-pick-watch-text">${watchMsg}</div>
       </div>`;
     }
 
