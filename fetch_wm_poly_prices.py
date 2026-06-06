@@ -23,11 +23,24 @@ WM_FILE      = os.path.join(BASE, "wm2026-data.json")
 POLY_HIST    = os.path.join(BASE, "wm2026-poly-history.json")  # Poly price snapshots over time
 ODDS_HIST    = os.path.join(BASE, "wm2026-odds-history.json")  # Pinnacle odds snapshots
 
+# ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
+try:
+    from cocobet_config import CONFIG as _CFG
+except Exception:
+    _CFG = {}
+
+def _cfg(section: str, key: str, default):
+    """Sicherer Config-Lookup mit Default-Fallback (=aktueller Hardcode-Wert)."""
+    if isinstance(_CFG, dict):
+        return _CFG.get(section, {}).get(key, default)
+    return default
+
 # Edge-Momentum: Snapshot-Alter in Stunden für Vergleich (24h-Fenster)
+# Bleibt hardcoded — reine Computation-Konstante, nicht Profil-relevant
 DELTA_WINDOW_H = 24
 
 # Edge-Alerts: Minimum Edge für Telegram-Notification
-ALERT_EDGE_MIN_PP = 5.0
+ALERT_EDGE_MIN_PP = float(_cfg("telegram", "alert_edge_min_pp", 5.0))
 
 GAMMA_URL = (
     "https://gamma-api.polymarket.com/events"
@@ -766,7 +779,7 @@ def main():
         # Jetzt: jede (matchKey × bestEdgeKey) max 1× pro 12h via dedup-state file.
         from datetime import datetime, timezone, timedelta
         EDGE_ALERT_DEDUP_FILE = BASE_DIR / "wm_edge_alert_dedup.json"
-        EDGE_DEDUP_HOURS = 12
+        EDGE_DEDUP_HOURS = _cfg("dedup_hours", "edge_alert", 12)
         dedup_state = {}
         if EDGE_ALERT_DEDUP_FILE.exists():
             try:
@@ -794,7 +807,8 @@ def main():
                and fx not in alert_queue
                and not _was_alerted_recently(fx)
         ]
-        alert_queue = (alert_queue + steam_alerts)[:4]  # max 4 Alerts pro Run
+        _max_alerts = _cfg("telegram", "max_alerts_per_run", 4)
+        alert_queue = (alert_queue + steam_alerts)[:_max_alerts]  # max N Alerts pro Run
 
         for fx in alert_queue:
             is_steam   = fx.get("steamLag") and fx.get("edgeTrend") == "growing"

@@ -68,8 +68,10 @@ DEFAULT_FALLBACK = {
         "sharp_move": 24, "position_health": 6, "spotlight_per_day": 2,
     },
     "telegram": {
-        "max_log_entries": 500, "max_alerts_per_run": 4,
+        "max_log_entries": 500,
+        "max_alerts_per_run": 4, "max_sharp_alerts_per_run": 6,
         "alert_edge_min_pp": 5, "alert_cumul_pp": 8, "alert_steam_pp": 10,
+        "snap_window_days": 14,
     },
 }
 

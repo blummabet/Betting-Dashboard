@@ -44,11 +44,23 @@ TELEGRAM_TOKEN = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
 # GitHub Actions setzt fehlende Secrets als leeren String → `or "default"` Pattern.
 CHAT_ID        = (os.environ.get("TELEGRAM_TRADES_CHAT_ID") or "").strip()
 
-ALERT_PP         = 5    # pp vs. letztem Snapshot → normaler Alert
-ALERT_PP_BIG     = 10   # pp vs. letztem Snapshot → Steam Move
-CUMUL_PP         = 8    # pp vs. Opening Line → kumulativer Drift-Alert
-SNAP_WINDOW_DAYS = 14   # Snapshots älter als N Tage in Drift-Analyse ignorieren
-MAX_ALERTS       = 6    # Maximal N Alerts pro Lauf (sortiert nach Stärke)
+# ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
+try:
+    from cocobet_config import CONFIG as _CFG
+except Exception:
+    _CFG = {}
+
+def _cfg(section: str, key: str, default):
+    """Sicherer Config-Lookup mit Default-Fallback (=aktueller Hardcode-Wert)."""
+    if isinstance(_CFG, dict):
+        return _CFG.get(section, {}).get(key, default)
+    return default
+
+ALERT_PP         = _cfg("telegram", "alert_edge_min_pp",         5)
+ALERT_PP_BIG     = _cfg("telegram", "alert_steam_pp",            10)
+CUMUL_PP         = _cfg("telegram", "alert_cumul_pp",            8)
+SNAP_WINDOW_DAYS = _cfg("telegram", "snap_window_days",          14)
+MAX_ALERTS       = _cfg("telegram", "max_sharp_alerts_per_run",  6)
 
 
 # ── Deduplication ─────────────────────────────────────────────────────────────
