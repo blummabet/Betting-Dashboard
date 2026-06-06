@@ -2929,6 +2929,31 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
   </div>
 
+  <!-- A ── WM Health-Dashboard (Live-Kennzahlen) ─────────────────── -->
+  <div style="background:linear-gradient(135deg,rgba(0,212,161,0.06),rgba(76,201,240,0.04));border:1px solid rgba(0,212,161,0.25);border-radius:14px;padding:20px;margin-bottom:20px;">
+    <div style="font-size:14px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+      <span>🎛️</span> WM Control Center
+      <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:auto;" id="cc_lastRefresh">Lädt…</span>
+    </div>
+    <div id="cc_grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;">
+      <!-- Filled by JS: BETs, Picks heute, Balance, Position-Health, Kill-Switch, etc. -->
+    </div>
+  </div>
+
+  <!-- B ── Telegram-Send-Log ──────────────────────────────────────── -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;">
+    <div style="font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+      <span>📨</span> Telegram-Log — letzte 15 Sends
+      <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:auto;" id="tg_log_count">—</span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">
+      Live aus <code>telegram-log.json</code> · 🌐 PUBLIC = Community-Channel · 🔒 PRIVAT = Trades-Channel
+    </div>
+    <div id="cc_tgLog" style="display:flex;flex-direction:column;gap:6px;font-size:12px;">
+      <div style="color:var(--muted);text-align:center;padding:20px;">Lädt…</div>
+    </div>
+  </div>
+
   <!-- 1 ── GitHub Actions Workflows ─────────────────────────────────── -->
   <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;">
     <div style="font-size:14px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;">

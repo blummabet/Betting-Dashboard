@@ -202,24 +202,50 @@ function _quickLink(icon, label, url, color) {
 }
 
 // ── Status workflows section ─────────────────────────────
+// Update 06.06.2026: WM-Pipeline komplett ergänzt, Liga-Workflows pausiert markiert
 const _STATUS_WORKFLOWS = [
-  { id: 'update-dashboard',  icon: '🏁', label: 'Dashboard Update',     color: '#3fb950', desc: 'Täglich 06:00 + 14:00 UTC' },
-  { id: 'fetch-prematch',    icon: '📋', label: 'Pre-Match Daten',       color: '#f0c040', desc: 'Täglich 04:45 + 12:45 UTC' },
-  { id: 'fetch-results',     icon: '📊', label: 'Ergebnisse holen',      color: '#58a6ff', desc: 'Täglich 3× täglich' },
-  { id: 'refresh-xg',        icon: '📐', label: 'xG Statistiken',        color: '#a78bfa', desc: 'Wöchentlich Mo 05:00 UTC' },
+  // ── WM 2026 (aktiv) ─────────────────────────────────────
+  { id: 'fetch-wm-data',     icon: '🌍', label: 'WM Daten',              color: '#00d4a1', desc: '5×/Tag · Picks + Form + Odds + Sharp Moves' },
+  { id: 'manage-wm-poly',    icon: '💹', label: 'WM Poly Trading',       color: '#a78bfa', desc: '5×/Tag · Auto-Trigger + Sell + Health' },
+  { id: 'poly-bets',         icon: '🟣', label: 'Polymarket Manual',     color: '#a78bfa', desc: 'On-Demand bei UI-Klick "Jetzt platzieren"' },
+  { id: 'daily-wm-story',    icon: '🎬', label: 'WM Live-Story Engine',  color: '#4cc9f0', desc: 'Täglich 06:00 UTC · TikTok Hook+Info' },
+  { id: 'daily-tiktok',      icon: '📱', label: 'Daily TikTok Cards',    color: '#4cc9f0', desc: 'Täglich 04:00 UTC · Hidden-Gem / Killer-Stat' },
+  { id: 'daily-heartbeat',   icon: '🤖', label: 'Daily Heartbeat',       color: '#3fb950', desc: 'Täglich 06:00 UTC · System-Status an Trades' },
+  { id: 'track-record-card', icon: '🏆', label: 'Track-Record-Card',     color: '#3fb950', desc: 'Täglich 19:00 UTC · ROI an Trades' },
+  { id: 'telegram-wm-recap', icon: '📺', label: 'WM Tages-Recap',        color: '#f0c040', desc: 'Täglich 21:30 UTC · Recap an Public' },
+  { id: 'kill-switch',       icon: '🛑', label: 'Kill-Switch (Mobile)',  color: '#f85149', desc: 'On-Demand · Trading sofort pausieren' },
+  // ── Liga (pausiert während WM) ──────────────────────────
+  { id: 'update-dashboard',  icon: '⏸️', label: 'Liga Dashboard',         color: '#8b949e', desc: 'PAUSIERT während WM · Liga-Picks' },
+  { id: 'fetch-prematch',    icon: '⏸️', label: 'Liga Pre-Match',         color: '#8b949e', desc: 'PAUSIERT während WM' },
+  { id: 'fetch-results',     icon: '⏸️', label: 'Liga Ergebnisse',        color: '#8b949e', desc: 'PAUSIERT während WM' },
 ];
 
 const _STATUS_FILES = [
-  { file: 'season-finish.html', icon: '🏁', label: 'Dashboard HTML',     desc: 'via update-dashboard.yml' },
-  { file: 'prematch-data.json', icon: '📋', label: 'Pre-Match Daten',    desc: 'via fetch-prematch.yml' },
-  { file: 'results-cache.json', icon: '📊', label: 'Ergebnisse Cache',   desc: 'via fetch-results.yml' },
-  { file: 'stats_cache.json',   icon: '📐', label: 'xG / Stats Cache',   desc: 'via refresh-xg.yml + refresh_stats.py' },
+  // ── WM Pick-Generierung ─────────────────────────────────
+  { file: 'wm2026-data.json',       icon: '🌍', label: 'WM Picks + Form + H2H',  desc: 'via fetch-wm-data.yml · 5×/Tag' },
+  { file: 'wm2026-odds-history.json', icon: '📈', label: 'Pinnacle Odds-History', desc: 'Opening vs Closing Tracking' },
+  { file: 'wm_poly_prices.json',    icon: '💹', label: 'Polymarket Prices+Edges', desc: 'Pinnacle vs Polymarket Drift' },
+  { file: 'pick_validation_report.json', icon: '🔍', label: 'Validator Report',     desc: 'via validate_wm_picks.py' },
+  { file: 'pick_changes_log.json',  icon: '🔄', label: 'Pick-Changes Log',       desc: 'Daily diff vs previous run' },
+  // ── WM Trading ──────────────────────────────────────────
+  { file: 'wm_poly_balance.json',   icon: '💰', label: 'Polymarket Balance',     desc: 'USDC verfügbar' },
+  { file: 'wm_auto_bets_placed.json', icon: '🤖', label: 'Auto-Bets platziert',  desc: 'Alle automatisch ausgelösten Trades' },
+  { file: 'wm_results.json',        icon: '📊', label: 'P&L + CLV Tracking',     desc: 'via resolve_wm_results.py' },
+  { file: 'position_health.json',   icon: '🩺', label: 'Position-Health-Score',  desc: '4-Faktor Health pro offenem Trade' },
+  { file: 'wm_kill_switch.json',    icon: '🛑', label: 'Kill-Switch State',      desc: 'enabled: true/false' },
+  // ── WM Content ──────────────────────────────────────────
+  { file: 'wm_story_proposals.json', icon: '🎬', label: 'Story-Engine Vorschläge', desc: 'Tägliche Story-Angle-Scores' },
+  { file: 'wm_live_story_state.json', icon: '📝', label: 'Story Dedup-State',     desc: 'Welche Entities zuletzt gepostet' },
+  { file: 'telegram-log.json',      icon: '📨', label: 'Telegram-Send-Log',       desc: 'Alle versendeten Nachrichten' },
+  { file: 'wm_sharp_dedup.json',    icon: '📡', label: 'Sharp-Move Dedup',        desc: 'Anti-Spam für Sharp-Alerts' },
+  { file: 'steam_lag_log.json',     icon: '🔥', label: 'Steam-Lag Log',           desc: 'Pinnacle-vs-Polymarket Edges' },
 ];
 
 const _STATUS_ACTIONS = [
   { key: 'picks_saved',        icon: '💾', label: 'Picks speichern',    color: '#3fb950' },
-  { key: 'results_fetched',    icon: '🔄', label: 'Ergebnisse holen',   color: '#58a6ff' },
-  { key: 'prematch_reloaded',  icon: '🔃', label: 'Pre-Match reload',   color: '#f0c040' },
+  { key: 'wm_picks_refresh',   icon: '🔄', label: 'WM Picks reload',    color: '#00d4a1' },
+  { key: 'poly_trader_open',   icon: '💹', label: 'Trade-Cockpit',      color: '#a78bfa' },
+  { key: 'story_preview',      icon: '🎬', label: 'Story-Vorschau',     color: '#4cc9f0' },
 ];
 
 const _REPO = 'blummabet/Betting-Dashboard';
@@ -376,12 +402,173 @@ async function initStatus() {
       `https://github.com/${_REPO}/actions/workflows/${w.id}.yml`,
       w.color)
   ).join('');
+
+  // ── Section A: WM Health-Dashboard (Live-Kennzahlen) ──
+  loadWmControlCenter();
+  // Auto-Refresh every 60s while on Status-Tab
+  if (!window._ccInterval) {
+    window._ccInterval = setInterval(() => {
+      if (document.getElementById('statusPanel')?.style.display !== 'none') {
+        loadWmControlCenter();
+      }
+    }, 60000);
+  }
+
+  // ── Section B: Telegram-Log (letzte 15 Sends) ─────────
+  loadTelegramLog();
 }
 
 
   // [validator functions] → validator.js
   // buildValidatorDates(), runPicksValidator(), renderValidatorOutput(), copyValidatorOutput()
 
+
+// ═══════════════════════════════════════════════════════
+//  WM CONTROL CENTER — Status-Tab Live-Health-Dashboard
+// ═══════════════════════════════════════════════════════
+async function loadWmControlCenter() {
+  const grid = document.getElementById('cc_grid');
+  const tsEl = document.getElementById('cc_lastRefresh');
+  if (!grid) return;
+
+  // Parallel fetch aller Health-relevanten Files
+  const [wmData, balance, autoBets, ks, health, results] = await Promise.all([
+    fetch('wm2026-data.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch('wm_poly_balance.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch('wm_auto_bets_placed.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch('wm_kill_switch.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch('position_health.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch('wm_results.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+  ]);
+
+  // ── Stats berechnen ──
+  let betCount = 0, abwCount = 0, watchCount = 0;
+  if (wmData?.picks) {
+    for (const plist of Object.values(wmData.picks)) {
+      if (!Array.isArray(plist)) continue;
+      for (const p of plist) {
+        if (p.verdict === 'BET') betCount++;
+        else if (p.verdict === 'ABWÄGEN') abwCount++;
+        else if (p.verdict === 'WATCH') watchCount++;
+      }
+    }
+  }
+
+  const balanceUsdc = balance?.total ?? balance?.usdc ?? null;
+  const balanceColor = balanceUsdc === null ? '#8b949e'
+    : balanceUsdc >= 100 ? '#3fb950'
+    : balanceUsdc >= 20 ? '#e3b341'
+    : '#f85149';
+
+  // Bets heute / total
+  const bets = autoBets?.bets || [];
+  const today = new Date().toISOString().slice(0, 10);
+  const betsToday = bets.filter(b => (b.placedAt || '').slice(0, 10) === today).length;
+  const stakeToday = bets.filter(b => (b.placedAt || '').slice(0, 10) === today)
+    .reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
+
+  // Kill-Switch
+  const ksOn = ks?.enabled !== false;   // default true (active)
+  const ksLabel = ksOn ? '🟢 LIVE' : '🔴 PAUSE';
+  const ksColor = ksOn ? '#3fb950' : '#f85149';
+
+  // Position-Health
+  const positions = health?.positions || [];
+  const critical = positions.filter(p => (p.status === 'critical' || p.status === 'warning')).length;
+  const healthColor = positions.length === 0 ? '#8b949e' : critical > 0 ? '#f85149' : '#3fb950';
+
+  // P&L
+  const totalPnl = results?.summary?.totalPnl ?? 0;
+  const roi = results?.summary?.roi ?? 0;
+  const pnlColor = totalPnl > 0 ? '#3fb950' : totalPnl < 0 ? '#f85149' : '#8b949e';
+
+  const stat = (icon, lbl, val, color, sub) => `
+    <div style="background:rgba(0,0,0,0.30);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">
+      <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">${icon} ${lbl}</div>
+      <div style="font-size:20px;font-weight:800;color:${color};line-height:1.1;">${val}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:3px;">${sub || ''}</div>
+    </div>`;
+
+  grid.innerHTML = [
+    stat('🎯', 'Aktive Picks', `${betCount}`, '#00d4a1', `BET · ${abwCount} ABWÄGEN · ${watchCount} WATCH`),
+    stat('🛑', 'Kill-Switch', ksLabel, ksColor, ks?.reason ? ks.reason.slice(0, 28) : 'Trading-Status'),
+    stat('💰', 'Polymarket Balance',
+         balanceUsdc !== null ? `$${balanceUsdc.toFixed(2)}` : '—',
+         balanceColor,
+         balance?.address ? balance.address.slice(0, 10) + '…' : 'USDC verfügbar'),
+    stat('🤖', 'Bets heute', `${betsToday}/8`, betsToday >= 7 ? '#f85149' : '#3fb950',
+         `$${stakeToday.toFixed(2)} / $50 max`),
+    stat('🩺', 'Position-Health',
+         positions.length > 0 ? `${positions.length - critical}/${positions.length}` : '—',
+         healthColor,
+         positions.length === 0 ? 'Keine offenen' : `${critical} kritisch`),
+    stat('📊', 'P&L (resolved)',
+         results?.summary ? `${totalPnl >= 0 ? '+' : ''}$${totalPnl.toFixed(2)}` : '—',
+         pnlColor,
+         results?.summary ? `ROI ${roi >= 0 ? '+' : ''}${roi.toFixed(1)}%` : 'noch keine'),
+  ].join('');
+
+  if (tsEl) {
+    const now = new Date();
+    tsEl.textContent = `Aktualisiert ${now.toLocaleTimeString('de-AT', {hour:'2-digit',minute:'2-digit'})}`;
+  }
+}
+
+async function loadTelegramLog() {
+  const el = document.getElementById('cc_tgLog');
+  const cnt = document.getElementById('tg_log_count');
+  if (!el) return;
+
+  try {
+    const r = await fetch('telegram-log.json?t=' + Date.now());
+    if (!r.ok) { el.innerHTML = '<div style="color:#f85149;padding:14px;text-align:center;">telegram-log.json nicht erreichbar</div>'; return; }
+    const log = await r.json();
+    if (!Array.isArray(log) || log.length === 0) {
+      el.innerHTML = '<div style="color:var(--muted);padding:14px;text-align:center;">Keine Logs</div>';
+      return;
+    }
+
+    if (cnt) cnt.textContent = `${log.length} total`;
+
+    // Letzte 15, neueste zuerst
+    const PUB_ID = '-1003819239615';
+    const last15 = [...log].reverse().slice(0, 15);
+
+    const TYPE_ICON = {
+      morning_card: '🌅', recap: '📊', sharp_alert: '📡', steam_alert: '🔥',
+      player_spotlight: '🌟', wm_live_story: '🎬', cumul_alert: '📈',
+      pick_changes_digest: '🔄', track_record: '🏆', auto_bet: '🤖', sell_alert: '💰',
+      heartbeat: '💓',
+    };
+    const TYPE_COLOR = {
+      morning_card: '#00d4a1', recap: '#f0c040', sharp_alert: '#ff8c00',
+      steam_alert: '#f85149', player_spotlight: '#a78bfa', wm_live_story: '#4cc9f0',
+      cumul_alert: '#ff8c00', pick_changes_digest: '#a78bfa', track_record: '#3fb950',
+      auto_bet: '#3fb950', sell_alert: '#e3b341',
+    };
+
+    el.innerHTML = last15.map(e => {
+      const icon = TYPE_ICON[e.type] || '📱';
+      const color = TYPE_COLOR[e.type] || '#8b949e';
+      const dt = e.sentAt ? new Date(e.sentAt).toLocaleString('de-AT',
+        { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '?';
+      const isPublic = String(e.chatId || '') === PUB_ID;
+      const chanBadge = isPublic
+        ? '<span style="background:rgba(248,81,73,0.10);border:1px solid rgba(248,81,73,0.30);color:#f85149;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">🌐 PUBLIC</span>'
+        : '<span style="background:rgba(63,185,80,0.10);border:1px solid rgba(63,185,80,0.30);color:#3fb950;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">🔒 PRIVAT</span>';
+      const preview = (e.preview || '').replace(/<[^>]+>/g, '').slice(0, 80);
+      return `<div style="display:flex;gap:10px;align-items:center;padding:8px 12px;background:var(--card2);border:1px solid var(--border);border-radius:8px;">
+        <span style="font-size:16px;flex-shrink:0;">${icon}</span>
+        <span style="color:${color};font-weight:700;font-size:11px;min-width:120px;text-transform:uppercase;letter-spacing:.3px;">${(e.type||'?').replace(/_/g,' ')}</span>
+        ${chanBadge}
+        <span style="color:var(--muted);font-size:11px;font-family:monospace;flex-shrink:0;">${dt}</span>
+        <span style="color:var(--text);font-size:11px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${preview}">${preview}</span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = `<div style="color:#f85149;padding:14px;text-align:center;">Fehler: ${e.message}</div>`;
+  }
+}
 
 // ═══════════════════════════════════════════════════════
 //  POLY TRADER TAB
