@@ -1447,15 +1447,29 @@ function renderPicks(D) {
   // angezeigt werden, weder Hero noch Secondary.
   const visiblePicks = picks.filter(p => !p.trackingExcluded);
 
-  const betPicks = visiblePicks.filter(p => p.verdict === 'BET');
-  const abwPicks = visiblePicks.filter(p => p.verdict === 'ABWÄGEN');
-
-  // Sortieren nach Edge (innerhalb BET/ABWÄGEN)
-  betPicks.sort((a,b) => (parseFloat(b.edgePP)||0) - (parseFloat(a.edgePP)||0));
-  abwPicks.sort((a,b) => (parseFloat(b.edgePP)||0) - (parseFloat(a.edgePP)||0));
-
-  const primary = betPicks[0] || abwPicks[0] || null;
+  // Audit-Fix 06.06.2026: Smart-Sub-Picks (saferAltFor) gewinnen über BET/ABWÄGEN.
+  // Wenn AH Aus +0.5 als safer-Alt zu DNB Aus markiert ist, soll AH Hero werden
+  // auch wenn ABWÄGEN — niedrigere Quote = sicherere Wette bei vergleichbarer Edge.
+  const allSorted = [...visiblePicks].sort((a, b) => {
+    const aSafer = !!a.saferAltFor;
+    const bSafer = !!b.saferAltFor;
+    if (aSafer && !bSafer) return -1;
+    if (bSafer && !aSafer) return 1;
+    if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
+    if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
+    return (parseFloat(b.edgePP)||0) - (parseFloat(a.edgePP)||0);
+  });
+  const primary = allSorted[0] || null;
   if (!primary) return '';
+
+  // BET/ABWÄGEN-Listen für Secondary-Rendering (Hero schon raus)
+  const remainingPicks = allSorted.slice(1);
+  const betPicks = primary.verdict === 'BET'
+    ? [primary, ...remainingPicks.filter(p => p.verdict === 'BET')]
+    : remainingPicks.filter(p => p.verdict === 'BET');
+  const abwPicks = primary.verdict === 'ABWÄGEN'
+    ? [primary, ...remainingPicks.filter(p => p.verdict === 'ABWÄGEN')]
+    : remainingPicks.filter(p => p.verdict === 'ABWÄGEN');
 
   // ── Asym-Datenbasis-Check (Fix #2) ──
   const isAsym = primary.dataQuality === 'elo+form_asym' || primary.dataQuality === 'elo_only';

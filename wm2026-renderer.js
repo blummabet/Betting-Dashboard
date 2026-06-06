@@ -434,13 +434,21 @@
       !p.trackingExcluded && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN')
     );
     const sortedPicks = [...livePicks].sort((a, b) => {
-      if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
-      if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
-      // SAFER-ALT-Picks (saferAltFor gesetzt) leicht bevorzugen
+      // Audit-Fix 06.06.2026: SAFER-ALT vor allem.
+      // Smart-Substitution markiert AH Aus +0.5 als saferAltFor='DNB Aus' wenn
+      // das Original eine riskante Quote >2.30 hat. Vorher wurde der safer-Alt
+      // benachteiligt weil ABWÄGEN nach BET sortiert wurde → DNB @3.14 blieb Hero
+      // statt AH +0.5 @1.88 mit höherer Edge zu nehmen. Jetzt: safer-Alt
+      // dominiert die Verdict-Hierarchie, weil die Smart-Sub-Engine den Pick
+      // explizit als "bessere Wahl" markiert hat.
       const aSafer = !!a.saferAltFor;
       const bSafer = !!b.saferAltFor;
       if (aSafer && !bSafer) return -1;
       if (bSafer && !aSafer) return 1;
+      // Innerhalb safer/non-safer: BET vor ABWÄGEN
+      if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
+      if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
+      // Dann Edge desc
       return (b.edgePP || 0) - (a.edgePP || 0);
     });
     let heroPick   = sortedPicks[0] || null;
