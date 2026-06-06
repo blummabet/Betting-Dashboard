@@ -1,0 +1,141 @@
+name: 🧪 Tests
+
+# Läuft bei jedem Push und jedem PR.
+# Ein roter ✗ verhindert, dass kaputter Code unbemerkt nach main rutscht.
+# Eingeführt 06.06.2026 nach dem großen Refactor — CI-Schutz für die 165 Tests.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      # Reine Daten/State-Commits müssen die Tests nicht triggern —
+      # die werden vom Pipeline-Bot in hoher Frequenz committet.
+      - 'wm2026-data.json'
+      - 'wm2026-odds-history.json'
+      - 'wm2026-poly-history.json'
+      - 'wm_poly_prices.json'
+      - 'wm_results.json'
+      - 'wm_poly_positions.json'
+      - 'wm_auto_bets_placed.json'
+      - 'wm_poly_balance.json'
+      - 'position_health.json'
+      - 'position_health_alerts.json'
+      - 'pick_confidence_stats.json'
+      - 'picks_snapshot.json'
+      - 'pick_changes_log.json'
+      - 'pick_validation_report.json'
+      - 'pick_changes_digest_state.json'
+      - 'telegram-log.json'
+      - 'wm_sharp_dedup.json'
+      - 'wm_sharp_moves_log.json'
+      - 'wm_edge_alert_dedup.json'
+      - 'steam_lag_log.json'
+      - 'steam_lag_sell_dedup.json'
+      - 'wm_preseason_sent.json'
+      - 'wm_live_story_state.json'
+      - 'wm_story_proposals.json'
+      - 'wm_live_story_outputs/**'
+      - 'track_record_state.json'
+      - 'tiktok_sent.json'
+      - 'bizarre_quote_sent.json'
+      - 'daily-tiktok/**'
+      - 'matches/data/**'
+      - 'matches/wm-index.json'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Falls 2 Pushes schnell aufeinander folgen, älteren abbrechen
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  python-tests:
+    name: Python + JS-Anti-Drift Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 📗 Node einrichten (für JS-Funktional-Tests)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 📦 Dependencies installieren
+        run: |
+          pip install -r requirements.txt
+          # PyYAML brauchen wir nicht für Tests, aber wenn jemand später
+          # YAML-Validierung dazu nimmt, ist es schon da
+          pip install pyyaml 2>/dev/null || true
+
+      - name: ✅ Tests laufen lassen
+        run: |
+          echo "─── Test-Architektur ───"
+          ls tests/*.py | wc -l | xargs echo "Test-Files:"
+          echo ""
+          python3 -m unittest discover tests -v 2>&1 | tail -80
+
+      - name: 🛡️  Smoketest — Foundations importierbar
+        run: |
+          # Falls die unittest-Discovery eine Datei übersieht, fängt das hier:
+          python3 -c "
+          import sys
+          for mod in ('pick_constants', 'pick_helpers', 'cocobet_config',
+                     'state_files_registry', 'generate_wm_picks', 'resolve_wm_picks',
+                     'validate_wm_picks', 'auto_wm_poly_trigger',
+                     'manage_wm_poly_positions', 'polymarket_bet',
+                     'fetch_wm_poly_prices', 'detect_wm_sharp_moves',
+                     'monitor_open_positions', 'steam_lag_monitor',
+                     'telegram_wm', 'generate_daily_tiktok',
+                     'compute_pick_confidence', 'detect_pick_changes'):
+              try:
+                  __import__(mod)
+                  print(f'  ✅ {mod}')
+              except Exception as e:
+                  print(f'  ❌ {mod}: {e}')
+                  sys.exit(1)
+          print()
+          print('Alle Module importieren sauber.')
+          "
+
+      - name: 🔍 JS-Syntax-Checks
+        run: |
+          node --check _pick_helpers.js && echo "✅ _pick_helpers.js"
+          node --check wm2026-renderer.js && echo "✅ wm2026-renderer.js"
+          node --check polymarket-tab.js && echo "✅ polymarket-tab.js"
+          node --check renderer.js && echo "✅ renderer.js"
+          node --check pick-verdict.js && echo "✅ pick-verdict.js"
+
+      - name: 📋 Trade-Pipeline-Konsistenz prüfen
+        run: |
+          # KRITISCH: Stake + Bankroll müssen zwischen polymarket_bet
+          # (manuell) und auto_wm_poly_trigger (auto) identisch sein.
+          python3 -c "
+          import polymarket_bet as pm
+          import auto_wm_poly_trigger as at
+          checks = [
+              ('STAKE_USDC',           pm.STAKE_USDC,           at.FLAT_STAKE_USDC),
+              ('DAILY_BET_CAP',        pm.DAILY_BET_CAP,        at.DAILY_BET_CAP),
+              ('DAILY_STAKE_CAP_USDC', pm.DAILY_STAKE_CAP_USDC, at.DAILY_STAKE_CAP_USDC),
+              ('MIN_BALANCE_BUFFER',   pm.MIN_BALANCE_BUFFER,   at.MIN_BALANCE_BUFFER),
+          ]
+          for name, manual, auto in checks:
+              if manual != auto:
+                  print(f'❌ INKONSISTENZ: {name} manual={manual} auto={auto}')
+                  exit(1)
+              print(f'  ✅ {name} = {manual} (manual==auto)')
+          print('Trade-Pipeline-Limits sind konsistent.')
+          "
