@@ -128,6 +128,81 @@ def evaluate_pick(market: str, home_score: int, away_score: int) -> str:
     return "PENDING"
 
 
+# AUDIT-Fix 06.06.2026: Cross-Market-Konflikt-Filter fürs Tracking
+# Problem: Bei CAN-BIH werden DNB Aus + AH Heim −0.5 gleichzeitig getrackt.
+# Wir wetten aber nur EINEN Pick — das andere "tracking" verfälscht die Stats.
+# Lösung: Nur Hero-Pick (höchste Edge) zählt als "echter" Pick.
+# Sekundäre Picks die DIREKTIONAL mit dem Hero im Konflikt stehen → VOID
+# (mit explizitem reason). Stat-Engine zählt sie nicht als Win/Loss.
+DIRECTION_MAP = {
+    "Heimsieg":               "homeStrong",
+    "Doppelte Chance — 1X":   "homeBias",
+    "Doppelte Chance — 12":   "decisive",
+    "AH Heim −0.5":           "homeStrong",
+    "AH Heim −0.75":          "homeStrong",
+    "AH Heim −1.0":           "homeStrong",
+    "DNB: Heimteam":          "homeStrong",
+    "Auswärtssieg":           "awayStrong",
+    "Doppelte Chance — X2":   "awayBias",
+    "AH Auswärts +0.5":       "awayStrong",
+    "AH Auswärts +0.75":      "awayStrong",
+    "AH Auswärts +1.0":       "awayStrong",
+    "DNB: Auswärtsteam":      "awayStrong",
+    "Unentschieden":          "drawOnly",
+    "Über 1.5 Tore":          "over",
+    "Über 2.5 Tore":          "over",
+    "Über 3.5 Tore":          "over",
+    "Unter 1.5 Tore":         "under",
+    "Unter 2.5 Tore":         "under",
+    "Unter 3.5 Tore":         "under",
+    "Beide Teams treffen":    "over",
+    "Beide Teams treffen — Ja": "over",
+    "Beide Teams treffen — Nein": "under",
+}
+INCOMPATIBLE = {
+    ("homeStrong", "awayStrong"), ("homeStrong", "awayBias"), ("homeStrong", "drawOnly"),
+    ("homeBias",   "awayStrong"), ("awayStrong", "drawOnly"), ("awayBias",   "homeStrong"),
+    ("decisive",   "drawOnly"),   ("over",       "under"),
+}
+def _is_incompatible(d1: str, d2: str) -> bool:
+    return (d1, d2) in INCOMPATIBLE or (d2, d1) in INCOMPATIBLE
+
+
+def _select_hero_and_mark_conflicts(pick_list: list) -> int:
+    """Wählt Hero (höchste Edge unter BET/ABWÄGEN) + markiert konfliktige als VOID.
+
+    Returns Anzahl der als VOID-Konflikt markierten Picks.
+    Mutiert pick_list in-place (setzt result + trackingExcluded für Konflikt-Picks).
+    """
+    live = [p for p in pick_list if p.get("verdict") in ("BET", "ABWÄGEN")]
+    # Sortierung: BET vor ABWÄGEN, dann Edge desc
+    live.sort(key=lambda p: (
+        0 if p.get("verdict") == "BET" else 1,
+        -float(p.get("edgePP") or 0),
+    ))
+    if not live:
+        return 0
+    hero = live[0]
+    hero_dir = DIRECTION_MAP.get(hero.get("market"))
+    if not hero_dir:
+        return 0   # unknown direction → kein Konflikt-Check möglich
+
+    voids = 0
+    for p in live[1:]:
+        d = DIRECTION_MAP.get(p.get("market"))
+        if not d:
+            continue
+        if _is_incompatible(hero_dir, d) and p.get("result") not in ("WIN", "LOSS", "VOID"):
+            p["result"]            = "VOID"
+            p["voidReason"]        = (
+                f"Cross-Market-Konflikt mit Top-Pick '{hero.get('market')}' "
+                f"({hero_dir} vs {d}) — wird nicht real gewettet, daher nicht getrackt"
+            )
+            p["trackingExcluded"]  = True
+            voids += 1
+    return voids
+
+
 def main():
     if not os.path.exists(WM_FILE):
         print(f"❌ {WM_FILE} fehlt")
@@ -146,7 +221,15 @@ def main():
     skipped_pending = 0
     skipped_unknown = 0
     win_count = loss_count = void_count = 0
+    conflict_voids = 0   # Audit-Fix: getrennt zählen
 
+    # ── Pass 1: Konflikt-VOIDs markieren (vor Spielende — sobald Picks generiert) ──
+    for pick_key, pick_list in picks.items():
+        if not isinstance(pick_list, list):
+            continue
+        conflict_voids += _select_hero_and_mark_conflicts(pick_list)
+
+    # ── Pass 2: Spielergebnisse auflösen ──
     for pick_key, pick_list in picks.items():
         if not isinstance(pick_list, list):
             continue
@@ -167,7 +250,7 @@ def main():
 
         for p in pick_list:
             if p.get("result") in ("WIN", "LOSS", "VOID"):
-                continue  # bereits aufgelöst
+                continue  # bereits aufgelöst (inkl. Konflikt-VOID)
 
             outcome = evaluate_pick(p.get("market", ""), hs, as_)
             if outcome == "PENDING":
@@ -182,8 +265,8 @@ def main():
             elif outcome == "LOSS": loss_count += 1
             elif outcome == "VOID": void_count += 1
 
-    # Zurückschreiben
-    if resolved > 0:
+    # Zurückschreiben — auch wenn nur Konflikt-VOIDs ohne Result-Resolves
+    if resolved > 0 or conflict_voids > 0:
         with open(WM_FILE, "w", encoding="utf-8") as f:
             json.dump(wm, f, ensure_ascii=False, indent=2)
 
@@ -192,11 +275,17 @@ def main():
         for p in v if p.get("result") in ("WIN", "LOSS", "VOID")
     )
     total_picks_all = sum(1 for v in picks.values() if isinstance(v, list) for _ in v)
+    excluded_count = sum(
+        1 for v in picks.values() if isinstance(v, list)
+        for p in v if p.get("trackingExcluded")
+    )
 
     print(f"=== resolve_wm_picks.py ===")
     print(f"  Neu aufgelöst: {resolved} (Win {win_count} · Loss {loss_count} · Void {void_count})")
+    print(f"  Konflikt-VOIDs neu markiert: {conflict_voids} (nicht real wettbar → von Tracking ausgeschlossen)")
     print(f"  Übersprungen (unbekannter Markt): {skipped_unknown}")
     print(f"  Gesamt aufgelöst: {total_resolved_all}/{total_picks_all}")
+    print(f"  Davon Tracking-excluded: {excluded_count}")
 
 
 if __name__ == "__main__":
