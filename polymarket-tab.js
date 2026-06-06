@@ -34,7 +34,7 @@ const POLY_MARKETS = new Set([
   'Heimsieg', 'Auswärtssieg', 'Unentschieden',
   // ── Goals Over/Under ────────────────────────────────────
   'Over 1.5 Tore', 'Over 2.5 Tore', 'Over 3.5 Tore',
-  'Under 1.5 Tore', 'Under 2.5 Tore',
+  'Under 1.5 Tore', 'Under 2.5 Tore', 'Under 3.5 Tore',
   // ── Both Teams to Score ─────────────────────────────────
   'Beide Teams treffen',
   // ── Corners Over/Under (all pick-engine lines) ──────────
@@ -468,6 +468,16 @@ function _extractWmPicksForDate(wm, dateStr) {
   const picks = wm.picks || {};
   const groups = wm.groups || {};
 
+  // BUG-FIX 06.06.2026: dateStr kommt vom Datepicker im Format DD.MM.YYYY
+  // (z.B. "11.06.2026"). fx.date ist aber ISO YYYY-MM-DD ("2026-06-11").
+  // String-Vergleich war NIE wahr → 0 Picks für WM angezeigt.
+  // Lösung: dateStr in ISO konvertieren falls nötig.
+  let dateStrIso = dateStr;
+  if (dateStr && dateStr.includes('.')) {
+    const [dd, mm, yyyy] = dateStr.split('.');
+    if (dd && mm && yyyy) dateStrIso = `${yyyy}-${mm}-${dd}`;
+  }
+
   // Build group/team Lookup für Flag + Name
   const teamLookup = {};
   for (const [gKey, gData] of Object.entries(groups)) {
@@ -485,7 +495,8 @@ function _extractWmPicksForDate(wm, dateStr) {
     const g = groups[gKey];
     if (!g) continue;
     const fx = (g.fixtures || []).find(f => f.home === hId && f.away === aId && f.matchday === md);
-    if (!fx || fx.date !== dateStr) continue;
+    // fx.date ist ISO YYYY-MM-DD — gegen konvertiertes dateStrIso vergleichen
+    if (!fx || fx.date !== dateStrIso) continue;
 
     const hInfo = teamLookup[hId] || { name: hId, flag: '🏳' };
     const aInfo = teamLookup[aId] || { name: aId, flag: '🏳' };
@@ -500,10 +511,15 @@ function _extractWmPicksForDate(wm, dateStr) {
 
       // Nur Märkte die Polymarket auch listet (POLY_MARKETS Set)
       // — generate_wm_picks.py schreibt deutsche Labels, müssen ggf. gemappt werden
+      // BUG-FIX 06.06.2026: Über 1.5 und Über 3.5 fehlten im Mapping
       const market = p.market;
       const mappedMarket =
+        market === 'Über 1.5 Tore'      ? 'Over 1.5 Tore' :
         market === 'Über 2.5 Tore'      ? 'Over 2.5 Tore' :
+        market === 'Über 3.5 Tore'      ? 'Over 3.5 Tore' :
+        market === 'Unter 1.5 Tore'     ? 'Under 1.5 Tore' :
         market === 'Unter 2.5 Tore'     ? 'Under 2.5 Tore' :
+        market === 'Unter 3.5 Tore'     ? 'Under 3.5 Tore' :
         market === 'Beide Teams treffen — Ja' ? 'Beide Teams treffen' :
         market;
       if (!POLY_MARKETS.has(mappedMarket)) continue;
