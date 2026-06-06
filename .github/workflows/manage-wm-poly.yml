@@ -136,9 +136,8 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add wm_poly_positions.json wm_poly_prices.json wm_auto_bets_placed.json \
-                  wm_poly_balance.json wm_results.json wm2026-poly-history.json \
-                  position_health.json position_health_alerts.json 2>/dev/null || true
+          # Refactor 2026-06-06: State-Files aus state_files_registry.json
+          git add $(python3 state_files_registry.py --bash-list manage_wm_poly) 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."
           else

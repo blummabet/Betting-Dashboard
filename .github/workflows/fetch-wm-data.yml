@@ -226,33 +226,10 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add wm2026-data.json wm2026-odds-history.json wm_poly_prices.json \
-                  wm2026-poly-history.json \
-                  wm_results.json matches/data/wm-*.json matches/wm-index.json \
-                  pick_confidence_stats.json \
-                  picks_snapshot.json pick_changes_log.json \
-                  pick_validation_report.json
-          # K6 Fix 05.06.2026 — Pick-Changes-Banner Files:
-          # picks_snapshot.json (für Diff-Vergleich nächster Run) +
-          # pick_changes_log.json (Banner-Anzeige im Dashboard) +
-          # pick_validation_report.json (Validation-Pill im Tracking-Tab)
-          # waren vorher nicht in git-add → Banner zeigte NIE Changes weil
-          # snapshot zwischen Runs nicht persistiert wurde.
-          #
-          # Dedup / Log Dateien — ALLE existieren als Seed im Repo, also kein 2>/dev/null
-          # nötig. Wenn add fehlschlägt → Fehler sichtbar machen statt schlucken.
-          # K8 Fix 05.06.2026 — pick_changes_digest_state.json hinzugefügt:
-          # ohne State-Persistenz würde der 14:00-Digest jedes Mal ALLE
-          # Changes als "neu" senden statt nur die seit gestern.
-          for f in telegram-log.json wm_sharp_dedup.json wm_sharp_moves_log.json \
-                   steam_lag_log.json steam_lag_sell_dedup.json wm_preseason_sent.json \
-                   pick_changes_digest_state.json; do
-            if [ -f "$f" ]; then
-              git add "$f"
-            else
-              echo "⚠️  $f fehlt lokal — sollte als Seed im Repo sein!"
-            fi
-          done
+          # Refactor 2026-06-06: State-Files-Liste aus state_files_registry.json
+          # (Single Source of Truth). Beim Hinzufügen neuer Files → dort eintragen.
+          # Glob-Expansion (z.B. matches/data/wm-*.json) durch unquoted $(...) ok.
+          git add $(python3 state_files_registry.py --bash-list fetch_wm_data) 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
           else

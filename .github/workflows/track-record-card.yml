@@ -57,8 +57,9 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          if [ -f track_record_state.json ]; then
-            git add track_record_state.json
+          # Refactor 2026-06-06: State-Files aus state_files_registry.json
+          git add $(python3 state_files_registry.py --bash-list track_record_card) 2>/dev/null || true
+          if true; then
             if ! git diff --staged --quiet; then
               TIMESTAMP=$(date +'%d.%m.%Y %H:%M')
               git commit -m "📊 Track-Record-State ${TIMESTAMP} UTC [skip ci]"

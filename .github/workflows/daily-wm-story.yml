@@ -54,10 +54,8 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          # telegram-log.json wird vom Engine angereichert → für UI-Tracking
-          # wm_live_story_outputs/ enthält Hook+Info HTMLs + PNGs (Audit + Re-Download)
-          git add wm_live_story_state.json wm_story_proposals.json \
-                  telegram-log.json wm_live_story_outputs/ 2>/dev/null || true
+          # Refactor 2026-06-06: State-Files aus state_files_registry.json
+          git add $(python3 state_files_registry.py --bash-list daily_wm_story) 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."
           else

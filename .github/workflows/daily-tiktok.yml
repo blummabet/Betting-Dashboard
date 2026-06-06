@@ -56,8 +56,8 @@ jobs:
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
           mkdir -p daily-tiktok
-          git add daily-tiktok/ 2>/dev/null || true
-          git add tiktok_sent.json bizarre_quote_sent.json 2>/dev/null || true
+          # Refactor 2026-06-06: State-Files aus state_files_registry.json
+          git add $(python3 state_files_registry.py --bash-list daily_tiktok) 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine neuen Files."
           else
