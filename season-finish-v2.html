@@ -2728,6 +2728,66 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <tr><td><code>generate_track_record_card.py</code></td><td>ROI-Card mit Equity-Curve, 21:00 UTC</td></tr>
         </tbody>
       </table>
+
+      <!-- ════════════ Foundations: Refactor 06.06.2026 ════════════ -->
+      <div class="h2-sub-label" style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.08);">🛡️ Foundations — Refactor 06.06.2026</div>
+
+      <div style="background:rgba(46,160,67,0.06);border-left:3px solid #2ea043;padding:12px 14px;margin-bottom:14px;border-radius:6px;">
+        <div style="font-size:12.5px;color:#2ea043;font-weight:700;margin-bottom:6px;">Warum wir das gemacht haben</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.82);line-height:1.6;">
+          Vor dem Refactor waren wichtige Konstanten (z.B. welche Märkte sich widersprechen,
+          ab welcher Edge ein Bet ausgelöst wird) <strong>an mehreren Stellen kopiert</strong>.
+          Wenn ich etwas änderte, musste ich an 3-4 Stellen denken — Drift war eingebaut.
+          Vor WM-Start mit echtem Geld auf Polymarket war das unhaltbar.
+          Jetzt gilt: <strong>jede Konstante hat genau einen Ort</strong>, jede Helper-Funktion auch.
+        </div>
+      </div>
+
+      <div class="h2-sub-label">Die 4 Foundation-Dateien</div>
+      <table class="h2-sched">
+        <thead><tr><th>Datei</th><th>Was drin steht</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>cocobet_config.json</code></td>
+            <td><strong>Alle Magic Numbers an EINEM Ort.</strong> Edge-Schwellen, Stake-Caps, Sell-Trigger, Telegram-Alert-Levels — über 60 Werte. Zwei Profile: <code>wm2026</code> (aktiv) und <code>liga_default</code> (für die Liga-Saison nach der WM).</td>
+          </tr>
+          <tr>
+            <td><code>pick_constants.json</code></td>
+            <td>Welche Märkte zusammenpassen / widersprechen. 29 Markets, 8 Konflikt-Paare. <strong>Eine Quelle</strong> für Python UND JavaScript — Tests verbieten Drift.</td>
+          </tr>
+          <tr>
+            <td><code>pick_helpers.py</code> + <code>_pick_helpers.js</code></td>
+            <td>Shared Logik: "ist Pick legitim?", "welcher Pick gewinnt als Hero?", "welche Picks kollidieren mit dem Hero?". Statt 4× kopiert.</td>
+          </tr>
+          <tr>
+            <td><code>state_files_registry.json</code></td>
+            <td>Welcher Workflow welche State-Files (Dedup-Logs, Snapshots) committen muss. Vorher hardcoded in 5 Workflows — jetzt eine Quelle.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="h2-sub-label" style="margin-top:18px;">Was das konkret für mich heißt</div>
+      <ul style="font-size:12px;color:rgba(255,255,255,0.82);line-height:1.7;padding-left:20px;">
+        <li><strong>Liga-Saison nach WM:</strong> EINE Zeile in <code>cocobet_config.json</code> ändern (<code>profiles.active: "liga_default"</code>) → alle Pipelines übernehmen Liga-Schwellen automatisch. Kein Code-Edit, kein Risiko etwas zu vergessen.</li>
+        <li><strong>Edge-Schwelle für Auto-Bet senken?</strong> EINE Zahl in der Config ändern. Auto-Trigger UND manuelle Bets sehen sofort denselben Wert — vorher konnten die auseinanderlaufen.</li>
+        <li><strong>Neuer Markt hinzufügen?</strong> In <code>pick_constants.json</code> eintragen → Python (Validator, Resolver, Tracker) UND JavaScript (Renderer, Event-Pages, Polymarket-Tab) wissen automatisch Bescheid.</li>
+        <li><strong>Safety-Master-Switches</strong> wie <code>AUTO_SELL_ENABLED</code> bleiben bewusst Hardcode — ein Config-Tippfehler darf niemals automatisch Geld bewegen.</li>
+      </ul>
+
+      <div class="h2-sub-label" style="margin-top:18px;">Test-Schutz — 165 automatisierte Checks</div>
+      <ul style="font-size:12px;color:rgba(255,255,255,0.82);line-height:1.7;padding-left:20px;">
+        <li><strong>Regression-Snapshot:</strong> 72 Matches × 230 Picks frozen — fängt jede ungewollte Pick-Änderung durch Code-Edits.</li>
+        <li><strong>Anti-Drift JS↔Python:</strong> Test prüft per Source-Scan, dass JavaScript-Map exakt zu Python-JSON passt. Drift unmöglich.</li>
+        <li><strong>Trade-Pipeline-Konsistenz:</strong> Test stellt sicher, dass manueller "Jetzt platzieren" UND Auto-Bet dieselben Bankroll-Limits sehen.</li>
+        <li><strong>Profile-Switch:</strong> Test setzt <code>COCOBET_PROFILE=liga_default</code> und prüft, dass Liga-Werte greifen + WM-Profile sauber zurückkehrt.</li>
+        <li><strong>Functional Node-Tests:</strong> Hero-Sort-Logik (saferAlt schlägt riskanten BET) wird durch tatsächliche Ausführung verifiziert, nicht nur durch Source-Inspektion.</li>
+      </ul>
+
+      <div class="h2-sub-label" style="margin-top:18px;">Was wenn ein User fragt: "wie funktioniert das eigentlich?"</div>
+      <div style="background:rgba(76,201,240,0.06);border-left:3px solid #4cc9f0;padding:12px 14px;border-radius:6px;font-size:12px;color:rgba(255,255,255,0.82);line-height:1.65;">
+        "Hinter den Picks steht ein Modell aus Elo, Form, Reisen und Höhe. Jeder Pick durchläuft 4 Schichten: Generator setzt die Schwellen, Validator prüft auf logische Widersprüche, Renderer filtert Konflikte aus dem UI, Tracker rechnet nur saubere Picks ins Track-Record.
+        Ab Juni 2026 ist die ganze Logik auf <strong>EINE Single Source of Truth</strong> aufgebaut — jede Schwelle, jede Regel existiert genau einmal. Beweis: 165 automatisierte Tests, die genau das prüfen. Nach der WM brauche ich eine Zeile ändern und das System läuft für die Liga-Saison weiter."
+      </div>
     </div>
   </details>
 
