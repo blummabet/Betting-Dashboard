@@ -1,0 +1,122 @@
+{
+  "_meta": {
+    "version":     "1.0",
+    "description": "CocoBet zentrale Konfiguration — Magic Numbers an einer Stelle",
+    "lastUpdated": "2026-06-06",
+    "notes": [
+      "Wird von cocobet_config.py geladen und an allen Scripten verfügbar gemacht.",
+      "Liga-Saison: einfach 'profile' wechseln statt Code anfassen.",
+      "Alle Werte sind hardcoded-Refaktorierungen aus den Scripten."
+    ]
+  },
+
+  "profiles": {
+    "active": "wm2026",
+
+    "wm2026": {
+      "description": "WM 2026 — Pre-Tournament restriktiver, Auto-Trade scharfgeschaltet",
+      "edge": {
+        "min_1x2_for_pick":       5,
+        "min_ou_for_pick":        4,
+        "min_dnb_for_pick":       6,
+        "min_dc_for_pick":        4,
+        "min_ah_for_pick":        4,
+        "bet_threshold_1x2":      8,
+        "bet_threshold_ou":       6,
+        "huge_edge_warn":         18,
+        "max_edge_sane":          18,
+        "ou_bet_max":             10,
+        "ah_bet_max":             12
+      },
+      "odds": {
+        "max_for_pick":           6.5,
+        "max_for_bet":            4.5,
+        "max_for_bet_ou":         3.0,
+        "max_for_bet_dnb":        4.0
+      },
+      "underdog": {
+        "elo_soft_threshold":     100,
+        "elo_hard_threshold":     200
+      },
+      "trade": {
+        "auto_trigger_edge_pp":   4.0,
+        "auto_trigger_edge_elo_only": 8.0,
+        "steam_lag_edge_pp":      2.0,
+        "pre_tournament_edge_pp": 6.0,
+        "pre_tournament_days":    5,
+        "pre_match_close_hours":  2,
+        "daily_bet_cap":          8,
+        "daily_stake_cap_usdc":   50.0,
+        "min_balance_buffer":     1.0,
+        "stake_usdc_flat":        5.5
+      },
+      "dedup_hours": {
+        "sell_alert":             6,
+        "edge_alert":             12,
+        "sharp_move":             24,
+        "position_health":        6,
+        "spotlight_per_day":      2
+      },
+      "telegram": {
+        "max_log_entries":        500,
+        "max_alerts_per_run":     4,
+        "alert_edge_min_pp":      5,
+        "alert_cumul_pp":         8,
+        "alert_steam_pp":         10
+      }
+    },
+
+    "liga_default": {
+      "description": "Liga-Saison Default — moderater, ohne Pre-Tournament-Phase",
+      "edge": {
+        "min_1x2_for_pick":       4,
+        "min_ou_for_pick":        4,
+        "min_dnb_for_pick":       5,
+        "min_dc_for_pick":        4,
+        "min_ah_for_pick":        4,
+        "bet_threshold_1x2":      6,
+        "bet_threshold_ou":       5,
+        "huge_edge_warn":         15,
+        "max_edge_sane":          15,
+        "ou_bet_max":             8,
+        "ah_bet_max":             10
+      },
+      "odds": {
+        "max_for_pick":           7.0,
+        "max_for_bet":            5.0,
+        "max_for_bet_ou":         3.5,
+        "max_for_bet_dnb":        4.5
+      },
+      "underdog": {
+        "elo_soft_threshold":     120,
+        "elo_hard_threshold":     220
+      },
+      "trade": {
+        "auto_trigger_edge_pp":   3.5,
+        "auto_trigger_edge_elo_only": 7.0,
+        "steam_lag_edge_pp":      2.0,
+        "pre_tournament_edge_pp": 0,
+        "pre_tournament_days":    0,
+        "pre_match_close_hours":  1,
+        "daily_bet_cap":          12,
+        "daily_stake_cap_usdc":   80.0,
+        "min_balance_buffer":     2.0,
+        "stake_usdc_flat":        5.5
+      },
+      "dedup_hours": {
+        "sell_alert":             6,
+        "edge_alert":             8,
+        "sharp_move":             18,
+        "position_health":        4,
+        "spotlight_per_day":      2
+      },
+      "telegram": {
+        "max_log_entries":        500,
+        "max_alerts_per_run":     6,
+        "alert_edge_min_pp":      4,
+        "alert_cumul_pp":         6,
+        "alert_steam_pp":         8
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "description": "Pick-Logik-Konstanten — auto-generiert aus pick_constants.py",
+    "warning": "Nicht von Hand editieren! Quelle: pick_constants.py"
+  },
+  "DIRECTION_MAP": {
+    "Heimsieg": "homeStrong",
+    "Auswärtssieg": "awayStrong",
+    "Unentschieden": "drawOnly",
+    "Doppelte Chance — 1X": "homeBias",
+    "Doppelte Chance — X2": "awayBias",
+    "Doppelte Chance — 12": "decisive",
+    "AH Heim −0.5": "homeStrong",
+    "AH Heim −0.75": "homeStrong",
+    "AH Heim −1.0": "homeStrong",
+    "AH Heim −1.5": "homeStrong",
+    "AH Auswärts +0.5": "awayStrong",
+    "AH Auswärts +0.75": "awayStrong",
+    "AH Auswärts +1.0": "awayStrong",
+    "AH Auswärts +1.5": "awayStrong",
+    "DNB: Heimteam": "homeStrong",
+    "DNB: Auswärtsteam": "awayStrong",
+    "Über 0.5 Tore": "over",
+    "Über 1.5 Tore": "over",
+    "Über 2.5 Tore": "over",
+    "Über 3.5 Tore": "over",
+    "Über 4.5 Tore": "over",
+    "Unter 0.5 Tore": "under",
+    "Unter 1.5 Tore": "under",
+    "Unter 2.5 Tore": "under",
+    "Unter 3.5 Tore": "under",
+    "Unter 4.5 Tore": "under",
+    "Beide Teams treffen": "over",
+    "Beide Teams treffen — Ja": "over",
+    "Beide Teams treffen — Nein": "under"
+  },
+  "INCOMPATIBLE": [
+    [
+      "awayBias",
+      "homeStrong"
+    ],
+    [
+      "awayStrong",
+      "drawOnly"
+    ],
+    [
+      "awayStrong",
+      "homeBias"
+    ],
+    [
+      "awayStrong",
+      "homeStrong"
+    ],
+    [
+      "decisive",
+      "drawOnly"
+    ],
+    [
+      "drawOnly",
+      "awayStrong"
+    ],
+    [
+      "drawOnly",
+      "decisive"
+    ],
+    [
+      "drawOnly",
+      "homeStrong"
+    ],
+    [
+      "homeBias",
+      "awayStrong"
+    ],
+    [
+      "homeStrong",
+      "awayBias"
+    ],
+    [
+      "homeStrong",
+      "awayStrong"
+    ],
+    [
+      "homeStrong",
+      "drawOnly"
+    ],
+    [
+      "over",
+      "under"
+    ],
+    [
+      "under",
+      "over"
+    ]
+  ]
+}

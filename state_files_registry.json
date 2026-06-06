@@ -1,0 +1,83 @@
+{
+  "_meta": {
+    "version":     "1.0",
+    "description": "Registry aller State-Files — wird von Workflows in git-add eingebunden",
+    "lastUpdated": "2026-06-06",
+    "notes": [
+      "Beim Hinzufügen eines neuen State-Files HIER eintragen — nicht in den Workflows.",
+      "Helper-Script: bash <(python state_files_registry.py --bash-list <category>)",
+      "Kategorien gruppieren nach Workflow-Owner damit jeder Workflow nur seine Files committet."
+    ]
+  },
+
+  "categories": {
+    "fetch_wm_data": {
+      "owner_workflow": "fetch-wm-data.yml",
+      "description":    "Picks-Generierung + Sharp-Detection + Story-Engine",
+      "files": [
+        "wm2026-data.json",
+        "wm2026-odds-history.json",
+        "wm_poly_prices.json",
+        "wm2026-poly-history.json",
+        "wm_results.json",
+        "matches/data/wm-*.json",
+        "matches/wm-index.json",
+        "pick_confidence_stats.json",
+        "picks_snapshot.json",
+        "pick_changes_log.json",
+        "pick_validation_report.json",
+        "telegram-log.json",
+        "wm_sharp_dedup.json",
+        "wm_sharp_moves_log.json",
+        "steam_lag_log.json",
+        "steam_lag_sell_dedup.json",
+        "wm_preseason_sent.json",
+        "pick_changes_digest_state.json",
+        "wm_edge_alert_dedup.json"
+      ]
+    },
+
+    "manage_wm_poly": {
+      "owner_workflow": "manage-wm-poly.yml",
+      "description":    "Poly-Positionen + Auto-Trigger + Health-Monitor",
+      "files": [
+        "wm_poly_positions.json",
+        "wm_poly_prices.json",
+        "wm_auto_bets_placed.json",
+        "wm_poly_balance.json",
+        "wm_results.json",
+        "wm2026-poly-history.json",
+        "position_health.json",
+        "position_health_alerts.json"
+      ]
+    },
+
+    "track_record_card": {
+      "owner_workflow": "track-record-card.yml",
+      "description":    "Daily Track-Record-Card State",
+      "files": [
+        "track_record_state.json"
+      ]
+    },
+
+    "daily_wm_story": {
+      "owner_workflow": "daily-wm-story.yml",
+      "description":    "WM Live-Story-Engine — Vorschläge + Dedup-State + HTML/PNG-Output",
+      "files": [
+        "wm_live_story_state.json",
+        "wm_story_proposals.json",
+        "telegram-log.json",
+        "wm_live_story_outputs/"
+      ]
+    },
+
+    "daily_tiktok": {
+      "owner_workflow": "daily-tiktok.yml",
+      "description":    "Daily TikTok-Cards Dedup",
+      "files": [
+        "bizarre_quote_sent.json",
+        "daily_story_state.json"
+      ]
+    }
+  }
+}
