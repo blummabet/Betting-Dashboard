@@ -128,71 +128,49 @@ def evaluate_pick(market: str, home_score: int, away_score: int) -> str:
     return "PENDING"
 
 
-# AUDIT-Fix 06.06.2026: Cross-Market-Konflikt-Filter fürs Tracking
-# Problem: Bei CAN-BIH werden DNB Aus + AH Heim −0.5 gleichzeitig getrackt.
-# Wir wetten aber nur EINEN Pick — das andere "tracking" verfälscht die Stats.
-# Lösung: Nur Hero-Pick (höchste Edge) zählt als "echter" Pick.
-# Sekundäre Picks die DIREKTIONAL mit dem Hero im Konflikt stehen → VOID
-# (mit explizitem reason). Stat-Engine zählt sie nicht als Win/Loss.
-DIRECTION_MAP = {
-    "Heimsieg":               "homeStrong",
-    "Doppelte Chance — 1X":   "homeBias",
-    "Doppelte Chance — 12":   "decisive",
-    "AH Heim −0.5":           "homeStrong",
-    "AH Heim −0.75":          "homeStrong",
-    "AH Heim −1.0":           "homeStrong",
-    "DNB: Heimteam":          "homeStrong",
-    "Auswärtssieg":           "awayStrong",
-    "Doppelte Chance — X2":   "awayBias",
-    "AH Auswärts +0.5":       "awayStrong",
-    "AH Auswärts +0.75":      "awayStrong",
-    "AH Auswärts +1.0":       "awayStrong",
-    "DNB: Auswärtsteam":      "awayStrong",
-    "Unentschieden":          "drawOnly",
-    "Über 1.5 Tore":          "over",
-    "Über 2.5 Tore":          "over",
-    "Über 3.5 Tore":          "over",
-    "Unter 1.5 Tore":         "under",
-    "Unter 2.5 Tore":         "under",
-    "Unter 3.5 Tore":         "under",
-    "Beide Teams treffen":    "over",
-    "Beide Teams treffen — Ja": "over",
-    "Beide Teams treffen — Nein": "under",
-}
-INCOMPATIBLE = {
-    ("homeStrong", "awayStrong"), ("homeStrong", "awayBias"), ("homeStrong", "drawOnly"),
-    ("homeBias",   "awayStrong"), ("awayStrong", "drawOnly"), ("awayBias",   "homeStrong"),
-    ("decisive",   "drawOnly"),   ("over",       "under"),
-}
-def _is_incompatible(d1: str, d2: str) -> bool:
-    return (d1, d2) in INCOMPATIBLE or (d2, d1) in INCOMPATIBLE
+# ── Refactor 2026-06-06: Konflikt-Filter via pick_constants + pick_helpers ──
+# Single Source of Truth für DIRECTION_MAP und Hero-Sort-Logik.
+# Backwards-compatible Fallback wenn Module fehlen (zwingender Skip).
+try:
+    from pick_constants import (
+        get_pick_direction as _get_dir,
+        are_directions_incompatible as _is_incompatible_dir,
+    )
+    from pick_helpers import hero_sort_key as _hero_sort_key
+    _HELPERS_AVAILABLE = True
+except ImportError:
+    _HELPERS_AVAILABLE = False
 
 
 def _select_hero_and_mark_conflicts(pick_list: list) -> int:
-    """Wählt Hero (höchste Edge unter BET/ABWÄGEN) + markiert konfliktige als VOID.
+    """Wählt Hero + markiert konfliktige als VOID + trackingExcluded.
 
+    Konsistent mit UI: Hero-Sort = saferAlt > BET > Edge desc.
     Returns Anzahl der als VOID-Konflikt markierten Picks.
-    Mutiert pick_list in-place (setzt result + trackingExcluded für Konflikt-Picks).
+    Mutiert pick_list in-place.
     """
+    if not _HELPERS_AVAILABLE:
+        return 0   # ohne helpers kein Konflikt-Check (fail-safe)
+
     live = [p for p in pick_list if p.get("verdict") in ("BET", "ABWÄGEN")]
-    # Sortierung: BET vor ABWÄGEN, dann Edge desc
-    live.sort(key=lambda p: (
-        0 if p.get("verdict") == "BET" else 1,
-        -float(p.get("edgePP") or 0),
-    ))
     if not live:
         return 0
+
+    # Sortierung identisch mit Renderer/Event-Page: saferAlt → BET → Edge desc.
+    # Wichtig: garantiert dass der gleiche Pick als Hero ausgewählt wird wie
+    # in der UI sichtbar. Sonst würden andere Picks als Konflikt markiert.
+    live.sort(key=_hero_sort_key)
     hero = live[0]
-    hero_dir = DIRECTION_MAP.get(hero.get("market"))
+    hero_dir = _get_dir(hero.get("market"))
     if not hero_dir:
         return 0   # unknown direction → kein Konflikt-Check möglich
 
     voids = 0
     for p in live[1:]:
-        d = DIRECTION_MAP.get(p.get("market"))
+        d = _get_dir(p.get("market"))
         if not d:
             continue
-        if _is_incompatible(hero_dir, d) and p.get("result") not in ("WIN", "LOSS", "VOID"):
+        if _is_incompatible_dir(hero_dir, d) and p.get("result") not in ("WIN", "LOSS", "VOID"):
             p["result"]            = "VOID"
             p["voidReason"]        = (
                 f"Cross-Market-Konflikt mit Top-Pick '{hero.get('market')}' "
