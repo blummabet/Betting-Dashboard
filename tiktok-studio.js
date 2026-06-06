@@ -83,6 +83,168 @@
   }
 
   // ─────────────────────────────────────────────────────────────────────
+  // Pool-Helper: ein Array → Random-Element, mit Rotation
+  // _poolIndex merkt sich welcher Index zuletzt war pro Pool-Key
+  // → "klick nochmal" bringt garantiert was anderes
+  // ─────────────────────────────────────────────────────────────────────
+  const _poolIndex = {};
+  function fromPool(key, pool){
+    if(!pool || !pool.length) return '';
+    // Wenn nur 1 Element, gib das zurück
+    if(pool.length === 1) return pool[0];
+    // Sonst: random aber NICHT das gleiche wie zuletzt
+    let idx;
+    const last = _poolIndex[key];
+    do { idx = Math.floor(Math.random() * pool.length); } while(idx === last && pool.length > 1);
+    _poolIndex[key] = idx;
+    return pool[idx];
+  }
+  function rollAllPools(){
+    // Neuer Klick → ALLE Pool-States reseten, damit überall garantiert was Neues kommt
+    for(const k of Object.keys(_poolIndex)) delete _poolIndex[k];
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
+  // Daten-Sammler pro Team — extrahiert ALLES Spannende was wir haben
+  // ─────────────────────────────────────────────────────────────────────
+  function teamPack(teamId){
+    if(!teamId || !WM_DATA) return null;
+    const team = listTeams().find(t => t.id===teamId);
+    if(!team) return null;
+    const form = (WM_DATA.form || {})[teamId] || {};
+    const squad = (WM_DATA.squads || {})[teamId] || {};
+    const xg = (WM_DATA.xgStats || {})[teamId] || {};
+    const corners = (WM_DATA.cornersForm || {})[teamId] || {};
+
+    // Form-Streak aus last10 berechnen (W/D/L)
+    const last10 = form.last10 || [];
+    let undefeatedStreak = 0, winStreak = 0;
+    for(let i = last10.length - 1; i >= 0; i--){
+      const r = last10[i];
+      if(r==='W'){ undefeatedStreak++; winStreak++; }
+      else if(r==='D'){ undefeatedStreak++; break; }
+      else break;
+    }
+    const wins10 = last10.filter(r => r==='W').length;
+    const losses10 = last10.filter(r => r==='L').length;
+    const last5Str = (form.last5||[]).join('-');
+
+    // Elo-Klassifikation (Welt-Vergleich)
+    const allTeams = listTeams();
+    const elos = allTeams.map(t => t.elo).filter(x => x > 0).sort((a,b) => b-a);
+    const elo = team.elo || 0;
+    const eloRank = elos.findIndex(x => x <= elo) + 1; // 1-based
+    const eloPct = elo > 0 ? Math.round(100 * (1 - eloRank / elos.length)) : 0;
+
+    return { team, form, squad, xg, corners,
+             undefeatedStreak, winStreak, wins10, losses10, last5Str,
+             elo, eloRank, eloPct };
+  }
+
+  // Stat-Pool: alle "could-be-a-killer-stat" Lines aus den Daten
+  function statPool(teamId){
+    const p = teamPack(teamId);
+    if(!p) return [];
+    const t = p.team;
+    const out = [];
+
+    // Elo-basierte Lines
+    if(p.elo > 0){
+      out.push(`Elo ${p.elo} — Top ${100 - p.eloPct}% aller WM-Teilnehmer`);
+      if(p.eloPct >= 70) out.push(`Mit Elo ${p.elo} unter den stärksten ${100 - p.eloPct}% der WM`);
+      if(p.eloPct < 30) out.push(`Elo ${p.elo} — von vielen unterschätzt, aber das Modell sieht es anders`);
+    }
+
+    // Form-basierte Lines
+    if(p.form.avgScored > 0){
+      out.push(`Trifft im Schnitt ${p.form.avgScored.toFixed(1)}× pro Spiel über die letzten ${p.form.games || 15} Partien`);
+    }
+    if(p.form.avgConceded != null && p.form.avgConceded < 1.0){
+      out.push(`Kassiert nur ${p.form.avgConceded.toFixed(2)} Gegentore pro Spiel — Defensive auf WM-Niveau`);
+    }
+    if(p.form.over25Rate != null){
+      const pct = Math.round(p.form.over25Rate * 100);
+      if(pct > 60) out.push(`Über 2.5 Tore in ${pct}% der letzten Spiele`);
+      else if(pct < 35) out.push(`Nur ${pct}% Over-2.5-Rate — Spiele tendenziell knapp`);
+    }
+    if(p.form.bttsRate != null){
+      const pct = Math.round(p.form.bttsRate * 100);
+      if(pct > 60) out.push(`Beide Teams treffen in ${pct}% — Tor-Garantie`);
+    }
+
+    // Streak-Lines
+    if(p.winStreak >= 3) out.push(`${p.winStreak} Siege in Folge in den letzten Pflichtspielen`);
+    else if(p.undefeatedStreak >= 4) out.push(`${p.undefeatedStreak} Spiele unbesiegt — Form passt`);
+
+    if(p.wins10 >= 7) out.push(`${p.wins10} von 10 Spielen gewonnen — Lauf pur`);
+    if(p.losses10 === 0 && p.form.last10) out.push(`Keine einzige Niederlage in den letzten 10 — kommt mit Selbstvertrauen`);
+
+    // Top-Scorer Lines
+    if(p.squad.name && p.squad.goals){
+      const min = p.squad.minutes || 0;
+      const goalsPer90 = min > 90 ? (p.squad.goals * 90 / min).toFixed(2) : null;
+      out.push(`${p.squad.name} (${p.squad.position||'?'}) mit ${p.squad.goals} Toren — die Lebensversicherung`);
+      if(goalsPer90) out.push(`Top-Scorer ${p.squad.name}: alle ${(90/Math.max(0.01,parseFloat(goalsPer90))).toFixed(0)} Minuten ein Tor`);
+      if((p.squad.assists||0) > 3) out.push(`${p.squad.name} mit ${p.squad.goals} Toren + ${p.squad.assists} Assists — komplett gefährlich`);
+    }
+
+    // Story-Field falls vorhanden (aus generate_wm_picks Travel-Burden etc.)
+    if(t.story) out.push(t.story);
+
+    // Confederation-Lines
+    if(t.confederation === 'CAF') out.push(`Stärkstes afrikanisches Team im Turnier`);
+    if(t.confederation === 'AFC' && p.eloPct > 50) out.push(`Top-Asiat im Feld — Pause vor Sommerpause keine Belastung`);
+
+    return out.filter(Boolean);
+  }
+
+  // Hook-Pool: 10+ Variationen pro Team
+  function hookPool(teamId){
+    const t = listTeams().find(x => x.id===teamId);
+    if(!t) return [];
+    const N = (t.name||'?').toUpperCase();
+    return [
+      `${N} IST KEIN ZUFALL`,
+      `DAS DUNKLE PFERD: ${N}`,
+      `WARUM ${N} BIS GANZ OBEN KOMMT`,
+      `${N} — ANDERS ALS DIE ERWARTUNG`,
+      `DIE STILLE WAFFE ${N}`,
+      `DEN HABEN ALLE UNTERSCHÄTZT: ${N}`,
+      `${N} SCHREIBT GESCHICHTE`,
+      `BAU NICHT GEGEN ${N}`,
+      `ELO LÜGT NICHT — ${N} IST DRAUF`,
+      `${N} — UND PLÖTZLICH SIND SIE FAVORIT`,
+      `HIER KOMMT ${N}`,
+      `${N} HAT EINEN PLAN`
+    ];
+  }
+
+  // Bottom-Tag-Pool: WM-allgemein
+  const TAG_POOL = [
+    '🌍 WM 2026 LIVE AB 11. JUNI',
+    '🇨🇦🇲🇽🇺🇸 16 STÄDTE · 48 TEAMS',
+    'WER WIRD WELTMEISTER?',
+    'PICKS TÄGLICH AUF COCOBET',
+    '🎯 EDGE-PICKS · MIT KOPF GEWETTET',
+    '⚽ COCOBET · DEINE WM-SICHT'
+  ];
+
+  // Punchline-Pool für Killer-Stat — generisch aus Stat-Pool
+  function punchPool(teamId){
+    const p = teamPack(teamId);
+    if(!p) return [];
+    const t = p.team;
+    return [
+      `Mehr als die Bookies es vermuten`,
+      `Beste Wert auf dem ganzen Brett`,
+      `Sharp Money zieht hier rein`,
+      `${t.name}-Quoten sinken stündlich`,
+      `Wer das ignoriert, gibt Geld weg`,
+      `Das Modell hat eine klare Meinung`
+    ];
+  }
+
+  // ─────────────────────────────────────────────────────────────────────
   // Studio-Card-Templates — alle 1080×1920 (TikTok 9:16)
   // ─────────────────────────────────────────────────────────────────────
   const COMMON_CSS = `
@@ -107,13 +269,14 @@
         {key:'stat', type:'text', label:'Killer-Stat', placeholder:'z.B. "Halbfinale 2022 — als einziges afrikanisches Team in der WM-Geschichte"', maxLen:140},
         {key:'tag', type:'text', label:'Bottom-Tag', placeholder:'z.B. "WM 2026 STARTET BALD"', maxLen:30}
       ],
-      autoFill: (data) => {
+      autoFill: (data, opts) => {
         if(!data.team) return data;
-        const t = listTeams().find(x => x.id===data.team);
-        if(!t) return data;
-        if(!data.hook) data.hook = `${t.name.toUpperCase()} IST KEIN ZUFALL`;
-        if(!data.stat) data.stat = t.story || `Elo ${t.elo} — vor der WM in absoluter Topform`;
-        if(!data.tag) data.tag = '🌍 WM 2026 LIVE AB 11. JUNI';
+        const force = opts && opts.force;
+        const stats = statPool(data.team);
+        const hooks = hookPool(data.team);
+        if(force || !data.hook) data.hook = fromPool('team_hook.hook', hooks);
+        if(force || !data.stat) data.stat = fromPool('team_hook.stat', stats) || 'Vor der WM in absoluter Topform';
+        if(force || !data.tag)  data.tag  = fromPool('team_hook.tag', TAG_POOL);
         return data;
       },
       render: (data) => {
@@ -150,7 +313,46 @@
         {key:'topline', type:'text', label:'Killer-Stat', placeholder:'z.B. "11 Tore in 9 Quali-Spielen"', maxLen:80},
         {key:'subline', type:'text', label:'Sub-Stat', placeholder:'z.B. "Trifft alle 65 Minuten"', maxLen:80}
       ],
-      autoFill: (data) => data,
+      autoFill: (data, opts) => {
+        const force = opts && opts.force;
+        // Player-Name aus Squad-Top-Scorer wenn kein eigener
+        if(data.team && WM_DATA){
+          const sq = (WM_DATA.squads||{})[data.team] || {};
+          if((force || !data.player) && sq.name) data.player = sq.name;
+          if((force || !data.position) && sq.position){
+            const posMap = {'ST':'STÜRMER','CF':'STÜRMER','LW':'FLÜGEL','RW':'FLÜGEL','CAM':'OFFENSIVES MITTELFELD',
+                            'CM':'MITTELFELD','CDM':'DEFENSIVES MITTELFELD','CB':'INNENVERTEIDIGUNG','GK':'TORWART','LB':'LINKSVERTEIDIGER','RB':'RECHTSVERTEIDIGER'};
+            data.position = posMap[sq.position] || sq.position;
+          }
+          // Top-Line Pool aus Squad-Stats + Form
+          if(data.team){
+            const pack = teamPack(data.team);
+            const top = [];
+            const sub = [];
+            if(sq.name && sq.goals){
+              top.push(`${sq.goals} Tore in den letzten ${Math.round((sq.minutes||0)/90)} Pflichtspielen`);
+              if(sq.minutes){
+                const per90 = (sq.goals * 90 / sq.minutes).toFixed(2);
+                top.push(`${per90} Tore pro 90 Minuten — Top-Level`);
+                top.push(`Trifft alle ${Math.round(sq.minutes / Math.max(1,sq.goals))} Minuten`);
+              }
+              if((sq.assists||0) > 0) top.push(`${sq.goals} Tore + ${sq.assists} Assists — ein One-Man-Show`);
+            }
+            if(pack && pack.form.avgScored){
+              sub.push(`Team trifft ${pack.form.avgScored.toFixed(1)}× pro Spiel — er ist meist beteiligt`);
+            }
+            if(pack && pack.form.bttsRate > 0.5){
+              sub.push(`Beide Teams treffen in ${Math.round(pack.form.bttsRate*100)}% — Tor-Garant`);
+            }
+            sub.push(`Polymarket-Quote auf ihn fallend — die Sharps wissen warum`);
+            sub.push(`Der unauffälligste Top-Scorer im Turnier`);
+            sub.push(`Letzte 5 Spiele: ${pack && pack.last5Str ? pack.last5Str : 'Form da'}`);
+            if(force || !data.topline) data.topline = fromPool('player.top', top) || `Top-Scorer mit ${sq.goals||'?'} Toren`;
+            if(force || !data.subline) data.subline = fromPool('player.sub', sub);
+          }
+        }
+        return data;
+      },
       render: (data) => {
         const t = listTeams().find(x => x.id===data.team) || {flag:'🏳', name:'?'};
         return `<style>${COMMON_CSS}
@@ -196,7 +398,31 @@
         {key:'cmp2', type:'text', label:'Vergleich 2', placeholder:'z.B. "fast so sicher wie ein Bayern-Sieg gegen Köln"', maxLen:80},
         {key:'cmp3', type:'text', label:'Vergleich 3', placeholder:'z.B. "öfter eingetroffen als Münchner Pünktlichkeit"', maxLen:80}
       ],
-      autoFill: (d) => d,
+      autoFill: (data, opts) => {
+        const force = opts && opts.force;
+        // Pool an Bizarre-Vergleichen (generisch nutzbar für jedes Subject)
+        const cmps = [
+          'wahrscheinlicher als dass Belgien rauskommt',
+          'fast so sicher wie ein Bayern-Sieg gegen Köln',
+          'öfter eingetroffen als Münchner Pünktlichkeit',
+          'realistischer als ein Ronaldo-Stillstand',
+          'sicherer als dass Mbappé sich beschwert',
+          'wahrscheinlicher als ein Trainer-Tweet nach dem Spiel',
+          'eher als ein torloses Bayern-Spiel',
+          'plausibler als ein England-Triumph im Elfmeterschießen',
+          'einfacher als deutsches Public Viewing nach Niederlage',
+          'wahrscheinlicher als drei Nullen in Serie A',
+          'sicherer als VAR-Pause länger als 3 Minuten',
+          'näher dran als an einem 0:0',
+          'eher als dass Messi den nächsten Pass quersteht',
+          'wahrscheinlicher als ein Lewy-Hattrick gegen Bottom-Half',
+          'realistischer als ein Salah-Spiel ohne Schussversuch'
+        ];
+        if(force || !data.cmp1) data.cmp1 = fromPool('bizarre.cmp1', cmps);
+        if(force || !data.cmp2) data.cmp2 = fromPool('bizarre.cmp2', cmps);
+        if(force || !data.cmp3) data.cmp3 = fromPool('bizarre.cmp3', cmps);
+        return data;
+      },
       render: (data) => `<style>${COMMON_CSS}
         .b-bg { background:linear-gradient(180deg,#0a0e27 0%,#1e293b 100%); padding:120px 80px; }
         .b-hook { font-size:52px; font-weight:600; opacity:0.8; margin-bottom:24px; }
@@ -229,16 +455,43 @@
         {key:'edge', type:'text', label:'Edge', placeholder:'z.B. "+8pp"'},
         {key:'why', type:'text', label:'Begründung', placeholder:'z.B. "Beide Teams treffen in 7 von 8 Quali-Spielen"', maxLen:120}
       ],
-      autoFill: (data) => {
+      autoFill: (data, opts) => {
+        const force = opts && opts.force;
         if(!data.match) return data;
         const m = listMatches().find(x => x.key===data.match);
         if(!m) return data;
         const best = bestPickForMatch(m);
-        if(best){
-          if(!data.pick) data.pick = best.market;
-          if(!data.odds) data.odds = String(best.odds || '');
-          if(!data.edge) data.edge = best.edgePP ? `+${best.edgePP}pp` : '';
-          if(!data.why) data.why = best.story || best.signal || '';
+        // Generiere Pool von Picks (best + 2 alternative falls vorhanden)
+        const allBets = (m.picks||[]).filter(p => !p.trackingExcluded && (p.verdict==='BET'||p.verdict==='ABWÄGEN'));
+        allBets.sort((a,b) => (b.edgePP||0) - (a.edgePP||0));
+        if(force || (!data.pick && best)) {
+          const pickPool = allBets.slice(0, 5).map(p => p.market);
+          const picked = fromPool('match.pick', pickPool) || (best && best.market);
+          if(picked){
+            data.pick = picked;
+            // odds + edge nachziehen aus gewähltem Pick
+            const p = allBets.find(x => x.market === picked) || best;
+            if(p){
+              if(force || !data.odds) data.odds = String(p.odds || '');
+              if(force || !data.edge) data.edge = p.edgePP ? `+${p.edgePP}pp Edge` : '';
+              // Why-Pool: story + signal + generische
+              const whys = [];
+              if(p.story) whys.push(p.story);
+              if(p.signal) whys.push(p.signal);
+              if(p.conf === 'high') whys.push('Hohe Confidence — Modell + Form + Bookies in Linie');
+              const pack = teamPack(m.home);
+              if(pack){
+                if(p.market.includes('Über') && pack.form.over25Rate > 0.5){
+                  whys.push(`Heim trifft Over 2.5 in ${Math.round(pack.form.over25Rate*100)}% der letzten ${pack.form.games||15} Spiele`);
+                }
+                if(p.market.includes('Heim') && pack.winStreak >= 2){
+                  whys.push(`Heim ${pack.winStreak} Siege in Serie — Lauf passt`);
+                }
+              }
+              whys.push(`Modell-Edge +${p.edgePP||'?'}pp vs Pinnacle Fair-Quote`);
+              if(force || !data.why) data.why = fromPool('match.why', whys) || '';
+            }
+          }
         }
         return data;
       },
@@ -284,7 +537,37 @@
         {key:'context', type:'text', label:'Kontext', placeholder:'z.B. "In den letzten 9 Quali-Spielen"', maxLen:100},
         {key:'punchline', type:'text', label:'Punchline', placeholder:'z.B. "Mehr als Deutschland + Frankreich zusammen"', maxLen:120}
       ],
-      autoFill: (d) => d,
+      autoFill: (data, opts) => {
+        const force = opts && opts.force;
+        if(!data.team) return data;
+        const pack = teamPack(data.team);
+        if(!pack) return data;
+        const sq = pack.squad;
+        // Pool an killer-Zahlen (number + unit + context)
+        const triplets = []; // {number, unit, context}
+        if(sq.goals) triplets.push({number:String(sq.goals), unit:'TORE', context:`${sq.name} in den letzten ${Math.round((sq.minutes||0)/90)} Pflichtspielen`});
+        if(sq.assists) triplets.push({number:String(sq.assists), unit:'ASSISTS', context:`${sq.name} — die andere Hälfte ihrer Power`});
+        if(pack.form.over25Rate != null){
+          triplets.push({number:String(Math.round(pack.form.over25Rate*100)), unit:'%', context:`Über 2.5 Tore in den letzten ${pack.form.games||15} Spielen`});
+        }
+        if(pack.form.bttsRate != null){
+          triplets.push({number:String(Math.round(pack.form.bttsRate*100)), unit:'%', context:`Beide Teams treffen in den letzten ${pack.form.games||15} Spielen`});
+        }
+        if(pack.wins10 >= 5) triplets.push({number:String(pack.wins10), unit:'SIEGE', context:`In den letzten 10 Pflichtspielen — Topform`});
+        if(pack.undefeatedStreak >= 3) triplets.push({number:String(pack.undefeatedStreak), unit:'SPIELE', context:`Unbesiegt in Folge`});
+        if(pack.form.avgScored > 1.5) triplets.push({number:pack.form.avgScored.toFixed(1), unit:'TORE / SPIEL', context:`Durchschnitt der letzten ${pack.form.games||15} Pflichtspiele`});
+        if(pack.elo) triplets.push({number:String(pack.elo), unit:'ELO', context:`Top ${100 - pack.eloPct}% aller WM-Teilnehmer`});
+
+        const picked = fromPool('killer.triplet', triplets.map((_,i) => i));
+        const pick = triplets[picked] || triplets[0];
+        if(pick){
+          if(force || !data.number)  data.number  = pick.number;
+          if(force || !data.unit)    data.unit    = pick.unit;
+          if(force || !data.context) data.context = pick.context;
+        }
+        if(force || !data.punchline) data.punchline = fromPool('killer.punch', punchPool(data.team));
+        return data;
+      },
       render: (data) => {
         const t = listTeams().find(x => x.id===data.team) || {flag:'🏳', name:'?'};
         return `<style>${COMMON_CSS}
@@ -323,18 +606,27 @@
         {key:'away_pct', type:'text', label:'% Auswärtssieg', placeholder:'z.B. "27"'},
         {key:'question', type:'text', label:'Bottom-Frage', placeholder:'Default: WAS TIPPST DU?', maxLen:50}
       ],
-      autoFill: (data) => {
+      autoFill: (data, opts) => {
+        const force = opts && opts.force;
         if(!data.match) return data;
         const m = listMatches().find(x => x.key===data.match);
         if(!m) return data;
         const polyKey = `${m.home}-${m.away}`;
         const poly = (POLY_DATA && POLY_DATA.prices) ? POLY_DATA.prices[polyKey] : null;
         if(poly){
-          if(!data.home_pct && poly.hw) data.home_pct = String(Math.round(poly.hw*100));
-          if(!data.draw_pct && poly.dr) data.draw_pct = String(Math.round(poly.dr*100));
-          if(!data.away_pct && poly.aw) data.away_pct = String(Math.round(poly.aw*100));
+          if(force || !data.home_pct) data.home_pct = poly.hw ? String(Math.round(poly.hw*100)) : '';
+          if(force || !data.draw_pct) data.draw_pct = poly.dr ? String(Math.round(poly.dr*100)) : '';
+          if(force || !data.away_pct) data.away_pct = poly.aw ? String(Math.round(poly.aw*100)) : '';
         }
-        if(!data.question) data.question = 'WAS TIPPST DU?';
+        const qs = [
+          'WAS TIPPST DU?',
+          'WER GEWINNT? KOMMENTIEREN!',
+          'TIPP IN DIE COMMENTS!',
+          'WER STEIGT AUF?',
+          'WER MACHT DEN UPSET?',
+          'ZAHLEN ODER GEFÜHL?'
+        ];
+        if(force || !data.question) data.question = fromPool('quiz.q', qs);
         return data;
       },
       render: (data) => {
@@ -430,8 +722,9 @@
       <div class="tts-desc">${esc(tmpl.desc)}</div>
       ${fields}
       <div class="tts-actions">
-        <button class="tts-btn tts-btn-fill" id="ttsAutoFill">✨ Auto-Fill</button>
-        <button class="tts-btn tts-btn-clear" id="ttsClear">🔄 Reset</button>
+        <button class="tts-btn tts-btn-fill" id="ttsAutoFill" title="Füllt nur leere Felder, behält deine Edits">✨ Leere Felder füllen</button>
+        <button class="tts-btn tts-btn-roll" id="ttsRoll" title="Überschreibt ALLE Felder mit anderen Vorschlägen">🎲 Alles neu würfeln</button>
+        <button class="tts-btn tts-btn-clear" id="ttsClear" title="Felder leeren">🔄 Reset</button>
       </div>
       <div class="tts-export">
         <button class="tts-btn tts-btn-png" id="ttsDownload">📸 PNG Download</button>
@@ -471,12 +764,14 @@
     return false;
   }
 
-  function doAutoFill(){
+  function doAutoFill(force){
     const tmpl = TEMPLATES[_currentType];
     if(!tmpl) return;
-    _currentData = tmpl.autoFill({..._currentData});
+    rollAllPools();   // reset rotation state so each click rolls new
+    _currentData = tmpl.autoFill({..._currentData}, {force: !!force});
     rerenderForm();
   }
+  function doRoll(){ doAutoFill(true); }
 
   function doClear(){
     _currentData = {};
@@ -495,7 +790,8 @@
       el.addEventListener('input', updateFromForm);
       el.addEventListener('change', updateFromForm);
     });
-    $('#ttsAutoFill')?.addEventListener('click', doAutoFill);
+    $('#ttsAutoFill')?.addEventListener('click', () => doAutoFill(false));
+    $('#ttsRoll')?.addEventListener('click', doRoll);
     $('#ttsClear')?.addEventListener('click', doClear);
     $('#ttsDownload')?.addEventListener('click', downloadPng);
     $('#ttsShare')?.addEventListener('click', copyShareUrl);
