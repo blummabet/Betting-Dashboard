@@ -27,6 +27,13 @@ import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+# Refactor 2026-06-06: zentraler Helper für trackingExcluded-Check
+try:
+    from pick_helpers import is_legitimate_pick
+except ImportError:
+    def is_legitimate_pick(p):
+        return p is not None and not (isinstance(p, dict) and p.get("trackingExcluded"))
+
 BASE         = Path(__file__).parent
 WM_FILE      = BASE / "wm2026-data.json"
 SNAPSHOT     = BASE / "picks_snapshot.json"
@@ -182,12 +189,13 @@ def diff_picks(old_picks: dict, new_picks: dict, wm: dict) -> list[dict]:
             old_p = old_by_market.get(mkt)
             new_p = new_by_market.get(mkt)
 
-            # AUDIT-Fix 06.06.2026: trackingExcluded-Flips nicht als Pick-Change
-            # loggen. resolve_wm_picks setzt trackingExcluded jeden Run neu —
-            # ohne diesen Filter würde der Daily-Digest täglich mit Konflikt-
+            # trackingExcluded-Flips nicht als Pick-Change loggen.
+            # resolve_wm_picks setzt trackingExcluded jeden Run neu — ohne
+            # diesen Filter würde der Daily-Digest täglich mit Konflikt-
             # Re-Marks geflutet werden.
-            if (old_p and old_p.get("trackingExcluded")) or \
-               (new_p and new_p.get("trackingExcluded")):
+            # is_legitimate_pick gibt False für trackingExcluded zurück.
+            if (old_p and not is_legitimate_pick(old_p)) or \
+               (new_p and not is_legitimate_pick(new_p)):
                 continue
 
             kind, reason = _make_reason(old_p, new_p)

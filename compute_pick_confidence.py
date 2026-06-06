@@ -28,6 +28,13 @@ import os
 import sys
 from datetime import datetime, timezone
 
+# Refactor 2026-06-06: zentraler Helper für trackingExcluded-Filter
+try:
+    from pick_helpers import is_legitimate_pick
+except ImportError:
+    def is_legitimate_pick(p):
+        return p is not None and not (isinstance(p, dict) and p.get("trackingExcluded"))
+
 BASE        = os.path.dirname(os.path.abspath(__file__))
 WM_FILE     = os.path.join(BASE, "wm2026-data.json")
 STATS_FILE  = os.path.join(BASE, "pick_confidence_stats.json")
@@ -108,11 +115,11 @@ def main():
         if not isinstance(pick_list, list):
             continue
         for p in pick_list:
-            # AUDIT-Fix 06.06.2026: trackingExcluded raus aus Confidence-Stats.
-            # Diese Picks sind direktional widersprüchlich (z.B. AH Heim −0.5
-            # neben DNB Auswärts) — wir wetten sie nicht, also dürfen sie
-            # die Hit-Rate-Cluster-Stats nicht verfälschen.
-            if p.get("trackingExcluded"):
+            # is_legitimate_pick filtert trackingExcluded automatisch.
+            # Diese Picks sind direktional widersprüchlich (Cross-Market-Filter
+            # vom Tracker) — wir wetten sie nicht, also dürfen sie die Hit-Rate-
+            # Cluster-Stats nicht verfälschen.
+            if not is_legitimate_pick(p):
                 continue
 
             r = p.get("result")
