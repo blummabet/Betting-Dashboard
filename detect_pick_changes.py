@@ -181,6 +181,15 @@ def diff_picks(old_picks: dict, new_picks: dict, wm: dict) -> list[dict]:
         for mkt in sorted(all_markets):
             old_p = old_by_market.get(mkt)
             new_p = new_by_market.get(mkt)
+
+            # AUDIT-Fix 06.06.2026: trackingExcluded-Flips nicht als Pick-Change
+            # loggen. resolve_wm_picks setzt trackingExcluded jeden Run neu —
+            # ohne diesen Filter würde der Daily-Digest täglich mit Konflikt-
+            # Re-Marks geflutet werden.
+            if (old_p and old_p.get("trackingExcluded")) or \
+               (new_p and new_p.get("trackingExcluded")):
+                continue
+
             kind, reason = _make_reason(old_p, new_p)
             if kind == "noop":
                 continue

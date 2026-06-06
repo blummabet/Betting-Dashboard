@@ -502,6 +502,11 @@ function _extractWmPicksForDate(wm, dateStr) {
     const aInfo = teamLookup[aId] || { name: aId, flag: '🏳' };
 
     for (const p of pickList) {
+      // AUDIT-Fix 06.06.2026: trackingExcluded raus — diese Picks sind
+      // direktional widersprüchlich zum Hero, sollen nicht für manuelle
+      // Trades vorgeschlagen werden.
+      if (p.trackingExcluded) continue;
+
       const edge = parseFloat(p.edgePP) || 0;
       const verdict = p.verdict;
 

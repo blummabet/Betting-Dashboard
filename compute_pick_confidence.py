@@ -108,6 +108,13 @@ def main():
         if not isinstance(pick_list, list):
             continue
         for p in pick_list:
+            # AUDIT-Fix 06.06.2026: trackingExcluded raus aus Confidence-Stats.
+            # Diese Picks sind direktional widersprüchlich (z.B. AH Heim −0.5
+            # neben DNB Auswärts) — wir wetten sie nicht, also dürfen sie
+            # die Hit-Rate-Cluster-Stats nicht verfälschen.
+            if p.get("trackingExcluded"):
+                continue
+
             r = p.get("result")
             if r not in ("WIN", "LOSS", "VOID"):
                 continue  # noch nicht aufgelöst
