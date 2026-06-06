@@ -663,12 +663,13 @@ def player_pick_card(
     opponent_flag: str,
     opponent_name: str,
     market_label: str,         # "Anytime Scorer", "Schüsse aufs Tor Over 1.5"
-    odds: float,               # z.B. 2.50
+    odds: float,               # z.B. 2.50  (NICHT angezeigt wenn hide_odds=True)
     bookmaker: str,            # "Pinnacle", "bet365" — wird kapitalisiert
     reason_line: str,          # 1-Liner Begründung, max ~80 Zeichen
     confidence: str = "high",  # "high" | "medium" | "low"
     series_tag: str | None = None,
     kickoff_label: str = "",   # "Do 11.06. · 21:00"
+    hide_odds: bool = True,    # AUDIT-Fix 05.06.2026: Default true — Konfidenz statt Quote
 ) -> str:
     """
     Player-Pick-Card im Lucas-Yamal-Style:
@@ -792,9 +793,7 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
   <div class="market-row"><div class="market-pill">{market_label}</div></div>
 
   <div class="hero-box">
-    <div class="hero-label">Quote</div>
-    <div class="hero-odds">{odds:.2f}</div>
-    <div class="hero-book">bei <strong>{book_disp}</strong></div>
+    {"<div class='hero-label'>Konfidenz</div><div class='hero-odds'>" + conf_label.split()[0] + "</div><div class='hero-book'>Pick-Modell</div>" if hide_odds else f"<div class='hero-label'>Quote</div><div class='hero-odds'>{odds:.2f}</div><div class='hero-book'>bei <strong>{book_disp}</strong></div>"}
   </div>
 
   <div class="match-row">
@@ -997,8 +996,14 @@ def daily_picks_card(
     closing_line: str = "",
     season_phase: str = "WM 2026 Gruppenphase",
     series_tag: str | None = None,
+    hide_odds: bool = True,    # AUDIT-Fix 05.06.2026: Default true — keine Quoten in TikTok-Cards
 ) -> str:
-    """Tägliche Picks-Card im CocoBet-Style — 360×640. Hero-Pick + bis 3 weitere."""
+    """Tägliche Picks-Card im CocoBet-Style — 360×640. Hero-Pick + bis 3 weitere.
+
+    hide_odds=True (Default): Quoten + Edge-pp werden NICHT angezeigt — nur Markt-Bezeichnung
+    und Konfidenz-Label. Schützt vor Compliance/Wett-Empfehlung-Risiko und macht die Cards
+    eher zur "Story" als zur "Quoten-Liste".
+    """
     t = THEMES["daily_picks"]
     accent = t["accent"]
     rgb = t["accentRgb"]
@@ -1022,7 +1027,14 @@ def daily_picks_card(
         op_verdict = op.get("verdict", "ABWÄGEN")
         op_color = accent if op_verdict == "BET" else "#f5c518"
         op_rgb   = rgb if op_verdict == "BET" else "245,197,24"
-        edge_str = f"+{op.get('edge_pp', 0)}pp" if op.get('edge_pp') else ""
+        # hide_odds: nur Verdict + Markt, kein @-Symbol und keine Edge-Zahl
+        if hide_odds:
+            odds_html = ""
+            edge_html = ""
+        else:
+            odds_html = f'<span class="op-odds">@{op.get("odds",0):.2f}</span>'
+            edge_str = f"+{op.get('edge_pp', 0)}pp" if op.get('edge_pp') else ""
+            edge_html = f'<span class="op-edge">{edge_str}</span>'
         other_html += f"""
         <div class="op-row">
           <div class="op-match">
@@ -1032,8 +1044,8 @@ def daily_picks_card(
           <div class="op-pick-row">
             <span class="op-vrd" style="color:{op_color};background:rgba({op_rgb},0.10);border:1px solid rgba({op_rgb},0.30);">{op_verdict}</span>
             <span class="op-market">{op.get("market","?")}</span>
-            <span class="op-odds">@{op.get("odds",0):.2f}</span>
-            <span class="op-edge">{edge_str}</span>
+            {odds_html}
+            {edge_html}
           </div>
         </div>"""
 
@@ -1136,10 +1148,10 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
     <div class="hero-meta">{hero_pick.get("time","")} · {hero_pick.get("venue","")}</div>
     <div class="hero-pick-row">
       <div class="hero-market">{hero_pick.get("market","?")}</div>
-      <div class="hero-odds">{hero_pick.get("odds",0):.2f}</div>
+      {"" if hide_odds else f'<div class="hero-odds">{hero_pick.get("odds",0):.2f}</div>'}
     </div>
     <div class="hero-edge-row">
-      <span class="hero-edge">+{hero_pick.get("edge_pp",0)}pp Edge</span>
+      {"" if hide_odds else f'<span class="hero-edge">+{hero_pick.get("edge_pp",0)}pp Edge</span>'}
       <span class="hero-story">{hero_pick.get("story","")}</span>
     </div>
   </div>
