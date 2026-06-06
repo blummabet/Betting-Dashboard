@@ -34,9 +34,20 @@ TG_WM_MODE     = os.environ.get("TG_WM_MODE", "morning")
 WM_FILE        = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wm2026-data.json")
 LOG_FILE       = os.path.join(os.path.dirname(os.path.abspath(__file__)), "telegram-log.json")
 
+# ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
+try:
+    from cocobet_config import CONFIG as _CFG
+except Exception:
+    _CFG = {}
+
+def _cfg(section: str, key: str, default):
+    if isinstance(_CFG, dict):
+        return _CFG.get(section, {}).get(key, default)
+    return default
+
 # Minimaler Edge für Pick-Aufnahme im Telegram
-MIN_BET_EDGE   = 4   # pp
-MIN_ABW_EDGE   = 4   # pp
+MIN_BET_EDGE   = _cfg("telegram", "min_bet_edge_pp", 4)   # pp
+MIN_ABW_EDGE   = _cfg("telegram", "min_abw_edge_pp", 4)   # pp
 
 
 # ── Tages-Dedup (Audit-Fix 06.06.2026) ────────────────────────────────────────

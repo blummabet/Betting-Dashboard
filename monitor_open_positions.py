@@ -47,17 +47,29 @@ WM_FILE       = BASE / "wm2026-data.json"
 HEALTH_FILE   = BASE / "position_health.json"
 DEDUP_FILE    = BASE / "position_health_alerts.json"
 
+# ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
+try:
+    from cocobet_config import CONFIG as _CFG
+except Exception:
+    _CFG = {}
+
+def _cfg(section: str, key: str, default):
+    """Sicherer Config-Lookup mit Default-Fallback (=aktueller Hardcode-Wert)."""
+    if isinstance(_CFG, dict):
+        return _CFG.get(section, {}).get(key, default)
+    return default
+
 # ── Score-Schwellen ───────────────────────────────────────────────
-SCORE_OK       = 80   # >= 80: alles gut, kein Alert
-SCORE_WATCH    = 60   # 60-79: Daily-Heartbeat erwähnt
-SCORE_WARNING  = 40   # 40-59: Telegram-Warnung
-SCORE_CRITICAL = 0    # <40:  Telegram-Kritisch + Sell-Empfehlung
+SCORE_OK       = _cfg("monitor", "score_ok",       80)   # >= 80: alles gut, kein Alert
+SCORE_WATCH    = _cfg("monitor", "score_watch",    60)   # 60-79: Daily-Heartbeat erwähnt
+SCORE_WARNING  = _cfg("monitor", "score_warning",  40)   # 40-59: Telegram-Warnung
+SCORE_CRITICAL = _cfg("monitor", "score_critical",  0)   # <40:  Telegram-Kritisch + Sell-Empfehlung
 
 # ── Faktor-Gewichte (Summen sich auf 75 — Phase 2 ergänzt um 25 für Lineup/Form) ──
-W_EDGE   = 30
-W_PINN   = 20
-W_CLV    = 15
-W_TIME   = 5
+W_EDGE   = _cfg("monitor", "w_edge", 30)
+W_PINN   = _cfg("monitor", "w_pinn", 20)
+W_CLV    = _cfg("monitor", "w_clv",  15)
+W_TIME   = _cfg("monitor", "w_time",  5)
 W_TOTAL  = W_EDGE + W_PINN + W_CLV + W_TIME   # = 70 in Phase 1
 
 # ── Telegram ──────────────────────────────────────────────────────

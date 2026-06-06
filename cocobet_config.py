@@ -63,6 +63,20 @@ DEFAULT_FALLBACK = {
         "age_loss_hours": 36.0, "age_loss_threshold_pct": 0.10,
         "no_inplay_loss_sell": True,
     },
+    "monitor": {
+        "score_ok": 80, "score_watch": 60, "score_warning": 40, "score_critical": 0,
+        "w_edge": 30, "w_pinn": 20, "w_clv": 15, "w_time": 5,
+    },
+    "steam": {
+        "sell_velocity_pp_h": 0.3, "sell_edge_threshold": 1.5,
+        "sell_min_entry_edge": 2.5, "high_conf_edge_min": 3.0,
+        "min_edge_pp": 1.5, "signal_edge_pp": 2.0, "converged_edge_pp": 1.0,
+        "trade_tier_edge_pp": 5.0,
+        "max_snapshots": 50, "signal_ttl_days": 30,
+    },
+    "tiktok": {
+        "dedup_window_days": 7,
+    },
     "dedup_hours": {
         "sell_alert": 6, "edge_alert": 12,
         "sharp_move": 24, "position_health": 6, "spotlight_per_day": 2,
@@ -72,6 +86,7 @@ DEFAULT_FALLBACK = {
         "max_alerts_per_run": 4, "max_sharp_alerts_per_run": 6,
         "alert_edge_min_pp": 5, "alert_cumul_pp": 8, "alert_steam_pp": 10,
         "snap_window_days": 14,
+        "min_bet_edge_pp": 4, "min_abw_edge_pp": 4,
     },
 }
 
