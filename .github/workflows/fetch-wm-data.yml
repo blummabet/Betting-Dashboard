@@ -162,12 +162,21 @@ jobs:
         run: python generate_wm_player_picks.py
         continue-on-error: true
 
-      # ── Player Spotlight (2-3x pro Woche, Di/Do/Sa) ──────────────────────
+      # ── Player Spotlight (2x pro Woche, Di/Do/Sa, nur Morgen-Cron) ──────
+      # AUDIT-Fix 06.06.2026: Nur bei 08:00 UTC Cron laufen, nicht bei allen 5.
+      # Vorher: 4-5 Runs am Spotlight-Tag × 2 Spotlights = 8-10 Sends statt 2.
+      # Plus: das Python-Script hat jetzt ein hartes Tages-Limit, falls
+      # ein Manual-Run dazwischen kommt.
       - name: 🌟 WM Player Spotlight generieren & senden
         run: |
           DOW=$(date +%u)
+          HOUR=$(date -u +%H)
           if [ "$DOW" = "2" ] || [ "$DOW" = "4" ] || [ "$DOW" = "6" ]; then
-            python generate_wm_player_spotlight.py
+            if [ "$HOUR" = "08" ]; then
+              python generate_wm_player_spotlight.py
+            else
+              echo "Spotlight-Tag ($DOW), aber nicht 08:00 UTC ($HOUR) — geskippt"
+            fi
           else
             echo "Heute kein Spotlight-Tag (Mo/Mi/Fr/So)"
           fi

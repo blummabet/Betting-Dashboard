@@ -313,13 +313,29 @@ def _narrative(entry: dict) -> str:
 def select_spotlights(wm: dict, props: dict, now: datetime) -> list[dict]:
     """
     Wählt die besten N Spieler für Spotlight aus.
+
+    AUDIT-Fix 06.06.2026: Tages-Limit (max MAX_SPOTLIGHTS pro Tag) — vorher war
+    es pro Workflow-Run. Resultat: bei 4 Cron-Runs am Spotlight-Tag (Di/Do/Sa)
+    mit MAX_SPOTLIGHTS=2 wurden 8 verschiedene Spieler statt 2 gepostet.
     """
     cutoff    = (now + timedelta(days=SPOTLIGHT_DAYS)).date()
     week_key  = now.strftime("%Y-W%W")
+    today_str = now.strftime("%Y-%m-%d")
 
     # Bereits gepostete Spotlights dieser Woche überspringen
     existing  = wm.get("playerSpotlights", {}).get(week_key, [])
     posted    = {e["playerName"] for e in existing}
+
+    # Tages-Limit: wie viele Spotlights wurden HEUTE bereits gepostet?
+    posted_today = sum(
+        1 for e in existing
+        if (e.get("postedAt") or "")[:10] == today_str
+    )
+    remaining_today = max(0, MAX_SPOTLIGHTS - posted_today)
+    if remaining_today == 0:
+        print(f"  ⛔ Tages-Limit erreicht: {posted_today}/{MAX_SPOTLIGHTS} Spotlights heute schon gepostet — kein neuer Spotlight")
+        return []
+    print(f"  ℹ️  Tages-Status: {posted_today} bereits heute gepostet · {remaining_today} weitere möglich")
 
     candidates: list[dict] = []
 
@@ -404,13 +420,14 @@ def select_spotlights(wm: dict, props: dict, now: datetime) -> list[dict]:
     ))
 
     # Duplikate (selber Spieler, verschiedene Spiele) entfernen
+    # AUDIT-Fix: max ist remaining_today (Tages-Limit), nicht MAX_SPOTLIGHTS per-run
     seen_players: set[str] = set()
     result = []
     for c in candidates:
         if c["playerName"] not in seen_players:
             seen_players.add(c["playerName"])
             result.append(c)
-        if len(result) >= MAX_SPOTLIGHTS:
+        if len(result) >= remaining_today:
             break
 
     return result
