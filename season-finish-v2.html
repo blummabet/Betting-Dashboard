@@ -2252,6 +2252,26 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           </div>
         </div>
 
+        <div class="h2-feature purple featured">
+          <div class="h2-feature-head">
+            <span class="h2-feature-icon">🎨</span>
+            <div>
+              <div class="h2-feature-title">TikTok Studio · Manueller Card-Generator</div>
+              <span class="h2-feature-tag neu">NEU</span>
+            </div>
+          </div>
+          <div class="h2-feature-desc">
+            Eigenes UI unter International für <strong>spontane Cards on-demand</strong>: 6 Card-Typen (Team-Hook, Player, Bizarre, Match-Pick, Killer-Stat, Quiz), Live-Vorschau, <strong>Auto-Fill aus echten Daten</strong> mit jedes-Mal-was-Neues-Rotation. PNG-Download + Share-Link. <strong>Liga-fähig per Config-Switch</strong> — eine Zeile in <code>studio_config.json</code> und das Studio funktioniert für Premier/Bundesliga/etc.
+          </div>
+          <div class="h2-mockup">
+            <span class="mk">Architektur:</span><br>
+            <span class="acc">studio_config.json</span> · Themes + Profile<br>
+            <span class="acc">studio_pools.json</span> · 60+ Templates<br>
+            <span class="acc">studio_templates/*.html</span> · 6 Cards<br>
+            <span class="muted">33 Tests · Refactor-Standard</span>
+          </div>
+        </div>
+
       </div>
     </div>
   </details>
@@ -2729,6 +2749,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <tr><td><code>generate_track_record_card.py</code></td><td>ROI-Card mit Equity-Curve, 21:00 UTC</td></tr>
         </tbody>
       </table>
+
+      <div class="h2-sub-label">🎬 TikTok Studio (manuell, Browser-basiert)</div>
+      <table class="h2-sched">
+        <thead><tr><th>File</th><th>Was drin steht</th></tr></thead>
+        <tbody>
+          <tr><td><code>tiktok-studio.js</code></td><td>UI + Template-Engine ({{var}} + {{#if}}) + Pool-Picker mit Rotation</td></tr>
+          <tr><td><code>studio_config.json</code></td><td>Card-Dimensions, Themes, Defaults — Profile-aware (wm2026 + liga_default)</td></tr>
+          <tr><td><code>studio_pools.json</code></td><td>Hook-Templates, Stat-Templates mit Eligibility-Conditions, Vergleiche, Tags, Punchlines</td></tr>
+          <tr><td><code>studio_templates/*.html</code></td><td>6 Card-Designs als HTML mit CSS-Variablen — Theme-Switch via Profile</td></tr>
+          <tr><td><code>tests/test_tiktok_studio.py</code></td><td>33 Tests: Schema, Pool-Mindestgrößen, Anti-Inline, Liga-Switch</td></tr>
+        </tbody>
+      </table>
+      <div style="background:rgba(167,139,250,0.08);border-left:3px solid #a78bfa;padding:10px 14px;border-radius:6px;margin-top:12px;font-size:11.5px;color:rgba(255,255,255,0.85);line-height:1.55;">
+        <strong style="color:#a78bfa;">Strikt getrennt vom Daily-Cron:</strong> Studio-Templates leben in eigenem Ordner, ändern nichts an der automatischen Card-Pipeline. Studio-Design anpassen kann den Daily-Output niemals brechen.
+      </div>
 
       <!-- ════════════ Foundations: Refactor 06.06.2026 ════════════ -->
       <div class="h2-sub-label" style="margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.08);">🛡️ Foundations — Refactor 06.06.2026</div>
