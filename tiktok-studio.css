@@ -150,30 +150,10 @@
   border-radius: 24px;
   padding: 20px;
   border: 1px solid rgba(255,255,255,0.06);
-}
-
-.tts-preview-frame {
-  width: 360px;
-  height: 640px;
-  background: #000;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.5),
-              0 0 0 1px rgba(255,255,255,0.05);
-  position: relative;
-}
-
-/* Skaliere die 1080×1920 Card auf 360×640 (factor 0.333…) */
-#ttsPreviewInner {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform-origin: top left;
-  transform: scale(0.333334);
-}
-#ttsPreviewInner > .stc {
-  width: 1080px !important;
-  height: 1920px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
 
 .tts-preview-meta {
@@ -182,61 +162,65 @@
   text-align: center;
 }
 
-/* Dual-Preview Layout (Hook + Detail nebeneinander) */
-.tts-preview-dual {
+/* ============= SINGLE-MODE (eine Card) ============= */
+#ttsPreviewInner.single {
+  width: 405px;
+  height: 720px;
+  background: #000;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.5),
+              0 0 0 1px rgba(255,255,255,0.05);
+}
+/* Card-Inhalt (.stc) wird via transform skaliert: 405/1080 = 0.375 */
+#ttsPreviewInner.single > .stc {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1080px !important;
+  height: 1920px !important;
+  transform-origin: top left;
+  transform: scale(0.375);
+}
+
+/* ============= DUAL-MODE (Hook + Detail) ============= */
+#ttsPreviewInner.dual {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 24px;
+  align-items: start;
   width: 100%;
 }
 .tts-preview-cell {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 .tts-preview-cell-label {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 800;
   letter-spacing: 1.5px;
-  opacity: 0.75;
+  opacity: 0.85;
 }
 .tts-preview-cell-card {
-  width: 290px;
-  height: 515px;
+  width: 320px;
+  height: 569px;   /* 1920/1080 × 320 ≈ 568.89 */
   background: #000;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.5);
 }
-.tts-preview-cell-card > div {
+.tts-preview-cell-card > .stc {
   position: absolute;
   top: 0;
   left: 0;
+  width: 1080px !important;
+  height: 1920px !important;
   transform-origin: top left;
-  transform: scale(0.268519);
-}
-
-/* Wenn dual mode aktiv ist, das alte Frame ausblenden */
-.tts-preview-wrap.dual .tts-preview-frame {
-  width: auto;
-  height: auto;
-  background: transparent;
-  box-shadow: none;
-}
-.tts-preview-wrap.dual #ttsPreviewInner {
-  position: relative;
-  transform: none;
-}
-.tts-preview-wrap.dual #ttsPreviewInner > .stc {
-  width: auto !important;
-  height: auto !important;
-}
-
-/* Single-Mode bleibt wie gehabt */
-.tts-preview-single {
-  display: contents;
+  transform: scale(0.296296);   /* 320 / 1080 */
 }
 
 /* Group-Headings im Form (Hook-Felder / Detail-Felder Trennung) */

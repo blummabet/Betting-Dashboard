@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de"><head>
+<meta charset="UTF-8">
+<title>Studio Preview Sizing Test</title>
+<style>
+  body { background:#0a0e27; color:#fff; font-family:system-ui; padding:20px; margin:0; }
+  h2 { color:#fbbf24; margin-top:30px; }
+  .label { font-size:13px; opacity:0.7; margin-bottom:8px; }
+  .demo-frame { padding:20px; background:rgba(255,255,255,0.04); border-radius:12px; margin-bottom:20px; display:inline-block; }
+</style>
+<link rel="stylesheet" href="../tiktok-studio.css">
+</head><body>
+
+<h2>📐 Erwartete Größen — bevor Page in Studio gerendert</h2>
+
+<div>
+  <div class="label">Single-Mode (eine Card): <code>405 × 720 px</code> (Scale 0.375 von 1080×1920)</div>
+  <div class="demo-frame">
+    <div id="ttsPreviewInner" class="single" style="background:linear-gradient(135deg, #0a0e27, #3a1b6e);">
+      <div class="stc" style="display:flex;align-items:center;justify-content:center;font-size:200px;color:#fbbf24;font-weight:900;">A</div>
+    </div>
+  </div>
+</div>
+
+<h2>📐 Dual-Mode (Hook + Detail): jede Card <code>320 × 569 px</code> (Scale 0.2963)</h2>
+
+<div class="demo-frame" style="width:720px;">
+  <div id="ttsPreviewInner-2" class="dual">
+    <div class="tts-preview-cell">
+      <div class="tts-preview-cell-label">🔥 Hook</div>
+      <div class="tts-preview-cell-card" style="background:linear-gradient(135deg, #0a0e27, #3a1b6e);">
+        <div class="stc" style="display:flex;align-items:center;justify-content:center;font-size:200px;color:#fbbf24;font-weight:900;">H</div>
+      </div>
+    </div>
+    <div class="tts-preview-cell">
+      <div class="tts-preview-cell-label">📋 Detail</div>
+      <div class="tts-preview-cell-card" style="background:linear-gradient(135deg, #1a0e2e, #0a0e27);">
+        <div class="stc" style="display:flex;align-items:center;justify-content:center;font-size:200px;color:#fbbf24;font-weight:900;">D</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Fix die zweite Vorschau (ID anders, aber gleiche CSS-Klasse)
+  document.getElementById('ttsPreviewInner-2').classList.add('dual');
+</script>
+
+</body></html>

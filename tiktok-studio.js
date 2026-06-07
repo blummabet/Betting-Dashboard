@@ -860,21 +860,19 @@
   function renderPreview(){
     const variants = variantsFor(_currentType);
     const preview = $('#ttsPreviewInner');
+    preview.classList.remove('single', 'dual');
     if(variants.length === 1){
-      preview.innerHTML = `<div class="tts-preview-single">
-        <div class="tts-preview-cell">${renderCard(_currentType, _currentData, variants[0])}</div>
-      </div>`;
-      preview.parentElement.classList.toggle('dual', false);
+      preview.classList.add('single');
+      preview.innerHTML = renderCard(_currentType, _currentData, variants[0]);
     } else {
-      const cells = variants.map(v => {
-        const labelMap = { hook:'🔥 Hook', detail:'📋 Detail' };
-        return `<div class="tts-preview-cell">
+      preview.classList.add('dual');
+      const labelMap = { hook:'🔥 Hook', detail:'📋 Detail' };
+      preview.innerHTML = variants.map(v => `
+        <div class="tts-preview-cell">
           <div class="tts-preview-cell-label">${labelMap[v]||v}</div>
           <div class="tts-preview-cell-card">${renderCard(_currentType, _currentData, v)}</div>
-        </div>`;
-      }).join('');
-      preview.innerHTML = `<div class="tts-preview-dual">${cells}</div>`;
-      preview.parentElement.classList.toggle('dual', true);
+        </div>
+      `).join('');
     }
   }
 
@@ -1012,9 +1010,7 @@
           </div>
           <div class="tts-right">
             <div class="tts-preview-wrap">
-              <div class="tts-preview-frame">
-                <div id="ttsPreviewInner"></div>
-              </div>
+              <div id="ttsPreviewInner" class="single"></div>
               <div class="tts-preview-meta">Vorschau · skaliert von 1080×1920</div>
             </div>
           </div>
