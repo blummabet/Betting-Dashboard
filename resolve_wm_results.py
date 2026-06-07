@@ -77,6 +77,21 @@ PLACED_FILE   = BASE / "wm_auto_bets_placed.json"
 HISTORY_FILE  = BASE / "picks_history.json"
 WM_FILE       = BASE / "wm2026-data.json"
 RESULTS_FILE  = BASE / "wm_results.json"
+POLY_HIST_FILE = BASE / "wm2026-poly-history.json"
+
+# Mapping zwischen Pick-Market-Label und Poly-Snapshot-Key
+# (Polymarket-Snapshots haben Keys wie poly_hw / poly_dr / poly_aw / poly_o25 / poly_u25)
+POLY_MARKET_KEY_MAP = {
+    "Heimsieg":         "hw",
+    "Auswärtssieg":     "aw",
+    "Unentschieden":    "dr",
+    "Over 2.5 Tore":    "o25",
+    "Under 2.5 Tore":   "u25",
+    "Über 2.5 Tore":    "o25",
+    "Unter 2.5 Tore":   "u25",
+    # BTTS / DC / AH / Corners: noch nicht in poly-history-Snapshot — bleiben None,
+    # CLV gegen Pinn-Closing (existing clvPP) deckt das weiterhin ab.
+}
 
 # Märkte und ihre Win-Bedingungen
 # tuple: (market_label, check_function(result) → bool | None (None=VOID wenn kein Ergebnis))
@@ -438,6 +453,74 @@ def normalize_bet(bet: dict) -> dict:
         yield {**bet, "source": bet.get("source", "auto")}
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Polymarket-Closing-Snapshot Helper (Audit-Erweiterung 07.06.2026)
+# ─────────────────────────────────────────────────────────────────────────────
+def find_poly_close_price(
+    poly_hist: dict,
+    home_id: str,
+    away_id: str,
+    market_label: str,
+    match_date: str
+) -> float | None:
+    """Liefert Polymarket-Preis ~1h vor Match-Start für CLV-Vergleich.
+
+    Strategie: aus wm2026-poly-history.json den Snapshot finden dessen ts
+    am nächsten an `match_date + 18:00 UTC` (typische WM-Anpfiff-Zeit)
+    aber NICHT danach liegt. Wenn kein Snapshot in [-12h, 0] vor Anpfiff →
+    nimm den jüngsten Snapshot insgesamt (besser als None).
+    """
+    if not poly_hist or not match_date:
+        return None
+    key       = f"{home_id}-{away_id}"
+    snapshots = poly_hist.get(key) or []
+    if not snapshots:
+        return None
+
+    poly_key = POLY_MARKET_KEY_MAP.get(market_label.strip())
+    if not poly_key:
+        return None
+    poly_field = f"poly_{poly_key}"
+
+    # Match-Anpfiff schätzen (WM-Standard: 19:00 UTC für Hauptspiele).
+    # Falls Datum bekannt, suchen wir Snapshot ≤ Anpfiff aber innerhalb 12h davor.
+    try:
+        from datetime import datetime, timezone, timedelta
+        if "T" in match_date:
+            anpfiff = datetime.fromisoformat(match_date.replace("Z", "+00:00"))
+        else:
+            anpfiff = datetime.fromisoformat(f"{match_date}T18:00:00+00:00")
+    except Exception:
+        anpfiff = None
+
+    best = None
+    best_dist = None
+    for snap in snapshots:
+        price = snap.get(poly_field)
+        if price is None:
+            continue
+        ts_str = snap.get("ts", "")
+        try:
+            ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+        except Exception:
+            continue
+
+        if anpfiff:
+            delta = (anpfiff - ts).total_seconds()
+            if delta < 0:
+                continue  # nach Anpfiff = uninteressant
+            if delta > 12 * 3600:
+                continue  # zu weit weg
+            if best_dist is None or delta < best_dist:
+                best = price
+                best_dist = delta
+        else:
+            # Fallback: jüngster Snapshot
+            best = price
+
+    return best
+
+
 def main():
     now_iso = datetime.now(timezone.utc).isoformat()
     print(f"📊  resolve_wm_results.py — P&L + CLV Tracking")
@@ -447,6 +530,7 @@ def main():
     placed_data = load_json(PLACED_FILE, {"bets": []})
     history     = load_json(HISTORY_FILE, [])
     wm          = load_json(WM_FILE, {})
+    poly_hist   = load_json(POLY_HIST_FILE, {})
 
     # Alle WM-Bets sammeln (auto + manuell)
     raw_bets: list[dict] = list(placed_data.get("bets", []))
@@ -495,6 +579,19 @@ def main():
         if pinn_close and poly_price:
             clv_pp = round((pinn_close - poly_price) * 100, 2)
 
+        # Polymarket-CLV (Audit-Erweiterung 07.06.2026):
+        # Vergleich Entry-Polymarket-Preis vs Polymarket-Preis ~1h vor Anpfiff.
+        # Sagt aus ob wir Polymarket-seitig gut getimed haben (komplementär zu Pinn-CLV).
+        poly_close = find_poly_close_price(
+            poly_hist,
+            home_id, away_id,
+            bet.get("market", ""),
+            bet.get("matchDate") or res.get("matchDate") or ""
+        )
+        poly_clv_pp = None
+        if poly_close and poly_price:
+            poly_clv_pp = round((poly_close - poly_price) * 100, 2)
+
         # Score-String
         score = None
         if res.get("home_score") is not None and res.get("away_score") is not None:
@@ -512,7 +609,10 @@ def main():
             "polyOdds":    poly_odds,
             "pinnFair":    round(pinn_fair, 4) if pinn_fair else None,
             "pinnClose":   round(pinn_close, 4) if pinn_close else None,
-            "clvPP":       clv_pp,
+            "clvPP":       clv_pp,           # CLV gegen Pinnacle (Industrie-Standard)
+            "polyClose":   round(poly_close, 4) if poly_close else None,
+            "polyClvPP":   poly_clv_pp,      # CLV gegen Polymarket-Close (Exchange-Timing)
+            "isSteamLag":  bool(bet.get("isSteamLag", False)),
             "result":      result_str,
             "pnl":         pnl,
             "score":       score,

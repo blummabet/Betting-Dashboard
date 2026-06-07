@@ -462,6 +462,15 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
     existing = {e["id"]: e for e in log.get("signals", [])}
     now_dt   = datetime.fromisoformat(now_ts.replace("Z", "+00:00"))
 
+    # Tracke (matchKey, market) Paare, die tatsächlich einen Snapshot im Main-Loop
+    # bekommen haben. Wird unten im Stale-Pass benutzt, um Doppel-Updates zu
+    # vermeiden — OHNE Signale zu überspringen, die nur via compute_signals()
+    # zurückgegeben wurden aber dann durch den MIN_EDGE_PP-Filter rausgeflogen sind.
+    # Bug-Fix 07.06.2026: Vorher war signal_keys_market aus der UNGEFILTERTEN
+    # signals-Liste gebaut → Matches mit Edge < MIN_EDGE_PP fielen in einen
+    # toten Winkel (Main-Loop skippt, Stale-Pass denkt Main-Loop hat updated).
+    snapshotted_in_main: set = set()
+
     for fx in signals:
         if (fx["bestEdge"] or 0) < MIN_EDGE_PP and not fx["steamLag"]:
             continue
@@ -546,6 +555,7 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
                 "outcome":          None,
             }
             log.setdefault("signals", []).append(new_entry)
+            snapshotted_in_main.add((fx["key"], best_key))
             flag = "🔥" if fx["steamLag"] else "🆕"
             print(f"  {flag} NEU: {new_entry['home']} vs {new_entry['away']}"
                   f" · {new_entry['marketLabel']} · +{current_edge:.1f}pp")
@@ -554,6 +564,7 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
             # ── Existierendes offenes Signal updaten ─────────────────────
             snaps = open_entry.setdefault("snapshots", [])
             snaps.append(snap)
+            snapshotted_in_main.add((fx["key"], best_key))
             if len(snaps) > MAX_SNAPSHOTS:
                 snaps[:] = snaps[-MAX_SNAPSHOTS:]
 
@@ -594,13 +605,20 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
                       f" · {open_entry['entryEdgePp']:+.1f}pp → {current_edge:+.1f}pp"
                       f" · {open_entry['convergencePct']:.0f}% geschlossen")
 
-    # ── Stale-Snapshot-Pass für OPEN-Signale die NICHT in find_signals() landen ──
+    # ── Stale-Snapshot-Pass für OPEN-Signale die NICHT im Main-Loop landen ──
     # Bug-Fix 05.06.2026: Wenn ein Match seinen Edge unter MIN_EDGE_PP verliert,
     # wird es in find_signals() gefiltert und das OPEN-Signal bleibt forever auf
     # altem currentEdgePp hängen. Dashboard zeigt dann veraltete Werte als aktuell.
     # → Wir hängen einen frischen Snapshot mit dem aktuellen (niedrigeren) Edge an
     #   und markieren bei Edge < CONVERGED_EDGE_PP als CONVERGED.
-    signal_keys_market = {(fx["key"], fx["bestEdgeKey"]) for fx in signals if fx.get("bestEdgeKey")}
+    #
+    # Bug-Fix 07.06.2026: Vorher wurde signal_keys_market aus der ungefilterten
+    # `signals`-Liste gebaut. Das umfasst auch Matches, deren bestEdge < MIN_EDGE_PP
+    # ist — die im Main-Loop wegen des early-continue NIE einen Snapshot kriegen.
+    # Beispiel: MEX-ZAF aw mit bestEdge=0.9 → im signal_keys_market drin, aber im
+    # Main-Loop ge-continued → Stale-Pass skipte fälschlich → 64h kein Update.
+    # Fix: snapshotted_in_main wird oben ausschließlich befüllt, wenn ein Snapshot
+    # auch wirklich angehängt wurde.
     # Lade alle aktuellen Fixtures aus wm_poly_prices.json für Stale-Check
     fx_lookup: dict = {}
     try:
@@ -620,7 +638,7 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
             continue
         mk_key = entry["matchKey"]
         market_key = entry["market"]
-        if (mk_key, market_key) in signal_keys_market:
+        if (mk_key, market_key) in snapshotted_in_main:
             continue   # bereits durch reguläre Loop aktualisiert
         # Such aktuellen Stand für diesen Markt
         fx_now = fx_lookup.get(mk_key)
