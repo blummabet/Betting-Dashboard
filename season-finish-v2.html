@@ -3173,7 +3173,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <!-- Schedule -->
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;">
     <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">📅 Automatischer Versandplan</div>
-    <div style="font-size:10px;color:var(--muted);margin-bottom:14px;">Haupt-Channel = CocoBet · Trades-Channel = privat (nur Auto-Bets &amp; P&amp;L)</div>
+    <div style="font-size:10px;color:var(--muted);margin-bottom:14px;">Haupt-Channel = CocoBet (öffentlich, 2.450 Follower) · Trades-Channel = privat (P&amp;L, Trade-Alerts, TikTok-Content)</div>
     <div style="display:flex;flex-direction:column;gap:10px;">
 
       <!-- Pre-Season -->
@@ -3191,17 +3191,60 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <span style="font-size:20px;flex-shrink:0">🌅</span>
         <div style="flex:1;">
           <div style="font-size:13px;font-weight:600;color:var(--text);">Morning Card <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;">5× täglich geprüft · Nur wenn WM-Spieltag (ab 11. Jun) · Picks + Elo + Edge + AI-Snippet + Bilanz · Script: telegram_wm.py</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;"><strong style="color:var(--text)">07:00 UTC = 09:00 Wien</strong> · Nur wenn WM-Spieltag (ab 11. Jun) · Picks + Elo + Edge + AI-Snippet + Bilanz · Tages-Dedup gegen Doppel-Send · Script: telegram_wm.py</div>
         </div>
-        <span style="margin-left:auto;font-size:10px;background:rgba(0,212,161,.15);color:#00d4a1;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">ab 11. Jun</span>
+        <span style="margin-left:auto;font-size:10px;background:rgba(0,212,161,.15);color:#00d4a1;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">09 Wien</span>
       </div>
+
+      <!-- Pick-Changes-Digest -->
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">🔄</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Pick-Changes-Digest <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;"><strong style="color:var(--text)">14:00 Wien</strong> · Welche Picks haben Edge gewonnen/verloren · State-File pick_changes_digest_state.json verhindert dass alte Changes nochmal kommen · Script: send_pick_changes_digest.py</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(252,165,165,.15);color:#fca5a5;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">14 Wien</span>
+      </div>
+
+      <!-- Player Spotlight -->
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">🌟</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Player Spotlight <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Di / Do / Sa · Max. 2 Spieler/Tag (Tages-Dedup nach Audit-Fix) · Scoring-Rate × Position-Bonus × Star-Bonus · Mit Anytime-Scorer-Odds aus TheOddsAPI · Script: generate_wm_player_spotlight.py</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">Di/Do/Sa</span>
+      </div>
+
+      <!-- Track-Record-Card -->
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">📈</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Track-Record-Card <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;"><strong style="color:var(--text)">19:00 UTC = 21:00 Wien</strong> · ROI + Hit-Rate + P&amp;L + Equity-Curve als SVG-Chart · State-File track_record_state.json verhindert Doppel-Send wenn ROI unverändert · Script: generate_track_record_card.py</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(0,212,161,.15);color:#00d4a1;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">21 Wien</span>
+      </div>
+
+      <!-- WM Recap -->
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">🌙</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">WM Tages-Recap <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;"><strong style="color:var(--text)">21:30 UTC = 23:30 Wien</strong> · Tagesergebnisse + Bilanz + WIN/LOSS/PUSH + P&amp;L · Erst sinnvoll ab 11. Jun · Script: telegram_wm.py (recap mode)</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(100,100,100,.2);color:var(--muted);padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">ab 11. Jun</span>
+      </div>
+
+      <div style="border-top:1px solid var(--border);margin:4px 0;padding-top:6px;"></div>
+      <div style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;">🔒 Trades-Channel (privat)</div>
 
       <!-- Sharp Move Alert -->
       <div style="display:flex;align-items:flex-start;gap:12px;">
         <span style="font-size:20px;flex-shrink:0">📡</span>
         <div style="flex:1;">
-          <div style="font-size:13px;font-weight:600;color:var(--text);">Sharp Move Alert <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Nach Odds-Fetch · Pinnacle Quote fällt ≥5% in &lt;30min · Dedup via wm_sharp_dedup.json · Script: detect_wm_sharp_moves.py</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Sharp Move Alert <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Nach Odds-Fetch (alle 4h) · Pinnacle-Drift ≥5pp Snapshot / ≥8pp Opening-Line · Dedup via wm_sharp_dedup.json · <strong style="color:var(--text)">Verschoben auf Trades (05.06.)</strong> — Pinnacle-Drift ist Trade-Info, nicht Community · Script: detect_wm_sharp_moves.py</div>
         </div>
         <span style="margin-left:auto;font-size:10px;background:rgba(255,140,0,.15);color:#ff8c00;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">ereignis</span>
       </div>
@@ -3210,40 +3253,38 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div style="display:flex;align-items:flex-start;gap:12px;">
         <span style="font-size:20px;flex-shrink:0">🔥</span>
         <div style="flex:1;">
-          <div style="font-size:13px;font-weight:600;color:var(--text);">Steam Lag Alert <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Pinnacle ≥2pp bewegt + Polymarket noch nicht angepasst + Edge ≥3pp · Cowork Task alle 2h + GitHub Action 5×/Tag · Script: steam_lag_monitor.py</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Steam Lag Alert <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Pinnacle bewegt sich, Polymarket noch nicht · Schwelle 3pp (WM) / 2.5pp (Liga) · <strong style="color:var(--text)">Verschoben auf Trades (05.06.)</strong> · Script: steam_lag_monitor.py</div>
         </div>
         <span style="margin-left:auto;font-size:10px;background:rgba(239,68,68,.15);color:#f87171;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">ereignis</span>
       </div>
 
-      <!-- Player Spotlight -->
+      <!-- Edge-Alerts aus fetch_wm_poly_prices -->
       <div style="display:flex;align-items:flex-start;gap:12px;">
-        <span style="font-size:20px;flex-shrink:0">🌟</span>
+        <span style="font-size:20px;flex-shrink:0">⚡</span>
         <div style="flex:1;">
-          <div style="font-size:13px;font-weight:600;color:var(--text);">Player Spotlight <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Di / Do / Sa · Max. 2 Spieler · Scoring-Rate × Position-Bonus × Star-Bonus · Mit Anytime-Scorer-Odds wenn verfügbar · Script: generate_wm_player_spotlight.py</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Edge-Alerts (Polymarket) <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Bei jedem Poly-Price-Fetch (alle 4h) · Wenn neue Edge ≥5pp gefunden oder Steam-Lag-Move · Max 4 Alerts/Run · 12h Dedup pro (match × markt) · Script: fetch_wm_poly_prices.py</div>
         </div>
-        <span style="margin-left:auto;font-size:10px;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">Di/Do/Sa</span>
+        <span style="margin-left:auto;font-size:10px;background:rgba(255,140,0,.15);color:#ff8c00;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">alle 4h</span>
       </div>
 
-      <!-- Recap -->
+      <!-- Position Health Alerts -->
       <div style="display:flex;align-items:flex-start;gap:12px;">
-        <span style="font-size:20px;flex-shrink:0">✅</span>
+        <span style="font-size:20px;flex-shrink:0">🏥</span>
         <div style="flex:1;">
-          <div style="font-size:13px;font-weight:600;color:var(--text);">Pick Recap <span style="font-size:10px;font-weight:400;color:var(--muted);">Haupt-Channel</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Nach Spielende wenn result ≠ NS · WIN/LOSS/PUSH + P&amp;L · Script: telegram_wm.py (recap mode)</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Position-Health Warnings <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Beim Position-Check · Score &lt;40 = kritisch (Sell-Empfehlung) · Score 40-60 = Warning · 6h Dedup pro Position · Script: monitor_open_positions.py</div>
         </div>
-        <span style="margin-left:auto;font-size:10px;background:rgba(100,100,100,.2);color:var(--muted);padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">ab 11. Jun</span>
+        <span style="margin-left:auto;font-size:10px;background:rgba(248,113,113,.15);color:#f87171;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">ereignis</span>
       </div>
-
-      <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
 
       <!-- Auto-Bet -->
       <div style="display:flex;align-items:flex-start;gap:12px;">
         <span style="font-size:20px;flex-shrink:0">🤖</span>
         <div style="flex:1;">
           <div style="font-size:13px;font-weight:600;color:var(--text);">Auto-Bet Bestätigung <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;">CLOB Order ausgeführt · Team, Einsatz €5–15, tokenId, Poly-Preis · Nur wenn AUTO_TRIGGER_ENABLED=true · Script: auto_wm_poly_trigger.py</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">CLOB Order ausgeführt · Team, Einsatz <strong style="color:var(--text)">€5 flat</strong>, tokenId, Poly-Preis, Edge · Caps: 8 Bets/Tag · $50 Stake/Tag · $80 Open-Exposure · Nur wenn AUTO_TRIGGER_ENABLED=true · Script: auto_wm_poly_trigger.py</div>
         </div>
         <span style="margin-left:auto;font-size:10px;background:rgba(163,113,247,.15);color:#a371f7;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">off (soon)</span>
       </div>
@@ -3253,19 +3294,42 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <span style="font-size:20px;flex-shrink:0">💸</span>
         <div style="flex:1;">
           <div style="font-size:13px;font-weight:600;color:var(--text);">Sell Alert <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Position verkauft: <strong style="color:var(--text)">+10% Profit</strong> · Poly konvergiert (Gap &lt;1.5pp) · Age-Decay +5% nach 48h · Pre-Match-Close 6h vor Anpfiff · Nur wenn AUTO_SELL_ENABLED=true · Script: manage_wm_poly_positions.py</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Position verkauft: <strong style="color:var(--text)">+10% Profit</strong> · Poly konvergiert (Gap &lt;1.5pp) · Age-Decay +5% nach 48h · 3 Loss-Trigger (Sharp-Against ≥7pp / Deep-40%+Time / Age-Loss) · <strong style="color:var(--text)">Pre-Match-Close 2h vor Anpfiff</strong> (war 6h, gesenkt 05.06.) · 6h Dedup · Script: manage_wm_poly_positions.py</div>
         </div>
         <span style="margin-left:auto;font-size:10px;background:rgba(163,113,247,.15);color:#a371f7;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">off (soon)</span>
       </div>
 
-      <!-- Daily TikTok-Cards (NEU) -->
+      <!-- Daily Heartbeat -->
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <span style="font-size:20px;flex-shrink:0">💓</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">Daily Heartbeat (Status) <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;"><strong style="color:var(--text)">06:00 UTC = 08:00 Wien</strong> · Status-Report Trade-Pipeline: offene Positionen, Balance, Kill-Switch-Status, Auto-Trigger-Health · Script: daily_heartbeat.py</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(76,201,240,.15);color:#4cc9f0;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">08 Wien</span>
+      </div>
+
+      <!-- Daily TikTok-Cards (mit Backup-Cron NEU) -->
       <div style="display:flex;align-items:flex-start;gap:12px;padding:10px;background:rgba(76,201,240,.05);border:1px solid rgba(76,201,240,.18);border-radius:8px;">
         <span style="font-size:20px;flex-shrink:0">🎬</span>
         <div style="flex:1;">
           <div style="font-size:13px;font-weight:600;color:var(--text);">Daily TikTok-Cards <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px;">Täglich <strong style="color:var(--text)">04:00 UTC = 06:00 Wien</strong> (Cron-Start) · 4 fertige PNGs · Ankommt typisch <strong style="color:var(--text)">06:30–07:30 Wien</strong> (GH-Actions-Latenz + Playwright-Install) · Story Hook+Info + Daily Killer-Stat Hook+Info · Dedup via tiktok_sent.json · Script: generate_daily_tiktok.py</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">
+            Primär <strong style="color:var(--text)">04:00 UTC = 06:00 Wien</strong> · Backup-Cron <strong style="color:var(--text)">05:30 UTC = 07:30 Wien</strong> (NEU 07.06. — fängt GitHub-Cron-Skips ab) ·
+            Bis zu 5 Card-Typen: Story Hook+Info, Daily Killer-Stat Hook+Info, Bizarre-Quote Hook+Info, Daily-Picks-Card, Player-Pick · Anti-Double-Send Guard (Backup skipt wenn Primär heute schon lief) · Ankommen typisch 06:30-07:30 Wien (Playwright-Latenz) · Dedup via tiktok_sent.json · Script: generate_daily_tiktok.py
+          </div>
         </div>
-        <span style="margin-left:auto;font-size:10px;background:rgba(76,201,240,.15);color:#4cc9f0;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">04 UTC</span>
+        <span style="margin-left:auto;font-size:10px;background:rgba(76,201,240,.15);color:#4cc9f0;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">04 + 5:30 UTC</span>
+      </div>
+
+      <!-- WM Live-Story Engine (NEU) -->
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:10px;background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.18);border-radius:8px;">
+        <span style="font-size:20px;flex-shrink:0">📺</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;color:var(--text);">WM Live-Story Engine <span style="font-size:10px;font-weight:400;color:var(--muted);">🔒 Trades-Channel</span></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;"><strong style="color:var(--text)">06:00 UTC = 08:00 Wien</strong> · Generiert Hook+Info-Card aus 4 Angles: Spiel-des-Tages, Killer-Stat aus Quali+Turnier, Underdog-Recap, Live-Player-Spotlight · <strong style="color:var(--text)">Übernimmt ab 11. Jun die Story-Card-Slot</strong> die der Story-Plan bis dahin gefüllt hat · 4-Tage Entity-Dedup · Script: generate_wm_live_story.py</div>
+        </div>
+        <span style="margin-left:auto;font-size:10px;background:rgba(167,139,250,.15);color:#a78bfa;padding:2px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;">ab 11. Jun</span>
       </div>
 
     </div>
@@ -3285,16 +3349,22 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         </tr>
       </thead>
       <tbody style="color:var(--text);">
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#4cc9f0;">04, 08, 12, 16, 20</td><td style="padding:6px 8px;font-family:monospace;">06, 10, 14, 18, 22</td><td style="padding:6px 8px;">WM-Daten · Odds · Picks · Sharp Moves · Steam Lag · Pre-Season-Post</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">fetch-wm-data.yml</td></tr>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#a371f7;">06, 10, 14, 18, 22</td><td style="padding:6px 8px;font-family:monospace;">08, 12, 16, 20, 00</td><td style="padding:6px 8px;">Poly Positionen prüfen · Auto-Trigger · Auto-Sell · Balance fetchen</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">manage-wm-poly.yml</td></tr>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#4cc9f0;font-weight:700;">06</td><td style="padding:6px 8px;font-family:monospace;font-weight:700;">08</td><td style="padding:6px 8px;font-weight:600;">🎬 Daily TikTok-Cards (4 PNGs in Trades-Channel)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">daily-tiktok.yml</td></tr>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#00d4a1;">07</td><td style="padding:6px 8px;font-family:monospace;">09</td><td style="padding:6px 8px;">Telegram Picks (Haupt-Channel · National + WM)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">update-dashboard.yml</td></tr>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#00d4a1;">09</td><td style="padding:6px 8px;font-family:monospace;">11</td><td style="padding:6px 8px;">Telegram Recap vom Vortag</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">update-dashboard.yml</td></tr>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#00d4a1;">11</td><td style="padding:6px 8px;font-family:monospace;">13</td><td style="padding:6px 8px;">Telegram IM BLICK / Watch</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">update-dashboard.yml</td></tr>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#f0883e;">~9× / Tag</td><td style="padding:6px 8px;font-family:monospace;">~9× / Tag</td><td style="padding:6px 8px;">Fetch Pre-Match Daten (TheOddsAPI · ClubElo · API-Football)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">fetch-prematch.yml</td></tr>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#f5c518;">21:30</td><td style="padding:6px 8px;font-family:monospace;">23:30</td><td style="padding:6px 8px;">WM Recap (Tagesergebnisse + Bilanz · ab 11. Jun)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">telegram-wm-recap.yml</td></tr>
-        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#f5c518;">06</td><td style="padding:6px 8px;font-family:monospace;">08</td><td style="padding:6px 8px;">Lineups fetchen (matchday)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">fetch-lineups.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#f0883e;">02, 10, 18</td><td style="padding:6px 8px;font-family:monospace;">04, 12, 20</td><td style="padding:6px 8px;">Fetch Pre-Match (TheOddsAPI · ClubElo · API-Football)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">fetch-prematch.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#4cc9f0;">04, 08, 12, 16, 20</td><td style="padding:6px 8px;font-family:monospace;">06, 10, 14, 18, 22</td><td style="padding:6px 8px;">WM-Daten · Odds · Picks · Edge-Alerts · Sharp/Steam</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">fetch-wm-data.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#4cc9f0;font-weight:700;">04</td><td style="padding:6px 8px;font-family:monospace;font-weight:700;">06</td><td style="padding:6px 8px;font-weight:600;">🎬 Daily TikTok-Cards (Primär · bis zu 5 Card-Typen)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">daily-tiktok.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#4cc9f0;font-weight:700;">05:30</td><td style="padding:6px 8px;font-family:monospace;font-weight:700;">07:30</td><td style="padding:6px 8px;font-weight:600;">🎬 Backup-Cron Daily-TikTok (NEU — skipt wenn Primär lief)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">daily-tiktok.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#a371f7;">06, 10, 14</td><td style="padding:6px 8px;font-family:monospace;">08, 12, 16</td><td style="padding:6px 8px;">Poly Positionen · Auto-Trigger · Auto-Sell · Balance · Health-Monitor</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">manage-wm-poly.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#a78bfa;font-weight:700;">06</td><td style="padding:6px 8px;font-family:monospace;font-weight:700;">08</td><td style="padding:6px 8px;font-weight:600;">📺 WM Live-Story Engine (Hook+Info aus 4 Angles)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">daily-wm-story.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#4cc9f0;">06</td><td style="padding:6px 8px;font-family:monospace;">08</td><td style="padding:6px 8px;">💓 Daily Heartbeat (Trade-Pipeline-Status)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">daily-heartbeat.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#f5c518;">07–21 (stündl.)</td><td style="padding:6px 8px;font-family:monospace;">09–23</td><td style="padding:6px 8px;">Lineups fetchen (jede Stunde am Matchday)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">fetch-lineups.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#00d4a1;font-weight:700;">07</td><td style="padding:6px 8px;font-family:monospace;font-weight:700;">09</td><td style="padding:6px 8px;font-weight:600;">🌅 Morning Card (Top-Picks) → Public</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">update-dashboard.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#00d4a1;">09</td><td style="padding:6px 8px;font-family:monospace;">11</td><td style="padding:6px 8px;">Telegram Recap vom Vortag → Public</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">update-dashboard.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#00d4a1;">11</td><td style="padding:6px 8px;font-family:monospace;">13</td><td style="padding:6px 8px;">Telegram IM BLICK / Watch → Public</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">update-dashboard.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#fca5a5;">12</td><td style="padding:6px 8px;font-family:monospace;">14</td><td style="padding:6px 8px;">🔄 Pick-Changes-Digest → Trades</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">update-dashboard.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#00d4a1;font-weight:700;">19</td><td style="padding:6px 8px;font-family:monospace;font-weight:700;">21</td><td style="padding:6px 8px;font-weight:600;">📈 Track-Record-Card (ROI + Equity-Curve) → Public</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">track-record-card.yml</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#f5c518;font-weight:700;">21:30</td><td style="padding:6px 8px;font-family:monospace;font-weight:700;">23:30</td><td style="padding:6px 8px;font-weight:600;">🌙 WM Tages-Recap → Public (ab 11. Jun)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">telegram-wm-recap.yml</td></tr>
         <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 8px;font-family:monospace;color:#a371f7;">repository_dispatch</td><td style="padding:6px 8px;font-family:monospace;">on-demand</td><td style="padding:6px 8px;">Manuelle Poly-Bets vom Dashboard "Jetzt platzieren"</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">poly-bets.yml</td></tr>
+        <tr><td style="padding:6px 8px;font-family:monospace;color:#888;">push to main</td><td style="padding:6px 8px;font-family:monospace;">on-push</td><td style="padding:6px 8px;">🧪 CI-Tests (228 Tests + JS-Syntax + Trade-Konsistenz)</td><td style="padding:6px 8px;color:var(--muted);font-family:monospace;font-size:10px;">tests.yml</td></tr>
       </tbody>
     </table>
   </div>
