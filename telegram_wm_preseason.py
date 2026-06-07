@@ -101,14 +101,48 @@ def tg_send(text: str) -> bool:
 # ── Dedup ─────────────────────────────────────────────────────────────────────
 
 def already_sent_today() -> bool:
+    """Dedup-Check mit ZWEI Quellen (Defense-in-Depth gegen State-File-Race).
+
+    Bug 07.06.2026: Pre-Season-Post kam 2× am selben Tag weil wm_preseason_sent.json
+    erst am Ende des Workflow-Runs committed wird. Wenn der Commit failed (Push-
+    Konflikt mit parallelem Workflow), startet der nächste Cron mit altem State
+    → Doppel-Send.
+
+    Fix: zusätzlich telegram-log.json prüfen — DAS wird in JEDEM Workflow nach
+    jedem Send committed (Single Source of Truth was wirklich rausgegangen ist).
+    Belt + Suspenders.
+    """
     today_str = date.today().isoformat()
-    if not SENT_FILE.exists():
-        return False
+
+    # Source 1: wm_preseason_sent.json (lokales State)
     try:
-        data = json.loads(SENT_FILE.read_text())
-        return data.get("lastSent") == today_str
+        if SENT_FILE.exists():
+            data = json.loads(SENT_FILE.read_text())
+            if data.get("lastSent") == today_str:
+                return True
+            # Auch History prüfen — falls lastSent versehentlich überschrieben
+            if today_str in (data.get("history") or []):
+                return True
     except Exception:
-        return False
+        pass
+
+    # Source 2: telegram-log.json (committed in jedem Workflow → robuster Backup)
+    try:
+        if LOG_FILE.exists():
+            log = json.loads(LOG_FILE.read_text())
+            if isinstance(log, list):
+                for entry in log:
+                    if not isinstance(entry, dict):
+                        continue
+                    if entry.get("type") != "preseason":
+                        continue
+                    sent_at = entry.get("sentAt", "")
+                    if sent_at.startswith(today_str):
+                        return True
+    except Exception:
+        pass
+
+    return False
 
 
 def mark_sent():
