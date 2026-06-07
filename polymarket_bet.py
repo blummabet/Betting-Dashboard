@@ -754,6 +754,11 @@ def log_bet_to_history(history: list, order: dict, result: dict) -> None:
                 "market":    market,
                 "stake":     order.get("stake", STAKE_USDC),
                 "polyPrice": order.get("polyPrice"),
+                "polyClose": None,       # ← Polymarket-Preis ~1h vor Anpfiff
+                                          #   wird von resolve_wm_results.py gesetzt
+                "polyClvPP": None,       # ← (polyClose - polyPrice) × 100
+                                          #   positiv = wir haben günstiger eingekauft als Closing
+                "isSteamLag": order.get("isSteamLag", False),  # für Backtest "Steam-Lag-Trades vs Normal"
                 "orderId":   result.get("orderId"),
                 "status":    result.get("status"),
                 "error":     result.get("error"),
