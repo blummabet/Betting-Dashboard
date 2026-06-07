@@ -35,6 +35,8 @@
   let WM_DATA = null;
   let PLAYER_DATA = null;
   let POLY_DATA = null;
+  let BIZARRE_TARGETS = null;   // bizarre_quote_targets.json (29 Outrights)
+  let BIZARRE_COMPARES = null;  // bizarre_comparisons.json (5 Tiers, 61 Vergleiche)
   let ACTIVE_PROFILE = 'wm2026';
 
   // Card-Typen mit Variants. Variants = ['hook', 'detail'] → 2 Cards (Pair).
@@ -76,9 +78,11 @@
   async function loadAll(){
     CONFIG = await fetchJson('studio_config.json', null);
     POOLS  = await fetchJson('studio_pools.json',  null);
-    WM_DATA      = await fetchJson('wm2026-data.json',          {});
-    PLAYER_DATA  = await fetchJson('wm2026-player-props.json',  {});
-    POLY_DATA    = await fetchJson('wm_poly_prices.json',       {});
+    WM_DATA          = await fetchJson('wm2026-data.json',          {});
+    PLAYER_DATA      = await fetchJson('wm2026-player-props.json',  {});
+    POLY_DATA        = await fetchJson('wm_poly_prices.json',       {});
+    BIZARRE_TARGETS  = await fetchJson('bizarre_quote_targets.json', {targets:[]});
+    BIZARRE_COMPARES = await fetchJson('bizarre_comparisons.json',   {tiers:{}});
     COMMON_CSS   = await fetchText('studio_templates/_common.css', '');
     // Templates pro Variant: TEMPLATE_HTML[type][variant] = html
     for(const [type, meta] of Object.entries(TEMPLATE_FILES)){
@@ -487,8 +491,48 @@
         if(!data.team) return data;
         const sq = (WM_DATA?.squads || {})[data.team] || {};
         const p = teamPack(data.team);
+
+        // ── KRITISCH: Stats gehören IMMER zum Squad-Top-Scorer (sq.name).
+        // Wenn der User einen anderen Namen eingibt, dürfen wir keine
+        // Squad-Stats befüllen — sonst sind die Zahlen falsch zum Namen.
+        // Match-Logik: case-insensitive substring match (toleriert "En-Nesyri" vs "Y. En-Nesyri").
+        const userName = (data.player || '').trim();
+        const sqName   = (sq.name || '').trim();
+        const namesMatch = !userName /* leer = wir setzen Top-Scorer */
+          || (sqName && (
+            userName.toLowerCase().includes(sqName.toLowerCase().split(/\s+/).pop().toLowerCase())
+            || sqName.toLowerCase().includes(userName.toLowerCase())
+          ));
+
         if(force || !data.player)   data.player   = sq.name || '';
         if(force || !data.position) data.position = generatePositionLabel(sq.position);
+
+        // Wenn die Namen NICHT matchen: generische Player-Lines ohne harte Zahlen,
+        // damit Lucas merkt dass er die Stats noch manuell setzen muss.
+        if(!namesMatch){
+          const genericTop = [
+            'Die heimliche Waffe ihres Teams',
+            'Wer den unterschätzt, zahlt drauf',
+            'Der Mann für die magischen Momente',
+            'Trifft wenn es zählt — und das tut es jetzt',
+            'Der Spieler den die Bookies nicht auf dem Schirm haben'
+          ];
+          const genericSub = [
+            'Stats hier manuell ergänzen — Modell hat keine Daten zu diesem Spieler',
+            'Spielerdaten noch nicht im System — Story einfach hingeschrieben',
+            'Top-Performance erwartet trotz fehlender Quali-Stats'
+          ];
+          if(force || !data.topline) data.topline = fromPool('pl.gen.top', genericTop);
+          if(force || !data.subline) data.subline = fromPool('pl.gen.sub', genericSub);
+          // Detail-Stats LEER lassen — User muss tippen
+          if(force){
+            // Bei Force trotzdem den Squad-Hinweis als bottom_line setzen
+            data.bottom_line = 'Stats unten manuell setzen für diesen Spieler';
+          }
+          return data;
+        }
+
+        // Namen matchen → echte Stats aus Squad-Daten
         if(force || !data.topline)  data.topline  = fromPool('pl.top', generatePlayerToplines(data.team));
         if(force || !data.subline)  data.subline  = fromPool('pl.sub', generatePlayerSublines(data.team));
         // Detail-Stats: 2-3 Number+Label-Pairs aus echten Daten
@@ -502,7 +546,6 @@
             stats.push({val: per90, lbl:'TORE / 90'});
           }
           if(p.form.avgScored) stats.push({val:p.form.avgScored.toFixed(1), lbl:'TEAM TORE/SPIEL'});
-          // Auswählen
           if(force || !data.stat1_val){ const s = stats[0]; if(s){ data.stat1_val = s.val; data.stat1_lbl = s.lbl; } }
           if(force || !data.stat2_val){ const s = stats[1]; if(s){ data.stat2_val = s.val; data.stat2_lbl = s.lbl; } }
           if(force || !data.stat3_val){ const s = stats[2]; if(s){ data.stat3_val = s.val; data.stat3_lbl = s.lbl; } }
@@ -550,10 +593,49 @@
       ],
       autoFill: (data, opts) => {
         const force = opts?.force;
-        const cmps = generateBizarrePool();
-        if(force || !data.cmp1) data.cmp1 = fromPool('bz.cmp1', cmps);
-        if(force || !data.cmp2) data.cmp2 = fromPool('bz.cmp2', cmps);
-        if(force || !data.cmp3) data.cmp3 = fromPool('bz.cmp3', cmps);
+
+        // ── Subject + Quote aus bizarre_quote_targets.json ──
+        // 29 vorgefertigte Outrights (Team wird Weltmeister mit Quote+Chance).
+        // Bei Force oder leerem Subject: random Target wählen.
+        const targets = BIZARRE_TARGETS?.targets || [];
+        let chosenTarget = null;
+        if(targets.length > 0){
+          if(force || !data.subject){
+            const idx = fromPool('bz.target', targets.map((_,i) => i));
+            chosenTarget = targets[idx];
+            data.subject = `${chosenTarget.flag} ${chosenTarget.name} WIRD WELTMEISTER`;
+            // target.quote ist *100 gespeichert (z.B. 3501 = 35.01)
+            if(force || !data.quote){
+              data.quote = (chosenTarget.quote / 100).toFixed(2).replace('.', ',');
+            }
+          } else if(data.subject){
+            // Versuche bestehendes Subject zurück zu mappen
+            chosenTarget = targets.find(t =>
+              data.subject.includes(t.name) || data.subject.includes(t.flag)
+            );
+          }
+        }
+
+        // ── 3 Vergleiche aus bizarre_comparisons.json ──
+        // Tier-Strategie wie pick_for_quote (Python):
+        //   1× Tier 1 (Mainstream) → für Eröffnung
+        //   1× Tier 2 oder 3 (Alltagsbezug) → Punchline
+        //   1× Tier 4 (vergleichbar selten) → Closer
+        // Filter: nur Items mit chance_pct >= target_chance_pct (sonst wären sie
+        // UNwahrscheinlicher als das Target — Vergleich würde unsinnig).
+        const targetPct = chosenTarget ? chosenTarget.chance_pct * 100 : 5;
+        const tiers = BIZARRE_COMPARES?.tiers || {};
+        const filterByMinChance = (arr) => (arr||[]).filter(c => c.chance_pct >= targetPct);
+        const t1 = filterByMinChance(tiers['1_mainstream']);
+        const t2 = filterByMinChance(tiers['2_selten']);
+        const t3 = filterByMinChance(tiers['3_sehr_selten']);
+        const t4 = filterByMinChance(tiers['4_krass_selten']);
+
+        const fmt = (c) => c ? `${c.emoji} ${c.text} (${c.chance_label})` : '';
+
+        if(force || !data.cmp1) data.cmp1 = fmt(fromPool('bz.t1', t1)) || fmt(fromPool('bz.t1f', tiers['1_mainstream']||[]));
+        if(force || !data.cmp2) data.cmp2 = fmt(fromPool('bz.t23', [...t2, ...t3])) || fmt(fromPool('bz.t23f', tiers['2_selten']||[]));
+        if(force || !data.cmp3) data.cmp3 = fmt(fromPool('bz.t4', t4)) || fmt(fromPool('bz.t4f', tiers['3_sehr_selten']||[]));
         return data;
       },
       buildRenderData: (data) => ({
@@ -802,6 +884,26 @@
     return `<input type="text" class="tts-input" data-key="${field.key}" value="${esc(val)}"${maxLen}>`;
   }
 
+  // Context-Hint pro Card-Typ — z.B. für Player-Spotlight Warnung wenn
+  // manuell eingegebener Name nicht zum Squad-Top-Scorer passt.
+  function buildContextHint(){
+    if(_currentType !== 'player') return '';
+    const teamId = _currentData.team;
+    if(!teamId) return '';
+    const sq = (WM_DATA?.squads || {})[teamId] || {};
+    const userName = (_currentData.player || '').trim();
+    if(!userName || !sq.name) return '';
+    const last = sq.name.toLowerCase().split(/\s+/).pop();
+    const matches = userName.toLowerCase().includes(last)
+                 || sq.name.toLowerCase().includes(userName.toLowerCase());
+    if(matches) return '';
+    return `<div class="tts-warn">
+      ⚠️ Daten im Modell gibt's nur für <strong>${esc(sq.name)}</strong> (Top-Scorer).
+      Auto-Fill befüllt deshalb keine Stats für "${esc(userName)}".
+      Trage Stat-Felder unten manuell ein, oder ändere den Namen auf <em>${esc(sq.name)}</em>.
+    </div>`;
+  }
+
   function buildForm(){
     const logic = CARD_LOGIC[_currentType];
     const meta  = TEMPLATE_FILES[_currentType];
@@ -843,6 +945,7 @@
 
     return `
       <div class="tts-desc">${esc(meta.desc)}</div>
+      ${buildContextHint()}
       ${allFields}
       <div class="tts-actions">
         <button class="tts-btn tts-btn-fill" id="ttsAutoFill" title="Füllt nur leere Felder">✨ Leere Felder füllen</button>

@@ -321,5 +321,90 @@ class TestStudioLigaSwitchWorks(unittest.TestCase):
             'WM- und Liga-Hooks überlappen zu stark — Profile haben zu wenig Unterschied')
 
 
+class TestBizarreDataMirror(unittest.TestCase):
+    """bizarre_comparisons.json muss exakt zu bizarre_comparisons.py spiegeln (Anti-Drift)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.json_data = json.loads((BASE / 'bizarre_comparisons.json').read_text(encoding='utf-8'))
+        import bizarre_comparisons
+        cls.py_mod = bizarre_comparisons
+
+    def test_file_exists(self):
+        self.assertTrue((BASE / 'bizarre_comparisons.json').exists())
+
+    def test_all_5_tiers_present(self):
+        tiers = self.json_data.get('tiers', {})
+        for k in ('1_mainstream', '2_selten', '3_sehr_selten', '4_krass_selten', '5_lotto'):
+            self.assertIn(k, tiers, f'Tier {k} fehlt in JSON')
+
+    def test_total_count_matches_python(self):
+        total_json = sum(len(v) for v in self.json_data['tiers'].values())
+        total_py   = self.py_mod.total_count()
+        self.assertEqual(total_json, total_py,
+            f'JSON hat {total_json} Vergleiche, Python hat {total_py} — Drift!')
+
+    def test_tier1_entries_match_python(self):
+        """Tier 1: jeder JSON-Eintrag muss exakt zu Python-Tuple passen."""
+        for json_entry, py_tuple in zip(self.json_data['tiers']['1_mainstream'],
+                                        self.py_mod.TIER_1_MAINSTREAM):
+            with self.subTest(text=json_entry.get('text','?')[:30]):
+                self.assertEqual(json_entry['emoji'],        py_tuple[0])
+                self.assertEqual(json_entry['text'],         py_tuple[1])
+                self.assertEqual(json_entry['chance_label'], py_tuple[2])
+                self.assertEqual(json_entry['chance_pct'],   py_tuple[3])
+
+
+class TestBizarreTargetsExist(unittest.TestCase):
+    """bizarre_quote_targets.json muss 29 Outrights haben."""
+
+    def test_targets_file(self):
+        f = BASE / 'bizarre_quote_targets.json'
+        self.assertTrue(f.exists())
+        data = json.loads(f.read_text(encoding='utf-8'))
+        targets = data.get('targets', [])
+        self.assertGreaterEqual(len(targets), 25,
+            'bizarre_quote_targets.json sollte mind. 25 Outrights haben')
+
+    def test_targets_have_required_fields(self):
+        data = json.loads((BASE / 'bizarre_quote_targets.json').read_text(encoding='utf-8'))
+        for t in data.get('targets', [])[:5]:
+            for f in ('id', 'name', 'flag', 'quote', 'chance_pct'):
+                with self.subTest(field=f, target=t.get('name')):
+                    self.assertIn(f, t, f'Target {t.get("name")} fehlt {f}')
+
+
+class TestStudioLoadsExternalData(unittest.TestCase):
+    """tiktok-studio.js muss bizarre-Daten extern laden + Player-Name-Match-Logik."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.src = (BASE / 'tiktok-studio.js').read_text(encoding='utf-8')
+
+    def test_loads_bizarre_targets(self):
+        self.assertIn("'bizarre_quote_targets.json'", self.src,
+            'Studio muss bizarre_quote_targets.json laden')
+
+    def test_loads_bizarre_comparisons(self):
+        self.assertIn("'bizarre_comparisons.json'", self.src)
+
+    def test_bizarre_uses_targets_for_subject(self):
+        """Bizarre Auto-Fill nutzt Targets statt random subject."""
+        self.assertIn('BIZARRE_TARGETS', self.src)
+        self.assertIn('chance_pct', self.src,
+            'Auto-Fill muss chance_pct des Targets nutzen für Tier-Filter')
+
+    def test_player_name_match_guard(self):
+        """Player-Auto-Fill prüft ob User-Name zu Squad-Top-Scorer passt."""
+        self.assertIn('namesMatch', self.src,
+            'Player-Auto-Fill muss Name-Match-Logik haben')
+        self.assertIn('Daten im Modell', self.src,
+            'UI-Hinweis "Daten im Modell" fehlt')
+
+    def test_player_context_hint_function(self):
+        self.assertIn('buildContextHint', self.src,
+            'Context-Hint-Funktion für Player-Spotlight fehlt')
+
+
 if __name__ == '__main__':
     unittest.main()
