@@ -25,7 +25,9 @@ POOLS_PATH     = BASE / 'studio_pools.json'
 TEMPLATES_DIR  = BASE / 'studio_templates'
 JS_PATH        = BASE / 'tiktok-studio.js'
 
-CARD_TYPES = ['team_hook', 'player', 'bizarre', 'match_pick', 'killer_stat', 'quiz']
+# Bizarre raus 07.06.2026 — Daten-Validity-Audit ergab dass
+# bizarre_quote_targets.json manuell + nicht live ist. Daily-Cron darf weiter.
+CARD_TYPES = ['team_hook', 'player', 'match_pick', 'killer_stat', 'quiz']
 
 
 class TestStudioConfigSchema(unittest.TestCase):
@@ -146,7 +148,7 @@ class TestStudioPoolsSchema(unittest.TestCase):
 
 # Card-Typen mit Hook+Detail-Variants (Pair) vs Standalone
 CARDS_WITH_DETAIL = ['team_hook', 'player', 'match_pick']
-CARDS_STANDALONE  = ['bizarre', 'killer_stat', 'quiz']
+CARDS_STANDALONE  = ['killer_stat', 'quiz']  # bizarre raus 07.06.2026 (manuelle/stale Daten)
 
 
 class TestStudioTemplates(unittest.TestCase):
@@ -381,18 +383,16 @@ class TestStudioLoadsExternalData(unittest.TestCase):
     def setUpClass(cls):
         cls.src = (BASE / 'tiktok-studio.js').read_text(encoding='utf-8')
 
-    def test_loads_bizarre_targets(self):
-        self.assertIn("'bizarre_quote_targets.json'", self.src,
-            'Studio muss bizarre_quote_targets.json laden')
-
-    def test_loads_bizarre_comparisons(self):
-        self.assertIn("'bizarre_comparisons.json'", self.src)
-
-    def test_bizarre_uses_targets_for_subject(self):
-        """Bizarre Auto-Fill nutzt Targets statt random subject."""
-        self.assertIn('BIZARRE_TARGETS', self.src)
-        self.assertIn('chance_pct', self.src,
-            'Auto-Fill muss chance_pct des Targets nutzen für Tier-Filter')
+    def test_bizarre_card_removed_from_studio(self):
+        """Bizarre-Card wurde 07.06.2026 entfernt — manuelle Quotes nicht valide.
+        Daily-Cron-Pipeline bleibt unangetastet (bizarre_quote_picker.py)."""
+        # Bizarre darf nicht mehr in TEMPLATE_FILES auftauchen
+        # (es darf nur noch als _bizarre_removed_ Kommentar/Marker drin sein)
+        self.assertNotIn("\n    bizarre:", self.src,
+            'Bizarre-Card aus TEMPLATE_FILES entfernen (siehe 07.06. Entscheidung)')
+        # Marker MUSS drinstehen als Dokumentation
+        self.assertIn('_bizarre_removed_07_06_2026', self.src,
+            'Removal-Marker mit Datum muss drin sein für Audit-Trail')
 
     def test_player_name_match_guard(self):
         """Player-Auto-Fill prüft ob User-Name zu Squad-Top-Scorer passt."""

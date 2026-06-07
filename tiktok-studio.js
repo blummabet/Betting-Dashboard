@@ -55,9 +55,11 @@
       hook:   'match_pick.html',
       detail: 'match_pick.detail.html'
     }},
-    bizarre:      {label: '🤯 Bizarre Compare',      desc: '3 schiefe Vergleiche zu einer Quote (standalone)', variants: {
-      standalone: 'bizarre.html'
-    }},
+    // BIZARRE entfernt 07.06.2026: bizarre_quote_targets.json war manuell
+    // ergänzt am 02.06. (Polymarket-Outrights ändern sich täglich → stale).
+    // Studio hatte keine valide Live-Quelle für Subject + Quote — wir hätten
+    // falsche Zahlen rausgehen lassen. Template + Cron-Pipeline bleiben intakt
+    // (bizarre_quote_picker.py reviewed Lucas manuell).
     killer_stat:  {label: '💥 Killer Stat',          desc: 'Team + EINE große Zahl (standalone)', variants: {
       standalone: 'killer_stat.html'
     }},
@@ -583,7 +585,10 @@
       }
     },
 
-    bizarre: {
+    // BIZARRE-Card entfernt 07.06.2026 — keine valide Live-Datenquelle.
+    // Auto-Fill war auf bizarre_quote_targets.json (manuell, 02.06.) angewiesen.
+    // Daily-Cron-Pipeline (bizarre_quote_picker.py) bleibt unangetastet.
+    _bizarre_removed_07_06_2026: {
       fields: [
         {key:'subject', type:'text', label:'Wer/Was', required:true},
         {key:'quote',   type:'text', label:'Quote'},
