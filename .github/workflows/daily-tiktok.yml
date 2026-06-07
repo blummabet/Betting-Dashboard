@@ -1,11 +1,17 @@
 name: 🎬 Daily TikTok-Cards
 
 on:
-  # 04:00 UTC = 06:00 Wien (Sommerzeit). GitHub Actions hat oft 30-60 Min Cron-Latenz +
-  # Playwright/Chromium-Install ~3-5 Min, daher ankommen typisch zwischen 06:30 und
-  # 07:30 Wien. Wenn du sie früher willst, hier weiter vorziehen (z.B. 03:00 UTC).
+  # PRIMÄR 04:00 UTC = 06:00 Wien (Sommerzeit). GitHub Actions hat oft 30-60 Min
+  # Cron-Latenz + Playwright/Chromium-Install ~3-5 Min, daher ankommen typisch
+  # zwischen 06:30 und 07:30 Wien. Wenn du sie früher willst, hier vorziehen.
+  #
+  # BACKUP 05:30 UTC = 07:30 Wien (eingeführt 07.06.2026).
+  # GitHub-Actions Cron-Skips sind real — primärer Run wurde am 07.06. übersprungen.
+  # Backup-Run prüft via Anti-Double-Send-Guard in generate_daily_tiktok.py
+  # (tiktok_sent.json + PNG-Existenz). Wenn primärer erfolgreich war: silent skip.
   schedule:
     - cron: '0 4 * * *'
+    - cron: '30 5 * * *'
 
   # Manuell auslösbar — optional anderes Datum reinpushen
   workflow_dispatch:

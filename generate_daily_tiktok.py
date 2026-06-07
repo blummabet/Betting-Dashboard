@@ -537,6 +537,22 @@ def main():
     today_iso = override or date.today().isoformat()
     print(f"=== generate_daily_tiktok.py · {today_iso} ===\n")
 
+    # ─── Anti-Double-Send Guard (Backup-Cron-Schutz) ──────────────────────────
+    # Wenn der primäre Cron (04:00 UTC) heute schon Cards generiert + gesendet
+    # hat, würde der Backup-Cron (05:30 UTC) sonst Bizarre/Story doppelt senden
+    # (Story-Plan ist pro-Datum fix, Bizarre-Picker hat keine Tages-Dedup).
+    # Marker: heute_iso in tiktok_sent.json.history?
+    # Plus: Force-Override via SKIP_GUARD=true (für Smoketests).
+    skip_guard = os.environ.get("SKIP_GUARD", "").lower() == "true"
+    if not skip_guard and not override:
+        _early_dedup = load_dedup()
+        _today_done = any(h.get("date") == today_iso for h in _early_dedup.get("history", []))
+        _existing_pngs = list(OUTPUT_DIR.glob(f"{today_iso}_*.png"))
+        if _today_done and _existing_pngs:
+            print(f"⏭️  Cards für {today_iso} bereits generiert ({len(_existing_pngs)} PNGs) "
+                  f"und gesendet → Backup-Cron skipt. SKIP_GUARD=true zum Forcieren.")
+            return
+
     # 1. Story-Serie laden
     story = get_story_for_date(today_iso)
     if story:
