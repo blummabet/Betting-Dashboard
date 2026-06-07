@@ -1,36 +1,217 @@
 <style>
-.pd-bg { background: linear-gradient(180deg, #1a0e2e 0%, #0a0e27 100%); padding: 100px 80px 200px; }
-.pd-head { display: flex; align-items: center; gap: 28px; margin-bottom: 50px; }
-.pd-flag { font-size: 100px; line-height: 1; }
-.pd-meta { flex: 1; }
-.pd-team { font-size: 28px; font-weight: 700; opacity: 0.75; letter-spacing: 3px; }
-.pd-pos { font-size: 22px; opacity: 0.55; margin-top: 6px; letter-spacing: 2px; }
-.pd-name { font-size: 84px; font-weight: 900; line-height: 1; letter-spacing: -2px; margin-bottom: 60px; background: linear-gradient(135deg, var(--accent, #fbbf24), #f59e0b); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-.pd-label { font-size: 26px; font-weight: 700; color: var(--accent, #fbbf24); letter-spacing: 3px; margin-bottom: 22px; }
-.pd-row { display: flex; gap: 16px; margin-bottom: 16px; }
-.pd-row.full { display: block; }
-.pd-stat { flex: 1; background: rgba(255,255,255,0.05); border-radius: 20px; padding: 28px 24px; text-align: center; }
-.pd-stat-val { font-size: 56px; font-weight: 900; color: var(--accent, #fbbf24); line-height: 1; }
-.pd-stat-lbl { font-size: 18px; opacity: 0.75; margin-top: 8px; letter-spacing: 1.5px; font-weight: 600; }
-.pd-quote { margin-top: 40px; background: rgba(251,191,36,0.08); border-left: 5px solid var(--accent, #fbbf24); padding: 28px 32px; border-radius: 18px; font-size: 34px; font-weight: 600; line-height: 1.35; }
-.pd-bottom { margin-top: 40px; font-size: 30px; font-weight: 700; line-height: 1.3; color: var(--accent, #fbbf24); text-align: center; }
+/*
+ * player.detail.html — Player-Spotlight Detail-Variante
+ * Style: Hidden-Gem-Aesthetik (parallel zu team_hook.detail).
+ * Komposition: Frame-Badges oben, Flagge zentriert, Player als Hero (gold),
+ * 3-Stats Grid (cyan-Cards), Quote-Story-Box, Bottom-Line Punchline.
+ */
+.pdh-bg {
+  background: radial-gradient(ellipse at top, #14204a 0%, #0a0e27 70%);
+  padding: 70px 70px 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+.pdh-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(125,211,252,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.pdh-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 50px;
+  position: relative;
+  z-index: 2;
+}
+.pdh-story-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 18px;
+  padding: 16px 28px;
+  text-align: left;
+  background: rgba(10,14,39,0.4);
+}
+.pdh-story-badge .lbl {
+  font-size: 22px;
+  letter-spacing: 4px;
+  opacity: 0.7;
+  font-weight: 600;
+}
+.pdh-story-badge .brand {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent, #fbbf24);
+  letter-spacing: 3px;
+  margin-top: 4px;
+}
+.pdh-tier-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 60px;
+  padding: 14px 32px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #7dd3fc;
+  letter-spacing: 3px;
+  background: rgba(10,14,39,0.4);
+}
+.pdh-flag {
+  font-size: 140px;
+  line-height: 1;
+  margin-bottom: 18px;
+  filter: drop-shadow(0 10px 28px rgba(0,0,0,0.45));
+  position: relative;
+  z-index: 2;
+}
+.pdh-team {
+  font-size: 28px;
+  font-weight: 700;
+  opacity: 0.65;
+  letter-spacing: 4px;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 2;
+}
+.pdh-name {
+  font-size: 100px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -2px;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--accent, #fbbf24), #f59e0b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  z-index: 2;
+}
+.pdh-pos {
+  font-size: 24px;
+  font-weight: 600;
+  opacity: 0.6;
+  letter-spacing: 3px;
+  margin-bottom: 36px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 2;
+}
+.pdh-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(125,211,252,0.3), transparent);
+  margin-bottom: 36px;
+  position: relative;
+  z-index: 2;
+}
+.pdh-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 18px;
+  width: 100%;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
+}
+.pdh-stat {
+  background: rgba(125,211,252,0.05);
+  border: 1px solid rgba(125,211,252,0.18);
+  border-radius: 22px;
+  padding: 32px 18px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 200px;
+}
+.pdh-stat-val {
+  font-size: 64px;
+  font-weight: 900;
+  color: #7dd3fc;
+  line-height: 1;
+  margin-bottom: 14px;
+  letter-spacing: -1px;
+}
+.pdh-stat-lbl {
+  font-size: 19px;
+  font-weight: 600;
+  opacity: 0.65;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  line-height: 1.25;
+}
+.pdh-quote {
+  background: rgba(125,211,252,0.04);
+  border: 1.5px solid rgba(125,211,252,0.28);
+  border-radius: 20px;
+  padding: 32px 36px;
+  font-size: 36px;
+  font-weight: 500;
+  line-height: 1.4;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 36px;
+  position: relative;
+  z-index: 2;
+}
+.pdh-bottom {
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #7dd3fc;
+  text-align: center;
+  padding: 0 10px;
+  position: relative;
+  z-index: 2;
+}
+.pdh-footnote {
+  position: absolute;
+  bottom: 90px;
+  left: 70px;
+  right: 70px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  opacity: 0.45;
+  letter-spacing: 1px;
+  z-index: 2;
+}
 </style>
-<div class="stc pd-bg">
-  <div class="pd-head">
-    <div class="pd-flag">{{flag}}</div>
-    <div class="pd-meta">
-      <div class="pd-team">{{team_upper}}</div>
-      <div class="pd-pos">{{position_upper}}</div>
+<div class="stc pdh-bg">
+  <div class="pdh-top">
+    <div class="pdh-story-badge">
+      <div class="lbl">STORY</div>
+      <div class="brand">COCOBET</div>
     </div>
+    <div class="pdh-tier-badge">⭐ PLAYER SPOTLIGHT</div>
   </div>
-  <div class="pd-name">{{player}}</div>
-  <div class="pd-label">{{detail_label}}</div>
-  <div class="pd-row">
-    {{#if stat1_val}}<div class="pd-stat"><div class="pd-stat-val">{{stat1_val}}</div><div class="pd-stat-lbl">{{stat1_lbl}}</div></div>{{/if}}
-    {{#if stat2_val}}<div class="pd-stat"><div class="pd-stat-val">{{stat2_val}}</div><div class="pd-stat-lbl">{{stat2_lbl}}</div></div>{{/if}}
+
+  <div class="pdh-flag">{{flag}}</div>
+  <div class="pdh-team">{{team_upper}}</div>
+  <div class="pdh-name">{{player}}</div>
+  <div class="pdh-pos">{{position_upper}}</div>
+
+  <div class="pdh-divider"></div>
+
+  <div class="pdh-stats-grid">
+    {{#if stat1_val}}<div class="pdh-stat"><div class="pdh-stat-val">{{stat1_val}}</div><div class="pdh-stat-lbl">{{stat1_lbl}}</div></div>{{/if}}
+    {{#if stat2_val}}<div class="pdh-stat"><div class="pdh-stat-val">{{stat2_val}}</div><div class="pdh-stat-lbl">{{stat2_lbl}}</div></div>{{/if}}
+    {{#if stat3_val}}<div class="pdh-stat"><div class="pdh-stat-val">{{stat3_val}}</div><div class="pdh-stat-lbl">{{stat3_lbl}}</div></div>{{/if}}
   </div>
-  {{#if stat3_val}}<div class="pd-row full"><div class="pd-stat"><div class="pd-stat-val">{{stat3_val}}</div><div class="pd-stat-lbl">{{stat3_lbl}}</div></div></div>{{/if}}
-  {{#if quote_line}}<div class="pd-quote">{{quote_line}}</div>{{/if}}
-  {{#if bottom_line}}<div class="pd-bottom">{{bottom_line}}</div>{{/if}}
+
+  {{#if quote_line}}<div class="pdh-quote">{{quote_line}}</div>{{/if}}
+  {{#if bottom_line}}<div class="pdh-bottom">{{bottom_line}}</div>{{/if}}
+
+  <div class="pdh-footnote">
+    <span>{{detail_label}}</span>
+    <span>cocobet</span>
+  </div>
   <div class="stc-brand">{{brand}}<small>{{brand_sub}}</small></div>
 </div>

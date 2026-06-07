@@ -1,26 +1,163 @@
 <style>
-.p-bg { background: linear-gradient(180deg, #1a0e2e 0%, #0a0e27 100%); padding: 120px 80px; }
-.p-flag { font-size: 160px; line-height: 1; margin-bottom: 24px; }
-.p-team { font-size: 38px; font-weight: 700; opacity: 0.7; margin-bottom: 60px; letter-spacing: 3px; }
-.p-name { font-size: 120px; font-weight: 900; line-height: 1; letter-spacing: -3px; margin-bottom: 24px; background: linear-gradient(135deg, var(--accent, #fbbf24), #f59e0b); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-.p-pos { font-size: 36px; font-weight: 600; opacity: 0.8; margin-bottom: 80px; letter-spacing: 4px; }
-.p-stat-box { background: rgba(251,191,36,0.1); border: 2px solid rgba(251,191,36,0.3); border-radius: 32px; padding: 48px; margin-bottom: 32px; }
-.p-stat-label { font-size: 26px; font-weight: 700; color: var(--accent, #fbbf24); margin-bottom: 16px; letter-spacing: 2px; }
-.p-stat-line { font-size: 56px; font-weight: 800; line-height: 1.2; }
-.p-stat-sub { background: rgba(255,255,255,0.06); border-radius: 24px; padding: 36px 40px; }
-.p-stat-sub-line { font-size: 40px; font-weight: 600; line-height: 1.3; }
+/*
+ * player.html — Player-Spotlight Hook-Variante
+ * Style: Hidden-Gem-Aesthetik (parallel zu team_hook).
+ * Komposition: Frame-Badges oben, Flagge zentriert, Player-Name als Hero
+ * (gold Gradient), Position als Subtitle, gold Killer-Stat-Box, Sub-Stat.
+ */
+.ph-bg {
+  background: radial-gradient(ellipse at top, #14204a 0%, #0a0e27 70%);
+  padding: 80px 70px 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+.ph-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(125,211,252,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.ph-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 2;
+}
+.ph-story-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 18px;
+  padding: 18px 28px;
+  text-align: left;
+  background: rgba(10,14,39,0.4);
+}
+.ph-story-badge .lbl {
+  font-size: 22px;
+  letter-spacing: 4px;
+  opacity: 0.7;
+  font-weight: 600;
+}
+.ph-story-badge .brand {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--accent, #fbbf24);
+  letter-spacing: 3px;
+  margin-top: 4px;
+}
+.ph-tier-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 60px;
+  padding: 16px 36px;
+  font-size: 26px;
+  font-weight: 800;
+  color: #7dd3fc;
+  letter-spacing: 3px;
+  background: rgba(10,14,39,0.4);
+}
+.ph-flag {
+  font-size: 170px;
+  line-height: 1;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 10px 28px rgba(0,0,0,0.45));
+  position: relative;
+  z-index: 2;
+}
+.ph-team {
+  font-size: 32px;
+  font-weight: 700;
+  opacity: 0.6;
+  letter-spacing: 4px;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 2;
+}
+.ph-name {
+  font-size: 120px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -3px;
+  margin-bottom: 18px;
+  background: linear-gradient(135deg, var(--accent, #fbbf24), #f59e0b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  z-index: 2;
+}
+.ph-pos {
+  font-size: 30px;
+  font-weight: 600;
+  opacity: 0.7;
+  margin-bottom: 70px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 2;
+}
+.ph-stat-box {
+  background: rgba(251,191,36,0.12);
+  border: 2px solid rgba(251,191,36,0.4);
+  border-radius: 28px;
+  padding: 40px 42px;
+  margin-bottom: 26px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+.ph-stat-label {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent, #fbbf24);
+  margin-bottom: 14px;
+  letter-spacing: 3px;
+}
+.ph-stat-line {
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.ph-stat-sub {
+  background: rgba(125,211,252,0.05);
+  border: 1px solid rgba(125,211,252,0.2);
+  border-radius: 24px;
+  padding: 32px 36px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+.ph-stat-sub-line {
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.3;
+}
 </style>
-<div class="stc p-bg">
-  <div class="p-flag">{{flag}}</div>
-  <div class="p-team">{{team_upper}}</div>
-  <div class="p-name">{{player}}</div>
-  <div class="p-pos">{{position_upper}}</div>
-  <div class="p-stat-box">
-    <div class="p-stat-label">⚡ KILLER-STAT</div>
-    <div class="p-stat-line">{{topline}}</div>
+<div class="stc ph-bg">
+  <div class="ph-top">
+    <div class="ph-story-badge">
+      <div class="lbl">STORY</div>
+      <div class="brand">COCOBET</div>
+    </div>
+    <div class="ph-tier-badge">⭐ PLAYER SPOTLIGHT</div>
   </div>
-  <div class="p-stat-sub">
-    <div class="p-stat-sub-line">{{subline}}</div>
+  <div class="ph-flag">{{flag}}</div>
+  <div class="ph-team">{{team_upper}}</div>
+  <div class="ph-name">{{player}}</div>
+  <div class="ph-pos">{{position_upper}}</div>
+  <div class="ph-stat-box">
+    <div class="ph-stat-label">⚡ KILLER-STAT</div>
+    <div class="ph-stat-line">{{topline}}</div>
+  </div>
+  <div class="ph-stat-sub">
+    <div class="ph-stat-sub-line">{{subline}}</div>
   </div>
   <div class="stc-brand">{{brand}}<small>{{brand_sub}}</small></div>
 </div>

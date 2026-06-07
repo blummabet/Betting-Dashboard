@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Studio-Cards — Vorschau (Hidden-Gem-Style)</title>
+<style>
+  :root {
+    --accent: #fbbf24;
+    --card-w: 1080px;
+    --card-h: 1920px;
+    --bg-page: #111;
+  }
+  body { margin:0; background: var(--bg-page); color:#fff; font-family: -apple-system, BlinkMacSystemFont, "Inter", sans-serif; padding:40px 20px 80px; }
+  h1 { text-align:center; font-weight:300; margin:0 0 8px; }
+  .sub { text-align:center; opacity:0.6; margin-bottom:40px; font-size:14px; }
+  .grid { display:flex; flex-wrap:wrap; gap:50px; justify-content:center; }
+  .col { display:flex; flex-direction:column; align-items:center; }
+  .col h2 { font-size:14px; opacity:0.7; letter-spacing:3px; margin:0 0 12px; }
+  .frame {
+    width:360px;
+    height:640px;
+    overflow:hidden;
+    border-radius:24px;
+    box-shadow: 0 12px 60px rgba(0,0,0,0.6);
+    position:relative;
+    background:#000;
+  }
+  .frame > .stc {
+    transform: scale(0.333);
+    transform-origin: top left;
+  }
+</style>
+</head>
+<body>
+
+<h1>Studio-Cards · Hidden-Gem-Style</h1>
+<div class="sub">Österreich-Vorlage angewendet auf team_hook + player Templates</div>
+
+<div class="grid">
+
+  <!-- ─── TEAM HOOK ──────────────────────────────────────────── -->
+  <div class="col">
+    <h2>TEAM HOOK</h2>
+    <div class="frame" id="tf-th-hook"></div>
+  </div>
+  <div class="col">
+    <h2>TEAM DETAIL</h2>
+    <div class="frame" id="tf-th-detail"></div>
+  </div>
+
+  <!-- ─── PLAYER ─────────────────────────────────────────────── -->
+  <div class="col">
+    <h2>PLAYER HOOK</h2>
+    <div class="frame" id="tf-p-hook"></div>
+  </div>
+  <div class="col">
+    <h2>PLAYER DETAIL</h2>
+    <div class="frame" id="tf-p-detail"></div>
+  </div>
+
+</div>
+
+<script>
+const COMMON_CSS = `
+.stc { width: 1080px; height: 1920px; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; color: #fff; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.stc-brand { position: absolute; bottom: 48px; left: 0; right: 0; text-align: center; font-size: 32px; font-weight: 800; opacity: 0.9; letter-spacing: 2px; }
+.stc-brand small { font-size: 18px; opacity: 0.7; display: block; margin-top: 4px; font-weight: 500; letter-spacing: 1px; }
+`;
+
+// Helper: rendert ein Template mit den gegebenen vars in einen Frame
+async function renderCard(frameId, tplPath, vars) {
+  const resp = await fetch('../studio_templates/' + tplPath);
+  let html = await resp.text();
+  // Sehr einfacher {{key}}-Resolver mit {{#if x}}…{{/if}} Support
+  html = html.replace(/\{\{#if (\w+)\}\}([\s\S]*?)\{\{\/if\}\}/g, (_, k, body) => vars[k] ? body : '');
+  html = html.replace(/\{\{(\w+)\}\}/g, (_, k) => vars[k] != null ? vars[k] : '');
+  document.getElementById(frameId).innerHTML = '<style>' + COMMON_CSS + '</style>' + html;
+}
+
+// Team Hook — Türkei "Geheimfavorit"-Beispiel
+renderCard('tf-th-hook', 'team_hook.html', {
+  flag: '🇹🇷',
+  hook: 'Türkei spielt wie ein Top-10-Team',
+  stat: 'Quali-Bilanz 7-1-0 · 22:4 Tore · stärkste Defensive aller Quali-Gruppen',
+  tag: 'WM 2026 LIVE AB 11. JUNI',
+  brand: 'COCOBET',
+  brand_sub: 'cocobet.app · WM 2026'
+});
+
+// Team Detail — Türkei mit 3 Stats
+renderCard('tf-th-detail', 'team_hook.detail.html', {
+  flag: '🇹🇷',
+  team_name: 'Türkei',
+  team_sub: 'Gruppe E · Elo 1786 · vs. Deutschland, Iran, Honduras',
+  hook: 'Montella formt einen Außenseiter zum Geheimfavoriten: kompakte Defensive, Güler als Spielmacher, Yıldız als Brecher — Türkei hat in der Quali nur ein Spiel abgegeben.',
+  detail_label: 'Daten: WM-Quali Gruppe D 2024/25',
+  stat1: 'Quali-Bilanz 7-1-0 · 22:4 Tore',
+  stat2: 'Nur 0,5 Gegentore pro Spiel',
+  stat3: 'Stärkste U23 in Europa (Elo +94 seit 2024)',
+  punchline: 'Außenseiter? Mit dieser Generation nicht. 🇹🇷',
+  brand: 'COCOBET',
+  brand_sub: 'cocobet.app · WM 2026'
+});
+
+// Player Hook — USA Pulisic
+renderCard('tf-p-hook', 'player.html', {
+  flag: '🇺🇸',
+  team_upper: 'USA',
+  player: 'C. PULISIC',
+  position_upper: 'OFFENSIVES MITTELFELD',
+  topline: 'Trifft alle 137 Minuten',
+  subline: 'Captain · Top-Scorer der Quali',
+  brand: 'COCOBET',
+  brand_sub: 'cocobet.app · WM 2026'
+});
+
+// Player Detail — USA Pulisic mit 3 Stats
+renderCard('tf-p-detail', 'player.detail.html', {
+  flag: '🇺🇸',
+  team_upper: 'USA',
+  player: 'C. PULISIC',
+  position_upper: 'OFFENSIVES MITTELFELD',
+  detail_label: 'Daten: Quali + Vereinsstats 2024/25',
+  stat1_val: '1.9×', stat1_lbl: 'Schüsse pro Spiel',
+  stat2_val: '67%',  stat2_lbl: 'Über 2.5 Tore',
+  stat3_val: '60%',  stat3_lbl: 'Beide Teams treffen',
+  quote_line: 'Pulisic zentriert die US-Offensive — kein Spiel ohne Schussbeteiligung in den letzten 15 Quali-Partien.',
+  bottom_line: 'Wer das ignoriert, gibt Geld weg',
+  brand: 'COCOBET',
+  brand_sub: 'cocobet.app · WM 2026'
+});
+</script>
+
+</body>
+</html>

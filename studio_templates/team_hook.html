@@ -1,14 +1,129 @@
 <style>
-.h-bg { background: linear-gradient(135deg, #0a0e27 0%, #1a1f4e 50%, #3a1b6e 100%); padding: 140px 80px 200px; }
-.h-flag { font-size: 280px; line-height: 1; margin-bottom: 40px; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.4)); }
-.h-hook { font-size: 88px; font-weight: 900; line-height: 1.05; letter-spacing: -2px; text-shadow: 0 4px 24px rgba(0,0,0,0.5); margin-bottom: 60px; }
-.h-stat { font-size: 46px; font-weight: 600; line-height: 1.35; opacity: 0.95; background: rgba(255,255,255,0.08); padding: 36px 40px; border-radius: 24px; border-left: 8px solid var(--accent, #fbbf24); }
-.h-tag { position: absolute; bottom: 160px; left: 0; right: 0; text-align: center; font-size: 32px; font-weight: 700; color: var(--accent, #fbbf24); letter-spacing: 3px; }
+/*
+ * team_hook.html — Hook-Variante (Eye-Catcher Card)
+ * Style: Hidden-Gem-Aesthetik (Österreich-Vorlage 07.06.2026).
+ * Dunkelblau-Gradient mit Cyan-Frame-Akzenten + Gold-Stat-Box unten.
+ * Komposition: Frame-Badges oben, Flagge zentriert, Hook-Headline mittig fett,
+ * blau-akzentuierte Tagline, gelbe Stat-Box als Hero-Anker.
+ */
+.th-bg {
+  background: radial-gradient(ellipse at top, #14204a 0%, #0a0e27 70%);
+  padding: 80px 70px 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+.th-bg::before {
+  /* Subtle grid texture für den "Hidden-Gem"-Look */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(125,211,252,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.th-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 80px;
+  position: relative;
+  z-index: 2;
+}
+.th-story-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 18px;
+  padding: 18px 28px;
+  text-align: left;
+  background: rgba(10,14,39,0.4);
+}
+.th-story-badge .lbl {
+  font-size: 22px;
+  letter-spacing: 4px;
+  opacity: 0.7;
+  font-weight: 600;
+}
+.th-story-badge .brand {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--accent, #fbbf24);
+  letter-spacing: 3px;
+  margin-top: 4px;
+}
+.th-tier-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 60px;
+  padding: 16px 36px;
+  font-size: 26px;
+  font-weight: 800;
+  color: #7dd3fc;
+  letter-spacing: 3px;
+  background: rgba(10,14,39,0.4);
+}
+.th-flag {
+  font-size: 240px;
+  line-height: 1;
+  margin-bottom: 50px;
+  filter: drop-shadow(0 12px 32px rgba(0,0,0,0.45));
+  position: relative;
+  z-index: 2;
+}
+.th-hook {
+  font-size: 86px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  margin-bottom: 60px;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  position: relative;
+  z-index: 2;
+}
+.th-stat-wrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+.th-stat {
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.35;
+  background: rgba(251,191,36,0.12);
+  border: 2px solid rgba(251,191,36,0.4);
+  border-radius: 28px;
+  padding: 38px 44px;
+  text-align: center;
+}
+.th-tag {
+  position: absolute;
+  bottom: 130px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 700;
+  color: #7dd3fc;
+  letter-spacing: 3px;
+  z-index: 2;
+}
 </style>
-<div class="stc h-bg">
-  <div class="h-flag">{{flag}}</div>
-  <div class="h-hook">{{hook}}</div>
-  <div class="h-stat">{{stat}}</div>
-  <div class="h-tag">{{tag}}</div>
+<div class="stc th-bg">
+  <div class="th-top">
+    <div class="th-story-badge">
+      <div class="lbl">STORY</div>
+      <div class="brand">COCOBET</div>
+    </div>
+    <div class="th-tier-badge">💎 HIDDEN GEM</div>
+  </div>
+  <div class="th-flag">{{flag}}</div>
+  <div class="th-hook">{{hook}}</div>
+  <div class="th-stat-wrap">
+    <div class="th-stat">⚡ {{stat}}</div>
+  </div>
+  <div class="th-tag">{{tag}}</div>
   <div class="stc-brand">{{brand}}<small>{{brand_sub}}</small></div>
 </div>
