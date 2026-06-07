@@ -2506,8 +2506,13 @@ function renderError(msg) {
 /* ── Boot ────────────────────────────────────────────────── */
 window._wmTravelBurden = null;
 
+// Cache-Buster auf alle lokalen JSON-Fetches damit GitHub Pages CDN bzw.
+// Browser-Disk-Cache nicht stale Picks/Form/Squad-Daten serviert.
+// Bug-Fix 07.06.2026: vorher kein ?t=... → Reload zeigte oft alten Stand.
+var __cb = '?t=' + Date.now();
+
 // Load travel burden data in background (non-blocking)
-fetch('../wm_travel_burden.json')
+fetch('../wm_travel_burden.json' + __cb)
   .then(r => r.ok ? r.json() : null)
   .then(tb => {
     if (tb) window._wmTravelBurden = tb;
@@ -2517,7 +2522,7 @@ fetch('../wm_travel_burden.json')
 if (!slug) {
   renderError('Kein Spiel-Slug in der URL angegeben. Bitte ?m=wm-xxx-vs-yyy-DATUM verwenden.');
 } else {
-  fetch('data/' + slug + '.json')
+  fetch('data/' + slug + '.json' + __cb)
     .then(function(r) {
       if (!r.ok) throw new Error('HTTP ' + r.status + ' – ' + r.statusText);
       return r.json();

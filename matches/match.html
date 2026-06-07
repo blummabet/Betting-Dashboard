@@ -683,7 +683,9 @@ async function init() {
 
   let D;
   try {
-    const res = await fetch(`data/${slug}.json`);
+    // Cache-Buster damit Browser-Disk-Cache / GitHub-Pages-CDN keine stale
+    // Pick-Daten serviert (Fix 07.06.2026 — analog wm-match.html).
+    const res = await fetch(`data/${slug}.json?t=${Date.now()}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     D = await res.json();
   } catch(e) {
