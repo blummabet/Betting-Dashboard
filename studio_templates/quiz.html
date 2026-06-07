@@ -1,0 +1,31 @@
+<style>
+.q-bg { background: linear-gradient(180deg, #1e1b4b 0%, #0f0a2e 100%); padding: 120px 80px; }
+.q-title { text-align: center; font-size: 46px; font-weight: 700; margin-bottom: 24px; opacity: 0.85; letter-spacing: 2px; }
+.q-match { text-align: center; display: flex; align-items: center; justify-content: center; gap: 32px; margin-bottom: 80px; font-size: 72px; font-weight: 900; }
+.q-vs { color: var(--accent, #fbbf24); font-size: 54px; }
+.q-opt { background: rgba(255,255,255,0.06); border-radius: 32px; padding: 48px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+.q-opt-label { font-size: 54px; font-weight: 800; line-height: 1.1; flex: 1; }
+.q-opt-pct { font-size: 96px; font-weight: 900; color: var(--accent, #fbbf24); letter-spacing: -2px; }
+.q-opt-pct small { font-size: 42px; opacity: 0.7; }
+.q-question { text-align: center; margin-top: 60px; font-size: 44px; font-weight: 800; color: var(--accent, #fbbf24); letter-spacing: 3px; }
+</style>
+<div class="stc q-bg">
+  <div class="q-title">⚽ {{tournament_label}} · WER GEWINNT?</div>
+  <div class="q-match">
+    <span>{{home_flag}}</span><span class="q-vs">vs</span><span>{{away_flag}}</span>
+  </div>
+  <div class="q-opt">
+    <div class="q-opt-label">{{home_upper}}</div>
+    <div class="q-opt-pct">{{home_pct}}<small>%</small></div>
+  </div>
+  <div class="q-opt">
+    <div class="q-opt-label">UNENTSCHIEDEN</div>
+    <div class="q-opt-pct">{{draw_pct}}<small>%</small></div>
+  </div>
+  <div class="q-opt">
+    <div class="q-opt-label">{{away_upper}}</div>
+    <div class="q-opt-pct">{{away_pct}}<small>%</small></div>
+  </div>
+  <div class="q-question">{{question}}</div>
+  <div class="stc-brand">{{brand}}<small>{{brand_sub}}</small></div>
+</div>

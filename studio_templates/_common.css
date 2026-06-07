@@ -1,0 +1,35 @@
+/*
+ * studio_templates/_common.css
+ * Shared CSS für alle Card-Templates. Wird vom Studio per Render einmal vor
+ * dem Template eingefügt. CSS-Variablen kommen aus studio_config.json theme.
+ */
+.stc {
+  width: var(--card-w, 1080px);
+  height: var(--card-h, 1920px);
+  box-sizing: border-box;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text, #fff);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.stc-brand {
+  position: absolute;
+  bottom: 48px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 800;
+  opacity: 0.9;
+  letter-spacing: 2px;
+}
+.stc-brand small {
+  font-size: 18px;
+  opacity: 0.7;
+  display: block;
+  margin-top: 4px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}

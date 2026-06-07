@@ -1,0 +1,149 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "description": "Text-Pools für TikTok Studio Auto-Fill. Profile-aware.",
+    "lastUpdated": "2026-06-06",
+    "notes": [
+      "Hooks/Stats/Compares haben Platzhalter wie {team_upper}, {goals}, {avg_scored}.",
+      "Engine ersetzt Platzhalter mit echten Daten.",
+      "Liga-Saison kann eigene Pools haben (länderübergreifend → ligaspezifisch).",
+      "Tests in test_tiktok_studio.py garantieren Schema + Mindest-Pool-Größen."
+    ]
+  },
+
+  "profiles": {
+    "active": "wm2026",
+
+    "shared": {
+      "description": "Cross-profile Pools — werden von beiden Profilen geerbt",
+      "stat_templates": [
+        {"id":"elo_top",        "min_elo_pct":70, "template":"Elo {elo} — Top {top_pct}% aller WM-Teilnehmer"},
+        {"id":"elo_underdog",   "max_elo_pct":30, "template":"Elo {elo} — von vielen unterschätzt, aber das Modell sieht es anders"},
+        {"id":"avg_scored",     "min_avg_scored":0.01, "template":"Trifft im Schnitt {avg_scored}× pro Spiel über die letzten {games} Partien"},
+        {"id":"defense_strong", "max_avg_conceded":1.0, "template":"Kassiert nur {avg_conceded} Gegentore pro Spiel — Defensive auf Top-Niveau"},
+        {"id":"over25_high",    "min_over25_rate":60, "template":"Über 2.5 Tore in {over25_pct}% der letzten Spiele"},
+        {"id":"over25_low",     "max_over25_rate":35, "template":"Nur {over25_pct}% Over-2.5-Rate — Spiele tendenziell knapp"},
+        {"id":"btts_high",      "min_btts_rate":60, "template":"Beide Teams treffen in {btts_pct}% — Tor-Garantie"},
+        {"id":"win_streak",     "min_win_streak":3, "template":"{win_streak} Siege in Folge in den letzten Pflichtspielen"},
+        {"id":"undefeated",     "min_undefeated":4, "template":"{undefeated} Spiele unbesiegt — Form passt"},
+        {"id":"wins10",         "min_wins10":7, "template":"{wins10} von 10 Spielen gewonnen — Lauf pur"},
+        {"id":"no_losses10",    "max_losses10":0, "template":"Keine einzige Niederlage in den letzten 10 — kommt mit Selbstvertrauen"},
+        {"id":"scorer_basic",   "needs_scorer":true, "template":"{scorer_name} ({scorer_pos}) mit {goals} Toren — die Lebensversicherung"},
+        {"id":"scorer_per_90",  "needs_scorer":true, "min_minutes":180, "template":"Top-Scorer {scorer_name}: alle {mins_per_goal} Minuten ein Tor"},
+        {"id":"scorer_combo",   "needs_scorer":true, "min_assists":4, "template":"{scorer_name} mit {goals} Toren + {assists} Assists — komplett gefährlich"}
+      ],
+      "bizarre_compares": [
+        "wahrscheinlicher als dass Belgien rauskommt",
+        "fast so sicher wie ein Bayern-Sieg gegen Köln",
+        "öfter eingetroffen als Münchner Pünktlichkeit",
+        "realistischer als ein Ronaldo-Stillstand",
+        "sicherer als dass Mbappé sich beschwert",
+        "wahrscheinlicher als ein Trainer-Tweet nach dem Spiel",
+        "eher als ein torloses Bayern-Spiel",
+        "plausibler als ein England-Triumph im Elfmeterschießen",
+        "einfacher als deutsches Public Viewing nach Niederlage",
+        "wahrscheinlicher als drei Nullen in Serie A",
+        "sicherer als VAR-Pause länger als 3 Minuten",
+        "näher dran als an einem 0:0",
+        "eher als dass Messi den nächsten Pass quersteht",
+        "wahrscheinlicher als ein Lewy-Hattrick gegen Bottom-Half",
+        "realistischer als ein Salah-Spiel ohne Schussversuch"
+      ],
+      "punchlines": [
+        "Mehr als die Bookies es vermuten",
+        "Beste Wert auf dem ganzen Brett",
+        "Sharp Money zieht hier rein",
+        "Quoten sinken stündlich",
+        "Wer das ignoriert, gibt Geld weg",
+        "Das Modell hat eine klare Meinung",
+        "Bookies sehen es noch nicht — sharps schon",
+        "Edge sichtbar für die, die hinschauen"
+      ],
+      "quiz_questions": [
+        "WAS TIPPST DU?",
+        "WER GEWINNT? KOMMENTIEREN!",
+        "TIPP IN DIE COMMENTS!",
+        "WER STEIGT AUF?",
+        "WER MACHT DEN UPSET?",
+        "ZAHLEN ODER GEFÜHL?",
+        "WIE SIEHST DU DAS?"
+      ],
+      "position_map": {
+        "ST":"STÜRMER","CF":"STÜRMER","LW":"FLÜGEL","RW":"FLÜGEL",
+        "CAM":"OFFENSIVES MITTELFELD","CM":"MITTELFELD","CDM":"DEFENSIVES MITTELFELD",
+        "CB":"INNENVERTEIDIGUNG","GK":"TORWART","LB":"LINKSVERTEIDIGER","RB":"RECHTSVERTEIDIGER",
+        "DM":"DEFENSIVES MITTELFELD","AM":"OFFENSIVES MITTELFELD"
+      },
+      "player_topline_templates": [
+        {"id":"goals_n_games",     "needs":["scorer_goals","scorer_games"], "template":"{goals} Tore in den letzten {games_played} Pflichtspielen"},
+        {"id":"per_90",            "needs":["scorer_per_90"],               "template":"{per_90} Tore pro 90 Minuten — Top-Level"},
+        {"id":"every_x_min",       "needs":["scorer_mins_per_goal"],        "template":"Trifft alle {mins_per_goal} Minuten"},
+        {"id":"goals_assists",     "needs":["scorer_assists_gt_0"],         "template":"{goals} Tore + {assists} Assists — ein One-Man-Show"}
+      ],
+      "player_subline_templates": [
+        {"id":"team_avg_high",     "needs":["team_avg_scored_gt_0"],   "template":"Team trifft {avg_scored}× pro Spiel — er ist meist beteiligt"},
+        {"id":"btts_team",         "needs":["team_btts_gt_50"],        "template":"Beide Teams treffen in {btts_pct}% — Tor-Garant"},
+        {"id":"poly_falling",      "needs":[],                         "template":"Polymarket-Quote auf ihn fallend — die Sharps wissen warum"},
+        {"id":"silent_top",        "needs":[],                         "template":"Der unauffälligste Top-Scorer im Turnier"},
+        {"id":"last5_form",        "needs":["last5_str"],              "template":"Letzte 5 Spiele: {last5_str}"}
+      ]
+    },
+
+    "wm2026": {
+      "description": "WM-spezifische Hooks + Tags",
+      "hook_templates": [
+        "{team_upper} IST KEIN ZUFALL",
+        "DAS DUNKLE PFERD: {team_upper}",
+        "WARUM {team_upper} BIS GANZ OBEN KOMMT",
+        "{team_upper} — ANDERS ALS DIE ERWARTUNG",
+        "DIE STILLE WAFFE {team_upper}",
+        "DEN HABEN ALLE UNTERSCHÄTZT: {team_upper}",
+        "{team_upper} SCHREIBT GESCHICHTE",
+        "BAU NICHT GEGEN {team_upper}",
+        "ELO LÜGT NICHT — {team_upper} IST DRAUF",
+        "{team_upper} — UND PLÖTZLICH SIND SIE FAVORIT",
+        "HIER KOMMT {team_upper}",
+        "{team_upper} HAT EINEN PLAN"
+      ],
+      "tag_pool": [
+        "🌍 WM 2026 LIVE AB 11. JUNI",
+        "🇨🇦🇲🇽🇺🇸 16 STÄDTE · 48 TEAMS",
+        "WER WIRD WELTMEISTER?",
+        "PICKS TÄGLICH AUF COCOBET",
+        "🎯 EDGE-PICKS · MIT KOPF GEWETTET",
+        "⚽ COCOBET · DEINE WM-SICHT"
+      ],
+      "confederation_lines": {
+        "CAF": ["Stärkstes afrikanisches Team im Turnier"],
+        "AFC": ["Top-Asiat im Feld — fit nach Pause vor Sommerstart"],
+        "CONMEBOL": ["Südamerikanische Klasse, jeder kennt's"],
+        "CONCACAF": ["Heimvorteil als Co-Gastgeber-Region"],
+        "UEFA": ["Europäische Spitze — bewährter Standard"]
+      }
+    },
+
+    "liga_default": {
+      "description": "Liga-Hooks für Premier/Bundesliga/etc. — neutralere Tone",
+      "hook_templates": [
+        "{team_upper} HAT EINEN LAUF",
+        "DAS MUSST DU WISSEN: {team_upper}",
+        "{team_upper} — DIESE WOCHE BRENNTS",
+        "{team_upper} — DIE ZAHLEN LÜGEN NICHT",
+        "WARUM {team_upper} JETZT HEISS IST",
+        "{team_upper} VS ERWARTUNG",
+        "DIE BOOKIES UNTERSCHÄTZEN {team_upper}",
+        "{team_upper} — DAS KOMMT JETZT",
+        "FORM TRIFFT EDGE: {team_upper}",
+        "ACHTUNG VOR {team_upper}"
+      ],
+      "tag_pool": [
+        "🎯 EDGE-PICKS · LIGA-SAISON",
+        "⚽ COCOBET · DEINE LIGA-SICHT",
+        "PICKS TÄGLICH AUF COCOBET",
+        "📊 MODELL > BAUCHGEFÜHL",
+        "🔥 LIGA · CocoBet TÄGLICH"
+      ],
+      "confederation_lines": {}
+    }
+  }
+}

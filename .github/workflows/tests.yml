@@ -118,6 +118,34 @@ jobs:
           node --check polymarket-tab.js && echo "✅ polymarket-tab.js"
           node --check renderer.js && echo "✅ renderer.js"
           node --check pick-verdict.js && echo "✅ pick-verdict.js"
+          node --check tiktok-studio.js && echo "✅ tiktok-studio.js"
+
+      - name: 🎬 TikTok Studio Smoketest
+        run: |
+          # Studio lädt ohne Crash + initTiktokStudio ist exposed
+          node -e "
+            const window = {};
+            const document = { addEventListener:() => {}, querySelector:() => null };
+            const location = { hash:'' };
+            const history = { replaceState:() => {} };
+            globalThis.window=window; globalThis.document=document;
+            globalThis.location=location; globalThis.history=history;
+            eval(require('fs').readFileSync('./tiktok-studio.js','utf8'));
+            if(typeof window.initTiktokStudio !== 'function'){
+              console.error('❌ initTiktokStudio nicht exposed'); process.exit(1);
+            }
+            console.log('✅ Studio-Modul lädt sauber');
+          "
+          # Templates + Config + Pools sind valide
+          python3 -c "
+          import json
+          from pathlib import Path
+          json.loads(Path('studio_config.json').read_text())
+          json.loads(Path('studio_pools.json').read_text())
+          for ct in ('team_hook','player','bizarre','match_pick','killer_stat','quiz'):
+              assert Path(f'studio_templates/{ct}.html').exists(), f'{ct}.html fehlt'
+          print('✅ Studio-Assets (config + pools + 6 templates) vollständig')
+          "
 
       - name: 📋 Trade-Pipeline-Konsistenz prüfen
         run: |

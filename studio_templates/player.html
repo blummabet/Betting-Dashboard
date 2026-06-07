@@ -1,0 +1,26 @@
+<style>
+.p-bg { background: linear-gradient(180deg, #1a0e2e 0%, #0a0e27 100%); padding: 120px 80px; }
+.p-flag { font-size: 160px; line-height: 1; margin-bottom: 24px; }
+.p-team { font-size: 38px; font-weight: 700; opacity: 0.7; margin-bottom: 60px; letter-spacing: 3px; }
+.p-name { font-size: 120px; font-weight: 900; line-height: 1; letter-spacing: -3px; margin-bottom: 24px; background: linear-gradient(135deg, var(--accent, #fbbf24), #f59e0b); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.p-pos { font-size: 36px; font-weight: 600; opacity: 0.8; margin-bottom: 80px; letter-spacing: 4px; }
+.p-stat-box { background: rgba(251,191,36,0.1); border: 2px solid rgba(251,191,36,0.3); border-radius: 32px; padding: 48px; margin-bottom: 32px; }
+.p-stat-label { font-size: 26px; font-weight: 700; color: var(--accent, #fbbf24); margin-bottom: 16px; letter-spacing: 2px; }
+.p-stat-line { font-size: 56px; font-weight: 800; line-height: 1.2; }
+.p-stat-sub { background: rgba(255,255,255,0.06); border-radius: 24px; padding: 36px 40px; }
+.p-stat-sub-line { font-size: 40px; font-weight: 600; line-height: 1.3; }
+</style>
+<div class="stc p-bg">
+  <div class="p-flag">{{flag}}</div>
+  <div class="p-team">{{team_upper}}</div>
+  <div class="p-name">{{player}}</div>
+  <div class="p-pos">{{position_upper}}</div>
+  <div class="p-stat-box">
+    <div class="p-stat-label">⚡ KILLER-STAT</div>
+    <div class="p-stat-line">{{topline}}</div>
+  </div>
+  <div class="p-stat-sub">
+    <div class="p-stat-sub-line">{{subline}}</div>
+  </div>
+  <div class="stc-brand">{{brand}}<small>{{brand_sub}}</small></div>
+</div>

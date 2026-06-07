@@ -1,0 +1,62 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "description": "TikTok Studio — Layout + Theme + Default-Config. Profile-aware (wm2026 vs liga_default).",
+    "lastUpdated": "2026-06-06",
+    "notes": [
+      "Card-Dimensions, Skalierung, Default-Card-Type, Theme-Colors hier.",
+      "Pools/Templates sind in studio_pools.json bzw. studio_templates/.",
+      "Liga-Switch: profile.active wechseln → andere Themes + Default-Picks."
+    ]
+  },
+
+  "profiles": {
+    "active": "wm2026",
+
+    "wm2026": {
+      "description": "WM 2026 — Goldgelb + dunkelblau, 9:16 TikTok",
+      "card": {
+        "width_px":           1080,
+        "height_px":          1920,
+        "preview_scale":      0.333,
+        "brand_text":         "COCOBET",
+        "brand_subtext":      "cocobet.app · WM 2026"
+      },
+      "theme": {
+        "accent":             "#fbbf24",
+        "accent_secondary":   "#dc2626",
+        "success":            "#34d399",
+        "primary_bg":         "#0a0e27",
+        "text":               "#ffffff"
+      },
+      "defaults": {
+        "default_card_type":  "team_hook",
+        "auto_fill_on_pick":  true,
+        "subject_filter":     "wm_only"
+      }
+    },
+
+    "liga_default": {
+      "description": "Liga-Saison — gleiches Layout, andere Default-Subjects + andere Hook-Pools",
+      "card": {
+        "width_px":           1080,
+        "height_px":          1920,
+        "preview_scale":      0.333,
+        "brand_text":         "COCOBET",
+        "brand_subtext":      "cocobet.app · Liga-Picks"
+      },
+      "theme": {
+        "accent":             "#fbbf24",
+        "accent_secondary":   "#3b82f6",
+        "success":            "#34d399",
+        "primary_bg":         "#0a0e27",
+        "text":               "#ffffff"
+      },
+      "defaults": {
+        "default_card_type":  "match_pick",
+        "auto_fill_on_pick":  true,
+        "subject_filter":     "active_leagues_only"
+      }
+    }
+  }
+}
