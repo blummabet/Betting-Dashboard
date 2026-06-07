@@ -21,12 +21,22 @@
   let _oddsHistoryLookup = {};  // key: "HOME-AWAY" → [ {ts, hw, dr, aw, o25, ...}, ... ]
   let _wmMatchPages = {};       // slug → match-page-data (aus matches/data/wm-{slug}.json)
   let _wmPagesLoaded = false;
+  let _wmPagesLastTs  = 0;      // wann wm-match-pages zuletzt geladen wurden
   const _expandedPreviews = new Set();  // Set of match-keys mit ausgeklapptem AI-Preview
   let _whyModalKey = null;              // wenn !== null: Modal ist offen für diesen matchKey
   let _activeGroup    = 'all';
   let _activeMd       = 'all';   // matchday filter: 'all' | 1 | 2 | 3
   let _activeSort     = 'date';  // 'date' | 'edge' | 'upset'
   let _loaded         = false;
+  let _lastLoadTs     = 0;       // Timestamp des letzten erfolgreichen Loads (ms)
+
+  // TTL für In-Memory-Cache. Tab-Wechsel innerhalb dieses Fensters → kein Re-Fetch
+  // (schnell). Danach: silent re-fetch im Hintergrund mit alten Karten sichtbar,
+  // damit Picks nach jedem 4h-Cron-Update spätestens 5 Min später frisch sind.
+  // Picks werden nur 5×/Tag (alle 4h) im Workflow neu generiert, ein 5-Min-TTL
+  // ist also conservatively kurz und liefert ein gutes Verhältnis aus Frische
+  // und Bandbreiten-Sparsamkeit.
+  const CARDS_CACHE_TTL_MS = 5 * 60 * 1000;
 
   const CO_HOSTS = new Set(['MEX', 'USA', 'CAN']);
 
@@ -37,16 +47,25 @@
     const panel = document.getElementById('intlCardsPanel');
     if (!panel) return;
 
-    if (_loaded && _wmData) {
+    // ── Cache-Strategie ──────────────────────────────────────────────────
+    // Warm hit (TTL nicht abgelaufen): nur re-rendern, kein Netzwerk.
+    // Warm miss (TTL abgelaufen, aber Daten vorhanden): alte Karten weiter
+    //   sichtbar lassen + im Hintergrund silent re-fetch → kein Flicker.
+    // Cold (noch nie geladen): Spinner zeigen, dann fetch.
+    const isWarm    = _loaded && _wmData;
+    const ttlValid  = (Date.now() - _lastLoadTs) < CARDS_CACHE_TTL_MS;
+    if (isWarm && ttlValid) {
       _render();
       return;
     }
-
-    panel.innerHTML = `
-      <div style="text-align:center;padding:60px 16px;color:var(--muted);">
-        <div style="font-size:36px;margin-bottom:14px;animation:spin 1.2s linear infinite;display:inline-block;">⚙️</div>
-        <div style="font-size:13px;font-weight:600;">Lade WM 2026 Daten…</div>
-      </div>`;
+    if (!isWarm) {
+      panel.innerHTML = `
+        <div style="text-align:center;padding:60px 16px;color:var(--muted);">
+          <div style="font-size:36px;margin-bottom:14px;animation:spin 1.2s linear infinite;display:inline-block;">⚙️</div>
+          <div style="font-size:13px;font-weight:600;">Lade WM 2026 Daten…</div>
+        </div>`;
+    }
+    // Bei warmem Miss: Karten bleiben sichtbar, fetch läuft silent unten weiter
 
     try {
       const [wmResp, polyResp, travelResp, confResp, ppResp, chgResp, histResp] = await Promise.all([
@@ -123,6 +142,7 @@
       }
 
       _loaded = true;
+      _lastLoadTs = Date.now();
       _render();
 
       // Stage 2: WM-Match-Pages im Hintergrund laden (für Probability-Bar, Squad-Pills, AI-Preview)
@@ -1144,20 +1164,29 @@
   //  WM-MATCH-PAGES — lazy load (Probability-Bar, Squad-Pills, AI-Preview)
   // ─────────────────────────────────────────────────────
   async function _loadWmMatchPages() {
-    if (_wmPagesLoaded) return;
+    // Gleiches Cache-Konzept wie initIntlCards: TTL-Check, silent re-fetch.
+    // Squad-Daten ändern sich selten, Probability-Bar abhängig vom Form-Fetch
+    // (alle 4h) — gleicher TTL macht Sinn damit alles synchron frisch ist.
+    if (_wmPagesLoaded && (Date.now() - _wmPagesLastTs) < CARDS_CACHE_TTL_MS) {
+      return;
+    }
     try {
-      const idxResp = await fetch('matches/wm-index.json?t=' + Date.now());
+      const bust = '?t=' + Date.now();
+      const idxResp = await fetch('matches/wm-index.json' + bust);
       if (!idxResp.ok) return;
       const idx = await idxResp.json();
       const slugs = idx.slugs || [];
       if (!slugs.length) return;
+      // Cache-Buster auch auf die individuellen Pages — sonst served der Browser
+      // beim zweiten Tab-Wechsel die alten Squad-/Form-Daten aus dem disk-cache.
       const results = await Promise.all(slugs.map(slug =>
-        fetch(`matches/data/${slug}.json`).then(r => r.ok ? r.json() : null).catch(() => null)
+        fetch(`matches/data/${slug}.json` + bust).then(r => r.ok ? r.json() : null).catch(() => null)
       ));
       for (const d of results) {
         if (d && d.slug) _wmMatchPages[d.slug] = d;
       }
       _wmPagesLoaded = true;
+      _wmPagesLastTs = Date.now();
       _render();   // Re-render mit den neuen Daten
     } catch (e) { console.warn('wm-match-pages load failed', e); }
   }

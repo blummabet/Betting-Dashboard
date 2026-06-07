@@ -24,9 +24,18 @@ class TestWorkflowHasBackupCron(unittest.TestCase):
 
     def test_workflow_has_two_crons(self):
         wf = (BASE / ".github/workflows/daily-tiktok.yml").read_text(encoding="utf-8")
-        # Primärer + Backup
-        self.assertIn("- cron: '0 4 * * *'",  wf, "Primärer Cron (04:00 UTC) fehlt")
+        # Primärer + Backup. Bug-Fix 07.06.2026: Primary auf 04:30 UTC verschoben,
+        # damit fetch-wm-data (04:00 UTC) seine Pick-Generation fertig hat bevor
+        # TikTok-Rendering startet (sonst stale wm2026-data.json).
+        self.assertIn("- cron: '30 4 * * *'", wf, "Primärer Cron (04:30 UTC) fehlt")
         self.assertIn("- cron: '30 5 * * *'", wf, "Backup-Cron (05:30 UTC) fehlt")
+
+    def test_concurrency_shared_with_fetch(self):
+        """Concurrency-Group muss fetch-wm-data sein damit TikTok-Render NIE
+        parallel zu Pick-Generation läuft (Bug-Fix 07.06.2026)."""
+        wf = (BASE / ".github/workflows/daily-tiktok.yml").read_text(encoding="utf-8")
+        self.assertIn("group: fetch-wm-data", wf,
+            "daily-tiktok muss die concurrency-Group von fetch-wm-data teilen")
 
 
 class TestGuardLogicInSource(unittest.TestCase):
