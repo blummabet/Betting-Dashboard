@@ -26,8 +26,14 @@
         "huge_edge_warn":         18,
         "max_edge_sane":          18,
         "ou_bet_max":             10,
-        "ah_bet_max":             12
+        "ah_bet_max":             12,
+        "dnb_ah_divergence_pp":   8
       },
+      "_meta_disabled_markets": "Backtest 07.06.2026 zeigte BTTS −15% ROI (n=141), Corners >10.5 −65% (n=10). Bis das Modell besser ist: diese Märkte erzeugen keine Picks. Re-enable wenn Skellam-Modell überarbeitet oder Backtest sie freigibt.",
+      "disabled_markets": [
+        "btts",
+        "o_corners105"
+      ],
       "odds": {
         "max_for_pick":           6.5,
         "max_for_bet":            4.5,

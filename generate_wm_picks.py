@@ -86,6 +86,24 @@ ODDS_BET_MAX_DNB = _cfg("odds", "max_for_bet_dnb",       4.0)
 UNDERDOG_ELO_SOFT = _cfg("underdog", "elo_soft_threshold", 100)
 UNDERDOG_ELO_HARD = _cfg("underdog", "elo_hard_threshold", 200)
 
+# Deaktivierte Märkte (Backtest 07.06.2026 — Skellam-Modell verliert systematisch
+# auf BTTS −15% ROI bei n=141, hohe Corner-Linien −65% bei n=10).
+# Bis das Modell überarbeitet ist, generieren wir keine Picks für diese Märkte.
+# Re-enable: Eintrag aus cocobet_config.json profiles.wm2026.disabled_markets entfernen.
+def _get_disabled_markets():
+    # cocobet_config._resolve_active_profile() merged nur DEFAULT_FALLBACK-Sections,
+    # daher zusätzlich-Sections wie disabled_markets verschwinden. Wir lesen die
+    # rohe JSON direkt für diese Liste.
+    try:
+        import os, json
+        from pathlib import Path
+        raw = json.loads((Path(__file__).parent / "cocobet_config.json").read_text(encoding="utf-8"))
+        active = os.environ.get("COCOBET_PROFILE") or raw["profiles"].get("active", "wm2026")
+        return set(raw["profiles"].get(active, {}).get("disabled_markets") or [])
+    except Exception:
+        return set()
+DISABLED_MARKETS = _get_disabled_markets()
+
 
 # ═══════════════════════════════════════════════════════════════════════════
 #  ELO-MODELL → Wahrscheinlichkeiten
@@ -906,6 +924,11 @@ def generate_picks_for_fixture(
 
     picks = []
     for mkey, label, min_edge in MARKET_CFG:
+        # Bug-Fix 07.06.2026: Märkte die historisch Geld verloren haben (Backtest)
+        # generieren keine Picks bis das Modell überarbeitet ist.
+        if mkey in DISABLED_MARKETS:
+            continue
+
         m_odds  = model_odds.get(mkey)
         bk      = market_odds.get(mkey)
         op      = open_odds.get(mkey)
