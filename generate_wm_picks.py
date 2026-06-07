@@ -1192,6 +1192,60 @@ def generate_picks_for_fixture(
         for m, r in downgraded[:5]:
             print(f"     · {m}: {r}")
 
+    # ── Cross-Model-Konsistenz: Elo (DNB) ↔ Skellam (AH +0.5) ─────────────
+    # Bug-Fix 07.06.2026 (IRN-NZL Case):
+    # DNB-Outcome und AH +0.5-Outcome decken FAKTISCH denselben Outcome ab
+    # (Team gewinnt oder X). DNB nutzt Elo-Modell, AH +0.5 nutzt Skellam.
+    # Wenn die beiden Modelle für den gleichen Outcome stark divergieren
+    # (≥ MODEL_DIVERGENCE_PP), ist die Wahrscheinlichkeit nicht vertrauenswürdig.
+    # → DNB-BET wird auf ABWÄGEN runtergesetzt.
+    #
+    # IRN-NZL: Elo sagt P(NZL no_loss)=58%, Skellam sagt 42% → 16pp Diff
+    # → DNB Auswärts BET wäre fragwürdig. Lieber ABWÄGEN.
+    DNB_AH_PAIRS = [
+        # (dnb-market, ah-key (model_odds key), team-side für no_loss-Berechnung)
+        ("DNB: Heimteam",     "ahH_n050", "home"),
+        ("DNB: Auswärtsteam", "ahA_p050", "away"),
+    ]
+    MODEL_DIVERGENCE_PP = _cfg("edge", "dnb_ah_divergence_pp", 8)
+    model_inconsistencies = []
+    for dnb_label, ah_key, side in DNB_AH_PAIRS:
+        dnb_p = market_to_pick.get(dnb_label)
+        if not dnb_p or dnb_p.get("verdict") != "BET":
+            continue
+        ah_model_q = model_odds.get(ah_key)
+        if not ah_model_q:
+            continue
+        # P(no_loss) aus Skellam: 1/ah_model_q × 0.97 (rückrechnen aus margin)
+        # Code: model_odds_ah = prob_to_odds(p * 0.97) → p = 1/(odds * 0.97)
+        p_skellam = 1.0 / (ah_model_q * 0.97)
+        # P(no_loss) aus Elo: Win + Draw je nach side
+        # 1X2-Modell-Quoten in model_odds["home"]/"draw"/"away"
+        m_home = model_odds.get("home")
+        m_draw = model_odds.get("draw")
+        m_away = model_odds.get("away")
+        if not (m_home and m_draw and m_away):
+            continue
+        p_home_elo = 1.0 / m_home
+        p_draw_elo = 1.0 / m_draw
+        p_away_elo = 1.0 / m_away
+        p_elo = (p_home_elo if side == "home" else p_away_elo) + p_draw_elo
+        diff_pp = (p_elo - p_skellam) * 100
+        # Wenn Elo deutlich optimistischer als Skellam für den gepickten Team
+        # → DNB-Edge ist wahrscheinlich überschätzt durch Elo-Bias
+        if abs(diff_pp) >= MODEL_DIVERGENCE_PP:
+            dnb_p["verdict"] = "ABWÄGEN"
+            dnb_p["downgradedReason"] = (
+                f"Modell-Inkonsistenz: Elo schätzt P(no_loss)={p_elo*100:.0f}%, "
+                f"Skellam (AH +0.5) sagt {p_skellam*100:.0f}% — "
+                f"Diff {diff_pp:+.0f}pp ≥ {MODEL_DIVERGENCE_PP}pp Schwelle"
+            )
+            model_inconsistencies.append((dnb_label, diff_pp))
+    if model_inconsistencies:
+        print(f"  🔀 Cross-Model-Konsistenz: {len(model_inconsistencies)} DNB-BETs→ABWÄGEN")
+        for m, d in model_inconsistencies:
+            print(f"     · {m}: Elo↔Skellam-Diff {d:+.0f}pp")
+
     safer_picks_to_add = []
     for p in picks:
         if p["verdict"] not in ("BET", "ABWÄGEN"):

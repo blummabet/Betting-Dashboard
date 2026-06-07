@@ -150,9 +150,18 @@ def _make_reason(old: dict | None, new: dict | None) -> tuple[str, str]:
     if abs(edge_delta) >= EDGE_DELTA_TG:
         sign = "+" if edge_delta > 0 else ""
         kind = "edge_up" if edge_delta > 0 else "edge_down"
-        return (kind, f"Edge {sign}{int(edge_delta)}pp ({o_old:.2f} → {o_new:.2f})"
-                       if isinstance(o_old, (int, float)) and isinstance(o_new, (int, float))
-                       else f"Edge {sign}{int(edge_delta)}pp")
+        if isinstance(o_old, (int, float)) and isinstance(o_new, (int, float)):
+            # Wenn die auf 2 Dezimalstellen gerundete Quote identisch ist,
+            # kommt das Edge-Delta vom Modell (xG/Form-Update), nicht vom Markt.
+            # Banner sonst irreführend: "Edge +3pp (3.45 → 3.45)" → wirkt wie Bug.
+            # Bug-Fix 07.06.2026: explizit "Modell-Update" labeln.
+            if abs(odds_delta) < 0.005:
+                reason = f"Edge {sign}{int(edge_delta)}pp · Modell-Update @{o_new:.2f}"
+            else:
+                reason = f"Edge {sign}{int(edge_delta)}pp ({o_old:.2f} → {o_new:.2f})"
+        else:
+            reason = f"Edge {sign}{int(edge_delta)}pp"
+        return (kind, reason)
     if abs(odds_delta) >= ODDS_DELTA_TG and isinstance(o_old, (int, float)) and isinstance(o_new, (int, float)):
         return ("odds_swing", f"Quote {o_old:.2f} → {o_new:.2f}")
 
