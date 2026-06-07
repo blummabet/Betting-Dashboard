@@ -37,13 +37,31 @@
   let POLY_DATA = null;
   let ACTIVE_PROFILE = 'wm2026';
 
+  // Card-Typen mit Variants. Variants = ['hook', 'detail'] → 2 Cards (Pair).
+  // Variants = ['standalone'] → 1 Card.
+  // Hook = kurz, eye-catcher. Detail = mehr Stats, Begründungen.
   const TEMPLATE_FILES = {
-    team_hook:    {file: 'team_hook.html',    label: '🔥 Team Hook',          desc: 'Hook-Statement + Killer-Stat über einem Team'},
-    player:       {file: 'player.html',       label: '⭐ Player Spotlight',    desc: 'Spieler + Killer-Linie aus Squad-Daten'},
-    bizarre:      {file: 'bizarre.html',      label: '🤯 Bizarre Compare',     desc: '3 schiefe Vergleiche zu einer Quote'},
-    match_pick:   {file: 'match_pick.html',   label: '🎯 Match Pick',          desc: 'Bester Pick zu einem Match'},
-    killer_stat:  {file: 'killer_stat.html',  label: '💥 Killer Stat',         desc: 'Team + EINE große Zahl'},
-    quiz:         {file: 'quiz.html',         label: '🎲 Quiz: Wer gewinnt?',  desc: 'Match + 3 Optionen mit Polymarket-Quoten'}
+    team_hook:    {label: '🔥 Team Hook + Detail',  desc: 'Hook (Eye-Catcher) + Detail-Card mit 3 Stats', variants: {
+      hook:   'team_hook.html',
+      detail: 'team_hook.detail.html'
+    }},
+    player:       {label: '⭐ Player Spotlight + Detail', desc: 'Spieler-Hook + Detail mit 3 Stat-Boxen', variants: {
+      hook:   'player.html',
+      detail: 'player.detail.html'
+    }},
+    match_pick:   {label: '🎯 Match Pick + Detail',  desc: 'Pick-Hook + Detail mit 3 Begründungs-Lines', variants: {
+      hook:   'match_pick.html',
+      detail: 'match_pick.detail.html'
+    }},
+    bizarre:      {label: '🤯 Bizarre Compare',      desc: '3 schiefe Vergleiche zu einer Quote (standalone)', variants: {
+      standalone: 'bizarre.html'
+    }},
+    killer_stat:  {label: '💥 Killer Stat',          desc: 'Team + EINE große Zahl (standalone)', variants: {
+      standalone: 'killer_stat.html'
+    }},
+    quiz:         {label: '🎲 Quiz: Wer gewinnt?',   desc: 'Match + 3 Optionen mit Polymarket-Quoten', variants: {
+      standalone: 'quiz.html'
+    }}
   };
 
   async function fetchJson(path, fallback){
@@ -62,9 +80,12 @@
     PLAYER_DATA  = await fetchJson('wm2026-player-props.json',  {});
     POLY_DATA    = await fetchJson('wm_poly_prices.json',       {});
     COMMON_CSS   = await fetchText('studio_templates/_common.css', '');
-    // Templates
+    // Templates pro Variant: TEMPLATE_HTML[type][variant] = html
     for(const [type, meta] of Object.entries(TEMPLATE_FILES)){
-      TEMPLATE_HTML[type] = await fetchText(`studio_templates/${meta.file}`, '');
+      TEMPLATE_HTML[type] = {};
+      for(const [variant, file] of Object.entries(meta.variants)){
+        TEMPLATE_HTML[type][variant] = await fetchText(`studio_templates/${file}`, '');
+      }
     }
     // Profile
     ACTIVE_PROFILE = (CONFIG?.profiles?.active) || 'wm2026';
@@ -398,21 +419,49 @@
 
     team_hook: {
       fields: [
-        {key:'team', type:'team', label:'Team', required:true},
-        {key:'hook', type:'text', label:'Hook (große Zeile)', maxLen:60},
-        {key:'stat', type:'text', label:'Killer-Stat', maxLen:140},
-        {key:'tag',  type:'text', label:'Bottom-Tag', maxLen:30}
+        {key:'team',  type:'team',   label:'Team', required:true},
+        {key:'hook',  type:'text',   label:'Hook (Eye-Catcher)', maxLen:60, group:'hook'},
+        {key:'stat',  type:'text',   label:'Stat für Hook-Card', maxLen:140, group:'hook'},
+        {key:'tag',   type:'text',   label:'Bottom-Tag (Hook)',  maxLen:30,  group:'hook'},
+        {key:'stat1', type:'text',   label:'Detail Stat 1', maxLen:100, group:'detail'},
+        {key:'stat2', type:'text',   label:'Detail Stat 2', maxLen:100, group:'detail'},
+        {key:'stat3', type:'text',   label:'Detail Stat 3', maxLen:100, group:'detail'},
+        {key:'punchline', type:'text', label:'Detail Punchline', maxLen:80, group:'detail'}
       ],
       autoFill: (data, opts) => {
         const force = opts?.force;
         if(!data.team) return data;
+        const statPool = generateStatPool(data.team);
+        // Hook-Felder
         if(force || !data.hook) data.hook = fromPool('th.hook', generateHookPool(data.team));
-        if(force || !data.stat) data.stat = fromPool('th.stat', generateStatPool(data.team)) || 'Vor der WM in absoluter Topform';
+        if(force || !data.stat) data.stat = fromPool('th.stat', statPool) || 'Vor der WM in absoluter Topform';
         if(force || !data.tag)  data.tag  = fromPool('th.tag', generateTagPool());
+        // Detail-Felder: 3 verschiedene Stats aus dem Pool (NICHT die gleichen wie Hook)
+        const remaining = statPool.filter(s => s !== data.stat);
+        if(force || !data.stat1) data.stat1 = fromPool('th.s1', remaining);
+        const after1 = remaining.filter(s => s !== data.stat1);
+        if(force || !data.stat2) data.stat2 = fromPool('th.s2', after1);
+        const after2 = after1.filter(s => s !== data.stat2);
+        if(force || !data.stat3) data.stat3 = fromPool('th.s3', after2);
+        if(force || !data.punchline) data.punchline = fromPool('th.punch', generatePunchPool());
         return data;
       },
-      buildRenderData: (data) => {
+      buildRenderData: (data, variant) => {
         const t = listTeams().find(x => x.id === data.team) || {flag:'🏳', name:'?'};
+        if(variant === 'detail'){
+          return {
+            ...buildBrandData(),
+            flag: t.flag,
+            team_name: t.name || '',
+            team_sub:  `Gruppe ${t.group || '?'} · Elo ${t.elo || '?'}`,
+            hook: data.hook || '',
+            detail_label: fromPool('th.dl', POOLS?.profiles?.shared?.detail_hook_labels || []),
+            stat1: data.stat1 || '',
+            stat2: data.stat2 || '',
+            stat3: data.stat3 || '',
+            punchline: data.punchline || ''
+          };
+        }
         return { ...buildBrandData(), flag:t.flag, hook:data.hook||'', stat:data.stat||'', tag:data.tag||'' };
       }
     },
@@ -422,21 +471,63 @@
         {key:'team',     type:'team', label:'Team', required:true},
         {key:'player',   type:'text', label:'Spieler-Name', required:true},
         {key:'position', type:'text', label:'Position'},
-        {key:'topline',  type:'text', label:'Killer-Stat', maxLen:80},
-        {key:'subline',  type:'text', label:'Sub-Stat',    maxLen:80}
+        {key:'topline',  type:'text', label:'Hook Killer-Stat', maxLen:80, group:'hook'},
+        {key:'subline',  type:'text', label:'Hook Sub-Stat',    maxLen:80, group:'hook'},
+        {key:'stat1_val', type:'text', label:'Detail Stat 1 Wert', group:'detail'},
+        {key:'stat1_lbl', type:'text', label:'Detail Stat 1 Label', group:'detail'},
+        {key:'stat2_val', type:'text', label:'Detail Stat 2 Wert', group:'detail'},
+        {key:'stat2_lbl', type:'text', label:'Detail Stat 2 Label', group:'detail'},
+        {key:'stat3_val', type:'text', label:'Detail Stat 3 Wert', group:'detail'},
+        {key:'stat3_lbl', type:'text', label:'Detail Stat 3 Label', group:'detail'},
+        {key:'quote_line', type:'text', label:'Detail Story-Line', maxLen:100, group:'detail'},
+        {key:'bottom_line', type:'text', label:'Detail Bottom', maxLen:60, group:'detail'}
       ],
       autoFill: (data, opts) => {
         const force = opts?.force;
         if(!data.team) return data;
         const sq = (WM_DATA?.squads || {})[data.team] || {};
+        const p = teamPack(data.team);
         if(force || !data.player)   data.player   = sq.name || '';
         if(force || !data.position) data.position = generatePositionLabel(sq.position);
         if(force || !data.topline)  data.topline  = fromPool('pl.top', generatePlayerToplines(data.team));
         if(force || !data.subline)  data.subline  = fromPool('pl.sub', generatePlayerSublines(data.team));
+        // Detail-Stats: 2-3 Number+Label-Pairs aus echten Daten
+        if(p && sq){
+          const stats = [];
+          if(sq.goals)    stats.push({val:String(sq.goals), lbl:'TORE'});
+          if(sq.assists)  stats.push({val:String(sq.assists), lbl:'ASSISTS'});
+          if(sq.minutes)  stats.push({val:String(Math.round(sq.minutes/90)), lbl:'SPIELE'});
+          if(sq.goals && sq.minutes){
+            const per90 = (sq.goals*90/sq.minutes).toFixed(2);
+            stats.push({val: per90, lbl:'TORE / 90'});
+          }
+          if(p.form.avgScored) stats.push({val:p.form.avgScored.toFixed(1), lbl:'TEAM TORE/SPIEL'});
+          // Auswählen
+          if(force || !data.stat1_val){ const s = stats[0]; if(s){ data.stat1_val = s.val; data.stat1_lbl = s.lbl; } }
+          if(force || !data.stat2_val){ const s = stats[1]; if(s){ data.stat2_val = s.val; data.stat2_lbl = s.lbl; } }
+          if(force || !data.stat3_val){ const s = stats[2]; if(s){ data.stat3_val = s.val; data.stat3_lbl = s.lbl; } }
+        }
+        if(force || !data.quote_line)  data.quote_line  = fromPool('pl.q', generatePlayerSublines(data.team));
+        if(force || !data.bottom_line) data.bottom_line = fromPool('pl.b', POOLS?.profiles?.shared?.detail_bottom_lines || []);
         return data;
       },
-      buildRenderData: (data) => {
+      buildRenderData: (data, variant) => {
         const t = listTeams().find(x => x.id === data.team) || {flag:'🏳', name:'?'};
+        if(variant === 'detail'){
+          return {
+            ...buildBrandData(),
+            flag: t.flag,
+            team_upper: (t.name || '').toUpperCase(),
+            position_upper: (data.position || '').toUpperCase(),
+            player: data.player || '',
+            detail_label: fromPool('pl.dl', POOLS?.profiles?.shared?.detail_player_labels || []),
+            stat1_val: data.stat1_val || '', stat1_lbl: data.stat1_lbl || '',
+            stat2_val: data.stat2_val || '', stat2_lbl: data.stat2_lbl || '',
+            stat3_val: data.stat3_val || '', stat3_lbl: data.stat3_lbl || '',
+            quote_line: data.quote_line || '',
+            bottom_line: data.bottom_line || ''
+          };
+        }
         return {
           ...buildBrandData(),
           flag: t.flag,
@@ -478,8 +569,11 @@
         {key:'match', type:'match', label:'Spiel', required:true},
         {key:'pick',  type:'text',  label:'Pick-Markt'},
         {key:'odds',  type:'text',  label:'Quote'},
-        {key:'edge',  type:'text',  label:'Edge'},
-        {key:'why',   type:'text',  label:'Begründung', maxLen:120}
+        {key:'edge',  type:'text',  label:'Edge', group:'hook'},
+        {key:'why',   type:'text',  label:'Hook Begründung', maxLen:120, group:'hook'},
+        {key:'reason1', type:'text', label:'Detail Grund 1', maxLen:100, group:'detail'},
+        {key:'reason2', type:'text', label:'Detail Grund 2', maxLen:100, group:'detail'},
+        {key:'reason3', type:'text', label:'Detail Grund 3', maxLen:100, group:'detail'}
       ],
       autoFill: (data, opts) => {
         const force = opts?.force;
@@ -500,18 +594,59 @@
               if(force || !data.odds) data.odds = String(p.odds || '');
               if(force || !data.edge) data.edge = p.edgePP ? `+${p.edgePP}pp Edge` : '';
               const whys = [];
-              if(p.story) whys.push(p.story);
+              if(p.story)  whys.push(p.story);
               if(p.signal) whys.push(p.signal);
               if(p.conf === 'high') whys.push('Hohe Confidence — Modell + Form + Bookies in Linie');
               whys.push(`Modell-Edge +${p.edgePP||'?'}pp vs Pinnacle Fair-Quote`);
-              if(force || !data.why) data.why = fromPool('mp.why', whys) || '';
+
+              // Pack zusätzliche Begründungen
+              const homePack = teamPack(m.home);
+              const awayPack = teamPack(m.away);
+              if(p.market.includes('Über') && homePack?.form.over25Rate > 0.5){
+                whys.push(`${m.home}: Over 2.5 in ${Math.round(homePack.form.over25Rate*100)}% der letzten Spiele`);
+              }
+              if(p.market.includes('Über') && awayPack?.form.over25Rate > 0.5){
+                whys.push(`${m.away}: Over 2.5 in ${Math.round(awayPack.form.over25Rate*100)}% der letzten Spiele`);
+              }
+              if(p.market.includes('Heim') && homePack?.winStreak >= 2){
+                whys.push(`Heim ${homePack.winStreak} Siege in Serie — Lauf passt`);
+              }
+              if(homePack?.form.avgScored){
+                whys.push(`Heim trifft ${homePack.form.avgScored.toFixed(1)}× pro Spiel`);
+              }
+              if(awayPack?.form.avgScored){
+                whys.push(`Auswärts trifft ${awayPack.form.avgScored.toFixed(1)}× pro Spiel`);
+              }
+
+              if(force || !data.why)    data.why    = fromPool('mp.why', whys) || '';
+              const rest1 = whys.filter(w => w !== data.why);
+              if(force || !data.reason1) data.reason1 = fromPool('mp.r1', rest1);
+              const rest2 = rest1.filter(w => w !== data.reason1);
+              if(force || !data.reason2) data.reason2 = fromPool('mp.r2', rest2);
+              const rest3 = rest2.filter(w => w !== data.reason2);
+              if(force || !data.reason3) data.reason3 = fromPool('mp.r3', rest3);
             }
           }
         }
         return data;
       },
-      buildRenderData: (data) => {
+      buildRenderData: (data, variant) => {
         const m = listMatches().find(x => x.key === data.match) || {label:'?', date:'', time:''};
+        const edgeShort = (data.edge || '').replace(/[^0-9.\-]/g, '') || '';
+        if(variant === 'detail'){
+          return {
+            ...buildBrandData(),
+            date_time: (m.date || '') + (m.time ? ' · ' + m.time : ''),
+            match_label: m.label || '',
+            pick: data.pick || '',
+            odds: data.odds || '',
+            edge_short: edgeShort,
+            detail_label: fromPool('mp.dl', POOLS?.profiles?.shared?.detail_match_pick_labels || []),
+            reason1: data.reason1 || '',
+            reason2: data.reason2 || '',
+            reason3: data.reason3 || ''
+          };
+        }
         return {
           ...buildBrandData(),
           date_time: (m.date || '') + (m.time ? ' · ' + m.time : ''),
@@ -618,13 +753,20 @@
   // ─────────────────────────────────────────────────────────────────────
   // Rendering einer Card
   // ─────────────────────────────────────────────────────────────────────
-  function renderCard(type, data){
+  function renderCard(type, data, variant){
     const logic = CARD_LOGIC[type];
-    const tmpl  = TEMPLATE_HTML[type];
+    const variantHtmls = TEMPLATE_HTML[type] || {};
+    const tmpl  = variantHtmls[variant];
     if(!logic || !tmpl) return '<div class="tts-error">Template nicht geladen</div>';
-    const renderData = logic.buildRenderData(data);
+    const renderData = logic.buildRenderData(data, variant);
     const cardHtml   = renderTemplate(tmpl, renderData);
     return `<style>${buildCssVars()}${COMMON_CSS}</style>${cardHtml}`;
+  }
+
+  // Liefert Variants als sortiertes Array. Hook zuerst, dann Detail.
+  function variantsFor(type){
+    const v = Object.keys(TEMPLATE_FILES[type]?.variants || {});
+    return v.sort((a,b) => (a==='hook' ? -1 : a==='standalone' ? -1 : a.localeCompare(b)));
   }
 
   // ─────────────────────────────────────────────────────────────────────
@@ -664,22 +806,51 @@
     const logic = CARD_LOGIC[_currentType];
     const meta  = TEMPLATE_FILES[_currentType];
     if(!logic || !meta) return '<div class="tts-error">Unbekannter Typ</div>';
-    const fields = logic.fields.map(f => `
-      <div class="tts-field">
-        <label class="tts-label">${esc(f.label)}${f.required?' <span class="tts-req">*</span>':''}</label>
-        ${buildFieldInput(f)}
-      </div>
-    `).join('');
+    const variants = variantsFor(_currentType);
+
+    // Felder nach group sortieren wenn variants > 1
+    const hookFields    = logic.fields.filter(f => !f.group || f.group === 'hook');
+    const detailFields  = logic.fields.filter(f => f.group === 'detail');
+    const sharedFields  = logic.fields.filter(f => !f.group); // team/match dropdowns
+
+    const renderFieldGroup = (fields, title) => {
+      if(!fields.length) return '';
+      const inner = fields.map(f => `
+        <div class="tts-field">
+          <label class="tts-label">${esc(f.label)}${f.required?' <span class="tts-req">*</span>':''}</label>
+          ${buildFieldInput(f)}
+        </div>`).join('');
+      const heading = title ? `<div class="tts-group-head">${esc(title)}</div>` : '';
+      return heading + inner;
+    };
+
+    const hasDetail = variants.includes('detail');
+    const allFields = hasDetail
+      ? renderFieldGroup(sharedFields, '') +
+        renderFieldGroup(hookFields.filter(f => f.group === 'hook'), '🔥 Hook-Card Felder') +
+        renderFieldGroup(detailFields, '📋 Detail-Card Felder')
+      : logic.fields.map(f => `
+          <div class="tts-field">
+            <label class="tts-label">${esc(f.label)}${f.required?' <span class="tts-req">*</span>':''}</label>
+            ${buildFieldInput(f)}
+          </div>`).join('');
+
+    // Pro Variant ein Download-Button
+    const downloadBtns = variants.map(v => {
+      const labelMap = { hook:'Hook', detail:'Detail', standalone:'Card' };
+      return `<button class="tts-btn tts-btn-png" data-variant="${v}">📸 ${labelMap[v]||v} PNG</button>`;
+    }).join('');
+
     return `
       <div class="tts-desc">${esc(meta.desc)}</div>
-      ${fields}
+      ${allFields}
       <div class="tts-actions">
         <button class="tts-btn tts-btn-fill" id="ttsAutoFill" title="Füllt nur leere Felder">✨ Leere Felder füllen</button>
         <button class="tts-btn tts-btn-roll" id="ttsRoll"     title="Überschreibt ALLE Felder">🎲 Alles neu würfeln</button>
         <button class="tts-btn tts-btn-clear" id="ttsClear">🔄 Reset</button>
       </div>
       <div class="tts-export">
-        <button class="tts-btn tts-btn-png"  id="ttsDownload">📸 PNG Download</button>
+        ${downloadBtns}
         <button class="tts-btn tts-btn-link" id="ttsShare">🔗 Share-Link kopieren</button>
         <button class="tts-btn tts-btn-open" id="ttsOpenNew">🪟 Vollformat öffnen</button>
       </div>
@@ -687,7 +858,24 @@
   }
 
   function renderPreview(){
-    $('#ttsPreviewInner').innerHTML = renderCard(_currentType, _currentData);
+    const variants = variantsFor(_currentType);
+    const preview = $('#ttsPreviewInner');
+    if(variants.length === 1){
+      preview.innerHTML = `<div class="tts-preview-single">
+        <div class="tts-preview-cell">${renderCard(_currentType, _currentData, variants[0])}</div>
+      </div>`;
+      preview.parentElement.classList.toggle('dual', false);
+    } else {
+      const cells = variants.map(v => {
+        const labelMap = { hook:'🔥 Hook', detail:'📋 Detail' };
+        return `<div class="tts-preview-cell">
+          <div class="tts-preview-cell-label">${labelMap[v]||v}</div>
+          <div class="tts-preview-cell-card">${renderCard(_currentType, _currentData, v)}</div>
+        </div>`;
+      }).join('');
+      preview.innerHTML = `<div class="tts-preview-dual">${cells}</div>`;
+      preview.parentElement.classList.toggle('dual', true);
+    }
   }
 
   function updateFromForm(){
@@ -738,7 +926,9 @@
     $('#ttsAutoFill')?.addEventListener('click', () => doAutoFill(false));
     $('#ttsRoll')?.addEventListener('click', doRoll);
     $('#ttsClear')?.addEventListener('click', doClear);
-    $('#ttsDownload')?.addEventListener('click', downloadPng);
+    $$('.tts-btn-png', $('#ttsForm')).forEach(btn => {
+      btn.addEventListener('click', () => downloadPng(btn.dataset.variant, btn));
+    });
     $('#ttsShare')?.addEventListener('click', copyShareUrl);
     $('#ttsOpenNew')?.addEventListener('click', openFullSize);
   }
@@ -746,25 +936,31 @@
   // ─────────────────────────────────────────────────────────────────────
   // Export-Funktionen
   // ─────────────────────────────────────────────────────────────────────
-  async function downloadPng(){
-    const btn = $('#ttsDownload');
+  async function downloadPng(variant, btn){
+    const origText = btn.textContent;
     btn.textContent = '⏳ Rendere…'; btn.disabled = true;
     try {
       if(!window.html2canvas){
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
       }
-      const target = $('#ttsPreviewInner').firstElementChild;
+      // Render diese Variant in einem off-screen Container
+      const tempDiv = document.createElement('div');
+      tempDiv.style.cssText = 'position:fixed;left:-99999px;top:0;';
+      tempDiv.innerHTML = renderCard(_currentType, _currentData, variant);
+      document.body.appendChild(tempDiv);
+      const target = tempDiv.querySelector('.stc') || tempDiv.firstElementChild;
       if(!target) throw new Error('Keine Card-Node gefunden');
       const canvas = await html2canvas(target, { backgroundColor:null, scale:1, useCORS:true });
       const a = document.createElement('a');
-      a.download = `cocobet_${_currentType}_${Date.now()}.png`;
+      a.download = `cocobet_${_currentType}_${variant}_${Date.now()}.png`;
       a.href = canvas.toDataURL('image/png');
       a.click();
+      document.body.removeChild(tempDiv);
     } catch(e){
       alert('PNG-Export fehlgeschlagen: ' + e.message);
       console.error(e);
     } finally {
-      btn.textContent = '📸 PNG Download'; btn.disabled = false;
+      btn.textContent = origText; btn.disabled = false;
     }
   }
 
@@ -788,11 +984,12 @@
   }
 
   function openFullSize(){
-    const html = $('#ttsPreviewInner').innerHTML;
+    const variants = variantsFor(_currentType);
+    const cards = variants.map(v => renderCard(_currentType, _currentData, v)).join('');
     const w = window.open('', '_blank');
-    w.document.write(`<!DOCTYPE html><html><head><title>CocoBet TikTok Card</title>
-      <style>body{margin:0;background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;}</style>
-      </head><body>${html}</body></html>`);
+    w.document.write(`<!DOCTYPE html><html><head><title>CocoBet TikTok Cards</title>
+      <style>body{margin:0;background:#000;display:flex;flex-direction:column;align-items:center;gap:32px;padding:32px;}</style>
+      </head><body>${cards}</body></html>`);
     w.document.close();
   }
 

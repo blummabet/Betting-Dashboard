@@ -144,8 +144,13 @@ class TestStudioPoolsSchema(unittest.TestCase):
             self.assertIn(pos, pm, f"position_map fehlt {pos}")
 
 
+# Card-Typen mit Hook+Detail-Variants (Pair) vs Standalone
+CARDS_WITH_DETAIL = ['team_hook', 'player', 'match_pick']
+CARDS_STANDALONE  = ['bizarre', 'killer_stat', 'quiz']
+
+
 class TestStudioTemplates(unittest.TestCase):
-    """studio_templates/*.html — alle Card-Typen haben Files."""
+    """studio_templates/*.html — alle Card-Typen + Variants haben Files."""
 
     def test_dir_exists(self):
         self.assertTrue(TEMPLATES_DIR.is_dir())
@@ -157,41 +162,52 @@ class TestStudioTemplates(unittest.TestCase):
             '_common.css fehlt .stc Basis-Klasse')
 
     def test_all_card_types_have_template(self):
-        for ct in CARD_TYPES:
+        # Standalone-Cards: <type>.html
+        for ct in CARDS_STANDALONE:
             f = TEMPLATES_DIR / f'{ct}.html'
             with self.subTest(card_type=ct):
-                self.assertTrue(f.exists(), f'Template fehlt: {f}')
+                self.assertTrue(f.exists(), f'Standalone-Template fehlt: {f}')
+        # Hook+Detail-Cards: <type>.html (Hook) + <type>.detail.html
+        for ct in CARDS_WITH_DETAIL:
+            hook_f   = TEMPLATES_DIR / f'{ct}.html'
+            detail_f = TEMPLATES_DIR / f'{ct}.detail.html'
+            with self.subTest(card_type=ct):
+                self.assertTrue(hook_f.exists(),   f'Hook-Template fehlt: {hook_f}')
+                self.assertTrue(detail_f.exists(), f'Detail-Template fehlt: {detail_f}')
+
+    def _all_template_paths(self):
+        """Gibt alle Template-Files zurück (Standalone + Hook + Detail)."""
+        paths = []
+        for ct in CARDS_STANDALONE:
+            paths.append((ct, TEMPLATES_DIR / f'{ct}.html'))
+        for ct in CARDS_WITH_DETAIL:
+            paths.append((f'{ct}.hook',   TEMPLATES_DIR / f'{ct}.html'))
+            paths.append((f'{ct}.detail', TEMPLATES_DIR / f'{ct}.detail.html'))
+        return paths
 
     def test_templates_have_brand_placeholder(self):
         """Jedes Template muss das Brand-Element haben."""
-        for ct in CARD_TYPES:
-            content = (TEMPLATES_DIR / f'{ct}.html').read_text(encoding='utf-8')
-            with self.subTest(card_type=ct):
+        for label, path in self._all_template_paths():
+            content = path.read_text(encoding='utf-8')
+            with self.subTest(template=label):
                 self.assertIn('{{brand}}', content,
-                    f'{ct}.html fehlt {{{{brand}}}} placeholder')
+                    f'{label}.html fehlt {{{{brand}}}} placeholder')
                 self.assertIn('stc-brand', content,
-                    f'{ct}.html fehlt .stc-brand element')
+                    f'{label}.html fehlt .stc-brand element')
 
     def test_templates_use_css_variables(self):
-        """Templates müssen --accent/--success etc. via var() benutzen,
-        nicht hardcoded Farben — damit Theme-Switch funktioniert."""
-        for ct in CARD_TYPES:
-            content = (TEMPLATES_DIR / f'{ct}.html').read_text(encoding='utf-8')
-            with self.subTest(card_type=ct):
+        for label, path in self._all_template_paths():
+            content = path.read_text(encoding='utf-8')
+            with self.subTest(template=label):
                 self.assertIn('var(--', content,
-                    f'{ct}.html nutzt keine CSS-Variablen — Theme-Switch broken')
+                    f'{label} nutzt keine CSS-Variablen — Theme-Switch broken')
 
     def test_no_inline_magic_numbers_for_dimensions(self):
-        """Templates dürfen NICHT 1080px/1920px hardcoden — kommt aus
-        --card-w / --card-h via studio_config."""
-        for ct in CARD_TYPES:
-            content = (TEMPLATES_DIR / f'{ct}.html').read_text(encoding='utf-8')
-            # Mit .stc Klasse darf NICHT direkt width:1080px gesetzt sein
-            with self.subTest(card_type=ct):
-                # Erlaubt: width: 1080px in _common.css (Fallback)
-                # Verboten: in einzelnen Templates
+        for label, path in self._all_template_paths():
+            content = path.read_text(encoding='utf-8')
+            with self.subTest(template=label):
                 self.assertNotIn('width:1080px', content.replace(' ', ''),
-                    f'{ct}.html hat hardcoded 1080px Width')
+                    f'{label} hat hardcoded 1080px Width')
 
 
 class TestStudioJsRefactorConform(unittest.TestCase):
@@ -256,6 +272,25 @@ class TestStudioJsRefactorConform(unittest.TestCase):
         self.assertIn('ACTIVE_PROFILE', self.src)
         self.assertIn('cfg(', self.src)
         self.assertIn('pool(', self.src)
+
+    def test_variants_system(self):
+        """JS muss variants-System haben (Hook+Detail-Paare)."""
+        self.assertIn('variants:', self.src,
+            'TEMPLATE_FILES muss variants-Dict pro Card-Typ haben')
+        self.assertIn("hook:", self.src)
+        self.assertIn("detail:", self.src)
+        self.assertIn("standalone:", self.src)
+        self.assertIn('variantsFor', self.src,
+            'variantsFor() Helper fehlt')
+
+    def test_render_card_takes_variant(self):
+        """renderCard(type, data, variant) — Signatur"""
+        # Eine der signatures muss enthalten sein
+        self.assertTrue(
+            'renderCard(_currentType, _currentData, variant' in self.src or
+            'renderCard(type, data, variant' in self.src or
+            'renderCard(_currentType, _currentData, v)' in self.src,
+            'renderCard() muss variant-Parameter haben')
 
 
 class TestStudioLigaSwitchWorks(unittest.TestCase):

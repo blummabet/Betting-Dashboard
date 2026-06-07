@@ -136,15 +136,20 @@ jobs:
             }
             console.log('✅ Studio-Modul lädt sauber');
           "
-          # Templates + Config + Pools sind valide
+          # Templates + Config + Pools sind valide (Standalone + Hook+Detail)
           python3 -c "
           import json
           from pathlib import Path
           json.loads(Path('studio_config.json').read_text())
           json.loads(Path('studio_pools.json').read_text())
-          for ct in ('team_hook','player','bizarre','match_pick','killer_stat','quiz'):
+          # Standalone
+          for ct in ('bizarre','killer_stat','quiz'):
               assert Path(f'studio_templates/{ct}.html').exists(), f'{ct}.html fehlt'
-          print('✅ Studio-Assets (config + pools + 6 templates) vollständig')
+          # Hook+Detail-Paare
+          for ct in ('team_hook','player','match_pick'):
+              assert Path(f'studio_templates/{ct}.html').exists(),        f'{ct}.html (Hook) fehlt'
+              assert Path(f'studio_templates/{ct}.detail.html').exists(), f'{ct}.detail.html fehlt'
+          print('✅ Studio-Assets (3 standalone + 3 hook+detail-paare) vollständig')
           "
 
       - name: 📋 Trade-Pipeline-Konsistenz prüfen
