@@ -1,41 +1,10 @@
 {
-  "lastRun": "2026-06-08T09:00:38.610466+00:00",
+  "lastRun": "2026-06-08T11:39:17.893725+00:00",
   "stats": {
     "total": 234,
     "errors": 0,
-    "warnings": 2,
-    "ok": 232
+    "warnings": 0,
+    "ok": 234
   },
-  "issues": [
-    {
-      "matchKey": "C-3-BRA-SCO",
-      "market": "AH Auswärts +1.0",
-      "level": "warning",
-      "code": "W_UNDERDOG_LEAK",
-      "message": "BET auf Underdog mit Elo-Gap 308 > 200 (Sanity-Filter sollte das fangen)",
-      "pickSnapshot": {
-        "verdict": "BET",
-        "odds": 2.02,
-        "modelOdds": 1.522,
-        "edgePP": 12,
-        "clvPP": 0.0,
-        "dataQuality": "elo+form"
-      }
-    },
-    {
-      "matchKey": "J-2-ARG-AUT",
-      "market": "AH Auswärts +0.5",
-      "level": "warning",
-      "code": "W_UNDERDOG_LEAK",
-      "message": "BET auf Underdog mit Elo-Gap 205 > 200 (Sanity-Filter sollte das fangen)",
-      "pickSnapshot": {
-        "verdict": "BET",
-        "odds": 2.23,
-        "modelOdds": 1.822,
-        "edgePP": 7,
-        "clvPP": 0.0,
-        "dataQuality": "elo+form"
-      }
-    }
-  ]
+  "issues": []
 }

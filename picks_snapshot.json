@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-06-08T09:00:38.660518+00:00",
+  "savedAt": "2026-06-08T11:39:17.926060+00:00",
   "picks": {
     "A-1-KOR-CZE": [
       {
@@ -37,7 +37,29 @@
           "home": 4.3,
           "away": 4.6,
           "total": 8.9
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "A-1-MEX-ZAF": [
@@ -60,14 +82,36 @@
           "market": "Unter 2.5 Tore",
           "odds": 1.74,
           "edgePP": 9
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 9.6
       },
       {
         "market": "Unter 2.5 Tore",
         "odds": 1.74,
         "modelOdds": 1.41,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -82,7 +126,30 @@
           "market": "Unter 1.5 Tore",
           "odds": 3.25,
           "edgePP": 9
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 9.6,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Unter 3.5 Tore",
@@ -98,7 +165,29 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 6.6
       },
       {
         "market": "Über 9.5 Ecken",
@@ -119,7 +208,29 @@
           "home": 4.0,
           "away": 3.6,
           "total": 7.6
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "A-2-CZE-ZAF": [
@@ -157,7 +268,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.36
+        "signalAdjustmentPP": 1.36,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 6.4
       },
       {
         "market": "Über 9.5 Ecken",
@@ -187,7 +301,7 @@
         "odds": 1.97,
         "modelOdds": 1.538,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -242,7 +356,11 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.74
+        "signalAdjustmentPP": -1.74,
+        "signalCountPos": 1,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 8.3,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Auswärtssieg",
@@ -303,7 +421,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.74
+        "signalAdjustmentPP": -1.74,
+        "signalCountPos": 1,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 5.3
       },
       {
         "market": "DNB: Auswärtsteam",
@@ -364,7 +485,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.74
+        "signalAdjustmentPP": -1.74,
+        "signalCountPos": 1,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 7.3
       },
       {
         "market": "Unter 1.5 Tore",
@@ -487,7 +611,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.94
+        "signalAdjustmentPP": -0.94,
+        "signalCountPos": 1,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 12.1
       },
       {
         "market": "AH Auswärts +0.75",
@@ -544,7 +671,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.94
+        "signalAdjustmentPP": -0.94,
+        "signalCountPos": 1,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 17.1
       },
       {
         "market": "Unter 1.5 Tore",
@@ -617,7 +747,7 @@
         "odds": 1.91,
         "modelOdds": 1.477,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 2,
         "storySig": 0,
@@ -671,7 +801,11 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.52
+        "signalAdjustmentPP": -0.52,
+        "signalCountPos": 1,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 10.5,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Unter 1.5 Tore",
@@ -803,7 +937,29 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form_asym"
+        "dataQuality": "elo+form_asym",
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 5.6
       }
     ],
     "B-1-QAT-SUI": [
@@ -846,7 +1002,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 0.93-1.53 vs Auswärts 2.40-1.00 (Δ -2.00)",
             "weight": 1.0,
-            "weighted_score": -1.56,
+            "weighted_score": -0.62,
             "metadata": {
               "home_xg_for": 0.93,
               "home_xg_against": 1.53,
@@ -857,17 +1013,21 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -4.29
+        "signalAdjustmentPP": -4.95,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 1.0
       },
       {
         "market": "Über 2.5 Tore",
         "odds": 1.61,
         "modelOdds": 1.347,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -882,14 +1042,37 @@
           "market": "Über 3.5 Tore",
           "odds": 2.55,
           "edgePP": 10
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 6.4,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 3.5 Tore",
         "odds": 2.55,
         "modelOdds": 1.906,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -903,7 +1086,30 @@
           "market": "Über 2.5 Tore",
           "odds": 1.61,
           "edgePP": 7
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 9.4,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 9.5 Ecken",
@@ -924,7 +1130,29 @@
           "home": 3.7,
           "away": 4.4,
           "total": 8.1
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "B-2-CAN-QAT": [
@@ -933,7 +1161,7 @@
         "odds": 3.25,
         "modelOdds": 2.332,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -987,7 +1215,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.67-0.47 vs Auswärts 0.93-1.53 (Δ +1.80)",
             "weight": 1.0,
-            "weighted_score": -1.4,
+            "weighted_score": -0.56,
             "metadata": {
               "home_xg_for": 1.67,
               "home_xg_against": 0.47,
@@ -998,10 +1226,15 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -3.16
+        "signalAdjustmentPP": -3.37,
+        "signalCountPos": 0,
+        "signalCountNeg": 3,
+        "effectiveEdgePP": 5.6,
+        "downgradedReason": "Engine warnt: Signal-Adjustment -3.4pp ≤ -3.0pp Schwelle"
       },
       {
         "market": "Über 9.5 Ecken",
@@ -1118,7 +1351,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.0
+        "signalAdjustmentPP": 1.0,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 7.0
       },
       {
         "market": "AH Auswärts +1.0",
@@ -1163,7 +1399,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.0
+        "signalAdjustmentPP": 1.0,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 12.0
       },
       {
         "market": "Doppelte Chance — X2",
@@ -1207,7 +1446,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.0
+        "signalAdjustmentPP": 1.0,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 5.0
       },
       {
         "market": "Unter 1.5 Tore",
@@ -1339,13 +1581,35 @@
           "home": 3.3,
           "away": 4.2,
           "total": 7.5
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "C-1-HTI-SCO": [
       {
         "market": "DNB: Heimteam",
-        "odds": 5.24,
+        "odds": 5.32,
         "modelOdds": 2.768,
         "conf": "medium",
         "verdict": "ABWÄGEN",
@@ -1382,7 +1646,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.54
+        "signalAdjustmentPP": -1.54,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 13.5
       },
       {
         "market": "Doppelte Chance — 1X",
@@ -1402,7 +1669,7 @@
         "saferAltFor": "DNB: Heimteam",
         "riskierAlt": {
           "market": "DNB: Heimteam",
-          "odds": 5.24,
+          "odds": 5.32,
           "edgePP": 15
         },
         "signals": [
@@ -1424,7 +1691,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.54
+        "signalAdjustmentPP": -1.54,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 4.5
       },
       {
         "market": "Über 1.5 Tore",
@@ -1446,7 +1716,29 @@
           "market": "Über 3.5 Tore",
           "odds": 3.4,
           "edgePP": 13
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 5.4
       },
       {
         "market": "Über 3.5 Tore",
@@ -1467,7 +1759,29 @@
           "market": "Über 1.5 Tore",
           "odds": 1.31,
           "edgePP": 6
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 12.4
       },
       {
         "market": "Über 8.5 Ecken",
@@ -1488,7 +1802,29 @@
           "home": 5.1,
           "away": 4.6,
           "total": 9.7
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "C-2-BRA-HTI": [
@@ -1586,7 +1922,7 @@
         "odds": 2.02,
         "modelOdds": 1.522,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -1618,7 +1954,11 @@
             }
           }
         ],
-        "signalAdjustmentPP": -3.0
+        "signalAdjustmentPP": -3.0,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 9.0,
+        "downgradedReason": "Engine warnt: Signal-Adjustment -3.0pp ≤ -3.0pp Schwelle"
       },
       {
         "market": "Über 3.5 Tore",
@@ -1684,10 +2024,10 @@
     "D-1-AUS-TUR": [
       {
         "market": "Doppelte Chance — 1X",
-        "odds": 2.04,
+        "odds": 2.02,
         "modelOdds": 1.397,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -1716,14 +2056,18 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.96
+        "signalAdjustmentPP": -0.96,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 17.0,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 1.5 Tore",
         "odds": 1.35,
         "modelOdds": 1.128,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -1732,7 +2076,30 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 8.4,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 2.5 Tore",
@@ -1755,7 +2122,29 @@
           "market": "Über 3.5 Tore",
           "odds": 3.56,
           "edgePP": 15
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 14.4
       },
       {
         "market": "Über 3.5 Tore",
@@ -1776,7 +2165,29 @@
           "market": "Über 2.5 Tore",
           "odds": 2.02,
           "edgePP": 15
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 14.4
       },
       {
         "market": "Über 8.5 Ecken",
@@ -1797,20 +2208,42 @@
           "home": 3.4,
           "away": 6.0,
           "total": 9.4
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "D-1-USA-PRY": [
       {
         "market": "AH Auswärts +0.5",
-        "odds": 1.87,
+        "odds": 1.89,
         "modelOdds": 1.587,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 5,
+        "edgePP": 6,
         "info": "Elo +177 · Form LWLLW·WLWWL · xG 1.5:1.6",
         "icon": "🎯",
         "result": null,
@@ -1838,7 +2271,7 @@
         "odds": 1.4,
         "modelOdds": 1.175,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -1853,7 +2286,30 @@
           "market": "Über 3.5 Tore",
           "odds": 4.33,
           "edgePP": 14
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 7.4,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 3.5 Tore",
@@ -1874,7 +2330,29 @@
           "market": "Über 1.5 Tore",
           "odds": 1.4,
           "edgePP": 8
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 13.4
       },
       {
         "market": "Über 8.5 Ecken",
@@ -1895,7 +2373,29 @@
           "home": 4.5,
           "away": 4.4,
           "total": 8.9
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "D-2-TUR-PRY": [
@@ -1904,7 +2404,7 @@
         "odds": 3.42,
         "modelOdds": 2.451,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -1958,7 +2458,11 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.53
+        "signalAdjustmentPP": -1.53,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 7.5,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "DNB: Auswärtsteam",
@@ -2020,7 +2524,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.53
+        "signalAdjustmentPP": -1.53,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 8.5
       },
       {
         "market": "Über 1.5 Tore",
@@ -2142,7 +2649,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -2.0
+        "signalAdjustmentPP": -2.0,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 14.0
       },
       {
         "market": "AH Auswärts +0.75",
@@ -2182,7 +2692,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -2.0
+        "signalAdjustmentPP": -2.0,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 16.0
       },
       {
         "market": "Über 1.5 Tore",
@@ -2325,7 +2838,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.98
+        "signalAdjustmentPP": 0.98,
+        "signalCountPos": 2,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 10.0
       },
       {
         "market": "Doppelte Chance — X2",
@@ -2386,7 +2902,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.98
+        "signalAdjustmentPP": 0.98,
+        "signalCountPos": 2,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 5.0
       },
       {
         "market": "Über 9.5 Ecken",
@@ -2416,7 +2935,7 @@
         "odds": 1.43,
         "modelOdds": 1.219,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -2470,7 +2989,11 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.19
+        "signalAdjustmentPP": -1.19,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 5.8,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 1.5 Tore",
@@ -2516,7 +3039,7 @@
         "odds": 2.45,
         "modelOdds": 1.842,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -2550,7 +3073,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.00-0.60 vs Auswärts 1.07-0.40 (Δ +0.73)",
             "weight": 1.0,
-            "weighted_score": -0.57,
+            "weighted_score": -0.23,
             "metadata": {
               "home_xg_for": 2.0,
               "home_xg_against": 0.6,
@@ -2561,10 +3084,15 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.68
+        "signalAdjustmentPP": -1.96,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 8.0,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Doppelte Chance — 12",
@@ -2601,7 +3129,29 @@
           "home": 3.8,
           "away": 3.3,
           "total": 7.1
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "E-1-GER-CUW": [
@@ -2624,7 +3174,29 @@
           "home": 5.4,
           "away": 3.9,
           "total": 9.2
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "E-2-ECU-CUW": [
@@ -2670,7 +3242,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.0
+        "signalAdjustmentPP": -1.0,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 15.0
       },
       {
         "market": "Unter 3.5 Tore",
@@ -2717,7 +3292,7 @@
         "odds": 1.53,
         "modelOdds": 1.265,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -2749,7 +3324,11 @@
             }
           }
         ],
-        "signalAdjustmentPP": 2.0
+        "signalAdjustmentPP": 2.0,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 11.0,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 9.5 Ecken",
@@ -2815,20 +3394,20 @@
     "E-3-GER-ECU": [
       {
         "market": "AH Auswärts +1.0",
-        "odds": 1.68,
+        "odds": 1.65,
         "modelOdds": 1.26,
         "conf": "high",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 15,
+        "edgePP": 14,
         "info": "Elo +205 · Form WWWWW·WDDWD · xG 0.9:0.9 · ✈️ 🇪🇨 1625km/2d (9%-xG)",
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 15pp > 12pp Modell-Bias-Schwelle",
+        "downgradedReason": "AH Edge 14pp > 12pp Modell-Bias-Schwelle",
         "signals": [
           {
             "name": "travel_burden",
@@ -2868,7 +3447,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.98
+        "signalAdjustmentPP": -1.98,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 12.0
       },
       {
         "market": "Unter 3.5 Tore",
@@ -2915,7 +3497,7 @@
         "odds": 1.85,
         "modelOdds": 1.503,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -2944,7 +3526,11 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.3
+        "signalAdjustmentPP": -1.29,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 6.7,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Unter 1.5 Tore",
@@ -2965,14 +3551,36 @@
           "market": "Unter 2.5 Tore",
           "odds": 1.91,
           "edgePP": 10
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 9.6
       },
       {
         "market": "Unter 2.5 Tore",
         "odds": 1.91,
         "modelOdds": 1.507,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -2987,14 +3595,37 @@
           "market": "Unter 1.5 Tore",
           "odds": 3.7,
           "edgePP": 9
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 10.6,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Unter 3.5 Tore",
         "odds": 1.35,
         "modelOdds": 1.157,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -3003,7 +3634,30 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 7.6,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 9.5 Ecken",
@@ -3024,7 +3678,29 @@
           "home": 4.1,
           "away": 3.9,
           "total": 7.9
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "F-1-SWE-TUN": [
@@ -3046,13 +3722,13 @@
         "saferAltFor": "DNB: Auswärtsteam",
         "riskierAlt": {
           "market": "DNB: Auswärtsteam",
-          "odds": 3.17,
+          "odds": 3.16,
           "edgePP": 13
         }
       },
       {
         "market": "Auswärtssieg",
-        "odds": 4.37,
+        "odds": 4.36,
         "modelOdds": 2.721,
         "conf": "high",
         "verdict": "BET",
@@ -3073,7 +3749,7 @@
       },
       {
         "market": "DNB: Auswärtsteam",
-        "odds": 3.17,
+        "odds": 3.16,
         "modelOdds": 2.101,
         "conf": "high",
         "verdict": "ABWÄGEN",
@@ -3112,7 +3788,29 @@
           "home": 3.9,
           "away": 3.8,
           "total": 7.7
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "F-2-NED-SWE": [
@@ -3159,7 +3857,7 @@
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.5:0.7 vs Auswärts 2.0:1.7",
             "weight": 1.0,
-            "weighted_score": 3.18,
+            "weighted_score": 1.27,
             "metadata": {
               "home_scored": 2.47,
               "home_conceded": 0.73,
@@ -3168,7 +3866,8 @@
               "home_games": 15,
               "away_games": 15,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           },
           {
             "name": "xg_strength",
@@ -3190,7 +3889,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": 3.45
+        "signalAdjustmentPP": 3.37,
+        "signalCountPos": 3,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 16.4
       },
       {
         "market": "AH Heim −0.75",
@@ -3234,7 +3936,7 @@
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.5:0.7 vs Auswärts 2.0:1.7",
             "weight": 1.0,
-            "weighted_score": 3.18,
+            "weighted_score": 1.27,
             "metadata": {
               "home_scored": 2.47,
               "home_conceded": 0.73,
@@ -3243,7 +3945,8 @@
               "home_games": 15,
               "away_games": 15,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           },
           {
             "name": "xg_strength",
@@ -3265,7 +3968,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": 3.45
+        "signalAdjustmentPP": 3.37,
+        "signalCountPos": 3,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 14.4
       },
       {
         "market": "AH Heim −1.0",
@@ -3310,7 +4016,7 @@
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.5:0.7 vs Auswärts 2.0:1.7",
             "weight": 1.0,
-            "weighted_score": 3.18,
+            "weighted_score": 1.27,
             "metadata": {
               "home_scored": 2.47,
               "home_conceded": 0.73,
@@ -3319,7 +4025,8 @@
               "home_games": 15,
               "away_games": 15,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           },
           {
             "name": "xg_strength",
@@ -3341,7 +4048,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": 3.45
+        "signalAdjustmentPP": 3.37,
+        "signalCountPos": 3,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 21.4
       },
       {
         "market": "Über 1.5 Tore",
@@ -3447,7 +4157,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.73-1.20 vs Auswärts 1.87-0.53 (Δ -0.80)",
             "weight": 1.0,
-            "weighted_score": -0.62,
+            "weighted_score": -0.25,
             "metadata": {
               "home_xg_for": 1.73,
               "home_xg_against": 1.2,
@@ -3458,10 +4168,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.72
+        "signalAdjustmentPP": -1.88,
+        "signalCountPos": 0,
+        "signalCountNeg": 3,
+        "effectiveEdgePP": 4.1
       },
       {
         "market": "Heimsieg",
@@ -3527,7 +4241,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.73-1.20 vs Auswärts 1.87-0.53 (Δ -0.80)",
             "weight": 1.0,
-            "weighted_score": -0.62,
+            "weighted_score": -0.25,
             "metadata": {
               "home_xg_for": 1.73,
               "home_xg_against": 1.2,
@@ -3538,10 +4252,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.72
+        "signalAdjustmentPP": -1.88,
+        "signalCountPos": 0,
+        "signalCountNeg": 3,
+        "effectiveEdgePP": 4.1
       },
       {
         "market": "Über 9.5 Ecken",
@@ -3753,7 +4471,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 3.07-0.93 vs Auswärts 1.13-0.93 (Δ +1.93)",
             "weight": 1.0,
-            "weighted_score": 1.51,
+            "weighted_score": 0.6,
             "metadata": {
               "home_xg_for": 3.07,
               "home_xg_against": 0.93,
@@ -3764,10 +4482,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 4.29
+        "signalAdjustmentPP": 4.98,
+        "signalCountPos": 2,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 10.0
       },
       {
         "market": "AH Heim −1.0",
@@ -3808,7 +4530,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 3.07-0.93 vs Auswärts 1.13-0.93 (Δ +1.93)",
             "weight": 1.0,
-            "weighted_score": 1.51,
+            "weighted_score": 0.6,
             "metadata": {
               "home_xg_for": 3.07,
               "home_xg_against": 0.93,
@@ -3819,10 +4541,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 4.29
+        "signalAdjustmentPP": 4.98,
+        "signalCountPos": 2,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 15.0
       },
       {
         "market": "Über 3.5 Tore",
@@ -3838,7 +4564,29 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 8.4
       },
       {
         "market": "Über 8.5 Ecken",
@@ -3859,16 +4607,97 @@
           "home": 7.1,
           "away": 2.7,
           "total": 9.8
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "G-1-IRN-NZL": [
+      {
+        "market": "AH Heim −0.5",
+        "odds": 1.89,
+        "modelOdds": 1.649,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 4,
+        "info": "Elo +39 · Form WWWLW·LLWLL · xG 2.5:1.4",
+        "icon": "🎯",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": 2.43,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.3:1.0 vs Auswärts 1.8:1.3",
+            "weight": 1.0,
+            "weighted_score": 2.07,
+            "metadata": {
+              "home_scored": 2.33,
+              "home_conceded": 1.0,
+              "away_scored": 1.8,
+              "away_conceded": 1.33,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 1.04,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.33-1.00 vs Auswärts 1.80-1.33 (Δ +0.87)",
+            "weight": 1.0,
+            "weighted_score": 0.27,
+            "metadata": {
+              "home_xg_for": 2.33,
+              "home_xg_against": 1.0,
+              "away_xg_for": 1.8,
+              "away_xg_against": 1.33,
+              "relative_diff": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            },
+            "correlation_discount_applied": 0.4
+          }
+        ],
+        "signalAdjustmentPP": 2.11,
+        "signalCountPos": 2,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 6.1
+      },
       {
         "market": "Auswärtssieg",
         "odds": 4.46,
         "modelOdds": 2.787,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -3902,7 +4731,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.33-1.00 vs Auswärts 1.80-1.33 (Δ +0.87)",
             "weight": 1.0,
-            "weighted_score": -0.68,
+            "weighted_score": -0.27,
             "metadata": {
               "home_xg_for": 2.33,
               "home_xg_against": 1.0,
@@ -3913,21 +4742,26 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.83
+        "signalAdjustmentPP": -2.11,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 8.9,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "DNB: Auswärtsteam",
-        "odds": 3.24,
+        "odds": 3.22,
         "modelOdds": 2.162,
         "conf": "high",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 13,
+        "edgePP": 12,
         "info": "Elo +39 · Form WWWLW·LLWLL · xG 2.5:1.4",
         "icon": "🎯",
         "result": null,
@@ -3958,7 +4792,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.33-1.00 vs Auswärts 1.80-1.33 (Δ +0.87)",
             "weight": 1.0,
-            "weighted_score": -0.68,
+            "weighted_score": -0.27,
             "metadata": {
               "home_xg_for": 2.33,
               "home_xg_against": 1.0,
@@ -3969,10 +4803,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.83
+        "signalAdjustmentPP": -2.11,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 9.9
       },
       {
         "market": "Über 1.5 Tore",
@@ -3989,7 +4827,29 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 18pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 18pp > 10pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 17.4
       },
       {
         "market": "Über 8.5 Ecken",
@@ -4010,7 +4870,29 @@
           "home": 4.7,
           "away": 4.1,
           "total": 8.7
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "G-2-BEL-IRN": [
@@ -4198,7 +5080,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.13-0.93 vs Auswärts 2.33-1.00 (Δ -1.13)",
             "weight": 1.0,
-            "weighted_score": 0.88,
+            "weighted_score": 0.35,
             "metadata": {
               "home_xg_for": 1.13,
               "home_xg_against": 0.93,
@@ -4209,10 +5091,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.49
+        "signalAdjustmentPP": 1.52,
+        "signalCountPos": 2,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 14.5
       },
       {
         "market": "Über 9.5 Ecken",
@@ -4256,7 +5142,29 @@
           "market": "Unter 3.5 Tore",
           "odds": 1.91,
           "edgePP": 11
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 10.6
       },
       {
         "market": "Unter 3.5 Tore",
@@ -4279,7 +5187,29 @@
           "market": "Unter 2.5 Tore",
           "odds": 3.2,
           "edgePP": 10
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 11.6
       }
     ],
     "H-1-SAU-URU": [
@@ -4302,7 +5232,29 @@
           "market": "Unter 2.5 Tore",
           "odds": 1.85,
           "edgePP": 17
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 17.6
       },
       {
         "market": "Unter 2.5 Tore",
@@ -4325,7 +5277,29 @@
           "market": "Unter 1.5 Tore",
           "odds": 3.5,
           "edgePP": 17
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 17.6
       },
       {
         "market": "Unter 3.5 Tore",
@@ -4342,7 +5316,29 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 12pp > 10pp Modell-Bias-Schwelle"
+        "downgradedReason": "O/U Edge 12pp > 10pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 12.6
       },
       {
         "market": "Über 9.5 Ecken",
@@ -4363,7 +5359,29 @@
           "home": 3.3,
           "away": 4.0,
           "total": 7.4
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "H-2-ESP-SAU": [
@@ -4492,7 +5510,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.73-0.87 vs Auswärts 1.13-1.33 (Δ +1.07)",
             "weight": 1.0,
-            "weighted_score": 0.83,
+            "weighted_score": 0.33,
             "metadata": {
               "home_xg_for": 1.73,
               "home_xg_against": 0.87,
@@ -4503,10 +5521,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 2.24
+        "signalAdjustmentPP": 2.57,
+        "signalCountPos": 2,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 20.6
       },
       {
         "market": "DNB: Auswärtsteam",
@@ -4548,7 +5570,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.73-0.87 vs Auswärts 1.13-1.33 (Δ +1.07)",
             "weight": 1.0,
-            "weighted_score": -0.83,
+            "weighted_score": -0.33,
             "metadata": {
               "home_xg_for": 1.73,
               "home_xg_against": 0.87,
@@ -4559,10 +5581,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -2.24
+        "signalAdjustmentPP": -2.57,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 5.4
       }
     ],
     "H-3-ESP-URU": [
@@ -4625,7 +5651,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.73-0.80 vs Auswärts 0.93-0.87 (Δ +1.87)",
             "weight": 1.0,
-            "weighted_score": 1.46,
+            "weighted_score": 0.58,
             "metadata": {
               "home_xg_for": 2.73,
               "home_xg_against": 0.8,
@@ -4636,10 +5662,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 3.45
+        "signalAdjustmentPP": 3.71,
+        "signalCountPos": 3,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 7.7
       },
       {
         "market": "AH Heim −1.0",
@@ -4700,7 +5730,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.73-0.80 vs Auswärts 0.93-0.87 (Δ +1.87)",
             "weight": 1.0,
-            "weighted_score": 1.46,
+            "weighted_score": 0.58,
             "metadata": {
               "home_xg_for": 2.73,
               "home_xg_against": 0.8,
@@ -4711,10 +5741,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 3.45
+        "signalAdjustmentPP": 3.71,
+        "signalCountPos": 3,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 7.7
       },
       {
         "market": "Über 8.5 Ecken",
@@ -4744,7 +5778,7 @@
         "odds": 1.31,
         "modelOdds": 1.092,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -4753,7 +5787,30 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 8.4,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 9.5 Ecken",
@@ -4774,7 +5831,29 @@
           "home": 4.5,
           "away": 4.0,
           "total": 8.5
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "I-1-IRQ-NOR": [
@@ -4797,7 +5876,29 @@
           "market": "Unter 2.5 Tore",
           "odds": 2.37,
           "edgePP": 8
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 4.6
       },
       {
         "market": "Unter 2.5 Tore",
@@ -4824,14 +5925,36 @@
           "market": "Unter 3.5 Tore",
           "odds": 1.56,
           "edgePP": 8
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 8.6
       },
       {
         "market": "Unter 3.5 Tore",
         "odds": 1.56,
         "modelOdds": 1.305,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -4846,7 +5969,30 @@
           "market": "Unter 2.5 Tore",
           "odds": 2.37,
           "edgePP": 8
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 8.6,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 9.5 Ecken",
@@ -4867,7 +6013,29 @@
           "home": 2.7,
           "away": 4.9,
           "total": 7.6
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "I-2-FRA-IRQ": [
@@ -4943,7 +6111,7 @@
         "odds": 3.26,
         "modelOdds": 2.038,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 1,
         "storySig": 0,
@@ -5007,7 +6175,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 3.47-0.67 vs Auswärts 2.73-0.67 (Δ +0.73)",
             "weight": 1.0,
-            "weighted_score": -0.57,
+            "weighted_score": -0.23,
             "metadata": {
               "home_xg_for": 3.47,
               "home_xg_against": 0.67,
@@ -5018,10 +6186,15 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.75
+        "signalAdjustmentPP": -1.93,
+        "signalCountPos": 0,
+        "signalCountNeg": 3,
+        "effectiveEdgePP": 14.1,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "DNB: Auswärtsteam",
@@ -5093,7 +6266,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 3.47-0.67 vs Auswärts 2.73-0.67 (Δ +0.73)",
             "weight": 1.0,
-            "weighted_score": -0.57,
+            "weighted_score": -0.23,
             "metadata": {
               "home_xg_for": 3.47,
               "home_xg_against": 0.67,
@@ -5104,10 +6277,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.75
+        "signalAdjustmentPP": -1.93,
+        "signalCountPos": 0,
+        "signalCountNeg": 3,
+        "effectiveEdgePP": 16.1
       },
       {
         "market": "Doppelte Chance — X2",
@@ -5179,7 +6356,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 3.47-0.67 vs Auswärts 2.73-0.67 (Δ +0.73)",
             "weight": 1.0,
-            "weighted_score": -0.57,
+            "weighted_score": -0.23,
             "metadata": {
               "home_xg_for": 3.47,
               "home_xg_against": 0.67,
@@ -5190,10 +6367,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.75
+        "signalAdjustmentPP": -1.93,
+        "signalCountPos": 0,
+        "signalCountNeg": 3,
+        "effectiveEdgePP": 3.1
       },
       {
         "market": "Über 2.5 Tore",
@@ -5321,7 +6502,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.20-1.13 vs Auswärts 3.47-0.67 (Δ -1.73)",
             "weight": 1.0,
-            "weighted_score": -1.35,
+            "weighted_score": -0.54,
             "metadata": {
               "home_xg_for": 2.2,
               "home_xg_against": 1.13,
@@ -5332,10 +6513,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.42
+        "signalAdjustmentPP": -1.28,
+        "signalCountPos": 1,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 7.7
       },
       {
         "market": "Doppelte Chance — 12",
@@ -5412,7 +6597,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.20-1.13 vs Auswärts 3.47-0.67 (Δ -1.73)",
             "weight": 1.0,
-            "weighted_score": -1.35,
+            "weighted_score": -0.54,
             "metadata": {
               "home_xg_for": 2.2,
               "home_xg_against": 1.13,
@@ -5423,10 +6608,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.42
+        "signalAdjustmentPP": -1.28,
+        "signalCountPos": 1,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 14.7
       },
       {
         "market": "Über 1.5 Tore",
@@ -5531,7 +6720,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.73-0.67 vs Auswärts 1.07-0.73 (Δ +1.73)",
             "weight": 1.0,
-            "weighted_score": -1.35,
+            "weighted_score": -0.54,
             "metadata": {
               "home_xg_for": 2.73,
               "home_xg_against": 0.67,
@@ -5542,21 +6731,25 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -2.99
+        "signalAdjustmentPP": -3.2,
+        "signalCountPos": 0,
+        "signalCountNeg": 3,
+        "effectiveEdgePP": 0.8
       },
       {
         "market": "DNB: Auswärtsteam",
-        "odds": 6.02,
+        "odds": 6.08,
         "modelOdds": 3.927,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 7,
+        "edgePP": 8,
         "info": "Elo +196 · Form LWWWW·DWWLL · xG 1.4:0.5 · ✈️ 🇸🇳 497km/3d (9%-xG) · ✈️ 🇮🇶 3399km/3d (15%-xG)",
         "icon": "🎯",
         "result": null,
@@ -5611,7 +6804,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.73-0.67 vs Auswärts 1.07-0.73 (Δ +1.73)",
             "weight": 1.0,
-            "weighted_score": -1.35,
+            "weighted_score": -0.54,
             "metadata": {
               "home_xg_for": 2.73,
               "home_xg_against": 0.67,
@@ -5622,10 +6815,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -2.99
+        "signalAdjustmentPP": -3.2,
+        "signalCountPos": 0,
+        "signalCountNeg": 3,
+        "effectiveEdgePP": 4.8
       },
       {
         "market": "Unter 1.5 Tore",
@@ -5729,7 +6926,29 @@
           "market": "Unter 3.5 Tore",
           "odds": 1.35,
           "edgePP": 13
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 18.6
       },
       {
         "market": "Unter 3.5 Tore",
@@ -5752,7 +6971,29 @@
           "market": "Unter 1.5 Tore",
           "odds": 3.7,
           "edgePP": 18
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 13.6
       },
       {
         "market": "Über 9.5 Ecken",
@@ -5773,7 +7014,29 @@
           "home": 3.3,
           "away": 2.4,
           "total": 5.8
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "J-1-AUT-JOR": [
@@ -5782,7 +7045,7 @@
         "odds": 3.45,
         "modelOdds": 2.331,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -5816,7 +7079,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.20-0.60 vs Auswärts 1.47-1.27 (Δ +1.40)",
             "weight": 1.0,
-            "weighted_score": -1.09,
+            "weighted_score": -0.44,
             "metadata": {
               "home_xg_for": 2.2,
               "home_xg_against": 0.6,
@@ -5827,10 +7090,15 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "away"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -2.92
+        "signalAdjustmentPP": -3.36,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 7.6,
+        "downgradedReason": "Engine warnt: Signal-Adjustment -3.4pp ≤ -3.0pp Schwelle"
       }
     ],
     "J-2-ARG-AUT": [
@@ -5839,7 +7107,7 @@
         "odds": 2.23,
         "modelOdds": 1.822,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -5888,24 +7156,28 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.06
+        "signalAdjustmentPP": -1.06,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 5.9,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "AH Auswärts +0.75",
-        "odds": 2.0,
+        "odds": 2.05,
         "modelOdds": 1.47,
         "conf": "high",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 14,
+        "edgePP": 15,
         "info": "Elo +205 · Form WWWWW·WWWDW · xG 1.2:0.7 · ✈️ 🇦🇹 2229km/4d (5%-xG)",
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 14pp > 12pp Modell-Bias-Schwelle",
+        "downgradedReason": "AH Edge 15pp > 12pp Modell-Bias-Schwelle",
         "signals": [
           {
             "name": "travel_burden",
@@ -5945,7 +7217,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.06
+        "signalAdjustmentPP": -1.06,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 13.9
       },
       {
         "market": "AH Auswärts +1.0",
@@ -6001,7 +7276,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.06
+        "signalAdjustmentPP": -1.06,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 2.9
       },
       {
         "market": "Unter 1.5 Tore",
@@ -6091,22 +7369,16 @@
         "odds": 2.45,
         "modelOdds": 1.781,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 12,
         "info": "Elo -49 · Form LDDWW·WDWLW · xG 0.5:2.0 · ✈️ 🇩🇿 2614km/4d/+1599m (8%-xG)",
-        "icon": "🛡️",
+        "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "saferAltFor": "Heimsieg",
-        "riskierAlt": {
-          "market": "Heimsieg",
-          "odds": 6.23,
-          "edgePP": 17
-        },
         "signals": [
           {
             "name": "travel_burden",
@@ -6156,7 +7428,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.47-1.27 vs Auswärts 2.13-0.40 (Δ -1.53)",
             "weight": 1.0,
-            "weighted_score": -1.2,
+            "weighted_score": -0.48,
             "metadata": {
               "home_xg_for": 1.47,
               "home_xg_against": 1.27,
@@ -6167,95 +7439,15 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.44
-      },
-      {
-        "market": "Heimsieg",
-        "odds": 6.23,
-        "modelOdds": 2.864,
-        "conf": "medium",
-        "verdict": "ABWÄGEN",
-        "modSig": 1,
-        "mktSig": -1,
-        "storySig": 0,
-        "edgePP": 17,
-        "info": "Elo -49 · Form LDDWW·WDWLW · xG 0.5:2.0 · ✈️ 🇩🇿 2614km/4d/+1599m (8%-xG)",
-        "icon": "🎯",
-        "result": null,
-        "clvPP": -5.0,
-        "dataQuality": "elo+form",
-        "boldAlt": {
-          "market": "Doppelte Chance — 1X",
-          "odds": 2.45,
-          "edgePP": 12
-        },
-        "signals": [
-          {
-            "name": "travel_burden",
-            "score": 2.4,
-            "confidence": 0.67,
-            "evidence": "✈️ Auswärts 2614km/4d (significant) · Auswärts Höhe +1599m",
-            "weight": 1.0,
-            "weighted_score": 1.61,
-            "metadata": {
-              "factor_home": 1.0,
-              "factor_away": 0.92,
-              "home": {
-                "km": 1053,
-                "rest_days": 4,
-                "alt_shift": 1439,
-                "burden": "moderate"
-              },
-              "away": {
-                "km": 2614,
-                "rest_days": 4,
-                "alt_shift": 1599,
-                "burden": "significant"
-              },
-              "pick_side": "home"
-            }
-          },
-          {
-            "name": "form_trend",
-            "score": -4.17,
-            "confidence": 0.85,
-            "evidence": "📈 Form letzte 15: Heim 1.5:1.3 vs Auswärts 2.1:0.4",
-            "weight": 1.0,
-            "weighted_score": -3.54,
-            "metadata": {
-              "home_scored": 1.47,
-              "home_conceded": 1.27,
-              "away_scored": 2.13,
-              "away_conceded": 0.4,
-              "home_games": 15,
-              "away_games": 15,
-              "pick_side": "home"
-            }
-          },
-          {
-            "name": "xg_strength",
-            "score": -1.84,
-            "confidence": 0.65,
-            "evidence": "⚡ Form-xG (Proxy): Heim 1.47-1.27 vs Auswärts 2.13-0.40 (Δ -1.53)",
-            "weight": 1.0,
-            "weighted_score": -1.2,
-            "metadata": {
-              "home_xg_for": 1.47,
-              "home_xg_against": 1.27,
-              "away_xg_for": 2.13,
-              "away_xg_against": 0.4,
-              "relative_diff": -1.53,
-              "home_games": 15,
-              "away_games": 15,
-              "is_proxy": true,
-              "pick_side": "home"
-            }
-          }
-        ],
-        "signalAdjustmentPP": -1.44
+        "signalAdjustmentPP": -1.35,
+        "signalCountPos": 1,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 10.7,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET"
       }
     ],
     "J-3-ARG-JOR": [],
@@ -6379,7 +7571,29 @@
           "market": "Unter 2.5 Tore",
           "odds": 2.25,
           "edgePP": 17
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 13.6
       },
       {
         "market": "Unter 2.5 Tore",
@@ -6402,14 +7616,36 @@
           "market": "Unter 1.5 Tore",
           "odds": 4.5,
           "edgePP": 13
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 17.6
       },
       {
         "market": "Unter 3.5 Tore",
         "odds": 1.43,
         "modelOdds": 1.167,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -6418,7 +7654,30 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (Unter)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.6,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 10.6,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 9.5 Ecken",
@@ -6439,7 +7698,29 @@
           "home": 4.0,
           "away": 2.2,
           "total": 6.2
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "K-1-UZB-COL": [
@@ -6463,7 +7744,29 @@
           "market": "Über 3.5 Tore",
           "odds": 3.35,
           "edgePP": 8
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 5.4
       },
       {
         "market": "Über 3.5 Tore",
@@ -6484,7 +7787,29 @@
           "market": "Über 2.5 Tore",
           "odds": 1.88,
           "edgePP": 6
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 7.4
       },
       {
         "market": "Über 9.5 Ecken",
@@ -6505,7 +7830,29 @@
           "home": 4.0,
           "away": 3.5,
           "total": 7.5
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "K-2-COL-COD": [
@@ -6551,7 +7898,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.0
+        "signalAdjustmentPP": 1.0,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 7.0
       },
       {
         "market": "Über 9.5 Ecken",
@@ -6757,7 +8107,7 @@
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.33-0.87 vs Auswärts 1.93-1.27 (Δ +0.80)",
             "weight": 1.0,
-            "weighted_score": 0.62,
+            "weighted_score": 0.25,
             "metadata": {
               "home_xg_for": 2.33,
               "home_xg_against": 0.87,
@@ -6768,10 +8118,14 @@
               "away_games": 15,
               "is_proxy": true,
               "pick_side": "home"
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.77
+        "signalAdjustmentPP": 1.94,
+        "signalCountPos": 3,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 13.9
       },
       {
         "market": "Über 1.5 Tore",
@@ -6818,7 +8172,7 @@
         "odds": 2.44,
         "modelOdds": 1.951,
         "conf": "medium",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -6847,7 +8201,11 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.87
+        "signalAdjustmentPP": 1.87,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 8.9,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 8.5 Ecken",
@@ -6868,7 +8226,29 @@
           "home": 5.2,
           "away": 4.8,
           "total": 10.0
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "L-1-GHA-PAN": [
@@ -6893,7 +8273,7 @@
         "odds": 1.4,
         "modelOdds": 1.143,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -6902,7 +8282,30 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 9.4,
+        "downgradedReason": "Engine: nur 0 positive Signal(e), Mindest-Threshold 2 für BET"
       },
       {
         "market": "Über 2.5 Tore",
@@ -6924,7 +8327,29 @@
           "market": "Über 3.5 Tore",
           "odds": 4.33,
           "edgePP": 18
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 17.4
       },
       {
         "market": "Über 3.5 Tore",
@@ -6945,7 +8370,29 @@
           "market": "Über 2.5 Tore",
           "odds": 2.25,
           "edgePP": 18
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": 17.4
       },
       {
         "market": "Über 9.5 Ecken",
@@ -6966,7 +8413,29 @@
           "home": 3.0,
           "away": 3.3,
           "total": 6.3
-        }
+        },
+        "signals": [
+          {
+            "name": "pressure_index",
+            "score": -0.6,
+            "confidence": 0.55,
+            "evidence": "🎯 MD1-Auftakts-Vorsicht (gegen Über)",
+            "weight": 1.0,
+            "weighted_score": -0.33,
+            "metadata": {
+              "matchday": 1,
+              "ko_stage": null,
+              "components": [
+                "MD1-Auftakts-Vorsicht (gegen Über)"
+              ],
+              "pick_side": "neutral"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.6,
+        "signalCountPos": 0,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -0.6
       }
     ],
     "L-2-ENG-GHA": [
