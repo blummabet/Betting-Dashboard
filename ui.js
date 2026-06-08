@@ -817,6 +817,22 @@ function renderPolyTrader(panel) {
   `;
 
   panel.innerHTML = healthBlock + cockpitBlock + wmTableHtml;
+
+  // Fix 08.06.2026: SVG-onload-Trigger feuern in modernen Browsern nicht
+  // mehr zuverlässig wenn via innerHTML eingefügt. Direkter Aufruf via
+  // setTimeout ist robuster — läuft im nächsten Event-Loop-Tick nachdem
+  // der DOM aktualisiert ist. Idempotent dank _cockpitLoading/_healthLoading-Flag.
+  setTimeout(() => {
+    if (typeof window.refreshCockpit === 'function' && !window._cockpitLoading) {
+      window._cockpitLoading = true;
+      window.refreshCockpit().finally(() => { window._cockpitLoading = false; });
+    }
+    if (typeof window.loadPositionHealth === 'function' && !window._healthLoading) {
+      window._healthLoading = true;
+      window.loadPositionHealth().finally(() => { window._healthLoading = false; });
+    }
+  }, 0);
+
   return; // ← remove this line after WM season to restore club table
 
   panel.innerHTML = wmTableHtml + `
