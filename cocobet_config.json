@@ -94,6 +94,20 @@
         "confidence_full":      0.80,
         "confidence_partial":   0.60
       },
+      "apif_predictions": {
+        "lookahead_days":          7,
+        "request_delay_sec":     1.0,
+        "request_timeout_sec":    15,
+        "cache_ttl_hours":         24
+      },
+      "apif_predictions_signal": {
+        "min_diff_pp":            5.0,
+        "max_credible_pp":       20.0,
+        "base_score_pp":          1.0,
+        "magnitude_scale":       0.15,
+        "confidence_floor":      0.40,
+        "confidence_ceil":       0.75
+      },
       "sell": {
         "profit_target":          0.10,
         "pinn_gap_pp":            1.5,

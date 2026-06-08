@@ -2197,14 +2197,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <div class="h2-feature-head">
             <span class="h2-feature-icon">🧠</span>
             <div>
-              <div class="h2-feature-title">Sharp-Signal-Engine (10 Signale)</div>
-              <span class="h2-feature-tag usp">USP · NEU 08.06.2026</span>
+              <div class="h2-feature-title">Sharp-Signal-Engine (12 Signale)</div>
+              <span class="h2-feature-tag usp">USP · ERWEITERT 08.06.2026</span>
             </div>
           </div>
           <div class="h2-feature-desc">
-            Modulare Engine im <code>sharp_signals/</code>-Ordner wertet pro Pick <strong>10 unabhängige Signale</strong> aus
+            Modulare Engine im <code>sharp_signals/</code>-Ordner wertet pro Pick <strong>12 unabhängige Signale</strong> aus
             (Lead-Lag-Bias, Steam-Lag, Polymarket-Sharp, Public-Static-Bias, Travel-Burden, Injury,
-            xG-Stärke, Form-Trend, H2H-Pattern, Pressure-Index) und produziert pro Signal Score + Evidence + Confidence.
+            xG-Stärke, Form-Trend, H2H-Pattern, Pressure-Index, <strong>Lineup T-1h</strong>,
+            <strong>API-Football Predictions</strong>) und produziert pro Signal Score + Evidence + Confidence.
             <strong>Bayesian-Lern-Loop</strong> aktualisiert die Signal-Weights nach jedem resolved Spiel —
             die Engine wird mit jedem WM-Tag besser. Edge-Adjustment greift direkt ins Verdict ein: BET-Picks die
             durch das Engine-Netto-Adjustment unter −3pp gedrückt werden, werden automatisch zu ABWÄGEN.
@@ -2214,7 +2215,33 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             <span class="acc">+2.5</span> Pinnacle Lead-Lag (early)<br>
             <span class="red">−4.4</span> ✈ Travel 2500km/2d<br>
             <span class="acc">+1.8</span> 📈 Form-Trend<br>
-            <span class="mk">Netto:</span> <span class="acc">+0.0pp</span> · Verdict bleibt
+            <span class="acc">+2.1</span> 📊 APIF +8pp confirmatory<br>
+            <span class="mk">Netto:</span> <span class="acc">+2.0pp</span> · Verdict bleibt
+          </div>
+        </div>
+
+        <div class="h2-feature featured" style="border-color:rgba(248,81,73,0.40);">
+          <div class="h2-feature-head">
+            <span class="h2-feature-icon">🚨</span>
+            <div>
+              <div class="h2-feature-title">Lineup-Watcher T-1h + Telegram-Sofort-Alert</div>
+              <span class="h2-feature-tag usp">USP · NEU 08.06.2026</span>
+            </div>
+          </div>
+          <div class="h2-feature-desc">
+            Separater Hot-Cron alle <strong>15 min während Match-Hours</strong> (09:00-23:00 UTC) zieht die
+            offiziellen Aufstellungen aus API-Football <strong>~1h vor Anpfiff</strong>. Wenn ein Top-Scorer
+            (≥2 Saison-Tore) auf der Bank steht oder komplett fehlt → <strong>Sofort-Alert an Trades-Channel</strong>
+            (privat, niemals Public) plus Engine-Downgrade des betroffenen Picks. Coverage 100% — auch
+            WM-Nachtspiele 1/4/6 Uhr Wien. Dedup pro (match+team+status) verhindert Doppel-Alerts.
+            Der spätestmögliche realtime-Signal-Pfad in der ganzen Engine.
+          </div>
+          <div class="h2-mockup">
+            <span class="mk">Telegram-Beispiel:</span><br>
+            🚨 LINEUP-ALERT<br>
+            Mexico vs South Africa · 21:00<br>
+            🏠 Mexico: <span class="red">R. Jiménez FEHLT</span> (7 Tore)<br>
+            → Über 2.5 BET → ABWÄGEN
           </div>
         </div>
 
@@ -2581,11 +2608,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div class="h2-sub-label" style="margin-top:24px;">Signal-Engine (sharp_signals/) — NEU 08.06.2026</div>
       <div class="h2-feature-grid">
         <div class="h2-feature" style="border-color:rgba(0,212,161,0.3);">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🧠</span><div class="h2-feature-title">10 modulare Signale</div></div>
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧠</span><div class="h2-feature-title">12 modulare Signale</div></div>
           <div class="h2-feature-desc">
             Lead-Lag-Bias (Pinnacle vs Soft-Books) · Steam-Lag (Pinn + Polymarket) · Polymarket-Sharp ·
             Public-Static-Bias · Travel-Burden (km+Höhe) · Injury (positionsbewusst GK/DEF/MID/FWD) ·
-            xG-Stärke (mit Form-Proxy für CONMEBOL/AFC) · Form-Trend · H2H-Pattern · Pressure-Index (Tournament-Stage).
+            xG-Stärke (Understat + NT-xG-Fallback) · Form-Trend · H2H-Pattern · Pressure-Index (Tournament-Stage) ·
+            <strong>Lineup T-1h</strong> (Top-Scorer-Bank/Missing) · <strong>API-Football Predictions</strong> (externes Modell vs Pinnacle).
             <strong>Jedes Signal returnt score + confidence + evidence</strong>.
           </div>
         </div>
@@ -2594,7 +2622,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <div class="h2-feature-desc">
             Signale werden in 4 Familien gruppiert (Sharp-Money, Form, Public, Context).
             Pro Familie zählt nur das stärkste Signal voll, weitere werden auf <strong>40%</strong> gedämpft.
-            Verhindert dass z.B. Lead-Lag + Steam-Lag + Polymarket-Sharp denselben Sharp-Move dreimal zählen.
+            <strong>Lineup-Signal und APIF-Predictions sind UNIQUE</strong> — orthogonal zu allen
+            Historien-Familien, daher volle Gewichtung ohne Discount. T-1h Realtime und externes
+            Modell sind unabhängige Wahrheits-Quellen.
           </div>
         </div>
         <div class="h2-feature" style="border-color:rgba(0,212,161,0.3);">
@@ -2613,6 +2643,48 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             BET → ABWÄGEN wenn Netto-Adjustment ≤ −3pp ODER wenn weniger als
             <strong>2 unabhängige positive Signale</strong> existieren.
             Ergebnis pre-WM: 52 → 24 BETs (alle haben jetzt erzählbare Begründung).
+          </div>
+        </div>
+      </div>
+
+      <div class="h2-sub-label" style="margin-top:24px;">Externe Daten-Pipelines (NEU 08.06.2026)</div>
+      <div class="h2-feature-grid">
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📈</span><div class="h2-feature-title">NT-xG Pipeline (API-Football)</div></div>
+          <div class="h2-feature-desc">
+            <code>fetch_wm_nt_xg.py</code> aggregiert <strong>expected_goals</strong> aus den letzten ~10
+            Nationalmannschafts-Spielen pro Team über <code>/fixtures/statistics</code>.
+            Schließt die Understat-Coverage-Lücke für CONMEBOL/AFC/Afrika/CONCACAF/OFC
+            (~33 fehlende Teams). Merge in <code>generate_wm_picks.py</code>: Understat-Priorität,
+            NT-xG als Lückenfüller. Cache 14 Tage pro Team.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📋</span><div class="h2-feature-title">Lineup-Watcher T-1h</div></div>
+          <div class="h2-feature-desc">
+            Eigener Hot-Cron-Workflow <code>wm-lineup-watcher.yml</code> mit
+            <strong>15-min-Intervall während Match-Hours</strong>. Holt Aufstellung aus
+            <code>/fixtures/lineups</code> sobald verfügbar, schreibt <code>wm_lineups.json</code>,
+            triggert Telegram-Alert wenn Top-Scorer fehlt/auf Bank. Speist
+            <code>lineup_signal</code> mit der spätestmöglichen realtime-Wahrheit. Cache 45min.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📊</span><div class="h2-feature-title">APIF Predictions Cross-Check</div></div>
+          <div class="h2-feature-desc">
+            <code>fetch_wm_apifootball_predictions.py</code> zieht das eigene Pricing-Modell von
+            API-Football pro Spiel. Drittes Modell <strong>unabhängig von Skellam+Elo und Pinnacle</strong>.
+            Signal vergleicht APIF-implied vs Pinnacle-implied pro 1X2/DNB-Outcome:
+            confirmatory wenn ≥5pp höher, warnend wenn niedriger. Cache 24h.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🛡️</span><div class="h2-feature-title">Public-vs-Sharp-Persistenz Fix</div></div>
+          <div class="h2-feature-desc">
+            Bug-Fix 08.06.2026: <code>fetch_wm_odds.py</code> hat die Public-Bookie-Quoten (Bet365)
+            zwar geholt aber nicht in <code>wm2026-data.json</code> persistiert →
+            <code>public_static_bias</code>-Signal feuerte für 234 Picks <strong>null mal</strong>.
+            Jetzt durchgereicht. Sharp-vs-Soft-Bias-Logik ist endlich aktiv.
           </div>
         </div>
       </div>

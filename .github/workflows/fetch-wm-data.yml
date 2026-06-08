@@ -159,6 +159,18 @@ jobs:
         run: python fetch_wm_lineups.py
         continue-on-error: true
         env:
+          APISPORTS_KEY:           ${{ secrets.APISPORTS_KEY }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      # ── API-Football Predictions (externes Cross-Model) ───────────────
+      # Drittes Modell unabhängig von Skellam+Elo und Pinnacle. apif_predictions
+      # Signal vergleicht pro 1X2/DNB-Pick gegen Pinnacle implied. Cache 24h
+      # → max 1 API-Call pro Match pro Tag.
+      - name: 📊 WM API-Football Predictions fetchen
+        run: python fetch_wm_apifootball_predictions.py
+        continue-on-error: true
+        env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
       # ── Spielergebnisse fetchen (schreibt result in wm2026-data.json Fixtures) ────

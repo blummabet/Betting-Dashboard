@@ -1390,9 +1390,23 @@ function _renderPickWhyButton(D, primary) {
             <tr><td>Elo (${escHtml(D.home)} / ${escHtml(D.away)})</td><td><strong>${D.homeElo} / ${D.awayElo} (${D.eloDiff>0?'+':''}${D.eloDiff})</strong></td></tr>
             <tr><td>xG-Erwartung (H / A)</td><td><strong>${D.xgHome} / ${D.xgAway}</strong></td></tr>
             ${pModel !== null ? `<tr><td>P(${escHtml(primary.market)}) Modell</td><td><strong>${pModel.toFixed(1)}%</strong></td></tr>` : ''}
-            ${primary.modelOdds && primary.odds ? `<tr><td>Modell-Quote → Markt-Quote</td><td><strong>${parseFloat(primary.modelOdds).toFixed(2)} → ${parseFloat(primary.odds).toFixed(2)} = ${edge>=0?'+':''}${edge}pp Edge</strong></td></tr>` : ''}
+            ${primary.modelOdds && primary.odds ? `<tr><td>Modell-Quote → Markt-Quote</td><td><strong>${parseFloat(primary.modelOdds).toFixed(2)} → ${parseFloat(primary.odds).toFixed(2)} = ${edge>=0?'+':''}${edge}pp Edge (roh)</strong></td></tr>` : ''}
+            ${(primary.effectiveEdgePP !== undefined && primary.effectiveEdgePP !== null && primary.effectiveEdgePP !== edge) ? `<tr><td>Engine-justierter Edge</td><td><strong style="color:${primary.effectiveEdgePP >= edge ? '#3fb950' : '#e3b341'};">${primary.effectiveEdgePP >= 0 ? '+' : ''}${primary.effectiveEdgePP}pp (Δ ${primary.signalAdjustmentPP >= 0 ? '+' : ''}${primary.signalAdjustmentPP || 0}pp)</strong></td></tr>` : ''}
           </table>
         </div>
+
+        ${(primary.signals && primary.signals.length > 0) ? `<div class="pwm-section">
+          <div class="pwm-section-title">🧠 Engine-Signale (${primary.signalCountPos || 0}+ / ${primary.signalCountNeg || 0}−)</div>
+          <table class="pwm-table">
+            ${primary.signals.map(s => {
+              const sc = s.weighted_score !== undefined ? s.weighted_score : s.score;
+              const col = sc > 0 ? '#3fb950' : sc < 0 ? '#e3b341' : '#8b949e';
+              const sym = sc > 0 ? '+' : '';
+              return `<tr><td>${escHtml(s.evidence || s.name)}</td><td><strong style="color:${col};">${sym}${sc}pp</strong></td></tr>`;
+            }).join('')}
+          </table>
+          ${primary.downgradedReason ? `<div style="margin-top:8px;padding:8px 12px;background:rgba(227,179,65,0.10);border-left:3px solid #e3b341;font-size:12px;color:#e3b341;">⚠️ ${escHtml(primary.downgradedReason)}</div>` : ''}
+        </div>` : ''}
 
         ${cornerInfo ? `<div class="pwm-section">
           <div class="pwm-section-title">📐 Eckenerwartung</div>

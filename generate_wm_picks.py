@@ -1397,6 +1397,20 @@ def main():
     except Exception as e:
         print(f"  ⚠️  Lineups-Load fehlgeschlagen: {e}")
 
+    # ── API-Football Predictions (externes Cross-Model, täglich) ────────
+    # Drittes Modell unabhängig von Skellam+Elo und Pinnacle. apif_predictions
+    # Signal vergleicht pro 1X2/DNB-Pick gegen Pinnacle implied.
+    apif_predictions_data: dict = {}
+    try:
+        apif_file = os.path.join(os.path.dirname(WM_FILE), "wm_apif_predictions.json")
+        if os.path.exists(apif_file):
+            with open(apif_file, encoding="utf-8") as f:
+                apif_predictions_data = json.load(f)
+            print(f"  📊 API-Football Predictions geladen: "
+                  f"{len(apif_predictions_data)} Spiele\n")
+    except Exception as e:
+        print(f"  ⚠️  APIF-Predictions-Load fehlgeschlagen: {e}")
+
     # Travel-Burden (compute_wm_travel_burden.py) — separates File
     travel_data = {}
     travel_file = os.path.join(os.path.dirname(WM_FILE), "wm_travel_burden.json")
@@ -1506,10 +1520,11 @@ def main():
                     "injuries":     injuries,
                     "form":         form,
                     "h2h":          h2h_data.get(ha_key, {}),
-                    "xg_stats":     xg_stats,
-                    "lineups":      lineups_data,
-                    "squads":       wm.get("squads", {}),
-                    "snapshot_ts":  None,   # → evaluate_signals nutzt now()
+                    "xg_stats":         xg_stats,
+                    "lineups":          lineups_data,
+                    "squads":           wm.get("squads", {}),
+                    "apif_predictions": apif_predictions_data,
+                    "snapshot_ts":      None,   # → evaluate_signals nutzt now()
                 }
                 for p in new_picks:
                     sig_out = evaluate_signals(p, sig_ctx)

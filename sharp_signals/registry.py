@@ -28,6 +28,7 @@ from sharp_signals.polymarket_sharp import PolymarketSharpSignal
 from sharp_signals.steam_lag import SteamLagSignal
 from sharp_signals.pressure_index import PressureIndexSignal
 from sharp_signals.lineup_signal import LineupSignal
+from sharp_signals.apif_predictions import ApifPredictionsSignal
 
 
 # Liste aller aktiv evaluierten Signale.
@@ -44,6 +45,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     SteamLagSignal(),
     PressureIndexSignal(),
     LineupSignal(),
+    ApifPredictionsSignal(),
 ]
 
 
@@ -116,6 +118,10 @@ SIGNAL_GROUPS: dict[str, str] = {
     # die anderen modellieren historische/statische Daten, lineup_signal
     # injiziert die spätestmögliche realtime Wahrheit. Volle Gewichtung.
     "lineup_signal":      "unique",
+    # apif_predictions ist auch UNIQUE — ein externes Drittes-Modell
+    # (API-Football's eigenes Pricing) vergleicht gegen Pinnacle. Liegt
+    # orthogonal zu unserem Skellam+Elo und zu allen Signal-Familien.
+    "apif_predictions":   "unique",
 }
 CORRELATION_DISCOUNT = 0.4   # zweites Signal aus selber Gruppe nur zu 40%
 
