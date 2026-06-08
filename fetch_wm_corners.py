@@ -29,7 +29,9 @@ WM_FILE      = BASE / "wm2026-data.json"
 APIF_HOST    = "v3.football.api-sports.io"
 APIF_KEY     = os.environ.get("APISPORTS_KEY", "")
 DELAY        = 1.5       # seconds between requests (Pro plan: 10 req/min)
-MAX_FIXTURES = 10        # cap stats calls per team to stay within API budget
+MAX_FIXTURES = 15        # Erhöht 08.06.2026 von 10 → 15 für größeres xG-Sample.
+                          # (CONMEBOL/AFC-Quali liefert in API-Football kein xG,
+                          # daher bleibt 30/48 Teams auch bei höherem Limit ohne xG.)
 FORCE        = "--force" in sys.argv
 STALE_H      = 72        # re-fetch after 72 hours
 

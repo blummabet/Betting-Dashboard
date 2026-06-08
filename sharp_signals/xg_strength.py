@@ -22,10 +22,13 @@ from sharp_signals.base import Signal, SignalResult
 
 
 DEFAULT_THRESHOLDS = {
-    "min_games":      5,        # mind. 5 xG-Spiele pro Team
-    "score_scale_pp": 2.0,      # pp pro xG-Diff-pp Differenz
-    "min_signal_pp":  0.8,
-    "max_signal_pp":  6.0,
+    "min_games":          5,    # mind. 5 xG-Spiele pro Team (echtes xG)
+    "min_games_proxy":    5,    # für Form-Proxy
+    "score_scale_pp":     2.0,  # pp pro xG-Diff-pp Differenz
+    "score_scale_proxy":  1.2,  # Form-Proxy wird gedämpft (kein echtes xG)
+    "min_signal_pp":      0.8,
+    "max_signal_pp":      6.0,
+    "proxy_confidence_max": 0.65,  # cap für Form-derived "xG"
 }
 
 
@@ -75,40 +78,58 @@ class XGStrengthSignal(Signal):
         if side == 0:
             return None
 
-        xg = context.get("xg_stats") or {}
         home_id, away_id = context.get("home_id"), context.get("away_id")
         if not (home_id and away_id):
             return None
 
+        # ── 1. Echtes xG bevorzugen wenn beidseitig verfügbar ──
+        xg = context.get("xg_stats") or {}
         xh = xg.get(home_id) or {}
         xa = xg.get(away_id) or {}
-        if (xh.get("games", 0) < self._t["min_games"]
-                or xa.get("games", 0) < self._t["min_games"]):
-            return None
-
         h_for, h_ag = xh.get("xgForAvg"), xh.get("xgAgainstAvg")
         a_for, a_ag = xa.get("xgForAvg"), xa.get("xgAgainstAvg")
-        if None in (h_for, h_ag, a_for, a_ag):
-            return None
+        h_games = xh.get("games", 0) or 0
+        a_games = xa.get("games", 0) or 0
 
-        home_diff = h_for - h_ag    # positiv = dominant
+        is_proxy = False
+        # ── 2. Fallback auf Form-Proxy wenn echtes xG fehlt ──
+        # API-Football hat für CONMEBOL/AFC-Quali keine xG-Statistik. Wir nutzen
+        # avgScored/avgConceded als Proxy mit niedriger Confidence — markiert
+        # mit is_proxy=True damit Backtest/Lernen es separat behandeln kann.
+        if None in (h_for, h_ag, a_for, a_ag) or h_games < self._t["min_games"] or a_games < self._t["min_games"]:
+            form = context.get("form") or {}
+            fh, fa = form.get(home_id) or {}, form.get(away_id) or {}
+            min_proxy = self._t["min_games_proxy"]
+            if (fh.get("games", 0) < min_proxy or fa.get("games", 0) < min_proxy):
+                return None
+            for v in (fh.get("avgScored"), fh.get("avgConceded"),
+                      fa.get("avgScored"), fa.get("avgConceded")):
+                if v is None:
+                    return None
+            h_for, h_ag = fh["avgScored"], fh["avgConceded"]
+            a_for, a_ag = fa["avgScored"], fa["avgConceded"]
+            h_games, a_games = fh["games"], fa["games"]
+            is_proxy = True
+
+        home_diff = h_for - h_ag
         away_diff = a_for - a_ag
-        relative = home_diff - away_diff   # positiv = Heim stärker
+        relative = home_diff - away_diff
 
-        # Aus Sicht der gepickten Seite
-        score = side * relative * self._t["score_scale_pp"]
-
+        scale = self._t["score_scale_proxy"] if is_proxy else self._t["score_scale_pp"]
+        score = side * relative * scale
         if abs(score) < self._t["min_signal_pp"]:
             return None
         score = max(-self._t["max_signal_pp"], min(self._t["max_signal_pp"], score))
 
-        # Confidence steigt mit Sample-Size beider Teams
-        n_min = min(xh["games"], xa["games"])
+        # Confidence — bei Proxy gecapt
+        n_min = min(h_games, a_games)
         confidence = min(0.90, 0.55 + 0.03 * n_min + 0.04 * abs(relative))
+        if is_proxy:
+            confidence = min(self._t["proxy_confidence_max"], confidence)
 
-        ev = (f"⚡ xG-Stärke: Heim {h_for:.2f}-{h_ag:.2f} "
-              f"vs Auswärts {a_for:.2f}-{a_ag:.2f} "
-              f"(Δ {relative:+.2f})")
+        label = "Form-xG (Proxy)" if is_proxy else "xG-Stärke"
+        ev = (f"⚡ {label}: Heim {h_for:.2f}-{h_ag:.2f} "
+              f"vs Auswärts {a_for:.2f}-{a_ag:.2f} (Δ {relative:+.2f})")
 
         return SignalResult(
             score=round(score, 2),
@@ -120,8 +141,9 @@ class XGStrengthSignal(Signal):
                 "away_xg_for":     round(a_for, 2),
                 "away_xg_against": round(a_ag, 2),
                 "relative_diff":   round(relative, 2),
-                "home_games":      xh["games"],
-                "away_games":      xa["games"],
+                "home_games":      h_games,
+                "away_games":      a_games,
+                "is_proxy":        is_proxy,
                 "pick_side":       "home" if side == 1 else "away",
             },
         )
