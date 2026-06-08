@@ -27,6 +27,7 @@ from sharp_signals.xg_strength import XGStrengthSignal
 from sharp_signals.polymarket_sharp import PolymarketSharpSignal
 from sharp_signals.steam_lag import SteamLagSignal
 from sharp_signals.pressure_index import PressureIndexSignal
+from sharp_signals.lineup_signal import LineupSignal
 
 
 # Liste aller aktiv evaluierten Signale.
@@ -42,6 +43,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     PolymarketSharpSignal(),
     SteamLagSignal(),
     PressureIndexSignal(),
+    LineupSignal(),
 ]
 
 
@@ -109,6 +111,11 @@ SIGNAL_GROUPS: dict[str, str] = {
     "travel_burden":      "context",
     "injury":             "context",
     "pressure_index":     "context",
+    # lineup_signal ist UNIQUE (kein Anti-Korrelations-Discount):
+    # T-1h Aufstellungs-Info ist orthogonal zu allen anderen Signalen —
+    # die anderen modellieren historische/statische Daten, lineup_signal
+    # injiziert die spätestmögliche realtime Wahrheit. Volle Gewichtung.
+    "lineup_signal":      "unique",
 }
 CORRELATION_DISCOUNT = 0.4   # zweites Signal aus selber Gruppe nur zu 40%
 

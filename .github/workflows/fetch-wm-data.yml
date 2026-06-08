@@ -151,6 +151,16 @@ jobs:
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
+      # ── Aufstellungen T-1h vor Anpfiff (lineup_signal-Datenquelle) ─────
+      # Holt nur Spiele in den nächsten 3h. Cache-TTL 45min. Wenn kein Spiel
+      # anstehend → silent exit. Muss VOR generate_wm_picks laufen damit
+      # lineup_signal die aktuellen Lineups nutzen kann.
+      - name: 📋 WM Aufstellungen (T-1h) fetchen
+        run: python fetch_wm_lineups.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
       # ── Spielergebnisse fetchen (schreibt result in wm2026-data.json Fixtures) ────
       - name: ⚽ WM Spielergebnisse fetchen
         run: python fetch_wm_match_results.py
