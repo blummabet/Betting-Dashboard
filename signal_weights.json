@@ -24,5 +24,26 @@
     "wins_when_triggered": 0,
     "last_updated": null,
     "notes": "Killer-Differenzierung — kaum Bookies modellieren das. xG-basiert, gemeinsame Logik mit generate_wm_picks.travel_factor()."
+  },
+  "injury": {
+    "weight": 1.0,
+    "n_observations": 0,
+    "wins_when_triggered": 0,
+    "last_updated": null,
+    "notes": "Positionsbewusst: GK > FWD > DEF/MID > Backup. Mehrere Ausfälle akkumulieren bis Cap 6pp/Team."
+  },
+  "form_trend": {
+    "weight": 1.0,
+    "n_observations": 0,
+    "wins_when_triggered": 0,
+    "last_updated": null,
+    "notes": "Tore-Avg-Diff der letzten ~5 Spiele. Score = scoring_diff × 3 + conceding_diff × 2.5."
+  },
+  "h2h_pattern": {
+    "weight": 1.0,
+    "n_observations": 0,
+    "wins_when_triggered": 0,
+    "last_updated": null,
+    "notes": "≥5 H2H Spiele Anforderung. Win-Rate (inkl. halber Draws) gegen 50% als Baseline."
   }
 }

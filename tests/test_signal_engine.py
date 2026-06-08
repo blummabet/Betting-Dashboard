@@ -222,6 +222,99 @@ class TestTravelBurden(unittest.TestCase):
             "Höhenwechsel sollte den Score weiter erhöhen")
 
 
+class TestInjurySignal(unittest.TestCase):
+    """Positionsbewusst — GK, DEF, MID, FWD verschieden gewichtet."""
+
+    @classmethod
+    def setUpClass(cls):
+        from sharp_signals.injury_signal import InjurySignal
+        cls.sig = InjurySignal()
+
+    def _evaluate(self, market, injuries, home="MEX", away="ZAF"):
+        return self.sig.evaluate(
+            {"market": market},
+            {"home_id": home, "away_id": away, "injuries": injuries}
+        )
+
+    def test_no_signal_when_no_injuries(self):
+        self.assertIsNone(self._evaluate("Heimsieg", {}))
+
+    def test_gk_injury_has_higher_impact_than_defender(self):
+        """Torwart-Ausfall ist gewichtiger als Verteidiger-Ausfall."""
+        gk_out = {"ZAF": {"players": [{"name": "Williams", "position": "GK"}]}}
+        df_out = {"ZAF": {"players": [{"name": "Mbatha", "position": "CB"}]}}
+        s_gk = self._evaluate("Heimsieg", gk_out)
+        s_df = self._evaluate("Heimsieg", df_out)
+        # Bei beiden picked Heim, gegnerischer Ausfall → positiver Score
+        self.assertGreater(s_gk.score, s_df.score,
+            "GK-Ausfall muss mehr Boost geben als CB")
+
+    def test_multiple_injuries_accumulate(self):
+        """3 Ausfälle > 1 Ausfall (bis zum Cap)."""
+        one = {"ZAF": {"players": [{"name": "Williams", "position": "GK"}]}}
+        many = {"ZAF": {"players": [
+            {"name": "Williams", "position": "GK"},
+            {"name": "Mbatha", "position": "CB"},
+            {"name": "Lebese", "position": "CM"},
+        ]}}
+        self.assertGreater(self._evaluate("Heimsieg", many).score,
+                           self._evaluate("Heimsieg", one).score)
+
+    def test_own_team_injury_hurts_pick(self):
+        """Wenn das gepickte Team einen Top-Spieler verliert → negativ."""
+        result = self._evaluate(
+            "Heimsieg",
+            {"MEX": {"players": [{"name": "Vega", "position": "GK"}]}}
+        )
+        self.assertIsNotNone(result)
+        self.assertLess(result.score, 0)
+
+
+class TestFormTrend(unittest.TestCase):
+    """Form-Differenz der letzten Spiele."""
+
+    @classmethod
+    def setUpClass(cls):
+        from sharp_signals.form_trend import FormTrendSignal
+        cls.sig = FormTrendSignal()
+
+    def test_positive_for_better_home_form(self):
+        ctx = {"home_id": "MEX", "away_id": "ZAF",
+               "form": {
+                   "MEX": {"games": 5, "avgScored": 2.4, "avgConceded": 0.6},
+                   "ZAF": {"games": 5, "avgScored": 1.0, "avgConceded": 2.0},
+               }}
+        result = self.sig.evaluate({"market": "Heimsieg"}, ctx)
+        self.assertIsNotNone(result)
+        self.assertGreater(result.score, 0)
+
+    def test_no_signal_with_too_few_games(self):
+        ctx = {"home_id": "MEX", "away_id": "ZAF",
+               "form": {"MEX": {"games": 2, "avgScored": 3.0, "avgConceded": 0.0},
+                        "ZAF": {"games": 2, "avgScored": 0.0, "avgConceded": 5.0}}}
+        self.assertIsNone(self.sig.evaluate({"market": "Heimsieg"}, ctx))
+
+
+class TestH2HPattern(unittest.TestCase):
+    """H2H Win-Rate."""
+
+    @classmethod
+    def setUpClass(cls):
+        from sharp_signals.h2h_pattern import H2HPatternSignal
+        cls.sig = H2HPatternSignal()
+
+    def test_positive_for_dominant_home_h2h(self):
+        ctx = {"h2h": {"games": 8, "homeWins": 6, "draws": 1, "awayWins": 1}}
+        result = self.sig.evaluate({"market": "Heimsieg"}, ctx)
+        self.assertIsNotNone(result)
+        self.assertGreater(result.score, 0)
+        self.assertIn("⚔️", result.evidence)
+
+    def test_no_signal_below_sample_threshold(self):
+        ctx = {"h2h": {"games": 3, "homeWins": 2, "draws": 1, "awayWins": 0}}
+        self.assertIsNone(self.sig.evaluate({"market": "Heimsieg"}, ctx))
+
+
 class TestRegistryEvaluateSignals(unittest.TestCase):
     """evaluate_signals kombiniert mehrere Signale gewichtet."""
 

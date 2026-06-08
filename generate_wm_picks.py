@@ -1452,6 +1452,9 @@ def main():
                     "odds_history": odds_history.get(ha_key, []) if odds_history else [],
                     "odds_snapshot": mkt.get(ha_key, {}),
                     "travel":       travel_data,
+                    "injuries":     injuries,
+                    "form":         form,
+                    "h2h":          h2h_data.get(ha_key, {}),
                     "snapshot_ts":  None,   # → evaluate_signals nutzt now()
                 }
                 for p in new_picks:
