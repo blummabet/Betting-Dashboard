@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-06-07T21:11:30.883867+00:00",
+  "savedAt": "2026-06-08T09:00:38.660518+00:00",
   "picks": {
     "A-1-KOR-CZE": [
       {
@@ -19,24 +19,24 @@
         "dataQuality": "elo+form"
       },
       {
-        "market": "Über 9.5 Ecken",
+        "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 2.766,
+        "modelOdds": 1.801,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 3.8,
-          "away": 4.7,
-          "total": 8.5
+          "home": 4.3,
+          "away": 4.6,
+          "total": 8.9
         }
       }
     ],
@@ -103,22 +103,22 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 4.547,
+        "modelOdds": 4.123,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 7.4 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.6 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.2,
-          "away": 3.2,
-          "total": 7.4
+          "home": 4.0,
+          "away": 3.6,
+          "total": 7.6
         }
       }
     ],
@@ -137,27 +137,47 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 1.1,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": 1.36,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.9:0.9 vs Auswärts 1.5:0.9",
+            "weight": 1.0,
+            "weighted_score": 1.16,
+            "metadata": {
+              "home_scored": 1.87,
+              "home_conceded": 0.87,
+              "away_scored": 1.47,
+              "away_conceded": 0.93,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 1.36
       },
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 2.885,
+        "modelOdds": 2.686,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.4 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.6 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 5.0,
-          "away": 3.4,
-          "total": 8.4
+          "home": 4.9,
+          "away": 3.7,
+          "total": 8.6
         }
       }
     ],
@@ -180,58 +200,121 @@
         "saferAltFor": "DNB: Auswärtsteam",
         "riskierAlt": {
           "market": "DNB: Auswärtsteam",
-          "odds": 3.51,
-          "edgePP": 10
-        }
-      },
-      {
-        "market": "AH Auswärts +0.75",
-        "odds": 1.8,
-        "modelOdds": 1.31,
-        "conf": "high",
-        "verdict": "ABWÄGEN",
-        "modSig": 1,
-        "mktSig": 0,
-        "storySig": 0,
-        "edgePP": 16,
-        "info": "Elo +57 · Form WWWDD·WWLLW · xG 1.0:0.9 · ✈️ 🇰🇷 2500km/2d/+2145m (18%-xG)",
-        "icon": "🎯",
-        "result": null,
-        "clvPP": 0.0,
-        "dataQuality": "full",
-        "downgradedReason": "AH Edge 16pp > 12pp Modell-Bias-Schwelle"
+          "odds": 3.4,
+          "edgePP": 9
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -4.4,
+            "confidence": 0.82,
+            "evidence": "✈️ Auswärts 2500km/2d (critical) · Auswärts Höhe +2145m",
+            "weight": 1.0,
+            "weighted_score": -3.61,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.82,
+              "home": {},
+              "away": {
+                "km": 2500,
+                "rest_days": 2,
+                "alt_shift": 2145,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 0.83,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.4:0.8 vs Auswärts 1.7:0.9",
+            "weight": 1.0,
+            "weighted_score": 0.71,
+            "metadata": {
+              "home_scored": 1.4,
+              "home_conceded": 0.8,
+              "away_scored": 1.73,
+              "away_conceded": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.74
       },
       {
         "market": "Auswärtssieg",
-        "odds": 4.55,
+        "odds": 4.44,
         "modelOdds": 3.155,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": -1,
-        "edgePP": 8,
+        "edgePP": 7,
         "info": "Elo +57 · Form WWWDD·WWLLW · H2H 0% A · xG 1.0:0.9 · ✈️ 🇰🇷 2500km/2d/+2145m (18%-xG)",
         "icon": "🎯",
         "result": null,
-        "clvPP": 0.1,
+        "clvPP": 0.6,
         "dataQuality": "full",
         "boldAlt": {
           "market": "AH Auswärts +0.5",
           "odds": 1.97,
           "edgePP": 10
-        }
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -4.4,
+            "confidence": 0.82,
+            "evidence": "✈️ Auswärts 2500km/2d (critical) · Auswärts Höhe +2145m",
+            "weight": 1.0,
+            "weighted_score": -3.61,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.82,
+              "home": {},
+              "away": {
+                "km": 2500,
+                "rest_days": 2,
+                "alt_shift": 2145,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 0.83,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.4:0.8 vs Auswärts 1.7:0.9",
+            "weight": 1.0,
+            "weighted_score": 0.71,
+            "metadata": {
+              "home_scored": 1.4,
+              "home_conceded": 0.8,
+              "away_scored": 1.73,
+              "away_conceded": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.74
       },
       {
         "market": "DNB: Auswärtsteam",
-        "odds": 3.51,
+        "odds": 3.4,
         "modelOdds": 2.47,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": -1,
-        "edgePP": 10,
+        "edgePP": 9,
         "info": "Elo +57 · Form WWWDD·WWLLW · H2H 67% H · xG 1.0:0.9 · ✈️ 🇰🇷 2500km/2d/+2145m (18%-xG)",
         "icon": "🎯",
         "result": null,
@@ -241,18 +324,58 @@
           "market": "AH Auswärts +0.5",
           "odds": 1.97,
           "edgePP": 10
-        }
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -4.4,
+            "confidence": 0.82,
+            "evidence": "✈️ Auswärts 2500km/2d (critical) · Auswärts Höhe +2145m",
+            "weight": 1.0,
+            "weighted_score": -3.61,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.82,
+              "home": {},
+              "away": {
+                "km": 2500,
+                "rest_days": 2,
+                "alt_shift": 2145,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 0.83,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.4:0.8 vs Auswärts 1.7:0.9",
+            "weight": 1.0,
+            "weighted_score": 0.71,
+            "metadata": {
+              "home_scored": 1.4,
+              "home_conceded": 0.8,
+              "away_scored": 1.73,
+              "away_conceded": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.74
       },
       {
         "market": "Unter 1.5 Tore",
-        "odds": 2.9,
+        "odds": 3.0,
         "modelOdds": 2.185,
-        "conf": "medium",
+        "conf": "high",
         "verdict": "BET",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 8,
+        "edgePP": 10,
         "info": "Elo +57 · Form WWWDD·WWLLW · xG 1.0:0.9 · ✈️ 🇰🇷 2500km/2d/+2145m (18%-xG)",
         "icon": "🎯",
         "result": null,
@@ -260,13 +383,13 @@
         "dataQuality": "full",
         "boldAlt": {
           "market": "Unter 2.5 Tore",
-          "odds": 1.63,
+          "odds": 1.65,
           "edgePP": 8
         }
       },
       {
         "market": "Unter 2.5 Tore",
-        "odds": 1.63,
+        "odds": 1.65,
         "modelOdds": 1.354,
         "conf": "medium",
         "verdict": "ABWÄGEN",
@@ -277,34 +400,34 @@
         "info": "Elo +57 · Form WWWDD·WWLLW · H2H 100% Ü2.5 · xG 1.0:0.9 · ✈️ 🇰🇷 2500km/2d/+2145m (18%-xG)",
         "icon": "🛡️",
         "result": null,
-        "clvPP": -0.8,
+        "clvPP": -1.5,
         "dataQuality": "full",
         "saferAltFor": "Unter 1.5 Tore",
         "riskierAlt": {
           "market": "Unter 1.5 Tore",
-          "odds": 2.9,
-          "edgePP": 8
+          "odds": 3.0,
+          "edgePP": 10
         }
       },
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 4.294,
+        "modelOdds": 3.518,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 7.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "full",
         "cornersExpected": {
-          "home": 3.9,
-          "away": 3.6,
-          "total": 7.5
+          "home": 3.8,
+          "away": 4.2,
+          "total": 7.9
         }
       }
     ],
@@ -324,7 +447,47 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 13pp > 12pp Modell-Bias-Schwelle"
+        "downgradedReason": "AH Edge 13pp > 12pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -3.4,
+            "confidence": 0.75,
+            "evidence": "✈️ Auswärts 1509km/2d (significant) · Auswärts Höhe +2030m",
+            "weight": 1.0,
+            "weighted_score": -2.55,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.87,
+              "home": {},
+              "away": {
+                "km": 1509,
+                "rest_days": 2,
+                "alt_shift": 2030,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 1.23,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.4:0.8 vs Auswärts 1.9:0.9",
+            "weight": 1.0,
+            "weighted_score": 1.05,
+            "metadata": {
+              "home_scored": 1.4,
+              "home_conceded": 0.8,
+              "away_scored": 1.87,
+              "away_conceded": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.94
       },
       {
         "market": "AH Auswärts +0.75",
@@ -341,7 +504,47 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 18pp > 12pp Modell-Bias-Schwelle"
+        "downgradedReason": "AH Edge 18pp > 12pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -3.4,
+            "confidence": 0.75,
+            "evidence": "✈️ Auswärts 1509km/2d (significant) · Auswärts Höhe +2030m",
+            "weight": 1.0,
+            "weighted_score": -2.55,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.87,
+              "home": {},
+              "away": {
+                "km": 1509,
+                "rest_days": 2,
+                "alt_shift": 2030,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 1.23,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.4:0.8 vs Auswärts 1.9:0.9",
+            "weight": 1.0,
+            "weighted_score": 1.05,
+            "metadata": {
+              "home_scored": 1.4,
+              "home_conceded": 0.8,
+              "away_scored": 1.87,
+              "away_conceded": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.94
       },
       {
         "market": "Unter 1.5 Tore",
@@ -423,7 +626,52 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 5.4,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.4,
+            "confidence": 0.67,
+            "evidence": "✈️ Auswärts 2501km/3d (critical) · Heim 1958km/2d (significant) · Auswärts Höhe +1940m",
+            "weight": 1.0,
+            "weighted_score": -1.61,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 0.82,
+              "home": {
+                "km": 1958,
+                "rest_days": 2,
+                "alt_shift": 90,
+                "burden": "significant"
+              },
+              "away": {
+                "km": 2501,
+                "rest_days": 3,
+                "alt_shift": 1940,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 0.96,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.5:0.9 vs Auswärts 1.7:0.9",
+            "weight": 1.0,
+            "weighted_score": 0.82,
+            "metadata": {
+              "home_scored": 1.47,
+              "home_conceded": 0.93,
+              "away_scored": 1.73,
+              "away_conceded": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.52
       },
       {
         "market": "Unter 1.5 Tore",
@@ -471,22 +719,22 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 3.558,
+        "modelOdds": 2.772,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 7.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 3.6,
-          "away": 4.3,
-          "total": 7.9
+          "home": 3.8,
+          "away": 4.7,
+          "total": 8.5
         }
       }
     ],
@@ -540,6 +788,22 @@
         "clvPP": 0.0,
         "dataQuality": "elo+form_asym",
         "downgradedReason": "BET→ABWÄGEN: dataQuality=elo+form_asym (Form-Daten fehlen ein Team)"
+      },
+      {
+        "market": "Unter 1.5 Tore",
+        "odds": 3.25,
+        "modelOdds": 2.647,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 5,
+        "info": "Elo +23 · Form DWDDW·? · xG 1.7:0.5",
+        "icon": "🎯",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form_asym"
       }
     ],
     "B-1-QAT-SUI": [
@@ -557,27 +821,50 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
-      },
-      {
-        "market": "Über 1.5 Tore",
-        "odds": 1.23,
-        "modelOdds": 1.087,
-        "conf": "medium",
-        "verdict": "ABWÄGEN",
-        "modSig": 0,
-        "mktSig": 0,
-        "storySig": 0,
-        "edgePP": 5,
-        "info": "Elo -244 · Form DLLDL·DWDLD · xG 0.7:2.9",
-        "icon": "🎯",
-        "result": null,
-        "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -5.73,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 0.9:1.5 vs Auswärts 2.4:1.0",
+            "weight": 1.0,
+            "weighted_score": -4.87,
+            "metadata": {
+              "home_scored": 0.93,
+              "home_conceded": 1.53,
+              "away_scored": 2.4,
+              "away_conceded": 1.0,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -2.4,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 0.93-1.53 vs Auswärts 2.40-1.00 (Δ -2.00)",
+            "weight": 1.0,
+            "weighted_score": -1.56,
+            "metadata": {
+              "home_xg_for": 0.93,
+              "home_xg_against": 1.53,
+              "away_xg_for": 2.4,
+              "away_xg_against": 1.0,
+              "relative_diff": -2.0,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -4.29
       },
       {
         "market": "Über 2.5 Tore",
-        "odds": 1.6,
+        "odds": 1.61,
         "modelOdds": 1.347,
         "conf": "medium",
         "verdict": "BET",
@@ -588,56 +875,55 @@
         "info": "Elo -244 · Form DLLDL·DWDLD · xG 0.7:2.9",
         "icon": "🛡️",
         "result": null,
-        "clvPP": 1.5,
+        "clvPP": 1.1,
         "dataQuality": "elo+form",
         "saferAltFor": "Über 3.5 Tore",
         "riskierAlt": {
           "market": "Über 3.5 Tore",
-          "odds": 2.8,
-          "edgePP": 14
+          "odds": 2.55,
+          "edgePP": 10
         }
       },
       {
         "market": "Über 3.5 Tore",
-        "odds": 2.8,
+        "odds": 2.55,
         "modelOdds": 1.906,
         "conf": "high",
-        "verdict": "ABWÄGEN",
+        "verdict": "BET",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 14,
+        "edgePP": 10,
         "info": "Elo -244 · Form DLLDL·DWDLD · xG 0.7:2.9",
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 14pp > 10pp Modell-Bias-Schwelle",
         "boldAlt": {
           "market": "Über 2.5 Tore",
-          "odds": 1.6,
+          "odds": 1.61,
           "edgePP": 7
         }
       },
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 3.388,
+        "modelOdds": 3.177,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.0 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.1 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
           "home": 3.7,
-          "away": 4.3,
-          "total": 8.0
+          "away": 4.4,
+          "total": 8.1
         }
       }
     ],
@@ -656,27 +942,86 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 540km/2d (moderate)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {},
+              "away": {
+                "km": 540,
+                "rest_days": 2,
+                "alt_shift": 66,
+                "burden": "moderate"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -4.87,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.7:0.5 vs Auswärts 0.9:1.5",
+            "weight": 1.0,
+            "weighted_score": -4.14,
+            "metadata": {
+              "home_scored": 1.67,
+              "home_conceded": 0.47,
+              "away_scored": 0.93,
+              "away_conceded": 1.53,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -2.16,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 1.67-0.47 vs Auswärts 0.93-1.53 (Δ +1.80)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "home_xg_for": 1.67,
+              "home_xg_against": 0.47,
+              "away_xg_for": 0.93,
+              "away_xg_against": 1.53,
+              "relative_diff": 1.8,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -3.16
       },
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 3.487,
+        "modelOdds": 3.28,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 7.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.1 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
           "home": 5.1,
-          "away": 2.8,
-          "total": 7.9
+          "away": 3.0,
+          "total": 8.1
         }
       }
     ],
@@ -712,6 +1057,22 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form_asym"
+      },
+      {
+        "market": "Über 3.5 Tore",
+        "odds": 3.55,
+        "modelOdds": 2.926,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 4,
+        "info": "Elo +137 · Form DWDLD·? · xG 2.0:0.8 · ✈️ 🇨🇭 4099km/3d (15%-xG) · ✈️ 🇧🇦 3622km/4d (15%-xG)",
+        "icon": "🎯",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form_asym"
       }
     ],
     "B-3-BIH-QAT": [
@@ -729,7 +1090,35 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form_asym"
+        "dataQuality": "elo+form_asym",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 686km/3d (moderate) · Heim 4303km/2d (critical)",
+            "weight": 1.0,
+            "weighted_score": 0.63,
+            "metadata": {
+              "factor_home": 0.85,
+              "factor_away": 0.9,
+              "home": {
+                "km": 4303,
+                "rest_days": 2,
+                "alt_shift": 0,
+                "burden": "critical"
+              },
+              "away": {
+                "km": 686,
+                "rest_days": 3,
+                "alt_shift": 66,
+                "burden": "moderate"
+              },
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 1.0
       },
       {
         "market": "AH Auswärts +1.0",
@@ -746,7 +1135,35 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form_asym",
-        "downgradedReason": "BET→ABWÄGEN: dataQuality=elo+form_asym (Form-Daten fehlen ein Team)"
+        "downgradedReason": "BET→ABWÄGEN: dataQuality=elo+form_asym (Form-Daten fehlen ein Team)",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 686km/3d (moderate) · Heim 4303km/2d (critical)",
+            "weight": 1.0,
+            "weighted_score": 0.63,
+            "metadata": {
+              "factor_home": 0.85,
+              "factor_away": 0.9,
+              "home": {
+                "km": 4303,
+                "rest_days": 2,
+                "alt_shift": 0,
+                "burden": "critical"
+              },
+              "away": {
+                "km": 686,
+                "rest_days": 3,
+                "alt_shift": 66,
+                "burden": "moderate"
+              },
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 1.0
       },
       {
         "market": "Doppelte Chance — X2",
@@ -762,7 +1179,35 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form_asym"
+        "dataQuality": "elo+form_asym",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 686km/3d (moderate) · Heim 4303km/2d (critical)",
+            "weight": 1.0,
+            "weighted_score": 0.63,
+            "metadata": {
+              "factor_home": 0.85,
+              "factor_away": 0.9,
+              "home": {
+                "km": 4303,
+                "rest_days": 2,
+                "alt_shift": 0,
+                "burden": "critical"
+              },
+              "away": {
+                "km": 686,
+                "rest_days": 3,
+                "alt_shift": 66,
+                "burden": "moderate"
+              },
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 1.0
       },
       {
         "market": "Unter 1.5 Tore",
@@ -855,7 +1300,7 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 3.487,
+        "modelOdds": 3.502,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
@@ -868,8 +1313,8 @@
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.8,
-          "away": 3.1,
+          "home": 4.6,
+          "away": 3.3,
           "total": 7.9
         }
       }
@@ -878,7 +1323,7 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 4.305,
+        "modelOdds": 4.239,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
@@ -915,13 +1360,33 @@
         "dataQuality": "elo+form",
         "boldAlt": {
           "market": "Doppelte Chance — 1X",
-          "odds": 2.6,
+          "odds": 2.55,
           "edgePP": 6
-        }
+        },
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -1.54,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.5:1.3 vs Auswärts 1.9:1.1",
+            "weight": 1.0,
+            "weighted_score": -1.31,
+            "metadata": {
+              "home_scored": 1.53,
+              "home_conceded": 1.27,
+              "away_scored": 1.93,
+              "away_conceded": 1.13,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.54
       },
       {
         "market": "Doppelte Chance — 1X",
-        "odds": 2.6,
+        "odds": 2.55,
         "modelOdds": 2.084,
         "conf": "medium",
         "verdict": "ABWÄGEN",
@@ -939,7 +1404,27 @@
           "market": "DNB: Heimteam",
           "odds": 5.24,
           "edgePP": 15
-        }
+        },
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -1.54,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.5:1.3 vs Auswärts 1.9:1.1",
+            "weight": 1.0,
+            "weighted_score": -1.31,
+            "metadata": {
+              "home_scored": 1.53,
+              "home_conceded": 1.27,
+              "away_scored": 1.93,
+              "away_conceded": 1.13,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.54
       },
       {
         "market": "Über 1.5 Tore",
@@ -987,40 +1472,40 @@
       {
         "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 1.468,
+        "modelOdds": 1.514,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 9.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 9.7 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.7,
-          "away": 5.2,
-          "total": 9.9
+          "home": 5.1,
+          "away": 4.6,
+          "total": 9.7
         }
       }
     ],
     "C-2-BRA-HTI": [
       {
         "market": "Unter 2.5 Tore",
-        "odds": 3.7,
+        "odds": 3.8,
         "modelOdds": 2.538,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": -1,
         "storySig": 0,
-        "edgePP": 10,
+        "edgePP": 11,
         "info": "Elo +418 · Form WWWLD·LWDLW · xG 2.0:1.2 · ✈️ 🇭🇹 4099km/3d (15%-xG)",
         "icon": "🎯",
         "result": null,
-        "clvPP": -2.6,
+        "clvPP": -3.3,
         "dataQuality": "elo+form",
         "boldAlt": {
           "market": "Unter 3.5 Tore",
@@ -1046,29 +1531,29 @@
         "saferAltFor": "Unter 2.5 Tore",
         "riskierAlt": {
           "market": "Unter 2.5 Tore",
-          "odds": 3.7,
-          "edgePP": 10
+          "odds": 3.8,
+          "edgePP": 11
         }
       },
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 3.031,
+        "modelOdds": 3.211,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.3 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.1 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.7,
-          "away": 3.5,
-          "total": 8.3
+          "home": 4.2,
+          "away": 3.9,
+          "total": 8.1
         }
       }
     ],
@@ -1110,18 +1595,41 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -3.0,
+            "confidence": 0.78,
+            "evidence": "✈️ Auswärts 3942km/2d (critical)",
+            "weight": 1.0,
+            "weighted_score": -2.34,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.85,
+              "home": {},
+              "away": {
+                "km": 3942,
+                "rest_days": 2,
+                "alt_shift": 45,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -3.0
       },
       {
         "market": "Über 3.5 Tore",
-        "odds": 3.1,
+        "odds": 3.2,
         "modelOdds": 2.285,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 9,
+        "edgePP": 10,
         "info": "Elo +308 · Form WWWLD·WWLLW · xG 1.8:1.5 · ✈️ 🏴󠁧󠁢󠁳󠁣󠁴󠁿 3942km/2d (15%-xG)",
         "icon": "🎯",
         "result": null,
@@ -1131,7 +1639,7 @@
       {
         "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 1.653,
+        "modelOdds": 1.643,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
@@ -1154,22 +1662,22 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 3.245,
+        "modelOdds": 3.494,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.1 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 5.1,
-          "away": 3.0,
-          "total": 8.1
+          "home": 4.6,
+          "away": 3.4,
+          "total": 7.9
         }
       }
     ],
@@ -1188,7 +1696,27 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -0.96,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.7:0.9 vs Auswärts 2.3:1.3",
+            "weight": 1.0,
+            "weighted_score": -0.82,
+            "metadata": {
+              "home_scored": 1.67,
+              "home_conceded": 0.93,
+              "away_scored": 2.27,
+              "away_conceded": 1.27,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.96
       },
       {
         "market": "Über 1.5 Tore",
@@ -1208,20 +1736,20 @@
       },
       {
         "market": "Über 2.5 Tore",
-        "odds": 1.97,
+        "odds": 2.02,
         "modelOdds": 1.462,
         "conf": "high",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 13,
+        "edgePP": 15,
         "info": "Elo +96 · Form DLWWL·WWWWD · xG 1.7:1.7",
         "icon": "🛡️",
         "result": null,
-        "clvPP": 1.3,
+        "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 13pp > 10pp Modell-Bias-Schwelle",
+        "downgradedReason": "O/U Edge 15pp > 10pp Modell-Bias-Schwelle",
         "saferAltFor": "Über 3.5 Tore",
         "riskierAlt": {
           "market": "Über 3.5 Tore",
@@ -1246,29 +1774,29 @@
         "dataQuality": "elo+form",
         "boldAlt": {
           "market": "Über 2.5 Tore",
-          "odds": 1.97,
-          "edgePP": 13
+          "odds": 2.02,
+          "edgePP": 15
         }
       },
       {
         "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 1.796,
+        "modelOdds": 1.613,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 9.4 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 3.0,
-          "away": 5.9,
-          "total": 8.9
+          "home": 3.4,
+          "away": 6.0,
+          "total": 9.4
         }
       }
     ],
@@ -1349,24 +1877,24 @@
         }
       },
       {
-        "market": "Über 9.5 Ecken",
+        "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 2.642,
+        "modelOdds": 1.808,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.6 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "full",
         "cornersExpected": {
-          "home": 4.6,
-          "away": 4.0,
-          "total": 8.6
+          "home": 4.5,
+          "away": 4.4,
+          "total": 8.9
         }
       }
     ],
@@ -1385,7 +1913,52 @@
         "icon": "🎯",
         "result": null,
         "clvPP": -0.1,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 4167km/4d (critical) · Heim 2494km/3d (significant)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 0.85,
+              "home": {
+                "km": 2494,
+                "rest_days": 3,
+                "alt_shift": 160,
+                "burden": "significant"
+              },
+              "away": {
+                "km": 4167,
+                "rest_days": 4,
+                "alt_shift": 45,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -1.93,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.3:1.3 vs Auswärts 1.4:1.0",
+            "weight": 1.0,
+            "weighted_score": -1.64,
+            "metadata": {
+              "home_scored": 2.27,
+              "home_conceded": 1.27,
+              "away_scored": 1.4,
+              "away_conceded": 1.0,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.53
       },
       {
         "market": "DNB: Auswärtsteam",
@@ -1402,7 +1975,68 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=65%, Skellam (AH +0.5) sagt 55% — Diff +10pp ≥ 8pp Schwelle"
+        "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=65%, Skellam (AH +0.5) sagt 55% — Diff +10pp ≥ 8pp Schwelle",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 4167km/4d (critical) · Heim 2494km/3d (significant)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 0.85,
+              "home": {
+                "km": 2494,
+                "rest_days": 3,
+                "alt_shift": 160,
+                "burden": "significant"
+              },
+              "away": {
+                "km": 4167,
+                "rest_days": 4,
+                "alt_shift": 45,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -1.93,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.3:1.3 vs Auswärts 1.4:1.0",
+            "weight": 1.0,
+            "weighted_score": -1.64,
+            "metadata": {
+              "home_scored": 2.27,
+              "home_conceded": 1.27,
+              "away_scored": 1.4,
+              "away_conceded": 1.0,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.53
+      },
+      {
+        "market": "Über 1.5 Tore",
+        "odds": 1.4,
+        "modelOdds": 1.238,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 4,
+        "info": "Elo -9 · Form WWWWD·WLWWL · xG 1.6:1.2 · ✈️ 🇹🇷 2494km/3d (9%-xG) · ✈️ 🇵🇾 4167km/4d (15%-xG)",
+        "icon": "🎯",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form"
       },
       {
         "market": "Über 2.5 Tore",
@@ -1422,20 +2056,20 @@
         "saferAltFor": "Über 3.5 Tore",
         "riskierAlt": {
           "market": "Über 3.5 Tore",
-          "odds": 4.25,
-          "edgePP": 7
+          "odds": 4.35,
+          "edgePP": 8
         }
       },
       {
         "market": "Über 3.5 Tore",
-        "odds": 4.25,
+        "odds": 4.35,
         "modelOdds": 3.032,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 7,
+        "edgePP": 8,
         "info": "Elo -9 · Form WWWWD·WLWWL · xG 1.6:1.2 · ✈️ 🇹🇷 2494km/3d (9%-xG) · ✈️ 🇵🇾 4167km/4d (15%-xG)",
         "icon": "🎯",
         "result": null,
@@ -1450,22 +2084,22 @@
       {
         "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 1.525,
+        "modelOdds": 1.496,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 9.7 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 9.8 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
           "home": 5.7,
-          "away": 4.0,
-          "total": 9.7
+          "away": 4.1,
+          "total": 9.8
         }
       }
     ],
@@ -1485,7 +2119,30 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 16pp > 12pp Modell-Bias-Schwelle"
+        "downgradedReason": "AH Edge 16pp > 12pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 1974km/3d (significant)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {},
+              "away": {
+                "km": 1974,
+                "rest_days": 3,
+                "alt_shift": 115,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -2.0
       },
       {
         "market": "AH Auswärts +0.75",
@@ -1502,7 +2159,30 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 18pp > 12pp Modell-Bias-Schwelle"
+        "downgradedReason": "AH Edge 18pp > 12pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 1974km/3d (significant)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {},
+              "away": {
+                "km": 1974,
+                "rest_days": 3,
+                "alt_shift": 115,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -2.0
       },
       {
         "market": "Über 1.5 Tore",
@@ -1566,41 +2246,86 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 3.582,
+        "modelOdds": 2.751,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 7.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
           "home": 4.8,
-          "away": 3.0,
-          "total": 7.9
+          "away": 3.7,
+          "total": 8.5
         }
       }
     ],
     "D-3-PRY-AUS": [
       {
         "market": "AH Auswärts +0.5",
-        "odds": 1.65,
+        "odds": 1.67,
         "modelOdds": 1.36,
         "conf": "medium",
         "verdict": "BET",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 8,
+        "edgePP": 9,
         "info": "Elo -87 · Form WLWWL·DLWWL · xG 0.9:1.2 · ✈️ 🇵🇾 4303km/3d (15%-xG) · ✈️ 🇦🇺 505km/3d (9%-xG)",
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 505km/3d (low) · Heim 4303km/3d (critical)",
+            "weight": 1.0,
+            "weighted_score": 0.63,
+            "metadata": {
+              "factor_home": 0.85,
+              "factor_away": 0.9,
+              "home": {
+                "km": 4303,
+                "rest_days": 3,
+                "alt_shift": 0,
+                "burden": "critical"
+              },
+              "away": {
+                "km": 505,
+                "rest_days": 3,
+                "alt_shift": 45,
+                "burden": "low"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 0.97,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.4:1.0 vs Auswärts 1.7:0.9",
+            "weight": 1.0,
+            "weighted_score": 0.82,
+            "metadata": {
+              "home_scored": 1.4,
+              "home_conceded": 1.0,
+              "away_scored": 1.67,
+              "away_conceded": 0.93,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.98
       },
       {
         "market": "Doppelte Chance — X2",
@@ -1616,27 +2341,72 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 505km/3d (low) · Heim 4303km/3d (critical)",
+            "weight": 1.0,
+            "weighted_score": 0.63,
+            "metadata": {
+              "factor_home": 0.85,
+              "factor_away": 0.9,
+              "home": {
+                "km": 4303,
+                "rest_days": 3,
+                "alt_shift": 0,
+                "burden": "critical"
+              },
+              "away": {
+                "km": 505,
+                "rest_days": 3,
+                "alt_shift": 45,
+                "burden": "low"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 0.97,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.4:1.0 vs Auswärts 1.7:0.9",
+            "weight": 1.0,
+            "weighted_score": 0.82,
+            "metadata": {
+              "home_scored": 1.4,
+              "home_conceded": 1.0,
+              "away_scored": 1.67,
+              "away_conceded": 0.93,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.98
       },
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 4.294,
+        "modelOdds": 3.28,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 7.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.1 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.4,
-          "away": 3.1,
-          "total": 7.5
+          "home": 4.5,
+          "away": 3.5,
+          "total": 8.1
         }
       }
     ],
@@ -1655,7 +2425,52 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 274km/3d (low) · Heim 3942km/3d (critical)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 0.85,
+              "factor_away": 0.9,
+              "home": {
+                "km": 3942,
+                "rest_days": 3,
+                "alt_shift": 45,
+                "burden": "critical"
+              },
+              "away": {
+                "km": 274,
+                "rest_days": 3,
+                "alt_shift": 0,
+                "burden": "low"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -1.33,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.9:1.4 vs Auswärts 2.3:1.3",
+            "weight": 1.0,
+            "weighted_score": -1.13,
+            "metadata": {
+              "home_scored": 1.93,
+              "home_conceded": 1.4,
+              "away_scored": 2.27,
+              "away_conceded": 1.27,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.19
       },
       {
         "market": "Über 1.5 Tore",
@@ -1676,29 +2491,29 @@
       {
         "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 1.427,
+        "modelOdds": 1.388,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 10.1 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 10.2 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.5,
-          "away": 5.6,
-          "total": 10.1
+          "home": 4.3,
+          "away": 5.9,
+          "total": 10.2
         }
       }
     ],
     "E-1-CIV-ECU": [
       {
         "market": "Auswärtssieg",
-        "odds": 2.44,
+        "odds": 2.45,
         "modelOdds": 1.842,
         "conf": "high",
         "verdict": "BET",
@@ -1709,8 +2524,47 @@
         "info": "Elo -107 · Form WWWLW·WDDWD · xG 1.0:0.8",
         "icon": "🎯",
         "result": null,
-        "clvPP": -1.8,
-        "dataQuality": "elo+form"
+        "clvPP": -1.9,
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -2.3,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.0:0.6 vs Auswärts 1.1:0.4",
+            "weight": 1.0,
+            "weighted_score": -1.95,
+            "metadata": {
+              "home_scored": 2.0,
+              "home_conceded": 0.6,
+              "away_scored": 1.07,
+              "away_conceded": 0.4,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -0.88,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.00-0.60 vs Auswärts 1.07-0.40 (Δ +0.73)",
+            "weight": 1.0,
+            "weighted_score": -0.57,
+            "metadata": {
+              "home_xg_for": 2.0,
+              "home_xg_against": 0.6,
+              "away_xg_for": 1.07,
+              "away_xg_against": 0.4,
+              "relative_diff": 0.73,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.68
       },
       {
         "market": "Doppelte Chance — 12",
@@ -1731,22 +2585,22 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 2.808,
+        "modelOdds": 5.466,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.1 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.8,
-          "away": 3.7,
-          "total": 8.5
+          "home": 3.8,
+          "away": 3.3,
+          "total": 7.1
         }
       }
     ],
@@ -1754,61 +2608,106 @@
       {
         "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 1.561,
+        "modelOdds": 1.666,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 9.6 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 9.2 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 5.6,
-          "away": 4.0,
-          "total": 9.6
+          "home": 5.4,
+          "away": 3.9,
+          "total": 9.2
         }
       }
     ],
     "E-2-ECU-CUW": [
       {
         "market": "Doppelte Chance — X2",
-        "odds": 4.35,
+        "odds": 5.05,
         "modelOdds": 2.631,
-        "conf": "high",
-        "verdict": "BET",
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 13,
+        "edgePP": 16,
         "info": "Elo +188 · Form WDDWD·WLLLD · xG 1.1:0.7 · ✈️ 🇨🇼 1625km/4d (5%-xG)",
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 1625km/4d (significant)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.95,
+              "home": {
+                "km": 641,
+                "rest_days": 4,
+                "alt_shift": 1026,
+                "burden": "low"
+              },
+              "away": {
+                "km": 1625,
+                "rest_days": 4,
+                "alt_shift": 1069,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.0
+      },
+      {
+        "market": "Unter 3.5 Tore",
+        "odds": 1.45,
+        "modelOdds": 1.077,
+        "conf": "high",
+        "verdict": "ABWÄGEN",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 18,
+        "info": "Elo +188 · Form WDDWD·WLLLD · xG 1.1:0.7 · ✈️ 🇨🇼 1625km/4d (5%-xG)",
+        "icon": "🎯",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "downgradedReason": "O/U Edge 18pp > 10pp Modell-Bias-Schwelle"
       },
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 3.106,
+        "modelOdds": 3.993,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.2 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.6 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.0,
-          "away": 4.2,
-          "total": 8.2
+          "home": 3.9,
+          "away": 3.8,
+          "total": 7.6
         }
       }
     ],
@@ -1827,27 +2726,50 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 1.3,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 2124km/3d (significant)",
+            "weight": 1.0,
+            "weighted_score": 1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {},
+              "away": {
+                "km": 2124,
+                "rest_days": 3,
+                "alt_shift": 43,
+                "burden": "significant"
+              },
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 2.0
       },
       {
-        "market": "Über 8.5 Ecken",
+        "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 1.487,
+        "modelOdds": 2.609,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 9.8 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.7 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 5.2,
-          "away": 4.6,
-          "total": 9.8
+          "home": 4.8,
+          "away": 3.9,
+          "total": 8.7
         }
       }
     ],
@@ -1869,24 +2791,24 @@
         "dataQuality": "elo+form"
       },
       {
-        "market": "Über 8.5 Ecken",
+        "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 1.779,
+        "modelOdds": 4.283,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 9.0 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.0,
-          "away": 5.0,
-          "total": 9.0
+          "home": 3.4,
+          "away": 4.1,
+          "total": 7.5
         }
       }
     ],
@@ -1906,7 +2828,47 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 15pp > 12pp Modell-Bias-Schwelle"
+        "downgradedReason": "AH Edge 15pp > 12pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 1625km/2d (significant)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {},
+              "away": {
+                "km": 1625,
+                "rest_days": 2,
+                "alt_shift": 1069,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -1.97,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.3:1.1 vs Auswärts 1.1:0.4",
+            "weight": 1.0,
+            "weighted_score": -1.67,
+            "metadata": {
+              "home_scored": 2.33,
+              "home_conceded": 1.13,
+              "away_scored": 1.07,
+              "away_conceded": 0.4,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.98
       },
       {
         "market": "Unter 3.5 Tore",
@@ -1928,29 +2890,29 @@
       {
         "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 1.743,
+        "modelOdds": 1.854,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 9.1 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.8 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 5.4,
-          "away": 3.6,
-          "total": 9.1
+          "home": 5.1,
+          "away": 3.7,
+          "total": 8.8
         }
       }
     ],
     "F-1-NED-JPN": [
       {
         "market": "AH Auswärts +0.5",
-        "odds": 1.83,
+        "odds": 1.85,
         "modelOdds": 1.503,
         "conf": "medium",
         "verdict": "BET",
@@ -1962,7 +2924,27 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -1.3,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.5:0.7 vs Auswärts 1.9:0.5",
+            "weight": 1.0,
+            "weighted_score": -1.1,
+            "metadata": {
+              "home_scored": 2.47,
+              "home_conceded": 0.73,
+              "away_scored": 1.87,
+              "away_conceded": 0.53,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.3
       },
       {
         "market": "Unter 1.5 Tore",
@@ -2026,22 +3008,22 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 4.072,
+        "modelOdds": 3.502,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 7.6 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.3,
-          "away": 3.3,
-          "total": 7.6
+          "home": 4.1,
+          "away": 3.9,
+          "total": 7.9
         }
       }
     ],
@@ -2064,13 +3046,13 @@
         "saferAltFor": "DNB: Auswärtsteam",
         "riskierAlt": {
           "market": "DNB: Auswärtsteam",
-          "odds": 3.16,
+          "odds": 3.17,
           "edgePP": 13
         }
       },
       {
         "market": "Auswärtssieg",
-        "odds": 4.36,
+        "odds": 4.37,
         "modelOdds": 2.721,
         "conf": "high",
         "verdict": "BET",
@@ -2091,7 +3073,7 @@
       },
       {
         "market": "DNB: Auswärtsteam",
-        "odds": 3.16,
+        "odds": 3.17,
         "modelOdds": 2.101,
         "conf": "high",
         "verdict": "ABWÄGEN",
@@ -2112,41 +3094,24 @@
         }
       },
       {
-        "market": "Über 1.5 Tore",
-        "odds": 1.35,
-        "modelOdds": 1.041,
-        "conf": "high",
-        "verdict": "ABWÄGEN",
-        "modSig": 1,
-        "mktSig": 0,
-        "storySig": 0,
-        "edgePP": 16,
-        "info": "Elo +30 · Form DLWWD·LLDWD · xG 1.9:2.3",
-        "icon": "🎯",
-        "result": null,
-        "clvPP": 0.0,
-        "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 16pp > 10pp Modell-Bias-Schwelle"
-      },
-      {
-        "market": "Über 8.5 Ecken",
+        "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 1.831,
+        "modelOdds": 3.823,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.8 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.7 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.3,
-          "away": 4.5,
-          "total": 8.8
+          "home": 3.9,
+          "away": 3.8,
+          "total": 7.7
         }
       }
     ],
@@ -2166,7 +3131,66 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 13pp > 12pp Modell-Bias-Schwelle"
+        "downgradedReason": "AH Edge 13pp > 12pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 1971km/3d (significant)",
+            "weight": 1.0,
+            "weighted_score": 1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {},
+              "away": {
+                "km": 1971,
+                "rest_days": 3,
+                "alt_shift": 318,
+                "burden": "significant"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 3.74,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.5:0.7 vs Auswärts 2.0:1.7",
+            "weight": 1.0,
+            "weighted_score": 3.18,
+            "metadata": {
+              "home_scored": 2.47,
+              "home_conceded": 0.73,
+              "away_scored": 2.0,
+              "away_conceded": 1.67,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 4.38,
+            "confidence": 0.82,
+            "evidence": "⚡ xG-Stärke: Heim 2.05-0.54 vs Auswärts 1.02-1.69 (Δ +2.19)",
+            "weight": 1.0,
+            "weighted_score": 3.59,
+            "metadata": {
+              "home_xg_for": 2.05,
+              "home_xg_against": 0.54,
+              "away_xg_for": 1.02,
+              "away_xg_against": 1.69,
+              "relative_diff": 2.19,
+              "home_games": 6,
+              "away_games": 7,
+              "is_proxy": false,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 3.45
       },
       {
         "market": "AH Heim −0.75",
@@ -2182,7 +3206,66 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 1971km/3d (significant)",
+            "weight": 1.0,
+            "weighted_score": 1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {},
+              "away": {
+                "km": 1971,
+                "rest_days": 3,
+                "alt_shift": 318,
+                "burden": "significant"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 3.74,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.5:0.7 vs Auswärts 2.0:1.7",
+            "weight": 1.0,
+            "weighted_score": 3.18,
+            "metadata": {
+              "home_scored": 2.47,
+              "home_conceded": 0.73,
+              "away_scored": 2.0,
+              "away_conceded": 1.67,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 4.38,
+            "confidence": 0.82,
+            "evidence": "⚡ xG-Stärke: Heim 2.05-0.54 vs Auswärts 1.02-1.69 (Δ +2.19)",
+            "weight": 1.0,
+            "weighted_score": 3.59,
+            "metadata": {
+              "home_xg_for": 2.05,
+              "home_xg_against": 0.54,
+              "away_xg_for": 1.02,
+              "away_xg_against": 1.69,
+              "relative_diff": 2.19,
+              "home_games": 6,
+              "away_games": 7,
+              "is_proxy": false,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 3.45
       },
       {
         "market": "AH Heim −1.0",
@@ -2199,23 +3282,83 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 18pp > 12pp Modell-Bias-Schwelle"
+        "downgradedReason": "AH Edge 18pp > 12pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 1971km/3d (significant)",
+            "weight": 1.0,
+            "weighted_score": 1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {},
+              "away": {
+                "km": 1971,
+                "rest_days": 3,
+                "alt_shift": 318,
+                "burden": "significant"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 3.74,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.5:0.7 vs Auswärts 2.0:1.7",
+            "weight": 1.0,
+            "weighted_score": 3.18,
+            "metadata": {
+              "home_scored": 2.47,
+              "home_conceded": 0.73,
+              "away_scored": 2.0,
+              "away_conceded": 1.67,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 4.38,
+            "confidence": 0.82,
+            "evidence": "⚡ xG-Stärke: Heim 2.05-0.54 vs Auswärts 1.02-1.69 (Δ +2.19)",
+            "weight": 1.0,
+            "weighted_score": 3.59,
+            "metadata": {
+              "home_xg_for": 2.05,
+              "home_xg_against": 0.54,
+              "away_xg_for": 1.02,
+              "away_xg_against": 1.69,
+              "relative_diff": 2.19,
+              "home_games": 6,
+              "away_games": 7,
+              "is_proxy": false,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 3.45
       },
       {
         "market": "Über 1.5 Tore",
-        "odds": 1.25,
+        "odds": 1.27,
         "modelOdds": 1.041,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 10,
+        "edgePP": 11,
         "info": "Elo +196 · Form LDWWD·DLWWD · xG 3.2:1.0 · ✈️ 🇸🇪 1971km/3d (9%-xG)",
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "downgradedReason": "O/U Edge 11pp > 10pp Modell-Bias-Schwelle"
       },
       {
         "market": "Über 8.5 Ecken",
@@ -2254,7 +3397,71 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Heim 1076km/3d (moderate)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 1.0,
+              "home": {
+                "km": 1076,
+                "rest_days": 3,
+                "alt_shift": 11,
+                "burden": "moderate"
+              },
+              "away": {
+                "km": 955,
+                "rest_days": 4,
+                "alt_shift": 307,
+                "burden": "moderate"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -2.07,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.7:1.2 vs Auswärts 1.9:0.5",
+            "weight": 1.0,
+            "weighted_score": -1.76,
+            "metadata": {
+              "home_scored": 1.73,
+              "home_conceded": 1.2,
+              "away_scored": 1.87,
+              "away_conceded": 0.53,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -0.96,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 1.73-1.20 vs Auswärts 1.87-0.53 (Δ -0.80)",
+            "weight": 1.0,
+            "weighted_score": -0.62,
+            "metadata": {
+              "home_xg_for": 1.73,
+              "home_xg_against": 1.2,
+              "away_xg_for": 1.87,
+              "away_xg_against": 0.53,
+              "relative_diff": -0.8,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.72
       },
       {
         "market": "Heimsieg",
@@ -2270,27 +3477,91 @@
         "icon": "🎯",
         "result": null,
         "clvPP": -0.4,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Heim 1076km/3d (moderate)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 1.0,
+              "home": {
+                "km": 1076,
+                "rest_days": 3,
+                "alt_shift": 11,
+                "burden": "moderate"
+              },
+              "away": {
+                "km": 955,
+                "rest_days": 4,
+                "alt_shift": 307,
+                "burden": "moderate"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -2.07,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.7:1.2 vs Auswärts 1.9:0.5",
+            "weight": 1.0,
+            "weighted_score": -1.76,
+            "metadata": {
+              "home_scored": 1.73,
+              "home_conceded": 1.2,
+              "away_scored": 1.87,
+              "away_conceded": 0.53,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -0.96,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 1.73-1.20 vs Auswärts 1.87-0.53 (Δ -0.80)",
+            "weight": 1.0,
+            "weighted_score": -0.62,
+            "metadata": {
+              "home_xg_for": 1.73,
+              "home_xg_against": 1.2,
+              "away_xg_for": 1.87,
+              "away_xg_against": 0.53,
+              "relative_diff": -0.8,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.72
       },
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 4.632,
+        "modelOdds": 7.51,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 7.4 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 6.6 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 3.2,
-          "away": 4.1,
-          "total": 7.4
+          "home": 2.3,
+          "away": 4.3,
+          "total": 6.6
         }
       }
     ],
@@ -2341,22 +3612,22 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 4.072,
+        "modelOdds": 3.502,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 7.6 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.3,
-          "away": 3.3,
-          "total": 7.6
+          "home": 4.9,
+          "away": 3.0,
+          "total": 7.9
         }
       }
     ],
@@ -2421,24 +3692,24 @@
         }
       },
       {
-        "market": "Über 8.5 Ecken",
+        "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 1.831,
+        "modelOdds": 3.823,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.7 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 5.4,
-          "away": 3.5,
-          "total": 8.9
+          "home": 5.0,
+          "away": 2.8,
+          "total": 7.7
         }
       }
     ],
@@ -2457,7 +3728,46 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": 5.8,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 3.1:0.9 vs Auswärts 1.1:0.9",
+            "weight": 1.0,
+            "weighted_score": 4.93,
+            "metadata": {
+              "home_scored": 3.07,
+              "home_conceded": 0.93,
+              "away_scored": 1.13,
+              "away_conceded": 0.93,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 2.32,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 3.07-0.93 vs Auswärts 1.13-0.93 (Δ +1.93)",
+            "weight": 1.0,
+            "weighted_score": 1.51,
+            "metadata": {
+              "home_xg_for": 3.07,
+              "home_xg_against": 0.93,
+              "away_xg_for": 1.13,
+              "away_xg_against": 0.93,
+              "relative_diff": 1.93,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 4.29
       },
       {
         "market": "AH Heim −1.0",
@@ -2473,7 +3783,46 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": 5.8,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 3.1:0.9 vs Auswärts 1.1:0.9",
+            "weight": 1.0,
+            "weighted_score": 4.93,
+            "metadata": {
+              "home_scored": 3.07,
+              "home_conceded": 0.93,
+              "away_scored": 1.13,
+              "away_conceded": 0.93,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 2.32,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 3.07-0.93 vs Auswärts 1.13-0.93 (Δ +1.93)",
+            "weight": 1.0,
+            "weighted_score": 1.51,
+            "metadata": {
+              "home_xg_for": 3.07,
+              "home_xg_against": 0.93,
+              "away_xg_for": 1.13,
+              "away_xg_against": 0.93,
+              "relative_diff": 1.93,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 4.29
       },
       {
         "market": "Über 3.5 Tore",
@@ -2494,22 +3843,22 @@
       {
         "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 1.404,
+        "modelOdds": 1.501,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 10.1 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 9.8 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 7.3,
-          "away": 2.8,
-          "total": 10.1
+          "home": 7.1,
+          "away": 2.7,
+          "total": 9.8
         }
       }
     ],
@@ -2528,7 +3877,46 @@
         "icon": "🎯",
         "result": null,
         "clvPP": -1.4,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -2.43,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.3:1.0 vs Auswärts 1.8:1.3",
+            "weight": 1.0,
+            "weighted_score": -2.07,
+            "metadata": {
+              "home_scored": 2.33,
+              "home_conceded": 1.0,
+              "away_scored": 1.8,
+              "away_conceded": 1.33,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -1.04,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.33-1.00 vs Auswärts 1.80-1.33 (Δ +0.87)",
+            "weight": 1.0,
+            "weighted_score": -0.68,
+            "metadata": {
+              "home_xg_for": 2.33,
+              "home_xg_against": 1.0,
+              "away_xg_for": 1.8,
+              "away_xg_against": 1.33,
+              "relative_diff": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.83
       },
       {
         "market": "DNB: Auswärtsteam",
@@ -2545,7 +3933,46 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=59%, Skellam (AH +0.5) sagt 42% — Diff +18pp ≥ 8pp Schwelle"
+        "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=59%, Skellam (AH +0.5) sagt 42% — Diff +18pp ≥ 8pp Schwelle",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -2.43,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.3:1.0 vs Auswärts 1.8:1.3",
+            "weight": 1.0,
+            "weighted_score": -2.07,
+            "metadata": {
+              "home_scored": 2.33,
+              "home_conceded": 1.0,
+              "away_scored": 1.8,
+              "away_conceded": 1.33,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -1.04,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.33-1.00 vs Auswärts 1.80-1.33 (Δ +0.87)",
+            "weight": 1.0,
+            "weighted_score": -0.68,
+            "metadata": {
+              "home_xg_for": 2.33,
+              "home_xg_against": 1.0,
+              "away_xg_for": 1.8,
+              "away_xg_against": 1.33,
+              "relative_diff": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.83
       },
       {
         "market": "Über 1.5 Tore",
@@ -2563,46 +3990,89 @@
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "downgradedReason": "O/U Edge 18pp > 10pp Modell-Bias-Schwelle"
-      }
-    ],
-    "G-2-BEL-IRN": [
-      {
-        "market": "Über 1.5 Tore",
-        "odds": 1.24,
-        "modelOdds": 1.063,
-        "conf": "medium",
-        "verdict": "BET",
-        "modSig": 1,
-        "mktSig": 0,
-        "storySig": 0,
-        "edgePP": 7,
-        "info": "Elo +279 · Form WWDWW·WWWLW · xG 2.5:1.5 · ✈️ 🇮🇷 2818km/3d (15%-xG)",
-        "icon": "🎯",
-        "result": null,
-        "clvPP": 0.0,
-        "dataQuality": "elo+form"
-      }
-    ],
-    "G-2-NZL-EGY": [
+      },
       {
         "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 1.695,
+        "modelOdds": 1.891,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 9.2 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.7 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.9,
-          "away": 4.3,
-          "total": 9.2
+          "home": 4.7,
+          "away": 4.1,
+          "total": 8.7
+        }
+      }
+    ],
+    "G-2-BEL-IRN": [
+      {
+        "market": "Über 1.5 Tore",
+        "odds": 1.3,
+        "modelOdds": 1.063,
+        "conf": "high",
+        "verdict": "ABWÄGEN",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 11,
+        "info": "Elo +279 · Form WWDWW·WWWLW · xG 2.5:1.5 · ✈️ 🇮🇷 2818km/3d (15%-xG)",
+        "icon": "🎯",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "downgradedReason": "O/U Edge 11pp > 10pp Modell-Bias-Schwelle"
+      },
+      {
+        "market": "Über 8.5 Ecken",
+        "odds": null,
+        "modelOdds": 1.517,
+        "conf": "low",
+        "verdict": "WATCH",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 0,
+        "info": "Ø 9.7 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "icon": "🚩",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "cornersExpected": {
+          "home": 6.5,
+          "away": 3.2,
+          "total": 9.7
+        }
+      }
+    ],
+    "G-2-NZL-EGY": [
+      {
+        "market": "Über 8.5 Ecken",
+        "odds": null,
+        "modelOdds": 1.864,
+        "conf": "low",
+        "verdict": "WATCH",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 0,
+        "info": "Ø 8.8 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "icon": "🚩",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "cornersExpected": {
+          "home": 4.6,
+          "away": 4.2,
+          "total": 8.8
         }
       }
     ],
@@ -2678,7 +4148,92 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 13pp > 12pp Modell-Bias-Schwelle"
+        "downgradedReason": "AH Edge 13pp > 12pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 2818km/3d (critical) · Heim 641km/2d (low)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 0.85,
+              "home": {
+                "km": 641,
+                "rest_days": 2,
+                "alt_shift": 1026,
+                "burden": "low"
+              },
+              "away": {
+                "km": 2818,
+                "rest_days": 3,
+                "alt_shift": 530,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 3.43,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.1:0.9 vs Auswärts 2.3:1.0",
+            "weight": 1.0,
+            "weighted_score": 2.92,
+            "metadata": {
+              "home_scored": 1.13,
+              "home_conceded": 0.93,
+              "away_scored": 2.33,
+              "away_conceded": 1.0,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 1.36,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 1.13-0.93 vs Auswärts 2.33-1.00 (Δ -1.13)",
+            "weight": 1.0,
+            "weighted_score": 0.88,
+            "metadata": {
+              "home_xg_for": 1.13,
+              "home_xg_against": 0.93,
+              "away_xg_for": 2.33,
+              "away_xg_against": 1.0,
+              "relative_diff": -1.13,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 1.49
+      },
+      {
+        "market": "Über 9.5 Ecken",
+        "odds": null,
+        "modelOdds": 3.769,
+        "conf": "low",
+        "verdict": "WATCH",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 0,
+        "info": "Ø 7.8 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "icon": "🚩",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "cornersExpected": {
+          "home": 3.4,
+          "away": 4.4,
+          "total": 7.8
+        }
       }
     ],
     "H-1-ESP-CPV": [
@@ -2788,20 +4343,63 @@
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "downgradedReason": "O/U Edge 12pp > 10pp Modell-Bias-Schwelle"
+      },
+      {
+        "market": "Über 9.5 Ecken",
+        "odds": null,
+        "modelOdds": 4.62,
+        "conf": "low",
+        "verdict": "WATCH",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 0,
+        "info": "Ø 7.4 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "icon": "🚩",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "cornersExpected": {
+          "home": 3.3,
+          "away": 4.0,
+          "total": 7.4
+        }
       }
     ],
-    "H-2-ESP-SAU": [],
+    "H-2-ESP-SAU": [
+      {
+        "market": "Über 9.5 Ecken",
+        "odds": null,
+        "modelOdds": 4.103,
+        "conf": "low",
+        "verdict": "WATCH",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 0,
+        "info": "Ø 7.6 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "icon": "🚩",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "cornersExpected": {
+          "home": 5.2,
+          "away": 2.4,
+          "total": 7.6
+        }
+      }
+    ],
     "H-2-URU-CPV": [
       {
         "market": "Unter 1.5 Tore",
-        "odds": 3.5,
+        "odds": 3.6,
         "modelOdds": 2.074,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 17,
+        "edgePP": 18,
         "info": "Elo +250 · Form DDLDW·WWLWD · xG 0.6:1.2 · ✈️ 🇺🇾 2074km/4d/+2198m (8%-xG)",
         "icon": "🎯",
         "result": null,
@@ -2832,20 +4430,20 @@
         "saferAltFor": "Unter 1.5 Tore",
         "riskierAlt": {
           "market": "Unter 1.5 Tore",
-          "odds": 3.5,
-          "edgePP": 17
+          "odds": 3.6,
+          "edgePP": 18
         }
       },
       {
         "market": "Unter 3.5 Tore",
-        "odds": 1.29,
+        "odds": 1.3,
         "modelOdds": 1.077,
-        "conf": "medium",
+        "conf": "high",
         "verdict": "BET",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 9,
+        "edgePP": 10,
         "info": "Elo +250 · Form DDLDW·WWLWD · xG 0.6:1.2 · ✈️ 🇺🇾 2074km/4d/+2198m (8%-xG)",
         "icon": "🎯",
         "result": null,
@@ -2869,7 +4467,46 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 18pp > 12pp Modell-Bias-Schwelle"
+        "downgradedReason": "AH Edge 18pp > 12pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": 2.97,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.7:0.9 vs Auswärts 1.1:1.3",
+            "weight": 1.0,
+            "weighted_score": 2.52,
+            "metadata": {
+              "home_scored": 1.73,
+              "home_conceded": 0.87,
+              "away_scored": 1.13,
+              "away_conceded": 1.33,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 1.28,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 1.73-0.87 vs Auswärts 1.13-1.33 (Δ +1.07)",
+            "weight": 1.0,
+            "weighted_score": 0.83,
+            "metadata": {
+              "home_xg_for": 1.73,
+              "home_xg_against": 0.87,
+              "away_xg_for": 1.13,
+              "away_xg_against": 1.33,
+              "relative_diff": 1.07,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 2.24
       },
       {
         "market": "DNB: Auswärtsteam",
@@ -2886,7 +4523,46 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=71%, Skellam (AH +0.5) sagt 42% — Diff +29pp ≥ 8pp Schwelle"
+        "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=71%, Skellam (AH +0.5) sagt 42% — Diff +29pp ≥ 8pp Schwelle",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -2.97,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.7:0.9 vs Auswärts 1.1:1.3",
+            "weight": 1.0,
+            "weighted_score": -2.52,
+            "metadata": {
+              "home_scored": 1.73,
+              "home_conceded": 0.87,
+              "away_scored": 1.13,
+              "away_conceded": 1.33,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -1.28,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 1.73-0.87 vs Auswärts 1.13-1.33 (Δ +1.07)",
+            "weight": 1.0,
+            "weighted_score": -0.83,
+            "metadata": {
+              "home_xg_for": 1.73,
+              "home_xg_against": 0.87,
+              "away_xg_for": 1.13,
+              "away_xg_against": 1.33,
+              "relative_diff": 1.07,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -2.24
       }
     ],
     "H-3-ESP-URU": [
@@ -2904,7 +4580,66 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 309km/3d (low)",
+            "weight": 1.0,
+            "weighted_score": 1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {},
+              "away": {
+                "km": 309,
+                "rest_days": 3,
+                "alt_shift": 27,
+                "burden": "low"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 5.57,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.7:0.8 vs Auswärts 0.9:0.9",
+            "weight": 1.0,
+            "weighted_score": 4.73,
+            "metadata": {
+              "home_scored": 2.73,
+              "home_conceded": 0.8,
+              "away_scored": 0.93,
+              "away_conceded": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 2.24,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.73-0.80 vs Auswärts 0.93-0.87 (Δ +1.87)",
+            "weight": 1.0,
+            "weighted_score": 1.46,
+            "metadata": {
+              "home_xg_for": 2.73,
+              "home_xg_against": 0.8,
+              "away_xg_for": 0.93,
+              "away_xg_against": 0.87,
+              "relative_diff": 1.87,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 3.45
       },
       {
         "market": "AH Heim −1.0",
@@ -2920,27 +4655,86 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 309km/3d (low)",
+            "weight": 1.0,
+            "weighted_score": 1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {},
+              "away": {
+                "km": 309,
+                "rest_days": 3,
+                "alt_shift": 27,
+                "burden": "low"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 5.57,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.7:0.8 vs Auswärts 0.9:0.9",
+            "weight": 1.0,
+            "weighted_score": 4.73,
+            "metadata": {
+              "home_scored": 2.73,
+              "home_conceded": 0.8,
+              "away_scored": 0.93,
+              "away_conceded": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 2.24,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.73-0.80 vs Auswärts 0.93-0.87 (Δ +1.87)",
+            "weight": 1.0,
+            "weighted_score": 1.46,
+            "metadata": {
+              "home_xg_for": 2.73,
+              "home_xg_against": 0.8,
+              "away_xg_for": 0.93,
+              "away_xg_against": 0.87,
+              "relative_diff": 1.87,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 3.45
       },
       {
         "market": "Über 8.5 Ecken",
         "odds": null,
-        "modelOdds": 1.808,
+        "modelOdds": 1.695,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 9.2 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 5.3,
-          "away": 3.6,
-          "total": 8.9
+          "home": 5.6,
+          "away": 3.5,
+          "total": 9.2
         }
       }
     ],
@@ -2962,24 +4756,24 @@
         "dataQuality": "elo+form"
       },
       {
-        "market": "Über 8.5 Ecken",
+        "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 1.574,
+        "modelOdds": 2.777,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 9.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 8.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.8,
-          "away": 4.7,
-          "total": 9.5
+          "home": 4.5,
+          "away": 4.0,
+          "total": 8.5
         }
       }
     ],
@@ -3001,24 +4795,24 @@
         "dataQuality": "elo+form",
         "boldAlt": {
           "market": "Unter 2.5 Tore",
-          "odds": 2.43,
-          "edgePP": 9
+          "odds": 2.37,
+          "edgePP": 8
         }
       },
       {
         "market": "Unter 2.5 Tore",
-        "odds": 2.43,
+        "odds": 2.37,
         "modelOdds": 1.854,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": -1,
         "storySig": 0,
-        "edgePP": 9,
+        "edgePP": 8,
         "info": "Elo -127 · Form DWWLL·WDLWW · xG 0.6:2.0",
         "icon": "🛡️",
         "result": null,
-        "clvPP": -4.3,
+        "clvPP": -3.3,
         "dataQuality": "elo+form",
         "saferAltFor": "Unter 1.5 Tore",
         "riskierAlt": {
@@ -3050,22 +4844,43 @@
         "saferAltFor": "Unter 2.5 Tore",
         "riskierAlt": {
           "market": "Unter 2.5 Tore",
-          "odds": 2.43,
-          "edgePP": 9
+          "odds": 2.37,
+          "edgePP": 8
+        }
+      },
+      {
+        "market": "Über 9.5 Ecken",
+        "odds": null,
+        "modelOdds": 4.083,
+        "conf": "low",
+        "verdict": "WATCH",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 0,
+        "info": "Ø 7.6 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "icon": "🚩",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "cornersExpected": {
+          "home": 2.7,
+          "away": 4.9,
+          "total": 7.6
         }
       }
     ],
     "I-2-FRA-IRQ": [
       {
         "market": "Unter 1.5 Tore",
-        "odds": 5.4,
+        "odds": 5.5,
         "modelOdds": 2.635,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 17,
+        "edgePP": 18,
         "info": "Elo +403 · Form LWWWW·DWWLL · xG 1.3:0.9 · ✈️ 🇮🇶 3399km/4d (9%-xG)",
         "icon": "🎯",
         "result": null,
@@ -3096,15 +4911,36 @@
         "saferAltFor": "Unter 1.5 Tore",
         "riskierAlt": {
           "market": "Unter 1.5 Tore",
-          "odds": 5.4,
-          "edgePP": 17
+          "odds": 5.5,
+          "edgePP": 18
+        }
+      },
+      {
+        "market": "Über 8.5 Ecken",
+        "odds": null,
+        "modelOdds": 1.904,
+        "conf": "low",
+        "verdict": "WATCH",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 0,
+        "info": "Ø 8.7 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "icon": "🚩",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "cornersExpected": {
+          "home": 5.6,
+          "away": 3.1,
+          "total": 8.7
         }
       }
     ],
     "I-2-NOR-SEN": [
       {
         "market": "Auswärtssieg",
-        "odds": 3.33,
+        "odds": 3.26,
         "modelOdds": 2.038,
         "conf": "high",
         "verdict": "BET",
@@ -3115,13 +4951,163 @@
         "info": "Elo -69 · Form WDLWW·LWWWW · xG 1.8:1.3 · ✈️ 🇸🇳 3100km/4d (9%-xG)",
         "icon": "🎯",
         "result": null,
-        "clvPP": 2.0,
+        "clvPP": 2.7,
         "dataQuality": "elo+form",
         "boldAlt": {
           "market": "Doppelte Chance — X2",
           "odds": 1.68,
           "edgePP": 5
-        }
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 3100km/4d (significant)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {
+                "km": 497,
+                "rest_days": 4,
+                "alt_shift": 250,
+                "burden": "low"
+              },
+              "away": {
+                "km": 3100,
+                "rest_days": 4,
+                "alt_shift": 49,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -2.2,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 3.5:0.7 vs Auswärts 2.7:0.7",
+            "weight": 1.0,
+            "weighted_score": -1.87,
+            "metadata": {
+              "home_scored": 3.47,
+              "home_conceded": 0.67,
+              "away_scored": 2.73,
+              "away_conceded": 0.67,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -0.88,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 3.47-0.67 vs Auswärts 2.73-0.67 (Δ +0.73)",
+            "weight": 1.0,
+            "weighted_score": -0.57,
+            "metadata": {
+              "home_xg_for": 3.47,
+              "home_xg_against": 0.67,
+              "away_xg_for": 2.73,
+              "away_xg_against": 0.67,
+              "relative_diff": 0.73,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.75
+      },
+      {
+        "market": "DNB: Auswärtsteam",
+        "odds": 2.47,
+        "modelOdds": 1.605,
+        "conf": "high",
+        "verdict": "ABWÄGEN",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 18,
+        "info": "Elo -69 · Form WDLWW·LWWWW · xG 1.8:1.3 · ✈️ 🇸🇳 3100km/4d (9%-xG)",
+        "icon": "🎯",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=71%, Skellam (AH +0.5) sagt 52% — Diff +19pp ≥ 8pp Schwelle",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 1.68,
+          "edgePP": 5
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 3100km/4d (significant)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {
+                "km": 497,
+                "rest_days": 4,
+                "alt_shift": 250,
+                "burden": "low"
+              },
+              "away": {
+                "km": 3100,
+                "rest_days": 4,
+                "alt_shift": 49,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -2.2,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 3.5:0.7 vs Auswärts 2.7:0.7",
+            "weight": 1.0,
+            "weighted_score": -1.87,
+            "metadata": {
+              "home_scored": 3.47,
+              "home_conceded": 0.67,
+              "away_scored": 2.73,
+              "away_conceded": 0.67,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -0.88,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 3.47-0.67 vs Auswärts 2.73-0.67 (Δ +0.73)",
+            "weight": 1.0,
+            "weighted_score": -0.57,
+            "metadata": {
+              "home_xg_for": 3.47,
+              "home_xg_against": 0.67,
+              "away_xg_for": 2.73,
+              "away_xg_against": 0.67,
+              "relative_diff": 0.73,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.75
       },
       {
         "market": "Doppelte Chance — X2",
@@ -3138,45 +5124,109 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "saferAltFor": "Auswärtssieg",
+        "saferAltFor": "DNB: Auswärtsteam",
         "riskierAlt": {
-          "market": "Auswärtssieg",
-          "odds": 3.33,
-          "edgePP": 16
-        }
+          "market": "DNB: Auswärtsteam",
+          "odds": 2.47,
+          "edgePP": 18
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 3100km/4d (significant)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {
+                "km": 497,
+                "rest_days": 4,
+                "alt_shift": 250,
+                "burden": "low"
+              },
+              "away": {
+                "km": 3100,
+                "rest_days": 4,
+                "alt_shift": 49,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -2.2,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 3.5:0.7 vs Auswärts 2.7:0.7",
+            "weight": 1.0,
+            "weighted_score": -1.87,
+            "metadata": {
+              "home_scored": 3.47,
+              "home_conceded": 0.67,
+              "away_scored": 2.73,
+              "away_conceded": 0.67,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -0.88,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 3.47-0.67 vs Auswärts 2.73-0.67 (Δ +0.73)",
+            "weight": 1.0,
+            "weighted_score": -0.57,
+            "metadata": {
+              "home_xg_for": 3.47,
+              "home_xg_against": 0.67,
+              "away_xg_for": 2.73,
+              "away_xg_against": 0.67,
+              "relative_diff": 0.73,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.75
       },
       {
         "market": "Über 2.5 Tore",
-        "odds": 1.88,
+        "odds": 1.92,
         "modelOdds": 1.568,
         "conf": "medium",
-        "verdict": "ABWÄGEN",
-        "modSig": 0,
+        "verdict": "BET",
+        "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 6,
+        "edgePP": 8,
         "info": "Elo -69 · Form WDLWW·LWWWW · xG 1.8:1.3 · ✈️ 🇸🇳 3100km/4d (9%-xG)",
         "icon": "🛡️",
         "result": null,
-        "clvPP": 1.4,
+        "clvPP": 0.3,
         "dataQuality": "elo+form",
         "saferAltFor": "Über 3.5 Tore",
         "riskierAlt": {
           "market": "Über 3.5 Tore",
-          "odds": 3.35,
-          "edgePP": 8
+          "odds": 3.4,
+          "edgePP": 9
         }
       },
       {
         "market": "Über 3.5 Tore",
-        "odds": 3.35,
+        "odds": 3.4,
         "modelOdds": 2.467,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 8,
+        "edgePP": 9,
         "info": "Elo -69 · Form WDLWW·LWWWW · xG 1.8:1.3 · ✈️ 🇸🇳 3100km/4d (9%-xG)",
         "icon": "🎯",
         "result": null,
@@ -3184,29 +5234,29 @@
         "dataQuality": "elo+form",
         "boldAlt": {
           "market": "Über 2.5 Tore",
-          "odds": 1.88,
-          "edgePP": 6
+          "odds": 1.92,
+          "edgePP": 8
         }
       },
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 2.857,
+        "modelOdds": 4.547,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.4 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.4 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.1,
-          "away": 4.3,
-          "total": 8.4
+          "home": 3.8,
+          "away": 3.6,
+          "total": 7.4
         }
       }
     ],
@@ -3226,7 +5276,66 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=89%, Skellam (AH +0.5) sagt 15% — Diff +74pp ≥ 8pp Schwelle"
+        "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=89%, Skellam (AH +0.5) sagt 15% — Diff +74pp ≥ 8pp Schwelle",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 3.0,
+            "confidence": 0.78,
+            "evidence": "✈️ Auswärts 3100km/3d (critical)",
+            "weight": 1.0,
+            "weighted_score": 2.34,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.85,
+              "home": {},
+              "away": {
+                "km": 3100,
+                "rest_days": 3,
+                "alt_shift": 49,
+                "burden": "critical"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -4.97,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.2:1.1 vs Auswärts 3.5:0.7",
+            "weight": 1.0,
+            "weighted_score": -4.22,
+            "metadata": {
+              "home_scored": 2.2,
+              "home_conceded": 1.13,
+              "away_scored": 3.47,
+              "away_conceded": 0.67,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -2.08,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.20-1.13 vs Auswärts 3.47-0.67 (Δ -1.73)",
+            "weight": 1.0,
+            "weighted_score": -1.35,
+            "metadata": {
+              "home_xg_for": 2.2,
+              "home_xg_against": 1.13,
+              "away_xg_for": 3.47,
+              "away_xg_against": 0.67,
+              "relative_diff": -1.73,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.42
       },
       {
         "market": "Doppelte Chance — 12",
@@ -3258,7 +5367,66 @@
         "icon": "🎯",
         "result": null,
         "clvPP": -3.5,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 3.0,
+            "confidence": 0.78,
+            "evidence": "✈️ Auswärts 3100km/3d (critical)",
+            "weight": 1.0,
+            "weighted_score": 2.34,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.85,
+              "home": {},
+              "away": {
+                "km": 3100,
+                "rest_days": 3,
+                "alt_shift": 49,
+                "burden": "critical"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -4.97,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.2:1.1 vs Auswärts 3.5:0.7",
+            "weight": 1.0,
+            "weighted_score": -4.22,
+            "metadata": {
+              "home_scored": 2.2,
+              "home_conceded": 1.13,
+              "away_scored": 3.47,
+              "away_conceded": 0.67,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -2.08,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.20-1.13 vs Auswärts 3.47-0.67 (Δ -1.73)",
+            "weight": 1.0,
+            "weighted_score": -1.35,
+            "metadata": {
+              "home_xg_for": 2.2,
+              "home_xg_against": 1.13,
+              "away_xg_for": 3.47,
+              "away_xg_against": 0.67,
+              "relative_diff": -1.73,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.42
       },
       {
         "market": "Über 1.5 Tore",
@@ -3313,7 +5481,71 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 3399km/3d (critical) · Heim 497km/3d (low)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 0.85,
+              "home": {
+                "km": 497,
+                "rest_days": 3,
+                "alt_shift": 250,
+                "burden": "low"
+              },
+              "away": {
+                "km": 3399,
+                "rest_days": 3,
+                "alt_shift": 299,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -5.16,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.7:0.7 vs Auswärts 1.1:0.7",
+            "weight": 1.0,
+            "weighted_score": -4.39,
+            "metadata": {
+              "home_scored": 2.73,
+              "home_conceded": 0.67,
+              "away_scored": 1.07,
+              "away_conceded": 0.73,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -2.08,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.73-0.67 vs Auswärts 1.07-0.73 (Δ +1.73)",
+            "weight": 1.0,
+            "weighted_score": -1.35,
+            "metadata": {
+              "home_xg_for": 2.73,
+              "home_xg_against": 0.67,
+              "away_xg_for": 1.07,
+              "away_xg_against": 0.73,
+              "relative_diff": 1.73,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -2.99
       },
       {
         "market": "DNB: Auswärtsteam",
@@ -3329,7 +5561,71 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 3399km/3d (critical) · Heim 497km/3d (low)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 0.85,
+              "home": {
+                "km": 497,
+                "rest_days": 3,
+                "alt_shift": 250,
+                "burden": "low"
+              },
+              "away": {
+                "km": 3399,
+                "rest_days": 3,
+                "alt_shift": 299,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -5.16,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.7:0.7 vs Auswärts 1.1:0.7",
+            "weight": 1.0,
+            "weighted_score": -4.39,
+            "metadata": {
+              "home_scored": 2.73,
+              "home_conceded": 0.67,
+              "away_scored": 1.07,
+              "away_conceded": 0.73,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -2.08,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.73-0.67 vs Auswärts 1.07-0.73 (Δ +1.73)",
+            "weight": 1.0,
+            "weighted_score": -1.35,
+            "metadata": {
+              "home_xg_for": 2.73,
+              "home_xg_against": 0.67,
+              "away_xg_for": 1.07,
+              "away_xg_against": 0.73,
+              "relative_diff": 1.73,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -2.99
       },
       {
         "market": "Unter 1.5 Tore",
@@ -3390,6 +5686,27 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form"
+      },
+      {
+        "market": "Über 9.5 Ecken",
+        "odds": null,
+        "modelOdds": 3.725,
+        "conf": "low",
+        "verdict": "WATCH",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 0,
+        "info": "Ø 7.8 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "icon": "🚩",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "cornersExpected": {
+          "home": 4.9,
+          "away": 2.9,
+          "total": 7.8
+        }
       }
     ],
     "J-1-ARG-DZA": [
@@ -3440,22 +5757,22 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 3.916,
+        "modelOdds": 14.162,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 7.7 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 5.8 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.3,
-          "away": 3.3,
-          "total": 7.7
+          "home": 3.3,
+          "away": 2.4,
+          "total": 5.8
         }
       }
     ],
@@ -3474,7 +5791,46 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -3.87,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.2:0.6 vs Auswärts 1.5:1.3",
+            "weight": 1.0,
+            "weighted_score": -3.29,
+            "metadata": {
+              "home_scored": 2.2,
+              "home_conceded": 0.6,
+              "away_scored": 1.47,
+              "away_conceded": 1.27,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -1.68,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.20-0.60 vs Auswärts 1.47-1.27 (Δ +1.40)",
+            "weight": 1.0,
+            "weighted_score": -1.09,
+            "metadata": {
+              "home_xg_for": 2.2,
+              "home_xg_against": 0.6,
+              "away_xg_for": 1.47,
+              "away_xg_against": 1.27,
+              "relative_diff": 1.4,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -2.92
       }
     ],
     "J-2-ARG-AUT": [
@@ -3492,7 +5848,47 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 2229km/4d (significant)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.95,
+              "home": {},
+              "away": {
+                "km": 2229,
+                "rest_days": 4,
+                "alt_shift": 160,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -1.1,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.4:0.4 vs Auswärts 2.2:0.6",
+            "weight": 1.0,
+            "weighted_score": -0.94,
+            "metadata": {
+              "home_scored": 2.4,
+              "home_conceded": 0.4,
+              "away_scored": 2.2,
+              "away_conceded": 0.6,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.06
       },
       {
         "market": "AH Auswärts +0.75",
@@ -3509,7 +5905,47 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 14pp > 12pp Modell-Bias-Schwelle"
+        "downgradedReason": "AH Edge 14pp > 12pp Modell-Bias-Schwelle",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 2229km/4d (significant)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.95,
+              "home": {},
+              "away": {
+                "km": 2229,
+                "rest_days": 4,
+                "alt_shift": 160,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -1.1,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.4:0.4 vs Auswärts 2.2:0.6",
+            "weight": 1.0,
+            "weighted_score": -0.94,
+            "metadata": {
+              "home_scored": 2.4,
+              "home_conceded": 0.4,
+              "away_scored": 2.2,
+              "away_conceded": 0.6,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.06
       },
       {
         "market": "AH Auswärts +1.0",
@@ -3525,18 +5961,58 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 2229km/4d (significant)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.95,
+              "home": {},
+              "away": {
+                "km": 2229,
+                "rest_days": 4,
+                "alt_shift": 160,
+                "burden": "significant"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -1.1,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.4:0.4 vs Auswärts 2.2:0.6",
+            "weight": 1.0,
+            "weighted_score": -0.94,
+            "metadata": {
+              "home_scored": 2.4,
+              "home_conceded": 0.4,
+              "away_scored": 2.2,
+              "away_conceded": 0.6,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.06
       },
       {
         "market": "Unter 1.5 Tore",
-        "odds": 3.5,
+        "odds": 3.55,
         "modelOdds": 2.189,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 14,
+        "edgePP": 15,
         "info": "Elo +205 · Form WWWWW·WWWDW · xG 1.2:0.7 · ✈️ 🇦🇹 2229km/4d (5%-xG)",
         "icon": "🎯",
         "result": null,
@@ -3567,20 +6043,20 @@
         "saferAltFor": "Unter 1.5 Tore",
         "riskierAlt": {
           "market": "Unter 1.5 Tore",
-          "odds": 3.5,
-          "edgePP": 14
+          "odds": 3.55,
+          "edgePP": 15
         }
       },
       {
         "market": "Unter 3.5 Tore",
-        "odds": 1.29,
+        "odds": 1.3,
         "modelOdds": 1.094,
         "conf": "medium",
         "verdict": "BET",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 8,
+        "edgePP": 9,
         "info": "Elo +205 · Form WWWWW·WWWDW · xG 1.2:0.7 · ✈️ 🇦🇹 2229km/4d (5%-xG)",
         "icon": "🎯",
         "result": null,
@@ -3590,41 +6066,196 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 6.018,
+        "modelOdds": 6.408,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 6.9 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 6.8 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 3.9,
-          "away": 3.0,
-          "total": 6.9
+          "home": 3.7,
+          "away": 3.1,
+          "total": 6.8
         }
       }
     ],
     "J-2-JOR-DZA": [
       {
         "market": "Doppelte Chance — 1X",
-        "odds": 2.33,
+        "odds": 2.45,
         "modelOdds": 1.781,
         "conf": "high",
         "verdict": "BET",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 10,
+        "edgePP": 12,
+        "info": "Elo -49 · Form LDDWW·WDWLW · xG 0.5:2.0 · ✈️ 🇩🇿 2614km/4d/+1599m (8%-xG)",
+        "icon": "🛡️",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "saferAltFor": "Heimsieg",
+        "riskierAlt": {
+          "market": "Heimsieg",
+          "odds": 6.23,
+          "edgePP": 17
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 2.4,
+            "confidence": 0.67,
+            "evidence": "✈️ Auswärts 2614km/4d (significant) · Auswärts Höhe +1599m",
+            "weight": 1.0,
+            "weighted_score": 1.61,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.92,
+              "home": {
+                "km": 1053,
+                "rest_days": 4,
+                "alt_shift": 1439,
+                "burden": "moderate"
+              },
+              "away": {
+                "km": 2614,
+                "rest_days": 4,
+                "alt_shift": 1599,
+                "burden": "significant"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -4.17,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.5:1.3 vs Auswärts 2.1:0.4",
+            "weight": 1.0,
+            "weighted_score": -3.54,
+            "metadata": {
+              "home_scored": 1.47,
+              "home_conceded": 1.27,
+              "away_scored": 2.13,
+              "away_conceded": 0.4,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -1.84,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 1.47-1.27 vs Auswärts 2.13-0.40 (Δ -1.53)",
+            "weight": 1.0,
+            "weighted_score": -1.2,
+            "metadata": {
+              "home_xg_for": 1.47,
+              "home_xg_against": 1.27,
+              "away_xg_for": 2.13,
+              "away_xg_against": 0.4,
+              "relative_diff": -1.53,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.44
+      },
+      {
+        "market": "Heimsieg",
+        "odds": 6.23,
+        "modelOdds": 2.864,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
+        "modSig": 1,
+        "mktSig": -1,
+        "storySig": 0,
+        "edgePP": 17,
         "info": "Elo -49 · Form LDDWW·WDWLW · xG 0.5:2.0 · ✈️ 🇩🇿 2614km/4d/+1599m (8%-xG)",
         "icon": "🎯",
         "result": null,
-        "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "clvPP": -5.0,
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Doppelte Chance — 1X",
+          "odds": 2.45,
+          "edgePP": 12
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 2.4,
+            "confidence": 0.67,
+            "evidence": "✈️ Auswärts 2614km/4d (significant) · Auswärts Höhe +1599m",
+            "weight": 1.0,
+            "weighted_score": 1.61,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.92,
+              "home": {
+                "km": 1053,
+                "rest_days": 4,
+                "alt_shift": 1439,
+                "burden": "moderate"
+              },
+              "away": {
+                "km": 2614,
+                "rest_days": 4,
+                "alt_shift": 1599,
+                "burden": "significant"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -4.17,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.5:1.3 vs Auswärts 2.1:0.4",
+            "weight": 1.0,
+            "weighted_score": -3.54,
+            "metadata": {
+              "home_scored": 1.47,
+              "home_conceded": 1.27,
+              "away_scored": 2.13,
+              "away_conceded": 0.4,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -1.84,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 1.47-1.27 vs Auswärts 2.13-0.40 (Δ -1.53)",
+            "weight": 1.0,
+            "weighted_score": -1.2,
+            "metadata": {
+              "home_xg_for": 1.47,
+              "home_xg_against": 1.27,
+              "away_xg_for": 2.13,
+              "away_xg_against": 0.4,
+              "relative_diff": -1.53,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.44
       }
     ],
     "J-3-ARG-JOR": [],
@@ -3709,22 +6340,22 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 2.89,
+        "modelOdds": 7.562,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 8.4 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 6.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 4.1,
-          "away": 4.3,
-          "total": 8.4
+          "home": 3.1,
+          "away": 3.4,
+          "total": 6.5
         }
       }
     ],
@@ -3746,13 +6377,13 @@
         "dataQuality": "elo+form",
         "boldAlt": {
           "market": "Unter 2.5 Tore",
-          "odds": 2.23,
+          "odds": 2.25,
           "edgePP": 17
         }
       },
       {
         "market": "Unter 2.5 Tore",
-        "odds": 2.23,
+        "odds": 2.25,
         "modelOdds": 1.531,
         "conf": "high",
         "verdict": "ABWÄGEN",
@@ -3763,7 +6394,7 @@
         "info": "Elo +320 · Form WWDWL·DWWDW · xG 1.1:1.1",
         "icon": "🛡️",
         "result": null,
-        "clvPP": 0.4,
+        "clvPP": 0.0,
         "dataQuality": "elo+form",
         "downgradedReason": "O/U Edge 17pp > 10pp Modell-Bias-Schwelle",
         "saferAltFor": "Unter 1.5 Tore",
@@ -3814,18 +6445,18 @@
     "K-1-UZB-COL": [
       {
         "market": "Über 2.5 Tore",
-        "odds": 1.91,
+        "odds": 1.88,
         "modelOdds": 1.567,
         "conf": "medium",
-        "verdict": "BET",
-        "modSig": 1,
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 7,
+        "edgePP": 6,
         "info": "Elo -210 · Form LWWDW·WLLWW · xG 1.8:1.3",
         "icon": "🛡️",
         "result": null,
-        "clvPP": -1.7,
+        "clvPP": -0.9,
         "dataQuality": "elo+form",
         "saferAltFor": "Über 3.5 Tore",
         "riskierAlt": {
@@ -3851,8 +6482,29 @@
         "dataQuality": "elo+form",
         "boldAlt": {
           "market": "Über 2.5 Tore",
-          "odds": 1.91,
-          "edgePP": 7
+          "odds": 1.88,
+          "edgePP": 6
+        }
+      },
+      {
+        "market": "Über 9.5 Ecken",
+        "odds": null,
+        "modelOdds": 4.338,
+        "conf": "low",
+        "verdict": "WATCH",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 0,
+        "info": "Ø 7.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "icon": "🚩",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "cornersExpected": {
+          "home": 4.0,
+          "away": 3.5,
+          "total": 7.5
         }
       }
     ],
@@ -3871,46 +6523,95 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Heim 1678km/4d (moderate)",
+            "weight": 1.0,
+            "weighted_score": 0.63,
+            "metadata": {
+              "factor_home": 0.95,
+              "factor_away": 1.0,
+              "home": {
+                "km": 1678,
+                "rest_days": 4,
+                "alt_shift": 291,
+                "burden": "moderate"
+              },
+              "away": {
+                "km": 1386,
+                "rest_days": 4,
+                "alt_shift": 19,
+                "burden": "moderate"
+              },
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 1.0
       },
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 16.388,
+        "modelOdds": 18.649,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 5.6 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 5.5 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
-          "home": 3.0,
-          "away": 2.6,
-          "total": 5.6
+          "home": 2.8,
+          "away": 2.7,
+          "total": 5.5
         }
       }
     ],
     "K-2-POR-UZB": [
       {
-        "market": "Unter 1.5 Tore",
-        "odds": 5.6,
-        "modelOdds": 4.167,
+        "market": "Unter 2.5 Tore",
+        "odds": 2.43,
+        "modelOdds": 2.049,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 5,
+        "edgePP": 4,
         "info": "Elo +330 · Form WWDWL·LWWDW · xG 1.6:1.2 · ✈️ 🇺🇿 1657km/4d (5%-xG)",
         "icon": "🎯",
         "result": null,
-        "clvPP": 0.0,
+        "clvPP": -0.3,
         "dataQuality": "elo+form"
+      },
+      {
+        "market": "Über 9.5 Ecken",
+        "odds": null,
+        "modelOdds": 3.093,
+        "conf": "low",
+        "verdict": "WATCH",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 0,
+        "info": "Ø 8.2 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "icon": "🚩",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "cornersExpected": {
+          "home": 4.7,
+          "away": 3.5,
+          "total": 8.2
+        }
       }
     ],
     "K-3-COD-UZB": [
@@ -3973,6 +6674,27 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form"
+      },
+      {
+        "market": "Über 9.5 Ecken",
+        "odds": null,
+        "modelOdds": 8.376,
+        "conf": "low",
+        "verdict": "WATCH",
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 0,
+        "info": "Ø 6.4 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "icon": "🚩",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "cornersExpected": {
+          "home": 2.9,
+          "away": 3.5,
+          "total": 6.4
+        }
       }
     ],
     "K-3-POR-COL": [
@@ -3990,7 +6712,66 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Auswärts 1386km/3d (significant)",
+            "weight": 1.0,
+            "weighted_score": 1.4,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.9,
+              "home": {},
+              "away": {
+                "km": 1386,
+                "rest_days": 3,
+                "alt_shift": 19,
+                "burden": "significant"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 2.2,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.3:0.9 vs Auswärts 1.9:1.3",
+            "weight": 1.0,
+            "weighted_score": 1.87,
+            "metadata": {
+              "home_scored": 2.33,
+              "home_conceded": 0.87,
+              "away_scored": 1.93,
+              "away_conceded": 1.27,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 0.96,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.33-0.87 vs Auswärts 1.93-1.27 (Δ +0.80)",
+            "weight": 1.0,
+            "weighted_score": 0.62,
+            "metadata": {
+              "home_xg_for": 2.33,
+              "home_xg_against": 0.87,
+              "away_xg_for": 1.93,
+              "away_xg_against": 1.27,
+              "relative_diff": 0.8,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 1.77
       },
       {
         "market": "Über 1.5 Tore",
@@ -4012,22 +6793,22 @@
       {
         "market": "Über 9.5 Ecken",
         "odds": null,
-        "modelOdds": 4.523,
+        "modelOdds": 4.864,
         "conf": "low",
         "verdict": "WATCH",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "Ø 7.4 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
+        "info": "Ø 7.3 Ecken erwartet · Pick aktiv sobald Bookies Quoten öffnen",
         "icon": "🚩",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "cornersExpected": {
           "home": 4.5,
-          "away": 3.0,
-          "total": 7.4
+          "away": 2.8,
+          "total": 7.3
         }
       }
     ],
@@ -4046,7 +6827,27 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "full"
+        "dataQuality": "full",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": 1.87,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.4:0.3 vs Auswärts 2.3:1.0",
+            "weight": 1.0,
+            "weighted_score": 1.59,
+            "metadata": {
+              "home_scored": 2.4,
+              "home_conceded": 0.33,
+              "away_scored": 2.33,
+              "away_conceded": 1.0,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 1.87
       },
       {
         "market": "Über 8.5 Ecken",
@@ -4193,6 +6994,22 @@
     ],
     "L-2-PAN-CRO": [
       {
+        "market": "Über 1.5 Tore",
+        "odds": 1.27,
+        "modelOdds": 1.126,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 4,
+        "info": "Elo -222 · Form DWLWD·LLWWW · xG 1.3:2.1 · ✈️ 🇵🇦 1973km/4d (5%-xG) · ✈️ 🇭🇷 1797km/4d (5%-xG)",
+        "icon": "🎯",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form"
+      },
+      {
         "market": "Über 2.5 Tore",
         "odds": 1.8,
         "modelOdds": 1.456,
@@ -4210,13 +7027,13 @@
         "saferAltFor": "Über 3.5 Tore",
         "riskierAlt": {
           "market": "Über 3.5 Tore",
-          "odds": 3.3,
+          "odds": 3.35,
           "edgePP": 13
         }
       },
       {
         "market": "Über 3.5 Tore",
-        "odds": 3.3,
+        "odds": 3.35,
         "modelOdds": 2.18,
         "conf": "medium",
         "verdict": "ABWÄGEN",
