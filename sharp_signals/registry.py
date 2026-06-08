@@ -29,6 +29,7 @@ from sharp_signals.steam_lag import SteamLagSignal
 from sharp_signals.pressure_index import PressureIndexSignal
 from sharp_signals.lineup_signal import LineupSignal
 from sharp_signals.apif_predictions import ApifPredictionsSignal
+from sharp_signals.weather_signal import WeatherSignal
 
 
 # Liste aller aktiv evaluierten Signale.
@@ -46,6 +47,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     PressureIndexSignal(),
     LineupSignal(),
     ApifPredictionsSignal(),
+    WeatherSignal(),
 ]
 
 
@@ -113,6 +115,11 @@ SIGNAL_GROUPS: dict[str, str] = {
     "travel_burden":      "context",
     "injury":             "context",
     "pressure_index":     "context",
+    # weather_signal in dieselbe context-Familie wie Travel-Burden + Injury —
+    # alle drei sind venue/spielort-bedingte Faktoren. Anti-Korr-Discount sinnvoll
+    # damit Travel + Heat zusammen nicht doppelt zählen (Bsp: lange Reise + Hitze
+    # in Dallas würden sonst beide gleichzeitig voll greifen).
+    "weather_signal":     "context",
     # lineup_signal ist UNIQUE (kein Anti-Korrelations-Discount):
     # T-1h Aufstellungs-Info ist orthogonal zu allen anderen Signalen —
     # die anderen modellieren historische/statische Daten, lineup_signal

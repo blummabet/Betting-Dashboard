@@ -2197,15 +2197,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <div class="h2-feature-head">
             <span class="h2-feature-icon">🧠</span>
             <div>
-              <div class="h2-feature-title">Sharp-Signal-Engine (12 Signale)</div>
+              <div class="h2-feature-title">Sharp-Signal-Engine (13 Signale)</div>
               <span class="h2-feature-tag usp">USP · ERWEITERT 08.06.2026</span>
             </div>
           </div>
           <div class="h2-feature-desc">
-            Modulare Engine im <code>sharp_signals/</code>-Ordner wertet pro Pick <strong>12 unabhängige Signale</strong> aus
+            Modulare Engine im <code>sharp_signals/</code>-Ordner wertet pro Pick <strong>13 unabhängige Signale</strong> aus
             (Lead-Lag-Bias, Steam-Lag, Polymarket-Sharp, Public-Static-Bias, Travel-Burden, Injury,
             xG-Stärke, Form-Trend, H2H-Pattern, Pressure-Index, <strong>Lineup T-1h</strong>,
-            <strong>API-Football Predictions</strong>) und produziert pro Signal Score + Evidence + Confidence.
+            <strong>API-Football Predictions</strong>, <strong>Weather/Hitze</strong>) und produziert pro Signal Score + Evidence + Confidence.
             <strong>Bayesian-Lern-Loop</strong> aktualisiert die Signal-Weights nach jedem resolved Spiel —
             die Engine wird mit jedem WM-Tag besser. Edge-Adjustment greift direkt ins Verdict ein: BET-Picks die
             durch das Engine-Netto-Adjustment unter −3pp gedrückt werden, werden automatisch zu ABWÄGEN.
@@ -2608,12 +2608,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div class="h2-sub-label" style="margin-top:24px;">Signal-Engine (sharp_signals/) — NEU 08.06.2026</div>
       <div class="h2-feature-grid">
         <div class="h2-feature" style="border-color:rgba(0,212,161,0.3);">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🧠</span><div class="h2-feature-title">12 modulare Signale</div></div>
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧠</span><div class="h2-feature-title">13 modulare Signale</div></div>
           <div class="h2-feature-desc">
             Lead-Lag-Bias (Pinnacle vs Soft-Books) · Steam-Lag (Pinn + Polymarket) · Polymarket-Sharp ·
             Public-Static-Bias · Travel-Burden (km+Höhe) · Injury (positionsbewusst GK/DEF/MID/FWD) ·
             xG-Stärke (Understat + NT-xG-Fallback) · Form-Trend · H2H-Pattern · Pressure-Index (Tournament-Stage) ·
-            <strong>Lineup T-1h</strong> (Top-Scorer-Bank/Missing) · <strong>API-Football Predictions</strong> (externes Modell vs Pinnacle).
+            <strong>Lineup T-1h</strong> (Top-Scorer-Bank/Missing) · <strong>API-Football Predictions</strong> (externes Modell vs Pinnacle) ·
+            <strong>Weather/Hitze</strong> (Cold-Climate-Penalty bei ≥30°C, Anpfiff-Zeit-modifiziert).
             <strong>Jedes Signal returnt score + confidence + evidence</strong>.
           </div>
         </div>

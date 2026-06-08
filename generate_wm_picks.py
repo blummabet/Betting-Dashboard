@@ -1411,6 +1411,26 @@ def main():
     except Exception as e:
         print(f"  ⚠️  APIF-Predictions-Load fehlgeschlagen: {e}")
 
+    # ── Wettervorhersage aus wm_weather.json (fetch_wm_weather.py) ────────
+    # Open-Meteo liefert tempMax/Min/Wind/Niederschlag/WeatherCode pro Spieltag.
+    # weather_signal nutzt das für Hitze-Penalty bei Cold-Climate-Teams.
+    # Außerdem schreiben wir das in fixture.weather damit Renderer-Pille
+    # (cc-env-heat ab 32°C) endlich anzeigen kann.
+    weather_data: dict = {}
+    try:
+        weather_file = os.path.join(os.path.dirname(WM_FILE), "wm_weather.json")
+        if os.path.exists(weather_file):
+            with open(weather_file, encoding="utf-8") as f:
+                weather_data = json.load(f).get("matches", {}) or {}
+            n_with_forecast = sum(
+                1 for v in weather_data.values()
+                if isinstance(v, dict) and v.get("forecastAvailable")
+            )
+            print(f"  🌡️ Wetter geladen: {n_with_forecast}/{len(weather_data)} "
+                  f"Spiele mit Vorhersage\n")
+    except Exception as e:
+        print(f"  ⚠️  Weather-Load fehlgeschlagen: {e}")
+
     # Travel-Burden (compute_wm_travel_burden.py) — separates File
     travel_data = {}
     travel_file = os.path.join(os.path.dirname(WM_FILE), "wm_travel_burden.json")
@@ -1473,6 +1493,22 @@ def main():
             pick_key = f"{gkey}-{fx['matchday']}-{fx['home']}-{fx['away']}"
             fx_date  = fx["date"]
 
+            # Wetter pro Fixture pipen → Renderer-Pille (_weatherPill) wird endlich
+            # sichtbar. Slug-Match wie generate_wm_match_pages.py es baut:
+            # "wm-{home_lc}-vs-{away_lc}-{date}". Defensiv: nur wenn forecast da.
+            if weather_data:
+                slug = f"wm-{fx['home'].lower()}-vs-{fx['away'].lower()}-{fx_date}"
+                w_entry = weather_data.get(slug) or {}
+                if w_entry.get("forecastAvailable") and w_entry.get("tempMax") is not None:
+                    fx["weather"] = {
+                        "temp":      w_entry.get("tempMax"),
+                        "tempMin":   w_entry.get("tempMin"),
+                        "condition": (w_entry.get("condition") or "").lower(),
+                        "icon":      w_entry.get("icon"),
+                        "windKph":   w_entry.get("windKmh"),
+                        "precipMm":  w_entry.get("precipMm"),
+                    }
+
             # Upset Score für jedes Fixture berechnen (immer, auch ohne Picks)
             elo_h = teams_map.get(fx["home"], {}).get("elo")
             elo_a = teams_map.get(fx["away"], {}).get("elo")
@@ -1524,6 +1560,9 @@ def main():
                     "lineups":          lineups_data,
                     "squads":           wm.get("squads", {}),
                     "apif_predictions": apif_predictions_data,
+                    "weather":          weather_data,
+                    "venue":            fx.get("venue"),
+                    "kickoff_time":     fx.get("time"),   # CEST/Wien lokale Zeit
                     "snapshot_ts":      None,   # → evaluate_signals nutzt now()
                 }
                 for p in new_picks:
