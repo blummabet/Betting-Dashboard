@@ -92,8 +92,28 @@ MAX_OPEN_EXPOSURE_USDC  = _cfg("trade", "max_open_exposure_usdc", 80.0)
 
 # Pre-Tournament-Schwelle: für Spiele >5 Tage entfernt höhere Edge-Schwelle.
 # Frühe Linien sind oft noch unsicher — Sharps geben dem Markt Zeit zur Korrektur.
+#
+# Hebel 2 (08.06.2026): GESTAFFELT statt binär.
+# Vorher: >5 Tage = 6pp hart. Folge: vor WM-Start praktisch keine Trades,
+# weil alle Spiele 3-14 Tage entfernt waren → 6pp ist Killer-Schwelle.
+# Neu: linear interpoliert zwischen PRE_TOURNAMENT_DAYS (5 → AUTO_TRIGGER_EDGE_PP)
+# und PRE_TOURNAMENT_FAR_DAYS (10 → PRE_TOURNAMENT_EDGE_PP).
+#   d=5  → 4.0pp
+#   d=7  → 4.8pp
+#   d=10 → 6.0pp
+#   d≥10 → 6.0pp
 PRE_TOURNAMENT_DAYS    = _cfg("trade", "pre_tournament_days",       5)
+PRE_TOURNAMENT_FAR_DAYS = _cfg("trade", "pre_tournament_far_days", 10)
 PRE_TOURNAMENT_EDGE_PP = _cfg("trade", "pre_tournament_edge_pp",  6.0)
+
+# Hebel 3 (08.06.2026): Engine-Hi-Confidence-Bonus.
+# Wenn Signal-Engine SEHR positiv steht (≥3 positive Signale UND
+# signalAdj ≥ +HI_CONF_ADJ_PP), senke Edge-Schwelle um HI_CONF_BONUS_PP.
+# Logik: drei unabhängige positive Signale rechtfertigen aggressivere
+# Stellungnahme. Symmetrisch zum Block-Gate (≤-3pp).
+ENGINE_HI_CONF_POS_MIN = _cfg("trade", "engine_hi_conf_pos_min",     3)
+ENGINE_HI_CONF_ADJ_PP  = _cfg("trade", "engine_hi_conf_adj_pp",    3.0)
+ENGINE_HI_CONF_BONUS_PP = _cfg("trade", "engine_hi_conf_bonus_pp", 1.0)
 
 # Adaptive Daily-Cap: skaliert mit verfügbarer Balance.
 # effective_cap = min(DAILY_STAKE_CAP_USDC, available_balance × ADAPTIVE_DAILY_FRACTION)
@@ -273,20 +293,38 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
         is_asym = fix.get("dataQuality") == "elo+form_asym"
         has_steam_lag = bool(fix.get("steamLag"))
 
-        # Effektiver Edge-Schwellenwert:
+        # Effektiver Edge-Schwellenwert (Basis):
         #  - steamLag=True: niedrigere Hürde (Pinn hat bereits bewegt → Signal ist valide)
         #  - elo_only / asym: höhere Hürde (schwache/asymmetrische Datenbasis)
         #  - normal: AUTO_TRIGGER_EDGE_PP
         if has_steam_lag:
-            effective_edge_threshold = STEAM_LAG_EDGE_PP
+            base_threshold = STEAM_LAG_EDGE_PP
         elif is_elo_only or is_asym:
-            effective_edge_threshold = AUTO_TRIGGER_EDGE_ELO_ONLY
+            base_threshold = AUTO_TRIGGER_EDGE_ELO_ONLY
         else:
-            effective_edge_threshold = AUTO_TRIGGER_EDGE_PP
+            base_threshold = AUTO_TRIGGER_EDGE_PP
 
-        # Pre-Tournament Edge-Verschärfung: wenn Spiel >5 Tage entfernt → höhere Schwelle
-        if d is not None and d > PRE_TOURNAMENT_DAYS:
-            effective_edge_threshold = max(effective_edge_threshold, PRE_TOURNAMENT_EDGE_PP)
+        # Pre-Tournament Edge-Verschärfung — Hebel 1+2 (08.06.2026)
+        #
+        # Hebel 1: Steam-Lag ist IMMUN gegen Pre-Tournament-Anhebung.
+        # Steam-Lag IST das Sharp-Signal — Pinnacle hat sich bereits bewegt,
+        # Polymarket hinkt hinterher. Vor WM-Start auf Konvergenz warten
+        # widerspricht der Logik des Signals.
+        #
+        # Hebel 2: Gestaffelte Schwelle statt binär.
+        # d=PRE_TOURNAMENT_DAYS → AUTO_TRIGGER_EDGE_PP (4pp)
+        # d=PRE_TOURNAMENT_FAR_DAYS → PRE_TOURNAMENT_EDGE_PP (6pp)
+        # Linear interpoliert dazwischen, geclamped darüber.
+        if (d is not None and d > PRE_TOURNAMENT_DAYS
+                and not has_steam_lag):
+            span = max(PRE_TOURNAMENT_FAR_DAYS - PRE_TOURNAMENT_DAYS, 1)
+            if d >= PRE_TOURNAMENT_FAR_DAYS:
+                pre_thr = PRE_TOURNAMENT_EDGE_PP
+            else:
+                ratio = (d - PRE_TOURNAMENT_DAYS) / span
+                pre_thr = AUTO_TRIGGER_EDGE_PP + ratio * (
+                    PRE_TOURNAMENT_EDGE_PP - AUTO_TRIGGER_EDGE_PP)
+            base_threshold = max(base_threshold, pre_thr)
 
         # Edge-Check für jeden Markt
         for edge_key, (price_key, market_label, fair_key, verdict_key, fld) in EDGE_MARKET_MAP.items():
@@ -296,7 +334,21 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
             eff_edge = fix.get(f"effectiveEdge_{fld}")
             edge = eff_edge if eff_edge is not None else raw_edge
 
-            if edge is None or edge < effective_edge_threshold:
+            # Hebel 3 (08.06.2026): Engine-Hi-Conf-Bonus pro Markt.
+            # ≥3 positive Signale + signalAdj ≥ +3pp → Schwelle -1pp.
+            # Lower-bound auf STEAM_LAG_EDGE_PP — nie unter den Sharp-Floor.
+            sig_adj_pre = fix.get(f"signalAdj_{fld}")
+            sig_pos_pre = fix.get(f"signalPos_{fld}")
+            market_threshold = base_threshold
+            if (isinstance(sig_pos_pre, int) and sig_pos_pre >= ENGINE_HI_CONF_POS_MIN
+                    and isinstance(sig_adj_pre, (int, float))
+                    and sig_adj_pre >= ENGINE_HI_CONF_ADJ_PP):
+                market_threshold = max(
+                    base_threshold - ENGINE_HI_CONF_BONUS_PP,
+                    STEAM_LAG_EDGE_PP,
+                )
+
+            if edge is None or edge < market_threshold:
                 continue
 
             # Verdict-Check: nur BET und ABWÄGEN — kein SKIP, kein None (kein Pick)

@@ -50,6 +50,7 @@
         "steam_lag_edge_pp":      3.0,
         "pre_tournament_edge_pp": 6.0,
         "pre_tournament_days":    5,
+        "pre_tournament_far_days": 10,
         "pre_match_close_hours":  2,
         "daily_bet_cap":          8,
         "daily_stake_cap_usdc":   50.0,
@@ -62,7 +63,12 @@
         "max_entry_price":        0.85,
         "max_positions_per_match": 2,
         "max_open_exposure_usdc": 80.0,
-        "adaptive_daily_fraction": 0.40
+        "adaptive_daily_fraction": 0.40,
+        "engine_block_adj_pp":   -3.0,
+        "engine_min_pos_for_abwaegen": 2,
+        "engine_hi_conf_pos_min": 3,
+        "engine_hi_conf_adj_pp": 3.0,
+        "engine_hi_conf_bonus_pp": 1.0
       },
       "sell": {
         "profit_target":          0.10,
