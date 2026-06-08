@@ -69,7 +69,7 @@ Triggered: manage-wm-poly.yml (nach Preis-Fetch)
 import json
 import math
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 BASE          = Path(__file__).parent
@@ -485,7 +485,9 @@ def find_poly_close_price(
     # Match-Anpfiff schätzen (WM-Standard: 19:00 UTC für Hauptspiele).
     # Falls Datum bekannt, suchen wir Snapshot ≤ Anpfiff aber innerhalb 12h davor.
     try:
-        from datetime import datetime, timezone, timedelta
+        # Bug-Fix 08.06.2026: lokalen datetime-Import entfernt (siehe fetch_wm_poly_prices)
+        # — globaler Import oben enthält jetzt timedelta. Sonst gleicher
+        # UnboundLocalError-Trap wie bei fetch_wm_poly_prices Line 625.
         if "T" in match_date:
             anpfiff = datetime.fromisoformat(match_date.replace("Z", "+00:00"))
         else:

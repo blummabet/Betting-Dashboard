@@ -15,7 +15,7 @@ import os
 import sys
 import urllib.request
 import urllib.error
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 BASE         = os.path.dirname(os.path.abspath(__file__))
 OUT_FILE     = os.path.join(BASE, "wm_poly_prices.json")
@@ -808,7 +808,11 @@ def main():
         # AUDIT-Fix 06.06.2026: Per-Match-per-Day-Dedup für Edge-Alerts.
         # Vorher: alle 4h würde derselbe Edge erneut gemeldet → 5×/Tag Spam.
         # Jetzt: jede (matchKey × bestEdgeKey) max 1× pro 12h via dedup-state file.
-        from datetime import datetime, timezone, timedelta
+        # CRITICAL Bug-Fix 08.06.2026: Lokaler `from datetime import datetime`
+        # triggerte Python's local scope rule — Line 625 (`datetime.now()`) crashte
+        # mit UnboundLocalError ein paar 100 Zeilen FRÜHER. Resultat: wm_poly_prices.json
+        # seit 2+ Tagen nicht geschrieben → Steam-Lag-Monitor las stale Daten.
+        # Fix: timedelta global oben importiert, lokaler Import entfernt.
         EDGE_ALERT_DEDUP_FILE = BASE_DIR / "wm_edge_alert_dedup.json"
         EDGE_DEDUP_HOURS = _cfg("dedup_hours", "edge_alert", 12)
         dedup_state = {}
