@@ -1,16 +1,148 @@
 <style>
-.q-bg { background: linear-gradient(180deg, #1e1b4b 0%, #0f0a2e 100%); padding: 120px 80px; }
-.q-title { text-align: center; font-size: 46px; font-weight: 700; margin-bottom: 24px; opacity: 0.85; letter-spacing: 2px; }
-.q-match { text-align: center; display: flex; align-items: center; justify-content: center; gap: 32px; margin-bottom: 80px; font-size: 72px; font-weight: 900; }
-.q-vs { color: var(--accent, #fbbf24); font-size: 54px; }
-.q-opt { background: rgba(255,255,255,0.06); border-radius: 32px; padding: 48px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
-.q-opt-label { font-size: 54px; font-weight: 800; line-height: 1.1; flex: 1; }
-.q-opt-pct { font-size: 96px; font-weight: 900; color: var(--accent, #fbbf24); letter-spacing: -2px; }
-.q-opt-pct small { font-size: 42px; opacity: 0.7; }
-.q-question { text-align: center; margin-top: 60px; font-size: 44px; font-weight: 800; color: var(--accent, #fbbf24); letter-spacing: 3px; }
+/*
+ * quiz.html — Wer-gewinnt Quiz Card (Hidden-Gem-Stil)
+ * Angeglichen an Österreich-Vorlage 08.06.2026.
+ * Komposition: STORY-Badge + QUIZ Tier-Badge, Match-Flaggen,
+ * 3 Optionen mit Gold-% Anker, Frage als Punchline.
+ */
+.q-bg {
+  background: radial-gradient(ellipse at top, #14204a 0%, #0a0e27 70%);
+  padding: 70px 70px 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.q-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(125,211,252,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.q-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 50px;
+  position: relative;
+  z-index: 2;
+}
+.q-story-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 18px;
+  padding: 16px 28px;
+  text-align: left;
+  background: rgba(10,14,39,0.4);
+}
+.q-story-badge .lbl {
+  font-size: 22px;
+  letter-spacing: 4px;
+  opacity: 0.7;
+  font-weight: 600;
+}
+.q-story-badge .brand {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent, #fbbf24);
+  letter-spacing: 3px;
+  margin-top: 4px;
+}
+.q-tier-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 60px;
+  padding: 14px 32px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #7dd3fc;
+  letter-spacing: 3px;
+  background: rgba(10,14,39,0.4);
+}
+.q-title {
+  text-align: center;
+  font-size: 38px;
+  font-weight: 700;
+  margin-bottom: 28px;
+  opacity: 0.85;
+  letter-spacing: 3px;
+  color: #7dd3fc;
+  position: relative;
+  z-index: 2;
+}
+.q-match {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  margin-bottom: 70px;
+  font-size: 96px;
+  font-weight: 900;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 12px 32px rgba(0,0,0,0.45));
+}
+.q-vs {
+  color: var(--accent, #fbbf24);
+  font-size: 56px;
+  letter-spacing: 4px;
+}
+.q-opt {
+  background: rgba(125,211,252,0.06);
+  border: 1.5px solid rgba(125,211,252,0.22);
+  border-radius: 28px;
+  padding: 42px 48px;
+  margin-bottom: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+.q-opt-label {
+  font-size: 50px;
+  font-weight: 800;
+  line-height: 1.1;
+  flex: 1;
+  letter-spacing: -1px;
+}
+.q-opt-pct {
+  font-size: 92px;
+  font-weight: 900;
+  color: var(--accent, #fbbf24);
+  letter-spacing: -2px;
+}
+.q-opt-pct small {
+  font-size: 38px;
+  opacity: 0.7;
+}
+.q-question {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 42px;
+  font-weight: 800;
+  color: #7dd3fc;
+  letter-spacing: 3px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
 </style>
 <div class="stc q-bg">
-  <div class="q-title">⚽ {{tournament_label}} · WER GEWINNT?</div>
+  <div class="q-top">
+    <div class="q-story-badge">
+      <div class="lbl">STORY</div>
+      <div class="brand">COCOBET</div>
+    </div>
+    <div class="q-tier-badge">⚽ QUIZ</div>
+  </div>
+  <div class="q-title">{{tournament_label}} · WER GEWINNT?</div>
   <div class="q-match">
     <span>{{home_flag}}</span><span class="q-vs">vs</span><span>{{away_flag}}</span>
   </div>

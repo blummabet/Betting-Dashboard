@@ -1,12 +1,129 @@
 <style>
-.b-bg { background: linear-gradient(180deg, #0a0e27 0%, #1e293b 100%); padding: 120px 80px; }
-.b-hook { font-size: 52px; font-weight: 600; opacity: 0.8; margin-bottom: 24px; }
-.b-subject { font-size: 84px; font-weight: 900; line-height: 1.05; margin-bottom: 24px; letter-spacing: -1px; }
-.b-quote { display: inline-block; background: var(--accent, #fbbf24); color: var(--primary-bg, #0a0e27); padding: 24px 48px; border-radius: 24px; font-size: 96px; font-weight: 900; margin-bottom: 80px; box-shadow: 0 12px 32px rgba(251,191,36,0.4); }
-.b-cmp { background: rgba(255,255,255,0.06); border-left: 6px solid var(--accent, #fbbf24); padding: 32px 40px; border-radius: 20px; margin-bottom: 28px; font-size: 40px; font-weight: 600; line-height: 1.3; }
-.b-cmp::before { content: "→ "; color: var(--accent, #fbbf24); font-weight: 900; }
+/*
+ * bizarre.html — Outright-Quote-Vergleich Card (Hidden-Gem-Stil)
+ * Angeglichen an Österreich-Vorlage 08.06.2026.
+ * Komposition: STORY-Badge + BIZARRE Tier-Badge, Subject zentriert,
+ * Quote als Gold-Hero-Box, 3 Vergleichs-Rows mit Cyan-Border-Left.
+ */
+.b-bg {
+  background: radial-gradient(ellipse at top, #14204a 0%, #0a0e27 70%);
+  padding: 70px 70px 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+.b-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(125,211,252,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.b-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 50px;
+  position: relative;
+  z-index: 2;
+}
+.b-story-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 18px;
+  padding: 16px 28px;
+  text-align: left;
+  background: rgba(10,14,39,0.4);
+}
+.b-story-badge .lbl {
+  font-size: 22px;
+  letter-spacing: 4px;
+  opacity: 0.7;
+  font-weight: 600;
+}
+.b-story-badge .brand {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent, #fbbf24);
+  letter-spacing: 3px;
+  margin-top: 4px;
+}
+.b-tier-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 60px;
+  padding: 14px 32px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #7dd3fc;
+  letter-spacing: 3px;
+  background: rgba(10,14,39,0.4);
+}
+.b-hook {
+  font-size: 36px;
+  font-weight: 600;
+  opacity: 0.7;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 2;
+}
+.b-subject {
+  font-size: 86px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+.b-quote {
+  display: inline-block;
+  background: var(--accent, #fbbf24);
+  color: #0a0e27;
+  padding: 26px 56px;
+  border-radius: 28px;
+  font-size: 88px;
+  font-weight: 900;
+  margin-bottom: 60px;
+  box-shadow: 0 12px 40px rgba(251,191,36,0.35);
+  position: relative;
+  z-index: 2;
+}
+.b-cmp {
+  background: rgba(125,211,252,0.06);
+  border-left: 5px solid #7dd3fc;
+  padding: 28px 36px;
+  border-radius: 18px;
+  margin-bottom: 22px;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+.b-cmp::before {
+  content: "→ ";
+  color: #7dd3fc;
+  font-weight: 900;
+}
 </style>
 <div class="stc b-bg">
+  <div class="b-top">
+    <div class="b-story-badge">
+      <div class="lbl">STORY</div>
+      <div class="brand">COCOBET</div>
+    </div>
+    <div class="b-tier-badge">🃏 BIZARRE</div>
+  </div>
   <div class="b-hook">DAS HEISST ZU SAGEN</div>
   <div class="b-subject">{{subject}}</div>
   {{#if quote}}<div class="b-quote">@{{quote}}</div>{{/if}}

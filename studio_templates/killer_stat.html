@@ -1,13 +1,139 @@
 <style>
-.k-bg { background: linear-gradient(135deg, #7c2d12 0%, #431407 100%); padding: 120px 80px; text-align: center; }
-.k-flag { font-size: 140px; line-height: 1; margin-bottom: 24px; }
-.k-team { font-size: 42px; font-weight: 700; opacity: 0.85; margin-bottom: 120px; letter-spacing: 4px; }
-.k-number { font-size: 360px; font-weight: 900; line-height: 0.9; letter-spacing: -12px; margin-bottom: 20px; background: linear-gradient(135deg, var(--accent, #fbbf24), var(--accent-secondary, #dc2626)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 20px 60px rgba(220,38,38,0.4); }
-.k-unit { font-size: 64px; font-weight: 800; letter-spacing: 8px; margin-bottom: 80px; }
-.k-context { font-size: 38px; font-weight: 600; line-height: 1.3; opacity: 0.95; margin-bottom: 40px; background: rgba(255,255,255,0.08); padding: 32px; border-radius: 24px; }
-.k-punch { font-size: 46px; font-weight: 800; line-height: 1.2; color: var(--accent, #fbbf24); padding: 0 20px; }
+/*
+ * killer_stat.html — Hero-Number Card (Hidden-Gem-Stil)
+ * Angeglichen an Österreich-Vorlage 08.06.2026.
+ * Komposition: STORY-Badge + KILLER-STAT Tier-Badge oben, Flagge zentriert,
+ * Riesen-Zahl als Gold-Hero-Anker mit Cyan-Glow, Unit + Context, Punchline.
+ */
+.k-bg {
+  background: radial-gradient(ellipse at top, #14204a 0%, #0a0e27 70%);
+  padding: 70px 70px 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+.k-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(125,211,252,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.k-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
+}
+.k-story-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 18px;
+  padding: 16px 28px;
+  text-align: left;
+  background: rgba(10,14,39,0.4);
+}
+.k-story-badge .lbl {
+  font-size: 22px;
+  letter-spacing: 4px;
+  opacity: 0.7;
+  font-weight: 600;
+}
+.k-story-badge .brand {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent, #fbbf24);
+  letter-spacing: 3px;
+  margin-top: 4px;
+}
+.k-tier-badge {
+  border: 2px solid rgba(125,211,252,0.5);
+  border-radius: 60px;
+  padding: 14px 32px;
+  font-size: 24px;
+  font-weight: 800;
+  color: #7dd3fc;
+  letter-spacing: 3px;
+  background: rgba(10,14,39,0.4);
+}
+.k-flag {
+  font-size: 140px;
+  line-height: 1;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 10px 28px rgba(0,0,0,0.45));
+  position: relative;
+  z-index: 2;
+}
+.k-team {
+  font-size: 40px;
+  font-weight: 700;
+  opacity: 0.7;
+  letter-spacing: 4px;
+  margin-bottom: 60px;
+  position: relative;
+  z-index: 2;
+}
+.k-number {
+  font-size: 340px;
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -10px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #fbbf24, #7dd3fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 20px 60px rgba(125,211,252,0.25);
+  position: relative;
+  z-index: 2;
+}
+.k-unit {
+  font-size: 58px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  color: #7dd3fc;
+  margin-bottom: 50px;
+  position: relative;
+  z-index: 2;
+}
+.k-context {
+  background: rgba(125,211,252,0.06);
+  border: 1.5px solid rgba(125,211,252,0.28);
+  border-radius: 22px;
+  padding: 32px 36px;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+.k-punch {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--accent, #fbbf24);
+  padding: 0 10px;
+  position: relative;
+  z-index: 2;
+}
 </style>
 <div class="stc k-bg">
+  <div class="k-top">
+    <div class="k-story-badge">
+      <div class="lbl">STORY</div>
+      <div class="brand">COCOBET</div>
+    </div>
+    <div class="k-tier-badge">💎 KILLER-STAT</div>
+  </div>
   <div class="k-flag">{{flag}}</div>
   <div class="k-team">{{team_upper}}</div>
   <div class="k-number">{{number}}</div>
