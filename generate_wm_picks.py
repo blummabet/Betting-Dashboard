@@ -1478,6 +1478,38 @@ def main():
                     if sig_out["signals"]:
                         p["signals"] = sig_out["signals"]
                         p["signalAdjustmentPP"] = sig_out["combined_score_pp"]
+                        p["signalCountPos"] = sig_out["n_positive_signals"]
+                        p["signalCountNeg"] = sig_out["n_negative_signals"]
+
+                        # ── Edge-Adjustment Integration ─────────────────
+                        # Echter Edge (model vs market) wird um Engine-Output
+                        # justiert. Damit kann der Renderer einen "echten" Edge
+                        # nach Engine-Korrektur zeigen.
+                        if isinstance(p.get("edgePP"), (int, float)):
+                            p["effectiveEdgePP"] = round(p["edgePP"] + sig_out["combined_score_pp"], 1)
+
+                        # ── Verdict-Override durch Engine ───────────────
+                        # Regel 1: BET → ABWÄGEN wenn Netto-Adjustment ≤ -3pp
+                        #   (Engine warnt deutlich gegen den Pick)
+                        # Regel 2: BET → ABWÄGEN wenn weniger als MIN_POSITIVE_SIGNALS
+                        #   positive Signale (kein quantifizierbarer Grund für BET)
+                        MIN_POSITIVE_SIGNALS = 2
+                        ENGINE_DOWNGRADE_PP = -3.0
+                        if p.get("verdict") == "BET":
+                            adj = sig_out["combined_score_pp"]
+                            n_pos = sig_out["n_positive_signals"]
+                            if adj <= ENGINE_DOWNGRADE_PP:
+                                p["verdict"] = "ABWÄGEN"
+                                p["downgradedReason"] = (
+                                    f"Engine warnt: Signal-Adjustment {adj:+.1f}pp "
+                                    f"≤ {ENGINE_DOWNGRADE_PP}pp Schwelle"
+                                )
+                            elif n_pos < MIN_POSITIVE_SIGNALS:
+                                p["verdict"] = "ABWÄGEN"
+                                p["downgradedReason"] = (
+                                    f"Engine: nur {n_pos} positive Signal(e), "
+                                    f"Mindest-Threshold {MIN_POSITIVE_SIGNALS} für BET"
+                                )
             except Exception as e:
                 print(f"  ⚠️  Signal-Engine crashed für {fx['home']}-{fx['away']}: {e}")
 

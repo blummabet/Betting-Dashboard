@@ -26,6 +26,7 @@ from sharp_signals.h2h_pattern import H2HPatternSignal
 from sharp_signals.xg_strength import XGStrengthSignal
 from sharp_signals.polymarket_sharp import PolymarketSharpSignal
 from sharp_signals.steam_lag import SteamLagSignal
+from sharp_signals.pressure_index import PressureIndexSignal
 
 
 # Liste aller aktiv evaluierten Signale.
@@ -40,6 +41,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     XGStrengthSignal(),
     PolymarketSharpSignal(),
     SteamLagSignal(),
+    PressureIndexSignal(),
 ]
 
 
@@ -87,21 +89,75 @@ def get_weight(weights: dict, signal_name: str) -> float:
     return float(w) if isinstance(w, (int, float)) else 1.0
 
 
+# ── Anti-Korrelation: Signal-Gruppen die dasselbe messen ──────────────────
+# Wenn mehrere Signale aus derselben Gruppe gleichzeitig triggern, ist das
+# meist ein Effekt (nicht 3 unabhängige Beobachtungen). Wir nehmen nur das
+# stärkste mit voller Gewichtung, der Rest wird mit CORRELATION_DISCOUNT
+# gedämpft.
+#
+#   sharp_money_family:  alle Signale die auf Pinnacle/Polymarket-Move basieren
+#   form_family:         alle Signale die auf Vergangenheits-Form basieren
+#   public_family:       alle Signale die auf Public-vs-Sharp-Bias basieren
+SIGNAL_GROUPS: dict[str, str] = {
+    "lead_lag_bias":      "sharp_money",
+    "steam_lag":          "sharp_money",
+    "polymarket_sharp":   "sharp_money",
+    "form_trend":         "form",
+    "xg_strength":        "form",
+    "h2h_pattern":        "form",
+    "public_static_bias": "public",
+    "travel_burden":      "context",
+    "injury":             "context",
+    "pressure_index":     "context",
+}
+CORRELATION_DISCOUNT = 0.4   # zweites Signal aus selber Gruppe nur zu 40%
+
+
+def _apply_anti_correlation(signal_outputs: list[dict]) -> list[dict]:
+    """
+    Gruppiert Signale nach Korrelations-Familie. Pro Gruppe: stärkster Score
+    voll, alle weiteren auf CORRELATION_DISCOUNT × Score gedämpft.
+    Mutiert die `weighted_score` Felder in-place und gibt die Liste zurück.
+    """
+    # Sortiere innerhalb jeder Gruppe nach |weighted_score| absteigend
+    by_group: dict[str, list[dict]] = {}
+    for s in signal_outputs:
+        g = SIGNAL_GROUPS.get(s["name"], "unique")
+        by_group.setdefault(g, []).append(s)
+
+    for g, members in by_group.items():
+        if g == "unique" or len(members) <= 1:
+            continue
+        members.sort(key=lambda x: abs(x["weighted_score"]), reverse=True)
+        for idx, m in enumerate(members):
+            if idx == 0:
+                continue   # stärkster bleibt voll
+            m["weighted_score"] = round(m["weighted_score"] * CORRELATION_DISCOUNT, 2)
+            m["correlation_discount_applied"] = CORRELATION_DISCOUNT
+    return signal_outputs
+
+
 def evaluate_signals(pick: dict, context: dict,
                      weights: Optional[dict] = None) -> dict:
     """
     Ruft alle aktiven Signale auf, sammelt die Results, gewichtet sie.
 
+    Anti-Korrelation: Signale aus derselben Gruppe (z.B. Sharp-Money) zählen
+    nur das stärkste voll; weitere werden gedämpft (CORRELATION_DISCOUNT).
+
     Returns:
       {
         "signals": [
           {"name": "lead_lag_bias", "score": +2.5, "confidence": 0.7,
-           "evidence": "...", "weight": 1.0, "weighted_score": +2.5},
+           "evidence": "...", "weight": 1.0, "weighted_score": +2.5,
+           "correlation_discount_applied": null | 0.4},
           ...
         ],
-        "combined_score_pp": Float,   # gewichteter Score-Summen (für edge adjustment)
-        "highest_confidence": Float,
-        "evidence_lines": [str, ...]  # für die Card
+        "combined_score_pp":  float,  # gewichteter Score (nach Anti-Korrelation)
+        "n_positive_signals": int,    # für Min-Threshold-Logik
+        "n_negative_signals": int,
+        "highest_confidence": float,
+        "evidence_lines":     [str, ...]
       }
     """
     if weights is None:
@@ -109,15 +165,12 @@ def evaluate_signals(pick: dict, context: dict,
 
     signal_outputs = []
     evidence_lines = []
-    weighted_sum   = 0.0
-    sum_of_weights = 0.0
     max_conf       = 0.0
 
     for signal in ACTIVE_SIGNALS:
         try:
             result = signal.evaluate(pick, context)
         except Exception as e:
-            # Ein einzelnes Signal darf den ganzen Pick nicht killen
             result = None
             print(f"  ⚠️  Signal {signal.name()} crashed: {e}")
         if result is None:
@@ -125,8 +178,6 @@ def evaluate_signals(pick: dict, context: dict,
 
         w = get_weight(weights, signal.name())
         weighted_score = result.score * w * result.confidence
-        weighted_sum   += weighted_score
-        sum_of_weights += w * result.confidence
         max_conf       = max(max_conf, result.confidence)
         evidence_lines.append(f"{signal.name()}: {result.evidence}")
 
@@ -140,10 +191,28 @@ def evaluate_signals(pick: dict, context: dict,
             "metadata":      result.metadata,
         })
 
-    combined = weighted_sum / sum_of_weights if sum_of_weights > 0 else 0.0
+    # Anti-Korrelation anwenden (in-place auf weighted_score)
+    signal_outputs = _apply_anti_correlation(signal_outputs)
+
+    # Combined-Score: sum of weighted_score / sum of effective weights
+    # (gewichtet by confidence × weight × discount-effective)
+    weighted_sum = sum(s["weighted_score"] for s in signal_outputs)
+    sum_of_w = 0.0
+    for s in signal_outputs:
+        eff_w = s["weight"] * s["confidence"]
+        if s.get("correlation_discount_applied"):
+            eff_w *= s["correlation_discount_applied"]
+        sum_of_w += eff_w
+    combined = weighted_sum / sum_of_w if sum_of_w > 0 else 0.0
+
+    n_pos = sum(1 for s in signal_outputs if s["score"] > 0)
+    n_neg = sum(1 for s in signal_outputs if s["score"] < 0)
+
     return {
         "signals":            signal_outputs,
         "combined_score_pp":  round(combined, 2),
+        "n_positive_signals": n_pos,
+        "n_negative_signals": n_neg,
         "highest_confidence": round(max_conf, 2),
         "evidence_lines":     evidence_lines,
     }
