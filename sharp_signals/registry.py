@@ -20,6 +20,9 @@ from sharp_signals.base import Signal, SignalResult
 from sharp_signals.lead_lag_bias import LeadLagBiasSignal
 from sharp_signals.public_static_bias import PublicStaticBiasSignal
 from sharp_signals.travel_burden import TravelBurdenSignal
+from sharp_signals.injury_signal import InjurySignal
+from sharp_signals.form_trend import FormTrendSignal
+from sharp_signals.h2h_pattern import H2HPatternSignal
 
 
 # Liste aller aktiv evaluierten Signale.
@@ -28,9 +31,12 @@ ACTIVE_SIGNALS: list[Signal] = [
     LeadLagBiasSignal(),
     PublicStaticBiasSignal(),
     TravelBurdenSignal(),
+    InjurySignal(),
+    FormTrendSignal(),
+    H2HPatternSignal(),
     # Weitere Signale werden hier ergänzt:
-    # InjurySignal(),
     # SteamLagSignal(),
+    # PolymarketSharpSignal(),
 ]
 
 
