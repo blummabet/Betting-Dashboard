@@ -43,9 +43,9 @@ MARKET_TO_PRICE_KEY = {
 TELEGRAM_TOKEN          = (os.getenv("TELEGRAM_TOKEN") or "").strip()
 # WICHTIG: Sell-Alerts mit P&L-Daten gehen NUR an Trades-Channel (privat),
 # NICHT an den öffentlichen CocoBet-Hauptchannel. Privacy-Fix 05.06.2026 (K1).
+# AUDIT-Fix 08.06.2026: Legacy-Alias TELEGRAM_CHAT_ID entfernt — alle Sender hier
+# nutzen explizit TELEGRAM_TRADES_CHAT_ID. Keine Verwechslungs-Gefahr mehr.
 TELEGRAM_TRADES_CHAT_ID = (os.getenv("TELEGRAM_TRADES_CHAT_ID") or "").strip()
-# Legacy-Alias für Code der noch TELEGRAM_CHAT_ID liest — beide zeigen auf Trades.
-TELEGRAM_CHAT_ID        = TELEGRAM_TRADES_CHAT_ID
 
 # ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
 # Backwards-compatible: Code-Defaults greifen wenn cocobet_config crash.

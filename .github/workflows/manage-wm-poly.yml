@@ -29,7 +29,13 @@ permissions:
 # cancel-in-progress: false — laufende Trades NIEMALS abbrechen,
 # sonst entstehen orphan-Orders auf der CLOB die niemand getrackt hat.
 concurrency:
-  group: poly-trading
+  # AUDIT-Fix 08.06.2026: Geteilte Group mit fetch-wm-data wegen shared files:
+  # wm_poly_prices.json, wm2026-poly-history.json, wm_results.json werden von
+  # BEIDEN Workflows geschrieben. Bei zeitnahen Pushes konnte `git pull -X ours`
+  # Commits überschreiben. Jetzt: serialisiert (nie parallel).
+  # Cron-Versatz (04/08/12/16/20 vs 06/10/14/18/22 UTC) → in der Praxis warten
+  # weniger als 2× pro Tag <5min auf Vorgänger.
+  group: fetch-wm-data
   cancel-in-progress: false
 
 jobs:
@@ -85,12 +91,13 @@ jobs:
           POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
 
       # ── Auto-Trigger: erkennt Steam Lag + Edge Signale und kauft automatisch ─────
+      # AUDIT-Fix 08.06.2026: TELEGRAM_CHAT_ID (public) entfernt — auto-trigger
+      # nutzt es nicht. Auto-Bet-Alerts gehen IMMER an Trades-Channel (privat).
       - name: 🤖 Auto-Trigger WM Bets
         run: ${{ env.POLY_PYTHON }} auto_wm_poly_trigger.py
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:            ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID:          ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_TRADES_CHAT_ID:   ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
           POLY_PRIVATE_KEY:          ${{ secrets.POLY_PRIVATE_KEY }}
           POLY_FUNDER_ADDRESS:       ${{ secrets.POLY_FUNDER_ADDRESS }}
