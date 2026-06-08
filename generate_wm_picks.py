@@ -1357,7 +1357,30 @@ def main():
     mkt      = wm.get("odds",     {})
     form         = wm.get("form",        {})
     h2h_data     = wm.get("h2h",         {})
-    xg_stats     = wm.get("xgStats",     {})   # API-Football xG
+    xg_stats     = wm.get("xgStats",     {})   # Understat xG (Europa-Teams)
+
+    # ── NT-xG aus API-Football als Fallback für fehlende Teams (08.06.2026) ──
+    # Understat hat nur ~15 von 48 Teams (Europa-fokussiert). wm_nt_xg.json
+    # liefert NT-xG aus den letzten Nationalmannschafts-Spielen für die
+    # ~33 fehlenden Teams (CONMEBOL/AFC/Afrika/CONCACAF/OFC).
+    # Merge: Understat hat Priorität, NT-xG füllt nur Lücken.
+    try:
+        nt_xg_file = os.path.join(os.path.dirname(WM_FILE), "wm_nt_xg.json")
+        if os.path.exists(nt_xg_file):
+            with open(nt_xg_file, encoding="utf-8") as f:
+                nt_xg = json.load(f)
+            merged = 0
+            for tid, entry in nt_xg.items():
+                if tid in xg_stats and xg_stats[tid].get("games", 0) >= 3:
+                    continue  # Understat-Daten haben Priorität
+                if not isinstance(entry, dict) or "xgForAvg" not in entry:
+                    continue
+                xg_stats[tid] = entry
+                merged += 1
+            if merged:
+                print(f"  ⊕ NT-xG (API-Football) gemerged: {merged} Teams ergänzt\n")
+    except Exception as e:
+        print(f"  ⚠️  NT-xG-Merge fehlgeschlagen: {e}")
     injuries     = wm.get("injuries",    {})   # Verletzungen/Sperren
     corners_form = wm.get("cornersForm", {})   # Eckball-Stats pro Team (fetch_wm_corners.py)
 

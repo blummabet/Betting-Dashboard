@@ -140,6 +140,17 @@ jobs:
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
+      # ── NT-xG aus API-Football fixture statistics (Coverage-Lücke füllen) ──
+      # Understat hat nur ~15 Europa-Teams. Diese Pipeline füllt die ~33 anderen
+      # Teams (CONMEBOL/AFC/Afrika/CONCACAF/OFC) mit NT-xG aus den letzten ~10
+      # Nationalmannschafts-Spielen. Cached 14 Tage pro Team — sehr API-sparsam.
+      # Muss VOR generate_wm_picks laufen damit xg_strength Signal merged.
+      - name: 📈 WM NT-xG (API-Football) fetchen
+        run: python fetch_wm_nt_xg.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
       # ── Spielergebnisse fetchen (schreibt result in wm2026-data.json Fixtures) ────
       - name: ⚽ WM Spielergebnisse fetchen
         run: python fetch_wm_match_results.py

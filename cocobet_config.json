@@ -70,6 +70,14 @@
         "engine_hi_conf_adj_pp": 3.0,
         "engine_hi_conf_bonus_pp": 1.0
       },
+      "nt_xg": {
+        "lookback_fixtures":      10,
+        "min_fixtures":            3,
+        "fixtures_max_age_days": 540,
+        "request_delay_sec":     1.2,
+        "request_timeout_sec":    15,
+        "skip_if_understat":   false
+      },
       "sell": {
         "profit_target":          0.10,
         "pinn_gap_pp":            1.5,
