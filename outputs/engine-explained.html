@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Wie die CocoBet-Engine einen Pick bewertet</title>
+<style>
+  :root {
+    --bg: #0a0e27;
+    --bg-2: #14204a;
+    --surface: rgba(125,211,252,0.06);
+    --border: rgba(125,211,252,0.22);
+    --text: #f0f4f8;
+    --muted: #94a3b8;
+    --cyan: #7dd3fc;
+    --gold: #fbbf24;
+    --green: #4ade80;
+    --red: #f87171;
+    --amber: #fbbf24;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    background: radial-gradient(ellipse at top, var(--bg-2) 0%, var(--bg) 60%);
+    background-attachment: fixed;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(125,211,252,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(125,211,252,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 48px 24px; position: relative; z-index: 1; }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .hero .crown {
+    display: inline-block;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 12px;
+    letter-spacing: -0.5px;
+  }
+  .hero .sub {
+    color: var(--muted);
+    font-size: 17px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* SECTION */
+  .section { margin-bottom: 56px; }
+  .step-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px;
+  }
+  .step-badge {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px;
+    flex-shrink: 0;
+  }
+  .step-title { font-size: 22px; font-weight: 700; margin: 0; }
+  .step-sub { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+
+  /* MATCH CARD */
+  .match-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+  }
+  .match-line {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .teams {
+    font-size: 24px; font-weight: 700;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .teams .vs { color: var(--muted); font-size: 16px; font-weight: 500; }
+  .match-meta { color: var(--muted); font-size: 13px; }
+  .match-meta strong { color: var(--text); font-weight: 600; }
+  .pick-row {
+    margin-top: 20px; padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .pick-label {
+    font-size: 11px; letter-spacing: 2px; color: var(--cyan); font-weight: 700;
+  }
+  .pick-mkt {
+    font-size: 28px; font-weight: 800; color: var(--gold);
+    margin-top: 2px;
+  }
+  .pick-odds {
+    font-size: 14px; color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* CALC BOX */
+  .calc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+  }
+  .calc-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(125,211,252,0.15);
+    font-size: 15px;
+  }
+  .calc-row:last-child { border-bottom: 0; }
+  .calc-row.highlight {
+    font-weight: 700;
+    color: var(--cyan);
+    border-bottom: 0;
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 2px solid var(--border);
+  }
+  .calc-row .val { font-family: ui-monospace, SF Mono, Consolas, monospace; }
+  .calc-row .lbl { color: var(--muted); }
+
+  /* SIGNAL CARDS GRID */
+  .signals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .signal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex; flex-direction: column;
+    gap: 4px;
+  }
+  .signal-card.pos { border-color: rgba(74,222,128,0.35); background: rgba(74,222,128,0.06); }
+  .signal-card.neg { border-color: rgba(248,113,113,0.35); background: rgba(248,113,113,0.06); }
+  .signal-card.silent { opacity: 0.45; }
+  .signal-card .ico { font-size: 22px; }
+  .signal-card .name { font-size: 12px; font-weight: 700; letter-spacing: 0.3px; }
+  .signal-card .val {
+    font-family: ui-monospace, monospace;
+    font-size: 15px; font-weight: 800; margin-top: 2px;
+  }
+  .signal-card.pos .val { color: var(--green); }
+  .signal-card.neg .val { color: var(--red); }
+  .signal-card .desc { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+  /* WATERFALL */
+  .waterfall {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+  }
+  .wf-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    align-items: center;
+    padding: 10px 0;
+    font-size: 14px;
+    gap: 16px;
+  }
+  .wf-row.start, .wf-row.end {
+    background: rgba(125,211,252,0.10);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 8px 0;
+    font-weight: 700;
+  }
+  .wf-row.end { background: rgba(251,191,36,0.10); border: 1px solid rgba(251,191,36,0.35); }
+  .wf-row .lbl { color: var(--text); }
+  .wf-row.start .lbl, .wf-row.end .lbl { color: var(--gold); }
+  .wf-row .bar-wrap {
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    position: relative;
+    overflow: visible;
+  }
+  .wf-row .bar {
+    position: absolute; top: 0; bottom: 0;
+    border-radius: 3px;
+  }
+  .wf-row .bar.pos { background: var(--green); }
+  .wf-row .bar.neg { background: var(--red); }
+  .wf-row .val {
+    text-align: right;
+    font-family: ui-monospace, monospace;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .wf-row .val.pos { color: var(--green); }
+  .wf-row .val.neg { color: var(--red); }
+  .wf-row.start .val, .wf-row.end .val { color: var(--gold); font-size: 18px; }
+
+  /* VERDICT */
+  .verdict {
+    background: linear-gradient(135deg, rgba(251,191,36,0.10), rgba(251,191,36,0.04));
+    border: 2px solid rgba(251,191,36,0.45);
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+  }
+  .verdict .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(251,191,36,0.18);
+    border-radius: 999px;
+    font-size: 11px; letter-spacing: 2px;
+    color: var(--amber);
+    font-weight: 700;
+  }
+  .verdict .big {
+    font-size: 44px; font-weight: 800;
+    margin: 16px 0 8px;
+    color: var(--amber);
+  }
+  .verdict .why {
+    color: var(--muted); font-size: 15px;
+    max-width: 560px; margin: 12px auto 0;
+  }
+
+  /* FOOTER NOTE */
+  .footnote {
+    margin-top: 56px;
+    padding: 20px;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .footnote strong { color: var(--cyan); }
+
+  /* Anti-Korr Highlight */
+  .akorr-note {
+    background: rgba(125,211,252,0.04);
+    border-left: 3px solid var(--cyan);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 16px;
+  }
+  .akorr-note strong { color: var(--cyan); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <span class="crown">COCOBET ENGINE · ERKLÄRT IN 4 SCHRITTEN</span>
+    <h1>Wie aus 13 Signalen ein klarer Tipp wird</h1>
+    <p class="sub">Beispiel: Norwegen gegen Italien in Dallas. 35°C bei Anpfiff. Unser Modell sagt: hier fallen wenige Tore. Aber stimmt das wirklich?</p>
+  </header>
+
+  <!-- STEP 1: MATCH -->
+  <section class="section">
+    <div class="step-header">
+      <div class="step-badge">1</div>
+      <div>
+        <h2 class="step-title">Das Spiel und unser Vorschlag</h2>
+        <p class="step-sub">Was sagen die Buchmacher, was sagt unser Modell?</p>
+      </div>
+    </div>
+
+    <div class="match-card">
+      <div class="match-line">
+        <div class="teams">
+          <span>🇳🇴 Norwegen</span>
+          <span class="vs">vs</span>
+          <span>🇮🇹 Italien</span>
+        </div>
+        <div class="match-meta">
+          📅 <strong>20.06.2026 · 21:00 Wien</strong><br>
+          📍 AT&amp;T Stadium Dallas · 13:00 lokal · <strong>35°C</strong>
+        </div>
+      </div>
+      <div class="pick-row">
+        <div>
+          <div class="pick-label">UNSER PICK</div>
+          <div class="pick-mkt">Unter 2.5 Tore</div>
+          <div class="pick-odds">Markt-Quote 1.74 · unser Modell hätte 1.52 fair gefunden</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="pick-label" style="color:var(--gold)">ROHER EDGE</div>
+          <div style="font-size:36px;font-weight:800;color:var(--gold);font-family:ui-monospace,monospace;">+8.3pp</div>
+          <div class="pick-odds">Der Markt zahlt mehr als statistisch fair wäre</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="calc">
+      <div class="calc-row">
+        <span class="lbl">Elo-Differenz (Norwegen 1742 vs Italien 1845)</span>
+        <span class="val">−103 Punkte</span>
+      </div>
+      <div class="calc-row">
+        <span class="lbl">xG-Erwartung (beide eher defensiv eingestellt)</span>
+        <span class="val">2.6 erwartete Tore</span>
+      </div>
+      <div class="calc-row">
+        <span class="lbl">Travel-Penalty (Norwegen-Anreise nach Dallas)</span>
+        <span class="val" style="color:var(--red)">−5% xG</span>
+      </div>
+      <div class="calc-row highlight">
+        <span>Daraus rechnet unser Modell:</span>
+        <span class="val">Fair-Quote 1.52 → Markt 1.74 = <strong>+8.3pp Edge</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2: SIGNALS -->
+  <section class="section">
+    <div class="step-header">
+      <div class="step-badge">2</div>
+      <div>
+        <h2 class="step-title">Die Engine prüft 13 Signale gleichzeitig</h2>
+        <p class="step-sub">Jedes Signal kann den Tipp verstärken (grün) oder anzweifeln (rot). Manche feuern nicht — das ist okay.</p>
+      </div>
+    </div>
+
+    <div class="signals-grid">
+      <div class="signal-card neg">
+        <div class="ico">🌡</div>
+        <div class="name">Weather/Hitze</div>
+        <div class="val">−2.5pp</div>
+        <div class="desc">Norwegen ist kaltes Klima gewohnt — 35°C zur Mittagszeit drückt deren Leistung</div>
+      </div>
+      <div class="signal-card neg">
+        <div class="ico">✈</div>
+        <div class="name">Travel-Burden</div>
+        <div class="val">−1.8pp</div>
+        <div class="desc">10.200 km Anreise, 4 Tage zwischen Spielen — beide Teams erschöpft</div>
+      </div>
+      <div class="signal-card neg">
+        <div class="ico">🎯</div>
+        <div class="name">Pressure-Index</div>
+        <div class="val">−0.6pp</div>
+        <div class="desc">Auftakt-Spiel · beide Teams meist vorsichtig, weniger Risiko</div>
+      </div>
+      <div class="signal-card pos">
+        <div class="ico">📈</div>
+        <div class="name">Form-Trend</div>
+        <div class="val">+1.4pp</div>
+        <div class="desc">Beide haben zuletzt wenig getroffen — passt zur Unter-These</div>
+      </div>
+      <div class="signal-card pos">
+        <div class="ico">🥅</div>
+        <div class="name">xG-Stärke</div>
+        <div class="val">+0.9pp</div>
+        <div class="desc">Defensiv-Werte solide auf beiden Seiten</div>
+      </div>
+      <div class="signal-card pos">
+        <div class="ico">📊</div>
+        <div class="name">APIF Predictions</div>
+        <div class="val">+1.1pp</div>
+        <div class="desc">Externes Modell bestätigt: niedriger Tor-Wert erwartet</div>
+      </div>
+      <div class="signal-card silent">
+        <div class="ico">📡</div>
+        <div class="name">Lead-Lag-Bias</div>
+        <div class="val">—</div>
+        <div class="desc">Sharp- und Soft-Bookies einig — kein Signal</div>
+      </div>
+      <div class="signal-card silent">
+        <div class="ico">📋</div>
+        <div class="name">Lineup T-1h</div>
+        <div class="val">—</div>
+        <div class="desc">Aufstellung noch nicht da, prüft 1h vorm Anpfiff erneut</div>
+      </div>
+      <div class="signal-card silent">
+        <div class="ico">🩹</div>
+        <div class="name">Injury</div>
+        <div class="val">—</div>
+        <div class="desc">Keine Schlüsselspieler verletzt gemeldet</div>
+      </div>
+      <div class="signal-card silent">
+        <div class="ico">⚡</div>
+        <div class="name">Steam-Lag</div>
+        <div class="val">—</div>
+        <div class="desc">Pinnacle und Polymarket noch synchron</div>
+      </div>
+    </div>
+
+    <div class="akorr-note">
+      <strong>Anti-Korrelations-Schutz aktiv:</strong> Travel-Burden, Weather, Pressure und Injury gehören zur selben "Spielort-Familie".
+      Damit wir denselben Faktor nicht dreimal zählen, wird das stärkste Signal voll gewertet und die anderen auf 40% gedämpft.
+      So bekommt z.B. die Reise nur den halben Effekt, weil die Hitze schon einen Großteil davon abdeckt.
+    </div>
+  </section>
+
+  <!-- STEP 3: WATERFALL -->
+  <section class="section">
+    <div class="step-header">
+      <div class="step-badge">3</div>
+      <div>
+        <h2 class="step-title">Alle Signale zusammengezählt</h2>
+        <p class="step-sub">So verändert sich unsere Edge-Schätzung Schritt für Schritt:</p>
+      </div>
+    </div>
+
+    <div class="waterfall">
+      <div class="wf-row start">
+        <span class="lbl">📊 Start: roher Edge aus Modell</span>
+        <span></span>
+        <span class="val">+8.3pp</span>
+      </div>
+      <div class="wf-row">
+        <span class="lbl">🌡 Hitze drückt Norwegen</span>
+        <span class="bar-wrap"><span class="bar neg" style="right:50%; width:30%;"></span></span>
+        <span class="val neg">−2.5pp</span>
+      </div>
+      <div class="wf-row">
+        <span class="lbl">✈ Reise gedämpft durch Anti-Korr</span>
+        <span class="bar-wrap"><span class="bar neg" style="right:50%; width:22%;"></span></span>
+        <span class="val neg">−1.8pp</span>
+      </div>
+      <div class="wf-row">
+        <span class="lbl">🎯 Auftakt-Vorsicht</span>
+        <span class="bar-wrap"><span class="bar neg" style="right:50%; width:8%;"></span></span>
+        <span class="val neg">−0.6pp</span>
+      </div>
+      <div class="wf-row">
+        <span class="lbl">📈 Form passt zum Pick</span>
+        <span class="bar-wrap"><span class="bar pos" style="left:50%; width:18%;"></span></span>
+        <span class="val pos">+1.4pp</span>
+      </div>
+      <div class="wf-row">
+        <span class="lbl">🥅 xG-Stärke defensiv solide</span>
+        <span class="bar-wrap"><span class="bar pos" style="left:50%; width:11%;"></span></span>
+        <span class="val pos">+0.9pp</span>
+      </div>
+      <div class="wf-row">
+        <span class="lbl">📊 Externes Modell bestätigt</span>
+        <span class="bar-wrap"><span class="bar pos" style="left:50%; width:14%;"></span></span>
+        <span class="val pos">+1.1pp</span>
+      </div>
+      <div class="wf-row end">
+        <span class="lbl">🎯 Effective Edge nach Engine</span>
+        <span></span>
+        <span class="val">+6.8pp</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 4: VERDICT -->
+  <section class="section">
+    <div class="step-header">
+      <div class="step-badge">4</div>
+      <div>
+        <h2 class="step-title">Was kommt am Ende raus?</h2>
+        <p class="step-sub">Drei Sicherheits-Gates prüfen ob wir wirklich BET-würdig sind.</p>
+      </div>
+    </div>
+
+    <div class="verdict">
+      <div class="tag">FINALES URTEIL</div>
+      <div class="big">⚖️ ABWÄGEN</div>
+      <p class="why">
+        Der Edge ist real (+6.8pp). Drei Signale bestätigen den Pick.
+        <strong style="color:var(--text);">Aber:</strong> Klima, Reise und Auftakt-Vorsicht
+        warnen so klar, dass das Netto-Engine-Saldo negativ ist (−1.5pp). Die Engine sagt:
+        "Lohnt sich anschauen, aber nicht volles Risiko."
+      </p>
+      <p class="why" style="margin-top:18px;">
+        <strong style="color:var(--gold);">In der Praxis:</strong> Auto-Trader kauft nicht.
+        Du als Mensch siehst auf der Card alle Signale transparent — und entscheidest selbst,
+        ob du das Risiko nimmst.
+      </p>
+    </div>
+  </section>
+
+  <!-- FOOTNOTE -->
+  <div class="footnote">
+    <strong>Warum so viele Signale?</strong>
+    Jedes Signal allein wäre zu schwach. Pinnacle hat den schärfsten Markt aller Bookies —
+    den dauerhaft zu schlagen ist fast unmöglich. Stattdessen <strong>nutzen wir Pinnacle als Anker</strong>
+    und unsere 13 Signale finden Situationen, in denen selbst Pinnacle eine wichtige Variable
+    übersehen hat (Hitze für Cold-Climate-Teams, Top-Scorer auf der Bank, lange Reisen, …).
+    Nach jedem Spiel lernt die Engine: <strong>welche Signale haben Recht behalten?</strong>
+    Die guten gewinnen Gewicht, die schlechten verlieren. So wird das System mit jedem
+    WM-Tag schärfer.
+  </div>
+
+</div>
+</body>
+</html>

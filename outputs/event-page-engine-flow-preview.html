@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Event-Page Engine-Flow Vorschau</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+  }
+  body {
+    margin: 0; padding: 32px 20px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+  }
+  .page { max-width: 720px; margin: 0 auto; }
+  .head { text-align: center; margin-bottom: 24px; }
+  .head h1 { margin: 0 0 4px; font-size: 18px; color: #7dd3fc; letter-spacing: 1px; }
+  .head p { margin: 0; color: var(--muted); font-size: 13px; }
+  .section { margin: 16px 0; }
+  .sec-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 10px;
+  }
+  .sec-ico { font-size: 14px; }
+  .sec-title { font-size: 14px; font-weight: 700; }
+  .sec-tag { font-size: 10px; padding: 2px 8px; border-radius: 999px; }
+  .sec-tag.blue { background: rgba(125,211,252,0.15); color: #7dd3fc; }
+  em { font-style: italic; }
+
+  /* Engine-Flow Styles (1:1 wie in wm-match.html) */
+  .efl-box{
+    background:linear-gradient(135deg,rgba(125,211,252,0.06),rgba(125,211,252,0.02));
+    border:1px solid rgba(125,211,252,0.22);
+    border-radius:14px;
+    padding:18px 20px;
+  }
+  .efl-head{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:14px;flex-wrap:wrap;gap:8px;
+  }
+  .efl-title{
+    font-size:13px;font-weight:700;letter-spacing:0.5px;
+    color:#7dd3fc;text-transform:uppercase;
+  }
+  .efl-sub{font-size:11px;color:#8b949e;}
+  .efl-row{
+    display:grid;grid-template-columns:1fr 100px 70px;
+    align-items:center;gap:14px;padding:7px 0;font-size:13px;
+  }
+  .efl-row.start, .efl-row.end{
+    background:rgba(251,191,36,0.08);
+    border:1px solid rgba(251,191,36,0.32);
+    border-radius:9px;
+    padding:10px 12px;
+    margin:6px 0;
+    font-weight:700;
+  }
+  .efl-row.end{
+    background:rgba(125,211,252,0.10);
+    border-color:rgba(125,211,252,0.40);
+  }
+  .efl-row .efl-lbl{color:#e6edf3;display:flex;align-items:center;gap:8px;font-size:13px;}
+  .efl-row.start .efl-lbl, .efl-row.end .efl-lbl{color:#fbbf24;font-size:13px;}
+  .efl-row.end .efl-lbl{color:#7dd3fc;}
+  .efl-bar-wrap{
+    height:5px;background:rgba(255,255,255,0.05);
+    border-radius:3px;position:relative;
+  }
+  .efl-bar{position:absolute;top:0;bottom:0;border-radius:3px;}
+  .efl-bar.pos{background:#3fb950;}
+  .efl-bar.neg{background:#f85149;}
+  .efl-val{
+    text-align:right;font-family:ui-monospace,SF Mono,Consolas,monospace;
+    font-weight:700;font-size:13px;
+  }
+  .efl-val.pos{color:#3fb950;}
+  .efl-val.neg{color:#f85149;}
+  .efl-val.gold{color:#fbbf24;font-size:15px;}
+  .efl-val.cyan{color:#7dd3fc;font-size:15px;}
+  .efl-divider{
+    border:0;border-top:1px dashed rgba(125,211,252,0.18);
+    margin:8px 0;
+  }
+  .efl-verdict{
+    margin-top:14px;padding:12px 14px;border-radius:10px;
+    font-size:12px;line-height:1.5;
+  }
+  .efl-verdict.bet{
+    background:rgba(63,185,80,0.08);
+    border-left:3px solid #3fb950;
+    color:#9ae6a8;
+  }
+  .efl-verdict.warn{
+    background:rgba(227,179,65,0.08);
+    border-left:3px solid #e3b341;
+    color:#f3d985;
+  }
+  .efl-verdict strong{color:#fff;font-weight:700;}
+
+  @media (max-width: 480px){
+    .efl-row{grid-template-columns:1fr 60px;gap:8px;font-size:12px;}
+    .efl-bar-wrap{display:none;}
+    .efl-row .efl-lbl{font-size:12px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="head">
+    <h1>🇲🇽 Mexiko vs 🇿🇦 Südafrika · ST 1</h1>
+    <p>Echte Daten aus wm2026-data.json · Pick "Unter 1.5 Tore @ 3.20"</p>
+  </div>
+
+  <!-- ───── Beispiel mit dem aktuellen Live-Pick ───── -->
+  <div class="section">
+    <div class="sec-head">
+      <span class="sec-ico">🧠</span>
+      <span class="sec-title">Wie die Engine zum Urteil kommt</span>
+      <span class="sec-tag blue">1 Signal</span>
+    </div>
+    <div class="efl-box">
+      <div class="efl-head">
+        <div class="efl-title">Edge-Anpassung im Detail</div>
+        <div class="efl-sub">Unter 1.5 Tore @ 3.20</div>
+      </div>
+      <div class="efl-row start">
+        <div class="efl-lbl">📊 Roher Edge (Modell vs Markt)</div>
+        <div></div>
+        <div class="efl-val gold">+6.0pp</div>
+      </div>
+      <div class="efl-row">
+        <div class="efl-lbl">🎯 MD1-Auftakts-Vorsicht (Unter)</div>
+        <div class="efl-bar-wrap"><span class="efl-bar pos" style="left:50%; width:8%;"></span></div>
+        <div class="efl-val pos">+0.3pp</div>
+      </div>
+      <hr class="efl-divider">
+      <div class="efl-row">
+        <div class="efl-lbl"><em style="color:#8b949e;">Σ Engine-Adjustment</em></div>
+        <div></div>
+        <div class="efl-val pos">+0.6pp</div>
+      </div>
+      <div class="efl-row end">
+        <div class="efl-lbl">🎯 Effective Edge nach Engine</div>
+        <div></div>
+        <div class="efl-val cyan">+6.6pp</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── Beispiel mit mehreren Signalen (Norwegen-Italien) ───── -->
+  <div class="head" style="margin-top: 48px;">
+    <h1>🇳🇴 Norwegen vs 🇮🇹 Italien · Dallas 35°C</h1>
+    <p>Mockup mit 6 aktiven Signalen — wie es bei der Engine in Action aussehen wird</p>
+  </div>
+
+  <div class="section">
+    <div class="sec-head">
+      <span class="sec-ico">🧠</span>
+      <span class="sec-title">Wie die Engine zum Urteil kommt</span>
+      <span class="sec-tag blue">6 Signale</span>
+    </div>
+    <div class="efl-box">
+      <div class="efl-head">
+        <div class="efl-title">Edge-Anpassung im Detail</div>
+        <div class="efl-sub">Unter 2.5 Tore @ 1.74</div>
+      </div>
+      <div class="efl-row start">
+        <div class="efl-lbl">📊 Roher Edge (Modell vs Markt)</div>
+        <div></div>
+        <div class="efl-val gold">+8.3pp</div>
+      </div>
+
+      <div class="efl-row">
+        <div class="efl-lbl">🌡 35°C Mittag · NOR cold</div>
+        <div class="efl-bar-wrap"><span class="efl-bar neg" style="right:50%; width:38%;"></span></div>
+        <div class="efl-val neg">−2.5pp</div>
+      </div>
+      <div class="efl-row">
+        <div class="efl-lbl">✈ Travel 10 200 km · 4d</div>
+        <div class="efl-bar-wrap"><span class="efl-bar neg" style="right:50%; width:27%;"></span></div>
+        <div class="efl-val neg">−1.8pp</div>
+      </div>
+      <div class="efl-row">
+        <div class="efl-lbl">🎯 MD1-Auftakts-Vorsicht (Unter)</div>
+        <div class="efl-bar-wrap"><span class="efl-bar neg" style="right:50%; width:9%;"></span></div>
+        <div class="efl-val neg">−0.6pp</div>
+      </div>
+      <div class="efl-row">
+        <div class="efl-lbl">📈 Form-Trend bestätigt</div>
+        <div class="efl-bar-wrap"><span class="efl-bar pos" style="left:50%; width:21%;"></span></div>
+        <div class="efl-val pos">+1.4pp</div>
+      </div>
+      <div class="efl-row">
+        <div class="efl-lbl">🥅 xG-Stärke defensiv solide</div>
+        <div class="efl-bar-wrap"><span class="efl-bar pos" style="left:50%; width:13%;"></span></div>
+        <div class="efl-val pos">+0.9pp</div>
+      </div>
+      <div class="efl-row">
+        <div class="efl-lbl">📊 APIF Predictions confirmatory</div>
+        <div class="efl-bar-wrap"><span class="efl-bar pos" style="left:50%; width:16%;"></span></div>
+        <div class="efl-val pos">+1.1pp</div>
+      </div>
+
+      <hr class="efl-divider">
+
+      <div class="efl-row">
+        <div class="efl-lbl"><em style="color:#8b949e;">Σ Engine-Adjustment</em></div>
+        <div></div>
+        <div class="efl-val neg">−1.5pp</div>
+      </div>
+      <div class="efl-row end">
+        <div class="efl-lbl">🎯 Effective Edge nach Engine</div>
+        <div></div>
+        <div class="efl-val cyan">+6.8pp</div>
+      </div>
+
+      <div class="efl-verdict warn">
+        ⚖️ <strong>Engine-Hinweis:</strong> Engine warnt — Klima, Reise und MD1-Vorsicht überschatten Form/xG/APIF-Bestätigung. Pick wird zu ABWÄGEN downgegradet.
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:48px; text-align:center; color:#6b7a8d; font-size:12px; line-height:1.6;">
+    So sieht's auf jeder Event-Page direkt unter dem Pick aus.<br>
+    Mobile-fallback: Balken werden ausgeblendet, Liste bleibt lesbar.
+  </div>
+</div>
+</body>
+</html>
