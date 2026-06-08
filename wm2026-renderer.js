@@ -611,6 +611,28 @@
       if (story) {
         html += `<div class="cc-story${heroPick.verdict === 'ABWÄGEN' ? ' cc-story-abw' : ''}">${story}</div>`;
       }
+
+      // ─── ENGINE-SIGNAL-STACK ─────────────────────────
+      // Signal-Engine (sharp_signals/) hat pro Pick signals[] mit evidence
+      // und signalAdjustmentPP. Zeigen wenn relevant — sonst leer.
+      const sigList = Array.isArray(heroPick.signals) ? heroPick.signals : [];
+      if (sigList.length) {
+        const adj = heroPick.signalAdjustmentPP;
+        const adjLabel = (typeof adj === 'number' && Math.abs(adj) >= 0.5)
+          ? `<span class="cc-sig-adj ${adj > 0 ? 'pos' : 'neg'}">${adj > 0 ? '+' : ''}${adj.toFixed(1)}pp</span>`
+          : '';
+        const rows = sigList.slice(0, 4).map(s => {
+          const cls = s.score > 0 ? 'pos' : 'neg';
+          return `<div class="cc-sig-row ${cls}">
+            <span class="cc-sig-score">${s.score > 0 ? '+' : ''}${s.score.toFixed(1)}</span>
+            <span class="cc-sig-evidence">${s.evidence}</span>
+          </div>`;
+        }).join('');
+        html += `<div class="cc-signals">
+          <div class="cc-signals-head">🧠 Engine-Signale ${adjLabel}</div>
+          ${rows}
+        </div>`;
+      }
     }
 
     // ─── EVIDENCE — Form + Key Signals ────────────────
@@ -1785,8 +1807,49 @@
         ${insightHtml}
       </div>` : ''}
 
+      ${(() => {
+        // ── Engine-Signale (sharp_signals/) — pro-Signal Breakdown ──
+        const sigs = Array.isArray(pick.signals) ? pick.signals : [];
+        if (!sigs.length) return '';
+        const adj = pick.signalAdjustmentPP;
+        const adjStr = (typeof adj === 'number')
+          ? `<span class="wm-sig-adj ${adj > 0 ? 'pos' : (adj < 0 ? 'neg' : '')}">Netto ${adj > 0 ? '+' : ''}${adj.toFixed(1)}pp</span>`
+          : '';
+        const rows = sigs.map(s => `
+          <div class="wm-sig-row">
+            <div class="wm-sig-name">${s.name.replace(/_/g, ' ')}</div>
+            <div class="wm-sig-evidence">${s.evidence}</div>
+            <div class="wm-sig-score ${s.score > 0 ? 'pos' : 'neg'}">${s.score > 0 ? '+' : ''}${s.score.toFixed(1)}pp</div>
+            <div class="wm-sig-conf">conf ${(s.confidence * 100).toFixed(0)}%</div>
+            <div class="wm-sig-weight">w ${(s.weight || 1).toFixed(2)}</div>
+          </div>`).join('');
+        return `<div class="wm-section">
+          <div class="wm-section-label">🧠 Engine-Signale — modulare Adjustments ${adjStr}</div>
+          <div class="wm-sig-table">${rows}</div>
+          <div class="wm-sig-note">
+            Sharp-Signal-Engine kombiniert Quoten-Bewegungen, Form, xG, Travel-Burden,
+            Verletzungen, H2H und Polymarket-Daten. Gewichte lernen nach jedem
+            resolved Pick via Bayesian-Update.
+          </div>
+        </div>`;
+      })()}
+
       ${clvBlock}
       ${backtestBlock}
+
+      <div class="wm-section">
+        <div class="wm-section-label">⚙️ Pick-Pipeline — wie der Pick entstanden ist</div>
+        <div class="wm-pipe">
+          <div class="wm-pipe-step"><strong>1. Elo + xG-Modell</strong> → fair-Quote pro Markt</div>
+          <div class="wm-pipe-step"><strong>2. Edge-Filter</strong> → nur Märkte mit Edge ≥ Mindestschwelle (1X2: 5pp, AH/O/U: 4pp)</div>
+          <div class="wm-pipe-step"><strong>3. Modell-Bias-Schutz</strong> → O/U-Edge >10pp bzw. AH-Edge >12pp wird auf ABWÄGEN downgegradet (Stress-Indikator)</div>
+          <div class="wm-pipe-step"><strong>4. Cross-Model-Check</strong> → DNB ↔ AH +0.5 vergleicht Elo- gegen Skellam-Implied. Bei Divergenz ≥ 8pp → BET wird ABWÄGEN${(pick.downgradedReason || '').includes('Modell-Inkonsistenz') ? ' <em style="color:var(--yellow);">← griff hier</em>' : ''}</div>
+          <div class="wm-pipe-step"><strong>5. Cross-Market-Konflikt</strong> → unvereinbare Direction-Picks (z.B. Heim + AH Auswärts) → schwächerer downgegradet${(pick.downgradedReason || '').includes('Konflikt') ? ' <em style="color:var(--yellow);">← griff hier</em>' : ''}</div>
+          <div class="wm-pipe-step"><strong>6. Smart-Substitution</strong> → bei hoher Quote (>2.30): sicherere Alternative im SUBSTITUTION_MAP gesucht</div>
+          <div class="wm-pipe-step"><strong>7. Verlust-Markt-Filter</strong> → BTTS, hohe Corner-Linien deaktiviert nach Backtest 07.06.2026 (BTTS −15% ROI bei n=141)</div>
+          <div class="wm-pipe-step"><strong>8. Signal-Engine</strong> → Lead-Lag-Bias, Travel, Form-Trend, xG, Public-Bias, Polymarket-Sharp, Steam-Lag, H2H, Injury werden als Modifikatoren angewandt</div>
+        </div>
+      </div>
 
       <div class="wm-section">
         <div class="wm-section-label">⚖️ Risiko & Stake-Empfehlung</div>
