@@ -1153,6 +1153,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wm-calc-label{color:rgba(255,255,255,.78);}
 .wm-calc-val{color:#e6edf3;font-family:'SF Mono',Menlo,monospace;font-weight:700;text-align:right;}
 .wm-calc-val.acc{color:#00d4a1;}
+.wm-calc-val.neg{color:#f55a5a;}
 
 .wm-insight{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.03);}
 .wm-insight:last-child{border-bottom:none;}
@@ -2186,29 +2187,56 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <details class="heart-collapse" open>
     <summary>
       <span class="heart-collapse-icon">⭐</span>
-      <span class="heart-collapse-title">Die 5 Killer-Features — was uns unterscheidet</span>
-      <span class="heart-collapse-meta">USP</span>
+      <span class="heart-collapse-title">Die Killer-Features — was uns unterscheidet</span>
+      <span class="heart-collapse-meta">USP · NEU</span>
     </summary>
     <div class="heart-collapse-body">
       <div class="h2-feature-grid">
+
+        <div class="h2-feature featured" style="border-color:rgba(0,212,161,0.40);">
+          <div class="h2-feature-head">
+            <span class="h2-feature-icon">🧠</span>
+            <div>
+              <div class="h2-feature-title">Sharp-Signal-Engine (10 Signale)</div>
+              <span class="h2-feature-tag usp">USP · NEU 08.06.2026</span>
+            </div>
+          </div>
+          <div class="h2-feature-desc">
+            Modulare Engine im <code>sharp_signals/</code>-Ordner wertet pro Pick <strong>10 unabhängige Signale</strong> aus
+            (Lead-Lag-Bias, Steam-Lag, Polymarket-Sharp, Public-Static-Bias, Travel-Burden, Injury,
+            xG-Stärke, Form-Trend, H2H-Pattern, Pressure-Index) und produziert pro Signal Score + Evidence + Confidence.
+            <strong>Bayesian-Lern-Loop</strong> aktualisiert die Signal-Weights nach jedem resolved Spiel —
+            die Engine wird mit jedem WM-Tag besser. Edge-Adjustment greift direkt ins Verdict ein: BET-Picks die
+            durch das Engine-Netto-Adjustment unter −3pp gedrückt werden, werden automatisch zu ABWÄGEN.
+          </div>
+          <div class="h2-mockup">
+            <span class="mk">Engine-Stack auf jeder Card:</span><br>
+            <span class="acc">+2.5</span> Pinnacle Lead-Lag (early)<br>
+            <span class="red">−4.4</span> ✈ Travel 2500km/2d<br>
+            <span class="acc">+1.8</span> 📈 Form-Trend<br>
+            <span class="mk">Netto:</span> <span class="acc">+0.0pp</span> · Verdict bleibt
+          </div>
+        </div>
 
         <div class="h2-feature featured">
           <div class="h2-feature-head">
             <span class="h2-feature-icon">🔍</span>
             <div>
-              <div class="h2-feature-title">"Warum?"-Modal mit Modell-Rechnung</div>
+              <div class="h2-feature-title">"Warum?"-Modal mit voller Pick-Pipeline</div>
               <span class="h2-feature-tag usp">USP</span>
             </div>
           </div>
           <div class="h2-feature-desc">
-            Jeder Pick zeigt auf Klick seine <strong>komplette Mathematik</strong>: Elo-Diff, xG-Erwartung, Travel-Modifier, Poisson-Wahrscheinlichkeit, Edge-Berechnung, CLV-Tracking, historischen Backtest und Kelly-Stake. Konkurrenz zeigt nur AI-Geschwurbel.
+            Jeder Pick zeigt auf Klick seine <strong>komplette Mathematik + 8-Schritte-Pipeline</strong>: Elo-Diff, xG-Erwartung,
+            Travel-Mod, Poisson-Wahrscheinlichkeit, Edge-Berechnung mit Engine-Adjustment, CLV-Tracking,
+            historischen Backtest, Risiko/Stake, Cross-Model-Check, Verlust-Markt-Filter. Konkurrenz zeigt AI-Geschwurbel.
           </div>
           <div class="h2-mockup">
             <span class="mk">Modell-Rechnung:</span><br>
             Elo <span class="num">1731/1582</span> = <span class="num">+149</span><br>
             xG <span class="num">2.37/1.03</span> · Travel <span class="red">−5%</span><br>
-            P(BTTS) Modell: <span class="num">63.7%</span><br>
-            <span class="acc">1.57 → 1.89 = +7pp Edge</span>
+            <span class="acc">1.57 → 1.89 = +7pp Edge (roh)</span><br>
+            <span class="acc">Engine-adj. Edge: +9.3pp</span>
           </div>
         </div>
 
@@ -2526,17 +2554,19 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <summary>
       <span class="heart-collapse-icon">🧠</span>
       <span class="heart-collapse-title">Modell &amp; Mathematik</span>
-      <span class="heart-collapse-meta">Elo · Poisson · Kelly</span>
+      <span class="heart-collapse-meta">Elo · Poisson · Signal-Engine · Bayesian-Learning</span>
     </summary>
     <div class="heart-collapse-body">
+
+      <div class="h2-sub-label">Basis-Modelle</div>
       <div class="h2-feature-grid">
         <div class="h2-feature">
           <div class="h2-feature-head"><span class="h2-feature-icon">📐</span><div class="h2-feature-title">Elo-System (Co-Host-Bonus)</div></div>
           <div class="h2-feature-desc">Internationale Elo + +30 für Co-Gastgeber (MEX/USA/CAN). Heimvorteil-Modifier in 1X2-Wahrscheinlichkeit.</div>
         </div>
         <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">⚽</span><div class="h2-feature-title">Poisson-Modell</div></div>
-          <div class="h2-feature-desc">λ_h × λ_a aus xG + Form + Injury + Travel-Mod. P(O/U), P(BTTS), P(DNB) deterministisch ableitbar.</div>
+          <div class="h2-feature-head"><span class="h2-feature-icon">⚽</span><div class="h2-feature-title">Poisson + Skellam-Modell</div></div>
+          <div class="h2-feature-desc">λ_h × λ_a aus xG + Form + Injury + Travel-Mod. Tor-Differenz als Skellam-Verteilung. P(O/U), P(BTTS), P(DNB), P(AH-Linien) deterministisch ableitbar.</div>
         </div>
         <div class="h2-feature">
           <div class="h2-feature-head"><span class="h2-feature-icon">💵</span><div class="h2-feature-title">½-Kelly Stake-Logik</div></div>
@@ -2548,7 +2578,70 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         </div>
       </div>
 
-      <div class="h2-sub-label">Data-Quality-Tier</div>
+      <div class="h2-sub-label" style="margin-top:24px;">Signal-Engine (sharp_signals/) — NEU 08.06.2026</div>
+      <div class="h2-feature-grid">
+        <div class="h2-feature" style="border-color:rgba(0,212,161,0.3);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧠</span><div class="h2-feature-title">10 modulare Signale</div></div>
+          <div class="h2-feature-desc">
+            Lead-Lag-Bias (Pinnacle vs Soft-Books) · Steam-Lag (Pinn + Polymarket) · Polymarket-Sharp ·
+            Public-Static-Bias · Travel-Burden (km+Höhe) · Injury (positionsbewusst GK/DEF/MID/FWD) ·
+            xG-Stärke (mit Form-Proxy für CONMEBOL/AFC) · Form-Trend · H2H-Pattern · Pressure-Index (Tournament-Stage).
+            <strong>Jedes Signal returnt score + confidence + evidence</strong>.
+          </div>
+        </div>
+        <div class="h2-feature" style="border-color:rgba(0,212,161,0.3);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🔗</span><div class="h2-feature-title">Anti-Korrelation-Combiner</div></div>
+          <div class="h2-feature-desc">
+            Signale werden in 4 Familien gruppiert (Sharp-Money, Form, Public, Context).
+            Pro Familie zählt nur das stärkste Signal voll, weitere werden auf <strong>40%</strong> gedämpft.
+            Verhindert dass z.B. Lead-Lag + Steam-Lag + Polymarket-Sharp denselben Sharp-Move dreimal zählen.
+          </div>
+        </div>
+        <div class="h2-feature" style="border-color:rgba(0,212,161,0.3);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📊</span><div class="h2-feature-title">Bayesian-Lern-Loop</div></div>
+          <div class="h2-feature-desc">
+            Pro resolved Pick: Beta-Binomial-Update mit Prior α=β=2. Posterior_mean / 0.5 = neuer Weight,
+            clamped [0.3, 1.7]. <strong>Smoothing</strong> unter n=10 Beobachtungen. Engine wird mit jedem
+            WM-Tag schärfer — Signale die predicten gewinnen Gewicht, andere verlieren.
+            Läuft automatisch nach <code>resolve_wm_results.py</code>.
+          </div>
+        </div>
+        <div class="h2-feature" style="border-color:rgba(0,212,161,0.3);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">⚖️</span><div class="h2-feature-title">Edge-Adjustment Integration</div></div>
+          <div class="h2-feature-desc">
+            <code>effectiveEdgePP = edgePP + Σ(signal_weighted_scores)</code>.
+            BET → ABWÄGEN wenn Netto-Adjustment ≤ −3pp ODER wenn weniger als
+            <strong>2 unabhängige positive Signale</strong> existieren.
+            Ergebnis pre-WM: 52 → 24 BETs (alle haben jetzt erzählbare Begründung).
+          </div>
+        </div>
+      </div>
+
+      <div class="h2-sub-label" style="margin-top:24px;">Pick-Pipeline (8 Schritte, sichtbar im Warum-Modal)</div>
+      <div class="h2-feature-grid">
+        <div class="h2-feature">
+          <div class="h2-feature-desc" style="line-height:1.8;">
+            <strong>1.</strong> Elo + xG-Modell → fair-Quote pro Markt<br>
+            <strong>2.</strong> Edge-Filter (1X2: ≥5pp · O/U+AH: ≥4pp)<br>
+            <strong>3.</strong> Modell-Bias-Schutz (O/U &gt;10pp · AH &gt;12pp → ABWÄGEN)<br>
+            <strong>4.</strong> Cross-Model-Check (DNB ↔ AH +0.5 · Divergenz ≥ 8pp → ABWÄGEN)<br>
+            <strong>5.</strong> Cross-Market-Konflikt (unvereinbare Direction → schwächerer downgegradet)<br>
+            <strong>6.</strong> Smart-Substitution (hohe Quote → sicherere Alternative)<br>
+            <strong>7.</strong> Verlust-Markt-Filter (BTTS, Corner&gt;10.5 nach Backtest-Empirik deaktiviert)<br>
+            <strong>8.</strong> Signal-Engine (Adjustment + Min-2-Positive-Threshold + Anti-Korrelation)
+          </div>
+        </div>
+      </div>
+
+      <div class="h2-sub-label" style="margin-top:24px;">Backtest-Findings 07.06.2026 (619 historische Picks)</div>
+      <div class="h2-num-grid">
+        <div class="h2-num"><div class="h2-num-val">−7.05%</div><div class="h2-num-lbl">Gesamt-ROI alt</div></div>
+        <div class="h2-num"><div class="h2-num-val acc">+1.34%</div><div class="h2-num-lbl">Elo-Sub-Modell</div></div>
+        <div class="h2-num"><div class="h2-num-val red">−9.57%</div><div class="h2-num-lbl">Skellam-Sub-Modell</div></div>
+        <div class="h2-num"><div class="h2-num-val">0.29</div><div class="h2-num-lbl">Brier (vs 0.25 random)</div></div>
+      </div>
+
+      <div class="h2-sub-label" style="margin-top:24px;">Data-Quality-Tier</div>
       <div class="h2-num-grid">
         <div class="h2-num"><div class="h2-num-val acc">full</div><div class="h2-num-lbl">Elo+Form+H2H+Odds</div></div>
         <div class="h2-num"><div class="h2-num-val">elo+form</div><div class="h2-num-lbl">ohne H2H</div></div>
@@ -2761,6 +2854,28 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <tr><td><code>validate_wm_picks.py</code></td><td>9 Sanity-Checks → pick_validation_report.json</td></tr>
           <tr><td><code>detect_pick_changes.py</code></td><td>Snapshot-Diff → Banner + Telegram-Digest</td></tr>
           <tr><td><code>fetch_wm_player_props.py</code></td><td>6 Spieler-Märkte von TheOddsAPI (T-3 vor Anpfiff)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="h2-sub-label" style="margin-top:18px;color:#00d4a1;">Signal-Engine (NEU 08.06.2026) — sharp_signals/</div>
+      <table class="h2-sched">
+        <thead><tr><th>Modul</th><th>Tut</th></tr></thead>
+        <tbody>
+          <tr><td><code>sharp_signals/base.py</code></td><td>Signal-ABC + SignalResult-Dataclass (score, confidence, evidence)</td></tr>
+          <tr><td><code>sharp_signals/registry.py</code></td><td>ACTIVE_SIGNALS-Liste + Anti-Korrelation-Combiner</td></tr>
+          <tr><td><code>sharp_signals/lead_lag_bias.py</code></td><td>Pinnacle dropt + Soft-Books lagging/folgen (EARLY/CONFIRMED)</td></tr>
+          <tr><td><code>sharp_signals/steam_lag.py</code></td><td>Pinnacle-Move + Polymarket-Lag (komplementär zu LeadLag)</td></tr>
+          <tr><td><code>sharp_signals/polymarket_sharp.py</code></td><td>Polymarket-implied vs Pinnacle-implied (Crypto-Sharp-Anker)</td></tr>
+          <tr><td><code>sharp_signals/public_static_bias.py</code></td><td>Konsens-Bookmaker vs Pinnacle (Anti-Public-Bias)</td></tr>
+          <tr><td><code>sharp_signals/travel_burden.py</code></td><td>Anreise-km + Höhenwechsel als Pick-Adjustment</td></tr>
+          <tr><td><code>sharp_signals/injury_signal.py</code></td><td>Positionsbewusst: GK/DEF/MID/FWD separat gewichtet</td></tr>
+          <tr><td><code>sharp_signals/xg_strength.py</code></td><td>Understat-xG mit Form-Proxy-Fallback für CONMEBOL/AFC</td></tr>
+          <tr><td><code>sharp_signals/form_trend.py</code></td><td>Form-Differenz der letzten 5 Spiele (avgScored/avgConceded)</td></tr>
+          <tr><td><code>sharp_signals/h2h_pattern.py</code></td><td>H2H Win-Rate inkl. Draws (≥5 Spiele Minimum)</td></tr>
+          <tr><td><code>sharp_signals/pressure_index.py</code></td><td>Tournament-Stage + Group-Standing + KO-Phase</td></tr>
+          <tr><td><code>update_signal_weights.py</code></td><td>Bayesian-Update der weights nach jedem resolved Pick</td></tr>
+          <tr><td><code>signal_weights.json</code></td><td>Pro Signal: weight + n_observations + last_updated (committed)</td></tr>
+          <tr><td><code>backtest_model_health.py</code></td><td>ROI/CLV-Backtest über picks_history.json mit Bootstrap-CIs</td></tr>
         </tbody>
       </table>
 

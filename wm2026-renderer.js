@@ -1699,7 +1699,12 @@
       calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">P(${pick.market}) Modell</span><span class="wm-calc-val">${probModel}%</span></div>`;
     }
     if (probModel != null && probMarket != null) {
-      calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">Modell-Quote → Markt-Quote</span><span class="wm-calc-val acc">${(pick.modelOdds||0).toFixed(2)} → ${oddsStr} = +${pick.edgePP}pp Edge</span></div>`;
+      calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">Modell-Quote → Markt-Quote</span><span class="wm-calc-val acc">${(pick.modelOdds||0).toFixed(2)} → ${oddsStr} = +${pick.edgePP}pp Edge (roh)</span></div>`;
+    }
+    if (typeof pick.effectiveEdgePP === 'number' && pick.effectiveEdgePP !== pick.edgePP) {
+      const eff = pick.effectiveEdgePP;
+      const effCls = eff >= pick.edgePP ? 'acc' : 'neg';
+      calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">Edge nach Engine-Adjustment</span><span class="wm-calc-val ${effCls}">${eff > 0 ? '+' : ''}${eff}pp <em style="opacity:0.7;">(${eff > pick.edgePP ? 'verstärkt' : 'gedämpft'})</em></span></div>`;
     }
 
     // ── 2. KEY INSIGHTS ──

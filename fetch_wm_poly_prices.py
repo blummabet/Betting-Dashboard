@@ -434,9 +434,17 @@ def main():
             for pk in pick_list:
                 mkt = pk.get("market", "")
                 picks_lookup[ha_key][mkt] = {
-                    "verdict":     pk.get("verdict"),
-                    "edgePP":      pk.get("edgePP"),
-                    "dataQuality": pk.get("dataQuality", "elo_only"),
+                    "verdict":             pk.get("verdict"),
+                    "edgePP":              pk.get("edgePP"),
+                    "dataQuality":         pk.get("dataQuality", "elo_only"),
+                    # ── Signal-Engine Felder (08.06.2026) ──────────────────
+                    # Auto-Trigger nutzt diese: ohne diese hat Auto-Trigger
+                    # die Engine komplett ignoriert (raw edge + verdict only).
+                    "signalAdjustmentPP":  pk.get("signalAdjustmentPP"),
+                    "signalCountPos":      pk.get("signalCountPos"),
+                    "signalCountNeg":      pk.get("signalCountNeg"),
+                    "effectiveEdgePP":     pk.get("effectiveEdgePP"),
+                    "downgradedReason":    pk.get("downgradedReason"),
                 }
 
     # Market label → edge_key / allFixtures field name
@@ -563,6 +571,29 @@ def main():
             # auto_wm_poly_trigger.py filters to BET/ABWÄGEN only
             **{
                 f"verdict_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("verdict")
+                for mkt_label, field in _MARKET_TO_FIELD.items()
+                if field in ("hw", "dr", "aw", "o25", "u25")
+            },
+            # ── Engine-Felder pro Markt (08.06.2026) ──────────────────────────
+            # Erlaubt Auto-Trigger über Signal-Adjustment, Min-Signal-Threshold
+            # und effectiveEdge zu filtern statt blind über raw edgePP.
+            **{
+                f"signalAdj_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("signalAdjustmentPP")
+                for mkt_label, field in _MARKET_TO_FIELD.items()
+                if field in ("hw", "dr", "aw", "o25", "u25")
+            },
+            **{
+                f"signalPos_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("signalCountPos")
+                for mkt_label, field in _MARKET_TO_FIELD.items()
+                if field in ("hw", "dr", "aw", "o25", "u25")
+            },
+            **{
+                f"effectiveEdge_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("effectiveEdgePP")
+                for mkt_label, field in _MARKET_TO_FIELD.items()
+                if field in ("hw", "dr", "aw", "o25", "u25")
+            },
+            **{
+                f"engineDowngrade_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("downgradedReason")
                 for mkt_label, field in _MARKET_TO_FIELD.items()
                 if field in ("hw", "dr", "aw", "o25", "u25")
             },

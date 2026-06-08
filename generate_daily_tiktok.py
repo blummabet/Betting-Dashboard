@@ -764,20 +764,27 @@ def main():
     # 5. Dedup-State updaten — NUR wenn auch wirklich auf Telegram gesendet wurde.
     # Damit Smoketests (SKIP_TELEGRAM=true) keinen falschen Eintrag erzeugen
     # der nachher den nächsten Live-Lauf blockt.
-    if fact and sent_to_telegram:
-        if fact.get("teamId"):
+    #
+    # Bug-Fix 09.06.2026: Vorher wurde der dedup-Marker NUR bei `fact`
+    # (Killer-Stat) geschrieben. Wenn nur Story-Cards gesendet wurden, fehlte
+    # der Tages-Marker → Backup-Cron um 05:30 UTC sah "heute noch nicht
+    # gesendet" und sendete die Cards nochmal. Jetzt: Marker IMMER schreiben
+    # sobald ETWAS auf Telegram raus ist.
+    if sent_to_telegram:
+        if fact and fact.get("teamId"):
             dedup.setdefault("history", []).append({"date": today_iso, "teamId": fact["teamId"]})
-        elif fact.get("teamIds"):
+        elif fact and fact.get("teamIds"):
             for tid in fact["teamIds"]:
                 dedup.setdefault("history", []).append({"date": today_iso, "teamId": tid})
+        else:
+            # Story-only oder ähnliches — leerer Marker damit Guard heute_iso findet
+            dedup.setdefault("history", []).append({"date": today_iso, "teamId": None})
         # Trim auf letzte 30 Tage
         from datetime import timedelta
         cutoff = (date.fromisoformat(today_iso) - timedelta(days=30)).isoformat()
         dedup["history"] = [h for h in dedup["history"] if h.get("date", "") >= cutoff]
         save_dedup(dedup)
         print(f"💾 Dedup-State aktualisiert ({len(dedup['history'])} Einträge)")
-    elif fact:
-        print(f"↪ Dedup NICHT aktualisiert (kein echter Telegram-Send)")
 
     # 6. Player-Pick Dedup (Spielername, 14 Tage)
     if player_pick and sent_to_telegram:

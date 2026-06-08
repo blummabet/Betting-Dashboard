@@ -132,17 +132,32 @@ def is_kill_switch_active() -> tuple[bool, str]:
         return True, f"Kill-Switch-Datei korrupt ({e}) — manuelle Prüfung nötig"
 
 # Welche Edge-Keys → Polymarket-Market-Label (muss OUTCOME_MAP in polymarket_bet.py matchen)
+# Field-Suffix wird auch für Engine-Felder genutzt: signalAdj_<field>, signalPos_<field>,
+# effectiveEdge_<field>, engineDowngrade_<field>.
 EDGE_MARKET_MAP = {
-    "edge_hw":  ("poly_hw",  "Heimsieg",           "fair_hw",  "verdict_hw"),
-    "edge_dr":  ("poly_dr",  "Unentschieden",       "fair_dr",  "verdict_dr"),
-    "edge_aw":  ("poly_aw",  "Auswärtssieg",        "fair_aw",  "verdict_aw"),
-    "edge_o25": ("poly_o25", "Over 2.5 Tore",       "fair_o25", "verdict_o25"),
-    "edge_u25": ("poly_u25", "Under 2.5 Tore",      "fair_u25", "verdict_u25"),
+    "edge_hw":  ("poly_hw",  "Heimsieg",           "fair_hw",  "verdict_hw",  "hw"),
+    "edge_dr":  ("poly_dr",  "Unentschieden",       "fair_dr",  "verdict_dr",  "dr"),
+    "edge_aw":  ("poly_aw",  "Auswärtssieg",        "fair_aw",  "verdict_aw",  "aw"),
+    "edge_o25": ("poly_o25", "Over 2.5 Tore",       "fair_o25", "verdict_o25", "o25"),
+    "edge_u25": ("poly_u25", "Under 2.5 Tore",      "fair_u25", "verdict_u25", "u25"),
 }
 
 # Nur diese Verdicts lösen Auto-Bets aus
 # SKIP und None (kein Pick für diesen Markt) werden übersprungen
 AUTO_TRIGGER_VERDICTS = {"BET", "ABWÄGEN"}
+
+# ── Signal-Engine-Gates (eingebaut 08.06.2026) ────────────────────────────
+# Bisher hat Auto-Trigger raw edgePP genutzt und die Engine komplett ignoriert.
+# Folge: BET → ABWÄGEN-Downgrades durch Engine wirkten nicht, weil Auto-Trigger
+# beide Verdicts traded. Jetzt: Engine-Warnungen blockieren Auto-Trades.
+#   * Wenn signalAdj <= ENGINE_BLOCK_ADJ_PP  → Trade blocken (Engine warnt deutlich)
+#   * Wenn engineDowngrade Feld gesetzt UND verdict==ABWÄGEN → Trade blocken
+#     (die Engine hat einen BET aktiv auf ABWÄGEN heruntergestuft)
+#   * Wenn signalPos < ENGINE_MIN_POS_FOR_ABWAEGEN UND verdict==ABWÄGEN → blocken
+#   * Edge-Threshold wird gegen effectiveEdge geprüft (Engine-justierter Edge)
+#     falls vorhanden, sonst Fallback auf raw edge.
+ENGINE_BLOCK_ADJ_PP        = _cfg("trade", "engine_block_adj_pp",        -3.0)
+ENGINE_MIN_POS_FOR_ABWAEGEN = _cfg("trade", "engine_min_pos_for_abwaegen", 2)
 
 # elo_only = noch keine Form-/H2H-Daten (Pre-Tournament) → konservativerer Edge-Schwellenwert
 # Erhöhter Schwellenwert verhindert Bets auf schwache Datenbasis
@@ -274,8 +289,13 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
             effective_edge_threshold = max(effective_edge_threshold, PRE_TOURNAMENT_EDGE_PP)
 
         # Edge-Check für jeden Markt
-        for edge_key, (price_key, market_label, fair_key, verdict_key) in EDGE_MARKET_MAP.items():
-            edge = fix.get(edge_key)
+        for edge_key, (price_key, market_label, fair_key, verdict_key, fld) in EDGE_MARKET_MAP.items():
+            raw_edge = fix.get(edge_key)
+            # Effective Edge = raw edge + signal-adjustment (Engine)
+            # Fallback auf raw edge wenn Engine kein Feld gesetzt hat.
+            eff_edge = fix.get(f"effectiveEdge_{fld}")
+            edge = eff_edge if eff_edge is not None else raw_edge
+
             if edge is None or edge < effective_edge_threshold:
                 continue
 
@@ -284,6 +304,33 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
             if verdict not in AUTO_TRIGGER_VERDICTS:
                 if verdict is not None:
                     print(f"  🚫 Verdict={verdict} für {fix['home']} vs {fix['away']} — {market_label} (kein Trigger)")
+                continue
+
+            # ── Signal-Engine Gates (08.06.2026) ─────────────────────────────
+            sig_adj  = fix.get(f"signalAdj_{fld}")
+            sig_pos  = fix.get(f"signalPos_{fld}")
+            sig_dwn  = fix.get(f"engineDowngrade_{fld}")
+
+            # Gate 1: Engine warnt deutlich (Summe der Signale ≤ -3pp)
+            if isinstance(sig_adj, (int, float)) and sig_adj <= ENGINE_BLOCK_ADJ_PP:
+                print(f"  🛑 Engine-Warnung ({sig_adj:+.1f}pp ≤ {ENGINE_BLOCK_ADJ_PP}pp) "
+                      f"— {fix['home']} vs {fix['away']} {market_label} (BLOCKED)")
+                continue
+
+            # Gate 2: Engine hat BET → ABWÄGEN heruntergestuft → KEIN Trade
+            # (sig_dwn ist nur gesetzt wenn der Pick wirklich downgegraded wurde)
+            if verdict == "ABWÄGEN" and sig_dwn:
+                print(f"  🛑 Engine-Downgrade aktiv: {sig_dwn} "
+                      f"— {fix['home']} vs {fix['away']} {market_label} (BLOCKED)")
+                continue
+
+            # Gate 3: Bei ABWÄGEN ohne explizites Downgrade — wenig positive Signale
+            # → vorsichtshalber nicht traden. BETs ohne sig_pos werden NICHT geblockt
+            # (Backwards-compat für Picks ohne Engine-Output).
+            if (verdict == "ABWÄGEN" and isinstance(sig_pos, int)
+                    and sig_pos < ENGINE_MIN_POS_FOR_ABWAEGEN):
+                print(f"  🛑 Nur {sig_pos} positive Engine-Signale für ABWÄGEN-Pick "
+                      f"(min {ENGINE_MIN_POS_FOR_ABWAEGEN}) — {fix['home']} vs {fix['away']} {market_label} (BLOCKED)")
                 continue
 
             poly_price = fix.get(price_key)
@@ -326,7 +373,10 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                 "polyPrice":   poly_price,
                 "slug":        slug,
                 "eventUrl":    event_url,
-                "edgePP":      edge,
+                "edgePP":           raw_edge,            # raw Pinnacle vs Polymarket
+                "effectiveEdgePP":  edge,                # Engine-justiert
+                "signalAdjPP":      sig_adj,             # Engine-Signal-Summe
+                "signalCountPos":   sig_pos,             # positive Signale
                 "pinnFair":    fix.get(fair_key),
                 "verdict":     verdict,
                 "dataQuality": fix.get("dataQuality", "elo_only"),
@@ -428,8 +478,13 @@ def main():
     print(f"\n  🎯 {len(candidates)} Kandidat(en) gefunden:\n")
     for c in candidates:
         odds_str = f"{1/c['polyPrice']:.2f}" if c['polyPrice'] else "?"
+        eff_str  = (f", eff {c['effectiveEdgePP']:+.1f}pp"
+                    if isinstance(c.get('effectiveEdgePP'), (int, float))
+                    and c.get('effectiveEdgePP') != c.get('edgePP') else "")
+        sig_str  = (f"  |  Signale: {c['signalAdjPP']:+.1f}pp ({c.get('signalCountPos') or 0}+)"
+                    if isinstance(c.get('signalAdjPP'), (int, float)) else "")
         print(f"    • {c['home']} vs {c['away']} — {c['market']}")
-        print(f"      Edge: +{c['edgePP']}pp  |  Poly: {odds_str}  |  Einsatz: ${c['stake']:.2f} USDC")
+        print(f"      Edge: +{c['edgePP']}pp{eff_str}  |  Poly: {odds_str}  |  Einsatz: ${c['stake']:.2f} USDC{sig_str}")
 
     if not is_enabled:
         print(f"\n⏸️  DEAKTIVIERT — {len(candidates)} Bet(s) würden platziert werden wenn aktiv.\n")
