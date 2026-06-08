@@ -1,27 +1,27 @@
 {
-  "today": "2026-06-05T12:41:45.114385+00:00",
+  "today": "2026-06-08T16:55:42.203461+00:00",
   "chosen": {
     "angle_id": "killerStat",
-    "entity_key": "defensiveWall:MAR",
+    "entity_key": "defensiveWall:ENG",
     "theme": "killer_stat",
-    "score": 0.733,
+    "score": 0.667,
     "hook_slots": {
       "big_number": {
         "value": "0.3",
-        "source": "form.MAR.avgConceded",
+        "source": "form.ENG.avgConceded",
         "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": 0.267
+        "raw": 0.333
       },
       "sub_title": {
-        "value": "Gegentore pro Spiel · Marokko",
+        "value": "Gegentore pro Spiel · England",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_1": {
-        "value": "<span class=\"acc\">Marokko</span> 🇲🇦 kassiert",
+        "value": "<span class=\"acc\">England</span> 🏴󠁧󠁢󠁥󠁮󠁧󠁿 kassiert",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -42,8 +42,8 @@
         "raw": null
       },
       "highlight_fact": {
-        "value": "0.3 Tore/Spiel kassiert — Ø 2.2 eigene",
-        "source": "form.MAR.avgConceded + form.MAR.avgScored",
+        "value": "0.3 Tore/Spiel kassiert — Ø 2.4 eigene",
+        "source": "form.ENG.avgConceded + form.ENG.avgScored",
         "source_file": "wm2026-data.json",
         "derived": true,
         "raw": null
@@ -51,14 +51,14 @@
     },
     "info_slots": {
       "flag": {
-        "value": "🇲🇦",
+        "value": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "name": {
-        "value": "Marokko",
+        "value": "England",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -73,10 +73,10 @@
       },
       "stat1_val": {
         "value": "0.3",
-        "source": "form.MAR.avgConceded",
+        "source": "form.ENG.avgConceded",
         "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": 0.267
+        "raw": 0.333
       },
       "stat1_lbl": {
         "value": "Gegen Ø",
@@ -86,11 +86,11 @@
         "raw": null
       },
       "stat2_val": {
-        "value": "2.2",
-        "source": "form.MAR.avgScored",
+        "value": "2.4",
+        "source": "form.ENG.avgScored",
         "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": 2.2
+        "raw": 2.4
       },
       "stat2_lbl": {
         "value": "Tore Ø",
@@ -101,7 +101,7 @@
       },
       "stat3_val": {
         "value": "47%",
-        "source": "form.MAR.over25Rate",
+        "source": "form.ENG.over25Rate",
         "source_file": "wm2026-data.json",
         "derived": false,
         "raw": 0.467
@@ -114,7 +114,7 @@
         "raw": null
       },
       "closing_line": {
-        "value": "<strong>Beste Defensiv-Quote</strong> aller 44 qualifizierten Teams. Ø 0.3 Tore über 15 Spiele.",
+        "value": "<strong>Beste Defensiv-Quote</strong> aller 47 qualifizierten Teams. Ø 0.3 Tore über 15 Spiele.",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -140,7 +140,7 @@
   },
   "verifier": {
     "angle_id": "killerStat",
-    "entity": "defensiveWall:MAR",
+    "entity": "defensiveWall:ENG",
     "ok": true,
     "failures": [],
     "details": [
@@ -242,14 +242,14 @@
       "angle_id": "killerStat",
       "entity_key": "avgScored:NOR",
       "theme": "killer_stat",
-      "score": 0.85,
+      "score": 0.8068,
       "hook_slots": {
         "big_number": {
-          "value": "3.5",
+          "value": "3.3",
           "source": "form.NOR.avgScored",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 3.467
+          "raw": 3.267
         },
         "sub_title": {
           "value": "Tore pro Spiel · Norwegen",
@@ -280,7 +280,7 @@
           "raw": null
         },
         "highlight_fact": {
-          "value": "Ø 3.5 Tore in 15 Spielen — Gegen Ø 0.7",
+          "value": "Ø 3.3 Tore in 15 Spielen — Gegen Ø 0.7",
           "source": "form.NOR.avgScored + form.NOR.games + form.NOR.avgConceded",
           "source_file": "wm2026-data.json",
           "derived": true,
@@ -303,18 +303,18 @@
           "raw": null
         },
         "role_line": {
-          "value": "Ø 3.5 Tore/Spiel · 15 Spiele Datenbasis",
+          "value": "Ø 3.3 Tore/Spiel · 15 Spiele Datenbasis",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat1_val": {
-          "value": "3.5",
+          "value": "3.3",
           "source": "form.NOR.avgScored",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 3.467
+          "raw": 3.267
         },
         "stat1_lbl": {
           "value": "Tore Ø",
@@ -352,7 +352,7 @@
           "raw": null
         },
         "closing_line": {
-          "value": "<strong>Höchste Ø-Tore-Quote</strong> aller 44 qualifizierten WM-Teams. Form-Datenbasis: 15 Spiele.",
+          "value": "<strong>Höchste Ø-Tore-Quote</strong> aller 47 qualifizierten WM-Teams. Form-Datenbasis: 15 Spiele.",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -374,30 +374,30 @@
         }
       },
       "series_tag": "",
-      "reason": "avgScored=3.5 (15 games) — höchster aller 44 Teams"
+      "reason": "avgScored=3.3 (15 games) — höchster aller 47 Teams"
     },
     {
       "angle_id": "killerStat",
-      "entity_key": "defensiveWall:MAR",
+      "entity_key": "defensiveWall:ENG",
       "theme": "killer_stat",
-      "score": 0.733,
+      "score": 0.667,
       "hook_slots": {
         "big_number": {
           "value": "0.3",
-          "source": "form.MAR.avgConceded",
+          "source": "form.ENG.avgConceded",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 0.267
+          "raw": 0.333
         },
         "sub_title": {
-          "value": "Gegentore pro Spiel · Marokko",
+          "value": "Gegentore pro Spiel · England",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "hook_line_1": {
-          "value": "<span class=\"acc\">Marokko</span> 🇲🇦 kassiert",
+          "value": "<span class=\"acc\">England</span> 🏴󠁧󠁢󠁥󠁮󠁧󠁿 kassiert",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -418,8 +418,8 @@
           "raw": null
         },
         "highlight_fact": {
-          "value": "0.3 Tore/Spiel kassiert — Ø 2.2 eigene",
-          "source": "form.MAR.avgConceded + form.MAR.avgScored",
+          "value": "0.3 Tore/Spiel kassiert — Ø 2.4 eigene",
+          "source": "form.ENG.avgConceded + form.ENG.avgScored",
           "source_file": "wm2026-data.json",
           "derived": true,
           "raw": null
@@ -427,14 +427,14 @@
       },
       "info_slots": {
         "flag": {
-          "value": "🇲🇦",
+          "value": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "name": {
-          "value": "Marokko",
+          "value": "England",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -449,10 +449,10 @@
         },
         "stat1_val": {
           "value": "0.3",
-          "source": "form.MAR.avgConceded",
+          "source": "form.ENG.avgConceded",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 0.267
+          "raw": 0.333
         },
         "stat1_lbl": {
           "value": "Gegen Ø",
@@ -462,11 +462,11 @@
           "raw": null
         },
         "stat2_val": {
-          "value": "2.2",
-          "source": "form.MAR.avgScored",
+          "value": "2.4",
+          "source": "form.ENG.avgScored",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 2.2
+          "raw": 2.4
         },
         "stat2_lbl": {
           "value": "Tore Ø",
@@ -477,7 +477,7 @@
         },
         "stat3_val": {
           "value": "47%",
-          "source": "form.MAR.over25Rate",
+          "source": "form.ENG.over25Rate",
           "source_file": "wm2026-data.json",
           "derived": false,
           "raw": 0.467
@@ -490,7 +490,7 @@
           "raw": null
         },
         "closing_line": {
-          "value": "<strong>Beste Defensiv-Quote</strong> aller 44 qualifizierten Teams. Ø 0.3 Tore über 15 Spiele.",
+          "value": "<strong>Beste Defensiv-Quote</strong> aller 47 qualifizierten Teams. Ø 0.3 Tore über 15 Spiele.",
           "source": "",
           "source_file": "",
           "derived": false,

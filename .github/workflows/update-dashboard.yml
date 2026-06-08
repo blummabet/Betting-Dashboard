@@ -23,6 +23,15 @@ on:
 permissions:
   contents: write
 
+# AUDIT-Fix 08.06.2026: Concurrency-Group hinzugefügt.
+# Vorher: 3× tägliche Crons (07/09/11 UTC) konnten gleichzeitig laufen wenn
+# workflow_run-Trigger (nach fetch-prematch) mit einer Schedule-Zeit kollidiert.
+# Folge: 2× picks_output.json schreiben, 2× telegram_bot.py senden = Doppel-Post.
+# Jetzt: serialisiert, nicht abgebrochen.
+concurrency:
+  group: update-dashboard
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -123,7 +132,7 @@ jobs:
         continue-on-error: true
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: '-1003819239615'
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TG_MODE: 'picks'
 
       # 8c. Telegram: Recap vom Vortag (11:00 Wien = 09:00 UTC)
@@ -133,7 +142,7 @@ jobs:
         continue-on-error: true
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: '-1003819239615'
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TG_MODE: 'recap'
 
       # 8d. Telegram: IM BLICK posten (13:00 Wien = 11:00 UTC)
@@ -143,7 +152,7 @@ jobs:
         continue-on-error: true
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: '-1003819239615'
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TG_MODE: 'watch'
 
       # 9. Geänderte Dateien zurück ins Repo committen und pushen

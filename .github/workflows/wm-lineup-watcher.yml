@@ -22,10 +22,13 @@ permissions:
   contents: write
 
 concurrency:
-  # Gleiche Group wie fetch-wm-data damit nie parallel zu Pick-Generation läuft
-  # (vermeidet Schreibkonflikte auf wm2026-data.json — obwohl wir es hier nur lesen)
-  group: fetch-wm-data
-  cancel-in-progress: false
+  # AUDIT-Fix 08.06.2026: Eigene Group statt fetch-wm-data.
+  # Vorher: 15-min-Cron-Watcher blockierte ständig fetch-wm-data (10-20min Laufzeit).
+  # Jetzt: lineup-watcher läuft unabhängig. Er schreibt NUR wm_lineups.json +
+  # wm_lineup_alerts.json — keine Konflikte mit wm2026-data.json (das er nur liest).
+  # cancel-in-progress: true damit ein neuer 15-min-Tick einen hängenden Run beendet.
+  group: wm-lineup-watcher
+  cancel-in-progress: true
 
 jobs:
   fetch-lineups:
