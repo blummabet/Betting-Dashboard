@@ -1,0 +1,82 @@
+name: 📋 WM Lineup-Watcher (T-1h Hot-Cron)
+
+# Hochfrequenter Watcher der NUR fetch_wm_lineups.py ausführt.
+# Während Match-Hours (09:00-23:00 UTC) alle 15 min.
+# Damit kein WM-Spiel das T-1h-Lineup-Fenster verpasst, egal welche Anpfiff-Zeit
+# (auch Nachtspiele 1/4/6 Uhr Wien Zeit werden zuverlässig abgedeckt).
+#
+# Dedup über wm_lineup_alerts.json — pro fixture+team+status nur einmal alarmen.
+# API-Last: max ~56 Runs × 1-3 Calls = ~150 Calls/Tag → bei 75k Limit egal.
+#
+# Nach WM: Cron lockern (alle 30 min reicht für reguläre Liga-Spielzeiten).
+
+on:
+  schedule:
+    # 09:00-23:00 UTC alle 15 min — covered alle WM-Anpfiffe inkl. Nachtspiele
+    - cron: '*/15 9-23 * * *'
+
+  # Manuell triggerbar für Tests
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  # Gleiche Group wie fetch-wm-data damit nie parallel zu Pick-Generation läuft
+  # (vermeidet Schreibkonflikte auf wm2026-data.json — obwohl wir es hier nur lesen)
+  group: fetch-wm-data
+  cancel-in-progress: false
+
+jobs:
+  fetch-lineups:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📋 Lineups fetchen + Telegram-Alert
+        run: python fetch_wm_lineups.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY:           ${{ secrets.APISPORTS_KEY }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 💾 State-Files committen + pushen
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          # Files aus state_files_registry für lineup_watcher
+          git add wm_lineups.json wm_lineup_alerts.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — sauberer Exit"
+          else
+            TIMESTAMP=$(date +'%d.%m.%Y %H:%M')
+            git commit -m "📋 Lineup-Watcher ${TIMESTAMP}"
+            git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            # Robust push mit Retry
+            PUSHED=0
+            for attempt in 1 2 3 4 5; do
+              git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+              CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+              if [ -n "$CONFLICTS" ]; then
+                echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+                git diff --staged --quiet || git commit -m "🔧 auto-resolve merge conflicts"
+              fi
+              if git push 2>&1; then
+                echo "✅ Push erfolgreich"
+                PUSHED=1
+                break
+              fi
+              sleep $((attempt * 3))
+            done
+            [ "$PUSHED" = "0" ] && exit 1
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

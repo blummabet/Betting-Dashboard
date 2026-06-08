@@ -50,8 +50,14 @@ from pathlib import Path
 BASE          = Path(__file__).parent
 WM_FILE       = BASE / "wm2026-data.json"
 OUTPUT_FILE   = BASE / "wm_lineups.json"
+ALERT_DEDUP   = BASE / "wm_lineup_alerts.json"
 APIF_HOST     = "v3.football.api-sports.io"
 APIF_KEY      = os.environ.get("APISPORTS_KEY", "9f36726c1bdc9957b4a49f89277b80db")
+
+# Telegram (Trades-Channel, NIEMALS Public)
+TELEGRAM_TOKEN          = os.environ.get("TELEGRAM_TOKEN", "")
+TELEGRAM_TRADES_CHAT_ID = os.environ.get("TELEGRAM_TRADES_CHAT_ID", "")
+SKIP_TELEGRAM           = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
 
 # ── Config ────────────────────────────────────────────────────────────────
 DEFAULT_CFG = {
@@ -62,6 +68,9 @@ DEFAULT_CFG = {
     "request_delay_sec":     1.0,
     "request_timeout_sec":    15,
     "cache_ttl_minutes":      45,    # nur neu fetchen wenn cache älter als N min
+    # ── Alert-Konfiguration ──────────────────────────────────────────
+    "alert_min_goals":         2,    # nur key-player (≥N Saison-Tore)
+    "alert_enabled":        True,
 }
 
 
@@ -226,6 +235,162 @@ def _fetch_lineup_for_fixture(fixture_id: int) -> dict | None:
     return {"home": _team_dict(home_block), "away": _team_dict(away_block)}
 
 
+# ── Telegram-Alert für Top-Scorer-Bench/Missing ───────────────────────────
+
+
+def _normalize_name(s: str) -> str:
+    """Akzent-normalisierter Vergleich (gleiche Logik wie lineup_signal)."""
+    if not s:
+        return ""
+    s = s.lower().strip()
+    repl = {
+        "á": "a", "à": "a", "ä": "a", "â": "a", "ã": "a", "ā": "a", "å": "a",
+        "é": "e", "è": "e", "ê": "e", "ë": "e", "ē": "e",
+        "í": "i", "ì": "i", "î": "i", "ï": "i", "ī": "i", "ı": "i",
+        "ó": "o", "ò": "o", "ô": "o", "ö": "o", "õ": "o", "ō": "o",
+        "ú": "u", "ù": "u", "û": "u", "ü": "u", "ū": "u",
+        "ñ": "n", "ç": "c", "ß": "ss",
+        "ğ": "g", "ş": "s", "ž": "z", "š": "s", "č": "c", "ć": "c",
+        "đ": "d", "ł": "l", "ń": "n", "ý": "y",
+    }
+    for k, v in repl.items():
+        s = s.replace(k, v)
+    return s
+
+
+def _player_in_lineup(player_name: str, players: list) -> bool:
+    """Robuster Name-Match (Last-Name ≥3 chars)."""
+    target = _normalize_name(player_name)
+    if not target:
+        return False
+    target_last = target.split()[-1] if " " in target else target
+    for p in players or []:
+        pname = _normalize_name(p.get("name", ""))
+        if not pname:
+            continue
+        if len(target) >= 5 and (target in pname or pname in target):
+            return True
+        pname_last = pname.split()[-1] if " " in pname else pname
+        if target_last == pname_last and len(target_last) >= 3:
+            return True
+    return False
+
+
+def _classify_scorer(scorer: dict, team_lineup: dict) -> str:
+    """Returns 'missing' | 'benched' | 'starting' | 'unknown'."""
+    if not scorer or not scorer.get("name"):
+        return "unknown"
+    if (scorer.get("goals") or 0) < CFG["alert_min_goals"]:
+        return "unknown"
+    name = scorer["name"]
+    if _player_in_lineup(name, team_lineup.get("starting") or []):
+        return "starting"
+    if _player_in_lineup(name, team_lineup.get("subs") or []):
+        return "benched"
+    return "missing"
+
+
+def _load_alert_dedup() -> dict:
+    if not ALERT_DEDUP.exists():
+        return {}
+    try:
+        return json.loads(ALERT_DEDUP.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def _save_alert_dedup(data: dict) -> None:
+    tmp = ALERT_DEDUP.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    tmp.replace(ALERT_DEDUP)
+
+
+def _send_telegram(text: str) -> bool:
+    """Sendet Nachricht an TRADES-Channel (privat). Returns ob erfolgreich."""
+    if SKIP_TELEGRAM:
+        print(f"   ↪ SKIP_TELEGRAM=true — würde senden: {text[:60]}...")
+        return False
+    if not TELEGRAM_TOKEN or not TELEGRAM_TRADES_CHAT_ID:
+        print(f"   ⚠️  TELEGRAM_TOKEN oder TRADES_CHAT_ID nicht gesetzt — Alert übersprungen")
+        return False
+    try:
+        import urllib.request
+        url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+        payload = json.dumps({
+            "chat_id":    TELEGRAM_TRADES_CHAT_ID,
+            "text":       text,
+            "parse_mode": "HTML",
+            "disable_web_page_preview": True,
+        }).encode()
+        req = urllib.request.Request(url, data=payload,
+                                     headers={"Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return 200 <= resp.status < 300
+    except Exception as e:
+        print(f"   ⚠️  Telegram-Send fehlgeschlagen: {e}")
+        return False
+
+
+def _emit_lineup_alerts(match_key: str, entry: dict, squads: dict,
+                        fixtures_meta: dict, dedup: dict) -> int:
+    """
+    Prüft pro Team ob der Top-Scorer fehlt/auf Bank ist und sendet Telegram-Alert.
+    Dedup pro (match_key + team_id + status) — ein Alert pro Pick-Veränderung.
+    Returns Anzahl gesendeter Alerts.
+    """
+    if not CFG.get("alert_enabled", True):
+        return 0
+
+    sent = 0
+    home_id = (entry.get("home") or {}).get("team_id_internal") or fixtures_meta.get("home_id")
+    away_id = (entry.get("away") or {}).get("team_id_internal") or fixtures_meta.get("away_id")
+    home_name = fixtures_meta.get("home_name", home_id)
+    away_name = fixtures_meta.get("away_name", away_id)
+    ko_iso = entry.get("kickoff", "")
+    try:
+        ko_dt = datetime.fromisoformat(ko_iso)
+        ko_str = ko_dt.strftime("%H:%M")
+    except Exception:
+        ko_str = "?"
+
+    for team_label, team_id, team_name, scorer, team_lineup in [
+        ("🏠 Heim",   home_id, home_name, squads.get(home_id, {}), entry.get("home", {})),
+        ("✈ Auswärts", away_id, away_name, squads.get(away_id, {}), entry.get("away", {})),
+    ]:
+        status = _classify_scorer(scorer, team_lineup)
+        if status in ("starting", "unknown"):
+            continue
+
+        # Dedup-Key: match + team_id + status (status-flip = neuer Alert)
+        dk = f"{match_key}|{team_id}|{status}"
+        if dk in dedup.get("seen", {}):
+            continue
+
+        status_emoji = "🚨" if status == "missing" else "⚠️"
+        status_text  = "FEHLT komplett" if status == "missing" else "auf der BANK"
+        text = (
+            f"{status_emoji} <b>LINEUP-ALERT</b>\n"
+            f"{home_name} vs {away_name} · Anpfiff {ko_str}\n\n"
+            f"{team_label} <b>{team_name}</b>: "
+            f"<b>{scorer.get('name')}</b> ({scorer.get('goals')} Saison-Tore) {status_text}\n\n"
+            f"<i>→ Engine wird Goals-Picks beim nächsten Run anpassen</i>"
+        )
+
+        if _send_telegram(text):
+            dedup.setdefault("seen", {})[dk] = {
+                "ts":     datetime.now(timezone.utc).isoformat(),
+                "team":   team_id,
+                "player": scorer.get("name"),
+                "status": status,
+            }
+            sent += 1
+            print(f"   📨 Alert gesendet: {team_name} {scorer.get('name')} {status}")
+
+    if sent:
+        _save_alert_dedup(dedup)
+    return sent
+
+
 # ── Main-Pipeline ─────────────────────────────────────────────────────────
 
 
@@ -282,9 +447,19 @@ def main():
         print("   Keine Spiele in den nächsten Stunden — sauberer Exit")
         return 0
 
+    # Squads aus wm2026-data laden für Alert-Logik (Top-Scorer pro Team)
+    squads = {}
+    try:
+        with WM_FILE.open(encoding="utf-8") as f:
+            squads = json.load(f).get("squads", {}) or {}
+    except Exception:
+        pass
+    alert_dedup = _load_alert_dedup()
+
     new_count = 0
     cached_count = 0
     fail_count = 0
+    alert_count = 0
 
     for fx in due:
         mk = fx["match_key"]
@@ -333,7 +508,18 @@ def main():
               f"({lineup['home']['formation']} vs {lineup['away']['formation']})")
         _save_output(existing)
 
-    print(f"\n=== Done: {new_count} neu, {cached_count} cached, {fail_count} fail ===")
+        # ── Telegram-Alert: Top-Scorer fehlt/auf Bank? ───────────────────
+        fixtures_meta = {
+            "home_id":   fx["home_id"],
+            "away_id":   fx["away_id"],
+            "home_name": _team_name_from_id(fx["home_id"]),
+            "away_name": _team_name_from_id(fx["away_id"]),
+        }
+        sent = _emit_lineup_alerts(mk, entry_new, squads, fixtures_meta, alert_dedup)
+        alert_count += sent
+
+    print(f"\n=== Done: {new_count} neu, {cached_count} cached, {fail_count} fail, "
+          f"{alert_count} Telegram-Alerts gesendet ===")
     print(f"   → {OUTPUT_FILE.name}")
     return 0
 
