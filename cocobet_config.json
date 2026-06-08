@@ -78,6 +78,22 @@
         "request_timeout_sec":    15,
         "skip_if_understat":   false
       },
+      "lineups": {
+        "lookahead_hours":      3,
+        "lookback_hours":      24,
+        "min_minutes_before":  30,
+        "max_minutes_before": 180,
+        "request_delay_sec":  1.0,
+        "request_timeout_sec": 15,
+        "cache_ttl_minutes":   45
+      },
+      "lineup_signal": {
+        "missing_score":         2.5,
+        "benched_score":         1.5,
+        "missing_min_goals":       2,
+        "confidence_full":      0.80,
+        "confidence_partial":   0.60
+      },
       "sell": {
         "profit_target":          0.10,
         "pinn_gap_pp":            1.5,

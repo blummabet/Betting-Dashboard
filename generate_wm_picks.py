@@ -1384,6 +1384,19 @@ def main():
     injuries     = wm.get("injuries",    {})   # Verletzungen/Sperren
     corners_form = wm.get("cornersForm", {})   # Eckball-Stats pro Team (fetch_wm_corners.py)
 
+    # ── Aufstellungen aus wm_lineups.json (T-1h, fetch_wm_lineups.py) ──────
+    # Nur wenige Spiele pro Run haben aktuelle Lineups (nur die nächsten 1-3h).
+    # Signal lineup_signal feuert dann pro Pick.
+    lineups_data: dict = {}
+    try:
+        lineups_file = os.path.join(os.path.dirname(WM_FILE), "wm_lineups.json")
+        if os.path.exists(lineups_file):
+            with open(lineups_file, encoding="utf-8") as f:
+                lineups_data = json.load(f)
+            print(f"  📋 Lineups geladen: {len(lineups_data)} Spiele\n")
+    except Exception as e:
+        print(f"  ⚠️  Lineups-Load fehlgeschlagen: {e}")
+
     # Travel-Burden (compute_wm_travel_burden.py) — separates File
     travel_data = {}
     travel_file = os.path.join(os.path.dirname(WM_FILE), "wm_travel_burden.json")
@@ -1494,6 +1507,8 @@ def main():
                     "form":         form,
                     "h2h":          h2h_data.get(ha_key, {}),
                     "xg_stats":     xg_stats,
+                    "lineups":      lineups_data,
+                    "squads":       wm.get("squads", {}),
                     "snapshot_ts":  None,   # → evaluate_signals nutzt now()
                 }
                 for p in new_picks:
