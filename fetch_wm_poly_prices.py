@@ -813,10 +813,10 @@ def main():
         # mit UnboundLocalError ein paar 100 Zeilen FRÜHER. Resultat: wm_poly_prices.json
         # seit 2+ Tagen nicht geschrieben → Steam-Lag-Monitor las stale Daten.
         # Fix: timedelta global oben importiert, lokaler Import entfernt.
-        EDGE_ALERT_DEDUP_FILE = BASE_DIR / "wm_edge_alert_dedup.json"
+        EDGE_ALERT_DEDUP_FILE = os.path.join(BASE, "wm_edge_alert_dedup.json")
         EDGE_DEDUP_HOURS = _cfg("dedup_hours", "edge_alert", 12)
         dedup_state = {}
-        if EDGE_ALERT_DEDUP_FILE.exists():
+        if os.path.exists(EDGE_ALERT_DEDUP_FILE):
             try:
                 with open(EDGE_ALERT_DEDUP_FILE) as f:
                     dedup_state = json.load(f)
