@@ -18,15 +18,17 @@ from typing import Optional
 
 from sharp_signals.base import Signal, SignalResult
 from sharp_signals.lead_lag_bias import LeadLagBiasSignal
+from sharp_signals.public_static_bias import PublicStaticBiasSignal
+from sharp_signals.travel_burden import TravelBurdenSignal
 
 
 # Liste aller aktiv evaluierten Signale.
 # Reihenfolge ist nur kosmetisch (Output-Reihenfolge auf der Card).
 ACTIVE_SIGNALS: list[Signal] = [
     LeadLagBiasSignal(),
+    PublicStaticBiasSignal(),
+    TravelBurdenSignal(),
     # Weitere Signale werden hier ergänzt:
-    # PublicStaticBiasSignal(),
-    # TravelBurdenSignal(),
     # InjurySignal(),
     # SteamLagSignal(),
 ]

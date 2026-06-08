@@ -1371,6 +1371,16 @@ def main():
         except Exception as e:
             print(f"  ⚠️  Travel-Burden nicht ladbar: {e}")
 
+    # Odds-History (für Signal-Engine LeadLag-Bias)
+    odds_history = {}
+    hist_file = os.path.join(os.path.dirname(WM_FILE), "wm2026-odds-history.json")
+    if os.path.exists(hist_file):
+        try:
+            with open(hist_file, encoding="utf-8") as hf:
+                odds_history = json.load(hf)
+        except Exception as e:
+            print(f"  ⚠️  Odds-History nicht ladbar: {e}")
+
     xg_count = sum(1 for v in xg_stats.values() if v and v.get("games", 0) >= 3)
     inj_count = sum(1 for k, v in injuries.items()
                     if k != "_meta" and isinstance(v, dict) and v.get("players"))
@@ -1426,6 +1436,31 @@ def main():
                 travel_data=travel_data,
                 corners_form=corners_form,
             )
+
+            # ── Signal-Engine: jedem Pick die signals[] Liste anhängen ────
+            # Modulare Sharp-Signal-Adjustments (sharp_signals/). Jede Iteration
+            # ruft alle aktiven Signale auf, sammelt scores + evidence pro Pick.
+            # Bayesian-Weight-Update läuft post-resolve via update_signal_weights.py.
+            try:
+                from sharp_signals.registry import evaluate_signals
+                ha_key = f"{fx['home']}-{fx['away']}"
+                sig_ctx = {
+                    "matchKey":     ha_key,
+                    "home_id":      fx["home"],
+                    "away_id":      fx["away"],
+                    "matchday":     fx["matchday"],
+                    "odds_history": odds_history.get(ha_key, []) if odds_history else [],
+                    "odds_snapshot": mkt.get(ha_key, {}),
+                    "travel":       travel_data,
+                    "snapshot_ts":  None,   # → evaluate_signals nutzt now()
+                }
+                for p in new_picks:
+                    sig_out = evaluate_signals(p, sig_ctx)
+                    if sig_out["signals"]:
+                        p["signals"] = sig_out["signals"]
+                        p["signalAdjustmentPP"] = sig_out["combined_score_pp"]
+            except Exception as e:
+                print(f"  ⚠️  Signal-Engine crashed für {fx['home']}-{fx['away']}: {e}")
 
             # Immer überschreiben — auch leere Liste löscht veraltete Picks
             wm["picks"][pick_key] = new_picks

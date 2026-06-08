@@ -112,6 +112,116 @@ class TestLeadLagBias(unittest.TestCase):
             "CONFIRMED muss höheren Score haben als EARLY bei gleicher Pinn-Bewegung")
 
 
+class TestPublicStaticBias(unittest.TestCase):
+    """Public-Konsens vs Pinnacle → contrarian Pick wenn Public stark biased."""
+
+    @classmethod
+    def setUpClass(cls):
+        from sharp_signals.public_static_bias import PublicStaticBiasSignal
+        cls.sig = PublicStaticBiasSignal()
+
+    def _evaluate(self, market: str, snap: dict):
+        return self.sig.evaluate({"market": market}, {"odds_snapshot": snap})
+
+    def test_no_signal_for_non_1x2(self):
+        snap = {"hw": 1.91, "dr": 3.47, "aw": 4.46,
+                "public_hw": 1.80, "public_dr": 3.50, "public_aw": 4.50,
+                "public_bookmaker": "bet365"}
+        self.assertIsNone(self._evaluate("Über 2.5 Tore", snap))
+
+    def test_no_signal_without_public_data(self):
+        snap = {"hw": 1.91, "dr": 3.47, "aw": 4.46}
+        self.assertIsNone(self._evaluate("Heimsieg", snap))
+
+    def test_no_signal_below_threshold(self):
+        # Pinnacle und Public quasi identisch → keine Bias
+        snap = {"hw": 1.91, "dr": 3.47, "aw": 4.46,
+                "public_hw": 1.90, "public_dr": 3.48, "public_aw": 4.45,
+                "public_bookmaker": "bet365"}
+        self.assertIsNone(self._evaluate("Heimsieg", snap))
+
+    def test_positive_score_when_public_overbets_picked_outcome(self):
+        """
+        Public hat Heim auf 1.65 (60.6%), Pinnacle auf 1.91 (52.4%).
+        Public überbettet Heim um ~8pp → Pick auf Heim ist contrarian → positiv.
+        """
+        snap = {"hw": 1.91, "dr": 3.47, "aw": 4.46,
+                "public_hw": 1.65, "public_dr": 3.80, "public_aw": 5.50,
+                "public_bookmaker": "bet365"}
+        result = self._evaluate("Heimsieg", snap)
+        self.assertIsNotNone(result)
+        self.assertGreater(result.score, 0)
+        self.assertIn("über-bettet", result.evidence)
+        self.assertIn("bet365", result.evidence)
+
+    def test_negative_score_when_public_underbets_picked_outcome(self):
+        """
+        Public hat Heim auf 2.20 (45%), Pinnacle auf 1.91 (52%).
+        Public unter-bettet Heim → Pick auf Heim folgt Public → kein Edge → negativ.
+        """
+        snap = {"hw": 1.91, "dr": 3.47, "aw": 4.46,
+                "public_hw": 2.20, "public_dr": 3.30, "public_aw": 3.80,
+                "public_bookmaker": "bet365"}
+        result = self._evaluate("Heimsieg", snap)
+        self.assertIsNotNone(result)
+        self.assertLess(result.score, 0)
+
+
+class TestTravelBurden(unittest.TestCase):
+    """Anreise + Höhe als Modifikator. Killer-Signal."""
+
+    @classmethod
+    def setUpClass(cls):
+        from sharp_signals.travel_burden import TravelBurdenSignal
+        cls.sig = TravelBurdenSignal()
+
+    def _evaluate(self, market, travel, home="MEX", away="ZAF", matchday=1):
+        return self.sig.evaluate(
+            {"market": market},
+            {"home_id": home, "away_id": away, "matchday": matchday, "travel": travel}
+        )
+
+    def test_no_signal_for_non_1x2(self):
+        travel = {"ZAF": {"legs": [{"matchday_to": 1, "km": 4000,
+                                    "rest_days": 2, "burden": "critical"}]}}
+        self.assertIsNone(self._evaluate("Über 2.5 Tore", travel))
+
+    def test_no_signal_when_both_teams_local(self):
+        travel = {"MEX": {"legs": [{"matchday_to": 1, "km": 200, "rest_days": 5}]},
+                  "ZAF": {"legs": [{"matchday_to": 1, "km": 300, "rest_days": 5}]}}
+        self.assertIsNone(self._evaluate("Heimsieg", travel))
+
+    def test_positive_score_for_home_pick_when_away_critical(self):
+        """Auswärts reist 4000km mit 2 Tagen Pause → Pick auf Heim = positiv."""
+        travel = {"ZAF": {"legs": [{"matchday_to": 1, "km": 4000,
+                                    "rest_days": 2, "burden": "critical"}]}}
+        result = self._evaluate("Heimsieg", travel)
+        self.assertIsNotNone(result)
+        self.assertGreater(result.score, 0)
+        self.assertIn("✈️", result.evidence)
+
+    def test_negative_score_for_away_pick_when_away_critical(self):
+        """Pick stützt Auswärts, aber Auswärts reist critical → negativ."""
+        travel = {"ZAF": {"legs": [{"matchday_to": 1, "km": 4000,
+                                    "rest_days": 2, "burden": "critical"}]}}
+        result = self._evaluate("Auswärtssieg", travel)
+        self.assertIsNotNone(result)
+        self.assertLess(result.score, 0)
+
+    def test_altitude_adds_score(self):
+        """Höhenwechsel ≥ 1500m gibt extra Score."""
+        travel_low_alt = {"ZAF": {"legs": [{"matchday_to": 1, "km": 4000,
+                                            "rest_days": 2, "burden": "critical",
+                                            "alt_shift": 0}]}}
+        travel_high_alt = {"ZAF": {"legs": [{"matchday_to": 1, "km": 4000,
+                                             "rest_days": 2, "burden": "critical",
+                                             "alt_shift": 2200}]}}
+        low  = self._evaluate("Heimsieg", travel_low_alt)
+        high = self._evaluate("Heimsieg", travel_high_alt)
+        self.assertGreater(high.score, low.score,
+            "Höhenwechsel sollte den Score weiter erhöhen")
+
+
 class TestRegistryEvaluateSignals(unittest.TestCase):
     """evaluate_signals kombiniert mehrere Signale gewichtet."""
 

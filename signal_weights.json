@@ -10,5 +10,19 @@
     "wins_when_triggered": 0,
     "last_updated": null,
     "notes": "Initial-Weight 1.0. Wird aktualisiert sobald WM-Spiele resolved sind (ab 12.06.2026)."
+  },
+  "public_static_bias": {
+    "weight": 1.0,
+    "n_observations": 0,
+    "wins_when_triggered": 0,
+    "last_updated": null,
+    "notes": "Migration aus generate_wm_picks.compute_public_bias(). Initial 1.0 (Elo-Familie). Wird ab 12.06. gelernt."
+  },
+  "travel_burden": {
+    "weight": 1.0,
+    "n_observations": 0,
+    "wins_when_triggered": 0,
+    "last_updated": null,
+    "notes": "Killer-Differenzierung — kaum Bookies modellieren das. xG-basiert, gemeinsame Logik mit generate_wm_picks.travel_factor()."
   }
 }
