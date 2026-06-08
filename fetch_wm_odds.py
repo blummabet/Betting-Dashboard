@@ -782,6 +782,13 @@ def main():
             "odds_open":  odds_open,
             "updatedAt":  now_iso,
         }
+        # Fix 08.06.2026: Public-Bookie-Quoten durchreichen.
+        # _extract_h2h_odds() liefert die als public_hw/dr/aw/public_bookmaker
+        # für den PublicStaticBias-Signal (Sharp vs Public-Konsens).
+        # Vorher wurden sie hier weggeworfen → Signal feuerte NIE für 234 Picks.
+        for pk in ("public_hw", "public_dr", "public_aw", "public_bookmaker"):
+            if h2h.get(pk) is not None:
+                new_entry[pk] = h2h[pk]
         # Add totals/btts if available
         for k in ("o15", "u15", "o25", "u25", "o35", "u35"):
             if tb.get(k):
