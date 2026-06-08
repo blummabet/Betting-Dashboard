@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Telegram-Post Vorschau · WM 2026 11.06.</title>
+<style>
+  :root {
+    --tg-bg: #0e1621;
+    --tg-bubble: #182533;
+    --tg-bubble-me: #2b5278;
+    --tg-text: #f0f4f8;
+    --tg-muted: #7e8a96;
+    --tg-link: #6fc0e8;
+    --tg-time: #6c7883;
+    --tg-header: #17212b;
+    --accent: #fbbf24;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    background: #050813;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #e6edf3;
+    min-height: 100vh;
+  }
+
+  .page-head {
+    text-align: center;
+    padding: 32px 20px 16px;
+  }
+  .page-head h1 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #7dd3fc;
+    letter-spacing: 1.5px;
+  }
+  .page-head .sub {
+    font-size: 13px;
+    color: #6b7a8d;
+  }
+
+  .stage {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    padding: 24px 20px 60px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  /* Telegram-Phone-Frame */
+  .phone {
+    width: 380px;
+    background: var(--tg-bg);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 4px #1a1a1a;
+    border: 1px solid #222;
+    display: flex;
+    flex-direction: column;
+    max-height: 760px;
+  }
+  .phone-header {
+    background: var(--tg-header);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .ph-avatar {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: #0a0e27;
+    font-size: 18px;
+  }
+  .ph-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--tg-text);
+  }
+  .ph-sub {
+    font-size: 12px;
+    color: var(--tg-muted);
+    margin-top: 2px;
+  }
+
+  .chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 12px 16px;
+    background: var(--tg-bg);
+    background-image:
+      radial-gradient(ellipse at 30% 20%, rgba(43,82,120,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 60%, rgba(125,211,252,0.06) 0%, transparent 50%);
+  }
+  .bubble {
+    background: var(--tg-bubble);
+    border-radius: 14px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    max-width: 88%;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--tg-text);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .bubble.full { max-width: 100%; }
+  .bubble b { color: #fff; }
+  .bubble i { color: #c6d3e0; font-style: italic; }
+  .bubble .time {
+    font-size: 10px;
+    color: var(--tg-time);
+    text-align: right;
+    margin-top: 4px;
+  }
+  .bubble.with-photo {
+    padding: 0;
+    overflow: hidden;
+  }
+  .bubble.with-photo img {
+    width: 100%;
+    display: block;
+  }
+  .bubble.with-photo .caption {
+    padding: 8px 12px 10px;
+  }
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.04);
+    margin: 14px 0 10px;
+    position: relative;
+  }
+  .divider::before {
+    content: attr(data-label);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--tg-bg);
+    padding: 0 10px;
+    font-size: 10px;
+    color: var(--tg-muted);
+    letter-spacing: 2px;
+  }
+
+  /* WM Photo-Card Mockup */
+  .card-photo {
+    background: radial-gradient(ellipse at top, #14204a 0%, #0a0e27 70%);
+    aspect-ratio: 9/16;
+    position: relative;
+    overflow: hidden;
+  }
+  .card-photo::before {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(125,211,252,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+  .card-photo-inner {
+    position: relative; z-index: 2;
+    padding: 18px 18px 80px;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    color: #fff; height: 100%;
+  }
+  .cp-top {
+    width: 100%;
+    display: flex; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .cp-story {
+    border: 1px solid rgba(125,211,252,0.5);
+    border-radius: 6px;
+    padding: 4px 8px;
+    text-align: left;
+    background: rgba(10,14,39,0.4);
+  }
+  .cp-story .lbl { font-size: 8px; letter-spacing: 2px; opacity: 0.7; font-weight: 600; }
+  .cp-story .brand { font-size: 9px; font-weight: 800; color: #fbbf24; letter-spacing: 1px; margin-top: 1px; }
+  .cp-tier {
+    border: 1px solid rgba(125,211,252,0.5);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 9px;
+    font-weight: 800;
+    color: #7dd3fc;
+    letter-spacing: 1.5px;
+    background: rgba(10,14,39,0.4);
+  }
+  .cp-day { font-size: 11px; opacity: 0.65; margin-bottom: 6px; letter-spacing: 1.5px; }
+  .cp-match { font-size: 22px; font-weight: 800; line-height: 1.15; margin-bottom: 24px; }
+  .cp-pick-lbl { font-size: 11px; font-weight: 700; color: #7dd3fc; margin-bottom: 6px; letter-spacing: 1.5px; }
+  .cp-pick { font-size: 32px; font-weight: 900; line-height: 1.05; margin-bottom: 18px; color: #fbbf24; }
+  .cp-odds { display: flex; gap: 10px; margin-bottom: 18px; width: 100%; }
+  .cp-odds-box {
+    flex: 1; background: rgba(125,211,252,0.06);
+    border: 1px solid rgba(125,211,252,0.32);
+    border-radius: 10px; padding: 12px 6px;
+  }
+  .cp-odds-lbl { font-size: 9px; opacity: 0.7; margin-bottom: 5px; letter-spacing: 1px; }
+  .cp-odds-val { font-size: 24px; font-weight: 900; color: #7dd3fc; line-height: 1; }
+  .cp-why {
+    background: rgba(125,211,252,0.04);
+    border-left: 2px solid #7dd3fc;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: left;
+  }
+  .cp-brand {
+    position: absolute; bottom: 14px; left: 0; right: 0;
+    text-align: center; font-size: 11px; font-weight: 800; opacity: 0.9; letter-spacing: 1.5px;
+  }
+
+  .col-label {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8b949e;
+    margin-top: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .channel-tag {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+  .channel-tag.public {
+    background: rgba(63,185,80,0.15);
+    color: #3fb950;
+    border: 1px solid rgba(63,185,80,0.35);
+  }
+  .channel-tag.private {
+    background: rgba(248,81,73,0.12);
+    color: #f85149;
+    border: 1px solid rgba(248,81,73,0.35);
+  }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>📱 So sehen die Telegram-Posts aus</h1>
+  <div class="sub">WM 11.06.2026 · 3 echte Beispiel-Posts aus dem CocoBet-System</div>
+</div>
+
+<div class="stage">
+
+  <!-- ═══════════════ POST 1: Morning-Card (PUBLIC Channel) ═══════════════ -->
+  <div>
+    <div class="phone">
+      <div class="phone-header">
+        <div class="ph-avatar">🌍</div>
+        <div>
+          <div class="ph-name">CocoBet · WM 2026</div>
+          <div class="ph-sub">📢 Channel · 2.450 Follower</div>
+        </div>
+      </div>
+      <div class="chat">
+        <div class="bubble full">
+          🌍 <b>WM 2026 — Heute · 4 Spiele</b><br>
+          👀 Heute im Blick — kein klarer BET<br><br>
+          ━━ Gruppe A · Spieltag 1 ━━<br>
+          🇲🇽 <b>Mexiko</b> vs 🇿🇦 <b>Südafrika</b><br>
+          📅 21:00 Uhr · Estadio Azteca<br>
+          ⚡ Elo: 1815 vs 1548 → Favorit: Mexiko<br><br>
+          ✦ <i>Mexikos Heim-Festung trifft auf eines der defensivsten Südafrika-Teams der letzten Jahre. Beide Teams mit niedriger Tor-Erwartung.</i><br><br>
+          ⚖️ ABWÄGEN: Unter 2.5 Tore @1.74 (+6pp)<br>
+          ⚖️ ABWÄGEN: Unter 1.5 Tore @3.2 (+6pp)<br><br>
+          ━━ Gruppe B · Spieltag 1 ━━<br>
+          🇨🇦 <b>Kanada</b> vs 🇧🇦 <b>Bosnien-H.</b><br>
+          📅 18:00 Uhr<br>
+          ⚡ Elo: 1672 vs 1649 → Favorit: Kanada<br><br>
+          ⚖️ ABWÄGEN: DNB Auswärts @3.42 (+14pp)<br>
+          ⚖️ ABWÄGEN: AH Heim −0.5 @1.81 (+7pp)<br><br>
+          📊 <b>Aktuelle Bilanz:</b> ROI +17.5% · 52% Hit (n=24)<br><br>
+          🤖 Powered by CocoBet · Elo · Poisson · 12-Signal-Engine
+          <div class="time">07:00</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-label">
+      Morning-Card<br>
+      <span class="channel-tag public">PUBLIC · 07:00 Wien</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════ POST 2: TikTok Photo-Cards (TRADES Channel) ═══════════════ -->
+  <div>
+    <div class="phone">
+      <div class="phone-header">
+        <div class="ph-avatar">💎</div>
+        <div>
+          <div class="ph-name">CocoBet · Trades</div>
+          <div class="ph-sub">🔒 Privater Channel · Owner only</div>
+        </div>
+      </div>
+      <div class="chat">
+        <div class="bubble full">
+          🎬 <b>CocoBet · TikTok-Cards · 2026-06-11</b><br>
+          Screen machen → posten. Reihenfolge: Hook → Info.
+          <div class="time">06:30</div>
+        </div>
+
+        <div class="bubble with-photo full">
+          <div class="card-photo">
+            <div class="card-photo-inner">
+              <div class="cp-top">
+                <div class="cp-story">
+                  <div class="lbl">STORY</div>
+                  <div class="brand">COCOBET</div>
+                </div>
+                <div class="cp-tier">🎯 PICK</div>
+              </div>
+              <div class="cp-day">DO · 11.06. · 21:00</div>
+              <div class="cp-match">🇲🇽 Mexiko<br>vs 🇿🇦 Südafrika</div>
+              <div class="cp-pick-lbl">UNSER PICK</div>
+              <div class="cp-pick">Unter 2.5</div>
+              <div class="cp-odds">
+                <div class="cp-odds-box"><div class="cp-odds-lbl">QUOTE</div><div class="cp-odds-val">1.74</div></div>
+                <div class="cp-odds-box"><div class="cp-odds-lbl">EDGE</div><div class="cp-odds-val">+6pp</div></div>
+              </div>
+              <div class="cp-why">Mexiko 0.8 Gegen Ø · H2H 100% Unter · MD1-Vorsicht</div>
+              <div class="cp-brand">COCOBET</div>
+            </div>
+          </div>
+          <div class="caption">
+            ⚡ <b>Daily Picks · DO 11.06.</b><br>
+            Top-Pick: Mexiko vs Südafrika — Unter 2.5 Tore @1.74 (+6pp)<br>
+            4 Spiele heute · weitere im Blick
+            <div class="time">06:30</div>
+          </div>
+        </div>
+
+        <div class="bubble with-photo full">
+          <div class="card-photo">
+            <div class="card-photo-inner">
+              <div class="cp-top">
+                <div class="cp-story">
+                  <div class="lbl">STORY</div>
+                  <div class="brand">COCOBET</div>
+                </div>
+                <div class="cp-tier" style="font-size:8px;">🎯 PICK · WARUM</div>
+              </div>
+              <div class="cp-day">DO · 11.06. · 21:00</div>
+              <div class="cp-match" style="font-size:18px;">🇲🇽 Mexiko vs 🇿🇦 Südafrika</div>
+              <div style="background:rgba(251,191,36,0.10);border:1px solid rgba(251,191,36,0.4);border-radius:10px;padding:10px 12px;margin-bottom:14px;width:100%;text-align:left;">
+                <div style="font-size:9px;font-weight:700;color:#fbbf24;letter-spacing:1.5px;margin-bottom:4px;">PICK</div>
+                <div style="font-size:22px;font-weight:900;">Unter 2.5</div>
+              </div>
+              <div class="cp-why" style="margin-bottom:6px;">→ Mexiko nur 0.8 Gegentore Ø</div>
+              <div class="cp-why" style="margin-bottom:6px;">→ H2H 100% Unter 2.5</div>
+              <div class="cp-why">→ MD1-Auftakts-Vorsicht</div>
+              <div class="cp-brand">COCOBET</div>
+            </div>
+          </div>
+          <div class="caption">
+            📖 <b>Story · DAILY PICKS</b> · DETAIL
+            <div class="time">06:30</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-label">
+      TikTok-Cards (Hook + Detail)<br>
+      <span class="channel-tag private">PRIVAT · 06:30 Wien</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════ POST 3: Lineup-Alert + Live-Story (TRADES Channel) ═══════════════ -->
+  <div>
+    <div class="phone">
+      <div class="phone-header">
+        <div class="ph-avatar">🚨</div>
+        <div>
+          <div class="ph-name">CocoBet · Trades</div>
+          <div class="ph-sub">🔒 Privater Channel · Engine-Alerts</div>
+        </div>
+      </div>
+      <div class="chat">
+        <div class="bubble full" style="border-left:3px solid #f85149;">
+          🚨 <b>LINEUP-ALERT</b><br>
+          Mexico vs South Africa · Anpfiff 21:00<br><br>
+          🏠 Heim <b>Mexico</b>: <b>R. Jiménez</b> (7 Saison-Tore) <b>auf der BANK</b><br><br>
+          <i>→ Engine wird Goals-Picks beim nächsten Run anpassen</i>
+          <div class="time">20:05</div>
+        </div>
+
+        <div class="bubble full" style="border-left:3px solid #e3b341;">
+          📡 <b>STEAM LAG · MEX vs ZAF</b><br>
+          Markt: Unter 2.5 Tore<br><br>
+          Pinnacle: 1.74 → 1.68 ⬇<br>
+          Polymarket: 1.78 (Lag: 4pp)<br>
+          Velocity: −0.32pp/h<br><br>
+          💡 Sharp Money bewegt sich — Pinn schon gepriced, Poly hinkt nach
+          <div class="time">19:48</div>
+        </div>
+
+        <div class="bubble full" style="border-left:3px solid #3fb950;">
+          ✅ <b>AUTO-TRIGGER · TRADE PLATZIERT</b><br>
+          🇿🇦 Curaçao Auswärtssieg<br>
+          Markt: Polymarket<br><br>
+          Entry: 0.18 USD<br>
+          Stake: $5.50 USDC<br>
+          Engine-Score: +3.2pp (3 positive Signale)<br>
+          Pinnacle-Edge: +5.1pp
+          <div class="time">14:22</div>
+        </div>
+
+        <div class="bubble full" style="border-left:3px solid #3fb950;">
+          📉 <b>EXIT SIGNAL — Edge konvergiert!</b><br>
+          🇿🇦 Curaçao Auswärtssieg<br><br>
+          Entry: +5.1pp → Jetzt: +1.8pp<br>
+          ⚡ Velocity: −0.55pp/h (schließt sich)<br>
+          ✅ 65% der Lücke geschlossen<br><br>
+          💡 Erwäge Position zu verkaufen
+          <div class="time">17:30</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-label">
+      Engine-Alerts (Live)<br>
+      <span class="channel-tag private">PRIVAT · während Spieltag</span>
+    </div>
+  </div>
+
+</div>
+
+<div style="text-align:center;margin-top:20px;margin-bottom:40px;font-size:12px;color:#6b7a8d;line-height:1.7;max-width:760px;margin-left:auto;margin-right:auto;padding:0 24px;">
+  <strong style="color:#7dd3fc;">3 verschiedene Telegram-Pfade pro WM-Spieltag:</strong><br>
+  <b>Morning-Card (07:00)</b> geht an die <span style="color:#3fb950">PUBLIC Community</span> — kompakte Übersicht aller Spiele, BETs und ABWÄGEN-Picks, ohne Stake/P&L.<br>
+  <b>TikTok-Cards (06:30)</b> gehen an deinen <span style="color:#f85149">PRIVATEN Trades-Channel</span> — visuelle PNGs zum Reposten in deine TikTok-Story.<br>
+  <b>Engine-Alerts (live)</b> kommen im <span style="color:#f85149">Trades-Channel</span> sobald Lineup-Watcher, Steam-Lag oder Auto-Trigger feuern.
+</div>
+
+</body>
+</html>

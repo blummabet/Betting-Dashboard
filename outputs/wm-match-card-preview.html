@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>WM Match-Card Vorschau · MEX-ZAF 11.06.2026</title>
+<style>
+  body {
+    margin: 0; padding: 40px 20px;
+    background: #050813;
+    color: #e6edf3;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #7dd3fc;
+    letter-spacing: 2px;
+  }
+  .sub {
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.6;
+    margin-bottom: 32px;
+  }
+  .stage {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .card-frame {
+    background: #000;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 2px rgba(125,211,252,0.15);
+    flex-shrink: 0;
+  }
+  .card-label {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8b949e;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 14px;
+  }
+
+  /* TikTok-Card hat 1080×1920. Skaliere auf 35% für Vorschau */
+  :root {
+    --card-w: 1080px;
+    --card-h: 1920px;
+    --accent: #fbbf24;
+    --text: #fff;
+  }
+  .scaled {
+    width: 1080px;
+    height: 1920px;
+    transform: scale(0.35);
+    transform-origin: top left;
+    margin-bottom: -1248px; /* compensiert für scaled height */
+    margin-right: -702px;   /* compensiert für scaled width */
+  }
+  /* Container-Wrapper für Skalierung — sonst floppt das Layout */
+  .scale-wrap {
+    width: calc(1080px * 0.35);
+    height: calc(1920px * 0.35);
+    overflow: hidden;
+  }
+  .scale-wrap .scaled {
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>📋 WM-Match-Card · automatisch generiert</h1>
+<div class="sub">
+  MEX vs ZAF · 11.06.2026 21:00 Wien · Estadio Azteca · Gruppe A · ST 1<br>
+  Live-Daten aus wm2026-data.json (signals[], Engine-Adjustment)
+</div>
+
+<div class="stage">
+
+  <!-- ════════════════ Hook-Card (match_pick.html) ════════════════ -->
+  <div>
+    <div class="card-frame">
+      <div class="scale-wrap">
+        <div class="scaled">
+
+<style>
+.m-bg {
+  background: radial-gradient(ellipse at top, #14204a 0%, #0a0e27 70%);
+  padding: 70px 70px 200px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  position: relative;
+}
+.m-bg::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(125,211,252,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px);
+  background-size: 60px 60px; pointer-events: none;
+}
+.m-top {
+  width: 100%; display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 50px; position: relative; z-index: 2;
+}
+.m-story-badge {
+  border: 2px solid rgba(125,211,252,0.5); border-radius: 18px;
+  padding: 16px 28px; text-align: left; background: rgba(10,14,39,0.4);
+}
+.m-story-badge .lbl { font-size: 22px; letter-spacing: 4px; opacity: 0.7; font-weight: 600; }
+.m-story-badge .brand { font-size: 24px; font-weight: 800; color: #fbbf24; letter-spacing: 3px; margin-top: 4px; }
+.m-tier-badge {
+  border: 2px solid rgba(125,211,252,0.5); border-radius: 60px;
+  padding: 14px 32px; font-size: 24px; font-weight: 800; color: #7dd3fc;
+  letter-spacing: 3px; background: rgba(10,14,39,0.4);
+}
+.m-day { font-size: 30px; opacity: 0.65; margin-bottom: 18px; letter-spacing: 3px; position: relative; z-index: 2; }
+.m-match { font-size: 64px; font-weight: 800; line-height: 1.1; margin-bottom: 70px; position: relative; z-index: 2; text-shadow: 0 4px 24px rgba(0,0,0,0.5); }
+.m-pick-label { font-size: 30px; font-weight: 700; color: #7dd3fc; margin-bottom: 16px; letter-spacing: 3px; position: relative; z-index: 2; }
+.m-pick { font-size: 86px; font-weight: 900; line-height: 1.05; margin-bottom: 50px; letter-spacing: -1px; color: #fbbf24; position: relative; z-index: 2; text-shadow: 0 4px 24px rgba(0,0,0,0.5); }
+.m-odds-row { display: flex; gap: 28px; margin-bottom: 50px; position: relative; z-index: 2; width: 100%; }
+.m-odds-box {
+  flex: 1; background: rgba(125,211,252,0.06); border: 1.5px solid rgba(125,211,252,0.32);
+  border-radius: 24px; padding: 36px 24px; text-align: center;
+}
+.m-odds-label { font-size: 22px; font-weight: 600; opacity: 0.7; margin-bottom: 14px; letter-spacing: 2px; text-transform: uppercase; }
+.m-odds-val { font-size: 72px; font-weight: 900; color: #7dd3fc; line-height: 1; letter-spacing: -1px; }
+.m-why {
+  background: rgba(125,211,252,0.04); border-left: 5px solid #7dd3fc; border-radius: 18px;
+  padding: 30px 36px; font-size: 36px; font-weight: 600; line-height: 1.35;
+  text-align: left; position: relative; z-index: 2; width: 100%;
+}
+.stc {
+  width: 1080px; height: 1920px; box-sizing: border-box;
+  font-family: 'Inter', sans-serif; color: #fff;
+  display: flex; flex-direction: column; position: relative; overflow: hidden;
+}
+.stc-brand {
+  position: absolute; bottom: 48px; left: 0; right: 0;
+  text-align: center; font-size: 32px; font-weight: 800; opacity: 0.9; letter-spacing: 2px;
+}
+.stc-brand small { font-size: 18px; opacity: 0.7; display: block; margin-top: 4px; font-weight: 500; letter-spacing: 1px; }
+</style>
+
+<div class="stc m-bg">
+  <div class="m-top">
+    <div class="m-story-badge">
+      <div class="lbl">STORY</div>
+      <div class="brand">COCOBET</div>
+    </div>
+    <div class="m-tier-badge">🎯 PICK</div>
+  </div>
+  <div class="m-day">DO · 11.06. · 21:00 WIEN</div>
+  <div class="m-match">🇲🇽 Mexiko<br>vs 🇿🇦 Südafrika</div>
+  <div class="m-pick-label">UNSER PICK</div>
+  <div class="m-pick">Unter 2.5 Tore</div>
+  <div class="m-odds-row">
+    <div class="m-odds-box"><div class="m-odds-label">QUOTE</div><div class="m-odds-val">1.74</div></div>
+    <div class="m-odds-box"><div class="m-odds-label">EDGE</div><div class="m-odds-val">+6pp</div></div>
+  </div>
+  <div class="m-why">Mexiko nur 0.8 Gegentore Ø · H2H 100% Unter 2.5 · MD1-Auftakts-Vorsicht</div>
+  <div class="stc-brand">COCOBET<small>Daten · Modell · Vertrauen</small></div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-label">match_pick.html (Hook)</div>
+  </div>
+
+  <!-- ════════════════ Detail-Card (match_pick.detail.html) ════════════════ -->
+  <div>
+    <div class="card-frame">
+      <div class="scale-wrap">
+        <div class="scaled">
+
+<style>
+.md-bg {
+  background: radial-gradient(ellipse at top, #14204a 0%, #0a0e27 70%);
+  padding: 60px 70px 200px;
+  display: flex; flex-direction: column; align-items: center; position: relative;
+}
+.md-bg::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(125,211,252,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125,211,252,0.04) 1px, transparent 1px);
+  background-size: 60px 60px; pointer-events: none;
+}
+.md-top { width: 100%; display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 40px; position: relative; z-index: 2; }
+.md-story-badge { border: 2px solid rgba(125,211,252,0.5); border-radius: 18px; padding: 16px 28px; text-align: left; background: rgba(10,14,39,0.4); }
+.md-story-badge .lbl { font-size: 22px; letter-spacing: 4px; opacity: 0.7; font-weight: 600; }
+.md-story-badge .brand { font-size: 24px; font-weight: 800; color: #fbbf24; letter-spacing: 3px; margin-top: 4px; }
+.md-tier-badge { border: 2px solid rgba(125,211,252,0.5); border-radius: 60px; padding: 14px 32px; font-size: 24px; font-weight: 800; color: #7dd3fc; letter-spacing: 3px; background: rgba(10,14,39,0.4); }
+.md-day { font-size: 26px; opacity: 0.6; margin-bottom: 14px; letter-spacing: 3px; text-align: center; width: 100%; position: relative; z-index: 2; }
+.md-match { font-size: 56px; font-weight: 800; line-height: 1.1; margin-bottom: 36px; text-align: center; width: 100%; position: relative; z-index: 2; text-shadow: 0 4px 24px rgba(0,0,0,0.5); }
+.md-pick-row { display: flex; gap: 18px; align-items: stretch; margin-bottom: 44px; width: 100%; position: relative; z-index: 2; }
+.md-pick-main { flex: 2; background: rgba(251,191,36,0.10); border: 2px solid rgba(251,191,36,0.4); border-radius: 24px; padding: 28px 32px; }
+.md-pick-lbl { font-size: 22px; font-weight: 700; color: #fbbf24; letter-spacing: 3px; margin-bottom: 12px; }
+.md-pick-mkt { font-size: 52px; font-weight: 900; line-height: 1.05; }
+.md-pick-side { flex: 1; background: rgba(125,211,252,0.06); border: 1.5px solid rgba(125,211,252,0.32); border-radius: 24px; padding: 28px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+.md-pick-side-lbl { font-size: 22px; opacity: 0.7; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
+.md-pick-side-val { font-size: 56px; font-weight: 900; color: #7dd3fc; line-height: 1; }
+.md-pick-side-val small { font-size: 22px; opacity: 0.75; }
+.md-label { font-size: 26px; font-weight: 700; color: #7dd3fc; letter-spacing: 3px; margin-bottom: 22px; text-transform: uppercase; width: 100%; position: relative; z-index: 2; }
+.md-reason { background: rgba(125,211,252,0.06); border-left: 5px solid #7dd3fc; padding: 24px 32px; border-radius: 18px; margin-bottom: 18px; font-size: 32px; font-weight: 600; line-height: 1.3; width: 100%; position: relative; z-index: 2; }
+.md-reason::before { content: "→ "; color: #7dd3fc; font-weight: 900; }
+</style>
+
+<div class="stc md-bg">
+  <div class="md-top">
+    <div class="md-story-badge">
+      <div class="lbl">STORY</div>
+      <div class="brand">COCOBET</div>
+    </div>
+    <div class="md-tier-badge">🎯 PICK · WARUM</div>
+  </div>
+  <div class="md-day">DO · 11.06. · 21:00 WIEN</div>
+  <div class="md-match">🇲🇽 Mexiko vs 🇿🇦 Südafrika</div>
+  <div class="md-pick-row">
+    <div class="md-pick-main">
+      <div class="md-pick-lbl">PICK</div>
+      <div class="md-pick-mkt">Unter 2.5 Tore</div>
+    </div>
+    <div class="md-pick-side">
+      <div class="md-pick-side-lbl">QUOTE</div>
+      <div class="md-pick-side-val">1.74</div>
+    </div>
+    <div class="md-pick-side">
+      <div class="md-pick-side-lbl">EDGE</div>
+      <div class="md-pick-side-val">+6<small>pp</small></div>
+    </div>
+  </div>
+  <div class="md-label">WARUM</div>
+  <div class="md-reason">Mexiko mit nur 0.8 Gegentoren Ø — defensiv top-strukturiert</div>
+  <div class="md-reason">H2H 100% Unter 2.5 — historisches Muster bestätigt</div>
+  <div class="md-reason">MD1-Auftakts-Vorsicht — Tor-Erwartung niedriger</div>
+  <div class="stc-brand">COCOBET<small>Daten · Modell · Vertrauen</small></div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    <div class="card-label">match_pick.detail.html (Detail)</div>
+  </div>
+
+</div>
+
+<div style="text-align:center;margin-top:40px;font-size:13px;color:#6b7a8d;line-height:1.6">
+  Card-Format: 1080 × 1920 px (TikTok-Standard) · hier auf 35% skaliert<br>
+  Auto-Generiert vom System bei WM-Start aus echten <code>wm2026-data.json</code> Picks<br>
+  Stil: Hidden-Gem-Aesthetik (Österreich-Vorlage) — einheitlich über alle 9 Templates
+</div>
+
+</body>
+</html>
