@@ -819,19 +819,31 @@ function renderPolyTrader(panel) {
   panel.innerHTML = healthBlock + cockpitBlock + wmTableHtml;
 
   // Fix 08.06.2026: SVG-onload-Trigger feuern in modernen Browsern nicht
-  // mehr zuverlässig wenn via innerHTML eingefügt. Direkter Aufruf via
-  // setTimeout ist robuster — läuft im nächsten Event-Loop-Tick nachdem
-  // der DOM aktualisiert ist. Idempotent dank _cockpitLoading/_healthLoading-Flag.
-  setTimeout(() => {
-    if (typeof window.refreshCockpit === 'function' && !window._cockpitLoading) {
+  // mehr zuverlässig wenn via innerHTML eingefügt (Security-Hardening).
+  // Direkter Aufruf via setTimeout ist robuster. Plus Retry-Loop falls
+  // polymarket-tab.js asynchron lädt und window.refreshCockpit zum ersten
+  // Tick noch undefined ist. Max 20 Retries × 100ms = 2s.
+  // Idempotent dank _cockpitLoading/_healthLoading-Flag.
+  (function bootCockpitLoaders(attempt = 0) {
+    const cockpitReady = typeof window.refreshCockpit === 'function';
+    const healthReady  = typeof window.loadPositionHealth === 'function';
+    if (cockpitReady && !window._cockpitLoading) {
       window._cockpitLoading = true;
+      console.log('[Cockpit-Boot] refreshCockpit() wird gerufen (attempt ' + attempt + ')');
       window.refreshCockpit().finally(() => { window._cockpitLoading = false; });
     }
-    if (typeof window.loadPositionHealth === 'function' && !window._healthLoading) {
+    if (healthReady && !window._healthLoading) {
       window._healthLoading = true;
+      console.log('[Cockpit-Boot] loadPositionHealth() wird gerufen (attempt ' + attempt + ')');
       window.loadPositionHealth().finally(() => { window._healthLoading = false; });
     }
-  }, 0);
+    if ((!cockpitReady || !healthReady) && attempt < 20) {
+      setTimeout(() => bootCockpitLoaders(attempt + 1), 100);
+    } else if (!cockpitReady || !healthReady) {
+      console.warn('[Cockpit-Boot] Loader-Funktionen nicht gefunden nach 2s — Frontend-Code unvollständig?',
+        { cockpitReady, healthReady });
+    }
+  })();
 
   return; // ← remove this line after WM season to restore club table
 
