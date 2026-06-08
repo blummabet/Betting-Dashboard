@@ -23,6 +23,9 @@ from sharp_signals.travel_burden import TravelBurdenSignal
 from sharp_signals.injury_signal import InjurySignal
 from sharp_signals.form_trend import FormTrendSignal
 from sharp_signals.h2h_pattern import H2HPatternSignal
+from sharp_signals.xg_strength import XGStrengthSignal
+from sharp_signals.polymarket_sharp import PolymarketSharpSignal
+from sharp_signals.steam_lag import SteamLagSignal
 
 
 # Liste aller aktiv evaluierten Signale.
@@ -34,9 +37,9 @@ ACTIVE_SIGNALS: list[Signal] = [
     InjurySignal(),
     FormTrendSignal(),
     H2HPatternSignal(),
-    # Weitere Signale werden hier ergänzt:
-    # SteamLagSignal(),
-    # PolymarketSharpSignal(),
+    XGStrengthSignal(),
+    PolymarketSharpSignal(),
+    SteamLagSignal(),
 ]
 
 

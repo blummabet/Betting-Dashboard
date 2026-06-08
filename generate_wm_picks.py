@@ -1371,7 +1371,7 @@ def main():
         except Exception as e:
             print(f"  ⚠️  Travel-Burden nicht ladbar: {e}")
 
-    # Odds-History (für Signal-Engine LeadLag-Bias)
+    # Odds-History (für Signal-Engine LeadLag-Bias + Steam-Lag)
     odds_history = {}
     hist_file = os.path.join(os.path.dirname(WM_FILE), "wm2026-odds-history.json")
     if os.path.exists(hist_file):
@@ -1380,6 +1380,20 @@ def main():
                 odds_history = json.load(hf)
         except Exception as e:
             print(f"  ⚠️  Odds-History nicht ladbar: {e}")
+
+    # Polymarket-Snapshot (für Polymarket-Sharp + Steam-Lag-Signal)
+    poly_snapshots = {}
+    poly_file = os.path.join(os.path.dirname(WM_FILE), "wm_poly_prices.json")
+    if os.path.exists(poly_file):
+        try:
+            with open(poly_file, encoding="utf-8") as pf:
+                poly_data = json.load(pf)
+            for _fx in poly_data.get("allFixtures", []):
+                k = _fx.get("key")
+                if k:
+                    poly_snapshots[k] = _fx
+        except Exception as e:
+            print(f"  ⚠️  Polymarket-Snapshot nicht ladbar: {e}")
 
     xg_count = sum(1 for v in xg_stats.values() if v and v.get("games", 0) >= 3)
     inj_count = sum(1 for k, v in injuries.items()
@@ -1451,10 +1465,12 @@ def main():
                     "matchday":     fx["matchday"],
                     "odds_history": odds_history.get(ha_key, []) if odds_history else [],
                     "odds_snapshot": mkt.get(ha_key, {}),
+                    "poly_snapshot": poly_snapshots.get(ha_key, {}),
                     "travel":       travel_data,
                     "injuries":     injuries,
                     "form":         form,
                     "h2h":          h2h_data.get(ha_key, {}),
+                    "xg_stats":     xg_stats,
                     "snapshot_ts":  None,   # → evaluate_signals nutzt now()
                 }
                 for p in new_picks:

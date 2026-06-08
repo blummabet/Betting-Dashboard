@@ -45,5 +45,26 @@
     "wins_when_triggered": 0,
     "last_updated": null,
     "notes": "≥5 H2H Spiele Anforderung. Win-Rate (inkl. halber Draws) gegen 50% als Baseline."
+  },
+  "xg_strength": {
+    "weight": 1.0,
+    "n_observations": 0,
+    "wins_when_triggered": 0,
+    "last_updated": null,
+    "notes": "Understat xGForAvg/xGAgainstAvg. xG-Diff zwischen Heim und Auswärts als Team-Stärke-Indikator."
+  },
+  "polymarket_sharp": {
+    "weight": 1.0,
+    "n_observations": 0,
+    "wins_when_triggered": 0,
+    "last_updated": null,
+    "notes": "Polymarket-implied vs Pinnacle-implied. Volume-Gate ≥ 5000 USDC. Bestätigend wenn beide einig."
+  },
+  "steam_lag": {
+    "weight": 1.0,
+    "n_observations": 0,
+    "wins_when_triggered": 0,
+    "last_updated": null,
+    "notes": "Pinnacle-Move + Polymarket-Lag. Komplementär zu lead_lag_bias (Soft-Books). Volume-Gate ≥ 3000 USDC."
   }
 }

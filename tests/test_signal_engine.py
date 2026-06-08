@@ -315,6 +315,86 @@ class TestH2HPattern(unittest.TestCase):
         self.assertIsNone(self.sig.evaluate({"market": "Heimsieg"}, ctx))
 
 
+class TestXGStrength(unittest.TestCase):
+    """xG-basierter Team-Stärke-Vergleich."""
+
+    @classmethod
+    def setUpClass(cls):
+        from sharp_signals.xg_strength import XGStrengthSignal
+        cls.sig = XGStrengthSignal()
+
+    def test_positive_when_home_xg_better(self):
+        ctx = {"home_id": "NED", "away_id": "SWE",
+               "xg_stats": {
+                   "NED": {"xgForAvg": 2.5, "xgAgainstAvg": 0.5, "games": 7},
+                   "SWE": {"xgForAvg": 1.0, "xgAgainstAvg": 1.6, "games": 7},
+               }}
+        r = self.sig.evaluate({"market": "Heimsieg"}, ctx)
+        self.assertIsNotNone(r)
+        self.assertGreater(r.score, 0)
+        self.assertIn("xG", r.evidence)
+
+    def test_no_signal_with_too_few_games(self):
+        ctx = {"home_id": "NED", "away_id": "SWE",
+               "xg_stats": {
+                   "NED": {"xgForAvg": 2.5, "xgAgainstAvg": 0.5, "games": 2},
+                   "SWE": {"xgForAvg": 1.0, "xgAgainstAvg": 1.6, "games": 2},
+               }}
+        self.assertIsNone(self.sig.evaluate({"market": "Heimsieg"}, ctx))
+
+
+class TestPolymarketSharp(unittest.TestCase):
+    """Polymarket vs Pinnacle."""
+
+    @classmethod
+    def setUpClass(cls):
+        from sharp_signals.polymarket_sharp import PolymarketSharpSignal
+        cls.sig = PolymarketSharpSignal()
+
+    def test_no_signal_when_volume_too_low(self):
+        ctx = {"odds_snapshot": {"hw": 1.91, "dr": 3.47, "aw": 4.46},
+               "poly_snapshot": {"poly_hw": 0.6, "poly_dr": 0.25, "poly_aw": 0.15,
+                                 "poly_vol": 500}}
+        self.assertIsNone(self.sig.evaluate({"market": "Heimsieg"}, ctx))
+
+    def test_positive_when_poly_confirms_pick(self):
+        # Pinnacle implied hw ~52%, Polymarket sees hw 60% → bestätigt Heim-Pick
+        ctx = {"odds_snapshot": {"hw": 1.91, "dr": 3.47, "aw": 4.46},
+               "poly_snapshot": {"poly_hw": 0.60, "poly_dr": 0.27, "poly_aw": 0.13,
+                                 "poly_vol": 20000}}
+        r = self.sig.evaluate({"market": "Heimsieg"}, ctx)
+        self.assertIsNotNone(r)
+        self.assertGreater(r.score, 0)
+
+
+class TestSteamLagSignal(unittest.TestCase):
+    """Pinnacle-Move + Polymarket-Lag."""
+
+    @classmethod
+    def setUpClass(cls):
+        from sharp_signals.steam_lag import SteamLagSignal
+        cls.sig = SteamLagSignal()
+
+    def _build_history(self, t1, t2):
+        from datetime import datetime, timedelta, timezone
+        now = datetime.now(timezone.utc)
+        return [
+            {"ts": (now - timedelta(hours=20)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+             **t1, "bk": "pinnacle"},
+            {"ts": (now - timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+             **t2, "bk": "pinnacle"},
+        ]
+
+    def test_no_signal_when_volume_too_low(self):
+        hist = self._build_history(
+            {"hw": 2.10, "dr": 3.40, "aw": 3.20},
+            {"hw": 1.85, "dr": 3.60, "aw": 3.60})
+        ctx = {"odds_history": hist,
+               "poly_snapshot": {"poly_hw": 0.50, "poly_dr": 0.28, "poly_aw": 0.22,
+                                 "poly_vol": 100}}
+        self.assertIsNone(self.sig.evaluate({"market": "Heimsieg"}, ctx))
+
+
 class TestRegistryEvaluateSignals(unittest.TestCase):
     """evaluate_signals kombiniert mehrere Signale gewichtet."""
 
