@@ -1513,12 +1513,10 @@ function _renderPickWhyButton(D, primary) {
             || (score >= 8 ? '🎯 Top-Wette' : score >= 6 ? '⭐ Gute Wette' : score >= 4 ? '👁 Beobachten' : '');
           const fams = primary.convictionFamilies || {};
           const rows = [
-            ['Sharp-Money (Pinnacle-Move + Bet365/WH-Lag)',  fams.sharp_money || 0, 3],
-            ['Form (Form-Trend + xG + H2H)',                 fams.form         || 0, 2],
-            ['Kontext (Travel + Druck + Wetter + Anreiz)',   fams.context      || 0, 2],
-            ['Echtzeit (Lineup-Confirm T-1h)',               fams.realtime     || 0, 2],
-            ['Markt-Konsens (Public-Bias + APIF-Predictions)', fams.market     || 0, 1],
-            ['Modell-Sanity (≤10pp vom Markt)',              fams.model        || 0, 1],
+            ['Sharp-Money (Pinnacle-Move + Bet365/WH-Lag)',                    fams.sharp_money || 0, 3],
+            ['Modell-Stack (Form + xG + H2H + Injury + Modell-Sanity)',        fams.model_stack || 0, 3],
+            ['Kontext (Travel + Lineup-T1h + Wetter + Druck + Anreiz)',        fams.context     || 0, 3],
+            ['Markt-Konsens (Public-Bias + APIF-Predictions)',                 fams.market      || 0, 1],
           ];
           const famHtml = rows.map(([n, v, max]) => {
             const isPos = v > 0;
@@ -1841,7 +1839,7 @@ function renderPicks(D) {
       .replace(/\bDC\b/g, 'Doppelte Chance')
       .replace(/\bBTTS\b/g, 'Beide treffen');
     const saferBadge = sp.saferAltFor
-      ? `<span style="background:rgba(76,201,240,.12);border:1px solid rgba(76,201,240,.4);color:#4cc9f0;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px;" title="Engine empfiehlt diese sicherere Variante anstelle der Original-Wette.">🛡️ Sicherere Variante (statt ${escHtml(_expandMarket(sp.saferAltFor))})</span>`
+      ? `<span style="background:rgba(76,201,240,.12);border:1px solid rgba(76,201,240,.4);color:#4cc9f0;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px;" title="${sp.synthetic ? 'Synthetisch erzeugt — Insurance gegen riskantere Original-Wette, eigene Edge oft gering.' : 'Engine empfiehlt diese sicherere Variante anstelle der Original-Wette.'}">${sp.synthetic ? '🛡 Insurance' : '🛡️ Sicherere Variante'} (statt ${escHtml(_expandMarket(sp.saferAltFor))})</span>`
       : '';
     // Downgraded-Reason-Hinweis
     const dgr = sp.downgradedReason

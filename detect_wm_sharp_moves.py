@@ -186,12 +186,19 @@ def impl_prob(odds: float | None) -> float | None:
 
 
 def pp_shift(old_odds: float | None, new_odds: float | None) -> float:
-    """Implied-Prob-Verschiebung in Prozentpunkten (positiv = Favorit wurde stärker)."""
-    old_p = impl_prob(old_odds)
-    new_p = impl_prob(new_odds)
-    if old_p is None or new_p is None:
-        return 0.0
-    return round(new_p - old_p, 2)
+    """Implied-Prob-Verschiebung in Prozentpunkten (positiv = Favorit wurde stärker).
+    Delegiert seit 09.06.2026 an conviction_score.compute_pp_shift — single source of truth.
+    """
+    try:
+        from conviction_score import compute_pp_shift
+        return compute_pp_shift(old_odds, new_odds)
+    except ImportError:
+        # Fallback (Tests, isolierte Calls)
+        old_p = impl_prob(old_odds)
+        new_p = impl_prob(new_odds)
+        if old_p is None or new_p is None:
+            return 0.0
+        return round(new_p - old_p, 2)
 
 
 def odds_arrow(shift: float) -> str:

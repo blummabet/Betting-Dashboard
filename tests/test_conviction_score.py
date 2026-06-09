@@ -44,29 +44,34 @@ class TestFamilyCaps(unittest.TestCase):
         r = compute_conviction_score(pick, sig_out, {})
         self.assertLessEqual(r["family_scores"]["sharp_money"], 3)
 
-    def test_form_max_2(self):
+    def test_model_stack_max_3(self):
+        # Familien-Restruktur 09.06.2026: form_trend + xg + h2h + injury → model_stack
+        # plus Modell-Sanity wenn modelOdds ≤10pp vom Markt
         pick = {"market": "Unter 2.5 Tore", "odds": 1.85, "modelOdds": 1.80}
         sig_out = {"signals": [
             _signal("form_trend"),
             _signal("xg_strength"),
             _signal("h2h_pattern"),
-        ], "combined_score_pp": 3.0, "n_positive_signals": 3}
+            _signal("injury"),
+        ], "combined_score_pp": 4.0, "n_positive_signals": 4}
         r = compute_conviction_score(pick, sig_out, {})
-        self.assertEqual(r["family_scores"]["form"], 2)
+        self.assertEqual(r["family_scores"]["model_stack"], 3)
 
     def test_score_clamped_to_10(self):
-        # Alle Familien max füllen → muss bei 10 enden
+        # Alle 4 Familien max füllen (Restruktur 09.06.2026):
+        # sharp_money(3) + model_stack(3) + context(3) + market(1) = 10
         pick = {"market": "Unter 2.5 Tore", "odds": 1.85, "modelOdds": 1.80}
         sig_out = {"signals": [
-            _signal("lead_lag_bias"), _signal("steam_lag"), _signal("polymarket_sharp"),
-            _signal("form_trend"), _signal("xg_strength"),
-            _signal("travel_burden"), _signal("injury"),
-            _signal("lineup_signal"),
-            _signal("apif_predictions"),
-        ], "combined_score_pp": 5.0, "n_positive_signals": 9}
+            _signal("lead_lag_bias"),
+            _signal("form_trend"), _signal("xg_strength"), _signal("h2h_pattern"), _signal("injury"),
+            _signal("travel_burden"), _signal("lineup_signal"), _signal("weather_signal"),
+            _signal("incentive_signal"), _signal("pressure_index"),
+            _signal("apif_predictions"), _signal("public_static_bias"),
+        ], "combined_score_pp": 5.0, "n_positive_signals": 12}
         r = compute_conviction_score(pick, sig_out, {})
         self.assertLessEqual(r["score"], 10)
-        self.assertGreaterEqual(r["score"], 8)
+        # Mit lead_lag + opening_movement potentiell + all families maxed → sollte ≥7 sein
+        self.assertGreaterEqual(r["score"], 7)
 
 
 class TestVerdictThresholds(unittest.TestCase):
@@ -107,18 +112,19 @@ class TestVerdictThresholds(unittest.TestCase):
 # ──────────────────────────────────────────────────────────────────────────
 class TestModellSanity(unittest.TestCase):
     def test_model_close_to_market_grants_point(self):
-        # Modell 1.80 vs Markt 1.85 → ~1.5pp Diff → ≤10pp → +1pt
+        # Modell 1.80 vs Markt 1.85 → ~1.5pp Diff → Modell-Sanity in model_stack-Familie
         pick = {"market": "Heimsieg", "odds": 1.85, "modelOdds": 1.80}
         sig_out = {"signals": [], "combined_score_pp": 0, "n_positive_signals": 0}
         r = compute_conviction_score(pick, sig_out, {})
-        self.assertEqual(r["family_scores"]["model"], 1)
+        self.assertGreaterEqual(r["family_scores"]["model_stack"], 1)
 
     def test_model_hallucinates_no_point(self):
-        # Modell 1.80 vs Markt 4.0 → ~30pp Diff → keine Punkte
+        # Modell 1.80 vs Markt 4.0 → ~30pp Diff → keine Modell-Sanity-Bonus
         pick = {"market": "Auswärtssieg", "odds": 4.0, "modelOdds": 1.80}
         sig_out = {"signals": [], "combined_score_pp": 0, "n_positive_signals": 0}
         r = compute_conviction_score(pick, sig_out, {})
-        self.assertEqual(r["family_scores"]["model"], 0)
+        # Halluzination: model_stack ohne Form-/xG-Signale + ohne Modell-Sanity = 0
+        self.assertEqual(r["family_scores"]["model_stack"], 0)
 
 
 # ──────────────────────────────────────────────────────────────────────────

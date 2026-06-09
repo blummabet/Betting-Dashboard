@@ -658,11 +658,9 @@
         const fams = heroPick.convictionFamilies || {};
         const famRows = [
           ['Sharp-Money (Pinn vs Bet365)', fams.sharp_money || 0, 3],
-          ['Form', fams.form || 0, 2],
-          ['Kontext', fams.context || 0, 2],
-          ['Echtzeit (Lineups)', fams.realtime || 0, 2],
-          ['Markt-Konsens', fams.market || 0, 1],
-          ['Modell-Sanity', fams.model || 0, 1],
+          ['Modell-Stack (Form + xG + H2H)', fams.model_stack || 0, 3],
+          ['Kontext (Travel + Lineup + Druck)', fams.context || 0, 3],
+          ['Markt-Konsens (Public + APIF)', fams.market || 0, 1],
         ].filter(([, v, max]) => v > 0 || max >= 2)
          .map(([n, v, max]) => `<div class="cc-fam-row ${v>0?'pos':''}"><span>${n}</span><span class="cc-fam-val">+${v} / max ${max}</span></div>`)
          .join('');
@@ -2006,12 +2004,10 @@
         if (score < 1) return '';
         const fams = pick.convictionFamilies || {};
         const rows = [
-          ['Sharp-Money (Pinnacle-Move + Bet365/WilliamHill-Lag)', fams.sharp_money || 0, 3],
-          ['Form (Form-Trend + xG + H2H)',                         fams.form         || 0, 2],
-          ['Kontext (Travel + Druck + Wetter + Anreiz)',           fams.context      || 0, 2],
-          ['Echtzeit (Lineup-Confirm T-1h)',                       fams.realtime     || 0, 2],
-          ['Markt-Konsens (Public-Bias + APIF-Predictions)',       fams.market       || 0, 1],
-          ['Modell-Sanity (≤10pp vom Markt)',                      fams.model        || 0, 1],
+          ['Sharp-Money (Pinnacle-Move + Bet365/WilliamHill-Lag)',    fams.sharp_money || 0, 3],
+          ['Modell-Stack (Form + xG + H2H + Injury + Modell-Sanity)', fams.model_stack || 0, 3],
+          ['Kontext (Travel + Lineup-T1h + Wetter + Druck + Anreiz)', fams.context     || 0, 3],
+          ['Markt-Konsens (Public-Bias + APIF-Predictions)',          fams.market      || 0, 1],
         ];
         const famHtml = rows.map(([n, v, max]) => {
           const cls = v > 0 ? 'pos' : '';

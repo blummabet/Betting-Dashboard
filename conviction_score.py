@@ -66,8 +66,10 @@ def _load_config() -> dict:
         },
         "verdict_thresholds": {"top": 8, "abwaegen": 6, "skip": 4},
         "family_caps": {
-            "sharp_money": 3, "form": 2, "context": 2,
-            "realtime": 2, "market": 1, "model": 1,
+            "sharp_money": 3,    # Pinnacle-Sharp + Soft-Books-Lag
+            "model_stack": 3,    # Form + xG + H2H + Injury + Modell-Sanity (vereint)
+            "context": 3,        # Travel + Lineup + Weather + Pressure + Incentive
+            "market": 1,         # Public-Bias + APIF-Predictions
         },
         "opening_movement": {
             "enabled": True, "min_pp_in_pick_direction": 3.0,
@@ -114,6 +116,31 @@ def _load_signal_weights() -> dict:
         ]}
     except Exception:
         return {}
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  Shared Sharp-Move Math (zentralisiert 09.06.2026)
+#  Wird auch von detect_wm_sharp_moves.py importiert — single source of truth.
+# ──────────────────────────────────────────────────────────────────────────
+def compute_pp_shift(open_odds, current_odds) -> float:
+    """Implied-Probability-Shift in Prozentpunkten zwischen zwei Quoten.
+    Positiv = wahrscheinlicher geworden. None-safe."""
+    try:
+        o = float(open_odds); c = float(current_odds)
+        if o <= 1.0 or c <= 1.0: return 0.0
+        return round(((1.0 / c) - (1.0 / o)) * 100, 2)
+    except (TypeError, ValueError):
+        return 0.0
+
+
+def compute_move_age_decay(days: float) -> float:
+    """Move-Age-Decay als simple 3-Stufen-Funktion (vorher 5 Stufen).
+    ≤14d = voller Punkt · ≤30d = halber · >30d = null.
+    Verhindert dass uralte Pinnacle-Moves ewig nachhängen."""
+    if days is None: return 1.0
+    if days > 30: return 0.0
+    if days > 14: return 0.5
+    return 1.0
 
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -340,8 +367,12 @@ def compute_conviction_score(pick: dict, signal_output: dict,
                 return float(s.get("confidence", 0.5)) * weights.get(name, 1.0)
         return 0.0
 
-    family_scores = {"sharp_money": 0, "form": 0, "context": 0,
-                     "realtime": 0, "market": 0, "model": 0}
+    # 4 Familien statt vorher 6 (Vereinfachung 09.06.2026):
+    # - sharp_money    (max 3) — Pinnacle-Sharp + Soft-Books-Lag
+    # - model_stack    (max 3) — Form + xG + H2H + Injury + Modell-Sanity
+    # - context        (max 3) — Travel + Lineup + Weather + Pressure + Incentive
+    # - market         (max 1) — Public-Bias + APIF-Predictions
+    family_scores = {"sharp_money": 0, "model_stack": 0, "context": 0, "market": 0}
     evidence = []
 
     # ── Familie 1: Sharp-Money-Konsens (max 3) ────────────────────────────
@@ -369,11 +400,7 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     if sm and sm.get("triggered"):
         hours = sm.get("hours_since_open") or 0
         days = hours / 24
-        if days > 30:   sm_decay = 0.0
-        elif days > 21: sm_decay = 0.2
-        elif days > 14: sm_decay = 0.5
-        elif days > 7:  sm_decay = 0.8
-        else:           sm_decay = 1.0
+        sm_decay = compute_move_age_decay(days)
         sm["move_age_decay"] = sm_decay
         sm["move_age_days"] = round(days, 1)
         sm_triggered = sm_decay >= 0.5
@@ -381,8 +408,8 @@ def compute_conviction_score(pick: dict, signal_output: dict,
             evidence.append(f"Sharp-Move: Pinnacle {sm['pinn_move_pp']:+.1f}pp seit Eröffnung (frisch)")
         elif sm_decay >= 0.5:
             evidence.append(f"Sharp-Move älter ({days:.0f}d): Pinnacle {sm['pinn_move_pp']:+.1f}pp — teil-gedämpft")
-        elif sm_decay > 0:
-            evidence.append(f"Sharp-Move sehr alt ({days:.0f}d): kein Conviction-Punkt")
+        else:
+            evidence.append(f"Sharp-Move zu alt ({days:.0f}d): kein Conviction-Punkt")
 
     soft_lag_fresh = bool(sm and sm.get("soft_lag_bonus") and sm_decay >= 0.8)
     if soft_lag_fresh:
@@ -401,47 +428,47 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     elif strength >= 1:  family_scores["sharp_money"] = 1   # 1 Quelle
     else:                family_scores["sharp_money"] = 0
 
-    # ── Familie 2: Form-Konsens (max 2) ───────────────────────────────────
-    form_signals_active = []
-    for name in ("form_trend", "xg_strength", "h2h_pattern"):
+    # ── Familie 2: Modell-Stack (max 3) ───────────────────────────────────
+    # Form + xG + H2H + Injury aus Signals + Modell-Sanity. Modell-Sanity zählt
+    # zur Familie weil sie alle anderen voraussetzt — ohne Modell-Realität sind
+    # auch Form/xG-Punkte fragwürdig.
+    model_signals_active = []
+    for name in ("form_trend", "xg_strength", "h2h_pattern", "injury"):
         if _signal_contributes(name) > 0:
-            form_signals_active.append(name)
-            evidence.append(f"Form: {name}")
-    family_scores["form"] = min(len(form_signals_active), caps["form"])
+            model_signals_active.append(name)
+            evidence.append(f"Modell: {name}")
+    model_count = len(model_signals_active)
 
-    # ── Familie 3: Kontext (max 2) ────────────────────────────────────────
+    # Modell-Sanity (model_odds ≤10pp vom Markt) = +1 zusätzlich
+    model_odds = pick.get("modelOdds")
+    market_odds = pick.get("odds")
+    model_sane = False
+    if isinstance(model_odds, (int, float)) and isinstance(market_odds, (int, float)):
+        if model_odds > 1.0 and market_odds > 1.0:
+            if abs(100.0 / model_odds - 100.0 / market_odds) <= 10.0:
+                model_sane = True
+                evidence.append("Modell ≤10pp vom Markt — keine Halluzination")
+    if model_sane:
+        model_count += 1
+    family_scores["model_stack"] = min(model_count, caps["model_stack"])
+
+    # ── Familie 3: Kontext (max 3) ────────────────────────────────────────
+    # Travel + Lineup (T-1h Echtzeit) + Weather + Pressure + Incentive
     ctx_signals_active = []
-    for name in ("travel_burden", "injury", "weather_signal",
+    for name in ("travel_burden", "lineup_signal", "weather_signal",
                  "pressure_index", "incentive_signal"):
         if _signal_contributes(name) > 0:
             ctx_signals_active.append(name)
             evidence.append(f"Kontext: {name}")
     family_scores["context"] = min(len(ctx_signals_active), caps["context"])
 
-    # ── Familie 4: Realtime — Lineup höher gewichtet (max 2) ──────────────
-    if _signal_contributes("lineup_signal") > 0:
-        family_scores["realtime"] = caps["realtime"]   # voll
-        evidence.append("Realtime: Lineup T-1h stützt Pick")
-
-    # ── Familie 5: Markt-Konsens (max 1) ──────────────────────────────────
+    # ── Familie 4: Markt-Konsens (max 1) ──────────────────────────────────
     market_signals_active = []
     for name in ("public_static_bias", "apif_predictions"):
         if _signal_contributes(name) > 0:
             market_signals_active.append(name)
             evidence.append(f"Markt-Konsens: {name}")
     family_scores["market"] = min(len(market_signals_active), caps["market"])
-
-    # ── Familie 6: Modell-Sanity (max 1) ──────────────────────────────────
-    # Modell darf nicht halluzinieren — model_odds darf nicht > 10pp vom Markt sein
-    model_odds = pick.get("modelOdds")
-    market_odds = pick.get("odds")
-    if isinstance(model_odds, (int, float)) and isinstance(market_odds, (int, float)):
-        if model_odds > 1.0 and market_odds > 1.0:
-            model_implied = 100.0 / model_odds
-            market_implied = 100.0 / market_odds
-            if abs(model_implied - market_implied) <= 10.0:
-                family_scores["model"] = caps["model"]
-                evidence.append("Modell ≤10pp vom Markt — keine Halluzination")
 
     # ── Total Score ───────────────────────────────────────────────────────
     total = sum(family_scores.values())
