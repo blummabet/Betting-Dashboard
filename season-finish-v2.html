@@ -1573,6 +1573,59 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .cc-conv-warn{background:linear-gradient(135deg,rgba(245,194,90,0.10),rgba(245,194,90,0.04));border-left:3px solid #f5c25a;}
 .cc-conv-warn .cc-conv-head{color:#f5c25a;}
 .cc-conv-extra{margin-top:6px;font-size:11px;color:var(--text);opacity:0.85;}
+.cc-conv-watch{background:linear-gradient(135deg,rgba(255,176,46,0.08),rgba(255,176,46,0.03));border-left:3px solid #ffb02e;}
+.cc-conv-watch .cc-conv-head{color:#ffb02e;}
+.cc-conv-watch .cc-conv-score{background:rgba(255,176,46,0.15);color:#ffb02e;}
+.cc-conv-low{background:rgba(255,255,255,0.02);border-left:3px solid rgba(255,255,255,0.10);}
+.cc-conv-low .cc-conv-head{color:var(--muted);}
+
+/* Familien-Tabelle */
+.cc-fam-grid{margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:3px 14px;font-size:11px;}
+.cc-fam-row{display:flex;justify-content:space-between;color:var(--muted);}
+.cc-fam-row.pos{color:var(--text);}
+.cc-fam-row.pos .cc-fam-val{color:#00d4a1;font-weight:600;}
+.cc-fam-val{font-family:'JetBrains Mono','SF Mono',Menlo,monospace;}
+
+/* Conviction-Bar mit 8+-Zielmarker */
+.cc-conv-bar{margin-top:8px;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;position:relative;overflow:visible;}
+.cc-conv-fill{height:100%;background:linear-gradient(90deg,#ffb02e,#00d4a1);border-radius:3px;transition:width 0.4s;}
+.cc-conv-target{position:absolute;left:80%;top:-2px;width:2px;height:10px;background:rgba(0,212,161,0.7);border-radius:1px;}
+.cc-conv-bar-labels{display:flex;justify-content:space-between;margin-top:4px;font-size:10px;color:var(--muted);}
+
+/* Sharp-Move-Box im Card */
+.cc-sharp-box{margin:10px 20px 14px;padding:10px 12px;background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.20);border-radius:8px;font-size:12px;line-height:1.5;}
+.cc-sm-head{color:#ff8a8a;font-weight:600;margin-bottom:6px;}
+.cc-sm-head strong{color:#ff6b6b;}
+.cc-sm-bar-row{display:flex;align-items:center;gap:8px;margin:6px 0 4px;font-size:11px;color:var(--muted);}
+.cc-sm-bar{flex:1;height:4px;background:rgba(255,255,255,0.08);border-radius:2px;position:relative;overflow:hidden;}
+.cc-sm-bar-fill{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#ff6b6b,#ffb02e);border-radius:2px;}
+.cc-sm-open,.cc-sm-now{font-family:'JetBrains Mono','SF Mono',Menlo,monospace;font-size:11px;color:var(--text);}
+.cc-sm-meta{font-size:10px;color:var(--muted);margin-top:4px;}
+.cc-sm-lag-fresh{color:#00d4a1;}
+.cc-sm-lag-closed{color:var(--muted);}
+
+/* Synthetische saferAlt-Anzeige */
+.cc-safer-alt{margin:6px 20px 10px;padding:10px 12px;border:1px dashed rgba(125,211,252,0.4);background:rgba(125,211,252,0.04);border-radius:8px;font-size:12px;}
+.cc-safer-alt-head{color:#7dd3fc;font-weight:600;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;}
+.cc-safer-alt-body{color:var(--text);}
+.cc-safer-alt-synth{font-size:10px;color:var(--muted);font-style:italic;margin-top:4px;}
+
+/* Conviction-Modal-Block im Warum-Modal */
+.wm-conv-modal{background:rgba(255,255,255,0.03);border-radius:8px;padding:14px;}
+.wm-conv-modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-weight:700;font-size:14px;color:var(--text);}
+.wm-conv-modal-score{background:linear-gradient(135deg,#ffb02e,#00d4a1);color:#0a0e1a;padding:3px 12px;border-radius:6px;font-family:'JetBrains Mono','SF Mono',Menlo,monospace;}
+.wm-conv-modal-bar{position:relative;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:visible;margin-bottom:14px;}
+.wm-conv-modal-fill{height:100%;background:linear-gradient(90deg,#ffb02e,#00d4a1);border-radius:4px;}
+.wm-conv-modal-target{position:absolute;left:80%;top:-3px;width:2px;height:14px;background:rgba(0,212,161,0.7);border-radius:1px;}
+.wm-conv-modal-fams{display:grid;grid-template-columns:1fr;gap:4px;font-size:12px;}
+.wm-fam-row{display:flex;justify-content:space-between;padding:6px 10px;border-radius:5px;background:rgba(255,255,255,0.02);color:var(--muted);}
+.wm-fam-row.pos{color:var(--text);background:rgba(0,212,161,0.06);}
+.wm-fam-val{font-family:'JetBrains Mono','SF Mono',Menlo,monospace;font-weight:600;}
+.wm-fam-row.pos .wm-fam-val{color:#00d4a1;}
+.wm-conv-modal-explain{margin-top:12px;font-size:11px;color:var(--muted);line-height:1.5;}
+
+/* Synthetic-Pick-Badge in Weitere-Picks-Liste */
+.cc-op-synth{display:inline-block;font-size:10px;color:#7dd3fc;margin-left:4px;}
 
 /* Evidence grid */
 .cc-evidence{padding:0 20px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}

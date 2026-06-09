@@ -1472,17 +1472,80 @@ function _renderPickWhyButton(D, primary) {
           </table>
         </div>
 
-        ${(typeof primary.convictionScore === 'number' && primary.convictionScore >= 6) ? `<div class="pwm-section">
-          <div class="pwm-section-title">🎯 Conviction-Score (Wett-Qualität)</div>
-          <div style="padding:12px 14px;background:${primary.convictionScore >= 8 ? 'rgba(0,212,161,0.08)' : 'rgba(125,211,252,0.08)'};border-left:3px solid ${primary.convictionScore >= 8 ? '#00d4a1' : '#7dd3fc'};border-radius:6px;font-size:13px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;font-weight:700;color:${primary.convictionScore >= 8 ? '#00d4a1' : '#7dd3fc'};">
-              <span>${primary.convictionLabel || (primary.convictionScore >= 8 ? '🎯 Top-Wette' : '⭐ Gute Wette')}</span>
-              <span style="font-family:ui-monospace,monospace;background:${primary.convictionScore >= 8 ? 'rgba(0,212,161,0.20)' : 'rgba(125,211,252,0.20)'};padding:3px 10px;border-radius:5px;">${primary.convictionScore}/10</span>
+        ${primary.sharpMoveActive && primary.sharpMoveDetails ? (() => {
+          const sm = primary.sharpMoveDetails;
+          const op = sm.open_pinn_odds;
+          const cu = sm.current_pinn_odds;
+          const mv = sm.pinn_move_pp || 0;
+          const days = sm.move_age_days;
+          const decay = sm.move_age_decay;
+          const lagBonus = sm.soft_lag_bonus;
+          const ageNote = (days != null)
+            ? (decay >= 1 ? `${Math.round(days)} Tage seit Eröffnung · frischer Move`
+              : decay >= 0.5 ? `${Math.round(days)} Tage seit Eröffnung · teil-gedämpft`
+              : `${Math.round(days)} Tage seit Eröffnung · älterer Move`)
+            : '';
+          const lagNote = lagBonus
+            ? `<span style="color:#00d4a1;">Soft-Books noch ${(sm.soft_lag_pp||0).toFixed(1)}pp im Rückstand</span>`
+            : `<span style="color:var(--muted);">Soft-Books haben aufgeholt</span>`;
+          const barWidth = Math.min(100, 30 + Math.abs(mv) * 7);
+          return `<div class="pwm-section">
+            <div class="pwm-section-title">🔥 Sharp-Move (Pinnacle-Bewegung)</div>
+            <div style="padding:12px 14px;background:rgba(255,107,107,0.08);border:1px solid rgba(255,107,107,0.25);border-radius:8px;font-size:12px;line-height:1.5;">
+              <div style="color:#ff8a8a;font-weight:600;margin-bottom:8px;">
+                <strong style="color:#ff6b6b;">Pinnacle bewegt</strong> ${mv > 0 ? '+' : ''}${mv.toFixed(1)}pp seit Eröffnung
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;margin:6px 0;font-size:11px;color:var(--muted);">
+                <span style="font-family:ui-monospace,monospace;color:var(--text);">Opening: ${op ? op.toFixed(2) : '?'}</span>
+                <div style="flex:1;height:5px;background:rgba(255,255,255,0.08);border-radius:3px;position:relative;overflow:hidden;">
+                  <div style="position:absolute;left:0;top:0;height:100%;width:${barWidth}%;background:linear-gradient(90deg,#ff6b6b,#ffb02e);border-radius:3px;"></div>
+                </div>
+                <span style="font-family:ui-monospace,monospace;color:var(--text);">Jetzt: ${cu ? cu.toFixed(2) : '?'}</span>
+              </div>
+              <div style="font-size:11px;color:var(--muted);margin-top:6px;">${ageNote} · ${lagNote}</div>
             </div>
-            ${primary.sharpMoveActive && primary.sharpMoveDetails ? `<div style="margin-top:8px;font-size:12px;">🔥 Sharp-Move: Pinnacle ${primary.sharpMoveDetails.open_pinn_odds ? primary.sharpMoveDetails.open_pinn_odds.toFixed(2) : '?'} → ${primary.sharpMoveDetails.current_pinn_odds ? primary.sharpMoveDetails.current_pinn_odds.toFixed(2) : '?'} · Softs noch hinterher</div>` : ''}
-            ${primary.pickTriggerReason && primary.pickTriggerReason !== 'Edge-getrieben' ? `<div style="margin-top:8px;font-size:12px;color:var(--muted);">💡 ${escHtml(primary.pickTriggerReason)}</div>` : ''}
-          </div>
-        </div>` : ''}
+          </div>`;
+        })() : ''}
+
+        ${(typeof primary.convictionScore === 'number' && primary.convictionScore >= 3) ? (() => {
+          const score = primary.convictionScore;
+          const label = primary.convictionLabel
+            || (score >= 8 ? '🎯 Top-Wette' : score >= 6 ? '⭐ Gute Wette' : score >= 4 ? '👁 Beobachten' : '');
+          const fams = primary.convictionFamilies || {};
+          const rows = [
+            ['Sharp-Money (Pinn-Move + Bet365-Lag)', fams.sharp_money || 0, 3],
+            ['Form (Trend + xG + H2H)',              fams.form         || 0, 2],
+            ['Kontext (Travel + Lineup + Anreiz)',   fams.context      || 0, 2],
+            ['Echtzeit (Lineup-Confirm)',            fams.realtime     || 0, 2],
+            ['Markt (CLV + Smart-Sub)',              fams.market       || 0, 1],
+            ['Modell-Sanity (≤10pp vom Markt)',      fams.model        || 0, 1],
+          ];
+          const famHtml = rows.map(([n, v, max]) => {
+            const isPos = v > 0;
+            return `<div style="display:flex;justify-content:space-between;padding:6px 10px;border-radius:5px;background:${isPos ? 'rgba(0,212,161,0.06)' : 'rgba(255,255,255,0.02)'};color:${isPos ? 'var(--text)' : 'var(--muted)'};">
+              <span>${n}</span>
+              <span style="font-family:ui-monospace,monospace;font-weight:600;color:${isPos ? '#00d4a1' : 'var(--muted)'};">+${v} / max ${max}</span>
+            </div>`;
+          }).join('');
+          const pct = (score / 10) * 100;
+          return `<div class="pwm-section">
+            <div class="pwm-section-title">🏅 Conviction-Score (Wett-Qualität)</div>
+            <div style="padding:14px;background:rgba(255,255,255,0.03);border-radius:8px;font-size:13px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-weight:700;margin-bottom:10px;">
+                <span style="color:var(--text);">${label}</span>
+                <span style="background:linear-gradient(135deg,#ffb02e,#00d4a1);color:#0a0e1a;padding:3px 12px;border-radius:6px;font-family:ui-monospace,monospace;">${score}/10</span>
+              </div>
+              <div style="position:relative;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:visible;margin-bottom:14px;">
+                <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,#ffb02e,#00d4a1);border-radius:4px;"></div>
+                <div style="position:absolute;left:80%;top:-3px;width:2px;height:14px;background:rgba(0,212,161,0.7);border-radius:1px;" title="8+ = Top-Wette"></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr;gap:4px;font-size:12px;">${famHtml}</div>
+              <div style="margin-top:12px;font-size:11px;color:var(--muted);line-height:1.5;">
+                Conviction zählt unabhängige Bestätigungs-Quellen. Bei 8+/10 darf ABWÄGEN auf BET hochgestuft werden.
+              </div>
+            </div>
+          </div>`;
+        })() : ''}
         ${(typeof primary.convictionScore === 'number' && primary.convictionScore < 4 && primary.modelHallucinationWarning) ? `<div class="pwm-section">
           <div style="padding:12px 14px;background:rgba(245,194,90,0.08);border-left:3px solid #f5c25a;border-radius:6px;font-size:13px;color:#f5c25a;">
             <div style="font-weight:700;">⚠ Edge vorhanden, aber dünne Begründung</div>

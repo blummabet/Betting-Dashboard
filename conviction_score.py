@@ -363,11 +363,35 @@ def compute_conviction_score(pick: dict, signal_output: dict,
 
     # Sharp-Move-Trigger (Pinnacle ≥X pp Move + Zeit) extra Punkt — unabhängig
     # vom Soft-Lag jetzt (Lockerung 09.06.2026). Soft-Lag-Bonus gibt nochmal +1.
+    # Move-Age-Decay: ≤7d=100%, ≤14d=80%, ≤21d=50%, >21d=20%, >30d=0% (Safety
+    # gegen ewig nachhängende historische Moves).
     sm = detect_sharp_move(pick, context, cfg)
     if sm and sm.get("triggered"):
-        sharp_count += 1
-        evidence.append(f"Sharp-Move: Pinnacle {sm['pinn_move_pp']:+.1f}pp seit Eröffnung")
-        if sm.get("soft_lag_bonus"):
+        hours = sm.get("hours_since_open") or 0
+        days = hours / 24
+        if days > 30:
+            decay = 0.0
+        elif days > 21:
+            decay = 0.2
+        elif days > 14:
+            decay = 0.5
+        elif days > 7:
+            decay = 0.8
+        else:
+            decay = 1.0
+        sm["move_age_decay"] = decay
+        sm["move_age_days"] = round(days, 1)
+        if decay >= 1.0:
+            sharp_count += 1
+            evidence.append(f"Sharp-Move: Pinnacle {sm['pinn_move_pp']:+.1f}pp seit Eröffnung")
+        elif decay >= 0.5:
+            sharp_count += 1  # ganzer Punkt aber Evidence flaggt Alter
+            evidence.append(f"Sharp-Move älter ({days:.0f}d): Pinnacle {sm['pinn_move_pp']:+.1f}pp — Punkt teil-gedämpft")
+        elif decay > 0:
+            # Bruchteil-Punkt nicht im Cap-System darstellbar → kein Punkt, nur Evidence
+            evidence.append(f"Sharp-Move sehr alt ({days:.0f}d): Pinnacle {sm['pinn_move_pp']:+.1f}pp — kein Conviction-Punkt")
+        # decay==0: nichts, evidence still leer
+        if sm.get("soft_lag_bonus") and decay >= 0.5:
             sharp_count += 1
             evidence.append(f"Bonus: Soft-Books {sm['soft_lag_pp']:.1f}pp hinter Pinnacle")
 

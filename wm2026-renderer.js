@@ -612,30 +612,69 @@
         html += `<div class="cc-story${heroPick.verdict === 'ABWÄGEN' ? ' cc-story-abw' : ''}">${story}</div>`;
       }
 
+      // ─── SHARP-MOVE-BOX (NEU 09.06.2026) ─────────────
+      // Bei aktivem Sharp-Move zeigen wir Pinnacle-Opening → Current als
+      // visuellen Balken inkl. Tage seit Eröffnung. Move-Age-Decay-Hinweis.
+      if (heroPick.sharpMoveActive) {
+        const sm = heroPick.sharpMoveDetails || {};
+        const op = sm.open_pinn_odds;
+        const cu = sm.current_pinn_odds;
+        const movePp = sm.pinn_move_pp || 0;
+        const ageDays = sm.move_age_days;
+        const decay = sm.move_age_decay;
+        const lagBonus = sm.soft_lag_bonus;
+        const ageNote = (ageDays != null)
+          ? (decay >= 1 ? `${Math.round(ageDays)} Tage seit Eröffnung · frischer Move`
+            : decay >= 0.5 ? `${Math.round(ageDays)} Tage seit Eröffnung · teil-gedämpft`
+            : `${Math.round(ageDays)} Tage seit Eröffnung · älterer Move`)
+          : '';
+        const lagNote = lagBonus
+          ? `<span class="cc-sm-lag-fresh">Soft-Books noch ${(sm.soft_lag_pp||0).toFixed(1)}pp im Rückstand</span>`
+          : `<span class="cc-sm-lag-closed">Soft-Books haben aufgeholt</span>`;
+        // Balken-Width: 0pp = 30%, 5pp = 50%, 10pp = 100%
+        const barWidth = Math.min(100, 30 + Math.abs(movePp) * 7);
+        html += `<div class="cc-sharp-box">
+          <div class="cc-sm-head">🔥 <strong>Pinnacle bewegt</strong> ${movePp > 0 ? '+' : ''}${movePp.toFixed(1)}pp seit Eröffnung</div>
+          <div class="cc-sm-bar-row">
+            <span class="cc-sm-open">Opening: ${op ? op.toFixed(2) : '?'}</span>
+            <div class="cc-sm-bar"><div class="cc-sm-bar-fill" style="width:${barWidth}%"></div></div>
+            <span class="cc-sm-now">Jetzt: ${cu ? cu.toFixed(2) : '?'}</span>
+          </div>
+          <div class="cc-sm-meta">${ageNote} · ${lagNote}</div>
+        </div>`;
+      }
+
       // ─── CONVICTION-BADGE (NEU 09.06.2026) ────────────
-      // Wett-Qualitäts-Bewertung 0-10 aus conviction_score.py — Sharp-Money +
-      // Signal-Familien + Modell-Sanity. Wird angezeigt wenn ≥6/10
-      // (Schwelle "Gute Wette"). Bei Sharp-Move + Conviction-Upgrade
-      // bekommt User klaren Hinweis warum der Pick aufgetaucht ist.
-      if (typeof heroPick.convictionScore === 'number' && heroPick.convictionScore >= 6) {
+      // Wett-Qualitäts-Bewertung 0-10 aus conviction_score.py.
+      // Bar-Visualisierung mit 8+-Zielmarker.
+      if (typeof heroPick.convictionScore === 'number' && heroPick.convictionScore >= 3) {
         const score = heroPick.convictionScore;
-        const label = heroPick.convictionLabel || (score >= 8 ? '🎯 Top-Wette' : '⭐ Gute Wette');
-        const cls   = score >= 8 ? 'cc-conv-top' : 'cc-conv-good';
-        let extraNote = '';
-        if (heroPick.sharpMoveActive) {
-          const sm = heroPick.sharpMoveDetails || {};
-          extraNote = `<div class="cc-conv-extra">🔥 Sharp-Move: Pinnacle ${sm.open_pinn_odds ? sm.open_pinn_odds.toFixed(2) : '?'} → ${sm.current_pinn_odds ? sm.current_pinn_odds.toFixed(2) : '?'} · Softs noch hinterher</div>`;
-        } else if (heroPick.pickTriggerReason && heroPick.pickTriggerReason !== 'Edge-getrieben') {
-          extraNote = `<div class="cc-conv-extra">💡 ${heroPick.pickTriggerReason}</div>`;
-        }
+        const label = heroPick.convictionLabel
+          || (score >= 8 ? '🎯 Top-Wette' : score >= 6 ? '⭐ Gute Wette' : score >= 4 ? '👁 Beobachten' : '');
+        const cls = score >= 8 ? 'cc-conv-top'
+                  : score >= 6 ? 'cc-conv-good'
+                  : score >= 4 ? 'cc-conv-watch' : 'cc-conv-low';
+        const pct = (score / 10) * 100;
+        const fams = heroPick.convictionFamilies || {};
+        const famRows = [
+          ['Sharp-Money', fams.sharp_money || 0, 3],
+          ['Form', fams.form || 0, 2],
+          ['Kontext', fams.context || 0, 2],
+          ['Echtzeit (Lineups)', fams.realtime || 0, 2],
+          ['Markt', fams.market || 0, 1],
+          ['Modell-Sanity', fams.model || 0, 1],
+        ].filter(([, v, max]) => v > 0 || max >= 2)
+         .map(([n, v, max]) => `<div class="cc-fam-row ${v>0?'pos':''}"><span>${n}</span><span class="cc-fam-val">+${v} / max ${max}</span></div>`)
+         .join('');
         html += `<div class="cc-conviction ${cls}">
           <div class="cc-conv-head">${label} <span class="cc-conv-score">${score}/10</span></div>
-          ${extraNote}
+          ${famRows ? `<div class="cc-fam-grid">${famRows}</div>` : ''}
+          <div class="cc-conv-bar"><div class="cc-conv-fill" style="width:${pct}%"></div><div class="cc-conv-target" title="8+ = Top-Wette"></div></div>
+          <div class="cc-conv-bar-labels"><span>Conviction ${score}/10</span><span>für Top-Wette: 8+</span></div>
         </div>`;
       } else if (typeof heroPick.convictionScore === 'number'
                  && heroPick.modelHallucinationWarning
                  && heroPick.convictionScore < 4) {
-        // Warnung bei Modell-Halluzination — Edge da, aber Signale schwach
         html += `<div class="cc-conviction cc-conv-warn">
           <div class="cc-conv-head">⚠ Edge vorhanden, aber dünne Begründung</div>
           <div class="cc-conv-extra">Conviction nur ${heroPick.convictionScore}/10 — Pick mit Vorsicht</div>
@@ -700,17 +739,45 @@
     html += `</div>`;
     html += `</div>`; // cc-evidence
 
+    // ─── Synthetische saferAlt-Box (NEU 09.06.2026) ───────
+    // Wenn HeroPick einen boldAlt referenziert (Smart-Sub-Insurance), zeigen
+    // wir die Alternative prominent als gestrichelte Box VOR den anderen Picks.
+    if (heroPick && heroPick.boldAlt) {
+      const ba = heroPick.boldAlt;
+      const altOdds = ba.odds != null ? ba.odds.toFixed(2) : '—';
+      const altEdge = ba.edgePP != null ? `${ba.edgePP > 0 ? '+' : ''}${ba.edgePP}pp` : '';
+      const heroOdds = heroPick.odds != null ? heroPick.odds.toFixed(2) : '—';
+      html += `<div class="cc-safer-alt">
+        <div class="cc-safer-alt-head">
+          <span>🛡 Sicherere Alternative</span>
+          <span style="font-family:'JetBrains Mono','SF Mono',Menlo,monospace;font-size:13px;">${ba.market} @${altOdds} · ${altEdge}</span>
+        </div>
+        <div class="cc-safer-alt-body">
+          Weniger Edge, aber deutlich risikoärmer als <strong>${heroPick.market} @${heroOdds}</strong>.
+        </div>
+        <div class="cc-safer-alt-synth">
+          ${ba.edgePP != null && ba.edgePP < 4 ? 'Synthetische Alternative — wurde nicht als eigener Pick generiert weil Edge unter Schwelle, aber als Insurance angeboten.' : 'Eigene Edge-Berechnung — auch als alleinstehender Pick valide.'}
+        </div>
+      </div>`;
+    }
+
     // ─── Other picks compact (if more than hero) ─────────
-    if (otherPicks.length) {
+    // Exclude bereits gezeigtes boldAlt-Market damit nicht doppelt
+    const heroBoldAltMarket = heroPick && heroPick.boldAlt ? heroPick.boldAlt.market : null;
+    const otherPicksFiltered = heroBoldAltMarket
+      ? otherPicks.filter(op => op.market !== heroBoldAltMarket)
+      : otherPicks;
+    if (otherPicksFiltered.length) {
       html += `<div class="cc-otherpicks">
         <div class="cc-ev-label" style="padding:0 0 6px 0;">Weitere Picks</div>`;
-      for (const op of otherPicks.slice(0, 3)) {
+      for (const op of otherPicksFiltered.slice(0, 3)) {
         const cls = op.verdict === 'BET' ? 'cc-op-bet' : 'cc-op-abw';
         const oddsStr = op.odds != null ? op.odds.toFixed(2) : '—';
-        const epp = op.edgePP != null ? ` <span class="cc-op-edge">+${op.edgePP}pp</span>` : '';
+        const epp = op.edgePP != null ? ` <span class="cc-op-edge">${op.edgePP > 0 ? '+' : ''}${op.edgePP}pp</span>` : '';
+        const synthBadge = op.synthetic ? ' <span class="cc-op-synth">🛡</span>' : '';
         html += `<div class="cc-op-row ${cls}">
           <span class="cc-op-verdict">${op.verdict}</span>
-          <span class="cc-op-market">${op.market}</span>
+          <span class="cc-op-market">${op.market}${synthBadge}</span>
           <span class="cc-op-odds">@${oddsStr}</span>${epp}
         </div>`;
       }
@@ -1927,6 +1994,51 @@
             Sharp-Signal-Engine kombiniert Quoten-Bewegungen, Form, xG, Travel-Burden,
             Verletzungen, H2H und Polymarket-Daten. Gewichte lernen nach jedem
             resolved Pick via Bayesian-Update.
+          </div>
+        </div>`;
+      })()}
+
+      ${(() => {
+        // ── Conviction-Familien-Tabelle (Modal-Block, NEU 09.06.2026) ──
+        // Zeigt im Modal welche Familien zur Conviction beigetragen haben.
+        if (typeof pick.convictionScore !== 'number') return '';
+        const score = pick.convictionScore;
+        if (score < 1) return '';
+        const fams = pick.convictionFamilies || {};
+        const rows = [
+          ['Sharp-Money (Pinnacle-Move + Bet365-Lag)', fams.sharp_money || 0, 3],
+          ['Form (Form-Trend + xG + H2H)',             fams.form         || 0, 2],
+          ['Kontext (Travel + Lineup + Druck + Wetter)', fams.context    || 0, 2],
+          ['Echtzeit (Lineup-Confirm + Watch)',        fams.realtime     || 0, 2],
+          ['Markt (CLV + Smart-Sub)',                  fams.market       || 0, 1],
+          ['Modell-Sanity (≤10pp vom Markt)',          fams.model        || 0, 1],
+        ];
+        const famHtml = rows.map(([n, v, max]) => {
+          const cls = v > 0 ? 'pos' : '';
+          return `<div class="wm-fam-row ${cls}">
+            <span class="wm-fam-name">${n}</span>
+            <span class="wm-fam-val">+${v} / max ${max}</span>
+          </div>`;
+        }).join('');
+        const pct = (score / 10) * 100;
+        const label = pick.convictionLabel
+          || (score >= 8 ? '🎯 Top-Wette' : score >= 6 ? '⭐ Gute Wette' : score >= 4 ? '👁 Beobachten' : '');
+        return `<div class="wm-section">
+          <div class="wm-section-label">🏅 Conviction-Score — wie überzeugt ist das System</div>
+          <div class="wm-conv-modal">
+            <div class="wm-conv-modal-head">
+              <span>${label}</span>
+              <span class="wm-conv-modal-score">${score}/10</span>
+            </div>
+            <div class="wm-conv-modal-bar">
+              <div class="wm-conv-modal-fill" style="width:${pct}%;"></div>
+              <div class="wm-conv-modal-target" title="8+ = Top-Wette"></div>
+            </div>
+            <div class="wm-conv-modal-fams">${famHtml}</div>
+            <div class="wm-conv-modal-explain">
+              Conviction zählt unabhängige Bestätigungs-Quellen. Bei 8+/10 darf ein ABWÄGEN auf BET hochgestuft werden.
+              Bayesian-Loop kalibriert die Gewichte nach jedem resolved Pick.
+            </div>
           </div>
         </div>`;
       })()}
