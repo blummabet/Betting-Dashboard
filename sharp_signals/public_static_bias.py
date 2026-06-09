@@ -67,6 +67,21 @@ def _outcome_key_from_market(market: str) -> Optional[str]:
     return None
 
 
+def _ou_btts_key(market: str) -> Optional[str]:
+    """Map O/U 2.5 + BTTS auf entsprechende Snapshot-Keys.
+    Andere O/U-Linien (1.5/3.5) haben wir Public-side nicht — wird ignoriert."""
+    m = (market or "").lower()
+    if "ecken" in m or "corner" in m: return None
+    # O/U 2.5 (nur diese Linie haben wir Public-side)
+    if ("2.5" in m or "2,5" in m) and "tore" in m:
+        if "über" in m or "uber" in m or "over" in m: return "o25"
+        if "unter" in m or "under" in m: return "u25"
+    # BTTS
+    if "beide" in m or "btts" in m:
+        return "bttsN" if ("nein" in m or "no" in m) else "bttsY"
+    return None
+
+
 class PublicStaticBiasSignal(Signal):
     """
     Vergleicht Pinnacle vs Konsens-Bookmaker für den gepickten Outcome.
@@ -84,11 +99,78 @@ class PublicStaticBiasSignal(Signal):
         return "public_static_bias"
 
     def evaluate(self, pick: dict, context: dict) -> Optional[SignalResult]:
-        outcome = _outcome_key_from_market(pick.get("market", ""))
-        if not outcome:
-            return None
-
         snap = context.get("odds_snapshot") or {}
+        market = pick.get("market", "")
+
+        # ── 1. 1X2 / DC / DNB / AH (alte Logik) ──────────────────────────
+        outcome = _outcome_key_from_market(market)
+        if outcome:
+            return self._eval_1x2(snap, outcome)
+
+        # ── 2. O/U 2.5 + BTTS (NEU 09.06.2026) ───────────────────────────
+        ou_key = _ou_btts_key(market)
+        if ou_key:
+            return self._eval_ou_btts(snap, ou_key)
+
+        return None
+
+    def _eval_ou_btts(self, snap: dict, key: str) -> Optional[SignalResult]:
+        """Public-vs-Pinnacle Bias für O/U 2.5 oder BTTS Ja/Nein.
+        Bei 2-way Märkten ist devig anders als bei 1X2 — wir nutzen einfaches
+        complementary-pair devig (vig gleichmäßig verteilt)."""
+        sharp_odds  = snap.get(key)
+        public_odds = snap.get(f"public_{key}")
+        if not sharp_odds or not public_odds: return None
+        if sharp_odds <= 1.0 or public_odds <= 1.0: return None
+
+        # Komplementärer Markt-Key für devig (z.B. o25 ↔ u25)
+        pairs = {"o25": "u25", "u25": "o25", "bttsY": "bttsN", "bttsN": "bttsY"}
+        opp = pairs.get(key)
+        sharp_opp  = snap.get(opp) if opp else None
+        public_opp = snap.get(f"public_{opp}") if opp else None
+
+        # Devig wenn opp-Quote da ist; sonst raw implied
+        if sharp_opp and public_opp:
+            s_main = 1.0 / sharp_odds
+            s_opp  = 1.0 / sharp_opp
+            sharp_p = s_main / (s_main + s_opp)
+            p_main = 1.0 / public_odds
+            p_opp  = 1.0 / public_opp
+            public_p = p_main / (p_main + p_opp)
+        else:
+            sharp_p  = 1.0 / sharp_odds
+            public_p = 1.0 / public_odds
+
+        diff_pp = (public_p - sharp_p) * 100.0
+        abs_diff = abs(diff_pp)
+        if abs_diff < self._t["min_bias_pp"]: return None
+        if abs_diff > self._t["max_credible_pp"]: return None
+
+        # Direction: Public überbettet (diff > 0) → contrarian Pick = positiv
+        direction = 1.0 if diff_pp > 0 else -1.0
+        extra = (abs_diff - self._t["min_bias_pp"]) * self._t["magnitude_scale"]
+        score = direction * (self._t["base_score_pp"] + extra)
+        confidence = min(0.80, 0.40 + abs_diff * 0.04)
+
+        oc_label = {"o25": "Über 2.5", "u25": "Unter 2.5",
+                    "bttsY": "BTTS Ja", "bttsN": "BTTS Nein"}[key]
+        public_bk = snap.get("public_ou_bookmaker", "Public")
+        direction_str = "über-bettet" if diff_pp > 0 else "unter-bettet"
+        if diff_pp > 0:
+            evidence = (f"{public_bk} {direction_str} {oc_label} um {abs_diff:.1f}pp "
+                        f"vs Pinnacle → contrarian Pick")
+        else:
+            evidence = (f"{public_bk} {direction_str} {oc_label} um {abs_diff:.1f}pp "
+                        f"vs Pinnacle → kein Public-Edge")
+
+        return SignalResult(
+            score=round(score, 2), confidence=round(confidence, 2), evidence=evidence,
+            metadata={"market_key": key, "diff_pp": round(diff_pp, 2),
+                      "sharp_p": round(sharp_p, 4), "public_p": round(public_p, 4),
+                      "public_bk": public_bk},
+        )
+
+    def _eval_1x2(self, snap: dict, outcome: str) -> Optional[SignalResult]:
         s_hw, s_dr, s_aw = snap.get("hw"), snap.get("dr"), snap.get("aw")
         p_hw, p_dr, p_aw = snap.get("public_hw"), snap.get("public_dr"), snap.get("public_aw")
         if not all([s_hw, s_dr, s_aw, p_hw, p_dr, p_aw]):

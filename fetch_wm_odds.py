@@ -522,6 +522,29 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
     c = _pick_bk(corner_cands)
     dc = _pick_bk(dc_cands)
 
+    # ── Public-Bookmaker O/U + BTTS (NEU 09.06.2026) ─────────────────────
+    # public_static_bias + lead_lag_bias brauchen Public-Quoten auch für O/U
+    # und BTTS — bisher nur 1X2 verfügbar. Pick public-bookie nach gleichem
+    # Schema wie h2h-Public (bet365 → williamhill → unibet → betfair).
+    PUBLIC_PRIO = ["bet365", "williamhill", "unibet", "betfair"]
+    # Public-Bookie darf nicht derselbe wie unser Sharp-Anker sein
+    our_sharp = our_book_prio[0] if our_book_prio else None
+    public_bk = None
+    for pp in PUBLIC_PRIO:
+        if pp != our_sharp and (pp in totals_lines_by_bk or pp in btts_cands):
+            public_bk = pp
+            break
+
+    pub_o25 = pub_u25 = pub_bttsY = pub_bttsN = None
+    if public_bk:
+        # Public O/U 2.5
+        pub_totals = totals_lines_by_bk.get(public_bk, {})
+        if 2.5 in pub_totals and pub_totals[2.5][0] and pub_totals[2.5][1]:
+            pub_o25, pub_u25 = pub_totals[2.5]
+        # Public BTTS
+        if public_bk in btts_cands:
+            pub_bttsY, pub_bttsN = btts_cands[public_bk]
+
     return {
         "o15":     round(t15[0], 3) if t15 else None,
         "u15":     round(t15[1], 3) if t15 else None,
@@ -531,6 +554,12 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
         "u35":     round(t35[1], 3) if t35 else None,
         "bttsY":   round(b[0], 3) if b else None,
         "bttsN":   round(b[1], 3) if b and b[1] else None,
+        # Public-Bookmaker O/U 2.5 + BTTS für public_static_bias / lead_lag (NEU 09.06.2026)
+        "public_o25":   round(pub_o25, 3) if pub_o25 else None,
+        "public_u25":   round(pub_u25, 3) if pub_u25 else None,
+        "public_bttsY": round(pub_bttsY, 3) if pub_bttsY else None,
+        "public_bttsN": round(pub_bttsN, 3) if pub_bttsN else None,
+        "public_ou_bookmaker": public_bk if (pub_o25 or pub_bttsY) else None,
         "cornerLine": c[0] if c else None,
         "cOver":   round(c[1], 3) if c and c[1] else None,
         "cUnder":  round(c[2], 3) if c and c[2] else None,
@@ -850,6 +879,11 @@ def main():
             new_entry["bttsY"] = tb["bttsY"]
             if tb.get("bttsN"):
                 new_entry["bttsN"] = tb["bttsN"]
+        # Public-Bookmaker O/U + BTTS (NEU 09.06.2026 — Signal-O/U-Coverage)
+        for pk in ("public_o25", "public_u25", "public_bttsY", "public_bttsN",
+                   "public_ou_bookmaker"):
+            if tb.get(pk) is not None:
+                new_entry[pk] = tb[pk]
         if tb.get("cOver"):
             new_entry["cornerLine"] = tb["cornerLine"]
             new_entry["cOver"]      = tb["cOver"]
