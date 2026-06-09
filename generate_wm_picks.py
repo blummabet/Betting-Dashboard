@@ -1378,6 +1378,26 @@ def generate_picks_for_fixture(
                 SYNTH_EDGE_FLOOR_PP = -2.0
                 if alt_edge < SYNTH_EDGE_FLOOR_PP:
                     continue  # Alt-Quote zu schlecht — kein Insurance-Anbieten
+                # FIX 09.06.2026 — Dedup: Wenn ein anderer Pick schon DIESE saferAlt
+                # vorgeschlagen hat, nicht 2× pushen. Stattdessen Original an die
+                # saferAltFor-Liste hängen (kommagetrennt, für Info-Text).
+                existing = next((sp for sp in safer_picks_to_add
+                                 if sp["market"] == alt_market
+                                 and abs((sp.get("odds") or 0) - alt_odds) < 1e-6), None)
+                if existing:
+                    prev = existing.get("saferAltFor", "")
+                    if p["market"] not in prev.split(" + "):
+                        existing["saferAltFor"] = f"{prev} + {p['market']}" if prev else p["market"]
+                        existing["info"] = (f"Synthetisch als sicherere Alternative zu "
+                                            f"„{existing['saferAltFor']}\" — eigene Edge "
+                                            f"{existing['edgePP']:+.1f}pp")
+                    # Original an boldAlt hängen, dann nächste Iteration
+                    p["boldAlt"] = {
+                        "market": existing["market"],
+                        "odds":   existing["odds"],
+                        "edgePP": existing["edgePP"],
+                    }
+                    break
                 alt_pick = {
                     "market":     alt_market,
                     "odds":       alt_odds,
@@ -1415,6 +1435,43 @@ def generate_picks_for_fixture(
             break   # erstbeste safer Variante reicht
     # Synthetische saferAlt-Picks ans Ende der Liste anhängen
     picks.extend(safer_picks_to_add)
+
+    # ── Cross-Market-Konflikt-Filter (FIX 09.06.2026) ─────────────────────────
+    # Bisher: validate_wm_picks fängt nur BET-vs-BET-Konflikte. ABWÄGEN-vs-ABWÄGEN
+    # blieb unentdeckt — Card zeigte z.B. CAN-Auswärtssieg + AH Heim −0.5 nebeneinander.
+    # Jetzt: schwächeren Konflikt-Pick als trackingExcluded markieren (Card-Renderer
+    # blendet die aus). Synthetische saferAlts werden NICHT excluded (sind Insurance).
+    try:
+        from pick_helpers import (get_pick_direction as _gd,
+                                  are_directions_incompatible as _inc)
+        def _strength(p):
+            # Höherer Wert = stärker. Conviction zählt am meisten, dann Edge.
+            return ((p.get("convictionScore") or 0) * 100.0
+                    + (p.get("edgePP") or 0))
+        for i, a in enumerate(picks):
+            if a.get("trackingExcluded") or a.get("synthetic"):
+                continue
+            if a.get("verdict") not in ("BET", "ABWÄGEN"):
+                continue
+            d_a = _gd(a.get("market"))
+            if not d_a:
+                continue
+            for b in picks[i+1:]:
+                if b.get("trackingExcluded") or b.get("synthetic"):
+                    continue
+                if b.get("verdict") not in ("BET", "ABWÄGEN"):
+                    continue
+                d_b = _gd(b.get("market"))
+                if not d_b or not _inc(d_a, d_b):
+                    continue
+                # Schwächeren excluden — bei Gleichstand den späteren
+                loser = b if _strength(a) >= _strength(b) else a
+                loser["trackingExcluded"] = True
+                loser["excludeReason"] = (
+                    f"Cross-Market-Konflikt mit „{(a if loser is b else b).get('market')}\""
+                )
+    except Exception as _e:
+        print(f"   ⚠️  cross-market-filter skipped: {_e}")
 
     # ── Corner-Beobachtungs-Marker: Falls Modell eine starke Erwartung hat
     # aber noch KEINE Markt-Quoten verfügbar sind, schreibe einen Info-Eintrag

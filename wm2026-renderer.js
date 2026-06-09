@@ -2013,9 +2013,10 @@
           <div class="wm-section-label">🧠 Engine-Signale — modulare Adjustments ${adjStr}</div>
           <div class="wm-sig-table">${rows}</div>
           <div class="wm-sig-note">
-            Sharp-Signal-Engine kombiniert Quoten-Bewegungen, Form, xG, Travel-Burden,
-            Verletzungen, H2H und Polymarket-Daten. Gewichte lernen nach jedem
-            resolved Pick via Bayesian-Update.
+            14-Signal-Engine: Sharp-Money (Lead-Lag, Polymarket-Sharp, Steam-Lag),
+            Modell (Form, H2H, xG, Injury), Kontext (Travel, Wetter, Druck, Anreiz, Lineup-T1h)
+            und Markt (Public-Bias, APIF-Predictions). Coverage: 1X2/DC/DNB/AH durchgängig,
+            O/U + BTTS in 4-5 Signalen (Update 09.06.). Gewichte lernen nach jedem resolved Pick via Bayesian-Update.
           </div>
         </div>`;
       })()}
@@ -2076,10 +2077,10 @@
           <div class="wm-pipe-step"><strong>2. Edge-Filter</strong> → nur Märkte mit Edge ≥ Mindestschwelle (1X2: 5pp, AH/O/U: 4pp)</div>
           <div class="wm-pipe-step"><strong>3. Modell-Bias-Schutz</strong> → O/U-Edge >10pp bzw. AH-Edge >12pp wird auf ABWÄGEN downgegradet (Stress-Indikator)</div>
           <div class="wm-pipe-step"><strong>4. Cross-Model-Check</strong> → DNB ↔ AH +0.5 vergleicht Elo- gegen Skellam-Implied. Bei Divergenz ≥ 8pp → BET wird ABWÄGEN${(pick.downgradedReason || '').includes('Modell-Inkonsistenz') ? ' <em style="color:var(--yellow);">← griff hier</em>' : ''}</div>
-          <div class="wm-pipe-step"><strong>5. Cross-Market-Konflikt</strong> → unvereinbare Direction-Picks (z.B. Heim + AH Auswärts) → schwächerer downgegradet${(pick.downgradedReason || '').includes('Konflikt') ? ' <em style="color:var(--yellow);">← griff hier</em>' : ''}</div>
-          <div class="wm-pipe-step"><strong>6. Smart-Substitution</strong> → bei hoher Quote (>2.30): sicherere Alternative im SUBSTITUTION_MAP gesucht</div>
-          <div class="wm-pipe-step"><strong>7. Verlust-Markt-Filter</strong> → BTTS, hohe Corner-Linien deaktiviert nach Backtest 07.06.2026 (BTTS −15% ROI bei n=141)</div>
-          <div class="wm-pipe-step"><strong>8. Signal-Engine</strong> → Lead-Lag-Bias, Travel, Form-Trend, xG, Public-Bias, Polymarket-Sharp, Steam-Lag, H2H, Injury werden als Modifikatoren angewandt</div>
+          <div class="wm-pipe-step"><strong>5. Cross-Market-Konflikt</strong> → unvereinbare Direction-Picks (z.B. Heim + AH Auswärts) → schwächerer aus Card/Tracking gefiltert (auch BET-vs-ABWÄGEN, neu 09.06.)${(pick.downgradedReason || '').includes('Konflikt') ? ' <em style="color:var(--yellow);">← griff hier</em>' : ''}</div>
+          <div class="wm-pipe-step"><strong>6. Smart-Substitution</strong> → bei hoher Quote (>2.30): sicherere Alternative gesucht. Wenn zwei Originale auf dieselbe Alt zeigen, wird sie nur einmal als Insurance angeboten (Dedup neu 09.06.)</div>
+          <div class="wm-pipe-step"><strong>7. Verlust-Markt-Filter</strong> → Corner-Linien für WM deaktiviert. BTTS am 09.06. reaktiviert mit Conviction-Gate, weil alter Skellam-Loss vor der Signal-Engine entstand</div>
+          <div class="wm-pipe-step"><strong>8. Signal-Engine (14 Signale)</strong> → Sharp: lead_lag, polymarket_sharp, steam_lag · Modell: form_trend, h2h_pattern, xg_strength, injury · Kontext: travel_burden, weather, pressure_index, incentive, lineup · Markt: public_static_bias, apif_predictions. Seit 09.06. mit O/U+BTTS-Coverage in form_trend/h2h/xg/travel/public_bias.</div>
         </div>
       </div>
 
