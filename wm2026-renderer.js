@@ -26,7 +26,7 @@
   let _whyModalKey = null;              // wenn !== null: Modal ist offen für diesen matchKey
   let _activeGroup    = 'all';
   let _activeMd       = 'all';   // matchday filter: 'all' | 1 | 2 | 3
-  let _activeSort     = 'date';  // 'date' | 'edge' | 'upset'
+  let _activeSort     = 'date';  // 'date' | 'conviction' | 'signals'
   let _loaded         = false;
   let _lastLoadTs     = 0;       // Timestamp des letzten erfolgreichen Loads (ms)
 
@@ -313,25 +313,38 @@
     <div class="wm-sort-bar">
       <span class="wm-sort-lbl">Sortierung:</span>
       <button class="wm-sort-btn${_activeSort==='date'?' active':''}" onclick="wmSetSort('date')">📅 Datum</button>
-      <button class="wm-sort-btn${_activeSort==='edge'?' active':''}" onclick="wmSetSort('edge')">⚡ Edge</button>
-      <button class="wm-sort-btn${_activeSort==='upset'?' active':''}" onclick="wmSetSort('upset')">💥 Upset</button>
+      <button class="wm-sort-btn${_activeSort==='conviction'?' active':''}" onclick="wmSetSort('conviction')" title="Höchste Conviction (x/10) zuerst">🏅 Conviction</button>
+      <button class="wm-sort-btn${_activeSort==='signals'?' active':''}" onclick="wmSetSort('signals')" title="Meiste feuernde Signale zuerst">🧠 Signale</button>
     </div>`;
 
+    // Helper: nur legitime (nicht-excluded, nicht-synth) Picks
+    const _livePicks = (fx) => {
+      const arr = picks[`${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}`] || [];
+      return arr.filter(p =>
+        !p.trackingExcluded
+        && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN')
+      );
+    };
+
     // Apply sort
-    if (_activeSort === 'edge') {
+    if (_activeSort === 'conviction') {
+      // Max Conviction-Score über alle Picks des Matches
       filtered = [...filtered].sort((a, b) => {
-        const pa = picks[`${a.groupKey}-${a.matchday}-${a.home}-${a.away}`] || [];
-        const pb = picks[`${b.groupKey}-${b.matchday}-${b.home}-${b.away}`] || [];
-        const ea = Math.max(...pa.map(p => p.edgePP || 0), 0);
-        const eb = Math.max(...pb.map(p => p.edgePP || 0), 0);
-        return eb - ea;
+        const ca = Math.max(0, ..._livePicks(a).map(p => p.convictionScore || 0));
+        const cb = Math.max(0, ..._livePicks(b).map(p => p.convictionScore || 0));
+        return cb - ca;
       });
-    } else if (_activeSort === 'upset') {
-      const us = _wmData.upsetScores || {};
+    } else if (_activeSort === 'signals') {
+      // Anzahl feuernde Signale (Summe über alle live Picks, Dedup nach Name)
       filtered = [...filtered].sort((a, b) => {
-        const ua = us[`${a.groupKey}-${a.matchday}-${a.home}-${a.away}`] || 0;
-        const ub = us[`${b.groupKey}-${b.matchday}-${b.home}-${b.away}`] || 0;
-        return ub - ua;
+        const sigCount = fx => {
+          const names = new Set();
+          for (const p of _livePicks(fx)) {
+            for (const s of (p.signals || [])) names.add(s.name);
+          }
+          return names.size;
+        };
+        return sigCount(b) - sigCount(a);
       });
     }
 
