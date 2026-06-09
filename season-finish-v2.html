@@ -2608,13 +2608,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div class="h2-sub-label" style="margin-top:24px;">Signal-Engine (sharp_signals/) — NEU 08.06.2026</div>
       <div class="h2-feature-grid">
         <div class="h2-feature" style="border-color:rgba(0,212,161,0.3);">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🧠</span><div class="h2-feature-title">13 modulare Signale</div></div>
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧠</span><div class="h2-feature-title">14 modulare Signale</div></div>
           <div class="h2-feature-desc">
             Lead-Lag-Bias (Pinnacle vs Soft-Books) · Steam-Lag (Pinn + Polymarket) · Polymarket-Sharp ·
             Public-Static-Bias · Travel-Burden (km+Höhe) · Injury (positionsbewusst GK/DEF/MID/FWD) ·
             xG-Stärke (Understat + NT-xG-Fallback) · Form-Trend · H2H-Pattern · Pressure-Index (Tournament-Stage) ·
             <strong>Lineup T-1h</strong> (Top-Scorer-Bank/Missing) · <strong>API-Football Predictions</strong> (externes Modell vs Pinnacle) ·
-            <strong>Weather/Hitze</strong> (Cold-Climate-Penalty bei ≥30°C, Anpfiff-Zeit-modifiziert).
+            <strong>Weather/Hitze</strong> (Cold-Climate-Penalty bei ≥30°C, Anpfiff-Zeit-modifiziert) ·
+            <strong>Anreiz-Signal</strong> (Qualifikations-Math + Bracket-Asymmetrie + Venue-Distanz + Rotation-Risk).
             <strong>Jedes Signal returnt score + confidence + evidence</strong>.
           </div>
         </div>
@@ -2623,9 +2624,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <div class="h2-feature-desc">
             Signale werden in 4 Familien gruppiert (Sharp-Money, Form, Public, Context).
             Pro Familie zählt nur das stärkste Signal voll, weitere werden auf <strong>40%</strong> gedämpft.
-            <strong>Lineup-Signal und APIF-Predictions sind UNIQUE</strong> — orthogonal zu allen
-            Historien-Familien, daher volle Gewichtung ohne Discount. T-1h Realtime und externes
-            Modell sind unabhängige Wahrheits-Quellen.
+            <strong>Lineup-Signal, APIF-Predictions und Anreiz-Signal sind orthogonal</strong> —
+            jeweils eigene Familie ohne Discount. T-1h Realtime, externes Drittes Modell und
+            Bracket-/Venue-Anreize sind unabhängige Wahrheits-Quellen.
           </div>
         </div>
         <div class="h2-feature" style="border-color:rgba(0,212,161,0.3);">
@@ -2677,6 +2678,28 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             API-Football pro Spiel. Drittes Modell <strong>unabhängig von Skellam+Elo und Pinnacle</strong>.
             Signal vergleicht APIF-implied vs Pinnacle-implied pro 1X2/DNB-Outcome:
             confirmatory wenn ≥5pp höher, warnend wenn niedriger. Cache 24h.
+          </div>
+        </div>
+        <div class="h2-feature" style="border-color:rgba(76,201,240,0.35);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🎯</span><div class="h2-feature-title">Anreiz-Signal (NEU 09.06.2026)</div></div>
+          <div class="h2-feature-desc">
+            <code>sharp_signals/incentive_signal.py</code> modelliert die <strong>sportlichen Anreize</strong>
+            einer Begegnung — rein computational, keine News, kein NLP. <strong>Vier orthogonale Komponenten</strong>:
+            <br>
+            <strong>(A) Qualifikations-Math</strong> ab MD2 — projeziert <em>must-win / can-draw / qualifiziert /
+            ausgeschieden</em> per competitor-aware Punkte-Modell mit GD-Tiebreaker. Dead-Rubber-Detection wenn
+            beide Teams nicht mehr kämpfen.
+            <br>
+            <strong>(B) Bracket-Asymmetrie</strong> — pro Team Endposition bei Sieg vs Niederlage simulieren,
+            via <code>wm_bracket.json</code> die wahrscheinlichen K.O.-Gegner ermitteln, Elo-Delta messen.
+            Sieg-Pfad gegen Stärkeren = Tank-Anreiz; gegen Schwächeren = Top-Anreiz.
+            <br>
+            <strong>(C) Venue-Distanz + Höhe</strong> — Haversine vom Match-Venue zum projizierten Achtelfinal-Venue
+            aus <code>wm_venues.json</code>. Bei extremer Reise-Asymmetrie (>1000km Delta) oder Mexico-City-Höhe
+            (2240m) zusätzlicher Modifier.
+            <br>
+            <strong>(D) Rotation-Risk</strong> ab K.O.-Phase — kurze Pause (≤3 Tage) + klarer Favorit (Quote ≤ 1.65)
+            → wahrscheinliche Schonung der Stammspieler, xG-Discount.
           </div>
         </div>
         <div class="h2-feature">
@@ -2946,6 +2969,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <tr><td><code>sharp_signals/form_trend.py</code></td><td>Form-Differenz der letzten 5 Spiele (avgScored/avgConceded)</td></tr>
           <tr><td><code>sharp_signals/h2h_pattern.py</code></td><td>H2H Win-Rate inkl. Draws (≥5 Spiele Minimum)</td></tr>
           <tr><td><code>sharp_signals/pressure_index.py</code></td><td>Tournament-Stage + Group-Standing + KO-Phase</td></tr>
+          <tr><td><code>sharp_signals/lineup_signal.py</code></td><td>T-1h Aufstellung: Top-Scorer Bank/Missing als Realtime-Wahrheit</td></tr>
+          <tr><td><code>sharp_signals/apif_predictions.py</code></td><td>Externes API-Football-Modell vs Pinnacle pro 1X2/DNB</td></tr>
+          <tr><td><code>sharp_signals/weather_signal.py</code></td><td>Cold-Climate-Penalty bei ≥30°C, Anpfiff-Zeit-modifiziert</td></tr>
+          <tr><td><code>sharp_signals/incentive_signal.py</code></td><td><strong>Anreiz-Signal: Qualifikations-Math + Bracket-Asymmetrie + Venue-Distanz + Rotation-Risk</strong></td></tr>
+          <tr><td><code>wm_bracket.json</code></td><td>WM-K.O.-Struktur (R32 → SF) mit Venues + Slot-Belegung — Input für Anreiz-Signal</td></tr>
+          <tr><td><code>wm_venues.json</code></td><td>16 Host-Stadien mit Koordinaten, Höhe, Zeitzone</td></tr>
           <tr><td><code>update_signal_weights.py</code></td><td>Bayesian-Update der weights nach jedem resolved Pick</td></tr>
           <tr><td><code>signal_weights.json</code></td><td>Pro Signal: weight + n_observations + last_updated (committed)</td></tr>
           <tr><td><code>backtest_model_health.py</code></td><td>ROI/CLV-Backtest über picks_history.json mit Bootstrap-CIs</td></tr>
