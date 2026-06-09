@@ -33,6 +33,18 @@ BASE         = Path(__file__).parent
 WM_FILE      = BASE / "wm2026-data.json"
 HISTORY_FILE = BASE / "wm2026-odds-history.json"
 
+# Config-aware Markt-Skip: wenn alle Corner-Markets im aktiven Profil disabled
+# sind, skippen wir Call 3 komplett (API-Quota sparen).
+def _corners_disabled() -> bool:
+    try:
+        from cocobet_config import CONFIG
+        disabled = set(CONFIG.get("disabled_markets", []) or [])
+        corner_keys = {"o_corners85", "o_corners95", "o_corners105"}
+        return corner_keys.issubset(disabled)
+    except Exception:
+        return False
+_SKIP_CORNERS = _corners_disabled()
+
 # Minimale Änderung (in absoluten Odds), damit ein neuer Snapshot geschrieben wird
 SNAP_MIN_DELTA = 0.02
 
@@ -675,34 +687,40 @@ def main():
     #   corners                  → einfacher Single-Line-Markt
     # Defensiv: wenn beide 0 events liefern, läuft Pipeline normal weiter (Picks
     # auf Corner-Markets entstehen nur wenn cornerLine im odds-Snapshot vorhanden).
-    print(f"  📥  Fetching corners per event (Call 3/3)…")
-    corn_added = 0
-    for i, eid in enumerate(event_ids):
-        path_corn = (f"/v4/sports/{sport_key}/events/{eid}/odds"
-                     f"?apiKey={ODDS_KEY}"
-                     f"&regions=eu,uk,us"
-                     f"&markets=alternate_totals_corners,corners"
-                     f"&oddsFormat=decimal")
-        try:
-            corn_data = odds_get(path_corn)
-        except Exception as _e:
-            corn_data = None
-        if isinstance(corn_data, dict) and corn_data.get("bookmakers"):
-            existing = totals_by_id.get(eid)
-            if existing:
-                existing_bk_keys = {b["key"]: b for b in existing.get("bookmakers", [])}
-                for new_bk in corn_data["bookmakers"]:
-                    bk_key = new_bk.get("key")
-                    if bk_key in existing_bk_keys:
-                        existing_bk_keys[bk_key]["markets"].extend(new_bk.get("markets", []))
-                    else:
-                        existing["bookmakers"].append(new_bk)
-                corn_added += 1
-            else:
-                totals_by_id[eid] = corn_data
-        if i < len(event_ids) - 1:
-            time.sleep(0.25)
-    print(f"  → corners: {corn_added} events mit Corner-Quoten")
+    # WM-Profil deaktiviert Corner-Markets komplett (keine Signal-Coverage) →
+    # Call 3 skip, spart 72+ API-Calls pro Run.
+    if _SKIP_CORNERS:
+        print(f"  ⏭️  Corners-Fetch skipped (Profil disabled alle Corner-Markets)")
+        corn_added = 0
+    else:
+        print(f"  📥  Fetching corners per event (Call 3/3)…")
+        corn_added = 0
+        for i, eid in enumerate(event_ids):
+            path_corn = (f"/v4/sports/{sport_key}/events/{eid}/odds"
+                         f"?apiKey={ODDS_KEY}"
+                         f"&regions=eu,uk,us"
+                         f"&markets=alternate_totals_corners,corners"
+                         f"&oddsFormat=decimal")
+            try:
+                corn_data = odds_get(path_corn)
+            except Exception as _e:
+                corn_data = None
+            if isinstance(corn_data, dict) and corn_data.get("bookmakers"):
+                existing = totals_by_id.get(eid)
+                if existing:
+                    existing_bk_keys = {b["key"]: b for b in existing.get("bookmakers", [])}
+                    for new_bk in corn_data["bookmakers"]:
+                        bk_key = new_bk.get("key")
+                        if bk_key in existing_bk_keys:
+                            existing_bk_keys[bk_key]["markets"].extend(new_bk.get("markets", []))
+                        else:
+                            existing["bookmakers"].append(new_bk)
+                    corn_added += 1
+                else:
+                    totals_by_id[eid] = corn_data
+            if i < len(event_ids) - 1:
+                time.sleep(0.25)
+        print(f"  → corners: {corn_added} events mit Corner-Quoten")
 
     t_ok = sum(1 for v in totals_by_id.values() if v.get("bookmakers"))
     print(f"  → {len(event_ids)} events abgefragt, {t_ok} mit Totals-Daten")

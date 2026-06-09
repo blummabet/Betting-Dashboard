@@ -1368,7 +1368,10 @@ def generate_picks_for_fixture(
     # ── Corner-Beobachtungs-Marker: Falls Modell eine starke Erwartung hat
     # aber noch KEINE Markt-Quoten verfügbar sind, schreibe einen Info-Eintrag
     # damit Card/Modal das anzeigen können. Verdict="WATCH" → kein BET, kein ABWÄGEN.
-    if corners_exp:
+    # Profile-gated: wenn alle Corner-Markets disabled (z.B. WM2026), wird auch
+    # kein WATCH-Marker geschrieben — Cards bleiben Corner-frei.
+    _corners_all_disabled = all(k in DISABLED_MARKETS for k in ("o_corners85", "o_corners95", "o_corners105"))
+    if corners_exp and not _corners_all_disabled:
         any_corner_pick = any(p["market"].lower().startswith("über") and "ecken" in p["market"].lower() for p in picks)
         if not any_corner_pick:
             # Bestimme welche Linie das Modell am stärksten sieht (P closest to 0.55)

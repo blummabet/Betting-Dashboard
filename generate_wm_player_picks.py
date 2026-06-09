@@ -310,7 +310,27 @@ def generate_picks_for_match(odds_key: str, market_data: dict, wm: dict, form: d
     return picks
 
 
+def _player_picks_disabled() -> bool:
+    """Profile-Gate."""
+    try:
+        import os, json
+        from pathlib import Path
+        raw = json.loads((Path(__file__).parent / "cocobet_config.json").read_text(encoding="utf-8"))
+        active = os.environ.get("COCOBET_PROFILE") or raw.get("profiles", {}).get("active", "wm2026")
+        pipes = raw.get("profiles", {}).get(active, {}).get("disabled_pipelines") or []
+        return "player_picks" in pipes
+    except Exception:
+        return False
+
+
 def main():
+    if _player_picks_disabled():
+        print("⏭️  generate_wm_player_picks.py — Player-Picks deaktiviert → leere picks {} schreiben")
+        OUT_FILE.write_text(json.dumps({"lastUpdate": datetime.now(timezone.utc).isoformat(),
+                                          "picks": {}}, ensure_ascii=False, indent=2),
+                              encoding="utf-8")
+        return
+
     if not PROPS_FILE.exists():
         print(f"⚠️  {PROPS_FILE.name} fehlt — kein Fetch bisher")
         OUT_FILE.write_text(json.dumps({"lastUpdate": datetime.now(timezone.utc).isoformat(),

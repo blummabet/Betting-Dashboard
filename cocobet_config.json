@@ -27,8 +27,16 @@
         "ah_bet_max": 12,
         "dnb_ah_divergence_pp": 8
       },
-      "_meta_disabled_markets": "Reaktiviert 09.06.2026 nach Conviction-Score-Live: BTTS+Corners zurück in den Pool. Begründung: alter Backtest-Loss kam aus reinem Skellam/Poisson ohne Signal-Adjust; Signal-Engine + Conviction-Gate (Sharp-Move + Familien-Confirm) filtern jetzt schlechte Picks raus. Bayesian-Loop kalibriert die Familien-Gewichte selbst neu sobald die ersten BTTS/Corner-Picks resolved sind. Falls n≥30 erneut <0% ROI: re-disable.",
-      "disabled_markets": [],
+      "_meta_disabled_markets": "WM2026-Profil: Corners aus, weil keines der 14 Signale aggregierte Corner-Daten hat (kein H2H-Corner-Rate, kein Corner-Form pro NT, kein NT-Corner-Bias) → reine Poisson-Predictions ohne Signal-Filter. Code bleibt drin für Liga-Saison (liga_default hat alle Corner-Markets enabled — dort gibt's H2H-Corner-Date + historische Vereins-Corner-Form). BTTS bleibt aktiviert: xG/Form/H2H/Lineup/Weather können BTTS-Picks sinnvoll bewerten.",
+      "disabled_markets": [
+        "o_corners85",
+        "o_corners95",
+        "o_corners105"
+      ],
+      "_meta_disabled_pipelines": "Player-Picks für WM2026 aus: weder die 14 Signale noch das Conviction-Score-Gate adressieren Spieler-Märkte (HERO/STAT/VALUE/FIRST haben eigene Heuristik ohne Engine-Hook). Für die System-Trainingsphase (WM-Picks resolved → Bayesian-Update) konzentrieren wir auf 1X2/DC/DNB/AH + O/U + BTTS, wo das Loop greift. Re-enable nach WM oder wenn Player-Engine-Signal gebaut ist.",
+      "disabled_pipelines": [
+        "player_picks"
+      ],
       "odds": {
         "max_for_pick": 6.5,
         "max_for_bet": 4.5,

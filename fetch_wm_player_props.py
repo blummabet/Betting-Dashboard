@@ -268,7 +268,24 @@ def fetch_event_player_props(event_id: str, sport_key: str) -> dict:
     return out
 
 
+def _player_picks_disabled() -> bool:
+    """Profile-Gate: 'player_picks' in disabled_pipelines → no-op."""
+    try:
+        import json
+        from pathlib import Path
+        raw = json.loads((Path(__file__).parent / "cocobet_config.json").read_text(encoding="utf-8"))
+        active = os.environ.get("COCOBET_PROFILE") or raw.get("profiles", {}).get("active", "wm2026")
+        pipes = raw.get("profiles", {}).get(active, {}).get("disabled_pipelines") or []
+        return "player_picks" in pipes
+    except Exception:
+        return False
+
+
 def main():
+    if _player_picks_disabled():
+        print("⏭️  fetch_wm_player_props.py — Player-Picks im aktiven Profil deaktiviert → skip")
+        sys.exit(0)
+
     now_iso = datetime.now(timezone.utc).isoformat()
     print(f"⚽  fetch_wm_player_props.py — WM 2026 Player Props (Multi-Markt)")
     print(f"    Key: {'✅' if ODDS_KEY else '❌'} | Fenster: +{DAYS_AHEAD} Tage")

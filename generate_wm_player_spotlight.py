@@ -434,8 +434,23 @@ def select_spotlights(wm: dict, props: dict, now: datetime) -> list[dict]:
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
+def _player_picks_disabled() -> bool:
+    try:
+        import os, json
+        from pathlib import Path
+        raw = json.loads((Path(__file__).parent / "cocobet_config.json").read_text(encoding="utf-8"))
+        active = os.environ.get("COCOBET_PROFILE") or raw.get("profiles", {}).get("active", "wm2026")
+        pipes = raw.get("profiles", {}).get(active, {}).get("disabled_pipelines") or []
+        return "player_picks" in pipes
+    except Exception:
+        return False
+
+
 def main():
     print("=== generate_wm_player_spotlight.py ===")
+    if _player_picks_disabled():
+        print("⏭️  Player-Picks im aktiven Profil deaktiviert → skip")
+        return
 
     with open(WM_FILE, encoding="utf-8") as f:
         wm = json.load(f)
