@@ -179,6 +179,23 @@ AUTO_TRIGGER_VERDICTS = {"BET", "ABWÄGEN"}
 ENGINE_BLOCK_ADJ_PP        = _cfg("trade", "engine_block_adj_pp",        -3.0)
 ENGINE_MIN_POS_FOR_ABWAEGEN = _cfg("trade", "engine_min_pos_for_abwaegen", 2)
 
+# Defense-in-Depth-Gates (09.06.2026, nach Niedrig-Edge-Incident).
+# Hintergrund: 4 Trades wurden bei raw_edge +1.1pp/+1.4pp platziert,
+# weil Engine-signalAdj den effectiveEdge über die 4pp-Schwelle pumpte.
+# Card-Conviction war jedoch 2/10 — System war sich selbst nicht sicher.
+#
+# Gate A: Raw-Edge-Floor. Engine darf eine schwache Pinnacle-Edge nicht
+# allein auf "tradeable" boosten. Der Polymarket-vs-Pinnacle Edge muss
+# selbst mindestens MIN_RAW_EDGE_PP betragen.
+MIN_RAW_EDGE_PP        = _cfg("trade", "min_raw_edge_pp",         2.0)
+#
+# Gate B: Conviction-Score-Floor. Wenn der Pick auf der Card weniger als
+# MIN_CONVICTION_FOR_AUTO/10 Punkte hat, blockt der Auto-Trigger.
+# Picks ohne Conviction-Feld (pre-Engine-Daten) werden NICHT geblockt —
+# Backwards-compat. Synthetische saferAlt-Picks bekommen einen Bonus von +1
+# (sie sind designed um "ABWÄGEN mit Insurance" zu sein).
+MIN_CONVICTION_FOR_AUTO = _cfg("trade", "min_conviction_for_auto",   3)
+
 # elo_only = noch keine Form-/H2H-Daten (Pre-Tournament) → konservativerer Edge-Schwellenwert
 # Erhöhter Schwellenwert verhindert Bets auf schwache Datenbasis
 AUTO_TRIGGER_EDGE_ELO_ONLY = _cfg("trade", "auto_trigger_edge_elo_only", 8.0)
@@ -349,6 +366,35 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                 )
 
             if edge is None or edge < market_threshold:
+                continue
+
+            # ── Defense-in-Depth Gate A (09.06.2026): Raw-Edge-Floor ─────────
+            # Engine darf eine schwache raw Edge nicht allein über die Schwelle
+            # boosten. raw_edge muss selbst MIN_RAW_EDGE_PP erreichen.
+            # Wenn raw_edge fehlt (None): konservativ blocken — Pre-Engine-Daten
+            # gibt es bei WM 2026 nicht mehr.
+            if raw_edge is None or raw_edge < MIN_RAW_EDGE_PP:
+                raw_str = f"{raw_edge:+.1f}pp" if isinstance(raw_edge, (int, float)) else "fehlt"
+                print(f"  🛑 Raw-Edge {raw_str} < {MIN_RAW_EDGE_PP}pp Floor "
+                      f"(eff={edge:+.1f}pp) — {fix['home']} vs {fix['away']} {market_label} (BLOCKED)")
+                continue
+
+            # ── Defense-in-Depth Gate B (09.06.2026): Conviction-Floor ───────
+            # Wenn Card-Conviction < MIN_CONVICTION_FOR_AUTO, kein Auto-Trade.
+            # Engine soll nicht traden was sich selbst nicht überzeugt.
+            # Picks ohne Conviction-Feld (alte Daten) werden NICHT geblockt.
+            conv = fix.get(f"conviction_{fld}")
+            if isinstance(conv, (int, float)) and conv < MIN_CONVICTION_FOR_AUTO:
+                print(f"  🛑 Conviction {conv}/10 < {MIN_CONVICTION_FOR_AUTO} "
+                      f"— {fix['home']} vs {fix['away']} {market_label} (BLOCKED)")
+                continue
+
+            # ── Defense-in-Depth Gate C (09.06.2026): trackingExcluded ───────
+            # Cross-Market-Konflikt-Filter hat diesen Pick aus Card+Tracking
+            # geworfen — der Auto-Trigger soll ihn dann auch nicht traden.
+            if fix.get(f"trackingExcluded_{fld}"):
+                print(f"  🛑 trackingExcluded gesetzt "
+                      f"— {fix['home']} vs {fix['away']} {market_label} (BLOCKED)")
                 continue
 
             # Verdict-Check: nur BET und ABWÄGEN — kein SKIP, kein None (kein Pick)
