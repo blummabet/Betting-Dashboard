@@ -243,13 +243,21 @@ function computeLineMovement(oddsOpen, oddsCurrent) {
     { label: '1',   key: 'hw',  ou: false },
     { label: 'X',   key: 'dr',  ou: false },
     { label: '2',   key: 'aw',  ou: false },
+    { label: 'O15', key: 'o15', ou: true  },
+    { label: 'U15', key: 'u15', ou: true  },
     { label: 'O25', key: 'o25', ou: true  },
     { label: 'U25', key: 'u25', ou: true  },
     { label: 'O35', key: 'o35', ou: true  },
     { label: 'U35', key: 'u35', ou: true  },
+    { label: 'BTTS', key: 'bttsY', ou: true },
+    // Corners: nur wenn beide Snapshots dieselbe cornerLine haben
+    { label: 'cOv', key: 'cOver', ou: true, cornerCheck: true },
+    { label: 'cUn', key: 'cUnder', ou: true, cornerCheck: true },
   ];
   const rows = [];
   for (const m of markets) {
+    // Corner-Pille nur zeigen wenn die Linie zwischen Snapshot stabil ist
+    if (m.cornerCheck && _open.cornerLine !== oddsCurrent.cornerLine) continue;
     const o = parseFloat(_open[m.key]);
     const c = parseFloat(oddsCurrent[m.key]);
     if (!o || !c || isNaN(o) || isNaN(c) || o <= 1 || c <= 1) continue;

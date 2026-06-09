@@ -229,7 +229,25 @@ def find_active_picks(wm: dict, match_key: str) -> list[dict]:
 
 
 def pick_market_to_field(market: str) -> str | None:
-    m = market.lower()
+    """Maps Pick-Market-String auf Odds-Snapshot-Feld.
+    Granular: O15/O25/O35, U15/U25/U35, BTTS, Corner-Lines."""
+    m = (market or "").lower()
+    # Corners (vor "über"/"unter"-Check)
+    if "ecken" in m or "corner" in m:
+        return "cOver" if ("über" in m or "over" in m) else "cUnder"
+    # BTTS
+    if "beide" in m or "btts" in m:
+        return "bttsN" if ("nein" in m or "no" in m) else "bttsY"
+    # Tor-Linien (granular)
+    if "über" in m or "uber" in m or "over" in m:
+        if "1.5" in m or "1,5" in m: return "o15"
+        if "3.5" in m or "3,5" in m: return "o35"
+        return "o25"
+    if "unter" in m or "under" in m:
+        if "1.5" in m or "1,5" in m: return "u15"
+        if "3.5" in m or "3,5" in m: return "u35"
+        return "u25"
+    # 1X2 / DC / DNB / AH (alle hängen am gleichen Outcome)
     if "heimsieg" in m or "home" in m:
         return "hw"
     if "auswärtssieg" in m or "away" in m:
@@ -360,26 +378,51 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
         prev = recent_snaps[-2]
         curr = recent_snaps[-1]
 
-        # ── Modus 1: Snapshot-zu-Snapshot (1X2 + O/U + BTTS) ──────────────
+        # ── Modus 1: Snapshot-zu-Snapshot (1X2 + O/U + BTTS + Corner) ──────
         hw_shift   = pp_shift(prev.get("hw"),    curr.get("hw"))
         dr_shift   = pp_shift(prev.get("dr"),    curr.get("dr"))
         aw_shift   = pp_shift(prev.get("aw"),    curr.get("aw"))
+        o15_shift  = pp_shift(prev.get("o15"),   curr.get("o15"))
+        u15_shift  = pp_shift(prev.get("u15"),   curr.get("u15"))
         o25_shift  = pp_shift(prev.get("o25"),   curr.get("o25"))
         u25_shift  = pp_shift(prev.get("u25"),   curr.get("u25"))
+        o35_shift  = pp_shift(prev.get("o35"),   curr.get("o35"))
+        u35_shift  = pp_shift(prev.get("u35"),   curr.get("u35"))
         btts_shift = pp_shift(prev.get("bttsY"), curr.get("bttsY"))
+        # Corner-Shifts: nur wenn beide Snapshots dieselbe cornerLine haben
+        c_over_shift = c_under_shift = 0
+        if prev.get("cornerLine") == curr.get("cornerLine"):
+            c_over_shift  = pp_shift(prev.get("cOver"),  curr.get("cOver"))
+            c_under_shift = pp_shift(prev.get("cUnder"), curr.get("cUnder"))
         max_shift  = max(abs(hw_shift), abs(dr_shift), abs(aw_shift),
-                         abs(o25_shift), abs(u25_shift), abs(btts_shift))
+                         abs(o15_shift), abs(u15_shift),
+                         abs(o25_shift), abs(u25_shift),
+                         abs(o35_shift), abs(u35_shift),
+                         abs(btts_shift),
+                         abs(c_over_shift), abs(c_under_shift))
 
         # ── Modus 2: Kumulativer Drift (Opening → Aktuell) ─────────────────
         opening_snap = snaps[0]
         cumul_hw   = pp_shift(opening_snap.get("hw"),    curr.get("hw"))
         cumul_dr   = pp_shift(opening_snap.get("dr"),    curr.get("dr"))
         cumul_aw   = pp_shift(opening_snap.get("aw"),    curr.get("aw"))
+        cumul_o15  = pp_shift(opening_snap.get("o15"),   curr.get("o15"))
+        cumul_u15  = pp_shift(opening_snap.get("u15"),   curr.get("u15"))
         cumul_o25  = pp_shift(opening_snap.get("o25"),   curr.get("o25"))
         cumul_u25  = pp_shift(opening_snap.get("u25"),   curr.get("u25"))
+        cumul_o35  = pp_shift(opening_snap.get("o35"),   curr.get("o35"))
+        cumul_u35  = pp_shift(opening_snap.get("u35"),   curr.get("u35"))
         cumul_btts = pp_shift(opening_snap.get("bttsY"), curr.get("bttsY"))
+        cumul_cOv = cumul_cUn = 0
+        if opening_snap.get("cornerLine") == curr.get("cornerLine"):
+            cumul_cOv = pp_shift(opening_snap.get("cOver"),  curr.get("cOver"))
+            cumul_cUn = pp_shift(opening_snap.get("cUnder"), curr.get("cUnder"))
         cumul_max  = max(abs(cumul_hw), abs(cumul_dr), abs(cumul_aw),
-                         abs(cumul_o25), abs(cumul_u25), abs(cumul_btts))
+                         abs(cumul_o15), abs(cumul_u15),
+                         abs(cumul_o25), abs(cumul_u25),
+                         abs(cumul_o35), abs(cumul_u35),
+                         abs(cumul_btts),
+                         abs(cumul_cOv), abs(cumul_cUn))
         is_cumul = (cumul_max >= CUMUL_PP and max_shift < ALERT_PP)  # nur wenn nicht bereits snap-alert
 
         if max_shift < ALERT_PP and not is_cumul:
@@ -403,12 +446,18 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
         pick_affected = []
         for p in active_picks:
             field = pick_market_to_field(p.get("market", ""))
-            if field == "hw" and abs(hw_shift) >= ALERT_PP:
-                pick_affected.append((p, hw_shift, "hw"))
-            elif field == "dr" and abs(dr_shift) >= ALERT_PP:
-                pick_affected.append((p, dr_shift, "dr"))
-            elif field == "aw" and abs(aw_shift) >= ALERT_PP:
-                pick_affected.append((p, aw_shift, "aw"))
+            # Field → entsprechender Shift-Wert. Dict-Lookup statt verschachtelte ifs.
+            _shifts = {
+                "hw": hw_shift, "dr": dr_shift, "aw": aw_shift,
+                "o15": o15_shift, "u15": u15_shift,
+                "o25": o25_shift, "u25": u25_shift,
+                "o35": o35_shift, "u35": u35_shift,
+                "bttsY": btts_shift, "bttsN": -btts_shift,  # invertiert
+                "cOver": c_over_shift, "cUnder": c_under_shift,
+            }
+            shift_val = _shifts.get(field)
+            if shift_val is not None and abs(shift_val) >= ALERT_PP:
+                pick_affected.append((p, shift_val, field))
 
         # Poly-Cross-Reference
         poly_edge, poly_dir = _poly_context(poly_edges, key, hw_shift, aw_shift)
@@ -425,15 +474,28 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
             "hw_shift":     hw_shift,
             "dr_shift":     dr_shift,
             "aw_shift":     aw_shift,
+            "o15_shift":    o15_shift,
+            "u15_shift":    u15_shift,
             "o25_shift":    o25_shift,
             "u25_shift":    u25_shift,
+            "o35_shift":    o35_shift,
+            "u35_shift":    u35_shift,
             "btts_shift":   btts_shift,
+            "c_over_shift": c_over_shift,
+            "c_under_shift": c_under_shift,
+            "corner_line":  curr.get("cornerLine"),
             "cumul_hw":     cumul_hw,
             "cumul_dr":     cumul_dr,
             "cumul_aw":     cumul_aw,
+            "cumul_o15":    cumul_o15,
+            "cumul_u15":    cumul_u15,
             "cumul_o25":    cumul_o25,
             "cumul_u25":    cumul_u25,
+            "cumul_o35":    cumul_o35,
+            "cumul_u35":    cumul_u35,
             "cumul_btts":   cumul_btts,
+            "cumul_c_over": cumul_cOv,
+            "cumul_c_under": cumul_cUn,
             "cumul_shift":  cumul_max,
             "max_shift":    max_shift,
             "effective_shift": effective_shift,

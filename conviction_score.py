@@ -130,6 +130,52 @@ def _pick_direction(market: str) -> str:
     return "neutral"
 
 
+def _pick_odds_key(market: str) -> Optional[str]:
+    """
+    Maps Pick-Market-String auf das Feld im Odds-Snapshot (hw/dr/aw/o25/u25/...).
+    Granularer als _pick_direction — unterscheidet O1.5 vs O2.5 vs O3.5,
+    BTTS Ja vs Nein, Corner-Linien.
+
+    Returns None wenn kein bekannter Markt → Sharp-Move-Detection skip.
+    """
+    m = (market or "").lower()
+
+    # Doppelte Chance (vor 1X2-Check) — approximiert die nähere Seite
+    if "doppelte chance" in m or "double chance" in m:
+        if "1x" in m: return "hw"   # Heim oder X — Heim-Bias als Proxy
+        if "x2" in m: return "aw"
+        if "12" in m: return "hw"   # Beide-Mannschaften: Heim-Seite als Default
+    # 1X2 + DNB/AH (alle hängen am gleichen Outcome-Implied)
+    if "heim" in m or "home" in m: return "hw"
+    if "auswärt" in m or "auswarts" in m or "away" in m: return "aw"
+    if "unentsch" in m or "remis" in m or "draw" in m: return "dr"
+
+    # Corners (vor Tore-Check — "Ecken" enthält auch "über"/"unter")
+    if "ecken" in m or "corner" in m:
+        if "8.5" in m or "85" in m: return "cOver85" if ("über" in m or "over" in m) else "cUnder85"
+        if "9.5" in m or "95" in m: return "cOver95" if ("über" in m or "over" in m) else "cUnder95"
+        if "10.5" in m or "105" in m: return "cOver105" if ("über" in m or "over" in m) else "cUnder105"
+        # Fallback: keine Linie erkannt → generisches cOver
+        return "cOver"
+
+    # BTTS
+    if "beide" in m or "btts" in m:
+        if "nein" in m or "no" in m: return "bttsN"
+        return "bttsY"
+
+    # Tor-Linien (granularer als nur "over"/"under")
+    if "über" in m or "uber" in m or "over" in m:
+        if "1.5" in m or "1,5" in m: return "o15"
+        if "3.5" in m or "3,5" in m: return "o35"
+        return "o25"  # Default
+    if "unter" in m or "under" in m:
+        if "1.5" in m or "1,5" in m: return "u15"
+        if "3.5" in m or "3,5" in m: return "u35"
+        return "u25"  # Default
+
+    return None
+
+
 # ──────────────────────────────────────────────────────────────────────────
 #  Sharp-Move-Trigger Detection
 # ──────────────────────────────────────────────────────────────────────────
@@ -151,11 +197,15 @@ def detect_sharp_move(pick: dict, context: dict, cfg: dict) -> Optional[dict]:
     opening = history[0]
     current = history[-1]
 
-    # Implied Probability für die Pick-Richtung
-    pick_key_map = {"home": "hw", "draw": "dr", "away": "aw",
-                    "over": "o25", "under": "u25"}
-    direction = _pick_direction(pick.get("market", ""))
-    key = pick_key_map.get(direction)
+    # Granularer Odds-Key direkt aus Market-String (deckt O15/O25/O35/BTTS/Corner ab).
+    # Fallback auf alten _pick_direction-Pfad für Backward-Compat.
+    key = _pick_odds_key(pick.get("market", ""))
+    if not key:
+        # Backward-Compat: alte pick_direction-Logik nur 1X2/O25/U25
+        pick_key_map = {"home": "hw", "draw": "dr", "away": "aw",
+                        "over": "o25", "under": "u25"}
+        direction = _pick_direction(pick.get("market", ""))
+        key = pick_key_map.get(direction)
     if not key:
         return None
 

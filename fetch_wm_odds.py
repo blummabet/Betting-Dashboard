@@ -395,7 +395,7 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
                 if yes:
                     btts_cands[bk_key] = (yes, no)
 
-            elif mkey == "corners":
+            elif mkey in ("corners", "alternate_totals_corners"):
                 lines: dict[float, list] = {}
                 for o in market.get("outcomes", []):
                     point = o.get("point")
@@ -620,11 +620,11 @@ def main():
     # Lösung: per-Event-Endpoint /events/{id}/odds — gleicher Ansatz wie
     # test-cards-api.js für Cards/Corners. Pinnacle O/U ist dort verfügbar.
     # WICHTIG (Fix 04.06.2026): TheOddsAPI liefert für WM-Events leere bookmakers wenn
-    # zu viele Markets in einem Call. 4 Markets pro Call ist das Limit. Daher 2 Calls:
+    # zu viele Markets in einem Call. 4 Markets pro Call ist das Limit. Daher 3 Calls:
     #   Call 1: totals,btts,double_chance,spreads (Standard + DC + AH)
     #   Call 2: alternate_totals (für O1.5/O3.5/U1.5/U3.5)
-    # corners wird raus weil TheOddsAPI für WM noch keine Corner-Quoten listet.
-    print(f"\n  📥  Fetching totals+btts+DC+spreads per event (Call 1/2)…")
+    #   Call 3: alternate_totals_corners,corners (09.06.2026 — Pinnacle hat Corners drin)
+    print(f"\n  📥  Fetching totals+btts+DC+spreads per event (Call 1/3)…")
     event_ids = [ev["id"] for ev in events if ev.get("id")]
     totals_by_id: dict[str, dict] = {}
 
@@ -641,7 +641,7 @@ def main():
             time.sleep(0.25)
 
     # ── Call 2: alternate_totals (für O1.5/O3.5/U1.5/U3.5) — mergen ──
-    print(f"  📥  Fetching alternate_totals per event (Call 2/2)…")
+    print(f"  📥  Fetching alternate_totals per event (Call 2/3)…")
     alt_added = 0
     for i, eid in enumerate(event_ids):
         path_alt = (f"/v4/sports/{sport_key}/events/{eid}/odds"
@@ -668,6 +668,41 @@ def main():
         if i < len(event_ids) - 1:
             time.sleep(0.25)
     print(f"  → alternate_totals: {alt_added} events mit zusätzlichen O/U-Linien")
+
+    # ── Call 3: corners — Pinnacle hat Corner-Quoten 1-3 Tage vor Anpfiff ──
+    # Wir probieren mehrere Market-Keys (TheOddsAPI hat das Schema mehrfach geändert):
+    #   alternate_totals_corners → bevorzugt (gibt Linie + over/under)
+    #   corners                  → einfacher Single-Line-Markt
+    # Defensiv: wenn beide 0 events liefern, läuft Pipeline normal weiter (Picks
+    # auf Corner-Markets entstehen nur wenn cornerLine im odds-Snapshot vorhanden).
+    print(f"  📥  Fetching corners per event (Call 3/3)…")
+    corn_added = 0
+    for i, eid in enumerate(event_ids):
+        path_corn = (f"/v4/sports/{sport_key}/events/{eid}/odds"
+                     f"?apiKey={ODDS_KEY}"
+                     f"&regions=eu,uk,us"
+                     f"&markets=alternate_totals_corners,corners"
+                     f"&oddsFormat=decimal")
+        try:
+            corn_data = odds_get(path_corn)
+        except Exception as _e:
+            corn_data = None
+        if isinstance(corn_data, dict) and corn_data.get("bookmakers"):
+            existing = totals_by_id.get(eid)
+            if existing:
+                existing_bk_keys = {b["key"]: b for b in existing.get("bookmakers", [])}
+                for new_bk in corn_data["bookmakers"]:
+                    bk_key = new_bk.get("key")
+                    if bk_key in existing_bk_keys:
+                        existing_bk_keys[bk_key]["markets"].extend(new_bk.get("markets", []))
+                    else:
+                        existing["bookmakers"].append(new_bk)
+                corn_added += 1
+            else:
+                totals_by_id[eid] = corn_data
+        if i < len(event_ids) - 1:
+            time.sleep(0.25)
+    print(f"  → corners: {corn_added} events mit Corner-Quoten")
 
     t_ok = sum(1 for v in totals_by_id.values() if v.get("bookmakers"))
     print(f"  → {len(event_ids)} events abgefragt, {t_ok} mit Totals-Daten")

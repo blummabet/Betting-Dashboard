@@ -27,11 +27,8 @@
         "ah_bet_max": 12,
         "dnb_ah_divergence_pp": 8
       },
-      "_meta_disabled_markets": "Backtest 07.06.2026 zeigte BTTS −15% ROI (n=141), Corners >10.5 −65% (n=10). Bis das Modell besser ist: diese Märkte erzeugen keine Picks. Re-enable wenn Skellam-Modell überarbeitet oder Backtest sie freigibt.",
-      "disabled_markets": [
-        "btts",
-        "o_corners105"
-      ],
+      "_meta_disabled_markets": "Reaktiviert 09.06.2026 nach Conviction-Score-Live: BTTS+Corners zurück in den Pool. Begründung: alter Backtest-Loss kam aus reinem Skellam/Poisson ohne Signal-Adjust; Signal-Engine + Conviction-Gate (Sharp-Move + Familien-Confirm) filtern jetzt schlechte Picks raus. Bayesian-Loop kalibriert die Familien-Gewichte selbst neu sobald die ersten BTTS/Corner-Picks resolved sind. Falls n≥30 erneut <0% ROI: re-disable.",
+      "disabled_markets": [],
       "odds": {
         "max_for_pick": 6.5,
         "max_for_bet": 4.5,
