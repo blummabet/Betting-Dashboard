@@ -76,6 +76,14 @@ TRADE_TIER_EDGE_PP     = _cfg("steam", "trade_tier_edge_pp", 5.0)  # entspricht 
 MAX_SNAPSHOTS     = _cfg("steam", "max_snapshots",   50)   # Snapshots pro Signal-Entry im Log
 SIGNAL_TTL_DAYS   = _cfg("steam", "signal_ttl_days", 30)   # Alte aufgelöste Signale nach N Tagen bereinigen
 
+# Bug-Fix 09.06.2026 — Daten-Lücke-Guard gegen Falsch-Konvergenz.
+# Wenn zwischen vorherigem und aktuellem Snapshot > N Stunden liegen (z.B. nach
+# Fetcher-Ausfall), darf ein gefallener Edge NICHT direkt als KONVERGIERT
+# markiert werden — die Bewegung könnte ein Daten-Sprung sein, nicht echte
+# Marktbewegung. Stattdessen: pendingConvergenceConfirm setzen, erst beim
+# nächsten Stale-Pass (=2-4h) bestätigen.
+SNAPSHOT_GAP_GUARD_HOURS = _cfg("steam", "snapshot_gap_guard_hours", 6.0)
+
 
 def _classify_entry_tier(entry_edge: float, steam_lag: bool) -> str:
     """Tier-Klassifikation für ein Entry-Signal."""
@@ -452,6 +460,25 @@ def calc_convergence(entry_edge: float, current_edge: float) -> float:
 
 
 # ── Hauptlogik: Log aktualisieren ────────────────────────────────────────────
+def _snapshot_gap_hours(snaps: list, now_dt) -> float | None:
+    """
+    Bug-Fix 09.06.2026 — Gap zwischen vorletztem und aktuell-angehängtem
+    Snapshot in Stunden. Der zuletzt-angehängte Snapshot ist snaps[-1]
+    (gerade neu hinzugefügt); vorletzter ist snaps[-2]. Returns None wenn
+    nicht genug Snapshots oder Parsing fehlschlägt.
+    """
+    if not snaps or len(snaps) < 2:
+        return None
+    try:
+        prev_ts = snaps[-2].get("ts")
+        if not prev_ts:
+            return None
+        prev_dt = datetime.fromisoformat(prev_ts.replace("Z", "+00:00"))
+        return (now_dt - prev_dt).total_seconds() / 3600
+    except Exception:
+        return None
+
+
 def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> dict:
     """
     1. Für jedes Signal mit edge >= MIN_EDGE_PP: prüfe ob bereits im Log
@@ -590,15 +617,38 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
             if (current_edge < CONVERGED_EDGE_PP
                     and open_entry["status"] == "OPEN"
                     and not open_entry.get("convergenceTs")):
-                sig_dt = datetime.fromisoformat(
-                    open_entry["signalTs"].replace("Z", "+00:00"))
-                hours = round((now_dt - sig_dt).total_seconds() / 3600, 1)
-                open_entry["convergenceTs"]    = now_ts
-                open_entry["convergenceHours"] = hours
-                open_entry["status"]           = "CONVERGED"
-                print(f"  ✅ KONVERGIERT nach {hours}h: "
-                      f"{open_entry['home']} vs {open_entry['away']}"
-                      f" · {open_entry['marketLabel']}")
+                # Bug-Fix 09.06.2026 — Daten-Lücke-Guard.
+                # Wenn vorletzter Snapshot zu alt → kein Auto-CONVERGED.
+                gap_h = _snapshot_gap_hours(snaps, now_dt)
+                if gap_h is not None and gap_h > SNAPSHOT_GAP_GUARD_HOURS:
+                    if open_entry.get("pendingConvergenceConfirm"):
+                        # Bestätigung beim 2. Run nach Lücke → echt konvergiert
+                        sig_dt = datetime.fromisoformat(
+                            open_entry["signalTs"].replace("Z", "+00:00"))
+                        hours = round((now_dt - sig_dt).total_seconds() / 3600, 1)
+                        open_entry["convergenceTs"]    = now_ts
+                        open_entry["convergenceHours"] = hours
+                        open_entry["status"]           = "CONVERGED"
+                        open_entry.pop("pendingConvergenceConfirm", None)
+                        print(f"  ✅ KONVERGIERT (nach Daten-Lücke-Bestätigung) nach {hours}h: "
+                              f"{open_entry['home']} vs {open_entry['away']}"
+                              f" · {open_entry['marketLabel']}")
+                    else:
+                        open_entry["pendingConvergenceConfirm"] = True
+                        print(f"  ⏳ Daten-Lücke {gap_h:.1f}h → Konvergenz nicht bestätigt: "
+                              f"{open_entry['home']} vs {open_entry['away']}"
+                              f" · {open_entry['marketLabel']} ({current_edge:+.1f}pp)")
+                else:
+                    sig_dt = datetime.fromisoformat(
+                        open_entry["signalTs"].replace("Z", "+00:00"))
+                    hours = round((now_dt - sig_dt).total_seconds() / 3600, 1)
+                    open_entry["convergenceTs"]    = now_ts
+                    open_entry["convergenceHours"] = hours
+                    open_entry["status"]           = "CONVERGED"
+                    open_entry.pop("pendingConvergenceConfirm", None)
+                    print(f"  ✅ KONVERGIERT nach {hours}h: "
+                          f"{open_entry['home']} vs {open_entry['away']}"
+                          f" · {open_entry['marketLabel']}")
             else:
                 print(f"  📊 UPDATE: {open_entry['home']} vs {open_entry['away']}"
                       f" · {open_entry['marketLabel']}"
@@ -666,12 +716,33 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
         stale_updated += 1
 
         # Bei Edge < CONVERGED_EDGE_PP als KONVERGIERT markieren
+        # Bug-Fix 09.06.2026 — Daten-Lücke-Guard (siehe Konstante SNAPSHOT_GAP_GUARD_HOURS).
+        # Vorletzter Snapshot ist snaps[-2] (vor dem eben angehängten).
         if cur_edge < CONVERGED_EDGE_PP and not entry.get("convergenceTs"):
+            gap_h = _snapshot_gap_hours(snaps, now_dt)
+            if gap_h is not None and gap_h > SNAPSHOT_GAP_GUARD_HOURS:
+                if entry.get("pendingConvergenceConfirm"):
+                    sig_dt = datetime.fromisoformat(entry["signalTs"].replace("Z", "+00:00"))
+                    hours = round((now_dt - sig_dt).total_seconds() / 3600, 1)
+                    entry["convergenceTs"]    = now_ts
+                    entry["convergenceHours"] = hours
+                    entry["status"]           = "CONVERGED"
+                    entry.pop("pendingConvergenceConfirm", None)
+                    stale_converged += 1
+                    print(f"  ✅ KONVERGIERT (stale-pass, bestätigt nach Lücke) nach {hours}h: "
+                          f"{entry['home']} vs {entry['away']} · {entry['marketLabel']}")
+                else:
+                    entry["pendingConvergenceConfirm"] = True
+                    print(f"  ⏳ Stale-Pass Daten-Lücke {gap_h:.1f}h → Konvergenz nicht bestätigt: "
+                          f"{entry['home']} vs {entry['away']}"
+                          f" · {entry['marketLabel']} ({cur_edge:+.1f}pp)")
+                continue
             sig_dt = datetime.fromisoformat(entry["signalTs"].replace("Z", "+00:00"))
             hours = round((now_dt - sig_dt).total_seconds() / 3600, 1)
             entry["convergenceTs"]    = now_ts
             entry["convergenceHours"] = hours
             entry["status"]           = "CONVERGED"
+            entry.pop("pendingConvergenceConfirm", None)
             stale_converged += 1
             print(f"  ✅ KONVERGIERT (stale-pass) nach {hours}h: "
                   f"{entry['home']} vs {entry['away']} · {entry['marketLabel']} "
