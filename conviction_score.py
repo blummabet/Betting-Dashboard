@@ -345,18 +345,17 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     evidence = []
 
     # ── Familie 1: Sharp-Money-Konsens (max 3) ────────────────────────────
-    # FIX 09.06.2026 (Agent-Audit): vorher konnte sharp_count vor Cap auf 5 ackumulieren
-    # (Sharp-Signale + Opening-Movement + Sharp-Move-Trigger + Soft-Lag-Bonus). Das
-    # maskierte den Score als 4-stufig (0/1/2/3) während er de-facto binär war (0 oder 3+).
-    # Jetzt: maximal EIN Bucket-Trigger pro Familie, mit Stärke-Stufung.
-    # Bucket "Live-Sharp" (Sharp-Move triggered + neu): 3pt
-    # Bucket "Bewegung+Konsens" (Pinnacle bewegte sich + Sharp-Signale): 2pt
-    # Bucket "Bewegung allein" (entweder Move ODER Signal-Konsens): 1pt
+    # FIX 09.06.2026 (Agent + Lucas): vorher waren polymarket_sharp + steam_lag
+    # in der Sharp-Money-Familie. Das ist zirkulär — Polymarket ist die TRADE-Gegenseite
+    # (wir gehen explizit gegen Polymarket, weil es systematisch danebenliegt),
+    # nicht ein Sharp-Anker. Polymarket-Signale beeinflussen weiter effectiveEdge
+    # in der Signal-Engine, zählen aber NICHT in Conviction.
+    # Echte Sharp-Indikatoren: Pinnacle-Move + Bet365/William Hill/Unibet-Lag.
     sharp_signals_active = []
-    for name in ("lead_lag_bias", "steam_lag", "polymarket_sharp"):
+    for name in ("lead_lag_bias",):   # Nur Pinnacle-vs-Soft-Books
         if _signal_contributes(name) > 0:
             sharp_signals_active.append(name)
-            evidence.append(f"Sharp-Signal: {name}")
+            evidence.append(f"Sharp-Signal: {name} (Pinnacle vs Bet365/WilliamHill)")
     sharp_signal_count = len(sharp_signals_active)
 
     om = detect_opening_movement(pick, context, cfg)

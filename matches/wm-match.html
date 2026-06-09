@@ -1513,12 +1513,12 @@ function _renderPickWhyButton(D, primary) {
             || (score >= 8 ? '🎯 Top-Wette' : score >= 6 ? '⭐ Gute Wette' : score >= 4 ? '👁 Beobachten' : '');
           const fams = primary.convictionFamilies || {};
           const rows = [
-            ['Sharp-Money (Pinn-Move + Bet365-Lag)', fams.sharp_money || 0, 3],
-            ['Form (Trend + xG + H2H)',              fams.form         || 0, 2],
-            ['Kontext (Travel + Lineup + Anreiz)',   fams.context      || 0, 2],
-            ['Echtzeit (Lineup-Confirm)',            fams.realtime     || 0, 2],
-            ['Markt (CLV + Smart-Sub)',              fams.market       || 0, 1],
-            ['Modell-Sanity (≤10pp vom Markt)',      fams.model        || 0, 1],
+            ['Sharp-Money (Pinnacle-Move + Bet365/WH-Lag)',  fams.sharp_money || 0, 3],
+            ['Form (Form-Trend + xG + H2H)',                 fams.form         || 0, 2],
+            ['Kontext (Travel + Druck + Wetter + Anreiz)',   fams.context      || 0, 2],
+            ['Echtzeit (Lineup-Confirm T-1h)',               fams.realtime     || 0, 2],
+            ['Markt-Konsens (Public-Bias + APIF-Predictions)', fams.market     || 0, 1],
+            ['Modell-Sanity (≤10pp vom Markt)',              fams.model        || 0, 1],
           ];
           const famHtml = rows.map(([n, v, max]) => {
             const isPos = v > 0;
@@ -1542,6 +1542,8 @@ function _renderPickWhyButton(D, primary) {
               <div style="display:grid;grid-template-columns:1fr;gap:4px;font-size:12px;">${famHtml}</div>
               <div style="margin-top:12px;font-size:11px;color:var(--muted);line-height:1.5;">
                 Conviction zählt unabhängige Bestätigungs-Quellen. Bei 8+/10 darf ABWÄGEN auf BET hochgestuft werden.
+                <br><br><strong>Polymarket-Signale</strong> (polymarket_sharp, steam_lag) zählen hier NICHT —
+                Polymarket ist Trade-Gegenseite, kein Sharp-Anker.
               </div>
             </div>
           </div>`;
