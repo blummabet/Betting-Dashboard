@@ -1491,6 +1491,68 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 //  Block C: CLV-Aggregation pro Signal-Familie (welche tragen langfristig)
 // ──────────────────────────────────────────────────────────────────────────
 
+// Finde den besten Conviction-Pick für ein Match (homeId-awayId).
+// Liefert {score, label, sharpMoveActive, pickKey, market} oder null.
+function _findBestConvictionForMatch(homeId, awayId) {
+  const wm = window.WM2026_DATA;
+  if (!wm || !wm.picks) return null;
+  let best = null;
+  for (const [pk, plist] of Object.entries(wm.picks)) {
+    if (!pk.endsWith(`-${homeId}-${awayId}`)) continue;
+    for (const p of plist) {
+      const score = typeof p.convictionScore === 'number' ? p.convictionScore : null;
+      if (score === null) continue;
+      if (!best || score > best.score) {
+        best = {
+          score, label: p.convictionLabel,
+          sharpMoveActive: !!p.sharpMoveActive,
+          pickKey: pk, market: p.market,
+          verdict: p.verdict,
+        };
+      }
+    }
+  }
+  return best;
+}
+
+// Mini-Sparkline aus odds-history für ein WM-Match-Markt (Pinnacle).
+// Returns SVG-String oder ''. width/height konfigurierbar.
+function _wmMiniSparkline(homeId, awayId, marketKey, w = 70, h = 18) {
+  const hist = window.WM2026_ODDS_HISTORY?.[`${homeId}-${awayId}`];
+  if (!Array.isArray(hist) || hist.length < 2) return '';
+  const series = hist.map(s => s[marketKey]).filter(v => typeof v === 'number' && v > 1);
+  if (series.length < 2) return '';
+  const min = Math.min(...series), max = Math.max(...series);
+  if (max === min) return '';
+  const stepX = w / (series.length - 1);
+  const pts = series.map((v, i) => `${(i * stepX).toFixed(1)},${(h - ((v - min) / (max - min)) * h).toFixed(1)}`).join(' ');
+  const last = series[series.length - 1], first = series[0];
+  const col = last < first ? '#3fb950' : last > first ? '#f85149' : '#8b949e';
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="vertical-align:middle;"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="1.5"/></svg>`;
+}
+
+// "Letzte Bewegung" aus History — wann hat sich der Wert zuletzt geändert?
+function _lastChangeAgo(homeId, awayId, marketKey) {
+  const hist = window.WM2026_ODDS_HISTORY?.[`${homeId}-${awayId}`];
+  if (!Array.isArray(hist) || hist.length < 2) return null;
+  // Find most recent change going from end backwards
+  let lastVal = hist[hist.length - 1]?.[marketKey];
+  if (typeof lastVal !== 'number') return null;
+  for (let i = hist.length - 2; i >= 0; i--) {
+    const v = hist[i][marketKey];
+    if (typeof v === 'number' && Math.abs(v - lastVal) > 0.01) {
+      const ts = hist[i + 1]?.ts;
+      if (!ts) return null;
+      const diffH = (Date.now() - new Date(ts).getTime()) / 3600000;
+      if (diffH < 1) return { mins: Math.round(diffH * 60), label: 'vor <1h' };
+      if (diffH < 24) return { mins: Math.round(diffH * 60), label: `vor ${Math.round(diffH)}h` };
+      const diffD = Math.floor(diffH / 24);
+      return { mins: Math.round(diffH * 60), label: `vor ${diffD}d` };
+    }
+  }
+  return { mins: 9999, label: 'stabil' };
+}
+
 // Sammle alle aktiven WM-Picks aus wm2026-data
 function _collectActiveWmPicks() {
   const wm = window.WM2026_DATA;
@@ -1845,12 +1907,35 @@ function renderSharpRadar() {
   </div>`;
 
   // ── Section 2: Biggest Movers (all week, with date + movement type label) ──
+  // Anti-Drift-Fix 09.06.2026:
+  //  · Conviction-Picks zuerst (höhere Conviction zuerst), dann nach maxMov
+  //  · Conviction-Badge + Sharp-Move-Indikator + Klickbar zur Event-Page
+  //  · Sparkline + "Letzte Bewegung"-Indikator für Aktualitäts-Signal
   const movers = allFixtures
     .filter(f => f.mvRows && f.maxMov >= 3)
-    .sort((a,b) => b.maxMov - a.maxMov)
+    .map(f => {
+      // Add Conviction info for WM-fixtures (m.home / m.away sind IDs bei WM)
+      const conv = _findBestConvictionForMatch(f.m.home, f.m.away);
+      return { ...f, conviction: conv };
+    })
+    .sort((a, b) => {
+      // 1) Picks mit Conviction ≥6 zuerst (nach Score absteigend)
+      const aC = a.conviction?.score || 0;
+      const bC = b.conviction?.score || 0;
+      const aRelevant = aC >= 6 ? 1 : 0;
+      const bRelevant = bC >= 6 ? 1 : 0;
+      if (aRelevant !== bRelevant) return bRelevant - aRelevant;
+      if (aRelevant && bRelevant && aC !== bC) return bC - aC;
+      // 2) Sharp-Move-Picks zuerst innerhalb gleichem Conviction-Bucket
+      const aS = a.conviction?.sharpMoveActive ? 1 : 0;
+      const bS = b.conviction?.sharpMoveActive ? 1 : 0;
+      if (aS !== bS) return bS - aS;
+      // 3) Tie-break nach maxMov
+      return b.maxMov - a.maxMov;
+    })
     .slice(0, 20);
 
-  const moversHtml = movers.length ? movers.map(({m, lk, L, mvRows, maxMov, kicked, openTs, oddsClosing}) => {
+  const moversHtml = movers.length ? movers.map(({m, lk, L, mvRows, maxMov, kicked, openTs, oddsClosing, conviction}) => {
     const maxColor  = _mvColor(maxMov);
     const dateLabel = _fmtDate(m.date);
     const timeLabel = m.time ? ` · ${m.time}` : '';
@@ -1865,34 +1950,59 @@ function renderSharpRadar() {
       ? `<span style="font-size:9px;color:${ageLabel.includes('<2h') ? '#f85149' : ageLabel.includes('1d') || ageLabel.includes('2d') ? '#e3b341' : '#6b7a8d'};padding:1px 5px;" title="Opening-Snapshot Alter">⏱ ${ageLabel}</span>`
       : '';
 
+    // ── WM-Check: ist das ein WM-Match? (→ Sparkline + Event-Page-Link) ──
+    const isWm = lk === 'wm2026' || (window.WM2026_ODDS_HISTORY && window.WM2026_ODDS_HISTORY[`${m.home}-${m.away}`]);
+
     const rowHtml = mvRows.map(row => {
       const backed     = row.ppShift > 0;
       const color      = backed ? '#3fb950' : '#f85149';
       const arrow      = row.oddCurr < row.oddOpen ? '↘' : '↗';
-      // After kickoff: "Linienbew." is actually Opening→Closing = real closing-line movement
-      // Before kickoff: it's Opening→Current (line drift, NOT final CLV)
       const movBadge   = Math.abs(row.ppShift) >= 3
         ? `<span style="font-size:9px;font-weight:800;padding:1px 5px;border-radius:4px;background:${backed ? 'rgba(63,185,80,0.15)' : 'rgba(248,81,73,0.12)'};color:${color};border:1px solid ${color}40;">${backed ? '↑ Markt' : '↓ Markt'}</span>`
         : '';
-      return `<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.04);border:1px solid #30363d;border-radius:5px;padding:2px 7px;font-size:11px;white-space:nowrap;">
+      // Mini-Sparkline für WM-Matches (zeigt visuell die Bewegung über Zeit)
+      const spark = isWm && row.key ? _wmMiniSparkline(m.home, m.away, row.key, 55, 14) : '';
+      // "Letzte Bewegung vor X" — Aktualitäts-Signal
+      const last = isWm && row.key ? _lastChangeAgo(m.home, m.away, row.key) : null;
+      const lastBadge = last
+        ? `<span style="font-size:9px;color:${last.mins < 360 ? '#3fb950' : last.mins < 1440 ? '#e3b341' : '#6b7a8d'};" title="Letzte Bewegung dieses Marktes">${last.label}</span>`
+        : '';
+      return `<span style="display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.04);border:1px solid #30363d;border-radius:5px;padding:2px 7px;font-size:11px;white-space:nowrap;">
         <span style="color:#8b949e;font-weight:700;">${row.label}</span>
         <span style="color:#8b949e;font-size:10px;">${row.oddOpen.toFixed(2)}→</span>
         <span style="color:${color};font-weight:700;">${row.oddCurr.toFixed(2)} ${arrow}</span>
+        ${spark}
         <span style="color:${color};font-size:10px;">${row.ppShift > 0 ? '+' : ''}${row.ppShift}pp</span>
         ${movBadge}
+        ${lastBadge}
       </span>`;
     }).join('');
 
-    return `<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;">
+    // Conviction-Badge (rechts neben maxMov-Pille)
+    const convBadge = conviction && conviction.score >= 6
+      ? `<span style="font-family:ui-monospace,monospace;font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;background:${conviction.score >= 8 ? 'rgba(0,212,161,0.20)' : 'rgba(125,211,252,0.20)'};color:${conviction.score >= 8 ? '#00d4a1' : '#7dd3fc'};" title="${conviction.label || ''} · ${conviction.market || ''}">${conviction.score >= 8 ? '🎯' : '⭐'} ${conviction.score}/10</span>`
+      : '';
+    const sharpBadge = conviction && conviction.sharpMoveActive
+      ? `<span style="font-size:10px;padding:2px 6px;border-radius:4px;background:rgba(248,81,73,0.15);color:#f85149;font-weight:700;">🔥</span>`
+      : '';
+
+    // Klickbar wenn WM-Match → Event-Page
+    const wrapStart = isWm
+      ? `<a href="matches/wm-match.html?m=wm-${m.home.toLowerCase()}-vs-${m.away.toLowerCase()}-${m.date.split('.').reverse().join('-')}" style="display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(0,212,161,0.45)'" onmouseout="this.style.borderColor='var(--border)'">`
+      : `<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;">`;
+    const wrapEnd = isWm ? `</a>` : `</div>`;
+
+    return `${wrapStart}
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
         <span style="font-size:15px;">${L.flag}</span>
         <span style="font-weight:700;font-size:13px;">${m.home} <span style="color:var(--muted)">vs</span> ${m.away}</span>
         <span style="font-size:10px;font-weight:600;padding:1px 7px;border-radius:8px;background:${isT ? 'rgba(0,212,161,0.12)' : 'rgba(255,255,255,0.05)'};color:${isT ? '#00d4a1' : '#8b949e'};border:1px solid ${isT ? 'rgba(0,212,161,0.3)' : '#30363d'};">${isT ? '📅 Heute' : (kicked ? '🔒 ' : '') + dateLabel}${timeLabel}</span>
         ${snapLabel}${ageBadge}
+        ${sharpBadge}${convBadge}
         <span style="margin-left:auto;background:rgba(255,255,255,0.05);border:1px solid ${maxColor}40;border-radius:12px;padding:2px 10px;font-size:11px;font-weight:800;color:${maxColor};">⚡ ${maxMov}pp</span>
       </div>
       <div style="display:flex;gap:5px;flex-wrap:wrap;">${rowHtml}</div>
-    </div>`;
+    ${wrapEnd}`;
   }).join('') : `<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Noch keine signifikante Linienbewegung diese Woche (≥3pp) — Opening-Snapshots werden täglich geladen.</div>`;
 
   // ── Section 3: Our Picks in Sharp Context (today's picks) ─────────────────

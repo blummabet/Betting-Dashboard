@@ -256,7 +256,7 @@ function computeLineMovement(oddsOpen, oddsCurrent) {
     const ppShift = Math.round(((1 / c) - (1 / o)) * 100);
     // O/U lines only shown when movement is meaningful (≥3pp) — static prices shown via pills
     if (m.ou && Math.abs(ppShift) < 3) continue;
-    rows.push({ label: m.label, oddOpen: o, oddCurr: c, ppShift });
+    rows.push({ label: m.label, key: m.key, oddOpen: o, oddCurr: c, ppShift });
   }
   if (!rows.length) return null;
   const maxAbs = Math.max(...rows.map(r => Math.abs(r.ppShift)));
