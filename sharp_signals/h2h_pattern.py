@@ -14,10 +14,16 @@ from sharp_signals.base import Signal, SignalResult
 
 
 DEFAULT_THRESHOLDS = {
-    "min_h2h_games":      5,
-    "dominance_threshold": 0.55,   # ≥55% Win-Rate als Dominanz
-    "score_scale_pp":     8.0,     # bei 70% Win-Rate: ~1.6pp Score
-    "min_signal_pp":      0.8,
+    # FIX 09.06.2026: Schwelle von 5 → 2 (WM-Realität: NTs spielen sich selten
+    # 5x gegeneinander; bei 5 würden 95% der Picks ohne H2H-Signal laufen).
+    # Score-Scale entsprechend reduziert weil 2-Spiele-Stichprobe rauschiger ist.
+    "min_h2h_games":      2,
+    "dominance_threshold": 0.55,
+    "score_scale_pp":     4.0,     # halbiert wg kleinerer Stichproben
+    "min_signal_pp":      0.6,
+    # Soft-Penalty wenn Stichprobe sehr klein (2-3 Spiele)
+    "small_sample_dampening": 0.6,
+    "small_sample_threshold": 4,
 }
 
 
@@ -82,14 +88,18 @@ class H2HPatternSignal(Signal):
         else:
             picked_rate = (away_wins + 0.5 * draws) / games
 
-        # Score = (rate - 0.5) × scale → bei 0.7 rate → 0.2 × 8 = +1.6pp
+        # Score = (rate - 0.5) × scale → bei 0.7 rate → 0.2 × 4 = +0.8pp
         score = (picked_rate - 0.5) * self._t["score_scale_pp"]
+
+        # Bei kleinem Sample (2-3 Spiele): zusätzlich dämpfen
+        if games < self._t["small_sample_threshold"]:
+            score *= self._t["small_sample_dampening"]
 
         if abs(score) < self._t["min_signal_pp"]:
             return None
 
-        # Confidence steigt mit Sample-Size
-        confidence = min(0.85, 0.45 + 0.04 * min(games, 10))
+        # Confidence steigt mit Sample-Size (bei 2 Spielen niedriger Cap)
+        confidence = min(0.85, 0.35 + 0.05 * min(games, 10))
 
         oc_label = "Heim" if side == +1 else "Auswärts"
         ev = (f"⚔️ H2H {games} Spiele: "

@@ -23,10 +23,13 @@ from sharp_signals.base import Signal, SignalResult
 
 
 DEFAULT_THRESHOLDS = {
-    "min_bias_pp":      3.0,   # darunter zu rauschig
-    "max_credible_pp": 15.0,   # darüber wahrscheinlich Daten-Anomalie
-    "base_score_pp":    1.8,   # Score-Beitrag bei moderatem Bias (5pp)
-    "magnitude_scale":  0.4,   # weiterer Score pro pp Bias über min_bias
+    # FIX 09.06.2026: min_bias 3 → 2 (Audit zeigte 92% der WM-Diffs in <3pp Range,
+    # 1% im sweet-spot). Pinnacle und Soft-Books alignen pre-WM zu stark, daher
+    # sensibleren Trigger nötig. Erste echte Sharp-Bewegung wird ab 2pp sichtbar.
+    "min_bias_pp":      2.0,
+    "max_credible_pp": 15.0,
+    "base_score_pp":    1.2,
+    "magnitude_scale":  0.5,
 }
 
 
