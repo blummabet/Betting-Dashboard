@@ -33,7 +33,19 @@ MAX_FIXTURES = 15        # Erhöht 08.06.2026 von 10 → 15 für größeres xG-S
                           # (CONMEBOL/AFC-Quali liefert in API-Football kein xG,
                           # daher bleibt 30/48 Teams auch bei höherem Limit ohne xG.)
 FORCE        = "--force" in sys.argv
-STALE_H      = 72        # re-fetch after 72 hours
+
+# Cache-TTL pro Profil. Liga: 72h (Saisons spielen ständig). WM: 168h (1 Woche),
+# weil NTs keine Test-Spiele zwischen WM-Matches haben — Daten ändern sich nur
+# nach echten Spielen. Spart pro Workflow-Run ~12 Minuten wenn Cache greift.
+def _stale_hours() -> int:
+    try:
+        cfg = json.loads((BASE / "cocobet_config.json").read_text(encoding="utf-8"))
+        active = os.environ.get("COCOBET_PROFILE") or cfg["profiles"].get("active", "wm2026")
+        return int(cfg["profiles"].get(active, {}).get("fetch_corners", {}).get("stale_hours", 72))
+    except Exception:
+        return 72
+
+STALE_H      = _stale_hours()
 
 
 # ── HTTP helper ───────────────────────────────────────────────────────────

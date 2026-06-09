@@ -42,6 +42,7 @@ import os
 import sys
 import time
 import http.client
+import urllib.parse
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -128,8 +129,11 @@ def _apif_get(path: str, timeout: int = 15) -> dict | None:
 
 
 def _find_team_id(team_name: str) -> int | None:
-    """Sucht die API-Football Team-ID für eine Nationalmannschaft."""
-    data = _apif_get(f"/teams?name={team_name.replace(' ', '%20')}")
+    """Sucht die API-Football Team-ID für eine Nationalmannschaft.
+    FIX 09.06.2026: urllib.parse.quote statt naivem replace — Sonderzeichen
+    (Türkiye=ü, später ggf. ñ/ç) werden jetzt korrekt URL-encoded.
+    """
+    data = _apif_get(f"/teams?name={urllib.parse.quote(team_name)}")
     if not data or not data.get("response"):
         return None
     # Filter: nur Nationalmannschaften (kein Club)
@@ -338,6 +342,19 @@ def main():
     if skip_understat_teams:
         print(f"   Überspringe (Understat-xG vorhanden): {len(skip_understat_teams)}")
 
+    # FIX 09.06.2026 — APIF-Team-IDs direkt aus wm2026-data.json["teamIds"] laden.
+    # Vorher: pro Team /teams?name=… Anfrage → scheiterte bei BIH/USA/CPV/TUR
+    # (Name-Match-Mismatch + Encoding-Bug). Wir haben die IDs schon, also nutzen.
+    direct_team_ids: dict[str, int] = {}
+    try:
+        with WM_FILE.open(encoding="utf-8") as f:
+            _wm = json.load(f)
+        direct_team_ids = _wm.get("teamIds", {}) or {}
+        if direct_team_ids:
+            print(f"   Direct-IDs aus wm2026-data.json: {len(direct_team_ids)} Teams")
+    except Exception:
+        pass
+
     new_count = 0
     skip_count = 0
     fail_count = 0
@@ -365,10 +382,17 @@ def main():
             continue
 
         print(f"\n🔎 {our_id} ({apif_name}):")
-        time.sleep(CFG["request_delay_sec"])
-        team_id = _find_team_id(apif_name)
+        # Primär: direct teamIds aus wm2026-data.json (kein API-Call nötig)
+        team_id = direct_team_ids.get(our_id)
+        if team_id:
+            try: team_id = int(team_id)
+            except Exception: team_id = None
+        # Fallback: Name-Search via API
         if not team_id:
-            print(f"   ⚠️  Team-ID nicht gefunden")
+            time.sleep(CFG["request_delay_sec"])
+            team_id = _find_team_id(apif_name)
+        if not team_id:
+            print(f"   ⚠️  Team-ID nicht gefunden (weder direct noch via Name-Search)")
             fail_count += 1
             continue
 
