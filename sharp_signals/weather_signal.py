@@ -210,12 +210,17 @@ class WeatherSignal(Signal):
         kickoff_mod = _kickoff_modifier(
             context.get("kickoff_time", ""), context.get("venue", ""), self._t
         )
-        # Effektive Hitze = tempMax × kickoff_modifier
-        effective_temp = temp_max * kickoff_mod
-        # Skala 0-1 wie weit über heat_threshold (gedämpft mit Modifier)
-        heat_intensity = min(1.0, max(0.0,
-            (effective_temp - self._t["heat_threshold"]) /
+        # FIX 09.06.2026: heat_intensity korrekt berechnen.
+        # ALT (bug): effective_temp = temp_max * kickoff_mod → 30°C*0.8 = 24°C
+        # → heat_intensity wurde immer 0, Signal feuerte nie auf O/U-Märkte
+        # bei "echten" WM-Hitze-Temperaturen (30-35°C).
+        # NEU: heat_intensity zuerst aus raw tempMax (Skala wie weit über Schwelle),
+        # dann gedämpft mit kickoff_mod (Abend = halbierte Penalty vs Mittag).
+        heat_intensity_raw = min(1.0, max(0.0,
+            (temp_max - self._t["heat_threshold"]) /
             (self._t["extreme_threshold"] - self._t["heat_threshold"])))
+        heat_intensity = heat_intensity_raw * kickoff_mod
+        effective_temp = temp_max   # nur fürs Logging
         if heat_intensity <= 0:
             return None
 

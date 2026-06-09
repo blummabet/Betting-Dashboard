@@ -473,20 +473,35 @@ class IncentiveSignal(Signal):
             return (score, " · ".join(notes), meta)
 
         # Must-Win-Asymmetrie: ein Team must_win, anderes nicht
-        if home_state.get("must_win") and not away_state.get("must_win"):
+        h_must_one_side = home_state.get("must_win") and not away_state.get("must_win")
+        a_must_one_side = away_state.get("must_win") and not home_state.get("must_win")
+        if h_must_one_side:
             if side == +1:
                 score += self._t["must_win_pp"]
                 notes.append("Heim muss gewinnen, Auswärts nicht — voller Druck pro Heim")
             elif side == -1:
                 score -= self._t["must_win_pp"]
                 notes.append("Heim muss gewinnen — wird voll attackieren")
-        elif away_state.get("must_win") and not home_state.get("must_win"):
+            # FIX 09.06.2026 — O/U: Must-Win-Team spielt offensiv → mehr Tore
+            elif is_over:
+                score += self._t["must_win_pp"] * 0.5
+                notes.append("Heim muss gewinnen — wird offensiv attackieren → mehr Tore wahrscheinlich")
+            elif is_under:
+                score -= self._t["must_win_pp"] * 0.5
+                notes.append("Heim muss gewinnen — wird offensiv attackieren → Unter unwahrscheinlicher")
+        elif a_must_one_side:
             if side == -1:
                 score += self._t["must_win_pp"]
                 notes.append("Auswärts muss gewinnen, Heim nicht — voller Druck pro Auswärts")
             elif side == +1:
                 score -= self._t["must_win_pp"]
                 notes.append("Auswärts muss gewinnen — wird voll attackieren")
+            elif is_over:
+                score += self._t["must_win_pp"] * 0.5
+                notes.append("Auswärts muss gewinnen — wird offensiv attackieren → mehr Tore wahrscheinlich")
+            elif is_under:
+                score -= self._t["must_win_pp"] * 0.5
+                notes.append("Auswärts muss gewinnen — wird offensiv attackieren → Unter unwahrscheinlicher")
 
         # Stake-Asymmetrie: ein Team hi-stake (must_win/third_chase), anderes qualified
         h_hi = home_state.get("must_win") or home_state.get("third_chase")
@@ -495,10 +510,17 @@ class IncentiveSignal(Signal):
             if side == +1:
                 score += self._t["stake_asymmetry_pp"]
                 notes.append("Heim spielt um Aufstieg, Auswärts schon qualifiziert (rotiert)")
+            # FIX 09.06.2026 — O/U: Stake-Asymmetrie → halbierter Stil-Konflikt → weniger Tore typisch
+            elif is_under:
+                score += self._t["stake_asymmetry_pp"] * 0.4
+                notes.append("Heim kämpft, Auswärts rotiert (qualifiziert) — Spiel verläuft kontrolliert")
         elif a_hi and home_state.get("qualified"):
             if side == -1:
                 score += self._t["stake_asymmetry_pp"]
                 notes.append("Auswärts spielt um Aufstieg, Heim schon qualifiziert (rotiert)")
+            elif is_under:
+                score += self._t["stake_asymmetry_pp"] * 0.4
+                notes.append("Auswärts kämpft, Heim rotiert (qualifiziert) — Spiel verläuft kontrolliert")
 
         return (score, " · ".join(notes), meta)
 

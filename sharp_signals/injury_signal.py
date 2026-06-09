@@ -115,6 +115,40 @@ def _team_injury_impact_pp(team_injuries: dict, thr: dict) -> tuple[float, list[
     return impact, notes
 
 
+def _team_injury_offense_defense(team_injuries: dict, thr: dict) -> tuple[float, float, list[str]]:
+    """
+    Splittet Injury-Impact in Offense-Impact (FWD/MID) vs Defense-Impact (GK/DEF).
+    Wird für den O/U-Branch genutzt: FWD-Ausfall → weniger Tore, GK/DEF-Ausfall → mehr Gegentore.
+    Returns (offense_pp, defense_pp, notes).
+    """
+    if not team_injuries or not team_injuries.get("players"):
+        return 0.0, 0.0, []
+    off_impact = 0.0
+    def_impact = 0.0
+    notes = []
+    for p in team_injuries["players"]:
+        if not isinstance(p, dict):
+            continue
+        pos_class = _classify_position(p.get("position") or "")
+        is_starter = _is_starter(p)
+        if not is_starter:
+            continue   # Backups beeinflussen O/U-Tor-Erwartung kaum
+        if pos_class == "FWD":
+            off_impact += thr["impact_FWD"]
+            notes.append(f"{p.get('name', '?')} (FWD)")
+        elif pos_class == "MID":
+            off_impact += thr["impact_MID"] * 0.5  # MF wirkt halb auf Offense
+            notes.append(f"{p.get('name', '?')} (MID)")
+        elif pos_class == "GK":
+            def_impact += thr["impact_GK"]
+            notes.append(f"{p.get('name', '?')} (GK)")
+        elif pos_class == "DEF":
+            def_impact += thr["impact_DEF"]
+            notes.append(f"{p.get('name', '?')} (DEF)")
+    cap = thr["max_per_team_pp"]
+    return min(cap, off_impact), min(cap, def_impact), notes
+
+
 def _pick_side(market: str) -> int:
     """+1 = Heim-Seite, -1 = Auswärts-Seite, 0 = nicht direkt."""
     m = (market or "").lower()
@@ -145,13 +179,55 @@ class InjurySignal(Signal):
         return "injury"
 
     def evaluate(self, pick: dict, context: dict) -> Optional[SignalResult]:
-        side = _pick_side(pick.get("market", ""))
-        if side == 0:
-            return None  # O/U-Märkte: Effekt ambivalent — separates Signal später
-
+        market = pick.get("market", "")
+        side = _pick_side(market)
         injuries = context.get("injuries") or {}
         home_id, away_id = context.get("home_id"), context.get("away_id")
         if not (home_id and away_id):
+            return None
+
+        # ── O/U-Branch (NEU 09.06.2026): Offense-/Defense-Split ──────────────
+        ml = market.lower()
+        is_over  = "über" in ml or "uber" in ml or "over" in ml
+        is_under = "unter" in ml or "under" in ml
+        is_ou_total = ("tore" in ml or "goals" in ml) and (is_over or is_under)
+
+        if is_ou_total:
+            h_off, h_def, h_notes = _team_injury_offense_defense(injuries.get(home_id), self._t)
+            a_off, a_def, a_notes = _team_injury_offense_defense(injuries.get(away_id), self._t)
+            # Tor-Impact pro Team: Stürmer-Ausfall reduziert eigene Tore,
+            # Defense-Ausfall erhöht Gegentore (= mehr Tore für anderes Team).
+            # Netto-Tor-Effekt: -h_off (eigene Tore weg) +a_def (mehr Tore gegen Auswärts)
+            # → analog für Auswärts. Gesamteffekt auf Tore in Spiel:
+            goals_delta = (-h_off + a_def) + (-a_off + h_def)
+            # NEGATIV = weniger Tore erwartet → Unter-Bias
+            # POSITIV = mehr Tore erwartet → Über-Bias
+            score = goals_delta if is_over else -goals_delta
+            if abs(score) < self._t["min_signal_pp"]:
+                return None
+            confidence = min(0.75, 0.45 + (abs(score) * 0.05))
+            ev_parts = []
+            if h_off > 0 or a_off > 0:
+                ev_parts.append(f"Offense-Ausfälle: Heim {h_off:.1f}pp · Auswärts {a_off:.1f}pp")
+            if h_def > 0 or a_def > 0:
+                ev_parts.append(f"Defense-Ausfälle: Heim {h_def:.1f}pp · Auswärts {a_def:.1f}pp")
+            evidence = "🩹 " + " · ".join(ev_parts) if ev_parts else f"Injury O/U-Effekt {score:+.1f}pp"
+            return SignalResult(
+                score=round(score, 2),
+                confidence=round(confidence, 2),
+                evidence=evidence,
+                metadata={
+                    "home_off_pp": round(h_off, 2),
+                    "home_def_pp": round(h_def, 2),
+                    "away_off_pp": round(a_off, 2),
+                    "away_def_pp": round(a_def, 2),
+                    "goals_delta": round(goals_delta, 2),
+                    "pick_side": "over" if is_over else "under",
+                },
+            )
+
+        # ── 1X2-Branch (alte Logik) ──────────────────────────────────────────
+        if side == 0:
             return None
 
         home_impact, home_notes = _team_injury_impact_pp(injuries.get(home_id), self._t)

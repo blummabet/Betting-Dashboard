@@ -10,7 +10,7 @@
     "updatedAt": null,
     "oddsUpdatedAt": "2026-06-08T15:31:27.309527+00:00",
     "formUpdatedAt": "2026-06-08T15:33:41.393773+00:00",
-    "picksUpdatedAt": "2026-06-09T19:33:32.299282+00:00",
+    "picksUpdatedAt": "2026-06-09T21:21:01.157742+00:00",
     "resultsUpdatedAt": "2026-06-08T15:57:13.712885+00:00",
     "cornersUpdatedAt": "2026-06-08T15:46:23.782010+00:00",
     "xgUpdatedAt": "2026-06-08T15:46:23.782015+00:00"
@@ -626,6 +626,14 @@
             "statusLong": "Not Started",
             "home_score": null,
             "away_score": null
+          },
+          "weather": {
+            "temp": 33,
+            "tempMin": 26,
+            "condition": "sonnig",
+            "icon": "☀️",
+            "windKph": 12,
+            "precipMm": 0
           }
         },
         {
@@ -2370,11 +2378,11 @@
           "pinn_move_pp": 5.0,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 364.6,
+          "hours_since_open": 366.4,
           "open_pinn_odds": 1.93,
           "current_pinn_odds": 1.76,
           "move_age_decay": 0.5,
-          "move_age_days": 15.2
+          "move_age_days": 15.3
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -2455,11 +2463,11 @@
           "pinn_move_pp": 5.0,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 364.6,
+          "hours_since_open": 366.4,
           "open_pinn_odds": 1.93,
           "current_pinn_odds": 1.76,
           "move_age_decay": 0.5,
-          "move_age_days": 15.2
+          "move_age_days": 15.3
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -2547,11 +2555,11 @@
           "pinn_move_pp": 5.41,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 364.6,
+          "hours_since_open": 366.4,
           "open_pinn_odds": 2.13,
           "current_pinn_odds": 1.91,
           "move_age_decay": 0.5,
-          "move_age_days": 15.2
+          "move_age_days": 15.3
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -4420,11 +4428,11 @@
           "pinn_move_pp": 5.29,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 490.2,
+          "hours_since_open": 492.0,
           "open_pinn_odds": 7.5,
           "current_pinn_odds": 5.37,
           "move_age_decay": 0.5,
-          "move_age_days": 20.4
+          "move_age_days": 20.5
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -7212,7 +7220,7 @@
             "confidence": 0.55,
             "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
             "weight": 1.0,
-            "weighted_score": 0.33,
+            "weighted_score": 0.13,
             "metadata": {
               "matchday": 1,
               "ko_stage": null,
@@ -7220,20 +7228,38 @@
                 "MD1-Auftakts-Vorsicht (Unter)"
               ],
               "pick_side": "neutral"
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "weather_signal",
+            "score": 1.2,
+            "confidence": 0.65,
+            "evidence": "🌡 33°C Mittag-Anpfiff · NED temperate · JPN temperate",
+            "weight": 1.0,
+            "weighted_score": 0.78,
+            "metadata": {
+              "temp_max": 33.0,
+              "effective_temp": 33.0,
+              "kickoff_mod": 1.0,
+              "home_climate": "temperate",
+              "away_climate": "temperate",
+              "heat_intensity": 0.6,
+              "side": "under"
             }
           }
         ],
-        "signalAdjustmentPP": -2.89,
-        "signalCountPos": 1,
+        "signalAdjustmentPP": -2.11,
+        "signalCountPos": 2,
         "signalCountNeg": 2,
-        "effectiveEdgePP": 6.1,
-        "convictionScore": 1,
+        "effectiveEdgePP": 6.9,
+        "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
         "convictionFamilies": {
           "sharp_money": 0,
           "model_stack": 0,
-          "context": 1,
+          "context": 2,
           "market": 0
         }
       },
@@ -7242,7 +7268,7 @@
         "odds": 1.91,
         "modelOdds": 1.507,
         "conf": "high",
-        "verdict": "ABWÄGEN",
+        "verdict": "BET",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
@@ -7279,7 +7305,7 @@
             "confidence": 0.55,
             "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
             "weight": 1.0,
-            "weighted_score": 0.33,
+            "weighted_score": 0.13,
             "metadata": {
               "matchday": 1,
               "ko_stage": null,
@@ -7287,23 +7313,42 @@
                 "MD1-Auftakts-Vorsicht (Unter)"
               ],
               "pick_side": "neutral"
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "weather_signal",
+            "score": 1.2,
+            "confidence": 0.65,
+            "evidence": "🌡 33°C Mittag-Anpfiff · NED temperate · JPN temperate",
+            "weight": 1.0,
+            "weighted_score": 0.78,
+            "metadata": {
+              "temp_max": 33.0,
+              "effective_temp": 33.0,
+              "kickoff_mod": 1.0,
+              "home_climate": "temperate",
+              "away_climate": "temperate",
+              "heat_intensity": 0.6,
+              "side": "under"
             }
           }
         ],
-        "signalAdjustmentPP": -0.47,
-        "signalCountPos": 1,
+        "signalAdjustmentPP": -0.03,
+        "signalCountPos": 2,
         "signalCountNeg": 1,
-        "effectiveEdgePP": 9.5,
-        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET",
-        "convictionScore": 1,
+        "effectiveEdgePP": 10.0,
+        "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
         "convictionFamilies": {
           "sharp_money": 0,
           "model_stack": 0,
-          "context": 1,
+          "context": 2,
           "market": 0
-        }
+        },
+        "pickTriggerReason": "Edge-getrieben",
+        "modelHallucinationWarning": "Edge gegen Pinnacle vorhanden, aber Conviction nur 2/10 — Signale stützen Pick wenig"
       },
       {
         "market": "Unter 3.5 Tore",
@@ -7357,7 +7402,7 @@
             "confidence": 0.55,
             "evidence": "🎯 MD1-Auftakts-Vorsicht (Unter)",
             "weight": 1.0,
-            "weighted_score": 0.33,
+            "weighted_score": 0.13,
             "metadata": {
               "matchday": 1,
               "ko_stage": null,
@@ -7365,20 +7410,38 @@
                 "MD1-Auftakts-Vorsicht (Unter)"
               ],
               "pick_side": "neutral"
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "weather_signal",
+            "score": 1.2,
+            "confidence": 0.65,
+            "evidence": "🌡 33°C Mittag-Anpfiff · NED temperate · JPN temperate",
+            "weight": 1.0,
+            "weighted_score": 0.78,
+            "metadata": {
+              "temp_max": 33.0,
+              "effective_temp": 33.0,
+              "kickoff_mod": 1.0,
+              "home_climate": "temperate",
+              "away_climate": "temperate",
+              "heat_intensity": 0.6,
+              "side": "under"
             }
           }
         ],
-        "signalAdjustmentPP": 1.87,
-        "signalCountPos": 3,
+        "signalAdjustmentPP": 1.86,
+        "signalCountPos": 4,
         "signalCountNeg": 0,
         "effectiveEdgePP": 7.9,
-        "convictionScore": 3,
-        "convictionVerdict": "skip",
-        "convictionLabel": null,
+        "convictionScore": 4,
+        "convictionVerdict": "watch",
+        "convictionLabel": "👁 Beobachten",
         "convictionFamilies": {
           "sharp_money": 0,
           "model_stack": 2,
-          "context": 1,
+          "context": 2,
           "market": 0
         }
       },
