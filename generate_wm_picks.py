@@ -1368,10 +1368,16 @@ def generate_picks_for_fixture(
                 alt_model = model_odds.get(alt_key) if alt_key else None
                 if not alt_odds or alt_odds <= 1.0:
                     continue
-                # Edge optional — auch ohne eigene Edge als "Insurance" anbieten
+                # Edge optional — auch ohne eigene Edge als "Insurance" anbieten.
+                # FIX 09.06.2026 Agent-Audit: Edge-Floor von -2pp verhindert
+                # synthetische Picks die garantiert -EV sind (DC/AH-Märkte haben
+                # oft höhere Vig als 1X2, daher gefährlich ohne Floor).
                 alt_edge = 0.0
                 if alt_model and alt_model > 1.0:
                     alt_edge = (1.0/alt_odds - 1.0/alt_model) * 100  # wie compute_verdict
+                SYNTH_EDGE_FLOOR_PP = -2.0
+                if alt_edge < SYNTH_EDGE_FLOOR_PP:
+                    continue  # Alt-Quote zu schlecht — kein Insurance-Anbieten
                 alt_pick = {
                     "market":     alt_market,
                     "odds":       alt_odds,

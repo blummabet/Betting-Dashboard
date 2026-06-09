@@ -150,13 +150,11 @@ def _pick_odds_key(market: str) -> Optional[str]:
     if "auswärt" in m or "auswarts" in m or "away" in m: return "aw"
     if "unentsch" in m or "remis" in m or "draw" in m: return "dr"
 
-    # Corners (vor Tore-Check — "Ecken" enthält auch "über"/"unter")
+    # Corners — generischer Key matched Odds-Snapshot. Die spezifische cornerLine
+    # liegt separat im Snapshot (`cornerLine`-Feld). Granulare cOver85/95/105
+    # gibts dort nicht. (Fix 09.06.2026 Agent-Audit.)
     if "ecken" in m or "corner" in m:
-        if "8.5" in m or "85" in m: return "cOver85" if ("über" in m or "over" in m) else "cUnder85"
-        if "9.5" in m or "95" in m: return "cOver95" if ("über" in m or "over" in m) else "cUnder95"
-        if "10.5" in m or "105" in m: return "cOver105" if ("über" in m or "over" in m) else "cUnder105"
-        # Fallback: keine Linie erkannt → generisches cOver
-        return "cOver"
+        return "cOver" if ("über" in m or "over" in m) else "cUnder"
 
     # BTTS
     if "beide" in m or "btts" in m:
@@ -347,55 +345,62 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     evidence = []
 
     # ── Familie 1: Sharp-Money-Konsens (max 3) ────────────────────────────
+    # FIX 09.06.2026 (Agent-Audit): vorher konnte sharp_count vor Cap auf 5 ackumulieren
+    # (Sharp-Signale + Opening-Movement + Sharp-Move-Trigger + Soft-Lag-Bonus). Das
+    # maskierte den Score als 4-stufig (0/1/2/3) während er de-facto binär war (0 oder 3+).
+    # Jetzt: maximal EIN Bucket-Trigger pro Familie, mit Stärke-Stufung.
+    # Bucket "Live-Sharp" (Sharp-Move triggered + neu): 3pt
+    # Bucket "Bewegung+Konsens" (Pinnacle bewegte sich + Sharp-Signale): 2pt
+    # Bucket "Bewegung allein" (entweder Move ODER Signal-Konsens): 1pt
     sharp_signals_active = []
     for name in ("lead_lag_bias", "steam_lag", "polymarket_sharp"):
         if _signal_contributes(name) > 0:
             sharp_signals_active.append(name)
-            evidence.append(f"Sharp: {name}")
+            evidence.append(f"Sharp-Signal: {name}")
+    sharp_signal_count = len(sharp_signals_active)
 
-    sharp_count = min(len(sharp_signals_active), 2)   # max 2 von Sharp-Signalen
-
-    # Opening-Movement zusätzlicher Punkt
     om = detect_opening_movement(pick, context, cfg)
-    if om and om.get("in_pick_direction"):
-        sharp_count += 1
+    has_opening = bool(om and om.get("in_pick_direction"))
+    if has_opening:
         evidence.append(f"Pinnacle bewegt {om['move_pp']:+.1f}pp seit Eröffnung in Pick-Richtung")
 
-    # Sharp-Move-Trigger (Pinnacle ≥X pp Move + Zeit) extra Punkt — unabhängig
-    # vom Soft-Lag jetzt (Lockerung 09.06.2026). Soft-Lag-Bonus gibt nochmal +1.
-    # Move-Age-Decay: ≤7d=100%, ≤14d=80%, ≤21d=50%, >21d=20%, >30d=0% (Safety
-    # gegen ewig nachhängende historische Moves).
     sm = detect_sharp_move(pick, context, cfg)
+    sm_triggered = False
+    sm_decay = 0.0
     if sm and sm.get("triggered"):
         hours = sm.get("hours_since_open") or 0
         days = hours / 24
-        if days > 30:
-            decay = 0.0
-        elif days > 21:
-            decay = 0.2
-        elif days > 14:
-            decay = 0.5
-        elif days > 7:
-            decay = 0.8
-        else:
-            decay = 1.0
-        sm["move_age_decay"] = decay
+        if days > 30:   sm_decay = 0.0
+        elif days > 21: sm_decay = 0.2
+        elif days > 14: sm_decay = 0.5
+        elif days > 7:  sm_decay = 0.8
+        else:           sm_decay = 1.0
+        sm["move_age_decay"] = sm_decay
         sm["move_age_days"] = round(days, 1)
-        if decay >= 1.0:
-            sharp_count += 1
-            evidence.append(f"Sharp-Move: Pinnacle {sm['pinn_move_pp']:+.1f}pp seit Eröffnung")
-        elif decay >= 0.5:
-            sharp_count += 1  # ganzer Punkt aber Evidence flaggt Alter
-            evidence.append(f"Sharp-Move älter ({days:.0f}d): Pinnacle {sm['pinn_move_pp']:+.1f}pp — Punkt teil-gedämpft")
-        elif decay > 0:
-            # Bruchteil-Punkt nicht im Cap-System darstellbar → kein Punkt, nur Evidence
-            evidence.append(f"Sharp-Move sehr alt ({days:.0f}d): Pinnacle {sm['pinn_move_pp']:+.1f}pp — kein Conviction-Punkt")
-        # decay==0: nichts, evidence still leer
-        if sm.get("soft_lag_bonus") and decay >= 0.5:
-            sharp_count += 1
-            evidence.append(f"Bonus: Soft-Books {sm['soft_lag_pp']:.1f}pp hinter Pinnacle")
+        sm_triggered = sm_decay >= 0.5
+        if sm_decay >= 1.0:
+            evidence.append(f"Sharp-Move: Pinnacle {sm['pinn_move_pp']:+.1f}pp seit Eröffnung (frisch)")
+        elif sm_decay >= 0.5:
+            evidence.append(f"Sharp-Move älter ({days:.0f}d): Pinnacle {sm['pinn_move_pp']:+.1f}pp — teil-gedämpft")
+        elif sm_decay > 0:
+            evidence.append(f"Sharp-Move sehr alt ({days:.0f}d): kein Conviction-Punkt")
 
-    family_scores["sharp_money"] = min(sharp_count, caps["sharp_money"])
+    soft_lag_fresh = bool(sm and sm.get("soft_lag_bonus") and sm_decay >= 0.8)
+    if soft_lag_fresh:
+        evidence.append(f"Soft-Books {sm['soft_lag_pp']:.1f}pp hinter Pinnacle (frischer Lag)")
+
+    # Strength-Berechnung statt naiver Akkumulation:
+    # Jede Quelle trägt limitiert bei, Map auf 4-stufige Skala (0/1/2/3).
+    strength = 0
+    if sm_triggered:           strength += 2   # Sharp-Move triggered = stärkstes Einzel-Signal
+    if has_opening:            strength += 1
+    strength += min(sharp_signal_count, 2)     # max 2 von Signal-Familie
+    if soft_lag_fresh:         strength += 1
+
+    if strength >= 5:    family_scores["sharp_money"] = 3   # 4+ Quellen aktiv
+    elif strength >= 3:  family_scores["sharp_money"] = 2   # 2-3 Quellen
+    elif strength >= 1:  family_scores["sharp_money"] = 1   # 1 Quelle
+    else:                family_scores["sharp_money"] = 0
 
     # ── Familie 2: Form-Konsens (max 2) ───────────────────────────────────
     form_signals_active = []

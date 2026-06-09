@@ -2772,6 +2772,69 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             Pressure-Index 0.8 wenn schlechter.
           </div>
         </div>
+        <div class="h2-feature" style="border-color:rgba(255,107,107,0.45);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🔥</span><div class="h2-feature-title">Sharp-Move-Detection mit Move-Age-Decay (NEU 09.06.2026)</div></div>
+          <div class="h2-feature-desc">
+            <code>conviction_score.detect_sharp_move()</code> erkennt Pinnacle-Moves seit Eröffnung
+            <strong>granular pro Markt</strong> — nicht nur 1X2 sondern auch O/U 1.5/2.5/3.5, BTTS, Doppelte
+            Chance. Trigger gelockert: <em>Move ≥5pp + ≥6h</em> reicht (Soft-Book-Lag wurde von
+            Hard-Requirement zu Bonus-Punkt). Begründung: Pinnacle-Position ist auch dann ein Modell-Signal
+            wenn Soft-Books seither aufgeholt haben.
+            <br>
+            <strong>Move-Age-Decay als Safety</strong>: ≤14d=100% Punkt, ≤21d=50%, ≤30d=20%-Evidence-only,
+            &gt;30d=verworfen. Verhindert dass uralte Moves ewig nachhängen.
+            <br>
+            <strong>Card + Event-Page-Visualisierung</strong>: Opening-Quote → Jetzt-Quote als Balken,
+            Tage seit Opening, Soft-Book-Status ("noch im Rückstand" vs "aufgeholt").
+            <br>
+            <strong>Live</strong>: 8 Sharp-Move-Triggers im aktuellen Datensatz auf 1X2 (CAN-QAT +10.4pp,
+            CPV-SAU +9.2pp, JOR-DZA +9.1pp, …) — mit O/U+BTTS noch mehr.
+          </div>
+        </div>
+        <div class="h2-feature" style="border-color:rgba(125,211,252,0.45);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🛡</span><div class="h2-feature-title">Synthetische Smart-Substitution (NEU 09.06.2026)</div></div>
+          <div class="h2-feature-desc">
+            Bisher: Smart-Sub (Heimsieg @2.66 → DC 1X @1.43 als saferAlt) griff nur wenn der Alt-Markt
+            <em>eigene Pick-würdige Edge ≥4pp</em> hatte. Folge: bei vielen riskanten BETs fehlte die Insurance.
+            <br>
+            <strong>Jetzt</strong>: Synthetisches saferAlt-Pick wird konstruiert sobald die Alt-Markt-Quote
+            (DC 1X / AH +0.5 / O2.5 / U2.5) im Odds-Snapshot verfügbar ist. Klar markiert als
+            <em>"Sicherere Alternative"</em>, eigene Edge transparent angezeigt (oft 0-3pp).
+            <br>
+            <strong>Card-UI</strong>: gestrichelte Box vor "Weitere Picks", mit Original-Quote-Vergleich
+            ("statt @2.66 jetzt @1.43") + Hinweis ob synthetisch oder eigenständig.
+            <br>
+            <strong>Live-Impact</strong>: KOR-CZE Heim @2.66 BET → DC 1X @1.43 saferAlt, MEX-ZAF U1.5
+            @3.20 → U2.5 @1.74, HTI-SCO O3.5 @3.40 → O1.5 @1.31, DNB Heim @5.30 → DC 1X @2.65.
+          </div>
+        </div>
+        <div class="h2-feature" style="border-color:rgba(255,176,46,0.45);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📐</span><div class="h2-feature-title">Familien-Tabelle im Warum-Modal (NEU 09.06.2026)</div></div>
+          <div class="h2-feature-desc">
+            Warum-Modal zeigt jetzt die <strong>volle Conviction-Familien-Auflösung</strong>: pro Familie
+            die erreichten Punkte vs. das Max, plus Progress-Bar mit 8+-Zielmarker. Macht transparent
+            <em>warum</em> ein Pick z.B. nur 3/10 hat (Sharp-Money +3, aber Form/Kontext 0). Identisch in
+            Card-Kompakt-Variante + Event-Page-Vollvariante.
+          </div>
+        </div>
+        <div class="h2-feature" style="border-color:rgba(255,255,255,0.18);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">⚙️</span><div class="h2-feature-title">Volle Markt-Coverage in Sharp + Conviction (NEU 09.06.2026)</div></div>
+          <div class="h2-feature-desc">
+            Bisher: Sharp-Move-Detection + Conviction-Sharp-Trigger erkannten nur 1X2 + O25/U25 + BTTS.
+            Picks auf Über 1.5 / 3.5 / BTTS Nein / Doppelte Chance fielen durch das Raster.
+            <br>
+            <strong>Jetzt</strong>: <code>_pick_odds_key()</code> in conviction_score +
+            <code>pick_market_to_field()</code> in detect_wm_sharp_moves erkennen <strong>granular
+            O15/O25/O35, U15/U25/U35, BTTS Y/N, DC 1X/X2/12, AH</strong>. BTTS aus disabled_markets zurück
+            (Skellam-Loss kam aus altem Modell ohne Signal-Adjust — Engine + Conviction-Gate filtern jetzt).
+            Movers-Liste im Sharp-Radar zeigt alle diese Märkte mit Sparkline + Last-Change-Indikator.
+            <br>
+            <strong>WM-aus, Liga-an</strong>: Corner-Markets (8.5/9.5/10.5 Ecken) + Player-Picks via
+            <code>disabled_markets</code> + <code>disabled_pipelines</code> Profile-gated für WM2026
+            deaktiviert (keine Signal-Coverage für NT-Corners; Player-Engine fehlt). Für National-Liga-Saison
+            werden beide reaktiviert (H2H-Corner-Date + Vereins-Corner-Form vorhanden).
+          </div>
+        </div>
         <div class="h2-feature" style="border-color:rgba(76,201,240,0.35);">
           <div class="h2-feature-head"><span class="h2-feature-icon">🎯</span><div class="h2-feature-title">Anreiz-Signal (NEU 09.06.2026)</div></div>
           <div class="h2-feature-desc">
@@ -2805,20 +2868,40 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         </div>
       </div>
 
-      <div class="h2-sub-label" style="margin-top:24px;">Pick-Pipeline (8 Schritte, sichtbar im Warum-Modal)</div>
+      <div class="h2-sub-label" style="margin-top:24px;">Pick-Pipeline (10 Schritte, sichtbar im Warum-Modal)</div>
       <div class="h2-feature-grid">
         <div class="h2-feature">
           <div class="h2-feature-desc" style="line-height:1.8;">
-            <strong>1.</strong> Elo + xG-Modell → fair-Quote pro Markt<br>
-            <strong>2.</strong> Edge-Filter (1X2: ≥5pp · O/U+AH: ≥4pp)<br>
+            <strong>1.</strong> Elo + xG-Modell → fair-Quote pro Markt (1X2/DC/DNB/AH + O/U 1.5/2.5/3.5 + BTTS)<br>
+            <strong>2.</strong> Edge-Filter (1X2: ≥5pp · O/U+AH+BTTS: ≥4pp)<br>
             <strong>3.</strong> Modell-Bias-Schutz (O/U &gt;10pp · AH &gt;12pp → ABWÄGEN)<br>
             <strong>4.</strong> Cross-Model-Check (DNB ↔ AH +0.5 · Divergenz ≥ 8pp → ABWÄGEN)<br>
             <strong>5.</strong> Cross-Market-Konflikt (unvereinbare Direction → schwächerer downgegradet)<br>
-            <strong>6.</strong> Smart-Substitution (hohe Quote → sicherere Alternative)<br>
-            <strong>7.</strong> Verlust-Markt-Filter (BTTS, Corner&gt;10.5 nach Backtest-Empirik deaktiviert)<br>
-            <strong>8.</strong> Signal-Engine (Adjustment + Min-2-Positive-Threshold + Anti-Korrelation)
+            <strong>6.</strong> Smart-Substitution synthetisch (hohe Quote → sicherere Alternative auch ohne eigene Edge)<br>
+            <strong>7.</strong> Profile-Gates (Corners + Player-Picks für WM2026 aus, Liga-Switch reaktiviert)<br>
+            <strong>8.</strong> Signal-Engine — <strong>14 modulare Signale</strong> mit Anti-Korrelation, Min-2-Positive-Threshold, Bayesian-Weight-Loop<br>
+            <strong>9.</strong> Sharp-Move-Detection — Pinnacle-Move seit Opening pro Markt-Key (granular O15/O25/O35 + BTTS + DC), Move-Age-Decay<br>
+            <strong>10.</strong> Conviction-Score 0-10 — 6 Familien (Sharp/Form/Kontext/Realtime/Markt/Modell). ABWÄGEN→BET-Upgrade bei ≥8/10
           </div>
         </div>
+      </div>
+
+      <div class="h2-sub-label" style="margin-top:24px;">Signal-Engine — 14 modulare Signale</div>
+      <div class="h2-feature-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>1. PublicStaticBias</strong> · Sharp ↔ Public Quoten-Spread</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>2. TravelBurden</strong> · Anreise-km + Höhe → xG-Discount</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>3. Injury</strong> · positionsbewusste Verletzungs-Penalty</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>4. FormTrend</strong> · Form-Delta letzte 5-10 Spiele</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>5. H2H-Pattern</strong> · historisches Matchup-Muster</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>6. xG-Strength</strong> · Understat-NT-xG-Pipeline</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>7. PolymarketSharp</strong> · Poly-Edge gegen Pinnacle</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>8. SteamLag</strong> · Pinnacle vs Soft-Books</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>9. LeadLag-Bias</strong> · Public-Book-Latenz</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>10. PressureIndex</strong> · Tabellen-Druck + Aufstieg-Math</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>11. Lineup</strong> · T-1h Top-Scorer-Verfügbarkeit</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>12. APIF-Predictions</strong> · drittes Pricing-Modell als Cross-Check</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>13. Weather</strong> · Hitze-Penalty für Cold-Climate-Teams</div></div>
+        <div class="h2-feature"><div class="h2-feature-desc"><strong>14. Incentive</strong> · Qualifikations-Math + Bracket + Venue + Rotation</div></div>
       </div>
 
       <div class="h2-sub-label" style="margin-top:24px;">Backtest-Findings 07.06.2026 (619 historische Picks)</div>
