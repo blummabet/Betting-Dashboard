@@ -175,35 +175,47 @@ def save_positions(data: dict):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def fetch_current_price(slug: str, market_key: str) -> float | None:
+def fetch_current_price(slug: str, market_key: str, match_key: str = "") -> float | None:
     """
     Holt aktuellen Polymarket-Preis für ein Spiel via Gamma API.
     market_key: 'hw' | 'dr' | 'aw' | 'o25' | 'u25'
+    match_key:  'GHA-PAN' (homeId-awayId) — Primär-Lookup im prices-Cache.
 
-    FIX 09.06.2026 — drei Bugs gleichzeitig:
-      (1) Cache-Lookup nutzte `entry.get(market_key)`, aber die prices-Cache-
-          Keys sind `poly_hw/poly_dr/poly_aw/poly_o25/poly_u25` — also Präfix
-          nötig. Cache-Hit failt → API-Fallback → leerer Slug → HTTP 422.
-      (2) Slug-Match auf `entry["slug"]` greift bei O/U nicht, weil die Auto-
-          Bets den `moreMktSlug` speichern (separater Polymarket-Event), nicht
-          den Moneyline-Slug. Wir matchen jetzt beide.
-      (3) Leerer Slug → kein API-Call, sondern None zurückgeben statt 422.
+    FIX 09.06.2026 — vier Bugs hintereinander:
+      (1) Cache-Lookup nutzte `entry.get(market_key)`, aber die Cache-Keys
+          sind `poly_hw/poly_dr/poly_aw/poly_o25/poly_u25` — Präfix nötig.
+      (2) Slug-Match scheitert bei O/U, weil Auto-Bets `moreMktSlug` haben
+          (separater Polymarket-Event), nicht den Moneyline-Slug.
+      (3) Leerer Slug → kein API-Call mit slug="", sondern None.
+      (4) Auto-Bets aus 09.06. haben weder slug noch moreMktSlug gespeichert
+          (Schreib-Bug im Trigger). Daher Primär-Lookup via match_key
+          (homeId-awayId), das ist der Dict-Key in prices.
     """
-    if not slug:
-        return None
-
-    # Zuerst lokalen Cache (wm_poly_prices.json) prüfen — vermeidet unnötige API-Calls
     cache_key = f"poly_{market_key}"
-    if os.path.exists(PRICES_FILE):
+
+    # Primär: direkter Lookup via match_key in prices-Dict
+    if match_key and os.path.exists(PRICES_FILE):
+        with open(PRICES_FILE, encoding="utf-8") as f:
+            cached = json.load(f)
+        entry = cached.get("prices", {}).get(match_key)
+        if entry:
+            price = entry.get(cache_key) or entry.get(market_key)
+            if price:
+                return float(price)
+
+    # Sekundär: Slug-basierte Suche (für ältere Bets mit slug aber ohne match_key)
+    if slug and os.path.exists(PRICES_FILE):
         with open(PRICES_FILE, encoding="utf-8") as f:
             cached = json.load(f)
         prices = cached.get("prices", {})
         for key, entry in prices.items():
-            # Beide Slug-Felder probieren: Moneyline-Slug (hw/dr/aw) + moreMktSlug (o25/u25)
             if entry.get("slug") == slug or entry.get("moreMktSlug") == slug:
                 price = entry.get(cache_key) or entry.get(market_key)
                 if price:
                     return float(price)
+
+    if not slug:
+        return None
 
     # Fallback: direkt von Gamma API holen — nur für moneyline, O/U-Endpoint
     # hat anderes Schema und wird vom Cache abgedeckt
@@ -233,8 +245,10 @@ def check_position(pos: dict) -> dict:
     market_key = pos.get("priceKey", "hw")  # hw/dr/aw
     entry      = pos.get("entryPrice", 0)
     pinn_fair  = pos.get("pinnFair", None)
+    # match_key (homeId-awayId) ist Primär-Lookup im prices-Cache
+    match_key  = f"{pos.get('homeId','')}-{pos.get('awayId','')}".strip("-")
 
-    current = fetch_current_price(slug, market_key)
+    current = fetch_current_price(slug, market_key, match_key)
     if current is None:
         pos["currentPrice"] = None
         pos["pnlPct"] = None
