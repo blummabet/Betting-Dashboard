@@ -191,6 +191,37 @@
         "confidence_md2": 0.55,
         "confidence_md3": 0.75,
         "confidence_ko": 0.65
+      },
+      "conviction_score": {
+        "_description": "Conviction-Score 0-10: Wie gut ist eine Wette begründet? Separat vom Edge-Verdict (das bleibt für Polymarket-Trading kritisch). Familien-gewichtet, Bayesian-Loop justiert weights über Zeit.",
+        "sharp_move": {
+          "min_pinn_move_pp": 5.0,
+          "min_soft_lag_pp": 3.0,
+          "min_hours_since_open": 6
+        },
+        "verdict_thresholds": {
+          "top": 8,
+          "abwaegen": 6,
+          "skip": 4
+        },
+        "family_caps": {
+          "sharp_money": 3,
+          "form": 2,
+          "context": 2,
+          "realtime": 2,
+          "market": 1,
+          "model": 1
+        },
+        "opening_movement": {
+          "enabled": true,
+          "min_pp_in_pick_direction": 3.0
+        },
+        "signal_weights_init": 1.0,
+        "card_quote_display": {
+          "show_soft_book_quote": true,
+          "show_pinn_in_modal": true,
+          "show_movement_in_modal": true
+        }
       }
     },
     "liga_default": {
@@ -312,6 +343,37 @@
         "confidence_md2": 0.55,
         "confidence_md3": 0.7,
         "confidence_ko": 0.65
+      },
+      "conviction_score": {
+        "_description": "Liga-Profil: gleiche Logik wie WM, aber moderatere Schwellen weil Liga-Quoten oft enger sind",
+        "sharp_move": {
+          "min_pinn_move_pp": 4.0,
+          "min_soft_lag_pp": 2.5,
+          "min_hours_since_open": 12
+        },
+        "verdict_thresholds": {
+          "top": 8,
+          "abwaegen": 6,
+          "skip": 4
+        },
+        "family_caps": {
+          "sharp_money": 3,
+          "form": 2,
+          "context": 2,
+          "realtime": 2,
+          "market": 1,
+          "model": 1
+        },
+        "opening_movement": {
+          "enabled": true,
+          "min_pp_in_pick_direction": 2.5
+        },
+        "signal_weights_init": 1.0,
+        "card_quote_display": {
+          "show_soft_book_quote": true,
+          "show_pinn_in_modal": true,
+          "show_movement_in_modal": true
+        }
       }
     }
   }
