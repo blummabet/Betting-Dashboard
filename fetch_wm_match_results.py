@@ -207,10 +207,33 @@ def main():
         if status_short in FINISHED_STATUSES:
             result_entry["resolvedAt"] = now_iso
 
+        # ── Venue-Sync 09.06.2026 ──────────────────────────────────────
+        # API-Football liefert venue.name + venue.city im /fixtures-Response.
+        # Vorher: wir ignorierten das. Resultat: "Empower Field, Denver" und
+        # "Camping World Stadium, Orlando" als Phantom-Venues aus alter Daten-
+        # quelle in wm2026-data.json. Jetzt: API-Football als Source-of-Truth.
+        api_venue = api_match.get("fixture", {}).get("venue", {}) or {}
+        venue_name = api_venue.get("name")
+        venue_city = api_venue.get("city")
+        venue_str = None
+        if venue_name and venue_city:
+            venue_str = f"{venue_name}, {venue_city}"
+        elif venue_name:
+            venue_str = venue_name
+        elif venue_city:
+            venue_str = venue_city
+
         # In wm2026-data.json schreiben
         for fx in wm["groups"][gkey]["fixtures"]:
             if fx["home"] == home_id and fx["away"] == away_id:
                 fx["result"] = result_entry
+                if venue_str:
+                    # Nur überschreiben wenn API-Quelle einen vernünftigen Wert liefert
+                    old_venue = fx.get("venue", "")
+                    if fx.get("venue") != venue_str:
+                        fx["venue"] = venue_str
+                        if old_venue:
+                            print(f"     📍 Venue-Update: {old_venue!r} → {venue_str!r}")
                 break
 
         score_str = f"{home_score}:{away_score}" if home_score is not None else "—"
