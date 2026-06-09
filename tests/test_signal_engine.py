@@ -181,10 +181,16 @@ class TestTravelBurden(unittest.TestCase):
             {"home_id": home, "away_id": away, "matchday": matchday, "travel": travel}
         )
 
-    def test_no_signal_for_non_1x2(self):
+    def test_ou_signal_for_travel_burden(self):
+        # NEU 09.06.2026: Travel dämpft Tore → Unter-Bias, halber Effekt vs 1X2
         travel = {"ZAF": {"legs": [{"matchday_to": 1, "km": 4000,
                                     "rest_days": 2, "burden": "critical"}]}}
-        self.assertIsNone(self._evaluate("Über 2.5 Tore", travel))
+        r_over = self._evaluate("Über 2.5 Tore", travel)
+        self.assertIsNotNone(r_over)
+        self.assertLess(r_over.score, 0)
+        r_under = self._evaluate("Unter 2.5 Tore", travel)
+        self.assertIsNotNone(r_under)
+        self.assertGreater(r_under.score, 0)
 
     def test_no_signal_when_both_teams_local(self):
         travel = {"MEX": {"legs": [{"matchday_to": 1, "km": 200, "rest_days": 5}]},
@@ -311,7 +317,8 @@ class TestH2HPattern(unittest.TestCase):
         self.assertIn("⚔️", result.evidence)
 
     def test_no_signal_below_sample_threshold(self):
-        ctx = {"h2h": {"games": 3, "homeWins": 2, "draws": 1, "awayWins": 0}}
+        # Schwelle wurde 09.06.2026 von 5 auf 2 gesenkt. 1 Spiel ist immer noch zu wenig.
+        ctx = {"h2h": {"games": 1, "homeWins": 1, "draws": 0, "awayWins": 0}}
         self.assertIsNone(self.sig.evaluate({"market": "Heimsieg"}, ctx))
 
 

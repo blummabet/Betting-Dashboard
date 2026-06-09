@@ -61,6 +61,15 @@ def _pick_side(market: str) -> int:
     return 0
 
 
+def _ou_market(market: str):
+    """O/U-Markt: returns direction (Über=+1 / Unter=-1) oder None."""
+    m = (market or "").lower()
+    if "ecken" in m or "corner" in m: return None
+    if "über" in m or "uber" in m or "over" in m: return +1
+    if "unter" in m or "under" in m: return -1
+    return None
+
+
 def _factor_from_burden(tb_team: dict, matchday: int) -> tuple[float, dict]:
     """
     Rekonstruiert den xG-Discount-Faktor und Metadata aus travel_data Eintrag.
@@ -115,9 +124,11 @@ class TravelBurdenSignal(Signal):
         return "travel_burden"
 
     def evaluate(self, pick: dict, context: dict) -> Optional[SignalResult]:
-        side = _pick_side(pick.get("market", ""))
-        if side == 0:
-            return None  # O/U/BTTS/Corners: Travel kein direktes Signal
+        market = pick.get("market", "")
+        side = _pick_side(market)
+        ou_dir = _ou_market(market) if side == 0 else None
+        if side == 0 and ou_dir is None:
+            return None  # BTTS/AH-Sondercases ignorieren (zu indirekt)
 
         travel = context.get("travel") or {}
         home_id = context.get("home_id")
@@ -136,6 +147,34 @@ class TravelBurdenSignal(Signal):
         # Nichts berichtenswertes
         if f_home >= min_factor and f_away >= min_factor:
             return None
+
+        # ── O/U-Pfad (NEU 09.06.2026): Reise dämpft Offensive auf BEIDEN Seiten ──
+        # Wenn beide Teams Reise-Penalty haben, sinkt erwartete Tor-Summe → Unter-Vorteil.
+        # Halbierter Effekt vs 1X2 weil O/U weiter weg von der Reise-Mechanik ist.
+        if ou_dir is not None:
+            # Summe der "fehlenden" Performance beider Teams (max 0.3 = 30% Penalty)
+            home_penalty = max(0, 1.0 - f_home)
+            away_penalty = max(0, 1.0 - f_away)
+            total_penalty = home_penalty + away_penalty
+            if total_penalty < 0.05:
+                return None
+            # Reise drückt Tore → positiv auf Unter, negativ auf Über
+            ou_score = -ou_dir * total_penalty * scale * 0.5   # halber Effekt
+            if abs(ou_score) < 0.5:
+                return None
+            confidence = min(0.70, 0.45 + total_penalty * 1.5)
+            parts = []
+            if home_penalty > 0:
+                parts.append(f"Heim {meta_home.get('km',0)}km/{meta_home.get('rest_days',0)}d")
+            if away_penalty > 0:
+                parts.append(f"Auswärts {meta_away.get('km',0)}km/{meta_away.get('rest_days',0)}d")
+            side_str = "Über" if ou_dir == +1 else "Unter"
+            ev = f"✈️ Reise-Erschöpfung dämpft Tore: " + " · ".join(parts) + f" → {side_str}-Bias"
+            return SignalResult(
+                score=round(ou_score, 2), confidence=round(confidence, 2), evidence=ev,
+                metadata={"factor_home": round(f_home, 3), "factor_away": round(f_away, 3),
+                          "total_penalty": round(total_penalty, 3), "pick_side": side_str},
+            )
 
         # Score-Berechnung
         # Pick stützt Heim (side=+1): Auswärts gepresst (f_away < 1.0) → positiv,

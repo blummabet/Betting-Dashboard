@@ -53,6 +53,25 @@ def _pick_side(market: str) -> int:
     return 0
 
 
+def _ou_market(market: str):
+    """Returns (direction, line) — siehe form_trend._ou_market."""
+    m = (market or "").lower()
+    is_over = "über" in m or "uber" in m or "over" in m
+    is_under = "unter" in m or "under" in m
+    if not (is_over or is_under): return (None, None)
+    if "ecken" in m or "corner" in m: return (None, None)
+    line = 2.5
+    if "1.5" in m or "1,5" in m: line = 1.5
+    elif "3.5" in m or "3,5" in m: line = 3.5
+    return (+1 if is_over else -1, line)
+
+
+def _btts_market(market: str):
+    m = (market or "").lower()
+    if not ("beide" in m or "btts" in m): return None
+    return -1 if ("nein" in m or "no" in m) else +1
+
+
 class H2HPatternSignal(Signal):
     """
     H2H Win-Rate-basiertes Signal.
@@ -68,54 +87,93 @@ class H2HPatternSignal(Signal):
         return "h2h_pattern"
 
     def evaluate(self, pick: dict, context: dict) -> Optional[SignalResult]:
-        side = _pick_side(pick.get("market", ""))
-        if side == 0:
-            return None
-
         h2h = context.get("h2h") or {}
         games = h2h.get("games", 0)
         if games < self._t["min_h2h_games"]:
             return None
+        market = pick.get("market", "")
 
-        home_wins = h2h.get("homeWins", 0)
-        draws     = h2h.get("draws", 0)
-        away_wins = h2h.get("awayWins", 0)
+        # Dampening für kleine Stichproben — auch für O/U+BTTS
+        small_sample = games < self._t["small_sample_threshold"]
+        small_factor = self._t["small_sample_dampening"] if small_sample else 1.0
 
-        # Win-Rate-equivalent für die gepickte Seite (inkl. Draws teilweise)
-        # Heim-Seite: Heimsiege voll, Draws halb (DC 1X / DNB-Logik)
-        if side == +1:
-            picked_rate = (home_wins + 0.5 * draws) / games
-        else:
-            picked_rate = (away_wins + 0.5 * draws) / games
+        # ── 1. 1X2 / DC / DNB / AH ────────────────────────────────────
+        side = _pick_side(market)
+        if side != 0:
+            home_wins = h2h.get("homeWins", 0)
+            draws     = h2h.get("draws", 0)
+            away_wins = h2h.get("awayWins", 0)
+            if side == +1:
+                picked_rate = (home_wins + 0.5 * draws) / games
+            else:
+                picked_rate = (away_wins + 0.5 * draws) / games
+            score = (picked_rate - 0.5) * self._t["score_scale_pp"] * small_factor
+            if abs(score) < self._t["min_signal_pp"]:
+                return None
+            confidence = min(0.85, 0.35 + 0.05 * min(games, 10))
+            oc_label = "Heim" if side == +1 else "Auswärts"
+            ev = (f"⚔️ H2H {games} Spiele: "
+                  f"{home_wins}H-{draws}X-{away_wins}A · {oc_label}-Rate {picked_rate*100:.0f}%")
+            return SignalResult(
+                score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
+                metadata={"games": games, "home_wins": home_wins, "draws": draws,
+                          "away_wins": away_wins, "picked_rate": round(picked_rate, 3),
+                          "pick_side": "home" if side == 1 else "away"},
+            )
 
-        # Score = (rate - 0.5) × scale → bei 0.7 rate → 0.2 × 4 = +0.8pp
-        score = (picked_rate - 0.5) * self._t["score_scale_pp"]
+        # ── 2. O/U (NEU 09.06.2026) — h2h.over25Rate + avgGoals ───────
+        ou_dir, ou_line = _ou_market(market)
+        if ou_dir is not None:
+            avg_goals = h2h.get("avgGoals")
+            over25_rate = h2h.get("over25Rate")
+            if avg_goals is None and over25_rate is None:
+                return None
+            # Wenn avgGoals da: vergleiche gegen die Linie
+            # Wenn nur over25Rate: bewerte nur O/U 2.5 sinnvoll
+            score = 0.0
+            ev_parts = []
+            if avg_goals is not None:
+                diff_to_line = avg_goals - ou_line
+                signed_diff = diff_to_line * ou_dir
+                score += signed_diff * (self._t["score_scale_pp"] / 2) * small_factor
+                ev_parts.append(f"Avg {avg_goals:.1f} Tore vs Linie {ou_line}")
+            if over25_rate is not None and ou_line == 2.5:
+                # Direktes Maß: Rate über 2.5
+                if ou_dir == +1:   # Über-Pick
+                    score += (over25_rate - 0.5) * self._t["score_scale_pp"] * small_factor
+                else:              # Unter-Pick
+                    score += (0.5 - over25_rate) * self._t["score_scale_pp"] * small_factor
+                ev_parts.append(f"Über-2.5-Rate {over25_rate*100:.0f}%")
+            if abs(score) < self._t["min_signal_pp"]:
+                return None
+            confidence = min(0.75, 0.35 + 0.05 * min(games, 10))
+            side_str = "Über" if ou_dir == +1 else "Unter"
+            ev = f"⚔️ H2H {games} Spiele: " + " · ".join(ev_parts) + f" → {side_str} {ou_line}"
+            return SignalResult(
+                score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
+                metadata={"games": games, "h2h_avg_goals": avg_goals,
+                          "h2h_over25_rate": over25_rate, "pick_side": f"{side_str} {ou_line}"},
+            )
 
-        # Bei kleinem Sample (2-3 Spiele): zusätzlich dämpfen
-        if games < self._t["small_sample_threshold"]:
-            score *= self._t["small_sample_dampening"]
+        # ── 3. BTTS (NEU 09.06.2026) — h2h.bttsRate ───────────────────
+        btts_dir = _btts_market(market)
+        if btts_dir is not None:
+            btts_rate = h2h.get("bttsRate")
+            if btts_rate is None:
+                return None
+            diff_from_neutral = btts_rate - 0.5
+            signed_diff = diff_from_neutral * btts_dir
+            if abs(signed_diff) < 0.08:
+                return None
+            score = signed_diff * self._t["score_scale_pp"] * 2 * small_factor
+            if abs(score) < self._t["min_signal_pp"]:
+                return None
+            confidence = min(0.70, 0.30 + 0.05 * min(games, 10))
+            side_str = "Ja" if btts_dir == +1 else "Nein"
+            ev = f"⚔️ H2H {games} Spiele: BTTS-Rate {btts_rate*100:.0f}% → Beide treffen {side_str}"
+            return SignalResult(
+                score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
+                metadata={"games": games, "h2h_btts_rate": btts_rate, "pick_side": f"BTTS-{side_str}"},
+            )
 
-        if abs(score) < self._t["min_signal_pp"]:
-            return None
-
-        # Confidence steigt mit Sample-Size (bei 2 Spielen niedriger Cap)
-        confidence = min(0.85, 0.35 + 0.05 * min(games, 10))
-
-        oc_label = "Heim" if side == +1 else "Auswärts"
-        ev = (f"⚔️ H2H {games} Spiele: "
-              f"{home_wins}H-{draws}X-{away_wins}A · "
-              f"{oc_label}-Rate {picked_rate*100:.0f}%")
-
-        return SignalResult(
-            score=round(score, 2),
-            confidence=round(confidence, 2),
-            evidence=ev,
-            metadata={
-                "games":       games,
-                "home_wins":   home_wins,
-                "draws":       draws,
-                "away_wins":   away_wins,
-                "picked_rate": round(picked_rate, 3),
-                "pick_side":   "home" if side == 1 else "away",
-            },
-        )
+        return None
