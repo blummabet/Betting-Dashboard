@@ -2,8 +2,11 @@
 """
 fetch_wm_weather.py — WM 2026 Wetterdaten
 ==========================================
-Holt Wettervorhersagen für alle WM-Spielorte via Open-Meteo API.
-Open-Meteo: kostenlos, kein API-Key, bis 16 Tage im Voraus.
+Holt Wettervorhersagen für alle WM-Spielorte via WeatherAPI.com.
+WeatherAPI: 1M Calls/Monat gratis, 14-Tage-Forecast, deutlich stabiler als
+das vorher genutzte Open-Meteo (das in unserer Umgebung 403 Forbidden gab).
+
+API-Doku: https://www.weatherapi.com/docs/
 
 Output: wm_weather.json
   {
@@ -15,13 +18,16 @@ Output: wm_weather.json
         "tempMax": 35, "tempMin": 26,
         "precipMm": 2.1,
         "windKmh": 18,
-        "weatherCode": 61,
+        "weatherCode": 1063,
         "condition": "Leichter Regen",
         "icon": "🌧️",
         "forecastAvailable": true
       }
     }
   }
+
+Umgebungsvariable:
+  WEATHERAPI_KEY — Key von weatherapi.com (gratis registrieren)
 """
 
 import json
@@ -29,94 +35,112 @@ import os
 import glob
 import urllib.request
 import urllib.error
+import urllib.parse
+import time
 from datetime import datetime, timezone, date, timedelta
 
 BASE         = os.path.dirname(os.path.abspath(__file__))
 WEATHER_FILE = os.path.join(BASE, "wm_weather.json")
 MATCHES_GLOB = os.path.join(BASE, "matches", "data", "wm-*.json")
 
-# ── Venue → Koordinaten + Timezone ───────────────────────────────────────────
+WEATHERAPI_KEY = (os.environ.get("WEATHERAPI_KEY") or "").strip()
+WEATHERAPI_URL = "https://api.weatherapi.com/v1/forecast.json"
+FORECAST_DAYS  = 14   # Free-Tier-Limit von WeatherAPI
+
+# ── Venue → Koordinaten ──────────────────────────────────────────────────────
+# Timezone-Info wird von WeatherAPI selbst geliefert, brauchen wir nicht mehr.
 VENUE_COORDS = {
-    "AT&T Stadium, Dallas":                   (32.7480, -97.0930, "America/Chicago"),
-    "Arrowhead Stadium, Kansas City":         (39.0489, -94.4839, "America/Chicago"),
-    "BMO Field, Toronto":                     (43.6332, -79.4186, "America/Toronto"),
-    "Estadio Akron, Guadalajara":             (20.7122, -103.4627, "America/Mexico_City"),
-    "Estadio Azteca, Mexico City":            (19.3032,  -99.1506, "America/Mexico_City"),
-    "Estadio BBVA, Monterrey":                (25.6690, -100.3120, "America/Monterrey"),
-    "Gillette Stadium, Boston":               (42.0909,  -71.2643, "America/New_York"),
-    "Hard Rock Stadium, Miami":               (25.9578,  -80.2388, "America/New_York"),
-    "Levi's Stadium, San Francisco":          (37.4032, -121.9697, "America/Los_Angeles"),
-    "Lincoln Financial Field, Philadelphia":  (39.9008,  -75.1675, "America/New_York"),
-    "Mercedes-Benz Stadium, Atlanta":         (33.7554,  -84.4009, "America/New_York"),
-    "MetLife Stadium, New York":              (40.8136,  -74.0744, "America/New_York"),
-    "Rose Bowl, Los Angeles":                 (34.1613, -118.1676, "America/Los_Angeles"),
-    "SoFi Stadium, Los Angeles":              (33.9535, -118.3392, "America/Los_Angeles"),
+    "AT&T Stadium, Dallas":                   (32.7480, -97.0930),
+    "Arrowhead Stadium, Kansas City":         (39.0489, -94.4839),
+    "BMO Field, Toronto":                     (43.6332, -79.4186),
+    "Estadio Akron, Guadalajara":             (20.7122, -103.4627),
+    "Estadio Azteca, Mexico City":            (19.3032,  -99.1506),
+    "Estadio BBVA, Monterrey":                (25.6690, -100.3120),
+    "Gillette Stadium, Boston":               (42.0909,  -71.2643),
+    "Hard Rock Stadium, Miami":               (25.9578,  -80.2388),
+    "Levi's Stadium, San Francisco":          (37.4032, -121.9697),
+    "Lincoln Financial Field, Philadelphia":  (39.9008,  -75.1675),
+    "Mercedes-Benz Stadium, Atlanta":         (33.7554,  -84.4009),
+    "MetLife Stadium, New York":              (40.8136,  -74.0744),
+    "Rose Bowl, Los Angeles":                 (34.1613, -118.1676),
+    "SoFi Stadium, Los Angeles":              (33.9535, -118.3392),
 }
 
-# ── WMO Wetter-Codes → Klartext + Emoji ──────────────────────────────────────
+# ── WeatherAPI Condition-Code → Klartext + Emoji ─────────────────────────────
+# Codes: https://www.weatherapi.com/docs/weather_conditions.json
 def _decode_weather(code: int) -> tuple[str, str]:
-    if code == 0:                    return "Sonnig",           "☀️"
-    if code in (1, 2):               return "Teilweise bewölkt","🌤️"
-    if code == 3:                    return "Bewölkt",          "☁️"
-    if code in (45, 48):             return "Neblig",           "🌫️"
-    if code in (51, 53, 55):         return "Nieselregen",      "🌦️"
-    if code in (61, 63):             return "Leichter Regen",   "🌧️"
-    if code == 65:                   return "Starker Regen",    "🌧️"
-    if code in (71, 73, 75, 77):     return "Schnee",           "❄️"
-    if code in (80, 81, 82):         return "Regenschauer",     "🌦️"
-    if code in (85, 86):             return "Schneeschauer",    "🌨️"
-    if code in (95, 96, 99):         return "Gewitter",         "⛈️"
+    if code == 1000:                                       return "Sonnig",            "☀️"
+    if code in (1003,):                                    return "Teilweise bewölkt", "🌤️"
+    if code in (1006, 1009):                               return "Bewölkt",           "☁️"
+    if code in (1030, 1135, 1147):                         return "Neblig",            "🌫️"
+    if code in (1063, 1150, 1153, 1180, 1183, 1240, 1249): return "Leichter Regen",    "🌧️"
+    if code in (1186, 1189, 1192, 1195, 1243, 1246):       return "Starker Regen",     "🌧️"
+    if code in (1066, 1069, 1114, 1117, 1210, 1213, 1216,
+                1219, 1222, 1225, 1255, 1258):             return "Schnee",            "❄️"
+    if code in (1072, 1168, 1171, 1198, 1201, 1204, 1207,
+                1237, 1252, 1261, 1264):                   return "Eisregen/Graupel",  "🌨️"
+    if code in (1087, 1273, 1276, 1279, 1282):             return "Gewitter",          "⛈️"
     return "Unbekannt", "🌡️"
 
 
-# ── Open-Meteo API Fetch ──────────────────────────────────────────────────────
-def fetch_venue_weather(lat: float, lon: float, tz: str) -> dict | None:
+# ── WeatherAPI Fetch ─────────────────────────────────────────────────────────
+def fetch_venue_weather(lat: float, lon: float) -> dict | None:
     """
-    Fetcht tägliche Wettervorhersage für einen Venue.
-    Gibt dict zurück: {date_str → {tempMax, tempMin, precipMm, windKmh, weatherCode}}
+    Fetcht 14-Tage tägliche Vorhersage für einen Venue.
+    Returns dict: {date_str → {tempMax, tempMin, precipMm, windKmh, weatherCode}}
     """
-    url = (
-        f"https://api.open-meteo.com/v1/forecast"
-        f"?latitude={lat}&longitude={lon}"
-        f"&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,"
-        f"wind_speed_10m_max,weather_code"
-        f"&timezone={tz}"
-        f"&forecast_days=16"
-    )
-    req = urllib.request.Request(url, headers={"User-Agent": "CocoBet/1.0"})
-    try:
-        with urllib.request.urlopen(req, timeout=15) as r:
-            data = json.loads(r.read())
-    except Exception as e:
-        print(f"  ⚠️  Open-Meteo Fehler ({lat},{lon}): {e}")
+    if not WEATHERAPI_KEY:
+        print("    ⚠️  WEATHERAPI_KEY nicht gesetzt — skip")
         return None
 
-    daily = data.get("daily", {})
-    dates     = daily.get("time", [])
-    temp_max  = daily.get("temperature_2m_max", [])
-    temp_min  = daily.get("temperature_2m_min", [])
-    precip    = daily.get("precipitation_sum", [])
-    wind      = daily.get("wind_speed_10m_max", [])
-    codes     = daily.get("weather_code", [])
+    params = urllib.parse.urlencode({
+        "key":  WEATHERAPI_KEY,
+        "q":    f"{lat},{lon}",
+        "days": FORECAST_DAYS,
+        "aqi":  "no",
+        "alerts": "no",
+    })
+    url = f"{WEATHERAPI_URL}?{params}"
+    req = urllib.request.Request(url, headers={"User-Agent": "CocoBet/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            data = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        body = ""
+        try: body = e.read().decode("utf-8", errors="replace")[:200]
+        except Exception: pass
+        print(f"    ⚠️  WeatherAPI HTTP {e.code} ({lat},{lon}): {body}")
+        return None
+    except Exception as e:
+        print(f"    ⚠️  WeatherAPI Fehler ({lat},{lon}): {e}")
+        return None
 
+    forecast_days = data.get("forecast", {}).get("forecastday", []) or []
     result = {}
-    for i, d in enumerate(dates):
-        result[d] = {
-            "tempMax":     round(temp_max[i], 1) if i < len(temp_max) and temp_max[i] is not None else None,
-            "tempMin":     round(temp_min[i], 1) if i < len(temp_min) and temp_min[i] is not None else None,
-            "precipMm":    round(precip[i], 1)   if i < len(precip)   and precip[i]   is not None else 0.0,
-            "windKmh":     round(wind[i], 1)      if i < len(wind)     and wind[i]     is not None else None,
-            "weatherCode": int(codes[i])           if i < len(codes)    and codes[i]    is not None else 0,
+    for fd in forecast_days:
+        d_str = fd.get("date")
+        day = fd.get("day", {})
+        if not d_str: continue
+        condition = day.get("condition", {}) or {}
+        result[d_str] = {
+            "tempMax":     round(day.get("maxtemp_c"), 1) if day.get("maxtemp_c") is not None else None,
+            "tempMin":     round(day.get("mintemp_c"), 1) if day.get("mintemp_c") is not None else None,
+            "precipMm":    round(day.get("totalprecip_mm", 0) or 0, 1),
+            "windKmh":     round(day.get("maxwind_kph"), 1) if day.get("maxwind_kph") is not None else None,
+            "weatherCode": int(condition.get("code", 0) or 0),
         }
     return result
 
 
 # ── Hauptlogik ────────────────────────────────────────────────────────────────
 def main():
-    print("=== fetch_wm_weather.py ===")
+    print("=== fetch_wm_weather.py (WeatherAPI) ===")
+    if not WEATHERAPI_KEY:
+        print("  ❌ WEATHERAPI_KEY nicht gesetzt — Abbruch (Secret in GitHub Actions setzen)")
+        return
     now_ts   = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC")
     today    = date.today()
-    max_date = today + timedelta(days=16)
+    max_date = today + timedelta(days=FORECAST_DAYS)
 
     # 1. Alle Match-JSONs laden
     match_files = sorted(glob.glob(MATCHES_GLOB))
@@ -140,32 +164,32 @@ def main():
 
     print(f"  🏟️  {len(venues_needed)} einzigartige Venues")
 
-    # 2. Wetter pro Venue fetchen (nur einmal pro Venue)
+    # 2. Wetter pro Venue fetchen
     venue_weather: dict[str, dict] = {}
-    for venue in sorted(venues_needed):
-        lat, lon, tz = VENUE_COORDS[venue]
+    for i, venue in enumerate(sorted(venues_needed)):
+        lat, lon = VENUE_COORDS[venue]
         print(f"  🌡️  {venue} ({lat:.2f}°N)…", end=" ", flush=True)
-        weather = fetch_venue_weather(lat, lon, tz)
+        weather = fetch_venue_weather(lat, lon)
         if weather:
             venue_weather[venue] = weather
             avail = sum(1 for d in weather if date.fromisoformat(d) <= max_date)
-            print(f"✅ {len(weather)} Tage ({avail} im Vorhersage-Fenster)")
+            print(f"✅ {len(weather)} Tage")
         else:
             print("❌ fehlgeschlagen")
+        # Rate-Limit: WeatherAPI free ist 1M/Monat aber pro Sekunde nicht limitiert.
+        # Trotzdem 0.2s zwischen Calls für Anstand.
+        if i < len(venues_needed) - 1:
+            time.sleep(0.2)
 
     # 3. Wetter pro Match zuordnen
     results = {}
     no_forecast = 0
     for m in matches_info:
-        slug  = m["slug"]
-        venue = m["venue"]
-        mdate = m["date"]
-
+        slug, venue, mdate = m["slug"], m["venue"], m["date"]
         try:
             match_date = date.fromisoformat(mdate)
         except Exception:
             continue
-
         in_window = match_date <= max_date
         w = None
         if in_window and venue in venue_weather:
@@ -195,15 +219,16 @@ def main():
 
     # 4. Speichern
     output = {
-        "generatedAt": now_ts,
+        "generatedAt":    now_ts,
         "forecastWindow": f"bis {max_date.isoformat()}",
-        "matches": results,
+        "source":         "weatherapi.com",
+        "matches":        results,
     }
     with open(WEATHER_FILE, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     with_forecast = len(results) - no_forecast
-    print(f"\n✅ wm_weather.json gespeichert")
+    print(f"\n✅ wm_weather.json gespeichert (Quelle: WeatherAPI)")
     print(f"   Mit Vorhersage: {with_forecast}  |  Zu weit in Zukunft: {no_forecast}")
 
 

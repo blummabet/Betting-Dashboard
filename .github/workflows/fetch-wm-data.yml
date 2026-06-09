@@ -173,15 +173,16 @@ jobs:
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
-      # ── Wettervorhersage (Open-Meteo, kein API-Key, alle 16 WM-Venues) ──
-      # Aktiviert 08.06.2026 — Pipeline existierte aber war tot.
+      # ── Wettervorhersage (WeatherAPI, 14-Tage-Forecast, alle WM-Venues) ──
+      # Umgestellt 09.06.2026 von Open-Meteo (gab 403 Forbidden in unserer
+      # Umgebung) auf WeatherAPI.com (1M Calls/Monat gratis, stabiler).
       # Liefert Daten für weather_signal (Hitze-Penalty bei Cold-Climate-Teams)
-      # + Renderer-Pille auf Cards. Open-Meteo: kostenlos, 16-Tage-Forecast,
-      # liefert Mittag-zu-Mittag täglich. Hourly-Detail würde Anpfiff-Stunde
-      # genauer treffen — als Phase 2.
+      # + Renderer-Pille auf Cards. Pro Run ein Call pro Venue (~14 Calls).
       - name: 🌡️ WM Wettervorhersage fetchen
         run: python fetch_wm_weather.py
         continue-on-error: true
+        env:
+          WEATHERAPI_KEY: ${{ secrets.WEATHERAPI_KEY }}
 
       # ── Spielergebnisse fetchen (schreibt result in wm2026-data.json Fixtures) ────
       - name: ⚽ WM Spielergebnisse fetchen

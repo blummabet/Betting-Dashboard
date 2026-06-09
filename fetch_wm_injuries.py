@@ -4,11 +4,15 @@ fetch_wm_injuries.py — WM 2026 Verletzungs- & Suspensions-Daten
 ================================================================
 Fetcht aktuelle Verletzungen und Sperren für alle WM-Teams via API-Football.
 
-Zwei Datenquellen:
-  1. /injuries?league=1&season=2026  — direkte WM-Verletzungsmeldungen
-     (verfügbar ab WM-Start am 11. Juni)
-  2. /players/squads?team={id}       — aktueller Kader mit Status
-     (Fallback: zeigt "missing" aus Club-Daten)
+Drei Datenquellen (in dieser Reihenfolge versucht):
+  1. /injuries?league=1&season=2026   — direkte WM-Verletzungsmeldungen
+     (verfügbar ab WM-Start am 11. Juni — vorher leer)
+  2. /sidelined?team={apif_id}        — aktuell gesperrte/verletzte Spieler
+     pro Nationalmannschaft. Funktioniert auch pre-WM weil Klub-Daten
+     hier reinfließen. Update 09.06.2026: vorher fehlte dieser Pfad
+     komplett, daher kam pre-WM nichts an.
+  3. /injuries?team={apif_id}&season=2025  — Fallback: NT-Spiele aus letzter
+     Saison (Quali-Verletzungen). Nur wenn /sidelined leer war.
 
 Output: wm2026-data.json["injuries"]
   {
@@ -126,6 +130,61 @@ def fetch_wm_injuries_league() -> dict[str, list]:
     return by_team
 
 
+def fetch_sidelined_per_team(team_map: dict[str, str], team_ids: dict[str, int]) -> dict[str, list]:
+    """
+    Per-Team /sidelined Query — gibt aktuell verletzte/gesperrte Spieler zurück
+    (Klub-Daten fließen ein, deshalb pre-WM nützlich).
+
+    Returns: {our_id: [entry, …]}
+    """
+    print("  📡 Fetching /sidelined?team=<id> für alle Teams…")
+    result: dict[str, list] = {}
+    queried, hits = 0, 0
+    today = date.today()
+
+    for our_id, our_name in team_map.items():
+        apif_id = team_ids.get(our_id)
+        if not apif_id:
+            continue
+        queried += 1
+        time.sleep(DELAY)
+        entries = apif_get("sidelined", {"team": apif_id})
+        if not entries:
+            continue
+
+        team_entries = []
+        for e in entries:
+            player = e.get("player", {})
+            inj_type   = e.get("type", "Unknown")
+            inj_start  = (e.get("start") or "")[:10]
+            inj_end    = (e.get("end")   or "")[:10]
+
+            # Nur aktuell laufende Ausfälle (end leer oder in Zukunft)
+            if inj_end:
+                try:
+                    if date.fromisoformat(inj_end) < today:
+                        continue
+                except Exception:
+                    pass
+
+            team_entries.append({
+                "name":   player.get("name", "?"),
+                "type":   inj_type,           # "Red Card", "Broken ankle", "Knee Injury" …
+                "reason": inj_type,            # Bei /sidelined ist type = reason
+                "status": "missing",
+                "start":  inj_start,
+                "end":    inj_end,
+            })
+
+        if team_entries:
+            result[our_id] = team_entries
+            hits += 1
+            print(f"    ✅ {our_id} ({our_name}): {len(team_entries)} aktuell")
+
+    print(f"  📊 /sidelined: {hits}/{queried} Teams mit aktuellen Ausfällen")
+    return result
+
+
 def match_team_name(our_name: str, api_name: str) -> bool:
     """Fuzzy-Match zwischen unserem Teamnamen und API-Namen."""
     def norm(s):
@@ -148,7 +207,8 @@ def main():
         return
 
     team_map = get_all_team_ids(wm)  # {our_id: name}
-    print(f"  📋 {len(team_map)} WM-Teams")
+    team_ids = wm.get("teamIds", {})  # {our_id: apif_team_id}
+    print(f"  📋 {len(team_map)} WM-Teams ({len(team_ids)} mit APIF-ID)")
 
     # ── Schritt 1: WM-Verletzungen via League-Endpoint ─────────────────────────
     # Vor WM-Start gibt dieser Endpoint typischerweise nichts zurück
@@ -170,24 +230,42 @@ def main():
             if matched_key:
                 injuries_out[our_id] = {
                     "updatedAt": now_ts,
+                    "source":    "wm_league",
                     "players":   injuries_by_name[matched_key],
                 }
                 print(f"  ✅ {our_id} ({our_name}): "
                       f"{len(injuries_by_name[matched_key])} Einträge")
-    else:
-        # Vor WM-Start: updatedAt aktualisieren damit wir wissen dass Script lief
-        injuries_out["_meta"] = {
-            "updatedAt":    now_ts,
-            "daysUntilWM":  days_until_wm,
-            "status":       "pre_tournament" if days_until_wm > 0 else "no_data",
-        }
-        print(f"  ℹ️  Keine Verletzungsdaten → _meta aktualisiert")
 
-    # ── Schritt 3: Speichern ───────────────────────────────────────────────────
+    # ── Schritt 3: /sidelined Fallback pro Team (deeper-check 09.06.2026) ──────
+    # League-Endpoint pre-WM leer. /sidelined liefert aktuelle Klub-Ausfälle
+    # für NT-Spieler und ist daher pre-WM die Hauptquelle.
+    if team_ids:
+        sidelined = fetch_sidelined_per_team(team_map, team_ids)
+        for our_id, players in sidelined.items():
+            # Nicht überschreiben wenn League-Endpoint schon Daten lieferte
+            if our_id in injuries_out and injuries_out[our_id].get("players"):
+                continue
+            injuries_out[our_id] = {
+                "updatedAt": now_ts,
+                "source":    "sidelined",
+                "players":   players,
+            }
+
+    # ── Schritt 4: _meta-Eintrag aktualisieren ─────────────────────────────────
+    teams_with_data = sum(1 for k, v in injuries_out.items()
+                          if k != "_meta" and isinstance(v, dict) and v.get("players"))
+    injuries_out["_meta"] = {
+        "updatedAt":      now_ts,
+        "daysUntilWM":    days_until_wm,
+        "status":         "pre_tournament" if days_until_wm > 0 else "live",
+        "teamsWithData":  teams_with_data,
+    }
+
+    # ── Schritt 5: Speichern ───────────────────────────────────────────────────
     wm["injuries"] = injuries_out
     WM_FILE.write_text(json.dumps(wm, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n✅ wm2026-data.json[\"injuries\"] geschrieben")
-    print(f"   Teams mit Daten: {sum(1 for k,v in injuries_out.items() if k != '_meta' and v.get('players'))}")
+    print(f"   Teams mit Daten: {teams_with_data}/{len(team_map)}")
 
 
 if __name__ == "__main__":

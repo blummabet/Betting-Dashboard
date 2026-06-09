@@ -110,12 +110,41 @@ def _team_name_from_id(team_id: str) -> str:
         return team_id
 
 
+# ── WM-Fixtures-Lookup (FIX 09.06.2026) ────────────────────────────────────
+# Vorher: pro Spiel /fixtures?date=YYYY-MM-DD globalen Fixture-Pool durchsuchen
+# + Team-Name-Fuzzy-Match. Fragil weil Teamnamen DE/EN driften und API
+# pro Tag nur N Treffer liefert. Jetzt: 1 Call /fixtures?league=1&season=2026
+# am Anfang, baut Map (home_apif_id, away_apif_id) → fixture_id.
+
+_WM_FIXTURE_MAP: dict[tuple[int, int], int] | None = None
+
+
+def _build_wm_fixture_map(team_ids: dict[str, int]) -> dict[tuple[int, int], int]:
+    """Holt alle WM-Fixtures auf einmal und mappt sie via APIF-Team-IDs."""
+    print("   🔍 Lade WM-Fixture-Pool (/fixtures?league=1&season=2026)…")
+    data = _apif_get("/fixtures?league=1&season=2026")
+    if not data or not data.get("response"):
+        print("   ⚠️  WM-Fixture-Pool leer — fallback auf Datum-Suche pro Spiel")
+        return {}
+    mapping: dict[tuple[int, int], int] = {}
+    for fx in data["response"]:
+        teams = fx.get("teams", {}) or {}
+        h = ((teams.get("home") or {}).get("id"))
+        a = ((teams.get("away") or {}).get("id"))
+        fid = ((fx.get("fixture") or {}).get("id"))
+        if h and a and fid:
+            mapping[(int(h), int(a))] = int(fid)
+    print(f"   ✅ {len(mapping)} WM-Fixtures gemappt")
+    return mapping
+
+
 # ── Fixture-Lookup ────────────────────────────────────────────────────────
 
 
-def _load_wm_fixtures() -> list[dict]:
+def _load_wm_fixtures() -> tuple[list[dict], dict[str, int]]:
+    """Returns (fixtures_list, team_ids_dict). team_ids: {our_id → apif_id}"""
     if not WM_FILE.exists():
-        return []
+        return [], {}
     try:
         with WM_FILE.open(encoding="utf-8") as f:
             wm = json.load(f)
@@ -130,9 +159,9 @@ def _load_wm_fixtures() -> list[dict]:
                         "date":      fx["date"],
                         "time":      fx.get("time", "21:00"),
                     })
-        return out
+        return out, wm.get("teamIds", {}) or {}
     except Exception:
-        return []
+        return [], {}
 
 
 def _is_upcoming(fx: dict, now_utc: datetime) -> bool:
@@ -163,8 +192,20 @@ def _is_cache_fresh(entry: dict) -> bool:
 # ── API-Football Calls ────────────────────────────────────────────────────
 
 
-def _find_apif_fixture_id(home_name: str, away_name: str, ko: datetime) -> int | None:
-    """Sucht fixture_id via /fixtures?date= + Team-Name-Match."""
+def _find_apif_fixture_id(home_name: str, away_name: str, ko: datetime,
+                          home_apif: int | None = None,
+                          away_apif: int | None = None) -> int | None:
+    """
+    Sucht fixture_id. Primärpfad (FIX 09.06.2026): WM-Fixture-Map per APIF-ID.
+    Fallback: /fixtures?date= + Team-Name-Match (alte Logik).
+    """
+    # Primär: WM-Fixture-Map (vorher initialisiert)
+    if _WM_FIXTURE_MAP and home_apif and away_apif:
+        fid = _WM_FIXTURE_MAP.get((int(home_apif), int(away_apif)))
+        if fid:
+            return fid
+
+    # Fallback: Datums-Suche + Name-Match
     data = _apif_get(f"/fixtures?date={ko.strftime('%Y-%m-%d')}")
     if not data or not data.get("response"):
         return None
@@ -252,7 +293,7 @@ def main():
     print("=== fetch_wm_apifootball_predictions.py ===\n")
     print(f"   lookahead={CFG['lookahead_days']}d, cache_ttl={CFG['cache_ttl_hours']}h\n")
 
-    fixtures = _load_wm_fixtures()
+    fixtures, team_ids = _load_wm_fixtures()
     if only_match:
         fixtures = [fx for fx in fixtures if fx["match_key"] == only_match]
     if not fixtures:
@@ -262,6 +303,13 @@ def main():
     now_utc = datetime.now(timezone.utc)
     upcoming = [fx for fx in fixtures if _is_upcoming(fx, now_utc)]
     existing = _load_existing()
+
+    # FIX 09.06.2026: WM-Fixture-Map einmalig laden statt pro Spiel /fixtures?date=
+    global _WM_FIXTURE_MAP
+    if upcoming and team_ids:
+        _WM_FIXTURE_MAP = _build_wm_fixture_map(team_ids)
+    else:
+        _WM_FIXTURE_MAP = {}
 
     print(f"   {len(upcoming)} Spiele im Lookahead-Range (von {len(fixtures)} total)\n")
 
@@ -286,12 +334,23 @@ def main():
 
         fixture_id = (entry or {}).get("fixture_id")
         if not fixture_id:
-            time.sleep(CFG["request_delay_sec"])
-            fixture_id = _find_apif_fixture_id(home_name, away_name, ko)
+            # Erst aus WM-Fixture-Map (kein Extra-Call), dann Datums-Fallback
+            home_apif = team_ids.get(fx["home_id"])
+            away_apif = team_ids.get(fx["away_id"])
+            fixture_id = _find_apif_fixture_id(home_name, away_name, ko,
+                                               home_apif, away_apif)
+            if not fixture_id:
+                time.sleep(CFG["request_delay_sec"])
+                # Try again with fallback path (Datums-Suche ohne ID-Hint)
+                fixture_id = _find_apif_fixture_id(home_name, away_name, ko)
             if not fixture_id:
                 print(f"   ⚠️  fixture_id nicht gefunden — skip")
                 fail_count += 1
                 continue
+            else:
+                source = "wm-map" if (home_apif and away_apif and
+                                      _WM_FIXTURE_MAP.get((int(home_apif), int(away_apif)))) else "date-fallback"
+                print(f"   🔗 fixture_id {fixture_id} ({source})")
 
         time.sleep(CFG["request_delay_sec"])
         pred = _fetch_prediction(fixture_id)
