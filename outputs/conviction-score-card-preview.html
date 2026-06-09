@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Conviction-Score Card-Vorschau</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #00d4a1;
+  }
+  body {
+    margin: 0; padding: 32px 20px;
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+  }
+  .page { max-width: 720px; margin: 0 auto; }
+  .head { text-align: center; margin-bottom: 28px; }
+  .head h1 { margin: 0 0 6px; font-size: 18px; color: var(--accent); letter-spacing: 1px; }
+  .head p { margin: 0; color: var(--muted); font-size: 13px; }
+
+  .mock-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .mock-head {
+    padding: 18px 20px 14px;
+  }
+  .mock-head h2 {
+    margin: 0 0 6px;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .mock-head .sub { color: var(--muted); font-size: 12px; }
+  .pick-row {
+    padding: 12px 20px;
+    background: rgba(0,212,161,0.04);
+    border-bottom: 1px solid var(--border);
+  }
+  .pick-row .pick { font-size: 15px; font-weight: 700; }
+  .pick-row .odds { color: var(--accent); font-weight: 700; }
+
+  /* Conviction-Badge — 1:1 wie in season-finish-v2.html */
+  .cc-conviction {
+    padding: 12px 20px;
+    margin: 0 0 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .cc-conv-head {
+    display: flex; justify-content: space-between; align-items: center;
+    font-weight: 700; font-size: 13px;
+  }
+  .cc-conv-score {
+    font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+    font-size: 14px; padding: 2px 10px; border-radius: 6px;
+  }
+  .cc-conv-top {
+    background: linear-gradient(135deg, rgba(0,212,161,0.10), rgba(0,212,161,0.04));
+    border-left: 3px solid #00d4a1;
+  }
+  .cc-conv-top .cc-conv-head { color: #00d4a1; }
+  .cc-conv-top .cc-conv-score {
+    background: rgba(0,212,161,0.20); color: #00d4a1;
+  }
+  .cc-conv-good {
+    background: linear-gradient(135deg, rgba(125,211,252,0.10), rgba(125,211,252,0.04));
+    border-left: 3px solid #7dd3fc;
+  }
+  .cc-conv-good .cc-conv-head { color: #7dd3fc; }
+  .cc-conv-good .cc-conv-score {
+    background: rgba(125,211,252,0.20); color: #7dd3fc;
+  }
+  .cc-conv-warn {
+    background: linear-gradient(135deg, rgba(245,194,90,0.10), rgba(245,194,90,0.04));
+    border-left: 3px solid #f5c25a;
+  }
+  .cc-conv-warn .cc-conv-head { color: #f5c25a; }
+  .cc-conv-extra {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--text);
+    opacity: 0.85;
+  }
+
+  /* Engine-Signal-Liste (Mock) */
+  .cc-signals {
+    padding: 12px 20px;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cc-signals-head {
+    font-weight: 700; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted); margin-bottom: 8px;
+    display: flex; justify-content: space-between;
+  }
+  .cc-sig-adj.pos {
+    background: rgba(0,212,161,0.15); color: #00d4a1;
+    padding: 2px 8px; border-radius: 4px; font-size: 11px;
+  }
+  .cc-sig-row {
+    display: flex; gap: 10px; padding: 4px 0;
+    border-top: 1px dashed var(--border);
+    font-size: 12px; line-height: 1.4;
+  }
+  .cc-sig-row:first-of-type { border-top: none; }
+  .cc-sig-row.pos .cc-sig-score { color: #00d4a1; }
+  .cc-sig-row.neg .cc-sig-score { color: #f55a5a; }
+  .cc-sig-score {
+    font-family: ui-monospace, monospace;
+    font-weight: 700; min-width: 36px; text-align: right;
+  }
+  .cc-foot {
+    padding: 12px 20px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .scenario-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="head">
+    <h1>🎯 CONVICTION-SCORE — Card-Vorschau</h1>
+    <p>Drei Beispiele für die neue Wett-Qualitäts-Bewertung 0-10.<br>
+       Sharp-Move, Top-Wette, Halluzinations-Warnung.</p>
+  </div>
+
+  <!-- ───── 1. TOP-WETTE — Strong Setup ohne klassischen Edge ───── -->
+  <div class="scenario-label">Szenario 1: Conviction-Upgrade ABWÄGEN → BET</div>
+  <div class="mock-card">
+    <div class="mock-head">
+      <h2>🇲🇽 Mexiko vs 🇨🇿 Tschechien · Gruppenphase MD3</h2>
+      <div class="sub">Mi, 24. Jun · 21:00 Uhr · Estadio Azteca, Mexico City</div>
+    </div>
+    <div class="pick-row">
+      <span class="pick">Unter 2.5 Tore</span> · Quote <span class="odds">1.45</span> · Edge nur +1pp
+    </div>
+    <div class="cc-conviction cc-conv-top">
+      <div class="cc-conv-head">🎯 Top-Wette <span class="cc-conv-score">9/10</span></div>
+      <div class="cc-conv-extra">💡 Conviction 9/10 — Setup ist sehr stark trotz kleinerer Edge</div>
+    </div>
+    <div class="cc-signals">
+      <div class="cc-signals-head">🧠 Engine-Signale <span class="cc-sig-adj pos">+3.2pp</span></div>
+      <div class="cc-sig-row pos"><span class="cc-sig-score">+2.0</span> 🎯 Beide Teams bereits durch — Tor-Niveau sinkt typisch</div>
+      <div class="cc-sig-row pos"><span class="cc-sig-score">+1.4</span> 📈 Form letzte 15: Heim 1.1:0.8 vs Auswärts 1.0:0.9</div>
+      <div class="cc-sig-row pos"><span class="cc-sig-score">+1.0</span> 🥅 Beide xG-defensiv stark (0.8 vs 0.9)</div>
+      <div class="cc-sig-row pos"><span class="cc-sig-score">+1.0</span> 📊 APIF Predictions confirmatory</div>
+    </div>
+    <div class="cc-foot">Pinnacle 1.50 · Markt-Konsens 1.48 · Modell ≤10pp vom Markt — keine Halluzination</div>
+  </div>
+
+  <!-- ───── 2. SHARP-MOVE PICK ───── -->
+  <div class="scenario-label">Szenario 2: Sharp-Move detected + ⭐ Gute Wette</div>
+  <div class="mock-card">
+    <div class="mock-head">
+      <h2>🇫🇷 Frankreich vs 🇸🇳 Senegal · Gruppenphase MD1</h2>
+      <div class="sub">Mo, 15. Jun · 18:00 Uhr · Mercedes-Benz Stadium, Atlanta</div>
+    </div>
+    <div class="pick-row">
+      <span class="pick">Über 1.5 Tore</span> · Quote <span class="odds">1.31</span> · Edge +9pp
+    </div>
+    <div class="cc-conviction cc-conv-good">
+      <div class="cc-conv-head">⭐ Gute Wette <span class="cc-conv-score">7/10</span></div>
+      <div class="cc-conv-extra">🔥 Sharp-Move: Pinnacle 1.40 → 1.31 · Bet365 noch 1.40 (Soft-Books hinterher)</div>
+    </div>
+    <div class="cc-signals">
+      <div class="cc-signals-head">🧠 Engine-Signale <span class="cc-sig-adj pos">+2.1pp</span></div>
+      <div class="cc-sig-row pos"><span class="cc-sig-score">+1.5</span> 🔥 Pinnacle-Move 9pp seit Eröffnung in Über-Richtung</div>
+      <div class="cc-sig-row pos"><span class="cc-sig-score">+1.0</span> 📈 Form-Trend: FRA 2.2 Ø · SEN 2.7 Ø</div>
+      <div class="cc-sig-row pos"><span class="cc-sig-score">+0.8</span> 🎯 APIF confirmatory · Public 65% Über</div>
+    </div>
+    <div class="cc-foot">Pinnacle bewegt klar in Pick-Richtung — Conviction stützt das mit 7/10</div>
+  </div>
+
+  <!-- ───── 3. HALLUZINATIONS-WARNUNG ───── -->
+  <div class="scenario-label">Szenario 3: Edge vorhanden, aber Signale dünn (Modell-Halluzination)</div>
+  <div class="mock-card">
+    <div class="mock-head">
+      <h2>🇦🇷 Argentinien vs 🇩🇿 Algerien · Gruppenphase MD1</h2>
+      <div class="sub">Mo, 15. Jun · 18:00 Uhr · MetLife Stadium, New York</div>
+    </div>
+    <div class="pick-row">
+      <span class="pick">Unter 1.5 Tore</span> · Quote <span class="odds">3.70</span> · Edge +18pp
+    </div>
+    <div class="cc-conviction cc-conv-warn">
+      <div class="cc-conv-head">⚠ Edge vorhanden, aber dünne Begründung</div>
+      <div class="cc-conv-extra">Conviction nur 2/10 — Pick mit Vorsicht. Modell sieht Edge das die Signale nicht stützen.</div>
+    </div>
+    <div class="cc-signals">
+      <div class="cc-signals-head">🧠 Engine-Signale <span class="cc-sig-adj pos">+0.6pp</span></div>
+      <div class="cc-sig-row pos"><span class="cc-sig-score">+0.6</span> 🎯 MD1-Auftakts-Vorsicht (Unter)</div>
+      <div class="cc-sig-row neg"><span class="cc-sig-score">−1.2</span> 📈 Form-Trend: ARG 2.4 Ø · DZA 2.1 Ø (gegen Unter)</div>
+      <div class="cc-sig-row neg"><span class="cc-sig-score">−0.8</span> 🥅 ARG xG-stark (2.1)</div>
+    </div>
+    <div class="cc-foot">Pinnacle 3.70 spricht für Über — Modell-Quote 1.08 ist Halluzination. Nicht in Cards als BET zeigen, nur in Liste.</div>
+  </div>
+
+  <!-- ───── Legende ───── -->
+  <div style="margin-top:48px; padding:18px 20px; background:rgba(255,255,255,0.02); border:1px dashed var(--border); border-radius:10px; font-size:12px; color:var(--muted); line-height:1.6;">
+    <p style="color:var(--text); margin:0 0 8px;"><strong>Wie es funktioniert:</strong></p>
+    <p style="margin:0 0 8px;">
+      <strong>Polymarket-Trading bleibt unangetastet</strong> — Auto-Trigger nutzt weiter Edge Pini→Poly für Konvergenz-Trades.
+      Conviction-Score ist <em>nur für Cards/Telegram</em>.
+    </p>
+    <p style="margin:0 0 8px;">
+      <strong>Drei Pfade zum Card-Pick</strong>: Edge-getrieben (wie bisher) · Conviction-Upgrade (ABWÄGEN→BET bei ≥8/10) · Halluzinations-Marker (BET mit &lt;4/10).
+    </p>
+    <p style="margin:0 0 8px;">
+      <strong>Bayesian-Lern-Loop läuft im Hintergrund</strong> — nach den ersten 30 WM-Picks justieren sich die Signal-Weights datengetrieben.
+      Lineup-Signal könnte z.B. weight=1.3 kriegen wenn historisch treffsicherer, Pressure-Index 0.8 wenn unterdurchschnittlich.
+    </p>
+    <p style="margin:0;">
+      <strong>Konfigurierbar in cocobet_config.json</strong> → profiles.&lt;profile&gt;.conviction_score. Alle Schwellwerte zentral, nicht 100 Files anpacken.
+    </p>
+  </div>
+</div>
+</body>
+</html>

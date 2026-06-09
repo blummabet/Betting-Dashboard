@@ -1472,6 +1472,24 @@ function _renderPickWhyButton(D, primary) {
           </table>
         </div>
 
+        ${(typeof primary.convictionScore === 'number' && primary.convictionScore >= 6) ? `<div class="pwm-section">
+          <div class="pwm-section-title">🎯 Conviction-Score (Wett-Qualität)</div>
+          <div style="padding:12px 14px;background:${primary.convictionScore >= 8 ? 'rgba(0,212,161,0.08)' : 'rgba(125,211,252,0.08)'};border-left:3px solid ${primary.convictionScore >= 8 ? '#00d4a1' : '#7dd3fc'};border-radius:6px;font-size:13px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-weight:700;color:${primary.convictionScore >= 8 ? '#00d4a1' : '#7dd3fc'};">
+              <span>${primary.convictionLabel || (primary.convictionScore >= 8 ? '🎯 Top-Wette' : '⭐ Gute Wette')}</span>
+              <span style="font-family:ui-monospace,monospace;background:${primary.convictionScore >= 8 ? 'rgba(0,212,161,0.20)' : 'rgba(125,211,252,0.20)'};padding:3px 10px;border-radius:5px;">${primary.convictionScore}/10</span>
+            </div>
+            ${primary.sharpMoveActive && primary.sharpMoveDetails ? `<div style="margin-top:8px;font-size:12px;">🔥 Sharp-Move: Pinnacle ${primary.sharpMoveDetails.open_pinn_odds ? primary.sharpMoveDetails.open_pinn_odds.toFixed(2) : '?'} → ${primary.sharpMoveDetails.current_pinn_odds ? primary.sharpMoveDetails.current_pinn_odds.toFixed(2) : '?'} · Softs noch hinterher</div>` : ''}
+            ${primary.pickTriggerReason && primary.pickTriggerReason !== 'Edge-getrieben' ? `<div style="margin-top:8px;font-size:12px;color:var(--muted);">💡 ${escHtml(primary.pickTriggerReason)}</div>` : ''}
+          </div>
+        </div>` : ''}
+        ${(typeof primary.convictionScore === 'number' && primary.convictionScore < 4 && primary.modelHallucinationWarning) ? `<div class="pwm-section">
+          <div style="padding:12px 14px;background:rgba(245,194,90,0.08);border-left:3px solid #f5c25a;border-radius:6px;font-size:13px;color:#f5c25a;">
+            <div style="font-weight:700;">⚠ Edge vorhanden, aber dünne Begründung</div>
+            <div style="margin-top:6px;font-size:12px;">${escHtml(primary.modelHallucinationWarning)}</div>
+          </div>
+        </div>` : ''}
+
         ${(primary.signals && primary.signals.length > 0) ? `<div class="pwm-section">
           <div class="pwm-section-title">🧠 Engine-Signale (${primary.signalCountPos || 0}+ / ${primary.signalCountNeg || 0}−)</div>
           <table class="pwm-table">

@@ -272,8 +272,22 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                 mkp = pct(p.get("odds"))
                 edge = p.get("edgePP", "?")
                 info = p.get("info", "")
+                # Conviction-Badge (NEU 09.06.2026) — Top-Wette wenn ≥8/10
+                conv_score = p.get("convictionScore")
+                conv_label = ""
+                if isinstance(conv_score, int):
+                    if conv_score >= 8:
+                        conv_label = f" · 🎯 <b>Top-Wette {conv_score}/10</b>"
+                    elif conv_score >= 6:
+                        conv_label = f" · ⭐ Gute Wette {conv_score}/10"
+                # Sharp-Move-Indikator
+                sharp_label = " · 🔥 Sharp-Move" if p.get("sharpMoveActive") else ""
+                # Halluzinations-Warnung
+                hall_warn = ""
+                if isinstance(conv_score, int) and conv_score < 4 and p.get("modelHallucinationWarning"):
+                    hall_warn = f" · ⚠ Conviction nur {conv_score}/10"
                 lines.append(
-                    f"🎯 <b>BET: {p['market']} @{p.get('odds', '?')}</b>"
+                    f"🎯 <b>BET: {p['market']} @{p.get('odds', '?')}</b>{conv_label}{sharp_label}{hall_warn}"
                 )
                 lines.append(
                     f"   💡 Edge: <b>+{edge}pp</b> | Modell: {mp} vs. Markt: {mkp}"
@@ -284,8 +298,12 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
             # ABWÄGEN-Picks
             for p in abw_picks:
                 edge = p.get("edgePP", "?")
+                conv_score = p.get("convictionScore")
+                conv_label = ""
+                if isinstance(conv_score, int) and conv_score >= 6:
+                    conv_label = f" · ⭐ Conviction {conv_score}/10"
                 lines.append(
-                    f"⚖️ ABWÄGEN: {p['market']} @{p.get('odds', '?')} (+{edge}pp)"
+                    f"⚖️ ABWÄGEN: {p['market']} @{p.get('odds', '?')} (+{edge}pp){conv_label}"
                 )
 
         lines.append("")  # Leerzeile zwischen Spielen

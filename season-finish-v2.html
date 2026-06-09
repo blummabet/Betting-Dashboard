@@ -2694,6 +2694,31 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             confirmatory wenn ≥5pp höher, warnend wenn niedriger. Cache 24h.
           </div>
         </div>
+        <div class="h2-feature" style="border-color:rgba(0,212,161,0.50);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🎯</span><div class="h2-feature-title">Conviction-Score 0-10 (NEU 09.06.2026)</div></div>
+          <div class="h2-feature-desc">
+            <strong>Wett-Qualitäts-Bewertung getrennt vom Edge-Verdict</strong> — Lucas-Insight:
+            Edge gegen Pinnacle ist Phantom wenn Elo halluziniert. Echte Wett-Qualität kommt aus
+            mehreren unabhängigen Signal-Familien + Sharp-Money-Bestätigung.
+            <br>
+            <strong>6 Familien (max 10pt)</strong>: Sharp-Money (max 3, höchste Cap — echter Edge-Beweis) ·
+            Form (max 2) · Kontext (max 2) · Realtime/Lineup (max 2) · Markt-Konsens (max 1) ·
+            Modell-Sanity (max 1, kein Halluzinations-Edge).
+            <br>
+            <strong>Drei Pfade zum Pick</strong>:
+            (1) <em>Edge-getrieben</em> wie bisher,
+            (2) <em>Conviction-Upgrade</em> — ABWÄGEN wird zu BET bei Conviction ≥8/10 (Setup so stark dass Edge-Filter zu konservativ war),
+            (3) <em>Halluzinations-Warn</em> — BET mit Conviction &lt;4 zeigt Card "⚠ dünne Begründung".
+            <br>
+            <strong>Polymarket-Trading 100% unangetastet</strong> — Conviction ist nur für Cards/Telegram.
+            Auto-Trigger rechnet weiter Pini→Poly-Edge wie bisher.
+            <br>
+            <strong>Bayesian-Lern-Loop kalibriert über Zeit</strong>: nach jedem resolved Pick werden
+            <code>signal_weights.json</code> Werte via Beta-Binomial-Update angepasst. Nach 30+ WM-Picks
+            sind die Weights datengetrieben — Lineup-Signal könnte z.B. weight=1.3 kriegen wenn historisch besser,
+            Pressure-Index 0.8 wenn schlechter.
+          </div>
+        </div>
         <div class="h2-feature" style="border-color:rgba(76,201,240,0.35);">
           <div class="h2-feature-head"><span class="h2-feature-icon">🎯</span><div class="h2-feature-title">Anreiz-Signal (NEU 09.06.2026)</div></div>
           <div class="h2-feature-desc">
@@ -2987,6 +3012,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <tr><td><code>sharp_signals/apif_predictions.py</code></td><td>Externes API-Football-Modell vs Pinnacle pro 1X2/DNB</td></tr>
           <tr><td><code>sharp_signals/weather_signal.py</code></td><td>Cold-Climate-Penalty bei ≥30°C, Anpfiff-Zeit-modifiziert</td></tr>
           <tr><td><code>sharp_signals/incentive_signal.py</code></td><td><strong>Anreiz-Signal: Qualifikations-Math + Bracket-Asymmetrie + Venue-Distanz + Rotation-Risk</strong></td></tr>
+          <tr><td><code>conviction_score.py</code></td><td><strong>Wett-Qualitäts-Bewertung 0-10: Sharp-Money + Familien + Sanity. Trennt Polymarket-Edge von Card-Empfehlung. ABWÄGEN→BET wenn ≥8</strong></td></tr>
           <tr><td><code>wm_bracket.json</code></td><td>WM-K.O.-Struktur (R32 → SF) mit Venues + Slot-Belegung — Input für Anreiz-Signal</td></tr>
           <tr><td><code>wm_venues.json</code></td><td>16 Host-Stadien mit Koordinaten, Höhe, Zeitzone</td></tr>
           <tr><td><code>update_signal_weights.py</code></td><td>Bayesian-Update der weights nach jedem resolved Pick</td></tr>
