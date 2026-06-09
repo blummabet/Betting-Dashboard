@@ -793,7 +793,7 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
   <div class="market-row"><div class="market-pill">{market_label}</div></div>
 
   <div class="hero-box">
-    {"<div class='hero-label'>Konfidenz</div><div class='hero-odds'>" + conf_label.split()[0] + "</div><div class='hero-book'>Pick-Modell</div>" if hide_odds else f"<div class='hero-label'>Quote</div><div class='hero-odds'>{odds:.2f}</div><div class='hero-book'>bei <strong>{book_disp}</strong></div>"}
+    <div class='hero-label'>Konfidenz</div><div class='hero-odds'>{conf_label.split()[0]}</div><div class='hero-book'>Eigene Analyse</div>
   </div>
 
   <div class="match-row">
@@ -1009,7 +1009,16 @@ def daily_picks_card(
     rgb = t["accentRgb"]
 
     is_bet = hero_pick.get("verdict") == "BET"
-    verdict_label = "UNSER PICK" if is_bet else "VORSICHTIGER PICK"
+    # Verdict-Label vereinfacht (NEU 09.06.2026): Wort-Sprache statt X/10.
+    # Lucas-Feedback: "8/10" klingt wie Stake-Angabe + setzt zu hohe Erwartung.
+    # Top-Pick (Conviction ≥8 = max Engine-Bestätigung), Main-Pick (normales BET), Beobachten.
+    _cs = hero_pick.get("convictionScore")
+    if isinstance(_cs, int) and _cs >= 8:
+        verdict_label = "🎯 TOP-PICK"
+    elif is_bet:
+        verdict_label = "💎 MAIN-PICK"
+    else:
+        verdict_label = "👁 BEOBACHTEN"
     verdict_color = accent if is_bet else "#f5c518"
     verdict_rgb   = rgb if is_bet else "245,197,24"
 
@@ -1082,8 +1091,16 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
   text-transform:uppercase; letter-spacing:1.2px; }}
 .hero {{ background:rgba({verdict_rgb},0.06); border:1px solid rgba({verdict_rgb},0.30);
   border-radius:12px; padding:14px 14px 12px; margin-bottom:14px; }}
-.hero-verdict {{ font-size:9px; font-weight:800; letter-spacing:1.8px; color:{verdict_color};
-  text-transform:uppercase; margin-bottom:6px; }}
+.hero-verdict {{
+  display:inline-block;
+  font-size:10px; font-weight:800; letter-spacing:1.5px;
+  color:{verdict_color};
+  background:rgba({verdict_rgb},0.18);
+  border:1px solid rgba({verdict_rgb},0.45);
+  border-radius:999px;
+  padding:4px 10px;
+  text-transform:uppercase; margin-bottom:8px;
+}}
 .hero-match {{ display:flex; align-items:center; gap:8px; margin-bottom:8px; }}
 .hero-flag {{ font-size:22px; }}
 .hero-teams {{ font-size:14px; font-weight:800; color:#fff; line-height:1.25; flex:1; }}
@@ -1100,6 +1117,17 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
   border-radius:5px; padding:2px 7px; }}
 .hero-story {{ font-size:10.5px; color:rgba(255,255,255,0.65); line-height:1.45;
   flex:1; }}
+/* Engine-Strip (NEU 09.06.2026): Conviction-Badge + Sharp-Move + Top-Signal */
+.hero-engine-strip {{ display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; padding-top:8px;
+  border-top:1px dashed rgba(255,255,255,0.06); }}
+.hero-conv {{ font-size:10px; font-weight:800; padding:3px 8px; border-radius:6px; letter-spacing:0.3px; }}
+.hero-conv-top {{ background:rgba(0,212,161,0.15); color:#00d4a1; border:1px solid rgba(0,212,161,0.4); }}
+.hero-conv-good {{ background:rgba(125,211,252,0.15); color:#7dd3fc; border:1px solid rgba(125,211,252,0.4); }}
+.hero-conv-watch {{ background:rgba(255,176,46,0.12); color:#ffb02e; border:1px solid rgba(255,176,46,0.35); }}
+.hero-sharp {{ font-size:10px; font-weight:800; color:#ff8a8a; background:rgba(255,107,107,0.12);
+  border:1px solid rgba(255,107,107,0.35); border-radius:6px; padding:3px 8px; }}
+.hero-top-sig {{ font-size:10px; font-weight:600; color:rgba(255,255,255,0.7);
+  background:rgba(255,255,255,0.04); border-radius:6px; padding:3px 8px; }}
 .other-label {{ font-size:9px; color:rgba(255,255,255,0.40); letter-spacing:1.5px;
   text-transform:uppercase; font-weight:700; margin-bottom:8px; }}
 .op-row {{ background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04);
@@ -1154,13 +1182,22 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
       {"" if hide_odds else f'<span class="hero-edge">+{hero_pick.get("edge_pp",0)}pp Edge</span>'}
       <span class="hero-story">{hero_pick.get("story","")}</span>
     </div>
+    {(lambda sm, sd: (
+      f'<div class="hero-engine-strip">'
+      + (f'<span class="hero-sharp">🔥 Sharp-Move</span>' if sm else '')
+      + (f'<span class="hero-top-sig">{sd}</span>' if sd else '')
+      + '</div>'
+    ) if (sm or sd) else '')(
+      hero_pick.get("sharpMoveActive"),
+      hero_pick.get("topSignal"),
+    )}
   </div>
   {f'<div class="other-label">Weitere im Blick</div>{other_html}' if other_html else ''}
   <div class="closing">
     <div class="closing-txt">{closing_line or 'Picks aus eigenem Modell · jeder mit Edge-Begründung. <strong>cocobet.</strong>'}</div>
   </div>
   <div class="footer">
-    <div class="ft ft-stand">Modell · Pinnacle · Devig</div>
+    <div class="ft ft-stand">Modell · Eigene Analyse</div>
     <div class="ft">cocobet · transparent</div>
   </div>
 </div>

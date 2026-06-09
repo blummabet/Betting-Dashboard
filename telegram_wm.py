@@ -266,44 +266,115 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
         if not bet_picks and not abw_picks:
             lines.append("🔇 Kein Pick mit ausreichend Edge")
         else:
+            # Narrative Engine-Signal-Beschreibungen (kein "+1.4pp"-Geblubber)
+            SIG_NARRATIVE = {
+                "weather_signal":    "🌡 Wetter stützt",
+                "travel_burden":     "✈ Reise belastet Gegner" ,
+                "pressure_index":    "🎯 Tabellen-Druck",
+                "form_trend":        "📈 Form passt",
+                "xg_strength":       "🥅 xG-Stärke da",
+                "h2h_pattern":       "🤝 H2H-Muster passt",
+                "injury":            "🩹 Verletzungen helfen",
+                "apif_predictions":  "📊 Externes Modell bestätigt",
+                "lead_lag_bias":     "📡 Sharp-Lag (Bet365 hinterher)",
+                "public_static_bias":"🎲 Public-Bias gegen Pick",
+                "incentive_signal":  "🏆 Anreiz stützt",
+                "lineup_signal":     "📋 Lineup bestätigt",
+            }
+            def _top_signals_narrative(p, n=2):
+                """Top-N positiv-wirkende Engine-Signale, narrativ statt mit pp-Werten."""
+                sigs = p.get("signals") or []
+                sigs_sorted = sorted(sigs, key=lambda s: abs(s.get("score", 0)), reverse=True)
+                out = []
+                for s in sigs_sorted[:n]:
+                    sc = s.get("score", 0)
+                    if abs(sc) < 0.5: continue   # nur substantielle Signale
+                    name = s.get("name", "")
+                    if name not in SIG_NARRATIVE: continue
+                    label = SIG_NARRATIVE[name]
+                    # Bei Gegen-Signalen Negativ-Markierung
+                    if sc < 0:
+                        label = label.replace(" stützt", " gegen Pick").replace(" passt", " gegen Pick")
+                    out.append(label)
+                return out
+
             # BET-Picks zuerst
             for p in bet_picks:
-                mp = model_pct(p.get("modelOdds"))
-                mkp = pct(p.get("odds"))
                 edge = p.get("edgePP", "?")
-                info = p.get("info", "")
-                # Conviction-Badge (NEU 09.06.2026) — Top-Wette wenn ≥8/10
                 conv_score = p.get("convictionScore")
-                conv_label = ""
+
+                # Header-Zeile: nur Markt + Quote + (optional) Conviction-Badge
+                # Sprache neutralisiert (NEU 09.06.2026): keine X/10-Skala in der UI
+                # — das klingt nach Stake-Speak ("8 Units") + erzeugt Halt-Stop-Gefühl.
+                # Wort-Labels statt Score. Quantifizierung kommt über Signal-Count.
+                conv_badge = ""
                 if isinstance(conv_score, int):
                     if conv_score >= 8:
-                        conv_label = f" · 🎯 <b>Top-Wette {conv_score}/10</b>"
+                        conv_badge = f" · 🎯 <b>Top-Pick</b>"
                     elif conv_score >= 6:
-                        conv_label = f" · ⭐ Gute Wette {conv_score}/10"
-                # Sharp-Move-Indikator
-                sharp_label = " · 🔥 Sharp-Move" if p.get("sharpMoveActive") else ""
-                # Halluzinations-Warnung
-                hall_warn = ""
-                if isinstance(conv_score, int) and conv_score < 4 and p.get("modelHallucinationWarning"):
-                    hall_warn = f" · ⚠ Conviction nur {conv_score}/10"
-                lines.append(
-                    f"🎯 <b>BET: {p['market']} @{p.get('odds', '?')}</b>{conv_label}{sharp_label}{hall_warn}"
-                )
-                lines.append(
-                    f"   💡 Edge: <b>+{edge}pp</b> | Modell: {mp} vs. Markt: {mkp}"
-                )
-                if info:
-                    lines.append(f"   📊 {info}")
+                        conv_badge = f" · ⭐ Main-Pick"
+                    elif conv_score < 3 and p.get("modelHallucinationWarning"):
+                        conv_badge = f" · ⚠ Edge ohne Bestätigung"
 
-            # ABWÄGEN-Picks
+                lines.append(
+                    f"🎯 <b>BET: {p['market']} @{p.get('odds', '?')}</b>{conv_badge}"
+                )
+                # Edge + Signal-Count Zeile (NEU 09.06.2026)
+                n_pos = p.get("signalCountPos") or 0
+                n_neg = p.get("signalCountNeg") or 0
+                signal_count_str = ""
+                if (n_pos + n_neg) > 0:
+                    signal_count_str = f" · {n_pos} von 14 Signale stützen" + (f", {n_neg} dagegen" if n_neg > 0 else "")
+                lines.append(f"   💡 +{edge}pp Edge{signal_count_str}")
+
+                # Sharp-Move als eigene Zeile mit narrativem Text
+                if p.get("sharpMoveActive"):
+                    sm = p.get("sharpMoveDetails") or {}
+                    mv = sm.get("pinn_move_pp", 0)
+                    days = sm.get("move_age_days")
+                    if isinstance(mv, (int, float)) and abs(mv) >= 1:
+                        direction = "stützt Pick" if mv > 0 else "gegen Pick"
+                        age_note = ""
+                        if days and days <= 3:
+                            age_note = " (frisch)"
+                        elif days and days > 14:
+                            age_note = " (älter)"
+                        lines.append(f"   🔥 Pinnacle {direction}{age_note}")
+
+                # Top-2 narrative Engine-Signale (kein pp-Zahlen-Salat)
+                top_sigs = _top_signals_narrative(p, n=2)
+                if top_sigs:
+                    lines.append(f"   🧠 " + " · ".join(top_sigs))
+
+                # Sicherere Alternative wenn vorhanden — knapp formuliert
+                bold_alt = p.get("boldAlt")
+                if bold_alt:
+                    lines.append(
+                        f"   🛡 Sicherer: {bold_alt.get('market')} @{bold_alt.get('odds')}"
+                    )
+
+            # ABWÄGEN-Picks — minimalistisch
             for p in abw_picks:
                 edge = p.get("edgePP", "?")
                 conv_score = p.get("convictionScore")
-                conv_label = ""
-                if isinstance(conv_score, int) and conv_score >= 6:
-                    conv_label = f" · ⭐ Conviction {conv_score}/10"
+                n_pos = p.get("signalCountPos") or 0
+                badges = []
+                if isinstance(conv_score, int):
+                    if conv_score >= 8:
+                        badges.append("🎯 Top-Pick")
+                    elif conv_score >= 6:
+                        badges.append("⭐ Main-Pick")
+                    elif conv_score < 3:
+                        badges.append("⚠ wenig Bestätigung")
+                if n_pos > 0:
+                    badges.append(f"{n_pos}/14 Signale")
+                if p.get("sharpMoveActive"):
+                    badges.append("🔥")
+                if p.get("synthetic"):
+                    badges.append("🛡 Insurance")
+                badge_str = "  " + " · ".join(badges) if badges else ""
                 lines.append(
-                    f"⚖️ ABWÄGEN: {p['market']} @{p.get('odds', '?')} (+{edge}pp){conv_label}"
+                    f"⚖️ {p['market']} @{p.get('odds', '?')} (+{edge}pp){badge_str}"
                 )
 
         lines.append("")  # Leerzeile zwischen Spielen

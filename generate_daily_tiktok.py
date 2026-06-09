@@ -661,6 +661,22 @@ def main():
                     h = teams.get(fx["home"], {})
                     a = teams.get(fx["away"], {})
                     p = best[0]
+                    # Top-Signal extrahieren (höchster |score|)
+                    SIG_LABELS = {
+                        "weather_signal": "🌡 Hitze", "travel_burden": "✈ Reise",
+                        "pressure_index": "🎯 Druck", "form_trend": "📈 Form",
+                        "xg_strength": "🥅 xG", "h2h_pattern": "🤝 H2H",
+                        "injury": "🩹 Verletzung", "apif_predictions": "📊 APIF",
+                        "lead_lag_bias": "📡 Sharp-Lag", "public_static_bias": "🎲 Public-Bias",
+                        "incentive_signal": "🏆 Anreiz", "lineup_signal": "📋 Lineup",
+                    }
+                    top_sig = None
+                    sigs = p.get("signals") or []
+                    if sigs:
+                        s_best = max(sigs, key=lambda s: abs(s.get("score", 0)), default=None)
+                        if s_best and abs(s_best.get("score", 0)) >= 0.5:
+                            lbl = SIG_LABELS.get(s_best.get("name"), s_best.get("name", "")[:10])
+                            top_sig = f"{lbl} {s_best['score']:+.1f}pp"
                     collected.append({
                         "flag_h": h.get("flag", "🏳️"),
                         "name_h": h.get("name", fx["home"]),
@@ -672,6 +688,10 @@ def main():
                         "odds": float(p.get("odds") or 0),
                         "edge_pp": p.get("edgePP", 0),
                         "verdict": p.get("verdict"),
+                        # Engine-Felder (NEU 09.06.2026) — werden vom Template gerendert
+                        "convictionScore": p.get("convictionScore"),
+                        "sharpMoveActive": bool(p.get("sharpMoveActive")),
+                        "topSignal": top_sig,
                         "_edge_score": (p.get("edgePP") or 0) + (10 if p.get("verdict") == "BET" else 0),
                     })
             if collected:
