@@ -1,0 +1,227 @@
+"""
+tests/test_card_logic_anti_drift.py — Anti-Drift-Tests für die 7 Card-Logic-Bugs
+die am 09.06.2026 im ST1-Audit gefunden wurden.
+
+Diese Tests existieren damit die Bugs NACHHALTIG nicht mehr vorkommen.
+Jeder Test verweist auf den Original-Bug der ihn ausgelöst hat.
+"""
+import json
+import re
+import sys
+import unittest
+from pathlib import Path
+
+REPO = Path(__file__).parent.parent
+sys.path.insert(0, str(REPO))
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  BUG 1: SaferAlt-Picks dürfen Engine-Downgrade nicht ignorieren
+# ──────────────────────────────────────────────────────────────────────────
+class TestSaferAltEngineGate(unittest.TestCase):
+    """
+    Original-Bug AUT-JOR ST1: SaferAlt-Pick DC X2 mit Engine -3.5pp blieb
+    "Vorsichtiger Pick" obwohl Engine massiv gegen den Pick warnte.
+    Fix: Engine-SKIP-Schwelle (-5pp) und CLV-Downgrade gelten auch für
+    ABWÄGEN-Picks, nicht nur BET.
+    """
+
+    def test_generate_wm_picks_has_skip_threshold(self):
+        src = (REPO / "generate_wm_picks.py").read_text(encoding="utf-8")
+        self.assertIn("ENGINE_SKIP_PP", src,
+            "generate_wm_picks muss ENGINE_SKIP_PP-Konstante haben (für extreme Engine-Warnung)")
+
+    def test_skip_applies_to_abwaegen_too(self):
+        # Der Block "in (\"BET\", \"ABWÄGEN\")" muss existieren
+        src = (REPO / "generate_wm_picks.py").read_text(encoding="utf-8")
+        # Engine-Block muss BET UND ABWÄGEN betrachten
+        self.assertRegex(src, r'verdict.*in.*\(\s*"BET"\s*,\s*"ABWÄGEN"\s*\)',
+            "Engine-Downgrade-Logik muss BET UND ABWÄGEN-Picks prüfen, nicht nur BET")
+
+    def test_beobachten_verdict_used_for_skip(self):
+        src = (REPO / "generate_wm_picks.py").read_text(encoding="utf-8")
+        self.assertIn('"BEOBACHTEN"', src,
+            "Bei massiver Engine-Warnung muss Pick auf BEOBACHTEN gesetzt werden")
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  BUG 2: CLV-Negativ muss Verdict beeinflussen
+# ──────────────────────────────────────────────────────────────────────────
+class TestClvDowngrade(unittest.TestCase):
+    """
+    Original-Bug CIV-ECU / GHA-PAN ST1: Picks mit klar negativem CLV
+    (Markt bewegt sich gegen unseren Pick) blieben ★★★ BET ohne Warnung.
+    Fix: CLV ≤ -3pp triggert ABWÄGEN-Downgrade.
+    """
+
+    def test_clv_threshold_present(self):
+        src = (REPO / "generate_wm_picks.py").read_text(encoding="utf-8")
+        self.assertIn("CLV_NEG_DOWNGRADE_PP", src,
+            "CLV-Downgrade-Schwelle muss als Konstante existieren")
+
+    def test_clv_used_in_verdict_override(self):
+        src = (REPO / "generate_wm_picks.py").read_text(encoding="utf-8")
+        # Regex: clv_pp wird in Verdict-Logik referenziert (nicht nur als Feld zurückgegeben)
+        self.assertRegex(src, r'clv_pp\s*<=\s*CLV_NEG_DOWNGRADE_PP',
+            "clv_pp muss als Verdict-Override-Bedingung verwendet werden")
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  BUG 3: "Form schlägt Elo" nur wenn Form WIRKLICH besser
+# ──────────────────────────────────────────────────────────────────────────
+class TestFormBesserAlsGegner(unittest.TestCase):
+    """
+    Original-Bug KOR-CZE ST1: Heimsieg-Pick auf KOR mit Argument
+    "Südkorea 3 Siege in 5 — Form schlägt Elo" — aber CZE hatte 4 Siege.
+    Argument invertiert. Fix: Vergleiche home.wins vs away.wins.
+    """
+
+    def test_form_argument_compares_both_teams(self):
+        src = (REPO / "wm2026-renderer.js").read_text(encoding="utf-8")
+        # Hard-Check: "Form schlägt Elo" darf NICHT in Template-Literal-Output sein
+        # (Vorkommen in // Kommentar-Zeilen ist OK — Anti-Drift-Doku).
+        # Strip alle //-Kommentare zeilenweise, dann Test.
+        cleaned = "\n".join(
+            re.sub(r'//.*$', '', line)
+            for line in src.split("\n")
+        )
+        self.assertNotIn("Form schlägt Elo", cleaned,
+            "'Form schlägt Elo' findet sich noch als User-Text — sollte nur als // Kommentar bleiben")
+
+    def test_form_comparison_helper_exists(self):
+        src = (REPO / "wm2026-renderer.js").read_text(encoding="utf-8")
+        self.assertIn("_formWins", src,
+            "_formWins-Helper muss existieren für Form-Vergleich")
+        self.assertRegex(src, r'homeWins\s*>\s*awayWins',
+            "Form-Argument muss home.wins > away.wins check enthalten")
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  BUG 4: Header "Defensiv-Schlacht" bei Klassen-Unterschied falsch
+# ──────────────────────────────────────────────────────────────────────────
+class TestHeaderKlassenUnterschied(unittest.TestCase):
+    """
+    Original-Bug ESP-CPV ST1: "🛡 Defensiv-Schlacht" Header bei 88% ESP-Sieg
+    (Elo +370). Fix: bei |eloDiff| >= 250 immer "Klassen-Unterschied".
+    """
+
+    def test_lopsided_overrides_torfest_defshow(self):
+        src = (REPO / "wm2026-renderer.js").read_text(encoding="utf-8")
+        # Suche das isLopsided-Pattern im _deriveAngle-Bereich
+        self.assertIn("isLopsided", src,
+            "isLopsided-Check muss existieren um Defensiv-Schlacht/Tor-Fest bei Klassen-Unterschied zu überschreiben")
+        # Pattern: isLopsided wird VOR der Über/Unter-Check geprüft
+        idx_lopsided = src.find("isLopsided")
+        idx_torfest  = src.find("Tor-Fest erwartet")
+        self.assertLess(idx_lopsided, idx_torfest,
+            "isLopsided-Check muss VOR Tor-Fest-Check stehen (sonst greift override nicht)")
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  DATEN-BUG 1: Phantom-Venues (Denver/Orlando) dürfen nicht vorkommen
+# ──────────────────────────────────────────────────────────────────────────
+class TestNoPhantomVenues(unittest.TestCase):
+    """
+    Original-Bug GER-CUW / ESP-CPV ST1: "Empower Field, Denver" und
+    "Camping World Stadium, Orlando" sind keine WM-2026 Host-Stadien.
+    Fix: alle Venues müssen in wm_venues.json bekannt sein ODER mit
+    "zu bestätigen"-Marker gekennzeichnet sein.
+    """
+
+    BLACKLIST = {
+        "Empower Field, Denver",
+        "Empower Field",
+        "Camping World Stadium, Orlando",
+        "Camping World Stadium",
+    }
+
+    def test_blacklist_not_in_any_json(self):
+        for fpath in REPO.rglob("*.json"):
+            # Skip irrelevant dirs
+            if any(skip in str(fpath) for skip in ("actions-runner", ".git/", "node_modules")):
+                continue
+            try:
+                content = fpath.read_text(encoding="utf-8")
+            except Exception:
+                continue
+            for bad in self.BLACKLIST:
+                self.assertNotIn(bad, content,
+                    f"Phantom-Venue '{bad}' gefunden in {fpath.relative_to(REPO)}")
+
+    def test_blacklist_not_in_fetcher_py(self):
+        for fpath in REPO.glob("fetch_wm_*.py"):
+            content = fpath.read_text(encoding="utf-8")
+            for bad in self.BLACKLIST:
+                self.assertNotIn(bad, content,
+                    f"Phantom-Venue '{bad}' in Fetcher {fpath.name}")
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  DATEN-BUG 2: Streak-Logik muss konsistent mit angezeigter Form sein
+# ──────────────────────────────────────────────────────────────────────────
+class TestStreakKonsistenz(unittest.TestCase):
+    """
+    Original-Bug BEL-EGY ST1: "EGY Sieg-Serie 3 in Folge" widerspricht
+    angezeigter last5-Form 'L W D W L'. Ursache: _winStreak schaute auf
+    last10, Card-Anzeige zeigte last5. Fix: _winStreak nur auf last5.
+    """
+
+    def test_winstreak_uses_only_last5(self):
+        src = (REPO / "wm2026-renderer.js").read_text(encoding="utf-8")
+        # Match die _winStreak-Funktion und prüfe dass kein last10-Fallback
+        match = re.search(r'function _winStreak\(form\)\s*\{(.*?)\n\s*\}', src, re.DOTALL)
+        self.assertIsNotNone(match, "_winStreak nicht gefunden")
+        body = match.group(1)
+        self.assertNotIn("last10", body,
+            "_winStreak darf nicht auf last10 fallback'en — sonst inkonsistent mit Card-Anzeige")
+        self.assertIn("last5", body, "_winStreak muss last5 nutzen")
+
+    def test_lossstreak_uses_only_last5(self):
+        src = (REPO / "wm2026-renderer.js").read_text(encoding="utf-8")
+        match = re.search(r'function _lossStreak\(form\)\s*\{(.*?)\n\s*\}', src, re.DOTALL)
+        self.assertIsNotNone(match)
+        body = match.group(1)
+        self.assertNotIn("last10", body, "_lossStreak darf nicht auf last10 fallbacken")
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  DATEN-BUG 3: H2H-Raten ab n=3 nur — keine 100%-Artefakte
+# ──────────────────────────────────────────────────────────────────────────
+class TestH2hMinSampleSize(unittest.TestCase):
+    """
+    Original-Bug MEX-ZAF ST1: "H2H 100% Unter 2.5" bei nur n=1 Spiel.
+    Statistisch bedeutungslos. Fix: H2H-Raten nur ab games >= 3 anzeigen.
+    """
+
+    def test_h2h_rate_guarded_by_min_games(self):
+        src = (REPO / "wm2026-renderer.js").read_text(encoding="utf-8")
+        # Pragmatischer Check: jeder "h2h.over25Rate"-Block der eine User-sichtbare
+        # Anzeige produziert (parts.push oder signals.push) muss einen
+        # games>=3 Guard im SELBEN if-Statement enthalten.
+        # Wir suchen if-Statements mit h2h.over25Rate und prüfen ob games>=3 darin steht.
+        if_pattern = re.compile(
+            r'if\s*\([^\)]*h2h[\?\.]over25Rate[^\)]*\)\s*\{[^\}]*?(?:parts\.push|signals\.push)',
+            re.DOTALL
+        )
+        for match in if_pattern.finditer(src):
+            block = match.group(0)
+            self.assertIn("games", block,
+                f"H2H-Rate-Anzeige ohne games-Guard: {block[:200]}")
+            self.assertRegex(block, r'games[^\)]*\>=\s*3',
+                f"H2H-Rate-Anzeige ohne games>=3-Threshold: {block[:200]}")
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  Smoketest: alle Module laden noch
+# ──────────────────────────────────────────────────────────────────────────
+class TestModulesStillLoad(unittest.TestCase):
+    def test_generate_wm_picks_loads(self):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("gwp", REPO / "generate_wm_picks.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        self.assertTrue(hasattr(mod, "main"))
+
+
+if __name__ == "__main__":
+    unittest.main()

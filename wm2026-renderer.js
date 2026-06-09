@@ -926,6 +926,15 @@
 
     const m = (pick.market || '').toLowerCase();
 
+    // Anti-Drift-Fix 09.06.2026 — Klassen-Unterschied schlägt Tor-/Defensiv-Label.
+    // Bei großem Elo-Vorsprung (>= 250) ist "Defensiv-Schlacht" bei Unter X.5
+    // oder "Tor-Fest" bei Über X.5 inhaltlich falsch — es ist eine kontrollierte
+    // Dominanz, kein Duell. Vorher: ESP-CPV (Elo +370) als "Defensiv-Schlacht"
+    // getitelt, obwohl 88% ESP-Sieg-Wahrscheinlichkeit.
+    const isLopsided = (eloDiff != null && Math.abs(eloDiff) >= 250);
+    if (isLopsided) {
+      return { cls: 'cc-a-pflicht', icon: '🏆', label: 'Klassen-Unterschied' };
+    }
     // Über X.5 Tore → Tor-Fest
     if ((m.includes('über') || m.includes('over')) && (m.includes('2.5') || m.includes('1.5') || m.includes('3.5'))) {
       return { cls: 'cc-a-torfest', icon: '⚽', label: 'Tor-Fest erwartet' };
@@ -998,9 +1007,9 @@
       } else if (awayForm && awayForm.over25Rate != null && awayForm.over25Rate >= 0.55 && primaryTeamId !== fx.away) {
         parts.push(`${away.name} ${Math.round(awayForm.over25Rate*100)}% Ü2.5`);
       }
-      // H2H-Trend
-      if (h2h && h2h.over25Rate != null && h2h.over25Rate >= 0.6 && parts.length < 2) {
-        parts.push(`H2H ${Math.round(h2h.over25Rate*100)}% Ü2.5`);
+      // H2H-Trend — Anti-Drift-Fix: erst ab n=3 Spielen sinnvoll, sonst "100%"-Artefakt bei n=1
+      if (h2h && h2h.over25Rate != null && h2h.over25Rate >= 0.6 && (h2h.games || 0) >= 3 && parts.length < 2) {
+        parts.push(`H2H ${Math.round(h2h.over25Rate*100)}% Ü2.5 (${h2h.games} Spiele)`);
       }
       sentence1 = parts.length
         ? parts.slice(0, 2).join(', ') + '. Beide Defensiven offen.'
@@ -1028,8 +1037,9 @@
       } else if (awayForm && awayConc < 1.0 && primaryTeamId !== fx.away) {
         parts.push(`${away.name} ${awayConc.toFixed(1)} Gegen Ø`);
       }
-      if (h2h && h2h.over25Rate != null && h2h.over25Rate < 0.5 && parts.length < 2) {
-        parts.push(`H2H ${Math.round((1-h2h.over25Rate)*100)}% Unter 2.5`);
+      // Anti-Drift-Fix 09.06.2026: H2H-Rate erst ab n=3 vertrauenswürdig (n=1 gibt 0% oder 100% Artefakte).
+      if (h2h && h2h.over25Rate != null && h2h.over25Rate < 0.5 && (h2h.games || 0) >= 3 && parts.length < 2) {
+        parts.push(`H2H ${Math.round((1-h2h.over25Rate)*100)}% Unter 2.5 (${h2h.games} Spiele)`);
       }
       sentence1 = parts.length
         ? parts.slice(0, 2).join(' · ') + '. Wenig Offensiv-Druck erwartet.'
@@ -1050,6 +1060,12 @@
       // Sieg-/Niederlage-Serien zuerst — narrative Schärfe
       const homeStreak = _winStreak(homeForm);
       const homeLossSt = _lossStreak(awayForm);
+      // Anti-Drift-Fix 09.06.2026 — "Form schlägt Elo" darf nur greifen wenn
+      // UNSER Team auch wirklich BESSER ist als der Gegner. Vorher: bei KOR
+      // (3W) vs CZE (4W) wurde "Korea Form schlägt Elo" gepickt, obwohl CZE
+      // bessere Form hatte. Jetzt: nur wenn home.wins > away.wins UND home.wins >= 3.
+      const homeWins = _formWins(homeForm);
+      const awayWins = _formWins(awayForm);
       if (homeStreak >= 4) {
         sentence1 = `<strong>${home.name} ${homeStreak} Siege in Folge</strong> — Form heißer als Quoten zeigen.`;
       } else if (homeLossSt >= 3) {
@@ -1058,28 +1074,29 @@
         sentence1 = `<strong>${home.name} Elo +${favDiff}</strong> über ${away.name} — klassische Heim-Pflichtaufgabe.`;
       } else if (favDiff >= 80) {
         sentence1 = `<strong>${home.name}</strong> favorisiert${homeForm && homeForm.last5 ? ` (Form ${homeForm.last5.join('')})` : ''}.`;
+      } else if (homeWins >= 3 && homeWins > awayWins) {
+        // Nur wenn unser Team echt bessere Form als Gegner hat
+        sentence1 = `<strong>${home.name} ${homeWins} Siege in 5</strong> — Form besser als ${away.name} (${awayWins}/5).`;
       } else {
-        const wins = homeForm?.last5 ? homeForm.last5.filter(r => r === 'W').length : 0;
-        sentence1 = wins >= 3
-          ? `<strong>${home.name} ${wins} Siege in 5</strong> — Form schlägt Elo.`
-          : `<strong>${home.name}</strong> Heim-Bonus + Quoten-Edge.`;
+        sentence1 = `<strong>${home.name}</strong> Heim-Bonus + Quoten-Edge.`;
       }
     }
     else if (m.includes('auswärt') || m.includes('away') || /^2$/.test(m)) {
       const favDiff = -(eloDiff || 0);
       const awayStreak = _winStreak(awayForm);
       const homeLossSt = _lossStreak(homeForm);
+      const homeWins = _formWins(homeForm);
+      const awayWins = _formWins(awayForm);
       if (awayStreak >= 4) {
         sentence1 = `<strong>${away.name} ${awayStreak} Siege in Folge</strong> — Quoten haben Form-Lauf nicht eingepreist.`;
       } else if (homeLossSt >= 3) {
         sentence1 = `<strong>${home.name} ${homeLossSt} Niederlagen in Folge</strong> — Markt traut der Krise nicht.`;
       } else if (favDiff >= 200) {
         sentence1 = `<strong>${away.name} Elo +${favDiff}</strong> über ${home.name} — Pflichtsieg-Favorit auswärts.`;
+      } else if (awayWins >= 3 && awayWins > homeWins) {
+        sentence1 = `<strong>${away.name} ${awayWins} Siege in 5</strong> — Form besser als ${home.name} (${homeWins}/5).`;
       } else {
-        const wins = awayForm?.last5 ? awayForm.last5.filter(r => r === 'W').length : 0;
-        sentence1 = wins >= 3
-          ? `<strong>${away.name} ${wins} Siege in 5</strong> — Form besser als Quoten suggerieren.`
-          : `<strong>${away.name}</strong> Auswärts-Form unterschätzt vom Markt.`;
+        sentence1 = `<strong>${away.name}</strong> Auswärts-Form mit Edge.`;
       }
     }
     else if (m.includes('unentsch') || m.includes('draw')) {
@@ -1964,9 +1981,9 @@
         const v = Math.round(awayForm.over25Rate * 100);
         signals.push({ label: `Ü2.5 ${away.flag}`, value: v + '%', cls: v >= 55 ? 'cc-val-hot' : '' });
       }
-      if (h2h?.over25Rate != null && signals.length < 4) {
+      if (h2h?.over25Rate != null && (h2h.games || 0) >= 3 && signals.length < 4) {
         const v = Math.round(h2h.over25Rate * 100);
-        signals.push({ label: `Ü2.5 H2H (${h2h.games || '?'})`, value: v + '%', cls: v >= 50 ? 'cc-val-hot' : '' });
+        signals.push({ label: `Ü2.5 H2H (${h2h.games})`, value: v + '%', cls: v >= 50 ? 'cc-val-hot' : '' });
       }
       if (homeForm?.bttsRate != null && awayForm?.bttsRate != null && signals.length < 4) {
         const v = Math.round(((homeForm.bttsRate + awayForm.bttsRate) / 2) * 100);
@@ -2163,9 +2180,13 @@
   // ─────────────────────────────────────────────────────
   //  Form-Helpers — Streaks aus last10/last5 ableiten
   // ─────────────────────────────────────────────────────
+  // Anti-Drift-Fix 09.06.2026: Streak NUR aus last5 (was die Card auch anzeigt).
+  // Vorher: Fallback auf last10 → "3 Siege in Folge" Claim aus last10 [..W,W,W],
+  // während Card-Pille die last5 [L,W,D,W,L] zeigt und User keine Serie sieht.
+  // Konsistenz: was die Card behauptet muss in der angezeigten Form sichtbar sein.
   function _winStreak(form) {
-    const arr = form?.last10 || form?.last5;
-    if (!arr) return 0;
+    const arr = form?.last5;
+    if (!Array.isArray(arr)) return 0;
     let s = 0;
     for (let i = arr.length - 1; i >= 0; i--) {
       if (arr[i] === 'W') s++; else break;
@@ -2173,13 +2194,19 @@
     return s;
   }
   function _lossStreak(form) {
-    const arr = form?.last10 || form?.last5;
-    if (!arr) return 0;
+    const arr = form?.last5;
+    if (!Array.isArray(arr)) return 0;
     let s = 0;
     for (let i = arr.length - 1; i >= 0; i--) {
       if (arr[i] === 'L') s++; else break;
     }
     return s;
+  }
+  // Anzahl Siege in last5 (NICHT consecutive) — für Form-Vergleichs-Logik
+  function _formWins(form) {
+    const arr = form?.last5;
+    if (!Array.isArray(arr)) return 0;
+    return arr.filter(r => r === 'W').length;
   }
 
   // ─────────────────────────────────────────────────────

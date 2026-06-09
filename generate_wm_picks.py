@@ -1673,23 +1673,49 @@ def main():
                         #   (Engine warnt deutlich gegen den Pick)
                         # Regel 2: BET → ABWÄGEN wenn weniger als MIN_POSITIVE_SIGNALS
                         #   positive Signale (kein quantifizierbarer Grund für BET)
+                        # Anti-Drift-Fix 09.06.2026:
+                        # Regel 3: BET ODER ABWÄGEN → SKIP wenn Adjustment ≤ -5pp
+                        #   (massive Engine-Warnung — auch für saferAlt-Picks die als
+                        #   ABWÄGEN starten. Vorher: nur BET-Picks wurden downgraded,
+                        #   ABWÄGEN-SaferAlts ignorierten Engine-Warnung komplett.
+                        #   Konkret-Beispiel: AUT-JOR Pick X2 mit Engine -3.5pp.)
+                        # Regel 4: BET → ABWÄGEN wenn CLV ≤ -3pp (Markt bewegt sich
+                        #   deutlich gegen unseren Pick — starkes Anti-Signal).
                         MIN_POSITIVE_SIGNALS = 2
-                        ENGINE_DOWNGRADE_PP = -3.0
-                        if p.get("verdict") == "BET":
-                            adj = sig_out["combined_score_pp"]
-                            n_pos = sig_out["n_positive_signals"]
-                            if adj <= ENGINE_DOWNGRADE_PP:
-                                p["verdict"] = "ABWÄGEN"
+                        ENGINE_DOWNGRADE_PP   = -3.0
+                        ENGINE_SKIP_PP        = -5.0
+                        CLV_NEG_DOWNGRADE_PP  = -3.0
+                        adj   = sig_out["combined_score_pp"]
+                        n_pos = sig_out["n_positive_signals"]
+                        clv_pp = p.get("clvPP")
+                        if p.get("verdict") in ("BET", "ABWÄGEN"):
+                            # Regel 3 zuerst (härteste): vollständiges SKIP
+                            if adj <= ENGINE_SKIP_PP:
+                                p["verdict"] = "BEOBACHTEN"
                                 p["downgradedReason"] = (
-                                    f"Engine warnt: Signal-Adjustment {adj:+.1f}pp "
-                                    f"≤ {ENGINE_DOWNGRADE_PP}pp Schwelle"
+                                    f"Engine warnt massiv: Signal-Adjustment {adj:+.1f}pp "
+                                    f"≤ {ENGINE_SKIP_PP}pp — Pick wird ausgeblendet"
                                 )
-                            elif n_pos < MIN_POSITIVE_SIGNALS:
-                                p["verdict"] = "ABWÄGEN"
-                                p["downgradedReason"] = (
-                                    f"Engine: nur {n_pos} positive Signal(e), "
-                                    f"Mindest-Threshold {MIN_POSITIVE_SIGNALS} für BET"
-                                )
+                            elif p.get("verdict") == "BET":
+                                if adj <= ENGINE_DOWNGRADE_PP:
+                                    p["verdict"] = "ABWÄGEN"
+                                    p["downgradedReason"] = (
+                                        f"Engine warnt: Signal-Adjustment {adj:+.1f}pp "
+                                        f"≤ {ENGINE_DOWNGRADE_PP}pp Schwelle"
+                                    )
+                                elif n_pos < MIN_POSITIVE_SIGNALS:
+                                    p["verdict"] = "ABWÄGEN"
+                                    p["downgradedReason"] = (
+                                        f"Engine: nur {n_pos} positive Signal(e), "
+                                        f"Mindest-Threshold {MIN_POSITIVE_SIGNALS} für BET"
+                                    )
+                                elif (isinstance(clv_pp, (int, float))
+                                      and clv_pp <= CLV_NEG_DOWNGRADE_PP):
+                                    p["verdict"] = "ABWÄGEN"
+                                    p["downgradedReason"] = (
+                                        f"Markt bewegt sich gegen Pick (CLV {clv_pp:+.1f}pp) — "
+                                        f"Pinnacle sieht Pick schwächer als bei Eröffnung"
+                                    )
             except Exception as e:
                 print(f"  ⚠️  Signal-Engine crashed für {fx['home']}-{fx['away']}: {e}")
 

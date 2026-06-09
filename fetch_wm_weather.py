@@ -40,8 +40,6 @@ VENUE_COORDS = {
     "AT&T Stadium, Dallas":                   (32.7480, -97.0930, "America/Chicago"),
     "Arrowhead Stadium, Kansas City":         (39.0489, -94.4839, "America/Chicago"),
     "BMO Field, Toronto":                     (43.6332, -79.4186, "America/Toronto"),
-    "Camping World Stadium, Orlando":         (28.5392, -81.3890, "America/New_York"),
-    "Empower Field, Denver":                  (39.7439, -105.0201, "America/Denver"),
     "Estadio Akron, Guadalajara":             (20.7122, -103.4627, "America/Mexico_City"),
     "Estadio Azteca, Mexico City":            (19.3032,  -99.1506, "America/Mexico_City"),
     "Estadio BBVA, Monterrey":                (25.6690, -100.3120, "America/Monterrey"),
