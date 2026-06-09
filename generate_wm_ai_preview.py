@@ -100,6 +100,8 @@ def compute_hash(data: dict) -> str:
                 p.get("odds"),
                 p.get("modelOdds"),     # H6: model-only Änderungen erkennen
                 p.get("dataQuality"),   # H6: dataQ-Wechsel = neue Konfidenz
+                p.get("convictionScore"),    # v5 (09.06): Conviction-Score in Prompt
+                p.get("sharpMoveActive"),    # v5 (09.06): Sharp-Move-Flag
             )
             for p in data.get("picks", [])
         ],
@@ -121,7 +123,7 @@ def compute_hash(data: dict) -> str:
         "formAGames":  (data.get("formAway") or {}).get("games"),
         "cornersExp":  data.get("cornersExp"),
         # Prompt-Version erhöht → erzwingt globale Regeneration aller alten Previews
-        "_promptVersion": 4,   # v4: erweiterter Cache-Key + Power-Devig-Korrekturen
+        "_promptVersion": 5,   # v5 (09.06.2026): Conviction-Score + Sharp-Move + Familien im Prompt
     }
     return hashlib.sha256(json.dumps(relevant, sort_keys=True, default=str).encode()).hexdigest()[:16]
 
@@ -250,7 +252,7 @@ def build_prompt(info: dict) -> str:
     elif upset >= 5:
         lines.append(f"Ausgeglichener als Elo nahelegt — Upset-Score {upset}/10")
 
-    # ── Picks ─────────────────────────────────────────────────────────────────
+    # ── Picks + Engine-Kontext (Conviction, Sharp-Move, Familien) ────────
     pick_lines = []
     for p in (bet_picks + abw_picks)[:3]:
         v     = p.get("verdict", "")
@@ -258,12 +260,44 @@ def build_prompt(info: dict) -> str:
         odds  = p.get("odds", "?")
         edge  = p.get("edgePP", "?")
         dq    = p.get("dataQuality", "")
+        conv  = p.get("convictionScore")
+        fams  = p.get("convictionFamilies") or {}
+        sm    = p.get("sharpMoveActive")
         dq_note = " [nur Elo-Daten]" if dq == "elo_only" else ""
-        pick_lines.append(f"{v}: {mkt} @{odds} (Edge +{edge}pp){dq_note}")
+        extras = []
+        if conv is not None:
+            extras.append(f"Conviction {conv}/10")
+        if sm:
+            sm_d = p.get("sharpMoveDetails") or {}
+            mv = sm_d.get("pinn_move_pp", 0)
+            extras.append(f"Sharp-Move Pinnacle {mv:+.1f}pp seit Eröffnung")
+        if fams:
+            active_fams = [f"{k}={v}" for k, v in fams.items() if v > 0]
+            if active_fams:
+                extras.append("Familien aktiv: " + ", ".join(active_fams))
+        extra_str = f" [{'; '.join(extras)}]" if extras else ""
+        pick_lines.append(f"{v}: {mkt} @{odds} (Edge +{edge}pp){dq_note}{extra_str}")
     if pick_lines:
         lines.append("Picks/Edge: " + " | ".join(pick_lines))
     else:
         lines.append("Picks: Kein klarer Edge identifiziert — kein aktiver Pick.")
+
+    # ── Engine-Signal-Adjustments (auf den Top-Pick) ─────────────────────
+    top_pick = (bet_picks + abw_picks)[:1]
+    if top_pick:
+        signals = top_pick[0].get("signals") or []
+        if signals:
+            sig_parts = []
+            for s in signals[:5]:
+                name = (s.get("name") or "").replace("_signal", "").replace("_", " ")
+                score = s.get("score", 0)
+                if abs(score) >= 0.3:
+                    sig_parts.append(f"{name} {score:+.1f}pp")
+            if sig_parts:
+                lines.append("Engine-Signale (Top-Pick): " + ", ".join(sig_parts))
+            adj = top_pick[0].get("signalAdjustmentPP")
+            if isinstance(adj, (int, float)) and abs(adj) >= 0.5:
+                lines.append(f"Engine-Netto-Adjustment: {adj:+.1f}pp auf rohen Edge")
 
     context = "\n".join(lines)
 
@@ -277,14 +311,19 @@ Schreibe exakt 4 Sätze auf Deutsch. Stil: journalistisch, sachlich, konkret —
 
 SATZ 1: Kräfteverhältnis — Wer ist Favorit, wie groß ist der Abstand, was sagen Elo und Form?
 SATZ 2: Spielcharakter — Was erwarten wir taktisch/statistisch? (Tore, Ecken, BTTS, Stil basierend auf Form)
-SATZ 3: Wetthinweis — Konkreter Pick mit Begründung WENN Edge vorhanden; sonst ehrlich "kein klarer Value heute"
-SATZ 4: Kontext — Co-Gastgeber-Vorteil, H2H-Besonderheit, Upset-Risiko, oder Gruppenrelevanz
+SATZ 3: Wetthinweis — Konkreter Pick mit Begründung WENN Edge vorhanden; sonst ehrlich "kein klarer Value heute".
+        Falls Conviction-Score gemeldet wurde, baue ihn ein: 8+/10 = "starke Bestätigung", 6-7 = "solide gestützt",
+        4-5 = "Beobachten — Signale dünn", 0-3 = "Edge ohne Signal-Backing, Halluzinations-Risiko".
+        Bei Sharp-Move: erwähne dass Pinnacle sich in Pick-Richtung bewegt hat ("Sharps stützen die Seite").
+SATZ 4: Kontext — Co-Gastgeber-Vorteil, H2H-Besonderheit, Upset-Risiko, Gruppenrelevanz, ODER
+        wenn eines der Engine-Signale (Hitze, Travel, Anreiz, Druck, Lineup) besonders stark feuert: das nennen.
 
 REGELN:
 - Kein "Laut Modell" oder "Laut Daten" — schreibe aus Analysten-Perspektive
 - Kein Hype, keine Emojis, kein Clickbait
 - Wenn kein Pick: trotzdem interessanten Aspekt über das Spiel erwähnen
-- Maximal 110 Wörter gesamt
+- Wenn Conviction-Score sehr niedrig (≤3) bei BET: explizit auf "wenig Signal-Backing" hinweisen
+- Maximal 130 Wörter gesamt (etwas mehr Spielraum wegen reicherem Kontext)
 - Nur die 4 Sätze, nichts davor oder danach"""
 
 

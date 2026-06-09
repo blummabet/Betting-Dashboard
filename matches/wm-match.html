@@ -1553,18 +1553,49 @@ function _renderPickWhyButton(D, primary) {
           </div>
         </div>` : ''}
 
-        ${(primary.signals && primary.signals.length > 0) ? `<div class="pwm-section">
-          <div class="pwm-section-title">🧠 Engine-Signale (${primary.signalCountPos || 0}+ / ${primary.signalCountNeg || 0}−)</div>
-          <table class="pwm-table">
-            ${primary.signals.map(s => {
-              const sc = s.weighted_score !== undefined ? s.weighted_score : s.score;
-              const col = sc > 0 ? '#3fb950' : sc < 0 ? '#e3b341' : '#8b949e';
-              const sym = sc > 0 ? '+' : '';
-              return `<tr><td>${escHtml(s.evidence || s.name)}</td><td><strong style="color:${col};">${sym}${sc}pp</strong></td></tr>`;
-            }).join('')}
-          </table>
-          ${primary.downgradedReason ? `<div style="margin-top:8px;padding:8px 12px;background:rgba(227,179,65,0.10);border-left:3px solid #e3b341;font-size:12px;color:#e3b341;">⚠️ ${escHtml(primary.downgradedReason)}</div>` : ''}
-        </div>` : ''}
+        ${(primary.signals && primary.signals.length > 0) ? (() => {
+          // Engine-Signal-Grid (NEU 09.06.2026) — Tiles statt Tabelle
+          const SIG_META = {
+            weather_signal:       ['🌡', 'Wetter'],
+            travel_burden:        ['✈', 'Travel'],
+            pressure_index:       ['🎯', 'Druck'],
+            form_trend:           ['📈', 'Form-Trend'],
+            xg_strength:          ['🥅', 'xG-Stärke'],
+            h2h_pattern:          ['🤝', 'H2H'],
+            injury:               ['🩹', 'Verletzungen'],
+            apif_predictions:     ['📊', 'APIF-Modell'],
+            lead_lag_bias:        ['📡', 'Sharp-Lag'],
+            public_static_bias:   ['🎲', 'Public-Bias'],
+            incentive_signal:     ['🏆', 'Anreiz'],
+            lineup_signal:        ['📋', 'Lineup T-1h'],
+            polymarket_sharp:     ['⚡', 'Poly (Trade)'],
+            steam_lag:            ['🌊', 'Steam-Lag (Trade)'],
+          };
+          const tiles = primary.signals.map(s => {
+            const [ico, name] = SIG_META[s.name] || ['•', s.name.replace(/_/g, ' ')];
+            const score = s.weighted_score !== undefined ? s.weighted_score : s.score;
+            const sc = typeof score === 'number' ? score : 0;
+            const cls = sc > 0.3 ? 'pos' : sc < -0.3 ? 'neg' : 'silent';
+            const val = Math.abs(sc) >= 0.1 ? `${sc > 0 ? '+' : ''}${sc.toFixed(1)}pp` : '—';
+            const bg = cls === 'pos' ? 'rgba(63,185,80,0.06)' : cls === 'neg' ? 'rgba(227,179,65,0.08)' : 'rgba(255,255,255,0.02)';
+            const bd = cls === 'pos' ? 'rgba(63,185,80,0.35)' : cls === 'neg' ? 'rgba(227,179,65,0.35)' : 'var(--border)';
+            const col = cls === 'pos' ? '#3fb950' : cls === 'neg' ? '#e3b341' : '#8b949e';
+            const opacity = cls === 'silent' ? 0.45 : 1;
+            return `<div style="background:${bg};border:1px solid ${bd};border-radius:10px;padding:10px 12px;opacity:${opacity};">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-size:16px;">${ico}</span>
+                <span style="font-size:10px;font-weight:700;color:var(--text);">${name}</span>
+              </div>
+              <div style="font-family:ui-monospace,monospace;font-size:13px;font-weight:800;color:${col};margin-top:2px;">${val}</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:3px;line-height:1.3;">${escHtml(s.evidence || '')}</div>
+            </div>`;
+          }).join('');
+          return `<div class="pwm-section">
+            <div class="pwm-section-title">🧠 Engine-Signale (${primary.signalCountPos || 0}+ / ${primary.signalCountNeg || 0}−)</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:8px;">${tiles}</div>
+            ${primary.downgradedReason ? `<div style="margin-top:10px;padding:8px 12px;background:rgba(227,179,65,0.10);border-left:3px solid #e3b341;font-size:12px;color:#e3b341;">⚠️ ${escHtml(primary.downgradedReason)}</div>` : ''}
+          </div>`;
+        })() : ''}
 
         ${cornerInfo ? `<div class="pwm-section">
           <div class="pwm-section-title">📐 Eckenerwartung</div>

@@ -1560,6 +1560,20 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .cc-sig-evidence{flex:1;color:var(--text);}
 .cc-story em{color:var(--muted);font-style:normal;font-size:12px;}
 
+/* Engine-Signal-Grid (Tiles statt Liste, NEU 09.06.2026) */
+.cc-sig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:8px;margin-top:8px;}
+.cc-sig-tile{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:10px 11px;display:flex;flex-direction:column;gap:3px;}
+.cc-sig-tile-pos{background:rgba(0,212,161,0.06);border-color:rgba(0,212,161,0.35);}
+.cc-sig-tile-neg{background:rgba(245,90,90,0.06);border-color:rgba(245,90,90,0.35);}
+.cc-sig-tile-silent{opacity:0.45;}
+.cc-sig-tile-head{display:flex;align-items:center;gap:6px;}
+.cc-sig-tile-ico{font-size:16px;}
+.cc-sig-tile-name{font-size:10px;font-weight:700;color:var(--text);letter-spacing:0.2px;}
+.cc-sig-tile-val{font-family:'JetBrains Mono','SF Mono',Menlo,monospace;font-size:13px;font-weight:800;margin-top:1px;}
+.cc-sig-tile-pos .cc-sig-tile-val{color:#00d4a1;}
+.cc-sig-tile-neg .cc-sig-tile-val{color:#f55a5a;}
+.cc-sig-tile-desc{font-size:10px;color:var(--muted);line-height:1.3;margin-top:2px;}
+
 /* Conviction-Badge (NEU 09.06.2026) — Wett-Qualitäts-Bewertung 0-10 */
 .cc-conviction{padding:12px 20px;margin:0 0 14px;border-bottom:1px solid var(--border);font-size:12px;}
 .cc-conv-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13px;}
@@ -2921,7 +2935,257 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
   </details>
 
-  <!-- ════════════════ 7. NATIONAL-LIGA (pausiert) ════════════════ -->
+  <!-- ════════════════ 7. ENGINE ERKLÄRT ════════════════ -->
+  <details class="heart-collapse">
+    <summary>
+      <span class="heart-collapse-icon">🧠</span>
+      <span class="heart-collapse-title">Wie die Engine wirklich funktioniert — 4 Schritte vom Edge zum Tipp</span>
+      <span class="heart-collapse-meta" style="color:#7dd3fc;">14 SIGNALE · CONVICTION-SCORE · SHARP-MOVE</span>
+    </summary>
+    <div class="heart-collapse-body">
+      <p style="color:var(--muted);font-size:13px;margin:0 0 24px;">
+        Konkretes Beispiel: <strong style="color:var(--text);">Norwegen – Italien in Dallas, 35°C bei Anpfiff.</strong>
+        Unser Modell sagt: hier fallen wenige Tore. Aber stimmt das wirklich? So prüft die Engine das in 4 Schritten.
+      </p>
+
+      <!-- STEP 1: MATCH + ROHER EDGE -->
+      <div style="display:flex;align-items:center;gap:12px;margin:24px 0 12px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:#f5c518;color:#0d1117;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">1</div>
+        <div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);">Roher Edge aus Elo + xG-Modell</div>
+          <div style="font-size:12px;color:var(--muted);">Was sagt der Markt, was sagt unser Modell?</div>
+        </div>
+      </div>
+      <div style="background:rgba(125,211,252,0.05);border:1.5px solid rgba(125,211,252,0.22);border-radius:14px;padding:16px 18px;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div style="font-size:11px;color:#7dd3fc;letter-spacing:1.5px;font-weight:700;">UNSER PICK</div>
+            <div style="font-size:22px;font-weight:800;color:#f5c518;margin-top:2px;">Unter 2.5 Tore</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:4px;">Markt-Quote 1.74 · Modell hätte 1.52 fair gefunden</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:#f5c518;letter-spacing:1.5px;font-weight:700;">ROHER EDGE</div>
+            <div style="font-size:30px;font-weight:800;color:#f5c518;font-family:ui-monospace,monospace;">+8.3pp</div>
+            <div style="font-size:12px;color:var(--muted);">Markt zahlt mehr als statistisch fair</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:14px 18px;font-size:13px;">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed rgba(125,211,252,0.15);">
+          <span style="color:var(--muted);">Elo-Differenz (NOR 1742 vs ITA 1845)</span>
+          <span style="font-family:ui-monospace,monospace;">−103 Punkte</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed rgba(125,211,252,0.15);">
+          <span style="color:var(--muted);">xG-Erwartung (defensive Tendenz)</span>
+          <span style="font-family:ui-monospace,monospace;">2.6 Tore</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed rgba(125,211,252,0.15);">
+          <span style="color:var(--muted);">Travel-Penalty (NOR-Anreise nach Dallas)</span>
+          <span style="font-family:ui-monospace,monospace;color:#f87171;">−5% xG</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0 0;margin-top:8px;border-top:2px solid var(--border);color:#7dd3fc;font-weight:700;">
+          <span>Modell-Rechnung:</span>
+          <span style="font-family:ui-monospace,monospace;">Fair 1.52 → Markt 1.74 = +8.3pp Edge</span>
+        </div>
+      </div>
+
+      <!-- STEP 2: SIGNAL-GRID -->
+      <div style="display:flex;align-items:center;gap:12px;margin:32px 0 12px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:#f5c518;color:#0d1117;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">2</div>
+        <div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);">Die Engine prüft 14 Signale gleichzeitig</div>
+          <div style="font-size:12px;color:var(--muted);">Jedes Signal kann den Tipp verstärken (grün) oder anzweifeln (rot). Manche feuern nicht — das ist okay.</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;">
+        <div style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.35);border-radius:12px;padding:12px 14px;">
+          <div style="font-size:20px;">🌡</div><div style="font-size:11px;font-weight:700;margin-top:2px;">Weather/Hitze</div><div style="font-family:ui-monospace,monospace;font-size:14px;font-weight:800;color:#f87171;margin-top:2px;">−2.5pp</div><div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3;">Norwegen Cold-Climate · 35°C drückt Leistung</div>
+        </div>
+        <div style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.35);border-radius:12px;padding:12px 14px;">
+          <div style="font-size:20px;">✈</div><div style="font-size:11px;font-weight:700;margin-top:2px;">Travel-Burden</div><div style="font-family:ui-monospace,monospace;font-size:14px;font-weight:800;color:#f87171;margin-top:2px;">−1.8pp</div><div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3;">10.200 km Anreise · 4 Tage Pause</div>
+        </div>
+        <div style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.35);border-radius:12px;padding:12px 14px;">
+          <div style="font-size:20px;">🎯</div><div style="font-size:11px;font-weight:700;margin-top:2px;">Pressure-Index</div><div style="font-family:ui-monospace,monospace;font-size:14px;font-weight:800;color:#f87171;margin-top:2px;">−0.6pp</div><div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3;">Auftakt-Vorsicht · weniger Risiko</div>
+        </div>
+        <div style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.35);border-radius:12px;padding:12px 14px;">
+          <div style="font-size:20px;">📈</div><div style="font-size:11px;font-weight:700;margin-top:2px;">Form-Trend</div><div style="font-family:ui-monospace,monospace;font-size:14px;font-weight:800;color:#4ade80;margin-top:2px;">+1.4pp</div><div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3;">Beide trafen zuletzt wenig — passt zur These</div>
+        </div>
+        <div style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.35);border-radius:12px;padding:12px 14px;">
+          <div style="font-size:20px;">🥅</div><div style="font-size:11px;font-weight:700;margin-top:2px;">xG-Stärke</div><div style="font-family:ui-monospace,monospace;font-size:14px;font-weight:800;color:#4ade80;margin-top:2px;">+0.9pp</div><div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3;">Defensiv solide auf beiden Seiten</div>
+        </div>
+        <div style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.35);border-radius:12px;padding:12px 14px;">
+          <div style="font-size:20px;">📊</div><div style="font-size:11px;font-weight:700;margin-top:2px;">APIF Predictions</div><div style="font-family:ui-monospace,monospace;font-size:14px;font-weight:800;color:#4ade80;margin-top:2px;">+1.1pp</div><div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3;">Externes Modell bestätigt niedrigen Tor-Wert</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:12px 14px;opacity:0.45;">
+          <div style="font-size:20px;">📡</div><div style="font-size:11px;font-weight:700;margin-top:2px;">Lead-Lag-Bias</div><div style="font-family:ui-monospace,monospace;font-size:14px;font-weight:800;margin-top:2px;">—</div><div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3;">Pinnacle und Bet365 noch synchron</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:12px 14px;opacity:0.45;">
+          <div style="font-size:20px;">📋</div><div style="font-size:11px;font-weight:700;margin-top:2px;">Lineup T-1h</div><div style="font-family:ui-monospace,monospace;font-size:14px;font-weight:800;margin-top:2px;">—</div><div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3;">Aufstellung erst 1h vorm Anpfiff</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:12px 14px;opacity:0.45;">
+          <div style="font-size:20px;">🩹</div><div style="font-size:11px;font-weight:700;margin-top:2px;">Injury</div><div style="font-family:ui-monospace,monospace;font-size:14px;font-weight:800;margin-top:2px;">—</div><div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3;">Keine Schlüsselspieler verletzt</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:12px 14px;opacity:0.45;">
+          <div style="font-size:20px;">⚡</div><div style="font-size:11px;font-weight:700;margin-top:2px;">Steam-Lag (Trade-only)</div><div style="font-family:ui-monospace,monospace;font-size:14px;font-weight:800;margin-top:2px;">—</div><div style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.3;">Pinnacle ↔ Polymarket noch synchron</div>
+        </div>
+      </div>
+      <div style="background:rgba(125,211,252,0.04);border-left:3px solid #7dd3fc;padding:11px 14px;border-radius:6px;font-size:12px;color:var(--muted);margin-top:14px;line-height:1.5;">
+        <strong style="color:#7dd3fc;">Anti-Korrelations-Schutz aktiv:</strong> Travel-Burden, Weather, Pressure und Injury gehören zur selben „Spielort-Familie".
+        Damit wir denselben Faktor nicht dreimal zählen, wird das stärkste Signal voll gewertet und die anderen auf 40% gedämpft.
+      </div>
+
+      <!-- STEP 3: WATERFALL -->
+      <div style="display:flex;align-items:center;gap:12px;margin:32px 0 12px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:#f5c518;color:#0d1117;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">3</div>
+        <div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);">Alle Signale zusammengezählt → effective Edge</div>
+          <div style="font-size:12px;color:var(--muted);">So verändert sich unsere Edge-Schätzung Schritt für Schritt.</div>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:14px 18px;">
+        <div style="background:rgba(125,211,252,0.10);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;font-weight:700;color:#f5c518;font-size:13px;margin-bottom:6px;">
+          <span>📊 Start: roher Edge aus Modell</span>
+          <span style="font-family:ui-monospace,monospace;font-size:15px;">+8.3pp</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 60px 60px;align-items:center;padding:6px 4px;font-size:12px;gap:12px;color:var(--text);">
+          <span>🌡 Hitze drückt Norwegen</span>
+          <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px;position:relative;"><span style="position:absolute;right:50%;top:0;bottom:0;width:30%;background:#f87171;border-radius:3px;"></span></div>
+          <span style="text-align:right;font-family:ui-monospace,monospace;color:#f87171;font-weight:700;">−2.5pp</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 60px 60px;align-items:center;padding:6px 4px;font-size:12px;gap:12px;">
+          <span>✈ Reise (gedämpft via Anti-Korr)</span>
+          <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px;position:relative;"><span style="position:absolute;right:50%;top:0;bottom:0;width:22%;background:#f87171;border-radius:3px;"></span></div>
+          <span style="text-align:right;font-family:ui-monospace,monospace;color:#f87171;font-weight:700;">−1.8pp</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 60px 60px;align-items:center;padding:6px 4px;font-size:12px;gap:12px;">
+          <span>🎯 Auftakt-Vorsicht</span>
+          <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px;position:relative;"><span style="position:absolute;right:50%;top:0;bottom:0;width:8%;background:#f87171;border-radius:3px;"></span></div>
+          <span style="text-align:right;font-family:ui-monospace,monospace;color:#f87171;font-weight:700;">−0.6pp</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 60px 60px;align-items:center;padding:6px 4px;font-size:12px;gap:12px;">
+          <span>📈 Form passt zum Pick</span>
+          <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px;position:relative;"><span style="position:absolute;left:50%;top:0;bottom:0;width:18%;background:#4ade80;border-radius:3px;"></span></div>
+          <span style="text-align:right;font-family:ui-monospace,monospace;color:#4ade80;font-weight:700;">+1.4pp</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 60px 60px;align-items:center;padding:6px 4px;font-size:12px;gap:12px;">
+          <span>🥅 xG defensiv solide</span>
+          <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px;position:relative;"><span style="position:absolute;left:50%;top:0;bottom:0;width:11%;background:#4ade80;border-radius:3px;"></span></div>
+          <span style="text-align:right;font-family:ui-monospace,monospace;color:#4ade80;font-weight:700;">+0.9pp</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 60px 60px;align-items:center;padding:6px 4px;font-size:12px;gap:12px;">
+          <span>📊 Externes Modell bestätigt</span>
+          <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px;position:relative;"><span style="position:absolute;left:50%;top:0;bottom:0;width:14%;background:#4ade80;border-radius:3px;"></span></div>
+          <span style="text-align:right;font-family:ui-monospace,monospace;color:#4ade80;font-weight:700;">+1.1pp</span>
+        </div>
+        <div style="background:rgba(251,191,36,0.10);border:1px solid rgba(251,191,36,0.35);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;font-weight:700;color:#f5c518;font-size:13px;margin-top:8px;">
+          <span>🎯 Effective Edge nach Engine</span>
+          <span style="font-family:ui-monospace,monospace;font-size:15px;">+6.8pp</span>
+        </div>
+      </div>
+
+      <!-- STEP 4: CONVICTION + VERDICT -->
+      <div style="display:flex;align-items:center;gap:12px;margin:32px 0 12px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:#f5c518;color:#0d1117;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">4</div>
+        <div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);">Conviction-Score 0-10 → BET / ABWÄGEN / SKIP</div>
+          <div style="font-size:12px;color:var(--muted);">Wett-Qualitäts-Bewertung aus 4 Familien — getrennt vom Edge-Verdict.</div>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:16px;">
+        <div style="display:grid;grid-template-columns:1fr;gap:6px;font-size:12px;margin-bottom:14px;">
+          <div style="display:flex;justify-content:space-between;padding:8px 12px;border-radius:5px;background:rgba(0,212,161,0.06);">
+            <span>Sharp-Money (Pinnacle-Move + Bet365/WH-Lag)</span>
+            <span style="font-family:ui-monospace,monospace;font-weight:600;color:#00d4a1;">+1 / max 3</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:8px 12px;border-radius:5px;background:rgba(0,212,161,0.06);">
+            <span>Modell-Stack (Form + xG + H2H + Modell-Sanity)</span>
+            <span style="font-family:ui-monospace,monospace;font-weight:600;color:#00d4a1;">+3 / max 3</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:8px 12px;border-radius:5px;background:rgba(0,212,161,0.06);">
+            <span>Kontext (Travel + Lineup + Wetter + Druck + Anreiz)</span>
+            <span style="font-family:ui-monospace,monospace;font-weight:600;color:#00d4a1;">+2 / max 3</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:8px 12px;border-radius:5px;background:rgba(0,212,161,0.06);">
+            <span>Markt-Konsens (Public-Bias + APIF)</span>
+            <span style="font-family:ui-monospace,monospace;font-weight:600;color:#00d4a1;">+1 / max 1</span>
+          </div>
+        </div>
+        <div style="position:relative;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:visible;margin-bottom:6px;">
+          <div style="height:100%;width:70%;background:linear-gradient(90deg,#ffb02e,#00d4a1);border-radius:4px;"></div>
+          <div style="position:absolute;left:80%;top:-3px;width:2px;height:14px;background:rgba(0,212,161,0.7);border-radius:1px;" title="8+ = Top-Wette"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);">
+          <span>Conviction 7/10</span>
+          <span>für Top-Wette: 8+</span>
+        </div>
+      </div>
+
+      <div style="background:linear-gradient(135deg,rgba(251,191,36,0.10),rgba(251,191,36,0.04));border:2px solid rgba(251,191,36,0.45);border-radius:14px;padding:20px;margin-top:16px;text-align:center;">
+        <div style="display:inline-block;padding:4px 12px;background:rgba(251,191,36,0.18);border-radius:999px;font-size:10px;letter-spacing:1.5px;color:#f5c518;font-weight:700;">FINALES URTEIL</div>
+        <div style="font-size:32px;font-weight:800;margin:12px 0 6px;color:#f5c518;">⚖️ ABWÄGEN</div>
+        <p style="color:var(--muted);font-size:13px;max-width:500px;margin:8px auto 0;line-height:1.5;">
+          Effective Edge +6.8pp, Conviction 7/10. Engine bestätigt die These — aber nicht stark genug für BET-Upgrade (Schwelle ≥8).
+          <strong style="color:var(--text);">In der Praxis:</strong> Auto-Trader kauft nicht. User sieht alle Signale transparent und entscheidet selbst.
+        </p>
+      </div>
+
+      <!-- FAMILIE-AUFSCHLÜSSELUNG -->
+      <div class="h2-sub-label" style="margin-top:32px;">Wie sich die Conviction-Familien aufbauen</div>
+      <div class="h2-feature-grid" style="grid-template-columns:1fr 1fr;">
+        <div class="h2-feature" style="border-color:rgba(255,107,107,0.4);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🔥</span><div class="h2-feature-title">Sharp-Money · max 3pt</div></div>
+          <div class="h2-feature-desc">
+            <strong>Strength-Berechnung</strong> aus 4 Quellen: <em>Sharp-Move triggered</em> (+2pt), <em>Opening-Movement in Pick-Richtung</em> (+1pt), <em>lead_lag_bias Signal aktiv</em> (+max 2pt), <em>Soft-Lag-Bonus frisch</em> (+1pt).<br>
+            Strength ≥5 → 3pt · ≥3 → 2pt · ≥1 → 1pt. <strong>Move-Age-Decay</strong>: ≤14d = voll, ≤30d = halb, >30d = null.
+            <br><br>
+            <strong style="color:var(--muted);">NICHT in dieser Familie:</strong> polymarket_sharp + steam_lag — das sind Trade-Pfad-Signale (Polymarket = Trade-Gegenseite, nicht Sharp-Anker).
+          </div>
+        </div>
+        <div class="h2-feature" style="border-color:rgba(125,211,252,0.4);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧮</span><div class="h2-feature-title">Modell-Stack · max 3pt</div></div>
+          <div class="h2-feature-desc">
+            Was sagen unsere Daten? <strong>Form-Trend + xG-Stärke + H2H-Pattern + Injury</strong> als Signale plus <strong>Modell-Sanity</strong> (Modell-Quote darf ≤10pp vom Markt abweichen — sonst Halluzination, kein Punkt).
+            <br><br>
+            Modell-Sanity ist ein Anti-Halluzinations-Filter: bei Edge &gt;10pp (z.B. KAN-BIH AH +0.5 mit +14.8pp) wird kein Sanity-Punkt vergeben → niedrige Conviction warnt den User.
+          </div>
+        </div>
+        <div class="h2-feature" style="border-color:rgba(255,176,46,0.4);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🌍</span><div class="h2-feature-title">Kontext · max 3pt</div></div>
+          <div class="h2-feature-desc">
+            Externe Spielumstände: <strong>Travel-Burden + Lineup T-1h + Weather + Pressure-Index + Incentive (Anreiz)</strong>.<br>
+            Pro positives Signal +1pt, gecappt bei 3. Lineup-Signal feuert erst T-1h vor Anpfiff — typisch werden 1-2 Familien-Punkte vor Live-Phase erreicht, mehr in der Hot-Phase.
+          </div>
+        </div>
+        <div class="h2-feature" style="border-color:rgba(125,211,252,0.4);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📊</span><div class="h2-feature-title">Markt-Konsens · max 1pt</div></div>
+          <div class="h2-feature-desc">
+            Externes Pricing-Modell als Cross-Check: <strong>Public-Static-Bias</strong> (Bet365 vs Pinnacle implied) und <strong>APIF-Predictions</strong> (drittes API-Football-Modell).<br>
+            Wenn mindestens eines übereinstimmt → 1pt. Diese Familie ist absichtlich klein-gewichtet (max 1) — externer Konsens ersetzt keine eigene Datenbasis.
+          </div>
+        </div>
+      </div>
+
+      <!-- VERDICT-MAPPING -->
+      <div class="h2-sub-label" style="margin-top:24px;">Conviction-Score → Wett-Empfehlung</div>
+      <div class="h2-num-grid">
+        <div class="h2-num"><div class="h2-num-val acc">8-10</div><div class="h2-num-lbl">🎯 Top-Wette · ABWÄGEN→BET-Upgrade</div></div>
+        <div class="h2-num"><div class="h2-num-val">6-7</div><div class="h2-num-lbl">⭐ Gute Wette · Edge solide bestätigt</div></div>
+        <div class="h2-num"><div class="h2-num-val">4-5</div><div class="h2-num-lbl">👁 Beobachten · Schwache Bestätigung</div></div>
+        <div class="h2-num"><div class="h2-num-val red">0-3</div><div class="h2-num-lbl">⚠ Edge ohne Backing · Halluzinations-Verdacht</div></div>
+      </div>
+
+      <div style="background:rgba(125,211,252,0.04);border:1px dashed var(--border);border-radius:10px;padding:16px;margin-top:24px;font-size:12px;color:var(--muted);line-height:1.6;">
+        <strong style="color:#7dd3fc;">Warum so viele Signale?</strong>
+        Jedes Signal allein wäre zu schwach. Pinnacle hat den schärfsten Markt aller Bookies — den dauerhaft zu schlagen ist fast unmöglich.
+        Stattdessen <strong style="color:var(--text);">nutzen wir Pinnacle als Anker</strong> und unsere 14 Signale finden Situationen,
+        in denen selbst Pinnacle eine wichtige Variable übersehen hat (Hitze für Cold-Climate-Teams, Top-Scorer auf der Bank,
+        lange Reisen, …). Nach jedem Spiel lernt die Engine: <strong style="color:var(--text);">welche Signale haben Recht behalten?</strong>
+        Die guten gewinnen Gewicht (Bayesian-Loop), die schlechten verlieren. So wird das System mit jedem WM-Tag schärfer.
+      </div>
+    </div>
+  </details>
+
+  <!-- ════════════════ 8. NATIONAL-LIGA (pausiert) ════════════════ -->
   <details class="heart-collapse">
     <summary>
       <span class="heart-collapse-icon">⚽</span>

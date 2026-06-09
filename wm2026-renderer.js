@@ -646,11 +646,14 @@
 
       // ─── CONVICTION-BADGE (NEU 09.06.2026) ────────────
       // Wett-Qualitäts-Bewertung 0-10 aus conviction_score.py.
-      // Bar-Visualisierung mit 8+-Zielmarker.
-      if (typeof heroPick.convictionScore === 'number' && heroPick.convictionScore >= 3) {
+      // Bar-Visualisierung mit 8+-Zielmarker. Wird IMMER angezeigt wenn
+      // Score gesetzt — auch bei niedrigem Score (transparente Warnung).
+      if (typeof heroPick.convictionScore === 'number') {
         const score = heroPick.convictionScore;
         const label = heroPick.convictionLabel
-          || (score >= 8 ? '🎯 Top-Wette' : score >= 6 ? '⭐ Gute Wette' : score >= 4 ? '👁 Beobachten' : '');
+          || (score >= 8 ? '🎯 Top-Wette' : score >= 6 ? '⭐ Gute Wette'
+            : score >= 4 ? '👁 Beobachten' : score >= 2 ? '⚠ Schwache Bestätigung'
+            : '⚠ Keine Bestätigung');
         const cls = score >= 8 ? 'cc-conv-top'
                   : score >= 6 ? 'cc-conv-good'
                   : score >= 4 ? 'cc-conv-watch' : 'cc-conv-low';
@@ -679,25 +682,46 @@
         </div>`;
       }
 
-      // ─── ENGINE-SIGNAL-STACK ─────────────────────────
+      // ─── ENGINE-SIGNAL-GRID (NEU 09.06.2026) ──────────
       // Signal-Engine (sharp_signals/) hat pro Pick signals[] mit evidence
-      // und signalAdjustmentPP. Zeigen wenn relevant — sonst leer.
+      // und signalAdjustmentPP. Grid mit pos/neg/silent Tiles statt Text-Liste.
       const sigList = Array.isArray(heroPick.signals) ? heroPick.signals : [];
       if (sigList.length) {
         const adj = heroPick.signalAdjustmentPP;
         const adjLabel = (typeof adj === 'number' && Math.abs(adj) >= 0.5)
-          ? `<span class="cc-sig-adj ${adj > 0 ? 'pos' : 'neg'}">${adj > 0 ? '+' : ''}${adj.toFixed(1)}pp</span>`
+          ? `<span class="cc-sig-adj ${adj > 0 ? 'pos' : 'neg'}">${adj > 0 ? '+' : ''}${adj.toFixed(1)}pp Netto</span>`
           : '';
-        const rows = sigList.slice(0, 4).map(s => {
-          const cls = s.score > 0 ? 'pos' : 'neg';
-          return `<div class="cc-sig-row ${cls}">
-            <span class="cc-sig-score">${s.score > 0 ? '+' : ''}${s.score.toFixed(1)}</span>
-            <span class="cc-sig-evidence">${s.evidence}</span>
+        // Icon + Display-Name Map für die 14 Signale
+        const SIG_META = {
+          weather_signal:       ['🌡', 'Wetter'],
+          travel_burden:        ['✈', 'Travel'],
+          pressure_index:       ['🎯', 'Druck'],
+          form_trend:           ['📈', 'Form-Trend'],
+          xg_strength:          ['🥅', 'xG-Stärke'],
+          h2h_pattern:          ['🤝', 'H2H'],
+          injury:               ['🩹', 'Verletzungen'],
+          apif_predictions:     ['📊', 'APIF-Modell'],
+          lead_lag_bias:        ['📡', 'Sharp-Lag'],
+          public_static_bias:   ['🎲', 'Public-Bias'],
+          incentive_signal:     ['🏆', 'Anreiz'],
+          lineup_signal:        ['📋', 'Lineup T-1h'],
+          polymarket_sharp:     ['⚡', 'Poly (Trade)'],
+          steam_lag:            ['🌊', 'Steam-Lag (Trade)'],
+        };
+        const tiles = sigList.slice(0, 6).map(s => {
+          const [ico, name] = SIG_META[s.name] || ['•', s.name.replace(/_/g, ' ')];
+          const score = s.score || 0;
+          const cls = score > 0.3 ? 'cc-sig-tile-pos' : score < -0.3 ? 'cc-sig-tile-neg' : 'cc-sig-tile-silent';
+          const val = Math.abs(score) >= 0.1 ? `${score > 0 ? '+' : ''}${score.toFixed(1)}pp` : '—';
+          return `<div class="cc-sig-tile ${cls}">
+            <div class="cc-sig-tile-head"><span class="cc-sig-tile-ico">${ico}</span><span class="cc-sig-tile-name">${name}</span></div>
+            <div class="cc-sig-tile-val">${val}</div>
+            <div class="cc-sig-tile-desc">${s.evidence || ''}</div>
           </div>`;
         }).join('');
         html += `<div class="cc-signals">
           <div class="cc-signals-head">🧠 Engine-Signale ${adjLabel}</div>
-          ${rows}
+          <div class="cc-sig-grid">${tiles}</div>
         </div>`;
       }
     }
