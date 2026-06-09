@@ -445,6 +445,11 @@ def main():
                     "signalCountNeg":      pk.get("signalCountNeg"),
                     "effectiveEdgePP":     pk.get("effectiveEdgePP"),
                     "downgradedReason":    pk.get("downgradedReason"),
+                    # Conviction-Score (09.06.2026): wird vom Auto-Trigger
+                    # als zusätzliches Gate genutzt — Trade nur bei ≥3/10.
+                    "convictionScore":     pk.get("convictionScore"),
+                    "synthetic":           pk.get("synthetic"),
+                    "trackingExcluded":    pk.get("trackingExcluded"),
                 }
 
     # Market label → edge_key / allFixtures field name
@@ -594,6 +599,23 @@ def main():
             },
             **{
                 f"engineDowngrade_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("downgradedReason")
+                for mkt_label, field in _MARKET_TO_FIELD.items()
+                if field in ("hw", "dr", "aw", "o25", "u25")
+            },
+            # Conviction-Score pro Markt (09.06.2026 — Auto-Trigger Gate)
+            **{
+                f"conviction_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("convictionScore")
+                for mkt_label, field in _MARKET_TO_FIELD.items()
+                if field in ("hw", "dr", "aw", "o25", "u25")
+            },
+            # Synthetic + trackingExcluded pro Markt (09.06.2026 — Auto-Trigger Gate)
+            **{
+                f"synthetic_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("synthetic")
+                for mkt_label, field in _MARKET_TO_FIELD.items()
+                if field in ("hw", "dr", "aw", "o25", "u25")
+            },
+            **{
+                f"trackingExcluded_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("trackingExcluded")
                 for mkt_label, field in _MARKET_TO_FIELD.items()
                 if field in ("hw", "dr", "aw", "o25", "u25")
             },
