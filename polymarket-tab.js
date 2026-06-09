@@ -515,6 +515,9 @@ function _extractWmPicksForDate(wm, dateStr) {
       // Filter: BET-only + Edge-Schwelle (Lucas: "nur die besten Bets")
       if (WM_POLY_BET_ONLY && verdict !== 'BET') continue;
       if (edge < WM_POLY_MIN_EDGE_PP) continue;
+      // FIX 1 (09.06.2026): synthetische saferAlt-Picks sind Card-Insurance,
+      // keine Trade-Kandidaten — werden im Polymarket-Tab nicht gelistet.
+      if (p.synthetic) continue;
 
       // Nur Märkte die Polymarket auch listet (POLY_MARKETS Set)
       // — generate_wm_picks.py schreibt deutsche Labels, müssen ggf. gemappt werden
@@ -564,6 +567,13 @@ function _extractWmPicksForDate(wm, dateStr) {
         wmMatchday: md,
         wmInfo: p.info || '',
         wmVenue: fx.venue || '',
+        // FIX 2 (09.06.2026): Conviction + Engine-Felder durchreichen
+        // damit Manual-Trade-Confirm Conviction sehen + warnen kann.
+        convictionScore:      typeof p.convictionScore === 'number' ? p.convictionScore : null,
+        convictionLabel:      p.convictionLabel || null,
+        signalAdjustmentPP:   typeof p.signalAdjustmentPP === 'number' ? p.signalAdjustmentPP : null,
+        effectiveEdgePP:      typeof p.effectiveEdgePP === 'number' ? p.effectiveEdgePP : null,
+        synthetic:            !!p.synthetic,
       });
     }
   }
@@ -598,6 +608,8 @@ function getWmPolyPicks(dateStr) {
 
     // Only BET and ABWÄGEN
     if (!['BET', 'ABWÄGEN'].includes(entry.verdict)) continue;
+    // FIX 1 (09.06.2026): synthetische saferAlt-Picks raus — Insurance, kein Trade
+    if (entry.synthetic) continue;
 
     // Map market name to Polymarket equivalent
     const polyMarket = WM_MARKET_TO_POLY[entry.market];
@@ -648,11 +660,21 @@ function getWmPolyPicks(dateStr) {
       oddsOpen:    null,
       h2h:         null,
       isWm:        true,
+      // FIX 2 (09.06.2026): Conviction + Engine-Felder durchreichen
+      convictionScore:      typeof entry.convictionScore === 'number' ? entry.convictionScore : null,
+      convictionLabel:      entry.convictionLabel || null,
+      signalAdjustmentPP:   typeof entry.signalAdjustmentPP === 'number' ? entry.signalAdjustmentPP : null,
+      effectiveEdgePP:      typeof entry.effectiveEdgePP === 'number' ? entry.effectiveEdgePP : null,
+      synthetic:            !!entry.synthetic,
     });
   }
 
+  // Sort: höchste Conviction zuerst (wenn vorhanden), dann edge (sc).
   results.sort((a, b) => {
     if (a.verdict !== b.verdict) return a.verdict === 'BET' ? -1 : 1;
+    const ca = typeof a.convictionScore === 'number' ? a.convictionScore : -1;
+    const cb = typeof b.convictionScore === 'number' ? b.convictionScore : -1;
+    if (ca !== cb) return cb - ca;
     return b.sc - a.sc;
   });
   return results;
@@ -1560,6 +1582,32 @@ function _wmBetConfirm(orderJson) {
     ? ((stakeEur / order.polyPrice) - stakeEur).toFixed(2)
     : '?';
 
+  // FIX 3 (09.06.2026): Conviction-Badge + Engine-Warnungen.
+  // Spiegelt die drei Auto-Trigger-Gates (Raw-Edge ≥2pp, Conviction ≥3/10,
+  // synthetic excluded). Manueller Trade kann override-en, aber muss informiert sein.
+  const conv = typeof order.conviction === 'number' ? order.conviction : null;
+  const convLabel = conv == null ? null
+    : conv >= 8 ? { txt: '🎯 Top-Pick', col: '#3fb950', bg: 'rgba(63,185,80,.18)' }
+    : conv >= 6 ? { txt: '⭐ Main-Pick', col: '#e3b341', bg: 'rgba(227,179,65,.18)' }
+    : conv >= 3 ? { txt: '👁 Beobachten', col: '#8b949e', bg: 'rgba(139,148,158,.15)' }
+                : { txt: '⚠ Schwache Bestätigung', col: '#f85149', bg: 'rgba(248,81,73,.15)' };
+
+  const warnings = [];
+  if (order.edge != null && order.edge < 2) {
+    warnings.push(`Raw-Edge nur ${order.edge > 0 ? '+' : ''}${order.edge}pp — Auto-Trigger-Mindest ist 2pp`);
+  }
+  if (conv != null && conv < 3) {
+    warnings.push(`Conviction ${conv}/10 — Auto-Trigger-Mindest ist 3/10`);
+  }
+  if (order.synthetic) {
+    warnings.push(`Synthetischer saferAlt-Pick — als Insurance gedacht, nicht als Trade`);
+  }
+  if (typeof order.effectiveEdge === 'number' && typeof order.edge === 'number'
+      && Math.abs(order.effectiveEdge - order.edge) > 1) {
+    const sign = order.signalAdj > 0 ? '+' : '';
+    warnings.push(`Engine pumpt Edge um ${sign}${(order.effectiveEdge - order.edge).toFixed(1)}pp (raw ${order.edge}pp → effektiv ${order.effectiveEdge}pp)`);
+  }
+
   // Reuse polyModal if it exists, otherwise create one inline
   let modal = document.getElementById('polyModal');
   if (!modal) {
@@ -1605,6 +1653,24 @@ function _wmBetConfirm(orderJson) {
         </div>
       </div>
     </div>
+
+    ${convLabel ? `
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;
+                background:${convLabel.bg};border:1px solid ${convLabel.col}55;border-radius:10px;
+                padding:10px 14px;margin-bottom:12px">
+      <div>
+        <div style="font-size:10px;color:#6e7681;text-transform:uppercase;letter-spacing:.5px">Conviction-Score</div>
+        <div style="font-size:14px;font-weight:800;color:${convLabel.col};margin-top:2px">${convLabel.txt}</div>
+      </div>
+      <div style="font-size:20px;font-weight:900;color:${convLabel.col}">${conv}/10</div>
+    </div>` : ''}
+
+    ${warnings.length ? `
+    <div style="background:#f8514911;border:1px solid #f8514944;border-radius:10px;padding:10px 14px;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:800;color:#f85149;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">⚠ Auto-Trigger hätte das geblockt</div>
+      ${warnings.map(w => `<div style="font-size:12px;color:#f85149;margin-top:2px">• ${w}</div>`).join('')}
+      <div style="font-size:10px;color:#8b949e;margin-top:6px;font-style:italic">Du kannst manuell überschreiben — der Auto-Trigger ist defensiver geworden weil die Engine Edges teils ungerechtfertigt pumpt.</div>
+    </div>` : ''}
 
     ${!pat ? `<div style="background:#f8514911;border:1px solid #f8514933;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:#f85149">
       ⚠️ Kein GitHub Token — <button onclick="polyOpenSettings()" style="background:none;border:none;color:#f85149;cursor:pointer;font-size:12px;font-weight:700;text-decoration:underline;font-family:inherit">Jetzt einrichten →</button>
@@ -2263,11 +2329,14 @@ function _renderWmMarketTable() {
       outcomesHtml = `<div style="margin-bottom:8px">
         <div style="font-size:9px;font-weight:700;color:#484f58;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">1X2</div>
         ${outcomeRow('H', fix.pinn_hw, fix.poly_hw, fix.edge_hw,
-          {home:fix.home,away:fix.away,market:'Heimsieg',polyPrice:fix.poly_hw,pinnFair:fix.fair_hw,slug:fix.slug,edge:fix.edge_hw}, bestMktForH)}
+          {home:fix.home,away:fix.away,market:'Heimsieg',polyPrice:fix.poly_hw,pinnFair:fix.fair_hw,slug:fix.slug,edge:fix.edge_hw,
+           conviction:fix.conviction_hw,signalAdj:fix.signalAdj_hw,effectiveEdge:fix.effectiveEdge_hw,synthetic:fix.synthetic_hw}, bestMktForH)}
         ${outcomeRow('X', fix.pinn_dr, fix.poly_dr, fix.edge_dr,
-          {home:fix.home,away:fix.away,market:'Unentschieden',polyPrice:fix.poly_dr,pinnFair:fix.fair_dr,slug:fix.slug,edge:fix.edge_dr}, bestMktForX)}
+          {home:fix.home,away:fix.away,market:'Unentschieden',polyPrice:fix.poly_dr,pinnFair:fix.fair_dr,slug:fix.slug,edge:fix.edge_dr,
+           conviction:fix.conviction_dr,signalAdj:fix.signalAdj_dr,effectiveEdge:fix.effectiveEdge_dr,synthetic:fix.synthetic_dr}, bestMktForX)}
         ${outcomeRow('A', fix.pinn_aw, fix.poly_aw, fix.edge_aw,
-          {home:fix.home,away:fix.away,market:'Auswärtssieg',polyPrice:fix.poly_aw,pinnFair:fix.fair_aw,slug:fix.slug,edge:fix.edge_aw}, bestMktForA)}
+          {home:fix.home,away:fix.away,market:'Auswärtssieg',polyPrice:fix.poly_aw,pinnFair:fix.fair_aw,slug:fix.slug,edge:fix.edge_aw,
+           conviction:fix.conviction_aw,signalAdj:fix.signalAdj_aw,effectiveEdge:fix.effectiveEdge_aw,synthetic:fix.synthetic_aw}, bestMktForA)}
       </div>`;
     } else {
       outcomesHtml = `<div style="font-size:11px;color:#484f58;padding:4px 0;display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px">
@@ -2289,9 +2358,11 @@ function _renderWmMarketTable() {
       ouHtml = `<div style="border-top:1px solid #21262d;padding-top:8px;margin-top:4px">
         <div style="font-size:9px;font-weight:700;color:#484f58;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Over / Under + BTTS</div>
         ${fix.poly_o25 ? outcomeRow('O2.5', fix.pinn_o25||null, fix.poly_o25, fix.edge_o25??null,
-          {home:fix.home,away:fix.away,market:'Über 2.5 Tore',polyPrice:fix.poly_o25,pinnFair:fix.fair_o25,slug:ouSlug,edge:fix.edge_o25}, bestMktO25) : ''}
+          {home:fix.home,away:fix.away,market:'Über 2.5 Tore',polyPrice:fix.poly_o25,pinnFair:fix.fair_o25,slug:ouSlug,edge:fix.edge_o25,
+           conviction:fix.conviction_o25,signalAdj:fix.signalAdj_o25,effectiveEdge:fix.effectiveEdge_o25,synthetic:fix.synthetic_o25}, bestMktO25) : ''}
         ${fix.poly_u25 ? outcomeRow('U2.5', fix.pinn_u25||null, fix.poly_u25, fix.edge_u25??null,
-          {home:fix.home,away:fix.away,market:'Unter 2.5 Tore',polyPrice:fix.poly_u25,pinnFair:fix.fair_u25,slug:ouSlug,edge:fix.edge_u25}, bestMktU25) : ''}
+          {home:fix.home,away:fix.away,market:'Unter 2.5 Tore',polyPrice:fix.poly_u25,pinnFair:fix.fair_u25,slug:ouSlug,edge:fix.edge_u25,
+           conviction:fix.conviction_u25,signalAdj:fix.signalAdj_u25,effectiveEdge:fix.effectiveEdge_u25,synthetic:fix.synthetic_u25}, bestMktU25) : ''}
         ${fix.poly_o15 ? outcomeRow('O1.5', null, fix.poly_o15, null,
           {home:fix.home,away:fix.away,market:'Über 1.5 Tore',polyPrice:fix.poly_o15,slug:ouSlug,edge:null}, false) : ''}
         ${fix.poly_o35 ? outcomeRow('O3.5', null, fix.poly_o35, null,
