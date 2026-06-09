@@ -7742,6 +7742,7 @@ async function loadPreMatchData() {
         if (Object.keys(_sResult).length > 0) {
           window._preMatchData   = _sResult;
           window._preMatchLoaded = true;
+          window._pmTs           = _sData.ts || Date.now();   // expose for Sharp Radar freshness display
           try { localStorage.setItem(cacheKey, JSON.stringify({ ts: _sData.ts || Date.now(), data: _sResult })); } catch(e) {}
           _injectPreMatchAndRerender();
           console.log(`[PreMatch] Server-Daten: ${Object.keys(_sResult).length} Spiele gematcht`);
@@ -9070,17 +9071,23 @@ function renderTgLog(log) {
 // ═══════════════════════════════════════════════════════
 (async function _preloadWmSharpData() {
   try {
-    const [wmD, wmH, wmTb] = await Promise.all([
+    const [wmD, wmH, wmTb, sigW, wmR] = await Promise.all([
       fetch('wm2026-data.json?t=' + Date.now())
         .then(r => r.ok ? r.json() : null).catch(() => null),
       fetch('wm2026-odds-history.json?t=' + Date.now())
         .then(r => r.ok ? r.json() : null).catch(() => null),
       fetch('wm_travel_burden.json?t=' + Date.now())
         .then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('signal_weights.json?t=' + Date.now())
+        .then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('wm_results.json?t=' + Date.now())
+        .then(r => r.ok ? r.json() : null).catch(() => null),
     ]);
     if (wmD)  window.WM2026_DATA         = wmD;
     if (wmH)  window.WM2026_ODDS_HISTORY = wmH;
     if (wmTb) window._wmTravelBurden     = wmTb;  // used by wm2026-renderer.js cards
+    if (sigW) window.SIGNAL_WEIGHTS      = sigW;  // Sharp Radar Bayesian-Status
+    if (wmR)  window.WM_RESULTS_DATA     = wmR;   // Sharp Radar CLV-Aggregation
   } catch(e) { /* silent — Sharp Radar falls back to league-only mode */ }
 })();
 

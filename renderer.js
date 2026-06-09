@@ -1484,6 +1484,227 @@ function renderFixtureCard(match, leagueName, leagueFlag, leagueKey) {
 //    3. Our Picks      — today's picks enriched with sharp context
 //    4. Market Heatmap — movement by market type across all fixtures
 // ═══════════════════════════════════════════════════════
+// ──────────────────────────────────────────────────────────────────────────
+//  SHARP-RADAR ADD-ONS (NEU 09.06.2026) — Sharp-Move-getriebene Engine
+//  Block A: Sharp-Move + Conviction Watchlist
+//  Block B: Bayesian-Weights Live-Status (was hat das System gelernt)
+//  Block C: CLV-Aggregation pro Signal-Familie (welche tragen langfristig)
+// ──────────────────────────────────────────────────────────────────────────
+
+// Sammle alle aktiven WM-Picks aus wm2026-data
+function _collectActiveWmPicks() {
+  const wm = window.WM2026_DATA;
+  if (!wm || !wm.picks || !wm.groups) return [];
+  const teamLookup = {};
+  for (const grp of Object.values(wm.groups || {})) {
+    for (const t of (grp.teams || [])) teamLookup[t.id] = t;
+  }
+  const fxLookup = {};
+  for (const [gk, grp] of Object.entries(wm.groups || {})) {
+    for (const fx of (grp.fixtures || [])) {
+      fxLookup[`${gk}-${fx.matchday}-${fx.home}-${fx.away}`] = { ...fx, groupKey: gk };
+    }
+  }
+  const result = [];
+  for (const [pk, plist] of Object.entries(wm.picks)) {
+    const fx = fxLookup[pk];
+    if (!fx) continue;
+    // Nur künftige Fixtures
+    try {
+      const fxDate = new Date(`${fx.date}T${fx.time || '20:00'}:00`);
+      if (fxDate < new Date(Date.now() - 6 * 3600 * 1000)) continue;
+    } catch(e) {}
+    for (const p of plist) {
+      const verdict = p.verdict;
+      if (verdict === 'SKIP' || verdict === 'BEOBACHTEN') continue;
+      result.push({
+        pickKey:  pk,
+        fixture:  fx,
+        home:     teamLookup[fx.home] || { id: fx.home, name: fx.home, flag: '🏳' },
+        away:     teamLookup[fx.away] || { id: fx.away, name: fx.away, flag: '🏳' },
+        pick:     p,
+      });
+    }
+  }
+  return result;
+}
+
+// Block A — Watchlist: Sharp-Move ODER Conviction ≥7
+function _renderSharpWatchlist() {
+  const picks = _collectActiveWmPicks();
+  const watch = picks.filter(item => {
+    const p = item.pick;
+    return p.sharpMoveActive
+        || (typeof p.convictionScore === 'number' && p.convictionScore >= 7);
+  });
+  if (watch.length === 0) {
+    return `<div class="section-label" style="margin-bottom:10px;">🎯 Sharp-Money Watchlist</div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px;color:var(--muted);font-size:12px;font-style:italic;text-align:center;">
+        Noch keine Picks mit Sharp-Move-Trigger oder hoher Conviction. Wird sichtbar sobald Pinnacle bewegt oder Signal-Setup ≥7/10 erreicht.
+      </div>`;
+  }
+  watch.sort((a, b) => (b.pick.convictionScore || 0) - (a.pick.convictionScore || 0));
+  const rows = watch.slice(0, 12).map(item => {
+    const p = item.pick;
+    const conv = typeof p.convictionScore === 'number' ? p.convictionScore : null;
+    const convBadge = conv !== null
+      ? `<span style="font-family:ui-monospace,monospace;font-size:11px;padding:2px 8px;border-radius:5px;font-weight:700;background:${conv >= 8 ? 'rgba(0,212,161,0.20)' : 'rgba(125,211,252,0.20)'};color:${conv >= 8 ? '#00d4a1' : '#7dd3fc'};">${conv}/10</span>`
+      : '';
+    const sharpBadge = p.sharpMoveActive
+      ? `<span style="font-size:10px;padding:2px 6px;border-radius:4px;background:rgba(248,81,73,0.20);color:#f85149;font-weight:700;">🔥 Sharp-Move</span>`
+      : '';
+    const sm = p.sharpMoveDetails;
+    const smDetails = sm
+      ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;">Pinnacle ${sm.open_pinn_odds ? sm.open_pinn_odds.toFixed(2) : '?'} → ${sm.current_pinn_odds ? sm.current_pinn_odds.toFixed(2) : '?'} · ${sm.soft_lag_pp ? `Soft +${sm.soft_lag_pp.toFixed(1)}pp dahinter` : 'Bewegt'}</div>`
+      : '';
+    return `<a href="matches/wm-match.html?m=wm-${item.fixture.home.toLowerCase()}-vs-${item.fixture.away.toLowerCase()}-${item.fixture.date}" style="display:block;padding:10px 14px;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);">
+      <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;">
+          <span>${item.home.flag} ${item.home.name}</span>
+          <span style="color:var(--muted);">vs</span>
+          <span>${item.away.flag} ${item.away.name}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">${sharpBadge}${convBadge}</div>
+      </div>
+      <div style="font-size:12px;color:var(--accent);font-weight:700;margin-top:4px;">${p.market} @${p.odds ? parseFloat(p.odds).toFixed(2) : '?'} <span style="color:var(--muted);font-weight:400;">· ${p.verdict}${p.edgePP != null ? ` · Edge +${p.edgePP}pp` : ''}</span></div>
+      ${smDetails}
+    </a>`;
+  }).join('');
+  return `<div class="section-label" style="margin-bottom:10px;">🎯 Sharp-Money Watchlist · ${watch.length} Picks aktiv</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px;">
+      ${rows}
+    </div>`;
+}
+
+// Block B — Bayesian-Weights aus signal_weights.json
+function _renderBayesianWeights() {
+  const weights = window.SIGNAL_WEIGHTS || {};
+  const signalNames = [
+    "lead_lag_bias", "public_static_bias", "travel_burden", "injury",
+    "form_trend", "h2h_pattern", "xg_strength", "polymarket_sharp",
+    "steam_lag", "pressure_index", "lineup_signal", "apif_predictions",
+    "weather_signal", "incentive_signal",
+  ];
+  const labels = {
+    lead_lag_bias: "Sharp-Move (Pinn vs Soft)",
+    public_static_bias: "Public-Bias",
+    travel_burden: "Travel-Burden",
+    injury: "Verletzungen",
+    form_trend: "Form-Trend",
+    h2h_pattern: "H2H-Pattern",
+    xg_strength: "xG-Stärke",
+    polymarket_sharp: "Polymarket-Sharp",
+    steam_lag: "Steam-Lag (Pinn vs Poly)",
+    pressure_index: "Pressure-Index",
+    lineup_signal: "Lineup T-1h",
+    apif_predictions: "APIF Predictions",
+    weather_signal: "Weather/Hitze",
+    incentive_signal: "Anreiz-Signal",
+  };
+  const rows = signalNames.map(name => {
+    const w = weights[name] || {};
+    const weight = typeof w.weight === 'number' ? w.weight : 1.0;
+    const n = w.n_observations || 0;
+    const wins = w.wins_when_triggered || 0;
+    const hitRate = n > 0 ? Math.round((wins / n) * 100) : null;
+    const wCol = weight > 1.1 ? '#3fb950' : weight < 0.9 ? '#f85149' : '#8b949e';
+    const wLabel = weight.toFixed(2);
+    const hrCell = hitRate !== null
+      ? `<span style="color:${hitRate >= 55 ? '#3fb950' : hitRate >= 45 ? '#e3b341' : '#f85149'};font-weight:700;">${hitRate}%</span>`
+      : `<span style="color:var(--muted);font-style:italic;">—</span>`;
+    return `<tr style="border-top:1px solid var(--border);">
+      <td style="padding:8px 12px;font-size:13px;">${labels[name] || name}</td>
+      <td style="padding:8px 12px;text-align:right;font-family:ui-monospace,monospace;color:${wCol};font-weight:700;">${wLabel}</td>
+      <td style="padding:8px 12px;text-align:right;font-size:12px;color:var(--muted);">${n}</td>
+      <td style="padding:8px 12px;text-align:right;font-size:12px;">${hrCell}</td>
+    </tr>`;
+  }).join('');
+  const totalN = signalNames.reduce((sum, name) => sum + ((weights[name] || {}).n_observations || 0), 0);
+  const learnState = totalN < 10
+    ? `<div style="padding:10px 14px;background:rgba(245,194,90,0.06);border-left:3px solid #f5c25a;font-size:12px;color:#f5c25a;">⏳ Lern-Loop wartet auf erste resolved WM-Picks. Erst nach ~30 Beobachtungen verschieben sich die Weights spürbar. WM-Start: 11. Juni.</div>`
+    : `<div style="padding:10px 14px;background:rgba(0,212,161,0.06);border-left:3px solid #00d4a1;font-size:12px;color:#00d4a1;">✓ Lern-Loop aktiv · ${totalN} Beobachtungen verteilt über alle Signale</div>`;
+  return `<div class="section-label" style="margin-bottom:10px;">🧠 Bayesian-Lern-Status · was das System gelernt hat</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px;">
+      ${learnState}
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="background:rgba(255,255,255,0.02);">
+          <th style="padding:10px 12px;text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Signal</th>
+          <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Weight</th>
+          <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">n</th>
+          <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Hit-Rate</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+// Block C — CLV-Aggregation pro Signal-Familie aus wm_results.json
+function _renderClvAggregation() {
+  const results = window.WM_RESULTS_DATA || null;
+  if (!results || !Array.isArray(results.picks) || results.picks.length === 0) {
+    return `<div class="section-label" style="margin-bottom:10px;">📈 CLV-Aggregation pro Signal-Familie</div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px;color:var(--muted);font-size:12px;text-align:center;">
+        Aussagekräftig ab ~30 resolved Picks. Voller Inhalt erscheint Mitte/Ende WM. Tracked pro Familie: Avg CLV, Hit-Rate, ROI.
+      </div>`;
+  }
+  const families = {
+    sharp_money: { signals: ["lead_lag_bias", "steam_lag", "polymarket_sharp"], picks: [] },
+    form:        { signals: ["form_trend", "xg_strength", "h2h_pattern"], picks: [] },
+    context:     { signals: ["travel_burden", "injury", "weather_signal", "pressure_index", "incentive_signal"], picks: [] },
+    realtime:    { signals: ["lineup_signal"], picks: [] },
+    market:      { signals: ["public_static_bias", "apif_predictions"], picks: [] },
+  };
+  for (const p of results.picks) {
+    if (!Array.isArray(p.signals) || p.result == null) continue;
+    for (const [famKey, fam] of Object.entries(families)) {
+      if (p.signals.some(s => fam.signals.includes(s.name) && (s.score || 0) > 0)) {
+        fam.picks.push(p);
+      }
+    }
+  }
+  const rows = Object.entries(families).map(([famKey, fam]) => {
+    const n = fam.picks.length;
+    if (n === 0) {
+      return `<tr style="border-top:1px solid var(--border);">
+        <td style="padding:8px 12px;font-size:13px;text-transform:capitalize;">${famKey.replace('_', ' ')}</td>
+        <td style="padding:8px 12px;text-align:right;color:var(--muted);font-style:italic;">—</td>
+        <td style="padding:8px 12px;text-align:right;color:var(--muted);font-style:italic;">—</td>
+        <td style="padding:8px 12px;text-align:right;color:var(--muted);font-style:italic;">—</td>
+        <td style="padding:8px 12px;text-align:right;color:var(--muted);">0</td>
+      </tr>`;
+    }
+    const wins = fam.picks.filter(p => p.result === 'won').length;
+    const hitRate = Math.round((wins / n) * 100);
+    const avgClv = fam.picks.reduce((s, p) => s + (p.clvPP || 0), 0) / n;
+    const roiSum = fam.picks.reduce((s, p) => {
+      const stake = 1;
+      const ret = p.result === 'won' ? (parseFloat(p.odds || 1) - 1) * stake : -stake;
+      return s + ret;
+    }, 0);
+    const roi = Math.round((roiSum / n) * 100);
+    return `<tr style="border-top:1px solid var(--border);">
+      <td style="padding:8px 12px;font-size:13px;text-transform:capitalize;">${famKey.replace('_', ' ')}</td>
+      <td style="padding:8px 12px;text-align:right;font-family:ui-monospace,monospace;color:${avgClv >= 1 ? '#3fb950' : avgClv >= 0 ? '#a8d48a' : '#f85149'};font-weight:700;">${avgClv >= 0 ? '+' : ''}${avgClv.toFixed(1)}pp</td>
+      <td style="padding:8px 12px;text-align:right;font-weight:700;color:${hitRate >= 55 ? '#3fb950' : hitRate >= 45 ? '#e3b341' : '#f85149'};">${hitRate}%</td>
+      <td style="padding:8px 12px;text-align:right;font-weight:700;color:${roi >= 0 ? '#3fb950' : '#f85149'};">${roi >= 0 ? '+' : ''}${roi}%</td>
+      <td style="padding:8px 12px;text-align:right;color:var(--muted);font-size:12px;">${n}</td>
+    </tr>`;
+  }).join('');
+  return `<div class="section-label" style="margin-bottom:10px;">📈 CLV-Aggregation pro Signal-Familie</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="background:rgba(255,255,255,0.02);">
+          <th style="padding:10px 12px;text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Familie</th>
+          <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Avg CLV</th>
+          <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Hit-Rate</th>
+          <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">ROI</th>
+          <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">n</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
 function renderSharpRadar() {
   const mc = document.getElementById('mainContent');
 
@@ -2172,16 +2393,40 @@ function renderSharpRadar() {
       <div style="font-size:12px;color:var(--muted);line-height:1.55;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
         <span>Linienbewegungen im Markt · alle 7 Tage · CLV-Orientierung für unsere Picks</span>
         ${(() => {
+          // Anti-Drift-Fix 09.06.2026: _pmTs greift für nationale Ligen.
+          // WM-Sommer: Liga-Pause → kein prematch-data, aber WM-Daten via
+          // WM2026_DATA. Fallback auf WM-generatedAt damit "wird geladen…"
+          // nicht stale bleibt wenn der WM-Datenflow ok ist.
           const _ts = window._pmTs;
-          if (!_ts) return '<span style="color:#8b949e;font-size:11px;">⏱ Daten werden geladen…</span>';
-          const diffM = Math.round((Date.now() - _ts) / 60000);
-          const ago = diffM < 2 ? 'gerade eben' : diffM < 60 ? `vor ${diffM} Min` : `vor ${Math.floor(diffM/60)} Std`;
-          const col = diffM < 90 ? '#3fb950' : diffM < 360 ? '#e3b341' : '#f85149';
-          const isoFmt = new Date(_ts).toLocaleString('de-AT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-          return `<span style="font-size:11px;font-weight:700;color:${col};background:rgba(0,0,0,0.25);border:1px solid ${col}40;border-radius:5px;padding:2px 8px;" title="Prematch-Daten: ${isoFmt}">⏱ ${ago} aktualisiert</span>`;
+          if (_ts) {
+            const diffM = Math.round((Date.now() - _ts) / 60000);
+            const ago = diffM < 2 ? 'gerade eben' : diffM < 60 ? `vor ${diffM} Min` : `vor ${Math.floor(diffM/60)} Std`;
+            const col = diffM < 90 ? '#3fb950' : diffM < 360 ? '#e3b341' : '#f85149';
+            const isoFmt = new Date(_ts).toLocaleString('de-AT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+            return `<span style="font-size:11px;font-weight:700;color:${col};background:rgba(0,0,0,0.25);border:1px solid ${col}40;border-radius:5px;padding:2px 8px;" title="Prematch-Daten: ${isoFmt}">⏱ ${ago} aktualisiert</span>`;
+          }
+          // Fallback: WM-Daten verfügbar?
+          const _wmTs = window.WM2026_DATA?._meta?.generatedAtIso || window.WM2026_DATA?._meta?.generatedAt;
+          if (_wmTs) {
+            try {
+              const t = new Date(_wmTs).getTime();
+              if (!isNaN(t)) {
+                const diffM = Math.round((Date.now() - t) / 60000);
+                const ago = diffM < 2 ? 'gerade eben' : diffM < 60 ? `vor ${diffM} Min` : `vor ${Math.floor(diffM/60)} Std`;
+                const col = diffM < 90 ? '#3fb950' : diffM < 360 ? '#e3b341' : '#f85149';
+                return `<span style="font-size:11px;font-weight:700;color:${col};background:rgba(0,0,0,0.25);border:1px solid ${col}40;border-radius:5px;padding:2px 8px;">⏱ WM-Daten ${ago}</span>`;
+              }
+            } catch(e) {}
+          }
+          // WM-Sommer-Hinweis statt "wird geladen" (Liga-Saison pausiert)
+          return '<span style="color:#8b949e;font-size:11px;">⏱ Liga-Pause · WM 2026 läuft separat</span>';
         })()}
       </div>
     </div>
+
+    ${_renderSharpWatchlist()}
+    ${_renderBayesianWeights()}
+    ${_renderClvAggregation()}
 
     <div class="section-label" style="margin-bottom:10px;">📊 Marktübersicht · diese Woche</div>
     ${kpiHtml}
