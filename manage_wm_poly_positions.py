@@ -178,20 +178,37 @@ def save_positions(data: dict):
 def fetch_current_price(slug: str, market_key: str) -> float | None:
     """
     Holt aktuellen Polymarket-Preis für ein Spiel via Gamma API.
-    market_key: 'hw' | 'dr' | 'aw'
+    market_key: 'hw' | 'dr' | 'aw' | 'o25' | 'u25'
+
+    FIX 09.06.2026 — drei Bugs gleichzeitig:
+      (1) Cache-Lookup nutzte `entry.get(market_key)`, aber die prices-Cache-
+          Keys sind `poly_hw/poly_dr/poly_aw/poly_o25/poly_u25` — also Präfix
+          nötig. Cache-Hit failt → API-Fallback → leerer Slug → HTTP 422.
+      (2) Slug-Match auf `entry["slug"]` greift bei O/U nicht, weil die Auto-
+          Bets den `moreMktSlug` speichern (separater Polymarket-Event), nicht
+          den Moneyline-Slug. Wir matchen jetzt beide.
+      (3) Leerer Slug → kein API-Call, sondern None zurückgeben statt 422.
     """
+    if not slug:
+        return None
+
     # Zuerst lokalen Cache (wm_poly_prices.json) prüfen — vermeidet unnötige API-Calls
+    cache_key = f"poly_{market_key}"
     if os.path.exists(PRICES_FILE):
         with open(PRICES_FILE, encoding="utf-8") as f:
             cached = json.load(f)
         prices = cached.get("prices", {})
         for key, entry in prices.items():
-            if entry.get("slug") == slug:
-                price = entry.get(market_key)
+            # Beide Slug-Felder probieren: Moneyline-Slug (hw/dr/aw) + moreMktSlug (o25/u25)
+            if entry.get("slug") == slug or entry.get("moreMktSlug") == slug:
+                price = entry.get(cache_key) or entry.get(market_key)
                 if price:
                     return float(price)
 
-    # Fallback: direkt von Gamma API holen
+    # Fallback: direkt von Gamma API holen — nur für moneyline, O/U-Endpoint
+    # hat anderes Schema und wird vom Cache abgedeckt
+    if market_key not in ("hw", "dr", "aw"):
+        return None
     data = _http_get(GAMMA_URL.format(slug=slug))
     if not data or not isinstance(data, list) or not data:
         return None
