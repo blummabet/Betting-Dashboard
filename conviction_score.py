@@ -240,16 +240,24 @@ def detect_sharp_move(pick: dict, context: dict, cfg: dict) -> Optional[dict]:
             lag = curr_implied - soft_implied
             soft_lag_pp = max(soft_lag_pp, lag)
 
+    # Trigger-Logik 09.06.2026: Soft-Lag von Hard-Requirement → Bonus.
+    # Begründung (Lucas): Wenn Pinnacle vor X Tagen klar Position bezogen hat
+    # und Soft-Books seither aufgeholt haben, ist der MOVE als Modell-Signal
+    # trotzdem wertvoll (Pinnacle = Wahrheits-Anker). Trading-Pfad nutzt
+    # Soft-Lag separat über fetch_wm_poly_prices/auto-trigger.
     triggered = (
         pinn_move_pp >= sm_cfg["min_pinn_move_pp"]
-        and soft_lag_pp >= sm_cfg["min_soft_lag_pp"]
         and (hours_since_open is None or hours_since_open >= sm_cfg["min_hours_since_open"])
     )
+    # Soft-Lag-Bonus: wenn weiterhin Soft-Book-Lag besteht, ist es ein "frischer"
+    # Sharp-Move → Conviction-Score gibt extra Punkt
+    soft_lag_bonus = soft_lag_pp >= sm_cfg["min_soft_lag_pp"]
 
     return {
         "triggered": triggered,
         "pinn_move_pp": round(pinn_move_pp, 2),
         "soft_lag_pp": round(soft_lag_pp, 2),
+        "soft_lag_bonus": soft_lag_bonus,
         "hours_since_open": round(hours_since_open, 1) if hours_since_open is not None else None,
         "open_pinn_odds": open_pinn,
         "current_pinn_odds": curr_pinn,
@@ -270,8 +278,11 @@ def detect_opening_movement(pick: dict, context: dict, cfg: dict) -> Optional[di
 
     pick_key_map = {"home": "hw", "draw": "dr", "away": "aw",
                     "over": "o25", "under": "u25"}
-    direction = _pick_direction(pick.get("market", ""))
-    key = pick_key_map.get(direction)
+    # Granularer Key first (deckt O15/O35/BTTS/Corner), fallback auf alt
+    key = _pick_odds_key(pick.get("market", ""))
+    if not key:
+        direction = _pick_direction(pick.get("market", ""))
+        key = pick_key_map.get(direction)
     if not key:
         return None
 
@@ -350,6 +361,16 @@ def compute_conviction_score(pick: dict, signal_output: dict,
         sharp_count += 1
         evidence.append(f"Pinnacle bewegt {om['move_pp']:+.1f}pp seit Eröffnung in Pick-Richtung")
 
+    # Sharp-Move-Trigger (Pinnacle ≥X pp Move + Zeit) extra Punkt — unabhängig
+    # vom Soft-Lag jetzt (Lockerung 09.06.2026). Soft-Lag-Bonus gibt nochmal +1.
+    sm = detect_sharp_move(pick, context, cfg)
+    if sm and sm.get("triggered"):
+        sharp_count += 1
+        evidence.append(f"Sharp-Move: Pinnacle {sm['pinn_move_pp']:+.1f}pp seit Eröffnung")
+        if sm.get("soft_lag_bonus"):
+            sharp_count += 1
+            evidence.append(f"Bonus: Soft-Books {sm['soft_lag_pp']:.1f}pp hinter Pinnacle")
+
     family_scores["sharp_money"] = min(sharp_count, caps["sharp_money"])
 
     # ── Familie 2: Form-Konsens (max 2) ───────────────────────────────────
@@ -409,15 +430,12 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     else:
         verdict, label = "skip", None
 
-    # Sharp-Move-Trigger separat berechnen (für Card-Indikator)
-    sharp_move = detect_sharp_move(pick, context, cfg)
-
     return {
         "score": int(total),
         "verdict": verdict,
         "label": label,
         "family_scores": family_scores,
         "evidence": evidence,
-        "sharp_move": sharp_move,
+        "sharp_move": sm,        # bereits oben berechnet
         "opening_movement": om,
     }

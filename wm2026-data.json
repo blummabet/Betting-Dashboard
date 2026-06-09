@@ -10,7 +10,7 @@
     "updatedAt": null,
     "oddsUpdatedAt": "2026-06-08T15:31:27.309527+00:00",
     "formUpdatedAt": "2026-06-08T15:33:41.393773+00:00",
-    "picksUpdatedAt": "2026-06-09T14:53:22.063465+00:00",
+    "picksUpdatedAt": "2026-06-09T15:29:08.039044+00:00",
     "resultsUpdatedAt": "2026-06-08T15:57:13.712885+00:00",
     "cornersUpdatedAt": "2026-06-08T15:46:23.782010+00:00",
     "xgUpdatedAt": "2026-06-08T15:46:23.782015+00:00"
@@ -1550,7 +1550,34 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.3,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Doppelte Chance — 1X",
+          "odds": 1.43,
+          "edgePP": 2.0
+        }
+      },
+      {
+        "market": "Doppelte Chance — 1X",
+        "odds": 1.43,
+        "modelOdds": 1.472,
+        "verdict": "ABWÄGEN",
+        "edgePP": 2.0,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „Heimsieg\" — eigene Edge +2.0pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "Heimsieg",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "Heimsieg",
+          "odds": 2.66,
+          "edgePP": 7
+        }
       }
     ],
     "A-2-MEX-KOR": [
@@ -1570,9 +1597,9 @@
         "clvPP": 0.6,
         "dataQuality": "full",
         "boldAlt": {
-          "market": "AH Auswärts +0.5",
-          "odds": 1.97,
-          "edgePP": 10
+          "market": "Doppelte Chance — X2",
+          "odds": 2.0,
+          "edgePP": -2.7
         },
         "signals": [
           {
@@ -1649,9 +1676,9 @@
         "clvPP": 0.0,
         "dataQuality": "full",
         "boldAlt": {
-          "market": "AH Auswärts +0.5",
-          "odds": 1.97,
-          "edgePP": 10
+          "market": "Doppelte Chance — X2",
+          "odds": 2.0,
+          "edgePP": -2.7
         },
         "signals": [
           {
@@ -1766,16 +1793,10 @@
         "storySig": 0,
         "edgePP": 10,
         "info": "Elo +57 · Form WWWDD·WWLLW · xG 1.0:0.9 · ✈️ 🇰🇷 2500km/2d/+2145m (18%-xG)",
-        "icon": "🛡️",
+        "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "full",
-        "saferAltFor": "DNB: Auswärtsteam",
-        "riskierAlt": {
-          "market": "DNB: Auswärtsteam",
-          "odds": 3.4,
-          "edgePP": 9
-        },
         "signals": [
           {
             "name": "travel_burden",
@@ -1830,6 +1851,166 @@
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": 0.64
+        }
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 2.0,
+        "modelOdds": 1.898,
+        "verdict": "ABWÄGEN",
+        "edgePP": -2.7,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „Auswärtssieg\" — eigene Edge -2.7pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "Auswärtssieg",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "full",
+        "riskierAlt": {
+          "market": "Auswärtssieg",
+          "odds": 4.44,
+          "edgePP": 7
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -4.4,
+            "confidence": 0.82,
+            "evidence": "✈️ Auswärts 2500km/2d (critical) · Auswärts Höhe +2145m",
+            "weight": 1.0,
+            "weighted_score": -3.61,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.82,
+              "home": {},
+              "away": {
+                "km": 2500,
+                "rest_days": 2,
+                "alt_shift": 2145,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 0.83,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.4:0.8 vs Auswärts 1.7:0.9",
+            "weight": 1.0,
+            "weighted_score": 0.71,
+            "metadata": {
+              "home_scored": 1.4,
+              "home_conceded": 0.8,
+              "away_scored": 1.73,
+              "away_conceded": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.74,
+        "signalCountPos": 1,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -4.4,
+        "convictionScore": 2,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "form": 1,
+          "context": 0,
+          "realtime": 0,
+          "market": 0,
+          "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": 0.64
+        }
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 2.0,
+        "modelOdds": 1.898,
+        "verdict": "ABWÄGEN",
+        "edgePP": -2.7,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „DNB: Auswärtsteam\" — eigene Edge -2.7pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "DNB: Auswärtsteam",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "full",
+        "riskierAlt": {
+          "market": "DNB: Auswärtsteam",
+          "odds": 3.4,
+          "edgePP": 9
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -4.4,
+            "confidence": 0.82,
+            "evidence": "✈️ Auswärts 2500km/2d (critical) · Auswärts Höhe +2145m",
+            "weight": 1.0,
+            "weighted_score": -3.61,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.82,
+              "home": {},
+              "away": {
+                "km": 2500,
+                "rest_days": 2,
+                "alt_shift": 2145,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 0.83,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.4:0.8 vs Auswärts 1.7:0.9",
+            "weight": 1.0,
+            "weighted_score": 0.71,
+            "metadata": {
+              "home_scored": 1.4,
+              "home_conceded": 0.8,
+              "away_scored": 1.73,
+              "away_conceded": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.74,
+        "signalCountPos": 1,
+        "signalCountNeg": 1,
+        "effectiveEdgePP": -4.4,
+        "convictionScore": 2,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "form": 1,
+          "context": 0,
+          "realtime": 0,
+          "market": 0,
+          "model": 1
         },
         "openingMovement": {
           "in_pick_direction": false,
@@ -1996,16 +2177,26 @@
         "signalCountNeg": 1,
         "effectiveEdgePP": 9.1,
         "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET",
-        "convictionScore": 2,
+        "convictionScore": 3,
         "convictionVerdict": "skip",
         "convictionLabel": null,
         "convictionFamilies": {
-          "sharp_money": 1,
+          "sharp_money": 2,
           "form": 1,
           "context": 0,
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "sharpMoveActive": true,
+        "sharpMoveDetails": {
+          "triggered": true,
+          "pinn_move_pp": 5.0,
+          "soft_lag_pp": 0.0,
+          "soft_lag_bonus": false,
+          "hours_since_open": 360.5,
+          "open_pinn_odds": 1.93,
+          "current_pinn_odds": 1.76
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -2071,16 +2262,26 @@
         "signalCountPos": 1,
         "signalCountNeg": 1,
         "effectiveEdgePP": 17.1,
-        "convictionScore": 2,
+        "convictionScore": 3,
         "convictionVerdict": "skip",
         "convictionLabel": null,
         "convictionFamilies": {
-          "sharp_money": 1,
+          "sharp_money": 2,
           "form": 1,
           "context": 0,
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "sharpMoveActive": true,
+        "sharpMoveDetails": {
+          "triggered": true,
+          "pinn_move_pp": 5.0,
+          "soft_lag_pp": 0.0,
+          "soft_lag_bonus": false,
+          "hours_since_open": 360.5,
+          "open_pinn_odds": 1.93,
+          "current_pinn_odds": 1.76
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -2153,16 +2354,26 @@
         "signalCountNeg": 1,
         "effectiveEdgePP": 10.5,
         "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET",
-        "convictionScore": 2,
+        "convictionScore": 3,
         "convictionVerdict": "skip",
         "convictionLabel": null,
         "convictionFamilies": {
-          "sharp_money": 1,
+          "sharp_money": 2,
           "form": 1,
           "context": 0,
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "sharpMoveActive": true,
+        "sharpMoveDetails": {
+          "triggered": true,
+          "pinn_move_pp": 5.41,
+          "soft_lag_pp": 0.0,
+          "soft_lag_bonus": false,
+          "hours_since_open": 360.5,
+          "open_pinn_odds": 2.13,
+          "current_pinn_odds": 1.91
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -2228,7 +2439,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": -1.4,
-        "dataQuality": "elo+form_asym"
+        "dataQuality": "elo+form_asym",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 1.97,
+          "edgePP": -6.5
+        }
       },
       {
         "market": "DNB: Auswärtsteam",
@@ -2245,7 +2461,12 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form_asym",
-        "downgradedReason": "BET→ABWÄGEN: dataQuality=elo+form_asym (Form-Daten fehlen ein Team)"
+        "downgradedReason": "BET→ABWÄGEN: dataQuality=elo+form_asym (Form-Daten fehlen ein Team)",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 1.97,
+          "edgePP": -6.5
+        }
       },
       {
         "market": "Unter 1.5 Tore",
@@ -2312,6 +2533,50 @@
         "clvPP": 0.0,
         "dataQuality": "elo+form_asym",
         "downgradedReason": "BET→ABWÄGEN: dataQuality=elo+form_asym (Form-Daten fehlen ein Team)"
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 1.97,
+        "modelOdds": 1.746,
+        "verdict": "ABWÄGEN",
+        "edgePP": -6.5,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „Auswärtssieg\" — eigene Edge -6.5pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "Auswärtssieg",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form_asym",
+        "riskierAlt": {
+          "market": "Auswärtssieg",
+          "odds": 4.6,
+          "edgePP": 11
+        }
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 1.97,
+        "modelOdds": 1.746,
+        "verdict": "ABWÄGEN",
+        "edgePP": -6.5,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „DNB: Auswärtsteam\" — eigene Edge -6.5pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "DNB: Auswärtsteam",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form_asym",
+        "riskierAlt": {
+          "market": "DNB: Auswärtsteam",
+          "odds": 3.42,
+          "edgePP": 14
+        }
       }
     ],
     "B-1-QAT-SUI": [
@@ -2383,6 +2648,10 @@
           "realtime": 0,
           "market": 0,
           "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -3.11
         }
       },
       {
@@ -2587,6 +2856,10 @@
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -5.6
         }
       }
     ],
@@ -2605,7 +2878,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 2.1,
-        "dataQuality": "elo+form_asym"
+        "dataQuality": "elo+form_asym",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 2.35,
+          "edgePP": -1.9
+        }
       },
       {
         "market": "DNB: Auswärtsteam",
@@ -2621,7 +2899,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form_asym"
+        "dataQuality": "elo+form_asym",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 2.35,
+          "edgePP": -1.9
+        }
       },
       {
         "market": "Über 3.5 Tore",
@@ -2638,6 +2921,50 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form_asym"
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 2.35,
+        "modelOdds": 2.25,
+        "verdict": "ABWÄGEN",
+        "edgePP": -1.9,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „Auswärtssieg\" — eigene Edge -1.9pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "Auswärtssieg",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form_asym",
+        "riskierAlt": {
+          "market": "Auswärtssieg",
+          "odds": 5.05,
+          "edgePP": 5
+        }
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 2.35,
+        "modelOdds": 2.25,
+        "verdict": "ABWÄGEN",
+        "edgePP": -1.9,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „DNB: Auswärtsteam\" — eigene Edge -1.9pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "DNB: Auswärtsteam",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form_asym",
+        "riskierAlt": {
+          "market": "DNB: Auswärtsteam",
+          "odds": 4.01,
+          "edgePP": 6
+        }
       }
     ],
     "B-3-CAN-SUI": [
@@ -2742,6 +3069,10 @@
           "realtime": 0,
           "market": 0,
           "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -3.29
         }
       },
       {
@@ -3029,6 +3360,10 @@
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -0.53
         }
       },
       {
@@ -3275,16 +3610,26 @@
         "signalCountNeg": 1,
         "effectiveEdgePP": 9.0,
         "downgradedReason": "Engine warnt: Signal-Adjustment -3.0pp ≤ -3.0pp Schwelle",
-        "convictionScore": 1,
+        "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
         "convictionFamilies": {
-          "sharp_money": 1,
+          "sharp_money": 2,
           "form": 0,
           "context": 0,
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "sharpMoveActive": true,
+        "sharpMoveDetails": {
+          "triggered": true,
+          "pinn_move_pp": 5.29,
+          "soft_lag_pp": 0.0,
+          "soft_lag_bonus": false,
+          "hours_since_open": 486.2,
+          "open_pinn_odds": 7.5,
+          "current_pinn_odds": 5.37
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -3504,6 +3849,10 @@
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -1.93
         }
       },
       {
@@ -3893,6 +4242,11 @@
         "result": null,
         "clvPP": -0.1,
         "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 1.64,
+          "edgePP": -2.5
+        },
         "signals": [
           {
             "name": "travel_burden",
@@ -3974,6 +4328,11 @@
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=65%, Skellam (AH +0.5) sagt 55% — Diff +10pp ≥ 8pp Schwelle",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 1.64,
+          "edgePP": -2.5
+        },
         "signals": [
           {
             "name": "travel_burden",
@@ -4096,6 +4455,176 @@
           "odds": 2.23,
           "edgePP": 8
         }
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 1.64,
+        "modelOdds": 1.576,
+        "verdict": "ABWÄGEN",
+        "edgePP": -2.5,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „Auswärtssieg\" — eigene Edge -2.5pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "Auswärtssieg",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "Auswärtssieg",
+          "odds": 3.42,
+          "edgePP": 9
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 4167km/4d (critical) · Heim 2494km/3d (significant)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 0.85,
+              "home": {
+                "km": 2494,
+                "rest_days": 3,
+                "alt_shift": 160,
+                "burden": "significant"
+              },
+              "away": {
+                "km": 4167,
+                "rest_days": 4,
+                "alt_shift": 45,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -1.93,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.3:1.3 vs Auswärts 1.4:1.0",
+            "weight": 1.0,
+            "weighted_score": -1.64,
+            "metadata": {
+              "home_scored": 2.27,
+              "home_conceded": 1.27,
+              "away_scored": 1.4,
+              "away_conceded": 1.0,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.53,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": -4.0,
+        "convictionScore": 1,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "form": 0,
+          "context": 0,
+          "realtime": 0,
+          "market": 0,
+          "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -0.09
+        }
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 1.64,
+        "modelOdds": 1.576,
+        "verdict": "ABWÄGEN",
+        "edgePP": -2.5,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „DNB: Auswärtsteam\" — eigene Edge -2.5pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "DNB: Auswärtsteam",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "DNB: Auswärtsteam",
+          "odds": 2.47,
+          "edgePP": 10
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 4167km/4d (critical) · Heim 2494km/3d (significant)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 0.85,
+              "home": {
+                "km": 2494,
+                "rest_days": 3,
+                "alt_shift": 160,
+                "burden": "significant"
+              },
+              "away": {
+                "km": 4167,
+                "rest_days": 4,
+                "alt_shift": 45,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -1.93,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.3:1.3 vs Auswärts 1.4:1.0",
+            "weight": 1.0,
+            "weighted_score": -1.64,
+            "metadata": {
+              "home_scored": 2.27,
+              "home_conceded": 1.27,
+              "away_scored": 1.4,
+              "away_conceded": 1.0,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.53,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": -4.0,
+        "convictionScore": 1,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "form": 0,
+          "context": 0,
+          "realtime": 0,
+          "market": 0,
+          "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -0.09
+        }
       }
     ],
     "D-3-USA-TUR": [
@@ -4173,6 +4702,10 @@
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": 1.7
         }
       },
       {
@@ -4283,6 +4816,10 @@
           "realtime": 0,
           "market": 0,
           "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": 0.17
         }
       },
       {
@@ -4384,6 +4921,11 @@
         "result": null,
         "clvPP": -1.9,
         "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 1.29,
+          "edgePP": 5.0
+        },
         "signals": [
           {
             "name": "form_trend",
@@ -4491,6 +5033,86 @@
           "realtime": 0,
           "market": 0,
           "model": 1
+        }
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 1.29,
+        "modelOdds": 1.378,
+        "verdict": "ABWÄGEN",
+        "edgePP": 5.0,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „Auswärtssieg\" — eigene Edge +5.0pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "Auswärtssieg",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "Auswärtssieg",
+          "odds": 2.45,
+          "edgePP": 10
+        },
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -2.5,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.0:0.6 vs Auswärts 1.0:0.4",
+            "weight": 1.0,
+            "weighted_score": -2.12,
+            "metadata": {
+              "home_scored": 2.0,
+              "home_conceded": 0.6,
+              "away_scored": 1.0,
+              "away_conceded": 0.4,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -0.96,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.00-0.60 vs Auswärts 1.00-0.40 (Δ +0.80)",
+            "weight": 1.0,
+            "weighted_score": -0.25,
+            "metadata": {
+              "home_xg_for": 2.0,
+              "home_xg_against": 0.6,
+              "away_xg_for": 1.0,
+              "away_xg_against": 0.4,
+              "relative_diff": 0.8,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            },
+            "correlation_discount_applied": 0.4
+          }
+        ],
+        "signalAdjustmentPP": -2.14,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 2.9,
+        "convictionScore": 1,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "form": 0,
+          "context": 0,
+          "realtime": 0,
+          "market": 0,
+          "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -1.92
         }
       }
     ],
@@ -4628,6 +5250,10 @@
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -0.02
         }
       },
       {
@@ -5086,9 +5712,9 @@
         "clvPP": -1.2,
         "dataQuality": "elo+form",
         "boldAlt": {
-          "market": "AH Auswärts +0.5",
-          "odds": 1.88,
-          "edgePP": 10
+          "market": "Doppelte Chance — X2",
+          "odds": 1.85,
+          "edgePP": -4.6
         }
       },
       {
@@ -5108,9 +5734,9 @@
         "dataQuality": "elo+form",
         "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=60%, Skellam (AH +0.5) sagt 70% — Diff -10pp ≥ 8pp Schwelle",
         "boldAlt": {
-          "market": "AH Auswärts +0.5",
-          "odds": 1.88,
-          "edgePP": 10
+          "market": "Doppelte Chance — X2",
+          "odds": 1.85,
+          "edgePP": -4.6
         }
       },
       {
@@ -5124,11 +5750,49 @@
         "storySig": 0,
         "edgePP": 10,
         "info": "Elo +30 · Form DLWWD·LLDWD · xG 1.9:2.3",
+        "icon": "🎯",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form"
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 1.85,
+        "modelOdds": 1.704,
+        "verdict": "ABWÄGEN",
+        "edgePP": -4.6,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „Auswärtssieg\" — eigene Edge -4.6pp",
         "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "Auswärtssieg",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "Auswärtssieg",
+          "odds": 4.36,
+          "edgePP": 12
+        }
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 1.85,
+        "modelOdds": 1.704,
+        "verdict": "ABWÄGEN",
+        "edgePP": -4.6,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „DNB: Auswärtsteam\" — eigene Edge -4.6pp",
+        "icon": "🛡️",
+        "synthetic": true,
         "saferAltFor": "DNB: Auswärtsteam",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
         "riskierAlt": {
           "market": "DNB: Auswärtsteam",
           "odds": 3.16,
@@ -5457,6 +6121,11 @@
         "result": null,
         "clvPP": -0.4,
         "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Doppelte Chance — 1X",
+          "odds": 2.06,
+          "edgePP": 0.7
+        },
         "signals": [
           {
             "name": "travel_burden",
@@ -5556,6 +6225,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Doppelte Chance — 1X",
+          "odds": 2.06,
+          "edgePP": 0.7
+        },
         "signals": [
           {
             "name": "travel_burden",
@@ -5624,6 +6298,216 @@
         "signalCountPos": 0,
         "signalCountNeg": 3,
         "effectiveEdgePP": 4.1,
+        "convictionScore": 1,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "form": 0,
+          "context": 0,
+          "realtime": 0,
+          "market": 0,
+          "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -0.4
+        }
+      },
+      {
+        "market": "Doppelte Chance — 1X",
+        "odds": 2.06,
+        "modelOdds": 2.09,
+        "verdict": "ABWÄGEN",
+        "edgePP": 0.7,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „Heimsieg\" — eigene Edge +0.7pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "Heimsieg",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "Heimsieg",
+          "odds": 4.81,
+          "edgePP": 6
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Heim 1076km/3d (moderate)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 1.0,
+              "home": {
+                "km": 1076,
+                "rest_days": 3,
+                "alt_shift": 11,
+                "burden": "moderate"
+              },
+              "away": {
+                "km": 955,
+                "rest_days": 4,
+                "alt_shift": 307,
+                "burden": "moderate"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -2.07,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.7:1.2 vs Auswärts 1.9:0.5",
+            "weight": 1.0,
+            "weighted_score": -1.76,
+            "metadata": {
+              "home_scored": 1.73,
+              "home_conceded": 1.2,
+              "away_scored": 1.87,
+              "away_conceded": 0.53,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -0.96,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 1.73-1.20 vs Auswärts 1.87-0.53 (Δ -0.80)",
+            "weight": 1.0,
+            "weighted_score": -0.25,
+            "metadata": {
+              "home_xg_for": 1.73,
+              "home_xg_against": 1.2,
+              "away_xg_for": 1.87,
+              "away_xg_against": 0.53,
+              "relative_diff": -0.8,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            },
+            "correlation_discount_applied": 0.4
+          }
+        ],
+        "signalAdjustmentPP": -1.88,
+        "signalCountPos": 0,
+        "signalCountNeg": 3,
+        "effectiveEdgePP": -1.2,
+        "convictionScore": 1,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "form": 0,
+          "context": 0,
+          "realtime": 0,
+          "market": 0,
+          "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -0.4
+        }
+      },
+      {
+        "market": "Doppelte Chance — 1X",
+        "odds": 2.06,
+        "modelOdds": 2.09,
+        "verdict": "ABWÄGEN",
+        "edgePP": 0.7,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „DNB: Heimteam\" — eigene Edge +0.7pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "DNB: Heimteam",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "DNB: Heimteam",
+          "odds": 3.64,
+          "edgePP": 6
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Heim 1076km/3d (moderate)",
+            "weight": 1.0,
+            "weighted_score": -1.4,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 1.0,
+              "home": {
+                "km": 1076,
+                "rest_days": 3,
+                "alt_shift": 11,
+                "burden": "moderate"
+              },
+              "away": {
+                "km": 955,
+                "rest_days": 4,
+                "alt_shift": 307,
+                "burden": "moderate"
+              },
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -2.07,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.7:1.2 vs Auswärts 1.9:0.5",
+            "weight": 1.0,
+            "weighted_score": -1.76,
+            "metadata": {
+              "home_scored": 1.73,
+              "home_conceded": 1.2,
+              "away_scored": 1.87,
+              "away_conceded": 0.53,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -0.96,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 1.73-1.20 vs Auswärts 1.87-0.53 (Δ -0.80)",
+            "weight": 1.0,
+            "weighted_score": -0.25,
+            "metadata": {
+              "home_xg_for": 1.73,
+              "home_xg_against": 1.2,
+              "away_xg_for": 1.87,
+              "away_xg_against": 0.53,
+              "relative_diff": -0.8,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "home"
+            },
+            "correlation_discount_applied": 0.4
+          }
+        ],
+        "signalAdjustmentPP": -1.88,
+        "signalCountPos": 0,
+        "signalCountNeg": 3,
+        "effectiveEdgePP": -1.2,
         "convictionScore": 1,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -5982,6 +6866,11 @@
         "result": null,
         "clvPP": -1.4,
         "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 1.8,
+          "edgePP": -1.9
+        },
         "signals": [
           {
             "name": "form_trend",
@@ -6058,6 +6947,11 @@
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=59%, Skellam (AH +0.5) sagt 42% — Diff +18pp ≥ 8pp Schwelle",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 1.8,
+          "edgePP": -1.9
+        },
         "signals": [
           {
             "name": "form_trend",
@@ -6239,6 +7133,166 @@
         "openingMovement": {
           "in_pick_direction": false,
           "move_pp": -1.68
+        }
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 1.8,
+        "modelOdds": 1.74,
+        "verdict": "ABWÄGEN",
+        "edgePP": -1.9,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „Auswärtssieg\" — eigene Edge -1.9pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "Auswärtssieg",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "Auswärtssieg",
+          "odds": 4.46,
+          "edgePP": 11
+        },
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -2.43,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.3:1.0 vs Auswärts 1.8:1.3",
+            "weight": 1.0,
+            "weighted_score": -2.07,
+            "metadata": {
+              "home_scored": 2.33,
+              "home_conceded": 1.0,
+              "away_scored": 1.8,
+              "away_conceded": 1.33,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -1.04,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.33-1.00 vs Auswärts 1.80-1.33 (Δ +0.87)",
+            "weight": 1.0,
+            "weighted_score": -0.27,
+            "metadata": {
+              "home_xg_for": 2.33,
+              "home_xg_against": 1.0,
+              "away_xg_for": 1.8,
+              "away_xg_against": 1.33,
+              "relative_diff": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            },
+            "correlation_discount_applied": 0.4
+          }
+        ],
+        "signalAdjustmentPP": -2.11,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": -4.0,
+        "convictionScore": 1,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "form": 0,
+          "context": 0,
+          "realtime": 0,
+          "market": 0,
+          "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -1.39
+        }
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 1.8,
+        "modelOdds": 1.74,
+        "verdict": "ABWÄGEN",
+        "edgePP": -1.9,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „DNB: Auswärtsteam\" — eigene Edge -1.9pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "DNB: Auswärtsteam",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "DNB: Auswärtsteam",
+          "odds": 3.22,
+          "edgePP": 12
+        },
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -2.43,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.3:1.0 vs Auswärts 1.8:1.3",
+            "weight": 1.0,
+            "weighted_score": -2.07,
+            "metadata": {
+              "home_scored": 2.33,
+              "home_conceded": 1.0,
+              "away_scored": 1.8,
+              "away_conceded": 1.33,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -1.04,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.33-1.00 vs Auswärts 1.80-1.33 (Δ +0.87)",
+            "weight": 1.0,
+            "weighted_score": -0.27,
+            "metadata": {
+              "home_xg_for": 2.33,
+              "home_xg_against": 1.0,
+              "away_xg_for": 1.8,
+              "away_xg_against": 1.33,
+              "relative_diff": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            },
+            "correlation_discount_applied": 0.4
+          }
+        ],
+        "signalAdjustmentPP": -2.11,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": -4.0,
+        "convictionScore": 1,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "form": 0,
+          "context": 0,
+          "realtime": 0,
+          "market": 0,
+          "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -1.39
         }
       }
     ],
@@ -7608,6 +8662,10 @@
           "realtime": 0,
           "market": 0,
           "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": 2.66
         }
       },
       {
@@ -7939,6 +8997,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 2.7,
+          "edgePP": 0.0
+        },
         "signals": [
           {
             "name": "travel_burden",
@@ -8181,6 +9244,111 @@
           "in_pick_direction": false,
           "move_pp": -1.62
         }
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 2.7,
+        "modelOdds": 2.7,
+        "verdict": "ABWÄGEN",
+        "edgePP": 0.0,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „DNB: Auswärtsteam\" — eigene Edge +0.0pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "DNB: Auswärtsteam",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "DNB: Auswärtsteam",
+          "odds": 6.08,
+          "edgePP": 8
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Auswärts 3399km/3d (critical) · Heim 497km/3d (low)",
+            "weight": 1.0,
+            "weighted_score": -0.63,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 0.85,
+              "home": {
+                "km": 497,
+                "rest_days": 3,
+                "alt_shift": 250,
+                "burden": "low"
+              },
+              "away": {
+                "km": 3399,
+                "rest_days": 3,
+                "alt_shift": 299,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -5.16,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 2.7:0.7 vs Auswärts 1.1:0.7",
+            "weight": 1.0,
+            "weighted_score": -4.39,
+            "metadata": {
+              "home_scored": 2.73,
+              "home_conceded": 0.67,
+              "away_scored": 1.07,
+              "away_conceded": 0.73,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -2.08,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 2.73-0.67 vs Auswärts 1.07-0.73 (Δ +1.73)",
+            "weight": 1.0,
+            "weighted_score": -0.54,
+            "metadata": {
+              "home_xg_for": 2.73,
+              "home_xg_against": 0.67,
+              "away_xg_for": 1.07,
+              "away_xg_against": 0.73,
+              "relative_diff": 1.73,
+              "home_games": 15,
+              "away_games": 15,
+              "is_proxy": true,
+              "pick_side": "away"
+            },
+            "correlation_discount_applied": 0.4
+          }
+        ],
+        "signalAdjustmentPP": -3.2,
+        "signalCountPos": 0,
+        "signalCountNeg": 3,
+        "effectiveEdgePP": -3.2,
+        "convictionScore": 1,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "form": 0,
+          "context": 0,
+          "realtime": 0,
+          "market": 0,
+          "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -1.62
+        }
       }
     ],
     "J-1-ARG-DZA": [
@@ -8365,6 +9533,10 @@
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -1.42
         }
       }
     ],
@@ -8859,6 +10031,10 @@
           "realtime": 0,
           "market": 0,
           "model": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -4.95
         }
       }
     ],
@@ -8878,7 +10054,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": -1.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 1.33,
+          "edgePP": 3.2
+        }
       },
       {
         "market": "Unter 1.5 Tore",
@@ -8940,6 +10121,28 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form"
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 1.33,
+        "modelOdds": 1.39,
+        "verdict": "ABWÄGEN",
+        "edgePP": 3.2,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „Auswärtssieg\" — eigene Edge +3.2pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "Auswärtssieg",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "Auswärtssieg",
+          "odds": 2.31,
+          "edgePP": 7
+        }
       }
     ],
     "K-1-POR-COD": [
@@ -9156,6 +10359,11 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 2.55,
+          "edgePP": 2.7
+        },
         "signals": [
           {
             "name": "travel_burden",
@@ -9218,6 +10426,74 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form"
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 2.55,
+        "modelOdds": 2.735,
+        "verdict": "ABWÄGEN",
+        "edgePP": 2.7,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „DNB: Auswärtsteam\" — eigene Edge +2.7pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "DNB: Auswärtsteam",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "DNB: Auswärtsteam",
+          "odds": 5.74,
+          "edgePP": 6
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 1.0,
+            "confidence": 0.63,
+            "evidence": "✈️ Heim 1678km/4d (moderate)",
+            "weight": 1.0,
+            "weighted_score": 0.63,
+            "metadata": {
+              "factor_home": 0.95,
+              "factor_away": 1.0,
+              "home": {
+                "km": 1678,
+                "rest_days": 4,
+                "alt_shift": 291,
+                "burden": "moderate"
+              },
+              "away": {
+                "km": 1386,
+                "rest_days": 4,
+                "alt_shift": 19,
+                "burden": "moderate"
+              },
+              "pick_side": "away"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 1.0,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 3.7,
+        "convictionScore": 2,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "form": 0,
+          "context": 1,
+          "realtime": 0,
+          "market": 0,
+          "model": 1
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": -0.31
+        }
       }
     ],
     "K-3-POR-COL": [
@@ -9417,7 +10693,12 @@
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
-        "dataQuality": "elo+form"
+        "dataQuality": "elo+form",
+        "boldAlt": {
+          "market": "Doppelte Chance — X2",
+          "odds": 1.69,
+          "edgePP": 3.4
+        }
       },
       {
         "market": "Über 1.5 Tore",
@@ -9593,6 +10874,28 @@
         "result": null,
         "clvPP": -2.2,
         "dataQuality": "elo+form"
+      },
+      {
+        "market": "Doppelte Chance — X2",
+        "odds": 1.69,
+        "modelOdds": 1.794,
+        "verdict": "ABWÄGEN",
+        "edgePP": 3.4,
+        "modSig": 1,
+        "mktSig": 0,
+        "storySig": 0,
+        "info": "Synthetisch als sicherere Alternative zu „Auswärtssieg\" — eigene Edge +3.4pp",
+        "icon": "🛡️",
+        "synthetic": true,
+        "saferAltFor": "Auswärtssieg",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "riskierAlt": {
+          "market": "Auswärtssieg",
+          "odds": 3.65,
+          "edgePP": 5
+        }
       }
     ],
     "L-2-ENG-GHA": [],

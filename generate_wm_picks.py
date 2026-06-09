@@ -1332,6 +1332,22 @@ def generate_picks_for_fixture(
         for m, d in model_inconsistencies:
             print(f"     · {m}: Elo↔Skellam-Diff {d:+.0f}pp")
 
+    # Market-Label → Odds-Key Map für synthetische saferAlt
+    # (wenn Alt-Markt in Odds verfügbar aber kein eigener Pick existiert)
+    LABEL_TO_KEY = {
+        "Doppelte Chance — 1X":  "dc1X",
+        "Doppelte Chance — X2":  "dcX2",
+        "Doppelte Chance — 12":  "dc12",
+        "AH Heim −0.5":          "ahH_n050",
+        "AH Heim −0.75":         "ahH_n075",
+        "AH Auswärts +0.5":      "ahA_p050",
+        "AH Auswärts +0.75":     "ahA_p075",
+        "Über 2.5 Tore":         "o25",
+        "Über 1.5 Tore":         "o15",
+        "Unter 2.5 Tore":        "u25",
+        "Unter 3.5 Tore":        "u35",
+    }
+
     safer_picks_to_add = []
     for p in picks:
         if p["verdict"] not in ("BET", "ABWÄGEN"):
@@ -1341,17 +1357,44 @@ def generate_picks_for_fixture(
         alternatives = SUBSTITUTION_MAP.get(p["market"], [])
         for alt_market in alternatives:
             alt_pick = market_to_pick.get(alt_market)
-            if not alt_pick:
-                continue
-            if alt_pick["verdict"] not in ("BET", "ABWÄGEN"):
-                continue
+            # CASE 1: Alt-Pick existiert bereits mit eigenem Verdict
+            if alt_pick and alt_pick["verdict"] in ("BET", "ABWÄGEN"):
+                pass  # weiter zur Quoten-Prüfung unten
+            else:
+                # CASE 2 (Lucas 09.06.2026): Alt-Pick existiert nicht oder ist SKIP/WATCH
+                # → synthetischen Pick aus odds/model_odds bauen wenn Quote verfügbar
+                alt_key = LABEL_TO_KEY.get(alt_market)
+                alt_odds = market_odds.get(alt_key) if alt_key else None
+                alt_model = model_odds.get(alt_key) if alt_key else None
+                if not alt_odds or alt_odds <= 1.0:
+                    continue
+                # Edge optional — auch ohne eigene Edge als "Insurance" anbieten
+                alt_edge = 0.0
+                if alt_model and alt_model > 1.0:
+                    alt_edge = (1.0/alt_odds - 1.0/alt_model) * 100  # wie compute_verdict
+                alt_pick = {
+                    "market":     alt_market,
+                    "odds":       alt_odds,
+                    "modelOdds":  alt_model,
+                    "verdict":    "ABWÄGEN",
+                    "edgePP":     round(alt_edge, 1),
+                    "modSig":     1,
+                    "mktSig":     0,
+                    "storySig":   0,
+                    "info":       f"Synthetisch als sicherere Alternative zu „{p['market']}\" — eigene Edge {alt_edge:+.1f}pp",
+                    "icon":       "🛡️",
+                    "synthetic":  True,
+                    "saferAltFor": p["market"],
+                    "result":     None,
+                    "clvPP":      0.0,
+                    "dataQuality": data_quality,
+                }
+                safer_picks_to_add.append(alt_pick)
             if (alt_pick.get("odds") or 0) >= (p["odds"] * 0.80):
                 continue   # nicht signifikant niedriger
             # Substitution: markiere Original als "boldAlt" der safer Variante
             alt_pick["saferAltFor"] = p["market"]
             alt_pick["icon"] = "🛡️"
-            # Falls nicht bereits drin: zur safer-Liste hinzufügen
-            # (alt_pick ist ja schon in picks, wir markieren nur)
             p["boldAlt"] = {
                 "market": alt_pick["market"],
                 "odds":   alt_pick["odds"],
@@ -1364,6 +1407,8 @@ def generate_picks_for_fixture(
                 "edgePP": p["edgePP"],
             }
             break   # erstbeste safer Variante reicht
+    # Synthetische saferAlt-Picks ans Ende der Liste anhängen
+    picks.extend(safer_picks_to_add)
 
     # ── Corner-Beobachtungs-Marker: Falls Modell eine starke Erwartung hat
     # aber noch KEINE Markt-Quoten verfügbar sind, schreibe einen Info-Eintrag

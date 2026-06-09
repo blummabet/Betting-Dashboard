@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Card-Vorschau · Sharp-Move + Conviction + saferAlt</title>
+<style>
+  body {
+    background: linear-gradient(180deg, #0a0e1a 0%, #14182c 100%);
+    color: #e4e7f0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 24px;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #8b91a8;
+    margin-bottom: 32px;
+    font-size: 14px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .matchup {
+    font-weight: 600;
+    font-size: 16px;
+  }
+  .badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-conv-top { background: rgba(255, 215, 0, 0.18); color: #ffd700; border: 1px solid rgba(255,215,0,0.4); }
+  .badge-conv-good { background: rgba(125, 211, 252, 0.15); color: #7dd3fc; border: 1px solid rgba(125,211,252,0.4); }
+  .badge-conv-watch { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.4); }
+  .badge-sharp { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.4); }
+  .badge-edge { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.4); }
+
+  .pick {
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+  }
+  .pick-main {
+    border: 1px solid rgba(34,197,94,0.4);
+    background: rgba(34, 197, 94, 0.06);
+  }
+  .pick-safer {
+    border: 1px dashed rgba(125, 211, 252, 0.4);
+    background: rgba(125, 211, 252, 0.04);
+  }
+  .pick-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .verdict {
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 700;
+  }
+  .verdict-bet { background: #22c55e; color: #0a0e1a; }
+  .verdict-abw { background: #fbbf24; color: #0a0e1a; }
+  .market {
+    font-size: 14px;
+    flex: 1;
+    margin-left: 8px;
+  }
+  .odds-edge {
+    font-size: 13px;
+    color: #8b91a8;
+  }
+  .why-text {
+    font-size: 12px;
+    color: #b4bbd0;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  .sharp-move-box {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239,68,68,0.25);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .sharp-move-box strong { color: #f87171; }
+  .move-vis {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    font-size: 11px;
+    color: #b4bbd0;
+  }
+  .move-bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .move-fill {
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(90deg, #f87171, #fb923c);
+    border-radius: 2px;
+  }
+
+  .signals-box {
+    background: rgba(125, 211, 252, 0.05);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+  }
+  .signal-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px;
+  }
+  .signal-name { color: #b4bbd0; }
+  .signal-val { font-weight: 600; }
+  .signal-pos { color: #4ade80; }
+  .signal-neg { color: #f87171; }
+
+  .conviction-bar {
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    margin: 8px 0 4px;
+    overflow: hidden;
+  }
+  .conviction-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #fbbf24, #ffd700);
+    border-radius: 3px;
+    transition: width 0.3s;
+  }
+  .conviction-label {
+    font-size: 11px;
+    color: #b4bbd0;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .info {
+    font-size: 11px;
+    color: #6b7088;
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .note {
+    background: rgba(125, 211, 252, 0.06);
+    border-left: 3px solid #7dd3fc;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    max-width: 1400px;
+    margin: 0 auto 24px;
+    color: #b4bbd0;
+  }
+</style>
+</head>
+<body>
+<h1>🎯 Card-Vorschau: Sharp-Move + Conviction + saferAlt</h1>
+<p class="subtitle">Mit echten Live-Daten vom 09.06.2026 + Mocked Top-Setup zum Vergleich</p>
+
+<div class="note">
+  <strong>Stand:</strong> 4 echte Sharp-Move-aktivierte Picks im aktuellen Datensatz (CAN-QAT, ZAF-KOR, MEX-CZE, BRA-SCO).
+  Bei MEX-CZE Spiel 3 hat Pinnacle Tschechien um +5pp gestützt seit Eröffnung — Sharp-Money-Familie volle 3 Punkte.
+  Konkrete Top-Wetten (8+/10) kommen meist erst T-24h bis T-2h wenn Lineups public werden.
+</div>
+
+<div class="grid">
+
+  <!-- ── 1. ECHTER Sharp-Move + Saferer Alternative (KOR-CZE) ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="matchup">🇰🇷 Südkorea vs 🇨🇿 Tschechien</div>
+      <div class="badges">
+        <span class="badge badge-edge">+7pp Edge</span>
+      </div>
+    </div>
+    <div style="font-size: 11px; color: #8b91a8; margin-bottom: 12px;">Gruppe A · ST 1 · Fr 12.06 · 00:00</div>
+
+    <div class="pick pick-main">
+      <div class="pick-row">
+        <span class="verdict verdict-bet">BET</span>
+        <span class="market">Heimsieg</span>
+        <span class="odds-edge">@2.66 · +7pp</span>
+      </div>
+      <div class="why-text">
+        Modell sagt 47%, Markt 38% — solider Edge. Aber: Quote ≥2.30 = riskanter Pick.
+      </div>
+    </div>
+
+    <div class="pick pick-safer">
+      <div class="pick-row">
+        <span class="verdict verdict-abw">🛡 ABWÄGEN</span>
+        <span class="market">Doppelte Chance — 1X</span>
+        <span class="odds-edge">@1.43 · +2pp</span>
+      </div>
+      <div class="why-text">
+        <strong>Sicherere Alternative</strong> — gewinnt bei Sieg ODER Remis. Weniger Edge, aber 1.43 statt 2.66.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2. ECHTER Sharp-Move (ZAF-KOR ST3) ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="matchup">🇿🇦 Südafrika vs 🇰🇷 Südkorea</div>
+      <div class="badges">
+        <span class="badge badge-sharp">🔥 Sharp-Move</span>
+        <span class="badge badge-conv-watch">👁 3/10</span>
+      </div>
+    </div>
+    <div style="font-size: 11px; color: #8b91a8; margin-bottom: 12px;">Gruppe A · ST 3 · echter Live-Datensatz</div>
+
+    <div class="sharp-move-box">
+      <strong>🔥 Pinnacle bewegt Südkorea</strong> +5.4pp seit Eröffnung
+      <div class="move-vis">
+        <span>Opening: 1.85</span>
+        <div class="move-bar"><div class="move-fill" style="width: 70%; left: 0;"></div></div>
+        <span>Jetzt: 1.65</span>
+      </div>
+      <div style="font-size: 11px; color: #8b91a8; margin-top: 4px;">
+        20 Tage seit Opening · Soft-Books haben aufgeholt (kein Lag mehr)
+      </div>
+    </div>
+
+    <div class="pick pick-main">
+      <div class="pick-row">
+        <span class="verdict verdict-abw">ABWÄGEN</span>
+        <span class="market">Auswärtssieg (Südkorea)</span>
+        <span class="odds-edge">@1.65 · +3pp</span>
+      </div>
+    </div>
+
+    <div class="signals-box">
+      <div class="signal-row"><span class="signal-name">Sharp-Money-Familie</span><span class="signal-val signal-pos">+3 / max 3</span></div>
+      <div class="signal-row"><span class="signal-name">Form-Familie</span><span class="signal-val">0 / 2</span></div>
+      <div class="signal-row"><span class="signal-name">Modell-Sanity</span><span class="signal-val signal-pos">+1 / 1</span></div>
+    </div>
+    <div class="conviction-bar"><div class="conviction-fill" style="width: 30%;"></div></div>
+    <div class="conviction-label"><span>Conviction 3/10</span><span>für Top-Wette: 8+</span></div>
+  </div>
+
+  <!-- ── 3. MOCK: wie Top-Wette aussehen würde ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="matchup">🇨🇦 Kanada vs 🇶🇦 Katar</div>
+      <div class="badges">
+        <span class="badge badge-sharp">🔥 Sharp-Move</span>
+        <span class="badge badge-conv-top">🎯 8/10</span>
+      </div>
+    </div>
+    <div style="font-size: 11px; color: #8b91a8; margin-bottom: 12px;">Gruppe B · echter Move +10.4pp (Mock: alle Signale bestätigen)</div>
+
+    <div class="sharp-move-box">
+      <strong>🔥🔥 Steam-Move</strong> Pinnacle Kanada +10.4pp seit Eröffnung
+      <div class="move-vis">
+        <span>Opening: 2.15</span>
+        <div class="move-bar"><div class="move-fill" style="width: 100%;"></div></div>
+        <span>Jetzt: 1.66</span>
+      </div>
+      <div style="font-size: 11px; color: #8b91a8; margin-top: 4px;">
+        18 Tage seit Opening · <span style="color: #4ade80;">Bet365 noch bei 1.78 (+4pp Lag)</span>
+      </div>
+    </div>
+
+    <div class="pick pick-main">
+      <div class="pick-row">
+        <span class="verdict verdict-bet">BET</span>
+        <span class="market">Heimsieg Kanada</span>
+        <span class="odds-edge">@1.66 · +6pp</span>
+      </div>
+      <div class="why-text">
+        Pinnacle hat sich klar positioniert. Form-Daten + xG-Werte bestätigen. Bet365 noch im Lag → echte Edge.
+      </div>
+    </div>
+
+    <div class="signals-box">
+      <div class="signal-row"><span class="signal-name">Sharp-Money (Pinn-Move + Bet365-Lag)</span><span class="signal-val signal-pos">+3 / max 3</span></div>
+      <div class="signal-row"><span class="signal-name">Form-Trend + xG</span><span class="signal-val signal-pos">+2 / max 2</span></div>
+      <div class="signal-row"><span class="signal-name">Kontext (Travel + Lineup)</span><span class="signal-val signal-pos">+2 / max 2</span></div>
+      <div class="signal-row"><span class="signal-name">Modell-Sanity (≤10pp vom Markt)</span><span class="signal-val signal-pos">+1 / 1</span></div>
+    </div>
+    <div class="conviction-bar"><div class="conviction-fill" style="width: 80%;"></div></div>
+    <div class="conviction-label"><span style="color: #ffd700;">🎯 Top-Wette · Conviction 8/10</span><span>≥8 = ABWÄGEN→BET-Upgrade</span></div>
+  </div>
+
+  <!-- ── 4. Real synthetisches saferAlt (HTI-SCO Über 3.5 → 1.5) ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="matchup">🇭🇹 Haiti vs 🏴󠁧󠁢󠁳󠁣󠁴󠁿 Schottland</div>
+      <div class="badges">
+        <span class="badge badge-edge">+13pp Edge</span>
+      </div>
+    </div>
+    <div style="font-size: 11px; color: #8b91a8; margin-bottom: 12px;">Gruppe C · ST 1 · echter Live-Datensatz</div>
+
+    <div class="pick pick-main">
+      <div class="pick-row">
+        <span class="verdict verdict-abw">ABWÄGEN</span>
+        <span class="market">Über 3.5 Tore</span>
+        <span class="odds-edge">@3.40 · +13pp</span>
+      </div>
+      <div class="why-text">
+        Hoher Edge, aber Über 3.5 ist riskant (nur 40% impliziert).
+      </div>
+    </div>
+
+    <div class="pick pick-safer">
+      <div class="pick-row">
+        <span class="verdict verdict-abw">🛡 ABWÄGEN</span>
+        <span class="market">Über 1.5 Tore</span>
+        <span class="odds-edge">@1.31 · +6pp</span>
+      </div>
+      <div class="why-text">
+        <strong>Sicherere Linie</strong> — 76% Wahrscheinlichkeit. Weniger Edge aber deutlich risikoärmer.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 5. Echter Mexico-SAR Smart-Sub U1.5 → U2.5 ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="matchup">🇲🇽 Mexiko vs 🇿🇦 Südafrika</div>
+      <div class="badges">
+        <span class="badge badge-edge">+6pp Edge</span>
+      </div>
+    </div>
+    <div style="font-size: 11px; color: #8b91a8; margin-bottom: 12px;">Gruppe A · ST 1 · echter Live-Datensatz</div>
+
+    <div class="pick pick-main">
+      <div class="pick-row">
+        <span class="verdict verdict-abw">ABWÄGEN</span>
+        <span class="market">Unter 1.5 Tore</span>
+        <span class="odds-edge">@3.20 · +6pp</span>
+      </div>
+    </div>
+
+    <div class="pick pick-safer">
+      <div class="pick-row">
+        <span class="verdict verdict-abw">🛡 ABWÄGEN</span>
+        <span class="market">Unter 2.5 Tore</span>
+        <span class="odds-edge">@1.74 · +6pp</span>
+      </div>
+      <div class="why-text">
+        <strong>Sicherere Linie</strong> — selber Edge, deutlich niedrigere Quote.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 6. Korean+Smart-Sub Synthetisch ── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="matchup">🛡 Neu: Synthetische saferAlt</div>
+      <div class="badges">
+        <span class="badge badge-conv-watch">Wie's funktioniert</span>
+      </div>
+    </div>
+    <div style="font-size: 12px; color: #b4bbd0; line-height: 1.6; padding: 8px 0;">
+      <strong>Vorher:</strong> Wenn Smart-Sub-Alt (z.B. DC 1X) keine eigene Edge ≥4pp hatte,
+      wurde sie nicht angeboten. Folge: Bei KOR-CZE Heimsieg @2.66 BET fehlte die DC 1X @1.43 Insurance.
+      <br><br>
+      <strong>Jetzt:</strong> Synthetisches saferAlt wird gebaut sobald Alt-Quote in den Markt-Daten verfügbar ist.
+      Klar markiert als "Sicherere Alternative" + eigene (oft geringe) Edge wird transparent angezeigt.
+      <br><br>
+      <strong>Conviction-Trigger gelockert:</strong> Sharp-Move feuert jetzt auch wenn Soft-Books bereits aufgeholt haben (alte Moves zählen).
+      Soft-Lag = Bonus-Punkt, nicht Hard-Requirement.
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
