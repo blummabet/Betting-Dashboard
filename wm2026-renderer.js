@@ -533,7 +533,7 @@
     if (showHotBadge && polyFix.bestEdge != null) {
       html += `<div class="cc-hot-badge">🔥 +${Math.round(polyFix.bestEdge)}pp Edge</div>`;
     } else if (polyFix && polyFix.steamLag) {
-      html += `<div class="cc-hot-badge">🔥 Steam Lag</div>`;
+      html += `<div class="cc-hot-badge" title="Pinnacle hat die Quote bereits bewegt — Polymarket hinkt hinterher. Klassisches Sharp-Signal.">🔥 Sharp-Move erkannt</div>`;
     }
 
     // ─── TOP — Angle + Teams + Meta ───────────────────
@@ -773,7 +773,7 @@
           global:  'WM-Picks gesamt',
         }[conf.scope] || 'Vergleich';
         const cls = conf.rate >= 60 ? 'cc-val-hot' : conf.rate < 40 ? 'cc-val-cool' : '';
-        confHtml = `<span class="cc-conf-backtest"><span class="cc-conf-rate ${cls}">${conf.rate}%</span> · n=${conf.n} ${scopeLabel}</span>`;
+        confHtml = `<span class="cc-conf-backtest"><span class="cc-conf-rate ${cls}">${conf.rate}%</span> Trefferquote · ${conf.n} ähnliche ${scopeLabel}</span>`;
       }
       html += `<div class="cc-actions">
         <div class="cc-data-tier">
@@ -1337,6 +1337,9 @@
       sparkSvg = _renderSparkline([openOdds, nowOdds], clvPositive);
     }
 
+    const _clvTooltip = clvPositive
+      ? 'Closing Line Value positiv: der Markt hat sich seit Eröffnung in Richtung unseres Picks bewegt — typisches Sharp-Signal.'
+      : 'Closing Line Value negativ: der Markt hat sich gegen unseren Pick bewegt.';
     return `<div class="cc-odds-strip">
       <div class="cc-os-drift">
         <span class="cc-os-label">Quote</span>
@@ -1344,7 +1347,7 @@
         <span class="cc-os-arrow">→</span>
         <span class="cc-os-now ${cls}">${nowOdds.toFixed(2)} ${arrow}</span>
         <span class="cc-os-pp ${cls}">${ppLabel}</span>
-        <span class="cc-os-clv cc-clv-${cls}">${clvLabel}</span>
+        <span class="cc-os-clv cc-clv-${cls}" title="${_clvTooltip}">${clvLabel}</span>
       </div>
       <div class="cc-os-spark">${sparkSvg}</div>
     </div>`;
@@ -1799,7 +1802,7 @@
           <div class="wm-backtest">
             <div class="wm-bt-num">${conf.rate}%</div>
             <div class="wm-bt-text">
-              Trefferquote bei <strong>${scopeLabel}</strong> (n=${conf.n}).
+              Trefferquote bei <strong>${scopeLabel}</strong> (über ${conf.n} vergleichbare Wetten).
               ${conf.rate >= 55 ? 'Solide Validierung des Modells.' : conf.rate >= 45 ? 'Mittlere Validierung — Edge nicht garantiert.' : 'Underperformance — Pick mit Vorsicht.'}
             </div>
           </div>

@@ -1467,8 +1467,8 @@ function _renderPickWhyButton(D, primary) {
             <tr><td>Elo (${escHtml(D.home)} / ${escHtml(D.away)})</td><td><strong>${D.homeElo} / ${D.awayElo} (${D.eloDiff>0?'+':''}${D.eloDiff})</strong></td></tr>
             <tr><td>xG-Erwartung (H / A)</td><td><strong>${D.xgHome} / ${D.xgAway}</strong></td></tr>
             ${pModel !== null ? `<tr><td>P(${escHtml(primary.market)}) Modell</td><td><strong>${pModel.toFixed(1)}%</strong></td></tr>` : ''}
-            ${primary.modelOdds && primary.odds ? `<tr><td>Modell-Quote → Markt-Quote</td><td><strong>${parseFloat(primary.modelOdds).toFixed(2)} → ${parseFloat(primary.odds).toFixed(2)} = ${edge>=0?'+':''}${edge}pp Edge (roh)</strong></td></tr>` : ''}
-            ${(primary.effectiveEdgePP !== undefined && primary.effectiveEdgePP !== null && primary.effectiveEdgePP !== edge) ? `<tr><td>Engine-justierter Edge</td><td><strong style="color:${primary.effectiveEdgePP >= edge ? '#3fb950' : '#e3b341'};">${primary.effectiveEdgePP >= 0 ? '+' : ''}${primary.effectiveEdgePP}pp (Δ ${primary.signalAdjustmentPP >= 0 ? '+' : ''}${primary.signalAdjustmentPP || 0}pp)</strong></td></tr>` : ''}
+            ${primary.modelOdds && primary.odds ? `<tr><td>Modell-Quote vs Markt-Quote</td><td><strong>${parseFloat(primary.modelOdds).toFixed(2)} (Modell) vs ${parseFloat(primary.odds).toFixed(2)} (Markt) → unser Modell sieht <span style="color:${edge>=0?'#3fb950':'#f85149'};">${edge>=0?'+':''}${edge} Prozentpunkte Vorsprung</span></strong></td></tr>` : ''}
+            ${(primary.effectiveEdgePP !== undefined && primary.effectiveEdgePP !== null && primary.effectiveEdgePP !== edge) ? `<tr><td>Vorsprung nach Engine-Signalen</td><td><strong style="color:${primary.effectiveEdgePP >= edge ? '#3fb950' : '#e3b341'};">${primary.effectiveEdgePP >= 0 ? '+' : ''}${primary.effectiveEdgePP} Prozentpunkte (Engine-Anpassung: ${primary.signalAdjustmentPP >= 0 ? '+' : ''}${primary.signalAdjustmentPP || 0} Prozentpunkte)</strong></td></tr>` : ''}
           </table>
         </div>
 
@@ -1494,7 +1494,13 @@ function _renderPickWhyButton(D, primary) {
           <div class="pwm-section-title">⚖️ Risiko & Stake-Empfehlung</div>
           <table class="pwm-table">
             <tr><td>Risiko-Tier</td><td><strong style="color:${riskColor};">${riskTier}</strong></td></tr>
-            <tr><td>Daten-Basis</td><td><strong>${primary.dataQuality || 'elo'}</strong></td></tr>
+            <tr><td>Daten-Basis</td><td><strong>${({
+              'full':           'Vollständig: Elo + Form beider Teams',
+              'elo+form':       'Elo + Form beider Teams',
+              'elo+form_asym':  'Elo + Form nur eines Teams (asymmetrisch)',
+              'elo_only':       'Nur Elo (keine Form-Daten)',
+              'elo':            'Nur Elo (keine Form-Daten)'
+            })[primary.dataQuality] || 'Nur Elo (keine Form-Daten)'}</strong></td></tr>
             ${kellyPct ? `<tr><td>½ Kelly Empfehlung</td><td><strong>${kellyPct}% der Bankroll</strong></td></tr>` : ''}
             ${primary.downgradedReason ? `<tr><td>Hinweis</td><td><span style="color:#e3b341;">${escHtml(primary.downgradedReason)}</span></td></tr>` : ''}
           </table>
@@ -1745,9 +1751,14 @@ function renderPicks(D) {
     const spEdge    = sp.edgePP != null ? (parseFloat(sp.edgePP) >= 0 ? '+' : '') + parseFloat(sp.edgePP).toFixed(1) + 'pp' : '';
     const spFV      = sp.fairValue ? 'FV ' + parseFloat(sp.fairValue).toFixed(2) : '';
     const spDetail  = [spFV, spEdge ? spEdge + ' Edge' : ''].filter(Boolean).join(' · ');
-    // Smart-Sub-Badge: 🛡️ wenn safer-alt
+    // Smart-Sub-Badge: 🛡️ wenn safer-alt — Abkürzungen DNB/AH/DC ausschreiben
+    const _expandMarket = (m) => (m || '')
+      .replace(/\bDNB\b/g, 'Draw No Bet')
+      .replace(/\bAH\b/g, 'Asian Handicap')
+      .replace(/\bDC\b/g, 'Doppelte Chance')
+      .replace(/\bBTTS\b/g, 'Beide treffen');
     const saferBadge = sp.saferAltFor
-      ? `<span style="background:rgba(76,201,240,.12);border:1px solid rgba(76,201,240,.4);color:#4cc9f0;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px;">🛡️ SAFER zu ${escHtml(sp.saferAltFor)}</span>`
+      ? `<span style="background:rgba(76,201,240,.12);border:1px solid rgba(76,201,240,.4);color:#4cc9f0;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:6px;" title="Engine empfiehlt diese sicherere Variante anstelle der Original-Wette.">🛡️ Sicherere Variante (statt ${escHtml(_expandMarket(sp.saferAltFor))})</span>`
       : '';
     // Downgraded-Reason-Hinweis
     const dgr = sp.downgradedReason
