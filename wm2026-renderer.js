@@ -1634,6 +1634,48 @@
       }
     }
 
+    // ── Incentive-Signal Insight (Bracket-Anreiz / Venue / Dead-Rubber / Rotation) ──
+    // Liest pro Pick die signals[] Liste und extrahiert incentive_signal,
+    // wenn es signifikant gefeuert hat (|score| >= 1.0pp). Übersetzt die
+    // Komponenten-Outputs in eine narrativ verständliche Erklärung mit
+    // Team-Namen — kein Engineer-Speak.
+    if (Array.isArray(pick.signals)) {
+      const inc = pick.signals.find(s => s && s.name === 'incentive_signal');
+      if (inc && typeof inc.score === 'number' && Math.abs(inc.score) >= 1.0) {
+        const positive = inc.score > 0;
+        const ev = (inc.evidence || '').replace(/^🎯\s*/, '');
+
+        // Welches Team steht im Fokus des Anreizes?
+        // Bei Heim-Pick → home, bei Auswärts-Pick → away, sonst neutral
+        const _m = (pick.market || '').toLowerCase();
+        const focusTeam = _m.includes('heim') ? home
+                       : (_m.includes('ausw') ? away : null);
+        const focusName = focusTeam ? focusTeam.name : 'das Team';
+
+        // Headline je nach Komponenten in evidence-String
+        let intro = positive
+          ? `${focusName} hat einen klaren sportlichen Anreiz, dieses Spiel zu gewinnen`
+          : `${focusName} hat strukturellen Gegenwind in diesem Spiel`;
+        if (ev.toLowerCase().includes('dead') || ev.toLowerCase().includes('beide teams bereits')) {
+          intro = `Spiel ohne sportlichen Druck — beide Teams stehen schon im Achtelfinale`;
+        } else if (ev.toLowerCase().includes('rotation') || ev.toLowerCase().includes('pause')) {
+          intro = positive
+            ? `Kurze Pause zur nächsten Runde — Favorit rotiert wahrscheinlich, Tor-Erwartung sinkt`
+            : `Nur kurze Pause zur nächsten Runde — Favorit schont Stammspieler`;
+        } else if (ev.toLowerCase().includes('muss gewinnen')) {
+          intro = `Klare Anreiz-Asymmetrie zwischen den Teams`;
+        }
+
+        candidates.push({
+          score: Math.abs(inc.score) * 15 + 25,   // priorisiert über Form-Signale
+          txt: `<strong>${intro}.</strong> ${ev.charAt(0).toUpperCase() + ev.slice(1)}. ` +
+               `Engine-Bewertung: <strong style="color:var(${positive ? '--accent' : '--red'});">` +
+               `${inc.score > 0 ? '+' : ''}${inc.score.toFixed(1)}pp</strong>.`,
+          tag: 'Anreiz', tagCls: positive ? 'wm-tag-sharp' : 'wm-tag-warn',
+        });
+      }
+    }
+
     // ── Edge-Magnitude Insight (Fallback wenn nichts anderes) ──
     if (candidates.length < 3 && pick.edgePP) {
       candidates.push({

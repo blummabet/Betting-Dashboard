@@ -663,6 +663,69 @@ def injury_discount(team_id: str, injuries: dict) -> float:
     return 1.0
 
 
+# ──────────────────────────────────────────────────────────────────────────
+#  Venue-Name → wm_venues.json venue_id Mapping
+#  (für incentive_signal Komp C — Distanz-Berechnung)
+# ──────────────────────────────────────────────────────────────────────────
+_VENUE_NAME_TO_ID = {
+    # Stadium-Name-Substrings → venue_id in wm_venues.json
+    "azteca":          "mexico_city",
+    "mexico city":     "mexico_city",
+    "monterrey":       "monterrey",
+    "guadalajara":     "guadalajara",
+    "rose bowl":       "los_angeles",
+    "sofi":            "los_angeles",
+    "inglewood":       "los_angeles",
+    "los angeles":     "los_angeles",
+    "at&t":            "dallas",
+    "arlington":       "dallas",
+    "dallas":          "dallas",
+    "nrg":             "houston",
+    "houston":         "houston",
+    "mercedes-benz":   "atlanta",
+    "mercedes benz":   "atlanta",
+    "atlanta":         "atlanta",
+    "gillette":        "boston",
+    "foxborough":      "boston",
+    "boston":          "boston",
+    "metlife":         "new_york",
+    "east rutherford": "new_york",
+    "new york":        "new_york",
+    "new jersey":      "new_york",
+    "lincoln":         "philadelphia",
+    "philadelphia":    "philadelphia",
+    "levi":            "san_francisco",
+    "santa clara":     "san_francisco",
+    "san francisco":   "san_francisco",
+    "lumen":           "seattle",
+    "seattle":         "seattle",
+    "hard rock":       "miami",
+    "miami gardens":   "miami",
+    "miami":           "miami",
+    "arrowhead":       "kansas_city",
+    "kansas city":     "kansas_city",
+    "bc place":        "vancouver",
+    "vancouver":       "vancouver",
+    "bmo":             "toronto",
+    "toronto":         "toronto",
+}
+
+
+def _wm_venue_id_from_name(venue_name) -> str | None:
+    """
+    Mappt einen Venue-String aus wm2026-data.json auf venue_id in wm_venues.json.
+    Substring-Match — robust gegen Schreibweisen ("Mexico City" / "Estadio Azteca, Mexico City" / "Azteca").
+    Returns None wenn nicht erkannt.
+    """
+    if not isinstance(venue_name, str) or not venue_name.strip():
+        return None
+    needle = venue_name.lower()
+    for key, vid in _VENUE_NAME_TO_ID.items():
+        if key in needle:
+            return vid
+    return None
+
+
 def generate_picks_for_fixture(
     fx: dict, gdata: dict,
     mkt: dict, form: dict, h2h_data: dict,
@@ -1544,6 +1607,23 @@ def main():
             try:
                 from sharp_signals.registry import evaluate_signals
                 ha_key = f"{fx['home']}-{fx['away']}"
+
+                # ── Incentive-Signal-Inputs: group_id + standings + team_elo +
+                # venue-id + match-date. Werden in sig_ctx gepackt damit
+                # incentive_signal seine Komponenten A/B/C/D füllen kann.
+                # Wenn Felder fehlen (Pre-Tournament, fehlende Standings) liefert
+                # das Signal None — kein Crash, kein false-positive.
+                _team_elo_map = {}
+                for _g, _gd in groups.items():
+                    for _t in _gd.get("teams", []):
+                        _tid = _t.get("id")
+                        _elo = _t.get("elo")
+                        if _tid and isinstance(_elo, (int, float)):
+                            _team_elo_map[_tid] = float(_elo)
+
+                # Venue-Name → venue_id (für wm_venues.json Lookup)
+                _venue_id = _wm_venue_id_from_name(fx.get("venue"))
+
                 sig_ctx = {
                     "matchKey":     ha_key,
                     "home_id":      fx["home"],
@@ -1564,6 +1644,14 @@ def main():
                     "venue":            fx.get("venue"),
                     "kickoff_time":     fx.get("time"),   # CEST/Wien lokale Zeit
                     "snapshot_ts":      None,   # → evaluate_signals nutzt now()
+                    # incentive_signal-Inputs:
+                    "group_id":           gkey,
+                    "standings":          wm.get("standings") or {},
+                    "team_elo":           _team_elo_map,
+                    "current_venue_id":   _venue_id,
+                    "current_match_date": fx.get("date"),
+                    # next_match_date (KO-Phase) — heute leer, kommt mit live K.O.-Auslosung
+                    "next_match_date":    fx.get("next_match_date"),
                 }
                 for p in new_picks:
                     sig_out = evaluate_signals(p, sig_ctx)

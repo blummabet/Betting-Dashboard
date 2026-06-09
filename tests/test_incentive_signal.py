@@ -120,7 +120,8 @@ class TestComponentASignal(unittest.TestCase):
         r = self.sig.evaluate({"market": "Unter 2.5 Tore"}, ctx)
         self.assertIsNotNone(r)
         self.assertGreater(r.score, 0)
-        self.assertIn("Dead Rubber", r.evidence)
+        # Humanisierter Text: "Beide Teams bereits durch"
+        self.assertIn("Beide Teams bereits durch", r.evidence)
 
     def test_dead_rubber_over_negative(self):
         ctx = {"home_id": "TM_A", "away_id": "TM_D", "group_id": "A",

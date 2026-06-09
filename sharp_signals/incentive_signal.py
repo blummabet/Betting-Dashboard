@@ -466,27 +466,27 @@ class IncentiveSignal(Signal):
             meta["dead_rubber"] = True
             if is_under:
                 score += self._t["dead_rubber_under_pp"]
-                notes.append("Dead Rubber → Unter wahrscheinlicher")
+                notes.append("Beide Teams bereits durch — Tor-Niveau sinkt typisch")
             elif is_over:
                 score -= self._t["dead_rubber_under_pp"]
-                notes.append("Dead Rubber → Über unwahrscheinlicher")
+                notes.append("Beide Teams bereits durch — weniger Tore erwartet")
             return (score, " · ".join(notes), meta)
 
         # Must-Win-Asymmetrie: ein Team must_win, anderes nicht
         if home_state.get("must_win") and not away_state.get("must_win"):
             if side == +1:
                 score += self._t["must_win_pp"]
-                notes.append("Heim must-win, Auswärts nicht")
+                notes.append("Heim muss gewinnen, Auswärts nicht — voller Druck pro Heim")
             elif side == -1:
                 score -= self._t["must_win_pp"]
-                notes.append("Heim must-win → Auswärtssieg unwahrscheinlicher")
+                notes.append("Heim muss gewinnen — wird voll attackieren")
         elif away_state.get("must_win") and not home_state.get("must_win"):
             if side == -1:
                 score += self._t["must_win_pp"]
-                notes.append("Auswärts must-win, Heim nicht")
+                notes.append("Auswärts muss gewinnen, Heim nicht — voller Druck pro Auswärts")
             elif side == +1:
                 score -= self._t["must_win_pp"]
-                notes.append("Auswärts must-win → Heimsieg unwahrscheinlicher")
+                notes.append("Auswärts muss gewinnen — wird voll attackieren")
 
         # Stake-Asymmetrie: ein Team hi-stake (must_win/third_chase), anderes qualified
         h_hi = home_state.get("must_win") or home_state.get("third_chase")
@@ -494,11 +494,11 @@ class IncentiveSignal(Signal):
         if h_hi and away_state.get("qualified"):
             if side == +1:
                 score += self._t["stake_asymmetry_pp"]
-                notes.append("Heim spielt um Existenz, Auswärts qualifiziert (Rotation)")
+                notes.append("Heim spielt um Aufstieg, Auswärts schon qualifiziert (rotiert)")
         elif a_hi and home_state.get("qualified"):
             if side == -1:
                 score += self._t["stake_asymmetry_pp"]
-                notes.append("Auswärts spielt um Existenz, Heim qualifiziert (Rotation)")
+                notes.append("Auswärts spielt um Aufstieg, Heim schon qualifiziert (rotiert)")
 
         return (score, " · ".join(notes), meta)
 
@@ -570,10 +570,12 @@ class IncentiveSignal(Signal):
             # Sieg-Pfad führt zu STÄRKEREM Gegner → Team hat Anreiz NICHT zu gewinnen
             # → Sieg-Pick (für unser Team) wird unwahrscheinlicher
             score = -magnitude
-            evidence = f"Bracket-Tank: Sieg→Gegner +{delta:.0f}Elo stärker"
+            evidence = (f"Bei Sieg wartet im Achtelfinale ein deutlich stärkerer Gegner "
+                        f"(+{delta:.0f} Elo) — Anreiz, lieber 2. zu werden")
         else:
             score = magnitude
-            evidence = f"Bracket-Top: Sieg→Gegner {delta:.0f}Elo schwächer"
+            evidence = (f"Bei Sieg wartet im Achtelfinale ein deutlich schwächerer Gegner "
+                        f"({delta:.0f} Elo) — extra Motivation, 1. zu werden")
 
         return (round(score, 2), evidence, meta)
 
@@ -650,21 +652,25 @@ class IncentiveSignal(Signal):
             if delta_km > 0:
                 # Sieg-Pfad WEITER weg → Reise-Burden auf Sieg-Outcome → Sieg-Pick -pp
                 score -= magnitude
-                notes.append(f"Sieg→{int(delta_km)}km weiter (Reise-Anreiz auf 2.)")
+                notes.append(f"Bei Sieg geht's {int(delta_km)} km weiter zum Achtelfinale "
+                             f"als bei Niederlage")
             else:
                 score += magnitude
-                notes.append(f"Sieg→{int(abs(delta_km))}km näher (Reise-Anreiz auf 1.)")
+                notes.append(f"Bei Sieg bleibt das Achtelfinale am gleichen Ort statt "
+                             f"{int(abs(delta_km))} km Reise — klarer Heimvorteil")
 
         # Höhen-Penalty: nur Sieg-Pfad führt in Hochland (>1500m), Niederlage-Pfad im Tiefland
         SIG_ALT = 1500.0
         if d["alt_W"] >= SIG_ALT and d["alt_L"] < SIG_ALT and d["alt_now"] < SIG_ALT:
             score -= alt_pen
-            notes.append(f"Sieg→Hochland {int(d['alt_W'])}m")
+            notes.append(f"Bei Sieg führt der Weg in {int(d['alt_W'])}m Höhe — "
+                         f"Belastung für nicht-akklimatisierte Teams")
         elif d["alt_L"] >= SIG_ALT and d["alt_W"] < SIG_ALT and d["alt_now"] < SIG_ALT:
             score += alt_pen
-            notes.append(f"Niederlage→Hochland {int(d['alt_L'])}m (Sieg vermeidet)")
+            notes.append(f"Bei Sieg vermeidet das Team den Höhen-Trip "
+                         f"({int(d['alt_L'])}m)")
 
-        evidence = "Bracket-Venue: " + " · ".join(notes) if notes else ""
+        evidence = " · ".join(notes) if notes else ""
         d["delta_pp"] = round(score, 2)
         return (round(score, 2), evidence, d)
 
@@ -710,17 +716,18 @@ class IncentiveSignal(Signal):
         # Sieg-Pick auf klaren Favorit → Rotation-Discount
         if side != 0 and pick_odds <= 1.65:
             score += self._t["rotation_pp"]   # negativ (siehe Default -1.5)
-            notes.append(f"Rotation T+{rest_days}d (Favorit @{pick_odds})")
+            notes.append(f"Nur {rest_days} Tage Pause bis zur nächsten Runde — "
+                         f"Favorit schont voraussichtlich Stammspieler")
 
         # Über-Pick → Rotation reduziert Tore
         if _is_over_market(pick.get("market", "")):
             score += self._t["rotation_pp"]   # auch negativ
-            notes.append(f"Rotation T+{rest_days}d → weniger Tore")
+            notes.append(f"Nur {rest_days} Tage Pause — Rotation, weniger Tor-Aktion")
 
         # Unter-Pick → Rotation hilft (umgekehrt)
         if _is_under_market(pick.get("market", "")):
             score -= self._t["rotation_pp"]   # also +1.5
-            notes.append(f"Rotation T+{rest_days}d → Unter wahrscheinlicher")
+            notes.append(f"Nur {rest_days} Tage Pause — Rotation drückt Tor-Erwartung")
 
         if abs(score) < 0.01:
             return (0.0, "", meta)

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Incentive-Signal Card-Vorschau</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #00d4a1;
+    --red: #f85149;
+    --warn: #e3b341;
+  }
+  body {
+    margin: 0; padding: 32px 20px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+  }
+  .page { max-width: 760px; margin: 0 auto; }
+  .head { text-align: center; margin-bottom: 28px; }
+  .head h1 { margin: 0 0 6px; font-size: 18px; color: var(--accent); letter-spacing: 1px; }
+  .head p  { margin: 0; color: var(--muted); font-size: 13px; }
+  .mock-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 28px;
+  }
+  .mock-card h2 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    color: var(--text);
+  }
+  .mock-card .sub { color: var(--muted); font-size: 12px; margin-bottom: 16px; }
+
+  /* Signal-Block (1:1 wie in wm2026-renderer.js _buildCard) */
+  .cc-signals {
+    background: rgba(125,211,252,0.04);
+    border: 1px solid rgba(125,211,252,0.15);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+  .cc-signals-head {
+    font-size: 11px;
+    color: #7dd3fc;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .cc-sig-adj.pos { color: var(--accent); font-weight: 700; }
+  .cc-sig-adj.neg { color: var(--red);    font-weight: 700; }
+  .cc-sig-row {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 10px;
+    padding: 5px 0;
+    font-size: 13px;
+    align-items: start;
+  }
+  .cc-sig-row.pos .cc-sig-score { color: var(--accent); }
+  .cc-sig-row.neg .cc-sig-score { color: var(--red); }
+  .cc-sig-score {
+    font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-weight: 700;
+    text-align: right;
+  }
+  .cc-sig-evidence { color: var(--text); line-height: 1.4; }
+
+  /* Modal-Insight (1:1 wie _extractInsights → _buildPickWhyModal) */
+  .modal-insight {
+    background: rgba(0,212,161,0.06);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+  .modal-insight.neg {
+    background: rgba(248,81,73,0.06);
+    border-left-color: var(--red);
+  }
+  .modal-insight .tag {
+    display: inline-block;
+    background: rgba(0,212,161,0.15);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .modal-insight.neg .tag {
+    background: rgba(248,81,73,0.15);
+    color: var(--red);
+  }
+  .modal-insight p { margin: 0; line-height: 1.5; }
+
+  .legend {
+    background: rgba(255,255,255,0.02);
+    border: 1px dashed var(--border);
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 24px;
+  }
+  .legend strong { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="head">
+    <h1>🧠 INCENTIVE-SIGNAL — Card-Vorschau</h1>
+    <p>So sehen Picks aus mit dem 14. Engine-Signal aktiv.<br>
+       3 Beispiele für die 4 Komponenten (A: Quali-Math, B: Bracket, C: Venue, D: Rotation).</p>
+  </div>
+
+  <!-- Beispiel 1: MD3 Bracket + Venue (Top-Anreiz) -->
+  <div class="mock-card">
+    <h2>🇲🇽 Mexiko vs Tschechien · Gruppenphase MD3 · @ Mexico City</h2>
+    <p class="sub">Hero-Pick: <strong>Heimsieg @1.85</strong> · Edge +5.0pp → effektiv +5.6pp</p>
+
+    <div class="cc-signals">
+      <div class="cc-signals-head">
+        🧠 Engine-Signale
+        <span class="cc-sig-adj pos">+0.6pp</span>
+      </div>
+      <div class="cc-sig-row pos">
+        <span class="cc-sig-score">+1.9</span>
+        <span class="cc-sig-evidence">🎯 Bei Sieg wartet im Achtelfinale ein deutlich schwächerer Gegner (−50 Elo) — extra Motivation, 1. zu werden · Bei Sieg bleibt das Achtelfinale am gleichen Ort statt 2500 km Reise — klarer Heimvorteil</span>
+      </div>
+    </div>
+
+    <!-- Modal-Insight (was im Warum?-Modal erscheint) -->
+    <div style="font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin: 16px 0 8px;">Warum?-Modal — Top-3 Insights:</div>
+    <div class="modal-insight">
+      <span class="tag">Anreiz</span>
+      <p><strong>Mexiko hat einen klaren sportlichen Anreiz, dieses Spiel zu gewinnen.</strong> Bei Sieg wartet im Achtelfinale ein deutlich schwächerer Gegner (−50 Elo) — extra Motivation, 1. zu werden. Bei Sieg bleibt das Achtelfinale am gleichen Ort statt 2500 km Reise — klarer Heimvorteil. Engine-Bewertung: <strong style="color:var(--accent);">+1.9pp</strong>.</p>
+    </div>
+    <div class="modal-insight">
+      <span class="tag" style="background:rgba(125,211,252,0.15);color:#7dd3fc;">Elo</span>
+      <p>Elo-Differenz <strong>+85</strong> zugunsten Mexiko — historisch klares Klassenmerkmal.</p>
+    </div>
+  </div>
+
+  <!-- Beispiel 2: Dead Rubber -->
+  <div class="mock-card">
+    <h2>🇧🇷 Brasilien vs Marokko · MD3 · beide bereits qualifiziert</h2>
+    <p class="sub">Hero-Pick: <strong>Unter 2.5 Tore @2.05</strong> · Edge +4.2pp → effektiv +5.2pp</p>
+
+    <div class="cc-signals">
+      <div class="cc-signals-head">
+        🧠 Engine-Signale
+        <span class="cc-sig-adj pos">+1.0pp</span>
+      </div>
+      <div class="cc-sig-row pos">
+        <span class="cc-sig-score">+1.0</span>
+        <span class="cc-sig-evidence">🎯 Beide Teams bereits durch — Tor-Niveau sinkt typisch</span>
+      </div>
+    </div>
+
+    <div style="font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin: 16px 0 8px;">Modal-Insight:</div>
+    <div class="modal-insight">
+      <span class="tag">Anreiz</span>
+      <p><strong>Spiel ohne sportlichen Druck — beide Teams stehen schon im Achtelfinale.</strong> Beide Teams bereits durch — Tor-Niveau sinkt typisch. Engine-Bewertung: <strong style="color:var(--accent);">+1.0pp</strong>.</p>
+    </div>
+  </div>
+
+  <!-- Beispiel 3: K.O.-Phase Rotation -->
+  <div class="mock-card">
+    <h2>🇩🇪 Deutschland vs 🇪🇳 England · Achtelfinale R16 · Viertelfinale in 2 Tagen</h2>
+    <p class="sub">Hero-Pick: <strong>Heimsieg @1.40</strong> · Edge +3.0pp → effektiv +1.5pp (Engine warnt)</p>
+
+    <div class="cc-signals">
+      <div class="cc-signals-head">
+        🧠 Engine-Signale
+        <span class="cc-sig-adj neg">−1.5pp</span>
+      </div>
+      <div class="cc-sig-row neg">
+        <span class="cc-sig-score">−1.5</span>
+        <span class="cc-sig-evidence">🎯 Nur 2 Tage Pause bis zur nächsten Runde — Favorit schont voraussichtlich Stammspieler</span>
+      </div>
+    </div>
+
+    <div style="font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin: 16px 0 8px;">Modal-Insight:</div>
+    <div class="modal-insight neg">
+      <span class="tag">Anreiz</span>
+      <p><strong>Nur kurze Pause zur nächsten Runde — Favorit schont Stammspieler.</strong> Nur 2 Tage Pause bis zur nächsten Runde — Favorit schont voraussichtlich Stammspieler. Engine-Bewertung: <strong style="color:var(--red);">−1.5pp</strong>.</p>
+    </div>
+  </div>
+
+  <div class="legend">
+    <p><strong>Wie's funktioniert:</strong></p>
+    <p>Das incentive_signal feuert ab MD2 sobald Gruppenstandings vorliegen, und in der K.O.-Phase bei kurzer Pause vor wichtigem Folgespiel. Die <strong>Signal-Score</strong> (z.B. +1.9pp) ist die rohe Empfehlung. Im <strong>Combiner</strong> wird sie mit Konfidenz und Bayesian-Weight verrechnet (siehe "weighted_score" in den Picks).</p>
+    <p>Auf der <strong>Card</strong>: Top-4 Signale werden als Liste angezeigt (Renderer-Code Line 624-635, automatisch).</p>
+    <p>Im <strong>Warum?-Modal</strong>: incentive_signal-Insights werden über Form-Signale priorisiert (Score +15·|adj|+25 in _extractInsights). Tag "Anreiz" mit Cyan-Akzent positiv, Rot-Warn negativ.</p>
+    <p>In der <strong>Engine-Flow-Visualization</strong> auf Event-Pages (matches/wm-match.html): automatisch da, weil signals[] direkt aus der Engine kommt.</p>
+  </div>
+
+</div>
+</body>
+</html>
