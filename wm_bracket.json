@@ -1,0 +1,182 @@
+{
+  "_meta": {
+    "description": "WM 2026 K.O.-Bracket-Struktur. Wird vom incentive_signal.py gelesen um Bracket-Asymmetrie + Venue-Distanz für ein Team zu projizieren.",
+    "source": "FIFA offizieller Spielplan",
+    "tournament": "fifa_world_cup_2026",
+    "format": "48 teams, 12 groups (A-L), top 2 + best 8 third-placed advance",
+    "matches_total_ko": 32,
+    "schema_version": "1.0",
+    "_field_docs": {
+      "side_a / side_b": "Entweder { type: 'group_position', group: 'A', position: 1|2|3 } oder { type: 'best_third', from_groups: [...] }",
+      "venue_id": "Key in wm_venues.json",
+      "winner_to": "Match-Nummer der nächsten Runde wo Sieger spielt",
+      "kickoff_local": "Lokale Anpfiff-Zeit (HH:MM, 24h)"
+    }
+  },
+  "round_of_32": {
+    "M73": {
+      "matchNo": 73,
+      "date": "2026-06-28",
+      "kickoff_local": "12:00",
+      "venue_id": "los_angeles",
+      "side_a": { "type": "group_position", "group": "A", "position": 2 },
+      "side_b": { "type": "group_position", "group": "B", "position": 2 },
+      "winner_to": "M90"
+    },
+    "M74": {
+      "matchNo": 74,
+      "date": "2026-06-29",
+      "kickoff_local": "16:30",
+      "venue_id": "boston",
+      "side_a": { "type": "group_position", "group": "E", "position": 1 },
+      "side_b": { "type": "best_third", "from_groups": ["A","B","C","D","F"] },
+      "winner_to": "M89"
+    },
+    "M75": {
+      "matchNo": 75,
+      "date": "2026-06-29",
+      "kickoff_local": "19:00",
+      "venue_id": "monterrey",
+      "side_a": { "type": "group_position", "group": "F", "position": 1 },
+      "side_b": { "type": "group_position", "group": "C", "position": 2 },
+      "winner_to": "M90"
+    },
+    "M76": {
+      "matchNo": 76,
+      "date": "2026-06-29",
+      "kickoff_local": "12:00",
+      "venue_id": "houston",
+      "side_a": { "type": "group_position", "group": "C", "position": 1 },
+      "side_b": { "type": "group_position", "group": "F", "position": 2 },
+      "winner_to": "M91"
+    },
+    "M77": {
+      "matchNo": 77,
+      "date": "2026-06-30",
+      "kickoff_local": "17:00",
+      "venue_id": "new_york",
+      "side_a": { "type": "group_position", "group": "I", "position": 1 },
+      "side_b": { "type": "best_third", "from_groups": ["C","D","F","G","H"] },
+      "winner_to": "M89"
+    },
+    "M78": {
+      "matchNo": 78,
+      "date": "2026-06-30",
+      "kickoff_local": "12:00",
+      "venue_id": "dallas",
+      "side_a": { "type": "group_position", "group": "E", "position": 2 },
+      "side_b": { "type": "group_position", "group": "I", "position": 2 },
+      "winner_to": "M91"
+    },
+    "M79": {
+      "matchNo": 79,
+      "date": "2026-06-30",
+      "kickoff_local": "19:00",
+      "venue_id": "mexico_city",
+      "side_a": { "type": "group_position", "group": "A", "position": 1 },
+      "side_b": { "type": "best_third", "from_groups": ["C","E","F","H","I"] },
+      "winner_to": "M92"
+    },
+    "M80": {
+      "matchNo": 80,
+      "date": "2026-07-01",
+      "kickoff_local": "12:00",
+      "venue_id": "atlanta",
+      "side_a": { "type": "group_position", "group": "L", "position": 1 },
+      "side_b": { "type": "best_third", "from_groups": ["E","H","I","J","K"] },
+      "winner_to": "M92"
+    },
+    "M81": {
+      "matchNo": 81,
+      "date": "2026-07-01",
+      "kickoff_local": "17:00",
+      "venue_id": "san_francisco",
+      "side_a": { "type": "group_position", "group": "D", "position": 1 },
+      "side_b": { "type": "best_third", "from_groups": ["B","E","F","I","J"] },
+      "winner_to": "M94"
+    },
+    "M82": {
+      "matchNo": 82,
+      "date": "2026-07-01",
+      "kickoff_local": "13:00",
+      "venue_id": "seattle",
+      "side_a": { "type": "group_position", "group": "G", "position": 1 },
+      "side_b": { "type": "best_third", "from_groups": ["A","E","H","I","J"] },
+      "winner_to": "M94"
+    },
+    "M83": {
+      "matchNo": 83,
+      "date": "2026-07-02",
+      "kickoff_local": "19:00",
+      "venue_id": "toronto",
+      "side_a": { "type": "group_position", "group": "K", "position": 2 },
+      "side_b": { "type": "group_position", "group": "L", "position": 2 },
+      "winner_to": "M93"
+    },
+    "M84": {
+      "matchNo": 84,
+      "date": "2026-07-02",
+      "kickoff_local": "12:00",
+      "venue_id": "los_angeles",
+      "side_a": { "type": "group_position", "group": "H", "position": 1 },
+      "side_b": { "type": "group_position", "group": "J", "position": 2 },
+      "winner_to": "M93"
+    },
+    "M85": {
+      "matchNo": 85,
+      "date": "2026-07-02",
+      "kickoff_local": "20:00",
+      "venue_id": "vancouver",
+      "side_a": { "type": "group_position", "group": "B", "position": 1 },
+      "side_b": { "type": "best_third", "from_groups": ["E","F","G","I","J"] },
+      "winner_to": "M96"
+    },
+    "M86": {
+      "matchNo": 86,
+      "date": "2026-07-03",
+      "kickoff_local": "18:00",
+      "venue_id": "miami",
+      "side_a": { "type": "group_position", "group": "J", "position": 1 },
+      "side_b": { "type": "group_position", "group": "H", "position": 2 },
+      "winner_to": "M95"
+    },
+    "M87": {
+      "matchNo": 87,
+      "date": "2026-07-03",
+      "kickoff_local": "20:30",
+      "venue_id": "kansas_city",
+      "side_a": { "type": "group_position", "group": "K", "position": 1 },
+      "side_b": { "type": "best_third", "from_groups": ["D","E","I","J","L"] },
+      "winner_to": "M96"
+    },
+    "M88": {
+      "matchNo": 88,
+      "date": "2026-07-03",
+      "kickoff_local": "13:00",
+      "venue_id": "dallas",
+      "side_a": { "type": "group_position", "group": "D", "position": 2 },
+      "side_b": { "type": "group_position", "group": "G", "position": 2 },
+      "winner_to": "M95"
+    }
+  },
+  "round_of_16": {
+    "M89": { "matchNo": 89, "date": "2026-07-04", "kickoff_local": "17:00", "venue_id": "philadelphia",  "side_a": "W74", "side_b": "W77", "winner_to": "M97"  },
+    "M90": { "matchNo": 90, "date": "2026-07-04", "kickoff_local": "12:00", "venue_id": "houston",       "side_a": "W73", "side_b": "W75", "winner_to": "M97"  },
+    "M91": { "matchNo": 91, "date": "2026-07-05", "kickoff_local": "16:00", "venue_id": "new_york",      "side_a": "W76", "side_b": "W78", "winner_to": "M99"  },
+    "M92": { "matchNo": 92, "date": "2026-07-05", "kickoff_local": "18:00", "venue_id": "mexico_city",   "side_a": "W79", "side_b": "W80", "winner_to": "M99"  },
+    "M93": { "matchNo": 93, "date": "2026-07-06", "kickoff_local": "14:00", "venue_id": "dallas",        "side_a": "W83", "side_b": "W84", "winner_to": "M98"  },
+    "M94": { "matchNo": 94, "date": "2026-07-06", "kickoff_local": "17:00", "venue_id": "seattle",       "side_a": "W81", "side_b": "W82", "winner_to": "M98"  },
+    "M95": { "matchNo": 95, "date": "2026-07-07", "kickoff_local": "12:00", "venue_id": "atlanta",       "side_a": "W86", "side_b": "W88", "winner_to": "M100" },
+    "M96": { "matchNo": 96, "date": "2026-07-07", "kickoff_local": "13:00", "venue_id": "vancouver",     "side_a": "W85", "side_b": "W87", "winner_to": "M100" }
+  },
+  "quarterfinals": {
+    "M97":  { "matchNo": 97,  "date": "2026-07-09", "kickoff_local": "16:00", "venue_id": "boston",       "side_a": "W89", "side_b": "W90", "winner_to": "M101" },
+    "M98":  { "matchNo": 98,  "date": "2026-07-10", "kickoff_local": "12:00", "venue_id": "los_angeles",  "side_a": "W93", "side_b": "W94", "winner_to": "M101" },
+    "M99":  { "matchNo": 99,  "date": "2026-07-11", "kickoff_local": "17:00", "venue_id": "miami",        "side_a": "W91", "side_b": "W92", "winner_to": "M102" },
+    "M100": { "matchNo": 100, "date": "2026-07-11", "kickoff_local": "20:00", "venue_id": "kansas_city",  "side_a": "W95", "side_b": "W96", "winner_to": "M102" }
+  },
+  "semifinals": {
+    "M101": { "matchNo": 101, "date": "2026-07-14", "kickoff_local": "14:00", "venue_id": "dallas",  "side_a": "W97", "side_b": "W98",  "winner_to": "M104" },
+    "M102": { "matchNo": 102, "date": "2026-07-15", "kickoff_local": "15:00", "venue_id": "atlanta", "side_a": "W99", "side_b": "W100", "winner_to": "M104" }
+  }
+}

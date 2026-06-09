@@ -108,12 +108,12 @@ class TestSignalRegistryActive(unittest.TestCase):
             "lead_lag_bias", "public_static_bias", "travel_burden", "injury",
             "form_trend", "h2h_pattern", "xg_strength", "polymarket_sharp",
             "steam_lag", "pressure_index", "lineup_signal", "apif_predictions",
-            "weather_signal",
+            "weather_signal", "incentive_signal",
         }
         self.assertEqual(set(names), expected,
                          f"Signal-Set abweichend. fehlt: {expected - set(names)}, "
                          f"extra: {set(names) - expected}")
-        self.assertEqual(len(ACTIVE_SIGNALS), 13)
+        self.assertEqual(len(ACTIVE_SIGNALS), 14)
 
     def test_lineup_and_apif_are_unique(self):
         from sharp_signals.registry import SIGNAL_GROUPS

@@ -30,6 +30,7 @@ from sharp_signals.pressure_index import PressureIndexSignal
 from sharp_signals.lineup_signal import LineupSignal
 from sharp_signals.apif_predictions import ApifPredictionsSignal
 from sharp_signals.weather_signal import WeatherSignal
+from sharp_signals.incentive_signal import IncentiveSignal
 
 
 # Liste aller aktiv evaluierten Signale.
@@ -48,6 +49,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     LineupSignal(),
     ApifPredictionsSignal(),
     WeatherSignal(),
+    IncentiveSignal(),
 ]
 
 
@@ -129,6 +131,10 @@ SIGNAL_GROUPS: dict[str, str] = {
     # (API-Football's eigenes Pricing) vergleicht gegen Pinnacle. Liegt
     # orthogonal zu unserem Skellam+Elo und zu allen Signal-Familien.
     "apif_predictions":   "unique",
+    # incentive_signal — eigene Familie. Anreiz-Strukturen (Bracket-Asymmetrie,
+    # Venue-Distanz, Qualifikations-Math) sind orthogonal zu Sharp-Money/Form/
+    # Public/Context. Kein Discount.
+    "incentive_signal":   "incentive",
 }
 CORRELATION_DISCOUNT = 0.4   # zweites Signal aus selber Gruppe nur zu 40%
 
