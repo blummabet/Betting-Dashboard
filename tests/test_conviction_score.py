@@ -1,0 +1,224 @@
+"""
+tests/test_conviction_score.py — Tests + Anti-Drift für conviction_score.py
+
+Architektur:
+  - Sharp-Move-Trigger (Pinnacle bewegt, Softs hinterher)
+  - 6 Familien à max-pt: sharp_money(3), form(2), context(2),
+    realtime(2), market(1), model(1) = max 10
+  - Verdict: ≥8 top, ≥6 abwaegen, ≥4 watch, <4 skip
+  - Bayesian-Weights aus signal_weights.json
+  - Config aus cocobet_config.json → profiles.<profile>.conviction_score
+"""
+import json
+import os
+import sys
+import unittest
+import importlib
+from pathlib import Path
+
+REPO = Path(__file__).parent.parent
+sys.path.insert(0, str(REPO))
+
+os.environ.pop("COCOBET_PROFILE", None)
+from conviction_score import (
+    compute_conviction_score, detect_sharp_move,
+    detect_opening_movement, _pick_direction, _load_config,
+)
+
+
+def _signal(name, score=1.0, confidence=0.6, evidence="test"):
+    return {"name": name, "score": score, "confidence": confidence, "evidence": evidence}
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  Familien-Caps + Verdict-Thresholds
+# ──────────────────────────────────────────────────────────────────────────
+class TestFamilyCaps(unittest.TestCase):
+    def test_sharp_money_max_3(self):
+        pick = {"market": "Heimsieg", "odds": 1.85, "modelOdds": 1.80}
+        sig_out = {"signals": [
+            _signal("lead_lag_bias"),
+            _signal("steam_lag"),
+            _signal("polymarket_sharp"),
+        ], "combined_score_pp": 3.0, "n_positive_signals": 3}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertLessEqual(r["family_scores"]["sharp_money"], 3)
+
+    def test_form_max_2(self):
+        pick = {"market": "Unter 2.5 Tore", "odds": 1.85, "modelOdds": 1.80}
+        sig_out = {"signals": [
+            _signal("form_trend"),
+            _signal("xg_strength"),
+            _signal("h2h_pattern"),
+        ], "combined_score_pp": 3.0, "n_positive_signals": 3}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertEqual(r["family_scores"]["form"], 2)
+
+    def test_score_clamped_to_10(self):
+        # Alle Familien max füllen → muss bei 10 enden
+        pick = {"market": "Unter 2.5 Tore", "odds": 1.85, "modelOdds": 1.80}
+        sig_out = {"signals": [
+            _signal("lead_lag_bias"), _signal("steam_lag"), _signal("polymarket_sharp"),
+            _signal("form_trend"), _signal("xg_strength"),
+            _signal("travel_burden"), _signal("injury"),
+            _signal("lineup_signal"),
+            _signal("apif_predictions"),
+        ], "combined_score_pp": 5.0, "n_positive_signals": 9}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertLessEqual(r["score"], 10)
+        self.assertGreaterEqual(r["score"], 8)
+
+
+class TestVerdictThresholds(unittest.TestCase):
+    def test_top_at_8(self):
+        pick = {"market": "Heimsieg", "odds": 1.85, "modelOdds": 1.80}
+        sig_out = {"signals": [
+            _signal("lead_lag_bias"), _signal("polymarket_sharp"),
+            _signal("form_trend"), _signal("h2h_pattern"),
+            _signal("travel_burden"), _signal("incentive_signal"),
+            _signal("lineup_signal"),
+            _signal("apif_predictions"),
+        ], "combined_score_pp": 4.0, "n_positive_signals": 8}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertGreaterEqual(r["score"], 8)
+        self.assertEqual(r["verdict"], "top")
+
+    def test_abwaegen_at_6(self):
+        pick = {"market": "Heimsieg", "odds": 1.85, "modelOdds": 1.80}
+        sig_out = {"signals": [
+            _signal("lead_lag_bias"), _signal("polymarket_sharp"),
+            _signal("form_trend"), _signal("h2h_pattern"),
+            _signal("travel_burden"), _signal("incentive_signal"),
+        ], "combined_score_pp": 3.0, "n_positive_signals": 6}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertGreaterEqual(r["score"], 6)
+        self.assertIn(r["verdict"], ("abwaegen", "top"))
+
+    def test_skip_low_score(self):
+        pick = {"market": "Heimsieg", "odds": 5.0, "modelOdds": 1.80}  # 60pp halluzination
+        sig_out = {"signals": [], "combined_score_pp": 0, "n_positive_signals": 0}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertLess(r["score"], 4)
+        self.assertEqual(r["verdict"], "skip")
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  Modell-Sanity Familie
+# ──────────────────────────────────────────────────────────────────────────
+class TestModellSanity(unittest.TestCase):
+    def test_model_close_to_market_grants_point(self):
+        # Modell 1.80 vs Markt 1.85 → ~1.5pp Diff → ≤10pp → +1pt
+        pick = {"market": "Heimsieg", "odds": 1.85, "modelOdds": 1.80}
+        sig_out = {"signals": [], "combined_score_pp": 0, "n_positive_signals": 0}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertEqual(r["family_scores"]["model"], 1)
+
+    def test_model_hallucinates_no_point(self):
+        # Modell 1.80 vs Markt 4.0 → ~30pp Diff → keine Punkte
+        pick = {"market": "Auswärtssieg", "odds": 4.0, "modelOdds": 1.80}
+        sig_out = {"signals": [], "combined_score_pp": 0, "n_positive_signals": 0}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertEqual(r["family_scores"]["model"], 0)
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  Sharp-Move Detection
+# ──────────────────────────────────────────────────────────────────────────
+class TestSharpMoveDetection(unittest.TestCase):
+    def test_no_history_no_trigger(self):
+        pick = {"market": "Heimsieg"}
+        r = detect_sharp_move(pick, {"odds_history": []}, _load_config())
+        self.assertIsNone(r)
+
+    def test_pick_direction(self):
+        self.assertEqual(_pick_direction("Heimsieg"), "home")
+        self.assertEqual(_pick_direction("Auswärtssieg"), "away")
+        self.assertEqual(_pick_direction("Über 2.5 Tore"), "over")
+        self.assertEqual(_pick_direction("Unter 1.5 Tore"), "under")
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  Opening-Movement
+# ──────────────────────────────────────────────────────────────────────────
+class TestOpeningMovement(unittest.TestCase):
+    def test_in_pick_direction_detected(self):
+        # Pinnacle 2.0 → 1.7 (drop) für Heimsieg-Pick = +Move
+        pick = {"market": "Heimsieg"}
+        ctx = {"odds_history": [
+            {"ts": "2026-06-01T00:00:00Z", "pinn_hw": 2.0},
+            {"ts": "2026-06-09T00:00:00Z", "pinn_hw": 1.7},
+        ]}
+        r = detect_opening_movement(pick, ctx, _load_config())
+        self.assertIsNotNone(r)
+        self.assertTrue(r["in_pick_direction"])
+        self.assertGreater(r["move_pp"], 3.0)
+
+    def test_against_pick_direction(self):
+        pick = {"market": "Heimsieg"}
+        ctx = {"odds_history": [
+            {"ts": "2026-06-01T00:00:00Z", "pinn_hw": 1.7},
+            {"ts": "2026-06-09T00:00:00Z", "pinn_hw": 2.0},
+        ]}
+        r = detect_opening_movement(pick, ctx, _load_config())
+        self.assertFalse(r["in_pick_direction"])
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  Profile-Switch
+# ──────────────────────────────────────────────────────────────────────────
+class TestProfileSwitch(unittest.TestCase):
+    def tearDown(self):
+        os.environ.pop("COCOBET_PROFILE", None)
+        from conviction_score import _load_config
+
+    def test_wm2026_defaults(self):
+        os.environ.pop("COCOBET_PROFILE", None)
+        cfg = _load_config()
+        self.assertEqual(cfg["sharp_move"]["min_pinn_move_pp"], 5.0)
+        self.assertEqual(cfg["verdict_thresholds"]["top"], 8)
+
+    def test_liga_default_has_different_thresholds(self):
+        os.environ["COCOBET_PROFILE"] = "liga_default"
+        cfg = _load_config()
+        # Liga hat min_hours_since_open = 12 (länger als WM)
+        self.assertEqual(cfg["sharp_move"]["min_hours_since_open"], 12)
+
+
+# ──────────────────────────────────────────────────────────────────────────
+#  Anti-Drift: Config-Felder sind konfigurierbar (nicht hardcoded)
+# ──────────────────────────────────────────────────────────────────────────
+class TestAntiDrift(unittest.TestCase):
+    """
+    Wenn jemand die Conviction-Score-Konstanten direkt im Code hardcoded
+    statt aus Config zu lesen, brechen diese Tests.
+    """
+    def test_thresholds_from_config_not_hardcoded(self):
+        src = (REPO / "conviction_score.py").read_text(encoding="utf-8")
+        # _load_config muss verwendet werden
+        self.assertIn("_load_config()", src,
+            "Conviction-Score muss _load_config() nutzen, nicht hardcoded Werte")
+        # cfg-Lookups müssen vorkommen
+        self.assertIn('cfg["verdict_thresholds"]', src)
+        self.assertIn('cfg["family_caps"]', src)
+
+    def test_signal_weights_loaded(self):
+        src = (REPO / "conviction_score.py").read_text(encoding="utf-8")
+        self.assertIn("_load_signal_weights", src,
+            "Bayesian-Weights müssen aus signal_weights.json gelesen werden")
+
+    def test_compute_conviction_in_generate_wm_picks(self):
+        src = (REPO / "generate_wm_picks.py").read_text(encoding="utf-8")
+        self.assertIn("compute_conviction_score", src,
+            "compute_conviction_score muss in generate_wm_picks.py aufgerufen werden")
+        self.assertIn("convictionScore", src,
+            "convictionScore-Feld muss an Picks angehängt werden")
+
+    def test_renderer_shows_conviction(self):
+        src = (REPO / "wm2026-renderer.js").read_text(encoding="utf-8")
+        self.assertIn("convictionScore", src,
+            "Renderer muss convictionScore-Feld anzeigen")
+        self.assertIn("Conviction", src.replace("conviction", "Conviction"))
+
+
+if __name__ == "__main__":
+    unittest.main()

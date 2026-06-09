@@ -1716,6 +1716,57 @@ def main():
                                         f"Markt bewegt sich gegen Pick (CLV {clv_pp:+.1f}pp) — "
                                         f"Pinnacle sieht Pick schwächer als bei Eröffnung"
                                     )
+
+                        # ── Conviction-Score (Phase 1, 09.06.2026) ──────
+                        # Bewertet Pick-Qualität 0-10 auf Basis Sharp-Money +
+                        # Signal-Familien + Modell-Sanity. Trennt Edge-Verdict
+                        # (für Polymarket-Trading) von Wett-Empfehlung (Cards).
+                        # Drei-Pfade-Logik:
+                        #   Edge-BET: klassischer Edge-Pick (Verdict bleibt)
+                        #   Conviction-BET: hohe Conviction kann ABWÄGEN auf
+                        #     BET hochstufen (Setup-getriebener Pick)
+                        #   Modell-Halluzination: BET + niedrige Conviction
+                        #     → bleibt BET aber wird in Card markiert
+                        try:
+                            from conviction_score import compute_conviction_score
+                            conv = compute_conviction_score(p, sig_out, sig_ctx)
+                            p["convictionScore"]   = conv["score"]
+                            p["convictionVerdict"] = conv["verdict"]
+                            p["convictionLabel"]   = conv["label"]
+                            p["convictionFamilies"] = conv["family_scores"]
+                            if conv.get("sharp_move") and conv["sharp_move"].get("triggered"):
+                                p["sharpMoveActive"] = True
+                                p["sharpMoveDetails"] = conv["sharp_move"]
+                            if conv.get("opening_movement"):
+                                p["openingMovement"] = conv["opening_movement"]
+
+                            # ── Conviction-Upgrade Pfad ─────────────────
+                            # ABWÄGEN-Pick wird BET wenn Conviction ≥ 8/10
+                            # (Setup ist so stark dass Edge-Filter zu konservativ war)
+                            CONVICTION_UPGRADE_THRESHOLD = 8
+                            if (p.get("verdict") == "ABWÄGEN"
+                                    and conv["score"] >= CONVICTION_UPGRADE_THRESHOLD
+                                    and not p.get("downgradedReason")):
+                                p["verdict"] = "BET"
+                                p["pickTriggerReason"] = (
+                                    f"Conviction {conv['score']}/10 — "
+                                    f"Setup ist sehr stark trotz kleinerer Edge"
+                                )
+                            elif p.get("verdict") == "BET":
+                                p["pickTriggerReason"] = "Edge-getrieben"
+
+                            # ── Modell-Halluzination Marker ─────────────
+                            # BET mit niedriger Conviction = Modell-Edge ohne
+                            # Signal-Bestätigung. Pick bleibt BET (Polymarket
+                            # nutzt Edge weiter) aber Card sieht Hinweis.
+                            if (p.get("verdict") == "BET"
+                                    and conv["score"] < 4):
+                                p["modelHallucinationWarning"] = (
+                                    f"Edge gegen Pinnacle vorhanden, aber Conviction nur "
+                                    f"{conv['score']}/10 — Signale stützen Pick wenig"
+                                )
+                        except Exception as conv_err:
+                            print(f"  ⚠️  Conviction-Score crashed: {conv_err}")
             except Exception as e:
                 print(f"  ⚠️  Signal-Engine crashed für {fx['home']}-{fx['away']}: {e}")
 

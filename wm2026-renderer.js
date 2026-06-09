@@ -612,6 +612,36 @@
         html += `<div class="cc-story${heroPick.verdict === 'ABWÄGEN' ? ' cc-story-abw' : ''}">${story}</div>`;
       }
 
+      // ─── CONVICTION-BADGE (NEU 09.06.2026) ────────────
+      // Wett-Qualitäts-Bewertung 0-10 aus conviction_score.py — Sharp-Money +
+      // Signal-Familien + Modell-Sanity. Wird angezeigt wenn ≥6/10
+      // (Schwelle "Gute Wette"). Bei Sharp-Move + Conviction-Upgrade
+      // bekommt User klaren Hinweis warum der Pick aufgetaucht ist.
+      if (typeof heroPick.convictionScore === 'number' && heroPick.convictionScore >= 6) {
+        const score = heroPick.convictionScore;
+        const label = heroPick.convictionLabel || (score >= 8 ? '🎯 Top-Wette' : '⭐ Gute Wette');
+        const cls   = score >= 8 ? 'cc-conv-top' : 'cc-conv-good';
+        let extraNote = '';
+        if (heroPick.sharpMoveActive) {
+          const sm = heroPick.sharpMoveDetails || {};
+          extraNote = `<div class="cc-conv-extra">🔥 Sharp-Move: Pinnacle ${sm.open_pinn_odds ? sm.open_pinn_odds.toFixed(2) : '?'} → ${sm.current_pinn_odds ? sm.current_pinn_odds.toFixed(2) : '?'} · Softs noch hinterher</div>`;
+        } else if (heroPick.pickTriggerReason && heroPick.pickTriggerReason !== 'Edge-getrieben') {
+          extraNote = `<div class="cc-conv-extra">💡 ${heroPick.pickTriggerReason}</div>`;
+        }
+        html += `<div class="cc-conviction ${cls}">
+          <div class="cc-conv-head">${label} <span class="cc-conv-score">${score}/10</span></div>
+          ${extraNote}
+        </div>`;
+      } else if (typeof heroPick.convictionScore === 'number'
+                 && heroPick.modelHallucinationWarning
+                 && heroPick.convictionScore < 4) {
+        // Warnung bei Modell-Halluzination — Edge da, aber Signale schwach
+        html += `<div class="cc-conviction cc-conv-warn">
+          <div class="cc-conv-head">⚠ Edge vorhanden, aber dünne Begründung</div>
+          <div class="cc-conv-extra">Conviction nur ${heroPick.convictionScore}/10 — Pick mit Vorsicht</div>
+        </div>`;
+      }
+
       // ─── ENGINE-SIGNAL-STACK ─────────────────────────
       // Signal-Engine (sharp_signals/) hat pro Pick signals[] mit evidence
       // und signalAdjustmentPP. Zeigen wenn relevant — sonst leer.

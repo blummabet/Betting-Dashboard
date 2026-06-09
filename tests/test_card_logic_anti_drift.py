@@ -149,11 +149,19 @@ class TestNoPhantomVenues(unittest.TestCase):
                     f"Phantom-Venue '{bad}' gefunden in {fpath.relative_to(REPO)}")
 
     def test_blacklist_not_in_fetcher_py(self):
+        # Vorkommen in Code-Kommentaren (// oder #) erlaubt — Anti-Drift-Doku.
+        # Wir prüfen nur Vorkommen ausserhalb von Kommentar-Zeilen.
+        import re
         for fpath in REPO.glob("fetch_wm_*.py"):
             content = fpath.read_text(encoding="utf-8")
+            # Strip # Kommentare zeilenweise
+            cleaned = "\n".join(
+                re.sub(r'#.*$', '', line)
+                for line in content.split("\n")
+            )
             for bad in self.BLACKLIST:
-                self.assertNotIn(bad, content,
-                    f"Phantom-Venue '{bad}' in Fetcher {fpath.name}")
+                self.assertNotIn(bad, cleaned,
+                    f"Phantom-Venue '{bad}' als Code-Wert in Fetcher {fpath.name}")
 
 
 # ──────────────────────────────────────────────────────────────────────────

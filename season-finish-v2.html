@@ -1560,6 +1560,20 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .cc-sig-evidence{flex:1;color:var(--text);}
 .cc-story em{color:var(--muted);font-style:normal;font-size:12px;}
 
+/* Conviction-Badge (NEU 09.06.2026) — Wett-Qualitäts-Bewertung 0-10 */
+.cc-conviction{padding:12px 20px;margin:0 0 14px;border-bottom:1px solid var(--border);font-size:12px;}
+.cc-conv-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13px;}
+.cc-conv-score{font-family:'JetBrains Mono','SF Mono',Menlo,monospace;font-size:14px;padding:2px 10px;border-radius:6px;}
+.cc-conv-top{background:linear-gradient(135deg,rgba(0,212,161,0.10),rgba(0,212,161,0.04));border-left:3px solid #00d4a1;}
+.cc-conv-top .cc-conv-head{color:#00d4a1;}
+.cc-conv-top .cc-conv-score{background:rgba(0,212,161,0.20);color:#00d4a1;}
+.cc-conv-good{background:linear-gradient(135deg,rgba(125,211,252,0.10),rgba(125,211,252,0.04));border-left:3px solid #7dd3fc;}
+.cc-conv-good .cc-conv-head{color:#7dd3fc;}
+.cc-conv-good .cc-conv-score{background:rgba(125,211,252,0.20);color:#7dd3fc;}
+.cc-conv-warn{background:linear-gradient(135deg,rgba(245,194,90,0.10),rgba(245,194,90,0.04));border-left:3px solid #f5c25a;}
+.cc-conv-warn .cc-conv-head{color:#f5c25a;}
+.cc-conv-extra{margin-top:6px;font-size:11px;color:var(--text);opacity:0.85;}
+
 /* Evidence grid */
 .cc-evidence{padding:0 20px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .cc-ev-block{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
