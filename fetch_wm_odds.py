@@ -234,11 +234,17 @@ def _extract_h2h(event: dict, home_id: str, away_id: str) -> dict | None:
         return False
 
     if not (_matches(ev_home, home_names) and _matches(ev_away, away_names)):
-        # Try reversed (in case API has teams swapped)
+        # API listet die Teams evtl. umgekehrt (ev_home = unser Auswärtsteam).
+        # Das ist OK, solange beide Teams zur Fixture passen — die Outcome-
+        # Zuordnung unten matcht per Team-IDENTITÄT (name_id == home_id), nicht
+        # per Reihenfolge.
+        # FIX 10.06.2026 (Audit): KEIN home_id/away_id-Swap mehr! Der alte Swap
+        # vertauschte hw↔aw (+ public_/odds_open-1X2) für jede Fixture, die die
+        # API umgekehrt listete → 5+ Spiele spiegelverkehrt (Mexiko als Heim-
+        # Außenseiter etc.). DC/AH/O-U waren nie betroffen (andere Funktion,
+        # matcht ebenfalls per Identität). Validierung reicht, Swap schädlich.
         if not (_matches(ev_home, away_names) and _matches(ev_away, home_names)):
             return None
-        # Swapped
-        home_id, away_id = away_id, home_id
 
     bk_result = _best_odds(event.get("bookmakers", []), BOOKMAKERS)
     if not bk_result:
