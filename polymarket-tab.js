@@ -3218,7 +3218,15 @@ function _polyCurrentPrice(bet, polyData) {
   const key = `${bet.homeId || ''}-${bet.awayId || ''}`;
   const fx = polyData.allFixtures.find(f => f.key === key);
   if (!fx) return null;
-  const map = { 'Heimsieg':'hw', 'Auswärtssieg':'aw', 'Unentschieden':'dr', 'Über 2.5 Tore':'o25', 'Unter 2.5 Tore':'u25' };
+  // FIX 10.06.2026: Auto-Trader schreibt ENGLISCHE O/U-Labels ("Over/Under 2.5 Tore",
+  // siehe EDGE_MARKET_MAP in auto_wm_poly_trigger.py). Die Map kannte nur die deutschen
+  // ("Über/Unter") → O/U-Positionen fanden nie einen Live-Preis → P&L blieb $0.
+  // Beide Varianten gemappt für Robustheit.
+  const map = {
+    'Heimsieg':'hw', 'Auswärtssieg':'aw', 'Unentschieden':'dr',
+    'Over 2.5 Tore':'o25', 'Under 2.5 Tore':'u25',
+    'Über 2.5 Tore':'o25', 'Unter 2.5 Tore':'u25',
+  };
   const fld = map[bet.market];
   return fld ? fx[`poly_${fld}`] : null;
 }

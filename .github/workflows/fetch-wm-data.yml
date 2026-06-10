@@ -200,6 +200,9 @@ jobs:
       - name: 🔍 WM Picks validieren
         run: python validate_wm_picks.py
         continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
       # ── Pick-Änderungen erkennen (Snapshot-Diff gegen letzten Run) ─────────
       - name: 🔄 WM Pick-Änderungen erkennen

@@ -20,6 +20,7 @@ Check-Codes:
   E_VERDICT_NO_EDGE  — verdict=BET aber edgePP<3 (Filter durchgerutscht)
   E_ORPHAN_MATCH     — Pick existiert aber Match nicht in fixtures
   E_MISSING_FIELD    — Pflichtfeld fehlt (market, odds, verdict, modelOdds)
+  E_HOMEAWAY_SWAP    — 1X2-Favorit widerspricht DC/Polymarket (Quoten vertauscht)
   W_UNDERDOG_LEAK    — Elo-Gap >200 und BET (Underdog-Filter sollte das fangen)
   W_DATAQ_OVERSTATED — dataQuality=full aber H2H/Form unvollständig
   W_NEGATIVE_CLV     — verdict=BET aber clvPP<-3 (Markt deutlich gegen uns)
@@ -29,12 +30,20 @@ Check-Codes:
 
 import json
 import os
+import sys
+import urllib.request
+import urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
 
 BASE        = Path(__file__).parent
 WM_FILE     = BASE / "wm2026-data.json"
 REPORT_FILE = BASE / "pick_validation_report.json"
+
+# Telegram-Alert (Push statt nur Banner). Ohne Token → Vorschau-Modus (Print).
+TELEGRAM_TOKEN = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
+ALERT_CHAT_ID  = (os.environ.get("TELEGRAM_TRADES_CHAT_ID")
+                  or os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
 
 UNDERDOG_ELO_SOFT = 100
 UNDERDOG_ELO_HARD = 200
@@ -52,6 +61,80 @@ EDGE_TOLERANCE_PP = 3.0      # erlaubte Abweichung gespeicherte vs. nachgerechne
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def tg_send(text: str) -> bool:
+    """Telegram-Alert an den Trades-/Ops-Channel. Ohne Token: Print-Vorschau."""
+    if not (TELEGRAM_TOKEN and ALERT_CHAT_ID):
+        print("⚠️  Kein TELEGRAM_TOKEN/CHAT_ID — Alert-Vorschau:")
+        print(text)
+        return True
+    url  = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    body = json.dumps({"chat_id": ALERT_CHAT_ID, "text": text,
+                       "parse_mode": "HTML"}).encode("utf-8")
+    req = urllib.request.Request(url, data=body,
+                                 headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read()).get("ok", False)
+    except Exception as e:
+        print(f"❌ Telegram-Alert fehlgeschlagen: {e}")
+        return False
+
+
+def _poly_side(odds: dict, key: str, od: dict):
+    """(poly_home, poly_away) für eine Fixture — auch unter umgekehrtem Key."""
+    if od.get("poly_hw") is not None:
+        return od.get("poly_hw"), od.get("poly_aw")
+    if "-" in key:
+        a, b = key.split("-")[:2]
+        rev = odds.get(f"{b}-{a}", {})
+        if rev.get("poly_hw") is not None:
+            return rev.get("poly_aw"), rev.get("poly_hw")
+    return None, None
+
+
+def validate_homeaway_swap(wm: dict, issues: list) -> None:
+    """E_HOMEAWAY_SWAP — 1X2-Favorit gegen identitäts-korrekte Referenz prüfen.
+
+    Hintergrund: fetch_wm_odds.py hatte einen Heim/Auswärts-Swap-Bug (10.06.2026),
+    der hw↔aw spiegelte. DC/AH/O-U waren nie betroffen → DC als Referenz, plus
+    Polymarket (voll unabhängig). Wenn der 1X2-Favorit der Referenz widerspricht,
+    ist die Fixture mit hoher Wahrscheinlichkeit spiegelverkehrt.
+    """
+    odds = wm.get("odds") or {}
+    for key, od in odds.items():
+        hw, aw = od.get("hw"), od.get("aw")
+        if not (isinstance(hw, (int, float)) and isinstance(aw, (int, float))):
+            continue
+        if abs(hw - aw) < 0.05:
+            continue  # echter Münzwurf — Richtung nicht aussagekräftig
+        x2_home_fav = hw < aw
+
+        # Referenz 1: Polymarket (primär, unabhängig)
+        ph, pa = _poly_side(odds, key, od)
+        poly_ref = (ph > pa) if (ph is not None and pa is not None) else None
+
+        # Referenz 2: Doppelte Chance (sekundär; Gleichstand = kein Signal)
+        dc1x, dcx2 = od.get("dc1X"), od.get("dcX2")
+        dc_ref = None
+        if isinstance(dc1x, (int, float)) and isinstance(dcx2, (int, float)) \
+                and abs(dc1x - dcx2) > 0.02:
+            dc_ref = dc1x < dcx2
+
+        ref = poly_ref if poly_ref is not None else dc_ref
+        if ref is None or ref == x2_home_fav:
+            continue
+
+        # Beide Referenzen (falls beide da) müssen widersprechen → kein Fehlalarm
+        if poly_ref is not None and dc_ref is not None and poly_ref != dc_ref:
+            continue
+
+        ref_name = "Polymarket" if poly_ref is not None else "DC"
+        _add(issues, key, "1X2", "error", "E_HOMEAWAY_SWAP",
+             f"1X2 hw/aw {hw}/{aw} → {'Heim' if x2_home_fav else 'Auswärts'}-Favorit, "
+             f"aber {ref_name} sieht {'Heim' if ref else 'Auswärts'}-Favorit "
+             f"— Heim/Auswärts-Quoten vermutlich vertauscht", od)
 
 
 def _add(issues, mk, market, level, code, message, snap):
@@ -269,6 +352,9 @@ def main():
         # Cross-Market-Check pro Match (nicht pro Pick)
         validate_cross_market(mk, plist, issues)
 
+    # Fixture-Level: Heim/Auswärts-Swap (unabhängig von einzelnen Picks)
+    validate_homeaway_swap(wm, issues)
+
     errors = [i for i in issues if i["level"] == "error"]
     warns  = [i for i in issues if i["level"] == "warning"]
 
@@ -296,6 +382,29 @@ def main():
         print("\n=== WARNINGS (Top 5) ===")
         for w in warns[:5]:
             print(f"  [{w['code']}] {w['matchKey']} · {w['market']}: {w['message']}")
+
+    # ── Push-Alert bei Errors ────────────────────────────────────────────
+    # Banner allein reicht nicht (man muss hinschauen). Bei Errors aktiv pingen.
+    if errors:
+        codes = {}
+        for e in errors:
+            codes[e["code"]] = codes.get(e["code"], 0) + 1
+        code_line = ", ".join(f"{c}×{n}" for c, n in sorted(codes.items()))
+        lines = [
+            f"🚨 <b>Validator: {len(errors)} Error(s)</b> bei {total} Picks",
+            f"<i>{code_line}</i>",
+            "",
+        ]
+        for e in errors[:8]:
+            lines.append(f"• [{e['code']}] {e['matchKey']} · {e['market']}")
+        if len(errors) > 8:
+            lines.append(f"… +{len(errors) - 8} weitere")
+        tg_send("\n".join(lines))
+
+    # Exit-Code: Step wird im Workflow rot (continue-on-error lässt Commit laufen,
+    # also gehen gute Daten NICHT verloren — der rote Step macht es nur sichtbar).
+    if errors:
+        sys.exit(1)
 
 
 if __name__ == "__main__":
