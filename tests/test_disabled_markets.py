@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """
-test_disabled_markets.py — Verlust-Märkte raus halten
+test_disabled_markets.py — Verlust-/Engine-lose Märkte raus halten
 
-Backtest 07.06.2026 hat gezeigt:
-  · BTTS: -15% ROI (n=141) — signifikant negativ
-  · noBtts: -26% ROI (n=40)
-  · Corners >10.5: -65% ROI (n=10)
+Stand 10.06.2026 (WM2026-Profil):
+  · Corners (o_corners85/95/105) DEAKTIVIERT — kein Signal hat aggregierte
+    Corner-Daten für WM-Nationalteams (kein H2H-Corner-Rate, kein NT-Corner-Bias)
+    → reine Poisson ohne Signal-Filter. Code bleibt für liga_default drin.
+  · BTTS WIEDER AKTIV (09.06.2026) — der alte Backtest-Loss (-15% ROI) stammt aus
+    dem alten Modell OHNE Signal-Adjust. xG/Form/H2H/Lineup/Weather können BTTS
+    inzwischen sinnvoll bewerten, daher raus aus disabled_markets.
 
-Bis das Modell überarbeitet ist, werden diese Märkte via
-cocobet_config.json.profiles.wm2026.disabled_markets[] gesperrt.
 Dieser Test stellt sicher dass:
-  1. Die config-Liste eingelesen wird
-  2. generate_picks_for_fixture diese Märkte überspringt
+  1. Die config-Liste eingelesen wird (Corners disabled, BTTS aktiv)
+  2. generate_picks_for_fixture die gesperrten Corner-Märkte überspringt
 """
 from __future__ import annotations
 import json
@@ -22,15 +23,25 @@ from pathlib import Path
 BASE = Path(__file__).parent.parent
 sys.path.insert(0, str(BASE))
 
+CORNER_KEYS = {"o_corners85", "o_corners95", "o_corners105"}
+
 
 class TestDisabledMarketsRead(unittest.TestCase):
     """Config wird korrekt geparst."""
 
-    def test_btts_in_disabled(self):
+    def test_corners_in_disabled(self):
         sys.argv = ["test"]
         import generate_wm_picks as g
-        self.assertIn("btts", g.DISABLED_MARKETS,
-            "BTTS muss in disabled_markets sein — Backtest hat es als -15% ROI markiert")
+        self.assertTrue(
+            CORNER_KEYS.issubset(set(g.DISABLED_MARKETS)),
+            "Alle Corner-Märkte müssen in disabled_markets sein — kein Engine-Hook für NT-Corners")
+
+    def test_btts_reenabled(self):
+        """BTTS am 09.06.2026 reaktiviert → darf NICHT mehr disabled sein."""
+        sys.argv = ["test"]
+        import generate_wm_picks as g
+        self.assertNotIn("btts", g.DISABLED_MARKETS,
+            "BTTS wurde 09.06.2026 reaktiviert (Signal-Adjust deckt es jetzt ab)")
 
 
 class TestDisabledMarketsFiltered(unittest.TestCase):
@@ -45,9 +56,9 @@ class TestDisabledMarketsFiltered(unittest.TestCase):
         travel_path = BASE / "wm_travel_burden.json"
         cls.travel = json.loads(travel_path.read_text()) if travel_path.exists() else {}
 
-    def test_no_btts_picks_anywhere(self):
-        """Über alle WM-Fixtures: kein einziger BTTS-Pick."""
-        btts_picks = []
+    def test_no_corner_picks_anywhere(self):
+        """Über alle WM-Fixtures: kein einziger aktiver Corner-Pick (BET/ABWÄGEN)."""
+        corner_picks = []
         for gkey, gdata in self.wm["groups"].items():
             for fx in gdata.get("fixtures", []):
                 try:
@@ -63,12 +74,14 @@ class TestDisabledMarketsFiltered(unittest.TestCase):
                     )
                     for p in picks:
                         m = (p.get("market") or "")
-                        if "Beide Teams" in m:
-                            btts_picks.append(f"{fx['home']}-{fx['away']}: {m}")
+                        # WATCH-Platzhalter ("Pick aktiv sobald Bookies öffnen")
+                        # sind kein aktiver Markt — nur BET/ABWÄGEN zählen.
+                        if "Ecken" in m and p.get("verdict") in ("BET", "ABWÄGEN"):
+                            corner_picks.append(f"{fx['home']}-{fx['away']}: {m}")
                 except Exception:
                     pass
-        self.assertEqual(btts_picks, [],
-            f"BTTS-Picks gefunden obwohl deaktiviert: {btts_picks[:5]}")
+        self.assertEqual(corner_picks, [],
+            f"Corner-Picks gefunden obwohl deaktiviert: {corner_picks[:5]}")
 
 
 if __name__ == "__main__":

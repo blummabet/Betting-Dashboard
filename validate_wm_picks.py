@@ -43,6 +43,12 @@ ODDS_OUTLIER_MIN  = 12.0     # >12 = vermutlich kein Markt
 HUGE_EDGE_PP      = 30       # >30pp Edge = verdächtig (Quoten invertiert?)
 NEG_CLV_THRESHOLD = -3       # <-3pp CLV bei BET = Markt deutlich gegen uns
 
+# Edge-Recompute-Konstanten — müssen 1:1 mit compute_verdict() in
+# generate_wm_picks.py übereinstimmen (Margin-Annahmen).
+MODEL_MARGIN      = 0.96     # model_prob = MODEL_MARGIN / modelOdds
+MARKET_DEVIG      = 1.03     # market_prob = MARKET_DEVIG / marketOdds (~Pinnacle-Vig)
+EDGE_TOLERANCE_PP = 3.0      # erlaubte Abweichung gespeicherte vs. nachgerechnete Edge
+
 
 def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -110,16 +116,21 @@ def validate_pick(mk: str, p: dict, wm: dict, issues: list) -> None:
     dataQ      = p.get("dataQuality")
 
     # ── E_EDGE_MATH ────────────────────────────────────────
-    # Wenn modelOdds < marketOdds → Modell sieht höhere Wahrscheinlichkeit → positive Edge
-    # Wenn modelOdds > marketOdds → negative Edge sollte rauskommen
-    if isinstance(modelOdds, (int, float)) and isinstance(odds, (int, float)) and modelOdds > 0:
-        if modelOdds > odds and edgePP > 1:
+    # FIX 10.06.2026 (Audit): Der alte Check verglich modelOdds vs marketOdds
+    # roh — das ignoriert die asymmetrischen Margins in compute_verdict
+    # (model_prob = 0.96/modelOdds, market_prob = 1.03/marketOdds). Dadurch
+    # gab es eine tote Zone nahe edge=0, in der modelOdds < marketOdds trotzdem
+    # zu leicht negativer (korrekter!) Edge führt → falsche Errors.
+    # Jetzt: Edge mit der EXAKTEN compute_verdict-Formel nachrechnen und nur
+    # flaggen wenn der gespeicherte Wert signifikant abweicht (Vorzeichen-Bug
+    # wie die invertierten Synth-DC/AH-Picks hätte das ebenfalls gefangen).
+    if isinstance(modelOdds, (int, float)) and isinstance(odds, (int, float)) \
+            and modelOdds > 1 and odds > 1:
+        expected_edge = ((MODEL_MARGIN / modelOdds) - (MARKET_DEVIG / odds)) * 100
+        if isinstance(edgePP, (int, float)) and abs(edgePP - expected_edge) > EDGE_TOLERANCE_PP:
             _add(issues, mk, market, "error", "E_EDGE_MATH",
-                 f"modelOdds {modelOdds} > marketOdds {odds} aber Edge {edgePP}pp positiv "
-                 f"(Quoten invertiert?)", p)
-        elif modelOdds < odds and edgePP < -1:
-            _add(issues, mk, market, "error", "E_EDGE_MATH",
-                 f"modelOdds {modelOdds} < marketOdds {odds} aber Edge {edgePP}pp negativ", p)
+                 f"edgePP {edgePP:+.1f} weicht von erwarteter Edge {expected_edge:+.1f}pp ab "
+                 f"(modelOdds {modelOdds}, marketOdds {odds}) — Vorzeichen/Margin-Bug?", p)
 
     # ── E_VERDICT_NO_EDGE ──────────────────────────────────
     if verdict == "BET" and isinstance(edgePP, (int, float)) and edgePP < BET_MIN_EDGE:

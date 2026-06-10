@@ -1374,7 +1374,13 @@ def generate_picks_for_fixture(
                 # oft höhere Vig als 1X2, daher gefährlich ohne Floor).
                 alt_edge = 0.0
                 if alt_model and alt_model > 1.0:
-                    alt_edge = (1.0/alt_odds - 1.0/alt_model) * 100  # wie compute_verdict
+                    # FIX 10.06.2026 (Audit): Vorzeichen war invertiert + Margins fehlten.
+                    # compute_verdict() rechnet model_prob - market_prob mit
+                    # model_prob=(1/model)*MODEL_MARGIN, market_prob=(1/markt)*1.03.
+                    # Alt: (1/alt_odds - 1/alt_model) = market - model OHNE Margin
+                    # → negiertes Vorzeichen → SYNTH_EDGE_FLOOR wirkte verkehrt herum.
+                    alt_edge = ((1.0/alt_model) * MODEL_MARGIN
+                                - (1.0/alt_odds) * 1.03) * 100  # 1:1 wie compute_verdict
                 SYNTH_EDGE_FLOOR_PP = -2.0
                 if alt_edge < SYNTH_EDGE_FLOOR_PP:
                     continue  # Alt-Quote zu schlecht — kein Insurance-Anbieten

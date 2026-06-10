@@ -17,6 +17,7 @@ Coverage:
 """
 import sys
 import unittest
+from datetime import date, timedelta
 from pathlib import Path
 
 REPO = Path(__file__).parent.parent
@@ -25,13 +26,26 @@ sys.path.insert(0, str(REPO))
 import auto_wm_poly_trigger as a
 
 
+def _date_in(days: int) -> str:
+    """ISO-Datum N Tage ab heute.
+
+    FIX 10.06.2026 (Audit): Die Tests nutzten hartkodierte Daten (z.B.
+    _date_in(3)), deren Tage-bis-Anpfiff sich mit fortschreitendem Kalender
+    verschoben — am 10.06. war _date_in(3) 0 Tage entfernt und wurde vom
+    Sicherheits-Gate "kein Kauf am Spieltag" korrekt geblockt, was die Tests
+    fälschlich rot färbte. Jetzt relativ zu date.today(), reproduziert die
+    ursprünglich gemeinten Lookahead-Distanzen stabil.
+    """
+    return (date.today() + timedelta(days=days)).isoformat()
+
+
 def _make_fixture(**overrides):
     """Default fixture mit allen Pflicht-Feldern, plus Engine-Felder per overrides."""
     base = {
         "key":        "MEX-ZAF",
         "home":       "Mexico",  "away": "South Africa",
         "homeId":     "MEX",     "awayId": "ZAF",
-        "date":       "2026-06-25",   # 16d Lookahead = im normal-Modus
+        "date":       _date_in(16),   # 16d Lookahead = im normal-Modus
         "vol":        50000,
         "hasPinnacle": True,
         "dataQuality": "full",
@@ -69,13 +83,13 @@ class TestPassThrough(unittest.TestCase):
         """Alter Pick ohne Engine-Felder: edge=6pp, BET, threshold=4 (normal) → PASS."""
         fix = _make_fixture()
         # Datum nah genug für normal-threshold
-        fix["date"] = "2026-06-10"   # < pre_tournament_days
+        fix["date"] = _date_in(3)   # < pre_tournament_days
         self.assertTrue(_is_in_candidates(fix))
 
     def test_engine_neutral_pass(self):
         """Engine neutral (+1.5pp adj, 2 pos) → PASS."""
         fix = _make_fixture(
-            date="2026-06-10",
+            date=_date_in(3),
             signalAdj_hw=1.5, signalPos_hw=2,
             effectiveEdge_hw=7.5,
         )
@@ -88,7 +102,7 @@ class TestEngineBlockGate(unittest.TestCase):
     def test_engine_warning_blocks(self):
         """signalAdj = -3.5pp → BLOCK trotz hohem raw edge."""
         fix = _make_fixture(
-            date="2026-06-10",
+            date=_date_in(3),
             edge_hw=8.0,
             signalAdj_hw=-3.5, signalPos_hw=0,
             effectiveEdge_hw=4.5,
@@ -98,7 +112,7 @@ class TestEngineBlockGate(unittest.TestCase):
     def test_engine_boundary_minus_3(self):
         """Exakt -3.0pp → BLOCK (≤ Schwelle)."""
         fix = _make_fixture(
-            date="2026-06-10",
+            date=_date_in(3),
             signalAdj_hw=-3.0, signalPos_hw=0,
             effectiveEdge_hw=3.0,
         )
@@ -107,7 +121,7 @@ class TestEngineBlockGate(unittest.TestCase):
     def test_engine_minus_2_9_passes(self):
         """-2.9pp passt durch (knapp über Schwelle)."""
         fix = _make_fixture(
-            date="2026-06-10",
+            date=_date_in(3),
             edge_hw=8.0,
             signalAdj_hw=-2.9, signalPos_hw=2,   # 2 pos für BET-Verdict
             effectiveEdge_hw=5.1,
@@ -122,7 +136,7 @@ class TestEngineDowngradeBlock(unittest.TestCase):
     def test_downgraded_abwaegen_blocks(self):
         """verdict=ABWÄGEN + downgrade_reason → BLOCK."""
         fix = _make_fixture(
-            date="2026-06-10",
+            date=_date_in(3),
             verdict_hw="ABWÄGEN",
             engineDowngrade_hw="Engine: nur 1 positives Signal, Mindest-Threshold 2 für BET",
             signalAdj_hw=0.5, signalPos_hw=1,
@@ -133,7 +147,7 @@ class TestEngineDowngradeBlock(unittest.TestCase):
     def test_abwaegen_without_downgrade_min_pos(self):
         """verdict=ABWÄGEN ohne downgrade, signalPos<2 → BLOCK (min_pos-Gate)."""
         fix = _make_fixture(
-            date="2026-06-10",
+            date=_date_in(3),
             verdict_hw="ABWÄGEN",
             signalAdj_hw=0.5, signalPos_hw=1,   # < min_pos
             effectiveEdge_hw=6.5,
@@ -143,7 +157,7 @@ class TestEngineDowngradeBlock(unittest.TestCase):
     def test_abwaegen_with_enough_pos_passes(self):
         """verdict=ABWÄGEN + 2+ pos signals → PASS (genug Konfidenz)."""
         fix = _make_fixture(
-            date="2026-06-10",
+            date=_date_in(3),
             verdict_hw="ABWÄGEN",
             signalAdj_hw=1.0, signalPos_hw=2,
             effectiveEdge_hw=7.0,
@@ -158,7 +172,7 @@ class TestHiConfBonus(unittest.TestCase):
         """edge=4.5pp wäre unter normal-Schwelle 4.0pp PRE_TOURNAMENT_FAR_DAYS
         bei d=10 würde es 6.0pp, aber Hi-Conf senkt das."""
         fix = _make_fixture(
-            date="2026-06-15",   # 7d → pre-tournament intermediate
+            date=_date_in(7),   # 7d → pre-tournament intermediate
             edge_hw=4.8,
             signalAdj_hw=3.5, signalPos_hw=3,
             effectiveEdge_hw=4.8,
@@ -170,7 +184,7 @@ class TestHiConfBonus(unittest.TestCase):
     def test_no_hi_conf_only_2_pos(self):
         """Nur 2 positive Signale (statt 3) → kein Bonus."""
         fix = _make_fixture(
-            date="2026-06-15",
+            date=_date_in(7),
             edge_hw=3.5,
             signalAdj_hw=3.5, signalPos_hw=2,   # < 3
             effectiveEdge_hw=3.5,
@@ -185,7 +199,7 @@ class TestSteamLagImmunity(unittest.TestCase):
     def test_steam_lag_at_pre_tournament_far(self):
         """Pre-Tournament-Schwelle wäre 6pp bei d=10. Steam-Lag bleibt bei 3pp."""
         fix = _make_fixture(
-            date="2026-06-20",   # ~12 Tage = pre_tournament_far
+            date=_date_in(12),   # ~12 Tage = pre_tournament_far
             edge_hw=3.5,         # über STEAM_LAG_EDGE_PP (3.0) aber unter PRE_TOURNAMENT (6.0)
             steamLag=True,
         )
@@ -194,7 +208,7 @@ class TestSteamLagImmunity(unittest.TestCase):
     def test_no_steam_lag_at_pre_tournament_blocks(self):
         """Selber edge, kein steam_lag → BLOCKIERT (würde normal pre-tournament threshold)."""
         fix = _make_fixture(
-            date="2026-06-20",
+            date=_date_in(12),
             edge_hw=3.5,
             steamLag=False,
         )
@@ -207,18 +221,18 @@ class TestPreTournamentStaggered(unittest.TestCase):
 
     def test_d5_uses_base_threshold(self):
         """d=5 = PRE_TOURNAMENT_DAYS-Grenze → base 4pp."""
-        fix = _make_fixture(date="2026-06-13", edge_hw=4.5)
+        fix = _make_fixture(date=_date_in(5), edge_hw=4.5)
         # Bei Tag 13 = 5 Tage → base
         self.assertTrue(_is_in_candidates(fix))
 
     def test_d10_uses_far_threshold(self):
         """d=10 → 6pp Schwelle."""
-        fix = _make_fixture(date="2026-06-18", edge_hw=5.0)
+        fix = _make_fixture(date=_date_in(10), edge_hw=5.0)
         # 10 Tage → 6pp → 5.0 < 6 → BLOCK
         self.assertFalse(_is_in_candidates(fix))
 
     def test_d10_with_enough_edge_passes(self):
-        fix = _make_fixture(date="2026-06-18", edge_hw=6.5)
+        fix = _make_fixture(date=_date_in(10), edge_hw=6.5)
         # Aber bei d=10 ist threshold 6pp → 6.5 > 6 → PASS — leider hier dataQuality bremst
         # Actually verdict_hw="BET" mit dataQuality="full" → normal threshold (4)
         # Da bei d=10 pre-tournament → 6pp. Edge 6.5 > 6 → PASS
@@ -231,7 +245,7 @@ class TestEffectiveEdgeFallback(unittest.TestCase):
     def test_uses_effective_edge_when_lower(self):
         """raw=8 würde passen, effective=2 (engine zog runter) → BLOCK."""
         fix = _make_fixture(
-            date="2026-06-10",
+            date=_date_in(3),
             edge_hw=8.0,
             effectiveEdge_hw=2.0,   # < threshold
             signalAdj_hw=-6.0,      # would also block via gate
@@ -242,7 +256,7 @@ class TestEffectiveEdgeFallback(unittest.TestCase):
     def test_falls_back_to_raw_when_no_effective(self):
         """effectiveEdge=None → raw edge wird genutzt."""
         fix = _make_fixture(
-            date="2026-06-10",
+            date=_date_in(3),
             edge_hw=6.0,
             effectiveEdge_hw=None,
         )
