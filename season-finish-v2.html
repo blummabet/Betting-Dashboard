@@ -2152,18 +2152,18 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             <div class="pitch-icon">🎯</div>
             <div class="pitch-meta">
               <div class="pitch-title">Eigene Pick-Engine</div>
-              <div class="pitch-stat">21+ Datensignale</div>
+              <div class="pitch-stat">15 Signale + Conviction</div>
             </div>
           </div>
           <div class="pitch-body">
-            Elo + Form + xG + H2H + Travel-Burden + Verletzungen + Public-Bias →
-            Modell-Wahrscheinlichkeit vs Markt-Quote = Edge in Prozentpunkten.
+            Pinnacle-Fair-Quote als Anker → 15 eigene Signale (Elo, xG, Form, H2H, Travel, Höhe, Hitze, Anreiz, Lineup, Sharp-Money …)
+            justieren sie → Edge in Prozentpunkten, plus Conviction-Score 0–10 für die Wett-Qualität.
           </div>
           <ul class="pitch-bullets">
-            <li>3-Signal-Verdict-Engine: BET / ABWÄGEN / SKIP</li>
+            <li>Verdict-Engine: BET / ABWÄGEN / SKIP + Conviction-Gate</li>
             <li>4 Datenqualitäts-Tiers — kein BET bei dünner Datenbasis</li>
             <li>Cross-Market-Konsistenz (kein "Heim &amp; Auswärts" gleichzeitig)</li>
-            <li><strong>Self-Learning:</strong> Hit-Rate pro Cluster nach jedem Spiel</li>
+            <li><strong>Bayesian Self-Learning:</strong> Signal-Gewichte lernen nach jedem Spiel</li>
           </ul>
         </div>
 
@@ -2296,15 +2296,17 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <div class="h2-feature-head">
             <span class="h2-feature-icon">🧠</span>
             <div>
-              <div class="h2-feature-title">Sharp-Signal-Engine (13 Signale)</div>
-              <span class="h2-feature-tag usp">USP · ERWEITERT 08.06.2026</span>
+              <div class="h2-feature-title">Sharp-Signal-Engine (15 Signale)</div>
+              <span class="h2-feature-tag usp">USP · ERWEITERT 10.06.2026</span>
             </div>
           </div>
           <div class="h2-feature-desc">
-            Modulare Engine im <code>sharp_signals/</code>-Ordner wertet pro Pick <strong>13 unabhängige Signale</strong> aus
-            (Lead-Lag-Bias, Steam-Lag, Polymarket-Sharp, Public-Static-Bias, Travel-Burden, Injury,
+            Modulare Engine im <code>sharp_signals/</code>-Ordner wertet pro Pick <strong>15 unabhängige Signale</strong> aus
+            (Lead-Lag-Bias, Steam-Lag, Public-Static-Bias, Travel-Burden, Injury,
             xG-Stärke, Form-Trend, H2H-Pattern, Pressure-Index, <strong>Lineup T-1h</strong>,
-            <strong>API-Football Predictions</strong>, <strong>Weather/Hitze</strong>) und produziert pro Signal Score + Evidence + Confidence.
+            <strong>API-Football Predictions</strong>, <strong>Hitze-Penalty</strong>, <strong>Höhen-Vorteil</strong>,
+            <strong>Anreiz-Modell</strong>) und produziert pro Signal Score + Evidence + Confidence.
+            Basis ist immer die <strong>Pinnacle-Fair-Quote</strong> (schärfster Markt der Welt) — die Signale sind Modifikatoren darauf, kein Gegenmodell.
             <strong>Bayesian-Lern-Loop</strong> aktualisiert die Signal-Weights nach jedem resolved Spiel —
             die Engine wird mit jedem WM-Tag besser. Edge-Adjustment greift direkt ins Verdict ein: BET-Picks die
             durch das Engine-Netto-Adjustment unter −3pp gedrückt werden, werden automatisch zu ABWÄGEN.
@@ -2316,6 +2318,95 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             <span class="acc">+1.8</span> 📈 Form-Trend<br>
             <span class="acc">+2.1</span> 📊 APIF +8pp confirmatory<br>
             <span class="mk">Netto:</span> <span class="acc">+2.0pp</span> · Verdict bleibt
+          </div>
+        </div>
+
+        <div class="h2-feature featured" style="border-color:rgba(0,212,161,0.40);">
+          <div class="h2-feature-head">
+            <span class="h2-feature-icon">🎯</span>
+            <div>
+              <div class="h2-feature-title">Conviction-Score (0–10)</div>
+              <span class="h2-feature-tag neu">NEU 10.06.2026</span>
+            </div>
+          </div>
+          <div class="h2-feature-desc">
+            Eigene <strong>Wett-Qualitäts-Bewertung</strong> aus 6 Signal-Familien (Sharp-Money, Modell-Stack, Kontext, Markt …).
+            Trennt sauber den <strong>Trade-Edge</strong> (zählt für Polymarket) von der <strong>Wett-Empfehlung</strong> (auf den Cards):
+            ein knapper Edge mit starker Conviction wird hochgestuft (ABWÄGEN→BET ab 8/10), ein dünner Edge bleibt Info.
+            Der Bayesian-Loop kalibriert die Familien-Gewichte automatisch mit.
+          </div>
+          <div class="h2-mockup">
+            <span class="mk">Conviction 7/10</span><br>
+            Sharp-Money <span class="acc">+2 / 3</span><br>
+            Modell-Stack <span class="acc">+3 / 3</span><br>
+            Kontext <span class="acc">+1 / 3</span><br>
+            <span class="mk">→ ABWÄGEN bleibt (für BET: 8+)</span>
+          </div>
+        </div>
+
+        <div class="h2-feature featured">
+          <div class="h2-feature-head">
+            <span class="h2-feature-icon">🏔️</span>
+            <div>
+              <div class="h2-feature-title">3 neue Kontext-Signale: Höhe · Hitze · Anreiz</div>
+              <span class="h2-feature-tag neu">NEU 10.06.2026</span>
+            </div>
+          </div>
+          <div class="h2-feature-desc">
+            <strong>Höhen-Vorteil:</strong> Mexico City (2240 m) gegen ein Niedrigland-Auswärtsteam → Heim-Bias + mehr Tore.
+            <strong>Hitze-Penalty:</strong> kühle Nationen in 30 °C+ Mittags-Anpfiff verlieren xG.
+            <strong>Anreiz-Modell:</strong> Qualifikations-Mathematik, Bracket-Asymmetrie und Rotations-Risiko in toten Gruppenspielen.
+            Drei Faktoren, die Bookies bestenfalls pauschal bepreisen — wir mathematisch, pro Spiel.
+          </div>
+          <div class="h2-mockup">
+            <span class="mk">MEX vs Niedrigland-Gast:</span><br>
+            🏔 2240 m akklimatisiert → <span class="acc">+2.1pp Heim</span><br>
+            ☀ 31 °C Mittag → <span class="acc">Über begünstigt</span><br>
+            🎟 beide schon qualifiziert → <span class="red">Rotation</span>
+          </div>
+        </div>
+
+        <div class="h2-feature purple featured">
+          <div class="h2-feature-head">
+            <span class="h2-feature-icon">🛡️</span>
+            <div>
+              <div class="h2-feature-title">Auto-Trading-Gates (Defense-in-Depth)</div>
+              <span class="h2-feature-tag neu">NEU 09.06.2026</span>
+            </div>
+          </div>
+          <div class="h2-feature-desc">
+            Der Auto-Trader kauft nur, was <strong>Engine UND Conviction</strong> überzeugt — mehrere unabhängige Sicherungen
+            hintereinander: <strong>Raw-Edge-Floor</strong> (Engine darf einen schwachen Edge nicht allein über die Schwelle boosten),
+            <strong>Conviction-Floor</strong>, <strong>Engine-Block</strong> bei klarer Signal-Warnung (≤ −3pp) und Block für
+            herabgestufte oder vom Tracking ausgeschlossene Picks. Verhindert Niedrig-Edge-Trades.
+          </div>
+          <div class="h2-mockup">
+            <span class="mk">Trade-Prüfung:</span><br>
+            Raw-Edge <span class="acc">≥ 2pp</span> ✓<br>
+            Conviction <span class="acc">≥ 3/10</span> ✓<br>
+            Engine-Adj <span class="acc">&gt; −3pp</span> ✓<br>
+            <span class="acc">→ Order ausgeführt</span>
+          </div>
+        </div>
+
+        <div class="h2-feature featured" style="border-color:rgba(88,166,255,0.40);">
+          <div class="h2-feature-head">
+            <span class="h2-feature-icon">🔍</span>
+            <div>
+              <div class="h2-feature-title">Auto-Validator mit Sofort-Alert</div>
+              <span class="h2-feature-tag neu">NEU 10.06.2026</span>
+            </div>
+          </div>
+          <div class="h2-feature-desc">
+            Ein Selbst-Kontroll-Netz prüft 2×/Tag jeden Pick auf <strong>strukturelle Fehler</strong>: vertauschte Heim/Auswärts-Quoten,
+            invertierte Edge-Vorzeichen, unmögliche Quoten, widersprüchliche Märkte. Findet es etwas, kommt sofort ein
+            <strong>Telegram-Alert</strong> in den Trades-Channel statt still im Report zu liegen. Glass-Box bis in die Qualitätssicherung.
+          </div>
+          <div class="h2-mockup">
+            <span class="mk">🚨 Validator-Alert:</span><br>
+            <span class="red">E_HOMEAWAY_SWAP</span> · ESP-URU<br>
+            1X2-Favorit ≠ Polymarket/DC<br>
+            <span class="muted">→ vor jedem Trade abgefangen</span>
           </div>
         </div>
 
@@ -2523,34 +2614,11 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
   </details>
 
-  <!-- ════════════════ SHOWCASE: SYSTEME (Feature-Kacheln, jargonfrei) ════════════════ -->
-  <details class="heart-collapse" open>
-    <summary>
-      <span class="heart-collapse-icon">⚙️</span>
-      <span class="heart-collapse-title">Die Systeme dahinter — auf einen Blick</span>
-      <span class="heart-collapse-meta">AUTO-TRADING · ALERTS · SHARP</span>
-    </summary>
-    <div class="heart-collapse-body">
-      <div class="h2-feature-grid">
-        <div class="h2-feature purple featured">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🟣</span><div class="h2-feature-title">Polymarket Auto-Trading</div></div>
-          <div class="h2-feature-desc">Vollautomatischer Handel auf Polymarket — fester Einsatz pro Wette, harte Bankroll-Limits, automatischer Gewinn-Verkauf und Notbremse per Handy. Kauft nur, wenn das Sharp-Money den Edge bestätigt.</div>
-        </div>
-        <div class="h2-feature featured">
-          <div class="h2-feature-head"><span class="h2-feature-icon">📲</span><div class="h2-feature-title">Telegram Live-Alerts</div></div>
-          <div class="h2-feature-desc">Zwei Channels, vollautomatisch: öffentliche Picks, Sharp-Move- &amp; Steam-Alerts und Player-Spotlights — plus ein privater Trades-Channel mit Auto-Bet-Bestätigungen und täglichem Kontostand-Update.</div>
-        </div>
-        <div class="h2-feature featured">
-          <div class="h2-feature-head"><span class="h2-feature-icon">📡</span><div class="h2-feature-title">Sharp-Money-Radar</div></div>
-          <div class="h2-feature-desc">Erkennt in Echtzeit, wohin das professionelle Geld fließt: Drückt Pinnacle die Quote, schlägt CocoBet an — grün wenn's unseren Pick bestätigt, rot wenn der Markt dagegenläuft.</div>
-        </div>
-      </div>
-      <p style="font-size:11.5px;color:var(--muted);margin-top:14px;line-height:1.6;">
-        👉 Alle technischen Details — Trigger-Zeitpläne, Parameter, Scripts — stehen im Bereich
-        <strong style="color:#58a6ff;">⚙️ Technik</strong> (oben umschalten).
-      </p>
-    </div>
-  </details>
+  <!-- Verweis auf Technik-Bereich (Systeme-Doku) -->
+  <p style="font-size:12px;color:var(--muted);margin:18px 2px 4px;line-height:1.6;text-align:center;">
+    👉 Alle technischen Details — Trigger-Zeitpläne, Parameter, Scripts, Architektur —
+    stehen im Bereich <strong style="color:#58a6ff;cursor:pointer;" onclick="heartZone('tech')">⚙️ Technik</strong> (oben umschalten).
+  </p>
 
   </div><!-- /heartShowcase -->
 
