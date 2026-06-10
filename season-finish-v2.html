@@ -2608,8 +2608,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
       <div class="h2-sub-label">Pick-Validator (Sanity-Checks)</div>
       <p style="font-size:11.5px;color:var(--muted);line-height:1.6;">
-        Nach jedem Pipeline-Run prüft <code>validate_wm_picks.py</code> alle Picks auf 9 Bug-Klassen.
-        Status-Pill im Tracking-Tab grün/gelb/rot. <strong style="color:var(--text);">Audit-Button</strong> vergleicht live Cards vs Tracking — Drift-Detection.
+        Nach jedem Pipeline-Run prüft <code>validate_wm_picks.py</code> alle Picks auf 10 Bug-Klassen
+        (inkl. <strong style="color:var(--text);">E_HOMEAWAY_SWAP</strong> — vertauschte Heim/Auswärts-Quoten via DC/Polymarket-Kreuzcheck).
+        Bei Fehlern <strong style="color:var(--text);">Telegram-Sofort-Alert</strong> statt stillem Report. Status-Pill im Tracking-Tab grün/gelb/rot, <strong style="color:var(--text);">Audit-Button</strong> vergleicht live Cards vs Tracking.
       </p>
     </div>
   </details>
@@ -2645,6 +2646,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <div class="h2-feature-head"><span class="h2-feature-icon">⚡</span><div class="h2-feature-title">Auto-Trigger mit Bankroll-Schutz</div></div>
           <div class="h2-feature-desc">
             <strong>€5.50 flat stake</strong> · DAILY_BET_CAP=8 · DAILY_STAKE_CAP=$50 · MAX_EXPOSURE=$80 · adaptive 40% × Wallet. AUTO_TRIGGER_EDGE_PP=4.0, PRE_TOURNAMENT 6.0.
+          </div>
+        </div>
+        <div class="h2-feature purple">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🛡️</span><div class="h2-feature-title">Engine-Gates (Defense-in-Depth · 09.06.2026)</div></div>
+          <div class="h2-feature-desc">
+            Mehrere unabhängige Sicherungen, bevor eine Order rausgeht: <strong>Raw-Edge-Floor ≥2pp</strong> (die Engine darf einen schwachen Roh-Edge nicht allein über die Schwelle boosten), <strong>Conviction-Floor ≥3/10</strong>, <strong>Engine-Block</strong> bei Signal-Warnung (signalAdj ≤ −3pp), Block für engine-downgraded BET→ABWÄGEN und für <code>trackingExcluded</code>-Picks. Geprüft gegen <code>effectiveEdge</code> (engine-justiert), nicht roh.
           </div>
         </div>
         <div class="h2-feature purple">
@@ -2809,14 +2816,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div class="h2-sub-label" style="margin-top:24px;">Signal-Engine (sharp_signals/) — NEU 08.06.2026</div>
       <div class="h2-feature-grid">
         <div class="h2-feature" style="border-color:rgba(0,212,161,0.3);">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🧠</span><div class="h2-feature-title">14 modulare Signale</div></div>
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧠</span><div class="h2-feature-title">15 modulare Signale</div></div>
           <div class="h2-feature-desc">
             Lead-Lag-Bias (Pinnacle vs Soft-Books) · Steam-Lag (Pinn + Polymarket) · Polymarket-Sharp ·
             Public-Static-Bias · Travel-Burden (km+Höhe) · Injury (positionsbewusst GK/DEF/MID/FWD) ·
             xG-Stärke (Understat + NT-xG-Fallback) · Form-Trend · H2H-Pattern · Pressure-Index (Tournament-Stage) ·
             <strong>Lineup T-1h</strong> (Top-Scorer-Bank/Missing) · <strong>API-Football Predictions</strong> (externes Modell vs Pinnacle) ·
             <strong>Weather/Hitze</strong> (Cold-Climate-Penalty bei ≥30°C, Anpfiff-Zeit-modifiziert) ·
-            <strong>Anreiz-Signal</strong> (Qualifikations-Math + Bracket-Asymmetrie + Venue-Distanz + Rotation-Risk).
+            <strong>Anreiz-Signal</strong> (Qualifikations-Math + Bracket-Asymmetrie + Venue-Distanz + Rotation-Risk) ·
+            <strong>Höhen-Vorteil</strong> (akklimatisiertes Heimteam ≥1500m gegen Niedrigland-Gast → Heim-Bias + mehr Tore; schließt die Lücke die Travel-Burden als Delta-only lässt).
             <strong>Jedes Signal returnt score + confidence + evidence</strong>.
           </div>
         </div>
@@ -2991,6 +2999,18 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             → wahrscheinliche Schonung der Stammspieler, xG-Discount.
           </div>
         </div>
+        <div class="h2-feature" style="border-color:rgba(76,201,240,0.35);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🏔️</span><div class="h2-feature-title">Höhen-Vorteil-Signal (NEU 10.06.2026)</div></div>
+          <div class="h2-feature-desc">
+            <code>sharp_signals/altitude_signal.py</code> — das <strong>15. Signal</strong>. Modelliert den
+            Akklimatisierungs-<strong>Asymmetrie</strong>-Vorteil: Heimteam ab Hauptstadt-Höhe ≥800m, Auswärtsgegner
+            aus dem Niedrigland (≤500m), Venue ≥1500m → Heim-Bias auf 1X2 (max +2.5pp) und Über-Tendenz auf O/U
+            (müder Gast kassiert mehr, max +1.5pp), zusätzlich Kickoff-Zeit-Modifier (Mittagshitze auf Höhe).
+            <strong>Feuert bewusst nicht</strong>, wenn der Gast selbst höhengewohnt ist (z.B. Südafrika/Johannesburg
+            1750m) — keine Asymmetrie, kein Edge. Schließt die Lücke, die <code>travel_burden</code> als reines
+            Delta-Signal lässt. Daten aus <code>wm_venues.json</code> + Team-Höhen-Tabelle.
+          </div>
+        </div>
         <div class="h2-feature">
           <div class="h2-feature-head"><span class="h2-feature-icon">🛡️</span><div class="h2-feature-title">Public-vs-Sharp-Persistenz Fix</div></div>
           <div class="h2-feature-desc">
@@ -3013,14 +3033,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             <strong>5.</strong> Cross-Market-Konflikt (unvereinbare Direction → schwächerer downgegradet)<br>
             <strong>6.</strong> Smart-Substitution synthetisch (hohe Quote → sicherere Alternative auch ohne eigene Edge)<br>
             <strong>7.</strong> Profile-Gates (Corners + Player-Picks für WM2026 aus, Liga-Switch reaktiviert)<br>
-            <strong>8.</strong> Signal-Engine — <strong>14 modulare Signale</strong> mit Anti-Korrelation, Min-2-Positive-Threshold, Bayesian-Weight-Loop<br>
+            <strong>8.</strong> Signal-Engine — <strong>15 modulare Signale</strong> mit Anti-Korrelation, Min-2-Positive-Threshold, Bayesian-Weight-Loop<br>
             <strong>9.</strong> Sharp-Move-Detection — Pinnacle-Move seit Opening pro Markt-Key (granular O15/O25/O35 + BTTS + DC), Move-Age-Decay<br>
             <strong>10.</strong> Conviction-Score 0-10 — 6 Familien (Sharp/Form/Kontext/Realtime/Markt/Modell). ABWÄGEN→BET-Upgrade bei ≥8/10
           </div>
         </div>
       </div>
 
-      <div class="h2-sub-label" style="margin-top:24px;">Signal-Engine — 14 modulare Signale</div>
+      <div class="h2-sub-label" style="margin-top:24px;">Signal-Engine — 15 modulare Signale</div>
       <div class="h2-feature-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
         <div class="h2-feature"><div class="h2-feature-desc"><strong>1. PublicStaticBias</strong> · Sharp ↔ Public Quoten-Spread</div></div>
         <div class="h2-feature"><div class="h2-feature-desc"><strong>2. TravelBurden</strong> · Anreise-km + Höhe → xG-Discount</div></div>
@@ -3060,7 +3080,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <summary>
       <span class="heart-collapse-icon">🧠</span>
       <span class="heart-collapse-title">Wie die Engine wirklich funktioniert — 4 Schritte vom Edge zum Tipp</span>
-      <span class="heart-collapse-meta" style="color:#7dd3fc;">14 SIGNALE · CONVICTION-SCORE · SHARP-MOVE</span>
+      <span class="heart-collapse-meta" style="color:#7dd3fc;">15 SIGNALE · CONVICTION-SCORE · SHARP-MOVE</span>
     </summary>
     <div class="heart-collapse-body">
       <p style="color:var(--muted);font-size:13px;margin:0 0 24px;">
@@ -3113,7 +3133,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div style="display:flex;align-items:center;gap:12px;margin:32px 0 12px;">
         <div style="width:32px;height:32px;border-radius:50%;background:#f5c518;color:#0d1117;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">2</div>
         <div>
-          <div style="font-size:16px;font-weight:700;color:var(--text);">Die Engine prüft 14 Signale gleichzeitig</div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);">Die Engine prüft 15 Signale gleichzeitig</div>
           <div style="font-size:12px;color:var(--muted);">Jedes Signal kann den Tipp verstärken (grün) oder anzweifeln (rot). Manche feuern nicht — das ist okay.</div>
         </div>
       </div>
@@ -3297,7 +3317,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div style="background:rgba(125,211,252,0.04);border:1px dashed var(--border);border-radius:10px;padding:16px;margin-top:24px;font-size:12px;color:var(--muted);line-height:1.6;">
         <strong style="color:#7dd3fc;">Warum so viele Signale?</strong>
         Jedes Signal allein wäre zu schwach. Pinnacle hat den schärfsten Markt aller Bookies — den dauerhaft zu schlagen ist fast unmöglich.
-        Stattdessen <strong style="color:var(--text);">nutzen wir Pinnacle als Anker</strong> und unsere 14 Signale finden Situationen,
+        Stattdessen <strong style="color:var(--text);">nutzen wir Pinnacle als Anker</strong> und unsere 15 Signale finden Situationen,
         in denen selbst Pinnacle eine wichtige Variable übersehen hat (Hitze für Cold-Climate-Teams, Top-Scorer auf der Bank,
         lange Reisen, …). Nach jedem Spiel lernt die Engine: <strong style="color:var(--text);">welche Signale haben Recht behalten?</strong>
         Die guten gewinnen Gewicht (Bayesian-Loop), die schlechten verlieren. So wird das System mit jedem WM-Tag schärfer.
@@ -3502,11 +3522,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <tr><td><code>fetch_wm_injuries.py</code></td><td>Verletzungen → Injury-Discount im Modell</td></tr>
           <tr><td><code>fetch_wm_form.py</code></td><td>Form + H2H aus letzten 15 Spielen pro Team</td></tr>
           <tr><td><code>fetch_wm_corners.py</code></td><td>Eckball-Schnitt for/against</td></tr>
+          <tr><td><code>fetch_wm_nt_xg.py</code></td><td>NT-xG aus /fixtures/statistics (Understat-Lückenfüller CONMEBOL/AFC/Afrika)</td></tr>
+          <tr><td><code>fetch_wm_apifootball_predictions.py</code></td><td>Externes 3. Modell (APIF-Predictions) für Cross-Check</td></tr>
+          <tr><td><code>fetch_wm_weather.py</code></td><td>Venue-Wetter (WeatherAPI) → Hitze-Penalty-Signal</td></tr>
+          <tr><td><code>fetch_wm_lineups.py</code></td><td>Aufstellungen T-1h (eigener Hot-Cron) → Lineup-Signal</td></tr>
           <tr><td><code>fetch_wm_match_results.py</code></td><td>Ergebnisse nach Spiel → Frozen-at-Kickoff</td></tr>
-          <tr><td><code>generate_wm_picks.py</code></td><td>62 Picks: Elo+Poisson+Travel+Public-Bias+Filter</td></tr>
+          <tr><td><code>generate_wm_picks.py</code></td><td>Picks: Pinnacle-Anker + 15 Signale + Conviction + Filter</td></tr>
           <tr><td><code>resolve_wm_picks.py</code></td><td>WIN/LOSS/VOID Resolution + clvPP-Berechnung</td></tr>
+          <tr><td><code>resolve_wm_results.py</code></td><td>P&amp;L + CLV-Tracking der platzierten Polymarket-Bets → wm_results.json</td></tr>
           <tr><td><code>compute_pick_confidence.py</code></td><td>Hit-Rate-Cluster für "Backtest"-Anzeige</td></tr>
-          <tr><td><code>validate_wm_picks.py</code></td><td>9 Sanity-Checks → pick_validation_report.json</td></tr>
+          <tr><td><code>validate_wm_picks.py</code></td><td>10 Sanity-Checks (inkl. E_HOMEAWAY_SWAP) → Report + Telegram-Alert bei Fehlern</td></tr>
           <tr><td><code>detect_pick_changes.py</code></td><td>Snapshot-Diff → Banner + Telegram-Digest</td></tr>
           <tr><td><code>fetch_wm_player_props.py</code></td><td>6 Spieler-Märkte von TheOddsAPI (T-3 vor Anpfiff)</td></tr>
         </tbody>
@@ -3532,6 +3557,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <tr><td><code>sharp_signals/apif_predictions.py</code></td><td>Externes API-Football-Modell vs Pinnacle pro 1X2/DNB</td></tr>
           <tr><td><code>sharp_signals/weather_signal.py</code></td><td>Cold-Climate-Penalty bei ≥30°C, Anpfiff-Zeit-modifiziert</td></tr>
           <tr><td><code>sharp_signals/incentive_signal.py</code></td><td><strong>Anreiz-Signal: Qualifikations-Math + Bracket-Asymmetrie + Venue-Distanz + Rotation-Risk</strong></td></tr>
+          <tr><td><code>sharp_signals/altitude_signal.py</code></td><td><strong>Höhen-Vorteil: akklim. Heimteam ≥1500m vs Niedrigland-Gast → Heim-Bias + Über (15. Signal, NEU 10.06.)</strong></td></tr>
           <tr><td><code>conviction_score.py</code></td><td><strong>Wett-Qualitäts-Bewertung 0-10: Sharp-Money + Familien + Sanity. Trennt Polymarket-Edge von Card-Empfehlung. ABWÄGEN→BET wenn ≥8</strong></td></tr>
           <tr><td><code>wm_bracket.json</code></td><td>WM-K.O.-Struktur (R32 → SF) mit Venues + Slot-Belegung — Input für Anreiz-Signal</td></tr>
           <tr><td><code>wm_venues.json</code></td><td>16 Host-Stadien mit Koordinaten, Höhe, Zeitzone</td></tr>
@@ -3547,7 +3573,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <tbody>
           <tr><td><code>fetch_wm_poly_prices.py</code></td><td>Polymarket Gamma + CLOB Prices, Edge-Alerts</td></tr>
           <tr><td><code>steam_lag_monitor.py</code></td><td>Steam-Lag-Detector + Konvergenz-Tracking</td></tr>
-          <tr><td><code>auto_wm_poly_trigger.py</code></td><td>Auto-Bet bei Edge ≥4pp · Kill-Switch · Bankroll-Caps</td></tr>
+          <tr><td><code>auto_wm_poly_trigger.py</code></td><td>Auto-Bet bei effectiveEdge ≥4pp · Defense-in-Depth-Gates · Kill-Switch · Bankroll-Caps</td></tr>
           <tr><td><code>manage_wm_poly_positions.py</code></td><td>Auto-Sell: 3 Profit + 3 Loss + Pre-Match-Close</td></tr>
           <tr><td><code>poly_heartbeat.py</code></td><td>Daily 06:00 UTC Status-Report</td></tr>
         </tbody>
@@ -3663,7 +3689,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
       <div class="h2-sub-label">Während WM</div>
       <ul style="font-size:12px;color:rgba(255,255,255,0.78);line-height:1.8;padding-left:20px;">
-        <li>🎯 Player-Props live ab ~8. Juni (1-3 Tage vor Match)</li>
+        <li>🎯 Player-Props-Pipeline gebaut, aber für WM2026 DEAKTIVIERT (kein Engine-Hook → kein Lärm im Bayesian-Loop; Re-Enable nach WM)</li>
         <li>📊 Pick-Confidence-Backtest baut sich auf mit jedem resolved Pick</li>
         <li>🎬 TikTok-Reichweite tracken — welche Cards performen besten</li>
         <li>📲 Receipt-Cards (✅ GETROFFEN-Stempel) als zusätzliches Format</li>
