@@ -31,6 +31,7 @@ from sharp_signals.lineup_signal import LineupSignal
 from sharp_signals.apif_predictions import ApifPredictionsSignal
 from sharp_signals.weather_signal import WeatherSignal
 from sharp_signals.incentive_signal import IncentiveSignal
+from sharp_signals.altitude_signal import AltitudeSignal
 
 
 # Liste aller aktiv evaluierten Signale.
@@ -50,6 +51,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     ApifPredictionsSignal(),
     WeatherSignal(),
     IncentiveSignal(),
+    AltitudeSignal(),
 ]
 
 
@@ -122,6 +124,10 @@ SIGNAL_GROUPS: dict[str, str] = {
     # damit Travel + Heat zusammen nicht doppelt zählen (Bsp: lange Reise + Hitze
     # in Dallas würden sonst beide gleichzeitig voll greifen).
     "weather_signal":     "context",
+    # altitude_signal ist auch context (Spielort-Faktor wie Wetter/Reise/Injury).
+    # Anti-Korr-Discount mit weather sinnvoll: Mexico City 2200m + Hitze sollten
+    # sich nicht doppelt addieren wenn beide Cold-Team-Effekt modellieren.
+    "altitude_signal":    "context",
     # lineup_signal ist UNIQUE (kein Anti-Korrelations-Discount):
     # T-1h Aufstellungs-Info ist orthogonal zu allen anderen Signalen —
     # die anderen modellieren historische/statische Daten, lineup_signal

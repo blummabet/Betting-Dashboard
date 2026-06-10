@@ -1734,6 +1734,22 @@ def main():
 
                 # Venue-Name → venue_id (für wm_venues.json Lookup)
                 _venue_id = _wm_venue_id_from_name(fx.get("venue"))
+                # Venue-Höhe für altitude_signal (09.06.2026)
+                _venue_altitude_m = 0
+                try:
+                    if _venue_id and isinstance(wm.get("_venues_cache"), dict):
+                        _venue_altitude_m = int(wm["_venues_cache"].get(_venue_id, {}).get("altitude_m") or 0)
+                    elif _venue_id:
+                        import json as _json, os as _os
+                        _vpath = _os.path.join(_os.path.dirname(WM_FILE), "wm_venues.json")
+                        if _os.path.exists(_vpath):
+                            with open(_vpath, encoding="utf-8") as _vf:
+                                _vraw = _json.load(_vf)
+                            _venues = (_vraw.get("venues") or _vraw) if isinstance(_vraw, dict) else {}
+                            wm["_venues_cache"] = _venues
+                            _venue_altitude_m = int(_venues.get(_venue_id, {}).get("altitude_m") or 0)
+                except Exception:
+                    _venue_altitude_m = 0
 
                 sig_ctx = {
                     "matchKey":     ha_key,
@@ -1753,6 +1769,7 @@ def main():
                     "apif_predictions": apif_predictions_data,
                     "weather":          weather_data,
                     "venue":            fx.get("venue"),
+                    "venue_altitude_m": _venue_altitude_m,   # für altitude_signal
                     "kickoff_time":     fx.get("time"),   # CEST/Wien lokale Zeit
                     "snapshot_ts":      None,   # → evaluate_signals nutzt now()
                     # incentive_signal-Inputs:
