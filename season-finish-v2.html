@@ -108,6 +108,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .heart-collapse-title{font-size:14px;font-weight:800;color:var(--text);letter-spacing:-.2px;flex:1;}
 .heart-collapse-meta{font-size:10px;color:var(--muted);letter-spacing:.5px;font-weight:600;}
 .heart-collapse-body{padding:0 20px 18px;border-top:1px solid var(--border);padding-top:18px;}
+/* Heart Zone-Toggle (Showcase / Technik) — Revamp 10.06.2026 */
+.heart-zone-toggle{display:inline-flex;background:#0d1117;border:1px solid var(--border);border-radius:13px;padding:4px;margin-bottom:16px;gap:4px;}
+.heart-zone-btn{appearance:none;background:transparent;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:800;letter-spacing:-.1px;color:var(--muted);padding:9px 18px;border-radius:9px;display:flex;align-items:center;gap:8px;transition:all .15s;}
+.heart-zone-btn:hover{color:rgba(255,255,255,0.85);}
+.heart-zone-btn.active{background:linear-gradient(180deg,rgba(0,212,161,0.16),rgba(0,212,161,0.05));color:#00d4a1;box-shadow:inset 0 0 0 1px rgba(0,212,161,0.32);}
+.heart-zone-btn.tech.active{background:linear-gradient(180deg,rgba(88,166,255,0.16),rgba(88,166,255,0.05));color:#58a6ff;box-shadow:inset 0 0 0 1px rgba(88,166,255,0.32);}
+.heart-zone-sub{font-size:12.5px;color:var(--muted);margin:0 0 22px;line-height:1.55;max-width:680px;}
 
 /* ── Pitch-One-Pager (Marketing-Showcase, screenshot-bereit) ── */
 .pitch-intro{
@@ -2111,6 +2118,17 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
   </div>
 
+  <!-- ════════════════ ZONE-TOGGLE (Revamp 10.06.2026) ════════════════ -->
+  <!-- Bereich 1 = Showcase (visuell, teilbar) · Bereich 2 = Technik (Doku/Architektur) -->
+  <div class="heart-zone-toggle" role="tablist">
+    <button class="heart-zone-btn active" id="heartZoneShowcaseBtn" onclick="heartZone('showcase')">✨ Showcase</button>
+    <button class="heart-zone-btn tech" id="heartZoneTechBtn" onclick="heartZone('tech')">⚙️ Technik</button>
+  </div>
+  <p class="heart-zone-sub" id="heartZoneSub">Was CocoBet macht — visuell &amp; teilbar. Perfekt zum Herzeigen &amp; Screenshotten.</p>
+
+  <!-- ░░░░░░░░░░░░░░░░ BEREICH 1: SHOWCASE ░░░░░░░░░░░░░░░░ -->
+  <div id="heartShowcase">
+
   <!-- ════════════════ PITCH-ONE-PAGER ════════════════ -->
   <!-- Marketing-tauglicher Feature-Showcase. Screenshot-bereit für Pitches/Werbung. -->
   <details class="heart-collapse" open>
@@ -2504,6 +2522,40 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       </p>
     </div>
   </details>
+
+  <!-- ════════════════ SHOWCASE: SYSTEME (Feature-Kacheln, jargonfrei) ════════════════ -->
+  <details class="heart-collapse" open>
+    <summary>
+      <span class="heart-collapse-icon">⚙️</span>
+      <span class="heart-collapse-title">Die Systeme dahinter — auf einen Blick</span>
+      <span class="heart-collapse-meta">AUTO-TRADING · ALERTS · SHARP</span>
+    </summary>
+    <div class="heart-collapse-body">
+      <div class="h2-feature-grid">
+        <div class="h2-feature purple featured">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🟣</span><div class="h2-feature-title">Polymarket Auto-Trading</div></div>
+          <div class="h2-feature-desc">Vollautomatischer Handel auf Polymarket — fester Einsatz pro Wette, harte Bankroll-Limits, automatischer Gewinn-Verkauf und Notbremse per Handy. Kauft nur, wenn das Sharp-Money den Edge bestätigt.</div>
+        </div>
+        <div class="h2-feature featured">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📲</span><div class="h2-feature-title">Telegram Live-Alerts</div></div>
+          <div class="h2-feature-desc">Zwei Channels, vollautomatisch: öffentliche Picks, Sharp-Move- &amp; Steam-Alerts und Player-Spotlights — plus ein privater Trades-Channel mit Auto-Bet-Bestätigungen und täglichem Kontostand-Update.</div>
+        </div>
+        <div class="h2-feature featured">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📡</span><div class="h2-feature-title">Sharp-Money-Radar</div></div>
+          <div class="h2-feature-desc">Erkennt in Echtzeit, wohin das professionelle Geld fließt: Drückt Pinnacle die Quote, schlägt CocoBet an — grün wenn's unseren Pick bestätigt, rot wenn der Markt dagegenläuft.</div>
+        </div>
+      </div>
+      <p style="font-size:11.5px;color:var(--muted);margin-top:14px;line-height:1.6;">
+        👉 Alle technischen Details — Trigger-Zeitpläne, Parameter, Scripts — stehen im Bereich
+        <strong style="color:#58a6ff;">⚙️ Technik</strong> (oben umschalten).
+      </p>
+    </div>
+  </details>
+
+  </div><!-- /heartShowcase -->
+
+  <!-- ░░░░░░░░░░░░░░░░ BEREICH 2: TECHNIK (Doku / Architektur) ░░░░░░░░░░░░░░░░ -->
+  <div id="heartTech" style="display:none;">
 
   <!-- ════════════════ 3. POLYMARKET ════════════════ -->
   <details class="heart-collapse">
@@ -3570,6 +3622,24 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       </ul>
     </div>
   </details>
+
+  </div><!-- /heartTech -->
+
+  <script>
+  function heartZone(z){
+    var showcase = z==='showcase';
+    var sc=document.getElementById('heartShowcase'), tc=document.getElementById('heartTech');
+    var sb=document.getElementById('heartZoneShowcaseBtn'), tb=document.getElementById('heartZoneTechBtn');
+    var sub=document.getElementById('heartZoneSub');
+    if(sc) sc.style.display = showcase?'':'none';
+    if(tc) tc.style.display = showcase?'none':'';
+    if(sb) sb.classList.toggle('active', showcase);
+    if(tb) tb.classList.toggle('active', !showcase);
+    if(sub) sub.textContent = showcase
+      ? 'Was CocoBet macht — visuell & teilbar. Perfekt zum Herzeigen & Screenshotten.'
+      : 'Wie es technisch läuft — Doku, Trigger-Zeitpläne, Architektur. Für Dev, AI & Technik-Check.';
+  }
+  </script>
 
 </div>
 </div>
