@@ -125,6 +125,39 @@ PRICES_FILE           = os.path.join(BASE_DIR, "wm_poly_prices.json")
 PLACED_FILE           = os.path.join(BASE_DIR, "wm_auto_bets_placed.json")
 BALANCE_FILE          = os.path.join(BASE_DIR, "wm_poly_balance.json")
 KILL_SWITCH_FILE      = os.path.join(BASE_DIR, "wm_kill_switch.json")
+WM_DATA_FILE          = os.path.join(BASE_DIR, "wm2026-data.json")
+
+# Stale-Odds-Circuit-Breaker (11.06.2026): Der Edge = Pinnacle-Fair vs Live-Poly.
+# Sind die Pinnacle-Odds eingefroren (fetch_wm_odds tot), wird Edge gegen alte
+# Preise gerechnet → gefährliche Fehl-Trades. Bei zu alten Odds: KEIN Auto-Trade.
+MAX_ODDS_AGE_HOURS    = _cfg("trade", "max_odds_age_hours", 24.0)
+
+
+def newest_pinnacle_odds_age_h() -> float | None:
+    """Alter (Stunden) der frischesten Pinnacle-Odds in wm2026-data.json.
+    None wenn keine updatedAt-Timestamps gefunden werden."""
+    try:
+        from datetime import datetime as _dt, timezone as _tz
+        with open(WM_DATA_FILE, encoding="utf-8") as f:
+            odds = (json.load(f).get("odds") or {})
+        newest = None
+        for v in odds.values():
+            ts = v.get("updatedAt") if isinstance(v, dict) else None
+            if not ts:
+                continue
+            try:
+                t = _dt.fromisoformat(ts.replace("Z", "+00:00"))
+                if t.tzinfo is None:
+                    t = t.replace(tzinfo=_tz.utc)
+            except Exception:
+                continue
+            if newest is None or t > newest:
+                newest = t
+        if newest is None:
+            return None
+        return (_dt.now(_tz.utc) - newest).total_seconds() / 3600.0
+    except Exception:
+        return None
 
 
 def is_kill_switch_active() -> tuple[bool, str]:
@@ -516,6 +549,24 @@ def main():
     fixtures = prices_data.get("allFixtures", [])
     generated_at = prices_data.get("generatedAt", "")
     print(f"  📋 {len(fixtures)} Fixtures geladen (Stand: {generated_at})")
+
+    # ── Stale-Odds-Circuit-Breaker (11.06.2026) ──────────────────────────
+    # Edge = Pinnacle-Fair vs Live-Poly. Wenn die Pinnacle-Odds eingefroren sind
+    # (fetch_wm_odds tot), wäre jeder Edge gegen veraltete Preise gerechnet →
+    # gefährliche Fehl-Trades. Dann lieber gar nicht traden.
+    odds_age = newest_pinnacle_odds_age_h()
+    if odds_age is not None and odds_age > MAX_ODDS_AGE_HOURS:
+        msg = (f"🛑 STALE-ODDS-STOP: frischeste Pinnacle-Odds {odds_age:.1f}h alt "
+               f"(> {MAX_ODDS_AGE_HOURS:.0f}h Limit) — fetch_wm_odds eingefroren? "
+               f"KEIN Auto-Trade, Edge gegen veraltete Preise wäre gefährlich.")
+        print("  " + msg + "\n")
+        _tok  = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
+        _chat = (os.environ.get("TELEGRAM_TRADES_CHAT_ID") or "").strip()
+        if _tok and _chat:
+            send_telegram(_tok, _chat, "⚠️ <b>Auto-Trade gestoppt</b>\n" + msg)
+        return
+    if odds_age is not None:
+        print(f"  🕐 Pinnacle-Odds {odds_age:.1f}h alt (Limit {MAX_ODDS_AGE_HOURS:.0f}h) — ok\n")
 
     # 2. Bereits platzierte Bets laden
     placed_data = load_json(PLACED_FILE, {"bets": [], "updatedAt": ""})

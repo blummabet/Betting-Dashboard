@@ -35,15 +35,44 @@ HISTORY_FILE = BASE / "wm2026-odds-history.json"
 
 # Config-aware Markt-Skip: wenn alle Corner-Markets im aktiven Profil disabled
 # sind, skippen wir Call 3 komplett (API-Quota sparen).
+# FIX 11.06.2026: cocobet_config.CONFIG = aufgelöstes Profil OHNE Extra-Sections
+# wie disabled_markets (die fallen bei _resolve_active_profile weg). CONFIG.get(
+# "disabled_markets") war IMMER None → _SKIP_CORNERS IMMER False → 72 Corner-
+# Requests pro Lauf trotz deaktivierter Corners → TheOddsAPI-Quota gesprengt →
+# Odds eingefroren. Jetzt roh aus der JSON gelesen (wie generate_wm_picks).
 def _corners_disabled() -> bool:
     try:
-        from cocobet_config import CONFIG
-        disabled = set(CONFIG.get("disabled_markets", []) or [])
+        import os as _os, json as _json
+        from pathlib import Path as _Path
+        raw = _json.loads((_Path(__file__).parent / "cocobet_config.json")
+                          .read_text(encoding="utf-8"))
+        active = _os.environ.get("COCOBET_PROFILE") or raw.get("profiles", {}).get("active", "wm2026")
+        disabled = set(raw.get("profiles", {}).get(active, {}).get("disabled_markets") or [])
         corner_keys = {"o_corners85", "o_corners95", "o_corners105"}
         return corner_keys.issubset(disabled)
     except Exception:
         return False
 _SKIP_CORNERS = _corners_disabled()
+
+
+def _tg_alert(text: str) -> None:
+    """Laut alarmieren wenn der Odds-Fetch versagt — niemals still alte Odds behalten."""
+    tok  = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
+    chat = (os.environ.get("TELEGRAM_TRADES_CHAT_ID")
+            or os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
+    if not (tok and chat):
+        print("  ⚠️  (kein TELEGRAM-Setup — Alert nur im Log)")
+        return
+    try:
+        import urllib.request
+        body = json.dumps({"chat_id": chat, "text": text,
+                           "parse_mode": "HTML"}).encode("utf-8")
+        req = urllib.request.Request(
+            f"https://api.telegram.org/bot{tok}/sendMessage",
+            data=body, headers={"Content-Type": "application/json"})
+        urllib.request.urlopen(req, timeout=15)
+    except Exception as e:
+        print(f"  ⚠️  Telegram-Alert fehlgeschlagen: {e}")
 
 # Minimale Änderung (in absoluten Odds), damit ein neuer Snapshot geschrieben wird
 SNAP_MIN_DELTA = 0.02
@@ -638,11 +667,25 @@ def main():
     if not sport_key:
         print("\n  ℹ️  WM 2026 odds not available in TheOddsAPI yet.")
         print("      Odds typically appear 2–3 weeks before the tournament.")
-        print("      Script will succeed silently — no changes to odds data.")
         # Write back unchanged (update meta only)
         wm["_meta"]["oddsUpdatedAt"] = now_iso
         with open(WM_FILE, "w", encoding="utf-8") as f:
             json.dump(wm, f, ensure_ascii=False, indent=2)
+        # Während des Turniers ist "kein Sport-Key" ein echter Fehler (Key/Quota/
+        # API-Umbenennung), kein harmloses Pre-Tournament-Warten → alarmieren.
+        try:
+            from datetime import date as _date
+            wm_started = any(
+                (fx.get("date") or "")[:10] <= datetime.now(timezone.utc).strftime("%Y-%m-%d")
+                for g in wm.get("groups", {}).values() for fx in g.get("fixtures", []))
+        except Exception:
+            wm_started = True
+        if wm_started:
+            _tg_alert("🛑 <b>Odds-Fetch: kein WM-Sport-Key bei TheOddsAPI</b>\n"
+                      "Mitten im Turnier — Key/Quota erschöpft oder API-Umbenennung? "
+                      "Odds bleiben eingefroren. Actions-Log + ODDS_API_KEY prüfen.")
+            print("  🛑  ALARM gesendet: kein Sport-Key trotz laufendem Turnier")
+            sys.exit(1)
         return
 
     # ── Fetch 1: h2h von Pinnacle & Co (bevorzugte Bookmaker) ───
@@ -1033,6 +1076,20 @@ def main():
     remaining = len(all_fixtures) - matched
     print(f"\n✅  {updated} fixtures priced, {remaining} not yet available")
     print(f"   Saved: {WM_FILE}")
+
+    # ── Loud-Failure-Guard (11.06.2026) ──────────────────────────────────
+    # Wenn 0 Fixtures gepreist wurden, ist der Fetch effektiv tot (API-Fehler,
+    # 401, Quota erschöpft) und behält still die ALTEN Odds → genau der Fall der
+    # den Feed seit 08.06 eingefroren hat. NIE wieder still: laut alarmieren.
+    if updated == 0 and len(all_fixtures) > 0:
+        _tg_alert(
+            "🛑 <b>Odds-Fetch hat 0 Fixtures aktualisiert</b>\n"
+            f"{len(all_fixtures)} Fixtures, aber keine neue Quote geschrieben — "
+            "TheOddsAPI-Fehler/401/Quota? Cards &amp; Trading laufen sonst auf "
+            "veralteten Odds (Auto-Trade-Stale-Guard greift, aber Feed muss "
+            "repariert werden). fetch_wm_odds-Actions-Log prüfen.")
+        print("  🛑  ALARM gesendet: 0 Fixtures aktualisiert (Odds-Feed tot?)")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

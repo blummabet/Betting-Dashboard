@@ -108,7 +108,9 @@ jobs:
         run: python fetch_wm_odds.py
         continue-on-error: true
         env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          ODDS_API_KEY:            ${{ secrets.ODDS_API_KEY }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
       # ── Sharp Move Detection (direkt nach Odds-Fetch) ─────────────────
       # Channel-Fix 05.06.2026: Alerts gehen jetzt an TRADES-Channel (privat)
@@ -199,6 +201,14 @@ jobs:
       # ── Pick-Validator (Sanity-Checks, schreibt pick_validation_report.json) ─────
       - name: 🔍 WM Picks validieren
         run: python validate_wm_picks.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      # ── Pre-Match Readiness: feuern alle Signale? sind alle Feeds frisch? ──
+      - name: 🚦 Pre-Match Readiness Check
+        run: python pre_match_readiness.py
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}

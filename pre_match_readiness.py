@@ -1,0 +1,288 @@
+#!/usr/bin/env python3
+"""
+pre_match_readiness.py — Pre-Match Readiness Check (gebaut 11.06.2026)
+=====================================================================
+
+Beantwortet täglich automatisch die Frage: "Feuern unsere Signale, wenn die
+heutigen/anstehenden Spiele kommen — und sind alle Daten-Feeds frisch?"
+
+Prüft zwei Dinge und alarmiert bei echten Lücken:
+
+  1. FEED-FRISCHE — existiert jede Input-Datei, ist sie aktuell und befüllt?
+     (weather mit Temps · apif mit Predictions · lineups bei nahen Spielen ·
+      nt_xg · odds-history · poly-prices)
+
+  2. SIGNAL-FEUERN — feuert jedes der 15 Signale in den aktuellen Picks?
+     Mit kontext-bewusster Erwartung: manche Signale feuern erst spät
+     (lineup T-1h), erst ab MD2 (incentive) oder nur bei Quotenbewegung
+     (steam/lead-lag) — die werden NICHT als Fehler gewertet.
+
+Output: Klartext-Report + (bei Errors) Telegram-Alert an den Trades-Channel.
+Exit-Code 1 bei echten Lücken (Workflow-Step wird rot, continue-on-error
+lässt den Rest laufen).
+
+Env:
+  TELEGRAM_TOKEN, TELEGRAM_TRADES_CHAT_ID — für Alert (ohne = Print-Vorschau)
+  READINESS_WINDOW_DAYS — wie viele Tage voraus geprüft werden (default 2)
+"""
+from __future__ import annotations
+import json
+import os
+import sys
+import urllib.request
+from datetime import datetime, timezone, date, timedelta
+from pathlib import Path
+
+BASE = Path(__file__).parent
+WM_FILE = BASE / "wm2026-data.json"
+
+TELEGRAM_TOKEN = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
+ALERT_CHAT_ID  = (os.environ.get("TELEGRAM_TRADES_CHAT_ID")
+                  or os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
+WINDOW_DAYS = int(os.environ.get("READINESS_WINDOW_DAYS", "2"))
+
+# Lineup-Signal lohnt sich erst, wenn ein Spiel in <= N Stunden ist
+LINEUP_WINDOW_H = 3.0
+# Feed gilt als "stale", wenn älter als N Stunden (mtime-Fallback)
+STALE_HOURS = 18.0
+
+
+def tg_send(text: str) -> bool:
+    if not (TELEGRAM_TOKEN and ALERT_CHAT_ID):
+        print("\n⚠️  Kein TELEGRAM_TOKEN/CHAT_ID — Alert-Vorschau:\n" + text)
+        return True
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    body = json.dumps({"chat_id": ALERT_CHAT_ID, "text": text,
+                       "parse_mode": "HTML"}).encode("utf-8")
+    req = urllib.request.Request(url, data=body,
+                                 headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read()).get("ok", False)
+    except Exception as e:
+        print(f"❌ Telegram-Alert fehlgeschlagen: {e}")
+        return False
+
+
+def _load(path: Path):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def _mtime_age_h(path: Path) -> float | None:
+    try:
+        return (datetime.now().timestamp() - path.stat().st_mtime) / 3600.0
+    except Exception:
+        return None
+
+
+def main() -> int:
+    if not WM_FILE.exists():
+        print("❌ wm2026-data.json fehlt — Abbruch")
+        return 1
+    wm = _load(WM_FILE) or {}
+    picks = wm.get("picks", {}) or {}
+
+    today = datetime.now(timezone.utc).date()
+    horizon = today + timedelta(days=WINDOW_DAYS)
+
+    # ── Anstehende Fixtures im Fenster ───────────────────────────────────
+    upcoming = []          # (matchKey-ish, home, away, matchday, date, hours_until)
+    for gk, gd in (wm.get("groups") or {}).items():
+        for fx in gd.get("fixtures", []):
+            ds = (fx.get("date") or "")[:10]
+            try:
+                d = date.fromisoformat(ds)
+            except Exception:
+                continue
+            if today <= d <= horizon:
+                hrs = None
+                try:
+                    ko = datetime.fromisoformat((fx.get("date") or "").replace("Z", "+00:00"))
+                    if ko.tzinfo is None:
+                        ko = ko.replace(tzinfo=timezone.utc)
+                    hrs = (ko - datetime.now(timezone.utc)).total_seconds() / 3600
+                except Exception:
+                    pass
+                upcoming.append({"gk": gk, "home": fx["home"], "away": fx["away"],
+                                 "md": fx.get("matchday"), "date": ds, "hrs": hrs})
+
+    errors: list[str] = []
+    warns:  list[str] = []
+    oks:    list[str] = []
+
+    # ── 1) FEED-FRISCHE ──────────────────────────────────────────────────
+    # Weather: muss für anstehende Spiele Temperaturen haben
+    wfile = BASE / "wm_weather.json"
+    wdata = _load(wfile) or {}
+    wmatches = wdata.get("matches", {}) if isinstance(wdata, dict) else {}
+    if not wmatches:
+        errors.append("🌡️ Weather: wm_weather.json fehlt/leer → weather_signal kann nicht feuern")
+    else:
+        with_temp = sum(1 for v in wmatches.values()
+                        if v.get("forecastAvailable") and v.get("tempMax") is not None)
+        age = _mtime_age_h(wfile)
+        if with_temp == 0:
+            errors.append("🌡️ Weather: 0 Spiele mit Temperatur (forecastAvailable=False überall) "
+                          "→ Fetch prüfen (WEATHERAPI_KEY / Actions-Log)")
+        elif age is not None and age > STALE_HOURS:
+            warns.append(f"🌡️ Weather: {with_temp} Spiele mit Forecast, aber Datei ~{age:.0f}h alt")
+        else:
+            oks.append(f"🌡️ Weather: {with_temp} Spiele mit Forecast")
+
+    # Pinnacle-Odds-Frische (WICHTIGSTES Feed — Basis für Edge, Cards UND Trading)
+    odds = wm.get("odds", {}) or {}
+    newest_odds_h = None
+    for v in odds.values():
+        ts = v.get("updatedAt") if isinstance(v, dict) else None
+        if not ts:
+            continue
+        try:
+            t = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+            if t.tzinfo is None:
+                t = t.replace(tzinfo=timezone.utc)
+        except Exception:
+            continue
+        age = (datetime.now(timezone.utc) - t).total_seconds() / 3600
+        if newest_odds_h is None or age < newest_odds_h:
+            newest_odds_h = age
+    if newest_odds_h is None:
+        errors.append("🎲 Pinnacle-Odds: keine updatedAt-Timestamps → fetch_wm_odds prüfen")
+    elif newest_odds_h > STALE_HOURS:
+        errors.append(f"🎲 Pinnacle-Odds EINGEFROREN: frischeste {newest_odds_h:.0f}h alt "
+                      f"(fetch_wm_odds tot?) → Edges/Cards/Trading laufen auf veralteten Preisen!")
+    else:
+        oks.append(f"🎲 Pinnacle-Odds: frischeste {newest_odds_h:.1f}h alt")
+
+    # APIF Predictions
+    afile = BASE / "wm_apif_predictions.json"
+    adata = _load(afile)
+    if not adata:
+        errors.append("📊 APIF-Predictions: wm_apif_predictions.json fehlt/leer "
+                      "→ apif_predictions-Signal tot (APISPORTS_KEY / Actions-Log prüfen)")
+    else:
+        n = len([k for k in adata if isinstance(adata.get(k), dict)])
+        oks.append(f"📊 APIF-Predictions: {n} Spiele")
+
+    # Lineups — nur relevant wenn ein Spiel in <= LINEUP_WINDOW_H Stunden
+    imminent = [u for u in upcoming if u["hrs"] is not None and 0 <= u["hrs"] <= LINEUP_WINDOW_H]
+    lfile = BASE / "wm_lineups.json"
+    ldata = _load(lfile) or {}
+    if imminent:
+        if not ldata:
+            errors.append(f"📋 Lineups: {len(imminent)} Spiel(e) in <{LINEUP_WINDOW_H:.0f}h, "
+                          "aber wm_lineups.json fehlt/leer → lineup_signal feuert nicht")
+        else:
+            oks.append(f"📋 Lineups: {len(ldata)} Spiele geladen ({len(imminent)} imminent)")
+    else:
+        oks.append("📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)")
+
+    # NT-xG
+    nfile = BASE / "wm_nt_xg.json"
+    ndata = _load(nfile) or {}
+    if not ndata:
+        warns.append("📈 NT-xG: wm_nt_xg.json fehlt/leer → xG-Fallback für Nicht-Europa schwächer")
+    else:
+        oks.append(f"📈 NT-xG: {len(ndata)} Teams")
+
+    # Odds-History (für steam/lead-lag/CLV)
+    hfile = BASE / "wm2026-odds-history.json"
+    hdata = _load(hfile) or {}
+    if hdata:
+        avg = sum(len(v) for v in hdata.values() if isinstance(v, list)) / max(len(hdata), 1)
+        oks.append(f"📉 Odds-History: {len(hdata)} Fixtures, Ø {avg:.1f} Snapshots")
+    else:
+        warns.append("📉 Odds-History fehlt → steam_lag/lead_lag/CLV ohne Basis")
+
+    # Poly-Preise (für Auto-Trade-Edge)
+    pfile = BASE / "wm_poly_prices.json"
+    pdata = _load(pfile) or {}
+    if (pdata.get("prices") if isinstance(pdata, dict) else None):
+        oks.append(f"💹 Poly-Preise: {len(pdata['prices'])} Fixtures")
+    else:
+        warns.append("💹 Poly-Preise fehlen/leer → Auto-Trade & polymarket_sharp ohne Basis")
+
+    # ── 2) SIGNAL-FEUERN (aus aktuellen Picks) ───────────────────────────
+    try:
+        from sharp_signals.registry import ACTIVE_SIGNALS
+        signal_names = [s.name() for s in ACTIVE_SIGNALS]
+    except Exception:
+        signal_names = ["lead_lag_bias", "public_static_bias", "travel_burden", "injury",
+                        "form_trend", "h2h_pattern", "xg_strength", "polymarket_sharp",
+                        "steam_lag", "pressure_index", "lineup_signal", "apif_predictions",
+                        "weather_signal", "incentive_signal", "altitude_signal"]
+
+    fire = {n: 0 for n in signal_names}
+    for plist in picks.values():
+        if not isinstance(plist, list):
+            continue
+        for p in plist:
+            for s in (p.get("signals") or []):
+                if s.get("name") in fire:
+                    fire[s["name"]] += 1
+
+    max_md = max((u["md"] or 0) for u in upcoming) if upcoming else 0
+    # Erwartung pro Signal: ('core' = muss feuern, sonst kontextabhängig OK bei 0)
+    CORE = {"form_trend", "xg_strength", "travel_burden", "pressure_index"}
+    CONDITIONAL_OK = {
+        "lineup_signal":    "feuert erst T-1h",
+        "incentive_signal": "feuert ab MD2",
+        "injury":           "nur bei gemeldeten Ausfällen",
+        "steam_lag":        "nur bei Quotenbewegung",
+        "lead_lag_bias":    "nur bei Quotenbewegung",
+        "polymarket_sharp": "nur bei Poly↔Pinnacle-Divergenz",
+        "h2h_pattern":      "nur bei ≥3 H2H-Spielen",
+        "altitude_signal":  "nur Höhen-Venues",
+        "public_static_bias": "nur bei Sharp-vs-Public-Divergenz",
+        "weather_signal":   "nur bei ≥30°C + Klima-Asymmetrie",
+        "apif_predictions": "nur wenn APIF-Daten vorhanden",
+    }
+    for n in signal_names:
+        if fire[n] > 0:
+            continue
+        if n in CORE:
+            errors.append(f"🧠 Signal '{n}' feuert in 0 Picks — sollte als Kern-Signal feuern!")
+        else:
+            warns.append(f"🧠 Signal '{n}' feuert nicht ({CONDITIONAL_OK.get(n, 'kontextabhängig')})")
+
+    # ── Report ───────────────────────────────────────────────────────────
+    fired = [n for n in signal_names if fire[n] > 0]
+    print("=== Pre-Match Readiness Check ===")
+    print(f"Stand: {datetime.now(timezone.utc):%Y-%m-%d %H:%M} UTC · Fenster: +{WINDOW_DAYS}d")
+    print(f"Anstehende Spiele: {len(upcoming)}"
+          + (f" (nächstes in {min((u['hrs'] for u in upcoming if u['hrs'] is not None), default=0):.1f}h)"
+             if upcoming else ""))
+    print(f"Signale feuern: {len(fired)}/{len(signal_names)} — {', '.join(fired) or 'keine'}")
+    print()
+    if oks:
+        print("✅ OK:")
+        for o in oks:
+            print("   " + o)
+    if warns:
+        print("\n⚠️  Hinweise (erwartbar / kein Blocker):")
+        for w in warns:
+            print("   " + w)
+    if errors:
+        print("\n❌ ECHTE LÜCKEN:")
+        for e in errors:
+            print("   " + e)
+    else:
+        print("\n✅ Keine echten Lücken — Engine ist bereit.")
+
+    # ── Telegram-Alert nur bei echten Lücken ─────────────────────────────
+    if errors:
+        lines = [f"⚠️ <b>Readiness-Check: {len(errors)} Lücke(n)</b>",
+                 f"<i>Signale feuern: {len(fired)}/{len(signal_names)} · "
+                 f"{len(upcoming)} Spiele im Fenster</i>", ""]
+        lines += ["• " + e for e in errors[:8]]
+        if warns:
+            lines += ["", "<i>Hinweise:</i>"] + ["· " + w for w in warns[:4]]
+        tg_send("\n".join(lines))
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
