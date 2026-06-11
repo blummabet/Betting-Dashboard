@@ -3628,7 +3628,10 @@ function _polyStatsHtml(c) {
         const resColor = r === 'WIN' ? '#3fb950' : r === 'LOSS' ? '#f85149' : '#8b949e';
         const dt = (b.placedAt || '').slice(0, 10).split('-').reverse().join('.');
         const pricePct = b.polyPrice ? `${Math.round(b.polyPrice * 100)}¢` : '—';
-        const src = b.source === 'auto' ? '<span title="Auto-Trader">🤖</span>' : '<span title="Manuell">✋</span>';
+        const isAuto = b.source === 'auto';
+        const src = isAuto
+          ? '<span style="background:rgba(63,185,80,.12);border:1px solid rgba(63,185,80,.4);color:#3fb950;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;white-space:nowrap" title="Vom Auto-Trader gesetzt">🤖 Auto</span>'
+          : '<span style="background:rgba(227,179,65,.12);border:1px solid rgba(227,179,65,.4);color:#e3b341;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;white-space:nowrap" title="Manuell gesetzt">✋ Manuell</span>';
         const pnlStr = (r && r !== 'PENDING') ? ` <span style="color:${resColor};font-size:11px">${(+b.pnl >= 0 ? '+' : '')}$${(+b.pnl || 0).toFixed(2)}</span>` : '';
         return `<tr style="border-bottom:1px solid #30363d">
           <td style="padding:9px 12px;font-size:11px;color:#8b949e">${dt}</td>
@@ -3645,7 +3648,7 @@ function _polyStatsHtml(c) {
   return `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
       <span style="font-size:11px;color:#8b949e">Live aus <code style="color:#a78bfa">wm_results.json</code> · Server-getrackt (Auto-Trader + resolve_wm_results) · Stand ${upd}</span>
-      <span style="margin-left:auto;font-size:11px;color:#8b949e">${placedArr.length} platziert · ${pending} offen</span>
+      <span style="margin-left:auto;font-size:11px;color:#8b949e">🤖 ${allBets.filter(b => b.source === 'auto').length} Auto · ✋ ${allBets.filter(b => b.source && b.source !== 'auto').length} Manuell · ${pending} offen</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px">
       ${cards.join('')}
@@ -3665,7 +3668,7 @@ function _polyStatsHtml(c) {
             <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Spiel</th>
             <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Markt</th>
             <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Preis</th>
-            <th style="padding:8px 12px;text-align:center;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Via</th>
+            <th style="padding:8px 12px;text-align:center;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Typ</th>
             <th style="padding:8px 12px;text-align:left;font-size:9px;color:#8b949e;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Result</th>
           </tr>
         </thead>
