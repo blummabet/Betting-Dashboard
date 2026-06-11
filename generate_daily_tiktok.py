@@ -305,7 +305,11 @@ def _strat_biggest_elo_gap(wm: dict, exclude: set = None) -> dict | None:
             if eh and ea:
                 pairs.append((abs(eh-ea), h, a, fx))
     if not pairs: return None
-    pairs.sort(reverse=True)
+    # FIX 11.06.2026: nur nach Elo-Gap sortieren. Vorher pairs.sort(reverse=True) →
+    # bei gleichem Gap verglich Python die Team-Dicts dahinter → TypeError
+    # "'<' not supported between instances of 'dict' and 'dict'" → Killer-Stat
+    # crashte → KEINE Daily-Cards. Key fixt das.
+    pairs.sort(key=lambda p: p[0], reverse=True)
     pairs = [p for p in pairs if p[1]["id"] not in exclude and p[2]["id"] not in exclude]
     if not pairs: return None
     gap, h, a, fx = pairs[0]

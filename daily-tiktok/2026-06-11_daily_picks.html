@@ -31,8 +31,16 @@ body { background:#0a0e18; display:flex; align-items:center; justify-content:cen
   text-transform:uppercase; letter-spacing:1.2px; }
 .hero { background:rgba(0,212,161,0.06); border:1px solid rgba(0,212,161,0.30);
   border-radius:12px; padding:14px 14px 12px; margin-bottom:14px; }
-.hero-verdict { font-size:9px; font-weight:800; letter-spacing:1.8px; color:#00d4a1;
-  text-transform:uppercase; margin-bottom:6px; }
+.hero-verdict {
+  display:inline-block;
+  font-size:10px; font-weight:800; letter-spacing:1.5px;
+  color:#00d4a1;
+  background:rgba(0,212,161,0.18);
+  border:1px solid rgba(0,212,161,0.45);
+  border-radius:999px;
+  padding:4px 10px;
+  text-transform:uppercase; margin-bottom:8px;
+}
 .hero-match { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
 .hero-flag { font-size:22px; }
 .hero-teams { font-size:14px; font-weight:800; color:#fff; line-height:1.25; flex:1; }
@@ -49,6 +57,17 @@ body { background:#0a0e18; display:flex; align-items:center; justify-content:cen
   border-radius:5px; padding:2px 7px; }
 .hero-story { font-size:10.5px; color:rgba(255,255,255,0.65); line-height:1.45;
   flex:1; }
+/* Engine-Strip (NEU 09.06.2026): Conviction-Badge + Sharp-Move + Top-Signal */
+.hero-engine-strip { display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; padding-top:8px;
+  border-top:1px dashed rgba(255,255,255,0.06); }
+.hero-conv { font-size:10px; font-weight:800; padding:3px 8px; border-radius:6px; letter-spacing:0.3px; }
+.hero-conv-top { background:rgba(0,212,161,0.15); color:#00d4a1; border:1px solid rgba(0,212,161,0.4); }
+.hero-conv-good { background:rgba(125,211,252,0.15); color:#7dd3fc; border:1px solid rgba(125,211,252,0.4); }
+.hero-conv-watch { background:rgba(255,176,46,0.12); color:#ffb02e; border:1px solid rgba(255,176,46,0.35); }
+.hero-sharp { font-size:10px; font-weight:800; color:#ff8a8a; background:rgba(255,107,107,0.12);
+  border:1px solid rgba(255,107,107,0.35); border-radius:6px; padding:3px 8px; }
+.hero-top-sig { font-size:10px; font-weight:600; color:rgba(255,255,255,0.7);
+  background:rgba(255,255,255,0.04); border-radius:6px; padding:3px 8px; }
 .other-label { font-size:9px; color:rgba(255,255,255,0.40); letter-spacing:1.5px;
   text-transform:uppercase; font-weight:700; margin-bottom:8px; }
 .op-row { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04);
@@ -85,31 +104,44 @@ body { background:#0a0e18; display:flex; align-items:center; justify-content:cen
       <div class="date-main">Do · 11.06.2026</div>
       <div class="date-sub">WM 2026 · Gruppenphase</div>
     </div>
-    <div class="date-sub">1 Spiel</div>
+    <div class="date-sub">2 Spiele</div>
   </div>
   <div class="hero">
-    <div class="hero-verdict">UNSER PICK</div>
+    <div class="hero-verdict">💎 MAIN-PICK</div>
     <div class="hero-match">
-      <span class="hero-flag">🇨🇦</span>
-      <div class="hero-teams">Kanada <span style="color:rgba(255,255,255,0.45);font-weight:400;">vs</span> Bosnien-H.</div>
-      <span class="hero-flag">🇧🇦</span>
+      <span class="hero-flag">🇰🇷</span>
+      <div class="hero-teams">Südkorea <span style="color:rgba(255,255,255,0.45);font-weight:400;">vs</span> Tschechien</div>
+      <span class="hero-flag">🇨🇿</span>
     </div>
-    <div class="hero-meta">18:00 Uhr · BMO Field, Toronto</div>
+    <div class="hero-meta">00:00 Uhr · SoFi Stadium, Los Angeles</div>
     <div class="hero-pick-row">
-      <div class="hero-market">DNB: Auswärtsteam</div>
-      <div class="hero-odds">3.45</div>
+      <div class="hero-market">Heimsieg</div>
+      
     </div>
     <div class="hero-edge-row">
-      <span class="hero-edge">+14pp Edge</span>
-      <span class="hero-story">Modell sieht klar Edge auf den Underdog.</span>
+      
+      <span class="hero-story">Solider Edge mit guten Daten.</span>
     </div>
+    
   </div>
-  
+  <div class="other-label">Weitere im Blick</div>
+        <div class="op-row">
+          <div class="op-match">
+            <span class="op-flags">🇲🇽 🇿🇦</span>
+            <span class="op-teams">Mexiko – Südafrika</span>
+          </div>
+          <div class="op-pick-row">
+            <span class="op-vrd" style="color:#f5c518;background:rgba(245,197,24,0.10);border:1px solid rgba(245,197,24,0.30);">ABWÄGEN</span>
+            <span class="op-market">Unter 1.5 Tore</span>
+            
+            
+          </div>
+        </div>
   <div class="closing">
     <div class="closing-txt">Picks aus eigenem Modell · jeder mit Edge-Begründung. <strong>cocobet.</strong></div>
   </div>
   <div class="footer">
-    <div class="ft ft-stand">Modell · Pinnacle · Devig</div>
+    <div class="ft ft-stand">Modell · Eigene Analyse</div>
     <div class="ft">cocobet · transparent</div>
   </div>
 </div>
