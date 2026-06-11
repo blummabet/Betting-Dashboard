@@ -1,7 +1,11 @@
 name: 🚀 Deploy to GitHub Pages
 
 on:
-  # Deployen wenn sich HTML/JS/CSS oder WM-Spieldaten geändert haben
+  # Deployen wenn sich HTML/JS/CSS oder WM-Spieldaten geändert haben.
+  # ACHTUNG: greift NUR bei menschlichen Pushes. Commits, die die CI mit dem
+  # default GITHUB_TOKEN pusht (Dashboard Bot, 5x/Tag Daten-Updates), lösen
+  # per GitHub-Rekursionsschutz KEINE Workflows aus → dieser push-Trigger
+  # sieht Bot-Daten-Updates nicht. Deshalb zusätzlich der schedule unten.
   push:
     branches: [main]
     paths:
@@ -10,6 +14,13 @@ on:
       - '**.css'
       - '.nojekyll'
       - '**.json'
+
+  # Universeller Sicherheitsnetz-Trigger: republisht main alle 15 Min, damit
+  # JEDES Bot-Daten-Update (Venues, Kickoffs, wm_status, Poly, Lineups …) auf
+  # der Live-Seite landet — ohne dass man jeden Daten-Workflow einzeln
+  # verdrahten muss. Deploy ist gratis (public repo) + concurrency-sicher.
+  schedule:
+    - cron: '*/15 * * * *'
 
   # Manuell jederzeit ausführbar
   workflow_dispatch:
