@@ -27,6 +27,7 @@
   let _grpFilter = 'all';
   let _mdFilter  = 'all';    // 'all' | 1 | 2 | 3
   let _vrdFilter = 'all';    // 'all' | 'BET' | 'ABWÄGEN' | 'SKIP'
+  let _trkSort   = 'chrono'; // 'chrono' (Standard, nach Anpfiff) | 'bet' (nach Pick-Stärke)
   let _showTop   = false;    // toggle for Top Picks section
   let _validationReport = null;
   let _showValidation   = false;
@@ -78,6 +79,7 @@
   window.wmTrkSetGroup   = g  => { _grpFilter = g;  _render(); };
   window.wmTrkSetMd      = md => { _mdFilter  = md; _render(); };
   window.wmTrkSetVerdict = v  => { _vrdFilter = v;  _render(); };
+  window.wmTrkSetSort    = s  => { _trkSort = s;   _render(); };
   window.wmTrkToggleTop  = () => { _showTop = !_showTop; _render(); };
   window.wmTrkRefresh    = () => { _loaded = false; _data = null; _validationReport = null; _auditReport = null; window.initIntlTracking(); };
   window.wmTrkToggleVal  = () => { _showValidation = !_showValidation; _showAudit = false; _render(); };
@@ -167,6 +169,17 @@
       }
     }
 
+    // Sortierung (11.06.2026): 'chrono' = nach Anpfiff (filtered ist schon
+    // chronologisch sortiert → flatPicks-Reihenfolge passt). 'bet' = nach
+    // Pick-Stärke (BET zuerst, dann Edge absteigend).
+    if (_trkSort === 'bet') {
+      const _vrank = v => (v === 'BET' ? 0 : v === 'ABWÄGEN' ? 1 : 2);
+      flatPicks.sort((a, b) => {
+        if (_vrank(a.verdict) !== _vrank(b.verdict)) return _vrank(a.verdict) - _vrank(b.verdict);
+        return (b.edgePP || 0) - (a.edgePP || 0);
+      });
+    }
+
     // Top Picks = BET verdict
     const topPicks = flatPicks.filter(p => p.verdict === 'BET');
 
@@ -223,6 +236,15 @@
     for (const [val, lbl, ico] of vrdOpts) {
       const active = _vrdFilter === val;
       html += `<button class="wm-md-btn${active ? ' active' : ''}" onclick="wmTrkSetVerdict('${val}')">${ico} ${lbl}</button>`;
+    }
+    html += `</div>`;
+
+    // Sortierung: chronologisch (Standard) vs nach Pick-Stärke (BET) — NEU 11.06.2026
+    html += `<div class="wm-trk-vrd-filter" style="margin-top:6px;">`;
+    html += `<span style="font-size:11px;color:var(--muted);align-self:center;margin-right:4px;">Sortierung:</span>`;
+    for (const [val, lbl, ico] of [['chrono','Chronologisch','📅'],['bet','Nach Pick-Stärke','🟢']]) {
+      const active = _trkSort === val;
+      html += `<button class="wm-md-btn${active ? ' active' : ''}" onclick="wmTrkSetSort('${val}')">${ico} ${lbl}</button>`;
     }
     html += `</div>`;
 

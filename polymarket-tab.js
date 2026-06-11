@@ -3192,12 +3192,14 @@ async function loadCockpitData() {
     `${base}/wm_poly_balance.json?t=${t}`,
     `${base}/wm_kill_switch.json?t=${t}`,
     `${base}/wm_poly_prices.json?t=${t}`,
+    `${base}/wm2026-data.json?t=${t}`,   // für Pinnacle-Odds-Frische (Edge-Basis)
   ];
   const fallbacks = [
     'wm_auto_bets_placed.json',
     'wm_poly_balance.json',
     'wm_kill_switch.json',
     'wm_poly_prices.json',
+    'wm2026-data.json',
   ];
   const results = await Promise.all(urls.map(async (u, i) => {
     try {
@@ -3210,7 +3212,7 @@ async function loadCockpitData() {
     } catch {}
     return null;
   }));
-  return { placed: results[0], balance: results[1], kill: results[2], poly: results[3] };
+  return { placed: results[0], balance: results[1], kill: results[2], poly: results[3], data: results[4] };
 }
 
 function _polyCurrentPrice(bet, polyData) {
@@ -3242,7 +3244,7 @@ function _polyHoursUntil(iso) {
 }
 
 function renderTradingCockpit(data) {
-  const { placed, balance: bal, kill, poly } = (data || {});
+  const { placed, balance: bal, kill, poly, data: wmData } = (data || {});
   const bets = (placed?.bets) || [];
   const balanceUsd = parseFloat(bal?.usdc || 0);
   const killEnabled = (kill?.enabled !== false);
@@ -3417,7 +3419,35 @@ function renderTradingCockpit(data) {
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div>
         <div style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#00d4a1;text-transform:uppercase">🎮 Trading Cockpit</div>
-        <div style="font-size:10px;color:#8b949e;margin-top:2px">Live aus GitHub · zuletzt geladen ${new Date().toLocaleTimeString('de-AT', {hour:'2-digit',minute:'2-digit'})}</div>
+        <div style="font-size:10px;color:#8b949e;margin-top:2px">Live aus GitHub</div>
+        ${(() => {
+          // FIX 11.06.2026: ECHTE Daten-Frische statt "zuletzt geladen" (= nur Ladezeit).
+          // Poly-Trade-Edge = Pinnacle-fair vs Poly-Preis → BEIDE müssen frisch sein.
+          // Rot + STALE ab 24h = exakt die Schwelle, ab der der Stale-Odds-Breaker
+          // den Auto-Trade stoppt. So sieht man sofort ob "nichts zu traden" =
+          // "ok, kein Edge" oder "Achtung, alte Daten".
+          const _parseDe = s => {
+            const m = (s || '').match(/(\d{2})\.(\d{2})\.(\d{4})\s+(\d{2}):(\d{2})/);
+            return m ? Date.UTC(+m[3], +m[2]-1, +m[1], +m[4], +m[5]) : null;
+          };
+          const now = Date.now();
+          const polyTs = _parseDe(poly && poly.generatedAt);
+          const polyH = polyTs ? (now - polyTs) / 3600000 : null;
+          let pinnTs = 0;
+          for (const v of Object.values((wmData && wmData.odds) || {})) {
+            if (v && v.updatedAt) { const t = new Date(v.updatedAt).getTime(); if (!isNaN(t) && t > pinnTs) pinnTs = t; }
+          }
+          const pinnH = pinnTs ? (now - pinnTs) / 3600000 : null;
+          const fmt = h => h == null ? '?' : h < 1 ? '<1h' : h < 24 ? Math.round(h) + 'h' : Math.floor(h/24) + 'd';
+          const worst = Math.max(polyH || 0, pinnH || 0);
+          const col = worst < 6 ? '#00d4a1' : worst < 24 ? '#e3b341' : '#f85149';
+          const stale = (pinnH != null && pinnH >= 24) || (polyH != null && polyH >= 24);
+          return `<div style="margin-top:6px;font-size:11px;font-weight:700;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            <span style="color:${col};background:rgba(0,0,0,0.25);border:1px solid ${col}66;border-radius:5px;padding:2px 8px;">📊 Poly-Preise: ${fmt(polyH)} alt</span>
+            <span style="color:${col};background:rgba(0,0,0,0.25);border:1px solid ${col}66;border-radius:5px;padding:2px 8px;">🎲 Pinnacle-Odds: ${fmt(pinnH)} alt</span>
+            ${stale ? '<span style="color:#f85149;font-weight:800;">⚠️ STALE — Auto-Trade pausiert (Breaker greift)</span>' : '<span style="color:#00d4a1;">✓ Daten frisch</span>'}
+          </div>`;
+        })()}
       </div>
       <button onclick="refreshCockpit()" style="background:rgba(0,212,161,.1);border:1px solid rgba(0,212,161,.3);color:#00d4a1;border-radius:8px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">↻ Refresh</button>
     </div>
