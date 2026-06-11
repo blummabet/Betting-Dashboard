@@ -123,61 +123,65 @@ def main() -> int:
     apif_to_code.setdefault(1113, "BIH")  # Bosnia & Herzegovina (falls in teamIds noch nicht)
     print(f"   {len(apif_to_code)} Team-IDs gemappt (apif_id → code)")
 
-    fixtures = fetch_wc_fixtures()
-    print(f"   {len(fixtures)} WC-Fixtures von API-Football erhalten")
-    if not fixtures:
-        print("⚠️  Keine Fixtures — API listet WC2026 (noch) nicht ODER Key/League/Season falsch.")
-        return 1
-
-    vmap = build_venue_map(fixtures, apif_to_code)
-    with_venue = sum(1 for v in vmap.values() if v["venue"])
-    print(f"   {len(vmap)} Fixtures gemappt, davon {with_venue} mit Venue\n")
-
-    # Auf unsere Gruppen-Fixtures anwenden
-    changed, set_kickoff, unmapped = [], 0, []
+    # ── 1) Committete Schedule deterministisch anwenden (KEIN API nötig) ─────
+    # Bulletproof: wm_venue_schedule.json ist fixe, korrekte Daten. Wird IMMER
+    # zuerst angewendet — so landet der Venue/Kickoff-Fix auch wenn der API-Call
+    # im CI fehlschlägt (vorher: `return 1` ohne zu schreiben → Venues blieben falsch).
     schedule = {}
-    for gdata in wm.get("groups", {}).values():
-        for fx in gdata.get("fixtures", []):
-            h, a = fx.get("home"), fx.get("away")
-            key = frozenset((h, a))
-            info = vmap.get(key)
-            mk = f"{h}-{a}"
-            if not info or not info["venue"]:
-                unmapped.append(mk)
-                continue
-            old_venue = fx.get("venue")
-            new_venue = info["venue"]
-            if old_venue != new_venue:
-                changed.append((mk, old_venue, new_venue))
-            schedule[mk] = {
-                "venue":   new_venue,
-                "city":    info["city"],
-                "kickoff": info["kickoff"],
-                "fixtureId": info["fixtureId"],
-            }
-            if write:
-                fx["venue"] = new_venue
-                if not fx.get("kickoff") and info.get("kickoff"):
-                    fx["kickoff"] = info["kickoff"]
-                    set_kickoff += 1
+    if OUT_FILE.exists():
+        try:
+            schedule = json.loads(OUT_FILE.read_text(encoding="utf-8")) or {}
+        except Exception:
+            schedule = {}
+    pre_changed, pre_ko = _apply_to_fixtures(wm, schedule, write)
+    if schedule:
+        print(f"   📁 Schedule angewendet: {len(pre_changed)} Venue-Korrekturen, {pre_ko} Kickoffs "
+              f"(aus committeter wm_venue_schedule.json)")
 
-    print(f"📋 {len(changed)} Venue-Korrekturen, {len(unmapped)} ungemappt:")
-    for mk, old, new in changed[:30]:
-        print(f"   {mk:10}  {old or '—'}  →  {new}")
-    if len(changed) > 30:
-        print(f"   … +{len(changed)-30} weitere")
-    if unmapped:
-        print(f"   ⚠️  ungemappt (Venue bleibt): {', '.join(unmapped[:12])}"
-              + (" …" if len(unmapped) > 12 else ""))
+    # ── 2) API-Refresh (best effort) — hält Schedule + Fixtures aktuell ──────
+    fixtures = fetch_wc_fixtures()
+    if fixtures:
+        vmap = build_venue_map(fixtures, apif_to_code)
+        mk_to_info = {f"{v['home']}-{v['away']}": v for v in vmap.values() if v.get("venue")}
+        api_changed, api_ko = _apply_to_fixtures(wm, mk_to_info, write)
+        schedule = {mk: {"venue": v["venue"], "city": v["city"],
+                         "kickoff": v["kickoff"], "fixtureId": v["fixtureId"]}
+                    for mk, v in mk_to_info.items()}
+        print(f"   🌐 API-Refresh: {len(fixtures)} Fixtures, {len(api_changed)} weitere Venue-Korrekturen")
+        for mk, old, new in api_changed[:15]:
+            print(f"      {mk:10} {old or '—'} → {new}")
+    else:
+        print("   ⚠️  API lieferte keine Fixtures — committete Schedule bleibt maßgeblich (Venues korrekt).")
 
     if write:
-        OUT_FILE.write_text(json.dumps(schedule, ensure_ascii=False, indent=2), encoding="utf-8")
+        if schedule:
+            OUT_FILE.write_text(json.dumps(schedule, ensure_ascii=False, indent=2), encoding="utf-8")
         WM_FILE.write_text(json.dumps(wm, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-        print(f"\n✅ geschrieben: wm2026-data.json ({len(changed)} Venues, {set_kickoff} Kickoffs) "
-              f"+ wm_venue_schedule.json ({len(schedule)} Spiele)")
+        print(f"\n✅ geschrieben: wm2026-data.json + wm_venue_schedule.json ({len(schedule)} Spiele)")
     else:
         print("\nℹ️  DRY-RUN — nichts geschrieben. Mit  --write  anwenden.")
     return 0
+
+
+def _apply_to_fixtures(wm: dict, mk_to_info: dict, write: bool):
+    """Setzt venue + kickoff je Gruppen-Fixture aus {matchKey: {venue,city,kickoff}}.
+    Returns (changed_list, n_kickoffs_set)."""
+    changed, ko_set = [], 0
+    for gdata in (wm.get("groups") or {}).values():
+        for fx in (gdata.get("fixtures") or []):
+            mk = f"{fx.get('home')}-{fx.get('away')}"
+            info = mk_to_info.get(mk)
+            if not info or not info.get("venue"):
+                continue
+            if fx.get("venue") != info["venue"]:
+                changed.append((mk, fx.get("venue"), info["venue"]))
+            if write:
+                fx["venue"] = info["venue"]
+                if info.get("kickoff"):
+                    if fx.get("kickoff") != info["kickoff"]:
+                        ko_set += 1
+                    fx["kickoff"] = info["kickoff"]
+    return changed, ko_set
 
 
 if __name__ == "__main__":
