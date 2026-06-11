@@ -463,6 +463,17 @@ const WM_POLY_MIN_EDGE_PP   = 5;        // mindestens +5pp Edge
 const WM_POLY_BET_ONLY      = true;     // nur verdict=BET, ABWÄGEN raus
 const WM_POLY_DAYS_AHEAD    = 7;        // nicht nur heute — Tag-für-Tag-Filter macht Lucas mit Datums-Picker
 
+// Anpfiff (Datum + Zeit, UTC) bereits vorbei? Daten-Zeiten sind UTC-basiert.
+// 00:00-Platzhalter werden so am jeweiligen Spieltag korrekt als "vorbei" erkannt,
+// bis echte Kickoff-Zeiten aus API-Football vorliegen (offener Punkt).
+function _wmKickoffPassed(fx) {
+  if (!fx || !fx.date) return false;
+  const t = (fx.time && /^\d{2}:\d{2}/.test(fx.time)) ? fx.time : '23:59';
+  const ko = new Date(`${fx.date}T${t}:00Z`);
+  if (isNaN(ko.getTime())) return false;
+  return ko.getTime() <= Date.now();
+}
+
 function _extractWmPicksForDate(wm, dateStr) {
   const results = [];
   const picks = wm.picks || {};
@@ -497,6 +508,11 @@ function _extractWmPicksForDate(wm, dateStr) {
     const fx = (g.fixtures || []).find(f => f.home === hId && f.away === aId && f.matchday === md);
     // fx.date ist ISO YYYY-MM-DD — gegen konvertiertes dateStrIso vergleichen
     if (!fx || fx.date !== dateStrIso) continue;
+    // FIX 11.06.2026: Spiele mit bereits vergangenem Anpfiff NICHT mehr als Wette
+    // anbieten. Betrifft v.a. die 00:00-Platzhalter-Zeiten (8 Fixtures): ein Spiel
+    // mit Anpfiff "heute 00:00" ist schon vorbei/läuft → darf nicht als frische
+    // Wette gelistet werden (Lucas: KOR-CZE erschien fälschlich als "heute").
+    if (_wmKickoffPassed(fx)) continue;
 
     const hInfo = teamLookup[hId] || { name: hId, flag: '🏳' };
     const aInfo = teamLookup[aId] || { name: aId, flag: '🏳' };
@@ -3525,105 +3541,114 @@ function renderAutoTraderConfig() {
     </details>`;
 }
 
-function renderPolyStats() {
-  // Merge localStorage bets with session-memory fallback (deduped by id)
-  const lsBets  = _getPolyBets();
-  const lsIds   = new Set(lsBets.map(b => b.id));
-  const sessBets = Object.values(window._polyPlacedThisSession || {})
-                    .filter(b => !lsIds.has(b.id));
-  const bets    = [...lsBets, ...sessBets];
-  const total   = bets.length;
-  const resolved = bets.filter(b => b.result && b.result !== 'void');
-  const won      = bets.filter(b => b.result === 'won').length;
-  const lost     = bets.filter(b => b.result === 'lost').length;
-  const winRate  = resolved.length > 0 ? Math.round(won / resolved.length * 100) : null;
-  const staked   = bets.reduce((s, b) => s + (b.stake || 0), 0);
-  const returned = bets.filter(b => b.result === 'won')
-    .reduce((s, b) => s + (b.polyPrice > 0 ? b.stake / b.polyPrice : 0), 0);
-  const pnl      = returned - staked;
-  const roi      = staked > 0 ? Math.round(pnl / staked * 100) : null;
+// ── Performance-Sektion (Server-Daten, 11.06.2026 neu gebaut) ───────────────
+// Vorher: localStorage 'betedge_poly_bets' + picks_history.json (frühe Manual-
+// Tracking-Version, Resultate 'won'/'lost', €). Jetzt autoritativ aus
+// wm_results.json (P&L/CLV/WIN-LOSS, resolve_wm_results.py) + wm_auto_bets_
+// placed.json (Auto-Trader) + wm_poly_balance.json — dieselbe Quelle wie
+// Status-Tab & Trading-Cockpit. Keine Karteileiche mehr.
+let _polyStatsCache = null;
+let _polyStatsLoading = false;
 
-  const statCards = [
-    {
-      label: 'Total Bets',
-      value: total,
-      sub:   `${won}W · ${lost}L · ${total - won - lost} open`,
-      color: '#e6edf3',
-    },
-    {
-      label: 'Win Rate',
-      value: winRate !== null ? `${winRate}%` : '—',
-      sub:   `${resolved.length} abgeschlossen`,
-      color: winRate !== null ? (winRate >= 50 ? '#3fb950' : '#f85149') : '#8b949e',
-    },
-    {
-      label: 'Einsatz',
-      value: `€${staked.toFixed(2)}`,
-      sub:   `Ø €${total > 0 ? (staked / total).toFixed(2) : '—'} / Bet`,
-      color: '#e6edf3',
-    },
-    {
-      label: 'P&L',
-      value: `€${pnl >= 0 ? '+' : ''}${pnl.toFixed(2)}`,
-      sub:   roi !== null ? `ROI: ${roi > 0 ? '+' : ''}${roi}%` : 'ROI: —',
-      color: pnl > 0 ? '#3fb950' : pnl < 0 ? '#f85149' : '#8b949e',
-    },
+async function _loadPolyStatsData() {
+  if (_polyStatsLoading) return;
+  _polyStatsLoading = true;
+  try {
+    const [res, placed, bal] = await Promise.all([
+      fetch('wm_results.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('wm_auto_bets_placed.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('wm_poly_balance.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    ]);
+    _polyStatsCache = { res, placed, bal };
+    const el = document.getElementById('polyStatsSection');
+    if (el) el.innerHTML = _polyStatsHtml(_polyStatsCache);
+  } finally { _polyStatsLoading = false; }
+}
+
+function renderPolyStats() {
+  _loadPolyStatsData();   // Hintergrund-Refresh; füllt #polyStatsSection wenn fertig
+  return _polyStatsCache
+    ? _polyStatsHtml(_polyStatsCache)
+    : `<div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:30px;text-align:center;color:#8b949e">⏳ Performance lädt…</div>`;
+}
+
+function _polyStatsHtml(c) {
+  const res = c.res || {};
+  const s = res.summary || {};
+  const allBets = Array.isArray(res.bets) ? res.bets : [];
+  const placedArr = (c.placed && Array.isArray(c.placed.bets)) ? c.placed.bets : [];
+  const balUsdc = c.bal ? (c.bal.total != null ? c.bal.total : (c.bal.usdc != null ? c.bal.usdc : null)) : null;
+
+  const resolved = s.resolved != null ? s.resolved : allBets.filter(b => b.result && b.result !== 'PENDING').length;
+  const wins   = s.wins   != null ? s.wins   : allBets.filter(b => b.result === 'WIN').length;
+  const losses = s.losses != null ? s.losses : allBets.filter(b => b.result === 'LOSS').length;
+  const pending= s.pending!= null ? s.pending: allBets.filter(b => b.result === 'PENDING').length;
+  const winRate = s.winRate;
+  const totalPnl = s.totalPnl != null ? s.totalPnl : 0;
+  const roi = s.roi;
+  const staked = s.totalStaked != null ? s.totalStaked : allBets.reduce((a, b) => a + (+b.stake || 0), 0);
+  const total = s.totalBets != null ? s.totalBets : allBets.length;
+  const avgClv = s.avgCLV;
+
+  const card = (label, value, sub, color) => `
+    <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px 16px">
+      <div style="font-size:10px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:700">${label}</div>
+      <div style="font-size:24px;font-weight:800;color:${color};line-height:1.1">${value}</div>
+      <div style="font-size:11px;color:#8b949e;margin-top:4px">${sub}</div>
+    </div>`;
+
+  const pnlColor = totalPnl > 0 ? '#3fb950' : totalPnl < 0 ? '#f85149' : '#8b949e';
+  const wrColor = winRate == null ? '#8b949e' : winRate >= 50 ? '#3fb950' : '#f85149';
+  const cards = [
+    card('Bilanz', resolved > 0 ? `${wins}W / ${losses}L` : '—',
+         winRate != null ? `Trefferquote ${Math.round(winRate)}%` : `${pending} offen · 0 aufgelöst`, wrColor),
+    card('P&L', `${totalPnl >= 0 ? '+' : ''}$${totalPnl.toFixed(2)}`,
+         roi != null ? `ROI ${roi >= 0 ? '+' : ''}${roi.toFixed(1)}%` : 'noch offen', pnlColor),
+    card('Einsatz', `$${staked.toFixed(2)}`,
+         `${total} Bets · Ø $${total > 0 ? (staked / total).toFixed(2) : '0.00'}`, '#e6edf3'),
+    card('Ø CLV', avgClv != null ? `${avgClv >= 0 ? '+' : ''}${avgClv.toFixed(1)}pp` : '—',
+         'Closing Line Value', avgClv == null ? '#8b949e' : avgClv >= 0 ? '#3fb950' : '#f85149'),
+    card('Balance', balUsdc != null ? `$${balUsdc.toFixed(2)}` : '—', 'USDC im Wallet',
+         balUsdc == null ? '#8b949e' : balUsdc >= 50 ? '#3fb950' : '#e3b341'),
   ];
 
-  const _toTs = s => { const [d,m,y] = (s||'00.00.0000').split('.'); return new Date(`${y}-${m}-${d}`); };
-  const recent = [...bets].sort((a,b) => _toTs(b.date) - _toTs(a.date)).slice(0, 15);
-  const rows   = recent.length === 0
-    ? `<tr><td colspan="6" style="text-align:center;color:#8b949e;padding:28px;font-size:13px">Noch keine Bets gespeichert</td></tr>`
-    : recent.map((b, i) => {
-        const resIcon   = b.result === 'won'  ? '✅' : b.result === 'lost' ? '❌' : b.result === 'void' ? '—' : '⏳';
-        const resColor  = b.result === 'won'  ? '#3fb950' : b.result === 'lost' ? '#f85149' : '#8b949e';
-        const pricePct  = b.polyPrice ? `${Math.round(b.polyPrice * 100)}¢` : '—';
-        const methIcon  = b.method === 'auto' ? '<span title="Auto via GitHub Action">🤖</span>' : '<span title="Manuell platziert">✋</span>';
+  const recent = [...allBets].sort((a, b) => (b.placedAt || '').localeCompare(a.placedAt || '')).slice(0, 15);
+  const rows = recent.length === 0
+    ? `<tr><td colspan="6" style="text-align:center;color:#8b949e;padding:28px;font-size:13px">Noch keine Auto-Trades — wm_results.json leer</td></tr>`
+    : recent.map(b => {
+        const r = b.result;
+        const resIcon = r === 'WIN' ? '✅' : r === 'LOSS' ? '❌' : r === 'VOID' ? '➖' : '⏳';
+        const resColor = r === 'WIN' ? '#3fb950' : r === 'LOSS' ? '#f85149' : '#8b949e';
+        const dt = (b.placedAt || '').slice(0, 10).split('-').reverse().join('.');
+        const pricePct = b.polyPrice ? `${Math.round(b.polyPrice * 100)}¢` : '—';
+        const src = b.source === 'auto' ? '<span title="Auto-Trader">🤖</span>' : '<span title="Manuell">✋</span>';
+        const pnlStr = (r && r !== 'PENDING') ? ` <span style="color:${resColor};font-size:11px">${(+b.pnl >= 0 ? '+' : '')}$${(+b.pnl || 0).toFixed(2)}</span>` : '';
         return `<tr style="border-bottom:1px solid #30363d">
-          <td style="padding:9px 12px;font-size:11px;color:#8b949e">${b.date}</td>
+          <td style="padding:9px 12px;font-size:11px;color:#8b949e">${dt}</td>
           <td style="padding:9px 12px;font-size:12px">${b.home} vs ${b.away}</td>
           <td style="padding:9px 12px;font-size:12px;color:${_marketColor(b.market)}">${b.market}</td>
           <td style="padding:9px 12px;font-size:12px;color:#a78bfa">${pricePct}</td>
-          <td style="padding:9px 12px;font-size:14px;text-align:center">${methIcon}</td>
-          <td style="padding:9px 12px;color:${resColor};font-weight:700">${resIcon}</td>
+          <td style="padding:9px 12px;font-size:14px;text-align:center">${src}</td>
+          <td style="padding:9px 12px;color:${resColor};font-weight:700;white-space:nowrap">${resIcon}${pnlStr}</td>
         </tr>`;
       }).join('');
 
-  return `
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px">
-      ${statCards.map(c => `
-        <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px 16px">
-          <div style="font-size:10px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;font-weight:700">${c.label}</div>
-          <div style="font-size:24px;font-weight:800;color:${c.color};line-height:1.1">${c.value}</div>
-          <div style="font-size:11px;color:#8b949e;margin-top:4px">${c.sub}</div>
-        </div>`).join('')}
-    </div>
+  const upd = res.updatedAt ? new Date(res.updatedAt).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—';
 
-    ${sessBets.length > 0 ? `
-    <div style="background:#1a2340;border:1px solid #a78bfa44;border-radius:8px;padding:10px 14px;margin-bottom:10px;font-size:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <span style="color:#a78bfa;font-weight:700">⚡ ${sessBets.length} Bet${sessBets.length!==1?'s':''} nur im Session-Memory (localStorage leer)</span>
-      <button onclick="
-        const sess=Object.values(window._polyPlacedThisSession||{});
-        const bets=_getPolyBets();
-        const ids=new Set(bets.map(b=>b.id));
-        sess.filter(b=>!ids.has(b.id)).forEach(b=>bets.push(b));
-        _savePolyBets(bets);
-        const n=_getPolyBets().length;
-        if(n>0){_polyToast('✅ '+sess.length+' Bet(s) in localStorage gespeichert');}
-        else{_polyToast('❌ localStorage-Save fehlgeschlagen — prüf Browser-Konsole');}
-        document.getElementById('polyStatsSection').innerHTML=renderPolyStats();
-      " style="background:#a78bfa22;border:1px solid #a78bfa55;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:700;padding:4px 12px;cursor:pointer;font-family:inherit">
-        💾 Jetzt in localStorage speichern
-      </button>
-    </div>` : ''}
+  return `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <span style="font-size:11px;color:#8b949e">Live aus <code style="color:#a78bfa">wm_results.json</code> · Server-getrackt (Auto-Trader + resolve_wm_results) · Stand ${upd}</span>
+      <span style="margin-left:auto;font-size:11px;color:#8b949e">${placedArr.length} platziert · ${pending} offen</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px">
+      ${cards.join('')}
+    </div>
     <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;overflow:hidden">
       <div style="padding:12px 16px;border-bottom:1px solid #30363d;display:flex;align-items:center;justify-content:space-between">
         <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8b949e">Letzte Bets</span>
-        <div style="display:flex;gap:6px">
-          <button onclick="_syncBetsFromHistory(false).then(()=>{document.getElementById('polyStatsSection').innerHTML=renderPolyStats();const g=document.getElementById('polyPickGrid');if(g)g.innerHTML=renderPolyPickCards();})" style="background:none;border:1px solid #a78bfa55;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit">📥 Sync Repo</button>
-          <button onclick="polyAutoResolve()" style="background:none;border:1px solid #3fb95055;border-radius:6px;color:#3fb950;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit">🔄 Auto-auswerten</button>
-          <button onclick="polyManualResolve()" style="background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit">✏️ Manuell</button>
-          <button onclick="if(confirm('Alle Poly-Bets komplett löschen? (Neustart)')){localStorage.removeItem('betedge_poly_bets');window._polyPlacedThisSession={};document.getElementById('polyStatsSection').innerHTML=renderPolyStats();const g=document.getElementById('polyPickGrid');if(g)g.innerHTML=renderPolyPickCards();_polyToast('🗑️ Poly-Bets zurückgesetzt');}" style="background:none;border:1px solid #f8514933;border-radius:6px;color:#f85149;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit">🗑️ Reset</button>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:10px;color:#8b949e">Auflösung automatisch per Cron</span>
+          <button onclick="_polyStatsCache=null;document.getElementById('polyStatsSection').innerHTML=renderPolyStats()" style="background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:inherit">🔄 Aktualisieren</button>
         </div>
       </div>
       <table style="width:100%;border-collapse:collapse">
