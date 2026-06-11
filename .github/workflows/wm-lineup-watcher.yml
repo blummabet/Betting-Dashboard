@@ -51,11 +51,29 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # NEU 11.06.2026: Picks neu generieren, WENN neue Aufstellungen reinkamen.
+      # Vorher holte der Watcher nur Lineups + Telegram-Alert — das 📋-Lineup-
+      # Signal floss aber NICHT in die Cards (erst beim 5×/Tag fetch-wm-data-Cron,
+      # der oft erst nach Anpfiff lief). Jetzt: bei neuer Lineup-Datei sofort
+      # generate_wm_picks → Lineup-Signal landet in Echtzeit auf der Card + Conviction.
+      - name: 🎯 Picks neu generieren bei neuen Lineups
+        run: |
+          if ! git diff --quiet -- wm_lineups.json 2>/dev/null; then
+            echo "📋 Neue Aufstellungen erkannt → generate_wm_picks läuft"
+            python generate_wm_picks.py || true
+          else
+            echo "ℹ️ Keine neuen Aufstellungen — keine Pick-Regenerierung nötig"
+          fi
+        continue-on-error: true
+
       - name: 💾 State-Files committen + pushen
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          # Files aus state_files_registry für lineup_watcher
+          # git add -u (11.06.2026): staged ALLE getrackten Änderungen — also auch
+          # wm2026-data.json aus der Pick-Regenerierung oben, nicht nur die Lineups.
+          # Sonst käme das Lineup-Signal zwar in die Picks, aber nicht ins Repo.
+          git add -u 2>/dev/null || true
           git add wm_lineups.json wm_lineup_alerts.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — sauberer Exit"
