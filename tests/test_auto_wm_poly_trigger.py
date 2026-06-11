@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 WM_EXPECTED = {
     "AUTO_TRIGGER_EDGE_PP":       4.0,
     "STEAM_LAG_EDGE_PP":          3.0,
-    "MIN_VOL":                    10000,
+    "MIN_VOL":                    1500,
     "MIN_DAYS_UNTIL_GAME":        1,
     "MIN_HOURS_BEFORE_MATCH":     4,
     "MIN_ENTRY_PRICE":            0.15,

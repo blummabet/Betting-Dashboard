@@ -57,7 +57,7 @@ AUTO_TRIGGER_EDGE_PP   = _cfg("trade", "auto_trigger_edge_pp",   4.0)
 STEAM_LAG_EDGE_PP      = _cfg("trade", "steam_lag_edge_pp",      3.0)
 
 # ── Match-Filter ──────────────────────────────────────────────────────────────
-MIN_VOL                = _cfg("trade", "min_vol_usdc",          10000)
+MIN_VOL                = _cfg("trade", "min_vol_usdc",           1500)
 MIN_DAYS_UNTIL_GAME    = _cfg("trade", "min_days_until_game",       1)
 MIN_HOURS_BEFORE_MATCH = _cfg("trade", "min_hours_before_match",    4)
 
