@@ -221,7 +221,15 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
         return None  # Keine Spiele heute
 
     # Sortieren nach Uhrzeit
-    matches_today.sort(key=lambda x: x["time"])
+    # FIX 11.06.2026: Mitternachts-Umbruch — 00:00-Anpfiff ist das späte Nacht-
+    # Spiel (nach 18:00/21:00), nicht das erste. < 06:00 als +24h sortieren.
+    def _ko_key(t):
+        try:
+            h, m = map(int, (t or "").split(":")); mins = h * 60 + m
+            return mins + 1440 if mins < 360 else mins
+        except Exception:
+            return 9999
+    matches_today.sort(key=lambda x: _ko_key(x.get("time")))
 
     # Header
     bet_count = sum(

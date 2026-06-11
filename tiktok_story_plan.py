@@ -342,6 +342,92 @@ def _story_uses_phantom_team(entry: dict) -> str | None:
     return name_lower or "unknown"
 
 
+def _generate_wm_story(date_str: str) -> dict | None:
+    """
+    Dynamische WM-Story (NEU 11.06.2026): ab Turnierstart hat der feste STORY_PLAN
+    keine Einträge mehr → täglich „Spiel des Tages" automatisch aus Live-Daten.
+
+    Wählt das Marquee-Spiel des Tages nach TEAM-STÄRKE (kombiniertes Elo), NICHT
+    nach Uhrzeit — umgeht damit das 00:00-Sortierproblem (späte US-Spiele).
+    Webt einen aktiven Pick ein, falls vorhanden; sonst xG/Form-Narrativ.
+    """
+    import json
+    from pathlib import Path
+    wm_file = Path(__file__).parent / "wm2026-data.json"
+    if not wm_file.exists():
+        return None
+    try:
+        wm = json.loads(wm_file.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+    # Heutige Fixtures + Team-Lookups sammeln
+    candidates = []
+    for gkey, gd in (wm.get("groups") or {}).items():
+        teams = {t["id"]: t for t in gd.get("teams", [])}
+        for fx in gd.get("fixtures", []):
+            if (fx.get("date") or "")[:10] != date_str:
+                continue
+            h, a = teams.get(fx.get("home")), teams.get(fx.get("away"))
+            if not h or not a:
+                continue
+            eh, ea = h.get("elo") or 0, a.get("elo") or 0
+            candidates.append({"g": gkey, "fx": fx, "h": h, "a": a, "eh": eh, "ea": ea,
+                               "md": fx.get("matchday"), "venue": fx.get("venue", ""),
+                               "time": fx.get("time", "")})
+    if not candidates:
+        return None
+
+    # Marquee = höchstes kombiniertes Elo (die zwei stärksten Teams des Tages)
+    c = max(candidates, key=lambda x: x["eh"] + x["ea"])
+    h, a, fx = c["h"], c["a"], c["fx"]
+    hid, aid = h["id"], a["id"]
+    diff = int(c["eh"] - c["ea"])
+    fav, und = (h, a) if c["eh"] >= c["ea"] else (a, h)
+
+    # Aktiven Pick für dieses Spiel suchen (sichtbar = BET/ABWÄGEN, kein Konflikt)
+    pkey = f"{c['g']}-{c['md']}-{hid}-{aid}"
+    picks = [p for p in (wm.get("picks") or {}).get(pkey, [])
+             if p.get("verdict") in ("BET", "ABWÄGEN")
+             and not p.get("trackingExcluded") and not p.get("synthetic")]
+    picks.sort(key=lambda p: (p.get("verdict") != "BET", -(p.get("edgePP") or 0)))
+    top = picks[0] if picks else None
+
+    n_today = len(candidates)
+    if top:
+        closing = (f'<strong>{top["market"]} @{top.get("odds","?")}</strong> mit '
+                   f'+{top.get("edgePP","?")}pp Edge — unser Pick für das Top-Spiel.')
+    else:
+        closing = (f'Elo-Differenz {abs(diff)} Punkte zugunsten '
+                   f'<strong>{fav.get("name", fav["id"])}</strong>. '
+                   f'Underdog {und.get("name", und["id"])} muss überraschen.')
+
+    role_time = f"{c['time']} Uhr" if c["time"] and c["time"] != "00:00" else "heute"
+    return {
+        "theme": "wm_spiel_des_tages",
+        "series_tag": f"SPIEL DES TAGES · ST {c['md']}",
+        "hook": {
+            "big_number":       f"{n_today}",
+            "sub_title":        f"{n_today} WM-Spiel{'e' if n_today != 1 else ''} heute",
+            "hook_line_1":      f'<span class="acc">{h.get("name", hid)}</span> trifft auf',
+            "hook_line_2":      f'<span class="yellow">{a.get("name", aid)}</span>.',
+            "mystery_question": "Wer holt die ersten Punkte?",
+            "highlight_fact":   f'{fav.get("name", fav["id"])} geht mit {abs(diff)} Elo-Punkten Vorsprung rein',
+        },
+        "info": {
+            "flag":         fav.get("flag", "🏆"),
+            "name":         f"{hid} vs {aid}",
+            "role_line":    f"Gruppe {c['g']} · {c['venue']} · {role_time}",
+            "stat1_val":    str(int(c["eh"])), "stat1_lbl": f"Elo {hid}",
+            "stat2_val":    str(int(c["ea"])), "stat2_lbl": f"Elo {aid}",
+            "stat3_val":    f"{diff:+d}",       "stat3_lbl": "Elo-Diff",
+            "closing_line": closing,
+            "quote_line":   'Das Top-Duell des Tages. ⚽',
+            "data_source":  "Daten: wm2026-data.json + Polymarket",
+        },
+    }
+
+
 def get_story_for_date(date_str: str) -> dict | None:
     """
     Liefert Story-Config für ein Datum, oder None wenn nichts geplant.
@@ -349,10 +435,13 @@ def get_story_for_date(date_str: str) -> dict | None:
     Phantom-Team-Guard: wenn die Story auf ein Team verweist das NICHT in
     wm2026-data.json::groups[*].teams steht (z.B. Polen 2026), wird die Story
     NICHT ausgeliefert + Warning geloggt. Verhindert peinliche Cards.
+
+    Ab Turnierstart: kein fester Plan-Eintrag mehr → dynamische WM-Story
+    („Spiel des Tages") aus Live-Daten.
     """
     entry = STORY_PLAN.get(date_str)
     if not entry:
-        return None
+        return _generate_wm_story(date_str)
     if entry.get("posted_manually"):
         return None
     phantom = _story_uses_phantom_team(entry)

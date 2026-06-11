@@ -134,10 +134,17 @@
       }
     }
 
-    // Sort by date → time → matchday
+    // Sort by date → time → matchday (FIX 11.06.2026: Mitternachts-Umbruch,
+    // 00:00 = spätes Nacht-Spiel, < 06:00 als +24h → nicht fälschlich zuerst)
+    const _koKey = (t) => {
+      if (!t || !/^\d{1,2}:\d{2}$/.test(t)) return 9999;
+      const [h, m] = t.split(":").map(Number); const mins = h * 60 + m;
+      return mins < 360 ? mins + 1440 : mins;
+    };
     rows.sort((a, b) => {
       if (a.fx.date !== b.fx.date) return a.fx.date.localeCompare(b.fx.date);
-      if (a.fx.time && b.fx.time)  return a.fx.time.localeCompare(b.fx.time);
+      const ta = _koKey(a.fx.time), tb = _koKey(b.fx.time);
+      if (ta !== tb)               return ta - tb;
       return a.fx.matchday - b.fx.matchday;
     });
 

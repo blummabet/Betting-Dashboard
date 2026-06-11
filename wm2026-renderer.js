@@ -232,9 +232,20 @@
         allFx.push({ ...fx, groupKey: gKey, groupData: gData });
       }
     }
+    // FIX 11.06.2026: Mitternachts-Umbruch. Ein 00:00-Anpfiff ist das SPÄTE
+    // Nacht-Spiel des Tages (nach den 18:00/21:00-Spielen), nicht das erste.
+    // Vorher sortierte "00:00" < "21:00" → KOR-CZE stand fälschlich VOR dem
+    // Opener MEX-ZAF. Frühe Uhrzeiten (< 06:00) als +24h behandeln.
+    const _kickoffSortKey = (t) => {
+      if (!t || !/^\d{1,2}:\d{2}$/.test(t)) return 9999;
+      const [h, m] = t.split(":").map(Number);
+      const mins = h * 60 + m;
+      return mins < 360 ? mins + 1440 : mins;   // < 06:00 → späte Session
+    };
     allFx.sort((a, b) => {
       if (a.date !== b.date)         return a.date.localeCompare(b.date);
-      if (a.time && b.time)          return a.time.localeCompare(b.time);
+      const ta = _kickoffSortKey(a.time), tb = _kickoffSortKey(b.time);
+      if (ta !== tb)                 return ta - tb;
       if (a.matchday !== b.matchday) return a.matchday - b.matchday;
       return a.groupKey.localeCompare(b.groupKey);
     });
