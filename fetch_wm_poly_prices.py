@@ -17,6 +17,18 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone, timedelta
 
+
+def _vienna_hhmm(kickoff_iso):
+    """HH:MM in Wiener Zeit (CEST UTC+2, WM-Fenster Juni/Juli) aus kickoff (UTC ISO).
+    Normalisiert das unzuverlässige fx.time-Seed-Feld (mal Wien, mal Venue-Local,
+    mal 00:00-Platzhalter) an der Quelle — kickoff ist die einzige Wahrheit."""
+    try:
+        return (datetime.fromisoformat(str(kickoff_iso).replace("Z", "+00:00"))
+                + timedelta(hours=2)).strftime("%H:%M")
+    except Exception:
+        return None
+
+
 BASE         = os.path.dirname(os.path.abspath(__file__))
 OUT_FILE     = os.path.join(BASE, "wm_poly_prices.json")
 WM_FILE      = os.path.join(BASE, "wm2026-data.json")
@@ -413,6 +425,9 @@ def main():
                 p = prices.get(f"{fx.get('home')}-{fx.get('away')}")
                 if p and p.get("kickoff"):
                     fx["kickoff"] = p["kickoff"]
+                    _t = _vienna_hhmm(p["kickoff"])
+                    if _t:
+                        fx["time"] = _t   # time-Feld aus kickoff normalisieren
                     ko_patched += 1
         print(f"   ⏰ {ko_patched} Fixture-Kickoff-Zeiten aus Polymarket gesetzt")
 

@@ -236,16 +236,11 @@
     // Nacht-Spiel des Tages (nach den 18:00/21:00-Spielen), nicht das erste.
     // Vorher sortierte "00:00" < "21:00" → KOR-CZE stand fälschlich VOR dem
     // Opener MEX-ZAF. Frühe Uhrzeiten (< 06:00) als +24h behandeln.
-    const _kickoffSortKey = (t) => {
-      if (!t || !/^\d{1,2}:\d{2}$/.test(t)) return 9999;
-      const [h, m] = t.split(":").map(Number);
-      const mins = h * 60 + m;
-      return mins < 360 ? mins + 1440 : mins;   // < 06:00 → späte Session
-    };
+    // Sortierung rein nach echtem Kickoff (UTC ms) — deckt Datum+Uhrzeit korrekt
+    // ab, auch Nach-Mitternacht-UTC-Spiele (KOR-CZE). fx.time-Heuristik nur Fallback.
     allFx.sort((a, b) => {
-      if (a.date !== b.date)         return a.date.localeCompare(b.date);
-      const ta = _kickoffSortKey(a.time), tb = _kickoffSortKey(b.time);
-      if (ta !== tb)                 return ta - tb;
+      const ka = _kickoffSortMs(a), kb = _kickoffSortMs(b);
+      if (ka !== kb)                 return ka - kb;
       if (a.matchday !== b.matchday) return a.matchday - b.matchday;
       return a.groupKey.localeCompare(b.groupKey);
     });
@@ -572,8 +567,8 @@
       <div class="cc-team"><span class="cc-flag">${away.flag}</span>${away.name}</div>
     </div>`;
     const groupLabel = (gData.name || ('Gruppe ' + fx.groupKey));
-    const dateMain   = _fmtDate(fx.date, fx.time);   // "Fr 12. Jun · 18:00 Uhr"
-    const localTime  = _venueLocalTime(fx.venue, fx.time);  // " · 12:00 NY" oder ""
+    const dateMain   = _fmtKickoffMain(fx);          // "So, 14. Jun · 00:00 Uhr" (Wien, aus kickoff)
+    const localTime  = _venueLocalFromKickoff(fx);   // " · 18:00 NY" (Venue-Local, aus kickoff)
     html += `<div class="cc-meta">
       <span>${groupLabel} · ST ${fx.matchday}</span>
       <span class="cc-dot"></span>
@@ -1875,9 +1870,11 @@
     // Time-Label
     let timeLabel = '';
     try {
-      const dt = new Date(`${fx.date}T${fx.time || '19:00'}:00`);
-      const wd = ['So','Mo','Di','Mi','Do','Fr','Sa'][dt.getDay()];
-      timeLabel = `${wd} ${dt.getDate().toString().padStart(2,'0')}.${(dt.getMonth()+1).toString().padStart(2,'0')}. · ${fx.time || ''}`;
+      // Aus echtem kickoff (UTC) → Wien (CEST UTC+2); Fallback alte date+time-Felder.
+      const _ko = fx.kickoff ? new Date(fx.kickoff) : new Date(`${fx.date}T${fx.time || '19:00'}:00Z`);
+      const _v  = new Date(_ko.getTime() + 2 * 3600 * 1000);
+      const wd  = ['So','Mo','Di','Mi','Do','Fr','Sa'][_v.getUTCDay()];
+      timeLabel = `${wd} ${String(_v.getUTCDate()).padStart(2,'0')}.${String(_v.getUTCMonth()+1).padStart(2,'0')}. · ${String(_v.getUTCHours()).padStart(2,'0')}:${String(_v.getUTCMinutes()).padStart(2,'0')}`;
     } catch (e) {}
 
     // ── 1. MODELL-RECHNUNG ──
@@ -2486,6 +2483,52 @@
     const h = String(Math.floor(totalMin / 60)).padStart(2, '0');
     const min = String(totalMin % 60).padStart(2, '0');
     return ` · ${h}:${min} ${tz.city}`;
+  }
+
+  // ── Authoritative Zeit-Anzeige aus fx.kickoff (UTC ISO) ───────────────────
+  // fx.time ist ein UNZUVERLÄSSIGES Seed-Feld: mal Wien-Zeit (MEX-ZAF "21:00"),
+  // mal Venue-Local (BRA-MAR "18:00" = NY statt Wien), mal 00:00-Platzhalter
+  // (KOR-CZE). Einzige verlässliche Quelle ist fx.kickoff (Polymarket gamma
+  // startTime, echtes UTC). WM-Fenster Juni/Juli → Wien durchgehend CEST (UTC+2).
+  function _koDate(fx) {
+    const ko = fx && fx.kickoff;
+    if (!ko) return null;
+    const d = new Date(ko);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  // Hauptlabel in Wiener Zeit: "So, 14. Jun · 00:00 Uhr". Fallback alte Felder.
+  function _fmtKickoffMain(fx) {
+    const d = _koDate(fx);
+    if (!d) return _fmtDate(fx.date, fx.time);
+    const v  = new Date(d.getTime() + 2 * 3600 * 1000);   // UTC+2 (CEST)
+    const h  = String(v.getUTCHours()).padStart(2, '0');
+    const mi = String(v.getUTCMinutes()).padStart(2, '0');
+    return `${_DAYS[v.getUTCDay()]}, ${v.getUTCDate()}. ${_MONTHS[v.getUTCMonth()]} · ${h}:${mi} Uhr`;
+  }
+
+  // Venue-Local aus kickoff: " · 18:00 NY". Fallback alte Felder.
+  function _venueLocalFromKickoff(fx) {
+    const d = _koDate(fx);
+    if (!d) return _venueLocalTime(fx.venue, fx.time);
+    const tz = _venueTz(fx.venue);
+    if (!tz) return '';
+    const loc = new Date(d.getTime() + tz.off * 3600 * 1000);
+    const h   = String(loc.getUTCHours()).padStart(2, '0');
+    const mi  = String(loc.getUTCMinutes()).padStart(2, '0');
+    return ` · ${h}:${mi} ${tz.city}`;
+  }
+
+  // Sort-Key (ms) aus kickoff; Fallback date+time-Heuristik (< 06:00 = späte Session).
+  function _kickoffSortMs(fx) {
+    const d = _koDate(fx);
+    if (d) return d.getTime();
+    if (!fx || !fx.date) return Infinity;
+    const m = /^(\d{1,2}):(\d{2})$/.exec(((fx.time || '')).trim());
+    let mins = m ? (parseInt(m[1], 10) * 60 + parseInt(m[2], 10)) : 0;
+    if (mins < 360) mins += 1440;
+    const base = new Date(fx.date + 'T00:00:00Z').getTime();
+    return (isNaN(base) ? 0 : base) + mins * 60000;
   }
 
   // ── Team row with form dots ───────────────────────────

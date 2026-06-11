@@ -163,9 +163,20 @@ def main() -> int:
     return 0
 
 
+def _vienna_hhmm(kickoff_iso):
+    """HH:MM in Wiener Zeit (CEST UTC+2, WM-Fenster Juni/Juli) aus kickoff (UTC ISO).
+    Normalisiert das unzuverlässige fx.time-Seed-Feld an der Quelle."""
+    try:
+        from datetime import datetime, timedelta
+        return (datetime.fromisoformat(str(kickoff_iso).replace("Z", "+00:00"))
+                + timedelta(hours=2)).strftime("%H:%M")
+    except Exception:
+        return None
+
+
 def _apply_to_fixtures(wm: dict, mk_to_info: dict, write: bool):
-    """Setzt venue + kickoff je Gruppen-Fixture aus {matchKey: {venue,city,kickoff}}.
-    Returns (changed_list, n_kickoffs_set)."""
+    """Setzt venue + kickoff (+ normalisierte time) je Gruppen-Fixture aus
+    {matchKey: {venue,city,kickoff}}. Returns (changed_list, n_kickoffs_set)."""
     changed, ko_set = [], 0
     for gdata in (wm.get("groups") or {}).values():
         for fx in (gdata.get("fixtures") or []):
@@ -181,6 +192,9 @@ def _apply_to_fixtures(wm: dict, mk_to_info: dict, write: bool):
                     if fx.get("kickoff") != info["kickoff"]:
                         ko_set += 1
                     fx["kickoff"] = info["kickoff"]
+                    _t = _vienna_hhmm(info["kickoff"])
+                    if _t:
+                        fx["time"] = _t   # time-Feld aus kickoff normalisieren
     return changed, ko_set
 
 

@@ -232,6 +232,7 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                     "group":      gkey,
                     "matchday":   fx["matchday"],
                     "time":       fx.get("time", ""),
+                    "kickoff":    fx.get("kickoff", ""),
                     "venue":      fx.get("venue", ""),
                     "home":       fx["home"],
                     "away":       fx["away"],
@@ -250,16 +251,35 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
     if not matches_today:
         return None  # Keine Spiele heute
 
-    # Sortieren nach Uhrzeit
-    # FIX 11.06.2026: Mitternachts-Umbruch — 00:00-Anpfiff ist das späte Nacht-
-    # Spiel (nach 18:00/21:00), nicht das erste. < 06:00 als +24h sortieren.
+    # Sortierung + Anzeige-Zeit aus echtem kickoff (UTC → Wien CEST UTC+2).
+    # FIX 11.06.2026: fx.time ist unzuverlässig (mal Wien, mal Venue-Local —
+    # BRA-MAR "18:00" = NY statt 00:00 Wien, KOR-CZE 00:00-Platzhalter). kickoff
+    # (Polymarket gamma startTime) ist die einzige verlässliche Quelle.
+    # Fallback: alte HH:MM-Heuristik mit Mitternachts-Umbruch (00:00 = Nacht-Spiel).
     def _ko_key(t):
         try:
             h, m = map(int, (t or "").split(":")); mins = h * 60 + m
             return mins + 1440 if mins < 360 else mins
         except Exception:
             return 9999
-    matches_today.sort(key=lambda x: _ko_key(x.get("time")))
+    def _ko_dt(ko):
+        try:
+            return datetime.fromisoformat((ko or "").replace("Z", "+00:00"))
+        except Exception:
+            return None
+    try:
+        _day_base = datetime.fromisoformat(target_date + "T00:00:00+00:00").timestamp()
+    except Exception:
+        _day_base = 0
+    for _m in matches_today:
+        _dt = _ko_dt(_m.get("kickoff"))
+        if _dt is not None:
+            _m["_sort"]    = _dt.timestamp()
+            _m["dispTime"] = (_dt + timedelta(hours=2)).strftime("%H:%M")  # Wien (CEST)
+        else:
+            _m["_sort"]    = _day_base + _ko_key(_m.get("time")) * 60
+            _m["dispTime"] = _m.get("time", "")
+    matches_today.sort(key=lambda x: x["_sort"])
 
     # Header
     bet_count = sum(
@@ -295,7 +315,7 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
             f"{m['homeFlag']} <b>{m['homeName']}</b> vs {m['awayFlag']} <b>{m['awayName']}</b>"
         )
         venue_str = short_venue(m["venue"])
-        lines.append(f"📅 {m['time']} Uhr{' · ' + venue_str if venue_str else ''}")
+        lines.append(f"📅 {m['dispTime']} Uhr{' · ' + venue_str if venue_str else ''}")
 
         # Elo-Info wenn vorhanden
         if m["homeElo"] and m["awayElo"]:

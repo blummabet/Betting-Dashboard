@@ -33,7 +33,7 @@ werden — nicht still weggeguardet.
 ═══════════════════════════════════════════════════════════════════════════════
 """
 from __future__ import annotations
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 # Venue-Name/City-Substring → venue_id (Spiegel von generate_wm_picks._VENUE_NAME_TO_ID).
 _VENUE_NAME_TO_ID = {
@@ -147,6 +147,27 @@ def check_kickoff_present(ctx):
             fails.append(f"{ctx.mk(fx)}: kickoff '{ko}' nicht parsebar")
     return _chk("kickoff_present", "Kickoff-Zeit real + plausibel", "error", fails,
                 "00:00-Platzhalter führten zu falschem Betting-Tab-Listing.")
+
+
+@integrity_check
+def check_time_matches_kickoff(ctx):
+    fails = []
+    for _g, fx in ctx.fixtures:
+        ko = fx.get("kickoff")
+        if not ko:
+            continue   # fehlender kickoff fängt check_kickoff_present ab
+        try:
+            v = (datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+                 + timedelta(hours=2)).strftime("%H:%M")   # Wien CEST (WM-Fenster Juni/Juli)
+        except Exception:
+            continue   # unparsebarer kickoff ebenfalls bei check_kickoff_present
+        t = fx.get("time")
+        if t != v:
+            fails.append(f"{ctx.mk(fx)}: time={t} ≠ Wien(kickoff) {v}")
+    return _chk("time_matches_kickoff", "Anpfiff-Zeit (time) == Wien(kickoff)", "warn", fails,
+                "fx.time war Seed-Müll (mal Wien, mal Venue-Local, mal 00:00-Platzhalter — "
+                "65/72 falsch). Anzeige leitet aus kickoff ab; Drift hier = Quelle "
+                "(fetch_wm_venues/fetch_wm_poly_prices) hat time nicht normalisiert.")
 
 
 def _real_match_keys(ctx):
