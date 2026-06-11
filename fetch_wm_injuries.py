@@ -132,15 +132,19 @@ def fetch_wm_injuries_league() -> dict[str, list]:
 
 def fetch_sidelined_per_team(team_map: dict[str, str], team_ids: dict[str, int]) -> dict[str, list]:
     """
-    Per-Team /sidelined Query — gibt aktuell verletzte/gesperrte Spieler zurück
-    (Klub-Daten fließen ein, deshalb pre-WM nützlich).
+    Per-Team-Ausfälle via /injuries?team={id}&season={season}.
+
+    FIX 11.06.2026: Vorher wurde /sidelined?team aufgerufen — aber der
+    /sidelined-Endpoint von API-Football akzeptiert KEINEN team-Parameter
+    (nur player/coach) → 47× "The Team field do not exist." → 0 Teams.
+    /injuries?team&season ist der valide team-Level-Endpoint und liefert
+    WM-Turnier-Ausfälle, sobald sie gemeldet werden.
 
     Returns: {our_id: [entry, …]}
     """
-    print("  📡 Fetching /sidelined?team=<id> für alle Teams…")
+    print("  📡 Fetching /injuries?team=<id>&season=… für alle Teams…")
     result: dict[str, list] = {}
     queried, hits = 0, 0
-    today = date.today()
 
     for our_id, our_name in team_map.items():
         apif_id = team_ids.get(our_id)
@@ -148,40 +152,32 @@ def fetch_sidelined_per_team(team_map: dict[str, str], team_ids: dict[str, int])
             continue
         queried += 1
         time.sleep(DELAY)
-        entries = apif_get("sidelined", {"team": apif_id})
+        entries = apif_get("injuries", {"team": apif_id, "season": WM_SEASON})
         if not entries:
             continue
 
         team_entries = []
+        seen: set = set()
         for e in entries:
             player = e.get("player", {})
-            inj_type   = e.get("type", "Unknown")
-            inj_start  = (e.get("start") or "")[:10]
-            inj_end    = (e.get("end")   or "")[:10]
-
-            # Nur aktuell laufende Ausfälle (end leer oder in Zukunft)
-            if inj_end:
-                try:
-                    if date.fromisoformat(inj_end) < today:
-                        continue
-                except Exception:
-                    pass
-
+            name   = player.get("name", "?")
+            if name in seen:        # API listet pro Fixture — pro Spieler nur 1×
+                continue
+            seen.add(name)
             team_entries.append({
-                "name":   player.get("name", "?"),
-                "type":   inj_type,           # "Red Card", "Broken ankle", "Knee Injury" …
-                "reason": inj_type,            # Bei /sidelined ist type = reason
-                "status": "missing",
-                "start":  inj_start,
-                "end":    inj_end,
+                "name":    name,
+                "type":    e.get("type", "Unknown"),    # "Missing Fixture" / "Questionable"
+                "reason":  e.get("reason", ""),          # "Injury" / "Suspended" / konkret
+                "status":  "missing",
+                "fixture": (e.get("fixture") or {}).get("date", ""),
             })
 
         if team_entries:
             result[our_id] = team_entries
             hits += 1
-            print(f"    ✅ {our_id} ({our_name}): {len(team_entries)} aktuell")
+            print(f"    ✅ {our_id} ({our_name}): {len(team_entries)} Ausfall/Ausfälle")
 
-    print(f"  📊 /sidelined: {hits}/{queried} Teams mit aktuellen Ausfällen")
+    print(f"  📊 /injuries?team: {hits}/{queried} Teams mit Ausfällen")
     return result
 
 

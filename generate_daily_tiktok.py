@@ -651,8 +651,12 @@ def main():
                         continue
                     pkey = f"{gkey}-{fx['matchday']}-{fx['home']}-{fx['away']}"
                     plist = (wm.get("picks") or {}).get(pkey, [])
-                    bets = [p for p in plist if p.get("verdict") == "BET"]
-                    abws = [p for p in plist if p.get("verdict") == "ABWÄGEN"]
+                    # FIX 11.06.2026: trackingExcluded (Cross-Market-Konflikte) + synthetische
+                    # Insurance-Picks raus — nie als "Pick des Tages" auf eine TikTok-Card.
+                    bets = [p for p in plist if p.get("verdict") == "BET"
+                            and not p.get("trackingExcluded") and not p.get("synthetic")]
+                    abws = [p for p in plist if p.get("verdict") == "ABWÄGEN"
+                            and not p.get("trackingExcluded") and not p.get("synthetic")]
                     bets.sort(key=lambda p: -(p.get("edgePP") or 0))
                     abws.sort(key=lambda p: -(p.get("edgePP") or 0))
                     best = (bets + abws)[:1]
