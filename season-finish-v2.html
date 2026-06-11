@@ -2058,7 +2058,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="top-nav-btn" id="navPolyTrader" onclick="showView('polytrading')" style="color:#00d4a1">📈 Polymarket Trading</button>
   <button class="top-nav-btn" id="navPolymarket" onclick="showView('polybetting')" style="color:#a78bfa">🟣 Polymarket Betting</button>
   <button class="top-nav-btn" id="navHeart" onclick="showView('heart')">❤️ Heart</button>
-  <button class="top-nav-btn" id="navStatus" onclick="showView('status')">🔧 Status</button>
+  <button class="top-nav-btn" id="navStatus" onclick="showView('status')">🔧 Status<span id="navStatusDot" style="display:none;width:8px;height:8px;border-radius:50%;background:#f85149;margin-left:6px;vertical-align:middle;box-shadow:0 0 6px rgba(248,81,73,.8);"></span></button>
   <!-- "Picks speichern" entfernt 11.06.2026 — Altlast aus dem manuellen Liga-Workflow
        (localStorage). Tracking/Resolution läuft heute automatisch über die Pipeline. -->
 </div>
@@ -9647,6 +9647,14 @@ function renderTgLog(log) {
     if (sigW) window.SIGNAL_WEIGHTS      = sigW;  // Sharp Radar Bayesian-Status
     if (wmR)  window.WM_RESULTS_DATA     = wmR;   // Sharp Radar CLV-Aggregation
   } catch(e) { /* silent — Sharp Radar falls back to league-only mode */ }
+})();
+
+// Status-Health beim Laden einmal rechnen, damit der Warn-Punkt am Status-Tab
+// sofort sichtbar ist — auch ohne den Tab zu öffnen.
+(function _bootStatusDot() {
+  const go = () => { if (typeof runStatusPage === 'function') runStatusPage(true); };
+  if (document.readyState === 'complete') setTimeout(go, 1200);
+  else window.addEventListener('load', () => setTimeout(go, 1200));
 })();
 
 </script>

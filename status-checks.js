@@ -184,6 +184,18 @@ function _stRenderVerdict(problems, status, valRep) {
   const badge = (n, s) => n > 0 ? `<div style="background:rgba(0,0,0,.25);border:1px solid ${_SEV_META[s].col};border-radius:8px;padding:6px 12px;text-align:center;min-width:54px;"><div style="font-size:18px;font-weight:800;color:${_SEV_META[s].col};">${n}</div><div style="font-size:9px;opacity:.7;text-transform:uppercase;">${_SEV_META[s].lbl}</div></div>` : '';
   document.getElementById('st_verdictCounts').innerHTML =
     badge(errs + srvErr + valErr, 'error') + badge(warns + srvWarn, 'warn');
+
+  // Roter/gelber Punkt am Status-Tab in der Hauptnavi — sichtbar ohne reinzuklicken
+  const dot = document.getElementById('navStatusDot');
+  if (dot) {
+    if (sev === 'ok') { dot.style.display = 'none'; }
+    else {
+      dot.style.display = 'inline-block';
+      dot.style.background = m.col;
+      dot.style.boxShadow = `0 0 6px ${m.col}`;
+      dot.title = title;
+    }
+  }
 }
 
 function _stRenderProblems(problems) {
