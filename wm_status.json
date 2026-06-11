@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-11T18:09:06Z",
+  "generatedAt": "2026-06-11T19:03:34Z",
   "windowDays": 2,
   "upcoming": 7,
   "signalsFired": [
@@ -13,8 +13,12 @@
     "altitude_signal"
   ],
   "signalsTotal": 15,
-  "verdict": "warn",
-  "errors": [],
+  "verdict": "error",
+  "errors": [
+    "🛡️ Venue → venue_id auflösbar: 8 Fehler (z.B. GER-CUW: Venue 'Spielort zu bestätigen' → kein venue_id)",
+    "🛡️ Venue == API-Football-Schedule: 66 Fehler (z.B. KOR-CZE: 'SoFi Stadium, Los Angeles' ≠ Schedule 'Estadio Akron, Guadalajara')",
+    "🛡️ Kickoff-Zeit real + plausibel: 12 Fehler (z.B. MEX-CZE: kein kickoff (Platzhalter 2026-06-19 20:00))"
+  ],
   "warns": [
     "🧠 Signal 'lead_lag_bias' feuert nicht (nur bei Quotenbewegung)",
     "🧠 Signal 'public_static_bias' feuert nicht (nur bei Sharp-vs-Public-Divergenz)",
@@ -22,7 +26,9 @@
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
     "🧠 Signal 'lineup_signal' feuert nicht (feuert erst T-1h)",
-    "🧠 Signal 'incentive_signal' feuert nicht (feuert ab MD2)"
+    "🧠 Signal 'incentive_signal' feuert nicht (feuert ab MD2)",
+    "🛡️ Pinnacle-1X2 vollständig + plausibel: 12 Fehler (z.B. SUI-CAN: 1X2 unvollständig hw=None dr=None aw=None)",
+    "🛡️ Public-Konsens (Soft-Books) vorhanden: 12 Fehler (z.B. SUI-CAN: kein public_hw)"
   ],
   "oks": [
     "🌡️ Weather: 60 Spiele mit Forecast",
@@ -30,9 +36,157 @@
     "📊 APIF-Predictions: 25 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 16 Teams",
-    "📉 Odds-History: 72 Fixtures, Ø 9.5 Snapshots",
+    "📉 Odds-History: 72 Fixtures, Ø 9.6 Snapshots",
     "💹 Poly-Preise: 72 Fixtures",
     "💼 Poly-Balance: $285.02",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
+  ],
+  "checks": [
+    {
+      "id": "venue_resolves",
+      "label": "Venue → venue_id auflösbar",
+      "severity": "error",
+      "ok": false,
+      "nFail": 8,
+      "failures": [
+        "GER-CUW: Venue 'Spielort zu bestätigen' → kein venue_id",
+        "GER-CIV: Venue 'Spielort zu bestätigen' → kein venue_id",
+        "GER-ECU: Venue 'Spielort zu bestätigen' → kein venue_id",
+        "ESP-CPV: Venue 'Spielort zu bestätigen' → kein venue_id",
+        "ESP-SAU: Venue 'Spielort zu bestätigen' → kein venue_id",
+        "ESP-URU: Venue 'Spielort zu bestätigen' → kein venue_id",
+        "JOR-DZA: Venue 'Spielort zu bestätigen' → kein venue_id",
+        "COL-COD: Venue 'Spielort zu bestätigen' → kein venue_id"
+      ],
+      "note": "Treibt travel_burden/altitude/weather. Fallback = falsche Signale."
+    },
+    {
+      "id": "venue_matches_schedule",
+      "label": "Venue == API-Football-Schedule",
+      "severity": "error",
+      "ok": false,
+      "nFail": 66,
+      "failures": [
+        "KOR-CZE: 'SoFi Stadium, Los Angeles' ≠ Schedule 'Estadio Akron, Guadalajara'",
+        "MEX-KOR: 'Estadio Azteca, Mexico City' ≠ Schedule 'Estadio Akron, Guadalajara'",
+        "CZE-ZAF: 'AT&T Stadium, Dallas' ≠ Schedule 'Mercedes-Benz Stadium, Atlanta'",
+        "ZAF-KOR: 'Rose Bowl, Los Angeles' ≠ Schedule 'Estadio BBVA, Monterrey'",
+        "QAT-SUI: 'MetLife Stadium, New York' ≠ Schedule 'Levi's Stadium, San Francisco Bay Area'",
+        "CAN-QAT: 'BMO Field, Toronto' ≠ Schedule 'BC Place, Vancouver'",
+        "SUI-BIH: 'Levi's Stadium, San Francisco' ≠ Schedule 'SoFi Stadium, Los Angeles'",
+        "CAN-SUI: 'BMO Field, Toronto' ≠ Schedule 'BC Place, Vancouver'",
+        "BIH-QAT: 'Gillette Stadium, Boston' ≠ Schedule 'Lumen Field, Seattle'",
+        "BRA-MAR: 'MetLife Stadium, New York' ≠ Schedule 'MetLife Stadium, New York New Jersey'",
+        "HTI-SCO: 'Levi's Stadium, San Francisco' ≠ Schedule 'Gillette Stadium, Boston'",
+        "BRA-HTI: 'MetLife Stadium, New York' ≠ Schedule 'Lincoln Financial Field, Philadelphia'",
+        "SCO-MAR: 'SoFi Stadium, Los Angeles' ≠ Schedule 'Gillette Stadium, Boston'",
+        "BRA-SCO: 'MetLife Stadium, New York' ≠ Schedule 'Hard Rock Stadium, Miami'",
+        "MAR-HTI: 'Rose Bowl, Los Angeles' ≠ Schedule 'Mercedes-Benz Stadium, Atlanta'",
+        "AUS-TUR: 'AT&T Stadium, Dallas' ≠ Schedule 'BC Place, Vancouver'",
+        "USA-AUS: 'SoFi Stadium, Los Angeles' ≠ Schedule 'Lumen Field, Seattle'",
+        "TUR-PRY: 'Gillette Stadium, Boston' ≠ Schedule 'Levi's Stadium, San Francisco Bay Area'",
+        "USA-TUR: 'MetLife Stadium, New York' ≠ Schedule 'SoFi Stadium, Los Angeles'",
+        "PRY-AUS: 'Levi's Stadium, San Francisco' ≠ Schedule 'Levi's Stadium, San Francisco Bay Area'",
+        "GER-CUW: 'Spielort zu bestätigen' ≠ Schedule 'NRG Stadium, Houston'",
+        "CIV-ECU: 'Estadio Akron, Guadalajara' ≠ Schedule 'Lincoln Financial Field, Philadelphia'",
+        "GER-CIV: 'Spielort zu bestätigen' ≠ Schedule 'BMO Field, Toronto'",
+        "ECU-CUW: 'Estadio BBVA, Monterrey' ≠ Schedule 'Arrowhead Stadium, Kansas City'",
+        "GER-ECU: 'Spielort zu bestätigen' ≠ Schedule 'MetLife Stadium, New York New Jersey'"
+      ],
+      "note": "Seed-Venues waren reihenweise falsch (KOR-CZE SoFi statt Guadalajara)."
+    },
+    {
+      "id": "kickoff_present",
+      "label": "Kickoff-Zeit real + plausibel",
+      "severity": "error",
+      "ok": false,
+      "nFail": 12,
+      "failures": [
+        "MEX-CZE: kein kickoff (Platzhalter 2026-06-19 20:00)",
+        "CAN-SUI: kein kickoff (Platzhalter 2026-06-19 20:00)",
+        "BRA-SCO: kein kickoff (Platzhalter 2026-06-20 20:00)",
+        "USA-TUR: kein kickoff (Platzhalter 2026-06-21 20:00)",
+        "GER-ECU: kein kickoff (Platzhalter 2026-06-21 20:00)",
+        "NED-TUN: kein kickoff (Platzhalter 2026-06-22 20:00)",
+        "BEL-NZL: kein kickoff (Platzhalter 2026-06-22 20:00)",
+        "ESP-URU: kein kickoff (Platzhalter 2026-06-23 20:00)",
+        "FRA-NOR: kein kickoff (Platzhalter 2026-06-24 20:00)",
+        "ARG-JOR: kein kickoff (Platzhalter 2026-06-24 20:00)",
+        "POR-COL: kein kickoff (Platzhalter 2026-06-25 20:00)",
+        "ENG-PAN: kein kickoff (Platzhalter 2026-06-25 20:00)"
+      ],
+      "note": "00:00-Platzhalter führten zu falschem Betting-Tab-Listing."
+    },
+    {
+      "id": "odds_sane",
+      "label": "Pinnacle-1X2 vollständig + plausibel",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 12,
+      "failures": [
+        "SUI-CAN: 1X2 unvollständig hw=None dr=None aw=None",
+        "SCO-BRA: 1X2 unvollständig hw=None dr=None aw=None",
+        "CZE-MEX: 1X2 unvollständig hw=None dr=None aw=None",
+        "ECU-GER: 1X2 unvollständig hw=None dr=None aw=None",
+        "TUN-NED: 1X2 unvollständig hw=None dr=None aw=None",
+        "TUR-USA: 1X2 unvollständig hw=None dr=None aw=None",
+        "NOR-FRA: 1X2 unvollständig hw=None dr=None aw=None",
+        "URU-ESP: 1X2 unvollständig hw=None dr=None aw=None",
+        "NZL-BEL: 1X2 unvollständig hw=None dr=None aw=None",
+        "PAN-ENG: 1X2 unvollständig hw=None dr=None aw=None",
+        "COL-POR: 1X2 unvollständig hw=None dr=None aw=None",
+        "JOR-ARG: 1X2 unvollständig hw=None dr=None aw=None"
+      ],
+      "note": "Quelle für Modell-Baseline + Edge."
+    },
+    {
+      "id": "homeaway_consistent",
+      "label": "Home/Away nicht vertauscht (Pinn vs Poly)",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet."
+    },
+    {
+      "id": "edge_consistent",
+      "label": "Edge == fair − poly (kein Stale-Edge)",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Stale edge_aw=-1.4 vs live +7.1 hat einen echten Trade blockiert."
+    },
+    {
+      "id": "schedule_date",
+      "label": "Spielplan-Datum == Polymarket",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Seed war ~1 Tag verschoben → Picks am falschen Tag."
+    },
+    {
+      "id": "public_consensus",
+      "label": "Public-Konsens (Soft-Books) vorhanden",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 12,
+      "failures": [
+        "SUI-CAN: kein public_hw",
+        "SCO-BRA: kein public_hw",
+        "CZE-MEX: kein public_hw",
+        "ECU-GER: kein public_hw",
+        "TUN-NED: kein public_hw",
+        "TUR-USA: kein public_hw",
+        "NOR-FRA: kein public_hw",
+        "URU-ESP: kein public_hw",
+        "NZL-BEL: kein public_hw",
+        "PAN-ENG: kein public_hw",
+        "COL-POR: kein public_hw",
+        "JOR-ARG: kein public_hw"
+      ],
+      "note": "Ohne public_* feuert public_static_bias nicht."
+    }
   ]
 }
