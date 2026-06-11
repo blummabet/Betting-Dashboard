@@ -191,6 +191,11 @@ def parse_event(event: dict) -> dict | None:
     slug  = event.get("slug", "")
     title = event.get("title", "")
     date  = event.get("eventDate", "")
+    # Echte Anpfiff-Zeit (UTC ISO) von Polymarket-Gamma. eventDate ist nur das
+    # Datum (US-Konvention) — startTime/gameStartTime hat die präzise Kickoff-Zeit,
+    # z.B. KOR-CZE "2026-06-12T02:00:00Z" (= 20:00 Guadalajara). Ersetzt die
+    # 00:00-Platzhalter im Seed-Spielplan (11.06.2026).
+    kickoff = event.get("startTime") or event.get("gameStartTime") or None
     vol   = event.get("volume", 0)
 
     # Identify home and away teams from teams array
@@ -259,6 +264,7 @@ def parse_event(event: dict) -> dict | None:
         "slug":      slug,
         "title":     title,
         "date":      date,
+        "kickoff":   kickoff,
         "vol":       round(vol, 2),
         "negRiskMarketId": neg_risk_market_id,
         "hwTokens":  hw_tokens,
@@ -397,6 +403,19 @@ def main():
             wm_odds[key] = existing
             patched += 1
 
+        # Echte Kickoff-Zeit (UTC) in die Gruppen-Fixtures schreiben — ersetzt die
+        # 00:00-Platzhalter. Der Polymarket-Betting-Tab blendet Spiele mit
+        # vergangenem Anpfiff aus; mit der echten Zeit zeigt er Spätspiele korrekt
+        # als heute-Abend statt sie fälschlich zu verstecken/als Mitternacht.
+        ko_patched = 0
+        for gdata in wm.get("groups", {}).values():
+            for fx in gdata.get("fixtures", []):
+                p = prices.get(f"{fx.get('home')}-{fx.get('away')}")
+                if p and p.get("kickoff"):
+                    fx["kickoff"] = p["kickoff"]
+                    ko_patched += 1
+        print(f"   ⏰ {ko_patched} Fixture-Kickoff-Zeiten aus Polymarket gesetzt")
+
     if wm is not None:
         with open(WM_FILE, "w", encoding="utf-8") as f:
             json.dump(wm, f, ensure_ascii=False, separators=(",", ":"))
@@ -525,6 +544,7 @@ def main():
             "homeName":     p["homeName"],
             "awayName":     p["awayName"],
             "date":         p["date"],
+            "kickoff":      p.get("kickoff"),
             "slug":         p["slug"],
             "moreMktSlug":  p.get("moreMktSlug"),
             "vol":          round(p["vol"], 0),
