@@ -236,6 +236,29 @@ def main() -> int:
             line = f"📂 {label}: Datei ~{age:.0f}h alt (> {STALE_HOURS:.0f}h) — Fetch hängt?"
             (errors if critical else warns).append(line)
 
+    # ── Spielplan-Konsistenz: Seed-Datum vs echtes Polymarket-Datum ──────
+    # 11.06.2026: Seed-Spielplan war ~1 Tag verschoben (56/60 Fixtures) → Picks
+    # gingen für Spiele raus, die erst am nächsten Tag waren. Polymarket hat die
+    # echten Anpfiff-Daten → jede Abweichung ist ein echter Spielplan-Fehler.
+    poly_prices = (pdata.get("prices") if isinstance(pdata, dict) else None) or {}
+    if poly_prices:
+        seed_date = {}
+        for gd in (wm.get("groups") or {}).values():
+            for fx in gd.get("fixtures", []):
+                seed_date[f"{fx.get('home')}-{fx.get('away')}"] = (fx.get("date") or "")[:10]
+        date_mismatch = []
+        for key, od in poly_prices.items():
+            pd_ = (od.get("date") or "")[:10]
+            sd_ = seed_date.get(key)
+            if pd_ and sd_ and pd_ != sd_:
+                date_mismatch.append(f"{key}: Seed {sd_} ≠ real {pd_}")
+        if date_mismatch:
+            errors.append(f"📅 Spielplan falsch datiert: {len(date_mismatch)} Fixture(s) "
+                          f"weichen vom echten Polymarket-Datum ab (z.B. {date_mismatch[0]}) "
+                          "→ Picks könnten am falschen Tag rausgehen!")
+        else:
+            oks.append("📅 Spielplan: Daten stimmen mit Polymarket überein")
+
     # ── 2) SIGNAL-FEUERN (aus aktuellen Picks) ───────────────────────────
     try:
         from sharp_signals.registry import ACTIVE_SIGNALS
