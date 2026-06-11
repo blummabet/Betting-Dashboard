@@ -27,7 +27,7 @@ const _ST_FEEDS = [
   { file: 'steam_lag_log.json',         icon: '🔥', label: 'Steam-Lag Monitor',         ts: 'updatedAt',       warnH: 8,  errH: 24, crit: false },
   { file: 'wm_weather.json',            icon: '🌡️', label: 'Wetter-Feed',               ts: 'generatedAt',     warnH: 30, errH: 60, crit: false },
   { file: 'wm_nt_xg.json',              icon: '📊', label: 'NT-xG (Coverage)',          ts: null,              warnH: 0,  errH: 0,  crit: false },
-  { file: 'wm_apifootball_predictions.json', icon: '🤝', label: 'APIF-Predictions',     ts: 'generatedAt',     warnH: 30, errH: 60, crit: false },
+  { file: 'wm_apif_predictions.json',   icon: '🤝', label: 'APIF-Predictions',        ts: null,              warnH: 0,  errH: 0,  crit: false },
   { file: 'wm_lineups.json',            icon: '📋', label: 'Aufstellungen (T-1h)',      ts: 'generatedAt',     warnH: 0,  errH: 0,  crit: false },
 ];
 

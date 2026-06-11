@@ -371,8 +371,13 @@ def main():
               + (f" · {pred['advice']}" if pred.get("advice") else ""))
         _save_output(existing)
 
+    # Datei IMMER schreiben (auch 0 neu) — sonst entsteht nie ein committbares
+    # File solange API-Football WC2026 noch nicht listet. So existiert der Feed,
+    # wird vom Registry-git-add erfasst und füllt sich automatisch sobald Daten da.
+    _save_output(existing)
+
     print(f"\n=== Done: {new_count} neu, {cached_count} cached, {fail_count} fail ===")
-    print(f"   → {OUTPUT_FILE.name}")
+    print(f"   → {OUTPUT_FILE.name} ({len(existing)} Einträge gesamt)")
     return 0
 
 

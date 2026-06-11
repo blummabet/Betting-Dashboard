@@ -156,12 +156,15 @@ def main() -> int:
     else:
         oks.append(f"🎲 Pinnacle-Odds: frischeste {newest_odds_h:.1f}h alt")
 
-    # APIF Predictions
+    # APIF Predictions — KEIN Code/Auth-Fehler wenn leer: derselbe APISPORTS_KEY
+    # liefert für wm_nt_xg Daten. API-Football listet WC-2026-Fixtures/Predictions
+    # (/fixtures?league=1&season=2026 + /predictions) erst näher am Turnier. Darum
+    # nur WARN (kontextabhängig), kein roter Blocker.
     afile = BASE / "wm_apif_predictions.json"
     adata = _load(afile)
     if not adata:
-        errors.append("📊 APIF-Predictions: wm_apif_predictions.json fehlt/leer "
-                      "→ apif_predictions-Signal tot (APISPORTS_KEY / Actions-Log prüfen)")
+        warns.append("📊 APIF-Predictions leer — API-Football listet WC2026 noch nicht "
+                     "(kein Code-Fehler; apif_predictions-Signal aktiviert sich näher am Turnier)")
     else:
         n = len([k for k in adata if isinstance(adata.get(k), dict)])
         oks.append(f"📊 APIF-Predictions: {n} Spiele")
