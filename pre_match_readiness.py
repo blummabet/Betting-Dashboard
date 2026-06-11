@@ -347,6 +347,28 @@ def main() -> int:
     else:
         print("\n✅ Keine echten Lücken — Engine ist bereit.")
 
+    # ── wm_status.json schreiben (Single Source of Truth für Status-Seite) ─
+    # Die Dashboard-Status-Seite rendert diese Datei: autoritative Health aus
+    # der echten Cron-Umgebung (Datei-mtimes, API-Keys, Spielplan-Konsistenz),
+    # die der Browser nicht selbst prüfen kann. Browser ergänzt Live-Checks.
+    status = {
+        "generatedAt":   datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "windowDays":    WINDOW_DAYS,
+        "upcoming":      len(upcoming),
+        "signalsFired":  fired,
+        "signalsTotal":  len(signal_names),
+        "verdict":       "error" if errors else ("warn" if warns else "ok"),
+        "errors":        errors,
+        "warns":         warns,
+        "oks":           oks,
+    }
+    try:
+        with open(BASE / "wm_status.json", "w", encoding="utf-8") as f:
+            json.dump(status, f, ensure_ascii=False, indent=2)
+        print("\n💾 wm_status.json geschrieben")
+    except Exception as e:
+        print(f"\n⚠️  wm_status.json schreiben fehlgeschlagen: {e}")
+
     # ── Telegram-Alert nur bei echten Lücken ─────────────────────────────
     if errors:
         lines = [f"⚠️ <b>Readiness-Check: {len(errors)} Lücke(n)</b>",

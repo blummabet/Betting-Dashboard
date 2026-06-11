@@ -138,7 +138,7 @@ function showView(view) {
   }
 
   // ── Callbacks ────────────────────────────────────────
-  if (view === 'status')            { initStatus(); buildValidatorDates(); }
+  if (view === 'status')            { initStatus(); }
   if (view === 'polybetting')       initPolymarket();
   if (view === 'polytrading')       initPolyTrader();
   if (view === 'national-tracking' && typeof initResultsV2      === 'function') initResultsV2();
@@ -271,8 +271,13 @@ async function initStatus() {
   if (_statusLoaded) return;
   _statusLoaded = true;
 
-  // ── Section 0: Validator Summary Banner ──────────────
-  const vs = (typeof VALIDATOR_SUMMARY !== 'undefined') ? VALIDATOR_SUMMARY : null;
+  // ── Section 0: WM Live-Health-Engine (ersetzt alten Liga-Validator-Banner) ──
+  // Der frühere VALIDATOR_SUMMARY-Banner kam aus der Liga-Pipeline und war für
+  // die WM unbrauchbar. Jetzt: runStatusPage() (status-checks.js) rendert Verdict,
+  // Live-Probleme, Server-Readiness, Feed-Frische und Signal-Matrix.
+  if (typeof runStatusPage === 'function') runStatusPage();
+
+  const vs = null;
   if (vs) {
     const banner  = document.getElementById('validatorBanner');
     const icon    = document.getElementById('validatorBannerIcon');
@@ -350,58 +355,10 @@ async function initStatus() {
     </a>`;
   }).join('');
 
-  // ── Section 2: File freshness via GitHub API ──────────
-  const filesEl   = document.getElementById('statusFiles');
-  const filesNote = document.getElementById('statusFilesNote');
-  filesEl.innerHTML = _STATUS_FILES.map(() =>
-    `<div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
-      <div style="height:48px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:12px;">Lädt…</div>
-    </div>`
-  ).join('');
-
-  const fileMeta = await Promise.all(_STATUS_FILES.map(async f => {
-    try {
-      const r = await fetch(`https://api.github.com/repos/${_REPO}/commits?path=${encodeURIComponent(f.file)}&per_page=1`);
-      if (!r.ok) return null;
-      const data = await r.json();
-      if (!data.length) return null;
-      const commit = data[0];
-      return {
-        date:    commit.commit?.committer?.date || commit.commit?.author?.date,
-        sha:     commit.sha?.slice(0, 7),
-        message: commit.commit?.message?.split('\n')[0] || '',
-      };
-    } catch(e) { return null; }
-  }));
-
-  filesEl.innerHTML = _STATUS_FILES.map((f, i) => {
-    const meta  = fileMeta[i];
-    const ago   = meta ? _timeAgo(meta.date) : '—';
-    const color = meta ? _freshnessColor(meta.date) : '#8b949e';
-    const sha   = meta?.sha ? `<span style="font-family:monospace;font-size:10px;opacity:.6;">${meta.sha}</span>` : '';
-    const msg   = meta?.message ? `<span title="${meta.message}">${meta.message.length > 40 ? meta.message.slice(0, 40) + '…' : meta.message}</span>` : '';
-    return `<div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;">
-      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">${f.icon} ${f.label}</div>
-      <div style="font-size:15px;font-weight:700;color:${color};margin-bottom:4px;">${ago}</div>
-      <div style="font-size:11px;color:var(--muted);">${f.file}</div>
-      ${meta ? `<div style="font-size:10px;color:var(--muted);margin-top:3px;">${sha} ${msg}</div>` : ''}
-    </div>`;
-  }).join('');
-
-  filesNote.textContent = 'Stand: via GitHub API  · Grün < 6h  ·  Gelb < 24h  ·  Rot ≥ 24h';
-
-  // ── Section 3: Dashboard action log ──────────────────
-  const actEl = document.getElementById('statusActions');
-  let log = {};
-  try { log = JSON.parse(localStorage.getItem('betedge_action_log') || '{}'); } catch(e) {}
-
-  actEl.innerHTML = _STATUS_ACTIONS.map(a => {
-    const ts    = log[a.key] || null;
-    const ago   = ts ? _timeAgo(ts) : 'Noch nie';
-    const color = ts ? _freshnessColor(ts) : '#8b949e';
-    const isoFmt = ts ? new Date(ts).toLocaleString('de-AT', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : null;
-    return _statusCard(a.icon, a.label, ago, isoFmt || 'Noch kein Klick in diesem Browser', color);
-  }).join('');
+  // ── Section 2 (Feed-Frische) + Signal-Matrix + Verdict + Probleme ──────
+  // → komplett in runStatusPage() (status-checks.js), oben aufgerufen.
+  //   Nutzt eingebettete Daten-Timestamps statt GitHub-API (kein Rate-Limit,
+  //   spiegelt echte Daten-Frische statt Commit-Zeit).
 
   // ── Section 4: Quick links to trigger workflows ───────
   document.getElementById('statusQuickLinks').innerHTML = _STATUS_WORKFLOWS.map(w =>
@@ -417,6 +374,7 @@ async function initStatus() {
     window._ccInterval = setInterval(() => {
       if (document.getElementById('statusPanel')?.style.display !== 'none') {
         loadWmControlCenter();
+        if (typeof runStatusPage === 'function') runStatusPage(true);
       }
     }, 60000);
   }

@@ -3868,28 +3868,42 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div id="statusPanel" style="display:none;max-width:960px;margin:0 auto;padding:20px 16px 60px;">
 
   <!-- Page header -->
-  <div style="margin-bottom:24px;">
-    <div style="font-size:20px;font-weight:700;margin-bottom:4px;">🔧 Status / Data</div>
-    <div style="font-size:13px;color:var(--muted);">Übersicht aller GitHub Actions Workflows, Datei-Frische und Dashboard-Aktionen</div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+    <div>
+      <div style="font-size:20px;font-weight:700;margin-bottom:4px;">🔧 Status — Single Source of Truth</div>
+      <div style="font-size:13px;color:var(--muted);">Läuft alles? Was ist gefailt? Live-Checks im Browser + letzter Pipeline-Lauf an einem Ort.</div>
+    </div>
+    <button onclick="runStatusPage(true)" style="margin-left:auto;background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">🔄 Neu prüfen</button>
   </div>
 
-  <!-- 0 ── Validator Status Banner ──────────────────────────────────── -->
-  <div id="validatorBanner" style="border-radius:14px;padding:18px 20px;margin-bottom:20px;display:none;">
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-      <div id="validatorBannerIcon" style="font-size:24px;line-height:1;"></div>
+  <!-- 0 ── GESAMT-VERDICT ─────────────────────────────────────────────── -->
+  <div id="st_verdict" style="border-radius:14px;padding:20px 22px;margin-bottom:18px;border:1px solid var(--border);background:var(--card);">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div id="st_verdictIcon" style="font-size:34px;line-height:1;">⏳</div>
       <div style="flex:1;min-width:0;">
-        <div id="validatorBannerTitle" style="font-size:14px;font-weight:700;margin-bottom:2px;"></div>
-        <div id="validatorBannerSub" style="font-size:12px;opacity:.75;"></div>
+        <div id="st_verdictTitle" style="font-size:17px;font-weight:800;">Prüfe System…</div>
+        <div id="st_verdictSub" style="font-size:12.5px;color:var(--muted);margin-top:3px;">Lade alle Feeds und rechne Live-Checks…</div>
       </div>
-      <div style="display:flex;gap:8px;flex-shrink:0;" id="validatorBannerCounts"></div>
+      <div id="st_verdictCounts" style="display:flex;gap:8px;flex-shrink:0;"></div>
     </div>
-    <div id="validatorBannerIssues" style="margin-top:14px;display:none;">
-      <div style="border-top:1px solid rgba(255,255,255,.12);padding-top:12px;display:flex;flex-direction:column;gap:8px;" id="validatorBannerList"></div>
+  </div>
+
+  <!-- 1 ── AKTIVE PROBLEME (Live-Checks im Browser) ───────────────────── -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;">
+    <div style="font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+      <span>🌐</span> Live-Checks <span style="font-size:11px;font-weight:400;color:var(--muted);">jetzt im Browser gerechnet</span>
     </div>
-    <div style="margin-top:12px;display:flex;align-items:center;gap:10px;">
-      <button id="validatorBannerToggle" onclick="toggleValidatorDetails()" style="background:rgba(255,255,255,.12);border:none;color:inherit;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;">Details anzeigen</button>
-      <span style="font-size:11px;opacity:.6;" id="validatorBannerTs"></span>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Stale-Edges · Home/Away-Konflikte · Spielplan · Kill-Switch · Odds-/Poly-Alter · Trade-Caps</div>
+    <div id="st_problems" style="display:flex;flex-direction:column;gap:8px;"><div style="color:var(--muted);text-align:center;padding:16px;">Lädt…</div></div>
+  </div>
+
+  <!-- 2 ── SERVER-READINESS (letzter Cron-Lauf) ───────────────────────── -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;">
+    <div style="font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+      <span>🖥️</span> Server-Readiness <span style="font-size:11px;font-weight:400;color:var(--muted);">letzter Pipeline-Lauf · prüft Datei-mtimes, API-Keys, Signal-Feuern</span>
+      <span id="st_serverTs" style="font-size:11px;font-weight:400;color:var(--muted);margin-left:auto;"></span>
     </div>
+    <div id="st_server" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"><div style="color:var(--muted);text-align:center;padding:16px;">Lädt wm_status.json…</div></div>
   </div>
 
   <!-- A ── WM Health-Dashboard (Live-Kennzahlen) ─────────────────── -->
@@ -3926,18 +3940,20 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div id="statusWorkflows" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;"></div>
   </div>
 
-  <!-- 2 ── Datei-Frische ────────────────────────────────────────────── -->
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;">
-    <div style="font-size:14px;font-weight:700;margin-bottom:16px;">📁 Datei-Frische</div>
-    <div id="statusFiles" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;"></div>
-    <div style="margin-top:12px;font-size:11px;color:var(--muted);" id="statusFilesNote">Wird über GitHub API geladen…</div>
+  <!-- 2 ── Feed-Frische (eingebettete Timestamps der Daten selbst) ───── -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;">
+    <div style="font-size:14px;font-weight:700;margin-bottom:4px;">📁 Feed-Frische</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:16px;">Aus dem Datenstand selbst (nicht Commit-Zeit) · grün = im Soll · gelb = überfällig · rot = tot/fehlt</div>
+    <div id="st_feeds" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;"></div>
   </div>
 
-  <!-- 3 ── Dashboard Aktionen (Browser-Log) ───────────────────────── -->
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px;">
-    <div style="font-size:14px;font-weight:700;margin-bottom:4px;">🖱️ Dashboard Aktionen</div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:16px;">Letzte Klicks auf Buttons — im Browser gespeichert</div>
-    <div id="statusActions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;"></div>
+  <!-- 3 ── Signal-Feuer-Matrix ──────────────────────────────────────── -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;">
+    <div style="font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+      <span>🧠</span> Signal-Feuer <span id="st_signalsCount" style="font-size:11px;font-weight:400;color:var(--muted);margin-left:auto;"></span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:16px;">Welche der 15 Engine-Signale in den aktuellen Picks tatsächlich feuern · grau = kontextabhängig still</div>
+    <div id="st_signals" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;"></div>
   </div>
 
   <!-- 4 ── Quick Actions / Links ──────────────────────────────────── -->
@@ -3947,24 +3963,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);">
       Workflows können auf GitHub gestartet werden: Actions → Workflow auswählen → <strong>Run workflow</strong>
     </div>
-  </div>
-
-  <!-- 5 ── Logik-Validator ──────────────────────────────────────── -->
-  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;">
-    <div style="font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
-      <span>🧪</span> Logik-Validator
-      <span style="font-size:11px;font-weight:400;color:var(--muted);margin-left:auto;">13 Checks · 🔴 Fehler · 🟡 Warnungen · 🔵 Hinweise</span>
-    </div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Wähle einen Spieltag — der Validator prüft alle Picks auf Logik-Konsistenz direkt im Browser</div>
-
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
-      <select id="validatorDateSelect" onchange="runPicksValidator()" style="background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 14px;font-size:13px;font-family:inherit;cursor:pointer;min-width:180px;">
-        <option value="">— Spieltag wählen —</option>
-      </select>
-      <button id="validatorCopyBtn" onclick="copyValidatorOutput()" style="display:none;background:#1a2030;border:1px solid var(--blue);color:var(--blue);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">📋 Kopieren</button>
-    </div>
-
-    <div id="validatorOutput" style="font-size:12.5px;line-height:1.6;"></div>
   </div>
 
 </div>
@@ -4367,6 +4365,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <script src="renderer.js"></script>
 <script src="share.js"></script>
 <script src="ui.js"></script>
+<script src="status-checks.js"></script>
 <script src="polymarket-tab.js"></script>
 <script src="results-v2.js"></script>
 <script src="wm2026-renderer.js"></script>

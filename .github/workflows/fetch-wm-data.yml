@@ -336,6 +336,9 @@ jobs:
           git add -u 2>/dev/null || true
           # Registry zusätzlich für NEUE (untracked) Files (z.B. neue match-pages).
           git add $(python3 state_files_registry.py --bash-list fetch_wm_data) 2>/dev/null || true
+          # wm_status.json (Status-Seite Single Source of Truth) explizit — neu/untracked,
+          # wird von git add -u nicht erfasst.
+          git add wm_status.json 2>/dev/null || true
           # Diagnose: was ist staged? (im Log sichtbar, kein stilles Versagen mehr)
           echo "📋 Staged für Commit:"; git diff --staged --name-only | sed 's/^/   /' || true
           if git diff --staged --quiet; then
