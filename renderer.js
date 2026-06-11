@@ -2503,33 +2503,38 @@ function renderSharpRadar() {
       <div style="font-size:12px;color:var(--muted);line-height:1.55;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
         <span>Linienbewegungen im Markt · alle 7 Tage · CLV-Orientierung für unsere Picks</span>
         ${(() => {
-          // Anti-Drift-Fix 09.06.2026: _pmTs greift für nationale Ligen.
-          // WM-Sommer: Liga-Pause → kein prematch-data, aber WM-Daten via
-          // WM2026_DATA. Fallback auf WM-generatedAt damit "wird geladen…"
-          // nicht stale bleibt wenn der WM-Datenflow ok ist.
+          // FIX 11.06.2026: Frische = ECHTER neuester Odds-Snapshot, NICHT die Datei-
+          // Generierungszeit. wm2026-data.json wird täglich neu geschrieben (generatedAt
+          // frisch), auch wenn die Odds eingefroren sind → alte Anzeige log "aktuell".
+          // Jetzt zeigen wir das Alter der jüngsten echten Odds-Bewegung. Rot + STALE
+          // wenn der Odds-Feed hängt — damit man Ausfälle sofort sieht.
+          let newestTs = 0;
+          const hist = window.WM2026_ODDS_HISTORY || {};
+          for (const snaps of Object.values(hist)) {
+            if (Array.isArray(snaps) && snaps.length) {
+              const t = new Date(snaps[snaps.length - 1].ts).getTime();
+              if (!isNaN(t) && t > newestTs) newestTs = t;
+            }
+          }
+          if (newestTs) {
+            const diffM = Math.round((Date.now() - newestTs) / 60000);
+            const ago = diffM < 2 ? 'gerade eben'
+                      : diffM < 60 ? `vor ${diffM} Min`
+                      : diffM < 1440 ? `vor ${Math.floor(diffM/60)} Std`
+                      : `vor ${Math.floor(diffM/1440)} Tg`;
+            const stale = diffM >= 1440;            // > 24h = Feed hängt
+            const col = diffM < 360 ? '#3fb950' : diffM < 1440 ? '#e3b341' : '#f85149';
+            const iso = new Date(newestTs).toLocaleString('de-AT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+            return `<span style="font-size:11px;font-weight:800;color:${col};background:rgba(0,0,0,0.25);border:1px solid ${col}66;border-radius:5px;padding:2px 8px;" title="Neueste Odds-Bewegung: ${iso}">📊 Odds ${ago} aktualisiert${stale ? ' · ⚠️ STALE — Feed prüfen' : ''}</span>`;
+          }
+          // Kein Snapshot geladen → ehrlich rot statt "wird geladen…"
           const _ts = window._pmTs;
           if (_ts) {
             const diffM = Math.round((Date.now() - _ts) / 60000);
-            const ago = diffM < 2 ? 'gerade eben' : diffM < 60 ? `vor ${diffM} Min` : `vor ${Math.floor(diffM/60)} Std`;
-            const col = diffM < 90 ? '#3fb950' : diffM < 360 ? '#e3b341' : '#f85149';
-            const isoFmt = new Date(_ts).toLocaleString('de-AT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-            return `<span style="font-size:11px;font-weight:700;color:${col};background:rgba(0,0,0,0.25);border:1px solid ${col}40;border-radius:5px;padding:2px 8px;" title="Prematch-Daten: ${isoFmt}">⏱ ${ago} aktualisiert</span>`;
+            const ago = diffM < 60 ? `vor ${diffM} Min` : `vor ${Math.floor(diffM/60)} Std`;
+            return `<span style="font-size:11px;font-weight:700;color:#8b949e;background:rgba(0,0,0,0.25);border:1px solid #30363d;border-radius:5px;padding:2px 8px;">⏱ Liga-Prematch ${ago}</span>`;
           }
-          // Fallback: WM-Daten verfügbar?
-          const _wmTs = window.WM2026_DATA?._meta?.generatedAtIso || window.WM2026_DATA?._meta?.generatedAt;
-          if (_wmTs) {
-            try {
-              const t = new Date(_wmTs).getTime();
-              if (!isNaN(t)) {
-                const diffM = Math.round((Date.now() - t) / 60000);
-                const ago = diffM < 2 ? 'gerade eben' : diffM < 60 ? `vor ${diffM} Min` : `vor ${Math.floor(diffM/60)} Std`;
-                const col = diffM < 90 ? '#3fb950' : diffM < 360 ? '#e3b341' : '#f85149';
-                return `<span style="font-size:11px;font-weight:700;color:${col};background:rgba(0,0,0,0.25);border:1px solid ${col}40;border-radius:5px;padding:2px 8px;">⏱ WM-Daten ${ago}</span>`;
-              }
-            } catch(e) {}
-          }
-          // WM-Sommer-Hinweis statt "wird geladen" (Liga-Saison pausiert)
-          return '<span style="color:#8b949e;font-size:11px;">⏱ Liga-Pause · WM 2026 läuft separat</span>';
+          return '<span style="color:#f85149;font-size:11px;font-weight:800;">⚠️ Keine Odds-Snapshots geladen — Feed prüfen</span>';
         })()}
       </div>
     </div>

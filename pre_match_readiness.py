@@ -204,6 +204,38 @@ def main() -> int:
     else:
         warns.append("💹 Poly-Preise fehlen/leer → Auto-Trade & polymarket_sharp ohne Basis")
 
+    # Poly-Balance (Trading-kritisch — ohne Balance keine korrekte Stake-Cap-Logik)
+    bfile = BASE / "wm_poly_balance.json"
+    bdata = _load(bfile)
+    if bdata is None:
+        warns.append("💼 Poly-Balance: wm_poly_balance.json fehlt → Bankroll-Caps ohne Basis")
+    else:
+        bage = _mtime_age_h(bfile)
+        if bage is not None and bage > STALE_HOURS:
+            warns.append(f"💼 Poly-Balance: ~{bage:.0f}h alt — fetch_wm_poly_balance läuft?")
+        else:
+            oks.append(f"💼 Poly-Balance: ${float(bdata.get('usdc') or 0):.2f}")
+
+    # ── Generischer Feed-Frische-Scan (Catch-all für still versagende Fetches) ──
+    # Die meisten Fetch-Scripts melden Fehler NICHT — dieser Scan fängt jedes
+    # Feed, das zu lange nicht aktualisiert wurde (mtime), als Sicherheitsnetz.
+    feed_files = {
+        "wm2026-data.json":          ("Kern-Daten (Picks/Odds/Form/Injuries)", True),
+        "wm_poly_prices.json":       ("Polymarket-Preise", True),
+        "wm2026-odds-history.json":  ("Odds-History", False),
+        "wm_nt_xg.json":             ("NT-xG", False),
+        "wm_weather.json":           ("Wetter", False),
+    }
+    for fn, (label, critical) in feed_files.items():
+        p = BASE / fn
+        if not p.exists():
+            (errors if critical else warns).append(f"📂 {label} ({fn}) fehlt komplett")
+            continue
+        age = _mtime_age_h(p)
+        if age is not None and age > STALE_HOURS:
+            line = f"📂 {label}: Datei ~{age:.0f}h alt (> {STALE_HOURS:.0f}h) — Fetch hängt?"
+            (errors if critical else warns).append(line)
+
     # ── 2) SIGNAL-FEUERN (aus aktuellen Picks) ───────────────────────────
     try:
         from sharp_signals.registry import ACTIVE_SIGNALS

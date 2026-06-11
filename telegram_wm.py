@@ -227,6 +227,7 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
     bet_count = sum(
         1 for m in matches_today
         for p in m["picks"] if p.get("verdict") == "BET" and p.get("edgePP", 0) >= MIN_BET_EDGE
+        and not p.get("trackingExcluded")
     )
     lines = [
         f"🌍 <b>WM 2026 — Heute · {len(matches_today)} Spiel{'e' if len(matches_today) != 1 else ''}</b>",
@@ -237,8 +238,13 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
         lines.append("👀 Heute im Blick — kein klarer BET\n")
 
     for m in matches_today:
-        bet_picks = [p for p in m["picks"] if p.get("verdict") == "BET" and p.get("edgePP", 0) >= MIN_BET_EDGE]
-        abw_picks = [p for p in m["picks"] if p.get("verdict") == "ABWÄGEN" and p.get("edgePP", 0) >= MIN_ABW_EDGE]
+        # FIX 11.06.2026: trackingExcluded raus (Cross-Market-Konflikte). Der Dashboard-
+        # Renderer filtert das seit 06.06., der Telegram-Sender hat es nie getan →
+        # widersprüchliche Picks (z.B. Auswärtssieg + AH Heim −0.5) landeten im Card.
+        bet_picks = [p for p in m["picks"] if p.get("verdict") == "BET"
+                     and p.get("edgePP", 0) >= MIN_BET_EDGE and not p.get("trackingExcluded")]
+        abw_picks = [p for p in m["picks"] if p.get("verdict") == "ABWÄGEN"
+                     and p.get("edgePP", 0) >= MIN_ABW_EDGE and not p.get("trackingExcluded")]
 
         # Spiel-Block
         us = m["upsetScore"]
