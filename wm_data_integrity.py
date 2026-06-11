@@ -149,10 +149,17 @@ def check_kickoff_present(ctx):
                 "00:00-Platzhalter führten zu falschem Betting-Tab-Listing.")
 
 
+def _real_match_keys(ctx):
+    return {ctx.mk(fx) for _g, fx in ctx.fixtures}
+
+
 @integrity_check
 def check_odds_sane(ctx):
+    real = _real_match_keys(ctx)
     fails = []
     for mk, o in ctx.odds.items():
+        if mk not in real:
+            continue   # Phantom-Keys separat (check_no_phantom_odds)
         hw, dr, aw = o.get("hw"), o.get("dr"), o.get("aw")
         if not all(isinstance(x, (int, float)) and x > 1.0 for x in (hw, dr, aw)):
             fails.append(f"{mk}: 1X2 unvollständig hw={hw} dr={dr} aw={aw}")
@@ -233,9 +240,22 @@ def check_lineup_present(ctx):
 
 @integrity_check
 def check_public_consensus(ctx):
-    fails = [f"{mk}: kein public_hw" for mk, o in ctx.odds.items() if not o.get("public_hw")]
+    real = _real_match_keys(ctx)
+    fails = [f"{mk}: kein public_hw" for mk, o in ctx.odds.items()
+             if mk in real and not o.get("public_hw")]
     return _chk("public_consensus", "Public-Konsens (Soft-Books) vorhanden", "warn", fails,
                 "Ohne public_* feuert public_static_bias nicht.")
+
+
+@integrity_check
+def check_no_phantom_odds(ctx):
+    """Odds-Keys, die KEINEM echten Fixture entsprechen — meist verkehrte
+    Heim/Auswärts-Reihenfolge (SUI-CAN statt CAN-SUI), leer. Daten-Hygiene:
+    so ein Phantom-Key kann bei Reverse-Lookups falsch matchen."""
+    real = _real_match_keys(ctx)
+    fails = [f"{mk}: kein echtes Fixture (Spiegel-Key?)" for mk in ctx.odds if mk not in real]
+    return _chk("no_phantom_odds", "Keine Phantom-Odds-Keys (verkehrte Reihenfolge)", "warn", fails,
+                "84 Odds-Keys vs 72 Fixtures = 12 leere Spiegel-Einträge. Quelle prüfen.")
 
 
 # ── Runner ───────────────────────────────────────────────────────────────────
