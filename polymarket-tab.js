@@ -463,11 +463,18 @@ const WM_POLY_MIN_EDGE_PP   = 5;        // mindestens +5pp Edge
 const WM_POLY_BET_ONLY      = true;     // nur verdict=BET, ABWÄGEN raus
 const WM_POLY_DAYS_AHEAD    = 7;        // nicht nur heute — Tag-für-Tag-Filter macht Lucas mit Datums-Picker
 
-// Anpfiff (Datum + Zeit, UTC) bereits vorbei? Daten-Zeiten sind UTC-basiert.
-// 00:00-Platzhalter werden so am jeweiligen Spieltag korrekt als "vorbei" erkannt,
-// bis echte Kickoff-Zeiten aus API-Football vorliegen (offener Punkt).
+// Anpfiff bereits vorbei?  Primär: echte UTC-Kickoff-Zeit fx.kickoff (von
+// Polymarket-Gamma, z.B. "2026-06-12T02:00:00Z"). Fallback: fx.date + fx.time.
+// So werden Spätspiele (z.B. KOR-CZE 02:00 UTC = 20:00 Guadalajara) korrekt als
+// "heute Abend, noch bettbar" behandelt statt über den 00:00-Platzhalter
+// fälschlich versteckt. Erst NACH Anpfiff verschwindet das Spiel.
 function _wmKickoffPassed(fx) {
-  if (!fx || !fx.date) return false;
+  if (!fx) return false;
+  if (fx.kickoff) {
+    const k = new Date(fx.kickoff);
+    if (!isNaN(k.getTime())) return k.getTime() <= Date.now();
+  }
+  if (!fx.date) return false;
   const t = (fx.time && /^\d{2}:\d{2}/.test(fx.time)) ? fx.time : '23:59';
   const ko = new Date(`${fx.date}T${t}:00Z`);
   if (isNaN(ko.getTime())) return false;
