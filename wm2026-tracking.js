@@ -147,9 +147,13 @@
     if (_mdFilter  !== 'all') filtered = filtered.filter(r => r.fx.matchday === +_mdFilter);
 
     // Flatten picks for filtered set (apply verdict filter)
+    // FIX 11.06.2026: trackingExcluded raus (Cross-Market-Konflikte wie
+    // CAN-BIH "AH Heim" neben "Auswärtssieg"). Das Tracking filterte nur nach
+    // Verdict → der Konflikt-Pick blieb sichtbar.
     const flatPicks = [];
     for (const row of filtered) {
       for (const p of row.picks) {
+        if (p.trackingExcluded) continue;
         if (_vrdFilter === 'all' || p.verdict === _vrdFilter) {
           flatPicks.push({ ...p, _row: row });
         }
@@ -371,8 +375,8 @@
       for (const fx of (gData.fixtures || [])) {
         const mk = `${gKey}-${fx.matchday}-${fx.home}-${fx.away}`;
         const all = allPicks[mk] || [];
-        // Card-Logik replizieren: BET/ABWÄGEN, sortiert
-        const live = all.filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN');
+        // Card-Logik replizieren: BET/ABWÄGEN, sortiert (trackingExcluded raus — FIX 11.06.2026)
+        const live = all.filter(p => (p.verdict === 'BET' || p.verdict === 'ABWÄGEN') && !p.trackingExcluded);
         const sorted = [...live].sort((a, b) => {
           if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
           if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
