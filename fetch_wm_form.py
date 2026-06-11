@@ -107,7 +107,7 @@ def resolve_team_ids(wm: dict) -> dict:
     # andere Schreibweisen verwendet. Liste mehrere Kandidaten und nimm
     # ersten erfolgreichen Match.
     ALT_NAMES = {
-        "BIH": ["Bosnia and Herzegovina", "Bosnia", "Bosnia-Herzegovina"],
+        "BIH": ["Bosnia & Herzegovina", "Bosnia and Herzegovina", "Bosnia", "Bosnia-Herzegovina"],
         "CPV": ["Cape Verde Islands", "Cabo Verde", "Cape Verde"],
         "TUR": ["Turkey", "Türkiye", "Turkiye"],
         "USA": ["USA", "United States", "United States of America"],
@@ -125,6 +125,14 @@ def resolve_team_ids(wm: dict) -> dict:
             print(f"  🔍 {tid} ({name})…", end=" ", flush=True)
             resp = apif_get("teams", {"name": name})
             time.sleep(DELAY)
+            # FIX 11.06.2026: Fuzzy-Fallback. /teams?name= ist EXAKT-Match — wenn
+            # API-Football eine andere Schreibweise nutzt (z.B. "Bosnia &
+            # Herzegovina" mit Ampersand), liefert name= 0 Treffer. /teams?search=
+            # macht Teilstring-Suche und fängt diese Fälle. War der Grund warum
+            # BIH als einziges der 48 Teams keine Form-Daten hatte.
+            if not resp:
+                resp = apif_get("teams", {"search": name})
+                time.sleep(DELAY)
             if not resp:
                 print("0 Treffer")
                 continue
