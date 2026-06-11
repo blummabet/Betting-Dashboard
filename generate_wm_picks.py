@@ -1473,6 +1473,12 @@ def generate_picks_for_fixture(
                 # Schwächeren excluden — bei Gleichstand den späteren
                 loser = b if _strength(a) >= _strength(b) else a
                 loser["trackingExcluded"] = True
+                # FIX 11.06.2026: HART auf SKIP setzen, nicht nur trackingExcluded.
+                # Vorher blieb verdict=ABWÄGEN → jeder Sender, der nur nach Verdict
+                # filtert (telegram_wm, tiktok), zeigte den Widerspruch trotzdem.
+                # SKIP ist für ALLE Renderer unsichtbar (alle filtern BET/ABWÄGEN).
+                # Eine Engine darf NIE Heim- UND Auswärtssieg gleichzeitig zeigen.
+                loser["verdict"] = "SKIP"
                 loser["excludeReason"] = (
                     f"Cross-Market-Konflikt mit „{(a if loser is b else b).get('market')}\""
                 )
