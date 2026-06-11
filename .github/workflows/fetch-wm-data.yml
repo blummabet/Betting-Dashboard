@@ -112,6 +112,15 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # ── Multi-Book Soft-Konsens (API-Football, 13 Books) für public_static_bias ──
+      # Nach fetch_wm_odds (Pinnacle steht), vor generate_wm_picks. Überschreibt die
+      # public_* Felder (vorher 1 Soft-Book = verrauscht) mit robustem Median-Konsens.
+      - name: 🏦 WM Multi-Book Konsens (Public-Bias)
+        run: python fetch_wm_multibook_odds.py --write
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
       # ── Sharp Move Detection (direkt nach Odds-Fetch) ─────────────────
       # Channel-Fix 05.06.2026: Alerts gehen jetzt an TRADES-Channel (privat)
       - name: 📡 WM Sharp Moves detektieren

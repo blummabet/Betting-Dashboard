@@ -155,6 +155,32 @@ def verify_slot(slot: Slot, max_drift_pct: float = 5.0) -> tuple[bool, str]:
     live_value = _walk_path(data, slot.source)
     if live_value is None:
         return False, f"path '{slot.source}' in {slot.source_file} nicht gefunden"
+    # Container-Source (Liste/Dict ohne festen Index, z.B. "groups.A.teams"):
+    # FIX 11.06.2026 — vorher str-cmp gegen das ganze Array → matchOfDay-Slots
+    # (stat1_val/stat2_val = Team-Elo) failten IMMER, Story wurde nie verifiziert.
+    # Intention der Angles ist Plausibilität: raw muss irgendwo als Wert in der
+    # Struktur vorkommen (Index unbestimmt). Gross-Fehler (erfundene Zahl) fallen
+    # weiterhin durch.
+    if isinstance(live_value, (list, dict)) and slot.raw is not None:
+        def _flat(o):
+            if isinstance(o, dict):
+                for v in o.values():
+                    yield from _flat(v)
+            elif isinstance(o, list):
+                for v in o:
+                    yield from _flat(v)
+            else:
+                yield o
+        raw_s = str(slot.raw)
+        for v in _flat(live_value):
+            if str(v) == raw_s:
+                return True, f"plausibility ok (raw {raw_s} in {slot.source})"
+            try:
+                if float(v) == float(slot.raw):
+                    return True, f"plausibility ok (raw {raw_s} ~ {v})"
+            except (ValueError, TypeError):
+                pass
+        return False, f"plausibility FAIL: raw {raw_s} nicht in {slot.source}"
     # Wenn raw gesetzt: numerischer Drift-Check
     if slot.raw is not None:
         try:

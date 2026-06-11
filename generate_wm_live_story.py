@@ -281,6 +281,23 @@ def main():
     today_iso = datetime.now(timezone.utc).isoformat()
     print(f"🎬 generate_wm_live_story.py · {today_iso[:19]} UTC\n")
 
+    # ── Per-Tag-Guard (11.06.2026) ───────────────────────────────────────────
+    # MAX 1 Story pro Kalendertag — egal wie oft der Workflow triggert (Cron 06:00
+    # + manuelle Dispatches + lokale Läufe). Vorher nur Entity-Dedup (letzte 4 Tage)
+    # → jeder Lauf postete eine NEUE Top-Story. Folge heute: matchOfDay KOR (15:51)
+    # + matchOfDay MEX (16:28) = Doppel-Spam. Geprüft wird auf einen bereits HEUTE
+    # erfolgreich geposteten Eintrag (status='posted'); fehlgeschlagene Versuche
+    # blocken NICHT (Retry bleibt möglich). FORCE_ANGLE/DRY_RUN umgehen den Guard.
+    if not DRY_RUN and not FORCE_ANGLE:
+        _today = today_iso[:10]
+        _posted_today = [p for p in (load_state().get("posted") or [])
+                         if str(p.get("ts", ""))[:10] == _today and p.get("status") == "posted"]
+        if _posted_today:
+            last = _posted_today[-1]
+            print(f"⏭️  Heute bereits eine Story gepostet "
+                  f"({last.get('angle_id')}/{last.get('entity_key')}) — skip (Limit 1/Tag).")
+            return
+
     # 1. Alle Angles abfragen
     all_proposals: list[StoryProposal] = []
     angle_modules = {
@@ -371,7 +388,13 @@ def main():
     if info_png: print(f"📸 Info-PNG: {info_png.name}")
 
     # 8. Telegram-Send: erst Caption-Text-Nachricht, dann beide PNGs
-    if not DRY_RUN:
+    # FIX 11.06.2026: NUR senden wenn der Fact-Verifier ok ist. Vorher wurde
+    # trotz Verifier-FAIL gesendet (heute 2× matchOfDay mit verifier_fail an den
+    # Channel) — ungeprüfte Zahlen dürfen NICHT raus. Bei Fail: kein Send, nur
+    # Audit-Record (status=verifier_fail unten).
+    if not DRY_RUN and not verify_report["ok"]:
+        print("\n🛑 Verifier FAILED — Story wird NICHT gesendet (ungeprüfte Fakten).")
+    if not DRY_RUN and verify_report["ok"]:
         # Header-Text als Einleitung (Story-Header + Verifier-Status)
         header_text = _telegram_preview_text(top, verify_report)
         _send_telegram_text(header_text)
