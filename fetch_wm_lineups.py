@@ -134,6 +134,7 @@ def _load_wm_fixtures() -> list[dict]:
                         "away_id":   fx["away"],
                         "date":      fx["date"],
                         "time":      fx.get("time", "21:00"),
+                        "kickoff":   fx.get("kickoff"),   # echte UTC-Zeit (Poly/API-Football)
                         "group":     grp_id,
                         "matchday":  fx.get("matchday"),
                     })
@@ -155,7 +156,17 @@ def _kickoff_utc(date_str: str, time_str: str) -> datetime | None:
 
 def _is_fixture_due(fx: dict, now_utc: datetime) -> bool:
     """Spiel pfeift in lookahead-Range an?"""
-    ko = _kickoff_utc(fx["date"], fx["time"])
+    # FIX 11.06.2026: echte UTC-kickoff bevorzugen. fx['time'] ist Wien-Lokalzeit,
+    # _kickoff_utc behandelt sie fälschlich als UTC → T-1h-Fenster lag ~2h zu spät,
+    # die Aufstellung wurde NIE im echten Fenster geholt (wm_lineups.json blieb leer).
+    ko = None
+    if fx.get("kickoff"):
+        try:
+            ko = datetime.fromisoformat(str(fx["kickoff"]).replace("Z", "+00:00"))
+        except Exception:
+            ko = None
+    if ko is None:
+        ko = _kickoff_utc(fx["date"], fx["time"])
     if ko is None:
         return False
     delta = (ko - now_utc).total_seconds() / 60.0   # minuten bis Anpfiff
@@ -201,6 +212,26 @@ def _find_apif_fixture_id(home_name: str, away_name: str, ko: datetime) -> int |
            (target_a in a_name or a_name in target_a):
             return (fx.get("fixture") or {}).get("id")
     return None
+
+
+_WC_FIXMAP = None   # (apif_home_id, apif_away_id) → fixture_id
+def _build_wc_fixmap() -> dict:
+    """Baut einmalig die WC-Fixture-Map über APIF-Team-IDs. Robust gegen
+    Namens-Schreibweisen (FIX 11.06.2026: Name-Match 'südafrika' vs 'South Africa'
+    scheiterte → wm_lineups.json blieb komplett leer)."""
+    global _WC_FIXMAP
+    if _WC_FIXMAP is not None:
+        return _WC_FIXMAP
+    _WC_FIXMAP = {}
+    data = _apif_get("/fixtures?league=1&season=2026")
+    for fx in ((data or {}).get("response") or []):
+        t = fx.get("teams") or {}
+        h = (t.get("home") or {}).get("id")
+        a = (t.get("away") or {}).get("id")
+        fid = (fx.get("fixture") or {}).get("id")
+        if h and a and fid:
+            _WC_FIXMAP[(int(h), int(a))] = fid
+    return _WC_FIXMAP
 
 
 def _parse_lineup_entry(player_block: dict) -> dict:
@@ -449,9 +480,16 @@ def main():
 
     # Squads aus wm2026-data laden für Alert-Logik (Top-Scorer pro Team)
     squads = {}
+    apif_ids = {}   # our_code → apif_team_id (für robuste fixture_id-Auflösung)
     try:
         with WM_FILE.open(encoding="utf-8") as f:
-            squads = json.load(f).get("squads", {}) or {}
+            _wmd = json.load(f)
+        squads = _wmd.get("squads", {}) or {}
+        for code, aid in (_wmd.get("teamIds") or {}).items():
+            try:
+                apif_ids[code] = int(aid)
+            except (TypeError, ValueError):
+                pass
     except Exception:
         pass
     alert_dedup = _load_alert_dedup()
@@ -475,8 +513,14 @@ def main():
 
         print(f"\n🔎 {mk} ({home_name} vs {away_name}) @ {fx['date']} {fx['time']}:")
 
-        # Lookup fixture_id (re-use cached wenn vorhanden)
+        # Lookup fixture_id — primär über APIF-Team-IDs (robust), sonst Name-Match.
         fixture_id = (entry or {}).get("fixture_id")
+        if not fixture_id:
+            h_ap, a_ap = apif_ids.get(fx["home_id"]), apif_ids.get(fx["away_id"])
+            if h_ap and a_ap:
+                fixture_id = _build_wc_fixmap().get((h_ap, a_ap))
+                if fixture_id:
+                    print(f"   ↪ fixture_id via Team-ID-Map: {fixture_id}")
         if not fixture_id:
             time.sleep(CFG["request_delay_sec"])
             fixture_id = _find_apif_fixture_id(home_name, away_name, ko)

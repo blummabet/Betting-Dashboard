@@ -73,11 +73,13 @@ def _chk(cid, label, severity, failures, note=""):
 
 class IntegrityCtx:
     """Geteilter Kontext für alle Checks — einmal gebaut, an jeden Guard gereicht."""
-    def __init__(self, wm, poly, schedule, venues):
+    def __init__(self, wm, poly, schedule, venues, lineups=None, now=None):
         self.wm = wm or {}
         self.poly = poly or {}
         self.schedule = schedule or {}
         self.venues = venues or {}
+        self.lineups = lineups or {}
+        self.now = now or datetime.now(timezone.utc)
         self.fixtures = [(g, fx) for g, gd in (self.wm.get("groups") or {}).items()
                          for fx in (gd.get("fixtures") or [])]
         self.odds = self.wm.get("odds") or {}
@@ -207,6 +209,29 @@ def check_schedule_date(ctx):
 
 
 @integrity_check
+def check_lineup_present(ctx):
+    from datetime import timedelta
+    horizon = ctx.now + timedelta(minutes=90)
+    fails = []
+    for _g, fx in ctx.fixtures:
+        ko = None
+        if fx.get("kickoff"):
+            try:
+                ko = datetime.fromisoformat(str(fx["kickoff"]).replace("Z", "+00:00"))
+            except Exception:
+                ko = None
+        if ko is None or not (ctx.now <= ko <= horizon):
+            continue   # nur Spiele die in <90min anpfeifen
+        ent = ctx.lineups.get(ctx.mk(fx))
+        starting = ((ent or {}).get("home") or {}).get("starting") or []
+        if not ent or not starting:
+            mins = int((ko - ctx.now).total_seconds() / 60)
+            fails.append(f"{ctx.mk(fx)}: Anpfiff in {mins}min, KEINE Aufstellung")
+    return _chk("lineup_present", "Aufstellung da vor Anpfiff (T-90min)", "warn", fails,
+                "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug.")
+
+
+@integrity_check
 def check_public_consensus(ctx):
     fails = [f"{mk}: kein public_hw" for mk, o in ctx.odds.items() if not o.get("public_hw")]
     return _chk("public_consensus", "Public-Konsens (Soft-Books) vorhanden", "warn", fails,
@@ -214,9 +239,9 @@ def check_public_consensus(ctx):
 
 
 # ── Runner ───────────────────────────────────────────────────────────────────
-def run_checks(wm, poly, schedule, venues):
+def run_checks(wm, poly, schedule, venues, lineups=None, now=None):
     """Führt die ganze Registry aus. Pure. Ein crashender Check killt den Rest nicht."""
-    ctx = IntegrityCtx(wm, poly, schedule, venues)
+    ctx = IntegrityCtx(wm, poly, schedule, venues, lineups=lineups, now=now)
     out = []
     for fn in INTEGRITY_CHECKS:
         try:

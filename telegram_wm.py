@@ -53,27 +53,57 @@ MIN_ABW_EDGE   = _cfg("telegram", "min_abw_edge_pp", 4)   # pp
 # ── Tages-Dedup (Audit-Fix 06.06.2026) ────────────────────────────────────────
 # Verhindert dass Morning/Recap-Cards mehrfach pro Tag verschickt werden,
 # wenn der Workflow 5×/Tag triggert.
+# Dedizierter Dedup-State — NUR von telegram_wm geschrieben.
+# FIX 11.06.2026: Vorher las der Dedup telegram-log.json, das aber von ZWEI
+# Workflows (fetch-wm-data + daily-wm-story) committet wird. Der `-X ours`-Merge
+# beim Push clobberte den morning_card-Marker → Dedup sah nichts → Morning-Card
+# wurde bei jedem Lauf erneut gesendet (Spam). Eigene Single-Writer-Datei behebt das.
+SENT_STATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wm_telegram_sent.json")
+
+
 def _already_sent_today(type_: str, target_date: str) -> bool:
-    """True wenn type_ heute schon mit target_date als 'date'-meta gesendet wurde."""
-    if not os.path.exists(LOG_FILE):
-        return False
-    try:
-        with open(LOG_FILE, encoding="utf-8") as f:
-            log = json.load(f)
-    except Exception:
-        return False
-    if not isinstance(log, list):
-        return False
+    """True wenn type_ heute schon für target_date gesendet wurde."""
     today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    for entry in reversed(log):
-        if entry.get("type") != type_:
-            continue
-        # Prüfen: heute gesendet UND für target_date
-        sent_at = (entry.get("sentAt") or "")[:10]
-        date_meta = entry.get("date") or ""
-        if sent_at == today_str and date_meta == target_date:
-            return True
+    key = f"{type_}:{target_date}"
+    # 1) Dedizierter State (robust, Single-Writer)
+    try:
+        if os.path.exists(SENT_STATE):
+            with open(SENT_STATE, encoding="utf-8") as f:
+                st = json.load(f)
+            if str(st.get(key, ""))[:10] == today_str:
+                return True
+    except Exception:
+        pass
+    # 2) Fallback: telegram-log.json (Altzustände)
+    try:
+        if os.path.exists(LOG_FILE):
+            with open(LOG_FILE, encoding="utf-8") as f:
+                log = json.load(f)
+            if isinstance(log, list):
+                for entry in reversed(log):
+                    if entry.get("type") != type_:
+                        continue
+                    if (entry.get("sentAt") or "")[:10] == today_str and (entry.get("date") or "") == target_date:
+                        return True
+    except Exception:
+        pass
     return False
+
+
+def _mark_sent(type_: str, target_date: str) -> None:
+    """Schreibt den Dedup-Marker in den dedizierten State (überlebt Merges)."""
+    try:
+        st = {}
+        if os.path.exists(SENT_STATE):
+            with open(SENT_STATE, encoding="utf-8") as f:
+                st = json.load(f)
+        if not isinstance(st, dict):
+            st = {}
+        st[f"{type_}:{target_date}"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        with open(SENT_STATE, "w", encoding="utf-8") as f:
+            json.dump(st, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"  ⚠️  Dedup-State schreiben fehlgeschlagen: {e}")
 
 
 # ── Telegram API ───────────────────────────────────────────────────────────────
@@ -496,6 +526,7 @@ def main():
                 print(f"  {'✅ Gesendet' if ok else '❌ Fehler'}")
                 if ok:
                     _log_send("morning_card", card.split("\n")[0], {"date": today, "mode": mode})
+                    _mark_sent("morning_card", today)
             else:
                 print(f"  ○ Keine WM-Spiele am {today}")
 
@@ -511,6 +542,7 @@ def main():
                 print(f"  {'✅ Gesendet' if ok else '❌ Fehler'}")
                 if ok:
                     _log_send("recap", card.split("\n")[0], {"date": yesterday, "mode": mode})
+                    _mark_sent("recap", yesterday)
             else:
                 print(f"  ○ Keine Picks mit Ergebnissen am {yesterday}")
 

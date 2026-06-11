@@ -400,9 +400,11 @@ def main() -> int:
     integrity = []
     try:
         from wm_data_integrity import run_checks as _run_integrity
-        _sched  = _load(BASE / "wm_venue_schedule.json") or {}
-        _venues = _load(BASE / "wm_venues.json") or {}
-        integrity = _run_integrity(wm, pdata if isinstance(pdata, dict) else {}, _sched, _venues)
+        _sched   = _load(BASE / "wm_venue_schedule.json") or {}
+        _venues  = _load(BASE / "wm_venues.json") or {}
+        _lineups = _load(BASE / "wm_lineups.json") or {}
+        integrity = _run_integrity(wm, pdata if isinstance(pdata, dict) else {}, _sched, _venues,
+                                   lineups=_lineups)
         for c in integrity:
             if not c["ok"]:
                 ex = c["failures"][0] if c["failures"] else "—"
