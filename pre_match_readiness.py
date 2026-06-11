@@ -204,6 +204,27 @@ def main() -> int:
     else:
         warns.append("💹 Poly-Preise fehlen/leer → Auto-Trade & polymarket_sharp ohne Basis")
 
+    # ── Stale-Edge-Konsistenz (11.06.2026) ─────────────────────────────────
+    # Das gespeicherte edge_X muss IMMER (fair_X - poly_X)*100 entsprechen.
+    # Real beobachtet: JPN-SWE edge_aw=-1.4 obwohl fair-poly=+7.1pp → Auto-Trader
+    # handelte auf veraltetem Edge und ließ einen fetten Trade liegen. Der Trigger
+    # rechnet jetzt live, ABER dieser Check schreit, falls die Datei selbst wieder
+    # inkonsistent geschrieben wird — damit es nie wieder unbemerkt passiert.
+    stale_edges = []
+    for fx in (pdata.get("allFixtures") or []):
+        for m in ("hw", "dr", "aw", "o25", "u25"):
+            fair = fx.get(f"fair_{m}"); pol = fx.get(f"poly_{m}"); ed = fx.get(f"edge_{m}")
+            if not all(isinstance(v, (int, float)) for v in (fair, pol, ed)):
+                continue
+            live = round((fair - pol) * 100, 1)
+            if abs(live - ed) > 0.5:
+                stale_edges.append(
+                    f"{fx.get('homeId')}-{fx.get('awayId')} {m}: gespeichert {ed:+.1f}pp ≠ live {live:+.1f}pp")
+    if stale_edges:
+        head = stale_edges[:6]
+        errors.append("⚠️ Stale Edges in wm_poly_prices.json (edge_X ≠ fair-poly): "
+                      + "; ".join(head) + (f" … +{len(stale_edges)-6} weitere" if len(stale_edges) > 6 else ""))
+
     # Poly-Balance (Trading-kritisch — ohne Balance keine korrekte Stake-Cap-Logik)
     bfile = BASE / "wm_poly_balance.json"
     bdata = _load(bfile)

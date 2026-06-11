@@ -67,6 +67,13 @@ def _make_fixture(**overrides):
         "steamLag":   False,
     }
     base.update(overrides)
+    # Stale-Edge-Fix (11.06.2026): Der Trigger rechnet die Entscheidungs-Edge jetzt
+    # LIVE aus (fair_hw - poly_hw)*100, statt dem gespeicherten edge_hw zu trauen.
+    # Damit edge_hw-Overrides in den Tests weiterhin die Schwellen-Logik steuern,
+    # leiten wir fair_hw konsistent aus der gewünschten edge_hw ab — außer der
+    # Aufrufer hat fair_hw explizit gesetzt.
+    if "fair_hw" not in overrides and base.get("edge_hw") is not None:
+        base["fair_hw"] = round(base["poly_hw"] + base["edge_hw"] / 100.0, 4)
     return base
 
 
@@ -261,6 +268,59 @@ class TestEffectiveEdgeFallback(unittest.TestCase):
             effectiveEdge_hw=None,
         )
         self.assertTrue(_is_in_candidates(fix))
+
+
+class TestVerdictOptional(unittest.TestCase):
+    """Poly-Strang braucht KEIN Modell-Verdict (11.06.2026).
+
+    Die Trade-Funktion handelt auf der Edge zu Polymarket (Pinnacle-fair vs Poly),
+    nicht auf unserem Modell. verdict=None (kein Modell-Pick auf diesem Outcome)
+    ist erlaubt; nur verdict=SKIP (aktives Modell-Veto) blockt.
+    """
+
+    def test_no_verdict_high_edge_passes(self):
+        """Kein Modell-Pick (verdict=None) + fetter Poly-Edge → PASS (JPN-SWE-Fall)."""
+        fix = _make_fixture(
+            date=_date_in(3),
+            edge_hw=7.0,
+            verdict_hw=None,
+        )
+        self.assertTrue(_is_in_candidates(fix))
+
+    def test_skip_verdict_blocks(self):
+        """verdict=SKIP = Modell-Veto → BLOCK trotz hohem Edge."""
+        fix = _make_fixture(
+            date=_date_in(3),
+            edge_hw=8.0,
+            verdict_hw="SKIP",
+        )
+        self.assertFalse(_is_in_candidates(fix))
+
+
+class TestStaleEdgeRecompute(unittest.TestCase):
+    """Live-Edge-Recompute aus fair-poly statt gespeichertem edge_X (11.06.2026)."""
+
+    def test_stale_low_edge_uses_live_high(self):
+        """Gespeichert edge_hw=-1.4 (veraltet), aber fair-poly = +7pp live → PASS."""
+        fix = _make_fixture(
+            date=_date_in(3),
+            edge_hw=-1.4,          # veralteter Wert in der Datei
+            fair_hw=0.57,          # frisch: 0.57 - 0.50 = +7pp
+            poly_hw=0.50,
+            verdict_hw=None,
+        )
+        self.assertTrue(_is_in_candidates(fix))
+
+    def test_stale_high_edge_uses_live_low(self):
+        """Gespeichert edge_hw=+9 (veraltet), aber fair-poly = +1pp live → BLOCK."""
+        fix = _make_fixture(
+            date=_date_in(3),
+            edge_hw=9.0,           # veralteter, zu hoher Wert
+            fair_hw=0.51,          # frisch: 0.51 - 0.50 = +1pp < threshold
+            poly_hw=0.50,
+            verdict_hw="BET",
+        )
+        self.assertFalse(_is_in_candidates(fix))
 
 
 if __name__ == "__main__":

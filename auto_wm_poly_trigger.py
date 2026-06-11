@@ -57,7 +57,7 @@ AUTO_TRIGGER_EDGE_PP   = _cfg("trade", "auto_trigger_edge_pp",   4.0)
 STEAM_LAG_EDGE_PP      = _cfg("trade", "steam_lag_edge_pp",      3.0)
 
 # ── Match-Filter ──────────────────────────────────────────────────────────────
-MIN_VOL                = _cfg("trade", "min_vol_usdc",          10000)
+MIN_VOL                = _cfg("trade", "min_vol_usdc",           1500)
 MIN_DAYS_UNTIL_GAME    = _cfg("trade", "min_days_until_game",       1)
 MIN_HOURS_BEFORE_MATCH = _cfg("trade", "min_hours_before_match",    4)
 
@@ -378,11 +378,32 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
 
         # Edge-Check für jeden Markt
         for edge_key, (price_key, market_label, fair_key, verdict_key, fld) in EDGE_MARKET_MAP.items():
-            raw_edge = fix.get(edge_key)
-            # Effective Edge = raw edge + signal-adjustment (Engine)
-            # Fallback auf raw edge wenn Engine kein Feld gesetzt hat.
-            eff_edge = fix.get(f"effectiveEdge_{fld}")
-            edge = eff_edge if eff_edge is not None else raw_edge
+            stored_edge = fix.get(edge_key)
+
+            # ── Stale-Edge-Schutz (11.06.2026) ──────────────────────────────
+            # Das gespeicherte edge_X kann veralten: bewegt sich Pinnacle, werden
+            # fair_X/poly_X frisch geschrieben, edge_X aber u.U. aus einem alten
+            # Lauf mitgeschleppt (real beobachtet bei JPN-SWE: edge_aw=-1.4 obwohl
+            # fair_aw-poly_aw=+7.1pp). Kanonische Quelle ist IMMER fair_X - poly_X.
+            # Wenn beide Rohwerte da sind, rechnen wir die Edge live und ignorieren
+            # das gespeicherte Feld. Bei Abweichung: lauter Hinweis (Stale-Guard).
+            fair_now = fix.get(fair_key)
+            poly_now = fix.get(price_key)
+            if isinstance(fair_now, (int, float)) and isinstance(poly_now, (int, float)) and poly_now > 0:
+                raw_edge = round((fair_now - poly_now) * 100, 1)
+                if isinstance(stored_edge, (int, float)) and abs(raw_edge - stored_edge) > 0.5:
+                    print(f"  ⚠️  Stale edge_{fld}: gespeichert {stored_edge:+.1f}pp ≠ live "
+                          f"{raw_edge:+.1f}pp — nutze live (fair {fair_now:.4f} − poly {poly_now:.4f}) "
+                          f"[{fix['home']} vs {fix['away']}]")
+            else:
+                raw_edge = stored_edge
+
+            # Poly-Strang ist Pinnacle-vs-Poly-Edge-getrieben (11.06.2026):
+            # Für die TRADE-Entscheidung zählt die Edge zu Polymarket, NICHT unser
+            # Modell. effectiveEdge (= raw + signalAdj) stammt aus generate_wm_picks
+            # und kann ebenfalls veralten — daher Entscheidungs-Edge = live raw edge.
+            # Die Signal-Engine bleibt nur als BREMSE aktiv (Block-Gates unten).
+            edge = raw_edge
 
             # Hebel 3 (08.06.2026): Engine-Hi-Conf-Bonus pro Markt.
             # ≥3 positive Signale + signalAdj ≥ +3pp → Schwelle -1pp.
@@ -430,11 +451,17 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                       f"— {fix['home']} vs {fix['away']} {market_label} (BLOCKED)")
                 continue
 
-            # Verdict-Check: nur BET und ABWÄGEN — kein SKIP, kein None (kein Pick)
+            # Verdict-Check (11.06.2026 überarbeitet): Der Poly-Strang braucht KEIN
+            # Modell-Verdict. Die Funktion handelt auf der Edge zu Polymarket
+            # (Pinnacle-fair vs Poly) — unser Modell ist hier irrelevant. Darum ist
+            # verdict=None (kein Modell-Pick auf diesem Outcome, z.B. JPN-SWE
+            # Schweden) ausdrücklich ERLAUBT.
+            # Einzige Ausnahme: verdict=SKIP = aktives Veto unseres Modells (z.B.
+            # Cross-Market-Konflikt) → bleibt geblockt. ABWÄGEN/BET laufen normal,
+            # ihre zusätzlichen Signal-Gates unten greifen weiterhin.
             verdict = fix.get(verdict_key)
-            if verdict not in AUTO_TRIGGER_VERDICTS:
-                if verdict is not None:
-                    print(f"  🚫 Verdict={verdict} für {fix['home']} vs {fix['away']} — {market_label} (kein Trigger)")
+            if verdict == "SKIP":
+                print(f"  🚫 Verdict=SKIP (Modell-Veto) — {fix['home']} vs {fix['away']} {market_label} (BLOCKED)")
                 continue
 
             # ── Signal-Engine Gates (08.06.2026) ─────────────────────────────

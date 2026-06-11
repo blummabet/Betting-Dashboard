@@ -384,11 +384,16 @@ function filteredSignals() {
   if (currentFilter === 'trade')          list = list.filter(s => (s.entryTier === 'trade') || (s.entryEdgePp || 0) >= 5);
   if (currentFilter === 'track')          list = list.filter(s => (s.entryTier === 'track') || ((s.entryEdgePp || 0) >= 2 && (s.entryEdgePp || 0) < 5));
 
-  if (currentSort === 'ts') {
-    list.sort((a,b) => (b.signalTs || '').localeCompare(a.signalTs || ''));
-  } else {
-    list.sort((a,b) => (b.entryEdgePp || 0) - (a.entryEdgePp || 0));
-  }
+  // Aktive (OFFENE) Signale immer zuerst, konvergierte/aufgelöste ans Ende
+  // (11.06.2026): grüne/konvergierte Spiele sind "vorbei" und lenken oben ab.
+  // Sie rutschen nach unten, die gewählte Sortierung gilt innerhalb der Gruppe.
+  const _activeRank = s => (s.status === 'OPEN' ? 0 : 1);
+  list.sort((a,b) => {
+    const dr = _activeRank(a) - _activeRank(b);
+    if (dr !== 0) return dr;
+    if (currentSort === 'ts') return (b.signalTs || '').localeCompare(a.signalTs || '');
+    return (b.entryEdgePp || 0) - (a.entryEdgePp || 0);
+  });
   return list;
 }
 
