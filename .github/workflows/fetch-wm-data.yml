@@ -193,6 +193,17 @@ jobs:
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
+      # ── Echte Venues (+ Kickoff) aus API-Football ────────────────────────
+      # MUSS VOR generate_wm_picks laufen: Venue treibt travel_burden/altitude/
+      # weather. Seed-Spielplan hatte falsche/Platzhalter-Venues (z.B. KOR-CZE
+      # als SoFi LA statt real Guadalajara). Schreibt fx.venue + fx.kickoff +
+      # wm_venue_schedule.json. Idempotent: nach Erst-Korrektur keine Änderung.
+      - name: 🏟️ WM Venues + Kickoff fetchen (API-Football)
+        run: python fetch_wm_venues.py --write
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
       # ── Pick-Generator (nach Form + Odds + Corners, schreibt auch upsetScores) ───────
       - name: 🎯 WM Picks + Upset Scores generieren
         run: python generate_wm_picks.py
