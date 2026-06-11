@@ -319,16 +319,27 @@ jobs:
         continue-on-error: true
 
       # ── Commit wm2026-data.json + match pages wenn geändert ──────────────
+      # if: always() (11.06.2026) — Commit MUSS laufen, auch wenn ein Schritt
+      # davor hart abbricht. Sonst bleiben frisch gefetchte Odds im Runner und
+      # landen nie auf GitHub (= "STALE" im Dashboard trotz erfolgreichem Fetch).
       - name: 💾 WM Daten speichern
+        if: always()
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          # Refactor 2026-06-06: State-Files-Liste aus state_files_registry.json
-          # (Single Source of Truth). Beim Hinzufügen neuer Files → dort eintragen.
-          # Glob-Expansion (z.B. matches/data/wm-*.json) durch unquoted $(...) ok.
+          # FIX 11.06.2026: BULLETPROOF staging. Vorher NUR git add $(registry) —
+          # wenn das aus irgendeinem Grund nichts staged (Script-Env, Pfad), wurde
+          # trotz frisch gefetchter Odds "Keine Änderungen" gemeldet → nichts
+          # committet → GitHub blieb tagelang auf altem Stand ("STALE" im Dashboard).
+          # git add -u staged JEDE Änderung an bereits getrackten Dateien (Odds,
+          # Picks, History …) unabhängig vom Registry-Script.
+          git add -u 2>/dev/null || true
+          # Registry zusätzlich für NEUE (untracked) Files (z.B. neue match-pages).
           git add $(python3 state_files_registry.py --bash-list fetch_wm_data) 2>/dev/null || true
+          # Diagnose: was ist staged? (im Log sichtbar, kein stilles Versagen mehr)
+          echo "📋 Staged für Commit:"; git diff --staged --name-only | sed 's/^/   /' || true
           if git diff --staged --quiet; then
-            echo "Keine Änderungen — kein Commit nötig."
+            echo "⚠️  Keine Änderungen gestaged — wenn ein Fetch lief, ist das verdächtig!"
           else
             TIMESTAMP=$(date +'%d.%m.%Y %H:%M')
             git commit -m "🌍 WM 2026 Data Update ${TIMESTAMP} UTC"
