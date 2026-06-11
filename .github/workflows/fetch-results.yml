@@ -47,11 +47,38 @@ jobs:
         run: python resolve_picks.py
         continue-on-error: true
 
+      # ── WM 2026 Abend-Catch (11.06.2026) ──────────────────────────────────
+      # fetch-wm-data.yml holt WM-Ergebnisse nur 4/8/12/16/20 UTC → Abendspiele
+      # (21:00-UTC-Anpfiff endet ~23:00) blieben bis 04:00 UTC unaufgelöst.
+      # Dieser Workflow läuft 21:00 + 23:30 UTC → Score holen + Picks/Bets noch
+      # in derselben Nacht auflösen. Reine Resolver (KEIN Regenerieren der Picks),
+      # alle stdlib → laufen unter plain python. update_signal_weights bleibt
+      # bewusst draußen (läuft in manage-wm-poly, sonst doppelte Gewichtung).
+      - name: ⚽ WM Spielergebnisse fetchen
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_wm_match_results.py
+        continue-on-error: true
+
+      - name: 📊 WM Picks resolven (WIN/LOSS)
+        run: python resolve_wm_picks.py
+        continue-on-error: true
+
+      - name: 🎯 WM Pick-Confidence berechnen
+        run: python compute_pick_confidence.py
+        continue-on-error: true
+
+      - name: 💹 WM Bets resolven (P&L + CLV)
+        run: python resolve_wm_results.py
+        continue-on-error: true
+
       - name: 💾 Ergebnisse & aufgewertete Picks speichern & pushen
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add results-cache.json picks_history.json
+          git add results-cache.json picks_history.json \
+                  wm2026-data.json wm_results.json \
+                  pick_confidence_stats.json wm2026-poly-history.json
           if git diff --staged --quiet; then
             echo "Keine neuen Ergebnisse — kein Commit nötig."
           else
