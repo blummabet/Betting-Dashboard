@@ -1996,13 +1996,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 </head>
 <body>
 
-<!-- ── Version Switcher ──────────────────────────────────────────────── -->
-<div id="versionBanner" style="position:sticky;top:0;z-index:9999;background:#0d1117;border-bottom:1px solid #30363d;padding:6px 16px;display:flex;align-items:center;gap:12px;font-size:11px;font-family:system-ui,sans-serif;">
-  <span style="color:#8b949e;">Version:</span>
-  <a href="season-finish.html" style="color:#8b949e;padding:2px 10px;border:1px solid #30363d;border-radius:12px;text-decoration:none;font-weight:600;transition:border-color .15s;" onmouseover="this.style.borderColor='#8b949e'" onmouseout="this.style.borderColor='#30363d'">← v1 — Stabil</a>
-  <span style="background:#1f6feb;color:#fff;padding:2px 10px;border-radius:12px;font-weight:700;letter-spacing:.4px;">v2 — Refactoring</span>
-  <span style="color:#e3b341;margin-left:auto;font-size:10px;">⚠️ Work in Progress — nicht für Produktion</span>
-</div>
+<!-- Version-Switcher entfernt 11.06.2026 — v1 ist Altlast, alles läuft auf v2. -->
 
 <!-- SCRIPT MODAL -->
 <div id="script-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;">
@@ -2065,7 +2059,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="top-nav-btn" id="navPolymarket" onclick="showView('polybetting')" style="color:#a78bfa">🟣 Polymarket Betting</button>
   <button class="top-nav-btn" id="navHeart" onclick="showView('heart')">❤️ Heart</button>
   <button class="top-nav-btn" id="navStatus" onclick="showView('status')">🔧 Status</button>
-  <button class="top-nav-btn" id="navSavePicks" onclick="savePicksToday(this)" title="Heutige Picks in localStorage sichern" style="margin-left:auto;color:#3fb950;">💾 <span id="navSaveLabel">Picks speichern</span></button>
+  <!-- "Picks speichern" entfernt 11.06.2026 — Altlast aus dem manuellen Liga-Workflow
+       (localStorage). Tracking/Resolution läuft heute automatisch über die Pipeline. -->
 </div>
 
 <!-- SUB NAV (Cards / Tracking / Telegram / TikTok Studio)
@@ -2081,7 +2076,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <!-- LEAGUE NAV -->
 <div class="league-nav" id="leagueNav">
   <button class="league-btn active" data-league="overview"><span class="lf">⭐</span><span>Best of All</span></button>
-  <button class="league-btn" data-league="sharp" style="border-bottom-color:rgba(0,212,161,0.4)"><span class="lf">📡</span><span>Sharp Radar</span></button>
+  <!-- Sharp-Radar-Liga-Tab entfernt 11.06.2026 — redundant, Sharp Radar ist in der Hauptnavi. -->
   <button class="league-btn" data-league="ENG"><span class="lf">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span>Premier League</span><span class="lr">…</span></button>
   <button class="league-btn" data-league="GER"><span class="lf">🇩🇪</span><span>Bundesliga</span><span class="lr">…</span></button>
   <button class="league-btn" data-league="ITA"><span class="lf">🇮🇹</span><span>Serie A</span><span class="lr">…</span></button>
