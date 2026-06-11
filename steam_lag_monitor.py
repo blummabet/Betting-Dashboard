@@ -293,6 +293,57 @@ def load_team_info() -> dict:
         return {}
 
 
+# ── Kickoff-Map: Live/beendete Spiele aus dem Steam-Lag fernhalten ───────────
+def load_kickoffs() -> dict:
+    """
+    {matchKey → kickoff ISO (UTC)} aus wm_poly_prices.json (Polymarket Gamma
+    startTime), Fallback wm2026-data.json. Steam-Lag ist ein PRE-MATCH-Edge
+    (Pinnacle-Move den Polymarket noch nicht eingepreist hat) — sobald ein
+    Spiel läuft, ist das kein handelbares Lag mehr, sondern In-Game-Bewegung.
+    Bug 11.06.2026: MEX-ZAF (heute, 19:00 UTC angestoßen) blieb OFFEN, weil der
+    alte Resolve-Pass nur `matchDate < today` prüfte — same-day-live fiel durch.
+    """
+    ko: dict = {}
+    try:
+        if POLY_FILE.exists():
+            with open(POLY_FILE, encoding="utf-8") as f:
+                data = json.load(f)
+            for fx in data.get("allFixtures", []):
+                k, kt = fx.get("key"), fx.get("kickoff")
+                if k and kt:
+                    ko[k] = kt
+    except Exception as e:
+        print(f"  ⚠️  load_kickoffs (poly) fehlgeschlagen: {e}")
+    try:
+        wm_file = BASE / "wm2026-data.json"
+        if wm_file.exists():
+            with open(wm_file, encoding="utf-8") as f:
+                wm = json.load(f)
+            for gdata in wm.get("groups", {}).values():
+                for fx in gdata.get("fixtures", []):
+                    k = f"{fx.get('home')}-{fx.get('away')}"
+                    if k not in ko and fx.get("kickoff"):
+                        ko[k] = fx["kickoff"]
+    except Exception as e:
+        print(f"  ⚠️  load_kickoffs (wm) fehlgeschlagen: {e}")
+    return ko
+
+
+def _kickoff_passed(kickoffs: dict, key: str, now_dt) -> bool:
+    """
+    True wenn der Anpfiff vorbei ist (Spiel läuft oder beendet). Fehlender/
+    unparsebarer Kickoff → False (lieber als upcoming behandeln als ein echtes
+    Pre-Match-Signal versehentlich verstecken).
+    """
+    kt = kickoffs.get(key)
+    if not kt:
+        return False
+    try:
+        return datetime.fromisoformat(str(kt).replace("Z", "+00:00")) <= now_dt
+    except Exception:
+        return False
+
+
 # ── Cache-Fallback: Poly-Preise aus wm_poly_prices.json ──────────────────────
 def fetch_poly_from_cache() -> dict:
     """
@@ -479,7 +530,8 @@ def _snapshot_gap_hours(snaps: list, now_dt) -> float | None:
         return None
 
 
-def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> dict:
+def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str,
+               kickoffs: dict | None = None) -> dict:
     """
     1. Für jedes Signal mit edge >= MIN_EDGE_PP: prüfe ob bereits im Log
        - Neu → neuen Entry anlegen
@@ -488,6 +540,7 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
     """
     existing = {e["id"]: e for e in log.get("signals", [])}
     now_dt   = datetime.fromisoformat(now_ts.replace("Z", "+00:00"))
+    kickoffs = kickoffs or {}
 
     # Tracke (matchKey, market) Paare, die tatsächlich einen Snapshot im Main-Loop
     # bekommen haben. Wird unten im Stale-Pass benutzt, um Doppel-Updates zu
@@ -499,6 +552,11 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
     snapshotted_in_main: set = set()
 
     for fx in signals:
+        # Live/beendet → kein Pre-Match-Steam-Lag mehr: weder neuen Eintrag anlegen
+        # noch ein offenes Signal weiter snapshotten. (Schließen passiert im
+        # Resolve-Pass unten.)
+        if _kickoff_passed(kickoffs, fx["key"], now_dt):
+            continue
         if (fx["bestEdge"] or 0) < MIN_EDGE_PP and not fx["steamLag"]:
             continue
 
@@ -686,6 +744,9 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
     for entry in log.get("signals", []):
         if entry["status"] != "OPEN":
             continue
+        # Live/beendet → nicht weiter snapshotten (wird im Resolve-Pass geschlossen)
+        if _kickoff_passed(kickoffs, entry["matchKey"], now_dt):
+            continue
         mk_key = entry["matchKey"]
         market_key = entry["market"]
         if (mk_key, market_key) in snapshotted_in_main:
@@ -758,6 +819,15 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str) -> 
 
     for entry in log.get("signals", []):
         if entry["status"] != "OPEN":
+            continue
+        # Kickoff vorbei (auch same-day-live) → Pre-Match-Edge nicht mehr handelbar.
+        # Schließen statt OFFEN lassen, sonst stehen laufende Spiele im aktiven Steam-Lag.
+        if _kickoff_passed(kickoffs, entry["matchKey"], now_dt):
+            entry["status"]       = "RESOLVED"
+            entry["resolvedAt"]   = now_ts
+            entry["resolveReason"] = "kickoff_passed"
+            print(f"  ⏱️  GESCHLOSSEN (Anpfiff vorbei): {entry['home']} vs {entry['away']}"
+                  f" · {entry['marketLabel']}")
             continue
         match_date_str = entry.get("matchDate", "")
         if match_date_str:
@@ -868,8 +938,9 @@ def main():
     print("📁 Lade Pinnacle-Kontext…")
     pinn_fair = load_pinn_fair()
 
-    # 3. Team-Infos
+    # 3. Team-Infos + Kickoff-Map (Live/beendete Spiele aus Steam-Lag fernhalten)
     team_info = load_team_info()
+    kickoffs  = load_kickoffs()
 
     # 4. Edges berechnen
     print("⚡ Berechne Edges…")
@@ -883,7 +954,7 @@ def main():
     # 5. Log laden und aktualisieren
     print("\n📝 Aktualisiere Log…")
     log = load_log()
-    log = update_log(log, signals, team_info, now_ts)
+    log = update_log(log, signals, team_info, now_ts, kickoffs)
 
     # 6. Speichern
     save_log(log)
@@ -897,8 +968,12 @@ def main():
     sell_dedup = load_sell_dedup()
     signals    = log.get("signals", [])
     alerts_sent = 0
+    now_dt_alert = datetime.fromisoformat(now_ts.replace("Z", "+00:00"))
 
     for sig in signals:
+        # Keine Alerts für laufende/beendete Spiele (kein Pre-Match-Edge mehr)
+        if _kickoff_passed(kickoffs, sig.get("matchKey", ""), now_dt_alert):
+            continue
         home  = sig.get("home", sig.get("homeId", "?"))
         away  = sig.get("away", sig.get("awayId", "?"))
         hf    = sig.get("homeFlag", "")
