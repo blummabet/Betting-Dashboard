@@ -150,6 +150,7 @@ async function runStatusPage(force) {
     }
 
     _stRenderProblems(problems);
+    _stRenderIntegrity(status);
     _stRenderServer(status);
     _stRenderSignals(data, status);
     _stRenderVerdict(problems, status, valRep);
@@ -217,6 +218,46 @@ function _stRenderProblems(problems) {
   }).join('');
 }
 
+function _stRenderIntegrity(status) {
+  const el = document.getElementById('st_integrity'); if (!el) return;
+  const cntEl = document.getElementById('st_integrityCount');
+  const checks = (status && Array.isArray(status.checks)) ? status.checks : null;
+  if (!checks) {
+    el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:14px;">wm_status.json hat noch keine Integritäts-Checks — kommt mit dem nächsten Pipeline-Lauf.</div>';
+    if (cntEl) cntEl.textContent = '';
+    return;
+  }
+  const okN = checks.filter(c => c.ok).length;
+  if (cntEl) cntEl.textContent = `${okN}/${checks.length} Checks sauber`;
+  // Fehler zuerst (error > warn > ok), dann nach Fail-Anzahl
+  const rank = c => c.ok ? 0 : (c.severity === 'error' ? 3 : 2);
+  const sorted = [...checks].sort((a, b) => rank(b) - rank(a) || (b.nFail - a.nFail));
+  el.innerHTML = sorted.map(c => {
+    const m = c.ok ? _SEV_META.ok : (c.severity === 'error' ? _SEV_META.error : _SEV_META.warn);
+    const fails = (c.failures || []);
+    const body = c.ok
+      ? `<span style="color:#3fb950;font-size:11px;">sauber</span>`
+      : `<span style="color:${m.col};font-size:11px;font-weight:700;">${c.nFail} Fehler</span>`;
+    const detail = (!c.ok && fails.length) ? `
+      <details style="margin-top:6px;">
+        <summary style="cursor:pointer;font-size:10px;color:var(--muted);">betroffene Spiele zeigen (${fails.length})</summary>
+        <div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">
+          ${fails.map(f => `<div style="font-size:11px;color:var(--text);font-family:monospace;">· ${f}</div>`).join('')}
+        </div>
+      </details>` : '';
+    return `<div style="background:${m.bg};border:1px solid ${m.bd};border-radius:9px;padding:10px 13px;">
+      <div style="display:flex;align-items:center;gap:9px;">
+        <span style="font-size:14px;">${m.icon}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-size:12.5px;color:var(--text);">${c.label}</div>
+          <div style="font-size:10.5px;color:var(--muted);">${c.note || ''}</div>
+        </div>
+        ${body}
+      </div>${detail}
+    </div>`;
+  }).join('');
+}
+
 function _stRenderServer(status) {
   const el = document.getElementById('st_server'); if (!el) return;
   const tsEl = document.getElementById('st_serverTs');
@@ -240,14 +281,24 @@ function _stRenderServer(status) {
   el.innerHTML = html;
 }
 
+let _stSignalChart = null;
+
+const _ST_SIG_ALL = ['lead_lag_bias', 'public_static_bias', 'travel_burden', 'injury', 'form_trend',
+  'h2h_pattern', 'xg_strength', 'polymarket_sharp', 'steam_lag', 'pressure_index',
+  'lineup_signal', 'apif_predictions', 'weather_signal', 'incentive_signal', 'altitude_signal'];
+const _ST_SIG_CORE = new Set(['form_trend', 'xg_strength', 'travel_burden', 'pressure_index']);
+const _ST_SIG_COND = {
+  lead_lag_bias: 'nur bei Quotenbewegung', injury: 'nur bei Ausfällen',
+  polymarket_sharp: 'nur bei Poly↔Pinn-Divergenz', steam_lag: 'nur bei Steam-Move',
+  lineup_signal: 'feuert T-1h', incentive_signal: 'ab MD2',
+  public_static_bias: 'nur bei Public-Divergenz', h2h_pattern: 'nur ≥3 H2H',
+  weather_signal: 'nur ≥30°C', apif_predictions: 'wenn APIF-Daten da',
+  altitude_signal: 'nur Höhen-Venues',
+};
+
 function _stRenderSignals(data, status) {
   const el = document.getElementById('st_signals'); if (!el) return;
-  const ALL = ['lead_lag_bias', 'public_static_bias', 'travel_burden', 'injury', 'form_trend',
-    'h2h_pattern', 'xg_strength', 'polymarket_sharp', 'steam_lag', 'pressure_index',
-    'lineup_signal', 'apif_predictions', 'weather_signal', 'incentive_signal', 'altitude_signal'];
-  const CORE = new Set(['form_trend', 'xg_strength', 'travel_burden', 'pressure_index']);
-  // Feuer-Zähler bevorzugt aus Live-Daten, sonst aus wm_status.signalsFired
-  const fire = {}; ALL.forEach(n => fire[n] = 0);
+  const fire = {}; _ST_SIG_ALL.forEach(n => fire[n] = 0);
   if (data && data.picks) {
     for (const plist of Object.values(data.picks)) {
       if (!Array.isArray(plist)) continue;
@@ -256,17 +307,86 @@ function _stRenderSignals(data, status) {
   } else if (status && Array.isArray(status.signalsFired)) {
     status.signalsFired.forEach(n => { if (n in fire) fire[n] = 1; });
   }
-  const fired = ALL.filter(n => fire[n] > 0).length;
+  const fired = _ST_SIG_ALL.filter(n => fire[n] > 0).length;
   const cnt = document.getElementById('st_signalsCount');
   if (cnt) cnt.textContent = `${fired}/15 feuern`;
-  el.innerHTML = ALL.map(n => {
-    const on = fire[n] > 0, core = CORE.has(n);
+
+  const maxC = Math.max(1, ..._ST_SIG_ALL.map(n => fire[n]));
+  const sorted = [..._ST_SIG_ALL].sort((a, b) => fire[b] - fire[a]);
+  el.innerHTML = sorted.map(n => {
+    const c = fire[n], on = c > 0, core = _ST_SIG_CORE.has(n);
     const col = on ? '#3fb950' : core ? '#f85149' : '#6e7681';
-    const icon = on ? '🟢' : core ? '🔴' : '⚪';
-    return `<div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:7px;">
-      <span style="font-size:11px;">${icon}</span>
-      <div style="min-width:0;flex:1;"><div style="font-size:11px;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${n}</div>
-      <div style="font-size:10px;color:${col};">${on ? fire[n] + '× aktiv' : core ? 'KERN — still!' : 'kontextabh.'}</div></div>
+    const pct = Math.round(c / maxC * 100);
+    const right = on ? `${c}×` : (core ? 'KERN still' : (_ST_SIG_COND[n] || 'kontextabh.'));
+    return `<div style="display:flex;align-items:center;gap:8px;">
+      <div style="width:128px;flex-shrink:0;font-size:11px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${n}">${n}</div>
+      <div style="flex:1;background:var(--card2);border-radius:4px;height:15px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:${col};opacity:${on ? 0.9 : 0.25};border-radius:4px;"></div>
+      </div>
+      <div style="width:118px;flex-shrink:0;font-size:10px;color:${col};text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${right}</div>
+    </div>`;
+  }).join('');
+
+  _stRenderSignalTrend();
+  _stRenderSignalWeights(fire);
+}
+
+async function _stRenderSignalTrend() {
+  const cv = document.getElementById('st_signalTrend');
+  const note = document.getElementById('st_signalTrendNote');
+  if (!cv || typeof Chart === 'undefined') return;
+  const hist = await _stGet('wm_signal_history.json');
+  if (!Array.isArray(hist) || hist.length === 0) {
+    if (note) note.textContent = 'Noch keine History — baut sich ab dem nächsten Pipeline-Lauf täglich auf.';
+    return;
+  }
+  const labels = hist.map(h => (h.date || '').slice(5));
+  const fired = hist.map(h => h.fired);
+  const pws = hist.map(h => h.picksWithSignal);
+  if (_stSignalChart) { try { _stSignalChart.destroy(); } catch (e) {} }
+  _stSignalChart = new Chart(cv.getContext('2d'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { label: 'Signale feuern (/15)', data: fired, borderColor: '#00d4a1', backgroundColor: 'rgba(0,212,161,.12)', tension: .3, fill: true, yAxisID: 'y', pointRadius: 3 },
+      { label: 'Picks mit Signal', data: pws, borderColor: '#a78bfa', tension: .3, yAxisID: 'y1', pointRadius: 2 },
+    ] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#8b949e', font: { size: 10 }, boxWidth: 12 } } },
+      scales: {
+        y:  { position: 'left',  min: 0, max: 15, title: { display: true, text: 'Signale', color: '#8b949e', font: { size: 9 } }, ticks: { color: '#8b949e', font: { size: 9 } }, grid: { color: 'rgba(255,255,255,.05)' } },
+        y1: { position: 'right', min: 0, ticks: { color: '#8b949e', font: { size: 9 } }, grid: { display: false } },
+        x:  { ticks: { color: '#8b949e', font: { size: 9 } }, grid: { display: false } },
+      },
+    },
+  });
+  if (note) note.textContent = `${hist.length} Tag(e) erfasst · aktuell ${fired[fired.length - 1]}/15 Signale · ${pws[pws.length - 1]} Picks mit Signal`;
+}
+
+async function _stRenderSignalWeights(fire) {
+  const el = document.getElementById('st_signalWeights'); if (!el) return;
+  const w = await _stGet('signal_weights.json');
+  const hist = await _stGet('wm_signal_history.json');
+  const first = (Array.isArray(hist) && hist.length) ? (hist[0].weights || {}) : {};
+  if (!w) { el.innerHTML = '<div style="color:var(--muted);font-size:11px;">signal_weights.json nicht gefunden</div>'; return; }
+  const rows = _ST_SIG_ALL.filter(n => w[n] && typeof w[n].weight === 'number');
+  if (!rows.length) { el.innerHTML = '<div style="color:var(--muted);font-size:11px;">Noch keine Gewichte.</div>'; return; }
+  // nach Gewicht sortiert (auffälligste zuerst)
+  rows.sort((a, b) => Math.abs((w[b].weight || 1) - 1) - Math.abs((w[a].weight || 1) - 1));
+  el.innerHTML = rows.map(n => {
+    const wt = w[n].weight, nobs = w[n].n_observations || 0;
+    const f0 = first[n];
+    const delta = (typeof f0 === 'number') ? wt - f0 : 0;
+    const dCol = delta > 0.001 ? '#3fb950' : delta < -0.001 ? '#f85149' : '#6e7681';
+    const dStr = Math.abs(delta) < 0.001 ? '±0' : (delta > 0 ? '+' : '') + delta.toFixed(2);
+    const wCol = wt > 1.02 ? '#3fb950' : wt < 0.98 ? '#f85149' : 'var(--text)';
+    return `<div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;">
+      <div style="font-size:11px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${n}">${n}</div>
+      <div style="display:flex;align-items:baseline;gap:6px;margin-top:2px;">
+        <span style="font-size:15px;font-weight:700;color:${wCol};">${wt.toFixed(2)}</span>
+        <span style="font-size:10px;color:${dCol};">Δ ${dStr}</span>
+        <span style="font-size:9px;color:var(--muted);margin-left:auto;">${nobs} obs</span>
+      </div>
     </div>`;
   }).join('');
 }

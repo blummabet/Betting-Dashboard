@@ -3888,6 +3888,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
   </div>
 
+  <!-- 0b ── DATEN-INTEGRITÄT (Pipeline-Guards, sichtbar) ───────────────── -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;">
+    <div style="font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
+      <span>🛡️</span> Daten-Integrität <span id="st_integrityCount" style="font-size:11px;font-weight:400;color:var(--muted);margin-left:auto;"></span>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Jeder Guard über die Felder, die Picks/Trades treiben — sichtbar gemacht, nicht still. 🔴/🟡 = bitte ansehen · ✅ = sauber. Klick für betroffene Spiele.</div>
+    <div id="st_integrity" style="display:flex;flex-direction:column;gap:6px;"><div style="color:var(--muted);text-align:center;padding:14px;">Lädt wm_status.json…</div></div>
+  </div>
+
   <!-- 1 ── AKTIVE PROBLEME (Live-Checks im Browser) ───────────────────── -->
   <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;">
     <div style="font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
@@ -3952,8 +3961,23 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div style="font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px;">
       <span>🧠</span> Signal-Feuer <span id="st_signalsCount" style="font-size:11px;font-weight:400;color:var(--muted);margin-left:auto;"></span>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:16px;">Welche der 15 Engine-Signale in den aktuellen Picks tatsächlich feuern · grau = kontextabhängig still</div>
-    <div id="st_signals" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;"></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:16px;">Wie oft jedes der 15 Engine-Signale in den aktuellen Picks feuert · 🟢 aktiv · 🔴 Kern-Signal still · ⚪ kontextabhängig still</div>
+    <div id="st_signals" style="display:flex;flex-direction:column;gap:5px;"></div>
+
+    <!-- Trend über Zeit -->
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;">📈 Feuern über Zeit</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Werden mit Turnierverlauf mehr Signale aktiv? (1 Punkt/Tag)</div>
+      <div style="position:relative;height:180px;"><canvas id="st_signalTrend"></canvas></div>
+      <div id="st_signalTrendNote" style="font-size:10px;color:var(--muted);margin-top:6px;"></div>
+    </div>
+
+    <!-- Signal-Gewichte (Bayesian) -->
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;">⚖️ Signal-Gewichte <span style="font-size:10px;font-weight:400;color:var(--muted);">(Bayesian — lernt aus resolved Picks)</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">1.00 = neutral · &gt;1 = überdurchschnittlich vertrauenswürdig · Δ = Veränderung seit Start</div>
+      <div id="st_signalWeights" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px;"></div>
+    </div>
   </div>
 
   <!-- 4 ── Quick Actions / Links ──────────────────────────────────── -->

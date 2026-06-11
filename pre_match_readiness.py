@@ -328,6 +328,50 @@ def main() -> int:
 
     # ── Report ───────────────────────────────────────────────────────────
     fired = [n for n in signal_names if fire[n] > 0]
+
+    # ── wm_signal_history.json: täglicher Snapshot für Status-Trend-Graph ────
+    # Erlaubt der Status-Seite zu zeigen, ob mit Turnierverlauf mehr Signale
+    # feuern + wie sich die Bayesian-Gewichte verschieben. 1 Eintrag/Tag (upsert).
+    try:
+        hist_file = BASE / "wm_signal_history.json"
+        hist = []
+        if hist_file.exists():
+            try:
+                hist = json.loads(hist_file.read_text(encoding="utf-8"))
+            except Exception:
+                hist = []
+        if not isinstance(hist, list):
+            hist = []
+        picks_with_sig = sum(1 for pl in picks.values() if isinstance(pl, list)
+                             for p in pl if (p.get("signals") or []))
+        total_picks = sum(1 for pl in picks.values() if isinstance(pl, list) for _ in pl)
+        weights = {}
+        try:
+            wf = json.loads((BASE / "signal_weights.json").read_text(encoding="utf-8"))
+            weights = {n: (wf.get(n) or {}).get("weight")
+                       for n in signal_names if isinstance(wf.get(n), dict)}
+        except Exception:
+            pass
+        today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        entry = {
+            "date":            today_str,
+            "ts":              datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "fired":           len(fired),
+            "total":           len(signal_names),
+            "picksWithSignal": picks_with_sig,
+            "totalPicks":      total_picks,
+            "perSignal":       {n: fire[n] for n in signal_names},
+            "weights":         weights,
+        }
+        hist = [h for h in hist if h.get("date") != today_str]   # upsert (1/Tag)
+        hist.append(entry)
+        hist = hist[-120:]
+        hist_file.write_text(json.dumps(hist, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"📈 wm_signal_history.json: {today_str} → {len(fired)}/{len(signal_names)} feuern, "
+              f"{picks_with_sig}/{total_picks} Picks mit Signal")
+    except Exception as e:
+        print(f"⚠️  wm_signal_history schreiben fehlgeschlagen: {e}")
+
     print("=== Pre-Match Readiness Check ===")
     print(f"Stand: {datetime.now(timezone.utc):%Y-%m-%d %H:%M} UTC · Fenster: +{WINDOW_DAYS}d")
     print(f"Anstehende Spiele: {len(upcoming)}"
@@ -350,6 +394,25 @@ def main() -> int:
     else:
         print("\n✅ Keine echten Lücken — Engine ist bereit.")
 
+    # ── Daten-Integrität (Pipeline-Härtung) ──────────────────────────────────
+    # Benannte Guards über die Felder, die Picks/Signale/Trades treiben. Werden
+    # auf der Status-Seite als ✅/🔴 sichtbar gemacht — kein stilles Weg-Guarden.
+    integrity = []
+    try:
+        from wm_data_integrity import run_checks as _run_integrity
+        _sched  = _load(BASE / "wm_venue_schedule.json") or {}
+        _venues = _load(BASE / "wm_venues.json") or {}
+        integrity = _run_integrity(wm, pdata if isinstance(pdata, dict) else {}, _sched, _venues)
+        for c in integrity:
+            if not c["ok"]:
+                ex = c["failures"][0] if c["failures"] else "—"
+                msg = f"🛡️ {c['label']}: {c['nFail']} Fehler (z.B. {ex})"
+                (errors if c["severity"] == "error" else warns).append(msg)
+        n_int_fail = sum(1 for c in integrity if not c["ok"])
+        print(f"\n🛡️ Daten-Integrität: {len(integrity)-n_int_fail}/{len(integrity)} Checks ok")
+    except Exception as e:
+        print(f"⚠️  Integritäts-Check fehlgeschlagen: {e}")
+
     # ── wm_status.json schreiben (Single Source of Truth für Status-Seite) ─
     # Die Dashboard-Status-Seite rendert diese Datei: autoritative Health aus
     # der echten Cron-Umgebung (Datei-mtimes, API-Keys, Spielplan-Konsistenz),
@@ -364,6 +427,7 @@ def main() -> int:
         "errors":        errors,
         "warns":         warns,
         "oks":           oks,
+        "checks":        integrity,
     }
     try:
         with open(BASE / "wm_status.json", "w", encoding="utf-8") as f:

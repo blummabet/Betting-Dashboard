@@ -95,6 +95,21 @@ def _save(path: Path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+# Team-Flaggen aus wm2026-data (id→🇽🇽). Behebt 🏳🏳 im Position-Alert:
+# current_fx (wm_poly_prices) hat keine Flagge, der Bet-Record auch nicht.
+_TEAM_FLAGS: dict | None = None
+def _flag(team_id: str | None) -> str | None:
+    global _TEAM_FLAGS
+    if _TEAM_FLAGS is None:
+        _TEAM_FLAGS = {}
+        wm = _load(WM_FILE, {})
+        for g in (wm.get("groups") or {}).values():
+            for t in (g.get("teams") or []):
+                if t.get("id") and t.get("flag"):
+                    _TEAM_FLAGS[t["id"]] = t["flag"]
+    return _TEAM_FLAGS.get(team_id) if team_id else None
+
+
 # ── Faktor-Berechnung ─────────────────────────────────────────────
 def _score_edge_persistence(entry_edge_pp: float, current_edge_pp: float) -> tuple[float, str]:
     """100 = voller Erhalt, 0 = Edge weg/negativ."""
@@ -243,8 +258,8 @@ def compute_health(bet: dict, current_fx: dict) -> dict:
         "matchKey":       current_fx.get("key"),
         "home":           current_fx.get("home") or bet.get("home"),
         "away":           current_fx.get("away") or bet.get("away"),
-        "homeFlag":       current_fx.get("homeFlag") or "🏳",
-        "awayFlag":       current_fx.get("awayFlag") or "🏳",
+        "homeFlag":       current_fx.get("homeFlag") or _flag(current_fx.get("homeId") or bet.get("homeId")) or "🏳",
+        "awayFlag":       current_fx.get("awayFlag") or _flag(current_fx.get("awayId") or bet.get("awayId")) or "🏳",
         "market":         bet.get("market", "?"),
         "score":          total_score,
         "status":         status,
