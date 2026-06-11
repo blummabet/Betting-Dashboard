@@ -290,24 +290,29 @@ def check_position(pos: dict) -> dict:
     in_play = hours_left is not None and hours_left <= 0
 
     # ── PROFIT-Trigger (PRIMARY/SECONDARY/TERTIARY) ───────────────────────────
-
-    # PRIMARY: +10% Profit (Cash-Cycle Optimierung)
-    if entry > 0 and current >= entry * (1 + PROFIT_TARGET):
-        sell = True
-        reason = f"Profit +{round(pnl_pct, 1)}% ≥ +{PROFIT_TARGET*100:.0f}% Ziel"
-
-    # SECONDARY: Poly konvergiert zu Pinnacle fair (innerhalb PINN_GAP_PP)
-    if not sell and pinn_fair and (current - entry) * 100 >= MIN_PROFIT_PP * 100:
-        gap = (pinn_fair - current) * 100
-        if gap <= PINN_GAP_PP:
+    # Pre-Match-only-Guard (11.06.2026): Profit-Mitnahme nur VOR Anpfiff. Sobald
+    # ein Spiel läuft (in_play), schließt Auto-Sell keine Positionen mehr zu
+    # volatilen In-Game-Preisen — konsistent mit dem Loss-Trigger (NO_INPLAY_LOSS_SELL)
+    # und der Pre-Match-Close-Logik. Einziger erlaubter KO-naher Exit bleibt der
+    # 2h-Hard-Close (is_pre_match_close, stoppt bei h_until=0).
+    if not in_play:
+        # PRIMARY: +10% Profit (Cash-Cycle Optimierung)
+        if entry > 0 and current >= entry * (1 + PROFIT_TARGET):
             sell = True
-            reason = f"Markt konvergiert: Poly {current:.3f} ≈ Pinn fair {pinn_fair:.3f} (Δ{gap:.1f}pp)"
+            reason = f"Profit +{round(pnl_pct, 1)}% ≥ +{PROFIT_TARGET*100:.0f}% Ziel"
 
-    # TERTIARY: Age-Decay — alte Position + kleiner Profit reicht
-    if not sell and entry > 0 and age_h is not None and age_h >= AGE_DECAY_HOURS:
-        if current >= entry * (1 + AGE_DECAY_PROFIT_TARGET):
-            sell = True
-            reason = f"Age-Decay: Position {age_h:.0f}h alt, +{round(pnl_pct, 1)}% ≥ +{AGE_DECAY_PROFIT_TARGET*100:.0f}% reicht"
+        # SECONDARY: Poly konvergiert zu Pinnacle fair (innerhalb PINN_GAP_PP)
+        if not sell and pinn_fair and (current - entry) * 100 >= MIN_PROFIT_PP * 100:
+            gap = (pinn_fair - current) * 100
+            if gap <= PINN_GAP_PP:
+                sell = True
+                reason = f"Markt konvergiert: Poly {current:.3f} ≈ Pinn fair {pinn_fair:.3f} (Δ{gap:.1f}pp)"
+
+        # TERTIARY: Age-Decay — alte Position + kleiner Profit reicht
+        if not sell and entry > 0 and age_h is not None and age_h >= AGE_DECAY_HOURS:
+            if current >= entry * (1 + AGE_DECAY_PROFIT_TARGET):
+                sell = True
+                reason = f"Age-Decay: Position {age_h:.0f}h alt, +{round(pnl_pct, 1)}% ≥ +{AGE_DECAY_PROFIT_TARGET*100:.0f}% reicht"
 
     # ── LOSS-Trigger (NUR wenn kein Profit-Sell + nicht In-Play) ──────────────
     skip_loss = sell or (NO_INPLAY_LOSS_SELL and in_play) or entry <= 0
