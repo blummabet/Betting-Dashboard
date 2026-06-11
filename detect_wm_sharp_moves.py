@@ -282,6 +282,15 @@ def match_date(wm: dict, home_id: str, away_id: str) -> str:
     return ""
 
 
+def match_kickoff(wm: dict, home_id: str, away_id: str) -> str:
+    """Echte UTC-Kickoff-Zeit (fx.kickoff) für ein Match, falls vorhanden."""
+    for gdata in wm.get("groups", {}).values():
+        for fx in gdata.get("fixtures", []):
+            if fx["home"] == home_id and fx["away"] == away_id:
+                return fx.get("kickoff") or ""
+    return ""
+
+
 def _load_poly_edges() -> dict:
     """
     Lädt Polymarket-Edge-Daten aus wm_poly_prices.json.
@@ -365,7 +374,18 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
             continue
         home_id, away_id = parts[0], parts[1]
 
-        # Spiel bereits abgelaufen? Überspringen.
+        # Spiel bereits ANGEPFIFFEN (live/vorbei)? Überspringen.
+        # FIX 11.06.2026: vorher nur Datum < heute → ein heute schon laufendes
+        # Spiel rutschte durch und löste „Steam"-Alerts auf In-Game-Bewegung aus
+        # (Mexiko 1:0 → Live-Quoten crashen ≠ Pre-Match-Sharp-Money). Jetzt: echte
+        # UTC-kickoff; ab Anpfiff kein Alert mehr.
+        ko_str = match_kickoff(wm, home_id, away_id)
+        if ko_str:
+            try:
+                if datetime.fromisoformat(str(ko_str).replace("Z", "+00:00")) <= now_utc:
+                    continue
+            except Exception:
+                pass
         game_date_str = match_date(wm, home_id, away_id)
         if game_date_str:
             try:
