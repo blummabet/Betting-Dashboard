@@ -1,9 +1,14 @@
 name: 📊 WM 2026 Telegram Recap
 
 on:
-  # 23:30 Vienna (21:30 UTC) — nach den Abendspielen (Anstoß 21:00)
+  # 11:00 Vienna (09:00 UTC) — Vormittags-Recap vom VORTAG (telegram_wm.py
+  # nutzt 'gestern' als Default). Bewusst NICHT abends:
+  #  · Vollständig: läuft nach dem 08:00-UTC fetch-wm-data-Lauf, der auch
+  #    Nach-Mitternacht-UTC-Spiele auflöst (z.B. KOR-CZE, Anpfiff 02:00 UTC,
+  #    Ende ~04:00). Ein Abend-Recap (21:30 UTC) würde solche Spiele verpassen.
+  #  · Ein Recap statt zwei → kein Doppel-Post, weniger Lärm.
   schedule:
-    - cron: '30 21 * * *'
+    - cron: '0 9 * * *'
 
   workflow_dispatch:
     inputs:
