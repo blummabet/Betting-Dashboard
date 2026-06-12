@@ -312,9 +312,9 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
         f"🌍 <b>WM 2026 — Heute · {len(matches_today)} Spiel{'e' if len(matches_today) != 1 else ''}</b>",
     ]
     if bet_count > 0:
-        lines.append(f"🎯 {bet_count} BET{'s' if bet_count != 1 else ''} mit Edge identifiziert\n")
+        lines.append(f"🟢 <b>{bet_count} BET{'s' if bet_count != 1 else ''}</b> — Engine und Signale überzeugt\n")
     else:
-        lines.append("👀 Heute im Blick — kein klarer BET\n")
+        lines.append("👀 Heute kein BET — die Engine wartet auf den richtigen Moment\n")
 
     for m in matches_today:
         # FIX 11.06.2026: trackingExcluded raus (Cross-Market-Konflikte). Der Dashboard-
@@ -392,25 +392,24 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                 # Sprache neutralisiert (NEU 09.06.2026): keine X/10-Skala in der UI
                 # — das klingt nach Stake-Speak ("8 Units") + erzeugt Halt-Stop-Gefühl.
                 # Wort-Labels statt Score. Quantifizierung kommt über Signal-Count.
+                # Public-Channel (12.06.2026): NUR positive Badges. Keine „Edge ohne
+                # Bestätigung"-/„wenig Bestätigung"-Warnungen — die untergraben den
+                # eigenen Pick und verwirren ("hää, wieso postet ihr das dann").
                 conv_badge = ""
                 if isinstance(conv_score, int):
                     if conv_score >= 8:
                         conv_badge = f" · 🎯 <b>Top-Pick</b>"
                     elif conv_score >= 6:
                         conv_badge = f" · ⭐ Main-Pick"
-                    elif conv_score < 3 and p.get("modelHallucinationWarning"):
-                        conv_badge = f" · ⚠ Edge ohne Bestätigung"
 
                 lines.append(
-                    f"🎯 <b>BET: {p['market']} @{p.get('odds', '?')}</b>{conv_badge}"
+                    f"🟢 <b>BET: {p['market']} @{p.get('odds', '?')}</b>{conv_badge}"
                 )
-                # Edge + Signal-Count Zeile (NEU 09.06.2026)
+                # Signal-Bestätigung NUR wenn welche stützen (kein „0/14"-Verwirrer).
                 n_pos = p.get("signalCountPos") or 0
                 n_neg = p.get("signalCountNeg") or 0
-                signal_count_str = ""
-                if (n_pos + n_neg) > 0:
-                    signal_count_str = f" · {n_pos} von 14 Signale stützen" + (f", {n_neg} dagegen" if n_neg > 0 else "")
-                lines.append(f"   💡 +{edge}pp Edge{signal_count_str}")
+                if n_pos > 0:
+                    lines.append(f"   💡 {n_pos} von 14 Signalen stützen")
 
                 # Sharp-Move als eigene Zeile mit narrativem Text
                 if p.get("sharpMoveActive"):
@@ -443,23 +442,22 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                 edge = p.get("edgePP", "?")
                 conv_score = p.get("convictionScore")
                 n_pos = p.get("signalCountPos") or 0
+                # Nur positive Badges (keine „wenig Bestätigung"-Warnung im Public-Channel).
                 badges = []
                 if isinstance(conv_score, int):
                     if conv_score >= 8:
                         badges.append("🎯 Top-Pick")
                     elif conv_score >= 6:
                         badges.append("⭐ Main-Pick")
-                    elif conv_score < 3:
-                        badges.append("⚠ wenig Bestätigung")
                 if n_pos > 0:
-                    badges.append(f"{n_pos}/14 Signale")
+                    badges.append(f"{n_pos}/14 Signale stützen")
                 if p.get("sharpMoveActive"):
                     badges.append("🔥")
                 if p.get("synthetic"):
                     badges.append("🛡 Insurance")
                 badge_str = "  " + " · ".join(badges) if badges else ""
                 lines.append(
-                    f"⚖️ {p['market']} @{p.get('odds', '?')} (+{edge}pp){badge_str}"
+                    f"🟡 <b>Abwägen:</b> {p['market']} @{p.get('odds', '?')}{badge_str}"
                 )
 
         lines.append("")  # Leerzeile zwischen Spielen
