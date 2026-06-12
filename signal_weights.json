@@ -33,10 +33,12 @@
     "notes": "Positionsbewusst: GK > FWD > DEF/MID > Backup. Mehrere Ausfälle akkumulieren bis Cap 6pp/Team."
   },
   "form_trend": {
-    "weight": 1.0,
-    "n_observations": 0,
-    "wins_when_triggered": 0,
-    "last_updated": null,
+    "weight": 1.067,
+    "n_observations": 2,
+    "wins_when_triggered": 2,
+    "losses_when_triggered": 0,
+    "posterior_mean": 0.667,
+    "last_updated": "2026-06-12T20:05:19Z",
     "notes": "Tore-Avg-Diff der letzten ~5 Spiele. Score = scoring_diff × 3 + conceding_diff × 2.5."
   },
   "h2h_pattern": {
@@ -47,10 +49,12 @@
     "notes": "≥5 H2H Spiele Anforderung. Win-Rate (inkl. halber Draws) gegen 50% als Baseline."
   },
   "xg_strength": {
-    "weight": 1.0,
-    "n_observations": 0,
-    "wins_when_triggered": 0,
-    "last_updated": null,
+    "weight": 1.067,
+    "n_observations": 2,
+    "wins_when_triggered": 2,
+    "losses_when_triggered": 0,
+    "posterior_mean": 0.667,
+    "last_updated": "2026-06-12T20:05:19Z",
     "notes": "Understat xGForAvg/xGAgainstAvg. xG-Diff zwischen Heim und Auswärts als Team-Stärke-Indikator."
   },
   "polymarket_sharp": {
@@ -68,10 +72,12 @@
     "notes": "Pinnacle-Move + Polymarket-Lag. Komplementär zu lead_lag_bias (Soft-Books). Volume-Gate ≥ 3000 USDC."
   },
   "pressure_index": {
-    "weight": 1.0,
-    "n_observations": 0,
-    "wins_when_triggered": 0,
-    "last_updated": null,
+    "weight": 1.043,
+    "n_observations": 3,
+    "wins_when_triggered": 2,
+    "losses_when_triggered": 1,
+    "posterior_mean": 0.571,
+    "last_updated": "2026-06-12T20:05:19Z",
     "notes": "Tournament-Stage + Group-Standing + KO-Phase. MD1: leicht risikoavers. MD3: Must-Win-Boost für 0-Pkt-Teams. KO: Tor-Erwartung niedriger."
   },
   "lineup_signal": {
