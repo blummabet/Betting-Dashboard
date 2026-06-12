@@ -87,14 +87,26 @@ def fetch_all_fixtures(league_id: int) -> list:
     return data.get("response", [])
 
 
+def _api_id(team_ids: dict, code: str) -> str:
+    """apiFootball-Team-ID aus teamIds robust lesen. FIX 12.06.2026: Struktur ist
+    FLACH ({"MEX": 16}), match_fixture las sie aber als {"MEX": {"apiFootball": 16}}
+    → .get('apiFootball') auf einem int crashte → JEDES Fixture-Matching schlug fehl
+    → Ergebnisse wurden NIE geschrieben (MEX-ZAF blieb NS trotz FT in der API).
+    Beide Strukturen werden jetzt unterstützt."""
+    v = team_ids.get(code)
+    if isinstance(v, dict):
+        v = v.get("apiFootball")
+    return str(v) if v not in (None, "") else ""
+
+
 def match_fixture(api_fixture: dict, home_id: str, away_id: str,
                   team_ids: dict) -> bool:
     """Prüft ob ein API-Football-Spiel zu unserem Fixture passt."""
     api_home_id = str(api_fixture["teams"]["home"]["id"])
     api_away_id = str(api_fixture["teams"]["away"]["id"])
 
-    our_home_api = str(team_ids.get(home_id, {}).get("apiFootball", ""))
-    our_away_api = str(team_ids.get(away_id, {}).get("apiFootball", ""))
+    our_home_api = _api_id(team_ids, home_id)
+    our_away_api = _api_id(team_ids, away_id)
 
     if our_home_api and our_away_api:
         return api_home_id == our_home_api and api_away_id == our_away_api
@@ -129,7 +141,7 @@ def main():
         wm = json.load(f)
 
     groups   = wm.get("groups", {})
-    team_ids = wm.get("teamIds", {})  # {"MEX": {"apiFootball": 123}, ...}
+    team_ids = wm.get("teamIds", {})  # FLACH: {"MEX": 16, ...} (siehe _api_id)
 
     # Alle Fixtures sammeln
     all_fixtures: list[dict] = []
