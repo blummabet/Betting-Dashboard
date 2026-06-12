@@ -81,7 +81,11 @@
         "fixtures_max_age_days": 540,
         "request_delay_sec": 1.2,
         "request_timeout_sec": 15,
-        "skip_if_understat": false
+        "skip_if_understat": false,
+        "xgsim_w_inside": 0.118,
+        "xgsim_w_on": 0.1,
+        "fetch_player_stats": true,
+        "refresh_age_days": 3
       },
       "lineups": {
         "lookahead_hours": 3,
@@ -227,6 +231,23 @@
           "show_pinn_in_modal": true,
           "show_movement_in_modal": true
         }
+      },
+      "chance_creation": {
+        "min_games": 3,
+        "shots_inside_weight": 0.4,
+        "result_scale": 0.45,
+        "ou_scale": 0.4,
+        "ou_baseline": 22.0,
+        "min_signal_pp": 0.8,
+        "max_signal_pp": 6.0
+      },
+      "form_rating": {
+        "min_games": 3,
+        "w_rating": 1.0,
+        "w_defense": 0.6,
+        "scale": 6.0,
+        "min_signal_pp": 0.8,
+        "max_signal_pp": 5.0
       }
     },
     "liga_default": {

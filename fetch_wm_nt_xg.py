@@ -60,6 +60,18 @@ DEFAULT_CFG = {
     "request_delay_sec":   1.2,   # zwischen API-Calls
     "request_timeout_sec": 15,
     "skip_if_understat":  False,  # True: skip Teams die in xgStats schon Understat haben
+    # ── xGsim: schuss-basierter xG-Proxy ─────────────────────────────────────
+    # Kalibriert 12.06.2026 via Chrome-MCP gegen 92 Spiele mit ECHTEM xG
+    # (Premier League + La Liga). OLS ohne Intercept: xg ≈ 0.118·inside + 0.10·on,
+    # R²=0.78, RMSE=0.47. Außerhalb-16er-Schüsse ~0 → ignoriert. Damit kriegen
+    # auch Teams OHNE echtes API-xG (CONMEBOL/AFC/Afrika, deren Freundschafts-
+    # spiele kein xG liefern, aber Schuss-Aufschlüsselung schon) eine echte
+    # Chancen-Qualität statt schwachem Tor-Form-Proxy.
+    "xgsim_w_inside":      0.118,
+    "xgsim_w_on":          0.10,
+    "fetch_player_stats":  True,  # /fixtures/players für Schlüsselpässe + Rating
+    "refresh_age_days":    3,     # Team neu ziehen wenn älter (WM: alle ~3 Tage
+                                  # neue Spiele → echtes WM-xG fließt zeitnah ein)
 }
 
 
@@ -176,92 +188,193 @@ def _list_recent_fixtures(team_id: int, max_n: int) -> list[dict]:
     return fixtures
 
 
-def _extract_xg_from_statistics(fixture_id: int) -> dict[int, dict]:
+def _num(v):
+    """Robust → float|None. Akzeptiert '63%', '1.23', 12, None, ''."""
+    if v is None or v == "":
+        return None
+    try:
+        return float(str(v).replace("%", "").strip())
+    except (ValueError, TypeError):
+        return None
+
+
+def _extract_fixture_stats(fixture_id: int) -> dict[int, dict]:
     """
-    Holt /fixtures/statistics?fixture=ID und extrahiert expected_goals pro Team.
-    Returns {team_id: {"xg": float}} oder {} falls nicht verfügbar.
+    Holt /fixtures/statistics?fixture=ID und extrahiert pro Team ALLE Felder,
+    die wir für Signale brauchen — plus den kalibrierten xGsim-Proxy.
+
+    Returns {team_id: {
+        "xg": float|None,      # echtes API-xG (oft None bei Friendlies)
+        "xgsim": float,        # 0.118·inside + 0.10·on  (immer berechenbar)
+        "inside": float, "outside": float, "on": float, "total": float,
+        "blocked": float, "saves": float,
+    }}
     """
     data = _apif_get(f"/fixtures/statistics?fixture={fixture_id}")
     if not data or not data.get("response"):
         return {}
+    w_in = CFG.get("xgsim_w_inside", 0.118)
+    w_on = CFG.get("xgsim_w_on", 0.10)
     out: dict[int, dict] = {}
     for team_stats in data["response"]:
         team_id = (team_stats.get("team") or {}).get("id")
-        stats_list = team_stats.get("statistics") or []
+        if not team_id:
+            continue
+        m: dict[str, object] = {}
         xg_val = None
-        for s in stats_list:
-            name = (s.get("type") or "").lower().replace("_", " ").strip()
-            # API-Football labelt unterschiedlich je Liga:
-            #   "expected_goals", "Expected Goals", "xG"
-            if "expected goals" in name or name == "xg":
-                v = s.get("value")
-                # Werte kommen oft als String "1.23" oder None
-                if v is None or v == "":
-                    continue
-                try:
-                    xg_val = float(str(v))
-                except (ValueError, TypeError):
-                    continue
-                break
-        if xg_val is not None and team_id:
-            out[team_id] = {"xg": xg_val}
+        for s in (team_stats.get("statistics") or []):
+            t = (s.get("type") or "")
+            key = t.lower().replace("_", " ").strip()
+            m[key] = s.get("value")
+            if "expected goals" in key or key == "xg":
+                xg_val = _num(s.get("value"))
+        inside  = _num(m.get("shots insidebox"))  or 0.0
+        outside = _num(m.get("shots outsidebox")) or 0.0
+        on      = _num(m.get("shots on goal"))    or 0.0
+        total   = _num(m.get("total shots"))      or 0.0
+        blocked = _num(m.get("blocked shots"))    or 0.0
+        saves   = _num(m.get("goalkeeper saves")) or 0.0
+        out[team_id] = {
+            "xg":      xg_val,
+            "xgsim":   round(w_in * inside + w_on * on, 3),
+            "inside":  inside, "outside": outside, "on": on, "total": total,
+            "blocked": blocked, "saves": saves,
+        }
+    return out
+
+
+def _extract_xg_from_statistics(fixture_id: int) -> dict[int, dict]:
+    """Backward-Compat-Wrapper (Tests + Altpfade): nur {team_id: {"xg": float}}
+    für Teams mit echtem xG."""
+    return {tid: {"xg": v["xg"]}
+            for tid, v in _extract_fixture_stats(fixture_id).items()
+            if v.get("xg") is not None}
+
+
+def _extract_player_aggregates(fixture_id: int) -> dict[int, dict]:
+    """
+    Holt /fixtures/players?fixture=ID → pro Team: Schlüsselpässe (Chancen-
+    Kreation) + minutengewichtetes Ø-Spieler-Rating (Form/Qualität).
+    Returns {team_id: {"keyPasses": float, "ratingAvg": float|None}} oder {}.
+    """
+    data = _apif_get(f"/fixtures/players?fixture={fixture_id}")
+    if not data or not data.get("response"):
+        return {}
+    out: dict[int, dict] = {}
+    for team_block in data["response"]:
+        tid = (team_block.get("team") or {}).get("id")
+        if not tid:
+            continue
+        kp = 0.0
+        r_weighted = 0.0
+        r_minutes = 0.0
+        for p in (team_block.get("players") or []):
+            st = (p.get("statistics") or [{}])[0] or {}
+            key = ((st.get("passes") or {}).get("key"))
+            if key is not None:
+                kp += _num(key) or 0.0
+            rating = _num((st.get("games") or {}).get("rating"))
+            mins = _num((st.get("games") or {}).get("minutes")) or 0.0
+            if rating is not None and mins > 0:
+                r_weighted += rating * mins
+                r_minutes += mins
+        out[tid] = {
+            "keyPasses": kp,
+            "ratingAvg": round(r_weighted / r_minutes, 2) if r_minutes > 0 else None,
+        }
     return out
 
 
 # ── Aggregations-Kern ─────────────────────────────────────────────────────
 
 
-def aggregate_team_xg(team_apif_id: int, our_id: str) -> dict | None:
-    """
-    Aggregiert xG für ein Team aus den letzten N Nationalmannschafts-Spielen.
+def _avg(total: float, n: int, nd: int = 3):
+    return round(total / n, nd) if n > 0 else None
 
-    Returns:
-      {
-        "xgForAvg":     float,
-        "xgAgainstAvg": float,
-        "games":        int,
-        "source":       "apif_fixtures_statistics",
-        "fixture_ids":  list[int],
-        "updatedAt":    iso8601
-      }
-      oder None wenn nicht genug Daten.
+
+def aggregate_team_stats(team_apif_id: int, our_id: str) -> dict | None:
+    """
+    Aggregiert Rich-Stats für ein Team aus den letzten N Spielen:
+      · xgForAvg/xgAgainstAvg  — ECHTES API-xG (nur über Spiele die es haben)
+      · xgSimForAvg/AgainstAvg — kalibrierter Schuss-Proxy (über ALLE Spiele)
+      · shotsInsideForAvg, sotForAvg, savesForAvg, blocksForAvg
+      · keyPassesForAvg (Chancen-Kreation), ratingAvg (Form), via Spieler-Endpoint
+    `games` = Spiele mit Schuss-Statistik (Basis für xgSim & Co.);
+    `xgGames` = Teilmenge mit echtem xG. Returns None bei zu wenig Daten.
     """
     fixtures = _list_recent_fixtures(team_apif_id, CFG["lookback_fixtures"])
     if len(fixtures) < CFG["min_fixtures"]:
         print(f"   ↪ {our_id}: nur {len(fixtures)} Fixtures gefunden — überspringe")
         return None
 
-    xg_for_total = 0.0
-    xg_ag_total  = 0.0
-    games        = 0
-    fixture_ids  = []
+    acc = {k: 0.0 for k in ("xg_for", "xg_ag", "sim_for", "sim_ag",
+                            "inside_for", "sot_for", "saves_for", "blocks_for",
+                            "kp_for", "rating_w", "rating_min")}
+    games = 0        # Spiele mit Schuss-Statistik (Team + Gegner)
+    xg_games = 0     # Teilmenge mit echtem xG (Team + Gegner)
+    fixture_ids: list[int] = []
+    want_players = bool(CFG.get("fetch_player_stats", True))
 
     for fx in fixtures:
         time.sleep(CFG["request_delay_sec"])
-        team_xgs = _extract_xg_from_statistics(fx["id"])
-        if team_apif_id not in team_xgs:
+        stats = _extract_fixture_stats(fx["id"])
+        me = stats.get(team_apif_id)
+        if not me:
             continue
-        # Gegner-ID bestimmen
         opp_id = fx["away_id"] if fx["home_id"] == team_apif_id else fx["home_id"]
-        if opp_id is None or opp_id not in team_xgs:
+        opp = stats.get(opp_id) if opp_id is not None else None
+        if not opp:
             continue
-        xg_for_total += team_xgs[team_apif_id]["xg"]
-        xg_ag_total  += team_xgs[opp_id]["xg"]
-        games        += 1
+        games += 1
         fixture_ids.append(fx["id"])
+        acc["sim_for"] += me["xgsim"]
+        acc["sim_ag"]  += opp["xgsim"]
+        acc["inside_for"] += me["inside"]
+        acc["sot_for"]    += me["on"]
+        acc["saves_for"]  += me["saves"]
+        acc["blocks_for"] += me["blocked"]
+        if me["xg"] is not None and opp["xg"] is not None:
+            acc["xg_for"] += me["xg"]
+            acc["xg_ag"]  += opp["xg"]
+            xg_games += 1
+        if want_players:
+            time.sleep(CFG["request_delay_sec"])
+            pl = _extract_player_aggregates(fx["id"])
+            mp = pl.get(team_apif_id)
+            if mp:
+                acc["kp_for"] += mp["keyPasses"]
+                if mp["ratingAvg"] is not None:
+                    acc["rating_w"]  += mp["ratingAvg"]
+                    acc["rating_min"] += 1
 
     if games < CFG["min_fixtures"]:
-        print(f"   ↪ {our_id}: nur {games} Fixtures mit xG-Daten — überspringe")
+        print(f"   ↪ {our_id}: nur {games} Fixtures mit Statistik — überspringe")
         return None
 
     return {
-        "xgForAvg":     round(xg_for_total / games, 3),
-        "xgAgainstAvg": round(xg_ag_total / games, 3),
+        # echtes xG (None wenn kein einziges Spiel echtes xG hatte)
+        "xgForAvg":     _avg(acc["xg_for"], xg_games),
+        "xgAgainstAvg": _avg(acc["xg_ag"], xg_games),
+        "xgGames":      xg_games,
+        # Schuss-Proxy (immer vorhanden)
+        "xgSimForAvg":     _avg(acc["sim_for"], games),
+        "xgSimAgainstAvg": _avg(acc["sim_ag"], games),
+        # Roh-Aggregate für weitere Signale
+        "shotsInsideForAvg": _avg(acc["inside_for"], games, 2),
+        "sotForAvg":         _avg(acc["sot_for"], games, 2),
+        "savesForAvg":       _avg(acc["saves_for"], games, 2),
+        "blocksForAvg":      _avg(acc["blocks_for"], games, 2),
+        "keyPassesForAvg":   _avg(acc["kp_for"], games, 2) if want_players else None,
+        "ratingAvg":         _avg(acc["rating_w"], int(acc["rating_min"]), 2),
         "games":        games,
         "source":       "apif_fixtures_statistics",
         "fixture_ids":  fixture_ids,
         "updatedAt":    datetime.now(timezone.utc).isoformat(),
     }
+
+
+# Backward-Compat-Alias (Altpfade/Tests rufen evtl. aggregate_team_xg)
+aggregate_team_xg = aggregate_team_stats
 
 
 # ── Main-Pipeline ─────────────────────────────────────────────────────────
@@ -368,7 +481,7 @@ def main():
         if not force and our_id in existing:
             try:
                 ts = datetime.fromisoformat(existing[our_id]["updatedAt"]).timestamp()
-                if (time.time() - ts) < 14 * 86400:
+                if (time.time() - ts) < CFG.get("refresh_age_days", 3) * 86400:
                     print(f"   ✓ {our_id} aktuell ({existing[our_id]['games']} games) — skip")
                     skip_count += 1
                     continue
@@ -396,15 +509,19 @@ def main():
             fail_count += 1
             continue
 
-        result = aggregate_team_xg(team_id, our_id)
+        result = aggregate_team_stats(team_id, our_id)
         if result is None:
             fail_count += 1
             continue
 
         existing[our_id] = result
         new_count += 1
-        print(f"   ✅ xG-For: {result['xgForAvg']}, xG-Against: {result['xgAgainstAvg']} "
-              f"({result['games']} games)")
+        _real = "echt" if result.get("xgForAvg") is not None else "sim"
+        _xgf = result.get("xgForAvg")
+        _xgf = _xgf if _xgf is not None else result.get("xgSimForAvg")
+        print(f"   ✅ xG-For: {_xgf} ({_real}), xGsim-For: {result['xgSimForAvg']}, "
+              f"KeyPässe: {result.get('keyPassesForAvg')}, Rating: {result.get('ratingAvg')} "
+              f"({result['games']} games, {result.get('xgGames',0)} mit echtem xG)")
         # Atomar nach jedem Team — fail-safe gegen Abbrüche
         _save_output(existing)
 

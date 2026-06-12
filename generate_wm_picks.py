@@ -1566,15 +1566,46 @@ def main():
             with open(nt_xg_file, encoding="utf-8") as f:
                 nt_xg = json.load(f)
             merged = 0
+            sim_filled = 0
+            # Zusatzfelder, die IMMER durchgereicht werden (auch wenn Understat das
+            # echte xG stellt) — sie speisen die neuen Signale (chance_creation,
+            # defense/rating) für ALLE Teams, nicht nur die ohne Understat.
+            EXTRA = ("xgSimForAvg", "xgSimAgainstAvg", "shotsInsideForAvg",
+                     "sotForAvg", "savesForAvg", "blocksForAvg",
+                     "keyPassesForAvg", "ratingAvg")
             for tid, entry in nt_xg.items():
-                if tid in xg_stats and xg_stats[tid].get("games", 0) >= 3:
-                    continue  # Understat-Daten haben Priorität
-                if not isinstance(entry, dict) or "xgForAvg" not in entry:
+                if not isinstance(entry, dict):
                     continue
-                xg_stats[tid] = entry
-                merged += 1
-            if merged:
-                print(f"  ⊕ NT-xG (API-Football) gemerged: {merged} Teams ergänzt\n")
+                rec = xg_stats.get(tid)
+                understat_real = (rec is not None
+                                  and rec.get("games", 0) >= 3
+                                  and rec.get("xgForAvg") is not None
+                                  and rec.get("source", "understat") == "understat")
+                if rec is None:
+                    rec = {}
+                    xg_stats[tid] = rec
+                # Zusatzfelder immer überlagern (für die neuen Signale)
+                for k in EXTRA:
+                    if entry.get(k) is not None:
+                        rec[k] = entry[k]
+                if understat_real:
+                    continue  # echtes Understat-xG behält Priorität für xgForAvg/Against
+                # xG-Werte aus NT-xG: echtes API-xG, sonst Schuss-Proxy (xGsim)
+                real_for = entry.get("xgForAvg")
+                if real_for is not None:
+                    rec["xgForAvg"]     = real_for
+                    rec["xgAgainstAvg"] = entry.get("xgAgainstAvg")
+                    rec["games"]        = entry.get("xgGames") or entry.get("games", 0)
+                    rec["source"]       = "apif_real"
+                    merged += 1
+                elif entry.get("xgSimForAvg") is not None:
+                    rec["xgForAvg"]     = entry["xgSimForAvg"]
+                    rec["xgAgainstAvg"] = entry.get("xgSimAgainstAvg")
+                    rec["games"]        = entry.get("games", 0)
+                    rec["source"]       = "shot_proxy"   # kalibrierter xGsim (R²=0.78)
+                    sim_filled += 1
+            if merged or sim_filled:
+                print(f"  ⊕ NT-xG gemerged: {merged} echt + {sim_filled} via xGsim-Proxy\n")
     except Exception as e:
         print(f"  ⚠️  NT-xG-Merge fehlgeschlagen: {e}")
     injuries     = wm.get("injuries",    {})   # Verletzungen/Sperren
