@@ -67,6 +67,44 @@ class TestWMProfileMatches(unittest.TestCase):
         self.assertNotIn("[:4]  # max 4 Alerts pro Run", src)
 
 
+class TestPolyMirrorNormalization(unittest.TestCase):
+    """Regression: Polymarket-Spiegel (Heim/Auswärts vertauscht, SUI-CAN statt
+    CAN-SUI) → poly landete unter Phantom-Key, echtes Fixture leer (84 statt 72
+    odds-keys). _flip_poly_orientation dreht auf Fixture-Reihenfolge."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.mod = _reload("wm2026")
+
+    def test_flip_swaps_home_away_keeps_symmetric(self):
+        p = {"homeId": "SUI", "awayId": "CAN", "homeName": "Schweiz", "awayName": "Kanada",
+             "hw": 0.55, "aw": 0.25, "dr": 0.20, "hwTokens": ["a"], "awTokens": ["b"],
+             "poly_o25": 0.6, "poly_btts": 0.5}
+        q = self.mod._flip_poly_orientation(p)
+        self.assertEqual(q["homeId"], "CAN")
+        self.assertEqual(q["awayId"], "SUI")
+        self.assertEqual(q["hw"], 0.25)   # CAN-Sieg = vorher SUI-aw
+        self.assertEqual(q["aw"], 0.55)   # SUI-Sieg = vorher SUI-hw
+        self.assertEqual(q["hwTokens"], ["b"])
+        self.assertEqual(q["awTokens"], ["a"])
+        self.assertEqual(q["dr"], 0.20)        # symmetrisch bleibt
+        self.assertEqual(q["poly_o25"], 0.6)   # symmetrisch bleibt
+        self.assertEqual(q["poly_btts"], 0.5)
+
+    def test_mirror_renormalizes_to_real_key(self):
+        real = {"CAN-SUI"}
+        prices = {"SUI-CAN": {"homeId": "SUI", "awayId": "CAN", "hw": 0.55, "aw": 0.25, "dr": 0.2}}
+        norm = {}
+        for k, p in prices.items():
+            rk = f"{p.get('awayId')}-{p.get('homeId')}"
+            if k not in real and rk in real:
+                p = self.mod._flip_poly_orientation(p); k = rk
+            norm[k] = p
+        self.assertIn("CAN-SUI", norm)
+        self.assertNotIn("SUI-CAN", norm)
+        self.assertEqual(norm["CAN-SUI"]["hw"], 0.25)
+
+
 class TestLigaProfileDiffers(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
