@@ -150,55 +150,64 @@ class TestAggregation(unittest.TestCase):
                 del sys.modules[mod]
         import fetch_wm_nt_xg
         self.mod = fetch_wm_nt_xg
-        self.mod.CFG = {**self.mod.DEFAULT_CFG, "request_delay_sec": 0}
+        # Player-Endpoint im Test aus (sonst echte _apif_get-Calls)
+        self.mod.CFG = {**self.mod.DEFAULT_CFG, "request_delay_sec": 0,
+                        "fetch_player_stats": False}
+
+    @staticmethod
+    def _row(xg, inside, on):
+        """Rich-Stats-Zeile wie _extract_fixture_stats sie liefert."""
+        return {"xg": xg, "xgsim": round(0.118 * inside + 0.10 * on, 3),
+                "inside": inside, "outside": 0.0, "on": on, "total": inside,
+                "blocked": 0.0, "saves": 0.0}
 
     def test_aggregates_xg_from_multiple_fixtures(self):
-        """Klassiker: 5 Fixtures mit xG, Aggregat = Avg."""
-        # Mock _list_recent_fixtures
+        """Klassiker: 3 Fixtures mit echtem xG → Aggregat = Avg."""
         fixtures = [
             {"id": 100, "home_id": 26, "away_id": 31, "date": "2025-01-01T00:00:00+00:00"},
             {"id": 101, "home_id": 31, "away_id": 26, "date": "2024-11-01T00:00:00+00:00"},
             {"id": 102, "home_id": 26, "away_id": 99, "date": "2024-09-01T00:00:00+00:00"},
         ]
-        xg_per_fixture = {
-            100: {26: {"xg": 1.5}, 31: {"xg": 0.8}},
-            101: {31: {"xg": 1.2}, 26: {"xg": 0.6}},
-            102: {26: {"xg": 2.0}, 99: {"xg": 0.4}},
+        per_fixture = {
+            100: {26: self._row(1.5, 10, 5), 31: self._row(0.8, 4, 2)},
+            101: {31: self._row(1.2, 8, 4), 26: self._row(0.6, 5, 2)},
+            102: {26: self._row(2.0, 12, 6), 99: self._row(0.4, 3, 1)},
         }
         with patch.object(self.mod, "_list_recent_fixtures", return_value=fixtures), \
-             patch.object(self.mod, "_extract_xg_from_statistics",
-                          side_effect=lambda fid: xg_per_fixture.get(fid, {})):
-            result = self.mod.aggregate_team_xg(26, "MEX")
+             patch.object(self.mod, "_extract_fixture_stats",
+                          side_effect=lambda fid: per_fixture.get(fid, {})):
+            result = self.mod.aggregate_team_stats(26, "MEX")
         self.assertIsNotNone(result)
         self.assertEqual(result["games"], 3)
-        # xG-For: 26's xG when 26 is home: 1.5, then away 0.6, home 2.0 → avg (1.5+0.6+2.0)/3
+        self.assertEqual(result["xgGames"], 3)
         self.assertAlmostEqual(result["xgForAvg"], (1.5 + 0.6 + 2.0) / 3, places=2)
-        # xG-Against: opponents' xG: 0.8, 1.2, 0.4 → avg
         self.assertAlmostEqual(result["xgAgainstAvg"], (0.8 + 1.2 + 0.4) / 3, places=2)
+        self.assertIsNotNone(result["xgSimForAvg"])  # Proxy immer berechnet
         self.assertEqual(result["source"], "apif_fixtures_statistics")
 
     def test_returns_none_when_too_few_fixtures(self):
         with patch.object(self.mod, "_list_recent_fixtures", return_value=[{"id": 1, "home_id": 26, "away_id": 31}]):
-            result = self.mod.aggregate_team_xg(26, "MEX")
+            result = self.mod.aggregate_team_stats(26, "MEX")
         self.assertIsNone(result)
 
-    def test_skips_fixtures_without_xg(self):
-        """Fixtures ohne xG-Daten werden übersprungen, müssen aber genug verbleiben."""
+    def test_xgsim_when_no_real_xg(self):
+        """Kernfall: KEIN echtes xG → xgForAvg=None, aber xgSimForAvg da (Lücken-Fill)."""
         fixtures = [
             {"id": 100, "home_id": 26, "away_id": 31, "date": "2025-01-01T00:00:00+00:00"},
             {"id": 101, "home_id": 26, "away_id": 31, "date": "2024-12-01T00:00:00+00:00"},
             {"id": 102, "home_id": 26, "away_id": 31, "date": "2024-11-01T00:00:00+00:00"},
         ]
-        # Nur 100 hat xG-Daten
-        xg_per_fixture = {
-            100: {26: {"xg": 1.0}, 31: {"xg": 0.5}},
-        }
+        per_fixture = {fid: {26: self._row(None, 10, 5), 31: self._row(None, 3, 1)}
+                       for fid in (100, 101, 102)}
         with patch.object(self.mod, "_list_recent_fixtures", return_value=fixtures), \
-             patch.object(self.mod, "_extract_xg_from_statistics",
-                          side_effect=lambda fid: xg_per_fixture.get(fid, {})):
-            result = self.mod.aggregate_team_xg(26, "MEX")
-        # Nur 1 Fixture mit xG → unter min_fixtures (3) → None
-        self.assertIsNone(result)
+             patch.object(self.mod, "_extract_fixture_stats",
+                          side_effect=lambda fid: per_fixture.get(fid, {})):
+            result = self.mod.aggregate_team_stats(26, "MEX")
+        self.assertIsNotNone(result)
+        self.assertEqual(result["games"], 3)
+        self.assertEqual(result["xgGames"], 0)
+        self.assertIsNone(result["xgForAvg"])             # kein echtes xG
+        self.assertAlmostEqual(result["xgSimForAvg"], 0.118 * 10 + 0.10 * 5, places=2)
 
 
 class TestSaveLoad(unittest.TestCase):

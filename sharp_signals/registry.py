@@ -32,6 +32,8 @@ from sharp_signals.apif_predictions import ApifPredictionsSignal
 from sharp_signals.weather_signal import WeatherSignal
 from sharp_signals.incentive_signal import IncentiveSignal
 from sharp_signals.altitude_signal import AltitudeSignal
+from sharp_signals.chance_creation import ChanceCreationSignal
+from sharp_signals.form_rating import FormRatingSignal
 
 
 # Liste aller aktiv evaluierten Signale.
@@ -52,6 +54,8 @@ ACTIVE_SIGNALS: list[Signal] = [
     WeatherSignal(),
     IncentiveSignal(),
     AltitudeSignal(),
+    ChanceCreationSignal(),
+    FormRatingSignal(),
 ]
 
 
@@ -115,6 +119,11 @@ SIGNAL_GROUPS: dict[str, str] = {
     "form_trend":         "form",
     "xg_strength":        "form",
     "h2h_pattern":        "form",
+    # chance_creation + form_rating: attackierende Qualität / Performance — stark
+    # mit xg_strength korreliert (Schüsse→xG). Bewusst in dieselbe form-Familie →
+    # Anti-Korr-Discount (0.4) verhindert Doppelzählung des Angriffs-Edges.
+    "chance_creation":    "form",
+    "form_rating":        "form",
     "public_static_bias": "public",
     "travel_burden":      "context",
     "injury":             "context",
