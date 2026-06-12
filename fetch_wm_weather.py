@@ -64,7 +64,35 @@ VENUE_COORDS = {
     "MetLife Stadium, New York":              (40.8136,  -74.0744),
     "Rose Bowl, Los Angeles":                 (34.1613, -118.1676),
     "SoFi Stadium, Los Angeles":              (33.9535, -118.3392),
+    # FIX 12.06.2026: fehlten komplett → diese 3 Host-Städte bekamen NIE Wetter.
+    "BC Place, Vancouver":                    (49.2767, -123.1119),
+    "Lumen Field, Seattle":                   (47.5952, -122.3316),
+    "NRG Stadium, Houston":                   (29.6847,  -95.4107),
 }
+
+
+def _resolve_coords(venue: str):
+    """Venue-String → (lat, lon), TOLERANT (FIX 12.06.2026). Die korrigierten
+    Venues aus wm2026-data weichen leicht von den VENUE_COORDS-Keys ab
+    ('Levi's Stadium, San Francisco Bay Area' vs '…San Francisco';
+    'MetLife …, New York New Jersey' vs '…New York') → exakter Match scheiterte
+    → kein Wetter für 23 umverlegte Spiele. Jetzt: Match per Stadion-Name."""
+    if not venue:
+        return None
+    if venue in VENUE_COORDS:
+        return VENUE_COORDS[venue]
+    vlow = venue.lower()
+    # Stadion-Name (Teil vor dem Komma) ist eindeutig → robustestes Kriterium
+    for k, c in VENUE_COORDS.items():
+        stadium = k.split(",")[0].strip().lower()
+        if stadium and stadium in vlow:
+            return c
+    # Fallback: Stadt-Teil
+    for k, c in VENUE_COORDS.items():
+        city = k.split(",")[-1].strip().lower()
+        if city and city in vlow:
+            return c
+    return None
 
 # ── WeatherAPI Condition-Code → Klartext + Emoji ─────────────────────────────
 # Codes: https://www.weatherapi.com/docs/weather_conditions.json
@@ -142,32 +170,41 @@ def main():
     today    = date.today()
     max_date = today + timedelta(days=FORECAST_DAYS)
 
-    # 1. Alle Match-JSONs laden
-    match_files = sorted(glob.glob(MATCHES_GLOB))
-    print(f"  📋 {len(match_files)} Match-Dateien gefunden")
+    # 1. Fixtures aus wm2026-data.json (Single Source of Truth, KORRIGIERTE Venues/
+    #    Daten) — FIX 12.06.2026: vorher aus matches/data/wm-*.json (stale, vom
+    #    Venue-Fix nie angefasst) → Wetter für falsche Stadt (z.B. QAT-SUI NY statt SF).
+    wm_path = os.path.join(BASE, "wm2026-data.json")
+    try:
+        wm = json.load(open(wm_path, encoding="utf-8"))
+    except Exception as e:
+        print(f"  ❌ wm2026-data.json nicht lesbar: {e}")
+        return
 
     matches_info = []
+    venue_coords: dict[str, tuple] = {}   # korrigierter Venue-String → (lat,lon)
     venues_needed = set()
-    for mf in match_files:
-        try:
-            d = json.load(open(mf, encoding="utf-8"))
-        except Exception:
-            continue
-        slug  = d.get("slug", "")
-        venue = d.get("venue", "")
-        mdate = (d.get("date") or "")[:10]
-        if not slug or not venue or not mdate:
-            continue
-        matches_info.append({"slug": slug, "venue": venue, "date": mdate})
-        if venue in VENUE_COORDS:
-            venues_needed.add(venue)
+    for g in (wm.get("groups") or {}).values():
+        for fx in (g.get("fixtures") or []):
+            h, a = fx.get("home"), fx.get("away")
+            venue = (fx.get("venue") or "").strip()
+            mdate = (fx.get("date") or "")[:10]
+            if not (h and a and venue and mdate):
+                continue
+            slug = f"wm-{h.lower()}-vs-{a.lower()}-{mdate}"
+            matches_info.append({"slug": slug, "venue": venue, "date": mdate})
+            coords = _resolve_coords(venue)
+            if coords:
+                venue_coords[venue] = coords
+                venues_needed.add(venue)
+            else:
+                print(f"  ⚠️  Keine Coords für Venue: {venue!r}")
 
-    print(f"  🏟️  {len(venues_needed)} einzigartige Venues")
+    print(f"  📋 {len(matches_info)} Fixtures aus wm2026-data | 🏟️  {len(venues_needed)} Venues mit Coords")
 
     # 2. Wetter pro Venue fetchen
     venue_weather: dict[str, dict] = {}
     for i, venue in enumerate(sorted(venues_needed)):
-        lat, lon = VENUE_COORDS[venue]
+        lat, lon = venue_coords[venue]
         print(f"  🌡️  {venue} ({lat:.2f}°N)…", end=" ", flush=True)
         weather = fetch_venue_weather(lat, lon)
         if weather:

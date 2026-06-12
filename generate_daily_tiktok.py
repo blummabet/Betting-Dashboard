@@ -89,6 +89,19 @@ def _pick_story_line(hero: dict) -> str:
     return f"{s} Edge — Modell über dem Markt."
 
 
+def _story_market_consistent(story: str, market: str) -> bool:
+    """Guard: 'Underdog'/'Außenseiter' darf NUR bei einem echten Auswärts-Pick
+    stehen — nie bei Tor-Märkten (Über/Unter), Heimsieg, BTTS etc. Schützt die
+    Card-Story vor inhaltlichen Widersprüchen (FIX 12.06.2026)."""
+    st = (story or "").lower()
+    mk = (market or "").lower()
+    is_away = ("auswärtssieg" in mk or "auswaertssieg" in mk or mk == "2"
+               or ("dnb" in mk and ("auswärts" in mk or "auswaerts" in mk)))
+    if ("underdog" in st or "außenseiter" in st or "aussenseiter" in st) and not is_away:
+        return False
+    return True
+
+
 def load_dedup() -> dict:
     if DEDUP_FILE.exists():
         try:
@@ -736,6 +749,12 @@ def main():
                 # für Tor-Märkte (Über/Unter) und wenn der Pick auf den FAVORITEN
                 # geht (z.B. USA Über 1.5). Jetzt: beschreibt den echten Markt.)
                 hero["story"] = _pick_story_line(hero)
+                # Selbst-Schutz: falls die Story je wieder „Underdog/Außenseiter"
+                # bei einem Nicht-Auswärts-Markt behauptet → auf neutral zurückfallen.
+                if not _story_market_consistent(hero["story"], hero.get("market")):
+                    hero["story"] = "Modell sieht Edge über dem Markt."
+                    print(f"⚠️  Card-Story-Guard: Underdog-Text bei Markt "
+                          f"'{hero.get('market')}' verhindert")
                 daily_picks_data = {
                     "hero": hero,
                     "others": collected[1:4],

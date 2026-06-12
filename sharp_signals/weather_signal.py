@@ -168,18 +168,33 @@ def _outcome_side(market: str) -> str:
 
 
 def _get_weather(context: dict) -> dict | None:
-    """Holt Weather-Daten aus context — entweder via match_slug oder direkt."""
-    mk = context.get("matchKey")
+    """Holt Weather-Daten aus context, gematcht auf die ECHTE Venue des Fixtures.
+
+    FIX 12.06.2026: Vorher wurde nur per home/away-Substring + forecastAvailable
+    gematcht — Datum UND Venue ignoriert. Bei umverlegten Spielen (z.B. QAT-SUI:
+    real Levi's SF, aber ein veralteter wm_weather-Eintrag stand auf MetLife NY
+    36.9°C) griff das Signal die FALSCHE Stadt → bogus Hitze-Penalty. Jetzt: nur
+    Forecast der tatsächlichen Venue; passt keiner → KEIN Signal (lieber nichts
+    als falsche Stadt)."""
     home_id, away_id = context.get("home_id"), context.get("away_id")
+    venue = (context.get("venue") or "").strip().lower()
     weather_dict = context.get("weather") or {}
-    # Versuche match_slug-basiert (wm-{home_lc}-vs-{away_lc}-{date})
-    if mk and home_id and away_id:
-        # Date aus kickoff_time-context fehlt; suche per home-away substring
-        for k, v in weather_dict.items():
-            if (home_id.lower() in k and away_id.lower() in k
-                    and isinstance(v, dict) and v.get("forecastAvailable")):
-                return v
-    return None
+    if not (home_id and away_id):
+        return None
+    fallback = None
+    for k, v in weather_dict.items():
+        if not (home_id.lower() in k and away_id.lower() in k):
+            continue
+        if not (isinstance(v, dict) and v.get("forecastAvailable")
+                and v.get("tempMax") is not None):
+            continue
+        wv = (v.get("venue") or "").strip().lower()
+        if venue and wv:
+            if wv == venue:
+                return v          # exakte Venue-Übereinstimmung → beste Wahl
+            continue              # echter Venue-Mismatch (Stale wie QAT-SUI) → skip
+        fallback = fallback or v  # keine Venue-Info → als Fallback akzeptieren
+    return fallback
 
 
 class WeatherSignal(Signal):
