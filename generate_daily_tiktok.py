@@ -63,6 +63,32 @@ MANUAL_POSTED_TEAMS = {"MAR", "ESP", "CRO", "BEL", "BRA", "ARG", "POR"}
 # Brasilien (Endrick 03.06.), Argentinien (manuell 04.06.), Portugal (Ronaldo)
 
 
+def _pick_story_line(hero: dict) -> str:
+    """Markt-korrekte Card-Story (FIX 12.06.2026). Vorher: hartes "Edge auf den
+    Underdog" bei Edge≥10 — falsch für Tor-Märkte (Über/Unter) und Favoriten-Picks.
+    Beschreibt jetzt den tatsächlichen Markt; "Underdog" NUR bei Auswärts-Pick."""
+    m = (hero.get("market") or "").lower()
+    edge = hero.get("edge_pp") or 0
+    s = "Starker" if edge >= 10 else "Solider" if edge >= 5 else "Knapper"
+    h = hero.get("name_h", "Heim")
+    a = hero.get("name_a", "Auswärts")
+    if "über" in m or "ueber" in m or "over" in m:
+        return f"{s} Tor-Edge: Modell erwartet mehr Tore als der Markt."
+    if "unter" in m or "under" in m:
+        return f"{s} Tor-Edge: Modell erwartet weniger Tore als der Markt."
+    if "btts" in m or "beide" in m:
+        return f"{s} Edge bei Beide-treffen — Modell über dem Markt."
+    if "heimsieg" in m or m == "1":
+        return f"{s} Edge auf {h} im Heimspiel."
+    if "auswärtssieg" in m or "auswaertssieg" in m or m == "2":
+        return f"{s} Edge auf Außenseiter {a}."
+    if "dnb" in m or "no bet" in m:
+        return f"{s} Absicherungs-Edge (Draw-No-Bet)."
+    if "doppelte" in m or "double" in m or m.startswith("dc"):
+        return f"{s} Doppelte-Chance-Edge."
+    return f"{s} Edge — Modell über dem Markt."
+
+
 def load_dedup() -> dict:
     if DEDUP_FILE.exists():
         try:
@@ -705,13 +731,11 @@ def main():
             if collected:
                 collected.sort(key=lambda p: -p["_edge_score"])
                 hero = collected[0]
-                # Story-Snippet aus Edge ableiten
-                if hero["edge_pp"] >= 10:
-                    hero["story"] = "Modell sieht klar Edge auf den Underdog."
-                elif hero["edge_pp"] >= 5:
-                    hero["story"] = "Solider Edge mit guten Daten."
-                else:
-                    hero["story"] = "Vorsichtig — Edge knapp."
+                # Story-Snippet markt-abhängig ableiten (FIX 12.06.2026: vorher
+                # stand bei Edge≥10 IMMER "Edge auf den Underdog" — komplett falsch
+                # für Tor-Märkte (Über/Unter) und wenn der Pick auf den FAVORITEN
+                # geht (z.B. USA Über 1.5). Jetzt: beschreibt den echten Markt.)
+                hero["story"] = _pick_story_line(hero)
                 daily_picks_data = {
                     "hero": hero,
                     "others": collected[1:4],

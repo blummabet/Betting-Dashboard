@@ -184,27 +184,48 @@ def short_venue(venue: str) -> str:
             return f"{parts[0]} · {parts[-1]}"
     return venue[:35]
 
+# FIX 12.06.2026: resolve_wm_picks schreibt UPPERCASE WIN/LOSS/VOID — Recap/Bilanz
+# vergleichen aber lowercase → normalisieren. + Conviction-Stake: BET höher als
+# ABWÄGEN (flat verzerrte die Bilanz, da viele schwächere ABWÄGEN). Poly bleibt flat.
+def _norm_result(r):
+    if not r:
+        return r
+    u = str(r).upper()
+    return {"WIN": "won", "LOSS": "lost", "VOID": "push", "PUSH": "push"}.get(u, str(r).lower())
+
+
+def _pick_stake(p) -> float:
+    """BET = €10, ABWÄGEN (+ Rest) = €5. Conviction-gewichtet."""
+    return 10.0 if (p or {}).get("verdict") == "BET" else 5.0
+
+
 def bilanz_footer(wm: dict) -> str:
-    """Berechnet WM P&L aus recorded results."""
+    """Berechnet WM P&L aus recorded results (conviction-gewichtet, case-robust)."""
     picks_all = wm.get("picks", {})
     w = l = push = 0
     pnl = 0.0
-    stake = 5.0  # €5 pro Pick
+    staked = 0.0
     for pick_list in picks_all.values():
         for p in pick_list:
-            r = p.get("result")
+            if p.get("trackingExcluded"):
+                continue
+            r = _norm_result(p.get("result"))
+            stake = _pick_stake(p)
             if r == "won":
                 w += 1
+                staked += stake
                 pnl += (p.get("odds", 1) - 1) * stake
             elif r == "lost":
                 l += 1
+                staked += stake
                 pnl -= stake
             elif r == "push":
                 push += 1
+                staked += stake
     total = w + l + push
     if total == 0:
         return "📈 WM-Bilanz: Picks ab dem ersten Spieltag"
-    roi = (pnl / (total * stake) * 100) if total > 0 else 0
+    roi = (pnl / staked * 100) if staked > 0 else 0
     pnl_str = f"+€{pnl:.2f}" if pnl >= 0 else f"-€{abs(pnl):.2f}"
     roi_str = f"+{roi:.1f}%" if roi >= 0 else f"{roi:.1f}%"
     return f"📈 WM-Bilanz: {w}W-{l}L-{push}P | ROI: {roi_str} | P&L: {pnl_str}"
@@ -480,21 +501,13 @@ def build_recap_card(wm: dict, target_date: str) -> str | None:
 
     lines = [f"📊 <b>WM 2026 Recap — {target_date}</b>\n"]
     day_pnl = 0.0
-    stake   = 5.0
     had_any = False
-
-    # FIX 12.06.2026: resolve_wm_picks schreibt UPPERCASE WIN/LOSS/VOID, dieser
-    # Recap vergleicht 'won'/'lost'/'push' → zählte nie etwas. Normalisieren.
-    def _norm_result(r):
-        if not r:
-            return r
-        u = str(r).upper()
-        return {"WIN": "won", "LOSS": "lost", "VOID": "push", "PUSH": "push"}.get(u, str(r).lower())
 
     for pick_key, fix_info in fix_lookup.items():
         fix_picks = all_picks.get(pick_key, [])
         pick_results = [(p, _norm_result(p.get("result"))) for p in fix_picks
-                        if p.get("verdict") in ("BET", "ABWÄGEN") and p.get("result")]
+                        if p.get("verdict") in ("BET", "ABWÄGEN") and p.get("result")
+                        and not p.get("trackingExcluded")]
         if not pick_results:
             continue
         had_any = True
@@ -503,6 +516,7 @@ def build_recap_card(wm: dict, target_date: str) -> str | None:
             f"{fix_info['awayFlag']} {fix_info['awayName']}"
         )
         for p, result in pick_results:
+            stake = _pick_stake(p)   # BET €10 / ABWÄGEN €5
             if result == "won":
                 profit = (p.get("odds", 1) - 1) * stake
                 day_pnl += profit

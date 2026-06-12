@@ -19,7 +19,11 @@
 (function () {
   'use strict';
 
-  const STAKE = 10; // € per pick for P&L calculation
+  // Conviction-gewichteter Stake (12.06.2026): BET höher als ABWÄGEN, weil BET =
+  // Edge + Signal-Bestätigung (höhere Konfidenz). Flat würde die ~vielen ABWÄGEN
+  // gleich gewichten → Bilanz weniger repräsentativ. Poly-Auto-Trading bleibt flat.
+  const STAKE_BET = 10, STAKE_ABW = 5; // € per pick
+  const _stakeOf = (p) => (p && p.verdict === 'BET') ? STAKE_BET : STAKE_ABW;
 
   // ── Module state ───────────────────────────────────────
   let _data      = null;
@@ -124,8 +128,8 @@
                : (u === 'VOID' || u === 'PUSH') ? 'push' : String(r).toLowerCase();
         };
         const combined = [
-          ...fxPicks.map(p  => ({ ...p, result: _normRes(p.result), _isPlayer: false })),
-          ...fxPPicks.map(p => ({ ...p, result: _normRes(p.result), _isPlayer: true  })),
+          ...fxPicks.map(p  => ({ ...p, result: _normRes(p.result), _stake: _stakeOf(p), _isPlayer: false })),
+          ...fxPPicks.map(p => ({ ...p, result: _normRes(p.result), _stake: _stakeOf(p), _isPlayer: true  })),
         ];
 
         if (!combined.length) continue; // no picks → skip
@@ -201,7 +205,7 @@
     <div class="wm-header">
       <div class="wm-header-left">
         <div class="wm-title">📊 WM 2026 Tracking</div>
-        <div class="wm-subtitle">Alle Picks aus den Cards · Eingefroren bei Kickoff · €${STAKE}/Pick</div>
+        <div class="wm-subtitle">Alle Picks aus den Cards · Eingefroren bei Kickoff · BET €${STAKE_BET} · ABWÄGEN €${STAKE_ABW}</div>
       </div>
       <div class="wm-header-right">
         <button onclick="wmTrkRefresh()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;">🔄 Aktualisieren</button>
@@ -459,9 +463,10 @@
 
     let pnl = null, roi = null;
     if (resolved.length > 0) {
-      pnl = +(won.reduce((s, p) => s + ((p.odds || 1) - 1) * STAKE, 0)
-            - lost.length * STAKE).toFixed(2);
-      roi = +(pnl / (resolved.length * STAKE) * 100).toFixed(1);
+      pnl = +(won.reduce((s, p) => s + ((p.odds || 1) - 1) * p._stake, 0)
+            - lost.reduce((s, p) => s + p._stake, 0)).toFixed(2);
+      const _staked = resolved.reduce((s, p) => s + p._stake, 0);
+      roi = _staked > 0 ? +(pnl / _staked * 100).toFixed(1) : null;
     }
 
     // Avg CLV — pro-Pick CLV in pp, gewichtet nur über resolved (sonst statistisch zappelig)
@@ -526,7 +531,7 @@
         <div class="wm-trk-hero-center">
           <div class="wm-trk-hero-label">Return on Investment</div>
           <div class="wm-trk-hero-num">${roiSign}${k.roi}%</div>
-          <div class="wm-trk-hero-sub">${k.pnl >= 0 ? '+' : '−'}€${Math.abs(k.pnl).toFixed(2)} bei €${STAKE}/Pick · ${k.resolved} resolvierte</div>
+          <div class="wm-trk-hero-sub">${k.pnl >= 0 ? '+' : '−'}€${Math.abs(k.pnl).toFixed(2)} · BET €${STAKE_BET}/ABWÄGEN €${STAKE_ABW} · ${k.resolved} resolvierte</div>
         </div>
         <div class="wm-trk-hero-side">
           <div class="wm-trk-hero-mini-num ${clvCls}">${clvVal}</div>
@@ -559,8 +564,8 @@
     sortable.forEach((s, i) => {
       const p = s.pick;
       let delta = 0;
-      if (p.result === 'won')  delta = ((p.odds || 1) - 1) * STAKE;
-      else if (p.result === 'lost') delta = -STAKE;
+      if (p.result === 'won')  delta = ((p.odds || 1) - 1) * p._stake;
+      else if (p.result === 'lost') delta = -p._stake;
       cum += delta;
       points.push({ x: i + 1, y: cum, pnl: cum, market: p.market, result: p.result, odds: p.odds });
     });
@@ -593,7 +598,7 @@
 
     return `<div class="wm-trk-curve">
       <div class="wm-trk-curve-head">
-        <span class="wm-trk-curve-title">📈 Bankroll-Verlauf · €${STAKE}/Pick</span>
+        <span class="wm-trk-curve-title">📈 Bankroll-Verlauf · BET €${STAKE_BET}/ABWÄGEN €${STAKE_ABW}</span>
         <span class="wm-trk-curve-sub">${resolved.length} resolvierte Picks</span>
       </div>
       <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="wm-trk-curve-svg">
@@ -634,15 +639,16 @@
     // P&L: won = profit of (odds-1)*STAKE; lost = -STAKE; push = 0
     let pnl = null;
     if (resolved.length > 0) {
-      pnl = won.reduce((s, p) => s + ((p.odds || 1) - 1) * STAKE, 0)
-          - lost.length * STAKE;
+      pnl = won.reduce((s, p) => s + ((p.odds || 1) - 1) * p._stake, 0)
+          - lost.reduce((s, p) => s + p._stake, 0);
       pnl = Math.round(pnl * 100) / 100;
     }
 
-    // ROI = P&L / (resolved * STAKE) * 100
+    // ROI = P&L / (Summe gestakter € auf resolved) * 100
     let roi = null;
-    if (resolved.length > 0) {
-      roi = Math.round(pnl / (resolved.length * STAKE) * 100);
+    const _staked = resolved.reduce((s, p) => s + p._stake, 0);
+    if (_staked > 0) {
+      roi = Math.round(pnl / _staked * 100);
     }
 
     const pnlColor  = pnl == null ? 'var(--muted)' : pnl >= 0 ? '#3fb950' : '#f85149';
@@ -790,8 +796,8 @@
 
     // P&L for this pick
     let pnlStr = '';
-    if (p.result === 'won')  pnlStr = `<span style="color:#3fb950;font-size:10px;font-weight:700;">+€${(((p.odds||1)-1)*STAKE).toFixed(2)}</span>`;
-    if (p.result === 'lost') pnlStr = `<span style="color:#f85149;font-size:10px;font-weight:700;">-€${STAKE.toFixed(2)}</span>`;
+    if (p.result === 'won')  pnlStr = `<span style="color:#3fb950;font-size:10px;font-weight:700;">+€${(((p.odds||1)-1)*p._stake).toFixed(2)}</span>`;
+    if (p.result === 'lost') pnlStr = `<span style="color:#f85149;font-size:10px;font-weight:700;">-€${p._stake.toFixed(2)}</span>`;
     if (p.result === 'push') pnlStr = `<span style="color:var(--muted);font-size:10px;">€0.00</span>`;
 
     const marketStr = p._isPlayer && p.playerName ? `${p.playerName} — ${p.market}` : p.market;
