@@ -1,10 +1,26 @@
 {
-  "lastRun": "2026-06-12T15:03:15.571161+00:00",
+  "lastRun": "2026-06-12T18:21:44.642161+00:00",
   "stats": {
-    "total": 190,
-    "errors": 0,
+    "total": 187,
+    "errors": 1,
     "warnings": 0,
-    "ok": 190
+    "ok": 186
   },
-  "issues": []
+  "issues": [
+    {
+      "matchKey": "USA-TUR",
+      "market": "1X2",
+      "level": "error",
+      "code": "E_HOMEAWAY_SWAP",
+      "message": "1X2 hw/aw 2.62/2.49 → Auswärts-Favorit, aber DC sieht Heim-Favorit — Heim/Auswärts-Quoten vermutlich vertauscht",
+      "pickSnapshot": {
+        "verdict": null,
+        "odds": null,
+        "modelOdds": null,
+        "edgePP": null,
+        "clvPP": null,
+        "dataQuality": null
+      }
+    }
+  ]
 }
