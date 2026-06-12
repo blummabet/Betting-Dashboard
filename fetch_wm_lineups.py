@@ -62,7 +62,9 @@ SKIP_TELEGRAM           = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
 # ── Config ────────────────────────────────────────────────────────────────
 DEFAULT_CFG = {
     "lookahead_hours":         3,    # nur Spiele in den nächsten N Stunden
-    "lookback_hours":         24,    # falls Spiel schon angefangen: noch N Stunden zurück
+    "lookback_hours":          0,    # FIX 12.06.2026: ab Anpfiff NICHT mehr (war 24 →
+                                     # Lineups/Alerts liefen bis 24h nach Spielende). Lineup
+                                     # ist Pre-Match. Alert hat zusätzlich harten ko-Guard.
     "min_minutes_before":     30,    # erst ab T-N min lineups verfügbar (~1h normal)
     "max_minutes_before":    180,    # T-3h obere Grenze
     "request_delay_sec":     1.0,
@@ -378,11 +380,20 @@ def _emit_lineup_alerts(match_key: str, entry: dict, squads: dict,
     home_name = fixtures_meta.get("home_name", home_id)
     away_name = fixtures_meta.get("away_name", away_id)
     ko_iso = entry.get("kickoff", "")
+    ko_dt = None
     try:
         ko_dt = datetime.fromisoformat(ko_iso)
+        if ko_dt.tzinfo is None:
+            ko_dt = ko_dt.replace(tzinfo=timezone.utc)
         ko_str = ko_dt.strftime("%H:%M")
     except Exception:
         ko_str = "?"
+
+    # FIX 12.06.2026: KEIN Lineup-Alert nach Anpfiff. lookback_hours hielt Spiele
+    # bis Stunden NACH Kickoff "due" (MEX-ZAF-Alert 23:41 UTC, Spiel 19:00 UTC vorbei).
+    # Lineup-Info ist nur PRE-MATCH sinnvoll (Engine passt Goals-Picks VOR dem Spiel an).
+    if ko_dt is not None and ko_dt <= datetime.now(timezone.utc):
+        return 0
 
     for team_label, team_id, team_name, scorer, team_lineup in [
         ("🏠 Heim",   home_id, home_name, squads.get(home_id, {}), entry.get("home", {})),

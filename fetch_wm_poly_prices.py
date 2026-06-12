@@ -29,6 +29,19 @@ def _vienna_hhmm(kickoff_iso):
         return None
 
 
+def _kickoff_passed(fx):
+    """True wenn der Anpfiff vorbei ist. Edge-Alerts sind PRE-MATCH-Signale —
+    ab Anpfiff ist eine Bewegung In-Game, kein handelbares Lag → kein Alert.
+    Fehlender/unparsebarer kickoff → False (nicht versehentlich unterdrücken)."""
+    ko = fx.get("kickoff")
+    if not ko:
+        return False
+    try:
+        return datetime.fromisoformat(str(ko).replace("Z", "+00:00")) <= datetime.now(timezone.utc)
+    except Exception:
+        return False
+
+
 BASE         = os.path.dirname(os.path.abspath(__file__))
 OUT_FILE     = os.path.join(BASE, "wm_poly_prices.json")
 WM_FILE      = os.path.join(BASE, "wm2026-data.json")
@@ -887,15 +900,19 @@ def main():
             last = dedup_state.get(dedup_key)
             return bool(last) and last >= cutoff
 
+        # FIX 12.06.2026: _kickoff_passed-Guard — KEINE Edge-Alerts nach Anpfiff.
+        # MEX-ZAF feuerte 22:18 UTC (Spiel 19:00 UTC vorbei). Edge-Alert ist Pre-Match.
         alert_queue = [
             fx for fx in all_fixtures
             if fx.get("edgeTrend") == "new" and (fx.get("bestEdge") or 0) >= ALERT_EDGE_MIN_PP
+               and not _kickoff_passed(fx)
                and not _was_alerted_recently(fx)
         ]
         steam_alerts = [
             fx for fx in all_fixtures
             if fx.get("steamLag") and fx.get("edgeTrend") in ("growing",)
                and (fx.get("bestEdge") or 0) >= ALERT_EDGE_MIN_PP
+               and not _kickoff_passed(fx)
                and fx not in alert_queue
                and not _was_alerted_recently(fx)
         ]

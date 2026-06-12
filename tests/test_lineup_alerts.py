@@ -14,6 +14,7 @@ import os
 import sys
 import tempfile
 import unittest
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -70,13 +71,17 @@ class TestEmitAlerts(unittest.TestCase):
         self.mod.SKIP_TELEGRAM = True  # keine reale Telegram-API
 
     def _entry(self, home_starting=None, home_subs=None,
-               away_starting=None, away_subs=None):
+               away_starting=None, away_subs=None, kickoff=None):
+        # Kickoff standardmäßig in der ZUKUNFT (T+1h) — Lineup-Alerts sind pre-match;
+        # ab Anpfiff unterdrückt der ko-Guard (FIX 12.06.2026). Fixes Datum würde
+        # mit fortschreitender realer Zeit fälschlich "post-kickoff" werden.
+        ko = kickoff or (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat()
         return {
             "fixture_id": 99,
-            "kickoff": "2026-06-11T19:00:00+00:00",
+            "kickoff": ko,
             "home": {"starting": home_starting or [], "subs": home_subs or []},
             "away": {"starting": away_starting or [], "subs": away_subs or []},
-            "fetchedAt": "2026-06-11T18:00:00+00:00",
+            "fetchedAt": datetime.now(timezone.utc).isoformat(),
         }
 
     def _meta(self):
@@ -90,6 +95,17 @@ class TestEmitAlerts(unittest.TestCase):
                   "ZAF": {"name": "P. Tau", "goals": 5}}
         dedup = {}
         sent = self.mod._emit_lineup_alerts("MEX-ZAF", entry, squads, self._meta(), dedup)
+        self.assertEqual(sent, 0)
+
+    def test_no_alert_after_kickoff(self):
+        # FIX 12.06.2026: nach Anpfiff KEIN Lineup-Alert (war: bis 24h danach).
+        past_ko = (datetime.now(timezone.utc) - timedelta(hours=2)).isoformat()
+        entry = self._entry(home_starting=[{"name": "Other"}],
+                            away_starting=[{"name": "Percy Tau"}],
+                            kickoff=past_ko)
+        squads = {"MEX": {"name": "R. Jiménez", "goals": 7},
+                  "ZAF": {"name": "P. Tau", "goals": 5}}
+        sent = self.mod._emit_lineup_alerts("MEX-ZAF", entry, squads, self._meta(), {})
         self.assertEqual(sent, 0)
 
     def test_alert_when_home_missing(self):

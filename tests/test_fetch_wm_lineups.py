@@ -49,12 +49,13 @@ class TestKickoffAndDue(unittest.TestCase):
         # Default lookahead = 3h
         self.assertFalse(self.mod._is_fixture_due(fx, now))
 
-    def test_is_fixture_due_past_within_lookback(self):
+    def test_is_fixture_due_after_kickoff(self):
+        # FIX 12.06.2026: lookback_hours auf 0 → ab Anpfiff NICHT mehr "due"
+        # (Lineup ist pre-match; vorher 24h → Alerts/Fetches nach Spielende).
         now = datetime.now(timezone.utc)
         ko_2h_ago = (now - timedelta(hours=2)).strftime("%Y-%m-%d %H:%M").split()
         fx = {"date": ko_2h_ago[0], "time": ko_2h_ago[1]}
-        # Default lookback = 24h
-        self.assertTrue(self.mod._is_fixture_due(fx, now))
+        self.assertFalse(self.mod._is_fixture_due(fx, now))
 
     def test_cache_fresh(self):
         now = datetime.now(timezone.utc)

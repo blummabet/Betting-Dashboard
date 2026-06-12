@@ -1,48 +1,48 @@
 {
-  "today": "2026-06-11T16:28:58.598440+00:00",
+  "today": "2026-06-12T04:46:40.129646+00:00",
   "chosen": {
     "angle_id": "matchOfDay",
-    "entity_key": "A-1-MEX-ZAF",
+    "entity_key": "B-1-CAN-BIH",
     "theme": "killer_stat",
-    "score": 0.5,
+    "score": 0.677,
     "hook_slots": {
       "big_number": {
-        "value": "1815",
+        "value": "1672",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "sub_title": {
-        "value": "Elo · Mexiko",
+        "value": "Elo · Kanada",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_1": {
-        "value": "Mexiko 🇲🇽",
+        "value": "Kanada 🇨🇦",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_2": {
-        "value": "gegen <span class=\"acc\">Südafrika</span> 🇿🇦",
+        "value": "gegen <span class=\"acc\">BIH</span> ",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "mystery_question": {
-        "value": "Schafft Südafrika die Überraschung?",
+        "value": "Wer setzt sich heute durch?",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "highlight_fact": {
-        "value": "Unter 1.5 Tore · Edge +6.0pp",
+        "value": "DNB: Auswärtsteam · Edge +13.0pp",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -51,56 +51,56 @@
     },
     "info_slots": {
       "flag": {
-        "value": "🇲🇽 vs 🇿🇦",
+        "value": "🇨🇦 vs 🌍",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "name": {
-        "value": "Mexiko vs Südafrika",
+        "value": "Kanada vs BIH",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "role_line": {
-        "value": "Gruppe A · Anpfiff: 2026-06-11 19:00 UTC",
+        "value": "Gruppe B · Anpfiff: 2026-06-12 19:00 UTC",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat1_val": {
-        "value": "1815",
-        "source": "groups.A.teams",
+        "value": "1672",
+        "source": "groups.B.teams",
         "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": 1815
+        "raw": 1672
       },
       "stat1_lbl": {
-        "value": "Elo MEX",
+        "value": "Elo CAN",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat2_val": {
-        "value": "1548",
-        "source": "groups.A.teams",
+        "value": "1649",
+        "source": "groups.B.teams",
         "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": 1548
+        "raw": 1649
       },
       "stat2_lbl": {
-        "value": "Elo ZAF",
+        "value": "Elo BIH",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat3_val": {
-        "value": "+6.0pp",
+        "value": "+13.0pp",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -114,7 +114,7 @@
         "raw": null
       },
       "closing_line": {
-        "value": "<strong>Pick: Unter 1.5 Tore</strong> @ 3.2 — Modell sieht 2.531.",
+        "value": "<strong>Pick: DNB: Auswärtsteam</strong> @ 3.34 — Modell sieht 2.197.",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -136,22 +136,13 @@
       }
     },
     "series_tag": "",
-    "reason": "Edge 6.0pp → 0.50"
+    "reason": "Edge 13.0pp → 0.50 · Elo-Diff 23 → drama +0.18"
   },
   "verifier": {
     "angle_id": "matchOfDay",
-    "entity": "A-1-MEX-ZAF",
-    "ok": false,
-    "failures": [
-      [
-        "stat1_val",
-        "str-cmp '[{'id': 'MEX', 'name': 'Mexiko', 'flag': '🇲🇽', 'elo': 1815, 'confederation': 'CONCACAF'}, {'id': 'ZAF', 'name': 'Südafrika', 'flag': '🇿🇦', 'elo': 1548, 'confederation': 'CAF'}, {'id': 'KOR', 'name': 'Südkorea', 'flag': '🇰🇷', 'elo': 1758, 'confederation': 'AFC'}, {'id': 'CZE', 'name': 'Tschechien', 'flag': '🇨🇿', 'elo': 1701, 'confederation': 'UEFA'}]' vs '1815'"
-      ],
-      [
-        "stat2_val",
-        "str-cmp '[{'id': 'MEX', 'name': 'Mexiko', 'flag': '🇲🇽', 'elo': 1815, 'confederation': 'CONCACAF'}, {'id': 'ZAF', 'name': 'Südafrika', 'flag': '🇿🇦', 'elo': 1548, 'confederation': 'CAF'}, {'id': 'KOR', 'name': 'Südkorea', 'flag': '🇰🇷', 'elo': 1758, 'confederation': 'AFC'}, {'id': 'CZE', 'name': 'Tschechien', 'flag': '🇨🇿', 'elo': 1701, 'confederation': 'UEFA'}]' vs '1548'"
-      ]
-    ],
+    "entity": "B-1-CAN-BIH",
+    "ok": true,
+    "failures": [],
     "details": [
       [
         "big_number",
@@ -200,8 +191,8 @@
       ],
       [
         "stat1_val",
-        false,
-        "str-cmp '[{'id': 'MEX', 'name': 'Mexiko', 'flag': '🇲🇽', 'elo': 1815, 'confederation': 'CONCACAF'}, {'id': 'ZAF', 'name': 'Südafrika', 'flag': '🇿🇦', 'elo': 1548, 'confederation': 'CAF'}, {'id': 'KOR', 'name': 'Südkorea', 'flag': '🇰🇷', 'elo': 1758, 'confederation': 'AFC'}, {'id': 'CZE', 'name': 'Tschechien', 'flag': '🇨🇿', 'elo': 1701, 'confederation': 'UEFA'}]' vs '1815'"
+        true,
+        "plausibility ok (raw 1672 in groups.B.teams)"
       ],
       [
         "stat1_lbl",
@@ -210,8 +201,8 @@
       ],
       [
         "stat2_val",
-        false,
-        "str-cmp '[{'id': 'MEX', 'name': 'Mexiko', 'flag': '🇲🇽', 'elo': 1815, 'confederation': 'CONCACAF'}, {'id': 'ZAF', 'name': 'Südafrika', 'flag': '🇿🇦', 'elo': 1548, 'confederation': 'CAF'}, {'id': 'KOR', 'name': 'Südkorea', 'flag': '🇰🇷', 'elo': 1758, 'confederation': 'AFC'}, {'id': 'CZE', 'name': 'Tschechien', 'flag': '🇨🇿', 'elo': 1701, 'confederation': 'UEFA'}]' vs '1548'"
+        true,
+        "plausibility ok (raw 1649 in groups.B.teams)"
       ],
       [
         "stat2_lbl",
@@ -361,7 +352,7 @@
           "raw": null
         },
         "closing_line": {
-          "value": "<strong>Höchste Ø-Tore-Quote</strong> aller 47 qualifizierten WM-Teams. Form-Datenbasis: 15 Spiele.",
+          "value": "<strong>Höchste Ø-Tore-Quote</strong> aller 48 qualifizierten WM-Teams. Form-Datenbasis: 15 Spiele.",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -383,7 +374,145 @@
         }
       },
       "series_tag": "",
-      "reason": "avgScored=3.3 (15 games) — höchster aller 47 Teams"
+      "reason": "avgScored=3.3 (15 games) — höchster aller 48 Teams"
+    },
+    {
+      "angle_id": "matchOfDay",
+      "entity_key": "B-1-CAN-BIH",
+      "theme": "killer_stat",
+      "score": 0.677,
+      "hook_slots": {
+        "big_number": {
+          "value": "1672",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "sub_title": {
+          "value": "Elo · Kanada",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_1": {
+          "value": "Kanada 🇨🇦",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_2": {
+          "value": "gegen <span class=\"acc\">BIH</span> ",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "mystery_question": {
+          "value": "Wer setzt sich heute durch?",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "highlight_fact": {
+          "value": "DNB: Auswärtsteam · Edge +13.0pp",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "info_slots": {
+        "flag": {
+          "value": "🇨🇦 vs 🌍",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "name": {
+          "value": "Kanada vs BIH",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "role_line": {
+          "value": "Gruppe B · Anpfiff: 2026-06-12 19:00 UTC",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_val": {
+          "value": "1672",
+          "source": "groups.B.teams",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 1672
+        },
+        "stat1_lbl": {
+          "value": "Elo CAN",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_val": {
+          "value": "1649",
+          "source": "groups.B.teams",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 1649
+        },
+        "stat2_lbl": {
+          "value": "Elo BIH",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_val": {
+          "value": "+13.0pp",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_lbl": {
+          "value": "Edge",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "closing_line": {
+          "value": "<strong>Pick: DNB: Auswärtsteam</strong> @ 3.34 — Modell sieht 2.197.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "quote_line": {
+          "value": "Edge sitzt. <span class=\"acc\">Heute Anpfiff.</span> ⚡",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "data_source": {
+          "value": "Daten: WM 2026 Live-Pipeline",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "series_tag": "",
+      "reason": "Edge 13.0pp → 0.50 · Elo-Diff 23 → drama +0.18"
     },
     {
       "angle_id": "killerStat",
@@ -499,7 +628,7 @@
           "raw": null
         },
         "closing_line": {
-          "value": "<strong>Beste Defensiv-Quote</strong> aller 47 qualifizierten Teams. Ø 0.3 Tore über 15 Spiele.",
+          "value": "<strong>Beste Defensiv-Quote</strong> aller 48 qualifizierten Teams. Ø 0.3 Tore über 15 Spiele.",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -525,47 +654,47 @@
     },
     {
       "angle_id": "matchOfDay",
-      "entity_key": "A-1-MEX-ZAF",
+      "entity_key": "A-1-KOR-CZE",
       "theme": "killer_stat",
-      "score": 0.5,
+      "score": 0.643,
       "hook_slots": {
         "big_number": {
-          "value": "1815",
+          "value": "1758",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "sub_title": {
-          "value": "Elo · Mexiko",
+          "value": "Elo · Südkorea",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "hook_line_1": {
-          "value": "Mexiko 🇲🇽",
+          "value": "Südkorea 🇰🇷",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "hook_line_2": {
-          "value": "gegen <span class=\"acc\">Südafrika</span> 🇿🇦",
+          "value": "gegen <span class=\"acc\">Tschechien</span> ",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "mystery_question": {
-          "value": "Schafft Südafrika die Überraschung?",
+          "value": "Wer setzt sich heute durch?",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "highlight_fact": {
-          "value": "Unter 1.5 Tore · Edge +6.0pp",
+          "value": "Heimsieg · Edge +8.0pp",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -574,56 +703,56 @@
       },
       "info_slots": {
         "flag": {
-          "value": "🇲🇽 vs 🇿🇦",
+          "value": "🇰🇷 vs 🌍",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "name": {
-          "value": "Mexiko vs Südafrika",
+          "value": "Südkorea vs Tschechien",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "role_line": {
-          "value": "Gruppe A · Anpfiff: 2026-06-11 19:00 UTC",
+          "value": "Gruppe A · Anpfiff: 2026-06-12 02:00 UTC",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat1_val": {
-          "value": "1815",
+          "value": "1758",
           "source": "groups.A.teams",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 1815
+          "raw": 1758
         },
         "stat1_lbl": {
-          "value": "Elo MEX",
+          "value": "Elo KOR",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat2_val": {
-          "value": "1548",
+          "value": "1701",
           "source": "groups.A.teams",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 1548
+          "raw": 1701
         },
         "stat2_lbl": {
-          "value": "Elo ZAF",
+          "value": "Elo CZE",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat3_val": {
-          "value": "+6.0pp",
+          "value": "+8.0pp",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -637,7 +766,7 @@
           "raw": null
         },
         "closing_line": {
-          "value": "<strong>Pick: Unter 1.5 Tore</strong> @ 3.2 — Modell sieht 2.531.",
+          "value": "<strong>Pick: Heimsieg</strong> @ 2.73 — Modell sieht 2.11.",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -659,7 +788,7 @@
         }
       },
       "series_tag": "",
-      "reason": "Edge 6.0pp → 0.50"
+      "reason": "Edge 8.0pp → 0.50 · Elo-Diff 57 → drama +0.14"
     }
   ]
 }
