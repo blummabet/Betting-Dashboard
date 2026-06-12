@@ -483,9 +483,17 @@ def build_recap_card(wm: dict, target_date: str) -> str | None:
     stake   = 5.0
     had_any = False
 
+    # FIX 12.06.2026: resolve_wm_picks schreibt UPPERCASE WIN/LOSS/VOID, dieser
+    # Recap vergleicht 'won'/'lost'/'push' → zählte nie etwas. Normalisieren.
+    def _norm_result(r):
+        if not r:
+            return r
+        u = str(r).upper()
+        return {"WIN": "won", "LOSS": "lost", "VOID": "push", "PUSH": "push"}.get(u, str(r).lower())
+
     for pick_key, fix_info in fix_lookup.items():
         fix_picks = all_picks.get(pick_key, [])
-        pick_results = [(p, p.get("result")) for p in fix_picks
+        pick_results = [(p, _norm_result(p.get("result"))) for p in fix_picks
                         if p.get("verdict") in ("BET", "ABWÄGEN") and p.get("result")]
         if not pick_results:
             continue

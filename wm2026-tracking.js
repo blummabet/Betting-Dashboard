@@ -113,9 +113,19 @@
         const pickKey  = `${gKey}-${fx.matchday}-${fx.home}-${fx.away}`;
         const fxPicks  = allPicks[pickKey]    || [];
         const fxPPicks = playerPicks[pickKey] || [];
+        // FIX 12.06.2026: resolve_wm_picks schreibt UPPERCASE WIN/LOSS/VOID,
+        // dieser Tab vergleicht aber 'won'/'lost'/'push' → nichts wurde als
+        // aufgelöst gezählt. Hier einmalig normalisieren (case-robust, beide
+        // Schreibweisen). VOID→push (neutral).
+        const _normRes = (r) => {
+          if (!r) return r;
+          const u = String(r).toUpperCase();
+          return u === 'WIN' ? 'won' : u === 'LOSS' ? 'lost'
+               : (u === 'VOID' || u === 'PUSH') ? 'push' : String(r).toLowerCase();
+        };
         const combined = [
-          ...fxPicks.map(p  => ({ ...p, _isPlayer: false })),
-          ...fxPPicks.map(p => ({ ...p, _isPlayer: true  })),
+          ...fxPicks.map(p  => ({ ...p, result: _normRes(p.result), _isPlayer: false })),
+          ...fxPPicks.map(p => ({ ...p, result: _normRes(p.result), _isPlayer: true  })),
         ];
 
         if (!combined.length) continue; // no picks → skip
