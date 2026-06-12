@@ -1888,16 +1888,22 @@
     // ── 1. MODELL-RECHNUNG ──
     const elo_h = matchPage?.homeElo || home.elo;
     const elo_a = matchPage?.awayElo || away.elo;
-    const xg_h  = matchPage?.xgHome;
-    const xg_a  = matchPage?.xgAway;
+    // FIX 12.06.2026: Modell-Tor-Erwartung (λ aus dem Pick) bevorzugen vor der
+    // matchPage-xG — sonst stand eine FREMDE xG (z.B. 2.87) neben der Modell-Prob
+    // (z.B. 85%), die auf einem anderen λ (~3.3) beruht → wirkte unstimmig.
+    const lamH = (typeof pick.lamH === 'number') ? pick.lamH : null;
+    const lamA = (typeof pick.lamA === 'number') ? pick.lamA : null;
+    const goalH = lamH != null ? lamH : matchPage?.xgHome;
+    const goalA = lamA != null ? lamA : matchPage?.xgAway;
+    const goalLabel = lamH != null ? 'Modell-Tor-Erwartung (H / A)' : 'xG Erwartung (H / A)';
     const probMarket  = pick.odds      ? Math.round(100 / pick.odds)      : null;
     const probModel   = pick.modelOdds ? Math.round(100 / pick.modelOdds) : null;
     let calcRows = '';
     if (elo_h && elo_a) {
       calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">Elo (${home.name} / ${away.name})</span><span class="wm-calc-val">${elo_h} / ${elo_a} (${eloDiff > 0 ? '+' : ''}${eloDiff})</span></div>`;
     }
-    if (xg_h != null && xg_a != null) {
-      calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">xG Erwartung (H / A)</span><span class="wm-calc-val">${xg_h.toFixed(2)} / ${xg_a.toFixed(2)}</span></div>`;
+    if (goalH != null && goalA != null) {
+      calcRows += `<div class="wm-calc-row"><span class="wm-calc-label">${goalLabel}</span><span class="wm-calc-val">${goalH.toFixed(2)} / ${goalA.toFixed(2)} <em style="opacity:.6">(Σ ${(goalH + goalA).toFixed(2)})</em></span></div>`;
     }
     // Travel-Mod
     const travel_h = _teamLegForMatch && _teamLegForMatch(fx.home, fx.matchday);

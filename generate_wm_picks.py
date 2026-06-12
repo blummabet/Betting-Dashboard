@@ -1113,6 +1113,13 @@ def generate_picks_for_fixture(
             "result":    None,
             "clvPP":       round(v.get("clvPP", 0.0), 1),
             "dataQuality": data_quality,
+            # Echte Modell-Tor-Erwartung (das λ, auf dem O/U-/BTTS-Quoten beruhen).
+            # FIX 12.06.2026: Card zeigte bisher eine FREMDE xG (matchPage) neben der
+            # Modell-Prob → wirkte unstimmig (z.B. xG 2.87 neben P(Ü1.5)=85%). Jetzt
+            # kann der Renderer die Zahl zeigen, auf der die Quote WIRKLICH basiert.
+            "lamH":        round(lam_h, 2),
+            "lamA":        round(lam_a, 2),
+            "lamTotal":    round(lam_h + lam_a, 2),
         }
         # Public-Bias als strukturiertes Feld — Renderer kann's für Story nutzen
         if pub_bias and pub_bias.get("max_abs", 0) >= 4:
@@ -1226,10 +1233,13 @@ def generate_picks_for_fixture(
         edge = float(p.get("edgePP") or 0)
         is_ou   = ("über" in m or "unter" in m or "beide teams" in m)
         is_ah   = ("ah " in m or "handicap" in m)
-        if is_ou and edge > EDGE_OU_BET_MAX:
+        if is_ou and edge >= EDGE_OU_BET_MAX:
+            # FIX 12.06.2026: > → >= . Genau-10pp-O/U (z.B. USA-PRY Über 1.5, 85%/
+            # λ≈3.3 vs xG 2.87) ist Grenzfall-Überkonfidenz → vorsichtshalber ABWÄGEN
+            # statt Confidence-BET. Echte Mismatches mit kleinerer Edge bleiben BET.
             p["verdict"] = "ABWÄGEN"
             p["downgradedReason"] = (
-                f"O/U Edge {edge:.0f}pp > {EDGE_OU_BET_MAX}pp Modell-Bias-Schwelle"
+                f"O/U Edge {edge:.0f}pp ≥ {EDGE_OU_BET_MAX}pp Modell-Bias-Schwelle"
             )
             bias_downgrades.append((p.get("market"), edge))
         elif is_ah and edge > EDGE_AH_BET_MAX:
