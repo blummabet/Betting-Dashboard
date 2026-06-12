@@ -483,6 +483,13 @@ def main():
                     _t = _vienna_hhmm(p["kickoff"])
                     if _t:
                         fx["time"] = _t   # time-Feld aus kickoff normalisieren
+                    # Match-Datum aus Polymarket eventDate (authoritativ). FIX 12.06.2026:
+                    # 12 MD3-Spiele hatten ein Seed-Datum ~5 Tage zu früh (CAN-SUI Seed
+                    # 06-19 ≠ real 06-24) → Picks am falschen Tag. eventDate = was der
+                    # schedule_date-Integritäts-Check als Wahrheit nutzt.
+                    pd = str(p.get("date") or "")[:10]
+                    if pd:
+                        fx["date"] = pd
                     ko_patched += 1
         print(f"   ⏰ {ko_patched} Fixture-Kickoff-Zeiten aus Polymarket gesetzt")
 
