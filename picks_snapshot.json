@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-06-12T05:07:03.768597+00:00",
+  "savedAt": "2026-06-12T08:38:14.556154+00:00",
   "picks": {
     "A-1-KOR-CZE": [
       {
@@ -14,7 +14,7 @@
         "edgePP": 8,
         "info": "Elo +57 · Form WWLLW·WWWWL · xG 1.2:1.3",
         "icon": "🎯",
-        "result": null,
+        "result": "WIN",
         "clvPP": -0.7,
         "dataQuality": "elo+form",
         "convictionScore": 0,
@@ -31,7 +31,9 @@
           "move_pp": -0.68
         },
         "pickTriggerReason": "Edge-getrieben",
-        "modelHallucinationWarning": "Edge gegen Pinnacle vorhanden, aber Conviction nur 0/10 — Signale stützen Pick wenig"
+        "modelHallucinationWarning": "Edge gegen Pinnacle vorhanden, aber Conviction nur 0/10 — Signale stützen Pick wenig",
+        "finalScore": "2-1",
+        "resolvedAt": "2026-06-12T05:58:50Z"
       }
     ],
     "A-1-MEX-ZAF": [
@@ -47,7 +49,7 @@
         "edgePP": 6,
         "info": "Elo +267 · Form WWWDD·DDLDL · xG 1.1:1.0",
         "icon": "🎯",
-        "result": null,
+        "result": "LOSS",
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "boldAlt": {
@@ -115,7 +117,9 @@
           "model_stack": 1,
           "context": 1,
           "market": 0
-        }
+        },
+        "finalScore": "2-0",
+        "resolvedAt": "2026-06-12T05:58:50Z"
       },
       {
         "market": "Unter 2.5 Tore",
@@ -129,7 +133,7 @@
         "edgePP": 6,
         "info": "Elo +267 · Form WWWDD·DDLDL · xG 1.1:1.0",
         "icon": "🛡️",
-        "result": null,
+        "result": "WIN",
         "clvPP": 1.0,
         "dataQuality": "elo+form",
         "saferAltFor": "Unter 1.5 Tore",
@@ -168,7 +172,9 @@
           "model_stack": 0,
           "context": 1,
           "market": 0
-        }
+        },
+        "finalScore": "2-0",
+        "resolvedAt": "2026-06-12T05:58:50Z"
       },
       {
         "market": "Unter 3.5 Tore",
@@ -182,7 +188,7 @@
         "edgePP": 4,
         "info": "Elo +267 · Form WWWDD·DDLDL · xG 1.1:1.0",
         "icon": "🎯",
-        "result": null,
+        "result": "WIN",
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "signals": [
@@ -245,7 +251,9 @@
           "model_stack": 3,
           "context": 1,
           "market": 0
-        }
+        },
+        "finalScore": "2-0",
+        "resolvedAt": "2026-06-12T05:58:50Z"
       }
     ],
     "A-2-CZE-ZAF": [
@@ -299,12 +307,12 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -4.82
+          "move_pp": -5.44
         }
       },
       {
         "market": "AH Auswärts +0.75",
-        "odds": 2.04,
+        "odds": 2.02,
         "modelOdds": 1.481,
         "conf": "high",
         "verdict": "ABWÄGEN",
@@ -352,26 +360,32 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -4.82
+          "move_pp": -5.44
         }
       }
     ],
     "A-2-MEX-KOR": [
       {
         "market": "AH Auswärts +0.5",
-        "odds": 1.87,
+        "odds": 1.81,
         "modelOdds": 1.538,
         "conf": "medium",
         "verdict": "ABWÄGEN",
-        "modSig": 1,
+        "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 7,
+        "edgePP": 6,
         "info": "Elo +57 · Form WWWDD·WWLLW · xG 1.0:0.9 · ✈️ 🇰🇷 2500km/2d/+2145m (18%-xG)",
-        "icon": "🎯",
+        "icon": "🛡️",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "full",
+        "saferAltFor": "Auswärtssieg",
+        "riskierAlt": {
+          "market": "Auswärtssieg",
+          "odds": 4.07,
+          "edgePP": 5
+        },
         "signals": [
           {
             "name": "travel_burden",
@@ -449,25 +463,151 @@
         "signalAdjustmentPP": -1.5,
         "signalCountPos": 1,
         "signalCountNeg": 3,
-        "effectiveEdgePP": 5.5,
-        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET",
+        "effectiveEdgePP": 4.5,
         "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
         "convictionFamilies": {
-          "sharp_money": 1,
-          "model_stack": 1,
+          "sharp_money": 0,
+          "model_stack": 2,
           "context": 0,
           "market": 0
         },
         "openingMovement": {
-          "in_pick_direction": true,
-          "move_pp": 4.3
+          "in_pick_direction": false,
+          "move_pp": 2.69
+        }
+      },
+      {
+        "market": "Auswärtssieg",
+        "odds": 4.07,
+        "modelOdds": 3.155,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
+        "mktSig": 1,
+        "storySig": -1,
+        "edgePP": 5,
+        "info": "Elo +57 · Form WWWDD·WWLLW · H2H 0% A · xG 1.0:0.9 · ✈️ 🇰🇷 2500km/2d/+2145m (18%-xG)",
+        "icon": "🎯",
+        "result": null,
+        "clvPP": 2.7,
+        "dataQuality": "full",
+        "boldAlt": {
+          "market": "AH Auswärts +0.5",
+          "odds": 1.81,
+          "edgePP": 6
+        },
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": -4.4,
+            "confidence": 0.82,
+            "evidence": "✈️ Auswärts 2500km/2d (critical) · Auswärts Höhe +2145m",
+            "weight": 1.0,
+            "weighted_score": -3.61,
+            "metadata": {
+              "factor_home": 1.0,
+              "factor_away": 0.82,
+              "home": {},
+              "away": {
+                "km": 2500,
+                "rest_days": 2,
+                "alt_shift": 2145,
+                "burden": "critical"
+              },
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 0.83,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.4:0.8 vs Auswärts 1.7:0.9",
+            "weight": 1.0,
+            "weighted_score": 0.71,
+            "metadata": {
+              "home_scored": 1.4,
+              "home_conceded": 0.8,
+              "away_scored": 1.73,
+              "away_conceded": 0.87,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "h2h_pattern",
+            "score": -0.8,
+            "confidence": 0.5,
+            "evidence": "⚔️ H2H 3 Spiele: 2H-1X-0A · Auswärts-Rate 17%",
+            "weight": 1.0,
+            "weighted_score": -0.16,
+            "metadata": {
+              "games": 3,
+              "home_wins": 2,
+              "draws": 1,
+              "away_wins": 0,
+              "picked_rate": 0.167,
+              "pick_side": "away"
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "apif_predictions",
+            "score": -2.31,
+            "confidence": 0.61,
+            "evidence": "📊 API-Football sieht Auswärts um 13.7pp niedriger als Pinnacle → externes Modell warnt",
+            "weight": 1.0,
+            "weighted_score": -1.41,
+            "metadata": {
+              "outcome": "away",
+              "apif_p": 0.1,
+              "sharp_p": 0.2375,
+              "diff_pp": -13.75,
+              "advice": "Double chance : Mexico or draw"
+            }
+          },
+          {
+            "name": "altitude_signal",
+            "score": -0.57,
+            "confidence": 0.7,
+            "evidence": "🏔 1551m Abend-Anpfiff · Heim MEX aus 2240m (akklim.) · Auswärts KOR aus 38m (Niedrigland)",
+            "weight": 1.0,
+            "weighted_score": -0.16,
+            "metadata": {
+              "venue_altitude_m": 1551,
+              "home_altitude_m": 2240,
+              "away_altitude_m": 38,
+              "intensity_raw": 0.35,
+              "intensity_effective": 0.23,
+              "kickoff_mod": 0.65,
+              "side": "away"
+            },
+            "correlation_discount_applied": 0.4
+          }
+        ],
+        "signalAdjustmentPP": -1.68,
+        "signalCountPos": 1,
+        "signalCountNeg": 4,
+        "effectiveEdgePP": 3.3,
+        "convictionScore": 2,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "model_stack": 2,
+          "context": 0,
+          "market": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": 2.69
         }
       },
       {
         "market": "Unter 1.5 Tore",
-        "odds": 2.88,
+        "odds": 2.85,
         "modelOdds": 2.185,
         "conf": "medium",
         "verdict": "ABWÄGEN",
@@ -482,7 +622,7 @@
         "dataQuality": "full",
         "boldAlt": {
           "market": "Unter 2.5 Tore",
-          "odds": 1.6,
+          "odds": 1.61,
           "edgePP": 7
         },
         "signals": [
@@ -563,7 +703,7 @@
       },
       {
         "market": "Unter 2.5 Tore",
-        "odds": 1.6,
+        "odds": 1.61,
         "modelOdds": 1.354,
         "conf": "medium",
         "verdict": "ABWÄGEN",
@@ -574,12 +714,12 @@
         "info": "Elo +57 · Form WWWDD·WWLLW · H2H 100% Ü2.5 · xG 1.0:0.9 · ✈️ 🇰🇷 2500km/2d/+2145m (18%-xG)",
         "icon": "🛡️",
         "result": null,
-        "clvPP": 0.4,
+        "clvPP": 0.0,
         "dataQuality": "full",
         "saferAltFor": "Unter 1.5 Tore",
         "riskierAlt": {
           "market": "Unter 1.5 Tore",
-          "odds": 2.88,
+          "odds": 2.85,
           "edgePP": 8
         },
         "signals": [
@@ -630,20 +770,19 @@
     "A-3-MEX-CZE": [
       {
         "market": "AH Auswärts +0.5",
-        "odds": 2.0,
+        "odds": 1.93,
         "modelOdds": 1.474,
         "conf": "high",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 14,
+        "edgePP": 12,
         "info": "Elo +114 · Form WWWDD·WWWWL · xG 1.0:1.0 · ✈️ 🇨🇿 1509km/2d/+2030m (13%-xG)",
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 14pp > 12pp Modell-Bias-Schwelle",
         "signals": [
           {
             "name": "travel_burden",
@@ -704,7 +843,8 @@
         "signalAdjustmentPP": -1.04,
         "signalCountPos": 1,
         "signalCountNeg": 2,
-        "effectiveEdgePP": 13.0,
+        "effectiveEdgePP": 11.0,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET",
         "convictionScore": 1,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -988,14 +1128,14 @@
     "A-3-ZAF-KOR": [
       {
         "market": "Unter 1.5 Tore",
-        "odds": 3.4,
+        "odds": 3.5,
         "modelOdds": 2.518,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 8,
+        "edgePP": 9,
         "info": "Elo -210 · Form DDLDL·WWLLW · xG 1.0:1.1 · ✈️ 🇿🇦 1958km/2d (9%-xG) · ✈️ 🇰🇷 2501km/3d/+1940m (18%-xG)",
         "icon": "🎯",
         "result": null,
@@ -1003,8 +1143,8 @@
         "dataQuality": "elo+form",
         "boldAlt": {
           "market": "Unter 2.5 Tore",
-          "odds": 1.78,
-          "edgePP": 7
+          "odds": 1.82,
+          "edgePP": 9
         },
         "signals": [
           {
@@ -1055,7 +1195,7 @@
         "signalAdjustmentPP": -1.22,
         "signalCountPos": 1,
         "signalCountNeg": 2,
-        "effectiveEdgePP": 6.8,
+        "effectiveEdgePP": 7.8,
         "convictionScore": 1,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -1068,24 +1208,24 @@
       },
       {
         "market": "Unter 2.5 Tore",
-        "odds": 1.78,
+        "odds": 1.82,
         "modelOdds": 1.474,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": -1,
         "storySig": 0,
-        "edgePP": 7,
+        "edgePP": 9,
         "info": "Elo -210 · Form DDLDL·WWLLW · xG 1.0:1.1 · ✈️ 🇿🇦 1958km/2d (9%-xG) · ✈️ 🇰🇷 2501km/3d/+1940m (18%-xG)",
         "icon": "🛡️",
         "result": null,
-        "clvPP": -2.6,
+        "clvPP": -3.9,
         "dataQuality": "elo+form",
         "saferAltFor": "Unter 1.5 Tore",
         "riskierAlt": {
           "market": "Unter 1.5 Tore",
-          "odds": 3.4,
-          "edgePP": 8
+          "odds": 3.5,
+          "edgePP": 9
         },
         "signals": [
           {
@@ -1106,7 +1246,7 @@
         "signalAdjustmentPP": 2.8,
         "signalCountPos": 1,
         "signalCountNeg": 0,
-        "effectiveEdgePP": 9.8,
+        "effectiveEdgePP": 11.8,
         "convictionScore": 1,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -1118,7 +1258,82 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -2.64
+          "move_pp": -3.88
+        }
+      },
+      {
+        "market": "Unter 3.5 Tore",
+        "odds": 1.29,
+        "modelOdds": 1.143,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": 4,
+        "info": "Elo -210 · Form DDLDL·WWLLW · xG 1.0:1.1 · ✈️ 🇿🇦 1958km/2d (9%-xG) · ✈️ 🇰🇷 2501km/3d/+1940m (18%-xG)",
+        "icon": "🎯",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "elo+form",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 2.8,
+            "confidence": 0.7,
+            "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Heim 1958km/2d · Auswärts 2501km/3d → Unter-Bias",
+            "weight": 1.0,
+            "weighted_score": 1.96,
+            "metadata": {
+              "factor_home": 0.9,
+              "factor_away": 0.82,
+              "total_penalty": 0.28,
+              "pick_side": "Unter"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": 3.73,
+            "confidence": 0.8,
+            "evidence": "📈 Form-Tor-Schnitt 2.6/Spiel vs Linie 3.5 → Unter -0.9 Tore Vorteil",
+            "weight": 1.0,
+            "weighted_score": 2.98,
+            "metadata": {
+              "expected_total": 2.57,
+              "ou_line": 3.5,
+              "diff_to_line": -0.93,
+              "pick_side": "Unter 3.5"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": 2.29,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy)-Tore: erwartet 2.57/Spiel vs Linie 3.5 → Unter -0.93",
+            "weight": 1.0,
+            "weighted_score": 0.6,
+            "metadata": {
+              "expected_total": 2.57,
+              "ou_line": 3.5,
+              "diff_to_line": -0.93,
+              "is_proxy": true,
+              "pick_side": "Unter 3.5"
+            },
+            "correlation_discount_applied": 0.4
+          }
+        ],
+        "signalAdjustmentPP": 3.15,
+        "signalCountPos": 3,
+        "signalCountNeg": 0,
+        "effectiveEdgePP": 7.2,
+        "convictionScore": 4,
+        "convictionVerdict": "watch",
+        "convictionLabel": "👁 Beobachten",
+        "convictionFamilies": {
+          "sharp_money": 0,
+          "model_stack": 3,
+          "context": 1,
+          "market": 0
         }
       }
     ],
@@ -1457,14 +1672,14 @@
     "B-1-QAT-SUI": [
       {
         "market": "Doppelte Chance — 1X",
-        "odds": 4.35,
+        "odds": 5.1,
         "modelOdds": 3.178,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 7,
+        "edgePP": 10,
         "info": "Elo -244 · Form DLLDL·DWDLD · xG 0.7:2.9",
         "icon": "🎯",
         "result": null,
@@ -1510,12 +1725,12 @@
             "name": "weather_signal",
             "score": 1.0,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Mittag-Anpfiff · Auswärts SUI (temperate) leidet",
+            "evidence": "🌡 37°C Mittag-Anpfiff · Auswärts SUI (temperate) leidet",
             "weight": 1.0,
             "weighted_score": 0.65,
             "metadata": {
-              "temp_max": 35.3,
-              "effective_temp": 35.3,
+              "temp_max": 36.9,
+              "effective_temp": 36.9,
               "kickoff_mod": 1.0,
               "home_climate": "hot",
               "away_climate": "temperate",
@@ -1527,20 +1742,19 @@
         "signalAdjustmentPP": -2.75,
         "signalCountPos": 1,
         "signalCountNeg": 2,
-        "effectiveEdgePP": 4.2,
-        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET",
-        "convictionScore": 2,
+        "effectiveEdgePP": 7.2,
+        "convictionScore": 1,
         "convictionVerdict": "skip",
         "convictionLabel": null,
         "convictionFamilies": {
           "sharp_money": 0,
-          "model_stack": 1,
+          "model_stack": 0,
           "context": 1,
           "market": 0
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -3.49
+          "move_pp": -4.43
         }
       },
       {
@@ -1610,12 +1824,12 @@
             "name": "weather_signal",
             "score": -1.0,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Mittag-Anpfiff · SUI temperate",
+            "evidence": "🌡 37°C Mittag-Anpfiff · SUI temperate",
             "weight": 1.0,
             "weighted_score": -0.65,
             "metadata": {
-              "temp_max": 35.3,
-              "effective_temp": 35.3,
+              "temp_max": 36.9,
+              "effective_temp": 36.9,
               "kickoff_mod": 1.0,
               "home_climate": "hot",
               "away_climate": "temperate",
@@ -1640,7 +1854,7 @@
       },
       {
         "market": "Über 2.5 Tore",
-        "odds": 1.66,
+        "odds": 1.65,
         "modelOdds": 1.347,
         "conf": "medium",
         "verdict": "BET",
@@ -1651,13 +1865,13 @@
         "info": "Elo -244 · Form DLLDL·DWDLD · xG 0.7:2.9",
         "icon": "🛡️",
         "result": null,
-        "clvPP": -0.7,
+        "clvPP": -0.4,
         "dataQuality": "elo+form",
         "saferAltFor": "Über 3.5 Tore",
         "riskierAlt": {
           "market": "Über 3.5 Tore",
-          "odds": 3.0,
-          "edgePP": 16
+          "odds": 2.92,
+          "edgePP": 15
         },
         "signals": [
           {
@@ -1711,12 +1925,12 @@
             "name": "weather_signal",
             "score": -1.0,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Mittag-Anpfiff · SUI temperate",
+            "evidence": "🌡 37°C Mittag-Anpfiff · SUI temperate",
             "weight": 1.0,
             "weighted_score": -0.65,
             "metadata": {
-              "temp_max": 35.3,
-              "effective_temp": 35.3,
+              "temp_max": 36.9,
+              "effective_temp": 36.9,
               "kickoff_mod": 1.0,
               "home_climate": "hot",
               "away_climate": "temperate",
@@ -1743,23 +1957,23 @@
       },
       {
         "market": "Über 3.5 Tore",
-        "odds": 3.0,
+        "odds": 2.92,
         "modelOdds": 1.906,
         "conf": "high",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 16,
+        "edgePP": 15,
         "info": "Elo -244 · Form DLLDL·DWDLD · xG 0.7:2.9",
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "O/U Edge 16pp > 10pp Modell-Bias-Schwelle",
+        "downgradedReason": "O/U Edge 15pp > 10pp Modell-Bias-Schwelle",
         "boldAlt": {
           "market": "Über 2.5 Tore",
-          "odds": 1.66,
+          "odds": 1.65,
           "edgePP": 9
         },
         "signals": [
@@ -1814,12 +2028,12 @@
             "name": "weather_signal",
             "score": -1.0,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Mittag-Anpfiff · SUI temperate",
+            "evidence": "🌡 37°C Mittag-Anpfiff · SUI temperate",
             "weight": 1.0,
             "weighted_score": -0.65,
             "metadata": {
-              "temp_max": 35.3,
-              "effective_temp": 35.3,
+              "temp_max": 36.9,
+              "effective_temp": 36.9,
               "kickoff_mod": 1.0,
               "home_climate": "hot",
               "away_climate": "temperate",
@@ -1831,7 +2045,7 @@
         "signalAdjustmentPP": -1.53,
         "signalCountPos": 0,
         "signalCountNeg": 4,
-        "effectiveEdgePP": 14.5,
+        "effectiveEdgePP": 13.5,
         "convictionScore": 0,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -2011,18 +2225,18 @@
       },
       {
         "market": "Beide Teams treffen — Ja",
-        "odds": 1.98,
+        "odds": 1.97,
         "modelOdds": 1.612,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 1,
-        "mktSig": -1,
+        "mktSig": 0,
         "storySig": 0,
-        "edgePP": 8,
+        "edgePP": 7,
         "info": "Elo +137 · Form DWDLD·DDDWW · xG 2.3:1.1 · ✈️ 🇨🇭 4099km/3d (15%-xG) · ✈️ 🇧🇦 3622km/4d (15%-xG)",
         "icon": "🎯",
         "result": null,
-        "clvPP": -2.1,
+        "clvPP": -1.9,
         "dataQuality": "elo+form",
         "signals": [
           {
@@ -2041,7 +2255,8 @@
         "signalAdjustmentPP": 1.0,
         "signalCountPos": 1,
         "signalCountNeg": 0,
-        "effectiveEdgePP": 9.0,
+        "effectiveEdgePP": 8.0,
+        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET",
         "convictionScore": 1,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -2246,12 +2461,12 @@
             "name": "weather_signal",
             "score": -2.0,
             "confidence": 0.65,
-            "evidence": "🌡 37°C Mittag-Anpfiff · SUI temperate · BIH temperate",
+            "evidence": "🌡 35°C Mittag-Anpfiff · SUI temperate · BIH temperate",
             "weight": 1.0,
             "weighted_score": -0.52,
             "metadata": {
-              "temp_max": 36.7,
-              "effective_temp": 36.7,
+              "temp_max": 35.1,
+              "effective_temp": 35.1,
               "kickoff_mod": 1.0,
               "home_climate": "temperate",
               "away_climate": "temperate",
@@ -2329,12 +2544,12 @@
             "name": "weather_signal",
             "score": -2.0,
             "confidence": 0.65,
-            "evidence": "🌡 37°C Mittag-Anpfiff · SUI temperate · BIH temperate",
+            "evidence": "🌡 35°C Mittag-Anpfiff · SUI temperate · BIH temperate",
             "weight": 1.0,
             "weighted_score": -0.52,
             "metadata": {
-              "temp_max": 36.7,
-              "effective_temp": 36.7,
+              "temp_max": 35.1,
+              "effective_temp": 35.1,
               "kickoff_mod": 1.0,
               "home_climate": "temperate",
               "away_climate": "temperate",
@@ -2412,12 +2627,12 @@
             "name": "weather_signal",
             "score": -2.0,
             "confidence": 0.65,
-            "evidence": "🌡 37°C Mittag-Anpfiff · SUI temperate · BIH temperate",
+            "evidence": "🌡 35°C Mittag-Anpfiff · SUI temperate · BIH temperate",
             "weight": 1.0,
             "weighted_score": -0.52,
             "metadata": {
-              "temp_max": 36.7,
-              "effective_temp": 36.7,
+              "temp_max": 35.1,
+              "effective_temp": 35.1,
               "kickoff_mod": 1.0,
               "home_climate": "temperate",
               "away_climate": "temperate",
@@ -2445,14 +2660,14 @@
     "B-3-BIH-QAT": [
       {
         "market": "AH Auswärts +0.75",
-        "odds": 2.08,
+        "odds": 1.98,
         "modelOdds": 1.708,
         "conf": "medium",
         "verdict": "ABWÄGEN",
-        "modSig": 1,
+        "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 7,
+        "edgePP": 4,
         "info": "Elo +107 · Form DDDWW·DLLDL · xG 1.7:0.9 · ✈️ 🇧🇦 4303km/2d (15%-xG) · ✈️ 🇶🇦 686km/3d (9%-xG)",
         "icon": "🎯",
         "result": null,
@@ -2523,20 +2738,19 @@
         "signalAdjustmentPP": -0.92,
         "signalCountPos": 1,
         "signalCountNeg": 2,
-        "effectiveEdgePP": 6.1,
-        "downgradedReason": "Engine: nur 1 positive Signal(e), Mindest-Threshold 2 für BET",
-        "convictionScore": 1,
+        "effectiveEdgePP": 3.1,
+        "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
         "convictionFamilies": {
           "sharp_money": 0,
-          "model_stack": 0,
+          "model_stack": 1,
           "context": 1,
           "market": 0
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -2.47
+          "move_pp": -1.5
         }
       }
     ],
@@ -2723,7 +2937,7 @@
       },
       {
         "market": "DNB: Heimteam",
-        "odds": 4.57,
+        "odds": 4.5,
         "modelOdds": 2.768,
         "conf": "medium",
         "verdict": "ABWÄGEN",
@@ -2761,38 +2975,38 @@
           },
           {
             "name": "apif_predictions",
-            "score": 2.74,
+            "score": 2.71,
             "confidence": 0.65,
-            "evidence": "📊 API-Football sieht Heim um 16.6pp höher als Pinnacle → bestätigt Pick",
+            "evidence": "📊 API-Football sieht Heim um 16.4pp höher als Pinnacle → bestätigt Pick",
             "weight": 1.0,
-            "weighted_score": 1.78,
+            "weighted_score": 1.76,
             "metadata": {
               "outcome": "home",
               "apif_p": 0.33,
-              "sharp_p": 0.1641,
-              "diff_pp": 16.59,
+              "sharp_p": 0.1657,
+              "diff_pp": 16.43,
               "advice": "No predictions available"
             }
           },
           {
             "name": "weather_signal",
-            "score": 1.38,
+            "score": 1.24,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Abend-Anpfiff · Auswärts SCO (cold) leidet",
+            "evidence": "🌡 34°C Abend-Anpfiff · Auswärts SCO (cold) leidet",
             "weight": 1.0,
-            "weighted_score": 0.9,
+            "weighted_score": 0.81,
             "metadata": {
-              "temp_max": 35.3,
-              "effective_temp": 35.3,
+              "temp_max": 34.5,
+              "effective_temp": 34.5,
               "kickoff_mod": 0.55,
               "home_climate": "hot",
               "away_climate": "cold",
-              "heat_intensity": 0.55,
+              "heat_intensity": 0.5,
               "side": "home"
             }
           }
         ],
-        "signalAdjustmentPP": 0.64,
+        "signalAdjustmentPP": 0.59,
         "signalCountPos": 2,
         "signalCountNeg": 1,
         "effectiveEdgePP": 12.6,
@@ -2807,7 +3021,7 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": 1.56
+          "move_pp": 1.67
         }
       },
       {
@@ -2828,7 +3042,7 @@
         "dataQuality": "elo+form",
         "riskierAlt": {
           "market": "Heimsieg",
-          "odds": 5.87,
+          "odds": 5.83,
           "edgePP": 10
         },
         "signals": [
@@ -2851,23 +3065,23 @@
           },
           {
             "name": "weather_signal",
-            "score": 1.38,
+            "score": 1.24,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Abend-Anpfiff · Auswärts SCO (cold) leidet",
+            "evidence": "🌡 34°C Abend-Anpfiff · Auswärts SCO (cold) leidet",
             "weight": 1.0,
-            "weighted_score": 0.9,
+            "weighted_score": 0.81,
             "metadata": {
-              "temp_max": 35.3,
-              "effective_temp": 35.3,
+              "temp_max": 34.5,
+              "effective_temp": 34.5,
               "kickoff_mod": 0.55,
               "home_climate": "hot",
               "away_climate": "cold",
-              "heat_intensity": 0.55,
+              "heat_intensity": 0.5,
               "side": "home"
             }
           }
         ],
-        "signalAdjustmentPP": -0.27,
+        "signalAdjustmentPP": -0.33,
         "signalCountPos": 1,
         "signalCountNeg": 1,
         "effectiveEdgePP": 1.9,
@@ -2882,12 +3096,12 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": 1.56
+          "move_pp": 1.67
         }
       },
       {
         "market": "Heimsieg",
-        "odds": 5.87,
+        "odds": 5.83,
         "modelOdds": 3.443,
         "conf": "medium",
         "verdict": "ABWÄGEN",
@@ -2898,7 +3112,7 @@
         "info": "Elo -110 · Form LWDLW·WWLLW · xG 1.4:2.0",
         "icon": "🎯",
         "result": null,
-        "clvPP": 1.6,
+        "clvPP": 1.7,
         "dataQuality": "elo+form",
         "boldAlt": {
           "market": "Doppelte Chance — 1X",
@@ -2925,38 +3139,38 @@
           },
           {
             "name": "apif_predictions",
-            "score": 2.74,
+            "score": 2.71,
             "confidence": 0.65,
-            "evidence": "📊 API-Football sieht Heim um 16.6pp höher als Pinnacle → bestätigt Pick",
+            "evidence": "📊 API-Football sieht Heim um 16.4pp höher als Pinnacle → bestätigt Pick",
             "weight": 1.0,
-            "weighted_score": 1.78,
+            "weighted_score": 1.76,
             "metadata": {
               "outcome": "home",
               "apif_p": 0.33,
-              "sharp_p": 0.1641,
-              "diff_pp": 16.59,
+              "sharp_p": 0.1657,
+              "diff_pp": 16.43,
               "advice": "No predictions available"
             }
           },
           {
             "name": "weather_signal",
-            "score": 1.38,
+            "score": 1.24,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Abend-Anpfiff · Auswärts SCO (cold) leidet",
+            "evidence": "🌡 34°C Abend-Anpfiff · Auswärts SCO (cold) leidet",
             "weight": 1.0,
-            "weighted_score": 0.9,
+            "weighted_score": 0.81,
             "metadata": {
-              "temp_max": 35.3,
-              "effective_temp": 35.3,
+              "temp_max": 34.5,
+              "effective_temp": 34.5,
               "kickoff_mod": 0.55,
               "home_climate": "hot",
               "away_climate": "cold",
-              "heat_intensity": 0.55,
+              "heat_intensity": 0.5,
               "side": "home"
             }
           }
         ],
-        "signalAdjustmentPP": 0.64,
+        "signalAdjustmentPP": 0.59,
         "signalCountPos": 2,
         "signalCountNeg": 1,
         "effectiveEdgePP": 10.6,
@@ -2971,7 +3185,7 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": 1.56
+          "move_pp": 1.67
         }
       },
       {
@@ -3045,26 +3259,26 @@
           },
           {
             "name": "weather_signal",
-            "score": -1.38,
+            "score": -1.24,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Abend-Anpfiff · SCO cold",
+            "evidence": "🌡 34°C Abend-Anpfiff · SCO cold",
             "weight": 1.0,
-            "weighted_score": -0.9,
+            "weighted_score": -0.81,
             "metadata": {
-              "temp_max": 35.3,
-              "effective_temp": 35.3,
+              "temp_max": 34.5,
+              "effective_temp": 34.5,
               "kickoff_mod": 0.55,
               "home_climate": "hot",
               "away_climate": "cold",
-              "heat_intensity": 0.55,
+              "heat_intensity": 0.5,
               "side": "over"
             }
           }
         ],
-        "signalAdjustmentPP": 2.31,
+        "signalAdjustmentPP": 2.36,
         "signalCountPos": 2,
         "signalCountNeg": 2,
-        "effectiveEdgePP": 7.3,
+        "effectiveEdgePP": 7.4,
         "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -3145,26 +3359,26 @@
           },
           {
             "name": "weather_signal",
-            "score": -1.38,
+            "score": -1.24,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Abend-Anpfiff · SCO cold",
+            "evidence": "🌡 34°C Abend-Anpfiff · SCO cold",
             "weight": 1.0,
-            "weighted_score": -0.9,
+            "weighted_score": -0.81,
             "metadata": {
-              "temp_max": 35.3,
-              "effective_temp": 35.3,
+              "temp_max": 34.5,
+              "effective_temp": 34.5,
               "kickoff_mod": 0.55,
               "home_climate": "hot",
               "away_climate": "cold",
-              "heat_intensity": 0.55,
+              "heat_intensity": 0.5,
               "side": "over"
             }
           }
         ],
-        "signalAdjustmentPP": -1.66,
+        "signalAdjustmentPP": -1.62,
         "signalCountPos": 0,
         "signalCountNeg": 4,
-        "effectiveEdgePP": 10.3,
+        "effectiveEdgePP": 10.4,
         "convictionScore": 0,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -3506,24 +3720,24 @@
           },
           {
             "name": "weather_signal",
-            "score": -0.8,
+            "score": -0.88,
             "confidence": 0.65,
             "evidence": "🌡 32°C Nachmittag-Anpfiff · SCO cold",
             "weight": 1.0,
-            "weighted_score": -0.21,
+            "weighted_score": -0.23,
             "metadata": {
-              "temp_max": 32.0,
-              "effective_temp": 32.0,
+              "temp_max": 32.2,
+              "effective_temp": 32.2,
               "kickoff_mod": 0.8,
               "home_climate": "hot",
               "away_climate": "cold",
-              "heat_intensity": 0.32,
+              "heat_intensity": 0.35,
               "side": "over"
             },
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.38,
+        "signalAdjustmentPP": -1.39,
         "signalCountPos": 0,
         "signalCountNeg": 4,
         "effectiveEdgePP": 7.6,
@@ -3727,23 +3941,23 @@
           },
           {
             "name": "weather_signal",
-            "score": -0.7,
+            "score": -0.6,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Abend-Anpfiff · AUS temperate · TUR temperate",
+            "evidence": "🌡 34°C Abend-Anpfiff · AUS temperate · TUR temperate",
             "weight": 1.0,
-            "weighted_score": -0.45,
+            "weighted_score": -0.39,
             "metadata": {
-              "temp_max": 35.4,
-              "effective_temp": 35.4,
+              "temp_max": 34.3,
+              "effective_temp": 34.3,
               "kickoff_mod": 0.35,
               "home_climate": "temperate",
               "away_climate": "temperate",
-              "heat_intensity": 0.35,
+              "heat_intensity": 0.3,
               "side": "over"
             }
           }
         ],
-        "signalAdjustmentPP": 2.7,
+        "signalAdjustmentPP": 2.74,
         "signalCountPos": 2,
         "signalCountNeg": 2,
         "effectiveEdgePP": 11.7,
@@ -3831,26 +4045,26 @@
           },
           {
             "name": "weather_signal",
-            "score": -0.7,
+            "score": -0.6,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Abend-Anpfiff · AUS temperate · TUR temperate",
+            "evidence": "🌡 34°C Abend-Anpfiff · AUS temperate · TUR temperate",
             "weight": 1.0,
-            "weighted_score": -0.45,
+            "weighted_score": -0.39,
             "metadata": {
-              "temp_max": 35.4,
-              "effective_temp": 35.4,
+              "temp_max": 34.3,
+              "effective_temp": 34.3,
               "kickoff_mod": 0.35,
               "home_climate": "temperate",
               "away_climate": "temperate",
-              "heat_intensity": 0.35,
+              "heat_intensity": 0.3,
               "side": "over"
             }
           }
         ],
-        "signalAdjustmentPP": 0.83,
+        "signalAdjustmentPP": 0.86,
         "signalCountPos": 2,
         "signalCountNeg": 2,
-        "effectiveEdgePP": 13.8,
+        "effectiveEdgePP": 13.9,
         "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -3931,26 +4145,26 @@
           },
           {
             "name": "weather_signal",
-            "score": -0.7,
+            "score": -0.6,
             "confidence": 0.65,
-            "evidence": "🌡 35°C Abend-Anpfiff · AUS temperate · TUR temperate",
+            "evidence": "🌡 34°C Abend-Anpfiff · AUS temperate · TUR temperate",
             "weight": 1.0,
-            "weighted_score": -0.45,
+            "weighted_score": -0.39,
             "metadata": {
-              "temp_max": 35.4,
-              "effective_temp": 35.4,
+              "temp_max": 34.3,
+              "effective_temp": 34.3,
               "kickoff_mod": 0.35,
               "home_climate": "temperate",
               "away_climate": "temperate",
-              "heat_intensity": 0.35,
+              "heat_intensity": 0.3,
               "side": "over"
             }
           }
         ],
-        "signalAdjustmentPP": -1.16,
+        "signalAdjustmentPP": -1.13,
         "signalCountPos": 0,
         "signalCountNeg": 4,
-        "effectiveEdgePP": 14.8,
+        "effectiveEdgePP": 14.9,
         "convictionScore": 0,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -5003,14 +5217,14 @@
     "D-3-PRY-AUS": [
       {
         "market": "AH Auswärts +0.5",
-        "odds": 1.65,
+        "odds": 1.71,
         "modelOdds": 1.36,
-        "conf": "medium",
+        "conf": "high",
         "verdict": "BET",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 8,
+        "edgePP": 10,
         "info": "Elo -87 · Form WLWWL·DLWWL · xG 0.9:1.2 · ✈️ 🇵🇾 4303km/3d (15%-xG) · ✈️ 🇦🇺 505km/3d (9%-xG)",
         "icon": "🎯",
         "result": null,
@@ -5063,7 +5277,7 @@
         "signalAdjustmentPP": 0.98,
         "signalCountPos": 2,
         "signalCountNeg": 0,
-        "effectiveEdgePP": 9.0,
+        "effectiveEdgePP": 11.0,
         "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -6306,7 +6520,7 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -1.82
+          "move_pp": -1.68
         }
       },
       {
@@ -6379,23 +6593,23 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.72,
+            "score": 0.84,
             "confidence": 0.65,
             "evidence": "🌡 32°C Mittag-Anpfiff · NED temperate · JPN temperate",
             "weight": 1.0,
-            "weighted_score": 0.47,
+            "weighted_score": 0.55,
             "metadata": {
-              "temp_max": 31.8,
-              "effective_temp": 31.8,
+              "temp_max": 32.1,
+              "effective_temp": 32.1,
               "kickoff_mod": 1.0,
               "home_climate": "temperate",
               "away_climate": "temperate",
-              "heat_intensity": 0.36,
+              "heat_intensity": 0.42,
               "side": "under"
             }
           }
         ],
-        "signalAdjustmentPP": -2.41,
+        "signalAdjustmentPP": -2.37,
         "signalCountPos": 2,
         "signalCountNeg": 2,
         "effectiveEdgePP": 5.6,
@@ -6480,23 +6694,23 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.72,
+            "score": 0.84,
             "confidence": 0.65,
             "evidence": "🌡 32°C Mittag-Anpfiff · NED temperate · JPN temperate",
             "weight": 1.0,
-            "weighted_score": 0.47,
+            "weighted_score": 0.55,
             "metadata": {
-              "temp_max": 31.8,
-              "effective_temp": 31.8,
+              "temp_max": 32.1,
+              "effective_temp": 32.1,
               "kickoff_mod": 1.0,
               "home_climate": "temperate",
               "away_climate": "temperate",
-              "heat_intensity": 0.36,
+              "heat_intensity": 0.42,
               "side": "under"
             }
           }
         ],
-        "signalAdjustmentPP": -0.42,
+        "signalAdjustmentPP": -0.38,
         "signalCountPos": 2,
         "signalCountNeg": 2,
         "effectiveEdgePP": 7.6,
@@ -6577,23 +6791,23 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.72,
+            "score": 0.84,
             "confidence": 0.65,
             "evidence": "🌡 32°C Mittag-Anpfiff · NED temperate · JPN temperate",
             "weight": 1.0,
-            "weighted_score": 0.47,
+            "weighted_score": 0.55,
             "metadata": {
-              "temp_max": 31.8,
-              "effective_temp": 31.8,
+              "temp_max": 32.1,
+              "effective_temp": 32.1,
               "kickoff_mod": 1.0,
               "home_climate": "temperate",
               "away_climate": "temperate",
-              "heat_intensity": 0.36,
+              "heat_intensity": 0.42,
               "side": "under"
             }
           }
         ],
-        "signalAdjustmentPP": 1.56,
+        "signalAdjustmentPP": 1.61,
         "signalCountPos": 4,
         "signalCountNeg": 0,
         "effectiveEdgePP": 6.6,
@@ -6636,12 +6850,12 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -1.52
+          "move_pp": -1.47
         }
       },
       {
         "market": "Auswärtssieg",
-        "odds": 4.43,
+        "odds": 4.42,
         "modelOdds": 2.721,
         "conf": "high",
         "verdict": "BET",
@@ -6662,41 +6876,41 @@
         "signals": [
           {
             "name": "apif_predictions",
-            "score": 1.93,
+            "score": 1.92,
             "confidence": 0.57,
             "evidence": "📊 API-Football sieht Auswärts um 11.2pp höher als Pinnacle → bestätigt Pick",
             "weight": 1.0,
-            "weighted_score": 1.1,
+            "weighted_score": 1.09,
             "metadata": {
               "outcome": "away",
               "apif_p": 0.33,
-              "sharp_p": 0.2183,
-              "diff_pp": 11.17,
+              "sharp_p": 0.2185,
+              "diff_pp": 11.15,
               "advice": "No predictions available"
             }
           },
           {
             "name": "weather_signal",
-            "score": 0.85,
+            "score": 0.41,
             "confidence": 0.65,
-            "evidence": "🌡 33°C Abend-Anpfiff · Heim SWE (cold) leidet",
+            "evidence": "🌡 32°C Abend-Anpfiff · Heim SWE (cold) leidet",
             "weight": 1.0,
-            "weighted_score": 0.55,
+            "weighted_score": 0.27,
             "metadata": {
-              "temp_max": 33.1,
-              "effective_temp": 33.1,
+              "temp_max": 31.5,
+              "effective_temp": 31.5,
               "kickoff_mod": 0.55,
               "home_climate": "cold",
               "away_climate": "hot",
-              "heat_intensity": 0.34,
+              "heat_intensity": 0.17,
               "side": "away"
             }
           }
         ],
-        "signalAdjustmentPP": 1.35,
+        "signalAdjustmentPP": 1.11,
         "signalCountPos": 2,
         "signalCountNeg": 0,
-        "effectiveEdgePP": 13.3,
+        "effectiveEdgePP": 13.1,
         "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -6708,14 +6922,14 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -1.52
+          "move_pp": -1.47
         },
         "pickTriggerReason": "Edge-getrieben",
         "modelHallucinationWarning": "Edge gegen Pinnacle vorhanden, aber Conviction nur 2/10 — Signale stützen Pick wenig"
       },
       {
         "market": "DNB: Auswärtsteam",
-        "odds": 3.22,
+        "odds": 3.24,
         "modelOdds": 2.101,
         "conf": "high",
         "verdict": "ABWÄGEN",
@@ -6737,41 +6951,41 @@
         "signals": [
           {
             "name": "apif_predictions",
-            "score": 1.93,
+            "score": 1.92,
             "confidence": 0.57,
             "evidence": "📊 API-Football sieht Auswärts um 11.2pp höher als Pinnacle → bestätigt Pick",
             "weight": 1.0,
-            "weighted_score": 1.1,
+            "weighted_score": 1.09,
             "metadata": {
               "outcome": "away",
               "apif_p": 0.33,
-              "sharp_p": 0.2183,
-              "diff_pp": 11.17,
+              "sharp_p": 0.2185,
+              "diff_pp": 11.15,
               "advice": "No predictions available"
             }
           },
           {
             "name": "weather_signal",
-            "score": 0.85,
+            "score": 0.41,
             "confidence": 0.65,
-            "evidence": "🌡 33°C Abend-Anpfiff · Heim SWE (cold) leidet",
+            "evidence": "🌡 32°C Abend-Anpfiff · Heim SWE (cold) leidet",
             "weight": 1.0,
-            "weighted_score": 0.55,
+            "weighted_score": 0.27,
             "metadata": {
-              "temp_max": 33.1,
-              "effective_temp": 33.1,
+              "temp_max": 31.5,
+              "effective_temp": 31.5,
               "kickoff_mod": 0.55,
               "home_climate": "cold",
               "away_climate": "hot",
-              "heat_intensity": 0.34,
+              "heat_intensity": 0.17,
               "side": "away"
             }
           }
         ],
-        "signalAdjustmentPP": 1.35,
+        "signalAdjustmentPP": 1.11,
         "signalCountPos": 2,
         "signalCountNeg": 0,
-        "effectiveEdgePP": 15.3,
+        "effectiveEdgePP": 15.1,
         "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -6783,7 +6997,7 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -1.52
+          "move_pp": -1.47
         }
       },
       {
@@ -6804,32 +7018,32 @@
         "dataQuality": "elo+form",
         "riskierAlt": {
           "market": "Auswärtssieg",
-          "odds": 4.43,
+          "odds": 4.42,
           "edgePP": 12
         },
         "signals": [
           {
             "name": "weather_signal",
-            "score": 0.85,
+            "score": 0.41,
             "confidence": 0.65,
-            "evidence": "🌡 33°C Abend-Anpfiff · Heim SWE (cold) leidet",
+            "evidence": "🌡 32°C Abend-Anpfiff · Heim SWE (cold) leidet",
             "weight": 1.0,
-            "weighted_score": 0.55,
+            "weighted_score": 0.27,
             "metadata": {
-              "temp_max": 33.1,
-              "effective_temp": 33.1,
+              "temp_max": 31.5,
+              "effective_temp": 31.5,
               "kickoff_mod": 0.55,
               "home_climate": "cold",
               "away_climate": "hot",
-              "heat_intensity": 0.34,
+              "heat_intensity": 0.17,
               "side": "away"
             }
           }
         ],
-        "signalAdjustmentPP": 0.85,
+        "signalAdjustmentPP": 0.42,
         "signalCountPos": 1,
         "signalCountNeg": 0,
-        "effectiveEdgePP": 3.0,
+        "effectiveEdgePP": 2.5,
         "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -6841,7 +7055,7 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -1.52
+          "move_pp": -1.47
         }
       }
     ],
@@ -7085,13 +7299,14 @@
             "confidence": 0.6,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Auswärts 1971km/3d → Über-Bias",
             "weight": 1.0,
-            "weighted_score": -0.6,
+            "weighted_score": -0.24,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.9,
               "total_penalty": 0.1,
               "pick_side": "Über"
-            }
+            },
+            "correlation_discount_applied": 0.4
           },
           {
             "name": "form_trend",
@@ -7140,27 +7355,26 @@
           },
           {
             "name": "weather_signal",
-            "score": -0.81,
+            "score": -1.04,
             "confidence": 0.65,
-            "evidence": "🌡 32°C Abend-Anpfiff · NED temperate · SWE cold",
+            "evidence": "🌡 33°C Abend-Anpfiff · NED temperate · SWE cold",
             "weight": 1.0,
-            "weighted_score": -0.21,
+            "weighted_score": -0.68,
             "metadata": {
-              "temp_max": 32.1,
-              "effective_temp": 32.1,
+              "temp_max": 32.7,
+              "effective_temp": 32.7,
               "kickoff_mod": 0.55,
               "home_climate": "temperate",
               "away_climate": "cold",
-              "heat_intensity": 0.23,
+              "heat_intensity": 0.3,
               "side": "over"
-            },
-            "correlation_discount_applied": 0.4
+            }
           }
         ],
-        "signalAdjustmentPP": 2.46,
+        "signalAdjustmentPP": 2.38,
         "signalCountPos": 3,
         "signalCountNeg": 2,
-        "effectiveEdgePP": 13.5,
+        "effectiveEdgePP": 13.4,
         "convictionScore": 3,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -8185,28 +8399,11 @@
               "diff_pp": 12.63,
               "advice": "No predictions available"
             }
-          },
-          {
-            "name": "weather_signal",
-            "score": -0.5,
-            "confidence": 0.65,
-            "evidence": "🌡 33°C Nachmittag-Anpfiff · Auswärts NZL (temperate) leidet",
-            "weight": 1.0,
-            "weighted_score": -0.33,
-            "metadata": {
-              "temp_max": 33.1,
-              "effective_temp": 33.1,
-              "kickoff_mod": 0.8,
-              "home_climate": "hot",
-              "away_climate": "temperate",
-              "heat_intensity": 0.5,
-              "side": "away"
-            }
           }
         ],
-        "signalAdjustmentPP": -0.6,
+        "signalAdjustmentPP": -0.64,
         "signalCountPos": 1,
-        "signalCountNeg": 3,
+        "signalCountNeg": 2,
         "effectiveEdgePP": 12.4,
         "convictionScore": 1,
         "convictionVerdict": "skip",
@@ -8293,28 +8490,11 @@
               "diff_pp": 12.63,
               "advice": "No predictions available"
             }
-          },
-          {
-            "name": "weather_signal",
-            "score": -0.5,
-            "confidence": 0.65,
-            "evidence": "🌡 33°C Nachmittag-Anpfiff · Auswärts NZL (temperate) leidet",
-            "weight": 1.0,
-            "weighted_score": -0.33,
-            "metadata": {
-              "temp_max": 33.1,
-              "effective_temp": 33.1,
-              "kickoff_mod": 0.8,
-              "home_climate": "hot",
-              "away_climate": "temperate",
-              "heat_intensity": 0.5,
-              "side": "away"
-            }
           }
         ],
-        "signalAdjustmentPP": -0.6,
+        "signalAdjustmentPP": -0.64,
         "signalCountPos": 1,
-        "signalCountNeg": 3,
+        "signalCountNeg": 2,
         "effectiveEdgePP": 14.4,
         "convictionScore": 1,
         "convictionVerdict": "skip",
@@ -8386,29 +8566,12 @@
               "pick_side": "away"
             },
             "correlation_discount_applied": 0.4
-          },
-          {
-            "name": "weather_signal",
-            "score": -0.5,
-            "confidence": 0.65,
-            "evidence": "🌡 33°C Nachmittag-Anpfiff · Auswärts NZL (temperate) leidet",
-            "weight": 1.0,
-            "weighted_score": -0.33,
-            "metadata": {
-              "temp_max": 33.1,
-              "effective_temp": 33.1,
-              "kickoff_mod": 0.8,
-              "home_climate": "hot",
-              "away_climate": "temperate",
-              "heat_intensity": 0.5,
-              "side": "away"
-            }
           }
         ],
-        "signalAdjustmentPP": -1.52,
+        "signalAdjustmentPP": -2.11,
         "signalCountPos": 0,
-        "signalCountNeg": 3,
-        "effectiveEdgePP": -0.3,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": -0.9,
         "convictionScore": 1,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -8992,8 +9155,8 @@
         "dataQuality": "elo+form",
         "boldAlt": {
           "market": "Doppelte Chance — 1X",
-          "odds": 2.8,
-          "edgePP": 0.4
+          "odds": 2.85,
+          "edgePP": 1.1
         },
         "signals": [
           {
@@ -9032,14 +9195,14 @@
       },
       {
         "market": "Doppelte Chance — 1X",
-        "odds": 2.8,
+        "odds": 2.85,
         "modelOdds": 2.581,
         "verdict": "ABWÄGEN",
-        "edgePP": 0.4,
+        "edgePP": 1.1,
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "info": "Synthetisch als sicherere Alternative zu „DNB: Heimteam\" — eigene Edge +0.4pp",
+        "info": "Synthetisch als sicherere Alternative zu „DNB: Heimteam\" — eigene Edge +1.1pp",
         "icon": "🛡️",
         "synthetic": true,
         "saferAltFor": "DNB: Heimteam",
@@ -9426,24 +9589,24 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.35,
+            "score": 0.32,
             "confidence": 0.65,
             "evidence": "🌡 32°C Nachmittag-Anpfiff · URU temperate",
             "weight": 1.0,
-            "weighted_score": 0.09,
+            "weighted_score": 0.08,
             "metadata": {
-              "temp_max": 32.2,
-              "effective_temp": 32.2,
+              "temp_max": 32.0,
+              "effective_temp": 32.0,
               "kickoff_mod": 0.8,
               "home_climate": "temperate",
               "away_climate": "hot",
-              "heat_intensity": 0.35,
+              "heat_intensity": 0.32,
               "side": "under"
             },
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.13,
+        "signalAdjustmentPP": -1.14,
         "signalCountPos": 2,
         "signalCountNeg": 2,
         "effectiveEdgePP": 16.9,
@@ -9496,24 +9659,24 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.35,
+            "score": 0.32,
             "confidence": 0.65,
             "evidence": "🌡 32°C Nachmittag-Anpfiff · URU temperate",
             "weight": 1.0,
-            "weighted_score": 0.09,
+            "weighted_score": 0.08,
             "metadata": {
-              "temp_max": 32.2,
-              "effective_temp": 32.2,
+              "temp_max": 32.0,
+              "effective_temp": 32.0,
               "kickoff_mod": 0.8,
               "home_climate": "temperate",
               "away_climate": "hot",
-              "heat_intensity": 0.35,
+              "heat_intensity": 0.32,
               "side": "under"
             },
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 0.66,
+        "signalAdjustmentPP": 0.65,
         "signalCountPos": 2,
         "signalCountNeg": 0,
         "effectiveEdgePP": 14.7,
@@ -9589,18 +9752,18 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.35,
+            "score": 0.32,
             "confidence": 0.65,
             "evidence": "🌡 32°C Nachmittag-Anpfiff · URU temperate",
             "weight": 1.0,
-            "weighted_score": 0.09,
+            "weighted_score": 0.08,
             "metadata": {
-              "temp_max": 32.2,
-              "effective_temp": 32.2,
+              "temp_max": 32.0,
+              "effective_temp": 32.0,
               "kickoff_mod": 0.8,
               "home_climate": "temperate",
               "away_climate": "hot",
-              "heat_intensity": 0.35,
+              "heat_intensity": 0.32,
               "side": "under"
             },
             "correlation_discount_applied": 0.4
@@ -9625,20 +9788,19 @@
     "H-3-CPV-SAU": [
       {
         "market": "AH Heim −0.5",
-        "odds": 2.51,
+        "odds": 2.47,
         "modelOdds": 1.783,
         "conf": "high",
-        "verdict": "ABWÄGEN",
+        "verdict": "BET",
         "modSig": 1,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 13,
+        "edgePP": 12,
         "info": "Elo -68 · Form WWLWD·DWLLL · xG 1.4:0.7 · ✈️ 🇨🇻 2074km/3d/+2198m (13%-xG) · ✈️ 🇸🇦 2072km/3d/+2171m (13%-xG)",
         "icon": "🎯",
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 13pp > 12pp Modell-Bias-Schwelle",
         "signals": [
           {
             "name": "form_trend",
@@ -9679,7 +9841,7 @@
         "signalAdjustmentPP": 2.28,
         "signalCountPos": 2,
         "signalCountNeg": 0,
-        "effectiveEdgePP": 15.3,
+        "effectiveEdgePP": 14.3,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -9695,16 +9857,17 @@
           "pinn_move_pp": 9.1,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 422.2,
+          "hours_since_open": 425.7,
           "open_pinn_odds": 3.22,
           "current_pinn_odds": 2.49,
           "move_age_decay": 0.5,
-          "move_age_days": 17.6
+          "move_age_days": 17.7
         },
         "openingMovement": {
           "in_pick_direction": true,
           "move_pp": 9.1
-        }
+        },
+        "pickTriggerReason": "Edge-getrieben"
       },
       {
         "market": "DNB: Auswärtsteam",
@@ -9721,7 +9884,7 @@
         "result": null,
         "clvPP": 0.0,
         "dataQuality": "elo+form",
-        "downgradedReason": "Modell-Inkonsistenz: Elo schätzt P(no_loss)=71%, Skellam (AH +0.5) sagt 46% — Diff +25pp ≥ 8pp Schwelle",
+        "downgradedReason": "Konflikt mit 'AH Heim −0.5' (unvereinbare Direction)",
         "trackingExcluded": true,
         "excludeReason": "Cross-Market-Konflikt mit „AH Heim −0.5\"",
         "signals": [
@@ -10476,26 +10639,26 @@
           },
           {
             "name": "weather_signal",
-            "score": 1.8,
+            "score": 1.76,
             "confidence": 0.65,
             "evidence": "🌡 34°C Nachmittag-Anpfiff · NOR cold",
             "weight": 1.0,
-            "weighted_score": 1.17,
+            "weighted_score": 1.14,
             "metadata": {
-              "temp_max": 34.5,
-              "effective_temp": 34.5,
+              "temp_max": 34.4,
+              "effective_temp": 34.4,
               "kickoff_mod": 0.8,
               "home_climate": "hot",
               "away_climate": "cold",
-              "heat_intensity": 0.72,
+              "heat_intensity": 0.7,
               "side": "under"
             }
           }
         ],
-        "signalAdjustmentPP": -2.05,
+        "signalAdjustmentPP": -2.06,
         "signalCountPos": 2,
         "signalCountNeg": 2,
-        "effectiveEdgePP": 4.0,
+        "effectiveEdgePP": 3.9,
         "convictionScore": 3,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -10582,23 +10745,23 @@
           },
           {
             "name": "weather_signal",
-            "score": 1.8,
+            "score": 1.76,
             "confidence": 0.65,
             "evidence": "🌡 34°C Nachmittag-Anpfiff · NOR cold",
             "weight": 1.0,
-            "weighted_score": 1.17,
+            "weighted_score": 1.14,
             "metadata": {
-              "temp_max": 34.5,
-              "effective_temp": 34.5,
+              "temp_max": 34.4,
+              "effective_temp": 34.4,
               "kickoff_mod": 0.8,
               "home_climate": "hot",
               "away_climate": "cold",
-              "heat_intensity": 0.72,
+              "heat_intensity": 0.7,
               "side": "under"
             }
           }
         ],
-        "signalAdjustmentPP": -0.06,
+        "signalAdjustmentPP": -0.08,
         "signalCountPos": 2,
         "signalCountNeg": 2,
         "effectiveEdgePP": 10.9,
@@ -10683,23 +10846,23 @@
           },
           {
             "name": "weather_signal",
-            "score": 1.8,
+            "score": 1.76,
             "confidence": 0.65,
             "evidence": "🌡 34°C Nachmittag-Anpfiff · NOR cold",
             "weight": 1.0,
-            "weighted_score": 1.17,
+            "weighted_score": 1.14,
             "metadata": {
-              "temp_max": 34.5,
-              "effective_temp": 34.5,
+              "temp_max": 34.4,
+              "effective_temp": 34.4,
               "kickoff_mod": 0.8,
               "home_climate": "hot",
               "away_climate": "cold",
-              "heat_intensity": 0.72,
+              "heat_intensity": 0.7,
               "side": "under"
             }
           }
         ],
-        "signalAdjustmentPP": 1.93,
+        "signalAdjustmentPP": 1.91,
         "signalCountPos": 4,
         "signalCountNeg": 0,
         "effectiveEdgePP": 11.9,
@@ -10810,24 +10973,24 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.69,
+            "score": 0.62,
             "confidence": 0.65,
             "evidence": "🌡 34°C Nachmittag-Anpfiff · FRA temperate",
             "weight": 1.0,
-            "weighted_score": 0.18,
+            "weighted_score": 0.16,
             "metadata": {
-              "temp_max": 34.3,
-              "effective_temp": 34.3,
+              "temp_max": 33.9,
+              "effective_temp": 33.9,
               "kickoff_mod": 0.8,
               "home_climate": "temperate",
               "away_climate": "hot",
-              "heat_intensity": 0.69,
+              "heat_intensity": 0.62,
               "side": "under"
             },
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.79,
+        "signalAdjustmentPP": -1.8,
         "signalCountPos": 2,
         "signalCountNeg": 2,
         "effectiveEdgePP": 16.2,
@@ -10910,24 +11073,24 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.69,
+            "score": 0.62,
             "confidence": 0.65,
             "evidence": "🌡 34°C Nachmittag-Anpfiff · FRA temperate",
             "weight": 1.0,
-            "weighted_score": 0.18,
+            "weighted_score": 0.16,
             "metadata": {
-              "temp_max": 34.3,
-              "effective_temp": 34.3,
+              "temp_max": 33.9,
+              "effective_temp": 33.9,
               "kickoff_mod": 0.8,
               "home_climate": "temperate",
               "away_climate": "hot",
-              "heat_intensity": 0.69,
+              "heat_intensity": 0.62,
               "side": "under"
             },
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 2.21,
+        "signalAdjustmentPP": 2.2,
         "signalCountPos": 4,
         "signalCountNeg": 0,
         "effectiveEdgePP": 18.2,
@@ -12800,59 +12963,6 @@
     "J-3-ARG-JOR": [],
     "J-3-DZA-AUT": [
       {
-        "market": "AH Heim −0.5",
-        "odds": 3.63,
-        "modelOdds": 2.267,
-        "conf": "high",
-        "verdict": "ABWÄGEN",
-        "modSig": 1,
-        "mktSig": 0,
-        "storySig": 0,
-        "edgePP": 14,
-        "info": "Elo -100 · Form WWDWL·WWWDW · xG 1.1:0.7 · ✈️ 🇩🇿 1053km/3d (9%-xG) · ✈️ 🇦🇹 2229km/3d (9%-xG)",
-        "icon": "🎯",
-        "result": null,
-        "clvPP": 0.0,
-        "dataQuality": "elo+form",
-        "downgradedReason": "AH Edge 14pp > 12pp Modell-Bias-Schwelle",
-        "signals": [
-          {
-            "name": "form_trend",
-            "score": 1.1,
-            "confidence": 0.85,
-            "evidence": "📈 Form letzte 15: Heim 2.4:0.4 vs Auswärts 2.2:0.6",
-            "weight": 1.0,
-            "weighted_score": 0.94,
-            "metadata": {
-              "home_scored": 2.4,
-              "home_conceded": 0.4,
-              "away_scored": 2.2,
-              "away_conceded": 0.6,
-              "home_games": 15,
-              "away_games": 15,
-              "pick_side": "home"
-            }
-          }
-        ],
-        "signalAdjustmentPP": 1.11,
-        "signalCountPos": 1,
-        "signalCountNeg": 0,
-        "effectiveEdgePP": 15.1,
-        "convictionScore": 1,
-        "convictionVerdict": "skip",
-        "convictionLabel": null,
-        "convictionFamilies": {
-          "sharp_money": 0,
-          "model_stack": 1,
-          "context": 0,
-          "market": 0
-        },
-        "openingMovement": {
-          "in_pick_direction": false,
-          "move_pp": -3.75
-        }
-      },
-      {
         "market": "Unter 1.5 Tore",
         "odds": 3.25,
         "modelOdds": 2.074,
@@ -12919,24 +13029,24 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.55,
+            "score": 0.44,
             "confidence": 0.65,
-            "evidence": "🌡 38°C Abend-Anpfiff · AUT temperate",
+            "evidence": "🌡 34°C Abend-Anpfiff · AUT temperate",
             "weight": 1.0,
-            "weighted_score": 0.14,
+            "weighted_score": 0.12,
             "metadata": {
-              "temp_max": 38.1,
-              "effective_temp": 38.1,
+              "temp_max": 34.0,
+              "effective_temp": 34.0,
               "kickoff_mod": 0.55,
               "home_climate": "hot",
               "away_climate": "temperate",
-              "heat_intensity": 0.55,
+              "heat_intensity": 0.44,
               "side": "under"
             },
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -1.71,
+        "signalAdjustmentPP": -1.72,
         "signalCountPos": 2,
         "signalCountNeg": 2,
         "effectiveEdgePP": 13.3,
@@ -12989,24 +13099,24 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.55,
+            "score": 0.44,
             "confidence": 0.65,
-            "evidence": "🌡 38°C Abend-Anpfiff · AUT temperate",
+            "evidence": "🌡 34°C Abend-Anpfiff · AUT temperate",
             "weight": 1.0,
-            "weighted_score": 0.14,
+            "weighted_score": 0.12,
             "metadata": {
-              "temp_max": 38.1,
-              "effective_temp": 38.1,
+              "temp_max": 34.0,
+              "effective_temp": 34.0,
               "kickoff_mod": 0.55,
               "home_climate": "hot",
               "away_climate": "temperate",
-              "heat_intensity": 0.55,
+              "heat_intensity": 0.44,
               "side": "under"
             },
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.6,
+        "signalAdjustmentPP": 1.58,
         "signalCountPos": 2,
         "signalCountNeg": 0,
         "effectiveEdgePP": 14.6,
@@ -13086,24 +13196,24 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.55,
+            "score": 0.44,
             "confidence": 0.65,
-            "evidence": "🌡 38°C Abend-Anpfiff · AUT temperate",
+            "evidence": "🌡 34°C Abend-Anpfiff · AUT temperate",
             "weight": 1.0,
-            "weighted_score": 0.14,
+            "weighted_score": 0.12,
             "metadata": {
-              "temp_max": 38.1,
-              "effective_temp": 38.1,
+              "temp_max": 34.0,
+              "effective_temp": 34.0,
               "kickoff_mod": 0.55,
               "home_climate": "hot",
               "away_climate": "temperate",
-              "heat_intensity": 0.55,
+              "heat_intensity": 0.44,
               "side": "under"
             },
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 2.09,
+        "signalAdjustmentPP": 2.08,
         "signalCountPos": 4,
         "signalCountNeg": 0,
         "effectiveEdgePP": 9.1,

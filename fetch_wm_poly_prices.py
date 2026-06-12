@@ -29,6 +29,19 @@ def _vienna_hhmm(kickoff_iso):
         return None
 
 
+def _flip_poly_orientation(p):
+    """Dreht ein Poly-Ergebnis auf die umgekehrte Heim/Auswärts-Reihenfolge
+    (Polymarket-Spiegel: Poly-Heim = unser Auswärts). Nur home/away-spezifische
+    Felder swappen (hw↔aw + Tokens + ids/names); symmetrische Märkte (dr, O/U,
+    BTTS) bleiben unverändert."""
+    q = dict(p)
+    q["homeId"],   q["awayId"]   = p.get("awayId"),   p.get("homeId")
+    q["homeName"], q["awayName"] = p.get("awayName"), p.get("homeName")
+    q["hw"],       q["aw"]       = p.get("aw"),       p.get("hw")
+    q["hwTokens"], q["awTokens"] = p.get("awTokens"), p.get("hwTokens")
+    return q
+
+
 def _kickoff_passed(fx):
     """True wenn der Anpfiff vorbei ist. Edge-Alerts sind PRE-MATCH-Signale —
     ab Anpfiff ist eine Bewegung In-Game, kein handelbares Lag → kein Alert.
@@ -416,6 +429,35 @@ def main():
         for gdata in wm.get("groups", {}).values():
             for t in gdata.get("teams", []):
                 team_names[t["id"]] = t.get("name", t["id"])
+
+        # ── Polymarket-Spiegel normalisieren (FIX 12.06.2026) ────────────────
+        # Bei ~12 Spielen (v.a. MD3) listet Polymarket Heim/Auswärts vertauscht
+        # (SUI-CAN statt CAN-SUI) → poly landete unter einem Phantom-Key, das
+        # echte Fixture (CAN-SUI) blieb ohne Poly-Daten/Edge/Trade. 84 odds-keys
+        # statt 72. Fix: auf UNSERE Fixture-Reihenfolge drehen (hw↔aw) + re-keyen.
+        real_keys = {
+            f"{f.get('home')}-{f.get('away')}"
+            for gdata in wm.get("groups", {}).values()
+            for f in gdata.get("fixtures", [])
+        }
+        _norm, _flipped = {}, 0
+        for k, p in prices.items():
+            rk = f"{p.get('awayId')}-{p.get('homeId')}"
+            if k not in real_keys and rk in real_keys:
+                p = _flip_poly_orientation(p)
+                k = rk
+                _flipped += 1
+            _norm[k] = p
+        prices = _norm
+        if _flipped:
+            print(f"  ↔ {_flipped} Poly-Spiegel auf Fixture-Reihenfolge normalisiert")
+
+        # Alt-Phantom-Keys aus früheren Läufen entfernen (Spiegel ohne echtes Fixture)
+        _ph = [k for k in wm_odds if k not in real_keys]
+        for pk in _ph:
+            del wm_odds[pk]
+        if _ph:
+            print(f"  🧹 {len(_ph)} Phantom-Odds-Keys entfernt: {', '.join(_ph[:6])}{'…' if len(_ph)>6 else ''}")
 
         patched = 0
         for key, p in prices.items():
