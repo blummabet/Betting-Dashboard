@@ -607,10 +607,18 @@
       // Odds-Strip: Opening → Now Drift + Mini-Sparkline (zwischen Pick und Story)
       const stripHtml = _buildOddsStrip(heroPick, fxOdds, fx);
       if (stripHtml) html += stripHtml;
-    } else if (isPlayed && fx.result) {
+    } else if (isPlayed && fx.result && fx.result.home_score != null && fx.result.away_score != null) {
+      // FIX 12.06.2026: Felder heißen home_score/away_score (nicht .home/.away)
+      // → vorher "undefined:undefined". Nur zeigen wenn echte Scores da sind.
       html += `<div class="cc-pick cc-pick-result">
         <div class="cc-pick-label">Endstand</div>
-        <div class="cc-pick-market">${fx.result.home}:${fx.result.away}</div>
+        <div class="cc-pick-market">${fx.result.home_score}:${fx.result.away_score}</div>
+      </div>`;
+    } else if (isPlayed) {
+      // Gespielt (laut Datum), aber Ergebnis noch nicht da (API-Football-Lag).
+      html += `<div class="cc-pick cc-pick-result">
+        <div class="cc-pick-label">Endstand</div>
+        <div class="cc-pick-market cc-pick-pending">–:–</div>
       </div>`;
     } else if (!isPlayed && !heroPick) {
       // Check ob die Picks wegen asymmetrischer Datenbasis ausgeblendet wurden

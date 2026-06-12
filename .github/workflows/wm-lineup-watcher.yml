@@ -97,7 +97,11 @@ jobs:
               fi
               sleep $((attempt * 3))
             done
-            [ "$PUSHED" = "0" ] && exit 1
+            # FIX 12.06.2026: NICHT `[ ... ] && exit 1` als letzte Zeile — bei
+            # erfolgreichem Push (PUSHED=1) liefert der fehlschlagende Test selbst
+            # Exit-Status 1, der unter `bash -e` zum Step-Exit wird → Job rot trotz
+            # ✅ Push. Sauber per if-Block.
+            if [ "$PUSHED" = "0" ]; then echo "❌ Push fehlgeschlagen"; exit 1; fi
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

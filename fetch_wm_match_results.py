@@ -67,7 +67,8 @@ def api_get(path: str) -> dict | None:
 
 def find_wm_league_id() -> int | None:
     """Sucht die WM 2026 League-ID bei API-Football."""
-    data = api_get(f"/leagues?name=FIFA+World+Cup&season={WM_SEASON}")
+    # API-Football-Liga heißt exakt "World Cup" (NICHT "FIFA World Cup"!), id=1.
+    data = api_get(f"/leagues?name=World+Cup&season={WM_SEASON}")
     if not data:
         return None
     leagues = data.get("response", [])
@@ -226,6 +227,21 @@ def main():
         # In wm2026-data.json schreiben
         for fx in wm["groups"][gkey]["fixtures"]:
             if fx["home"] == home_id and fx["away"] == away_id:
+                # Stale-Downgrade-Schutz (12.06.2026): ein bereits FINALES Ergebnis
+                # NICHT mit einem NS/Scheduled-Re-Fetch plätten. API-Football (und
+                # auch ESPN) liefern WC2026-Spiele teils noch als "Not Started",
+                # obwohl sie längst final sind → sonst würde ein gesetztes 2:0
+                # bei jedem Lauf auf null zurückgesetzt.
+                _old = fx.get("result") or {}
+                _old_final = (_old.get("status") in FINISHED_STATUSES
+                              and _old.get("home_score") is not None)
+                _new_final = (status_short in FINISHED_STATUSES
+                              and home_score is not None)
+                if _old_final and not _new_final:
+                    print(f"  🛡️  {home_id} vs {away_id}: behalte finales "
+                          f"{_old.get('home_score')}:{_old.get('away_score')} "
+                          f"(API liefert {status_short})")
+                    break
                 fx["result"] = result_entry
                 if venue_str:
                     # Nur überschreiben wenn API-Quelle einen vernünftigen Wert liefert
