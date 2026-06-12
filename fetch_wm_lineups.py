@@ -467,8 +467,15 @@ def main():
     args = sys.argv[1:]
     force      = "--force" in args
     only_match = next((a.split("=", 1)[1] for a in args if a.startswith("--match=")), None)
+    # FIX 12.06.2026 — Doppel-Send: NUR der */15-Watcher (wm-lineup-watcher.yml) darf
+    # Lineup-Alerts senden. fetch-wm-data ruft dasselbe Script (Daten-Refresh), lief
+    # aber zu den :00-Crons GLEICHZEITIG mit dem Watcher → beide laden den Dedup-Marker
+    # von origin (ohne den neuen Alert), beide senden, erst danach committet einer →
+    # 2× Alert. --no-alerts (in fetch-wm-data gesetzt) macht diesen Lauf rein daten-
+    # holend. Ein einziger Sender = kein Race, analog Morning-Card-Fix.
+    no_alerts  = "--no-alerts" in args or os.environ.get("LINEUP_ALERTS_OFF", "").lower() == "true"
 
-    print("=== fetch_wm_lineups.py ===\n")
+    print("=== fetch_wm_lineups.py ===" + ("  [NO-ALERTS]" if no_alerts else "") + "\n")
     print(f"   lookahead={CFG['lookahead_hours']}h, lookback={CFG['lookback_hours']}h, "
           f"cache_ttl={CFG['cache_ttl_minutes']}min\n")
 
@@ -570,7 +577,7 @@ def main():
             "home_name": _team_name_from_id(fx["home_id"]),
             "away_name": _team_name_from_id(fx["away_id"]),
         }
-        sent = _emit_lineup_alerts(mk, entry_new, squads, fixtures_meta, alert_dedup)
+        sent = 0 if no_alerts else _emit_lineup_alerts(mk, entry_new, squads, fixtures_meta, alert_dedup)
         alert_count += sent
 
     print(f"\n=== Done: {new_count} neu, {cached_count} cached, {fail_count} fail, "

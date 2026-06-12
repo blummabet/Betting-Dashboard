@@ -66,15 +66,25 @@ def _paged(path_base: str) -> list:
     return out
 
 
-def build_fixture_map(apif_to_code: dict) -> dict:
-    """fixture_id → 'HOME-AWAY' (unsere Codes).
+def build_fixture_map(apif_to_code: dict, real_keys: set) -> dict:
+    """fixture_id → (matchKey, flipped) — matchKey IMMER in UNSERER Fixture-
+    Reihenfolge (aus real_keys), nicht in APIF-Reihenfolge.
 
-    FIX 12.06.2026: NICHT _paged() benutzen — API-Football lehnt `&page` bei
+    FIX 12.06.2026 (a): NICHT _paged() benutzen — API-Football lehnt `&page` bei
     /fixtures ab ('The Page field do not exist.' → 0 Ergebnisse). /fixtures liefert
     ohnehin alle Spiele in EINER Response (paging.total=1). Vorher: _paged hängte
     &page=1 an → /fixtures gab 0 → fmap leer → JEDE /odds-Zeile übersprungen → 0
     Konsens-Writes → public_* blieb beim alten Einzel-Book (williamhill). /odds
-    paginiert dagegen normal, deshalb fällt es nur hier auf."""
+    paginiert dagegen normal, deshalb fällt es nur hier auf.
+
+    FIX 12.06.2026 (b) — SPIEGEL-BUG: API-Football listet 12 MD3-Spiele in
+    umgekehrter Heim/Auswärts-Reihenfolge vs. unser Seed (derselbe Cluster wie
+    Polymarket, z.B. CAN-SUI). Vorher schrieb der Fetcher Konsens unter den
+    APIF-Key (SUI-CAN) → (1) Phantom-Key, den fetch_wm_poly_prices später löscht,
+    (2) das echte Fixture (CAN-SUI) blieb beim alten williamhill → public_is_multibook
+    fiel nie auf 0. Jetzt: Key auf UNSERE Reihenfolge normalisieren; bei Umkehr
+    `flipped=True`, damit der Aufrufer hw↔aw tauscht (dr/O-U/BTTS sind
+    richtungs-unabhängig). Analog zu _flip_poly_orientation im Poly-Fetcher."""
     data = _apif_get(f"/fixtures?league={WC_LEAGUE_ID}&season={WC_SEASON}")
     fixtures = (data or {}).get("response") or []
     fmap = {}
@@ -83,8 +93,14 @@ def build_fixture_map(apif_to_code: dict) -> dict:
         teams = fx.get("teams") or {}
         h = apif_to_code.get((teams.get("home") or {}).get("id"))
         a = apif_to_code.get((teams.get("away") or {}).get("id"))
-        if fid and h and a:
-            fmap[fid] = f"{h}-{a}"
+        if not (fid and h and a):
+            continue
+        if f"{h}-{a}" in real_keys:
+            fmap[fid] = (f"{h}-{a}", False)
+        elif f"{a}-{h}" in real_keys:          # APIF spiegelt → unsere Reihenfolge erzwingen
+            fmap[fid] = (f"{a}-{h}", True)
+        else:
+            fmap[fid] = (f"{h}-{a}", False)     # unbekannt: best effort, kein Spiegel-Wissen
     return fmap
 
 
@@ -132,8 +148,12 @@ def main() -> int:
     apif_to_code.setdefault(1113, "BIH")
     odds_ref = wm.setdefault("odds", {})
 
-    fmap = build_fixture_map(apif_to_code)
-    print(f"   {len(fmap)} Fixtures gemappt")
+    real_keys = {f"{f['home']}-{f['away']}"
+                 for g in (wm.get("groups") or {}).values()
+                 for f in (g.get("fixtures") or [])}
+    fmap = build_fixture_map(apif_to_code, real_keys)
+    n_flip = sum(1 for _, fl in fmap.values() if fl)
+    print(f"   {len(fmap)} Fixtures gemappt ({n_flip} Heim/Auswärts gespiegelt → normalisiert)")
 
     rows = _paged(f"/odds?league={WC_LEAGUE_ID}&season={WC_SEASON}")
     print(f"   {len(rows)} Odds-Einträge von API-Football\n")
@@ -144,12 +164,14 @@ def main() -> int:
     updated, samples = 0, []
     for row in rows:
         fid = (row.get("fixture") or {}).get("id")
-        mk = fmap.get(fid)
+        mk, flipped = fmap.get(fid, (None, False))
         if not mk:
             continue
         con = consensus_for_fixture(row.get("bookmakers") or [])
         if not con.get("hw") or con["n_books"] < 2:
             continue   # zu wenig Soft-Books → kein verlässlicher Konsens
+        if flipped:    # APIF-Heim == unser Auswärts → hw↔aw tauschen (dr/O-U/BTTS bleiben)
+            con["hw"], con["aw"] = con["aw"], con["hw"]
         entry = odds_ref.setdefault(mk, {})
         before = entry.get("public_hw")
         new_pub = {

@@ -166,8 +166,11 @@ jobs:
       # Holt nur Spiele in den nächsten 3h. Cache-TTL 45min. Wenn kein Spiel
       # anstehend → silent exit. Muss VOR generate_wm_picks laufen damit
       # lineup_signal die aktuellen Lineups nutzen kann.
+      # --no-alerts: NUR der */15-Watcher (wm-lineup-watcher.yml) sendet Lineup-
+      # Alerts. Dieser Lauf überlappt zu :00 mit dem Watcher → ohne den Schalter
+      # senden beide denselben Alert (Race vor Dedup-Commit). Hier nur Daten holen.
       - name: 📋 WM Aufstellungen (T-1h) fetchen
-        run: python fetch_wm_lineups.py
+        run: python fetch_wm_lineups.py --no-alerts
         continue-on-error: true
         env:
           APISPORTS_KEY:           ${{ secrets.APISPORTS_KEY }}
@@ -221,14 +224,6 @@ jobs:
       # ── Pick-Validator (Sanity-Checks, schreibt pick_validation_report.json) ─────
       - name: 🔍 WM Picks validieren
         run: python validate_wm_picks.py
-        continue-on-error: true
-        env:
-          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
-
-      # ── Pre-Match Readiness: feuern alle Signale? sind alle Feeds frisch? ──
-      - name: 🚦 Pre-Match Readiness Check
-        run: python pre_match_readiness.py
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
@@ -337,6 +332,18 @@ jobs:
       - name: 📄 WM Event Pages generieren
         run: python generate_wm_match_pages.py
         continue-on-error: true
+
+      # ── Pre-Match Readiness — MUSS NACH fetch_wm_poly_prices laufen (FIX 12.06.2026)! ──
+      # Der Poly-Backfill normalisiert fx.date + entfernt Phantom-Odds-Keys. Lief
+      # Readiness DAVOR (alte Position vor poly), meldete wm_status.json schedule_date
+      # + no_phantom_odds rot, OBWOHL die committeten Daten sauber waren (Report ≠
+      # Realität). Jetzt am Ende, vor dem Commit → Report spiegelt den Endstand.
+      - name: 🚦 Pre-Match Readiness Check
+        run: python pre_match_readiness.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
       # ── Commit wm2026-data.json + match pages wenn geändert ──────────────
       # if: always() (11.06.2026) — Commit MUSS laufen, auch wenn ein Schritt
