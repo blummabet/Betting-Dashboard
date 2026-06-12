@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-11T22:17:44Z",
+  "generatedAt": "2026-06-12T05:07:03Z",
   "windowDays": 2,
-  "upcoming": 7,
+  "upcoming": 10,
   "signalsFired": [
     "travel_burden",
     "form_trend",
@@ -26,14 +26,14 @@
     "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 12 Fehler (z.B. SUI-CAN: kein echtes Fixture (Spiegel-Key?))"
   ],
   "oks": [
-    "🌡️ Weather: 90 Spiele mit Forecast",
+    "🌡️ Weather: 94 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.4h alt",
-    "📊 APIF-Predictions: 27 Spiele",
-    "📋 Lineups: 1 Spiele geladen (2 imminent)",
+    "📊 APIF-Predictions: 29 Spiele",
+    "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 16 Teams",
-    "📉 Odds-History: 72 Fixtures, Ø 9.8 Snapshots",
-    "💹 Poly-Preise: 71 Fixtures",
-    "💼 Poly-Balance: $285.02",
+    "📉 Odds-History: 72 Fixtures, Ø 10.2 Snapshots",
+    "💹 Poly-Preise: 69 Fixtures",
+    "💼 Poly-Balance: $277.35",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -63,6 +63,15 @@
       "nFail": 0,
       "failures": [],
       "note": "00:00-Platzhalter führten zu falschem Betting-Tab-Listing."
+    },
+    {
+      "id": "time_matches_kickoff",
+      "label": "Anpfiff-Zeit (time) == Wien(kickoff)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fx.time war Seed-Müll (mal Wien, mal Venue-Local, mal 00:00-Platzhalter — 65/72 falsch). Anzeige leitet aus kickoff ab; Drift hier = Quelle (fetch_wm_venues/fetch_wm_poly_prices) hat time nicht normalisiert."
     },
     {
       "id": "odds_sane",
