@@ -401,9 +401,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── Telegram Morning Card (nur wenn WM Spieltag) ─────────────────────
+      # ── Telegram Morning Card — NUR 1×/Tag (08:00 UTC = 10:00 Wien) oder manuell ──
+      # FIX 12.06.2026: Doppel-Post-Ursache war NICHT die Dedup-Logik, sondern dass
+      # dieser Step (a) bei JEDEM der 5 Crons lief und (b) als LETZTER Step NACH dem
+      # Commit (Z.345) liegt → der Dedup-Marker (wm_telegram_sent.json) wurde nie
+      # committet → jeder Lauf sah "noch nicht gesendet" → Resend (05:07 + 08:30).
+      # Deterministisches Zeit-Gate statt auf persistenten State zu hoffen: 1×/Tag.
       - name: 📱 WM Telegram Morning Card
-        run: python telegram_wm.py
+        run: |
+          HOUR=$(date -u +%H)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$HOUR" = "08" ]; then
+            python telegram_wm.py
+          else
+            echo "ℹ️  Morning Card läuft nur 08:00 UTC (oder manuell) — geskippt (jetzt ${HOUR}:00 UTC)"
+          fi
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
