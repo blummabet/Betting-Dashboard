@@ -67,8 +67,16 @@ def _paged(path_base: str) -> list:
 
 
 def build_fixture_map(apif_to_code: dict) -> dict:
-    """fixture_id → 'HOME-AWAY' (unsere Codes)."""
-    fixtures = _paged(f"/fixtures?league={WC_LEAGUE_ID}&season={WC_SEASON}")
+    """fixture_id → 'HOME-AWAY' (unsere Codes).
+
+    FIX 12.06.2026: NICHT _paged() benutzen — API-Football lehnt `&page` bei
+    /fixtures ab ('The Page field do not exist.' → 0 Ergebnisse). /fixtures liefert
+    ohnehin alle Spiele in EINER Response (paging.total=1). Vorher: _paged hängte
+    &page=1 an → /fixtures gab 0 → fmap leer → JEDE /odds-Zeile übersprungen → 0
+    Konsens-Writes → public_* blieb beim alten Einzel-Book (williamhill). /odds
+    paginiert dagegen normal, deshalb fällt es nur hier auf."""
+    data = _apif_get(f"/fixtures?league={WC_LEAGUE_ID}&season={WC_SEASON}")
+    fixtures = (data or {}).get("response") or []
     fmap = {}
     for fx in fixtures:
         fid = (fx.get("fixture") or {}).get("id")
