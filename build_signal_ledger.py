@@ -1,0 +1,146 @@
+#!/usr/bin/env python3
+"""
+build_signal_ledger.py — dauerhaftes Lern-Gedächtnis für den Bayesian-Loop.
+
+WARUM (12.06.2026): update_signal_weights.py las wm_results.json — das ist aber
+der TRADE-P&L der platzierten Polymarket-Bets (Key `bets`, ohne signals[], oft
+PENDING). Die aufgelösten CARD-Picks mit signals[] + WIN/LOSS leben in
+wm2026-data.json["picks"], wo der Updater nie hinsah → 0 Beobachtungen → alle
+Gewichte ewig 1.0. Trade-P&L und Signal-Lernen sind zwei verschiedene Dinge.
+
+Dieses Script kapselt die Beobachtungs-Erfassung (Single-Responsibility):
+  · Liest aufgelöste Card-Picks (result ∈ WIN/LOSS/VOID) MIT signals[] aus
+    wm2026-data.json.
+  · UPSERT (append-only, dedup nach matchKey|market) in wm_signal_ledger.json.
+    Idempotent: erneutes Laufen überschreibt denselben Eintrag, dupliziert nie.
+  · Snapshot der Signale (name+score) zum Auflöse-Zeitpunkt — so überlebt die
+    Beobachtung jede spätere Picks-Neugenerierung (robust gegen signal[]-Verlust).
+
+Der Updater (update_signal_weights.py) liest danach den Ledger statt wm_results.
+
+Run:  python3 build_signal_ledger.py [--write]   (Default: DRY-RUN)
+Workflow: läuft NACH resolve_wm_results.py, VOR update_signal_weights.py.
+"""
+from __future__ import annotations
+import json
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+BASE        = Path(__file__).parent
+WM_FILE     = BASE / "wm2026-data.json"
+LEDGER_FILE = BASE / "wm_signal_ledger.json"
+
+LEARNABLE_RESULTS = {"WIN", "LOSS", "VOID"}   # VOID wird aufgenommen, vom Updater aber ignoriert
+
+
+def _load_json(path: Path, default):
+    if not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"⚠️  {path.name} laden fehlgeschlagen: {e}")
+        return default
+
+
+def _save_ledger(ledger: dict) -> None:
+    tmp = LEDGER_FILE.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(ledger, indent=2, ensure_ascii=False), encoding="utf-8")
+    tmp.replace(LEDGER_FILE)
+
+
+def _slim_signals(signals: list) -> list:
+    """Nur das, was der Bayesian-Loop braucht: name + score (score≠0 = gefeuert)."""
+    out = []
+    for s in signals or []:
+        if not isinstance(s, dict):
+            continue
+        name = s.get("name")
+        score = s.get("score", 0.0)
+        if name and score not in (0, 0.0, None):
+            out.append({"name": name, "score": round(float(score), 3)})
+    return out
+
+
+def collect_observations(wm: dict) -> list[dict]:
+    """Aufgelöste Card-Picks mit gefeuerten Signalen → Ledger-Records."""
+    now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    records = []
+    for match_key, plist in (wm.get("picks") or {}).items():
+        for p in (plist or []):
+            result = str(p.get("result") or "").upper()
+            if result not in LEARNABLE_RESULTS:
+                continue
+            sigs = _slim_signals(p.get("signals"))
+            if not sigs:
+                continue   # ohne gefeuerte Signale nichts zu lernen
+            market = p.get("market") or "?"
+            records.append({
+                "key":        f"{match_key}|{market}",
+                "matchKey":   match_key,
+                "market":     market,
+                "result":     result,
+                "signals":    sigs,
+                "resolvedAt": p.get("resolvedAt") or now_iso,
+            })
+    return records
+
+
+def upsert(ledger: dict, observations: list[dict]) -> tuple[int, int]:
+    """Mergt Beobachtungen in den Ledger. Returns (neu, aktualisiert)."""
+    by_key = {r["key"]: r for r in ledger.get("records", [])}
+    new, upd = 0, 0
+    for obs in observations:
+        if obs["key"] in by_key:
+            # Nur überschreiben wenn sich was Relevantes geändert hat (idempotent).
+            old = by_key[obs["key"]]
+            if old.get("result") != obs["result"] or old.get("signals") != obs["signals"]:
+                upd += 1
+            by_key[obs["key"]] = {**old, **obs}
+        else:
+            by_key[obs["key"]] = obs
+            new += 1
+    ledger["records"] = sorted(by_key.values(), key=lambda r: r["key"])
+    return new, upd
+
+
+def main() -> int:
+    write = "--write" in sys.argv[1:]
+    print(f"=== build_signal_ledger.py === ({'WRITE' if write else 'DRY-RUN'})\n")
+
+    wm = _load_json(WM_FILE, {})
+    ledger = _load_json(LEDGER_FILE, None)
+    if not isinstance(ledger, dict):
+        ledger = {
+            "_meta": {
+                "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick "
+                               "ein Snapshot der gefeuerten Signale + Outcome. Quelle für "
+                               "update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
+                "version": "1.0",
+            },
+            "records": [],
+        }
+
+    obs = collect_observations(wm)
+    print(f"   {len(obs)} aufgelöste Picks mit gefeuerten Signalen gefunden")
+    new, upd = upsert(ledger, obs)
+    ledger["_meta"]["updated_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    ledger["_meta"]["total_records"] = len(ledger["records"])
+
+    print(f"   → {new} neu, {upd} aktualisiert · Ledger gesamt: {len(ledger['records'])} Records")
+    # kleine Outcome-Übersicht
+    from collections import Counter
+    c = Counter(r["result"] for r in ledger["records"])
+    print(f"   Outcomes: {dict(c)}")
+
+    if write:
+        _save_ledger(ledger)
+        print(f"\n✅ {LEDGER_FILE.name} geschrieben")
+    else:
+        print("\nℹ️  DRY-RUN — mit --write anwenden.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

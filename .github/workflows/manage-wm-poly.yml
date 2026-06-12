@@ -126,11 +126,19 @@ jobs:
         run: ${{ env.POLY_PYTHON }} resolve_wm_results.py
         continue-on-error: true
 
+      # ── Lern-Ledger aktualisieren ───────────────────────────────────────────
+      # FIX 12.06.2026: erfasst aufgelöste CARD-Picks (mit signals[] + WIN/LOSS)
+      # aus wm2026-data.json in wm_signal_ledger.json (append-only, dedup). MUSS
+      # vor update_signal_weights laufen — der Updater liest jetzt den Ledger,
+      # nicht mehr wm_results.json (= Trade-P&L ohne Signale → war immer leer).
+      - name: 🧾 Signal-Lern-Ledger aktualisieren
+        run: ${{ env.POLY_PYTHON }} build_signal_ledger.py --write
+        continue-on-error: true
+
       # ── Signal-Engine Lern-Update ───────────────────────────────────────────
       # Nach jedem resolved Pick: Bayesian-Update der Signal-Weights basierend
-      # auf Win/Loss-Outcome. Schreibt signal_weights.json — wird per State-File-
-      # Registry committet. Erst sobald WM-Spiele resolved sind (ab 12.06.) gibt
-      # es echte Updates; vorher liefert das Script einen No-Op.
+      # auf Win/Loss-Outcome aus dem Ledger. Schreibt signal_weights.json — wird
+      # per State-File-Registry committet.
       - name: 🧠 Signal-Weights lernen
         run: ${{ env.POLY_PYTHON }} update_signal_weights.py
         continue-on-error: true

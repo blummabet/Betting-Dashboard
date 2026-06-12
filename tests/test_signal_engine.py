@@ -462,11 +462,11 @@ class TestUpdateSignalWeights(unittest.TestCase):
                 "signals": [{"name": "lead_lag_bias", "score": 2.0}]
             })
         with tempfile.TemporaryDirectory() as td:
-            results_file = Path(td) / "wm_results.json"
+            ledger_file = Path(td) / "wm_signal_ledger.json"
             weights_file = Path(td) / "signal_weights.json"
-            results_file.write_text(json.dumps({"picks": picks}))
+            ledger_file.write_text(json.dumps({"records": picks}))
             weights_file.write_text(json.dumps({}))
-            with patch.object(upd, "RESULTS_FILE", results_file), \
+            with patch.object(upd, "LEDGER_FILE", ledger_file), \
                  patch.object(upd, "WEIGHTS_FILE", weights_file):
                 w = upd.update_weights()
         self.assertGreater(w["lead_lag_bias"]["weight"], 1.0,
@@ -483,11 +483,11 @@ class TestUpdateSignalWeights(unittest.TestCase):
                 "signals": [{"name": "lead_lag_bias", "score": 2.0}]
             })
         with tempfile.TemporaryDirectory() as td:
-            results_file = Path(td) / "wm_results.json"
+            ledger_file = Path(td) / "wm_signal_ledger.json"
             weights_file = Path(td) / "signal_weights.json"
-            results_file.write_text(json.dumps({"picks": picks}))
+            ledger_file.write_text(json.dumps({"records": picks}))
             weights_file.write_text(json.dumps({}))
-            with patch.object(upd, "RESULTS_FILE", results_file), \
+            with patch.object(upd, "LEDGER_FILE", ledger_file), \
                  patch.object(upd, "WEIGHTS_FILE", weights_file):
                 w = upd.update_weights()
         self.assertLess(w["lead_lag_bias"]["weight"], 1.0,
@@ -503,11 +503,11 @@ class TestUpdateSignalWeights(unittest.TestCase):
                 "signals": [{"name": "lead_lag_bias", "score": 2.0}]
             })
         with tempfile.TemporaryDirectory() as td:
-            results_file = Path(td) / "wm_results.json"
+            ledger_file = Path(td) / "wm_signal_ledger.json"
             weights_file = Path(td) / "signal_weights.json"
-            results_file.write_text(json.dumps({"picks": picks}))
+            ledger_file.write_text(json.dumps({"records": picks}))
             weights_file.write_text(json.dumps({}))
-            with patch.object(upd, "RESULTS_FILE", results_file), \
+            with patch.object(upd, "LEDGER_FILE", ledger_file), \
                  patch.object(upd, "WEIGHTS_FILE", weights_file):
                 w = upd.update_weights()
         # Mit Smoothing sollte weight nahe 1.0 sein, nicht im Sanity-Bound

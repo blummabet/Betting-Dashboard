@@ -2,10 +2,17 @@
 """
 update_signal_weights.py — Bayesian Lern-Loop für sharp_signals
 
-Wird nach resolve_wm_results.py aufgerufen:
-  · Liest alle resolved Picks (wm_results.json)
-  · Für jeden Pick mit signals[]: pro Signal eine Beobachtung (won/lost)
+Wird nach build_signal_ledger.py aufgerufen:
+  · Liest das Lern-Ledger (wm_signal_ledger.json) — je aufgelöster Card-Pick ein
+    Snapshot der gefeuerten Signale + Outcome (WIN/LOSS).
+  · Für jeden Record mit signals[]: pro Signal eine Beobachtung (won/lost)
   · Bayesian-Update der Weights in signal_weights.json
+
+FIX 12.06.2026: Vorher las dieses Script wm_results.json — das ist aber der
+TRADE-P&L der platzierten Polymarket-Bets (Key `bets`, ohne signals[], oft
+PENDING), NICHT die aufgelösten Card-Picks. Ergebnis: 0 Beobachtungen, alle
+Gewichte blieben ewig 1.0. Die Beobachtungs-Erfassung liegt jetzt in
+build_signal_ledger.py; dieses Script konsumiert nur noch den Ledger.
 
 Math (Beta-Binomial mit Prior α=β=2 für "vorsichtigen Start"):
   posterior_mean = (α + wins) / (α + β + n)
@@ -36,22 +43,23 @@ PRIOR_ALPHA = 2.0
 PRIOR_BETA  = 2.0
 MIN_OBS_FOR_TRUST = 10  # davor: konservatives Update (50% weight zur Prior)
 
-RESULTS_FILE = BASE / "wm_results.json"
+LEDGER_FILE  = BASE / "wm_signal_ledger.json"
 WEIGHTS_FILE = BASE / "signal_weights.json"
 
 
 def _load_results() -> list[dict]:
-    if not RESULTS_FILE.exists():
+    """Lern-Beobachtungen aus dem Signal-Ledger (records[]). Jeder Record hat
+    result (WIN/LOSS/VOID) + signals[] (name/score) — genau was update_weights braucht."""
+    if not LEDGER_FILE.exists():
         return []
     try:
-        d = json.loads(RESULTS_FILE.read_text(encoding="utf-8"))
-        # Format kann verschieden sein: ['picks': [...]] oder direkt eine Liste
+        d = json.loads(LEDGER_FILE.read_text(encoding="utf-8"))
         if isinstance(d, list):
             return d
         if isinstance(d, dict):
-            return d.get("picks") or d.get("resolved") or []
+            return d.get("records") or d.get("picks") or d.get("resolved") or []
     except Exception as e:
-        print(f"⚠️  wm_results.json laden fehlgeschlagen: {e}")
+        print(f"⚠️  wm_signal_ledger.json laden fehlgeschlagen: {e}")
     return []
 
 
