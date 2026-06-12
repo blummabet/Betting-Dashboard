@@ -401,19 +401,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── Telegram Morning Card — NUR 1×/Tag (08:00 UTC = 10:00 Wien) oder manuell ──
-      # FIX 12.06.2026: Doppel-Post-Ursache war NICHT die Dedup-Logik, sondern dass
-      # dieser Step (a) bei JEDEM der 5 Crons lief und (b) als LETZTER Step NACH dem
-      # Commit (Z.345) liegt → der Dedup-Marker (wm_telegram_sent.json) wurde nie
-      # committet → jeder Lauf sah "noch nicht gesendet" → Resend (05:07 + 08:30).
-      # Deterministisches Zeit-Gate statt auf persistenten State zu hoffen: 1×/Tag.
+      # ── Telegram Morning Card — NUR beim GEPLANTEN 08:00-UTC-Cron (1×/Tag) ──
+      # FIX 12.06.2026 (v2): NUR scheduled + HOUR==08. KEIN workflow_dispatch mehr!
+      # Ursache des 3.-Posts: das alte „oder manuell"-Schlupfloch — jeder manuelle
+      # „WM Daten"-Lauf (die wir beim Fixen ständig machen) hat die Karte neu gepostet.
+      # Der Dedup-Marker persistiert nicht (Step liegt nach dem Commit), daher MUSS
+      # das Gate deterministisch sein. Manuell posten → telegram-manual.yml.
       - name: 📱 WM Telegram Morning Card
         run: |
           HOUR=$(date -u +%H)
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$HOUR" = "08" ]; then
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$HOUR" = "08" ]; then
             python telegram_wm.py
           else
-            echo "ℹ️  Morning Card läuft nur 08:00 UTC (oder manuell) — geskippt (jetzt ${HOUR}:00 UTC)"
+            echo "ℹ️  Morning Card nur beim geplanten 08:00-UTC-Cron (jetzt ${{ github.event_name }} ${HOUR}:00 UTC) — geskippt"
           fi
         continue-on-error: true
         env:

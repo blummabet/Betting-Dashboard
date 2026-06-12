@@ -269,6 +269,28 @@ def check_public_consensus(ctx):
 
 
 @integrity_check
+def check_public_is_multibook(ctx):
+    """FIX 12.06.2026: public_* soll der MEDIAN-KONSENS (fetch_wm_multibook_odds,
+    'Konsens (N Books)') sein, nicht der alte verrauschte Einzel-Soft-Book
+    (williamhill/bet365 aus fetch_wm_odds). check_public_consensus prüft nur ob
+    public_hw DA ist → blind dafür, ob der Konsens wirklich aktiv ist. Dieser
+    Check flaggt Fixtures, deren public_* noch vom Einzel-Book stammt (= Multibook-
+    Step hat nicht geschrieben, z.B. APIF /odds leer oder Step-Fail)."""
+    real = _real_match_keys(ctx)
+    fails = []
+    for mk, o in ctx.odds.items():
+        if mk not in real or not o.get("public_hw"):
+            continue
+        bk = str(o.get("public_bookmaker") or "")
+        if not bk.lower().startswith("konsens"):
+            fails.append(f"{mk}: public aus Einzel-Book '{bk or '?'}' statt Konsens")
+    return _chk("public_is_multibook", "Public = Multi-Book-Konsens (nicht Einzel-Book)",
+                "warn", fails,
+                "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem "
+                "Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben.")
+
+
+@integrity_check
 def check_no_phantom_odds(ctx):
     """Odds-Keys, die KEINEM echten Fixture entsprechen — meist verkehrte
     Heim/Auswärts-Reihenfolge (SUI-CAN statt CAN-SUI), leer. Daten-Hygiene:
