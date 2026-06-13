@@ -193,7 +193,13 @@ class TestRegistryAndConfig(unittest.TestCase):
     def test_signal_weight_present(self):
         w = json.loads((REPO / "signal_weights.json").read_text(encoding="utf-8"))
         self.assertIn("weather_signal", w)
-        self.assertEqual(w["weather_signal"]["weight"], 1.0)
+        # FIX 14.06.2026: Gewicht wird vom Bayesian-Loop GELERNT — es driftet von 1.0
+        # weg, sobald Wetter-Spiele aufgelöst sind (z.B. nach QAT-SUI → 1.1). Daher
+        # nur Präsenz + plausible Spanne prüfen, NICHT == 1.0 (sonst bricht der Test
+        # jedes Mal, wenn das Lernsystem korrekt arbeitet).
+        wt = w["weather_signal"]["weight"]
+        self.assertIsInstance(wt, (int, float))
+        self.assertTrue(0.1 <= wt <= 3.0, f"weather-Gewicht außerhalb plausibler Spanne: {wt}")
 
     def test_config_section_present(self):
         cfg = json.loads((REPO / "cocobet_config.json").read_text(encoding="utf-8"))

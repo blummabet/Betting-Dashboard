@@ -648,6 +648,44 @@ def main():
               f"— {bet.get('market','')} | P&L: {pnl:+.2f}€{clv_str}")
 
     _write_results(resolved_bets, now_iso)
+    _write_back_status_to_placed(resolved_bets, now_iso)
+
+
+def _write_back_status_to_placed(resolved_bets: list[dict], now_iso: str) -> None:
+    """FIX 13.06.2026: Aufgelösten Status (won/lost/void) in wm_auto_bets_placed.json
+    zurückschreiben — symmetrisch zum „sold" das der Auto-Sell setzt. SONST blieben
+    aufgelöste Wetten auf status=`placed` ohne `result` → klebten ewig im „Offene
+    Positionen · Live"-Panel (Filter: result==null && !soldAt) als „🔴 läuft / −100%"
+    (QAT-SUI nach LOSS). Und manage_wm_poly_positions (lädt nur status==`placed`)
+    würde sie weiter zu managen versuchen. Sold-Bets werden NICHT überschrieben."""
+    if not os.path.exists(PLACED_FILE):
+        return
+    try:
+        data = json.loads(PLACED_FILE.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"  ⚠️  Status-Rückschreiben übersprungen (Lesefehler): {e}")
+        return
+    _STATUS = {"WIN": "won", "LOSS": "lost", "VOID": "void"}
+    by_key = {rb.get("betKey"): rb for rb in resolved_bets
+              if rb.get("result") in _STATUS}
+    changed = 0
+    for bet in data.get("bets", []):
+        if (bet.get("status") or "").lower() == "sold":
+            continue   # früh verkauft = terminal, nie übers Ergebnis überschreiben
+        rb = by_key.get(bet.get("betKey"))
+        if not rb:
+            continue
+        new_status = _STATUS[rb["result"]]
+        if bet.get("status") != new_status or bet.get("result") != rb["result"]:
+            bet["status"]     = new_status
+            bet["result"]     = rb["result"]
+            bet["pnl"]        = rb.get("pnl")
+            bet["resolvedAt"] = rb.get("resolvedAt") or now_iso
+            changed += 1
+    if changed:
+        data["updatedAt"] = now_iso
+        PLACED_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"  ↩️  {changed} aufgelöste Wette(n) in wm_auto_bets_placed.json markiert (won/lost/void)")
 
 
 def _write_results(bets: list[dict], now_iso: str) -> None:
