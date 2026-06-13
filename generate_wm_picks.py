@@ -1065,10 +1065,15 @@ def generate_picks_for_fixture(
                 open_odds[mk]   = None
                 dyn_ah_markets.append((mk, f"AH Auswärts {_fmt_ah_line(-L)}", EDGE_MIN_AH))
 
-    # Feste AH-Buckets aus der Iteration nehmen (durch dynamische Leiter ersetzt),
-    # Rest von MARKET_CFG unverändert + dynamische AH anhängen.
-    _markets_iter = [m for m in MARKET_CFG
-                     if not (m[0].startswith("ahH_") or m[0].startswith("ahA_"))] + dyn_ah_markets
+    # Feste AH-Buckets durch dynamische Leiter ersetzen — ABER nur wenn die Leiter
+    # tatsächlich Linien liefert. FIX 13.06.2026: Sind die Odds eingefroren/alt (kein
+    # ahLadder, z.B. wenn TheOddsAPI diesen Lauf nicht neu gefetcht wurde), FALLBACK auf
+    # die festen Buckets — sonst kollabieren die AH-Picks (60→6). Kein Entweder-Oder-Bruch.
+    if dyn_ah_markets:
+        _markets_iter = [m for m in MARKET_CFG
+                         if not (m[0].startswith("ahH_") or m[0].startswith("ahA_"))] + dyn_ah_markets
+    else:
+        _markets_iter = list(MARKET_CFG)   # Leiter fehlt → feste Buckets behalten
 
     picks = []
     for mkey, label, min_edge in _markets_iter:
