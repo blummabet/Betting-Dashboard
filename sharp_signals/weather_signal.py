@@ -211,7 +211,13 @@ class WeatherSignal(Signal):
         if not weather or weather.get("tempMax") is None:
             return None
         temp_max = float(weather["tempMax"])
-        if temp_max < self._t["heat_threshold"]:
+        # FIX 13.06.2026: ECHTE Anpfiff-Temperatur bevorzugen (tempAtKickoff, stündlich)
+        # statt Tagesmax. Tagesmax überschätzt Mittags-/Nacht-Anpfiffe massiv
+        # (QAT-SUI: 33° Tagesmax vs ~26° um 12h; Nachtspiele: 33° vs ~15°).
+        _t_kick = weather.get("tempAtKickoff")
+        _has_hourly = _t_kick is not None
+        temp_used = float(_t_kick) if _has_hourly else temp_max
+        if temp_used < self._t["heat_threshold"]:
             return None
 
         side = _outcome_side(pick.get("market", ""))
@@ -222,20 +228,17 @@ class WeatherSignal(Signal):
         home_climate = TEAM_CLIMATE.get(home_id, "temperate")
         away_climate = TEAM_CLIMATE.get(away_id, "temperate")
 
-        kickoff_mod = _kickoff_modifier(
-            context.get("kickoff_time", ""), context.get("venue", ""), self._t
-        )
-        # FIX 09.06.2026: heat_intensity korrekt berechnen.
-        # ALT (bug): effective_temp = temp_max * kickoff_mod → 30°C*0.8 = 24°C
-        # → heat_intensity wurde immer 0, Signal feuerte nie auf O/U-Märkte
-        # bei "echten" WM-Hitze-Temperaturen (30-35°C).
-        # NEU: heat_intensity zuerst aus raw tempMax (Skala wie weit über Schwelle),
-        # dann gedämpft mit kickoff_mod (Abend = halbierte Penalty vs Mittag).
+        # Wenn echte Anpfiff-Temperatur (tempAtKickoff) vorliegt, spiegelt sie die
+        # Tageszeit BEREITS → KEIN zusätzlicher kickoff_modifier (sonst Doppel-Discount).
+        # Sonst Fallback: Tagesmax × kickoff_modifier (alte Näherung, FIX 09.06.2026
+        # — heat_intensity aus raw temp, dann mit Tageszeit gedämpft).
+        kickoff_mod = 1.0 if _has_hourly else _kickoff_modifier(
+            context.get("kickoff_time", ""), context.get("venue", ""), self._t)
         heat_intensity_raw = min(1.0, max(0.0,
-            (temp_max - self._t["heat_threshold"]) /
+            (temp_used - self._t["heat_threshold"]) /
             (self._t["extreme_threshold"] - self._t["heat_threshold"])))
         heat_intensity = heat_intensity_raw * kickoff_mod
-        effective_temp = temp_max   # nur fürs Logging
+        effective_temp = temp_used   # echte Anpfiff-Temp (oder Tagesmax-Fallback)
         if heat_intensity <= 0:
             return None
 
@@ -290,10 +293,14 @@ class WeatherSignal(Signal):
         if not evidence_parts or score == 0:
             return None
 
-        ko_label = "Mittag" if kickoff_mod >= 0.95 else \
-                   "Nachmittag" if kickoff_mod >= 0.75 else \
+        # Tageszeit-Label IMMER aus der echten Anpfiffzeit ableiten (nicht aus
+        # kickoff_mod — der ist bei vorhandener Stunden-Temp 1.0 und wäre sonst
+        # fälschlich „Mittag"). Angezeigte Temp = echte Anpfiff-Temp (temp_used).
+        _label_mod = _kickoff_modifier(context.get("kickoff_time", ""), context.get("venue", ""), self._t)
+        ko_label = "Mittag" if _label_mod >= 0.95 else \
+                   "Nachmittag" if _label_mod >= 0.75 else \
                    "Abend"
-        evidence = (f"🌡 {temp_max:.0f}°C {ko_label}-Anpfiff · "
+        evidence = (f"🌡 {temp_used:.0f}°C {ko_label}-Anpfiff · "
                     + " · ".join(evidence_parts))
 
         return SignalResult(
@@ -302,6 +309,7 @@ class WeatherSignal(Signal):
             evidence=evidence,
             metadata={
                 "temp_max":         temp_max,
+                "tempAtKickoff":    round(temp_used, 1) if _has_hourly else None,
                 "effective_temp":   round(effective_temp, 1),
                 "kickoff_mod":      kickoff_mod,
                 "home_climate":     home_climate,

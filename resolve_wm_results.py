@@ -569,8 +569,21 @@ def main():
         key     = f"{home_id}-{away_id}"
         res     = result_lookup.get(key, {})
 
-        result_str  = determine_result(bet, res) if res else "PENDING"
-        pnl         = compute_pnl(bet, result_str)
+        # FIX 13.06.2026: Früh per Auto-Sell/Konvergenz verkaufte Trades sind
+        # TERMINAL — nicht übers Spielergebnis auflösen (wir sind ja schon raus).
+        # Realisierter P&L = sharesEstimate × (sellPrice − Entry). Sonst blieben sie
+        # ewig PENDING und die Performance-Sektion zeigte den Verkauf nie.
+        bet_status = (bet.get("status") or "").lower()
+        if bet_status == "sold":
+            result_str = "SOLD"
+            _entry  = float(bet.get("polyPrice", 0) or 0)
+            _exit   = bet.get("sellPrice")
+            _shares = float(bet.get("sharesEstimate", 0) or 0)
+            pnl = (round(_shares * (float(_exit) - _entry), 2)
+                   if (_exit is not None and _entry > 0) else 0.0)
+        else:
+            result_str  = determine_result(bet, res) if res else "PENDING"
+            pnl         = compute_pnl(bet, result_str)
         poly_price  = float(bet.get("polyPrice", 0) or 0)
         poly_odds   = round(1.0 / poly_price, 3) if poly_price > 0 else None
         pinn_fair   = float(bet.get("pinnFair", 0) or 0) or None
@@ -621,11 +634,15 @@ def main():
             "slug":        bet.get("slug", ""),
             "source":      bet.get("source", "auto"),
             "placedAt":    bet.get("placedAt", ""),
-            "resolvedAt":  res.get("resolvedAt") if result_str in ("WIN", "LOSS", "VOID") else None,
+            "resolvedAt":  (res.get("resolvedAt") if result_str in ("WIN", "LOSS", "VOID")
+                            else bet.get("soldAt") if result_str == "SOLD" else None),
+            # Early-Sell-Details (für die Performance-Anzeige)
+            "sellPrice":   round(float(bet["sellPrice"]), 4) if bet.get("sellPrice") is not None else None,
+            "sellReason":  bet.get("sellReason"),
         }
 
         resolved_bets.append(resolved_bet)
-        status_icon = {"WIN": "✅", "LOSS": "❌", "VOID": "⬜", "PENDING": "⏳"}.get(result_str, "?")
+        status_icon = {"WIN": "✅", "LOSS": "❌", "VOID": "⬜", "PENDING": "⏳", "SOLD": "💸"}.get(result_str, "?")
         clv_str = f" CLV={clv_pp:+.1f}pp" if clv_pp is not None else ""
         print(f"  {status_icon} {bet.get('home','')} vs {bet.get('away','')} "
               f"— {bet.get('market','')} | P&L: {pnl:+.2f}€{clv_str}")
@@ -638,6 +655,7 @@ def _write_results(bets: list[dict], now_iso: str) -> None:
     wins     = [b for b in finished if b.get("result") == "WIN"]
     losses   = [b for b in finished if b.get("result") == "LOSS"]
     voids    = [b for b in finished if b.get("result") == "VOID"]
+    sold     = [b for b in bets if b.get("result") == "SOLD"]   # früh verkauft (FIX 13.06.2026)
     pending  = [b for b in bets if b.get("result") == "PENDING"]
 
     total_staked = sum(b.get("stake", 0) for b in bets if b.get("result") != "VOID")
@@ -657,8 +675,9 @@ def _write_results(bets: list[dict], now_iso: str) -> None:
 
     summary = {
         "totalBets":   len(bets),
-        "resolved":    len(finished),
+        "resolved":    len(finished) + len(sold),   # geschlossen = aufgelöst + früh verkauft
         "pending":     len(pending),
+        "sold":        len(sold),
         "wins":        len(wins),
         "losses":      len(losses),
         "voids":       len(voids),

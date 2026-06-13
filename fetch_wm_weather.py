@@ -150,12 +150,20 @@ def fetch_venue_weather(lat: float, lon: float) -> dict | None:
         day = fd.get("day", {})
         if not d_str: continue
         condition = day.get("condition", {}) or {}
+        # Stündliche Temperaturen (FIX 13.06.2026) — für die echte Anpfiff-Temperatur
+        # statt des Tagesmax. (epoch_utc, temp_c) je Stunde; Match per UTC-Epoch.
+        hours = []
+        for h in (fd.get("hour") or []):
+            ep = h.get("time_epoch"); tc = h.get("temp_c")
+            if ep is not None and tc is not None:
+                hours.append([int(ep), round(tc, 1)])
         result[d_str] = {
             "tempMax":     round(day.get("maxtemp_c"), 1) if day.get("maxtemp_c") is not None else None,
             "tempMin":     round(day.get("mintemp_c"), 1) if day.get("mintemp_c") is not None else None,
             "precipMm":    round(day.get("totalprecip_mm", 0) or 0, 1),
             "windKmh":     round(day.get("maxwind_kph"), 1) if day.get("maxwind_kph") is not None else None,
             "weatherCode": int(condition.get("code", 0) or 0),
+            "hours":       hours,
         }
     return result
 
@@ -191,7 +199,8 @@ def main():
             if not (h and a and venue and mdate):
                 continue
             slug = f"wm-{h.lower()}-vs-{a.lower()}-{mdate}"
-            matches_info.append({"slug": slug, "venue": venue, "date": mdate})
+            matches_info.append({"slug": slug, "venue": venue, "date": mdate,
+                                 "kickoff": fx.get("kickoff")})
             coords = _resolve_coords(venue)
             if coords:
                 venue_coords[venue] = coords
@@ -234,11 +243,37 @@ def main():
 
         if w:
             condition, icon = _decode_weather(w["weatherCode"])
+            # Echte Temperatur zur Anpfiff-Stunde (FIX 13.06.2026): nächste Stunde
+            # zum Kickoff per UTC-Epoch. Tagesmax überschätzt Mittags-/Nacht-Spiele
+            # massiv (z.B. QAT-SUI Mittag-Anpfiff: tempMax 33° vs real ~25-27° um 12h;
+            # Nachtspiele: tempMax 33° vs real ~15°). Fallback tempMax wenn kein Match.
+            # MAX über das Spiel-Fenster (Anpfiff −0.5h … +2.5h), nicht nur die
+            # Anpfiff-Stunde: ein Mittags-Anpfiff heizt während des Spiels auf
+            # (12:00 ~28° → 13:30 ~30°). Das Fenster-Max trifft die reale Hitze, die
+            # die Spieler abbekommen. Matching per UTC-Epoch → findet die echte
+            # LOKALE Stadion-Stunde (unabhängig von der Anzeige-Zeitzone). Fallback
+            # nächste Stunde, sonst tempMax.
+            temp_kick = None
+            ko = m.get("kickoff")
+            if ko and w.get("hours"):
+                try:
+                    ko_epoch = datetime.fromisoformat(str(ko).replace("Z", "+00:00")).timestamp()
+                    window = [t for (ep, t) in w["hours"]
+                              if ko_epoch - 1800 <= ep <= ko_epoch + 9000]   # −0.5h … +2.5h
+                    if window:
+                        temp_kick = max(window)
+                    else:
+                        best = min(w["hours"], key=lambda hp: abs(hp[0] - ko_epoch))
+                        if abs(best[0] - ko_epoch) <= 5400:
+                            temp_kick = best[1]
+                except Exception:
+                    temp_kick = None
             results[slug] = {
                 "venue":             venue,
                 "date":              mdate,
                 "tempMax":           w["tempMax"],
                 "tempMin":           w["tempMin"],
+                "tempAtKickoff":     temp_kick,
                 "precipMm":          w["precipMm"],
                 "windKmh":           w["windKmh"],
                 "weatherCode":       w["weatherCode"],

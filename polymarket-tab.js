@@ -2641,9 +2641,6 @@ function _renderWmMarketTable() {
     <!-- Performance / P&L / CLV Section (async-filled) -->
     <div id="wmPerformanceSection"></div>
 
-    <!-- Trade-Verlauf: geschlossene/verkaufte Auto-Trades (async-filled, 13.06.2026) -->
-    <div id="wmTradeHistorySection"></div>
-
     <!-- Alert Zone (always visible when alerts exist) -->
     ${alertZoneHtml}
 
@@ -2708,10 +2705,6 @@ function _renderWmMarketTable() {
     fetch('wm_auto_bets_placed.json?' + Date.now())
       .then(r => r.ok ? r.json() : null)
       .then(d => {
-        // Trade-Verlauf (geschlossene/verkaufte Auto-Trades) füllen
-        const hist = document.getElementById('wmTradeHistorySection');
-        if (hist) hist.innerHTML = _buildTradeHistoryHtml(d);
-
         const el = document.getElementById('wmAutoBetsCount');
         if (!el) return;
         const bets  = d && Array.isArray(d.bets) ? d.bets : [];
@@ -2762,64 +2755,6 @@ function _renderWmMarketTable() {
 
 // Alias — kept so old references still work
 function _renderWmClvRadar() { return _renderWmMarketTable(); }
-
-// ── WM 2026 Trade-Verlauf — geschlossene/verkaufte Auto-Trades ────────────
-// NEU 13.06.2026: Unter den offenen Positionen fehlte ein Verlauf der bereits
-// geschlossenen Auto-Trades (v.a. die früh per Auto-Sell/Konvergenz verkauften —
-// die tauchen NICHT in der Performance-Sektion auf, weil die nur aufgelöste
-// WIN/LOSS aus wm_results.json zeigt). Quelle: wm_auto_bets_placed.json (status != placed).
-function _buildTradeHistoryHtml(data) {
-  const bets = (data && Array.isArray(data.bets)) ? data.bets : [];
-  const SKIP = new Set(['placed', 'dry_run', 'skipped', 'failed']);
-  const closed = bets.filter(b => b.status && !SKIP.has(b.status));
-  if (!closed.length) return '';
-
-  closed.sort((a, b) => (b.soldAt || b.placedAt || '').localeCompare(a.soldAt || a.placedAt || ''));
-
-  const _pnl = (b) => {
-    const entry = b.polyPrice || 0, exit = b.sellPrice, sh = b.sharesEstimate || 0;
-    if (exit == null || entry <= 0) return { eur: null, pct: null };
-    return { eur: sh * (exit - entry), pct: (exit / entry - 1) * 100 };
-  };
-
-  const rows = closed.map(b => {
-    const entry = b.polyPrice || 0;
-    const { eur, pct } = _pnl(b);
-    const col   = eur == null ? '#8b949e' : eur >= 0 ? '#3fb950' : '#f85149';
-    const pnlStr = eur == null ? '—'
-      : `${eur >= 0 ? '+' : ''}€${eur.toFixed(2)} <span style="font-weight:400;font-size:10px">(${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%)</span>`;
-    const dateStr = (b.soldAt || b.placedAt || '').slice(0, 10);
-    const exitStr = (b.sellPrice != null) ? b.sellPrice.toFixed(3) : '—';
-    const reason  = b.sellReason
-      ? `<div style="font-size:10px;color:#8b949e;margin-top:2px">${b.sellReason}</div>` : '';
-    const stIcon  = b.status === 'sold' ? '💸' : (b.status === 'won' ? '✅' : b.status === 'lost' ? '❌' : '•');
-    return `<tr style="border-top:1px solid #21262d">
-      <td style="padding:8px 10px;font-size:11px;color:#8b949e;white-space:nowrap;vertical-align:top">${dateStr}</td>
-      <td style="padding:8px 10px;font-size:12px;color:#c9d1d9;vertical-align:top">${stIcon} ${b.home} – ${b.away}<div style="font-size:10px;color:#8b949e">${b.market}</div></td>
-      <td style="padding:8px 10px;font-size:12px;color:#c9d1d9;white-space:nowrap;text-align:center;vertical-align:top">${entry.toFixed(3)} → ${exitStr}</td>
-      <td style="padding:8px 10px;font-size:12px;font-weight:700;color:${col};text-align:right;white-space:nowrap;vertical-align:top">${pnlStr}${reason}</td>
-    </tr>`;
-  }).join('');
-
-  const totEur = closed.reduce((s, b) => { const p = _pnl(b); return s + (p.eur || 0); }, 0);
-  const totCol = totEur >= 0 ? '#3fb950' : '#f85149';
-
-  return `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:14px;margin-bottom:14px">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-      <span style="font-size:13px;font-weight:700;color:#a78bfa">📜 Trade-Verlauf — geschlossene Trades (${closed.length})</span>
-      <span style="margin-left:auto;font-size:12px;font-weight:700;color:${totCol}">Σ ${totEur >= 0 ? '+' : ''}€${totEur.toFixed(2)}</span>
-    </div>
-    <table style="width:100%;border-collapse:collapse">
-      <thead><tr>
-        <th style="padding:4px 10px;font-size:10px;color:#484f58;text-transform:uppercase;text-align:left">Datum</th>
-        <th style="padding:4px 10px;font-size:10px;color:#484f58;text-transform:uppercase;text-align:left">Spiel / Markt</th>
-        <th style="padding:4px 10px;font-size:10px;color:#484f58;text-transform:uppercase;text-align:center">Entry → Exit</th>
-        <th style="padding:4px 10px;font-size:10px;color:#484f58;text-transform:uppercase;text-align:right">P&amp;L</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-  </div>`;
-}
 
 // ── WM 2026 Performance / P&L / CLV Section ───────────────────────────────
 // Gebaut aus wm_results.json, wird async nach dem Rendern injiziert.
@@ -2879,10 +2814,12 @@ function _buildPerformanceHtml(data) {
     </div>`;
 
   const rows = sorted.map(b => {
-    const resultIcon = {WIN:'✅',LOSS:'❌',VOID:'⬜',PENDING:'⏳'}[b.result] ?? '?';
-    const resultCol  = {WIN:'#3fb950',LOSS:'#f85149',VOID:'#8b949e',PENDING:'#e3b341'}[b.result] ?? '#8b949e';
+    const resultIcon = {WIN:'✅',LOSS:'❌',VOID:'⬜',PENDING:'⏳',SOLD:'💸'}[b.result] ?? '?';
+    const resultCol  = {WIN:'#3fb950',LOSS:'#f85149',VOID:'#8b949e',PENDING:'#e3b341',SOLD:'#a78bfa'}[b.result] ?? '#8b949e';
+    const resultLabel = b.result === 'SOLD' ? 'VERKAUFT' : b.result;   // früh verkauft (FIX 13.06.2026)
     const pnlStr2    = b.result === 'WIN'  ? `+€${b.pnl.toFixed(2)}`
                      : b.result === 'LOSS' ? `-€${Math.abs(b.pnl).toFixed(2)}`
+                     : b.result === 'SOLD' ? `${b.pnl >= 0 ? '+' : '-'}€${Math.abs(b.pnl || 0).toFixed(2)}`
                      : b.result === 'VOID' ? '—'
                      : '⏳';
     const pnlCol     = b.pnl > 0 ? '#3fb950' : b.pnl < 0 ? '#f85149' : '#8b949e';
@@ -2903,8 +2840,9 @@ function _buildPerformanceHtml(data) {
       : '';
 
     return `<tr style="border-top:1px solid #161b22">
-      <td style="padding:8px 10px;font-size:12px;color:${resultCol};font-weight:700;white-space:nowrap">
-        ${resultIcon} ${b.result}
+      <td style="padding:8px 10px;font-size:12px;color:${resultCol};font-weight:700;white-space:nowrap"
+          ${b.result === 'SOLD' && b.sellReason ? `title="${b.sellReason.replace(/"/g,'')}"` : ''}>
+        ${resultIcon} ${resultLabel}
       </td>
       <td style="padding:8px 10px;font-size:12px;color:#e6edf3;white-space:nowrap">
         ${b.home} vs ${b.away}

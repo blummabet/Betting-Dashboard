@@ -517,6 +517,33 @@ def main():
 
     all_positions = positions + auto_positions
 
+    # ── FIX 13.06.2026: echte Anpfiffzeit auflösen (KRITISCH) ────────────────
+    # Auto-Bets speichern nur `matchDate` (Datum, 00:00 Uhr), kein kickoff. Dadurch
+    # hielt hours_until_match JEDES Abendspiel schon ab Mitternacht für „bereits
+    # gestartet" (h_until negativ) → der 2h-Pre-Match-Hard-Close feuerte NIE und der
+    # In-Play-Guard blockte den Verkauf → Trade rutschte LIVE ins In-Play (QAT-SUI
+    # 13.06., offen während des Spiels). Lösung: Kickoff (UTC) aus wm2026-data.json je
+    # HOME-AWAY ziehen und matchDate damit überschreiben — wirkt für check_position
+    # (in_play) UND den Pre-Match-Close. Deckt bestehende offene Bets + künftige ab.
+    try:
+        _wm = json.load(open(os.path.join(BASE, "wm2026-data.json"), encoding="utf-8"))
+        _ko_map = {}
+        for _g in (_wm.get("groups") or {}).values():
+            for _fx in (_g.get("fixtures") or []):
+                _k = _fx.get("kickoff")
+                if _k:
+                    _ko_map[f"{_fx.get('home')}-{_fx.get('away')}"] = _k
+        _fixed = 0
+        for p in all_positions:
+            rk = p.get("kickoff") or _ko_map.get(f"{p.get('homeId')}-{p.get('awayId')}")
+            if rk and rk != p.get("matchDate"):
+                p["matchDate"] = rk
+                _fixed += 1
+        if _fixed:
+            print(f"  🕐 {_fixed} Position(en) auf echte Anpfiffzeit normalisiert")
+    except Exception as _e:
+        print(f"  ⚠️  Kickoff-Auflösung fehlgeschlagen (nutze matchDate): {_e}")
+
     if not all_positions:
         print("  Keine offenen Positionen.")
         return
