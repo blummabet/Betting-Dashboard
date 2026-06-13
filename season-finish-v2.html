@@ -4378,25 +4378,29 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   ⚠️ Wette verantwortungsbewusst · Nur für Personen ab 18 Jahren · Quoten können sich ändern
 </div>
 
-<!-- pick-engine: GATE, getBettingPicks(), Poisson utils, FV helpers -->
-<script src="pick-engine.js"></script>
-<!-- pick-verdict: shared 3-signal BET/ABWÄGEN/SKIP engine (used by renderer + polymarket-tab) -->
-<script src="pick-verdict.js"></script>
-<!-- _pick_helpers: DIRECTION_MAP + INCOMPATIBLE + isLegitimatePick + heroSort.
-     Spiegelt pick_constants.json. Genutzt von wm2026-renderer.js + polymarket-tab.js + matches/wm-match.html -->
-<script src="_pick_helpers.js"></script>
-<script src="validator.js"></script>
-<script src="renderer.js"></script>
-<script src="share.js"></script>
-<script src="ui.js"></script>
-<script src="status-checks.js"></script>
-<script src="polymarket-tab.js"></script>
-<script src="results-v2.js"></script>
-<script src="wm2026-renderer.js"></script>
-<script src="wm2026-tracking.js"></script>
-<!-- TikTok Studio — manueller Card-Generator. Strikt getrennt vom Daily-Cron. -->
+<!-- Lokale App-Scripts mit Cache-Busting (FIX 13.06.2026) ─────────────────────
+     BUG: season-finish-v2.html lud diese Scripts ohne Versions-Query → Browser
+     servierten nach einem Pages-Deploy die ALTE gecachte Datei. Konkret zeigte
+     die Live-Karte ★★★ trotz Conviction 0, weil die neue wm2026-renderer.js
+     (Stern-an-Conviction-Kopplung) im Cache nicht ankam.
+     FIX: Stunden-Bucket-Version (?v=) → max 1h stale, danach garantiert frisch,
+     innerhalb der Stunde weiter gecached. document.write hält die Lade-Reihenfolge
+     synchron (Abhängigkeiten: pick-engine → verdict → helpers → renderer → …). -->
+<script>
+(function () {
+  var v = Math.floor(Date.now() / 3600000);  // Stunden-Bucket
+  var scripts = [
+    "pick-engine.js", "pick-verdict.js", "_pick_helpers.js", "validator.js",
+    "renderer.js", "share.js", "ui.js", "status-checks.js", "polymarket-tab.js",
+    "results-v2.js", "wm2026-renderer.js", "wm2026-tracking.js", "tiktok-studio.js"
+  ];
+  for (var i = 0; i < scripts.length; i++) {
+    document.write('<scr' + 'ipt src="' + scripts[i] + '?v=' + v + '"></scr' + 'ipt>');
+  }
+})();
+</script>
+<!-- TikTok Studio CSS (manueller Card-Generator) -->
 <link rel="stylesheet" href="tiktok-studio.css">
-<script src="tiktok-studio.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════
 //  LIVE DATA from Sofascore — fetched 31.03.2026

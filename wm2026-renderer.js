@@ -434,6 +434,9 @@
     const sortedPicks = [...livePicks].sort((a, b) => {
       if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
       if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
+      // FIX 13.06.2026: Conviction vor Edge (gleicher Hero wie in der Karte).
+      const _ca = a.convictionScore || 0, _cb = b.convictionScore || 0;
+      if (_cb !== _ca) return _cb - _ca;
       return (b.edgePP || 0) - (a.edgePP || 0);
     });
     const heroPick = sortedPicks[0];
@@ -487,6 +490,12 @@
       // Innerhalb safer/non-safer: BET vor ABWÄGEN
       if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
       if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
+      // FIX 13.06.2026: Conviction VOR roher Edge. Vorher entschied bei gleichem
+      // Verdict allein die Edge → ein conv-0-Longshot mit hoher Edge wurde zum Hero
+      // (z.B. BEL-EGY „Über 3.5" conv0/edge9 schlug „AH Heim −1.5" conv3/edge6).
+      // Qualität (signal-gestützte Conviction) schlägt jetzt rohe Edge bei der Hero-Wahl.
+      const _ca = a.convictionScore || 0, _cb = b.convictionScore || 0;
+      if (_cb !== _ca) return _cb - _ca;
       // Dann Edge desc
       return (b.edgePP || 0) - (a.edgePP || 0);
     });
