@@ -646,26 +646,52 @@ def place_sell_order(token_id: str, size: float, private_key: str,
         s = (err_str or "").lower()
         return "fok" in s or "fully filled" in s or "fill" in s
 
+    def _market_sell(sz: float):
+        """Einzelner Market-SELL-Versuch → (orderId|None, err|None)."""
+        try:
+            resp = client.create_and_post_market_order(
+                order_args=MarketOrderArgs(
+                    token_id=token_id,
+                    amount=sz,          # For SELL: amount = tokens (not USDC)
+                    side=Side.SELL,
+                    order_type=OrderType.GTC,
+                ),
+                options=PartialCreateOrderOptions(tick_size="0.01"),
+            )
+            return _parse_resp(resp)
+        except PolyApiException as e:
+            return None, str(e)
+        except Exception as e:
+            return None, str(e)
+
     # ── STEP 1: Market SELL order ─────────────────────────────────────────────
-    market_err = None
-    try:
-        resp = client.create_and_post_market_order(
-            order_args=MarketOrderArgs(
-                token_id=token_id,
-                amount=size,          # For SELL: amount = tokens (not USDC)
-                side=Side.SELL,
-                order_type=OrderType.GTC,
-            ),
-            options=PartialCreateOrderOptions(tick_size="0.01"),
-        )
-        oid, err = _parse_resp(resp)
-        if oid:
-            return {"status": "placed", "orderId": oid, "error": None, "method": "market_sell"}
-        market_err = err
-    except PolyApiException as e:
-        market_err = str(e)
-    except Exception as e:
-        market_err = str(e)
+    oid, market_err = _market_sell(size)
+    if oid:
+        return {"status": "placed", "orderId": oid, "error": None, "method": "market_sell"}
+
+    # ── STEP 1b: Balance-Shortfall-Retry (FIX 13.06.2026) ─────────────────────
+    # sharesEstimate (Kaufzeit) ist oft ~2% höher als die tatsächlich gehaltenen
+    # Tokens (Fees/Slippage/Rundung) → CLOB lehnt mit "not enough balance: balance:
+    # <micro>, order amount: <micro>" ab. Das ist KEIN FOK-Fehler → STEP 2 würde
+    # sonst sofort abbrechen und gar nicht verkaufen. Fix: echte Balance aus der
+    # Fehlermeldung parsen (Mikro-Einheiten, 6 Dezimalstellen) und EINMAL mit der
+    # tatsächlich verfügbaren Menge neu verkaufen (auf 2 Dezimalstellen abgerundet,
+    # damit garantiert ≤ Balance).
+    if market_err and "balance" in market_err.lower() and "enough" in market_err.lower():
+        import re as _re, math as _math
+        m = _re.search(r"balance:\s*(\d+)", market_err)
+        if m:
+            bal_tokens = int(m.group(1)) / 1_000_000.0
+            safe_size  = _math.floor(bal_tokens * 100) / 100.0  # 2 Dezimal, abgerundet
+            if 0 < safe_size < size:
+                print(f"  ♻️  Balance-Shortfall: nur {bal_tokens:.4f} Tokens da (Order war {size}) "
+                      f"— Retry SELL mit {safe_size}")
+                size = safe_size   # auch der Limit-Fallback (STEP 2) nutzt die gekappte Menge
+                oid_b, err_b = _market_sell(size)
+                if oid_b:
+                    return {"status": "placed", "orderId": oid_b, "error": None,
+                            "method": "market_sell_balance_capped"}
+                market_err = err_b or market_err
 
     # ── STEP 2: GTC limit SELL fallback ──────────────────────────────────────
     if not _is_fok_error(market_err):
