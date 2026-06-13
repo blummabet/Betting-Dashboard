@@ -1794,12 +1794,27 @@ def main():
 
     wm.setdefault("picks", {})
 
-    today = datetime.now(timezone.utc).date().isoformat()
+    today  = datetime.now(timezone.utc).date().isoformat()
+    now_dt = datetime.now(timezone.utc)
+
+    def _kickoff_passed(fx: dict) -> bool:
+        """True wenn der Anpfiff vorbei ist (Spiel läuft/beendet). Fehlender/
+        unparsebarer Kickoff → False (lieber als upcoming behandeln, damit ein
+        Pre-Match-Refresh nicht versehentlich blockiert wird). Basis: fx.kickoff
+        (UTC-ISO), nicht fx.time (siehe Memo: fx.time unzuverlässig)."""
+        kt = fx.get("kickoff")
+        if not kt:
+            return False
+        try:
+            return datetime.fromisoformat(str(kt).replace("Z", "+00:00")) <= now_dt
+        except Exception:
+            return False
 
     total_with_picks = 0
     total_no_picks   = 0
     total_frozen     = 0
     total_past       = 0
+    total_refreshed  = 0
 
     wm.setdefault("upsetScores", {})
 
@@ -1840,19 +1855,33 @@ def main():
                 total_past += 1
                 continue
 
-            # Heutige Spiele — eingefroren wenn Picks schon vorhanden
+            # ── Match-Day-Handling (Fix 13.06.2026) ──────────────────────────
+            # Vorher: heutige Spiele mit vorhandenen Picks wurden komplett
+            # eingefroren (continue) → die T-1h-Aufstellungen (lineup_signal) kamen
+            # NIE in die Picks, weil sie erst am Spieltag verfügbar sind. Folge:
+            # lineup_signal feuerte nie in Conviction/Ledger (Gewicht ewig 1.0).
+            # Jetzt: Freeze erst NACH Anpfiff. Pre-Kickoff am Spieltag werden die
+            # gepickten Märkte + Quoten EINGEFROREN gelassen (kein Pick-Drift,
+            # stabile veröffentlichte Picks), aber die Signal-Engine + Conviction
+            # laufen neu → lineup_signal (und jedes andere späte Signal) fließt in
+            # Conviction + Bayesian-Ledger ein. Idempotent über baseVerdict.
+            refresh_existing = False
             if fx_date == today:
-                if wm["picks"].get(pick_key):
-                    total_frozen += 1
-                    continue
-                # Noch keine Picks für heute → generieren (Spiel noch nicht gestartet)
+                existing_today = wm["picks"].get(pick_key)
+                if existing_today is not None:
+                    if _kickoff_passed(fx):
+                        total_frozen += 1
+                        continue
+                    new_picks        = existing_today   # Märkte/Quoten unangetastet
+                    refresh_existing = True
 
-            new_picks = generate_picks_for_fixture(
-                fx, gdata, mkt, form, h2h_data, today,
-                xg_stats=xg_stats, injuries=injuries,
-                travel_data=travel_data,
-                corners_form=corners_form,
-            )
+            if not refresh_existing:
+                new_picks = generate_picks_for_fixture(
+                    fx, gdata, mkt, form, h2h_data, today,
+                    xg_stats=xg_stats, injuries=injuries,
+                    travel_data=travel_data,
+                    corners_form=corners_form,
+                )
 
             # ── Signal-Engine: jedem Pick die signals[] Liste anhängen ────
             # Modulare Sharp-Signal-Adjustments (sharp_signals/). Jede Iteration
@@ -1925,6 +1954,16 @@ def main():
                     "next_match_date":    fx.get("next_match_date"),
                 }
                 for p in new_picks:
+                    # Idempotenz (Match-Day-Refresh): Engine-Verdict-Overrides immer
+                    # vom Basis-Verdict neu anwenden, nicht auf einem bereits
+                    # überschriebenen Verdict aufsetzen. Beim ersten Mal Basis merken.
+                    if "baseVerdict" not in p:
+                        p["baseVerdict"] = p.get("verdict")
+                    else:
+                        p["verdict"] = p["baseVerdict"]
+                        p.pop("downgradedReason", None)
+                        p.pop("pickTriggerReason", None)
+                        p.pop("modelHallucinationWarning", None)
                     sig_out = evaluate_signals(p, sig_ctx)
                     # Conviction-Score läuft AUCH wenn signals=[] (Modell-Sanity + Sharp-Move
                     # können unabhängig Punkte geben — Fix 09.06.2026)
@@ -2033,10 +2072,14 @@ def main():
             # Immer überschreiben — auch leere Liste löscht veraltete Picks
             wm["picks"][pick_key] = new_picks
 
+            if refresh_existing:
+                total_refreshed += 1
+
             if new_picks:
                 total_with_picks += 1
+                _tag = " ↻ Signal-Refresh" if refresh_existing else ""
                 print(f"  ✅ {fx['home']} vs {fx['away']} (ST{fx['matchday']}, {fx_date}): "
-                      f"{len(new_picks)} Pick(s)")
+                      f"{len(new_picks)} Pick(s){_tag}")
                 if VERBOSE:
                     for p in new_picks:
                         edge = p.get("edgePP", "?")
@@ -2052,7 +2095,8 @@ def main():
 
     print(f"\n[Picks] {total_with_picks} Fixtures mit Picks · "
           f"{total_no_picks} ohne Picks · "
-          f"{total_frozen} eingefroren · "
+          f"{total_refreshed} Signal-Refresh (pre-kickoff) · "
+          f"{total_frozen} eingefroren (post-kickoff) · "
           f"{total_past} vergangen")
 
     wm["_meta"] = wm.get("_meta", {})
