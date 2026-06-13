@@ -34,6 +34,45 @@ from tiktok_story_plan import get_story_for_date
 from bizarre_quote_picker import get_daily_bizarre_card
 from player_pick_picker import get_daily_player_pick, save_dedup as save_player_dedup, _load_dedup as _load_player_dedup
 
+def _pick_hook_config(hero: dict) -> dict:
+    """Baut den Mystery-Hook (große Zahl + Curiosity-Gap) für die Pick-Card —
+    datengetrieben nach Markt-Typ, OHNE den Markt zu verraten (Auflösung erst in
+    der Pick-Card). Stil = hook_card() (Lucas' Yamal-Look). Hinzugefügt 13.06.2026:
+    die Pick-Card war die einzige Card-Art ohne Hook (fact/story/bizarre hatten alle)."""
+    m    = (hero.get("market") or "").lower()
+    edge = hero.get("edge_pp") or 0
+    lam  = hero.get("lamTotal")
+    nh   = hero.get("name_h", "Heim")
+    na   = hero.get("name_a", "Auswärts")
+    time = (hero.get("time") or "").strip()
+    is_totals = ("über" in m or "uber" in m or "unter" in m)
+    if is_totals and isinstance(lam, (int, float)) and lam > 0:
+        big = f"{lam:.2f}".rstrip("0").rstrip(".")
+        sub = "erwartete Tore · unser Modell"
+        if "unter" in m:
+            h1 = 'Unser Modell sieht ein <span class="acc">enges Spiel</span>.'
+            h2 = 'Der Markt preist <span class="yellow">zu viele Tore</span> ein.'
+        else:
+            h1 = 'Unser Modell sieht <span class="acc">Tore fallen</span>.'
+            h2 = 'Der Markt hat das <span class="yellow">noch nicht kapiert</span>.'
+    else:
+        big = f"+{int(round(edge))}"
+        sub = "Prozentpunkte Edge · gegen den Markt"
+        h1 = 'Ein Team wird vom Markt <span class="acc">unterschätzt</span>.'
+        h2 = 'Unser Modell <span class="yellow">sieht den Value</span>.'
+    return dict(
+        theme="daily_picks",
+        big_number=big,
+        sub_title=sub,
+        hook_line_1=h1,
+        hook_line_2=h2,
+        mystery_question="Ein Markt schreit Value. Welcher?",
+        highlight_fact=f"{nh} – {na} · heute {time}".strip(" ·"),
+        cta="PICK IM VIDEO →",
+        series_tag="WM 2026 · DAILY PICK",
+    )
+
+
 BASE       = Path(__file__).parent
 WM_FILE    = BASE / "wm2026-data.json"
 OUTPUT_DIR = BASE / "daily-tiktok"
@@ -739,6 +778,7 @@ def main():
                         "convictionScore": p.get("convictionScore"),
                         "sharpMoveActive": bool(p.get("sharpMoveActive")),
                         "topSignal": top_sig,
+                        "lamTotal": p.get("lamTotal"),   # für Pick-Hook-Card (Tor-Märkte)
                         "_edge_score": (p.get("edgePP") or 0) + (10 if p.get("verdict") == "BET" else 0),
                     })
             if collected:
@@ -768,6 +808,23 @@ def main():
         date_obj = _dt.fromisoformat(today_iso)
         wd = ["Mo","Di","Mi","Do","Fr","Sa","So"][date_obj.weekday()]
         date_label = f"{wd} · {date_obj.strftime('%d.%m.%Y')}"
+        # ── Pick-Hook-Card (NEU 13.06.2026) ──────────────────────────────────
+        # Mystery-Hook VOR der Pick-Card (3-5 Sek Curiosity-Gap → Retention).
+        # Verrät den Markt bewusst nicht. Gleicher Stil wie fact/story/bizarre-Hooks.
+        try:
+            dph_html = hook_card(**_pick_hook_config(daily_picks_data["hero"]))
+            dph_path = OUTPUT_DIR / f"{today_iso}_daily_picks_hook.html"
+            dph_path.write_text(dph_html, encoding="utf-8")
+            dph_png = render_to_png(dph_path)
+            if dph_png:
+                _h = daily_picks_data["hero"]
+                produced.append(("daily_picks_hook",
+                                 dph_png,
+                                 f"🎯 Hook · {_h['name_h']} vs {_h['name_a']} — Pick im Video"))
+                print("⚡ Pick-Hook-Card gerendert")
+        except Exception as _e:
+            print(f"⚠️  Pick-Hook-Card fehlgeschlagen: {_e}")
+
         dp_html = daily_picks_card(
             date_label=date_label,
             n_matches=daily_picks_data["n_matches"],

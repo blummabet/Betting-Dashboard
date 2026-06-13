@@ -1045,7 +1045,10 @@ def main():
 
         # ── Odds History Snapshot ─────────────────────────────
         snaps = history.setdefault(key, [])
-        last_snap = snaps[-1] if snaps else None
+        # FIX 13.06.2026: letzten PINNACLE-Snap suchen (nicht irgendeinen) — seit wir
+        # auch Public-Snaps in dieselbe Liste schreiben, wäre snaps[-1] sonst evtl. ein
+        # Public-Eintrag und der _snap_changed-Vergleich falsch.
+        last_snap = next((s for s in reversed(snaps) if s.get("bk") != "public"), None)
         if _snap_changed(last_snap, h2h["hw"], h2h["dr"], h2h["aw"]):
             snap_entry = {
                 "ts":  now_iso,
@@ -1060,6 +1063,29 @@ def main():
             if tb["bttsY"]:
                 snap_entry["bttsY"] = tb["bttsY"]
             snaps.append(snap_entry)
+
+            # ── Soft-Book/Public-Konsens-Snapshot (FIX 13.06.2026) ───────────────
+            # WARUM: lead_lag_bias vergleicht „Pinnacle bewegt sich, Soft-Books hinken
+            # nach". Bisher stand in der Odds-History NUR Pinnacle → das Signal konnte
+            # NIE feuern (0/280 Picks) → Sharp-Money-Conviction-Familie strukturell tot
+            # → Conviction flächendeckend niedrig. Jetzt schreiben wir bei jeder Pinnacle-
+            # Bewegung auch den Public-Konsens als eigenen bk="public"-Eintrag mit
+            # gleichem Timestamp → lead_lag sieht die Lag-Bewegung. (1X2 + O/U 2.5.)
+            ph = h2h.get("public_hw")
+            pd = h2h.get("public_dr")
+            pa = h2h.get("public_aw")
+            if ph and pa:
+                pub_entry = {
+                    "ts":  now_iso,
+                    "hw":  ph,
+                    "dr":  pd,
+                    "aw":  pa,
+                    "bk":  "public",
+                }
+                if tb.get("public_o25"):
+                    pub_entry["o25"] = tb["public_o25"]
+                    pub_entry["u25"] = tb.get("public_u25")
+                snaps.append(pub_entry)
 
         # Track snapshot count + log
         if snaps and snaps[-1].get("ts") == now_iso:
