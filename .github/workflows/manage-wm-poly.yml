@@ -1,14 +1,19 @@
 name: 💹 WM Poly Positionen überwachen
 
 on:
-  # 5x täglich — morgens, mittags, nachmittags, abends, nachts (UTC)
-  # Wien: +2h (CEST) → entspricht 08:00, 12:00, 16:00, 20:00, 00:00 CEST
+  # FIX 13.06.2026 — Pre-Match-Hard-Close-Lücke geschlossen.
+  # Vorher: nur 5×/Tag (06/10/14/18/22 UTC) → der 2h-Hard-Close (PRE_MATCH_CLOSE_HOURS)
+  # traf nur Spiele, die 0-2h nach einem Cron anstießen. 45/72 WM-Spiele stießen in
+  # die 4h-Lücken → Positionen rutschten ins In-Play und wurden bis zur Auflösung
+  # gehalten (NO_INPLAY_LOSS_SELL) → voller Verlust möglich. WIDERSPRUCH zur Regel
+  # „kein Trade geht ins In-Play".
+  # Jetzt: alle 30 min in den WM-Anpfiff-Bändern (Anpfiffe liegen 00-04 + 16-23 UTC,
+  # 2h-Vorlauf → 14:00-04:00 UTC abgedeckt) + 2 Tages-Läufe fürs Housekeeping
+  # (Profit-/Age-Trigger auf lang gehaltene Positionen).
   schedule:
-    - cron: '0 6 * * *'
-    - cron: '0 10 * * *'
-    - cron: '0 14 * * *'
-    - cron: '0 18 * * *'
-    - cron: '0 22 * * *'
+    - cron: '0,30 14-23 * * *'   # Abend-Anpfiffe (16-23 UTC) inkl. 2h-Vorlauf
+    - cron: '0,30 0-5 * * *'     # Nacht-Anpfiffe (00-04 UTC) inkl. Vorlauf
+    - cron: '0 6,10 * * *'       # Tages-Housekeeping (lang gehaltene Positionen)
 
   # Manuell auslösbar (z.B. direkt nach einer neuen Position)
   workflow_dispatch:
