@@ -301,6 +301,23 @@ def check_no_phantom_odds(ctx):
                 "84 Odds-Keys vs 72 Fixtures = 12 leere Spiegel-Einträge. Quelle prüfen.")
 
 
+@integrity_check
+def check_result_score_final(ctx):
+    """result.home_score darf NUR gesetzt sein, wenn das Spiel beendet ist
+    (FT/AET/PEN). Sonst ist ein Live-Zwischenstand gespeichert, den das
+    Dashboard als „Endstand" rendert (USA-PRY 1H 2:0 vs echtem 4:1, 13.06.2026)."""
+    finished = {"FT", "AET", "PEN"}
+    fails = []
+    for _g, fx in ctx.fixtures:
+        r = fx.get("result") or {}
+        st = str(r.get("status") or "").upper()
+        if r.get("home_score") is not None and st not in finished:
+            fails.append(f"{ctx.mk(fx)}: Score {r.get('home_score')}:{r.get('away_score')} "
+                         f"bei Status {st or '—'} (nicht beendet)")
+    return _chk("result_score_final", "Endstand nur bei beendetem Spiel", "error", fails,
+                "Live-Zwischenstand im result → wird als Endstand gerendert.")
+
+
 # ── Runner ───────────────────────────────────────────────────────────────────
 def run_checks(wm, poly, schedule, venues, lineups=None, now=None):
     """Führt die ganze Registry aus. Pure. Ein crashender Check killt den Rest nicht."""

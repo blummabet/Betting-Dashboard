@@ -207,11 +207,17 @@ def main():
             else:
                 winner = "draw"
 
+        # FIX 13.06.2026: Scores NUR persistieren wenn das Spiel beendet ist.
+        # Vorher wurde ein Live-Zwischenstand (z.B. USA-PRY 1H 2:0) ins result
+        # geschrieben → Dashboard rendert ihn als „Endstand 2:0", obwohl das Spiel
+        # 4:1 endete. result.home_score ist damit IMMER ein echter Endstand;
+        # Live-Status (1H/HT/…) + elapsed werden weiter gezeigt, aber ohne Score.
+        _finished = status_short in FINISHED_STATUSES
         result_entry = {
             "status":      status_short,
             "statusLong":  status_long,
-            "home_score":  home_score,
-            "away_score":  away_score,
+            "home_score":  home_score if _finished else None,
+            "away_score":  away_score if _finished else None,
         }
         if winner is not None:
             result_entry["winner"] = winner

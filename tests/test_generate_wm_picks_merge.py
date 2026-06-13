@@ -95,7 +95,13 @@ class TestRegistryAndConfigConsistency(unittest.TestCase):
         for name in ["lineup_signal", "apif_predictions"]:
             self.assertIn(name, w)
             self.assertIn("weight", w[name])
-            self.assertEqual(w[name]["weight"], 1.0, f"{name} sollte initial weight=1.0 haben")
+            # FIX 13.06.2026: NICHT mehr ==1.0 prüfen. Seit der Bayesian-Loop
+            # tatsächlich lernt (project_bayesian_loop_fix), bewegen sich die
+            # Gewichte legitim weg von 1.0. Nur Sanity-Bound [0.3, 1.7] prüfen.
+            wv = w[name]["weight"]
+            self.assertIsInstance(wv, (int, float))
+            self.assertGreaterEqual(wv, 0.3)
+            self.assertLessEqual(wv, 1.7)
 
 
 class TestSignalRegistryActive(unittest.TestCase):

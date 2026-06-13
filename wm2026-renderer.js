@@ -607,19 +607,33 @@
       // Odds-Strip: Opening → Now Drift + Mini-Sparkline (zwischen Pick und Story)
       const stripHtml = _buildOddsStrip(heroPick, fxOdds, fx);
       if (stripHtml) html += stripHtml;
-    } else if (isPlayed && fx.result && fx.result.home_score != null && fx.result.away_score != null) {
-      // FIX 12.06.2026: Felder heißen home_score/away_score (nicht .home/.away)
-      // → vorher "undefined:undefined". Nur zeigen wenn echte Scores da sind.
+    } else if (isPlayed && fx.result && fx.result.home_score != null && fx.result.away_score != null
+               && ['FT','AET','PEN'].includes((fx.result.status || 'FT').toUpperCase())) {
+      // FIX 12.06.2026: Felder heißen home_score/away_score (nicht .home/.away).
+      // FIX 13.06.2026: NUR bei finished (FT/AET/PEN) als „Endstand" zeigen — sonst
+      // wurde ein Live-Zwischenstand (1H 2:0) fälschlich als Endstand gerendert,
+      // obwohl das Spiel 4:1 endete. (Default 'FT' für Altdaten ohne status-Feld.)
       html += `<div class="cc-pick cc-pick-result">
         <div class="cc-pick-label">Endstand</div>
         <div class="cc-pick-market">${fx.result.home_score}:${fx.result.away_score}</div>
       </div>`;
     } else if (isPlayed) {
-      // Gespielt (laut Datum), aber Ergebnis noch nicht da (API-Football-Lag).
-      html += `<div class="cc-pick cc-pick-result">
-        <div class="cc-pick-label">Endstand</div>
-        <div class="cc-pick-market cc-pick-pending">–:–</div>
-      </div>`;
+      // Entweder live (Spiel läuft) oder gespielt aber Ergebnis-Lag.
+      const _st = (fx.result && fx.result.status || '').toUpperCase();
+      const _liveSet = ['1H','HT','2H','ET','BT','P','LIVE','INT','SUSP'];
+      if (_liveSet.includes(_st)) {
+        const _el = fx.result && fx.result.elapsed;
+        html += `<div class="cc-pick cc-pick-result">
+          <div class="cc-pick-label">🔴 Läuft${_el ? ` · ${_el}'` : ''}</div>
+          <div class="cc-pick-market cc-pick-pending">Endstand abwarten</div>
+        </div>`;
+      } else {
+        // Gespielt (laut Datum), aber Ergebnis noch nicht da (API-Football-Lag).
+        html += `<div class="cc-pick cc-pick-result">
+          <div class="cc-pick-label">Endstand</div>
+          <div class="cc-pick-market cc-pick-pending">–:–</div>
+        </div>`;
+      }
     } else if (!isPlayed && !heroPick) {
       // Check ob die Picks wegen asymmetrischer Datenbasis ausgeblendet wurden
       const hasAsymPicks = livePicks.length > 0;
