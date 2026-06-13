@@ -123,8 +123,11 @@ class ChanceCreationSignal(Signal):
                 return None
             score = max(-self._t["max_signal_pp"], min(self._t["max_signal_pp"], score))
             conf = min(0.72, 0.42 + 0.02 * abs(total - self._t["ou_baseline"]))
-            ev = (f"🎨 Chancen-Volumen: Σ {total:.1f} (Schlüsselpässe+Abschlüsse beider Teams) "
-                  f"{'hoch→Over' if ou_dir>0 else 'niedrig→Under'}")
+            side = "Over" if ou_dir > 0 else "Under"
+            lean = "stützt" if score > 0 else "warnt gegen"
+            level = "viel" if total > self._t["ou_baseline"] else "wenig"
+            ev = (f"🎨 Chancen-Volumen Σ {total:.1f} ({level}, Schlüsselpässe+Abschlüsse) "
+                  f"→ {lean} {side}")
             return SignalResult(round(score, 2), round(conf, 2), ev,
                                 {"total_threat": round(total, 2)})
         return None

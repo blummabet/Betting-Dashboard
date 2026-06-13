@@ -590,7 +590,18 @@
     // ─── PICK HERO ─────────────────────────────────────
     if (!isPlayed && heroPick) {
       const isAbw = heroPick.verdict === 'ABWÄGEN';
-      const stars = heroPick.conf === 'high' ? 3 : heroPick.conf === 'medium' ? 2 : 1;
+      // FIX 13.06.2026 — Sterne an Conviction koppeln (vorher nur Modell-Confidence
+      // → ★★★ trotz Conviction 0–2/10, oversellte schwache Picks). Jetzt: Minimum aus
+      // Modell-Confidence UND Conviction (0–10 aus den Signal-Familien). 3 Sterne nur,
+      // wenn beides trägt. So zeigt die Karte ehrlich, wenn die Signale dünn sind.
+      const _confStars = heroPick.conf === 'high' ? 3 : heroPick.conf === 'medium' ? 2 : 1;
+      let stars = _confStars;
+      const _cs = heroPick.convictionScore;
+      if (typeof _cs === 'number') {
+        // 3★ nur bei ≥6 (= „gute Wette"-Conviction), 2★ ab 3, sonst 1★.
+        const _convStars = _cs >= 6 ? 3 : _cs >= 3 ? 2 : 1;
+        stars = Math.min(_confStars, _convStars);
+      }
       const oddsStr = heroPick.odds != null ? heroPick.odds.toFixed(2) : '—';
       html += `<div class="cc-pick${isAbw ? ' cc-pick-abw' : ''}">
         <div class="cc-pick-label">${isAbw ? 'Vorsichtiger Pick' : 'Unser Pick'}</div>

@@ -169,8 +169,9 @@ class FormTrendSignal(Signal):
             confidence = min(0.80, 0.45 + 0.04 * min(fh.get("games", 0), fa.get("games", 0))
                              + 0.08 * abs(signed_diff))
             side_str = "Über" if ou_dir == +1 else "Unter"
-            ev = (f"📈 Form-Tor-Schnitt {expected_total:.1f}/Spiel "
-                  f"vs Linie {ou_line} → {side_str} {ou_dir*signed_diff:+.1f} Tore Vorteil")
+            lean = "stützt" if score > 0 else "warnt gegen"
+            ev = (f"📈 Form-Tor-Schnitt {expected_total:.1f}/Spiel vs Linie {ou_line} "
+                  f"→ {lean} {side_str} ({diff_to_line:+.1f} ggü. Linie)")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={
