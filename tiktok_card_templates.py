@@ -1206,3 +1206,109 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
 """
 
 
+# ── Spieltag-Bilanz-Card (Ergebnis-Promo, wiederverwendbar) ───────────────────
+def bilanz_card(
+    hit_pct: str,
+    record_line: str,
+    games: list,
+    *,
+    theme: str = "track_record",
+    badge: str | None = None,
+    series_tag: str = "SPIELTAG 1",
+    sub_label: str = "Trefferquote",
+    sub_detail: str = "",
+    cta: str = "ALLE PICKS IM VIDEO",
+) -> str:
+    """
+    Ergebnis-/Bilanz-Card im Lucas-Style — Trefferquote + Spiele mit Flagge,
+    Endstand und ✅/❌/↩️ pro Pick. Wiederverwendbar pro Spieltag.
+
+    Args:
+        hit_pct:     Große Zahl, z.B. "78%"
+        record_line: z.B. "<b>7 Siege</b> · 2 daneben · 1 Cashback"
+        games:       Liste von dicts:
+                       {"home_flag","home","score","away","away_flag",
+                        "marks": ["W","L","P", ...]}   # W=Treffer L=daneben P=Push(Cashback)
+        theme:       THEMES-Key (default track_record = grün)
+        series_tag:  Label oben links
+        sub_label/sub_detail: unter der großen Zahl
+        cta:         Fußzeile
+
+    Liefert: kompletter HTML-String, 360×640 (rendert via render_to_png/Playwright
+    pixelgenau wie die anderen Cards — SF Pro + Farb-Emoji-Flaggen).
+    """
+    t = THEMES.get(theme, THEMES["track_record"])
+    accent = t["accent"]; rgb = t["accentRgb"]
+    badge = badge or "📊 SPIELTAG-BILANZ"
+    _SYM = {"W": "✅", "L": "❌", "P": "↩️"}
+    rows = ""
+    for g in games:
+        marks = g.get("marks") or []
+        w = sum(1 for m in marks if m == "W")
+        dec = sum(1 for m in marks if m in ("W", "L"))
+        chips = "".join(f'<span class="mk">{_SYM.get(m,"")}</span>' for m in marks)
+        tally = f'{w}/{dec}' if dec else ''
+        rows += (
+            f'<div class="game"><div class="g-top">'
+            f'<span class="team"><span class="flag">{g.get("home_flag","")}</span>{g.get("home","")}</span>'
+            f'<span class="score">{g.get("score","")}</span>'
+            f'<span class="team team-r">{g.get("away","")}<span class="flag">{g.get("away_flag","")}</span></span>'
+            f'</div><div class="marks">{chips}<span class="tally">{tally}</span></div></div>'
+        )
+    sub_detail_html = f' · {sub_detail}' if sub_detail else ''
+    return f"""<!DOCTYPE html>
+<html lang="de"><head><meta charset="UTF-8"><title>Bilanz</title><style>
+* {{ margin:0; padding:0; box-sizing:border-box; }}
+body {{ background:#0a0e18; display:flex; align-items:center; justify-content:center; min-height:100vh;
+  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }}
+.card {{ width:360px; height:640px; background-color:#0a0e18;
+  background-image:
+    radial-gradient(circle at 50% 28%, rgba({rgb},0.10) 0%, transparent 45%),
+    linear-gradient(rgba(255,255,255,0.014) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.014) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
+  border-radius:24px; padding:22px 22px 14px; position:relative; overflow:hidden;
+  display:flex; flex-direction:column; border:1px solid rgba(255,255,255,0.05); }}
+.series {{ position:absolute; top:13px; left:15px; font-size:9px; font-weight:800; letter-spacing:1.5px;
+  color:{accent}; opacity:.7; border:1px solid rgba({rgb},.3); border-radius:6px; padding:3px 8px; }}
+.logo {{ display:flex; justify-content:center; margin-bottom:10px; }}
+.badge {{ display:flex; justify-content:center; margin-bottom:12px; }}
+.badge-inner {{ font-size:11px; font-weight:700; letter-spacing:2px; color:{accent};
+  background:{t["badgeBg"]}; border:1px solid {t["badgeBorder"]}; border-radius:24px; padding:7px 18px; }}
+.number-box {{ border:1px solid rgba({rgb},0.30); border-radius:14px; padding:14px 18px 10px; text-align:center;
+  margin-bottom:10px; background:rgba({rgb},0.025);
+  box-shadow: inset 0 0 32px rgba({rgb},0.06), 0 0 48px rgba({rgb},0.08); }}
+.number {{ font-size:68px; font-weight:900; color:{accent}; line-height:1; letter-spacing:-2px;
+  text-shadow:0 0 28px rgba({rgb},0.45); }}
+.number-sub {{ font-size:10px; font-weight:600; color:rgba(255,255,255,0.34); margin-top:6px;
+  letter-spacing:2px; text-transform:uppercase; }}
+.bilanz {{ text-align:center; font-size:13px; font-weight:600; color:rgba(255,255,255,0.5); margin-bottom:10px; }}
+.bilanz b {{ color:#fff; }}
+.game {{ background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.05); border-radius:12px;
+  padding:7px 13px; margin-bottom:6px; }}
+.g-top {{ display:flex; align-items:center; justify-content:space-between; }}
+.team {{ font-size:16px; font-weight:800; color:#fff; display:flex; align-items:center; gap:7px; width:40%; }}
+.team-r {{ justify-content:flex-end; }}
+.flag {{ font-size:18px; }}
+.score {{ font-size:17px; font-weight:900; color:{accent}; width:20%; text-align:center; }}
+.marks {{ display:flex; align-items:center; gap:5px; margin-top:5px; }}
+.mk {{ font-size:13px; }}
+.tally {{ margin-left:auto; font-size:11px; font-weight:700; color:rgba(255,255,255,0.4); }}
+.cta {{ font-size:10px; font-weight:600; color:rgba(255,255,255,0.28); text-align:center; letter-spacing:3px;
+  border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; margin-top:auto; }}
+.brand {{ font-size:10px; font-weight:700; color:rgba(255,255,255,0.2); text-align:center; letter-spacing:4px;
+  margin-top:7px; text-transform:uppercase; }}
+</style></head><body>
+<div class="card">
+  <div class="series">{series_tag}</div>
+  <div class="logo">{_logo_block(54)}</div>
+  <div class="badge"><div class="badge-inner">{badge}</div></div>
+  <div class="number-box"><div class="number">{hit_pct}</div><div class="number-sub">{sub_label}{sub_detail_html}</div></div>
+  <div class="bilanz">{record_line}</div>
+  {rows}
+  <div class="cta">{cta}</div>
+  <div class="brand">cocobet</div>
+</div>
+</body></html>"""
+
+

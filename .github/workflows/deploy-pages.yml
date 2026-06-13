@@ -22,6 +22,19 @@ on:
   schedule:
     - cron: '*/15 * * * *'
 
+  # Sofort-Deploy direkt nach Abschluss eines Daten-Workflows.
+  # FIX 13.06.2026: Der */15-Schedule läuft bei GitHub oft 15-30 Min verspätet →
+  # FT-Ergebnisse/Resolves (z.B. USA-PRY 4:1) landeten erst spät live, obwohl main
+  # längst korrekt war. workflow_run feuert WORKFLOW-basiert (nicht commit-basiert)
+  # → umgeht die GITHUB_TOKEN-Rekursionssperre und deployt sofort nach jedem
+  # Bot-Daten-Update. Schedule bleibt als Sicherheitsnetz.
+  workflow_run:
+    workflows:
+      - "🌍 WM 2026 Daten aktualisieren"
+      - "📊 Ergebnisse holen"
+      - "💹 WM Poly Positionen überwachen"
+    types: [completed]
+
   # Manuell jederzeit ausführbar
   workflow_dispatch:
 
