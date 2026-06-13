@@ -79,24 +79,40 @@ def evaluate_pick(market: str, home_score: int, away_score: int) -> str:
 
     m = (market or "").lower()
 
-    # 1X2 / Match Result
+    # ── DNB (Draw No Bet) — ZUERST prüfen ────────────────────────────────────
+    # FIX 13.06.2026: muss VOR den generischen 1X2-Checks stehen. „DNB:
+    # Auswärtsteam" enthält den Substring „auswärt" → wurde sonst von der
+    # Auswärtssieg-Regel abgefangen und ein Remis fälschlich als LOSS gewertet,
+    # statt als VOID (Einsatz zurück = Cashback). Bei Remis IMMER VOID.
+    if "dnb" in m or "draw no bet" in m or "no bet" in m:
+        if draw:
+            return "VOID"
+        if "heim" in m or "home" in m:
+            return "WIN" if home_win else "LOSS"
+        if "auswärt" in m or "auswarts" in m or "away" in m:
+            return "WIN" if away_win else "LOSS"
+        return "PENDING"   # DNB ohne erkennbare Seite
+
+    # ── Doppelte Chance ──────────────────────────────────────────────────────
+    if "doppelte" in m or "double chance" in m or m in ("1x", "x2", "12"):
+        if "1x" in m:
+            return "WIN" if (home_win or draw) else "LOSS"
+        if "x2" in m:
+            return "WIN" if (away_win or draw) else "LOSS"
+        if "12" in m:
+            return "WIN" if (home_win or away_win) else "LOSS"
+        return "PENDING"
+
+    # ── 1X2 / Match Result (präzise Vollwort-Checks) ─────────────────────────
     if "heimsieg" in m or m == "1":
         return "WIN" if home_win else "LOSS"
-    if "auswärt" in m or m == "2":
+    if "auswärtssieg" in m or "auswaertssieg" in m or m == "2":
         return "WIN" if away_win else "LOSS"
     if "unentsch" in m or m == "x":
         return "WIN" if draw else "LOSS"
 
-    # Doppelte Chance
-    if "1x" in m or "doppelte" in m and "1x" in m:
-        return "WIN" if (home_win or draw) else "LOSS"
-    if "x2" in m or ("doppelte" in m and "x2" in m):
-        return "WIN" if (away_win or draw) else "LOSS"
-    if "12" in m or ("doppelte" in m and "12" in m):
-        return "WIN" if (home_win or away_win) else "LOSS"
-
     # Over/Under
-    if "über" in m or "over" in m:
+    if "über" in m or "uber" in m or "over" in m:
         for thr in (0.5, 1.5, 2.5, 3.5, 4.5):
             if str(thr) in m:
                 return "WIN" if total > thr else "LOSS"
@@ -112,17 +128,6 @@ def evaluate_pick(market: str, home_score: int, away_score: int) -> str:
         if "nein" in m or "no" in m:
             return "WIN" if not btts else "LOSS"
         return "WIN" if btts else "LOSS"
-
-    # DNB
-    if "dnb" in m:
-        if "heim" in m:
-            if draw:    return "VOID"
-            if home_win: return "WIN"
-            return "LOSS"
-        if "auswärt" in m:
-            if draw:    return "VOID"
-            if away_win: return "WIN"
-            return "LOSS"
 
     # Unknown market — bleibt unaufgelöst
     return "PENDING"
@@ -200,6 +205,7 @@ def main():
     skipped_unknown = 0
     win_count = loss_count = void_count = 0
     conflict_voids = 0   # Audit-Fix: getrennt zählen
+    corrected = 0        # Selbst-Heilung falsch aufgelöster Picks
 
     # ── Pass 1: Konflikt-VOIDs markieren (vor Spielende — sobald Picks generiert) ──
     for pick_key, pick_list in picks.items():
@@ -228,7 +234,22 @@ def main():
 
         for p in pick_list:
             if p.get("result") in ("WIN", "LOSS", "VOID"):
-                continue  # bereits aufgelöst (inkl. Konflikt-VOID)
+                # Selbst-Heilung (13.06.2026): bereits aufgelöste Picks gegen das
+                # finale Ergebnis re-prüfen und korrigieren, falls falsch (z.B. der
+                # DNB-Remis→LOSS-Bug). Endstand ist deterministisch, also stabil —
+                # kein Flapping. Konflikt-VOIDs (voidReason) bleiben unangetastet.
+                if p.get("voidReason"):
+                    continue
+                fresh = evaluate_pick(p.get("market", ""), hs, as_)
+                if fresh in ("WIN", "LOSS", "VOID") and fresh != p["result"]:
+                    print(f"   🔧 Korrektur {pick_key} '{p.get('market')}': "
+                          f"{p['result']} → {fresh}")
+                    p["result"]         = fresh
+                    p["finalScore"]     = f"{hs}-{as_}"
+                    p["resolvedAt"]     = now_iso
+                    p["resultCorrected"] = True
+                    corrected += 1
+                continue  # bereits aufgelöst
 
             outcome = evaluate_pick(p.get("market", ""), hs, as_)
             if outcome == "PENDING":
@@ -243,8 +264,8 @@ def main():
             elif outcome == "LOSS": loss_count += 1
             elif outcome == "VOID": void_count += 1
 
-    # Zurückschreiben — auch wenn nur Konflikt-VOIDs ohne Result-Resolves
-    if resolved > 0 or conflict_voids > 0:
+    # Zurückschreiben — auch wenn nur Konflikt-VOIDs oder Korrekturen
+    if resolved > 0 or conflict_voids > 0 or corrected > 0:
         with open(WM_FILE, "w", encoding="utf-8") as f:
             json.dump(wm, f, ensure_ascii=False, indent=2)
 

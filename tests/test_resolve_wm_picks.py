@@ -7,6 +7,37 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
+class TestDNBEvaluation(unittest.TestCase):
+    """DNB (Draw No Bet): Remis = VOID (Cashback), nicht LOSS. Bug 13.06.2026."""
+
+    def setUp(self):
+        import resolve_wm_picks
+        self.ep = resolve_wm_picks.evaluate_pick
+
+    def test_dnb_away_draw_is_void(self):
+        # CAN-BIH 1:1 → DNB Auswärts muss VOID sein (war fälschlich LOSS)
+        self.assertEqual(self.ep("DNB: Auswärtsteam", 1, 1), "VOID")
+
+    def test_dnb_home_draw_is_void(self):
+        self.assertEqual(self.ep("DNB: Heimteam", 2, 2), "VOID")
+
+    def test_dnb_win_loss(self):
+        self.assertEqual(self.ep("DNB: Auswärtsteam", 0, 2), "WIN")
+        self.assertEqual(self.ep("DNB: Auswärtsteam", 2, 0), "LOSS")
+        self.assertEqual(self.ep("DNB: Heimteam", 2, 0), "WIN")
+        self.assertEqual(self.ep("DNB: Heimteam", 0, 2), "LOSS")
+
+    def test_plain_1x2_unaffected(self):
+        # Echte 1X2-Märkte dürfen NICHT vom DNB-Fix berührt werden
+        self.assertEqual(self.ep("Auswärtssieg", 1, 1), "LOSS")
+        self.assertEqual(self.ep("Auswärtssieg", 0, 1), "WIN")
+        self.assertEqual(self.ep("Heimsieg", 2, 0), "WIN")
+
+    def test_double_chance(self):
+        self.assertEqual(self.ep("Doppelte Chance: X2", 1, 1), "WIN")
+        self.assertEqual(self.ep("Doppelte Chance: 1X", 0, 3), "LOSS")
+
+
 class TestModuleImports(unittest.TestCase):
     """Sicherstellen dass refaktorierte Imports drin sind."""
 
