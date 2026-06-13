@@ -1847,8 +1847,15 @@ def main():
                 slug = f"wm-{fx['home'].lower()}-vs-{fx['away'].lower()}-{fx_date}"
                 w_entry = weather_data.get(slug) or {}
                 if w_entry.get("forecastAvailable") and w_entry.get("tempMax") is not None:
+                    # FIX 13.06.2026: Card-Pille zeigt die echte Anpfiff-Temperatur
+                    # (tempAtKickoff), nicht das Tagesmax — sonst stand z.B. bei QAT-SUI
+                    # „34°C" obwohl es zum Mittags-Anpfiff ~26°C sind. Fallback tempMax.
+                    _temp_disp = w_entry.get("tempAtKickoff")
+                    if _temp_disp is None:
+                        _temp_disp = w_entry.get("tempMax")
                     fx["weather"] = {
-                        "temp":      w_entry.get("tempMax"),
+                        "temp":      _temp_disp,
+                        "tempMax":   w_entry.get("tempMax"),
                         "tempMin":   w_entry.get("tempMin"),
                         "condition": (w_entry.get("condition") or "").lower(),
                         "icon":      w_entry.get("icon"),

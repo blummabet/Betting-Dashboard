@@ -540,6 +540,7 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                 "dataQuality": fix.get("dataQuality", "elo_only"),
                 "isSteamLag":  has_steam_lag,
                 "matchDate":   (fix.get("date") or "")[:10],
+                "kickoff":     fix.get("kickoff"),   # echte Anpfiffzeit (UTC) für 2h-Pre-Match-Close
                 "_betKey":     key,   # intern, wird vor Übergabe an polymarket_bet entfernt
             })
 
@@ -823,6 +824,7 @@ def main():
                 # ── Fields needed for auto-sell ──────────────────────
                 "tokenId":        token_id,
                 "matchDate":      order.get("matchDate", ""),
+                "kickoff":        order.get("kickoff"),   # echte Anpfiffzeit (UTC) → 2h-Pre-Match-Close
                 "sharesEstimate": shares_estimate,
                 "isSteamLag":     is_steam,
             })
