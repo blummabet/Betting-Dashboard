@@ -977,10 +977,17 @@ def main():
         for k in ("dc1X", "dc12", "dcX2"):
             if tb.get(k):
                 new_entry[k] = tb[k]
-        # Asian Handicap (alle 3 Linien wenn verfügbar)
-        for k in ("ahH_n050", "ahA_p050", "ahH_n075", "ahA_p075", "ahH_n100", "ahA_p100"):
+        # Asian Handicap — feste Linien + breitere Mismatch-Linien.
+        # FIX 13.06.2026: ahH_n150/200 + ahLadder fehlten in dieser Kopier-Liste →
+        # wurden zwar von get_match_odds zurückgegeben, aber nie ins gespeicherte
+        # new_entry übernommen (DARUM blieb ahLadder ewig leer trotz neuem Code).
+        for k in ("ahH_n050", "ahA_p050", "ahH_n075", "ahA_p075", "ahH_n100", "ahA_p100",
+                  "ahH_n150", "ahA_p150", "ahH_n200", "ahA_p200"):
             if tb.get(k):
                 new_entry[k] = tb[k]
+        # Volle AH-Leiter für die dynamische Linien-Wahl in generate_wm_picks.
+        if tb.get("ahLadder"):
+            new_entry["ahLadder"] = tb["ahLadder"]
 
         # ── Closing Odds einfrieren wenn Anpfiff vorbei ──────────────────────
         # CLV-Basis: die letzten Pinnacle-Odds VOR dem Anpfiff.
