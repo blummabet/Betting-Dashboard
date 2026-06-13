@@ -22,11 +22,11 @@
       "roi": 29.0
     },
     "Heimsieg": {
-      "n": 1,
-      "wins": 1,
+      "n": 2,
+      "wins": 2,
       "losses": 0,
       "rate": 100.0,
-      "roi": 173.0
+      "roi": 134.5
     },
     "Auswärtssieg": {
       "n": 1,
@@ -38,9 +38,10 @@
     "DNB: Auswärtsteam": {
       "n": 1,
       "wins": 0,
-      "losses": 1,
-      "rate": 0.0,
-      "roi": -100.0
+      "losses": 0,
+      "rate": 0,
+      "roi": 0.0,
+      "voids": 1
     },
     "Doppelte Chance — X2": {
       "n": 1,
@@ -48,15 +49,29 @@
       "losses": 0,
       "rate": 100.0,
       "roi": 98.0
+    },
+    "Über 1.5 Tore": {
+      "n": 1,
+      "wins": 1,
+      "losses": 0,
+      "rate": 100.0,
+      "roi": 43.0
+    },
+    "Über 3.5 Tore": {
+      "n": 1,
+      "wins": 1,
+      "losses": 0,
+      "rate": 100.0,
+      "roi": 350.0
     }
   },
   "byAngle": {
     "other": {
-      "n": 3,
-      "wins": 2,
+      "n": 5,
+      "wins": 4,
       "losses": 1,
-      "rate": 66.7,
-      "roi": 9.0
+      "rate": 80.0,
+      "roi": 84.0
     },
     "defshow": {
       "n": 1,
@@ -66,11 +81,12 @@
       "roi": 74.0
     },
     "pflicht": {
-      "n": 3,
-      "wins": 1,
-      "losses": 2,
-      "rate": 33.3,
-      "roi": -9.0
+      "n": 4,
+      "wins": 2,
+      "losses": 1,
+      "rate": 66.7,
+      "roi": 42.2,
+      "voids": 1
     }
   },
   "byEdgeRange": {
@@ -89,30 +105,40 @@
       "roi": 63.5
     },
     "10pp+": {
-      "n": 2,
-      "wins": 0,
-      "losses": 2,
-      "rate": 0.0,
-      "roi": -100.0
+      "n": 5,
+      "wins": 3,
+      "losses": 1,
+      "rate": 75.0,
+      "roi": 77.8,
+      "voids": 1
     }
   },
   "byDataQuality": {
     "elo+form": {
       "n": 7,
       "wins": 4,
-      "losses": 3,
-      "rate": 57.1,
-      "roi": 10.6
+      "losses": 2,
+      "rate": 66.7,
+      "roi": 24.9,
+      "voids": 1
+    },
+    "full": {
+      "n": 3,
+      "wins": 3,
+      "losses": 0,
+      "rate": 100.0,
+      "roi": 163.0
     }
   },
   "byCluster": {},
   "global": {
-    "n": 7,
-    "wins": 4,
-    "losses": 3,
-    "rate": 57.1,
-    "roi": 10.6
+    "n": 10,
+    "wins": 7,
+    "losses": 2,
+    "rate": 77.8,
+    "roi": 66.3,
+    "voids": 1
   },
   "minSamples": 3,
-  "updatedAt": "2026-06-13T01:47:25Z"
+  "updatedAt": "2026-06-13T04:45:53Z"
 }
