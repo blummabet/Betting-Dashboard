@@ -8,12 +8,12 @@
     "teams": 48,
     "groups": 12,
     "updatedAt": null,
-    "oddsUpdatedAt": "2026-06-13T10:04:36.452655+00:00",
-    "formUpdatedAt": "2026-06-13T10:06:50.735626+00:00",
-    "picksUpdatedAt": "2026-06-13T10:18:30.900017+00:00",
-    "resultsUpdatedAt": "2026-06-13T10:18:30.091874+00:00",
-    "cornersUpdatedAt": "2026-06-13T10:17:48.302194+00:00",
-    "xgUpdatedAt": "2026-06-13T10:17:48.302199+00:00"
+    "oddsUpdatedAt": "2026-06-13T10:33:06.091574+00:00",
+    "formUpdatedAt": "2026-06-13T10:35:15.006998+00:00",
+    "picksUpdatedAt": "2026-06-13T10:46:49.851463+00:00",
+    "resultsUpdatedAt": "2026-06-13T10:46:49.094668+00:00",
+    "cornersUpdatedAt": "2026-06-13T10:46:04.073505+00:00",
+    "xgUpdatedAt": "2026-06-13T10:46:04.073511+00:00"
   },
   "groups": {
     "A": {
@@ -63,7 +63,7 @@
             "away_score": 0,
             "winner": "MEX",
             "elapsed": 90,
-            "resolvedAt": "2026-06-13T10:18:30.091874+00:00"
+            "resolvedAt": "2026-06-13T10:46:49.094668+00:00"
           },
           "weather": {
             "temp": 23.2,
@@ -89,7 +89,7 @@
             "away_score": 1,
             "winner": "KOR",
             "elapsed": 90,
-            "resolvedAt": "2026-06-13T10:18:30.091874+00:00"
+            "resolvedAt": "2026-06-13T10:46:49.094668+00:00"
           },
           "weather": {
             "temp": 29.3,
@@ -236,7 +236,7 @@
             "away_score": 1,
             "winner": "draw",
             "elapsed": 90,
-            "resolvedAt": "2026-06-13T10:18:30.091874+00:00"
+            "resolvedAt": "2026-06-13T10:46:49.094668+00:00"
           },
           "weather": {
             "temp": 26.8,
@@ -573,7 +573,7 @@
             "away_score": 1,
             "winner": "USA",
             "elapsed": 90,
-            "resolvedAt": "2026-06-13T10:18:30.091874+00:00"
+            "resolvedAt": "2026-06-13T10:46:49.094668+00:00"
           },
           "weather": {
             "temp": 29.0,
@@ -7993,6 +7993,21 @@
         "downgradedReason": "O/U Edge 11pp ≥ 10pp Modell-Bias-Schwelle",
         "signals": [
           {
+            "name": "public_static_bias",
+            "score": -1.34,
+            "confidence": 0.49,
+            "evidence": "Konsens (13 Books) unter-bettet BTTS Ja um 2.3pp vs Pinnacle → kein Public-Edge",
+            "weight": 1.0,
+            "weighted_score": -0.66,
+            "metadata": {
+              "market_key": "bttsY",
+              "diff_pp": -2.27,
+              "sharp_p": 0.5027,
+              "public_p": 0.48,
+              "public_bk": "Konsens (13 Books)"
+            }
+          },
+          {
             "name": "xg_strength",
             "score": -2.12,
             "confidence": 0.58,
@@ -8007,10 +8022,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -2.12,
+        "signalAdjustmentPP": -1.78,
         "signalCountPos": 0,
-        "signalCountNeg": 1,
-        "effectiveEdgePP": 8.9,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 9.2,
         "convictionScore": 0,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -8073,7 +8088,7 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -3.8
+          "move_pp": -3.73
         }
       }
     ],
@@ -16996,7 +17011,7 @@
           "pinn_move_pp": 14.4,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 451.4,
+          "hours_since_open": 451.8,
           "open_pinn_odds": 3.22,
           "current_pinn_odds": 2.2,
           "move_age_decay": 0.5,
@@ -17103,7 +17118,7 @@
           "pinn_move_pp": 14.4,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 451.4,
+          "hours_since_open": 451.8,
           "open_pinn_odds": 3.22,
           "current_pinn_odds": 2.2,
           "move_age_decay": 0.5,
@@ -17209,7 +17224,7 @@
           "pinn_move_pp": 14.4,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 451.4,
+          "hours_since_open": 451.8,
           "open_pinn_odds": 3.22,
           "current_pinn_odds": 2.2,
           "move_age_decay": 0.5,
@@ -21405,8 +21420,8 @@
         "lamTotal": 2.32,
         "boldAlt": {
           "market": "Unter 2.5 Tore",
-          "odds": 2.14,
-          "edgePP": 11
+          "odds": 2.12,
+          "edgePP": 10
         },
         "signals": [
           {
@@ -21502,23 +21517,23 @@
       },
       {
         "market": "Unter 2.5 Tore",
-        "odds": 2.14,
+        "odds": 2.12,
         "modelOdds": 1.625,
         "conf": "high",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 1,
         "storySig": 0,
-        "edgePP": 11,
+        "edgePP": 10,
         "info": "Elo +320 · Form WWWDW·LDWWD · xG 1.2:1.1",
         "icon": "🛡️",
         "result": null,
-        "clvPP": 2.3,
+        "clvPP": 2.7,
         "dataQuality": "elo+form",
         "lamH": 1.21,
         "lamA": 1.11,
         "lamTotal": 2.32,
-        "downgradedReason": "O/U Edge 11pp ≥ 10pp Modell-Bias-Schwelle",
+        "downgradedReason": "O/U Edge 10pp ≥ 10pp Modell-Bias-Schwelle",
         "saferAltFor": "Unter 1.5 Tore",
         "riskierAlt": {
           "market": "Unter 1.5 Tore",
@@ -21591,7 +21606,7 @@
         "signalAdjustmentPP": -1.18,
         "signalCountPos": 2,
         "signalCountNeg": 2,
-        "effectiveEdgePP": 9.8,
+        "effectiveEdgePP": 8.8,
         "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -23993,7 +24008,7 @@
         "u25": 1.61,
         "bttsY": 1.98
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.99,
       "public_dr": 3.25,
       "public_aw": 4.0,
@@ -24023,7 +24038,7 @@
       "poly_hw": 0.485,
       "poly_dr": 0.285,
       "poly_aw": 0.235,
-      "poly_vol": 176094.77,
+      "poly_vol": 178114.0,
       "poly_slug": "fifwc-mex-kr-2026-06-18"
     },
     "CZE-ZAF": {
@@ -24039,7 +24054,7 @@
         "u25": 1.57,
         "bttsY": 1.91
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.74,
       "public_dr": 3.7,
       "public_aw": 4.55,
@@ -24129,31 +24144,31 @@
         "u25": 2.12,
         "bttsY": 2.08
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 13.0,
-      "public_dr": 6.5,
-      "public_aw": 1.22,
+      "public_dr": 6.4,
+      "public_aw": 1.21,
       "public_bookmaker": "Konsens (13 Books)",
       "o15": 1.21,
-      "u15": 5.6,
+      "u15": 5.5,
       "o25": 1.62,
       "u25": 2.25,
-      "o35": 2.62,
-      "u35": 1.6,
+      "o35": 2.64,
+      "u35": 1.59,
       "bttsY": 2.38,
       "bttsN": 1.5,
       "dc1X": 5.1,
       "dc12": 1.15,
       "dcX2": 1.06,
-      "public_o25": 1.58,
-      "public_u25": 2.36,
-      "public_bttsY": 2.25,
+      "public_o25": 1.6,
+      "public_u25": 2.35,
+      "public_bttsY": 2.2,
       "public_bttsN": 1.62,
       "public_ou_bookmaker": "Konsens (13 Books)",
       "poly_hw": 0.0615,
       "poly_dr": 0.135,
       "poly_aw": 0.815,
-      "poly_vol": 2815215.44,
+      "poly_vol": 2867056.06,
       "poly_slug": "fifwc-qat-che-2026-06-13"
     },
     "CAN-QAT": {
@@ -24169,7 +24184,7 @@
         "u25": 1.72,
         "bttsY": 2.04
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.3,
       "public_dr": 5.0,
       "public_aw": 10.5,
@@ -24191,15 +24206,15 @@
       "ahA_p075": 3.05,
       "ahH_n100": 1.48,
       "ahA_p100": 2.65,
-      "public_o25": 1.87,
-      "public_u25": 1.91,
-      "public_bttsY": 2.38,
+      "public_o25": 1.85,
+      "public_u25": 1.93,
+      "public_bttsY": 2.35,
       "public_bttsN": 1.53,
       "public_ou_bookmaker": "Konsens (11 Books)",
       "poly_hw": 0.755,
       "poly_dr": 0.165,
       "poly_aw": 0.085,
-      "poly_vol": 69375.47,
+      "poly_vol": 69393.03,
       "poly_slug": "fifwc-can-qat-2026-06-18"
     },
     "SUI-BIH": {
@@ -24215,7 +24230,7 @@
         "u25": 1.85,
         "bttsY": 1.9
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.57,
       "public_dr": 3.94,
       "public_aw": 5.8,
@@ -24239,8 +24254,8 @@
       "ahA_p100": 1.8,
       "public_o25": 2.0,
       "public_u25": 1.8,
-      "public_bttsY": 2.02,
-      "public_bttsN": 1.71,
+      "public_bttsY": 2.01,
+      "public_bttsN": 1.72,
       "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "BRA-MAR": {
@@ -24256,9 +24271,9 @@
         "u25": 1.85,
         "bttsY": 1.91
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
-      "public_hw": 1.67,
-      "public_dr": 3.8,
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
+      "public_hw": 1.7,
+      "public_dr": 3.7,
       "public_aw": 5.25,
       "public_bookmaker": "Konsens (13 Books)",
       "o15": 1.4,
@@ -24272,12 +24287,12 @@
       "dc1X": 1.15,
       "dc12": 1.28,
       "dcX2": 2.15,
-      "ahH_n050": 1.67,
-      "ahA_p050": 2.2,
-      "ahH_n075": 1.87,
-      "ahA_p075": 1.95,
-      "ahH_n100": 2.23,
-      "ahA_p100": 1.65,
+      "ahH_n050": 1.66,
+      "ahA_p050": 2.23,
+      "ahH_n075": 1.89,
+      "ahA_p075": 1.93,
+      "ahH_n100": 2.2,
+      "ahA_p100": 1.66,
       "odds_closing": {
         "hw": 1.68,
         "dr": 3.81,
@@ -24287,21 +24302,21 @@
         "bttsY": 2.05,
         "frozenAt": "2026-06-13T04:31:58.568551+00:00"
       },
-      "public_o25": 2.05,
-      "public_u25": 1.75,
-      "public_bttsY": 2.0,
-      "public_bttsN": 1.75,
+      "public_o25": 2.15,
+      "public_u25": 1.69,
+      "public_bttsY": 2.07,
+      "public_bttsN": 1.7,
       "public_ou_bookmaker": "Konsens (13 Books)",
       "poly_hw": 0.575,
       "poly_dr": 0.255,
       "poly_aw": 0.175,
-      "poly_vol": 2922462.33,
+      "poly_vol": 2965791.79,
       "poly_slug": "fifwc-bra-mar-2026-06-13"
     },
     "HTI-SCO": {
       "hw": 5.8,
-      "dr": 4.5,
-      "aw": 1.59,
+      "dr": 4.6,
+      "aw": 1.57,
       "bookmaker": "pinnacle",
       "odds_open": {
         "hw": 6.46,
@@ -24311,10 +24326,10 @@
         "u25": 1.98,
         "bttsY": 2.0
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
-      "public_hw": 5.8,
-      "public_dr": 4.2,
-      "public_aw": 1.57,
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
+      "public_hw": 5.75,
+      "public_dr": 4.3,
+      "public_aw": 1.55,
       "public_bookmaker": "Konsens (13 Books)",
       "o15": 1.22,
       "u15": 4.5,
@@ -24324,13 +24339,13 @@
       "u35": 1.45,
       "bttsY": 1.8,
       "bttsN": 1.98,
-      "dc1X": 2.5,
+      "dc1X": 2.45,
       "dc12": 1.21,
-      "dcX2": 1.13,
-      "ahH_n050": 5.6,
+      "dcX2": 1.14,
+      "ahH_n050": 5.75,
       "ahA_p050": 1.14,
-      "ahH_n100": 11.2,
-      "ahA_p100": 1.0,
+      "ahH_n100": 10.7,
+      "ahA_p100": 1.01,
       "odds_closing": {
         "hw": 5.9,
         "dr": 4.35,
@@ -24340,15 +24355,15 @@
         "bttsY": 1.91,
         "frozenAt": "2026-06-13T04:31:58.568551+00:00"
       },
-      "public_o25": 1.84,
-      "public_u25": 1.95,
-      "public_bttsY": 1.9,
-      "public_bttsN": 1.85,
+      "public_o25": 1.74,
+      "public_u25": 2.1,
+      "public_bttsY": 1.83,
+      "public_bttsN": 1.95,
       "public_ou_bookmaker": "Konsens (13 Books)",
       "poly_hw": 0.165,
       "poly_dr": 0.215,
       "poly_aw": 0.625,
-      "poly_vol": 843968.51,
+      "poly_vol": 855554.65,
       "poly_slug": "fifwc-hai-sco-2026-06-13"
     },
     "BRA-HTI": {
@@ -24364,7 +24379,7 @@
         "o25": 1.24,
         "u25": 3.38
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.07,
       "public_dr": 11.0,
       "public_aw": 29.0,
@@ -24385,12 +24400,12 @@
       "public_o25": 1.29,
       "public_u25": 3.45,
       "public_bttsY": 2.5,
-      "public_bttsN": 1.48,
+      "public_bttsN": 1.47,
       "public_ou_bookmaker": "Konsens (11 Books)",
       "poly_hw": 0.905,
       "poly_dr": 0.0595,
       "poly_aw": 0.0325,
-      "poly_vol": 128718.7,
+      "poly_vol": 128768.7,
       "poly_slug": "fifwc-bra-hai-2026-06-19"
     },
     "SCO-MAR": {
@@ -24406,7 +24421,7 @@
         "u25": 1.57,
         "bttsY": 1.95
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 4.0,
       "public_dr": 3.25,
       "public_aw": 1.95,
@@ -24450,7 +24465,7 @@
         "u25": 2.1,
         "bttsY": 1.83
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.43,
       "public_dr": 4.5,
       "public_aw": 7.0,
@@ -24535,9 +24550,9 @@
       "poly_slug": "fifwc-usa-par-2026-06-12"
     },
     "AUS-TUR": {
-      "hw": 5.37,
+      "hw": 5.35,
       "dr": 3.86,
-      "aw": 1.72,
+      "aw": 1.73,
       "bookmaker": "pinnacle",
       "odds_open": {
         "hw": 4.46,
@@ -24547,10 +24562,10 @@
         "u25": 1.71,
         "bttsY": 1.86
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
-      "public_hw": 4.9,
-      "public_dr": 3.75,
-      "public_aw": 1.73,
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
+      "public_hw": 5.0,
+      "public_dr": 3.7,
+      "public_aw": 1.71,
       "public_bookmaker": "Konsens (13 Books)",
       "o15": 1.36,
       "u15": 3.5,
@@ -24565,17 +24580,17 @@
       "dcX2": 1.15,
       "ahH_n050": 4.9,
       "ahA_p050": 1.18,
-      "ahH_n100": 12.5,
+      "ahH_n100": 12.2,
       "ahA_p100": 1.0,
       "public_o25": 2.0,
       "public_u25": 1.8,
       "public_bttsY": 1.95,
-      "public_bttsN": 1.82,
+      "public_bttsN": 1.8,
       "public_ou_bookmaker": "Konsens (13 Books)",
       "poly_hw": 0.185,
       "poly_dr": 0.255,
-      "poly_aw": 0.565,
-      "poly_vol": 1084274.46,
+      "poly_aw": 0.575,
+      "poly_vol": 1092491.02,
       "poly_slug": "fifwc-aus-tur-2026-06-14"
     },
     "USA-AUS": {
@@ -24591,10 +24606,10 @@
         "u25": 1.79,
         "bttsY": 1.9
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
-      "public_hw": 1.57,
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
+      "public_hw": 1.55,
       "public_dr": 4.0,
-      "public_aw": 5.5,
+      "public_aw": 5.6,
       "public_bookmaker": "Konsens (11 Books)",
       "o15": 1.3,
       "u15": 3.4,
@@ -24602,7 +24617,7 @@
       "u25": 1.78,
       "o35": 3.6,
       "u35": 1.28,
-      "bttsY": 2.16,
+      "bttsY": 2.14,
       "bttsN": 1.68,
       "dc1X": 1.14,
       "dc12": 1.22,
@@ -24614,14 +24629,14 @@
       "ahH_n100": 1.96,
       "ahA_p100": 1.79,
       "public_o25": 1.95,
-      "public_u25": 1.85,
-      "public_bttsY": 1.94,
+      "public_u25": 1.84,
+      "public_bttsY": 2.0,
       "public_bttsN": 1.75,
       "public_ou_bookmaker": "Konsens (11 Books)",
       "poly_hw": 0.635,
       "poly_dr": 0.215,
       "poly_aw": 0.165,
-      "poly_vol": 164682.85,
+      "poly_vol": 165237.3,
       "poly_slug": "fifwc-usa-aus-2026-06-19"
     },
     "TUR-PRY": {
@@ -24637,8 +24652,8 @@
         "u25": 1.55,
         "bttsY": 1.94
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
-      "public_hw": 2.05,
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
+      "public_hw": 2.04,
       "public_dr": 3.22,
       "public_aw": 3.85,
       "public_bookmaker": "Konsens (11 Books)",
@@ -24660,7 +24675,7 @@
       "ahH_n100": 2.88,
       "ahA_p100": 1.32,
       "public_o25": 2.25,
-      "public_u25": 1.62,
+      "public_u25": 1.625,
       "public_bttsY": 1.95,
       "public_bttsN": 1.78,
       "public_ou_bookmaker": "Konsens (11 Books)",
@@ -24683,9 +24698,9 @@
         "u25": 4.35,
         "bttsY": 2.88
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.04,
-      "public_dr": 17.0,
+      "public_dr": 17.5,
       "public_aw": 36.0,
       "public_bookmaker": "Konsens (13 Books)",
       "o15": 1.07,
@@ -24699,15 +24714,15 @@
       "dc1X": 1.01,
       "dc12": 1.02,
       "dcX2": 12.0,
-      "public_o25": 1.175,
-      "public_u25": 4.6,
-      "public_bttsY": 2.62,
-      "public_bttsN": 1.44,
+      "public_o25": 1.17,
+      "public_u25": 4.725,
+      "public_bttsY": 2.63,
+      "public_bttsN": 1.43,
       "public_ou_bookmaker": "Konsens (13 Books)",
       "poly_hw": 0.9395,
       "poly_dr": 0.0385,
       "poly_aw": 0.0245,
-      "poly_vol": 1921685.15,
+      "poly_vol": 1923549.53,
       "poly_slug": "fifwc-ger-kor-2026-06-14"
     },
     "CIV-ECU": {
@@ -24723,7 +24738,7 @@
         "u25": 1.5,
         "bttsY": 2.1
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 3.6,
       "public_dr": 2.8,
       "public_aw": 2.4,
@@ -24751,7 +24766,7 @@
       "poly_hw": 0.265,
       "poly_dr": 0.335,
       "poly_aw": 0.405,
-      "poly_vol": 146086.9,
+      "poly_vol": 146292.62,
       "poly_slug": "fifwc-civ-ecu-2026-06-14"
     },
     "GER-CIV": {
@@ -24767,7 +24782,7 @@
         "u25": 2.18,
         "bttsY": 1.68
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.53,
       "public_dr": 4.2,
       "public_aw": 5.6,
@@ -24791,13 +24806,13 @@
       "ahA_p100": 1.93,
       "public_o25": 1.79,
       "public_u25": 2.0,
-      "public_bttsY": 1.82,
+      "public_bttsY": 1.83,
       "public_bttsN": 1.88,
       "public_ou_bookmaker": "Konsens (11 Books)",
       "poly_hw": 0.635,
       "poly_dr": 0.205,
       "poly_aw": 0.175,
-      "poly_vol": 64022.86,
+      "poly_vol": 64024.42,
       "poly_slug": "fifwc-ger-civ-2026-06-20"
     },
     "ECU-CUW": {
@@ -24813,7 +24828,7 @@
         "u25": 1.96,
         "bttsY": 2.63
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.18,
       "public_dr": 6.5,
       "public_aw": 15.0,
@@ -24842,8 +24857,8 @@
       "public_ou_bookmaker": "Konsens (11 Books)",
       "poly_hw": 0.815,
       "poly_dr": 0.125,
-      "poly_aw": 0.0675,
-      "poly_vol": 88014.54,
+      "poly_aw": 0.065,
+      "poly_vol": 88040.76,
       "poly_slug": "fifwc-ecu-kor-2026-06-20"
     },
     "NED-JPN": {
@@ -24859,10 +24874,10 @@
         "u25": 1.87,
         "bttsY": 1.71
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
-      "public_hw": 1.97,
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
+      "public_hw": 1.98,
       "public_dr": 3.55,
-      "public_aw": 3.7,
+      "public_aw": 3.75,
       "public_bookmaker": "Konsens (13 Books)",
       "o15": 1.31,
       "u15": 3.75,
@@ -24889,7 +24904,7 @@
       "poly_hw": 0.475,
       "poly_dr": 0.265,
       "poly_aw": 0.255,
-      "poly_vol": 1196241.16,
+      "poly_vol": 1198272.49,
       "poly_slug": "fifwc-nld-jpn-2026-06-14"
     },
     "SWE-TUN": {
@@ -24905,10 +24920,10 @@
         "u25": 1.6,
         "bttsY": 1.93
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
-      "public_hw": 1.88,
-      "public_dr": 3.5,
-      "public_aw": 4.33,
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
+      "public_hw": 1.9,
+      "public_dr": 3.4,
+      "public_aw": 4.2,
       "public_bookmaker": "Konsens (13 Books)",
       "o15": 1.42,
       "u15": 3.15,
@@ -24929,13 +24944,13 @@
       "ahA_p100": 1.43,
       "public_o25": 2.2,
       "public_u25": 1.67,
-      "public_bttsY": 1.97,
-      "public_bttsN": 1.75,
+      "public_bttsY": 1.95,
+      "public_bttsN": 1.77,
       "public_ou_bookmaker": "Konsens (13 Books)",
       "poly_hw": 0.505,
       "poly_dr": 0.275,
       "poly_aw": 0.215,
-      "poly_vol": 307813.11,
+      "poly_vol": 308037.85,
       "poly_slug": "fifwc-swe-tun-2026-06-14"
     },
     "NED-SWE": {
@@ -24951,7 +24966,7 @@
         "u25": 1.94,
         "bttsY": 1.72
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.62,
       "public_dr": 3.9,
       "public_aw": 5.25,
@@ -24978,7 +24993,7 @@
       "public_bttsY": 1.87,
       "public_bttsN": 1.85,
       "public_ou_bookmaker": "Konsens (11 Books)",
-      "poly_hw": 0.595,
+      "poly_hw": 0.585,
       "poly_dr": 0.235,
       "poly_aw": 0.175,
       "poly_vol": 14719.99,
@@ -24997,7 +25012,7 @@
         "u25": 1.51,
         "bttsY": 2.14
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 5.3,
       "public_dr": 3.5,
       "public_aw": 1.7,
@@ -25025,7 +25040,7 @@
       "poly_hw": 0.165,
       "poly_dr": 0.265,
       "poly_aw": 0.585,
-      "poly_vol": 23366.42,
+      "poly_vol": 23368.12,
       "poly_slug": "fifwc-tun-jpn-2026-06-21"
     },
     "BEL-EGY": {
@@ -25041,10 +25056,10 @@
         "u25": 1.98,
         "bttsY": 1.77
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.62,
       "public_dr": 3.9,
-      "public_aw": 5.55,
+      "public_aw": 5.6,
       "public_bookmaker": "Konsens (13 Books)",
       "o15": 1.33,
       "u15": 3.6,
@@ -25071,7 +25086,7 @@
       "poly_hw": 0.605,
       "poly_dr": 0.245,
       "poly_aw": 0.165,
-      "poly_vol": 96765.19,
+      "poly_vol": 97136.95,
       "poly_slug": "fifwc-bel-egy-2026-06-15"
     },
     "IRN-NZL": {
@@ -25087,10 +25102,10 @@
         "u25": 1.69,
         "bttsY": 1.95
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.85,
       "public_dr": 3.5,
-      "public_aw": 4.75,
+      "public_aw": 4.65,
       "public_bookmaker": "Konsens (13 Books)",
       "o15": 1.45,
       "u15": 2.85,
@@ -25109,7 +25124,7 @@
       "ahA_p075": 1.74,
       "ahH_n100": 2.65,
       "ahA_p100": 1.48,
-      "public_o25": 2.38,
+      "public_o25": 2.37,
       "public_u25": 1.6,
       "public_bttsY": 2.1,
       "public_bttsN": 1.67,
@@ -25117,7 +25132,7 @@
       "poly_hw": 0.525,
       "poly_dr": 0.275,
       "poly_aw": 0.195,
-      "poly_vol": 189495.54,
+      "poly_vol": 189569.66,
       "poly_slug": "fifwc-irn-nzl-2026-06-15"
     },
     "BEL-IRN": {
@@ -25133,7 +25148,7 @@
         "u25": 1.9,
         "bttsY": 2.07
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.4,
       "public_dr": 4.5,
       "public_aw": 8.0,
@@ -25179,7 +25194,7 @@
         "u25": 1.57,
         "bttsY": 2.0
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 5.0,
       "public_dr": 3.5,
       "public_aw": 1.73,
@@ -25212,8 +25227,8 @@
     },
     "ESP-CPV": {
       "hw": 1.08,
-      "dr": 11.71,
-      "aw": 28.57,
+      "dr": 11.72,
+      "aw": 28.58,
       "bookmaker": "pinnacle",
       "odds_open": {
         "hw": 1.08,
@@ -25223,9 +25238,9 @@
         "u25": 3.15,
         "bttsY": 2.7
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.1,
-      "public_dr": 10.75,
+      "public_dr": 11.0,
       "public_aw": 26.0,
       "public_bookmaker": "Konsens (13 Books)",
       "o15": 1.12,
@@ -25240,11 +25255,11 @@
       "dc12": 1.02,
       "dcX2": 8.0,
       "ahH_n050": 1.08,
-      "ahA_p050": 7.5,
+      "ahA_p050": 8.0,
       "ahH_n075": 1.09,
-      "ahA_p075": 7.0,
+      "ahA_p075": 7.5,
       "ahH_n100": 1.1,
-      "ahA_p100": 6.75,
+      "ahA_p100": 7.0,
       "public_o25": 1.34,
       "public_u25": 3.1,
       "public_bttsY": 2.5,
@@ -25253,7 +25268,7 @@
       "poly_hw": 0.905,
       "poly_dr": 0.0675,
       "poly_aw": 0.0335,
-      "poly_vol": 633132.63,
+      "poly_vol": 633540.54,
       "poly_slug": "fifwc-esp-cvi-2026-06-15"
     },
     "SAU-URU": {
@@ -25269,7 +25284,7 @@
         "u25": 1.83,
         "bttsY": 2.05
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 7.7,
       "public_dr": 4.4,
       "public_aw": 1.44,
@@ -25295,7 +25310,7 @@
       "poly_hw": 0.115,
       "poly_dr": 0.215,
       "poly_aw": 0.665,
-      "poly_vol": 192650.23,
+      "poly_vol": 193659.48,
       "poly_slug": "fifwc-ksa-ury-2026-06-15"
     },
     "ESP-SAU": {
@@ -25311,7 +25326,7 @@
         "o25": 1.43,
         "u25": 2.48
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.1,
       "public_dr": 9.0,
       "public_aw": 25.0,
@@ -25357,7 +25372,7 @@
         "u25": 1.78,
         "bttsY": 2.07
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.44,
       "public_dr": 4.33,
       "public_aw": 7.1,
@@ -25403,7 +25418,7 @@
         "u25": 1.95,
         "bttsY": 2.0
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.46,
       "public_dr": 4.33,
       "public_aw": 7.1,
@@ -25425,7 +25440,7 @@
       "ahA_p075": 2.43,
       "ahH_n100": 1.78,
       "ahA_p100": 2.08,
-      "public_o25": 1.92,
+      "public_o25": 1.93,
       "public_u25": 1.86,
       "public_bttsY": 2.07,
       "public_bttsN": 1.69,
@@ -25433,7 +25448,7 @@
       "poly_hw": 0.665,
       "poly_dr": 0.215,
       "poly_aw": 0.125,
-      "poly_vol": 344773.83,
+      "poly_vol": 345069.5,
       "poly_slug": "fifwc-fra-sen-2026-06-16"
     },
     "IRQ-NOR": {
@@ -25449,7 +25464,7 @@
         "u25": 2.2,
         "bttsY": 2.06
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 13.5,
       "public_dr": 6.65,
       "public_aw": 1.2,
@@ -25473,7 +25488,7 @@
       "poly_hw": 0.065,
       "poly_dr": 0.125,
       "poly_aw": 0.815,
-      "poly_vol": 112594.11,
+      "poly_vol": 112882.18,
       "poly_slug": "fifwc-irq-nor-2026-06-16"
     },
     "FRA-IRQ": {
@@ -25489,7 +25504,7 @@
         "u25": 2.35,
         "bttsY": 2.65
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.11,
       "public_dr": 8.45,
       "public_aw": 24.0,
@@ -25519,7 +25534,7 @@
       "poly_hw": 0.875,
       "poly_dr": 0.095,
       "poly_aw": 0.0385,
-      "poly_vol": 104396.51,
+      "poly_vol": 105446.87,
       "poly_slug": "fifwc-fra-irq-2026-06-22"
     },
     "NOR-SEN": {
@@ -25535,7 +25550,7 @@
         "u25": 1.89,
         "bttsY": 1.75
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 2.12,
       "public_dr": 3.4,
       "public_aw": 3.32,
@@ -25581,7 +25596,7 @@
         "u25": 1.83,
         "bttsY": 2.2
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.385,
       "public_dr": 4.535,
       "public_aw": 9.0,
@@ -25611,7 +25626,7 @@
       "poly_hw": 0.695,
       "poly_dr": 0.205,
       "poly_aw": 0.105,
-      "poly_vol": 238795.62,
+      "poly_vol": 239116.46,
       "poly_slug": "fifwc-arg-alg-2026-06-16"
     },
     "AUT-JOR": {
@@ -25627,7 +25642,7 @@
         "u25": 2.28,
         "bttsY": 1.89
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.32,
       "public_dr": 5.4,
       "public_aw": 9.025,
@@ -25651,13 +25666,13 @@
       "ahA_p100": 2.6,
       "public_o25": 1.65,
       "public_u25": 2.22,
-      "public_bttsY": 2.0,
+      "public_bttsY": 1.99,
       "public_bttsN": 1.75,
       "public_ou_bookmaker": "Konsens (12 Books)",
       "poly_hw": 0.735,
       "poly_dr": 0.175,
       "poly_aw": 0.105,
-      "poly_vol": 106974.92,
+      "poly_vol": 107260.47,
       "poly_slug": "fifwc-aut-jor-2026-06-17"
     },
     "ARG-AUT": {
@@ -25673,7 +25688,7 @@
         "u25": 1.7,
         "bttsY": 1.92
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.62,
       "public_dr": 3.8,
       "public_aw": 5.5,
@@ -25695,8 +25710,8 @@
       "ahA_p075": 2.05,
       "ahH_n100": 2.07,
       "ahA_p100": 1.76,
-      "public_o25": 1.92,
-      "public_u25": 1.85,
+      "public_o25": 1.95,
+      "public_u25": 1.83,
       "public_bttsY": 1.9,
       "public_bttsN": 1.82,
       "public_ou_bookmaker": "Konsens (11 Books)",
@@ -25719,7 +25734,7 @@
         "u25": 1.84,
         "bttsY": 1.88
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 6.5,
       "public_dr": 4.0,
       "public_aw": 1.52,
@@ -25763,7 +25778,7 @@
         "u25": 2.25,
         "bttsY": 1.88
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.28,
       "public_dr": 5.5,
       "public_aw": 10.575,
@@ -25771,20 +25786,20 @@
       "o15": 1.2,
       "u15": 4.4,
       "o25": 1.68,
-      "u25": 2.14,
+      "u25": 2.12,
       "o35": 2.82,
       "u35": 1.42,
       "bttsY": 2.15,
       "bttsN": 1.63,
       "dc1X": 1.03,
       "dc12": 1.13,
-      "dcX2": 3.65,
+      "dcX2": 3.6,
       "ahH_n050": 1.27,
       "ahA_p050": 3.75,
-      "ahH_n075": 1.32,
-      "ahA_p075": 3.35,
-      "ahH_n100": 1.4,
-      "ahA_p100": 2.95,
+      "ahH_n075": 1.33,
+      "ahA_p075": 3.3,
+      "ahH_n100": 1.41,
+      "ahA_p100": 2.9,
       "public_o25": 1.69,
       "public_u25": 2.1,
       "public_bttsY": 2.175,
@@ -25793,7 +25808,7 @@
       "poly_hw": 0.765,
       "poly_dr": 0.165,
       "poly_aw": 0.075,
-      "poly_vol": 136835.81,
+      "poly_vol": 137053.31,
       "poly_slug": "fifwc-prt-cdr-2026-06-17"
     },
     "UZB-COL": {
@@ -25809,7 +25824,7 @@
         "u25": 1.85,
         "bttsY": 2.1
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 8.7,
       "public_dr": 4.555,
       "public_aw": 1.385,
@@ -25825,8 +25840,8 @@
       "dc1X": 3.0,
       "dc12": 1.2,
       "dcX2": 1.07,
-      "ahH_n050": 8.0,
-      "ahA_p050": 1.08,
+      "ahH_n050": 7.5,
+      "ahA_p050": 1.09,
       "public_o25": 1.925,
       "public_u25": 1.86,
       "public_bttsY": 2.215,
@@ -25851,7 +25866,7 @@
         "o25": 1.58,
         "u25": 2.41
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.23,
       "public_dr": 6.0,
       "public_aw": 11.5,
@@ -25897,7 +25912,7 @@
         "u25": 1.72,
         "bttsY": 2.07
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.46,
       "public_dr": 4.0,
       "public_aw": 7.4,
@@ -25943,7 +25958,7 @@
         "u25": 2.07,
         "bttsY": 1.73
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 2.1,
       "public_dr": 3.3,
       "public_aw": 3.5,
@@ -25973,7 +25988,7 @@
       "poly_hw": 0.465,
       "poly_dr": 0.285,
       "poly_aw": 0.265,
-      "poly_vol": 28984.03,
+      "poly_vol": 29623.1,
       "poly_slug": "fifwc-col-prt-2026-06-27"
     },
     "ENG-CRO": {
@@ -25989,7 +26004,7 @@
         "u25": 1.77,
         "bttsY": 1.95
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.73,
       "public_dr": 3.7,
       "public_aw": 4.9,
@@ -26019,7 +26034,7 @@
       "poly_hw": 0.565,
       "poly_dr": 0.255,
       "poly_aw": 0.185,
-      "poly_vol": 143069.45,
+      "poly_vol": 144310.3,
       "poly_slug": "fifwc-eng-hrv-2026-06-17"
     },
     "GHA-PAN": {
@@ -26035,7 +26050,7 @@
         "u25": 1.69,
         "bttsY": 1.87
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 2.15,
       "public_dr": 3.325,
       "public_aw": 3.44,
@@ -26055,8 +26070,8 @@
       "ahA_p050": 1.74,
       "ahH_n075": 2.55,
       "ahA_p075": 1.5,
-      "ahH_n100": 3.4,
-      "ahA_p100": 1.32,
+      "ahH_n100": 3.45,
+      "ahA_p100": 1.3,
       "public_o25": 2.225,
       "public_u25": 1.63,
       "public_bttsY": 1.95,
@@ -26065,7 +26080,7 @@
       "poly_hw": 0.435,
       "poly_dr": 0.285,
       "poly_aw": 0.275,
-      "poly_vol": 66446.45,
+      "poly_vol": 66448.73,
       "poly_slug": "fifwc-gha-pan-2026-06-17"
     },
     "ENG-GHA": {
@@ -26081,7 +26096,7 @@
         "u25": 2.0,
         "bttsY": 2.0
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.31,
       "public_dr": 5.0,
       "public_aw": 10.0,
@@ -26127,7 +26142,7 @@
         "u25": 1.88,
         "bttsY": 1.88
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 6.5,
       "public_dr": 3.85,
       "public_aw": 1.54,
@@ -26171,7 +26186,7 @@
         "u25": 1.7,
         "bttsY": 1.96
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.62,
       "public_dr": 3.71,
       "public_aw": 5.6,
@@ -26212,7 +26227,7 @@
         "u25": 2.05,
         "bttsY": 2.2
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.31,
       "public_dr": 5.0,
       "public_aw": 9.5,
@@ -26258,7 +26273,7 @@
         "u25": 1.7,
         "bttsY": 1.83
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 5.6,
       "public_dr": 3.84,
       "public_aw": 1.6,
@@ -26300,7 +26315,7 @@
         "u25": 2.06,
         "bttsY": 2.25
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 13.5,
       "public_dr": 6.1,
       "public_aw": 1.22,
@@ -26340,7 +26355,7 @@
         "u25": 1.72,
         "bttsY": 1.83
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 2.1,
       "public_dr": 3.35,
       "public_aw": 3.5,
@@ -26386,8 +26401,8 @@
         "u25": 1.57,
         "bttsY": 2.0
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
-      "public_hw": 2.15,
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
+      "public_hw": 2.12,
       "public_dr": 3.2,
       "public_aw": 3.5,
       "public_bookmaker": "Konsens (11 Books)",
@@ -26408,7 +26423,7 @@
       "ahA_p075": 1.5,
       "ahH_n100": 3.5,
       "ahA_p100": 1.3,
-      "public_o25": 2.255,
+      "public_o25": 2.25,
       "public_u25": 1.62,
       "public_bttsY": 1.93,
       "public_bttsN": 1.8,
@@ -26432,7 +26447,7 @@
         "u25": 1.87,
         "bttsY": 2.2
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.4,
       "public_dr": 4.4,
       "public_aw": 8.0,
@@ -26478,7 +26493,7 @@
         "u25": 1.62,
         "bttsY": 2.0
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 2.3,
       "public_dr": 3.4,
       "public_aw": 2.89,
@@ -26505,10 +26520,10 @@
       "public_bttsY": 1.82,
       "public_bttsN": 1.9,
       "public_ou_bookmaker": "Konsens (11 Books)",
-      "poly_hw": 0.425,
-      "poly_dr": 0.245,
-      "poly_aw": 0.335,
-      "poly_vol": 55243.84,
+      "poly_hw": 0.415,
+      "poly_dr": 0.24,
+      "poly_aw": 0.355,
+      "poly_vol": 59662.66,
       "poly_slug": "fifwc-cvi-ksa-2026-06-26"
     },
     "EGY-IRN": {
@@ -26524,7 +26539,7 @@
         "u25": 1.6,
         "bttsY": 2.0
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 2.23,
       "public_dr": 3.0,
       "public_aw": 3.52,
@@ -26570,7 +26585,7 @@
         "u25": 1.7,
         "bttsY": 2.0
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.64,
       "public_dr": 3.75,
       "public_aw": 5.5,
@@ -26586,8 +26601,8 @@
       "dc1X": 1.14,
       "dc12": 1.26,
       "dcX2": 2.2,
-      "ahH_n050": 1.63,
-      "ahA_p050": 2.28,
+      "ahH_n050": 1.62,
+      "ahA_p050": 2.25,
       "ahH_n075": 1.8,
       "ahA_p075": 2.09,
       "ahH_n100": 2.16,
@@ -26616,7 +26631,7 @@
         "u25": 1.62,
         "bttsY": 2.0
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 2.3,
       "public_dr": 3.2,
       "public_aw": 3.13,
@@ -26646,7 +26661,7 @@
       "poly_hw": 0.415,
       "poly_dr": 0.285,
       "poly_aw": 0.315,
-      "poly_vol": 4607.53,
+      "poly_vol": 4610.53,
       "poly_slug": "fifwc-cdr-uzb-2026-06-27"
     },
     "DZA-AUT": {
@@ -26662,7 +26677,7 @@
         "u25": 1.72,
         "bttsY": 1.91
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 3.5,
       "public_dr": 3.2,
       "public_aw": 2.15,
@@ -26689,8 +26704,8 @@
       "public_bttsY": 1.82,
       "public_bttsN": 1.9,
       "public_ou_bookmaker": "Konsens (11 Books)",
-      "poly_hw": 0.26,
-      "poly_dr": 0.315,
+      "poly_hw": 0.255,
+      "poly_dr": 0.305,
       "poly_aw": 0.445,
       "poly_vol": 12233.8,
       "poly_slug": "fifwc-alg-aut-2026-06-27"
@@ -26708,7 +26723,7 @@
         "u25": 1.7,
         "bttsY": 1.91
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.82,
       "public_dr": 3.5,
       "public_aw": 4.4,
@@ -26754,7 +26769,7 @@
         "u25": 1.67,
         "bttsY": 1.87
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 3.5,
       "public_dr": 3.3,
       "public_aw": 2.1,
@@ -26800,10 +26815,10 @@
         "u25": 1.78,
         "bttsY": 1.8
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 2.5,
-      "public_dr": 3.44,
-      "public_aw": 2.64,
+      "public_dr": 3.45,
+      "public_aw": 2.7,
       "public_bookmaker": "Konsens (11 Books)",
       "o15": 1.25,
       "u15": 3.75,
@@ -26816,21 +26831,21 @@
       "dc1X": 1.43,
       "dc12": 1.29,
       "dcX2": 1.5,
-      "ahH_n050": 2.42,
-      "ahA_p050": 1.55,
+      "ahH_n050": 2.5,
+      "ahA_p050": 1.53,
       "ahH_n075": 3.05,
       "ahA_p075": 1.38,
       "ahH_n100": 4.2,
       "ahA_p100": 1.23,
-      "public_o25": 1.86,
-      "public_u25": 1.91,
+      "public_o25": 1.85,
+      "public_u25": 1.95,
       "public_bttsY": 1.65,
       "public_bttsN": 2.11,
       "public_ou_bookmaker": "Konsens (11 Books)",
       "poly_hw": 0.395,
       "poly_dr": 0.265,
       "poly_aw": 0.355,
-      "poly_vol": 32360.33,
+      "poly_vol": 32656.47,
       "poly_slug": "fifwc-tur-usa-2026-06-25"
     },
     "GER-ECU": {
@@ -26846,7 +26861,7 @@
         "u25": 1.91,
         "bttsY": 1.83
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.7,
       "public_dr": 3.75,
       "public_aw": 4.8,
@@ -26892,7 +26907,7 @@
         "u25": 1.88,
         "bttsY": 2.0
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.5,
       "public_dr": 4.2,
       "public_aw": 6.4,
@@ -26919,7 +26934,7 @@
       "public_bttsY": 1.95,
       "public_bttsN": 1.77,
       "public_ou_bookmaker": "Konsens (11 Books)",
-      "poly_hw": 0.665,
+      "poly_hw": 0.655,
       "poly_dr": 0.215,
       "poly_aw": 0.135,
       "poly_vol": 17331.39,
@@ -26938,7 +26953,7 @@
         "u25": 2.15,
         "bttsY": 2.2
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.27,
       "public_dr": 5.5,
       "public_aw": 10.5,
@@ -26965,10 +26980,10 @@
       "public_bttsY": 2.12,
       "public_bttsN": 1.65,
       "public_ou_bookmaker": "Konsens (11 Books)",
-      "poly_hw": 0.775,
+      "poly_hw": 0.765,
       "poly_dr": 0.155,
       "poly_aw": 0.085,
-      "poly_vol": 18875.55,
+      "poly_vol": 18884.55,
       "poly_slug": "fifwc-nzl-bel-2026-06-26"
     },
     "ESP-URU": {
@@ -26984,7 +26999,7 @@
         "u25": 1.85,
         "bttsY": 1.91
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.62,
       "public_dr": 3.9,
       "public_aw": 5.2,
@@ -27030,7 +27045,7 @@
         "u25": 1.8,
         "bttsY": 2.0
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.83,
       "public_dr": 3.58,
       "public_aw": 4.3,
@@ -27060,7 +27075,7 @@
       "poly_hw": 0.535,
       "poly_dr": 0.255,
       "poly_aw": 0.225,
-      "poly_vol": 36404.74,
+      "poly_vol": 36406.59,
       "poly_slug": "fifwc-nor-fra-2026-06-26"
     },
     "ARG-JOR": {
@@ -27076,9 +27091,9 @@
         "o25": 1.53,
         "u25": 2.34
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.18,
-      "public_dr": 6.5,
+      "public_dr": 6.75,
       "public_aw": 15.0,
       "public_bookmaker": "Konsens (11 Books)",
       "o15": 1.14,
@@ -27122,9 +27137,9 @@
         "u25": 2.25,
         "bttsY": 2.38
       },
-      "updatedAt": "2026-06-13T10:04:36.452655+00:00",
+      "updatedAt": "2026-06-13T10:33:06.091574+00:00",
       "public_hw": 1.27,
-      "public_dr": 5.6,
+      "public_dr": 5.7,
       "public_aw": 10.5,
       "public_bookmaker": "Konsens (11 Books)",
       "o15": 1.18,
@@ -27152,7 +27167,7 @@
       "poly_hw": 0.765,
       "poly_dr": 0.145,
       "poly_aw": 0.105,
-      "poly_vol": 43240.31,
+      "poly_vol": 43390.46,
       "poly_slug": "fifwc-pan-eng-2026-06-27"
     }
   },
@@ -28952,435 +28967,435 @@
   },
   "aiPreviews": {
     "A-1-MEX-ZAF": {
-      "text": "Mexiko ist der mit Abstand stärkste Gegner im Duell. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Unter 1.5 Tore @3.2 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Mexiko ist der mit Abstand stärkste Gegner im Duell. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Mexiko geht als haushoher Favorit in diese Partie. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Unter 1.5 Tore @3.2 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Mexiko geht als haushoher Favorit in diese Partie. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "A-1-KOR-CZE": {
-      "text": "Ausgeglichene Partie — alles ist möglich. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Unser Modell sieht klar Edge auf Heimsieg @2.73 (+8pp gegenüber dem Markt). Ein Überraschungsergebnis ist nicht ausgeschlossen — Tschechien hat das Potenzial zu überraschen.",
-      "tgSnippet": "Ausgeglichene Partie — alles ist möglich. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Auf dem Papier ein offenes Duell. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Das stärkste Signal: Heimsieg @2.73 mit einem Edge von +8pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Tschechien hat das Potenzial zu überraschen.",
+      "tgSnippet": "Auf dem Papier ein offenes Duell. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "A-2-MEX-KOR": {
-      "text": "Auf dem Papier ein offenes Duell. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Auswärtssieg @4.07 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Südkorea hat das Potenzial zu überraschen.",
-      "tgSnippet": "Auf dem Papier ein offenes Duell. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Die Elo-Werte liegen eng beieinander. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Auswärtssieg @4.07 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Südkorea hat das Potenzial zu überraschen.",
+      "tgSnippet": "Die Elo-Werte liegen eng beieinander. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "A-2-CZE-ZAF": {
-      "text": "Tschechien hat einen komfortablen Elo-Vorsprung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Unter 1.5 Tore @3.15 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Tschechien hat einen komfortablen Elo-Vorsprung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Das Modell sieht Tschechien klar vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Unter 1.5 Tore @3.15 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Das Modell sieht Tschechien klar vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "A-3-MEX-CZE": {
-      "text": "Mexiko hat einen moderaten Qualitätsvorteil. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Unter 1.5 Tore @3.2 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Tschechien hat das Potenzial zu überraschen.",
-      "tgSnippet": "Mexiko hat einen moderaten Qualitätsvorteil. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Leichte Überlegenheit für Mexiko laut Elo. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Unter 1.5 Tore @3.2 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Tschechien hat das Potenzial zu überraschen.",
+      "tgSnippet": "Leichte Überlegenheit für Mexiko laut Elo. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "A-3-ZAF-KOR": {
-      "text": "Das Modell sieht Südkorea klar vorne. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel. Unser Modell sieht klar Edge auf Unter 3.5 Tore @1.29 (+7pp gegenüber dem Markt).",
-      "tgSnippet": "Das Modell sieht Südkorea klar vorne. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Südkorea ist deutlicher Favorit laut Elo-Modell. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel. Unser Modell sieht klar Edge auf Unter 3.5 Tore @1.29 (+7pp gegenüber dem Markt).",
+      "tgSnippet": "Südkorea ist deutlicher Favorit laut Elo-Modell. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "B-1-CAN-BIH": {
-      "text": "Auf dem Papier ein offenes Duell. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Auswärtssieg @4.56 — die Quote ist interessant, aber Edge knapp. Trotz der Papierform ist Bosnien-H. gefährlich — Elo-Gap von nur 23 Punkten macht einen Upset realistisch.",
-      "tgSnippet": "Auf dem Papier ein offenes Duell. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Ausgeglichene Partie — alles ist möglich. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Auswärtssieg @4.56 — die Quote ist interessant, aber Edge knapp. Trotz der Papierform ist Bosnien-H. gefährlich — Elo-Gap von nur 23 Punkten macht einen Upset realistisch.",
+      "tgSnippet": "Ausgeglichene Partie — alles ist möglich. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "B-1-QAT-SUI": {
-      "text": "Schweiz hat einen komfortablen Elo-Vorsprung. Schweiz kommt in besserer Torform in dieses Spiel (3.4 vs 2.5 Tore/Spiel). Konkret empfehlen wir Über 2.5 Tore @1.63 — der Markt unterschätzt diese Option um 8pp.",
-      "tgSnippet": "Schweiz hat einen komfortablen Elo-Vorsprung. Schweiz kommt in besserer Torform in dieses Spiel (3.4 vs 2.5 Tore/Spiel).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Das Modell sieht Schweiz klar vorne. Schweiz kommt in besserer Torform in dieses Spiel (3.4 vs 2.5 Tore/Spiel). Konkret empfehlen wir Über 2.5 Tore @1.63 — der Markt unterschätzt diese Option um 8pp.",
+      "tgSnippet": "Das Modell sieht Schweiz klar vorne. Schweiz kommt in besserer Torform in dieses Spiel (3.4 vs 2.5 Tore/Spiel).",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "B-2-CAN-QAT": {
-      "text": "Kanada geht als leichter Favorit ins Rennen. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Doppelte Chance — X2 @3.35 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Katar hat das Potenzial zu überraschen.",
-      "tgSnippet": "Kanada geht als leichter Favorit ins Rennen. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Leichte Überlegenheit für Kanada laut Elo. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Doppelte Chance — X2 @3.35 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Katar hat das Potenzial zu überraschen.",
+      "tgSnippet": "Leichte Überlegenheit für Kanada laut Elo. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "B-2-SUI-BIH": {
-      "text": "Schweiz geht als leichter Favorit ins Rennen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Auswärtssieg @5.42 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Bosnien-H. hat das Potenzial zu überraschen.",
-      "tgSnippet": "Schweiz geht als leichter Favorit ins Rennen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Schweiz hat einen moderaten Qualitätsvorteil. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Auswärtssieg @5.42 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Bosnien-H. hat das Potenzial zu überraschen.",
+      "tgSnippet": "Schweiz hat einen moderaten Qualitätsvorteil. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "B-3-CAN-SUI": {
-      "text": "Schweiz geht als leichter Favorit ins Rennen. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Unter 1.5 Tore @3.2 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Kanada hat das Potenzial zu überraschen.",
-      "tgSnippet": "Schweiz geht als leichter Favorit ins Rennen. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Leichte Überlegenheit für Schweiz laut Elo. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Potenzielle Value-Option bei Unter 1.5 Tore @3.2 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Kanada hat das Potenzial zu überraschen.",
+      "tgSnippet": "Leichte Überlegenheit für Schweiz laut Elo. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "B-3-BIH-QAT": {
       "text": "Bosnien-H. hat einen moderaten Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe B steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei AH Auswärts +0.75 @2.08 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Katar hat das Potenzial zu überraschen.",
       "tgSnippet": "Bosnien-H. hat einen moderaten Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe B steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "C-1-BRA-MAR": {
-      "text": "Das Modell sieht Brasilien klar vorne. Brasilien zeigt die offensivstärkere Form der letzten Wochen (3.1 vs 2.3 Tore/Spiel). Potenzielle Value-Option bei Unter 1.5 Tore @3.3 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Das Modell sieht Brasilien klar vorne. Brasilien zeigt die offensivstärkere Form der letzten Wochen (3.1 vs 2.3 Tore/Spiel).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Brasilien ist deutlicher Favorit laut Elo-Modell. Brasilien zeigt die offensivstärkere Form der letzten Wochen (3.1 vs 2.3 Tore/Spiel). Potenzielle Value-Option bei Unter 1.5 Tore @3.3 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Brasilien ist deutlicher Favorit laut Elo-Modell. Brasilien zeigt die offensivstärkere Form der letzten Wochen (3.1 vs 2.3 Tore/Spiel).",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "C-1-HTI-SCO": {
-      "text": "Schottland hat einen moderaten Qualitätsvorteil. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Potenzielle Value-Option bei Heimsieg @5.89 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Haiti hat das Potenzial zu überraschen.",
-      "tgSnippet": "Schottland hat einen moderaten Qualitätsvorteil. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Schottland geht als leichter Favorit ins Rennen. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Potenzielle Value-Option bei Heimsieg @5.89 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Haiti hat das Potenzial zu überraschen.",
+      "tgSnippet": "Schottland geht als leichter Favorit ins Rennen. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "C-2-BRA-HTI": {
-      "text": "Brasilien geht als haushoher Favorit in diese Partie. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Das Modell sieht keine ausreichende Fehlbewertung durch den Markt.",
-      "tgSnippet": "Brasilien geht als haushoher Favorit in diese Partie. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Auf dem Papier ist Brasilien klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Wir verzichten heute auf eine konkrete Wettempfehlung.",
+      "tgSnippet": "Auf dem Papier ist Brasilien klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "C-2-SCO-MAR": {
-      "text": "Marokko hat einen moderaten Qualitätsvorteil. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Wir verzichten heute auf eine konkrete Wettempfehlung. Ein Überraschungsergebnis ist nicht ausgeschlossen — Schottland hat das Potenzial zu überraschen.",
-      "tgSnippet": "Marokko hat einen moderaten Qualitätsvorteil. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Leichte Überlegenheit für Marokko laut Elo. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Das Modell sieht keine ausreichende Fehlbewertung durch den Markt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Schottland hat das Potenzial zu überraschen.",
+      "tgSnippet": "Leichte Überlegenheit für Marokko laut Elo. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "D-1-USA-PRY": {
       "text": "Das Modell sieht USA klar vorne. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Konkret empfehlen wir Über 1.5 Tore @1.43 — der Markt unterschätzt diese Option um 10pp.",
       "tgSnippet": "Das Modell sieht USA klar vorne. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "D-1-AUS-TUR": {
-      "text": "Leichte Überlegenheit für Australien laut Elo. Türkei kommt in besserer Torform in dieses Spiel (3.5 vs 2.6 Tore/Spiel). Das stärkste Signal: Über 1.5 Tore @1.36 mit einem Edge von +9pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Türkei hat das Potenzial zu überraschen.",
-      "tgSnippet": "Leichte Überlegenheit für Australien laut Elo. Türkei kommt in besserer Torform in dieses Spiel (3.5 vs 2.6 Tore/Spiel).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Australien geht als leichter Favorit ins Rennen. Türkei kommt in besserer Torform in dieses Spiel (3.5 vs 2.6 Tore/Spiel). Konkret empfehlen wir Über 1.5 Tore @1.36 — der Markt unterschätzt diese Option um 9pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Türkei hat das Potenzial zu überraschen.",
+      "tgSnippet": "Australien geht als leichter Favorit ins Rennen. Türkei kommt in besserer Torform in dieses Spiel (3.5 vs 2.6 Tore/Spiel).",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "D-2-USA-AUS": {
-      "text": "USA geht als leichter Favorit ins Rennen. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Konkret empfehlen wir Unter 3.5 Tore @1.28 — der Markt unterschätzt diese Option um 7pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Australien hat das Potenzial zu überraschen.",
-      "tgSnippet": "USA geht als leichter Favorit ins Rennen. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "USA hat einen moderaten Qualitätsvorteil. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Konkret empfehlen wir Unter 3.5 Tore @1.28 — der Markt unterschätzt diese Option um 7pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Australien hat das Potenzial zu überraschen.",
+      "tgSnippet": "USA hat einen moderaten Qualitätsvorteil. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "D-2-TUR-PRY": {
-      "text": "Ausgeglichene Partie — alles ist möglich. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Auswärtssieg @3.87 — die Quote ist interessant, aber Edge knapp. Trotz der Papierform ist Türkei gefährlich — Elo-Gap von nur 9 Punkten macht einen Upset realistisch.",
-      "tgSnippet": "Ausgeglichene Partie — alles ist möglich. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Die Elo-Werte liegen eng beieinander. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Auswärtssieg @3.87 — die Quote ist interessant, aber Edge knapp. Trotz der Papierform ist Türkei gefährlich — Elo-Gap von nur 9 Punkten macht einen Upset realistisch.",
+      "tgSnippet": "Die Elo-Werte liegen eng beieinander. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "E-1-GER-CUW": {
-      "text": "Deutschland geht als haushoher Favorit in diese Partie. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Konkret empfehlen wir Unter 3.5 Tore @2.5 — der Markt unterschätzt diese Option um 7pp.",
+      "text": "Deutschland geht als haushoher Favorit in diese Partie. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Das stärkste Signal: Unter 3.5 Tore @2.5 mit einem Edge von +7pp.",
       "tgSnippet": "Deutschland geht als haushoher Favorit in diese Partie. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "E-1-CIV-ECU": {
-      "text": "Leichte Überlegenheit für Ecuador laut Elo. Elfenbeinküste zeigt die offensivstärkere Form der letzten Wochen (2.7 vs 1.4 Tore/Spiel). Potenzielle Value-Option bei Auswärtssieg @2.41 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Elfenbeinküste hat das Potenzial zu überraschen.",
-      "tgSnippet": "Leichte Überlegenheit für Ecuador laut Elo. Elfenbeinküste zeigt die offensivstärkere Form der letzten Wochen (2.7 vs 1.4 Tore/Spiel).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Ecuador geht als leichter Favorit ins Rennen. Elfenbeinküste zeigt die offensivstärkere Form der letzten Wochen (2.7 vs 1.4 Tore/Spiel). Potenzielle Value-Option bei Auswärtssieg @2.41 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Elfenbeinküste hat das Potenzial zu überraschen.",
+      "tgSnippet": "Ecuador geht als leichter Favorit ins Rennen. Elfenbeinküste zeigt die offensivstärkere Form der letzten Wochen (2.7 vs 1.4 Tore/Spiel).",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "E-2-GER-CIV": {
-      "text": "Deutschland ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Konkret empfehlen wir Heimsieg @1.52 — der Markt unterschätzt diese Option um 8pp.",
-      "tgSnippet": "Deutschland ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Deutschland geht als haushoher Favorit in diese Partie. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Konkret empfehlen wir Heimsieg @1.52 — der Markt unterschätzt diese Option um 8pp.",
+      "tgSnippet": "Deutschland geht als haushoher Favorit in diese Partie. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "E-2-ECU-CUW": {
-      "text": "Das Modell sieht Ecuador klar vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Doppelte Chance — X2 @5.5 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Das Modell sieht Ecuador klar vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Ecuador hat einen komfortablen Elo-Vorsprung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Doppelte Chance — X2 @5.5 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Ecuador hat einen komfortablen Elo-Vorsprung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "F-1-NED-JPN": {
-      "text": "Niederlande hat einen moderaten Qualitätsvorteil. Niederlande zeigt die offensivstärkere Form der letzten Wochen (3.3 vs 2.4 Tore/Spiel). Konkret empfehlen wir Unter 2.5 Tore @1.91 — der Markt unterschätzt diese Option um 8pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Japan hat das Potenzial zu überraschen.",
-      "tgSnippet": "Niederlande hat einen moderaten Qualitätsvorteil. Niederlande zeigt die offensivstärkere Form der letzten Wochen (3.3 vs 2.4 Tore/Spiel).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Leichte Überlegenheit für Niederlande laut Elo. Niederlande zeigt die offensivstärkere Form der letzten Wochen (3.3 vs 2.4 Tore/Spiel). Das stärkste Signal: Unter 2.5 Tore @1.91 mit einem Edge von +8pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Japan hat das Potenzial zu überraschen.",
+      "tgSnippet": "Leichte Überlegenheit für Niederlande laut Elo. Niederlande zeigt die offensivstärkere Form der letzten Wochen (3.3 vs 2.4 Tore/Spiel).",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "F-1-SWE-TUN": {
-      "text": "Auf dem Papier ein offenes Duell. Schweden zeigt die offensivstärkere Form der letzten Wochen (3.7 vs 2.9 Tore/Spiel). Konkret empfehlen wir AH Auswärts +0.75 @1.69 — der Markt unterschätzt diese Option um 12pp. Trotz der Papierform ist Tunesien gefährlich — Elo-Gap von nur 30 Punkten macht einen Upset realistisch.",
-      "tgSnippet": "Auf dem Papier ein offenes Duell. Schweden zeigt die offensivstärkere Form der letzten Wochen (3.7 vs 2.9 Tore/Spiel).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Ausgeglichene Partie — alles ist möglich. Schweden zeigt die offensivstärkere Form der letzten Wochen (3.7 vs 2.9 Tore/Spiel). Unser Modell sieht klar Edge auf AH Auswärts +0.75 @1.69 (+12pp gegenüber dem Markt). Trotz der Papierform ist Tunesien gefährlich — Elo-Gap von nur 30 Punkten macht einen Upset realistisch.",
+      "tgSnippet": "Ausgeglichene Partie — alles ist möglich. Schweden zeigt die offensivstärkere Form der letzten Wochen (3.7 vs 2.9 Tore/Spiel).",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "F-2-NED-SWE": {
-      "text": "Niederlande ist deutlicher Favorit laut Elo-Modell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Konkret empfehlen wir AH Heim −0.75 @1.8 — der Markt unterschätzt diese Option um 12pp.",
-      "tgSnippet": "Niederlande ist deutlicher Favorit laut Elo-Modell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Niederlande hat einen komfortablen Elo-Vorsprung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Unser Modell sieht klar Edge auf AH Heim −0.75 @1.8 (+12pp gegenüber dem Markt).",
+      "tgSnippet": "Niederlande hat einen komfortablen Elo-Vorsprung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "F-2-TUN-JPN": {
-      "text": "Japan geht als leichter Favorit ins Rennen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Heimsieg @5.26 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Tunesien hat das Potenzial zu überraschen.",
-      "tgSnippet": "Japan geht als leichter Favorit ins Rennen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Japan hat einen moderaten Qualitätsvorteil. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Heimsieg @5.26 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Tunesien hat das Potenzial zu überraschen.",
+      "tgSnippet": "Japan hat einen moderaten Qualitätsvorteil. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "G-1-BEL-EGY": {
-      "text": "Das Modell sieht Belgien klar vorne. Belgien zeigt die offensivstärkere Form der letzten Wochen (4.0 vs 2.1 Tore/Spiel). Das stärkste Signal: AH Heim −1.0 @2.14 mit einem Edge von +8pp.",
-      "tgSnippet": "Das Modell sieht Belgien klar vorne. Belgien zeigt die offensivstärkere Form der letzten Wochen (4.0 vs 2.1 Tore/Spiel).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Belgien hat einen komfortablen Elo-Vorsprung. Belgien zeigt die offensivstärkere Form der letzten Wochen (4.0 vs 2.1 Tore/Spiel). Unser Modell sieht klar Edge auf AH Heim −1.0 @2.14 (+8pp gegenüber dem Markt).",
+      "tgSnippet": "Belgien hat einen komfortablen Elo-Vorsprung. Belgien zeigt die offensivstärkere Form der letzten Wochen (4.0 vs 2.1 Tore/Spiel).",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "G-1-IRN-NZL": {
-      "text": "Die Elo-Werte liegen eng beieinander. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Potenzielle Value-Option bei Auswärtssieg @4.78 — die Quote ist interessant, aber Edge knapp. Trotz der Papierform ist Neuseeland gefährlich — Elo-Gap von nur 39 Punkten macht einen Upset realistisch.",
-      "tgSnippet": "Die Elo-Werte liegen eng beieinander. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Auf dem Papier ein offenes Duell. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Potenzielle Value-Option bei Auswärtssieg @4.78 — die Quote ist interessant, aber Edge knapp. Trotz der Papierform ist Neuseeland gefährlich — Elo-Gap von nur 39 Punkten macht einen Upset realistisch.",
+      "tgSnippet": "Auf dem Papier ein offenes Duell. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "G-2-BEL-IRN": {
-      "text": "Auf dem Papier ist Belgien klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Über 1.5 Tore @1.3 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Auf dem Papier ist Belgien klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Belgien ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Über 1.5 Tore @1.3 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Belgien ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "G-2-NZL-EGY": {
-      "text": "Ägypten geht als leichter Favorit ins Rennen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Konkret empfehlen wir Unter 2.5 Tore @1.62 — der Markt unterschätzt diese Option um 9pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Neuseeland hat das Potenzial zu überraschen.",
+      "text": "Ägypten geht als leichter Favorit ins Rennen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Das stärkste Signal: Unter 2.5 Tore @1.62 mit einem Edge von +9pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Neuseeland hat das Potenzial zu überraschen.",
       "tgSnippet": "Ägypten geht als leichter Favorit ins Rennen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "H-1-ESP-CPV": {
       "text": "Spanien geht als haushoher Favorit in diese Partie. Spanien zeigt die offensivstärkere Form der letzten Wochen (3.7 vs 2.6 Tore/Spiel). Das stärkste Signal: Unter 3.5 Tore @1.91 mit einem Edge von +7pp.",
       "tgSnippet": "Spanien geht als haushoher Favorit in diese Partie. Spanien zeigt die offensivstärkere Form der letzten Wochen (3.7 vs 2.6 Tore/Spiel).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "H-1-SAU-URU": {
       "text": "Uruguay hat einen komfortablen Elo-Vorsprung. Saudi-Arabien zeigt die offensivstärkere Form der letzten Wochen (2.3 vs 1.8 Tore/Spiel). Potenzielle Value-Option bei DNB: Heimteam @6.49 — die Quote ist interessant, aber Edge knapp.",
       "tgSnippet": "Uruguay hat einen komfortablen Elo-Vorsprung. Saudi-Arabien zeigt die offensivstärkere Form der letzten Wochen (2.3 vs 1.8 Tore/Spiel).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "H-2-ESP-SAU": {
       "text": "Spanien ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Beide Teams treffen — Ja @2.84 — die Quote ist interessant, aber Edge knapp.",
       "tgSnippet": "Spanien ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "H-2-URU-CPV": {
-      "text": "Auf dem Papier ist Uruguay klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Unter 1.5 Tore @3.6 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Auf dem Papier ist Uruguay klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Uruguay ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Unter 1.5 Tore @3.6 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Uruguay ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "I-1-FRA-SEN": {
       "text": "Frankreich ist deutlicher Favorit laut Elo-Modell. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Das stärkste Signal: Über 1.5 Tore @1.31 mit einem Edge von +8pp.",
       "tgSnippet": "Frankreich ist deutlicher Favorit laut Elo-Modell. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "I-1-IRQ-NOR": {
-      "text": "Norwegen geht als leichter Favorit ins Rennen. Norwegen kommt in besserer Torform in dieses Spiel (3.9 vs 1.8 Tore/Spiel). Potenzielle Value-Option bei Unter 1.5 Tore @4.5 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Irak hat das Potenzial zu überraschen.",
-      "tgSnippet": "Norwegen geht als leichter Favorit ins Rennen. Norwegen kommt in besserer Torform in dieses Spiel (3.9 vs 1.8 Tore/Spiel).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Norwegen hat einen moderaten Qualitätsvorteil. Norwegen kommt in besserer Torform in dieses Spiel (3.9 vs 1.8 Tore/Spiel). Potenzielle Value-Option bei Unter 1.5 Tore @4.5 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Irak hat das Potenzial zu überraschen.",
+      "tgSnippet": "Norwegen hat einen moderaten Qualitätsvorteil. Norwegen kommt in besserer Torform in dieses Spiel (3.9 vs 1.8 Tore/Spiel).",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "J-1-ARG-DZA": {
       "text": "Argentinien geht als haushoher Favorit in diese Partie. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Potenzielle Value-Option bei Unter 1.5 Tore @3.7 — die Quote ist interessant, aber Edge knapp.",
       "tgSnippet": "Argentinien geht als haushoher Favorit in diese Partie. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "J-1-AUT-JOR": {
-      "text": "Österreich hat einen moderaten Qualitätsvorteil. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Potenzielle Value-Option bei Doppelte Chance — X2 @3.45 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Jordanien hat das Potenzial zu überraschen.",
-      "tgSnippet": "Österreich hat einen moderaten Qualitätsvorteil. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Leichte Überlegenheit für Österreich laut Elo. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Potenzielle Value-Option bei Doppelte Chance — X2 @3.45 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Jordanien hat das Potenzial zu überraschen.",
+      "tgSnippet": "Leichte Überlegenheit für Österreich laut Elo. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "K-1-POR-COD": {
-      "text": "Auf dem Papier ist Portugal klar überlegen. Portugal zeigt die offensivstärkere Form der letzten Wochen (3.1 vs 2.3 Tore/Spiel). Das stärkste Signal: Unter 3.5 Tore @1.42 mit einem Edge von +7pp.",
+      "text": "Auf dem Papier ist Portugal klar überlegen. Portugal zeigt die offensivstärkere Form der letzten Wochen (3.1 vs 2.3 Tore/Spiel). Unser Modell sieht klar Edge auf Unter 3.5 Tore @1.42 (+7pp gegenüber dem Markt).",
       "tgSnippet": "Auf dem Papier ist Portugal klar überlegen. Portugal zeigt die offensivstärkere Form der letzten Wochen (3.1 vs 2.3 Tore/Spiel).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "K-1-UZB-COL": {
-      "text": "Das Modell sieht Kolumbien klar vorne. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Potenzielle Value-Option bei Über 2.5 Tore @1.88 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Das Modell sieht Kolumbien klar vorne. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Kolumbien hat einen komfortablen Elo-Vorsprung. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Potenzielle Value-Option bei Über 2.5 Tore @1.88 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Kolumbien hat einen komfortablen Elo-Vorsprung. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "L-1-ENG-CRO": {
-      "text": "England hat einen komfortablen Elo-Vorsprung. Im Direktvergleich (3 Spiele) hat England die Nase klar vorne (2S-1U-0N). Kein klarer Markt-Edge identifiziert — beobachten und abwarten.",
-      "tgSnippet": "England hat einen komfortablen Elo-Vorsprung. Im Direktvergleich (3 Spiele) hat England die Nase klar vorne (2S-1U-0N).",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Das Modell sieht England klar vorne. Im Direktvergleich (3 Spiele) hat England die Nase klar vorne (2S-1U-0N). Wir verzichten heute auf eine konkrete Wettempfehlung.",
+      "tgSnippet": "Das Modell sieht England klar vorne. Im Direktvergleich (3 Spiele) hat England die Nase klar vorne (2S-1U-0N).",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "L-1-GHA-PAN": {
-      "text": "Auf dem Papier ein offenes Duell. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Potenzielle Value-Option bei Über 1.5 Tore @1.43 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Panama hat das Potenzial zu überraschen.",
-      "tgSnippet": "Auf dem Papier ein offenes Duell. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Die Elo-Werte liegen eng beieinander. Beide Teams kommen mit ähnlicher Torquote in diese Partie. Potenzielle Value-Option bei Über 1.5 Tore @1.43 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Panama hat das Potenzial zu überraschen.",
+      "tgSnippet": "Die Elo-Werte liegen eng beieinander. Beide Teams kommen mit ähnlicher Torquote in diese Partie.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "C-3-BRA-SCO": {
-      "text": "Brasilien geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Über 3.5 Tore @3.1 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Brasilien geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Auf dem Papier ist Brasilien klar überlegen. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Über 3.5 Tore @3.1 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Auf dem Papier ist Brasilien klar überlegen. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "C-3-MAR-HTI": {
-      "text": "Das Modell sieht Marokko klar vorne. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Unter 1.5 Tore @4.5 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Das Modell sieht Marokko klar vorne. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Marokko hat einen komfortablen Elo-Vorsprung. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Unter 1.5 Tore @4.5 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Marokko hat einen komfortablen Elo-Vorsprung. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "D-3-USA-TUR": {
-      "text": "USA hat einen komfortablen Elo-Vorsprung. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Konkret empfehlen wir Über 1.5 Tore @1.25 — der Markt unterschätzt diese Option um 8pp.",
-      "tgSnippet": "USA hat einen komfortablen Elo-Vorsprung. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Das Modell sieht USA klar vorne. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Unser Modell sieht klar Edge auf Über 1.5 Tore @1.25 (+8pp gegenüber dem Markt).",
+      "tgSnippet": "Das Modell sieht USA klar vorne. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "D-3-PRY-AUS": {
-      "text": "Australien hat einen moderaten Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe D steht für beide Teams viel auf dem Spiel. Konkret empfehlen wir Unter 2.5 Tore @1.62 — der Markt unterschätzt diese Option um 9pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Paraguay hat das Potenzial zu überraschen.",
-      "tgSnippet": "Australien hat einen moderaten Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe D steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Australien geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe D steht für beide Teams viel auf dem Spiel. Konkret empfehlen wir Unter 2.5 Tore @1.62 — der Markt unterschätzt diese Option um 9pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Paraguay hat das Potenzial zu überraschen.",
+      "tgSnippet": "Australien geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe D steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "E-3-GER-ECU": {
-      "text": "Das Modell sieht Deutschland klar vorne. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Unter 3.5 Tore @1.33 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Das Modell sieht Deutschland klar vorne. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Deutschland hat einen komfortablen Elo-Vorsprung. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Unter 3.5 Tore @1.33 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Deutschland hat einen komfortablen Elo-Vorsprung. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "E-3-CUW-CIV": {
-      "text": "Elfenbeinküste geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Unter 1.5 Tore @4.6 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Curaçao hat das Potenzial zu überraschen.",
-      "tgSnippet": "Elfenbeinküste geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Leichte Überlegenheit für Elfenbeinküste laut Elo. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Unter 1.5 Tore @4.6 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Curaçao hat das Potenzial zu überraschen.",
+      "tgSnippet": "Leichte Überlegenheit für Elfenbeinküste laut Elo. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "F-3-NED-TUN": {
-      "text": "Das Modell sieht Niederlande klar vorne. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Konkret empfehlen wir Über 2.5 Tore @1.8 — der Markt unterschätzt diese Option um 9pp.",
-      "tgSnippet": "Das Modell sieht Niederlande klar vorne. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Niederlande hat einen komfortablen Elo-Vorsprung. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Unser Modell sieht klar Edge auf Über 2.5 Tore @1.8 (+9pp gegenüber dem Markt).",
+      "tgSnippet": "Niederlande hat einen komfortablen Elo-Vorsprung. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "F-3-JPN-SWE": {
-      "text": "Japan geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Über 2.5 Tore @2.06 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Schweden hat das Potenzial zu überraschen.",
-      "tgSnippet": "Japan geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Japan hat einen moderaten Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Über 2.5 Tore @2.06 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Schweden hat das Potenzial zu überraschen.",
+      "tgSnippet": "Japan hat einen moderaten Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "G-3-BEL-NZL": {
-      "text": "Belgien geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Über 1.5 Tore @1.18 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Belgien geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Auf dem Papier ist Belgien klar überlegen. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Über 1.5 Tore @1.18 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Auf dem Papier ist Belgien klar überlegen. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "G-3-EGY-IRN": {
-      "text": "Ägypten geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei AH Auswärts +0.5 @1.68 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Iran hat das Potenzial zu überraschen.",
-      "tgSnippet": "Ägypten geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Ägypten hat einen moderaten Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei AH Auswärts +0.5 @1.68 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Iran hat das Potenzial zu überraschen.",
+      "tgSnippet": "Ägypten hat einen moderaten Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "H-3-ESP-URU": {
-      "text": "Leichte Überlegenheit für Spanien laut Elo. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Auswärtssieg @5.15 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Uruguay hat das Potenzial zu überraschen.",
-      "tgSnippet": "Leichte Überlegenheit für Spanien laut Elo. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Spanien geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Auswärtssieg @5.15 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Uruguay hat das Potenzial zu überraschen.",
+      "tgSnippet": "Spanien geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "H-3-CPV-SAU": {
       "text": "Auf dem Papier ein offenes Duell. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei AH Heim −1.0 @4.0 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Kap Verde hat das Potenzial zu überraschen.",
       "tgSnippet": "Auf dem Papier ein offenes Duell. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "I-2-FRA-IRQ": {
-      "text": "Frankreich ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Unter 1.5 Tore @5.8 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Frankreich ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Auf dem Papier ist Frankreich klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Unter 1.5 Tore @5.8 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Auf dem Papier ist Frankreich klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "I-2-NOR-SEN": {
       "text": "Die Elo-Werte liegen eng beieinander. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Auswärtssieg @3.28 — die Quote ist interessant, aber Edge knapp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Norwegen hat das Potenzial zu überraschen.",
       "tgSnippet": "Die Elo-Werte liegen eng beieinander. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "I-3-FRA-NOR": {
-      "text": "Frankreich geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel. Das stärkste Signal: Über 1.5 Tore @1.3 mit einem Edge von +9pp.",
-      "tgSnippet": "Frankreich geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Auf dem Papier ist Frankreich klar überlegen. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel. Konkret empfehlen wir Über 1.5 Tore @1.3 — der Markt unterschätzt diese Option um 9pp.",
+      "tgSnippet": "Auf dem Papier ist Frankreich klar überlegen. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "I-3-SEN-IRQ": {
       "text": "Senegal hat einen komfortablen Elo-Vorsprung. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel. Konkret empfehlen wir Unter 3.5 Tore @1.3 — der Markt unterschätzt diese Option um 9pp.",
       "tgSnippet": "Senegal hat einen komfortablen Elo-Vorsprung. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "J-2-ARG-AUT": {
-      "text": "Das Modell sieht Argentinien klar vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Unter 1.5 Tore @3.6 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Das Modell sieht Argentinien klar vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Argentinien hat einen komfortablen Elo-Vorsprung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Unter 1.5 Tore @3.6 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Argentinien hat einen komfortablen Elo-Vorsprung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "J-2-JOR-DZA": {
-      "text": "Die Elo-Werte liegen eng beieinander. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Heimsieg @6.19 — die Quote ist interessant, aber Edge knapp. Trotz der Papierform ist Jordanien gefährlich — Elo-Gap von nur 49 Punkten macht einen Upset realistisch.",
-      "tgSnippet": "Die Elo-Werte liegen eng beieinander. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Ausgeglichene Partie — alles ist möglich. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Heimsieg @6.19 — die Quote ist interessant, aber Edge knapp. Trotz der Papierform ist Jordanien gefährlich — Elo-Gap von nur 49 Punkten macht einen Upset realistisch.",
+      "tgSnippet": "Ausgeglichene Partie — alles ist möglich. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "J-3-ARG-JOR": {
-      "text": "Argentinien ist der mit Abstand stärkste Gegner im Duell. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei AH Auswärts +0.75 @4.1 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Argentinien ist der mit Abstand stärkste Gegner im Duell. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Auf dem Papier ist Argentinien klar überlegen. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei AH Auswärts +0.75 @4.1 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Auf dem Papier ist Argentinien klar überlegen. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "J-3-DZA-AUT": {
-      "text": "Leichte Überlegenheit für Österreich laut Elo. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel. Das stärkste Signal: Unter 3.5 Tore @1.25 mit einem Edge von +7pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Algerien hat das Potenzial zu überraschen.",
+      "text": "Leichte Überlegenheit für Österreich laut Elo. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel. Unser Modell sieht klar Edge auf Unter 3.5 Tore @1.25 (+7pp gegenüber dem Markt). Ein Überraschungsergebnis ist nicht ausgeschlossen — Algerien hat das Potenzial zu überraschen.",
       "tgSnippet": "Leichte Überlegenheit für Österreich laut Elo. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "K-2-POR-UZB": {
-      "text": "Auf dem Papier ist Portugal klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Beide Teams treffen — Ja @1.98 — die Quote ist interessant, aber Edge knapp.",
-      "tgSnippet": "Auf dem Papier ist Portugal klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Portugal ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Beide Teams treffen — Ja @1.98 — die Quote ist interessant, aber Edge knapp.",
+      "tgSnippet": "Portugal ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "K-2-COL-COD": {
-      "text": "Das Modell sieht Kolumbien klar vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Unser Modell sieht klar Edge auf Unter 3.5 Tore @1.25 (+7pp gegenüber dem Markt).",
-      "tgSnippet": "Das Modell sieht Kolumbien klar vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Kolumbien hat einen komfortablen Elo-Vorsprung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Konkret empfehlen wir Unter 3.5 Tore @1.25 — der Markt unterschätzt diese Option um 7pp.",
+      "tgSnippet": "Kolumbien hat einen komfortablen Elo-Vorsprung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "K-3-POR-COL": {
       "text": "Portugal hat einen moderaten Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel. Konkret empfehlen wir AH Heim −1.0 @3.25 — der Markt unterschätzt diese Option um 10pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Kolumbien hat das Potenzial zu überraschen.",
       "tgSnippet": "Portugal hat einen moderaten Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "K-3-COD-UZB": {
-      "text": "Auf dem Papier ein offenes Duell. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Unter 1.5 Tore @2.98 — die Quote ist interessant, aber Edge knapp. Trotz der Papierform ist Usbekistan gefährlich — Elo-Gap von nur 10 Punkten macht einen Upset realistisch.",
-      "tgSnippet": "Auf dem Papier ein offenes Duell. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "Die Elo-Werte liegen eng beieinander. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Unter 1.5 Tore @2.98 — die Quote ist interessant, aber Edge knapp. Trotz der Papierform ist Usbekistan gefährlich — Elo-Gap von nur 10 Punkten macht einen Upset realistisch.",
+      "tgSnippet": "Die Elo-Werte liegen eng beieinander. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "L-2-ENG-GHA": {
-      "text": "Auf dem Papier ist England klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Wir verzichten heute auf eine konkrete Wettempfehlung.",
-      "tgSnippet": "Auf dem Papier ist England klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "England ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Das Modell sieht keine ausreichende Fehlbewertung durch den Markt.",
+      "tgSnippet": "England ist der mit Abstand stärkste Gegner im Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "L-2-PAN-CRO": {
       "text": "Das Modell sieht Kroatien klar vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Potenzielle Value-Option bei Über 3.5 Tore @3.5 — die Quote ist interessant, aber Edge knapp.",
       "tgSnippet": "Das Modell sieht Kroatien klar vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "L-3-ENG-PAN": {
-      "text": "Auf dem Papier ist England klar überlegen. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel. Kein klarer Markt-Edge identifiziert — beobachten und abwarten.",
-      "tgSnippet": "Auf dem Papier ist England klar überlegen. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "text": "England geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel. Das Modell sieht keine ausreichende Fehlbewertung durch den Markt.",
+      "tgSnippet": "England geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     },
     "L-3-CRO-GHA": {
       "text": "Kroatien ist deutlicher Favorit laut Elo-Modell. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel. Potenzielle Value-Option bei Über 1.5 Tore @1.33 — die Quote ist interessant, aber Edge knapp.",
       "tgSnippet": "Kroatien ist deutlicher Favorit laut Elo-Modell. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-13T10:18:56.935312+00:00",
+      "generatedAt": "2026-06-13T10:47:08.645442+00:00",
       "hash": "rule-based"
     }
   },
@@ -29516,13 +29531,13 @@
       "forAvg": 3.8,
       "againstAvg": 2.2,
       "games": 15,
-      "updatedAt": "2026-06-13T10:07:18.253854+00:00"
+      "updatedAt": "2026-06-13T10:35:42.159096+00:00"
     },
     "AUS": {
       "forAvg": 2.77,
       "againstAvg": 4.92,
       "games": 13,
-      "updatedAt": "2026-06-13T10:07:45.607738+00:00"
+      "updatedAt": "2026-06-13T10:36:09.288724+00:00"
     },
     "AUT": {
       "forAvg": 3.93,
@@ -29540,7 +29555,7 @@
       "forAvg": 4.29,
       "againstAvg": 3.43,
       "games": 14,
-      "updatedAt": "2026-06-13T10:08:12.917102+00:00"
+      "updatedAt": "2026-06-13T10:36:36.234738+00:00"
     },
     "CAN": {
       "forAvg": 5.92,
@@ -29552,19 +29567,19 @@
       "forAvg": 4.0,
       "againstAvg": 2.92,
       "games": 12,
-      "updatedAt": "2026-06-13T10:08:40.460298+00:00"
+      "updatedAt": "2026-06-13T10:37:03.316261+00:00"
     },
     "COD": {
       "forAvg": 2.89,
       "againstAvg": 2.0,
       "games": 9,
-      "updatedAt": "2026-06-13T10:09:07.812612+00:00"
+      "updatedAt": "2026-06-13T10:37:30.294185+00:00"
     },
     "COL": {
       "forAvg": 3.6,
       "againstAvg": 2.93,
       "games": 15,
-      "updatedAt": "2026-06-13T10:09:35.194253+00:00"
+      "updatedAt": "2026-06-13T10:37:57.766313+00:00"
     },
     "CRO": {
       "forAvg": 7.29,
@@ -29576,7 +29591,7 @@
       "forAvg": 3.92,
       "againstAvg": 4.17,
       "games": 12,
-      "updatedAt": "2026-06-13T10:10:30.071724+00:00"
+      "updatedAt": "2026-06-13T10:38:51.726744+00:00"
     },
     "CZE": {
       "forAvg": 6.92,
@@ -29588,19 +29603,19 @@
       "forAvg": 3.11,
       "againstAvg": 3.0,
       "games": 9,
-      "updatedAt": "2026-06-13T10:10:57.505058+00:00"
+      "updatedAt": "2026-06-13T10:39:18.683260+00:00"
     },
     "ECU": {
       "forAvg": 3.6,
       "againstAvg": 3.6,
       "games": 15,
-      "updatedAt": "2026-06-13T10:11:24.861450+00:00"
+      "updatedAt": "2026-06-13T10:39:45.610337+00:00"
     },
     "EGY": {
       "forAvg": 2.73,
       "againstAvg": 5.09,
       "games": 11,
-      "updatedAt": "2026-06-13T10:11:52.373785+00:00"
+      "updatedAt": "2026-06-13T10:40:12.637168+00:00"
     },
     "ENG": {
       "forAvg": 8.13,
@@ -29636,31 +29651,31 @@
       "forAvg": 4.38,
       "againstAvg": 4.15,
       "games": 13,
-      "updatedAt": "2026-06-13T10:12:19.859040+00:00"
+      "updatedAt": "2026-06-13T10:40:39.776977+00:00"
     },
     "IRN": {
       "forAvg": 3.71,
       "againstAvg": 4.0,
       "games": 7,
-      "updatedAt": "2026-06-13T10:12:47.217669+00:00"
+      "updatedAt": "2026-06-13T10:41:06.794318+00:00"
     },
     "IRQ": {
       "forAvg": 3.33,
       "againstAvg": 4.17,
       "games": 6,
-      "updatedAt": "2026-06-13T10:13:14.582766+00:00"
+      "updatedAt": "2026-06-13T10:41:33.826358+00:00"
     },
     "JOR": {
       "forAvg": 2.5,
       "againstAvg": 5.0,
       "games": 4,
-      "updatedAt": "2026-06-13T10:13:41.977634+00:00"
+      "updatedAt": "2026-06-13T10:42:00.858813+00:00"
     },
     "JPN": {
       "forAvg": 4.83,
       "againstAvg": 1.92,
       "games": 12,
-      "updatedAt": "2026-06-13T10:14:09.320858+00:00"
+      "updatedAt": "2026-06-13T10:42:27.832709+00:00"
     },
     "KOR": {
       "forAvg": 5.5,
@@ -29672,7 +29687,7 @@
       "forAvg": 5.0,
       "againstAvg": 2.33,
       "games": 9,
-      "updatedAt": "2026-06-13T10:14:36.671375+00:00"
+      "updatedAt": "2026-06-13T10:42:54.802136+00:00"
     },
     "MEX": {
       "forAvg": 4.67,
@@ -29696,7 +29711,7 @@
       "forAvg": 4.12,
       "againstAvg": 5.62,
       "games": 8,
-      "updatedAt": "2026-06-13T10:15:04.067213+00:00"
+      "updatedAt": "2026-06-13T10:43:21.804701+00:00"
     },
     "PAN": {
       "forAvg": 3.92,
@@ -29720,13 +29735,13 @@
       "forAvg": 3.5,
       "againstAvg": 4.8,
       "games": 10,
-      "updatedAt": "2026-06-13T10:15:31.474429+00:00"
+      "updatedAt": "2026-06-13T10:43:48.790638+00:00"
     },
     "SAU": {
       "forAvg": 2.25,
       "againstAvg": 3.12,
       "games": 8,
-      "updatedAt": "2026-06-13T10:15:58.890007+00:00"
+      "updatedAt": "2026-06-13T10:44:16.069002+00:00"
     },
     "SCO": {
       "forAvg": 5.2,
@@ -29738,7 +29753,7 @@
       "forAvg": 4.75,
       "againstAvg": 2.83,
       "games": 12,
-      "updatedAt": "2026-06-13T10:16:26.211626+00:00"
+      "updatedAt": "2026-06-13T10:44:43.016933+00:00"
     },
     "SUI": {
       "forAvg": 4.87,
@@ -29756,19 +29771,19 @@
       "forAvg": 2.62,
       "againstAvg": 3.75,
       "games": 8,
-      "updatedAt": "2026-06-13T10:16:53.581997+00:00"
+      "updatedAt": "2026-06-13T10:45:10.005706+00:00"
     },
     "URU": {
       "forAvg": 4.47,
       "againstAvg": 4.47,
       "games": 15,
-      "updatedAt": "2026-06-13T10:17:20.926768+00:00"
+      "updatedAt": "2026-06-13T10:45:36.972503+00:00"
     },
     "UZB": {
       "forAvg": 4.75,
       "againstAvg": 3.38,
       "games": 8,
-      "updatedAt": "2026-06-13T10:17:48.302098+00:00"
+      "updatedAt": "2026-06-13T10:46:04.073415+00:00"
     },
     "ZAF": {
       "forAvg": 4.54,
@@ -29780,7 +29795,7 @@
       "forAvg": 0.5,
       "againstAvg": 1.0,
       "games": 4,
-      "updatedAt": "2026-06-13T10:10:02.598827+00:00"
+      "updatedAt": "2026-06-13T10:38:24.754385+00:00"
     },
     "TUR": {
       "forAvg": 6.67,
@@ -30440,7 +30455,7 @@
   },
   "injuries": {
     "_meta": {
-      "updatedAt": "2026-06-13T10:05:41.273940+00:00",
+      "updatedAt": "2026-06-13T10:34:06.847565+00:00",
       "daysUntilWM": -2,
       "status": "live",
       "teamsWithData": 1

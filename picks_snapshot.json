@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-06-13T10:18:31.083230+00:00",
+  "savedAt": "2026-06-13T10:46:50.033506+00:00",
   "picks": {
     "A-1-KOR-CZE": [
       {
@@ -5470,7 +5470,7 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -3.8
+          "move_pp": -3.73
         }
       },
       {
@@ -5494,6 +5494,21 @@
         "downgradedReason": "O/U Edge 11pp ≥ 10pp Modell-Bias-Schwelle",
         "signals": [
           {
+            "name": "public_static_bias",
+            "score": -1.34,
+            "confidence": 0.49,
+            "evidence": "Konsens (13 Books) unter-bettet BTTS Ja um 2.3pp vs Pinnacle → kein Public-Edge",
+            "weight": 1.0,
+            "weighted_score": -0.66,
+            "metadata": {
+              "market_key": "bttsY",
+              "diff_pp": -2.27,
+              "sharp_p": 0.5027,
+              "public_p": 0.48,
+              "public_bk": "Konsens (13 Books)"
+            }
+          },
+          {
             "name": "xg_strength",
             "score": -2.12,
             "confidence": 0.58,
@@ -5508,10 +5523,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": -2.12,
+        "signalAdjustmentPP": -1.78,
         "signalCountPos": 0,
-        "signalCountNeg": 1,
-        "effectiveEdgePP": 8.9,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": 9.2,
         "convictionScore": 0,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -14388,7 +14403,7 @@
           "pinn_move_pp": 14.4,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 451.4,
+          "hours_since_open": 451.8,
           "open_pinn_odds": 3.22,
           "current_pinn_odds": 2.2,
           "move_age_decay": 0.5,
@@ -14495,7 +14510,7 @@
           "pinn_move_pp": 14.4,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 451.4,
+          "hours_since_open": 451.8,
           "open_pinn_odds": 3.22,
           "current_pinn_odds": 2.2,
           "move_age_decay": 0.5,
@@ -14601,7 +14616,7 @@
           "pinn_move_pp": 14.4,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 451.4,
+          "hours_since_open": 451.8,
           "open_pinn_odds": 3.22,
           "current_pinn_odds": 2.2,
           "move_age_decay": 0.5,
@@ -19387,8 +19402,8 @@
         "lamTotal": 2.32,
         "boldAlt": {
           "market": "Unter 2.5 Tore",
-          "odds": 2.14,
-          "edgePP": 11
+          "odds": 2.12,
+          "edgePP": 10
         },
         "signals": [
           {
@@ -19484,23 +19499,23 @@
       },
       {
         "market": "Unter 2.5 Tore",
-        "odds": 2.14,
+        "odds": 2.12,
         "modelOdds": 1.625,
         "conf": "high",
         "verdict": "ABWÄGEN",
         "modSig": 1,
         "mktSig": 1,
         "storySig": 0,
-        "edgePP": 11,
+        "edgePP": 10,
         "info": "Elo +320 · Form WWWDW·LDWWD · xG 1.2:1.1",
         "icon": "🛡️",
         "result": null,
-        "clvPP": 2.3,
+        "clvPP": 2.7,
         "dataQuality": "elo+form",
         "lamH": 1.21,
         "lamA": 1.11,
         "lamTotal": 2.32,
-        "downgradedReason": "O/U Edge 11pp ≥ 10pp Modell-Bias-Schwelle",
+        "downgradedReason": "O/U Edge 10pp ≥ 10pp Modell-Bias-Schwelle",
         "saferAltFor": "Unter 1.5 Tore",
         "riskierAlt": {
           "market": "Unter 1.5 Tore",
@@ -19573,7 +19588,7 @@
         "signalAdjustmentPP": -1.18,
         "signalCountPos": 2,
         "signalCountNeg": 2,
-        "effectiveEdgePP": 9.8,
+        "effectiveEdgePP": 8.8,
         "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
