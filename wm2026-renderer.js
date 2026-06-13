@@ -590,17 +590,17 @@
     // ─── PICK HERO ─────────────────────────────────────
     if (!isPlayed && heroPick) {
       const isAbw = heroPick.verdict === 'ABWÄGEN';
-      // FIX 13.06.2026 — Sterne an Conviction koppeln (vorher nur Modell-Confidence
-      // → ★★★ trotz Conviction 0–2/10, oversellte schwache Picks). Jetzt: Minimum aus
-      // Modell-Confidence UND Conviction (0–10 aus den Signal-Familien). 3 Sterne nur,
-      // wenn beides trägt. So zeigt die Karte ehrlich, wenn die Signale dünn sind.
+      // FIX 13.06.2026 (Mittelweg) — Haupt-Pick behält Sterne aus Modell-Confidence,
+      // wird aber NUR runtergestuft, wenn die Signale aktiv WIDERSPRECHEN (Netto ≤ −2pp)
+      // oder quasi keine Bestätigung da ist (Conviction ≤ 1). So bleiben solide Picks
+      // klare Heroes (★★/★★★), nur echte Oversell-Fälle (Edge da, aber alle Signale
+      // dagegen — z.B. CIV-ECU) fallen auf ★. Nicht generell wegen früher dünner Daten.
       const _confStars = heroPick.conf === 'high' ? 3 : heroPick.conf === 'medium' ? 2 : 1;
       let stars = _confStars;
-      const _cs = heroPick.convictionScore;
-      if (typeof _cs === 'number') {
-        // 3★ nur bei ≥6 (= „gute Wette"-Conviction), 2★ ab 3, sonst 1★.
-        const _convStars = _cs >= 6 ? 3 : _cs >= 3 ? 2 : 1;
-        stars = Math.min(_confStars, _convStars);
+      const _net = heroPick.signalAdjustmentPP;
+      const _cs  = heroPick.convictionScore;
+      if ((typeof _net === 'number' && _net <= -2) || (typeof _cs === 'number' && _cs <= 1)) {
+        stars = 1;
       }
       const oddsStr = heroPick.odds != null ? heroPick.odds.toFixed(2) : '—';
       html += `<div class="cc-pick${isAbw ? ' cc-pick-abw' : ''}">
