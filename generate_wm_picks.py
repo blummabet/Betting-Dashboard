@@ -959,6 +959,27 @@ def generate_picks_for_fixture(
     def _ah_odds(p: float) -> float | None:
         return prob_to_odds(p * 0.97) if p > 0.05 else None
 
+    # Generelle AH-Deckungs-„Units" (Win=1, Push=0.5, Loss=0) für JEDE Linie —
+    # auch −2.75/−3.25 (Blowout-Bande). Viertel-Linien = Mittel zweier Halb-Wetten.
+    # Basis für die dynamische Leiter-Wahl (13.06.2026).
+    import math as _math
+    _max_g = max(10, int(lam_total) + 6)
+    _php = [_math.exp(-lam_h) * lam_h ** g / _math.factorial(g) for g in range(_max_g)]
+    _pap = [_math.exp(-lam_a) * lam_a ** g / _math.factorial(g) for g in range(_max_g)]
+    def _ah_units(line: float) -> float:
+        def leg(L: float) -> float:
+            u = 0.0
+            for h in range(_max_g):
+                ph = _php[h]
+                for a in range(_max_g):
+                    adj = (h - a) + L
+                    if adj > 0:    u += ph * _pap[a]
+                    elif adj == 0: u += 0.5 * ph * _pap[a]
+            return u
+        if round(line * 4) % 2 == 1:        # Viertel-Linie
+            return (leg(line - 0.25) + leg(line + 0.25)) / 2.0
+        return leg(line)
+
     # Modell-Quoten für Corner-Märkte
     if corners_exp:
         total_c = corners_exp[2]
@@ -1009,8 +1030,48 @@ def generate_picks_for_fixture(
             return max(0, elo_diff)    # positiv wenn Auswärts schwächer
         return 0  # O/U, BTTS, Draw: kein Underdog-Konzept
 
+    # ── Dynamische AH-Linien aus der angebotenen Leiter (13.06.2026) ──────────
+    # Pinnacle bietet AH als schmale Bande um die faire Linie (keine festen Buckets) —
+    # bei Blowouts z.B. −2.75…−3.75. Wir lesen die GANZE Leiter und erzeugen pro
+    # angebotener Linie einen Heim- + Auswärts-Markt (Modell-Prob via _ah_units, beliebige
+    # Linie inkl. Viertel). Begrenzt auf kompetitive Linien (Units 0.15–0.85), damit die
+    # Karte nicht mit Fast-Sicher-Linien überläuft. Ersetzt die festen ahH_n*/ahA_p*-Buckets.
+    def _fmt_ah_line(x: float) -> str:
+        s = f"{x:+.2f}".rstrip("0").rstrip(".")
+        return s.replace("-", "−")   # Anzeige-Minus
+    dyn_ah_markets = []
+    _ladder = odds_snap.get("ahLadder") or {}
+    if _ladder and lam_h and lam_a:
+        for lk, pair in _ladder.items():
+            try:
+                L = float(lk)
+            except (TypeError, ValueError):
+                continue
+            hp = (pair or [None, None])[0]
+            ap = (pair or [None, None])[1] if pair and len(pair) > 1 else None
+            u_home = _ah_units(L)
+            if not (0.15 <= u_home <= 0.85):
+                continue   # zu einseitig (Fast-Sicher) → uninteressant
+            if hp:
+                mk = f"ahH_dyn:{lk}"
+                model_odds[mk]  = _ah_odds(u_home)
+                market_odds[mk] = hp
+                open_odds[mk]   = None
+                dyn_ah_markets.append((mk, f"AH Heim {_fmt_ah_line(L)}", EDGE_MIN_AH))
+            if ap:
+                mk = f"ahA_dyn:{lk}"
+                model_odds[mk]  = _ah_odds(1.0 - u_home)
+                market_odds[mk] = ap
+                open_odds[mk]   = None
+                dyn_ah_markets.append((mk, f"AH Auswärts {_fmt_ah_line(-L)}", EDGE_MIN_AH))
+
+    # Feste AH-Buckets aus der Iteration nehmen (durch dynamische Leiter ersetzt),
+    # Rest von MARKET_CFG unverändert + dynamische AH anhängen.
+    _markets_iter = [m for m in MARKET_CFG
+                     if not (m[0].startswith("ahH_") or m[0].startswith("ahA_"))] + dyn_ah_markets
+
     picks = []
-    for mkey, label, min_edge in MARKET_CFG:
+    for mkey, label, min_edge in _markets_iter:
         # Bug-Fix 07.06.2026: Märkte die historisch Geld verloren haben (Backtest)
         # generieren keine Picks bis das Modell überarbeitet ist.
         if mkey in DISABLED_MARKETS:

@@ -559,6 +559,24 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
     ah_15 = _pick_ah(-1.5)
     ah_20 = _pick_ah(-2.0)
 
+    # Volle AH-Leiter (13.06.2026): Pinnacle bietet AH als schmale Bande um die faire
+    # Linie — KEINE festen Buckets. Bei Blowouts (GER-CUW) ist die Bande z.B. −2.75…−3.75.
+    # Daher die KOMPLETTE angebotene Leiter speichern, damit generate_wm_picks die
+    # passende/sicherste Linie dynamisch wählen kann. {str(home_line): [home_odds, away_odds]}.
+    def _ah_ladder() -> dict:
+        for prio in our_book_prio:
+            d = ah_lines_by_bk.get(prio)
+            if d:
+                out = {str(k): [v[0], v[1]] for k, v in sorted(d.items()) if v[0] and v[1]}
+                if out:
+                    return out
+        for d in ah_lines_by_bk.values():
+            out = {str(k): [v[0], v[1]] for k, v in sorted(d.items()) if v[0] and v[1]}
+            if out:
+                return out
+        return {}
+    ah_ladder = _ah_ladder()
+
     b = _pick_bk(btts_cands)
     c = _pick_bk(corner_cands)
     dc = _pick_bk(dc_cands)
@@ -617,6 +635,7 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
         "ahA_p150": round(ah_15[1], 3)  if ah_15  else None,
         "ahH_n200": round(ah_20[0], 3)  if ah_20  else None,
         "ahA_p200": round(ah_20[1], 3)  if ah_20  else None,
+        "ahLadder": ah_ladder,          # volle angebotene Leiter (dynamische Linien-Wahl)
     }
 
 
