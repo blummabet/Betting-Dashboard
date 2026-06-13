@@ -69,6 +69,7 @@ Triggered: manage-wm-poly.yml (nach Preis-Fetch)
 import json
 import math
 import os
+import re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -523,6 +524,68 @@ def find_poly_close_price(
     return best
 
 
+def _parse_ah_line(market_lower: str):
+    """Signierte AH-Linie aus Markt-String ('AH Heim −1.5' → -1.5, 'AH Auswärts +0.5'
+    → +0.5). Unicode-Minus (−) wird normalisiert."""
+    mm = re.search(r"([+\-]?\s*\d+(?:\.\d+)?)", market_lower.replace("−", "-"))
+    if not mm:
+        return None
+    try:
+        return float(mm.group(1).replace(" ", ""))
+    except Exception:
+        return None
+
+
+def process_verdict(market: str, result_str: str, stats: dict | None) -> dict:
+    """Prozess-Urteil aus den ECHTEN Match-xG (14.06.2026): hat der Pick es per xG
+    „verdient"? Trennt Können von Varianz. Liefert {processVerdict, processCovered,
+    xgTotal, xgHome, xgAway} oder {} wenn nicht beurteilbar.
+
+    processVerdict:
+      JUSTIFIED     — gewonnen & per xG verdient (sauberer Win)
+      LUCKY         — gewonnen, aber per xG NICHT verdient (Glück)
+      UNLUCKY       — verloren, aber per xG verdient (Pech — z.B. QAT-SUI Over)
+      DESERVED_LOSS — verloren & per xG auch verdient verloren (echter Fehl-Read)
+    """
+    if result_str not in ("WIN", "LOSS") or not stats:
+        return {}
+    xg_t = stats.get("xgTotal")
+    xg_h = stats.get("homeXg")
+    xg_a = stats.get("awayXg")
+    if xg_t is None:
+        return {}
+    m = (market or "").lower()
+    covered = None
+    mt = re.search(r"(\d+\.5)", m)
+    is_goals = "tore" in m or "goals" in m
+    if is_goals and ("über" in m or "uber" in m or "over" in m) and mt:
+        covered = xg_t >= float(mt.group(1))
+    elif is_goals and ("unter" in m or "under" in m) and mt:
+        covered = xg_t < float(mt.group(1))
+    elif xg_h is not None and xg_a is not None:
+        diff = xg_h - xg_a   # >0 = Heim per xG besser
+        if "ah heim" in m or "ah home" in m:
+            ln = _parse_ah_line(m)
+            covered = (diff + ln) > 0 if ln is not None else None
+        elif "ah auswärt" in m or "ah auswaert" in m or "ah away" in m:
+            ln = _parse_ah_line(m)
+            covered = (-diff + ln) > 0 if ln is not None else None
+        elif "heimsieg" in m:                         covered = diff > 0
+        elif "auswärtssieg" in m or "auswaertssieg" in m: covered = diff < 0
+        elif "1x" in m or "dnb: heim" in m:           covered = diff >= -0.3
+        elif "x2" in m or "dnb: auswärt" in m:        covered = diff <= 0.3
+        elif "unentschieden" in m:                    covered = abs(diff) < 0.4
+    if covered is None:
+        return {}
+    won = (result_str == "WIN")
+    verdict = ("JUSTIFIED" if (won and covered) else
+               "LUCKY"     if (won and not covered) else
+               "UNLUCKY"   if (not won and covered) else
+               "DESERVED_LOSS")
+    return {"processVerdict": verdict, "processCovered": covered,
+            "xgTotal": xg_t, "xgHome": xg_h, "xgAway": xg_a}
+
+
 def main():
     now_iso = datetime.now(timezone.utc).isoformat()
     print(f"📊  resolve_wm_results.py — P&L + CLV Tracking")
@@ -640,6 +703,11 @@ def main():
             "sellPrice":   round(float(bet["sellPrice"]), 4) if bet.get("sellPrice") is not None else None,
             "sellReason":  bet.get("sellReason"),
         }
+
+        # Prozess-Urteil aus echten Match-xG (14.06.2026): verdient/Pech/Glück.
+        pv = process_verdict(bet.get("market", ""), result_str, res.get("stats"))
+        if pv:
+            resolved_bet.update(pv)
 
         resolved_bets.append(resolved_bet)
         status_icon = {"WIN": "✅", "LOSS": "❌", "VOID": "⬜", "PENDING": "⏳", "SOLD": "💸"}.get(result_str, "?")

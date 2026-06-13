@@ -33,6 +33,24 @@ LEDGER_FILE = BASE / "wm_signal_ledger.json"
 
 LEARNABLE_RESULTS = {"WIN", "LOSS", "VOID"}   # VOID wird aufgenommen, vom Updater aber ignoriert
 
+# Prozess-Verdict (verdient/Pech/Glück aus echten Match-xG) wiederverwenden — eine
+# Quelle, dieselbe Logik wie in der Performance-Anzeige.
+try:
+    from resolve_wm_results import process_verdict as _process_verdict
+except Exception:
+    _process_verdict = None
+
+
+def _build_stats_lookup(wm: dict) -> dict:
+    """{matchKey 'G-MD-HOME-AWAY' → result.stats} aus den gespielten Fixtures."""
+    out = {}
+    for g, gd in (wm.get("groups") or {}).items():
+        for fx in (gd.get("fixtures") or []):
+            stats = (fx.get("result") or {}).get("stats")
+            if stats:
+                out[f"{g}-{fx.get('matchday')}-{fx.get('home')}-{fx.get('away')}"] = stats
+    return out
+
 
 def _load_json(path: Path, default):
     if not path.exists():
@@ -64,8 +82,11 @@ def _slim_signals(signals: list) -> list:
 
 
 def collect_observations(wm: dict) -> list[dict]:
-    """Aufgelöste Card-Picks mit gefeuerten Signalen → Ledger-Records."""
+    """Aufgelöste Card-Picks mit gefeuerten Signalen → Ledger-Records.
+    Inkl. Prozess-Verdict (verdient/Pech/Glück aus echten Match-xG, 14.06.2026),
+    damit der Updater verlorene-aber-verdiente Picks milder bestraft."""
     now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    stats_lookup = _build_stats_lookup(wm)
     records = []
     for match_key, plist in (wm.get("picks") or {}).items():
         for p in (plist or []):
@@ -76,14 +97,19 @@ def collect_observations(wm: dict) -> list[dict]:
             if not sigs:
                 continue   # ohne gefeuerte Signale nichts zu lernen
             market = p.get("market") or "?"
-            records.append({
+            rec = {
                 "key":        f"{match_key}|{market}",
                 "matchKey":   match_key,
                 "market":     market,
                 "result":     result,
                 "signals":    sigs,
                 "resolvedAt": p.get("resolvedAt") or now_iso,
-            })
+            }
+            if _process_verdict:
+                pv = _process_verdict(market, result, stats_lookup.get(match_key))
+                if pv.get("processVerdict"):
+                    rec["processVerdict"] = pv["processVerdict"]
+            records.append(rec)
     return records
 
 
@@ -95,7 +121,8 @@ def upsert(ledger: dict, observations: list[dict]) -> tuple[int, int]:
         if obs["key"] in by_key:
             # Nur überschreiben wenn sich was Relevantes geändert hat (idempotent).
             old = by_key[obs["key"]]
-            if old.get("result") != obs["result"] or old.get("signals") != obs["signals"]:
+            if (old.get("result") != obs["result"] or old.get("signals") != obs["signals"]
+                    or old.get("processVerdict") != obs.get("processVerdict")):
                 upd += 1
             by_key[obs["key"]] = {**old, **obs}
         else:

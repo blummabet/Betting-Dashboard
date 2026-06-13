@@ -87,6 +87,79 @@ def fetch_all_fixtures(league_id: int) -> list:
     return data.get("response", [])
 
 
+def _num(v):
+    """Tolerantes Zahlen-Parsing (entfernt %, behandelt None/Strings)."""
+    try:
+        if v is None:
+            return None
+        if isinstance(v, str):
+            v = v.replace("%", "").strip()
+        return float(v)
+    except Exception:
+        return None
+
+
+def fetch_match_stats(api_match: dict) -> dict | None:
+    """Echte Match-Statistiken eines BEENDETEN Spiels — Basis fürs Prozess-Lernen
+    (14.06.2026). Holt /fixtures/statistics + /fixtures/players und liefert pro
+    Heim/Auswärts: xG (API, sonst xGsim 0.118·inside + 0.10·on), Schüsse, SOT,
+    Inside-Box, Key-Passes (Großchancen-Proxy). So kann das System „verdient vs Pech"
+    bewerten statt nur aus dem Endstand zu lernen (QAT-SUI 1:1: Schweiz xG-dominant)."""
+    fid = (api_match.get("fixture") or {}).get("id")
+    teams = api_match.get("teams") or {}
+    home_tid = (teams.get("home") or {}).get("id")
+    away_tid = (teams.get("away") or {}).get("id")
+    if not (fid and home_tid and away_tid):
+        return None
+    data = api_get(f"/fixtures/statistics?fixture={fid}")
+    if not data or not data.get("response"):
+        return None
+    per: dict = {}
+    for ts in data["response"]:
+        tid = (ts.get("team") or {}).get("id")
+        if not tid:
+            continue
+        m, xg = {}, None
+        for s in (ts.get("statistics") or []):
+            key = (s.get("type") or "").lower().strip()
+            m[key] = s.get("value")
+            if "expected goals" in key or key == "xg":
+                xg = _num(s.get("value"))
+        inside = _num(m.get("shots insidebox")) or 0.0
+        on     = _num(m.get("shots on goal")) or 0.0
+        total  = _num(m.get("total shots")) or 0.0
+        per[tid] = {"xg": xg, "xgsim": round(0.118 * inside + 0.10 * on, 3),
+                    "sot": on, "shots": total, "inside": inside}
+    if home_tid not in per or away_tid not in per:
+        return None
+    # Key-Passes (Großchancen-Proxy) aus /fixtures/players
+    kp: dict = {}
+    pdata = api_get(f"/fixtures/players?fixture={fid}")
+    if pdata and pdata.get("response"):
+        for tb in pdata["response"]:
+            tid = (tb.get("team") or {}).get("id")
+            if not tid:
+                continue
+            s = 0.0
+            for p in (tb.get("players") or []):
+                k = (((p.get("statistics") or [{}])[0] or {}).get("passes") or {}).get("key")
+                if k is not None:
+                    s += _num(k) or 0.0
+            kp[tid] = s
+    h, a = per[home_tid], per[away_tid]
+    h_xg = h["xg"] if h["xg"] is not None else h["xgsim"]
+    a_xg = a["xg"] if a["xg"] is not None else a["xgsim"]
+    xg_source = "api" if (h["xg"] is not None and a["xg"] is not None) else "sim"
+    return {
+        "homeXg": round(h_xg, 2), "awayXg": round(a_xg, 2),
+        "xgTotal": round(h_xg + a_xg, 2), "xgSource": xg_source,
+        "homeSot": h["sot"], "awaySot": a["sot"],
+        "homeShots": h["shots"], "awayShots": a["shots"],
+        "homeInside": h["inside"], "awayInside": a["inside"],
+        "homeKeyPasses": kp.get(home_tid), "awayKeyPasses": kp.get(away_tid),
+    }
+
+
 def _api_id(team_ids: dict, code: str) -> str:
     """apiFootball-Team-ID aus teamIds robust lesen. FIX 12.06.2026: Struktur ist
     FLACH ({"MEX": 16}), match_fixture las sie aber als {"MEX": {"apiFootball": 16}}
@@ -260,6 +333,17 @@ def main():
                           f"{_old.get('home_score')}:{_old.get('away_score')} "
                           f"(API liefert {status_short})")
                     break
+                # Post-Match-Stats (xG/Schüsse/Key-Passes) für Prozess-Lernen —
+                # idempotent: schon erfasste Stats nicht neu holen (spart API-Calls).
+                if _finished:
+                    if _old.get("stats"):
+                        result_entry["stats"] = _old["stats"]
+                    else:
+                        _st = fetch_match_stats(api_match)
+                        if _st:
+                            result_entry["stats"] = _st
+                            print(f"     📊 Match-Stats: xG {_st['homeXg']}:{_st['awayXg']} "
+                                  f"(Σ{_st['xgTotal']}, {_st['xgSource']})")
                 fx["result"] = result_entry
                 if venue_str:
                     # Nur überschreiben wenn API-Quelle einen vernünftigen Wert liefert

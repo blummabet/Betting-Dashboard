@@ -1,0 +1,105 @@
+"""
+test_process_learning.py — Post-Match-Prozess-Lernen (14.06.2026)
+
+Deckt die Kette ab: echte Match-xG → „verdient/Pech"-Verdict → prozess-gewichtetes
+Bayesian-Lernen. Kern-Use-Case (Lucas, QAT-SUI): Over 2.5 ging als LOSS, aber die
+Schweiz war xG-dominant (Tore verdient) → das System soll die Signale milder
+bestrafen als bei einem echten Fehl-Read.
+"""
+import sys
+import unittest
+from pathlib import Path
+
+BASE = Path(__file__).parent.parent
+sys.path.insert(0, str(BASE))
+
+
+class TestProcessVerdict(unittest.TestCase):
+    """resolve_wm_results.process_verdict — xG vs Ergebnis."""
+
+    def setUp(self):
+        import resolve_wm_results
+        self.pv = resolve_wm_results.process_verdict
+        # QAT(home) 0.6 : SUI(away) 2.4 → Σ3.0, endete real 1:1
+        self.stats = {"xgTotal": 3.0, "homeXg": 0.6, "awayXg": 2.4}
+
+    def test_over_lost_but_deserved_is_unlucky(self):
+        self.assertEqual(self.pv("Über 2.5 Tore", "LOSS", self.stats)["processVerdict"], "UNLUCKY")
+
+    def test_over_lost_and_deserved_loss(self):
+        # 3.0 < 3.5 → Over 3.5 hat es per xG NICHT verdient
+        self.assertEqual(self.pv("Über 3.5 Tore", "LOSS", self.stats)["processVerdict"], "DESERVED_LOSS")
+
+    def test_over_won_justified(self):
+        self.assertEqual(self.pv("Über 1.5 Tore", "WIN", self.stats)["processVerdict"], "JUSTIFIED")
+
+    def test_double_chance_home_won_but_lucky(self):
+        # 1X (Heim/Remis) gewann (1:1), aber Heim war xG-dominiert → glücklich
+        self.assertEqual(self.pv("Doppelte Chance — 1X", "WIN", self.stats)["processVerdict"], "LUCKY")
+
+    def test_no_stats_returns_empty(self):
+        self.assertEqual(self.pv("Über 2.5 Tore", "LOSS", None), {})
+
+    def test_pending_returns_empty(self):
+        self.assertEqual(self.pv("Über 2.5 Tore", "PENDING", self.stats), {})
+
+
+class TestOutcomeScore(unittest.TestCase):
+    """update_signal_weights._process_outcome_score — prozess-justiert + Binär-Fallback."""
+
+    def setUp(self):
+        import update_signal_weights
+        self.f = update_signal_weights._process_outcome_score
+
+    def test_process_scores(self):
+        self.assertEqual(self.f({"processVerdict": "JUSTIFIED"}), 1.0)
+        self.assertEqual(self.f({"processVerdict": "DESERVED_LOSS"}), 0.0)
+        self.assertGreater(self.f({"processVerdict": "UNLUCKY"}), 0.0)   # Loss, aber Teilgutschrift
+        self.assertLess(self.f({"processVerdict": "LUCKY"}), 1.0)        # Win, aber Teilabzug
+
+    def test_binary_fallback_identical_to_old(self):
+        # Ohne processVerdict exakt altes Verhalten: WIN=1, LOSS=0, Void=None
+        self.assertEqual(self.f({"result": "WIN"}), 1.0)
+        self.assertEqual(self.f({"result": "LOSS"}), 0.0)
+        self.assertIsNone(self.f({"result": "VOID"}))
+
+
+class TestProcessWeightedLearningSofterPenalty(unittest.TestCase):
+    """Ein verlorener-aber-verdienter Pick bestraft ein Signal MILDER als ein
+    verlorener-und-verdient-verlorener (gleiche Signal-Richtung)."""
+
+    def test_unlucky_loss_softer_than_deserved_loss(self):
+        import update_signal_weights as U
+        sig = [{"name": "form_trend", "score": 1.0}]   # score>0 = „guter Pick"
+        unlucky = [{"result": "LOSS", "processVerdict": "UNLUCKY", "signals": sig}] * 5
+        deserved = [{"result": "LOSS", "processVerdict": "DESERVED_LOSS", "signals": sig}] * 5
+        # Gutschrift summieren wie der Updater
+        cu = sum(U._process_outcome_score(p) for p in unlucky)
+        cd = sum(U._process_outcome_score(p) for p in deserved)
+        self.assertGreater(cu, cd, "UNLUCKY-Loss muss mehr Gutschrift geben als DESERVED_LOSS")
+
+
+class TestLedgerCarriesVerdict(unittest.TestCase):
+    """build_signal_ledger.collect_observations hängt processVerdict an, wenn Match-
+    Stats vorhanden sind."""
+
+    def test_verdict_attached_from_stats(self):
+        import build_signal_ledger as B
+        wm = {
+            "groups": {"B": {"fixtures": [{
+                "matchday": 1, "home": "CAN", "away": "BIH",
+                "result": {"status": "FT", "home_score": 1, "away_score": 1,
+                           "stats": {"xgTotal": 3.0, "homeXg": 0.6, "awayXg": 2.4}},
+            }]}},
+            "picks": {"B-1-CAN-BIH": [{
+                "market": "Über 2.5 Tore", "result": "LOSS",
+                "signals": [{"name": "xg_strength", "score": 1.2}],
+            }]},
+        }
+        recs = B.collect_observations(wm)
+        self.assertEqual(len(recs), 1)
+        self.assertEqual(recs[0].get("processVerdict"), "UNLUCKY")
+
+
+if __name__ == "__main__":
+    unittest.main()

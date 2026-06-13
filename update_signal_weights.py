@@ -86,6 +86,28 @@ def _result_is_win(pick: dict) -> bool | None:
     return None
 
 
+# Prozess-justierter Outcome ∈ [0,1] (FIX 14.06.2026): 1 = per xG verdient gewonnen,
+# 0 = per xG verdient verloren. Trennt Können von Varianz — ein verlorener-aber-
+# verdienter Pick (UNLUCKY, z.B. QAT-SUI Over) bestraft die Signale nur teilweise,
+# ein glücklicher Win (LUCKY) belohnt sie nur teilweise.
+PROCESS_OUTCOME = {
+    "JUSTIFIED":     1.0,
+    "LUCKY":         0.65,
+    "UNLUCKY":       0.35,
+    "DESERVED_LOSS": 0.0,
+}
+
+
+def _process_outcome_score(pick: dict) -> float | None:
+    """Kontinuierlicher Outcome-Score. Ohne processVerdict (keine Match-xG) Fallback
+    aufs binäre Ergebnis (WIN=1.0, LOSS=0.0) → identisch zum alten Verhalten."""
+    pv = pick.get("processVerdict")
+    if pv in PROCESS_OUTCOME:
+        return PROCESS_OUTCOME[pv]
+    w = _result_is_win(pick)
+    return None if w is None else (1.0 if w else 0.0)
+
+
 def update_weights() -> dict:
     """Hauptlogik: Bayesian-Update aller Signal-Weights."""
     weights = _load_weights()
@@ -99,23 +121,22 @@ def update_weights() -> dict:
     #   score < 0 = Signal sagte "schlechter Pick" → Loss = predicted correctly
     counts: dict[str, dict] = {}
     for pick in picks:
-        outcome = _result_is_win(pick)
-        if outcome is None:
+        o = _process_outcome_score(pick)   # ∈ [0,1], prozess-justiert (FIX 14.06.2026)
+        if o is None:
             continue
         for s in pick.get("signals") or []:
             name  = s.get("name")
             score = s.get("score", 0.0)
             if not name or score == 0.0:
                 continue
-            counts.setdefault(name, {"n": 0, "predicted_correctly": 0})
+            counts.setdefault(name, {"n": 0, "predicted_correctly": 0.0})
             counts[name]["n"] += 1
-            # Signal-Korrektheit:
-            #   score > 0 & Win  → korrekt
-            #   score < 0 & Loss → korrekt
-            #   sonst            → falsch
+            # Signal-Korrektheit FRAKTIONAL: score>0 sagte „guter Pick" → Gutschrift =
+            # wie verdient der Win war (o); score<0 sagte „schlechter Pick" →
+            # Gutschrift = wie verdient der Loss war (1-o). Binär-Fallback (o∈{0,1})
+            # reproduziert exakt das alte „predicted_win == outcome".
             predicted_win = score > 0
-            if predicted_win == outcome:
-                counts[name]["predicted_correctly"] += 1
+            counts[name]["predicted_correctly"] += o if predicted_win else (1.0 - o)
 
     # Update jeder Signal-Entry
     now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -141,8 +162,8 @@ def update_weights() -> dict:
         weights[sig_name] = {
             "weight":              round(clamped_weight, 3),
             "n_observations":      n,
-            "wins_when_triggered": wins,
-            "losses_when_triggered": losses,
+            "wins_when_triggered": round(wins, 2),       # fraktional (prozess-justiert)
+            "losses_when_triggered": round(losses, 2),
             "posterior_mean":      round(post_mean, 3),
             "last_updated":        now_iso,
             "notes":               prev.get("notes") or "",

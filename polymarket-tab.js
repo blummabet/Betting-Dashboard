@@ -2838,11 +2838,23 @@ function _buildPerformanceHtml(data) {
       ? `<a href="https://polymarket.com/sports/fifa-world-cup/${slug}" target="_blank"
            style="color:#a78bfa;font-size:10px;text-decoration:none">↗</a>`
       : '';
+    // Prozess-Urteil aus echten Match-xG (14.06.2026): verdient/Pech/Glück
+    const PROC = {
+      UNLUCKY:       { t: '😤 unverdient', c: '#e3b341' },
+      LUCKY:         { t: '🍀 Glück',      c: '#e3b341' },
+      JUSTIFIED:     { t: '✓ verdient',    c: '#3fb950' },
+      DESERVED_LOSS: { t: '✓ verd. Niederl.', c: '#8b949e' },
+    };
+    const _pv = PROC[b.processVerdict];
+    const procTag = _pv
+      ? `<div style="font-size:9px;color:${_pv.c};font-weight:600;margin-top:2px"
+             title="echte Match-xG ${b.xgHome ?? '?'}:${b.xgAway ?? '?'} (Σ ${b.xgTotal ?? '?'})">${_pv.t}</div>`
+      : '';
 
     return `<tr style="border-top:1px solid #161b22">
       <td style="padding:8px 10px;font-size:12px;color:${resultCol};font-weight:700;white-space:nowrap"
           ${b.result === 'SOLD' && b.sellReason ? `title="${b.sellReason.replace(/"/g,'')}"` : ''}>
-        ${resultIcon} ${resultLabel}
+        ${resultIcon} ${resultLabel}${procTag}
       </td>
       <td style="padding:8px 10px;font-size:12px;color:#e6edf3;white-space:nowrap">
         ${b.home} vs ${b.away}

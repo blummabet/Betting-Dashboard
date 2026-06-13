@@ -34,6 +34,20 @@ werden — nicht still weggeguardet.
 """
 from __future__ import annotations
 from datetime import datetime, timezone, timedelta
+from pathlib import Path as _Path
+
+_BASE = _Path(__file__).resolve().parent
+
+
+def _lazy(fname):
+    """Best-effort-Load einer JSON neben diesem Modul (für Guards, die nicht über
+    run_checks injiziert werden — z.B. Auto-Bets/Odds-History)."""
+    try:
+        import json as _json
+        p = _BASE / fname
+        return _json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+    except Exception:
+        return {}
 
 # Venue-Name/City-Substring → venue_id (Spiegel von generate_wm_picks._VENUE_NAME_TO_ID).
 _VENUE_NAME_TO_ID = {
@@ -73,13 +87,18 @@ def _chk(cid, label, severity, failures, note=""):
 
 class IntegrityCtx:
     """Geteilter Kontext für alle Checks — einmal gebaut, an jeden Guard gereicht."""
-    def __init__(self, wm, poly, schedule, venues, lineups=None, now=None):
+    def __init__(self, wm, poly, schedule, venues, lineups=None, now=None,
+                 auto_bets=None, history=None):
         self.wm = wm or {}
         self.poly = poly or {}
         self.schedule = schedule or {}
         self.venues = venues or {}
         self.lineups = lineups or {}
         self.now = now or datetime.now(timezone.utc)
+        # Auto-Bets + Odds-History (14.06.2026): injizierbar (Tests) oder lazy von Disk.
+        _ab = auto_bets if auto_bets is not None else _lazy("wm_auto_bets_placed.json")
+        self.auto_bets = (_ab.get("bets") if isinstance(_ab, dict) else _ab) or []
+        self.history = (history if history is not None else _lazy("wm2026-odds-history.json")) or {}
         self.fixtures = [(g, fx) for g, gd in (self.wm.get("groups") or {}).items()
                          for fx in (gd.get("fixtures") or [])]
         self.odds = self.wm.get("odds") or {}
@@ -318,10 +337,103 @@ def check_result_score_final(ctx):
                 "Live-Zwischenstand im result → wird als Endstand gerendert.")
 
 
+_FINISHED = {"FT", "AET", "PEN"}
+
+
+@integrity_check
+def check_autobet_kickoff_present(ctx):
+    """Offene Auto-Bets MÜSSEN eine auflösbare Anpfiffzeit haben (bet.kickoff ODER
+    Fixture-Kickoff). Sonst greift der 2h-Pre-Match-Close nicht und der Trade rutscht
+    LIVE ins In-Play (QAT-SUI 13.06.2026, −€5.50). GELD-KRITISCH."""
+    ko_by_ha = {ctx.mk(fx): fx.get("kickoff") for _g, fx in ctx.fixtures if fx.get("kickoff")}
+    fails = []
+    for b in ctx.auto_bets:
+        is_open = ((b.get("status") or "").lower() == "placed"
+                   and not b.get("soldAt") and b.get("result") is None)
+        if not is_open:
+            continue
+        ha = f"{b.get('homeId')}-{b.get('awayId')}"
+        if not (b.get("kickoff") or ko_by_ha.get(ha)):
+            fails.append(f"{ha} {b.get('market','')}: offener Auto-Bet ohne auflösbaren Kickoff")
+    return _chk("autobet_kickoff", "Offene Auto-Bets haben Anpfiffzeit", "error", fails,
+                "Ohne Kickoff feuert der 2h-Close nicht → Trade rutscht ins In-Play.")
+
+
+@integrity_check
+def check_resolved_status_propagated(ctx):
+    """Ein beendetes Spiel darf keinen Auto-Bet mehr auf status='placed' haben — sonst
+    klebt er als '🔴 läuft' in den offenen Positionen (QAT-SUI nach LOSS, 13.06.2026).
+    resolve_wm_results muss won/lost/void zurückschreiben."""
+    finished_ha = {f"{fx.get('home')}-{fx.get('away')}" for _g, fx in ctx.fixtures
+                   if str((fx.get("result") or {}).get("status") or "").upper() in _FINISHED}
+    fails = []
+    for b in ctx.auto_bets:
+        ha = f"{b.get('homeId')}-{b.get('awayId')}"
+        if ha in finished_ha and (b.get("status") or "").lower() == "placed":
+            fails.append(f"{ha} {b.get('market','')}: Spiel beendet, Auto-Bet noch 'placed'")
+    return _chk("resolved_status_propagated", "Beendete Spiele: Auto-Bet-Status aktualisiert", "warn", fails,
+                "Sonst hängt die Wette ewig in 'Offene Positionen · Live'.")
+
+
+@integrity_check
+def check_ah_ladder_coverage(ctx):
+    """Bepreiste, anstehende Spiele sollten eine ahLadder haben — sonst der AH-'klappt-
+    nie'-Bug (ahLadder wurde nie ins gespeicherte Odds-Entry kopiert, 13.06.2026).
+    Nur Spiele mit 1X2-Odds + Anpfiff in den nächsten 5 Tagen (kein Rauschen)."""
+    fails = []
+    horizon = ctx.now + timedelta(days=5)
+    for _g, fx in ctx.fixtures:
+        mk = ctx.mk(fx)
+        od = ctx.odds.get(mk) or {}
+        if not od.get("hw"):
+            continue
+        try:
+            dt = datetime.fromisoformat(str(fx.get("kickoff")).replace("Z", "+00:00")).astimezone(timezone.utc)
+        except Exception:
+            continue
+        if ctx.now <= dt <= horizon and not od.get("ahLadder"):
+            fails.append(f"{mk}: bepreist + Anpfiff nah, aber keine ahLadder")
+    return _chk("ah_ladder_coverage", "AH-Leiter bei nahen bepreisten Spielen", "warn", fails,
+                "ahLadder fehlte → AH-Picks fielen durchs Raster (Mismatches ohne AH).")
+
+
+@integrity_check
+def check_finished_has_stats(ctx):
+    """Beendete Spiele sollten result.stats (echte Match-xG) haben — sonst fehlt dem
+    Prozess-Lernen (verdient/Pech) die Datenbasis (14.06.2026)."""
+    fails = []
+    for _g, fx in ctx.fixtures:
+        r = fx.get("result") or {}
+        if str(r.get("status") or "").upper() in _FINISHED and not r.get("stats"):
+            fails.append(f"{ctx.mk(fx)}: beendet, aber keine result.stats (xG)")
+    return _chk("finished_has_stats", "Beendete Spiele haben Match-Stats (xG)", "warn", fails,
+                "Ohne Match-xG lernt der Bayesian-Loop nur aus Glück/Pech, nicht aus dem Prozess.")
+
+
+@integrity_check
+def check_soft_book_history(ctx):
+    """Die Odds-History muss Soft-Book-Snapshots (bk='public') enthalten — sonst kann
+    lead_lag_bias NIE feuern (nur Pinnacle → Sharp-Money-Conviction strukturell tot,
+    13.06.2026). Erst ab genug History relevant."""
+    hist = ctx.history if isinstance(ctx.history, dict) else {}
+    total = sum(len(v) for v in hist.values() if isinstance(v, list))
+    if total < 20:
+        return None   # zu wenig History für ein Urteil
+    public = sum(1 for v in hist.values() if isinstance(v, list)
+                 for s in v if isinstance(s, dict) and s.get("bk") == "public")
+    fails = []
+    if public == 0:
+        fails.append(f"0 'public'-Snapshots in {total} History-Einträgen → lead_lag kann nie feuern")
+    return _chk("soft_book_history", "Soft-Book-Snapshots in Odds-History", "warn", fails,
+                "Ohne Soft-Book-Zeitreihe ist die Sharp-Money-Conviction-Familie tot.")
+
+
 # ── Runner ───────────────────────────────────────────────────────────────────
-def run_checks(wm, poly, schedule, venues, lineups=None, now=None):
+def run_checks(wm, poly, schedule, venues, lineups=None, now=None,
+               auto_bets=None, history=None):
     """Führt die ganze Registry aus. Pure. Ein crashender Check killt den Rest nicht."""
-    ctx = IntegrityCtx(wm, poly, schedule, venues, lineups=lineups, now=now)
+    ctx = IntegrityCtx(wm, poly, schedule, venues, lineups=lineups, now=now,
+                       auto_bets=auto_bets, history=history)
     out = []
     for fn in INTEGRITY_CHECKS:
         try:
