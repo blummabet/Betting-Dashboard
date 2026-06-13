@@ -921,23 +921,39 @@ def main():
 
         existing = odds_out.get(key, {})
 
-        # Preserve opening line (first-ever snapshot) — never overwrite
+        # Preserve opening line (first-ever snapshot) — never overwrite.
+        # FIX 13.06.2026: VORHER fror odds_open nur hw/dr/aw/o25/u25/bttsY ein →
+        # ALLE Alt-Linien (o15/o35/u15/u35, DC, AH) hatten KEINE Eröffnungsquote →
+        # der CLV-Sharp-Move-Check in compute_verdict (generate_wm_picks) konnte für
+        # sie nie feuern (mkt_sig=0) → Alt-Line-Picks entgingen dem Line-Movement-
+        # Filter. Konkret BEL-EGY: Über 3.5 wurde BET, obwohl die korrelierte Über-
+        # 2.5-Linie eine starke Sharp-Bewegung GEGEN Over zeigte (1.74→1.98, CLV
+        # −7pp) — nur weil Über 3.5 keine Open-Quote hatte. Jetzt: ALLE Linien
+        # einfrieren, damit CLV auf jeder Linie greift.
+        _OPEN_TB_KEYS = (
+            "o15", "u15", "o25", "u25", "o35", "u35",
+            "bttsY", "bttsN",
+            "dc1X", "dc12", "dcX2",
+            "ahH_n050", "ahA_p050", "ahH_n075", "ahA_p075", "ahH_n100", "ahA_p100",
+            "ahH_n150", "ahA_p150", "ahH_n200", "ahA_p200",
+            "cornerLine", "cOver", "cUnder",
+        )
         odds_open = existing.get("odds_open")
         if not odds_open and h2h:
-            odds_open = {
-                "hw": h2h["hw"], "dr": h2h["dr"], "aw": h2h["aw"],
-                **({"o25": tb["o25"]} if tb["o25"] else {}),
-                **({"u25": tb["u25"]} if tb["u25"] else {}),
-                **({"bttsY": tb["bttsY"]} if tb["bttsY"] else {}),
-            }
+            odds_open = {"hw": h2h["hw"], "dr": h2h["dr"], "aw": h2h["aw"]}
+            for k in _OPEN_TB_KEYS:
+                if tb.get(k):
+                    odds_open[k] = tb[k]
+            if tb.get("ahLadder"):
+                odds_open["ahLadder"] = tb["ahLadder"]
         elif odds_open:
-            # Backfill totals/btts into existing odds_open if not yet set
-            if tb["o25"] and not odds_open.get("o25"):
-                odds_open["o25"] = tb["o25"]
-            if tb["u25"] and not odds_open.get("u25"):
-                odds_open["u25"] = tb["u25"]
-            if tb["bttsY"] and not odds_open.get("bttsY"):
-                odds_open["bttsY"] = tb["bttsY"]
+            # Backfill: jede Linie, die beim ersten Open noch fehlte (Alt-Totals/AH
+            # kommen erst per alternate_* Call), nachtragen — aber nie überschreiben.
+            for k in _OPEN_TB_KEYS:
+                if tb.get(k) and not odds_open.get(k):
+                    odds_open[k] = tb[k]
+            if tb.get("ahLadder") and not odds_open.get("ahLadder"):
+                odds_open["ahLadder"] = tb["ahLadder"]
 
         new_entry = {
             "hw":         h2h["hw"],
