@@ -2046,18 +2046,23 @@ function _renderWmMarketTable() {
   // ── filter ────────────────────────────────────────────────────────────────
   const f = _wmTableFilter;
   const allFix = _wmAllFixtures;
-  const steamFix  = allFix.filter(x => x.steamLag === true);
-  const growFix   = allFix.filter(x => x.edgeTrend === 'growing' && (x.bestEdge||0) >= 2);
+  // FIX 14.06.2026: beendete Spiele (Anpfiff vorbei) raus aus den HANDLUNGS-Buckets.
+  // Settled Poly-Preise (→1.00 / →0 nach Spielende) erzeugten Phantom-Edges in der
+  // Alert Zone (z.B. KOR-CZE +31.9pp, USA-PRY +24.6pp — beide längst gespielt, „Poly
+  // bietet —"). Kein Trade möglich → es wurde auch nie einer ausgelöst. Filter via
+  // _wmKickoffPassed (fx.kickoff aus Polymarket-Gamma). 'all'/'pinn' bleiben (Browse).
+  const _live = x => !_wmKickoffPassed(x);
+  const steamFix  = allFix.filter(x => x.steamLag === true && _live(x));
+  const growFix   = allFix.filter(x => x.edgeTrend === 'growing' && (x.bestEdge||0) >= 2 && _live(x));
+  const alertFix  = allFix.filter(x => (x.bestEdge||0) >= ALERT_EDGE_PP && _live(x))
+                          .sort((a,b) => (b.momentumScore||0) - (a.momentumScore||0));
   const counts = {
     steam: steamFix.length,
     grow:  growFix.length,
-    alert: allFix.filter(x => (x.bestEdge||0) >= ALERT_EDGE_PP).length,
+    alert: alertFix.length,
     pinn:  allFix.filter(x => x.hasPinnacle).length,
     all:   allFix.length,
   };
-
-  const alertFix = allFix.filter(x => (x.bestEdge||0) >= ALERT_EDGE_PP)
-                         .sort((a,b) => (b.momentumScore||0) - (a.momentumScore||0));
 
   const tableFix = (() => {
     if (f === 'steam')  return steamFix;
