@@ -50,28 +50,42 @@
       "rate": 100.0,
       "roi": 98.0
     },
-    "Über 1.5 Tore": {
+    "Doppelte Chance — 1X": {
       "n": 1,
       "wins": 1,
       "losses": 0,
       "rate": 100.0,
-      "roi": 43.0
+      "roi": 400.0
+    },
+    "Über 1.5 Tore": {
+      "n": 2,
+      "wins": 2,
+      "losses": 0,
+      "rate": 100.0,
+      "roi": 34.0
+    },
+    "Über 2.5 Tore": {
+      "n": 1,
+      "wins": 0,
+      "losses": 1,
+      "rate": 0.0,
+      "roi": -100.0
     },
     "Über 3.5 Tore": {
-      "n": 1,
+      "n": 2,
       "wins": 1,
-      "losses": 0,
-      "rate": 100.0,
-      "roi": 350.0
+      "losses": 1,
+      "rate": 50.0,
+      "roi": 125.0
     }
   },
   "byAngle": {
     "other": {
-      "n": 5,
-      "wins": 4,
-      "losses": 1,
-      "rate": 80.0,
-      "roi": 84.0
+      "n": 8,
+      "wins": 6,
+      "losses": 2,
+      "rate": 75.0,
+      "roi": 93.1
     },
     "defshow": {
       "n": 1,
@@ -87,15 +101,22 @@
       "rate": 66.7,
       "roi": 42.2,
       "voids": 1
+    },
+    "torfest": {
+      "n": 1,
+      "wins": 0,
+      "losses": 1,
+      "rate": 0.0,
+      "roi": -100.0
     }
   },
   "byEdgeRange": {
     "5-10pp": {
-      "n": 3,
-      "wins": 2,
-      "losses": 1,
-      "rate": 66.7,
-      "roi": 49.0
+      "n": 5,
+      "wins": 3,
+      "losses": 2,
+      "rate": 60.0,
+      "roi": 14.4
     },
     "0-5pp": {
       "n": 2,
@@ -105,21 +126,21 @@
       "roi": 63.5
     },
     "10pp+": {
-      "n": 5,
-      "wins": 3,
-      "losses": 1,
-      "rate": 75.0,
-      "roi": 77.8,
+      "n": 7,
+      "wins": 4,
+      "losses": 2,
+      "rate": 66.7,
+      "roi": 98.4,
       "voids": 1
     }
   },
   "byDataQuality": {
     "elo+form": {
-      "n": 7,
-      "wins": 4,
-      "losses": 2,
-      "rate": 66.7,
-      "roi": 24.9,
+      "n": 11,
+      "wins": 6,
+      "losses": 4,
+      "rate": 60.0,
+      "roi": 36.3,
       "voids": 1
     },
     "full": {
@@ -132,13 +153,13 @@
   },
   "byCluster": {},
   "global": {
-    "n": 10,
-    "wins": 7,
-    "losses": 2,
-    "rate": 77.8,
-    "roi": 66.3,
+    "n": 14,
+    "wins": 9,
+    "losses": 4,
+    "rate": 69.2,
+    "roi": 63.4,
     "voids": 1
   },
   "minSamples": 3,
-  "updatedAt": "2026-06-13T17:29:28Z"
+  "updatedAt": "2026-06-13T21:16:40Z"
 }
