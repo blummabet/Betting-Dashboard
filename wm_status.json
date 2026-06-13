@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-13T21:16:56Z",
+  "generatedAt": "2026-06-13T23:12:12Z",
   "windowDays": 2,
   "upcoming": 12,
   "signalsFired": [
@@ -29,12 +29,12 @@
   "oks": [
     "🌡️ Weather: 62 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.2h alt",
-    "📊 APIF-Predictions: 33 Spiele",
+    "📊 APIF-Predictions: 34 Spiele",
     "📋 Lineups: 5 Spiele geladen (5 imminent)",
     "📈 NT-xG: 46 Teams",
-    "📉 Odds-History: 72 Fixtures, Ø 13.6 Snapshots",
+    "📉 Odds-History: 72 Fixtures, Ø 14.2 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $271.71",
+    "💼 Poly-Balance: $277.47",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -154,6 +154,51 @@
       "nFail": 0,
       "failures": [],
       "note": "Live-Zwischenstand im result → wird als Endstand gerendert."
+    },
+    {
+      "id": "autobet_kickoff",
+      "label": "Offene Auto-Bets haben Anpfiffzeit",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Ohne Kickoff feuert der 2h-Close nicht → Trade rutscht ins In-Play."
+    },
+    {
+      "id": "resolved_status_propagated",
+      "label": "Beendete Spiele: Auto-Bet-Status aktualisiert",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Sonst hängt die Wette ewig in 'Offene Positionen · Live'."
+    },
+    {
+      "id": "ah_ladder_coverage",
+      "label": "AH-Leiter bei nahen bepreisten Spielen",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "ahLadder fehlte → AH-Picks fielen durchs Raster (Mismatches ohne AH)."
+    },
+    {
+      "id": "finished_has_stats",
+      "label": "Beendete Spiele haben Match-Stats (xG)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Ohne Match-xG lernt der Bayesian-Loop nur aus Glück/Pech, nicht aus dem Prozess."
+    },
+    {
+      "id": "soft_book_history",
+      "label": "Soft-Book-Snapshots in Odds-History",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Ohne Soft-Book-Zeitreihe ist die Sharp-Money-Conviction-Familie tot."
     }
   ]
 }
