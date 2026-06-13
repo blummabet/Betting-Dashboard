@@ -489,8 +489,10 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
                 if dc_1x or dc_x2 or dc_12:
                     dc_cands[bk_key] = (dc_1x, dc_12, dc_x2)
 
-            elif mkey == "spreads":
+            elif mkey in ("spreads", "alternate_spreads"):
                 # Asian Handicap: jedes Outcome hat name=Team + point=Line
+                # alternate_spreads (13.06.2026) liefert die volle Linien-Leiter →
+                # ah_lines_by_bk sammelt jetzt ALLE Linien, nicht nur die Hauptlinie.
                 if bk_key not in ah_lines_by_bk:
                     ah_lines_by_bk[bk_key] = {}
                 for o in market.get("outcomes", []):
@@ -730,14 +732,19 @@ def main():
         if i < len(event_ids) - 1:
             time.sleep(0.25)
 
-    # ── Call 2: alternate_totals (für O1.5/O3.5/U1.5/U3.5) — mergen ──
-    print(f"  📥  Fetching alternate_totals per event (Call 2/3)…")
+    # ── Call 2: alternate_totals + alternate_spreads — mergen ──
+    # FIX 13.06.2026: `spreads` (Call 1) liefert pro Buchmacher nur EINE Linie (die
+    # Hauptlinie). Bei Mismatches (z.B. SUI -2 Favorit) ist die −2.0 → fällt durch
+    # unser Raster ±0.5/0.75/1.0 → AH blieb leer (34/72 Fixtures ohne AH, u.a. QAT-SUI).
+    # `alternate_spreads` gibt die GANZE Handicap-Leiter pro Book (auch ±0.5/1.0 bei
+    # Favoriten + ±1.5/2/2.5 bei Mismatches) → füllt die AH-Felder für fast alle Spiele.
+    print(f"  📥  Fetching alternate_totals + alternate_spreads per event (Call 2/3)…")
     alt_added = 0
     for i, eid in enumerate(event_ids):
         path_alt = (f"/v4/sports/{sport_key}/events/{eid}/odds"
                     f"?apiKey={ODDS_KEY}"
                     f"&regions=eu,uk,us"
-                    f"&markets=alternate_totals"
+                    f"&markets=alternate_totals,alternate_spreads"
                     f"&oddsFormat=decimal")
         alt_data = odds_get(path_alt)
         if isinstance(alt_data, dict) and alt_data.get("bookmakers"):
