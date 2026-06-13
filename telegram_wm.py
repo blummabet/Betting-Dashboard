@@ -233,6 +233,38 @@ def bilanz_footer(wm: dict) -> str:
 
 
 # ── Morning Card ───────────────────────────────────────────────────────────────
+def _pick_intro(hero: dict | None, home_name: str, away_name: str, fav: str | None) -> str | None:
+    """Pick-KONSISTENTE 1-Satz-Einleitung (FIX 13.06.2026).
+    Vorher zeigte die Karte eine generische Favoriten-Vorschau (rohe Form-Tore),
+    die den Picks widersprach — z.B. „Brasilien offensivstärker" über einem Unter-/
+    Marokko-Handicap-Pick. Verwirrte Leser. Diese Einleitung richtet sich nach dem
+    HAUPT-Pick: was wird tatsächlich bespielt + auf welcher Seite."""
+    if not hero:
+        return None
+    m  = (hero.get("market", "") or "").lower()
+    mk = hero.get("market", "")
+    favc = f"{fav} ist favorisiert, aber " if fav else ""
+    # Tor-Märkte (richtungs-unabhängig vom Team)
+    if "unter" in m or "under" in m:
+        return f"{favc}das Modell erwartet ein enges, torarmes Spiel — Value auf <b>{mk}</b>."
+    if "über" in m or "uber" in m or "over" in m:
+        return f"Das Modell erwartet ein offenes, torreiches Spiel — Value auf <b>{mk}</b>."
+    if "beide teams treffen" in m or "btts" in m:
+        return f"Das Modell sieht Treffer auf beiden Seiten — Value auf <b>{mk}</b>."
+    # Team-Märkte: welche Seite stützt der Pick?
+    backs = None
+    if any(t in m for t in ("heimsieg", "ah heim", "dnb: heim", "dnb: heimteam")) or "1x" in m:
+        backs = home_name
+    elif any(t in m for t in ("auswärtssieg", "auswaertssieg", "ah auswärt", "ah auswarts",
+                              "dnb: auswärt", "dnb: auswärtsteam")) or "x2" in m:
+        backs = away_name
+    if backs:
+        if fav and backs != fav:
+            return f"{favc}{backs} wird vom Markt unterschätzt — Value auf die Außenseiter-Seite <b>{mk}</b>."
+        return f"{backs} setzt sich laut Modell durch — Value auf <b>{mk}</b>."
+    return None
+
+
 def build_morning_card(wm: dict, target_date: str) -> str | None:
     """Baut die Morning-Card für alle WM-Spiele am target_date."""
 
@@ -241,12 +273,33 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
     upset_scores = wm.get("upsetScores", {})
     ai_previews  = wm.get("aiPreviews", {})
 
-    # Alle Fixtures am target_date sammeln
+    # Spiele der „Fußball-Nacht" per Anpfiff-Zeitfenster sammeln (FIX 13.06.2026).
+    # Vorher: fx.date == target_date (Kalendertag) → späte Nacht-Spiele (4/6 Uhr Wien =
+    # 02-04 UTC des Folgetags) rollten ins nächste Datum und fehlten in der Karte
+    # (z.B. AUS-TUR 06:00), obwohl sie noch zur heutigen Slate gehören. Jetzt: Anpfiff
+    # in [target_date 08:00 UTC, +1 Tag 08:00 UTC) — deckt 21:00 bis ~06:00 Wien ab,
+    # ohne die nächste Nacht zu doppeln. Fallback auf fx.date wenn kein kickoff.
+    try:
+        _win_start = datetime.fromisoformat(target_date + "T08:00:00+00:00")
+        _win_end   = _win_start + timedelta(days=1)
+    except Exception:
+        _win_start = _win_end = None
+
+    def _in_slate(fx) -> bool:
+        ko = fx.get("kickoff")
+        if ko and _win_start:
+            try:
+                dt = datetime.fromisoformat(ko.replace("Z", "+00:00")).astimezone(timezone.utc)
+                return _win_start <= dt < _win_end
+            except Exception:
+                pass
+        return fx.get("date") == target_date   # Fallback ohne kickoff
+
     matches_today = []
     for gkey, gdata in groups.items():
         teams_map = {t["id"]: t for t in gdata.get("teams", [])}
         for fx in gdata.get("fixtures", []):
-            if fx.get("date") == target_date:
+            if _in_slate(fx):
                 pick_key = f"{gkey}-{fx['matchday']}-{fx['home']}-{fx['away']}"
                 home_t   = teams_map.get(fx["home"], {})
                 away_t   = teams_map.get(fx["away"], {})
@@ -345,8 +398,18 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
             fav = m["homeName"] if elo_diff > 0 else m["awayName"]
             lines.append(f"⚡ Elo: {m['homeElo']} vs {m['awayElo']} → Favorit: {fav}")
 
-        # AI Snippet (1-2 Sätze Vorschau)
-        if m.get("aiSnippet"):
+        # Einleitung — pick-KONSISTENT (FIX 13.06.2026). Vorher generische
+        # Favoriten-Vorschau (aiSnippet), die den Picks widersprach (z.B. „Brasilien
+        # offensivstärker" über Unter-/Marokko-Handicap → User verwirrt). Jetzt richtet
+        # sich der Satz nach dem Haupt-Pick. Fallback auf aiSnippet nur wenn kein Pick.
+        _hero = (bet_picks or abw_picks or [None])[0]
+        _fav = None
+        if m["homeElo"] and m["awayElo"]:
+            _fav = m["homeName"] if m["homeElo"] >= m["awayElo"] else m["awayName"]
+        _intro = _pick_intro(_hero, m["homeName"], m["awayName"], _fav)
+        if _intro:
+            lines.append(f"\n✦ <i>{_intro}</i>")
+        elif m.get("aiSnippet"):
             lines.append(f"\n✦ <i>{m['aiSnippet']}</i>")
 
         if not bet_picks and not abw_picks:
