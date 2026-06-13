@@ -793,6 +793,21 @@ def generate_picks_for_fixture(
     bk_dr = odds_snap.get("dr")
     bk_aw = odds_snap.get("aw")
 
+    # ── Pinnacle-Anker für 1X2/DC/DNB (Fix 13.06.2026) ───────────────────────
+    # Vorher: 1X2/DC/DNB-Modell-Quoten kamen rein aus dem Elo-Modell. Das wich bei
+    # klaren Favoriten stark von Pinnacle UND vom eigenen Tormodell ab und erzeugte
+    # PHANTOM-Edges (QAT-SUI: Elo sah „Katar oder Remis" mit 31.5%, Pinnacle 19.6%,
+    # Tormodell 18% → fake edge +10pp auf DC 1X). Philosophie (Lucas): Pinnacle ist
+    # der Anker, NICHT zu schlagen; eigene Daten wirken als Modifikatoren — und zwar
+    # über die Signal-Engine (effectiveEdgePP), nicht über eine abweichende Baseline.
+    # Daher: Baseline pH/pD/pA = de-viggte Pinnacle-1X2. Elo bleibt Fallback wenn
+    # keine Marktquote da ist (Pre-Tournament). Tor-Modell (lam_h/lam_a) für
+    # O/U + AH + BTTS bleibt UNBERÜHRT (war konsistent mit Pinnacle).
+    probs_elo = probs   # für Evidence/Debug behalten
+    if bk_hw and bk_dr and bk_aw:
+        _ph, _pd, _pa = devig_1x2(bk_hw, bk_dr, bk_aw)
+        probs = {"pH": _ph, "pD": _pd, "pA": _pa, "anchored": True}
+
     # Public-vs-Sharp Bias (Pinnacle vs bet365) — wenn beide Bookies verfügbar
     pub_bias = compute_public_bias(odds_snap)
     if pub_bias and pub_bias["max_abs"] >= 4 and VERBOSE:

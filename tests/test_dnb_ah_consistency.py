@@ -54,23 +54,31 @@ class TestDnbAhCrossModelConsistency(unittest.TestCase):
                     )
         return None
 
-    def test_irn_nzl_dnb_downgraded_to_abwaegen(self):
+    def test_irn_nzl_no_phantom_dnb_bet(self):
         """
-        Regression-Test 07.06.2026: IRN-NZL DNB Auswärts darf nicht BET sein
-        weil Elo (~58%) und Skellam (~42%) für denselben Outcome divergieren.
+        Regression-Test 07.06.2026 (aktualisiert 13.06.2026): IRN-NZL darf KEINEN
+        DNB-Auswärts-BET als Phantom-Value zeigen.
+
+        Ursprünglich (07.06.): Elo-DNB (~58%) divergierte von Skellam-AH (~42%) →
+        Phantom „DNB Auswärts BET +13pp". Fix damals: Cross-Model-Konsistenz-
+        Downgrade auf ABWÄGEN mit Reason „Modell-Inkonsistenz".
+
+        Seit dem PINNACLE-ANKER (13.06.2026) wird die 1X2/DC/DNB-Baseline aus den
+        de-viggten Pinnacle-Quoten gebildet statt aus dem Elo-Modell → der Phantom-
+        Edge entsteht an der WURZEL nicht mehr. Folge: IRN-NZL hat gar keinen
+        DNB-Auswärts-Pick mehr (Pinnacle sieht NZL-no-loss ~47% → kein BET-Edge).
+
+        Der Test prüft daher das robuste Outcome: ENTWEDER kein DNB-Auswärts-Pick
+        (Anker hat den Phantom eliminiert) ODER — falls einer existiert — er ist
+        nicht BET. Beides erfüllt die Regressions-Absicht: kein Phantom-DNB-BET.
         """
         picks = self._picks("IRN", "NZL")
         self.assertIsNotNone(picks, "IRN-NZL Fixture muss in den Daten sein")
         dnb_a = next((p for p in picks if p.get("market") == "DNB: Auswärtsteam"), None)
-        self.assertIsNotNone(dnb_a, "DNB Auswärtsteam Pick muss existieren")
-        # Hauptsache: NICHT BET (kann ABWÄGEN oder SKIP sein)
-        self.assertNotEqual(dnb_a.get("verdict"), "BET",
-            f"DNB Auswärts darf nicht BET sein (Modell-Inkonsistenz IRN-NZL). "
-            f"Aktuell: {dnb_a.get('verdict')}, Reason: {dnb_a.get('downgradedReason')}")
-        # Reason muss Inkonsistenz nennen damit der User es nachvollziehen kann
-        reason = dnb_a.get("downgradedReason") or ""
-        self.assertIn("Modell-Inkonsistenz", reason,
-            f"downgradedReason sollte 'Modell-Inkonsistenz' erwähnen — bekam: {reason}")
+        if dnb_a is not None:
+            self.assertNotEqual(dnb_a.get("verdict"), "BET",
+                f"DNB Auswärts darf kein Phantom-BET sein. "
+                f"Aktuell: {dnb_a.get('verdict')}, Reason: {dnb_a.get('downgradedReason')}")
 
 
 class TestCrossModelLogicUnit(unittest.TestCase):
