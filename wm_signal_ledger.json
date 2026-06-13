@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-12T23:27:23Z",
-    "total_records": 6
+    "updated_at": "2026-06-13T08:48:28Z",
+    "total_records": 11
   },
   "records": [
     {
@@ -62,6 +62,23 @@
       "resolvedAt": "2026-06-12T05:58:50Z"
     },
     {
+      "key": "B-1-CAN-BIH|AH Heim −0.5",
+      "matchKey": "B-1-CAN-BIH",
+      "market": "AH Heim −0.5",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.53
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.2
+        }
+      ],
+      "resolvedAt": "2026-06-13T07:21:14Z"
+    },
+    {
       "key": "B-1-CAN-BIH|Auswärtssieg",
       "matchKey": "B-1-CAN-BIH",
       "market": "Auswärtssieg",
@@ -86,7 +103,7 @@
       "key": "B-1-CAN-BIH|DNB: Auswärtsteam",
       "matchKey": "B-1-CAN-BIH",
       "market": "DNB: Auswärtsteam",
-      "result": "LOSS",
+      "result": "VOID",
       "signals": [
         {
           "name": "form_trend",
@@ -101,7 +118,7 @@
           "score": 2.02
         }
       ],
-      "resolvedAt": "2026-06-12T20:59:21Z"
+      "resolvedAt": "2026-06-13T04:45:53Z"
     },
     {
       "key": "B-1-CAN-BIH|Doppelte Chance — X2",
@@ -119,6 +136,78 @@
         }
       ],
       "resolvedAt": "2026-06-12T20:59:21Z"
+    },
+    {
+      "key": "D-1-USA-PRY|AH Auswärts +0.5",
+      "matchKey": "D-1-USA-PRY",
+      "market": "AH Auswärts +0.5",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "h2h_pattern",
+          "score": -1.2
+        }
+      ],
+      "resolvedAt": "2026-06-13T07:21:14Z"
+    },
+    {
+      "key": "D-1-USA-PRY|Heimsieg",
+      "matchKey": "D-1-USA-PRY",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "h2h_pattern",
+          "score": 1.2
+        }
+      ],
+      "resolvedAt": "2026-06-13T04:45:53Z"
+    },
+    {
+      "key": "D-1-USA-PRY|Über 1.5 Tore",
+      "matchKey": "D-1-USA-PRY",
+      "market": "Über 1.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 5.47
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.35
+        },
+        {
+          "name": "pressure_index",
+          "score": -0.6
+        }
+      ],
+      "resolvedAt": "2026-06-13T04:45:53Z"
+    },
+    {
+      "key": "D-1-USA-PRY|Über 3.5 Tore",
+      "matchKey": "D-1-USA-PRY",
+      "market": "Über 3.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -2.53
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -2.2
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.55
+        },
+        {
+          "name": "pressure_index",
+          "score": -0.6
+        }
+      ],
+      "resolvedAt": "2026-06-13T04:45:53Z"
     }
   ]
 }
