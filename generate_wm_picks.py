@@ -590,6 +590,11 @@ MARKET_CFG = [
     ("ahA_p075",  "AH Auswärts +0.75",          EDGE_MIN_AH),
     ("ahH_n100",  "AH Heim −1.0",               EDGE_MIN_AH),
     ("ahA_p100",  "AH Auswärts +1.0",           EDGE_MIN_AH),
+    # Breitere Linien für Mismatches (13.06.2026) — sicherere Underdog-Absicherung
+    ("ahH_n150",  "AH Heim −1.5",               EDGE_MIN_AH),
+    ("ahA_p150",  "AH Auswärts +1.5",           EDGE_MIN_AH),
+    ("ahH_n200",  "AH Heim −2.0",               EDGE_MIN_AH),
+    ("ahA_p200",  "AH Auswärts +2.0",           EDGE_MIN_AH),
     # ── Corner-Picks (Pinnacle listet 1-3 Tage vor Anpfiff) ──
     ("o_corners85",  "Über 8.5 Ecken",          EDGE_MIN_OU),
     ("o_corners95",  "Über 9.5 Ecken",          EDGE_MIN_OU),
@@ -858,6 +863,10 @@ def generate_picks_for_fixture(
         "ahA_p075": odds_snap.get("ahA_p075"),
         "ahH_n100": odds_snap.get("ahH_n100"),
         "ahA_p100": odds_snap.get("ahA_p100"),
+        "ahH_n150": odds_snap.get("ahH_n150"),
+        "ahA_p150": odds_snap.get("ahA_p150"),
+        "ahH_n200": odds_snap.get("ahH_n200"),
+        "ahA_p200": odds_snap.get("ahA_p200"),
         # Corner-Markets
         "o_corners85":  odds_snap.get("cOver") if odds_snap.get("cornerLine") == 8.5  else None,
         "o_corners95":  odds_snap.get("cOver") if odds_snap.get("cornerLine") == 9.5  else None,
@@ -887,6 +896,10 @@ def generate_picks_for_fixture(
         "ahA_p075": open_snap.get("ahA_p075"),
         "ahH_n100": open_snap.get("ahH_n100"),
         "ahA_p100": open_snap.get("ahA_p100"),
+        "ahH_n150": open_snap.get("ahH_n150"),
+        "ahA_p150": open_snap.get("ahA_p150"),
+        "ahH_n200": open_snap.get("ahH_n200"),
+        "ahA_p200": open_snap.get("ahA_p200"),
         "o_corners85":  open_snap.get("cOver") if open_snap.get("cornerLine") == 8.5  else None,
         "o_corners95":  open_snap.get("cOver") if open_snap.get("cornerLine") == 9.5  else None,
         "o_corners105": open_snap.get("cOver") if open_snap.get("cornerLine") == 10.5 else None,
@@ -922,6 +935,9 @@ def generate_picks_for_fixture(
                 elif line == -0.75 and diff >= 1: p += ph * pa * (1.0 if diff >= 2 else 0.5)
                 elif line == -1.0 and diff >= 2: p += ph * pa
                 elif line == -1.0 and diff == 1: p += ph * pa * 0.5  # Push-Anteil
+                elif line == -1.5 and diff >= 2: p += ph * pa
+                elif line == -2.0 and diff >= 3: p += ph * pa
+                elif line == -2.0 and diff == 2: p += ph * pa * 0.5  # Push-Anteil
                 elif line == 0.5 and diff >= 0: p += ph * pa
                 elif line == 0.75 and diff >= 0: p += ph * pa * (1.0 if diff >= 1 else 0.5)
                 elif line == 1.0 and diff >= -1 and diff != 0: p += ph * pa
@@ -934,6 +950,10 @@ def generate_picks_for_fixture(
     p_ah_a_p075 = 1.0 - p_ah_h_n075
     p_ah_h_n100 = _p_ah_home(-1.0)
     p_ah_a_p100 = 1.0 - p_ah_h_n100
+    p_ah_h_n150 = _p_ah_home(-1.5)
+    p_ah_a_p150 = 1.0 - p_ah_h_n150
+    p_ah_h_n200 = _p_ah_home(-2.0)
+    p_ah_a_p200 = 1.0 - p_ah_h_n200
 
     # Margin-Discount 3% (typisch für AH-Märkte)
     def _ah_odds(p: float) -> float | None:
@@ -970,6 +990,10 @@ def generate_picks_for_fixture(
         "ahA_p075": _ah_odds(p_ah_a_p075),
         "ahH_n100": _ah_odds(p_ah_h_n100),
         "ahA_p100": _ah_odds(p_ah_a_p100),
+        "ahH_n150": _ah_odds(p_ah_h_n150),
+        "ahA_p150": _ah_odds(p_ah_a_p150),
+        "ahH_n200": _ah_odds(p_ah_h_n200),
+        "ahA_p200": _ah_odds(p_ah_a_p200),
         "o_corners85":  m_c_85,
         "o_corners95":  m_c_95,
         "o_corners105": m_c_105,

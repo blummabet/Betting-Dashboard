@@ -38,6 +38,53 @@ class TestDNBEvaluation(unittest.TestCase):
         self.assertEqual(self.ep("Doppelte Chance: 1X", 0, 3), "LOSS")
 
 
+class TestAsianHandicap(unittest.TestCase):
+    """AH-Auflösung inkl. Viertel-Linien (Push/Half) + Whole-Line-Push. Build 13.06.2026."""
+
+    def setUp(self):
+        import resolve_wm_picks
+        self.ep = resolve_wm_picks.evaluate_pick
+
+    def test_half_lines(self):
+        self.assertEqual(self.ep("AH Heim −0.5", 1, 0), "WIN")
+        self.assertEqual(self.ep("AH Heim −0.5", 1, 1), "LOSS")
+        self.assertEqual(self.ep("AH Auswärts +0.5", 1, 1), "WIN")   # Remis → Away +0.5 gewinnt
+        self.assertEqual(self.ep("AH Auswärts +0.5", 2, 1), "LOSS")
+
+    def test_whole_lines_push(self):
+        self.assertEqual(self.ep("AH Heim −1.0", 1, 0), "VOID")      # exakt 1 → Push
+        self.assertEqual(self.ep("AH Heim −1.0", 2, 0), "WIN")
+        self.assertEqual(self.ep("AH Auswärts +1.0", 2, 1), "VOID")  # Heim by 1 → Push
+        self.assertEqual(self.ep("AH Heim −2.0", 2, 0), "VOID")
+
+    def test_quarter_lines(self):
+        self.assertEqual(self.ep("AH Heim −0.75", 1, 0), "WIN")      # by 1 → Half-Win → WIN
+        self.assertEqual(self.ep("AH Heim −0.75", 1, 1), "LOSS")
+        self.assertEqual(self.ep("AH Auswärts +0.75", 2, 1), "LOSS") # Heim by 1 → Half-Loss → LOSS
+
+    def test_wide_lines(self):
+        self.assertEqual(self.ep("AH Heim −1.5", 2, 0), "WIN")
+        self.assertEqual(self.ep("AH Heim −1.5", 1, 0), "LOSS")
+        self.assertEqual(self.ep("AH Auswärts +2.0", 2, 1), "WIN")   # Underdog-Absicherung
+
+    def test_quarter_stake_factor(self):
+        import resolve_wm_picks as r
+        # Half-Win (Heim −0.75, Sieg mit genau 1) → WIN, halber Stake
+        self.assertEqual(r._ah_result("ah heim −0.75", 1), ("WIN", 0.5))
+        # Half-Loss (Auswärts +0.75, Heim by 1) → LOSS, halber Stake
+        self.assertEqual(r._ah_result("ah auswärts +0.75", 1), ("LOSS", 0.5))
+        # Volle Linie → Faktor 1.0
+        self.assertEqual(r._ah_result("ah heim −0.5", 1), ("WIN", 1.0))
+        # _apply_ah_stake_factor setzt das Feld am Pick
+        p = {"market": "AH Heim −0.75", "result": "WIN"}
+        r._apply_ah_stake_factor(p, 1, 0)
+        self.assertEqual(p.get("resultStakeFactor"), 0.5)
+        # Nicht-AH-Pick bekommt keinen Faktor
+        p2 = {"market": "Über 2.5 Tore", "result": "WIN"}
+        r._apply_ah_stake_factor(p2, 3, 1)
+        self.assertNotIn("resultStakeFactor", p2)
+
+
 class TestModuleImports(unittest.TestCase):
     """Sicherstellen dass refaktorierte Imports drin sind."""
 

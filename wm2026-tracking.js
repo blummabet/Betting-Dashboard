@@ -463,8 +463,11 @@
 
     let pnl = null, roi = null;
     if (resolved.length > 0) {
-      pnl = +(won.reduce((s, p) => s + ((p.odds || 1) - 1) * p._stake, 0)
-            - lost.reduce((s, p) => s + p._stake, 0)).toFixed(2);
+      // resultStakeFactor (13.06.2026): 0.5 bei AH-Viertel-Linien-Halb-Ergebnis
+      // (halber Stake gewinnt/verliert, Rest Push). Wirkt nur auf die P&L-Beiträge,
+      // NICHT auf den staked-Nenner (voller Einsatz wurde riskiert).
+      pnl = +(won.reduce((s, p) => s + ((p.odds || 1) - 1) * p._stake * (p.resultStakeFactor || 1), 0)
+            - lost.reduce((s, p) => s + p._stake * (p.resultStakeFactor || 1), 0)).toFixed(2);
       const _staked = resolved.reduce((s, p) => s + p._stake, 0);
       roi = _staked > 0 ? +(pnl / _staked * 100).toFixed(1) : null;
     }

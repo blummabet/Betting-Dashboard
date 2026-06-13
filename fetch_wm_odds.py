@@ -554,6 +554,10 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
     ah_05 = _pick_ah(-0.5)
     ah_075 = _pick_ah(-0.75)
     ah_10 = _pick_ah(-1.0)
+    # Breitere Linien für Mismatches (13.06.2026) — „sicherere" Underdog-Linien
+    # (z.B. QAT +1.5/+2) jetzt verfügbar dank alternate_spreads.
+    ah_15 = _pick_ah(-1.5)
+    ah_20 = _pick_ah(-2.0)
 
     b = _pick_bk(btts_cands)
     c = _pick_bk(corner_cands)
@@ -609,6 +613,10 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
         "ahA_p075": round(ah_075[1], 3) if ah_075 else None,
         "ahH_n100": round(ah_10[0], 3)  if ah_10  else None,
         "ahA_p100": round(ah_10[1], 3)  if ah_10  else None,
+        "ahH_n150": round(ah_15[0], 3)  if ah_15  else None,
+        "ahA_p150": round(ah_15[1], 3)  if ah_15  else None,
+        "ahH_n200": round(ah_20[0], 3)  if ah_20  else None,
+        "ahA_p200": round(ah_20[1], 3)  if ah_20  else None,
     }
 
 

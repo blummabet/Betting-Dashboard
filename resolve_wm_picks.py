@@ -20,8 +20,53 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
+
+
+def _ah_result(market_lower: str, margin: int) -> tuple[str, float]:
+    """Asian-Handicap-Auflösung. margin = home_score − away_score.
+    Returns (result, stake_factor). stake_factor=0.5 bei Viertel-Linien-Halb-
+    Ergebnissen (halber Einsatz gewinnt/verliert, andere Hälfte Push), sonst 1.0.
+    Unterstützt ±0.5/0.75/1.0/1.5/2.0. Whole-Lines mit exaktem Deckungs-Gleichstand
+    → VOID (Einsatz zurück)."""
+    mm = market_lower.replace("−", "-").replace("–", "-").replace(",", ".")
+    side = "heim" if ("heim" in mm or "home" in mm) else \
+           ("aus" if ("auswärt" in mm or "auswarts" in mm or "away" in mm) else None)
+    nums = re.findall(r"[-+]?\d+(?:\.\d+)?", mm)
+    if side is None or not nums:
+        return ("PENDING", 1.0)
+    L = abs(float(nums[-1]))
+
+    def leg(line: float) -> int:
+        cm = (margin - line) if side == "heim" else (-margin + line)
+        return 1 if cm > 0 else (-1 if cm < 0 else 0)
+
+    if round(L * 4) % 2 == 1:           # Viertel-Linie (0.75, 1.25, …) → 2 Halb-Wetten
+        s = leg(L - 0.25) + leg(L + 0.25)   # ∈ {-2,-1,0,1,2}
+        if s == 2:  return ("WIN", 1.0)
+        if s == 1:  return ("WIN", 0.5)     # Half-Win: halber Stake gewinnt, Rest Push
+        if s == 0:  return ("VOID", 1.0)
+        if s == -1: return ("LOSS", 0.5)    # Half-Loss: halber Stake verliert, Rest Push
+        return ("LOSS", 1.0)
+    r = leg(L)                          # Halb-/Ganz-Linie
+    return ("WIN", 1.0) if r > 0 else (("LOSS", 1.0) if r < 0 else ("VOID", 1.0))
+
+
+def _apply_ah_stake_factor(p: dict, hs: int, as_: int) -> None:
+    """Hängt resultStakeFactor=0.5 an AH-Picks mit Viertel-Linien-Halb-Ergebnis
+    (halber Einsatz gewinnt/verliert). P&L-Consumer multiplizieren damit. Sonst clean."""
+    m = (p.get("market", "") or "").lower()
+    is_ah = "ah" in m and any(k in m for k in ("heim", "auswärt", "auswarts", "home", "away"))
+    if not is_ah or p.get("result") not in ("WIN", "LOSS"):
+        p.pop("resultStakeFactor", None)
+        return
+    _, fac = _ah_result(m, hs - as_)
+    if fac != 1.0:
+        p["resultStakeFactor"] = fac
+    else:
+        p.pop("resultStakeFactor", None)
 
 BASE     = os.path.dirname(os.path.abspath(__file__))
 WM_FILE  = os.path.join(BASE, "wm2026-data.json")
@@ -102,6 +147,14 @@ def evaluate_pick(market: str, home_score: int, away_score: int) -> str:
         if "12" in m:
             return "WIN" if (home_win or away_win) else "LOSS"
         return "PENDING"
+
+    # ── Asian Handicap (13.06.2026) ──────────────────────────────────────────
+    # „AH Heim −0.5", „AH Auswärts +1.5" etc. Wird VOR den 1X2-Checks geprüft —
+    # enthält zwar „heim"/„auswärt", aber 1X2 nutzt Vollwörter (heimsieg/auswärtssieg),
+    # daher keine Kollision. Vorher gab es gar keinen AH-Zweig → AH-Picks blieben PENDING.
+    if ("ah" in m and ("heim" in m or "auswärt" in m or "auswarts" in m
+                       or "home" in m or "away" in m)):
+        return _ah_result(m, home_score - away_score)[0]
 
     # ── 1X2 / Match Result (präzise Vollwort-Checks) ─────────────────────────
     if "heimsieg" in m or m == "1":
@@ -248,6 +301,7 @@ def main():
                     p["finalScore"]     = f"{hs}-{as_}"
                     p["resolvedAt"]     = now_iso
                     p["resultCorrected"] = True
+                    _apply_ah_stake_factor(p, hs, as_)
                     corrected += 1
                 continue  # bereits aufgelöst
 
@@ -259,6 +313,7 @@ def main():
             p["result"]      = outcome
             p["finalScore"]  = f"{hs}-{as_}"
             p["resolvedAt"]  = now_iso
+            _apply_ah_stake_factor(p, hs, as_)
             resolved += 1
             if outcome == "WIN":   win_count += 1
             elif outcome == "LOSS": loss_count += 1

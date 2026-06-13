@@ -211,14 +211,15 @@ def bilanz_footer(wm: dict) -> str:
                 continue
             r = _norm_result(p.get("result"))
             stake = _pick_stake(p)
+            fac = p.get("resultStakeFactor", 1.0)  # 0.5 bei AH-Viertel-Halb-Ergebnis
             if r == "won":
                 w += 1
                 staked += stake
-                pnl += (p.get("odds", 1) - 1) * stake
+                pnl += (p.get("odds", 1) - 1) * stake * fac
             elif r == "lost":
                 l += 1
                 staked += stake
-                pnl -= stake
+                pnl -= stake * fac
             elif r == "push":
                 push += 1
                 staked += stake
@@ -515,13 +516,14 @@ def build_recap_card(wm: dict, target_date: str) -> str | None:
         )
         for p, result in pick_results:
             stake = _pick_stake(p)   # BET €10 / ABWÄGEN €5
+            fac = p.get("resultStakeFactor", 1.0)  # 0.5 bei AH-Viertel-Halb-Ergebnis
             if result == "won":
-                profit = (p.get("odds", 1) - 1) * stake
+                profit = (p.get("odds", 1) - 1) * stake * fac
                 day_pnl += profit
                 lines.append(f"  ✅ {p['market']} @{p.get('odds','?')} → +€{profit:.2f}")
             elif result == "lost":
-                day_pnl -= stake
-                lines.append(f"  ❌ {p['market']} @{p.get('odds','?')} → -€{stake:.2f}")
+                day_pnl -= stake * fac
+                lines.append(f"  ❌ {p['market']} @{p.get('odds','?')} → -€{stake * fac:.2f}")
             elif result == "push":
                 lines.append(f"  🔄 {p['market']} @{p.get('odds','?')} → Push")
         lines.append("")
