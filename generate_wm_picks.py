@@ -2217,6 +2217,36 @@ def main():
                 _extra["trackingExcluded"] = True
                 _extra["dedupAHLine"] = True
 
+    # ── Riskanter-Hero-ohne-Safe-Variante → ganzes Spiel auf Beobachtung (14.06.2026) ──
+    # Repliziert die Renderer-Demotion IN DEN DATEN, damit ALLE Konsumenten (Card,
+    # Tracking, Telegram, TikTok) einig sind. Vorher demotete nur der Dashboard-Renderer
+    # → CIV-ECU „AH Heim −0.5 @3.55" ging trotzdem als ABWÄGEN ins Telegram (Lucas-Befund).
+    # Hero-Wahl = gleiche Sortierung wie Renderer: saferAlt zuerst, dann BET>ABWÄGEN,
+    # dann Conviction, dann Edge. Hero riskant (Quote >3.0 ODER AH-Favorit ≤ −1.5) UND
+    # ohne sichere Alternative → alle Live-Picks des Spiels trackingExcluded.
+    _VR2 = {"BET": 0, "ABWÄGEN": 1}
+    _AHF = re.compile(r"AH (?:Heim|Auswärts) −([\d.]+)")
+    for _plist in (wm.get("picks") or {}).values():
+        if not isinstance(_plist, list):
+            continue
+        _live = [p for p in _plist
+                 if not p.get("trackingExcluded") and not p.get("boldAlt")
+                 and p.get("verdict") in ("BET", "ABWÄGEN")]
+        if not _live:
+            continue
+        _hero = sorted(_live, key=lambda p: (
+            0 if p.get("saferAltFor") else 1,
+            _VR2.get(p.get("verdict"), 2),
+            -(p.get("convictionScore") or 0),
+            -(p.get("edgePP") or 0),
+        ))[0]
+        _ahm = _AHF.search(_hero.get("market") or "")
+        _risky = (_hero.get("odds") or 0) > 3.0 or (_ahm and float(_ahm.group(1)) >= 1.5)
+        if _risky and not _hero.get("saferAltFor") and not _hero.get("boldAlt"):
+            for p in _live:
+                p["trackingExcluded"] = True
+                p["demotedRiskyGame"] = True
+
     wm["_meta"] = wm.get("_meta", {})
     wm["_meta"]["picksUpdatedAt"] = datetime.now(timezone.utc).isoformat()
 
