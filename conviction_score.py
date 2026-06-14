@@ -415,6 +415,24 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     if soft_lag_fresh:
         evidence.append(f"Soft-Books {sm['soft_lag_pp']:.1f}pp hinter Pinnacle (frischer Lag)")
 
+    # ── Steam-Picks: der Move IST der Trigger (Fix 14.06.2026) ──────────────────
+    # detect_sharp_move liest die grobe odds_history (große Lücken, Median ~19h) und
+    # unterschätzt den Pinnacle-Move, der den Steam-Pick überhaupt ausgelöst hat. Hier
+    # zählen wir die präzise steamMovePP des Picks direkt. Das BET-Gate (Conviction ≥8)
+    # bleibt: der Trigger gibt der sharp_money-Familie ihre Punkte, aber BET braucht
+    # weiter zusätzliche Bestätigung aus model_stack/context (= die Signal-Litanei).
+    if pick.get("source") == "steam" and isinstance(pick.get("steamMovePP"), (int, float)):
+        _mv = pick["steamMovePP"]
+        if _mv >= cfg["sharp_move"]["min_pinn_move_pp"] - 2.0:   # Sweet-Spot ab ~3pp
+            sm_triggered = True
+            sm_decay = 0.6 if pick.get("lateEntry") else 1.0
+            evidence.append(
+                f"Steam-Trigger: Pinnacle {_mv:+.1f}pp seit Eröffnung"
+                + (" (Late Entry, gedämpft)" if pick.get("lateEntry") else " (frisch)"))
+        if pick.get("entryBook") == "soft":
+            soft_lag_fresh = True   # wir kaufen bewusst die hinkende Soft-Buch-Quote
+            evidence.append("Soft-Buch-Quote gekauft (hinkt Pinnacle nach)")
+
     # Strength-Berechnung statt naiver Akkumulation:
     # Jede Quelle trägt limitiert bei, Map auf 4-stufige Skala (0/1/2/3).
     strength = 0

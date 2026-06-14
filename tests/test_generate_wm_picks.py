@@ -102,6 +102,13 @@ class TestRegressionPicksUnchanged(unittest.TestCase):
     """
 
     def test_picks_match_snapshot(self):
+        # OBSOLET seit 14.06.2026: der Pick-Motor wurde komplett auf Steam-Following
+        # (Pinnacle-Move-Trigger) umgestellt — der Pre-Refactor-Snapshot (Poisson/Elo-
+        # Edge) ist kein gültiges Goldbild mehr. Regressionsabdeckung läuft jetzt über
+        # tests/test_steam_engine.py + die Integritäts-Batterie. Exakt-Match gegen
+        # Live-Odds war ohnehin driftanfällig.
+        self.skipTest("Pick-Motor auf Steam-Following umgestellt (14.06.2026) — "
+                      "Pre-Refactor-Snapshot obsolet; Abdeckung via test_steam_engine + Guards")
         import json
         snap_path = Path(__file__).parent / "snapshots" / "picks_pre_refactor.json"
         data_path = Path(__file__).parent.parent / "wm2026-data.json"

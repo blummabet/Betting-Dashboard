@@ -66,6 +66,19 @@ class TestPickSafeVariant(unittest.TestCase):
             {"verdict": "BET", "market": "AH Auswärts −1.5", "odds": 2.44}]})
         self.assertFalse(_result(wm)["ok"])
 
+    def test_steam_derived_ah_safe_odds_not_flagged(self):
+        # Steam leitet die AH-Linie bewusst auf eine sichere Quote ab (ESP −2 @1.60).
+        # Linien-Höhe ist kein Risiko mehr — nur Quote > 3.0 wäre eins.
+        wm = _wm({"A-3-ESP-SAU": [
+            {"verdict": "BET", "market": "AH Heim −2", "odds": 1.60, "source": "steam"}]})
+        self.assertTrue(_result(wm)["ok"])
+
+    def test_steam_high_odds_still_flagged(self):
+        # Auch ein Steam-Pick mit Quote > 3.0 ist riskant ohne sichere Variante.
+        wm = _wm({"A-3-ESP-SAU": [
+            {"verdict": "BET", "market": "AH Heim −2", "odds": 3.40, "source": "steam"}]})
+        self.assertFalse(_result(wm)["ok"])
+
 
 if __name__ == "__main__":
     unittest.main()

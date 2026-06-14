@@ -215,8 +215,20 @@ def validate_pick(mk: str, p: dict, wm: dict, issues: list) -> None:
                  f"edgePP {edgePP:+.1f} weicht von erwarteter Edge {expected_edge:+.1f}pp ab "
                  f"(modelOdds {modelOdds}, marketOdds {odds}) — Vorzeichen/Margin-Bug?", p)
 
-    # ── E_VERDICT_NO_EDGE ──────────────────────────────────
-    if verdict == "BET" and isinstance(edgePP, (int, float)) and edgePP < BET_MIN_EDGE:
+    # ── E_VERDICT_NO_EDGE / Steam-Äquivalent ───────────────
+    # Steam-Picks (Lucas' Modell) sind CONVICTION-/MOVE-getrieben, NICHT edge-getrieben:
+    # edgePP ist by design ~0/negativ, weil wir Pinnacle nicht schlagen, sondern den Move
+    # reiten. Daher gilt die Edge-Schwelle nur für Nicht-Steam. Für Steam-BET prüfen wir
+    # stattdessen, dass der auslösende Move + die Conviction wirklich vorhanden sind.
+    if p.get("source") == "steam":
+        if verdict == "BET":
+            if not isinstance(p.get("steamMovePP"), (int, float)):
+                _add(issues, mk, market, "error", "E_STEAM_NO_MOVE",
+                     "Steam-BET ohne steamMovePP — Trigger (Pinnacle-Move) fehlt", p)
+            elif not isinstance(p.get("convictionScore"), (int, float)):
+                _add(issues, mk, market, "error", "E_STEAM_NO_CONVICTION",
+                     "Steam-BET ohne convictionScore — Bestätigungs-Stufe nicht gelaufen", p)
+    elif verdict == "BET" and isinstance(edgePP, (int, float)) and edgePP < BET_MIN_EDGE:
         _add(issues, mk, market, "error", "E_VERDICT_NO_EDGE",
              f"BET-Pick mit nur {edgePP}pp Edge (Schwelle: ≥{BET_MIN_EDGE}pp) — "
              f"Filter durchgerutscht oder Edge nachträglich gefallen", p)

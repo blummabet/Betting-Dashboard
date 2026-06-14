@@ -215,7 +215,13 @@ def check_pick_safe_variant(ctx):
             if p.get("verdict") != "BET":
                 continue
             odds = p.get("odds") or 0
-            risky = odds > 3.0 or _ah_fav_line(p.get("market")) >= 1.5
+            # Steam-Picks leiten die AH-Linie bewusst auf eine sichere Quote ab
+            # (build_steam_pick → 1,4-1,95) → die Linien-Höhe ist hier kein Risiko,
+            # nur eine Quote > 3,0 zählt. Sonst: AH ≤ −1.5 ODER Quote > 3,0.
+            if p.get("source") == "steam":
+                risky = odds > 3.0
+            else:
+                risky = odds > 3.0 or _ah_fav_line(p.get("market")) >= 1.5
             if risky and not p.get("saferAltFor") and not p.get("boldAlt"):
                 fails.append(f"{key}: BET {p.get('market')} @{odds} — keine sichere Variante")
     return _chk("pick_safe_variant", "Riskanter BET hat sichere Variante", "warn", fails,

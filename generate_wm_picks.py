@@ -82,6 +82,11 @@ ODDS_BET_MAX     = _cfg("odds", "max_for_bet",           4.5)
 ODDS_BET_MAX_OU  = _cfg("odds", "max_for_bet_ou",        3.0)
 ODDS_BET_MAX_DNB = _cfg("odds", "max_for_bet_dnb",       4.0)
 
+# Steam-Engine (Lucas' Modell): Picks pro Card + Conviction-BET-Schwelle.
+# WM lockerer als Liga (weniger Spiele) — Liga-Profil setzt steam_bet_threshold höher.
+MAX_STEAM_PICKS_PER_CARD = _cfg("conviction_score", "max_steam_picks_per_card", 3)
+STEAM_BET_THRESHOLD      = _cfg("conviction_score", "steam_bet_threshold",      6)
+
 # Underdog-Filter
 UNDERDOG_ELO_SOFT = _cfg("underdog", "elo_soft_threshold", 100)
 UNDERDOG_ELO_HARD = _cfg("underdog", "elo_hard_threshold", 200)
@@ -1739,6 +1744,113 @@ def generate_picks_for_fixture(
     return picks
 
 
+# ════════════════════════════════════════════════════════════════════════════
+# STEAM-ENGINE (Lucas' echtes Modell, 14.06.2026) — Pinnacle-Move-Following.
+# Ersetzt den Poisson/Elo-Edge-Trigger als Pick-Quelle für NEU gebaute Spiele.
+# Trigger = Pinnacle-Drop (open→jetzt). Kein Fair-Value. Pick = gesteamte Seite zur
+# Softbook-Quote (bzw. abgeleitete sichere Linie bei heftigen Favoriten). Die nachge-
+# lagerte Signal- + Conviction-Maschine bleibt UNVERÄNDERT: sie feuert die 17 Signale
+# auf den Pick, die Sharp-Money-Familie erkennt den Move, Conviction ≥8 hebt ABWÄGEN→BET.
+# modelOdds = de-viggte Pinnacle-Baseline der Pick-Seite → hält den O/U-Anker-Guard grün
+# und liefert einen ehrlichen (kleinen) Softbook-vs-Pinnacle-Edge.
+# ════════════════════════════════════════════════════════════════════════════
+_STEAM_OU_PAIR = {
+    "Über 1.5 Tore": ("o15", "u15"), "Unter 1.5 Tore": ("u15", "o15"),
+    "Über 2.5 Tore": ("o25", "u25"), "Unter 2.5 Tore": ("u25", "o25"),
+    "Über 3.5 Tore": ("o35", "u35"), "Unter 3.5 Tore": ("u35", "o35"),
+    "Beide Teams treffen — Ja": ("bttsY", "bttsN"),
+    "Beide Teams treffen — Nein": ("bttsN", "bttsY"),
+}
+
+
+def _steam_model_odds(snap, market):
+    """modelOdds = prob_to_odds(de-viggte Pinnacle-Fair der Pick-Seite).
+    1X2 → 3-Weg-Devig, O/U/BTTS → 2-Weg-Devig. AH → None (keine saubere Fair-Linie,
+    Caller nutzt dann die Quote selbst → Edge ~0, ehrlich)."""
+    if market in ("Heimsieg", "Unentschieden", "Auswärtssieg"):
+        hw, dr, aw = snap.get("hw"), snap.get("dr"), snap.get("aw")
+        if hw and dr and aw and min(hw, dr, aw) > 1.0:
+            ph, pd, pa = devig_1x2(hw, dr, aw)
+            p = {"Heimsieg": ph, "Unentschieden": pd, "Auswärtssieg": pa}[market]
+            return prob_to_odds(p)
+        return None
+    pair = _STEAM_OU_PAIR.get(market)
+    if pair:
+        a, b = snap.get(pair[0]), snap.get(pair[1])
+        if a and b and a > 1.0 and b > 1.0:
+            ia, ib = 1.0 / a, 1.0 / b
+            return prob_to_odds(ia / (ia + ib))
+    return None
+
+
+def _steam_card_pick(snap, pick):
+    """Ein steam_engine-Pick → Card-Dict im Standard-Format (Signal/Conviction-Stufe
+    hängt danach signals/convictionScore an)."""
+    t = pick["trigger"]
+    market = pick["market"]
+    odds = float(pick["entry_odd"])
+    model_odds = _steam_model_odds(snap, market) or odds
+    edge_pp = 0
+    if model_odds > 1.0 and odds > 1.0:
+        edge_pp = round(((1.0 / model_odds) * MODEL_MARGIN - (1.0 / odds) * 1.03) * 100)
+
+    move = t["move_pp"]
+    soft_lag = pick.get("soft_lagging")
+    parts = [f"📉 Pinnacle {t['open']}→{t['cur']} (Sharp-Money-Drop +{move}pp)"]
+    if soft_lag is not None and soft_lag > 0.5:
+        parts.append(f"Softbook hinkt +{soft_lag}pp (Value)")
+    if pick.get("derived"):
+        parts.append(f"sichere Linie abgeleitet: {market} @{odds:g}")
+    if pick.get("lateEntry"):
+        parts.append("⏱️ Late Entry — Lernwert, weniger CLV")
+    info = " · ".join(parts)
+    conf = "high" if (t["sweet"] and move >= 4) else "medium"
+
+    return {
+        "market": market, "odds": round(odds, 2), "modelOdds": round(model_odds, 3),
+        "conf": conf, "verdict": "ABWÄGEN",        # Lebenszyklus: reift via Conviction→BET
+        "modSig": 0, "mktSig": 0, "storySig": 0,
+        "edgePP": edge_pp, "info": info, "icon": "🔥",
+        "result": None, "clvPP": 0.0, "dataQuality": "steam",
+        "lamH": None, "lamA": None, "lamTotal": None,
+        # ── Steam-Metadaten (Anzeige + CLV-Tracking) ──
+        "source": "steam", "steamMovePP": move,
+        "steamOpen": t["open"], "steamCur": t["cur"],
+        "entryBook": pick["book"], "entryOdd": round(odds, 2),
+        "lateEntry": bool(pick.get("lateEntry")), "steamDerived": bool(pick.get("derived")),
+        "ahLine": pick.get("ah_line"),
+    }
+
+
+def generate_steam_picks_for_fixture(fx, snap, today_iso):
+    """Bis zu MAX_STEAM_PICKS_PER_CARD Steam-Picks je Spiel im Card-Format (oder []).
+    Mehrere, wenn verschiedene Kategorien droppen (z.B. Home-HC + Over). Die Signal/
+    Conviction-Stufe danach hängt signals/convictionScore an und hebt ABWÄGEN→BET."""
+    if not snap:
+        return []
+    import steam_engine as _steam
+    try:
+        days = (datetime.fromisoformat(str(fx.get("date"))).date()
+                - datetime.fromisoformat(str(today_iso)).date()).days
+    except Exception:
+        days = None
+    picks = _steam.build_steam_picks(snap, days_to_ko=days, max_picks=MAX_STEAM_PICKS_PER_CARD)
+    # Multi-Pick: widersprüchliche Kombis vermeiden (z.B. Unter 3.5 + BTTS Ja). Stärkster
+    # Pick zuerst (detect_steam sortiert nach Sweet+Move) — schwächere Widersprüche raus.
+    # Nutzt die zentrale Inkompatibilitäts-Logik (pick_helpers = single source of truth).
+    try:
+        from pick_helpers import picks_are_incompatible
+    except Exception:
+        picks_are_incompatible = lambda a, b: False  # noqa: E731
+    cards = []
+    for p in picks:
+        card = _steam_card_pick(snap, p)
+        if any(picks_are_incompatible(card, kept) for kept in cards):
+            continue
+        cards.append(card)
+    return cards
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 #  MAIN
 # ═══════════════════════════════════════════════════════════════════════════
@@ -2001,11 +2113,15 @@ def main():
                     refresh_existing = True
 
             if not refresh_existing:
-                new_picks = generate_picks_for_fixture(
-                    fx, gdata, mkt, form, h2h_data, today,
-                    xg_stats=xg_stats, injuries=injuries,
-                    travel_data=travel_data,
-                    corners_form=corners_form,
+                # ── STEAM-ENGINE als Pick-Quelle (Umstellung 14.06.2026) ──────
+                # Lucas: alte Edge/Poisson-Picks komplett killen, neue Cards = Steam.
+                # Nicht-eingefrorene (künftige) Spiele bekommen genau EINEN Steam-Pick
+                # aus dem Pinnacle-Move; die gepostete Vergangenheit/heute+morgen bleibt
+                # via Freeze (oben) unangetastet. Der alte generate_picks_for_fixture
+                # bleibt im Code (Referenz/Tests), wird aber für neue Picks nicht mehr
+                # aufgerufen.
+                new_picks = generate_steam_picks_for_fixture(
+                    fx, mkt.get(f"{fx['home']}-{fx['away']}", {}), today,
                 )
 
             # ── Signal-Engine: jedem Pick die signals[] Liste anhängen ────
@@ -2171,14 +2287,19 @@ def main():
                         if conv.get("opening_movement"):
                             p["openingMovement"] = conv["opening_movement"]
 
-                        CONVICTION_UPGRADE_THRESHOLD = 8
+                        # Steam-Picks reifen via Conviction zu BET. WM-Schwelle niedriger
+                        # als Liga (weniger Spiele) — STEAM_BET_THRESHOLD aus Config-Profil.
+                        # Nicht-Steam (Altpfad) bleibt bei 8. Disziplin bleibt: BET braucht
+                        # Move + zusätzliche Signal-Bestätigung, nur die Schwelle ist profil-abh.
+                        _conv_threshold = (STEAM_BET_THRESHOLD
+                                           if p.get("source") == "steam" else 8)
                         if (p.get("verdict") == "ABWÄGEN"
-                                and conv["score"] >= CONVICTION_UPGRADE_THRESHOLD
+                                and conv["score"] >= _conv_threshold
                                 and not p.get("downgradedReason")):
                             p["verdict"] = "BET"
                             p["pickTriggerReason"] = (
-                                f"Conviction {conv['score']}/10 — "
-                                f"Setup ist sehr stark trotz kleinerer Edge"
+                                f"Conviction {conv['score']}/10 (≥{_conv_threshold}) — "
+                                f"Move + Signale bestätigen den Pick"
                             )
                         elif p.get("verdict") == "BET":
                             p["pickTriggerReason"] = "Edge-getrieben"
@@ -2276,7 +2397,11 @@ def main():
             -(p.get("edgePP") or 0),
         ))[0]
         _ahm = _AHF.search(_hero.get("market") or "")
-        _risky = (_hero.get("odds") or 0) > 3.0 or (_ahm and float(_ahm.group(1)) >= 1.5)
+        # Steam-Picks leiten die AH-Linie bewusst auf eine SICHERE Quote ab (1,4-1,95) →
+        # die Linien-Höhe (−1,5/−2) ist hier kein Risiko, nur eine Quote > 3,0 wäre eins.
+        _is_steam = _hero.get("source") == "steam"
+        _risky = (_hero.get("odds") or 0) > 3.0 or (
+            not _is_steam and _ahm and float(_ahm.group(1)) >= 1.5)
         if _risky and not _hero.get("saferAltFor") and not _hero.get("boldAlt"):
             for p in _live:
                 p["trackingExcluded"] = True
