@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-13T22:38:54Z",
-    "total_records": 15
+    "updated_at": "2026-06-14T04:51:32Z",
+    "total_records": 19
   },
   "records": [
     {
@@ -25,7 +25,8 @@
           "score": 0.6
         }
       ],
-      "resolvedAt": "2026-06-12T05:58:50Z"
+      "resolvedAt": "2026-06-12T05:58:50Z",
+      "processVerdict": "DESERVED_LOSS"
     },
     {
       "key": "A-1-MEX-ZAF|Unter 2.5 Tore",
@@ -38,7 +39,8 @@
           "score": 0.6
         }
       ],
-      "resolvedAt": "2026-06-12T05:58:50Z"
+      "resolvedAt": "2026-06-12T05:58:50Z",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "A-1-MEX-ZAF|Unter 3.5 Tore",
@@ -59,7 +61,8 @@
           "score": 0.6
         }
       ],
-      "resolvedAt": "2026-06-12T05:58:50Z"
+      "resolvedAt": "2026-06-12T05:58:50Z",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "B-1-CAN-BIH|AH Heim −0.5",
@@ -76,7 +79,8 @@
           "score": 1.2
         }
       ],
-      "resolvedAt": "2026-06-13T07:21:14Z"
+      "resolvedAt": "2026-06-13T07:21:14Z",
+      "processVerdict": "UNLUCKY"
     },
     {
       "key": "B-1-CAN-BIH|Auswärtssieg",
@@ -97,7 +101,8 @@
           "score": 2.02
         }
       ],
-      "resolvedAt": "2026-06-12T20:59:21Z"
+      "resolvedAt": "2026-06-12T20:59:21Z",
+      "processVerdict": "DESERVED_LOSS"
     },
     {
       "key": "B-1-CAN-BIH|DNB: Auswärtsteam",
@@ -135,7 +140,8 @@
           "score": -1.2
         }
       ],
-      "resolvedAt": "2026-06-12T20:59:21Z"
+      "resolvedAt": "2026-06-12T20:59:21Z",
+      "processVerdict": "LUCKY"
     },
     {
       "key": "B-1-QAT-SUI|Doppelte Chance — 1X",
@@ -164,7 +170,8 @@
           "score": -2.35
         }
       ],
-      "resolvedAt": "2026-06-13T21:16:40Z"
+      "resolvedAt": "2026-06-13T21:16:40Z",
+      "processVerdict": "LUCKY"
     },
     {
       "key": "B-1-QAT-SUI|Über 1.5 Tore",
@@ -193,7 +200,8 @@
           "score": -1.0
         }
       ],
-      "resolvedAt": "2026-06-13T21:16:40Z"
+      "resolvedAt": "2026-06-13T21:16:40Z",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "B-1-QAT-SUI|Über 2.5 Tore",
@@ -222,7 +230,8 @@
           "score": -1.0
         }
       ],
-      "resolvedAt": "2026-06-13T21:16:40Z"
+      "resolvedAt": "2026-06-13T21:16:40Z",
+      "processVerdict": "UNLUCKY"
     },
     {
       "key": "B-1-QAT-SUI|Über 3.5 Tore",
@@ -251,7 +260,96 @@
           "score": -1.0
         }
       ],
-      "resolvedAt": "2026-06-13T21:16:40Z"
+      "resolvedAt": "2026-06-13T21:16:40Z",
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "C-1-BRA-MAR|AH Auswärts +0.5",
+      "matchKey": "C-1-BRA-MAR",
+      "market": "AH Auswärts +0.5",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.0
+        },
+        {
+          "name": "chance_creation",
+          "score": -1.08
+        }
+      ],
+      "resolvedAt": "2026-06-14T02:03:45Z",
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "C-1-BRA-MAR|AH Auswärts +1.0",
+      "matchKey": "C-1-BRA-MAR",
+      "market": "AH Auswärts +1.0",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.0
+        },
+        {
+          "name": "chance_creation",
+          "score": -1.08
+        }
+      ],
+      "resolvedAt": "2026-06-14T02:03:45Z",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "C-1-BRA-MAR|Unter 1.5 Tore",
+      "matchKey": "C-1-BRA-MAR",
+      "market": "Unter 1.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -4.93
+        },
+        {
+          "name": "xg_strength",
+          "score": -3.58
+        },
+        {
+          "name": "pressure_index",
+          "score": 0.6
+        },
+        {
+          "name": "lineup_signal",
+          "score": 2.5
+        },
+        {
+          "name": "chance_creation",
+          "score": -3.23
+        }
+      ],
+      "resolvedAt": "2026-06-14T02:03:45Z",
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "C-1-BRA-MAR|Unter 2.5 Tore",
+      "matchKey": "C-1-BRA-MAR",
+      "market": "Unter 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "pressure_index",
+          "score": 0.6
+        },
+        {
+          "name": "lineup_signal",
+          "score": 2.5
+        },
+        {
+          "name": "chance_creation",
+          "score": -3.23
+        }
+      ],
+      "resolvedAt": "2026-06-14T02:03:45Z",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "D-1-USA-PRY|AH Auswärts +0.5",
@@ -264,7 +362,8 @@
           "score": -1.2
         }
       ],
-      "resolvedAt": "2026-06-13T07:21:14Z"
+      "resolvedAt": "2026-06-13T07:21:14Z",
+      "processVerdict": "DESERVED_LOSS"
     },
     {
       "key": "D-1-USA-PRY|Heimsieg",
@@ -277,7 +376,8 @@
           "score": 1.2
         }
       ],
-      "resolvedAt": "2026-06-13T04:45:53Z"
+      "resolvedAt": "2026-06-13T04:45:53Z",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "D-1-USA-PRY|Über 1.5 Tore",
@@ -298,7 +398,8 @@
           "score": -0.6
         }
       ],
-      "resolvedAt": "2026-06-13T04:45:53Z"
+      "resolvedAt": "2026-06-13T04:45:53Z",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "D-1-USA-PRY|Über 3.5 Tore",
@@ -323,7 +424,8 @@
           "score": -0.6
         }
       ],
-      "resolvedAt": "2026-06-13T04:45:53Z"
+      "resolvedAt": "2026-06-13T04:45:53Z",
+      "processVerdict": "LUCKY"
     }
   ]
 }
