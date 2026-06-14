@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-14T04:51:32Z",
-    "total_records": 19
+    "updated_at": "2026-06-14T08:59:48Z",
+    "total_records": 29
   },
   "records": [
     {
@@ -350,6 +350,202 @@
       ],
       "resolvedAt": "2026-06-14T02:03:45Z",
       "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "C-1-HTI-SCO|Beide Teams treffen — Ja",
+      "matchKey": "C-1-HTI-SCO",
+      "market": "Beide Teams treffen — Ja",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "xg_strength",
+          "score": -1.93
+        }
+      ],
+      "resolvedAt": "2026-06-14T06:46:37Z",
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "C-1-HTI-SCO|DNB: Heimteam",
+      "matchKey": "C-1-HTI-SCO",
+      "market": "DNB: Heimteam",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -1.54
+        },
+        {
+          "name": "apif_predictions",
+          "score": 2.79
+        },
+        {
+          "name": "chance_creation",
+          "score": -3.51
+        }
+      ],
+      "resolvedAt": "2026-06-14T06:46:37Z",
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "C-1-HTI-SCO|Doppelte Chance — 1X",
+      "matchKey": "C-1-HTI-SCO",
+      "market": "Doppelte Chance — 1X",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -1.54
+        },
+        {
+          "name": "chance_creation",
+          "score": -3.51
+        }
+      ],
+      "resolvedAt": "2026-06-14T06:46:37Z",
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "C-1-HTI-SCO|Heimsieg",
+      "matchKey": "C-1-HTI-SCO",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -1.54
+        },
+        {
+          "name": "apif_predictions",
+          "score": 2.79
+        },
+        {
+          "name": "chance_creation",
+          "score": -3.51
+        }
+      ],
+      "resolvedAt": "2026-06-14T06:46:37Z",
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "C-1-HTI-SCO|Über 1.5 Tore",
+      "matchKey": "C-1-HTI-SCO",
+      "market": "Über 1.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 5.73
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.69
+        },
+        {
+          "name": "pressure_index",
+          "score": -0.6
+        }
+      ],
+      "resolvedAt": "2026-06-14T06:46:37Z",
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "C-1-HTI-SCO|Über 3.5 Tore",
+      "matchKey": "C-1-HTI-SCO",
+      "market": "Über 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -2.27
+        },
+        {
+          "name": "xg_strength",
+          "score": -3.31
+        },
+        {
+          "name": "pressure_index",
+          "score": -0.6
+        }
+      ],
+      "resolvedAt": "2026-06-14T06:46:37Z",
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "D-1-AUS-TUR|Beide Teams treffen — Ja",
+      "matchKey": "D-1-AUS-TUR",
+      "market": "Beide Teams treffen — Ja",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "xg_strength",
+          "score": -2.12
+        }
+      ],
+      "resolvedAt": "2026-06-14T06:46:37Z",
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "D-1-AUS-TUR|Über 1.5 Tore",
+      "matchKey": "D-1-AUS-TUR",
+      "market": "Über 1.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 6.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.47
+        },
+        {
+          "name": "pressure_index",
+          "score": -0.6
+        }
+      ],
+      "resolvedAt": "2026-06-14T06:46:37Z",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "D-1-AUS-TUR|Über 2.5 Tore",
+      "matchKey": "D-1-AUS-TUR",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.27
+        },
+        {
+          "name": "pressure_index",
+          "score": -0.6
+        }
+      ],
+      "resolvedAt": "2026-06-14T06:46:37Z",
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "D-1-AUS-TUR|Über 3.5 Tore",
+      "matchKey": "D-1-AUS-TUR",
+      "market": "Über 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -1.73
+        },
+        {
+          "name": "xg_strength",
+          "score": -3.53
+        },
+        {
+          "name": "pressure_index",
+          "score": -0.6
+        }
+      ],
+      "resolvedAt": "2026-06-14T06:46:37Z",
+      "processVerdict": "UNLUCKY"
     },
     {
       "key": "D-1-USA-PRY|AH Auswärts +0.5",
