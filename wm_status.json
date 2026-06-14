@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-14T13:50:55Z",
+  "generatedAt": "2026-06-14T17:23:48Z",
   "windowDays": 2,
   "upcoming": 12,
   "signalsFired": [
@@ -19,22 +19,22 @@
   "signalsTotal": 17,
   "perSignal": {
     "lead_lag_bias": 0,
-    "public_static_bias": 2,
-    "travel_burden": 156,
+    "public_static_bias": 3,
+    "travel_burden": 152,
     "injury": 0,
-    "form_trend": 207,
+    "form_trend": 204,
     "h2h_pattern": 12,
-    "xg_strength": 195,
+    "xg_strength": 189,
     "polymarket_sharp": 0,
     "steam_lag": 0,
-    "pressure_index": 41,
-    "lineup_signal": 2,
+    "pressure_index": 42,
+    "lineup_signal": 4,
     "apif_predictions": 4,
-    "weather_signal": 21,
+    "weather_signal": 19,
     "incentive_signal": 0,
     "altitude_signal": 9,
-    "chance_creation": 143,
-    "form_rating": 85
+    "chance_creation": 148,
+    "form_rating": 81
   },
   "verdict": "warn",
   "errors": [],
@@ -43,16 +43,15 @@
     "🧠 Signal 'injury' feuert nicht (nur bei gemeldeten Ausfällen)",
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
-    "🧠 Signal 'incentive_signal' feuert nicht (feuert ab MD2)",
-    "🛡️ Riskanter BET hat sichere Variante: 1 Fehler (z.B. G-3-BEL-NZL: BET AH Heim −2.0 @2.6 — keine sichere Variante)"
+    "🧠 Signal 'incentive_signal' feuert nicht (feuert ab MD2)"
   ],
   "oks": [
     "🌡️ Weather: 65 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.4h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.2h alt",
     "📊 APIF-Predictions: 37 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 46 Teams",
-    "📉 Odds-History: 72 Fixtures, Ø 16.2 Snapshots",
+    "📉 Odds-History: 72 Fixtures, Ø 16.8 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
     "💼 Poly-Balance: $199.57",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -98,11 +97,9 @@
       "id": "pick_safe_variant",
       "label": "Riskanter BET hat sichere Variante",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "G-3-BEL-NZL: BET AH Heim −2.0 @2.6 — keine sichere Variante"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "AH ≤ −1.5 / Quote > 3.0 als BET-Headline braucht eine sicherere Alternative (generate_wm_picks: SUBSTITUTION_MAP + _safer_alternatives + Renderer-Demotion)."
     },
     {
