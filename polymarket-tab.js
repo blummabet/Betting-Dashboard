@@ -1881,6 +1881,10 @@ function _wmResetStakeConfig() {
 
 // ── System Guide — Pipeline-Anleitung oben im WM Tab ──────────────────────
 function _renderWmSystemGuide() {
+  // FIX 14.06.2026 (Lucas): Trading-System-Erklärung + Roadmap aus dem Polymarket-
+  // Trading-Tab entfernt — gehört dort nicht hin. Funktion gibt nichts mehr zurück.
+  return '';
+  // eslint-disable-next-line no-unreachable
   // Status: auto-trigger active? (check local config)
   const autoEnabled = localStorage.getItem('wmAutoTriggerLive') === 'true';
   const manualPhase = !autoEnabled;
