@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-14T18:52:34Z",
-    "total_records": 29
+    "updated_at": "2026-06-14T20:22:42Z",
+    "total_records": 31
   },
   "records": [
     {
@@ -622,6 +622,74 @@
       ],
       "resolvedAt": "2026-06-13T04:45:53Z",
       "processVerdict": "LUCKY"
+    },
+    {
+      "key": "E-1-GER-CUW|Unter 2.5 Tore",
+      "matchKey": "E-1-GER-CUW",
+      "market": "Unter 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "public_static_bias",
+          "score": -1.61
+        },
+        {
+          "name": "form_trend",
+          "score": -3.33
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.44
+        },
+        {
+          "name": "pressure_index",
+          "score": 0.6
+        },
+        {
+          "name": "lineup_signal",
+          "score": 1.5
+        },
+        {
+          "name": "weather_signal",
+          "score": 0.38
+        },
+        {
+          "name": "chance_creation",
+          "score": -4.33
+        }
+      ],
+      "resolvedAt": "2026-06-14T19:59:00Z",
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "E-1-GER-CUW|Unter 3.5 Tore",
+      "matchKey": "E-1-GER-CUW",
+      "market": "Unter 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "xg_strength",
+          "score": 2.06
+        },
+        {
+          "name": "pressure_index",
+          "score": 0.6
+        },
+        {
+          "name": "lineup_signal",
+          "score": 1.5
+        },
+        {
+          "name": "weather_signal",
+          "score": 0.38
+        },
+        {
+          "name": "chance_creation",
+          "score": -4.33
+        }
+      ],
+      "resolvedAt": "2026-06-14T19:59:00Z",
+      "processVerdict": "DESERVED_LOSS"
     }
   ]
 }
