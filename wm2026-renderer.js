@@ -523,6 +523,22 @@
       }
     }
 
+    // ── FIX 14.06.2026: Riskanter Longshot-Hero ohne sichere Alternative ──────
+    // Lucas: bei vielen Spielen war der Haupt-Pick die riskante Variante (AH −1.5/−2.5,
+    // Quote >3). Die Engine bietet jetzt eine sichere Variante an (saferAltFor/boldAlt) —
+    // WO ES SIE GIBT. Für echte Mismatch-Longshots (z.B. AH Auswärts −2 @6.4, Unter 1.5
+    // @3.15) ist die sichere Variante −EV → die Engine bietet (korrekt) keine an. Dann
+    // soll auch KEIN riskanter Pick als Headline stehen: lieber „Beobachtungs-Spiel".
+    // Greift NUR wenn keine sichere Alternative existiert (kein boldAlt UND kein saferAltFor).
+    const RISKY_HERO_MAX = 3.0;
+    const _ahFavLine = (m) => { const x = /AH (?:Heim|Auswärts) −([\d.]+)/.exec(m || ''); return x ? parseFloat(x[1]) : 0; };
+    const _heroIsRiskyVariant = heroPick &&
+      ((heroPick.odds || 0) > RISKY_HERO_MAX || _ahFavLine(heroPick.market) >= 1.5);
+    if (heroPick && _heroIsRiskyVariant && !heroPick.boldAlt && !heroPick.saferAltFor) {
+      heroPick = null;
+      otherPicks = [];
+    }
+
     // ── Cross-Market-Konsistenz im UI 06.06.2026 ───────────────────────────
     // Bug: Generator-Check greift nur bei BET-Pairs. Wenn Hero ABWÄGEN ist
     // (z.B. CAN-BIH X2 @2.05), aber "Weitere Picks" enthalten AH Heim −0.5

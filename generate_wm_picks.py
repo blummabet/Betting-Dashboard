@@ -26,7 +26,7 @@ Run:   python3 generate_wm_picks.py [--verbose]
 Cron:  Täglich via fetch-wm-data.yml (nach fetch_wm_form.py)
 """
 
-import json, math, os, sys
+import json, math, os, re, sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -1281,6 +1281,15 @@ def generate_picks_for_fixture(
         "Über 2.5 Tore":      ["Über 1.5 Tore"],
         "Unter 1.5 Tore":     ["Unter 2.5 Tore", "Unter 3.5 Tore"],
         "Unter 2.5 Tore":     ["Unter 3.5 Tore"],
+        # FIX 14.06.2026: AH-Heim-Handicaps (Favoriten-Picks) hatten KEINE Substitution
+        # → riskante „AH Heim −1.5 @2.90"-Heroes (Belgien, Iran, CIV) blieben Haupt-Pick,
+        # obwohl AH −0.5 / Doppelte Chance 1X mit viel niedrigerer Quote verfügbar waren.
+        # Ladder von riskant → sicher: −2.0 → −1.0 → −0.5 → DC 1X (Sieg-oder-Remis).
+        "AH Heim −2.0":       ["AH Heim −1.0", "AH Heim −0.5", "Doppelte Chance — 1X"],
+        "AH Heim −1.5":       ["AH Heim −0.5", "AH Heim −1.0", "Doppelte Chance — 1X"],
+        "AH Heim −1.0":       ["AH Heim −0.5", "Doppelte Chance — 1X"],
+        "AH Heim −0.75":      ["AH Heim −0.5", "Doppelte Chance — 1X"],
+        "AH Heim −0.5":       ["Doppelte Chance — 1X"],
     }
 
     market_to_pick = {p["market"]: p for p in picks}
@@ -1455,6 +1464,7 @@ def generate_picks_for_fixture(
         "Doppelte Chance — 12":  "dc12",
         "AH Heim −0.5":          "ahH_n050",
         "AH Heim −0.75":         "ahH_n075",
+        "AH Heim −1.0":          "ahH_n100",
         "AH Auswärts +0.5":      "ahA_p050",
         "AH Auswärts +0.75":     "ahA_p075",
         "Über 2.5 Tore":         "o25",
@@ -1463,13 +1473,57 @@ def generate_picks_for_fixture(
         "Unter 3.5 Tore":        "u35",
     }
 
+    def _safer_alternatives(market: str) -> list:
+        """Sichere Varianten für einen Markt. Statische Map zuerst; sonst generisch für
+        die DYNAMISCHE AH-Leiter (−0.25, −2.25, −2.5, Auswärts −X …), die keine festen
+        Labels hat. FIX 14.06.2026: vorher fielen alle dyn. AH-Linien durch → riskante
+        Handicap-Heroes (BEL-NZL −2.5, SCO-MAR Auswärts −2) ohne sichere Alternative."""
+        if market in SUBSTITUTION_MAP:
+            return SUBSTITUTION_MAP[market]
+        # Heim-Favorit (jede −X-Linie): normaler Sieg (AH −0.5) → flachere Linie (−1) →
+        # DC 1X (Sieg/Remis). Beide Linien-Formate listen: dyn. Leiter strippt Nullen
+        # („−1"), feste Buckets nicht („−1.0") → so greift CASE 1 (existierenden Pick
+        # wiederverwenden) statt ein Duplikat zu synthetisieren.
+        if market.startswith("AH Heim −"):
+            return ["AH Heim −0.5", "AH Heim −1", "AH Heim −1.0", "Doppelte Chance — 1X"]
+        # Auswärts-Favorit (negative Linie): analog. „+X" = Underdog-Absicherung → safe.
+        if market.startswith("AH Auswärts −"):
+            return ["AH Auswärts −0.5", "AH Auswärts −1", "AH Auswärts −1.0", "Doppelte Chance — X2"]
+        return []
+
+    def _alt_market_odds(alt_market: str):
+        """(market_odds, model_odds) für ein Alt-Label. Erst feste Keys (LABEL_TO_KEY),
+        dann die DYNAMISCHE AH-Leiter (ahH_dyn:/ahA_dyn:) — sonst sind safere Away-/
+        Quarter-Linien (z.B. „AH Auswärts −1.0") unerreichbar (FIX 14.06.2026)."""
+        key = LABEL_TO_KEY.get(alt_market)
+        if key and market_odds.get(key):
+            return market_odds.get(key), model_odds.get(key)
+        m = re.match(r"AH (Heim|Auswärts) (.+)", alt_market)
+        if m:
+            side = m.group(1)
+            try:
+                val = float(m.group(2).replace("−", "-"))
+            except ValueError:
+                return None, None
+            target_L = val if side == "Heim" else -val   # Leiter-Key ist Heim-Perspektive
+            prefix = "ahH_dyn:" if side == "Heim" else "ahA_dyn:"
+            for mk in market_odds:
+                if not mk.startswith(prefix):
+                    continue
+                try:
+                    if abs(float(mk.split(":", 1)[1]) - target_L) < 1e-9:
+                        return market_odds.get(mk), model_odds.get(mk)
+                except ValueError:
+                    continue
+        return None, None
+
     safer_picks_to_add = []
     for p in picks:
         if p["verdict"] not in ("BET", "ABWÄGEN"):
             continue
         if (p.get("odds") or 0) <= 2.30:
             continue
-        alternatives = SUBSTITUTION_MAP.get(p["market"], [])
+        alternatives = _safer_alternatives(p["market"])
         for alt_market in alternatives:
             alt_pick = market_to_pick.get(alt_market)
             # CASE 1: Alt-Pick existiert bereits mit eigenem Verdict
@@ -1478,10 +1532,15 @@ def generate_picks_for_fixture(
             else:
                 # CASE 2 (Lucas 09.06.2026): Alt-Pick existiert nicht oder ist SKIP/WATCH
                 # → synthetischen Pick aus odds/model_odds bauen wenn Quote verfügbar
-                alt_key = LABEL_TO_KEY.get(alt_market)
-                alt_odds = market_odds.get(alt_key) if alt_key else None
-                alt_model = model_odds.get(alt_key) if alt_key else None
+                alt_odds, alt_model = _alt_market_odds(alt_market)
                 if not alt_odds or alt_odds <= 1.0:
+                    continue
+                # FIX 14.06.2026: „signifikant niedriger"-Check VOR die Synthese ziehen.
+                # Vorher wurde der synthetische Safer-Pick angelegt und erst danach geprüft
+                # → eine HÖHERE/gleiche Quote (z.B. AH −0.25 → „safer" −0.5 @5.8 bei PAN-CRO,
+                # eine HÄRTERE Linie!) landete trotzdem als saferAltFor in der Liste und wurde
+                # zum Hero. Eine sichere Variante MUSS echt niedrigere Quote haben.
+                if alt_odds >= (p["odds"] * 0.80):
                     continue
                 # Edge optional — auch ohne eigene Edge als "Insurance" anbieten.
                 # FIX 09.06.2026 Agent-Audit: Edge-Floor von -2pp verhindert

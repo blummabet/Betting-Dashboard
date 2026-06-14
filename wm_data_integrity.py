@@ -33,6 +33,7 @@ werden — nicht still weggeguardet.
 ═══════════════════════════════════════════════════════════════════════════════
 """
 from __future__ import annotations
+import re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path as _Path
 
@@ -187,6 +188,39 @@ def check_time_matches_kickoff(ctx):
                 "fx.time war Seed-Müll (mal Wien, mal Venue-Local, mal 00:00-Platzhalter — "
                 "65/72 falsch). Anzeige leitet aus kickoff ab; Drift hier = Quelle "
                 "(fetch_wm_venues/fetch_wm_poly_prices) hat time nicht normalisiert.")
+
+
+_AH_FAV_RE = re.compile(r"AH (?:Heim|Auswärts) −([\d.]+)")
+
+
+def _ah_fav_line(market):
+    """Magnitude einer AH-Favoriten-Linie (−1.5 → 1.5). 0 wenn kein AH-Favorit."""
+    m = _AH_FAV_RE.search(market or "")
+    return float(m.group(1)) if m else 0.0
+
+
+@integrity_check
+def check_pick_safe_variant(ctx):
+    """FIX 14.06.2026: Kein BET-Pick darf eine RISKANTE Variante (AH-Handicap ≤ −1.5
+    ODER Quote > 3.0) als Empfehlung haben, ohne dass eine SICHERE Variante angeboten
+    wird (saferAltFor/boldAlt). Fing den Bug, den Lucas per Auge fand: Favoriten bekamen
+    „AH Heim −1.5 @2.9" als Haupt-Pick statt normalem Sieg, weil die Substitutions-Map
+    AH-Linien nicht kannte. Greift universell (auch dynamische Leiter + Auswärts)."""
+    picks = ctx.wm.get("picks") or {}
+    fails = []
+    for key, plist in picks.items():
+        if not isinstance(plist, list):
+            continue
+        for p in plist:
+            if p.get("verdict") != "BET":
+                continue
+            odds = p.get("odds") or 0
+            risky = odds > 3.0 or _ah_fav_line(p.get("market")) >= 1.5
+            if risky and not p.get("saferAltFor") and not p.get("boldAlt"):
+                fails.append(f"{key}: BET {p.get('market')} @{odds} — keine sichere Variante")
+    return _chk("pick_safe_variant", "Riskanter BET hat sichere Variante", "warn", fails,
+                "AH ≤ −1.5 / Quote > 3.0 als BET-Headline braucht eine sicherere Alternative "
+                "(generate_wm_picks: SUBSTITUTION_MAP + _safer_alternatives + Renderer-Demotion).")
 
 
 def _real_match_keys(ctx):
