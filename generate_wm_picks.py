@@ -1622,6 +1622,8 @@ def generate_picks_for_fixture(
             break   # erstbeste safer Variante reicht
     # Synthetische saferAlt-Picks ans Ende der Liste anhängen
     picks.extend(safer_picks_to_add)
+    # AH-Linien-Dedup läuft als Final-Pass über ALLE Spiele am Ende (deckt auch heutige
+    # Signal-Refresh-Spiele ab, bei denen dieser Builder übersprungen wird). Siehe main().
 
     # ── Cross-Market-Konflikt-Filter (FIX 09.06.2026) ─────────────────────────
     # Bisher: validate_wm_picks fängt nur BET-vs-BET-Konflikte. ABWÄGEN-vs-ABWÄGEN
@@ -2186,6 +2188,30 @@ def main():
           f"{total_refreshed} Signal-Refresh (pre-kickoff) · "
           f"{total_frozen} eingefroren (post-kickoff) · "
           f"{total_past} vergangen")
+
+    # ── AH-Linien-Dedup über ALLE Spiele (Final-Pass, 14.06.2026, Lucas) ──────
+    # Pro Seite+Vorzeichen nur EINE Handicap-Linie („AH Auswärts +0.5" UND „+0.75"
+    # sind redundant — eine Cover-Linie reicht). Läuft hier am Ende, damit es AUCH
+    # heutige Signal-Refresh-/eingefrorene Spiele erfasst (Builder wird da übersprungen).
+    # Beste Edge behalten (Tie → niedrigere Quote = sicherer), Rest trackingExcluded.
+    for _plist in (wm.get("picks") or {}).values():
+        if not isinstance(_plist, list):
+            continue
+        _grp: dict = {}
+        for _p in _plist:
+            if (_p.get("trackingExcluded") or _p.get("boldAlt")
+                    or _p.get("verdict") not in ("BET", "ABWÄGEN")):
+                continue
+            _m = re.match(r"(AH (?:Heim|Auswärts) [+−])", _p.get("market") or "")
+            if _m:
+                _grp.setdefault(_m.group(1), []).append(_p)
+        for _members in _grp.values():
+            if len(_members) <= 1:
+                continue
+            _members.sort(key=lambda x: (-(x.get("edgePP") or 0), (x.get("odds") or 99)))
+            for _extra in _members[1:]:
+                _extra["trackingExcluded"] = True
+                _extra["dedupAHLine"] = True
 
     wm["_meta"] = wm.get("_meta", {})
     wm["_meta"]["picksUpdatedAt"] = datetime.now(timezone.utc).isoformat()

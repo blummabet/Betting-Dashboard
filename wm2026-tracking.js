@@ -194,12 +194,23 @@
                   && !hero.boldAlt && !hero.saferAltFor;
     };
 
+    const _ahGrp = (m) => { const x = /^(AH (?:Heim|Auswärts) [+−])/.exec(m || ''); return x ? x[1] : null; };
     const flatPicks = [];
     for (const row of filtered) {
       if (_rowDemoted(row.picks)) continue;   // Spiel = Beobachtung in der Card → auch hier raus
+      // AH-Linien-Dedup pro Spiel (14.06.2026): je Seite+Vorzeichen nur die beste Linie
+      // (höchste Edge). „AH Auswärts +0.5" UND „+0.75" sind redundant — eine reicht.
+      const ahBest = {};
+      for (const p of row.picks) {
+        if (p.trackingExcluded || p.boldAlt) continue;
+        const g = _ahGrp(p.market);
+        if (g && (!ahBest[g] || (p.edgePP || 0) > (ahBest[g].edgePP || 0))) ahBest[g] = p;
+      }
       for (const p of row.picks) {
         if (p.trackingExcluded) continue;
         if (p.boldAlt) continue;   // FIX 14.06.2026: durch sichere Variante ersetzt → nicht tracken
+        const g = _ahGrp(p.market);
+        if (g && ahBest[g] && ahBest[g] !== p) continue;   // redundante AH-Linie
         if (_vrdFilter === 'all' || p.verdict === _vrdFilter) {
           flatPicks.push({ ...p, _row: row });
         }
@@ -798,9 +809,10 @@
     const vClr     = verdict === 'BET' ? '#3fb950' : verdict === 'SKIP' ? '#f85149' : '#e3b341';
     const vBg      = verdict === 'BET' ? 'rgba(63,185,80,.08)' : verdict === 'SKIP' ? 'rgba(248,81,73,.08)' : 'rgba(227,179,65,.08)';
 
-    const conf     = p.conf || 'medium';
-    const stars    = conf === 'high' ? '★★★' : conf === 'medium' ? '★★☆' : '★☆☆';
-    const starsClr = conf === 'high' ? '#3fb950' : conf === 'medium' ? '#e3b341' : '#8b949e';
+    // FIX 14.06.2026: Sterne aus dem VERDICT (nicht aus conf/Datenqualität) — sonst stand
+    // ein ★★★-ABWÄGEN über einem ★★☆-BET (Lucas). Jetzt: BET ★★★ ≥ ABWÄGEN ★★☆ > Rest.
+    const stars    = verdict === 'BET' ? '★★★' : verdict === 'ABWÄGEN' ? '★★☆' : '★☆☆';
+    const starsClr = verdict === 'BET' ? '#3fb950' : verdict === 'ABWÄGEN' ? '#e3b341' : '#8b949e';
 
     const oddsStr  = p.odds != null ? p.odds.toFixed(2) : '—';
 
