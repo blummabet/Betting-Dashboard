@@ -29,7 +29,7 @@ import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card, daily_picks_card
+from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card, daily_picks_card, match_preview_card
 from tiktok_story_plan import get_story_for_date
 from bizarre_quote_picker import get_daily_bizarre_card
 from player_pick_picker import get_daily_player_pick, save_dedup as save_player_dedup, _load_dedup as _load_player_dedup
@@ -167,6 +167,10 @@ TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_TOKEN", "").strip()
 TRADES_CHAT_ID   = os.environ.get("TELEGRAM_TRADES_CHAT_ID", "").strip()
 SKIP_RENDER      = os.environ.get("SKIP_RENDER", "").lower() == "true"
 SKIP_TELEGRAM    = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
+# 14.06.2026 (Lucas): Umstellung auf Match-Preview-Cards. Daily-Picks-Sammelkarte
+# bleibt im Code, wird aber NICHT mehr gesendet (Flag default false). Previews on.
+SEND_DAILY_PICKS = os.environ.get("SEND_DAILY_PICKS", "").lower() == "true"
+SEND_PREVIEWS    = os.environ.get("SEND_PREVIEWS", "true").lower() == "true"
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -614,6 +618,143 @@ def tg_send_text(text: str) -> bool:
 #  MAIN
 # ═══════════════════════════════════════════════════════════════════════════
 
+# ── Match-Preview-Cards (NEU 14.06.2026, Lucas) ───────────────────────────────
+# Pro Match eine Story-Preview-Card (KEINE Quoten). Story = aiPreviews tgSnippet,
+# Facts = Auto-Top-4 aus form/xgStats/elo/Wetter, Angle aus Spielcharakter.
+_PREVIEW_ANGLES = {
+    "torfest":  ("⚽ TOR-FEST ERWARTET",  "#3fb950", "63,185,80"),
+    "defensiv": ("🛡 DEFENSIV-DUELL",     "#4cc9f0", "76,201,240"),
+    "klasse":   ("🏆 KLASSEN-UNTERSCHIED", "#f0883e", "240,136,62"),
+    "gruppe":   ("⚖️ GRUPPENSPIEL",        "#00d4a1", "0,212,161"),
+}
+
+
+def _preview_angle(form_h: dict, form_a: dict, elo_diff: float) -> str:
+    fh, fa = form_h or {}, form_a or {}
+    over = ((fh.get("over25Rate") or 0) + (fa.get("over25Rate") or 0)) / 2
+    goals = (fh.get("avgGoals") or 0) + (fa.get("avgGoals") or 0)
+    conc = ((fh.get("avgConceded") if fh.get("avgConceded") is not None else 9)
+            + (fa.get("avgConceded") if fa.get("avgConceded") is not None else 9)) / 2
+    if abs(elo_diff) >= 250:
+        return "klasse"
+    if over >= 0.60 or goals >= 5.6:
+        return "torfest"
+    if conc <= 0.85 or over <= 0.42:
+        return "defensiv"
+    return "gruppe"
+
+
+def _preview_facts(fx, flag_h, name_h, flag_a, name_a,
+                   form_h, form_a, xg_h, xg_a, elo_diff) -> list:
+    """Sammelt Fact-Kandidaten mit Interessantheits-Score, gibt Top-4-Strings zurück."""
+    cand = []  # (score, text)
+
+    def team_facts(tflag, tname, f, xg):
+        f = f or {}
+        l5 = f.get("last5") or []
+        w, l = l5.count("W"), l5.count("L")
+        if len(l5) >= 5 and w == 5:
+            cand.append((9.0, f"🔥 {tflag} {tname}: 5 Siege in Folge"))
+        elif w >= 4:
+            cand.append((6.0, f"📈 {tflag} {tname}: {w} von 5 gewonnen"))
+        if l >= 4:
+            cand.append((5.0, f"📉 {tflag} {tname}: {l} Pleiten in 5"))
+        ac = f.get("avgConceded")
+        if ac is not None and ac <= 0.7:
+            cand.append((7.0, f"🛡 {tflag} {tname}: nur {ac:.1f} Gegentore Ø"))
+        asc = f.get("avgScored")
+        if asc and asc >= 2.3:
+            cand.append((6.0, f"⚽ {tflag} {tname}: {asc:.1f} Tore Ø"))
+        o = f.get("over25Rate")
+        if o is not None:
+            if o >= 0.65:
+                cand.append((5.0, f"📊 {tflag} {tname}: {round(o*100)}% Über 2.5"))
+            elif o <= 0.34:
+                cand.append((5.0, f"🔒 {tflag} {tname}: {round(o*100)}% Über 2.5"))
+        if xg:
+            r = xg.get("ratingAvg")
+            if r and r >= 7.3:
+                cand.append((4.5, f"📋 {tflag} {tname}: Form-Rating {r:.1f}"))
+
+    team_facts(flag_h, name_h, form_h, xg_h)
+    team_facts(flag_a, name_a, form_a, xg_a)
+
+    # Match-Level
+    if abs(elo_diff) >= 150:
+        fav_flag, fav_name = (flag_h, name_h) if elo_diff > 0 else (flag_a, name_a)
+        cand.append((min(8.0, abs(elo_diff) / 60), f"📊 {fav_flag} {fav_name}: +{round(abs(elo_diff))} Elo"))
+    wx = (fx.get("weather") or {})
+    temp = wx.get("tempAtKickoff") if wx.get("tempAtKickoff") is not None else wx.get("tempMax")
+    if isinstance(temp, (int, float)) and temp >= 30:
+        cand.append((4.0, f"🌡 {round(temp)}°C im Stadion"))
+    ven = (fx.get("venue") or "")
+    if "Mexico City" in ven or "Azteca" in ven:
+        cand.append((5.5, "🏔 Höhe: 2.240m über dem Meer"))
+
+    cand.sort(key=lambda x: -x[0])
+    out, seen = [], set()
+    for _, txt in cand:
+        if txt in seen:
+            continue
+        seen.add(txt)
+        out.append(txt)
+        if len(out) == 4:
+            break
+    return out
+
+
+def build_match_preview_cards(wm: dict, today_iso: str) -> list:
+    """Baut pro heutigem Match eine Preview-Card → Liste (label, png_path, caption)."""
+    produced = []
+    forms = wm.get("form") or {}
+    xgs = wm.get("xgStats") or {}
+    previews = wm.get("aiPreviews") or {}
+    from datetime import datetime as _dt
+    try:
+        date_obj = _dt.fromisoformat(today_iso)
+        wd = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"][date_obj.weekday()]
+        date_label = f"{wd} · {date_obj.strftime('%d.%m.%Y')}"
+    except Exception:
+        date_label = today_iso
+
+    for gkey, gdata in (wm.get("groups") or {}).items():
+        teams = {t["id"]: t for t in gdata.get("teams", [])}
+        for fx in gdata.get("fixtures", []):
+            if fx.get("date") != today_iso:
+                continue
+            hid, aid = fx["home"], fx["away"]
+            h, a = teams.get(hid, {}), teams.get(aid, {})
+            pkey = f"{gkey}-{fx['matchday']}-{hid}-{aid}"
+            prev = previews.get(pkey) or {}
+            story = (prev.get("tgSnippet") or "").strip()
+            if not story:
+                continue   # ohne Story keine Card
+            form_h, form_a = forms.get(hid, {}), forms.get(aid, {})
+            elo_diff = (h.get("elo") or 0) - (a.get("elo") or 0)
+            angle_key = _preview_angle(form_h, form_a, elo_diff)
+            angle_label, accent, rgb = _PREVIEW_ANGLES[angle_key]
+            flag_h, flag_a = h.get("flag", "🏳️"), a.get("flag", "🏳️")
+            name_h, name_a = h.get("name", hid), a.get("name", aid)
+            facts = _preview_facts(fx, flag_h, name_h, flag_a, name_a,
+                                   form_h, form_a, xgs.get(hid), xgs.get(aid), elo_diff)
+            kickoff_label = (fx.get("time", "") + " Uhr").strip()
+            venue = (fx.get("venue") or "").split("·")[0].strip()[:34]
+            html = match_preview_card(
+                date_label=date_label, flag_h=flag_h, name_h=name_h,
+                flag_a=flag_a, name_a=name_a, kickoff_label=kickoff_label,
+                venue=venue, group_label=f"Gruppe {gkey} · ST {fx['matchday']}",
+                angle_label=angle_label, accent=accent, accent_rgb=rgb,
+                story_text=story, facts=facts,
+            )
+            path = OUTPUT_DIR / f"{today_iso}_preview_{hid}_{aid}.html"
+            path.write_text(html, encoding="utf-8")
+            png = render_to_png(path)
+            if png:
+                produced.append((f"preview_{hid}_{aid}", png,
+                                 f"🎬 <b>Preview · {name_h} vs {name_a}</b> · {kickoff_label}"))
+    return produced
+
+
 def main():
     override = os.environ.get("DAILY_TIKTOK_DATE", "").strip()
     today_iso = override or date.today().isoformat()
@@ -717,6 +858,16 @@ def main():
     else:
         print("🤡 Keine Bizarre-Card heute (Targets-File leer oder fehlt)")
 
+    # ── 3b. Match-Preview-Cards (NEU 14.06.2026) — je Match eine Story-Card ──
+    if SEND_PREVIEWS and WM_FILE.exists():
+        try:
+            wm_prev = json.loads(WM_FILE.read_text(encoding="utf-8"))
+            preview_cards = build_match_preview_cards(wm_prev, today_iso)
+            produced.extend(preview_cards)
+            print(f"🎬 Match-Preview-Cards: {len(preview_cards)} Spiel(e)")
+        except Exception as e:
+            print(f"⚠️  Match-Preview-Cards fehlgeschlagen: {e}")
+
     # ── 4. Daily-Picks-Card (Top-Pick + bis zu 3 weitere) ──
     # Sammelt alle Picks für today_iso aus wm2026-data.json und rendert
     # eine zusammenfassende Card im CocoBet-Style (360×640).
@@ -803,7 +954,7 @@ def main():
         except Exception as e:
             print(f"⚠️  Daily-Picks-Card-Daten konnten nicht geladen werden: {e}")
 
-    if daily_picks_data:
+    if daily_picks_data and SEND_DAILY_PICKS:
         from datetime import datetime as _dt
         date_obj = _dt.fromisoformat(today_iso)
         wd = ["Mo","Di","Mi","Do","Fr","Sa","So"][date_obj.weekday()]
