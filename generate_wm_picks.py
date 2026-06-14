@@ -27,7 +27,7 @@ Cron:  Täglich via fetch-wm-data.yml (nach fetch_wm_form.py)
 """
 
 import json, math, os, re, sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 BASE    = Path(__file__).parent
@@ -801,8 +801,9 @@ def generate_picks_for_fixture(
     # der Anker, NICHT zu schlagen; eigene Daten wirken als Modifikatoren — und zwar
     # über die Signal-Engine (effectiveEdgePP), nicht über eine abweichende Baseline.
     # Daher: Baseline pH/pD/pA = de-viggte Pinnacle-1X2. Elo bleibt Fallback wenn
-    # keine Marktquote da ist (Pre-Tournament). Tor-Modell (lam_h/lam_a) für
-    # O/U + AH + BTTS bleibt UNBERÜHRT (war konsistent mit Pinnacle).
+    # keine Marktquote da ist (Pre-Tournament). O/U + BTTS werden seit 14.06.2026
+    # ebenfalls an Pinnacle geankert (siehe _devig2-Block unten). AH-Linien laufen
+    # noch über das Tor-Modell (lam_h/lam_a) — Kandidat für den nächsten Schritt.
     probs_elo = probs   # für Evidence/Debug behalten
     if bk_hw and bk_dr and bk_aw:
         _ph, _pd, _pa = devig_1x2(bk_hw, bk_dr, bk_aw)
@@ -926,6 +927,32 @@ def generate_picks_for_fixture(
     p_o25 = poisson_over(lam_total, 2.5)
     p_o35 = poisson_over(lam_total, 3.5)
     p_b   = p_btts(lam_h, lam_a)
+
+    # ── Pinnacle-Anker für O/U + BTTS (Fix 14.06.2026) ───────────────────────
+    # ZWEITE HÄLFTE der 13.06.-Umstellung (Lucas): die Sieg-Märkte (1X2/DC/DNB) sind
+    # seit 13.06. an Pinnacle geankert, die TOR-Märkte liefen aber WEITER über das
+    # Poisson-λ → das Modell schlug Pinnacle und erzeugte Phantom-Edges (DEU-CUW Unter
+    # 3.5: λ→48%, Pinnacle fair 39% → fake +7pp, obwohl Deutschland Curaçao zerlegt).
+    # Jetzt: Baseline P(Über/Unter/BTTS) = de-viggte Pinnacle-Linie. Poisson bleibt
+    # Fallback wenn Pinnacle die Linie nicht listet. Signale wirken obendrauf (Modifikator).
+    def _devig2(o_over, o_under):
+        """Faire P(over/yes) aus 2-Weg-Markt (Vig entfernt)."""
+        if not o_over or not o_under or o_over <= 1.0 or o_under <= 1.0:
+            return None
+        io, iu = 1.0 / o_over, 1.0 / o_under
+        return io / (io + iu)
+    p_o15_elo, p_o25_elo, p_o35_elo, p_b_elo = p_o15, p_o25, p_o35, p_b   # Fallback/Debug
+    ou_anchored = {}
+    for _pname, _ov, _un in (("o15", "o15", "u15"), ("o25", "o25", "u25"),
+                             ("o35", "o35", "u35"), ("btts", "bttsY", "bttsN")):
+        _fair = _devig2(odds_snap.get(_ov), odds_snap.get(_un))
+        if _fair is not None:
+            ou_anchored[_pname] = True
+            if   _pname == "o15": p_o15 = _fair
+            elif _pname == "o25": p_o25 = _fair
+            elif _pname == "o35": p_o35 = _fair
+            elif _pname == "btts": p_b = _fair
+
     dnb_h_mod, dnb_a_mod = derive_dnb(probs["pH"], probs["pD"], probs["pA"])
 
     # Doppelte Chance Modell-Quoten
@@ -1877,8 +1904,9 @@ def main():
 
     wm.setdefault("picks", {})
 
-    today  = datetime.now(timezone.utc).date().isoformat()
-    now_dt = datetime.now(timezone.utc)
+    today    = datetime.now(timezone.utc).date().isoformat()
+    tomorrow = (datetime.now(timezone.utc).date() + timedelta(days=1)).isoformat()
+    now_dt   = datetime.now(timezone.utc)
 
     def _kickoff_passed(fx: dict) -> bool:
         """True wenn der Anpfiff vorbei ist (Spiel läuft/beendet). Fehlender/
@@ -1955,14 +1983,21 @@ def main():
             # stabile veröffentlichte Picks), aber die Signal-Engine + Conviction
             # laufen neu → lineup_signal (und jedes andere späte Signal) fließt in
             # Conviction + Bayesian-Ledger ein. Idempotent über baseVerdict.
+            #
+            # ERWEITERT 14.06.2026 (Lucas): Freeze deckt jetzt heute UND morgen ab.
+            # Grund: Picks für heute + morgen Nacht sind bereits veröffentlicht
+            # (Telegram/TikTok) und MÜSSEN getrackt werden. Sie dürfen durch einen
+            # Rebuild (z.B. den neuen O/U-Pinnacle-Anker) NICHT rückwirkend verändert
+            # oder rausgeworfen werden. Der Anker wirkt nur auf NEU gebaute Spiele
+            # (übermorgen+), die noch nicht gepostet sind. „Existing" = schon gepickt.
             refresh_existing = False
-            if fx_date == today:
-                existing_today = wm["picks"].get(pick_key)
-                if existing_today is not None:
+            if fx_date <= tomorrow:
+                existing_pk = wm["picks"].get(pick_key)
+                if existing_pk is not None:
                     if _kickoff_passed(fx):
                         total_frozen += 1
                         continue
-                    new_picks        = existing_today   # Märkte/Quoten unangetastet
+                    new_picks        = existing_pk   # Märkte/Quoten/Verdict unangetastet
                     refresh_existing = True
 
             if not refresh_existing:

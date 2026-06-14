@@ -205,6 +205,7 @@
   <div class="stat conv"><div class="stat-val" id="s-conv">—</div><div class="stat-label">✅ Konvergiert</div></div>
   <div class="stat steam"><div class="stat-val" id="s-steam">—</div><div class="stat-label">🔥 Steam Lag</div></div>
   <div class="stat rate"><div class="stat-val" id="s-rate">—</div><div class="stat-label">⚡ Konvergenzrate</div></div>
+  <div class="stat rate"><div class="stat-val" id="s-profrate">—</div><div class="stat-label">💰 profitabel konvergiert</div></div>
   <div class="stat time"><div class="stat-val" id="s-time">—</div><div class="stat-label">⏱ Ø Konvergenzzeit</div></div>
 </div>
 
@@ -307,10 +308,25 @@ function updateStats() {
   const rate = total_trackable > 0 ? Math.round(n_conv / total_trackable * 100) : 0;
   const avgT = conv_times.length > 0 ? (conv_times.reduce((a,b)=>a+b,0)/conv_times.length).toFixed(1) : null;
 
+  // FIX 14.06.2026 (Lucas): Konvergenz nach RICHTUNG splitten. Eine Lücke schließt sich
+  // auf zwei Arten — Poly STEIGT zu Pinnacle (echter Trade-Gewinn) ODER Pinnacle FÄLLT
+  // zu Poly (faire Prob war nur kurz daneben → KEIN Gewinn). Nur erstere ist ein echter
+  // Edge. „profitabel konvergiert" = konvergierte Position mit P&L > $0.05 (gleiche
+  // Schwelle wie die Portfolio-Win-Rate). Die Differenz zur 82% ist die Schein-Konvergenz.
+  const _conv = allSignals.filter(s => s.status === 'CONVERGED' && s.entryPolyPrice > 0);
+  const _profConv = _conv.filter(s => { const p = calcPosition(s); return p && p.pnl > 0.05; }).length;
+  const _profRate = _conv.length > 0 ? Math.round(_profConv / _conv.length * 100) : 0;
+
   document.getElementById('s-open').textContent  = n_open;
   document.getElementById('s-conv').textContent  = n_conv;
   document.getElementById('s-steam').textContent = n_steam;
   document.getElementById('s-rate').textContent  = total_trackable > 0 ? `${rate}%` : '—';
+  const _profEl = document.getElementById('s-profrate');
+  if (_profEl) {
+    _profEl.textContent = _conv.length > 0 ? `${_profRate}%` : '—';
+    _profEl.title = `${_profConv} von ${_conv.length} konvergierten Positionen liefen profitabel ` +
+                    `(Poly stieg zu Pinnacle). Der Rest schloss sich, weil Pinnacle zu Poly fiel — kein Gewinn.`;
+  }
   document.getElementById('s-time').textContent  = avgT ? `${avgT}h` : '—';
 }
 

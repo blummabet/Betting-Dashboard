@@ -223,6 +223,65 @@ def check_pick_safe_variant(ctx):
                 "(generate_wm_picks: SUBSTITUTION_MAP + _safer_alternatives + Renderer-Demotion).")
 
 
+# Spiegel von generate_wm_picks: MODEL_MARGIN (0.96) + O/U-Markt → Pinnacle-Linien-Paar.
+_MODEL_MARGIN = 0.96
+_OU_PINN_PAIR = {
+    "Über 1.5 Tore": ("o15", "u15", "o"), "Unter 1.5 Tore": ("o15", "u15", "u"),
+    "Über 2.5 Tore": ("o25", "u25", "o"), "Unter 2.5 Tore": ("o25", "u25", "u"),
+    "Über 3.5 Tore": ("o35", "u35", "o"), "Unter 3.5 Tore": ("o35", "u35", "u"),
+    "Beide Teams treffen — Ja":   ("bttsY", "bttsN", "o"),
+    "Beide Teams treffen — Nein": ("bttsY", "bttsN", "u"),
+}
+
+
+@integrity_check
+def check_ou_pinnacle_anchored(ctx):
+    """FIX 14.06.2026: O/U + BTTS sind seit heute an Pinnacle geankert (wie 1X2 seit
+    13.06.) — Baseline P(Über/Unter/BTTS) = de-viggte Pinnacle-Linie, nicht mehr das
+    Poisson-Tor-Modell. Sonst schlug das Modell Pinnacle und erzeugte Phantom-Edges
+    (DEU-CUW Unter 3.5: Poisson 48 % statt Pinnacle-fair 39 %).
+    Tripwire gegen Regression: für JEDES NEU gebaute O/U/BTTS-Pick (Spiel ab übermorgen,
+    Pinnacle-Linie vorhanden) muss modelOdds ≈ prob_to_odds(de-vig Pinnacle) sein. Liegt
+    es stattdessen beim Poisson-Wert → der Anker wurde versehentlich entfernt.
+    AUSGENOMMEN: gepostete Spiele (heute + morgen). Die werden bewusst eingefroren und
+    NICHT umgeankert, damit veröffentlichte Picks trackbar bleiben (Lucas 14.06.)."""
+    picks = ctx.wm.get("picks") or {}
+    # Datum + Pinnacle-Odds je pick_key auflösen.
+    date_by_key, odds_by_key = {}, {}
+    for _g, fx in ctx.fixtures:
+        pk = f"{_g}-{fx.get('matchday')}-{fx.get('home')}-{fx.get('away')}"
+        date_by_key[pk] = fx.get("date")
+        odds_by_key[pk] = ctx.odds.get(f"{fx.get('home')}-{fx.get('away')}") or {}
+    tomorrow = (ctx.now.date() + timedelta(days=1)).isoformat()
+    fails = []
+    for key, plist in picks.items():
+        if not isinstance(plist, list):
+            continue
+        dt = date_by_key.get(key)
+        if not dt or dt <= tomorrow:
+            continue   # gepostet/eingefroren → bewusst unangerührt
+        osnap = odds_by_key.get(key) or {}
+        for p in plist:
+            if p.get("verdict") not in ("BET", "ABWÄGEN"):
+                continue
+            pair = _OU_PINN_PAIR.get(p.get("market"))
+            if not pair:
+                continue
+            ov, un = osnap.get(pair[0]), osnap.get(pair[1])
+            if not ov or not un or ov <= 1.0 or un <= 1.0:
+                continue   # keine Pinnacle-Linie → Poisson-Fallback erlaubt, nicht prüfbar
+            io, iu = 1.0 / ov, 1.0 / un
+            fair = (io if pair[2] == "o" else iu) / (io + iu)
+            expected = round((1.0 / fair) * _MODEL_MARGIN, 3)
+            mo = p.get("modelOdds")
+            if not isinstance(mo, (int, float)) or abs(mo - expected) > 0.20:
+                fails.append(f"{key}: {p.get('market')} modelOdds={mo} ≠ Pinnacle-Anker "
+                             f"{expected} (Poisson-Regression?)")
+    return _chk("ou_pinnacle_anchored", "O/U + BTTS an Pinnacle geankert", "warn", fails,
+                "generate_wm_picks: _devig2-Block (Z.~930). Baseline = de-viggte Pinnacle, "
+                "Poisson nur Fallback. Gepostete Spiele (≤morgen) ausgenommen.")
+
+
 def _real_match_keys(ctx):
     return {ctx.mk(fx) for _g, fx in ctx.fixtures}
 

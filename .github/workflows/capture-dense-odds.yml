@@ -1,0 +1,56 @@
+name: 📸 Dense Odds Capture (Analyse)
+
+# ISOLIERT vom Live-System (Lucas 14.06.2026). Sammelt NUR dichte Pinnacle+Soft-Book-
+# 1X2-Snapshots in wm_dense_odds_log.json, um die Post-Match-Move-These backzutesten:
+# bewegt ein Spielende die Linien der Folge-Spiele, und hinkt Polymarket nach?
+# Keine Picks, keine Verdicts, keine Trades. Berührt KEINE Live-Dateien.
+#
+# Fenster: WM-Spiele laufen Wiener Zeit ~19:00 bis ~06:00 (Folgetag), letzter Abpfiff
+# ~08:00 Wien. Wien = UTC+2 (CEST). Dichtes Polling daher UTC 16:00–08:00 = Wien 18:00–10:00.
+# 1 h2h-Batch-Call/Lauf (~2 Quota-Einheiten) → günstig.
+
+on:
+  schedule:
+    - cron: '*/30 16-23 * * *'   # Wien 18:00–01:30
+    - cron: '*/30 0-8 * * *'     # Wien 02:00–10:30 (deckt späte Abpfiffe + Post-Match ab)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dense-odds-capture
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📸 Snapshot Pinnacle + Soft-Book 1X2
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python capture_dense_odds.py
+
+      - name: 💾 Log committen (nur die Analyse-Datei)
+        run: |
+          git config user.name "Dashboard Bot"
+          git config user.email "actions@github.com"
+          git add wm_dense_odds_log.json
+          if git diff --staged --quiet; then
+            echo "Keine Änderung — kein Commit."
+          else
+            git commit -m "📸 Dense odds snapshot $(date -u +'%Y-%m-%d %H:%M') UTC"
+            git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+            for attempt in 1 2 3 4 5; do
+              git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+              if git push origin main; then echo "✅ gepusht"; break; fi
+              echo "Push-Retry $attempt…"; sleep 5
+            done
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
