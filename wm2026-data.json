@@ -11,7 +11,7 @@
     "oddsUpdatedAt": "2026-06-13T22:58:59.902187+00:00",
     "formUpdatedAt": "2026-06-13T23:01:04.777073+00:00",
     "picksUpdatedAt": "2026-06-13T23:11:56.754713+00:00",
-    "resultsUpdatedAt": "2026-06-13T23:11:54.640585+00:00",
+    "resultsUpdatedAt": "2026-06-14T02:03:44.534620+00:00",
     "cornersUpdatedAt": "2026-06-13T23:11:10.894276+00:00",
     "xgUpdatedAt": "2026-06-13T23:11:10.894281+00:00"
   },
@@ -63,7 +63,7 @@
             "away_score": 0,
             "winner": "MEX",
             "elapsed": 90,
-            "resolvedAt": "2026-06-13T23:11:54.640585+00:00",
+            "resolvedAt": "2026-06-14T02:03:44.534620+00:00",
             "stats": {
               "homeXg": 1.46,
               "awayXg": 0.32,
@@ -103,7 +103,7 @@
             "away_score": 1,
             "winner": "KOR",
             "elapsed": 90,
-            "resolvedAt": "2026-06-13T23:11:54.640585+00:00",
+            "resolvedAt": "2026-06-14T02:03:44.534620+00:00",
             "stats": {
               "homeXg": 1.78,
               "awayXg": 0.99,
@@ -268,7 +268,7 @@
             "away_score": 1,
             "winner": "draw",
             "elapsed": 90,
-            "resolvedAt": "2026-06-13T23:11:54.640585+00:00",
+            "resolvedAt": "2026-06-14T02:03:44.534620+00:00",
             "stats": {
               "homeXg": 1.58,
               "awayXg": 0.89,
@@ -300,7 +300,7 @@
           "time": "21:00",
           "home": "QAT",
           "away": "SUI",
-          "venue": "Levi's Stadium, San Francisco Bay Area",
+          "venue": "Levi's Stadium, Santa Clara",
           "result": {
             "status": "FT",
             "statusLong": "Match Finished",
@@ -308,7 +308,7 @@
             "away_score": 1,
             "winner": "draw",
             "elapsed": 90,
-            "resolvedAt": "2026-06-13T23:11:54.640585+00:00",
+            "resolvedAt": "2026-06-14T02:03:44.534620+00:00",
             "stats": {
               "homeXg": 0.99,
               "awayXg": 2.82,
@@ -466,13 +466,29 @@
           "time": "00:00",
           "home": "BRA",
           "away": "MAR",
-          "venue": "MetLife Stadium, New York New Jersey",
+          "venue": "MetLife Stadium, East Rutherford",
           "result": {
-            "status": "2H",
-            "statusLong": "Second Half",
-            "home_score": null,
-            "away_score": null,
-            "elapsed": 47
+            "status": "FT",
+            "statusLong": "Match Finished",
+            "home_score": 1,
+            "away_score": 1,
+            "winner": "draw",
+            "elapsed": 90,
+            "resolvedAt": "2026-06-14T02:03:44.534620+00:00",
+            "stats": {
+              "homeXg": 1.46,
+              "awayXg": 0.91,
+              "xgTotal": 2.37,
+              "xgSource": "sim",
+              "homeSot": 4.0,
+              "awaySot": 2.0,
+              "homeShots": 12.0,
+              "awayShots": 12.0,
+              "homeInside": 9.0,
+              "awayInside": 6.0,
+              "homeKeyPasses": 10.0,
+              "awayKeyPasses": 10.0
+            }
           },
           "weather": {
             "temp": 31.8,
@@ -493,10 +509,11 @@
           "away": "SCO",
           "venue": "Gillette Stadium, Boston",
           "result": {
-            "status": "NS",
-            "statusLong": "Not Started",
+            "status": "HT",
+            "statusLong": "Halftime",
             "home_score": null,
-            "away_score": null
+            "away_score": null,
+            "elapsed": 45
           },
           "weather": {
             "temp": 24.6,
@@ -640,7 +657,7 @@
           "time": "03:00",
           "home": "USA",
           "away": "PRY",
-          "venue": "SoFi Stadium, Los Angeles",
+          "venue": "SoFi Stadium, Inglewood",
           "result": {
             "status": "FT",
             "statusLong": "Match Finished",
@@ -648,7 +665,7 @@
             "away_score": 1,
             "winner": "USA",
             "elapsed": 90,
-            "resolvedAt": "2026-06-13T23:11:54.640585+00:00",
+            "resolvedAt": "2026-06-14T02:03:44.534620+00:00",
             "stats": {
               "homeXg": 2.13,
               "awayXg": 0.57,
@@ -6408,7 +6425,7 @@
         "edgePP": 4,
         "info": "Elo +181 · Form WWWLD·DWWWD · xG 1.1:1.1",
         "icon": "🎯",
-        "result": null,
+        "result": "LOSS",
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "lamH": 1.1,
@@ -6513,7 +6530,9 @@
           "context": 2,
           "market": 0
         },
-        "baseVerdict": "ABWÄGEN"
+        "baseVerdict": "ABWÄGEN",
+        "finalScore": "1-1",
+        "resolvedAt": "2026-06-14T02:03:45Z"
       },
       {
         "market": "Unter 2.5 Tore",
@@ -6527,7 +6546,7 @@
         "edgePP": 4,
         "info": "Elo +181 · Form WWWLD·DWWWD · xG 1.1:1.1",
         "icon": "🛡️",
-        "result": null,
+        "result": "WIN",
         "clvPP": 2.4,
         "dataQuality": "elo+form",
         "lamH": 1.1,
@@ -6602,7 +6621,9 @@
           "context": 2,
           "market": 0
         },
-        "baseVerdict": "ABWÄGEN"
+        "baseVerdict": "ABWÄGEN",
+        "finalScore": "1-1",
+        "resolvedAt": "2026-06-14T02:03:45Z"
       },
       {
         "market": "AH Auswärts +0.5",
@@ -6616,7 +6637,7 @@
         "edgePP": 16,
         "info": "Elo +181 · Form WWWLD·DWWWD · xG 1.1:1.1",
         "icon": "🎯",
-        "result": null,
+        "result": "WIN",
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "lamH": 1.1,
@@ -6672,7 +6693,9 @@
           "in_pick_direction": false,
           "move_pp": 2.91
         },
-        "baseVerdict": "ABWÄGEN"
+        "baseVerdict": "ABWÄGEN",
+        "finalScore": "1-1",
+        "resolvedAt": "2026-06-14T02:03:45Z"
       },
       {
         "market": "AH Auswärts +1.0",
@@ -6686,7 +6709,7 @@
         "edgePP": 13,
         "info": "Elo +181 · Form WWWLD·DWWWD · xG 1.1:1.1",
         "icon": "🎯",
-        "result": null,
+        "result": "WIN",
         "clvPP": 0.0,
         "dataQuality": "elo+form",
         "lamH": 1.1,
@@ -6742,7 +6765,9 @@
           "in_pick_direction": false,
           "move_pp": 2.91
         },
-        "baseVerdict": "ABWÄGEN"
+        "baseVerdict": "ABWÄGEN",
+        "finalScore": "1-1",
+        "resolvedAt": "2026-06-14T02:03:45Z"
       }
     ],
     "C-1-HTI-SCO": [
