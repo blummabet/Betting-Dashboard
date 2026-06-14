@@ -429,7 +429,7 @@
     // Diese werden vom Tracker (resolve_wm_picks.py) als VOID markiert wenn sie
     // direktional widersprüchlich sind — wir wollen sie nirgends anzeigen.
     const livePicks = fxPicks.filter(p =>
-      !p.trackingExcluded && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN')
+      !p.trackingExcluded && !p.boldAlt && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN')
     );
     const sortedPicks = [...livePicks].sort((a, b) => {
       if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
@@ -473,7 +473,7 @@
     // Diese werden vom Tracker (resolve_wm_picks.py) als VOID markiert wenn sie
     // direktional widersprüchlich sind — wir wollen sie nirgends anzeigen.
     const livePicks = fxPicks.filter(p =>
-      !p.trackingExcluded && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN')
+      !p.trackingExcluded && !p.boldAlt && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN')
     );
     const sortedPicks = [...livePicks].sort((a, b) => {
       // Audit-Fix 06.06.2026: SAFER-ALT vor allem.

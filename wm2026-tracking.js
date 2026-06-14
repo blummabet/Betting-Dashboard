@@ -199,6 +199,7 @@
       if (_rowDemoted(row.picks)) continue;   // Spiel = Beobachtung in der Card → auch hier raus
       for (const p of row.picks) {
         if (p.trackingExcluded) continue;
+        if (p.boldAlt) continue;   // FIX 14.06.2026: durch sichere Variante ersetzt → nicht tracken
         if (_vrdFilter === 'all' || p.verdict === _vrdFilter) {
           flatPicks.push({ ...p, _row: row });
         }

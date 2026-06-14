@@ -1577,6 +1577,10 @@ def generate_picks_for_fixture(
                         "odds":   existing["odds"],
                         "edgePP": existing["edgePP"],
                     }
+                    # FIX 14.06.2026: riskante Variante ist durch die sichere ERSETZT →
+                    # nicht mehr separat tracken/anzeigen (sonst tauchen die hohen Quoten
+                    # weiter in „Weitere Picks" + Tracking auf, Lucas-Befund).
+                    p["trackingExcluded"] = True
                     break
                 alt_pick = {
                     "market":     alt_market,
@@ -1606,6 +1610,9 @@ def generate_picks_for_fixture(
                 "odds":   alt_pick["odds"],
                 "edgePP": alt_pick["edgePP"],
             }
+            # FIX 14.06.2026: riskante Variante ist durch die sichere ERSETZT → nicht mehr
+            # separat tracken/anzeigen (hohe Quoten sonst weiter in Weitere Picks + Tracking).
+            p["trackingExcluded"] = True
             # Auch im saferAlt-Feld speichern (bidirektional)
             alt_pick["riskierAlt"] = {
                 "market": p["market"],
