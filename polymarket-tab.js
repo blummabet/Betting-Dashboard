@@ -1021,7 +1021,9 @@ const WM_MARKET_TO_PRICE_KEY = {
   'Over 2.5 Tore':         'poly_o25',
   'Under 2.5 Tore':        'poly_u25',
   'Over 1.5 Tore':         'poly_o15',
+  'Under 1.5 Tore':        'poly_u15',   // FIX 14.06.2026: fehlte → "kein Markt" trotz Daten
   'Over 3.5 Tore':         'poly_o35',
+  'Under 3.5 Tore':        'poly_u35',   // FIX 14.06.2026: DEU-CUW Under 3.5 nicht handelbar weil unmapped
   'Beide Teams treffen':   'poly_btts',
 };
 
@@ -3610,20 +3612,30 @@ function renderPolyStats() {
 function _polyStatsHtml(c) {
   const res = c.res || {};
   const s = res.summary || {};
-  const allBets = Array.isArray(res.bets) ? res.bets : [];
-  const placedArr = (c.placed && Array.isArray(c.placed.bets)) ? c.placed.bets : [];
+  const allRows = Array.isArray(res.bets) ? res.bets : [];
+  // FIX 14.06.2026: Die Betting-Seite zeigt NUR manuell getriggerte Wetten
+  // (polymarket_bet.py-Terminal / ✏️ Position loggen → source='manual'). Auto-Trader-
+  // Trades (source='auto'/'auto_steam', inkl. Legacy-Einträge ohne source → default auto)
+  // gehören aufs Trading-Cockpit, nicht hierher. Kennzahlen werden lokal aus dem manuellen
+  // Subset gerechnet — die Server-summary aggregiert auto+manuell und wäre sonst falsch.
+  const _isAutoSrc = b => { const sc = b.source || 'auto'; return sc === 'auto' || sc === 'auto_steam'; };
+  const allBets   = allRows.filter(b => !_isAutoSrc(b));
+  const autoCount = allRows.length - allBets.length;
+  const placedArr = (c.placed && Array.isArray(c.placed.bets)) ? c.placed.bets.filter(b => !_isAutoSrc(b)) : [];
   const balUsdc = c.bal ? (c.bal.total != null ? c.bal.total : (c.bal.usdc != null ? c.bal.usdc : null)) : null;
 
-  const resolved = s.resolved != null ? s.resolved : allBets.filter(b => b.result && b.result !== 'PENDING').length;
-  const wins   = s.wins   != null ? s.wins   : allBets.filter(b => b.result === 'WIN').length;
-  const losses = s.losses != null ? s.losses : allBets.filter(b => b.result === 'LOSS').length;
-  const pending= s.pending!= null ? s.pending: allBets.filter(b => b.result === 'PENDING').length;
-  const winRate = s.winRate;
-  const totalPnl = s.totalPnl != null ? s.totalPnl : 0;
-  const roi = s.roi;
-  const staked = s.totalStaked != null ? s.totalStaked : allBets.reduce((a, b) => a + (+b.stake || 0), 0);
-  const total = s.totalBets != null ? s.totalBets : allBets.length;
-  const avgClv = s.avgCLV;
+  const resolved = allBets.filter(b => ['WIN','LOSS','VOID'].includes(b.result)).length;
+  const wins   = allBets.filter(b => b.result === 'WIN').length;
+  const losses = allBets.filter(b => b.result === 'LOSS').length;
+  const pending= allBets.filter(b => !b.result || b.result === 'PENDING').length;
+  const decided = wins + losses;
+  const winRate = decided > 0 ? (wins / decided) * 100 : null;
+  const totalPnl = allBets.reduce((a, b) => a + (+b.pnl || 0), 0);
+  const staked = allBets.reduce((a, b) => a + (+b.stake || 0), 0);
+  const roi = staked > 0 ? (totalPnl / staked) * 100 : null;
+  const total = allBets.length;
+  const _clvs = allBets.map(b => (typeof b.clv === 'number' ? b.clv : (typeof b.clvPp === 'number' ? b.clvPp : null))).filter(v => v != null);
+  const avgClv = _clvs.length ? _clvs.reduce((a, v) => a + v, 0) / _clvs.length : null;
 
   const card = (label, value, sub, color) => `
     <div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:14px 16px">
@@ -3649,7 +3661,7 @@ function _polyStatsHtml(c) {
 
   const recent = [...allBets].sort((a, b) => (b.placedAt || '').localeCompare(a.placedAt || '')).slice(0, 15);
   const rows = recent.length === 0
-    ? `<tr><td colspan="6" style="text-align:center;color:#8b949e;padding:28px;font-size:13px">Noch keine Auto-Trades — wm_results.json leer</td></tr>`
+    ? `<tr><td colspan="6" style="text-align:center;color:#8b949e;padding:28px;font-size:13px">Noch keine manuell getriggerten Wetten — platziere über „✏️ Position loggen" oder <code style="color:#a78bfa">polymarket_bet.py</code></td></tr>`
     : recent.map(b => {
         const r = b.result;
         const resIcon = r === 'WIN' ? '✅' : r === 'LOSS' ? '❌' : r === 'VOID' ? '➖' : '⏳';
@@ -3675,8 +3687,8 @@ function _polyStatsHtml(c) {
 
   return `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
-      <span style="font-size:11px;color:#8b949e">Live aus <code style="color:#a78bfa">wm_results.json</code> · Server-getrackt (Auto-Trader + resolve_wm_results) · Stand ${upd}</span>
-      <span style="margin-left:auto;font-size:11px;color:#8b949e">🤖 ${allBets.filter(b => b.source === 'auto').length} Auto · ✋ ${allBets.filter(b => b.source && b.source !== 'auto').length} Manuell · ${pending} offen</span>
+      <span style="font-size:11px;color:#8b949e">Nur <strong style="color:#e3b341">manuell getriggerte</strong> Wetten · Server-getrackt (resolve_wm_results) · Stand ${upd}</span>
+      <span style="margin-left:auto;font-size:11px;color:#8b949e">✋ ${total} Manuell · ${pending} offen${autoCount > 0 ? ` · <span title="Auto-Trader-Trades — sichtbar im Trading-Cockpit, hier ausgeblendet">🤖 ${autoCount} Auto ausgeblendet</span>` : ''}</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px">
       ${cards.join('')}

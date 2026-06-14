@@ -827,6 +827,9 @@ def main():
                 "kickoff":        order.get("kickoff"),   # echte Anpfiffzeit (UTC) → 2h-Pre-Match-Close
                 "sharesEstimate": shares_estimate,
                 "isSteamLag":     is_steam,
+                # FIX 14.06.2026: source explizit taggen (vorher fehlte es → Frontend/Resolve
+                # mussten auf "default=auto" vertrauen). Betting-Seite filtert auf source.
+                "source":         "auto_steam" if is_steam else "auto",
             })
         else:
             print(f"    ❌ Fehlgeschlagen: {result.get('error')}")
