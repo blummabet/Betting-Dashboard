@@ -557,8 +557,11 @@
     // Greift NUR wenn keine sichere Alternative existiert (kein boldAlt UND kein saferAltFor).
     const RISKY_HERO_MAX = 3.0;
     const _ahFavLine = (m) => { const x = /AH (?:Heim|Auswärts) −([\d.]+)/.exec(m || ''); return x ? parseFloat(x[1]) : 0; };
+    // Steam-Picks leiten die AH-Linie bewusst auf eine sichere Quote ab (1,4-1,95) →
+    // die Linien-Höhe ist kein Risiko, nur eine Quote > 3,0 wäre eins (analog Engine/Guard).
     const _heroIsRiskyVariant = heroPick &&
-      ((heroPick.odds || 0) > RISKY_HERO_MAX || _ahFavLine(heroPick.market) >= 1.5);
+      ((heroPick.odds || 0) > RISKY_HERO_MAX ||
+       (heroPick.source !== 'steam' && _ahFavLine(heroPick.market) >= 1.5));
     if (heroPick && _heroIsRiskyVariant && !heroPick.boldAlt && !heroPick.saferAltFor) {
       heroPick = null;
       otherPicks = [];
@@ -665,9 +668,15 @@
         </button>
       </div>`;
 
-      // Odds-Strip: Opening → Now Drift + Mini-Sparkline (zwischen Pick und Story)
-      const stripHtml = _buildOddsStrip(heroPick, fxOdds, fx);
-      if (stripHtml) html += stripHtml;
+      // Odds-Verlauf zwischen Pick und Story. Steam-Picks: eigener Move-Graph (geht für
+      // ALLE Märkte inkl. AH, nutzt steamOpen/steamCur direkt). Sonst der klassische
+      // Odds-Strip (nur mappbare Märkte mit ≥2pp Drift).
+      if (heroPick.source === 'steam') {
+        html += _steamMoveGraph(heroPick);
+      } else {
+        const stripHtml = _buildOddsStrip(heroPick, fxOdds, fx);
+        if (stripHtml) html += stripHtml;
+      }
     } else if (isPlayed && fx.result && fx.result.home_score != null && fx.result.away_score != null
                && ['FT','AET','PEN'].includes((fx.result.status || 'FT').toUpperCase())) {
       // FIX 12.06.2026: Felder heißen home_score/away_score (nicht .home/.away).
@@ -2656,6 +2665,30 @@
     </div>`;
   }
 
+  // ── Steam-Move-Graph (Pinnacle Opening→jetzt) ─────────
+  // Kleiner Verlaufs-Sparkline für Steam-Picks: zeigt visuell den Pinnacle-Drop, der
+  // den Pick getriggert hat (Lucas' Modell). Quote oben = Opening, fällt nach unten-rechts
+  // = Sharp Money rein. Nur Inline-Styles → kein CSS-Abhängigkeit.
+  function _steamMoveGraph(pick) {
+    if (!pick || pick.source !== 'steam') return '';
+    const o = pick.steamOpen, c = pick.steamCur, mv = pick.steamMovePP;
+    if (o == null || c == null || o <= 1 || c <= 1) return '';
+    const W = 116, H = 30, pad = 5;
+    const lo = Math.min(o, c), hi = Math.max(o, c), span = (hi - lo) || 0.01;
+    const yv = v => pad + ((hi - v) / span) * (H - 2 * pad);   // höhere Quote oben
+    const x0 = pad, x1 = W - pad, y0 = yv(o), y1 = yv(c);
+    const col = '#16a34a';   // Drop = Geld rein = positives Signal
+    return `<div style="display:flex;align-items:center;gap:7px;margin-top:4px;font-size:11px;line-height:1">
+      <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="flex:none;overflow:visible">
+        <line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${col}" stroke-width="2"/>
+        <circle cx="${x0}" cy="${y0}" r="2.5" fill="#9ca3af"/>
+        <circle cx="${x1}" cy="${y1}" r="3.5" fill="${col}"/>
+      </svg>
+      <span style="opacity:.9">📉 ${(+o).toFixed(2)} → <strong>${(+c).toFixed(2)}</strong>
+        <span style="color:${col};font-weight:700">+${mv}pp Geld</span>${pick.entryBook === 'soft' ? ' · Soft-Quote' : ''}</span>
+    </div>`;
+  }
+
   // ── Pick row with edgePP ──────────────────────────────
   function _buildPickRow(pick, isPlayer) {
     const verdict  = pick.verdict || 'ABWÄGEN';
@@ -2696,6 +2729,7 @@
         <div class="wm-pick-market">${market}${dqBadge}</div>
         ${modelHtml}
         ${pick.info ? `<div class="wm-pick-info">${pick.info}</div>` : ''}
+        ${_steamMoveGraph(pick)}
       </div>
       <span class="wm-pick-stars" style="color:${starsClr}">${stars}</span>
       ${edgeHtml}

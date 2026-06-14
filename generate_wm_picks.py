@@ -86,6 +86,10 @@ ODDS_BET_MAX_DNB = _cfg("odds", "max_for_bet_dnb",       4.0)
 # WM lockerer als Liga (weniger Spiele) — Liga-Profil setzt steam_bet_threshold höher.
 MAX_STEAM_PICKS_PER_CARD = _cfg("conviction_score", "max_steam_picks_per_card", 3)
 STEAM_BET_THRESHOLD      = _cfg("conviction_score", "steam_bet_threshold",      6)
+# Steam-Cutover (Launch-Grenze 14.→15.06.2026): Spiele mit Anpfiff BIS hierher sind
+# bereits veröffentlicht (DEU-CUW, NED-JPN, CIV-ECU) → Picks eingefroren/getrackt. Alles
+# DANACH (ab SWE-TUN 02:00Z / BEL-EGY) wird mit Steam neu gebaut. Einmaliger Übergang.
+STEAM_CUTOVER_UTC        = _cfg("steam", "cutover_after_utc", "2026-06-15T00:00:00Z")
 
 # Underdog-Filter
 UNDERDOG_ELO_SOFT = _cfg("underdog", "elo_soft_threshold", 100)
@@ -2020,6 +2024,11 @@ def main():
     tomorrow = (datetime.now(timezone.utc).date() + timedelta(days=1)).isoformat()
     now_dt   = datetime.now(timezone.utc)
 
+    try:
+        _steam_cutover_dt = datetime.fromisoformat(STEAM_CUTOVER_UTC.replace("Z", "+00:00"))
+    except Exception:
+        _steam_cutover_dt = None
+
     def _kickoff_passed(fx: dict) -> bool:
         """True wenn der Anpfiff vorbei ist (Spiel läuft/beendet). Fehlender/
         unparsebarer Kickoff → False (lieber als upcoming behandeln, damit ein
@@ -2030,6 +2039,20 @@ def main():
             return False
         try:
             return datetime.fromisoformat(str(kt).replace("Z", "+00:00")) <= now_dt
+        except Exception:
+            return False
+
+    def _posted_frozen(fx: dict) -> bool:
+        """Spiel bereits veröffentlicht (Anpfiff ≤ Steam-Cutover) → Picks einfrieren
+        statt neu mit Steam zu bauen. Schützt die geposteten Launch-Picks (DEU-CUW,
+        NED-JPN, CIV-ECU). Siehe [[feedback_posted_picks_immutable]]."""
+        if _steam_cutover_dt is None:
+            return False
+        kt = fx.get("kickoff")
+        if not kt:
+            return False
+        try:
+            return datetime.fromisoformat(str(kt).replace("Z", "+00:00")) <= _steam_cutover_dt
         except Exception:
             return False
 
@@ -2096,20 +2119,21 @@ def main():
             # laufen neu → lineup_signal (und jedes andere späte Signal) fließt in
             # Conviction + Bayesian-Ledger ein. Idempotent über baseVerdict.
             #
-            # ERWEITERT 14.06.2026 (Lucas): Freeze deckt jetzt heute UND morgen ab.
-            # Grund: Picks für heute + morgen Nacht sind bereits veröffentlicht
-            # (Telegram/TikTok) und MÜSSEN getrackt werden. Sie dürfen durch einen
-            # Rebuild (z.B. den neuen O/U-Pinnacle-Anker) NICHT rückwirkend verändert
-            # oder rausgeworfen werden. Der Anker wirkt nur auf NEU gebaute Spiele
-            # (übermorgen+), die noch nicht gepostet sind. „Existing" = schon gepickt.
+            # PRÄZISER CUTOVER 14.06.2026 (Lucas): nicht nach Datum, sondern nach
+            # ANPFIFF-Zeit. Gepostet wurde bis CIV-ECU (~Mitternacht). Alles mit Anpfiff
+            # ≤ STEAM_CUTOVER (15.06 00:00Z) = veröffentlicht → einfrieren/tracken. Alles
+            # danach (ab SWE-TUN 02:00Z, BEL-EGY abends) wird mit Steam neu gebaut.
+            # Bereits angepfiffene Spiele werden nie (neu) gebaut.
+            if _kickoff_passed(fx):
+                if wm["picks"].get(pick_key) is not None:
+                    total_frozen += 1
+                continue
+
             refresh_existing = False
-            if fx_date <= tomorrow:
+            if _posted_frozen(fx):
                 existing_pk = wm["picks"].get(pick_key)
                 if existing_pk is not None:
-                    if _kickoff_passed(fx):
-                        total_frozen += 1
-                        continue
-                    new_picks        = existing_pk   # Märkte/Quoten/Verdict unangetastet
+                    new_picks        = existing_pk   # gepostet → Märkte/Quoten/Verdict unangetastet
                     refresh_existing = True
 
             if not refresh_existing:
