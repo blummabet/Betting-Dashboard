@@ -1,134 +1,134 @@
 {
-  "today": "2026-06-13T03:53:49.114945+00:00",
+  "today": "2026-06-14T06:03:38.522275+00:00",
   "chosen": {
-    "angle_id": "matchOfDay",
-    "entity_key": "D-1-USA-PRY",
+    "angle_id": "killerStat",
+    "entity_key": "avgScored:NOR",
     "theme": "killer_stat",
-    "score": 0.7330000000000001,
+    "score": 0.8068,
     "hook_slots": {
       "big_number": {
-        "value": "1828",
-        "source": "",
-        "source_file": "",
+        "value": "3.3",
+        "source": "form.NOR.avgScored",
+        "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": null
+        "raw": 3.267
       },
       "sub_title": {
-        "value": "Elo · USA",
+        "value": "Tore pro Spiel · Norwegen",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_1": {
-        "value": "USA 🇺🇸",
+        "value": "<span class=\"acc\">Norwegen</span> 🇳🇴 trifft",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_2": {
-        "value": "gegen <span class=\"acc\">Paraguay</span> 🇵🇾",
+        "value": "<span class=\"yellow\">jeden Gegner.</span>",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "mystery_question": {
-        "value": "Schafft Paraguay die Überraschung?",
+        "value": "Wer stoppt diese Maschine?",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "highlight_fact": {
-        "value": "Über 3.5 Tore · Edge +15.0pp",
-        "source": "",
-        "source_file": "",
-        "derived": false,
+        "value": "Ø 3.3 Tore in 15 Spielen — Gegen Ø 0.7",
+        "source": "form.NOR.avgScored + form.NOR.games + form.NOR.avgConceded",
+        "source_file": "wm2026-data.json",
+        "derived": true,
         "raw": null
       }
     },
     "info_slots": {
       "flag": {
-        "value": "🇺🇸 vs 🇵🇾",
+        "value": "🇳🇴",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "name": {
-        "value": "USA vs Paraguay",
+        "value": "Norwegen",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "role_line": {
-        "value": "Gruppe D · Anpfiff: 2026-06-13 01:00 UTC",
+        "value": "Ø 3.3 Tore/Spiel · 15 Spiele Datenbasis",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat1_val": {
-        "value": "1828",
-        "source": "groups.D.teams",
+        "value": "3.3",
+        "source": "form.NOR.avgScored",
         "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": 1828
+        "raw": 3.267
       },
       "stat1_lbl": {
-        "value": "Elo USA",
+        "value": "Tore Ø",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat2_val": {
-        "value": "1651",
-        "source": "groups.D.teams",
+        "value": "0.7",
+        "source": "form.NOR.avgConceded",
         "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": 1651
+        "raw": 0.667
       },
       "stat2_lbl": {
-        "value": "Elo PRY",
+        "value": "Gegen Ø",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat3_val": {
-        "value": "+15.0pp",
-        "source": "",
-        "source_file": "",
+        "value": "15",
+        "source": "form.NOR.games",
+        "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": null
+        "raw": 15
       },
       "stat3_lbl": {
-        "value": "Edge",
+        "value": "Spiele",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "closing_line": {
-        "value": "<strong>Pick: Über 3.5 Tore</strong> @ 4.5 — Modell sieht 2.537.",
+        "value": "<strong>Höchste Ø-Tore-Quote</strong> aller 48 qualifizierten WM-Teams. Form-Datenbasis: 15 Spiele.",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "quote_line": {
-        "value": "Edge sitzt. <span class=\"acc\">Heute Anpfiff.</span> ⚡",
+        "value": "Tor-Maschine ohne <span class=\"acc\">Stopper</span> in Sicht. ⚽",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "data_source": {
-        "value": "Daten: WM 2026 Live-Pipeline",
+        "value": "Daten: WM-Quali + Tests 2024/25",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -136,18 +136,18 @@
       }
     },
     "series_tag": "",
-    "reason": "Edge 15.0pp → 0.50 · dataQ=full → +0.15 · H2H 3 Spiele → +0.06"
+    "reason": "avgScored=3.3 (15 games) — höchster aller 48 Teams"
   },
   "verifier": {
-    "angle_id": "matchOfDay",
-    "entity": "D-1-USA-PRY",
+    "angle_id": "killerStat",
+    "entity": "avgScored:NOR",
     "ok": true,
     "failures": [],
     "details": [
       [
         "big_number",
         true,
-        "static"
+        "ok (0.0% drift, threshold 5.0%)"
       ],
       [
         "sub_title",
@@ -172,7 +172,7 @@
       [
         "highlight_fact",
         true,
-        "static"
+        "derived (plausibility ok)"
       ],
       [
         "flag",
@@ -192,7 +192,7 @@
       [
         "stat1_val",
         true,
-        "plausibility ok (raw 1828 in groups.D.teams)"
+        "ok (0.0% drift, threshold 5.0%)"
       ],
       [
         "stat1_lbl",
@@ -202,7 +202,7 @@
       [
         "stat2_val",
         true,
-        "plausibility ok (raw 1651 in groups.D.teams)"
+        "ok (0.0% drift, threshold 5.0%)"
       ],
       [
         "stat2_lbl",
@@ -212,7 +212,7 @@
       [
         "stat3_val",
         true,
-        "static"
+        "ok (0.0% drift, threshold 5.0%)"
       ],
       [
         "stat3_lbl",
@@ -377,134 +377,134 @@
       "reason": "avgScored=3.3 (15 games) — höchster aller 48 Teams"
     },
     {
-      "angle_id": "matchOfDay",
-      "entity_key": "D-1-USA-PRY",
-      "theme": "killer_stat",
-      "score": 0.7330000000000001,
+      "angle_id": "underdogRecap",
+      "entity_key": "recap:C-BRA-MAR",
+      "theme": "hidden_gem",
+      "score": 0.7700814111261873,
       "hook_slots": {
         "big_number": {
-          "value": "1828",
+          "value": "3.9x",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "sub_title": {
-          "value": "Elo · USA",
+          "value": "so unwahrscheinlich war's",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "hook_line_1": {
-          "value": "USA 🇺🇸",
+          "value": "Brasilien/Marokko 🤝",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "hook_line_2": {
-          "value": "gegen <span class=\"acc\">Paraguay</span> 🇵🇾",
+          "value": "schockt <span class=\"acc\"></span>",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "mystery_question": {
-          "value": "Schafft Paraguay die Überraschung?",
+          "value": "Wer hatte das auf dem Schirm?",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "highlight_fact": {
-          "value": "Über 3.5 Tore · Edge +15.0pp",
-          "source": "",
-          "source_file": "",
-          "derived": false,
+          "value": "Unentschieden bei Closing-Quote 3.95",
+          "source": "odds.BRA-MAR.odds_closing",
+          "source_file": "wm2026-data.json",
+          "derived": true,
           "raw": null
         }
       },
       "info_slots": {
         "flag": {
-          "value": "🇺🇸 vs 🇵🇾",
+          "value": "🤝",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "name": {
-          "value": "USA vs Paraguay",
+          "value": "Brasilien/Marokko 1:1",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "role_line": {
-          "value": "Gruppe D · Anpfiff: 2026-06-13 01:00 UTC",
+          "value": "Pinnacle Closing: 3.9x — Markt sah es nicht",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat1_val": {
-          "value": "1828",
-          "source": "groups.D.teams",
-          "source_file": "wm2026-data.json",
+          "value": "1:1",
+          "source": "",
+          "source_file": "",
           "derived": false,
-          "raw": 1828
+          "raw": null
         },
         "stat1_lbl": {
-          "value": "Elo USA",
+          "value": "Endstand",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat2_val": {
-          "value": "1651",
-          "source": "groups.D.teams",
-          "source_file": "wm2026-data.json",
+          "value": "3.9x",
+          "source": "",
+          "source_file": "",
           "derived": false,
-          "raw": 1651
+          "raw": null
         },
         "stat2_lbl": {
-          "value": "Elo PRY",
+          "value": "Quote",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat3_val": {
-          "value": "+15.0pp",
+          "value": "25%",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat3_lbl": {
-          "value": "Edge",
+          "value": "Wskt.",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "closing_line": {
-          "value": "<strong>Pick: Über 3.5 Tore</strong> @ 4.5 — Modell sieht 2.537.",
+          "value": "<strong>Pinnacle gab Ergebnis 25% Wahrscheinlichkeit.</strong> Es passierte trotzdem.",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "quote_line": {
-          "value": "Edge sitzt. <span class=\"acc\">Heute Anpfiff.</span> ⚡",
+          "value": "Warum die Sharps <span class=\"acc\">trotzdem dabei</span> waren. 🎯",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "data_source": {
-          "value": "Daten: WM 2026 Live-Pipeline",
+          "value": "Daten: Pinnacle Closing + Endergebnis",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -512,7 +512,7 @@
         }
       },
       "series_tag": "",
-      "reason": "Edge 15.0pp → 0.50 · dataQ=full → +0.15 · H2H 3 Spiele → +0.06"
+      "reason": "surprise=0.75 (Unentschieden) fair_prob=0.25 → 3.9x"
     },
     {
       "angle_id": "killerStat",
@@ -653,179 +653,41 @@
       "reason": "avgConceded=0.3 (15 games) — niedrigster aller Teams"
     },
     {
-      "angle_id": "underdogRecap",
-      "entity_key": "recap:A-KOR-CZE",
-      "theme": "hidden_gem",
-      "score": 0.603992239284878,
-      "hook_slots": {
-        "big_number": {
-          "value": "2.7x",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "sub_title": {
-          "value": "so unwahrscheinlich war's",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_1": {
-          "value": "Südkorea 🇰🇷",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_2": {
-          "value": "schockt <span class=\"acc\">Tschechien</span>",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "mystery_question": {
-          "value": "Wer hatte das auf dem Schirm?",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "highlight_fact": {
-          "value": "Heimsieg bei Closing-Quote 2.75",
-          "source": "odds.KOR-CZE.odds_closing",
-          "source_file": "wm2026-data.json",
-          "derived": true,
-          "raw": null
-        }
-      },
-      "info_slots": {
-        "flag": {
-          "value": "🇰🇷",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "name": {
-          "value": "Südkorea 2:1 Tschechien",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "role_line": {
-          "value": "Pinnacle Closing: 2.7x — Markt sah es nicht",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_val": {
-          "value": "2:1",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_lbl": {
-          "value": "Endstand",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_val": {
-          "value": "2.7x",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_lbl": {
-          "value": "Quote",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_val": {
-          "value": "36%",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_lbl": {
-          "value": "Wskt.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "closing_line": {
-          "value": "<strong>Pinnacle gab Ergebnis 36% Wahrscheinlichkeit.</strong> Es passierte trotzdem.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "quote_line": {
-          "value": "Warum die Sharps <span class=\"acc\">trotzdem dabei</span> waren. 🎯",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "data_source": {
-          "value": "Daten: Pinnacle Closing + Endergebnis",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "series_tag": "",
-      "reason": "surprise=0.64 (Heimsieg) fair_prob=0.36 → 2.7x"
-    },
-    {
       "angle_id": "matchOfDay",
-      "entity_key": "B-1-QAT-SUI",
+      "entity_key": "D-1-AUS-TUR",
       "theme": "killer_stat",
-      "score": 0.5,
+      "score": 0.604,
       "hook_slots": {
         "big_number": {
-          "value": "1542",
+          "value": "1738",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "sub_title": {
-          "value": "Elo · Katar",
+          "value": "Elo · Australien",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "hook_line_1": {
-          "value": "Katar 🇶🇦",
+          "value": "Australien 🇦🇺",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "hook_line_2": {
-          "value": "gegen <span class=\"acc\">Schweiz</span> 🇨🇭",
+          "value": "gegen <span class=\"acc\">Türkei</span> 🇹🇷",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "mystery_question": {
-          "value": "Schafft Schweiz die Überraschung?",
+          "value": "Wer setzt sich heute durch?",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -841,49 +703,49 @@
       },
       "info_slots": {
         "flag": {
-          "value": "🇶🇦 vs 🇨🇭",
+          "value": "🇦🇺 vs 🇹🇷",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "name": {
-          "value": "Katar vs Schweiz",
+          "value": "Australien vs Türkei",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "role_line": {
-          "value": "Gruppe B · Anpfiff: 2026-06-13 19:00 UTC",
+          "value": "Gruppe D · Anpfiff: 2026-06-14 04:00 UTC",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat1_val": {
-          "value": "1542",
-          "source": "groups.B.teams",
+          "value": "1738",
+          "source": "groups.D.teams",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 1542
+          "raw": 1738
         },
         "stat1_lbl": {
-          "value": "Elo QAT",
+          "value": "Elo AUS",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat2_val": {
-          "value": "1786",
-          "source": "groups.B.teams",
+          "value": "1642",
+          "source": "groups.D.teams",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 1786
+          "raw": 1642
         },
         "stat2_lbl": {
-          "value": "Elo SUI",
+          "value": "Elo TUR",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -904,7 +766,7 @@
           "raw": null
         },
         "closing_line": {
-          "value": "<strong>Pick: Über 3.5 Tore</strong> @ 3.05 — Modell sieht 1.906.",
+          "value": "<strong>Pick: Über 3.5 Tore</strong> @ 3.85 — Modell sieht 2.194.",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -926,130 +788,130 @@
         }
       },
       "series_tag": "",
-      "reason": "Edge 17.0pp → 0.50"
+      "reason": "Edge 17.0pp → 0.50 · Elo-Diff 96 → drama +0.10"
     },
     {
       "angle_id": "matchOfDay",
-      "entity_key": "C-1-BRA-MAR",
-      "theme": "hidden_gem",
-      "score": 0.019000000000000017,
+      "entity_key": "E-1-CIV-ECU",
+      "theme": "killer_stat",
+      "score": 0.593,
       "hook_slots": {
         "big_number": {
-          "value": "1959",
+          "value": "1612",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "sub_title": {
-          "value": "Elo · Brasilien",
+          "value": "Elo · Elfenbeinküste",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "hook_line_1": {
-          "value": "Brasilien 🇧🇷",
+          "value": "Elfenbeinküste 🇨🇮",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "hook_line_2": {
-          "value": "gegen <span class=\"acc\">Marokko</span> 🇲🇦",
+          "value": "gegen <span class=\"acc\">Ecuador</span> 🇪🇨",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "mystery_question": {
-          "value": "Schafft Marokko die Überraschung?",
+          "value": "Schafft Ecuador die Überraschung?",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "highlight_fact": {
-          "value": "H2H: 1 Spiele · letzte: ?",
-          "source": "h2h.BRA-MAR.games",
-          "source_file": "wm2026-data.json",
+          "value": "AH Heim −0.5 · Edge +6.0pp",
+          "source": "",
+          "source_file": "",
           "derived": false,
-          "raw": 1
+          "raw": null
         }
       },
       "info_slots": {
         "flag": {
-          "value": "🇧🇷 vs 🇲🇦",
+          "value": "🇨🇮 vs 🇪🇨",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "name": {
-          "value": "Brasilien vs Marokko",
+          "value": "Elfenbeinküste vs Ecuador",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "role_line": {
-          "value": "Gruppe C · Anpfiff: 2026-06-13 22:00 UTC",
+          "value": "Gruppe E · Anpfiff: 2026-06-14 23:00 UTC",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat1_val": {
-          "value": "1959",
-          "source": "groups.C.teams",
+          "value": "1612",
+          "source": "groups.E.teams",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 1959
+          "raw": 1612
         },
         "stat1_lbl": {
-          "value": "Elo BRA",
+          "value": "Elo CIV",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat2_val": {
-          "value": "1778",
-          "source": "groups.C.teams",
+          "value": "1719",
+          "source": "groups.E.teams",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 1778
+          "raw": 1719
         },
         "stat2_lbl": {
-          "value": "Elo MAR",
+          "value": "Elo ECU",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat3_val": {
-          "value": "—",
+          "value": "+6.0pp",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat3_lbl": {
-          "value": "kein Edge",
+          "value": "Edge",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "closing_line": {
-          "value": "Spannendes Gruppenspiel ohne klaren Pick — beide Teams in vergleichbarer Form.",
+          "value": "<strong>Pick: AH Heim −0.5</strong> @ 3.55 — Modell sieht 2.724.",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "quote_line": {
-          "value": "<span class=\"acc\">Heute Anpfiff.</span> ⚡",
+          "value": "Edge sitzt. <span class=\"acc\">Heute Anpfiff.</span> ⚡",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -1064,7 +926,421 @@
         }
       },
       "series_tag": "",
-      "reason": ""
+      "reason": "Edge 6.0pp → 0.50 · Elo-Diff -107 → drama +0.09"
+    },
+    {
+      "angle_id": "matchOfDay",
+      "entity_key": "C-1-HTI-SCO",
+      "theme": "killer_stat",
+      "score": 0.59,
+      "hook_slots": {
+        "big_number": {
+          "value": "1541",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "sub_title": {
+          "value": "Elo · HTI",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_1": {
+          "value": "HTI ",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_2": {
+          "value": "gegen <span class=\"acc\">Schottland</span> 🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "mystery_question": {
+          "value": "Schafft Schottland die Überraschung?",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "highlight_fact": {
+          "value": "DNB: Heimteam · Edge +12.0pp",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "info_slots": {
+        "flag": {
+          "value": "🌍 vs 🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "name": {
+          "value": "HTI vs Schottland",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "role_line": {
+          "value": "Gruppe C · Anpfiff: 2026-06-14 01:00 UTC",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_val": {
+          "value": "1541",
+          "source": "groups.C.teams",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 1541
+        },
+        "stat1_lbl": {
+          "value": "Elo HTI",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_val": {
+          "value": "1651",
+          "source": "groups.C.teams",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 1651
+        },
+        "stat2_lbl": {
+          "value": "Elo SCO",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_val": {
+          "value": "+12.0pp",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_lbl": {
+          "value": "Edge",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "closing_line": {
+          "value": "<strong>Pick: DNB: Heimteam</strong> @ 4.56 — Modell sieht 2.768.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "quote_line": {
+          "value": "Edge sitzt. <span class=\"acc\">Heute Anpfiff.</span> ⚡",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "data_source": {
+          "value": "Daten: WM 2026 Live-Pipeline",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "series_tag": "",
+      "reason": "Edge 12.0pp → 0.50 · Elo-Diff -110 → drama +0.09"
+    },
+    {
+      "angle_id": "matchOfDay",
+      "entity_key": "F-1-NED-JPN",
+      "theme": "killer_stat",
+      "score": 0.585,
+      "hook_slots": {
+        "big_number": {
+          "value": "1908",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "sub_title": {
+          "value": "Elo · NED",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_1": {
+          "value": "NED ",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_2": {
+          "value": "gegen <span class=\"acc\">Japan</span> 🇯🇵",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "mystery_question": {
+          "value": "Schafft Japan die Überraschung?",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "highlight_fact": {
+          "value": "AH Auswärts +0.75 · Edge +11.0pp",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "info_slots": {
+        "flag": {
+          "value": "🌍 vs 🇯🇵",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "name": {
+          "value": "NED vs Japan",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "role_line": {
+          "value": "Gruppe F · Anpfiff: 2026-06-14 20:00 UTC",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_val": {
+          "value": "1908",
+          "source": "groups.F.teams",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 1908
+        },
+        "stat1_lbl": {
+          "value": "Elo NED",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_val": {
+          "value": "1793",
+          "source": "groups.F.teams",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 1793
+        },
+        "stat2_lbl": {
+          "value": "Elo JPN",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_val": {
+          "value": "+11.0pp",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_lbl": {
+          "value": "Edge",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "closing_line": {
+          "value": "<strong>Pick: AH Auswärts +0.75</strong> @ 1.68 — Modell sieht 1.322.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "quote_line": {
+          "value": "Edge sitzt. <span class=\"acc\">Heute Anpfiff.</span> ⚡",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "data_source": {
+          "value": "Daten: WM 2026 Live-Pipeline",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "series_tag": "",
+      "reason": "Edge 11.0pp → 0.50 · Elo-Diff 115 → drama +0.09"
+    },
+    {
+      "angle_id": "matchOfDay",
+      "entity_key": "E-1-GER-CUW",
+      "theme": "killer_stat",
+      "score": 0.5,
+      "hook_slots": {
+        "big_number": {
+          "value": "1924",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "sub_title": {
+          "value": "Elo · Deutschland",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_1": {
+          "value": "Deutschland 🇩🇪",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_2": {
+          "value": "gegen <span class=\"acc\">CUW</span> ",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "mystery_question": {
+          "value": "Schafft CUW die Überraschung?",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "highlight_fact": {
+          "value": "Unter 3.5 Tore · Edge +7.0pp",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "info_slots": {
+        "flag": {
+          "value": "🇩🇪 vs 🌍",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "name": {
+          "value": "Deutschland vs CUW",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "role_line": {
+          "value": "Gruppe E · Anpfiff: 2026-06-14 17:00 UTC",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_val": {
+          "value": "1924",
+          "source": "groups.E.teams",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 1924
+        },
+        "stat1_lbl": {
+          "value": "Elo GER",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_val": {
+          "value": "1531",
+          "source": "groups.E.teams",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 1531
+        },
+        "stat2_lbl": {
+          "value": "Elo CUW",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_val": {
+          "value": "+7.0pp",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_lbl": {
+          "value": "Edge",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "closing_line": {
+          "value": "<strong>Pick: Unter 3.5 Tore</strong> @ 2.5 — Modell sieht 2.011.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "quote_line": {
+          "value": "Edge sitzt. <span class=\"acc\">Heute Anpfiff.</span> ⚡",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "data_source": {
+          "value": "Daten: WM 2026 Live-Pipeline",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "series_tag": "",
+      "reason": "Edge 7.0pp → 0.50"
     }
   ]
 }
