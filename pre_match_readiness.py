@@ -425,6 +425,8 @@ def main() -> int:
         "upcoming":      len(upcoming),
         "signalsFired":  fired,
         "signalsTotal":  len(signal_names),
+        "perSignal":     fire,   # 14.06.2026: echte Feuer-Zähler pro Signal → Status-Seite
+                                 # zeigt Matrix authoritativ (statt aus data.picks abzuleiten)
         "verdict":       "error" if errors else ("warn" if warns else "ok"),
         "errors":        errors,
         "warns":         warns,

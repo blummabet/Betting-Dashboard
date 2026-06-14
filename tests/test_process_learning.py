@@ -37,6 +37,20 @@ class TestProcessVerdict(unittest.TestCase):
         # 1X (Heim/Remis) gewann (1:1), aber Heim war xG-dominiert → glücklich
         self.assertEqual(self.pv("Doppelte Chance — 1X", "WIN", self.stats)["processVerdict"], "LUCKY")
 
+    def test_btts_lost_but_both_deserved_is_unlucky(self):
+        # FIX 14.06.2026: BTTS prozess-bewertbar. AUS-TUR 0:2 — Türkei (away) xG 1.8,
+        # Australien (home) 0.9 → beide ≥0.8, BTTS-Ja verlor (TUR traf nicht) → UNLUCKY.
+        s = {"xgTotal": 2.7, "homeXg": 0.9, "awayXg": 1.8}
+        self.assertEqual(self.pv("Beide Teams treffen — Ja", "LOSS", s)["processVerdict"], "UNLUCKY")
+
+    def test_btts_lost_one_side_dead_is_deserved(self):
+        s = {"xgTotal": 1.4, "homeXg": 1.2, "awayXg": 0.2}   # away tot (<0.8)
+        self.assertEqual(self.pv("Beide Teams treffen — Ja", "LOSS", s)["processVerdict"], "DESERVED_LOSS")
+
+    def test_btts_no_won_both_dead_is_justified(self):
+        s = {"xgTotal": 0.8, "homeXg": 0.5, "awayXg": 0.3}
+        self.assertEqual(self.pv("Beide Teams treffen — Nein", "WIN", s)["processVerdict"], "JUSTIFIED")
+
     def test_no_stats_returns_empty(self):
         self.assertEqual(self.pv("Über 2.5 Tore", "LOSS", None), {})
 
