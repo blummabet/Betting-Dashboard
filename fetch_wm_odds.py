@@ -1049,7 +1049,8 @@ def main():
         # auch Public-Snaps in dieselbe Liste schreiben, wäre snaps[-1] sonst evtl. ein
         # Public-Eintrag und der _snap_changed-Vergleich falsch.
         last_snap = next((s for s in reversed(snaps) if s.get("bk") != "public"), None)
-        if _snap_changed(last_snap, h2h["hw"], h2h["dr"], h2h["aw"]):
+        pinn_changed = _snap_changed(last_snap, h2h["hw"], h2h["dr"], h2h["aw"])
+        if pinn_changed:
             snap_entry = {
                 "ts":  now_iso,
                 "hw":  h2h["hw"],
@@ -1064,23 +1065,28 @@ def main():
                 snap_entry["bttsY"] = tb["bttsY"]
             snaps.append(snap_entry)
 
-            # ── Soft-Book/Public-Konsens-Snapshot (FIX 13.06.2026) ───────────────
-            # WARUM: lead_lag_bias vergleicht „Pinnacle bewegt sich, Soft-Books hinken
-            # nach". Bisher stand in der Odds-History NUR Pinnacle → das Signal konnte
-            # NIE feuern (0/280 Picks) → Sharp-Money-Conviction-Familie strukturell tot
-            # → Conviction flächendeckend niedrig. Jetzt schreiben wir bei jeder Pinnacle-
-            # Bewegung auch den Public-Konsens als eigenen bk="public"-Eintrag mit
-            # gleichem Timestamp → lead_lag sieht die Lag-Bewegung. (1X2 + O/U 2.5.)
-            ph = h2h.get("public_hw")
-            pd = h2h.get("public_dr")
-            pa = h2h.get("public_aw")
-            if ph and pa:
+        # ── Soft-Book (bet365)-Snapshot für lead_lag_bias ────────────────────────
+        # Quelle ist bet365 (PUBLIC_PRIO/regions uk; 2.-schärfster Buchmacher, Lucas 14.06.).
+        # lead_lag vergleicht „Pinnacle bewegt sich, bet365 hinkt nach".
+        # FIX 14.06.2026: bet365-Snap wird jetzt geschrieben wenn ENTWEDER Pinnacle sich
+        # bewegt (→ wir brauchen genau dann eine bet365-Vergleichslesung, um den Lag zu
+        # sehen — auch wenn bet365 flach ist) ODER bet365 sich selbst bewegt. Vorher nur an
+        # Pinnacle gekoppelt → bei flachen Pre-Match-Linien fast keine Snaps → _compute_move_pp
+        # (braucht ≥2 Snaps) gab None → Signal feuerte 0×. Union maximiert die Zeitreihe;
+        # feuert, sobald sich überhaupt etwas bewegt (kein Move = korrekt kein Signal).
+        ph = h2h.get("public_hw")
+        pd = h2h.get("public_dr")
+        pa = h2h.get("public_aw")
+        if ph and pa:
+            last_pub = next((s for s in reversed(snaps) if s.get("bk") == "public"), None)
+            if pinn_changed or _snap_changed(last_pub, ph, pd, pa):
                 pub_entry = {
                     "ts":  now_iso,
                     "hw":  ph,
                     "dr":  pd,
                     "aw":  pa,
                     "bk":  "public",
+                    "bookmaker": h2h.get("public_bookmaker"),   # i.d.R. bet365
                 }
                 if tb.get("public_o25"):
                     pub_entry["o25"] = tb["public_o25"]
