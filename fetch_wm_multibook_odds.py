@@ -183,6 +183,14 @@ def main() -> int:
         }
         if write:
             entry.update({k: v for k, v in new_pub.items() if v is not None})
+            # Soft-Konsens-OPENING einmalig festhalten (erste Sichtung) → erlaubt später
+            # die echte Follow-Bestätigung: ist der Soft-Konsens dem Pinnacle-Move GEFOLGT?
+            # (Fix 14.06.2026 für Steam-Modell.) Nie überschreiben = Eröffnungswert bleibt.
+            for _side in ("hw", "dr", "aw", "o25", "u25", "bttsY", "bttsN"):
+                _ov = con.get(_side)
+                _ok = f"public_{_side}_open"
+                if _ov is not None and entry.get(_ok) is None:
+                    entry[_ok] = _ov
         updated += 1
         if len(samples) < 8:
             samples.append(f"{mk}: pub hw/dr/aw={con['hw']}/{con['dr']}/{con['aw']} "

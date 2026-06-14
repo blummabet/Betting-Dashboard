@@ -70,6 +70,31 @@ class TestDerive(unittest.TestCase):
         self.assertEqual(pick["entry_odd"], 1.90)
 
 
+class TestSoftConfirmation(unittest.TestCase):
+    def test_soft_followed_confirmed(self):
+        # Pini 1.90→1.70 (Heim). Soft-Konsens Opening 1.95 → jetzt 1.78 = gefolgt → bestätigt.
+        snap = {"hw": 1.70, "public_hw": 1.78, "public_hw_open": 1.95,
+                "odds_open": {"hw": 1.90}}
+        p = se.build_steam_pick(snap)
+        self.assertTrue(p["soft_confirmed"])
+        self.assertGreater(p["soft_follow_pp"], 1.5)
+
+    def test_soft_not_followed_not_confirmed(self):
+        # Soft kaum bewegt (1.93→1.92) obwohl Pini fiel → nicht bestätigt, aber Lag = Value.
+        snap = {"hw": 1.70, "public_hw": 1.92, "public_hw_open": 1.93,
+                "odds_open": {"hw": 1.90}}
+        p = se.build_steam_pick(snap)
+        self.assertFalse(p["soft_confirmed"])
+        self.assertGreater(p["soft_lagging"], 0)
+
+    def test_no_soft_opening_no_confirm(self):
+        # Ohne Soft-Opening kann nicht bestätigt werden (nur Momentaufnahme-Lag).
+        snap = {"hw": 1.70, "public_hw": 1.78, "odds_open": {"hw": 1.90}}
+        p = se.build_steam_pick(snap)
+        self.assertIsNone(p["soft_follow_pp"])
+        self.assertFalse(p["soft_confirmed"])
+
+
 class TestLifecycleAndCLV(unittest.TestCase):
     def test_late_entry_flag_by_days(self):
         snap = {"hw": 1.70, "public_hw": 1.74, "odds_open": {"hw": 1.90}}

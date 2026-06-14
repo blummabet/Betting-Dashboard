@@ -433,6 +433,12 @@ def compute_conviction_score(pick: dict, signal_output: dict,
             soft_lag_fresh = True   # wir kaufen bewusst die hinkende Soft-Buch-Quote
             evidence.append("Soft-Buch-Quote gekauft (hinkt Pinnacle nach)")
 
+    # Echte Soft-FOLLOW-Bestätigung: der Soft-Konsens ist dem Pinnacle-Move seit Opening
+    # gefolgt (nicht nur Momentaufnahme-Lag) → stärkstes Soft-Confirm-Signal (Fix 14.06.).
+    steam_soft_confirmed = bool(pick.get("softConfirmed"))
+    if steam_soft_confirmed:
+        evidence.append(f"Soft-Konsens folgte dem Move (+{pick.get('softFollowPP')}pp) — bestätigt")
+
     # Strength-Berechnung statt naiver Akkumulation:
     # Jede Quelle trägt limitiert bei, Map auf 4-stufige Skala (0/1/2/3).
     strength = 0
@@ -440,6 +446,7 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     if has_opening:            strength += 1
     strength += min(sharp_signal_count, 2)     # max 2 von Signal-Familie
     if soft_lag_fresh:         strength += 1
+    if steam_soft_confirmed:   strength += 1   # Soft folgte = echte marktweite Bestätigung
 
     if strength >= 5:    family_scores["sharp_money"] = 3   # 4+ Quellen aktiv
     elif strength >= 3:  family_scores["sharp_money"] = 2   # 2-3 Quellen

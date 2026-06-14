@@ -106,29 +106,42 @@ def derive_pick(trig: dict, snap: dict) -> dict | None:
     """Aus einem Steam-Trigger EINEN bettbaren Pick ableiten. None wenn keine
     bettbare Linie existiert (z.B. Auswärts-Favorit ohne Minus-Leiter)."""
     cur = trig["cur"]
-    # Softbook-Quote der gesteamten Seite: 1X2 → public_hw/dr/aw, O/U/BTTS → soft_key.
+    # Softbook-KONSENS der gesteamten Seite (jetzt + Opening): 1X2 → public_hw/dr/aw,
+    # O/U/BTTS → soft_key. Opening (…_open) erlaubt die echte FOLLOW-Bestätigung:
+    # ist der Soft-Konsens dem Pinnacle-Move gefolgt? (Median-Konsens, nicht Einzelbuch.)
     if trig["kind"] == "1x2":
-        soft = snap.get(f"public_{trig['key']}")
+        soft_now = snap.get(f"public_{trig['key']}")
+        soft_open = snap.get(f"public_{trig['key']}_open")
     else:
         soft_key = trig.get("soft_key")
-        soft = snap.get(soft_key) if soft_key else None
+        soft_now = snap.get(soft_key) if soft_key else None
+        soft_open = snap.get(f"{soft_key}_open") if soft_key else None
 
-    # Starker 1X2-Favorit, gerade Seite unbettbar kurz → Handicap ableiten
+    # Soft-Follow (Bestätigung): + = Soft-Konsens seit Opening Richtung Pick gelaufen.
+    soft_follow = None
+    if soft_now and soft_open and soft_now > 1.0 and soft_open > 1.0:
+        soft_follow = round((_imp(soft_now) - _imp(soft_open)) * 100, 1)
+    soft_confirmed = soft_follow is not None and soft_follow >= 1.5
+    # Soft-Lag (Value): + = Soft hinkt der aktuellen Pinnacle-Quote noch hinterher.
+    soft_lag = None
+    if soft_now and soft_now > 1.0:
+        soft_lag = round((_imp(cur) - _imp(soft_now)) * 100, 1)
+
+    # Starker 1X2-Favorit, gerade Seite unbettbar kurz → Handicap ableiten (kein Soft-AH)
     if trig["kind"] == "1x2" and cur < STRAIGHT_MIN:
         ah = _best_ah(snap, trig.get("ah_pref", ""))
         if ah is None:
             return None   # keine Linie → kein Pick (sauber übersprungen)
         odd, line, disp = ah
         return {"market": disp, "ah_line": line, "entry_odd": odd, "book": "pini",
-                "derived": True, "trigger": trig, "soft_lagging": None}
+                "derived": True, "trigger": trig, "soft_lagging": None,
+                "soft_follow_pp": soft_follow, "soft_confirmed": soft_confirmed}
 
     # Sonst: gerade Seite. Softbook-Quote bevorzugt (Anzeige/Einstieg), sonst Pini.
-    entry, book = (soft, "soft") if (soft and soft > 1.0) else (cur, "pini")
-    soft_lag = None
-    if soft and soft > 1.0:
-        soft_lag = round((_imp(cur) - _imp(soft)) * 100, 1)  # + = Soft hinkt nach (Value)
+    entry, book = (soft_now, "soft") if (soft_now and soft_now > 1.0) else (cur, "pini")
     return {"market": trig["label"], "ah_line": None, "entry_odd": round(entry, 3),
-            "book": book, "derived": False, "trigger": trig, "soft_lagging": soft_lag}
+            "book": book, "derived": False, "trigger": trig, "soft_lagging": soft_lag,
+            "soft_follow_pp": soft_follow, "soft_confirmed": soft_confirmed}
 
 
 def _trigger_category(trig: dict) -> str:

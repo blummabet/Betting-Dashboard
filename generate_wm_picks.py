@@ -1800,9 +1800,14 @@ def _steam_card_pick(snap, pick):
 
     move = t["move_pp"]
     soft_lag = pick.get("soft_lagging")
+    soft_follow = pick.get("soft_follow_pp")
+    soft_confirmed = bool(pick.get("soft_confirmed"))
     parts = [f"📉 Pinnacle {t['open']}→{t['cur']} (Sharp-Money-Drop +{move}pp)"]
-    if soft_lag is not None and soft_lag > 0.5:
-        parts.append(f"Softbook hinkt +{soft_lag}pp (Value)")
+    # Soft-Bestätigung: ist der Soft-Konsens dem Move gefolgt? (echte Bestätigung)
+    if soft_confirmed:
+        parts.append(f"✅ Soft-Konsens folgte +{soft_follow}pp (bestätigt)")
+    elif soft_lag is not None and soft_lag > 0.5:
+        parts.append(f"Soft-Konsens hinkt +{soft_lag}pp (Value, noch nicht bestätigt)")
     if pick.get("derived"):
         parts.append(f"sichere Linie abgeleitet: {market} @{odds:g}")
     if pick.get("lateEntry"):
@@ -1822,6 +1827,7 @@ def _steam_card_pick(snap, pick):
         "steamOpen": t["open"], "steamCur": t["cur"],
         "entryBook": pick["book"], "entryOdd": round(odds, 2),
         "lateEntry": bool(pick.get("lateEntry")), "steamDerived": bool(pick.get("derived")),
+        "softConfirmed": soft_confirmed, "softFollowPP": soft_follow,
         "ahLine": pick.get("ah_line"),
     }
 
@@ -2129,12 +2135,17 @@ def main():
                     total_frozen += 1
                 continue
 
+            # Refresh (Märkte/Quoten/Verdict reuse + Signale/Conviction neu) wenn:
+            #  • gepostet (Anpfiff ≤ Steam-Cutover, Launch-Schutz), ODER
+            #  • heutiges Spiel mit bestehenden Picks → Match-Day-Signal-Refresh, damit
+            #    späte Signale (lineup_signal T-1h) noch in Pick/Conviction/Ledger fließen
+            #    UND der veröffentlichte Pick pre-kickoff stabil bleibt (kein Drift).
+            # Sonst (echt neue / künftige Spiele): mit Steam neu bauen.
+            existing_pk = wm["picks"].get(pick_key)
             refresh_existing = False
-            if _posted_frozen(fx):
-                existing_pk = wm["picks"].get(pick_key)
-                if existing_pk is not None:
-                    new_picks        = existing_pk   # gepostet → Märkte/Quoten/Verdict unangetastet
-                    refresh_existing = True
+            if existing_pk is not None and (_posted_frozen(fx) or fx_date == today):
+                new_picks        = existing_pk
+                refresh_existing = True
 
             if not refresh_existing:
                 # ── STEAM-ENGINE als Pick-Quelle (Umstellung 14.06.2026) ──────
