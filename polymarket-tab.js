@@ -2052,25 +2052,32 @@ function _renderWmMarketTable() {
   // bietet —"). Kein Trade möglich → es wurde auch nie einer ausgelöst. Filter via
   // _wmKickoffPassed (fx.kickoff aus Polymarket-Gamma). 'all'/'pinn' bleiben (Browse).
   const _live = x => !_wmKickoffPassed(x);
-  const steamFix  = allFix.filter(x => x.steamLag === true && _live(x));
-  const growFix   = allFix.filter(x => x.edgeTrend === 'growing' && (x.bestEdge||0) >= 2 && _live(x));
-  const alertFix  = allFix.filter(x => (x.bestEdge||0) >= ALERT_EDGE_PP && _live(x))
+  // liveFix = nur noch ANSTEHENDE Spiele. Beendete Spiele (Anpfiff vorbei) gehören
+  // NICHT in die Opportunity-Tabelle: settled Poly-Preise (→1.00/0) erzeugen Phantom-
+  // Edges (+43pp etc.) und ein „BET"/„Position loggen" auf ein gelaufenes Spiel ist
+  // irreführend — es kann eh kein Trade mehr ausgelöst werden. Sie bleiben oben in der
+  // Performance/Verlauf-Sektion sichtbar. Gilt jetzt für ALLE Buckets inkl. Default 'all'.
+  const liveFix = allFix.filter(_live);
+  const finishedCount = allFix.length - liveFix.length;
+  const steamFix  = liveFix.filter(x => x.steamLag === true);
+  const growFix   = liveFix.filter(x => x.edgeTrend === 'growing' && (x.bestEdge||0) >= 2);
+  const alertFix  = liveFix.filter(x => (x.bestEdge||0) >= ALERT_EDGE_PP)
                           .sort((a,b) => (b.momentumScore||0) - (a.momentumScore||0));
   const counts = {
     steam: steamFix.length,
     grow:  growFix.length,
     alert: alertFix.length,
-    pinn:  allFix.filter(x => x.hasPinnacle).length,
-    all:   allFix.length,
+    pinn:  liveFix.filter(x => x.hasPinnacle).length,
+    all:   liveFix.length,
   };
 
   const tableFix = (() => {
     if (f === 'steam')  return steamFix;
     if (f === 'grow')   return growFix;
     if (f === 'alert')  return alertFix;
-    if (f === 'pinn')   return allFix.filter(x => x.hasPinnacle);
-    // Default 'all': sorted by momentum score (already sorted from Python)
-    return allFix;
+    if (f === 'pinn')   return liveFix.filter(x => x.hasPinnacle);
+    // Default 'all': nur noch anstehende Spiele, sortiert nach Momentum (aus Python)
+    return liveFix;
   })();
 
   // ── filter bar ────────────────────────────────────────────────────────────
@@ -2600,7 +2607,7 @@ function _renderWmMarketTable() {
 
   const tableRows = tableFix.map(tradeBriefCard).join('');
 
-  const noPinnCount = allFix.filter(x => !x.hasPinnacle).length;
+  const noPinnCount = liveFix.filter(x => !x.hasPinnacle).length;
   const standStr = _wmGeneratedAt ? _wmGeneratedAt : '';
   // Next update times (UTC → CEST +2h): 06,10,14,18,22 UTC
   const nextUpdate = (() => {
@@ -2656,7 +2663,8 @@ function _renderWmMarketTable() {
       ${counts.grow  > 0 ? filterBtn('grow',  '📈 Wächst', counts.grow, '#3fb950') : ''}
       ${filterBtn('alert', `🎯 Alert ≥${ALERT_EDGE_PP}pp`, counts.alert, '#e3b341')}
       ${filterBtn('pinn',  '🔷 Mit Pinnacle', counts.pinn)}
-      ${filterBtn('all',   '📋 Alle 72', counts.all)}
+      ${filterBtn('all',   `📋 Alle ${counts.all}`, counts.all)}
+      ${finishedCount > 0 ? `<span style="font-size:10px;color:#484f58;margin-left:2px">· ${finishedCount} beendet (in Performance)</span>` : ''}
     </div>
     ${(counts.steam > 0 || counts.grow > 0) ? `
     <div style="background:rgba(63,185,80,0.06);border:1px solid #3fb95030;border-radius:8px;
