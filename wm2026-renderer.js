@@ -428,9 +428,7 @@
     // Audit-Fix 06.06.2026: trackingExcluded Picks komplett raus aus der Card.
     // Diese werden vom Tracker (resolve_wm_picks.py) als VOID markiert wenn sie
     // direktional widersprüchlich sind — wir wollen sie nirgends anzeigen.
-    const livePicks = fxPicks.filter(p =>
-      !p.trackingExcluded && !p.boldAlt && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN')
-    );
+    const livePicks = _wmLivePicks(fxPicks);
     const sortedPicks = [...livePicks].sort((a, b) => {
       if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
       if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
@@ -457,6 +455,24 @@
     `;
   }
 
+  // Live-Picks (BET/ABWÄGEN, ohne ausgeschlossene/ersetzte) + AH-Linien-Dedup.
+  // FIX 14.06.2026: je Seite+Vorzeichen nur die beste AH-Linie (höchste Edge) —
+  // „AH Auswärts +0.5" UND „+0.75" sind redundant, eine Cover-Linie reicht (Lucas).
+  function _wmLivePicks(fxPicks) {
+    const base = (fxPicks || []).filter(p =>
+      !p.trackingExcluded && !p.boldAlt && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN'));
+    const best = {};
+    for (const p of base) {
+      const m = /^(AH (?:Heim|Auswärts) [+−])/.exec(p.market || '');
+      if (!m) continue;
+      if (!best[m[1]] || (p.edgePP || 0) > (best[m[1]].edgePP || 0)) best[m[1]] = p;
+    }
+    return base.filter(p => {
+      const m = /^(AH (?:Heim|Auswärts) [+−])/.exec(p.market || '');
+      return !(m && best[m[1]] && best[m[1]] !== p);
+    });
+  }
+
   // ─────────────────────────────────────────────────────
   //  CARD BUILDER — Community-First Layout (Pick/Story/Confidence)
   // ─────────────────────────────────────────────────────
@@ -472,9 +488,7 @@
     // Audit-Fix 06.06.2026: trackingExcluded Picks komplett raus aus der Card.
     // Diese werden vom Tracker (resolve_wm_picks.py) als VOID markiert wenn sie
     // direktional widersprüchlich sind — wir wollen sie nirgends anzeigen.
-    const livePicks = fxPicks.filter(p =>
-      !p.trackingExcluded && !p.boldAlt && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN')
-    );
+    const livePicks = _wmLivePicks(fxPicks);
     const sortedPicks = [...livePicks].sort((a, b) => {
       // Audit-Fix 06.06.2026: SAFER-ALT vor allem.
       // Smart-Substitution markiert AH Aus +0.5 als saferAltFor='DNB Aus' wenn
@@ -623,13 +637,12 @@
       // oder quasi keine Bestätigung da ist (Conviction ≤ 1). So bleiben solide Picks
       // klare Heroes (★★/★★★), nur echte Oversell-Fälle (Edge da, aber alle Signale
       // dagegen — z.B. CIV-ECU) fallen auf ★. Nicht generell wegen früher dünner Daten.
-      const _confStars = heroPick.conf === 'high' ? 3 : heroPick.conf === 'medium' ? 2 : 1;
-      let stars = _confStars;
+      // FIX 14.06.2026: Sterne aus dem VERDICT (nicht conf/Datenqualität) — sonst stand
+      // ein ★★★-ABWÄGEN über einem ★★☆-BET. BET 3 ≥ ABWÄGEN 2; bei klar widersprechenden
+      // Signalen (Netto ≤ −2pp) eine Stufe runter (BET→2, ABWÄGEN→1).
+      let stars = heroPick.verdict === 'BET' ? 3 : heroPick.verdict === 'ABWÄGEN' ? 2 : 1;
       const _net = heroPick.signalAdjustmentPP;
-      const _cs  = heroPick.convictionScore;
-      if ((typeof _net === 'number' && _net <= -2) || (typeof _cs === 'number' && _cs <= 1)) {
-        stars = 1;
-      }
+      if (typeof _net === 'number' && _net <= -2) stars = Math.max(1, stars - 1);
       const oddsStr = heroPick.odds != null ? heroPick.odds.toFixed(2) : '—';
       html += `<div class="cc-pick${isAbw ? ' cc-pick-abw' : ''}">
         <div class="cc-pick-label">${isAbw ? 'Vorsichtiger Pick' : 'Unser Pick'}</div>
@@ -2636,10 +2649,11 @@
 
   // ── Pick row with edgePP ──────────────────────────────
   function _buildPickRow(pick, isPlayer) {
-    const conf    = pick.conf || 'medium';
-    const stars   = conf === 'high' ? '★★★' : conf === 'medium' ? '★★☆' : '★☆☆';
-    const starsClr = conf === 'high' ? '#3fb950' : conf === 'medium' ? '#e3b341' : '#8b949e';
     const verdict  = pick.verdict || 'ABWÄGEN';
+    // FIX 14.06.2026: Sterne aus dem Verdict, nicht aus conf (Datenqualität) — Konsistenz
+    // mit dem Label (BET ★★★ ≥ ABWÄGEN ★★☆ > Rest), wie im Tracking + Hero.
+    const stars   = verdict === 'BET' ? '★★★' : verdict === 'ABWÄGEN' ? '★★☆' : '★☆☆';
+    const starsClr = verdict === 'BET' ? '#3fb950' : verdict === 'ABWÄGEN' ? '#e3b341' : '#8b949e';
     const vClr     = verdict === 'BET' ? '#3fb950' : verdict === 'SKIP' ? '#f85149' : '#e3b341';
     const vBg      = verdict === 'BET' ? 'rgba(63,185,80,.12)' : verdict === 'SKIP' ? 'rgba(248,81,73,.10)' : 'rgba(227,179,65,.10)';
     const vBorder  = verdict === 'BET' ? 'rgba(63,185,80,.35)' : verdict === 'SKIP' ? 'rgba(248,81,73,.30)' : 'rgba(227,179,65,.30)';
