@@ -482,7 +482,12 @@
   // ─────────────────────────────────────────────────────
   function _buildCard(fx, gData, home, away, fxOdds, fxPicks, fxPPicks, standing, homeSquad, awaySquad, homeForm, awayForm, polyFix, todayIso) {
     const eloDiff   = (home.elo && away.elo) ? (home.elo - away.elo) : null;
-    const isPlayed  = fx.date < todayIso;
+    // FIX 14.06.2026: nicht nur Datum < heute — auch HEUTE bereits beendete Spiele
+    // (AUS-TUR 06:00 angepfiffen, FT, aber fx.date == todayIso) gelten als gespielt,
+    // sonst rendert die Card sie weiter als offenen Pick statt als Endstand (Lucas).
+    const _finalStatus = ['FT', 'AET', 'PEN', 'AWD', 'WO'].includes(
+      ((fx.result && fx.result.status) || '').toUpperCase());
+    const isPlayed  = fx.date < todayIso || _finalStatus;
     const isToday   = fx.date === todayIso;
 
     // Pick selection: pick BET/ABWÄGEN with highest edge as hero
