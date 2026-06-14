@@ -283,9 +283,12 @@ function _stRenderServer(status) {
 
 let _stSignalChart = null;
 
+// FIX 14.06.2026: chance_creation + form_rating ergänzt (waren seit ihrer Einführung
+// nicht in der Matrix → „X/15" statt 17, zwei stark feuernde Signale unsichtbar).
 const _ST_SIG_ALL = ['lead_lag_bias', 'public_static_bias', 'travel_burden', 'injury', 'form_trend',
   'h2h_pattern', 'xg_strength', 'polymarket_sharp', 'steam_lag', 'pressure_index',
-  'lineup_signal', 'apif_predictions', 'weather_signal', 'incentive_signal', 'altitude_signal'];
+  'lineup_signal', 'apif_predictions', 'weather_signal', 'incentive_signal', 'altitude_signal',
+  'chance_creation', 'form_rating'];
 const _ST_SIG_CORE = new Set(['form_trend', 'xg_strength', 'travel_burden', 'pressure_index']);
 const _ST_SIG_COND = {
   lead_lag_bias: 'nur bei Quotenbewegung', injury: 'nur bei Ausfällen',
@@ -294,22 +297,28 @@ const _ST_SIG_COND = {
   public_static_bias: 'nur bei Public-Divergenz', h2h_pattern: 'nur ≥3 H2H',
   weather_signal: 'nur ≥30°C', apif_predictions: 'wenn APIF-Daten da',
   altitude_signal: 'nur Höhen-Venues',
+  chance_creation: 'wenn Team-Stats da', form_rating: 'wenn Team-Stats da',
 };
 
 function _stRenderSignals(data, status) {
   const el = document.getElementById('st_signals'); if (!el) return;
   const fire = {}; _ST_SIG_ALL.forEach(n => fire[n] = 0);
   if (data && data.picks) {
+    // Primär: echte Zähler aus den aktuellen Picks (frischeste Wahrheit).
     for (const plist of Object.values(data.picks)) {
       if (!Array.isArray(plist)) continue;
       for (const p of plist) for (const s of (p.signals || [])) if (s.name in fire) fire[s.name]++;
     }
+  } else if (status && status.perSignal) {
+    // Fallback 1 (14.06.2026): autoritative Zähler aus dem letzten Pipeline-Lauf.
+    for (const n of _ST_SIG_ALL) if (n in status.perSignal) fire[n] = status.perSignal[n];
   } else if (status && Array.isArray(status.signalsFired)) {
+    // Fallback 2: nur binär (feuert/feuert nicht).
     status.signalsFired.forEach(n => { if (n in fire) fire[n] = 1; });
   }
   const fired = _ST_SIG_ALL.filter(n => fire[n] > 0).length;
   const cnt = document.getElementById('st_signalsCount');
-  if (cnt) cnt.textContent = `${fired}/15 feuern`;
+  if (cnt) cnt.textContent = `${fired}/${_ST_SIG_ALL.length} feuern`;
 
   const maxC = Math.max(1, ..._ST_SIG_ALL.map(n => fire[n]));
   const sorted = [..._ST_SIG_ALL].sort((a, b) => fire[b] - fire[a]);
