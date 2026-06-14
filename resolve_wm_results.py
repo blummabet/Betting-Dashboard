@@ -575,6 +575,14 @@ def process_verdict(market: str, result_str: str, stats: dict | None) -> dict:
         elif "1x" in m or "dnb: heim" in m:           covered = diff >= -0.3
         elif "x2" in m or "dnb: auswärt" in m:        covered = diff <= 0.3
         elif "unentschieden" in m:                    covered = abs(diff) < 0.4
+        elif "beide teams" in m or "btts" in m:
+            # FIX 14.06.2026: BTTS prozess-bewerten. Beide Teams mit ≥0.8 xG haben ein
+            # Tor „verdient" → Finishing-Varianz von Können trennen. Gelernt aus AUS-TUR
+            # (Türkei away-xG ~1.8, traf 0 → BTTS-Ja-Loss = UNLUCKY, nicht voll bestrafen).
+            BTTS_XG = 0.8
+            both_deserved = (xg_h >= BTTS_XG and xg_a >= BTTS_XG)
+            is_no = "nein" in m or "no" in m
+            covered = (not both_deserved) if is_no else both_deserved
     if covered is None:
         return {}
     won = (result_str == "WIN")
