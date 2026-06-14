@@ -200,11 +200,17 @@
       if (_rowDemoted(row.picks)) continue;   // Spiel = Beobachtung in der Card → auch hier raus
       // AH-Linien-Dedup pro Spiel (14.06.2026): je Seite+Vorzeichen nur die beste Linie
       // (höchste Edge). „AH Auswärts +0.5" UND „+0.75" sind redundant — eine reicht.
+      const _vr = (v) => v === 'BET' ? 0 : v === 'ABWÄGEN' ? 1 : v === 'BEOBACHTEN' ? 2 : 3;
       const ahBest = {};
       for (const p of row.picks) {
-        if (p.trackingExcluded || p.boldAlt) continue;
+        if (p.trackingExcluded || p.boldAlt || p.verdict === 'SKIP') continue;
         const g = _ahGrp(p.market);
-        if (g && (!ahBest[g] || (p.edgePP || 0) > (ahBest[g].edgePP || 0))) ahBest[g] = p;
+        if (!g) continue;
+        const cur = ahBest[g];
+        const better = !cur
+          || _vr(p.verdict) < _vr(cur.verdict)
+          || (_vr(p.verdict) === _vr(cur.verdict) && (p.edgePP || 0) > (cur.edgePP || 0));
+        if (better) ahBest[g] = p;
       }
       for (const p of row.picks) {
         if (p.trackingExcluded) continue;
