@@ -2194,13 +2194,15 @@ def main():
     # sind redundant — eine Cover-Linie reicht). Läuft hier am Ende, damit es AUCH
     # heutige Signal-Refresh-/eingefrorene Spiele erfasst (Builder wird da übersprungen).
     # Beste Edge behalten (Tie → niedrigere Quote = sicherer), Rest trackingExcluded.
+    _VRANK = {"BET": 0, "ABWÄGEN": 1, "BEOBACHTEN": 2}
     for _plist in (wm.get("picks") or {}).values():
         if not isinstance(_plist, list):
             continue
         _grp: dict = {}
         for _p in _plist:
-            if (_p.get("trackingExcluded") or _p.get("boldAlt")
-                    or _p.get("verdict") not in ("BET", "ABWÄGEN")):
+            # ALLE Verdicts (auch BEOBACHTEN!) — sonst flutet die BEOBACHTEN-AH-Leiter
+            # (+0.5…+2.75) das Tracking (Lucas „wild", IRQ-NOR). SKIP bleibt eh unsichtbar.
+            if _p.get("trackingExcluded") or _p.get("boldAlt") or _p.get("verdict") == "SKIP":
                 continue
             _m = re.match(r"(AH (?:Heim|Auswärts) [+−])", _p.get("market") or "")
             if _m:
@@ -2208,7 +2210,9 @@ def main():
         for _members in _grp.values():
             if len(_members) <= 1:
                 continue
-            _members.sort(key=lambda x: (-(x.get("edgePP") or 0), (x.get("odds") or 99)))
+            # Handlungsrelevanteste behalten: BET > ABWÄGEN > BEOBACHTEN, dann höchste Edge.
+            _members.sort(key=lambda x: (_VRANK.get(x.get("verdict"), 3),
+                                         -(x.get("edgePP") or 0), (x.get("odds") or 99)))
             for _extra in _members[1:]:
                 _extra["trackingExcluded"] = True
                 _extra["dedupAHLine"] = True

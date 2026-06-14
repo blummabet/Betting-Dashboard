@@ -461,11 +461,15 @@
   function _wmLivePicks(fxPicks) {
     const base = (fxPicks || []).filter(p =>
       !p.trackingExcluded && !p.boldAlt && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN'));
+    const _vr = (v) => v === 'BET' ? 0 : v === 'ABWÄGEN' ? 1 : v === 'BEOBACHTEN' ? 2 : 3;
     const best = {};
     for (const p of base) {
       const m = /^(AH (?:Heim|Auswärts) [+−])/.exec(p.market || '');
       if (!m) continue;
-      if (!best[m[1]] || (p.edgePP || 0) > (best[m[1]].edgePP || 0)) best[m[1]] = p;
+      const cur = best[m[1]];
+      const better = !cur || _vr(p.verdict) < _vr(cur.verdict)
+        || (_vr(p.verdict) === _vr(cur.verdict) && (p.edgePP || 0) > (cur.edgePP || 0));
+      if (better) best[m[1]] = p;
     }
     return base.filter(p => {
       const m = /^(AH (?:Heim|Auswärts) [+−])/.exec(p.market || '');
