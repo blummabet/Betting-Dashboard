@@ -72,6 +72,10 @@ jobs:
         run: python resolve_wm_results.py
         continue-on-error: true
 
+      - name: 📉 Steam-CLV berechnen (Einstieg vs Closing pro Steam-Pick)
+        run: python resolve_steam_clv.py
+        continue-on-error: true
+
       - name: 💾 Ergebnisse & aufgewertete Picks speichern & pushen
         run: |
           git config user.name "Dashboard Bot"
