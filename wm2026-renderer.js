@@ -501,6 +501,7 @@
     });
     let heroPick   = sortedPicks[0] || null;
     let otherPicks = sortedPicks.slice(1);
+    let watchReason = null;   // warum ein Spiel zur Beobachtung demotet wurde (für Text)
 
     // ── UI-Convention-Fix 05.06.2026 ──────────────────────────────────────
     // Bei dataQuality=elo+form_asym (ein Team hat keine Form-Daten):
@@ -520,6 +521,7 @@
         // Card als Beobachtungs-Spiel rendern (kein Main-Pick)
         heroPick = null;
         otherPicks = []; // andere Picks ausblenden — Datenbasis fehlt
+        watchReason = 'asymData';
       }
     }
 
@@ -537,6 +539,7 @@
     if (heroPick && _heroIsRiskyVariant && !heroPick.boldAlt && !heroPick.saferAltFor) {
       heroPick = null;
       otherPicks = [];
+      watchReason = 'riskyNoSafe';
     }
 
     // ── Cross-Market-Konsistenz im UI 06.06.2026 ───────────────────────────
@@ -671,11 +674,13 @@
         </div>`;
       }
     } else if (!isPlayed && !heroPick) {
-      // Check ob die Picks wegen asymmetrischer Datenbasis ausgeblendet wurden
-      const hasAsymPicks = livePicks.length > 0;
-      const watchMsg = hasAsymPicks
-        ? 'Datenbasis unvollständig — Form-Daten eines Teams fehlen'
-        : 'Kein Pick mit Edge — Spielverlauf abwarten';
+      // FIX 14.06.2026: korrekte Begründung je nach Demotion-Grund (vorher zeigte JEDE
+      // Demotion mit Live-Picks fälschlich „Form-Daten fehlen", auch der Risiko-Fall).
+      const watchMsg =
+        watchReason === 'riskyNoSafe' ? 'Nur riskante Varianten (hohe Quote) — keine sichere Wette'
+        : watchReason === 'asymData'  ? 'Datenbasis unvollständig — Form-Daten eines Teams fehlen'
+        : (livePicks.length > 0)      ? 'Datenbasis unvollständig — Form-Daten eines Teams fehlen'
+        :                               'Kein Pick mit Edge — Spielverlauf abwarten';
       html += `<div class="cc-pick cc-pick-watch">
         <div class="cc-pick-label">Beobachtungs-Spiel</div>
         <div class="cc-pick-watch-text">${watchMsg}</div>
