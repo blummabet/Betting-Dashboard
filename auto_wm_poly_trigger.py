@@ -69,6 +69,11 @@ MIN_HOURS_BEFORE_MATCH = _cfg("trade", "min_hours_before_match",    4)
 MIN_ENTRY_PRICE        = _cfg("trade", "min_entry_price",        0.15)
 MAX_ENTRY_PRICE        = _cfg("trade", "max_entry_price",        0.85)
 
+# Handicap-Trading (15.06.2026): Poly-Spreads vs Pinnacle-AH-Leiter. Default AUS —
+# erst scharf schalten, wenn die Token-Platzierung in polymarket_bet.py verifiziert
+# ist (AH-Trades brauchen den Spread-Token, nicht den Standard-Slug-Token).
+AH_TRADE_ENABLED       = _cfg("trade", "ah_trade_enabled",       False)
+
 # ── Stake (flat) ──────────────────────────────────────────────────────────────
 # €5 ≈ $5.50 USDC pro Pick. Bankroll-Schutz via DAILY_BET_CAP + DAILY_STAKE_CAP_USDC.
 FLAT_STAKE_USDC        = _cfg("trade", "stake_usdc_flat",         5.5)
@@ -543,6 +548,52 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                 "kickoff":     fix.get("kickoff"),   # echte Anpfiffzeit (UTC) für 2h-Pre-Match-Close
                 "_betKey":     key,   # intern, wird vor Übergabe an polymarket_bet entfernt
             })
+
+        # ── Handicap-Edges (15.06.2026): Poly-Spreads vs Pinnacle-AH-Leiter ──────
+        # Edge-getrieben (ah.edge = fair − poly, vorberechnet in fetch_wm_poly_prices).
+        # Schlanke Gates: Edge-Floor (max base/Raw) + Entry-Price + Dedup + Token da.
+        # Keine per-Outcome-Signal-Felder (AH hat keine) → konservativ rein auf der
+        # Pinnacle-vs-Poly-Edge. Default-AUS bis Token-Platzierung verifiziert.
+        if AH_TRADE_ENABLED:
+            for ah in (fix.get("ah_edges") or []):
+                ah_edge    = ah.get("edge")
+                poly_price = ah.get("poly")
+                tokens     = ah.get("tokens") or []
+                if ah_edge is None or ah_edge < max(base_threshold, MIN_RAW_EDGE_PP):
+                    continue
+                if not poly_price or poly_price < MIN_ENTRY_PRICE or poly_price > MAX_ENTRY_PRICE:
+                    continue
+                if not tokens:
+                    continue   # ohne Spread-Token nicht platzierbar
+                side_lbl     = "Heim" if ah.get("side") == "home" else "Auswärts"
+                market_label = f"AH {side_lbl} {ah['line']:+g}"
+                key = bet_key(fix, market_label)
+                if key in placed_keys:
+                    continue
+                _slug = fix.get("moreMktSlug") or fix.get("slug")
+                candidates.append({
+                    "home":        fix["home"],
+                    "away":        fix["away"],
+                    "homeId":      fix.get("homeId", ""),
+                    "awayId":      fix.get("awayId", ""),
+                    "market":      market_label,
+                    "league":      "WM2026",
+                    "stake":       _get_stake_for_edge(ah_edge),
+                    "polyPrice":   poly_price,
+                    "slug":        _slug,
+                    "eventUrl":    f"https://polymarket.com/sports/fifa-world-cup/{_slug}" if _slug else None,
+                    "edgePP":          ah_edge,
+                    "effectiveEdgePP": ah_edge,
+                    "pinnFair":    ah.get("fair"),
+                    "tokens":      tokens,          # Spread-Token (Yes) für Platzierung
+                    "verdict":     None,
+                    "dataQuality": fix.get("dataQuality", "elo_only"),
+                    "isSteamLag":  has_steam_lag,
+                    "matchDate":   (fix.get("date") or "")[:10],
+                    "kickoff":     fix.get("kickoff"),
+                    "_betKey":     key,
+                    "_isHandicap": True,
+                })
 
     return candidates
 

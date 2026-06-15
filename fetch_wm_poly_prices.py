@@ -346,8 +346,74 @@ def fetch_more_markets(slug: str) -> dict:
         elif smt == "both_teams_to_score":
             result["btts"]    = round(over_price, 4)   # Yes price
             result["btts_no"] = round(under_price, 4)  # No price
+        elif smt == "spreads" and line is not None:
+            # Handicap (15.06.2026): groupItemTitle = "Scotland (-1.5)" → Team + Linie.
+            # Markt ist binär: Yes = Team deckt das Handicap (prices[0]). clobTokenIds
+            # für die Trade-Platzierung. Pro Team eine Linien-Map.
+            git  = m.get("groupItemTitle", "") or ""
+            team = git.split("(")[0].strip()
+            if not team:
+                continue
+            try:
+                tokens = json.loads(m.get("clobTokenIds", "[]") or "[]")
+            except Exception:
+                tokens = []
+            result["spreads"].setdefault(team, {})[float(line)] = {
+                "yes":    round(over_price, 4),   # Team deckt das Handicap
+                "tokens": tokens,
+            }
 
     return result
+
+
+def _devig_2way(o_a, o_b):
+    """Faire P(Seite A) aus 2-Weg-Quoten (Vig entfernt)."""
+    if not o_a or not o_b or o_a <= 1 or o_b <= 1:
+        return None
+    ia, ib = 1.0 / o_a, 1.0 / o_b
+    return ia / (ia + ib)
+
+
+def _ladder_get(ah_ladder, target_line):
+    """Pinnacle-AH-Leiter [home_odds, away_odds] für eine Heim-Linie (Float-Match)."""
+    for k, v in (ah_ladder or {}).items():
+        try:
+            if abs(float(k) - target_line) < 1e-6 and v and v[0] and v[1]:
+                return v
+        except (TypeError, ValueError):
+            continue
+    return None
+
+
+def compute_ah_edges(poly_ah_home: dict, poly_ah_away: dict, ah_ladder: dict) -> list:
+    """Handicap-Edges (15.06.2026): pro Poly-Linie fair aus Pinnacle-AH-Leiter de-viggen.
+    Pinnacle-Leiter ist nach HEIM-Linie geschlüsselt: Poly „Heim (L)" → Leiter L;
+    Poly „Auswärts (L)" = Heim +|L| → Leiter −L. Nur EXAKTE Linien-Treffer (kein
+    Schätzen über mismatched lines). edge = fair − poly_yes (positiv = Poly unterbewertet)."""
+    out = []
+    for side, poly_lines in (("home", poly_ah_home or {}), ("away", poly_ah_away or {})):
+        for line, info in poly_lines.items():
+            poly_yes = (info or {}).get("yes")
+            if not poly_yes:
+                continue
+            pinn_key = line if side == "home" else -line
+            lad = _ladder_get(ah_ladder, pinn_key)
+            if not lad:
+                continue
+            home_odds, away_odds = lad[0], lad[1]
+            fair = _devig_2way(home_odds, away_odds) if side == "home" \
+                else _devig_2way(away_odds, home_odds)
+            if fair is None:
+                continue
+            out.append({
+                "side":   side,
+                "line":   line,
+                "poly":   poly_yes,
+                "fair":   round(fair, 4),
+                "edge":   round((fair - poly_yes) * 100, 1),
+                "tokens": (info or {}).get("tokens", []),
+            })
+    return out
 
 
 def main():
@@ -404,6 +470,11 @@ def main():
             result["poly_u35"]    = totals.get(3.5, {}).get("under")
             result["poly_btts"]   = mm.get("btts")
             result["poly_btts_no"] = mm.get("btts_no")
+            # Handicap-Linien (15.06.2026): mm["spreads"] keyed by Poly-Teamname →
+            # auf Heim/Auswärts auflösen. {line: {yes, tokens}}.
+            _spreads = mm.get("spreads") or {}
+            result["poly_ah_home"] = _spreads.get(result["homeName"], {})
+            result["poly_ah_away"] = _spreads.get(result["awayName"], {})
             result["moreMktSlug"] = f"{slug}-more-markets" if mm else None
 
             prices[key] = result
@@ -612,6 +683,10 @@ def main():
             edge_o25   = round((fair_o25 - poly_o25) * 100, 1)
             edge_u25   = round((fair_u25 - (poly_u25 or 0)) * 100, 1) if poly_u25 else None
 
+        # ── Handicap-Edges (15.06.2026): Poly-Spreads vs Pinnacle-AH-Leiter ──────
+        ah_edges = compute_ah_edges(p.get("poly_ah_home"), p.get("poly_ah_away"),
+                                    pinn.get("ahLadder"))
+
         all_fixtures.append({
             "key":          key,
             "homeId":       home_id,
@@ -658,6 +733,8 @@ def main():
             "edge_aw":      edge_aw,
             "edge_o25":     edge_o25,
             "edge_u25":     edge_u25,
+            # Handicap-Edges (Liste {side,line,poly,fair,edge,tokens}) — Poly-Spreads
+            "ah_edges":     ah_edges,
             # Best positive edge of this fixture
             "bestEdge":     best_edge,
             "bestEdgeKey":  best_edge_key,
