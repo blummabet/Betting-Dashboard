@@ -56,20 +56,27 @@ def _imp(o):
     return (1.0 / o) if (o and o > 1.0) else None
 
 
-def detect_steam(snap: dict, trigger_pp: float = TRIGGER_PP) -> list[dict]:
-    """Alle Seiten mit Pinnacle-Drop (Opening → jetzt) ≥ trigger_pp. + = Quote gefallen."""
+def detect_steam(snap: dict, trigger_pp: float = TRIGGER_PP,
+                 drift: dict | None = None) -> list[dict]:
+    """Alle Seiten mit spielspezifischem Pinnacle-Drop (Opening → jetzt) ≥ trigger_pp.
+    drift = markt-weiter Median-Move je Seite; wird abgezogen, damit nur die Bewegung
+    ZÄHLT, die ÜBER den Marktschnitt hinausgeht (echtes spielspezifisches Sharp-Money,
+    nicht WM-weiter Tor-Markt-Drift). move_pp = bereinigt, move_raw_pp = roh (open→jetzt)."""
     op = snap.get("odds_open") or {}
+    drift = drift or {}
     out = []
 
     def _add(key, label, cur, opn, kind, extra=None):
         ci, oi = _imp(cur), _imp(opn)
         if ci is None or oi is None:
             return
-        move = (ci - oi) * 100.0
+        move_raw = (ci - oi) * 100.0
+        move = move_raw - drift.get(key, 0.0)   # markt-weiten Drift entfernen
         if move < trigger_pp:
             return
         d = {"key": key, "label": label, "cur": cur, "open": opn,
-             "move_pp": round(move, 1), "sweet": SWEET[0] <= move <= SWEET[1], "kind": kind}
+             "move_pp": round(move, 1), "move_raw_pp": round(move_raw, 1),
+             "sweet": SWEET[0] <= move <= SWEET[1], "kind": kind}
         if extra:
             d.update(extra)
         out.append(d)
@@ -153,13 +160,37 @@ def _trigger_category(trig: dict) -> str:
     return "totals"
 
 
+_DRIFT_SIDES = ("hw", "dr", "aw", "o15", "u15", "o25", "u25",
+                "o35", "u35", "bttsY", "bttsN")
+
+
+def market_drift(odds: dict, min_samples: int = 5) -> dict:
+    """Markt-weiter Median-Move je Seite (Opening→jetzt) über ALLE Fixtures. Wird in
+    detect_steam abgezogen → isoliert spielspezifisches Sharp-Money vom WM-weiten Drift
+    (z.B. Tor-Markt driftet überall Richtung Under). Nur Seiten mit ≥min_samples zählen."""
+    import statistics
+    acc = {s: [] for s in _DRIFT_SIDES}
+    for o in (odds or {}).values():
+        if not isinstance(o, dict):
+            continue
+        op = o.get("odds_open") or {}
+        for s in _DRIFT_SIDES:
+            ci, oi = _imp(o.get(s)), _imp(op.get(s))
+            if ci is not None and oi is not None:
+                acc[s].append((ci - oi) * 100.0)
+    return {s: round(statistics.median(v), 2)
+            for s, v in acc.items() if len(v) >= min_samples}
+
+
 def build_steam_picks(snap: dict, *, days_to_ko: float | None = None,
-                      trigger_pp: float = TRIGGER_PP, max_picks: int = 3) -> list[dict]:
+                      trigger_pp: float = TRIGGER_PP, max_picks: int = 3,
+                      drift: dict | None = None) -> list[dict]:
     """Bis zu max_picks Steam-Picks je Spiel, dedupliziert nach Kategorie
     (result/totals/btts). Häufiger Fall: Home-Favorit dropt → oft dropt auch das Over
-    → beide werden gezeigt. Aber nie 2× dieselbe Kategorie (keine 5 Abwägungen)."""
+    → beide werden gezeigt. Aber nie 2× dieselbe Kategorie (keine 5 Abwägungen).
+    drift = markt-weiter Median-Move (aus market_drift) → spielspezifisch isolieren."""
     out, seen = [], set()
-    for trig in detect_steam(snap, trigger_pp):
+    for trig in detect_steam(snap, trigger_pp, drift=drift):
         cat = _trigger_category(trig)
         if cat in seen:
             continue
@@ -178,9 +209,10 @@ def build_steam_picks(snap: dict, *, days_to_ko: float | None = None,
 
 
 def build_steam_pick(snap: dict, *, days_to_ko: float | None = None,
-                     trigger_pp: float = TRIGGER_PP) -> dict | None:
+                     trigger_pp: float = TRIGGER_PP, drift: dict | None = None) -> dict | None:
     """Stärkster einzelner Steam-Pick (Rückwärtskompatibilität)."""
-    picks = build_steam_picks(snap, days_to_ko=days_to_ko, trigger_pp=trigger_pp, max_picks=1)
+    picks = build_steam_picks(snap, days_to_ko=days_to_ko, trigger_pp=trigger_pp,
+                              max_picks=1, drift=drift)
     return picks[0] if picks else None
 
 

@@ -1832,10 +1832,11 @@ def _steam_card_pick(snap, pick):
     }
 
 
-def generate_steam_picks_for_fixture(fx, snap, today_iso):
+def generate_steam_picks_for_fixture(fx, snap, today_iso, drift=None):
     """Bis zu MAX_STEAM_PICKS_PER_CARD Steam-Picks je Spiel im Card-Format (oder []).
     Mehrere, wenn verschiedene Kategorien droppen (z.B. Home-HC + Over). Die Signal/
-    Conviction-Stufe danach hängt signals/convictionScore an und hebt ABWÄGEN→BET."""
+    Conviction-Stufe danach hängt signals/convictionScore an und hebt ABWÄGEN→BET.
+    drift = markt-weiter Median-Move → spielspezifisches Sharp-Money isolieren."""
     if not snap:
         return []
     import steam_engine as _steam
@@ -1844,7 +1845,8 @@ def generate_steam_picks_for_fixture(fx, snap, today_iso):
                 - datetime.fromisoformat(str(today_iso)).date()).days
     except Exception:
         days = None
-    picks = _steam.build_steam_picks(snap, days_to_ko=days, max_picks=MAX_STEAM_PICKS_PER_CARD)
+    picks = _steam.build_steam_picks(snap, days_to_ko=days,
+                                     max_picks=MAX_STEAM_PICKS_PER_CARD, drift=drift)
     # Multi-Pick: widersprüchliche Kombis vermeiden (z.B. Unter 3.5 + BTTS Ja). Stärkster
     # Pick zuerst (detect_steam sortiert nach Sweet+Move) — schwächere Widersprüche raus.
     # Nutzt die zentrale Inkompatibilitäts-Logik (pick_helpers = single source of truth).
@@ -2030,6 +2032,19 @@ def main():
     tomorrow = (datetime.now(timezone.utc).date() + timedelta(days=1)).isoformat()
     now_dt   = datetime.now(timezone.utc)
 
+    # Markt-weiter Median-Move je Seite (Opening→jetzt) über ALLE Fixtures. Wird vom
+    # Steam-Trigger abgezogen → nur spielspezifisches Sharp-Money zählt, nicht der
+    # WM-weite Tor-Markt-Drift (sonst triggert fast jedes Spiel „Unter/BTTS-Nein").
+    try:
+        import steam_engine as _steam_mod
+        _steam_drift = _steam_mod.market_drift(mkt)
+        if _steam_drift:
+            print(f"  Steam-Markt-Drift (abgezogen): "
+                  + ", ".join(f"{k} {v:+.1f}" for k, v in sorted(_steam_drift.items())))
+    except Exception as _e:
+        _steam_drift = {}
+        print(f"  ⚠️  Steam-Markt-Drift nicht berechenbar: {_e}")
+
     try:
         _steam_cutover_dt = datetime.fromisoformat(STEAM_CUTOVER_UTC.replace("Z", "+00:00"))
     except Exception:
@@ -2157,6 +2172,7 @@ def main():
                 # aufgerufen.
                 new_picks = generate_steam_picks_for_fixture(
                     fx, mkt.get(f"{fx['home']}-{fx['away']}", {}), today,
+                    drift=_steam_drift,
                 )
 
             # ── Signal-Engine: jedem Pick die signals[] Liste anhängen ────

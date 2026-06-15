@@ -70,6 +70,31 @@ class TestDerive(unittest.TestCase):
         self.assertEqual(pick["entry_odd"], 1.90)
 
 
+class TestMarketDriftDetrend(unittest.TestCase):
+    def test_market_wide_under_drift_removed(self):
+        # 6 Spiele driften ALLE ~5pp Richtung Under (o25 von 1.80→~2.0, Markt-Drift).
+        # Ein 7. Spiel driftet 5pp wie der Rest → NACH Detrend kein spielspez. Steam.
+        odds = {}
+        for i in range(6):
+            odds[f"T{i}-X{i}"] = {"u25": 1.75, "o25": 2.05, "hw": 1.9,
+                                  "odds_open": {"u25": 1.90, "o25": 1.80, "hw": 1.9}}
+        drift = se.market_drift(odds, min_samples=3)
+        # u25 ist markt-weit gefallen (Geld auf Under) → Drift positiv
+        self.assertIn("u25", drift)
+        self.assertGreater(drift["u25"], 3)
+        # Ein Spiel das GENAU wie der Markt driftet → kein Trigger nach Detrend
+        snap = {"u25": 1.75, "o25": 2.05, "odds_open": {"u25": 1.90, "o25": 1.80}}
+        self.assertEqual(se.detect_steam(snap, drift=drift), [])
+
+    def test_game_specific_excess_still_triggers(self):
+        # Markt driftet Under ~+4pp; DIESES Spiel driftet Heim deutlich stärker als Markt
+        odds = {f"T{i}-X{i}": {"u25": 1.75, "odds_open": {"u25": 1.90}} for i in range(6)}
+        drift = se.market_drift(odds, min_samples=3)
+        snap = {"hw": 1.55, "odds_open": {"hw": 1.75}}   # Heim +X über Markt-Drift (hw≈0)
+        trigs = se.detect_steam(snap, drift=drift)
+        self.assertTrue(any(t["key"] == "hw" for t in trigs))
+
+
 class TestSoftConfirmation(unittest.TestCase):
     def test_soft_followed_confirmed(self):
         # Pini 1.90→1.70 (Heim). Soft-Konsens Opening 1.95 → jetzt 1.78 = gefolgt → bestätigt.
