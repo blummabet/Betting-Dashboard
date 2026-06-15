@@ -40,6 +40,13 @@ DEFAULT_THRESHOLDS = {
     "role_off_weight":  {"ATT": 1.0, "MID": 0.6},
     "role_def_weight":  {"GK": 1.0, "DEF": 0.8},
     "key_player_cap":       4.0,    # max Beitrag (off bzw. def) je Team
+    # Rückkehrer-Boost (15.06.2026): präsenter Schlüsselspieler der zuletzt Spiele
+    # verpasst hat → Team STÄRKER als die (ihn nicht enthaltende) nt_xg-Form-Baseline.
+    # Spiegelbild der Ausfall-Logik, kleiner als ein Ausfall (unsicherer). Nicht-redundant
+    # zur Team-Form, weil die den Rückkehrer ja gar nicht kennt.
+    "return_boost":         1.2,    # Magnitude (vs missing_score 2.5)
+    "return_min_importance": 0.6,   # nur echte Schlüsselspieler
+    "return_min_games_missed": 1,   # muss ≥N jüngste Team-Spiele verpasst haben
 }
 
 
@@ -169,34 +176,57 @@ class LineupSignal(Signal):
         return "missing"
 
     # ── Voller Pfad: alle Schlüsselspieler positions-bewusst ──────────────
-    def _team_losses(self, key_players: list, team_lineup: dict):
+    def _team_losses(self, key_players: list, team_lineup: dict, player_form: dict = None):
         """(offensive_loss, defensive_loss, details) für ein Team.
         Offensiv = fehlende ATT/MID (Team trifft weniger). Defensiv = fehlende
-        GK/DEF (Team kassiert mehr). Gewichtet mit importance + Status-Wucht."""
+        GK/DEF (Team kassiert mehr). Gewichtet mit importance + Status-Wucht.
+
+        importance wird mit dem Per-Spieler-Form-Faktor skaliert (player_form, 15.06.2026):
+        ein Schlüsselspieler in schwacher Turnier-/Saison-Form wiegt weniger. Liga-tauglich,
+        weil player_form über die Spieler-ID läuft (s. player_form.py)."""
         off_w = self._t["role_off_weight"]
         def_w = self._t["role_def_weight"]
+        pf = player_form or {}
         off_loss = def_loss = 0.0
         details = []
         for kp in key_players or []:
             status = self._player_status(kp, team_lineup)
-            if status == "starting":
-                continue
-            mag = self._t["missing_score"] if status == "missing" else self._t["benched_score"]
+            pf_entry = pf.get(str(kp.get("id"))) or {}
+            form = float(pf_entry.get("form_factor", 1.0) or 1.0)
             imp = float(kp.get("importance") or 0.5)
+            imp_eff = imp * form
             role = (kp.get("role") or "").upper()
-            contrib = mag * imp
+
+            if status == "starting":
+                # Rückkehrer-Boost: präsent + hoher Klub-Wert + zuletzt Spiele verpasst →
+                # Team stärker als die nt_xg-Form-Baseline (die ihn nicht kennt). GEWINN
+                # = negativer Verlust → senkt off_loss/def_loss (kann negativ werden).
+                gm = pf_entry.get("games_missed")
+                if (imp >= self._t["return_min_importance"]
+                        and gm is not None and gm >= self._t["return_min_games_missed"]):
+                    gain = self._t["return_boost"] * imp_eff
+                    if role in off_w:
+                        off_loss -= gain * off_w[role]
+                    if role in def_w:
+                        def_loss -= gain * def_w[role]
+                    details.append({"name": kp.get("name"), "role": role, "status": "returning",
+                                    "games_missed": gm, "importance": round(imp_eff, 3)})
+                continue
+
+            mag = self._t["missing_score"] if status == "missing" else self._t["benched_score"]
+            contrib = mag * imp_eff
             if role in off_w:
                 off_loss += contrib * off_w[role]
             if role in def_w:
                 def_loss += contrib * def_w[role]
             details.append({"name": kp.get("name"), "role": role, "status": status,
-                            "importance": imp})
+                            "importance": round(imp_eff, 3), "form_factor": round(form, 3)})
         cap = self._t["key_player_cap"]
-        return min(off_loss, cap), min(def_loss, cap), details
+        return max(-cap, min(off_loss, cap)), max(-cap, min(def_loss, cap)), details
 
-    def _evaluate_full(self, side, entry, home_id, away_id, kp_home, kp_away):
-        off_h, def_h, det_h = self._team_losses(kp_home, entry.get("home", {}))
-        off_a, def_a, det_a = self._team_losses(kp_away, entry.get("away", {}))
+    def _evaluate_full(self, side, entry, home_id, away_id, kp_home, kp_away, player_form=None):
+        off_h, def_h, det_h = self._team_losses(kp_home, entry.get("home", {}), player_form)
+        off_a, def_a, det_a = self._team_losses(kp_away, entry.get("away", {}), player_form)
 
         score = 0.0
         if side == "over":
@@ -219,7 +249,8 @@ class LineupSignal(Signal):
 
         any_missing = any(a["status"] == "missing" for a in affected)
         confidence = self._t["confidence_full"] if any_missing else self._t["confidence_partial"]
-        parts = [f"{a['team']} {a['name']} ({a['role']}) {'fehlt' if a['status']=='missing' else 'Bank'}"
+        _lbl = {"missing": "fehlt", "benched": "Bank", "returning": "zurück"}
+        parts = [f"{a['team']} {a['name']} ({a['role']}) {_lbl.get(a['status'], a['status'])}"
                  for a in affected]
         return SignalResult(
             score=round(score, 2),
@@ -299,9 +330,14 @@ class LineupSignal(Signal):
         kp_home = home_sq.get("key_players")
         kp_away = away_sq.get("key_players")
 
+        # Per-Spieler-Form (player_form.py) — skaliert importance. Leer = neutral (Faktor 1.0).
+        player_form = (context.get("player_form") or {})
+        if isinstance(player_form, dict) and "players" in player_form:
+            player_form = player_form["players"]   # akzeptiert ganzes File ODER nur das Mapping
+
         # Voller Pfad sobald MINDESTENS ein Team eine key_players-Liste hat;
         # sonst Legacy-Top-Scorer (Abwärtskompatibilität für alte Squad-Daten).
         if kp_home or kp_away:
             return self._evaluate_full(side, entry, home_id, away_id,
-                                       kp_home or [], kp_away or [])
+                                       kp_home or [], kp_away or [], player_form)
         return self._evaluate_top_scorer(side, entry, home_id, away_id, home_sq, away_sq)

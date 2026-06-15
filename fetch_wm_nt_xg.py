@@ -74,6 +74,9 @@ DEFAULT_CFG = {
                                   # neue Spiele → echtes WM-xG fließt zeitnah ein)
 }
 
+# Sammelt Per-Spieler-Match-Zeilen während des Laufs → Form-Ledger (s. main()).
+_PLAYER_FORM_ROWS: list = []
+
 
 def _load_cfg() -> dict:
     """Liest cocobet_config.json profile-spezifisch oder fällt auf Defaults."""
@@ -260,6 +263,13 @@ def _extract_player_aggregates(fixture_id: int) -> dict[int, dict]:
     data = _apif_get(f"/fixtures/players?fixture={fixture_id}")
     if not data or not data.get("response"):
         return {}
+    # Per-Spieler-Rohzeilen in den Form-Ledger (15.06.2026) — Quelle für player_form.py.
+    # Wettbewerbs-agnostisch (Spieler-ID) → derselbe Ledger funktioniert für Liga/CL.
+    try:
+        import player_form as _pf
+        _PLAYER_FORM_ROWS.extend(_pf.rows_from_fixture_players(fixture_id, data["response"]))
+    except Exception:
+        pass
     out: dict[int, dict] = {}
     for team_block in data["response"]:
         tid = (team_block.get("team") or {}).get("id")
@@ -527,6 +537,33 @@ def main():
 
     print(f"\n=== Done: {new_count} neu, {skip_count} skipped, {fail_count} fail ===")
     print(f"   → {OUTPUT_FILE.name}")
+
+    # ── Per-Spieler-Form-Ledger fortschreiben + player_form.json neu bauen ──
+    if _PLAYER_FORM_ROWS:
+        try:
+            import player_form as _pf
+            ledger = json.loads(_pf.LEDGER_FILE.read_text(encoding="utf-8")) \
+                if _pf.LEDGER_FILE.exists() else {"_meta": {"description":
+                    "Append-only Per-Spieler-Match-Stats (Rating/Tore/Schlüsselpässe). "
+                    "Quelle für player_form.py — wettbewerbs-agnostisch (Spieler-ID)."},
+                    "records": []}
+            added = _pf.append_records(ledger, _PLAYER_FORM_ROWS)
+            _pf.LEDGER_FILE.write_text(json.dumps(ledger, ensure_ascii=False), encoding="utf-8")
+            # Form-Tabelle neu berechnen (Baselines aus squads.key_players)
+            squads = {}
+            try:
+                squads = (json.loads(WM_FILE.read_text(encoding="utf-8")).get("squads")) or {}
+            except Exception:
+                pass
+            table = _pf.build_form_table(ledger, _pf.baselines_from_squads(squads),
+                                         squad_players=_pf.squad_player_ids(squads))
+            _pf.OUT_FILE.write_text(json.dumps({
+                "_meta": {"generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                          "players": len(table)}, "players": table},
+                ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"   📈 player_form: +{added} Match-Zeilen → {len(table)} Spieler mit Form-Faktor")
+        except Exception as e:
+            print(f"   ⚠️  player_form-Update fehlgeschlagen: {e}")
     return 0
 
 

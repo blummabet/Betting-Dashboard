@@ -1966,6 +1966,19 @@ def main():
     except Exception as e:
         print(f"  ⚠️  Lineups-Load fehlgeschlagen: {e}")
 
+    # ── Per-Spieler-Form (player_form.py) — skaliert lineup_signal importance ──
+    # Liga-tauglich (Spieler-ID-basiert). Leer/fehlend = neutral (Faktor 1.0).
+    player_form_data: dict = {}
+    try:
+        _pf_file = os.path.join(os.path.dirname(WM_FILE), "player_form.json")
+        if os.path.exists(_pf_file):
+            with open(_pf_file, encoding="utf-8") as f:
+                player_form_data = (json.load(f) or {}).get("players", {})
+            if player_form_data:
+                print(f"  📈 Spieler-Form geladen: {len(player_form_data)} Spieler\n")
+    except Exception as e:
+        print(f"  ⚠️  player_form-Load fehlgeschlagen: {e}")
+
     # ── API-Football Predictions (externes Cross-Model, täglich) ────────
     # Drittes Modell unabhängig von Skellam+Elo und Pinnacle. apif_predictions
     # Signal vergleicht pro 1X2/DNB-Pick gegen Pinnacle implied.
@@ -2211,6 +2224,7 @@ def main():
                     "h2h":          h2h_data.get(ha_key, {}),
                     "xg_stats":         xg_stats,
                     "lineups":          lineups_data,
+                    "player_form":      player_form_data,
                     "squads":           wm.get("squads", {}),
                     "apif_predictions": apif_predictions_data,
                     "weather":          weather_data,
