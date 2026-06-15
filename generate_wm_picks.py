@@ -1938,12 +1938,14 @@ def main():
                     rec["xgForAvg"]     = real_for
                     rec["xgAgainstAvg"] = entry.get("xgAgainstAvg")
                     rec["games"]        = entry.get("xgGames") or entry.get("games", 0)
+                    rec["xgGames"]      = entry.get("xgGames") or 0   # echte xG-Abdeckung (Z.f. thin-xG-Dämpfer)
                     rec["source"]       = "apif_real"
                     merged += 1
                 elif entry.get("xgSimForAvg") is not None:
                     rec["xgForAvg"]     = entry["xgSimForAvg"]
                     rec["xgAgainstAvg"] = entry.get("xgSimAgainstAvg")
                     rec["games"]        = entry.get("games", 0)
+                    rec["xgGames"]      = entry.get("xgGames") or 0   # Proxy → meist 0 echte xG-Spiele
                     rec["source"]       = "shot_proxy"   # kalibrierter xGsim (R²=0.78)
                     sim_filled += 1
             if merged or sim_filled:

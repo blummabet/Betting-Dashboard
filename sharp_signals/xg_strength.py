@@ -34,6 +34,12 @@ DEFAULT_THRESHOLDS = {
     "ou_threshold":       0.35,  # xG-Diff zur Linie damit Signal feuert
     "ou_score_scale":     3.5,
     "btts_score_scale":   4.5,
+    # Dünne-xG-Abdeckung-Dämpfer (15.06.2026, Lucas — ESP-CPV 0:0): hat ein Team
+    # GAR KEINE echten xG-Spiele (nur Schuss-/Form-Proxy, z.B. Kap Verde, viele
+    # CONMEBOL/AFC/Afrika-Teams), ist die Tor-Markt-Schätzung messbar unsicherer.
+    # SANFT: nur die Confidence runter (Richtung/Score bleiben) → kleinerer
+    # gewichteter Beitrag + sichtbar in der Evidence. Kein Überreagieren.
+    "thin_xg_confidence_mult": 0.80,
 }
 
 
@@ -96,14 +102,27 @@ class XGStrengthSignal(Signal):
     def name(self) -> str:
         return "xg_strength"
 
+    @staticmethod
+    def _real_xg_games(entry: dict) -> int:
+        """Echte xG-Spiele eines Teams (nicht Schuss-/Form-Proxy). 0 = gar keine
+        echte xG-Abdeckung (Kap Verde & viele CONMEBOL/AFC/Afrika-Teams)."""
+        g = entry.get("xgGames")
+        if g is not None:
+            return g
+        if entry.get("xgForAvg") is not None and entry.get("source") in ("understat", "apif_real"):
+            return entry.get("games", 0) or 0
+        return 0
+
     def _resolve_xg(self, context: dict):
         """Resolve xG-Werte oder Form-Proxy. Returns (h_for, h_ag, a_for, a_ag,
-        h_games, a_games, is_proxy) oder None wenn unvollständig."""
+        h_games, a_games, is_proxy, thin_cov) oder None wenn unvollständig.
+        thin_cov = mind. ein Team hat 0 echte xG-Spiele (nur Proxy)."""
         home_id, away_id = context.get("home_id"), context.get("away_id")
         if not (home_id and away_id): return None
         xg = context.get("xg_stats") or {}
         xh = xg.get(home_id) or {}
         xa = xg.get(away_id) or {}
+        thin_cov = min(self._real_xg_games(xh), self._real_xg_games(xa)) == 0
         h_for, h_ag = xh.get("xgForAvg"), xh.get("xgAgainstAvg")
         a_for, a_ag = xa.get("xgForAvg"), xa.get("xgAgainstAvg")
         h_games = xh.get("games", 0) or 0
@@ -123,15 +142,18 @@ class XGStrengthSignal(Signal):
             a_for, a_ag = fa["avgScored"], fa["avgConceded"]
             h_games, a_games = fh["games"], fa["games"]
             is_proxy = True
-        return (h_for, h_ag, a_for, a_ag, h_games, a_games, is_proxy)
+        return (h_for, h_ag, a_for, a_ag, h_games, a_games, is_proxy, thin_cov)
 
     def evaluate(self, pick: dict, context: dict) -> Optional[SignalResult]:
         resolved = self._resolve_xg(context)
         if not resolved: return None
-        h_for, h_ag, a_for, a_ag, h_games, a_games, is_proxy = resolved
+        h_for, h_ag, a_for, a_ag, h_games, a_games, is_proxy, thin_cov = resolved
         market = pick.get("market", "")
         label = "Form-xG (Proxy)" if is_proxy else "xG-Stärke"
         n_min = min(h_games, a_games)
+        # Sanfter Dämpfer (Confidence) wenn ein Team gar kein echtes xG hat.
+        _thin_mult = self._t.get("thin_xg_confidence_mult", 1.0) if thin_cov else 1.0
+        _thin_ev = " · dünne xG-Abdeckung" if thin_cov else ""
 
         # ── 1. 1X2 / DC / DNB / AH (Outcome-Differenz) ───────────────────
         side = _pick_side(market)
@@ -146,8 +168,9 @@ class XGStrengthSignal(Signal):
             score = max(-self._t["max_signal_pp"], min(self._t["max_signal_pp"], score))
             confidence = min(0.90, 0.55 + 0.03 * n_min + 0.04 * abs(relative))
             if is_proxy: confidence = min(self._t["proxy_confidence_max"], confidence)
+            confidence *= _thin_mult
             ev = (f"⚡ {label}: Heim {h_for:.2f}-{h_ag:.2f} "
-                  f"vs Auswärts {a_for:.2f}-{a_ag:.2f} (Δ {relative:+.2f})")
+                  f"vs Auswärts {a_for:.2f}-{a_ag:.2f} (Δ {relative:+.2f}){_thin_ev}")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"home_xg_for": round(h_for, 2), "home_xg_against": round(h_ag, 2),
@@ -174,9 +197,10 @@ class XGStrengthSignal(Signal):
                 return None
             confidence = min(0.80, 0.45 + 0.03 * n_min + 0.05 * abs(signed_diff))
             if is_proxy: confidence = min(self._t["proxy_confidence_max"], confidence)
+            confidence *= _thin_mult
             side_str = "Über" if ou_dir == +1 else "Unter"
             ev = (f"⚡ {label}-Tore: erwartet {expected_total:.2f}/Spiel "
-                  f"vs Linie {ou_line} → {side_str} {ou_dir*signed_diff:+.2f}")
+                  f"vs Linie {ou_line} → {side_str} {ou_dir*signed_diff:+.2f}{_thin_ev}")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"expected_total": round(expected_total, 2), "ou_line": ou_line,
@@ -203,9 +227,10 @@ class XGStrengthSignal(Signal):
                 return None
             confidence = min(0.75, 0.40 + 0.03 * n_min)
             if is_proxy: confidence = min(self._t["proxy_confidence_max"], confidence)
+            confidence *= _thin_mult
             side_str = "Ja" if btts_dir == +1 else "Nein"
             ev = (f"⚡ {label}: Heim {h_for:.2f} vs Ausw-Defense {a_ag:.2f}, "
-                  f"Ausw {a_for:.2f} vs Heim-Defense {h_ag:.2f} → Beide treffen {side_str}")
+                  f"Ausw {a_for:.2f} vs Heim-Defense {h_ag:.2f} → Beide treffen {side_str}{_thin_ev}")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"h_score_strength": round(h_score_strength, 2),
