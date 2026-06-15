@@ -793,21 +793,33 @@ def main():
                 )
             break
 
-        # Gamma Event finden
-        event = gamma_find_event(order)
-        if not event:
-            print(f"    ❌ Kein Polymarket-Event gefunden — übersprungen")
-            continue
+        # ── Token-Auflösung ──────────────────────────────────────────────────
+        # HANDICAP (15.06.2026): Spread-Token wurde in fetch_wm_poly_prices EXAKT
+        # erfasst (Poly clobTokenIds) und im Candidate mitgegeben. find_clob_token_id
+        # kennt Spread-Märkte NICHT → würde falschen Token treffen. Daher für AH den
+        # Token direkt nehmen: tokens[0] = YES = „Team deckt das Handicap".
+        token_id = None
+        if order.get("_isHandicap") and order.get("tokens"):
+            token_id = order["tokens"][0]
+            print(f"    🎯 Handicap — Spread-Token direkt aus Candidate: {token_id[:16]}…")
 
-        print(f"    ✅ Event: {event.get('title')}")
-
-        # CLOB Token ID
-        token_id = find_clob_token_id(event, market, home, away)
         if not token_id:
-            print(f"    ⚠️  Token nicht in Event — suche Winner-Event…")
-            winner_event = gamma_find_winner_event(order, event)
-            if winner_event:
-                token_id = find_clob_token_id(winner_event, market, home, away)
+            # Gamma Event finden
+            event = gamma_find_event(order)
+            if not event:
+                print(f"    ❌ Kein Polymarket-Event gefunden — übersprungen")
+                continue
+
+            print(f"    ✅ Event: {event.get('title')}")
+
+            # CLOB Token ID
+            token_id = find_clob_token_id(event, market, home, away)
+            if not token_id:
+                print(f"    ⚠️  Token nicht in Event — suche Winner-Event…")
+                winner_event = gamma_find_winner_event(order, event)
+                if winner_event:
+                    token_id = find_clob_token_id(winner_event, market, home, away)
+
         if not token_id:
             print(f"    ❌ CLOB Token ID nicht gefunden — übersprungen")
             continue

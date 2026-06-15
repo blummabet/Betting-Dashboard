@@ -902,31 +902,43 @@ def main():
                 skipped_bankroll += 1
                 break
 
-        # 2. Gamma API: Event via Slug (aus Cache-URL) oder Keyword-Fallback
-        event = gamma_find_event(order)
-        if not event:
-            print(f"  ❌ Kein Polymarket-Event gefunden — übersprungen")
-            log_bet_to_history(history, order, {"status": "skipped", "orderId": None, "error": "no event found"})
-            failed += 1
-            continue
+        # ── Token-Auflösung ──────────────────────────────────────────────────
+        # HANDICAP (15.06.2026): Der Spread-Token wurde in fetch_wm_poly_prices
+        # EXAKT erfasst (Poly clobTokenIds des Spread-Markts) und im Candidate
+        # mitgegeben. find_clob_token_id kennt Spread-Märkte NICHT → würde den
+        # falschen Token treffen. Daher für AH direkt verwenden: tokens[0] = YES-
+        # Token = „Team deckt das Handicap".
+        token_id = None
+        if order.get("_isHandicap") and order.get("tokens"):
+            token_id = order["tokens"][0]
+            print(f"  🎯 Handicap-Markt — Spread-Token direkt aus Candidate")
 
-        print(f"  ✅ Event: {event.get('title')}")
+        if not token_id:
+            # 2. Gamma API: Event via Slug (aus Cache-URL) oder Keyword-Fallback
+            event = gamma_find_event(order)
+            if not event:
+                print(f"  ❌ Kein Polymarket-Event gefunden — übersprungen")
+                log_bet_to_history(history, order, {"status": "skipped", "orderId": None, "error": "no event found"})
+                failed += 1
+                continue
 
-        # 3. CLOB Token ID für den Outcome finden
-        token_id = find_clob_token_id(event, market, home, away)
-        if not token_id:
-            # "More Markets" events enthalten keine 1X2/Moneyline Token IDs.
-            # → Separates Winner-Event suchen und nochmal versuchen.
-            print(f"  ⚠️  Token nicht in '{event.get('title')}' — suche Winner-Event …")
-            winner_event = gamma_find_winner_event(order, event)
-            if winner_event:
-                print(f"  🔄 Winner-Event: {winner_event.get('title')}")
-                token_id = find_clob_token_id(winner_event, market, home, away)
-        if not token_id:
-            print(f"  ❌ CLOB Token ID für '{market}' nicht gefunden — übersprungen")
-            log_bet_to_history(history, order, {"status": "skipped", "orderId": None, "error": "token_id not found"})
-            failed += 1
-            continue
+            print(f"  ✅ Event: {event.get('title')}")
+
+            # 3. CLOB Token ID für den Outcome finden
+            token_id = find_clob_token_id(event, market, home, away)
+            if not token_id:
+                # "More Markets" events enthalten keine 1X2/Moneyline Token IDs.
+                # → Separates Winner-Event suchen und nochmal versuchen.
+                print(f"  ⚠️  Token nicht in '{event.get('title')}' — suche Winner-Event …")
+                winner_event = gamma_find_winner_event(order, event)
+                if winner_event:
+                    print(f"  🔄 Winner-Event: {winner_event.get('title')}")
+                    token_id = find_clob_token_id(winner_event, market, home, away)
+            if not token_id:
+                print(f"  ❌ CLOB Token ID für '{market}' nicht gefunden — übersprungen")
+                log_bet_to_history(history, order, {"status": "skipped", "orderId": None, "error": "token_id not found"})
+                failed += 1
+                continue
 
         print(f"  📍 Token ID: {token_id[:16]}…")
         if poly_price:
