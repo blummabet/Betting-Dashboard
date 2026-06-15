@@ -288,45 +288,51 @@ def _role_from_apif_pos(pos: str) -> str:
     return "MID"
 
 
-def _build_key_players(players: list, top_outfield: int = 6) -> list:
+def _build_key_players(players: list, top_outfield: int = 6, min_minutes: int = 200) -> list:
     """Schlüsselspieler je Team über ALLE Positionen (15.06.2026, volle Ausfall-
     Wertung statt nur Top-Scorer). Top-N Feldspieler nach Beitrag + der wichtigste
     Keeper. Pro Spieler: id (robustes Lineup-Matching), Rolle, importance 0–1.
-    importance = Mix aus Einsatzminuten (Verfügbarkeit) + Rating."""
-    outfield, keepers = [], []
-    for p_obj in players:
+
+    ADAPTIV (Fix 15.06.2026): bevorzugt Spieler mit ≥ min_minutes, aber wenn die
+    gelieferte Saison wenig Minuten hat (z.B. Turnier-Saison 2026 frisch → fast
+    alle < 200 min, sonst LEERE Liste wie bei ESP/CZE/USA), wird der Minuten-Filter
+    fallengelassen und nach Score gerankt. Garantiert eine Liste sobald Daten da sind."""
+    def _entry(p_obj):
         player = p_obj.get("player", {})
         stats  = (p_obj.get("statistics") or [{}])[0]
         pos    = (stats.get("games", {}).get("position") or "").upper()
-        role   = _role_from_apif_pos(pos)
         minutes = stats.get("games", {}).get("minutes") or 0
+        if minutes <= 0:
+            return None
         rating  = float(stats.get("games", {}).get("rating") or 0)
-        goals   = stats.get("goals", {}).get("total")   or 0
-        assists = stats.get("goals", {}).get("assists")  or 0
-        if minutes < 200:           # Rand-Spieler raus
-            continue
-        importance = round(min(1.0, 0.55 * (minutes / 2700.0) + 0.45 * (rating / 8.0)), 3)
-        entry = {
+        e = {
             "id":         player.get("id"),
             "name":       player.get("name", "—"),
-            "role":       role,
-            "goals":      goals,
-            "assists":    assists,
+            "role":       _role_from_apif_pos(pos),
+            "goals":      stats.get("goals", {}).get("total")  or 0,
+            "assists":    stats.get("goals", {}).get("assists") or 0,
             "minutes":    minutes,
             "rating":     rating,
-            "importance": importance,
+            "importance": round(min(1.0, 0.55 * (minutes / 2700.0) + 0.45 * (rating / 8.0)), 3),
+            "_score":     _score_player(stats, pos) + rating * 2 + minutes / 600.0,
         }
-        if role == "GK":
-            keepers.append(entry)
-        else:
-            entry["_score"] = _score_player(stats, pos) + rating * 2 + minutes / 600.0
-            outfield.append(entry)
+        return e
 
-    outfield.sort(key=lambda c: -c["_score"])
-    for c in outfield:
+    cands = [e for e in (_entry(p) for p in players) if e]
+    if not cands:
+        return []
+    # Pass 1: nur Stammspieler (≥ min_minutes). Pass 2 (Fallback): alle mit Minuten.
+    pool = [c for c in cands if c["minutes"] >= min_minutes]
+    if sum(1 for c in pool if c["role"] != "GK") < 4:
+        pool = cands
+
+    outfield = sorted((c for c in pool if c["role"] != "GK"), key=lambda c: -c["_score"])
+    keepers  = sorted((c for c in pool if c["role"] == "GK"),
+                      key=lambda c: -(c["minutes"] + c["rating"] * 100))
+    chosen = outfield[:top_outfield] + keepers[:1]
+    for c in chosen:
         c.pop("_score", None)
-    keepers.sort(key=lambda c: -(c["minutes"] + c["rating"] * 100))
-    return outfield[:top_outfield] + keepers[:1]
+    return chosen
 
 
 def fetch_all_players(apif_team_id: int) -> list:
@@ -371,7 +377,11 @@ def main():
     with open(WM_FILE, encoding="utf-8") as f:
         wm = json.load(f)
 
-    squads_out: dict[str, dict] = {} if FORCE else (wm.get("squads") or {})
+    # IMMER vom Bestand starten (Fix 15.06.2026): Vorher wischte FORCE alles auf {}
+    # → Teams deren Re-Fetch scheiterte (kein API-Match / keine Spieler, z.B. USA, CZE)
+    # fielen KOMPLETT raus, inkl. ihres alten Top-Scorers. Jetzt überschreiben Erfolge
+    # den alten Eintrag, Fehlschläge behalten ihn → kein Datenverlust.
+    squads_out: dict[str, dict] = dict(wm.get("squads") or {})
     all_team_ids = sorted(
         t["id"]
         for g in wm.get("groups", {}).values()
@@ -395,8 +405,12 @@ def main():
     failed  = []
 
     for our_id in all_team_ids:
-        if not FORCE and squads_out.get(our_id, {}).get("name"):
-            print(f"  ⏭  {our_id} already set: {squads_out[our_id]['name']} — skip")
+        # Skip nur wenn key_players SCHON da (Fix 15.06.2026): vorher reichte „name",
+        # dadurch blieben Teams mit altem Top-Scorer-Eintrag aber OHNE key_players
+        # (ESP, BIH … 10 Stück) auf normalen Läufen ewig leer. Jetzt holt ein
+        # Normal-Lauf genau die fehlenden key_players nach — kein erneuter Force nötig.
+        if not FORCE and squads_out.get(our_id, {}).get("key_players"):
+            print(f"  ⏭  {our_id} already set: {squads_out[our_id].get('name')} — skip")
             skipped += 1
             continue
 
