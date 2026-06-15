@@ -113,54 +113,90 @@ for gk, gv in data['groups'].items():
 for tid in team_games:
     team_games[tid].sort(key=lambda x: (x['date'], x['matchday']))
 
+# ── Base Camps laden (Trainingslager je Team) ──────────────────────────────
+# Modell-Umstellung 15.06.2026 (Lucas): Reise-Last = Base Camp ↔ Spielort PRO
+# Spiel (nicht Venue→Venue). Gründe:
+#   1) Teams kehren zwischen Spielen ins Base Camp zurück (FIFA-Konzept), die
+#      relevante Strecke ist Base→Stadion, nicht Stadion→Stadion.
+#   2) Damit bekommt auch Spieltag 1 eine Reise-Last (vorher 0 — kein Venue→Venue-
+#      Leg existierte für MD1). [[project_travel_xg_modifier]] Befund 1.
+#   3) Carry-over: Rest-Müdigkeit aus dem vorigen Trip wird (gedämpft durch
+#      Ruhetage) mitgeschleppt — vorher war jedes Leg unabhängig. Befund 2.
+with open(os.path.join(BASE, 'wm_base_camps.json'), encoding='utf-8') as _bcf:
+    BASE_CAMPS = json.load(_bcf).get('camps', {})
+
+# Wieviel der vorigen Effektiv-Last in den nächsten Spieltag mitgeht.
+# Mehr Ruhetage → mehr Erholung → weniger Carry-over. Bei ≤2 Ruhetagen 0.5,
+# linear -0.1 je weiterem Ruhetag, Boden 0.0 (ab ~7 Tagen vollständig erholt).
+def _carry_decay(rest_days):
+    return max(0.0, min(0.5, 0.5 - 0.1 * max(0, rest_days - 2)))
+
+ARRIVAL_REST = 6   # MD1: Teams reisen ~1 Woche vor Anpfiff an → reichlich Erholung
+
+def _burden_label(eff_km, rest_days, crossing):
+    """Burden-Stufe aus EFFEKTIVER Last (eigene Strecke + Carry-over) + Ruhe."""
+    if eff_km < 150 and not crossing:
+        return 'none'
+    if eff_km >= 3000 or (eff_km >= 2000 and rest_days <= 3):
+        return 'critical'
+    if eff_km >= 1500 or (eff_km >= 900 and rest_days <= 3) or (crossing and eff_km >= 700):
+        return 'significant'
+    if eff_km >= 500 or crossing:
+        return 'moderate'
+    return 'low'
+
 # ── Compute burden ────────────────────────────────────────────────────────
 output = {}
 
 for tid, games in team_games.items():
     meta = team_meta.get(tid, {})
+    bc   = BASE_CAMPS.get(tid)
     legs = []
+    prev_eff = 0.0   # Carry-over-Speicher (effektive Last des vorigen Spiels)
 
-    for i in range(1, len(games)):
-        g0, g1 = games[i-1], games[i]
-        v0, v1 = g0['venue'], g1['venue']
-        if not v0 or not v1:
-            legs.append({'error': f'venue missing: {g0["venue_str"]} or {g1["venue_str"]}'})
+    for i, g in enumerate(games):
+        v = g['venue']
+        if not bc or not v:
+            legs.append({'error': f'base camp / venue missing: {tid} / {g["venue_str"]}'})
+            prev_eff = 0.0
             continue
 
-        km         = haversine(v0['lat'], v0['lon'], v1['lat'], v1['lon'])
-        d0         = date.fromisoformat(g0['date'])
-        d1         = date.fromisoformat(g1['date'])
-        rest_days  = (d1 - d0).days - 1
-        crossing   = v0['country'] != v1['country']
-        same_venue = km < 50  # within 50km = same city
+        # Eigene Strecke dieses Spieltags: Base Camp → Stadion
+        km = haversine(bc['lat'], bc['lon'], v['lat'], v['lon'])
 
-        # Climate shift penalty: if altitude changes significantly
-        alt_shift = abs(v1.get('alt',0) - v0.get('alt',0))
-
-        if same_venue:
-            burden = 'none'
-        elif km >= 3500 or (km >= 2500 and rest_days <= 3):
-            burden = 'critical'
-        elif km >= 2000 or (km >= 1200 and rest_days <= 3) or (crossing and km >= 800):
-            burden = 'significant'
-        elif km >= 700 or crossing:
-            burden = 'moderate'
+        # Ruhetage VOR diesem Spiel (seit vorigem Match). MD1: notionale Anreise-Ruhe.
+        if i == 0:
+            rest_days = ARRIVAL_REST
         else:
-            burden = 'low'
+            d_prev = date.fromisoformat(games[i-1]['date'])
+            d_cur  = date.fromisoformat(g['date'])
+            rest_days = (d_cur - d_prev).days - 1
+
+        crossing  = bc['country'] != v['country']
+        same_city = km < 100
+        alt_shift = abs(v.get('alt', 0) - bc.get('alt', 0))
+
+        # Carry-over: gedämpfte Rest-Last aus dem vorigen Trip
+        carry_km = round(prev_eff * _carry_decay(rest_days))
+        eff_km   = km + carry_km
+        burden   = _burden_label(eff_km, rest_days, crossing)
+        prev_eff = eff_km   # für den nächsten Spieltag
 
         legs.append({
-            'matchday_from': g0['matchday'],
-            'matchday_to':   g1['matchday'],
-            'from_city':     v0['city'],
-            'from_country':  v0['country'],
-            'from_venue':    v0.get('name', v0['city']),
-            'to_city':       v1['city'],
-            'to_country':    v1['country'],
-            'to_venue':      v1.get('name', v1['city']),
+            'matchday_from': games[i-1]['matchday'] if i > 0 else 0,
+            'matchday_to':   g['matchday'],
+            'from_city':     bc['city'],
+            'from_country':  bc['country'],
+            'from_venue':    f"Base Camp ({bc['city']})",
+            'to_city':       v['city'],
+            'to_country':    v['country'],
+            'to_venue':      v.get('name', v['city']),
             'km':            km,
+            'carry_km':      carry_km,
+            'effective_km':  eff_km,
             'rest_days':     rest_days,
             'border_crossing': crossing,
-            'same_venue':    same_venue,
+            'same_venue':    same_city,
             'alt_shift':     alt_shift,
             'burden':        burden,
         })
@@ -173,15 +209,20 @@ for tid, games in team_games.items():
     n_critical  = sum(1 for l in valid_legs if l['burden'] == 'critical')
     n_signif    = sum(1 for l in valid_legs if l['burden'] == 'significant')
     n_moderate  = sum(1 for l in valid_legs if l['burden'] == 'moderate')
-    min_rest    = min((l['rest_days'] for l in valid_legs), default=99)
+    # min_rest nur über echte Zwischen-Spiel-Ruhe (MD>1) — die MD1-Anreise-Ruhe ist
+    # notional und soll die Stau-Erkennung nicht verwässern.
+    _real_rests = [l['rest_days'] for l in valid_legs if l['matchday_to'] > 1]
+    min_rest    = min(_real_rests, default=99)
 
-    # Score 0-10
+    # Score 0-10. Re-kalibriert 15.06.2026 fürs Base-Camp-Modell: jetzt 3 Legs/Team
+    # (inkl. MD1) statt 2 → Divisor/Gewichte angepasst, sonst sättigt fast jedes Team
+    # bei 10 und differenziert nicht mehr (Ziel: Proximität Base-Camp↔Venue trennt).
     score = min(10, round(
-        (total_km / 600) +
-        (crossings * 1.5) +
-        (n_critical * 3.0) +
-        (n_signif  * 1.5) +
-        (n_moderate * 0.5) +
+        (total_km / 1000) +
+        (crossings * 1.0) +
+        (n_critical * 2.0) +
+        (n_signif  * 1.0) +
+        (n_moderate * 0.4) +
         (max(0, 3 - min_rest) * 0.5)
     ))
 

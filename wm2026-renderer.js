@@ -1358,7 +1358,7 @@
       if ((leg.burden || '').toLowerCase() === 'critical') {
         return `<strong>${teamFlag} ${teamName} fliegt ${km} km</strong> mit nur ${rest} Ruhetagen` + (altShift >= 1500 ? ` und ${altShift}m Höhenwechsel` : '');
       }
-      if ((leg.burden || '').toLowerCase() === 'high' || (leg.km || 0) >= 3000) {
+      if ((leg.burden || '').toLowerCase() === 'significant' || (leg.km || 0) >= 3000) {
         return `${teamFlag} ${teamName} mit ${km} km Anreise (${rest} Ruhetage)`;
       }
       return null;
@@ -2344,7 +2344,7 @@
     // Travel-Burden — wenn signifikant (>= 3000km oder critical/high) als Signal mit aufnehmen
     const homeLeg = _teamLegForMatch(fx.home, fx.matchday);
     const awayLeg = _teamLegForMatch(fx.away, fx.matchday);
-    const relLeg = (leg) => leg && !leg.same_venue && ((leg.km || 0) >= 3000 || ['critical','high'].includes((leg.burden||'').toLowerCase()));
+    const relLeg = (leg) => leg && !leg.same_venue && ((leg.km || 0) >= 3000 || ['critical','significant'].includes((leg.burden||'').toLowerCase()));
     if (relLeg(homeLeg) && signals.length < 4) {
       signals.push({ label: `${home.flag} Anreise`, value: `${Math.round(homeLeg.km).toLocaleString('de')} km`, cls: 'cc-val-hot' });
     }
@@ -2513,9 +2513,9 @@
     const burden = (leg.burden || '').toLowerCase();
     if (burden === 'none' || burden === 'low') return '';
     const km = Math.round(leg.km).toLocaleString('de');
-    const cls = burden === 'critical' ? 'cc-env-heat'
-              : burden === 'high'     ? 'cc-env-alt'
-              :                          'cc-env-pill';
+    const cls = burden === 'critical'    ? 'cc-env-heat'
+              : burden === 'significant' ? 'cc-env-alt'
+              :                            'cc-env-pill';
     const icon = burden === 'critical' ? '⚠️' : '✈️';
     return `<span class="cc-env-pill ${cls}">${icon} ${teamFlag} ${km} km</span>`;
   }

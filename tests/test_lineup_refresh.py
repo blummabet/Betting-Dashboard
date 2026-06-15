@@ -80,24 +80,27 @@ class TestMatchDayLineupRefresh(unittest.TestCase):
             G.main()
         return buf.getvalue()
 
-    def test_pre_kickoff_refresh_injects_lineup_signal(self):
+    def test_pre_kickoff_rebuild_keeps_lineup_signal(self):
+        """FIX 15.06.2026 (Lucas): heutige POST-Cutover-Spiele (Anpfiff > Steam-Cutover)
+        werden nicht mehr eingefroren, sondern FREI mit Steam neu gebaut. Entscheidend
+        bleibt: die Signal-Engine läuft auch beim Rebuild → lineup_signal (T-1h) fließt
+        weiterhin in den Pick + Conviction + Bayesian-Ledger. Markt/Verdict dürfen jetzt
+        aus Steam kommen (kein eingefrorener Markt mehr)."""
         import tempfile
         with tempfile.TemporaryDirectory() as d:
             tmp = Path(d)
+            # +3h ⇒ heute, Anpfiff nach dem Steam-Cutover (15.06 00:00Z) ⇒ rebuild
             wmp = self._prep_tmp(tmp, _utc_now() + datetime.timedelta(hours=3))
             self._run(wmp)
             p = json.loads(wmp.read_text(encoding="utf-8"))["picks"]["B-1-CAN-BIH"][0]
             names = [s["name"] for s in p.get("signals", [])]
-            # lineup_signal muss jetzt im Pick stehen
+            # Kern-Garantie: lineup_signal überlebt den Rebuild (Lern-Loop bleibt gefüttert)
             self.assertIn("lineup_signal", names,
-                          "lineup_signal kam beim Pre-Kickoff-Refresh nicht in den Pick")
-            # Markt + Quote unangetastet (kein Pick-Drift)
-            self.assertEqual(p["market"], "Über 2.5 Tore")
-            self.assertEqual(p["odds"], 2.0)
-            # Basis-Verdict gemerkt
-            self.assertEqual(p.get("baseVerdict"), "BET")
+                          "lineup_signal fehlt nach Steam-Rebuild — Lern-Loop-Leck")
 
     def test_idempotent_across_runs(self):
+        """Steam-Rebuild ist deterministisch: mehrfaches Laufen darf den Verdict nicht
+        flattern lassen (gleicher Snapshot → gleicher Pick)."""
         import tempfile
         with tempfile.TemporaryDirectory() as d:
             tmp = Path(d)
@@ -107,8 +110,7 @@ class TestMatchDayLineupRefresh(unittest.TestCase):
             self._run(wmp)
             self._run(wmp)
             p = json.loads(wmp.read_text(encoding="utf-8"))["picks"]["B-1-CAN-BIH"][0]
-            self.assertEqual(p["verdict"], v1, "Verdict flattert über mehrere Refresh-Läufe")
-            self.assertEqual(p.get("baseVerdict"), "BET")
+            self.assertEqual(p["verdict"], v1, "Verdict flattert über mehrere Rebuild-Läufe")
 
     def test_post_kickoff_stays_frozen(self):
         import tempfile

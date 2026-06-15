@@ -71,40 +71,14 @@ def _ou_market(market: str):
 
 
 def _factor_from_burden(tb_team: dict, matchday: int) -> tuple[float, dict]:
-    """
-    Rekonstruiert den xG-Discount-Faktor und Metadata aus travel_data Eintrag.
-    Same Logik wie generate_wm_picks.travel_factor() — bewusst dupliziert um die
-    Signal-Engine eigenständig zu halten.
-    """
-    if not tb_team or not tb_team.get("legs"):
+    """xG-Discount + Metadata aus travel_data. Delegiert an travel_common — EINE
+    Quelle, geteilt mit generate_wm_picks.travel_factor() (kein Duplikat mehr,
+    siehe Drift 15.06.2026)."""
+    from .travel_common import factor_from_leg, leg_for_matchday
+    leg = leg_for_matchday(tb_team, matchday)
+    if not leg:
         return 1.0, {}
-    leg = next((l for l in tb_team["legs"] if l.get("matchday_to") == matchday), None)
-    if not leg or leg.get("same_venue"):
-        return 1.0, {}
-
-    km        = leg.get("km", 0) or 0
-    rest_days = leg.get("rest_days", 99) or 99
-    alt_shift = abs(leg.get("alt_shift", 0) or 0)
-    burden    = (leg.get("burden", "") or "").lower()
-
-    if burden == "critical":   factor = 0.85
-    elif burden == "high":     factor = 0.90
-    elif burden == "medium":   factor = 0.95
-    else:
-        if km >= 3000 and rest_days <= 3:   factor = 0.85
-        elif km >= 3000 or rest_days <= 3:  factor = 0.90
-        elif km >= 1500:                    factor = 0.95
-        else:                               factor = 1.0
-
-    if alt_shift >= 1500:
-        factor = max(0.80, factor - 0.03)
-
-    return factor, {
-        "km":         km,
-        "rest_days":  rest_days,
-        "alt_shift":  alt_shift,
-        "burden":     burden,
-    }
+    return factor_from_leg(leg)
 
 
 class TravelBurdenSignal(Signal):

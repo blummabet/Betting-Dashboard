@@ -140,5 +140,65 @@ class TestRegressionPicksUnchanged(unittest.TestCase):
             f"Regression: {len(diffs)} Matches anders als Snapshot: {diffs[:5]}")
 
 
+class TestFixturePickState(unittest.TestCase):
+    """fixture_pick_state(): Freeze/Refresh/Rebuild-Entscheidung (Fix 15.06.2026).
+
+    Kernpunkt: NUR die Anpfiff-Zeit gegen den Cutover entscheidet, ob ein heutiges
+    Spiel veröffentlicht (refresh) oder frei (rebuild) ist — kein `fx_date == today`.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        from datetime import datetime, timezone
+        import generate_wm_picks as g
+        cls.g = g
+        cls.dt = datetime
+        cls.tz = timezone
+        # "Jetzt" = 15.06.2026 12:00Z, Cutover = 15.06.2026 00:00Z, today = 15.06.
+        cls.now = datetime(2026, 6, 15, 12, 0, tzinfo=timezone.utc)
+        cls.cutover = datetime(2026, 6, 15, 0, 0, tzinfo=timezone.utc)
+        cls.today = "2026-06-15"
+
+    def _state(self, date, kickoff, has_pick):
+        return self.g.fixture_pick_state(
+            {"date": date, "kickoff": kickoff}, has_pick,
+            self.today, self.now, self.cutover,
+        )
+
+    def test_past_fixture_untouched(self):
+        self.assertEqual(self._state("2026-06-14", "2026-06-14T20:00:00Z", True), "past")
+
+    def test_kicked_off_today_is_frozen(self):
+        # Anpfiff 10:00Z < now 12:00Z → läuft/vorbei
+        self.assertEqual(self._state("2026-06-15", "2026-06-15T10:00:00Z", True), "kickoff_passed")
+
+    def test_today_published_pre_cutover_with_pick_refreshes(self):
+        # Anpfiff genau am Cutover (≤), noch nicht angepfiffen wäre nötig — hier vor now
+        # liegt es aber: published + kickoff_passed → kickoff_passed gewinnt (Reihenfolge).
+        # Reiner Refresh-Fall: kickoff ≤ cutover ABER > now ist unmöglich (cutover ≤ now),
+        # daher Refresh greift praktisch nur solange now ≤ cutover. Test über frühes now:
+        early_now = self.dt(2026, 6, 14, 23, 0, tzinfo=self.tz.utc)
+        state = self.g.fixture_pick_state(
+            {"date": "2026-06-15", "kickoff": "2026-06-14T23:30:00Z"},
+            True, "2026-06-14", early_now, self.cutover,
+        )
+        self.assertEqual(state, "refresh")
+
+    def test_today_post_cutover_rebuilds_even_with_pick(self):
+        # DER FIX: heutiges Spiel, Anpfiff abends (> cutover, > now), Pick existiert
+        # → früher 'refresh' (eingefroren), jetzt 'rebuild' (frei mit Steam).
+        self.assertEqual(self._state("2026-06-15", "2026-06-15T19:00:00Z", True), "rebuild")
+
+    def test_future_fixture_rebuilds(self):
+        self.assertEqual(self._state("2026-06-16", "2026-06-16T18:00:00Z", False), "rebuild")
+
+    def test_missing_kickoff_treated_as_upcoming(self):
+        # Fehlender Anpfiff → nicht versehentlich freezen → rebuild
+        self.assertEqual(self._state("2026-06-15", None, True), "rebuild")
+
+    def test_post_cutover_without_pick_rebuilds(self):
+        self.assertEqual(self._state("2026-06-15", "2026-06-15T19:00:00Z", False), "rebuild")
+
+
 if __name__ == "__main__":
     unittest.main()

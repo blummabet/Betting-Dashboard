@@ -162,50 +162,31 @@ def travel_factor(team_id: str, matchday: int, travel_data: dict) -> tuple[float
       factor:  Multiplikator auf λ (Angriffsstärke). 0.85-1.0.
       label:   Kurzbeschreibung für Story/Logging ("3942km · 4d rest" o.ä.)
 
-    Discount-Skala (basiert auf Sportwissenschafts-Studien zu Long-Haul-Travel
-    bei Fußball-Nationalteams: -5% bis -15% xG in den ersten 90 Min):
-      - critical (≥ 3000km UND rest ≤ 3 Tage):       factor 0.85 (-15%)
-      - high     (≥ 3000km ODER rest ≤ 3 Tage):     factor 0.90 (-10%)
-      - medium   (≥ 1500km):                         factor 0.95 (-5%)
-      - low/none: 1.0
-    Plus +5% Penalty wenn alt_shift ≥ 1500m (Höhenwechsel).
+    Discount-Skala (Sportwissenschaft zu Long-Haul-Travel bei NTs: -5% bis -15% xG):
+      - critical:    factor 0.85 (-15%)
+      - significant: factor 0.90 (-10%)
+      - moderate:    factor 0.95 (-5%)
+      - low/none:    1.0
+    Plus Höhen-Penalty wenn alt_shift ≥ 1500m. Die Faktor-Logik lebt zentral in
+    sharp_signals/travel_common.factor_from_leg() — geteilt mit der Signal-Engine,
+    damit Pick-Bau und Adjustment NIE wieder driften (Drift-Fix 15.06.2026).
     """
     if not travel_data:
         return 1.0, ""
-    tb = travel_data.get(team_id, {})
-    if not tb or not tb.get("legs"):
+    from sharp_signals.travel_common import factor_from_leg, leg_for_matchday
+    leg = leg_for_matchday(travel_data.get(team_id, {}), matchday)
+    if not leg:
         return 1.0, ""
 
-    leg = next((l for l in tb["legs"] if l.get("matchday_to") == matchday), None)
-    if not leg or leg.get("same_venue"):
+    factor, meta = factor_from_leg(leg)
+    if not meta:   # same_venue o.ä. → kein Discount
         return 1.0, ""
 
-    km        = leg.get("km", 0) or 0
-    rest_days = leg.get("rest_days", 99) or 99
-    alt_shift = abs(leg.get("alt_shift", 0) or 0)
-    burden    = (leg.get("burden", "") or "").lower()
-
-    # Basis-Discount aus burden-Label (vorberechnet von compute_wm_travel_burden.py)
-    if burden == "critical":
-        factor = 0.85
-    elif burden == "high":
-        factor = 0.90
-    elif burden == "medium":
-        factor = 0.95
-    else:
-        # Fallback: km/rest_days selbst beurteilen
-        if km >= 3000 and rest_days <= 3:   factor = 0.85
-        elif km >= 3000 or rest_days <= 3:  factor = 0.90
-        elif km >= 1500:                    factor = 0.95
-        else:                               factor = 1.0
-
-    # Höhen-Penalty zusätzlich (Mexico City 2200m etc.)
-    if alt_shift >= 1500:
-        factor = max(0.80, factor - 0.03)
-
-    label = f"{km}km/{rest_days}d"
-    if alt_shift >= 1500:
-        label += f"/+{alt_shift}m"
+    label = f"{meta['km']}km/{meta['rest_days']}d"
+    if meta.get("carry_km"):
+        label += f"/+{meta['carry_km']}km carry"
+    if meta.get("alt_shift", 0) >= 1500:
+        label += f"/+{meta['alt_shift']}m"
     return factor, label
 
 
@@ -1863,6 +1844,43 @@ def generate_steam_picks_for_fixture(fx, snap, today_iso, drift=None):
     return cards
 
 
+def _parse_kickoff(kt):
+    """fx.kickoff (UTC-ISO) → aware datetime, oder None. fx.time ist unzuverlässig
+    (siehe [[feedback_fx_time_unreliable]]), daher immer kickoff."""
+    if not kt:
+        return None
+    try:
+        return datetime.fromisoformat(str(kt).replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
+def fixture_pick_state(fx, has_pick, today, now_dt, cutover_dt):
+    """Single Source of Truth: was passiert mit den Picks eines Fixtures?
+
+    Returns einen von vier Zuständen:
+      'past'           — Spiel-Datum < today → unangetastet lassen.
+      'kickoff_passed' — Anpfiff vorbei (Spiel läuft/beendet) → nie (neu) bauen, nur tracken.
+      'refresh'        — veröffentlicht (Anpfiff ≤ Cutover) UND Pick existiert → Märkte/Quoten
+                         reuse, Signale/Conviction neu (Launch-Schutz, kein Pick-Drift).
+      'rebuild'        — sonst (künftig ODER heute Post-Cutover) → mit Steam neu bauen.
+
+    FIX 15.06.2026 (Lucas): KEIN `fx_date == today`-Gate mehr. Nur die Anpfiff-Zeit
+    gegen den Steam-Cutover entscheidet, ob ein Spiel als veröffentlicht gilt. Vorher
+    fror das Datum-Gate auch heutige NOCH-NICHT-veröffentlichte Post-Cutover-Spiele
+    (ESP abends, BEL) ein. Fehlender/unparsebarer Anpfiff → wie upcoming behandeln
+    (lieber rebuild als versehentlich freezen). Siehe [[feedback_posted_picks_immutable]]."""
+    fx_date = fx.get("date")
+    if fx_date and today and fx_date < today:
+        return "past"
+    ko = _parse_kickoff(fx.get("kickoff"))
+    if ko is not None and now_dt is not None and ko <= now_dt:
+        return "kickoff_passed"
+    if has_pick and cutover_dt is not None and ko is not None and ko <= cutover_dt:
+        return "refresh"
+    return "rebuild"
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 #  MAIN
 # ═══════════════════════════════════════════════════════════════════════════
@@ -2021,7 +2039,7 @@ def main():
                     if k != "_meta" and isinstance(v, dict) and v.get("players"))
     travel_critical = sum(1 for k, v in travel_data.items()
                           if isinstance(v, dict) and any(
-                              (l.get("burden") or "").lower() in ("critical", "high")
+                              (l.get("burden") or "").lower() in ("critical", "significant")
                               for l in v.get("legs", [])))
     print(f"  xgStats: {xg_count} Teams | Injuries: {inj_count} Teams | "
           f"Travel: {travel_critical} Teams mit kritischer Anreise\n")
@@ -2050,32 +2068,8 @@ def main():
     except Exception:
         _steam_cutover_dt = None
 
-    def _kickoff_passed(fx: dict) -> bool:
-        """True wenn der Anpfiff vorbei ist (Spiel läuft/beendet). Fehlender/
-        unparsebarer Kickoff → False (lieber als upcoming behandeln, damit ein
-        Pre-Match-Refresh nicht versehentlich blockiert wird). Basis: fx.kickoff
-        (UTC-ISO), nicht fx.time (siehe Memo: fx.time unzuverlässig)."""
-        kt = fx.get("kickoff")
-        if not kt:
-            return False
-        try:
-            return datetime.fromisoformat(str(kt).replace("Z", "+00:00")) <= now_dt
-        except Exception:
-            return False
-
-    def _posted_frozen(fx: dict) -> bool:
-        """Spiel bereits veröffentlicht (Anpfiff ≤ Steam-Cutover) → Picks einfrieren
-        statt neu mit Steam zu bauen. Schützt die geposteten Launch-Picks (DEU-CUW,
-        NED-JPN, CIV-ECU). Siehe [[feedback_posted_picks_immutable]]."""
-        if _steam_cutover_dt is None:
-            return False
-        kt = fx.get("kickoff")
-        if not kt:
-            return False
-        try:
-            return datetime.fromisoformat(str(kt).replace("Z", "+00:00")) <= _steam_cutover_dt
-        except Exception:
-            return False
+    # Freeze/Refresh/Rebuild-Entscheidung lebt modulweit in fixture_pick_state()
+    # (Single Source of Truth, testbar) — keine verteilten Closures mehr.
 
     total_with_picks = 0
     total_no_picks   = 0
@@ -2124,43 +2118,31 @@ def main():
                        else 4 if gap < 200 else 2 if gap < 300 else 1)
                 wm["upsetScores"][pick_key] = us
 
-            # Vergangene Spiele — eingefroren
-            if fx_date < today:
+            # ── Freeze/Refresh/Rebuild-Entscheidung (Single Source of Truth) ──
+            # fixture_pick_state() kapselt die gesamte Logik (Fix 15.06.2026, Lucas):
+            #   past           → unangetastet
+            #   kickoff_passed → nur tracken, nie (neu) bauen
+            #   refresh        → veröffentlicht (Anpfiff ≤ Cutover) + Pick da: Märkte/Quoten
+            #                    reuse, aber Signale/Conviction neu (T-1h lineup_signal fließt
+            #                    in Conviction + Bayesian-Ledger, Pick bleibt pre-kickoff stabil)
+            #   rebuild        → künftig ODER heute Post-Cutover (ESP abends, BEL): Steam neu.
+            # Vorher fror ein `fx_date == today`-Gate auch die heutigen Post-Cutover-Spiele
+            # ein. Jetzt entscheidet nur die Anpfiff-Zeit gegen STEAM_CUTOVER.
+            existing_pk = wm["picks"].get(pick_key)
+            state = fixture_pick_state(
+                fx, existing_pk is not None, today, now_dt, _steam_cutover_dt
+            )
+            if state == "past":
                 total_past += 1
                 continue
-
-            # ── Match-Day-Handling (Fix 13.06.2026) ──────────────────────────
-            # Vorher: heutige Spiele mit vorhandenen Picks wurden komplett
-            # eingefroren (continue) → die T-1h-Aufstellungen (lineup_signal) kamen
-            # NIE in die Picks, weil sie erst am Spieltag verfügbar sind. Folge:
-            # lineup_signal feuerte nie in Conviction/Ledger (Gewicht ewig 1.0).
-            # Jetzt: Freeze erst NACH Anpfiff. Pre-Kickoff am Spieltag werden die
-            # gepickten Märkte + Quoten EINGEFROREN gelassen (kein Pick-Drift,
-            # stabile veröffentlichte Picks), aber die Signal-Engine + Conviction
-            # laufen neu → lineup_signal (und jedes andere späte Signal) fließt in
-            # Conviction + Bayesian-Ledger ein. Idempotent über baseVerdict.
-            #
-            # PRÄZISER CUTOVER 14.06.2026 (Lucas): nicht nach Datum, sondern nach
-            # ANPFIFF-Zeit. Gepostet wurde bis CIV-ECU (~Mitternacht). Alles mit Anpfiff
-            # ≤ STEAM_CUTOVER (15.06 00:00Z) = veröffentlicht → einfrieren/tracken. Alles
-            # danach (ab SWE-TUN 02:00Z, BEL-EGY abends) wird mit Steam neu gebaut.
-            # Bereits angepfiffene Spiele werden nie (neu) gebaut.
-            if _kickoff_passed(fx):
-                if wm["picks"].get(pick_key) is not None:
+            if state == "kickoff_passed":
+                if existing_pk is not None:
                     total_frozen += 1
                 continue
 
-            # Refresh (Märkte/Quoten/Verdict reuse + Signale/Conviction neu) wenn:
-            #  • gepostet (Anpfiff ≤ Steam-Cutover, Launch-Schutz), ODER
-            #  • heutiges Spiel mit bestehenden Picks → Match-Day-Signal-Refresh, damit
-            #    späte Signale (lineup_signal T-1h) noch in Pick/Conviction/Ledger fließen
-            #    UND der veröffentlichte Pick pre-kickoff stabil bleibt (kein Drift).
-            # Sonst (echt neue / künftige Spiele): mit Steam neu bauen.
-            existing_pk = wm["picks"].get(pick_key)
-            refresh_existing = False
-            if existing_pk is not None and (_posted_frozen(fx) or fx_date == today):
-                new_picks        = existing_pk
-                refresh_existing = True
+            refresh_existing = (state == "refresh")
+            if refresh_existing:
+                new_picks = existing_pk
 
             if not refresh_existing:
                 # ── STEAM-ENGINE als Pick-Quelle (Umstellung 14.06.2026) ──────
