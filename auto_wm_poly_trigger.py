@@ -69,10 +69,12 @@ MIN_HOURS_BEFORE_MATCH = _cfg("trade", "min_hours_before_match",    4)
 MIN_ENTRY_PRICE        = _cfg("trade", "min_entry_price",        0.15)
 MAX_ENTRY_PRICE        = _cfg("trade", "max_entry_price",        0.85)
 
-# Handicap-Trading (15.06.2026): Poly-Spreads vs Pinnacle-AH-Leiter. Default AUS —
-# erst scharf schalten, wenn die Token-Platzierung in polymarket_bet.py verifiziert
-# ist (AH-Trades brauchen den Spread-Token, nicht den Standard-Slug-Token).
+# Handicap-Trading (15.06.2026): Poly-Spreads vs Pinnacle-AH-Leiter.
 AH_TRADE_ENABLED       = _cfg("trade", "ah_trade_enabled",       False)
+# Plausibilitäts-Cap (Guard): ein echter AH-Edge vs Pinnacle ist klein. Alles
+# darüber ist fast sicher ein Datenfehler (z.B. Mirror-Bug: Poly-Spread der
+# falschen Seite). Solche „Edges" NIE traden. Fängt 30–56pp-Phantome sofort.
+AH_MAX_EDGE_PP         = _cfg("trade", "ah_max_edge_pp",         12.0)
 
 # ── Stake (flat) ──────────────────────────────────────────────────────────────
 # €5 ≈ $5.50 USDC pro Pick. Bankroll-Schutz via DAILY_BET_CAP + DAILY_STAKE_CAP_USDC.
@@ -560,6 +562,11 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                 poly_price = ah.get("poly")
                 tokens     = ah.get("tokens") or []
                 if ah_edge is None or ah_edge < max(base_threshold, MIN_RAW_EDGE_PP):
+                    continue
+                # Guard: unplausibel großer Edge → Datenfehler (z.B. Mirror) → NIE traden
+                if ah_edge > AH_MAX_EDGE_PP:
+                    print(f"  🛑 AH-Edge {ah_edge:+.1f}pp > {AH_MAX_EDGE_PP}pp Cap "
+                          f"(Datenfehler-Verdacht) — {fix['home']} vs {fix['away']} {ah.get('side')} {ah.get('line')} (BLOCKED)")
                     continue
                 if not poly_price or poly_price < MIN_ENTRY_PRICE or poly_price > MAX_ENTRY_PRICE:
                     continue

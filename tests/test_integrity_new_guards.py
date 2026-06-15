@@ -107,6 +107,25 @@ class TestNewIntegrityGuards(unittest.TestCase):
         c = _result(self._run(wm), "ou_anchor_source")
         self.assertTrue(c["ok"])
 
+    # ── AH-Edge-Sanity (Mirror-Phantom-Detektor, 15.06.2026) ────────────────
+    def _run_poly(self, poly):
+        return run_checks({"groups": {}}, poly, {}, {}, now=NOW,
+                          auto_bets={"bets": []}, history={})
+
+    def test_ah_phantom_edge_flagged(self):
+        poly = {"allFixtures": [{"homeId": "ENG", "awayId": "PAN",
+                "ah_edges": [{"side": "home", "line": -1.5, "poly": 0.0235,
+                              "fair": 0.5257, "edge": 50.2}]}]}
+        c = _result(self._run_poly(poly), "ah_edge_sane")
+        self.assertFalse(c["ok"])
+
+    def test_ah_small_edge_ok(self):
+        poly = {"allFixtures": [{"homeId": "URU", "awayId": "CPV",
+                "ah_edges": [{"side": "home", "line": -1.5, "poly": 0.365,
+                              "fair": 0.4071, "edge": 4.2}]}]}
+        c = _result(self._run_poly(poly), "ah_edge_sane")
+        self.assertTrue(c["ok"])
+
 
 if __name__ == "__main__":
     unittest.main()

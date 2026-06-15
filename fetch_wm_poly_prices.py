@@ -470,11 +470,17 @@ def main():
             result["poly_u35"]    = totals.get(3.5, {}).get("under")
             result["poly_btts"]   = mm.get("btts")
             result["poly_btts_no"] = mm.get("btts_no")
-            # Handicap-Linien (15.06.2026): mm["spreads"] keyed by Poly-Teamname →
-            # auf Heim/Auswärts auflösen. {line: {yes, tokens}}.
+            # Handicap-Linien (15.06.2026): mm["spreads"] keyed by Poly-Teamname.
+            # FIX 15.06.2026 (Mirror-Bug): NICHT nach Poly-Heim/Auswärts speichern —
+            # Poly spiegelt Spiele (PAN-ENG vs unser ENG-PAN), dann landeten Panamas
+            # Spreads unter „home" während fair für England gerechnet wurde → Phantom-
+            # Edge 50pp. Stattdessen nach UNSERER Team-ID schlüsseln → orientierungs-
+            # immun. compute_ah_edges (im Patch-Loop) löst home/away per Key auf.
             _spreads = mm.get("spreads") or {}
-            result["poly_ah_home"] = _spreads.get(result["homeName"], {})
-            result["poly_ah_away"] = _spreads.get(result["awayName"], {})
+            result["poly_ah_by_team"] = {
+                tid: lines for team, lines in _spreads.items()
+                if (tid := resolve_team_id(team))
+            }
             result["moreMktSlug"] = f"{slug}-more-markets" if mm else None
 
             prices[key] = result
@@ -684,7 +690,12 @@ def main():
             edge_u25   = round((fair_u25 - (poly_u25 or 0)) * 100, 1) if poly_u25 else None
 
         # ── Handicap-Edges (15.06.2026): Poly-Spreads vs Pinnacle-AH-Leiter ──────
-        ah_edges = compute_ah_edges(p.get("poly_ah_home"), p.get("poly_ah_away"),
+        # home_id/away_id aus dem (normalisierten) Key → poly_ah_by_team auflösen.
+        # Orientierungs-immun: egal wie Poly das Spiel spiegelt, die Spreads landen
+        # bei der richtigen Seite (per Team-ID, nicht Poly-Heim/Auswärts).
+        _ah_by_team = p.get("poly_ah_by_team") or {}
+        ah_edges = compute_ah_edges(_ah_by_team.get(home_id, {}),
+                                    _ah_by_team.get(away_id, {}),
                                     pinn.get("ahLadder"))
 
         all_fixtures.append({
