@@ -1,10 +1,26 @@
 {
-  "lastRun": "2026-06-15T10:02:03.756126+00:00",
+  "lastRun": "2026-06-15T14:07:04.455759+00:00",
   "stats": {
-    "total": 90,
+    "total": 96,
     "errors": 0,
-    "warnings": 0,
-    "ok": 90
+    "warnings": 1,
+    "ok": 95
   },
-  "issues": []
+  "issues": [
+    {
+      "matchKey": "C-2-BRA-HTI",
+      "market": "Auswärtssieg",
+      "level": "warning",
+      "code": "W_ODDS_OUTLIER",
+      "message": "Quote 23.0 > 12.0 — vermutlich kein liquider Markt, sollte gefiltert sein",
+      "pickSnapshot": {
+        "verdict": "ABWÄGEN",
+        "odds": 23.0,
+        "modelOdds": 22.091,
+        "edgePP": 0,
+        "clvPP": 0.0,
+        "dataQuality": "steam"
+      }
+    }
+  ]
 }
