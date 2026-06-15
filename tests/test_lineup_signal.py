@@ -216,5 +216,82 @@ class TestSignalRegistry(unittest.TestCase):
         self.assertIn("lineup_signal", weights)
 
 
+class TestFullAbsenceEvaluation(unittest.TestCase):
+    """Volle Ausfall-Wertung (15.06.2026): positions-bewusst, alle Schlüsselspieler.
+
+    Spieler werden per id gematcht. starting/subs = Liste {id, name}. Fehlt ein
+    key_player in beiden → 'missing'.
+    """
+
+    def _ctx_full(self, side_present_ids_home, side_present_ids_away,
+                  kp_home, kp_away, home_subs_ids=(), away_subs_ids=()):
+        def lst(ids):
+            return [{"id": i, "name": f"p{i}"} for i in ids]
+        return {
+            "matchKey": "AAA-BBB", "home_id": "AAA", "away_id": "BBB",
+            "lineups": {"AAA-BBB": {
+                "home": {"starting": lst(side_present_ids_home), "subs": lst(home_subs_ids)},
+                "away": {"starting": lst(side_present_ids_away), "subs": lst(away_subs_ids)},
+                "fetchedAt": "2026-06-15T18:00:00+00:00",
+            }},
+            "squads": {"AAA": {"key_players": kp_home}, "BBB": {"key_players": kp_away}},
+        }
+
+    def _kp(self, pid, role, imp=0.9):
+        return {"id": pid, "name": f"p{pid}", "role": role, "importance": imp}
+
+    def test_missing_defender_pushes_over_positive(self):
+        # Heim-Innenverteidiger (id 2) fehlt → mehr Gegentore → Über positiv
+        kp_home = [self._kp(1, "ATT"), self._kp(2, "DEF")]
+        ctx = self._ctx_full([1], [10], kp_home, [self._kp(10, "ATT")])
+        sig = LineupSignal()
+        r = sig.evaluate({"market": "Über 2.5 Tore"}, ctx)
+        self.assertIsNotNone(r)
+        self.assertGreater(r.score, 0, "fehlender Verteidiger sollte Über stützen")
+        self.assertEqual(r.metadata["mode"], "full")
+
+    def test_missing_striker_pushes_over_negative(self):
+        # Heim-Stürmer (id 1) fehlt → eigenes Team trifft weniger → Über negativ
+        kp_home = [self._kp(1, "ATT"), self._kp(2, "DEF")]
+        ctx = self._ctx_full([2], [10], kp_home, [self._kp(10, "ATT")])
+        r = LineupSignal().evaluate({"market": "Über 2.5 Tore"}, ctx)
+        self.assertIsNotNone(r)
+        self.assertLess(r.score, 0, "fehlender Stürmer sollte Über schwächen")
+
+    def test_missing_keeper_helps_opponent_outright(self):
+        # Auswärts-Keeper (id 20) fehlt → Heimsieg wahrscheinlicher → positiv
+        kp_away = [self._kp(10, "ATT"), self._kp(20, "GK")]
+        ctx = self._ctx_full([1], [10], [self._kp(1, "ATT")], kp_away)
+        r = LineupSignal().evaluate({"market": "Heimsieg"}, ctx)
+        self.assertIsNotNone(r)
+        self.assertGreater(r.score, 0)
+
+    def test_benched_weaker_than_missing(self):
+        kp_home = [self._kp(1, "ATT")]
+        # Variante A: Stürmer fehlt ganz
+        miss = self._ctx_full([9], [10], kp_home, [self._kp(10, "ATT")])
+        # Variante B: Stürmer auf Bank
+        bench = self._ctx_full([9], [10], kp_home, [self._kp(10, "ATT")], home_subs_ids=[1])
+        s_miss = LineupSignal().evaluate({"market": "Über 2.5 Tore"}, miss).score
+        s_bench = LineupSignal().evaluate({"market": "Über 2.5 Tore"}, bench).score
+        # Beide negativ (Stürmer weg), aber Bank schwächer als komplett fehlt
+        self.assertLess(s_miss, s_bench)
+
+    def test_all_starting_returns_none(self):
+        kp_home = [self._kp(1, "ATT"), self._kp(2, "DEF")]
+        kp_away = [self._kp(10, "ATT")]
+        ctx = self._ctx_full([1, 2], [10], kp_home, kp_away)
+        self.assertIsNone(LineupSignal().evaluate({"market": "Über 2.5 Tore"}, ctx))
+
+    def test_falls_back_to_top_scorer_without_key_players(self):
+        # Keine key_players → Legacy-Pfad (mode top_scorer)
+        ctx = _ctx(home_starting=[{"id": 5, "name": "Andere"}],
+                   home_scorer={"name": "R. Jiménez", "goals": 7},
+                   away_scorer={"name": "P. Tau", "goals": 5})
+        r = LineupSignal().evaluate({"market": "Über 2.5 Tore"}, ctx)
+        self.assertIsNotNone(r)
+        self.assertEqual(r.metadata["mode"], "top_scorer")
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

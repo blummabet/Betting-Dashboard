@@ -5,27 +5,24 @@ Konzept:
   ~1h vor Anpfiff veröffentlichen die Verbände die Startaufstellungen.
   Das ist der späteste informationsreiche Datenpunkt vor dem Spiel.
 
-  Zwei harte Signale:
-    1) Top-Scorer fehlt komplett (nicht im Starting-11 UND nicht auf Bench)
-       → starker negativer Score für Goals-Märkte (Über)
-       → moderater positiver Score für defensive Markets (Unter, Heim/Auswärts-Underdog)
-    2) Top-Scorer auf der Bank statt Starting-11
-       → moderater negativer Score für Goals (Rotation/Schonung)
-       → kann auch bedeuten: Trainer plant 60-min einsatz, weniger Wirkung
+  VOLLE AUSFALL-WERTUNG (15.06.2026, Lucas): Die T-1h-Aufstellung IST die
+  Grundwahrheit, wer fehlt — besser als die (für NTs leere) Injury-API. Wir werten
+  daher ALLE Schlüsselspieler aus, nicht nur den Top-Scorer, und positions-bewusst:
 
-  Soft-Signal (Rotation-Detection):
-    - Wenn formationen-shift (z.B. 4-3-3 → 5-4-1) → defensiv geplant
-    - Wenn Backup-Keeper startet → defensives Risiko hoch
+    · Fehlender Stürmer/Mittelfeld (ATT/MID) → eigenes Team trifft WENIGER
+    · Fehlender Keeper/Verteidiger (GK/DEF)  → eigenes Team kassiert MEHR
+
+  Daraus pro Team: offensive_loss + defensive_loss (gewichtet mit importance +
+  Status-Wucht: komplett fehlt > auf Bank). Markt-Richtung:
+    Über  = + (def_loss beider) − (off_loss beider)   [schwache Abwehr → mehr Tore]
+    Unter = invers
+    Heimsieg = Auswärts-Schwäche − Heim-Schwäche;  Auswärtssieg = invers
 
   Datenanbindung:
-    context["lineups"][match_key] = {home: {starting, subs}, away: {starting, subs}, ...}
-    context["squads"][team_id]    = {name, goals, assists, minutes}  # Top-Scorer
-
-  Score-Direction:
-    Pick auf "Über"  → top-scorer-fehlt = negativ (weniger goals erwartet)
-    Pick auf "Unter" → top-scorer-fehlt = positiv
-    Pick auf Heim-Win wenn Auswärts-Top-Scorer fehlt = positiv
-    Pick auf Auswärts-Win wenn Heim-Top-Scorer fehlt = positiv
+    context["lineups"][match_key] = {home:{starting,subs}, away:{starting,subs}, ...}
+      starting/subs-Einträge: {id, name, pos, ...} — Match per id, dann Name.
+    context["squads"][team_id]["key_players"] = [{id,name,role,importance,...}]
+      (fetch_wm_squads.py). Fehlt key_players → Fallback auf Legacy-Top-Scorer.
 """
 from __future__ import annotations
 from typing import Optional
@@ -33,11 +30,16 @@ from sharp_signals.base import Signal, SignalResult
 
 
 DEFAULT_THRESHOLDS = {
-    "missing_score":        2.5,    # Top-Scorer fehlt komplett (volle Wucht)
-    "benched_score":        1.5,    # Top-Scorer auf Bank
-    "missing_min_goals":      2,    # erst ab N Saison-Toren zählt der Spieler als Schlüsselspieler
+    "missing_score":        2.5,    # Schlüsselspieler fehlt komplett (volle Wucht)
+    "benched_score":        1.5,    # Schlüsselspieler auf Bank
+    "missing_min_goals":      2,    # Legacy-Top-Scorer: erst ab N Saison-Toren wichtig
     "confidence_full":     0.80,
     "confidence_partial":  0.60,
+    # Volle Ausfall-Wertung (15.06.2026): positions-bewusste Gewichte.
+    # Offensiv: fehlt → eigenes Team trifft weniger. Defensiv: fehlt → kassiert mehr.
+    "role_off_weight":  {"ATT": 1.0, "MID": 0.6},
+    "role_def_weight":  {"GK": 1.0, "DEF": 0.8},
+    "key_player_cap":       4.0,    # max Beitrag (off bzw. def) je Team
 }
 
 
@@ -145,36 +147,95 @@ class LineupSignal(Signal):
     def name(self) -> str:
         return "lineup_signal"
 
-    def evaluate(self, pick: dict, context: dict) -> Optional[SignalResult]:
-        # Match-Key aus Context
-        mk = context.get("matchKey")
-        if not mk:
-            return None
-        lineups = context.get("lineups") or {}
-        entry = lineups.get(mk)
-        if not entry:
+    # ── Status-Erkennung ──────────────────────────────────────────────────
+    @staticmethod
+    def _player_status(player: dict, team_lineup: dict) -> str:
+        """missing | benched | starting. ID-Match zuerst (robust), dann Name."""
+        pid = player.get("id")
+        starting = team_lineup.get("starting") or []
+        subs     = team_lineup.get("subs") or []
+        if pid is not None:
+            if any(p.get("id") == pid for p in starting):
+                return "starting"
+            if any(p.get("id") == pid for p in subs):
+                return "benched"
+            # ID bekannt aber nirgends → fehlt (kein Namens-Fallback nötig)
+            return "missing"
+        name = player.get("name", "")
+        if _player_in_list(name, starting):
+            return "starting"
+        if _player_in_list(name, subs):
+            return "benched"
+        return "missing"
+
+    # ── Voller Pfad: alle Schlüsselspieler positions-bewusst ──────────────
+    def _team_losses(self, key_players: list, team_lineup: dict):
+        """(offensive_loss, defensive_loss, details) für ein Team.
+        Offensiv = fehlende ATT/MID (Team trifft weniger). Defensiv = fehlende
+        GK/DEF (Team kassiert mehr). Gewichtet mit importance + Status-Wucht."""
+        off_w = self._t["role_off_weight"]
+        def_w = self._t["role_def_weight"]
+        off_loss = def_loss = 0.0
+        details = []
+        for kp in key_players or []:
+            status = self._player_status(kp, team_lineup)
+            if status == "starting":
+                continue
+            mag = self._t["missing_score"] if status == "missing" else self._t["benched_score"]
+            imp = float(kp.get("importance") or 0.5)
+            role = (kp.get("role") or "").upper()
+            contrib = mag * imp
+            if role in off_w:
+                off_loss += contrib * off_w[role]
+            if role in def_w:
+                def_loss += contrib * def_w[role]
+            details.append({"name": kp.get("name"), "role": role, "status": status,
+                            "importance": imp})
+        cap = self._t["key_player_cap"]
+        return min(off_loss, cap), min(def_loss, cap), details
+
+    def _evaluate_full(self, side, entry, home_id, away_id, kp_home, kp_away):
+        off_h, def_h, det_h = self._team_losses(kp_home, entry.get("home", {}))
+        off_a, def_a, det_a = self._team_losses(kp_away, entry.get("away", {}))
+
+        score = 0.0
+        if side == "over":
+            # Schwache Abwehr → mehr Tore (+); schwacher Angriff → weniger Tore (−)
+            score += (def_h + def_a) - (off_h + off_a)
+        elif side == "under":
+            score += (off_h + off_a) - (def_h + def_a)
+        elif side == "home":
+            # Auswärts geschwächt → Heimsieg wahrscheinlicher
+            score += (off_a + def_a) - (off_h + def_h)
+        elif side == "away":
+            score += (off_h + def_h) - (off_a + def_a)
+        else:
             return None
 
-        squads = context.get("squads") or {}
-        home_id = context.get("home_id")
-        away_id = context.get("away_id")
-        if not home_id or not away_id:
+        affected = ([{**d, "team": "Heim", "team_id": home_id} for d in det_h if d["status"] != "starting"]
+                    + [{**d, "team": "Auswärts", "team_id": away_id} for d in det_a if d["status"] != "starting"])
+        if not affected or abs(round(score, 2)) < 0.05:
             return None
 
-        side = _outcome_side_from_market(pick.get("market", ""))
-        if side == "unknown":
-            return None
+        any_missing = any(a["status"] == "missing" for a in affected)
+        confidence = self._t["confidence_full"] if any_missing else self._t["confidence_partial"]
+        parts = [f"{a['team']} {a['name']} ({a['role']}) {'fehlt' if a['status']=='missing' else 'Bank'}"
+                 for a in affected]
+        return SignalResult(
+            score=round(score, 2),
+            confidence=round(confidence, 2),
+            evidence="🚨 " + " · ".join(parts),
+            metadata={"side": side, "affected": affected,
+                      "mode": "full", "fetchedAt": entry.get("fetchedAt")},
+        )
 
-        # Top-Scorer checken pro Team
-        home_scorer = squads.get(home_id) or {}
-        away_scorer = squads.get(away_id) or {}
-
+    # ── Legacy-Fallback: nur Top-Scorer (wenn keine key_players da) ────────
+    def _evaluate_top_scorer(self, side, entry, home_id, away_id, home_scorer, away_scorer):
         def _status(scorer: dict, team_lineup: dict) -> str:
-            """missing | benched | starting | unknown"""
             if not scorer or not scorer.get("name"):
                 return "unknown"
             if (scorer.get("goals") or 0) < self._t["missing_min_goals"]:
-                return "unknown"   # nicht wichtig genug
+                return "unknown"
             name = scorer["name"]
             if _player_in_list(name, team_lineup.get("starting") or []):
                 return "starting"
@@ -184,64 +245,63 @@ class LineupSignal(Signal):
 
         home_status = _status(home_scorer, entry.get("home", {}))
         away_status = _status(away_scorer, entry.get("away", {}))
-
-        # Score-Logik (siehe Modul-Header)
         score = 0.0
-        evidence_parts = []
-        affected_teams = []
-
+        evidence_parts, affected_teams = [], []
         for team_label, team_id, status, scorer in [
             ("Heim", home_id, home_status, home_scorer),
             ("Auswärts", away_id, away_status, away_scorer),
         ]:
-            if status == "starting" or status == "unknown":
+            if status in ("starting", "unknown"):
                 continue
             magnitude = self._t["missing_score"] if status == "missing" else self._t["benched_score"]
-            # Direction abhängig von Markt + welcher Team's Stürmer fehlt
-            if side == "over":
-                # weniger Stürmer-Power → over WENIGER wahrscheinlich → score negativ
-                score -= magnitude
-            elif side == "under":
-                # weniger Stürmer-Power → under MEHR wahrscheinlich → score positiv
-                score += magnitude
-            elif side == "home" and team_label == "Auswärts":
-                # Auswärts-Top-Scorer fehlt → Heim-Sieg wahrscheinlicher
-                score += magnitude
-            elif side == "away" and team_label == "Heim":
-                # Heim-Top-Scorer fehlt → Auswärts-Sieg wahrscheinlicher
-                score += magnitude
-            elif side == "home" and team_label == "Heim":
-                # Heim-Top-Scorer fehlt UND wir picken Heim → negativ
-                score -= magnitude
-            elif side == "away" and team_label == "Auswärts":
-                # Auswärts-Top-Scorer fehlt UND wir picken Auswärts → negativ
-                score -= magnitude
-            else:
-                continue
-            status_label = "fehlt" if status == "missing" else "Bank"
-            evidence_parts.append(f"{team_label} {scorer['name']} {status_label}")
-            affected_teams.append({
-                "team": team_label, "team_id": team_id,
-                "scorer": scorer.get("name"), "goals": scorer.get("goals"),
-                "status": status,
-            })
-
+            if side == "over":                                    score -= magnitude
+            elif side == "under":                                 score += magnitude
+            elif side == "home" and team_label == "Auswärts":     score += magnitude
+            elif side == "away" and team_label == "Heim":         score += magnitude
+            elif side == "home" and team_label == "Heim":         score -= magnitude
+            elif side == "away" and team_label == "Auswärts":     score -= magnitude
+            else:                                                 continue
+            evidence_parts.append(f"{team_label} {scorer['name']} "
+                                  f"{'fehlt' if status == 'missing' else 'Bank'}")
+            affected_teams.append({"team": team_label, "team_id": team_id,
+                                   "scorer": scorer.get("name"), "goals": scorer.get("goals"),
+                                   "status": status})
         if not affected_teams:
             return None
-
-        # Confidence: voll bei missing, partial bei nur bench
         any_missing = any(t["status"] == "missing" for t in affected_teams)
         confidence = self._t["confidence_full"] if any_missing else self._t["confidence_partial"]
-
-        evidence = "🚨 " + " · ".join(evidence_parts)
-
         return SignalResult(
             score=round(score, 2),
             confidence=round(confidence, 2),
-            evidence=evidence,
-            metadata={
-                "side":      side,
-                "affected":  affected_teams,
-                "fetchedAt": entry.get("fetchedAt"),
-            },
+            evidence="🚨 " + " · ".join(evidence_parts),
+            metadata={"side": side, "affected": affected_teams,
+                      "mode": "top_scorer", "fetchedAt": entry.get("fetchedAt")},
         )
+
+    def evaluate(self, pick: dict, context: dict) -> Optional[SignalResult]:
+        mk = context.get("matchKey")
+        if not mk:
+            return None
+        entry = (context.get("lineups") or {}).get(mk)
+        if not entry:
+            return None
+        home_id = context.get("home_id")
+        away_id = context.get("away_id")
+        if not home_id or not away_id:
+            return None
+        side = _outcome_side_from_market(pick.get("market", ""))
+        if side == "unknown":
+            return None
+
+        squads = context.get("squads") or {}
+        home_sq = squads.get(home_id) or {}
+        away_sq = squads.get(away_id) or {}
+        kp_home = home_sq.get("key_players")
+        kp_away = away_sq.get("key_players")
+
+        # Voller Pfad sobald MINDESTENS ein Team eine key_players-Liste hat;
+        # sonst Legacy-Top-Scorer (Abwärtskompatibilität für alte Squad-Daten).
+        if kp_home or kp_away:
+            return self._evaluate_full(side, entry, home_id, away_id,
+                                       kp_home or [], kp_away or [])
+        return self._evaluate_top_scorer(side, entry, home_id, away_id, home_sq, away_sq)

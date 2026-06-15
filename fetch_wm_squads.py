@@ -278,6 +278,57 @@ def _best_attacker(players: list) -> dict | None:
     return result
 
 
+def _role_from_apif_pos(pos: str) -> str:
+    """API-Football Position → grobe Rolle {GK, DEF, MID, ATT}."""
+    p = (pos or "").upper()
+    if p == "GOALKEEPER":              return "GK"
+    if p == "DEFENDER":                return "DEF"
+    if p == "MIDFIELDER":              return "MID"
+    if p in ("ATTACKER", "FORWARD"):   return "ATT"
+    return "MID"
+
+
+def _build_key_players(players: list, top_outfield: int = 6) -> list:
+    """Schlüsselspieler je Team über ALLE Positionen (15.06.2026, volle Ausfall-
+    Wertung statt nur Top-Scorer). Top-N Feldspieler nach Beitrag + der wichtigste
+    Keeper. Pro Spieler: id (robustes Lineup-Matching), Rolle, importance 0–1.
+    importance = Mix aus Einsatzminuten (Verfügbarkeit) + Rating."""
+    outfield, keepers = [], []
+    for p_obj in players:
+        player = p_obj.get("player", {})
+        stats  = (p_obj.get("statistics") or [{}])[0]
+        pos    = (stats.get("games", {}).get("position") or "").upper()
+        role   = _role_from_apif_pos(pos)
+        minutes = stats.get("games", {}).get("minutes") or 0
+        rating  = float(stats.get("games", {}).get("rating") or 0)
+        goals   = stats.get("goals", {}).get("total")   or 0
+        assists = stats.get("goals", {}).get("assists")  or 0
+        if minutes < 200:           # Rand-Spieler raus
+            continue
+        importance = round(min(1.0, 0.55 * (minutes / 2700.0) + 0.45 * (rating / 8.0)), 3)
+        entry = {
+            "id":         player.get("id"),
+            "name":       player.get("name", "—"),
+            "role":       role,
+            "goals":      goals,
+            "assists":    assists,
+            "minutes":    minutes,
+            "rating":     rating,
+            "importance": importance,
+        }
+        if role == "GK":
+            keepers.append(entry)
+        else:
+            entry["_score"] = _score_player(stats, pos) + rating * 2 + minutes / 600.0
+            outfield.append(entry)
+
+    outfield.sort(key=lambda c: -c["_score"])
+    for c in outfield:
+        c.pop("_score", None)
+    keepers.sort(key=lambda c: -(c["minutes"] + c["rating"] * 100))
+    return outfield[:top_outfield] + keepers[:1]
+
+
 def fetch_all_players(apif_team_id: int) -> list:
     """
     Fetch all pages of players for a team (up to MAX_PAGES).
@@ -368,6 +419,7 @@ def main():
 
         best = _best_attacker(players)
         if best:
+            best["key_players"] = _build_key_players(players)
             squads_out[our_id] = best
             print(f"      ✅ Picked: {best['name']} ({best['position']}) "
                   f"— {best['goals']}G {best['assists']}A {best['minutes']}min")
