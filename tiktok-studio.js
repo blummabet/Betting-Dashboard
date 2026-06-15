@@ -517,7 +517,7 @@
             'Wer den unterschätzt, zahlt drauf',
             'Der Mann für die magischen Momente',
             'Trifft wenn es zählt — und das tut es jetzt',
-            'Der Spieler den die Bookies nicht auf dem Schirm haben'
+            'Der stille Star, über den keiner spricht'
           ];
           const genericSub = [
             'Stats hier manuell ergänzen — Modell hat keine Daten zu diesem Spieler',
@@ -683,7 +683,7 @@
               const whys = [];
               if(p.story)  whys.push(p.story);
               if(p.signal) whys.push(p.signal);
-              if(p.conf === 'high') whys.push('Hohe Confidence — Modell + Form + Bookies in Linie');
+              if(p.conf === 'high') whys.push('Hohe Confidence — Modell + Form + Markt einig');
               whys.push(`Modell-Edge +${p.edgePP||'?'}pp vs Pinnacle Fair-Quote`);
 
               // Pack zusätzliche Begründungen
