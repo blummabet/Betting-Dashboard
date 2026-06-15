@@ -1796,6 +1796,18 @@ function renderSharpRadar() {
       return Date.now() >= new Date(+y, +mo - 1, +d, +h, +min, 0).getTime();
     } catch { return false; }
   };
+  // Radar-Relevanz (15.06.2026, Lucas): nur handelbare/aktuelle Spiele zeigen.
+  // Verstecke definitiv beendete Spiele + alles, was mehr als 1 Tag in der
+  // Vergangenheit liegt. Heute + anstehend + gestern (kurzer Rückblick) bleiben.
+  // Das Lernen läuft unabhängig über den Bayesian-Loop, nicht über diese Anzeige.
+  const _radarRelevant = (m) => {
+    if (!m || !m.date) return true;
+    if (isMatchOver(m.date, m.time)) return false;
+    try {
+      const d = parseGermanDate(m.date); d.setHours(0, 0, 0, 0);
+      return d.getTime() >= (todayMidnight.getTime() - 24 * 3600 * 1000);
+    } catch { return true; }
+  };
   // Age of opening snapshot in human-readable form
   const _openAge = (ts) => {
     if (!ts) return null;
@@ -1912,7 +1924,7 @@ function renderSharpRadar() {
   //  · Conviction-Badge + Sharp-Move-Indikator + Klickbar zur Event-Page
   //  · Sparkline + "Letzte Bewegung"-Indikator für Aktualitäts-Signal
   const movers = allFixtures
-    .filter(f => f.mvRows && f.maxMov >= 3)
+    .filter(f => f.mvRows && f.maxMov >= 3 && _radarRelevant(f.m))
     .map(f => {
       // Add Conviction info for WM-fixtures (m.home / m.away sind IDs bei WM)
       const conv = _findBestConvictionForMatch(f.m.home, f.m.away);
