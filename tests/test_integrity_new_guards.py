@@ -126,6 +126,19 @@ class TestNewIntegrityGuards(unittest.TestCase):
         c = _result(self._run_poly(poly), "ah_edge_sane")
         self.assertTrue(c["ok"])
 
+    def test_ah_settled_market_not_flagged(self):
+        # Spiel gelaufen → Poly-Preis springt auf 0/1, riesiger Schein-Edge.
+        # Das ist ein Resolution-Artefakt, KEIN Mirror-Bug → Guard ignoriert es.
+        poly = {"allFixtures": [
+            {"homeId": "AUS", "awayId": "TUR",   # poly 1.0 (settled)
+             "ah_edges": [{"side": "home", "line": -1.5, "poly": 1.0,
+                           "fair": 0.0728, "edge": -92.7}]},
+            {"homeId": "BEL", "awayId": "EGY",   # poly ~0 (settled)
+             "ah_edges": [{"side": "home", "line": -1.5, "poly": 0.005,
+                           "fair": 0.3462, "edge": 34.1}]}]}
+        c = _result(self._run_poly(poly), "ah_edge_sane")
+        self.assertTrue(c["ok"], "Settled-Markt (poly 0/1) ist kein Phantom")
+
 
 if __name__ == "__main__":
     unittest.main()

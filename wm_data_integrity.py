@@ -576,9 +576,16 @@ def check_ah_edge_sane(ctx):
     for fx in (ctx.poly_all or []):
         for e in (fx.get("ah_edges") or []):
             edge = e.get("edge")
+            poly = e.get("poly")
+            # Settled/degenerierte Märkte (Spiel gelaufen → poly ~0/1) sind nur ein
+            # Resolution-Artefakt, kein echtes Edge-Signal → nicht als Phantom werten.
+            # (Trader blockt sie eh via Entry-Price/Timing.) Nur Anomalien in normaler
+            # Preis-Range (z.B. Mirror: poly 0.04 vs fair 0.35) sollen rot werden.
+            if not isinstance(poly, (int, float)) or poly <= 0.02 or poly >= 0.98:
+                continue
             if isinstance(edge, (int, float)) and abs(edge) > CAP:
                 fails.append(f"{fx.get('homeId')}-{fx.get('awayId')}: AH {e.get('side')} "
-                             f"{e.get('line')} Edge {edge:+.1f}pp (poly {e.get('poly')} / "
+                             f"{e.get('line')} Edge {edge:+.1f}pp (poly {poly} / "
                              f"fair {e.get('fair')}) — Phantom/Mirror-Verdacht")
     return _chk("ah_edge_sane", "AH-Handicap-Edges plausibel (kein Mirror)", "warn", fails,
                 "fetch_wm_poly_prices: poly_ah_by_team team-ID-geschlüsselt (mirror-immun). "
