@@ -564,6 +564,27 @@ def check_soft_book_history(ctx):
                 "Ohne Soft-Book-Zeitreihe ist die Sharp-Money-Conviction-Familie tot.")
 
 
+@integrity_check
+def check_ah_edge_sane(ctx):
+    """FIX 15.06.2026: AH-Handicap-Edges (Poly-Spreads vs Pinnacle-AH-Leiter) müssen
+    plausibel sein. Ein echter Edge ist klein (wenige pp); ein Riesen-Edge ist fast
+    sicher ein Datenfehler — v.a. der MIRROR-Bug (Poly listet z.B. ENG-PAN als PAN-ENG
+    → Spread der falschen Seite vs fair der richtigen → Phantom 30–56pp). Macht solche
+    Edges SICHTBAR im 🛡️-Panel. Der Auto-Trader blockt sie zusätzlich via AH_MAX_EDGE_PP."""
+    CAP = 12.0
+    fails = []
+    for fx in (ctx.poly_all or []):
+        for e in (fx.get("ah_edges") or []):
+            edge = e.get("edge")
+            if isinstance(edge, (int, float)) and abs(edge) > CAP:
+                fails.append(f"{fx.get('homeId')}-{fx.get('awayId')}: AH {e.get('side')} "
+                             f"{e.get('line')} Edge {edge:+.1f}pp (poly {e.get('poly')} / "
+                             f"fair {e.get('fair')}) — Phantom/Mirror-Verdacht")
+    return _chk("ah_edge_sane", "AH-Handicap-Edges plausibel (kein Mirror)", "warn", fails,
+                "fetch_wm_poly_prices: poly_ah_by_team team-ID-geschlüsselt (mirror-immun). "
+                "Riesen-Edge = falsche Seite/Daten. Auto-Trader blockt via AH_MAX_EDGE_PP.")
+
+
 # ── Runner ───────────────────────────────────────────────────────────────────
 def run_checks(wm, poly, schedule, venues, lineups=None, now=None,
                auto_bets=None, history=None):
