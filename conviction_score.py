@@ -381,12 +381,12 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     # (wir gehen explizit gegen Polymarket, weil es systematisch danebenliegt),
     # nicht ein Sharp-Anker. Polymarket-Signale beeinflussen weiter effectiveEdge
     # in der Signal-Engine, zählen aber NICHT in Conviction.
-    # Echte Sharp-Indikatoren: Pinnacle-Move + Bet365/William Hill/Unibet-Lag.
+    # Echte Sharp-Indikatoren: Pinnacle-Move + Softbook-Konsens-Lag (13-Book-Median).
     sharp_signals_active = []
     for name in ("lead_lag_bias",):   # Nur Pinnacle-vs-Soft-Books
         if _signal_contributes(name) > 0:
             sharp_signals_active.append(name)
-            evidence.append(f"Sharp-Signal: {name} (Pinnacle vs Bet365/WilliamHill)")
+            evidence.append(f"Sharp-Signal: {name} (Pinnacle vs Softbookies)")
     sharp_signal_count = len(sharp_signals_active)
 
     om = detect_opening_movement(pick, context, cfg)

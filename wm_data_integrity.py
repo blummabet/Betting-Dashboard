@@ -288,6 +288,43 @@ def check_ou_pinnacle_anchored(ctx):
                 "Poisson nur Fallback. Gepostete Spiele (≤morgen) ausgenommen.")
 
 
+@integrity_check
+def check_ou_anchor_source(ctx):
+    """FIX 15.06.2026 (Lucas): Der Tor-Anker (o25/bttsY…) BEVORZUGT Pinnacle, fällt
+    aber still auf einen Soft-Book zurück, wenn Pinnacle die Linie nicht listet —
+    der De-Vig würde diese Soft-Linie dann als „Pinnacle-fair" behandeln. fetch_wm_odds
+    taggt jetzt die Quelle je Markt (o15_src/o25_src/o35_src/btts_src). Dieser Guard
+    macht den stillen Fallback SICHTBAR: warnt für jeden O/U/BTTS-Pick (BET/ABWÄGEN),
+    dessen Anker NICHT von Pinnacle stammt. Severity warn → 🛡️-Panel, kein Block."""
+    picks = ctx.wm.get("picks") or {}
+    odds_by_key = {}
+    for _g, fx in ctx.fixtures:
+        pk = f"{_g}-{fx.get('matchday')}-{fx.get('home')}-{fx.get('away')}"
+        odds_by_key[pk] = ctx.odds.get(f"{fx.get('home')}-{fx.get('away')}") or {}
+    fails = []
+    for key, plist in picks.items():
+        if not isinstance(plist, list):
+            continue
+        osnap = odds_by_key.get(key) or {}
+        for p in plist:
+            if p.get("verdict") not in ("BET", "ABWÄGEN"):
+                continue
+            pair = _OU_PINN_PAIR.get(p.get("market"))
+            if not pair:
+                continue
+            base = pair[0]
+            src_key = ("btts" if base.startswith("btts") else base) + "_src"
+            src = osnap.get(src_key)
+            if src is None:
+                continue   # kein Tag (alte Daten / keine Linie) → nicht prüfbar
+            if src != "pinnacle":
+                fails.append(f"{key}: {p.get('market')} Tor-Anker von '{src}' statt Pinnacle "
+                             f"(de-viggter Soft-Preis als Sharp-Fair behandelt)")
+    return _chk("ou_anchor_source", "Tor-Anker stammt von Pinnacle", "warn", fails,
+                "fetch_wm_odds: _pick_total_line/_pick_bk Fallback auf Soft-Book wenn "
+                "Pinnacle die Linie nicht listet. Soft-Anker = unzuverlässige Fair-Schätzung.")
+
+
 def _real_match_keys(ctx):
     return {ctx.mk(fx) for _g, fx in ctx.fixtures}
 

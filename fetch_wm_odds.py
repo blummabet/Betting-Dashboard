@@ -515,12 +515,15 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
                     elif is_away:
                         ah_lines_by_bk[bk_key][line_key][1] = price
 
+    # Hängt die QUELLE (Buchmacher-Key) als letztes Tupel-Element an (Fix 15.06.2026):
+    # damit der Tor-Anker nachvollziehbar ist und ein Guard warnen kann, wenn er NICHT
+    # von Pinnacle stammt (stiller Soft-Fallback). Bestehende Indizes [0]/[1] bleiben.
     def _pick_bk(cands: dict):
         for prio in our_book_prio:
             if prio in cands:
-                return cands[prio]
-        for v in cands.values():
-            return v
+                return (*cands[prio], prio)
+        for k, v in cands.items():
+            return (*v, k)
         return None
 
     # Total-Linien aus bevorzugtem Bookie
@@ -529,10 +532,11 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
             if prio in totals_lines_by_bk and line in totals_lines_by_bk[prio]:
                 ov, un = totals_lines_by_bk[prio][line]
                 if ov and un:
-                    return (ov, un)
-        for bk_data in totals_lines_by_bk.values():
+                    return (ov, un, prio)
+        for bk_key, bk_data in totals_lines_by_bk.items():
             if line in bk_data and bk_data[line][0] and bk_data[line][1]:
-                return tuple(bk_data[line])
+                ov, un = bk_data[line]
+                return (ov, un, bk_key)
         return None
 
     t15 = _pick_total_line(1.5)
@@ -613,6 +617,12 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
         "u35":     round(t35[1], 3) if t35 else None,
         "bttsY":   round(b[0], 3) if b else None,
         "bttsN":   round(b[1], 3) if b and b[1] else None,
+        # Quelle des TOR-Ankers je Markt (Fix 15.06.2026): erlaubt dem Integritäts-Guard
+        # zu warnen, wenn der de-viggte „Pinnacle-Anker" in Wahrheit ein Soft-Fallback ist.
+        "o15_src":  t15[2] if t15 else None,
+        "o25_src":  t25[2] if t25 else None,
+        "o35_src":  t35[2] if t35 else None,
+        "btts_src": b[2]  if b   else None,
         # Public-Bookmaker O/U 2.5 + BTTS für public_static_bias / lead_lag (NEU 09.06.2026)
         "public_o25":   round(pub_o25, 3) if pub_o25 else None,
         "public_u25":   round(pub_u25, 3) if pub_u25 else None,

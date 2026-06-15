@@ -68,7 +68,27 @@ class TestMatchDayLineupRefresh(unittest.TestCase):
                          "evidence": "x", "weight": 1.0, "weighted_score": 0.6,
                          "metadata": {}}],
         }]
+        # Deterministische Squad-/Aufstellungs-Daten (15.06.2026): macht den Test
+        # unabhängig von Live-Squad-Drift (BIH-Top-Scorer wechselte auf 1-Tor-Spieler).
+        # CAN-Schlüsselstürmer (id 9001) fehlt komplett in der Aufstellung → lineup_signal
+        # MUSS feuern (Voll-Pfad), egal welchen Markt der Steam-Rebuild wählt.
+        wm.setdefault("squads", {})
+        wm["squads"]["CAN"] = {"name": "Key Striker", "goals": 9, "position": "ST",
+            "key_players": [{"id": 9001, "name": "Key Striker", "role": "ATT", "importance": 0.9}]}
         wmp.write_text(json.dumps(wm, ensure_ascii=False), encoding="utf-8")
+
+        lup = tmp / "wm_lineups.json"
+        lineups = json.loads(lup.read_text(encoding="utf-8")) if lup.exists() else {}
+        lineups["CAN-BIH"] = {
+            "home": {"team_id": "CAN", "formation": "4-3-3", "coach": "x",
+                     "starting": [{"id": i, "name": f"c{i}", "pos": "M"} for i in range(1, 12)],
+                     "subs": []},   # id 9001 NICHT dabei → fehlt
+            "away": {"team_id": "BIH", "formation": "4-3-3", "coach": "y",
+                     "starting": [{"id": i, "name": f"b{i}", "pos": "M"} for i in range(20, 31)],
+                     "subs": []},
+            "fetchedAt": _utc_now().isoformat(),
+        }
+        lup.write_text(json.dumps(lineups, ensure_ascii=False), encoding="utf-8")
         return wmp
 
     @staticmethod
