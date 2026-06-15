@@ -97,8 +97,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # ── Squad Spotlight (API-Football, läuft die ganze Tournier-Phase) ──
+      # force_squads=true (manueller Dispatch) → --force, sonst skippt das Script
+      # alle Teams die schon einen Eintrag haben → key_players (15.06.2026) käme nie
+      # rein. Ohne Force: nur neue/fehlende Teams.
       - name: 🧬 WM Squad-Spotlight fetchen
-        run: python fetch_wm_squads.py
+        run: python fetch_wm_squads.py ${{ (github.event_name == 'workflow_dispatch' && inputs.force_squads) && '--force' || '' }}
         continue-on-error: true
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
