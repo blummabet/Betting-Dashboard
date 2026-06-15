@@ -75,6 +75,8 @@ AH_TRADE_ENABLED       = _cfg("trade", "ah_trade_enabled",       False)
 # darüber ist fast sicher ein Datenfehler (z.B. Mirror-Bug: Poly-Spread der
 # falschen Seite). Solche „Edges" NIE traden. Fängt 30–56pp-Phantome sofort.
 AH_MAX_EDGE_PP         = _cfg("trade", "ah_max_edge_pp",         12.0)
+BTTS_TRADE_ENABLED     = _cfg("trade", "btts_trade_enabled",     True)
+BTTS_MAX_EDGE_PP       = _cfg("trade", "btts_max_edge_pp",       12.0)
 
 # ── Stake (flat) ──────────────────────────────────────────────────────────────
 # €5 ≈ $5.50 USDC pro Pick. Bankroll-Schutz via DAILY_BET_CAP + DAILY_STAKE_CAP_USDC.
@@ -200,7 +202,14 @@ EDGE_MARKET_MAP = {
     "edge_aw":  ("poly_aw",  "Auswärtssieg",        "fair_aw",  "verdict_aw",  "aw"),
     "edge_o25": ("poly_o25", "Over 2.5 Tore",       "fair_o25", "verdict_o25", "o25"),
     "edge_u25": ("poly_u25", "Under 2.5 Tore",      "fair_u25", "verdict_u25", "u25"),
+    # BTTS (15.06.2026): binär Ja/Nein, beide Seiten getrennt. Engine-Hook via
+    # Card-Verdict/Conviction (wie O/U). Token aus Candidate (poly_btts_tokens).
+    "edge_btts":    ("poly_btts",    "Beide Teams treffen — Ja",   "fair_btts",    "verdict_btts",    "btts"),
+    "edge_btts_no": ("poly_btts_no", "Beide Teams treffen — Nein", "fair_btts_no", "verdict_btts_no", "btts_no"),
 }
+
+# BTTS-Trade-Schalter (15.06.2026) — wie AH ein Kill-Switch auf Markt-Ebene.
+# Default an (BTTS ist ein normaler Pick-Markt wie O/U), aber separat abschaltbar.
 
 # Nur diese Verdicts lösen Auto-Bets aus
 # SKIP und None (kein Pick für diesen Markt) werden übersprungen
@@ -385,6 +394,9 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
 
         # Edge-Check für jeden Markt
         for edge_key, (price_key, market_label, fair_key, verdict_key, fld) in EDGE_MARKET_MAP.items():
+            # BTTS-Markt-Schalter (15.06.2026): separat abschaltbar.
+            if fld in ("btts", "btts_no") and not BTTS_TRADE_ENABLED:
+                continue
             stored_edge = fix.get(edge_key)
 
             # ── Stale-Edge-Schutz (11.06.2026) ──────────────────────────────
@@ -404,6 +416,14 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                           f"[{fix['home']} vs {fix['away']}]")
             else:
                 raw_edge = stored_edge
+
+            # BTTS-Phantom-Cap (15.06.2026): unplausibel großer Edge → Datenfehler-
+            # Verdacht (z.B. settled-Markt poly 0/1) → NIE traden. Defense-in-Depth
+            # analog zum AH-Cap; Entry-Price-Filter fängt das meiste, der Cap den Rest.
+            if fld in ("btts", "btts_no") and isinstance(raw_edge, (int, float)) and abs(raw_edge) > BTTS_MAX_EDGE_PP:
+                print(f"  🛑 BTTS-Edge {raw_edge:+.1f}pp > {BTTS_MAX_EDGE_PP}pp Cap "
+                      f"(Datenfehler-Verdacht) — {fix['home']} vs {fix['away']} {market_label} (BLOCKED)")
+                continue
 
             # Poly-Strang ist Pinnacle-vs-Poly-Edge-getrieben (11.06.2026):
             # Für die TRADE-Entscheidung zählt die Edge zu Polymarket, NICHT unser
@@ -519,13 +539,26 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                 print(f"  ⏭️  Bereits platziert: {fix['home']} vs {fix['away']} — {market_label}")
                 continue
 
-            # Slug: für O/U den moreMktSlug verwenden, sonst den Moneyline-Slug
-            is_ou = market_label in ("Over 2.5 Tore", "Under 2.5 Tore")
-            slug = (fix.get("moreMktSlug") or fix.get("slug")) if is_ou else fix.get("slug")
+            # Slug: für O/U + BTTS den moreMktSlug verwenden, sonst den Moneyline-Slug
+            is_more_mkt = fld in ("o25", "u25", "btts", "btts_no")
+            slug = (fix.get("moreMktSlug") or fix.get("slug")) if is_more_mkt else fix.get("slug")
             event_url = (
                 f"https://polymarket.com/sports/fifa-world-cup/{slug}"
                 if slug else None
             )
+
+            # BTTS-Token direkt aus den geparsten clobTokenIds (15.06.2026):
+            # poly_btts_tokens = [Yes-Token, No-Token]. find_clob_token_id kennt
+            # den BTTS-Markt nicht zuverlässig → Token-Fast-Path wie bei AH.
+            _btts_tokens = fix.get("poly_btts_tokens") or []
+            _btts_token = None
+            if fld == "btts" and len(_btts_tokens) >= 1:
+                _btts_token = _btts_tokens[0]
+            elif fld == "btts_no" and len(_btts_tokens) >= 2:
+                _btts_token = _btts_tokens[1]
+            if fld in ("btts", "btts_no") and not _btts_token:
+                print(f"  🚫 BTTS ohne Token — {fix['home']} vs {fix['away']} {market_label} (nicht platzierbar)")
+                continue
 
             candidates.append({
                 "home":        fix["home"],
@@ -535,6 +568,7 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                 "market":      market_label,
                 "league":      "WM2026",
                 "stake":       _get_stake_for_edge(edge),
+                **({"tokens": [_btts_token], "_isBtts": True} if _btts_token else {}),
                 "polyPrice":   poly_price,
                 "slug":        slug,
                 "eventUrl":    event_url,
@@ -809,6 +843,10 @@ def main():
         if order.get("_isHandicap") and order.get("tokens"):
             token_id = order["tokens"][0]
             print(f"    🎯 Handicap — Spread-Token direkt aus Candidate: {token_id[:16]}…")
+        elif order.get("_isBtts") and order.get("tokens"):
+            # BTTS-Token (Yes bzw. No) wurde in fetch_wm_poly_prices exakt erfasst.
+            token_id = order["tokens"][0]
+            print(f"    🎯 BTTS — Outcome-Token direkt aus Candidate: {token_id[:16]}…")
 
         if not token_id:
             # Gamma Event finden

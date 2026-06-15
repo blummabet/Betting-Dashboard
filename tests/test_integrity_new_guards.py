@@ -139,6 +139,26 @@ class TestNewIntegrityGuards(unittest.TestCase):
         c = _result(self._run_poly(poly), "ah_edge_sane")
         self.assertTrue(c["ok"], "Settled-Markt (poly 0/1) ist kein Phantom")
 
+    # ── BTTS-Edge-Sanity (15.06.2026, BTTS-Auto-Trade verdrahtet) ───────────
+    def test_btts_phantom_edge_flagged(self):
+        poly = {"allFixtures": [{"homeId": "ESP", "awayId": "CPV",
+                "poly_btts": 0.40, "fair_btts": 0.85, "edge_btts": 45.0}]}
+        c = _result(self._run_poly(poly), "btts_edge_sane")
+        self.assertFalse(c["ok"])
+
+    def test_btts_small_edge_ok(self):
+        poly = {"allFixtures": [{"homeId": "ESP", "awayId": "CPV",
+                "poly_btts": 0.55, "fair_btts": 0.59, "edge_btts": 4.0,
+                "poly_btts_no": 0.45, "fair_btts_no": 0.41, "edge_btts_no": -4.0}]}
+        c = _result(self._run_poly(poly), "btts_edge_sane")
+        self.assertTrue(c["ok"])
+
+    def test_btts_settled_market_not_flagged(self):
+        poly = {"allFixtures": [{"homeId": "GER", "awayId": "CUW",
+                "poly_btts": 1.0, "fair_btts": 0.30, "edge_btts": -70.0}]}
+        c = _result(self._run_poly(poly), "btts_edge_sane")
+        self.assertTrue(c["ok"], "Settled BTTS-Markt (poly 0/1) ist kein Phantom")
+
 
 if __name__ == "__main__":
     unittest.main()

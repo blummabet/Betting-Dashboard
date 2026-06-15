@@ -327,7 +327,7 @@ def fetch_more_markets(slug: str) -> dict:
         return {}
 
     event = data[0]
-    result = {"totals": {}, "btts": None, "btts_no": None, "spreads": {}}
+    result = {"totals": {}, "btts": None, "btts_no": None, "btts_tokens": [], "spreads": {}}
 
     for m in event.get("markets", []):
         smt    = m.get("sportsMarketType", "")
@@ -346,6 +346,12 @@ def fetch_more_markets(slug: str) -> dict:
         elif smt == "both_teams_to_score":
             result["btts"]    = round(over_price, 4)   # Yes price
             result["btts_no"] = round(under_price, 4)  # No price
+            # clobTokenIds: token[0] = Yes-Outcome, token[1] = No-Outcome
+            # (gleiche Reihenfolge wie outcomePrices) → für Auto-Trade-Platzierung.
+            try:
+                result["btts_tokens"] = json.loads(m.get("clobTokenIds", "[]") or "[]")
+            except Exception:
+                result["btts_tokens"] = []
         elif smt == "spreads" and line is not None:
             # Handicap (15.06.2026): groupItemTitle = "Scotland (-1.5)" → Team + Linie.
             # Markt ist binär: Yes = Team deckt das Handicap (prices[0]). clobTokenIds
@@ -470,6 +476,7 @@ def main():
             result["poly_u35"]    = totals.get(3.5, {}).get("under")
             result["poly_btts"]   = mm.get("btts")
             result["poly_btts_no"] = mm.get("btts_no")
+            result["poly_btts_tokens"] = mm.get("btts_tokens") or []
             # Handicap-Linien (15.06.2026): mm["spreads"] keyed by Poly-Teamname.
             # FIX 15.06.2026 (Mirror-Bug): NICHT nach Poly-Heim/Auswärts speichern —
             # Poly spiegelt Spiele (PAN-ENG vs unser ENG-PAN), dann landeten Panamas
@@ -636,9 +643,12 @@ def main():
         "Über 2.5 Tore":             "o25",   # German alias (generate_wm_picks.py)
         "Under 2.5 Tore":            "u25",
         "Unter 2.5 Tore":            "u25",   # German alias
-        "Beide Teams treffen":       "btts",
-        "Beide Teams treffen — Ja":  "btts",  # German alias with suffix
+        "Beide Teams treffen":        "btts",
+        "Beide Teams treffen — Ja":   "btts",      # Yes-Seite
+        "Beide Teams treffen — Nein": "btts_no",   # No-Seite
     }
+    # Märkte, für die Engine-Felder (verdict/conviction/signal…) durchgereicht werden.
+    _ENGINE_FIELDS = ("hw", "dr", "aw", "o25", "u25", "btts", "btts_no")
 
     for key, p in prices.items():
         home_id, away_id = key.split("-", 1)
@@ -689,6 +699,24 @@ def main():
             edge_o25   = round((fair_o25 - poly_o25) * 100, 1)
             edge_u25   = round((fair_u25 - (poly_u25 or 0)) * 100, 1) if poly_u25 else None
 
+        # ── BTTS Pinnacle edge (15.06.2026): de-vig Pinnacle bttsY/bttsN ───────
+        # Binärer Markt: Poly poly_btts (Ja) / poly_btts_no (Nein). Fair aus der
+        # de-viggten Pinnacle-Baseline (wie 1X2/O-U, NICHT Poisson). Beide Seiten
+        # getrennt handelbar — Pick kann „Ja" ODER „Nein" sein.
+        poly_btts    = p.get("poly_btts")
+        poly_btts_no = p.get("poly_btts_no")
+        pinn_bttsY   = pinn.get("bttsY")
+        pinn_bttsN   = pinn.get("bttsN")
+        fair_btts = fair_btts_no = edge_btts = edge_btts_no = None
+        if pinn_bttsY and pinn_bttsN and pinn_bttsY > 1:
+            btts_margin  = 1/pinn_bttsY + 1/pinn_bttsN
+            fair_btts    = round((1/pinn_bttsY) / btts_margin, 4)
+            fair_btts_no = round((1/pinn_bttsN) / btts_margin, 4)
+            if poly_btts:
+                edge_btts = round((fair_btts - poly_btts) * 100, 1)
+            if poly_btts_no:
+                edge_btts_no = round((fair_btts_no - poly_btts_no) * 100, 1)
+
         # ── Handicap-Edges (15.06.2026): Poly-Spreads vs Pinnacle-AH-Leiter ──────
         # home_id/away_id aus dem (normalisierten) Key → poly_ah_by_team auflösen.
         # Orientierungs-immun: egal wie Poly das Spiel spiegelt, die Spreads landen
@@ -724,6 +752,7 @@ def main():
             "poly_u35":     p.get("poly_u35"),
             "poly_btts":    p.get("poly_btts"),
             "poly_btts_no": p.get("poly_btts_no"),
+            "poly_btts_tokens": p.get("poly_btts_tokens", []),
             # Pinnacle 1X2 (decimal odds, e.g. 1.85)
             "pinn_hw":      pinn_hw,
             "pinn_dr":      pinn_dr,
@@ -738,12 +767,17 @@ def main():
             # Pinnacle devigged fair probabilities (O/U)
             "fair_o25":     fair_o25,
             "fair_u25":     fair_u25,
+            # Pinnacle devigged fair probabilities (BTTS)
+            "fair_btts":    fair_btts,
+            "fair_btts_no": fair_btts_no,
             # Edge per outcome in percentage points (positive = Poly underpriced)
             "edge_hw":      edge_hw,
             "edge_dr":      edge_dr,
             "edge_aw":      edge_aw,
             "edge_o25":     edge_o25,
             "edge_u25":     edge_u25,
+            "edge_btts":    edge_btts,
+            "edge_btts_no": edge_btts_no,
             # Handicap-Edges (Liste {side,line,poly,fair,edge,tokens}) — Poly-Spreads
             "ah_edges":     ah_edges,
             # Best positive edge of this fixture
@@ -762,7 +796,7 @@ def main():
             **{
                 f"verdict_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("verdict")
                 for mkt_label, field in _MARKET_TO_FIELD.items()
-                if field in ("hw", "dr", "aw", "o25", "u25")
+                if field in _ENGINE_FIELDS
             },
             # ── Engine-Felder pro Markt (08.06.2026) ──────────────────────────
             # Erlaubt Auto-Trigger über Signal-Adjustment, Min-Signal-Threshold
@@ -770,39 +804,39 @@ def main():
             **{
                 f"signalAdj_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("signalAdjustmentPP")
                 for mkt_label, field in _MARKET_TO_FIELD.items()
-                if field in ("hw", "dr", "aw", "o25", "u25")
+                if field in _ENGINE_FIELDS
             },
             **{
                 f"signalPos_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("signalCountPos")
                 for mkt_label, field in _MARKET_TO_FIELD.items()
-                if field in ("hw", "dr", "aw", "o25", "u25")
+                if field in _ENGINE_FIELDS
             },
             **{
                 f"effectiveEdge_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("effectiveEdgePP")
                 for mkt_label, field in _MARKET_TO_FIELD.items()
-                if field in ("hw", "dr", "aw", "o25", "u25")
+                if field in _ENGINE_FIELDS
             },
             **{
                 f"engineDowngrade_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("downgradedReason")
                 for mkt_label, field in _MARKET_TO_FIELD.items()
-                if field in ("hw", "dr", "aw", "o25", "u25")
+                if field in _ENGINE_FIELDS
             },
             # Conviction-Score pro Markt (09.06.2026 — Auto-Trigger Gate)
             **{
                 f"conviction_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("convictionScore")
                 for mkt_label, field in _MARKET_TO_FIELD.items()
-                if field in ("hw", "dr", "aw", "o25", "u25")
+                if field in _ENGINE_FIELDS
             },
             # Synthetic + trackingExcluded pro Markt (09.06.2026 — Auto-Trigger Gate)
             **{
                 f"synthetic_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("synthetic")
                 for mkt_label, field in _MARKET_TO_FIELD.items()
-                if field in ("hw", "dr", "aw", "o25", "u25")
+                if field in _ENGINE_FIELDS
             },
             **{
                 f"trackingExcluded_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("trackingExcluded")
                 for mkt_label, field in _MARKET_TO_FIELD.items()
-                if field in ("hw", "dr", "aw", "o25", "u25")
+                if field in _ENGINE_FIELDS
             },
             "dataQuality": next(
                 (v.get("dataQuality") for v in picks_lookup.get(key, {}).values()), "elo_only"

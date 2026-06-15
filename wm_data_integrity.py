@@ -592,6 +592,34 @@ def check_ah_edge_sane(ctx):
                 "Riesen-Edge = falsche Seite/Daten. Auto-Trader blockt via AH_MAX_EDGE_PP.")
 
 
+@integrity_check
+def check_btts_edge_sane(ctx):
+    """NEU 15.06.2026 (BTTS-Auto-Trade verdrahtet): Die BTTS-Edges (Poly poly_btts/
+    poly_btts_no vs de-viggte Pinnacle-Baseline) müssen plausibel sein. Ein echter
+    Edge ist klein; ein Riesen-Edge ist fast sicher ein Datenfehler (z.B. fehlender/
+    vertauschter Pinnacle-bttsY-Wert oder ein settled-Markt). Macht das im 🛡️-Panel
+    SICHTBAR. Der Auto-Trader blockt zusätzlich via BTTS_MAX_EDGE_PP."""
+    CAP = 12.0
+    fails = []
+    for fx in (ctx.poly_all or []):
+        for side, ekey, pkey in (("Ja", "edge_btts", "poly_btts"),
+                                  ("Nein", "edge_btts_no", "poly_btts_no")):
+            edge = fx.get(ekey)
+            poly = fx.get(pkey)
+            # Settled/degeneriert (Spiel gelaufen → poly ~0/1) = Resolution-Artefakt,
+            # kein echtes Edge-Signal → überspringen (wie AH).
+            if not isinstance(poly, (int, float)) or poly <= 0.02 or poly >= 0.98:
+                continue
+            if isinstance(edge, (int, float)) and abs(edge) > CAP:
+                fails.append(f"{fx.get('homeId')}-{fx.get('awayId')}: BTTS {side} "
+                             f"Edge {edge:+.1f}pp (poly {poly} / fair "
+                             f"{fx.get('fair_btts' if side=='Ja' else 'fair_btts_no')}) "
+                             f"— Datenfehler-Verdacht")
+    return _chk("btts_edge_sane", "BTTS-Edges plausibel", "warn", fails,
+                "fetch_wm_poly_prices: fair_btts aus de-viggter Pinnacle-bttsY/N. "
+                "Riesen-Edge = Daten kaputt. Auto-Trader blockt via BTTS_MAX_EDGE_PP.")
+
+
 # ── Runner ───────────────────────────────────────────────────────────────────
 def run_checks(wm, poly, schedule, venues, lineups=None, now=None,
                auto_bets=None, history=None):

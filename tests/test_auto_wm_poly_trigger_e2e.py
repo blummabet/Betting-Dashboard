@@ -323,5 +323,63 @@ class TestStaleEdgeRecompute(unittest.TestCase):
         self.assertFalse(_is_in_candidates(fix))
 
 
+class TestBttsAutoTrade(unittest.TestCase):
+    """BTTS Auto-Trade (15.06.2026): Poly poly_btts/poly_btts_no vs de-viggte
+    Pinnacle-Baseline. Token-Fast-Path aus poly_btts_tokens [Yes, No]."""
+
+    def _btts_fix(self, **ov):
+        base = dict(
+            date=_date_in(3),
+            # HW neutralisieren (kein zweiter Kandidat) → fair=poly
+            edge_hw=None, fair_hw=0.50, poly_hw=0.50, verdict_hw=None,
+            # BTTS Ja: 8pp Edge (fair 0.58 − poly 0.50)
+            poly_btts=0.50, fair_btts=0.58, verdict_btts="BET", conviction_btts=5,
+            poly_btts_tokens=["YESTK", "NOTK"],
+        )
+        base.update(ov)
+        return _make_fixture(**base)
+
+    def _btts_cands(self, fix):
+        return [c for c in a.find_trigger_candidates([fix], placed_keys=set())
+                if c["market"].startswith("Beide Teams treffen")]
+
+    def test_btts_yes_candidate_uses_first_token(self):
+        cands = self._btts_cands(self._btts_fix())
+        self.assertEqual(len(cands), 1)
+        c = cands[0]
+        self.assertEqual(c["market"], "Beide Teams treffen — Ja")
+        self.assertTrue(c.get("_isBtts"))
+        self.assertEqual(c.get("tokens"), ["YESTK"])   # Yes = token[0]
+
+    def test_btts_no_uses_second_token(self):
+        fix = self._btts_fix(
+            verdict_btts=None,                         # Ja kein Pick
+            poly_btts=0.50, fair_btts=0.50,            # Ja-Edge = 0
+            poly_btts_no=0.45, fair_btts_no=0.55,      # Nein-Edge = +10pp
+            verdict_btts_no="BET", conviction_btts_no=5,
+        )
+        cands = self._btts_cands(fix)
+        self.assertEqual(len(cands), 1)
+        self.assertEqual(cands[0]["market"], "Beide Teams treffen — Nein")
+        self.assertEqual(cands[0].get("tokens"), ["NOTK"])   # No = token[1]
+
+    def test_btts_phantom_cap_blocks(self):
+        # 25pp Edge (fair 0.75 − poly 0.50) → über BTTS_MAX_EDGE_PP → BLOCK
+        cands = self._btts_cands(self._btts_fix(fair_btts=0.75))
+        self.assertEqual(cands, [])
+
+    def test_btts_missing_token_skipped(self):
+        cands = self._btts_cands(self._btts_fix(poly_btts_tokens=[]))
+        self.assertEqual(cands, [])
+
+    def test_btts_disabled_suppresses(self):
+        orig = a.BTTS_TRADE_ENABLED
+        a.BTTS_TRADE_ENABLED = False
+        try:
+            self.assertEqual(self._btts_cands(self._btts_fix()), [])
+        finally:
+            a.BTTS_TRADE_ENABLED = orig
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
