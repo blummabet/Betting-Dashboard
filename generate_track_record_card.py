@@ -91,17 +91,19 @@ def compute_kpis(wm: dict) -> dict:
     clv_picks = [p for p in resolved if isinstance(p.get("clvPP"), (int, float))]
     avg_clv = sum(p["clvPP"] for p in clv_picks) / len(clv_picks) if clv_picks else None
 
-    # Equity-Curve: chronologisch sortiert nach Kickoff
+    # Genauigkeits-Verlauf (TikTok-safe, 15.06.2026): KEINE €-Equity mehr, sondern
+    # kumulativer Netto-Treffer-Verlauf (richtig +1 / falsch −1) chronologisch.
+    # Zeigt denselben Trend (Form der Prognosen) ohne Geld/Glücksspiel-Signal.
     sortable = [p for p in resolved if p.get("_date")]
     sortable.sort(key=lambda p: (p["_date"], p.get("_time") or "23:59"))
-    cum = 0.0
+    cum = 0
     equity = []
     for p in sortable:
         if p["result"] == "won":
-            cum += ((p.get("odds") or 1) - 1) * STAKE_EUR
+            cum += 1
         elif p["result"] == "lost":
-            cum -= STAKE_EUR
-        equity.append(round(cum, 2))
+            cum -= 1
+        equity.append(cum)
 
     return {
         "total":     total,
@@ -215,13 +217,11 @@ def main():
 
     png_path = render_png(html_path)
     if png_path:
-        sign = "+" if k["roi_pct"] >= 0 else ""
+        # TikTok-safe (15.06.2026): keine €/ROI/P&L — Prognose-Genauigkeit statt Geld.
         caption = (
-            f"📊 <b>CocoBet Track-Record</b>\n"
-            f"ROI {sign}{k['roi_pct']:.1f}% · Hit-Rate {k['hit_rate']}% · "
-            f"{k['resolved']}/{k['total']} Picks resolved\n"
-            f"P&amp;L {sign}€{abs(k['pnl_eur']):.2f} bei €{STAKE_EUR}/Pick · "
-            f"Ø CLV {k['avg_clv']:+.1f}pp" if k['avg_clv'] is not None else ""
+            f"📊 <b>CocoBet Prognose-Genauigkeit</b>\n"
+            f"{k['hit_rate']}% richtig · {k['resolved']}/{k['total']} Prognosen ausgewertet"
+            + (f" · Ø Vorhersage-Wert {k['avg_clv']:+.1f}pp" if k['avg_clv'] is not None else "")
         )
         ok = tg_send_photo(png_path, caption)
         if ok:

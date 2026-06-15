@@ -446,7 +446,7 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
 
   <div class="hero-box">
     <div class="hero-pct">{chance_pct}</div>
-    <div class="hero-quote">Quote <strong>{quote_str}</strong></div>
+    <div class="hero-quote">Chance <strong>{quote_str}</strong></div>
   </div>
 
   <div class="list-title">Was eher passiert</div>
@@ -459,7 +459,7 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
   <div class="quote">{quote_line}</div>
 
   <div class="footer">
-    <div class="ft">Quote: Polymarket Outrights · 02.06.26</div>
+    <div class="ft">Outright-Wahrscheinlichkeiten · 02.06.26</div>
     <div class="ft">cocobet</div>
   </div>
 </div>
@@ -808,7 +808,7 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
   </div>
 
   <div class="footer">
-    <div class="ft">Quote: TheOddsAPI · live</div>
+    <div class="ft">Eigene Analyse · live</div>
     <div class="ft">cocobet</div>
   </div>
 </div>
@@ -880,7 +880,7 @@ def track_record_card(
     else:
         curve_svg = (
             f'<div style="text-align:center;font-size:10px;color:rgba(255,255,255,.35);'
-            f'padding:20px 0;letter-spacing:1px;">Bankroll-Verlauf folgt mit ersten Picks</div>'
+            f'padding:20px 0;letter-spacing:1px;">Genauigkeits-Verlauf folgt mit ersten Prognosen</div>'
         )
 
     return f"""<!DOCTYPE html>
@@ -953,28 +953,28 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
   <div class="period">{period_label}</div>
 
   <div class="hero">
-    <div class="hero-label">Return on Investment</div>
-    <div class="hero-num">{roi_sign}{abs(roi_pct):.1f}<span class="unit">%</span></div>
-    <div class="hero-sub">{pnl_sign}€{abs(pnl_eur):.2f} bei €{stake_eur}/Pick</div>
+    <div class="hero-label">Prognose-Genauigkeit</div>
+    <div class="hero-num">{hit_rate_pct}<span class="unit">%</span></div>
+    <div class="hero-sub">{resolved_picks} von {total_picks} Prognosen ausgewertet</div>
   </div>
 
   <div class="stats-row">
     <div class="stat">
-      <div class="stat-num acc">{hit_rate_pct}%</div>
-      <div class="stat-lbl">Trefferquote</div>
+      <div class="stat-num acc">{resolved_picks}</div>
+      <div class="stat-lbl">ausgewertet</div>
     </div>
     <div class="stat">
-      <div class="stat-num">{resolved_picks}<span style="font-size:11px;color:rgba(255,255,255,.40);">/{total_picks}</span></div>
-      <div class="stat-lbl">Picks resolved</div>
+      <div class="stat-num">{total_picks}</div>
+      <div class="stat-lbl">Prognosen gesamt</div>
     </div>
     <div class="stat">
       <div class="stat-num acc">{clv_str}</div>
-      <div class="stat-lbl">Ø CLV</div>
+      <div class="stat-lbl">Ø Vorhersage-Wert</div>
     </div>
   </div>
 
   <div class="curve-wrap">
-    <div class="curve-label">Bankroll-Verlauf</div>
+    <div class="curve-label">Genauigkeits-Verlauf</div>
     {curve_svg}
   </div>
 
