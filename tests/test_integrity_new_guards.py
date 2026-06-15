@@ -82,6 +82,31 @@ class TestNewIntegrityGuards(unittest.TestCase):
         c = _result(self._run(wm, history=hist), "soft_book_history")
         self.assertTrue(c["ok"])
 
+    # ── Tor-Anker-Quelle (15.06.2026): warnt bei Soft-Fallback ──────────────
+    def _wm_with_anchor(self, src):
+        return {
+            "groups": {"H": {"fixtures": [
+                {"home": "ESP", "away": "CPV", "matchday": 1, "date": "2026-06-20"}]}},
+            "odds": {"ESP-CPV": {"o25": 1.31, "u25": 3.6, "o25_src": src}},
+            "picks": {"H-1-ESP-CPV": [
+                {"market": "Über 2.5 Tore", "verdict": "BET", "modelOdds": 1.31}]},
+        }
+
+    def test_soft_sourced_anchor_flagged(self):
+        c = _result(self._run(self._wm_with_anchor("williamhill")), "ou_anchor_source")
+        self.assertFalse(c["ok"], "Soft-Book als Tor-Anker muss als Warnung auftauchen")
+
+    def test_pinnacle_anchor_ok(self):
+        c = _result(self._run(self._wm_with_anchor("pinnacle")), "ou_anchor_source")
+        self.assertTrue(c["ok"])
+
+    def test_untagged_anchor_not_checkable_ok(self):
+        # Alte Daten ohne *_src-Tag → nicht prüfbar → kein false-positive
+        wm = self._wm_with_anchor("pinnacle")
+        del wm["odds"]["ESP-CPV"]["o25_src"]
+        c = _result(self._run(wm), "ou_anchor_source")
+        self.assertTrue(c["ok"])
+
 
 if __name__ == "__main__":
     unittest.main()

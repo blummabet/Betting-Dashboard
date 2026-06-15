@@ -773,7 +773,7 @@
         const pct = (score / 10) * 100;
         const fams = heroPick.convictionFamilies || {};
         const famRows = [
-          ['Sharp-Money (Pinn vs Bet365)', fams.sharp_money || 0, 3],
+          ['Sharp-Money (Pinnacle vs Softbookies)', fams.sharp_money || 0, 3],
           ['Modell-Stack (Form + xG + H2H)', fams.model_stack || 0, 3],
           ['Kontext (Travel + Lineup + Druck)', fams.context || 0, 3],
           ['Markt-Konsens (Public + APIF)', fams.market || 0, 1],
@@ -2150,7 +2150,7 @@
         if (score < 1) return '';
         const fams = pick.convictionFamilies || {};
         const rows = [
-          ['Sharp-Money (Pinnacle-Move + Bet365/WilliamHill-Lag)',    fams.sharp_money || 0, 3],
+          ['Sharp-Money (Pinnacle-Move + Softbook-Konsens-Lag)',      fams.sharp_money || 0, 3],
           ['Modell-Stack (Form + xG + H2H + Injury + Modell-Sanity)', fams.model_stack || 0, 3],
           ['Kontext (Travel + Lineup-T1h + Wetter + Druck + Anreiz)', fams.context     || 0, 3],
           ['Markt-Konsens (Public-Bias + APIF-Predictions)',          fams.market      || 0, 1],
