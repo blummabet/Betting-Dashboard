@@ -57,19 +57,19 @@ def _pick_hook_config(hero: dict) -> dict:
             h2 = 'Der Markt hat das <span class="yellow">noch nicht kapiert</span>.'
     else:
         big = f"+{int(round(edge))}"
-        sub = "Prozentpunkte Edge · gegen den Markt"
-        h1 = 'Ein Team wird vom Markt <span class="acc">unterschätzt</span>.'
-        h2 = 'Unser Modell <span class="yellow">sieht den Value</span>.'
+        sub = "Punkte Vorsprung · gegen die Markterwartung"
+        h1 = 'Ein Team wird <span class="acc">unterschätzt</span>.'
+        h2 = 'Unser Modell <span class="yellow">sieht die Chance</span>.'
     return dict(
         theme="daily_picks",
         big_number=big,
         sub_title=sub,
         hook_line_1=h1,
         hook_line_2=h2,
-        mystery_question="Ein Markt schreit Value. Welcher?",
+        mystery_question="Ein Spiel sticht heraus. Welches?",
         highlight_fact=f"{nh} – {na} · heute {time}".strip(" ·"),
-        cta="PICK IM VIDEO →",
-        series_tag="WM 2026 · DAILY PICK",
+        cta="ANALYSE IM VIDEO →",
+        series_tag="WM 2026 · DAILY ANALYSE",
     )
 
 
