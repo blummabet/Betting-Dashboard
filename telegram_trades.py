@@ -89,6 +89,17 @@ def _flag(team_id: str) -> str:
     return _FLAGS.get(team_id.upper(), "🏳️")
 
 
+def is_auto_source(source: str | None) -> bool:
+    """Single Source of Truth: gilt ein Bet als Auto-Trade?
+
+    Der Auto-Trader taggt sich als "auto" ODER "auto_steam" (Steam-Lag). Frühere
+    exakte ==-Vergleiche liessen auto_steam durchrutschen → Telegram zeigte
+    "MANUELLER BET" (NED-TUN 15.06.) und manage_wm_poly_positions verkaufte
+    Steam-Lag-Positionen nie automatisch. startswith deckt jede auto_*-Variante.
+    """
+    return (source or "").startswith("auto")
+
+
 # ── Nachrichten-Formatter ──────────────────────────────────────────────────
 
 def notify_trade_opened(
@@ -109,8 +120,9 @@ def notify_trade_opened(
     stake_str = f"€{stake:.2f}"
     pct_str   = f"{round(poly_price * 100)}¢"
 
-    icon  = "🤖" if source == "auto" else "👆"
-    label = "AUTO-BET" if source == "auto" else "MANUELLER BET"
+    is_auto = is_auto_source(source)
+    icon  = "🤖" if is_auto else "👆"
+    label = "AUTO-BET" if is_auto else "MANUELLER BET"
     if dry_run:
         label = f"[DRY-RUN] {label}"
 

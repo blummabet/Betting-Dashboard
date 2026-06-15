@@ -26,6 +26,8 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone, date
 
+from telegram_trades import is_auto_source  # Single Source: auto vs manual (deckt auto_steam)
+
 BASE           = os.path.dirname(os.path.abspath(__file__))
 POSITIONS_FILE = os.path.join(BASE, "wm_poly_positions.json")
 AUTO_BETS_FILE = os.path.join(BASE, "wm_auto_bets_placed.json")
@@ -558,7 +560,10 @@ def main():
         home   = pos.get("home", "?")
         away   = pos.get("away", "?")
         market = pos.get("market", "?")
-        is_auto = pos.get("source") == "auto"
+        # FIX 15.06.2026: Steam-Lag-Auto-Bets haben source="auto_steam" — der frühere
+        # exakte ==-Vergleich schloss sie vom Auto-Sell aus (blieben ewig sell_signaled,
+        # nie beim Pre-Match-Close verkauft). is_auto_source deckt jede auto_*-Variante.
+        is_auto = is_auto_source(pos.get("source"))
         print(f"\n  Prüfe: {home} vs {away} — {market}")
 
         check_position(pos)

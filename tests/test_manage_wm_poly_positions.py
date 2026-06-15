@@ -198,5 +198,41 @@ class TestFunctionsStillWork(unittest.TestCase):
         self.assertIsNone(hours_until_match(""))
 
 
+class TestAutoSourceClassifier(unittest.TestCase):
+    """FIX 15.06.2026: auto_steam (Steam-Lag) muss als Auto gelten.
+    Vorher exakter ==-Vergleich → Telegram 'MANUELLER BET' + kein Auto-Sell."""
+
+    def test_auto_and_auto_steam_are_auto(self):
+        from telegram_trades import is_auto_source
+        self.assertTrue(is_auto_source("auto"))
+        self.assertTrue(is_auto_source("auto_steam"))   # Steam-Lag = der NED-TUN-Fall
+        self.assertTrue(is_auto_source("auto_ah"))       # zukünftige auto_*-Variante
+
+    def test_manual_and_empty_are_not_auto(self):
+        from telegram_trades import is_auto_source
+        self.assertFalse(is_auto_source("manual"))
+        self.assertFalse(is_auto_source(""))
+        self.assertFalse(is_auto_source(None))
+
+    def test_manage_uses_same_classifier(self):
+        import manage_wm_poly_positions as mm
+        self.assertTrue(mm.is_auto_source("auto_steam"))
+
+    def test_telegram_label_for_auto_steam(self):
+        import telegram_trades as t
+        sent = {}
+        orig = t.send_trades_message
+        t.send_trades_message = lambda text: sent.setdefault("text", text) or True
+        try:
+            t.notify_trade_opened(
+                home="Niederlande", away="Tunesien", market="Under 2.5 Tore",
+                stake=5.5, poly_price=0.42, source="auto_steam",
+            )
+        finally:
+            t.send_trades_message = orig
+        self.assertIn("AUTO-BET", sent["text"])
+        self.assertNotIn("MANUELLER", sent["text"])
+
+
 if __name__ == "__main__":
     unittest.main()
