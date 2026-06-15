@@ -58,6 +58,21 @@ class TestAhEdges(unittest.TestCase):
         self.assertIsNone(f._devig_2way(1.0, 2.0))   # ungültige Quote
         self.assertIsNone(f._devig_2way(None, 2.0))
 
+    def test_mirror_immune_team_id_lookup(self):
+        # Mirror-Bug-Regression (15.06.2026): Poly listet ENG-PAN als PAN-ENG.
+        # Spreads team-ID-geschlüsselt → richtige Seite trotz Spiegelung.
+        spreads = {"England": {-1.5: {"yes": 0.54, "tokens": ["eng"]}},
+                   "Panama":  {-1.5: {"yes": 0.0235, "tokens": ["pan"]}}}
+        by_team = {tid: lines for team, lines in spreads.items()
+                   if (tid := f.resolve_team_id(team))}
+        self.assertEqual(set(by_team), {"ENG", "PAN"})
+        # Fixture ENG-PAN: home=ENG → Englands Spread (0.54), NICHT Panamas 0.0235
+        ladder = {"-1.5": [1.45, 2.7]}
+        edges = f.compute_ah_edges(by_team.get("ENG", {}), by_team.get("PAN", {}), ladder)
+        home = [e for e in edges if e["side"] == "home"][0]
+        self.assertEqual(home["poly"], 0.54)        # Englands Preis, nicht Panamas
+        self.assertEqual(home["tokens"], ["eng"])   # Englands Token
+
 
 if __name__ == "__main__":
     unittest.main()
