@@ -7,12 +7,13 @@ on:
   # die 4h-Lücken → Positionen rutschten ins In-Play und wurden bis zur Auflösung
   # gehalten (NO_INPLAY_LOSS_SELL) → voller Verlust möglich. WIDERSPRUCH zur Regel
   # „kein Trade geht ins In-Play".
-  # 16.06.2026: zurück auf 0,30 (alle 30min). GitHub drosselt */15-Schedules unter Last
-  # (real ~30min, belegt am Lineup-Watcher), und ein einzelner self-hosted Runner staut
-  # schwerere Läufe. Statt enger zu takten, ist der Hard-Close auf 40min vor Anpfiff
-  # gesetzt (pre_match_close_hours=0.67) → bei 30min-Kadenz landet GARANTIERT ein Lauf im
+  # 16.06.2026: 0,30 (alle 30min). Jetzt auf GitHubs Cloud-Runner (kein Mac-Sleep mehr,
+  # kein Single-Runner-Stau) → geplante Läufe feuern zuverlässig. GitHub kann hochfrequente
+  # */15-Schedules unter Last trotzdem drosseln, darum 0,30 + Hard-Close auf 40min vor
+  # Anpfiff (pre_match_close_hours=0.67) → bei 30min-Kadenz landet GARANTIERT ein Lauf im
   # Fenster [KO-40, KO-10], sicher pre-match. Fängt die Lineup-Steam (droppt 60-90min vor
   # KO) weiterhin. Anpfiffe 00-04 + 16-23 UTC, Vorlauf → 14:00-04:00.
+  # (Mit Cloud-Runner könnte man später wieder */15 + 20min-Close testen.)
   # + 2 Tages-Läufe fürs Housekeeping (Profit-/Age-Trigger auf lang gehaltene Positionen).
   schedule:
     - cron: '0,30 14-23 * * *'   # Abend-Anpfiffe (16-23 UTC) inkl. Vorlauf
@@ -49,30 +50,29 @@ concurrency:
 
 jobs:
   monitor-positions:
-    # Self-hosted Runner (Mac) — gleiche Umgebung wie poly-bets.yml
-    # py-clob-client-v2 wird frisch von GitHub installiert (nicht auf PyPI verfügbar)
-    runs-on: self-hosted
+    # 16.06.2026 (Lucas): von self-hosted (Mac) auf GitHubs Cloud-Runner umgezogen.
+    # Grund: der Mac schlief zwischendurch → geplante Läufe feuerten nicht → Auto-Trader
+    # stand stundenlang. POLY_PRIVATE_KEY liegt eh schon als Secret (fürs Wetten genutzt),
+    # also keine zusätzliche Sicherheits-Abwägung. Jetzt Mac-unabhängig + zuverlässiger Cron.
+    runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
 
-      - name: 🐍 Python + py-clob-client-v2 einrichten
+      - name: 🐍 Python 3.11 einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 py-clob-client-v2 + Deps
         run: |
-          PYTHON=""
-          for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11; do
-            if "$PY" --version &>/dev/null 2>&1; then
-              PYTHON="$PY"
-              break
-            fi
-          done
-          if [ -z "$PYTHON" ]; then echo "❌ Kein Python >= 3.11 gefunden"; exit 1; fi
-          echo "✅ $PYTHON ($($PYTHON --version))"
-          echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
-          $PYTHON -m pip install --break-system-packages requests --quiet
-          $PYTHON -m pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
-          $PYTHON -m pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
-          $PYTHON -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
+          echo "POLY_PYTHON=python" >> $GITHUB_ENV
+          python -m pip install --upgrade pip --quiet
+          python -m pip install requests --quiet
+          python -m pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
+          python -m pip install "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
+          python -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
 
       # ── Phase 1 (16.06.2026): Pinnacle-Odds frisch holen VOR den Poly-Preisen ──
       # Grund: der Auto-Trader-Edge = Pinnacle-fair vs Live-Poly. fetch-wm-data holt
