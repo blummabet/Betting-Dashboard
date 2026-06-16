@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-16T09:32:03Z",
+  "generatedAt": "2026-06-16T16:31:52Z",
   "windowDays": 2,
   "upcoming": 12,
   "signalsFired": [
@@ -19,23 +19,23 @@
   ],
   "signalsTotal": 17,
   "perSignal": {
-    "lead_lag_bias": 1,
-    "public_static_bias": 4,
-    "travel_burden": 27,
+    "lead_lag_bias": 3,
+    "public_static_bias": 7,
+    "travel_burden": 41,
     "injury": 0,
-    "form_trend": 58,
-    "h2h_pattern": 4,
-    "xg_strength": 46,
+    "form_trend": 77,
+    "h2h_pattern": 6,
+    "xg_strength": 69,
     "polymarket_sharp": 0,
     "steam_lag": 0,
-    "pressure_index": 23,
+    "pressure_index": 28,
     "lineup_signal": 6,
     "apif_predictions": 12,
-    "weather_signal": 12,
+    "weather_signal": 14,
     "incentive_signal": 0,
     "altitude_signal": 2,
-    "chance_creation": 26,
-    "form_rating": 8
+    "chance_creation": 32,
+    "form_rating": 9
   },
   "verdict": "warn",
   "errors": [],
@@ -43,18 +43,17 @@
     "🧠 Signal 'injury' feuert nicht (nur bei gemeldeten Ausfällen)",
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
-    "🧠 Signal 'incentive_signal' feuert nicht (feuert ab MD2)",
-    "🛡️ AH-Leiter bei nahen bepreisten Spielen: 5 Fehler (z.B. TUR-PRY: bepreist + Anpfiff nah, aber keine ahLadder)"
+    "🧠 Signal 'incentive_signal' feuert nicht (feuert ab MD2)"
   ],
   "oks": [
     "🌡️ Weather: 56 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 11.4h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
     "📊 APIF-Predictions: 45 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 46 Teams",
-    "📉 Odds-History: 72 Fixtures, Ø 21.2 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 22.0 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $319.37",
+    "💼 Poly-Balance: $318.99",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -131,13 +130,22 @@
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
+      "id": "odds_freshness",
+      "label": "Pinnacle-Odds frisch (< 6h)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Auto-Trader stoppt hart erst bei max_odds_age_hours (24h) — dieser Guard warnt früh. Root-Cause: fetch_wm_odds-Workflow/Cron prüfen."
+    },
+    {
       "id": "homeaway_consistent",
       "label": "Home/Away nicht vertauscht (Pinn vs Poly)",
       "severity": "error",
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet."
+      "note": "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet. Bei knappen Quoten ggf. echte Markt-Uneinigkeit — Fixture-Orientierung prüfen."
     },
     {
       "id": "edge_consistent",
@@ -221,18 +229,21 @@
       "note": "Sonst hängt die Wette ewig in 'Offene Positionen · Live'."
     },
     {
+      "id": "ah_btts_position_priced",
+      "label": "AH/BTTS-Positionen über Token bewertbar",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "manage_wm_poly_positions bewertet AH/BTTS über den Token. Fehlt er im Cache → kein Sell (sicher), aber Position hängt. fetch_wm_poly_prices prüfen."
+    },
+    {
       "id": "ah_ladder_coverage",
       "label": "AH-Leiter bei nahen bepreisten Spielen",
       "severity": "warn",
-      "ok": false,
-      "nFail": 5,
-      "failures": [
-        "TUR-PRY: bepreist + Anpfiff nah, aber keine ahLadder",
-        "GER-CIV: bepreist + Anpfiff nah, aber keine ahLadder",
-        "ECU-CUW: bepreist + Anpfiff nah, aber keine ahLadder",
-        "NED-SWE: bepreist + Anpfiff nah, aber keine ahLadder",
-        "TUN-JPN: bepreist + Anpfiff nah, aber keine ahLadder"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "ahLadder fehlte → AH-Picks fielen durchs Raster (Mismatches ohne AH)."
     },
     {
