@@ -366,6 +366,8 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
     cutoff  = now_utc - timedelta(days=SNAP_WINDOW_DAYS)
 
     for key, snaps in history.items():
+        if key == "_meta" or not isinstance(snaps, list):
+            continue   # _meta (oddsFetchedAt) ist kein Fixture-Snapshot-Array
         if len(snaps) < 2:
             continue
 

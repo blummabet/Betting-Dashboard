@@ -1241,11 +1241,20 @@ def main():
         print(f"   ⚠️  Closing-Lines-Persistenz fehlgeschlagen: {_e}")
 
     # ── Write history ─────────────────────────────────────────
+    # FIX 16.06.2026: Fetch-Zeitstempel IMMER schreiben (auch ohne Move), damit der
+    # Sharp-Radar-Badge „zuletzt geholt" zeigt — sonst stand er bei flachen Linien ewig
+    # auf der letzten Bewegung und meldete fälschlich STALE, obwohl wir alle 15-30min
+    # frisch holen (Manage-Zyklus). `_meta` ist kein Fixture-Array → von allen
+    # Snapshot-Iterationen (py: per-Key-Zugriff, js: Array.isArray) ignoriert.
+    history.setdefault("_meta", {})
+    history["_meta"]["oddsFetchedAt"] = now_iso
     if snaps_added > 0:
-        _save_history(history)
+        history["_meta"]["lastMovementAt"] = now_iso
+    _save_history(history)
+    if snaps_added > 0:
         print(f"   📸  {snaps_added} neue Snapshots → {HISTORY_FILE.name}")
     else:
-        print(f"   📸  Keine Odds-Änderung — kein neuer Snapshot")
+        print(f"   📸  Keine Odds-Änderung — Fetch-Zeitstempel aktualisiert")
 
     remaining = len(all_fixtures) - matched
     print(f"\n✅  {updated} fixtures priced, {remaining} not yet available")

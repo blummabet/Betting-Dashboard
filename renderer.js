@@ -2515,29 +2515,32 @@ function renderSharpRadar() {
       <div style="font-size:12px;color:var(--muted);line-height:1.55;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
         <span>Linienbewegungen im Markt · alle 7 Tage · CLV-Orientierung für unsere Picks</span>
         ${(() => {
-          // FIX 11.06.2026: Frische = ECHTER neuester Odds-Snapshot, NICHT die Datei-
-          // Generierungszeit. wm2026-data.json wird täglich neu geschrieben (generatedAt
-          // frisch), auch wenn die Odds eingefroren sind → alte Anzeige log "aktuell".
-          // Jetzt zeigen wir das Alter der jüngsten echten Odds-Bewegung. Rot + STALE
-          // wenn der Odds-Feed hängt — damit man Ausfälle sofort sieht.
-          let newestTs = 0;
+          // FIX 16.06.2026: Frische = letzter FETCH (hist._meta.oddsFetchedAt), nicht nur
+          // die letzte Bewegung. Grund (Lucas): bei flachen Pre-Match-Linien gab es lange
+          // keinen neuen Snapshot → Badge hing auf „vor 17 Std" und meldete fälschlich
+          // STALE, obwohl der Manage-Zyklus alle 15-30min frisch holt. fetch_wm_odds
+          // schreibt jetzt oddsFetchedAt bei JEDEM Lauf. Stale erst wenn der FETCH hängt.
           const hist = window.WM2026_ODDS_HISTORY || {};
+          let moveTs = 0;
           for (const snaps of Object.values(hist)) {
             if (Array.isArray(snaps) && snaps.length) {
               const t = new Date(snaps[snaps.length - 1].ts).getTime();
-              if (!isNaN(t) && t > newestTs) newestTs = t;
+              if (!isNaN(t) && t > moveTs) moveTs = t;
             }
           }
-          if (newestTs) {
-            const diffM = Math.round((Date.now() - newestTs) / 60000);
+          const fetchIso = (hist._meta && hist._meta.oddsFetchedAt) || null;
+          const fetchTs  = fetchIso ? new Date(fetchIso).getTime() : 0;
+          const baseTs   = fetchTs || moveTs;   // Fallback auf Bewegung (alte Daten ohne _meta)
+          if (baseTs) {
+            const diffM = Math.round((Date.now() - baseTs) / 60000);
             const ago = diffM < 2 ? 'gerade eben'
                       : diffM < 60 ? `vor ${diffM} Min`
                       : diffM < 1440 ? `vor ${Math.floor(diffM/60)} Std`
                       : `vor ${Math.floor(diffM/1440)} Tg`;
-            const stale = diffM >= 1440;            // > 24h = Feed hängt
-            const col = diffM < 360 ? '#3fb950' : diffM < 1440 ? '#e3b341' : '#f85149';
-            const iso = new Date(newestTs).toLocaleString('de-AT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
-            return `<span style="font-size:11px;font-weight:800;color:${col};background:rgba(0,0,0,0.25);border:1px solid ${col}66;border-radius:5px;padding:2px 8px;" title="Neueste Odds-Bewegung: ${iso}">📊 Odds ${ago} aktualisiert${stale ? ' · ⚠️ STALE — Feed prüfen' : ''}</span>`;
+            const stale = diffM >= 240;             // > 4h ohne Fetch = Feed hängt (Lauf alle 15-30min)
+            const col = diffM < 90 ? '#3fb950' : diffM < 240 ? '#e3b341' : '#f85149';
+            const moveTxt = moveTs ? new Date(moveTs).toLocaleString('de-AT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '—';
+            return `<span style="font-size:11px;font-weight:800;color:${col};background:rgba(0,0,0,0.25);border:1px solid ${col}66;border-radius:5px;padding:2px 8px;" title="Letzte Pinnacle-Bewegung: ${moveTxt}">📊 Odds ${ago} geholt${stale ? ' · ⚠️ STALE — Feed prüfen' : ''}</span>`;
           }
           // Kein Snapshot geladen → ehrlich rot statt "wird geladen…"
           const _ts = window._pmTs;
