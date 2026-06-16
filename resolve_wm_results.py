@@ -412,17 +412,23 @@ def determine_result(bet: dict, res: dict) -> str:
 
     market  = bet.get("market", "")
     checker = MARKET_WIN_CONDITIONS.get(market)
-    if not checker:
-        return "VOID"
+    if checker:
+        try:
+            win = checker(res)
+        except Exception:
+            win = None
+        if win is None:
+            return "VOID"
+        return "WIN" if win else "LOSS"
 
-    try:
-        win = checker(res)
-    except Exception:
-        win = None
-
-    if win is None:
-        return "VOID"
-    return "WIN" if win else "LOSS"
+    # Fallback (16.06.2026): dynamische AH/BTTS-Auflösung. AH-Linien variieren (−1.5,
+    # −2.5, +0.5 …) und passen nie in ein exaktes Dict; BTTS kommt vom Auto-Trader mit
+    # em-dash („Beide Teams treffen — Ja/Nein"). Beide würden sonst als VOID settlen
+    # (kein P&L, kein Lernen). [[project_poly_handicap_trading]] [[project_btts_auto_trade]].
+    dyn = _resolve_ah_btts(market, res)
+    if dyn is not None:
+        return dyn
+    return "VOID"
 
 
 def compute_pnl(bet: dict, result: str) -> float:
@@ -544,6 +550,47 @@ def _parse_ah_line(market_lower: str):
         return float(mm.group(1).replace(" ", ""))
     except Exception:
         return None
+
+
+def _resolve_ah_btts(market: str, res: dict):
+    """Dynamische WIN/LOSS-Auflösung aus dem Endstand für AH (jede Linie) + BTTS
+    (alle Varianten: em-dash/Bindestrich, Ja/Nein/ohne Suffix). Gibt 'WIN'/'LOSS'/
+    'VOID' (exakter AH-Push) oder None (= kein AH/BTTS → Caller voided)."""
+    m = (market or "").lower().replace("−", "-")
+    hs, as_ = res.get("home_score"), res.get("away_score")
+    if hs is None or as_ is None:
+        return "VOID"
+    try:
+        hs, as_ = int(hs), int(as_)
+    except (TypeError, ValueError):
+        return "VOID"
+
+    # ── BTTS ──
+    if "beide teams" in m or "btts" in m:
+        both = hs >= 1 and as_ >= 1
+        is_no = "nein" in m or "no" in m
+        won = (not both) if is_no else both
+        return "WIN" if won else "LOSS"
+
+    # ── Asian Handicap (jede Linie) ──
+    if "ah " in m or m.startswith("ah") or "handicap" in m:
+        line = _parse_ah_line(m)
+        if line is None:
+            return "VOID"
+        if "heim" in m or "home" in m:
+            margin = hs - as_
+        elif "ausw" in m or "away" in m:
+            margin = as_ - hs
+        else:
+            return "VOID"
+        cover = margin + line          # >0 gedeckt, <0 nicht, =0 Push (ganzz. Linie)
+        if cover > 0:
+            return "WIN"
+        if cover < 0:
+            return "LOSS"
+        return "VOID"
+
+    return None
 
 
 def process_verdict(market: str, result_str: str, stats: dict | None) -> dict:

@@ -62,6 +62,9 @@ def derive_angle(market: str, dq: str = "") -> str:
     if "beide teams treffen" in m or "btts" in m:
         if "nein" in m or "no" in m: return "defshow"
         return "torfest"
+    # AH zuerst (16.06.2026): 'AH Heim/Auswärts' enthält 'heim'/'ausw' → würde sonst
+    # fälschlich als 1X2 „pflicht" geclustert und dessen Trefferquote verfälschen.
+    if m.startswith("ah ") or "handicap" in m:         return "handicap"
     if "heim" in m or "home" in m or m == "1":         return "pflicht"
     if "auswärt" in m or "away" in m or m == "2":      return "pflicht"
     if "unentsch" in m or "draw" in m:                 return "duell"

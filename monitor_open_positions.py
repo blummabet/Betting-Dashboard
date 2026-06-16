@@ -34,6 +34,7 @@ Läuft in manage-wm-poly.yml (5× täglich) — nach manage_wm_poly_positions.py
 
 import json
 import os
+import re
 import sys
 import urllib.parse
 import urllib.request
@@ -111,9 +112,11 @@ def _flag(team_id: str | None) -> str | None:
 
 
 # ── Faktor-Berechnung ─────────────────────────────────────────────
-def _score_edge_persistence(entry_edge_pp: float, current_edge_pp: float) -> tuple[float, str]:
+def _score_edge_persistence(entry_edge_pp: float, current_edge_pp) -> tuple[float, str]:
     """100 = voller Erhalt, 0 = Edge weg/negativ."""
-    if entry_edge_pp <= 0:
+    if current_edge_pp is None:
+        return 70.0, "Edge aktuell nicht bewertbar (Markt nicht aufgelöst)"
+    if not entry_edge_pp or entry_edge_pp <= 0:
         return 50.0, "Entry-Edge ≤0pp — nicht bewertbar"
     if current_edge_pp <= 0:
         return 0.0, f"Edge ist NEGATIV ({current_edge_pp:.1f}pp) — Markt gegen uns"
@@ -184,6 +187,69 @@ def _score_time_pressure(hours_until_match: float) -> tuple[float, str]:
     return 100.0, "Match läuft / vorbei"
 
 
+def _line_close(a, b, tol=0.01) -> bool:
+    try:
+        return abs(float(a) - float(b)) <= tol
+    except (TypeError, ValueError):
+        return False
+
+
+def resolve_current_market(bet: dict, current_fx: dict):
+    """(current_edge_pp, current_poly, current_pinn_fair) für die Position — robust für
+    ALLE Markttypen (16.06.2026). AH/BTTS über den EXAKTEN Token (mirror-immun), sonst
+    Moneyline/O-U über fair_X/edge_X.
+
+    WICHTIG: 'AH Heim -2.5' / 'AH Auswärts +0.5' dürfen NICHT als hw/aw klassifiziert
+    werden — der frühere `"heim" in label`-Check fing sie fälschlich → die 1X2-Heimsieg-
+    fair (z.B. 0.66) statt der AH-fair (~0.18) → Phantom-CLV +50pp / Phantom-Drift +46pp.
+    Gibt (None, None, None) wenn nicht auflösbar → die Scores werten das als neutral."""
+    lbl = (bet.get("market") or "").strip().lower()
+    tok = bet.get("tokenId") or ""
+
+    # ── Asian Handicap ──
+    if lbl.startswith("ah "):
+        ah = current_fx.get("ah_edges") or []
+        for e in ah:                                   # 1) per exaktem Token
+            toks = e.get("tokens") or []
+            if tok and toks and toks[0] == tok:
+                return (e.get("edge"), e.get("poly"), e.get("fair"))
+        side = "home" if "heim" in lbl else ("away" if "ausw" in lbl else None)
+        m = re.search(r"[-+]?\d+(?:[.,]\d+)?", lbl)    # 2) Fallback: Seite + Linie
+        line = float(m.group().replace(",", ".")) if m else None
+        if side and line is not None:
+            for e in ah:
+                if e.get("side") == side and _line_close(e.get("line"), line):
+                    return (e.get("edge"), e.get("poly"), e.get("fair"))
+        return (None, None, None)
+
+    # ── BTTS (Ja/Nein) ──
+    if lbl.startswith("beide teams"):
+        bt = current_fx.get("poly_btts_tokens") or []
+        if tok and len(bt) >= 2 and tok == bt[1]:
+            return (current_fx.get("edge_btts_no"), current_fx.get("poly_btts_no"), current_fx.get("fair_btts_no"))
+        if tok and len(bt) >= 1 and tok == bt[0]:
+            return (current_fx.get("edge_btts"), current_fx.get("poly_btts"), current_fx.get("fair_btts"))
+        if "nein" in lbl:                              # Fallback per Label
+            return (current_fx.get("edge_btts_no"), current_fx.get("poly_btts_no"), current_fx.get("fair_btts_no"))
+        return (current_fx.get("edge_btts"), current_fx.get("poly_btts"), current_fx.get("fair_btts"))
+
+    # ── Moneyline / Over-Under ──
+    market_key = (bet.get("marketKey") or "").lower()
+    if market_key in ("hw", "aw", "dr", "o25", "u25", "o15", "u15", "o35", "u35"):
+        mkt_k = market_key
+    elif "heim" in lbl or "dnb: heim" in lbl: mkt_k = "hw"
+    elif "ausw" in lbl or "dnb: ausw" in lbl: mkt_k = "aw"
+    elif "unentsch" in lbl or "remis" in lbl: mkt_k = "dr"
+    elif "über 2.5" in lbl or "over 2.5" in lbl: mkt_k = "o25"
+    elif "unter 2.5" in lbl or "under 2.5" in lbl: mkt_k = "u25"
+    elif "über 1.5" in lbl or "over 1.5" in lbl: mkt_k = "o15"
+    elif "unter 1.5" in lbl or "under 1.5" in lbl: mkt_k = "u15"
+    elif "über 3.5" in lbl or "over 3.5" in lbl: mkt_k = "o35"
+    elif "unter 3.5" in lbl or "under 3.5" in lbl: mkt_k = "u35"
+    else: mkt_k = "hw"
+    return (current_fx.get(f"edge_{mkt_k}"), current_fx.get(f"poly_{mkt_k}"), current_fx.get(f"fair_{mkt_k}"))
+
+
 # ── Health-Score-Berechnung ───────────────────────────────────────
 def compute_health(bet: dict, current_fx: dict) -> dict:
     """
@@ -194,25 +260,11 @@ def compute_health(bet: dict, current_fx: dict) -> dict:
     entry_edge_pp     = bet.get("edgePP") or bet.get("entryEdgePp") or 0
     entry_poly_price  = bet.get("polyPrice") or bet.get("entryPolyPrice") or 0
     entry_pinn_fair   = bet.get("pinnFair") or bet.get("entryPinnFair") or 0
-    market_key  = (bet.get("marketKey") or "").lower()
-    market_lbl  = (bet.get("market") or "").lower()
-    # Mapping: direkte Kürzel haben Vorrang, sonst aus dem Markt-Label ableiten
-    if market_key in ("hw", "aw", "dr", "o25", "u25", "o15", "u15", "o35", "u35"):
-        mkt_k = market_key
-    elif "heim" in market_lbl or "dnb: heim" in market_lbl: mkt_k = "hw"
-    elif "ausw" in market_lbl or "dnb: ausw" in market_lbl: mkt_k = "aw"
-    elif "unentsch" in market_lbl or "remis" in market_lbl: mkt_k = "dr"
-    elif "über 2.5" in market_lbl or "over 2.5" in market_lbl: mkt_k = "o25"
-    elif "unter 2.5" in market_lbl or "under 2.5" in market_lbl: mkt_k = "u25"
-    elif "über 1.5" in market_lbl or "over 1.5" in market_lbl: mkt_k = "o15"
-    elif "unter 1.5" in market_lbl or "under 1.5" in market_lbl: mkt_k = "u15"
-    elif "über 3.5" in market_lbl or "over 3.5" in market_lbl: mkt_k = "o35"
-    elif "unter 3.5" in market_lbl or "under 3.5" in market_lbl: mkt_k = "u35"
-    else: mkt_k = "hw"   # Fallback
-
-    current_edge_pp   = current_fx.get(f"edge_{mkt_k}") or 0
-    current_poly      = current_fx.get(f"poly_{mkt_k}") or 0
-    current_pinn_fair = current_fx.get(f"fair_{mkt_k}") or 0
+    # Markt robust auflösen — AH/BTTS über Token, sonst Moneyline/O-U (16.06.2026).
+    _edge, _poly, _fair = resolve_current_market(bet, current_fx)
+    current_edge_pp   = _edge if isinstance(_edge, (int, float)) else None
+    current_poly      = _poly if isinstance(_poly, (int, float)) else 0
+    current_pinn_fair = _fair if isinstance(_fair, (int, float)) else None
 
     # Hours bis Match
     match_date = bet.get("matchDate") or current_fx.get("date") or ""
