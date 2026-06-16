@@ -32,7 +32,7 @@ WM_EXPECTED = {
     "AGE_LOSS_HOURS":          36.0,
     "AGE_LOSS_THRESHOLD_PCT":  0.10,
     "NO_INPLAY_LOSS_SELL":     True,
-    "PRE_MATCH_CLOSE_HOURS":   0.33,   # 16.06.2026: 2h → 20min (späterer Exit)
+    "PRE_MATCH_CLOSE_HOURS":   0.67,   # 16.06.2026: 2h → 40min (späterer Exit, GitHub-30min-kadenz-sicher)
 }
 
 

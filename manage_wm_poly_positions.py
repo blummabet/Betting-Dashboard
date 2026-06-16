@@ -103,10 +103,11 @@ AUTO_SELL_ENABLED     = False
 
 # Hard-Close Stunden vor Anpfiff — bereits in trade-section (von auto_trigger).
 # 05.06.2026: von 6 → 2 verschoben (Lineups 60-90min vor Anpfiff, Sharp-Moves 2-4h vor KO).
-# 16.06.2026 (Lucas): auf 0.33h (20min) gesenkt — wir halten die Gewinner bis kurz vor
-# Anpfiff, um die späte Steam (v.a. Aufstellungs-Moves ~1h vor KO) mitzunehmen. 20min
-# Puffer = sicher VOR dem Anpfiff raus (kein In-Play-Risiko). Pre-match-Märkte driften
-# nur, sie springen nicht — erst nach Anpfiff wird's volatil.
+# 16.06.2026 (Lucas): von 2h auf 0.67h (40min) gesenkt — wir halten die Gewinner bis kurz
+# vor Anpfiff, um die späte Steam (v.a. Aufstellungs-Moves 60-90min vor KO) mitzunehmen.
+# 40min (statt der zuerst geplanten 20min), weil GitHubs Scheduler real nur ~30min-Kadenz
+# liefert → bei 30min-Läufen landet garantiert einer im Fenster [KO-40,KO-10], sicher
+# pre-match. Pre-match-Märkte driften nur, sie springen nicht — erst nach Anpfiff volatil.
 PRE_MATCH_CLOSE_HOURS = _cfg("trade", "pre_match_close_hours", 2)
 
 # Früher Stop-Loss (16.06.2026): Da wir jetzt länger halten, kappen wir klare Verlierer

@@ -7,14 +7,16 @@ on:
   # die 4h-Lücken → Positionen rutschten ins In-Play und wurden bis zur Auflösung
   # gehalten (NO_INPLAY_LOSS_SELL) → voller Verlust möglich. WIDERSPRUCH zur Regel
   # „kein Trade geht ins In-Play".
-  # 16.06.2026: alle 15 min in den WM-Anpfiff-Bändern (statt 30). Grund: Hard-Close
-  # liegt jetzt bei 20min vor Anpfiff (vorher 2h) — bei 30min-Takt wäre der nächste Lauf
-  # erst beim Anpfiff selbst, also zu spät. 15min-Takt schliesst zuverlässig 5-20min
-  # vor KO, sicher pre-match. Anpfiffe 00-04 + 16-23 UTC, kleiner Vorlauf → 14:00-04:00.
+  # 16.06.2026: zurück auf 0,30 (alle 30min). GitHub drosselt */15-Schedules unter Last
+  # (real ~30min, belegt am Lineup-Watcher), und ein einzelner self-hosted Runner staut
+  # schwerere Läufe. Statt enger zu takten, ist der Hard-Close auf 40min vor Anpfiff
+  # gesetzt (pre_match_close_hours=0.67) → bei 30min-Kadenz landet GARANTIERT ein Lauf im
+  # Fenster [KO-40, KO-10], sicher pre-match. Fängt die Lineup-Steam (droppt 60-90min vor
+  # KO) weiterhin. Anpfiffe 00-04 + 16-23 UTC, Vorlauf → 14:00-04:00.
   # + 2 Tages-Läufe fürs Housekeeping (Profit-/Age-Trigger auf lang gehaltene Positionen).
   schedule:
-    - cron: '*/15 14-23 * * *'   # Abend-Anpfiffe (16-23 UTC) inkl. Vorlauf
-    - cron: '*/15 0-5 * * *'     # Nacht-Anpfiffe (00-04 UTC) inkl. Vorlauf
+    - cron: '0,30 14-23 * * *'   # Abend-Anpfiffe (16-23 UTC) inkl. Vorlauf
+    - cron: '0,30 0-5 * * *'     # Nacht-Anpfiffe (00-04 UTC) inkl. Vorlauf
     - cron: '0 6,10 * * *'       # Tages-Housekeeping (lang gehaltene Positionen)
 
   # Manuell auslösbar (z.B. direkt nach einer neuen Position)
