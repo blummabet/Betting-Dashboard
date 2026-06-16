@@ -114,26 +114,33 @@ async function runStatusPage(force) {
     if (ks && ks.enabled === false) add('warn', 'Auto-Trading pausiert (Kill-Switch)',
       `Trading ist manuell gestoppt${ks.reason ? ': ' + ks.reason : ''}. Resume via GitHub Action "Kill-Switch".`);
 
-    // ── Live-Check 5: Pinnacle-Odds-Alter (Stale-Odds-Breaker) ──────────
+    // ── Live-Check 5: Trading-Odds frisch GEHOLT? (16.06.2026) ──────────
+    // Pinnacle-Odds treiben jeden Trade-Edge. Quelle der Frische = _meta.oddsFetchedAt
+    // (von fetch_wm_odds bei JEDEM Lauf gesetzt, auch ohne Bewegung — nicht der letzte
+    // Snapshot, der bei flachen Linien ewig alt aussieht). manage holt alle 30min,
+    // also ist >2h schon verdächtig, >4h = Feed/Runner hängt → KEINE frischen Trades.
     if (oddsHist && typeof oddsHist === 'object') {
-      let newest = null;
-      for (const arr of Object.values(oddsHist)) {
-        if (!Array.isArray(arr) || !arr.length) continue;
-        const t = _stParseTs(arr[arr.length - 1].ts);
-        if (t && (!newest || t > newest)) newest = t;
+      const fetchedAt = oddsHist._meta && oddsHist._meta.oddsFetchedAt;
+      let ts = _stParseTs(fetchedAt);
+      if (!ts) {   // Fallback (alte Daten ohne _meta): jüngster Snapshot
+        for (const arr of Object.values(oddsHist)) {
+          if (!Array.isArray(arr) || !arr.length) continue;
+          const t = _stParseTs(arr[arr.length - 1].ts);
+          if (t && (!ts || t > ts)) ts = t;
+        }
       }
-      const age = _stAgeH(newest);
-      if (age === null) add('warn', 'Keine Odds-Snapshots', 'wm2026-odds-history.json leer/unlesbar.');
-      else if (age > 24) add('error', `Pinnacle-Odds ${age.toFixed(0)}h alt`,
-        `> 24h → Auto-Trader-Stale-Odds-Breaker greift, KEINE Trades. fetch_wm_odds / GitHub Actions prüfen.`);
-      else if (age > 12) add('warn', `Pinnacle-Odds ${age.toFixed(0)}h alt`, 'Älter als ein halber Tag — Fetch beobachten.');
+      const age = _stAgeH(ts);
+      if (age === null) add('error', 'Keine Trading-Odds', 'wm2026-odds-history.json leer/ohne Fetch-Zeitstempel — fetch_wm_odds prüfen.');
+      else if (age > 4) add('error', `Trading-Odds ${age.toFixed(1)}h nicht geholt`,
+        `fetch_wm_odds liefert nicht (API-Limit / Runner offline / Workflow). Edges laufen gegen veraltete Pinnacle → bei >24h stoppt der Auto-Trader ganz.`);
+      else if (age > 2) add('warn', `Trading-Odds ${age.toFixed(1)}h nicht geholt`, 'manage-wm-poly sollte alle 30min holen — Lauf beobachten.');
     }
 
-    // ── Live-Check 6: Poly-Preise-Alter ──────────────────────────────────
+    // ── Live-Check 6: Poly-Preise-Alter (manage-Zyklus-Heartbeat) ────────
     if (poly) {
       const age = _stAgeH(_stParseTs(poly.generatedAt));
-      if (age !== null && age > 24) add('error', `Poly-Preise ${age.toFixed(0)}h alt`, 'manage-wm-poly / fetch_wm_poly_prices prüfen.');
-      else if (age !== null && age > 12) add('warn', `Poly-Preise ${age.toFixed(0)}h alt`, 'Älter als erwartet (5×/Tag).');
+      if (age !== null && age > 4) add('error', `Poly-Preise ${age.toFixed(1)}h alt`, 'manage-wm-poly hängt (alle 30min erwartet) → kein Auto-Trading. Runner/Workflow prüfen.');
+      else if (age !== null && age > 2) add('warn', `Poly-Preise ${age.toFixed(1)}h alt`, 'Älter als der 30min-Trading-Takt — manage-wm-poly beobachten.');
     }
 
     // ── Live-Check 7: Balance-Alter ──────────────────────────────────────
@@ -149,7 +156,7 @@ async function runStatusPage(force) {
       if (n >= 8) add('info', `Daily-Bet-Cap erreicht (${n}/8)`, 'Heute werden keine weiteren Auto-Trades ausgelöst.');
     }
 
-    _stRenderProblems(problems);
+    _stRenderProblems(problems, valRep);
     _stRenderIntegrity(status);
     _stRenderServer(status);
     _stRenderSignals(data, status);
@@ -199,23 +206,46 @@ function _stRenderVerdict(problems, status, valRep) {
   }
 }
 
-function _stRenderProblems(problems) {
+function _stRenderProblems(problems, valRep) {
   const el = document.getElementById('st_problems'); if (!el) return;
+  let html;
   if (!problems.length) {
-    el.innerHTML = `<div style="text-align:center;padding:20px;color:#3fb950;font-weight:700;">🟢 Keine Live-Probleme — alle Browser-Checks grün</div>`;
-    return;
+    html = `<div style="text-align:center;padding:20px;color:#3fb950;font-weight:700;">🟢 Keine Live-Probleme — alle Browser-Checks grün</div>`;
+  } else {
+    problems.sort((a, b) => _SEV_RANK[b.sev] - _SEV_RANK[a.sev]);
+    html = problems.map(p => {
+      const m = _SEV_META[p.sev];
+      return `<div style="background:${m.bg};border:1px solid ${m.bd};border-radius:9px;padding:11px 14px;display:flex;gap:11px;align-items:flex-start;">
+        <span style="flex-shrink:0;font-size:15px;">${m.icon}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;color:var(--text);font-size:13px;">${p.title}</div>
+          <div style="color:var(--muted);font-size:11.5px;margin-top:2px;">${p.detail}</div>
+        </div>
+      </div>`;
+    }).join('');
   }
-  problems.sort((a, b) => _SEV_RANK[b.sev] - _SEV_RANK[a.sev]);
-  el.innerHTML = problems.map(p => {
-    const m = _SEV_META[p.sev];
-    return `<div style="background:${m.bg};border:1px solid ${m.bd};border-radius:9px;padding:11px 14px;display:flex;gap:11px;align-items:flex-start;">
-      <span style="flex-shrink:0;font-size:15px;">${m.icon}</span>
-      <div style="flex:1;min-width:0;">
-        <div style="font-weight:700;color:var(--text);font-size:13px;">${p.title}</div>
-        <div style="color:var(--muted);font-size:11.5px;margin-top:2px;">${p.detail}</div>
-      </div>
-    </div>`;
-  }).join('');
+
+  // ── Pick-Validator-Issues auflisten (16.06.2026) ──────────────────────
+  // Vorher stand im Header nur „Pick-Validator: 3 Fehler", aber die 3 wurden
+  // NIRGENDS gelistet. Jetzt mit Code + Spiel + Markt + Begründung sichtbar.
+  const issues = (valRep && Array.isArray(valRep.issues)) ? valRep.issues : [];
+  if (issues.length) {
+    const rank = { error: 3, warning: 2, warn: 2 };
+    issues.sort((a, b) => (rank[b.level] || 0) - (rank[a.level] || 0));
+    html += `<div style="margin-top:16px;font-weight:700;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;">🔍 Pick-Validator · ${issues.length} Hinweis(e)</div>`;
+    html += issues.map(i => {
+      const m = _SEV_META[i.level === 'error' ? 'error' : 'warn'];
+      const head = [i.code, i.matchKey, i.market].filter(Boolean).join(' · ');
+      return `<div style="background:${m.bg};border:1px solid ${m.bd};border-radius:9px;padding:11px 14px;display:flex;gap:11px;align-items:flex-start;margin-top:7px;">
+        <span style="flex-shrink:0;font-size:15px;">${m.icon}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;color:var(--text);font-size:13px;">${head}</div>
+          <div style="color:var(--muted);font-size:11.5px;margin-top:2px;">${i.message || ''}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  el.innerHTML = html;
 }
 
 function _stRenderIntegrity(status) {
