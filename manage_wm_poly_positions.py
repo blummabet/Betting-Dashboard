@@ -238,19 +238,70 @@ def fetch_current_price(slug: str, market_key: str, match_key: str = "") -> floa
     return None
 
 
+def _token_price_from_cache(token_id: str) -> float | None:
+    """FIX 16.06.2026 (Geld-Bug): Preis einer AH/BTTS-Position über den EXAKTEN
+    Token bewerten, den wir halten — nicht über ein Markt-Label-Fallback.
+
+    Anlass: USA-AUS „AH Heim -1.5" hatte keinen Eintrag in MARKET_TO_PRICE_KEY →
+    Fallback "hw" → bewertet mit der USA-Heimsieg-Moneyline (0.615) statt dem
+    AH-Token-Preis (0.345) → Schein-Profit +80% → fälschlich auto-verkauft.
+
+    Token-IDs sind global eindeutig. Wir scannen allFixtures nach dem Token in
+    ah_edges[].tokens[0] (AH-Yes) bzw. poly_btts_tokens[0/1] (BTTS Ja/Nein) und
+    geben den dort gespeicherten Live-Poly-Preis zurück. Mirror-immun.
+    Kein Treffer → None → check_position verkauft NICHT (sicherer Default)."""
+    if not token_id or not os.path.exists(PRICES_FILE):
+        return None
+    try:
+        with open(PRICES_FILE, encoding="utf-8") as f:
+            cache = json.load(f)
+    except Exception:
+        return None
+    def _ok(p):
+        # Degenerierte/settled Preise (0/None) sind nicht handelbar → None
+        # (kein Sell statt Phantom-P&L). Kleine echte Preise wie 0.05 bleiben gültig.
+        return p if isinstance(p, (int, float)) and p > 0 else None
+    for fx in cache.get("allFixtures", []):
+        for e in (fx.get("ah_edges") or []):
+            toks = e.get("tokens") or []
+            if toks and toks[0] == token_id:
+                return _ok(e.get("poly"))
+        bt = fx.get("poly_btts_tokens") or []
+        if len(bt) >= 1 and bt[0] == token_id:
+            return _ok(fx.get("poly_btts"))
+        if len(bt) >= 2 and bt[1] == token_id:
+            return _ok(fx.get("poly_btts_no"))
+    return None
+
+
+def _is_token_market(market: str) -> bool:
+    """AH/BTTS-Märkte werden NICHT über eine Moneyline-Preisspalte bewertet,
+    sondern über den exakten Token (siehe _token_price_from_cache)."""
+    m = market or ""
+    return m.startswith("AH ") or m.startswith("Beide Teams treffen")
+
+
 def check_position(pos: dict) -> dict:
     """
     Prüft eine offene Position und gibt ein Dict mit Status zurück.
     Setzt pos['currentPrice'], pos['pnlPct'], pos['sellReason'] etc.
     """
     slug       = pos.get("slug", "")
-    market_key = pos.get("priceKey", "hw")  # hw/dr/aw
+    market     = pos.get("market", "")
+    market_key = pos.get("priceKey")        # hw/dr/aw/o25/u25 — None bei AH/BTTS/unbekannt
     entry      = pos.get("entryPrice", 0)
     pinn_fair  = pos.get("pinnFair", None)
     # match_key (homeId-awayId) ist Primär-Lookup im prices-Cache
     match_key  = f"{pos.get('homeId','')}-{pos.get('awayId','')}".strip("-")
 
-    current = fetch_current_price(slug, market_key, match_key)
+    # AH/BTTS: über den exakten Token bewerten. Moneyline/O-U: über die Preisspalte.
+    # Unbekannter Markt ohne priceKey → current=None → kein Sell (sicherer Default).
+    if _is_token_market(market):
+        current = _token_price_from_cache(pos.get("tokenId", ""))
+    elif market_key:
+        current = fetch_current_price(slug, market_key, match_key)
+    else:
+        current = None
     if current is None:
         pos["currentPrice"] = None
         pos["pnlPct"] = None
@@ -402,7 +453,11 @@ def load_auto_bets_as_positions() -> list:
         if bet.get("status") != "placed":
             continue
         market = bet.get("market", "")
-        price_key = MARKET_TO_PRICE_KEY.get(market, "hw")
+        # FIX 16.06.2026: KEIN "hw"-Default mehr. AH/BTTS (+ unbekannte Märkte) haben
+        # keine Moneyline-Preisspalte → priceKey=None, Bewertung läuft über den Token
+        # (check_position._token_price_from_cache). Der alte Default "hw" bewertete
+        # AH-Positionen mit der Heimsieg-Quote → Schein-Profit → Fehl-Sell.
+        price_key = MARKET_TO_PRICE_KEY.get(market)
         positions.append({
             "home":           bet.get("home", ""),
             "away":           bet.get("away", ""),
@@ -415,7 +470,8 @@ def load_auto_bets_as_positions() -> list:
             "pinnFair":       bet.get("pinnFair"),
             "stake":          bet.get("stake", 0),
             "status":         "open",
-            "source":         "auto",
+            # FIX 16.06.2026: echte Source übernehmen (auto/auto_steam) statt hart "auto"
+            "source":         bet.get("source", "auto"),
             "_betKey":        bet.get("betKey", ""),
             "placedAt":       bet.get("placedAt", ""),
             # ── Auto-sell fields ─────────────────────────────────

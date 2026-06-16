@@ -159,6 +159,68 @@ class TestNewIntegrityGuards(unittest.TestCase):
         c = _result(self._run_poly(poly), "btts_edge_sane")
         self.assertTrue(c["ok"], "Settled BTTS-Markt (poly 0/1) ist kein Phantom")
 
+    # ── AH/BTTS-Position-Bewertbarkeit (16.06.2026, Geld-Bug) ───────────────
+    def _run_poly_ab(self, poly, bets):
+        return run_checks({"groups": {}}, poly, {}, {}, now=NOW,
+                          auto_bets={"bets": bets}, history={})
+
+    def test_ah_position_token_in_cache_ok(self):
+        poly = {"allFixtures": [{"homeId": "USA", "awayId": "AUS",
+                "ah_edges": [{"side": "home", "line": -1.5, "poly": 0.345,
+                              "tokens": ["AHTOK", "AHNO"]}]}]}
+        bets = [{"homeId": "USA", "awayId": "AUS", "market": "AH Heim -1.5",
+                 "status": "placed", "tokenId": "AHTOK"}]
+        c = _result(self._run_poly_ab(poly, bets), "ah_btts_position_priced")
+        self.assertTrue(c["ok"])
+
+    def test_ah_position_token_missing_flagged(self):
+        poly = {"allFixtures": [{"homeId": "USA", "awayId": "AUS",
+                "ah_edges": [{"side": "home", "line": -1.5, "poly": 0.345,
+                              "tokens": ["AHTOK", "AHNO"]}]}]}
+        bets = [{"homeId": "USA", "awayId": "AUS", "market": "AH Heim -1.5",
+                 "status": "placed", "tokenId": "FALSCHER_TOKEN"}]
+        c = _result(self._run_poly_ab(poly, bets), "ah_btts_position_priced")
+        self.assertFalse(c["ok"])
+
+    # ── Home/Away-Konsistenz (16.06.2026: war toter Guard, Poly=Wahrscheinlichkeit) ──
+    def _run_ha(self, odds, prices):
+        return run_checks({"groups": {}, "odds": odds}, {"prices": prices}, {}, {}, now=NOW,
+                          auto_bets={"bets": []}, history={})
+
+    def test_homeaway_swap_flagged_poly_probabilities(self):
+        # Pinnacle: Heim-Fav (hw<aw). Poly (Wahrscheinlichkeit): Ausw-Fav (phw<paw) → Konflikt
+        odds   = {"CPV-SAU": {"hw": 2.40, "aw": 2.63}}
+        prices = {"CPV-SAU": {"hw": 0.345, "aw": 0.395}}
+        c = _result(self._run_ha(odds, prices), "homeaway_consistent")
+        self.assertFalse(c["ok"], "Poly als Wahrscheinlichkeit muss verglichen werden (nicht >1.0-gefiltert)")
+
+    def test_homeaway_consistent_ok_when_agree(self):
+        odds   = {"ENG-PAN": {"hw": 1.40, "aw": 7.0}}     # Heim klar Fav
+        prices = {"ENG-PAN": {"hw": 0.72, "aw": 0.10}}    # Poly auch Heim Fav
+        c = _result(self._run_ha(odds, prices), "homeaway_consistent")
+        self.assertTrue(c["ok"])
+
+    def test_homeaway_skips_coinflip(self):
+        # |hw-aw| ≤ 0.15 → kein aussagekräftiger Favorit → nicht flaggen
+        odds   = {"AAA-BBB": {"hw": 2.55, "aw": 2.50}}
+        prices = {"AAA-BBB": {"hw": 0.40, "aw": 0.42}}
+        c = _result(self._run_ha(odds, prices), "homeaway_consistent")
+        self.assertTrue(c["ok"])
+
+    # ── Odds-Freshness (16.06.2026: 13h alte Pinnacle-Odds, kein Guard fing es) ──
+    def _run_fresh(self, updated_at):
+        wm = {"groups": {}, "odds": {"ENG-PAN": {"hw": 1.4, "aw": 7.0, "updatedAt": updated_at}}}
+        return run_checks(wm, {}, {}, {}, now=NOW, auto_bets={"bets": []}, history={})
+
+    def test_stale_odds_flagged(self):
+        # NOW = 2026-06-14 12:00; Odds von vor 13h → > 6h Warnschwelle
+        c = _result(self._run_fresh("2026-06-13T23:00:00Z"), "odds_freshness")
+        self.assertFalse(c["ok"])
+
+    def test_fresh_odds_ok(self):
+        c = _result(self._run_fresh("2026-06-14T09:00:00Z"), "odds_freshness")  # 3h alt
+        self.assertTrue(c["ok"])
+
 
 if __name__ == "__main__":
     unittest.main()

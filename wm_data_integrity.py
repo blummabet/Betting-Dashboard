@@ -347,6 +347,46 @@ def check_odds_sane(ctx):
                 "Quelle für Modell-Baseline + Edge.")
 
 
+# Frische-Schwelle für Pinnacle-Odds (Stunden). Der Auto-Trader stoppt erst hart
+# bei 24h (max_odds_age_hours) — dieser Guard WARNT viel früher, damit eingefrorene
+# fetch_wm_odds-Läufe im 🛡️-Panel sichtbar werden, BEVOR auf 13h alten Preisen
+# getradet wird. Befund Lucas 16.06.2026 (Sharp Radar zeigte 13h).
+ODDS_FRESHNESS_WARN_H = 6.0
+
+
+@integrity_check
+def check_odds_freshness(ctx):
+    """NEU 16.06.2026: Pinnacle-Odds müssen halbwegs frisch sein. Edge = Pinnacle-fair
+    vs Live-Poly — sind die Odds eingefroren (fetch_wm_odds tot/Cron-Lücke), rechnet
+    JEDER Edge gegen veraltete Preise (gefährlich für Auto-Trades). Der bisherige
+    24h-Hard-Stop im Trader liess 13h durch; nichts machte es sichtbar. Dieser Guard
+    nimmt die frischeste updatedAt aller Odds und warnt ab ODDS_FRESHNESS_WARN_H."""
+    newest = None
+    for v in ctx.odds.values():
+        ts = v.get("updatedAt") if isinstance(v, dict) else None
+        if not ts:
+            continue
+        try:
+            t = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+            if t.tzinfo is None:
+                t = t.replace(tzinfo=timezone.utc)
+        except Exception:
+            continue
+        if newest is None or t > newest:
+            newest = t
+    fails = []
+    if newest is not None:
+        age_h = (ctx.now - newest).total_seconds() / 3600
+        if age_h > ODDS_FRESHNESS_WARN_H:
+            fails.append(f"Frischeste Pinnacle-Odds {age_h:.1f}h alt "
+                         f"(> {ODDS_FRESHNESS_WARN_H:.0f}h) — fetch_wm_odds eingefroren? "
+                         f"Edges laufen gegen veraltete Preise.")
+    return _chk("odds_freshness", "Pinnacle-Odds frisch (< {:.0f}h)".format(ODDS_FRESHNESS_WARN_H),
+                "warn", fails,
+                "Auto-Trader stoppt hart erst bei max_odds_age_hours (24h) — dieser Guard "
+                "warnt früh. Root-Cause: fetch_wm_odds-Workflow/Cron prüfen.")
+
+
 @integrity_check
 def check_homeaway_consistent(ctx):
     fails = []
@@ -354,13 +394,26 @@ def check_homeaway_consistent(ctx):
         hw, aw = o.get("hw"), o.get("aw")
         pj = ctx.poly_prices.get(mk) or {}
         phw, paw = pj.get("hw"), pj.get("aw")
-        if not all(isinstance(x, (int, float)) and x > 1.0 for x in (hw, aw, phw, paw)):
+        # FIX 16.06.2026 (TOTER GUARD): Pinnacle sind Dezimalquoten (>1.0), Poly aber
+        # WAHRSCHEINLICHKEITEN (0–1). Der alte all(... x>1.0)-Filter verlangte auch von
+        # phw/paw >1.0 → traf NIE zu → der Guard übersprang JEDES Spiel und war effektiv
+        # tot (immer grün). Darum fing der Pick-Validator CPV-SAU, die Integritäts-
+        # Tabelle aber nicht. Jetzt getrennt validiert: Odds >1.0, Poly 0<p<1.
+        if not (isinstance(hw, (int, float)) and isinstance(aw, (int, float)) and hw > 1.0 and aw > 1.0):
             continue
-        if abs(hw - aw) > 0.3 and (hw < aw) != (phw > paw):
-            fails.append(f"{mk}: Pinnacle-Fav {'Heim' if hw < aw else 'Ausw'} ≠ "
+        if not (isinstance(phw, (int, float)) and isinstance(paw, (int, float)) and 0 < phw < 1 and 0 < paw < 1):
+            continue
+        # Schwelle 0.3 → 0.15. CPV-SAU (hw 2.40/aw 2.63, Δ0.23,
+        # Pinn-Fav Heim vs Poly-Fav Ausw) rutschte bei 0.3 durch, der Pick-Validator
+        # (Schwelle 0.05) fing es aber → Status zeigte „1 Fehler", Integritäts-Tabelle
+        # aber grün. 0.15 schliesst die Lücke ohne Coin-Flip-False-Positives (verifiziert:
+        # CPV-SAU war der EINZIGE Konflikt im Slate).
+        if abs(hw - aw) > 0.15 and (hw < aw) != (phw > paw):
+            fails.append(f"{mk}: Pinnacle-Fav {'Heim' if hw < aw else 'Ausw'} (hw {hw}/aw {aw}) ≠ "
                          f"Poly-Fav {'Heim' if phw > paw else 'Ausw'} (Swap-Verdacht)")
     return _chk("homeaway_consistent", "Home/Away nicht vertauscht (Pinn vs Poly)", "error", fails,
-                "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet.")
+                "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet. "
+                "Bei knappen Quoten ggf. echte Markt-Uneinigkeit — Fixture-Orientierung prüfen.")
 
 
 @integrity_check
@@ -509,6 +562,42 @@ def check_resolved_status_propagated(ctx):
             fails.append(f"{ha} {b.get('market','')}: Spiel beendet, Auto-Bet noch 'placed'")
     return _chk("resolved_status_propagated", "Beendete Spiele: Auto-Bet-Status aktualisiert", "warn", fails,
                 "Sonst hängt die Wette ewig in 'Offene Positionen · Live'.")
+
+
+@integrity_check
+def check_ah_btts_position_priced(ctx):
+    """NEU 16.06.2026 (Geld-Bug): Offene AH/BTTS-Auto-Bets müssen über ihren EXAKTEN
+    Token im Preis-Cache bewertbar sein. Anlass: USA-AUS „AH Heim -1.5" hatte keinen
+    Moneyline-Preis-Key → wurde mit der Heimsieg-Quote (0.615) statt dem AH-Token
+    (0.345) bewertet → Schein-Profit +80% → fälschlich auto-verkauft. Jetzt bewertet
+    manage_wm_poly_positions über den Token; dieser Guard macht sichtbar, wenn ein
+    offener AH/BTTS-Bet NICHT im Cache auflösbar ist (Auto-Sell würde blind laufen)."""
+    # Alle bekannten Token im Preis-Cache sammeln (AH-Yes + BTTS Ja/Nein)
+    known = set()
+    for fx in (ctx.poly_all or []):
+        for e in (fx.get("ah_edges") or []):
+            toks = e.get("tokens") or []
+            if toks:
+                known.add(toks[0])
+        for t in (fx.get("poly_btts_tokens") or []):
+            known.add(t)
+    if not known:
+        return _chk("ah_btts_position_priced", "AH/BTTS-Positionen bewertbar", "warn", [],
+                    "Preis-Cache hat noch keine AH/BTTS-Token (erster Fetch ausstehend).")
+    fails = []
+    for b in ctx.auto_bets:
+        mkt = b.get("market", "") or ""
+        if (b.get("status") or "").lower() != "placed":
+            continue
+        if not (mkt.startswith("AH ") or mkt.startswith("Beide Teams treffen")):
+            continue
+        tok = b.get("tokenId") or ""
+        if tok not in known:
+            fails.append(f"{b.get('homeId')}-{b.get('awayId')} {mkt}: Token nicht im "
+                         f"Preis-Cache — Auto-Sell kann nicht korrekt bewerten")
+    return _chk("ah_btts_position_priced", "AH/BTTS-Positionen über Token bewertbar", "warn", fails,
+                "manage_wm_poly_positions bewertet AH/BTTS über den Token. Fehlt er im "
+                "Cache → kein Sell (sicher), aber Position hängt. fetch_wm_poly_prices prüfen.")
 
 
 @integrity_check

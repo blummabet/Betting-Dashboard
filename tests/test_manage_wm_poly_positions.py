@@ -234,5 +234,57 @@ class TestAutoSourceClassifier(unittest.TestCase):
         self.assertNotIn("MANUELLER", sent["text"])
 
 
+class TestAhBttsValuation(unittest.TestCase):
+    """FIX 16.06.2026 (Geld-Bug): AH/BTTS-Positionen über den exakten Token bewerten,
+    NICHT über den Moneyline-Fallback 'hw'. USA-AUS 'AH Heim -1.5' wurde mit der
+    Heimsieg-Quote (0.615) statt dem AH-Token (0.345) bewertet → Schein-+80% → Fehl-Sell."""
+
+    def setUp(self):
+        import json, tempfile
+        import manage_wm_poly_positions as m
+        self.m = m
+        cache = {"allFixtures": [{
+            "homeId": "USA", "awayId": "AUS",
+            "poly_hw": 0.615,                       # Moneyline (FALSCHE Quelle)
+            "ah_edges": [{"side": "home", "line": -1.5, "poly": 0.345,
+                          "tokens": ["AHTOK_YES", "AHTOK_NO"]}],
+            "poly_btts": 0.46, "poly_btts_no": 0.54,
+            "poly_btts_tokens": ["BTTSYES", "BTTSNO"],
+        }]}
+        self.tmp = tempfile.NamedTemporaryFile("w", suffix=".json", delete=False)
+        json.dump(cache, self.tmp); self.tmp.close()
+        self._orig = m.PRICES_FILE
+        m.PRICES_FILE = self.tmp.name
+
+    def tearDown(self):
+        import os
+        self.m.PRICES_FILE = self._orig
+        os.unlink(self.tmp.name)
+
+    def _pos(self, market, token):
+        return {"market": market, "tokenId": token, "homeId": "USA", "awayId": "AUS",
+                "entryPrice": 0.335, "priceKey": None, "placedAt": "2026-06-16T09:00:00Z",
+                "matchDate": "2026-06-19"}
+
+    def test_ah_uses_token_price_not_moneyline(self):
+        pos = self.m.check_position(self._pos("AH Heim -1.5", "AHTOK_YES"))
+        self.assertEqual(pos["currentPrice"], 0.345)   # AH-Token, NICHT 0.615
+        self.assertLess(pos["pnlPct"], 10)             # kein +80% Schein-Profit
+        self.assertFalse(pos.get("sellSignal"))
+
+    def test_btts_yes_uses_btts_price(self):
+        pos = self.m.check_position(self._pos("Beide Teams treffen — Ja", "BTTSYES"))
+        self.assertEqual(pos["currentPrice"], 0.46)
+
+    def test_btts_no_uses_no_price(self):
+        pos = self.m.check_position(self._pos("Beide Teams treffen — Nein", "BTTSNO"))
+        self.assertEqual(pos["currentPrice"], 0.54)
+
+    def test_unknown_token_no_sell(self):
+        pos = self.m.check_position(self._pos("AH Heim -1.5", "GIBTSNICHT"))
+        self.assertIsNone(pos["currentPrice"])
+        self.assertFalse(pos.get("sellSignal"))
+
+
 if __name__ == "__main__":
     unittest.main()
