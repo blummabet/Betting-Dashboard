@@ -103,7 +103,34 @@ AUTO_SELL_ENABLED     = False
 
 # Hard-Close Stunden vor Anpfiff — bereits in trade-section (von auto_trigger).
 # 05.06.2026: von 6 → 2 verschoben (Lineups 60-90min vor Anpfiff, Sharp-Moves 2-4h vor KO).
+# 16.06.2026 (Lucas): auf 0.33h (20min) gesenkt — wir halten die Gewinner bis kurz vor
+# Anpfiff, um die späte Steam (v.a. Aufstellungs-Moves ~1h vor KO) mitzunehmen. 20min
+# Puffer = sicher VOR dem Anpfiff raus (kein In-Play-Risiko). Pre-match-Märkte driften
+# nur, sie springen nicht — erst nach Anpfiff wird's volatil.
 PRE_MATCH_CLOSE_HOURS = _cfg("trade", "pre_match_close_hours", 2)
+
+# Früher Stop-Loss (16.06.2026): Da wir jetzt länger halten, kappen wir klare Verlierer
+# VOR dem volatilen Aufstellungs-Fenster. Ab EARLY_STOPLOSS_HOURS vor Anpfiff wird jede
+# Position, die ≥ EARLY_STOPLOSS_PCT hinten liegt, sofort geschlossen (nur pre-match).
+EARLY_STOPLOSS_HOURS = _cfg("trade", "early_stoploss_hours", 2.0)
+EARLY_STOPLOSS_PCT   = _cfg("trade", "early_stoploss_pct",   0.15)
+
+
+def time_based_exit(h_until, pnl_pct):
+    """Zeit-basierte Pre-Match-Exits (16.06.2026), reine Funktion → testbar:
+      1. Hard-Close: Anpfiff in ≤ PRE_MATCH_CLOSE_HOURS (20min) → alles schliessen.
+      2. Stop-Loss: zwischen Hard-Close und EARLY_STOPLOSS_HOURS (2h) Verlierer ≥15%
+         kappen, bevor das volatile Aufstellungs-Fenster kommt.
+    Beides nur pre-match (h_until > 0). Gibt (should_sell, reason) zurück."""
+    if h_until is None:
+        return (False, "")
+    if 0 <= h_until <= PRE_MATCH_CLOSE_HOURS:
+        return (True, f"Pre-Match Close ({h_until:.2f}h vor Anpfiff)")
+    if (PRE_MATCH_CLOSE_HOURS < h_until <= EARLY_STOPLOSS_HOURS
+            and isinstance(pnl_pct, (int, float))
+            and pnl_pct <= -EARLY_STOPLOSS_PCT * 100):
+        return (True, f"Stop-Loss {pnl_pct:.1f}% ({h_until:.1f}h vor Anpfiff)")
+    return (False, "")
 
 # ── Gamma API ────────────────────────────────────────────────────────────────
 GAMMA_URL = "https://gamma-api.polymarket.com/events?slug={slug}"
@@ -628,20 +655,16 @@ def main():
         pnl     = pos.get("pnlPct")
         print(f"    Entry: {pos.get('entryPrice')} | Aktuell: {current} | P&L: {pnl}%")
 
-        # ── Pre-match close check ─────────────────────────────────────────────
+        # ── Zeit-basierte Exits: Hard-Close (20min) + Stop-Loss (16.06.2026) ──
         match_date = pos.get("matchDate", "")
         h_until = hours_until_match(match_date) if match_date else None
-        is_pre_match_close = (
-            h_until is not None and 0 <= h_until <= PRE_MATCH_CLOSE_HOURS
-        )
-        if is_pre_match_close:
-            print(f"    ⏰ PRE-MATCH CLOSE: Anpfiff in {h_until:.1f}h — schließe Position")
+        time_sell, time_reason = time_based_exit(h_until, pnl)
+        if time_sell:
+            print(f"    ⏰ ZEIT-EXIT: {time_reason}")
 
-        # Sell-Signal oder Pre-Match Close → handeln
-        should_sell = pos.get("sellSignal") or is_pre_match_close
-        sell_reason = pos.get("sellReason") or (
-            f"Pre-Match Close ({h_until:.1f}h vor Anpfiff)" if is_pre_match_close else ""
-        )
+        # Sell-Signal (aus check_position) oder Zeit-Exit → handeln
+        should_sell = pos.get("sellSignal") or time_sell
+        sell_reason = pos.get("sellReason") or time_reason
 
         if should_sell:
             print(f"    🚨 SELL: {sell_reason}")

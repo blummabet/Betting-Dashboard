@@ -47,6 +47,7 @@ DEFAULT_FALLBACK = {
         "steam_lag_edge_pp": 3.0,
         "pre_tournament_edge_pp": 6.0, "pre_tournament_days": 5,
         "pre_match_close_hours": 2,
+        "early_stoploss_hours": 2.0, "early_stoploss_pct": 0.15,
         "daily_bet_cap": 8, "daily_stake_cap_usdc": 50.0,
         "min_balance_buffer": 1.0, "stake_usdc_flat": 5.5,
         "min_vol_usdc": 10000, "min_days_until_game": 1,

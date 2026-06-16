@@ -32,7 +32,7 @@ WM_EXPECTED = {
     "AGE_LOSS_HOURS":          36.0,
     "AGE_LOSS_THRESHOLD_PCT":  0.10,
     "NO_INPLAY_LOSS_SELL":     True,
-    "PRE_MATCH_CLOSE_HOURS":   2,
+    "PRE_MATCH_CLOSE_HOURS":   0.33,   # 16.06.2026: 2h → 20min (späterer Exit)
 }
 
 
@@ -196,6 +196,48 @@ class TestFunctionsStillWork(unittest.TestCase):
         self.assertLess(result, 0)
         # Empty
         self.assertIsNone(hours_until_match(""))
+
+
+class TestTimeBasedExit(unittest.TestCase):
+    """Späterer Exit (20min) + Stop-Loss (16.06.2026). time_based_exit ist rein/testbar."""
+
+    def setUp(self):
+        import importlib, cocobet_config, manage_wm_poly_positions as m
+        importlib.reload(cocobet_config); importlib.reload(m)
+        self.m = m
+
+    def test_hard_close_within_20min(self):
+        sell, reason = self.m.time_based_exit(0.25, 5.0)   # 15min vor Anpfiff
+        self.assertTrue(sell)
+        self.assertIn("Pre-Match Close", reason)
+
+    def test_no_close_at_2h_if_winning(self):
+        # 2h vorher, +5% → kein Hard-Close (zu früh) und kein Stop-Loss (kein Verlust)
+        sell, _ = self.m.time_based_exit(1.5, 5.0)
+        self.assertFalse(sell)
+
+    def test_stoploss_cuts_loser_before_kickoff(self):
+        # 1.5h vor Anpfiff, -20% → Stop-Loss greift
+        sell, reason = self.m.time_based_exit(1.5, -20.0)
+        self.assertTrue(sell)
+        self.assertIn("Stop-Loss", reason)
+
+    def test_stoploss_not_triggered_small_loss(self):
+        # -10% < 15% Schwelle → kein Stop-Loss
+        sell, _ = self.m.time_based_exit(1.5, -10.0)
+        self.assertFalse(sell)
+
+    def test_winner_rides_past_2h(self):
+        # +30% bei 1.5h → KEIN Verkauf (Gewinner läuft bis zum 20min-Close)
+        sell, _ = self.m.time_based_exit(1.5, 30.0)
+        self.assertFalse(sell)
+
+    def test_no_exit_far_out(self):
+        sell, _ = self.m.time_based_exit(10.0, -50.0)   # 10h vorher → noch nichts
+        self.assertFalse(sell)
+
+    def test_none_h_until_safe(self):
+        self.assertEqual(self.m.time_based_exit(None, -50.0), (False, ""))
 
 
 class TestAutoSourceClassifier(unittest.TestCase):

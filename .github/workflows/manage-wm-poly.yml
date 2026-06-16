@@ -7,12 +7,14 @@ on:
   # die 4h-Lücken → Positionen rutschten ins In-Play und wurden bis zur Auflösung
   # gehalten (NO_INPLAY_LOSS_SELL) → voller Verlust möglich. WIDERSPRUCH zur Regel
   # „kein Trade geht ins In-Play".
-  # Jetzt: alle 30 min in den WM-Anpfiff-Bändern (Anpfiffe liegen 00-04 + 16-23 UTC,
-  # 2h-Vorlauf → 14:00-04:00 UTC abgedeckt) + 2 Tages-Läufe fürs Housekeeping
-  # (Profit-/Age-Trigger auf lang gehaltene Positionen).
+  # 16.06.2026: alle 15 min in den WM-Anpfiff-Bändern (statt 30). Grund: Hard-Close
+  # liegt jetzt bei 20min vor Anpfiff (vorher 2h) — bei 30min-Takt wäre der nächste Lauf
+  # erst beim Anpfiff selbst, also zu spät. 15min-Takt schliesst zuverlässig 5-20min
+  # vor KO, sicher pre-match. Anpfiffe 00-04 + 16-23 UTC, kleiner Vorlauf → 14:00-04:00.
+  # + 2 Tages-Läufe fürs Housekeeping (Profit-/Age-Trigger auf lang gehaltene Positionen).
   schedule:
-    - cron: '0,30 14-23 * * *'   # Abend-Anpfiffe (16-23 UTC) inkl. 2h-Vorlauf
-    - cron: '0,30 0-5 * * *'     # Nacht-Anpfiffe (00-04 UTC) inkl. Vorlauf
+    - cron: '*/15 14-23 * * *'   # Abend-Anpfiffe (16-23 UTC) inkl. Vorlauf
+    - cron: '*/15 0-5 * * *'     # Nacht-Anpfiffe (00-04 UTC) inkl. Vorlauf
     - cron: '0 6,10 * * *'       # Tages-Housekeeping (lang gehaltene Positionen)
 
   # Manuell auslösbar (z.B. direkt nach einer neuen Position)
@@ -70,7 +72,22 @@ jobs:
           $PYTHON -m pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
           $PYTHON -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
 
-      # ── Erst Poly-Preise frisch holen (Gamma API, kein Key) ──────────────────
+      # ── Phase 1 (16.06.2026): Pinnacle-Odds frisch holen VOR den Poly-Preisen ──
+      # Grund: der Auto-Trader-Edge = Pinnacle-fair vs Live-Poly. fetch-wm-data holt
+      # Pinnacle nur 5×/Tag (alle 4h) → bei 15min-Trading-Takt war die fair bis zu 4h
+      # alt → Steam-Moves erst 4h spät gesehen, Poly längst konvergiert. Jetzt jeder
+      # Trading-Zyklus auf frischer Pinnacle-fair. WICHTIG: wm2026-data.json wird hier
+      # NICHT committet (das macht fetch-wm-data, owner) — Race vermieden; die frischen
+      # Edges fliessen über fetch_wm_poly_prices in wm_poly_prices.json (committet).
+      - name: 📈 Pinnacle-Odds frisch (Phase 1 Steam-Frische)
+        run: python fetch_wm_odds.py
+        continue-on-error: true
+        env:
+          ODDS_API_KEY:            ${{ secrets.ODDS_API_KEY }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      # ── Dann Poly-Preise frisch holen (Gamma API, kein Key) → fair/edge neu ──────
       - name: 💹 WM Polymarket Preise aktualisieren
         run: ${{ env.POLY_PYTHON }} fetch_wm_poly_prices.py
         continue-on-error: true

@@ -80,6 +80,37 @@ SNAP_MIN_DELTA = 0.02
 ODDS_KEY   = os.environ.get("ODDS_API_KEY", "16154a94ee84482dcd5a4af88d521d73")
 ODDS_HOST  = "api.the-odds-api.com"
 
+# TheOddsAPI-Kosten = Märkte × Regionen pro Request. Die per-Event-Calls liefen auf
+# eu,uk,us — wir ankern aber NUR auf Pinnacle (eu) + bet365 (uk, soft). Die us-Region
+# (DraftKings/FanDuel…) nutzt unser Modell nicht → war reiner Quota-Verbrauch. Auf eu,uk
+# gesenkt (16.06.2026, nach 100K-Verbrauch). Der h2h-Call lief eh schon auf eu,uk.
+PER_EVENT_REGIONS = "eu,uk"
+
+# CLV-Closing: in diesem Fenster vor Anpfiff werden die aktuellen Odds laufend als
+# (vorläufige) Closing-Linie mitgeschrieben → der letzte pre-match Snapshot wird final.
+# 6h deckt mind. einen fetch-wm-data-Lauf ab; mit dichtem Manage-Fetch wird's minutengenau.
+CLOSING_CAPTURE_WINDOW_H = 6.0
+
+
+def compute_closing(existing, cur_odds, hours_to_ko, now_iso):
+    """Reine CLV-Closing-Logik (16.06.2026, testbar). Gibt das neue odds_closing zurück.
+      - final → nie ändern (return existing)
+      - pre-match (hours_to_ko > 0) im Capture-Fenster → aktuelle Odds als provisional
+      - pre-match außerhalb Fenster → existing behalten
+      - post-kickoff (hours_to_ko <= 0) + provisional vorhanden → final machen (NIE In-Play
+        überschreiben); ohne pre-match Snapshot → None (Caller nutzt last_known-Fallback)."""
+    if existing and existing.get("final"):
+        return existing
+    if hours_to_ko is None:
+        return existing
+    if hours_to_ko > 0:
+        if hours_to_ko <= CLOSING_CAPTURE_WINDOW_H:
+            return {**cur_odds, "frozenAt": now_iso, "provisional": True}
+        return existing
+    if existing:
+        return {**existing, "provisional": False, "final": True}
+    return None
+
 # TheOddsAPI sport key for FIFA World Cup
 # Falls back through list until one returns data
 WM_SPORT_KEYS = [
@@ -758,10 +789,13 @@ def main():
     totals_by_id: dict[str, dict] = {}
 
     for i, eid in enumerate(event_ids):
+        # `spreads` (Hauptlinie) ENTFERNT 16.06.2026: redundant, da Call 2
+        # `alternate_spreads` die VOLLE Leiter inkl. Hauptlinie liefert (gleicher
+        # Parser-Zweig). Spart 1 Markt × Regionen × Events × Läufe an Quota.
         path_ev = (f"/v4/sports/{sport_key}/events/{eid}/odds"
                    f"?apiKey={ODDS_KEY}"
-                   f"&regions=eu,uk,us"
-                   f"&markets=totals,btts,double_chance,spreads"
+                   f"&regions={PER_EVENT_REGIONS}"
+                   f"&markets=totals,btts,double_chance"
                    f"&oddsFormat=decimal")
         ev_data = odds_get(path_ev)
         if isinstance(ev_data, dict) and ev_data.get("bookmakers"):
@@ -780,7 +814,7 @@ def main():
     for i, eid in enumerate(event_ids):
         path_alt = (f"/v4/sports/{sport_key}/events/{eid}/odds"
                     f"?apiKey={ODDS_KEY}"
-                    f"&regions=eu,uk,us"
+                    f"&regions={PER_EVENT_REGIONS}"
                     f"&markets=alternate_totals,alternate_spreads"
                     f"&oddsFormat=decimal")
         alt_data = odds_get(path_alt)
@@ -820,7 +854,7 @@ def main():
         for i, eid in enumerate(event_ids):
             path_corn = (f"/v4/sports/{sport_key}/events/{eid}/odds"
                          f"?apiKey={ODDS_KEY}"
-                         f"&regions=eu,uk,us"
+                         f"&regions={PER_EVENT_REGIONS}"
                          f"&markets=alternate_totals_corners,corners"
                          f"&oddsFormat=decimal")
             try:
@@ -1015,40 +1049,35 @@ def main():
         if tb.get("ahLadder"):
             new_entry["ahLadder"] = tb["ahLadder"]
 
-        # ── Closing Odds einfrieren wenn Anpfiff vorbei ──────────────────────
-        # CLV-Basis: die letzten Pinnacle-Odds VOR dem Anpfiff.
-        # Sobald fx["date"] + fx["time"] in der Vergangenheit liegt →
-        # aktuelle Odds als Closing einfrieren (einmalig, nie überschreiben).
+        # ── Closing Odds: letzter PRE-Anpfiff-Snapshot (CLV-Basis) ───────────
+        # FIX 16.06.2026: Vorher wurden beim ERSTEN Fetch NACH Anpfiff die aktuellen
+        # Odds eingefroren — die sind dann In-Play (volatil, falsche Closing-Basis →
+        # verfälschtes CLV). Jetzt: solange pre-match, laufend die aktuellen Odds als
+        # (vorläufige) Closing mitschreiben → konvergiert zur echten Closing-Linie, je
+        # näher am Anpfiff der letzte Fetch war (mit dichtem Fetchen minutengenau).
+        # Sobald Anpfiff vorbei: den letzten pre-match Snapshot als final behalten,
+        # NIE mit In-Play-Odds überschreiben.
         existing_closing = existing.get("odds_closing")
-        if existing_closing:
-            # Bereits eingefroren — nie überschreiben
-            new_entry["odds_closing"] = existing_closing
-        else:
-            # Prüfen ob Anpfiff schon vorbei
-            fx_date = fx.get("date", "")
-            fx_time = fx.get("time", "21:00")
-            if fx_date:
-                try:
-                    from datetime import datetime as _dt, timezone as _tz
-                    # Spiele laufen in der Zeitzone des Austragungsortes, aber für die
-                    # Closing-Linie reicht UTC-Annäherung: +2h buffer (CEST / UTC+2)
-                    kickoff_str = f"{fx_date}T{fx_time}:00+02:00"
-                    kickoff_dt  = _dt.fromisoformat(kickoff_str)
-                    now_dt      = _dt.now(_tz.utc).astimezone(kickoff_dt.tzinfo)
-                    if now_dt >= kickoff_dt:
-                        # Anpfiff vorbei → aktuelle Odds als Closing einfrieren
-                        new_entry["odds_closing"] = {
-                            "hw":  h2h["hw"],
-                            "dr":  h2h["dr"],
-                            "aw":  h2h["aw"],
-                            **({"o25": tb["o25"]} if tb.get("o25") else {}),
-                            **({"u25": tb["u25"]} if tb.get("u25") else {}),
-                            **({"bttsY": tb["bttsY"]} if tb.get("bttsY") else {}),
-                            "frozenAt": now_iso,
-                        }
-                        print(f"  🔒  Closing eingefroren: {home_id} vs {away_id}")
-                except Exception:
-                    pass
+        fx_date = fx.get("date", "")
+        fx_time = fx.get("time", "21:00")
+        _hours_to_ko = None
+        if fx_date:
+            try:
+                from datetime import datetime as _dt, timezone as _tz
+                _kickoff_dt  = _dt.fromisoformat(f"{fx_date}T{fx_time}:00+02:00")
+                _now_dt      = _dt.now(_tz.utc).astimezone(_kickoff_dt.tzinfo)
+                _hours_to_ko = (_kickoff_dt - _now_dt).total_seconds() / 3600
+            except Exception:
+                _hours_to_ko = None
+        _cur = {"hw": h2h["hw"], "dr": h2h["dr"], "aw": h2h["aw"],
+                **({"o25": tb["o25"]} if tb.get("o25") else {}),
+                **({"u25": tb["u25"]} if tb.get("u25") else {}),
+                **({"bttsY": tb["bttsY"]} if tb.get("bttsY") else {})}
+        _closing = compute_closing(existing_closing, _cur, _hours_to_ko, now_iso)
+        if _closing is not None:
+            new_entry["odds_closing"] = _closing
+            if _closing.get("final") and not (existing_closing or {}).get("final"):
+                print(f"  🔒  Closing final (letzter pre-match Snapshot): {home_id} vs {away_id}")
 
         odds_out[key] = new_entry
         updated += 1
@@ -1124,8 +1153,11 @@ def main():
         away_id = fx["away"]
         key     = f"{home_id}-{away_id}"
         entry   = odds_out.get(key)
-        if not entry or entry.get("odds_closing"):
-            continue  # kein Eintrag oder bereits eingefroren
+        if not entry:
+            continue
+        # Schon final eingefroren → nichts tun.
+        if (entry.get("odds_closing") or {}).get("final"):
+            continue
 
         fx_date = fx.get("date", "")
         fx_time = fx.get("time", "21:00")
@@ -1137,7 +1169,13 @@ def main():
             kickoff_str = f"{fx_date}T{fx_time}:00+02:00"
             kickoff_dt  = _dt.fromisoformat(kickoff_str)
             now_dt      = _dt.now(_tz.utc).astimezone(kickoff_dt.tzinfo)
-            if now_dt >= kickoff_dt and entry.get("hw") and entry.get("aw"):
+            # Spiel angepfiffen + ein vorläufiger pre-match Snapshot existiert → final machen
+            # (NICHT mit In-Play überschreiben). TheOddsAPI hat das Event evtl. schon entfernt.
+            if now_dt >= kickoff_dt and (entry.get("odds_closing") or {}).get("provisional"):
+                entry["odds_closing"] = {**entry["odds_closing"], "provisional": False, "final": True}
+                freeze_count += 1
+                continue
+            if now_dt >= kickoff_dt and not entry.get("odds_closing") and entry.get("hw") and entry.get("aw"):
                 entry["odds_closing"] = {
                     "hw":  entry["hw"],
                     "dr":  entry.get("dr"),
@@ -1147,6 +1185,7 @@ def main():
                     **({"bttsY": entry["bttsY"]} if entry.get("bttsY") else {}),
                     "frozenAt":   now_iso,
                     "frozenFrom": "last_known",  # TheOddsAPI hat Event nicht mehr geliefert
+                    "final":      True,
                 }
                 freeze_count += 1
                 home_display = TEAM_NAMES.get(home_id, [home_id])[0]

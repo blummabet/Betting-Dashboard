@@ -3,7 +3,11 @@ name: 🌍 WM 2026 Daten aktualisieren
 on:
   # 5× täglich: 06:00, 10:00, 14:00, 18:00, 22:00 Vienna (04:00, 08:00, 12:00, 16:00, 20:00 UTC)
   # Vor dem Tournament: feineres Edge-Tracking + frühere Steam-Lag-Erkennung
-  # TheOddsAPI-Budget: ~5 Requests/Run × 5 Runs/Tag = 25 Requests/Tag (von ~400 täglichem Kontingent)
+  # TheOddsAPI-Budget (KORRIGIERT 16.06.2026): NICHT ~5 Req/Run. Das per-Event-Modell
+  # (totals/btts/dc + alternate_totals/spreads pro Spiel) macht ~2 Calls × ~72 Spiele
+  # = ~144 Requests/Run. Kosten = Märkte×Regionen: nach Senkung auf eu,uk + Entfernen
+  # des redundanten `spreads` ~720 Credits/Run × 5 = ~3.600/Tag (~108K/Monat). 100K-
+  # Limit am 16.06. erreicht → nächster Hebel: per-Event-Calls auf KO-nahe Spiele begrenzen.
   schedule:
     - cron: '0 4,8,12,16,20 * * *'
 
