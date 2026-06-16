@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-15T21:29:28Z",
-    "total_records": 39
+    "updated_at": "2026-06-16T11:10:40Z",
+    "total_records": 42
   },
   "records": [
     {
@@ -848,6 +848,32 @@
       "processVerdict": "UNLUCKY"
     },
     {
+      "key": "G-1-IRN-NZL|Unter 2.5 Tore",
+      "matchKey": "G-1-IRN-NZL",
+      "market": "Unter 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": 0.5
+        },
+        {
+          "name": "form_trend",
+          "score": -2.93
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.8
+        },
+        {
+          "name": "pressure_index",
+          "score": 0.6
+        }
+      ],
+      "resolvedAt": "2026-06-16T07:33:04Z",
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
       "key": "H-1-ESP-CPV|Beide Teams treffen — Ja",
       "matchKey": "H-1-ESP-CPV",
       "market": "Beide Teams treffen — Ja",
@@ -886,6 +912,54 @@
       ],
       "resolvedAt": "2026-06-15T19:55:26Z",
       "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "H-1-SAU-URU|Auswärtssieg",
+      "matchKey": "H-1-SAU-URU",
+      "market": "Auswärtssieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 1.28
+        },
+        {
+          "name": "lineup_signal",
+          "score": -2.05
+        },
+        {
+          "name": "apif_predictions",
+          "score": -2.93
+        },
+        {
+          "name": "weather_signal",
+          "score": -0.36
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.59
+        },
+        {
+          "name": "form_rating",
+          "score": 5.0
+        }
+      ],
+      "resolvedAt": "2026-06-16T02:16:59Z",
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "H-1-SAU-URU|Beide Teams treffen — Nein",
+      "matchKey": "H-1-SAU-URU",
+      "market": "Beide Teams treffen — Nein",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.0
+        }
+      ],
+      "resolvedAt": "2026-06-16T02:16:59Z",
+      "processVerdict": "UNLUCKY"
     }
   ]
 }
