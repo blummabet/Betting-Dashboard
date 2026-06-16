@@ -50,29 +50,32 @@ concurrency:
 
 jobs:
   monitor-positions:
-    # 16.06.2026 (Lucas): EU-VPS-Runner statt Mac ODER GitHub-Cloud.
-    # - Mac (self-hosted) schlief → geplante Läufe feuerten nicht.
-    # - GitHub-Cloud (ubuntu-latest) wird von Polymarket GEOBLOCKT (403 „Trading restricted
-    #   in your region") → Order-Platzierung scheitert, weil GitHub-Runner in US-Regionen.
-    # → Lösung: eigener self-hosted Runner auf einem IMMER-AN EU-VPS (erlaubte Region +
-    #   zuverlässig + Mac-unabhängig). Label 'linux' trifft NUR den VPS, nicht den Mac
-    #   (macOS-Label) — so bleibt poly-bets.yml frei für den Mac. Setup: VPS_RUNNER_SETUP.md.
-    runs-on: [self-hosted, linux]
+    # 16.06.2026 (Lucas): zurück auf den Mac (self-hosted). WICHTIGE LEKTION:
+    # Polymarket geoblockt JEDE Rechenzentrums-IP (GitHub-Cloud US UND Hetzner-EU-VPS →
+    # beide 403 „Trading restricted in your region"). NUR Wohn-/Privat-IPs (Mac zuhause)
+    # dürfen Orders platzieren. Datacenter-IPs sind generell gesperrt (VPN/Proxy-Schutz).
+    # → Trading MUSS vom Heimnetz laufen. Mac am Strom + Sleep aus = residential + zuverlässig.
+    # Label 'macOS' trifft NUR den Mac, NICHT den (noch laufenden) Linux-VPS (der würde
+    # wieder geoblockt). VPS kann gekündigt werden — wird hier nicht mehr genutzt.
+    runs-on: [self-hosted, macOS]
 
     steps:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
 
-      - name: 🐍 Python venv + py-clob-client-v2 (Linux self-hosted)
+      - name: 🐍 Python + py-clob-client-v2 einrichten (Mac)
         run: |
-          PY=$(command -v python3.11 || command -v python3.12 || command -v python3.13 || command -v python3)
-          echo "Using $PY ($($PY --version))"
-          rm -rf .venv && "$PY" -m venv .venv
-          echo "POLY_PYTHON=$PWD/.venv/bin/python" >> $GITHUB_ENV
-          .venv/bin/python -m pip install --upgrade pip --quiet
-          .venv/bin/python -m pip install requests --quiet
-          .venv/bin/python -m pip install "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
-          .venv/bin/python -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
+          PYTHON=""
+          for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11; do
+            if "$PY" --version &>/dev/null 2>&1; then PYTHON="$PY"; break; fi
+          done
+          if [ -z "$PYTHON" ]; then echo "❌ Kein Python >= 3.11 gefunden"; exit 1; fi
+          echo "✅ $PYTHON ($($PYTHON --version))"
+          echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
+          $PYTHON -m pip install --break-system-packages requests --quiet
+          $PYTHON -m pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
+          $PYTHON -m pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
+          $PYTHON -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
 
       # ── Phase 1 (16.06.2026): Pinnacle-Odds frisch holen VOR den Poly-Preisen ──
       # Grund: der Auto-Trader-Edge = Pinnacle-fair vs Live-Poly. fetch-wm-data holt
