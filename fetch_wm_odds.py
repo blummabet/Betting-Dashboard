@@ -31,6 +31,11 @@ from pathlib import Path
 
 BASE         = Path(__file__).parent
 WM_FILE      = BASE / "wm2026-data.json"
+# Phase 3 (16.06.2026): persistente, minutengenaue Closing-Linien in EIGENER Datei.
+# Grund: der Manage-Workflow holt alle 15min frische Odds (→ Closing konvergiert an den
+# Anpfiff), committet aber wm2026-data.json NICHT (Race-Vermeidung). Diese kleine Datei
+# committet er → die nahe-Anpfiff-Closing überlebt. resolve_wm_results bevorzugt sie.
+CLOSING_LINES_FILE = BASE / "wm_closing_lines.json"
 HISTORY_FILE = BASE / "wm2026-odds-history.json"
 
 # Config-aware Markt-Skip: wenn alle Corner-Markets im aktiven Profil disabled
@@ -90,6 +95,23 @@ PER_EVENT_REGIONS = "eu,uk"
 # (vorläufige) Closing-Linie mitgeschrieben → der letzte pre-match Snapshot wird final.
 # 6h deckt mind. einen fetch-wm-data-Lauf ab; mit dichtem Manage-Fetch wird's minutengenau.
 CLOSING_CAPTURE_WINDOW_H = 6.0
+
+
+def merge_closing_lines(existing: dict, odds_out: dict) -> dict:
+    """Phase 3 (16.06.2026): spiegelt die odds_closing aus wm2026-data in die persistente
+    wm_closing_lines.json. Regel: ein bereits FINALES Closing nie überschreiben/downgraden;
+    sonst die FRISCHERE provisional übernehmen (näher am Anpfiff = besseres CLV). Rein/testbar."""
+    out = dict(existing or {})
+    for key, entry in (odds_out or {}).items():
+        cl = (entry or {}).get("odds_closing")
+        if not cl:
+            continue
+        prev = out.get(key)
+        if prev and prev.get("final"):
+            continue
+        if cl.get("final") or not prev or str(cl.get("frozenAt", "")) >= str(prev.get("frozenAt", "")):
+            out[key] = cl
+    return out
 
 
 def compute_closing(existing, cur_odds, hours_to_ko, now_iso):
@@ -1203,6 +1225,20 @@ def main():
 
     with open(WM_FILE, "w", encoding="utf-8") as f:
         json.dump(wm, f, ensure_ascii=False, indent=2)
+
+    # ── Persistente Closing-Linien (Phase 3) ──────────────────
+    # Eigene Datei, die der 15min-Manage-Workflow committet → minutengenaue CLV-Basis.
+    try:
+        _existing_cl = {}
+        if CLOSING_LINES_FILE.exists():
+            _existing_cl = json.loads(CLOSING_LINES_FILE.read_text(encoding="utf-8")) or {}
+        _merged_cl = merge_closing_lines(_existing_cl, odds_out)
+        CLOSING_LINES_FILE.write_text(
+            json.dumps(_merged_cl, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"   🎯  {sum(1 for v in _merged_cl.values() if v.get('final'))} finale / "
+              f"{len(_merged_cl)} Closing-Linien → {CLOSING_LINES_FILE.name}")
+    except Exception as _e:
+        print(f"   ⚠️  Closing-Lines-Persistenz fehlgeschlagen: {_e}")
 
     # ── Write history ─────────────────────────────────────────
     if snaps_added > 0:

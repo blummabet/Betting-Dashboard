@@ -60,5 +60,32 @@ class TestComputeClosing(unittest.TestCase):
         self.assertEqual(f.compute_closing(existing, CUR, None, "T6"), existing)
 
 
+class TestMergeClosingLines(unittest.TestCase):
+    """Phase 3: persistente Closing-Linien (wm_closing_lines.json)."""
+
+    def test_takes_fresher_provisional(self):
+        existing = {"A-B": {"hw": 2.2, "frozenAt": "T1", "provisional": True}}
+        odds_out = {"A-B": {"odds_closing": {"hw": 2.0, "frozenAt": "T2", "provisional": True}}}
+        out = f.merge_closing_lines(existing, odds_out)
+        self.assertEqual(out["A-B"]["hw"], 2.0)   # T2 > T1 → frischer
+
+    def test_final_never_downgraded(self):
+        existing = {"A-B": {"hw": 1.9, "frozenAt": "T9", "final": True}}
+        odds_out = {"A-B": {"odds_closing": {"hw": 2.0, "frozenAt": "T1", "provisional": True}}}
+        out = f.merge_closing_lines(existing, odds_out)
+        self.assertEqual(out["A-B"]["hw"], 1.9)   # final bleibt
+        self.assertTrue(out["A-B"]["final"])
+
+    def test_final_overwrites_provisional(self):
+        existing = {"A-B": {"hw": 2.0, "frozenAt": "T1", "provisional": True}}
+        odds_out = {"A-B": {"odds_closing": {"hw": 2.05, "frozenAt": "T2", "final": True}}}
+        out = f.merge_closing_lines(existing, odds_out)
+        self.assertTrue(out["A-B"]["final"])
+
+    def test_skips_entries_without_closing(self):
+        out = f.merge_closing_lines({}, {"A-B": {"hw": 2.0}})   # kein odds_closing
+        self.assertEqual(out, {})
+
+
 if __name__ == "__main__":
     unittest.main()

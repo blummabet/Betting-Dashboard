@@ -193,6 +193,16 @@ def build_result_lookup(wm: dict) -> dict:
     """
     lookup = {}
     odds_map = wm.get("odds", {})
+    # Phase 3 (16.06.2026): minutengenaue Closing-Linien aus eigener Datei bevorzugen
+    # (vom 15min-Manage-Fetch nahe Anpfiff committet). Fallback = odds_closing in
+    # wm2026-data.json (bis-4h-frühe Closing). Macht CLV präziser.
+    closing_lines = {}
+    try:
+        _clf = BASE / "wm_closing_lines.json"
+        if _clf.exists():
+            closing_lines = json.loads(_clf.read_text(encoding="utf-8")) or {}
+    except Exception:
+        closing_lines = {}
 
     for gdata in wm.get("groups", {}).values():
         for fx in gdata.get("fixtures", []):
@@ -204,9 +214,9 @@ def build_result_lookup(wm: dict) -> dict:
             if not result:
                 continue
 
-            # Pinnacle Closing Odds aus odds_map
+            # Pinnacle Closing Odds — minutengenaue Datei bevorzugen, sonst odds_map
             odds_entry = odds_map.get(key, {})
-            closing    = odds_entry.get("odds_closing", {})
+            closing    = closing_lines.get(key) or odds_entry.get("odds_closing", {})
 
             # Fair probability aus Closing Odds berechnen — H2: Power-Devig
             pinn_close_hw = pinn_close_dr = pinn_close_aw = None
