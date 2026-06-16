@@ -228,13 +228,10 @@ jobs:
         run: python generate_wm_picks.py
         continue-on-error: true
 
-      # ── Pick-Validator (Sanity-Checks, schreibt pick_validation_report.json) ─────
-      - name: 🔍 WM Picks validieren
-        run: python validate_wm_picks.py
-        continue-on-error: true
-        env:
-          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+      # Pick-Validator wurde 16.06.2026 NACH fetch_wm_poly_prices verschoben (siehe unten):
+      # er prüft u.a. E_HOMEAWAY_SWAP gegen Polymarket als Referenz. Lief er VOR der
+      # Poly-Normalisierung, sah er gespiegelte/veraltete poly_hw → False-Swaps (MAR-HTI,
+      # ZAF-KOR, CUW-CIV waren alle Fehlalarme, Pinnacle+Poly stimmten in Wahrheit überein).
 
       # ── Pick-Änderungen erkennen (Snapshot-Diff gegen letzten Run) ─────────
       - name: 🔄 WM Pick-Änderungen erkennen
@@ -308,6 +305,17 @@ jobs:
       # ── Polymarket Preise (Gamma API + CLOB Depth + Edge Alerts) ────────
       - name: 💹 WM Polymarket Preise + Edge Alerts
         run: python fetch_wm_poly_prices.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      # ── Pick-Validator — NACH fetch_wm_poly_prices (FIX 16.06.2026) ──────────────
+      # MUSS nach der Poly-Normalisierung laufen: E_HOMEAWAY_SWAP prüft den 1X2-Favoriten
+      # gegen Polymarket. Vorher (Step ~233, vor Poly) sah er gespiegelte/veraltete poly_hw
+      # → False-Swap-Alarme. Schreibt pick_validation_report.json für die Status-Seite.
+      - name: 🔍 WM Picks validieren
+        run: python validate_wm_picks.py
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
