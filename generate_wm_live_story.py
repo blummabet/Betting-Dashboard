@@ -40,7 +40,9 @@ from wm_story_engine import (
 from tiktok_card_templates import hook_card, info_card
 
 # Angles
-from wm_story_angles import match_of_day, killer_stat, underdog_recap, player_spotlight
+# match_of_day bleibt importiert (liefert FLAG/TEAM_NAMES/_team_name an andere Angles),
+# wird aber NICHT mehr als eigener Angle gewählt (16.06.2026, Lucas: „Spiel des Tages" raus).
+from wm_story_angles import match_of_day, killer_stat, underdog_recap, player_spotlight, travel_alarm
 
 
 # ── Config ────────────────────────────────────────────────────────────────────
@@ -301,7 +303,8 @@ def main():
     # 1. Alle Angles abfragen
     all_proposals: list[StoryProposal] = []
     angle_modules = {
-        "matchOfDay":      match_of_day,
+        # matchOfDay (Elo-„Spiel des Tages") raus (16.06.2026, Lucas). travelAlarm rein.
+        "travelAlarm":     travel_alarm,
         "killerStat":      killer_stat,
         "underdogRecap":   underdog_recap,
         "playerSpotlight": player_spotlight,

@@ -88,7 +88,7 @@ def _generate_avg_scored_proposal(wm: dict) -> StoryProposal | None:
             "stat3_val": s_from(f"{games}", source=f"form.{tid}.games", raw=games),
             "stat3_lbl": s_static("Spiele"),
             "closing_line": s_static(
-                f"<strong>Höchste Ø-Tore-Quote</strong> aller {len(candidates)} qualifizierten WM-Teams. "
+                f"<strong>Höchster Tor-Schnitt</strong> aller {len(candidates)} qualifizierten WM-Teams. "
                 f"Form-Datenbasis: {games} Spiele."
             ),
             "quote_line":   s_static(f'Tor-Maschine ohne <span class="acc">Stopper</span> in Sicht. ⚽'),
@@ -154,9 +154,9 @@ def _generate_defensive_wall(wm: dict) -> StoryProposal | None:
                 source=f"form.{tid}.over25Rate",
                 raw=over25_rate,
             ),
-            "stat3_lbl": s_static("Ü 2.5 Quote"),
+            "stat3_lbl": s_static("3+ Tore"),
             "closing_line": s_static(
-                f"<strong>Beste Defensiv-Quote</strong> aller {len(candidates)} qualifizierten Teams. "
+                f"<strong>Beste Defensive</strong> aller {len(candidates)} qualifizierten Teams. "
                 f"Ø {conceded:.1f} Tore über {games} Spiele."
             ),
             "quote_line":   s_static(f'Wer hier <span class="acc">zwei Tore</span> macht, gewinnt. 🛡️'),
@@ -200,28 +200,29 @@ def _generate_xg_outlier(wm: dict) -> StoryProposal | None:
             "sub_title":    s_static(f"xG-Verlust durch Anreise · {name}"),
             "hook_line_1":  s_static(f'<span class="acc">{name}</span> {flag} verliert'),
             "hook_line_2":  s_static('vor jedem Spiel <span class="yellow">Energie.</span>'),
-            "mystery_question": s_static("Welcher Bookie hat das eingerechnet?"),
+            "mystery_question": s_static("Was macht das mit den Beinen?"),
             "highlight_fact": s_derived(
-                f"Modell rechnet -{discount_pct}% xG ein — Bookies oft nicht",
+                f"Reise-Last kostet {name} rund {discount_pct}% Tor-Gefahr",
                 sources=[f"xgStats.{tid}.travelDiscount"],
             ),
         },
         info_slots={
             "flag":      s_static(flag),
             "name":      s_static(name),
-            "role_line": s_static(f"WM-Reise belastet xG-Output deutlich"),
+            "role_line": s_static(f"WM-Reise belastet die Tor-Gefahr deutlich"),
             "stat1_val": s_derived(f"-{discount_pct}%", sources=[f"xgStats.{tid}.travelDiscount"]),
-            "stat1_lbl": s_static("xG-Discount"),
-            "stat2_val": s_static("Modell"),
-            "stat2_lbl": s_static("Quelle"),
-            "stat3_val": s_static("Killer"),
-            "stat3_lbl": s_static("Edge"),
+            "stat1_lbl": s_static("Tor-Gefahr"),
+            "stat2_val": s_static("Anreise"),
+            "stat2_lbl": s_static("Ursache"),
+            "stat3_val": s_static("✈️"),
+            "stat3_lbl": s_static("Reise-Faktor"),
+            # TikTok-safe (16.06.2026): Bookie/Markt-Quoten/Edge raus → reine Reise-Story.
             "closing_line": s_static(
-                f"<strong>Travel-Burden Discount</strong> ist im Modell, oft nicht in den Markt-Quoten. "
-                f"Asymmetrische Information."
+                f"<strong>Tausende Kilometer</strong> zwischen Trainingslager und Spielort "
+                f"zehren an der Frische — und damit an den Toren."
             ),
-            "quote_line":   s_static(f'Bookies schlafen. <span class="acc">Modell rechnet.</span> ✈️'),
-            "data_source":  s_static("Daten: xG-Modell mit Travel-Modifier"),
+            "quote_line":   s_static(f'Die Reise spielt <span class="acc">immer mit.</span> ✈️'),
+            "data_source":  s_static("Daten: Reise-Analyse (Trainingslager → Spielort)"),
         },
         reason=f"travelDiscount={discount:.2f} ({discount_pct}%)",
     )

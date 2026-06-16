@@ -171,6 +171,9 @@ SKIP_TELEGRAM    = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
 # bleibt im Code, wird aber NICHT mehr gesendet (Flag default false). Previews on.
 SEND_DAILY_PICKS = os.environ.get("SEND_DAILY_PICKS", "").lower() == "true"
 SEND_PREVIEWS    = os.environ.get("SEND_PREVIEWS", "true").lower() == "true"
+# 16.06.2026 (Lucas): Bizarre-Quote-Card PAUSIERT — fad geworden + zeigt Quote/Chance
+# (Quoten-Leak). Default AUS. Wieder an via SEND_BIZARRE=true, falls reaktiviert.
+SEND_BIZARRE     = os.environ.get("SEND_BIZARRE", "").lower() == "true"
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -833,8 +836,10 @@ def main():
                 )
                 produced.append((f"fact_{kind}", png, caption))
 
-    # ── 3. Bizarre-Quote (3. tägliche Card — automatisch aus bizarre_quote_targets.json) ──
-    bizarre = get_daily_bizarre_card(today_iso)
+    # ── 3. Bizarre-Quote (PAUSIERT 16.06.2026, Lucas: fad + Quoten-Leak) ──
+    bizarre = get_daily_bizarre_card(today_iso) if SEND_BIZARRE else None
+    if not SEND_BIZARRE:
+        print("🤡 Bizarre-Quote pausiert (SEND_BIZARRE=false)")
     if bizarre:
         print(f"🤡 Bizarre Quote: {bizarre['target']['name']} ({bizarre['info']['quote_str']} = {bizarre['info']['chance_pct']})")
         # Bizarre nutzt eigenes bizarre_info_card statt info_card

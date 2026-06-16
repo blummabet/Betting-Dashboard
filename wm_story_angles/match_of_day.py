@@ -200,9 +200,10 @@ def generate(today_iso: str | None = None) -> list[StoryProposal]:
             ),
         }
         if best:
-            edge_val = float(best.get("edgePP") or 0)
+            # TikTok-safe (16.06.2026): KEINE Quoten/Edge — nur die Prognose-Richtung
+            # in neutraler Sprache (Sperren-Schutz, [[feedback_tiktok_safe_cards]]).
             hook_slots["highlight_fact"] = s_static(
-                f"{best.get('market', '?')} · Edge {edge_val:+.1f}pp"
+                f'Unsere Prognose: <span class="acc">{best.get("market", "?")}</span>'
             )
         else:
             # H2H als Highlight wenn kein Pick
@@ -238,19 +239,19 @@ def generate(today_iso: str | None = None) -> list[StoryProposal]:
             "stat2_lbl": s_static(f"Elo {away}"),
         }
         if best:
-            edge_val = float(best.get("edgePP") or 0)
-            info_slots["stat3_val"] = s_static(f"{edge_val:+.1f}pp")
-            info_slots["stat3_lbl"] = s_static("Edge")
+            # TikTok-safe: Quoten/Edge/„@odds — Modell sieht X" RAUS → nur qualitative Prognose.
+            info_slots["stat3_val"] = s_static("✓")
+            info_slots["stat3_lbl"] = s_static("Prognose")
             info_slots["closing_line"] = s_static(
-                f"<strong>Pick: {best.get('market', '?')}</strong> @ {best.get('odds', '?')} "
-                f"— Modell sieht {best.get('modelOdds', '?')}."
+                f'<strong>Unsere Prognose: {best.get("market", "?")}</strong> — '
+                f'unser Modell sieht hier den Trend.'
             )
             info_slots["quote_line"] = s_static(
-                f'Edge sitzt. <span class="acc">Heute Anpfiff.</span> ⚡'
+                f'<span class="acc">Heute Anpfiff.</span> ⚡'
             )
         else:
             info_slots["stat3_val"] = s_static("—")
-            info_slots["stat3_lbl"] = s_static("kein Edge")
+            info_slots["stat3_lbl"] = s_static("offen")
             info_slots["closing_line"] = s_static(
                 f"Spannendes Gruppenspiel ohne klaren Pick — beide Teams in vergleichbarer Form."
             )

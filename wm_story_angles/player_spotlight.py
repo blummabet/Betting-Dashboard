@@ -70,7 +70,20 @@ def generate(today_iso: str | None = None) -> list[StoryProposal]:
 
         # Score: hoch wenn (Goals + Assists) hoch + Team spielt bald
         ga = float(goals) + float(assists) * 0.5
-        score = min(0.30 + ga / 50.0, 0.80)
+        score = min(0.32 + ga / 45.0, 0.82)
+
+        # Tor-Beteiligung = die knackige Zahl (Tore + Vorlagen)
+        involvement = int(goals) + int(assists)
+        # Punch je nach Output (16.06.2026, Lucas: „mit Punch")
+        if involvement >= 30:
+            punch_h2 = 'war diese Saison eine <span class="yellow">Maschine.</span>'
+            punch_fact = f"{involvement} Tore + Vorlagen in einer Saison. Der Mann hört nicht auf."
+        elif involvement >= 15:
+            punch_h2 = 'traf diese Saison <span class="yellow">am Fließband.</span>'
+            punch_fact = f"An {involvement} Treffern direkt beteiligt — heute will er nachlegen."
+        else:
+            punch_h2 = 'kann ein Spiel <span class="yellow">allein entscheiden.</span>'
+            punch_fact = f"{int(goals)} Tore, {int(assists)} Vorlagen — der Unterschiedsspieler."
 
         proposals.append(StoryProposal(
             angle_id="playerSpotlight",
@@ -83,12 +96,12 @@ def generate(today_iso: str | None = None) -> list[StoryProposal]:
                     source=f"playerSpotlights.{player_key}.seasonGoals",
                     raw=goals,
                 ),
-                "sub_title":    s_static(f"Tore in der Saison · {name}"),
+                "sub_title":    s_static(f"Saisontore · {name}"),
                 "hook_line_1":  s_static(f'<span class="acc">{name}</span> {FLAG.get(team_id,"")}'),
-                "hook_line_2":  s_static(f'kommt {match_date or "bald"} zur WM-Bühne.'),
-                "mystery_question": s_static("Bricht er den WM-Rekord?"),
+                "hook_line_2":  s_static(punch_h2),
+                "mystery_question": s_static("Stoppt ihn heute jemand?"),
                 "highlight_fact": s_derived(
-                    f"{int(goals)}T / {int(assists)}A bei {club}",
+                    punch_fact,
                     sources=[f"playerSpotlights.{player_key}.seasonGoals",
                              f"playerSpotlights.{player_key}.seasonAssists"],
                 ),
@@ -96,22 +109,23 @@ def generate(today_iso: str | None = None) -> list[StoryProposal]:
             info_slots={
                 "flag":      s_static(FLAG.get(team_id, "🌍")),
                 "name":      s_static(name),
-                "role_line": s_static(f"{role} · {_team_name(team_id)} · Club: {club}"),
+                "role_line": s_static(f"{role} · {_team_name(team_id)} · {club}"),
                 "stat1_val": s_from(str(int(goals)),
                                     source=f"playerSpotlights.{player_key}.seasonGoals", raw=goals),
                 "stat1_lbl": s_static("Tore"),
                 "stat2_val": s_from(str(int(assists)),
                                     source=f"playerSpotlights.{player_key}.seasonAssists", raw=assists),
-                "stat2_lbl": s_static("Assists"),
-                "stat3_val": s_static(str(ps.get("age") or "?")),
-                "stat3_lbl": s_static("Alter"),
+                "stat2_lbl": s_static("Vorlagen"),
+                "stat3_val": s_static(str(involvement)),
+                "stat3_lbl": s_static("direkt beteiligt"),
                 "closing_line": s_static(
-                    f"<strong>{name}</strong> ist {role.lower()} bei {club} — und kommt {match_date or 'bald'} ins Turnier."
+                    f"<strong>{name}</strong> war diese Saison an {involvement} Treffern direkt "
+                    f"beteiligt. Genau so einer entscheidet ein WM-Spiel."
                 ),
-                "quote_line":   s_static(f'WM-Bühne. <span class="acc">Bereit?</span> 🎯'),
-                "data_source":  s_static("Daten: Squad-Spotlight 2024/25"),
+                "quote_line":   s_static(f'Merk dir den <span class="acc">Namen.</span> 🎯'),
+                "data_source":  s_static("Daten: Saison-Statistik 2024/25"),
             },
-            reason=f"{name} ({team_id}) G={goals} A={assists} spielt {match_date}",
+            reason=f"{name} ({team_id}) G={goals} A={assists} inv={involvement} spielt {match_date}",
         ))
 
     return proposals

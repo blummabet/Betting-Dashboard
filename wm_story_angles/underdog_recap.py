@@ -125,33 +125,35 @@ def generate(today_iso: str | None = None) -> list[StoryProposal]:
         entity_key=f"recap:{gkey}-{home}-{away}",
         theme="hidden_gem",
         score=score,
+        # TikTok-safe (16.06.2026): Pinnacle/Quote/Sharps RAUS — Außenseiter-Drama bleibt,
+        # nur über die Wahrscheinlichkeit (Analyse), nicht über Buchmacher-Quoten.
         hook_slots={
-            "big_number":   s_static(f"{factor}x"),
-            "sub_title":    s_static(f"so unwahrscheinlich war's"),
+            "big_number":   s_static(f"{int(fair_prob*100)}%"),
+            "sub_title":    s_static(f"so wahrscheinlich war dieser Sieg"),
             "hook_line_1":  s_static(f'{winner_name} {flag}'),
             "hook_line_2":  s_static(f'schockt <span class="acc">{loser_name}</span>'),
             "mystery_question": s_static("Wer hatte das auf dem Schirm?"),
             "highlight_fact": s_derived(
-                f"{outcome} bei Closing-Quote {1/max(fair_prob,0.01):.2f}",
-                sources=[f"odds.{home}-{away}.odds_closing"],
+                f"Nur {int(fair_prob*100)}% Chance laut den Daten — und doch passiert",
+                sources=[f"form.{home}.games"],
             ),
         },
         info_slots={
             "flag":      s_static(flag),
             "name":      s_static(f"{winner_name} {hs}:{as_} {loser_name}".strip()),
-            "role_line": s_static(f"Pinnacle Closing: {factor}x — Markt sah es nicht"),
+            "role_line": s_static(f"Kaum jemand hatte diesen Ausgang auf dem Schirm"),
             "stat1_val": s_static(f"{hs}:{as_}"),
             "stat1_lbl": s_static("Endstand"),
-            "stat2_val": s_static(f"{factor}x"),
-            "stat2_lbl": s_static("Quote"),
+            "stat2_val": s_static("✓"),
+            "stat2_lbl": s_static("Außenseiter-Sieg"),
             "stat3_val": s_static(f"{int(fair_prob*100)}%"),
-            "stat3_lbl": s_static("Wskt."),
+            "stat3_lbl": s_static("Chance laut Daten"),
             "closing_line": s_static(
-                f"<strong>Pinnacle gab Ergebnis {int(fair_prob*100)}% Wahrscheinlichkeit.</strong> "
+                f"<strong>Die Daten gaben dem Ergebnis nur {int(fair_prob*100)}% Chance.</strong> "
                 f"Es passierte trotzdem."
             ),
-            "quote_line":   s_static(f'Warum die Sharps <span class="acc">trotzdem dabei</span> waren. 🎯'),
-            "data_source":  s_static("Daten: Pinnacle Closing + Endergebnis"),
+            "quote_line":   s_static(f'Außenseiter schreiben <span class="acc">Geschichte.</span> 🎯'),
+            "data_source":  s_static("Daten: Prognose-Modell + Endergebnis"),
         },
         reason=f"surprise={surprise:.2f} ({outcome}) fair_prob={fair_prob:.2f} → {factor}x",
     )]
