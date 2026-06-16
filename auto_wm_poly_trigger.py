@@ -324,6 +324,21 @@ def send_telegram(token: str, chat_id: str, text: str) -> bool:
 
 # ── Hauptlogik ─────────────────────────────────────────────────────────────────
 
+def is_homeaway_swap_suspect(fix: dict) -> bool:
+    """Spiegelt die Integritäts-Guard-Logik (homeaway_consistent): wenn die Pinnacle-
+    Favorit-Seite der Poly-Favorit-Seite widerspricht (bei merklicher Differenz), ist die
+    1X2-Orientierung fragwürdig → der 1X2-Edge ist phantom/invertiert. Befund 16.06.2026:
+    CPV-SAU lieferte +4.6pp auf CPV-Heimsieg, obwohl Poly SAU favorisiert (Swap-Verdacht).
+    Dann KEIN Auto-Trade auf hw/dr/aw. O/U/BTTS/AH sind orientierungs-unabhängig → erlaubt."""
+    hw, aw = fix.get("pinn_hw"), fix.get("pinn_aw")
+    phw, paw = fix.get("poly_hw"), fix.get("poly_aw")
+    if not all(isinstance(x, (int, float)) for x in (hw, aw, phw, paw)):
+        return False
+    if not (hw > 1 and aw > 1 and 0 < phw < 1 and 0 < paw < 1):
+        return False
+    return abs(hw - aw) > 0.15 and (hw < aw) != (phw > paw)
+
+
 def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
     """
     Findet alle Fixture+Markt-Kombinationen die die Trigger-Kriterien erfüllen.
@@ -396,6 +411,12 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
         for edge_key, (price_key, market_label, fair_key, verdict_key, fld) in EDGE_MARKET_MAP.items():
             # BTTS-Markt-Schalter (15.06.2026): separat abschaltbar.
             if fld in ("btts", "btts_no") and not BTTS_TRADE_ENABLED:
+                continue
+            # Home/Away-Swap-Schutz (16.06.2026): bei fragwürdiger 1X2-Orientierung
+            # (Pinn-Fav ≠ Poly-Fav) ist der 1X2-Edge phantom → KEIN Trade auf hw/dr/aw.
+            if fld in ("hw", "dr", "aw") and is_homeaway_swap_suspect(fix):
+                print(f"  🛑 Home/Away-Swap-Verdacht (Pinn-Fav ≠ Poly-Fav) — "
+                      f"{fix['home']} vs {fix['away']} {market_label} (1X2 BLOCKED)")
                 continue
             stored_edge = fix.get(edge_key)
 

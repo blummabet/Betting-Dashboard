@@ -80,7 +80,7 @@ jobs:
       # NICHT committet (das macht fetch-wm-data, owner) — Race vermieden; die frischen
       # Edges fliessen über fetch_wm_poly_prices in wm_poly_prices.json (committet).
       - name: 📈 Pinnacle-Odds frisch (Phase 1 Steam-Frische)
-        run: python fetch_wm_odds.py
+        run: ${{ env.POLY_PYTHON }} fetch_wm_odds.py
         continue-on-error: true
         env:
           ODDS_API_KEY:            ${{ secrets.ODDS_API_KEY }}

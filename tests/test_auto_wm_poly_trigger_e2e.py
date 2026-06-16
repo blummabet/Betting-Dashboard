@@ -323,6 +323,37 @@ class TestStaleEdgeRecompute(unittest.TestCase):
         self.assertFalse(_is_in_candidates(fix))
 
 
+class TestHomeAwaySwapBlock(unittest.TestCase):
+    """16.06.2026: 1X2-Auto-Trade bei Home/Away-Swap-Verdacht blocken (CPV-SAU-Fall)."""
+
+    def test_suspect_detected(self):
+        # CPV-SAU: Pinn-Fav Heim (2.40<2.63), Poly-Fav Ausw (0.345<0.395) → Verdacht
+        self.assertTrue(a.is_homeaway_swap_suspect(
+            {"pinn_hw": 2.40, "pinn_aw": 2.63, "poly_hw": 0.345, "poly_aw": 0.395}))
+
+    def test_agreement_not_suspect(self):
+        self.assertFalse(a.is_homeaway_swap_suspect(
+            {"pinn_hw": 1.40, "pinn_aw": 7.0, "poly_hw": 0.72, "poly_aw": 0.10}))
+
+    def test_coinflip_not_suspect(self):
+        self.assertFalse(a.is_homeaway_swap_suspect(
+            {"pinn_hw": 2.55, "pinn_aw": 2.50, "poly_hw": 0.40, "poly_aw": 0.42}))
+
+    def test_missing_data_not_suspect(self):
+        self.assertFalse(a.is_homeaway_swap_suspect({"pinn_hw": 2.4, "poly_hw": 0.34}))
+
+    def test_swap_fixture_1x2_blocked(self):
+        # +4.6pp auf CPV-Heimsieg, aber Swap-Verdacht → KEIN 1X2-Kandidat
+        fix = _make_fixture(
+            date=_date_in(3),
+            pinn_hw=2.40, pinn_aw=2.63,
+            poly_hw=0.345, poly_aw=0.395, fair_hw=0.391,   # edge_hw ≈ +4.6pp
+            edge_hw=4.6, verdict_hw=None,
+        )
+        cands = a.find_trigger_candidates([fix], placed_keys=set())
+        self.assertFalse(any(c["market"] == "Heimsieg" for c in cands))
+
+
 class TestBttsAutoTrade(unittest.TestCase):
     """BTTS Auto-Trade (15.06.2026): Poly poly_btts/poly_btts_no vs de-viggte
     Pinnacle-Baseline. Token-Fast-Path aus poly_btts_tokens [Yes, No]."""
