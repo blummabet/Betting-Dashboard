@@ -1984,6 +1984,11 @@
     const isAbw      = pick.verdict === 'ABWÄGEN';
     const accent     = isAbw ? '#f5c518' : '#00d4a1';
     const oddsStr    = pick.odds != null ? pick.odds.toFixed(2) : '—';
+    // Steam-Confirmed-Badge (17.06.2026): Linie stark in unsere Richtung gelaufen →
+    // bestätigter Move (auf Poly geritten), auch wenn die Karten-Edge konvergiert ist.
+    const steamBadge = pick.steamConfirmed
+      ? `<div class="wm-steam-confirmed" title="Pinnacle-Move ist eingetreten und von Soft-Quoten bestätigt. Der Wert am Buch ist abgeschmolzen — auf Polymarket wird der Move geritten. Kein frischer Value-Einstieg mehr.">🔥 Move bestätigt${pick.steamFollowPP ? ` +${pick.steamFollowPP.toFixed(0)}pp` : ''} · geritten auf Poly</div>`
+      : '';
 
     // Time-Label
     let timeLabel = '';
@@ -2120,6 +2125,7 @@
             <div class="wm-time">${timeLabel}</div>
             <div class="wm-pick-odds" style="color:${accent};">${oddsStr}</div>
             <div class="wm-pick-market">${isAbw ? 'Vorsichtiger Pick' : 'Unser Pick'}<strong>${pick.market}</strong></div>
+            ${steamBadge}
           </div>
           <div class="wm-team">
             <span class="wm-team-flag">${away.flag}</span>
@@ -2146,22 +2152,34 @@
         const adjStr = (typeof adj === 'number')
           ? `<span class="wm-sig-adj ${adj > 0 ? 'pos' : (adj < 0 ? 'neg' : '')}">Netto ${adj > 0 ? '+' : ''}${adj.toFixed(1)}pp</span>`
           : '';
-        const rows = sigs.map(s => `
+        // Signal-Vorzeichen = Richtung zur WETTE: score > 0 stützt den Pick (bestätigt
+        // den Move), score < 0 spricht dagegen. 17.06.2026: klar in Dafür/Dagegen gruppiert
+        // (Lucas) — der Public sieht sofort, welche Signale den Drop bestätigen.
+        const _row = (s) => `
           <div class="wm-sig-row">
             <div class="wm-sig-name">${s.name.replace(/_/g, ' ')}</div>
             <div class="wm-sig-evidence">${s.evidence}</div>
             <div class="wm-sig-score ${s.score > 0 ? 'pos' : 'neg'}">${s.score > 0 ? '+' : ''}${s.score.toFixed(1)}pp</div>
             <div class="wm-sig-conf">conf ${(s.confidence * 100).toFixed(0)}%</div>
             <div class="wm-sig-weight">w ${(s.weight || 1).toFixed(2)}</div>
-          </div>`).join('');
+          </div>`;
+        const _byMag = (a, b) => Math.abs(b.score) - Math.abs(a.score);
+        const pro     = sigs.filter(s => s.score > 0).sort(_byMag);
+        const contra  = sigs.filter(s => s.score < 0).sort(_byMag);
+        const neutral = sigs.filter(s => s.score === 0).length;
+        const _group = (title, cls, arr) => arr.length
+          ? `<div class="wm-sig-group-head ${cls}">${title} · ${arr.length}</div>
+             <div class="wm-sig-table">${arr.map(_row).join('')}</div>`
+          : '';
         return `<div class="wm-section">
-          <div class="wm-section-label">🧠 Engine-Signale — modulare Adjustments ${adjStr}</div>
-          <div class="wm-sig-table">${rows}</div>
+          <div class="wm-section-label">🧠 Engine-Signale — was bestätigt den Move ${adjStr}</div>
+          ${_group('✅ Dafür — stützen den Pick', 'pro', pro)}
+          ${_group('⚠️ Dagegen — sprechen dagegen', 'contra', contra)}
           <div class="wm-sig-note">
-            14-Signal-Engine: Sharp-Money (Lead-Lag, Polymarket-Sharp, Steam-Lag),
-            Modell (Form, H2H, xG, Injury), Kontext (Travel, Wetter, Druck, Anreiz, Lineup-T1h)
-            und Markt (Public-Bias, APIF-Predictions). Coverage: 1X2/DC/DNB/AH durchgängig,
-            O/U + BTTS in 4-5 Signalen (Update 09.06.). Gewichte lernen nach jedem resolved Pick via Bayesian-Update.
+            Vorzeichen = Richtung zur Wette: <strong>+pp dafür</strong>, <strong>−pp dagegen</strong>.
+            ${neutral ? `${neutral} Signal${neutral !== 1 ? 'e' : ''} neutral (nicht gezeigt). ` : ''}
+            Nur getriggerte Signale; die volle Liste inkl. nicht-feuernder steht auf der Event-Page.
+            Gewichte (w) lernen nach jedem aufgelösten Pick via Bayesian-Update.
           </div>
         </div>`;
       })()}

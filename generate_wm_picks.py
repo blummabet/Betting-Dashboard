@@ -81,6 +81,12 @@ ODDS_MAX         = _cfg("odds", "max_for_pick",          6.5)
 ODDS_BET_MAX     = _cfg("odds", "max_for_bet",           4.5)
 ODDS_BET_MAX_OU  = _cfg("odds", "max_for_bet_ou",        3.0)
 ODDS_BET_MAX_DNB = _cfg("odds", "max_for_bet_dnb",       4.0)
+# Steam-Confirmed-Sichtbarkeit (17.06.2026, Lucas): Ein Pick, dessen Linie stark in
+# unsere Richtung gelaufen ist (clvPP ≥ N), ist ein BESTÄTIGTER Steam-Move. Auch wenn
+# die Karten-Edge dadurch auf ~0 konvergiert ist (Wert am Buch weg), bleibt er auf der
+# Card sichtbar — der Move IST das Signal (auf Poly wird er geritten). Sonst verschwindet
+# genau die Wette, die unsere These bestätigt hat.
+STEAM_CONFIRM_PP = _cfg("edge", "steam_confirm_pp",      5.0)
 
 # Steam-Engine (Lucas' Modell): Picks pro Card + Conviction-BET-Schwelle.
 # WM lockerer als Liga (weniger Spiele) — Liga-Profil setzt steam_bet_threshold höher.
@@ -1127,7 +1133,17 @@ def generate_picks_for_fixture(
         # Nur NICHT-SKIP Picks mit ausreichend Edge
         if v["verdict"] == "SKIP":
             continue
-        if v["edgePP"] < min_edge:
+        # Steam-Confirmed-Ausnahme (17.06.2026): ein Pick, dessen Linie stark in unsere
+        # Richtung lief (clvPP ≥ STEAM_CONFIRM_PP), bleibt sichtbar — auch wenn die Edge
+        # dadurch konvergiert ist. Er wird NICHT als frische Value-Wette präsentiert
+        # (Verdict bleibt wie berechnet, meist ABWÄGEN), sondern mit „Move bestätigt"-
+        # Badge: der bestätigte Move IST das Signal, auf Poly wird er geritten.
+        # Edge-Floor −10: an der Konvergenz liegt die Karten-Edge struktur­bedingt
+        # bei ~−5 (Modell-Margin 0.96 × Markt-Devig 1.03). −10 lässt echte bestätigte
+        # Konvergenzen durch, droppt aber echte Über­schießer (Markt weit über fair).
+        _steam_confirmed = (v.get("clvPP", 0.0) >= STEAM_CONFIRM_PP
+                            and v["edgePP"] >= -10)
+        if v["edgePP"] < min_edge and not _steam_confirmed:
             continue
 
         # ── Underdog-Sanity-Filter ────────────────────────────────────────
@@ -1234,6 +1250,11 @@ def generate_picks_for_fixture(
             "icon":      "🎯",
             "result":    None,
             "clvPP":       round(v.get("clvPP", 0.0), 1),
+            # Steam-Confirmed (17.06.2026): Linie stark in unsere Richtung gelaufen →
+            # bestätigter Move, auch wenn die Karten-Edge konvergiert ist. Renderer zeigt
+            # „🔥 Move bestätigt"-Badge; KEINE frische Value-Wette (auf Poly wird er geritten).
+            "steamConfirmed": bool(_steam_confirmed),
+            "steamFollowPP":  round(v.get("clvPP", 0.0), 1) if _steam_confirmed else None,
             "dataQuality": data_quality,
             # Echte Modell-Tor-Erwartung (das λ, auf dem O/U-/BTTS-Quoten beruhen).
             # FIX 12.06.2026: Card zeigte bisher eine FREMDE xG (matchPage) neben der
