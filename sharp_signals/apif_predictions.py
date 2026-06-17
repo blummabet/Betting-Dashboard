@@ -102,7 +102,16 @@ class ApifPredictionsSignal(Signal):
         preds = (context.get("apif_predictions") or {}).get(mk)
         if not preds:
             return None
+        # Platzhalter-Schutz (17.06.2026 Audit): API-Football liefert für viele WM-Spiele
+        # leere Vorhersagen — advice "No predictions available", percent flach 0.33/0.33/0.33.
+        # Die feuerten ein FALSCHES Cross-Check-Signal (Differenz zum Pinnacle-Favoriten lag
+        # im credible Band) → verschmutzten Picks + Lern-Loop. Solche überspringen.
+        if "no predictions" in str(preds.get("advice", "")).lower():
+            return None
         percent = preds.get("percent") or {}
+        _vals = [percent.get(k) for k in ("home", "draw", "away")]
+        if all(isinstance(v, (int, float)) for v in _vals) and (max(_vals) - min(_vals) < 0.02):
+            return None   # flach (~1/3 je Outcome) = kein echtes Modell
         apif_p = percent.get(outcome)
         if apif_p is None:
             return None

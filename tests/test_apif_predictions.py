@@ -54,6 +54,17 @@ class TestSignalEvaluation(unittest.TestCase):
             "odds_snapshot": {"hw": pinn_odds[0], "dr": pinn_odds[1], "aw": pinn_odds[2]},
         }
 
+    def test_placeholder_advice_skipped(self):
+        """API-Football „No predictions available" → kein Signal (17.06.2026 Audit)."""
+        ctx = self._ctx({"home": 0.33, "draw": 0.33, "away": 0.33})
+        ctx["apif_predictions"]["MEX-ZAF"]["advice"] = "No predictions available"
+        self.assertIsNone(self.sig.evaluate({"market": "Heimsieg"}, ctx))
+
+    def test_flat_percent_skipped(self):
+        """Flache 0.33/0.33/0.33 (Platzhalter ohne advice) → kein Signal."""
+        ctx = self._ctx({"home": 0.33, "draw": 0.33, "away": 0.34})
+        self.assertIsNone(self.sig.evaluate({"market": "Heimsieg"}, ctx))
+
     def test_confirmatory_positive(self):
         """APIF gibt Heim mit 75% an, Pinnacle 62% → +13pp diff → confirmatory."""
         ctx = self._ctx({"home": 0.75, "draw": 0.15, "away": 0.10})
