@@ -142,13 +142,18 @@ def derive_pick(trig: dict, snap: dict) -> dict | None:
         odd, line, disp = ah
         return {"market": disp, "ah_line": line, "entry_odd": odd, "book": "pini",
                 "derived": True, "trigger": trig, "soft_lagging": None,
-                "soft_follow_pp": soft_follow, "soft_confirmed": soft_confirmed}
+                "soft_follow_pp": soft_follow, "soft_confirmed": soft_confirmed,
+                "soft_open": None, "soft_now": None}
 
     # Sonst: gerade Seite. Softbook-Quote bevorzugt (Anzeige/Einstieg), sonst Pini.
+    # soft_open/soft_now (17.06.2026): rohe Soft-Konsens-Quoten Opening→jetzt — der Renderer
+    # zeichnet daraus den ECHTEN Soft-Streifen (der Pinnacle-Streifen kommt aus dem Trigger).
     entry, book = (soft_now, "soft") if (soft_now and soft_now > 1.0) else (cur, "pini")
     return {"market": trig["label"], "ah_line": None, "entry_odd": round(entry, 3),
             "book": book, "derived": False, "trigger": trig, "soft_lagging": soft_lag,
-            "soft_follow_pp": soft_follow, "soft_confirmed": soft_confirmed}
+            "soft_follow_pp": soft_follow, "soft_confirmed": soft_confirmed,
+            "soft_open": round(soft_open, 3) if soft_open else None,
+            "soft_now": round(soft_now, 3) if soft_now else None}
 
 
 def _trigger_category(trig: dict) -> str:
@@ -182,21 +187,59 @@ def market_drift(odds: dict, min_samples: int = 5) -> dict:
             for s, v in acc.items() if len(v) >= min_samples}
 
 
+# Tor-Linien-Leitern nach STEIGENDER Quote (für Sub-Floor-Promotion).
+_OVER_LADDER  = ["o15", "o25", "o35"]   # Über: höhere Linie = höhere Quote
+_UNDER_LADDER = ["u35", "u25", "u15"]   # Unter: niedrigere Linie = höhere Quote
+
+
+def _promote_to_floor(trig, trigs, snap, floor):
+    """Sub-Floor Tor-Trigger (z.B. Über 1.5 @1.29) → die nächst-höhere Linie, die AUCH
+    getriggert hat (sich bewegt hat) UND deren Quote ≥ floor ist. None, wenn keine solche
+    Linie existiert → Pick fällt weg (nichts unter floor zeigen, Lucas 17.06.2026)."""
+    key = trig.get("key", "")
+    ladder = _OVER_LADDER if key in _OVER_LADDER else (_UNDER_LADDER if key in _UNDER_LADDER else None)
+    if not ladder:
+        return None
+    triggered = {t.get("key") for t in trigs}
+    i = ladder.index(key)
+    for nk in ladder[i + 1:]:
+        if nk not in triggered:
+            continue   # diese höhere Linie hat sich NICHT bewegt → nicht hochbiegen
+        nt = next((t for t in trigs if t.get("key") == nk), None)
+        if nt is None:
+            continue
+        p = derive_pick(nt, snap)
+        if p and p.get("entry_odd", 0) >= floor:
+            return p
+    return None
+
+
 def build_steam_picks(snap: dict, *, days_to_ko: float | None = None,
                       trigger_pp: float = TRIGGER_PP, max_picks: int = 3,
-                      drift: dict | None = None) -> list[dict]:
+                      drift: dict | None = None, min_odds: float = 0.0) -> list[dict]:
     """Bis zu max_picks Steam-Picks je Spiel, dedupliziert nach Kategorie
     (result/totals/btts). Häufiger Fall: Home-Favorit dropt → oft dropt auch das Over
     → beide werden gezeigt. Aber nie 2× dieselbe Kategorie (keine 5 Abwägungen).
-    drift = markt-weiter Median-Move (aus market_drift) → spielspezifisch isolieren."""
+    drift = markt-weiter Median-Move (aus market_drift) → spielspezifisch isolieren.
+    min_odds (17.06.2026, Lucas): getriggerte Linie unter min_odds (z.B. Über 1.5 @1.29) →
+    auf die nächst-höhere Linie hochgehen, die AUCH getriggert hat (≥ min_odds); gibt's keine,
+    Pick weglassen (nichts unter min_odds anzeigen)."""
     out, seen = [], set()
-    for trig in detect_steam(snap, trigger_pp, drift=drift):
+    all_trigs = detect_steam(snap, trigger_pp, drift=drift)
+    for trig in all_trigs:
         cat = _trigger_category(trig)
         if cat in seen:
             continue
         pick = derive_pick(trig, snap)
         if not pick:
             continue
+        # Sub-Floor-Schutz: zu kurze Linie → nächst-höhere getriggerte (≥min_odds) oder weg.
+        if min_odds and pick.get("entry_odd", 0) < min_odds:
+            promoted = _promote_to_floor(trig, all_trigs, snap, min_odds)
+            if promoted is None:
+                seen.add(cat)   # Kategorie verbraucht — nichts unter Floor zeigen
+                continue
+            pick = promoted
         late = (days_to_ko is not None and days_to_ko < 2.0)
         if pick.get("soft_lagging") is not None and pick["soft_lagging"] <= 0.5:
             late = True   # Soft schon konvergiert → Late/no-edge-Hinweis
