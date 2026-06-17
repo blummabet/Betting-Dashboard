@@ -96,6 +96,13 @@ PER_EVENT_REGIONS = "eu,uk"
 # 6h deckt mind. einen fetch-wm-data-Lauf ab; mit dichtem Manage-Fetch wird's minutengenau.
 CLOSING_CAPTURE_WINDOW_H = 6.0
 
+# In-Play-Schutz für den last_known-Fallback (16.06.2026 → QAT-SUI-Phantom):
+# Ein Spiel ohne pre-match Snapshot, das schon LÄNGER läuft, liefert über TheOddsAPI
+# Live-Quoten (QAT-SUI o25=21.0 / hw=81.0). Die als „Closing" einzufrieren erzeugt
+# −55pp CLV-Phantome. Daher nur einfrieren, wenn der Anpfiff noch keine TOL-Minuten
+# her ist — danach lieber KEIN Closing (CLV=None) als ein erfundenes.
+CLOSING_FALLBACK_INPLAY_TOL_MIN = 15.0
+
 
 def merge_closing_lines(existing: dict, odds_out: dict) -> dict:
     """Phase 3 (16.06.2026): spiegelt die odds_closing aus wm2026-data in die persistente
@@ -1197,7 +1204,9 @@ def main():
                 entry["odds_closing"] = {**entry["odds_closing"], "provisional": False, "final": True}
                 freeze_count += 1
                 continue
-            if now_dt >= kickoff_dt and not entry.get("odds_closing") and entry.get("hw") and entry.get("aw"):
+            mins_since_ko = (now_dt - kickoff_dt).total_seconds() / 60.0
+            if (now_dt >= kickoff_dt and mins_since_ko <= CLOSING_FALLBACK_INPLAY_TOL_MIN
+                    and not entry.get("odds_closing") and entry.get("hw") and entry.get("aw")):
                 entry["odds_closing"] = {
                     "hw":  entry["hw"],
                     "dr":  entry.get("dr"),

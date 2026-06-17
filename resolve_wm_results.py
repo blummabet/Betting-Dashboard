@@ -186,6 +186,46 @@ def load_json(path: Path, default):
         return default
 
 
+# In-Play-Toleranz: Snapshots, die bis zu CLOSING_PREMATCH_TOL_MIN nach dem
+# nominellen Anpfiff eingefroren wurden, gelten noch als "Closing" (Anpfiffzeiten
+# sind teils ungenau / Verzögerungen). Alles danach = Live-Quoten → verwerfen.
+CLOSING_PREMATCH_TOL_MIN = 10
+
+
+def _parse_ts(ts_str):
+    """ISO-Timestamp → tz-aware datetime, oder None bei Fehler."""
+    if not ts_str or not isinstance(ts_str, str):
+        return None
+    try:
+        dt = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
+    except Exception:
+        return None
+
+
+def closing_is_prematch(closing: dict, kickoff_iso) -> bool:
+    """
+    In-Play-Schutz für CLV (16.06.2026 → QAT-SUI-Phantom).
+
+    Ein Closing-Snapshot, der NACH Anpfiff eingefroren wurde, enthält Live-Quoten
+    (z.B. QAT-SUI o25=21.0 / hw=81.0 bei spätem 1:1) und vergiftet den CLV
+    (−55pp Phantom, zog den Dashboard-avgCLV auf −55). Solche Snapshots dürfen
+    NIE als Closing dienen — lieber kein CLV als ein erfundener.
+
+    Nicht verifizierbar (kein frozenAt oder kein Anpfiff) → True (kein Regress
+    gegenüber Altbestand). [[feedback_steam_lag_prematch_only]].
+    """
+    if not closing:
+        return False
+    frozen = _parse_ts(closing.get("frozenAt"))
+    ko     = _parse_ts(kickoff_iso)
+    if frozen is None or ko is None:
+        return True  # nicht prüfbar → zulassen (Verhalten wie bisher)
+    return frozen <= ko + timedelta(minutes=CLOSING_PREMATCH_TOL_MIN)
+
+
 def build_result_lookup(wm: dict) -> dict:
     """
     Erstellt ein Lookup: "HOME_ID-AWAY_ID" → result-dict.
@@ -217,6 +257,15 @@ def build_result_lookup(wm: dict) -> dict:
             # Pinnacle Closing Odds — minutengenaue Datei bevorzugen, sonst odds_map
             odds_entry = odds_map.get(key, {})
             closing    = closing_lines.get(key) or odds_entry.get("odds_closing", {})
+
+            # In-Play-Schutz (16.06.2026): wurde der Snapshot NACH Anpfiff eingefroren,
+            # sind es Live-Quoten → CLV-Phantom (QAT-SUI o25=21.0 → −55pp). Verwerfen
+            # und auf den (pre-match) odds_map-Fallback ausweichen; ist der auch in-play,
+            # bleibt closing leer → CLV=None statt erfunden.
+            kickoff_iso = fx.get("kickoff")
+            if closing and not closing_is_prematch(closing, kickoff_iso):
+                fallback = odds_entry.get("odds_closing", {})
+                closing = fallback if closing_is_prematch(fallback, kickoff_iso) else {}
 
             # Fair probability aus Closing Odds berechnen — H2: Power-Devig
             pinn_close_hw = pinn_close_dr = pinn_close_aw = None

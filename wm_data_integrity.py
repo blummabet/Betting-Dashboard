@@ -144,10 +144,61 @@ def check_venue_matches_schedule(ctx):
     fails = []
     for _g, fx in ctx.fixtures:
         s = ctx.schedule.get(ctx.mk(fx))
-        if s and s.get("venue") and fx.get("venue") != s["venue"]:
-            fails.append(f"{ctx.mk(fx)}: '{fx.get('venue')}' ≠ Schedule '{s['venue']}'")
-    return _chk("venue_matches_schedule", "Venue == API-Football-Schedule", "error", fails,
+        if not (s and s.get("venue")):
+            continue
+        fxv, sv = fx.get("venue"), s["venue"]
+        if fxv == sv:
+            continue
+        # Stadt-/Marketing-Labels weichen oft ab (Levi's „Santa Clara" vs
+        # „San Francisco Bay Area", SoFi „Inglewood" vs „Los Angeles"). Nur ECHT
+        # verschiedene Stadien (verschiedene venue_id) sind ein Fehler — gleicher
+        # venue_id = bloßes Label-Rauschen, kein Daten-Problem (16.06.2026).
+        vid_fx, vid_s = _venue_id(fxv), _venue_id(sv)
+        if vid_fx and vid_s and vid_fx == vid_s:
+            continue
+        detail = (f" (venue_id {vid_fx}≠{vid_s})" if vid_fx and vid_s else " (nicht auflösbar)")
+        fails.append(f"{ctx.mk(fx)}: '{fxv}' ≠ Schedule '{sv}'{detail}")
+    return _chk("venue_matches_schedule", "Venue == API-Football-Schedule", "warn", fails,
+                "Nur echte Stadion-Abweichung (verschiedene venue_id) zählt; reine "
+                "Stadt-Label-Unterschiede (gleiches venue_id) werden ignoriert. "
                 "Seed-Venues waren reihenweise falsch (KOR-CZE SoFi statt Guadalajara).")
+
+
+@integrity_check
+def check_closing_prematch(ctx):
+    """In-Play-Schutz für den CLV (16.06.2026 → QAT-SUI-Phantom).
+
+    Ein Closing-Snapshot, der NACH Anpfiff eingefroren wurde, enthält Live-Quoten
+    (QAT-SUI o25=21.0 / hw=81.0 bei spätem 1:1) → −55pp CLV-Phantom, das den
+    Dashboard-avgCLV verzerrt. Der Resolver verwirft solche Snapshots inzwischen
+    (resolve_wm_results.closing_is_prematch); dieser Guard macht die Lecks sichtbar,
+    damit die Write-Seite (Closing-Freeze) nachgezogen werden kann.
+    """
+    cl = _lazy("wm_closing_lines.json")
+    if not isinstance(cl, dict) or not cl:
+        return None
+    ko_by_key = {ctx.mk(fx): fx.get("kickoff") for _g, fx in ctx.fixtures}
+    fails = []
+    for key, snap in cl.items():
+        if not isinstance(snap, dict):
+            continue
+        frozen, ko = snap.get("frozenAt"), ko_by_key.get(key)
+        if not frozen or not ko:
+            continue
+        try:
+            fz = datetime.fromisoformat(str(frozen).replace("Z", "+00:00"))
+            kk = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+        except Exception:
+            continue
+        if fz.tzinfo is None: fz = fz.replace(tzinfo=timezone.utc)
+        if kk.tzinfo is None: kk = kk.replace(tzinfo=timezone.utc)
+        late_min = (fz - kk).total_seconds() / 60.0
+        if late_min > 10:
+            fails.append(f"{key}: Closing +{late_min:.0f}min nach Anpfiff eingefroren "
+                         f"(In-Play → CLV verworfen)")
+    return _chk("closing_prematch", "Closing-Snapshot vor Anpfiff (kein In-Play-Leck)", "warn", fails,
+                "frozenAt nach Anpfiff = Live-Quoten. Resolver nullt den CLV; "
+                "Write-Seite sollte Closing spätestens bei Anpfiff einfrieren.")
 
 
 @integrity_check
