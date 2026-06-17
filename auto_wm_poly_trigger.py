@@ -237,6 +237,12 @@ ENGINE_MIN_POS_FOR_ABWAEGEN = _cfg("trade", "engine_min_pos_for_abwaegen", 2)
 # allein auf "tradeable" boosten. Der Polymarket-vs-Pinnacle Edge muss
 # selbst mindestens MIN_RAW_EDGE_PP betragen.
 MIN_RAW_EDGE_PP        = _cfg("trade", "min_raw_edge_pp",         2.0)
+# Spread-Gate (17.06.2026): Eintritt wird gegen den ECHTEN Ask geprüft, nicht den
+# Mid. real_edge = fair − ask muss MIN_RAW_EDGE_PP überleben, der Spread eng genug
+# sein und das Buch liquide. Verhindert Trades, deren Mid-Edge der Spread auffrisst
+# (USA-TUR: +5.2pp Mid-Edge war real nur +2.2pp gegen den 43¢-Ask).
+MAX_ENTRY_SPREAD_PP    = _cfg("trade", "max_entry_spread_pp",     6.0)
+MIN_BOOK_LIQ_USDC      = _cfg("trade", "min_book_liq_usdc",      50.0)
 #
 # Gate B: Conviction-Score-Floor. Wenn der Pick auf der Card weniger als
 # MIN_CONVICTION_FOR_AUTO/10 Punkte hat, blockt der Auto-Trigger.
@@ -890,15 +896,50 @@ def main():
             print(f"    ❌ CLOB Token ID nicht gefunden — übersprungen")
             continue
 
-        print(f"    📍 Token: {token_id[:16]}…  |  Preis: {round(poly_p*100)}¢")
+        print(f"    📍 Token: {token_id[:16]}…  |  Mid-Preis: {round(poly_p*100)}¢")
 
-        # Schätze Anzahl der YES-Tokens (Stake / Preis) — wird für Sell gebraucht
-        shares_estimate = round(stake / poly_p, 4) if poly_p > 0 else 0.0
+        # ── Spread-Gate (17.06.2026): gegen den ECHTEN Ask prüfen ──────────────
+        # Der Candidate hat die Mid-Edge bestanden. Aber gekauft wird über den Ask,
+        # verkauft über den Bid — auf dünnen Märkten frisst der Spread die Edge.
+        # Hier der letzte Check vor echtem Geld: echte Edge = fair − ask, Spread eng,
+        # Buch liquide. Buch nicht erreichbar → Fallback Mid (Exit-Guard schützt dann).
+        fill_price   = poly_p   # Fallback = Mid (bisheriges Verhalten)
+        entry_ask    = None
+        entry_spread = None
+        try:
+            from manage_wm_poly_positions import fetch_token_book
+            _book = fetch_token_book(token_id)
+        except Exception:
+            _book = None
+        if _book:
+            entry_ask    = _book["ask"]
+            entry_spread = _book["spreadPP"]
+            liq          = _book.get("liqUSD")
+            fair         = order.get("pinnFair")
+            real_edge_pp = ((fair - entry_ask) * 100
+                            if isinstance(fair, (int, float)) else None)
+            if entry_spread > MAX_ENTRY_SPREAD_PP:
+                print(f"    🛑 Spread {entry_spread:.1f}pp > {MAX_ENTRY_SPREAD_PP:.0f}pp — übersprungen (Spread frisst Edge)")
+                continue
+            if liq is not None and liq < MIN_BOOK_LIQ_USDC:
+                print(f"    🛑 Buch-Liquidität ${liq:.0f} < ${MIN_BOOK_LIQ_USDC:.0f} — übersprungen")
+                continue
+            if real_edge_pp is not None and real_edge_pp < MIN_RAW_EDGE_PP:
+                print(f"    🛑 Echte Edge {real_edge_pp:.1f}pp (fair−ask {entry_ask:.3f}) < {MIN_RAW_EDGE_PP}pp Floor — übersprungen")
+                continue
+            fill_price = entry_ask   # ehrlicher Eintrittspreis = Ask (was wir zahlen)
+            _re = f" · echte Edge {real_edge_pp:.1f}pp" if real_edge_pp is not None else ""
+            print(f"    ✅ Spread-Gate ok: Ask {entry_ask:.3f} · Spread {entry_spread:.1f}pp{_re}")
+        else:
+            print(f"    ⚠️  Orderbuch nicht abrufbar — Eintritt zum Mid {poly_p:.3f} (Spread-Gate übersprungen)")
 
-        # Order platzieren
+        # Schätze Anzahl der Tokens (Stake / Fill-Preis) — wird für Sell gebraucht
+        shares_estimate = round(stake / fill_price, 4) if fill_price > 0 else 0.0
+
+        # Order platzieren (price_hint = realer Ask wenn verfügbar, sonst Mid)
         result = place_market_order(
             token_id, float(stake), private_key,
-            price_hint=float(poly_p),
+            price_hint=float(fill_price),
         )
 
         log_bet_to_history(history, order, result)
@@ -923,7 +964,7 @@ def main():
                 from telegram_trades import notify_trade_opened
                 notify_trade_opened(
                     home=home, away=away, market=market,
-                    stake=stake, poly_price=poly_p,
+                    stake=stake, poly_price=fill_price,
                     edge_pp=order.get("edgePP"),
                     pinn_fair=order.get("pinnFair"),
                     order_id=result.get("orderId"),
@@ -943,7 +984,10 @@ def main():
                 "homeId":         order.get("homeId", ""),
                 "awayId":         order.get("awayId", ""),
                 "market":         market,
-                "polyPrice":      poly_p,
+                "polyPrice":      fill_price,        # ehrlicher Eintritt = Ask (17.06.2026)
+                "polyMid":        poly_p,            # Mid zum Vergleich/Audit
+                "entryAsk":       entry_ask,         # echter Ask (None wenn Buch fehlte)
+                "entrySpreadPP":  entry_spread,
                 "pinnFair":       order.get("pinnFair"),
                 "edgePP":         order["edgePP"],
                 "stake":          stake,
