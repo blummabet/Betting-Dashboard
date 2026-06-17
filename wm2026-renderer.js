@@ -798,8 +798,8 @@
         const fams = heroPick.convictionFamilies || {};
         const famRows = [
           ['💸', 'Sharp-Money', fams.sharp_money || 0, 3],
-          ['📊', 'Modell-Stack', fams.model_stack || 0, 3],
-          ['🧭', 'Kontext', fams.context || 0, 3],
+          ['📊', 'Modell-Stack', fams.model_stack || 0, 3],   // Form+xG+H2H+Chancen+Rating
+          ['🧭', 'Kontext', fams.context || 0, 3],            // Travel+Lineup+Wetter+Druck+Höhe
           ['🌐', 'Markt-Konsens', fams.market || 0, 1],
         ].filter(([, , v, max]) => v > 0 || max >= 2)
          .map(([icon, n, v, max]) => {

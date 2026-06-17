@@ -67,8 +67,8 @@ def _load_config() -> dict:
         "verdict_thresholds": {"top": 8, "abwaegen": 6, "skip": 4},
         "family_caps": {
             "sharp_money": 3,    # Pinnacle-Sharp + Soft-Books-Lag
-            "model_stack": 3,    # Form + xG + H2H + Injury + Modell-Sanity (vereint)
-            "context": 3,        # Travel + Lineup + Weather + Pressure + Incentive
+            "model_stack": 3,    # Form + xG + H2H + Injury + ChanceCreation + FormRating + Modell-Sanity
+            "context": 3,        # Travel + Lineup + Weather + Pressure + Incentive + Altitude
             "market": 1,         # Public-Bias + APIF-Predictions
         },
         "opening_movement": {
@@ -457,8 +457,12 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     # Form + xG + H2H + Injury aus Signals + Modell-Sanity. Modell-Sanity zählt
     # zur Familie weil sie alle anderen voraussetzt — ohne Modell-Realität sind
     # auch Form/xG-Punkte fragwürdig.
+    # 17.06.2026 (Lucas-Audit): chance_creation + form_rating ergänzt — feuerten in der
+    # Pick-Anpassung, fehlten aber in der Conviction-Familie. Beide sind Modell-Signale
+    # (Chancen-Volumen / Form-Rating), gehören zum model_stack.
     model_signals_active = []
-    for name in ("form_trend", "xg_strength", "h2h_pattern", "injury"):
+    for name in ("form_trend", "xg_strength", "h2h_pattern", "injury",
+                 "chance_creation", "form_rating"):
         if _signal_contributes(name) > 0:
             model_signals_active.append(name)
             evidence.append(f"Modell: {name}")
@@ -479,9 +483,11 @@ def compute_conviction_score(pick: dict, signal_output: dict,
 
     # ── Familie 3: Kontext (max 3) ────────────────────────────────────────
     # Travel + Lineup (T-1h Echtzeit) + Weather + Pressure + Incentive
+    # 17.06.2026 (Lucas-Audit): altitude_signal ergänzt — Venue-Höhen-Kontext (wie
+    # travel/weather), feuerte aber nicht in die Conviction.
     ctx_signals_active = []
     for name in ("travel_burden", "lineup_signal", "weather_signal",
-                 "pressure_index", "incentive_signal"):
+                 "pressure_index", "incentive_signal", "altitude_signal"):
         if _signal_contributes(name) > 0:
             ctx_signals_active.append(name)
             evidence.append(f"Kontext: {name}")
