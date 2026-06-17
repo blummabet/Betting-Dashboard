@@ -797,13 +797,20 @@
         const pct = (score / 10) * 100;
         const fams = heroPick.convictionFamilies || {};
         const famRows = [
-          ['Sharp-Money (Pinnacle vs Softbookies)', fams.sharp_money || 0, 3],
-          ['Modell-Stack (Form + xG + H2H)', fams.model_stack || 0, 3],
-          ['Kontext (Travel + Lineup + Druck)', fams.context || 0, 3],
-          ['Markt-Konsens (Public + APIF)', fams.market || 0, 1],
-        ].filter(([, v, max]) => v > 0 || max >= 2)
-         .map(([n, v, max]) => `<div class="cc-fam-row ${v>0?'pos':''}"><span>${n}</span><span class="cc-fam-val">+${v} / max ${max}</span></div>`)
-         .join('');
+          ['💸', 'Sharp-Money', fams.sharp_money || 0, 3],
+          ['📊', 'Modell-Stack', fams.model_stack || 0, 3],
+          ['🧭', 'Kontext', fams.context || 0, 3],
+          ['🌐', 'Markt-Konsens', fams.market || 0, 1],
+        ].filter(([, , v, max]) => v > 0 || max >= 2)
+         .map(([icon, n, v, max]) => {
+           const segs = Array.from({length: max}, (_, i) =>
+             `<span class="cc-fam-seg${i < v ? ' on' : ''}"></span>`).join('');
+           return `<div class="cc-fam-row ${v > 0 ? 'pos' : ''}">
+             <span class="cc-fam-name">${icon} ${n}</span>
+             <span class="cc-fam-segs">${segs}</span>
+             <span class="cc-fam-val">${v}/${max}</span>
+           </div>`;
+         }).join('');
         html += `<div class="cc-conviction ${cls}">
           <div class="cc-conv-head">${label} <span class="cc-conv-score">${score}/10</span></div>
           ${famRows ? `<div class="cc-fam-grid">${famRows}</div>` : ''}
@@ -2707,27 +2714,25 @@
     </div>`;
   }
 
-  // ── Steam-Move-Graph (Pinnacle Opening→jetzt) ─────────
-  // Kleiner Verlaufs-Sparkline für Steam-Picks: zeigt visuell den Pinnacle-Drop, der
-  // den Pick getriggert hat (Lucas' Modell). Quote oben = Opening, fällt nach unten-rechts
-  // = Sharp Money rein. Nur Inline-Styles → kein CSS-Abhängigkeit.
+  // ── Soft-Quote-Move-Balken (Opening→jetzt) ────────────
+  // 17.06.2026 (Lucas): vereinheitlicht mit der Pinnacle-Box (cc-sharp-box) — gleicher
+  // Balken-Stil für ALLE Odds-Drops, nur farblich getrennt (Soft = grün, Pinnacle = rot).
+  // Zeigt den Drop auf der Quote, die wir bespielen (entry book), der den Pick triggert.
   function _steamMoveGraph(pick) {
     if (!pick || pick.source !== 'steam') return '';
     const o = pick.steamOpen, c = pick.steamCur, mv = pick.steamMovePP;
     if (o == null || c == null || o <= 1 || c <= 1) return '';
-    const W = 116, H = 30, pad = 5;
-    const lo = Math.min(o, c), hi = Math.max(o, c), span = (hi - lo) || 0.01;
-    const yv = v => pad + ((hi - v) / span) * (H - 2 * pad);   // höhere Quote oben
-    const x0 = pad, x1 = W - pad, y0 = yv(o), y1 = yv(c);
-    const col = '#16a34a';   // Drop = Geld rein = positives Signal
-    return `<div style="display:flex;align-items:center;gap:7px;margin-top:4px;font-size:11px;line-height:1">
-      <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="flex:none;overflow:visible">
-        <line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${col}" stroke-width="2"/>
-        <circle cx="${x0}" cy="${y0}" r="2.5" fill="#9ca3af"/>
-        <circle cx="${x1}" cy="${y1}" r="3.5" fill="${col}"/>
-      </svg>
-      <span style="opacity:.9">📉 ${(+o).toFixed(2)} → <strong>${(+c).toFixed(2)}</strong>
-        <span style="color:${col};font-weight:700">+${mv}pp Geld</span>${pick.entryBook === 'soft' ? ' · Soft-Quote' : ''}</span>
+    const isSoft = pick.entryBook === 'soft';
+    const label = isSoft ? 'Soft-Quote bewegt' : 'Quote bewegt';
+    const barWidth = Math.min(100, 30 + Math.abs(mv || 0) * 7);
+    return `<div class="cc-sharp-box cc-soft">
+      <div class="cc-sm-head">💶 <strong>${label}</strong> ${mv > 0 ? '+' : ''}${mv}pp seit Eröffnung</div>
+      <div class="cc-sm-bar-row">
+        <span class="cc-sm-open">Opening: ${(+o).toFixed(2)}</span>
+        <div class="cc-sm-bar"><div class="cc-sm-bar-fill" style="width:${barWidth}%"></div></div>
+        <span class="cc-sm-now">Jetzt: ${(+c).toFixed(2)}</span>
+      </div>
+      <div class="cc-sm-meta">Geld rein${isSoft ? ' · Soft-Books bestätigen' : ''}</div>
     </div>`;
   }
 
