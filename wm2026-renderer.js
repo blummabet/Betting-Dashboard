@@ -749,37 +749,9 @@
         html += `<div class="cc-story${heroPick.verdict === 'ABWÄGEN' ? ' cc-story-abw' : ''}">${story}</div>`;
       }
 
-      // ─── SHARP-MOVE-BOX (NEU 09.06.2026) ─────────────
-      // Bei aktivem Sharp-Move zeigen wir Pinnacle-Opening → Current als
-      // visuellen Balken inkl. Tage seit Eröffnung. Move-Age-Decay-Hinweis.
-      if (heroPick.sharpMoveActive) {
-        const sm = heroPick.sharpMoveDetails || {};
-        const op = sm.open_pinn_odds;
-        const cu = sm.current_pinn_odds;
-        const movePp = sm.pinn_move_pp || 0;
-        const ageDays = sm.move_age_days;
-        const decay = sm.move_age_decay;
-        const lagBonus = sm.soft_lag_bonus;
-        const ageNote = (ageDays != null)
-          ? (decay >= 1 ? `${Math.round(ageDays)} Tage seit Eröffnung · frischer Move`
-            : decay >= 0.5 ? `${Math.round(ageDays)} Tage seit Eröffnung · teil-gedämpft`
-            : `${Math.round(ageDays)} Tage seit Eröffnung · älterer Move`)
-          : '';
-        const lagNote = lagBonus
-          ? `<span class="cc-sm-lag-fresh">Soft-Books noch ${(sm.soft_lag_pp||0).toFixed(1)}pp im Rückstand</span>`
-          : `<span class="cc-sm-lag-closed">Soft-Books haben aufgeholt</span>`;
-        // Balken-Width: 0pp = 30%, 5pp = 50%, 10pp = 100%
-        const barWidth = Math.min(100, 30 + Math.abs(movePp) * 7);
-        html += `<div class="cc-sharp-box">
-          <div class="cc-sm-head">🔥 <strong>Pinnacle bewegt</strong> ${movePp > 0 ? '+' : ''}${movePp.toFixed(1)}pp seit Eröffnung</div>
-          <div class="cc-sm-bar-row">
-            <span class="cc-sm-open">Opening: ${op ? op.toFixed(2) : '?'}</span>
-            <div class="cc-sm-bar"><div class="cc-sm-bar-fill" style="width:${barWidth}%"></div></div>
-            <span class="cc-sm-now">Jetzt: ${cu ? cu.toFixed(2) : '?'}</span>
-          </div>
-          <div class="cc-sm-meta">${ageNote} · ${lagNote}</div>
-        </div>`;
-      }
+      // SHARP-MOVE-BOX entfernt 17.06.2026: war ein ZWEITER Pinnacle-Streifen aus der
+      // (löchrigen) odds_history → erschien nur auf manchen Cards. Der Pinnacle-Streifen
+      // kommt jetzt IMMER aus dem Steam-Trigger via _steamMoveGraph (Z.699). Doppelung weg.
 
       // ─── CONVICTION-BADGE (NEU 09.06.2026) ────────────
       // Wett-Qualitäts-Bewertung 0-10 aus conviction_score.py.
@@ -2721,26 +2693,60 @@
     </div>`;
   }
 
-  // ── Soft-Quote-Move-Balken (Opening→jetzt) ────────────
-  // 17.06.2026 (Lucas): vereinheitlicht mit der Pinnacle-Box (cc-sharp-box) — gleicher
-  // Balken-Stil für ALLE Odds-Drops, nur farblich getrennt (Soft = grün, Pinnacle = rot).
-  // Zeigt den Drop auf der Quote, die wir bespielen (entry book), der den Pick triggert.
-  function _steamMoveGraph(pick) {
-    if (!pick || pick.source !== 'steam') return '';
-    const o = pick.steamOpen, c = pick.steamCur, mv = pick.steamMovePP;
+  // ── Odds-Move-Balken: Pinnacle (immer) + Soft (wenn da) ──────────────────────
+  // 17.06.2026 (Lucas): EIN Balken-Bauteil, zwei korrekt benannte Quellen.
+  //   Pinnacle (rot) = steamOpen/steamCur (der Trigger — IMMER, deshalb jede Card).
+  //   Soft (grün)    = softOpen/softNow (echte Softbook-Bewegung — wenn vorhanden).
+  // Vorher war der grüne Streifen fälschlich „Soft", zeigte aber Pinnacle-Daten.
+  function _moveBar(opts) {
+    const { icon, label, o, c, mvText, meta, cls } = opts;
     if (o == null || c == null || o <= 1 || c <= 1) return '';
-    const isSoft = pick.entryBook === 'soft';
-    const label = isSoft ? 'Soft-Quote bewegt' : 'Quote bewegt';
-    const barWidth = Math.min(100, 30 + Math.abs(mv || 0) * 7);
-    return `<div class="cc-sharp-box cc-soft">
-      <div class="cc-sm-head">💶 <strong>${label}</strong> ${mv > 0 ? '+' : ''}${mv}pp seit Eröffnung</div>
+    const mvPP = ((1 / +c) - (1 / +o)) * 100;            // implizite Bewegung in pp
+    const barWidth = Math.min(100, 30 + Math.abs(mvPP) * 7);
+    return `<div class="cc-sharp-box ${cls}">
+      <div class="cc-sm-head">${icon} <strong>${label}</strong> ${mvText}</div>
       <div class="cc-sm-bar-row">
         <span class="cc-sm-open">Opening: ${(+o).toFixed(2)}</span>
         <div class="cc-sm-bar"><div class="cc-sm-bar-fill" style="width:${barWidth}%"></div></div>
         <span class="cc-sm-now">Jetzt: ${(+c).toFixed(2)}</span>
       </div>
-      <div class="cc-sm-meta">Geld rein${isSoft ? ' · Soft-Books bestätigen' : ''}</div>
+      ${meta ? `<div class="cc-sm-meta">${meta}</div>` : ''}
     </div>`;
+  }
+
+  function _steamMoveGraph(pick) {
+    if (!pick || pick.source !== 'steam') return '';
+    let html = '';
+    // 1) Pinnacle — der Trigger, immer da. Alters-/Lag-Kontext aus sharpMoveDetails wenn vorhanden.
+    const mv = pick.steamMovePP;
+    const sm = pick.sharpMoveDetails || {};
+    let pinnMeta = 'Sharp-Money rein — der Trigger';
+    if (sm.move_age_days != null) {
+      const d = sm.move_age_decay;
+      pinnMeta = (d >= 1 ? `${Math.round(sm.move_age_days)} Tage seit Eröffnung · frischer Move`
+                : d >= 0.5 ? `${Math.round(sm.move_age_days)} Tage seit Eröffnung · teil-gedämpft`
+                : `${Math.round(sm.move_age_days)} Tage seit Eröffnung · älterer Move`);
+    }
+    html += _moveBar({
+      icon: '🔥', label: 'Pinnacle bewegt', cls: 'cc-pinn',
+      o: pick.steamOpen, c: pick.steamCur,
+      mvText: `${mv > 0 ? '+' : ''}${mv}pp seit Eröffnung`,
+      meta: pinnMeta,
+    });
+    // 2) Soft-Quote — die echte Softbook-Bewegung (nur wenn Soft-Daten da)
+    if (pick.softOpen != null && pick.softNow != null) {
+      const ff = pick.softFollowPP;
+      const softMeta = pick.softConfirmed
+        ? '✅ Soft-Books bestätigen den Move'
+        : (ff != null && ff > 0 ? `Soft-Books folgen (+${ff}pp)` : 'Soft-Books hinken noch nach');
+      html += _moveBar({
+        icon: '💶', label: 'Soft-Quote bewegt', cls: 'cc-soft',
+        o: pick.softOpen, c: pick.softNow,
+        mvText: (ff != null ? `${ff > 0 ? '+' : ''}${ff}pp seit Eröffnung` : ''),
+        meta: softMeta,
+      });
+    }
+    return html;
   }
 
   // ── Pick row with edgePP ──────────────────────────────

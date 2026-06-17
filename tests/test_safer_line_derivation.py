@@ -77,5 +77,36 @@ class TestSaferLineDerivation(unittest.TestCase):
         self.assertFalse(out.get("safeDerived"))
 
 
+class TestSubFloorPromotion(unittest.TestCase):
+    """Sub-1.35 Trigger (Über 1.5 @1.29) → nächst-höhere Linie wenn AUCH getriggert, sonst weg."""
+
+    import steam_engine as S
+
+    def _totals(self, picks):
+        return [(p["market"], p["entry_odd"]) for p in picks
+                if p["market"].startswith(("Über", "Unter"))]
+
+    def test_promotes_when_higher_line_also_moved(self):
+        snap = {"o15": 1.29, "u15": 3.6, "o25": 1.55, "u25": 2.4, "o35": 2.7, "u35": 1.45,
+                "odds_open": {"o15": 1.36, "u15": 3.2, "o25": 1.70, "u25": 2.1,
+                              "o35": 2.9, "u35": 1.4}}
+        tot = self._totals(self.S.build_steam_picks(snap, min_odds=1.35))
+        self.assertIn(("Über 2.5 Tore", 1.55), tot)
+        self.assertNotIn("Über 1.5 Tore", [m for m, _ in tot])
+
+    def test_drops_when_higher_line_didnt_move(self):
+        snap = {"o15": 1.29, "u15": 3.6, "o25": 1.55, "u25": 2.4, "o35": 2.7, "u35": 1.45,
+                "odds_open": {"o15": 1.36, "u15": 3.2, "o25": 1.56, "u25": 2.39,
+                              "o35": 2.71, "u35": 1.44}}
+        tot = self._totals(self.S.build_steam_picks(snap, min_odds=1.35))
+        self.assertEqual(tot, [])   # nichts unter 1.35 anzeigen
+
+    def test_no_floor_keeps_short(self):
+        # ohne min_odds bleibt die kurze Linie (Rückwärtskompatibilität)
+        snap = {"o15": 1.29, "u15": 3.6, "odds_open": {"o15": 1.36, "u15": 3.2}}
+        tot = self._totals(self.S.build_steam_picks(snap, min_odds=0.0))
+        self.assertTrue(any(m == "Über 1.5 Tore" for m, _ in tot))
+
+
 if __name__ == "__main__":
     unittest.main()

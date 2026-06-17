@@ -1851,6 +1851,7 @@ def _steam_card_pick(snap, pick):
         # ── Steam-Metadaten (Anzeige + CLV-Tracking) ──
         "source": "steam", "steamMovePP": move,
         "steamOpen": t["open"], "steamCur": t["cur"],
+        "softOpen": pick.get("soft_open"), "softNow": pick.get("soft_now"),
         "entryBook": pick["book"], "entryOdd": round(odds, 2),
         "lateEntry": bool(pick.get("lateEntry")), "steamDerived": bool(pick.get("derived")),
         "softConfirmed": soft_confirmed, "softFollowPP": soft_follow,
@@ -1911,7 +1912,8 @@ def generate_steam_picks_for_fixture(fx, snap, today_iso, drift=None):
     except Exception:
         days = None
     picks = _steam.build_steam_picks(snap, days_to_ko=days,
-                                     max_picks=MAX_STEAM_PICKS_PER_CARD, drift=drift)
+                                     max_picks=MAX_STEAM_PICKS_PER_CARD, drift=drift,
+                                     min_odds=SAFE_LINE_MIN_ODDS)
     # Multi-Pick: widersprüchliche Kombis vermeiden (z.B. Unter 3.5 + BTTS Ja). Stärkster
     # Pick zuerst (detect_steam sortiert nach Sweet+Move) — schwächere Widersprüche raus.
     # Nutzt die zentrale Inkompatibilitäts-Logik (pick_helpers = single source of truth).
