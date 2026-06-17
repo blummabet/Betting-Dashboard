@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-16T22:13:18Z",
+  "generatedAt": "2026-06-17T09:04:12Z",
   "windowDays": 2,
-  "upcoming": 12,
+  "upcoming": 13,
   "signalsFired": [
     "lead_lag_bias",
     "public_static_bias",
@@ -19,23 +19,23 @@
   ],
   "signalsTotal": 17,
   "perSignal": {
-    "lead_lag_bias": 3,
-    "public_static_bias": 8,
-    "travel_burden": 40,
+    "lead_lag_bias": 7,
+    "public_static_bias": 10,
+    "travel_burden": 44,
     "injury": 0,
-    "form_trend": 77,
-    "h2h_pattern": 6,
-    "xg_strength": 70,
+    "form_trend": 79,
+    "h2h_pattern": 7,
+    "xg_strength": 73,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 28,
     "lineup_signal": 7,
-    "apif_predictions": 12,
-    "weather_signal": 17,
+    "apif_predictions": 13,
+    "weather_signal": 15,
     "incentive_signal": 0,
     "altitude_signal": 2,
-    "chance_creation": 33,
-    "form_rating": 9
+    "chance_creation": 36,
+    "form_rating": 11
   },
   "verdict": "warn",
   "errors": [],
@@ -43,17 +43,18 @@
     "🧠 Signal 'injury' feuert nicht (nur bei gemeldeten Ausfällen)",
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
-    "🧠 Signal 'incentive_signal' feuert nicht (feuert ab MD2)"
+    "🧠 Signal 'incentive_signal' feuert nicht (feuert ab MD2)",
+    "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))"
   ],
   "oks": [
-    "🌡️ Weather: 56 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
-    "📊 APIF-Predictions: 47 Spiele",
-    "📋 Lineups: 12 Spiele geladen (5 imminent)",
-    "📈 NT-xG: 46 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 23.0 Snapshots",
+    "🌡️ Weather: 53 Spiele mit Forecast",
+    "🎲 Pinnacle-Odds: frischeste 0.2h alt",
+    "📊 APIF-Predictions: 49 Spiele",
+    "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
+    "📈 NT-xG: 47 Teams",
+    "📉 Odds-History: 73 Fixtures, Ø 25.5 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $331.93",
+    "💼 Poly-Balance: $321.08",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -69,11 +70,28 @@
     {
       "id": "venue_matches_schedule",
       "label": "Venue == API-Football-Schedule",
-      "severity": "error",
+      "severity": "warn",
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Seed-Venues waren reihenweise falsch (KOR-CZE SoFi statt Guadalajara)."
+      "note": "Nur echte Stadion-Abweichung (verschiedene venue_id) zählt; reine Stadt-Label-Unterschiede (gleiches venue_id) werden ignoriert. Seed-Venues waren reihenweise falsch (KOR-CZE SoFi statt Guadalajara)."
+    },
+    {
+      "id": "closing_prematch",
+      "label": "Closing-Snapshot vor Anpfiff (kein In-Play-Leck)",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 7,
+      "failures": [
+        "MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
+        "CAN-BIH: Closing +41min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
+        "QAT-SUI: Closing +123min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
+        "AUS-TUR: Closing +203min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
+        "NED-JPN: Closing +68min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
+        "BEL-EGY: Closing +191min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
+        "ESP-CPV: Closing +60min nach Anpfiff eingefroren (In-Play → CLV verworfen)"
+      ],
+      "note": "frozenAt nach Anpfiff = Live-Quoten. Resolver nullt den CLV; Write-Seite sollte Closing spätestens bei Anpfiff einfrieren."
     },
     {
       "id": "kickoff_present",
