@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-17T09:04:12Z",
+  "generatedAt": "2026-06-17T15:05:13Z",
   "windowDays": 2,
   "upcoming": 13,
   "signalsFired": [
@@ -19,23 +19,23 @@
   ],
   "signalsTotal": 17,
   "perSignal": {
-    "lead_lag_bias": 7,
-    "public_static_bias": 10,
-    "travel_burden": 44,
+    "lead_lag_bias": 3,
+    "public_static_bias": 5,
+    "travel_burden": 45,
     "injury": 0,
-    "form_trend": 79,
-    "h2h_pattern": 7,
-    "xg_strength": 73,
+    "form_trend": 82,
+    "h2h_pattern": 6,
+    "xg_strength": 75,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 28,
     "lineup_signal": 7,
-    "apif_predictions": 13,
+    "apif_predictions": 11,
     "weather_signal": 15,
     "incentive_signal": 0,
     "altitude_signal": 2,
-    "chance_creation": 36,
-    "form_rating": 11
+    "chance_creation": 34,
+    "form_rating": 10
   },
   "verdict": "warn",
   "errors": [],
@@ -52,9 +52,9 @@
     "📊 APIF-Predictions: 49 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 25.5 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 26.9 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $321.08",
+    "💼 Poly-Balance: $326.48",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -245,6 +245,24 @@
       "nFail": 0,
       "failures": [],
       "note": "Sonst hängt die Wette ewig in 'Offene Positionen · Live'."
+    },
+    {
+      "id": "safer_line_applied",
+      "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
+    },
+    {
+      "id": "profit_sell_real",
+      "label": "Profit-Sell ist real (Verkauf > Einstieg)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Mid-Gewinn der beim echten Bid ein Verlust ist. Fix: Bewertung am Bid (fetch_token_book) + Profit-Sell-Veto."
     },
     {
       "id": "ah_btts_position_priced",
