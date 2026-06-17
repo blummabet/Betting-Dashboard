@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-17T18:14:33Z",
+  "generatedAt": "2026-06-17T19:01:32Z",
   "windowDays": 2,
   "upcoming": 13,
   "signalsFired": [
@@ -13,28 +13,29 @@
     "lineup_signal",
     "apif_predictions",
     "weather_signal",
+    "incentive_signal",
     "altitude_signal",
     "chance_creation",
     "form_rating"
   ],
   "signalsTotal": 17,
   "perSignal": {
-    "lead_lag_bias": 2,
+    "lead_lag_bias": 3,
     "public_static_bias": 5,
     "travel_burden": 45,
     "injury": 0,
-    "form_trend": 82,
+    "form_trend": 81,
     "h2h_pattern": 6,
-    "xg_strength": 74,
+    "xg_strength": 75,
     "polymarket_sharp": 0,
     "steam_lag": 0,
-    "pressure_index": 28,
+    "pressure_index": 30,
     "lineup_signal": 8,
-    "apif_predictions": 11,
-    "weather_signal": 15,
-    "incentive_signal": 0,
+    "apif_predictions": 10,
+    "weather_signal": 14,
+    "incentive_signal": 7,
     "altitude_signal": 2,
-    "chance_creation": 35,
+    "chance_creation": 34,
     "form_rating": 11
   },
   "verdict": "warn",
@@ -43,8 +44,8 @@
     "🧠 Signal 'injury' feuert nicht (nur bei gemeldeten Ausfällen)",
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
-    "🧠 Signal 'incentive_signal' feuert nicht (feuert ab MD2)",
-    "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))"
+    "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
+    "🛡️ AH-Handicap-Edges plausibel (kein Mirror): 5 Fehler (z.B. USA-AUS: AH home -3.5 Edge -42.1pp (poly 0.5 / fair 0.079) — Phantom/Mirror-Verdacht)"
   ],
   "oks": [
     "🌡️ Weather: 53 Spiele mit Forecast",
@@ -52,7 +53,7 @@
     "📊 APIF-Predictions: 49 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 28.9 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 29.3 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
     "💼 Poly-Balance: $320.88",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -247,6 +248,15 @@
       "note": "Sonst hängt die Wette ewig in 'Offene Positionen · Live'."
     },
     {
+      "id": "standings_built",
+      "label": "Gruppentabellen gebaut (wenn Ergebnisse da)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "wm_standings.apply_to_wm läuft in generate_wm_picks; leer trotz Ergebnissen = Build-Ausfall."
+    },
+    {
       "id": "safer_line_applied",
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
@@ -304,9 +314,15 @@
       "id": "ah_edge_sane",
       "label": "AH-Handicap-Edges plausibel (kein Mirror)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 5,
+      "failures": [
+        "USA-AUS: AH home -3.5 Edge -42.1pp (poly 0.5 / fair 0.079) — Phantom/Mirror-Verdacht",
+        "TUN-JPN: AH away -3.5 Edge -41.7pp (poly 0.5 / fair 0.0829) — Phantom/Mirror-Verdacht",
+        "ESP-SAU: AH home -4.5 Edge -33.6pp (poly 0.5 / fair 0.1641) — Phantom/Mirror-Verdacht",
+        "ESP-SAU: AH home -3.5 Edge +16.5pp (poly 0.135 / fair 0.2995) — Phantom/Mirror-Verdacht",
+        "BEL-IRN: AH home -3.5 Edge -37.9pp (poly 0.5 / fair 0.1208) — Phantom/Mirror-Verdacht"
+      ],
       "note": "fetch_wm_poly_prices: poly_ah_by_team team-ID-geschlüsselt (mirror-immun). Riesen-Edge = falsche Seite/Daten. Auto-Trader blockt via AH_MAX_EDGE_PP."
     },
     {
