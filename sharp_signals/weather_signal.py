@@ -49,6 +49,14 @@ DEFAULT_THRESHOLDS = {
     "kickoff_modifier_evening": 0.55,   # 19-21 lokal
     "kickoff_modifier_night":   0.35,   # 22+ lokal
     "confidence":          0.65,
+    # Klima-Dome-Dämpfung (17.06.2026): Stadien mit schließbarem Dach + Vollklima
+    # (AT&T Dallas, NRG Houston, Mercedes-Benz Atlanta) halten ~21°C unabhängig von
+    # der Außentemperatur → Hitze-Penalty greift dort nicht/kaum. Faktor wird auf
+    # heat_intensity multipliziert: 0.0 = nie feuern, 0.25 = Restpenalty als Hedge
+    # (falls FIFA das Dach bei milden Abendspielen offen lässt). Matching über
+    # Stadion-Namen-Substring im venue-String (nicht Stadt → keine Verwechslung).
+    "climate_controlled_venues": ["at&t", "nrg stadium", "mercedes-benz", "mercedes benz"],
+    "climate_controlled_factor": 0.25,
 }
 
 
@@ -238,6 +246,16 @@ class WeatherSignal(Signal):
             (temp_used - self._t["heat_threshold"]) /
             (self._t["extreme_threshold"] - self._t["heat_threshold"])))
         heat_intensity = heat_intensity_raw * kickoff_mod
+
+        # Klima-Dome-Dämpfung (17.06.2026): in schließbar-überdachten Vollklima-Stadien
+        # (Dallas/Houston/Atlanta) ist die Platztemperatur ~21°C — die Außen-Hitze
+        # erreicht die Spieler nicht. heat_intensity wird gedämpft (Faktor aus Config).
+        venue_l = (context.get("venue") or "").lower()
+        cc_venues = self._t.get("climate_controlled_venues") or []
+        climate_controlled = any(s in venue_l for s in cc_venues)
+        if climate_controlled:
+            heat_intensity *= float(self._t.get("climate_controlled_factor", 0.0))
+
         effective_temp = temp_used   # echte Anpfiff-Temp (oder Tagesmax-Fallback)
         if heat_intensity <= 0:
             return None
@@ -302,6 +320,8 @@ class WeatherSignal(Signal):
                    "Abend"
         evidence = (f"🌡 {temp_used:.0f}°C {ko_label}-Anpfiff · "
                     + " · ".join(evidence_parts))
+        if climate_controlled:
+            evidence += " · 🏟 Klima-Dome (Penalty gedämpft)"
 
         return SignalResult(
             score=round(score, 2),
@@ -315,6 +335,7 @@ class WeatherSignal(Signal):
                 "home_climate":     home_climate,
                 "away_climate":     away_climate,
                 "heat_intensity":   round(heat_intensity, 2),
+                "climate_controlled": climate_controlled,
                 "side":             side,
             },
         )
