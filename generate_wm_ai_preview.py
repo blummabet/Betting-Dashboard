@@ -271,6 +271,16 @@ def build_prompt(info: dict) -> str:
             sm_d = p.get("sharpMoveDetails") or {}
             mv = sm_d.get("pinn_move_pp", 0)
             extras.append(f"Sharp-Move Pinnacle {mv:+.1f}pp seit Eröffnung")
+        # Steam-Move zuverlässig aus dem Trigger (17.06.2026) — nicht nur odds_history.
+        smv = p.get("steamMovePP")
+        if smv and not sm:
+            extras.append(f"Pinnacle-Move {p.get('steamOpen')}→{p.get('steamCur')} (+{smv}pp seit Eröffnung)")
+        if p.get("softConfirmed"):
+            extras.append("Soft-Konsens bestätigt den Move")
+        elif p.get("softFollowPP") is not None and p.get("softFollowPP", 0) > 0:
+            extras.append(f"Soft-Konsens folgt (+{p.get('softFollowPP')}pp)")
+        if p.get("safeDerived"):
+            extras.append(f"sichere Linie abgeleitet (These war {p.get('safeThesisMarket')} @{p.get('safeThesisOdds')})")
         if fams:
             active_fams = [f"{k}={v}" for k, v in fams.items() if v > 0]
             if active_fams:
@@ -311,19 +321,26 @@ Schreibe exakt 4 Sätze auf Deutsch. Stil: journalistisch, sachlich, konkret —
 
 SATZ 1: Kräfteverhältnis — Wer ist Favorit, wie groß ist der Abstand, was sagen Elo und Form?
 SATZ 2: Spielcharakter — Was erwarten wir taktisch/statistisch? (Tore, Ecken, BTTS, Stil basierend auf Form)
-SATZ 3: Wetthinweis — Konkreter Pick mit Begründung WENN Edge vorhanden; sonst ehrlich "kein klarer Value heute".
-        Falls Conviction-Score gemeldet wurde, baue ihn ein: 8+/10 = "starke Bestätigung", 6-7 = "solide gestützt",
-        4-5 = "Beobachten — Signale dünn", 0-3 = "Edge ohne Signal-Backing, Halluzinations-Risiko".
-        Bei Sharp-Move: erwähne dass Pinnacle sich in Pick-Richtung bewegt hat ("Sharps stützen die Seite").
+SATZ 3: Wetthinweis — Nenne den konkreten Pick. WICHTIG zur Begründung: unser Modell ist
+        Steam-Following, NICHT Pinnacle-schlagen. Die Begründung ist also NICHT ein Preis-Edge
+        (der ist bei einem bestätigten Move bauartbedingt ~0 — schreibe NIE "kein Value", wenn
+        ein Pinnacle-Move + Signale da sind!), sondern: Pinnacle hat die Quote in Pick-Richtung
+        bewegt (Sharp Money) UND die Signale bestätigen die Richtung. Conviction einbauen:
+        8+/10 = "stark bestätigt", 6-7 = "solide gestützt", 4-5 = "Beobachten, Bestätigung dünn".
+        Wenn eine sichere Linie abgeleitet wurde: kurz erklären, dass der Move zwar auf der
+        riskanten Linie kam, wir aber die sicherere Linie spielen (höhere Trefferquote).
+        Nur wenn WIRKLICH kein Move und kein Pick da ist: ehrlich "heute kein klares Signal".
 SATZ 4: Kontext — Co-Gastgeber-Vorteil, H2H-Besonderheit, Upset-Risiko, Gruppenrelevanz, ODER
-        wenn eines der Engine-Signale (Hitze, Travel, Anreiz, Druck, Lineup) besonders stark feuert: das nennen.
+        wenn ein Engine-Signal (Hitze/Klima-Dome, Travel, Höhe, Anreiz, Druck, Aufstellung) stark
+        feuert: das konkret nennen.
 
 REGELN:
 - Kein "Laut Modell" oder "Laut Daten" — schreibe aus Analysten-Perspektive
 - Kein Hype, keine Emojis, kein Clickbait
-- Wenn kein Pick: trotzdem interessanten Aspekt über das Spiel erwähnen
-- Wenn Conviction-Score sehr niedrig (≤3) bei BET: explizit auf "wenig Signal-Backing" hinweisen
-- Maximal 130 Wörter gesamt (etwas mehr Spielraum wegen reicherem Kontext)
+- Der Pinnacle-Move + Signal-Bestätigung ist die Story, nicht der Preis-Edge
+- Wenn kein Pick: trotzdem einen interessanten Aspekt über das Spiel erwähnen
+- Wenn Conviction-Score sehr niedrig (≤3) bei BET: ehrlich auf "noch dünne Bestätigung" hinweisen
+- Maximal 130 Wörter gesamt
 - Nur die 4 Sätze, nichts davor oder danach"""
 
 
