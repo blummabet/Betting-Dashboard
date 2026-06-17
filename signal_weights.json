@@ -10,7 +10,7 @@
     "wins_when_triggered": 0.35,
     "losses_when_triggered": 0.65,
     "posterior_mean": 0.47,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "Initial-Weight 1.0. Wird aktualisiert sobald WM-Spiele resolved sind (ab 12.06.2026)."
   },
   "public_static_bias": {
@@ -19,16 +19,16 @@
     "wins_when_triggered": 1.0,
     "losses_when_triggered": 0.0,
     "posterior_mean": 0.6,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "Migration aus generate_wm_picks.compute_public_bias(). Initial 1.0 (Elo-Familie). Wird ab 12.06. gelernt."
   },
   "travel_burden": {
-    "weight": 1.0,
-    "n_observations": 2,
-    "wins_when_triggered": 1.0,
-    "losses_when_triggered": 1.0,
-    "posterior_mean": 0.5,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "weight": 0.987,
+    "n_observations": 3,
+    "wins_when_triggered": 1.35,
+    "losses_when_triggered": 1.65,
+    "posterior_mean": 0.479,
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "Killer-Differenzierung — kaum Bookies modellieren das. xG-basiert, gemeinsame Logik mit generate_wm_picks.travel_factor()."
   },
   "injury": {
@@ -39,12 +39,12 @@
     "notes": "Positionsbewusst: GK > FWD > DEF/MID > Backup. Mehrere Ausfälle akkumulieren bis Cap 6pp/Team."
   },
   "form_trend": {
-    "weight": 1.373,
-    "n_observations": 33,
-    "wins_when_triggered": 23.4,
-    "losses_when_triggered": 9.6,
-    "posterior_mean": 0.686,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "weight": 1.387,
+    "n_observations": 35,
+    "wins_when_triggered": 25.05,
+    "losses_when_triggered": 9.95,
+    "posterior_mean": 0.694,
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "Tore-Avg-Diff der letzten ~5 Spiele. Score = scoring_diff × 3 + conceding_diff × 2.5."
   },
   "h2h_pattern": {
@@ -53,16 +53,16 @@
     "wins_when_triggered": 2.35,
     "losses_when_triggered": 0.65,
     "posterior_mean": 0.621,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "≥5 H2H Spiele Anforderung. Win-Rate (inkl. halber Draws) gegen 50% als Baseline."
   },
   "xg_strength": {
-    "weight": 1.253,
-    "n_observations": 28,
-    "wins_when_triggered": 18.05,
+    "weight": 1.276,
+    "n_observations": 29,
+    "wins_when_triggered": 19.05,
     "losses_when_triggered": 9.95,
-    "posterior_mean": 0.627,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "posterior_mean": 0.638,
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "Understat xGForAvg/xGAgainstAvg. xG-Diff zwischen Heim und Auswärts als Team-Stärke-Indikator."
   },
   "polymarket_sharp": {
@@ -80,12 +80,12 @@
     "notes": "Pinnacle-Move + Polymarket-Lag. Komplementär zu lead_lag_bias (Soft-Books). Volume-Gate ≥ 3000 USDC."
   },
   "pressure_index": {
-    "weight": 0.837,
-    "n_observations": 23,
-    "wins_when_triggered": 9.3,
-    "losses_when_triggered": 13.7,
-    "posterior_mean": 0.419,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "weight": 0.872,
+    "n_observations": 25,
+    "wins_when_triggered": 10.65,
+    "losses_when_triggered": 14.35,
+    "posterior_mean": 0.436,
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "Tournament-Stage + Group-Standing + KO-Phase. MD1: leicht risikoavers. MD3: Must-Win-Boost für 0-Pkt-Teams. KO: Tor-Erwartung niedriger."
   },
   "lineup_signal": {
@@ -94,7 +94,7 @@
     "wins_when_triggered": 3.0,
     "losses_when_triggered": 4.0,
     "posterior_mean": 0.455,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "T-1h Aufstellungs-Signal. Top-Scorer fehlt komplett → starke Auswirkung auf Goals + Outright. Unique-Group (kein Anti-Korr-Discount), volle Gewichtung weil orthogonal zu historischen Signalen."
   },
   "apif_predictions": {
@@ -103,7 +103,7 @@
     "wins_when_triggered": 1.0,
     "losses_when_triggered": 3.0,
     "posterior_mean": 0.375,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "Externes Drittes-Modell (API-Football's eigenes Pricing-Modell). Cross-Check gegen Pinnacle pro 1X2/DNB-Pick. Unique-Group, volle Gewichtung."
   },
   "weather_signal": {
@@ -112,7 +112,7 @@
     "wins_when_triggered": 2.95,
     "losses_when_triggered": 7.05,
     "posterior_mean": 0.354,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "Hitze-Penalty (≥30°C) für cold/temperate-climate Teams. Mittag-Anpfiff voll, Abend gedämpft. Context-Group mit Travel+Injury — Anti-Korr verhindert doppeltes Zählen wenn Hitze+Reise zusammen."
   },
   "incentive_signal": {
@@ -122,12 +122,12 @@
     "last_updated": "2026-06-09T07:06:27.557827+00:00"
   },
   "chance_creation": {
-    "weight": 1.144,
-    "n_observations": 21,
+    "weight": 1.1,
+    "n_observations": 22,
     "wins_when_triggered": 12.3,
-    "losses_when_triggered": 8.7,
-    "posterior_mean": 0.572,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "losses_when_triggered": 9.7,
+    "posterior_mean": 0.55,
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "neu 12.06.2026 — xG/Stats-Build"
   },
   "form_rating": {
@@ -136,7 +136,7 @@
     "wins_when_triggered": 1.4,
     "losses_when_triggered": 2.6,
     "posterior_mean": 0.425,
-    "last_updated": "2026-06-17T07:06:10Z",
+    "last_updated": "2026-06-17T07:21:05Z",
     "notes": "neu 12.06.2026 — xG/Stats-Build"
   }
 }
