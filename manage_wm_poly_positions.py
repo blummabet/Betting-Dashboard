@@ -66,9 +66,11 @@ def _cfg(section: str, key: str, default):
 # ── Sell-Schwellwerte ─────────────────────────────────────────────────────────
 # 01.06.2026: PROFIT_TARGET 0.20 → 0.10 (schnellerer Cash-Cycle, gemessen).
 # PINN_GAP von 2.0 → 1.5 angepasst, MIN_PROFIT_PP als Schutz für Secondary.
-PROFIT_TARGET   = _cfg("sell", "profit_target", 0.10)
+PROFIT_TARGET   = _cfg("sell", "profit_target", 0.08)
 PINN_GAP_PP     = _cfg("sell", "pinn_gap_pp",   1.5)
 MIN_PROFIT_PP   = _cfg("sell", "min_profit_pp", 0.03)
+# Spread-Schutz (17.06.2026): nicht in absurd breite Orderbücher verkaufen
+MAX_SELL_SPREAD_PP = _cfg("sell", "max_sell_spread_pp", 15.0)
 
 # Age-Decay: ältere Positionen sollen Cash freimachen — auch bei kleinem Profit schließen
 AGE_DECAY_HOURS         = _cfg("sell", "age_decay_hours",         48)
@@ -164,6 +166,54 @@ def _http_get(url: str) -> dict | list | None:
     except Exception as e:
         print(f"  HTTP error {url}: {e}")
         return None
+
+
+CLOB_BOOK_URL = "https://clob.polymarket.com/books?token_id={token_id}"
+
+
+def fetch_token_book(token_id: str) -> dict | None:
+    """
+    Live-Top-of-Book vom Polymarket-CLOB für GENAU den Token, den wir halten.
+
+    17.06.2026 (Geld-Bug USA-TUR): Positionen wurden am MITTELPREIS bewertet
+    (`poly_btts_no` = 1 − JA-Mid), nicht am echten realisierbaren VERKAUFSPREIS.
+    Kauf lief über den Ask (0.43), Verkauf über den Bid (0.41) → angezeigte +10%
+    waren real −4%. Fix: Position immer am **Bid** bewerten (was wir beim Verkauf
+    wirklich bekommen), Eintritt am **Ask**.
+
+    ORDER-UNABHÄNGIG: best bid = max(bids), best ask = min(asks) — Polymarket
+    sortiert Bücher nicht garantiert; Index [0] anzunehmen wäre der nächste Phantom-Bug.
+
+    Gibt {bid, ask, mid, spreadPP} oder None (→ Caller verkauft NICHT = sicherer Default).
+    """
+    if not token_id:
+        return None
+    data = _http_get(CLOB_BOOK_URL.format(token_id=token_id))
+    if not isinstance(data, dict):
+        return None
+    try:
+        bids = [(float(b["price"]), float(b.get("size", 0) or 0))
+                for b in (data.get("bids") or [])
+                if isinstance(b, dict) and b.get("price") is not None]
+        asks = [(float(a["price"]), float(a.get("size", 0) or 0))
+                for a in (data.get("asks") or [])
+                if isinstance(a, dict) and a.get("price") is not None]
+    except (TypeError, ValueError):
+        return None
+    if not bids or not asks:
+        return None
+    best_bid, bid_sz = max(bids, key=lambda x: x[0])
+    best_ask, ask_sz = min(asks, key=lambda x: x[0])
+    # Sanity: 0 < bid < ask < 1. Gekreuztes/degeneriertes Buch → None (kein Sell).
+    if not (0.0 < best_bid < best_ask < 1.0):
+        return None
+    return {
+        "bid":      round(best_bid, 4),
+        "ask":      round(best_ask, 4),
+        "mid":      round((best_bid + best_ask) / 2, 4),
+        "spreadPP": round((best_ask - best_bid) * 100, 1),
+        "liqUSD":   round(best_bid * bid_sz + best_ask * ask_sz, 0),
+    }
 
 
 def send_telegram(text: str) -> bool:
@@ -322,14 +372,32 @@ def check_position(pos: dict) -> dict:
     # match_key (homeId-awayId) ist Primär-Lookup im prices-Cache
     match_key  = f"{pos.get('homeId','')}-{pos.get('awayId','')}".strip("-")
 
-    # AH/BTTS: über den exakten Token bewerten. Moneyline/O-U: über die Preisspalte.
-    # Unbekannter Markt ohne priceKey → current=None → kein Sell (sicherer Default).
-    if _is_token_market(market):
-        current = _token_price_from_cache(pos.get("tokenId", ""))
-    elif market_key:
-        current = fetch_current_price(slug, market_key, match_key)
+    # ── Bewertung am REALISIERBAREN Bid (17.06.2026, universal für ALLE Märkte) ──
+    # Jede Position trägt einen tokenId → wir holen das Live-Orderbuch und bewerten
+    # am **Bid** (was wir beim Verkauf wirklich bekommen), NICHT am Mittelpreis.
+    # Das killt den Spread-Phantom-Gewinn (USA-TUR: Mid +10% war real −4%).
+    # Fallback nur wenn das Buch nicht erreichbar ist → Cache-Mid (degradiert,
+    # markiert via priceSource, damit Guard + Anzeige es sehen).
+    token_id = pos.get("tokenId", "")
+    book = fetch_token_book(token_id)
+    spread_pp = None
+    if book:
+        current = book["bid"]
+        spread_pp = book["spreadPP"]
+        pos["bookBid"]     = book["bid"]
+        pos["bookAsk"]     = book["ask"]
+        pos["spreadPP"]    = book["spreadPP"]
+        pos["priceSource"] = "live_bid"
     else:
-        current = None
+        # Degradierter Fallback: Cache-Mid. NICHT der echte Verkaufspreis →
+        # P&L ist hier optimistisch; Guard/Anzeige markieren das.
+        if _is_token_market(market):
+            current = _token_price_from_cache(token_id)
+        elif market_key:
+            current = fetch_current_price(slug, market_key, match_key)
+        else:
+            current = None
+        pos["priceSource"] = "cache_mid_fallback"
     if current is None:
         pos["currentPrice"] = None
         pos["pnlPct"] = None
@@ -376,23 +444,24 @@ def check_position(pos: dict) -> dict:
     # volatilen In-Game-Preisen — konsistent mit dem Loss-Trigger (NO_INPLAY_LOSS_SELL)
     # und der Pre-Match-Close-Logik. Einziger erlaubter KO-naher Exit bleibt der
     # 2h-Hard-Close (is_pre_match_close, stoppt bei h_until=0).
+    profit_sell = False   # Profit-Mitnahme (vs Loss-Stop) — für den Spread-Guard unten
     if not in_play:
-        # PRIMARY: +10% Profit (Cash-Cycle Optimierung)
+        # PRIMARY: Profit-Ziel erreicht (Cash-Cycle). current = REALER Bid → echter Gewinn.
         if entry > 0 and current >= entry * (1 + PROFIT_TARGET):
-            sell = True
+            sell = True; profit_sell = True
             reason = f"Profit +{round(pnl_pct, 1)}% ≥ +{PROFIT_TARGET*100:.0f}% Ziel"
 
         # SECONDARY: Poly konvergiert zu Pinnacle fair (innerhalb PINN_GAP_PP)
         if not sell and pinn_fair and (current - entry) * 100 >= MIN_PROFIT_PP * 100:
             gap = (pinn_fair - current) * 100
             if gap <= PINN_GAP_PP:
-                sell = True
+                sell = True; profit_sell = True
                 reason = f"Markt konvergiert: Poly {current:.3f} ≈ Pinn fair {pinn_fair:.3f} (Δ{gap:.1f}pp)"
 
         # TERTIARY: Age-Decay — alte Position + kleiner Profit reicht
         if not sell and entry > 0 and age_h is not None and age_h >= AGE_DECAY_HOURS:
             if current >= entry * (1 + AGE_DECAY_PROFIT_TARGET):
-                sell = True
+                sell = True; profit_sell = True
                 reason = f"Age-Decay: Position {age_h:.0f}h alt, +{round(pnl_pct, 1)}% ≥ +{AGE_DECAY_PROFIT_TARGET*100:.0f}% reicht"
 
     # ── LOSS-Trigger (NUR wenn kein Profit-Sell + nicht In-Play) ──────────────
@@ -427,6 +496,21 @@ def check_position(pos: dict) -> dict:
             sell = True
             reason = (f"Age-Loss: Position {age_h:.0f}h alt, "
                       f"{round(pnl_pct,1)}% im Minus — Spread frisst Buchwert")
+
+    # ── GUARD (17.06.2026): Profit-Sell darf NIE in einen realen Verlust verkaufen ──
+    # Belt-and-suspenders gegen die Spread-Phantom-Klasse: eine Profit-Mitnahme ist
+    # nur erlaubt, wenn der echte Bid ÜBER dem Einstieg liegt UND der Spread nicht
+    # absurd breit ist (sonst frisst der Verkauf den Buchgewinn). Loss-/Kickoff-Stops
+    # bleiben unangetastet — da WOLLEN wir raus, egal wie der Spread steht.
+    if sell and profit_sell:
+        if entry > 0 and current <= entry:
+            sell = False
+            reason = ""
+            pos["sellVetoed"] = f"Profit-Sell geblockt: Bid {current:.3f} ≤ Entry {entry:.3f} (Spread-Phantom)"
+        elif spread_pp is not None and spread_pp > MAX_SELL_SPREAD_PP:
+            sell = False
+            reason = ""
+            pos["sellVetoed"] = f"Profit-Sell geblockt: Spread {spread_pp:.1f}pp > {MAX_SELL_SPREAD_PP:.0f}pp"
 
     pos["sellSignal"] = sell
     pos["sellReason"] = reason if sell else ""
