@@ -45,9 +45,17 @@ def _cfg(section: str, key: str, default):
         return _CFG.get(section, {}).get(key, default)
     return default
 
-# Minimaler Edge für Pick-Aufnahme im Telegram
+# Minimaler Edge (Alt-Schwellen, NICHT mehr Gate fürs Posting — siehe unten).
 MIN_BET_EDGE   = _cfg("telegram", "min_bet_edge_pp", 4)   # pp
 MIN_ABW_EDGE   = _cfg("telegram", "min_abw_edge_pp", 4)   # pp
+# 17.06.2026 (Lucas, „Zwei-Flächen"-Konzept): Card-Posting ist NICHT edge-getrieben.
+# Ein bestätigter Steam-Move hat am Spieltag edgePP ~0/negativ BY DESIGN — der Wert
+# steckt in der Drop-Bestätigung durch Signale, nicht im Preis. Daher gilt:
+#   BET posten  = verdict == "BET" (Conviction-Schwelle steckt schon im Verdict).
+#   ABWÄGEN     = Conviction-Floor statt Edge-Floor.
+# Der alte edgePP≥4-Gate killte genau die bestätigten BETs (z.B. ENG-CRO BET/Conv 7
+# mit edge −4 → „heute kein BET"). [[feedback_two_surfaces_concept]].
+MIN_ABW_CONVICTION = _cfg("telegram", "min_abw_conviction", 4)   # 0-10
 
 
 # ── Tages-Dedup (Audit-Fix 06.06.2026) ────────────────────────────────────────
@@ -359,7 +367,7 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
     # Header
     bet_count = sum(
         1 for m in matches_today
-        for p in m["picks"] if p.get("verdict") == "BET" and p.get("edgePP", 0) >= MIN_BET_EDGE
+        for p in m["picks"] if p.get("verdict") == "BET"
         and not p.get("trackingExcluded")
     )
     lines = [
@@ -375,9 +383,10 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
         # Renderer filtert das seit 06.06., der Telegram-Sender hat es nie getan →
         # widersprüchliche Picks (z.B. Auswärtssieg + AH Heim −0.5) landeten im Card.
         bet_picks = [p for p in m["picks"] if p.get("verdict") == "BET"
-                     and p.get("edgePP", 0) >= MIN_BET_EDGE and not p.get("trackingExcluded")]
+                     and not p.get("trackingExcluded")]
         abw_picks = [p for p in m["picks"] if p.get("verdict") == "ABWÄGEN"
-                     and p.get("edgePP", 0) >= MIN_ABW_EDGE and not p.get("trackingExcluded")]
+                     and (p.get("convictionScore") or 0) >= MIN_ABW_CONVICTION
+                     and not p.get("trackingExcluded")]
 
         # Spiel-Block
         us = m["upsetScore"]

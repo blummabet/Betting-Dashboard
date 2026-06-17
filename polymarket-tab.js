@@ -426,7 +426,8 @@ function getPolyPicks(dateStr) {
   }
 
   // ── WM 2026 BET-Picks für dieses Datum dazu ──────────────────────────────
-  // Nur "die besten" — Lucas-Filter: verdict=BET + edge ≥ 5pp.
+  // Filter: nur verdict=BET (Card-Edge-Floor 17.06.2026 entfernt — bestätigte
+  // Steam-BETs haben edge ~0 by design; Betting-Tab zeigt sie wie die Cards).
   // Quelle: window.WM2026_DATA (von wm2026-renderer.js gesetzt) oder _wmDataCache
   // (eigener async Fetch in initPolymarket falls noch nicht geladen).
   const wmSrc = window.WM2026_DATA || window._wmDataCache;
@@ -458,8 +459,11 @@ async function _loadWmDataAsync() {
   _wmDataLoading = false;
 }
 
-// Filter-Schwellen für WM BET-Picks im Polymarket-Tab
-const WM_POLY_MIN_EDGE_PP   = 5;        // mindestens +5pp Edge
+// Filter-Schwellen für WM BET-Picks im MANUELLEN Betting-Tab (NICHT Trading-Cockpit).
+// 17.06.2026 (Lucas, Zwei-Flächen-Konzept): Card-Edge-Floor ENTFERNT. Ein bestätigter
+// Steam-BET hat am Spieltag edgePP ~0 BY DESIGN — der Wert steckt in der Signal-
+// Bestätigung, nicht im Preis. Betting-Tab zeigt jetzt ALLE verdict==BET (wie die Cards).
+// (Der Auto-Trader/Trading-Cockpit ist davon UNBERÜHRT — der bleibt voll edge-getrieben.)
 const WM_POLY_BET_ONLY      = true;     // nur verdict=BET, ABWÄGEN raus
 const WM_POLY_DAYS_AHEAD    = 7;        // nicht nur heute — Tag-für-Tag-Filter macht Lucas mit Datums-Picker
 
@@ -535,9 +539,8 @@ function _extractWmPicksForDate(wm, dateStr) {
       const edge = parseFloat(p.edgePP) || 0;
       const verdict = p.verdict;
 
-      // Filter: BET-only + Edge-Schwelle (Lucas: "nur die besten Bets")
+      // Filter: nur verdict=BET (Card-Edge-Floor entfernt 17.06.2026 — siehe oben).
       if (WM_POLY_BET_ONLY && verdict !== 'BET') continue;
-      if (edge < WM_POLY_MIN_EDGE_PP) continue;
       // FIX 1 (09.06.2026): synthetische saferAlt-Picks sind Card-Insurance,
       // keine Trade-Kandidaten — werden im Polymarket-Tab nicht gelistet.
       if (p.synthetic) continue;
