@@ -27,6 +27,7 @@
   let _activeGroup    = 'all';
   let _activeMd       = 'all';   // matchday filter: 'all' | 1 | 2 | 3
   let _activeSort     = 'date';  // 'date' | 'conviction' | 'signals'
+  let _showPast       = false;   // 17.06.2026: vergangene/gespielte Spiele default ausgeblendet (weniger Scrollen)
   let _loaded         = false;
   let _lastLoadTs     = 0;       // Timestamp des letzten erfolgreichen Loads (ms)
 
@@ -170,6 +171,10 @@
   };
   window.wmSetSort = function (s) {
     _activeSort = s;
+    _render();
+  };
+  window.wmTogglePast = function () {
+    _showPast = !_showPast;
     _render();
   };
 
@@ -322,6 +327,25 @@
       <button class="wm-sort-btn${_activeSort==='conviction'?' active':''}" onclick="wmSetSort('conviction')" title="Höchste Conviction (x/10) zuerst">🏅 Conviction</button>
       <button class="wm-sort-btn${_activeSort==='signals'?' active':''}" onclick="wmSetSort('signals')" title="Meiste feuernde Signale zuerst">🧠 Signale</button>
     </div>`;
+
+    // ── Vergangene Spiele ausblenden (17.06.2026) ─────
+    // Default: gespielte Spiele (Datum < heute ODER Endstatus) raus → weniger Scrollen.
+    // Toggle-Button blendet sie bei Bedarf wieder ein.
+    const _FINAL = ['FT', 'AET', 'PEN', 'AWD', 'WO'];
+    const _isPlayed = (fx) =>
+      fx.date < todayIso || _FINAL.includes(String((fx.result || {}).status || '').toUpperCase());
+    const _pastCount = filtered.filter(_isPlayed).length;
+    if (!_showPast && _pastCount > 0) {
+      filtered = filtered.filter(fx => !_isPlayed(fx));
+    }
+    if (_pastCount > 0) {
+      html += `
+      <div class="wm-past-toggle-bar" style="display:flex;justify-content:center;margin:8px 0 4px;">
+        <button class="wm-sort-btn" onclick="wmTogglePast()" style="font-size:12px;">
+          ${_showPast ? `🙈 ${_pastCount} vergangene Spiele ausblenden` : `👁 ${_pastCount} vergangene Spiele einblenden`}
+        </button>
+      </div>`;
+    }
 
     // Helper: nur legitime (nicht-excluded, nicht-synth) Picks
     const _livePicks = (fx) => {

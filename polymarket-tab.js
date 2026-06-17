@@ -3125,6 +3125,9 @@ const AUTO_TRADER_CONFIG = {
       { lbl: 'Min Liquidität (Vol)',         val: '≥ $10.000',        note: 'Schützt vor dünnen Märkten' },
       { lbl: 'Min Stunden bis Anpfiff',      val: '≥ 4h',             note: 'Kein Kauf zu nah am Spiel' },
       { lbl: 'Min Tage bis Spiel',           val: '≥ 1 Tag',          note: 'Kein Kauf am Spieltag selbst' },
+      { lbl: 'Eintritt am echten Ask',       val: 'Spread-Gate',      note: '17.06.26: echte Edge = fair − Ask (nicht Mid). Eintritt zum Ask, nicht zum Mittelpreis.' },
+      { lbl: 'Max Eintritts-Spread',         val: '≤ 6.0pp',          note: '17.06.26: zu breiter Spread frisst die Edge → kein Kauf' },
+      { lbl: 'Min Orderbuch-Liquidität',     val: '≥ $50',            note: '17.06.26: Top-of-Book Bid+Ask — dünnes Buch = kein Kauf' },
     ],
   },
   stake: {
@@ -3143,7 +3146,10 @@ const AUTO_TRADER_CONFIG = {
     title: 'Auto-Sell (manage_wm_poly_positions.py)',
     enabled:  'via GitHub Secret AUTO_SELL_ENABLED',
     rows: [
-      { lbl: 'Profit-Target',                val: '+10%',              note: '01.06.26: von +20% gesenkt — schneller Cash-Cycle' },
+      { lbl: 'Bewertung am echten Bid',      val: 'realisierbar',      note: '17.06.26: Position am Orderbuch-Bid bewertet (was wir beim Verkauf bekommen), NICHT am Mittelpreis. Killt Spread-Phantom-Gewinne.' },
+      { lbl: 'Profit-Target',                val: '+8%',               note: '17.06.26: +10% → +8% — auf REALEM Bid-Gewinn (nicht Mid)' },
+      { lbl: 'Profit-Sell-Veto',             val: 'Bid > Entry',       note: '17.06.26: Profit-Mitnahme nur wenn Bid wirklich über Einstieg + Spread eng' },
+      { lbl: 'Max Sell-Spread',              val: '≤ 15pp',            note: '17.06.26: nicht in absurd breites Buch verkaufen' },
       { lbl: 'Pinn-Konvergenz-Gap',          val: '≤ 1.5pp',           note: '01.06.26: von 2.0 strenger gemacht' },
       { lbl: 'Min Profit vor Konvergenz',    val: '+3pp',              note: 'Sekundär-Schwelle nicht-bei-0 schließen' },
       { lbl: 'Age-Decay-Schwelle',           val: '+5% nach 48h',      note: 'NEU: alte Positionen mit kleinem Profit schließen' },
