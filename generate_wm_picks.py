@@ -92,6 +92,20 @@ STEAM_CONFIRM_PP = _cfg("edge", "steam_confirm_pp",      5.0)
 # WM lockerer als Liga (weniger Spiele) — Liga-Profil setzt steam_bet_threshold höher.
 MAX_STEAM_PICKS_PER_CARD = _cfg("conviction_score", "max_steam_picks_per_card", 3)
 STEAM_BET_THRESHOLD      = _cfg("conviction_score", "steam_bet_threshold",      6)
+
+# Safer-Line-Ableitung Phase 1 (17.06.2026, Lucas): ein riskanter Steam-Pick (Über 3.5,
+# Heimsieg) wird auf die nächst-sicherere Linie als WETTE umgelegt — der Move bleibt die
+# These. ABER nur wenn die sichere Linie ihre Quote ≥ SAFE_LINE_MIN_ODDS hält; sonst (zu
+# kurz, kein Reiz) bleibt's bei der Original-Linie. snap hat echte Quoten für alle Ziele.
+SAFE_LINE_MIN_ODDS = _cfg("edge", "safe_line_min_odds", 1.35)
+_STEAM_SAFER_MAP = {
+    "Über 3.5 Tore":  ("o25",  "Über 2.5 Tore"),
+    "Über 2.5 Tore":  ("o15",  "Über 1.5 Tore"),
+    "Unter 1.5 Tore": ("u25",  "Unter 2.5 Tore"),
+    "Unter 2.5 Tore": ("u35",  "Unter 3.5 Tore"),
+    "Heimsieg":       ("dc1X", "Doppelte Chance — 1X"),
+    "Auswärtssieg":   ("dcX2", "Doppelte Chance — X2"),
+}
 # Steam-Cutover (Launch-Grenze 14.→15.06.2026): Spiele mit Anpfiff BIS hierher sind
 # bereits veröffentlicht (DEU-CUW, NED-JPN, CIV-ECU) → Picks eingefroren/getrackt. Alles
 # DANACH (ab SWE-TUN 02:00Z / BEL-EGY) wird mit Steam neu gebaut. Einmaliger Übergang.
@@ -1780,6 +1794,16 @@ def _steam_model_odds(snap, market):
             p = {"Heimsieg": ph, "Unentschieden": pd, "Auswärtssieg": pa}[market]
             return prob_to_odds(p)
         return None
+    # Doppelte Chance (17.06.2026 für Safer-Line-Ableitung): fair aus de-viggtem 1X2.
+    if market in ("Doppelte Chance — 1X", "Doppelte Chance — X2", "Doppelte Chance — 12"):
+        hw, dr, aw = snap.get("hw"), snap.get("dr"), snap.get("aw")
+        if hw and dr and aw and min(hw, dr, aw) > 1.0:
+            ph, pd, pa = devig_1x2(hw, dr, aw)
+            p = {"Doppelte Chance — 1X": ph + pd,
+                 "Doppelte Chance — X2": pd + pa,
+                 "Doppelte Chance — 12": ph + pa}[market]
+            return prob_to_odds(p)
+        return None
     pair = _STEAM_OU_PAIR.get(market)
     if pair:
         a, b = snap.get(pair[0]), snap.get(pair[1])
@@ -1834,6 +1858,45 @@ def _steam_card_pick(snap, pick):
     }
 
 
+def _derive_safer_steam_line(card, snap):
+    """Phase 1 (17.06.2026, Lucas): riskante Steam-Linie → nächst-sicherere Linie als WETTE,
+    SOLANGE deren Quote ≥ SAFE_LINE_MIN_ODDS (1.35) bleibt. Sonst (zu kurz) Original behalten.
+    Der Steam-Move bleibt als These erhalten (safeThesisMarket/safeThesisOdds + steamOpen/Cur).
+
+    Beispiele: Über 3.5 → Über 2.5 · Heimsieg → Doppelte Chance 1X. Echte Quoten aus snap
+    (o25/o15/u25/u35/dc1X/dcX2). Greift NICHT für AH/BTTS (Phase 2 / keine saubere Mapping)."""
+    orig_market = card.get("market")
+    mapping = _STEAM_SAFER_MAP.get(orig_market)
+    if not mapping:
+        return card
+    key, safe_label = mapping
+    safe_odds = snap.get(key)
+    if not (isinstance(safe_odds, (int, float)) and safe_odds > 1.0):
+        return card  # sichere Linie nicht verfügbar → Original
+    safe_odds = round(float(safe_odds), 2)
+    orig_odds = card.get("odds") or 0
+    # Lucas-Regel: sichere Linie nur nehmen wenn Quote ≥ 1.35 UND echt niedriger als Original.
+    if safe_odds < SAFE_LINE_MIN_ODDS or safe_odds >= orig_odds:
+        return card
+    safe_model = _steam_model_odds(snap, safe_label) or safe_odds
+    edge_pp = 0
+    if safe_model > 1.0 and safe_odds > 1.0:
+        edge_pp = round(((1.0 / safe_model) * MODEL_MARGIN - (1.0 / safe_odds) * 1.03) * 100)
+    # Original-Linie als These behalten, sichere Linie wird die Wette.
+    card["safeThesisMarket"] = orig_market
+    card["safeThesisOdds"]   = round(float(orig_odds), 2)
+    card["safeDerived"]      = True
+    card["market"]    = safe_label
+    card["odds"]      = safe_odds
+    card["entryOdd"]  = safe_odds
+    card["modelOdds"] = round(safe_model, 3)
+    card["edgePP"]    = edge_pp
+    card["info"] = (card.get("info", "")
+                    + f" · ✅ Sichere Linie abgeleitet: {safe_label} @{safe_odds:g} "
+                      f"(These: {orig_market} @{card['safeThesisOdds']:g})")
+    return card
+
+
 def generate_steam_picks_for_fixture(fx, snap, today_iso, drift=None):
     """Bis zu MAX_STEAM_PICKS_PER_CARD Steam-Picks je Spiel im Card-Format (oder []).
     Mehrere, wenn verschiedene Kategorien droppen (z.B. Home-HC + Over). Die Signal/
@@ -1859,6 +1922,8 @@ def generate_steam_picks_for_fixture(fx, snap, today_iso, drift=None):
     cards = []
     for p in picks:
         card = _steam_card_pick(snap, p)
+        # Phase 1 (17.06.2026): riskante Linie → sichere Linie ableiten (Floor 1.35).
+        card = _derive_safer_steam_line(card, snap)
         if any(picks_are_incompatible(card, kept) for kept in cards):
             continue
         cards.append(card)

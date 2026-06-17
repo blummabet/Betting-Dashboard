@@ -1997,6 +1997,12 @@
       ? `<div class="wm-steam-confirmed" title="Pinnacle-Move ist eingetreten und von Soft-Quoten bestätigt. Der Wert am Buch ist abgeschmolzen — auf Polymarket wird der Move geritten. Kein frischer Value-Einstieg mehr.">🔥 Move bestätigt${pick.steamFollowPP ? ` +${pick.steamFollowPP.toFixed(0)}pp` : ''} · geritten auf Poly</div>`
       : '';
 
+    // Safer-Line-Ableitung (17.06.2026): der Sharp-Move lief auf einer riskanten Linie,
+    // gewettet wird die sichere Linie. Move = These, sichere Linie = Wette.
+    const safeBadge = pick.safeDerived
+      ? `<div class="wm-safe-derived" title="Der Sharp-Money-Move lief auf der riskanten Linie. Zum Wetten leiten wir die nächst-sichere Linie ab (höhere Trefferquote), solange ihre Quote ≥ 1,35 bleibt. Der Move bleibt die These.">🎯 Move auf <strong>${pick.safeThesisMarket}</strong>${pick.safeThesisOdds ? ` @${(+pick.safeThesisOdds).toFixed(2)}` : ''} → sichere Wette: <strong>${pick.market}</strong></div>`
+      : '';
+
     // Time-Label
     let timeLabel = '';
     try {
@@ -2132,6 +2138,7 @@
             <div class="wm-time">${timeLabel}</div>
             <div class="wm-pick-odds" style="color:${accent};">${oddsStr}</div>
             <div class="wm-pick-market">${isAbw ? 'Vorsichtiger Pick' : 'Unser Pick'}<strong>${pick.market}</strong></div>
+            ${safeBadge}
             ${steamBadge}
           </div>
           <div class="wm-team">

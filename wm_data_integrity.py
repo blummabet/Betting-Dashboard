@@ -616,6 +616,54 @@ def check_resolved_status_propagated(ctx):
 
 
 @integrity_check
+def check_safer_line_applied(ctx):
+    """Phase-1-Safer-Line (17.06.2026, Lucas): ein Steam-Pick auf einer riskanten Linie
+    (Über 3.5, Heimsieg, Auswärtssieg …) MUSS die nächst-sichere Linie abgeleitet haben,
+    wenn eine mit Quote ≥ 1.35 und echt niedriger verfügbar war. Macht sichtbar, wenn die
+    Ableitung nicht greift. Spiegel von generate_wm_picks._STEAM_SAFER_MAP. (Frozen/gepostete
+    Picks von vor dem Fix können hier auftauchen, bis sie neu gebaut werden — erwartetes
+    Übergangsrauschen.)"""
+    SAFER = {
+        "Über 3.5 Tore": ("o25", "Über 2.5 Tore"), "Über 2.5 Tore": ("o15", "Über 1.5 Tore"),
+        "Unter 1.5 Tore": ("u25", "Unter 2.5 Tore"), "Unter 2.5 Tore": ("u35", "Unter 3.5 Tore"),
+        "Heimsieg": ("dc1X", "Doppelte Chance — 1X"), "Auswärtssieg": ("dcX2", "Doppelte Chance — X2"),
+    }
+    FLOOR = 1.35
+    picks = ctx.wm.get("picks") or {}
+    odds = ctx.odds
+    fails = []
+    for key, plist in picks.items():
+        if not isinstance(plist, list):
+            continue
+        parts = key.split("-")
+        if len(parts) < 4:
+            continue
+        ha = f"{parts[-2]}-{parts[-1]}"
+        o = odds.get(ha) or {}
+        for p in plist:
+            if p.get("source") != "steam" or p.get("trackingExcluded"):
+                continue
+            if p.get("result"):
+                continue  # aufgelöst → egal
+            if p.get("safeDerived"):
+                so = p.get("odds")
+                if isinstance(so, (int, float)) and so < FLOOR:
+                    fails.append(f"{ha} {p.get('market')}: safeDerived aber Quote {so} < {FLOOR}")
+                continue
+            mp = SAFER.get(p.get("market"))
+            if not mp:
+                continue
+            sk, lbl = mp
+            so, po = o.get(sk), p.get("odds") or 0
+            if isinstance(so, (int, float)) and FLOOR <= so < po:
+                fails.append(f"{ha} {p.get('market')} @{po}: sichere Linie {lbl} @{so} "
+                             f"verfügbar (≥{FLOOR}), nicht abgeleitet")
+    return _chk("safer_line_applied", "Safer-Line abgeleitet wo verfügbar (≥1.35)", "warn", fails,
+                "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — "
+                "Ableitung greift nicht (oder Pick ist frozen von vor dem Fix).")
+
+
+@integrity_check
 def check_profit_sell_real(ctx):
     """NEU 17.06.2026 (Geld-Bug): Eine Profit-Mitnahme muss REAL sein — der
     Verkaufspreis muss über dem Einstieg liegen. Anlass: USA-TUR „BTTS Nein" wurde
