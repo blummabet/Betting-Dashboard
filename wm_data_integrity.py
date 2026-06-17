@@ -616,6 +616,30 @@ def check_resolved_status_propagated(ctx):
 
 
 @integrity_check
+def check_profit_sell_real(ctx):
+    """NEU 17.06.2026 (Geld-Bug): Eine Profit-Mitnahme muss REAL sein — der
+    Verkaufspreis muss über dem Einstieg liegen. Anlass: USA-TUR „BTTS Nein" wurde
+    am MITTELPREIS bewertet (Mid +10%), real war's am Bid −4% (Kauf 43¢ / Verkauf 41¢).
+    Fängt die Spread-Phantom-Klasse aus den gespeicherten Trades. Bewertung läuft jetzt
+    am Bid + Profit-Sell-Veto in manage_wm_poly_positions; dieser Guard macht Regressionen
+    sichtbar."""
+    fails = []
+    for b in ctx.auto_bets:
+        if (b.get("status") or "").lower() != "sold":
+            continue
+        rsn = (b.get("sellReason") or "").lower()
+        is_profit = ("profit" in rsn) or ("konvergiert" in rsn) or ("age-decay" in rsn)
+        sp, ent = b.get("sellPrice"), b.get("polyPrice")
+        if (is_profit and isinstance(sp, (int, float)) and isinstance(ent, (int, float))
+                and sp <= ent):
+            fails.append(f"{b.get('home')}-{b.get('away')} {b.get('market','')}: "
+                         f"Profit-Sell {sp:.3f} ≤ Entry {ent:.3f} (Spread-Phantom)")
+    return _chk("profit_sell_real", "Profit-Sell ist real (Verkauf > Einstieg)", "warn", fails,
+                "Mid-Gewinn der beim echten Bid ein Verlust ist. Fix: Bewertung am Bid "
+                "(fetch_token_book) + Profit-Sell-Veto.")
+
+
+@integrity_check
 def check_ah_btts_position_priced(ctx):
     """NEU 16.06.2026 (Geld-Bug): Offene AH/BTTS-Auto-Bets müssen über ihren EXAKTEN
     Token im Preis-Cache bewertbar sein. Anlass: USA-AUS „AH Heim -1.5" hatte keinen

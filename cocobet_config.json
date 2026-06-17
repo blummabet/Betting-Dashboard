@@ -79,7 +79,9 @@
         "min_conviction_for_auto": 3,
         "engine_hi_conf_pos_min": 3,
         "engine_hi_conf_adj_pp": 3.0,
-        "engine_hi_conf_bonus_pp": 1.0
+        "engine_hi_conf_bonus_pp": 1.0,
+        "max_entry_spread_pp": 6.0,
+        "min_book_liq_usdc": 50.0
       },
       "nt_xg": {
         "lookback_fixtures": 10,
@@ -154,7 +156,7 @@
         "climate_controlled_factor": 0.25
       },
       "sell": {
-        "profit_target": 0.1,
+        "profit_target": 0.08,
         "pinn_gap_pp": 1.5,
         "min_profit_pp": 0.03,
         "age_decay_hours": 48,
@@ -164,7 +166,8 @@
         "loss_deep_hours_ahead": 12.0,
         "age_loss_hours": 36.0,
         "age_loss_threshold_pct": 0.1,
-        "no_inplay_loss_sell": true
+        "no_inplay_loss_sell": true,
+        "max_sell_spread_pp": 15.0
       },
       "monitor": {
         "score_ok": 80,

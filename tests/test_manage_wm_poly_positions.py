@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 # Pre-Refactor-Hardcodes (Source of Truth für WM2026)
 WM_EXPECTED = {
-    "PROFIT_TARGET":           0.10,
+    "PROFIT_TARGET":           0.08,   # 17.06.2026: 0.10 → 0.08 (Lucas, auf REALEM Bid-Gewinn)
     "PINN_GAP_PP":             1.5,
     "MIN_PROFIT_PP":           0.03,
     "AGE_DECAY_HOURS":         48,
