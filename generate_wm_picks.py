@@ -1979,6 +1979,17 @@ def main():
     with open(WM_FILE, encoding="utf-8") as f:
         wm = json.load(f)
 
+    # Gruppentabellen aus beendeten Ergebnissen bauen (17.06.2026): füllt wm["standings"]
+    # + wm["thirdRanking"] VOR der Signal-Auswertung → incentive_signal + pressure_index
+    # bekommen endlich Daten (waren mangels Tabelle tot). Idempotent, persistiert im Write.
+    try:
+        import wm_standings as _wmst
+        _st = _wmst.apply_to_wm(wm)
+        _played = sum(r["played"] for v in _st.values() for r in v) // 2
+        print(f"  📊 Standings gebaut: {len(_st)} Gruppen, {_played} Spiele verbucht")
+    except Exception as _e:
+        print(f"  ⚠️  Standings-Build fehlgeschlagen: {_e}")
+
     groups   = wm.get("groups",   {})
     mkt      = wm.get("odds",     {})
     form         = wm.get("form",        {})

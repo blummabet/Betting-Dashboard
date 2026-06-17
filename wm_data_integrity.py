@@ -616,6 +616,23 @@ def check_resolved_status_propagated(ctx):
 
 
 @integrity_check
+def check_standings_built(ctx):
+    """Standings-Builder (17.06.2026): wenn beendete Spiele existieren, MUSS wm["standings"]
+    befüllt sein (incentive_signal + pressure_index brauchen die Tabelle). Fängt eine
+    Regression, falls der Build (in generate_wm_picks) ausfällt."""
+    finished = sum(1 for _g, fx in ctx.fixtures
+                   if str((fx.get("result") or {}).get("status") or "").upper() in _FINISHED)
+    standings = ctx.wm.get("standings") or {}
+    nrows = sum(len(v) for v in standings.values() if isinstance(v, list))
+    fails = []
+    if finished >= 2 and nrows == 0:
+        fails.append(f"{finished} beendete Spiele, aber wm[standings] leer → "
+                     f"incentive/pressure ohne Daten")
+    return _chk("standings_built", "Gruppentabellen gebaut (wenn Ergebnisse da)", "warn", fails,
+                "wm_standings.apply_to_wm läuft in generate_wm_picks; leer trotz Ergebnissen = Build-Ausfall.")
+
+
+@integrity_check
 def check_safer_line_applied(ctx):
     """Phase-1-Safer-Line (17.06.2026, Lucas): ein Steam-Pick auf einer riskanten Linie
     (Über 3.5, Heimsieg, Auswärtssieg …) MUSS die nächst-sichere Linie abgeleitet haben,

@@ -503,6 +503,18 @@ class IncentiveSignal(Signal):
                 score -= self._t["must_win_pp"] * 0.5
                 notes.append("Auswärts muss gewinnen — wird offensiv attackieren → Unter unwahrscheinlicher")
 
+        # BEIDE müssen gewinnen (symmetrisch, 17.06.2026 Lucas-Audit): kein Ergebnis-Edge,
+        # aber offenes Spiel — beide attackieren → klassisches Tor-Fest. Bisher fehlte der
+        # symmetrische Fall (nur die Asymmetrie war abgedeckt).
+        if home_state.get("must_win") and away_state.get("must_win"):
+            meta["both_must_win"] = True
+            if is_over:
+                score += self._t["must_win_pp"] * 0.6
+                notes.append("Beide müssen gewinnen — offenes Spiel, beide attackieren → mehr Tore")
+            elif is_under:
+                score -= self._t["must_win_pp"] * 0.6
+                notes.append("Beide müssen gewinnen — offenes Spiel → Unter unwahrscheinlicher")
+
         # Stake-Asymmetrie: ein Team hi-stake (must_win/third_chase), anderes qualified
         h_hi = home_state.get("must_win") or home_state.get("third_chase")
         a_hi = away_state.get("must_win") or away_state.get("third_chase")
