@@ -44,6 +44,24 @@ class TestFamilyCaps(unittest.TestCase):
         r = compute_conviction_score(pick, sig_out, {})
         self.assertLessEqual(r["family_scores"]["sharp_money"], 3)
 
+    def test_freshness_dampens_sharp_money(self):
+        # 18.06.2026 (Lucas): ein stale/gedrehter Move darf sharp_money nicht voll kreditieren.
+        base = {"market": "Heimsieg", "odds": 1.85, "modelOdds": 1.80,
+                "source": "steam", "steamMovePP": 6.0, "entryBook": "soft", "softConfirmed": True}
+        sig_out = {"signals": [_signal("lead_lag_bias"), _signal("steam_lag")],
+                   "combined_score_pp": 3.0, "n_positive_signals": 2}
+        # confirm / kein State → volle Sharp-Punkte
+        full = compute_conviction_score({**base, "freshnessState": "confirm"}, sig_out, {})
+        self.assertGreaterEqual(full["family_scores"]["sharp_money"], 2)
+        # drift → gedeckelt auf 1
+        drift = compute_conviction_score({**base, "freshnessState": "drift"}, sig_out, {})
+        self.assertLessEqual(drift["family_scores"]["sharp_money"], 1)
+        # reverse → 0
+        rev = compute_conviction_score({**base, "freshnessState": "reverse"}, sig_out, {})
+        self.assertEqual(rev["family_scores"]["sharp_money"], 0)
+        # und drift kostet echte Gesamt-Punkte ggü. confirm
+        self.assertLess(drift["score"], full["score"])
+
     def test_model_stack_max_3(self):
         # Familien-Restruktur 09.06.2026: form_trend + xg + h2h + injury → model_stack
         # plus Modell-Sanity wenn modelOdds ≤10pp vom Markt

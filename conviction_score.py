@@ -74,6 +74,11 @@ def _load_config() -> dict:
         "opening_movement": {
             "enabled": True, "min_pp_in_pick_direction": 3.0,
         },
+        # Frische-Modell (18.06.2026): der Move seit Eröffnung kann ALT sein. Die
+        # sharp_money-Familie darf einen stale/gedrehten Move nicht voll kreditieren —
+        # sonst tragen die Fundamentals (model_stack/context) den Pick zu BET, obwohl
+        # der eigentliche Edge (der frische Move) fehlt. reverse → 0, drift → cap.
+        "freshness": {"drift_sharp_cap": 1, "reverse_sharp_cap": 0},
         "signal_weights_init": 1.0,
         "card_quote_display": {
             "show_soft_book_quote": True,
@@ -452,6 +457,24 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     elif strength >= 3:  family_scores["sharp_money"] = 2   # 2-3 Quellen
     elif strength >= 1:  family_scores["sharp_money"] = 1   # 1 Quelle
     else:                family_scores["sharp_money"] = 0
+
+    # ── Frische-Klammer (18.06.2026, Lucas) ───────────────────────────────
+    # sm_triggered basiert auf steamMovePP = Move seit ERÖFFNUNG, der alt sein kann.
+    # Das Frische-Modell (generate_wm_picks.analyze_recent_move) klassifiziert den
+    # LETZTEN Bewegungs-Abschnitt: confirm/drift/reverse. Ein stale/gedrehter Move darf
+    # die sharp_money-Familie NICHT voll kreditieren — sonst tragen die Fundamentals
+    # (model_stack/context) den Pick zu BET, obwohl der eigentliche Edge (der frische
+    # Move) fehlt. Das ist genau die −34%-Drift-Kategorie aus dem Track-Record.
+    _fresh = pick.get("freshnessState")
+    _fcfg  = cfg.get("freshness", {"drift_sharp_cap": 1, "reverse_sharp_cap": 0})
+    if _fresh == "reverse":
+        family_scores["sharp_money"] = min(family_scores["sharp_money"],
+                                           _fcfg.get("reverse_sharp_cap", 0))
+        evidence.append("Reverser: frisches Geld GEGEN den Move → sharp_money entwertet")
+    elif _fresh == "drift":
+        family_scores["sharp_money"] = min(family_scores["sharp_money"],
+                                           _fcfg.get("drift_sharp_cap", 1))
+        evidence.append("Move ruht (Drift, kein frisches Geld) → sharp_money gedämpft")
 
     # ── Familie 2: Modell-Stack (max 3) ───────────────────────────────────
     # Form + xG + H2H + Injury aus Signals + Modell-Sanity. Modell-Sanity zählt

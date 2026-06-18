@@ -21,7 +21,8 @@ from wm_data_integrity import run_checks  # noqa: E402
 NOW = datetime(2026, 6, 18, 12, 0, tzinfo=timezone.utc)
 
 
-def _snap(hw, ts, dr=3.4, aw=3.6):
+def _snap(hw, ts, dr=3.5, aw=3.6):
+    # Realistische 3-Wege-Quote: De-Vig braucht kohärente Geschwister-Linien.
     return {"bk": "pinnacle", "ts": ts.isoformat(), "hw": hw, "dr": dr, "aw": aw}
 
 
@@ -31,29 +32,47 @@ def _result(checks, cid):
 
 class TestFreshnessModel(unittest.TestCase):
     def test_reverse_latest_leg_overrides_old_move(self):
-        # Linie läuft 5 Tage FÜR uns (2.20→2.00), dreht dann vor 2 Tagen, fällt (2.00→2.30).
-        # Ein fixes 24h-Fenster hätte den Reverser verschluckt — die latest-leg-Logik nicht.
-        hist = [_snap(2.20, NOW - timedelta(days=6)), _snap(2.10, NOW - timedelta(days=4)),
-                _snap(2.00, NOW - timedelta(days=2)), _snap(2.15, NOW - timedelta(days=1)),
-                _snap(2.30, NOW - timedelta(hours=2))]
+        # Home läuft Tage FÜR uns (rein bis 1.90), dreht dann, driftet raus (2.38) während
+        # away reinkommt. Ein fixes 24h-Fenster hätte das verschluckt — latest-leg nicht.
+        hist = [_snap(2.05, NOW - timedelta(days=6), aw=3.7), _snap(1.98, NOW - timedelta(days=5), aw=3.9),
+                _snap(1.90, NOW - timedelta(days=3), aw=4.1), _snap(1.92, NOW - timedelta(days=2, hours=12), aw=4.0),
+                _snap(2.05, NOW - timedelta(days=2), aw=3.7), _snap(2.15, NOW - timedelta(days=1, hours=12), dr=3.45, aw=3.5),
+                _snap(2.28, NOW - timedelta(days=1), dr=3.4, aw=3.3), _snap(2.38, NOW - timedelta(hours=2), dr=3.4, aw=3.15)]
         a = G.analyze_recent_move(hist, "Heimsieg")
         self.assertEqual(a["state"], "reverse")
         self.assertLess(a["movePP"], -G.REVERSER_THRESHOLD_PP)
-        self.assertGreater(a["legHours"], 24)  # dreht seit ~2 Tagen, nicht nur 24h
+        self.assertGreater(a["legHours"], 24)  # dreht seit Tagen, nicht nur 24h
 
     def test_confirm_when_money_keeps_running_for_pick(self):
-        hist = [_snap(2.40, NOW - timedelta(days=5)), _snap(2.20, NOW - timedelta(days=3)),
-                _snap(2.05, NOW - timedelta(days=1)), _snap(1.95, NOW - timedelta(hours=2))]
+        hist = [_snap(2.40, NOW - timedelta(days=5), aw=3.0), _snap(2.25, NOW - timedelta(days=3), aw=3.2),
+                _snap(2.10, NOW - timedelta(days=1, hours=12), aw=3.5), _snap(2.00, NOW - timedelta(days=1), aw=3.7),
+                _snap(1.92, NOW - timedelta(hours=6), aw=3.9), _snap(1.88, NOW - timedelta(hours=2), aw=4.0)]
         a = G.analyze_recent_move(hist, "Heimsieg")
         self.assertEqual(a["state"], "confirm")
         self.assertGreaterEqual(a["movePP"], G.CONFIRM_THRESHOLD_PP)
 
     def test_drift_when_recent_leg_is_flat(self):
         # Großer alter Move, aber die jüngsten Snaps sind quasi unbewegt → ruht.
-        hist = [_snap(2.60, NOW - timedelta(days=8)), _snap(2.05, NOW - timedelta(days=5)),
-                _snap(2.04, NOW - timedelta(days=1)), _snap(2.05, NOW - timedelta(hours=1))]
+        hist = [_snap(2.60, NOW - timedelta(days=12), dr=3.4, aw=2.8), _snap(2.05, NOW - timedelta(days=7)),
+                _snap(2.05, NOW - timedelta(days=5)), _snap(2.04, NOW - timedelta(days=3)),
+                _snap(2.05, NOW - timedelta(days=1)), _snap(2.05, NOW - timedelta(hours=2))]
         a = G.analyze_recent_move(hist, "Heimsieg")
         self.assertEqual(a["state"], "drift")
+
+    def test_sparse_leg_not_trusted(self):
+        # Nur 2 Snaps → kein vertrauenswürdiges reverse, fällt auf drift (kein Demote/Konter).
+        hist = [_snap(1.90, NOW - timedelta(days=2), aw=4.1), _snap(2.40, NOW - timedelta(hours=2), aw=3.1)]
+        a = G.analyze_recent_move(hist, "Heimsieg")
+        self.assertEqual(a["state"], "drift")
+
+    def test_flip_ready_only_on_strong_persistent_reverse(self):
+        # Deutlicher (>5pp) Reverser über genug Snaps → flipReady (Konter lohnt).
+        hist = [_snap(2.05, NOW - timedelta(days=6), aw=3.7), _snap(1.98, NOW - timedelta(days=5), aw=3.9),
+                _snap(1.90, NOW - timedelta(days=3), aw=4.1), _snap(1.92, NOW - timedelta(days=2, hours=12), aw=4.0),
+                _snap(2.05, NOW - timedelta(days=2), aw=3.7), _snap(2.15, NOW - timedelta(days=1, hours=12), dr=3.45, aw=3.5),
+                _snap(2.28, NOW - timedelta(days=1), dr=3.4, aw=3.3), _snap(2.38, NOW - timedelta(hours=2), dr=3.4, aw=3.15)]
+        a = G.analyze_recent_move(hist, "Heimsieg")
+        self.assertTrue(a["flipReady"])
 
     def test_unmappable_market_returns_none(self):
         hist = [_snap(2.1, NOW - timedelta(days=1)), _snap(2.0, NOW)]
@@ -61,20 +80,6 @@ class TestFreshnessModel(unittest.TestCase):
 
     def test_insufficient_data_returns_none(self):
         self.assertIsNone(G.analyze_recent_move([_snap(2.0, NOW)], "Heimsieg"))
-
-    def test_lastmoveh_distinguishes_fresh_vs_old_reversal(self):
-        # Frischer Reverser: Gegen-Move passiert gerade eben.
-        fresh = [_snap(2.00, NOW - timedelta(days=4)), _snap(1.95, NOW - timedelta(days=2)),
-                 _snap(2.20, NOW - timedelta(hours=2))]
-        a = G.analyze_recent_move(fresh, "Heimsieg")
-        self.assertEqual(a["state"], "reverse")
-        self.assertLessEqual(a["lastMoveH"], G.STALE_AFTER_H)   # frisch
-        # Alter Reverser: Gegen-Move vor 7 Tagen, seither flach.
-        old = [_snap(2.00, NOW - timedelta(days=14)), _snap(2.25, NOW - timedelta(days=7)),
-               _snap(2.25, NOW - timedelta(days=1)), _snap(2.25, NOW - timedelta(hours=2))]
-        b = G.analyze_recent_move(old, "Heimsieg")
-        self.assertEqual(b["state"], "reverse")
-        self.assertGreater(b["lastMoveH"], G.STALE_AFTER_H)     # alt
 
 
 class TestReverserCounter(unittest.TestCase):

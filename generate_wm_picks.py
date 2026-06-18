@@ -107,9 +107,16 @@ SAFE_LINE_MIN_ODDS = _cfg("edge", "safe_line_min_odds", 1.35)
 #   DRIFT      |frische Leg| < Schwellen                → Move ruht / nur alte Drift
 #   REVERSER   frische Leg ≤ −REVERSER gegen Pick       → frisches Geld dreht gegen uns
 # (Analyse: CZE-ZAF +1.9 Eröffnung aber Leg −3.5; JOR-DZA +4.4 aber Leg −6.1.)
-REVERSER_THRESHOLD_PP  = _cfg("edge", "reverser_threshold_pp",  3.0)
+REVERSER_THRESHOLD_PP  = _cfg("edge", "reverser_threshold_pp",  3.0)   # Eltern zurückstufen (warn)
+REVERSER_FLIP_PP       = _cfg("edge", "reverser_flip_pp",       5.0)   # höhere Hürde: Gegen-Konter ableiten
 CONFIRM_THRESHOLD_PP   = _cfg("edge", "confirm_threshold_pp",   3.0)
 LEG_NOISE_PP           = _cfg("edge", "leg_noise_pp",           0.4)
+# Dünn-Daten-Guard: ein vertrauenswürdiges reverse/confirm braucht genug DICHTE Snaps. Die
+# Leg-Erkennung stoppt zudem an großen Zeitlücken (alte, spärliche Vor-Turnier-Daten) — sonst
+# läuft der Pivot über 19-Tage-„Legs" (PAN-CRO-Phantom). Persistenz für den Flip: min Snaps.
+MIN_LEG_SNAPS          = _cfg("edge", "min_leg_snaps",          3)
+MAX_LEG_GAP_H          = _cfg("edge", "max_leg_gap_h",          96)   # nur echte Mehr-Tage-Lücken (De-Vig erledigt die Phantome)
+MIN_FLIP_SNAPS         = _cfg("edge", "min_flip_snaps",         4)
 # Aktualität: misst NICHT welcher Move zählt (das macht die latest leg), sondern ob die
 # Linie ÜBERHAUPT noch aktiv ist. Ein großer Move vor 5 Tagen, seither flach, ist „bestätigt"
 # der Form nach — aber alter Drift, nicht frisch. Liegt der letzte echte Move länger zurück,
@@ -1894,40 +1901,90 @@ def _reverser_key(market):
     return None
 
 
+# De-Vig-Geschwister je Key: Bewegung soll die ECHTE Wkt-Änderung messen, nicht den
+# Margin-Drift von Pinnacle (engt/weitet die Marge → 1/Quote bewegt sich ohne Wkt-Move).
+_DEVIG_SIBLINGS = {
+    "hw": ["hw", "dr", "aw"], "dr": ["hw", "dr", "aw"], "aw": ["hw", "dr", "aw"],
+    "o15": ["o15", "u15"], "u15": ["o15", "u15"],
+    "o25": ["o25", "u25"], "u25": ["o25", "u25"],
+    "o35": ["o35", "u35"], "u35": ["o35", "u35"],
+    "bttsY": ["bttsY", "bttsN"], "bttsN": ["bttsY", "bttsN"],
+}
+
+
+def _devigged_implied(snap, key):
+    """De-viggte implizite Wkt für key aus den Geschwister-Quoten des Snapshots.
+    Fehlen die Geschwister → roher 1/Quote-Fallback (ehrlich, nur ohne Margin-Korrektur)."""
+    try:
+        v = float(snap.get(key))
+    except (TypeError, ValueError):
+        return None
+    if not v or v <= 1.0:
+        return None
+    sibs = _DEVIG_SIBLINGS.get(key)
+    if sibs:
+        denom, ok = 0.0, True
+        for s in sibs:
+            try:
+                sv = float(snap.get(s))
+            except (TypeError, ValueError):
+                ok = False
+                break
+            if not sv or sv <= 1.0:
+                ok = False
+                break
+            denom += 1.0 / sv
+        if ok and denom > 0:
+            return (1.0 / v) / denom
+    return 1.0 / v
+
+
 def _pinn_implied_series(hist, key):
-    """Sortierte [(ts, implizite_Wkt)] aus bk=='pinnacle'-Snaps für key. Höhere implizite
-    Wkt = FÜR den Pick (niedrigere Quote)."""
+    """Sortierte [(ts, de-viggte implizite Wkt)] aus bk=='pinnacle'-Snaps für key.
+    Höhere implizite Wkt = FÜR den Pick (niedrigere Quote)."""
     snaps = []
     for s in hist or []:
         if not isinstance(s, dict) or s.get("bk") != "pinnacle":
             continue
-        v, t = s.get(key), s.get("ts")
-        if v and t:
-            try:
-                ti = datetime.fromisoformat(str(t).replace("Z", "+00:00"))
-                vi = float(v)
-                if vi > 1.0:
-                    snaps.append((ti, 1.0 / vi))
-            except Exception:
-                continue
+        t = s.get("ts")
+        if not t:
+            continue
+        imp = _devigged_implied(s, key)
+        if imp is None:
+            continue
+        try:
+            ti = datetime.fromisoformat(str(t).replace("Z", "+00:00"))
+        except Exception:
+            continue
+        snaps.append((ti, imp))
     snaps.sort()
     return snaps
 
 
-def _latest_leg_move_pp(series, noise_pp):
+def _latest_leg_move_pp(series, noise_pp, max_gap_h=None):
     """Netto-Bewegung (pp implizite Wkt) des JÜNGSTEN zusammenhängenden Abschnitts.
     series = [(ts, implied)] chronologisch. Läuft rückwärts vom letzten Snap bis die Richtung
-    kippt (Pivot) und misst end−pivot. + = FÜR den Pick, − = gegen.
+    kippt (Pivot) ODER eine Zeitlücke > max_gap_h auftritt (dann endet der dichte Abschnitt —
+    schützt vor Legs über alte, spärliche Daten). + = FÜR den Pick, − = gegen.
     Gibt (movePP, pivot_idx, last_move_idx) — last_move_idx = Index des jüngsten echten Moves."""
     n = len(series)
     if n < 2:
         return None, None, None
     noise = noise_pp / 100.0
     probs = [p for _, p in series]
+    ts    = [t for t, _ in series]
+
+    def _gap_too_big(a, b):  # Stunden zwischen Snap a-1 und a
+        if max_gap_h is None:
+            return False
+        return (ts[a] - ts[b]).total_seconds() / 3600.0 > max_gap_h
+
     i = n - 1
-    # Richtung des jüngsten Nicht-Rausch-Schritts
+    # Richtung des jüngsten Nicht-Rausch-Schritts (stoppt an großer Lücke)
     dirn, j = 0, i
     while j > 0:
+        if _gap_too_big(j, j - 1):
+            break
         d = probs[j] - probs[j - 1]
         if abs(d) >= noise:
             dirn = 1 if d > 0 else -1
@@ -1936,8 +1993,11 @@ def _latest_leg_move_pp(series, noise_pp):
     if dirn == 0:                       # alles Rauschen → keine echte Bewegung
         return 0.0, i, i
     # rückwärts solange die Bewegung in dirn weiterläuft (kleines Gegen-Rauschen toleriert)
+    # und keine große Zeitlücke kommt
     pivot, k = j - 1, j - 1
     while k > 0:
+        if _gap_too_big(k, k - 1):
+            break
         d = probs[k] - probs[k - 1]
         if d * dirn >= -noise:
             pivot, k = k - 1, k - 1
@@ -1956,20 +2016,29 @@ def analyze_recent_move(hist, market):
     series = _pinn_implied_series(hist, key)
     if len(series) < 2:
         return None
-    move_pp, pivot, last_move_idx = _latest_leg_move_pp(series, LEG_NOISE_PP)
+    move_pp, pivot, last_move_idx = _latest_leg_move_pp(series, LEG_NOISE_PP, MAX_LEG_GAP_H)
     if move_pp is None:
         return None
+    leg_snaps = len(series) - pivot          # Snaps im jüngsten Abschnitt (Dichte/Persistenz)
     leg_h = round((series[-1][0] - series[pivot][0]).total_seconds() / 3600.0, 1)
     # Aktualität: Stunden seit dem letzten ECHTEN (Nicht-Rausch) Move
     last_move_h = round((series[-1][0] - series[last_move_idx][0]).total_seconds() / 3600.0, 1)
-    if move_pp <= -REVERSER_THRESHOLD_PP:
+    # Dünn-Daten-Guard: zu wenige dichte Snaps → kein vertrauenswürdiges reverse/confirm
+    # (dann „drift" = neutral, kein Demote/Konter und keine Confirm-Gutschrift).
+    trustworthy = len(series) >= MIN_LEG_SNAPS and leg_snaps >= MIN_LEG_SNAPS
+    if move_pp <= -REVERSER_THRESHOLD_PP and trustworthy:
         state = "reverse"                       # Reversal zählt immer, egal wie alt
-    elif move_pp >= CONFIRM_THRESHOLD_PP and last_move_h <= STALE_AFTER_H:
+    elif move_pp >= CONFIRM_THRESHOLD_PP and last_move_h <= STALE_AFTER_H and trustworthy:
         state = "confirm"                       # für uns UND Linie noch aktiv
     else:
-        state = "drift"                         # zu klein ODER alter, ruhender Move
-    return {"movePP": move_pp, "legHours": leg_h,
-            "lastMoveH": last_move_h, "state": state}
+        state = "drift"                         # zu klein / alt / zu dünn
+    # Flip-Bereitschaft: NUR bei deutlichem Reverser (höhere Schwelle) der über genug Snaps
+    # hält → erst dann lohnt die Gegen-Linie (sonst nur warnen, A zurückstufen).
+    flip_ready = bool(state == "reverse"
+                      and move_pp <= -REVERSER_FLIP_PP
+                      and leg_snaps >= MIN_FLIP_SNAPS)
+    return {"movePP": move_pp, "legHours": leg_h, "lastMoveH": last_move_h,
+            "legSnaps": leg_snaps, "state": state, "flipReady": flip_ready}
 
 
 def recent_pinn_move_pp(hist, market, window_h=None):
@@ -2455,12 +2524,19 @@ def main():
             # damit ein abgeleiteter Reverser-Konter dieselben Signale + Conviction bekommt
             # (Lucas: „feuern die Signale dann dafür?"). Reverser-Eltern werden zurückgestuft;
             # der Konter wird als eigener ABWÄGEN-Pick angehängt (reift nur via Conviction→BET).
+            # Immutability (feedback_posted_picks_immutable): gepostete Picks (Anpfiff
+            # heute/morgen) komplett unangetastet lassen — kein Frische-Feld, keine Conviction-
+            # Wirkung, kein Demote/Konter. Das Frische-Modell greift erst übermorgen+ (fx_date
+            # > tomorrow), damit eine veröffentlichte Wette nicht rückwirkend kippt.
+            _fr_posted = bool(fx.get("date") and fx.get("date") <= tomorrow)
             try:
                 _fr_ha   = f"{fx['home']}-{fx['away']}"
                 _fr_hist = odds_history.get(_fr_ha, []) if odds_history else []
                 _fr_snap = mkt.get(_fr_ha, {})
                 _counters = []
                 for _p in (new_picks or []):
+                    if _fr_posted:
+                        continue
                     if _p.get("source") != "steam" or _p.get("reverserCounter"):
                         continue
                     _an = analyze_recent_move(_fr_hist, _p.get("market", ""))
@@ -2469,10 +2545,10 @@ def main():
                     _p["recentMovePP"]   = _an["movePP"]
                     _p["freshnessState"] = _an["state"]
                     _p["legHours"]       = _an["legHours"]
+                    _p["legSnaps"]       = _an.get("legSnaps")
                     if _an["state"] == "reverse":
                         _p["reverser"]    = True
                         _p["reverserPP"]  = _an["movePP"]
-                        _p["legHours"]    = _an["legHours"]
                         # frisch = letzter echter Gegen-Move ≤ STALE_AFTER_H; sonst alter
                         # Move gegen uns (trotzdem zurückstufen, aber ehrlich anders labeln).
                         _lmh = _an.get("lastMoveH")
@@ -2488,9 +2564,12 @@ def main():
                             f"Reverser: frisches Geld {_an['movePP']:+.1f}pp (letzter "
                             f"Bewegungs-Abschnitt) GEGEN den Pick — Move seit Eröffnung überholt"
                         )
-                        _ctr = _derive_reverser_counter(_p, _fr_snap, _an["movePP"])
-                        if _ctr:
-                            _counters.append(_ctr)
+                        # Gegen-Linie NUR bei deutlichem, persistentem Reverser (flipReady):
+                        # höhere Schwelle + genug Snaps. Schwacher Reverser → nur warnen.
+                        if _an.get("flipReady"):
+                            _ctr = _derive_reverser_counter(_p, _fr_snap, _an["movePP"])
+                            if _ctr:
+                                _counters.append(_ctr)
                 if _counters:
                     new_picks = list(new_picks) + _counters
             except Exception as _fr_err:
