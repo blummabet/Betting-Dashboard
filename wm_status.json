@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-18T18:25:15Z",
+  "generatedAt": "2026-06-18T22:01:18Z",
   "windowDays": 2,
   "upcoming": 11,
   "signalsFired": [
@@ -21,24 +21,24 @@
   ],
   "signalsTotal": 18,
   "perSignal": {
-    "lead_lag_bias": 3,
-    "public_static_bias": 6,
-    "travel_burden": 46,
+    "lead_lag_bias": 2,
+    "public_static_bias": 9,
+    "travel_burden": 48,
     "injury": 0,
-    "form_trend": 82,
-    "h2h_pattern": 5,
-    "xg_strength": 77,
+    "form_trend": 83,
+    "h2h_pattern": 6,
+    "xg_strength": 78,
     "polymarket_sharp": 0,
     "steam_lag": 0,
-    "pressure_index": 30,
-    "lineup_signal": 9,
+    "pressure_index": 29,
+    "lineup_signal": 10,
     "apif_predictions": 11,
-    "weather_signal": 12,
-    "incentive_signal": 5,
+    "weather_signal": 13,
+    "incentive_signal": 7,
     "altitude_signal": 2,
     "chance_creation": 34,
-    "form_rating": 11,
-    "freshness_leg": 44
+    "form_rating": 10,
+    "freshness_leg": 45
   },
   "verdict": "warn",
   "errors": [],
@@ -47,17 +47,18 @@
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
-    "🛡️ Riskanter BET hat sichere Variante: 1 Fehler (z.B. L-3-ENG-PAN: BET Doppelte Chance — X2 @3.75 — keine sichere Variante)"
+    "🛡️ Riskanter BET hat sichere Variante: 1 Fehler (z.B. L-3-ENG-PAN: BET Doppelte Chance — X2 @3.75 — keine sichere Variante)",
+    "🛡️ Offene Positionen am Ask eingebucht (nicht Mid): 11 Fehler (z.B. QAT-SUI Over 2.5 Tore: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher)"
   ],
   "oks": [
     "🌡️ Weather: 48 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.1h alt",
-    "📊 APIF-Predictions: 52 Spiele",
-    "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
+    "📊 APIF-Predictions: 53 Spiele",
+    "📋 Lineups: 17 Spiele geladen (4 imminent)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 39.1 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 40.4 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $313.10",
+    "💼 Poly-Balance: $345.27",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -295,6 +296,27 @@
       "nFail": 0,
       "failures": [],
       "note": "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder Signal nicht registriert."
+    },
+    {
+      "id": "entry_priced_at_ask",
+      "label": "Offene Positionen am Ask eingebucht (nicht Mid)",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 11,
+      "failures": [
+        "QAT-SUI Over 2.5 Tore: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher",
+        "NOR-SEN Over 2.5 Tore: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher",
+        "CUW-CIV Under 2.5 Tore: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher",
+        "NED-TUN Under 2.5 Tore: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher",
+        "TUR-PRY Under 2.5 Tore: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher",
+        "URU-CPV AH Heim -2.5: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher",
+        "POR-UZB Beide Teams treffen — Ja: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher",
+        "FRA-IRQ AH Heim -3.5: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher",
+        "ECU-CUW AH Heim -3.5: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher",
+        "ENG-GHA Beide Teams treffen — Ja: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher",
+        "CPV-SAU Beide Teams treffen — Nein: entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher"
+      ],
+      "note": "Mid-Entry überzeichnet jeden Gewinn (Spread-Phantom-Klasse). Neue Entries gehen über das Spread-Gate (Ask oder skip); Alt-Positionen ohne entryAsk altern aus. Bewertung/Exit ist über Bid + cache_mid-Veto abgesichert."
     },
     {
       "id": "profit_sell_real",
