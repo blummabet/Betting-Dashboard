@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-18T08:46:37Z",
+  "generatedAt": "2026-06-18T14:52:57Z",
   "windowDays": 2,
   "upcoming": 11,
   "signalsFired": [
@@ -16,27 +16,29 @@
     "incentive_signal",
     "altitude_signal",
     "chance_creation",
-    "form_rating"
+    "form_rating",
+    "freshness_leg"
   ],
-  "signalsTotal": 17,
+  "signalsTotal": 18,
   "perSignal": {
     "lead_lag_bias": 2,
-    "public_static_bias": 7,
-    "travel_burden": 44,
+    "public_static_bias": 6,
+    "travel_burden": 45,
     "injury": 0,
-    "form_trend": 80,
-    "h2h_pattern": 5,
-    "xg_strength": 76,
+    "form_trend": 81,
+    "h2h_pattern": 6,
+    "xg_strength": 77,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 30,
     "lineup_signal": 8,
-    "apif_predictions": 10,
-    "weather_signal": 16,
+    "apif_predictions": 11,
+    "weather_signal": 12,
     "incentive_signal": 4,
     "altitude_signal": 2,
     "chance_creation": 33,
-    "form_rating": 11
+    "form_rating": 11,
+    "freshness_leg": 44
   },
   "verdict": "warn",
   "errors": [],
@@ -45,15 +47,16 @@
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
-    "🛡️ Riskanter BET hat sichere Variante: 1 Fehler (z.B. L-3-ENG-PAN: BET Doppelte Chance — X2 @3.75 — keine sichere Variante)"
+    "🛡️ Riskanter BET hat sichere Variante: 1 Fehler (z.B. L-3-ENG-PAN: BET Doppelte Chance — X2 @3.75 — keine sichere Variante)",
+    "🛡️ Aufstellung da vor Anpfiff (T-90min): 1 Fehler (z.B. CZE-ZAF: Anpfiff in 67min, KEINE Aufstellung)"
   ],
   "oks": [
     "🌡️ Weather: 48 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
     "📊 APIF-Predictions: 52 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 36.0 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 37.7 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
     "💼 Poly-Balance: $333.39",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -190,9 +193,11 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "CZE-ZAF: Anpfiff in 67min, KEINE Aufstellung"
+      ],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -266,6 +271,33 @@
       "nFail": 0,
       "failures": [],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
+    },
+    {
+      "id": "reverser_demoted",
+      "label": "Reverser-Picks zurückgestuft (nicht BET)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Frisches Geld dreht gegen den Pick → Move seit Eröffnung überholt. Erwartung: generate_wm_picks stuft auf ABWÄGEN/BEOBACHTEN zurück (downgradedReason 'Reverser')."
+    },
+    {
+      "id": "bet_move_fresh",
+      "label": "BET frisch eingestiegen oder gehalten",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Neuer BET braucht frischen Move (≤ bet_entry_hurdle_h). Alter Move darf nur via Hold (betHeld) BET bleiben. Stale-BET ohne Hold = Entry-Gate-Leck."
+    },
+    {
+      "id": "freshness_learning_coupled",
+      "label": "Frische landet im Lern-Ledger",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder Signal nicht registriert."
     },
     {
       "id": "profit_sell_real",
