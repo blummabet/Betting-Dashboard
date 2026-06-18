@@ -1422,8 +1422,12 @@
     }
 
     // Sentence 2 — Modell vs Markt
+    // 17.06.2026: Steam-Picks NICHT als „Edge minimal" framen — bei einem bestätigten Move
+    // ist der Rest-Edge bauartbedingt ~0; der Wert steckt im Drop, nicht im Restpreis.
     let modelSentence = '';
-    if (pick.modelOdds != null && pick.odds != null) {
+    if (pick.source === 'steam' && pick.steamMovePP) {
+      modelSentence = `<em>Pinnacle-Move ${(+pick.steamOpen).toFixed(2)}→${(+pick.steamCur).toFixed(2)} (+${pick.steamMovePP}pp) — der Wert steckt im bestätigten Drop, nicht im Restpreis.</em>`;
+    } else if (pick.modelOdds != null && pick.odds != null) {
       const epp = pick.edgePP != null ? pick.edgePP : 0;
       const tier = epp >= 12 ? 'massiv' : epp >= 6 ? 'solide' : epp >= 3 ? 'dünn' : 'minimal';
       modelSentence = `<em>Modell sagt ${pick.modelOdds.toFixed(2)}, Markt ${pick.odds.toFixed(2)} — Edge ${tier} (+${epp}pp).</em>`;
