@@ -763,6 +763,29 @@ def check_freshness_learning_coupled(ctx):
 
 
 @integrity_check
+def check_entry_priced_at_ask(ctx):
+    """Entry-Mid-Phantom (18.06.2026, Lucas — „Handicap-Phantom"): eine OFFENE Auto-Position
+    OHNE entryAsk wurde zum MITTELPREIS eingebucht, nicht zum tatsächlich gezahlten Ask. Die
+    P&L-Baseline ist dann zu niedrig → jeder „Gewinn" überzeichnet (ESP-SAU AH −3.5 „+10%"
+    war real ~flat). Forward ist das gefixt (Spread-Gate + REQUIRE_BOOK_FOR_ENTRY → Eintritt
+    zum Ask oder skip); dieser Guard macht die Alt-Positionen sichtbar, deren angezeigte P&L
+    unzuverlässig ist (altern aus). Greift universal (1X2/OU/AH/BTTS)."""
+    fails = []
+    for b in ctx.auto_bets:
+        st = (b.get("status") or "").lower()
+        if st in ("sold", "resolved") or b.get("soldAt") or b.get("resolved"):
+            continue
+        if b.get("entryAsk") is None:
+            fails.append(f"{b.get('homeId')}-{b.get('awayId')} {b.get('market','')}: "
+                         f"entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher")
+    return _chk("entry_priced_at_ask", "Offene Positionen am Ask eingebucht (nicht Mid)",
+                "warn", fails,
+                "Mid-Entry überzeichnet jeden Gewinn (Spread-Phantom-Klasse). Neue Entries "
+                "gehen über das Spread-Gate (Ask oder skip); Alt-Positionen ohne entryAsk "
+                "altern aus. Bewertung/Exit ist über Bid + cache_mid-Veto abgesichert.")
+
+
+@integrity_check
 def check_profit_sell_real(ctx):
     """NEU 17.06.2026 (Geld-Bug): Eine Profit-Mitnahme muss REAL sein — der
     Verkaufspreis muss über dem Einstieg liegen. Anlass: USA-TUR „BTTS Nein" wurde
