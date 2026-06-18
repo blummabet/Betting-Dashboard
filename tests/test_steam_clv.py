@@ -29,14 +29,16 @@ class TestSteamCLVMath(unittest.TestCase):
 
 class TestSteamCLVResolve(unittest.TestCase):
     def _wm(self, with_result):
-        fx = {"matchday": 2, "home": "MEX", "away": "KOR", "date": "2026-06-20"}
+        # Fiktive Team-Codes (TS1/TS2) — kein echter Key, sonst überschreibt die reale
+        # wm_closing_lines.json die Inline-Closing-Daten (MEX-KOR existiert dort jetzt).
+        fx = {"matchday": 2, "home": "TS1", "away": "TS2", "date": "2026-06-20"}
         if with_result:
             fx["result"] = {"home_score": 2, "away_score": 0, "status": "FT"}
         return {
             "groups": {"A": {"fixtures": [fx]}},
-            "odds": {"MEX-KOR": {"hw": 1.80, "dr": 3.6, "aw": 4.5,
+            "odds": {"TS1-TS2": {"hw": 1.80, "dr": 3.6, "aw": 4.5,
                                  "odds_closing": {"hw": 1.65, "dr": 3.8, "aw": 5.2}}},
-            "picks": {"A-2-MEX-KOR": [
+            "picks": {"A-2-TS1-TS2": [
                 {"market": "Heimsieg", "verdict": "BET", "source": "steam",
                  "odds": 1.85, "entryOdd": 1.85, "steamMovePP": 6.0}]},
         }
@@ -45,7 +47,7 @@ class TestSteamCLVResolve(unittest.TestCase):
         wm = self._wm(with_result=True)
         n = scl.resolve(wm)
         self.assertEqual(n, 1)
-        p = wm["picks"]["A-2-MEX-KOR"][0]
+        p = wm["picks"]["A-2-TS1-TS2"][0]
         self.assertTrue(p.get("clvResolved"))
         self.assertIsInstance(p.get("clvPP"), float)
         # Closing hw 1.65 (~de-vigged Prob > 1/1.85) → Linie lief in Pick-Richtung → CLV > 0
@@ -54,12 +56,12 @@ class TestSteamCLVResolve(unittest.TestCase):
     def test_no_clv_before_result(self):
         wm = self._wm(with_result=False)
         self.assertEqual(scl.resolve(wm), 0)
-        self.assertNotIn("clvPP", [k for k in wm["picks"]["A-2-MEX-KOR"][0] if k == "clvPP"
-                                   and wm["picks"]["A-2-MEX-KOR"][0].get("clvResolved")])
+        self.assertNotIn("clvPP", [k for k in wm["picks"]["A-2-TS1-TS2"][0] if k == "clvPP"
+                                   and wm["picks"]["A-2-TS1-TS2"][0].get("clvResolved")])
 
     def test_non_steam_pick_ignored(self):
         wm = self._wm(with_result=True)
-        wm["picks"]["A-2-MEX-KOR"][0]["source"] = "alt"
+        wm["picks"]["A-2-TS1-TS2"][0]["source"] = "alt"
         self.assertEqual(scl.resolve(wm), 0)
 
 

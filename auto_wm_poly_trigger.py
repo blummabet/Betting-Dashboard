@@ -243,6 +243,10 @@ MIN_RAW_EDGE_PP        = _cfg("trade", "min_raw_edge_pp",         2.0)
 # (USA-TUR: +5.2pp Mid-Edge war real nur +2.2pp gegen den 43¢-Ask).
 MAX_ENTRY_SPREAD_PP    = _cfg("trade", "max_entry_spread_pp",     6.0)
 MIN_BOOK_LIQ_USDC      = _cfg("trade", "min_book_liq_usdc",      50.0)
+# 17.06.2026 (Lucas): kein beidseitiges Orderbuch → KEIN Trade (statt blind zum Mid).
+# Genau die dünnen AH/BTTS-Longshots (CPV-SAU BTTS Nein @+3.5pp Mid) hatten kein Buch →
+# Spread-Gate übersprungen → real fast keine Edge nach dem Ask. Sicherer Default True.
+REQUIRE_BOOK_FOR_ENTRY = _cfg("trade", "require_book_for_entry", True)
 #
 # Gate B: Conviction-Score-Floor. Wenn der Pick auf der Card weniger als
 # MIN_CONVICTION_FOR_AUTO/10 Punkte hat, blockt der Auto-Trigger.
@@ -930,6 +934,11 @@ def main():
             fill_price = entry_ask   # ehrlicher Eintrittspreis = Ask (was wir zahlen)
             _re = f" · echte Edge {real_edge_pp:.1f}pp" if real_edge_pp is not None else ""
             print(f"    ✅ Spread-Gate ok: Ask {entry_ask:.3f} · Spread {entry_spread:.1f}pp{_re}")
+        elif REQUIRE_BOOK_FOR_ENTRY:
+            # Kein beidseitiges Buch (dünner Markt / Endpoint-Hänger) → NICHT blind zum Mid
+            # einsteigen. Genau diese dünnen Märkte tragen den breitesten realen Spread.
+            print(f"    🛑 Kein beidseitiges Orderbuch (dünner Markt) — übersprungen statt blind zum Mid")
+            continue
         else:
             print(f"    ⚠️  Orderbuch nicht abrufbar — Eintritt zum Mid {poly_p:.3f} (Spread-Gate übersprungen)")
 

@@ -81,7 +81,8 @@
         "engine_hi_conf_adj_pp": 3.0,
         "engine_hi_conf_bonus_pp": 1.0,
         "max_entry_spread_pp": 6.0,
-        "min_book_liq_usdc": 50.0
+        "min_book_liq_usdc": 50.0,
+        "require_book_for_entry": true
       },
       "nt_xg": {
         "lookback_fixtures": 10,
@@ -327,7 +328,8 @@
         "max_entry_price": 0.88,
         "max_positions_per_match": 3,
         "max_open_exposure_usdc": 120.0,
-        "adaptive_daily_fraction": 0.5
+        "adaptive_daily_fraction": 0.5,
+        "require_book_for_entry": true
       },
       "sell": {
         "profit_target": 0.08,

@@ -15,10 +15,15 @@ Fix:
 import sys
 import unittest
 import unittest.mock as mock
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 REPO = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO))
+
+# Spieltermin IMMER in der Zukunft (relativ zu jetzt) — sonst kippt der Test in den
+# In-Play-Modus, sobald die Wanduhr über ein fixes Datum läuft (Profit-Sells sind dann aus).
+_FUTURE_MATCH = (datetime.now(timezone.utc) + timedelta(hours=12)).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 import manage_wm_poly_positions as M
 import wm_data_integrity as I
@@ -57,7 +62,7 @@ class TestHonestValuation(unittest.TestCase):
     def _pos(self, **kw):
         base = {"market": "Beide Teams treffen — Nein", "tokenId": "X",
                 "pinnFair": 0.452, "sharesEstimate": 13, "placedAt": "",
-                "matchDate": "2026-06-17T20:00:00Z", "homeId": "USA", "awayId": "TUR"}
+                "matchDate": _FUTURE_MATCH, "homeId": "USA", "awayId": "TUR"}
         base.update(kw)
         return base
 
