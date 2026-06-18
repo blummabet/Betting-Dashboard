@@ -706,6 +706,34 @@ def check_reverser_demoted(ctx):
 
 
 @integrity_check
+def check_freshness_learning_coupled(ctx):
+    """Lern-Kopplung (18.06.2026, Lucas): ein Steam-Pick mit frischem confirm/reverse-Zustand
+    MUSS das `freshness_leg`-Signal in signals[] tragen — sonst kommt die Frische NICHT im
+    Bayesian-Ledger an und das System lernt nie, ob Reverser wirklich verlieren. Drift (Score 0)
+    wird bewusst nicht geledgert (neutral), daher hier ausgenommen. Picks ohne freshnessState
+    (Altpfad/gepostet) werden ignoriert — kein Übergangsrauschen."""
+    picks = ctx.wm.get("picks") or {}
+    fails = []
+    for key, plist in picks.items():
+        if not isinstance(plist, list):
+            continue
+        for p in plist:
+            if p.get("source") != "steam" or p.get("reverserCounter"):
+                continue
+            if p.get("freshnessState") not in ("confirm", "reverse"):
+                continue
+            names = {s.get("name") for s in (p.get("signals") or []) if isinstance(s, dict)}
+            if "freshness_leg" not in names:
+                fails.append(f"{key} {p.get('market')}: freshnessState="
+                             f"{p.get('freshnessState')} aber kein freshness_leg-Signal "
+                             f"(Lern-Loop bekommt die Frische nicht)")
+    return _chk("freshness_learning_coupled", "Frische landet im Lern-Ledger", "warn", fails,
+                "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop "
+                "das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder "
+                "Signal nicht registriert.")
+
+
+@integrity_check
 def check_profit_sell_real(ctx):
     """NEU 17.06.2026 (Geld-Bug): Eine Profit-Mitnahme muss REAL sein — der
     Verkaufspreis muss über dem Einstieg liegen. Anlass: USA-TUR „BTTS Nein" wurde

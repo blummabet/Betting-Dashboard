@@ -34,6 +34,7 @@ from sharp_signals.incentive_signal import IncentiveSignal
 from sharp_signals.altitude_signal import AltitudeSignal
 from sharp_signals.chance_creation import ChanceCreationSignal
 from sharp_signals.form_rating import FormRatingSignal
+from sharp_signals.freshness_signal import FreshnessLegSignal
 
 
 # Liste aller aktiv evaluierten Signale.
@@ -56,6 +57,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     AltitudeSignal(),
     ChanceCreationSignal(),
     FormRatingSignal(),
+    FreshnessLegSignal(),
 ]
 
 

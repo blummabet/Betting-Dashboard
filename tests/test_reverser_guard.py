@@ -128,8 +128,36 @@ class TestReverserGuard(unittest.TestCase):
     def test_non_reverser_bet_ok(self):
         picks = {"A-1-AAA-BBB": [
             {"market": "Heimsieg", "source": "steam", "verdict": "BET",
-             "freshnessState": "confirm"}]}
+             "freshnessState": "confirm", "signals": [{"name": "freshness_leg", "score": 3.0}]}]}
         c = _result(self._run(picks), "reverser_demoted")
+        self.assertTrue(c["ok"])
+
+
+class TestFreshnessLearningCoupled(unittest.TestCase):
+    def _run(self, picks):
+        wm = {"groups": {}, "picks": picks}
+        return run_checks(wm, {}, {}, {}, now=NOW, auto_bets={"bets": []}, history={})
+
+    def test_confirm_without_signal_flagged(self):
+        picks = {"A-1-AAA-BBB": [
+            {"market": "Heimsieg", "source": "steam", "freshnessState": "confirm",
+             "signals": [{"name": "form_trend", "score": 1.0}]}]}
+        c = _result(self._run(picks), "freshness_learning_coupled")
+        self.assertFalse(c["ok"])
+
+    def test_confirm_with_signal_ok(self):
+        picks = {"A-1-AAA-BBB": [
+            {"market": "Heimsieg", "source": "steam", "freshnessState": "confirm",
+             "signals": [{"name": "freshness_leg", "score": 3.0}]}]}
+        c = _result(self._run(picks), "freshness_learning_coupled")
+        self.assertTrue(c["ok"])
+
+    def test_drift_exempt(self):
+        # Drift (Score 0) wird bewusst nicht geledgert → kein Signal nötig, kein Fail.
+        picks = {"A-1-AAA-BBB": [
+            {"market": "Heimsieg", "source": "steam", "freshnessState": "drift",
+             "signals": []}]}
+        c = _result(self._run(picks), "freshness_learning_coupled")
         self.assertTrue(c["ok"])
 
 

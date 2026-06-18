@@ -2546,6 +2546,7 @@ def main():
                     _p["freshnessState"] = _an["state"]
                     _p["legHours"]       = _an["legHours"]
                     _p["legSnaps"]       = _an.get("legSnaps")
+                    _p["flipReady"]      = bool(_an.get("flipReady"))
                     if _an["state"] == "reverse":
                         _p["reverser"]    = True
                         _p["reverserPP"]  = _an["movePP"]

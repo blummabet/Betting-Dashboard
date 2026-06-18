@@ -25,7 +25,15 @@
         "max_edge_sane": 18,
         "ou_bet_max": 10,
         "ah_bet_max": 12,
-        "dnb_ah_divergence_pp": 8
+        "dnb_ah_divergence_pp": 8,
+        "reverser_threshold_pp": 3.0,
+        "reverser_flip_pp": 5.0,
+        "confirm_threshold_pp": 3.0,
+        "leg_noise_pp": 0.4,
+        "stale_after_h": 72,
+        "min_leg_snaps": 3,
+        "max_leg_gap_h": 96,
+        "min_flip_snaps": 4
       },
       "_meta_disabled_markets": "WM2026-Profil: Corners aus, weil keines der 14 Signale aggregierte Corner-Daten hat (kein H2H-Corner-Rate, kein Corner-Form pro NT, kein NT-Corner-Bias) → reine Poisson-Predictions ohne Signal-Filter. Code bleibt drin für Liga-Saison (liga_default hat alle Corner-Markets enabled — dort gibt's H2H-Corner-Date + historische Vereins-Corner-Form). BTTS bleibt aktiviert: xG/Form/H2H/Lineup/Weather können BTTS-Picks sinnvoll bewerten.",
       "disabled_markets": [
@@ -284,6 +292,14 @@
         "scale": 6.0,
         "min_signal_pp": 0.8,
         "max_signal_pp": 5.0
+      },
+      "freshness_leg": {
+        "score_scale": 0.5,
+        "max_signal_pp": 4.0,
+        "drift_score_pp": 0.0,
+        "base_conf": 0.5,
+        "conf_per_snap": 0.04,
+        "max_conf": 0.85
       }
     },
     "liga_default": {
@@ -299,7 +315,15 @@
         "huge_edge_warn": 15,
         "max_edge_sane": 15,
         "ou_bet_max": 8,
-        "ah_bet_max": 10
+        "ah_bet_max": 10,
+        "reverser_threshold_pp": 3.0,
+        "reverser_flip_pp": 5.0,
+        "confirm_threshold_pp": 3.0,
+        "leg_noise_pp": 0.4,
+        "stale_after_h": 72,
+        "min_leg_snaps": 4,
+        "max_leg_gap_h": 24,
+        "min_flip_snaps": 5
       },
       "odds": {
         "max_for_pick": 7.0,
@@ -440,6 +464,14 @@
         "steam_bet_threshold": 8,
         "max_steam_picks_per_card": 3,
         "_meta_steam": "Steam-Modell: BET ab Conviction ≥8 (Liga strenger), max 3 Picks/Card"
+      },
+      "freshness_leg": {
+        "score_scale": 0.5,
+        "max_signal_pp": 4.0,
+        "drift_score_pp": 0.0,
+        "base_conf": 0.5,
+        "conf_per_snap": 0.04,
+        "max_conf": 0.85
       }
     }
   }
