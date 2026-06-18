@@ -192,6 +192,24 @@ class TestComponentBSignal(unittest.TestCase):
         self.assertGreater(cb["delta_elo"], 50)   # Sieg-Pfad gegen Stärkeren
         self.assertLess(r.score, 0)               # → Heimsieg-Pick gedrückt
 
+    def test_md2_suppresses_bracket(self):
+        # 17.06.2026 (Lucas): bei MD2 ist die Bracket-/Gegner-Projektion noch Spekulation
+        # (eigene End-Pos + andere Gruppen offen) → Component B/C feuern NICHT, nur ab MD3.
+        st = {**self.st,
+              "B": [{"team":"CAN","points":6,"played":2,"gd":3},
+                    {"team":"BIH","points":4,"played":2,"gd":1},
+                    {"team":"USA","points":3,"played":2,"gd":0},
+                    {"team":"PRY","points":1,"played":2,"gd":-4}]}
+        team_elo = {"MEX":1815,"CZE":1730,"BIH":1620,
+                    "C3":1820,"E3":1810,"F3":1800,"H3":1790,"I3":1820}
+        ctx = {"home_id":"MEX","away_id":"CZE","group_id":"A","matchday":2,
+               "standings":st,"team_elo":team_elo}
+        r = self.sig.evaluate({"market":"Heimsieg"}, ctx)
+        # Bei MD2 darf der Bracket-Anteil (B) nicht beitragen (kein „+Elo stärker"-Text).
+        if r is not None:
+            self.assertEqual(r.metadata["components"]["B"], {})
+            self.assertNotIn("Achtelfinale", r.evidence)
+
     def test_top_anreiz_weak_opponent_at_pos1(self):
         # 2B = stark, best_third-Pool schwach → bei Sieg trifft MEX auf Schwächeren
         st = {**self.st,

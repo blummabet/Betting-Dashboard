@@ -788,10 +788,19 @@ class IncentiveSignal(Signal):
                 return None  # Standings noch nicht da
 
             score_a, ev_a, meta_a = self._component_a(pick, context, home_state, away_state)
-            score_b, ev_b, meta_b = self._component_b(pick, context, home_id, away_id,
-                                                      group_id, standings)
-            score_c, ev_c, meta_c = self._component_c(pick, context, home_id, away_id,
-                                                      group_id, standings)
+            # Bracket-Asymmetrie (B) + R32-Venue-Distanz (C) erst am LETZTEN Gruppenspiel
+            # (MD3, 17.06.2026 Lucas-Check). Bei MD2 ist BEIDES Spekulation: die eigene
+            # End-Position (MD3 kommt noch) UND der R32-Gegner (aus anderen Gruppen, die
+            # erst MD1 gespielt haben → Tabelle ändert sich komplett). „+141 Elo stärker"
+            # auf MD1-Tabellen ist Rauschen. Component A (Must-Win) bleibt für MD2+MD3.
+            if matchday == 3:
+                score_b, ev_b, meta_b = self._component_b(pick, context, home_id, away_id,
+                                                          group_id, standings)
+                score_c, ev_c, meta_c = self._component_c(pick, context, home_id, away_id,
+                                                          group_id, standings)
+            else:
+                score_b, ev_b, meta_b = 0.0, "", {}
+                score_c, ev_c, meta_c = 0.0, "", {}
             total = score_a + score_b + score_c
             evidences = [e for e in (ev_a, ev_b, ev_c) if e]
             confidence = (self._t["confidence_md3"] if matchday == 3
