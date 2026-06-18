@@ -10,7 +10,7 @@
     "updatedAt": null,
     "oddsUpdatedAt": "2026-06-17T21:53:51.418146+00:00",
     "formUpdatedAt": "2026-06-17T21:55:35.722206+00:00",
-    "picksUpdatedAt": "2026-06-17T21:57:50.524384+00:00",
+    "picksUpdatedAt": "2026-06-18T01:44:49.484712+00:00",
     "resultsUpdatedAt": "2026-06-17T22:51:11.005555+00:00",
     "cornersUpdatedAt": "2026-06-17T21:57:20.453118+00:00",
     "xgUpdatedAt": "2026-06-17T21:57:20.453126+00:00"
@@ -3016,28 +3016,16 @@
     ],
     "L": [
       {
-        "team": "CRO",
-        "played": 0,
-        "won": 0,
-        "draw": 0,
-        "lost": 0,
-        "points": 0,
-        "gf": 0,
-        "ga": 0,
-        "gd": 0,
-        "pos": 1
-      },
-      {
         "team": "ENG",
-        "played": 0,
-        "won": 0,
+        "played": 1,
+        "won": 1,
         "draw": 0,
         "lost": 0,
-        "points": 0,
-        "gf": 0,
-        "ga": 0,
-        "gd": 0,
-        "pos": 2
+        "points": 3,
+        "gf": 4,
+        "ga": 2,
+        "gd": 2,
+        "pos": 1
       },
       {
         "team": "GHA",
@@ -3049,7 +3037,7 @@
         "gf": 0,
         "ga": 0,
         "gd": 0,
-        "pos": 3
+        "pos": 2
       },
       {
         "team": "PAN",
@@ -3061,6 +3049,18 @@
         "gf": 0,
         "ga": 0,
         "gd": 0,
+        "pos": 3
+      },
+      {
+        "team": "CRO",
+        "played": 1,
+        "won": 0,
+        "draw": 0,
+        "lost": 1,
+        "points": 0,
+        "gf": 2,
+        "ga": 4,
+        "gd": -2,
         "pos": 4
       }
     ]
@@ -3335,7 +3335,7 @@
         "info": "📉 Pinnacle 4.57→4.1 (Sharp-Money-Drop +3.5pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.79 (These: Auswärtssieg @4)",
         "icon": "🔥",
         "result": null,
-        "clvPP": -3.75,
+        "clvPP": 0.0,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -3408,8 +3408,7 @@
         "openingMovement": {
           "in_pick_direction": true,
           "move_pp": 3.76
-        },
-        "clvResolved": true
+        }
       }
     ],
     "A-2-CZE-ZAF": [
@@ -3446,6 +3445,25 @@
         "ahLine": null,
         "baseVerdict": "ABWÄGEN",
         "signals": [
+          {
+            "name": "lead_lag_bias",
+            "score": -1.92,
+            "confidence": 0.7,
+            "evidence": "Pinnacle Heim -2.3pp · public hinkt nach(1) → früh erkannt",
+            "weight": 0.994,
+            "weighted_score": -1.34,
+            "metadata": {
+              "stage": "early",
+              "pinn_move_pp": -2.3,
+              "soft_moves": [
+                {
+                  "bk": "public",
+                  "move_pp": -0.39
+                }
+              ],
+              "outcome": "hw"
+            }
+          },
           {
             "name": "travel_burden",
             "score": 2.4,
@@ -3508,10 +3526,10 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.2,
+        "signalAdjustmentPP": 0.49,
         "signalCountPos": 2,
-        "signalCountNeg": 1,
-        "effectiveEdgePP": -2.8,
+        "signalCountNeg": 2,
+        "effectiveEdgePP": -3.5,
         "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -3527,11 +3545,11 @@
           "pinn_move_pp": 6.38,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 684.6,
+          "hours_since_open": 688.4,
           "open_pinn_odds": 1.97,
           "current_pinn_odds": 1.75,
           "move_age_decay": 0.5,
-          "move_age_days": 28.5
+          "move_age_days": 28.7
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -3889,11 +3907,11 @@
           "pinn_move_pp": 14.78,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 559.0,
+          "hours_since_open": 562.8,
           "open_pinn_odds": 2.13,
           "current_pinn_odds": 1.62,
           "move_age_decay": 0.5,
-          "move_age_days": 23.3
+          "move_age_days": 23.4
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -4732,7 +4750,7 @@
         "info": "📉 Pinnacle 3.25→2.69 (Sharp-Money-Drop +5.9pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Über 2.5 Tore @1.71 (These: Über 3.5 Tore @2.69)",
         "icon": "🔥",
         "result": null,
-        "clvPP": -3.11,
+        "clvPP": 0.0,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -4812,8 +4830,7 @@
           "model_stack": 1,
           "context": 0,
           "market": 0
-        },
-        "clvResolved": true
+        }
       },
       {
         "market": "AH Heim −1.5",
@@ -4922,18 +4939,18 @@
         "sharpMoveActive": true,
         "sharpMoveDetails": {
           "triggered": true,
-          "pinn_move_pp": 10.41,
+          "pinn_move_pp": 12.89,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 684.6,
+          "hours_since_open": 688.4,
           "open_pinn_odds": 1.49,
-          "current_pinn_odds": 1.29,
+          "current_pinn_odds": 1.25,
           "move_age_decay": 0.5,
-          "move_age_days": 28.5
+          "move_age_days": 28.7
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 10.41
+          "move_pp": 12.89
         },
         "pickTriggerReason": "Conviction 6/10 (≥6) — Move + Signale bestätigen den Pick"
       }
@@ -6083,7 +6100,7 @@
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -5,
-        "info": "📉 Pinnacle 2.02→1.85 (Sharp-Money-Drop +4.5pp)",
+        "info": "📉 Pinnacle 2.02→1.85 (Sharp-Money-Drop +4.5pp) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -6099,7 +6116,7 @@
         "softNow": null,
         "entryBook": "pini",
         "entryOdd": 1.85,
-        "lateEntry": false,
+        "lateEntry": true,
         "steamDerived": false,
         "softConfirmed": false,
         "softFollowPP": null,
@@ -6360,11 +6377,11 @@
           "pinn_move_pp": 9.75,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 684.6,
+          "hours_since_open": 688.4,
           "open_pinn_odds": 2.11,
           "current_pinn_odds": 1.75,
           "move_age_decay": 0.5,
-          "move_age_days": 28.5
+          "move_age_days": 28.7
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -7429,11 +7446,11 @@
           "pinn_move_pp": 5.55,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 684.6,
+          "hours_since_open": 688.4,
           "open_pinn_odds": 1.72,
           "current_pinn_odds": 1.57,
           "move_age_decay": 0.5,
-          "move_age_days": 28.5
+          "move_age_days": 28.7
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -7552,11 +7569,11 @@
           "pinn_move_pp": 5.16,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 684.6,
+          "hours_since_open": 688.4,
           "open_pinn_odds": 2.23,
           "current_pinn_odds": 2.0,
           "move_age_decay": 0.5,
-          "move_age_days": 28.5
+          "move_age_days": 28.7
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -8503,11 +8520,11 @@
           "pinn_move_pp": 11.95,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 684.6,
+          "hours_since_open": 688.4,
           "open_pinn_odds": 1.24,
           "current_pinn_odds": 1.08,
           "move_age_decay": 0.5,
-          "move_age_days": 28.5
+          "move_age_days": 28.7
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -9381,11 +9398,11 @@
           "pinn_move_pp": 10.41,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 684.6,
+          "hours_since_open": 688.4,
           "open_pinn_odds": 1.82,
           "current_pinn_odds": 1.53,
           "move_age_decay": 0.5,
-          "move_age_days": 28.5
+          "move_age_days": 28.7
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -10061,11 +10078,11 @@
           "pinn_move_pp": 5.78,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 559.0,
+          "hours_since_open": 562.8,
           "open_pinn_odds": 2.39,
           "current_pinn_odds": 2.1,
           "move_age_decay": 0.5,
-          "move_age_days": 23.3
+          "move_age_days": 23.4
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -11222,11 +11239,11 @@
           "pinn_move_pp": 5.98,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 559.0,
+          "hours_since_open": 562.8,
           "open_pinn_odds": 3.22,
           "current_pinn_odds": 2.7,
           "move_age_decay": 0.5,
-          "move_age_days": 23.3
+          "move_age_days": 23.4
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -11909,11 +11926,11 @@
           "pinn_move_pp": 6.47,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 684.6,
+          "hours_since_open": 688.4,
           "open_pinn_odds": 3.57,
           "current_pinn_odds": 2.9,
           "move_age_decay": 0.5,
-          "move_age_days": 28.5
+          "move_age_days": 28.7
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -13023,11 +13040,11 @@
           "pinn_move_pp": 5.21,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 684.6,
+          "hours_since_open": 688.4,
           "open_pinn_odds": 1.71,
           "current_pinn_odds": 1.57,
           "move_age_decay": 0.5,
-          "move_age_days": 28.5
+          "move_age_days": 28.7
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -13709,11 +13726,11 @@
           "pinn_move_pp": 6.51,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 559.0,
+          "hours_since_open": 562.8,
           "open_pinn_odds": 2.5,
           "current_pinn_odds": 2.15,
           "move_age_decay": 0.5,
-          "move_age_days": 23.3
+          "move_age_days": 23.4
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -14021,18 +14038,18 @@
         "signalCountPos": 2,
         "signalCountNeg": 1,
         "effectiveEdgePP": -3.0,
-        "convictionScore": 4,
+        "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
         "convictionFamilies": {
-          "sharp_money": 1,
+          "sharp_money": 2,
           "model_stack": 3,
           "context": 0,
           "market": 0
         },
         "openingMovement": {
-          "in_pick_direction": false,
-          "move_pp": 1.76
+          "in_pick_direction": true,
+          "move_pp": 4.24
         }
       }
     ],
@@ -14341,7 +14358,7 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": 1.25
+          "move_pp": 1.78
         },
         "trackingExcluded": true,
         "demotedRiskyGame": true
@@ -32079,7 +32096,7 @@
       "qualifies": true
     },
     {
-      "team": "GHA",
+      "team": "PAN",
       "group": "L",
       "points": 0,
       "gd": 0,
