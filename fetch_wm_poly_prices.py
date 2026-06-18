@@ -801,18 +801,31 @@ def main():
             # ── Engine-Felder pro Markt (08.06.2026) ──────────────────────────
             # Erlaubt Auto-Trigger über Signal-Adjustment, Min-Signal-Threshold
             # und effectiveEdge zu filtern statt blind über raw edgePP.
+            # Trade-Variante OHNE freshness_leg (Lucas-Audit 18.06.2026, zwei Flächen):
+            # die Card-Frische darf das Trading nicht treiben. signalAdjustmentPP_trade ist
+            # die Signal-Summe minus dem freshness_leg-Beitrag. Fallback auf die volle Summe,
+            # falls das Feld (Altpick / Nicht-Steam) fehlt.
             **{
-                f"signalAdj_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("signalAdjustmentPP")
+                f"signalAdj_{field}": (
+                    picks_lookup.get(key, {}).get(mkt_label, {}).get("signalAdjustmentPP_trade")
+                    if picks_lookup.get(key, {}).get(mkt_label, {}).get("signalAdjustmentPP_trade") is not None
+                    else picks_lookup.get(key, {}).get(mkt_label, {}).get("signalAdjustmentPP"))
                 for mkt_label, field in _MARKET_TO_FIELD.items()
                 if field in _ENGINE_FIELDS
             },
             **{
-                f"signalPos_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("signalCountPos")
+                f"signalPos_{field}": (
+                    picks_lookup.get(key, {}).get(mkt_label, {}).get("signalCountPos_trade")
+                    if picks_lookup.get(key, {}).get(mkt_label, {}).get("signalCountPos_trade") is not None
+                    else picks_lookup.get(key, {}).get(mkt_label, {}).get("signalCountPos"))
                 for mkt_label, field in _MARKET_TO_FIELD.items()
                 if field in _ENGINE_FIELDS
             },
             **{
-                f"effectiveEdge_{field}": picks_lookup.get(key, {}).get(mkt_label, {}).get("effectiveEdgePP")
+                f"effectiveEdge_{field}": (
+                    picks_lookup.get(key, {}).get(mkt_label, {}).get("effectiveEdgePP_trade")
+                    if picks_lookup.get(key, {}).get(mkt_label, {}).get("effectiveEdgePP_trade") is not None
+                    else picks_lookup.get(key, {}).get(mkt_label, {}).get("effectiveEdgePP"))
                 for mkt_label, field in _MARKET_TO_FIELD.items()
                 if field in _ENGINE_FIELDS
             },

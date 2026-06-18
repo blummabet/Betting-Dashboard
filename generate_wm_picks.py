@@ -2674,12 +2674,33 @@ def main():
                         p["signalCountPos"] = sig_out["n_positive_signals"]
                         p["signalCountNeg"] = sig_out["n_negative_signals"]
 
+                        # ── Trade-Variante OHNE freshness_leg (18.06.2026, Lucas-Audit) ──
+                        # Zwei Flächen: die Card-Frische darf das Trading NICHT treiben. Der
+                        # Auto-Trader liest signalAdj/effectiveEdge — ein confirm würde sonst
+                        # den effectiveEdge über die Schwelle pumpen, ein reverse doppelt zählen
+                        # (die Umkehr steckt schon im live-recomputeten Pinnacle-fair). Daher
+                        # Trade-Felder ohne den freshness_leg-Beitrag.
+                        _fresh_pp = sum(s.get("score", 0.0) for s in sig_out["signals"]
+                                        if s.get("name") == "freshness_leg")
+                        p["signalAdjustmentPP_trade"] = round(
+                            sig_out["combined_score_pp"] - _fresh_pp, 1)
+                        # auch aus dem Signal-ZÄHLER raus (Trader nutzt signalPos für einen
+                        # Schwellen-Bonus) — sonst hilft ein confirm dem Trade über die Hintertür.
+                        _fresh_pos = sum(1 for s in sig_out["signals"]
+                                         if s.get("name") == "freshness_leg" and s.get("score", 0) > 0)
+                        _fresh_neg = sum(1 for s in sig_out["signals"]
+                                         if s.get("name") == "freshness_leg" and s.get("score", 0) < 0)
+                        p["signalCountPos_trade"] = max(0, sig_out["n_positive_signals"] - _fresh_pos)
+                        p["signalCountNeg_trade"] = max(0, sig_out["n_negative_signals"] - _fresh_neg)
+
                         # ── Edge-Adjustment Integration ─────────────────
                         # Echter Edge (model vs market) wird um Engine-Output
                         # justiert. Damit kann der Renderer einen "echten" Edge
                         # nach Engine-Korrektur zeigen.
                         if isinstance(p.get("edgePP"), (int, float)):
                             p["effectiveEdgePP"] = round(p["edgePP"] + sig_out["combined_score_pp"], 1)
+                            p["effectiveEdgePP_trade"] = round(
+                                p["edgePP"] + p["signalAdjustmentPP_trade"], 1)
 
                         # ── Verdict-Override durch Engine ───────────────
                         # Regel 1: BET → ABWÄGEN wenn Netto-Adjustment ≤ -3pp
@@ -2791,6 +2812,17 @@ def main():
                         print(f"  ⚠️  Conviction-Score crashed: {conv_err}")
             except Exception as e:
                 print(f"  ⚠️  Signal-Engine crashed für {fx['home']}-{fx['away']}: {e}")
+
+            # firstBetAt IMMER aus dem alten Pick mitnehmen (Audit-Fix a, 18.06.2026):
+            # nur ein Timestamp, ändert kein Verdict — auch für kurzfristige/posted Picks,
+            # die den Hold-Block (unten, posted-gated) nicht durchlaufen. Sonst resettet
+            # „BET seit X" jeden Lauf.
+            if existing_pk:
+                _old_fb = {op.get("market"): op.get("firstBetAt") for op in existing_pk
+                           if isinstance(op, dict) and op.get("firstBetAt")}
+                for p in new_picks:
+                    if p.get("verdict") == "BET" and _old_fb.get(p.get("market")):
+                        p["firstBetAt"] = _old_fb[p.get("market")]
 
             # ── BET-Hold über Läufe (18.06.2026, Lucas) ───────────────────
             # Einmal BET, bleibt BET — solange KEIN Reverser (frisches Gegen-Geld) kommt,
