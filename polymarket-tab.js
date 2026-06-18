@@ -3129,8 +3129,10 @@ const AUTO_TRADER_CONFIG = {
       { lbl: 'Min Stunden bis Anpfiff',      val: '≥ 4h',             note: 'Kein Kauf zu nah am Spiel' },
       { lbl: 'Min Tage bis Spiel',           val: '≥ 1 Tag',          note: 'Kein Kauf am Spieltag selbst' },
       { lbl: 'Eintritt am echten Ask',       val: 'Spread-Gate',      note: '17.06.26: echte Edge = fair − Ask (nicht Mid). Eintritt zum Ask, nicht zum Mittelpreis.' },
+      { lbl: 'Echte Ask-Edge-Floor',         val: '≥ 4.0pp',          note: '17.06.26: der ENTSCHEIDENDE Floor — 4pp nach Spread (alte 5pp waren Mid = ~3pp real)' },
       { lbl: 'Max Eintritts-Spread',         val: '≤ 6.0pp',          note: '17.06.26: zu breiter Spread frisst die Edge → kein Kauf' },
       { lbl: 'Min Orderbuch-Liquidität',     val: '≥ $50',            note: '17.06.26: Top-of-Book Bid+Ask — dünnes Buch = kein Kauf' },
+      { lbl: 'Kein Buch → kein Trade',       val: 'require_book',     note: '17.06.26: kein beidseitiges Orderbuch (dünner Markt) → übersprungen statt blind zum Mid' },
     ],
   },
   stake: {
