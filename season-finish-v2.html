@@ -2615,6 +2615,78 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
   </details>
 
+  <!-- ════════════════ PULSE — FRISCHE-LEBENSZYKLUS ════════════════ -->
+  <details class="heart-collapse" open>
+    <summary>
+      <span class="heart-collapse-icon">💓</span>
+      <span class="heart-collapse-title">Pulse — der Puls jedes Moves</span>
+      <span class="heart-collapse-meta">NEU</span>
+    </summary>
+    <div class="heart-collapse-body">
+
+      <div class="pitch-intro" style="margin-bottom:18px;">
+        <strong>Pulse misst, ob ein Pinnacle-Move gerade lebt, ruht oder dreht.</strong>
+        Der „Move seit Eröffnung" kann Wochen alt sein — Pulse schaut nur auf den <strong>letzten Bewegungs-Abschnitt</strong>
+        der de-viggten Pinnacle-Linie (fenster-frei) und teilt jeden Pick in drei Zustände. Das entscheidet, ob ein Pick
+        frisch genug für BET ist, wie lange er BET bleibt, und ob das frische Geld gegen uns dreht.
+      </div>
+
+      <!-- Die 3 Zustände -->
+      <div class="heart-grid" style="margin-bottom:18px;">
+        <div class="heart-card" style="border-color:rgba(63,185,80,.35);background:rgba(63,185,80,.05);">
+          <h3 style="color:#3fb950;">↑ GESTÄRKT</h3>
+          <p>Frisches Geld läuft <strong>weiter für uns</strong> — der Move ist lebendig. Voller Sharp-Money-Kredit, BET-fähig.</p>
+          <p style="margin-top:8px;color:var(--muted);font-size:12px;"><em>Bsp: COD–UZB Heimsieg, Pinnacle vor 2h nochmal +4,7pp → BET seit 2h.</em></p>
+        </div>
+        <div class="heart-card" style="border-color:rgba(139,148,158,.35);background:rgba(139,148,158,.05);">
+          <h3 style="color:#8b949e;">• BASIS</h3>
+          <p>Der Move ist die <strong>Grundlage</strong>, ruht aktuell. Sharp-Money gedämpft — Fundamentals allein lösen keinen neuen BET aus.</p>
+          <p style="margin-top:8px;color:var(--muted);font-size:12px;"><em>Bsp: BIH–QAT Heimsieg, Move vor 3 Tagen, seither ruhig → hält BET, kein Gegen-Geld.</em></p>
+        </div>
+        <div class="heart-card" style="border-color:rgba(248,81,73,.35);background:rgba(248,81,73,.05);">
+          <h3 style="color:#f85149;">↓ DREHT</h3>
+          <p>Frisches Geld dreht <strong>gegen uns</strong> (Reverser). Pick wird zurückgestuft — bei deutlichem, anhaltendem Dreh kommt die <strong>sichere Gegen-Linie</strong> daneben.</p>
+          <p style="margin-top:8px;color:var(--muted);font-size:12px;"><em>Bsp: Heimsieg dreht −6pp → BEOBACHTEN + „Doppelte Chance X2" als datengetriebener Konter.</em></p>
+        </div>
+      </div>
+
+      <!-- BET-Lebenszyklus -->
+      <div class="h2-sub-label">BET-Lebenszyklus — zeitbewusst, mit Gedächtnis</div>
+      <div class="heart-grid" style="margin-bottom:18px;">
+        <div class="heart-card accent">
+          <h3>🟢 ENTER</h3>
+          <p>Neu auf BET <strong>nur bei frischem Move</strong> — letzter echter Move ≤ 48h (Liga 36h). Ein alter Drift-Move löst nie BET aus, egal wie stark die Fundamentals.</p>
+        </div>
+        <div class="heart-card">
+          <h3>🔵 HOLD</h3>
+          <p>Einmal BET, <strong>bleibt BET bis ein Reverser kommt</strong> — auch wenn der Move ruht. „Wenn nichts dagegen spricht, bleibt er." Die Card zeigt „BET seit X — hält".</p>
+        </div>
+        <div class="heart-card pressure">
+          <h3>🔴 EXIT</h3>
+          <p>Nur ein <strong>Reverser</strong> (frisches Gegen-Geld) oder eine harte Engine-Warnung stuft ab. Zeit allein beendet keinen BET.</p>
+        </div>
+      </div>
+
+      <!-- Lernen + Invariante -->
+      <div class="heart-grid">
+        <div class="heart-card gold-c">
+          <h3>🧠 Pulse lernt mit</h3>
+          <p>Der Pulse-Zustand ist ein eigenes Signal (<code>freshness_leg</code>): es fließt in den Bayesian-Lern-Ledger und lernt nach jedem Spiel <strong>richtungs-bewusst</strong> — bekommt Gewicht, wenn GESTÄRKT-Picks gewinnen und DREHT-Picks verlieren.</p>
+        </div>
+        <div class="heart-card">
+          <h3>🔒 Zwei Flächen getrennt</h3>
+          <p>Harte Regel: <strong>Pulse treibt nur die Cards, nie das Trading.</strong> Das freshness_leg-Signal ist aus dem Auto-Trader ausgeschlossen — ein GESTÄRKT darf keinen Poly-Trade über die Schwelle pumpen.</p>
+        </div>
+      </div>
+
+      <p style="font-size:12px;color:var(--muted);margin-top:14px;line-height:1.6;">
+        <strong style="color:var(--text);">Liga-Modus:</strong> alle Pulse-Schwellen (Frische-Hürde, Reverser-/Flip-Grenzen, Persistenz) sind config-getrieben pro Profil.
+        Bei ~10× so vielen Spielen pro Wochenende wie zur WM werden sie nachgeschärft — und der Bayesian-Loop lernt das Pulse-Gewicht aus dem dichten Datenstrom.
+      </p>
+
+    </div>
+  </details>
+
   <!-- ════════════════ 2. WM 2026 LIVE-FEATURES ════════════════ -->
   <details class="heart-collapse" open>
     <summary>
