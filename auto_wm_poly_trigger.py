@@ -731,8 +731,14 @@ def main():
     placed_keys = {b["betKey"] for b in placed_bets if b.get("betKey")}
     # Match-Level Dedup: zähle wie viele Bets schon auf jedes Match liegen
     # (egal welcher Markt). Verhindert gegenläufige Heim+Auswärts-Positionen.
+    # Audit-Fix 18.06.2026: nur OFFENE Positionen zählen (resolved/verkaufte raus). Das
+    # MAX_POSITIONS_PER_MATCH-Limit cappt die gleichzeitige Exposure pro Match, nicht die
+    # Lebenszeit. Vorher zählten aufgelöste UND verkaufte Bets mit → nach 2 frühen Sells
+    # vor Anpfiff blockierte ein legitimer Re-Entry fälschlich (gleiche Logik wie open_bets).
     match_position_count = {}
     for b in placed_bets:
+        if b.get("resolved") or b.get("soldAt"):
+            continue
         mkey = f"{b.get('homeId','')}-{b.get('awayId','')}"
         match_position_count[mkey] = match_position_count.get(mkey, 0) + 1
     print(f"  ✅ {len(placed_keys)} bereits platzierte Bets geladen "

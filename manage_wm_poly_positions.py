@@ -507,6 +507,14 @@ def check_position(pos: dict) -> dict:
             sell = False
             reason = ""
             pos["sellVetoed"] = f"Profit-Sell geblockt: Bid {current:.3f} ≤ Entry {entry:.3f} (Spread-Phantom)"
+        elif pos.get("priceSource") == "cache_mid_fallback":
+            # Audit-Fix 18.06.2026: kein Live-Buch → current ist der optimistische Cache-MID,
+            # nicht der realisierbare Bid, und spread_pp ist None (Spread-Veto greift nicht).
+            # Eine Profit-Mitnahme braucht einen verifizierten Bid → ohne Buch nicht verkaufen.
+            # (Loss-/Kickoff-Stops bleiben erlaubt — da wollen wir RAUS, egal wie.)
+            sell = False
+            reason = ""
+            pos["sellVetoed"] = "Profit-Sell geblockt: kein Live-Buch (cache_mid) — Bid nicht verifizierbar"
         elif spread_pp is not None and spread_pp > MAX_SELL_SPREAD_PP:
             sell = False
             reason = ""

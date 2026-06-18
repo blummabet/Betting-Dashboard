@@ -107,6 +107,16 @@ class TestHonestValuation(unittest.TestCase):
         self.assertEqual(r["priceSource"], "cache_mid_fallback")
         self.assertEqual(r["currentPrice"], 0.40)
 
+    def test_profit_sell_vetoed_without_live_book(self):
+        # Audit-Fix 18.06.: Buch down, Cache-Mid 0.46 vs Entry 0.40 = +15% (Phantom, kein
+        # verifizierter Bid) → Profit-Sell MUSS geblockt sein (Loss-Stops blieben erlaubt).
+        with mock.patch.object(M, "fetch_token_book", return_value=None), \
+             mock.patch.object(M, "_token_price_from_cache", return_value=0.46):
+            r = M.check_position(self._pos(entryPrice=0.40, pinnFair=0.60))
+        self.assertEqual(r["priceSource"], "cache_mid_fallback")
+        self.assertFalse(r["sellSignal"])
+        self.assertIn("Live-Buch", r.get("sellVetoed", ""))
+
 
 class TestProfitSellRealGuard(unittest.TestCase):
     def _ctx(self, bets):
