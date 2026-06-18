@@ -2737,9 +2737,31 @@
     </div>`;
   }
 
+  // Frische-Status auf einen Blick (18.06.2026): BASIS (Move ruht) / GESTÄRKT (frisches
+  // Geld weiter für uns) / DREHT (frisches Geld gegen uns). Soll Lucas sofort sehen lassen,
+  // ob sich was geändert oder verstärkt hat.
+  function _freshnessStatusBadge(pick) {
+    if (!pick || pick.source !== 'steam' || !pick.freshnessState) return '';
+    const map = {
+      confirm: { label: 'GESTÄRKT', arrow: '↑', color: '#3fb950', bg: 'rgba(63,185,80,.12)', sub: 'frisches Geld läuft weiter für uns' },
+      drift:   { label: 'BASIS',    arrow: '•', color: '#8b949e', bg: 'rgba(139,148,158,.12)', sub: 'der Move ist die Grundlage — ruht aktuell' },
+      reverse: { label: 'DREHT',    arrow: '↓', color: '#f85149', bg: 'rgba(248,81,73,.12)', sub: 'frisches Geld dreht gegen uns' },
+    };
+    const m = map[pick.freshnessState];
+    if (!m) return '';
+    const rmv = pick.recentMovePP;
+    const rmvStr = (rmv != null) ? `${rmv > 0 ? '+' : ''}${(+rmv).toFixed(1)}pp frisch` : '';
+    const legStr = pick.legHours != null
+      ? (pick.legHours >= 48 ? ` · seit ~${Math.round(pick.legHours / 24)} Tg` : ` · seit ~${Math.round(pick.legHours)}h`) : '';
+    return `<div style="display:flex;align-items:center;gap:8px;margin:2px 0 6px;padding:5px 9px;border-radius:8px;background:${m.bg};border:1px solid ${m.color}55;">
+      <span style="font-weight:700;color:${m.color};font-size:.8rem;letter-spacing:.04em;white-space:nowrap;">${m.arrow} ${m.label}</span>
+      <span style="color:#8b949e;font-size:.74rem;line-height:1.2;">${m.sub}${rmvStr ? ` · <strong style="color:${m.color}">${rmvStr}</strong>` : ''}${legStr}</span>
+    </div>`;
+  }
+
   function _steamMoveGraph(pick) {
     if (!pick || pick.source !== 'steam') return '';
-    let html = '';
+    let html = _freshnessStatusBadge(pick);
     // 1) Pinnacle — der Trigger, immer da. Alters-/Lag-Kontext aus sharpMoveDetails wenn vorhanden.
     const mv = pick.steamMovePP;
     const sm = pick.sharpMoveDetails || {};

@@ -2806,6 +2806,11 @@ def main():
                     old = _old_bet.get(p.get("market"))
                     if not old:
                         continue
+                    # Kein Grandfathering (Lucas 18.06.): nur Picks halten, die schon UNTER
+                    # der neuen Logik BET wurden (firstBetAt vorhanden). Alt-BETs aus dem
+                    # Vor-Frische-Stand müssen sich frisch requalifizieren, nicht durchrutschen.
+                    if not old.get("firstBetAt"):
+                        continue
                     if p.get("reverser") or p.get("freshnessState") == "reverse":
                         continue                     # Reverser → Exit (Demote bleibt)
                     if p.get("verdict") == "BET":
