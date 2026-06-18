@@ -117,6 +117,10 @@ LEG_NOISE_PP           = _cfg("edge", "leg_noise_pp",           0.4)
 MIN_LEG_SNAPS          = _cfg("edge", "min_leg_snaps",          3)
 MAX_LEG_GAP_H          = _cfg("edge", "max_leg_gap_h",          96)   # nur echte Mehr-Tage-Lücken (De-Vig erledigt die Phantome)
 MIN_FLIP_SNAPS         = _cfg("edge", "min_flip_snaps",         4)
+# Zeitbewusster BET-Lebenszyklus (18.06.2026, Lucas): ENTER BET nur bei FRISCHEM Move
+# (letzter echter Move ≤ Hürde), HOLD bis ein Reverser kommt (auch wenn der Move ruht),
+# EXIT bei Reverser. Verhindert dass ein alter Drift-Move neu BET auslöst.
+BET_ENTRY_HURDLE_H     = _cfg("edge", "bet_entry_hurdle_h",     48)
 # Aktualität: misst NICHT welcher Move zählt (das macht die latest leg), sondern ob die
 # Linie ÜBERHAUPT noch aktiv ist. Ein großer Move vor 5 Tagen, seither flach, ist „bestätigt"
 # der Form nach — aber alter Drift, nicht frisch. Liegt der letzte echte Move länger zurück,
@@ -2546,6 +2550,7 @@ def main():
                     _p["freshnessState"] = _an["state"]
                     _p["legHours"]       = _an["legHours"]
                     _p["legSnaps"]       = _an.get("legSnaps")
+                    _p["lastMoveH"]      = _an.get("lastMoveH")
                     _p["flipReady"]      = bool(_an.get("flipReady"))
                     if _an["state"] == "reverse":
                         _p["reverser"]    = True
@@ -2556,8 +2561,10 @@ def main():
                         _p["reverserFresh"]     = bool(_lmh is not None and _lmh <= STALE_AFTER_H)
                         _p["reverserLastMoveH"] = _lmh
                         # Eltern zurückstufen (überschreibt spätere Conviction-Upgrades,
-                        # da downgradedReason gesetzt). Starker Reverser → BEOBACHTEN.
-                        if _an["movePP"] <= -2 * REVERSER_THRESHOLD_PP:
+                        # da downgradedReason gesetzt). Starker Reverser (≤ −6pp) ODER wenn wir
+                        # die Gegen-Linie zeigen (flipReady) → BEOBACHTEN: der Eltern-Pick soll
+                        # nicht als zweites, widersprüchliches ABWÄGEN neben dem Konter stehen.
+                        if _an["movePP"] <= -2 * REVERSER_THRESHOLD_PP or _an.get("flipReady"):
                             _p["verdict"] = "BEOBACHTEN"
                         elif _p.get("verdict") == "BET":
                             _p["verdict"] = "ABWÄGEN"
@@ -2746,16 +2753,33 @@ def main():
                         # Move + zusätzliche Signal-Bestätigung, nur die Schwelle ist profil-abh.
                         _conv_threshold = (STEAM_BET_THRESHOLD
                                            if p.get("source") == "steam" else 8)
+                        # BET-Entry-Hürde (18.06.2026): NEU auf BET nur bei FRISCHEM Move —
+                        # letzter echter Move ≤ BET_ENTRY_HURDLE_H. lastMoveH None (unmappbarer
+                        # Markt / Nicht-Steam) → Hürde aus (Altverhalten). Ein alter Drift-Move
+                        # kann so nie neu BET auslösen, egal wie stark die Fundamentals sind.
+                        _lmh = p.get("lastMoveH")
+                        _move_fresh = (_lmh is None) or (_lmh <= BET_ENTRY_HURDLE_H)
                         if (p.get("verdict") == "ABWÄGEN"
                                 and conv["score"] >= _conv_threshold
-                                and not p.get("downgradedReason")):
+                                and not p.get("downgradedReason")
+                                and _move_fresh):
                             p["verdict"] = "BET"
                             p["pickTriggerReason"] = (
                                 f"Conviction {conv['score']}/10 (≥{_conv_threshold}) — "
-                                f"Move + Signale bestätigen den Pick"
+                                f"frischer Move + Signale bestätigen den Pick"
                             )
+                            p.setdefault("firstBetAt", now_dt.isoformat())
+                        elif (p.get("verdict") == "ABWÄGEN"
+                                and conv["score"] >= _conv_threshold
+                                and not p.get("downgradedReason")
+                                and not _move_fresh):
+                            # Conviction reicht, aber der Move ist nicht mehr frisch (> Hürde).
+                            # Kein NEUER BET — der Hold-Schritt (unten) hebt ihn nur, wenn er
+                            # schon BET war und kein Reverser dagegensteht.
+                            p["staleForEntry"] = True
                         elif p.get("verdict") == "BET":
                             p["pickTriggerReason"] = "Edge-getrieben"
+                            p.setdefault("firstBetAt", now_dt.isoformat())
 
                         if (p.get("verdict") == "BET"
                                 and conv["score"] < 4):
@@ -2767,6 +2791,40 @@ def main():
                         print(f"  ⚠️  Conviction-Score crashed: {conv_err}")
             except Exception as e:
                 print(f"  ⚠️  Signal-Engine crashed für {fx['home']}-{fx['away']}: {e}")
+
+            # ── BET-Hold über Läufe (18.06.2026, Lucas) ───────────────────
+            # Einmal BET, bleibt BET — solange KEIN Reverser (frisches Gegen-Geld) kommt,
+            # auch wenn der Move ruht (settled). „Wenn nichts dagegen spricht, bleibt er."
+            # Memory = der alte Pick (existing_pk) vor dem Überschreiben. Nur künftige Picks
+            # (fx_date > tomorrow); gepostete bleiben unangetastet. Exit-Gründe (Reverser /
+            # harte Engine-Warnung / CLV gegen) heben den Hold NICHT auf.
+            _hold_posted = bool(fx.get("date") and fx.get("date") <= tomorrow)
+            if not _hold_posted and existing_pk:
+                _old_bet = {op.get("market"): op for op in existing_pk
+                            if isinstance(op, dict) and op.get("verdict") == "BET"}
+                for p in new_picks:
+                    old = _old_bet.get(p.get("market"))
+                    if not old:
+                        continue
+                    if p.get("reverser") or p.get("freshnessState") == "reverse":
+                        continue                     # Reverser → Exit (Demote bleibt)
+                    if p.get("verdict") == "BET":
+                        if old.get("firstBetAt"):    # firstBetAt mitnehmen
+                            p["firstBetAt"] = old["firstBetAt"]
+                        continue
+                    # War BET, ist jetzt < BET (Move ruht / Conviction knapp). Halten —
+                    # ABER nur wenn keine harte Warnung dagegen steht (downgradedReason aus
+                    # Engine-SKIP/CLV). staleForEntry (nur „nicht frisch genug für NEU-Entry")
+                    # ist kein Exit-Grund.
+                    if (p.get("verdict") in ("ABWÄGEN", "BEOBACHTEN")
+                            and not p.get("downgradedReason")):
+                        p["verdict"]      = "BET"
+                        p["betHeld"]      = True
+                        p["firstBetAt"]   = old.get("firstBetAt") or now_dt.isoformat()
+                        p["pickTriggerReason"] = (
+                            "Hält BET: war bestätigt, Move ruht — aber kein Reverser dagegen "
+                            "(bleibt bis frisches Gegen-Geld kommt)"
+                        )
 
             # Immer überschreiben — auch leere Liste löscht veraltete Picks
             wm["picks"][pick_key] = new_picks

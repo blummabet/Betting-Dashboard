@@ -1439,7 +1439,22 @@
       modelSentence = `<em>${pick.info}</em>`;
     }
 
-    return sentences.join(' ') + (modelSentence ? '<br>' + modelSentence : '');
+    // BET-Lebenszyklus: seit wann BET + „hält trotz ruhendem Move" (18.06.2026)
+    let betLifeSentence = '';
+    if (pick.verdict === 'BET' && pick.firstBetAt) {
+      const since = new Date(pick.firstBetAt);
+      if (!isNaN(since)) {
+        const hrs = Math.max(0, (Date.now() - since.getTime()) / 3600000);
+        const ago = hrs < 24 ? `${Math.round(hrs)}h` : `${Math.round(hrs / 24)} Tg`;
+        betLifeSentence = pick.betHeld
+          ? `<em style="color:#3fb950;">✅ BET seit ${ago} — hält: Move ruht, aber kein Gegen-Geld.</em>`
+          : `<em style="color:#8b949e;">BET seit ${ago}.</em>`;
+      }
+    }
+
+    return sentences.join(' ')
+      + (modelSentence ? '<br>' + modelSentence : '')
+      + (betLifeSentence ? '<br>' + betLifeSentence : '');
   }
 
   // ─────────────────────────────────────────────────────

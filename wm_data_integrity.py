@@ -706,6 +706,35 @@ def check_reverser_demoted(ctx):
 
 
 @integrity_check
+def check_bet_move_fresh(ctx):
+    """BET-Lebenszyklus (18.06.2026, Lucas): ein Steam-BET muss entweder auf einem FRISCHEN
+    Move eingestiegen sein (lastMoveH ≤ Hürde) ODER ein bewusst GEHALTENER BET sein (betHeld,
+    war schon BET, kein Reverser). Ein BET auf einem stale Move OHNE Hold-Flag ist ein Leck —
+    der Entry-Hürden-Gate hat nicht gegriffen. lastMoveH None (unmappbar/Nicht-Steam) =
+    ausgenommen (Hürde greift dort bewusst nicht)."""
+    HURDLE = 48 + 1   # kleine Toleranz; echte Schwelle ist config (wm 48)
+    picks = ctx.wm.get("picks") or {}
+    fails = []
+    for key, plist in picks.items():
+        if not isinstance(plist, list):
+            continue
+        for p in plist:
+            if p.get("source") != "steam" or p.get("verdict") != "BET":
+                continue
+            if p.get("result") or p.get("trackingExcluded"):
+                continue
+            lmh = p.get("lastMoveH")
+            if lmh is None or p.get("betHeld"):
+                continue
+            if lmh > HURDLE:
+                fails.append(f"{key} {p.get('market')}: BET aber Move stale "
+                             f"(lastMoveH={lmh}h > Hürde) und kein betHeld")
+    return _chk("bet_move_fresh", "BET frisch eingestiegen oder gehalten", "warn", fails,
+                "Neuer BET braucht frischen Move (≤ bet_entry_hurdle_h). Alter Move darf nur "
+                "via Hold (betHeld) BET bleiben. Stale-BET ohne Hold = Entry-Gate-Leck.")
+
+
+@integrity_check
 def check_freshness_learning_coupled(ctx):
     """Lern-Kopplung (18.06.2026, Lucas): ein Steam-Pick mit frischem confirm/reverse-Zustand
     MUSS das `freshness_leg`-Signal in signals[] tragen — sonst kommt die Frische NICHT im
