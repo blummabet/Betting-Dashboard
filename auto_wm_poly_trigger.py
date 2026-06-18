@@ -7,7 +7,8 @@ filtert bereits platzierte Bets, und löst neue Bets aus.
 
 Konfiguration:
     ENABLED = False          → Skript läuft durch aber platziert keine Bets (sicher!)
-    AUTO_TRIGGER_EDGE_PP     → Mindest-Edge in Prozentpunkten (Standard: 5.0)
+    AUTO_TRIGGER_EDGE_PP     → Mindest-Edge in Prozentpunkten (Standard: 4.0; war 5.0,
+                               am 01.06.2026 gesenkt — Sweet Spot 3-5pp). Steam-Lag: 3.0.
     MIN_VOL                  → Mindest-Liquidity auf Polymarket (Standard: 10000 USDC)
     MIN_DAYS_UNTIL_GAME      → Nicht am Spieltag selbst wetten (Standard: 1)
 
@@ -247,6 +248,11 @@ MIN_BOOK_LIQ_USDC      = _cfg("trade", "min_book_liq_usdc",      50.0)
 # Genau die dünnen AH/BTTS-Longshots (CPV-SAU BTTS Nein @+3.5pp Mid) hatten kein Buch →
 # Spread-Gate übersprungen → real fast keine Edge nach dem Ask. Sicherer Default True.
 REQUIRE_BOOK_FOR_ENTRY = _cfg("trade", "require_book_for_entry", True)
+# 17.06.2026 (Lucas): der ENTSCHEIDENDE Floor auf der ECHTEN Ask-Edge (fair − ask, nach
+# Spread) — entkoppelt vom Mid-Vorfilter. Die alten 5pp waren Mid (~3pp real); 4pp ECHT
+# ist sauberer + strenger und schneidet dünne Longshots raus. MIN_RAW_EDGE_PP (2.0) bleibt
+# der Mid-Sanity-Vorfilter.
+MIN_ASK_EDGE_PP        = _cfg("trade", "min_ask_edge_pp",         4.0)
 #
 # Gate B: Conviction-Score-Floor. Wenn der Pick auf der Card weniger als
 # MIN_CONVICTION_FOR_AUTO/10 Punkte hat, blockt der Auto-Trigger.
@@ -928,8 +934,8 @@ def main():
             if liq is not None and liq < MIN_BOOK_LIQ_USDC:
                 print(f"    🛑 Buch-Liquidität ${liq:.0f} < ${MIN_BOOK_LIQ_USDC:.0f} — übersprungen")
                 continue
-            if real_edge_pp is not None and real_edge_pp < MIN_RAW_EDGE_PP:
-                print(f"    🛑 Echte Edge {real_edge_pp:.1f}pp (fair−ask {entry_ask:.3f}) < {MIN_RAW_EDGE_PP}pp Floor — übersprungen")
+            if real_edge_pp is not None and real_edge_pp < MIN_ASK_EDGE_PP:
+                print(f"    🛑 Echte Ask-Edge {real_edge_pp:.1f}pp (fair−ask {entry_ask:.3f}) < {MIN_ASK_EDGE_PP}pp Floor — übersprungen")
                 continue
             fill_price = entry_ask   # ehrlicher Eintrittspreis = Ask (was wir zahlen)
             _re = f" · echte Edge {real_edge_pp:.1f}pp" if real_edge_pp is not None else ""
