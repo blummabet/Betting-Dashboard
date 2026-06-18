@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-17T21:58:07Z",
+  "generatedAt": "2026-06-18T07:16:52Z",
   "windowDays": 2,
-  "upcoming": 13,
+  "upcoming": 11,
   "signalsFired": [
     "lead_lag_bias",
     "public_static_bias",
@@ -21,21 +21,21 @@
   "signalsTotal": 17,
   "perSignal": {
     "lead_lag_bias": 3,
-    "public_static_bias": 5,
-    "travel_burden": 46,
+    "public_static_bias": 9,
+    "travel_burden": 43,
     "injury": 0,
-    "form_trend": 81,
-    "h2h_pattern": 5,
-    "xg_strength": 75,
+    "form_trend": 80,
+    "h2h_pattern": 6,
+    "xg_strength": 77,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 30,
     "lineup_signal": 8,
-    "apif_predictions": 10,
+    "apif_predictions": 9,
     "weather_signal": 14,
-    "incentive_signal": 7,
+    "incentive_signal": 4,
     "altitude_signal": 2,
-    "chance_creation": 35,
+    "chance_creation": 34,
     "form_rating": 11
   },
   "verdict": "warn",
@@ -45,18 +45,18 @@
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
-    "🛡️ Aufstellung da vor Anpfiff (T-90min): 1 Fehler (z.B. GHA-PAN: Anpfiff in 61min, KEINE Aufstellung)",
-    "🛡️ AH-Handicap-Edges plausibel (kein Mirror): 2 Fehler (z.B. ESP-SAU: AH home -5.5 Edge -41.8pp (poly 0.5 / fair 0.0822) — Phantom/Mirror-Verdacht)"
+    "🛡️ Riskanter BET hat sichere Variante: 1 Fehler (z.B. L-3-ENG-PAN: BET Doppelte Chance — X2 @3.75 — keine sichere Variante)",
+    "🛡️ AH-Handicap-Edges plausibel (kein Mirror): 5 Fehler (z.B. FRA-IRQ: AH home -5.5 Edge -14.1pp (poly 0.28 / fair 0.1391) — Phantom/Mirror-Verdacht)"
   ],
   "oks": [
-    "🌡️ Weather: 53 Spiele mit Forecast",
+    "🌡️ Weather: 48 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.1h alt",
-    "📊 APIF-Predictions: 50 Spiele",
-    "📋 Lineups: 14 Spiele geladen (4 imminent)",
+    "📊 APIF-Predictions: 52 Spiele",
+    "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 31.4 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 35.2 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $249.59",
+    "💼 Poly-Balance: $333.39",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -117,9 +117,11 @@
       "id": "pick_safe_variant",
       "label": "Riskanter BET hat sichere Variante",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "L-3-ENG-PAN: BET Doppelte Chance — X2 @3.75 — keine sichere Variante"
+      ],
       "note": "AH ≤ −1.5 / Quote > 3.0 als BET-Headline braucht eine sicherere Alternative (generate_wm_picks: SUBSTITUTION_MAP + _safer_alternatives + Renderer-Demotion)."
     },
     {
@@ -189,11 +191,9 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "GHA-PAN: Anpfiff in 61min, KEINE Aufstellung"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -318,10 +318,13 @@
       "label": "AH-Handicap-Edges plausibel (kein Mirror)",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 5,
       "failures": [
-        "ESP-SAU: AH home -5.5 Edge -41.8pp (poly 0.5 / fair 0.0822) — Phantom/Mirror-Verdacht",
-        "CAN-QAT: AH home -4.5 Edge -43.0pp (poly 0.5 / fair 0.0702) — Phantom/Mirror-Verdacht"
+        "FRA-IRQ: AH home -5.5 Edge -14.1pp (poly 0.28 / fair 0.1391) — Phantom/Mirror-Verdacht",
+        "CAN-QAT: AH home -4.5 Edge -29.4pp (poly 0.37 / fair 0.0761) — Phantom/Mirror-Verdacht",
+        "MAR-HTI: AH home -4.5 Edge -39.2pp (poly 0.5 / fair 0.1085) — Phantom/Mirror-Verdacht",
+        "ESP-SAU: AH home -5.5 Edge -42.1pp (poly 0.5 / fair 0.079) — Phantom/Mirror-Verdacht",
+        "ECU-CUW: AH home -5.5 Edge -41.7pp (poly 0.5 / fair 0.0829) — Phantom/Mirror-Verdacht"
       ],
       "note": "fetch_wm_poly_prices: poly_ah_by_team team-ID-geschlüsselt (mirror-immun). Riesen-Edge = falsche Seite/Daten. Auto-Trader blockt via AH_MAX_EDGE_PP."
     },
