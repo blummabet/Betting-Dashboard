@@ -98,6 +98,23 @@ STEAM_BET_THRESHOLD      = _cfg("conviction_score", "steam_bet_threshold",      
 # These. ABER nur wenn die sichere Linie ihre Quote ≥ SAFE_LINE_MIN_ODDS hält; sonst (zu
 # kurz, kein Reiz) bleibt's bei der Original-Linie. snap hat echte Quoten für alle Ziele.
 SAFE_LINE_MIN_ODDS = _cfg("edge", "safe_line_min_odds", 1.35)
+# Frische-Modell / Reverser-Guard (18.06.2026, Lucas): der „Move seit Eröffnung" ist oft
+# alter Drift. Was zählt ist die FRISCHE Bewegung. Statt eines fixen Uhr-Fensters (24h ist
+# willkürlich — bei 30-Min-Snaps kann der frische Move auch 5 Tage vor Anpfiff passieren)
+# erkennen wir den LETZTEN Bewegungs-Abschnitt (latest leg): die dichte Pinnacle-Reihe rück-
+# wärts bis die Richtung kippt (Pivot), Netto-Move SEIT dem Pivot. Drei Zustände:
+#   BESTÄTIGT  frische Leg ≥ +CONFIRM in Pick-Richtung  → Geld läuft weiter für uns
+#   DRIFT      |frische Leg| < Schwellen                → Move ruht / nur alte Drift
+#   REVERSER   frische Leg ≤ −REVERSER gegen Pick       → frisches Geld dreht gegen uns
+# (Analyse: CZE-ZAF +1.9 Eröffnung aber Leg −3.5; JOR-DZA +4.4 aber Leg −6.1.)
+REVERSER_THRESHOLD_PP  = _cfg("edge", "reverser_threshold_pp",  3.0)
+CONFIRM_THRESHOLD_PP   = _cfg("edge", "confirm_threshold_pp",   3.0)
+LEG_NOISE_PP           = _cfg("edge", "leg_noise_pp",           0.4)
+# Aktualität: misst NICHT welcher Move zählt (das macht die latest leg), sondern ob die
+# Linie ÜBERHAUPT noch aktiv ist. Ein großer Move vor 5 Tagen, seither flach, ist „bestätigt"
+# der Form nach — aber alter Drift, nicht frisch. Liegt der letzte echte Move länger zurück,
+# fällt ein Für-Pick-Leg auf DRIFT zurück (Reverser bleibt Reverser, egal wie alt).
+STALE_AFTER_H          = _cfg("edge", "stale_after_h",          72)
 _STEAM_SAFER_MAP = {
     "Über 3.5 Tore":  ("o25",  "Über 2.5 Tore"),
     "Über 2.5 Tore":  ("o15",  "Über 1.5 Tore"),
@@ -1859,6 +1876,109 @@ def _steam_card_pick(snap, pick):
     }
 
 
+_REVERSER_KEY = {
+    "heimsieg": "hw", "auswärtssieg": "aw", "auswartssieg": "aw", "unentschieden": "dr",
+    "ah heim": "hw", "ah auswärts": "aw", "ah auswarts": "aw",
+    "doppelte chance — 1x": "hw", "doppelte chance — x2": "aw",
+    "über 1.5": "o15", "über 2.5": "o25", "über 3.5": "o35",
+    "unter 1.5": "u15", "unter 2.5": "u25", "unter 3.5": "u35",
+    "beide teams treffen — ja": "bttsY", "beide teams treffen — nein": "bttsN",
+}
+
+
+def _reverser_key(market):
+    m = (market or "").lower()
+    for frag, key in _REVERSER_KEY.items():
+        if m.startswith(frag) or frag in m:
+            return key
+    return None
+
+
+def _pinn_implied_series(hist, key):
+    """Sortierte [(ts, implizite_Wkt)] aus bk=='pinnacle'-Snaps für key. Höhere implizite
+    Wkt = FÜR den Pick (niedrigere Quote)."""
+    snaps = []
+    for s in hist or []:
+        if not isinstance(s, dict) or s.get("bk") != "pinnacle":
+            continue
+        v, t = s.get(key), s.get("ts")
+        if v and t:
+            try:
+                ti = datetime.fromisoformat(str(t).replace("Z", "+00:00"))
+                vi = float(v)
+                if vi > 1.0:
+                    snaps.append((ti, 1.0 / vi))
+            except Exception:
+                continue
+    snaps.sort()
+    return snaps
+
+
+def _latest_leg_move_pp(series, noise_pp):
+    """Netto-Bewegung (pp implizite Wkt) des JÜNGSTEN zusammenhängenden Abschnitts.
+    series = [(ts, implied)] chronologisch. Läuft rückwärts vom letzten Snap bis die Richtung
+    kippt (Pivot) und misst end−pivot. + = FÜR den Pick, − = gegen.
+    Gibt (movePP, pivot_idx, last_move_idx) — last_move_idx = Index des jüngsten echten Moves."""
+    n = len(series)
+    if n < 2:
+        return None, None, None
+    noise = noise_pp / 100.0
+    probs = [p for _, p in series]
+    i = n - 1
+    # Richtung des jüngsten Nicht-Rausch-Schritts
+    dirn, j = 0, i
+    while j > 0:
+        d = probs[j] - probs[j - 1]
+        if abs(d) >= noise:
+            dirn = 1 if d > 0 else -1
+            break
+        j -= 1
+    if dirn == 0:                       # alles Rauschen → keine echte Bewegung
+        return 0.0, i, i
+    # rückwärts solange die Bewegung in dirn weiterläuft (kleines Gegen-Rauschen toleriert)
+    pivot, k = j - 1, j - 1
+    while k > 0:
+        d = probs[k] - probs[k - 1]
+        if d * dirn >= -noise:
+            pivot, k = k - 1, k - 1
+        else:
+            break
+    return round((probs[i] - probs[pivot]) * 100, 1), pivot, j
+
+
+def analyze_recent_move(hist, market):
+    """Frische-Analyse eines Picks aus der dichten Pinnacle-History.
+    Returns {movePP, legHours, state} oder None (Markt nicht mappbar / Key fehlt in History).
+    state ∈ {'confirm','drift','reverse'} aus dem letzten Bewegungs-Abschnitt (latest leg)."""
+    key = _reverser_key(market)
+    if not key:
+        return None
+    series = _pinn_implied_series(hist, key)
+    if len(series) < 2:
+        return None
+    move_pp, pivot, last_move_idx = _latest_leg_move_pp(series, LEG_NOISE_PP)
+    if move_pp is None:
+        return None
+    leg_h = round((series[-1][0] - series[pivot][0]).total_seconds() / 3600.0, 1)
+    # Aktualität: Stunden seit dem letzten ECHTEN (Nicht-Rausch) Move
+    last_move_h = round((series[-1][0] - series[last_move_idx][0]).total_seconds() / 3600.0, 1)
+    if move_pp <= -REVERSER_THRESHOLD_PP:
+        state = "reverse"                       # Reversal zählt immer, egal wie alt
+    elif move_pp >= CONFIRM_THRESHOLD_PP and last_move_h <= STALE_AFTER_H:
+        state = "confirm"                       # für uns UND Linie noch aktiv
+    else:
+        state = "drift"                         # zu klein ODER alter, ruhender Move
+    return {"movePP": move_pp, "legHours": leg_h,
+            "lastMoveH": last_move_h, "state": state}
+
+
+def recent_pinn_move_pp(hist, market, window_h=None):
+    """Dünner Wrapper (Tests/Altpfad): nur die frische Leg-Bewegung in pp. window_h ignoriert
+    (das Modell ist jetzt fenster-frei via latest leg)."""
+    a = analyze_recent_move(hist, market)
+    return a["movePP"] if a else None
+
+
 def _derive_safer_steam_line(card, snap):
     """Phase 1 (17.06.2026, Lucas): riskante Steam-Linie → nächst-sicherere Linie als WETTE,
     SOLANGE deren Quote ≥ SAFE_LINE_MIN_ODDS (1.35) bleibt. Sonst (zu kurz) Original behalten.
@@ -1896,6 +2016,64 @@ def _derive_safer_steam_line(card, snap):
                     + f" · ✅ Sichere Linie abgeleitet: {safe_label} @{safe_odds:g} "
                       f"(These: {orig_market} @{card['safeThesisOdds']:g})")
     return card
+
+
+# Reverser-Konter: bei frischem Geld GEGEN den Pick die SICHERE Linie auf der jetzt
+# favorisierten Gegenseite (nicht der nackte Gegen-Sieg — gespiegelte Safer-Line-Logik).
+_REVERSER_COUNTER_MAP = {
+    "Heimsieg":             ("dcX2", "Doppelte Chance — X2"),
+    "Auswärtssieg":         ("dc1X", "Doppelte Chance — 1X"),
+    "Doppelte Chance — 1X": ("dcX2", "Doppelte Chance — X2"),
+    "Doppelte Chance — X2": ("dc1X", "Doppelte Chance — 1X"),
+    "Über 3.5 Tore":  ("u35", "Unter 3.5 Tore"),
+    "Über 2.5 Tore":  ("u35", "Unter 3.5 Tore"),
+    "Über 1.5 Tore":  ("u25", "Unter 2.5 Tore"),
+    "Unter 1.5 Tore": ("o25", "Über 2.5 Tore"),
+    "Unter 2.5 Tore": ("o35", "Über 3.5 Tore"),
+    "Unter 3.5 Tore": ("o35", "Über 3.5 Tore"),
+}
+
+
+def _reverser_counter_target(market):
+    m = market or ""
+    if m in _REVERSER_COUNTER_MAP:
+        return _REVERSER_COUNTER_MAP[m]
+    if m.startswith("AH Heim"):
+        return ("dcX2", "Doppelte Chance — X2")
+    if m.startswith("AH Auswärts") or m.startswith("AH Auswarts"):
+        return ("dc1X", "Doppelte Chance — 1X")
+    return None
+
+
+def _derive_reverser_counter(parent, snap, move_pp):
+    """Bei REVERSER: sichere Gegen-Linie als eigenen Pick (ABWÄGEN, läuft durch die Signal-
+    Engine → reift nur via Conviction zu BET, wenn Signale sie tragen). Floor 1.35. None wenn
+    Gegen-Linie nicht mappbar/verfügbar oder zu kurz (< Floor → kein Mehrwert, nur Warnung)."""
+    tgt = _reverser_counter_target(parent.get("market"))
+    if not tgt:
+        return None
+    key, label = tgt
+    odds = snap.get(key)
+    if not (isinstance(odds, (int, float)) and odds >= SAFE_LINE_MIN_ODDS):
+        return None
+    odds = round(float(odds), 2)
+    model = _steam_model_odds(snap, label) or odds
+    edge_pp = 0
+    if model > 1.0 and odds > 1.0:
+        edge_pp = round(((1.0 / model) * MODEL_MARGIN - (1.0 / odds) * 1.03) * 100)
+    return {
+        "market": label, "odds": odds, "modelOdds": round(model, 3),
+        "conf": "medium", "verdict": "ABWÄGEN",
+        "modSig": 0, "mktSig": 0, "storySig": 0,
+        "edgePP": edge_pp, "icon": "↩️",
+        "info": (f"↩️ Reverser-Konter zu {parent.get('market')}: frisches Pinnacle-Geld "
+                 f"{move_pp:+.1f}pp dreht auf diese Seite — sichere Linie {label} @{odds:g}"),
+        "result": None, "clvPP": 0.0, "dataQuality": "steam",
+        "lamH": None, "lamA": None, "lamTotal": None,
+        "source": "steam", "reverserCounter": True,
+        "counterOf": parent.get("market"), "counterMovePP": move_pp,
+        "entryBook": parent.get("entryBook", "pinnacle"), "entryOdd": odds,
+    }
 
 
 def generate_steam_picks_for_fixture(fx, snap, today_iso, drift=None):
@@ -2270,6 +2448,53 @@ def main():
                     fx, mkt.get(f"{fx['home']}-{fx['away']}", {}), today,
                     drift=_steam_drift,
                 )
+
+            # ── Frische-Modell (18.06.2026, Lucas) ────────────────────────
+            # Jedem Steam-Pick die FRISCHE Bewegung (letzter Bewegungs-Abschnitt der
+            # Pinnacle-Reihe) anhängen: confirm/drift/reverse. Läuft VOR der Signal-Engine,
+            # damit ein abgeleiteter Reverser-Konter dieselben Signale + Conviction bekommt
+            # (Lucas: „feuern die Signale dann dafür?"). Reverser-Eltern werden zurückgestuft;
+            # der Konter wird als eigener ABWÄGEN-Pick angehängt (reift nur via Conviction→BET).
+            try:
+                _fr_ha   = f"{fx['home']}-{fx['away']}"
+                _fr_hist = odds_history.get(_fr_ha, []) if odds_history else []
+                _fr_snap = mkt.get(_fr_ha, {})
+                _counters = []
+                for _p in (new_picks or []):
+                    if _p.get("source") != "steam" or _p.get("reverserCounter"):
+                        continue
+                    _an = analyze_recent_move(_fr_hist, _p.get("market", ""))
+                    if not _an:
+                        continue
+                    _p["recentMovePP"]   = _an["movePP"]
+                    _p["freshnessState"] = _an["state"]
+                    _p["legHours"]       = _an["legHours"]
+                    if _an["state"] == "reverse":
+                        _p["reverser"]    = True
+                        _p["reverserPP"]  = _an["movePP"]
+                        _p["legHours"]    = _an["legHours"]
+                        # frisch = letzter echter Gegen-Move ≤ STALE_AFTER_H; sonst alter
+                        # Move gegen uns (trotzdem zurückstufen, aber ehrlich anders labeln).
+                        _lmh = _an.get("lastMoveH")
+                        _p["reverserFresh"]     = bool(_lmh is not None and _lmh <= STALE_AFTER_H)
+                        _p["reverserLastMoveH"] = _lmh
+                        # Eltern zurückstufen (überschreibt spätere Conviction-Upgrades,
+                        # da downgradedReason gesetzt). Starker Reverser → BEOBACHTEN.
+                        if _an["movePP"] <= -2 * REVERSER_THRESHOLD_PP:
+                            _p["verdict"] = "BEOBACHTEN"
+                        elif _p.get("verdict") == "BET":
+                            _p["verdict"] = "ABWÄGEN"
+                        _p["downgradedReason"] = (
+                            f"Reverser: frisches Geld {_an['movePP']:+.1f}pp (letzter "
+                            f"Bewegungs-Abschnitt) GEGEN den Pick — Move seit Eröffnung überholt"
+                        )
+                        _ctr = _derive_reverser_counter(_p, _fr_snap, _an["movePP"])
+                        if _ctr:
+                            _counters.append(_ctr)
+                if _counters:
+                    new_picks = list(new_picks) + _counters
+            except Exception as _fr_err:
+                print(f"  ⚠️  Frische-Modell crashed für {fx['home']}-{fx['away']}: {_fr_err}")
 
             # ── Signal-Engine: jedem Pick die signals[] Liste anhängen ────
             # Modulare Sharp-Signal-Adjustments (sharp_signals/). Jede Iteration

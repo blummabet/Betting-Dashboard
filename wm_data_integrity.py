@@ -681,6 +681,31 @@ def check_safer_line_applied(ctx):
 
 
 @integrity_check
+def check_reverser_demoted(ctx):
+    """Reverser-Guard (18.06.2026, Lucas): ein Steam-Pick, dessen FRISCHES Geld gegen ihn
+    dreht (freshnessState == 'reverse' / reverser=True), darf NICHT mehr als BET sichtbar
+    sein — er muss auf ABWÄGEN/BEOBACHTEN zurückgestuft sein. Macht Lecks sichtbar, wo der
+    frische Reverser den Move seit Eröffnung nicht überschrieben hat. Gepostete/frozen Picks
+    von vor dem Fix können bis zum Neu-Bau auftauchen (erwartetes Übergangsrauschen)."""
+    picks = ctx.wm.get("picks") or {}
+    fails = []
+    for key, plist in picks.items():
+        if not isinstance(plist, list):
+            continue
+        for p in plist:
+            if p.get("result") or p.get("trackingExcluded"):
+                continue
+            is_rev = p.get("reverser") or p.get("freshnessState") == "reverse"
+            if is_rev and p.get("verdict") == "BET":
+                fails.append(f"{key} {p.get('market')}: Reverser "
+                             f"({p.get('reverserPP', p.get('recentMovePP'))}pp) aber noch BET")
+    return _chk("reverser_demoted", "Reverser-Picks zurückgestuft (nicht BET)", "warn", fails,
+                "Frisches Geld dreht gegen den Pick → Move seit Eröffnung überholt. "
+                "Erwartung: generate_wm_picks stuft auf ABWÄGEN/BEOBACHTEN zurück "
+                "(downgradedReason 'Reverser').")
+
+
+@integrity_check
 def check_profit_sell_real(ctx):
     """NEU 17.06.2026 (Geld-Bug): Eine Profit-Mitnahme muss REAL sein — der
     Verkaufspreis muss über dem Einstieg liegen. Anlass: USA-TUR „BTTS Nein" wurde

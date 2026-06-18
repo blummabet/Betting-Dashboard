@@ -1425,7 +1425,11 @@
     // 17.06.2026: Steam-Picks NICHT als „Edge minimal" framen — bei einem bestätigten Move
     // ist der Rest-Edge bauartbedingt ~0; der Wert steckt im Drop, nicht im Restpreis.
     let modelSentence = '';
-    if (pick.source === 'steam' && pick.steamMovePP) {
+    if (pick.reverserCounter) {
+      modelSentence = `<em>Datengetriebene Gegen-Linie: das frische Pinnacle-Geld dreht auf diese Seite. Sichere Linie statt nacktem Gegen-Sieg — reift nur via Conviction zu BET.</em>`;
+    } else if (pick.source === 'steam' && pick.reverser) {
+      modelSentence = `<em>Pinnacle-Move ${(+pick.steamOpen).toFixed(2)}→${(+pick.steamCur).toFixed(2)} seit Eröffnung — aber das frische Geld dreht gegen den Pick. Move überholt, Pick zurückgestuft.</em>`;
+    } else if (pick.source === 'steam' && pick.steamMovePP) {
       modelSentence = `<em>Pinnacle-Move ${(+pick.steamOpen).toFixed(2)}→${(+pick.steamCur).toFixed(2)} (+${pick.steamMovePP}pp) — der Wert steckt im bestätigten Drop, nicht im Restpreis.</em>`;
     } else if (pick.modelOdds != null && pick.odds != null) {
       const epp = pick.edgePP != null ? pick.edgePP : 0;
@@ -2731,12 +2735,42 @@
                 : d >= 0.5 ? `${Math.round(sm.move_age_days)} Tage seit Eröffnung · teil-gedämpft`
                 : `${Math.round(sm.move_age_days)} Tage seit Eröffnung · älterer Move`);
     }
+    // Frische-Split (18.06.2026): der „Move seit Eröffnung" wird ehrlich in seinen
+    // LETZTEN Bewegungs-Abschnitt aufgeteilt. confirm = frisches Geld läuft weiter für uns,
+    // drift = Move ruht (nur alte Drift), reverse = frisches Geld dreht GEGEN uns.
+    if (pick.recentMovePP != null && pick.freshnessState) {
+      const rmv = +pick.recentMovePP;
+      const legTxt = pick.legHours != null
+        ? (pick.legHours >= 48 ? `~${Math.round(pick.legHours / 24)} Tage`
+           : `~${Math.round(pick.legHours)}h`) : '';
+      const rmvStr = `${rmv > 0 ? '+' : ''}${rmv.toFixed(1)}pp`;
+      if (pick.freshnessState === 'confirm') {
+        pinnMeta += ` · <span style="color:#3fb950;">✅ frisch bestätigt: ${rmvStr} im letzten Abschnitt (${legTxt})</span>`;
+      } else if (pick.freshnessState === 'reverse') {
+        const revWord = pick.reverserFresh === false ? 'Linie steht GEGEN den Move' : 'frisches Geld dreht GEGEN uns';
+        pinnMeta += ` · <span style="color:#f85149;font-weight:600;">⚠️ Reverser: ${rmvStr} — ${revWord}</span>`;
+      } else {
+        pinnMeta += ` · <span style="color:#8b949e;">⏸ Move ruht (frischer Abschnitt nur ${rmvStr})</span>`;
+      }
+    }
     html += _moveBar({
       icon: '🔥', label: 'Pinnacle bewegt', cls: 'cc-pinn',
       o: pick.steamOpen, c: pick.steamCur,
       mvText: `${mv > 0 ? '+' : ''}${mv}pp seit Eröffnung`,
       meta: pinnMeta,
     });
+    // Prominente Reverser-Warnung (frisches Geld läuft gegen unseren Pick)
+    if (pick.reverser) {
+      const fresh = pick.reverserFresh !== false;
+      const headline = fresh ? 'Frisches Geld dreht gegen uns' : 'Linie steht gegen den Move';
+      const sub = fresh
+        ? 'der Move seit Eröffnung ist überholt'
+        : `der Gegen-Move ist älter${pick.reverserLastMoveH != null ? ` (~${Math.round(pick.reverserLastMoveH / 24)} Tage)` : ''}, aber der Pick sitzt auf der falschen Seite`;
+      html += `<div class="cc-reverser-warn" style="margin-top:6px;padding:8px 10px;border-radius:8px;
+        background:rgba(248,81,73,.10);border:1px solid rgba(248,81,73,.35);color:#f85149;font-size:.82rem;">
+        ⚠️ <strong>${headline}</strong> — ${sub}. Pick zurückgestuft.${pick.reverserPP != null ? ` (letzter Abschnitt ${(+pick.reverserPP).toFixed(1)}pp)` : ''}
+      </div>`;
+    }
     // 2) Soft-Quote — die echte Softbook-Bewegung (nur wenn Soft-Daten da)
     if (pick.softOpen != null && pick.softNow != null) {
       const ff = pick.softFollowPP;
@@ -2785,8 +2819,12 @@
     const dqBadge = pick.dataQuality && pick.dataQuality !== 'elo+form'
       ? `<span class="wm-dq-badge">${pick.dataQuality}</span>` : '';
 
+    const counterCls = pick.reverserCounter ? ' wm-pick-row--counter' : '';
+    const counterTag = pick.reverserCounter
+      ? `<span class="wm-counter-tag" title="Frisches Geld dreht auf diese Seite — datengetriebene Gegen-Linie zum zurückgestuften Pick. Reift nur via Conviction zu BET." style="display:inline-block;font-size:.7rem;color:#58a6ff;border:1px solid rgba(88,166,255,.4);border-radius:6px;padding:1px 6px;margin-bottom:3px;">↩️ Reverser-Konter${pick.counterOf ? ` zu ${pick.counterOf}` : ''}</span>` : '';
     return `
-    <div class="wm-pick-row">
+    <div class="wm-pick-row${counterCls}"${pick.reverserCounter ? ' style="border-left:3px solid rgba(88,166,255,.5);padding-left:8px;"' : ''}>
+      ${counterTag ? `<div style="width:100%;">${counterTag}</div>` : ''}
       <span class="wm-verdict" style="color:${vClr};background:${vBg};border-color:${vBorder};">${verdict}</span>
       <span class="wm-pick-icon">${icon}</span>
       <div class="wm-pick-main">
