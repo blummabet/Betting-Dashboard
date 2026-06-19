@@ -28,6 +28,20 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+
+def _kickoff_passed(fx):
+    """True wenn der Anpfiff vorbei ist → Spiel gelaufen/in-play. Dann sind die offenen
+    Positionen Phantom (gewonnene Wetten vor Redeem) → nicht als Smart-Money zählen.
+    Fehlender/unparsebarer kickoff → False (nicht versehentlich alles überspringen)."""
+    ko = fx.get("kickoff")
+    if not ko:
+        return False
+    try:
+        kt = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+        return datetime.now(timezone.utc) >= kt
+    except Exception:
+        return False
+
 BASE = Path(__file__).parent
 PRICES_FILE = BASE / "wm_poly_prices.json"
 OUT_FILE    = BASE / "wm_poly_smartmoney.json"
@@ -36,6 +50,7 @@ HOLDERS_URL = "https://data-api.polymarket.com/holders?market={cond}&limit=200"
 TOP_N           = 10        # für topHolderShare
 BIG_TRADER_USD  = 1000      # Wallet ab $ = „Top-Trader"
 HOLDERS_TIMEOUT = 15
+MIN_WRITE_USD   = 5000      # darunter ($0.00M-Platzhalter/gelaufene Spiele) NICHT schreiben
 
 
 def _http_get(url: str):
@@ -102,10 +117,14 @@ def main():
               "erst Preise, dann Smart-Money.")
     matches = {}
     n_ok = 0
+    n_skip_ko = 0
     for fx in fixtures:
         key = fx.get("key")
         if not key:
             continue
+        if _kickoff_passed(fx):
+            n_skip_ko += 1
+            continue   # gelaufen/in-play → offenes Interesse ist Phantom
         legs = {
             "home": (fx.get("hwCondition"), (fx.get("hwTokens") or [None])[0], fx.get("poly_hw")),
             "draw": (fx.get("drCondition"), (fx.get("drTokens") or [None])[0], fx.get("poly_dr")),
@@ -118,8 +137,8 @@ def main():
                 outcomes[side] = sm
                 total += sm["usd"]
                 top_traders += sm.pop("_big")
-        if not outcomes or total <= 0:
-            continue
+        if not outcomes or total < MIN_WRITE_USD:
+            continue   # $0.00M-Platzhalter → nicht schreiben
         for side, o in outcomes.items():
             o["share"] = round(o["usd"] / total, 3)
         matches[key] = {"totalUsd": round(total, 0), "topTraders": top_traders,
@@ -131,7 +150,8 @@ def main():
     OUT_FILE.write_text(json.dumps(
         {"matches": matches, "updatedAt": datetime.now(timezone.utc).isoformat()},
         ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"\n💾 {n_ok}/{len(fixtures)} Spiele mit Smart-Money → {OUT_FILE.name}")
+    print(f"\n💾 {n_ok}/{len(fixtures)} Spiele mit Smart-Money "
+          f"({n_skip_ko} gelaufen übersprungen) → {OUT_FILE.name}")
 
 
 if __name__ == "__main__":

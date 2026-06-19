@@ -47,7 +47,7 @@ class TestSmartMoney(unittest.TestCase):
 
     def test_thin_market_no_signal(self):
         self.assertIsNone(self.s.evaluate({"market": "Heimsieg", "modelOdds": 1.667},
-                                          _ctx(total=100_000)))   # < min_volume
+                                          _ctx(total=50_000)))   # < min_volume (100k)
 
     def test_retail_only_no_signal(self):
         # hohes Volumen, aber Konzentration unter min_top_share → reines Retail → None
@@ -82,6 +82,36 @@ class TestSmartMoneyGuard(unittest.TestCase):
                                now=datetime(2026, 6, 19, tzinfo=timezone.utc),
                                auto_bets={"bets": []}, history={})
         c = next((x for x in res if x["id"] == "smartmoney_sane"), None)
+        self.assertIsNotNone(c)
+        self.assertFalse(c["ok"])
+
+
+class TestCardOnlyTradeIsolation(unittest.TestCase):
+    """Zwei-Flächen-Invariante: smart_money darf NIE in den Trade-Pfad lecken (Zirkel)."""
+
+    def _run(self, picks):
+        import wm_data_integrity as W
+        from datetime import datetime, timezone
+        res = W.run_checks({"groups": {}, "picks": picks}, {}, {}, {},
+                           now=datetime(2026, 6, 20, tzinfo=timezone.utc),
+                           auto_bets={"bets": []}, history={})
+        return next((x for x in res if x["id"] == "card_only_not_in_trade"), None)
+
+    def _pick(self, trade_adj):
+        # smart_money +1.5 + form_trend −2.0 → combined −0.5; Trade-Feld MUSS −2.0 sein
+        return {"market": "Heimsieg",
+                "signals": [{"name": "smart_money", "score": 1.5},
+                            {"name": "form_trend", "score": -2.0}],
+                "signalAdjustmentPP": -0.5,
+                "signalAdjustmentPP_trade": trade_adj}
+
+    def test_correct_exclusion_passes(self):
+        c = self._run({"C-2-BRA-HTI": [self._pick(-2.0)]})   # smart_money sauber abgezogen
+        self.assertIsNotNone(c)
+        self.assertTrue(c["ok"])
+
+    def test_leak_into_trade_flagged(self):
+        c = self._run({"C-2-BRA-HTI": [self._pick(-0.5)]})    # smart_money NICHT abgezogen
         self.assertIsNotNone(c)
         self.assertFalse(c["ok"])
 

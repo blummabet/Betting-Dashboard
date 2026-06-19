@@ -26,7 +26,8 @@ from sharp_signals.base import Signal, SignalResult
 DEFAULT_THRESHOLDS = {
     "scale":            6.0,    # excess × smartness × scale → pp
     "max_signal_pp":    1.5,    # NIEDRIGER Cap (unbewiesen) — Liga nachjustieren
-    "min_volume_usd":   500_000,  # darunter zu dünn → kein Signal
+    "min_volume_usd":   100_000,  # darunter zu dünn → kein Signal (20.06.: 500k→100k, da wir
+                                  # offenes Interesse der Top-200 messen, nicht kumuliertes Volumen)
     "min_top_share":    0.10,   # darunter reines Retail → kaum smart
     "base_conf":        0.40,
     "max_conf":         0.6,

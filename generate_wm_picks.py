@@ -92,6 +92,9 @@ STEAM_CONFIRM_PP = _cfg("edge", "steam_confirm_pp",      5.0)
 # WM lockerer als Liga (weniger Spiele) — Liga-Profil setzt steam_bet_threshold höher.
 MAX_STEAM_PICKS_PER_CARD = _cfg("conviction_score", "max_steam_picks_per_card", 3)
 STEAM_BET_THRESHOLD      = _cfg("conviction_score", "steam_bet_threshold",      6)
+# Variante A (20.06.2026): Quote der gesteamten Seite über diesem Wert = Longshot → kein Trigger
+# (z.B. Haiti 51→22 gg. Brasilien → keine X2-Nonsens-Karte). Mainline-Steam bleibt unberührt.
+STEAM_MAX_TRIGGER_ODDS   = _cfg("steam", "max_trigger_odds", 6.0)
 
 # Safer-Line-Ableitung Phase 1 (17.06.2026, Lucas): ein riskanter Steam-Pick (Über 3.5,
 # Heimsieg) wird auf die nächst-sicherere Linie als WETTE umgelegt — der Move bleibt die
@@ -2164,7 +2167,8 @@ def generate_steam_picks_for_fixture(fx, snap, today_iso, drift=None):
         days = None
     picks = _steam.build_steam_picks(snap, days_to_ko=days,
                                      max_picks=MAX_STEAM_PICKS_PER_CARD, drift=drift,
-                                     min_odds=SAFE_LINE_MIN_ODDS)
+                                     min_odds=SAFE_LINE_MIN_ODDS,
+                                     max_trigger_odds=STEAM_MAX_TRIGGER_ODDS)
     # Multi-Pick: widersprüchliche Kombis vermeiden (z.B. Unter 3.5 + BTTS Ja). Stärkster
     # Pick zuerst (detect_steam sortiert nach Sweet+Move) — schwächere Widersprüche raus.
     # Nutzt die zentrale Inkompatibilitäts-Logik (pick_helpers = single source of truth).

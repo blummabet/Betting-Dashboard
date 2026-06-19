@@ -20,6 +20,11 @@ durchgepreist. Defaults entsprechend.
 from __future__ import annotations
 
 TRIGGER_PP = 3.0                 # ab hier gilt ein Move als Steam
+# Variante A (20.06.2026, Lucas): Quote der gesteamten Seite über diesem Wert = Longshot →
+# KEIN Trigger. Auf Außenseitern (z.B. Haiti 51→22 gg. Brasilien) ist der de-vig-pp-Move fast
+# nur Favoriten-Festigung + Vig-Umverteilung, kein echtes Sharp-Money. Verhindert Nonsens-Karten
+# wie „X2 @7.10 gegen den Must-Win-Favoriten". Mainline-Steam (BTTS @2.08, Favoriten, O/U) bleibt.
+MAX_TRIGGER_ODDS = 6.0           # ~<17% implied → drüber ist der Move Rauschen
 SWEET = (3.0, 6.0)               # beste Zone; darüber Vorsicht (durchgepreist)
 TARGET_ODDS = (1.45, 1.95)       # Ziel-Quotenregion für den abgeleiteten Pick
 TARGET_MID = 1.65
@@ -57,11 +62,14 @@ def _imp(o):
 
 
 def detect_steam(snap: dict, trigger_pp: float = TRIGGER_PP,
-                 drift: dict | None = None) -> list[dict]:
+                 drift: dict | None = None,
+                 max_trigger_odds: float = MAX_TRIGGER_ODDS) -> list[dict]:
     """Alle Seiten mit spielspezifischem Pinnacle-Drop (Opening → jetzt) ≥ trigger_pp.
     drift = markt-weiter Median-Move je Seite; wird abgezogen, damit nur die Bewegung
     ZÄHLT, die ÜBER den Marktschnitt hinausgeht (echtes spielspezifisches Sharp-Money,
-    nicht WM-weiter Tor-Markt-Drift). move_pp = bereinigt, move_raw_pp = roh (open→jetzt)."""
+    nicht WM-weiter Tor-Markt-Drift). move_pp = bereinigt, move_raw_pp = roh (open→jetzt).
+    max_trigger_odds (Variante A): Seiten mit aktueller Quote über diesem Wert (Longshots)
+    triggern NICHT — dort ist der pp-Move Rauschen, kein Sharp-Money."""
     op = snap.get("odds_open") or {}
     drift = drift or {}
     out = []
@@ -70,6 +78,8 @@ def detect_steam(snap: dict, trigger_pp: float = TRIGGER_PP,
         ci, oi = _imp(cur), _imp(opn)
         if ci is None or oi is None:
             return
+        if max_trigger_odds and cur and cur > max_trigger_odds:
+            return                              # Longshot → kein Trigger (Variante A)
         move_raw = (ci - oi) * 100.0
         move = move_raw - drift.get(key, 0.0)   # markt-weiten Drift entfernen
         if move < trigger_pp:
@@ -216,7 +226,8 @@ def _promote_to_floor(trig, trigs, snap, floor):
 
 def build_steam_picks(snap: dict, *, days_to_ko: float | None = None,
                       trigger_pp: float = TRIGGER_PP, max_picks: int = 3,
-                      drift: dict | None = None, min_odds: float = 0.0) -> list[dict]:
+                      drift: dict | None = None, min_odds: float = 0.0,
+                      max_trigger_odds: float = MAX_TRIGGER_ODDS) -> list[dict]:
     """Bis zu max_picks Steam-Picks je Spiel, dedupliziert nach Kategorie
     (result/totals/btts). Häufiger Fall: Home-Favorit dropt → oft dropt auch das Over
     → beide werden gezeigt. Aber nie 2× dieselbe Kategorie (keine 5 Abwägungen).
@@ -225,7 +236,7 @@ def build_steam_picks(snap: dict, *, days_to_ko: float | None = None,
     auf die nächst-höhere Linie hochgehen, die AUCH getriggert hat (≥ min_odds); gibt's keine,
     Pick weglassen (nichts unter min_odds anzeigen)."""
     out, seen = [], set()
-    all_trigs = detect_steam(snap, trigger_pp, drift=drift)
+    all_trigs = detect_steam(snap, trigger_pp, drift=drift, max_trigger_odds=max_trigger_odds)
     for trig in all_trigs:
         cat = _trigger_category(trig)
         if cat in seen:
