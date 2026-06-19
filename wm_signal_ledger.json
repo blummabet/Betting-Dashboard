@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-19T20:57:39Z",
-    "total_records": 56
+    "updated_at": "2026-06-19T21:12:47Z",
+    "total_records": 58
   },
   "records": [
     {
@@ -784,6 +784,46 @@
       ],
       "resolvedAt": "2026-06-13T04:45:53Z",
       "processVerdict": "LUCKY"
+    },
+    {
+      "key": "D-2-USA-AUS|Beide Teams treffen — Ja",
+      "matchKey": "D-2-USA-AUS",
+      "market": "Beide Teams treffen — Ja",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "public_static_bias",
+          "score": -2.48
+        }
+      ],
+      "resolvedAt": "2026-06-19T21:04:29Z",
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "D-2-USA-AUS|Über 2.5 Tore",
+      "matchKey": "D-2-USA-AUS",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.5
+        },
+        {
+          "name": "form_trend",
+          "score": 1.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 0.98
+        },
+        {
+          "name": "lineup_signal",
+          "score": -3.17
+        }
+      ],
+      "resolvedAt": "2026-06-19T21:04:29Z",
+      "processVerdict": "DESERVED_LOSS"
     },
     {
       "key": "E-1-CIV-ECU|AH Heim −0.5",
