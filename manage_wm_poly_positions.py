@@ -168,7 +168,11 @@ def _http_get(url: str) -> dict | list | None:
         return None
 
 
-CLOB_BOOK_URL = "https://clob.polymarket.com/books?token_id={token_id}"
+# 19.06.2026 (Root-Cause „seit 17.06 nichts getradet"): Endpoint war /books (Mehrzahl) →
+# das erwartet einen POST-Body, GET ?token_id= gab HTTP 400 Bad Request → fetch_token_book
+# scheiterte bei JEDEM Aufruf → REQUIRE_BOOK skippte alles + jede Bewertung fiel auf cache_mid.
+# Korrekter Endpoint = /book (Einzahl, GET ?token_id=) für ein einzelnes Token-Orderbuch.
+CLOB_BOOK_URL = "https://clob.polymarket.com/book?token_id={token_id}"
 
 
 def fetch_token_book(token_id: str) -> dict | None:

@@ -38,6 +38,12 @@ class TestFetchTokenBook(unittest.TestCase):
         with mock.patch.object(M, "_http_get", return_value=data):
             return M.fetch_token_book("TOK")
 
+    def test_clob_endpoint_is_singular_book(self):
+        # 19.06.2026 Root-Cause: /books (Mehrzahl) gab HTTP 400 → jeder Buch-Fetch scheiterte
+        # → kein Trade seit 17.06 + cache_mid-Phantom. Korrekt = /book (Einzahl).
+        self.assertIn("/book?token_id=", M.CLOB_BOOK_URL)
+        self.assertNotIn("/books", M.CLOB_BOOK_URL)
+
     def test_bids_ascending_asks_descending(self):
         # Poly liefert manchmal bids aufsteigend, asks absteigend → [0] wäre falsch
         b = self._book(bids=[0.38, 0.39, 0.41], asks=[0.46, 0.44, 0.43])
