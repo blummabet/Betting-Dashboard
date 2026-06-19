@@ -10,7 +10,7 @@
     "updatedAt": null,
     "oddsUpdatedAt": "2026-06-19T21:01:55.835273+00:00",
     "formUpdatedAt": "2026-06-19T21:03:44.883954+00:00",
-    "picksUpdatedAt": "2026-06-19T21:04:29.722035+00:00",
+    "picksUpdatedAt": "2026-06-19T21:36:13.848165+00:00",
     "resultsUpdatedAt": "2026-06-19T21:04:28.639147+00:00",
     "cornersUpdatedAt": "2026-06-19T21:03:44.993030+00:00",
     "xgUpdatedAt": "2026-06-19T21:03:44.993042+00:00"
@@ -3888,11 +3888,11 @@
         "safeThesisMarket": "Auswärtssieg",
         "safeThesisOdds": 3.33,
         "safeDerived": true,
-        "recentMovePP": 1.6,
+        "recentMovePP": 1.4,
         "freshnessState": "drift",
-        "legHours": 8.8,
-        "legSnaps": 5,
-        "lastMoveH": 2.3,
+        "legHours": 13.5,
+        "legSnaps": 6,
+        "lastMoveH": 7.0,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "signals": [
@@ -3901,8 +3901,8 @@
             "score": -3.4,
             "confidence": 0.75,
             "evidence": "✈️ Auswärts 1488km/5d (significant) · Auswärts Höhe +2200m",
-            "weight": 1.057,
-            "weighted_score": -2.7,
+            "weight": 1.12,
+            "weighted_score": -2.86,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.87,
@@ -4004,14 +4004,14 @@
             "name": "freshness_leg",
             "score": 0.0,
             "confidence": 0.5,
-            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +1.6pp) — kein frisches Geld",
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +1.4pp) — kein frisches Geld",
             "weight": 1.0,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
-              "recentMovePP": 1.6,
-              "legSnaps": 5,
-              "legHours": 8.8,
+              "recentMovePP": 1.4,
+              "legSnaps": 6,
+              "legHours": 13.5,
               "flipReady": false
             }
           },
@@ -4019,21 +4019,21 @@
             "name": "smart_money",
             "score": -1.5,
             "confidence": 0.41,
-            "evidence": "💰 Smart Money: 28% auf Auswärts (Top-Wallets 89%) vs Pinnacle-Fair 58% → weniger als der Markt rechtfertigt",
+            "evidence": "💰 Smart Money: 27% auf Auswärts (Top-Wallets 89%) vs Pinnacle-Fair 58% → weniger als der Markt rechtfertigt",
             "weight": 1.0,
             "weighted_score": -0.61,
             "metadata": {
               "outcome": "away",
-              "share": 0.283,
-              "topHolderShare": 0.893,
+              "share": 0.273,
+              "topHolderShare": 0.89,
               "fairShare": 0.575,
-              "excessPP": -29.2,
-              "totalUsd": 121086.0,
-              "topTraders": 16
+              "excessPP": -30.2,
+              "totalUsd": 125891.0,
+              "topTraders": 17
             }
           }
         ],
-        "signalAdjustmentPP": -0.18,
+        "signalAdjustmentPP": -0.23,
         "signalCountPos": 2,
         "signalCountNeg": 3,
         "signalAdjustmentPP_trade": 1.3,
@@ -4056,7 +4056,7 @@
           "pinn_move_pp": 6.37,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 606.1,
+          "hours_since_open": 606.7,
           "open_pinn_odds": 4.02,
           "current_pinn_odds": 3.2,
           "move_age_decay": 0.5,
@@ -4067,26 +4067,26 @@
           "move_pp": 6.37
         },
         "smartMoney": {
-          "totalUsd": 121086.0,
-          "topTraders": 16,
+          "totalUsd": 125891.0,
+          "topTraders": 17,
           "outcomes": {
             "home": {
-              "usd": 70023.0,
-              "topHolderShare": 0.916,
+              "usd": 75385.0,
+              "topHolderShare": 0.901,
               "holders": 200,
-              "share": 0.578
+              "share": 0.599
             },
             "draw": {
-              "usd": 16775.0,
-              "topHolderShare": 0.871,
-              "holders": 131,
-              "share": 0.139
+              "usd": 16113.0,
+              "topHolderShare": 0.864,
+              "holders": 136,
+              "share": 0.128
             },
             "away": {
-              "usd": 34288.0,
-              "topHolderShare": 0.893,
-              "holders": 143,
-              "share": 0.283
+              "usd": 34393.0,
+              "topHolderShare": 0.89,
+              "holders": 145,
+              "share": 0.273
             }
           }
         }
@@ -4137,8 +4137,8 @@
             "score": 1.4,
             "confidence": 0.6,
             "evidence": "✈️ Auswärts 636km/5d (moderate) · Heim 639km/5d (moderate) · Heim Höhe +1860m",
-            "weight": 1.057,
-            "weighted_score": 0.89,
+            "weight": 1.12,
+            "weighted_score": 0.94,
             "metadata": {
               "factor_home": 0.92,
               "factor_away": 0.95,
@@ -4166,8 +4166,8 @@
             "score": 0.8,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.2:1.0 vs Auswärts 1.5:1.0",
-            "weight": 1.335,
-            "weighted_score": 0.91,
+            "weight": 1.306,
+            "weighted_score": 0.89,
             "metadata": {
               "home_scored": 1.2,
               "home_conceded": 1.0,
@@ -4255,7 +4255,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.14,
+        "signalAdjustmentPP": -0.13,
         "signalCountPos": 2,
         "signalCountNeg": 2,
         "signalAdjustmentPP_trade": -0.1,
@@ -4278,7 +4278,7 @@
           "pinn_move_pp": 15.55,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 606.1,
+          "hours_since_open": 606.7,
           "open_pinn_odds": 2.13,
           "current_pinn_odds": 1.6,
           "move_age_decay": 0.5,
@@ -4289,14 +4289,14 @@
           "move_pp": 15.55
         },
         "smartMoney": {
-          "totalUsd": 46055.0,
+          "totalUsd": 46114.0,
           "topTraders": 7,
           "outcomes": {
             "home": {
-              "usd": 3253.0,
-              "topHolderShare": 0.825,
-              "holders": 115,
-              "share": 0.071
+              "usd": 3251.0,
+              "topHolderShare": 0.826,
+              "holders": 114,
+              "share": 0.07
             },
             "draw": {
               "usd": 5789.0,
@@ -4305,8 +4305,8 @@
               "share": 0.126
             },
             "away": {
-              "usd": 37013.0,
-              "topHolderShare": 0.725,
+              "usd": 37074.0,
+              "topHolderShare": 0.723,
               "holders": 200,
               "share": 0.804
             }
@@ -5662,8 +5662,8 @@
             "score": 2.0,
             "confidence": 0.7,
             "evidence": "✈️ Auswärts 1907km/5d (significant)",
-            "weight": 1.057,
-            "weighted_score": 1.48,
+            "weight": 1.12,
+            "weighted_score": 1.57,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.9,
@@ -5684,8 +5684,8 @@
             "score": -2.03,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.5:0.4 vs Auswärts 2.5:0.9",
-            "weight": 1.335,
-            "weighted_score": -2.3,
+            "weight": 1.306,
+            "weighted_score": -2.25,
             "metadata": {
               "home_scored": 1.47,
               "home_conceded": 0.4,
@@ -5775,14 +5775,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.05,
+        "signalAdjustmentPP": -0.01,
         "signalCountPos": 2,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": -0.1,
+        "signalAdjustmentPP_trade": -0.0,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 1,
         "effectiveEdgePP": -4.0,
-        "effectiveEdgePP_trade": -4.1,
+        "effectiveEdgePP_trade": -4.0,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -5797,24 +5797,24 @@
           "move_pp": 4.63
         },
         "smartMoney": {
-          "totalUsd": 25507.0,
+          "totalUsd": 25596.0,
           "topTraders": 6,
           "outcomes": {
             "home": {
-              "usd": 6768.0,
-              "topHolderShare": 0.677,
-              "holders": 154,
+              "usd": 6793.0,
+              "topHolderShare": 0.675,
+              "holders": 155,
               "share": 0.265
             },
             "draw": {
-              "usd": 6804.0,
-              "topHolderShare": 0.807,
-              "holders": 130,
+              "usd": 6832.0,
+              "topHolderShare": 0.821,
+              "holders": 134,
               "share": 0.267
             },
             "away": {
-              "usd": 11935.0,
-              "topHolderShare": 0.721,
+              "usd": 11971.0,
+              "topHolderShare": 0.719,
               "holders": 200,
               "share": 0.468
             }
@@ -5867,8 +5867,8 @@
             "score": -1.5,
             "confidence": 0.68,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Heim 1140km/5d · Auswärts 1481km/5d → Über-Bias",
-            "weight": 1.057,
-            "weighted_score": -1.08,
+            "weight": 1.12,
+            "weighted_score": -1.14,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 0.9,
@@ -5939,7 +5939,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.09,
+        "signalAdjustmentPP": -0.12,
         "signalCountPos": 1,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": -0.1,
@@ -6001,8 +6001,8 @@
             "score": -1.48,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.73 vs Ausw-Defense 1.73, Ausw 0.60 vs Heim-Defense 1.13 → Beide treffen Ja · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": -0.95,
+            "weight": 1.2,
+            "weighted_score": -0.92,
             "metadata": {
               "h_score_strength": 1.0,
               "a_score_strength": 0.53,
@@ -6026,7 +6026,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.83,
+        "signalAdjustmentPP": -0.82,
         "signalCountPos": 0,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": -0.8,
@@ -6087,16 +6087,16 @@
             "name": "lead_lag_bias",
             "score": 6.0,
             "confidence": 0.7,
-            "evidence": "Pinnacle Heim +6.4pp · public folgt(1) → bestätigt",
+            "evidence": "Pinnacle Heim +5.2pp · public folgt(1) → bestätigt",
             "weight": 0.994,
             "weighted_score": 4.17,
             "metadata": {
               "stage": "confirmed",
-              "pinn_move_pp": 6.38,
+              "pinn_move_pp": 5.16,
               "soft_moves": [
                 {
                   "bk": "public",
-                  "move_pp": 8.36
+                  "move_pp": 6.93
                 }
               ],
               "outcome": "hw"
@@ -6107,8 +6107,8 @@
             "score": 1.0,
             "confidence": 0.62,
             "evidence": "✈️ Auswärts 1481km/5d (significant) · Heim 1140km/5d (moderate)",
-            "weight": 1.057,
-            "weighted_score": 0.26,
+            "weight": 1.12,
+            "weighted_score": 0.28,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 0.9,
@@ -6137,8 +6137,8 @@
             "score": 4.9,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.7:1.1 vs Auswärts 0.6:1.7",
-            "weight": 1.335,
-            "weighted_score": 5.56,
+            "weight": 1.306,
+            "weighted_score": 5.44,
             "metadata": {
               "home_scored": 1.73,
               "home_conceded": 1.13,
@@ -6154,8 +6154,8 @@
             "score": 2.08,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.73-1.13 vs Auswärts 0.60-1.73 (Δ +1.73) · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.53,
+            "weight": 1.2,
+            "weighted_score": 0.52,
             "metadata": {
               "home_xg_for": 1.73,
               "home_xg_against": 1.13,
@@ -6199,7 +6199,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 3.25,
+        "signalAdjustmentPP": 3.24,
         "signalCountPos": 5,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": 3.2,
@@ -6222,7 +6222,7 @@
           "pinn_move_pp": 11.9,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 606.1,
+          "hours_since_open": 606.7,
           "open_pinn_odds": 1.68,
           "current_pinn_odds": 1.4,
           "move_age_decay": 0.5,
@@ -7124,8 +7124,8 @@
             "score": -1.5,
             "confidence": 0.5,
             "evidence": "Konsens (13 Books) unter-bettet BTTS Ja um 2.6pp vs Pinnacle → kein Public-Edge",
-            "weight": 1.1,
-            "weighted_score": -0.83,
+            "weight": 1.167,
+            "weighted_score": -0.88,
             "metadata": {
               "market_key": "bttsY",
               "diff_pp": -2.59,
@@ -7153,26 +7153,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 931343.0,
-          "topTraders": 92,
+          "totalUsd": 978020.0,
+          "topTraders": 101,
           "outcomes": {
             "home": {
-              "usd": 843454.0,
-              "topHolderShare": 0.597,
+              "usd": 877739.0,
+              "topHolderShare": 0.576,
               "holders": 200,
-              "share": 0.906
+              "share": 0.897
             },
             "draw": {
-              "usd": 40333.0,
-              "topHolderShare": 0.67,
+              "usd": 46076.0,
+              "topHolderShare": 0.688,
               "holders": 200,
-              "share": 0.043
+              "share": 0.047
             },
             "away": {
-              "usd": 47556.0,
-              "topHolderShare": 0.8,
+              "usd": 54205.0,
+              "topHolderShare": 0.807,
               "holders": 200,
-              "share": 0.051
+              "share": 0.055
             }
           }
         }
@@ -7217,8 +7217,8 @@
             "score": 1.33,
             "confidence": 0.75,
             "evidence": "📈 BTTS-Schnitt Form 37% (Heim 1.9:1.1, Auswärts 1.9:0.3) → Beide treffen Nein",
-            "weight": 1.335,
-            "weighted_score": 0.53,
+            "weight": 1.306,
+            "weighted_score": 0.52,
             "metadata": {
               "avg_btts_rate": 0.367,
               "pick_side": "BTTS-Nein"
@@ -7230,8 +7230,8 @@
             "score": -2.36,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.87 vs Ausw-Defense 0.33, Ausw 1.87 vs Heim-Defense 1.07 → Beide treffen Nein · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": -1.51,
+            "weight": 1.2,
+            "weighted_score": -1.47,
             "metadata": {
               "h_score_strength": 3.73,
               "a_score_strength": 1.75,
@@ -7258,26 +7258,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 1074216.0,
-          "topTraders": 143,
+          "totalUsd": 1908966.0,
+          "topTraders": 184,
           "outcomes": {
             "home": {
-              "usd": 68760.0,
-              "topHolderShare": 0.679,
+              "usd": 101778.0,
+              "topHolderShare": 0.745,
               "holders": 200,
-              "share": 0.064
+              "share": 0.053
             },
             "draw": {
-              "usd": 69685.0,
-              "topHolderShare": 0.774,
+              "usd": 85105.0,
+              "topHolderShare": 0.748,
               "holders": 200,
-              "share": 0.065
+              "share": 0.045
             },
             "away": {
-              "usd": 935771.0,
-              "topHolderShare": 0.525,
+              "usd": 1722083.0,
+              "topHolderShare": 0.657,
               "holders": 200,
-              "share": 0.871
+              "share": 0.902
             }
           }
         }
@@ -7317,18 +7317,18 @@
         "signals": [
           {
             "name": "lead_lag_bias",
-            "score": 4.44,
+            "score": 3.04,
             "confidence": 0.7,
-            "evidence": "Pinnacle Auswärts +3.3pp · public folgt(1) → bestätigt",
+            "evidence": "Pinnacle Auswärts +2.3pp · public folgt(1) → bestätigt",
             "weight": 0.994,
-            "weighted_score": 3.09,
+            "weighted_score": 2.12,
             "metadata": {
               "stage": "confirmed",
-              "pinn_move_pp": 3.33,
+              "pinn_move_pp": 2.28,
               "soft_moves": [
                 {
                   "bk": "public",
-                  "move_pp": 3.9
+                  "move_pp": 2.22
                 }
               ],
               "outcome": "aw"
@@ -7339,8 +7339,8 @@
             "score": 1.0,
             "confidence": 0.63,
             "evidence": "✈️ Heim 1128km/5d (moderate)",
-            "weight": 1.057,
-            "weighted_score": 0.67,
+            "weight": 1.12,
+            "weighted_score": 0.71,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 1.0,
@@ -7368,8 +7368,8 @@
             "score": 1.83,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.9:1.1 vs Auswärts 1.9:0.3",
-            "weight": 1.335,
-            "weighted_score": 2.08,
+            "weight": 1.306,
+            "weighted_score": 2.03,
             "metadata": {
               "home_scored": 1.87,
               "home_conceded": 1.07,
@@ -7385,7 +7385,7 @@
             "score": 0.88,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.87-1.07 vs Auswärts 1.87-0.33 (Δ -0.73) · dünne xG-Abdeckung",
-            "weight": 1.232,
+            "weight": 1.2,
             "weighted_score": 0.22,
             "metadata": {
               "home_xg_for": 1.87,
@@ -7399,79 +7399,103 @@
             "correlation_discount_applied": 0.4
           },
           {
+            "name": "lineup_signal",
+            "score": 0.42,
+            "confidence": 0.6,
+            "evidence": "🚨 Heim K. McLean (MID) Bank",
+            "weight": 0.98,
+            "weighted_score": 0.25,
+            "metadata": {
+              "side": "away",
+              "affected": [
+                {
+                  "name": "K. McLean",
+                  "role": "MID",
+                  "status": "benched",
+                  "importance": 0.463,
+                  "form_factor": 1.063,
+                  "team": "Heim",
+                  "team_id": "SCO"
+                }
+              ],
+              "mode": "full",
+              "fetchedAt": "2026-06-19T21:36:13.598785+00:00"
+            }
+          },
+          {
             "name": "smart_money",
-            "score": 0.82,
-            "confidence": 0.45,
-            "evidence": "💰 Smart Money: 87% auf Auswärts (Top-Wallets 52%) vs Pinnacle-Fair 61% → mehr als der Markt rechtfertigt",
+            "score": 1.15,
+            "confidence": 0.5,
+            "evidence": "💰 Smart Money: 90% auf Auswärts (Top-Wallets 66%) vs Pinnacle-Fair 61% → mehr als der Markt rechtfertigt",
             "weight": 1.0,
-            "weighted_score": 0.37,
+            "weighted_score": 0.57,
             "metadata": {
               "outcome": "away",
-              "share": 0.871,
-              "topHolderShare": 0.525,
+              "share": 0.902,
+              "topHolderShare": 0.657,
               "fairShare": 0.609,
-              "excessPP": 26.2,
-              "totalUsd": 1074216.0,
-              "topTraders": 143
+              "excessPP": 29.3,
+              "totalUsd": 1908966.0,
+              "topTraders": 184
             }
           }
         ],
-        "signalAdjustmentPP": 2.01,
-        "signalCountPos": 5,
+        "signalAdjustmentPP": 1.53,
+        "signalCountPos": 6,
         "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": 1.2,
-        "signalCountPos_trade": 4,
+        "signalAdjustmentPP_trade": 0.4,
+        "signalCountPos_trade": 5,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -1.0,
-        "effectiveEdgePP_trade": -1.8,
-        "convictionScore": 7,
-        "convictionVerdict": "abwaegen",
-        "convictionLabel": "⭐ Gute Wette",
+        "effectiveEdgePP": -1.5,
+        "effectiveEdgePP_trade": -2.6,
+        "convictionScore": 8,
+        "convictionVerdict": "top",
+        "convictionLabel": "🎯 Top-Wette",
         "convictionFamilies": {
           "sharp_money": 3,
           "model_stack": 3,
-          "context": 1,
+          "context": 2,
           "market": 0
         },
         "sharpMoveActive": true,
         "sharpMoveDetails": {
           "triggered": true,
-          "pinn_move_pp": 14.34,
+          "pinn_move_pp": 12.49,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 731.8,
+          "hours_since_open": 732.3,
           "open_pinn_odds": 2.11,
-          "current_pinn_odds": 1.62,
+          "current_pinn_odds": 1.67,
           "move_age_decay": 0.0,
           "move_age_days": 30.5
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 14.34
+          "move_pp": 12.49
         },
-        "pickTriggerReason": "Conviction 7/10 (≥6) — frischer Move + Signale bestätigen den Pick",
+        "pickTriggerReason": "Conviction 8/10 (≥6) — frischer Move + Signale bestätigen den Pick",
         "firstBetAt": "2026-06-18T14:52:38.406099+00:00",
         "smartMoney": {
-          "totalUsd": 1074216.0,
-          "topTraders": 143,
+          "totalUsd": 1908966.0,
+          "topTraders": 184,
           "outcomes": {
             "home": {
-              "usd": 68760.0,
-              "topHolderShare": 0.679,
+              "usd": 101778.0,
+              "topHolderShare": 0.745,
               "holders": 200,
-              "share": 0.064
+              "share": 0.053
             },
             "draw": {
-              "usd": 69685.0,
-              "topHolderShare": 0.774,
+              "usd": 85105.0,
+              "topHolderShare": 0.748,
               "holders": 200,
-              "share": 0.065
+              "share": 0.045
             },
             "away": {
-              "usd": 935771.0,
-              "topHolderShare": 0.525,
+              "usd": 1722083.0,
+              "topHolderShare": 0.657,
               "holders": 200,
-              "share": 0.871
+              "share": 0.902
             }
           }
         }
@@ -7525,8 +7549,8 @@
             "score": 1.0,
             "confidence": 0.62,
             "evidence": "✈️ Auswärts 1032km/4d (moderate) · Heim 1733km/4d (significant)",
-            "weight": 1.057,
-            "weighted_score": 0.66,
+            "weight": 1.12,
+            "weighted_score": 0.69,
             "metadata": {
               "factor_home": 0.9,
               "factor_away": 0.95,
@@ -7647,7 +7671,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.18,
+        "signalAdjustmentPP": -0.16,
         "signalCountPos": 1,
         "signalCountNeg": 2,
         "signalAdjustmentPP_trade": -0.2,
@@ -7669,14 +7693,14 @@
           "move_pp": 2.05
         },
         "smartMoney": {
-          "totalUsd": 31941.0,
+          "totalUsd": 32052.0,
           "topTraders": 5,
           "outcomes": {
             "home": {
-              "usd": 23318.0,
-              "topHolderShare": 0.841,
+              "usd": 23429.0,
+              "topHolderShare": 0.838,
               "holders": 200,
-              "share": 0.73
+              "share": 0.731
             },
             "draw": {
               "usd": 2952.0,
@@ -7688,7 +7712,7 @@
               "usd": 5671.0,
               "topHolderShare": 0.866,
               "holders": 136,
-              "share": 0.178
+              "share": 0.177
             }
           }
         }
@@ -7737,8 +7761,8 @@
             "score": 1.5,
             "confidence": 0.68,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Heim 1733km/4d · Auswärts 1032km/4d → Unter-Bias",
-            "weight": 1.057,
-            "weighted_score": 1.08,
+            "weight": 1.12,
+            "weighted_score": 1.14,
             "metadata": {
               "factor_home": 0.9,
               "factor_away": 0.95,
@@ -7751,8 +7775,8 @@
             "score": -2.13,
             "confidence": 0.8,
             "evidence": "📈 Form-Tor-Schnitt 3.0/Spiel vs Linie 2.5 → warnt gegen Unter (+0.5 ggü. Linie)",
-            "weight": 1.335,
-            "weighted_score": -2.27,
+            "weight": 1.306,
+            "weighted_score": -2.23,
             "metadata": {
               "expected_total": 3.03,
               "ou_line": 2.5,
@@ -7765,8 +7789,8 @@
             "score": -1.31,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy)-Tore: erwartet 3.03/Spiel vs Linie 2.5 → Unter +0.53 · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": -0.34,
+            "weight": 1.2,
+            "weighted_score": -0.33,
             "metadata": {
               "expected_total": 3.03,
               "ou_line": 2.5,
@@ -7812,14 +7836,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.48,
+        "signalAdjustmentPP": -0.44,
         "signalCountPos": 2,
         "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": -0.5,
+        "signalAdjustmentPP_trade": -0.4,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -4.5,
-        "effectiveEdgePP_trade": -4.5,
+        "effectiveEdgePP": -4.4,
+        "effectiveEdgePP_trade": -4.4,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -7830,14 +7854,14 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 31941.0,
+          "totalUsd": 32052.0,
           "topTraders": 5,
           "outcomes": {
             "home": {
-              "usd": 23318.0,
-              "topHolderShare": 0.841,
+              "usd": 23429.0,
+              "topHolderShare": 0.838,
               "holders": 200,
-              "share": 0.73
+              "share": 0.731
             },
             "draw": {
               "usd": 2952.0,
@@ -7849,7 +7873,7 @@
               "usd": 5671.0,
               "topHolderShare": 0.866,
               "holders": 136,
-              "share": 0.178
+              "share": 0.177
             }
           }
         }
@@ -7903,8 +7927,8 @@
             "score": -1.0,
             "confidence": 0.6,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Heim 1161km/4d · Auswärts 1085km/4d → Über-Bias",
-            "weight": 1.057,
-            "weighted_score": -0.63,
+            "weight": 1.12,
+            "weighted_score": -0.67,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 0.95,
@@ -7928,14 +7952,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.49,
+        "signalAdjustmentPP": 0.45,
         "signalCountPos": 1,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": -1.1,
+        "signalAdjustmentPP_trade": -1.2,
         "signalCountPos_trade": 0,
         "signalCountNeg_trade": 1,
         "effectiveEdgePP": -4.5,
-        "effectiveEdgePP_trade": -6.1,
+        "effectiveEdgePP_trade": -6.2,
         "convictionScore": 2,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -7946,26 +7970,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 22271.0,
-          "topTraders": 4,
+          "totalUsd": 21452.0,
+          "topTraders": 3,
           "outcomes": {
             "home": {
-              "usd": 17962.0,
-              "topHolderShare": 0.657,
+              "usd": 17142.0,
+              "topHolderShare": 0.651,
               "holders": 200,
-              "share": 0.807
+              "share": 0.799
             },
             "draw": {
-              "usd": 1930.0,
+              "usd": 1931.0,
               "topHolderShare": 0.783,
-              "holders": 81,
-              "share": 0.087
+              "holders": 82,
+              "share": 0.09
             },
             "away": {
               "usd": 2379.0,
               "topHolderShare": 0.849,
-              "holders": 113,
-              "share": 0.107
+              "holders": 114,
+              "share": 0.111
             }
           }
         }
@@ -8014,8 +8038,8 @@
             "score": 4.5,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.9:0.3 vs Auswärts 1.2:1.3",
-            "weight": 1.335,
-            "weighted_score": 5.11,
+            "weight": 1.306,
+            "weighted_score": 5.0,
             "metadata": {
               "home_scored": 1.87,
               "home_conceded": 0.33,
@@ -8031,8 +8055,8 @@
             "score": 2.0,
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.87-0.33 vs Auswärts 1.20-1.33 (Δ +1.67)",
-            "weight": 1.232,
-            "weighted_score": 0.64,
+            "weight": 1.2,
+            "weighted_score": 0.62,
             "metadata": {
               "home_xg_for": 1.87,
               "home_xg_against": 0.33,
@@ -8060,7 +8084,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 3.05,
+        "signalAdjustmentPP": 3.03,
         "signalCountPos": 3,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": 1.5,
@@ -8083,7 +8107,7 @@
           "pinn_move_pp": 5.37,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 606.1,
+          "hours_since_open": 606.7,
           "open_pinn_odds": 1.34,
           "current_pinn_odds": 1.25,
           "move_age_decay": 0.5,
@@ -8094,26 +8118,26 @@
           "move_pp": 5.37
         },
         "smartMoney": {
-          "totalUsd": 22271.0,
-          "topTraders": 4,
+          "totalUsd": 21452.0,
+          "topTraders": 3,
           "outcomes": {
             "home": {
-              "usd": 17962.0,
-              "topHolderShare": 0.657,
+              "usd": 17142.0,
+              "topHolderShare": 0.651,
               "holders": 200,
-              "share": 0.807
+              "share": 0.799
             },
             "draw": {
-              "usd": 1930.0,
+              "usd": 1931.0,
               "topHolderShare": 0.783,
-              "holders": 81,
-              "share": 0.087
+              "holders": 82,
+              "share": 0.09
             },
             "away": {
               "usd": 2379.0,
               "topHolderShare": 0.849,
-              "holders": 113,
-              "share": 0.107
+              "holders": 114,
+              "share": 0.111
             }
           }
         }
@@ -8998,26 +9022,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 351120.0,
-          "topTraders": 52,
+          "totalUsd": 441685.0,
+          "topTraders": 56,
           "outcomes": {
             "home": {
-              "usd": 304789.0,
-              "topHolderShare": 0.58,
+              "usd": 386754.0,
+              "topHolderShare": 0.517,
               "holders": 200,
-              "share": 0.868
+              "share": 0.876
             },
             "draw": {
-              "usd": 25204.0,
-              "topHolderShare": 0.406,
+              "usd": 25523.0,
+              "topHolderShare": 0.398,
               "holders": 200,
-              "share": 0.072
+              "share": 0.058
             },
             "away": {
-              "usd": 21127.0,
-              "topHolderShare": 0.5,
+              "usd": 29408.0,
+              "topHolderShare": 0.623,
               "holders": 200,
-              "share": 0.06
+              "share": 0.067
             }
           }
         }
@@ -9063,8 +9087,8 @@
             "score": -1.0,
             "confidence": 0.6,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Heim 1019km/4d → Über-Bias",
-            "weight": 1.057,
-            "weighted_score": -0.63,
+            "weight": 1.12,
+            "weighted_score": -0.67,
             "metadata": {
               "factor_home": 0.9,
               "factor_away": 1.0,
@@ -9077,8 +9101,8 @@
             "score": 1.87,
             "confidence": 0.8,
             "evidence": "📈 Form-Tor-Schnitt 3.0/Spiel vs Linie 2.5 → stützt Über (+0.5 ggü. Linie)",
-            "weight": 1.335,
-            "weighted_score": 2.0,
+            "weight": 1.306,
+            "weighted_score": 1.95,
             "metadata": {
               "expected_total": 2.97,
               "ou_line": 2.5,
@@ -9091,8 +9115,8 @@
             "score": 1.14,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy)-Tore: erwartet 2.97/Spiel vs Linie 2.5 → Über +0.47 · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.29,
+            "weight": 1.2,
+            "weighted_score": 0.28,
             "metadata": {
               "expected_total": 2.97,
               "ou_line": 2.5,
@@ -9103,7 +9127,7 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 0.85,
+        "signalAdjustmentPP": 0.79,
         "signalCountPos": 2,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": 0.8,
@@ -9121,26 +9145,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 351120.0,
-          "topTraders": 52,
+          "totalUsd": 441685.0,
+          "topTraders": 56,
           "outcomes": {
             "home": {
-              "usd": 304789.0,
-              "topHolderShare": 0.58,
+              "usd": 386754.0,
+              "topHolderShare": 0.517,
               "holders": 200,
-              "share": 0.868
+              "share": 0.876
             },
             "draw": {
-              "usd": 25204.0,
-              "topHolderShare": 0.406,
+              "usd": 25523.0,
+              "topHolderShare": 0.398,
               "holders": 200,
-              "share": 0.072
+              "share": 0.058
             },
             "away": {
-              "usd": 21127.0,
-              "topHolderShare": 0.5,
+              "usd": 29408.0,
+              "topHolderShare": 0.623,
               "holders": 200,
-              "share": 0.06
+              "share": 0.067
             }
           }
         }
@@ -9183,8 +9207,8 @@
             "score": -2.0,
             "confidence": 0.7,
             "evidence": "✈️ Heim 1019km/4d (significant)",
-            "weight": 1.057,
-            "weighted_score": -1.48,
+            "weight": 1.12,
+            "weighted_score": -1.57,
             "metadata": {
               "factor_home": 0.9,
               "factor_away": 1.0,
@@ -9205,8 +9229,8 @@
             "score": 2.6,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.2:1.2 vs Auswärts 1.3:1.2",
-            "weight": 1.335,
-            "weighted_score": 2.95,
+            "weight": 1.306,
+            "weighted_score": 2.89,
             "metadata": {
               "home_scored": 2.2,
               "home_conceded": 1.2,
@@ -9222,8 +9246,8 @@
             "score": 1.04,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.20-1.20 vs Auswärts 1.33-1.20 (Δ +0.87) · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.27,
+            "weight": 1.2,
+            "weighted_score": 0.26,
             "metadata": {
               "home_xg_for": 2.2,
               "home_xg_against": 1.2,
@@ -9237,29 +9261,29 @@
           },
           {
             "name": "smart_money",
-            "score": 1.33,
+            "score": 1.21,
             "confidence": 0.42,
-            "evidence": "💰 Smart Money: 87% auf Heim (Top-Wallets 58%) vs Pinnacle-Fair 49% → mehr als der Markt rechtfertigt",
+            "evidence": "💰 Smart Money: 88% auf Heim (Top-Wallets 52%) vs Pinnacle-Fair 49% → mehr als der Markt rechtfertigt",
             "weight": 1.0,
-            "weighted_score": 0.56,
+            "weighted_score": 0.51,
             "metadata": {
               "outcome": "home",
-              "share": 0.868,
-              "topHolderShare": 0.58,
+              "share": 0.876,
+              "topHolderShare": 0.517,
               "fairShare": 0.485,
-              "excessPP": 38.3,
-              "totalUsd": 351120.0,
-              "topTraders": 52
+              "excessPP": 39.1,
+              "totalUsd": 441685.0,
+              "topTraders": 56
             }
           }
         ],
-        "signalAdjustmentPP": 0.9,
+        "signalAdjustmentPP": 0.82,
         "signalCountPos": 3,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": -0.4,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -3.1,
+        "effectiveEdgePP": -3.2,
         "effectiveEdgePP_trade": -4.4,
         "convictionScore": 5,
         "convictionVerdict": "watch",
@@ -9276,7 +9300,7 @@
           "pinn_move_pp": 5.16,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 731.8,
+          "hours_since_open": 732.3,
           "open_pinn_odds": 2.23,
           "current_pinn_odds": 2.0,
           "move_age_decay": 0.0,
@@ -9287,26 +9311,26 @@
           "move_pp": 5.16
         },
         "smartMoney": {
-          "totalUsd": 351120.0,
-          "topTraders": 52,
+          "totalUsd": 441685.0,
+          "topTraders": 56,
           "outcomes": {
             "home": {
-              "usd": 304789.0,
-              "topHolderShare": 0.58,
+              "usd": 386754.0,
+              "topHolderShare": 0.517,
               "holders": 200,
-              "share": 0.868
+              "share": 0.876
             },
             "draw": {
-              "usd": 25204.0,
-              "topHolderShare": 0.406,
+              "usd": 25523.0,
+              "topHolderShare": 0.398,
               "holders": 200,
-              "share": 0.072
+              "share": 0.058
             },
             "away": {
-              "usd": 21127.0,
-              "topHolderShare": 0.5,
+              "usd": 29408.0,
+              "topHolderShare": 0.623,
               "holders": 200,
-              "share": 0.06
+              "share": 0.067
             }
           }
         }
@@ -9347,9 +9371,9 @@
         "safeThesisMarket": "Auswärtssieg",
         "safeThesisOdds": 2.8,
         "safeDerived": true,
-        "recentMovePP": -0.5,
+        "recentMovePP": 0.7,
         "freshnessState": "drift",
-        "legHours": 0.5,
+        "legHours": 1.0,
         "legSnaps": 2,
         "lastMoveH": 0.0,
         "flipReady": false,
@@ -9360,8 +9384,8 @@
             "score": -1.0,
             "confidence": 0.63,
             "evidence": "✈️ Auswärts 605km/5d (moderate)",
-            "weight": 1.057,
-            "weighted_score": -0.67,
+            "weight": 1.12,
+            "weighted_score": -0.71,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.95,
@@ -9382,8 +9406,8 @@
             "score": 1.67,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.9:1.5 vs Auswärts 2.2:1.2",
-            "weight": 1.335,
-            "weighted_score": 1.9,
+            "weight": 1.306,
+            "weighted_score": 1.85,
             "metadata": {
               "home_scored": 1.87,
               "home_conceded": 1.47,
@@ -9398,19 +9422,19 @@
             "name": "freshness_leg",
             "score": 0.0,
             "confidence": 0.5,
-            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt -0.5pp) — kein frisches Geld",
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.7pp) — kein frisches Geld",
             "weight": 1.0,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
-              "recentMovePP": -0.5,
+              "recentMovePP": 0.7,
               "legSnaps": 2,
-              "legHours": 0.5,
+              "legHours": 1.0,
               "flipReady": false
             }
           }
         ],
-        "signalAdjustmentPP": 0.53,
+        "signalAdjustmentPP": 0.49,
         "signalCountPos": 1,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": 0.5,
@@ -9432,26 +9456,26 @@
           "move_pp": 1.4
         },
         "smartMoney": {
-          "totalUsd": 72019.0,
-          "topTraders": 10,
+          "totalUsd": 76127.0,
+          "topTraders": 12,
           "outcomes": {
             "home": {
-              "usd": 46340.0,
-              "topHolderShare": 0.895,
+              "usd": 49492.0,
+              "topHolderShare": 0.884,
               "holders": 200,
-              "share": 0.643
+              "share": 0.65
             },
             "draw": {
-              "usd": 5289.0,
-              "topHolderShare": 0.857,
-              "holders": 100,
-              "share": 0.073
+              "usd": 5214.0,
+              "topHolderShare": 0.821,
+              "holders": 112,
+              "share": 0.068
             },
             "away": {
-              "usd": 20390.0,
-              "topHolderShare": 0.802,
-              "holders": 159,
-              "share": 0.283
+              "usd": 21421.0,
+              "topHolderShare": 0.762,
+              "holders": 162,
+              "share": 0.281
             }
           }
         }
@@ -9489,9 +9513,9 @@
         "ahLine": null,
         "recentMovePP": 5.1,
         "freshnessState": "confirm",
-        "legHours": 326.4,
-        "legSnaps": 18,
-        "lastMoveH": 0.0,
+        "legHours": 327.4,
+        "legSnaps": 19,
+        "lastMoveH": 1.0,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "signals": [
@@ -9500,8 +9524,8 @@
             "score": -0.5,
             "confidence": 0.53,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Auswärts 605km/5d → Über-Bias",
-            "weight": 1.057,
-            "weighted_score": -0.28,
+            "weight": 1.12,
+            "weighted_score": -0.3,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.95,
@@ -9514,8 +9538,8 @@
             "score": 3.47,
             "confidence": 0.8,
             "evidence": "📈 Form-Tor-Schnitt 3.4/Spiel vs Linie 2.5 → stützt Über (+0.9 ggü. Linie)",
-            "weight": 1.335,
-            "weighted_score": 3.71,
+            "weight": 1.306,
+            "weighted_score": 3.63,
             "metadata": {
               "expected_total": 3.37,
               "ou_line": 2.5,
@@ -9528,8 +9552,8 @@
             "score": 2.12,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy)-Tore: erwartet 3.37/Spiel vs Linie 2.5 → Über +0.87 · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.54,
+            "weight": 1.2,
+            "weighted_score": 0.53,
             "metadata": {
               "expected_total": 3.37,
               "ou_line": 2.5,
@@ -9549,13 +9573,13 @@
             "metadata": {
               "state": "confirm",
               "recentMovePP": 5.1,
-              "legSnaps": 18,
-              "legHours": 326.4,
+              "legSnaps": 19,
+              "legHours": 327.4,
               "flipReady": false
             }
           }
         ],
-        "signalAdjustmentPP": 2.25,
+        "signalAdjustmentPP": 2.2,
         "signalCountPos": 3,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": -0.3,
@@ -9573,26 +9597,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 72019.0,
-          "topTraders": 10,
+          "totalUsd": 76127.0,
+          "topTraders": 12,
           "outcomes": {
             "home": {
-              "usd": 46340.0,
-              "topHolderShare": 0.895,
+              "usd": 49492.0,
+              "topHolderShare": 0.884,
               "holders": 200,
-              "share": 0.643
+              "share": 0.65
             },
             "draw": {
-              "usd": 5289.0,
-              "topHolderShare": 0.857,
-              "holders": 100,
-              "share": 0.073
+              "usd": 5214.0,
+              "topHolderShare": 0.821,
+              "holders": 112,
+              "share": 0.068
             },
             "away": {
-              "usd": 20390.0,
-              "topHolderShare": 0.802,
-              "holders": 159,
-              "share": 0.283
+              "usd": 21421.0,
+              "topHolderShare": 0.762,
+              "holders": 162,
+              "share": 0.281
             }
           }
         }
@@ -9630,9 +9654,9 @@
         "ahLine": null,
         "recentMovePP": 4.3,
         "freshnessState": "confirm",
-        "legHours": 326.4,
-        "legSnaps": 18,
-        "lastMoveH": 22.5,
+        "legHours": 327.4,
+        "legSnaps": 19,
+        "lastMoveH": 23.5,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "signals": [
@@ -9641,27 +9665,27 @@
             "score": 1.0,
             "confidence": 0.75,
             "evidence": "📈 BTTS-Schnitt Form 60% (Heim 1.9:1.5, Auswärts 2.2:1.2) → Beide treffen Ja",
-            "weight": 1.335,
-            "weighted_score": 0.4,
+            "weight": 1.306,
+            "weighted_score": 0.98,
             "metadata": {
               "avg_btts_rate": 0.6,
               "pick_side": "BTTS-Ja"
-            },
-            "correlation_discount_applied": 0.4
+            }
           },
           {
             "name": "xg_strength",
             "score": 1.57,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.87 vs Ausw-Defense 1.20, Ausw 2.20 vs Heim-Defense 1.47 → Beide treffen Ja · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 1.01,
+            "weight": 1.2,
+            "weighted_score": 0.39,
             "metadata": {
               "h_score_strength": 1.56,
               "a_score_strength": 1.5,
               "is_proxy": true,
               "pick_side": "BTTS-Ja"
-            }
+            },
+            "correlation_discount_applied": 0.4
           },
           {
             "name": "freshness_leg",
@@ -9673,20 +9697,20 @@
             "metadata": {
               "state": "confirm",
               "recentMovePP": 4.3,
-              "legSnaps": 18,
-              "legHours": 326.4,
+              "legSnaps": 19,
+              "legHours": 327.4,
               "flipReady": false
             }
           }
         ],
-        "signalAdjustmentPP": 1.71,
+        "signalAdjustmentPP": 1.54,
         "signalCountPos": 3,
         "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": -0.4,
+        "signalAdjustmentPP_trade": -0.6,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -4.3,
-        "effectiveEdgePP_trade": -6.4,
+        "effectiveEdgePP": -4.5,
+        "effectiveEdgePP_trade": -6.6,
         "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -9697,26 +9721,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 72019.0,
-          "topTraders": 10,
+          "totalUsd": 76127.0,
+          "topTraders": 12,
           "outcomes": {
             "home": {
-              "usd": 46340.0,
-              "topHolderShare": 0.895,
+              "usd": 49492.0,
+              "topHolderShare": 0.884,
               "holders": 200,
-              "share": 0.643
+              "share": 0.65
             },
             "draw": {
-              "usd": 5289.0,
-              "topHolderShare": 0.857,
-              "holders": 100,
-              "share": 0.073
+              "usd": 5214.0,
+              "topHolderShare": 0.821,
+              "holders": 112,
+              "share": 0.068
             },
             "away": {
-              "usd": 20390.0,
-              "topHolderShare": 0.802,
-              "holders": 159,
-              "share": 0.283
+              "usd": 21421.0,
+              "topHolderShare": 0.762,
+              "holders": 162,
+              "share": 0.281
             }
           }
         }
@@ -9761,8 +9785,8 @@
             "score": -2.02,
             "confidence": 0.55,
             "evidence": "Konsens (12 Books) unter-bettet BTTS Nein um 3.6pp vs Pinnacle → kein Public-Edge",
-            "weight": 1.1,
-            "weighted_score": -1.22,
+            "weight": 1.167,
+            "weighted_score": -1.3,
             "metadata": {
               "market_key": "bttsN",
               "diff_pp": -3.63,
@@ -9776,8 +9800,8 @@
             "score": -1.23,
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.33 vs Ausw-Defense 0.80, Ausw 1.67 vs Heim-Defense 1.20 → Beide treffen Nein",
-            "weight": 1.232,
-            "weighted_score": -0.98,
+            "weight": 1.2,
+            "weighted_score": -0.96,
             "metadata": {
               "h_score_strength": 1.67,
               "a_score_strength": 1.39,
@@ -9786,7 +9810,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.56,
+        "signalAdjustmentPP": -1.59,
         "signalCountPos": 0,
         "signalCountNeg": 2,
         "signalAdjustmentPP_trade": -1.6,
@@ -9804,26 +9828,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 10796.0,
+          "totalUsd": 10594.0,
           "topTraders": 3,
           "outcomes": {
             "home": {
-              "usd": 3587.0,
-              "topHolderShare": 0.906,
+              "usd": 3580.0,
+              "topHolderShare": 0.905,
               "holders": 75,
-              "share": 0.332
+              "share": 0.338
             },
             "draw": {
-              "usd": 2300.0,
-              "topHolderShare": 0.898,
-              "holders": 62,
-              "share": 0.213
+              "usd": 2304.0,
+              "topHolderShare": 0.892,
+              "holders": 64,
+              "share": 0.217
             },
             "away": {
-              "usd": 4909.0,
-              "topHolderShare": 0.812,
-              "holders": 132,
-              "share": 0.455
+              "usd": 4710.0,
+              "topHolderShare": 0.802,
+              "holders": 134,
+              "share": 0.445
             }
           }
         }
@@ -9872,8 +9896,8 @@
             "score": -2.0,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.3:1.2 vs Auswärts 1.7:0.8",
-            "weight": 1.335,
-            "weighted_score": -2.27,
+            "weight": 1.306,
+            "weighted_score": -2.22,
             "metadata": {
               "home_scored": 1.33,
               "home_conceded": 1.2,
@@ -9889,7 +9913,7 @@
             "score": -0.88,
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.33-1.20 vs Auswärts 1.67-0.80 (Δ -0.73)",
-            "weight": 1.232,
+            "weight": 1.2,
             "weighted_score": -0.28,
             "metadata": {
               "home_xg_for": 1.33,
@@ -9940,26 +9964,26 @@
           "move_pp": 2.16
         },
         "smartMoney": {
-          "totalUsd": 10796.0,
+          "totalUsd": 10594.0,
           "topTraders": 3,
           "outcomes": {
             "home": {
-              "usd": 3587.0,
-              "topHolderShare": 0.906,
+              "usd": 3580.0,
+              "topHolderShare": 0.905,
               "holders": 75,
-              "share": 0.332
+              "share": 0.338
             },
             "draw": {
-              "usd": 2300.0,
-              "topHolderShare": 0.898,
-              "holders": 62,
-              "share": 0.213
+              "usd": 2304.0,
+              "topHolderShare": 0.892,
+              "holders": 64,
+              "share": 0.217
             },
             "away": {
-              "usd": 4909.0,
-              "topHolderShare": 0.812,
-              "holders": 132,
-              "share": 0.455
+              "usd": 4710.0,
+              "topHolderShare": 0.802,
+              "holders": 134,
+              "share": 0.445
             }
           }
         }
@@ -10379,8 +10403,8 @@
             "score": -1.5,
             "confidence": 0.68,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Heim 841km/5d · Auswärts 539km/5d → Über-Bias",
-            "weight": 1.057,
-            "weighted_score": -1.08,
+            "weight": 1.12,
+            "weighted_score": -1.14,
             "metadata": {
               "factor_home": 0.9,
               "factor_away": 0.95,
@@ -10393,8 +10417,8 @@
             "score": 3.06,
             "confidence": 0.8,
             "evidence": "📈 Form-Tor-Schnitt 3.3/Spiel vs Linie 2.5 → stützt Über (+0.8 ggü. Linie)",
-            "weight": 1.335,
-            "weighted_score": 3.27,
+            "weight": 1.306,
+            "weighted_score": 3.2,
             "metadata": {
               "expected_total": 3.27,
               "ou_line": 2.5,
@@ -10407,8 +10431,8 @@
             "score": 1.88,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy)-Tore: erwartet 3.27/Spiel vs Linie 2.5 → Über +0.77 · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.48,
+            "weight": 1.2,
+            "weighted_score": 0.47,
             "metadata": {
               "expected_total": 3.27,
               "ou_line": 2.5,
@@ -10419,14 +10443,14 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.31,
+        "signalAdjustmentPP": 1.23,
         "signalCountPos": 2,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": 1.3,
+        "signalAdjustmentPP_trade": 1.2,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -4.7,
-        "effectiveEdgePP_trade": -4.7,
+        "effectiveEdgePP": -4.8,
+        "effectiveEdgePP_trade": -4.8,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -10437,26 +10461,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 167721.0,
+          "totalUsd": 174613.0,
           "topTraders": 26,
           "outcomes": {
             "home": {
-              "usd": 144855.0,
-              "topHolderShare": 0.545,
+              "usd": 151883.0,
+              "topHolderShare": 0.524,
               "holders": 200,
-              "share": 0.864
+              "share": 0.87
             },
             "draw": {
-              "usd": 10116.0,
+              "usd": 10134.0,
               "topHolderShare": 0.655,
               "holders": 200,
-              "share": 0.06
+              "share": 0.058
             },
             "away": {
-              "usd": 12750.0,
-              "topHolderShare": 0.743,
+              "usd": 12596.0,
+              "topHolderShare": 0.726,
               "holders": 200,
-              "share": 0.076
+              "share": 0.072
             }
           }
         }
@@ -10501,8 +10525,8 @@
             "score": 1.0,
             "confidence": 0.62,
             "evidence": "✈️ Auswärts 1946km/5d (significant) · Heim 990km/5d (moderate)",
-            "weight": 1.057,
-            "weighted_score": 0.66,
+            "weight": 1.12,
+            "weighted_score": 0.69,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 0.9,
@@ -10535,15 +10559,15 @@
             "metadata": {
               "outcome": "home",
               "share": 0.835,
-              "topHolderShare": 0.876,
+              "topHolderShare": 0.875,
               "fairShare": 0.629,
               "excessPP": 20.6,
-              "totalUsd": 177326.0,
+              "totalUsd": 177366.0,
               "topTraders": 13
             }
           }
         ],
-        "signalAdjustmentPP": 1.03,
+        "signalAdjustmentPP": 1.02,
         "signalCountPos": 2,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": -0.1,
@@ -10566,7 +10590,7 @@
           "pinn_move_pp": 10.26,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 731.8,
+          "hours_since_open": 732.3,
           "open_pinn_odds": 1.24,
           "current_pinn_odds": 1.1,
           "move_age_decay": 0.0,
@@ -10577,12 +10601,12 @@
           "move_pp": 10.26
         },
         "smartMoney": {
-          "totalUsd": 177326.0,
+          "totalUsd": 177366.0,
           "topTraders": 13,
           "outcomes": {
             "home": {
-              "usd": 148075.0,
-              "topHolderShare": 0.876,
+              "usd": 148130.0,
+              "topHolderShare": 0.875,
               "holders": 200,
               "share": 0.835
             },
@@ -10593,8 +10617,8 @@
               "share": 0.111
             },
             "away": {
-              "usd": 9546.0,
-              "topHolderShare": 0.589,
+              "usd": 9531.0,
+              "topHolderShare": 0.587,
               "holders": 200,
               "share": 0.054
             }
@@ -10639,8 +10663,8 @@
             "score": -1.5,
             "confidence": 0.68,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Heim 990km/5d · Auswärts 1946km/5d → Über-Bias",
-            "weight": 1.057,
-            "weighted_score": -1.08,
+            "weight": 1.12,
+            "weighted_score": -1.14,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 0.9,
@@ -10667,12 +10691,12 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 177326.0,
+          "totalUsd": 177366.0,
           "topTraders": 13,
           "outcomes": {
             "home": {
-              "usd": 148075.0,
-              "topHolderShare": 0.876,
+              "usd": 148130.0,
+              "topHolderShare": 0.875,
               "holders": 200,
               "share": 0.835
             },
@@ -10683,8 +10707,8 @@
               "share": 0.111
             },
             "away": {
-              "usd": 9546.0,
-              "topHolderShare": 0.589,
+              "usd": 9531.0,
+              "topHolderShare": 0.587,
               "holders": 200,
               "share": 0.054
             }
@@ -10732,8 +10756,8 @@
             "score": -1.37,
             "confidence": 0.49,
             "evidence": "Konsens (12 Books) unter-bettet BTTS Nein um 2.3pp vs Pinnacle → kein Public-Edge",
-            "weight": 1.1,
-            "weighted_score": -0.74,
+            "weight": 1.167,
+            "weighted_score": -0.78,
             "metadata": {
               "market_key": "bttsN",
               "diff_pp": -2.35,
@@ -10747,8 +10771,8 @@
             "score": 1.0,
             "confidence": 0.75,
             "evidence": "📈 BTTS-Schnitt Form 40% (Heim 1.8:1.7, Auswärts 2.1:0.5) → Beide treffen Nein",
-            "weight": 1.335,
-            "weighted_score": 1.0,
+            "weight": 1.306,
+            "weighted_score": 0.98,
             "metadata": {
               "avg_btts_rate": 0.4,
               "pick_side": "BTTS-Nein"
@@ -10759,7 +10783,7 @@
             "score": -0.88,
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.80 vs Ausw-Defense 0.53, Ausw 2.13 vs Heim-Defense 1.67 → Beide treffen Nein",
-            "weight": 1.232,
+            "weight": 1.2,
             "weighted_score": -0.28,
             "metadata": {
               "h_score_strength": 3.38,
@@ -10770,7 +10794,7 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": -0.01,
+        "signalAdjustmentPP": -0.04,
         "signalCountPos": 1,
         "signalCountNeg": 2,
         "signalAdjustmentPP_trade": -0.0,
@@ -10788,14 +10812,14 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 28368.0,
+          "totalUsd": 28448.0,
           "topTraders": 4,
           "outcomes": {
             "home": {
               "usd": 2230.0,
-              "topHolderShare": 0.578,
-              "holders": 193,
-              "share": 0.079
+              "topHolderShare": 0.573,
+              "holders": 195,
+              "share": 0.078
             },
             "draw": {
               "usd": 2705.0,
@@ -10804,10 +10828,10 @@
               "share": 0.095
             },
             "away": {
-              "usd": 23433.0,
-              "topHolderShare": 0.97,
-              "holders": 88,
-              "share": 0.826
+              "usd": 23513.0,
+              "topHolderShare": 0.967,
+              "holders": 89,
+              "share": 0.827
             }
           }
         }
@@ -11407,8 +11431,8 @@
             "score": -1.43,
             "confidence": 0.5,
             "evidence": "Konsens (13 Books) unter-bettet Über 2.5 um 2.5pp vs Pinnacle → kein Public-Edge",
-            "weight": 1.1,
-            "weighted_score": -0.79,
+            "weight": 1.167,
+            "weighted_score": -0.83,
             "metadata": {
               "market_key": "o25",
               "diff_pp": -2.46,
@@ -11422,8 +11446,8 @@
             "score": -1.0,
             "confidence": 0.6,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Heim 1050km/5d · Auswärts 408km/5d → Über-Bias",
-            "weight": 1.057,
-            "weighted_score": -0.63,
+            "weight": 1.12,
+            "weighted_score": -0.67,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 0.95,
@@ -11436,8 +11460,8 @@
             "score": 4.0,
             "confidence": 0.8,
             "evidence": "📈 Form-Tor-Schnitt 3.5/Spiel vs Linie 2.5 → stützt Über (+1.0 ggü. Linie)",
-            "weight": 1.335,
-            "weighted_score": 4.27,
+            "weight": 1.306,
+            "weighted_score": 4.18,
             "metadata": {
               "expected_total": 3.5,
               "ou_line": 2.5,
@@ -11493,14 +11517,14 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.0,
+        "signalAdjustmentPP": 0.93,
         "signalCountPos": 2,
         "signalCountNeg": 4,
-        "signalAdjustmentPP_trade": 1.0,
+        "signalAdjustmentPP_trade": 0.9,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 4,
-        "effectiveEdgePP": -1.0,
-        "effectiveEdgePP_trade": -1.0,
+        "effectiveEdgePP": -1.1,
+        "effectiveEdgePP_trade": -1.1,
         "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -11511,26 +11535,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 101025.0,
-          "topTraders": 12,
+          "totalUsd": 127812.0,
+          "topTraders": 15,
           "outcomes": {
             "home": {
-              "usd": 74129.0,
-              "topHolderShare": 0.674,
+              "usd": 99627.0,
+              "topHolderShare": 0.749,
               "holders": 200,
-              "share": 0.734
+              "share": 0.779
             },
             "draw": {
-              "usd": 10990.0,
-              "topHolderShare": 0.6,
+              "usd": 11685.0,
+              "topHolderShare": 0.623,
               "holders": 200,
-              "share": 0.109
+              "share": 0.091
             },
             "away": {
-              "usd": 15906.0,
-              "topHolderShare": 0.446,
+              "usd": 16500.0,
+              "topHolderShare": 0.468,
               "holders": 200,
-              "share": 0.157
+              "share": 0.129
             }
           }
         }
@@ -11573,8 +11597,8 @@
             "score": -1.49,
             "confidence": 0.5,
             "evidence": "Konsens (13 Books) unter-bettet BTTS Ja um 2.6pp vs Pinnacle → kein Public-Edge",
-            "weight": 1.1,
-            "weighted_score": -0.82,
+            "weight": 1.167,
+            "weighted_score": -0.87,
             "metadata": {
               "market_key": "bttsY",
               "diff_pp": -2.58,
@@ -11588,8 +11612,8 @@
             "score": 1.33,
             "confidence": 0.75,
             "evidence": "📈 BTTS-Schnitt Form 63% (Heim 2.5:0.9, Auswärts 1.9:1.7) → Beide treffen Ja",
-            "weight": 1.335,
-            "weighted_score": 1.33,
+            "weight": 1.306,
+            "weighted_score": 1.3,
             "metadata": {
               "avg_btts_rate": 0.633,
               "pick_side": "BTTS-Ja"
@@ -11600,8 +11624,8 @@
             "score": 1.03,
             "confidence": 0.49,
             "evidence": "⚡ xG-Stärke: Heim 1.87 vs Ausw-Defense 1.52, Ausw 1.06 vs Heim-Defense 0.54 → Beide treffen Ja · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.25,
+            "weight": 1.2,
+            "weighted_score": 0.24,
             "metadata": {
               "h_score_strength": 1.23,
               "a_score_strength": 1.94,
@@ -11611,7 +11635,7 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 0.42,
+        "signalAdjustmentPP": 0.37,
         "signalCountPos": 2,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": 0.4,
@@ -11629,26 +11653,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 101025.0,
-          "topTraders": 12,
+          "totalUsd": 127812.0,
+          "topTraders": 15,
           "outcomes": {
             "home": {
-              "usd": 74129.0,
-              "topHolderShare": 0.674,
+              "usd": 99627.0,
+              "topHolderShare": 0.749,
               "holders": 200,
-              "share": 0.734
+              "share": 0.779
             },
             "draw": {
-              "usd": 10990.0,
-              "topHolderShare": 0.6,
+              "usd": 11685.0,
+              "topHolderShare": 0.623,
               "holders": 200,
-              "share": 0.109
+              "share": 0.091
             },
             "away": {
-              "usd": 15906.0,
-              "topHolderShare": 0.446,
+              "usd": 16500.0,
+              "topHolderShare": 0.468,
               "holders": 200,
-              "share": 0.157
+              "share": 0.129
             }
           }
         }
@@ -11699,8 +11723,8 @@
             "score": -2.0,
             "confidence": 0.7,
             "evidence": "✈️ Auswärts 1737km/6d (significant)",
-            "weight": 1.057,
-            "weighted_score": -1.48,
+            "weight": 1.12,
+            "weighted_score": -1.57,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.9,
@@ -11721,8 +11745,8 @@
             "score": 3.96,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.4:1.5 vs Auswärts 2.0:0.7",
-            "weight": 1.335,
-            "weighted_score": 4.49,
+            "weight": 1.306,
+            "weighted_score": 4.4,
             "metadata": {
               "home_scored": 1.4,
               "home_conceded": 1.53,
@@ -11738,8 +11762,8 @@
             "score": 1.76,
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.40-1.53 vs Auswärts 2.00-0.67 (Δ -1.47)",
-            "weight": 1.232,
-            "weighted_score": 0.56,
+            "weight": 1.2,
+            "weighted_score": 0.55,
             "metadata": {
               "home_xg_for": 1.4,
               "home_xg_against": 1.53,
@@ -11785,28 +11809,28 @@
             "name": "smart_money",
             "score": 0.68,
             "confidence": 0.41,
-            "evidence": "💰 Smart Money: 84% auf Auswärts (Top-Wallets 63%) vs Pinnacle-Fair 66% → mehr als der Markt rechtfertigt",
+            "evidence": "💰 Smart Money: 84% auf Auswärts (Top-Wallets 62%) vs Pinnacle-Fair 66% → mehr als der Markt rechtfertigt",
             "weight": 1.0,
             "weighted_score": 0.28,
             "metadata": {
               "outcome": "away",
               "share": 0.84,
-              "topHolderShare": 0.627,
+              "topHolderShare": 0.625,
               "fairShare": 0.659,
               "excessPP": 18.1,
-              "totalUsd": 137821.0,
+              "totalUsd": 138140.0,
               "topTraders": 22
             }
           }
         ],
-        "signalAdjustmentPP": 0.55,
+        "signalAdjustmentPP": 0.5,
         "signalCountPos": 3,
         "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": -0.1,
+        "signalAdjustmentPP_trade": -0.2,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 2,
         "effectiveEdgePP": -3.5,
-        "effectiveEdgePP_trade": -4.1,
+        "effectiveEdgePP_trade": -4.2,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -11822,7 +11846,7 @@
           "pinn_move_pp": 10.41,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 731.8,
+          "hours_since_open": 732.3,
           "open_pinn_odds": 1.82,
           "current_pinn_odds": 1.53,
           "move_age_decay": 0.0,
@@ -11833,24 +11857,24 @@
           "move_pp": 10.41
         },
         "smartMoney": {
-          "totalUsd": 137821.0,
+          "totalUsd": 138140.0,
           "topTraders": 22,
           "outcomes": {
             "home": {
               "usd": 7591.0,
-              "topHolderShare": 0.819,
+              "topHolderShare": 0.818,
               "holders": 200,
               "share": 0.055
             },
             "draw": {
-              "usd": 14512.0,
-              "topHolderShare": 0.851,
+              "usd": 14532.0,
+              "topHolderShare": 0.85,
               "holders": 200,
               "share": 0.105
             },
             "away": {
-              "usd": 115718.0,
-              "topHolderShare": 0.627,
+              "usd": 116017.0,
+              "topHolderShare": 0.625,
               "holders": 200,
               "share": 0.84
             }
@@ -11901,8 +11925,8 @@
             "score": -1.0,
             "confidence": 0.6,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Auswärts 1737km/6d → Über-Bias",
-            "weight": 1.057,
-            "weighted_score": -0.63,
+            "weight": 1.12,
+            "weighted_score": -0.67,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.9,
@@ -11926,13 +11950,13 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.46,
+        "signalAdjustmentPP": 0.43,
         "signalCountPos": 1,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": -1.1,
         "signalCountPos_trade": 0,
         "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -2.5,
+        "effectiveEdgePP": -2.6,
         "effectiveEdgePP_trade": -4.1,
         "convictionScore": 3,
         "convictionVerdict": "skip",
@@ -11944,24 +11968,24 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 137821.0,
+          "totalUsd": 138140.0,
           "topTraders": 22,
           "outcomes": {
             "home": {
               "usd": 7591.0,
-              "topHolderShare": 0.819,
+              "topHolderShare": 0.818,
               "holders": 200,
               "share": 0.055
             },
             "draw": {
-              "usd": 14512.0,
-              "topHolderShare": 0.851,
+              "usd": 14532.0,
+              "topHolderShare": 0.85,
               "holders": 200,
               "share": 0.105
             },
             "away": {
-              "usd": 115718.0,
-              "topHolderShare": 0.627,
+              "usd": 116017.0,
+              "topHolderShare": 0.625,
               "holders": 200,
               "share": 0.84
             }
@@ -12014,8 +12038,8 @@
             "score": -1.0,
             "confidence": 0.6,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Auswärts 1583km/3d → Über-Bias",
-            "weight": 1.057,
-            "weighted_score": -0.63,
+            "weight": 1.12,
+            "weighted_score": -0.67,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.9,
@@ -12028,8 +12052,8 @@
             "score": 2.53,
             "confidence": 0.8,
             "evidence": "📈 Form-Tor-Schnitt 3.1/Spiel vs Linie 2.5 → stützt Über (+0.6 ggü. Linie)",
-            "weight": 1.335,
-            "weighted_score": 2.7,
+            "weight": 1.306,
+            "weighted_score": 2.64,
             "metadata": {
               "expected_total": 3.13,
               "ou_line": 2.5,
@@ -12042,8 +12066,8 @@
             "score": 1.55,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy)-Tore: erwartet 3.13/Spiel vs Linie 2.5 → Über +0.63 · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.4,
+            "weight": 1.2,
+            "weighted_score": 0.39,
             "metadata": {
               "expected_total": 3.13,
               "ou_line": 2.5,
@@ -12069,7 +12093,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.0,
+        "signalAdjustmentPP": 0.96,
         "signalCountPos": 2,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": 1.0,
@@ -12093,7 +12117,7 @@
             "home": {
               "usd": 13544.0,
               "topHolderShare": 0.855,
-              "holders": 152,
+              "holders": 154,
               "share": 0.753
             },
             "draw": {
@@ -12160,8 +12184,8 @@
             "score": 2.0,
             "confidence": 0.7,
             "evidence": "✈️ Heim 1018km/3d (significant)",
-            "weight": 1.057,
-            "weighted_score": 1.48,
+            "weight": 1.12,
+            "weighted_score": 1.57,
             "metadata": {
               "factor_home": 0.9,
               "factor_away": 1.0,
@@ -12182,8 +12206,8 @@
             "score": -2.87,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.0:0.7 vs Auswärts 1.9:1.7",
-            "weight": 1.335,
-            "weighted_score": -3.26,
+            "weight": 1.306,
+            "weighted_score": -3.19,
             "metadata": {
               "home_scored": 2.0,
               "home_conceded": 0.67,
@@ -12199,8 +12223,8 @@
             "score": -1.36,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.00-0.67 vs Auswärts 1.93-1.73 (Δ +1.13) · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": -0.35,
+            "weight": 1.2,
+            "weighted_score": -0.34,
             "metadata": {
               "home_xg_for": 2.0,
               "home_xg_against": 0.67,
@@ -12310,7 +12334,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.04,
+        "signalAdjustmentPP": -0.99,
         "signalCountPos": 1,
         "signalCountNeg": 4,
         "signalAdjustmentPP_trade": -1.0,
@@ -12332,26 +12356,26 @@
           "move_pp": 3.49
         },
         "smartMoney": {
-          "totalUsd": 14807.0,
+          "totalUsd": 14673.0,
           "topTraders": 4,
           "outcomes": {
             "home": {
-              "usd": 8518.0,
-              "topHolderShare": 0.757,
+              "usd": 8368.0,
+              "topHolderShare": 0.747,
               "holders": 200,
-              "share": 0.575
+              "share": 0.57
             },
             "draw": {
               "usd": 3017.0,
               "topHolderShare": 0.824,
-              "holders": 89,
-              "share": 0.204
+              "holders": 90,
+              "share": 0.206
             },
             "away": {
-              "usd": 3272.0,
-              "topHolderShare": 0.764,
-              "holders": 118,
-              "share": 0.221
+              "usd": 3288.0,
+              "topHolderShare": 0.761,
+              "holders": 120,
+              "share": 0.224
             }
           }
         }
@@ -12516,8 +12540,8 @@
             "score": 1.0,
             "confidence": 0.62,
             "evidence": "✈️ Auswärts 456km/5d (moderate) · Heim 1907km/5d (significant)",
-            "weight": 1.057,
-            "weighted_score": 0.66,
+            "weight": 1.12,
+            "weighted_score": 0.69,
             "metadata": {
               "factor_home": 0.9,
               "factor_away": 0.95,
@@ -12571,7 +12595,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.41,
+        "signalAdjustmentPP": -0.38,
         "signalCountPos": 1,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": -0.4,
@@ -12593,24 +12617,24 @@
           "move_pp": 4.02
         },
         "smartMoney": {
-          "totalUsd": 22041.0,
+          "totalUsd": 22006.0,
           "topTraders": 3,
           "outcomes": {
             "home": {
-              "usd": 4956.0,
-              "topHolderShare": 0.703,
+              "usd": 4949.0,
+              "topHolderShare": 0.704,
               "holders": 200,
               "share": 0.225
             },
             "draw": {
-              "usd": 4623.0,
-              "topHolderShare": 0.635,
+              "usd": 4620.0,
+              "topHolderShare": 0.632,
               "holders": 200,
               "share": 0.21
             },
             "away": {
-              "usd": 12462.0,
-              "topHolderShare": 0.652,
+              "usd": 12437.0,
+              "topHolderShare": 0.649,
               "holders": 200,
               "share": 0.565
             }
@@ -12657,8 +12681,8 @@
             "score": -1.58,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 3.13 vs Ausw-Defense 1.47, Ausw 1.40 vs Heim-Defense 0.93 → Beide treffen Nein · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": -1.01,
+            "weight": 1.2,
+            "weighted_score": -0.99,
             "metadata": {
               "h_score_strength": 2.14,
               "a_score_strength": 1.5,
@@ -12667,7 +12691,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.58,
+        "signalAdjustmentPP": -1.59,
         "signalCountPos": 0,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": -1.6,
@@ -12685,26 +12709,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 17017.0,
+          "totalUsd": 17083.0,
           "topTraders": 4,
           "outcomes": {
             "home": {
-              "usd": 11126.0,
-              "topHolderShare": 0.894,
-              "holders": 110,
-              "share": 0.654
+              "usd": 11206.0,
+              "topHolderShare": 0.888,
+              "holders": 111,
+              "share": 0.656
             },
             "draw": {
-              "usd": 2540.0,
-              "topHolderShare": 0.854,
-              "holders": 81,
-              "share": 0.149
+              "usd": 2526.0,
+              "topHolderShare": 0.858,
+              "holders": 83,
+              "share": 0.148
             },
             "away": {
               "usd": 3351.0,
               "topHolderShare": 0.859,
               "holders": 122,
-              "share": 0.197
+              "share": 0.196
             }
           }
         }
@@ -12755,8 +12779,8 @@
             "score": 1.0,
             "confidence": 0.62,
             "evidence": "✈️ Auswärts 1735km/4d (significant) · Heim 368km/4d (moderate)",
-            "weight": 1.057,
-            "weighted_score": 0.66,
+            "weight": 1.12,
+            "weighted_score": 0.69,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 0.9,
@@ -12784,8 +12808,8 @@
             "score": -3.4,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.1:1.0 vs Auswärts 2.3:1.0",
-            "weight": 1.335,
-            "weighted_score": -3.86,
+            "weight": 1.306,
+            "weighted_score": -3.77,
             "metadata": {
               "home_scored": 1.13,
               "home_conceded": 1.0,
@@ -12801,8 +12825,8 @@
             "score": -1.36,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.13-1.00 vs Auswärts 2.27-1.00 (Δ -1.13) · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": -0.35,
+            "weight": 1.2,
+            "weighted_score": -0.34,
             "metadata": {
               "home_xg_for": 1.13,
               "home_xg_against": 1.0,
@@ -12845,14 +12869,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.0,
+        "signalAdjustmentPP": -0.96,
         "signalCountPos": 2,
         "signalCountNeg": 3,
-        "signalAdjustmentPP_trade": -2.9,
+        "signalAdjustmentPP_trade": -2.8,
         "signalCountPos_trade": 1,
         "signalCountNeg_trade": 3,
         "effectiveEdgePP": -4.0,
-        "effectiveEdgePP_trade": -5.9,
+        "effectiveEdgePP_trade": -5.8,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -12868,7 +12892,7 @@
           "pinn_move_pp": 5.78,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 606.1,
+          "hours_since_open": 606.7,
           "open_pinn_odds": 2.39,
           "current_pinn_odds": 2.1,
           "move_age_decay": 0.5,
@@ -12879,14 +12903,14 @@
           "move_pp": 5.78
         },
         "smartMoney": {
-          "totalUsd": 8085.0,
+          "totalUsd": 8094.0,
           "topTraders": 1,
           "outcomes": {
             "home": {
               "usd": 4226.0,
-              "topHolderShare": 0.775,
-              "holders": 113,
-              "share": 0.523
+              "topHolderShare": 0.769,
+              "holders": 115,
+              "share": 0.522
             },
             "draw": {
               "usd": 1583.0,
@@ -12895,9 +12919,9 @@
               "share": 0.196
             },
             "away": {
-              "usd": 2276.0,
-              "topHolderShare": 0.846,
-              "holders": 88,
+              "usd": 2285.0,
+              "topHolderShare": 0.843,
+              "holders": 89,
               "share": 0.282
             }
           }
@@ -12947,8 +12971,8 @@
             "score": 1.5,
             "confidence": 0.68,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Heim 368km/4d · Auswärts 1735km/4d → Unter-Bias",
-            "weight": 1.057,
-            "weighted_score": 1.08,
+            "weight": 1.12,
+            "weighted_score": 1.14,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 0.9,
@@ -12972,7 +12996,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.89,
+        "signalAdjustmentPP": 0.9,
         "signalCountPos": 1,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": 0.9,
@@ -12990,14 +13014,14 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 8085.0,
+          "totalUsd": 8094.0,
           "topTraders": 1,
           "outcomes": {
             "home": {
               "usd": 4226.0,
-              "topHolderShare": 0.775,
-              "holders": 113,
-              "share": 0.523
+              "topHolderShare": 0.769,
+              "holders": 115,
+              "share": 0.522
             },
             "draw": {
               "usd": 1583.0,
@@ -13006,9 +13030,9 @@
               "share": 0.196
             },
             "away": {
-              "usd": 2276.0,
-              "topHolderShare": 0.846,
-              "holders": 88,
+              "usd": 2285.0,
+              "topHolderShare": 0.843,
+              "holders": 89,
               "share": 0.282
             }
           }
@@ -13547,8 +13571,8 @@
             "score": 2.0,
             "confidence": 0.7,
             "evidence": "✈️ Auswärts 1315km/5d (significant)",
-            "weight": 1.057,
-            "weighted_score": 1.48,
+            "weight": 1.12,
+            "weighted_score": 1.57,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.9,
@@ -13576,8 +13600,8 @@
             "score": 5.63,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.7:0.9 vs Auswärts 1.1:1.2",
-            "weight": 1.335,
-            "weighted_score": 6.39,
+            "weight": 1.306,
+            "weighted_score": 6.25,
             "metadata": {
               "home_scored": 2.67,
               "home_conceded": 0.87,
@@ -13593,8 +13617,8 @@
             "score": 2.32,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.67-0.87 vs Auswärts 1.07-1.20 (Δ +1.93) · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.6,
+            "weight": 1.2,
+            "weighted_score": 0.58,
             "metadata": {
               "home_xg_for": 2.67,
               "home_xg_against": 0.87,
@@ -13625,27 +13649,27 @@
             "name": "smart_money",
             "score": 1.23,
             "confidence": 0.41,
-            "evidence": "💰 Smart Money: 90% auf Heim (Top-Wallets 84%) vs Pinnacle-Fair 65% → mehr als der Markt rechtfertigt",
+            "evidence": "💰 Smart Money: 89% auf Heim (Top-Wallets 84%) vs Pinnacle-Fair 65% → mehr als der Markt rechtfertigt",
             "weight": 1.0,
             "weighted_score": 0.5,
             "metadata": {
               "outcome": "home",
-              "share": 0.895,
-              "topHolderShare": 0.837,
+              "share": 0.894,
+              "topHolderShare": 0.836,
               "fairShare": 0.649,
-              "excessPP": 24.6,
-              "totalUsd": 141213.0,
+              "excessPP": 24.5,
+              "totalUsd": 141464.0,
               "topTraders": 14
             }
           }
         ],
-        "signalAdjustmentPP": 2.95,
+        "signalAdjustmentPP": 2.91,
         "signalCountPos": 4,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": 1.7,
         "signalCountPos_trade": 3,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -2.0,
+        "effectiveEdgePP": -2.1,
         "effectiveEdgePP_trade": -3.3,
         "convictionScore": 5,
         "convictionVerdict": "watch",
@@ -13661,24 +13685,24 @@
           "move_pp": 4.1
         },
         "smartMoney": {
-          "totalUsd": 141213.0,
+          "totalUsd": 141464.0,
           "topTraders": 14,
           "outcomes": {
             "home": {
-              "usd": 126337.0,
-              "topHolderShare": 0.837,
+              "usd": 126522.0,
+              "topHolderShare": 0.836,
               "holders": 200,
-              "share": 0.895
+              "share": 0.894
             },
             "draw": {
-              "usd": 8387.0,
-              "topHolderShare": 0.63,
+              "usd": 8415.0,
+              "topHolderShare": 0.627,
               "holders": 200,
               "share": 0.059
             },
             "away": {
-              "usd": 6489.0,
-              "topHolderShare": 0.544,
+              "usd": 6527.0,
+              "topHolderShare": 0.54,
               "holders": 200,
               "share": 0.046
             }
@@ -13725,8 +13749,8 @@
             "score": 1.0,
             "confidence": 0.75,
             "evidence": "📈 BTTS-Schnitt Form 40% (Heim 1.0:0.9, Auswärts 1.7:0.8) → Beide treffen Nein",
-            "weight": 1.335,
-            "weighted_score": 1.0,
+            "weight": 1.306,
+            "weighted_score": 0.98,
             "metadata": {
               "avg_btts_rate": 0.4,
               "pick_side": "BTTS-Nein"
@@ -13751,26 +13775,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 42872.0,
+          "totalUsd": 42922.0,
           "topTraders": 10,
           "outcomes": {
             "home": {
-              "usd": 32318.0,
+              "usd": 32339.0,
               "topHolderShare": 0.718,
               "holders": 200,
-              "share": 0.754
+              "share": 0.753
             },
             "draw": {
-              "usd": 6850.0,
-              "topHolderShare": 0.692,
+              "usd": 6846.0,
+              "topHolderShare": 0.69,
               "holders": 200,
-              "share": 0.16
+              "share": 0.159
             },
             "away": {
-              "usd": 3704.0,
-              "topHolderShare": 0.638,
+              "usd": 3737.0,
+              "topHolderShare": 0.633,
               "holders": 200,
-              "share": 0.086
+              "share": 0.087
             }
           }
         }
@@ -13819,8 +13843,8 @@
             "score": 1.0,
             "confidence": 0.6,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Heim 915km/5d → Unter-Bias",
-            "weight": 1.057,
-            "weighted_score": 0.63,
+            "weight": 1.12,
+            "weighted_score": 0.67,
             "metadata": {
               "factor_home": 0.9,
               "factor_away": 1.0,
@@ -13864,14 +13888,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.53,
+        "signalAdjustmentPP": 0.55,
         "signalCountPos": 2,
         "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": 0.5,
+        "signalAdjustmentPP_trade": 0.6,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 0,
         "effectiveEdgePP": -6.5,
-        "effectiveEdgePP_trade": -6.5,
+        "effectiveEdgePP_trade": -6.4,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -13882,26 +13906,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 42872.0,
+          "totalUsd": 42922.0,
           "topTraders": 10,
           "outcomes": {
             "home": {
-              "usd": 32318.0,
+              "usd": 32339.0,
               "topHolderShare": 0.718,
               "holders": 200,
-              "share": 0.754
+              "share": 0.753
             },
             "draw": {
-              "usd": 6850.0,
-              "topHolderShare": 0.692,
+              "usd": 6846.0,
+              "topHolderShare": 0.69,
               "holders": 200,
-              "share": 0.16
+              "share": 0.159
             },
             "away": {
-              "usd": 3704.0,
-              "topHolderShare": 0.638,
+              "usd": 3737.0,
+              "topHolderShare": 0.633,
               "holders": 200,
-              "share": 0.086
+              "share": 0.087
             }
           }
         }
@@ -13952,8 +13976,8 @@
             "score": 5.17,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.7:0.9 vs Auswärts 1.0:0.9",
-            "weight": 1.335,
-            "weighted_score": 5.87,
+            "weight": 1.306,
+            "weighted_score": 5.74,
             "metadata": {
               "home_scored": 2.67,
               "home_conceded": 0.87,
@@ -13969,8 +13993,8 @@
             "score": 2.08,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.67-0.87 vs Auswärts 1.00-0.93 (Δ +1.73) · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.53,
+            "weight": 1.2,
+            "weighted_score": 0.52,
             "metadata": {
               "home_xg_for": 2.67,
               "home_xg_against": 0.87,
@@ -13998,7 +14022,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 3.38,
+        "signalAdjustmentPP": 3.37,
         "signalCountPos": 2,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": 3.4,
@@ -14020,13 +14044,13 @@
           "move_pp": 2.4
         },
         "smartMoney": {
-          "totalUsd": 9643.0,
+          "totalUsd": 9645.0,
           "topTraders": 2,
           "outcomes": {
             "home": {
-              "usd": 7624.0,
+              "usd": 7626.0,
               "topHolderShare": 0.753,
-              "holders": 173,
+              "holders": 174,
               "share": 0.791
             },
             "draw": {
@@ -14088,8 +14112,8 @@
             "score": -1.48,
             "confidence": 0.5,
             "evidence": "Konsens (12 Books) unter-bettet BTTS Ja um 2.6pp vs Pinnacle → kein Public-Edge",
-            "weight": 1.1,
-            "weighted_score": -0.81,
+            "weight": 1.167,
+            "weighted_score": -0.86,
             "metadata": {
               "market_key": "bttsY",
               "diff_pp": -2.55,
@@ -14114,7 +14138,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.77,
+        "signalAdjustmentPP": -0.79,
         "signalCountPos": 0,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": -0.8,
@@ -14132,13 +14156,13 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 9643.0,
+          "totalUsd": 9645.0,
           "topTraders": 2,
           "outcomes": {
             "home": {
-              "usd": 7624.0,
+              "usd": 7626.0,
               "topHolderShare": 0.753,
-              "holders": 173,
+              "holders": 174,
               "share": 0.791
             },
             "draw": {
@@ -14205,8 +14229,8 @@
             "score": 3.0,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.7:0.8 vs Auswärts 1.1:1.2",
-            "weight": 1.335,
-            "weighted_score": 3.4,
+            "weight": 1.306,
+            "weighted_score": 3.33,
             "metadata": {
               "home_scored": 1.73,
               "home_conceded": 0.8,
@@ -14222,8 +14246,8 @@
             "score": 1.28,
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.73-0.80 vs Auswärts 1.07-1.20 (Δ +1.07)",
-            "weight": 1.232,
-            "weighted_score": 0.41,
+            "weight": 1.2,
+            "weighted_score": 0.4,
             "metadata": {
               "home_xg_for": 1.73,
               "home_xg_against": 0.8,
@@ -14251,13 +14275,13 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.95,
+        "signalAdjustmentPP": 1.94,
         "signalCountPos": 2,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": 1.9,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -5.0,
+        "effectiveEdgePP": -5.1,
         "effectiveEdgePP_trade": -5.1,
         "convictionScore": 4,
         "convictionVerdict": "watch",
@@ -14274,7 +14298,7 @@
           "pinn_move_pp": 5.98,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 606.1,
+          "hours_since_open": 606.7,
           "open_pinn_odds": 3.22,
           "current_pinn_odds": 2.7,
           "move_age_decay": 0.5,
@@ -14285,11 +14309,11 @@
           "move_pp": 5.98
         },
         "smartMoney": {
-          "totalUsd": 38396.0,
+          "totalUsd": 38403.0,
           "topTraders": 8,
           "outcomes": {
             "home": {
-              "usd": 7303.0,
+              "usd": 7302.0,
               "topHolderShare": 0.796,
               "holders": 106,
               "share": 0.19
@@ -14301,9 +14325,9 @@
               "share": 0.109
             },
             "away": {
-              "usd": 26898.0,
-              "topHolderShare": 0.927,
-              "holders": 123,
+              "usd": 26906.0,
+              "topHolderShare": 0.925,
+              "holders": 128,
               "share": 0.701
             }
           }
@@ -14591,8 +14615,8 @@
             "score": -0.5,
             "confidence": 0.53,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Auswärts 503km/5d → Über-Bias",
-            "weight": 1.057,
-            "weighted_score": -0.28,
+            "weight": 1.12,
+            "weighted_score": -0.3,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.95,
@@ -14605,8 +14629,8 @@
             "score": 1.47,
             "confidence": 0.8,
             "evidence": "📈 Form-Tor-Schnitt 2.9/Spiel vs Linie 2.5 → stützt Über (+0.4 ggü. Linie)",
-            "weight": 1.335,
-            "weighted_score": 1.57,
+            "weight": 1.306,
+            "weighted_score": 1.54,
             "metadata": {
               "expected_total": 2.87,
               "ou_line": 2.5,
@@ -14619,8 +14643,8 @@
             "score": 0.9,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy)-Tore: erwartet 2.87/Spiel vs Linie 2.5 → Über +0.37 · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.23,
+            "weight": 1.2,
+            "weighted_score": 0.22,
             "metadata": {
               "expected_total": 2.87,
               "ou_line": 2.5,
@@ -14646,7 +14670,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.64,
+        "signalAdjustmentPP": 0.61,
         "signalCountPos": 2,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": 0.6,
@@ -14664,24 +14688,24 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 103718.0,
+          "totalUsd": 103684.0,
           "topTraders": 15,
           "outcomes": {
             "home": {
-              "usd": 90893.0,
-              "topHolderShare": 0.758,
+              "usd": 90850.0,
+              "topHolderShare": 0.757,
               "holders": 200,
               "share": 0.876
             },
             "draw": {
-              "usd": 10086.0,
-              "topHolderShare": 0.892,
+              "usd": 10096.0,
+              "topHolderShare": 0.891,
               "holders": 200,
               "share": 0.097
             },
             "away": {
-              "usd": 2739.0,
-              "topHolderShare": 0.544,
+              "usd": 2738.0,
+              "topHolderShare": 0.543,
               "holders": 200,
               "share": 0.026
             }
@@ -14732,8 +14756,8 @@
             "score": 1.0,
             "confidence": 0.63,
             "evidence": "✈️ Auswärts 503km/5d (moderate)",
-            "weight": 1.057,
-            "weighted_score": 0.67,
+            "weight": 1.12,
+            "weighted_score": 0.71,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.95,
@@ -14761,8 +14785,8 @@
             "score": 3.7,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.5:1.2 vs Auswärts 1.1:1.0",
-            "weight": 1.335,
-            "weighted_score": 4.2,
+            "weight": 1.306,
+            "weighted_score": 4.11,
             "metadata": {
               "home_scored": 2.47,
               "home_conceded": 1.2,
@@ -14778,8 +14802,8 @@
             "score": 1.44,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.47-1.20 vs Auswärts 1.07-1.00 (Δ +1.20) · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.37,
+            "weight": 1.2,
+            "weighted_score": 0.36,
             "metadata": {
               "home_xg_for": 2.47,
               "home_xg_against": 1.2,
@@ -14816,22 +14840,22 @@
             "metadata": {
               "outcome": "home",
               "share": 0.876,
-              "topHolderShare": 0.758,
+              "topHolderShare": 0.757,
               "fairShare": 0.735,
               "excessPP": 14.1,
-              "totalUsd": 103718.0,
+              "totalUsd": 103684.0,
               "topTraders": 15
             }
           }
         ],
-        "signalAdjustmentPP": 2.3,
+        "signalAdjustmentPP": 2.27,
         "signalCountPos": 5,
         "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": -0.8,
+        "signalAdjustmentPP_trade": -0.9,
         "signalCountPos_trade": 3,
         "signalCountNeg_trade": 0,
         "effectiveEdgePP": -2.7,
-        "effectiveEdgePP_trade": -5.8,
+        "effectiveEdgePP_trade": -5.9,
         "convictionScore": 6,
         "convictionVerdict": "abwaegen",
         "convictionLabel": "⭐ Gute Wette",
@@ -14850,24 +14874,24 @@
         "firstBetAt": "2026-06-18T14:52:38.406099+00:00",
         "pickTriggerReason": "Hält BET: war bestätigt, Move ruht — aber kein Reverser dagegen (bleibt bis frisches Gegen-Geld kommt)",
         "smartMoney": {
-          "totalUsd": 103718.0,
+          "totalUsd": 103684.0,
           "topTraders": 15,
           "outcomes": {
             "home": {
-              "usd": 90893.0,
-              "topHolderShare": 0.758,
+              "usd": 90850.0,
+              "topHolderShare": 0.757,
               "holders": 200,
               "share": 0.876
             },
             "draw": {
-              "usd": 10086.0,
-              "topHolderShare": 0.892,
+              "usd": 10096.0,
+              "topHolderShare": 0.891,
               "holders": 200,
               "share": 0.097
             },
             "away": {
-              "usd": 2739.0,
-              "topHolderShare": 0.544,
+              "usd": 2738.0,
+              "topHolderShare": 0.543,
               "holders": 200,
               "share": 0.026
             }
@@ -14923,8 +14947,8 @@
             "score": 1.0,
             "confidence": 0.63,
             "evidence": "✈️ Heim 725km/5d (moderate)",
-            "weight": 1.057,
-            "weighted_score": 0.67,
+            "weight": 1.12,
+            "weighted_score": 0.71,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 1.0,
@@ -14945,8 +14969,8 @@
             "score": -2.2,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 3.2:0.7 vs Auswärts 2.5:0.7",
-            "weight": 1.335,
-            "weighted_score": -2.5,
+            "weight": 1.306,
+            "weighted_score": -2.44,
             "metadata": {
               "home_scored": 3.2,
               "home_conceded": 0.73,
@@ -14962,7 +14986,7 @@
             "score": -0.88,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 3.20-0.73 vs Auswärts 2.47-0.73 (Δ +0.73) · dünne xG-Abdeckung",
-            "weight": 1.232,
+            "weight": 1.2,
             "weighted_score": -0.22,
             "metadata": {
               "home_xg_for": 3.2,
@@ -14991,7 +15015,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.8,
+        "signalAdjustmentPP": -0.76,
         "signalCountPos": 1,
         "signalCountNeg": 2,
         "signalAdjustmentPP_trade": -0.8,
@@ -15014,7 +15038,7 @@
           "pinn_move_pp": 6.47,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 731.8,
+          "hours_since_open": 732.3,
           "open_pinn_odds": 3.57,
           "current_pinn_odds": 2.9,
           "move_age_decay": 0.0,
@@ -15025,23 +15049,23 @@
           "move_pp": 6.47
         },
         "smartMoney": {
-          "totalUsd": 70816.0,
+          "totalUsd": 70926.0,
           "topTraders": 9,
           "outcomes": {
             "home": {
-              "usd": 47319.0,
-              "topHolderShare": 0.608,
+              "usd": 47428.0,
+              "topHolderShare": 0.606,
               "holders": 200,
-              "share": 0.668
+              "share": 0.669
             },
             "draw": {
               "usd": 9823.0,
               "topHolderShare": 0.803,
               "holders": 200,
-              "share": 0.139
+              "share": 0.138
             },
             "away": {
-              "usd": 13674.0,
+              "usd": 13675.0,
               "topHolderShare": 0.779,
               "holders": 200,
               "share": 0.193
@@ -15098,8 +15122,8 @@
             "score": -2.0,
             "confidence": 0.7,
             "evidence": "✈️ Auswärts 994km/3d (significant)",
-            "weight": 1.057,
-            "weighted_score": -1.48,
+            "weight": 1.12,
+            "weighted_score": -1.57,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.9,
@@ -15120,8 +15144,8 @@
             "score": 3.37,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.5:1.2 vs Auswärts 3.2:0.7",
-            "weight": 1.335,
-            "weighted_score": 3.82,
+            "weight": 1.306,
+            "weighted_score": 3.74,
             "metadata": {
               "home_scored": 2.47,
               "home_conceded": 1.2,
@@ -15137,8 +15161,8 @@
             "score": 1.81,
             "confidence": 0.59,
             "evidence": "⚡ xG-Stärke: Heim 2.61-0.65 vs Auswärts 3.41-0.54 (Δ -0.91) · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.53,
+            "weight": 1.2,
+            "weighted_score": 0.51,
             "metadata": {
               "home_xg_for": 2.61,
               "home_xg_against": 0.65,
@@ -15243,14 +15267,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.55,
+        "signalAdjustmentPP": 0.5,
         "signalCountPos": 2,
         "signalCountNeg": 3,
-        "signalAdjustmentPP_trade": 0.6,
+        "signalAdjustmentPP_trade": 0.5,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 3,
         "effectiveEdgePP": -5.5,
-        "effectiveEdgePP_trade": -5.4,
+        "effectiveEdgePP_trade": -5.5,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -15265,19 +15289,19 @@
           "move_pp": 2.93
         },
         "smartMoney": {
-          "totalUsd": 36247.0,
+          "totalUsd": 36237.0,
           "topTraders": 6,
           "outcomes": {
             "home": {
-              "usd": 23768.0,
+              "usd": 23758.0,
               "topHolderShare": 0.732,
               "holders": 200,
               "share": 0.656
             },
             "draw": {
               "usd": 4374.0,
-              "topHolderShare": 0.868,
-              "holders": 108,
+              "topHolderShare": 0.865,
+              "holders": 110,
               "share": 0.121
             },
             "away": {
@@ -15333,8 +15357,8 @@
             "score": -1.0,
             "confidence": 0.6,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Auswärts 994km/3d → Über-Bias",
-            "weight": 1.057,
-            "weighted_score": -0.63,
+            "weight": 1.12,
+            "weighted_score": -0.67,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.9,
@@ -15347,8 +15371,8 @@
             "score": 5.2,
             "confidence": 0.8,
             "evidence": "📈 Form-Tor-Schnitt 3.8/Spiel vs Linie 2.5 → stützt Über (+1.3 ggü. Linie)",
-            "weight": 1.335,
-            "weighted_score": 5.55,
+            "weight": 1.306,
+            "weighted_score": 5.43,
             "metadata": {
               "expected_total": 3.8,
               "ou_line": 2.5,
@@ -15361,8 +15385,8 @@
             "score": 3.86,
             "confidence": 0.52,
             "evidence": "⚡ xG-Stärke-Tore: erwartet 3.60/Spiel vs Linie 2.5 → Über +1.10 · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.99,
+            "weight": 1.2,
+            "weighted_score": 0.96,
             "metadata": {
               "expected_total": 3.6,
               "ou_line": 2.5,
@@ -15400,14 +15424,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 3.04,
+        "signalAdjustmentPP": 2.96,
         "signalCountPos": 4,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": 1.4,
+        "signalAdjustmentPP_trade": 1.3,
         "signalCountPos_trade": 3,
         "signalCountNeg_trade": 1,
         "effectiveEdgePP": -2.0,
-        "effectiveEdgePP_trade": -3.6,
+        "effectiveEdgePP_trade": -3.7,
         "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -15418,19 +15442,19 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 36247.0,
+          "totalUsd": 36237.0,
           "topTraders": 6,
           "outcomes": {
             "home": {
-              "usd": 23768.0,
+              "usd": 23758.0,
               "topHolderShare": 0.732,
               "holders": 200,
               "share": 0.656
             },
             "draw": {
               "usd": 4374.0,
-              "topHolderShare": 0.868,
-              "holders": 108,
+              "topHolderShare": 0.865,
+              "holders": 110,
               "share": 0.121
             },
             "away": {
@@ -15486,8 +15510,8 @@
             "score": 1.33,
             "confidence": 0.75,
             "evidence": "📈 BTTS-Schnitt Form 63% (Heim 2.5:1.2, Auswärts 3.2:0.7) → Beide treffen Ja",
-            "weight": 1.335,
-            "weighted_score": 0.53,
+            "weight": 1.306,
+            "weighted_score": 0.52,
             "metadata": {
               "avg_btts_rate": 0.633,
               "pick_side": "BTTS-Ja"
@@ -15499,8 +15523,8 @@
             "score": 6.0,
             "confidence": 0.44,
             "evidence": "⚡ xG-Stärke: Heim 2.61 vs Ausw-Defense 0.54, Ausw 3.41 vs Heim-Defense 0.65 → Beide treffen Ja · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 3.25,
+            "weight": 1.2,
+            "weighted_score": 3.17,
             "metadata": {
               "h_score_strength": 4.79,
               "a_score_strength": 5.24,
@@ -15524,7 +15548,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 3.05,
+        "signalAdjustmentPP": 3.04,
         "signalCountPos": 3,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": 1.4,
@@ -15542,19 +15566,19 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 36247.0,
+          "totalUsd": 36237.0,
           "topTraders": 6,
           "outcomes": {
             "home": {
-              "usd": 23768.0,
+              "usd": 23758.0,
               "topHolderShare": 0.732,
               "holders": 200,
               "share": 0.656
             },
             "draw": {
               "usd": 4374.0,
-              "topHolderShare": 0.868,
-              "holders": 108,
+              "topHolderShare": 0.865,
+              "holders": 110,
               "share": 0.121
             },
             "away": {
@@ -15606,8 +15630,8 @@
             "score": 1.0,
             "confidence": 0.75,
             "evidence": "📈 BTTS-Schnitt Form 40% (Heim 2.5:0.7, Auswärts 1.1:1.0) → Beide treffen Nein",
-            "weight": 1.335,
-            "weighted_score": 0.4,
+            "weight": 1.306,
+            "weighted_score": 0.39,
             "metadata": {
               "avg_btts_rate": 0.4,
               "pick_side": "BTTS-Nein"
@@ -15619,8 +15643,8 @@
             "score": -1.44,
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.47 vs Ausw-Defense 1.00, Ausw 1.07 vs Heim-Defense 0.73 → Beide treffen Nein",
-            "weight": 1.232,
-            "weighted_score": -1.15,
+            "weight": 1.2,
+            "weighted_score": -1.12,
             "metadata": {
               "h_score_strength": 2.47,
               "a_score_strength": 1.46,
@@ -15647,26 +15671,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 11299.0,
+          "totalUsd": 11387.0,
           "topTraders": 2,
           "outcomes": {
             "home": {
-              "usd": 8314.0,
-              "topHolderShare": 0.921,
-              "holders": 107,
-              "share": 0.736
+              "usd": 8398.0,
+              "topHolderShare": 0.913,
+              "holders": 110,
+              "share": 0.738
             },
             "draw": {
               "usd": 1461.0,
               "topHolderShare": 0.817,
               "holders": 69,
-              "share": 0.129
+              "share": 0.128
             },
             "away": {
-              "usd": 1524.0,
-              "topHolderShare": 0.814,
-              "holders": 103,
-              "share": 0.135
+              "usd": 1528.0,
+              "topHolderShare": 0.812,
+              "holders": 105,
+              "share": 0.134
             }
           }
         }
@@ -15921,8 +15945,8 @@
             "score": 1.0,
             "confidence": 0.62,
             "evidence": "✈️ Auswärts 2098km/4d (significant) · Heim 742km/5d (moderate)",
-            "weight": 1.057,
-            "weighted_score": 0.66,
+            "weight": 1.12,
+            "weighted_score": 0.69,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 0.9,
@@ -15950,8 +15974,8 @@
             "score": 1.2,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.3:0.3 vs Auswärts 2.3:0.7",
-            "weight": 1.335,
-            "weighted_score": 1.36,
+            "weight": 1.306,
+            "weighted_score": 1.33,
             "metadata": {
               "home_scored": 2.33,
               "home_conceded": 0.27,
@@ -15994,18 +16018,18 @@
           },
           {
             "name": "smart_money",
-            "score": 0.69,
+            "score": 0.7,
             "confidence": 0.41,
             "evidence": "💰 Smart Money: 80% auf Heim (Top-Wallets 70%) vs Pinnacle-Fair 63% → mehr als der Markt rechtfertigt",
             "weight": 1.0,
-            "weighted_score": 0.28,
+            "weighted_score": 0.29,
             "metadata": {
               "outcome": "home",
-              "share": 0.796,
-              "topHolderShare": 0.699,
+              "share": 0.798,
+              "topHolderShare": 0.7,
               "fairShare": 0.631,
-              "excessPP": 16.5,
-              "totalUsd": 135266.0,
+              "excessPP": 16.7,
+              "totalUsd": 136383.0,
               "topTraders": 14
             }
           }
@@ -16035,26 +16059,26 @@
         "firstBetAt": "2026-06-18T14:52:38.406099+00:00",
         "pickTriggerReason": "Hält BET: war bestätigt, Move ruht — aber kein Reverser dagegen (bleibt bis frisches Gegen-Geld kommt)",
         "smartMoney": {
-          "totalUsd": 135266.0,
+          "totalUsd": 136383.0,
           "topTraders": 14,
           "outcomes": {
             "home": {
-              "usd": 107655.0,
-              "topHolderShare": 0.699,
+              "usd": 108770.0,
+              "topHolderShare": 0.7,
               "holders": 200,
-              "share": 0.796
+              "share": 0.798
             },
             "draw": {
-              "usd": 9313.0,
-              "topHolderShare": 0.851,
+              "usd": 9312.0,
+              "topHolderShare": 0.85,
               "holders": 200,
-              "share": 0.069
+              "share": 0.068
             },
             "away": {
-              "usd": 18298.0,
+              "usd": 18301.0,
               "topHolderShare": 0.924,
               "holders": 200,
-              "share": 0.135
+              "share": 0.134
             }
           }
         }
@@ -16105,8 +16129,8 @@
             "score": -1.0,
             "confidence": 0.62,
             "evidence": "✈️ Auswärts 2335km/5d (significant) · Heim 904km/4d (moderate)",
-            "weight": 1.057,
-            "weighted_score": -0.66,
+            "weight": 1.12,
+            "weighted_score": -0.69,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 0.9,
@@ -16134,8 +16158,8 @@
             "score": 4.33,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.5:1.5 vs Auswärts 2.2:0.6",
-            "weight": 1.335,
-            "weighted_score": 4.91,
+            "weight": 1.306,
+            "weighted_score": 4.81,
             "metadata": {
               "home_scored": 1.53,
               "home_conceded": 1.53,
@@ -16151,8 +16175,8 @@
             "score": 1.92,
             "confidence": 0.65,
             "evidence": "⚡ Form-xG (Proxy): Heim 1.53-1.53 vs Auswärts 2.20-0.60 (Δ -1.60)",
-            "weight": 1.232,
-            "weighted_score": 0.62,
+            "weight": 1.2,
+            "weighted_score": 0.6,
             "metadata": {
               "home_xg_for": 1.53,
               "home_xg_against": 1.53,
@@ -16180,14 +16204,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.87,
+        "signalAdjustmentPP": 1.8,
         "signalCountPos": 2,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": 1.9,
+        "signalAdjustmentPP_trade": 1.8,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -3.1,
-        "effectiveEdgePP_trade": -3.1,
+        "effectiveEdgePP": -3.2,
+        "effectiveEdgePP_trade": -3.2,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -16203,7 +16227,7 @@
           "pinn_move_pp": 5.21,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 731.8,
+          "hours_since_open": 732.3,
           "open_pinn_odds": 1.71,
           "current_pinn_odds": 1.57,
           "move_age_decay": 0.0,
@@ -16214,26 +16238,26 @@
           "move_pp": 5.21
         },
         "smartMoney": {
-          "totalUsd": 32596.0,
+          "totalUsd": 32567.0,
           "topTraders": 4,
           "outcomes": {
             "home": {
-              "usd": 2555.0,
-              "topHolderShare": 0.682,
+              "usd": 2523.0,
+              "topHolderShare": 0.688,
               "holders": 151,
-              "share": 0.078
+              "share": 0.077
             },
             "draw": {
               "usd": 2832.0,
-              "topHolderShare": 0.585,
-              "holders": 171,
+              "topHolderShare": 0.583,
+              "holders": 172,
               "share": 0.087
             },
             "away": {
-              "usd": 27209.0,
-              "topHolderShare": 0.929,
-              "holders": 164,
-              "share": 0.835
+              "usd": 27212.0,
+              "topHolderShare": 0.935,
+              "holders": 165,
+              "share": 0.836
             }
           }
         }
@@ -16285,8 +16309,8 @@
             "score": -1.33,
             "confidence": 0.75,
             "evidence": "📈 BTTS-Schnitt Form 37% (Heim 2.2:0.6, Auswärts 2.3:0.7) → Beide treffen Ja",
-            "weight": 1.335,
-            "weighted_score": -0.53,
+            "weight": 1.306,
+            "weighted_score": -0.52,
             "metadata": {
               "avg_btts_rate": 0.367,
               "pick_side": "BTTS-Ja"
@@ -16298,8 +16322,8 @@
             "score": 6.0,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.20 vs Ausw-Defense 0.67, Ausw 2.27 vs Heim-Defense 0.60 → Beide treffen Ja · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 3.84,
+            "weight": 1.2,
+            "weighted_score": 3.74,
             "metadata": {
               "h_score_strength": 3.3,
               "a_score_strength": 3.78,
@@ -16323,7 +16347,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 2.15,
+        "signalAdjustmentPP": 2.12,
         "signalCountPos": 1,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": 2.1,
@@ -16341,7 +16365,7 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 27056.0,
+          "totalUsd": 27063.0,
           "topTraders": 7,
           "outcomes": {
             "home": {
@@ -16354,12 +16378,12 @@
               "usd": 8159.0,
               "topHolderShare": 0.968,
               "holders": 63,
-              "share": 0.302
+              "share": 0.301
             },
             "away": {
-              "usd": 11338.0,
-              "topHolderShare": 0.847,
-              "holders": 147,
+              "usd": 11345.0,
+              "topHolderShare": 0.842,
+              "holders": 144,
               "share": 0.419
             }
           }
@@ -16412,8 +16436,8 @@
             "score": 2.0,
             "confidence": 0.7,
             "evidence": "✈️ Auswärts 2297km/4d (significant)",
-            "weight": 1.057,
-            "weighted_score": 1.48,
+            "weight": 1.12,
+            "weighted_score": 1.57,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.9,
@@ -16445,7 +16469,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.19,
+        "signalAdjustmentPP": 1.22,
         "signalCountPos": 1,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": 1.2,
@@ -16467,7 +16491,7 @@
           "move_pp": 3.99
         },
         "smartMoney": {
-          "totalUsd": 27056.0,
+          "totalUsd": 27063.0,
           "topTraders": 7,
           "outcomes": {
             "home": {
@@ -16480,12 +16504,12 @@
               "usd": 8159.0,
               "topHolderShare": 0.968,
               "holders": 63,
-              "share": 0.302
+              "share": 0.301
             },
             "away": {
-              "usd": 11338.0,
-              "topHolderShare": 0.847,
-              "holders": 147,
+              "usd": 11345.0,
+              "topHolderShare": 0.842,
+              "holders": 144,
               "share": 0.419
             }
           }
@@ -16692,8 +16716,8 @@
             "score": -1.0,
             "confidence": 0.75,
             "evidence": "📈 BTTS-Schnitt Form 60% (Heim 2.3:0.9, Auswärts 1.9:1.2) → Beide treffen Nein",
-            "weight": 1.335,
-            "weighted_score": -0.4,
+            "weight": 1.306,
+            "weighted_score": -0.39,
             "metadata": {
               "avg_btts_rate": 0.6,
               "pick_side": "BTTS-Nein"
@@ -16705,8 +16729,8 @@
             "score": -2.97,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.33 vs Ausw-Defense 1.20, Ausw 1.87 vs Heim-Defense 0.93 → Beide treffen Nein · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": -1.9,
+            "weight": 1.2,
+            "weighted_score": -1.85,
             "metadata": {
               "h_score_strength": 1.94,
               "a_score_strength": 2.0,
@@ -16733,25 +16757,25 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 35058.0,
-          "topTraders": 7,
+          "totalUsd": 35566.0,
+          "topTraders": 8,
           "outcomes": {
             "home": {
-              "usd": 30226.0,
-              "topHolderShare": 0.635,
+              "usd": 30731.0,
+              "topHolderShare": 0.63,
               "holders": 200,
-              "share": 0.862
+              "share": 0.864
             },
             "draw": {
               "usd": 2681.0,
-              "topHolderShare": 0.65,
-              "holders": 168,
-              "share": 0.076
+              "topHolderShare": 0.649,
+              "holders": 169,
+              "share": 0.075
             },
             "away": {
-              "usd": 2151.0,
-              "topHolderShare": 0.748,
-              "holders": 162,
+              "usd": 2154.0,
+              "topHolderShare": 0.747,
+              "holders": 167,
               "share": 0.061
             }
           }
@@ -16803,8 +16827,8 @@
             "score": 1.3,
             "confidence": 0.65,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Auswärts 1296km/5d → Unter-Bias",
-            "weight": 1.057,
-            "weighted_score": 0.89,
+            "weight": 1.12,
+            "weighted_score": 0.95,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.87,
@@ -16828,7 +16852,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.75,
+        "signalAdjustmentPP": 0.77,
         "signalCountPos": 1,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": 0.8,
@@ -16846,12 +16870,12 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 19966.0,
+          "totalUsd": 19980.0,
           "topTraders": 2,
           "outcomes": {
             "home": {
-              "usd": 15301.0,
-              "topHolderShare": 0.788,
+              "usd": 15306.0,
+              "topHolderShare": 0.787,
               "holders": 200,
               "share": 0.766
             },
@@ -16862,10 +16886,10 @@
               "share": 0.119
             },
             "away": {
-              "usd": 2286.0,
-              "topHolderShare": 0.702,
+              "usd": 2295.0,
+              "topHolderShare": 0.699,
               "holders": 128,
-              "share": 0.114
+              "share": 0.115
             }
           }
         }
@@ -16916,8 +16940,8 @@
             "score": 4.4,
             "confidence": 0.82,
             "evidence": "✈️ Auswärts 2428km/3d (critical) · Auswärts Höhe +1564m",
-            "weight": 1.057,
-            "weighted_score": 3.81,
+            "weight": 1.12,
+            "weighted_score": 4.04,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.82,
@@ -16938,8 +16962,8 @@
             "score": 0.94,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.3:0.9 vs Auswärts 2.1:1.1",
-            "weight": 1.335,
-            "weighted_score": 1.07,
+            "weight": 1.306,
+            "weighted_score": 1.04,
             "metadata": {
               "home_scored": 2.33,
               "home_conceded": 0.93,
@@ -16966,14 +16990,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.95,
+        "signalAdjustmentPP": 2.01,
         "signalCountPos": 2,
         "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": 1.9,
+        "signalAdjustmentPP_trade": 2.0,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 0,
         "effectiveEdgePP": -2.0,
-        "effectiveEdgePP_trade": -2.1,
+        "effectiveEdgePP_trade": -2.0,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -16988,11 +17012,11 @@
           "move_pp": 1.61
         },
         "smartMoney": {
-          "totalUsd": 38426.0,
+          "totalUsd": 38429.0,
           "topTraders": 4,
           "outcomes": {
             "home": {
-              "usd": 31327.0,
+              "usd": 31329.0,
               "topHolderShare": 0.907,
               "holders": 200,
               "share": 0.815
@@ -17004,8 +17028,8 @@
               "share": 0.077
             },
             "away": {
-              "usd": 4157.0,
-              "topHolderShare": 0.742,
+              "usd": 4158.0,
+              "topHolderShare": 0.751,
               "holders": 137,
               "share": 0.108
             }
@@ -17056,8 +17080,8 @@
             "score": 1.8,
             "confidence": 0.7,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Auswärts 2428km/3d → Unter-Bias",
-            "weight": 1.057,
-            "weighted_score": 1.33,
+            "weight": 1.12,
+            "weighted_score": 1.41,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.82,
@@ -17070,8 +17094,8 @@
             "score": -2.93,
             "confidence": 0.8,
             "evidence": "📈 Form-Tor-Schnitt 3.2/Spiel vs Linie 2.5 → warnt gegen Unter (+0.7 ggü. Linie)",
-            "weight": 1.335,
-            "weighted_score": -3.13,
+            "weight": 1.306,
+            "weighted_score": -3.06,
             "metadata": {
               "expected_total": 3.23,
               "ou_line": 2.5,
@@ -17084,8 +17108,8 @@
             "score": -1.8,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy)-Tore: erwartet 3.23/Spiel vs Linie 2.5 → Unter +0.73 · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": -0.46,
+            "weight": 1.2,
+            "weighted_score": -0.45,
             "metadata": {
               "expected_total": 3.23,
               "ou_line": 2.5,
@@ -17111,14 +17135,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.88,
+        "signalAdjustmentPP": -0.81,
         "signalCountPos": 1,
         "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": -0.9,
+        "signalAdjustmentPP_trade": -0.8,
         "signalCountPos_trade": 1,
         "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -4.9,
-        "effectiveEdgePP_trade": -4.9,
+        "effectiveEdgePP": -4.8,
+        "effectiveEdgePP_trade": -4.8,
         "convictionScore": 3,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -17129,11 +17153,11 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 38426.0,
+          "totalUsd": 38429.0,
           "topTraders": 4,
           "outcomes": {
             "home": {
-              "usd": 31327.0,
+              "usd": 31329.0,
               "topHolderShare": 0.907,
               "holders": 200,
               "share": 0.815
@@ -17145,8 +17169,8 @@
               "share": 0.077
             },
             "away": {
-              "usd": 4157.0,
-              "topHolderShare": 0.742,
+              "usd": 4158.0,
+              "topHolderShare": 0.751,
               "holders": 137,
               "share": 0.108
             }
@@ -17199,8 +17223,8 @@
             "score": -2.0,
             "confidence": 0.7,
             "evidence": "✈️ Heim 1127km/3d (significant)",
-            "weight": 1.057,
-            "weighted_score": -1.48,
+            "weight": 1.12,
+            "weighted_score": -1.57,
             "metadata": {
               "factor_home": 0.9,
               "factor_away": 1.0,
@@ -17232,14 +17256,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.23,
+        "signalAdjustmentPP": 0.17,
         "signalCountPos": 1,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": -2.1,
+        "signalAdjustmentPP_trade": -2.2,
         "signalCountPos_trade": 0,
         "signalCountNeg_trade": 1,
         "effectiveEdgePP": -3.8,
-        "effectiveEdgePP_trade": -6.1,
+        "effectiveEdgePP_trade": -6.2,
         "convictionScore": 3,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -17255,7 +17279,7 @@
           "pinn_move_pp": 7.62,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 606.1,
+          "hours_since_open": 606.7,
           "open_pinn_odds": 2.5,
           "current_pinn_odds": 2.1,
           "move_age_decay": 0.5,
@@ -17269,13 +17293,13 @@
         "firstBetAt": "2026-06-18T14:52:38.406099+00:00",
         "pickTriggerReason": "Hält BET: war bestätigt, Move ruht — aber kein Reverser dagegen (bleibt bis frisches Gegen-Geld kommt)",
         "smartMoney": {
-          "totalUsd": 17779.0,
+          "totalUsd": 17781.0,
           "topTraders": 5,
           "outcomes": {
             "home": {
-              "usd": 9872.0,
+              "usd": 9874.0,
               "topHolderShare": 0.936,
-              "holders": 78,
+              "holders": 79,
               "share": 0.555
             },
             "draw": {
@@ -17540,8 +17564,8 @@
             "score": 2.33,
             "confidence": 0.75,
             "evidence": "📈 BTTS-Schnitt Form 27% (Heim 2.3:0.5, Auswärts 1.7:1.1) → Beide treffen Nein",
-            "weight": 1.335,
-            "weighted_score": 0.93,
+            "weight": 1.306,
+            "weighted_score": 0.91,
             "metadata": {
               "avg_btts_rate": 0.267,
               "pick_side": "BTTS-Nein"
@@ -17553,8 +17577,8 @@
             "score": -3.74,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.33 vs Ausw-Defense 1.07, Ausw 1.67 vs Heim-Defense 0.47 → Beide treffen Nein · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": -2.4,
+            "weight": 1.2,
+            "weighted_score": -2.33,
             "metadata": {
               "h_score_strength": 2.19,
               "a_score_strength": 3.33,
@@ -17563,7 +17587,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.41,
+        "signalAdjustmentPP": -1.4,
         "signalCountPos": 1,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": -1.4,
@@ -17581,12 +17605,12 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 56653.0,
+          "totalUsd": 56788.0,
           "topTraders": 15,
           "outcomes": {
             "home": {
-              "usd": 40102.0,
-              "topHolderShare": 0.759,
+              "usd": 40219.0,
+              "topHolderShare": 0.758,
               "holders": 200,
               "share": 0.708
             },
@@ -17594,12 +17618,12 @@
               "usd": 8362.0,
               "topHolderShare": 0.877,
               "holders": 177,
-              "share": 0.148
+              "share": 0.147
             },
             "away": {
-              "usd": 8189.0,
-              "topHolderShare": 0.827,
-              "holders": 194,
+              "usd": 8207.0,
+              "topHolderShare": 0.825,
+              "holders": 197,
               "share": 0.145
             }
           }
@@ -17649,8 +17673,8 @@
             "score": -2.0,
             "confidence": 0.7,
             "evidence": "✈️ Heim 1990km/5d (significant)",
-            "weight": 1.057,
-            "weighted_score": -1.48,
+            "weight": 1.12,
+            "weighted_score": -1.57,
             "metadata": {
               "factor_home": 0.9,
               "factor_away": 1.0,
@@ -17671,8 +17695,8 @@
             "score": 3.5,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.3:0.5 vs Auswärts 1.7:1.1",
-            "weight": 1.335,
-            "weighted_score": 3.97,
+            "weight": 1.306,
+            "weighted_score": 3.89,
             "metadata": {
               "home_scored": 2.33,
               "home_conceded": 0.47,
@@ -17688,8 +17712,8 @@
             "score": 1.52,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.33-0.47 vs Auswärts 1.67-1.07 (Δ +1.27) · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": 0.39,
+            "weight": 1.2,
+            "weighted_score": 0.38,
             "metadata": {
               "home_xg_for": 2.33,
               "home_xg_against": 0.47,
@@ -17717,14 +17741,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.09,
+        "signalAdjustmentPP": 1.02,
         "signalCountPos": 2,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": 1.1,
+        "signalAdjustmentPP_trade": 1.0,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -2.9,
-        "effectiveEdgePP_trade": -2.9,
+        "effectiveEdgePP": -3.0,
+        "effectiveEdgePP_trade": -3.0,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -17740,7 +17764,7 @@
           "pinn_move_pp": 6.21,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 731.8,
+          "hours_since_open": 732.3,
           "open_pinn_odds": 1.32,
           "current_pinn_odds": 1.22,
           "move_age_decay": 0.0,
@@ -17751,12 +17775,12 @@
           "move_pp": 6.21
         },
         "smartMoney": {
-          "totalUsd": 56653.0,
+          "totalUsd": 56788.0,
           "topTraders": 15,
           "outcomes": {
             "home": {
-              "usd": 40102.0,
-              "topHolderShare": 0.759,
+              "usd": 40219.0,
+              "topHolderShare": 0.758,
               "holders": 200,
               "share": 0.708
             },
@@ -17764,12 +17788,12 @@
               "usd": 8362.0,
               "topHolderShare": 0.877,
               "holders": 177,
-              "share": 0.148
+              "share": 0.147
             },
             "away": {
-              "usd": 8189.0,
-              "topHolderShare": 0.827,
-              "holders": 194,
+              "usd": 8207.0,
+              "topHolderShare": 0.825,
+              "holders": 197,
               "share": 0.145
             }
           }
@@ -17821,8 +17845,8 @@
             "score": 1.0,
             "confidence": 0.6,
             "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Auswärts 572km/5d → Unter-Bias",
-            "weight": 1.057,
-            "weighted_score": 0.63,
+            "weight": 1.12,
+            "weighted_score": 0.67,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.9,
@@ -17835,8 +17859,8 @@
             "score": -2.67,
             "confidence": 0.8,
             "evidence": "📈 Form-Tor-Schnitt 3.2/Spiel vs Linie 2.5 → warnt gegen Unter (+0.7 ggü. Linie)",
-            "weight": 1.335,
-            "weighted_score": -2.85,
+            "weight": 1.306,
+            "weighted_score": -2.79,
             "metadata": {
               "expected_total": 3.17,
               "ou_line": 2.5,
@@ -17849,8 +17873,8 @@
             "score": -1.63,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy)-Tore: erwartet 3.17/Spiel vs Linie 2.5 → Unter +0.67 · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": -0.42,
+            "weight": 1.2,
+            "weighted_score": -0.41,
             "metadata": {
               "expected_total": 3.17,
               "ou_line": 2.5,
@@ -17876,14 +17900,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": -1.07,
+        "signalAdjustmentPP": -1.03,
         "signalCountPos": 1,
         "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": -1.1,
+        "signalAdjustmentPP_trade": -1.0,
         "signalCountPos_trade": 1,
         "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -6.1,
-        "effectiveEdgePP_trade": -6.1,
+        "effectiveEdgePP": -6.0,
+        "effectiveEdgePP_trade": -6.0,
         "convictionScore": 3,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -17894,24 +17918,24 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 22190.0,
+          "totalUsd": 22266.0,
           "topTraders": 6,
           "outcomes": {
             "home": {
               "usd": 2143.0,
-              "topHolderShare": 0.787,
-              "holders": 88,
-              "share": 0.097
+              "topHolderShare": 0.782,
+              "holders": 90,
+              "share": 0.096
             },
             "draw": {
               "usd": 3127.0,
-              "topHolderShare": 0.814,
-              "holders": 108,
-              "share": 0.141
+              "topHolderShare": 0.811,
+              "holders": 109,
+              "share": 0.14
             },
             "away": {
-              "usd": 16920.0,
-              "topHolderShare": 0.696,
+              "usd": 16996.0,
+              "topHolderShare": 0.693,
               "holders": 200,
               "share": 0.763
             }
@@ -17958,8 +17982,8 @@
             "score": -1.29,
             "confidence": 0.49,
             "evidence": "Konsens (12 Books) unter-bettet BTTS Nein um 2.2pp vs Pinnacle → kein Public-Edge",
-            "weight": 1.1,
-            "weighted_score": -0.7,
+            "weight": 1.167,
+            "weighted_score": -0.74,
             "metadata": {
               "market_key": "bttsN",
               "diff_pp": -2.17,
@@ -17973,8 +17997,8 @@
             "score": -2.65,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.33 vs Ausw-Defense 1.27, Ausw 1.60 vs Heim-Defense 0.47 → Beide treffen Nein · dünne xG-Abdeckung",
-            "weight": 1.232,
-            "weighted_score": -1.7,
+            "weight": 1.2,
+            "weighted_score": -1.65,
             "metadata": {
               "h_score_strength": 1.84,
               "a_score_strength": 3.2,
@@ -17983,7 +18007,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": -2.03,
+        "signalAdjustmentPP": -2.0,
         "signalCountPos": 0,
         "signalCountNeg": 2,
         "signalAdjustmentPP_trade": -2.0,
@@ -18001,26 +18025,26 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 16812.0,
+          "totalUsd": 16900.0,
           "topTraders": 3,
           "outcomes": {
             "home": {
-              "usd": 11662.0,
+              "usd": 11810.0,
               "topHolderShare": 0.709,
               "holders": 191,
-              "share": 0.694
+              "share": 0.699
             },
             "draw": {
-              "usd": 856.0,
-              "topHolderShare": 0.72,
-              "holders": 79,
-              "share": 0.051
+              "usd": 796.0,
+              "topHolderShare": 0.718,
+              "holders": 78,
+              "share": 0.047
             },
             "away": {
               "usd": 4294.0,
               "topHolderShare": 0.882,
               "holders": 108,
-              "share": 0.255
+              "share": 0.254
             }
           }
         }
@@ -18071,8 +18095,8 @@
             "score": -1.0,
             "confidence": 0.63,
             "evidence": "✈️ Heim 202km/3d (moderate)",
-            "weight": 1.057,
-            "weighted_score": -0.67,
+            "weight": 1.12,
+            "weighted_score": -0.71,
             "metadata": {
               "factor_home": 0.95,
               "factor_away": 1.0,
@@ -18100,8 +18124,8 @@
             "score": 2.2,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 2.4:1.1 vs Auswärts 1.7:1.1",
-            "weight": 1.335,
-            "weighted_score": 2.5,
+            "weight": 1.306,
+            "weighted_score": 2.44,
             "metadata": {
               "home_scored": 2.4,
               "home_conceded": 1.07,
@@ -18117,7 +18141,7 @@
             "score": 0.88,
             "confidence": 0.52,
             "evidence": "⚡ Form-xG (Proxy): Heim 2.40-1.07 vs Auswärts 1.67-1.07 (Δ +0.73) · dünne xG-Abdeckung",
-            "weight": 1.232,
+            "weight": 1.2,
             "weighted_score": 0.22,
             "metadata": {
               "home_xg_for": 2.4,
@@ -18146,7 +18170,7 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.8,
+        "signalAdjustmentPP": 0.76,
         "signalCountPos": 2,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": 0.8,
@@ -18177,7 +18201,7 @@
             "home": {
               "usd": 15296.0,
               "topHolderShare": 0.871,
-              "holders": 142,
+              "holders": 143,
               "share": 0.665
             },
             "draw": {
