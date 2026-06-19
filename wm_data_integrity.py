@@ -762,27 +762,37 @@ def check_freshness_learning_coupled(ctx):
                 "Signal nicht registriert.")
 
 
+# Spread-Gate-Härtung ging am 17.06.2026 abends live (entryAsk-Recording + REQUIRE_BOOK_FOR_
+# ENTRY). Positionen DAVOR wurden teils zum Mid eingebucht (entryAsk=None) — bekannter Alt-
+# Bestand, läuft aus, kein neuer Fehler. Der Guard meldet daher nur Positionen AB diesem
+# Stichtag: ein neuer Mid-Entry = echte Regression (Gate umgangen). Alt-Bestand = stumm.
+ENTRY_ASK_GUARD_SINCE = "2026-06-18"
+
+
 @integrity_check
 def check_entry_priced_at_ask(ctx):
     """Entry-Mid-Phantom (18.06.2026, Lucas — „Handicap-Phantom"): eine OFFENE Auto-Position
-    OHNE entryAsk wurde zum MITTELPREIS eingebucht, nicht zum tatsächlich gezahlten Ask. Die
-    P&L-Baseline ist dann zu niedrig → jeder „Gewinn" überzeichnet (ESP-SAU AH −3.5 „+10%"
-    war real ~flat). Forward ist das gefixt (Spread-Gate + REQUIRE_BOOK_FOR_ENTRY → Eintritt
-    zum Ask oder skip); dieser Guard macht die Alt-Positionen sichtbar, deren angezeigte P&L
-    unzuverlässig ist (altern aus). Greift universal (1X2/OU/AH/BTTS)."""
+    OHNE entryAsk wurde zum MITTELPREIS eingebucht statt zum gezahlten Ask → P&L-Baseline zu
+    niedrig, „Gewinn" überzeichnet (ESP-SAU AH −3.5 „+10%" war real ~flat). Forward gefixt
+    (Spread-Gate + REQUIRE_BOOK_FOR_ENTRY → Ask oder skip). Dieser Guard ist ein REGRESSIONS-
+    Melder: nur Positionen ab ENTRY_ASK_GUARD_SINCE (= nach der Härtung) zählen — der bekannte
+    Alt-Bestand davor ist bewusst stumm (läuft aus, Exit über Bid + cache_mid-Veto gesichert)."""
     fails = []
     for b in ctx.auto_bets:
         st = (b.get("status") or "").lower()
         if st in ("sold", "resolved") or b.get("soldAt") or b.get("resolved"):
             continue
+        placed = (b.get("placedAt") or "")[:10]
+        if not placed or placed < ENTRY_ASK_GUARD_SINCE:
+            continue                       # Alt-Bestand vor der Härtung → stumm
         if b.get("entryAsk") is None:
-            fails.append(f"{b.get('homeId')}-{b.get('awayId')} {b.get('market','')}: "
-                         f"entryAsk fehlt — Entry am Mid geloggt, P&L-Baseline unsicher")
-    return _chk("entry_priced_at_ask", "Offene Positionen am Ask eingebucht (nicht Mid)",
+            fails.append(f"{b.get('homeId')}-{b.get('awayId')} {b.get('market','')} "
+                         f"({placed}): entryAsk fehlt — NEUER Mid-Entry, Spread-Gate umgangen")
+    return _chk("entry_priced_at_ask", "Neue Entries am Ask eingebucht (nicht Mid)",
                 "warn", fails,
-                "Mid-Entry überzeichnet jeden Gewinn (Spread-Phantom-Klasse). Neue Entries "
-                "gehen über das Spread-Gate (Ask oder skip); Alt-Positionen ohne entryAsk "
-                "altern aus. Bewertung/Exit ist über Bid + cache_mid-Veto abgesichert.")
+                f"Regressions-Melder ab {ENTRY_ASK_GUARD_SINCE}: ein neuer Entry ohne entryAsk "
+                "heißt das Spread-Gate (REQUIRE_BOOK_FOR_ENTRY) wurde umgangen. Alt-Positionen "
+                "davor sind bewusst stumm (bekannt, laufen aus).")
 
 
 @integrity_check
