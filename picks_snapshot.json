@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-06-19T19:25:05.338315+00:00",
+  "savedAt": "2026-06-19T19:35:26.057777+00:00",
   "picks": {
     "A-1-KOR-CZE": [
       {
@@ -855,7 +855,7 @@
           "pinn_move_pp": 6.37,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 604.5,
+          "hours_since_open": 604.6,
           "open_pinn_odds": 4.02,
           "current_pinn_odds": 3.2,
           "move_age_decay": 0.5,
@@ -1053,7 +1053,7 @@
           "pinn_move_pp": 15.55,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 604.5,
+          "hours_since_open": 604.6,
           "open_pinn_odds": 2.13,
           "current_pinn_odds": 1.6,
           "move_age_decay": 0.5,
@@ -2631,7 +2631,7 @@
           "pinn_move_pp": 11.9,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 604.5,
+          "hours_since_open": 604.6,
           "open_pinn_odds": 1.68,
           "current_pinn_odds": 1.4,
           "move_age_decay": 0.5,
@@ -3816,14 +3816,14 @@
       {
         "market": "Beide Teams treffen — Ja",
         "odds": 2.3,
-        "modelOdds": 2.156,
+        "modelOdds": 2.182,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": 0,
-        "info": "📉 Pinnacle 2.75→2.08 (Sharp-Money-Drop +11.7pp) · Soft-Konsens hinkt +4.6pp (Value, noch nicht bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
+        "edgePP": -1,
+        "info": "📉 Pinnacle 2.75→2.1 (Sharp-Money-Drop +11.3pp) · Soft-Konsens hinkt +4.1pp (Value, noch nicht bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -3832,9 +3832,9 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 11.7,
+        "steamMovePP": 11.3,
         "steamOpen": 2.75,
-        "steamCur": 2.08,
+        "steamCur": 2.1,
         "softOpen": 2.3,
         "softNow": 2.3,
         "entryBook": "soft",
@@ -3848,28 +3848,28 @@
         "signals": [
           {
             "name": "public_static_bias",
-            "score": -1.95,
-            "confidence": 0.54,
-            "evidence": "Konsens (13 Books) unter-bettet BTTS Ja um 3.5pp vs Pinnacle → kein Public-Edge",
+            "score": -1.69,
+            "confidence": 0.52,
+            "evidence": "Konsens (13 Books) unter-bettet BTTS Ja um 3.0pp vs Pinnacle → kein Public-Edge",
             "weight": 1.1,
-            "weighted_score": -1.16,
+            "weighted_score": -0.97,
             "metadata": {
               "market_key": "bttsY",
-              "diff_pp": -3.51,
-              "sharp_p": 0.4453,
+              "diff_pp": -2.97,
+              "sharp_p": 0.44,
               "public_p": 0.4103,
               "public_bk": "Konsens (13 Books)"
             }
           }
         ],
-        "signalAdjustmentPP": -1.95,
+        "signalAdjustmentPP": -1.7,
         "signalCountPos": 0,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": -1.9,
+        "signalAdjustmentPP_trade": -1.7,
         "signalCountPos_trade": 0,
         "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -1.9,
-        "effectiveEdgePP_trade": -1.9,
+        "effectiveEdgePP": -2.7,
+        "effectiveEdgePP_trade": -2.7,
         "convictionScore": 3,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -3878,7 +3878,9 @@
           "model_stack": 1,
           "context": 0,
           "market": 0
-        }
+        },
+        "trackingExcluded": true,
+        "demotedRiskyGame": true
       },
       {
         "market": "Doppelte Chance — X2",
@@ -3972,21 +3974,23 @@
         "openingMovement": {
           "in_pick_direction": false,
           "move_pp": 2.8
-        }
+        },
+        "trackingExcluded": true,
+        "demotedRiskyGame": true
       }
     ],
     "C-2-SCO-MAR": [
       {
         "market": "Auswärtssieg",
         "odds": 1.67,
-        "modelOdds": 1.656,
+        "modelOdds": 1.662,
         "conf": "medium",
         "verdict": "BET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -4,
-        "info": "📉 Pinnacle 2.11→1.68 (Sharp-Money-Drop +13.4pp) · ⏱️ Late Entry — Lernwert, weniger CLV",
+        "info": "📉 Pinnacle 2.11→1.69 (Sharp-Money-Drop +13.0pp) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -3995,9 +3999,9 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 13.4,
+        "steamMovePP": 13.0,
         "steamOpen": 2.11,
-        "steamCur": 1.68,
+        "steamCur": 1.69,
         "softOpen": 1.67,
         "softNow": 1.67,
         "entryBook": "soft",
@@ -4011,18 +4015,18 @@
         "signals": [
           {
             "name": "lead_lag_bias",
-            "score": 3.75,
+            "score": 3.49,
             "confidence": 0.7,
-            "evidence": "Pinnacle Auswärts +2.8pp · public folgt(1) → bestätigt",
+            "evidence": "Pinnacle Auswärts +2.6pp · public folgt(1) → bestätigt",
             "weight": 0.994,
-            "weighted_score": 2.61,
+            "weighted_score": 2.43,
             "metadata": {
               "stage": "confirmed",
-              "pinn_move_pp": 2.81,
+              "pinn_move_pp": 2.61,
               "soft_moves": [
                 {
                   "bk": "public",
-                  "move_pp": 2.22
+                  "move_pp": 2.52
                 }
               ],
               "outcome": "aw"
@@ -4093,7 +4097,7 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 2.03,
+        "signalAdjustmentPP": 1.96,
         "signalCountPos": 4,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": 2.0,
@@ -4113,18 +4117,18 @@
         "sharpMoveActive": true,
         "sharpMoveDetails": {
           "triggered": true,
-          "pinn_move_pp": 12.49,
+          "pinn_move_pp": 13.21,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 730.1,
+          "hours_since_open": 730.3,
           "open_pinn_odds": 2.11,
-          "current_pinn_odds": 1.67,
+          "current_pinn_odds": 1.65,
           "move_age_decay": 0.0,
           "move_age_days": 30.4
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 12.49
+          "move_pp": 13.21
         },
         "pickTriggerReason": "Conviction 7/10 (≥6) — frischer Move + Signale bestätigen den Pick",
         "firstBetAt": "2026-06-18T14:52:38.406099+00:00"
@@ -4574,7 +4578,7 @@
           "pinn_move_pp": 5.37,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 604.5,
+          "hours_since_open": 604.6,
           "open_pinn_odds": 1.34,
           "current_pinn_odds": 1.25,
           "move_age_decay": 0.5,
@@ -5431,7 +5435,7 @@
           "pinn_move_pp": 5.16,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 730.1,
+          "hours_since_open": 730.3,
           "open_pinn_odds": 2.23,
           "current_pinn_odds": 2.0,
           "move_age_decay": 0.0,
@@ -5776,7 +5780,120 @@
         }
       }
     ],
-    "D-3-PRY-AUS": [],
+    "D-3-PRY-AUS": [
+      {
+        "market": "Heimsieg",
+        "odds": 2.15,
+        "modelOdds": 2.11,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": -2,
+        "info": "📉 Pinnacle 2.2→2.06 (Sharp-Money-Drop +3.8pp) · Soft-Konsens hinkt +2.0pp (Value, noch nicht bestätigt)",
+        "icon": "🔥",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "steam",
+        "lamH": null,
+        "lamA": null,
+        "lamTotal": null,
+        "source": "steam",
+        "steamMovePP": 3.8,
+        "steamOpen": 2.2,
+        "steamCur": 2.06,
+        "softOpen": 2.15,
+        "softNow": 2.15,
+        "entryBook": "soft",
+        "entryOdd": 2.15,
+        "lateEntry": false,
+        "steamDerived": false,
+        "softConfirmed": false,
+        "softFollowPP": 0.0,
+        "ahLine": null,
+        "recentMovePP": 1.3,
+        "freshnessState": "drift",
+        "legHours": 19.5,
+        "legSnaps": 2,
+        "lastMoveH": 0.0,
+        "flipReady": false,
+        "baseVerdict": "ABWÄGEN",
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": -2.0,
+            "confidence": 0.85,
+            "evidence": "📈 Form letzte 15: Heim 1.3:1.2 vs Auswärts 1.7:0.8",
+            "weight": 1.335,
+            "weighted_score": -2.27,
+            "metadata": {
+              "home_scored": 1.33,
+              "home_conceded": 1.2,
+              "away_scored": 1.67,
+              "away_conceded": 0.8,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            }
+          },
+          {
+            "name": "xg_strength",
+            "score": -0.88,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heim 1.33-1.20 vs Auswärts 1.67-0.80 (Δ -0.73)",
+            "weight": 1.232,
+            "weighted_score": -0.28,
+            "metadata": {
+              "home_xg_for": 1.33,
+              "home_xg_against": 1.2,
+              "away_xg_for": 1.67,
+              "away_xg_against": 0.8,
+              "relative_diff": -0.73,
+              "is_proxy": true,
+              "pick_side": "home"
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "freshness_leg",
+            "score": 0.0,
+            "confidence": 0.5,
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +1.3pp) — kein frisches Geld",
+            "weight": 1.0,
+            "weighted_score": 0.0,
+            "metadata": {
+              "state": "drift",
+              "recentMovePP": 1.3,
+              "legSnaps": 2,
+              "legHours": 19.5,
+              "flipReady": false
+            }
+          }
+        ],
+        "signalAdjustmentPP": -1.3,
+        "signalCountPos": 0,
+        "signalCountNeg": 2,
+        "signalAdjustmentPP_trade": -1.3,
+        "signalCountPos_trade": 0,
+        "signalCountNeg_trade": 2,
+        "effectiveEdgePP": -3.3,
+        "effectiveEdgePP_trade": -3.3,
+        "convictionScore": 2,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 1,
+          "model_stack": 1,
+          "context": 0,
+          "market": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": false,
+          "move_pp": 2.16
+        }
+      }
+    ],
     "D-3-USA-TUR": [
       {
         "market": "Beide Teams treffen — Ja",
@@ -5811,9 +5928,9 @@
         "ahLine": null,
         "recentMovePP": 4.3,
         "freshnessState": "confirm",
-        "legHours": 318.6,
-        "legSnaps": 15,
-        "lastMoveH": 14.8,
+        "legHours": 325.4,
+        "legSnaps": 16,
+        "lastMoveH": 21.5,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "signals": [
@@ -5854,8 +5971,8 @@
             "metadata": {
               "state": "confirm",
               "recentMovePP": 4.3,
-              "legSnaps": 15,
-              "legHours": 318.6,
+              "legSnaps": 16,
+              "legHours": 325.4,
               "flipReady": false
             }
           }
@@ -5879,16 +5996,16 @@
         }
       },
       {
-        "market": "Doppelte Chance — 1X",
-        "odds": 1.44,
-        "modelOdds": 1.469,
-        "conf": "medium",
+        "market": "Doppelte Chance — X2",
+        "odds": 1.5,
+        "modelOdds": 1.551,
+        "conf": "high",
         "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": -6,
-        "info": "📉 Pinnacle 2.5→2.33 (Sharp-Money-Drop +3.6pp) · Soft-Konsens hinkt +0.9pp (Value, noch nicht bestätigt) · ✅ Sichere Linie abgeleitet: Doppelte Chance — 1X @1.44 (These: Heimsieg @2.38)",
+        "edgePP": -7,
+        "info": "📉 Pinnacle 2.72→2.53 (Sharp-Money-Drop +4.0pp) · Soft-Konsens hinkt +3.8pp (Value, noch nicht bestätigt) · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.5 (These: Auswärtssieg @2.8)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -5897,36 +6014,36 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 3.6,
-        "steamOpen": 2.5,
-        "steamCur": 2.33,
-        "softOpen": 2.38,
-        "softNow": 2.38,
+        "steamMovePP": 4.0,
+        "steamOpen": 2.72,
+        "steamCur": 2.53,
+        "softOpen": 2.8,
+        "softNow": 2.8,
         "entryBook": "soft",
-        "entryOdd": 1.44,
+        "entryOdd": 1.5,
         "lateEntry": false,
         "steamDerived": false,
         "softConfirmed": false,
         "softFollowPP": 0.0,
         "ahLine": null,
-        "safeThesisMarket": "Heimsieg",
-        "safeThesisOdds": 2.38,
+        "safeThesisMarket": "Auswärtssieg",
+        "safeThesisOdds": 2.8,
         "safeDerived": true,
-        "recentMovePP": 2.0,
+        "recentMovePP": 2.4,
         "freshnessState": "drift",
-        "legHours": 14.8,
-        "legSnaps": 4,
+        "legHours": 6.8,
+        "legSnaps": 2,
         "lastMoveH": 0.0,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "signals": [
           {
             "name": "travel_burden",
-            "score": 1.0,
+            "score": -1.0,
             "confidence": 0.63,
             "evidence": "✈️ Auswärts 605km/5d (moderate)",
             "weight": 1.057,
-            "weighted_score": 0.67,
+            "weighted_score": -0.67,
             "metadata": {
               "factor_home": 1.0,
               "factor_away": 0.95,
@@ -5939,16 +6056,16 @@
                 "alt_shift": 315,
                 "burden": "moderate"
               },
-              "pick_side": "home"
+              "pick_side": "away"
             }
           },
           {
             "name": "form_trend",
-            "score": -1.67,
+            "score": 1.67,
             "confidence": 0.85,
             "evidence": "📈 Form letzte 15: Heim 1.9:1.5 vs Auswärts 2.2:1.2",
             "weight": 1.335,
-            "weighted_score": -1.9,
+            "weighted_score": 1.9,
             "metadata": {
               "home_scored": 1.87,
               "home_conceded": 1.47,
@@ -5956,29 +6073,29 @@
               "away_conceded": 1.2,
               "home_games": 15,
               "away_games": 15,
-              "pick_side": "home"
+              "pick_side": "away"
             }
           },
           {
             "name": "freshness_leg",
             "score": 0.0,
             "confidence": 0.5,
-            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +2.0pp) — kein frisches Geld",
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +2.4pp) — kein frisches Geld",
             "weight": 1.0,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
-              "recentMovePP": 2.0,
-              "legSnaps": 4,
-              "legHours": 14.8,
+              "recentMovePP": 2.4,
+              "legSnaps": 2,
+              "legHours": 6.8,
               "flipReady": false
             }
           }
         ],
-        "signalAdjustmentPP": -0.53,
+        "signalAdjustmentPP": 0.53,
         "signalCountPos": 1,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": -0.5,
+        "signalAdjustmentPP_trade": 0.5,
         "signalCountPos_trade": 1,
         "signalCountNeg_trade": 1,
         "effectiveEdgePP": -6.5,
@@ -5988,13 +6105,13 @@
         "convictionLabel": null,
         "convictionFamilies": {
           "sharp_money": 1,
-          "model_stack": 1,
-          "context": 1,
+          "model_stack": 2,
+          "context": 0,
           "market": 0
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": 1.67
+          "move_pp": 0.27
         }
       },
       {
@@ -6030,9 +6147,9 @@
         "ahLine": null,
         "recentMovePP": 4.2,
         "freshnessState": "drift",
-        "legHours": 318.6,
-        "legSnaps": 15,
-        "lastMoveH": 149.0,
+        "legHours": 325.4,
+        "legSnaps": 16,
+        "lastMoveH": 155.8,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "signals": [
@@ -6090,8 +6207,8 @@
             "metadata": {
               "state": "drift",
               "recentMovePP": 4.2,
-              "legSnaps": 15,
-              "legHours": 318.6,
+              "legSnaps": 16,
+              "legHours": 325.4,
               "flipReady": false
             }
           }
@@ -6574,7 +6691,7 @@
           "pinn_move_pp": 10.26,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 730.1,
+          "hours_since_open": 730.3,
           "open_pinn_odds": 1.24,
           "current_pinn_odds": 1.1,
           "move_age_decay": 0.0,
@@ -7809,7 +7926,7 @@
           "pinn_move_pp": 10.41,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 730.1,
+          "hours_since_open": 730.3,
           "open_pinn_odds": 1.82,
           "current_pinn_odds": 1.53,
           "move_age_decay": 0.0,
@@ -8711,7 +8828,7 @@
           "pinn_move_pp": 5.78,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 604.5,
+          "hours_since_open": 604.6,
           "open_pinn_odds": 2.39,
           "current_pinn_odds": 2.1,
           "move_age_decay": 0.5,
@@ -9730,7 +9847,7 @@
           "pinn_move_pp": 5.98,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 604.5,
+          "hours_since_open": 604.6,
           "open_pinn_odds": 3.22,
           "current_pinn_odds": 2.7,
           "move_age_decay": 0.5,
@@ -10583,7 +10700,7 @@
           "pinn_move_pp": 6.47,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 730.1,
+          "hours_since_open": 730.3,
           "open_pinn_odds": 3.57,
           "current_pinn_odds": 2.9,
           "move_age_decay": 0.0,
@@ -11611,7 +11728,7 @@
           "pinn_move_pp": 5.21,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 730.1,
+          "hours_since_open": 730.3,
           "open_pinn_odds": 1.71,
           "current_pinn_odds": 1.57,
           "move_age_decay": 0.0,
@@ -12260,7 +12377,7 @@
           "pinn_move_pp": 7.62,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 604.5,
+          "hours_since_open": 604.6,
           "open_pinn_odds": 2.5,
           "current_pinn_odds": 2.1,
           "move_age_decay": 0.5,
@@ -12853,7 +12970,7 @@
           "pinn_move_pp": 6.21,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 730.1,
+          "hours_since_open": 730.3,
           "open_pinn_odds": 1.32,
           "current_pinn_odds": 1.22,
           "move_age_decay": 0.0,
@@ -13439,6 +13556,112 @@
         "betHeld": true,
         "firstBetAt": "2026-06-18T14:52:38.406099+00:00",
         "pickTriggerReason": "Hält BET: war bestätigt, Move ruht — aber kein Reverser dagegen (bleibt bis frisches Gegen-Geld kommt)",
+        "trackingExcluded": true,
+        "demotedRiskyGame": true
+      },
+      {
+        "market": "Unter 2.5 Tore",
+        "odds": 2.31,
+        "modelOdds": 2.329,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": -3,
+        "info": "📉 Pinnacle 5.0→4.3 (Sharp-Money-Drop +3.0pp) · ✅ Sichere Linie abgeleitet: Unter 2.5 Tore @2.31 (These: Unter 1.5 Tore @4.3)",
+        "icon": "🔥",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "steam",
+        "lamH": null,
+        "lamA": null,
+        "lamTotal": null,
+        "source": "steam",
+        "steamMovePP": 3.0,
+        "steamOpen": 5.0,
+        "steamCur": 4.3,
+        "softOpen": null,
+        "softNow": null,
+        "entryBook": "pini",
+        "entryOdd": 2.31,
+        "lateEntry": false,
+        "steamDerived": false,
+        "softConfirmed": false,
+        "softFollowPP": null,
+        "ahLine": null,
+        "safeThesisMarket": "Unter 1.5 Tore",
+        "safeThesisOdds": 4.3,
+        "safeDerived": true,
+        "recentMovePP": -0.4,
+        "freshnessState": "drift",
+        "legHours": 28.3,
+        "legSnaps": 6,
+        "lastMoveH": 21.8,
+        "flipReady": false,
+        "baseVerdict": "ABWÄGEN",
+        "signals": [
+          {
+            "name": "travel_burden",
+            "score": 2.0,
+            "confidence": 0.7,
+            "evidence": "✈️ Reise-Erschöpfung dämpft Tore: Heim 1754km/3d · Auswärts 599km/3d → Unter-Bias",
+            "weight": 1.057,
+            "weighted_score": 1.48,
+            "metadata": {
+              "factor_home": 0.85,
+              "factor_away": 0.95,
+              "total_penalty": 0.2,
+              "pick_side": "Unter"
+            }
+          },
+          {
+            "name": "form_trend",
+            "score": -1.33,
+            "confidence": 0.8,
+            "evidence": "📈 Form-Tor-Schnitt 2.8/Spiel vs Linie 2.5 → warnt gegen Unter (+0.3 ggü. Linie)",
+            "weight": 1.335,
+            "weighted_score": -1.42,
+            "metadata": {
+              "expected_total": 2.83,
+              "ou_line": 2.5,
+              "diff_to_line": 0.33,
+              "pick_side": "Unter 2.5"
+            }
+          },
+          {
+            "name": "freshness_leg",
+            "score": 0.0,
+            "confidence": 0.5,
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt -0.4pp) — kein frisches Geld",
+            "weight": 1.0,
+            "weighted_score": 0.0,
+            "metadata": {
+              "state": "drift",
+              "recentMovePP": -0.4,
+              "legSnaps": 6,
+              "legHours": 28.3,
+              "flipReady": false
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.03,
+        "signalCountPos": 1,
+        "signalCountNeg": 1,
+        "signalAdjustmentPP_trade": 0.0,
+        "signalCountPos_trade": 1,
+        "signalCountNeg_trade": 1,
+        "effectiveEdgePP": -3.0,
+        "effectiveEdgePP_trade": -3.0,
+        "convictionScore": 3,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 1,
+          "model_stack": 1,
+          "context": 1,
+          "market": 0
+        },
         "trackingExcluded": true,
         "demotedRiskyGame": true
       }
