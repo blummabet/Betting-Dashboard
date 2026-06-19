@@ -3435,7 +3435,10 @@ function renderTradingCockpit(data) {
   if (openBets.length > 0) {
     const rows = openBets.slice().sort((a,b) => (b.placedAt || '').localeCompare(a.placedAt || '')).map(b => {
       const entry = parseFloat(b.polyPrice || 0);
-      const cur = _polyCurrentPrice(b, poly);
+      // 19.06.2026: echten Bid-Preis von manage_wm_poly_positions bevorzugen (b.currentPrice),
+      // der deckt AH/BTTS ab (vorher „—", weil client-seitig kein Preis-Feld). Fallback =
+      // gecachter Markt-Preis für Totals/1X2.
+      const cur = (b.currentPrice != null) ? b.currentPrice : _polyCurrentPrice(b, poly);
       const stake = parseFloat(b.stake || 0);
       let pnl = null, pnlPct = null;
       if (cur != null && entry > 0) {

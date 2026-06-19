@@ -669,6 +669,41 @@ def execute_auto_sell(pos: dict, private_key: str, reason: str) -> dict:
     return result
 
 
+def persist_auto_bet_valuations(positions: list) -> int:
+    """Schreibt den ECHTEN (Bid-)Aktuell-Preis + P&L auf die OFFENEN Auto-Bets zurück
+    (19.06.2026, Lucas). Vorher zeigte die Betting-Tab nur Totals P&L (client-seitig aus
+    Cache-Preisen), AH/BTTS „—" weil es dafür kein flaches Preis-Feld gibt. manage hat den
+    echten Bid (fetch_token_book) — wir persistieren ihn je betKey, die Tab zeigt ihn dann.
+    Nur status=='placed'-Bets; verkaufte/aufgelöste bleiben unangetastet."""
+    by_key = {p.get("_betKey"): p for p in positions
+              if p.get("_betKey") and p.get("currentPrice") is not None}
+    if not by_key or not os.path.exists(AUTO_BETS_FILE):
+        return 0
+    try:
+        with open(AUTO_BETS_FILE, encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        print(f"  ⚠️  persist_auto_bet_valuations Lesefehler: {e}")
+        return 0
+    n = 0
+    for bet in data.get("bets", []):
+        if (bet.get("status") or "").lower() != "placed" or bet.get("soldAt"):
+            continue
+        p = by_key.get(bet.get("betKey"))
+        if not p:
+            continue
+        bet["currentPrice"] = p.get("currentPrice")
+        bet["pnlPct"]       = p.get("pnlPct")
+        bet["priceSource"]  = p.get("priceSource")
+        bet["valuedAt"]     = datetime.now(timezone.utc).isoformat()
+        n += 1
+    if n:
+        data["updatedAt"] = datetime.now(timezone.utc).isoformat()
+        with open(AUTO_BETS_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    return n
+
+
 def update_auto_bet_status(bet_key: str, new_status: str,
                            sell_result: dict, current_price: float,
                            sell_reason: str) -> None:
@@ -875,6 +910,11 @@ def main():
 
     # Update file — nur manuelle Positionen zurückschreiben (auto-bets kommen aus eigenem File)
     save_positions(data)
+    # Echten Bid-Preis + P&L auf offene Auto-Bets persistieren → Betting-Tab zeigt ihn
+    # (auch für AH/BTTS, die client-seitig kein Preis-Feld haben).
+    _valued = persist_auto_bet_valuations(auto_positions)
+    if _valued:
+        print(f"  💾 {_valued} offene Auto-Bet(s) mit echtem Bid-P&L aktualisiert")
     write_book_health()   # Buch-Fetch-Gesundheit (nur wenn dieser Lauf Bücher abfragte)
 
     print(f"\n✅ Fertig — {alerts_sent} Alert(s) | {sells_executed} Auto-Sell(s) ausgeführt")
