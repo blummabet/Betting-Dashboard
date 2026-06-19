@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-19T09:22:33Z",
+  "generatedAt": "2026-06-19T17:52:16Z",
   "windowDays": 2,
   "upcoming": 12,
   "signalsFired": [
@@ -23,22 +23,22 @@
   "perSignal": {
     "lead_lag_bias": 4,
     "public_static_bias": 11,
-    "travel_burden": 55,
+    "travel_burden": 53,
     "injury": 0,
     "form_trend": 86,
-    "h2h_pattern": 6,
-    "xg_strength": 73,
+    "h2h_pattern": 7,
+    "xg_strength": 74,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 29,
     "lineup_signal": 10,
-    "apif_predictions": 12,
-    "weather_signal": 14,
+    "apif_predictions": 11,
+    "weather_signal": 15,
     "incentive_signal": 7,
-    "altitude_signal": 3,
-    "chance_creation": 25,
+    "altitude_signal": 2,
+    "chance_creation": 26,
     "form_rating": 5,
-    "freshness_leg": 44
+    "freshness_leg": 43
   },
   "verdict": "warn",
   "errors": [],
@@ -47,17 +47,18 @@
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
-    "🛡️ Riskanter BET hat sichere Variante: 1 Fehler (z.B. L-3-ENG-PAN: BET Doppelte Chance — X2 @3.75 — keine sichere Variante)"
+    "🛡️ Riskanter BET hat sichere Variante: 1 Fehler (z.B. L-3-ENG-PAN: BET Doppelte Chance — X2 @3.75 — keine sichere Variante)",
+    "🛡️ Aufstellung da vor Anpfiff (T-90min): 1 Fehler (z.B. USA-AUS: Anpfiff in 67min, KEINE Aufstellung)"
   ],
   "oks": [
     "🌡️ Weather: 44 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.4h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
     "📊 APIF-Predictions: 55 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 44.2 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 46.5 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $334.02",
+    "💼 Poly-Balance: $328.38",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -192,9 +193,11 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "USA-AUS: Anpfiff in 67min, KEINE Aufstellung"
+      ],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
