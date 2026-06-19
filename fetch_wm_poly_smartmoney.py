@@ -2,18 +2,21 @@
 """
 fetch_wm_poly_smartmoney.py — Polymarket Geld-/Wallet-Verteilung pro Spiel (19.06.2026, Lucas)
 
-Für jedes WM-Fixture den 1X2-Geld-Split + Big-Wallet-Konzentration aus der Polymarket data-api
-(/holders je Outcome-Token). Liest die Tokens + Preise aus wm_poly_prices.json (hwTokens/drTokens/
-awTokens + poly_hw/dr/aw), holt je Token die Holder, aggregiert:
+Für jedes WM-Fixture den 1X2-Geld-Split + Big-Wallet-Konzentration aus der Polymarket data-api.
+data-api `/holders?market=<conditionId>` (conditionId, NICHT Token-ID!) liefert je Outcome-Binär
+die Holder gruppiert nach Token: [{token, holders:[{proxyWallet, amount, outcomeIndex}]}]. Wir
+nehmen je Outcome (home/draw/away) die Holder-Gruppe des YES-Tokens (=hwTokens[0]/drTokens[0]/
+awTokens[0]) und aggregieren:
   outcomes[home|draw|away] = {usd, share, topHolderShare, holders}
   + totalUsd, topTraders (# Wallets ≥ big_trader_usd)
 → wm_poly_smartmoney.json {matches:{HOME-AWAY:{...}}, updatedAt}.
 
-Speist das (NIEDRIG gewichtete) smart_money-Signal + die violette Card-Box. Schreibt IMMER
-(auch partiell/leer), damit das Signal robust None liefert wenn nichts da ist.
+Braucht hwCondition/drCondition/awCondition + hwTokens/.. + poly_hw/dr/aw aus wm_poly_prices.json
+(alle von fetch_wm_poly_prices.py geschrieben). Speist das (NIEDRIG gewichtete) smart_money-Signal
++ die violette Card-Box. Schreibt IMMER (auch partiell/leer) → Signal liefert robust None.
 
 WICHTIG: Polymarket ist geoblockt — läuft NUR auf dem Mac-Runner (wie clob/gamma). Vom Sandbox
-nicht testbar. Holders-Endpoint-Param ggf. am ersten Live-Lauf justieren (Log zeigt rohe Antwort).
+nicht testbar. Endpoint-Form: shaunlebron gist (Polymarket Data API Docs), /holders.
 
 Run (Runner):  python3 fetch_wm_poly_smartmoney.py
 """
@@ -28,7 +31,7 @@ from pathlib import Path
 BASE = Path(__file__).parent
 PRICES_FILE = BASE / "wm_poly_prices.json"
 OUT_FILE    = BASE / "wm_poly_smartmoney.json"
-HOLDERS_URL = "https://data-api.polymarket.com/holders?market={token}&limit=200"
+HOLDERS_URL = "https://data-api.polymarket.com/holders?market={cond}&limit=200"
 
 TOP_N           = 10        # für topHolderShare
 BIG_TRADER_USD  = 1000      # Wallet ab $ = „Top-Trader"
@@ -45,9 +48,18 @@ def _http_get(url: str):
         return None
 
 
-def _parse_holders(data):
-    """Robust: akzeptiert [..] oder {holders:[..]} mit {proxyWallet, amount}. → [(wallet, amount)]."""
-    rows = data.get("holders") if isinstance(data, dict) else data
+def _holders_for_token(data, yes_token):
+    """Aus der /holders-Antwort (Liste von {token, holders}) die Holder-Liste des YES-Tokens
+    ziehen. → [(wallet, amount)]. Fallback: flache Liste, falls Format abweicht."""
+    groups = data if isinstance(data, list) else (data.get("holders") if isinstance(data, dict) else None)
+    rows = None
+    yt = str(yes_token)
+    for g in (groups or []):
+        if isinstance(g, dict) and "holders" in g:          # gruppiert {token, holders:[...]}
+            if str(g.get("token")) == yt:
+                rows = g.get("holders"); break
+        else:                                                # bereits flache Holder-Liste
+            rows = groups; break
     out = []
     for h in (rows or []):
         if not isinstance(h, dict):
@@ -63,12 +75,12 @@ def _parse_holders(data):
     return out
 
 
-def _outcome_smartmoney(token: str, price):
-    """{usd, topHolderShare, holders, _big, _wallets} oder None (kein Token/Buch)."""
-    if not token or not isinstance(price, (int, float)) or price <= 0:
+def _outcome_smartmoney(condition: str, yes_token: str, price):
+    """{usd, topHolderShare, holders, _big} oder None. condition=conditionId (0x…), yes_token=clobTokenId."""
+    if not condition or not yes_token or not isinstance(price, (int, float)) or price <= 0:
         return None
-    data = _http_get(HOLDERS_URL.format(token=token))
-    holders = _parse_holders(data)
+    data = _http_get(HOLDERS_URL.format(cond=condition))
+    holders = _holders_for_token(data, yes_token)
     if not holders:
         return None
     amounts = sorted((a for _, a in holders), reverse=True)
@@ -84,6 +96,10 @@ def main():
     if not PRICES_FILE.exists():
         print("⚠️  wm_poly_prices.json fehlt — nichts zu tun."); return
     fixtures = json.loads(PRICES_FILE.read_text(encoding="utf-8")).get("allFixtures", [])
+    if fixtures and not any(fx.get("hwCondition") for fx in fixtures):
+        print("⚠️  Keine conditionId in wm_poly_prices.json — fetch_wm_poly_prices.py muss "
+              "ZUERST laufen (schreibt hwCondition/drCondition/awCondition). Manuell testen: "
+              "erst Preise, dann Smart-Money.")
     matches = {}
     n_ok = 0
     for fx in fixtures:
@@ -91,13 +107,13 @@ def main():
         if not key:
             continue
         legs = {
-            "home": ((fx.get("hwTokens") or [None])[0], fx.get("poly_hw")),
-            "draw": ((fx.get("drTokens") or [None])[0], fx.get("poly_dr")),
-            "away": ((fx.get("awTokens") or [None])[0], fx.get("poly_aw")),
+            "home": (fx.get("hwCondition"), (fx.get("hwTokens") or [None])[0], fx.get("poly_hw")),
+            "draw": (fx.get("drCondition"), (fx.get("drTokens") or [None])[0], fx.get("poly_dr")),
+            "away": (fx.get("awCondition"), (fx.get("awTokens") or [None])[0], fx.get("poly_aw")),
         }
         outcomes, total, top_traders = {}, 0.0, 0
-        for side, (tok, price) in legs.items():
-            sm = _outcome_smartmoney(tok, price)
+        for side, (cond, tok, price) in legs.items():
+            sm = _outcome_smartmoney(cond, tok, price)
             if sm:
                 outcomes[side] = sm
                 total += sm["usd"]

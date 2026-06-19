@@ -39,6 +39,7 @@ def _flip_poly_orientation(p):
     q["homeName"], q["awayName"] = p.get("awayName"), p.get("homeName")
     q["hw"],       q["aw"]       = p.get("aw"),       p.get("hw")
     q["hwTokens"], q["awTokens"] = p.get("awTokens"), p.get("hwTokens")
+    q["hwCondition"], q["awCondition"] = p.get("awCondition"), p.get("hwCondition")
     return q
 
 
@@ -256,12 +257,14 @@ def parse_event(event: dict) -> dict | None:
     # Parse markets
     hw = dr = aw = None
     hw_tokens = dr_tokens = aw_tokens = []
+    hw_cond = dr_cond = aw_cond = None          # conditionId je Outcome (für data-api /holders + /trades)
     neg_risk_market_id = event.get("negRiskMarketID")
 
     for m in event.get("markets", []):
         gt     = m.get("groupItemTitle", "")
         prices = json.loads(m.get("outcomePrices", "[]") or "[]")
         tokens = json.loads(m.get("clobTokenIds", "[]") or "[]")
+        cond   = m.get("conditionId")
         yes_price = float(prices[0]) if prices else None
 
         if yes_price is None:
@@ -270,22 +273,22 @@ def parse_event(event: dict) -> dict | None:
         gt_lower = gt.lower()
         if "draw" in gt_lower:
             dr = yes_price
-            dr_tokens = tokens
+            dr_tokens = tokens; dr_cond = cond
         elif resolve_team_id(gt) == home_id:
             hw = yes_price
-            hw_tokens = tokens
+            hw_tokens = tokens; hw_cond = cond
         elif resolve_team_id(gt) == away_id:
             aw = yes_price
-            aw_tokens = tokens
+            aw_tokens = tokens; aw_cond = cond
         else:
             # Fallback: try by groupItemThreshold (0=home,1=draw,2=away) if present
             threshold = str(m.get("groupItemThreshold", ""))
             if threshold == "0":
-                hw = yes_price; hw_tokens = tokens
+                hw = yes_price; hw_tokens = tokens; hw_cond = cond
             elif threshold == "1":
-                dr = yes_price; dr_tokens = tokens
+                dr = yes_price; dr_tokens = tokens; dr_cond = cond
             elif threshold == "2":
-                aw = yes_price; aw_tokens = tokens
+                aw = yes_price; aw_tokens = tokens; aw_cond = cond
 
     if hw is None or aw is None:
         print(f"  WARN {slug}: missing hw={hw} aw={aw} dr={dr}")
@@ -308,6 +311,9 @@ def parse_event(event: dict) -> dict | None:
         "hwTokens":  hw_tokens,
         "drTokens":  dr_tokens,
         "awTokens":  aw_tokens,
+        "hwCondition": hw_cond,
+        "drCondition": dr_cond,
+        "awCondition": aw_cond,
     }
 
 
@@ -790,6 +796,10 @@ def main():
             "hwTokens":     p.get("hwTokens", []),
             "drTokens":     p.get("drTokens", []),
             "awTokens":     p.get("awTokens", []),
+            # conditionId je Outcome (data-api /holders + /trades → smart_money)
+            "hwCondition":  p.get("hwCondition"),
+            "drCondition":  p.get("drCondition"),
+            "awCondition":  p.get("awCondition"),
             # ── Pick verdicts from generate_wm_picks.py ─────────────────────────
             # verdict_hw/dr/aw/o25/u25: "BET" | "ABWÄGEN" | "SKIP" | null
             # auto_wm_poly_trigger.py filters to BET/ABWÄGEN only
