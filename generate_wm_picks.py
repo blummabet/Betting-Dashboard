@@ -2399,6 +2399,19 @@ def main():
         except Exception as e:
             print(f"  ⚠️  Polymarket-Snapshot nicht ladbar: {e}")
 
+    # Smart-Money-Verteilung (19.06.2026): Geld-Split + Wallet-Konzentration je Spiel aus
+    # fetch_wm_poly_smartmoney.py (data-api /holders+/trades, läuft am Mac-Runner). Optional
+    # — fehlt die Datei, feuert das smart_money-Signal einfach nicht.
+    smartmoney = {}
+    _sm_file = os.path.join(os.path.dirname(WM_FILE), "wm_poly_smartmoney.json")
+    if os.path.exists(_sm_file):
+        try:
+            with open(_sm_file, encoding="utf-8") as smf:
+                _smraw = json.load(smf)
+            smartmoney = _smraw.get("matches", _smraw) if isinstance(_smraw, dict) else {}
+        except Exception as e:
+            print(f"  ⚠️  Smart-Money nicht ladbar: {e}")
+
     xg_count = sum(1 for v in xg_stats.values() if v and v.get("games", 0) >= 3)
     inj_count = sum(1 for k, v in injuries.items()
                     if k != "_meta" and isinstance(v, dict) and v.get("players"))
@@ -2631,6 +2644,7 @@ def main():
                     "odds_history": odds_history.get(ha_key, []) if odds_history else [],
                     "odds_snapshot": mkt.get(ha_key, {}),
                     "poly_snapshot": poly_snapshots.get(ha_key, {}),
+                    "smartmoney":    smartmoney,
                     "travel":       travel_data,
                     "injuries":     injuries,
                     "form":         form,
@@ -2680,16 +2694,20 @@ def main():
                         # den effectiveEdge über die Schwelle pumpen, ein reverse doppelt zählen
                         # (die Umkehr steckt schon im live-recomputeten Pinnacle-fair). Daher
                         # Trade-Felder ohne den freshness_leg-Beitrag.
+                        # Card-only-Signale aus dem Trade-Pfad raus (zwei Flächen): freshness_leg
+                        # (würde Trade-Edge pumpen) + smart_money (Poly-Geld über Poly-Trades zu
+                        # entscheiden wäre ZIRKULÄR/reflexiv). Sie treiben nur Cards + Lern-Loop.
+                        _CARD_ONLY = ("freshness_leg", "smart_money")
                         _fresh_pp = sum(s.get("score", 0.0) for s in sig_out["signals"]
-                                        if s.get("name") == "freshness_leg")
+                                        if s.get("name") in _CARD_ONLY)
                         p["signalAdjustmentPP_trade"] = round(
                             sig_out["combined_score_pp"] - _fresh_pp, 1)
                         # auch aus dem Signal-ZÄHLER raus (Trader nutzt signalPos für einen
                         # Schwellen-Bonus) — sonst hilft ein confirm dem Trade über die Hintertür.
                         _fresh_pos = sum(1 for s in sig_out["signals"]
-                                         if s.get("name") == "freshness_leg" and s.get("score", 0) > 0)
+                                         if s.get("name") in _CARD_ONLY and s.get("score", 0) > 0)
                         _fresh_neg = sum(1 for s in sig_out["signals"]
-                                         if s.get("name") == "freshness_leg" and s.get("score", 0) < 0)
+                                         if s.get("name") in _CARD_ONLY and s.get("score", 0) < 0)
                         p["signalCountPos_trade"] = max(0, sig_out["n_positive_signals"] - _fresh_pos)
                         p["signalCountNeg_trade"] = max(0, sig_out["n_negative_signals"] - _fresh_neg)
 
@@ -2862,6 +2880,13 @@ def main():
                             "Hält BET: war bestätigt, Move ruht — aber kein Reverser dagegen "
                             "(bleibt bis frisches Gegen-Geld kommt)"
                         )
+
+            # Smart-Money-Split (Poly-Geldverteilung) für die violette Card-Anzeige an jeden
+            # Pick hängen — reine Anzeige, ändert kein Verdict (19.06.2026).
+            _sm_match = smartmoney.get(f"{fx['home']}-{fx['away']}")
+            if _sm_match and isinstance(_sm_match, dict):
+                for _p in (new_picks or []):
+                    _p["smartMoney"] = _sm_match
 
             # Immer überschreiben — auch leere Liste löscht veraltete Picks
             wm["picks"][pick_key] = new_picks

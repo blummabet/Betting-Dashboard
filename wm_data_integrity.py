@@ -770,6 +770,36 @@ ENTRY_ASK_GUARD_SINCE = "2026-06-18"
 
 
 @integrity_check
+def check_smartmoney_sane(ctx):
+    """Smart-Money-Daten-Sanity (19.06.2026, Lucas): wm_poly_smartmoney.json (data-api /holders+
+    /trades vom Mac-Runner) muss kohärent sein — Outcome-Shares summieren ~1, totalUsd da. Fängt
+    kaputte/partielle Aggregation, bevor das (niedrig gewichtete) smart_money-Signal darauf läuft.
+    Fehlt die Datei → still (Feature noch nicht am Runner deployt)."""
+    sm = _lazy("wm_poly_smartmoney.json")
+    if not isinstance(sm, dict):
+        return None
+    matches = sm.get("matches", sm)
+    if not isinstance(matches, dict) or not matches:
+        return None
+    fails = []
+    for key, m in matches.items():
+        if not isinstance(m, dict):
+            continue
+        outs = m.get("outcomes") or {}
+        shares = [o.get("share") for o in outs.values()
+                  if isinstance(o, dict) and isinstance(o.get("share"), (int, float))]
+        if shares:
+            s = sum(shares)
+            if not (0.9 <= s <= 1.1):
+                fails.append(f"{key}: Outcome-Shares summieren {s:.2f} (≠ ~1.0) — Aggregation kaputt?")
+        if m.get("totalUsd") in (None, 0):
+            fails.append(f"{key}: totalUsd fehlt/0 — Holder/Trade-Fetch leer?")
+    return _chk("smartmoney_sane", "Smart-Money-Daten kohärent", "warn", fails,
+                "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal "
+                "auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner).")
+
+
+@integrity_check
 def check_book_fetch_healthy(ctx):
     """Buch-Fetch-Gesundheit (19.06.2026, Lucas: „der Guard muss sowas sehen"). Anlass:
     `fetch_token_book` rief monatelang `/books` (Mehrzahl) → HTTP 400 → JEDER Buch-Fetch

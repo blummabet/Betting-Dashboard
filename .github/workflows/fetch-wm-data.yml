@@ -310,6 +310,13 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # ── Smart-Money (Poly Geld-/Wallet-Verteilung) — NACH fetch_wm_poly_prices ──
+      # Braucht hwTokens/drTokens/awTokens + Preise aus wm_poly_prices.json. Lagt 1 Zyklus
+      # in die Picks (Card-only, niedrig gewichtet → unkritisch). Poly geoblockt → nur Runner.
+      - name: 💰 WM Polymarket Smart-Money
+        run: python fetch_wm_poly_smartmoney.py
+        continue-on-error: true
+
       # ── Pick-Validator — NACH fetch_wm_poly_prices (FIX 16.06.2026) ──────────────
       # MUSS nach der Poly-Normalisierung laufen: E_HOMEAWAY_SWAP prüft den 1X2-Favoriten
       # gegen Polymarket. Vorher (Step ~233, vor Poly) sah er gespiegelte/veraltete poly_hw

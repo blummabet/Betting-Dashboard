@@ -1454,7 +1454,37 @@
 
     return sentences.join(' ')
       + (modelSentence ? '<br>' + modelSentence : '')
-      + (betLifeSentence ? '<br>' + betLifeSentence : '');
+      + (betLifeSentence ? '<br>' + betLifeSentence : '')
+      + _smartMoneyBox(pick);
+  }
+
+  // 💰 Smart-Money-Box (violett, 19.06.2026): Poly-Geldverteilung + Top-Trader. Reine Anzeige.
+  function _smartMoneyBox(pick) {
+    const sm = pick && pick.smartMoney;
+    if (!sm || !sm.outcomes) return '';
+    const o = sm.outcomes;
+    const pct = v => (v && v.share != null) ? Math.round(v.share * 100) : null;
+    const h = pct(o.home), d = pct(o.draw), a = pct(o.away);
+    if (h == null && a == null) return '';
+    const usdM = sm.totalUsd ? (sm.totalUsd >= 1e6 ? `$${(sm.totalUsd/1e6).toFixed(1)}M` : `$${Math.round(sm.totalUsd/1e3)}k`) : '';
+    const tt = sm.topTraders != null ? ` · ${sm.topTraders} Top-Trader` : '';
+    const parts = [];
+    if (h != null) parts.push(`Heim ${h}%`);
+    if (d != null) parts.push(`X ${d}%`);
+    if (a != null) parts.push(`Ausw. ${a}%`);
+    // stärkste Seite + deren Big-Wallet-Konzentration hervorheben
+    let topNote = '';
+    const sides = [['home', o.home], ['away', o.away]].filter(x => x[1] && x[1].share != null);
+    if (sides.length) {
+      const lead = sides.reduce((m, x) => x[1].share > m[1].share ? x : m);
+      const lbl = lead[0] === 'home' ? 'Heim' : 'Ausw.';
+      if (lead[1].topHolderShare != null)
+        topNote = ` · Big-Wallets auf ${lbl}: ${Math.round(lead[1].topHolderShare*100)}%`;
+    }
+    return `<div style="margin-top:6px;padding:5px 9px;border-radius:8px;background:rgba(167,139,250,.10);border:1px solid rgba(167,139,250,.35);font-size:.76rem;color:#c4b5fd;">
+      💰 <strong>Smart Money</strong> ${usdM}${tt}<br>
+      <span style="color:#a78bfa;">${parts.join(' · ')}</span><span style="color:#8b949e;">${topNote}</span>
+    </div>`;
   }
 
   // ─────────────────────────────────────────────────────
