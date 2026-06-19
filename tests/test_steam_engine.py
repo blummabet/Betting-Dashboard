@@ -95,6 +95,39 @@ class TestMarketDriftDetrend(unittest.TestCase):
         self.assertTrue(any(t["key"] == "hw" for t in trigs))
 
 
+class TestLongshotCeiling(unittest.TestCase):
+    """Variante A (20.06.2026): Quote > max_trigger_odds → kein Steam-Trigger.
+    Außenseiter-Move (Haiti 51→22 gg. Brasilien) ist Rauschen, keine Karte."""
+
+    def _bra_hti(self):
+        # aw = Haiti-Longshot 51→22 (triggert via Drift +3.8pp), bttsY Mainline 2.75→2.08
+        return ({"odds_open": {"aw": 51.0, "bttsY": 2.75}, "aw": 22.0, "bttsY": 2.08},
+                {"aw": -1.2})  # snap, drift
+
+    def test_longshot_blocked_by_default_ceiling(self):
+        snap, drift = self._bra_hti()
+        labels = [t["label"] for t in se.detect_steam(snap, drift=drift)]
+        self.assertNotIn("Auswärtssieg", labels)           # Longshot @22 raus
+        self.assertIn("Beide Teams treffen — Ja", labels)   # Mainline bleibt
+
+    def test_longshot_triggers_without_ceiling(self):
+        # Kontrolle: ohne Ceiling würde der Longshot triggern (sonst testen wir nichts)
+        snap, drift = self._bra_hti()
+        labels = [t["label"] for t in se.detect_steam(snap, drift=drift, max_trigger_odds=999)]
+        self.assertIn("Auswärtssieg", labels)
+
+    def test_build_steam_picks_drops_longshot_card(self):
+        snap, drift = self._bra_hti()
+        markets = [p["market"] for p in se.build_steam_picks(snap, drift=drift, min_odds=1.35)]
+        self.assertEqual(markets, ["Beide Teams treffen — Ja"])  # kein X2/Auswärts
+
+    def test_mainline_favorite_not_affected(self):
+        # Favorit @1.14 (weit unter Ceiling) triggert weiter normal
+        snap = {"odds_open": {"hw": 1.30}, "hw": 1.14}
+        labels = [t["label"] for t in se.detect_steam(snap)]
+        self.assertIn("Heimsieg", labels)
+
+
 class TestSoftConfirmation(unittest.TestCase):
     def test_soft_followed_confirmed(self):
         # Pini 1.90→1.70 (Heim). Soft-Konsens Opening 1.95 → jetzt 1.78 = gefolgt → bestätigt.

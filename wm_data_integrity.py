@@ -280,6 +280,43 @@ def check_pick_safe_variant(ctx):
                 "(generate_wm_picks: SUBSTITUTION_MAP + _safer_alternatives + Renderer-Demotion).")
 
 
+# Spiegelt cocobet_config steam.max_trigger_odds (generate_wm_picks: STEAM_MAX_TRIGGER_ODDS).
+_STEAM_MAX_TRIGGER_ODDS = 6.0
+
+
+@integrity_check
+def check_steam_longshot_ceiling(ctx):
+    """Variante A (20.06.2026, Lucas): Steam-Trigger auf einer Longshot-Quote (> ceiling) ist
+    Rauschen, keine Sharp-Money. detect_steam blockt das jetzt am Trigger; dieser Guard ist der
+    Regressions-Tripwire — fällt eine NEUE (nicht eingefrorene) Steam-Karte auf, deren Trigger-
+    Quote (steamCur/steamOpen) über dem Ceiling liegt, ist der Block kaputt. Fing den BRA-HTI-
+    Fall: Haiti 51→22 erzeugte ein „X2 @7.10" gegen den Must-Win-Favoriten.
+    AUSGENOMMEN: gepostete Spiele (heute + morgen) — bewusst eingefroren, nicht rückwirksam."""
+    picks = ctx.wm.get("picks") or {}
+    date_by_key = {}
+    for _g, fx in ctx.fixtures:
+        pk = f"{_g}-{fx.get('matchday')}-{fx.get('home')}-{fx.get('away')}"
+        date_by_key[pk] = fx.get("date")
+    tomorrow = (ctx.now.date() + timedelta(days=1)).isoformat()
+    fails = []
+    for key, plist in picks.items():
+        if not isinstance(plist, list):
+            continue
+        dt = date_by_key.get(key)
+        if not dt or dt <= tomorrow:
+            continue   # gepostet/eingefroren → bewusst unangerührt (Variante A gilt ab übermorgen)
+        for p in plist:
+            if p.get("source") != "steam":
+                continue
+            trig = p.get("steamCur") or p.get("steamOpen")
+            if isinstance(trig, (int, float)) and trig > _STEAM_MAX_TRIGGER_ODDS:
+                fails.append(f"{key}: Steam {p.get('market')} aus Longshot-Trigger @{trig} "
+                             f"(> {_STEAM_MAX_TRIGGER_ODDS})")
+    return _chk("steam_longshot_ceiling", "Steam-Trigger respektiert Longshot-Ceiling", "warn",
+                fails, "Neue Steam-Karte aus einer Quote > Ceiling — detect_steam max_trigger_odds "
+                "greift nicht (steam_engine / cocobet_config steam.max_trigger_odds).")
+
+
 # Spiegel von generate_wm_picks: MODEL_MARGIN (0.96) + O/U-Markt → Pinnacle-Linien-Paar.
 _MODEL_MARGIN = 0.96
 _OU_PINN_PAIR = {
@@ -797,6 +834,43 @@ def check_smartmoney_sane(ctx):
     return _chk("smartmoney_sane", "Smart-Money-Daten kohärent", "warn", fails,
                 "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal "
                 "auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner).")
+
+
+# Card-only-Signale (zwei Flächen): treiben NUR Cards + Lern-Loop, NIE das Polymarket-Trading.
+# Der Auto-Trader liest signalAdj_<field> ← signalAdjustmentPP_trade. Diese Trade-Felder MÜSSEN
+# den Card-only-Beitrag abziehen (generate_wm_picks _CARD_ONLY). Spiegelbild hier als Tripwire.
+_CARD_ONLY_SIGNALS = ("freshness_leg", "smart_money")
+
+
+@integrity_check
+def check_card_only_not_in_trade(ctx):
+    """ZWEI-FLÄCHEN-INVARIANTE (20.06.2026, Lucas: „Poly-Signale KEINERLEI Auswirkung aufs
+    Polymarket-Trading"). freshness_leg + smart_money sind Card-only. Der Auto-Trader liest die
+    _trade-Felder (signalAdjustmentPP_trade → signalAdj_<field>), die den Card-only-Score abziehen.
+    Dieser Guard ist der harte Tripwire: für JEDES Pick mit Card-only-Signal muss
+    signalAdjustmentPP_trade ≈ signalAdjustmentPP − Σ(card-only score) sein. Weicht es ab, leckt
+    ein Card-Signal in den Trade-Pfad (= Zirkel bei smart_money: Poly-Geld entscheidet Poly-Trade)."""
+    picks = ctx.wm.get("picks") or {}
+    fails = []
+    for key, plist in picks.items():
+        if not isinstance(plist, list):
+            continue
+        for p in plist:
+            sigs = p.get("signals")
+            adj, trade = p.get("signalAdjustmentPP"), p.get("signalAdjustmentPP_trade")
+            if not isinstance(sigs, list) or not isinstance(adj, (int, float)) \
+               or not isinstance(trade, (int, float)):
+                continue
+            co = sum(s.get("score", 0.0) for s in sigs
+                     if isinstance(s, dict) and s.get("name") in _CARD_ONLY_SIGNALS)
+            expected = round(adj - co, 1)
+            if abs(trade - expected) > 0.11:
+                fails.append(f"{key} {p.get('market')}: signalAdj_trade {trade} ≠ erwartet "
+                             f"{expected} (adj {round(adj,1)} − card-only {round(co,1)}) — "
+                             f"Card-Signal leckt in den Trade-Pfad")
+    return _chk("card_only_not_in_trade", "Card-Signale nicht im Trade-Pfad", "warn", fails,
+                "freshness_leg/smart_money müssen aus signalAdjustmentPP_trade abgezogen sein "
+                "(generate_wm_picks _CARD_ONLY). Sonst treibt ein Card-Signal den Auto-Trader.")
 
 
 @integrity_check
