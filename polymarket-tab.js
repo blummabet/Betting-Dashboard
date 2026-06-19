@@ -3445,7 +3445,12 @@ function renderTradingCockpit(data) {
         pnl = (stake / entry) * cur - stake;
         pnlPct = pnl / stake * 100;
       }
-      const hrsUntil = _polyHoursUntil(b.matchDate);
+      // FIX 19.06.2026 (Lucas): Anpfiff IMMER aus der echten UTC-Kickoff-Zeit, NICHT aus
+      // b.matchDate (nur Datum → 00:00Z; bei Spätspielen einen Tag daneben → ECU-CUW „in 3.5h"
+      // statt 27.5h, TUR-PRY „läuft" statt in 6.5h). Priorität: Record-kickoff → Fixture-Lookup
+      // (_wmAllFixtures, autoritativ aus Gamma) → matchDate als letzter Fallback.
+      const _fxKo = (_wmAllFixtures.find(f => f.key === `${b.homeId}-${b.awayId}`) || {}).kickoff;
+      const hrsUntil = _polyHoursUntil(b.kickoff || _fxKo || b.matchDate);
       const matchStatus = hrsUntil != null ? (hrsUntil < 0 ? '🔴 läuft' : hrsUntil < 6 ? `⚠️ in ${hrsUntil.toFixed(1)}h` : `${hrsUntil.toFixed(1)}h`) : '—';
       const pnlColor = pnl == null ? '#8b949e' : pnl > 0.05 ? '#00d4a1' : pnl < -0.05 ? '#f85149' : '#e3b341';
       const slug = b.slug || '';
