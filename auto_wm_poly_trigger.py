@@ -1026,7 +1026,17 @@ def main():
                 "source":         "auto_steam" if is_steam else "auto",
             })
         else:
-            print(f"    ❌ Fehlgeschlagen: {result.get('error')}")
+            _err = str(result.get("error") or "")
+            if "post_only" in _err or "post-only" in _err:
+                # Börsenseitig + transient: Polymarkets CLOB nimmt gerade nur Maker-Orders
+                # (Post-Only-Modus, retry_after_seconds). UNSERE Market-Order wird abgelehnt —
+                # kein Bug, kein Phantom-Record. Nächster Cron-Lauf retryt automatisch.
+                print(f"    ⏳ Polymarket im POST-ONLY-Modus (nimmt nur Maker-Orders) — "
+                      f"vorübergehend, kein Trade. Retry beim nächsten Lauf.")
+            elif "503" in _err or "retry_after" in _err:
+                print(f"    ⏳ Börse vorübergehend nicht annahmebereit (503) — Retry nächster Lauf.")
+            else:
+                print(f"    ❌ Fehlgeschlagen: {_err}")
 
     # 5. Ergebnisse speichern
     if new_placed:
