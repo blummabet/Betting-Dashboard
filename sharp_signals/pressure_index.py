@@ -32,8 +32,11 @@ from sharp_signals.base import Signal, SignalResult
 DEFAULT_THRESHOLDS = {
     # Tournament-Stage-Modifikatoren (in pp)
     "md1_caution_pp":         0.6,   # leicht risikoavers
-    "md3_qualified_rotation_pp": -1.2,  # qualifiziertes Team rotiert → schwächer
-    "md3_must_win_pp":         1.5,   # Team auf 0 Punkten mit must-win
+    "md3_qualified_rotation_pp": -1.2,  # qualifiziertes Team rotiert → schwächer (eigene Seite)
+    "md3_coast_opponent_pp":   1.2,   # qualifiziert+gesichert → Gegenseite boosten (Schon-Risiko)
+    "md3_must_win_pp":         1.5,   # Must-Win-Team (aus Quali-Mathe, nicht nur 0 Pkt)
+    "home_wc_coast_damp":      0.5,   # Heim-WM-Host gibt sich vor eigenem Publikum nicht auf → Schon-Risiko gedämpft
+    "host_teams":              ["MEX", "USA", "CAN"],   # WM-2026-Gastgeber (liga: leer)
     "ko_phase_caution_pp":     1.0,   # KO erhöht Vorsicht
     "ko_final_pp":             1.5,   # Halbfinale/Finale spezial
     # Threshold
@@ -165,27 +168,48 @@ class PressureIndexSignal(Signal):
                 confidence = 0.55
 
             elif matchday == 3:
-                # Standings müssen für die spannenden Bedingungen vorliegen
+                # Standings + Gruppe für die Qualifikations-Mathe (19.06.2026, Lucas):
+                # Must-Win aus dem must_win-Flag (nicht nur points==0 → fängt z.B. CZE @1Pkt),
+                # und ein qualifiziert+gesichertes Team ist Schon-Risiko → die GEGENSEITE wird
+                # geboostet (nicht nur die eigene Seite gestraft). Heim-WM-Host gedämpft.
                 standings = context.get("standings") or {}
-                home_pts = _team_points_from_standings(home_id, standings)
-                away_pts = _team_points_from_standings(away_id, standings)
+                group_id  = context.get("group_id")
+                try:
+                    from sharp_signals.incentive_signal import _compute_qualification_state as _qs
+                    hs = _qs(home_id, group_id, 3, standings) if group_id else {}
+                    aw = _qs(away_id, group_id, 3, standings) if group_id else {}
+                except Exception:
+                    hs, aw = {}, {}
 
-                if home_pts is not None and away_pts is not None:
-                    # Team auf 0 Pkt in MD3 = existenzieller Must-Win
-                    if home_pts == 0 and side == +1:
-                        score += self._t["md3_must_win_pp"]
-                        notes.append(f"Heim 0-Pkt Must-Win-Modus")
-                        confidence = 0.75
-                    elif away_pts == 0 and side == -1:
-                        score += self._t["md3_must_win_pp"]
-                        notes.append(f"Auswärts 0-Pkt Must-Win-Modus")
-                        confidence = 0.75
-                    # Team auf 6+ Pkt = qualifiziert, rotiert → schwächer
-                    if home_pts >= 6 and side == +1:
-                        score += self._t["md3_qualified_rotation_pp"]
+                # Must-Win → Sieg-Seite des verzweifelten Teams boosten
+                if hs.get("must_win") and side == +1:
+                    score += self._t["md3_must_win_pp"]
+                    notes.append("Heim Must-Win (Quali-Mathe)"); confidence = 0.75
+                elif aw.get("must_win") and side == -1:
+                    score += self._t["md3_must_win_pp"]
+                    notes.append("Auswärts Must-Win (Quali-Mathe)"); confidence = 0.75
+
+                # Qualifiziert+gesichert = Schon-Risiko → schwächeres Team → Gegenseite boosten,
+                # eigene Sieg-Seite dämpfen. Heim-Gastgeber: gedämpft (gibt sich daheim nicht auf).
+                hosts = set(self._t.get("host_teams") or [])
+                boost = self._t["md3_coast_opponent_pp"]
+                rot   = self._t["md3_qualified_rotation_pp"]
+                if hs.get("qualified"):
+                    damp = self._t["home_wc_coast_damp"] if home_id in hosts else 1.0
+                    if side == -1:
+                        score += boost * damp
+                        notes.append("Heim qualifiziert/gesichert (Schon-Risiko) → Auswärts" + (" [Heim-WM gedämpft]" if damp < 1 else ""))
+                        confidence = max(confidence, 0.7)
+                    elif side == +1:
+                        score += rot * damp
                         notes.append("Heim qualifiziert → Rotation")
-                    elif away_pts >= 6 and side == -1:
-                        score += self._t["md3_qualified_rotation_pp"]
+                if aw.get("qualified"):
+                    if side == +1:
+                        score += boost
+                        notes.append("Auswärts qualifiziert/gesichert (Schon-Risiko) → Heim")
+                        confidence = max(confidence, 0.7)
+                    elif side == -1:
+                        score += rot
                         notes.append("Auswärts qualifiziert → Rotation")
 
         if abs(score) < self._t["min_signal_pp"]:

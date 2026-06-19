@@ -47,6 +47,12 @@ DEFAULT_THRESHOLDS = {
     "return_boost":         1.2,    # Magnitude (vs missing_score 2.5)
     "return_min_importance": 0.6,   # nur echte Schlüsselspieler
     "return_min_games_missed": 1,   # muss ≥N jüngste Team-Spiele verpasst haben
+    # Schon-Verstärkung (19.06.2026, Lucas): ein qualifiziert+gesichertes Team (MD3), das
+    # seine Offensive rausnimmt, schont BEWUSST → der offensive_loss zählt mehr (strategisches
+    # Schonen, nicht Verletzung). Greift NUR wenn das Lineup das Schonen tatsächlich zeigt.
+    "coast_off_amplify":        1.4,    # Faktor auf offensive_loss des Schon-Teams
+    "coast_off_amplify_home_wc": 1.15,  # Heim-WM-Host: gibt sich daheim nicht auf → kaum verstärkt
+    "host_teams":              ["MEX", "USA", "CAN"],
 }
 
 
@@ -224,9 +230,39 @@ class LineupSignal(Signal):
         cap = self._t["key_player_cap"]
         return max(-cap, min(off_loss, cap)), max(-cap, min(def_loss, cap)), details
 
-    def _evaluate_full(self, side, entry, home_id, away_id, kp_home, kp_away, player_form=None):
+    def _coast_amplify(self, home_id, away_id, context):
+        """(faktor_heim, faktor_auswärts) für den offensive_loss. >1.0 wenn das Team in MD3
+        qualifiziert+gesichert ist (bewusstes Schonen). Heim-WM-Host gedämpft. Sonst 1.0."""
+        ctx = context or {}
+        if ctx.get("matchday") != 3:
+            return 1.0, 1.0
+        standings = ctx.get("standings") or {}
+        group_id = ctx.get("group_id")
+        if not group_id:
+            return 1.0, 1.0
+        try:
+            from sharp_signals.incentive_signal import _compute_qualification_state as _qs
+            hq = bool(_qs(home_id, group_id, 3, standings).get("qualified"))
+            aq = bool(_qs(away_id, group_id, 3, standings).get("qualified"))
+        except Exception:
+            return 1.0, 1.0
+        hosts = set(self._t.get("host_teams") or [])
+        amp = self._t["coast_off_amplify"]
+        amp_wc = self._t["coast_off_amplify_home_wc"]
+        fh = (amp_wc if home_id in hosts else amp) if hq else 1.0
+        fa = amp if aq else 1.0
+        return fh, fa
+
+    def _evaluate_full(self, side, entry, home_id, away_id, kp_home, kp_away, player_form=None, context=None):
         off_h, def_h, det_h = self._team_losses(kp_home, entry.get("home", {}), player_form)
         off_a, def_a, det_a = self._team_losses(kp_away, entry.get("away", {}), player_form)
+
+        # Schon-Verstärkung (19.06.2026): wenn ein qualifiziert+gesichertes Team (MD3) seine
+        # Offensive tatsächlich rausnimmt, zählt dieser offensive_loss mehr (bewusstes Schonen).
+        # Heim-WM-Host gedämpft (gibt sich daheim nicht auf). Greift nur bei echtem off_loss.
+        cf_h, cf_a = self._coast_amplify(home_id, away_id, context)
+        off_h *= cf_h
+        off_a *= cf_a
 
         score = 0.0
         if side == "over":
@@ -339,5 +375,5 @@ class LineupSignal(Signal):
         # sonst Legacy-Top-Scorer (Abwärtskompatibilität für alte Squad-Daten).
         if kp_home or kp_away:
             return self._evaluate_full(side, entry, home_id, away_id,
-                                       kp_home or [], kp_away or [], player_form)
+                                       kp_home or [], kp_away or [], player_form, context)
         return self._evaluate_top_scorer(side, entry, home_id, away_id, home_sq, away_sq)
