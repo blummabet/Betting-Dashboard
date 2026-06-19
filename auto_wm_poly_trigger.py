@@ -1039,6 +1039,18 @@ def main():
         save_history(history)
         print(f"  💾 picks_history.json aktualisiert")
 
+    # Buch-Fetch-Gesundheit wegschreiben (19.06.2026): der Trigger ist der zuverlässige
+    # Buch-Prober (Spread-Gate je Kandidat). Guard check_book_fetch_healthy liest das und
+    # schlägt Alarm, falls der CLOB-Endpoint/Netz tot ist (Versuche>0 aber 0 echte Bücher).
+    try:
+        from manage_wm_poly_positions import write_book_health, _BOOK_HEALTH
+        write_book_health()
+        if _BOOK_HEALTH["attempts"] > 0:
+            print(f"  📕 Buch-Fetch: {_BOOK_HEALTH['ok']}/{_BOOK_HEALTH['attempts']} ok "
+                  f"(Transport-Fehler {_BOOK_HEALTH['transport_fail']}, dünn {_BOOK_HEALTH['empty_or_crossed']})")
+    except Exception as _bh:
+        print(f"  ⚠️  Buch-Health-Write fehlgeschlagen: {_bh}")
+
     print(f"\n{'='*55}")
     print(f"  Fertig — {len(new_placed)} Bet(s) platziert")
     print(f"{'='*55}\n")

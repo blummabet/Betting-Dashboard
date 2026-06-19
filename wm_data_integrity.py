@@ -770,6 +770,36 @@ ENTRY_ASK_GUARD_SINCE = "2026-06-18"
 
 
 @integrity_check
+def check_book_fetch_healthy(ctx):
+    """Buch-Fetch-Gesundheit (19.06.2026, Lucas: „der Guard muss sowas sehen"). Anlass:
+    `fetch_token_book` rief monatelang `/books` (Mehrzahl) → HTTP 400 → JEDER Buch-Fetch
+    scheiterte still → 0 Trades seit 17.06 + cache_mid-Phantom, ohne dass die Batterie es sah.
+    Der Trigger/Manage schreiben jetzt wm_book_health.json {attempts, transport_fail, ok}.
+    Hier: Versuche>0 aber 0 echte Bücher = Endpoint/Netz tot → ERROR (Transport-Fehler) bzw.
+    WARN (alles leer/dünn). Macht den stillen Totalausfall sofort sichtbar."""
+    bh = _lazy("wm_book_health.json")
+    if not isinstance(bh, dict):
+        return None                       # nie gelaufen / keine Daten → kein Signal
+    att = bh.get("attempts") or 0
+    ok  = bh.get("ok") or 0
+    tf  = bh.get("transport_fail") or 0
+    if att <= 0 or ok > 0:
+        return None                       # gesund (mind. ein echtes Buch) oder nichts geprüft
+    # att>0 und ok==0 → kein einziges echtes Buch
+    if tf > 0:
+        sev = "error"
+        msg = (f"Buch-Fetch TOT: 0/{att} echte Bücher, {tf} Transport-Fehler "
+               f"(HTTP/Netz) — CLOB-Endpoint prüfen (war Root-Cause des 17.06-Trade-Stopps)")
+    else:
+        sev = "warn"
+        msg = (f"Buch-Fetch: 0/{att} Bücher, alle leer/einseitig — evtl. zu dünn/zu früh, "
+               f"aber falls dauerhaft: Endpoint/Token-Format prüfen")
+    return _chk("book_fetch_healthy", "Polymarket-Orderbuch erreichbar", sev, [msg],
+                "Ohne echtes Buch wird JEDER Trade übersprungen (REQUIRE_BOOK) und jede "
+                "Bewertung fällt auf cache_mid. wm_book_health.json aus Trigger/Manage.")
+
+
+@integrity_check
 def check_entry_priced_at_ask(ctx):
     """Entry-Mid-Phantom (18.06.2026, Lucas — „Handicap-Phantom"): eine OFFENE Auto-Position
     OHNE entryAsk wurde zum MITTELPREIS eingebucht statt zum gezahlten Ask → P&L-Baseline zu

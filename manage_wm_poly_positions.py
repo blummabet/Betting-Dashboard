@@ -168,6 +168,29 @@ def _http_get(url: str) -> dict | list | None:
         return None
 
 
+# ── Buch-Fetch-Gesundheit (19.06.2026, Lucas: „der Guard muss sowas sehen") ──────
+# Zählt pro Prozess-Lauf: Versuche, Transport-Fehler (None aus _http_get = HTTP/Netz,
+# z.B. der /books-400er), echte Bücher. write_book_health() schreibt das weg; Guard
+# check_book_fetch_healthy schlägt Alarm wenn Versuche>0 aber 0 echte Bücher (= Endpoint/
+# Netz tot, genau der stille Totalausfall der das Trading vom 17.→19.06 abgewürgt hat).
+_BOOK_HEALTH = {"attempts": 0, "transport_fail": 0, "empty_or_crossed": 0, "ok": 0}
+BOOK_HEALTH_FILE = os.path.join(BASE, "wm_book_health.json")
+
+
+def write_book_health(path: str = None) -> None:
+    """Schreibt den Buch-Fetch-Gesundheits-Snapshot — NUR wenn dieser Lauf Bücher abfragte
+    (attempts>0), damit ein Leerlauf (0 Positionen/Kandidaten) keine echten Daten überschreibt."""
+    if _BOOK_HEALTH["attempts"] <= 0:
+        return
+    try:
+        from datetime import datetime as _dt, timezone as _tz
+        snap = dict(_BOOK_HEALTH, ts=_dt.now(_tz.utc).isoformat())
+        with open(path or BOOK_HEALTH_FILE, "w", encoding="utf-8") as f:
+            json.dump(snap, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"  ⚠️  write_book_health fehlgeschlagen: {e}")
+
+
 # 19.06.2026 (Root-Cause „seit 17.06 nichts getradet"): Endpoint war /books (Mehrzahl) →
 # das erwartet einen POST-Body, GET ?token_id= gab HTTP 400 Bad Request → fetch_token_book
 # scheiterte bei JEDEM Aufruf → REQUIRE_BOOK skippte alles + jede Bewertung fiel auf cache_mid.
@@ -192,8 +215,10 @@ def fetch_token_book(token_id: str) -> dict | None:
     """
     if not token_id:
         return None
+    _BOOK_HEALTH["attempts"] += 1
     data = _http_get(CLOB_BOOK_URL.format(token_id=token_id))
     if not isinstance(data, dict):
+        _BOOK_HEALTH["transport_fail"] += 1   # None aus _http_get = HTTP/Netz (z.B. 400)
         return None
     try:
         bids = [(float(b["price"]), float(b.get("size", 0) or 0))
@@ -203,14 +228,18 @@ def fetch_token_book(token_id: str) -> dict | None:
                 for a in (data.get("asks") or [])
                 if isinstance(a, dict) and a.get("price") is not None]
     except (TypeError, ValueError):
+        _BOOK_HEALTH["transport_fail"] += 1
         return None
     if not bids or not asks:
+        _BOOK_HEALTH["empty_or_crossed"] += 1   # echte Antwort, aber einseitig/leer (dünn)
         return None
     best_bid, bid_sz = max(bids, key=lambda x: x[0])
     best_ask, ask_sz = min(asks, key=lambda x: x[0])
     # Sanity: 0 < bid < ask < 1. Gekreuztes/degeneriertes Buch → None (kein Sell).
     if not (0.0 < best_bid < best_ask < 1.0):
+        _BOOK_HEALTH["empty_or_crossed"] += 1
         return None
+    _BOOK_HEALTH["ok"] += 1
     return {
         "bid":      round(best_bid, 4),
         "ask":      round(best_ask, 4),
@@ -846,6 +875,7 @@ def main():
 
     # Update file — nur manuelle Positionen zurückschreiben (auto-bets kommen aus eigenem File)
     save_positions(data)
+    write_book_health()   # Buch-Fetch-Gesundheit (nur wenn dieser Lauf Bücher abfragte)
 
     print(f"\n✅ Fertig — {alerts_sent} Alert(s) | {sells_executed} Auto-Sell(s) ausgeführt")
     if alerts_sent == 0 and sells_executed == 0 and open_pos:
