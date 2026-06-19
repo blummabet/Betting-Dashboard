@@ -27,6 +27,8 @@ import json
 import os
 import sys
 import math
+import re
+import time
 import requests
 from datetime import datetime, timezone, date
 
@@ -76,6 +78,11 @@ AH_TRADE_ENABLED       = _cfg("trade", "ah_trade_enabled",       False)
 # darüber ist fast sicher ein Datenfehler (z.B. Mirror-Bug: Poly-Spread der
 # falschen Seite). Solche „Edges" NIE traden. Fängt 30–56pp-Phantome sofort.
 AH_MAX_EDGE_PP         = _cfg("trade", "ah_max_edge_pp",         12.0)
+# AH-Preis-Floor (19.06.2026, Lucas): tiefe Handicaps unter ~20¢ sind rauschige Longshots —
+# der „Edge" dort ist oft ein Polymarket-Dünnmarkt-Artefakt, nicht echter Wert, und die
+# Pinnacle-Fair an extremen Linien ist unsicherer. Bis der AH-Tracker (analyze_ah_outcomes)
+# zeigt, dass tiefe Linien +EV sind, kappen wir sie. Strenger als der allgemeine MIN_ENTRY_PRICE.
+AH_MIN_ENTRY_PRICE     = _cfg("trade", "ah_min_entry_price",     0.20)
 BTTS_TRADE_ENABLED     = _cfg("trade", "btts_trade_enabled",     True)
 BTTS_MAX_EDGE_PP       = _cfg("trade", "btts_max_edge_pp",       12.0)
 
@@ -243,6 +250,11 @@ MIN_RAW_EDGE_PP        = _cfg("trade", "min_raw_edge_pp",         2.0)
 # sein und das Buch liquide. Verhindert Trades, deren Mid-Edge der Spread auffrisst
 # (USA-TUR: +5.2pp Mid-Edge war real nur +2.2pp gegen den 43¢-Ask).
 MAX_ENTRY_SPREAD_PP    = _cfg("trade", "max_entry_spread_pp",     6.0)
+# Post-Only-Retry (19.06.2026, Lucas): Polymarkets CLOB geht zeitweise in „post-only mode"
+# (nur Maker-Orders erlaubt) → unsere Market-Order wird mit retry_after_seconds abgelehnt.
+# Statt bis zum nächsten Cron zu warten, EINMAL im selben Lauf nach dem Backoff erneut
+# probieren (gecappt). Fängt kurze Fenster ab (05:11 blockiert → 05:26 durch).
+POST_ONLY_RETRY_MAX_S  = _cfg("trade", "post_only_retry_max_s",   120)
 MIN_BOOK_LIQ_USDC      = _cfg("trade", "min_book_liq_usdc",      50.0)
 # 17.06.2026 (Lucas): kein beidseitiges Orderbuch → KEIN Trade (statt blind zum Mid).
 # Genau die dünnen AH/BTTS-Longshots (CPV-SAU BTTS Nein @+3.5pp Mid) hatten kein Buch →
@@ -353,6 +365,34 @@ def is_homeaway_swap_suspect(fix: dict) -> bool:
     if not (hw > 1 and aw > 1 and 0 < phw < 1 and 0 < paw < 1):
         return False
     return abs(hw - aw) > 0.15 and (hw < aw) != (phw > paw)
+
+
+def _is_transient_exchange_error(err: str) -> bool:
+    e = (err or "").lower()
+    return ("post_only" in e or "post-only" in e or "retry_after" in e
+            or "status_code=503" in e or "503" in e)
+
+
+def _parse_retry_after_s(err: str) -> int:
+    m = re.search(r"retry_after_seconds['\"]?\s*[:=]\s*(\d+)", err or "")
+    return int(m.group(1)) if m else 0
+
+
+def place_order_with_retry(place_fn, token_id, stake, private_key, fill_price):
+    """Market-Order platzieren; bei TRANSIENTEM Börsen-Fehler (Post-Only-Modus / 503) EINMAL
+    nach dem von der Börse genannten Backoff (gecappt auf POST_ONLY_RETRY_MAX_S) erneut
+    versuchen. Andere Fehler (Creds, FOK, Balance) werden NICHT geretryt — die löst der
+    Retry nicht. place_fn = polymarket_bet.place_market_order (injiziert für Testbarkeit)."""
+    result = place_fn(token_id, float(stake), private_key, price_hint=float(fill_price))
+    if result.get("status") in ("placed", "dry-run"):
+        return result
+    err = str(result.get("error") or "")
+    if not _is_transient_exchange_error(err):
+        return result
+    wait = min((_parse_retry_after_s(err) or 100) + 5, POST_ONLY_RETRY_MAX_S)
+    print(f"    ⏳ Post-Only/503 (transient) — warte {wait}s und versuche EINMAL erneut…")
+    time.sleep(wait)
+    return place_fn(token_id, float(stake), private_key, price_hint=float(fill_price))
 
 
 def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
@@ -638,6 +678,13 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
                 if ah_edge > AH_MAX_EDGE_PP:
                     print(f"  🛑 AH-Edge {ah_edge:+.1f}pp > {AH_MAX_EDGE_PP}pp Cap "
                           f"(Datenfehler-Verdacht) — {fix['home']} vs {fix['away']} {ah.get('side')} {ah.get('line')} (BLOCKED)")
+                    continue
+                # AH-Preis-Floor: tiefe/dünne Longshot-Linien (< ~20¢) kappen, bis der
+                # AH-Tracker beweist, dass sie +EV sind (Lucas 19.06.2026).
+                if poly_price is not None and poly_price < AH_MIN_ENTRY_PRICE:
+                    print(f"  🚫 AH {ah.get('side')} {ah.get('line')} @ {round((poly_price or 0)*100)}¢ "
+                          f"< {round(AH_MIN_ENTRY_PRICE*100)}¢ AH-Floor — Longshot übersprungen "
+                          f"({fix['home']} vs {fix['away']})")
                     continue
                 if not poly_price or poly_price < MIN_ENTRY_PRICE or poly_price > MAX_ENTRY_PRICE:
                     continue
@@ -957,10 +1004,10 @@ def main():
         # Schätze Anzahl der Tokens (Stake / Fill-Preis) — wird für Sell gebraucht
         shares_estimate = round(stake / fill_price, 4) if fill_price > 0 else 0.0
 
-        # Order platzieren (price_hint = realer Ask wenn verfügbar, sonst Mid)
-        result = place_market_order(
-            token_id, float(stake), private_key,
-            price_hint=float(fill_price),
+        # Order platzieren (price_hint = realer Ask wenn verfügbar, sonst Mid).
+        # Mit Post-Only-/503-Retry: kurze Börsen-Sperren werden im selben Lauf abgefangen.
+        result = place_order_with_retry(
+            place_market_order, token_id, stake, private_key, fill_price,
         )
 
         log_bet_to_history(history, order, result)
