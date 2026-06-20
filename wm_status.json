@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-19T19:36:42Z",
+  "generatedAt": "2026-06-19T21:06:30Z",
   "windowDays": 2,
   "upcoming": 12,
   "signalsFired": [
@@ -17,15 +17,16 @@
     "altitude_signal",
     "chance_creation",
     "form_rating",
-    "freshness_leg"
+    "freshness_leg",
+    "smart_money"
   ],
   "signalsTotal": 19,
   "perSignal": {
     "lead_lag_bias": 3,
     "public_static_bias": 12,
-    "travel_burden": 54,
+    "travel_burden": 52,
     "injury": 0,
-    "form_trend": 88,
+    "form_trend": 86,
     "h2h_pattern": 7,
     "xg_strength": 75,
     "polymarket_sharp": 0,
@@ -38,8 +39,8 @@
     "altitude_signal": 2,
     "chance_creation": 26,
     "form_rating": 5,
-    "freshness_leg": 45,
-    "smart_money": 0
+    "freshness_leg": 43,
+    "smart_money": 8
   },
   "verdict": "warn",
   "errors": [],
@@ -47,17 +48,17 @@
     "🧠 Signal 'injury' feuert nicht (nur bei gemeldeten Ausfällen)",
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
-    "🧠 Signal 'smart_money' feuert nicht (kontextabhängig)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
-    "🛡️ Riskanter BET hat sichere Variante: 1 Fehler (z.B. L-3-ENG-PAN: BET Doppelte Chance — X2 @3.75 — keine sichere Variante)"
+    "🛡️ Aufstellung da vor Anpfiff (T-90min): 1 Fehler (z.B. SCO-MAR: Anpfiff in 53min, KEINE Aufstellung)",
+    "🛡️ BTTS-Edges plausibel: 2 Fehler (z.B. USA-AUS: BTTS Ja Edge +41.3pp (poly 0.03 / fair 0.443) — Datenfehler-Verdacht)"
   ],
   "oks": [
     "🌡️ Weather: 44 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.1h alt",
-    "📊 APIF-Predictions: 55 Spiele",
-    "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
+    "📊 APIF-Predictions: 56 Spiele",
+    "📋 Lineups: 18 Spiele geladen (3 imminent)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 47.0 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 47.4 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
     "💼 Poly-Balance: $328.38",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -120,12 +121,19 @@
       "id": "pick_safe_variant",
       "label": "Riskanter BET hat sichere Variante",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "L-3-ENG-PAN: BET Doppelte Chance — X2 @3.75 — keine sichere Variante"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "AH ≤ −1.5 / Quote > 3.0 als BET-Headline braucht eine sicherere Alternative (generate_wm_picks: SUBSTITUTION_MAP + _safer_alternatives + Renderer-Demotion)."
+    },
+    {
+      "id": "steam_longshot_ceiling",
+      "label": "Steam-Trigger respektiert Longshot-Ceiling",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Neue Steam-Karte aus einer Quote > Ceiling — detect_steam max_trigger_odds greift nicht (steam_engine / cocobet_config steam.max_trigger_odds)."
     },
     {
       "id": "ou_pinnacle_anchored",
@@ -194,9 +202,11 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "SCO-MAR: Anpfiff in 53min, KEINE Aufstellung"
+      ],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -308,6 +318,15 @@
       "note": "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner)."
     },
     {
+      "id": "card_only_not_in_trade",
+      "label": "Card-Signale nicht im Trade-Pfad",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "freshness_leg/smart_money müssen aus signalAdjustmentPP_trade abgezogen sein (generate_wm_picks _CARD_ONLY). Sonst treibt ein Card-Signal den Auto-Trader."
+    },
+    {
       "id": "entry_priced_at_ask",
       "label": "Neue Entries am Ask eingebucht (nicht Mid)",
       "severity": "warn",
@@ -374,9 +393,12 @@
       "id": "btts_edge_sane",
       "label": "BTTS-Edges plausibel",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 2,
+      "failures": [
+        "USA-AUS: BTTS Ja Edge +41.3pp (poly 0.03 / fair 0.443) — Datenfehler-Verdacht",
+        "USA-AUS: BTTS Nein Edge -41.3pp (poly 0.97 / fair 0.557) — Datenfehler-Verdacht"
+      ],
       "note": "fetch_wm_poly_prices: fair_btts aus de-viggter Pinnacle-bttsY/N. Riesen-Edge = Daten kaputt. Auto-Trader blockt via BTTS_MAX_EDGE_PP."
     }
   ]
