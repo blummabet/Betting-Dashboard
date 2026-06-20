@@ -21,6 +21,7 @@ WM_FILE      = os.path.join(BASE, "wm2026-data.json")
 HISTORY_FILE = os.path.join(BASE, "wm2026-odds-history.json")
 POLY_FILE    = os.path.join(BASE, "wm_poly_prices.json")
 PROPS_FILE   = os.path.join(BASE, "wm2026-player-props.json")
+SMARTMONEY_FILE = os.path.join(BASE, "wm_poly_smartmoney.json")
 
 CO_HOSTS = {"MEX", "USA", "CAN"}
 
@@ -299,6 +300,15 @@ def poisson_xg(home_form, away_form, home_elo: float, away_elo: float, home_is_c
     return xg_home, xg_away
 
 
+def _smartmoney_all(_cache={}):
+    """Smart-Money (wm_poly_smartmoney.json) einmal laden + memoizen. {} wenn fehlt."""
+    if "d" not in _cache:
+        raw = load_json(SMARTMONEY_FILE) or {}
+        d = raw.get("matches", raw)
+        _cache["d"] = d if isinstance(d, dict) else {}
+    return _cache["d"]
+
+
 def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, ai_previews=None, poly_lookup=None):
     home_id = fixture["home"]
     away_id = fixture["away"]
@@ -454,6 +464,28 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         home_team, away_team,
     )
 
+    # Pinnacle- + Soft-Bookie-Odds-Strips (Opening → jetzt) für die Match-Page-Strips
+    _oo = (odds_raw or {}).get("odds_open") or {}
+    pinn_odds = None
+    if odds_raw and odds_raw.get("hw"):
+        pinn_odds = {
+            "openH": _oo.get("hw"), "openD": _oo.get("dr"), "openA": _oo.get("aw"),
+            "nowH": odds_raw.get("hw"), "nowD": odds_raw.get("dr"), "nowA": odds_raw.get("aw"),
+            "book": odds_raw.get("bookmaker") or "Pinnacle",
+        }
+    soft_odds = None
+    if odds_raw and odds_raw.get("public_hw"):
+        soft_odds = {
+            "openH": odds_raw.get("public_hw_open"), "openD": odds_raw.get("public_dr_open"),
+            "openA": odds_raw.get("public_aw_open"),
+            "nowH": odds_raw.get("public_hw"), "nowD": odds_raw.get("public_dr"),
+            "nowA": odds_raw.get("public_aw"),
+            "book": odds_raw.get("public_bookmaker") or "Soft-Books",
+        }
+
+    # Smart-Money (Polymarket-Wallet-Verteilung) für dieses Spiel
+    smart_money = _smartmoney_all().get(odds_key)
+
     # Group teams + fixtures (for group table / context)
     group_teams = group_data.get("teams", [])
     group_fixtures = group_data.get("fixtures", [])
@@ -510,6 +542,9 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         # Bet Insights + Polymarket + Player Props
         "betInsights":   bet_insights,
         "polyData":      poly_out,
+        "pinnOdds":      pinn_odds,
+        "softOdds":      soft_odds,
+        "smartMoney":    smart_money,
         "playerProps":   player_props_out,
         # Data sections
         "picks":         picks_raw,

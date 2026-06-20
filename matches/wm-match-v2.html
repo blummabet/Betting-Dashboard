@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#04060c">
+<meta name="color-scheme" content="dark">
+<title>Match · WM 2026 · CocoBet</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04060c; --card:#0b101c; --card2:#101727;
+  --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.14);
+  --text:#f2f5ff; --sub:#76819c; --faint:#414c66;
+  --gold:#f5c518; --market:#4cc2ff;
+  --home:#4cc2ff; --away:#ff5d5d;
+  --pos:#2dd47e; --neg:#ff5d5d;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;background:#04060c!important}
+body{font-family:'Space Grotesk',sans-serif;background:#04060c!important;color:var(--text);
+  max-width:780px;margin:0 auto;overflow-x:hidden;min-height:100vh;padding-bottom:30px}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+.mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+.disp{font-family:'Bebas Neue',sans-serif;letter-spacing:.02em}
+
+.topbar{position:sticky;top:0;z-index:300;height:48px;display:flex;align-items:center;gap:12px;
+  padding:0 16px;background:rgba(4,6,12,.85);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.tb-back{color:var(--sub);text-decoration:none;font-size:14px}
+.tb-crumb{font-size:10px;letter-spacing:2.4px;color:var(--faint);text-transform:uppercase;font-weight:700}
+.tb-live{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:9px;font-weight:700;
+  letter-spacing:2px;color:var(--gold);text-transform:uppercase}
+.tb-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);animation:pulse 2.2s infinite}
+@keyframes pulse{50%{opacity:.25}}
+
+.hero{position:relative;padding:30px 0 0;overflow:hidden}
+.hero .field-h,.hero .field-a{position:absolute;top:-20%;width:75%;height:130%;filter:blur(70px);opacity:.30;pointer-events:none}
+.hero .field-h{left:-25%;background:radial-gradient(closest-side,var(--home),transparent 70%)}
+.hero .field-a{right:-25%;background:radial-gradient(closest-side,var(--away),transparent 70%)}
+.hero .slash{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 49.6%,rgba(255,255,255,.08) 49.6%,rgba(255,255,255,.08) 50.4%,transparent 50.4%)}
+.hero-eyebrow{position:relative;display:flex;justify-content:center;gap:9px;font-size:10px;
+  letter-spacing:2.6px;color:var(--sub);text-transform:uppercase;font-weight:700;flex-wrap:wrap;padding:0 16px}
+.hero-eyebrow b{color:var(--text)}
+.hero-names{position:relative;text-align:center;margin-top:16px;line-height:.86}
+.hn{font-size:clamp(50px,15vw,98px);display:block}
+.hn.h{color:var(--text)}
+.hn.a{color:transparent;-webkit-text-stroke:2px var(--away);margin-top:-2px}
+.hn .fl{font-size:.42em;vertical-align:.32em;-webkit-text-stroke:0;letter-spacing:0;color:var(--text)}
+.hero-ko{position:relative;text-align:center;margin:14px 0 4px;font-size:12px;color:var(--sub);letter-spacing:.5px}
+.hero-ko b{color:var(--text)}
+.arc-wrap{position:relative;margin:6px auto 0;width:min(320px,84vw)}
+svg.arc{width:100%;display:block}
+.arc-center{position:absolute;left:0;right:0;top:52%;text-align:center}
+.arc-center .ac-v{font-size:44px;font-weight:800;line-height:1}
+.arc-center .ac-l{font-size:9px;letter-spacing:2.2px;color:var(--sub);text-transform:uppercase;font-weight:700;margin-top:4px}
+.arc-legend{display:flex;justify-content:center;gap:16px;margin:4px 0 16px;font-size:11px;color:var(--sub)}
+.arc-legend b{color:var(--text);font-weight:700}
+.arc-legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.cd{display:flex;justify-content:center;gap:9px;margin:8px 0 4px}
+.cd .u{background:rgba(255,255,255,.04);border:1px solid var(--line2);border-radius:11px;min-width:58px;padding:8px 6px 6px;text-align:center}
+.cd .v{font-size:22px;font-weight:800;line-height:1}
+.cd .l{font-size:8px;letter-spacing:2px;color:var(--faint);text-transform:uppercase;font-weight:700;margin-top:4px}
+
+.chapnav{position:sticky;top:48px;z-index:250;display:flex;gap:8px;overflow-x:auto;
+  padding:10px 16px;background:rgba(4,6,12,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);scrollbar-width:none}
+.chapnav::-webkit-scrollbar{display:none}
+.chapnav a{flex:0 0 auto;font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--sub);text-decoration:none;padding:7px 13px;border:1px solid var(--line2);border-radius:99px;transition:all .2s}
+.chapnav a.on,.chapnav a:hover{color:var(--text);border-color:var(--gold);background:rgba(245,197,24,.07)}
+
+.chap{position:relative;padding:34px 18px 4px}
+.chap-h{display:flex;align-items:baseline;gap:12px;margin-bottom:4px}
+.chap-h .ct{font-size:28px;line-height:1}
+.chap-h .cs{font-size:11px;color:var(--sub);letter-spacing:.3px;line-height:1.5}
+.viz-foot{font-size:10.5px;color:var(--faint);margin-top:10px;line-height:1.6}
+
+.verdict{margin:30px 14px 0;border-radius:22px;position:relative;overflow:hidden;
+  background:radial-gradient(120% 90% at 85% -10%,rgba(245,197,24,.16),transparent 55%),linear-gradient(160deg,#141103,var(--card) 60%);
+  border:1px solid rgba(245,197,24,.35);padding:22px 20px 18px;box-shadow:0 14px 50px rgba(0,0,0,.5)}
+.verdict.abw{background:radial-gradient(120% 90% at 85% -10%,rgba(76,194,255,.12),transparent 55%),linear-gradient(160deg,#06121b,var(--card) 60%);border-color:rgba(76,194,255,.3)}
+.verdict.skip{background:linear-gradient(160deg,#12161f,var(--card) 60%);border-color:var(--line2)}
+.vd-eyebrow{font-size:9.5px;font-weight:800;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
+.verdict.abw .vd-eyebrow{color:var(--market)}
+.vd-big{display:flex;align-items:baseline;gap:14px;margin-top:10px;flex-wrap:wrap}
+.vd-big .m{font-size:clamp(38px,11vw,58px);line-height:.9}
+.vd-big .o{font-size:28px;font-weight:800;color:var(--gold)}
+.vd-stars{font-size:20px;letter-spacing:2px;margin-left:auto}
+.vd-tags{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.vd-tag{font-size:10.5px;font-weight:700;border:1px solid var(--line2);border-radius:8px;padding:5px 10px;color:var(--sub)}
+.vd-tag.gold{color:var(--gold);border-color:rgba(245,197,24,.4);background:rgba(245,197,24,.08)}
+.vd-tag.pos{color:var(--pos);border-color:rgba(45,212,126,.35)}
+.vd-tag.neg{color:var(--neg);border-color:rgba(255,93,93,.3)}
+.vd-chart-h{font-size:10px;letter-spacing:2.4px;color:var(--sub);text-transform:uppercase;font-weight:800;margin:22px 0 10px}
+.vd-model{font-size:13px;line-height:1.6;color:#bac4dd;margin-top:14px}
+.vd-model b{color:var(--text)}
+
+.wf{margin-top:8px}
+.wf-row{display:grid;grid-template-columns:120px 1fr 56px;gap:10px;align-items:center;margin-bottom:9px}
+.wf-lbl{font-size:11px;color:var(--sub);font-weight:600;line-height:1.3}
+.wf-lbl small{display:block;font-size:9px;color:var(--faint)}
+.wf-track{position:relative;height:16px}
+.wf-bar{position:absolute;top:3px;height:10px;border-radius:5px;width:0;transition:width .8s cubic-bezier(.22,1,.36,1),left .8s}
+.wf-bar.base{background:linear-gradient(90deg,rgba(255,255,255,.14),rgba(255,255,255,.3))}
+.wf-bar.pos{background:linear-gradient(90deg,rgba(45,212,126,.35),var(--pos))}
+.wf-bar.neg{background:linear-gradient(90deg,var(--neg),rgba(255,93,93,.35))}
+.wf-bar.fin{background:linear-gradient(90deg,rgba(245,197,24,.35),var(--gold));box-shadow:0 0 12px rgba(245,197,24,.3)}
+.wf-val{font-size:11px;font-weight:800;text-align:right}
+.wf-val.pos{color:var(--pos)} .wf-val.neg{color:var(--neg)} .wf-val.fin{color:var(--gold)} .wf-val.base{color:var(--sub)}
+
+.viz-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 16px;margin-top:14px;position:relative;overflow:hidden}
+
+/* Signal-Board */
+.sb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.sb-tile{border-radius:11px;padding:10px 9px;background:var(--card2);border:1px solid var(--line);position:relative;min-height:62px}
+.sb-tile .sn{font-size:10px;font-weight:700;color:var(--sub);line-height:1.3}
+.sb-tile .sv{font-size:11px;font-weight:800;margin-top:5px}
+.sb-tile .se{font-size:9px;color:var(--faint);margin-top:4px;line-height:1.35}
+.sb-tile.pos{border-color:rgba(45,212,126,.35)} .sb-tile.pos .sv{color:var(--pos)}
+.sb-tile.neg{border-color:rgba(255,93,93,.3)} .sb-tile.neg .sv{color:var(--neg)}
+.sb-tile.off .sv{color:var(--faint)}
+.sb-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:9.5px;color:var(--faint);margin-top:12px}
+.sb-legend i{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:5px}
+
+/* Conviction */
+.cv-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
+.cv-score{font-size:40px;font-weight:800;line-height:1}
+.cv-score small{font-size:15px;color:var(--faint);font-weight:700}
+.cv-verdict{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;border:1px solid var(--line2);border-radius:7px;padding:5px 11px;color:var(--sub)}
+.fam-row{display:grid;grid-template-columns:130px 1fr 38px;gap:10px;align-items:center;margin-bottom:10px}
+.fam-lbl{font-size:11px;color:var(--sub);font-weight:600}
+.fam-track{position:relative;display:flex;gap:4px;height:12px}
+.fam-seg{flex:1;border-radius:4px;background:var(--card2);border:1px solid var(--line)}
+.fam-seg.on{background:linear-gradient(90deg,rgba(245,197,24,.4),var(--gold));border-color:transparent}
+.fam-pts{font-size:11px;font-weight:800;text-align:right;color:var(--sub)} .fam-pts.on{color:var(--gold)}
+.cv-target{position:relative;height:10px;margin:22px 0 4px;background:var(--card2);border-radius:5px;overflow:visible}
+.cv-target .fill{position:absolute;left:0;top:0;bottom:0;border-radius:5px;width:0;background:linear-gradient(90deg,rgba(245,197,24,.3),var(--gold));transition:width .9s ease}
+.cv-target .goal{position:absolute;left:80%;top:-5px;bottom:-5px;width:2.5px;background:var(--pos);border-radius:2px}
+.cv-target .goal::after{content:'BET 8';position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:800;color:var(--pos);white-space:nowrap;font-family:'JetBrains Mono'}
+
+/* Pulse */
+.pulse{display:flex;align-items:center;gap:12px;border-radius:14px;padding:13px 15px;margin-top:14px;border:1px solid var(--line2)}
+.pulse .pl-badge{font-size:13px;font-weight:800;letter-spacing:1px;padding:6px 12px;border-radius:8px}
+.pulse .pl-tx{font-size:12px;color:var(--sub);line-height:1.5}
+.pulse.up{border-color:rgba(45,212,126,.4)} .pulse.up .pl-badge{color:var(--pos);background:rgba(45,212,126,.12)}
+.pulse.base{border-color:var(--line2)} .pulse.base .pl-badge{color:var(--sub);background:var(--card2)}
+.pulse.down{border-color:rgba(255,93,93,.4)} .pulse.down .pl-badge{color:var(--neg);background:rgba(255,93,93,.12)}
+
+/* Odds-Strip (Open → Now) */
+.os-strip{margin-top:14px}
+.os-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.os-name{font-size:13px;font-weight:800} .os-name small{color:var(--faint);font-weight:600;font-size:10px;margin-left:6px}
+.os-row{display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:8px;align-items:center;margin-bottom:7px}
+.os-k{font-size:10px;color:var(--faint);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.os-cell{text-align:center;font-family:'JetBrains Mono';font-weight:700;font-size:13px;background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:8px 4px;position:relative}
+.os-cell .delta{display:block;font-size:9px;font-weight:800;margin-top:3px}
+.os-cell .delta.dn{color:var(--pos)} .os-cell .delta.up{color:var(--neg)} .os-cell .delta.fl{color:var(--faint)}
+.os-cell.lead{border-color:rgba(245,197,24,.4)}
+
+/* Smart Money */
+.smbar{display:flex;height:30px;border-radius:9px;overflow:hidden;margin-top:12px;border:1px solid var(--line2)}
+.smbar .seg{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#06101a;min-width:0;transition:width .9s cubic-bezier(.22,1,.36,1);width:0}
+.smbar .seg.h{background:linear-gradient(90deg,#4cc2ff,#7ad4ff)} .smbar .seg.d{background:#4a5570;color:var(--text)} .smbar .seg.a{background:linear-gradient(90deg,#ff6b6b,#ff9090)}
+.sm-meta{display:flex;justify-content:space-between;font-size:10.5px;color:var(--faint);margin-top:8px}
+.sm-meta b{color:var(--text)}
+.sm-edge{font-size:12px;color:var(--sub);margin-top:10px;line-height:1.5;padding:10px 12px;border-radius:10px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.3)}
+.sm-edge b{color:#c4b5fd}
+
+/* Story */
+.story-prose{font-size:14.5px;line-height:1.8;color:#bac4dd;margin-top:14px}
+.story-prose::first-letter{font-family:'Bebas Neue',sans-serif;font-size:50px;line-height:.8;float:left;margin:6px 10px 0 0;color:var(--gold)}
+
+/* Form-Balken */
+.fb-team{margin-bottom:16px}
+.fb-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.fb-flag{font-size:18px} .fb-flag b{font-size:12px;font-weight:700;margin-left:6px}
+.fb-streak{font-size:10px;font-weight:800;letter-spacing:.6px;border-radius:99px;padding:5px 11px}
+.fb-streak.hot{color:var(--pos);background:rgba(45,212,126,.1);border:1px solid rgba(45,212,126,.3)}
+.fb-streak.cold{color:var(--market);background:rgba(76,194,255,.08);border:1px solid rgba(76,194,255,.28)}
+.fb-track{position:relative;display:grid;grid-template-columns:repeat(10,1fr);gap:6px;height:54px}
+.fb-track::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:var(--line2)}
+.fb-cell{position:relative}
+.fb-bar{position:absolute;left:15%;right:15%;border-radius:6px;transform:scaleY(0);transition:transform .5s cubic-bezier(.22,1,.36,1)}
+.fb-cell.W .fb-bar{bottom:50%;height:46%;transform-origin:bottom;background:linear-gradient(180deg,var(--pos),rgba(45,212,126,.35))}
+.fb-cell.L .fb-bar{top:50%;height:46%;transform-origin:top;background:linear-gradient(180deg,rgba(255,93,93,.35),var(--neg))}
+.fb-cell.D .fb-bar{top:calc(50% - 4px);height:8px;transform-origin:center;border-radius:4px;background:rgba(255,255,255,.22)}
+.fb-track.go .fb-bar{transform:scaleY(1)}
+.fb-legend{display:flex;gap:16px;font-size:10px;color:var(--sub);margin-top:10px}
+.fb-legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.fb-legend i.w{background:var(--pos)} .fb-legend i.d{background:rgba(255,255,255,.3)} .fb-legend i.l{background:var(--neg)}
+
+/* Spieler-Duell */
+.duel{display:grid;gap:12px;margin-top:14px}
+.pcard{background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:16px;position:relative;overflow:hidden}
+.pcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.pcard.h::before{background:var(--home)} .pcard.a::before{background:var(--away)}
+.pc-top{display:flex;align-items:center;justify-content:space-between}
+.pc-role{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub);border:1px solid var(--line2);border-radius:6px;padding:4px 9px}
+.pc-name{font-size:16px;font-weight:700;margin-top:10px} .pc-pos{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-top:2px}
+.pc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}
+.pcs{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:9px 4px;text-align:center}
+.pcs b{font-size:19px;font-weight:800;display:block;line-height:1} .pcs span{font-size:8px;letter-spacing:.8px;color:var(--faint);text-transform:uppercase;font-weight:700;display:block;margin-top:4px}
+.pcard.h .pcs b{color:var(--home)} .pcard.a .pcs b{color:var(--away)}
+
+/* Gruppen-Tabelle */
+.gt-row{display:grid;grid-template-columns:24px 1fr 38px 38px;gap:8px;align-items:center;padding:9px 4px;border-bottom:1px solid var(--line);font-size:13px}
+.gt-row:last-child{border-bottom:0}
+.gt-row .pos{font-size:11px;color:var(--faint);font-weight:800} .gt-row.qual .pos{color:var(--pos)}
+.gt-row .tn{font-weight:700} .gt-row.me .tn{color:var(--gold)}
+.gt-row .el{text-align:right;font-family:'JetBrains Mono';font-size:11px;color:var(--sub)}
+.gt-head{display:grid;grid-template-columns:24px 1fr 38px 38px;gap:8px;font-size:8.5px;color:var(--faint);text-transform:uppercase;letter-spacing:1px;font-weight:700;padding:0 4px 6px}
+
+.foot{padding:28px 18px 30px;text-align:center;font-size:10px;color:var(--faint);line-height:1.8}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="tb-back" href="../season-finish-v2.html">←</a>
+  <span class="tb-crumb" id="crumb">WM 2026</span>
+  <span class="tb-live"><span class="tb-dot"></span>Modell live</span>
+</header>
+
+<section class="hero">
+  <div class="field-h"></div><div class="field-a"></div><div class="slash"></div>
+  <div class="hero-eyebrow" id="eyebrow"></div>
+  <div class="hero-names disp" id="names"></div>
+  <div class="hero-ko" id="ko"></div>
+  <div class="cd mono" id="cd"></div>
+  <div class="arc-wrap">
+    <svg class="arc" viewBox="0 0 300 168" id="arc"></svg>
+    <div class="arc-center"><div class="ac-v mono" id="arc-num">0%</div><div class="ac-l" id="arc-lbl"></div></div>
+  </div>
+  <div class="arc-legend" id="arc-legend"></div>
+</section>
+
+<nav class="chapnav" id="chapnav">
+  <a href="#c-pick" class="on">Pick</a>
+  <a href="#c-engine">Engine</a>
+  <a href="#c-markt">Märkte</a>
+  <a href="#c-story">Story</a>
+  <a href="#c-form">Form</a>
+  <a href="#c-duell">Duell</a>
+  <a href="#c-gruppe">Gruppe</a>
+</nav>
+
+<section class="verdict" id="c-pick"><div id="verdict-body"></div></section>
+
+<section class="chap" id="c-engine">
+  <div class="chap-h"><span class="ct disp">Wie sicher ist sich die Engine?</span></div>
+  <div class="chap-h"><span class="cs">19 unabhängige Signale pro Spiel — und ein ehrliches Urteil, das nicht jedem Vorteil hinterherläuft.</span></div>
+  <div id="pulse-box"></div>
+  <div class="viz-card"><div id="signal-board"></div></div>
+  <div class="viz-card"><div id="conviction-box"></div></div>
+</section>
+
+<section class="chap" id="c-markt">
+  <div class="chap-h"><span class="ct disp">Die Märkte</span></div>
+  <div class="chap-h"><span class="cs">Pinnacle (Sharp-Anker) und die Soft-Books seit Eröffnung — plus wo das große Geld auf Polymarket liegt.</span></div>
+  <div class="viz-card"><div id="odds-box"></div></div>
+  <div class="viz-card" id="poly-card"><div id="poly-box"></div></div>
+</section>
+
+<section class="chap" id="c-story">
+  <div class="chap-h"><span class="ct disp">Die Story zum Spiel</span></div>
+  <div id="story-box"></div>
+</section>
+
+<section class="chap" id="c-form">
+  <div class="chap-h"><span class="ct disp">Wer kommt in Fahrt?</span></div>
+  <div class="chap-h"><span class="cs">Die letzten 10 Spiele — Balken nach oben ist gut, nach unten nicht.</span></div>
+  <div class="viz-card"><div id="form-box"></div></div>
+</section>
+
+<section class="chap" id="c-duell">
+  <div class="chap-h"><span class="ct disp">Schlüsselspieler</span></div>
+  <div id="duell-box"></div>
+</section>
+
+<section class="chap" id="c-gruppe">
+  <div class="chap-h"><span class="ct disp">Die Gruppe</span></div>
+  <div class="chap-h"><span class="cs">CocoBet-Stärke (Elo) der vier Teams.</span></div>
+  <div class="viz-card"><div id="gruppe-box"></div></div>
+</section>
+
+<footer class="foot" id="foot"></footer>
+
+<script>
+const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $=id=>document.getElementById(id);
+
+// Signal-Name → kurzes Label fürs UI
+const SIG_LABEL={
+  lead_lag_bias:'Pinnacle vs Soft-Books', public_static_bias:'Publikum vs Pinnacle',
+  travel_burden:'Reise-Last', injury:'Ausfälle', form_trend:'Form', h2h_pattern:'Direkte Duelle',
+  xg_strength:'Chancen-Qualität (xG)', polymarket_sharp:'Polymarket-Sharp', steam_lag:'Steam-Lag',
+  pressure_index:'Druck & Anreiz', lineup_signal:'Aufstellung', apif_predictions:'Zweitmodell',
+  weather_signal:'Wetter / Hitze', incentive_signal:'Tabellen-Anreiz', altitude_signal:'Höhe',
+  chance_creation:'Chancen-Kreation', form_rating:'Form-Rating', freshness_leg:'Pulse / Frische',
+  smart_money:'Smart Money',
+};
+
+async function load(){
+  const params=new URLSearchParams(location.search);
+  const slug=params.get('m')||'';
+  let P=window.__PAYLOAD__;
+  if(!P){ try{ P=await (await fetch('data/'+slug+'.json')).json(); }catch(e){ $('foot').textContent='Daten konnten nicht geladen werden.'; return; } }
+  render(P);
+}
+
+function heroPick(P){
+  const picks=(P.picks||[]).filter(p=>!p.trackingExcluded && !p.synthetic);
+  if(!picks.length) return null;
+  const rank=v=>v==='BET'?2:v==='ABWÄGEN'?1:0;
+  return picks.slice().sort((a,b)=>(rank(b.verdict)-rank(a.verdict))||((b.convictionScore||0)-(a.convictionScore||0)))[0];
+}
+
+function render(P){
+  document.title=`${P.home} – ${P.away} · WM 2026 · CocoBet`;
+  $('crumb').textContent=`WM 2026 · ${P.groupName||('Gruppe '+P.group)}`;
+
+  // Hero
+  const dObj=tryDate(P.date,P.time);
+  const wd=['So','Mo','Di','Mi','Do','Fr','Sa'][dObj?dObj.getDay():0];
+  $('eyebrow').innerHTML=`<span>${wd} <b>${fmtDate(P.date)}</b></span><span>·</span><span><b>${P.time||'—'}</b> MESZ</span>`+(P.venue?`<span>·</span><span>${(P.venue||'').split('·')[0].trim()}</span>`:'');
+  $('names').innerHTML=`<span class="hn h"><span class="fl">${P.homeFlag||''}</span> ${(P.home||'').toUpperCase()}</span><span class="hn a">${(P.away||'').toUpperCase()} <span class="fl">${P.awayFlag||''}</span></span>`;
+  $('ko').innerHTML=`Spieltag ${P.matchday} · Elo <b class="mono">${P.homeElo}</b> vs <b class="mono">${P.awayElo}</b>`;
+
+  // Win-Prob-Arc (de-viggter Markt)
+  const ph=P.probHome,pd=P.probDraw,pa=P.probAway;
+  if(ph!=null&&pa!=null){
+    drawArc([{v:ph,c:css('--home')},{v:pd,c:css('--faint')},{v:pa,c:css('--away')}]);
+    const fav=ph>=pa?['Heim',ph,'--home',P.home]:['Auswärts',pa,'--away',P.away];
+    $('arc-num').dataset.n=Math.round(fav[1]); $('arc-num').style.color=css(fav[2]);
+    $('arc-lbl').textContent=`Markt: ${fav[3]} Sieg`;
+    countUp($('arc-num'),Math.round(fav[1]));
+    $('arc-legend').innerHTML=
+      `<span><i style="background:var(--home)"></i>${P.home} <b class="mono">${Math.round(ph)}%</b></span>`+
+      `<span><i style="background:var(--faint)"></i>Remis <b class="mono">${Math.round(pd)}%</b></span>`+
+      `<span><i style="background:var(--away)"></i>${P.away} <b class="mono">${Math.round(pa)}%</b></span>`;
+  } else { $('arc-legend').textContent='Keine Marktquoten verfügbar.'; }
+
+  // Countdown
+  if(dObj){ startCountdown(dObj.getTime()); } else { $('cd').style.display='none'; }
+
+  // Pick + alle Sektionen
+  const p=heroPick(P);
+  renderVerdict(P,p);
+  renderPulse(p); renderSignalBoard(p); renderConviction(p);
+  renderOdds(P); renderPoly(P); renderStory(P); renderForm(P); renderDuell(P); renderGruppe(P);
+  scrollspy();
+
+  $('foot').innerHTML=`CocoBet Engine · 19 Signale · Bayesian-Lernen · Pinnacle-Anker · Polymarket<br>Stand ${P.generatedAtHuman||''} · Keine Wettberatung · 18+`;
+}
+
+function renderVerdict(P,p){
+  const sec=$('c-pick'), body=$('verdict-body');
+  if(!p){ sec.classList.add('skip'); body.innerHTML=`<div class="vd-eyebrow">Kein Pick</div><div class="vd-model">Für dieses Spiel hat die Engine keine Empfehlung — kein ausreichender Vorteil gegen die Pinnacle-Fair-Quote.</div>`; return; }
+  const isAbw=p.verdict==='ABWÄGEN', isSkip=!['BET','ABWÄGEN'].includes(p.verdict);
+  sec.classList.toggle('abw',isAbw); sec.classList.toggle('skip',isSkip);
+  const cs=(typeof p.convictionScore==='number')?p.convictionScore:null;
+  let stars=p.verdict==='BET'?3:isAbw?(cs!=null?(cs>=7?3:cs>=4?2:1):2):1;
+  const starStr='★★★☆☆'.slice(3-stars,3-stars+3);
+  const odds=p.odds!=null?p.odds.toFixed(2):'—';
+  const edge=p.edgePP!=null?p.edgePP:null;
+  const eff=p.effectiveEdgePP!=null?p.effectiveEdgePP:edge;
+  const tags=[];
+  if(eff!=null) tags.push(`<span class="vd-tag ${eff>0?'gold':'neg'} mono">Edge ${eff>0?'+':''}${(+eff).toFixed(1)}pp</span>`);
+  if(cs!=null) tags.push(`<span class="vd-tag">Conviction ${cs}/10</span>`);
+  const eyebrow=p.verdict==='BET'?'⚡ CocoBet Pick':isAbw?'🛡 Vorsichtiger Pick':'Kein Pick';
+  body.innerHTML=`
+    <div class="vd-eyebrow">${eyebrow}</div>
+    <div class="vd-big"><span class="m disp">${p.market}</span><span class="o mono">@${odds}</span><span class="vd-stars" style="color:var(--gold)">${starStr}</span></div>
+    <div class="vd-tags">${tags.join('')}</div>
+    ${p.info?`<div class="vd-model">${humanInfo(p)}</div>`:''}
+    <div class="vd-chart-h">So kommt der Pick zustande</div>
+    <div class="wf" id="waterfall"></div>
+    <p class="viz-foot">Basis ist die Pinnacle-Fair-Quote. Jedes Signal schiebt den Vorteil — am Ende bleibt nur, was nach allen Prüfungen übrig ist.</p>`;
+  buildWaterfall(p);
+}
+
+function humanInfo(p){
+  if(p.source==='steam'&&p.steamMovePP)
+    return `Pinnacle ist von <b>${(+p.steamOpen).toFixed(2)}</b> auf <b>${(+p.steamCur).toFixed(2)}</b> gefallen (+${p.steamMovePP}pp) — der Wert steckt im Move, nicht im Restpreis.`;
+  if(p.modelOdds!=null&&p.odds!=null)
+    return `Unser Modell sieht <b>${(+p.modelOdds).toFixed(2)}</b>, der Markt bietet <b>${(+p.odds).toFixed(2)}</b>.`;
+  return '';
+}
+
+function buildWaterfall(p){
+  const box=$('waterfall'); if(!box) return;
+  const base=p.edgePP!=null?+p.edgePP:0;
+  const sigs=(p.signals||[]).filter(s=>s&&typeof s.score==='number'&&Math.abs(s.score)>=0.05)
+    .sort((a,b)=>Math.abs(b.score)-Math.abs(a.score));
+  const eff=p.effectiveEdgePP!=null?+p.effectiveEdgePP:base+sigs.reduce((s,x)=>s+x.score,0);
+  const rows=[{lbl:'Markt-Vorteil',sub:'Quote vs Pinnacle-Fair',v:base,typ:'base'}];
+  sigs.forEach(s=>rows.push({lbl:SIG_LABEL[s.name]||s.name,sub:shortEv(s.evidence),v:+s.score,typ:s.score>0?'pos':'neg',damp:!!s.correlation_discount_applied}));
+  rows.push({lbl:'Echter Vorteil',sub:'das bleibt übrig',v:eff,typ:'fin'});
+  const MAX=Math.max(10,Math.abs(base)+1,Math.abs(eff)+1,...sigs.map(s=>Math.abs(s.score)));
+  let cum=0,html='';
+  rows.forEach(r=>{
+    let left,w;
+    if(r.typ==='base'){left=0;w=Math.max(r.v,0.2);cum=r.v;}
+    else if(r.typ==='fin'){left=0;w=Math.max(r.v,0.2);}
+    else{const a=Math.min(cum,cum+r.v);w=Math.abs(r.v)||0.2;left=a;cum+=r.v;}
+    const showVal=(r.typ==='base'||r.typ==='fin')?`${r.v>0?'+':''}${r.v.toFixed(1)}pp`:`${r.v>0?'+':''}${r.v.toFixed(1)}pp`;
+    html+=`<div class="wf-row">
+      <div class="wf-lbl">${r.lbl}${r.sub?`<small>${r.sub}</small>`:''}</div>
+      <div class="wf-track"><div class="wf-bar ${r.typ}" data-l="${Math.max(0,left/MAX*100).toFixed(1)}" data-w="${(w/MAX*100).toFixed(1)}"></div></div>
+      <div class="wf-val ${r.typ} mono">${r.typ==='base'?'Start':showVal}</div></div>`;
+  });
+  box.innerHTML=html;
+  obs(box,()=>box.querySelectorAll('.wf-bar').forEach(b=>{b.style.left=b.dataset.l+'%';b.style.width=b.dataset.w+'%';}));
+}
+
+function shortEv(ev){ if(!ev) return ''; let t=ev.replace(/^[^\wÄÖÜäöü]+/,'').trim(); return t.length>52?t.slice(0,50)+'…':t; }
+
+// ── Arc ──
+function drawArc(segs){
+  const svg=$('arc'),cx=150,cy=152,r=118,w=17,gap=.035;
+  const polar=a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)];
+  let html='',start=Math.PI;
+  const tot=segs.reduce((s,x)=>s+x.v,0)||100;
+  segs.forEach(s=>{
+    const sweep=(s.v/tot)*Math.PI, a0=start+gap/2, a1=start+sweep-gap/2;
+    if(a1>a0){
+      const [x0,y0]=polar(a0),[x1,y1]=polar(a1),large=(a1-a0)>Math.PI?1:0,len=r*(a1-a0);
+      html+=`<path d="M${x0.toFixed(1)},${y0.toFixed(1)} A${r},${r} 0 ${large} 1 ${x1.toFixed(1)},${y1.toFixed(1)}" fill="none" stroke="${s.c}" stroke-width="${w}" stroke-linecap="round" stroke-dasharray="${len.toFixed(0)}" stroke-dashoffset="${reduced?0:len.toFixed(0)}" style="transition:stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1) .2s"/>`;
+    }
+    start+=sweep;
+  });
+  svg.innerHTML=html;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>svg.querySelectorAll('path').forEach(p=>p.style.strokeDashoffset='0')));
+}
+function countUp(el,target){
+  if(reduced){el.textContent=target+'%';return}
+  let t0=null;const step=ts=>{if(!t0)t0=ts;const k=Math.min((ts-t0)/1100,1);
+    el.textContent=Math.round(target*(1-Math.pow(1-k,3)))+'%';if(k<1)requestAnimationFrame(step)};
+  requestAnimationFrame(step);
+}
+// ── Countdown ──
+function startCountdown(ko){
+  const cd=$('cd');
+  cd.innerHTML=['Tage','Std','Min','Sek'].map((l,i)=>`<div class="u"><div class="v" id="cd${i}">–</div><div class="l">${l}</div></div>`).join('');
+  function tick(){
+    let ms=ko-Date.now();
+    if(ms<=0){cd.innerHTML='<div class="u"><div class="v">⚽ LIVE</div><div class="l">Anpfiff</div></div>';return}
+    const d=Math.floor(ms/864e5);ms-=d*864e5;const h=Math.floor(ms/36e5);ms-=h*36e5;
+    const m=Math.floor(ms/6e4);ms-=m*6e4;const s=Math.floor(ms/1e3);
+    $('cd0').textContent=d;$('cd1').textContent=String(h).padStart(2,'0');
+    $('cd2').textContent=String(m).padStart(2,'0');$('cd3').textContent=String(s).padStart(2,'0');
+    setTimeout(tick,1000);
+  }
+  tick();
+}
+// ── Helpers ──
+function obs(el,fn){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){fn();io.disconnect()}}),{threshold:.2});io.observe(el);}
+function tryDate(d,t){ if(!d)return null; const tm=(t&&/^\d{2}:\d{2}/.test(t))?t:'18:00'; const dt=new Date(`${d}T${tm}:00+02:00`); return isNaN(dt)?null:dt; }
+function fmtDate(d){ if(!d)return''; const[y,m,da]=d.split('-'); return `${da}.${m}.${y}`; }
+
+// ── Signal-Board (alle 19) ──
+function renderSignalBoard(p){
+  const box=$('signal-board'); if(!box) return;
+  const fired={}; ((p&&p.signals)||[]).forEach(s=>{if(s&&s.name)fired[s.name]=s;});
+  let nPos=0,nNeg=0,nOff=0;
+  const tiles=Object.keys(SIG_LABEL).map(name=>{
+    const s=fired[name];
+    if(s&&typeof s.score==='number'&&Math.abs(s.score)>=0.05){
+      const cls=s.score>0?'pos':'neg'; s.score>0?nPos++:nNeg++;
+      return `<div class="sb-tile ${cls}"><div class="sn">${SIG_LABEL[name]}</div><div class="sv">${s.score>0?'+':''}${s.score.toFixed(1)}pp</div><div class="se">${shortEv(s.evidence)}</div></div>`;
+    }
+    nOff++;
+    return `<div class="sb-tile off"><div class="sn">${SIG_LABEL[name]}</div><div class="sv">—</div><div class="se">greift hier nicht</div></div>`;
+  }).join('');
+  box.innerHTML=`<div class="chap-h" style="margin-bottom:10px"><span class="cs"><b style="color:var(--pos)">${nPos} dafür</b> · <b style="color:var(--neg)">${nNeg} dagegen</b> · ${nOff} neutral</span></div>
+    <div class="sb-grid">${tiles}</div>
+    <div class="sb-legend"><span><i style="background:var(--pos)"></i>für den Pick</span><span><i style="background:var(--neg)"></i>dagegen</span><span><i style="background:var(--faint)"></i>greift hier nicht</span></div>`;
+}
+
+// ── Conviction ──
+function renderConviction(p){
+  const box=$('conviction-box'); if(!box) return;
+  const cs=(p&&typeof p.convictionScore==='number')?p.convictionScore:null;
+  if(cs==null){ box.closest('.viz-card').style.display='none'; return; }
+  const f=p.convictionFamilies||{};
+  const rows=[['Profi-Geld folgt',f.sharp_money||0,3],['Modell-Stack',f.model_stack||0,3],['Umfeld & Kontext',f.context||0,3],['Buchmacher-Konsens',f.market||0,1]];
+  const verdict=cs>=8?'Top-Wette':cs>=6?'Gute Wette':cs>=4?'Beobachten':'Schwache Bestätigung';
+  const fam=rows.map(([n,v,m])=>{let s='';for(let i=0;i<m;i++)s+=`<div class="fam-seg${i<v?' on':''}"></div>`;
+    return `<div class="fam-row"><span class="fam-lbl">${n}</span><div class="fam-track">${s}</div><span class="fam-pts${v>0?' on':''}">${v}/${m}</span></div>`;}).join('');
+  box.innerHTML=`<div class="cv-head"><div class="cv-score mono">${cs}<small>/10</small></div><span class="cv-verdict">${verdict}</span></div>${fam}
+    <div class="cv-target"><div class="fill" id="cv-fill" data-w="${cs/10*100}"></div><div class="goal"></div></div>
+    <p class="viz-foot" style="margin-top:14px">Erst ab <b>8 von 10</b> aus unabhängigen Quellen gilt ein Pick als Top-Wette. Diese Strenge ist Absicht.</p>`;
+  obs(box,()=>{const fl=$('cv-fill');if(fl)fl.style.width=fl.dataset.w+'%';});
+}
+
+// ── Pulse ──
+function renderPulse(p){
+  const box=$('pulse-box'); if(!box) return;
+  if(!p||p.source!=='steam'||!p.freshnessState){box.innerHTML='';return;}
+  const map={confirm:['up','GESTÄRKT','frisches Geld läuft weiter für uns'],drift:['base','BASIS','der Move ist die Grundlage — ruht aktuell'],reverse:['down','DREHT','frisches Geld dreht gegen uns']};
+  const m=map[p.freshnessState]; if(!m){box.innerHTML='';return;}
+  const rmv=p.recentMovePP!=null?` · <b style="color:var(--text)">${p.recentMovePP>0?'+':''}${(+p.recentMovePP).toFixed(1)}pp zuletzt</b>`:'';
+  box.innerHTML=`<div class="pulse ${m[0]}"><span class="pl-badge">⚡ Pulse ${m[1]}</span><span class="pl-tx">${m[2]}${rmv}</span></div>`;
+}
+
+// ── Odds-Strips ──
+function oddsStrip(name,book,o){
+  if(!o||o.nowH==null)return '';
+  const cell=(open,now)=>{
+    if(now==null)return '<div class="os-cell">–</div>';
+    let dl='<span class="delta fl">–</span>';
+    if(open!=null){const d=(1/now-1/open)*100;
+      dl=Math.abs(d)<0.3?'<span class="delta fl">±0</span>':`<span class="delta ${d>0?'dn':'up'}">${d>0?'▲':'▼'}${Math.abs(d).toFixed(1)}pp</span>`;}
+    return `<div class="os-cell">${(+now).toFixed(2)}${dl}</div>`;
+  };
+  return `<div class="os-strip"><div class="os-head"><span class="os-name">${name}<small>${book||''}</small></span><span class="os-k">Open → Jetzt</span></div>
+    <div class="os-row"><span class="os-k">1 / X / 2</span>${cell(o.openH,o.nowH)}${cell(o.openD,o.nowD)}${cell(o.openA,o.nowA)}</div></div>`;
+}
+function renderOdds(P){
+  const box=$('odds-box');
+  const html=oddsStrip('Pinnacle','Sharp-Anker',P.pinnOdds)+oddsStrip('Soft-Books',(P.softOdds&&P.softOdds.book)||'',P.softOdds);
+  box.innerHTML=html||'<p class="viz-foot">Keine Quoten-Historie verfügbar.</p>';
+}
+
+// ── Polymarket / Smart Money ──
+function renderPoly(P){
+  const box=$('poly-box'),sm=P.smartMoney;
+  if(!sm||!sm.outcomes){ $('poly-card').style.display='none'; return; }
+  const o=sm.outcomes,pct=x=>(x&&x.share!=null)?Math.round(x.share*100):0;
+  const h=pct(o.home),d=pct(o.draw),a=pct(o.away);
+  const usd=sm.totalUsd>=1e6?`$${(sm.totalUsd/1e6).toFixed(1)}M`:`$${Math.round((sm.totalUsd||0)/1e3)}k`;
+  let edge='';
+  const p=heroPick(P),sig=((p&&p.signals)||[]).find(s=>s&&s.name==='smart_money');
+  if(sig&&sig.metadata&&sig.metadata.excessPP!=null){const m=sig.metadata,sl={home:'Heim',draw:'Unentschieden',away:'Auswärts'}[m.outcome]||m.outcome;
+    edge=`<div class="sm-edge">Auf <b>${sl}</b> liegen ${Math.round((m.share||0)*100)}% des großen Geldes — fair wären ${Math.round((m.fairShare||0)*100)}% (${m.excessPP>0?'+':''}${m.excessPP}pp ${m.excessPP>0?'mehr als der Markt rechtfertigt':'darunter'}).</div>`;}
+  box.innerHTML=`<div class="chap-h" style="margin-bottom:4px"><span class="cs">💰 <b style="color:#c4b5fd">Smart Money</b> — wo die großen Wallets liegen</span></div>
+    <div class="smbar"><div class="seg h" data-w="${h}">${h>=12?h+'%':''}</div><div class="seg d" data-w="${d}">${d>=12?d+'%':''}</div><div class="seg a" data-w="${a}">${a>=12?a+'%':''}</div></div>
+    <div class="sm-meta"><span>${usd} verfolgt · ${sm.topTraders||0} Wallets &gt;$1k</span><span>Heim ${h}% · X ${d}% · Ausw. ${a}%</span></div>${edge}
+    <p class="viz-foot">Verfolgt wird das offene Interesse der größten Wallets je Ausgang — nicht das Gesamtvolumen (das ist höher).</p>`;
+  obs(box,()=>box.querySelectorAll('.smbar .seg').forEach(s=>s.style.width=s.dataset.w+'%'));
+}
+
+// ── Story ──
+function renderStory(P){
+  const t=P.aiTgSnippet||P.aiPreview;
+  if(!t){ $('c-story').style.display='none'; return; }
+  $('story-box').innerHTML=`<p class="story-prose">${t}</p>`;
+}
+
+// ── Form-Balken ──
+function fbTeam(flag,name,res){
+  if(!res||!res.length)return '';
+  const arr=res.slice(-10), w=arr.filter(x=>x==='W').length, l=arr.filter(x=>x==='L').length;
+  let streak=0,last=arr[arr.length-1]; for(let i=arr.length-1;i>=0&&arr[i]===last;i--)streak++;
+  const badge=(last==='W'&&streak>=2)?`<span class="fb-streak hot">🔥 ${streak} Siege in Serie</span>`
+    :(w<=1)?`<span class="fb-streak cold">🧊 ${w} Sieg${w===1?'':'e'} aus ${arr.length}</span>`
+    :`<span class="fb-streak cold">${w}S · ${l}N</span>`;
+  const cells=arr.map((r,i)=>`<div class="fb-cell ${r}" style="opacity:${(0.4+0.6*(i/(arr.length-1||1))).toFixed(2)}"><div class="fb-bar" style="transition-delay:${i*40}ms"></div></div>`).join('');
+  return `<div class="fb-team"><div class="fb-meta"><span class="fb-flag">${flag} <b>${name}</b></span>${badge}</div><div class="fb-track">${cells}</div></div>`;
+}
+function renderForm(P){
+  const norm=x=>Array.isArray(x)?x:(typeof x==='string'?x.split(''):[]);
+  const h=fbTeam(P.homeFlag,P.home,norm(P.homeForm&&(P.homeForm.last10||P.homeForm.last5)));
+  const a=fbTeam(P.awayFlag,P.away,norm(P.awayForm&&(P.awayForm.last10||P.awayForm.last5)));
+  if(!h&&!a){ $('c-form').style.display='none'; return; }
+  $('form-box').innerHTML=h+a+`<div class="fb-legend"><span><i class="w"></i>Sieg</span><span><i class="d"></i>Remis</span><span><i class="l"></i>Niederlage</span></div>`;
+  $('form-box').querySelectorAll('.fb-track').forEach(t=>obs(t,()=>t.classList.add('go')));
+}
+
+// ── Spieler-Duell ──
+function renderDuell(P){
+  const spots=(P.playerSpotlights||[]).filter(s=>s&&(s.player||s.name));
+  if(!spots.length){ $('c-duell').style.display='none'; return; }
+  const cards=spots.slice(0,2).map(sp=>{
+    const pl=sp.player||{}, isHome=sp.teamId===P.homeId;
+    const st=[];
+    if(pl.goals!=null)st.push([pl.goals,'Tore']);
+    if(pl.assists!=null)st.push([pl.assists,'Assists']);
+    if(pl.rating!=null)st.push([(+pl.rating).toFixed(1),'Rating']);
+    else if(pl.appearances!=null)st.push([pl.appearances,'Spiele']);
+    while(st.length<3)st.push(['–','']);
+    return `<div class="pcard ${isHome?'h':'a'}"><div class="pc-top"><span style="font-size:24px">${isHome?P.homeFlag:P.awayFlag}</span><span class="pc-role">${sp.role||sp.tag||sp.label||'Schlüsselspieler'}</span></div>
+      <div class="pc-name">${pl.name||sp.name||'—'}</div><div class="pc-pos">${pl.position||sp.teamId||''}</div>
+      <div class="pc-stats">${st.slice(0,3).map(([v,l])=>`<div class="pcs"><b>${v}</b><span>${l}</span></div>`).join('')}</div></div>`;
+  }).join('');
+  $('duell-box').innerHTML=`<div class="duel">${cards}</div>`;
+}
+
+// ── Gruppe ──
+function renderGruppe(P){
+  const teams=(P.homeTeams||[]).slice().filter(t=>t&&t.elo).sort((a,b)=>(b.elo||0)-(a.elo||0));
+  if(teams.length<2){ $('c-gruppe').style.display='none'; return; }
+  let html=`<div class="gt-head"><span>#</span><span>Team</span><span>Elo</span><span></span></div>`;
+  teams.forEach((t,i)=>{
+    const me=(t.id===P.homeId||t.id===P.awayId);
+    html+=`<div class="gt-row ${i<2?'qual':''} ${me?'me':''}"><span class="pos">${i+1}</span><span class="tn">${t.flag||''} ${t.name}</span><span class="el">${t.elo}</span><span class="el">${i<2?'✓':''}</span></div>`;
+  });
+  $('gruppe-box').innerHTML=html+`<p class="viz-foot">Top 2 (✓) ziehen sicher weiter; Platz 3 hat als bester Gruppendritter Chancen.</p>`;
+}
+
+// ── Scrollspy für Kapitel-Nav ──
+function scrollspy(){
+  const links=[...document.querySelectorAll('.chapnav a')];
+  const secs=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){
+    links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));}}),{rootMargin:'-30% 0px -60% 0px'});
+  secs.forEach(s=>io.observe(s));
+}
+
+load();
+</script>
+</body>
+</html>
