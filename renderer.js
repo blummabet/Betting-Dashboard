@@ -1619,7 +1619,7 @@ function _renderSharpWatchlist() {
     const smDetails = sm
       ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;">Pinnacle ${sm.open_pinn_odds ? sm.open_pinn_odds.toFixed(2) : '?'} → ${sm.current_pinn_odds ? sm.current_pinn_odds.toFixed(2) : '?'} · ${sm.soft_lag_pp ? `Soft +${sm.soft_lag_pp.toFixed(1)}pp dahinter` : 'Bewegt'}</div>`
       : '';
-    return `<a href="matches/wm-match.html?m=wm-${item.fixture.home.toLowerCase()}-vs-${item.fixture.away.toLowerCase()}-${item.fixture.date}" style="display:block;padding:10px 14px;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);">
+    return `<a href="matches/wm-match-v2.html?m=wm-${item.fixture.home.toLowerCase()}-vs-${item.fixture.away.toLowerCase()}-${item.fixture.date}" style="display:block;padding:10px 14px;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);">
       <div style="display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;">
         <div style="display:flex;align-items:center;gap:8px;font-size:13px;">
           <span>${item.home.flag} ${item.home.name}</span>
@@ -2000,7 +2000,7 @@ function renderSharpRadar() {
 
     // Klickbar wenn WM-Match → Event-Page
     const wrapStart = isWm
-      ? `<a href="matches/wm-match.html?m=wm-${m.home.toLowerCase()}-vs-${m.away.toLowerCase()}-${m.date.split('.').reverse().join('-')}" style="display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(0,212,161,0.45)'" onmouseout="this.style.borderColor='var(--border)'">`
+      ? `<a href="matches/wm-match-v2.html?m=wm-${m.home.toLowerCase()}-vs-${m.away.toLowerCase()}-${m.date.split('.').reverse().join('-')}" style="display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;transition:border-color .15s;" onmouseover="this.style.borderColor='rgba(0,212,161,0.45)'" onmouseout="this.style.borderColor='var(--border)'">`
       : `<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;">`;
     const wrapEnd = isWm ? `</a>` : `</div>`;
 

@@ -1050,7 +1050,7 @@
         .join('<span style="color:#30363d;margin:0 6px">·</span>');
       html += `<div class="cc-actions">
         <div class="cc-data-tier">${_chips}</div>
-        <a class="cc-detail-btn" href="matches/wm-match.html?m=${slug}" target="_blank">↗ Analyse</a>
+        <a class="cc-detail-btn" href="matches/wm-match-v2.html?m=${slug}" target="_blank">↗ Analyse</a>
         <button class="cc-share-btn" onclick="window.wmSharePick && window.wmSharePick('${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}')">📤 Posten</button>
       </div>`;
     } else {
@@ -1058,7 +1058,7 @@
         <div class="cc-data-tier">
           ${isPlayed ? '<span class="cc-tier-pill">gespielt</span>' : '<span class="cc-tier-pill">beobachten</span>'}
         </div>
-        <a class="cc-detail-btn" href="matches/wm-match.html?m=${slug}" target="_blank">↗ Analyse</a>
+        <a class="cc-detail-btn" href="matches/wm-match-v2.html?m=${slug}" target="_blank">↗ Analyse</a>
         <span></span>
       </div>`;
     }
