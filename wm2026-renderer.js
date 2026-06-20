@@ -995,27 +995,53 @@
     // ─── ACTIONS row ──────────────────────────────────
     const slug = `wm-${fx.home.toLowerCase()}-vs-${fx.away.toLowerCase()}-${fx.date}`;
     if (!isPlayed && heroPick) {
-      const dq    = heroPick.dataQuality || 'elo';
-      const dqCls = dq === 'full' ? 'cc-tier-full' : '';
-      // Confidence-Backtest: zeige Hit-Rate vergleichbarer Picks
+      // Fußzeile (20.06.2026): Datenqualitäts-Tier (steam/full/elo) + conf RAUS — die Engine ist
+      // signal-getrieben, das Tier interessiert niemanden mehr. Stattdessen drei aussagekräftige
+      // Chips: Pulse (Frische des Moves) · Lineup (Ausfälle T-1h) · Track-Record (ehrliche Zählung).
+
+      // Track-Record: ehrliche „X von N" statt nacktem Prozent (n ist klein → % wirkt zu präzise).
       const conf = _confidenceFor(heroPick);
-      let confHtml = '';
+      let trackStr = '';
       if (conf && conf.n >= 3) {
-        const scopeLabel = {
-          cluster: 'identische Picks',
-          market:  `auf ${heroPick.market}`,
-          angle:   `auf ${_angleKeyFromMarket(heroPick.market)}-Picks`,
-          global:  'WM-Picks gesamt',
-        }[conf.scope] || 'Vergleich';
+        const won = Math.round(conf.rate / 100 * conf.n);
         const cls = conf.rate >= 60 ? 'cc-val-hot' : conf.rate < 40 ? 'cc-val-cool' : '';
-        confHtml = `<span class="cc-conf-backtest"><span class="cc-conf-rate ${cls}">${conf.rate}%</span> Trefferquote · ${conf.n} ähnliche ${scopeLabel}</span>`;
+        const scopeLabel = {
+          cluster: 'praktisch identischen',
+          market:  heroPick.market,
+          angle:   'ähnlichen',
+          global:  'allen WM-',
+        }[conf.scope] || 'vergleichbaren';
+        trackStr = `<span class="cc-conf-backtest" title="Trefferquote vergleichbarer Picks aus dem Backtest — kleine Stichprobe, nur grobe Orientierung."><span class="cc-conf-rate ${cls}">${won}/${conf.n}</span> ${scopeLabel} Wetten getroffen</span>`;
       }
+      // Pulse — nur Steam-Picks mit Frische-Status (GESTÄRKT / BASIS / DREHT)
+      let pulseStr = '';
+      const _pmap = { confirm: ['GESTÄRKT', '#3fb950'], drift: ['BASIS', '#8b949e'], reverse: ['DREHT', '#f85149'] };
+      if (heroPick.source === 'steam' && _pmap[heroPick.freshnessState]) {
+        const pm = _pmap[heroPick.freshnessState];
+        pulseStr = `<span style="font-size:.74rem;color:#8b949e" title="Pulse — Frische des Sharp-Money-Moves">⚡ Pulse <strong style="color:${pm[1]}">${pm[0]}</strong></span>`;
+      }
+      // Lineup — wenn die Aufstellung raus ist (T-1h) und jemand fehlt/zurück ist
+      let lineupStr = '';
+      const _lsig = (heroPick.signals || []).find(s => s && s.name === 'lineup_signal');
+      const _aff  = (_lsig && _lsig.metadata && _lsig.metadata.affected) || [];
+      if (_aff.length) {
+        const _nm = a => a.name || a.scorer || 'Schlüsselspieler';   // key_players: name · top_scorer: scorer
+        const _miss = _aff.find(a => a.status === 'missing');
+        const _ben  = _aff.find(a => a.status === 'benched');
+        const _ret  = _aff.find(a => a.status === 'returning');
+        let _lt = '', _lc = '#8b949e';
+        if (_miss)      { _lt = `${_nm(_miss)} fehlt`;      _lc = '#f85149'; }
+        else if (_ben)  { _lt = `${_nm(_ben)} nur Bank`;    _lc = '#e3b341'; }
+        else if (_ret)  { _lt = `${_nm(_ret)} zurück`;      _lc = '#3fb950'; }
+        if (_lt) {
+          const _more = _aff.length > 1 ? ` +${_aff.length - 1}` : '';
+          lineupStr = `<span style="font-size:.74rem;color:${_lc}" title="Aufstellung (T-1h)">📋 ${_lt}${_more}</span>`;
+        }
+      }
+      const _chips = [pulseStr, lineupStr, trackStr].filter(Boolean)
+        .join('<span style="color:#30363d;margin:0 6px">·</span>');
       html += `<div class="cc-actions">
-        <div class="cc-data-tier">
-          <span class="cc-tier-pill ${dqCls}">${dq}</span>
-          <span class="cc-conf-text">· conf ${heroPick.conf || 'medium'}</span>
-          ${confHtml}
-        </div>
+        <div class="cc-data-tier">${_chips}</div>
         <a class="cc-detail-btn" href="matches/wm-match.html?m=${slug}" target="_blank">↗ Analyse</a>
         <button class="cc-share-btn" onclick="window.wmSharePick && window.wmSharePick('${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}')">📤 Posten</button>
       </div>`;
@@ -2115,19 +2141,20 @@
     if (_confidenceFor) {
       const conf = _confidenceFor(pick);
       if (conf && conf.n >= 3) {
+        const won = Math.round(conf.rate / 100 * conf.n);
         const scopeLabel = {
-          cluster: 'identischen Picks',
-          market:  `${pick.market}-Picks`,
-          angle:   'ähnlichen Picks',
-          global:  'allen WM-Picks',
-        }[conf.scope] || 'vergleichbaren Picks';
+          cluster: 'praktisch identischen',
+          market:  `${pick.market}-`,
+          angle:   'ähnlichen',
+          global:  'allen WM-',
+        }[conf.scope] || 'vergleichbaren';
         backtestBlock = `<div class="wm-section">
           <div class="wm-section-label">📊 Historischer Backtest</div>
           <div class="wm-backtest">
-            <div class="wm-bt-num">${conf.rate}%</div>
+            <div class="wm-bt-num">${won}/${conf.n}</div>
             <div class="wm-bt-text">
-              Trefferquote bei <strong>${scopeLabel}</strong> (über ${conf.n} vergleichbare Wetten).
-              ${conf.rate >= 55 ? 'Solide Validierung des Modells.' : conf.rate >= 45 ? 'Mittlere Validierung — Edge nicht garantiert.' : 'Underperformance — Pick mit Vorsicht.'}
+              Von <strong>${conf.n} ${scopeLabel}Wetten</strong> haben <strong>${won}</strong> getroffen (${conf.rate}%).
+              ${conf.n < 5 ? 'Noch kleine Stichprobe — nur grobe Orientierung.' : conf.rate >= 55 ? 'Solide Validierung des Modells.' : conf.rate >= 45 ? 'Mittlere Validierung — Edge nicht garantiert.' : 'Underperformance — Pick mit Vorsicht.'}
             </div>
           </div>
         </div>`;
