@@ -137,9 +137,8 @@ class FormTrendSignal(Signal):
                 0.50 + 0.04 * min(fh.get("games", 0), fa.get("games", 0))
                 + 0.05 * (abs(scoring_diff) + abs(conceding_diff))
             )
-            ev = (f"📈 Form letzte {min(fh['games'], fa['games'])}: "
-                  f"Heim {h_scored:.1f}:{h_conced:.1f} vs "
-                  f"Auswärts {a_scored:.1f}:{a_conced:.1f}")
+            ev = (f"📈 Letzte {min(fh['games'], fa['games'])} Spiele: Heim trifft {h_scored:.1f} "
+                  f"pro Partie und kassiert {h_conced:.1f}, Auswärts {a_scored:.1f} und {a_conced:.1f}.")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={
@@ -169,9 +168,9 @@ class FormTrendSignal(Signal):
             confidence = min(0.80, 0.45 + 0.04 * min(fh.get("games", 0), fa.get("games", 0))
                              + 0.08 * abs(signed_diff))
             side_str = "Über" if ou_dir == +1 else "Unter"
-            lean = "stützt" if score > 0 else "warnt gegen"
-            ev = (f"📈 Form-Tor-Schnitt {expected_total:.1f}/Spiel vs Linie {ou_line} "
-                  f"→ {lean} {side_str} ({diff_to_line:+.1f} ggü. Linie)")
+            lean = "spricht für" if score > 0 else "spricht eher gegen"
+            ev = (f"📈 Nach der Form fallen ~{expected_total:.1f} Tore pro Spiel, die Linie liegt "
+                  f"bei {ou_line} — {lean} {side_str} ({diff_to_line:+.1f} ggü. Linie).")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={
@@ -206,9 +205,9 @@ class FormTrendSignal(Signal):
             confidence = min(0.75, 0.45 + 0.05 * min(fh.get("games", 0), fa.get("games", 0))
                              + 0.5 * abs(signed_diff))
             side_str = "Ja" if btts_dir == +1 else "Nein"
-            ev = (f"📈 BTTS-Schnitt Form {avg_btts*100:.0f}% "
+            ev = (f"📈 In der Form treffen beide Teams zu ~{avg_btts*100:.0f}% "
                   f"(Heim {h_scored:.1f}:{h_conced:.1f}, Auswärts {a_scored:.1f}:{a_conced:.1f}) "
-                  f"→ Beide treffen {side_str}")
+                  f"— passt zu „Beide treffen {side_str}\".")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"avg_btts_rate": round(avg_btts, 3), "pick_side": f"BTTS-{side_str}"},

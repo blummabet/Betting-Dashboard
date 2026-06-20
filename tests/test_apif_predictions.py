@@ -86,7 +86,7 @@ class TestSignalEvaluation(unittest.TestCase):
         r = self.sig.evaluate({"market": "Heimsieg"}, ctx)
         self.assertIsNotNone(r)
         self.assertLess(r.score, 0)
-        self.assertIn("warnt", r.evidence)
+        self.assertIn("Vorsicht", r.evidence)
 
     def test_below_min_diff_returns_none(self):
         """APIF gibt Heim mit 64%, Pinnacle 62% → 2pp → unter Threshold → None."""

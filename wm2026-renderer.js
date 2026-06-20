@@ -1389,9 +1389,9 @@
       const pb = pick.publicBias;
       const ocName = { hw: 'Heimsieg', dr: 'Unentschieden', aw: 'Auswärtssieg' }[pb.outcome] || pb.outcome;
       const ocTeam = pb.outcome === 'hw' ? home.name : pb.outcome === 'aw' ? away.name : null;
-      const verb = pb.direction === 'over' ? '<strong>über-bettet</strong>' : '<strong>unter-bettet</strong>';
+      const verb = pb.direction === 'over' ? 'pumpt' : 'lässt links liegen';
       const target = ocTeam ? `${ocTeam} (${ocName})` : ocName;
-      sentences.push(`💸 <strong>${pb.bookmaker}</strong> ${verb} ${target} um <strong>${pb.pp}pp</strong> vs Pinnacle — Sharps sehen das Public-Money gegenläufig.`);
+      sentences.push(`💸 Die Masse bei <strong>${pb.bookmaker}</strong> ${verb} ${target} um <strong>${pb.pp}pp</strong> gegenüber Pinnacle — die Sharps sehen's andersrum.`);
     }
 
     // 3) ST3 Standings-Druck (Aufstiegs-Kontext)
@@ -1426,15 +1426,15 @@
     // ist der Rest-Edge bauartbedingt ~0; der Wert steckt im Drop, nicht im Restpreis.
     let modelSentence = '';
     if (pick.reverserCounter) {
-      modelSentence = `<em>Datengetriebene Gegen-Linie: das frische Pinnacle-Geld dreht auf diese Seite. Sichere Linie statt nacktem Gegen-Sieg — reift nur via Conviction zu BET.</em>`;
+      modelSentence = `<em>Hier dreht das frische Pinnacle-Geld auf die Gegenseite. Wir nehmen lieber die sichere Linie als blind auf den Gegen-Sieg zu gehen — die wird erst mit mehr Bestätigung zur echten Wette.</em>`;
     } else if (pick.source === 'steam' && pick.reverser) {
-      modelSentence = `<em>Pinnacle-Move ${(+pick.steamOpen).toFixed(2)}→${(+pick.steamCur).toFixed(2)} seit Eröffnung — aber das frische Geld dreht gegen den Pick. Move überholt, Pick zurückgestuft.</em>`;
+      modelSentence = `<em>Pinnacle ist von ${(+pick.steamOpen).toFixed(2)} auf ${(+pick.steamCur).toFixed(2)} gelaufen, aber das frische Geld dreht jetzt gegen den Pick — der Move ist überholt, wir stufen zurück.</em>`;
     } else if (pick.source === 'steam' && pick.steamMovePP) {
-      modelSentence = `<em>Pinnacle-Move ${(+pick.steamOpen).toFixed(2)}→${(+pick.steamCur).toFixed(2)} (+${pick.steamMovePP}pp) — der Wert steckt im bestätigten Drop, nicht im Restpreis.</em>`;
+      modelSentence = `<em>Pinnacle ist von ${(+pick.steamOpen).toFixed(2)} auf ${(+pick.steamCur).toFixed(2)} gefallen (+${pick.steamMovePP}pp) — der Wert steckt im Move selbst, nicht mehr im Restpreis.</em>`;
     } else if (pick.modelOdds != null && pick.odds != null) {
       const epp = pick.edgePP != null ? pick.edgePP : 0;
-      const tier = epp >= 12 ? 'massiv' : epp >= 6 ? 'solide' : epp >= 3 ? 'dünn' : 'minimal';
-      modelSentence = `<em>Modell sagt ${pick.modelOdds.toFixed(2)}, Markt ${pick.odds.toFixed(2)} — Edge ${tier} (+${epp}pp).</em>`;
+      const tier = epp >= 12 ? 'einen massiven' : epp >= 6 ? 'einen soliden' : epp >= 3 ? 'einen kleinen' : 'kaum';
+      modelSentence = `<em>Unser Modell sieht ${pick.modelOdds.toFixed(2)}, der Markt bietet ${pick.odds.toFixed(2)} — macht ${tier} Vorsprung (+${epp}pp).</em>`;
     } else if (pick.info) {
       modelSentence = `<em>${pick.info}</em>`;
     }
@@ -2795,12 +2795,12 @@
     // 1) Pinnacle — der Trigger, immer da. Alters-/Lag-Kontext aus sharpMoveDetails wenn vorhanden.
     const mv = pick.steamMovePP;
     const sm = pick.sharpMoveDetails || {};
-    let pinnMeta = 'Sharp-Money rein — der Trigger';
+    let pinnMeta = 'Hier ist scharfes Geld reingelaufen — das war der Auslöser';
     if (sm.move_age_days != null) {
       const d = sm.move_age_decay;
-      pinnMeta = (d >= 1 ? `${Math.round(sm.move_age_days)} Tage seit Eröffnung · frischer Move`
-                : d >= 0.5 ? `${Math.round(sm.move_age_days)} Tage seit Eröffnung · teil-gedämpft`
-                : `${Math.round(sm.move_age_days)} Tage seit Eröffnung · älterer Move`);
+      pinnMeta = (d >= 1 ? `vor ${Math.round(sm.move_age_days)} Tagen losgelaufen · noch frisch`
+                : d >= 0.5 ? `vor ${Math.round(sm.move_age_days)} Tagen losgelaufen · schon etwas abgekühlt`
+                : `vor ${Math.round(sm.move_age_days)} Tagen losgelaufen · nicht mehr taufrisch`);
     }
     // Frische-Split (18.06.2026): der „Move seit Eröffnung" wird ehrlich in seinen
     // LETZTEN Bewegungs-Abschnitt aufgeteilt. confirm = frisches Geld läuft weiter für uns,
@@ -2812,12 +2812,12 @@
            : `~${Math.round(pick.legHours)}h`) : '';
       const rmvStr = `${rmv > 0 ? '+' : ''}${rmv.toFixed(1)}pp`;
       if (pick.freshnessState === 'confirm') {
-        pinnMeta += ` · <span style="color:#3fb950;">✅ frisch bestätigt: ${rmvStr} im letzten Abschnitt (${legTxt})</span>`;
+        pinnMeta += ` · <span style="color:#3fb950;">✅ läuft frisch weiter: ${rmvStr} im letzten Abschnitt (${legTxt})</span>`;
       } else if (pick.freshnessState === 'reverse') {
-        const revWord = pick.reverserFresh === false ? 'Linie steht GEGEN den Move' : 'frisches Geld dreht GEGEN uns';
-        pinnMeta += ` · <span style="color:#f85149;font-weight:600;">⚠️ Reverser: ${rmvStr} — ${revWord}</span>`;
+        const revWord = pick.reverserFresh === false ? 'die Linie steht inzwischen gegen den Move' : 'frisches Geld dreht gegen uns';
+        pinnMeta += ` · <span style="color:#f85149;font-weight:600;">⚠️ Achtung, dreht: ${rmvStr} — ${revWord}</span>`;
       } else {
-        pinnMeta += ` · <span style="color:#8b949e;">⏸ Move ruht (frischer Abschnitt nur ${rmvStr})</span>`;
+        pinnMeta += ` · <span style="color:#8b949e;">⏸ der Move macht gerade Pause (zuletzt nur ${rmvStr})</span>`;
       }
     }
     html += _moveBar({
@@ -2841,9 +2841,17 @@
     // 2) Soft-Quote — die echte Softbook-Bewegung (nur wenn Soft-Daten da)
     if (pick.softOpen != null && pick.softNow != null) {
       const ff = pick.softFollowPP;
+      // FIX 19.06.2026 (Lucas): „hinken nach" war der Catch-all-Fallback — stand auch da, wenn
+      // die Soft-Quote 0pp bewegt hat und gar nicht hinterherhinkt. Echtes Lag = Soft-Quote
+      // noch LÄNGER als die aktuelle Pinnacle-Quote (steamCur), d.h. Soft hat noch nicht
+      // aufgeschlossen → Resthebel. Ist Soft schon ≤ Pinnacle, gibt's keinen Lag mehr.
+      const _softLags = (pick.softNow != null && pick.steamCur != null
+                         && pick.softNow > pick.steamCur * 1.005);
       const softMeta = pick.softConfirmed
         ? '✅ Soft-Books bestätigen den Move'
-        : (ff != null && ff > 0 ? `Soft-Books folgen (+${ff}pp)` : 'Soft-Books hinken noch nach');
+        : (ff != null && ff > 0 ? `Soft-Books ziehen nach (+${ff}pp)`
+           : _softLags ? 'Soft-Books hängen noch hinterher — da ist noch Luft'
+           : 'Soft-Quote ist schon auf Pinnacle-Höhe');
       html += _moveBar({
         icon: '💶', label: 'Soft-Quote bewegt', cls: 'cc-soft',
         o: pick.softOpen, c: pick.softNow,

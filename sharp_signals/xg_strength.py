@@ -169,8 +169,8 @@ class XGStrengthSignal(Signal):
             confidence = min(0.90, 0.55 + 0.03 * n_min + 0.04 * abs(relative))
             if is_proxy: confidence = min(self._t["proxy_confidence_max"], confidence)
             confidence *= _thin_mult
-            ev = (f"⚡ {label}: Heim {h_for:.2f}-{h_ag:.2f} "
-                  f"vs Auswärts {a_for:.2f}-{a_ag:.2f} (Δ {relative:+.2f}){_thin_ev}")
+            ev = (f"⚡ {label}: Heim erspielt sich {h_for:.2f} Tor-Chancen (xG) und gibt {h_ag:.2f} "
+                  f"her, Auswärts {a_for:.2f} und {a_ag:.2f} — macht {relative:+.2f} Unterschied.{_thin_ev}")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"home_xg_for": round(h_for, 2), "home_xg_against": round(h_ag, 2),
@@ -199,8 +199,8 @@ class XGStrengthSignal(Signal):
             if is_proxy: confidence = min(self._t["proxy_confidence_max"], confidence)
             confidence *= _thin_mult
             side_str = "Über" if ou_dir == +1 else "Unter"
-            ev = (f"⚡ {label}-Tore: erwartet {expected_total:.2f}/Spiel "
-                  f"vs Linie {ou_line} → {side_str} {ou_dir*signed_diff:+.2f}{_thin_ev}")
+            ev = (f"⚡ Die xG-Werte deuten auf ~{expected_total:.2f} Tore pro Spiel hin, die Linie "
+                  f"steht bei {ou_line} — Tendenz {side_str} ({ou_dir*signed_diff:+.2f}).{_thin_ev}")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"expected_total": round(expected_total, 2), "ou_line": ou_line,
@@ -229,8 +229,8 @@ class XGStrengthSignal(Signal):
             if is_proxy: confidence = min(self._t["proxy_confidence_max"], confidence)
             confidence *= _thin_mult
             side_str = "Ja" if btts_dir == +1 else "Nein"
-            ev = (f"⚡ {label}: Heim {h_for:.2f} vs Ausw-Defense {a_ag:.2f}, "
-                  f"Ausw {a_for:.2f} vs Heim-Defense {h_ag:.2f} → Beide treffen {side_str}{_thin_ev}")
+            ev = (f"⚡ {label}: Heims Angriff ({h_for:.2f}) trifft auf Auswärts' Abwehr ({a_ag:.2f}), "
+                  f"umgekehrt {a_for:.2f} gegen {h_ag:.2f} — spricht für „Beide treffen {side_str}\".{_thin_ev}")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"h_score_strength": round(h_score_strength, 2),

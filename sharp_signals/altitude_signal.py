@@ -229,9 +229,9 @@ class AltitudeSignal(Signal):
         ko_label = ("Mittag" if kickoff_mod >= 0.95
                     else "Nachmittag" if kickoff_mod >= 0.80
                     else "Abend")
-        evidence = (f"🏔 {venue_alt}m {ko_label}-Anpfiff · "
-                    f"Heim {home_id} aus {home_alt}m (akklim.) · "
-                    f"Auswärts {away_id} aus {away_alt}m (Niedrigland)")
+        evidence = (f"🏔 Gespielt wird auf {venue_alt}m ({ko_label}-Anpfiff): Heim ({home_id}) ist "
+                    f"aus {home_alt}m die Höhe gewohnt, Auswärts ({away_id}) kommt aus dem "
+                    f"Flachland ({away_alt}m) — die dünne Luft macht den Unterschied.")
 
         return SignalResult(
             score=round(score, 2),

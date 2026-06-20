@@ -108,9 +108,10 @@ class SmartMoneySignal(Signal):
         confidence = min(self._t["max_conf"],
                          self._t["base_conf"] + min(0.2, total / 20_000_000))
         side_lbl = {"home": "Heim", "draw": "X", "away": "Auswärts"}[outcome]
-        ev = (f"💰 Smart Money: {round(share*100)}% auf {side_lbl} "
-              f"(Top-Wallets {round(top_share*100)}%) vs Pinnacle-Fair {round(fair_share*100)}% "
-              f"→ {'mehr' if excess > 0 else 'weniger'} als der Markt rechtfertigt")
+        ev = (f"💰 Auf Polymarket liegen {round(share*100)}% des Geldes auf {side_lbl} — "
+              f"{'mehr' if excess > 0 else 'weniger'} als der faire Preis hergibt "
+              f"({round(fair_share*100)}%), und es sind echte Wale dahinter "
+              f"(Top-Wallets {round(top_share*100)}%).")
         return SignalResult(
             score=round(float(score), 2),
             confidence=round(float(confidence), 2),

@@ -208,12 +208,12 @@ class LeadLagBiasSignal(Signal):
         oc_label = {"hw": "Heim", "dr": "X", "aw": "Auswärts"}[outcome]
         if is_confirmed:
             soft_str = ", ".join(bk for bk, _ in followed[:2])
-            evidence = (f"Pinnacle {oc_label} {pinn_move:+.1f}pp · "
-                        f"{soft_str} folgt({len(followed)}) → bestätigt")
+            evidence = (f"Pinnacle hat {oc_label} um {pinn_move:+.1f}pp bewegt, und {soft_str} "
+                        f"ziehen schon nach ({len(followed)}) — der Move ist bestätigt.")
         else:
             soft_str = ", ".join(bk for bk, _ in lagging[:2])
-            evidence = (f"Pinnacle {oc_label} {pinn_move:+.1f}pp · "
-                        f"{soft_str} hinkt nach({len(lagging)}) → früh erkannt")
+            evidence = (f"Pinnacle hat {oc_label} um {pinn_move:+.1f}pp bewegt, {soft_str} "
+                        f"hängen noch hinterher ({len(lagging)}) — wir sind früh dran.")
 
         return SignalResult(
             score=round(score, 2),

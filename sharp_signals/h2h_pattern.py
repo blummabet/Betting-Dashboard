@@ -112,8 +112,8 @@ class H2HPatternSignal(Signal):
                 return None
             confidence = min(0.85, 0.35 + 0.05 * min(games, 10))
             oc_label = "Heim" if side == +1 else "Auswärts"
-            ev = (f"⚔️ H2H {games} Spiele: "
-                  f"{home_wins}H-{draws}X-{away_wins}A · {oc_label}-Rate {picked_rate*100:.0f}%")
+            ev = (f"⚔️ Direkte Duelle ({games}): {home_wins} Heimsiege, {draws} Remis, "
+                  f"{away_wins} Auswärtssiege — {oc_label} holt davon {picked_rate*100:.0f}%.")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"games": games, "home_wins": home_wins, "draws": draws,
@@ -136,19 +136,20 @@ class H2HPatternSignal(Signal):
                 diff_to_line = avg_goals - ou_line
                 signed_diff = diff_to_line * ou_dir
                 score += signed_diff * (self._t["score_scale_pp"] / 2) * small_factor
-                ev_parts.append(f"Avg {avg_goals:.1f} Tore vs Linie {ou_line}")
+                ev_parts.append(f"im Schnitt {avg_goals:.1f} Tore (Linie {ou_line})")
             if over25_rate is not None and ou_line == 2.5:
                 # Direktes Maß: Rate über 2.5
                 if ou_dir == +1:   # Über-Pick
                     score += (over25_rate - 0.5) * self._t["score_scale_pp"] * small_factor
                 else:              # Unter-Pick
                     score += (0.5 - over25_rate) * self._t["score_scale_pp"] * small_factor
-                ev_parts.append(f"Über-2.5-Rate {over25_rate*100:.0f}%")
+                ev_parts.append(f"in {over25_rate*100:.0f}% fielen über 2.5 Tore")
             if abs(score) < self._t["min_signal_pp"]:
                 return None
             confidence = min(0.75, 0.35 + 0.05 * min(games, 10))
             side_str = "Über" if ou_dir == +1 else "Unter"
-            ev = f"⚔️ H2H {games} Spiele: " + " · ".join(ev_parts) + f" → {side_str} {ou_line}"
+            ev = (f"⚔️ Aus den letzten {games} Duellen: " + " · ".join(ev_parts)
+                  + f" → spricht für {side_str} {ou_line}.")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"games": games, "h2h_avg_goals": avg_goals,
@@ -170,7 +171,8 @@ class H2HPatternSignal(Signal):
                 return None
             confidence = min(0.70, 0.30 + 0.05 * min(games, 10))
             side_str = "Ja" if btts_dir == +1 else "Nein"
-            ev = f"⚔️ H2H {games} Spiele: BTTS-Rate {btts_rate*100:.0f}% → Beide treffen {side_str}"
+            ev = (f"⚔️ In den {games} direkten Duellen trafen beide zu {btts_rate*100:.0f}% "
+                  f"— passt zu „Beide treffen {side_str}\".")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"games": games, "h2h_btts_rate": btts_rate, "pick_side": f"BTTS-{side_str}"},

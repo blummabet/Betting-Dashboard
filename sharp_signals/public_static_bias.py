@@ -157,11 +157,11 @@ class PublicStaticBiasSignal(Signal):
         public_bk = snap.get("public_ou_bookmaker", "Public")
         direction_str = "über-bettet" if diff_pp > 0 else "unter-bettet"
         if diff_pp > 0:
-            evidence = (f"{public_bk} {direction_str} {oc_label} um {abs_diff:.1f}pp "
-                        f"vs Pinnacle → contrarian Pick")
+            evidence = (f"Die breite Masse ({public_bk}) hat {oc_label} um {abs_diff:.1f}pp "
+                        f"überbewertet (vs Pinnacle) — wir halten bewusst dagegen.")
         else:
-            evidence = (f"{public_bk} {direction_str} {oc_label} um {abs_diff:.1f}pp "
-                        f"vs Pinnacle → kein Public-Edge")
+            evidence = (f"Die breite Masse ({public_bk}) lässt {oc_label} um {abs_diff:.1f}pp "
+                        f"links liegen (vs Pinnacle) — kein Publikums-Hebel hier.")
 
         return SignalResult(
             score=round(score, 2), confidence=round(confidence, 2), evidence=evidence,
@@ -205,11 +205,11 @@ class PublicStaticBiasSignal(Signal):
         public_bk = snap.get("public_bookmaker", "Public")
         direction_str = "über-bettet" if diff_pp > 0 else "unter-bettet"
         if diff_pp > 0:
-            evidence = (f"{public_bk} {direction_str} {oc_label} um {abs_diff:.1f}pp "
-                        f"vs Pinnacle → contrarian Pick")
+            evidence = (f"Die breite Masse ({public_bk}) hat {oc_label} um {abs_diff:.1f}pp "
+                        f"überbewertet (vs Pinnacle) — wir halten bewusst dagegen.")
         else:
-            evidence = (f"{public_bk} {direction_str} {oc_label} um {abs_diff:.1f}pp "
-                        f"vs Pinnacle → kein Public-Edge")
+            evidence = (f"Die breite Masse ({public_bk}) lässt {oc_label} um {abs_diff:.1f}pp "
+                        f"links liegen (vs Pinnacle) — kein Publikums-Hebel hier.")
 
         return SignalResult(
             score=round(score, 2),

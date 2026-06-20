@@ -151,7 +151,7 @@ class TestPublicStaticBias(unittest.TestCase):
         result = self._evaluate("Heimsieg", snap)
         self.assertIsNotNone(result)
         self.assertGreater(result.score, 0)
-        self.assertIn("über-bettet", result.evidence)
+        self.assertIn("überbewertet", result.evidence)
         self.assertIn("bet365", result.evidence)
 
     def test_negative_score_when_public_underbets_picked_outcome(self):

@@ -318,10 +318,10 @@ class WeatherSignal(Signal):
         ko_label = "Mittag" if _label_mod >= 0.95 else \
                    "Nachmittag" if _label_mod >= 0.75 else \
                    "Abend"
-        evidence = (f"🌡 {temp_used:.0f}°C {ko_label}-Anpfiff · "
-                    + " · ".join(evidence_parts))
+        evidence = (f"🌡 Bei {temp_used:.0f}°C zum {ko_label}-Anpfiff tun sich hitze-ungewohnte "
+                    f"Teams schwer — " + " · ".join(evidence_parts))
         if climate_controlled:
-            evidence += " · 🏟 Klima-Dome (Penalty gedämpft)"
+            evidence += " · 🏟 im Klima-Dome ist die Hitze aber entschärft"
 
         return SignalResult(
             score=round(score, 2),

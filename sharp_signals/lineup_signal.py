@@ -285,8 +285,8 @@ class LineupSignal(Signal):
 
         any_missing = any(a["status"] == "missing" for a in affected)
         confidence = self._t["confidence_full"] if any_missing else self._t["confidence_partial"]
-        _lbl = {"missing": "fehlt", "benched": "Bank", "returning": "zurück"}
-        parts = [f"{a['team']} {a['name']} ({a['role']}) {_lbl.get(a['status'], a['status'])}"
+        _lbl = {"missing": "fehlt", "benched": "sitzt nur auf der Bank", "returning": "ist zurück"}
+        parts = [f"bei {a['team']} {_lbl.get(a['status'], a['status'])} {a['name']} ({a['role']})"
                  for a in affected]
         return SignalResult(
             score=round(score, 2),
@@ -328,8 +328,8 @@ class LineupSignal(Signal):
             elif side == "home" and team_label == "Heim":         score -= magnitude
             elif side == "away" and team_label == "Auswärts":     score -= magnitude
             else:                                                 continue
-            evidence_parts.append(f"{team_label} {scorer['name']} "
-                                  f"{'fehlt' if status == 'missing' else 'Bank'}")
+            evidence_parts.append(f"bei {team_label} {'fehlt' if status == 'missing' else 'sitzt'} "
+                                  f"{scorer['name']}{'' if status == 'missing' else ' nur auf der Bank'}")
             affected_teams.append({"team": team_label, "team_id": team_id,
                                    "scorer": scorer.get("name"), "goals": scorer.get("goals"),
                                    "status": status})

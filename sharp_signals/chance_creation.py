@@ -108,8 +108,8 @@ class ChanceCreationSignal(Signal):
                 return None
             score = max(-self._t["max_signal_pp"], min(self._t["max_signal_pp"], score))
             conf = min(0.80, 0.50 + 0.04 * abs(relative))
-            ev = (f"🎨 Chancen-Kreation: Heim {th:.1f} vs Auswärts {ta:.1f} "
-                  f"(Schlüsselpässe+Abschlüsse, Δ {relative:+.1f})")
+            ev = (f"🎨 Beim Chancen-Kreieren liegt Heim bei {th:.1f}, Auswärts bei {ta:.1f} "
+                  f"(Schlüsselpässe + Abschlüsse) — Vorsprung {relative:+.1f}.")
             return SignalResult(round(score, 2), round(conf, 2), ev,
                                 {"home_threat": round(th, 2), "away_threat": round(ta, 2),
                                  "relative": round(relative, 2)})
@@ -124,10 +124,10 @@ class ChanceCreationSignal(Signal):
             score = max(-self._t["max_signal_pp"], min(self._t["max_signal_pp"], score))
             conf = min(0.72, 0.42 + 0.02 * abs(total - self._t["ou_baseline"]))
             side = "Over" if ou_dir > 0 else "Under"
-            lean = "stützt" if score > 0 else "warnt gegen"
+            lean = "spricht für" if score > 0 else "spricht eher gegen"
             level = "viel" if total > self._t["ou_baseline"] else "wenig"
-            ev = (f"🎨 Chancen-Volumen Σ {total:.1f} ({level}, Schlüsselpässe+Abschlüsse) "
-                  f"→ {lean} {side}")
+            ev = (f"🎨 Zusammen kreieren beide eher {level} Chancen ({total:.1f} aus Schlüsselpässen "
+                  f"+ Abschlüssen) — {lean} {side}.")
             return SignalResult(round(score, 2), round(conf, 2), ev,
                                 {"total_threat": round(total, 2)})
         return None

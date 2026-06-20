@@ -184,10 +184,10 @@ class PressureIndexSignal(Signal):
                 # Must-Win → Sieg-Seite des verzweifelten Teams boosten
                 if hs.get("must_win") and side == +1:
                     score += self._t["md3_must_win_pp"]
-                    notes.append("Heim Must-Win (Quali-Mathe)"); confidence = 0.75
+                    notes.append("Heim muss hier gewinnen, um weiterzukommen"); confidence = 0.75
                 elif aw.get("must_win") and side == -1:
                     score += self._t["md3_must_win_pp"]
-                    notes.append("Auswärts Must-Win (Quali-Mathe)"); confidence = 0.75
+                    notes.append("Auswärts muss hier gewinnen, um weiterzukommen"); confidence = 0.75
 
                 # Qualifiziert+gesichert = Schon-Risiko → schwächeres Team → Gegenseite boosten,
                 # eigene Sieg-Seite dämpfen. Heim-Gastgeber: gedämpft (gibt sich daheim nicht auf).
@@ -198,19 +198,19 @@ class PressureIndexSignal(Signal):
                     damp = self._t["home_wc_coast_damp"] if home_id in hosts else 1.0
                     if side == -1:
                         score += boost * damp
-                        notes.append("Heim qualifiziert/gesichert (Schon-Risiko) → Auswärts" + (" [Heim-WM gedämpft]" if damp < 1 else ""))
+                        notes.append("Heim ist schon durch und könnte Kräfte sparen — spricht für Auswärts" + (" (als Gastgeber aber gedämpft)" if damp < 1 else ""))
                         confidence = max(confidence, 0.7)
                     elif side == +1:
                         score += rot * damp
-                        notes.append("Heim qualifiziert → Rotation")
+                        notes.append("Heim ist schon durch — Rotation möglich")
                 if aw.get("qualified"):
                     if side == +1:
                         score += boost
-                        notes.append("Auswärts qualifiziert/gesichert (Schon-Risiko) → Heim")
+                        notes.append("Auswärts ist schon durch und könnte Kräfte sparen — spricht für Heim")
                         confidence = max(confidence, 0.7)
                     elif side == -1:
                         score += rot
-                        notes.append("Auswärts qualifiziert → Rotation")
+                        notes.append("Auswärts ist schon durch — Rotation möglich")
 
         if abs(score) < self._t["min_signal_pp"]:
             return None

@@ -84,9 +84,9 @@ class FormRatingSignal(Signal):
             return None
         score = max(-self._t["max_signal_pp"], min(self._t["max_signal_pp"], score))
         conf = min(0.78, 0.48 + 0.5 * abs(rating_diff))
-        ev = (f"📋 Form-Rating: Heim {rt_h:.2f} vs Auswärts {rt_a:.2f} "
-              f"(Δ {rating_diff:+.2f}" +
-              (f", Abwehr Δ {defense_diff:+.2f}" if defense_diff else "") + ")")
+        ev = (f"📋 Im Form-Rating steht Heim bei {rt_h:.2f}, Auswärts bei {rt_a:.2f} "
+              f"— Vorsprung {rating_diff:+.2f}" +
+              (f", in der Abwehr {defense_diff:+.2f}" if defense_diff else "") + ".")
         return SignalResult(round(score, 2), round(conf, 2), ev,
                             {"home_rating": rt_h, "away_rating": rt_a,
                              "rating_diff": round(rating_diff, 2),

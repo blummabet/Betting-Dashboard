@@ -40,7 +40,7 @@ class TestPressureMd3(unittest.TestCase):
         r = self.p.evaluate({"market": "Doppelte Chance — X2"}, _ctx())
         self.assertIsNotNone(r)
         self.assertGreater(r.score, 1.0)
-        self.assertIn("Must-Win", r.evidence)
+        self.assertIn("muss hier gewinnen", r.evidence)
         self.assertIn("gedämpft", r.evidence)   # Heim-WM-Dämpfer sichtbar
 
     def test_home_win_penalised_by_rotation(self):

@@ -141,11 +141,11 @@ class ApifPredictionsSignal(Signal):
 
         side_de = {"home": "Heim", "draw": "X", "away": "Auswärts"}[outcome]
         if diff_pp > 0:
-            evidence = (f"📊 API-Football sieht {side_de} um {abs_diff:.1f}pp "
-                        f"höher als Pinnacle → bestätigt Pick")
+            evidence = (f"📊 Ein zweites Modell (API-Football) schätzt {side_de} um {abs_diff:.1f}pp "
+                        f"höher ein als Pinnacle — Rückendeckung für den Pick.")
         else:
-            evidence = (f"📊 API-Football sieht {side_de} um {abs_diff:.1f}pp "
-                        f"niedriger als Pinnacle → externes Modell warnt")
+            evidence = (f"📊 Ein zweites Modell (API-Football) sieht {side_de} um {abs_diff:.1f}pp "
+                        f"niedriger als Pinnacle — das mahnt zur Vorsicht.")
 
         return SignalResult(
             score=round(score, 2),

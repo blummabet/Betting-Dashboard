@@ -139,11 +139,11 @@ class TravelBurdenSignal(Signal):
             confidence = min(0.70, 0.45 + total_penalty * 1.5)
             parts = []
             if home_penalty > 0:
-                parts.append(f"Heim {meta_home.get('km',0)}km/{meta_home.get('rest_days',0)}d")
+                parts.append(f"Heim {meta_home.get('km',0)} km, {meta_home.get('rest_days',0)} Tage Pause")
             if away_penalty > 0:
-                parts.append(f"Auswärts {meta_away.get('km',0)}km/{meta_away.get('rest_days',0)}d")
+                parts.append(f"Auswärts {meta_away.get('km',0)} km, {meta_away.get('rest_days',0)} Tage Pause")
             side_str = "Über" if ou_dir == +1 else "Unter"
-            ev = f"✈️ Reise-Erschöpfung dämpft Tore: " + " · ".join(parts) + f" → {side_str}-Bias"
+            ev = "✈️ Die Reisestrapazen drücken aufs Toreschießen — " + " · ".join(parts) + f" → eher {side_str}."
             return SignalResult(
                 score=round(ou_score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"factor_home": round(f_home, 3), "factor_away": round(f_away, 3),
@@ -176,12 +176,12 @@ class TravelBurdenSignal(Signal):
         parts = []
         if f_away < min_factor:
             burden = meta_away.get("burden", "")
-            parts.append(f"Auswärts {meta_away.get('km')}km/{meta_away.get('rest_days')}d "
-                         f"({burden})")
+            parts.append(f"Auswärts {meta_away.get('km')} km, nur {meta_away.get('rest_days')} Tage "
+                         f"Pause ({burden})")
         if f_home < min_factor:
             burden = meta_home.get("burden", "")
-            parts.append(f"Heim {meta_home.get('km')}km/{meta_home.get('rest_days')}d "
-                         f"({burden})")
+            parts.append(f"Heim {meta_home.get('km')} km, nur {meta_home.get('rest_days')} Tage "
+                         f"Pause ({burden})")
         alt_notes = []
         if meta_home.get("alt_shift", 0) >= 1500:
             alt_notes.append(f"Heim Höhe +{meta_home['alt_shift']}m")
@@ -189,7 +189,8 @@ class TravelBurdenSignal(Signal):
             alt_notes.append(f"Auswärts Höhe +{meta_away['alt_shift']}m")
         if alt_notes:
             parts.extend(alt_notes)
-        evidence = "✈️ " + " · ".join(parts) if parts else f"Travel-Effekt {score:+.1f}pp"
+        evidence = ("✈️ Lange Anreise zehrt an den Beinen: " + " · ".join(parts)) if parts \
+            else f"Reise-Effekt {score:+.1f}pp"
 
         return SignalResult(
             score=round(score, 2),
