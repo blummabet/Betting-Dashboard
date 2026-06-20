@@ -29,7 +29,7 @@ import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card, daily_picks_card, match_preview_card
+from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card, daily_picks_card, match_preview_card, match_review_card
 from tiktok_story_plan import get_story_for_date
 from bizarre_quote_picker import get_daily_bizarre_card
 from player_pick_picker import get_daily_player_pick, save_dedup as save_player_dedup, _load_dedup as _load_player_dedup
@@ -171,6 +171,7 @@ SKIP_TELEGRAM    = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
 # bleibt im Code, wird aber NICHT mehr gesendet (Flag default false). Previews on.
 SEND_DAILY_PICKS = os.environ.get("SEND_DAILY_PICKS", "").lower() == "true"
 SEND_PREVIEWS    = os.environ.get("SEND_PREVIEWS", "true").lower() == "true"
+SEND_REVIEWS     = os.environ.get("SEND_REVIEWS", "true").lower() == "true"   # Vortags-Nachbericht
 # 16.06.2026 (Lucas): Bizarre-Quote-Card PAUSIERT — fad geworden + zeigt Quote/Chance
 # (Quoten-Leak). Default AUS. Wieder an via SEND_BIZARRE=true, falls reaktiviert.
 SEND_BIZARRE     = os.environ.get("SEND_BIZARRE", "").lower() == "true"
@@ -758,6 +759,136 @@ def build_match_preview_cards(wm: dict, today_iso: str) -> list:
     return produced
 
 
+# ── Match-Review-Cards (NEU 20.06.2026, Lucas) ────────────────────────────────
+# Nachbericht der VORTAGS-Spiele (die wir am Tag davor als Preview hatten). KEINE Quoten,
+# kein Wett-Inhalt — Endstand + Chancen-Analyse (xG vs Ergebnis) + Stat-Chips. Ersetzt die
+# schwächeren Killer-Stat/Story-Cards als Daily-Content (die bleiben Fallback).
+_REVIEW_ANGLES = {
+    "verdient":    ("✅ VERDIENTER SIEG",         "#3fb950", "63,185,80"),
+    "raubzug":     ("🍀 GLÜCKLICHER SIEG",        "#f0883e", "240,136,62"),
+    "unglueck":    ("😤 LEISTUNG OHNE LOHN",      "#e3b341", "227,179,65"),
+    "torfest":     ("⚽ TOR-FESTIVAL",            "#3fb950", "63,185,80"),
+    "abwehr":      ("🛡 ABWEHRSCHLACHT",          "#4cc9f0", "76,201,240"),
+    "nachbericht": ("📊 NACHBERICHT",             "#00d4a1", "0,212,161"),
+}
+
+
+def _review_angle(sh: int, sa: int, xgh, xga) -> str:
+    """Spielcharakter aus Ergebnis + xG (verdient/glücklich/unglücklich/torfest/abwehr)."""
+    xgh, xga = (xgh or 0.0), (xga or 0.0)
+    g = sh + sa
+    if sh == sa:  # Remis
+        if abs(xgh - xga) >= 1.0:
+            return "unglueck"        # einer dominierte die Chancen, nur Remis
+        if g >= 4:
+            return "torfest"
+        if g <= 1 and (xgh + xga) <= 1.6:
+            return "abwehr"
+        return "nachbericht"
+    win_xg, los_xg = (xgh, xga) if sh > sa else (xga, xgh)
+    if win_xg + 0.4 < los_xg:
+        return "raubzug"             # Sieger hatte weniger xG als der Verlierer
+    if g >= 4:
+        return "torfest"
+    if abs(sh - sa) >= 2 or (win_xg - los_xg) >= 0.5:
+        return "verdient"            # klare Tordifferenz ODER deutliches Chancen-Plus
+    return "nachbericht"
+
+
+def _review_recap(angle: str, name_h: str, sh: int, name_a: str, sa: int, xgh, xga) -> str:
+    """Lockerer 1-2-Satz-Nachbericht, datengetrieben, ohne Jargon."""
+    xg = (f"xG {(xgh or 0):.1f}:{(xga or 0):.1f}") if (xgh or xga) else ""
+    win = name_h if sh > sa else name_a
+    los = name_a if sh > sa else name_h
+    big, small = max(sh, sa), min(sh, sa)
+    if angle == "raubzug":
+        return (f"{win} nimmt die drei Punkte mit, obwohl {los} das bessere Spiel machte — "
+                f"die Chancen ({xg}) sprachen für die andere Seite. Effizienz schlägt Übergewicht.")
+    if angle == "unglueck":
+        return (f"Leistung ohne Lohn: trotz klarer Chancen-Überlegenheit ({xg}) bleibt es beim "
+                f"{sh}:{sa}. Das hätte deutlich mehr verdient gehabt.")
+    if angle == "torfest":
+        return (f"Spektakel mit {sh + sa} Toren — {name_h} und {name_a} liefern sich einen "
+                f"offenen Schlagabtausch, am Ende steht es {sh}:{sa}.")
+    if angle == "abwehr":
+        return (f"Zähe Defensiv-Partie mit kaum echten Chancen ({xg}) — am Ende ein enges {sh}:{sa}.")
+    if angle == "verdient":
+        return (f"{win} gewinnt verdient {big}:{small} — die klar bessere Mannschaft, "
+                f"auch nach den Chancen ({xg}).")
+    if sh == sa:
+        return f"Punkteteilung beim {sh}:{sa} — die Chancen hielten sich die Waage ({xg})."
+    return f"{win} setzt sich {big}:{small} gegen {los} durch ({xg})."
+
+
+def _review_facts(stats: dict, sh: int, sa: int) -> list:
+    """Stat-Chips aus result.stats (echte API-Werte: Schüsse/aufs Tor/Strafraum + xG)."""
+    def _i(v):
+        try: return int(round(float(v)))
+        except (TypeError, ValueError): return None
+    f = [f"⚽ Tore {sh}:{sa}"]
+    if stats.get("homeXg") is not None and stats.get("awayXg") is not None:
+        f.append(f"📊 xG {stats['homeXg']:.1f}:{stats['awayXg']:.1f}")
+    sh_, sa_ = _i(stats.get("homeShots")), _i(stats.get("awayShots"))
+    if sh_ is not None and sa_ is not None:
+        f.append(f"🎯 Schüsse {sh_}:{sa_}")
+    so_h, so_a = _i(stats.get("homeSot")), _i(stats.get("awaySot"))
+    if so_h is not None and so_a is not None:
+        f.append(f"🥅 aufs Tor {so_h}:{so_a}")
+    in_h, in_a = _i(stats.get("homeInside")), _i(stats.get("awayInside"))
+    if in_h is not None and in_a is not None:
+        f.append(f"📍 im Strafraum {in_h}:{in_a}")
+    return f[:5]
+
+
+def build_match_review_cards(wm: dict, today_iso: str) -> list:
+    """Baut pro GESTRIGEM fertigem Match eine Review-Card → Liste (label, png_path, caption)."""
+    produced = []
+    from datetime import datetime as _dt, timedelta as _td
+    try:
+        yest_obj = _dt.fromisoformat(today_iso).date() - _td(days=1)
+        yest = yest_obj.isoformat()
+        wd = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"][yest_obj.weekday()]
+        date_label = f"{wd} · {yest_obj.strftime('%d.%m.%Y')}"
+    except Exception:
+        return produced
+
+    for gkey, gdata in (wm.get("groups") or {}).items():
+        teams = {t["id"]: t for t in gdata.get("teams", [])}
+        for fx in gdata.get("fixtures", []):
+            if fx.get("date") != yest:
+                continue
+            r = fx.get("result") or {}
+            if r.get("status") not in ("FT", "AET", "PEN"):
+                continue
+            sh, sa = r.get("home_score"), r.get("away_score")
+            if sh is None or sa is None:
+                continue
+            stats = r.get("stats") or {}
+            hid, aid = fx["home"], fx["away"]
+            h, a = teams.get(hid, {}), teams.get(aid, {})
+            flag_h, flag_a = h.get("flag", "🏳️"), a.get("flag", "🏳️")
+            name_h, name_a = h.get("name", hid), a.get("name", aid)
+            xgh, xga = stats.get("homeXg"), stats.get("awayXg")
+            angle = _review_angle(sh, sa, xgh, xga)
+            angle_label, accent, rgb = _REVIEW_ANGLES[angle]
+            recap = _review_recap(angle, name_h, sh, name_a, sa, xgh, xga)
+            facts = _review_facts(stats, sh, sa)
+            html = match_review_card(
+                date_label=date_label, flag_h=flag_h, name_h=name_h, score_h=sh,
+                flag_a=flag_a, name_a=name_a, score_a=sa,
+                group_label=f"Gruppe {gkey} · ST {fx['matchday']}",
+                angle_label=angle_label, accent=accent, accent_rgb=rgb,
+                recap_text=recap, facts=facts,
+            )
+            path = OUTPUT_DIR / f"{today_iso}_review_{hid}_{aid}.html"
+            path.write_text(html, encoding="utf-8")
+            png = render_to_png(path)
+            if png:
+                produced.append((f"review_{hid}_{aid}", png,
+                                 f"📊 <b>Review · {name_h} {sh}:{sa} {name_a}</b>"))
+    return produced
+
+
 def main():
     override = os.environ.get("DAILY_TIKTOK_DATE", "").strip()
     today_iso = override or date.today().isoformat()
@@ -779,37 +910,52 @@ def main():
                   f"und gesendet → Backup-Cron skipt. SKIP_GUARD=true zum Forcieren.")
             return
 
-    # 1. Story-Serie laden
-    story = get_story_for_date(today_iso)
-    if story:
-        print(f"📖 Story für heute: {story.get('series_tag','?')}")
-    else:
-        print("📖 Keine Story für heute geplant (manuell gepostet oder leer)")
-
-    # 2. Daily Killer-Stat aus wm2026-data.json (mit Dedup-Schutz)
-    fact = None
-    dedup = load_dedup()
-    excluded = MANUAL_POSTED_TEAMS | recently_sent_team_ids(dedup, today_iso)
-    print(f"🚫 Ausgeschlossen (manuell + letzte {DEDUP_WINDOW_DAYS} Tage): {sorted(excluded)}")
-
+    # wm einmal laden
+    wm = None
     if WM_FILE.exists():
         try:
             wm = json.loads(WM_FILE.read_text(encoding="utf-8"))
-            fact = pick_daily_killer_stat(wm, today_iso, exclude_team_ids=excluded)
         except Exception as e:
             print(f"⚠️  wm2026-data.json nicht lesbar: {e}")
-    if fact:
-        print(f"⚡ Daily Killer-Stat: {fact['info']['name']}")
-    else:
-        print("⚡ Kein Killer-Stat heute (alle Top-Kandidaten gefiltert oder keine Daten)")
 
-    if not story and not fact:
+    # 1. Vortags-Reviews = PRIMÄRER Daily-Content (20.06.2026, Lucas). Nachbericht der Spiele,
+    #    die wir am Tag davor als Preview hatten — Endstand + Chancen-Analyse + Stats.
+    reviews = []
+    if SEND_REVIEWS and wm:
+        try:
+            reviews = build_match_review_cards(wm, today_iso)
+            print(f"📊 Match-Review-Cards (Vortag): {len(reviews)} Spiel(e)")
+        except Exception as e:
+            print(f"⚠️  Match-Review-Cards fehlgeschlagen: {e}")
+
+    dedup = load_dedup()
+    excluded = MANUAL_POSTED_TEAMS | recently_sent_team_ids(dedup, today_iso)
+
+    # 2. Story-Serie + Killer-Stat — nur FALLBACK, wenn es heute KEINE Reviews gibt.
+    story, fact = None, None
+    if reviews:
+        print("📖⚡ Story + Killer-Stat heute übersprungen — Reviews sind der Content (Fallback aus)")
+    else:
+        story = get_story_for_date(today_iso)
+        print(f"📖 Story für heute: {story.get('series_tag','?')}" if story
+              else "📖 Keine Story für heute geplant")
+        print(f"🚫 Ausgeschlossen (manuell + letzte {DEDUP_WINDOW_DAYS} Tage): {sorted(excluded)}")
+        if wm:
+            try:
+                fact = pick_daily_killer_stat(wm, today_iso, exclude_team_ids=excluded)
+            except Exception as e:
+                print(f"⚠️  Killer-Stat fehlgeschlagen: {e}")
+        print(f"⚡ Daily Killer-Stat: {fact['info']['name']}" if fact
+              else "⚡ Kein Killer-Stat heute")
+
+    if not story and not fact and not reviews:
         print("\nNichts zu posten. Ende.")
         return
 
     # 3. HTML + PNG erzeugen
     print()
     produced = []  # list of (label, png_path, caption)
+    produced.extend(reviews)   # Vortags-Reviews (schon gerendert in build_match_review_cards)
     if story:
         paths = write_cards("story", story, today_iso)
         for kind in ("hook", "info"):
