@@ -1943,7 +1943,7 @@ function _renderWmSystemGuide() {
         'Pinnacle devigged → fairer Wert berechnet',
         'Edge = Pinn fair − Poly · in %p',
         'steamLag wenn Pinnacle zieht, Poly schläft',
-        'Telegram-Alert bei Edge ≥ 5pp (neu/steam)',
+        'Telegram-Alert bei Edge ≥ 4pp (neu/steam)',
       ])}
       ${arrow}
       ${phase(2, manualPhase ? '✋' : '🤖', manualPhase ? 'Manuell setzen' : 'Auto-Bet', manualPhase ? 'JETZT' : 'AKTIV', manualPhase ? '#e3b341' : '#3fb950', manualPhase ? '#1a160a' : '#0d1a0d', manualPhase ? [
@@ -1953,19 +1953,19 @@ function _renderWmSystemGuide() {
         'JSON exportieren → in wm_poly_positions.json einfügen → GitHub Desktop commiten',
         'GitHub Action übernimmt ab da das Monitoring',
       ] : [
-        'Edge ≥ 5pp + Vol ≥ 10.000 USDC + Pinnacle gelistet',
+        'Echte Ask-Edge ≥ 4pp (nach Spread) + Vol ≥ $1.500 + Pinnacle gelistet',
         'Verdict BET oder ABWÄGEN erforderlich',
         'Nicht am Spieltag selbst (mind. 1 Tag vorher)',
-        'Stake: €5 (3pp), €10 (5pp), €15 (7pp+)',
+        'Stake: $5.50 flat (keine Edge-Tiers, 01.06. bestätigt)',
         'Telegram-Benachrichtigung im Trades-Channel',
       ])}
       ${arrow}
-      ${phase(3, '📊', 'Position schließen', '5×/Tag', '#a78bfa', '#0f0d1a', [
-        'manage_wm_poly_positions.py überwacht Preise',
-        '<strong style="color:#3fb950">Sell-Ziel</strong>: Poly steigt +20% über Entry-Preis',
-        '<strong style="color:#e3b341">Konvergenz</strong>: Poly innerhalb 2pp von Pinn fair',
-        'Telegram-Sell-Alert mit direktem Link',
-        'Nach Spielende: CLV + P&L automatisch berechnet',
+      ${phase(3, '📊', 'Position schließen', 'alle 30 Min', '#a78bfa', '#0f0d1a', [
+        'manage_wm_poly_positions.py überwacht den echten Bid',
+        '<strong style="color:#3fb950">Profit-Ziel</strong>: realer Bid-Gewinn ≥ +8% über Entry',
+        '<strong style="color:#e3b341">Konvergenz</strong>: Poly innerhalb 1.5pp von Pinn fair',
+        '<strong style="color:#f85149">Stop-Loss</strong>: ≥15% im Minus (bis 2h vor KO) → raus',
+        'Hard-Close ~40 Min vor Anpfiff · danach CLV + P&L',
       ])}
     </div>
 
@@ -1974,11 +1974,11 @@ function _renderWmSystemGuide() {
       <div style="font-size:10px;font-weight:800;color:#484f58;letter-spacing:.8px;
                   text-transform:uppercase;margin-bottom:10px">Auto-Trigger Kriterien (ab 1. Juni)</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px">
-        ${criteriaRow('🎯', 'Mindest-Edge', '≥ 5pp vs Pinnacle fair', '#3fb950')}
-        ${criteriaRow('💧', 'Liquidität', '≥ $10.000 Vol', '#3fb950')}
-        ${criteriaRow('📅', 'Timing', 'Mind. 1 Tag vor Spielbeginn', '#e3b341')}
+        ${criteriaRow('🎯', 'Mindest-Edge', '≥ 4pp Ask-Edge (nach Spread)', '#3fb950')}
+        ${criteriaRow('💧', 'Liquidität', '≥ $1.500 Vol + Buch ≥ $50', '#3fb950')}
+        ${criteriaRow('📅', 'Timing', '1 Tag bis ~40 Min vor Anpfiff', '#e3b341')}
         ${criteriaRow('✅', 'Verdict', 'BET oder ABWÄGEN', '#3fb950')}
-        ${criteriaRow('📊', 'Datenqualität', 'Form + H2H vorhanden (≥5pp) oder ELO-only (≥8pp)', '#e3b341')}
+        ${criteriaRow('📊', 'Datenqualität', 'Form + H2H (≥4pp) oder ELO-only (≥8pp)', '#e3b341')}
         ${criteriaRow('💰', 'Max. Stake', '€5–€15 je nach Edge-Tier', '#a78bfa')}
       </div>
     </div>
@@ -3125,7 +3125,7 @@ const AUTO_TRADER_CONFIG = {
       { lbl: 'Edge-Schwelle Steam Lag',      val: '≥ 3.0pp',          note: 'Bonus bei Pinn-Move ohne Poly-Reaktion' },
       { lbl: 'Edge-Schwelle elo_only',       val: '≥ 8.0pp',          note: 'Strenger bei dünner Datenbasis' },
       { lbl: 'Pre-Tournament-Schwelle',      val: '≥ 6.0pp',          note: 'Wenn Match > 5 Tage entfernt — frühe Linien sind unsicher' },
-      { lbl: 'Min Liquidität (Vol)',         val: '≥ $10.000',        note: 'Schützt vor dünnen Märkten' },
+      { lbl: 'Min Liquidität (Vol)',         val: '≥ $1.500',         note: 'Schützt vor dünnen Märkten (min_vol_usdc)' },
       { lbl: 'Min Stunden bis Anpfiff',      val: '≥ 4h',             note: 'Kein Kauf zu nah am Spiel' },
       { lbl: 'Min Tage bis Spiel',           val: '≥ 1 Tag',          note: 'Kein Kauf am Spieltag selbst' },
       { lbl: 'Eintritt am echten Ask',       val: 'Spread-Gate',      note: '17.06.26: echte Edge = fair − Ask (nicht Mid). Eintritt zum Ask, nicht zum Mittelpreis.' },
@@ -3157,8 +3157,12 @@ const AUTO_TRADER_CONFIG = {
       { lbl: 'Max Sell-Spread',              val: '≤ 15pp',            note: '17.06.26: nicht in absurd breites Buch verkaufen' },
       { lbl: 'Pinn-Konvergenz-Gap',          val: '≤ 1.5pp',           note: '01.06.26: von 2.0 strenger gemacht' },
       { lbl: 'Min Profit vor Konvergenz',    val: '+3pp',              note: 'Sekundär-Schwelle nicht-bei-0 schließen' },
-      { lbl: 'Age-Decay-Schwelle',           val: '+5% nach 48h',      note: 'NEU: alte Positionen mit kleinem Profit schließen' },
-      { lbl: 'Pre-Match-Close',              val: '6h vor Anpfiff',    note: 'Notbremse — alle offenen schließen' },
+      { lbl: 'Age-Decay-Schwelle',           val: '+5% nach 36h',      note: 'Alte Positionen mit kleinem Profit schließen (age_decay_profit_target)' },
+      { lbl: '🔴 Stop-Loss (früh)',          val: '−15% bis 2h vor KO', note: '16.06.26: ab 2h vor Anpfiff jede Position ≥15% im Minus sofort raus — VOR dem volatilen Aufstellungs-Fenster (early_stoploss_pct 0.15 / early_stoploss_hours 2.0)' },
+      { lbl: '🔴 Deep-Loss',                 val: '−40% + ≥12h',       note: 'Tief im Minus UND noch ≥12h bis Anpfiff → Bankroll re-allokieren (loss_deep_pct 0.40)' },
+      { lbl: '🔴 Sharps gegen uns',          val: 'Pinn ≥7pp < Entry', note: 'Pinnacle-Fair liegt ≥7pp UNTER unserem Entry-Preis → Sharps haben die Erwartung gesenkt, raus (sharp_against_gap_pp 7)' },
+      { lbl: '🔴 Age-Loss',                  val: '−10% nach 36h',     note: 'Alte Verlustposition → Spread frisst sonst den Buchwert (age_loss_threshold_pct 0.10)' },
+      { lbl: 'Pre-Match-Close (Hard)',       val: '≤ 0.67h (~40 Min)', note: '16.06.26 enger gestellt: kurz vor Anpfiff alle offenen Positionen schließen — vorher 6h, jetzt ~40 Min (pre_match_close_hours 0.67). NICHT in-play halten.' },
     ],
   },
 };
