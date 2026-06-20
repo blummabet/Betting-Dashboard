@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-20T01:43:07Z",
-    "total_records": 58
+    "updated_at": "2026-06-20T01:58:15Z",
+    "total_records": 60
   },
   "records": [
     {
@@ -632,6 +632,58 @@
       ],
       "resolvedAt": "2026-06-14T06:46:37Z",
       "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "C-2-SCO-MAR|Auswärtssieg",
+      "matchKey": "C-2-SCO-MAR",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.04
+        },
+        {
+          "name": "travel_burden",
+          "score": 1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 1.83
+        },
+        {
+          "name": "xg_strength",
+          "score": 0.88
+        },
+        {
+          "name": "lineup_signal",
+          "score": 0.42
+        },
+        {
+          "name": "smart_money",
+          "score": 1.15
+        }
+      ],
+      "resolvedAt": "2026-06-20T01:44:09Z",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "C-2-SCO-MAR|Beide Teams treffen — Nein",
+      "matchKey": "C-2-SCO-MAR",
+      "market": "Beide Teams treffen — Nein",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.33
+        },
+        {
+          "name": "xg_strength",
+          "score": -2.36
+        }
+      ],
+      "resolvedAt": "2026-06-20T01:44:09Z",
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "D-1-AUS-TUR|Beide Teams treffen — Ja",
