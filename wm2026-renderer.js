@@ -1500,24 +1500,32 @@
     const pct = v => (v && v.share != null) ? Math.round(v.share * 100) : null;
     const h = pct(o.home), d = pct(o.draw), a = pct(o.away);
     if (h == null && a == null) return '';
-    const usdM = sm.totalUsd ? (sm.totalUsd >= 1e6 ? `$${(sm.totalUsd/1e6).toFixed(1)}M` : `$${Math.round(sm.totalUsd/1e3)}k`) : '';
-    const tt = sm.topTraders != null ? ` · ${sm.topTraders} Top-Trader` : '';
+    const usd = sm.totalUsd ? (sm.totalUsd >= 1e6 ? `$${(sm.totalUsd/1e6).toFixed(1)}M` : `$${Math.round(sm.totalUsd/1e3)}k`) : '';
     const parts = [];
     if (h != null) parts.push(`Heim ${h}%`);
-    if (d != null) parts.push(`X ${d}%`);
+    if (d != null) parts.push(`Unent. ${d}%`);
     if (a != null) parts.push(`Ausw. ${a}%`);
-    // stärkste Seite + deren Big-Wallet-Konzentration hervorheben
-    let topNote = '';
-    const sides = [['home', o.home], ['away', o.away]].filter(x => x[1] && x[1].share != null);
-    if (sides.length) {
-      const lead = sides.reduce((m, x) => x[1].share > m[1].share ? x : m);
-      const lbl = lead[0] === 'home' ? 'Heim' : 'Ausw.';
-      if (lead[1].topHolderShare != null)
-        topNote = ` · Big-Wallets auf ${lbl}: ${Math.round(lead[1].topHolderShare*100)}%`;
+    // Der eigentliche „Smart"-Teil (20.06.2026): hat das Geld auf UNSERER Pick-Seite den fairen
+    // Pinnacle-Preis übertroffen? Kommt aus dem smart_money-Signal am Pick (nur wenn es gefeuert
+    // hat — 1X2/DC/AH). Roher Split allein spiegelt nur den Favoriten; erst der Überschuss ist Signal.
+    let edgeLine = '';
+    const sig = (pick.signals || []).find(s => s && s.name === 'smart_money');
+    if (sig && sig.metadata && sig.metadata.excessPP != null) {
+      const m = sig.metadata;
+      const sideLbl = { home: 'Heim', draw: 'Unent.', away: 'Ausw.' }[m.outcome] || m.outcome;
+      const moneyPct = Math.round((m.share || 0) * 100);
+      const fairPct  = Math.round((m.fairShare || 0) * 100);
+      const exc = m.excessPP;
+      edgeLine = `<br><span style="color:${exc > 0 ? '#3fb950' : '#8b949e'};">→ auf ${sideLbl} `
+        + `${moneyPct}% Geld vs. ${fairPct}% fair (${exc > 0 ? '+' : ''}${exc}pp ${exc > 0 ? 'mehr als der Markt rechtfertigt' : 'darunter'})</span>`;
     }
-    return `<div style="margin-top:6px;padding:5px 9px;border-radius:8px;background:rgba(167,139,250,.10);border:1px solid rgba(167,139,250,.35);font-size:.76rem;color:#c4b5fd;">
-      💰 <strong>Smart Money</strong> ${usdM}${tt}<br>
-      <span style="color:#a78bfa;">${parts.join(' · ')}</span><span style="color:#8b949e;">${topNote}</span>
+    const tip = `Verfolgt wird das offene Interesse der größten Wallets je Ausgang auf Polymarket — `
+      + `NICHT das Gesamtvolumen des Marktes (das ist höher). ${usd} = Summe dieser Top-Positionen`
+      + (sm.topTraders != null ? `, davon ${sm.topTraders} Wallets über $1.000.` : '.');
+    return `<div style="margin-top:6px;padding:6px 9px;border-radius:8px;background:rgba(167,139,250,.10);border:1px solid rgba(167,139,250,.35);font-size:.76rem;color:#c4b5fd;" title="${tip}">
+      💰 <strong>Smart Money</strong> — wo die großen Wallets liegen<br>
+      <span style="color:#8b949e;">${usd} verfolgt${sm.topTraders != null ? ` · ${sm.topTraders} Wallets &gt;$1k` : ''}</span><br>
+      <span style="color:#a78bfa;">${parts.join(' · ')}</span>${edgeLine}
     </div>`;
   }
 
@@ -2880,13 +2888,17 @@
       // die Soft-Quote 0pp bewegt hat und gar nicht hinterherhinkt. Echtes Lag = Soft-Quote
       // noch LÄNGER als die aktuelle Pinnacle-Quote (steamCur), d.h. Soft hat noch nicht
       // aufgeschlossen → Resthebel. Ist Soft schon ≤ Pinnacle, gibt's keinen Lag mehr.
-      const _softLags = (pick.softNow != null && pick.steamCur != null
-                         && pick.softNow > pick.steamCur * 1.005);
+      // FIX 20.06.2026 (Lucas): „da ist noch Luft" war vage — jetzt zeigen wir GEGENÜBER WEM
+      // (Pinnacle) und WIE VIEL. Lag in pp = 1/Pinnacle − 1/Soft (positiv = Soft länger als
+      // Pinnacle = noch nicht aufgeschlossen). Unter ~1pp: praktisch gleichauf, kein „hinterher".
+      const _pinn = pick.steamCur;
+      const _lagPp = (_pinn && pick.softNow) ? (1 / _pinn - 1 / pick.softNow) * 100 : null;
       const softMeta = pick.softConfirmed
         ? '✅ Soft-Books bestätigen den Move'
         : (ff != null && ff > 0 ? `Soft-Books ziehen nach (+${ff}pp)`
-           : _softLags ? 'Soft-Books hängen noch hinterher — da ist noch Luft'
-           : 'Soft-Quote ist schon auf Pinnacle-Höhe');
+           : (_lagPp != null && _lagPp >= 1.0)
+              ? `Soft ${(+pick.softNow).toFixed(2)} hängt noch ~${_lagPp.toFixed(1)}pp hinter Pinnacle ${(+_pinn).toFixed(2)}`
+              : 'Soft-Quote ist praktisch auf Pinnacle-Höhe');
       html += _moveBar({
         icon: '💶', label: 'Soft-Quote bewegt', cls: 'cc-soft',
         o: pick.softOpen, c: pick.softNow,
