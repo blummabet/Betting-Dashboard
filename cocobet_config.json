@@ -312,6 +312,14 @@
         "min_top_share": 0.1,
         "base_conf": 0.4,
         "max_conf": 0.6
+      },
+      "pick_calibration": {
+        "enabled": true,
+        "min_picks": 50,
+        "min_segment_n": 15,
+        "scale": 5.0,
+        "max_nudge": 0.5,
+        "_meta": "WM=Werkbank, sehr niedriger Effekt. Liga nach 4-5 Runden hochschrauben."
       }
     },
     "liga_default": {
@@ -496,6 +504,13 @@
         "min_top_share": 0.1,
         "base_conf": 0.4,
         "max_conf": 0.6
+      },
+      "pick_calibration": {
+        "enabled": true,
+        "min_picks": 40,
+        "min_segment_n": 25,
+        "scale": 8.0,
+        "max_nudge": 1.5
       }
     }
   }

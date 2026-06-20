@@ -170,6 +170,13 @@ jobs:
         run: ${{ env.POLY_PYTHON }} update_signal_weights.py
         continue-on-error: true
 
+      # ── Lern-Ebene 2: Segment-Kalibrierung (20.06.2026) ─────────────────────
+      # Liest den Ledger → prozess-justierte Performance je Segment → pick_calibration.json.
+      # generate_wm_picks nudged daraus die Conviction gedeckelt (erst ab min_picks, WM 50).
+      - name: 📐 Pick-Kalibrierung aktualisieren
+        run: ${{ env.POLY_PYTHON }} compute_pick_calibration.py --write
+        continue-on-error: true
+
       # ── Position-Health-Monitor: prüft offene Trades auf These-Erhalt ────────
       # Berechnet pro offener Position einen 4-Faktor-Health-Score (0-100):
       #   Edge-Persistenz · Pinnacle-Drift · CLV-Status · Time-Pressure

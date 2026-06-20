@@ -104,6 +104,11 @@ def collect_observations(wm: dict) -> list[dict]:
                 "result":     result,
                 "signals":    sigs,
                 "resolvedAt": p.get("resolvedAt") or now_iso,
+                # Segment-Felder für die Kalibrierung (20.06.2026): Quelle (steam/model),
+                # Conviction + Late-Entry → compute_pick_calibration lernt pro Segment.
+                "source":           p.get("source") or "model",
+                "convictionScore":  p.get("convictionScore"),
+                "lateEntry":        bool(p.get("lateEntry")),
             }
             if _process_verdict:
                 pv = _process_verdict(market, result, stats_lookup.get(match_key))
