@@ -2163,18 +2163,19 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             <div class="pitch-icon">🎯</div>
             <div class="pitch-meta">
               <div class="pitch-title">Eigene Pick-Engine</div>
-              <div class="pitch-stat">17 Signale + Conviction</div>
+              <div class="pitch-stat">19 Signale + Conviction</div>
             </div>
           </div>
           <div class="pitch-body">
-            Pinnacle-Fair-Quote als Anker → 15 eigene Signale (Elo, xG, Form, H2H, Travel, Höhe, Hitze, Anreiz, Lineup, Sharp-Money …)
+            Pinnacle-Fair-Quote als Anker → 19 eigene Signale (xG, Form, H2H, Chancen, Travel, Höhe, Hitze,
+            Anreiz, Lineup, Sharp-Money, <strong>Polymarket-Geld</strong>, <strong>Pulse-Frische</strong> …)
             justieren sie → Edge in Prozentpunkten, plus Conviction-Score 0–10 für die Wett-Qualität.
           </div>
           <ul class="pitch-bullets">
-            <li>Verdict-Engine: BET / ABWÄGEN / SKIP + Conviction-Gate</li>
-            <li>4 Datenqualitäts-Tiers — kein BET bei dünner Datenbasis</li>
+            <li>Verdict-Engine: BET / ABWÄGEN / SKIP + Conviction-Gate (BET ab 8/10)</li>
+            <li><strong>Steam-Following:</strong> Pinnacle bewegt sich zuerst, wir reiten den Move</li>
             <li>Cross-Market-Konsistenz (kein "Heim &amp; Auswärts" gleichzeitig)</li>
-            <li><strong>Bayesian Self-Learning:</strong> Signal-Gewichte lernen nach jedem Spiel</li>
+            <li><strong>Self-Learning:</strong> Signal-Gewichte + Segment-Kalibrierung lernen nach jedem Spiel</li>
           </ul>
         </div>
 
@@ -2184,7 +2185,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
             <div class="pitch-icon">💹</div>
             <div class="pitch-meta">
               <div class="pitch-title">Polymarket Auto-Trading</div>
-              <div class="pitch-stat">5×/Tag Cron</div>
+              <div class="pitch-stat">alle 30 Min</div>
             </div>
           </div>
           <div class="pitch-body">
@@ -2235,7 +2236,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           </div>
           <ul class="pitch-bullets">
             <li>Morning Card + Liga-Picks + Recap (öffentlich, automatisch)</li>
-            <li>Sharp-Move-Alerts &amp; Steam-Lag-Signale (privat, 5×/Tag)</li>
+            <li>Sharp-Move-Alerts &amp; Steam-Lag-Signale (privat, laufend)</li>
             <li>Auto-Bet-Bestätigung mit Order-ID (privat)</li>
             <li><strong>Pick-Changes-Digest</strong> täglich 14:00 mit Reasoning</li>
           </ul>
@@ -2307,16 +2308,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <div class="h2-feature-head">
             <span class="h2-feature-icon">🧠</span>
             <div>
-              <div class="h2-feature-title">Sharp-Signal-Engine (17 Signale)</div>
-              <span class="h2-feature-tag usp">USP · ERWEITERT 10.06.2026</span>
+              <div class="h2-feature-title">Sharp-Signal-Engine (19 Signale)</div>
+              <span class="h2-feature-tag usp">USP · ERWEITERT 20.06.2026</span>
             </div>
           </div>
           <div class="h2-feature-desc">
-            Modulare Engine im <code>sharp_signals/</code>-Ordner wertet pro Pick <strong>15 unabhängige Signale</strong> aus
+            Modulare Engine im <code>sharp_signals/</code>-Ordner wertet pro Pick <strong>19 unabhängige Signale</strong> aus
             (Lead-Lag-Bias, Steam-Lag, Public-Static-Bias, Travel-Burden, Injury,
-            xG-Stärke, Form-Trend, H2H-Pattern, Pressure-Index, <strong>Lineup T-1h</strong>,
+            xG-Stärke, Form-Trend, Form-Rating, H2H-Pattern, <strong>Chancen-Kreation</strong>, Pressure-Index, <strong>Lineup T-1h</strong>,
             <strong>API-Football Predictions</strong>, <strong>Hitze-Penalty</strong>, <strong>Höhen-Vorteil</strong>,
-            <strong>Anreiz-Modell</strong>) und produziert pro Signal Score + Evidence + Confidence.
+            <strong>Anreiz-Modell</strong>, <strong>Pulse-Frische</strong>, <strong>Smart-Money</strong>) und produziert pro Signal Score + Evidence + Confidence.
             Basis ist immer die <strong>Pinnacle-Fair-Quote</strong> (schärfster Markt der Welt) — die Signale sind Modifikatoren darauf, kein Gegenmodell.
             <strong>Bayesian-Lern-Loop</strong> aktualisiert die Signal-Weights nach jedem resolved Spiel —
             die Engine wird mit jedem WM-Tag besser. Edge-Adjustment greift direkt ins Verdict ein: BET-Picks die
@@ -2377,16 +2378,86 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           </div>
         </div>
 
+        <div class="h2-feature featured" style="border-color:rgba(0,212,161,0.40);">
+          <div class="h2-feature-head">
+            <span class="h2-feature-icon">🌊</span>
+            <div>
+              <div class="h2-feature-title">Steam-Following + Pulse</div>
+              <span class="h2-feature-tag neu">NEU 18.06.2026</span>
+            </div>
+          </div>
+          <div class="h2-feature-desc">
+            Das eigentliche Modell: wir wollen Pinnacle nicht <em>schlagen</em>, sondern den <strong>Move reiten</strong>.
+            Fällt die Pinnacle-Quote (Sharp-Money rein) und die Soft-Books hinken nach, steigen wir früh ein.
+            <strong>Pulse</strong> misst die Frische des Moves über seinen letzten Abschnitt: <strong>GESTÄRKT</strong>
+            (frisches Geld läuft weiter für uns), <strong>BASIS</strong> (Move ruht), <strong>DREHT</strong> (frisches Geld
+            kippt gegen uns → Pick wird zurückgestuft + sichere Gegen-Linie daneben). Longshot-Moves (Quote &gt; 6) zählen
+            bewusst nicht — da ist die Bewegung Rauschen, kein Sharp-Money.
+          </div>
+          <div class="h2-mockup">
+            <span class="mk">SCO–MAR · Auswärtssieg</span><br>
+            🔥 Pinnacle <span class="acc">2.11 → 1.67 (+13.7pp)</span><br>
+            ⚡ Pulse <span class="acc">GESTÄRKT</span> · Soft hinkt nach<br>
+            <span class="mk">→ Move geritten, nicht Fair-Value gewettet</span>
+          </div>
+        </div>
+
+        <div class="h2-feature purple featured">
+          <div class="h2-feature-head">
+            <span class="h2-feature-icon">💰</span>
+            <div>
+              <div class="h2-feature-title">Smart-Money: Polymarket-Geld lesen</div>
+              <span class="h2-feature-tag neu">NEU 20.06.2026</span>
+            </div>
+          </div>
+          <div class="h2-feature-desc">
+            Wir lesen auf Polymarket, <strong>wo das große Geld liegt</strong> — über die data-api (Holder + Trades pro Outcome).
+            Gemessen wird der <strong>Überschuss gegen die scharfe Pinnacle-Fair</strong> (nicht 50/50), gewichtet mit der
+            <strong>Wal-Konzentration</strong> (wie viel auf wenigen Top-Wallets). Kein nacktes Volumen-Signal — und bewusst
+            <strong>niedrig gedeckelt</strong>. Wichtig: rein für die Cards, <strong>nie fürs Trading</strong> (sonst entschiede
+            Poly-Geld über Poly-Trades — ein Zirkel). Eine eigene violette Box auf der Card zeigt den Split.
+          </div>
+          <div class="h2-mockup">
+            <span class="mk">Geld-Split auf Polymarket</span><br>
+            💰 <span class="acc">91 %</span> auf Heim · faire 87 %<br>
+            🐋 Top-Wallets 30 % · $0.9M<br>
+            <span class="mk">→ leichter Smart-Money-Rückenwind (Card-only)</span>
+          </div>
+        </div>
+
+        <div class="h2-feature featured" style="border-color:rgba(88,166,255,0.40);">
+          <div class="h2-feature-head">
+            <span class="h2-feature-icon">📐</span>
+            <div>
+              <div class="h2-feature-title">Lern-Ebene 2: Pick-Kalibrierung</div>
+              <span class="h2-feature-tag neu">NEU 20.06.2026</span>
+            </div>
+          </div>
+          <div class="h2-feature-desc">
+            Über dem Signal-Lernen lernt das System jetzt auch pro <strong>Pick-Segment</strong> (z.B. Steam vs. Modell):
+            Wie gut läuft ein Segment gegenüber dem Schnitt — <strong>prozess-justiert</strong> (verdient/Pech aus xG)?
+            Daraus kommt ein <strong>sehr kleiner, gedeckelter Conviction-Nudge</strong>, der erst ab genug Sample greift.
+            Schöner Befund: roh wirkten die frühen Steam-Picks schwächer — prozess-justiert verschwindet der Unterschied
+            fast, ihre Verluste waren oft unglücklich. Genau deshalb bleibt der Effekt winzig, bis echte Muster da sind.
+          </div>
+          <div class="h2-mockup">
+            <span class="mk">Segment-Performance (prozess-justiert)</span><br>
+            steam <span class="acc">0.479</span> · model <span class="acc">0.456</span><br>
+            → Δ winzig → Nudge ≈ 0<br>
+            <span class="mk">Liga: nach 4–5 Runden hochschraubbar</span>
+          </div>
+        </div>
+
         <div class="h2-feature featured" style="border-color:rgba(63,185,80,0.40);">
           <div class="h2-feature-head">
             <span class="h2-feature-icon">🛡️</span>
             <div>
               <div class="h2-feature-title">Selbst-Überwachung: Integritäts-Batterie</div>
-              <span class="h2-feature-tag neu">NEU · 18 Guards</span>
+              <span class="h2-feature-tag neu">NEU · 40 Guards</span>
             </div>
           </div>
           <div class="h2-feature-desc">
-            18 automatische Guards prüfen bei jedem Lauf jeden Datenpunkt, der Picks oder Trades treibt — Venue, Anpfiffzeit, Quoten, Edge, AH-Linien, Match-xG, Trade-Status.
+            40 automatische Guards prüfen bei jedem Lauf jeden Datenpunkt, der Picks oder Trades treibt — Venue, Anpfiffzeit, Quoten, Edge, AH-Linien, Match-xG, Trade-Status, Smart-Money-Kohärenz, Zwei-Flächen-Trennung.
             Fehler werden <strong>laut sichtbar</strong> gemacht (Status-Seite + Alert), nicht still geschluckt. Prinzip:
             <strong>jeder Bug, der je durchrutscht, hinterlässt einen neuen Guard</strong> — das System überwacht sich selbst und wird mit jedem Fehler robuster.
           </div>
@@ -3363,7 +3434,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div style="display:flex;align-items:center;gap:12px;margin:32px 0 12px;">
         <div style="width:32px;height:32px;border-radius:50%;background:#f5c518;color:#0d1117;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;">2</div>
         <div>
-          <div style="font-size:16px;font-weight:700;color:var(--text);">Die Engine prüft 17 Signale gleichzeitig</div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);">Die Engine prüft 19 Signale gleichzeitig</div>
           <div style="font-size:12px;color:var(--muted);">Jedes Signal kann den Tipp verstärken (grün) oder anzweifeln (rot). Manche feuern nicht — das ist okay.</div>
         </div>
       </div>
@@ -3547,7 +3618,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <div style="background:rgba(125,211,252,0.04);border:1px dashed var(--border);border-radius:10px;padding:16px;margin-top:24px;font-size:12px;color:var(--muted);line-height:1.6;">
         <strong style="color:#7dd3fc;">Warum so viele Signale?</strong>
         Jedes Signal allein wäre zu schwach. Pinnacle hat den schärfsten Markt aller Bookies — den dauerhaft zu schlagen ist fast unmöglich.
-        Stattdessen <strong style="color:var(--text);">nutzen wir Pinnacle als Anker</strong> und unsere 17 Signale finden Situationen,
+        Stattdessen <strong style="color:var(--text);">nutzen wir Pinnacle als Anker</strong> und unsere 19 Signale finden Situationen,
         in denen selbst Pinnacle eine wichtige Variable übersehen hat (Hitze für Cold-Climate-Teams, Top-Scorer auf der Bank,
         lange Reisen, …). Nach jedem Spiel lernt die Engine: <strong style="color:var(--text);">welche Signale haben Recht behalten?</strong>
         Und zwar nicht nur am Ergebnis, sondern an den <strong style="color:var(--text);">echten Match-xG</strong> — ein per xG verdienter, aber unglücklich verlorener Tipp wird milder gewertet als ein echter Fehl-Read.
@@ -3758,7 +3829,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
           <tr><td><code>fetch_wm_weather.py</code></td><td>Venue-Wetter (WeatherAPI) → Hitze-Penalty-Signal</td></tr>
           <tr><td><code>fetch_wm_lineups.py</code></td><td>Aufstellungen T-1h (eigener Hot-Cron) → Lineup-Signal</td></tr>
           <tr><td><code>fetch_wm_match_results.py</code></td><td>Ergebnisse nach Spiel → Frozen-at-Kickoff</td></tr>
-          <tr><td><code>generate_wm_picks.py</code></td><td>Picks: Pinnacle-Anker + 17 Signale + Conviction + Filter</td></tr>
+          <tr><td><code>generate_wm_picks.py</code></td><td>Picks: Pinnacle-Anker + 19 Signale + Conviction + Filter</td></tr>
           <tr><td><code>resolve_wm_picks.py</code></td><td>WIN/LOSS/VOID Resolution + clvPP-Berechnung</td></tr>
           <tr><td><code>resolve_wm_results.py</code></td><td>P&amp;L + CLV-Tracking der platzierten Polymarket-Bets → wm_results.json</td></tr>
           <tr><td><code>compute_pick_confidence.py</code></td><td>Hit-Rate-Cluster für "Backtest"-Anzeige</td></tr>
@@ -3909,15 +3980,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <span class="heart-collapse-meta">WM + danach</span>
     </summary>
     <div class="heart-collapse-body">
-      <div class="h2-sub-label" style="color:#3fb950;">✅ Kürzlich umgesetzt (13.–14. Jun)</div>
+      <div class="h2-sub-label" style="color:#3fb950;">✅ Kürzlich umgesetzt (15.–20. Jun)</div>
       <ul style="font-size:12px;color:rgba(255,255,255,0.78);line-height:1.8;padding-left:20px;">
+        <li>🌊 <strong>Steam-Following + Pulse:</strong> Move reiten statt Fair-Value wetten — Frische-Lebenszyklus (GESTÄRKT/BASIS/DREHT) + Reverser mit sicherer Gegen-Linie</li>
+        <li>💰 <strong>Smart-Money:</strong> Polymarket-Geld-/Wallet-Split als Card-Signal (Überschuss vs Pinnacle-Fair × Wal-Konzentration, niedrig gedeckelt, nie fürs Trading)</li>
+        <li>📐 <strong>Lern-Ebene 2 — Pick-Kalibrierung:</strong> prozess-justierte Segment-Performance nudged die Conviction gedeckelt (ab 50 Picks, sehr niedrig)</li>
+        <li>💶 <strong>Ehrliche Trade-P&amp;L:</strong> Positionen am echten Bid bewertet (kein Spread-Phantom) + Eintritts-Spread-Gate + W/L zählt profitable Sells</li>
+        <li>🛡️ <strong>Steam-Longshot-Ceiling + Zwei-Flächen-Guard:</strong> kein Nonsens-Pick aus Longshot-Rauschen; Card-Signale leaken nie ins Trading</li>
+        <li>💬 <strong>Karten menschlicher:</strong> Signal-Texte in ganzen Sätzen, Fußzeile entrümpelt (Pulse · Lineup · Track-Record), Sterne aus der Conviction</li>
         <li>🧪 <strong>Prozess-Lernen:</strong> echte Match-xG → verdient/Pech/Glück → prozess-gewichtetes Bayesian-Update (trennt Können von Varianz)</li>
         <li>🎯 <strong>Pinnacle-Anker</strong> für 1X2/DC/DNB — Phantom-Edges aus dem Elo-Modell eliminiert</li>
         <li>📐 <strong>Dynamische AH-Leiter</strong> (ahLadder) + AH-Auflösung mit Half-Stake bei Viertel-Linien</li>
         <li>📋 <strong>Lineup-Signal-Refresh</strong> am Spieltag — T-1h-Aufstellung fließt endlich in Conviction + Ledger</li>
         <li>📡 <strong>CLV-Open-Linien + Soft-Book-History</strong> — lead_lag/Sharp-Money-Conviction kann endlich feuern</li>
         <li>💸 <strong>Auto-Sell-Kette:</strong> Konvergenz-Exit + 2h-Pre-Match-Close (echter Kickoff) + Balance-gekappter Verkauf</li>
-        <li>🛡️ <strong>Integritäts-Batterie 13 → 18 Guards</strong> — Selbst-Überwachung wächst mit jedem Bug</li>
+        <li>🛡️ <strong>Integritäts-Batterie 13 → 40 Guards</strong> — Selbst-Überwachung wächst mit jedem Bug</li>
         <li>🎬 <strong>Pick-Hook-Cards</strong> (TikTok) + <strong>Trade-Verlauf</strong> im Cockpit</li>
       </ul>
       <div class="h2-sub-label">Vor WM-Start (bis 10. Jun)</div>
