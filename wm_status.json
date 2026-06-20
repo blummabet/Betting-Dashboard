@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-19T21:06:30Z",
+  "generatedAt": "2026-06-20T07:48:02Z",
   "windowDays": 2,
   "upcoming": 12,
   "signalsFired": [
@@ -22,24 +22,24 @@
   ],
   "signalsTotal": 19,
   "perSignal": {
-    "lead_lag_bias": 3,
-    "public_static_bias": 12,
-    "travel_burden": 52,
+    "lead_lag_bias": 4,
+    "public_static_bias": 14,
+    "travel_burden": 50,
     "injury": 0,
-    "form_trend": 86,
+    "form_trend": 87,
     "h2h_pattern": 7,
-    "xg_strength": 75,
+    "xg_strength": 79,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 29,
-    "lineup_signal": 11,
+    "lineup_signal": 12,
     "apif_predictions": 11,
-    "weather_signal": 15,
+    "weather_signal": 12,
     "incentive_signal": 7,
     "altitude_signal": 2,
     "chance_creation": 26,
     "form_rating": 5,
-    "freshness_leg": 43,
+    "freshness_leg": 38,
     "smart_money": 8
   },
   "verdict": "warn",
@@ -48,19 +48,17 @@
     "🧠 Signal 'injury' feuert nicht (nur bei gemeldeten Ausfällen)",
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
-    "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
-    "🛡️ Aufstellung da vor Anpfiff (T-90min): 1 Fehler (z.B. SCO-MAR: Anpfiff in 53min, KEINE Aufstellung)",
-    "🛡️ BTTS-Edges plausibel: 2 Fehler (z.B. USA-AUS: BTTS Ja Edge +41.3pp (poly 0.03 / fair 0.443) — Datenfehler-Verdacht)"
+    "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))"
   ],
   "oks": [
-    "🌡️ Weather: 44 Spiele mit Forecast",
+    "🌡️ Weather: 40 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.1h alt",
-    "📊 APIF-Predictions: 56 Spiele",
-    "📋 Lineups: 18 Spiele geladen (3 imminent)",
+    "📊 APIF-Predictions: 58 Spiele",
+    "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 47.4 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 51.6 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $328.38",
+    "💼 Poly-Balance: $288.69",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -202,11 +200,9 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "SCO-MAR: Anpfiff in 53min, KEINE Aufstellung"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -393,12 +389,9 @@
       "id": "btts_edge_sane",
       "label": "BTTS-Edges plausibel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 2,
-      "failures": [
-        "USA-AUS: BTTS Ja Edge +41.3pp (poly 0.03 / fair 0.443) — Datenfehler-Verdacht",
-        "USA-AUS: BTTS Nein Edge -41.3pp (poly 0.97 / fair 0.557) — Datenfehler-Verdacht"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "fetch_wm_poly_prices: fair_btts aus de-viggter Pinnacle-bttsY/N. Riesen-Edge = Daten kaputt. Auto-Trader blockt via BTTS_MAX_EDGE_PP."
     }
   ]
