@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-20T20:59:57Z",
-    "total_records": 63
+    "updated_at": "2026-06-20T21:14:51Z",
+    "total_records": 65
   },
   "records": [
     {
@@ -1315,6 +1315,56 @@
       "source": "model",
       "convictionScore": 4,
       "lateEntry": false
+    },
+    {
+      "key": "F-2-NED-SWE|Beide Teams treffen — Ja",
+      "matchKey": "F-2-NED-SWE",
+      "market": "Beide Teams treffen — Ja",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.33
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.03
+        }
+      ],
+      "resolvedAt": "2026-06-20T21:10:08Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "F-2-NED-SWE|Über 2.5 Tore",
+      "matchKey": "F-2-NED-SWE",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 4.0
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -1.8
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.88
+        }
+      ],
+      "resolvedAt": "2026-06-20T21:10:08Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "G-1-IRN-NZL|Unter 2.5 Tore",
