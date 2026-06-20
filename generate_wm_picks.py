@@ -96,6 +96,36 @@ STEAM_BET_THRESHOLD      = _cfg("conviction_score", "steam_bet_threshold",      
 # (z.B. Haiti 51→22 gg. Brasilien → keine X2-Nonsens-Karte). Mainline-Steam bleibt unberührt.
 STEAM_MAX_TRIGGER_ODDS   = _cfg("steam", "max_trigger_odds", 6.0)
 
+# ── Lern-Ebene 2: Segment-Kalibrierung (20.06.2026, Lucas) ───────────────────────────────
+# Sehr kleiner, gedeckelter Conviction-Nudge je Pick-Segment (steam/model) aus der prozess-
+# justierten Performance (pick_calibration.json). Erst ab CAL_MIN_PICKS aktiv (WM 50, bewusst
+# niedriger Effekt — selbst 50 ist dünn). Liga später hochschraubbar (Config-Profil).
+CAL_ENABLED   = _cfg("pick_calibration", "enabled",       True)
+CAL_MIN_PICKS = _cfg("pick_calibration", "min_picks",     50)
+CAL_MIN_SEG_N = _cfg("pick_calibration", "min_segment_n", 15)
+CAL_SCALE     = _cfg("pick_calibration", "scale",         5.0)
+CAL_MAX_NUDGE = _cfg("pick_calibration", "max_nudge",     0.5)
+try:
+    _PICK_CALIBRATION = json.loads((BASE / "pick_calibration.json").read_text(encoding="utf-8"))
+except Exception:
+    _PICK_CALIBRATION = {}
+
+
+def _calibration_nudge(pick: dict) -> float:
+    """Kleiner, gedeckelter Conviction-Nudge aus der Segment-Performance (prozess-justiert).
+    0.0 wenn deaktiviert, zu wenig Gesamt-Sample (<min_picks) oder Segment zu dünn (<min_seg_n)."""
+    if not CAL_ENABLED:
+        return 0.0
+    meta = _PICK_CALIBRATION.get("_meta") or {}
+    if (meta.get("totalN") or 0) < CAL_MIN_PICKS:
+        return 0.0
+    seg = "steam" if pick.get("source") == "steam" else "model"
+    s = (_PICK_CALIBRATION.get("segments") or {}).get(seg) or {}
+    if (s.get("n") or 0) < CAL_MIN_SEG_N:
+        return 0.0
+    delta = s.get("delta") or 0.0
+    return round(max(-CAL_MAX_NUDGE, min(CAL_MAX_NUDGE, delta * CAL_SCALE)), 2)
+
 # Safer-Line-Ableitung Phase 1 (17.06.2026, Lucas): ein riskanter Steam-Pick (Über 3.5,
 # Heimsieg) wird auf die nächst-sicherere Linie als WETTE umgelegt — der Move bleibt die
 # These. ABER nur wenn die sichere Linie ihre Quote ≥ SAFE_LINE_MIN_ODDS hält; sonst (zu
@@ -2780,7 +2810,14 @@ def main():
                     try:
                         from conviction_score import compute_conviction_score
                         conv = compute_conviction_score(p, sig_out, sig_ctx)
-                        p["convictionScore"]   = conv["score"]
+                        # Lern-Ebene 2: gedeckelter Segment-Nudge auf die Conviction (sehr klein,
+                        # erst ab CAL_MIN_PICKS). Raw + Nudge transparent festhalten.
+                        _cal_nudge = _calibration_nudge(p)
+                        _conv_raw = conv["score"]
+                        p["convictionScore"]   = max(0, min(10, int(round(_conv_raw + _cal_nudge))))
+                        if _cal_nudge:
+                            p["convictionRaw"]    = _conv_raw
+                            p["calibrationNudge"] = _cal_nudge
                         p["convictionVerdict"] = conv["verdict"]
                         p["convictionLabel"]   = conv["label"]
                         p["convictionFamilies"] = conv["family_scores"]
