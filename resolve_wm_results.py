@@ -731,6 +731,11 @@ def main():
     bets: list[dict] = []
     for rb in raw_bets:
         for b in normalize_bet(rb):
+            # Phantom-/Halb-Records überspringen (20.06.2026, Lucas): nie echt platziert —
+            # kein Markt UND kein Token UND kein Preis (z.B. „Frankreich-Irak-" mit leerem
+            # Markt aus picks_history). Sonst blähen sie totalBets/pending künstlich auf.
+            if not (b.get("market") or "").strip() and not b.get("tokenId") and not b.get("polyPrice"):
+                continue
             bets.append(b)
 
     # Ergebnis-Lookup aufbauen
@@ -872,22 +877,30 @@ def _write_back_status_to_placed(resolved_bets: list[dict], now_iso: str) -> Non
 
 def _write_results(bets: list[dict], now_iso: str) -> None:
     finished = [b for b in bets if b.get("result") in ("WIN", "LOSS", "VOID")]
-    wins     = [b for b in finished if b.get("result") == "WIN"]
-    losses   = [b for b in finished if b.get("result") == "LOSS"]
     voids    = [b for b in finished if b.get("result") == "VOID"]
     sold     = [b for b in bets if b.get("result") == "SOLD"]   # früh verkauft (FIX 13.06.2026)
     pending  = [b for b in bets if b.get("result") == "PENDING"]
+    closed   = finished + sold                                  # alle geschlossenen Positionen
+
+    # Trefferquote-Logik (20.06.2026, Lucas): ein früh verkaufter Trade ist kein Match-Win,
+    # aber ein PROFITABLER Sell ist für die Bilanz ein Gewinn (Verlust-Sell ein Verlust).
+    # Sonst zeigte „0W / 1L", obwohl 9+ profitable Sells liefen. ±0-Sells bleiben neutral.
+    sold_win  = [b for b in sold if (b.get("pnl") or 0) > 0]
+    sold_loss = [b for b in sold if (b.get("pnl") or 0) < 0]
+    wins     = [b for b in finished if b.get("result") == "WIN"]  + sold_win
+    losses   = [b for b in finished if b.get("result") == "LOSS"] + sold_loss
+    decided  = len(wins) + len(losses)
 
     total_staked = sum(b.get("stake", 0) for b in bets if b.get("result") != "VOID")
     total_pnl    = sum(b.get("pnl", 0) for b in bets)
     roi          = round(total_pnl / total_staked * 100, 2) if total_staked > 0 else 0.0
 
-    clv_values = [b["clvPP"] for b in finished if b.get("clvPP") is not None]
+    clv_values = [b["clvPP"] for b in closed if b.get("clvPP") is not None]
     avg_clv    = round(sum(clv_values) / len(clv_values), 2) if clv_values else None
 
-    # Einfache Sharpe-Schätzung (benötigt ≥5 resolved Bets)
+    # Einfache Sharpe-Schätzung (benötigt ≥5 geschlossene Bets)
     sharpe = None
-    pnls = [b.get("pnl", 0) for b in finished]
+    pnls = [b.get("pnl", 0) for b in closed]
     if len(pnls) >= 5:
         mean = sum(pnls) / len(pnls)
         std  = math.sqrt(sum((p - mean) ** 2 for p in pnls) / len(pnls))
@@ -895,13 +908,13 @@ def _write_results(bets: list[dict], now_iso: str) -> None:
 
     summary = {
         "totalBets":   len(bets),
-        "resolved":    len(finished) + len(sold),   # geschlossen = aufgelöst + früh verkauft
+        "resolved":    len(closed),   # geschlossen = aufgelöst + früh verkauft
         "pending":     len(pending),
         "sold":        len(sold),
-        "wins":        len(wins),
-        "losses":      len(losses),
+        "wins":        len(wins),     # inkl. profitabler Sells
+        "losses":      len(losses),   # inkl. Verlust-Sells
         "voids":       len(voids),
-        "winRate":     round(len(wins) / len(finished) * 100, 1) if finished else None,
+        "winRate":     round(len(wins) / decided * 100, 1) if decided else None,
         "totalStaked": round(total_staked, 2),
         "totalPnl":    round(total_pnl, 4),
         "roi":         roi,
