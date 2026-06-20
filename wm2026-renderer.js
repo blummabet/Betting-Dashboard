@@ -676,7 +676,15 @@
       // FIX 14.06.2026: Sterne aus dem VERDICT (nicht conf/Datenqualität) — sonst stand
       // ein ★★★-ABWÄGEN über einem ★★☆-BET. BET 3 ≥ ABWÄGEN 2; bei klar widersprechenden
       // Signalen (Netto ≤ −2pp) eine Stufe runter (BET→2, ABWÄGEN→1).
-      let stars = heroPick.verdict === 'BET' ? 3 : heroPick.verdict === 'ABWÄGEN' ? 2 : 1;
+      // Sterne = DER EINE schnelle Pick-Indikator (Lucas 20.06.): BET bleibt ★★★ (Konsistenz
+      // zum Label), ABWÄGEN wird nach Conviction abgestuft (★/★★/★★★) — so tragen die Sterne
+      // echte Stärke statt nur das Verdict zu spiegeln und stimmen mit dem Conviction-Block
+      // darunter überein (Glance hier, Detail dort), statt zwei konkurrierende Indikatoren.
+      const _cs = (typeof heroPick.convictionScore === 'number') ? heroPick.convictionScore : null;
+      let stars;
+      if (heroPick.verdict === 'BET') stars = 3;
+      else if (heroPick.verdict === 'ABWÄGEN') stars = (_cs != null) ? (_cs >= 7 ? 3 : _cs >= 4 ? 2 : 1) : 2;
+      else stars = 1;
       const _net = heroPick.signalAdjustmentPP;
       if (typeof _net === 'number' && _net <= -2) stars = Math.max(1, stars - 1);
       const oddsStr = heroPick.odds != null ? heroPick.odds.toFixed(2) : '—';
