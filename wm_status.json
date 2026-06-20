@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-20T13:32:58Z",
+  "generatedAt": "2026-06-20T21:10:48Z",
   "windowDays": 2,
   "upcoming": 12,
   "signalsFired": [
@@ -22,43 +22,46 @@
   ],
   "signalsTotal": 19,
   "perSignal": {
-    "lead_lag_bias": 3,
-    "public_static_bias": 12,
-    "travel_burden": 51,
+    "lead_lag_bias": 5,
+    "public_static_bias": 17,
+    "travel_burden": 54,
     "injury": 0,
-    "form_trend": 88,
+    "form_trend": 89,
     "h2h_pattern": 7,
     "xg_strength": 79,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 29,
     "lineup_signal": 12,
-    "apif_predictions": 11,
-    "weather_signal": 12,
-    "incentive_signal": 7,
+    "apif_predictions": 10,
+    "weather_signal": 13,
+    "incentive_signal": 5,
     "altitude_signal": 2,
     "chance_creation": 26,
     "form_rating": 5,
-    "freshness_leg": 40,
-    "smart_money": 9
+    "freshness_leg": 42,
+    "smart_money": 11
   },
-  "verdict": "warn",
-  "errors": [],
+  "verdict": "error",
+  "errors": [
+    "🛡️ Home/Away nicht vertauscht (Pinn vs Poly): 1 Fehler (z.B. GER-CIV: Pinnacle-Fav Heim (hw 2.37/aw 3.16) ≠ Poly-Fav Ausw (Swap-Verdacht))"
+  ],
   "warns": [
     "🧠 Signal 'injury' feuert nicht (nur bei gemeldeten Ausfällen)",
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
-    "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))"
+    "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
+    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 1 Fehler (z.B. GER-CIV Heimsieg @1.48: sichere Linie Doppelte Chance — 1X @1.47 verfügbar (≥1.35), nicht abgeleitet)"
   ],
   "oks": [
     "🌡️ Weather: 40 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.1h alt",
     "📊 APIF-Predictions: 58 Spiele",
-    "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
+    "📋 Lineups: 19 Spiele geladen (5 imminent)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 53.3 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 56.1 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $294.42",
+    "💼 Poly-Balance: $206.63",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -173,9 +176,11 @@
       "id": "homeaway_consistent",
       "label": "Home/Away nicht vertauscht (Pinn vs Poly)",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "GER-CIV: Pinnacle-Fav Heim (hw 2.37/aw 3.16) ≠ Poly-Fav Ausw (Swap-Verdacht)"
+      ],
       "note": "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet. Bei knappen Quoten ggf. echte Markt-Uneinigkeit — Fixture-Orientierung prüfen."
     },
     {
@@ -272,9 +277,11 @@
       "id": "safer_line_applied",
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "GER-CIV Heimsieg @1.48: sichere Linie Doppelte Chance — 1X @1.47 verfügbar (≥1.35), nicht abgeleitet"
+      ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
     {

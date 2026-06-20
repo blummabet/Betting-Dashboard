@@ -1,10 +1,10 @@
 {
-  "lastRun": "2026-06-20T13:32:57.799287+00:00",
+  "lastRun": "2026-06-20T21:10:47.095903+00:00",
   "stats": {
-    "total": 124,
-    "errors": 0,
+    "total": 129,
+    "errors": 1,
     "warnings": 1,
-    "ok": 123
+    "ok": 127
   },
   "issues": [
     {
@@ -20,6 +20,21 @@
         "edgePP": -3,
         "clvPP": -3.96,
         "dataQuality": "steam"
+      }
+    },
+    {
+      "matchKey": "GER-CIV",
+      "market": "1X2",
+      "level": "error",
+      "code": "E_HOMEAWAY_SWAP",
+      "message": "1X2 hw/aw 2.37/3.16 → Heim-Favorit, aber Polymarket sieht Auswärts-Favorit — Heim/Auswärts-Quoten vermutlich vertauscht",
+      "pickSnapshot": {
+        "verdict": null,
+        "odds": null,
+        "modelOdds": null,
+        "edgePP": null,
+        "clvPP": null,
+        "dataQuality": null
       }
     }
   ]

@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-20T14:59:28Z",
-    "total_records": 63
+    "updated_at": "2026-06-20T22:30:04Z",
+    "total_records": 67
   },
   "records": [
     {
@@ -1164,6 +1164,56 @@
       "lateEntry": false
     },
     {
+      "key": "E-2-GER-CIV|Heimsieg",
+      "matchKey": "E-2-GER-CIV",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.14
+        },
+        {
+          "name": "travel_burden",
+          "score": -1.0
+        },
+        {
+          "name": "smart_money",
+          "score": 0.77
+        }
+      ],
+      "resolvedAt": "2026-06-20T22:09:53Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "E-2-GER-CIV|Über 2.5 Tore",
+      "matchKey": "E-2-GER-CIV",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.5
+        },
+        {
+          "name": "form_trend",
+          "score": 3.06
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.88
+        }
+      ],
+      "resolvedAt": "2026-06-20T22:09:53Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
       "key": "F-1-NED-JPN|AH Auswärts +0.5",
       "matchKey": "F-1-NED-JPN",
       "market": "AH Auswärts +0.5",
@@ -1315,6 +1365,56 @@
       "source": "model",
       "convictionScore": 4,
       "lateEntry": false
+    },
+    {
+      "key": "F-2-NED-SWE|Beide Teams treffen — Ja",
+      "matchKey": "F-2-NED-SWE",
+      "market": "Beide Teams treffen — Ja",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.33
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.03
+        }
+      ],
+      "resolvedAt": "2026-06-20T21:10:08Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "F-2-NED-SWE|Über 2.5 Tore",
+      "matchKey": "F-2-NED-SWE",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 4.0
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -1.8
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.88
+        }
+      ],
+      "resolvedAt": "2026-06-20T21:10:08Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "G-1-IRN-NZL|Unter 2.5 Tore",
