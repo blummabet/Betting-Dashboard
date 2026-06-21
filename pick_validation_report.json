@@ -1,8 +1,8 @@
 {
-  "lastRun": "2026-06-21T13:54:40.534271+00:00",
+  "lastRun": "2026-06-21T17:24:31.473701+00:00",
   "stats": {
-    "total": 130,
-    "errors": 0,
+    "total": 131,
+    "errors": 1,
     "warnings": 1,
     "ok": 129
   },
@@ -20,6 +20,21 @@
         "edgePP": -3,
         "clvPP": -3.96,
         "dataQuality": "steam"
+      }
+    },
+    {
+      "matchKey": "CPV-SAU",
+      "market": "1X2",
+      "level": "error",
+      "code": "E_HOMEAWAY_SWAP",
+      "message": "1X2 hw/aw 2.48/2.57 → Heim-Favorit, aber Polymarket sieht Auswärts-Favorit — Heim/Auswärts-Quoten vermutlich vertauscht",
+      "pickSnapshot": {
+        "verdict": null,
+        "odds": null,
+        "modelOdds": null,
+        "edgePP": null,
+        "clvPP": null,
+        "dataQuality": null
       }
     }
   ]
