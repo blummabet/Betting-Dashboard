@@ -23,29 +23,31 @@ PREVIEW_DAYS = 60   # Abdeckung für gesamte WM inkl. KO-Runden (bis 19. Juli)
 # ── Textbausteine ──────────────────────────────────────────────────────────────
 
 def _fav_phrase(fav: str, gap: int) -> str:
+    # 21.06.2026 (Lucas): KEINE Elo-Wörter/Zahlen mehr — klingt nach Tabellenkalkulation.
+    # Favoriten-Framing in normaler Fußball-Sprache.
     if gap >= 250:
         opts = [
             f"{fav} geht als haushoher Favorit in diese Partie",
-            f"{fav} ist der mit Abstand stärkste Gegner im Duell",
-            f"Auf dem Papier ist {fav} klar überlegen",
+            f"{fav} ist auf dem Papier klar überlegen",
+            f"Alles andere als ein Sieg von {fav} wäre eine Überraschung",
         ]
     elif gap >= 150:
         opts = [
-            f"{fav} ist deutlicher Favorit laut Elo-Modell",
-            f"{fav} hat einen komfortablen Elo-Vorsprung",
-            f"Das Modell sieht {fav} klar vorne",
+            f"{fav} ist der klare Favorit in diesem Duell",
+            f"{fav} geht mit der Favoritenrolle ins Spiel",
+            f"Die Rollen sind verteilt: {fav} ist vorne",
         ]
     elif gap >= 75:
         opts = [
             f"{fav} geht als leichter Favorit ins Rennen",
-            f"{fav} hat einen moderaten Qualitätsvorteil",
-            f"Leichte Überlegenheit für {fav} laut Elo",
+            f"{fav} hat einen kleinen Qualitätsvorteil",
+            f"Ein hauchdünner Vorteil für {fav}",
         ]
     else:
         opts = [
             "Auf dem Papier ein offenes Duell",
-            "Die Elo-Werte liegen eng beieinander",
-            "Ausgeglichene Partie — alles ist möglich",
+            "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance",
+            "Schwer auszurechnen: hier ist alles drin",
         ]
     return random.choice(opts)
 
@@ -83,64 +85,84 @@ def _context_phrase(home: str, away: str, info: dict) -> str:
     elif matchday == 2:
         parts.append(f"In Spieltag {matchday} wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln")
 
-    if not parts:
-        # Fallback: Form
-        hf = info.get("homeForm")
-        af = info.get("awayForm")
-        if hf and af:
-            hg = hf.get("avgGoals", 0) or 0
-            ag = af.get("avgGoals", 0) or 0
-            if hg > ag + 0.5:
-                parts.append(f"{home} zeigt die offensivstärkere Form der letzten Wochen ({hg:.1f} vs {ag:.1f} Tore/Spiel)")
-            elif ag > hg + 0.5:
-                parts.append(f"{away} kommt in besserer Torform in dieses Spiel ({ag:.1f} vs {hg:.1f} Tore/Spiel)")
-            else:
-                parts.append(f"Beide Teams kommen mit ähnlicher Torquote in diese Partie")
-        else:
-            opts = [
-                f"Beide Teams wollen früh ein Zeichen setzen",
-                f"Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen",
-                f"Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend",
-            ]
-            parts.append(random.choice(opts))
+    # Form-Kontext als ZUSÄTZLICHE Farbe (richer) — aber PICK-SICHER (21.06.2026): die
+    # Tor-Richtungs-Behauptung darf dem Haupt-Pick NICHT widersprechen (kein „torreich" über
+    # einem Unter-Pick). Richtung des Haupt-Picks aus den Picks ableiten und nur konsistente
+    # Aussage zulassen.
+    _pk = " ".join((p.get("market") or "").lower() for p in (info.get("picks") or [])
+                   if not p.get("trackingExcluded") and p.get("verdict") in ("BET", "ABWÄGEN"))
+    _wants_over  = any(t in _pk for t in ("über", "over")) or ("beide teams treffen" in _pk and "nein" not in _pk)
+    _wants_under = any(t in _pk for t in ("unter", "under")) or ("treffen — nein" in _pk or "btts — nein" in _pk)
+    hf = info.get("homeForm")
+    af = info.get("awayForm")
+    if hf and af:
+        hg = hf.get("avgGoals", 0) or 0
+        ag = af.get("avgGoals", 0) or 0
+        if hg + ag >= 3.2 and not _wants_under:
+            parts.append("beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin")
+        elif 0 < hg + ag <= 2.0 and not _wants_over:
+            parts.append("zuletzt taten sich beide vor dem Tor schwer — eher eine zähe Partie")
 
-    return parts[0] if parts else ""
+    if not parts:
+        opts = [
+            "beide Teams wollen früh ein Zeichen setzen",
+            "auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen",
+            "der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend",
+        ]
+        parts.append(random.choice(opts))
+
+    # Bis zu 2 Kontext-Teile für mehr Substanz (richer)
+    sel = parts[:2]
+    return ". ".join(s[0].upper() + s[1:] for s in sel)
 
 
 def _pick_phrase(picks: list, home: str, away: str) -> str:
-    bet_picks = [p for p in picks if p.get("verdict") == "BET" and p.get("edgePP", 0) >= 4]
-    abw_picks = [p for p in picks if p.get("verdict") == "ABWÄGEN" and p.get("edgePP", 0) >= 4]
+    # 21.06.2026 (Lucas, Single-Source): Pick-Auswahl wie im Telegram/Card-Renderer —
+    # BET vor ABWÄGEN, trackingExcluded raus, KEIN edge-Floor (Cards sind nicht edge-gated).
+    # So nennt die Vorschau denselben Haupt-Pick wie die Karten darunter (kein Widerspruch).
+    live = [p for p in picks
+            if not p.get("trackingExcluded") and not p.get("boldAlt")
+            and p.get("verdict") in ("BET", "ABWÄGEN")]
+    bet_picks = [p for p in live if p.get("verdict") == "BET"]
+    abw_picks = [p for p in live if p.get("verdict") == "ABWÄGEN"]
 
     if bet_picks:
         p    = bet_picks[0]
         edge = p.get("edgePP", "?")
         odds = p.get("odds", "?")
         mkt  = p.get("market", "")
+        edge_part = f" — der Markt unterschätzt das um {edge}pp" if isinstance(edge, (int, float)) and edge > 0 else ""
         opts = [
-            f"Unser Modell sieht klar Edge auf {mkt} @{odds} (+{edge}pp gegenüber dem Markt)",
-            f"Das stärkste Signal: {mkt} @{odds} mit einem Edge von +{edge}pp",
-            f"Konkret empfehlen wir {mkt} @{odds} — der Markt unterschätzt diese Option um {edge}pp",
+            f"Unser stärkstes Signal heute: {mkt} @{odds}{edge_part}",
+            f"Klarer Fall für uns — {mkt} @{odds}{edge_part}",
+            f"Wir setzen auf {mkt} @{odds}{edge_part}",
         ]
         return random.choice(opts)
     elif abw_picks:
         p    = abw_picks[0]
         odds = p.get("odds", "?")
         mkt  = p.get("market", "")
-        return f"Potenzielle Value-Option bei {mkt} @{odds} — die Quote ist interessant, aber Edge knapp"
+        opts = [
+            f"Einen genaueren Blick wert: {mkt} @{odds} — hier sieht das Modell Value",
+            f"Spannend wird {mkt} @{odds}, wo unser Modell eine Chance erkennt",
+            f"Auf der Beobachtungsliste: {mkt} @{odds}",
+        ]
+        return random.choice(opts)
     else:
         opts = [
-            "Kein klarer Markt-Edge identifiziert — beobachten und abwarten",
-            "Das Modell sieht keine ausreichende Fehlbewertung durch den Markt",
-            "Wir verzichten heute auf eine konkrete Wettempfehlung",
+            "Heute kein klarer Markt-Vorteil — wir warten auf den besseren Moment",
+            "Das Modell sieht hier keine Fehlbewertung — kein Pick",
+            "Diesmal halten wir uns zurück: kein ausreichender Vorteil",
         ]
         return random.choice(opts)
 
 
 def _upset_phrase(score: int, fav: str, underdog: str, gap: int) -> str:
+    # Ohne Elo-Zahl (21.06.2026).
     if score >= 8:
-        return f"Trotz der Papierform ist {underdog} gefährlich — Elo-Gap von nur {gap} Punkten macht einen Upset realistisch"
+        return f"Vorsicht trotz Papierform: {underdog} ist brandgefährlich — ein Upset ist absolut realistisch"
     elif score >= 6:
-        return f"Ein Überraschungsergebnis ist nicht ausgeschlossen — {underdog} hat das Potenzial zu überraschen"
+        return f"Ein Überraschungsergebnis ist nicht ausgeschlossen — {underdog} hat das Zeug dazu"
     return ""
 
 
