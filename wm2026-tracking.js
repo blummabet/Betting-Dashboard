@@ -173,31 +173,17 @@
     // FIX 11.06.2026: trackingExcluded raus (Cross-Market-Konflikte wie
     // CAN-BIH "AH Heim" neben "Auswärtssieg"). Das Tracking filterte nur nach
     // Verdict → der Konflikt-Pick blieb sichtbar.
-    // FIX 14.06.2026: Card-Demotion replizieren, damit Tracking & Cards konsistent sind.
-    // Spiele, deren bester Pick eine riskante Variante (Quote >3.0 ODER AH-Favorit ≤ −1.5)
-    // OHNE sichere Alternative ist, rendert die Card als „Beobachtungs-Spiel" (kein Pick).
-    // Vorher listete das Tracking deren alte hohe Quoten trotzdem → Widerspruch (Lucas 14.06).
-    const _ahFavLine = (m) => { const x = /AH (?:Heim|Auswärts) −([\d.]+)/.exec(m || ''); return x ? parseFloat(x[1]) : 0; };
-    const _rowDemoted = (picks) => {
-      const live = picks.filter(p => !p.trackingExcluded && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN'));
-      if (!live.length) return false;
-      const hero = [...live].sort((a, b) => {
-        const aS = !!a.saferAltFor, bS = !!b.saferAltFor;
-        if (aS && !bS) return -1; if (bS && !aS) return 1;
-        if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
-        if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
-        const ca = a.convictionScore || 0, cb = b.convictionScore || 0;
-        if (cb !== ca) return cb - ca;
-        return (b.edgePP || 0) - (a.edgePP || 0);
-      })[0];
-      return hero && ((hero.odds || 0) > 3.0 || _ahFavLine(hero.market) >= 1.5)
-                  && !hero.boldAlt && !hero.saferAltFor;
-    };
-
+    // FIX 21.06.2026 (Lucas, Single-Source): KEINE eigene Risky-Hero-Demotion mehr hier.
+    // Die „riskante Variante → Beobachtungs-Spiel"-Entscheidung trifft AUSSCHLIESSLICH der
+    // Engine (generate_wm_picks.py: stempelt trackingExcluded + demotedRiskyGame, INKL. der
+    // Steam-Ausnahme bei sicher abgeleiteten Quoten). Cards (renderer.js) + Telegram vertrauen
+    // exakt diesen Flags. Das Tracking re-derivte die Demotion vorher selbst — aber OHNE die
+    // Steam-Ausnahme — und verbarg dadurch legitime Steam-Picks (z.B. ECU-CUW „AH Heim −1.5 @1.5"),
+    // die in Telegram + Card sichtbar waren → Divergenz. trackingExcluded (unten) ist die
+    // einzige Quelle. Tracking == Card == Telegram == Engine.
     const _ahGrp = (m) => { const x = /^(AH (?:Heim|Auswärts) [+−])/.exec(m || ''); return x ? x[1] : null; };
     const flatPicks = [];
     for (const row of filtered) {
-      if (_rowDemoted(row.picks)) continue;   // Spiel = Beobachtung in der Card → auch hier raus
       // AH-Linien-Dedup pro Spiel (14.06.2026): je Seite+Vorzeichen nur die beste Linie
       // (höchste Edge). „AH Auswärts +0.5" UND „+0.75" sind redundant — eine reicht.
       const _vr = (v) => v === 'BET' ? 0 : v === 'ABWÄGEN' ? 1 : v === 'BEOBACHTEN' ? 2 : 3;
