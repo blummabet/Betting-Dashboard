@@ -43,14 +43,21 @@ def _kickoff_passed(fx):
         return False
 
 BASE = Path(__file__).parent
-PRICES_FILE = BASE / "wm_poly_prices.json"
-OUT_FILE    = BASE / "wm_poly_smartmoney.json"
-HOLDERS_URL = "https://data-api.polymarket.com/holders?market={cond}&limit=200"
+PRICES_FILE  = BASE / "wm_poly_prices.json"
+OUT_FILE     = BASE / "wm_poly_smartmoney.json"
+WALLETS_FILE = BASE / "wm_poly_wallets.json"     # 21.06.2026: Wallet-Dashboard
+HOLDERS_URL  = "https://data-api.polymarket.com/holders?market={cond}&limit=200"
+TRADES_URL   = "https://data-api.polymarket.com/trades?market={cond}&limit=100"
 
 TOP_N           = 10        # für topHolderShare
 BIG_TRADER_USD  = 1000      # Wallet ab $ = „Top-Trader"
 HOLDERS_TIMEOUT = 15
 MIN_WRITE_USD   = 5000      # darunter ($0.00M-Platzhalter/gelaufene Spiele) NICHT schreiben
+
+# Wallet-Dashboard (21.06.2026, Lucas): einzelne fette Einsätze sichtbar machen
+TOP_WALLETS_PER_OUTCOME = 8      # wie viele Einzel-Wallets je Outcome behalten
+BIG_TRADE_USD           = 2000   # Trade ab $ kommt in den „große Trades"-Feed
+LEADERBOARD_MAX         = 60     # globale Bestenliste begrenzen
 
 
 def _http_get(url: str):
@@ -103,8 +110,49 @@ def _outcome_smartmoney(condition: str, yes_token: str, price):
     usd = tot_amt * float(price)             # Shares × $/Share = $-Wert der Positionen
     top = sum(amounts[:TOP_N]) / tot_amt if tot_amt > 0 else 0.0
     big = sum(1 for _, a in holders if a * float(price) >= BIG_TRADER_USD)
+    # Einzel-Wallets (Top-N nach Größe) fürs Wallet-Dashboard behalten
+    top_wallets = [{"wallet": w, "usd": round(a * float(price), 0), "shares": round(a, 0)}
+                   for w, a in sorted(holders, key=lambda x: x[1], reverse=True)[:TOP_WALLETS_PER_OUTCOME]]
     return {"usd": round(usd, 0), "topHolderShare": round(top, 3),
-            "holders": len(holders), "_big": big}
+            "holders": len(holders), "_big": big, "_wallets": top_wallets}
+
+
+def _big_trades(condition, pick_label, side, price):
+    """Große jüngste Trades (≥ BIG_TRADE_USD) auf einen Outcome-Markt → Liste.
+    /trades liefert je Trade {proxyWallet, side BUY/SELL, size, price, timestamp}.
+    Defensiv geparst (blind gebaut — Polymarket geoblockt). Leere Liste bei Fehlern."""
+    if not condition:
+        return []
+    data = _http_get(TRADES_URL.format(cond=condition))
+    rows = data if isinstance(data, list) else (data.get("trades") if isinstance(data, dict) else None)
+    out = []
+    for t in (rows or []):
+        if not isinstance(t, dict):
+            continue
+        w = t.get("proxyWallet") or t.get("proxy_wallet") or t.get("wallet")
+        sz = t.get("size") or t.get("amount") or t.get("shares")
+        pr = t.get("price")
+        action = (t.get("side") or t.get("type") or "").upper()
+        ts = t.get("timestamp") or t.get("time") or t.get("matchTime")
+        try:
+            sz = float(sz); pr = float(pr) if pr is not None else float(price)
+        except (TypeError, ValueError):
+            continue
+        usd = sz * pr
+        if not w or usd < BIG_TRADE_USD:
+            continue
+        # Unix-Sekunden → ISO falls nötig
+        ts_iso = ts
+        try:
+            if ts and (isinstance(ts, (int, float)) or str(ts).isdigit()):
+                ts_iso = datetime.fromtimestamp(int(ts), timezone.utc).isoformat()
+        except Exception:
+            ts_iso = None
+        out.append({"wallet": w, "side": side, "pick": pick_label,
+                    "usd": round(usd, 0), "price": round(pr, 3),
+                    "action": "BUY" if action.startswith("B") else ("SELL" if action.startswith("S") else action),
+                    "ts": ts_iso})
+    return out
 
 
 def main():
@@ -116,6 +164,8 @@ def main():
               "ZUERST laufen (schreibt hwCondition/drCondition/awCondition). Manuell testen: "
               "erst Preise, dann Smart-Money.")
     matches = {}
+    wallet_matches = {}          # 21.06.2026: Wallet-Dashboard pro Spiel
+    all_positions, all_trades = [], []
     n_ok = 0
     n_skip_ko = 0
     for fx in fixtures:
@@ -125,33 +175,67 @@ def main():
         if _kickoff_passed(fx):
             n_skip_ko += 1
             continue   # gelaufen/in-play → offenes Interesse ist Phantom
+        home_nm = fx.get("home") or fx.get("homeName") or fx.get("homeId") or key.split("-")[0]
+        away_nm = fx.get("away") or fx.get("awayName") or fx.get("awayId") or key.split("-")[-1]
+        # side → was wird gewettet (Pick-Label)
+        pick_label = {"home": f"{home_nm} Sieg", "draw": "Unentschieden", "away": f"{away_nm} Sieg"}
         legs = {
             "home": (fx.get("hwCondition"), (fx.get("hwTokens") or [None])[0], fx.get("poly_hw")),
             "draw": (fx.get("drCondition"), (fx.get("drTokens") or [None])[0], fx.get("poly_dr")),
             "away": (fx.get("awCondition"), (fx.get("awTokens") or [None])[0], fx.get("poly_aw")),
         }
         outcomes, total, top_traders = {}, 0.0, 0
+        positions, trades = [], []
         for side, (cond, tok, price) in legs.items():
             sm = _outcome_smartmoney(cond, tok, price)
-            if sm:
-                outcomes[side] = sm
-                total += sm["usd"]
-                top_traders += sm.pop("_big")
+            if not sm:
+                continue
+            wallets = sm.pop("_wallets", [])
+            outcomes[side] = sm
+            total += sm["usd"]
+            top_traders += sm.pop("_big")
+            for w in wallets:
+                positions.append({"wallet": w["wallet"], "usd": w["usd"], "shares": w["shares"],
+                                  "side": side, "pick": pick_label[side]})
+            trades.extend(_big_trades(cond, pick_label[side], side, price))
         if not outcomes or total < MIN_WRITE_USD:
             continue   # $0.00M-Platzhalter → nicht schreiben
         for side, o in outcomes.items():
             o["share"] = round(o["usd"] / total, 3)
         matches[key] = {"totalUsd": round(total, 0), "topTraders": top_traders,
                         "outcomes": outcomes}
+        # Wallet-Dashboard-Daten
+        positions.sort(key=lambda p: p["usd"], reverse=True)
+        trades.sort(key=lambda t: (t.get("ts") or ""), reverse=True)
+        wallet_matches[key] = {"home": home_nm, "away": away_nm,
+                               "topPositions": positions[:12], "bigTrades": trades[:20]}
+        for p in positions:
+            all_positions.append({**p, "match": f"{home_nm} – {away_nm}", "key": key})
+        for t in trades:
+            all_trades.append({**t, "match": f"{home_nm} – {away_nm}", "key": key})
         n_ok += 1
         print(f"  ✅ {key}: ${total/1e6:.2f}M · "
-              + " · ".join(f"{s} {o['share']*100:.0f}%" for s, o in outcomes.items()))
+              + " · ".join(f"{s} {o['share']*100:.0f}%" for s, o in outcomes.items())
+              + f" · {len(positions)} Wallets, {len(trades)} große Trades")
 
     OUT_FILE.write_text(json.dumps(
         {"matches": matches, "updatedAt": datetime.now(timezone.utc).isoformat()},
         ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # Globale Bestenliste + Trade-Feed (für das Wallet-Dashboard)
+    all_positions.sort(key=lambda p: p["usd"], reverse=True)
+    all_trades.sort(key=lambda t: (t.get("ts") or ""), reverse=True)
+    WALLETS_FILE.write_text(json.dumps({
+        "matches":          wallet_matches,
+        "topPositionsAll":  all_positions[:LEADERBOARD_MAX],
+        "bigTradesAll":     all_trades[:LEADERBOARD_MAX],
+        "updatedAt":        datetime.now(timezone.utc).isoformat(),
+    }, ensure_ascii=False, indent=2), encoding="utf-8")
+
     print(f"\n💾 {n_ok}/{len(fixtures)} Spiele mit Smart-Money "
           f"({n_skip_ko} gelaufen übersprungen) → {OUT_FILE.name}")
+    print(f"🐋 Wallet-Dashboard: {len(all_positions)} Positionen, {len(all_trades)} große Trades "
+          f"→ {WALLETS_FILE.name}")
 
 
 if __name__ == "__main__":

@@ -34,14 +34,14 @@ const _ALL_PANELS = [
   'mainContent', 'trackingV2Panel', 'resultsPanel',
   'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
   'tiktokStudioPanel',
-  'polymarketPanel', 'polyTraderPanel',
+  'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel',
   'heartPanel', 'statusPanel',
 ];
 
 // Top-nav button IDs
 const _TOP_NAV_IDS = [
   'navNational', 'navIntl', 'navSharp',
-  'navPolyTrader', 'navPolymarket', 'navHeart', 'navStatus',
+  'navPolyTrader', 'navPolymarket', 'navPolyWallets', 'navHeart', 'navStatus',
 ];
 
 function showView(view) {
@@ -68,6 +68,7 @@ function showView(view) {
     'sharp':             'mainContent',
     'polytrading':       'polyTraderPanel',
     'polybetting':       'polymarketPanel',
+    'polywallets':       'polyWalletsPanel',
     'heart':             'heartPanel',
     'status':            'statusPanel',
   };
@@ -119,6 +120,7 @@ function showView(view) {
     'sharp':       'navSharp',
     'polytrading': 'navPolyTrader',
     'polybetting': 'navPolymarket',
+    'polywallets': 'navPolyWallets',
     'heart':       'navHeart',
     'status':      'navStatus',
   };
@@ -141,6 +143,7 @@ function showView(view) {
   if (view === 'status')            { initStatus(); }
   if (view === 'polybetting')       initPolymarket();
   if (view === 'polytrading')       initPolyTrader();
+  if (view === 'polywallets'  && typeof initPolyWallets === 'function') initPolyWallets();
   if (view === 'national-tracking' && typeof initResultsV2      === 'function') initResultsV2();
   if (view === 'intl-cards'        && typeof initIntlCards     === 'function') initIntlCards();
   if (view === 'intl-tracking'     && typeof initIntlTracking  === 'function') initIntlTracking();
