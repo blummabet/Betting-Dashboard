@@ -475,6 +475,39 @@ def check_odds_freshness(ctx):
                 "warnt früh. Root-Cause: fetch_wm_odds-Workflow/Cron prüfen.")
 
 
+SWAP_HISTORY_FILE = _BASE / "wm_swap_history.json"
+
+
+def _record_swap_history(fails, now):
+    """Append-only Verlauf der Home/Away-Swap-Treffer (20.06.2026, Lucas: „schauen ob's öfter
+    kommt"). Dedup pro (Tag, Spiel), prunt > 120 Tage. Returns (gesamt, distinkte Tage, zuletzt)."""
+    import json
+    try:
+        try:
+            hist = json.loads(open(SWAP_HISTORY_FILE, encoding="utf-8").read())
+        except Exception:
+            hist = {"events": []}
+        events = hist.get("events", [])
+        today = now.date().isoformat()
+        seen = {(e.get("date"), e.get("fixture")) for e in events}
+        for f in fails:
+            fx = f.split(":", 1)[0].strip()
+            if (today, fx) not in seen:
+                events.append({"date": today, "fixture": fx})
+                seen.add((today, fx))
+        # Prune > 120 Tage
+        from datetime import timedelta
+        cutoff = (now.date() - timedelta(days=120)).isoformat()
+        events = [e for e in events if (e.get("date") or "") >= cutoff]
+        hist["events"] = events
+        with open(SWAP_HISTORY_FILE, "w", encoding="utf-8") as fh:
+            json.dump(hist, fh, ensure_ascii=False, indent=2)
+        days = sorted({e["date"] for e in events})
+        return len(events), len(days), (events[-1] if events else None)
+    except Exception:
+        return 0, 0, None
+
+
 @integrity_check
 def check_homeaway_consistent(ctx):
     fails = []
@@ -499,9 +532,14 @@ def check_homeaway_consistent(ctx):
         if abs(hw - aw) > 0.15 and (hw < aw) != (phw > paw):
             fails.append(f"{mk}: Pinnacle-Fav {'Heim' if hw < aw else 'Ausw'} (hw {hw}/aw {aw}) ≠ "
                          f"Poly-Fav {'Heim' if phw > paw else 'Ausw'} (Swap-Verdacht)")
-    return _chk("homeaway_consistent", "Home/Away nicht vertauscht (Pinn vs Poly)", "error", fails,
-                "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet. "
-                "Bei knappen Quoten ggf. echte Markt-Uneinigkeit — Fixture-Orientierung prüfen.")
+    hint = ("fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet. "
+            "Bei knappen Quoten ggf. echte Markt-Uneinigkeit — Fixture-Orientierung prüfen.")
+    if fails:
+        total, ndays, last = _record_swap_history(fails, ctx.now)
+        if total:
+            last_s = f" (zuletzt {last['fixture']} am {last['date'][5:]})" if last else ""
+            hint += f" · Verlauf: {total}× an {ndays} Tag(en){last_s} — erst bei Muster fixen."
+    return _chk("homeaway_consistent", "Home/Away nicht vertauscht (Pinn vs Poly)", "error", fails, hint)
 
 
 @integrity_check

@@ -148,7 +148,7 @@ class TestConfigJsonHasAllSellKeys(unittest.TestCase):
         "profit_target", "pinn_gap_pp", "min_profit_pp",
         "age_decay_hours", "age_decay_profit_target",
         "sharp_against_gap_pp", "loss_deep_pct", "loss_deep_hours_ahead",
-        "age_loss_hours", "age_loss_threshold_pct",
+        "age_loss_hours", "age_loss_threshold_pct", "age_loss_max_hours_left",
         "no_inplay_loss_sell",
     ]
 
@@ -326,6 +326,52 @@ class TestAhBttsValuation(unittest.TestCase):
         pos = self.m.check_position(self._pos("AH Heim -1.5", "GIBTSNICHT"))
         self.assertIsNone(pos["currentPrice"])
         self.assertFalse(pos.get("sellSignal"))
+
+
+class TestAgeLossKickoffGate(unittest.TestCase):
+    """FIX 21.06.2026 (Geld-Bug): Age-Loss (LOSS 3) verkaufte KO-blind. NED-TUN
+    'Under 2.5' wurde 127h alt bei -10.6% AUTO-VERKAUFT, obwohl das Spiel noch
+    Tage weg war — die These hatte ihr Event noch vor sich und das -10.6% war
+    großteils nur Bid/Ask-Spread. Den Spread zahlt man erst BEIM Verkauf; früh
+    verkaufen REALISIERT ihn. Fix: Age-Loss nur wenn Anpfiff nah (<=48h)."""
+
+    def setUp(self):
+        import importlib, cocobet_config, manage_wm_poly_positions as m
+        importlib.reload(cocobet_config); importlib.reload(m)
+        self.m = m
+        # Live-Buch deterministisch: Bid 0.380 vs Entry 0.425 → -10.6%
+        self._orig_book = m.fetch_token_book
+        m.fetch_token_book = lambda tid: {"bid": 0.380, "ask": 0.420, "spreadPP": 4.0}
+
+    def tearDown(self):
+        self.m.fetch_token_book = self._orig_book
+
+    def _pos(self, match_in_hours):
+        from datetime import datetime, timezone, timedelta
+        now = datetime.now(timezone.utc)
+        placed = (now - timedelta(hours=127)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        match = (now + timedelta(hours=match_in_hours)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        return {"market": "Under 2.5 Tore", "tokenId": "U25TOK",
+                "homeId": "NED", "awayId": "TUN", "entryPrice": 0.425,
+                "priceKey": "u25", "placedAt": placed, "matchDate": match}
+
+    def test_no_agesell_when_match_days_away(self):
+        # 5 Tage bis Anpfiff → KEIN Age-Loss-Verkauf (These intakt, Spread-Minus halten)
+        pos = self.m.check_position(self._pos(120))
+        self.assertAlmostEqual(pos["pnlPct"], -10.6, delta=0.3)
+        self.assertFalse(pos["sellSignal"], f"Frühverkauf! Grund: {pos.get('sellReason')}")
+
+    def test_agesell_when_kickoff_near(self):
+        # 24h bis Anpfiff → Age-Loss greift (alt + Minus + Spread, Exit-Fenster)
+        pos = self.m.check_position(self._pos(24))
+        self.assertTrue(pos["sellSignal"])
+        self.assertIn("Age-Loss", pos["sellReason"])
+
+    def test_no_agesell_when_matchdate_unknown(self):
+        # Kein matchDate → hours_left None → konservativ halten (kein Blind-Verkauf)
+        p = self._pos(24); p["matchDate"] = ""
+        pos = self.m.check_position(p)
+        self.assertFalse(pos["sellSignal"])
 
 
 if __name__ == "__main__":
