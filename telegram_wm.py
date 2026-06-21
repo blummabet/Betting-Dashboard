@@ -393,7 +393,7 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
         lines.append(f"━━ Gruppe {m['group']} · Spieltag {m['matchday']} ━━")
 
         if us >= 6:
-            lines.append(f"{upset_label(us)} · Elo-Gap {abs((m['homeElo'] or 0) - (m['awayElo'] or 0))} Pkt")
+            lines.append(f"{upset_label(us)}")   # ohne Elo-Gap-Zahl (21.06.2026, Lucas)
 
         lines.append(
             f"{m['homeFlag']} <b>{m['homeName']}</b> vs {m['awayFlag']} <b>{m['awayName']}</b>"
@@ -401,25 +401,24 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
         venue_str = short_venue(m["venue"])
         lines.append(f"📅 {m['dispTime']} Uhr{' · ' + venue_str if venue_str else ''}")
 
-        # Elo-Info wenn vorhanden
-        if m["homeElo"] and m["awayElo"]:
-            elo_diff = m["homeElo"] - m["awayElo"]
-            fav = m["homeName"] if elo_diff > 0 else m["awayName"]
-            lines.append(f"⚡ Elo: {m['homeElo']} vs {m['awayElo']} → Favorit: {fav}")
-
-        # Einleitung — pick-KONSISTENT (FIX 13.06.2026). Vorher generische
-        # Favoriten-Vorschau (aiSnippet), die den Picks widersprach (z.B. „Brasilien
-        # offensivstärker" über Unter-/Marokko-Handicap → User verwirrt). Jetzt richtet
-        # sich der Satz nach dem Haupt-Pick. Fallback auf aiSnippet nur wenn kein Pick.
+        # KEIN roher Elo-Block mehr (21.06.2026, Lucas: „das ganze Elo-Ding ist nicht
+        # notwendig"). Der Favorit fließt nur intern in die pick-konsistente Einleitung.
         _hero = (bet_picks or abw_picks or [None])[0]
         _fav = None
         if m["homeElo"] and m["awayElo"]:
             _fav = m["homeName"] if m["homeElo"] >= m["awayElo"] else m["awayName"]
+
+        # Content (21.06.2026, reicher): ZWEI Zeilen — erst das Elo-freie Szene-Snippet
+        # (Kontext/Stimmung), dann die pick-KONSISTENTE Pick-Zeile. Das Snippet macht keine
+        # Richtungs-Wette mehr (Generator pick-aware) → kein Widerspruch zur Pick-Zeile.
+        _scene = m.get("aiSnippet")
         _intro = _pick_intro(_hero, m["homeName"], m["awayName"], _fav)
+        _first = True
+        if _scene:
+            lines.append(f"\n✦ <i>{_scene}</i>")
+            _first = False
         if _intro:
-            lines.append(f"\n✦ <i>{_intro}</i>")
-        elif m.get("aiSnippet"):
-            lines.append(f"\n✦ <i>{m['aiSnippet']}</i>")
+            lines.append((f"\n✦ <i>{_intro}</i>" if _first else f"✦ <i>{_intro}</i>"))
 
         if not bet_picks and not abw_picks:
             lines.append("🔇 Kein Pick mit ausreichend Edge")
@@ -478,11 +477,14 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                 lines.append(
                     f"🟢 <b>BET: {p['market']} @{p.get('odds', '?')}</b>{conv_badge}"
                 )
-                # Signal-Bestätigung NUR wenn welche stützen (kein „0/14"-Verwirrer).
+                # Signal-Bestätigung NUR wenn welche stützen. KEIN fixer Nenner mehr
+                # (21.06.2026, Lucas: „/14" war veraltet — wir haben 19 Signale, und nicht
+                # jedes ist je Markt anwendbar). Echte Zahlen statt fragilem Hardcode.
                 n_pos = p.get("signalCountPos") or 0
                 n_neg = p.get("signalCountNeg") or 0
                 if n_pos > 0:
-                    lines.append(f"   💡 {n_pos} von 14 Signalen stützen")
+                    _neg = f", {n_neg} dagegen" if n_neg else ""
+                    lines.append(f"   💡 {n_pos} Signale dafür{_neg}")
 
                 # Sharp-Move als eigene Zeile mit narrativem Text
                 if p.get("sharpMoveActive"):
@@ -523,7 +525,7 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                     elif conv_score >= 6:
                         badges.append("⭐ Main-Pick")
                 if n_pos > 0:
-                    badges.append(f"{n_pos}/14 Signale stützen")
+                    badges.append(f"{n_pos} Signale dafür")
                 if p.get("sharpMoveActive"):
                     badges.append("🔥")
                 if p.get("synthetic"):
@@ -537,7 +539,7 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
 
     # Footer
     lines.append(bilanz_footer(wm))
-    lines.append("\n🤖 Powered by CocoBet · Elo · Poisson · 3-Signal-Verdict")
+    lines.append("\n🤖 CocoBet · datengetriebenes Pick-Modell mit 19 Signalen")
 
     return "\n".join(lines)
 
