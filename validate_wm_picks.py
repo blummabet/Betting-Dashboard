@@ -107,8 +107,13 @@ def validate_homeaway_swap(wm: dict, issues: list) -> None:
         hw, aw = od.get("hw"), od.get("aw")
         if not (isinstance(hw, (int, float)) and isinstance(aw, (int, float))):
             continue
-        if abs(hw - aw) < 0.05:
-            continue  # echter Münzwurf — Richtung nicht aussagekräftig
+        if abs(hw - aw) < 0.15:
+            # Münzwurf — Richtung nicht aussagekräftig. Schwelle 0.15 IDENTISCH zum
+            # Integritäts-Guard check_homeaway_consistent (21.06.2026, Lucas): vorher 0.05
+            # → der Validator schrie „SWAP" bei knappen Spielen (CPV-SAU hw/aw 2.48/2.57,
+            # Δ0.09), die der Guard korrekt als „sauber" durchließ → widersprüchliche Meldungen
+            # + Telegram-Fehlalarm. Beide Swap-Detektoren nutzen jetzt dieselbe Schwelle.
+            continue
         x2_home_fav = hw < aw
 
         # Referenz 1: Polymarket (primär, unabhängig)
