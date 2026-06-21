@@ -222,5 +222,64 @@ class TestNewIntegrityGuards(unittest.TestCase):
         self.assertTrue(c["ok"])
 
 
+class TestSignalCoverageGuard(unittest.TestCase):
+    """Coverage-Guard (21.06.2026, Lucas-Sorge: 'finden die Guards stille Fehler?').
+    Schlägt an, wenn ein zuletzt zuverlässig feuerndes Signal heute slatewide 0 zeigt.
+    History wird via _lazy-Monkeypatch injiziert (deterministisch, kein Disk)."""
+
+    def setUp(self):
+        import wm_data_integrity as W
+        self.W = W
+        self._orig = W._lazy
+        self.ctx = type("C", (), {})()
+
+    def tearDown(self):
+        self.W._lazy = self._orig
+
+    def _patch(self, hist):
+        orig = self._orig
+        self.W._lazy = lambda f: hist if "signal_history" in f else orig(f)
+
+    def _day(self, **per):
+        return {"date": "d", "perSignal": dict(per)}
+
+    def test_silent_signal_flagged(self):
+        # form_trend feuert 4 Tage zuverlässig, heute 0 → Verdacht
+        self._patch([
+            self._day(form_trend=140, xg_strength=120),
+            self._day(form_trend=145, xg_strength=125),
+            self._day(form_trend=150, xg_strength=130),
+            self._day(form_trend=148, xg_strength=128),
+            self._day(form_trend=0,   xg_strength=129),   # heute
+        ])
+        c = self.W.check_signal_coverage(self.ctx)
+        self.assertFalse(c["ok"])
+        self.assertTrue(any("form_trend" in f for f in c["failures"]))
+        self.assertEqual(c["severity"], "warn")
+
+    def test_intermittent_signal_not_flagged(self):
+        # Wetter hat einen Off-Tag im Fenster → intermittierend → kein Fehlalarm
+        self._patch([
+            self._day(weather_signal=30),
+            self._day(weather_signal=0),
+            self._day(weather_signal=35),
+            self._day(weather_signal=33),
+            self._day(weather_signal=0),   # heute auch 0, aber Baseline nicht durchgehend
+        ])
+        c = self.W.check_signal_coverage(self.ctx)
+        self.assertTrue(c["ok"])
+
+    def test_always_zero_signal_not_flagged(self):
+        # injury feuert nie (API leer) → war nie aktiv → kein Fehlalarm
+        self._patch([self._day(injury=0) for _ in range(5)])
+        c = self.W.check_signal_coverage(self.ctx)
+        self.assertTrue(c["ok"])
+
+    def test_too_little_history_ok(self):
+        self._patch([self._day(form_trend=100), self._day(form_trend=0)])
+        c = self.W.check_signal_coverage(self.ctx)
+        self.assertTrue(c["ok"])
+
+
 if __name__ == "__main__":
     unittest.main()

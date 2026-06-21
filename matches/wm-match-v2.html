@@ -293,7 +293,7 @@ const $=id=>document.getElementById(id);
 
 // Signal-Name → kurzes Label fürs UI
 const SIG_LABEL={
-  lead_lag_bias:'Pinnacle vs Soft-Books', public_static_bias:'Publikum vs Pinnacle',
+  lead_lag_bias:'Pinnacle vs Soft-Books (Lag)', public_static_bias:'Publikum vs Pinnacle (Soft-Konsens)',
   travel_burden:'Reise-Last', injury:'Ausfälle', form_trend:'Form', h2h_pattern:'Direkte Duelle',
   xg_strength:'Chancen-Qualität (xG)', polymarket_sharp:'Polymarket-Sharp', steam_lag:'Steam-Lag',
   pressure_index:'Druck & Anreiz', lineup_signal:'Aufstellung', apif_predictions:'Zweitmodell',
@@ -301,6 +301,26 @@ const SIG_LABEL={
   chance_creation:'Chancen-Kreation', form_rating:'Form-Rating', freshness_leg:'Pulse / Frische',
   smart_money:'Smart Money',
 };
+// Warum ein Signal HIER nicht feuert — ehrliche „sucht nach"-Beschreibung statt pauschal
+// „greift hier nicht" (21.06.2026, Lucas: Event-Page-Gründe). Keine Ops-Daten, reines Display.
+const SIG_OFF_REASON={
+  lead_lag_bias:'nur Sieg/Remis/Sieg', public_static_bias:'kein Soft-vs-Pinnacle-Gefälle',
+  travel_burden:'keine spürbare Reise-Last', injury:'keine Ausfall-Daten',
+  form_trend:'kein klarer Form-Trend', h2h_pattern:'kein klares Duell-Muster',
+  xg_strength:'kein xG-Vorsprung', polymarket_sharp:'Polymarket nicht als Anker',
+  steam_lag:'kein Pinnacle-Lag', pressure_index:'keine Druck-/Anreiz-Lage',
+  lineup_signal:'Aufstellung erst ~1h vor Anpfiff', apif_predictions:'kein Zweitmodell-Wert',
+  weather_signal:'kein Hitze-/Kälte-Faktor', incentive_signal:'keine Anreiz-Asymmetrie',
+  altitude_signal:'kein Höhen-Faktor', chance_creation:'kein Chancen-Signal',
+  form_rating:'kein Form-Rating-Edge', freshness_leg:'kein frischer Move',
+  smart_money:'keine Wallet-Konzentration',
+};
+function offReason(name,market){
+  if(name==='lead_lag_bias'){ const m=(market||'').toLowerCase();
+    const is1x2=/heimsieg|auswärtssieg|auswartssieg|unentsch|dnb|^1$|^2$|^x$/.test(m);
+    if(!is1x2) return 'gilt nur für Sieg/Remis/Sieg'; }
+  return SIG_OFF_REASON[name]||'greift hier nicht';
+}
 
 async function load(){
   const params=new URLSearchParams(location.search);
@@ -352,7 +372,15 @@ function render(P){
   renderOdds(P); renderPoly(P); renderStory(P); renderForm(P); renderDuell(P); renderGruppe(P);
   scrollspy();
 
-  $('foot').innerHTML=`CocoBet Engine · 19 Signale · Bayesian-Lernen · Pinnacle-Anker · Polymarket<br>Stand ${P.generatedAtHuman||''} · Keine Wettberatung · 18+`;
+  // Stale-Hinweis (21.06.2026, Lucas): wenn der Snapshot > 6h alt ist, sichtbar markieren —
+  // sonst wirkt eine Seite „still" (z.B. Aufstellung fehlt), die nur veraltet ist.
+  let standTxt=`Stand ${P.generatedAtHuman||''}`;
+  if(P.generatedAt){
+    const ageH=(Date.now()-new Date(P.generatedAt).getTime())/3.6e6;
+    if(ageH>6&&isFinite(ageH))
+      standTxt=`<span style="color:#e0a829;font-weight:600">⚠ Stand ${P.generatedAtHuman||''} (${Math.round(ageH)}h alt — wird automatisch neu gebaut)</span>`;
+  }
+  $('foot').innerHTML=`CocoBet Engine · 19 Signale · Bayesian-Lernen · Pinnacle-Anker · Polymarket<br>${standTxt} · Keine Wettberatung · 18+`;
 }
 
 function renderVerdict(P,p){
@@ -472,7 +500,7 @@ function renderSignalBoard(p){
       return `<div class="sb-tile ${cls}"><div class="sn">${SIG_LABEL[name]}</div><div class="sv">${s.score>0?'+':''}${s.score.toFixed(1)}pp</div><div class="se">${shortEv(s.evidence)}</div></div>`;
     }
     nOff++;
-    return `<div class="sb-tile off"><div class="sn">${SIG_LABEL[name]}</div><div class="sv">—</div><div class="se">greift hier nicht</div></div>`;
+    return `<div class="sb-tile off"><div class="sn">${SIG_LABEL[name]}</div><div class="sv">—</div><div class="se">${offReason(name,p&&p.market)}</div></div>`;
   }).join('');
   box.innerHTML=`<div class="chap-h" style="margin-bottom:10px"><span class="cs"><b style="color:var(--pos)">${nPos} dafür</b> · <b style="color:var(--neg)">${nNeg} dagegen</b> · ${nOff} neutral</span></div>
     <div class="sb-grid">${tiles}</div>

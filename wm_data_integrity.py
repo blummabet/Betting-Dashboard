@@ -542,6 +542,47 @@ def check_homeaway_consistent(ctx):
     return _chk("homeaway_consistent", "Home/Away nicht vertauscht (Pinn vs Poly)", "error", fails, hint)
 
 
+# Coverage-Guard (21.06.2026, Lucas: „ich hab Angst dass wir Fehler haben und die Guards
+# das nicht erkennen"). Die übrige Batterie prüft DATEN-Konsistenz, nicht Signal-ABDECKUNG.
+# Dieser Guard liest die tägliche Feuer-History (wm_signal_history.json) und schlägt an, wenn
+# ein Signal, das zuletzt ZUVERLÄSSIG feuerte (jeder der letzten 3 Tage > 0), heute slatewide
+# auf 0 fällt — das Muster eines Fetcher-Ausfalls oder einer Code-Regression, das sonst still
+# im „greift hier nicht" untergeht. Bewusst WARN (kein error): kann auch ein legitimer Tag
+# ohne passende Spiele sein — der Mensch schaut drauf. min(letzte 3)>0 filtert intermittierende
+# Signale (z.B. Wetter an einem kühlen Spieltag) raus, damit kein Dauer-Fehlalarm entsteht.
+SIGCOV_MIN_BASELINE = 3     # Median-Feuer im Fenster, damit ein Signal überhaupt „beobachtet" wird
+SIGCOV_BASELINE_DAYS = 7    # Trailing-Fenster
+
+@integrity_check
+def check_signal_coverage(ctx):
+    import statistics
+    hist = _lazy("wm_signal_history.json")
+    if not isinstance(hist, list) or len(hist) < 4:
+        return _chk("signal_coverage", "Kein Signal still verstummt", "warn", [],
+                    "Zu wenig History (<4 Tage) für Coverage-Vergleich — sammelt sich an.")
+    latest   = hist[-1]
+    baseline = hist[-(SIGCOV_BASELINE_DAYS + 1):-1]   # bis zu 7 Tage VOR dem letzten
+    per_now  = latest.get("perSignal") or {}
+    fails = []
+    for name, today in sorted(per_now.items()):
+        if not isinstance(today, (int, float)):
+            continue
+        counts = [(h.get("perSignal") or {}).get(name, 0) for h in baseline]
+        counts = [c for c in counts if isinstance(c, (int, float))]
+        if len(counts) < 3:
+            continue
+        recent3 = counts[-3:]
+        if today == 0 and min(recent3) > 0 and statistics.median(counts) >= SIGCOV_MIN_BASELINE:
+            med = statistics.median(counts)
+            active = sum(1 for c in counts if c > 0)
+            fails.append(f"{name}: heute 0 gefeuert, zuletzt Ø {med:.0f}/Tag "
+                         f"({active}/{len(counts)} Tage aktiv, letzte 3 Tage durchgehend) — verstummt?")
+    hint = ("Ein Signal das die letzten Tage zuverlässig feuerte und heute slatewide 0 zeigt = "
+            "Verdacht auf Daten-/Fetcher-Ausfall oder Code-Regression. Engine prüfen, nicht ignorieren. "
+            "WARN, weil auch ein Spieltag ohne passende Lage sein kann.")
+    return _chk("signal_coverage", "Kein Signal still verstummt", "warn", fails, hint)
+
+
 @integrity_check
 def check_edge_consistent(ctx):
     fails = []
