@@ -59,34 +59,17 @@ def devig(h, d, a):
 
 def model_probs_from_elo(home_elo: float, away_elo: float, home_is_cohost: bool = False):
     """
-    Berechnet Modell-Wahrscheinlichkeiten direkt aus Elo-Ratings.
-    Identische Logik wie generate_wm_picks.py:elo_probabilities().
-    Returns (probHome%, probDraw%, probAway%).
+    Modell-Wahrscheinlichkeiten aus Elo. EINZIGE Quelle ist generate_wm_picks.
+    elo_probabilities() — kein eigener Kopie der Formel mehr (21.06.2026, Lucas:
+    „nicht das wir was doppelt machen"). Lazy-Import wegen Zirkularität
+    (generate_wm_picks ruft diesen Builder auf). Returns (pHome%, pDraw%, pAway%).
     """
-    import math
-    DRAW_BASE = 0.24
-    DRAW_MAX  = 0.30
-    DRAW_MIN  = 0.10
-    HOME_BONUS_PP = 0.03
-
-    diff       = home_elo - away_elo
-    p_expected = 1.0 / (1.0 + 10.0 ** (-diff / 400.0))
-    if home_is_cohost:
-        p_expected = min(0.93, p_expected + HOME_BONUS_PP)
-
-    abs_diff = abs(diff)
-    p_draw   = DRAW_BASE * max(0.35, 1.0 - abs_diff / 600.0)
-    p_draw   = max(DRAW_MIN, min(DRAW_MAX, p_draw))
-
-    p_no_draw = 1.0 - p_draw
-    p_home    = p_expected * p_no_draw
-    p_away    = (1.0 - p_expected) * p_no_draw
-
-    total = p_home + p_draw + p_away
+    from generate_wm_picks import elo_probabilities   # lazy: vermeidet Zirkel-Import
+    p = elo_probabilities(home_elo, away_elo, home_is_cohost)
     return (
-        round(p_home / total * 100, 1),
-        round(p_draw / total * 100, 1),
-        round(p_away / total * 100, 1),
+        round(p["pH"] * 100, 1),
+        round(p["pD"] * 100, 1),
+        round(p["pA"] * 100, 1),
     )
 
 
