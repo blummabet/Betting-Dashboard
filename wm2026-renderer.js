@@ -1177,8 +1177,8 @@
     }
     // Special: standings-based scenarios (ST 2/3)
     if (standing && standing.length && fx.matchday >= 3) {
-      const homePos = standing.findIndex(s => s.id === fx.home) + 1;
-      const awayPos = standing.findIndex(s => s.id === fx.away) + 1;
+      const homePos = standing.findIndex(s => s.team === fx.home) + 1;
+      const awayPos = standing.findIndex(s => s.team === fx.away) + 1;
       if (homePos > 3 && awayPos > 3) return { cls: 'cc-a-dead', icon: '❌', label: 'Beide ausgeschieden' };
       if ((homePos > 3 || awayPos > 3) && fx.matchday === 3) {
         return { cls: 'cc-a-druck', icon: '🔥', label: 'Aufstiegs-Druck' };
@@ -1430,10 +1430,10 @@
 
     // 3) ST3 Standings-Druck (Aufstiegs-Kontext)
     if (fx.matchday >= 3 && standing && standing.length) {
-      const hRow = standing.find(s => s.id === fx.home);
-      const aRow = standing.find(s => s.id === fx.away);
-      const hPos = standing.findIndex(s => s.id === fx.home) + 1;
-      const aPos = standing.findIndex(s => s.id === fx.away) + 1;
+      const hRow = standing.find(s => s.team === fx.home);
+      const aRow = standing.find(s => s.team === fx.away);
+      const hPos = standing.findIndex(s => s.team === fx.home) + 1;
+      const aPos = standing.findIndex(s => s.team === fx.away) + 1;
       if (hRow && aRow) {
         const hSafe = hPos <= 2;
         const aSafe = aPos <= 2;
@@ -2757,7 +2757,7 @@
 
   // ── Team row with form dots ───────────────────────────
   function _teamRow(team, standing, teamId, side, form, eloDelta) {
-    const pos    = standing ? standing.findIndex(s => s.id === teamId) + 1 : 0;
+    const pos    = standing ? standing.findIndex(s => s.team === teamId) + 1 : 0;
     const posStr = pos > 0 ? `<span class="wm-standing-pos">${pos}.</span>` : '';
     // Show Elo as delta (advantage over opponent), not raw number
     let eloStr = '';
@@ -3072,14 +3072,14 @@
   }
 
   function _standingScenario(home, away, standing, matchday) {
-    const homeRow = standing.find(s => s.id === home.id);
-    const awayRow = standing.find(s => s.id === away.id);
+    const homeRow = standing.find(s => s.team === home.id);
+    const awayRow = standing.find(s => s.team === away.id);
     if (!homeRow || !awayRow) return null;
 
     const homePts = homeRow.pts || 0;
     const awayPts = awayRow.pts || 0;
-    const homePos = standing.findIndex(s => s.id === home.id) + 1;
-    const awayPos = standing.findIndex(s => s.id === away.id) + 1;
+    const homePos = standing.findIndex(s => s.team === home.id) + 1;
+    const awayPos = standing.findIndex(s => s.team === away.id) + 1;
 
     if (homePos > 3 && awayPos > 3) return `❌ Beide Teams bereits ausgeschieden`;
     if (homePos <= 2 && awayPos <= 2 && matchday === 3) return `🏆 Beide qualifiziert — Kampf um <strong>Gruppenführung</strong>`;

@@ -131,7 +131,13 @@ SIGNAL_GROUPS: dict[str, str] = {
     "public_static_bias": "public",
     "travel_burden":      "context",
     "injury":             "context",
-    "pressure_index":     "context",
+    # pressure_index in dieselbe Familie wie incentive_signal (21.06.2026, Lucas):
+    # beide modellieren am Spieltag 3 dieselbe Qualifikations-Asymmetrie (muss gewinnen /
+    # schon durch → Gegenseite). Vorher in „context" + incentive in eigener Familie →
+    # KEIN Discount → die Quali-Story zählte doppelt (MEX-CZE: Druck +2,1 UND Anreiz +3,5
+    # = ~+5,6pp aus EINEM Fakt). Jetzt geteilte Familie → stärkstes Signal voll, das
+    # zweite (die Echo-Wertung) auf 40% gedämpft. Greift nur wenn BEIDE feuern (MD3-Quali).
+    "pressure_index":     "incentive",
     # weather_signal in dieselbe context-Familie wie Travel-Burden + Injury —
     # alle drei sind venue/spielort-bedingte Faktoren. Anti-Korr-Discount sinnvoll
     # damit Travel + Heat zusammen nicht doppelt zählen (Bsp: lange Reise + Hitze
