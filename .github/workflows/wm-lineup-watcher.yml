@@ -61,6 +61,10 @@ jobs:
           if ! git diff --quiet -- wm_lineups.json 2>/dev/null; then
             echo "📋 Neue Aufstellungen erkannt → generate_wm_picks läuft"
             python generate_wm_picks.py || true
+            # 21.06.2026: Event-Page-Payloads sofort mit-neu-bauen, damit das
+            # Aufstellungs-Signal auch die Match-Pages erreicht (rein lokal, 0 API-Calls).
+            echo "📄 Match-Pages neu bauen (Lineup-Signal → Event-Page)"
+            python generate_wm_match_pages.py || true
           else
             echo "ℹ️ Keine neuen Aufstellungen — keine Pick-Regenerierung nötig"
           fi

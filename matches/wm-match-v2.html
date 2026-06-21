@@ -213,6 +213,42 @@ svg.arc{width:100%;display:block}
 
 .foot{padding:28px 18px 30px;text-align:center;font-size:10px;color:var(--faint);line-height:1.8}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ── Tale-of-the-Tape (Direktvergleich) ── */
+.tape-grp{margin-top:16px}
+.tape-grp:first-child{margin-top:0}
+.tape-gh{font-size:9px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--faint);margin:0 0 9px}
+.tape-row{margin-bottom:12px}
+.tape-row:last-child{margin-bottom:0}
+.tape-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
+.tape-v{font-family:'JetBrains Mono';font-size:13px;font-weight:700;color:var(--sub);min-width:46px}
+.tape-v.h{text-align:left} .tape-v.a{text-align:right}
+.tape-v.win{color:var(--text)}
+.tape-lbl{font-size:9.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.tape-bars{display:flex;align-items:center;gap:3px;height:7px}
+.tape-bar{height:100%;border-radius:4px;background:var(--card2);position:relative;overflow:hidden;flex:1}
+.tape-bar i{position:absolute;top:0;bottom:0;width:0;border-radius:4px;transition:width 1s cubic-bezier(.22,1,.36,1)}
+.tape-bar.h{display:flex;justify-content:flex-end} .tape-bar.h i{right:0;background:var(--home)}
+.tape-bar.a i{left:0;background:var(--away)}
+.tape-mid{font-size:8px;color:var(--faint);font-weight:700;letter-spacing:.5px;flex:0 0 auto;padding:0 2px}
+
+/* ── Aufstellung (Formations-Pitch) ── */
+.lu-note{font-size:11px;color:var(--sub);line-height:1.6;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+.lu-key{font-size:11px;color:var(--text);line-height:1.55;background:rgba(255,93,93,.08);border:1px solid rgba(255,93,93,.28);border-radius:12px;padding:11px 14px;margin-bottom:14px}
+.lu-team{margin-top:16px}
+.lu-team:first-child{margin-top:0}
+.lu-thead{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.lu-flag{font-size:22px}
+.lu-tn{font-size:14px;font-weight:800;color:var(--text)}
+.lu-meta{font-size:10px;color:var(--faint);font-weight:600}
+.lu-pitch{background:linear-gradient(180deg,rgba(45,212,126,.07),rgba(45,212,126,.02));border:1px solid var(--line);border-radius:14px;padding:14px 8px;display:flex;flex-direction:column;gap:13px}
+.lu-line{display:flex;justify-content:space-around;gap:6px}
+.lu-p{display:flex;flex-direction:column;align-items:center;gap:3px;flex:0 1 64px;text-align:center}
+.lu-num{width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono';font-size:11px;font-weight:700;background:var(--card2);border:1.5px solid var(--home);color:var(--text)}
+.lu-team.a .lu-num{border-color:var(--away)}
+.lu-pn{font-size:8.5px;color:var(--sub);line-height:1.15;max-width:62px}
+.lu-bench{font-size:10px;color:var(--faint);line-height:1.7;margin-top:9px}
+.lu-bench b{color:var(--sub);font-weight:700}
 </style>
 </head>
 <body>
@@ -241,6 +277,8 @@ svg.arc{width:100%;display:block}
   <a href="#c-markt">Märkte</a>
   <a href="#c-story">Story</a>
   <a href="#c-form">Form</a>
+  <a href="#c-tape">Vergleich</a>
+  <a href="#c-lineup">Aufstellung</a>
   <a href="#c-duell">Duell</a>
   <a href="#c-gruppe">Gruppe</a>
 </nav>
@@ -271,6 +309,18 @@ svg.arc{width:100%;display:block}
   <div class="chap-h"><span class="ct disp">Wer kommt in Fahrt?</span></div>
   <div class="chap-h"><span class="cs">Die letzten 10 Spiele — Balken nach oben ist gut, nach unten nicht.</span></div>
   <div class="viz-card"><div id="form-box"></div></div>
+</section>
+
+<section class="chap" id="c-tape">
+  <div class="chap-h"><span class="ct disp">Direktvergleich</span></div>
+  <div class="chap-h"><span class="cs">Beide Teams Kopf an Kopf — Stärke, Form, Offensive, Defensive und die Tor-Tendenzen.</span></div>
+  <div class="viz-card"><div id="tape-box"></div></div>
+</section>
+
+<section class="chap" id="c-lineup">
+  <div class="chap-h"><span class="ct disp">Aufstellung</span></div>
+  <div class="chap-h"><span class="cs">Die Startelf erscheint rund 1 Stunde vor Anpfiff — sobald sie da ist, fließt sie live in die Engine.</span></div>
+  <div class="viz-card"><div id="lineup-box"></div></div>
 </section>
 
 <section class="chap" id="c-duell">
@@ -369,7 +419,9 @@ function render(P){
   const p=heroPick(P);
   renderVerdict(P,p);
   renderPulse(p); renderSignalBoard(p); renderConviction(p);
-  renderOdds(P); renderPoly(P); renderStory(P); renderForm(P); renderDuell(P); renderGruppe(P);
+  renderOdds(P); renderPoly(P); renderStory(P); renderForm(P);
+  renderTape(P,p); renderLineup(P,p);
+  renderDuell(P); renderGruppe(P);
   scrollspy();
 
   // Stale-Hinweis (21.06.2026, Lucas): wenn der Snapshot > 6h alt ist, sichtbar markieren —
@@ -626,6 +678,109 @@ function renderGruppe(P){
     html+=`<div class="gt-row ${i<2?'qual':''} ${me?'me':''}"><span class="pos">${i+1}</span><span class="tn">${t.flag||''} ${t.name}</span><span class="el">${t.elo}</span><span class="el">${i<2?'✓':''}</span></div>`;
   });
   $('gruppe-box').innerHTML=html+`<p class="viz-foot">Top 2 (✓) ziehen sicher weiter; Platz 3 hat als bester Gruppendritter Chancen.</p>`;
+}
+
+// ── Direktvergleich (Tale-of-the-Tape) ──
+function renderTape(P,p){
+  const box=$('tape-box'); if(!box){return;}
+  const hf=P.homeForm||{}, af=P.awayForm||{};
+  const pts=arr=>{ const a=Array.isArray(arr)?arr:[]; return a.reduce((s,r)=>s+(r==='W'?3:r==='D'?1:0),0); };
+  const num=v=>(v==null||isNaN(v))?null:+v;
+  // Gruppen: [Überschrift, [Zeilen]]; Zeile = [label, hVal, aVal, fmt, lowerBetter]
+  const groups=[
+    ['Stärke & Form',[
+      ['Elo-Stärke', num(P.homeElo), num(P.awayElo), v=>Math.round(v), false],
+      ['Form-Punkte (5)', pts(hf.last5), pts(af.last5), v=>v+'/15', false],
+    ]],
+    ['Offensive & Defensive',[
+      ['xG Angriff', num(P.xgHome), num(P.xgAway), v=>v.toFixed(2), false],
+      ['Tore Ø', num(hf.avgScored), num(af.avgScored), v=>v.toFixed(1), false],
+      ['Gegentore Ø', num(hf.avgConceded), num(af.avgConceded), v=>v.toFixed(1), true],
+    ]],
+    ['Tor-Tendenzen',[
+      ['Über 2.5 Rate', num(hf.over25Rate), num(af.over25Rate), v=>Math.round(v)+'%', false],
+      ['Beide treffen', num(hf.bttsRate), num(af.bttsRate), v=>Math.round(v)+'%', false],
+    ]],
+  ];
+  // Ecken + H2H als eigene Gruppe (nur wenn Daten)
+  const ch=P.cornersHome||{}, ca=P.cornersAway||{}, ec=[];
+  if(num(ch.forAvg)!=null||num(ca.forAvg)!=null)
+    ec.push(['Ecken Ø', num(ch.forAvg), num(ca.forAvg), v=>v.toFixed(1), false]);
+  if(ec.length) groups.push(['Ecken & Duelle', ec]);
+
+  const rowHTML=(lbl,h,a,fmt,low)=>{
+    if(h==null&&a==null) return '';
+    const hh=h==null?0:h, aa=a==null?0:a, sum=hh+aa;
+    let wh=sum>0?hh/sum*100:50, wa=sum>0?aa/sum*100:50;
+    // "weniger ist besser" (Gegentore): Gewinner = kleinerer Wert
+    const hWin = h!=null&&a!=null && (low ? hh<aa : hh>aa);
+    const aWin = h!=null&&a!=null && (low ? aa<hh : aa>hh);
+    return `<div class="tape-row">
+      <div class="tape-top">
+        <span class="tape-v h ${hWin?'win':''}">${h==null?'–':fmt(h)}</span>
+        <span class="tape-lbl">${lbl}</span>
+        <span class="tape-v a ${aWin?'win':''}">${a==null?'–':fmt(a)}</span>
+      </div>
+      <div class="tape-bars">
+        <div class="tape-bar h"><i data-w="${wh.toFixed(0)}"></i></div>
+        <div class="tape-bar a"><i data-w="${wa.toFixed(0)}"></i></div>
+      </div></div>`;
+  };
+  let html=`<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:14px">
+      <span style="color:var(--home)">${P.homeFlag||''} ${P.home}</span>
+      <span style="color:var(--away)">${P.away} ${P.awayFlag||''}</span></div>`;
+  groups.forEach(([gh,rows])=>{
+    const r=rows.map(x=>rowHTML(...x)).join('');
+    if(r.trim()) html+=`<div class="tape-grp"><div class="tape-gh">${gh}</div>${r}</div>`;
+  });
+  box.innerHTML=html;
+  obs(box,()=>box.querySelectorAll('.tape-bar i').forEach(i=>i.style.width=i.dataset.w+'%'));
+}
+
+// ── Aufstellung (Formations-Pitch) ──
+function renderLineup(P,p){
+  const box=$('lineup-box'); if(!box){return;}
+  const lu=P.lineups;
+  if(!lu||(!lu.home&&!lu.away)){
+    box.innerHTML=`<div class="lu-note">⏳ Noch keine Aufstellung veröffentlicht. Die Verbände geben die Startelf meist rund <b>1 Stunde vor Anpfiff</b> bekannt — dann erscheint sie hier und das Aufstellungs-Signal fließt automatisch in die Engine.</div>`;
+    return;
+  }
+  // Schlüssel-Ausfälle aus dem lineup_signal (falls gefeuert)
+  let keyHTML='';
+  const sig=((p&&p.signals)||[]).find(s=>s&&s.name==='lineup_signal');
+  if(sig&&sig.evidence) keyHTML=`<div class="lu-key">📋 ${shortEv(sig.evidence)}</div>`;
+
+  const POS_ORDER={G:0,D:1,M:2,F:3,A:3};
+  const teamHTML=(side,flag,teamName,cls)=>{
+    if(!side||!(side.starting||[]).length) return '';
+    const xi=side.starting.slice();
+    // Linien gruppieren: nach grid-Reihe wenn vorhanden, sonst nach Position
+    const byLine={};
+    xi.forEach(pl=>{
+      let line;
+      if(pl.grid&&/^\d+:/.test(pl.grid)) line=parseInt(pl.grid.split(':')[0],10);
+      else line=(POS_ORDER[pl.pos]!=null?POS_ORDER[pl.pos]:2)+1;
+      (byLine[line]=byLine[line]||[]).push(pl);
+    });
+    const lines=Object.keys(byLine).map(Number).sort((a,b)=>b-a); // Angriff oben
+    const pitch=lines.map(ln=>{
+      const ps=byLine[ln].slice().sort((a,b)=>{
+        const ca=a.grid?parseInt((a.grid.split(':')[1]||'0'),10):0;
+        const cb=b.grid?parseInt((b.grid.split(':')[1]||'0'),10):0;
+        return ca-cb;
+      });
+      return `<div class="lu-line">${ps.map(pl=>`<div class="lu-p"><div class="lu-num">${pl.num||''}</div><div class="lu-pn">${(pl.name||'').split(' ').slice(-1)[0]}</div></div>`).join('')}</div>`;
+    }).join('');
+    const bench=(side.subs||[]).slice(0,9).map(s=>s.name?(s.name.split(' ').slice(-1)[0]):'').filter(Boolean).join(' · ');
+    return `<div class="lu-team ${cls}">
+      <div class="lu-thead"><span class="lu-flag">${flag||''}</span><span class="lu-tn">${teamName||''}</span>
+        <span class="lu-meta">${side.formation||''}${side.coach?' · '+side.coach:''}</span></div>
+      <div class="lu-pitch">${pitch}</div>
+      ${bench?`<div class="lu-bench"><b>Bank:</b> ${bench}</div>`:''}</div>`;
+  };
+  box.innerHTML=keyHTML
+    + teamHTML(lu.home,P.homeFlag,P.home,'h')
+    + teamHTML(lu.away,P.awayFlag,P.away,'a');
 }
 
 // ── Scrollspy für Kapitel-Nav ──
