@@ -309,6 +309,38 @@ def _smartmoney_all(_cache={}):
     return _cache["d"]
 
 
+LINEUPS_FILE = os.path.join(BASE, "wm_lineups.json")
+
+def _lineups_all(_cache={}):
+    """Aufstellungen (wm_lineups.json) einmal laden + memoizen. {} wenn fehlt."""
+    if "d" not in _cache:
+        d = load_json(LINEUPS_FILE) or {}
+        _cache["d"] = d if isinstance(d, dict) else {}
+    return _cache["d"]
+
+
+def _lineup_for(home_id, away_id):
+    """Schlanke Aufstellung (Formation/Trainer/Start-XI mit grid/Bank) fürs Payload.
+    None wenn (noch) keine veröffentlicht — Aufstellungen kommen ~1h vor Anpfiff."""
+    lu = _lineups_all().get(f"{home_id}-{away_id}") or {}
+    def _slim(side):
+        if not isinstance(side, dict) or not side.get("starting"):
+            return None
+        return {
+            "formation": side.get("formation"),
+            "coach":     side.get("coach"),
+            "starting":  [{"name": p.get("name"), "pos": p.get("pos"),
+                           "grid": p.get("grid"), "num": p.get("num")}
+                          for p in (side.get("starting") or [])],
+            "subs":      [{"name": p.get("name"), "pos": p.get("pos"), "num": p.get("num")}
+                          for p in (side.get("subs") or [])],
+        }
+    h, a = _slim(lu.get("home")), _slim(lu.get("away"))
+    if not h and not a:
+        return None
+    return {"home": h, "away": a, "kickoff": lu.get("kickoff")}
+
+
 def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, ai_previews=None, poly_lookup=None):
     home_id = fixture["home"]
     away_id = fixture["away"]
@@ -528,6 +560,8 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         "aiTgSnippet":   (ai_previews or {}).get(pick_key, {}).get("tgSnippet"),
         # Player Spotlights
         "playerSpotlights": _match_player_spotlights(wm, home_id, away_id),
+        # Aufstellung (wm_lineups.json, ~T-1h) — Formation/Trainer/Start-XI/Bank
+        "lineups": _lineup_for(home_id, away_id),
         # Squad key players (with extended stats: shots, cards, rating, etc.)
         "squads": {
             home_id: wm.get("squads", {}).get(home_id),
