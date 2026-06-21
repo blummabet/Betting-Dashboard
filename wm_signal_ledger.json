@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-21T21:02:08Z",
-    "total_records": 71
+    "updated_at": "2026-06-21T21:17:05Z",
+    "total_records": 73
   },
   "records": [
     {
@@ -1636,6 +1636,48 @@
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true
+    },
+    {
+      "key": "H-2-ESP-SAU|Beide Teams treffen — Ja",
+      "matchKey": "H-2-ESP-SAU",
+      "market": "Beide Teams treffen — Ja",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "public_static_bias",
+          "score": 1.42
+        }
+      ],
+      "resolvedAt": "2026-06-21T21:09:28Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "H-2-ESP-SAU|Über 2.5 Tore",
+      "matchKey": "H-2-ESP-SAU",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 1.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 0.98
+        }
+      ],
+      "resolvedAt": "2026-06-21T21:09:28Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "processVerdict": "LUCKY"
     },
     {
       "key": "I-1-FRA-SEN|Beide Teams treffen — Ja",
