@@ -62,6 +62,7 @@ DEFAULT_FALLBACK = {
         "sharp_against_gap_pp": 7.0,
         "loss_deep_pct": 0.40, "loss_deep_hours_ahead": 12.0,
         "age_loss_hours": 36.0, "age_loss_threshold_pct": 0.10,
+        "age_loss_max_hours_left": 48.0,
         "no_inplay_loss_sell": True,
     },
     "monitor": {

@@ -90,9 +90,15 @@ SHARP_AGAINST_GAP_PP   = _cfg("sell", "sharp_against_gap_pp", 7.0)
 LOSS_DEEP_PCT          = _cfg("sell", "loss_deep_pct",         0.40)
 LOSS_DEEP_HOURS_AHEAD  = _cfg("sell", "loss_deep_hours_ahead", 12.0)
 
-# 3. AGE-LOSS: alte Position + im Minus → realisieren bevor Spread alles frisst
+# 3. AGE-LOSS: alte Position + im Minus → realisieren bevor Spread alles frisst.
+#    KO-GATE (21.06.2026, Lucas): NUR feuern wenn Anpfiff NAH (hours_left <= max).
+#    Tage vor dem Spiel ist „alt + im Minus" kein echtes Gegen-Signal — die These hat
+#    ihr Event noch komplett vor sich und das −10% ist großteils nur Bid/Ask-Spread.
+#    Den Spread zahlt man erst BEIM Verkauf; früh verkaufen REALISIERT ihn, statt ihn
+#    zu vermeiden. Erst im Exit-Fenster (nah am KO) ist „alt+Minus+Spread" ein Grund.
 AGE_LOSS_HOURS         = _cfg("sell", "age_loss_hours",         36.0)
 AGE_LOSS_THRESHOLD_PCT = _cfg("sell", "age_loss_threshold_pct", 0.10)
+AGE_LOSS_MAX_HOURS_LEFT = _cfg("sell", "age_loss_max_hours_left", 48.0)
 
 # 4. NEVER IN-PLAY: Live-Phase = kein Loss-Trigger (Polymarket-Live-Liquidität zu mies)
 NO_INPLAY_LOSS_SELL    = _cfg("sell", "no_inplay_loss_sell", True)
@@ -521,14 +527,19 @@ def check_position(pos: dict) -> dict:
             reason = (f"Deep-Loss: {round(pnl_pct,1)}% ≤ -{LOSS_DEEP_PCT*100:.0f}%, "
                       f"noch {hours_left:.1f}h bis Kickoff — Bankroll re-allokieren")
 
-        # LOSS 3: AGE-LOSS — alte Position + im Minus
-        # → Spread frisst sonst Buchwert, lieber realisieren
+        # LOSS 3: AGE-LOSS — alte Position + im Minus + Anpfiff NAH
+        # → Spread frisst sonst Buchwert, lieber realisieren.
+        # KO-Gate: NUR wenn hours_left <= AGE_LOSS_MAX_HOURS_LEFT. Tage vor dem Spiel
+        # ist die These intakt → halten (kein Frühverkauf eines Spread-Minus).
         elif (age_h is not None
               and age_h >= AGE_LOSS_HOURS
-              and loss_pct <= -AGE_LOSS_THRESHOLD_PCT):
+              and loss_pct <= -AGE_LOSS_THRESHOLD_PCT
+              and hours_left is not None
+              and hours_left <= AGE_LOSS_MAX_HOURS_LEFT):
             sell = True
             reason = (f"Age-Loss: Position {age_h:.0f}h alt, "
-                      f"{round(pnl_pct,1)}% im Minus — Spread frisst Buchwert")
+                      f"{round(pnl_pct,1)}% im Minus, noch {hours_left:.1f}h bis KO "
+                      f"— Spread frisst Buchwert")
 
     # ── GUARD (17.06.2026): Profit-Sell darf NIE in einen realen Verlust verkaufen ──
     # Belt-and-suspenders gegen die Spread-Phantom-Klasse: eine Profit-Mitnahme ist
