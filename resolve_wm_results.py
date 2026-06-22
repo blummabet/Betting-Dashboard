@@ -779,11 +779,17 @@ def main():
         # Polymarket-CLV (Audit-Erweiterung 07.06.2026):
         # Vergleich Entry-Polymarket-Preis vs Polymarket-Preis ~1h vor Anpfiff.
         # Sagt aus ob wir Polymarket-seitig gut getimed haben (komplementär zu Pinn-CLV).
+        # ECHTEN Anpfiff bevorzugen (21.06.2026): find_poly_close_price fällt sonst auf
+        # einen hartkodierten 18:00-UTC-Schätzwert zurück → für Spiele um 00:00/03:00/22:00
+        # UTC würde es post-game-Snapshots als „Closing" ziehen. kickoff (mit Uhrzeit) ist
+        # die verlässliche Quelle ([[feedback_fx_time_unreliable]]); Datum nur als Fallback.
+        _ko_for_poly = (bet.get("kickoff") or res.get("kickoff")
+                        or bet.get("matchDate") or res.get("matchDate") or "")
         poly_close = find_poly_close_price(
             poly_hist,
             home_id, away_id,
             bet.get("market", ""),
-            bet.get("matchDate") or res.get("matchDate") or ""
+            _ko_for_poly
         )
         poly_clv_pp = None
         if poly_close and poly_price:

@@ -93,8 +93,13 @@ PER_EVENT_REGIONS = "eu,uk"
 
 # CLV-Closing: in diesem Fenster vor Anpfiff werden die aktuellen Odds laufend als
 # (vorläufige) Closing-Linie mitgeschrieben → der letzte pre-match Snapshot wird final.
-# 6h deckt mind. einen fetch-wm-data-Lauf ab; mit dichtem Manage-Fetch wird's minutengenau.
-CLOSING_CAPTURE_WINDOW_H = 6.0
+# 9h (21.06.2026, Lucas-Write-Side-Fix): der fetch-wm-data-Cron (0 4,8,12,16,20 UTC) hat
+# nachts eine 8h-Lücke (20:00→04:00). Mit 6h bekamen Spiele, die in dieser Lücke anpfeifen
+# (z.B. 02:00-03:00 UTC), KEINEN Pre-Match-Snapshot → der last_known-Fallback fror In-Play-
+# Quoten ein → CLV verworfen (7 Spiele im Status-Panel). 9h ≥ größte Cron-Lücke (8h) +
+# Marge → der letzte Fetch VOR jedem Anpfiff liegt im Fenster → jedes Spiel kriegt einen
+# echten Pre-Match-Snapshot, der bei Anpfiff final wird. Schließt die CLV-Abdeckungs-Lücke.
+CLOSING_CAPTURE_WINDOW_H = 9.0
 
 # In-Play-Schutz für den last_known-Fallback (16.06.2026 → QAT-SUI-Phantom):
 # Ein Spiel ohne pre-match Snapshot, das schon LÄNGER läuft, liefert über TheOddsAPI

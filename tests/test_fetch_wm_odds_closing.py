@@ -31,6 +31,14 @@ class TestComputeClosing(unittest.TestCase):
         c = f.compute_closing(existing, CUR, hours_to_ko=20.0, now_iso="T1")
         self.assertEqual(c, existing)   # 20h entfernt → noch nicht erfassen
 
+    def test_overnight_gap_game_now_captured(self):
+        # Write-Side-Fix 21.06.2026: Spiel 7.5h vor Anpfiff (Nacht-Cron-Lücke 20→04 UTC).
+        # Mit altem 6h-Fenster wurde KEIN Snapshot erfasst → In-Play-Fallback. Mit 9h ja.
+        self.assertGreaterEqual(f.CLOSING_CAPTURE_WINDOW_H, 8.0)
+        c = f.compute_closing(None, CUR, hours_to_ko=7.5, now_iso="T1")
+        self.assertEqual(c["hw"], 2.0)        # jetzt als provisorisches Closing erfasst
+        self.assertTrue(c["provisional"])
+
     def test_prematch_overwrites_with_latest(self):
         existing = {"hw": 2.2, "dr": 3.1, "aw": 3.5, "provisional": True}
         c = f.compute_closing(existing, CUR, hours_to_ko=0.5, now_iso="T2")
