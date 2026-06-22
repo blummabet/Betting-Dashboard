@@ -695,7 +695,71 @@
     "totalPnl": 2.03,
     "roi": 1.42,
     "avgCLV": -1.02,
-    "sharpeEst": 0.07
+    "sharpeEst": 0.07,
+    "postmortem": {
+      "closedN": 15,
+      "realizedPnl": 2.03,
+      "avgClv": -1.02,
+      "clvCoverage": "4/15",
+      "byMarket": {
+        "AH": {
+          "n": 7,
+          "pnl": 6.59,
+          "avgClv": null,
+          "clvCoverage": "0/7"
+        },
+        "BTTS": {
+          "n": 2,
+          "pnl": 1.09,
+          "avgClv": null,
+          "clvCoverage": "0/2"
+        },
+        "O/U": {
+          "n": 6,
+          "pnl": -5.65,
+          "avgClv": -1.02,
+          "clvCoverage": "4/6"
+        }
+      },
+      "byExit": {
+        "Age-Loss": {
+          "n": 2,
+          "pnl": -1.17,
+          "avgClv": null,
+          "clvCoverage": "0/2"
+        },
+        "KO-Close": {
+          "n": 3,
+          "pnl": -0.11,
+          "avgClv": -3.1,
+          "clvCoverage": "3/3"
+        },
+        "Konvergenz": {
+          "n": 2,
+          "pnl": 1.09,
+          "avgClv": 5.19,
+          "clvCoverage": "1/2"
+        },
+        "LOSS": {
+          "n": 1,
+          "pnl": -5.5,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        },
+        "Profit-Mitnahme": {
+          "n": 7,
+          "pnl": 7.72,
+          "avgClv": null,
+          "clvCoverage": "0/7"
+        }
+      },
+      "heldToClose": {
+        "n": 0,
+        "exitBetter": 0,
+        "holdBetter": 0,
+        "avgDeltaEur": null
+      }
+    }
   },
-  "updatedAt": "2026-06-21T20:02:04.986322+00:00"
+  "updatedAt": "2026-06-22T04:35:56.459834+00:00"
 }

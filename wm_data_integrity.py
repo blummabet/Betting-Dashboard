@@ -584,6 +584,36 @@ def check_signal_coverage(ctx):
 
 
 @integrity_check
+def check_trade_clv_coverage(ctx):
+    # Mess-Schicht-Guard (21.06.2026, Lucas: „lass mich vorher die Mess-Schicht schließen").
+    # CLV (Entry vs Pinnacle-Closing) ist der Frühindikator für +EV — ohne ihn ist die Trade-
+    # Auswertung blind. Dieser Guard meldet, wenn geschlossene Trades keine CLV/Closing-Daten
+    # haben (Closing-Snapshot nicht zuverlässig bei Anpfiff erfasst) → Post-Mortem teilblind.
+    import json
+    res = _lazy("wm_results.json")
+    pm = ((res.get("summary") or {}).get("postmortem") or {}) if isinstance(res, dict) else {}
+    closed = pm.get("closedN") or 0
+    fails = []
+    if closed >= 5:
+        cov = str(pm.get("clvCoverage") or "0/0")
+        try:
+            got, tot = (int(x) for x in cov.split("/"))
+        except Exception:
+            got, tot = 0, closed
+        if tot > 0 and got / tot < 0.5:
+            fails.append(f"CLV nur bei {cov} geschlossenen Trades erfasst — Closing-Snapshot "
+                         f"lückenhaft → Auswertung teilblind")
+        if (pm.get("heldToClose") or {}).get("n", 0) == 0:
+            fails.append("polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung "
+                         "nicht möglich (Poly-Closing-Snapshot nicht erfasst)")
+    hint = ("CLV (Entry vs Pinnacle-Closing) ist DER Frühindikator für +EV; ohne ihn lässt sich "
+            "nicht sagen ob die Strategie Wert holt. Lücke = Closing-Snapshot wird nicht "
+            "zuverlässig bei Anpfiff eingefroren (pinnClose/polyClose). Schließt an den "
+            "Closing-In-Play-Guard an — die Write-Seite muss bei Anpfiff einfrieren.")
+    return _chk("trade_clv_coverage", "Trade-Auswertung: CLV/Closing erfasst", "warn", fails, hint)
+
+
+@integrity_check
 def check_edge_consistent(ctx):
     fails = []
     for fx in ctx.poly_all:

@@ -281,5 +281,44 @@ class TestSignalCoverageGuard(unittest.TestCase):
         self.assertTrue(c["ok"])
 
 
+class TestTradeClvCoverageGuard(unittest.TestCase):
+    """Mess-Schicht-Guard (21.06.2026, Lucas): CLV/Closing muss erfasst sein, sonst ist
+    die Trade-Auswertung teilblind. History via _lazy-Monkeypatch injiziert."""
+
+    def setUp(self):
+        import wm_data_integrity as W
+        self.W = W
+        self._orig = W._lazy
+        self.ctx = type("C", (), {})()
+
+    def tearDown(self):
+        self.W._lazy = self._orig
+
+    def _patch(self, pm):
+        orig = self._orig
+        res = {"summary": {"postmortem": pm}}
+        self.W._lazy = lambda f: res if "wm_results" in f else orig(f)
+
+    def test_low_clv_coverage_flagged(self):
+        self._patch({"closedN": 15, "clvCoverage": "4/15",
+                     "heldToClose": {"n": 0}})
+        c = self.W.check_trade_clv_coverage(self.ctx)
+        self.assertFalse(c["ok"])
+        self.assertEqual(c["severity"], "warn")
+        self.assertTrue(any("CLV nur bei" in f for f in c["failures"]))
+        self.assertTrue(any("polyClose" in f for f in c["failures"]))
+
+    def test_good_coverage_ok(self):
+        self._patch({"closedN": 12, "clvCoverage": "10/12",
+                     "heldToClose": {"n": 8}})
+        c = self.W.check_trade_clv_coverage(self.ctx)
+        self.assertTrue(c["ok"])
+
+    def test_too_few_closed_ok(self):
+        self._patch({"closedN": 3, "clvCoverage": "0/3", "heldToClose": {"n": 0}})
+        c = self.W.check_trade_clv_coverage(self.ctx)
+        self.assertTrue(c["ok"])
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -2781,6 +2781,55 @@ function _renderWmClvRadar() { return _renderWmMarketTable(); }
 // ── WM 2026 Performance / P&L / CLV Section ───────────────────────────────
 // Gebaut aus wm_results.json, wird async nach dem Rendern injiziert.
 
+// ── Trade Post-Mortem (21.06.2026, Lucas) — rückblickend „was wäre besser gewesen".
+// Quelle: summary.postmortem (resolve_wm_results._write_results). CLV = Entry vs
+// Pinnacle-Closing, der Frühindikator für +EV. Markiert lückenhafte CLV-Abdeckung.
+function _buildPostmortemHtml(pm) {
+  if (!pm || !pm.closedN) return '';
+  const eur    = v => v == null ? '—' : `${v >= 0 ? '+' : '-'}€${Math.abs(v).toFixed(2)}`;
+  const eurCol = v => (v || 0) >= 0 ? '#3fb950' : '#f85149';
+  const clv    = v => v == null ? '<span style="color:#484f58">—</span>'
+    : `<span style="color:${v >= 0 ? '#3fb950' : '#f85149'}">${v >= 0 ? '+' : ''}${v.toFixed(1)}pp</span>`;
+  const cov = (pm.clvCoverage || '0/0').split('/').map(Number);
+  const covLow = cov[1] > 0 && cov[0] / cov[1] < 0.5;
+  const covNote = covLow
+    ? `<div style="margin-top:8px;padding:8px 10px;background:rgba(227,179,65,.08);border:1px solid rgba(227,179,65,.25);border-radius:8px;font-size:10px;color:#e3b341;line-height:1.5">⚠ CLV nur bei ${pm.clvCoverage} Trades erfasst — Closing-Snapshot noch lückenhaft, Auswertung teilblind. CLV (Entry vs Pinnacle-Closing) ist der Frühindikator für echten Wert.</div>`
+    : '';
+  const row = (k, v) => `<tr style="border-top:1px solid #161b22">
+      <td style="padding:6px 10px;font-size:11px;color:#e6edf3">${k}</td>
+      <td style="padding:6px 10px;font-size:11px;text-align:center;color:#8b949e">${v.n}</td>
+      <td style="padding:6px 10px;font-size:11px;text-align:right;font-weight:700;color:${eurCol(v.pnl)}">${eur(v.pnl)}</td>
+      <td style="padding:6px 10px;font-size:11px;text-align:center">${clv(v.avgClv)} <span style="color:#484f58;font-size:9px">${v.clvCoverage}</span></td>
+    </tr>`;
+  const mkRows = Object.entries(pm.byMarket || {}).map(([k, v]) => row(k, v)).join('');
+  const exRows = Object.entries(pm.byExit   || {}).map(([k, v]) => row(k, v)).join('');
+  const htc = pm.heldToClose || {};
+  const htcLine = (htc.n || 0) > 0
+    ? `🔁 Halten bis Closing: ${htc.exitBetter}× früher-raus besser · ${htc.holdBetter}× halten besser (Ø ${eur(htc.avgDeltaEur)}/Trade)`
+    : '🔁 Halten-bis-Closing-Gegenrechnung: noch keine Daten (Poly-Closing-Snapshot fehlt)';
+  const tbl = (title, rows) => `
+    <div style="margin-top:10px">
+      <div style="font-size:10px;color:#6e7681;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${title}</div>
+      <table style="width:100%;border-collapse:collapse;border:1px solid #21262d;border-radius:6px;overflow:hidden">
+        <thead><tr style="background:#161b22">
+          <th style="padding:5px 10px;font-size:9px;color:#484f58;text-align:left;text-transform:uppercase;letter-spacing:.5px">Segment</th>
+          <th style="padding:5px 10px;font-size:9px;color:#484f58;text-align:center;text-transform:uppercase">n</th>
+          <th style="padding:5px 10px;font-size:9px;color:#484f58;text-align:right;text-transform:uppercase">P&L</th>
+          <th style="padding:5px 10px;font-size:9px;color:#3fb950;text-align:center;text-transform:uppercase">ØCLV</th>
+        </tr></thead><tbody>${rows}</tbody>
+      </table>
+    </div>`;
+  return `
+    <div style="margin:14px 0;padding:14px 16px;background:#0d1117;border:1px solid #21262d;border-radius:12px">
+      <div style="font-size:11px;font-weight:700;color:#484f58;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">🔬 Trade Post-Mortem — was trägt, was nicht</div>
+      <div style="font-size:11px;color:#8b949e">${pm.closedN} geschlossen · realisiert <b style="color:${eurCol(pm.realizedPnl)}">${eur(pm.realizedPnl)}</b> · ØCLV ${clv(pm.avgClv)} <span style="color:#484f58">(${pm.clvCoverage})</span></div>
+      ${covNote}
+      ${tbl('Nach Markt-Typ', mkRows)}
+      ${tbl('Nach Exit-Grund', exRows)}
+      <div style="margin-top:10px;font-size:10px;color:#8b949e;line-height:1.5">${htcLine}</div>
+    </div>`;
+}
+
 function _buildPerformanceHtml(data) {
   const s     = data.summary || {};
   const bets  = data.bets    || [];
@@ -2898,6 +2947,7 @@ function _buildPerformanceHtml(data) {
         ${s.sharpeEst != null ? `<span style="color:#6e7681;font-size:10px;margin-left:8px;font-weight:400">Sharpe ~${s.sharpeEst.toFixed(2)}</span>` : ''}
       </div>
       ${statsHtml}
+      ${_buildPostmortemHtml(s.postmortem)}
 
       <!-- Bet-Tabelle -->
       <div style="overflow-x:auto;border-radius:8px;border:1px solid #21262d">

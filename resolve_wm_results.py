@@ -906,6 +906,64 @@ def _write_results(bets: list[dict], now_iso: str) -> None:
         std  = math.sqrt(sum((p - mean) ** 2 for p in pnls) / len(pnls))
         sharpe = round(mean / std, 2) if std > 0 else None
 
+    # ── Post-Mortem (21.06.2026, Lucas: „was wäre besser gewesen") — rückblickende
+    # Trade-Analyse für die Test-Woche. Single Source: pro Markt-Typ + Exit-Grund n/P&L/
+    # CLV-Abdeckung, plus „halten bis Closing"-Gegenrechnung wo polyClose existiert.
+    # CLV = (pinnClose − entry) ist DER Frühindikator für +EV (unabhängig vom W/L-Rauschen).
+    def _mkt_cls(m):
+        m = (m or "").lower()
+        if "beide" in m or "btts" in m:                                   return "BTTS"
+        if "über" in m or "uber" in m or "unter" in m or "over" in m or "under" in m: return "O/U"
+        if m.startswith("ah") or " ah " in m or "handicap" in m:          return "AH"
+        return "1X2"
+
+    def _exit_cls(b):
+        r = b.get("result")
+        if r in ("WIN", "LOSS", "VOID"):   return r
+        rsn = (b.get("sellReason") or "").lower()
+        if "age-decay" in rsn:             return "Age-Decay (Profit)"
+        if "age-loss" in rsn:              return "Age-Loss"
+        if "profit" in rsn:                return "Profit-Mitnahme"
+        if "konvergi" in rsn:              return "Konvergenz"
+        if "close" in rsn:                 return "KO-Close"
+        if "sharp" in rsn:                 return "Sharp-gegen"
+        if "deep-loss" in rsn:             return "Deep-Loss"
+        return "Sell-sonstig"
+
+    _bym, _byx = {}, {}
+    _htc_n = _htc_better = _htc_worse = 0
+    _htc_delta = 0.0
+    for b in closed:
+        _pnl = b.get("pnl") or 0
+        _clv = b.get("clvPP")
+        for _d, _k in ((_bym, _mkt_cls(b.get("market"))), (_byx, _exit_cls(b))):
+            _e = _d.setdefault(_k, {"n": 0, "pnl": 0.0, "clvN": 0, "clvSum": 0.0})
+            _e["n"] += 1; _e["pnl"] += _pnl
+            if isinstance(_clv, (int, float)): _e["clvN"] += 1; _e["clvSum"] += _clv
+        _pc, _entry, _stake = b.get("polyClose"), b.get("polyPrice"), (b.get("stake") or 0)
+        if isinstance(_pc, (int, float)) and isinstance(_entry, (int, float)) and _entry > 0:
+            _htc_pnl = _stake * (_pc / _entry - 1)
+            _htc_n += 1; _htc_delta += (_pnl - _htc_pnl)
+            if   _pnl > _htc_pnl + 0.01: _htc_better += 1
+            elif _pnl < _htc_pnl - 0.01: _htc_worse  += 1
+
+    def _fin(d):
+        return {k: {"n": v["n"], "pnl": round(v["pnl"], 2),
+                    "avgClv": round(v["clvSum"] / v["clvN"], 2) if v["clvN"] else None,
+                    "clvCoverage": f"{v['clvN']}/{v['n']}"}
+                for k, v in sorted(d.items())}
+
+    postmortem = {
+        "closedN":      len(closed),
+        "realizedPnl":  round(total_pnl, 2),
+        "avgClv":       avg_clv,
+        "clvCoverage":  f"{len(clv_values)}/{len(closed)}",   # Frühindikator-Abdeckung
+        "byMarket":     _fin(_bym),
+        "byExit":       _fin(_byx),
+        "heldToClose":  {"n": _htc_n, "exitBetter": _htc_better, "holdBetter": _htc_worse,
+                         "avgDeltaEur": round(_htc_delta / _htc_n, 2) if _htc_n else None},
+    }
+
     summary = {
         "totalBets":   len(bets),
         "resolved":    len(closed),   # geschlossen = aufgelöst + früh verkauft
@@ -920,6 +978,7 @@ def _write_results(bets: list[dict], now_iso: str) -> None:
         "roi":         roi,
         "avgCLV":      avg_clv,
         "sharpeEst":   sharpe,
+        "postmortem":  postmortem,
     }
 
     out = {
