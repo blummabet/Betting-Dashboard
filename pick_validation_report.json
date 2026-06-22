@@ -1,41 +1,10 @@
 {
-  "lastRun": "2026-06-22T10:02:29.081600+00:00",
+  "lastRun": "2026-06-22T14:30:37.754939+00:00",
   "stats": {
     "total": 129,
-    "errors": 1,
-    "warnings": 1,
-    "ok": 127
+    "errors": 0,
+    "warnings": 0,
+    "ok": 129
   },
-  "issues": [
-    {
-      "matchKey": "C-2-SCO-MAR",
-      "market": "Auswärtssieg",
-      "level": "warning",
-      "code": "W_NEGATIVE_CLV",
-      "message": "BET-Pick mit CLV -4.0pp — Markt deutlich gegen uns (könnte falsch gepickt sein)",
-      "pickSnapshot": {
-        "verdict": "BET",
-        "odds": 1.67,
-        "modelOdds": 1.641,
-        "edgePP": -3,
-        "clvPP": -3.96,
-        "dataQuality": "steam"
-      }
-    },
-    {
-      "matchKey": "BEL-IRN",
-      "market": "1X2",
-      "level": "error",
-      "code": "E_HOMEAWAY_SWAP",
-      "message": "1X2 hw/aw 4.0/5.2 → Heim-Favorit, aber Polymarket sieht Auswärts-Favorit — Heim/Auswärts-Quoten vermutlich vertauscht",
-      "pickSnapshot": {
-        "verdict": null,
-        "odds": null,
-        "modelOdds": null,
-        "edgePP": null,
-        "clvPP": null,
-        "dataQuality": null
-      }
-    }
-  ]
+  "issues": []
 }

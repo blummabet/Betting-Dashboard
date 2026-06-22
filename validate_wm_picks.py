@@ -52,6 +52,52 @@ ODDS_OUTLIER_MIN  = 12.0     # >12 = vermutlich kein Markt
 HUGE_EDGE_PP      = 30       # >30pp Edge = verdächtig (Quoten invertiert?)
 NEG_CLV_THRESHOLD = -3       # <-3pp CLV bei BET = Markt deutlich gegen uns
 
+# 22.06.2026 (Lucas, Live-Check-Fehlalarme): abgelaufene Spiele aus Fixture-Checks ausnehmen.
+# Bei fertigen Spielen kollabieren die Polymarket-Preise auf den Endstand (poly_hw=poly_aw=0.0
+# bei Remis) → der Swap-Check las das 0/0 als „Auswärts-Favorit" und meldete einen falschen
+# Swap (BEL-IRN, Remis). Und der W_NEGATIVE_CLV „könnte falsch gepickt sein" ist gegenstandslos,
+# wenn das Ergebnis schon feststeht (SCO-MAR Auswärtssieg-Steam-Pick GEWANN trotz −4pp CLV).
+_FINISHED_STATUSES = {"FT", "AET", "PEN", "AWD", "WO"}
+_FIXTURE_INDEX: dict = {}     # 'HOME-AWAY' → fixture; einmal in main() gefüllt
+
+
+def _build_fixture_index(wm: dict) -> dict:
+    idx = {}
+    for _g, gd in (wm.get("groups") or {}).items():
+        for fx in (gd.get("fixtures") or []):
+            h, a = fx.get("home"), fx.get("away")
+            if h and a:
+                idx[f"{h}-{a}"] = fx
+    return idx
+
+
+def _fx_for_key(key: str):
+    """Fixture zu einem Match-Key finden — akzeptiert 'HOME-AWAY' und 'GKEY-MD-HOME-AWAY'."""
+    if not key:
+        return None
+    if key in _FIXTURE_INDEX:
+        return _FIXTURE_INDEX[key]
+    parts = key.split("-")
+    if len(parts) >= 2:
+        return _FIXTURE_INDEX.get(f"{parts[-2]}-{parts[-1]}")
+    return None
+
+
+def _is_finished(fx) -> bool:
+    r = (fx or {}).get("result") or {}
+    return str(r.get("status") or "").upper() in _FINISHED_STATUSES
+
+
+def _kickoff_passed(fx, now=None) -> bool:
+    ko = (fx or {}).get("kickoff")
+    if not ko:
+        return False
+    try:
+        kt = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+        return (now or datetime.now(timezone.utc)) >= kt
+    except Exception:
+        return False
+
 # Edge-Recompute-Konstanten — müssen 1:1 mit compute_verdict() in
 # generate_wm_picks.py übereinstimmen (Margin-Annahmen).
 MODEL_MARGIN      = 0.96     # model_prob = MODEL_MARGIN / modelOdds
@@ -104,6 +150,11 @@ def validate_homeaway_swap(wm: dict, issues: list) -> None:
     """
     odds = wm.get("odds") or {}
     for key, od in odds.items():
+        # 22.06.2026: fertige/laufende Spiele raus. Post-Anpfiff spiegelt Polymarket den (Zwischen-)
+        # Stand, nicht die Markt-Sicht aufs Ergebnis → Swap-Detektion gegen Poly ist dann ungültig.
+        fx = _fx_for_key(key)
+        if _is_finished(fx) or _kickoff_passed(fx):
+            continue
         hw, aw = od.get("hw"), od.get("aw")
         if not (isinstance(hw, (int, float)) and isinstance(aw, (int, float))):
             continue
@@ -118,7 +169,11 @@ def validate_homeaway_swap(wm: dict, issues: list) -> None:
 
         # Referenz 1: Polymarket (primär, unabhängig)
         ph, pa = _poly_side(odds, key, od)
-        poly_ref = (ph > pa) if (ph is not None and pa is not None) else None
+        # Poly-Tie (inkl. 0/0 nach Auflösung oder echter 50/50) gibt KEINE Richtung her → no-signal,
+        # sonst läse das 0.0/0.0 als „Auswärts-Favorit".
+        poly_ref = None
+        if isinstance(ph, (int, float)) and isinstance(pa, (int, float)) and abs(ph - pa) > 0.02:
+            poly_ref = ph > pa
 
         # Referenz 2: Doppelte Chance (sekundär; Gleichstand = kein Signal)
         dc1x, dcx2 = od.get("dc1X"), od.get("dcX2")
@@ -290,10 +345,17 @@ def validate_pick(mk: str, p: dict, wm: dict, issues: list) -> None:
                  f"oder H2H ({h2h_games}) unter Schwelle", p)
 
     # ── W_NEGATIVE_CLV ─────────────────────────────────────
-    if verdict == "BET" and isinstance(clvPP, (int, float)) and clvPP <= NEG_CLV_THRESHOLD:
-        _add(issues, mk, market, "warning", "W_NEGATIVE_CLV",
-             f"BET-Pick mit CLV {clvPP:+.1f}pp — Markt deutlich gegen uns "
-             f"(könnte falsch gepickt sein)", p)
+    # 22.06.2026: gegenstandslos bei fertigem Spiel (Ergebnis steht — SCO-MAR Auswärtssieg gewann
+    # trotz −4pp CLV). Und für Steam ist neg. CLV by design möglich (move-/conviction-getrieben,
+    # nicht edge-getrieben) → neutraleres Wording statt „falsch gepickt".
+    if verdict == "BET" and isinstance(clvPP, (int, float)) and clvPP <= NEG_CLV_THRESHOLD \
+            and not _is_finished(_fx_for_key(mk)):
+        is_steam = p.get("source") == "steam" or dataQ == "steam"
+        msg = (f"BET-Pick mit CLV {clvPP:+.1f}pp — der Move hielt nicht bis zum Close "
+               f"(Steam ist move-/conviction-getrieben, nicht edge-getrieben)") if is_steam else \
+              (f"BET-Pick mit CLV {clvPP:+.1f}pp — Markt deutlich gegen uns "
+               f"(könnte falsch gepickt sein)")
+        _add(issues, mk, market, "warning", "W_NEGATIVE_CLV", msg, p)
 
     # ── W_ODDS_OUTLIER ─────────────────────────────────────
     if isinstance(odds, (int, float)) and odds > ODDS_OUTLIER_MIN:
@@ -358,6 +420,8 @@ def main():
         return
 
     wm = json.loads(WM_FILE.read_text(encoding="utf-8"))
+    global _FIXTURE_INDEX
+    _FIXTURE_INDEX = _build_fixture_index(wm)   # 'HOME-AWAY' → fixture (für finished/kickoff-Gate)
     picks_by_match = wm.get("picks") or {}
 
     issues: list = []

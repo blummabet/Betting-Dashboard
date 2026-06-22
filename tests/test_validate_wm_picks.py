@@ -82,6 +82,83 @@ class TestCrossMarketValidator(unittest.TestCase):
             "trackingExcluded Pick wird ignoriert — kein Konflikt-Error")
 
 
+class TestHomeawaySwapFinishedSkip(unittest.TestCase):
+    """E_HOMEAWAY_SWAP: abgelaufene Spiele raus + Poly-Tie als no-signal (22.06.2026)."""
+
+    def _wm(self, *, finished, poly=(0.0, 1.0, 0.0), kickoff="2030-01-01T00:00:00Z"):
+        # 1X2 Heim-Favorit (hw<aw), Poly degeneriert → würde ohne Fix fälschlich Swap melden
+        result = {"status": "FT", "winner": "draw"} if finished else None
+        fx = {"home": "BEL", "away": "IRN", "kickoff": kickoff, "result": result}
+        return {
+            "groups": {"B": {"fixtures": [fx]}},
+            "odds": {"BEL-IRN": {"hw": 4.0, "aw": 5.2, "dc1X": 1.03, "dcX2": 1.03,
+                                 "poly_hw": poly[0], "poly_dr": poly[1], "poly_aw": poly[2]}},
+        }
+
+    def _run(self, wm):
+        import validate_wm_picks as V
+        V._FIXTURE_INDEX = V._build_fixture_index(wm)
+        issues = []
+        V.validate_homeaway_swap(wm, issues)
+        return [i for i in issues if i["code"] == "E_HOMEAWAY_SWAP"]
+
+    def test_finished_match_no_swap_alarm(self):
+        self.assertEqual(self._run(self._wm(finished=True)), [])
+
+    def test_kickoff_passed_no_swap_alarm(self):
+        self.assertEqual(
+            self._run(self._wm(finished=False, kickoff="2020-01-01T00:00:00Z")), [])
+
+    def test_poly_tie_is_no_signal(self):
+        # live, aber Poly 0/0 (tie) → keine Richtung → kein Alarm (DC ist hier auch tie)
+        self.assertEqual(self._run(self._wm(finished=False, poly=(0.0, 0.0, 0.0))), [])
+
+    def test_live_genuine_swap_still_flagged(self):
+        # live, 1X2 Heim-Favorit aber Poly klar Auswärts-Favorit → echter Swap, MUSS feuern
+        wm = self._wm(finished=False, poly=(0.20, 0.20, 0.60))
+        self.assertEqual(len(self._run(wm)), 1)
+
+
+class TestNegativeClvFinishedAndSteam(unittest.TestCase):
+    """W_NEGATIVE_CLV: nicht auf fertigen Spielen; Steam-Wording (22.06.2026)."""
+
+    def _wm(self, finished):
+        result = {"status": "FT", "winner": "MAR"} if finished else None
+        fx = {"home": "SCO", "away": "MAR", "kickoff": "2030-01-01T00:00:00Z", "result": result}
+        return {"groups": {"C": {"fixtures": [fx]}}, "odds": {}}
+
+    def _pick(self, steam):
+        p = {"market": "Auswärtssieg", "odds": 1.67, "verdict": "BET",
+             "edgePP": -3, "clvPP": -3.96}
+        if steam:
+            p.update({"source": "steam", "dataQuality": "steam",
+                      "steamMovePP": 4.0, "convictionScore": 8})
+        else:
+            p["edgePP"] = 3        # sonst feuert E_VERDICT_NO_EDGE separat
+        return p
+
+    def _clv(self, wm, pick):
+        import validate_wm_picks as V
+        V._FIXTURE_INDEX = V._build_fixture_index(wm)
+        issues = []
+        V.validate_pick("C-2-SCO-MAR", pick, wm, issues)
+        return [i for i in issues if i["code"] == "W_NEGATIVE_CLV"]
+
+    def test_finished_steam_no_clv_warning(self):
+        self.assertEqual(self._clv(self._wm(True), self._pick(steam=True)), [])
+
+    def test_live_steam_warns_without_mispick_wording(self):
+        w = self._clv(self._wm(False), self._pick(steam=True))
+        self.assertEqual(len(w), 1)
+        self.assertNotIn("falsch gepickt", w[0]["message"])
+        self.assertIn("Close", w[0]["message"])
+
+    def test_live_nonsteam_keeps_mispick_wording(self):
+        w = self._clv(self._wm(False), self._pick(steam=False))
+        self.assertEqual(len(w), 1)
+        self.assertIn("falsch gepickt", w[0]["message"])
+
+
 class TestLiveDataValidation(unittest.TestCase):
     """Smoketest auf echten WM-Daten — sollte sauber laufen."""
 
