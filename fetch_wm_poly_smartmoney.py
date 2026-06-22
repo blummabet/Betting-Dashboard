@@ -60,6 +60,67 @@ BIG_TRADE_USD           = 2000   # Trade ab $ kommt in den „große Trades"-Fee
 LEADERBOARD_MAX         = 60     # globale Bestenliste begrenzen
 
 
+def _cfg_cluster_window_h() -> float:
+    """Cluster-Fenster (Stunden) aus dem aktiven Profil — single source mit dem Signal.
+    Der Fetcher MUSS das Fenster zur Fetch-Zeit kennen (distinkte Wallets pro Zeitraum lassen
+    sich aus den Aggregaten nicht rückrechnen). Fallback 12h."""
+    try:
+        import json as _j
+        raw = _j.loads((BASE / "cocobet_config.json").read_text(encoding="utf-8"))
+        active = os.environ.get("COCOBET_PROFILE") or raw["profiles"].get("active", "wm2026")
+        return float(raw["profiles"][active].get("smart_money", {}).get("cluster_window_h", 12))
+    except Exception:
+        return 12.0
+
+
+def _parse_ts(ts):
+    try:
+        return datetime.fromisoformat(str(ts).replace("Z", "+00:00")) if ts else None
+    except Exception:
+        return None
+
+
+def _hours_to_kickoff(fx):
+    """Stunden bis Anpfiff (positiv = liegt vorne). None wenn kein/kaputter kickoff.
+    Für die Exit-Erkennung: SELLs werden erst nah am KO als Conviction-Aufgabe gewertet."""
+    kt = _parse_ts(fx.get("kickoff"))
+    if not kt:
+        return None
+    return round((kt - datetime.now(timezone.utc)).total_seconds() / 3600.0, 1)
+
+
+def _cluster_metrics(trades, window_h):
+    """Konsens-Cluster + Net-Flow je Outcome-Seite aus den großen Trades (PolymarketScan-Idee:
+    ≥N unabhängige Wallets kaufen dieselbe Seite in kurzem Fenster → repreist meist).
+      cluster    = # DISTINKTE BUY-Wallets im Fenster (echter Konsens, nicht eine Wallet ×N)
+      buyUsd/sellUsd, netFlowUsd = BUY − SELL  (negativ = Verkäufer dominieren → Conviction kippt)
+    Fenster ab dem JÜNGSTEN Trade (robust gegen alte Snaps ohne frische Trades)."""
+    times = [t for t in (_parse_ts(x.get("ts")) for x in trades) if t]
+    ref = max(times) if times else None
+    agg = {}
+    for t in trades:
+        side = t.get("side")
+        if side not in ("home", "draw", "away"):
+            continue
+        tt = _parse_ts(t.get("ts"))
+        if ref and tt and (ref - tt).total_seconds() > window_h * 3600:
+            continue
+        d = agg.setdefault(side, {"_buyW": set(), "buyUsd": 0.0, "sellUsd": 0.0})
+        usd = t.get("usd") or 0
+        if t.get("action") == "BUY":
+            d["buyUsd"] += usd
+            if t.get("wallet"):
+                d["_buyW"].add(t["wallet"])
+        elif t.get("action") == "SELL":
+            d["sellUsd"] += usd
+    out = {}
+    for side, d in agg.items():
+        out[side] = {"cluster": len(d["_buyW"]),
+                     "buyUsd": round(d["buyUsd"], 0), "sellUsd": round(d["sellUsd"], 0),
+                     "netFlowUsd": round(d["buyUsd"] - d["sellUsd"], 0)}
+    return out
+
+
 def _http_get(url: str):
     req = urllib.request.Request(url, headers={"User-Agent": "BetEdge/1.0", "Accept": "application/json"})
     try:
@@ -200,10 +261,15 @@ def main():
             trades.extend(_big_trades(cond, pick_label[side], side, price))
         if not outcomes or total < MIN_WRITE_USD:
             continue   # $0.00M-Platzhalter → nicht schreiben
+        # Konsens-Cluster + Net-Flow je Seite aus den großen Trades (21.06.→22.06., PolymarketScan)
+        cluster = _cluster_metrics(trades, _cfg_cluster_window_h())
         for side, o in outcomes.items():
             o["share"] = round(o["usd"] / total, 3)
+            cm = cluster.get(side)
+            if cm:
+                o.update(cm)
         matches[key] = {"totalUsd": round(total, 0), "topTraders": top_traders,
-                        "outcomes": outcomes}
+                        "hoursToKickoff": _hours_to_kickoff(fx), "outcomes": outcomes}
         # Wallet-Dashboard-Daten
         positions.sort(key=lambda p: p["usd"], reverse=True)
         trades.sort(key=lambda t: (t.get("ts") or ""), reverse=True)

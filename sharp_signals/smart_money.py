@@ -31,6 +31,14 @@ DEFAULT_THRESHOLDS = {
     "min_top_share":    0.10,   # darunter reines Retail → kaum smart
     "base_conf":        0.40,
     "max_conf":         0.6,
+    # Konsens-Cluster + Whale-Exit (22.06.2026, PolymarketScan-Idee). Window lebt im Fetcher
+    # (cluster_window_h, single source) — hier nur die Entscheidungs-Schwellen.
+    "cluster_window_h":   12,    # NUR Doku/Single-Source — Fetcher liest es zur Fetch-Zeit
+    "cluster_min_wallets": 3,    # ≥N unabhängige BUY-Wallets im Fenster = echter Konsens
+    "cluster_boost":      1.25,  # smartness-Faktor wenn Cluster erreicht (gedeckelt via max_pp)
+    "exit_window_h":      24,    # SELLs erst so nah am Anpfiff als Conviction-Aufgabe werten
+    "exit_min_usd":       2000,  # Net-Abfluss ab $ = Verkäufer dominieren unsere Pick-Seite
+    "exit_penalty":       1.0,   # pp-Abzug Richtung Warnung bei Exit-Muster
 }
 
 
@@ -99,7 +107,23 @@ class SmartMoneySignal(Signal):
         smartness = max(0.0, top_share)
         if smartness < self._t["min_top_share"]:
             return None                       # reines Retail → nicht smart genug
+
+        # Konsens-Cluster: ≥N unabhängige große BUY-Wallets im Fenster verstärken die Konzentration
+        cluster = int(sm.get("cluster") or 0)
+        clustered = cluster >= self._t["cluster_min_wallets"]
+        if clustered:
+            smartness *= self._t["cluster_boost"]
+
         score = excess * smartness * self._t["scale"]
+
+        # Whale-Exit: Verkäufer dominieren unsere Pick-Seite nah am Anpfiff → Conviction kippt.
+        net = sm.get("netFlowUsd")
+        hk = data.get("hoursToKickoff")
+        exit_hit = (isinstance(net, (int, float)) and net <= -self._t["exit_min_usd"]
+                    and isinstance(hk, (int, float)) and 0 <= hk <= self._t["exit_window_h"])
+        if exit_hit:
+            score -= self._t["exit_penalty"]   # Richtung Warnung drücken (kein Confirm)
+
         cap = self._t["max_signal_pp"]
         score = max(-cap, min(cap, score))
         if abs(score) < 0.1:
@@ -112,6 +136,11 @@ class SmartMoneySignal(Signal):
               f"{'mehr' if excess > 0 else 'weniger'} als der faire Preis hergibt "
               f"({round(fair_share*100)}%), und es sind echte Wale dahinter "
               f"(Top-Wallets {round(top_share*100)}%).")
+        if clustered:
+            ev += f" {cluster} große Wallets sammeln gerade unabhängig dieselbe Seite ein."
+        if exit_hit:
+            ev += (f" ⚠️ Aber kurz vor Anpfiff verkaufen Wale netto rund "
+                   f"${abs(net)/1000:.0f}k auf dieser Seite — die Überzeugung kippt.")
         return SignalResult(
             score=round(float(score), 2),
             confidence=round(float(confidence), 2),
@@ -121,5 +150,9 @@ class SmartMoneySignal(Signal):
                 "topHolderShare": round(top_share, 3), "fairShare": round(fair_share, 3),
                 "excessPP": round(excess * 100, 1), "totalUsd": total,
                 "topTraders": data.get("topTraders"),
+                "cluster": cluster, "clustered": clustered,
+                "netFlowUsd": net if isinstance(net, (int, float)) else None,
+                "hoursToKickoff": hk if isinstance(hk, (int, float)) else None,
+                "exitFlag": exit_hit,
             },
         )

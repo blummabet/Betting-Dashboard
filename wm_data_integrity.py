@@ -945,6 +945,47 @@ def check_smartmoney_sane(ctx):
                 "auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner).")
 
 
+@integrity_check
+def check_smartmoney_cluster_sane(ctx):
+    """Cluster/Net-Flow-Sanity (22.06.2026, PolymarketScan-Idee): die je Outcome geschriebenen
+    Konsens-Cluster-Felder (cluster/buyUsd/sellUsd/netFlowUsd, fetch_wm_poly_smartmoney.py) müssen
+    plausibel sein, BEVOR das smart_money-Signal Cluster-Boost/Exit-Penalty darauf rechnet:
+      · cluster ist ein nicht-negativer Integer und NIE größer als die Holder-Zahl der Seite
+      · buyUsd/sellUsd ≥ 0 und netFlowUsd ≈ buyUsd − sellUsd
+    Fehlt die Datei / hat noch keine Cluster-Felder (alter Runner-Stand) → still."""
+    sm = _lazy("wm_poly_smartmoney.json")
+    if not isinstance(sm, dict):
+        return None
+    matches = sm.get("matches", sm)
+    if not isinstance(matches, dict) or not matches:
+        return None
+    fails, saw_cluster = [], False
+    for key, m in matches.items():
+        if not isinstance(m, dict):
+            continue
+        for side, o in (m.get("outcomes") or {}).items():
+            if not isinstance(o, dict) or "cluster" not in o:
+                continue
+            saw_cluster = True
+            cl, hold = o.get("cluster"), o.get("holders")
+            buy, sell, net = o.get("buyUsd"), o.get("sellUsd"), o.get("netFlowUsd")
+            if not isinstance(cl, int) or cl < 0:
+                fails.append(f"{key} {side}: cluster {cl!r} kein nicht-negativer Integer")
+            if isinstance(cl, int) and isinstance(hold, int) and cl > hold:
+                fails.append(f"{key} {side}: cluster {cl} > holders {hold} — unmöglich")
+            for nm, v in (("buyUsd", buy), ("sellUsd", sell)):
+                if v is not None and (not isinstance(v, (int, float)) or v < 0):
+                    fails.append(f"{key} {side}: {nm} {v!r} negativ/kaputt")
+            if all(isinstance(x, (int, float)) for x in (buy, sell, net)) \
+               and abs(net - (buy - sell)) > 1.0:
+                fails.append(f"{key} {side}: netFlowUsd {net} ≠ buy {buy} − sell {sell}")
+    if not saw_cluster:
+        return None                       # Runner schreibt Cluster-Felder noch nicht → still
+    return _chk("smartmoney_cluster_sane", "Smart-Money-Cluster kohärent", "warn", fails,
+                "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der "
+                "Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll.")
+
+
 # Card-only-Signale (zwei Flächen): treiben NUR Cards + Lern-Loop, NIE das Polymarket-Trading.
 # Der Auto-Trader liest signalAdj_<field> ← signalAdjustmentPP_trade. Diese Trade-Felder MÜSSEN
 # den Card-only-Beitrag abziehen (generate_wm_picks _CARD_ONLY). Spiegelbild hier als Tripwire.

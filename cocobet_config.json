@@ -312,7 +312,13 @@
         "min_volume_usd": 100000,
         "min_top_share": 0.1,
         "base_conf": 0.4,
-        "max_conf": 0.6
+        "max_conf": 0.6,
+        "cluster_window_h": 12,
+        "cluster_min_wallets": 3,
+        "cluster_boost": 1.25,
+        "exit_window_h": 24,
+        "exit_min_usd": 2000,
+        "exit_penalty": 1.0
       },
       "pick_calibration": {
         "enabled": true,
@@ -505,7 +511,13 @@
         "min_volume_usd": 100000,
         "min_top_share": 0.1,
         "base_conf": 0.4,
-        "max_conf": 0.6
+        "max_conf": 0.6,
+        "cluster_window_h": 12,
+        "cluster_min_wallets": 3,
+        "cluster_boost": 1.25,
+        "exit_window_h": 24,
+        "exit_min_usd": 2000,
+        "exit_penalty": 1.0
       },
       "pick_calibration": {
         "enabled": true,
