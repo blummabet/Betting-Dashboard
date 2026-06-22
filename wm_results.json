@@ -48,7 +48,7 @@
       "slug": "",
       "source": "auto",
       "placedAt": "2026-06-09T20:03:35.681644+00:00",
-      "resolvedAt": "2026-06-22T07:30:42.782994+00:00",
+      "resolvedAt": "2026-06-22T10:01:42.510657+00:00",
       "sellPrice": null,
       "sellReason": null,
       "processVerdict": "UNLUCKY",
@@ -96,18 +96,18 @@
       "pinnFair": 0.488,
       "pinnClose": 0.5027,
       "clvPP": 1.27,
-      "polyClose": 0.515,
-      "polyClvPP": 2.5,
+      "polyClose": 0.525,
+      "polyClvPP": 3.5,
       "isSteamLag": false,
-      "result": "PENDING",
-      "pnl": 0.0,
+      "result": "SOLD",
+      "pnl": 0.34,
       "score": null,
       "slug": "",
       "source": "auto",
       "placedAt": "2026-06-09T20:03:37.211953+00:00",
-      "resolvedAt": null,
-      "sellPrice": null,
-      "sellReason": null
+      "resolvedAt": "2026-06-22T10:03:39.761480+00:00",
+      "sellPrice": 0.52,
+      "sellReason": "Markt konvergiert: Poly 0.520 ≈ Pinn fair 0.488 (Δ-3.2pp)"
     },
     {
       "betKey": "GER-CUW-Under 2.5 Tore",
@@ -684,23 +684,23 @@
   ],
   "summary": {
     "totalBets": 26,
-    "resolved": 16,
-    "pending": 10,
-    "sold": 15,
-    "wins": 11,
+    "resolved": 17,
+    "pending": 9,
+    "sold": 16,
+    "wins": 12,
     "losses": 4,
     "voids": 0,
-    "winRate": 73.3,
+    "winRate": 75.0,
     "totalStaked": 143.0,
-    "totalPnl": 2.32,
-    "roi": 1.62,
-    "avgCLV": -1.02,
-    "sharpeEst": 0.08,
+    "totalPnl": 2.66,
+    "roi": 1.86,
+    "avgCLV": -0.57,
+    "sharpeEst": 0.09,
     "postmortem": {
-      "closedN": 16,
-      "realizedPnl": 2.32,
-      "avgClv": -1.02,
-      "clvCoverage": "4/16",
+      "closedN": 17,
+      "realizedPnl": 2.66,
+      "avgClv": -0.57,
+      "clvCoverage": "5/17",
       "byMarket": {
         "AH": {
           "n": 8,
@@ -715,10 +715,10 @@
           "clvCoverage": "0/2"
         },
         "O/U": {
-          "n": 6,
-          "pnl": -5.65,
-          "avgClv": -1.02,
-          "clvCoverage": "4/6"
+          "n": 7,
+          "pnl": -5.31,
+          "avgClv": -0.57,
+          "clvCoverage": "5/7"
         }
       },
       "byExit": {
@@ -741,10 +741,10 @@
           "clvCoverage": "3/3"
         },
         "Konvergenz": {
-          "n": 2,
-          "pnl": 1.09,
-          "avgClv": 5.19,
-          "clvCoverage": "1/2"
+          "n": 3,
+          "pnl": 1.43,
+          "avgClv": 3.23,
+          "clvCoverage": "2/3"
         },
         "LOSS": {
           "n": 1,
@@ -760,12 +760,12 @@
         }
       },
       "heldToClose": {
-        "n": 0,
+        "n": 1,
         "exitBetter": 0,
-        "holdBetter": 0,
-        "avgDeltaEur": null
+        "holdBetter": 1,
+        "avgDeltaEur": -0.05
       }
     }
   },
-  "updatedAt": "2026-06-22T09:33:18.793239+00:00"
+  "updatedAt": "2026-06-22T10:22:23.512843+00:00"
 }
