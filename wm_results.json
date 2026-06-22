@@ -48,7 +48,7 @@
       "slug": "",
       "source": "auto",
       "placedAt": "2026-06-09T20:03:35.681644+00:00",
-      "resolvedAt": "2026-06-22T02:12:15.234142+00:00",
+      "resolvedAt": "2026-06-22T10:01:42.510657+00:00",
       "sellPrice": null,
       "sellReason": null,
       "processVerdict": "UNLUCKY",
@@ -96,18 +96,18 @@
       "pinnFair": 0.488,
       "pinnClose": 0.5027,
       "clvPP": 1.27,
-      "polyClose": null,
-      "polyClvPP": null,
+      "polyClose": 0.515,
+      "polyClvPP": 2.5,
       "isSteamLag": false,
-      "result": "PENDING",
-      "pnl": 0.0,
+      "result": "SOLD",
+      "pnl": 0.34,
       "score": null,
       "slug": "",
       "source": "auto",
       "placedAt": "2026-06-09T20:03:37.211953+00:00",
-      "resolvedAt": null,
-      "sellPrice": null,
-      "sellReason": null
+      "resolvedAt": "2026-06-22T10:03:39.761480+00:00",
+      "sellPrice": 0.52,
+      "sellReason": "Markt konvergiert: Poly 0.520 ≈ Pinn fair 0.488 (Δ-3.2pp)"
     },
     {
       "betKey": "GER-CUW-Under 2.5 Tore",
@@ -680,22 +680,118 @@
       "resolvedAt": null,
       "sellPrice": null,
       "sellReason": null
+    },
+    {
+      "betKey": "NED-TUN-Beide Teams treffen — Nein",
+      "home": "Niederlande",
+      "away": "Tunesien",
+      "homeId": "NED",
+      "awayId": "TUN",
+      "market": "Beide Teams treffen — Nein",
+      "stake": 5.5,
+      "polyPrice": 0.64,
+      "polyOdds": 1.562,
+      "pinnFair": 0.6881,
+      "pinnClose": null,
+      "clvPP": null,
+      "polyClose": null,
+      "polyClvPP": null,
+      "isSteamLag": false,
+      "result": "PENDING",
+      "pnl": 0.0,
+      "score": null,
+      "slug": "",
+      "source": "auto",
+      "placedAt": "2026-06-22T11:18:34.217671+00:00",
+      "resolvedAt": null,
+      "sellPrice": null,
+      "sellReason": null
     }
   ],
   "summary": {
-    "totalBets": 26,
-    "resolved": 16,
+    "totalBets": 27,
+    "resolved": 17,
     "pending": 10,
-    "sold": 15,
-    "wins": 11,
+    "sold": 16,
+    "wins": 12,
     "losses": 4,
     "voids": 0,
-    "winRate": 73.3,
-    "totalStaked": 143.0,
-    "totalPnl": 2.32,
-    "roi": 1.62,
-    "avgCLV": -1.02,
-    "sharpeEst": 0.08
+    "winRate": 75.0,
+    "totalStaked": 148.5,
+    "totalPnl": 2.66,
+    "roi": 1.79,
+    "avgCLV": -0.57,
+    "sharpeEst": 0.09,
+    "postmortem": {
+      "closedN": 17,
+      "realizedPnl": 2.66,
+      "avgClv": -0.57,
+      "clvCoverage": "5/17",
+      "byMarket": {
+        "AH": {
+          "n": 8,
+          "pnl": 6.88,
+          "avgClv": null,
+          "clvCoverage": "0/8"
+        },
+        "BTTS": {
+          "n": 2,
+          "pnl": 1.09,
+          "avgClv": null,
+          "clvCoverage": "0/2"
+        },
+        "O/U": {
+          "n": 7,
+          "pnl": -5.31,
+          "avgClv": -0.57,
+          "clvCoverage": "5/7"
+        }
+      },
+      "byExit": {
+        "Age-Decay (Profit)": {
+          "n": 1,
+          "pnl": 0.29,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        },
+        "Age-Loss": {
+          "n": 2,
+          "pnl": -1.17,
+          "avgClv": null,
+          "clvCoverage": "0/2"
+        },
+        "KO-Close": {
+          "n": 3,
+          "pnl": -0.11,
+          "avgClv": -3.1,
+          "clvCoverage": "3/3"
+        },
+        "Konvergenz": {
+          "n": 3,
+          "pnl": 1.43,
+          "avgClv": 3.23,
+          "clvCoverage": "2/3"
+        },
+        "LOSS": {
+          "n": 1,
+          "pnl": -5.5,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        },
+        "Profit-Mitnahme": {
+          "n": 7,
+          "pnl": 7.72,
+          "avgClv": null,
+          "clvCoverage": "0/7"
+        }
+      },
+      "heldToClose": {
+        "n": 1,
+        "exitBetter": 1,
+        "holdBetter": 0,
+        "avgDeltaEur": 0.06
+      }
+    }
   },
-  "updatedAt": "2026-06-22T05:17:50.342720+00:00"
+  "updatedAt": "2026-06-22T11:48:37.664718+00:00"
 }

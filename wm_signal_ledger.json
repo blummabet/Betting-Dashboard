@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-22T05:17:50Z",
-    "total_records": 75
+    "updated_at": "2026-06-22T11:48:37Z",
+    "total_records": 77
   },
   "records": [
     {
@@ -1536,6 +1536,48 @@
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true
+    },
+    {
+      "key": "G-2-NZL-EGY|Auswärtssieg",
+      "matchKey": "G-2-NZL-EGY",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": 1.0
+        },
+        {
+          "name": "apif_predictions",
+          "score": -2.53
+        },
+        {
+          "name": "smart_money",
+          "score": 0.22
+        }
+      ],
+      "resolvedAt": "2026-06-22T07:30:43Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "G-2-NZL-EGY|Über 2.5 Tore",
+      "matchKey": "G-2-NZL-EGY",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.5
+        }
+      ],
+      "resolvedAt": "2026-06-22T07:30:43Z",
+      "source": "steam",
+      "convictionScore": 2,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "H-1-ESP-CPV|Beide Teams treffen — Ja",
