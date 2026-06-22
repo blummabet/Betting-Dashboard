@@ -147,6 +147,48 @@ class TestClusterMetrics(unittest.TestCase):
         self.assertEqual(m["home"]["cluster"], 1)
 
 
+class TestFetcherClustersAll(unittest.TestCase):
+    """End-to-end: main() schreibt die globale Konsens-Cluster-Liste in wm_poly_wallets.json
+    (mit gemockten data-api-Calls — Polymarket ist geoblockt)."""
+
+    def test_clusters_written(self):
+        import json, tempfile
+        import unittest.mock as mock
+        import fetch_wm_poly_smartmoney as F
+        from pathlib import Path
+        d = Path(tempfile.mkdtemp())
+        prices, out, wal = d / "p.json", d / "sm.json", d / "wal.json"
+        fut = "2030-01-01T00:00:00+00:00"
+        prices.write_text(json.dumps({"allFixtures": [
+            {"key": "FRA-IRQ", "home": "Frankreich", "away": "Irak", "kickoff": fut,
+             "hwCondition": "0x1", "hwTokens": ["t1"], "poly_hw": 0.5,
+             "drCondition": "0x2", "drTokens": ["t2"], "poly_dr": 0.3,
+             "awCondition": "0x3", "awTokens": ["t3"], "poly_aw": 0.2}]}))
+
+        def fake_sm(cond, tok, price):
+            return {"usd": 100000.0, "topHolderShare": 0.5, "holders": 100, "_big": 3, "_wallets": []}
+
+        def fake_trades(cond, pick_label, side, price):
+            if side == "home":   # 3 unabhängige BUY-Wallets → Cluster 3
+                return [{"wallet": w, "side": "home", "action": "BUY", "usd": 3000,
+                         "ts": fut, "pick": pick_label} for w in ("0xa", "0xb", "0xc")]
+            return []
+
+        with mock.patch.object(F, "PRICES_FILE", prices), \
+             mock.patch.object(F, "OUT_FILE", out), \
+             mock.patch.object(F, "WALLETS_FILE", wal), \
+             mock.patch.object(F, "_outcome_smartmoney", fake_sm), \
+             mock.patch.object(F, "_big_trades", fake_trades):
+            F.main()
+
+        w = json.loads(wal.read_text())
+        self.assertIn("clustersAll", w)
+        home = next((c for c in w["clustersAll"] if c["side"] == "home"), None)
+        self.assertIsNotNone(home)
+        self.assertEqual(home["cluster"], 3)
+        self.assertEqual(home["buyUsd"], 9000)
+
+
 class TestClusterGuard(unittest.TestCase):
     def _run(self, sm):
         import unittest.mock as mock

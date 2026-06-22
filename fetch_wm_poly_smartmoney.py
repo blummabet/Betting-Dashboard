@@ -226,7 +226,7 @@ def main():
               "erst Preise, dann Smart-Money.")
     matches = {}
     wallet_matches = {}          # 21.06.2026: Wallet-Dashboard pro Spiel
-    all_positions, all_trades = [], []
+    all_positions, all_trades, all_clusters = [], [], []   # 22.06.: Konsens-Cluster-Feed
     n_ok = 0
     n_skip_ko = 0
     for fx in fixtures:
@@ -263,13 +263,14 @@ def main():
             continue   # $0.00M-Platzhalter → nicht schreiben
         # Konsens-Cluster + Net-Flow je Seite aus den großen Trades (21.06.→22.06., PolymarketScan)
         cluster = _cluster_metrics(trades, _cfg_cluster_window_h())
+        hk = _hours_to_kickoff(fx)
         for side, o in outcomes.items():
             o["share"] = round(o["usd"] / total, 3)
             cm = cluster.get(side)
             if cm:
                 o.update(cm)
         matches[key] = {"totalUsd": round(total, 0), "topTraders": top_traders,
-                        "hoursToKickoff": _hours_to_kickoff(fx), "outcomes": outcomes}
+                        "hoursToKickoff": hk, "outcomes": outcomes}
         # Wallet-Dashboard-Daten
         positions.sort(key=lambda p: p["usd"], reverse=True)
         trades.sort(key=lambda t: (t.get("ts") or ""), reverse=True)
@@ -279,6 +280,17 @@ def main():
             all_positions.append({**p, "match": f"{home_nm} – {away_nm}", "key": key})
         for t in trades:
             all_trades.append({**t, "match": f"{home_nm} – {away_nm}", "key": key})
+        # Konsens-Cluster-Feed: je Seite mit erkanntem Cluster/Net-Flow eine Zeile fürs Dashboard.
+        # Fakten only — der Tab entscheidet Filter/Labels (Cluster-Stärke, Exit-Warnung nah am KO).
+        for side, cm in cluster.items():
+            if cm.get("cluster", 0) <= 0 and cm.get("netFlowUsd", 0) == 0:
+                continue
+            all_clusters.append({
+                "key": key, "match": f"{home_nm} – {away_nm}", "side": side,
+                "pick": pick_label[side], "cluster": cm.get("cluster", 0),
+                "netFlowUsd": cm.get("netFlowUsd", 0), "buyUsd": cm.get("buyUsd", 0),
+                "sellUsd": cm.get("sellUsd", 0), "hoursToKickoff": hk,
+            })
         n_ok += 1
         print(f"  ✅ {key}: ${total/1e6:.2f}M · "
               + " · ".join(f"{s} {o['share']*100:.0f}%" for s, o in outcomes.items())
@@ -291,17 +303,20 @@ def main():
     # Globale Bestenliste + Trade-Feed (für das Wallet-Dashboard)
     all_positions.sort(key=lambda p: p["usd"], reverse=True)
     all_trades.sort(key=lambda t: (t.get("ts") or ""), reverse=True)
+    # Konsens-Cluster: stärkster Konsens zuerst, bei Gleichstand größter Abfluss (Exit) oben
+    all_clusters.sort(key=lambda c: (c.get("cluster", 0), -c.get("netFlowUsd", 0)), reverse=True)
     WALLETS_FILE.write_text(json.dumps({
         "matches":          wallet_matches,
         "topPositionsAll":  all_positions[:LEADERBOARD_MAX],
         "bigTradesAll":     all_trades[:LEADERBOARD_MAX],
+        "clustersAll":      all_clusters[:LEADERBOARD_MAX],
         "updatedAt":        datetime.now(timezone.utc).isoformat(),
     }, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(f"\n💾 {n_ok}/{len(fixtures)} Spiele mit Smart-Money "
           f"({n_skip_ko} gelaufen übersprungen) → {OUT_FILE.name}")
-    print(f"🐋 Wallet-Dashboard: {len(all_positions)} Positionen, {len(all_trades)} große Trades "
-          f"→ {WALLETS_FILE.name}")
+    print(f"🐋 Wallet-Dashboard: {len(all_positions)} Positionen, {len(all_trades)} große Trades, "
+          f"{len(all_clusters)} Cluster → {WALLETS_FILE.name}")
 
 
 if __name__ == "__main__":

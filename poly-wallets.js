@@ -43,6 +43,7 @@ function _pwLink(w) { return 'https://polymarket.com/profile/' + encodeURICompon
 function renderPolyWallets(panel, data) {
   const positions = (data && data.topPositionsAll) || [];
   const trades    = (data && data.bigTradesAll) || [];
+  const clusters  = (data && data.clustersAll) || [];
   const upd = data && data.updatedAt ? (typeof _timeAgo === 'function' ? _timeAgo(data.updatedAt) : data.updatedAt) : '—';
 
   if (!data || (!positions.length && !trades.length)) {
@@ -63,6 +64,48 @@ function renderPolyWallets(panel, data) {
     + '<p style="color:#76819c;font-size:13px;margin:0 0 22px;line-height:1.6">Wo das große Geld liegt: '
     + 'die größten Einzel-Positionen und die jüngsten fetten Trades. Klick auf ein Wallet → Polymarket-Profil. '
     + 'Beträge sind geschätzt (Anteile × aktueller Preis).</p>';
+
+  // ── 0. Konsens-Cluster + Net-Flow (22.06.2026, von PolymarketScan abgeschaut) ──
+  //   Cluster = wie viele UNABHÄNGIGE große Wallets dieselbe Seite einsammeln (≥3 = echter
+  //   Konsens, repreist meist). Net-Flow = Kauf − Verkauf; stark negativ nah am Anpfiff = Exit.
+  let clHTML = '';
+  const clShow = clusters.filter(c => (c.cluster || 0) >= 2
+                 || (c.netFlowUsd || 0) <= -2000);   // nur aussagekräftige Zeilen
+  if (clShow.length) {
+    clHTML =
+      '<div style="margin-bottom:34px"><div style="font-size:11px;font-weight:800;letter-spacing:1.2px;'
+      + 'text-transform:uppercase;color:#5eead4;margin-bottom:6px">Konsens-Cluster &amp; Geldfluss</div>'
+      + '<p style="color:#76819c;font-size:12px;margin:0 0 12px;line-height:1.6">Wo mehrere große Wallets '
+      + 'unabhängig dieselbe Seite einsammeln (Konsens) — oder netto rauslaufen (Exit, ⚠️ nah am Anpfiff). '
+      + 'Speist das <span style="color:#a78bfa">Smart-Money</span>-Signal auf den Cards.</p>'
+      + '<div style="display:flex;flex-direction:column;gap:7px">';
+    clShow.forEach(c => {
+      const col = _pwSideColor(c.side);
+      const net = Number(c.netFlowUsd) || 0;
+      const hk = c.hoursToKickoff;
+      const nearKO = typeof hk === 'number' && hk >= 0 && hk <= 24;
+      const isExit = net <= -2000 && nearKO;
+      const strong = (c.cluster || 0) >= 3;
+      const badge = isExit
+        ? '<span style="font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;white-space:nowrap;background:rgba(255,123,93,.16);color:#ff7b5d">⚠️ EXIT</span>'
+        : '<span style="font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px;white-space:nowrap;background:rgba(94,234,212,.14);color:#5eead4">🐋 ' + (c.cluster || 0) + ' WALLETS</span>';
+      const netLbl = (net >= 0 ? '+' : '−') + _pwUsd(Math.abs(net)).slice(1);
+      const koLbl = typeof hk === 'number' ? (hk >= 0 ? `Anpfiff in ${hk < 1 ? '<1' : Math.round(hk)}h` : 'läuft') : '';
+      clHTML +=
+        '<div style="display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;'
+        + 'background:#0f1626;border:1px solid ' + (isExit ? 'rgba(255,123,93,.30)' : 'rgba(94,234,212,.18)') + ';border-radius:12px;padding:11px 14px">'
+        + badge
+        + '<div style="min-width:0">'
+        +   '<div style="font-size:13px;color:#e6ebf5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'
+        +     '<span style="color:' + col + ';font-weight:700">' + (c.pick || c.side) + '</span> · ' + (c.match || c.key || '') + '</div>'
+        +   '<div style="font-size:11px;color:#76819c;margin-top:2px">'
+        +     (strong ? 'starker Konsens · ' : '') + 'Net-Flow ' + netLbl + (koLbl ? ' · ' + koLbl : '') + '</div>'
+        + '</div>'
+        + '<span style="font-family:monospace;font-weight:800;font-size:15px;color:' + (net >= 0 ? '#2dd47e' : '#ff5d5d') + ';white-space:nowrap">' + netLbl + '</span>'
+        + '</div>';
+    });
+    clHTML += '</div></div>';
+  }
 
   // ── 1. Größte Einzel-Positionen ──
   let posHTML =
@@ -120,5 +163,5 @@ function renderPolyWallets(panel, data) {
   }
   trHTML += '</div>';
 
-  panel.innerHTML = header + posHTML + trHTML;
+  panel.innerHTML = header + clHTML + posHTML + trHTML;
 }

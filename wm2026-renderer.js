@@ -1509,6 +1509,7 @@
     // Pinnacle-Preis übertroffen? Kommt aus dem smart_money-Signal am Pick (nur wenn es gefeuert
     // hat — 1X2/DC/AH). Roher Split allein spiegelt nur den Favoriten; erst der Überschuss ist Signal.
     let edgeLine = '';
+    let clusterLine = '';
     const sig = (pick.signals || []).find(s => s && s.name === 'smart_money');
     if (sig && sig.metadata && sig.metadata.excessPP != null) {
       const m = sig.metadata;
@@ -1518,6 +1519,16 @@
       const exc = m.excessPP;
       edgeLine = `<br><span style="color:${exc > 0 ? '#3fb950' : '#8b949e'};">→ auf ${sideLbl} `
         + `${moneyPct}% Geld vs. ${fairPct}% fair (${exc > 0 ? '+' : ''}${exc}pp ${exc > 0 ? 'mehr als der Markt rechtfertigt' : 'darunter'})</span>`;
+      // Konsens-Cluster (22.06.2026): ≥N unabhängige Wale sammeln dieselbe Seite ein → Verstärkung;
+      // Whale-Exit nah am Anpfiff → Warnung (Conviction kippt). Kommt aus sig.metadata.
+      if (m.clustered && m.cluster) {
+        clusterLine = `<br><span style="color:#5eead4;">🐋 ${m.cluster} große Wallets sammeln gerade dieselbe Seite ein</span>`;
+      }
+      if (m.exitFlag) {
+        const net = Math.abs(m.netFlowUsd || 0);
+        const netLbl = net >= 1000 ? `$${Math.round(net/1000)}k` : `$${Math.round(net)}`;
+        clusterLine += `<br><span style="color:#ff7b5d;">⚠️ Wale verkaufen kurz vor Anpfiff netto ${netLbl} hier — Überzeugung kippt</span>`;
+      }
     }
     const tip = `Verfolgt wird das offene Interesse der größten Wallets je Ausgang auf Polymarket — `
       + `NICHT das Gesamtvolumen des Marktes (das ist höher). ${usd} = Summe dieser Top-Positionen`
@@ -1525,7 +1536,7 @@
     return `<div style="margin-top:6px;padding:6px 9px;border-radius:8px;background:rgba(167,139,250,.10);border:1px solid rgba(167,139,250,.35);font-size:.76rem;color:#c4b5fd;" title="${tip}">
       💰 <strong>Smart Money</strong> — wo die großen Wallets liegen<br>
       <span style="color:#8b949e;">${usd} verfolgt${sm.topTraders != null ? ` · ${sm.topTraders} Wallets &gt;$1k` : ''}</span><br>
-      <span style="color:#a78bfa;">${parts.join(' · ')}</span>${edgeLine}
+      <span style="color:#a78bfa;">${parts.join(' · ')}</span>${edgeLine}${clusterLine}
     </div>`;
   }
 
