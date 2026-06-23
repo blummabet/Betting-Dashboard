@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-23T06:05:21Z",
-    "total_records": 80
+    "updated_at": "2026-06-23T07:20:28Z",
+    "total_records": 82
   },
   "records": [
     {
@@ -1843,6 +1843,35 @@
       "processVerdict": "DESERVED_LOSS"
     },
     {
+      "key": "I-2-NOR-SEN|Doppelte Chance — X2",
+      "matchKey": "I-2-NOR-SEN",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": 1.0
+        },
+        {
+          "name": "form_trend",
+          "score": -2.2
+        },
+        {
+          "name": "xg_strength",
+          "score": -0.88
+        },
+        {
+          "name": "smart_money",
+          "score": -1.5
+        }
+      ],
+      "resolvedAt": "2026-06-23T06:13:35Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
       "key": "J-1-ARG-DZA|Unter 3.5 Tore",
       "matchKey": "J-1-ARG-DZA",
       "market": "Unter 3.5 Tore",
@@ -1951,6 +1980,31 @@
       "resolvedAt": "2026-06-22T19:31:56Z",
       "source": "steam",
       "convictionScore": 7,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "J-2-JOR-DZA|Auswärtssieg",
+      "matchKey": "J-2-JOR-DZA",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 4.33
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.92
+        }
+      ],
+      "resolvedAt": "2026-06-23T06:13:35Z",
+      "source": "steam",
+      "convictionScore": 5,
       "lateEntry": true,
       "processVerdict": "JUSTIFIED"
     },

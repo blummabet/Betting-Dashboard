@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-22T22:01:36Z",
+  "generatedAt": "2026-06-23T06:20:18Z",
   "windowDays": 2,
-  "upcoming": 14,
+  "upcoming": 16,
   "signalsFired": [
     "lead_lag_bias",
     "public_static_bias",
@@ -23,10 +23,10 @@
   "signalsTotal": 19,
   "perSignal": {
     "lead_lag_bias": 6,
-    "public_static_bias": 13,
-    "travel_burden": 57,
+    "public_static_bias": 12,
+    "travel_burden": 59,
     "injury": 0,
-    "form_trend": 91,
+    "form_trend": 90,
     "h2h_pattern": 7,
     "xg_strength": 82,
     "polymarket_sharp": 0,
@@ -35,12 +35,12 @@
     "lineup_signal": 14,
     "apif_predictions": 8,
     "weather_signal": 14,
-    "incentive_signal": 9,
+    "incentive_signal": 11,
     "altitude_signal": 2,
     "chance_creation": 26,
     "form_rating": 5,
-    "freshness_leg": 36,
-    "smart_money": 14
+    "freshness_leg": 28,
+    "smart_money": 15
   },
   "verdict": "warn",
   "errors": [],
@@ -49,19 +49,18 @@
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
-    "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. CLV nur bei 6/17 geschlossenen Trades erfasst — Closing-Snapshot lückenhaft → Auswertung teilblind)",
-    "🛡️ AH-Handicap-Edges plausibel (kein Mirror): 1 Fehler (z.B. FRA-IRQ: AH home -1.5 Edge -31.3pp (poly 0.765 / fair 0.4524) — Phantom/Mirror-Verdacht)",
-    "🛡️ BTTS-Edges plausibel: 2 Fehler (z.B. FRA-IRQ: BTTS Ja Edge +16.0pp (poly 0.195 / fair 0.3549) — Datenfehler-Verdacht)"
+    "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. CLV nur bei 6/18 geschlossenen Trades erfasst — Closing-Snapshot lückenhaft → Auswertung teilblind)",
+    "🛡️ Soft-Eröffnung echt erfasst: 11 Fehler (z.B. BRA-SCO: Soft bewegte sich 1.44→1.36, aber Opening==Jetzt (1.38) — nicht eingefroren)"
   ],
   "oks": [
-    "🌡️ Weather: 32 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
+    "🌡️ Weather: 29 Spiele mit Forecast",
+    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
     "📊 APIF-Predictions: 59 Spiele",
-    "📋 Lineups: 22 Spiele geladen (4 imminent)",
+    "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 74.4 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 77.8 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $366.10",
+    "💼 Poly-Balance: $416.09",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -197,7 +196,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "CLV nur bei 6/17 geschlossenen Trades erfasst — Closing-Snapshot lückenhaft → Auswertung teilblind"
+        "CLV nur bei 6/18 geschlossenen Trades erfasst — Closing-Snapshot lückenhaft → Auswertung teilblind"
       ],
       "note": "CLV (Entry vs Pinnacle-Closing) ist DER Frühindikator für +EV; ohne ihn lässt sich nicht sagen ob die Strategie Wert holt. Lücke = Closing-Snapshot wird nicht zuverlässig bei Anpfiff eingefroren (pinnClose/polyClose). Schließt an den Closing-In-Play-Guard an — die Write-Seite muss bei Anpfiff einfrieren."
     },
@@ -337,6 +336,27 @@
       "note": "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner)."
     },
     {
+      "id": "soft_opening_captured",
+      "label": "Soft-Eröffnung echt erfasst",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 11,
+      "failures": [
+        "BRA-SCO: Soft bewegte sich 1.44→1.36, aber Opening==Jetzt (1.38) — nicht eingefroren",
+        "POR-COL: Soft bewegte sich 2.1→2.05, aber Opening==Jetzt (2.05) — nicht eingefroren",
+        "ENG-GHA: Soft bewegte sich 1.3→1.18, aber Opening==Jetzt (1.2) — nicht eingefroren",
+        "MAR-HTI: Soft bewegte sich 1.3→1.18, aber Opening==Jetzt (1.18) — nicht eingefroren",
+        "JPN-SWE: Soft bewegte sich 2.1→1.91, aber Opening==Jetzt (1.93) — nicht eingefroren",
+        "EGY-IRN: Soft bewegte sich 2.25→2.4, aber Opening==Jetzt (2.4) — nicht eingefroren",
+        "MEX-CZE: Soft bewegte sich 1.83→1.91, aber Opening==Jetzt (1.91) — nicht eingefroren",
+        "USA-TUR: Soft bewegte sich 2.45→1.83, aber Opening==Jetzt (1.93) — nicht eingefroren",
+        "GER-ECU: Soft bewegte sich 1.73→1.85, aber Opening==Jetzt (1.92) — nicht eingefroren",
+        "BEL-NZL: Soft bewegte sich 1.29→1.2, aber Opening==Jetzt (1.2) — nicht eingefroren",
+        "ENG-PAN: Soft bewegte sich 1.25→1.22, aber Opening==Jetzt (1.22) — nicht eingefroren"
+      ],
+      "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
+    },
+    {
       "id": "smartmoney_cluster_sane",
       "label": "Smart-Money-Cluster kohärent",
       "severity": "warn",
@@ -412,23 +432,18 @@
       "id": "ah_edge_sane",
       "label": "AH-Handicap-Edges plausibel (kein Mirror)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "FRA-IRQ: AH home -1.5 Edge -31.3pp (poly 0.765 / fair 0.4524) — Phantom/Mirror-Verdacht"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "fetch_wm_poly_prices: poly_ah_by_team team-ID-geschlüsselt (mirror-immun). Riesen-Edge = falsche Seite/Daten. Auto-Trader blockt via AH_MAX_EDGE_PP."
     },
     {
       "id": "btts_edge_sane",
       "label": "BTTS-Edges plausibel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 2,
-      "failures": [
-        "FRA-IRQ: BTTS Ja Edge +16.0pp (poly 0.195 / fair 0.3549) — Datenfehler-Verdacht",
-        "FRA-IRQ: BTTS Nein Edge -16.0pp (poly 0.805 / fair 0.6451) — Datenfehler-Verdacht"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "fetch_wm_poly_prices: fair_btts aus de-viggter Pinnacle-bttsY/N. Riesen-Edge = Daten kaputt. Auto-Trader blockt via BTTS_MAX_EDGE_PP."
     }
   ]
