@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-23T01:34:57Z",
-    "total_records": 79
+    "updated_at": "2026-06-23T01:50:02Z",
+    "total_records": 80
   },
   "records": [
     {
@@ -1812,6 +1812,35 @@
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true
+    },
+    {
+      "key": "I-2-FRA-IRQ|Über 3.5 Tore",
+      "matchKey": "I-2-FRA-IRQ",
+      "market": "Über 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -0.5
+        },
+        {
+          "name": "form_trend",
+          "score": -2.53
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.55
+        },
+        {
+          "name": "weather_signal",
+          "score": -0.72
+        }
+      ],
+      "resolvedAt": "2026-06-23T01:39:24Z",
+      "source": "steam",
+      "convictionScore": 2,
+      "lateEntry": true,
+      "processVerdict": "DESERVED_LOSS"
     },
     {
       "key": "J-1-ARG-DZA|Unter 3.5 Tore",
