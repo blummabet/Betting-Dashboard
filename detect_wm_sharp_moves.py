@@ -365,9 +365,16 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
     now_utc = datetime.now(timezone.utc)
     cutoff  = now_utc - timedelta(days=SNAP_WINDOW_DAYS)
 
-    for key, snaps in history.items():
-        if key == "_meta" or not isinstance(snaps, list):
+    for key, raw_snaps in history.items():
+        if key == "_meta" or not isinstance(raw_snaps, list):
             continue   # _meta (oddsFetchedAt) ist kein Fixture-Snapshot-Array
+        # FIX 23.06.2026 (Lucas): Sharp Radar NUR auf dem Pinnacle-Strom rechnen. Seit dem
+        # lead_lag-Fix (14.06.) liegen public/soft-Snaps in DERSELBEN History-Liste → der Radar
+        # mischte beide Bücher: prev=Pinnacle vs curr=public ergab Phantom-Moves (reine Buch-
+        # Margen-Differenz), und opening_snap war der älteste (Pinnacle-)Snap während curr ein
+        # public war → falscher kumulativer Drift (DZA-AUT „29 Tage/62 Snaps/public", 2.37→2.30).
+        # Soft-Bestätigung läuft separat über die Card-Soft-Bar. bk fehlt (Legacy) → als sharp werten.
+        snaps = [s for s in raw_snaps if isinstance(s, dict) and s.get("bk") != "public"]
         if len(snaps) < 2:
             continue
 

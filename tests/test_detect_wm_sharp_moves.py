@@ -129,5 +129,56 @@ class TestSendsToTradesChannelOnly(unittest.TestCase):
         self.assertIn("TELEGRAM_TRADES_CHAT_ID", src)
 
 
+class TestRadarPinnacleStreamOnly(unittest.TestCase):
+    """23.06.2026 (Lucas): Radar mischte public+pinnacle aus derselben History-Liste →
+    Phantom-Drift (prev=Pinnacle vs curr=public, opening Pinnacle vs curr public). Fix: nur
+    bk!=public verwenden."""
+
+    def setUp(self):
+        import detect_wm_sharp_moves as D
+        importlib.reload(D)
+        self.D = D
+        from datetime import datetime, timezone, timedelta
+        now = datetime.now(timezone.utc)
+        # Snapshots innerhalb des Fensters; ts t-3d, t-2d, t-1d
+        self.ts = [(now - timedelta(days=d)).isoformat() for d in (3, 2, 1)]
+
+    def _wm(self):
+        # Fixture in der Zukunft, sonst überspringt der Radar (angepfiffen/vorbei)
+        from datetime import datetime, timezone, timedelta
+        ko = (datetime.now(timezone.utc) + timedelta(days=2)).isoformat()
+        d = (datetime.now(timezone.utc) + timedelta(days=2)).date().isoformat()
+        return {"groups": {"X": {
+            "teams": [{"id": "AAA", "name": "A", "flag": "🅰"},
+                      {"id": "BBB", "name": "B", "flag": "🅱"}],
+            "fixtures": [{"home": "AAA", "away": "BBB", "kickoff": ko, "date": d}],
+        }}, "picks": {}}
+
+    def _hist(self, pinn_dr, pub_dr):
+        # interleaved wie in der echten History: je ts ein pinnacle- + ein public-Snap
+        snaps = []
+        for i, t in enumerate(self.ts):
+            snaps.append({"ts": t, "hw": 2.0, "dr": pinn_dr[i], "aw": 4.0, "bk": "pinnacle"})
+            snaps.append({"ts": t, "hw": 2.0, "dr": pub_dr[i], "aw": 4.0, "bk": "public"})
+        return {"AAA-BBB": snaps}
+
+    def test_flat_pinnacle_no_phantom_from_public(self):
+        # Pinnacle flach (3.0), public bewegt stark (3.0→2.3) → NACH Fix kein Move
+        moves = self.D.analyze_moves(self._hist([3.0, 3.0, 3.0], [3.0, 2.6, 2.3]),
+                                     self._wm(), {})
+        self.assertEqual([m for m in moves if m["key"] == "AAA-BBB"], [],
+                         "Public-Bewegung darf keinen Sharp-Move auslösen")
+
+    def test_real_pinnacle_move_detected_on_pinnacle_only(self):
+        # Pinnacle bewegt real (3.19→2.30 ≈ +12pp kumulativ), public flach
+        moves = self.D.analyze_moves(self._hist([3.19, 2.60, 2.30], [3.0, 3.0, 3.0]),
+                                     self._wm(), {})
+        m = next((x for x in moves if x["key"] == "AAA-BBB"), None)
+        self.assertIsNotNone(m, "echter Pinnacle-Move muss erkannt werden")
+        self.assertEqual(m["opening_snap"].get("bk"), "pinnacle")
+        self.assertEqual(m["curr"].get("bk"), "pinnacle")
+        self.assertEqual(m["prev"].get("bk"), "pinnacle")
+
+
 if __name__ == "__main__":
     unittest.main()
