@@ -1,11 +1,12 @@
 {
-  "generatedAt": "2026-06-23T14:32:07Z",
+  "generatedAt": "2026-06-23T17:57:38Z",
   "windowDays": 2,
   "upcoming": 16,
   "signalsFired": [
     "lead_lag_bias",
     "public_static_bias",
     "travel_burden",
+    "injury",
     "form_trend",
     "h2h_pattern",
     "xg_strength",
@@ -23,12 +24,12 @@
   "signalsTotal": 19,
   "perSignal": {
     "lead_lag_bias": 9,
-    "public_static_bias": 15,
-    "travel_burden": 59,
-    "injury": 0,
-    "form_trend": 92,
+    "public_static_bias": 12,
+    "travel_burden": 58,
+    "injury": 1,
+    "form_trend": 93,
     "h2h_pattern": 7,
-    "xg_strength": 83,
+    "xg_strength": 84,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 32,
@@ -39,29 +40,28 @@
     "altitude_signal": 2,
     "chance_creation": 26,
     "form_rating": 5,
-    "freshness_leg": 29,
+    "freshness_leg": 31,
     "smart_money": 18
   },
   "verdict": "warn",
   "errors": [],
   "warns": [
-    "🧠 Signal 'injury' feuert nicht (nur bei gemeldeten Ausfällen)",
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
     "🛡️ Steam-Lag: 1 Position pro Wette: 10 Fehler (z.B. CPV-SAU hw: 5 Einträge (soll 1))",
-    "🛡️ Soft-Eröffnung echt erfasst: 3 Fehler (z.B. MAR-HTI: Soft bewegte sich 1.3→1.17, aber Opening==Jetzt (1.18) — nicht eingefroren)",
-    "🛡️ AH-Leiter bei nahen bepreisten Spielen: 2 Fehler (z.B. POR-COL: bepreist + Anpfiff nah, aber keine ahLadder)"
+    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. USA-TUR: Soft bewegte sich 2.45→1.83, aber Opening==Jetzt (1.93) — nicht eingefroren)",
+    "🛡️ AH-Handicap-Edges plausibel (kein Mirror): 3 Fehler (z.B. POR-UZB: AH home -2.5 Edge -47.0pp (poly 0.915 / fair 0.445) — Phantom/Mirror-Verdacht)"
   ],
   "oks": [
     "🌡️ Weather: 28 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.2h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 81.2 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 82.0 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $393.78",
+    "💼 Poly-Balance: $302.35",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -368,11 +368,9 @@
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 1,
       "failures": [
-        "MAR-HTI: Soft bewegte sich 1.3→1.17, aber Opening==Jetzt (1.18) — nicht eingefroren",
-        "CUW-CIV: Soft bewegte sich 15.0→21.0, aber Opening==Jetzt (19.0) — nicht eingefroren",
-        "JPN-SWE: Soft bewegte sich 2.1→1.91, aber Opening==Jetzt (1.93) — nicht eingefroren"
+        "USA-TUR: Soft bewegte sich 2.45→1.83, aber Opening==Jetzt (1.93) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
@@ -425,12 +423,9 @@
       "id": "ah_ladder_coverage",
       "label": "AH-Leiter bei nahen bepreisten Spielen",
       "severity": "warn",
-      "ok": false,
-      "nFail": 2,
-      "failures": [
-        "POR-COL: bepreist + Anpfiff nah, aber keine ahLadder",
-        "COD-UZB: bepreist + Anpfiff nah, aber keine ahLadder"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "ahLadder fehlte → AH-Picks fielen durchs Raster (Mismatches ohne AH)."
     },
     {
@@ -455,9 +450,13 @@
       "id": "ah_edge_sane",
       "label": "AH-Handicap-Edges plausibel (kein Mirror)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 3,
+      "failures": [
+        "POR-UZB: AH home -2.5 Edge -47.0pp (poly 0.915 / fair 0.445) — Phantom/Mirror-Verdacht",
+        "POR-UZB: AH home -5.5 Edge -12.3pp (poly 0.1935 / fair 0.0702) — Phantom/Mirror-Verdacht",
+        "POR-UZB: AH home -4.5 Edge -29.2pp (poly 0.44 / fair 0.148) — Phantom/Mirror-Verdacht"
+      ],
       "note": "fetch_wm_poly_prices: poly_ah_by_team team-ID-geschlüsselt (mirror-immun). Riesen-Edge = falsche Seite/Daten. Auto-Trader blockt via AH_MAX_EDGE_PP."
     },
     {
