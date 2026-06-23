@@ -966,6 +966,30 @@ def check_btts_not_templated_traded(ctx):
 
 
 @integrity_check
+def check_no_duplicate_picks(ctx):
+    """Eine Karte pro (Spiel, Markt) — kein doppelter Pick (23.06.2026, Lucas: PAN-CRO hatte 2×
+    „Beide Teams treffen — Ja" in Cards + Tracking). Entsteht durch Refresh-/Merge-Altlasten;
+    generate_wm_picks._dedup_picks_by_market fängt es am Write-Boundary, hier als Tripwire sichtbar."""
+    picks = ctx.wm.get("picks") or {}
+    fails = []
+    for key, plist in picks.items():
+        if not isinstance(plist, list):
+            continue
+        seen = {}
+        for p in plist:
+            if not isinstance(p, dict):
+                continue
+            m = p.get("market")
+            seen[m] = seen.get(m, 0) + 1
+        for m, n in seen.items():
+            if n > 1:
+                fails.append(f"{key}: '{m}' {n}× (soll 1)")
+    return _chk("no_duplicate_picks", "Kein doppelter Pick je Spiel/Markt", "warn", fails,
+                "Je (Spiel, Markt) genau EINE Karte. Mehrfach → _dedup_picks_by_market greift nicht "
+                "(Refresh-/Merge-Altlast).")
+
+
+@integrity_check
 def check_steam_lag_no_dupes(ctx):
     """Steam-Lag: 1 Position pro Wette (23.06.2026, Lucas). steam_lag_log.json darf je
     (matchKey, market) nur EINEN Tracking-Eintrag haben — anderer Markt im selben Spiel ist eine

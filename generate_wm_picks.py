@@ -2254,6 +2254,31 @@ def fixture_pick_state(fx, has_pick, today, now_dt, cutover_dt):
     return "rebuild"
 
 
+_VERDICT_RANK = {"BET": 3, "ABWÄGEN": 2, "BEOBACHTEN": 1, "SKIP": 0}
+
+
+def _dedup_picks_by_market(picks: list) -> list:
+    """Genau EINE Karte je (Markt) pro Spiel (23.06.2026, Lucas: PAN-CRO 2× „Beide Teams
+    treffen — Ja"). Defensiver Write-Boundary-Dedup gegen Refresh-/Merge-Altlasten. Bei Kollision
+    bleibt der stärkere: BET > ABWÄGEN > BEOBACHTEN, dann höhere Conviction, dann höhere Quote.
+    Reihenfolge des ersten Auftretens bleibt erhalten."""
+    if not isinstance(picks, list) or len(picks) < 2:
+        return picks
+    best, order = {}, []
+    for p in picks:
+        if not isinstance(p, dict):
+            continue
+        m = p.get("market")
+        rank = (_VERDICT_RANK.get(p.get("verdict"), 0),
+                p.get("convictionScore") or 0, p.get("odds") or 0)
+        if m not in best:
+            best[m] = (rank, p)
+            order.append(m)
+        elif rank > best[m][0]:
+            best[m] = (rank, p)
+    return [best[m][1] for m in order]
+
+
 def _attach_qualification_states(wm: dict) -> None:
     """Hängt pro MD3-Fixture den mathematisch korrekten Qualifikations-Status BEIDER Teams ans
     Fixture (fx['qualHome']/fx['qualAway']). Single Source = incentive_signal._compute_qualification_
@@ -2968,6 +2993,9 @@ def main():
                 for _p in (new_picks or []):
                     _p["smartMoney"] = _sm_match
 
+            # Write-Boundary-Dedup (23.06.2026, Lucas: PAN-CRO hatte 2× „Beide Teams treffen — Ja"):
+            # genau EINE Karte je (Markt) — defensiv gegen Refresh-/Merge-Altlasten aus jeder Quelle.
+            new_picks = _dedup_picks_by_market(new_picks)
             # Immer überschreiben — auch leere Liste löscht veraltete Picks
             wm["picks"][pick_key] = new_picks
 
