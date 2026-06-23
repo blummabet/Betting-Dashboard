@@ -13,6 +13,7 @@ No API key required — Gamma API is public.
 import json
 import os
 import sys
+import collections
 import urllib.request
 import urllib.error
 from datetime import datetime, timezone, timedelta
@@ -428,6 +429,28 @@ def compute_ah_edges(poly_ah_home: dict, poly_ah_away: dict, ah_ladder: dict) ->
     return out
 
 
+# Templated/Platzhalter-BTTS-Linien (23.06.2026, Lucas): Pinnacle (bzw. der Feed) liefert für viele
+# WM-Spiele eine GENERISCHE Standard-BTTS-Linie (z.B. 1.91/1.80 auf 5 Spielen) statt eines echten
+# Spiel-Sharp-Preises. Die de-vig davon (fair 0.4852/0.5148) ist mathematisch sauber, aber inhaltlich
+# wertlos → Phantom-Edge → Auto-Trader setzte echtes Geld (CPV-SAU/PRY-AUS/JPN-SWE, real negativer Edge).
+BTTS_TEMPLATE_MIN = 3   # dieselbe (bttsY,bttsN) über >= N Spiele = Platzhalter → nicht handelbar
+
+
+def compute_btts_edges(pinn_bttsY, pinn_bttsN, poly_btts, poly_btts_no, templated=False):
+    """De-viggte Pinnacle-BTTS-Fair + Edge je Seite. Liefert bei fehlender Linie ODER templated
+    (generische Standardlinie, kein echter Sharp-Preis) überall None → der Auto-Trader handelt sie
+    NICHT (edge=None → skip). Echte Linie: fair_Ja + fair_Nein = 1.0."""
+    if templated or not (isinstance(pinn_bttsY, (int, float)) and isinstance(pinn_bttsN, (int, float))
+                         and pinn_bttsY > 1 and pinn_bttsN > 1):
+        return None, None, None, None
+    margin = 1 / pinn_bttsY + 1 / pinn_bttsN
+    fair    = round((1 / pinn_bttsY) / margin, 4)
+    fair_no = round((1 / pinn_bttsN) / margin, 4)
+    edge    = round((fair - poly_btts) * 100, 1) if poly_btts else None
+    edge_no = round((fair_no - poly_btts_no) * 100, 1) if poly_btts_no else None
+    return fair, fair_no, edge, edge_no
+
+
 def main():
     print("=== fetch_wm_poly_prices.py ===")
 
@@ -656,6 +679,16 @@ def main():
     # Märkte, für die Engine-Felder (verdict/conviction/signal…) durchgereicht werden.
     _ENGINE_FIELDS = ("hw", "dr", "aw", "o25", "u25", "btts", "btts_no")
 
+    # Templated-BTTS-Erkennung: zähle jede (bttsY,bttsN)-Linie über ALLE Spiele. Eine Linie, die
+    # auf >= BTTS_TEMPLATE_MIN Spielen identisch auftaucht, ist eine generische Platzhalter-Linie
+    # (kein echter Spiel-Sharp-Preis) → unten von der BTTS-Fair/Edge ausgeschlossen.
+    _btts_line_counts = collections.Counter()
+    for _o in (wm_odds_ref or {}).values():
+        if isinstance(_o, dict):
+            _y, _n = _o.get("bttsY"), _o.get("bttsN")
+            if isinstance(_y, (int, float)) and isinstance(_n, (int, float)):
+                _btts_line_counts[(_y, _n)] += 1
+
     for key, p in prices.items():
         home_id, away_id = key.split("-", 1)
         pinn = wm_odds_ref.get(key, {})
@@ -713,15 +746,15 @@ def main():
         poly_btts_no = p.get("poly_btts_no")
         pinn_bttsY   = pinn.get("bttsY")
         pinn_bttsN   = pinn.get("bttsN")
-        fair_btts = fair_btts_no = edge_btts = edge_btts_no = None
-        if pinn_bttsY and pinn_bttsN and pinn_bttsY > 1:
-            btts_margin  = 1/pinn_bttsY + 1/pinn_bttsN
-            fair_btts    = round((1/pinn_bttsY) / btts_margin, 4)
-            fair_btts_no = round((1/pinn_bttsN) / btts_margin, 4)
-            if poly_btts:
-                edge_btts = round((fair_btts - poly_btts) * 100, 1)
-            if poly_btts_no:
-                edge_btts_no = round((fair_btts_no - poly_btts_no) * 100, 1)
+        btts_templated = (
+            isinstance(pinn_bttsY, (int, float)) and isinstance(pinn_bttsN, (int, float))
+            and _btts_line_counts[(pinn_bttsY, pinn_bttsN)] >= BTTS_TEMPLATE_MIN
+        )
+        fair_btts, fair_btts_no, edge_btts, edge_btts_no = compute_btts_edges(
+            pinn_bttsY, pinn_bttsN, poly_btts, poly_btts_no, templated=btts_templated)
+        if btts_templated:
+            print(f"  ⏭️  BTTS templated ({pinn_bttsY}/{pinn_bttsN} auf "
+                  f"{_btts_line_counts[(pinn_bttsY, pinn_bttsN)]} Spielen) → {key} nicht handelbar")
 
         # ── Handicap-Edges (15.06.2026): Poly-Spreads vs Pinnacle-AH-Leiter ──────
         # home_id/away_id aus dem (normalisierten) Key → poly_ah_by_team auflösen.
@@ -776,6 +809,7 @@ def main():
             # Pinnacle devigged fair probabilities (BTTS)
             "fair_btts":    fair_btts,
             "fair_btts_no": fair_btts_no,
+            "btts_templated": btts_templated,   # generische Platzhalter-Linie → nicht handelbar
             # Edge per outcome in percentage points (positive = Poly underpriced)
             "edge_hw":      edge_hw,
             "edge_dr":      edge_dr,
