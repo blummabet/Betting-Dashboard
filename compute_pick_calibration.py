@@ -55,8 +55,23 @@ def _agg(vals: list[float]) -> dict:
     return {"n": n, "procWin": round(sum(vals) / n, 3) if n else None}
 
 
+# 23.06.2026 (Lucas): Runde 1 (alte Engine) aus der Kalibrierung ausschließen — wie im
+# Bayesian-Updater. Ledger behält die Historie, Lernen startet ab MD2.
+MIN_LEARN_MATCHDAY = 2
+
+
+def _matchday_of(rec: dict):
+    md = rec.get("matchday")
+    if isinstance(md, int):
+        return md
+    parts = str(rec.get("matchKey") or rec.get("key") or "").split("-")
+    return int(parts[1]) if len(parts) >= 2 and parts[1].isdigit() else None
+
+
 def compute(ledger: dict) -> dict:
     recs = ledger.get("records", []) if isinstance(ledger, dict) else []
+    recs = [r for r in recs
+            if (_matchday_of(r) is None or _matchday_of(r) >= MIN_LEARN_MATCHDAY)]
     scored = [(r, _outcome(r)) for r in recs]
     scored = [(r, o) for r, o in scored if o is not None]
     all_vals = [o for _, o in scored]

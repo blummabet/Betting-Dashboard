@@ -43,24 +43,50 @@ PRIOR_ALPHA = 2.0
 PRIOR_BETA  = 2.0
 MIN_OBS_FOR_TRUST = 10  # davor: konservatives Update (50% weight zur Prior)
 
+# 23.06.2026 (Lucas): Runde 1 (alte Engine) aus dem Lern-Loop ausschließen — die ST1-Picks liefen
+# teils auf alter Engine und würden die neuen Gewichte verwässern. Ledger behält die Historie
+# (Audit), aber das Lernen startet ab Matchday 2. Höher setzen, um Slate weiter einzuschränken.
+MIN_LEARN_MATCHDAY = 2
+
 LEDGER_FILE  = BASE / "wm_signal_ledger.json"
 WEIGHTS_FILE = BASE / "signal_weights.json"
 
 
+def _matchday_of(pick: dict) -> int | None:
+    """Matchday aus dem Record. Bevorzugt explizites Feld, sonst aus matchKey
+    'GKEY-MD-HOME-AWAY' (2. Segment). None wenn nicht ableitbar."""
+    md = pick.get("matchday")
+    if isinstance(md, int):
+        return md
+    parts = str(pick.get("matchKey") or pick.get("key") or "").split("-")
+    if len(parts) >= 2 and parts[1].isdigit():
+        return int(parts[1])
+    return None
+
+
 def _load_results() -> list[dict]:
     """Lern-Beobachtungen aus dem Signal-Ledger (records[]). Jeder Record hat
-    result (WIN/LOSS/VOID) + signals[] (name/score) — genau was update_weights braucht."""
+    result (WIN/LOSS/VOID) + signals[] (name/score) — genau was update_weights braucht.
+    Runde < MIN_LEARN_MATCHDAY (alte Engine) wird ausgefiltert."""
     if not LEDGER_FILE.exists():
         return []
     try:
         d = json.loads(LEDGER_FILE.read_text(encoding="utf-8"))
-        if isinstance(d, list):
-            return d
-        if isinstance(d, dict):
-            return d.get("records") or d.get("picks") or d.get("resolved") or []
+        recs = d if isinstance(d, list) else (
+            d.get("records") or d.get("picks") or d.get("resolved") or [])
     except Exception as e:
         print(f"⚠️  wm_signal_ledger.json laden fehlgeschlagen: {e}")
-    return []
+        return []
+    kept, skipped = [], 0
+    for r in recs:
+        md = _matchday_of(r)
+        if md is not None and md < MIN_LEARN_MATCHDAY:
+            skipped += 1
+            continue
+        kept.append(r)
+    if skipped:
+        print(f"  ⏭️  {skipped} Records aus Runde < MD{MIN_LEARN_MATCHDAY} (alte Engine) übersprungen")
+    return kept
 
 
 def _load_weights() -> dict:
