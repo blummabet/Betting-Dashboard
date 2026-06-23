@@ -48,7 +48,7 @@
       "slug": "",
       "source": "auto",
       "placedAt": "2026-06-09T20:03:35.681644+00:00",
-      "resolvedAt": "2026-06-23T21:27:35.767327+00:00",
+      "resolvedAt": "2026-06-23T22:17:43.188815+00:00",
       "sellPrice": null,
       "sellReason": null,
       "processVerdict": "UNLUCKY",
@@ -339,7 +339,7 @@
       "slug": "",
       "source": "auto",
       "placedAt": "2026-06-17T17:22:22.438452+00:00",
-      "resolvedAt": "2026-06-23T21:27:35.767327+00:00",
+      "resolvedAt": "2026-06-23T22:17:43.188815+00:00",
       "sellPrice": null,
       "sellReason": null,
       "processVerdict": "DESERVED_LOSS",
@@ -442,15 +442,20 @@
       "polyClose": null,
       "polyClvPP": null,
       "isSteamLag": false,
-      "result": "PENDING",
-      "pnl": 0.0,
-      "score": null,
+      "result": "LOSS",
+      "pnl": -5.5,
+      "score": "0-0",
       "slug": "",
       "source": "auto",
       "placedAt": "2026-06-17T22:22:50.026132+00:00",
-      "resolvedAt": null,
+      "resolvedAt": "2026-06-23T22:17:43.188815+00:00",
       "sellPrice": null,
-      "sellReason": null
+      "sellReason": null,
+      "processVerdict": "DESERVED_LOSS",
+      "processCovered": false,
+      "xgTotal": 0.4,
+      "xgHome": 0.3,
+      "xgAway": 0.1
     },
     {
       "betKey": "CPV-SAU-Beide Teams treffen — Nein",
@@ -793,23 +798,23 @@
   ],
   "summary": {
     "totalBets": 30,
-    "resolved": 19,
-    "pending": 11,
+    "resolved": 20,
+    "pending": 10,
     "sold": 17,
     "wins": 12,
-    "losses": 5,
+    "losses": 6,
     "voids": 0,
-    "winRate": 70.6,
+    "winRate": 66.7,
     "totalStaked": 165.0,
-    "totalPnl": -2.84,
-    "roi": -1.72,
-    "avgCLV": 1.84,
-    "sharpeEst": -0.07,
+    "totalPnl": -8.34,
+    "roi": -5.05,
+    "avgCLV": 1.21,
+    "sharpeEst": -0.18,
     "postmortem": {
-      "closedN": 19,
-      "realizedPnl": -2.84,
-      "avgClv": 1.84,
-      "clvCoverage": "10/19",
+      "closedN": 20,
+      "realizedPnl": -8.34,
+      "avgClv": 1.21,
+      "clvCoverage": "11/20",
       "byMarket": {
         "AH": {
           "n": 8,
@@ -818,10 +823,10 @@
           "clvCoverage": "2/8"
         },
         "BTTS": {
-          "n": 3,
-          "pnl": -4.41,
-          "avgClv": 2.68,
-          "clvCoverage": "2/3"
+          "n": 4,
+          "pnl": -9.91,
+          "avgClv": 0.1,
+          "clvCoverage": "3/4"
         },
         "O/U": {
           "n": 8,
@@ -856,10 +861,10 @@
           "clvCoverage": "2/3"
         },
         "LOSS": {
-          "n": 2,
-          "pnl": -11.0,
-          "avgClv": -4.8,
-          "clvCoverage": "1/2"
+          "n": 3,
+          "pnl": -16.5,
+          "avgClv": -4.92,
+          "clvCoverage": "2/3"
         },
         "Profit-Mitnahme": {
           "n": 7,
@@ -882,5 +887,5 @@
       }
     }
   },
-  "updatedAt": "2026-06-23T22:06:55.506563+00:00"
+  "updatedAt": "2026-06-23T22:17:44.022116+00:00"
 }
