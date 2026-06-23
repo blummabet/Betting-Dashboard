@@ -946,6 +946,26 @@ def check_smartmoney_sane(ctx):
 
 
 @integrity_check
+def check_btts_not_templated_traded(ctx):
+    """Tripwire (23.06.2026, Lucas): eine als templated markierte BTTS-Linie (generische Pinnacle-
+    Platzhalter-Linie, auf vielen Spielen identisch) darf KEINEN handelbaren Edge produzieren.
+    Vorfall: CPV-SAU/PRY-AUS/JPN-SWE — fair=0.5148 aus der 1.91/1.80-Standardlinie → Phantom-Edge
+    +3.5–5pp, real negativ, echtes Geld gesetzt. fetch_wm_poly_prices.compute_btts_edges nullt
+    fair/edge bei btts_templated → hier prüfen, dass das auch greift."""
+    fails = []
+    for fx in (ctx.poly_all or []):
+        if not isinstance(fx, dict) or not fx.get("btts_templated"):
+            continue
+        for ekey in ("edge_btts", "edge_btts_no"):
+            if isinstance(fx.get(ekey), (int, float)):
+                fails.append(f"{fx.get('homeId')}-{fx.get('awayId')}: {ekey}={fx[ekey]} trotz "
+                             f"templated BTTS-Linie (sollte None sein)")
+    return _chk("btts_not_templated_traded", "BTTS-Platzhalter nicht handelbar", "warn", fails,
+                "Templated Pinnacle-BTTS-Linien (auf vielen Spielen identisch) sind kein echter "
+                "Sharp-Preis → fair/edge müssen None sein, sonst tradet der Auto-Trader Phantom-Edges.")
+
+
+@integrity_check
 def check_steam_lag_no_dupes(ctx):
     """Steam-Lag: 1 Position pro Wette (23.06.2026, Lucas). steam_lag_log.json darf je
     (matchKey, market) nur EINEN Tracking-Eintrag haben — anderer Markt im selben Spiel ist eine
