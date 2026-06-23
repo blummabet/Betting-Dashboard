@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-22T16:04:12Z",
-    "total_records": 77
+    "updated_at": "2026-06-23T04:35:16Z",
+    "total_records": 80
   },
   "records": [
     {
@@ -1814,6 +1814,35 @@
       "lateEntry": true
     },
     {
+      "key": "I-2-FRA-IRQ|Über 3.5 Tore",
+      "matchKey": "I-2-FRA-IRQ",
+      "market": "Über 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -0.5
+        },
+        {
+          "name": "form_trend",
+          "score": -2.53
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.55
+        },
+        {
+          "name": "weather_signal",
+          "score": -0.72
+        }
+      ],
+      "resolvedAt": "2026-06-23T01:39:24Z",
+      "source": "steam",
+      "convictionScore": 2,
+      "lateEntry": true,
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
       "key": "J-1-ARG-DZA|Unter 3.5 Tore",
       "matchKey": "J-1-ARG-DZA",
       "market": "Unter 3.5 Tore",
@@ -1866,6 +1895,64 @@
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true
+    },
+    {
+      "key": "J-2-ARG-AUT|Beide Teams treffen — Nein",
+      "matchKey": "J-2-ARG-AUT",
+      "market": "Beide Teams treffen — Nein",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.66
+        },
+        {
+          "name": "xg_strength",
+          "score": -6.0
+        }
+      ],
+      "resolvedAt": "2026-06-22T19:31:56Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "J-2-ARG-AUT|Heimsieg",
+      "matchKey": "J-2-ARG-AUT",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 6.0
+        },
+        {
+          "name": "public_static_bias",
+          "score": -1.22
+        },
+        {
+          "name": "travel_burden",
+          "score": 1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 1.2
+        },
+        {
+          "name": "lineup_signal",
+          "score": 0.22
+        },
+        {
+          "name": "smart_money",
+          "score": 1.02
+        }
+      ],
+      "resolvedAt": "2026-06-22T19:31:56Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "K-1-POR-COD|Unter 3.5 Tore",
