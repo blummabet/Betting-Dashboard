@@ -946,6 +946,28 @@ def check_smartmoney_sane(ctx):
 
 
 @integrity_check
+def check_steam_lag_no_dupes(ctx):
+    """Steam-Lag: 1 Position pro Wette (23.06.2026, Lucas). steam_lag_log.json darf je
+    (matchKey, market) nur EINEN Tracking-Eintrag haben — anderer Markt im selben Spiel ist eine
+    eigene Position, aber dasselbe Match+Markt nie doppelt. Mehrfach = Dedup-Bug (vorher fand der
+    Monitor nach Konvergenz den Eintrag nicht mehr → neue ID je Tag, JOR-DZA hw lag 6× im Log)."""
+    log = _lazy("steam_lag_log.json")
+    sigs = log.get("signals") if isinstance(log, dict) else None
+    if not isinstance(sigs, list) or not sigs:
+        return None
+    counts = {}
+    for s in sigs:
+        if not isinstance(s, dict):
+            continue
+        k = (s.get("matchKey"), s.get("market"))
+        counts[k] = counts.get(k, 0) + 1
+    fails = [f"{mk} {mkt}: {c} Einträge (soll 1)" for (mk, mkt), c in counts.items() if c > 1]
+    return _chk("steam_lag_no_dupes", "Steam-Lag: 1 Position pro Wette", "warn", fails,
+                "Je (Match, Markt) nur EINE Tracking-Position. Mehrfach → make_signal_id/Status-"
+                "Filter in steam_lag_monitor.update_log defekt (Re-Detektion legt Duplikat an).")
+
+
+@integrity_check
 def check_soft_opening_captured(ctx):
     """Soft-Eröffnung echt erfasst (22.06.2026, Lucas: „Opening==Jetzt auf fast jeder Card").
     Bug: fetch_wm_odds baute den Odds-Eintrag je Lauf neu OHNE public_*_open zu übernehmen →

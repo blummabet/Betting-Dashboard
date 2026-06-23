@@ -480,9 +480,11 @@ def compute_edges(poly: dict, pinn: dict) -> list[dict]:
 
 
 # ── Signal-ID generieren ──────────────────────────────────────────────────────
-def make_signal_id(key: str, market: str, ts: str) -> str:
-    date_tag = ts[:10].replace("-", "")
-    return f"{key}_{market}_{date_tag}"
+def make_signal_id(key: str, market: str, ts: str | None = None) -> str:
+    # 23.06.2026 (Lucas: „jede Wette mit 1 Position"): ID STABIL pro (Match, Markt) — NICHT mehr
+    # tages-getaggt. Vorher gab das tages-Tag derselben Wette bei Re-Detektion an einem neuen Tag
+    # eine neue ID → Duplikat-Positionen (JOR-DZA hw 6×). Anderer Markt im selben Spiel = eigene ID.
+    return f"{key}_{market}"
 
 
 # ── Log laden/speichern ───────────────────────────────────────────────────────
@@ -564,13 +566,14 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str,
         if not best_key:
             continue
 
-        sig_id = make_signal_id(fx["key"], best_key, now_ts)
-        # Find existing open entry for same match + market (any date)
+        # EINE Position pro (Match, Markt): bestehenden Eintrag finden, egal welcher Status
+        # (außer RESOLVED — abgepfiffenes Spiel, kein Re-Open). Vorher nur status=="OPEN" → nach
+        # Konvergenz wurde bei Re-Detektion ein DUPLIKAT angelegt (Lucas 23.06.).
         open_entry = None
         for e in log.get("signals", []):
             if (e["matchKey"] == fx["key"]
                     and e["market"] == best_key
-                    and e["status"] == "OPEN"):
+                    and e["status"] != "RESOLVED"):
                 open_entry = e
                 break
 
@@ -818,7 +821,9 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str,
     current_keys = {fx["key"] for fx in signals}
 
     for entry in log.get("signals", []):
-        if entry["status"] != "OPEN":
+        # 23.06.2026: auch hängende non-OPEN-Stati (Legacy PRE_CONVERGED) nach Anpfiff schließen —
+        # CONVERGED bleibt CONVERGED (erfolgreiche Konvergenz), RESOLVED ist schon zu.
+        if entry["status"] in ("RESOLVED", "CONVERGED"):
             continue
         # Kickoff vorbei (auch same-day-live) → Pre-Match-Edge nicht mehr handelbar.
         # Schließen statt OFFEN lassen, sonst stehen laufende Spiele im aktiven Steam-Lag.
