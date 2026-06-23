@@ -950,33 +950,56 @@ def check_soft_opening_captured(ctx):
     """Soft-Eröffnung echt erfasst (22.06.2026, Lucas: „Opening==Jetzt auf fast jeder Card").
     Bug: fetch_wm_odds baute den Odds-Eintrag je Lauf neu OHNE public_*_open zu übernehmen →
     fetch_wm_multibook_odds (set-once-if-None) re-initialisierte das Soft-Opening auf den AKTUELLEN
-    Konsens → 0pp Soft-Bewegung überall. Heuristik gegen Fehlalarm auf frischem Slate: nur Fixtures
-    zählen, bei denen sich PINNACLE nachweislich bewegt hat (odds_open.hw ≠ hw → Markt lief, Zeit
-    verging). Ist dort die Soft-Eröffnung == aktuelle Soft-Quote, wurde sie nicht echt eingefroren."""
+    Konsens → 0pp Soft-Bewegung überall.
+
+    PRÄZISE statt heuristisch: Beleg ist die Soft-ZEITREIHE selbst (wm2026-odds-history.json, bk=
+    'public'). Nur flaggen, wenn die Soft-Linie sich real bewegt hat (oldest≠latest), das gespeicherte
+    Soft-Opening aber == aktueller Soft-Quote ist → dann wurde die Bewegung nicht eingefroren. Soft
+    genuin flach (Pinnacle bewegt, Soft nicht) ist KEIN Bug → wird nicht geflaggt. Fertige/laufende
+    Spiele raus (historisch, gepostete Picks immutable)."""
     odds = ctx.odds or {}
-    moved, frozen = 0, []
-    for key, o in odds.items():
-        if not isinstance(o, dict):
+    skip = set()
+    for _g, fx in ctx.fixtures:
+        h, a = fx.get("home"), fx.get("away")
+        if not (h and a):
             continue
-        hw = o.get("hw")
-        oo = (o.get("odds_open") or {}).get("hw")
+        fin = str((fx.get("result") or {}).get("status") or "").upper() in \
+            {"FT", "AET", "PEN", "AWD", "WO"}
+        passed = False
+        ko = fx.get("kickoff")
+        if ko:
+            try:
+                passed = ctx.now >= datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+            except Exception:
+                passed = False
+        if fin or passed:
+            skip.add(f"{h}-{a}")
+    hist = ctx.history or {}
+    checked, frozen = 0, []
+    for key, o in odds.items():
+        if not isinstance(o, dict) or key in skip:
+            continue
         ph = o.get("public_hw")
         po = o.get("public_hw_open")
-        if not all(isinstance(x, (int, float)) for x in (hw, oo, ph, po)):
+        if not (isinstance(ph, (int, float)) and isinstance(po, (int, float))):
             continue
-        if abs(hw - oo) < 0.05:
-            continue                       # Pinnacle nicht bewegt → kein Zeitbeleg → überspringen
-        moved += 1
+        snaps = [s for s in (hist.get(key) or [])
+                 if s.get("bk") == "public" and isinstance(s.get("hw"), (int, float))]
+        if len(snaps) < 2:
+            continue                       # keine Soft-Zeitreihe → keine Aussage
+        soft_first, soft_last = snaps[0]["hw"], snaps[-1]["hw"]
+        if abs(soft_first - soft_last) <= 0.03:
+            continue                       # Soft-Linie real flach → Opening==Jetzt ist korrekt
+        checked += 1
         if abs(ph - po) < 1e-9:
-            frozen.append(f"{key}: Soft-Open == Jetzt ({po}), obwohl Pinnacle {oo}→{hw} lief")
-    if moved < 5:
-        return None                        # zu wenig Markt-Bewegung im Slate → keine Aussage
-    share = len(frozen) / moved
-    fails = frozen if share > 0.6 else []
-    return _chk("soft_opening_captured", "Soft-Eröffnung echt erfasst", "warn", fails,
-                f"{len(frozen)}/{moved} bewegte Spiele mit Soft-Open==Jetzt (Schwelle 60%). "
-                "public_*_open darf nicht je Lauf auf den aktuellen Konsens zurückgesetzt werden — "
-                "fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen.")
+            frozen.append(f"{key}: Soft bewegte sich {soft_first}→{soft_last}, aber "
+                          f"Opening==Jetzt ({po}) — nicht eingefroren")
+    if checked < 3:
+        return None                        # zu wenig bewegte Soft-Linien → keine Aussage
+    return _chk("soft_opening_captured", "Soft-Eröffnung echt erfasst", "warn", frozen,
+                "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle "
+                "Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen "
+                "(sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt).")
 
 
 @integrity_check
