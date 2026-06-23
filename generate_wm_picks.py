@@ -2254,6 +2254,39 @@ def fixture_pick_state(fx, has_pick, today, now_dt, cutover_dt):
     return "rebuild"
 
 
+def _attach_qualification_states(wm: dict) -> None:
+    """Hängt pro MD3-Fixture den mathematisch korrekten Qualifikations-Status BEIDER Teams ans
+    Fixture (fx['qualHome']/fx['qualAway']). Single Source = incentive_signal._compute_qualification_
+    state (Top-2-Mathe + Best-Dritte). Der Renderer rendert daraus „wer muss / wer will / wer ist
+    durch", statt es aus der Tabellen-Position zu erraten. 23.06.2026, Lucas."""
+    try:
+        from sharp_signals.incentive_signal import _compute_qualification_state
+    except Exception as e:
+        print(f"  ⚠️  Qual-State-Attach übersprungen (Import): {e}")
+        return
+    standings = wm.get("standings") or {}
+    if not standings:
+        return
+    KEEP = ("label", "qualified", "must_win", "can_draw", "eliminated",
+            "third_realistic", "current_position", "current_points")
+    n = 0
+    for gk, gd in (wm.get("groups") or {}).items():
+        for fx in (gd.get("fixtures") or []):
+            if (fx.get("matchday") or 0) < 3:
+                continue
+            for field, tid in (("qualHome", fx.get("home")), ("qualAway", fx.get("away"))):
+                if not tid:
+                    continue
+                try:
+                    stt = _compute_qualification_state(tid, gk, fx.get("matchday") or 3, standings)
+                    fx[field] = {k: stt.get(k) for k in KEEP if k in stt}
+                    n += 1
+                except Exception:
+                    continue
+    if n:
+        print(f"  🎯 Qualifikations-Status an {n} MD3-Team-Slots gehängt (Renderer-Narrativ)")
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 #  MAIN
 # ═══════════════════════════════════════════════════════════════════════════
@@ -2274,6 +2307,12 @@ def main():
         print(f"  📊 Standings gebaut: {len(_st)} Gruppen, {_played} Spiele verbucht")
     except Exception as _e:
         print(f"  ⚠️  Standings-Build fehlgeschlagen: {_e}")
+
+    # 23.06.2026 (Lucas): mathematisch korrekten Qualifikations-Status pro MD3-Fixture ans Fixture
+    # hängen (Single Source = incentive_signal._compute_qualification_state). Der Renderer zeigt das
+    # nur noch an, statt es aus der Tabellen-POSITION zu erraten (Bug: pos<=2='sicher' / pos>3='muss'
+    # → Iran/Uruguay mit 2 Pkt fälschlich „schon Achtelfinale", obwohl noch Vierter möglich).
+    _attach_qualification_states(wm)
 
     groups   = wm.get("groups",   {})
     mkt      = wm.get("odds",     {})

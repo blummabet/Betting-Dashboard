@@ -1175,8 +1175,19 @@
     if (fx.groupKey === 'C' && fx.matchday === 1 && fx.home === 'BRA' && fx.away === 'MAR') {
       return { cls: 'cc-a-eroeff', icon: '🎬', label: 'WM-Eröffnungsspiel' };
     }
-    // Special: standings-based scenarios (ST 2/3)
-    if (standing && standing.length && fx.matchday >= 3) {
+    // Special: standings-based scenarios (ST 3) — aus dem mathematisch korrekten Qual-Status
+    // (incentive_signal, am Fixture als qualHome/qualAway), NICHT aus der Tabellenposition.
+    // Bug 23.06.2026: pos<=2 galt als „sicher" → Iran/Uruguay mit 2 Pkt fälschlich „Gruppensieg".
+    if (fx.matchday >= 3 && (fx.qualHome || fx.qualAway)) {
+      const hL = (fx.qualHome && fx.qualHome.label) || null;
+      const aL = (fx.qualAway && fx.qualAway.label) || null;
+      const SAFE  = ['qualified', 'can_draw'];          // faktisch durch (Remis reicht)
+      const DRUCK = ['must_win', 'eliminated', 'third_chase'];
+      if (hL === 'eliminated' && aL === 'eliminated')  return { cls: 'cc-a-dead', icon: '❌', label: 'Beide ausgeschieden' };
+      if (SAFE.includes(hL) && SAFE.includes(aL))      return { cls: 'cc-a-titel', icon: '🏆', label: 'Spiel um Gruppensieg' };
+      if (DRUCK.includes(hL) || DRUCK.includes(aL))    return { cls: 'cc-a-druck', icon: '🔥', label: 'Aufstiegs-Druck' };
+    } else if (standing && standing.length && fx.matchday >= 3) {
+      // Fallback (alte Positions-Heuristik) bis qualHome/qualAway im Payload sind
       const homePos = standing.findIndex(s => s.team === fx.home) + 1;
       const awayPos = standing.findIndex(s => s.team === fx.away) + 1;
       if (homePos > 3 && awayPos > 3) return { cls: 'cc-a-dead', icon: '❌', label: 'Beide ausgeschieden' };
@@ -1428,30 +1439,44 @@
       sentences.push(`💸 Die Masse bei <strong>${pb.bookmaker}</strong> ${verb} ${target} um <strong>${pb.pp}pp</strong> gegenüber Pinnacle — die Sharps sehen's andersrum.`);
     }
 
-    // 3) ST3 Standings-Druck (Aufstiegs-Kontext)
-    if (fx.matchday >= 3 && standing && standing.length) {
-      const hRow = standing.find(s => s.team === fx.home);
-      const aRow = standing.find(s => s.team === fx.away);
+    // 3) ST3 Standings-Druck (Aufstiegs-Kontext) — aus dem mathematisch korrekten Qual-Status
+    //    (incentive_signal, fx.qualHome/qualAway). Bug 23.06.2026: vorher Tabellen-POSITION
+    //    (pos<=2='sicher', pos>3='muss') → Iran/Uruguay (2 Pkt, Platz 2) fälschlich „schon
+    //    Achtelfinale", Platz-3-Teams (müssen meist gewinnen) gar nicht erwähnt.
+    if (fx.matchday >= 3 && (fx.qualHome || fx.qualAway)) {
+      const _phrase = (team, q) => {
+        if (!q || !q.label) return null;
+        switch (q.label) {
+          case 'qualified':   return `${team.flag} ${team.name} ist schon durch`;
+          case 'eliminated':  return `${team.flag} ${team.name} ist ausgeschieden`;
+          case 'must_win':    return `${team.flag} ${team.name} muss gewinnen, um weiterzukommen`;
+          case 'can_draw':    return `${team.flag} ${team.name} reicht schon ein Remis`;
+          case 'third_chase': return `${team.flag} ${team.name} braucht einen Sieg für den besten Dritten`;
+          default:            return null;
+        }
+      };
+      const hq = fx.qualHome, aq = fx.qualAway;
+      if (hq && aq && hq.label === 'qualified' && aq.label === 'qualified') {
+        sentences.push(`<strong>Beide schon durch</strong> — Rotation + Schonung möglich.`);
+      } else if (hq && aq && hq.label === 'eliminated' && aq.label === 'eliminated') {
+        sentences.push(`<strong>Beide ausgeschieden</strong> — Friendly-Charakter, beide ohne Druck.`);
+      } else {
+        const hp = _phrase(home, hq), ap = _phrase(away, aq);
+        if (hp) sentences.push(`<strong>${hp}</strong>.`);
+        if (ap) sentences.push(`<strong>${ap}</strong>.`);
+      }
+    } else if (fx.matchday >= 3 && standing && standing.length) {
+      // Fallback (alte Positions-Heuristik) bis qualHome/qualAway im Payload sind
       const hPos = standing.findIndex(s => s.team === fx.home) + 1;
       const aPos = standing.findIndex(s => s.team === fx.away) + 1;
-      if (hRow && aRow) {
-        const hSafe = hPos <= 2;
-        const aSafe = aPos <= 2;
-        const hOut  = hPos > 3;
-        const aOut  = aPos > 3;
-        if (hSafe && aSafe) {
-          sentences.push(`<strong>Beide schon Achtelfinale</strong> — Rotation + Schonung wahrscheinlich.`);
-        } else if (hOut && aOut) {
-          sentences.push(`<strong>Beide ausgeschieden</strong> — Friendly-Charakter, beide ohne Druck.`);
-        } else if (hOut && aSafe) {
-          sentences.push(`<strong>${home.flag} ${home.name} braucht zwingend Sieg + Schützenhilfe</strong>, ${away.name} bereits sicher.`);
-        } else if (aOut && hSafe) {
-          sentences.push(`<strong>${away.flag} ${away.name} muss alles riskieren</strong>, ${home.name} bereits sicher.`);
-        } else if (hOut) {
-          sentences.push(`<strong>${home.flag} ${home.name} im Aufstiegs-Modus</strong> — Sieg Pflicht.`);
-        } else if (aOut) {
-          sentences.push(`<strong>${away.flag} ${away.name} im Aufstiegs-Modus</strong> — Sieg Pflicht.`);
-        }
+      if (standing.find(s => s.team === fx.home) && standing.find(s => s.team === fx.away)) {
+        const hSafe = hPos <= 2, aSafe = aPos <= 2, hOut = hPos > 3, aOut = aPos > 3;
+        if (hSafe && aSafe) sentences.push(`<strong>Beide schon Achtelfinale</strong> — Rotation + Schonung wahrscheinlich.`);
+        else if (hOut && aOut) sentences.push(`<strong>Beide ausgeschieden</strong> — Friendly-Charakter, beide ohne Druck.`);
+        else if (hOut && aSafe) sentences.push(`<strong>${home.flag} ${home.name} braucht zwingend Sieg + Schützenhilfe</strong>, ${away.name} bereits sicher.`);
+        else if (aOut && hSafe) sentences.push(`<strong>${away.flag} ${away.name} muss alles riskieren</strong>, ${home.name} bereits sicher.`);
+        else if (hOut) sentences.push(`<strong>${home.flag} ${home.name} im Aufstiegs-Modus</strong> — Sieg Pflicht.`);
+        else if (aOut) sentences.push(`<strong>${away.flag} ${away.name} im Aufstiegs-Modus</strong> — Sieg Pflicht.`);
       }
     }
 
