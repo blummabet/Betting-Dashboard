@@ -946,6 +946,40 @@ def check_smartmoney_sane(ctx):
 
 
 @integrity_check
+def check_soft_opening_captured(ctx):
+    """Soft-Eröffnung echt erfasst (22.06.2026, Lucas: „Opening==Jetzt auf fast jeder Card").
+    Bug: fetch_wm_odds baute den Odds-Eintrag je Lauf neu OHNE public_*_open zu übernehmen →
+    fetch_wm_multibook_odds (set-once-if-None) re-initialisierte das Soft-Opening auf den AKTUELLEN
+    Konsens → 0pp Soft-Bewegung überall. Heuristik gegen Fehlalarm auf frischem Slate: nur Fixtures
+    zählen, bei denen sich PINNACLE nachweislich bewegt hat (odds_open.hw ≠ hw → Markt lief, Zeit
+    verging). Ist dort die Soft-Eröffnung == aktuelle Soft-Quote, wurde sie nicht echt eingefroren."""
+    odds = ctx.odds or {}
+    moved, frozen = 0, []
+    for key, o in odds.items():
+        if not isinstance(o, dict):
+            continue
+        hw = o.get("hw")
+        oo = (o.get("odds_open") or {}).get("hw")
+        ph = o.get("public_hw")
+        po = o.get("public_hw_open")
+        if not all(isinstance(x, (int, float)) for x in (hw, oo, ph, po)):
+            continue
+        if abs(hw - oo) < 0.05:
+            continue                       # Pinnacle nicht bewegt → kein Zeitbeleg → überspringen
+        moved += 1
+        if abs(ph - po) < 1e-9:
+            frozen.append(f"{key}: Soft-Open == Jetzt ({po}), obwohl Pinnacle {oo}→{hw} lief")
+    if moved < 5:
+        return None                        # zu wenig Markt-Bewegung im Slate → keine Aussage
+    share = len(frozen) / moved
+    fails = frozen if share > 0.6 else []
+    return _chk("soft_opening_captured", "Soft-Eröffnung echt erfasst", "warn", fails,
+                f"{len(frozen)}/{moved} bewegte Spiele mit Soft-Open==Jetzt (Schwelle 60%). "
+                "public_*_open darf nicht je Lauf auf den aktuellen Konsens zurückgesetzt werden — "
+                "fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen.")
+
+
+@integrity_check
 def check_smartmoney_cluster_sane(ctx):
     """Cluster/Net-Flow-Sanity (22.06.2026, PolymarketScan-Idee): die je Outcome geschriebenen
     Konsens-Cluster-Felder (cluster/buyUsd/sellUsd/netFlowUsd, fetch_wm_poly_smartmoney.py) müssen

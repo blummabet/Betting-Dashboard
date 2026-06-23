@@ -145,6 +145,27 @@ def compute_closing(existing, cur_odds, hours_to_ko, now_iso):
         return {**existing, "provisional": False, "final": True}
     return None
 
+
+# Soft-Konsens-Eröffnung (public_*_open) — wird von fetch_wm_multibook_odds.py „set-once-if-None"
+# gesetzt. MUSS wie odds_open über Läufe hinweg erhalten bleiben.
+_SOFT_OPEN_KEYS = (
+    "public_hw_open", "public_dr_open", "public_aw_open",
+    "public_o25_open", "public_u25_open", "public_bttsY_open", "public_bttsN_open",
+)
+
+
+def carry_soft_open(existing: dict, new_entry: dict) -> dict:
+    """FIX 22.06.2026 (Lucas: „Opening==Jetzt auf fast jeder Card"): new_entry wird je Lauf frisch
+    gebaut und odds_out[key]=new_entry ersetzt den Eintrag KOMPLETT. odds_open wurde explizit aus
+    existing übernommen, public_*_open aber NICHT → war danach None → fetch_wm_multibook_odds (läuft
+    danach, set-once-if-None) re-initialisierte das Soft-Opening auf den AKTUELLEN Konsens → 0pp
+    Soft-Bewegung überall. Lösung: Soft-Opening genau wie odds_open mitschleppen."""
+    for k in _SOFT_OPEN_KEYS:
+        if existing.get(k) is not None:
+            new_entry[k] = existing[k]
+    return new_entry
+
+
 # TheOddsAPI sport key for FIFA World Cup
 # Falls back through list until one returns data
 WM_SPORT_KEYS = [
@@ -1048,6 +1069,9 @@ def main():
         for pk in ("public_hw", "public_dr", "public_aw", "public_bookmaker"):
             if h2h.get(pk) is not None:
                 new_entry[pk] = h2h[pk]
+        # Soft-Opening (public_*_open) aus dem alten Eintrag übernehmen — sonst setzt
+        # fetch_wm_multibook_odds.py es je Lauf neu auf den aktuellen Konsens (Opening==Jetzt-Bug).
+        carry_soft_open(existing, new_entry)
         # Add totals/btts if available
         for k in ("o15", "u15", "o25", "u25", "o35", "u35"):
             if tb.get(k):

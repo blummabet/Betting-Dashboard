@@ -1,134 +1,134 @@
 {
-  "today": "2026-06-22T04:38:34.975244+00:00",
+  "today": "2026-06-23T04:35:40.673655+00:00",
   "chosen": {
-    "angle_id": "killerStat",
-    "entity_key": "defensiveWall:ARG",
-    "theme": "killer_stat",
-    "score": 0.733,
+    "angle_id": "travelAlarm",
+    "entity_key": "heat:F-JPN-SWE",
+    "theme": "hidden_factor",
+    "score": 0.866,
     "hook_slots": {
       "big_number": {
-        "value": "0.3",
-        "source": "form.ARG.avgConceded",
-        "source_file": "wm2026-data.json",
+        "value": "35°C",
+        "source": "",
+        "source_file": "",
         "derived": false,
-        "raw": 0.267
+        "raw": null
       },
       "sub_title": {
-        "value": "Gegentore pro Spiel · Argentinien",
+        "value": "Hitze zum Anpfiff",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_1": {
-        "value": "<span class=\"acc\">Argentinien</span> 🇦🇷 kassiert",
+        "value": "<span class=\"acc\">SWE</span>  ist Kälte gewohnt —",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_2": {
-        "value": "<span class=\"yellow\">fast keine Tore.</span>",
+        "value": "heute spielt die <span class=\"yellow\">Sonne mit.</span>",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "mystery_question": {
-        "value": "Wer durchbricht die Mauer?",
+        "value": "Wer schmilzt in der Schlussphase?",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "highlight_fact": {
-        "value": "0.3 Tore/Spiel kassiert — Ø 2.3 eigene",
-        "source": "form.ARG.avgConceded + form.ARG.avgScored",
-        "source_file": "wm2026-data.json",
-        "derived": true,
+        "value": "SWE spielt bei 35°C. Kälte-gewohnte Teams brechen in der Hitze spürbar ein.",
+        "source": "",
+        "source_file": "",
+        "derived": false,
         "raw": null
       }
     },
     "info_slots": {
       "flag": {
-        "value": "🇦🇷",
+        "value": "🇯🇵 vs 🌍",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "name": {
-        "value": "Argentinien",
+        "value": "Japan vs SWE",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "role_line": {
-        "value": "Bestes Defensivteam laut Form · 15 Spiele Datenbasis",
+        "value": "35°C zum Anpfiff",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat1_val": {
-        "value": "0.3",
-        "source": "form.ARG.avgConceded",
-        "source_file": "wm2026-data.json",
+        "value": "35°C",
+        "source": "",
+        "source_file": "",
         "derived": false,
-        "raw": 0.267
+        "raw": null
       },
       "stat1_lbl": {
-        "value": "Gegen Ø",
+        "value": "Temperatur",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat2_val": {
-        "value": "2.3",
-        "source": "form.ARG.avgScored",
-        "source_file": "wm2026-data.json",
+        "value": "☀️",
+        "source": "",
+        "source_file": "",
         "derived": false,
-        "raw": 2.333
+        "raw": null
       },
       "stat2_lbl": {
-        "value": "Tore Ø",
+        "value": "volle Sonne",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat3_val": {
-        "value": "47%",
-        "source": "form.ARG.over25Rate",
-        "source_file": "wm2026-data.json",
+        "value": "💦",
+        "source": "",
+        "source_file": "",
         "derived": false,
-        "raw": 0.467
+        "raw": null
       },
       "stat3_lbl": {
-        "value": "3+ Tore",
+        "value": "Kräfteverschleiß",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "closing_line": {
-        "value": "<strong>Beste Defensive</strong> aller 48 qualifizierten Teams. Ø 0.3 Tore über 15 Spiele.",
+        "value": "<strong>Hitze ist ein Gegner ohne Trikot.</strong> Bei 35°C zählt am Ende, wer noch laufen kann.",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "quote_line": {
-        "value": "Wer hier <span class=\"acc\">zwei Tore</span> macht, gewinnt. 🛡️",
+        "value": "Die Sonne spielt <span class=\"acc\">immer mit.</span> ☀️",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "data_source": {
-        "value": "Daten: WM-Quali + Tests 2024/25",
+        "value": "Daten: Wetter-Vorhersage zum Anpfiff",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -136,18 +136,18 @@
       }
     },
     "series_tag": "",
-    "reason": "avgConceded=0.3 (15 games) — niedrigster aller Teams"
+    "reason": "heat=35.4°C JPN-SWE"
   },
   "verifier": {
-    "angle_id": "killerStat",
-    "entity": "defensiveWall:ARG",
+    "angle_id": "travelAlarm",
+    "entity": "heat:F-JPN-SWE",
     "ok": true,
     "failures": [],
     "details": [
       [
         "big_number",
         true,
-        "ok (0.0% drift, threshold 5.0%)"
+        "static"
       ],
       [
         "sub_title",
@@ -172,7 +172,7 @@
       [
         "highlight_fact",
         true,
-        "derived (plausibility ok)"
+        "static"
       ],
       [
         "flag",
@@ -192,7 +192,7 @@
       [
         "stat1_val",
         true,
-        "ok (0.0% drift, threshold 5.0%)"
+        "static"
       ],
       [
         "stat1_lbl",
@@ -202,7 +202,7 @@
       [
         "stat2_val",
         true,
-        "ok (0.0% drift, threshold 5.0%)"
+        "static"
       ],
       [
         "stat2_lbl",
@@ -212,7 +212,7 @@
       [
         "stat3_val",
         true,
-        "ok (0.0% drift, threshold 5.0%)"
+        "static"
       ],
       [
         "stat3_lbl",
@@ -239,148 +239,10 @@
   },
   "all": [
     {
-      "angle_id": "underdogRecap",
-      "entity_key": "recap:E-ECU-CUW",
-      "theme": "hidden_gem",
-      "score": 0.9,
-      "hook_slots": {
-        "big_number": {
-          "value": "9%",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "sub_title": {
-          "value": "so wahrscheinlich war dieser Sieg",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_1": {
-          "value": "Ecuador/CUW 🤝",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_2": {
-          "value": "schockt <span class=\"acc\"></span>",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "mystery_question": {
-          "value": "Wer hatte das auf dem Schirm?",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "highlight_fact": {
-          "value": "Nur 9% Chance laut den Daten — und doch passiert",
-          "source": "form.ECU.games",
-          "source_file": "wm2026-data.json",
-          "derived": true,
-          "raw": null
-        }
-      },
-      "info_slots": {
-        "flag": {
-          "value": "🤝",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "name": {
-          "value": "Ecuador/CUW 0:0",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "role_line": {
-          "value": "Kaum jemand hatte diesen Ausgang auf dem Schirm",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_val": {
-          "value": "0:0",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_lbl": {
-          "value": "Endstand",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_val": {
-          "value": "✓",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_lbl": {
-          "value": "Außenseiter-Sieg",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_val": {
-          "value": "9%",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_lbl": {
-          "value": "Chance laut Daten",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "closing_line": {
-          "value": "<strong>Die Daten gaben dem Ergebnis nur 9% Chance.</strong> Es passierte trotzdem.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "quote_line": {
-          "value": "Außenseiter schreiben <span class=\"acc\">Geschichte.</span> 🎯",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "data_source": {
-          "value": "Daten: Prognose-Modell + Endergebnis",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "series_tag": "",
-      "reason": "surprise=0.90 (Unentschieden) fair_prob=0.10 → 10.5x"
-    },
-    {
       "angle_id": "travelAlarm",
-      "entity_key": "heat:J-ARG-AUT",
+      "entity_key": "heat:F-JPN-SWE",
       "theme": "hidden_factor",
-      "score": 0.846,
+      "score": 0.866,
       "hook_slots": {
         "big_number": {
           "value": "35°C",
@@ -397,7 +259,7 @@
           "raw": null
         },
         "hook_line_1": {
-          "value": "<span class=\"acc\">Österreich</span> 🇦🇹 ist Kälte gewohnt —",
+          "value": "<span class=\"acc\">SWE</span>  ist Kälte gewohnt —",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -418,7 +280,7 @@
           "raw": null
         },
         "highlight_fact": {
-          "value": "Österreich spielt bei 35°C. Kälte-gewohnte Teams brechen in der Hitze spürbar ein.",
+          "value": "SWE spielt bei 35°C. Kälte-gewohnte Teams brechen in der Hitze spürbar ein.",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -427,14 +289,14 @@
       },
       "info_slots": {
         "flag": {
-          "value": "🇦🇷 vs 🇦🇹",
+          "value": "🇯🇵 vs 🌍",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "name": {
-          "value": "Argentinien vs Österreich",
+          "value": "Japan vs SWE",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -512,7 +374,283 @@
         }
       },
       "series_tag": "",
-      "reason": "heat=34.9°C ARG-AUT"
+      "reason": "heat=35.4°C JPN-SWE"
+    },
+    {
+      "angle_id": "underdogRecap",
+      "entity_key": "recap:G-BEL-IRN",
+      "theme": "hidden_gem",
+      "score": 0.8550678482414843,
+      "hook_slots": {
+        "big_number": {
+          "value": "19%",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "sub_title": {
+          "value": "so wahrscheinlich war dieser Sieg",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_1": {
+          "value": "Belgien/Iran 🤝",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_2": {
+          "value": "schockt <span class=\"acc\"></span>",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "mystery_question": {
+          "value": "Wer hatte das auf dem Schirm?",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "highlight_fact": {
+          "value": "Nur 19% Chance laut den Daten — und doch passiert",
+          "source": "form.BEL.games",
+          "source_file": "wm2026-data.json",
+          "derived": true,
+          "raw": null
+        }
+      },
+      "info_slots": {
+        "flag": {
+          "value": "🤝",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "name": {
+          "value": "Belgien/Iran 0:0",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "role_line": {
+          "value": "Kaum jemand hatte diesen Ausgang auf dem Schirm",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_val": {
+          "value": "0:0",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_lbl": {
+          "value": "Endstand",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_val": {
+          "value": "✓",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_lbl": {
+          "value": "Außenseiter-Sieg",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_val": {
+          "value": "19%",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_lbl": {
+          "value": "Chance laut Daten",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "closing_line": {
+          "value": "<strong>Die Daten gaben dem Ergebnis nur 19% Chance.</strong> Es passierte trotzdem.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "quote_line": {
+          "value": "Außenseiter schreiben <span class=\"acc\">Geschichte.</span> 🎯",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "data_source": {
+          "value": "Daten: Prognose-Modell + Endergebnis",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "series_tag": "",
+      "reason": "surprise=0.80 (Unentschieden) fair_prob=0.20 → 5.1x"
+    },
+    {
+      "angle_id": "travelAlarm",
+      "entity_key": "alt:A-MEX-CZE",
+      "theme": "hidden_factor",
+      "score": 0.8266666666666667,
+      "hook_slots": {
+        "big_number": {
+          "value": "2240m",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "sub_title": {
+          "value": "Höhe in Mexico City",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_1": {
+          "value": "<span class=\"acc\">Mexiko</span> 🇲🇽 vs Tschechien ",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_2": {
+          "value": "spielen, wo die <span class=\"yellow\">Luft dünn wird.</span>",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "mystery_question": {
+          "value": "Wem geht zuerst die Puste aus?",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "highlight_fact": {
+          "value": "Auf 2240m hat die Luft ~17% weniger Sauerstoff — die letzten 20 Minuten werden zur Tortur.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "info_slots": {
+        "flag": {
+          "value": "🇲🇽 vs 🌍",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "name": {
+          "value": "Mexiko vs Tschechien",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "role_line": {
+          "value": "Spielort Mexico City · 2240 Meter über dem Meer",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_val": {
+          "value": "2240m",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_lbl": {
+          "value": "Höhe",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_val": {
+          "value": "🫁",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_lbl": {
+          "value": "dünne Luft",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_val": {
+          "value": "20'",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_lbl": {
+          "value": "Schlussphase",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "closing_line": {
+          "value": "<strong>Höhe ist ein unsichtbarer Gegner.</strong> Wer nicht akklimatisiert ist, dem brechen am Ende die Beine weg.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "quote_line": {
+          "value": "Die Höhe spielt <span class=\"acc\">immer mit.</span> ⛰️",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "data_source": {
+          "value": "Daten: Spielort-Höhe (Venue-Analyse)",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "series_tag": "",
+      "reason": "altitude=2240m Mexico City"
     },
     {
       "angle_id": "killerStat",
@@ -792,164 +930,26 @@
     },
     {
       "angle_id": "travelAlarm",
-      "entity_key": "alt:K-COL-COD",
+      "entity_key": "trip:TUN-1600",
       "theme": "hidden_factor",
-      "score": 0.597,
+      "score": 0.5337760107482642,
       "hook_slots": {
         "big_number": {
-          "value": "1551m",
+          "value": "1.600 km",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "sub_title": {
-          "value": "Höhe in Guadalajara",
+          "value": "Anreise · Tunesien",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "hook_line_1": {
-          "value": "<span class=\"acc\">Kolumbien</span> 🇨🇴 vs COD ",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_2": {
-          "value": "spielen, wo die <span class=\"yellow\">Luft dünn wird.</span>",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "mystery_question": {
-          "value": "Wem geht zuerst die Puste aus?",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "highlight_fact": {
-          "value": "Auf 1551m hat die Luft ~12% weniger Sauerstoff — die letzten 20 Minuten werden zur Tortur.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "info_slots": {
-        "flag": {
-          "value": "🇨🇴 vs 🌍",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "name": {
-          "value": "Kolumbien vs COD",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "role_line": {
-          "value": "Spielort Guadalajara · 1551 Meter über dem Meer",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_val": {
-          "value": "1551m",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_lbl": {
-          "value": "Höhe",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_val": {
-          "value": "🫁",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_lbl": {
-          "value": "dünne Luft",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_val": {
-          "value": "20'",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_lbl": {
-          "value": "Schlussphase",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "closing_line": {
-          "value": "<strong>Höhe ist ein unsichtbarer Gegner.</strong> Wer nicht akklimatisiert ist, dem brechen am Ende die Beine weg.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "quote_line": {
-          "value": "Die Höhe spielt <span class=\"acc\">immer mit.</span> ⛰️",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "data_source": {
-          "value": "Daten: Spielort-Höhe (Venue-Analyse)",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "series_tag": "",
-      "reason": "altitude=1551m Guadalajara"
-    },
-    {
-      "angle_id": "travelAlarm",
-      "entity_key": "trip:POR-1550",
-      "theme": "hidden_factor",
-      "score": 0.5246715687500781,
-      "hook_slots": {
-        "big_number": {
-          "value": "1.550 km",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "sub_title": {
-          "value": "Anreise · Portugal",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_1": {
-          "value": "<span class=\"acc\">Portugal</span> 🇵🇹 reist",
+          "value": "<span class=\"acc\">Tunesien</span> 🇹🇳 reist",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -970,7 +970,7 @@
           "raw": null
         },
         "highlight_fact": {
-          "value": "Rund 1.550 km von Palm Beach Gardens, FL zum Spielort Houston — mehr als von Wien nach New York.",
+          "value": "Rund 1.600 km von Monterrey, MX zum Spielort Kansas City — mehr als von Wien nach New York.",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -979,28 +979,28 @@
       },
       "info_slots": {
         "flag": {
-          "value": "🇵🇹",
+          "value": "🇹🇳",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "name": {
-          "value": "Portugal",
+          "value": "Tunesien",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "role_line": {
-          "value": "Trainingslager Palm Beach Gardens, FL → Spielort Houston",
+          "value": "Trainingslager Monterrey, MX → Spielort Kansas City",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat1_val": {
-          "value": "1.550",
+          "value": "1.600",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -1064,7 +1064,7 @@
         }
       },
       "series_tag": "",
-      "reason": "trip=1550km POR"
+      "reason": "trip=1600km TUN"
     }
   ]
 }
