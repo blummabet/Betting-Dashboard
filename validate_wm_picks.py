@@ -225,7 +225,7 @@ def validate_pick(mk: str, p: dict, wm: dict, issues: list) -> None:
     # rote Pill obwohl alles korrekt. Jetzt: für nicht-aktive Verdicts nur
     # Light-Check (market + verdict + parse-key).
     verdict_raw = p.get("verdict", "")
-    NON_ACTIVE_VERDICTS = {"WATCH", "STAT", "SKIP"}
+    NON_ACTIVE_VERDICTS = {"WATCH", "STAT", "SKIP", "NOBET"}
     if verdict_raw in NON_ACTIVE_VERDICTS:
         # Light-Check: nur market + parse-key + orphan-match
         if not market or market == "?":

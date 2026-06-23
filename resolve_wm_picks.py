@@ -286,6 +286,17 @@ def main():
         hs, as_ = r["home_score"], r["away_score"]
 
         for p in pick_list:
+            # NOBET (23.06.2026, Lucas): kein echter Bet → NIE p["result"] setzen (zählt nicht in
+            # P&L/Win-Rate/Lernen). Stattdessen rein informatives Schatten-Ergebnis berechnen.
+            if p.get("verdict") == "NOBET":
+                if p.get("shadowResult") in ("WIN", "LOSS", "VOID"):
+                    continue
+                _sh = evaluate_pick(p.get("market", ""), hs, as_)
+                if _sh in ("WIN", "LOSS", "VOID"):
+                    p["shadowResult"] = _sh
+                    p["finalScore"]   = f"{hs}-{as_}"
+                    p["resolvedAt"]   = now_iso
+                continue
             if p.get("result") in ("WIN", "LOSS", "VOID"):
                 # Selbst-Heilung (13.06.2026): bereits aufgelöste Picks gegen das
                 # finale Ergebnis re-prüfen und korrigieren, falls falsch (z.B. der

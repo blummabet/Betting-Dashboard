@@ -2257,6 +2257,53 @@ def fixture_pick_state(fx, has_pick, today, now_dt, cutover_dt):
 _VERDICT_RANK = {"BET": 3, "ABWÄGEN": 2, "BEOBACHTEN": 1, "SKIP": 0}
 
 
+def _carry_nobet(existing_pk, new_picks, odds_snap, now_iso):
+    """NOBET-Karten (23.06.2026, Lucas): ein Markt, der mal BET/ABWÄGEN war und jetzt KEIN echter
+    Pick mehr ist (z.B. COL-COD Unter — Edge gekippt), verschwindet nicht lautlos, sondern bleibt
+    als verdict='NOBET' mit Begründung in Cards + Tracking. Schatten-Ergebnis setzt der Resolver.
+    Zählt NICHT in P&L/Win-Rate/Lernen/Trading (result bleibt None). Nur ex-BET/ABWÄGEN (oder schon
+    NOBET) werden behalten — SKIP/BEOBACHTEN nicht. Persistiert über Rebuilds bis Anpfiff."""
+    existing_pk = existing_pk or []
+    out = list(new_picks or [])
+    new_markets = {p.get("market") for p in out if isinstance(p, dict)}
+    for old in existing_pk:
+        if not isinstance(old, dict):
+            continue
+        m = old.get("market")
+        if not m or m in new_markets:
+            continue   # weiterhin echter Pick → kein NOBET
+        was_real  = old.get("verdict") in ("BET", "ABWÄGEN")
+        was_nobet = old.get("verdict") == "NOBET"
+        if not (was_real or was_nobet):
+            continue
+        nb = dict(old)
+        if was_real:
+            nb["origVerdict"] = old.get("verdict")
+            nb["origOdds"]    = old.get("odds")
+            nb["nobetSince"]  = now_iso
+        nb["verdict"] = "NOBET"
+        nb["result"]  = None
+        nb.pop("trackingExcluded", None)
+        # Grund ableiten: aktuelle Quote (über _reverser_key-Mapping) vs Original
+        cur = None
+        try:
+            k = _reverser_key(m)
+            v = (odds_snap or {}).get(k) if k else None
+            cur = float(v) if isinstance(v, (int, float)) else None
+        except Exception:
+            cur = None
+        orig = nb.get("origOdds")
+        if isinstance(cur, (int, float)) and isinstance(orig, (int, float)) and cur > orig + 0.01:
+            nb["nobetReason"] = f"Edge weg — Linie gegen den Pick gelaufen ({orig:g}→{cur:g})"
+        elif isinstance(cur, (int, float)) and isinstance(orig, (int, float)) and cur < orig - 0.01:
+            nb["nobetReason"] = f"Quote zu kurz geworden ({orig:g}→{cur:g}) — kein Value mehr"
+        else:
+            nb["nobetReason"] = "Kein Value mehr — Move ausgelaufen / Konsens konvergiert"
+        out.append(nb)
+        new_markets.add(m)
+    return out
+
+
 def _dedup_picks_by_market(picks: list) -> list:
     """Genau EINE Karte je (Markt) pro Spiel (23.06.2026, Lucas: PAN-CRO 2× „Beide Teams
     treffen — Ja"). Defensiver Write-Boundary-Dedup gegen Refresh-/Merge-Altlasten. Bei Kollision
@@ -2996,6 +3043,9 @@ def main():
             # Write-Boundary-Dedup (23.06.2026, Lucas: PAN-CRO hatte 2× „Beide Teams treffen — Ja"):
             # genau EINE Karte je (Markt) — defensiv gegen Refresh-/Merge-Altlasten aus jeder Quelle.
             new_picks = _dedup_picks_by_market(new_picks)
+            # NOBET-Karten (23.06.2026): ex-BET/ABWÄGEN ohne aktuellen Pick als NOBET behalten.
+            new_picks = _carry_nobet(existing_pk, new_picks,
+                                     mkt.get(f"{fx['home']}-{fx['away']}", {}), now_dt.isoformat())
             # Immer überschreiben — auch leere Liste löscht veraltete Picks
             wm["picks"][pick_key] = new_picks
 

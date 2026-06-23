@@ -930,6 +930,30 @@
       html += `</div>`;
     }
 
+    // ─── NOBET (war BET/ABWÄGEN, Value inzwischen weg) — transparent, KEIN Bet ──
+    // 23.06.2026 (Lucas): nicht lautlos verschwinden lassen, sondern „gesehen, aber kein Bet, weil…"
+    // zeigen. Schatten-Resultat rein informativ (zählt NICHT in P&L/Win-Rate/Lernen).
+    const _nobets = (fxPicks || []).filter(p => p && p.verdict === 'NOBET');
+    if (_nobets.length) {
+      html += `<div class="cc-otherpicks" style="opacity:.8">
+        <div class="cc-ev-label" style="padding:0 0 6px 0;color:#76819c;">Kein Bet — gesehen, aber kein Value</div>`;
+      for (const nb of _nobets.slice(0, 3)) {
+        const _o = nb.odds != null ? nb.odds.toFixed(2) : (nb.origOdds != null ? nb.origOdds.toFixed(2) : '—');
+        const _sh = nb.shadowResult === 'WIN'  ? '<span style="color:#3fb950">✅ hätte gewonnen</span>'
+                  : nb.shadowResult === 'LOSS' ? '<span style="color:#f85149">❌ hätte verloren</span>'
+                  : nb.shadowResult === 'VOID' ? '<span style="color:#8b949e">➖ Push</span>'
+                  : `@${_o}`;
+        const _reason = nb.nobetReason
+          ? `<br><span style="font-size:.7rem;color:#76819c">${nb.nobetReason}</span>` : '';
+        html += `<div class="cc-op-row" style="background:rgba(118,129,156,.08);border-color:rgba(118,129,156,.22)">
+          <span class="cc-op-verdict" style="color:#76819c">NOBET</span>
+          <span class="cc-op-market">${nb.market}${_reason}</span>
+          <span class="cc-op-odds" style="color:#76819c;white-space:nowrap">${_sh}</span>
+        </div>`;
+      }
+      html += `</div>`;
+    }
+
     // ─── SQUAD PILLS (Top-Spieler je Team mit G/A) ──
     if (matchPage && !isPlayed) {
       const sp = _buildSquadPills(matchPage, home, away);

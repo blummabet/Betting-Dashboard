@@ -90,6 +90,8 @@ def collect_observations(wm: dict) -> list[dict]:
     records = []
     for match_key, plist in (wm.get("picks") or {}).items():
         for p in (plist or []):
+            if p.get("verdict") == "NOBET":
+                continue   # 23.06.2026: NOBET ist kein Bet → nie ins Lern-Ledger (nur Schatten-Info)
             result = str(p.get("result") or "").upper()
             if result not in LEARNABLE_RESULTS:
                 continue

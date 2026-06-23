@@ -183,6 +183,7 @@
     // einzige Quelle. Tracking == Card == Telegram == Engine.
     const _ahGrp = (m) => { const x = /^(AH (?:Heim|Auswärts) [+−])/.exec(m || ''); return x ? x[1] : null; };
     const flatPicks = [];
+    const nobetRows = [];   // 23.06.2026 (Lucas): NOBET separat — NIE in flatPicks/KPIs/P&L
     for (const row of filtered) {
       // AH-Linien-Dedup pro Spiel (14.06.2026): je Seite+Vorzeichen nur die beste Linie
       // (höchste Edge). „AH Auswärts +0.5" UND „+0.75" sind redundant — eine reicht.
@@ -201,6 +202,10 @@
       for (const p of row.picks) {
         if (p.trackingExcluded) continue;
         if (p.boldAlt) continue;   // FIX 14.06.2026: durch sichere Variante ersetzt → nicht tracken
+        if (p.verdict === 'NOBET') {   // kein Bet → eigener Abschnitt, NIE in KPIs/P&L/Win-Rate
+          nobetRows.push({ ...p, _row: row });
+          continue;
+        }
         const g = _ahGrp(p.market);
         if (g && ahBest[g] && ahBest[g] !== p) continue;   // redundante AH-Linie
         if (_vrdFilter === 'all' || p.verdict === _vrdFilter) {
@@ -326,7 +331,45 @@
       html += _buildPicksTable(flatPicks, todayIso);
     }
 
+    // ─── NOBET — gesehen, aber kein Bet (kein KPI/P&L-Einfluss) ───────────
+    html += _buildNobetSection(nobetRows);
+
     panel.innerHTML = html;
+  }
+
+  // NOBET-Abschnitt (23.06.2026, Lucas): Picks die mal BET/ABWÄGEN waren und deren Value gekippt
+  // ist. Rein informativ mit Grund + grauem Schatten-Resultat — NICHT in KPIs/Win-Rate/P&L.
+  function _buildNobetSection(rows) {
+    if (!rows || !rows.length) return '';
+    const _shadow = (r) => {
+      const s = String(r.shadowResult || '').toUpperCase();
+      if (s === 'WIN')  return '<span style="color:#3fb950">✅ hätte gewonnen</span>';
+      if (s === 'LOSS') return '<span style="color:#f85149">❌ hätte verloren</span>';
+      if (s === 'VOID') return '<span style="color:#8b949e">➖ Push</span>';
+      return '<span style="color:#76819c">offen</span>';
+    };
+    let html = `
+      <div class="wm-trk-section-title" style="margin-top:18px;color:#76819c;">
+        🚫 Kein Bet — gesehen, aber kein Value
+        <span class="wm-trk-count">${rows.length}</span>
+      </div>
+      <div style="font-size:11px;color:#76819c;margin:0 0 8px;">War mal BET/ABWÄGEN, Edge dann gekippt. Schatten-Ergebnis rein informativ — zählt nicht in Quote/P&L.</div>
+      <div style="display:flex;flex-direction:column;gap:6px;opacity:.85">`;
+    for (const r of rows) {
+      const fx = r._row && r._row.fx ? r._row.fx : {};
+      const match = `${fx.home || ''}–${fx.away || ''}`;
+      const _o = r.origOdds != null ? `@${(+r.origOdds).toFixed(2)}` : (r.odds != null ? `@${(+r.odds).toFixed(2)}` : '');
+      html += `
+        <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;background:rgba(118,129,156,.08);border:1px solid rgba(118,129,156,.2);border-radius:10px;padding:9px 12px">
+          <div style="min-width:0">
+            <div style="font-size:13px;color:#c9d2e3"><span style="color:#76819c;font-weight:700">NOBET</span> · ${r.market || ''} ${_o ? `<span style="color:#76819c">${_o}</span>` : ''}</div>
+            <div style="font-size:11px;color:#76819c;margin-top:2px;overflow:hidden;text-overflow:ellipsis">${match}${r.nobetReason ? ' · ' + r.nobetReason : ''}</div>
+          </div>
+          <div style="font-size:12px;white-space:nowrap">${_shadow(r)}</div>
+        </div>`;
+    }
+    html += `</div>`;
+    return html;
   }
 
   // ─────────────────────────────────────────────────────
