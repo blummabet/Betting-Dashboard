@@ -15981,20 +15981,6 @@
       "entryTier": "track",
       "snapshots": [
         {
-          "ts": "2026-06-17T09:04:12Z",
-          "edgePp": 1.8,
-          "polyPrice": 0.095,
-          "pinnFair": 0.1126,
-          "steamLag": false
-        },
-        {
-          "ts": "2026-06-17T10:02:04Z",
-          "edgePp": 1.8,
-          "polyPrice": 0.095,
-          "pinnFair": 0.1126,
-          "steamLag": false
-        },
-        {
           "ts": "2026-06-17T12:02:04Z",
           "edgePp": 1.8,
           "polyPrice": 0.095,
@@ -16329,6 +16315,20 @@
           "polyPrice": 0.085,
           "pinnFair": 0.1029,
           "steamLag": false
+        },
+        {
+          "ts": "2026-06-23T06:01:36Z",
+          "edgePp": 1.8,
+          "polyPrice": 0.085,
+          "pinnFair": 0.1029,
+          "steamLag": false
+        },
+        {
+          "ts": "2026-06-23T06:20:17Z",
+          "edgePp": 1.8,
+          "polyPrice": 0.085,
+          "pinnFair": 0.1029,
+          "steamLag": false
         }
       ],
       "currentEdgePp": 1.8,
@@ -16363,20 +16363,6 @@
       "highConfidence": false,
       "entryTier": "track",
       "snapshots": [
-        {
-          "ts": "2026-06-17T09:04:12Z",
-          "edgePp": 2.6,
-          "polyPrice": 0.135,
-          "pinnFair": 0.1606,
-          "steamLag": false
-        },
-        {
-          "ts": "2026-06-17T10:02:04Z",
-          "edgePp": 2.6,
-          "polyPrice": 0.135,
-          "pinnFair": 0.1606,
-          "steamLag": false
-        },
         {
           "ts": "2026-06-17T12:02:04Z",
           "edgePp": 2.6,
@@ -16712,12 +16698,26 @@
           "polyPrice": 0.115,
           "pinnFair": 0.1363,
           "steamLag": false
+        },
+        {
+          "ts": "2026-06-23T06:01:36Z",
+          "edgePp": 3.1,
+          "polyPrice": 0.105,
+          "pinnFair": 0.1359,
+          "steamLag": false
+        },
+        {
+          "ts": "2026-06-23T06:20:17Z",
+          "edgePp": 3.1,
+          "polyPrice": 0.105,
+          "pinnFair": 0.136,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 2.1,
-      "currentPolyPrice": 0.115,
-      "edgeVelocityPPH": 0.0,
-      "convergencePct": 4.5,
+      "currentEdgePp": 3.1,
+      "currentPolyPrice": 0.105,
+      "edgeVelocityPPH": 0.125,
+      "convergencePct": 0.0,
       "convergenceTs": null,
       "convergenceHours": null,
       "status": "OPEN",
@@ -18284,6 +18284,20 @@
           "polyPrice": 0.105,
           "pinnFair": 0.1171,
           "steamLag": false
+        },
+        {
+          "ts": "2026-06-23T06:01:36Z",
+          "edgePp": 1.2,
+          "polyPrice": 0.105,
+          "pinnFair": 0.1171,
+          "steamLag": false
+        },
+        {
+          "ts": "2026-06-23T06:20:17Z",
+          "edgePp": 1.2,
+          "polyPrice": 0.105,
+          "pinnFair": 0.1171,
+          "steamLag": false
         }
       ],
       "currentEdgePp": 1.2,
@@ -18348,8 +18362,55 @@
       "convergenceHours": 10.8,
       "status": "CONVERGED",
       "outcome": null
+    },
+    {
+      "id": "DZA-AUT_dr_20260623",
+      "matchKey": "DZA-AUT",
+      "homeId": "DZA",
+      "awayId": "AUT",
+      "home": "Algerien",
+      "away": "Österreich",
+      "homeFlag": "🇩🇿",
+      "awayFlag": "🇦🇹",
+      "matchDate": "2026-06-27",
+      "market": "dr",
+      "marketLabel": "Unentschieden",
+      "signalTs": "2026-06-23T06:01:36Z",
+      "entryEdgePp": 2.7,
+      "entryPolyPrice": 0.335,
+      "entryPinnFair": 0.362,
+      "entryVol": 0,
+      "steamLagAtSignal": false,
+      "pinnMoveAtSignal": null,
+      "edgeTrendAtSignal": "growing",
+      "highConfidence": false,
+      "entryTier": "track",
+      "snapshots": [
+        {
+          "ts": "2026-06-23T06:01:36Z",
+          "edgePp": 2.7,
+          "polyPrice": 0.335,
+          "pinnFair": 0.362,
+          "steamLag": false
+        },
+        {
+          "ts": "2026-06-23T06:20:17Z",
+          "edgePp": -2.3,
+          "polyPrice": 0.405,
+          "pinnFair": 0.3822,
+          "steamLag": true
+        }
+      ],
+      "currentEdgePp": -2.3,
+      "currentPolyPrice": 0.405,
+      "edgeVelocityPPH": null,
+      "convergencePct": 100.0,
+      "convergenceTs": "2026-06-23T06:20:17Z",
+      "convergenceHours": 0.3,
+      "status": "CONVERGED",
+      "outcome": null
     }
   ],
-  "updatedAt": "2026-06-22T22:01:35Z",
-  "runCount": 293
+  "updatedAt": "2026-06-23T06:20:17Z",
+  "runCount": 295
 }

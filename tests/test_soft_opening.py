@@ -41,38 +41,42 @@ class TestCarrySoftOpen(unittest.TestCase):
 
 
 class TestSoftOpeningGuard(unittest.TestCase):
-    def _run(self, odds):
+    def _run(self, odds, history):
         res = W.run_checks({"groups": {}, "picks": {}, "odds": odds}, {}, {}, {},
                            now=datetime(2026, 6, 22, tzinfo=timezone.utc),
-                           auto_bets={"bets": []}, history={})
+                           auto_bets={"bets": []}, history=history)
         return next((x for x in res if x["id"] == "soft_opening_captured"), None)
 
-    def _moved_frozen(self, n):
-        # Pinnacle bewegt (open 2.0 → now 2.4), Soft-Open == Soft-Now (eingefroren)
-        return {f"M{i}-X{i}": {"hw": 2.4, "odds_open": {"hw": 2.0},
-                               "public_hw": 2.3, "public_hw_open": 2.3} for i in range(n)}
+    def _soft_hist(self, first, last):
+        # Soft-Zeitreihe (bk=public): bewegt sich von first → last
+        return [{"bk": "public", "hw": first}, {"bk": "public", "hw": last}]
 
-    def _moved_ok(self, n):
-        # Pinnacle bewegt, Soft-Open ≠ Soft-Now (echt erfasst)
-        return {f"M{i}-X{i}": {"hw": 2.4, "odds_open": {"hw": 2.0},
-                               "public_hw": 2.3, "public_hw_open": 2.55} for i in range(n)}
+    def _odds(self, n, open_val):
+        return {f"M{i}-X{i}": {"public_hw": 2.3, "public_hw_open": open_val} for i in range(n)}
+
+    def _hist(self, n, first, last):
+        return {f"M{i}-X{i}": self._soft_hist(first, last) for i in range(n)}
 
     def test_frozen_openings_flagged(self):
-        c = self._run(self._moved_frozen(8))
+        # Soft-Linie bewegte sich (2.6→2.3), aber Opening == Jetzt (2.3) → Bug
+        c = self._run(self._odds(5, 2.3), self._hist(5, 2.6, 2.3))
         self.assertIsNotNone(c)
         self.assertFalse(c["ok"])
 
     def test_real_openings_pass(self):
-        c = self._run(self._moved_ok(8))
+        # Soft bewegte sich UND Opening (2.6) ≠ Jetzt (2.3) → echt erfasst
+        c = self._run(self._odds(5, 2.6), self._hist(5, 2.6, 2.3))
         self.assertIsNotNone(c)
         self.assertTrue(c["ok"])
 
-    def test_no_movement_no_verdict(self):
-        # Pinnacle nicht bewegt → keine Aussage (frischer Slate, kein Fehlalarm)
-        flat = {f"M{i}-X{i}": {"hw": 2.0, "odds_open": {"hw": 2.0},
-                               "public_hw": 2.0, "public_hw_open": 2.0} for i in range(8)}
-        c = self._run(flat)
-        self.assertIsNone(c)   # Guard liefert None (< 5 bewegte Spiele)
+    def test_flat_soft_not_flagged(self):
+        # Soft-Linie real flach (2.3→2.3) → Opening==Jetzt ist korrekt, kein Flag
+        c = self._run(self._odds(5, 2.3), self._hist(5, 2.3, 2.3))
+        self.assertIsNone(c)   # keine bewegte Soft-Linie → keine Aussage
+
+    def test_no_history_no_verdict(self):
+        c = self._run(self._odds(5, 2.3), {})
+        self.assertIsNone(c)
 
 
 if __name__ == "__main__":
