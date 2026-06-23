@@ -1130,7 +1130,11 @@ def main():
         _cur = {"hw": h2h["hw"], "dr": h2h["dr"], "aw": h2h["aw"],
                 **({"o25": tb["o25"]} if tb.get("o25") else {}),
                 **({"u25": tb["u25"]} if tb.get("u25") else {}),
-                **({"bttsY": tb["bttsY"]} if tb.get("bttsY") else {})}
+                **({"bttsY": tb["bttsY"]} if tb.get("bttsY") else {}),
+                **({"bttsN": tb["bttsN"]} if tb.get("bttsN") else {}),
+                # 23.06.2026 (Lucas): AH-Leiter mit-einfrieren → CLV für AH-Trades (bisher 0/8,
+                # weil die Closing-Linie die Leiter nie enthielt). resolve_wm_results de-viggt sie.
+                **({"ahLadder": tb["ahLadder"]} if tb.get("ahLadder") else {})}
         _closing = compute_closing(existing_closing, _cur, _hours_to_ko, now_iso)
         if _closing is not None:
             new_entry["odds_closing"] = _closing

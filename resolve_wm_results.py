@@ -375,11 +375,52 @@ def build_result_lookup(wm: dict) -> dict:
                 "_pinn_close_dnbA":    pinn_close_dnbA,
                 "_pinn_close_ahH_n050": pinn_close_ahH_n050,
                 "_pinn_close_ahA_p050": pinn_close_ahA_p050,
+                # 23.06.2026: ganze Closing-AH-Leiter durchreichen → CLV für JEDE AH-Linie
+                "_pinn_close_ah_ladder": closing.get("ahLadder"),
                 "_pinn_close_cOver":   pinn_close_cOver,
                 "_pinn_close_cUnder":  pinn_close_cUnder,
                 "_pinn_corner_line":   corner_line,
             }
     return lookup
+
+
+def _devig_2way(o_a, o_b):
+    """Faire P(Seite A) aus 2-Weg-Quoten (Vig entfernt). Spiegelt fetch_wm_poly_prices."""
+    if not o_a or not o_b or o_a <= 1 or o_b <= 1:
+        return None
+    ia, ib = 1.0 / o_a, 1.0 / o_b
+    return ia / (ia + ib)
+
+
+def _ladder_get(ah_ladder, target_line):
+    """Pinnacle-AH-Leiter [home_odds, away_odds] für eine HEIM-Linie (Float-Match)."""
+    for k, v in (ah_ladder or {}).items():
+        try:
+            if abs(float(k) - target_line) < 1e-6 and v and v[0] and v[1]:
+                return v
+        except (TypeError, ValueError):
+            continue
+    return None
+
+
+def _ah_close_fair(ladder, market):
+    """De-viggte Pinnacle-Closing-Fair für eine AH-Wette JEDER Linie (23.06.2026, Lucas).
+    Leiter ist nach HEIM-Linie geschlüsselt: Heim-Wette L → Leiter L; Auswärts-Wette L → Leiter −L
+    (Auswärts -X = Heim +X). Spiegelt compute_ah_edges in fetch_wm_poly_prices. None wenn Linie nicht
+    in der Closing-Leiter (z.B. tiefe −4.5 nicht gequotet) → CLV bleibt ehrlich leer statt erfunden."""
+    line = _parse_ah_line((market or "").lower())
+    if line is None or not ladder:
+        return None
+    ml = (market or "").lower()
+    is_home = "heim" in ml or "home" in ml
+    is_away = "ausw" in ml or "away" in ml
+    if not (is_home or is_away):
+        return None
+    lad = _ladder_get(ladder, line if is_home else -line)
+    if not lad:
+        return None
+    h_odds, a_odds = lad[0], lad[1]
+    return _devig_2way(h_odds, a_odds) if is_home else _devig_2way(a_odds, h_odds)
 
 
 def get_pinn_close_for_market(res: dict, market: str) -> float | None:
@@ -436,12 +477,10 @@ def get_pinn_close_for_market(res: dict, market: str) -> float | None:
             return res.get("_pinn_close_bttsN")
         return res.get("_pinn_close_btts")
 
-    # Asian Handicap -0.5 (Heimteam -0.5 entspricht effektiv Heimsieg ohne Draw)
+    # Asian Handicap — JEDE Linie (23.06.2026): de-vig der eingefrorenen Closing-AH-Leiter.
+    # Vorher nur −0.5 (und die Leiter war eh nie im Closing) → AH-CLV war 0/8.
     if "handicap" in m or "ah " in m or m.startswith("ah"):
-        if "heim" in m and ("-0.5" in m or "-0,5" in m):
-            return res.get("_pinn_close_ahH_n050")
-        if ("auswärt" in m or "auswart" in m) and ("+0.5" in m or "+0,5" in m):
-            return res.get("_pinn_close_ahA_p050")
+        return _ah_close_fair(res.get("_pinn_close_ah_ladder"), market)
 
     # Corners
     if "corner" in m or "eck" in m:
