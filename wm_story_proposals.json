@@ -1,134 +1,134 @@
 {
-  "today": "2026-06-23T04:35:40.673655+00:00",
+  "today": "2026-06-24T09:23:24.678014+00:00",
   "chosen": {
-    "angle_id": "travelAlarm",
-    "entity_key": "heat:F-JPN-SWE",
-    "theme": "hidden_factor",
-    "score": 0.866,
+    "angle_id": "underdogRecap",
+    "entity_key": "recap:L-ENG-GHA",
+    "theme": "hidden_gem",
+    "score": 0.9,
     "hook_slots": {
       "big_number": {
-        "value": "35°C",
+        "value": "13%",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "sub_title": {
-        "value": "Hitze zum Anpfiff",
+        "value": "so wahrscheinlich war dieser Sieg",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_1": {
-        "value": "<span class=\"acc\">SWE</span>  ist Kälte gewohnt —",
+        "value": "England/Ghana 🤝",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_2": {
-        "value": "heute spielt die <span class=\"yellow\">Sonne mit.</span>",
+        "value": "schockt <span class=\"acc\"></span>",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "mystery_question": {
-        "value": "Wer schmilzt in der Schlussphase?",
+        "value": "Wer hatte das auf dem Schirm?",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "highlight_fact": {
-        "value": "SWE spielt bei 35°C. Kälte-gewohnte Teams brechen in der Hitze spürbar ein.",
-        "source": "",
-        "source_file": "",
-        "derived": false,
+        "value": "Nur 13% Chance laut den Daten — und doch passiert",
+        "source": "form.ENG.games",
+        "source_file": "wm2026-data.json",
+        "derived": true,
         "raw": null
       }
     },
     "info_slots": {
       "flag": {
-        "value": "🇯🇵 vs 🌍",
+        "value": "🤝",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "name": {
-        "value": "Japan vs SWE",
+        "value": "England/Ghana 0:0",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "role_line": {
-        "value": "35°C zum Anpfiff",
+        "value": "Kaum jemand hatte diesen Ausgang auf dem Schirm",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat1_val": {
-        "value": "35°C",
+        "value": "0:0",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat1_lbl": {
-        "value": "Temperatur",
+        "value": "Endstand",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat2_val": {
-        "value": "☀️",
+        "value": "✓",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat2_lbl": {
-        "value": "volle Sonne",
+        "value": "Außenseiter-Sieg",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat3_val": {
-        "value": "💦",
+        "value": "13%",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat3_lbl": {
-        "value": "Kräfteverschleiß",
+        "value": "Chance laut Daten",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "closing_line": {
-        "value": "<strong>Hitze ist ein Gegner ohne Trikot.</strong> Bei 35°C zählt am Ende, wer noch laufen kann.",
+        "value": "<strong>Die Daten gaben dem Ergebnis nur 13% Chance.</strong> Es passierte trotzdem.",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "quote_line": {
-        "value": "Die Sonne spielt <span class=\"acc\">immer mit.</span> ☀️",
+        "value": "Außenseiter schreiben <span class=\"acc\">Geschichte.</span> 🎯",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "data_source": {
-        "value": "Daten: Wetter-Vorhersage zum Anpfiff",
+        "value": "Daten: Prognose-Modell + Endergebnis",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -136,11 +136,11 @@
       }
     },
     "series_tag": "",
-    "reason": "heat=35.4°C JPN-SWE"
+    "reason": "surprise=0.87 (Unentschieden) fair_prob=0.13 → 7.7x"
   },
   "verifier": {
-    "angle_id": "travelAlarm",
-    "entity": "heat:F-JPN-SWE",
+    "angle_id": "underdogRecap",
+    "entity": "recap:L-ENG-GHA",
     "ok": true,
     "failures": [],
     "details": [
@@ -172,7 +172,7 @@
       [
         "highlight_fact",
         true,
-        "static"
+        "derived (plausibility ok)"
       ],
       [
         "flag",
@@ -239,151 +239,13 @@
   },
   "all": [
     {
-      "angle_id": "travelAlarm",
-      "entity_key": "heat:F-JPN-SWE",
-      "theme": "hidden_factor",
-      "score": 0.866,
-      "hook_slots": {
-        "big_number": {
-          "value": "35°C",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "sub_title": {
-          "value": "Hitze zum Anpfiff",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_1": {
-          "value": "<span class=\"acc\">SWE</span>  ist Kälte gewohnt —",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_2": {
-          "value": "heute spielt die <span class=\"yellow\">Sonne mit.</span>",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "mystery_question": {
-          "value": "Wer schmilzt in der Schlussphase?",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "highlight_fact": {
-          "value": "SWE spielt bei 35°C. Kälte-gewohnte Teams brechen in der Hitze spürbar ein.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "info_slots": {
-        "flag": {
-          "value": "🇯🇵 vs 🌍",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "name": {
-          "value": "Japan vs SWE",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "role_line": {
-          "value": "35°C zum Anpfiff",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_val": {
-          "value": "35°C",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_lbl": {
-          "value": "Temperatur",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_val": {
-          "value": "☀️",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_lbl": {
-          "value": "volle Sonne",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_val": {
-          "value": "💦",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_lbl": {
-          "value": "Kräfteverschleiß",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "closing_line": {
-          "value": "<strong>Hitze ist ein Gegner ohne Trikot.</strong> Bei 35°C zählt am Ende, wer noch laufen kann.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "quote_line": {
-          "value": "Die Sonne spielt <span class=\"acc\">immer mit.</span> ☀️",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "data_source": {
-          "value": "Daten: Wetter-Vorhersage zum Anpfiff",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "series_tag": "",
-      "reason": "heat=35.4°C JPN-SWE"
-    },
-    {
       "angle_id": "underdogRecap",
-      "entity_key": "recap:G-BEL-IRN",
+      "entity_key": "recap:L-ENG-GHA",
       "theme": "hidden_gem",
-      "score": 0.8550678482414843,
+      "score": 0.9,
       "hook_slots": {
         "big_number": {
-          "value": "19%",
+          "value": "13%",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -397,7 +259,7 @@
           "raw": null
         },
         "hook_line_1": {
-          "value": "Belgien/Iran 🤝",
+          "value": "England/Ghana 🤝",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -418,8 +280,8 @@
           "raw": null
         },
         "highlight_fact": {
-          "value": "Nur 19% Chance laut den Daten — und doch passiert",
-          "source": "form.BEL.games",
+          "value": "Nur 13% Chance laut den Daten — und doch passiert",
+          "source": "form.ENG.games",
           "source_file": "wm2026-data.json",
           "derived": true,
           "raw": null
@@ -434,7 +296,7 @@
           "raw": null
         },
         "name": {
-          "value": "Belgien/Iran 0:0",
+          "value": "England/Ghana 0:0",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -476,7 +338,7 @@
           "raw": null
         },
         "stat3_val": {
-          "value": "19%",
+          "value": "13%",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -490,7 +352,7 @@
           "raw": null
         },
         "closing_line": {
-          "value": "<strong>Die Daten gaben dem Ergebnis nur 19% Chance.</strong> Es passierte trotzdem.",
+          "value": "<strong>Die Daten gaben dem Ergebnis nur 13% Chance.</strong> Es passierte trotzdem.",
           "source": "",
           "source_file": "",
           "derived": false,
@@ -512,7 +374,145 @@
         }
       },
       "series_tag": "",
-      "reason": "surprise=0.80 (Unentschieden) fair_prob=0.20 → 5.1x"
+      "reason": "surprise=0.87 (Unentschieden) fair_prob=0.13 → 7.7x"
+    },
+    {
+      "angle_id": "travelAlarm",
+      "entity_key": "heat:F-JPN-SWE",
+      "theme": "hidden_factor",
+      "score": 0.88,
+      "hook_slots": {
+        "big_number": {
+          "value": "36°C",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "sub_title": {
+          "value": "Hitze zum Anpfiff",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_1": {
+          "value": "<span class=\"acc\">SWE</span>  ist Kälte gewohnt —",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_2": {
+          "value": "heute spielt die <span class=\"yellow\">Sonne mit.</span>",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "mystery_question": {
+          "value": "Wer schmilzt in der Schlussphase?",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "highlight_fact": {
+          "value": "SWE spielt bei 36°C. Kälte-gewohnte Teams brechen in der Hitze spürbar ein.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "info_slots": {
+        "flag": {
+          "value": "🇯🇵 vs 🌍",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "name": {
+          "value": "Japan vs SWE",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "role_line": {
+          "value": "36°C zum Anpfiff",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_val": {
+          "value": "36°C",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_lbl": {
+          "value": "Temperatur",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_val": {
+          "value": "☀️",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_lbl": {
+          "value": "volle Sonne",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_val": {
+          "value": "💦",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_lbl": {
+          "value": "Kräfteverschleiß",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "closing_line": {
+          "value": "<strong>Hitze ist ein Gegner ohne Trikot.</strong> Bei 36°C zählt am Ende, wer noch laufen kann.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "quote_line": {
+          "value": "Die Sonne spielt <span class=\"acc\">immer mit.</span> ☀️",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "data_source": {
+          "value": "Daten: Wetter-Vorhersage zum Anpfiff",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "series_tag": "",
+      "reason": "heat=35.9°C JPN-SWE"
     },
     {
       "angle_id": "travelAlarm",
@@ -654,144 +654,6 @@
     },
     {
       "angle_id": "killerStat",
-      "entity_key": "avgScored:NOR",
-      "theme": "killer_stat",
-      "score": 0.78,
-      "hook_slots": {
-        "big_number": {
-          "value": "3.2",
-          "source": "form.NOR.avgScored",
-          "source_file": "wm2026-data.json",
-          "derived": false,
-          "raw": 3.2
-        },
-        "sub_title": {
-          "value": "Tore pro Spiel · Norwegen",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_1": {
-          "value": "<span class=\"acc\">Norwegen</span> 🇳🇴 trifft",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_2": {
-          "value": "<span class=\"yellow\">jeden Gegner.</span>",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "mystery_question": {
-          "value": "Wer stoppt diese Maschine?",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "highlight_fact": {
-          "value": "Ø 3.2 Tore in 15 Spielen — Gegen Ø 0.7",
-          "source": "form.NOR.avgScored + form.NOR.games + form.NOR.avgConceded",
-          "source_file": "wm2026-data.json",
-          "derived": true,
-          "raw": null
-        }
-      },
-      "info_slots": {
-        "flag": {
-          "value": "🇳🇴",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "name": {
-          "value": "Norwegen",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "role_line": {
-          "value": "Ø 3.2 Tore/Spiel · 15 Spiele Datenbasis",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_val": {
-          "value": "3.2",
-          "source": "form.NOR.avgScored",
-          "source_file": "wm2026-data.json",
-          "derived": false,
-          "raw": 3.2
-        },
-        "stat1_lbl": {
-          "value": "Tore Ø",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_val": {
-          "value": "0.7",
-          "source": "form.NOR.avgConceded",
-          "source_file": "wm2026-data.json",
-          "derived": false,
-          "raw": 0.733
-        },
-        "stat2_lbl": {
-          "value": "Gegen Ø",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_val": {
-          "value": "15",
-          "source": "form.NOR.games",
-          "source_file": "wm2026-data.json",
-          "derived": false,
-          "raw": 15
-        },
-        "stat3_lbl": {
-          "value": "Spiele",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "closing_line": {
-          "value": "<strong>Höchster Tor-Schnitt</strong> aller 48 qualifizierten WM-Teams. Form-Datenbasis: 15 Spiele.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "quote_line": {
-          "value": "Tor-Maschine ohne <span class=\"acc\">Stopper</span> in Sicht. ⚽",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "data_source": {
-          "value": "Daten: WM-Quali + Tests 2024/25",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "series_tag": "",
-      "reason": "avgScored=3.2 (15 games) — höchster aller 48 Teams"
-    },
-    {
-      "angle_id": "killerStat",
       "entity_key": "defensiveWall:ARG",
       "theme": "killer_stat",
       "score": 0.733,
@@ -832,7 +694,7 @@
           "raw": null
         },
         "highlight_fact": {
-          "value": "0.3 Tore/Spiel kassiert — Ø 2.3 eigene",
+          "value": "0.3 Tore/Spiel kassiert — Ø 2.4 eigene",
           "source": "form.ARG.avgConceded + form.ARG.avgScored",
           "source_file": "wm2026-data.json",
           "derived": true,
@@ -876,11 +738,11 @@
           "raw": null
         },
         "stat2_val": {
-          "value": "2.3",
+          "value": "2.4",
           "source": "form.ARG.avgScored",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 2.333
+          "raw": 2.4
         },
         "stat2_lbl": {
           "value": "Tore Ø",
@@ -927,6 +789,144 @@
       },
       "series_tag": "",
       "reason": "avgConceded=0.3 (15 games) — niedrigster aller Teams"
+    },
+    {
+      "angle_id": "killerStat",
+      "entity_key": "avgScored:BEL",
+      "theme": "killer_stat",
+      "score": 0.7268000000000001,
+      "hook_slots": {
+        "big_number": {
+          "value": "3.1",
+          "source": "form.BEL.avgScored",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 3.067
+        },
+        "sub_title": {
+          "value": "Tore pro Spiel · Belgien",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_1": {
+          "value": "<span class=\"acc\">Belgien</span> 🇧🇪 trifft",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "hook_line_2": {
+          "value": "<span class=\"yellow\">jeden Gegner.</span>",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "mystery_question": {
+          "value": "Wer stoppt diese Maschine?",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "highlight_fact": {
+          "value": "Ø 3.1 Tore in 15 Spielen — Gegen Ø 0.7",
+          "source": "form.BEL.avgScored + form.BEL.games + form.BEL.avgConceded",
+          "source_file": "wm2026-data.json",
+          "derived": true,
+          "raw": null
+        }
+      },
+      "info_slots": {
+        "flag": {
+          "value": "🇧🇪",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "name": {
+          "value": "Belgien",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "role_line": {
+          "value": "Ø 3.1 Tore/Spiel · 15 Spiele Datenbasis",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat1_val": {
+          "value": "3.1",
+          "source": "form.BEL.avgScored",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 3.067
+        },
+        "stat1_lbl": {
+          "value": "Tore Ø",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat2_val": {
+          "value": "0.7",
+          "source": "form.BEL.avgConceded",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 0.733
+        },
+        "stat2_lbl": {
+          "value": "Gegen Ø",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "stat3_val": {
+          "value": "15",
+          "source": "form.BEL.games",
+          "source_file": "wm2026-data.json",
+          "derived": false,
+          "raw": 15
+        },
+        "stat3_lbl": {
+          "value": "Spiele",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "closing_line": {
+          "value": "<strong>Höchster Tor-Schnitt</strong> aller 48 qualifizierten WM-Teams. Form-Datenbasis: 15 Spiele.",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "quote_line": {
+          "value": "Tor-Maschine ohne <span class=\"acc\">Stopper</span> in Sicht. ⚽",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        },
+        "data_source": {
+          "value": "Daten: WM-Quali + Tests 2024/25",
+          "source": "",
+          "source_file": "",
+          "derived": false,
+          "raw": null
+        }
+      },
+      "series_tag": "",
+      "reason": "avgScored=3.1 (15 games) — höchster aller 48 Teams"
     },
     {
       "angle_id": "travelAlarm",
