@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-test_qual_state_attach.py — MD3-Qualifikations-Status korrekt pro Fixture (23.06.2026, Lucas).
+test_qual_state_attach.py — szenario-basierter MD3-Qualifikations-Status (23.06.2026, Lucas).
 
-Der Renderer zeigte „schon Achtelfinale/bereits sicher" anhand der Tabellen-POSITION → Teams mit
-2–3 Punkten auf Platz 2 galten fälschlich als sicher (Iran, Uruguay, Korea, Elfenbeinküste).
-Fix: generate_wm_picks._attach_qualification_states hängt den mathematisch korrekten Status
-(incentive_signal._compute_qualification_state) ans Fixture; der Renderer zeigt ihn nur noch an.
+Der Renderer zeigte „England braucht einen Sieg für den besten Dritten" — Blödsinn, England spielt
+um Platz 1. Ursache: die alte Mathe summierte die Max-Punkte ALLER anderen unabhängig (die spielen
+aber gegeneinander). Fix: _md3_qual_status rechnet die 2 Rest-Spiele durch (3×3) und achtet auf
+Platz 1+2, nicht nur „bester Dritter".
 """
 import sys
 import unittest
@@ -14,60 +14,53 @@ from pathlib import Path
 REPO = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO))
 
-from sharp_signals.incentive_signal import _compute_qualification_state  # noqa: E402
 import generate_wm_picks as G  # noqa: E402
 
 
-def _row(team, played, points, gd):
+def _row(team, points, gd, played=2):
     return {"team": team, "played": played, "points": points, "gd": gd}
 
 
-class TestQualMathRealCases(unittest.TestCase):
-    """Echte Schlussrunden-Tabellen — die Karten-Fehler dürfen nicht mehr passieren."""
-
-    def test_iran_2pts_not_qualified(self):
-        # Gruppe G: EGY 4, IRN 2, BEL 2, NZL 1 — Iran (Platz 2) ist NICHT sicher
-        st = {"G": [_row("EGY", 2, 4, 2), _row("IRN", 2, 2, 0),
-                    _row("BEL", 2, 2, 0), _row("NZL", 2, 1, -2)]}
-        s = _compute_qualification_state("IRN", "G", 3, st)
-        self.assertFalse(s["qualified"], "Iran mit 2 Pkt darf nicht 'qualified' sein")
-
-    def test_korea_3pts_pos2_not_qualified(self):
-        # Gruppe A: MEX 6, KOR 3, CZE 1, ZAF 1 — Korea (Platz 2) noch schlagbar
-        st = {"A": [_row("MEX", 2, 6, 3), _row("KOR", 2, 3, 0),
-                    _row("CZE", 2, 1, -1), _row("ZAF", 2, 1, -2)]}
-        s = _compute_qualification_state("KOR", "A", 3, st)
-        self.assertFalse(s["qualified"], "Korea mit 3 Pkt darf nicht 'bereits sicher' sein")
-
-    def test_both_6pts_locked_qualified(self):
-        # Gruppe I: FRA 6, NOR 6 — beide mathematisch durch
-        st = {"I": [_row("FRA", 2, 6, 5), _row("NOR", 2, 6, 4),
-                    _row("SEN", 2, 0, -3), _row("IRQ", 2, 0, -6)]}
-        self.assertTrue(_compute_qualification_state("FRA", "I", 3, st)["qualified"])
-        self.assertTrue(_compute_qualification_state("NOR", "I", 3, st)["qualified"])
+def _wm(group, rows, remaining):
+    fixtures = [{"home": h, "away": a, "matchday": 3, "result": None} for h, a in remaining]
+    return {"standings": {group: rows}, "groups": {group: {"fixtures": fixtures}}}
 
 
-class TestAttachToFixtures(unittest.TestCase):
-    def test_attach_sets_qual_fields_on_md3(self):
-        wm = {
-            "standings": {"G": [_row("EGY", 2, 4, 2), _row("IRN", 2, 2, 0),
-                                _row("BEL", 2, 2, 0), _row("NZL", 2, 1, -2)]},
-            "groups": {"G": {"fixtures": [
-                {"matchday": 3, "home": "EGY", "away": "IRN"},
-                {"matchday": 2, "home": "BEL", "away": "NZL"},  # nicht MD3 → kein Attach
-            ]}},
-        }
+class TestMd3QualStatus(unittest.TestCase):
+    def test_leader_not_third_chase(self):
+        # Gruppe L: ENG 4, GHA 4, CRO 3, PAN 0 — Rest: ENG-PAN, CRO-GHA
+        wm = _wm("L", [_row("ENG", 4, 2), _row("GHA", 4, 1), _row("CRO", 3, -1), _row("PAN", 0, -2)],
+                 [("ENG", "PAN"), ("CRO", "GHA")])
+        eng = G._md3_qual_status(wm, "L", "ENG")["label"]
+        self.assertIn(eng, ("qualified", "leader_can_draw"))
+        self.assertNotEqual(eng, "third_chase")          # DAS war der Bug
+        # PAN 0 Pkt, max 3 → kein realistischer bester Dritter → eliminated
+        self.assertEqual(G._md3_qual_status(wm, "L", "PAN")["label"], "eliminated")
+        self.assertEqual(G._md3_qual_status(wm, "L", "CRO")["label"], "win_secures_top2")
+
+    def test_win_secures_not_third_chase(self):
+        # Gruppe A: MEX 6, KOR 3, CZE 1, ZAF 1 — Rest: MEX-CZE, ZAF-KOR
+        wm = _wm("A", [_row("MEX", 6, 3), _row("KOR", 3, 0), _row("CZE", 1, -1), _row("ZAF", 1, -2)],
+                 [("MEX", "CZE"), ("ZAF", "KOR")])
+        self.assertEqual(G._md3_qual_status(wm, "A", "MEX")["label"], "qualified")
+        self.assertEqual(G._md3_qual_status(wm, "A", "KOR")["label"], "win_secures_top2")
+        self.assertEqual(G._md3_qual_status(wm, "A", "CZE")["label"], "must_win_top2")
+
+    def test_both_leaders_locked(self):
+        # Gruppe I: FRA 6, NOR 6 → beide durch
+        wm = _wm("I", [_row("FRA", 6, 5), _row("NOR", 6, 4), _row("SEN", 0, -3), _row("IRQ", 0, -6)],
+                 [("FRA", "NOR"), ("SEN", "IRQ")])
+        self.assertEqual(G._md3_qual_status(wm, "I", "FRA")["label"], "qualified")
+        self.assertEqual(G._md3_qual_status(wm, "I", "NOR")["label"], "qualified")
+        self.assertEqual(G._md3_qual_status(wm, "I", "SEN")["label"], "eliminated")
+
+    def test_attach_writes_new_labels(self):
+        wm = _wm("L", [_row("ENG", 4, 2), _row("GHA", 4, 1), _row("CRO", 3, -1), _row("PAN", 0, -2)],
+                 [("ENG", "PAN"), ("CRO", "GHA")])
         G._attach_qualification_states(wm)
-        md3 = wm["groups"]["G"]["fixtures"][0]
-        self.assertIn("qualHome", md3)
-        self.assertIn("qualAway", md3)
-        self.assertFalse(md3["qualAway"]["qualified"])   # Iran nicht sicher
-        self.assertNotIn("qualHome", wm["groups"]["G"]["fixtures"][1])  # MD2 unberührt
-
-    def test_no_standings_no_crash(self):
-        wm = {"groups": {"G": {"fixtures": [{"matchday": 3, "home": "A", "away": "B"}]}}}
-        G._attach_qualification_states(wm)   # darf nicht crashen
-        self.assertNotIn("qualHome", wm["groups"]["G"]["fixtures"][0])
+        fx = wm["groups"]["L"]["fixtures"][0]   # ENG-PAN
+        self.assertIn("qualHome", fx)
+        self.assertNotEqual(fx["qualHome"]["label"], "third_chase")  # England nie „bester Dritter"
 
 
 if __name__ == "__main__":

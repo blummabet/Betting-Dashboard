@@ -2326,21 +2326,90 @@ def _dedup_picks_by_market(picks: list) -> list:
     return [best[m][1] for m in order]
 
 
+def _md3_qual_status(wm: dict, group_id: str, team_id: str) -> dict:
+    """Szenario-basierter MD3-Qualifikations-Status (23.06.2026, Lucas — „England braucht Sieg für
+    besten Dritten" war Blödsinn, England spielt um Platz 1). Rechnet die 2 verbleibenden Gruppen-
+    spiele wirklich durch (3×3 Ausgänge) statt naiv die Max-Punkte ALLER anderen zu summieren
+    (die spielen ja gegeneinander → können nicht alle gewinnen). Berücksichtigt Platz 1 + Platz 2,
+    nicht nur „bester Dritter". GD-Tiebreak per aktuellem Stand + ±1 je Sieg/Niederlage (Proxy)."""
+    st = (wm.get("standings") or {}).get(group_id) or []
+    rows = {r.get("team"): r for r in st if r.get("team")}
+    if team_id not in rows or len(rows) < 4:
+        return {"label": "unknown"}
+    teams = list(rows.keys())
+    FIN = {"FT", "AET", "PEN", "AWD", "WO"}
+    rem = []
+    for fx in ((wm.get("groups") or {}).get(group_id) or {}).get("fixtures", []):
+        h, a = fx.get("home"), fx.get("away")
+        if h in rows and a in rows and \
+           str((fx.get("result") or {}).get("status") or "").upper() not in FIN:
+            rem.append((h, a))
+    involved = {t for g in rem for t in g}
+    if len(rem) != 2 or len(involved) != 4 or team_id not in involved:
+        return {"label": "unknown"}   # nicht die saubere „2 Spiele übrig"-MD3-Lage
+    my_game = next(g for g in rem if team_id in g)
+    opp = my_game[1] if my_game[0] == team_id else my_game[0]
+    oa, ob = next(g for g in rem if team_id not in g)
+    base = {t: (int(rows[t].get("points") or 0), int(rows[t].get("gd") or 0)) for t in teams}
+
+    def _rank(pts, gd):
+        order = sorted(teams, key=lambda t: (-pts[t], -gd[t], t))
+        return order.index(team_id) + 1
+
+    my_out = {"W": (3, 0, 1), "D": (1, 1, 0), "L": (0, 3, -1)}      # myPts, oppPts, myGdΔ
+    ot_out = {"a": (3, 0, 1), "d": (1, 1, 0), "b": (0, 3, -1)}      # oaPts, obPts, oaGdΔ
+    ranks_by_my = {"W": [], "D": [], "L": []}
+    all_ranks = []
+    for mk, (mp, op_, mgd) in my_out.items():
+        for _ok, (ap, bp, agd) in ot_out.items():
+            pts = {t: base[t][0] for t in teams}
+            gd = {t: base[t][1] for t in teams}
+            pts[team_id] += mp; pts[opp] += op_; gd[team_id] += mgd; gd[opp] -= mgd
+            pts[oa] += ap; pts[ob] += bp; gd[oa] += agd; gd[ob] -= agd
+            r = _rank(pts, gd)
+            ranks_by_my[mk].append(r)
+            all_ranks.append(r)
+
+    locked        = all(r <= 2 for r in all_ranks)
+    draw_secures  = all(r <= 2 for r in ranks_by_my["D"])
+    win_secures   = all(r <= 2 for r in ranks_by_my["W"])
+    win_top2_poss = any(r <= 2 for r in ranks_by_my["W"])
+    first_if_win  = any(r == 1 for r in ranks_by_my["W"])
+    third_poss    = any(r <= 3 for r in ranks_by_my["W"])
+    own_max_pts   = base[team_id][0] + 3
+
+    # Best-Dritter braucht in der 48er-WM realistisch ≥4 Punkte → 3-Pkt-Drittplatzierte = raus.
+    third_realistic = third_poss and own_max_pts >= 4
+    if locked:
+        label = "qualified"
+    elif not win_top2_poss and not third_realistic:
+        label = "eliminated"
+    elif draw_secures:
+        label = "leader_can_draw" if first_if_win else "can_draw"
+    elif win_secures:
+        label = "win_secures_top2"
+    elif win_top2_poss:
+        label = "must_win_top2"
+    elif third_realistic:
+        label = "third_chase"
+    else:
+        label = "eliminated"
+
+    return {"label": label, "current_position": _rank(
+                {t: base[t][0] for t in teams}, {t: base[t][1] for t in teams}),
+            "current_points": base[team_id][0], "first_if_win": bool(first_if_win),
+            "draw_secures": bool(draw_secures)}
+
+
 def _attach_qualification_states(wm: dict) -> None:
-    """Hängt pro MD3-Fixture den mathematisch korrekten Qualifikations-Status BEIDER Teams ans
-    Fixture (fx['qualHome']/fx['qualAway']). Single Source = incentive_signal._compute_qualification_
-    state (Top-2-Mathe + Best-Dritte). Der Renderer rendert daraus „wer muss / wer will / wer ist
-    durch", statt es aus der Tabellen-Position zu erraten. 23.06.2026, Lucas."""
-    try:
-        from sharp_signals.incentive_signal import _compute_qualification_state
-    except Exception as e:
-        print(f"  ⚠️  Qual-State-Attach übersprungen (Import): {e}")
-        return
+    """Hängt pro MD3-Fixture den szenario-basierten Qualifikations-Status BEIDER Teams ans Fixture
+    (fx['qualHome']/fx['qualAway']) — via _md3_qual_status (rechnet die 2 Rest-Spiele durch, achtet
+    auf Platz 1+2, nicht nur „bester Dritter"). Der Renderer rendert daraus „wer ist durch / Remis
+    reicht / muss für Top 2 gewinnen / …". 23.06.2026, Lucas."""
     standings = wm.get("standings") or {}
     if not standings:
         return
-    KEEP = ("label", "qualified", "must_win", "can_draw", "eliminated",
-            "third_realistic", "current_position", "current_points")
+    KEEP = ("label", "current_position", "current_points", "first_if_win", "draw_secures")
     n = 0
     for gk, gd in (wm.get("groups") or {}).items():
         for fx in (gd.get("fixtures") or []):
@@ -2350,7 +2419,9 @@ def _attach_qualification_states(wm: dict) -> None:
                 if not tid:
                     continue
                 try:
-                    stt = _compute_qualification_state(tid, gk, fx.get("matchday") or 3, standings)
+                    stt = _md3_qual_status(wm, gk, tid)
+                    if stt.get("label") in (None, "unknown"):
+                        continue
                     fx[field] = {k: stt.get(k) for k in KEEP if k in stt}
                     n += 1
                 except Exception:

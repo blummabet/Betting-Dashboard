@@ -1205,8 +1205,8 @@
     if (fx.matchday >= 3 && (fx.qualHome || fx.qualAway)) {
       const hL = (fx.qualHome && fx.qualHome.label) || null;
       const aL = (fx.qualAway && fx.qualAway.label) || null;
-      const SAFE  = ['qualified', 'can_draw'];          // faktisch durch (Remis reicht)
-      const DRUCK = ['must_win', 'eliminated', 'third_chase'];
+      const SAFE  = ['qualified', 'can_draw', 'leader_can_draw'];   // faktisch durch (Remis reicht)
+      const DRUCK = ['must_win_top2', 'win_secures_top2', 'third_chase', 'eliminated', 'must_win'];
       if (hL === 'eliminated' && aL === 'eliminated')  return { cls: 'cc-a-dead', icon: '❌', label: 'Beide ausgeschieden' };
       if (SAFE.includes(hL) && SAFE.includes(aL))      return { cls: 'cc-a-titel', icon: '🏆', label: 'Spiel um Gruppensieg' };
       if (DRUCK.includes(hL) || DRUCK.includes(aL))    return { cls: 'cc-a-druck', icon: '🔥', label: 'Aufstiegs-Druck' };
@@ -1470,13 +1470,17 @@
     if (fx.matchday >= 3 && (fx.qualHome || fx.qualAway)) {
       const _phrase = (team, q) => {
         if (!q || !q.label) return null;
+        const t = `${team.flag} ${team.name}`;
         switch (q.label) {
-          case 'qualified':   return `${team.flag} ${team.name} ist schon durch`;
-          case 'eliminated':  return `${team.flag} ${team.name} ist ausgeschieden`;
-          case 'must_win':    return `${team.flag} ${team.name} muss gewinnen, um weiterzukommen`;
-          case 'can_draw':    return `${team.flag} ${team.name} reicht schon ein Remis`;
-          case 'third_chase': return `${team.flag} ${team.name} braucht einen Sieg für den besten Dritten`;
-          default:            return null;
+          case 'qualified':       return `${t} ist schon durch`;
+          case 'leader_can_draw': return `${t} führt — ein Remis reicht fürs Achtelfinale, ein Sieg für Platz 1`;
+          case 'can_draw':        return `${t} reicht schon ein Remis fürs Achtelfinale`;
+          case 'win_secures_top2':return `${t} ist mit einem Sieg sicher unter den Top 2`;
+          case 'must_win_top2':   return `${t} braucht einen Sieg für die Top 2`;
+          case 'third_chase':     return `${t} kann nur noch über den besten Dritten weiter — ein Sieg muss her`;
+          case 'eliminated':      return `${t} ist ausgeschieden`;
+          case 'must_win':        return `${t} muss gewinnen, um weiterzukommen`;  // Legacy-Fallback
+          default:                return null;
         }
       };
       const hq = fx.qualHome, aq = fx.qualAway;
