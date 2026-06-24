@@ -3517,7 +3517,12 @@ function renderTradingCockpit(data) {
         <td style="padding:8px 12px;font-size:11px;color:#e6edf3;font-family:'SF Mono',Menlo,monospace">${cur != null ? (cur * 100).toFixed(1) + '¢' : '—'}</td>
         <td style="padding:8px 12px;font-size:11px;color:${pnlColor};font-weight:700;font-family:'SF Mono',Menlo,monospace;text-align:right">${pnl != null ? fmtPct(pnlPct) : '—'}</td>
         <td style="padding:8px 12px;font-size:10px;color:#8b949e">${matchStatus}</td>
-        <td style="padding:8px 12px;font-size:10px"><a href="${polyLink}" target="_blank" style="color:#a371f7;text-decoration:none">🔗</a></td>
+        <td style="padding:8px 12px;font-size:10px;white-space:nowrap">
+          <a href="${polyLink}" target="_blank" style="color:#a371f7;text-decoration:none">🔗</a>
+          <button onclick="_wmClosePosition('${(b.betKey || '').replace(/'/g, '')}','${((b.home||b.homeId)+' '+(b.market||'')).replace(/'/g,'')}')"
+            title="Hab ich manuell auf Polymarket verkauft → als geschlossen markieren"
+            style="margin-left:6px;background:#21262d;border:1px solid #30363d;border-radius:5px;color:#8b949e;font-size:10px;padding:2px 7px;cursor:pointer;font-family:inherit">🔒 geschl.</button>
+        </td>
       </tr>`;
     }).join('');
     positionsHtml = `
@@ -4097,6 +4102,37 @@ async function _callGitHubDispatch(orders) {
   });
 
   return resp.ok || resp.status === 204; // GitHub returns 204 No Content on success
+}
+
+// 23.06.2026 (Lucas): Position manuell als geschlossen markieren (hab direkt auf Polymarket
+// verkauft). Löst close-poly-position aus → reconcile_poly_positions.py --close=<betKey> liest
+// den echten Sell-Trade, setzt status=closed_manual + realisierten P&L, stoppt die Sell-Alerts.
+async function _wmClosePosition(betKey, label) {
+  if (!betKey) { _polyToast('❌ Kein betKey — Position nicht identifizierbar'); return; }
+  const pat = _getGithubPAT();
+  if (!pat) { polyOpenSettings(); return; }
+  if (!window.confirm(`Position als manuell geschlossen markieren?\n\n${label || betKey}\n\n` +
+      `Das System liest deinen echten Verkaufs-Trade von Polymarket, bucht den realisierten ` +
+      `P&L und stoppt die Sell-Alerts. (Du hast bereits auf Polymarket verkauft.)`)) return;
+  try {
+    const resp = await fetch(`https://api.github.com/repos/${POLY_GITHUB_REPO}/dispatches`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${pat}`,
+        'Accept': 'application/vnd.github+json',
+        'Content-Type': 'application/json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+      body: JSON.stringify({ event_type: 'close-poly-position', client_payload: { betKey } }),
+    });
+    if (resp.ok || resp.status === 204) {
+      _polyToast('🔒 Schließung ausgelöst — Runner bucht den Verkauf in ~1 Min');
+    } else {
+      _polyToast('❌ Dispatch fehlgeschlagen — PAT prüfen');
+    }
+  } catch (e) {
+    _polyToast('🔒 Schließung ausgelöst (Antwort unklar — in 1 Min prüfen)');
+  }
 }
 
 // ── Confirm modal ───────────────────────────────────────

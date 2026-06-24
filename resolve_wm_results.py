@@ -795,13 +795,19 @@ def main():
         # Realisierter P&L = sharesEstimate × (sellPrice − Entry). Sonst blieben sie
         # ewig PENDING und die Performance-Sektion zeigte den Verkauf nie.
         bet_status = (bet.get("status") or "").lower()
-        if bet_status == "sold":
+        if bet_status in ("sold", "closed_manual"):
             result_str = "SOLD"
-            _entry  = float(bet.get("polyPrice", 0) or 0)
-            _exit   = bet.get("sellPrice")
-            _shares = float(bet.get("sharesEstimate", 0) or 0)
-            pnl = (round(_shares * (float(_exit) - _entry), 2)
-                   if (_exit is not None and _entry > 0) else 0.0)
+            # closed_manual (23.06.2026): manuell auf Polymarket verkauft → echter realisierter
+            # P&L steht schon am Bet (reconcile_poly_positions aus dem Sell-Trade). Sonst (sold)
+            # aus sellPrice rechnen.
+            if bet_status == "closed_manual" and isinstance(bet.get("pnl"), (int, float)):
+                pnl = bet["pnl"]
+            else:
+                _entry  = float(bet.get("polyPrice", 0) or 0)
+                _exit   = bet.get("sellPrice")
+                _shares = float(bet.get("sharesEstimate", 0) or 0)
+                pnl = (round(_shares * (float(_exit) - _entry), 2)
+                       if (_exit is not None and _entry > 0) else 0.0)
         else:
             result_str  = determine_result(bet, res) if res else "PENDING"
             pnl         = compute_pnl(bet, result_str)
@@ -902,7 +908,7 @@ def _write_back_status_to_placed(resolved_bets: list[dict], now_iso: str) -> Non
               if rb.get("result") in _STATUS}
     changed = 0
     for bet in data.get("bets", []):
-        if (bet.get("status") or "").lower() == "sold":
+        if (bet.get("status") or "").lower() in ("sold", "closed_manual"):
             continue   # früh verkauft = terminal, nie übers Ergebnis überschreiben
         rb = by_key.get(bet.get("betKey"))
         if not rb:

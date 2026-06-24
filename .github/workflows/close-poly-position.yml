@@ -1,0 +1,50 @@
+name: 🔒 Close Polymarket Position (manuell)
+
+# Vom Dashboard-Button „Geschlossen" ausgelöst, wenn Lucas eine Position direkt auf
+# Polymarket verkauft hat. Payload: { "betKey": "<betKey>" }
+# Markiert den Bet in wm_auto_bets_placed.json als 'closed_manual' (echter Sell-P&L aus
+# der Wallet-Trade-Historie) → raus aus Health/Alerts/Pending.
+on:
+  repository_dispatch:
+    types: [close-poly-position]
+
+# Teilt die Trading-Concurrency-Gruppe (kein Parallellauf mit manage/place).
+concurrency:
+  group: poly-trading
+  cancel-in-progress: false
+
+jobs:
+  close-position:
+    name: Mark position closed_manual
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 6
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Find Python
+        run: |
+          PYTHON=""
+          for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11 python3; do
+            if "$PY" --version &>/dev/null 2>&1; then PYTHON="$PY"; break; fi
+          done
+          if [ -z "$PYTHON" ]; then echo "❌ Kein Python gefunden"; exit 1; fi
+          echo "✅ $PYTHON ($($PYTHON --version))"
+          echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
+
+      - name: Reconcile + close the position
+        env:
+          POLY_FUNDER_ADDRESS: ${{ secrets.POLY_FUNDER_ADDRESS }}
+          BET_KEY:             ${{ github.event.client_payload.betKey }}
+        run: ${{ env.POLY_PYTHON }} reconcile_poly_positions.py --close="$BET_KEY"
+
+      - name: Commit updated wm_auto_bets_placed.json
+        run: |
+          git config user.name  "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add wm_auto_bets_placed.json
+          git diff --staged --quiet || git commit -m "poly: close position manuell [skip ci]"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push

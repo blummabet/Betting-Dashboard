@@ -750,6 +750,17 @@ def main():
     now = datetime.now(timezone.utc)
     print(f"  {now.strftime('%d.%m.%Y %H:%M UTC')}")
 
+    # ── Manuelle Eingriffe erkennen (23.06.2026, Lucas) ──────────────────────
+    # Hat Lucas direkt auf Polymarket verkauft, hängt der Bet sonst ewig als 'placed'
+    # → Dauer-Alerts. Gleicht ZUERST die echten Wallet-Positionen ab und markiert weg-
+    # verkaufte (Spiel noch nicht fertig) als 'closed_manual'. load_auto_bets_as_positions
+    # lädt danach nur noch 'placed' → keine Alerts mehr auf manuell geschlossene Positionen.
+    try:
+        import reconcile_poly_positions as _rec
+        _rec.run()
+    except Exception as _re:
+        print(f"  ⚠️  reconcile übersprungen: {_re}")
+
     # Sicherheitsschalter: Auto-Sell aktiviert?
     env_sell = os.getenv("AUTO_SELL_ENABLED", "").strip().lower()
     auto_sell_on = AUTO_SELL_ENABLED or env_sell in ("true", "1", "yes")
