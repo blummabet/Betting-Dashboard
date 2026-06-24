@@ -1,0 +1,55 @@
+name: 📈 Pinnacle Odds Refresh (dicht)
+
+# 23.06.2026 (Lucas): Pinnacle nur 5×/Tag (fetch-wm-data) → Steam-Moves wirken „verwaschen".
+# Dieser schlanke Extra-Dienst holt NUR die Pinnacle-Odds + erkennt Moves (Sharp Radar) alle 2h,
+# interleaved mit fetch-wm-data (4,8,12,16,20 UTC) → Pinnacle ~alle 2h frisch. Kein voller
+# Pipeline-Lauf (keine Form/Lineups/Poly). Kosten: ~720 TheOddsAPI-Credits/Lauf × ~6 = ~4,3k/Tag
+# (~130k/Monat) — bei 5-Mio-Limit unkritisch. Nach 1 Woche Verbrauch prüfen, Cadence justieren.
+on:
+  schedule:
+    - cron: '0 2,6,10,14,18,22 * * *'   # füllt die Lücken zwischen fetch-wm-data (4,8,12,16,20)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Teilt die Gruppe mit fetch-wm-data → kein gleichzeitiges Schreiben/Pushen von wm2026-data.json.
+concurrency:
+  group: fetch-wm-data
+  cancel-in-progress: false
+
+jobs:
+  pinnacle-refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 💰 Pinnacle-Odds holen (nur fetch_wm_odds)
+        env:
+          ODDS_API_KEY:            ${{ secrets.ODDS_API_KEY }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+        run: python fetch_wm_odds.py
+
+      - name: 📡 Sharp-Moves erkennen (Radar)
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+        run: python detect_wm_sharp_moves.py || true
+
+      - name: 💾 Odds + Snapshots committen
+        run: |
+          git config user.name  "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add wm2026-data.json wm2026-odds-history.json wm_sharp_moves_log.json wm_sharp_dedup.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "pinnacle: dichter Odds-Refresh + Move-Scan [skip ci]"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
