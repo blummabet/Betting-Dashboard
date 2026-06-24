@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-24T21:09:19Z",
-    "total_records": 89
+    "updated_at": "2026-06-24T21:24:24Z",
+    "total_records": 92
   },
   "records": [
     {
@@ -478,6 +478,77 @@
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true
+    },
+    {
+      "key": "B-3-BIH-QAT|AH Heim −1",
+      "matchKey": "B-3-BIH-QAT",
+      "market": "AH Heim −1",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": 1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 4.9
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.08
+        },
+        {
+          "name": "pressure_index",
+          "score": 1.5
+        }
+      ],
+      "resolvedAt": "2026-06-24T21:19:15Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "B-3-BIH-QAT|Beide Teams treffen — Ja",
+      "matchKey": "B-3-BIH-QAT",
+      "market": "Beide Teams treffen — Ja",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "xg_strength",
+          "score": -1.48
+        }
+      ],
+      "resolvedAt": "2026-06-24T21:19:15Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": true,
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "B-3-BIH-QAT|Über 2.5 Tore",
+      "matchKey": "B-3-BIH-QAT",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.5
+        },
+        {
+          "name": "lineup_signal",
+          "score": -4.04
+        },
+        {
+          "name": "incentive_signal",
+          "score": 1.2
+        }
+      ],
+      "resolvedAt": "2026-06-24T21:19:15Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": true,
+      "processVerdict": "LUCKY"
     },
     {
       "key": "C-1-BRA-MAR|AH Auswärts +0.5",
