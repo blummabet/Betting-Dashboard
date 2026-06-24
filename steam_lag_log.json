@@ -12679,12 +12679,19 @@
           "polyPrice": 0.315,
           "pinnFair": 0.3284,
           "steamLag": true
+        },
+        {
+          "ts": "2026-06-24T07:38:03Z",
+          "edgePp": 1.2,
+          "polyPrice": 0.325,
+          "pinnFair": 0.3368,
+          "steamLag": true
         }
       ],
-      "currentEdgePp": 1.3,
-      "currentPolyPrice": 0.315,
-      "edgeVelocityPPH": 0.0,
-      "convergencePct": 72.3,
+      "currentEdgePp": 1.2,
+      "currentPolyPrice": 0.325,
+      "edgeVelocityPPH": -0.007,
+      "convergencePct": 74.5,
       "status": "CONVERGED",
       "outcome": null,
       "resetReason": "data_gap_16.1h_before_convergence_snapshot_2026-06-09",
@@ -16403,13 +16410,6 @@
       "entryTier": "track",
       "snapshots": [
         {
-          "ts": "2026-06-18T07:16:52Z",
-          "edgePp": 2.5,
-          "polyPrice": 0.135,
-          "pinnFair": 0.1596,
-          "steamLag": false
-        },
-        {
           "ts": "2026-06-18T08:42:06Z",
           "edgePp": 2.5,
           "polyPrice": 0.135,
@@ -16751,16 +16751,24 @@
           "polyPrice": 0.105,
           "pinnFair": 0.1333,
           "steamLag": false
+        },
+        {
+          "ts": "2026-06-24T07:38:03Z",
+          "edgePp": -0.2,
+          "polyPrice": 0.105,
+          "pinnFair": 0.1027,
+          "steamLag": true
         }
       ],
-      "currentEdgePp": 2.8,
+      "currentEdgePp": -0.2,
       "currentPolyPrice": 0.105,
       "edgeVelocityPPH": 0.0,
-      "convergencePct": 0.0,
+      "convergencePct": 100.0,
       "convergenceTs": null,
       "convergenceHours": null,
       "status": "OPEN",
-      "outcome": null
+      "outcome": null,
+      "pendingConvergenceConfirm": true
     },
     {
       "id": "JPN-SWE_aw_20260615",
@@ -18414,16 +18422,24 @@
           "polyPrice": 0.105,
           "pinnFair": 0.1196,
           "steamLag": false
+        },
+        {
+          "ts": "2026-06-24T07:38:03Z",
+          "edgePp": 0.5,
+          "polyPrice": 0.115,
+          "pinnFair": 0.1196,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 1.5,
-      "currentPolyPrice": 0.105,
+      "currentEdgePp": 0.5,
+      "currentPolyPrice": 0.115,
       "edgeVelocityPPH": 0.0,
-      "convergencePct": 28.6,
+      "convergencePct": 76.2,
       "convergenceTs": null,
       "convergenceHours": null,
       "status": "OPEN",
-      "outcome": null
+      "outcome": null,
+      "pendingConvergenceConfirm": true
     },
     {
       "id": "NOR-SEN_aw_20260621",
@@ -18527,6 +18543,6 @@
       "outcome": null
     }
   ],
-  "updatedAt": "2026-06-23T21:28:21Z",
-  "runCount": 301
+  "updatedAt": "2026-06-24T07:38:03Z",
+  "runCount": 302
 }
