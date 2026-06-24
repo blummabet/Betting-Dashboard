@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T10:49:15Z",
+  "generatedAt": "2026-06-24T14:12:18Z",
   "windowDays": 2,
   "upcoming": 18,
   "signalsFired": [
@@ -24,10 +24,10 @@
   "signalsTotal": 19,
   "perSignal": {
     "lead_lag_bias": 9,
-    "public_static_bias": 16,
-    "travel_burden": 68,
+    "public_static_bias": 19,
+    "travel_burden": 69,
     "injury": 2,
-    "form_trend": 105,
+    "form_trend": 106,
     "h2h_pattern": 7,
     "xg_strength": 92,
     "polymarket_sharp": 0,
@@ -36,12 +36,12 @@
     "lineup_signal": 16,
     "apif_predictions": 10,
     "weather_signal": 16,
-    "incentive_signal": 18,
+    "incentive_signal": 19,
     "altitude_signal": 3,
     "chance_creation": 26,
     "form_rating": 5,
     "freshness_leg": 24,
-    "smart_money": 21
+    "smart_money": 23
   },
   "verdict": "warn",
   "errors": [],
@@ -50,9 +50,9 @@
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. CLV nur bei 11/23 geschlossenen Trades erfasst — Closing-Snapshot lückenhaft → Auswertung teilblind)",
-    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 1 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.36 verfügbar (≥1.35), nicht abgeleitet)",
+    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 2 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.36 verfügbar (≥1.35), nicht abgeleitet)",
     "🛡️ Steam-Lag: 1 Position pro Wette: 10 Fehler (z.B. CPV-SAU hw: 5 Einträge (soll 1))",
-    "🛡️ Soft-Eröffnung echt erfasst: 2 Fehler (z.B. MAR-HTI: Soft bewegte sich 1.3→1.2, aber Opening==Jetzt (1.18) — nicht eingefroren)"
+    "🛡️ Soft-Eröffnung echt erfasst: 3 Fehler (z.B. MAR-HTI: Soft bewegte sich 1.3→1.18, aber Opening==Jetzt (1.18) — nicht eingefroren)"
   ],
   "oks": [
     "🌡️ Weather: 24 Spiele mit Forecast",
@@ -60,7 +60,7 @@
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 88.7 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 90.0 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
     "💼 Poly-Balance: $308.66",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -297,9 +297,10 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 1,
+      "nFail": 2,
       "failures": [
-        "BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.36 verfügbar (≥1.35), nicht abgeleitet"
+        "BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.36 verfügbar (≥1.35), nicht abgeleitet",
+        "PRY-AUS Unter 1.5 Tore @2.2: sichere Linie Unter 2.5 Tore @1.36 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -382,10 +383,11 @@
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 3,
       "failures": [
-        "MAR-HTI: Soft bewegte sich 1.3→1.2, aber Opening==Jetzt (1.18) — nicht eingefroren",
-        "CUW-CIV: Soft bewegte sich 15.0→19.0, aber Opening==Jetzt (19.0) — nicht eingefroren"
+        "MAR-HTI: Soft bewegte sich 1.3→1.18, aber Opening==Jetzt (1.18) — nicht eingefroren",
+        "CUW-CIV: Soft bewegte sich 15.0→19.0, aber Opening==Jetzt (19.0) — nicht eingefroren",
+        "MEX-CZE: Soft bewegte sich 1.83→1.91, aber Opening==Jetzt (1.91) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
