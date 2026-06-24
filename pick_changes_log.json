@@ -1,46 +1,6 @@
 {
-  "lastUpdate": "2026-06-24T17:50:41.034010+00:00",
+  "lastUpdate": "2026-06-24T19:58:05.151474+00:00",
   "changes": [
-    {
-      "matchKey": "F-3-JPN-SWE",
-      "fixture": "🇯🇵 Japan vs 🇸🇪 Schweden · ST3",
-      "kickoff": "2026-06-25T01:00:00",
-      "market": "Beide Teams treffen — Ja",
-      "deltaKind": "edge_up",
-      "reason": "Edge +3pp · Modell-Update @1.66",
-      "ts": "2026-06-21T09:59:52.043534+00:00",
-      "relevant": true,
-      "before": {
-        "verdict": "ABWÄGEN",
-        "odds": 1.66,
-        "edgePP": -4
-      },
-      "after": {
-        "verdict": "ABWÄGEN",
-        "odds": 1.66,
-        "edgePP": -1
-      }
-    },
-    {
-      "matchKey": "H-2-ESP-SAU",
-      "fixture": "🇪🇸 Spanien vs 🇸🇦 Saudi-Arabien · ST2",
-      "kickoff": "2026-06-21T18:00:00",
-      "market": "Über 2.5 Tore",
-      "deltaKind": "edge_up",
-      "reason": "Edge +3pp (1.37 → 1.40)",
-      "ts": "2026-06-21T09:59:52.043534+00:00",
-      "relevant": true,
-      "before": {
-        "verdict": "ABWÄGEN",
-        "odds": 1.37,
-        "edgePP": -7
-      },
-      "after": {
-        "verdict": "ABWÄGEN",
-        "odds": 1.4,
-        "edgePP": -4
-      }
-    },
     {
       "matchKey": "I-3-SEN-IRQ",
       "fixture": "🇸🇳 Senegal vs 🇮🇶 Irak · ST3",
@@ -3487,6 +3447,46 @@
         "verdict": "NOBET",
         "odds": 2.15,
         "edgePP": -6
+      }
+    },
+    {
+      "matchKey": "G-3-BEL-NZL",
+      "fixture": "🇧🇪 Belgien vs 🇳🇿 Neuseeland · ST3",
+      "kickoff": "2026-06-26T05:00:00",
+      "market": "Beide Teams treffen — Nein",
+      "deltaKind": "upgrade",
+      "reason": "NOBET → ABWÄGEN · Edge -3pp",
+      "ts": "2026-06-24T19:58:05.149924+00:00",
+      "relevant": true,
+      "before": {
+        "verdict": "NOBET",
+        "odds": 1.57,
+        "edgePP": -3
+      },
+      "after": {
+        "verdict": "ABWÄGEN",
+        "odds": 1.6,
+        "edgePP": -3
+      }
+    },
+    {
+      "matchKey": "G-3-BEL-NZL",
+      "fixture": "🇧🇪 Belgien vs 🇳🇿 Neuseeland · ST3",
+      "kickoff": "2026-06-26T05:00:00",
+      "market": "Über 2.5 Tore",
+      "deltaKind": "downgrade",
+      "reason": "BET → NOBET · Edge -5pp",
+      "ts": "2026-06-24T19:58:05.149924+00:00",
+      "relevant": true,
+      "before": {
+        "verdict": "BET",
+        "odds": 1.5,
+        "edgePP": -5
+      },
+      "after": {
+        "verdict": "NOBET",
+        "odds": 1.5,
+        "edgePP": -5
       }
     }
   ]
