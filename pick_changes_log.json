@@ -1,38 +1,6 @@
 {
-  "lastUpdate": "2026-06-24T19:58:05.151474+00:00",
+  "lastUpdate": "2026-06-24T21:19:15.205217+00:00",
   "changes": [
-    {
-      "matchKey": "I-3-SEN-IRQ",
-      "fixture": "🇸🇳 Senegal vs 🇮🇶 Irak · ST3",
-      "kickoff": "2026-06-26T21:00:00",
-      "market": "AH Heim −1.5",
-      "deltaKind": "new_pick",
-      "reason": "Neuer BET: +-4pp Edge @1.95",
-      "ts": "2026-06-21T09:59:52.043534+00:00",
-      "relevant": true,
-      "before": null,
-      "after": {
-        "verdict": "BET",
-        "odds": 1.95,
-        "edgePP": -4
-      }
-    },
-    {
-      "matchKey": "I-3-SEN-IRQ",
-      "fixture": "🇸🇳 Senegal vs 🇮🇶 Irak · ST3",
-      "kickoff": "2026-06-26T21:00:00",
-      "market": "AH Heim −2",
-      "deltaKind": "removed",
-      "reason": "Entfernt — BET verschwunden (Edge weg oder Quote weg)",
-      "ts": "2026-06-21T09:59:52.043534+00:00",
-      "relevant": true,
-      "before": {
-        "verdict": "BET",
-        "odds": 2.63,
-        "edgePP": -3
-      },
-      "after": null
-    },
     {
       "matchKey": "D-3-USA-TUR",
       "fixture": "🇺🇸 USA vs 🇹🇷 Türkei · ST3",
@@ -3487,6 +3455,46 @@
         "verdict": "NOBET",
         "odds": 1.5,
         "edgePP": -5
+      }
+    },
+    {
+      "matchKey": "C-3-MAR-HTI",
+      "fixture": "🇲🇦 Marokko vs 🇭🇹 Haiti · ST3",
+      "kickoff": "2026-06-24T00:00:00",
+      "market": "Beide Teams treffen — Nein",
+      "deltaKind": "upgrade",
+      "reason": "NOBET → ABWÄGEN · Edge -6pp",
+      "ts": "2026-06-24T21:19:15.203294+00:00",
+      "relevant": true,
+      "before": {
+        "verdict": "NOBET",
+        "odds": 1.57,
+        "edgePP": -5
+      },
+      "after": {
+        "verdict": "ABWÄGEN",
+        "odds": 1.53,
+        "edgePP": -6
+      }
+    },
+    {
+      "matchKey": "C-3-MAR-HTI",
+      "fixture": "🇲🇦 Marokko vs 🇭🇹 Haiti · ST3",
+      "kickoff": "2026-06-24T00:00:00",
+      "market": "Über 2.5 Tore",
+      "deltaKind": "downgrade",
+      "reason": "ABWÄGEN → NOBET · Edge -4pp",
+      "ts": "2026-06-24T21:19:15.203294+00:00",
+      "relevant": true,
+      "before": {
+        "verdict": "ABWÄGEN",
+        "odds": 1.58,
+        "edgePP": -4
+      },
+      "after": {
+        "verdict": "NOBET",
+        "odds": 1.58,
+        "edgePP": -4
       }
     }
   ]
