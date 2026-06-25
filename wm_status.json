@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-25T07:38:50Z",
+  "generatedAt": "2026-06-25T10:57:59Z",
   "windowDays": 2,
   "upcoming": 18,
   "signalsFired": [
@@ -23,9 +23,9 @@
   ],
   "signalsTotal": 19,
   "perSignal": {
-    "lead_lag_bias": 10,
-    "public_static_bias": 16,
-    "travel_burden": 72,
+    "lead_lag_bias": 9,
+    "public_static_bias": 17,
+    "travel_burden": 73,
     "injury": 3,
     "form_trend": 109,
     "h2h_pattern": 7,
@@ -38,10 +38,10 @@
     "weather_signal": 17,
     "incentive_signal": 21,
     "altitude_signal": 3,
-    "chance_creation": 26,
-    "form_rating": 5,
+    "chance_creation": 29,
+    "form_rating": 6,
     "freshness_leg": 14,
-    "smart_money": 23
+    "smart_money": 25
   },
   "verdict": "warn",
   "errors": [],
@@ -51,15 +51,15 @@
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
     "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 2 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
     "🛡️ Steam-Lag: 1 Position pro Wette: 10 Fehler (z.B. CPV-SAU hw: 5 Einträge (soll 1))",
-    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. CUW-CIV: Soft bewegte sich 15.0→19.0, aber Opening==Jetzt (19.0) — nicht eingefroren)"
+    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. CUW-CIV: Soft bewegte sich 15.0→17.0, aber Opening==Jetzt (19.0) — nicht eingefroren)"
   ],
   "oks": [
     "🌡️ Weather: 18 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.4h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 73 Fixtures, Ø 96.6 Snapshots",
+    "📉 Odds-History: 73 Fixtures, Ø 97.4 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
     "💼 Poly-Balance: $322.81",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -382,7 +382,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "CUW-CIV: Soft bewegte sich 15.0→19.0, aber Opening==Jetzt (19.0) — nicht eingefroren"
+        "CUW-CIV: Soft bewegte sich 15.0→17.0, aber Opening==Jetzt (19.0) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
