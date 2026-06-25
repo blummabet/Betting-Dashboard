@@ -41,6 +41,11 @@
 
   const CO_HOSTS = new Set(['MEX', 'USA', 'CAN']);
 
+  // (25.06.2026, Lucas: KO-Runden) Reihenfolge + deutsche Labels für die KO-Phase.
+  // Quelle bleibt wm["koFixtures"] (Backend-Resolver) — hier nur Anzeige.
+  const KO_ROUND_ORDER  = ['R32', 'R16', 'QF', 'SF'];
+  const KO_ROUND_LABELS = { R32: 'Sechzehntelfinale', R16: 'Achtelfinale', QF: 'Viertelfinale', SF: 'Halbfinale' };
+
   // ─────────────────────────────────────────────────────
   //  ENTRY POINT
   // ─────────────────────────────────────────────────────
@@ -237,6 +242,33 @@
         allFx.push({ ...fx, groupKey: gKey, groupData: gData });
       }
     }
+
+    // (25.06.2026, Lucas: KO-Runden) KO-Paarungen aus wm["koFixtures"] einreihen.
+    // EINMAL eine globale Team-Union bauen (für Flaggen/Elo), weil KO-Teams aus
+    // beliebigen Gruppen kommen. In der „Alle"-Ansicht nur bothResolved zeigen
+    // (sonst Lärm); nicht-aufgelöste nur in der Runden-gefilterten Ansicht.
+    const koFixtures = Array.isArray(_wmData.koFixtures) ? _wmData.koFixtures : [];
+    if (koFixtures.length) {
+      const _allTeams = [];
+      const _seenTeam = new Set();
+      for (const gData of Object.values(groups)) {
+        for (const t of (gData.teams || [])) {
+          if (!_seenTeam.has(t.id)) { _seenTeam.add(t.id); _allTeams.push(t); }
+        }
+      }
+      const _koGroupData = { teams: _allTeams, name: 'K.O.-Runde' };
+      const _mdIsRound = KO_ROUND_ORDER.includes(_activeMd);
+      for (const kf of koFixtures) {
+        // In „Alle"-Ansicht nur aufgelöste; in Runden-Ansicht auch Platzhalter.
+        if (!kf.bothResolved && !_mdIsRound) continue;
+        allFx.push({
+          home: kf.home, away: kf.away,
+          date: kf.date, kickoff: kf.kickoff, venue: kf.venue,
+          matchday: kf.round, groupKey: 'KO', isKO: true, koData: kf,
+          groupData: _koGroupData,
+        });
+      }
+    }
     // FIX 11.06.2026: Mitternachts-Umbruch. Ein 00:00-Anpfiff ist das SPÄTE
     // Nacht-Spiel des Tages (nach den 18:00/21:00-Spielen), nicht das erste.
     // Vorher sortierte "00:00" < "21:00" → KOR-CZE stand fälschlich VOR dem
@@ -252,7 +284,9 @@
 
     // ── Apply filters ─────────────────────────────────
     let filtered = _activeGroup === 'all' ? allFx : allFx.filter(fx => fx.groupKey === _activeGroup);
-    if (_activeMd !== 'all') filtered = filtered.filter(fx => fx.matchday === +_activeMd);
+    // (25.06.2026, Lucas: KO-Runden) String-Vergleich, damit numerische Spieltage
+    // UND Runden-Codes (R32/R16/QF/SF) als _activeMd funktionieren.
+    if (_activeMd !== 'all') filtered = filtered.filter(fx => String(fx.matchday) === String(_activeMd));
 
     // ── Shared data maps ──────────────────────────────
     const picks       = _wmData.picks       || {};
@@ -317,6 +351,14 @@
     html += `<button class="wm-md-btn${_activeMd === 1 ? ' active' : ''}" onclick="wmSetMd(1)">Spieltag 1</button>`;
     html += `<button class="wm-md-btn${_activeMd === 2 ? ' active' : ''}" onclick="wmSetMd(2)">Spieltag 2</button>`;
     html += `<button class="wm-md-btn${_activeMd === 3 ? ' active' : ''}" onclick="wmSetMd(3)">Spieltag 3</button>`;
+    // (25.06.2026, Lucas: KO-Runden) Runden-Buttons NUR für Runden mit koFixtures.
+    {
+      const _koRounds = new Set((Array.isArray(_wmData.koFixtures) ? _wmData.koFixtures : []).map(k => k.round));
+      for (const r of KO_ROUND_ORDER) {
+        if (!_koRounds.has(r)) continue;
+        html += `<button class="wm-md-btn${_activeMd === r ? ' active' : ''}" onclick="wmSetMd('${r}')">${KO_ROUND_LABELS[r]}</button>`;
+      }
+    }
     html += `</div>`;
 
     // ─── Sort control ────────────────────────────────
@@ -418,7 +460,14 @@
         const awayForm  = form[fx.away]   || null;
         const polyFix   = _polyLookup[`${fx.home}-${fx.away}`] || null;
 
-        html += _buildCard(fx, gData, homeTeam, awayTeam, fxOdds, fxPicks, fxPPicks, fxStand, homeSquad, awaySquad, homeForm, awayForm, polyFix, todayIso);
+        // (25.06.2026, Lucas: KO-Runden) KO-Fixtures bekommen eine eigene, kompakte
+        // Card (keine Gruppen-Standings/Quali-Logik → kein Crash). Gruppenspiele
+        // unverändert über _buildCard.
+        if (fx.isKO) {
+          html += _buildKoCard(fx, homeTeam, awayTeam, fxOdds, fxPicks, polyFix, todayIso);
+        } else {
+          html += _buildCard(fx, gData, homeTeam, awayTeam, fxOdds, fxPicks, fxPPicks, fxStand, homeSquad, awaySquad, homeForm, awayForm, polyFix, todayIso);
+        }
       }
       html += `</div>`;
     }
@@ -1084,6 +1133,129 @@
         </div>
         <a class="cc-detail-btn" href="matches/wm-match-v2.html?m=${slug}" target="_blank">↗ Analyse</a>
         <span></span>
+      </div>`;
+    }
+
+    html += `</div>`; // cc-card
+    return html;
+  }
+
+  // ─────────────────────────────────────────────────────
+  //  KO-CARD BUILDER (25.06.2026, Lucas: KO-Runden)
+  //  Kompakte Card für die K.O.-Phase. Zweistufig:
+  //   1. bothResolved + Live-Picks → volle (schlanke) Pick-Card.
+  //   2. bothResolved, KEINE Picks → Vorschau („Quoten folgen").
+  //   3. nicht bothResolved        → Platzhalter (homeRef vs awayRef).
+  //  KEINE Gruppen-Standings/Quali-Logik (gibt's für KO nicht).
+  // ─────────────────────────────────────────────────────
+  function _buildKoCard(fx, home, away, fxOdds, fxPicks, polyFix, todayIso) {
+    const kf = fx.koData || {};
+    const roundLabel = kf.roundLabel || KO_ROUND_LABELS[kf.round] || 'K.O.-Runde';
+    const eloDiff = (home.elo && away.elo) ? (home.elo - away.elo) : null;
+
+    const _finalStatus = ['FT', 'AET', 'PEN', 'AWD', 'WO'].includes(
+      ((fx.result && fx.result.status) || '').toUpperCase());
+    const isPlayed = fx.date < todayIso || _finalStatus;
+    const isToday  = fx.date === todayIso;
+
+    // Live-Picks (BET/ABWÄGEN, ohne ausgeschlossene/redundante AH-Linien) —
+    // identische Quelle wie Gruppenspiele (_wmLivePicks liest fxPicks).
+    const livePicks = _wmLivePicks(fxPicks);
+    const sortedPicks = [...livePicks].sort((a, b) => {
+      if (a.verdict === 'BET' && b.verdict !== 'BET') return -1;
+      if (b.verdict === 'BET' && a.verdict !== 'BET') return 1;
+      const _ca = a.convictionScore || 0, _cb = b.convictionScore || 0;
+      if (_cb !== _ca) return _cb - _ca;
+      return (b.edgePP || 0) - (a.edgePP || 0);
+    });
+
+    // ── Card-Klasse / Tier ──
+    let cardCls = 'cc-card cc-ko-card';
+    if (isPlayed)                                            cardCls += ' cc-played';
+    else if (sortedPicks[0] && sortedPicks[0].verdict === 'BET')      cardCls += ' cc-tier-bet';
+    else if (sortedPicks[0] && sortedPicks[0].verdict === 'ABWÄGEN')  cardCls += ' cc-tier-abw';
+    else                                                    cardCls += ' cc-tier-watch';
+    if (isToday) cardCls += ' cc-today';
+
+    const matchKey = `KO-${kf.round || ''}-${fx.home || 'TBD'}-${fx.away || 'TBD'}`;
+    let html = `<div class="${cardCls}" data-match-key="${matchKey}">`;
+
+    // ── TOP — Runden-Badge + Teams + Meta ──
+    html += `<div class="cc-top">`;
+    html += `<div class="cc-angle cc-angle-neutral">🏆 ${roundLabel}${kf.matchNo ? ` · Spiel ${kf.matchNo}` : ''}</div>`;
+
+    if (kf.bothResolved) {
+      html += `<div class="cc-teams">
+        <div class="cc-team"><span class="cc-flag">${home.flag}</span>${home.name}</div>
+        <div class="cc-vs">VS</div>
+        <div class="cc-team"><span class="cc-flag">${away.flag}</span>${away.name}</div>
+      </div>`;
+    } else {
+      // Platzhalter: menschenlesbare Referenzen (immer vorhanden).
+      html += `<div class="cc-teams cc-teams-tbd">
+        <div class="cc-team cc-team-tbd">${kf.homeRef || 'noch offen'}</div>
+        <div class="cc-vs">VS</div>
+        <div class="cc-team cc-team-tbd">${kf.awayRef || 'noch offen'}</div>
+      </div>`;
+    }
+
+    const dateMain  = _fmtKickoffMain(fx);          // "So, 28. Jun · 21:00 Uhr" (Wien)
+    const localTime = _venueLocalFromKickoff(fx);   // " · 14:00 LA"
+    html += `<div class="cc-meta">
+      <span>${roundLabel}</span>
+      <span class="cc-dot"></span>
+      <span>${dateMain}${localTime ? `<span class="cc-local-tz">${localTime}</span>` : ''}</span>
+      ${fx.venue ? `<span class="cc-dot"></span><span class="cc-venue">📍 ${fx.venue}</span>` : ''}
+    </div></div>`;
+
+    // ── Body: 3 Zustände ──
+    if (isPlayed && fx.result && fx.result.home_score != null && fx.result.away_score != null
+        && ['FT','AET','PEN'].includes((fx.result.status || 'FT').toUpperCase())) {
+      html += `<div class="cc-pick cc-pick-result">
+        <div class="cc-pick-label">Endstand</div>
+        <div class="cc-pick-market">${fx.result.home_score}:${fx.result.away_score}</div>
+      </div>`;
+    } else if (!kf.bothResolved) {
+      // Zustand 3: Teams stehen noch nicht fest.
+      html += `<div class="cc-pick cc-pick-watch">
+        <div class="cc-pick-label">Paarung offen</div>
+        <div class="cc-pick-watch-text">Teams stehen noch nicht fest</div>
+      </div>`;
+    } else if (sortedPicks.length) {
+      // Zustand 1: bothResolved + Live-Picks → schlanke Pick-Darstellung.
+      const hero = sortedPicks[0];
+      const isAbw = hero.verdict === 'ABWÄGEN';
+      const _cs = (typeof hero.convictionScore === 'number') ? hero.convictionScore : null;
+      let stars;
+      if (hero.verdict === 'BET') stars = 3;
+      else if (isAbw) stars = (_cs != null) ? (_cs >= 7 ? 3 : _cs >= 4 ? 2 : 1) : 2;
+      else stars = 1;
+      const _net = hero.signalAdjustmentPP;
+      if (typeof _net === 'number' && _net <= -2) stars = Math.max(1, stars - 1);
+      const oddsStr = hero.odds != null ? hero.odds.toFixed(2) : '—';
+      html += `<div class="cc-pick${isAbw ? ' cc-pick-abw' : ''}">
+        <div class="cc-pick-label">${isAbw ? 'Vorsichtiger Pick' : 'Unser Pick'}</div>
+        <div class="cc-pick-market">${hero.market}</div>
+        <div class="cc-pick-odds"><span class="cc-at">@</span><span class="cc-num">${oddsStr}</span></div>
+        <div class="cc-pick-conf">
+          ${[1,2,3].map(n => `<span class="cc-star${isAbw ? ' cc-star-abw' : ''} ${n <= stars ? 'cc-star-full' : 'cc-star-empty'}">★</span>`).join('')}
+        </div>
+      </div>`;
+      // Weitere Picks kompakt darunter.
+      for (const p of sortedPicks.slice(1)) {
+        const pAbw = p.verdict === 'ABWÄGEN';
+        const pOdds = p.odds != null ? p.odds.toFixed(2) : '—';
+        html += `<div class="cc-ko-extra-pick">
+          <span class="cc-verdict ${pAbw ? 'cc-verdict-abw' : 'cc-verdict-bet'}">${p.verdict}</span>
+          <span class="cc-ko-extra-market">${p.market}</span>
+          <span class="cc-ko-extra-odds">@ ${pOdds}</span>
+        </div>`;
+      }
+    } else {
+      // Zustand 2: bothResolved, aber (noch) keine Picks/Quoten.
+      html += `<div class="cc-pick cc-pick-watch">
+        <div class="cc-pick-label">Vorschau</div>
+        <div class="cc-pick-watch-text">⏳ Quoten folgen</div>
       </div>`;
     }
 

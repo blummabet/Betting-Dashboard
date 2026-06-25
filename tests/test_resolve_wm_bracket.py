@@ -1,0 +1,126 @@
+#!/usr/bin/env python3
+"""
+test_resolve_wm_bracket.py — KO-Bracket-Auflösung (25.06.2026, Lucas: „sobald beide Teams feststehen
+kann er schon eine Card generieren"). Prüft: Gruppenplatz löst NUR bei kompletter Gruppe; best_third
++ W-Refs bleiben TBD; kickoff UTC korrekt aus Venue-TZ; inkrementell + idempotent.
+"""
+import sys
+import unittest
+from pathlib import Path
+
+REPO = Path(__file__).parent.parent
+sys.path.insert(0, str(REPO))
+
+import resolve_wm_bracket as R  # noqa: E402
+
+VENUES = {"los_angeles": {"city": "Los Angeles", "tz_offset_h_utc": -7},
+          "boston":      {"city": "Boston",      "tz_offset_h_utc": -4}}
+
+# Mini-Bracket: 1 R32-Spiel mit zwei Gruppenplätzen, 1 mit best_third, 1 R16 mit W-Refs
+BRACKET = {
+    "round_of_32": {
+        "M73": {"matchNo": 73, "date": "2026-06-28", "kickoff_local": "12:00",
+                "venue_id": "los_angeles",
+                "side_a": {"type": "group_position", "group": "A", "position": 2},
+                "side_b": {"type": "group_position", "group": "B", "position": 2},
+                "winner_to": "M90"},
+        "M74": {"matchNo": 74, "date": "2026-06-29", "kickoff_local": "16:30",
+                "venue_id": "boston",
+                "side_a": {"type": "group_position", "group": "A", "position": 1},
+                "side_b": {"type": "best_third", "from_groups": ["C", "D", "F"]},
+                "winner_to": "M89"},
+    },
+    "round_of_16": {
+        "M90": {"matchNo": 90, "date": "2026-07-04", "kickoff_local": "12:00",
+                "venue_id": "los_angeles", "side_a": "W73", "side_b": "W75", "winner_to": "M97"},
+    },
+}
+
+
+def _complete_group(g):
+    """4 Teams, alle 6 Spiele FT → Gruppe komplett."""
+    teams = [f"{g}1", f"{g}2", f"{g}3", f"{g}4"]
+    fxs = []
+    for i in range(len(teams)):
+        for j in range(i + 1, len(teams)):
+            fxs.append({"home": teams[i], "away": teams[j],
+                        "result": {"status": "FT", "home_score": 1, "away_score": 0}})
+    return {"teams": [{"id": t} for t in teams], "fixtures": fxs}
+
+
+class TestKickoffUtc(unittest.TestCase):
+    def test_la_noon_is_19utc(self):
+        self.assertEqual(R._kickoff_utc("2026-06-28", "12:00", "los_angeles", VENUES),
+                         "2026-06-28T19:00:00Z")
+
+    def test_missing_tz_returns_none(self):
+        self.assertIsNone(R._kickoff_utc("2026-06-28", "12:00", "unknown", VENUES))
+
+
+class TestGroupComplete(unittest.TestCase):
+    def test_complete(self):
+        self.assertTrue(R._group_complete({"A": _complete_group("A")}, "A"))
+
+    def test_incomplete(self):
+        g = _complete_group("A")
+        g["fixtures"][0]["result"]["status"] = "NS"
+        self.assertFalse(R._group_complete({"A": g}, "A"))
+
+
+class TestResolution(unittest.TestCase):
+    def _build(self, groups):
+        standings = {}
+        for gid, gd in groups.items():
+            # Tabelle in fixer Reihenfolge (G1..G4)
+            standings[gid] = [{"team": t["id"], "pos": i + 1}
+                              for i, t in enumerate(gd["teams"])]
+        return R.build_ko_fixtures(BRACKET, groups, standings, VENUES, {})
+
+    def test_group_position_resolves_when_complete(self):
+        ko = self._build({"A": _complete_group("A"), "B": _complete_group("B")})
+        m73 = next(f for f in ko if f["matchNo"] == 73)
+        self.assertTrue(m73["bothResolved"])
+        self.assertEqual((m73["home"], m73["away"]), ("A2", "B2"))
+        self.assertEqual(m73["round"], "R32")
+        self.assertEqual(m73["roundLabel"], "Sechzehntelfinale")
+
+    def test_group_position_tbd_when_incomplete(self):
+        g = _complete_group("B")
+        g["fixtures"][0]["result"]["status"] = "NS"   # B nicht komplett
+        ko = self._build({"A": _complete_group("A"), "B": g})
+        m73 = next(f for f in ko if f["matchNo"] == 73)
+        self.assertFalse(m73["bothResolved"])
+        self.assertIsNone(m73["away"])
+        self.assertEqual(m73["awayRef"], "2. Gruppe B")   # Ref-Label trotzdem da
+
+    def test_best_third_stays_tbd(self):
+        ko = self._build({"A": _complete_group("A")})
+        m74 = next(f for f in ko if f["matchNo"] == 74)
+        self.assertTrue(m74["homeResolved"])      # A1 aufgelöst
+        self.assertFalse(m74["awayResolved"])     # best_third TBD
+        self.assertIn("Bester Dritter", m74["awayRef"])
+
+    def test_w_ref_stays_tbd_without_ko_results(self):
+        ko = self._build({"A": _complete_group("A"), "B": _complete_group("B")})
+        m90 = next(f for f in ko if f["matchNo"] == 90)
+        self.assertFalse(m90["bothResolved"])
+        self.assertEqual(m90["homeRef"], "Sieger Spiel 73")
+
+    def test_winner_ref_resolves_with_result(self):
+        groups = {"A": _complete_group("A"), "B": _complete_group("B")}
+        standings = {g: [{"team": t["id"]} for t in gd["teams"]] for g, gd in groups.items()}
+        ko = R.build_ko_fixtures(BRACKET, groups, standings, VENUES, {"73": "A2"})
+        m90 = next(f for f in ko if f["matchNo"] == 90)
+        self.assertEqual(m90["home"], "A2")       # Sieger M73 eingesetzt
+
+    def test_apply_to_wm_writes_kofixtures(self):
+        wm = {"groups": {"A": _complete_group("A"), "B": _complete_group("B")},
+              "standings": {"A": [{"team": f"A{i}"} for i in range(1, 5)],
+                            "B": [{"team": f"B{i}"} for i in range(1, 5)]}}
+        ko = R.apply_to_wm(wm, bracket=BRACKET, venues=VENUES)
+        self.assertIs(ko, wm["koFixtures"])
+        self.assertTrue(any(f["bothResolved"] for f in ko))
+
+
+if __name__ == "__main__":
+    unittest.main()

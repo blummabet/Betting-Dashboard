@@ -2451,6 +2451,16 @@ def main():
     except Exception as _e:
         print(f"  ⚠️  Standings-Build fehlgeschlagen: {_e}")
 
+    # KO-Bracket auflösen (25.06.2026, Lucas): wm["koFixtures"] mit echten Paarungen, sobald eine
+    # Gruppe komplett ist. Braucht die frischen Standings von oben. Inkrementell + idempotent.
+    try:
+        import resolve_wm_bracket as _wmko
+        _ko = _wmko.apply_to_wm(wm)
+        _ko_res = sum(1 for f in _ko if f.get("bothResolved"))
+        print(f"  🏆 KO-Bracket: {len(_ko)} Slots, {_ko_res} mit beiden Teams fix")
+    except Exception as _e:
+        print(f"  ⚠️  KO-Bracket-Auflösung fehlgeschlagen: {_e}")
+
     # 23.06.2026 (Lucas): mathematisch korrekten Qualifikations-Status pro MD3-Fixture ans Fixture
     # hängen (Single Source = incentive_signal._compute_qualification_state). Der Renderer zeigt das
     # nur noch an, statt es aus der Tabellen-POSITION zu erraten (Bug: pos<=2='sicher' / pos>3='muss'
@@ -2673,7 +2683,39 @@ def main():
 
     wm.setdefault("upsetScores", {})
 
-    for gkey, gdata in groups.items():
+    # ── KO-Phase als synthetische Gruppe (25.06.2026, Lucas: „sobald beide Teams feststehen kann er
+    # schon eine Card generieren"). Zweistufig: ist ein koFixture mit beiden Teams aufgelöst, läuft es
+    # durch DENSELBEN Pick-Körper wie Gruppenspiele. Ohne KO-Quoten liefert die Steam-Engine nichts →
+    # leere Picks = reine Vorschau-Card (Renderer zeigt sie aus koFixtures). Mit Quoten → echter Pick.
+    # WICHTIG: NUR lokal iteriert, NICHT in wm["groups"] geschrieben (sonst baut wm_standings eine
+    # Geister-Gruppe „KO"). gkey="KO", matchday=Runden-Code (R32/R16/QF/SF) → pick_key "KO-R32-A-B".
+    _all_teams = []
+    _seen_tid = set()
+    for _gd in groups.values():
+        for _t in (_gd.get("teams") or []):
+            _tid = _t.get("id") if isinstance(_t, dict) else _t
+            if _tid and _tid not in _seen_tid:
+                _seen_tid.add(_tid)
+                _all_teams.append(_t)
+    _ko_fixtures = []
+    for _kf in (wm.get("koFixtures") or []):
+        if not _kf.get("bothResolved"):
+            continue
+        _ko_fixtures.append({
+            "home":       _kf["home"],
+            "away":       _kf["away"],
+            "matchday":   _kf["round"],          # "R32"/"R16"/"QF"/"SF"
+            "date":       _kf.get("date"),
+            "kickoff":    _kf.get("kickoff"),
+            "venue":      _kf.get("venue"),
+            "koMatchKey": _kf.get("matchKey"),
+            "koRoundLabel": _kf.get("roundLabel"),
+        })
+    _iter_groups = list(groups.items())
+    if _ko_fixtures:
+        _iter_groups.append(("KO", {"teams": _all_teams, "fixtures": _ko_fixtures}))
+
+    for gkey, gdata in _iter_groups:
         teams_map = {t["id"]: t for t in gdata.get("teams", [])}
 
         for fx in gdata.get("fixtures", []):

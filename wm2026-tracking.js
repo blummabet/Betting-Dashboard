@@ -25,6 +25,10 @@
   const STAKE_BET = 10, STAKE_ABW = 5; // € per pick
   const _stakeOf = (p) => (p && p.verdict === 'BET') ? STAKE_BET : STAKE_ABW;
 
+  // (25.06.2026, Lucas: KO-Runden) Reihenfolge + deutsche Labels der K.O.-Phase.
+  const KO_ROUND_ORDER  = ['R32', 'R16', 'QF', 'SF'];
+  const KO_ROUND_LABELS = { R32: 'Sechzehntelfinale', R16: 'Achtelfinale', QF: 'Viertelfinale', SF: 'Halbfinale' };
+
   // ── Module state ───────────────────────────────────────
   let _data      = null;
   let _loaded    = false;
@@ -150,6 +154,53 @@
       }
     }
 
+    // (25.06.2026, Lucas: KO-Runden) KO-Zeilen einbinden. Nur bothResolved (Teams
+    // stehen fest). Picks unter "KO-{round}-{home}-{away}" — gleiche BET/ABWÄGEN/NOBET-
+    // Behandlung wie Gruppenspiele. Team-Namen aus globaler Team-Union, da KO-Teams
+    // aus beliebigen Gruppen kommen. Picks zählen normal mit, sobald WIN/LOSS.
+    {
+      const koFixtures = Array.isArray(_data.koFixtures) ? _data.koFixtures : [];
+      if (koFixtures.length) {
+        const teamUnion = {};
+        for (const gData of Object.values(groups)) {
+          for (const t of (gData.teams || [])) {
+            if (!teamUnion[t.id]) teamUnion[t.id] = t;
+          }
+        }
+        const _koGData = { name: 'K.O.-Runde', teams: Object.values(teamUnion) };
+        const _normResKo = (r) => {
+          if (!r) return r;
+          const u = String(r).toUpperCase();
+          return u === 'WIN' ? 'won' : u === 'LOSS' ? 'lost'
+               : (u === 'VOID' || u === 'PUSH') ? 'push' : String(r).toLowerCase();
+        };
+        for (const kf of koFixtures) {
+          if (!kf.bothResolved) continue;
+          const pickKey = `KO-${kf.round}-${kf.home}-${kf.away}`;
+          const fxPicks = allPicks[pickKey] || [];
+          if (!fxPicks.length) continue;   // ohne Picks keine Tracking-Zeile
+          const combined = fxPicks.map(p => ({
+            ...p, result: _normResKo(p.result), _stake: _stakeOf(p), _isPlayer: false,
+          }));
+          const koDate = kf.date || (kf.kickoff ? String(kf.kickoff).slice(0, 10) : '');
+          const isPast = koDate && koDate < todayIso;
+          rows.push({
+            fx: {
+              home: kf.home, away: kf.away, round: kf.round,
+              matchday: kf.round, kickoff: kf.kickoff, date: koDate,
+              time: (kf.kickoff ? new Date(kf.kickoff).toTimeString().slice(0, 5) : ''),
+              groupKey: 'KO', isKO: true,
+            },
+            gData: _koGData,
+            homeTeam: teamUnion[kf.home] || { id: kf.home, name: kf.home, flag: '🏳' },
+            awayTeam: teamUnion[kf.away] || { id: kf.away, name: kf.away, flag: '🏳' },
+            picks:    combined,
+            isLocked: isPast,
+          });
+        }
+      }
+    }
+
     // Sort by date → time → matchday (FIX 11.06.2026: Mitternachts-Umbruch,
     // 00:00 = spätes Nacht-Spiel, < 06:00 als +24h → nicht fälschlich zuerst)
     const _koKey = (t) => {
@@ -166,8 +217,12 @@
 
     // ── Apply filters ─────────────────────────────────
     let filtered = rows;
-    if (_grpFilter !== 'all') filtered = filtered.filter(r => r.fx.groupKey === _grpFilter);
-    if (_mdFilter  !== 'all') filtered = filtered.filter(r => r.fx.matchday === +_mdFilter);
+    // (25.06.2026, Lucas: KO-Runden) Gruppen-Filter: KO-Zeilen haben keine Gruppe
+    // → nur bei „alle Gruppen" zeigen, sonst rausfiltern (kein falsches Auftauchen).
+    if (_grpFilter !== 'all') filtered = filtered.filter(r => !r.fx.isKO && r.fx.groupKey === _grpFilter);
+    // (25.06.2026, Lucas: KO-Runden) String-Vergleich: numerische Spieltage UND
+    // Runden-Codes (R32/R16/QF/SF) als _mdFilter.
+    if (_mdFilter  !== 'all') filtered = filtered.filter(r => String(r.fx.matchday) === String(_mdFilter));
 
     // Flatten picks for filtered set (apply verdict filter)
     // FIX 11.06.2026: trackingExcluded raus (Cross-Market-Konflikte wie
@@ -273,6 +328,15 @@
     html += _fBtn('Spieltag 1', 1,     _mdFilter, `wmTrkSetMd(1)`);
     html += _fBtn('Spieltag 2', 2,     _mdFilter, `wmTrkSetMd(2)`);
     html += _fBtn('Spieltag 3', 3,     _mdFilter, `wmTrkSetMd(3)`);
+    // (25.06.2026, Lucas: KO-Runden) Runden-Buttons NUR für vorhandene Runden.
+    {
+      const _koRounds = new Set((Array.isArray(_data.koFixtures) ? _data.koFixtures : [])
+        .filter(k => k.bothResolved).map(k => k.round));
+      for (const r of KO_ROUND_ORDER) {
+        if (!_koRounds.has(r)) continue;
+        html += _fBtn(KO_ROUND_LABELS[r], r, _mdFilter, `wmTrkSetMd('${r}')`);
+      }
+    }
     html += `</div>`;
 
     // Verdict filter

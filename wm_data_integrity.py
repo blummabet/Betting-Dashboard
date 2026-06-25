@@ -966,6 +966,38 @@ def check_btts_not_templated_traded(ctx):
 
 
 @integrity_check
+def check_ko_bracket_consistency(ctx):
+    """KO-Paarungen plausibel (25.06.2026, Lucas: KO-Runden). Sobald eine Gruppe komplett ist, müssen
+    deren Gruppenplatz-Slots aufgelöst sein; aufgelöste KO-Spiele dürfen nicht Team gegen sich selbst
+    sein. Fängt Resolver-Ausfälle sichtbar (warn)."""
+    ko = ctx.wm.get("koFixtures") or []
+    if not ko:
+        return _chk("ko_bracket_consistency", "KO-Bracket plausibel", "warn", [],
+                    "Noch keine koFixtures (vor Gruppen-Abschluss normal).")
+    FIN = {"FT", "AET", "PEN", "AWD", "WO"}
+    groups = ctx.wm.get("groups") or {}
+    complete = {g for g, gd in groups.items()
+                if (gd.get("fixtures") and
+                    all(str((fx.get("result") or {}).get("status", "")).upper() in FIN
+                        for fx in gd["fixtures"]))}
+    fails = []
+    for f in ko:
+        if f.get("bothResolved") and f.get("home") and f.get("home") == f.get("away"):
+            fails.append(f"{f.get('matchKey')}: Team gegen sich selbst ({f.get('home')})")
+    # Gruppe komplett, aber ein direkter Gruppenplatz-Slot dieser Gruppe noch TBD?
+    for f in ko:
+        if f.get("round") != "R32" or f.get("bothResolved"):
+            continue
+        for side, ref in (("home", f.get("homeRef", "")), ("away", f.get("awayRef", ""))):
+            for g in complete:
+                if (ref.endswith(f"Gruppe {g}") and not f.get(f"{side}Resolved")):
+                    fails.append(f"{f.get('matchKey')}: Gruppe {g} komplett, {side} ({ref}) "
+                                 f"noch nicht aufgelöst — Resolver prüfen")
+    return _chk("ko_bracket_consistency", "KO-Bracket plausibel", "warn", fails,
+                "resolve_wm_bracket muss Gruppenplätze auflösen sobald die Gruppe durch ist.")
+
+
+@integrity_check
 def check_played_games_resolved(ctx):
     """Gespielte Spiele müssen einen Endstand haben (25.06.2026, Lucas: MD3 alle pending). Kickoff
     > 5h her, aber kein FT/AET/PEN-Ergebnis → der Result-Fetch (fetch_wm_match_results) hat's nicht

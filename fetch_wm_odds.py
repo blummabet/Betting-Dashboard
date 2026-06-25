@@ -783,6 +783,30 @@ def main():
         for fx in gdata.get("fixtures", []):
             all_fixtures.append({**fx, "groupKey": gkey})
 
+    # ── KO-Paarungen mit-bepreisen (25.06.2026, Lucas) ───────────────────────────
+    # Sobald eine Gruppe komplett ist, stehen R32-Paarungen fest → auch deren Quoten holen, damit die
+    # Card vom Vorschau- in den Pick-Zustand wechselt (zweistufig). Bracket hier frisch auflösen
+    # (idempotent), damit Quoten same-cycle landen statt erst nach dem nächsten generate-Lauf.
+    try:
+        import wm_standings as _wmst
+        import resolve_wm_bracket as _wmko
+        _wmst.apply_to_wm(wm)
+        _ko = _wmko.apply_to_wm(wm)
+        _ko_n = 0
+        for _kf in _ko:
+            if _kf.get("bothResolved") and _kf.get("home") and _kf.get("away"):
+                all_fixtures.append({
+                    "home": _kf["home"], "away": _kf["away"],
+                    "matchday": _kf["round"], "date": _kf.get("date"),
+                    "kickoff": _kf.get("kickoff"), "venue": _kf.get("venue"),
+                    "groupKey": "KO",
+                })
+                _ko_n += 1
+        if _ko_n:
+            print(f"  🏆 {_ko_n} KO-Paarungen werden mit-bepreist")
+    except Exception as _e:
+        print(f"  ⚠️  KO-Quoten-Sammlung übersprungen: {_e}")
+
     print(f"  Fixtures to price: {len(all_fixtures)}")
 
     # ── Find working sport key ────────────────────────────────
