@@ -31,7 +31,14 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 BASE    = Path(__file__).parent
-WM_FILE = BASE / "wm2026-data.json"
+# Dataset-Modus (25.06.2026, Lucas: Liga auf WM-Stack). COCOBET_DATASET=liga → läuft auf
+# liga-data.json mit Liga-Sibling-Dateien (liga_*.json); fehlende → graceful kein-Signal (kein
+# WM-Datenleck). KO/Quali-Schritte werden für Liga gegatet. Default bleibt WM (unverändert).
+_DATASET     = (os.environ.get("COCOBET_DATASET") or "wm").lower()
+IS_LIGA      = _DATASET == "liga"
+WM_FILE      = BASE / ("liga-data.json" if IS_LIGA else "wm2026-data.json")
+_FILE_PREFIX = "liga_" if IS_LIGA else "wm_"
+_HISTORY_FILE = "liga-odds-history.json" if IS_LIGA else "wm2026-odds-history.json"
 VERBOSE = "--verbose" in sys.argv or "-v" in sys.argv
 
 # ── Modell-Parameter ──────────────────────────────────────────────────────
@@ -2451,21 +2458,22 @@ def main():
     except Exception as _e:
         print(f"  ⚠️  Standings-Build fehlgeschlagen: {_e}")
 
-    # KO-Bracket auflösen (25.06.2026, Lucas): wm["koFixtures"] mit echten Paarungen, sobald eine
-    # Gruppe komplett ist. Braucht die frischen Standings von oben. Inkrementell + idempotent.
-    try:
+    # KO-Bracket + Quali-Status sind WM-spezifisch → für Liga gegatet (25.06.2026, Lucas).
+    if not IS_LIGA:
+      # KO-Bracket auflösen: wm["koFixtures"] mit echten Paarungen, sobald eine Gruppe komplett ist.
+      try:
         import resolve_wm_bracket as _wmko
         _ko = _wmko.apply_to_wm(wm)
         _ko_res = sum(1 for f in _ko if f.get("bothResolved"))
         print(f"  🏆 KO-Bracket: {len(_ko)} Slots, {_ko_res} mit beiden Teams fix")
-    except Exception as _e:
+      except Exception as _e:
         print(f"  ⚠️  KO-Bracket-Auflösung fehlgeschlagen: {_e}")
 
     # 23.06.2026 (Lucas): mathematisch korrekten Qualifikations-Status pro MD3-Fixture ans Fixture
     # hängen (Single Source = incentive_signal._compute_qualification_state). Der Renderer zeigt das
     # nur noch an, statt es aus der Tabellen-POSITION zu erraten (Bug: pos<=2='sicher' / pos>3='muss'
     # → Iran/Uruguay mit 2 Pkt fälschlich „schon Achtelfinale", obwohl noch Vierter möglich).
-    _attach_qualification_states(wm)
+      _attach_qualification_states(wm)
 
     groups   = wm.get("groups",   {})
     mkt      = wm.get("odds",     {})
@@ -2479,7 +2487,7 @@ def main():
     # ~33 fehlenden Teams (CONMEBOL/AFC/Afrika/CONCACAF/OFC).
     # Merge: Understat hat Priorität, NT-xG füllt nur Lücken.
     try:
-        nt_xg_file = os.path.join(os.path.dirname(WM_FILE), "wm_nt_xg.json")
+        nt_xg_file = os.path.join(os.path.dirname(WM_FILE), f"{_FILE_PREFIX}nt_xg.json")
         if os.path.exists(nt_xg_file):
             with open(nt_xg_file, encoding="utf-8") as f:
                 nt_xg = json.load(f)
@@ -2536,7 +2544,7 @@ def main():
     # Signal lineup_signal feuert dann pro Pick.
     lineups_data: dict = {}
     try:
-        lineups_file = os.path.join(os.path.dirname(WM_FILE), "wm_lineups.json")
+        lineups_file = os.path.join(os.path.dirname(WM_FILE), f"{_FILE_PREFIX}lineups.json")
         if os.path.exists(lineups_file):
             with open(lineups_file, encoding="utf-8") as f:
                 lineups_data = json.load(f)
@@ -2548,7 +2556,8 @@ def main():
     # Liga-tauglich (Spieler-ID-basiert). Leer/fehlend = neutral (Faktor 1.0).
     player_form_data: dict = {}
     try:
-        _pf_file = os.path.join(os.path.dirname(WM_FILE), "player_form.json")
+        _pf_file = os.path.join(os.path.dirname(WM_FILE),
+                                "liga_player_form.json" if IS_LIGA else "player_form.json")
         if os.path.exists(_pf_file):
             with open(_pf_file, encoding="utf-8") as f:
                 player_form_data = (json.load(f) or {}).get("players", {})
@@ -2562,7 +2571,7 @@ def main():
     # Signal vergleicht pro 1X2/DNB-Pick gegen Pinnacle implied.
     apif_predictions_data: dict = {}
     try:
-        apif_file = os.path.join(os.path.dirname(WM_FILE), "wm_apif_predictions.json")
+        apif_file = os.path.join(os.path.dirname(WM_FILE), f"{_FILE_PREFIX}apif_predictions.json")
         if os.path.exists(apif_file):
             with open(apif_file, encoding="utf-8") as f:
                 apif_predictions_data = json.load(f)
@@ -2578,7 +2587,7 @@ def main():
     # (cc-env-heat ab 32°C) endlich anzeigen kann.
     weather_data: dict = {}
     try:
-        weather_file = os.path.join(os.path.dirname(WM_FILE), "wm_weather.json")
+        weather_file = os.path.join(os.path.dirname(WM_FILE), f"{_FILE_PREFIX}weather.json")
         if os.path.exists(weather_file):
             with open(weather_file, encoding="utf-8") as f:
                 weather_data = json.load(f).get("matches", {}) or {}
@@ -2593,7 +2602,7 @@ def main():
 
     # Travel-Burden (compute_wm_travel_burden.py) — separates File
     travel_data = {}
-    travel_file = os.path.join(os.path.dirname(WM_FILE), "wm_travel_burden.json")
+    travel_file = os.path.join(os.path.dirname(WM_FILE), f"{_FILE_PREFIX}travel_burden.json")
     if os.path.exists(travel_file):
         try:
             with open(travel_file, encoding="utf-8") as tf:
@@ -2603,7 +2612,7 @@ def main():
 
     # Odds-History (für Signal-Engine LeadLag-Bias + Steam-Lag)
     odds_history = {}
-    hist_file = os.path.join(os.path.dirname(WM_FILE), "wm2026-odds-history.json")
+    hist_file = os.path.join(os.path.dirname(WM_FILE), _HISTORY_FILE)
     if os.path.exists(hist_file):
         try:
             with open(hist_file, encoding="utf-8") as hf:
@@ -2613,7 +2622,7 @@ def main():
 
     # Polymarket-Snapshot (für Polymarket-Sharp + Steam-Lag-Signal)
     poly_snapshots = {}
-    poly_file = os.path.join(os.path.dirname(WM_FILE), "wm_poly_prices.json")
+    poly_file = os.path.join(os.path.dirname(WM_FILE), f"{_FILE_PREFIX}poly_prices.json")
     if os.path.exists(poly_file):
         try:
             with open(poly_file, encoding="utf-8") as pf:
@@ -2629,7 +2638,7 @@ def main():
     # fetch_wm_poly_smartmoney.py (data-api /holders+/trades, läuft am Mac-Runner). Optional
     # — fehlt die Datei, feuert das smart_money-Signal einfach nicht.
     smartmoney = {}
-    _sm_file = os.path.join(os.path.dirname(WM_FILE), "wm_poly_smartmoney.json")
+    _sm_file = os.path.join(os.path.dirname(WM_FILE), f"{_FILE_PREFIX}poly_smartmoney.json")
     if os.path.exists(_sm_file):
         try:
             with open(_sm_file, encoding="utf-8") as smf:
@@ -2884,7 +2893,7 @@ def main():
                         _venue_altitude_m = int(wm["_venues_cache"].get(_venue_id, {}).get("altitude_m") or 0)
                     elif _venue_id:
                         import json as _json, os as _os
-                        _vpath = _os.path.join(_os.path.dirname(WM_FILE), "wm_venues.json")
+                        _vpath = _os.path.join(_os.path.dirname(WM_FILE), f"{_FILE_PREFIX}venues.json")
                         if _os.path.exists(_vpath):
                             with open(_vpath, encoding="utf-8") as _vf:
                                 _vraw = _json.load(_vf)

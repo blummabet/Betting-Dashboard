@@ -38,7 +38,7 @@ class TestGenerateMergeCodePaths(unittest.TestCase):
 
     def test_apif_predictions_load_present(self):
         """APIF Predictions werden geladen."""
-        self.assertIn("wm_apif_predictions.json", self.src)
+        self.assertIn("apif_predictions.json", self.src)   # Prefix via _FILE_PREFIX (wm_/liga_)
         self.assertIn("apif_predictions_data", self.src)
 
     def test_sig_ctx_includes_all_four_new_sources(self):
@@ -57,9 +57,9 @@ class TestGenerateMergeCodePaths(unittest.TestCase):
     def test_load_order_correct(self):
         """NT-xG/Lineups/APIF müssen VOR der Signal-Engine geladen werden
         (sonst sehen die Signale die Daten nicht)."""
-        nt_xg_pos    = self.src.find("wm_nt_xg.json")
-        lineups_pos  = self.src.find("wm_lineups.json")
-        apif_pos     = self.src.find("wm_apif_predictions.json")
+        nt_xg_pos    = self.src.find("nt_xg.json")
+        lineups_pos  = self.src.find("lineups.json")
+        apif_pos     = self.src.find("apif_predictions.json")
         eng_call_pos = self.src.find("evaluate_signals(p, sig_ctx)")
         self.assertGreater(eng_call_pos, 0)
         for label, pos in [("nt_xg", nt_xg_pos), ("lineups", lineups_pos), ("apif", apif_pos)]:

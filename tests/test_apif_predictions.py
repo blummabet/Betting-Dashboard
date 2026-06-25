@@ -191,7 +191,7 @@ class TestRegistryAndConfig(unittest.TestCase):
 
     def test_generate_picks_loads_predictions(self):
         src = (REPO / "generate_wm_picks.py").read_text(encoding="utf-8")
-        self.assertIn("wm_apif_predictions.json", src)
+        self.assertIn("apif_predictions.json", src)   # Prefix via _FILE_PREFIX (wm_/liga_)
         self.assertIn("apif_predictions_data", src)
 
 
