@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-25T01:40:06Z",
-    "total_records": 92
+    "updated_at": "2026-06-25T01:55:05Z",
+    "total_records": 94
   },
   "records": [
     {
@@ -862,6 +862,56 @@
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true
+    },
+    {
+      "key": "C-3-MAR-HTI|AH Heim −1.5",
+      "matchKey": "C-3-MAR-HTI",
+      "market": "AH Heim −1.5",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 4.57
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.0
+        },
+        {
+          "name": "incentive_signal",
+          "score": 1.53
+        },
+        {
+          "name": "smart_money",
+          "score": 1.32
+        }
+      ],
+      "resolvedAt": "2026-06-25T01:40:55Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "C-3-MAR-HTI|Beide Teams treffen — Nein",
+      "matchKey": "C-3-MAR-HTI",
+      "market": "Beide Teams treffen — Nein",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.67
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.92
+        }
+      ],
+      "resolvedAt": "2026-06-25T01:40:55Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "UNLUCKY"
     },
     {
       "key": "D-1-AUS-TUR|Beide Teams treffen — Ja",
