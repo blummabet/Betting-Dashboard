@@ -3266,7 +3266,7 @@ def main():
     with open(WM_FILE, "w", encoding="utf-8") as f:
         json.dump(wm, f, ensure_ascii=False, indent=2)
 
-    print("✅ wm2026-data.json gespeichert.")
+    print(f"✅ {os.path.basename(str(WM_FILE))} gespeichert.")
 
 
 if __name__ == "__main__":
