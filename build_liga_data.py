@@ -107,6 +107,14 @@ def build_groups(standings_by_league: dict, fixtures_by_league: dict,
             if ourstat in ("FT", "AET", "PEN"):
                 result = {"status": ourstat,
                           "home_score": gl.get("home"), "away_score": gl.get("away")}
+            # Teams AUCH aus Fixtures ableiten (25.06.2026, Lucas: „nichts da"). Vorsaison hat noch
+            # keine Standings → sonst blieben teams=[] obwohl Fixtures existieren.
+            for _t in (home, away):
+                _tid = _t.get("id")
+                if _tid is not None and _tid not in seen:
+                    seen.add(_tid)
+                    teams.append({"id": str(_tid), "name": _t.get("name") or str(_tid),
+                                  "logo": _t.get("logo"), "elo": elo_by_team.get(str(_tid))})
             fixtures.append({
                 "home":     str(home.get("id")),
                 "away":     str(away.get("id")),
