@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-25T14:31:48Z",
+  "generatedAt": "2026-06-25T18:08:33Z",
   "windowDays": 2,
   "upcoming": 18,
   "signalsFired": [
@@ -23,9 +23,9 @@
   ],
   "signalsTotal": 19,
   "perSignal": {
-    "lead_lag_bias": 9,
+    "lead_lag_bias": 10,
     "public_static_bias": 15,
-    "travel_burden": 73,
+    "travel_burden": 74,
     "injury": 3,
     "form_trend": 109,
     "h2h_pattern": 7,
@@ -36,12 +36,12 @@
     "lineup_signal": 17,
     "apif_predictions": 10,
     "weather_signal": 17,
-    "incentive_signal": 21,
+    "incentive_signal": 22,
     "altitude_signal": 3,
-    "chance_creation": 29,
+    "chance_creation": 30,
     "form_rating": 6,
     "freshness_leg": 14,
-    "smart_money": 25
+    "smart_money": 26
   },
   "verdict": "warn",
   "errors": [],
@@ -49,16 +49,16 @@
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
-    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 2 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
+    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
     "🛡️ Steam-Lag: 1 Position pro Wette: 10 Fehler (z.B. CPV-SAU hw: 5 Einträge (soll 1))"
   ],
   "oks": [
     "🌡️ Weather: 18 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 74 Fixtures, Ø 97.3 Snapshots",
+    "📉 Odds-History: 74 Fixtures, Ø 98.5 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
     "💼 Poly-Balance: $328.59",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -293,10 +293,11 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 3,
       "failures": [
         "BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet",
-        "PRY-AUS Unter 1.5 Tore @2.2: sichere Linie Unter 2.5 Tore @1.36 verfügbar (≥1.35), nicht abgeleitet"
+        "PRY-AUS Unter 1.5 Tore @2.2: sichere Linie Unter 2.5 Tore @1.36 verfügbar (≥1.35), nicht abgeleitet",
+        "NED-TUN Über 3.5 Tore @1.83: sichere Linie Über 2.5 Tore @1.36 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
