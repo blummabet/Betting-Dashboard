@@ -45,16 +45,20 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python fetch_liga_odds.py
 
+      # 25.06.2026 (Lucas: „Navi da, keine Cards"): Pick-/Resolve-Schritte dürfen den Commit der
+      # Daten NICHT blockieren. Wenn einer crasht, liegen Teams+Fixtures+Quoten trotzdem in
+      # liga-data.json → Cards erscheinen. Darum `|| true` + Commit mit `if: always()`.
       - name: 🎯 Liga-Picks generieren (Signal-Engine, liga_default)
-        run: python generate_liga_picks.py
+        run: python generate_liga_picks.py || true
 
       - name: ✅ Liga-Picks resolven (WIN/LOSS/VOID)
-        run: python resolve_wm_picks.py
+        run: python resolve_wm_picks.py || true
 
       - name: 📉 Liga-CLV setzen (Einstieg vs Closing)
         run: python resolve_steam_clv.py || true
 
       - name: 💾 liga-data.json committen
+        if: always()
         run: |
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"

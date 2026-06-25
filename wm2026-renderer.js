@@ -556,10 +556,16 @@
         // (25.06.2026, Lucas: KO-Runden) KO-Fixtures bekommen eine eigene, kompakte
         // Card (keine Gruppen-Standings/Quali-Logik → kein Crash). Gruppenspiele
         // unverändert über _buildCard.
-        if (fx.isKO) {
-          html += _buildKoCard(fx, homeTeam, awayTeam, fxOdds, fxPicks, polyFix, todayIso);
-        } else {
-          html += _buildCard(fx, gData, homeTeam, awayTeam, fxOdds, fxPicks, fxPPicks, fxStand, homeSquad, awaySquad, homeForm, awayForm, polyFix, todayIso);
+        // (25.06.2026, Lucas) Pro-Fixture gekapselt: eine fehlerhafte (z.B. Liga-)Card darf nicht
+        // die GESAMTE Liste blanken — fehlerhafte überspringen, Rest rendert.
+        try {
+          if (fx.isKO) {
+            html += _buildKoCard(fx, homeTeam, awayTeam, fxOdds, fxPicks, polyFix, todayIso);
+          } else {
+            html += _buildCard(fx, gData, homeTeam, awayTeam, fxOdds, fxPicks, fxPPicks, fxStand, homeSquad, awaySquad, homeForm, awayForm, polyFix, todayIso);
+          }
+        } catch (err) {
+          console.warn('Card-Build fehlgeschlagen', fx && (fx.home + '-' + fx.away), err);
         }
       }
       html += `</div>`;
