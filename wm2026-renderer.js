@@ -388,10 +388,12 @@
     html += `<div class="wm-group-filter">`;
     html += `<button class="wm-gf-btn${_activeGroup === 'all' ? ' active' : ''}" onclick="wmSetGroup('all')">⭐ Alle</button>`;
     for (const gKey of groupKeys) {
-      // (25.06.2026, Lucas: Liga auf WM-Stack) WM: „Gr. A" (Strip „Gruppe "); Liga:
-      // voller Liga-Name („Premier League"), kein „Gr."-Präfix.
+      // (25.06.2026, Lucas: Liga auf WM-Stack) WM: „Gr. A" (Strip „Gruppe "); Liga: Liga-FLAGGE
+      // + Kürzel (🏴 ENG), wie die alte National-Nav. Fallback auf Namen wenn keine Flagge.
       const gLabel = (groups[gKey].name || gKey).replace('Gruppe ', '');
-      const gBtnLabel = _isLiga ? gLabel : `Gr. ${gLabel}`;
+      const gBtnLabel = _isLiga
+        ? `${groups[gKey].flag ? groups[gKey].flag + ' ' : ''}${gKey}`
+        : `Gr. ${gLabel}`;
       // Count picks in this group
       const gPicks = Object.entries(picks)
         .filter(([k]) => k.startsWith(gKey + '-'))

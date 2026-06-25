@@ -349,9 +349,10 @@
     html += `<div class="wm-group-filter" style="margin-top:12px;">`;
     html += _fBtn('⭐ Alle', 'all', _grpFilter, `wmTrkSetGroup('all')`);
     for (const gKey of groupKeys) {
-      // (25.06.2026, Lucas: Liga auf WM-Stack) WM: „Gr. A"; Liga: voller Liga-Name.
+      // (25.06.2026, Lucas: Liga auf WM-Stack) WM: „Gr. A"; Liga: Liga-FLAGGE + Kürzel (🏴 ENG).
       const label = (groups[gKey].name || 'Gruppe ?').replace('Gruppe ', '');
-      html += _fBtn(_isLiga ? label : `Gr. ${label}`, gKey, _grpFilter, `wmTrkSetGroup('${gKey}')`);
+      const ligaLabel = `${groups[gKey].flag ? groups[gKey].flag + ' ' : ''}${gKey}`;
+      html += _fBtn(_isLiga ? ligaLabel : `Gr. ${label}`, gKey, _grpFilter, `wmTrkSetGroup('${gKey}')`);
     }
     html += `</div>`;
 
