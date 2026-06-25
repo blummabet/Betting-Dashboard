@@ -1,0 +1,210 @@
+#!/usr/bin/env python3
+"""
+build_liga_data.py — Top-5-Ligen in WM-Datenformat (25.06.2026, Lucas: Liga auf dem bewährten
+WM-Stack statt das alte, fehleranfällige Liga-Frontend wiederzubeleben).
+
+Erzeugt `liga-data.json` in EXAKT der Struktur von wm2026-data.json — eine Liga spielt dabei die
+Rolle einer „Gruppe":
+    { "groups": { "ENG": {name, flag, teams:[{id,name,elo}], fixtures:[{home,away,matchday,date,
+      kickoff,venue,result}]}, "GER": {...}, ... }, "odds": {}, "picks": {}, "_meta": {...} }
+Damit ziehen der bewährte WM-Renderer/Tracking/Odds/CLV/Signal-Engine fast unverändert auf den
+Liga-Daten (WM-only Features via liga_default-Profil aus). Quoten füllt fetch_liga_odds.py separat.
+
+`build_groups(...)` ist ein REINER Transformer (testbar). `main()` holt via API-Football und schreibt.
+Team-„id" = API-Football-Team-ID als String (stabil); `name` für Anzeige + Odds-Matching (TheOddsAPI).
+"""
+from __future__ import annotations
+
+import http.client
+import json
+import os
+import re
+import sys
+from datetime import datetime, timezone
+
+APIF_HOST = "v3.football.api-sports.io"
+APIF_KEY = os.environ.get("APISPORTS_KEY", "")
+BASE = os.path.dirname(os.path.abspath(__file__))
+OUT_FILE = os.path.join(BASE, "liga-data.json")
+
+# Top-5-Ligen (API-Football league_id). Bewusst nur die 5 mit bester xG/Daten-Abdeckung (Understat).
+LEAGUES_TOP5 = {
+    "ENG": {"apif_id": 39,  "name": "Premier League", "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"},
+    "ESP": {"apif_id": 140, "name": "La Liga",        "flag": "🇪🇸"},
+    "GER": {"apif_id": 78,  "name": "Bundesliga",     "flag": "🇩🇪"},
+    "ITA": {"apif_id": 135, "name": "Serie A",        "flag": "🇮🇹"},
+    "FRA": {"apif_id": 61,  "name": "Ligue 1",        "flag": "🇫🇷"},
+}
+
+
+def current_season(now: datetime | None = None) -> int:
+    """API-Football-Saison = Startjahr. Ab Juni zählt die kommende Saison (Sommer-Fenster)."""
+    now = now or datetime.now(timezone.utc)
+    return now.year if now.month >= 6 else now.year - 1
+
+
+def _parse_round(round_str: str) -> int | None:
+    """'Regular Season - 1' → 1. None wenn nicht parsebar (Playoff/Relegation etc.)."""
+    m = re.search(r"(\d+)\s*$", str(round_str or ""))
+    return int(m.group(1)) if m else None
+
+
+def _status_map(short: str) -> str:
+    """API-Football-Status → unser Schema (FT/AET/PEN beendet, sonst NS/LIVE)."""
+    s = (short or "NS").upper()
+    if s in ("FT", "AET", "PEN", "AWD", "WO"):
+        return s
+    if s in ("1H", "2H", "HT", "ET", "P", "LIVE", "INT", "BT"):
+        return "LIVE"
+    return "NS"
+
+
+def build_groups(standings_by_league: dict, fixtures_by_league: dict,
+                 elo_by_team: dict | None = None) -> dict:
+    """REINER Transformer: API-Responses → groups-Struktur im WM-Format.
+    standings_by_league: {league_key: <API /standings response>}
+    fixtures_by_league:  {league_key: <API /fixtures response>}
+    elo_by_team:         optional {team_id_str: elo}
+    """
+    elo_by_team = elo_by_team or {}
+    groups = {}
+    for lk, cfg in LEAGUES_TOP5.items():
+        # ── Teams aus Standings ──
+        teams = []
+        seen = set()
+        st_resp = (standings_by_league.get(lk) or {})
+        for blk in (st_resp.get("response") or []):
+            league = (blk.get("league") or {})
+            for table in (league.get("standings") or []):
+                for row in (table or []):
+                    t = (row.get("team") or {})
+                    tid = t.get("id")
+                    if tid is None or tid in seen:
+                        continue
+                    seen.add(tid)
+                    teams.append({
+                        "id":   str(tid),
+                        "name": t.get("name") or str(tid),
+                        "logo": t.get("logo"),
+                        "elo":  elo_by_team.get(str(tid)),
+                    })
+        # ── Fixtures ──
+        fixtures = []
+        fx_resp = (fixtures_by_league.get(lk) or {})
+        for item in (fx_resp.get("response") or []):
+            fxo = (item.get("fixture") or {})
+            tm  = (item.get("teams") or {})
+            gl  = (item.get("goals") or {})
+            lg  = (item.get("league") or {})
+            home = (tm.get("home") or {})
+            away = (tm.get("away") or {})
+            if home.get("id") is None or away.get("id") is None:
+                continue
+            iso = fxo.get("date")   # ISO mit TZ
+            status_short = ((fxo.get("status") or {}).get("short")) or "NS"
+            ourstat = _status_map(status_short)
+            result = None
+            if ourstat in ("FT", "AET", "PEN"):
+                result = {"status": ourstat,
+                          "home_score": gl.get("home"), "away_score": gl.get("away")}
+            fixtures.append({
+                "home":     str(home.get("id")),
+                "away":     str(away.get("id")),
+                "homeName": home.get("name"),
+                "awayName": away.get("name"),
+                "matchday": _parse_round(lg.get("round")),
+                "date":     (iso or "")[:10] or None,
+                "kickoff":  iso,
+                "venue":    ((fxo.get("venue") or {}).get("name")),
+                "result":   result,
+            })
+        fixtures.sort(key=lambda f: (f.get("kickoff") or "", f.get("home") or ""))
+        groups[lk] = {"name": cfg["name"], "flag": cfg["flag"],
+                      "teams": teams, "fixtures": fixtures}
+    return groups
+
+
+# ───────────────────────── Live-Fetch (API-Football) ─────────────────────────
+
+def _api_get(path: str) -> dict | None:
+    if not APIF_KEY:
+        return None
+    try:
+        conn = http.client.HTTPSConnection(APIF_HOST, timeout=20)
+        conn.request("GET", path, headers={"x-apisports-key": APIF_KEY})
+        resp = conn.getresponse()
+        raw = resp.read().decode("utf-8", "replace")
+        conn.close()
+        if resp.status != 200:
+            print(f"  ⚠️  API-Football {resp.status} bei {path}: {raw[:160]}")
+            return None
+        return json.loads(raw)
+    except Exception as e:
+        print(f"  ⚠️  API-Fehler {path}: {e}")
+        return None
+
+
+def main():
+    season = int(os.environ.get("LIGA_SEASON") or current_season())
+    print(f"=== build_liga_data.py — Saison {season} ===")
+    if not APIF_KEY:
+        print("  ❌  APISPORTS_KEY nicht gesetzt — übersprungen (läuft nur im Workflow).")
+        sys.exit(0)
+
+    standings_by_league, fixtures_by_league = {}, {}
+    for lk, cfg in LEAGUES_TOP5.items():
+        lid = cfg["apif_id"]
+        standings_by_league[lk] = _api_get(f"/standings?league={lid}&season={season}") or {}
+        fixtures_by_league[lk]  = _api_get(f"/fixtures?league={lid}&season={season}") or {}
+        nfx = len((fixtures_by_league[lk].get("response") or []))
+        print(f"  {lk}: {nfx} Fixtures geladen")
+
+    # Elo aus vorhandenem Cache (optional), Schlüssel = team_id-String
+    elo = {}
+    for cache in ("stats_cache.json", "league_fallback_cache.json"):
+        p = os.path.join(BASE, cache)
+        if os.path.exists(p):
+            try:
+                with open(p, encoding="utf-8") as f:
+                    _c = json.load(f)
+                # bestmöglich: nach {id: elo} durchsuchen (defensiv, Struktur variiert)
+                def _scan(o):
+                    if isinstance(o, dict):
+                        if "id" in o and "elo" in o and o.get("elo"):
+                            elo.setdefault(str(o["id"]), o["elo"])
+                        for v in o.values():
+                            _scan(v)
+                    elif isinstance(o, list):
+                        for v in o:
+                            _scan(v)
+                _scan(_c)
+            except Exception:
+                pass
+
+    groups = build_groups(standings_by_league, fixtures_by_league, elo)
+
+    # Bestehende liga-data.json mergen (odds/picks/Opening NICHT überschreiben)
+    wm = {}
+    if os.path.exists(OUT_FILE):
+        try:
+            with open(OUT_FILE, encoding="utf-8") as f:
+                wm = json.load(f)
+        except Exception:
+            wm = {}
+    wm["groups"] = groups
+    wm.setdefault("odds", {})
+    wm.setdefault("picks", {})
+    wm.setdefault("_meta", {})
+    wm["_meta"]["profile"] = "liga_default"
+    wm["_meta"]["season"] = season
+    wm["_meta"]["dataUpdatedAt"] = datetime.now(timezone.utc).isoformat()
+
+    with open(OUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(wm, f, ensure_ascii=False, indent=2)
+    n_fx = sum(len(g["fixtures"]) for g in groups.values())
+    n_tm = sum(len(g["teams"]) for g in groups.values())
+    print(f"  ✅ liga-data.json: {len(groups)} Ligen · {n_tm} Teams · {n_fx} Fixtures")
+
+
+if __name__ == "__main__":
+    main()
