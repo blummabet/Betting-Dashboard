@@ -966,6 +966,32 @@ def check_btts_not_templated_traded(ctx):
 
 
 @integrity_check
+def check_played_games_resolved(ctx):
+    """Gespielte Spiele müssen einen Endstand haben (25.06.2026, Lucas: MD3 alle pending). Kickoff
+    > 5h her, aber kein FT/AET/PEN-Ergebnis → der Result-Fetch (fetch_wm_match_results) hat's nicht
+    geschrieben (z.B. Heim/Auswärts-Orientierung ≠ API-Football → Match scheitert). 5h-Puffer deckt
+    den 4×/Tag-Abruf-Zeitplan ab, ohne frisch-fertige Spiele fälschlich zu flaggen."""
+    fails = []
+    for _g, fx in ctx.fixtures:
+        ko = fx.get("kickoff")
+        if not ko:
+            continue
+        try:
+            kt = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+        except Exception:
+            continue
+        if (ctx.now - kt).total_seconds() < 5 * 3600:
+            continue   # zu frisch — Result-Fetch (4×/Tag) hatte evtl. noch keinen Lauf
+        st = str((fx.get("result") or {}).get("status") or "").upper()
+        if st not in ("FT", "AET", "PEN", "AWD", "WO"):
+            fails.append(f"{fx.get('home')}-{fx.get('away')}: Anpfiff {str(ko)[:16]} vorbei, "
+                         f"aber Ergebnis-Status '{st or 'leer'}' — Result-Fetch-Lücke?")
+    return _chk("played_games_resolved", "Gespielte Spiele haben Endstand", "warn", fails,
+                "fetch_wm_match_results muss FT-Endstände schreiben. Fehlt's > 5h nach Anpfiff: "
+                "Team-Matching (Orientierung/Team-ID) oder API-Football-Lag prüfen.")
+
+
+@integrity_check
 def check_no_duplicate_picks(ctx):
     """Eine Karte pro (Spiel, Markt) — kein doppelter Pick (23.06.2026, Lucas: PAN-CRO hatte 2×
     „Beide Teams treffen — Ja" in Cards + Tracking). Entsteht durch Refresh-/Merge-Altlasten;

@@ -173,8 +173,12 @@ def _api_id(team_ids: dict, code: str) -> str:
 
 
 def match_fixture(api_fixture: dict, home_id: str, away_id: str,
-                  team_ids: dict) -> bool:
-    """Prüft ob ein API-Football-Spiel zu unserem Fixture passt."""
+                  team_ids: dict) -> str | None:
+    """Orientierungs-AGNOSTISCH (FIX 25.06.2026, Lucas: MD3 nicht aufgelöst). Match per Team-PAAR,
+    nicht per Heim/Auswärts-Reihenfolge — API-Football ordnet bei WM-Spielen (oft neutraler Platz)
+    Heim/Auswärts teils anders zu als unser Seed → strikter Reihenfolge-Match schlug fehl → kein
+    Ergebnis. Gibt zurück: 'direct' (api_home == unser_home), 'swapped' (vertauscht) oder None.
+    Der Aufrufer mappt die Scores entsprechend per Team-ID (sonst falscher Endstand!)."""
     api_home_id = str(api_fixture["teams"]["home"]["id"])
     api_away_id = str(api_fixture["teams"]["away"]["id"])
 
@@ -182,19 +186,23 @@ def match_fixture(api_fixture: dict, home_id: str, away_id: str,
     our_away_api = _api_id(team_ids, away_id)
 
     if our_home_api and our_away_api:
-        return api_home_id == our_home_api and api_away_id == our_away_api
+        if {api_home_id, api_away_id} != {str(our_home_api), str(our_away_api)}:
+            return None
+        return "direct" if api_home_id == str(our_home_api) else "swapped"
 
-    # Fallback: Namensvergleich
+    # Fallback: Namensvergleich (auch orientierungs-agnostisch)
     from fetch_wm_odds import TEAM_NAMES  # type: ignore
-    def names_match(api_name: str, our_id: str) -> bool:
+    def nm(api_name: str, our_id: str) -> bool:
         api_l = api_name.lower()
-        for n in TEAM_NAMES.get(our_id, [our_id]):
-            if n.lower() in api_l or api_l in n.lower():
-                return True
-        return False
+        return any(n.lower() in api_l or api_l in n.lower()
+                   for n in TEAM_NAMES.get(our_id, [our_id]))
 
-    return (names_match(api_fixture["teams"]["home"]["name"], home_id)
-            and names_match(api_fixture["teams"]["away"]["name"], away_id))
+    ah, aa = api_fixture["teams"]["home"]["name"], api_fixture["teams"]["away"]["name"]
+    if nm(ah, home_id) and nm(aa, away_id):
+        return "direct"
+    if nm(ah, away_id) and nm(aa, home_id):
+        return "swapped"
+    return None
 
 
 def main():
@@ -247,12 +255,14 @@ def main():
         away_id = our_fx["away"]
         gkey    = our_fx["gkey"]
 
-        # Passendes API-Fixture suchen
+        # Passendes API-Fixture suchen (orientierungs-agnostisch)
         api_match = None
+        orientation = None
         for af in api_fixtures:
             try:
-                if match_fixture(af, home_id, away_id, team_ids):
-                    api_match = af
+                o = match_fixture(af, home_id, away_id, team_ids)
+                if o:
+                    api_match, orientation = af, o
                     break
             except Exception:
                 continue
@@ -267,8 +277,12 @@ def main():
         elapsed      = status_obj.get("elapsed")
 
         goals = api_match.get("goals", {})
-        home_score = goals.get("home")
-        away_score = goals.get("away")
+        # Score nach Team-ID mappen: bei 'swapped' liefert API Heim/Auswärts vertauscht →
+        # sonst würde unser home_score den falschen Endstand bekommen (25.06.2026).
+        if orientation == "swapped":
+            home_score, away_score = goals.get("away"), goals.get("home")
+        else:
+            home_score, away_score = goals.get("home"), goals.get("away")
 
         # Winner bestimmen
         winner = None
