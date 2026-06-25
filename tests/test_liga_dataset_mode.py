@@ -39,5 +39,25 @@ class TestDatasetMode(unittest.TestCase):
         self.assertEqual(hist, "liga-odds-history.json")
 
 
+def _file_for(module, attr, dataset):
+    env = dict(os.environ)
+    env.pop("COCOBET_DATASET", None)
+    if dataset:
+        env["COCOBET_DATASET"] = dataset
+    snip = f"import {module} as m, os; print(os.path.basename(str(m.{attr})))"
+    return subprocess.check_output([sys.executable, "-c", snip], cwd=str(REPO), env=env).decode().strip()
+
+
+class TestResolverDataset(unittest.TestCase):
+    def test_resolve_picks_wm_default(self):
+        self.assertEqual(_file_for("resolve_wm_picks", "WM_FILE", None), "wm2026-data.json")
+
+    def test_resolve_picks_liga(self):
+        self.assertEqual(_file_for("resolve_wm_picks", "WM_FILE", "liga"), "liga-data.json")
+
+    def test_steam_clv_liga(self):
+        self.assertEqual(_file_for("resolve_steam_clv", "WM", "liga"), "liga-data.json")
+
+
 if __name__ == "__main__":
     unittest.main()

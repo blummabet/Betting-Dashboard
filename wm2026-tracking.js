@@ -29,6 +29,13 @@
   const KO_ROUND_ORDER  = ['R32', 'R16', 'QF', 'SF'];
   const KO_ROUND_LABELS = { R32: 'Sechzehntelfinale', R16: 'Achtelfinale', QF: 'Viertelfinale', SF: 'Halbfinale' };
 
+  // ── Modus-Parametrisierung (25.06.2026, Lucas: Liga auf WM-Stack) ──────
+  // Gleiches Tracking bedient WM (intlTrackingPanel/wm2026-data.json) UND Liga
+  // (trackingV2Panel/liga-data.json). Defaults = WM → initIntlTracking() unverändert.
+  let _dataFile = 'wm2026-data.json';
+  let _panelId  = 'intlTrackingPanel';
+  let _mode     = 'wm';   // 'wm' | 'liga'
+
   // ── Module state ───────────────────────────────────────
   let _data      = null;
   let _loaded    = false;
@@ -46,7 +53,25 @@
   //  ENTRY POINT
   // ─────────────────────────────────────────────────────
   window.initIntlTracking = async function () {
-    const panel = document.getElementById('intlTrackingPanel');
+    // WM-Defaults (25.06.2026, Lucas: Liga auf WM-Stack) — Verhalten unverändert.
+    _dataFile = 'wm2026-data.json';
+    _panelId  = 'intlTrackingPanel';
+    _mode     = 'wm';
+    return _loadTracking();
+  };
+
+  // (25.06.2026, Lucas: Liga auf WM-Stack) National-Tracking auf dem WM-Tracking.
+  // Liest liga-data.json (WM-Format) ins Panel trackingV2Panel. Gleiche
+  // BET/ABWÄGEN/NOBET-Logik; KO-Zeilen feuern nur bei koFixtures (Liga: keine).
+  window.initNationalTracking = async function () {
+    _dataFile = 'liga-data.json';
+    _panelId  = 'trackingV2Panel';
+    _mode     = 'liga';
+    return _loadTracking();
+  };
+
+  async function _loadTracking() {
+    const panel = document.getElementById(_panelId);
     if (!panel) return;
 
     if (_loaded && _data) {
@@ -57,13 +82,15 @@
     panel.innerHTML = `
       <div style="text-align:center;padding:60px 16px;color:var(--muted);">
         <div style="font-size:36px;margin-bottom:14px;animation:spin 1.2s linear infinite;display:inline-block;">⚙️</div>
-        <div style="font-size:13px;font-weight:600;">Lade WM 2026 Picks…</div>
+        <div style="font-size:13px;font-weight:600;">${_mode === 'liga' ? 'Lade Liga-Picks…' : 'Lade WM 2026 Picks…'}</div>
       </div>`;
 
     try {
+      // (25.06.2026, Lucas: Liga auf WM-Stack) Im liga-Modus kein WM-Validator-Report.
+      const _isLiga = _mode === 'liga';
       const [resp, valResp] = await Promise.all([
-        fetch('wm2026-data.json?t=' + Date.now()),
-        fetch('pick_validation_report.json?t=' + Date.now()).catch(() => null),
+        fetch(_dataFile + '?t=' + Date.now()),
+        _isLiga ? Promise.resolve(null) : fetch('pick_validation_report.json?t=' + Date.now()).catch(() => null),
       ]);
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       _data   = await resp.json();
@@ -73,15 +100,16 @@
       _loaded = true;
       _render();
     } catch (e) {
+      const _retryFn = _mode === 'liga' ? 'window.initNationalTracking()' : 'window.initIntlTracking()';
       panel.innerHTML = `
         <div style="text-align:center;padding:60px 16px;color:var(--muted);">
           <div style="font-size:40px;margin-bottom:16px;">⚠️</div>
           <div style="font-size:15px;font-weight:700;color:var(--red);">Daten konnten nicht geladen werden</div>
           <div style="font-size:12px;margin-top:8px;">${e.message}</div>
-          <button onclick="window.initIntlTracking()" style="margin-top:18px;background:var(--accent);color:#000;border:none;border-radius:8px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;">Erneut versuchen</button>
+          <button onclick="${_retryFn}" style="margin-top:18px;background:var(--accent);color:#000;border:none;border-radius:8px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;">Erneut versuchen</button>
         </div>`;
     }
-  };
+  }
 
   // Filter callbacks (called from inline onclick)
   window.wmTrkSetGroup   = g  => { _grpFilter = g;  _render(); };
@@ -89,7 +117,8 @@
   window.wmTrkSetVerdict = v  => { _vrdFilter = v;  _render(); };
   window.wmTrkSetSort    = s  => { _trkSort = s;   _render(); };
   window.wmTrkToggleTop  = () => { _showTop = !_showTop; _render(); };
-  window.wmTrkRefresh    = () => { _loaded = false; _data = null; _validationReport = null; _auditReport = null; window.initIntlTracking(); };
+  // (25.06.2026, Lucas: Liga auf WM-Stack) Refresh ruft den modus-passenden Entry-Point.
+  window.wmTrkRefresh    = () => { _loaded = false; _data = null; _validationReport = null; _auditReport = null; (_mode === 'liga' ? window.initNationalTracking : window.initIntlTracking)(); };
   window.wmTrkToggleVal  = () => { _showValidation = !_showValidation; _showAudit = false; _render(); };
   window.wmTrkRunAudit   = () => { _auditReport = _runCardTrackingAudit(); _showAudit = true; _showValidation = false; _render(); };
   window.wmTrkCloseAudit = () => { _showAudit = false; _render(); };
@@ -98,8 +127,9 @@
   //  MAIN RENDER
   // ─────────────────────────────────────────────────────
   function _render() {
-    const panel = document.getElementById('intlTrackingPanel');
+    const panel = document.getElementById(_panelId);
     if (!panel || !_data) return;
+    const _isLiga = _mode === 'liga';   // (25.06.2026, Lucas: Liga auf WM-Stack)
 
     const groups      = _data.groups      || {};
     const allPicks    = _data.picks        || {};
@@ -287,10 +317,12 @@
     let html = '';
 
     // ─── Header ───────────────────────────────────────
+    // (25.06.2026, Lucas: Liga auf WM-Stack) Neutraler Liga-Titel im liga-Modus.
+    const _trkTitle = _isLiga ? '📊 Liga Tracking' : '📊 WM 2026 Tracking';
     html += `
     <div class="wm-header">
       <div class="wm-header-left">
-        <div class="wm-title">📊 WM 2026 Tracking</div>
+        <div class="wm-title">${_trkTitle}</div>
         <div class="wm-subtitle">Alle Picks aus den Cards · Eingefroren bei Kickoff · BET €${STAKE_BET} · ABWÄGEN €${STAKE_ABW}</div>
       </div>
       <div class="wm-header-right">
@@ -317,14 +349,49 @@
     html += `<div class="wm-group-filter" style="margin-top:12px;">`;
     html += _fBtn('⭐ Alle', 'all', _grpFilter, `wmTrkSetGroup('all')`);
     for (const gKey of groupKeys) {
+      // (25.06.2026, Lucas: Liga auf WM-Stack) WM: „Gr. A"; Liga: voller Liga-Name.
       const label = (groups[gKey].name || 'Gruppe ?').replace('Gruppe ', '');
-      html += _fBtn(`Gr. ${label}`, gKey, _grpFilter, `wmTrkSetGroup('${gKey}')`);
+      html += _fBtn(_isLiga ? label : `Gr. ${label}`, gKey, _grpFilter, `wmTrkSetGroup('${gKey}')`);
     }
     html += `</div>`;
 
     // Matchday filter
     html += `<div class="wm-md-filter">`;
     html += _fBtn('Alle Spieltage', 'all', _mdFilter, `wmTrkSetMd('all')`);
+    if (_isLiga) {
+      // (25.06.2026, Lucas: Liga auf WM-Stack) Spieltag-Buttons DYNAMISCH aus den
+      // vorhandenen fixtures[].matchday-Werten (distinct, sortiert). Bei vielen Runden
+      // auf die nächsten ~3 anstehenden begrenzen (analog Renderer). _fBtn vergleicht
+      // strikt (=== val) → val als String + onclick wmTrkSetMd('<md>') (String-Filter).
+      const _mdSet = new Set();
+      for (const gData of Object.values(groups)) {
+        for (const fx of (gData.fixtures || [])) {
+          if (fx.matchday != null && fx.matchday !== '') _mdSet.add(fx.matchday);
+        }
+      }
+      const _allMds = [..._mdSet].sort((a, b) =>
+        (parseFloat(a) || 0) - (parseFloat(b) || 0) || String(a).localeCompare(String(b)));
+      let _shownMds = _allMds;
+      if (_allMds.length > 4) {
+        const _upcoming = _allMds.filter(md => {
+          for (const gData of Object.values(groups)) {
+            for (const fx of (gData.fixtures || [])) {
+              if (String(fx.matchday) === String(md) && fx.date >= todayIso) return true;
+            }
+          }
+          return false;
+        });
+        _shownMds = (_upcoming.length ? _upcoming : _allMds).slice(0, 3);
+        if (_mdFilter !== 'all' && !_shownMds.some(md => String(md) === String(_mdFilter))
+            && _allMds.some(md => String(md) === String(_mdFilter))) {
+          _shownMds = [..._shownMds, _mdFilter];
+        }
+      }
+      for (const md of _shownMds) {
+        const _mdStr = String(md).replace(/['"\\]/g, '');
+        html += _fBtn(`Spieltag ${md}`, _mdStr, String(_mdFilter), `wmTrkSetMd('${_mdStr}')`);
+      }
+    } else {
     html += _fBtn('Spieltag 1', 1,     _mdFilter, `wmTrkSetMd(1)`);
     html += _fBtn('Spieltag 2', 2,     _mdFilter, `wmTrkSetMd(2)`);
     html += _fBtn('Spieltag 3', 3,     _mdFilter, `wmTrkSetMd(3)`);
@@ -336,6 +403,7 @@
         if (!_koRounds.has(r)) continue;
         html += _fBtn(KO_ROUND_LABELS[r], r, _mdFilter, `wmTrkSetMd('${r}')`);
       }
+    }
     }
     html += `</div>`;
 

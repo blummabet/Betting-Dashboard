@@ -13,6 +13,15 @@
 (function () {
   'use strict';
 
+  // ── Modus-Parametrisierung (25.06.2026, Lucas: Liga auf WM-Stack) ──────
+  // Gleicher Renderer bedient WM (International-Cards) UND Liga (National-Cards).
+  // Defaults = WM, damit initIntlCards() exakt wie bisher läuft. initNationalCards()
+  // überschreibt _dataFile/_cardsPanelId/_mode → liest liga-data.json ins Panel
+  // mainContent und blendet WM-only-UI (Countdown/Spieltag-1-3/KO/Quali) aus.
+  let _dataFile     = 'wm2026-data.json';
+  let _cardsPanelId = 'intlCardsPanel';
+  let _mode         = 'wm';   // 'wm' | 'liga'
+
   // ── Module state ──────────────────────────────────────
   let _wmData         = null;
   let _polyLookup     = {};   // key: "HOME-AWAY" → poly fixture object
@@ -50,7 +59,27 @@
   //  ENTRY POINT
   // ─────────────────────────────────────────────────────
   window.initIntlCards = async function () {
-    const panel = document.getElementById('intlCardsPanel');
+    // WM-Defaults (25.06.2026, Lucas: Liga auf WM-Stack) — Verhalten unverändert.
+    _dataFile     = 'wm2026-data.json';
+    _cardsPanelId = 'intlCardsPanel';
+    _mode         = 'wm';
+    return _loadCards();
+  };
+
+  // (25.06.2026, Lucas: Liga auf WM-Stack) National-Cards auf dem WM-Renderer.
+  // Liest liga-data.json (WM-Format, Liga=„Gruppe") ins Panel mainContent.
+  // Im liga-Modus werden die WM-Sibling-Fetches (poly/travel/confidence/player-picks/
+  // odds-history/match-pages) NICHT geladen — nur liga-data.json. Die WM-only-UI
+  // (Countdown, Spieltag-1-3-Buttons, KO/Quali) wird in _render() ausgeblendet.
+  window.initNationalCards = async function () {
+    _dataFile     = 'liga-data.json';
+    _cardsPanelId = 'mainContent';
+    _mode         = 'liga';
+    return _loadCards();
+  };
+
+  async function _loadCards() {
+    const panel = document.getElementById(_cardsPanelId);
     if (!panel) return;
 
     // ── Cache-Strategie ──────────────────────────────────────────────────
@@ -68,24 +97,29 @@
       panel.innerHTML = `
         <div style="text-align:center;padding:60px 16px;color:var(--muted);">
           <div style="font-size:36px;margin-bottom:14px;animation:spin 1.2s linear infinite;display:inline-block;">⚙️</div>
-          <div style="font-size:13px;font-weight:600;">Lade WM 2026 Daten…</div>
+          <div style="font-size:13px;font-weight:600;">${_mode === 'liga' ? 'Lade Liga-Daten…' : 'Lade WM 2026 Daten…'}</div>
         </div>`;
     }
     // Bei warmem Miss: Karten bleiben sichtbar, fetch läuft silent unten weiter
 
     try {
+      // (25.06.2026, Lucas: Liga auf WM-Stack) Im liga-Modus NUR liga-data.json laden —
+      // WM-Sibling-JSONs (poly/travel/confidence/player-picks/odds-history) bleiben null/leer.
+      const _isLiga = _mode === 'liga';
       const [wmResp, polyResp, travelResp, confResp, ppResp, chgResp, histResp] = await Promise.all([
-        fetch('wm2026-data.json?t=' + Date.now()),
-        fetch('wm_poly_prices.json?t=' + Date.now()).catch(() => null),
-        fetch('wm_travel_burden.json?t=' + Date.now()).catch(() => null),
-        fetch('pick_confidence_stats.json?t=' + Date.now()).catch(() => null),
-        fetch('wm2026-player-picks.json?t=' + Date.now()).catch(() => null),
-        fetch('pick_changes_log.json?t=' + Date.now()).catch(() => null),
-        fetch('wm2026-odds-history.json?t=' + Date.now()).catch(() => null),
+        fetch(_dataFile + '?t=' + Date.now()),
+        _isLiga ? Promise.resolve(null) : fetch('wm_poly_prices.json?t=' + Date.now()).catch(() => null),
+        _isLiga ? Promise.resolve(null) : fetch('wm_travel_burden.json?t=' + Date.now()).catch(() => null),
+        _isLiga ? Promise.resolve(null) : fetch('pick_confidence_stats.json?t=' + Date.now()).catch(() => null),
+        _isLiga ? Promise.resolve(null) : fetch('wm2026-player-picks.json?t=' + Date.now()).catch(() => null),
+        _isLiga ? Promise.resolve(null) : fetch('pick_changes_log.json?t=' + Date.now()).catch(() => null),
+        _isLiga ? Promise.resolve(null) : fetch('wm2026-odds-history.json?t=' + Date.now()).catch(() => null),
       ]);
       if (!wmResp.ok) throw new Error('HTTP ' + wmResp.status);
       _wmData = await wmResp.json();
-      window.WM2026_DATA = _wmData;   // expose for Sharp Radar + other modules
+      // (25.06.2026, Lucas: Liga auf WM-Stack) WM2026_DATA NUR im WM-Modus exposen —
+      // sonst würde der Liga-Tab die WM-Daten für Sharp Radar überschreiben.
+      if (_mode !== 'liga') window.WM2026_DATA = _wmData;   // expose for Sharp Radar + other modules
 
       if (polyResp && polyResp.ok) {
         const polyRaw = await polyResp.json();
@@ -153,17 +187,20 @@
 
       // Stage 2: WM-Match-Pages im Hintergrund laden (für Probability-Bar, Squad-Pills, AI-Preview)
       // Erstes Render zeigt Cards schon, zweites Render hat dann die Extra-Daten
-      _loadWmMatchPages();
+      // (25.06.2026, Lucas: Liga auf WM-Stack) NUR im WM-Modus — Liga hat keine match-pages.
+      if (_mode !== 'liga') _loadWmMatchPages();
     } catch (e) {
+      // (25.06.2026, Lucas: Liga auf WM-Stack) Retry ruft den modus-passenden Entry-Point.
+      const _retryFn = _mode === 'liga' ? 'window.initNationalCards()' : 'window.initIntlCards()';
       panel.innerHTML = `
         <div style="text-align:center;padding:60px 16px;color:var(--muted);">
           <div style="font-size:40px;margin-bottom:16px;">⚠️</div>
           <div style="font-size:15px;font-weight:700;color:var(--red);">Daten konnten nicht geladen werden</div>
           <div style="font-size:12px;margin-top:8px;">${e.message}</div>
-          <button onclick="window.initIntlCards()" style="margin-top:18px;background:var(--accent);color:#000;border:none;border-radius:8px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;">Erneut versuchen</button>
+          <button onclick="${_retryFn}" style="margin-top:18px;background:var(--accent);color:#000;border:none;border-radius:8px;padding:8px 20px;font-size:13px;font-weight:700;cursor:pointer;">Erneut versuchen</button>
         </div>`;
     }
-  };
+  }
 
   // ── Group / Matchday filters (called from inline onclick) ─
   window.wmSetGroup = function (gKey) {
@@ -229,8 +266,9 @@
   //  MAIN RENDER
   // ─────────────────────────────────────────────────────
   function _render() {
-    const panel = document.getElementById('intlCardsPanel');
+    const panel = document.getElementById(_cardsPanelId);
     if (!panel || !_wmData) return;
+    const _isLiga = _mode === 'liga';   // (25.06.2026, Lucas: Liga auf WM-Stack)
 
     const groups    = _wmData.groups || {};
     const groupKeys = Object.keys(groups).sort();
@@ -315,6 +353,20 @@
     const totalPicks = Object.values(picks).flat().filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN').length;
     const polyCount  = Object.keys(_polyLookup).length;
 
+    if (_isLiga) {
+      // (25.06.2026, Lucas: Liga auf WM-Stack) Neutraler Liga-Header — kein WM-Countdown,
+      // keine WM-Turnier-Subline, kein Poly-Märkte-Zähler (Liga hat keine Poly-Siblings).
+      html += `
+      <div class="wm-header">
+        <div class="wm-header-left">
+          <div class="wm-title">⚽ Top-Ligen</div>
+          <div class="wm-subtitle">Premier League · La Liga · Bundesliga · Serie A · Ligue 1</div>
+        </div>
+        <div class="wm-header-right">
+          ${totalPicks > 0 ? `<span style="font-size:10px;font-weight:700;color:var(--accent);">${totalPicks} Picks</span>` : ''}
+        </div>
+      </div>`;
+    } else {
     html += `
     <div class="wm-header">
       <div class="wm-header-left">
@@ -327,6 +379,7 @@
         ${polyCount > 0 ? `<span style="font-size:10px;font-weight:700;color:#a78bfa;">${polyCount} Poly-Märkte</span>` : ''}
       </div>
     </div>`;
+    }
 
     // ─── Pick-Changes Banner (last 24h, only relevant ones) ──
     html += _buildChangesBanner();
@@ -335,19 +388,51 @@
     html += `<div class="wm-group-filter">`;
     html += `<button class="wm-gf-btn${_activeGroup === 'all' ? ' active' : ''}" onclick="wmSetGroup('all')">⭐ Alle</button>`;
     for (const gKey of groupKeys) {
-      const gLabel = groups[gKey].name.replace('Gruppe ', '');
+      // (25.06.2026, Lucas: Liga auf WM-Stack) WM: „Gr. A" (Strip „Gruppe "); Liga:
+      // voller Liga-Name („Premier League"), kein „Gr."-Präfix.
+      const gLabel = (groups[gKey].name || gKey).replace('Gruppe ', '');
+      const gBtnLabel = _isLiga ? gLabel : `Gr. ${gLabel}`;
       // Count picks in this group
       const gPicks = Object.entries(picks)
         .filter(([k]) => k.startsWith(gKey + '-'))
         .flatMap(([, v]) => v)
         .filter(p => p.verdict === 'BET').length;
-      html += `<button class="wm-gf-btn${_activeGroup === gKey ? ' active' : ''}" onclick="wmSetGroup('${gKey}')">Gr. ${gLabel}${gPicks ? ` <span style="font-size:8px;background:rgba(63,185,80,.2);color:#3fb950;border-radius:4px;padding:0 4px;">${gPicks}</span>` : ''}</button>`;
+      html += `<button class="wm-gf-btn${_activeGroup === gKey ? ' active' : ''}" onclick="wmSetGroup('${gKey}')">${gBtnLabel}${gPicks ? ` <span style="font-size:8px;background:rgba(63,185,80,.2);color:#3fb950;border-radius:4px;padding:0 4px;">${gPicks}</span>` : ''}</button>`;
     }
     html += `</div>`;
 
     // ─── Matchday Filter ─────────────────────────────
     html += `<div class="wm-md-filter">`;
     html += `<button class="wm-md-btn${_activeMd === 'all' ? ' active' : ''}" onclick="wmSetMd('all')">Alle Spieltage</button>`;
+    if (_isLiga) {
+      // (25.06.2026, Lucas: Liga auf WM-Stack) Spieltag-Buttons DYNAMISCH aus den
+      // vorhandenen fixtures[].matchday-Werten (distinct, sortiert). Bei vielen Runden
+      // (Liga = bis zu 38 Spieltage) auf die nächsten ~3 anstehenden begrenzen +
+      // „Alle Spieltage" oben. „Anstehend" = kleinste Spieltage mit Spielen ab heute;
+      // gibt es keine Zukunfts-Spiele mehr, fallen wir auf die letzten 3 zurück.
+      const _mdSet = new Set();
+      for (const fx of allFx) {
+        if (fx.matchday != null && fx.matchday !== '') _mdSet.add(fx.matchday);
+      }
+      const _allMds = [..._mdSet].sort((a, b) =>
+        (parseFloat(a) || 0) - (parseFloat(b) || 0) || String(a).localeCompare(String(b)));
+      let _shownMds = _allMds;
+      if (_allMds.length > 4) {
+        // nächste 3 anstehende Spieltage (haben mind. ein Spiel ab heute)
+        const _upcoming = _allMds.filter(md =>
+          allFx.some(fx => String(fx.matchday) === String(md) && fx.date >= todayIso));
+        _shownMds = (_upcoming.length ? _upcoming : _allMds).slice(0, 3);
+        // aktiven Spieltag immer sichtbar lassen, auch wenn er nicht „anstehend" ist
+        if (_activeMd !== 'all' && !_shownMds.some(md => String(md) === String(_activeMd))
+            && _allMds.some(md => String(md) === String(_activeMd))) {
+          _shownMds = [..._shownMds, _activeMd];
+        }
+      }
+      for (const md of _shownMds) {
+        const _active = String(_activeMd) === String(md);
+        html += `<button class="wm-md-btn${_active ? ' active' : ''}" onclick="wmSetMd('${String(md).replace(/['"\\]/g, '')}')">Spieltag ${md}</button>`;
+      }
+    } else {
     html += `<button class="wm-md-btn${_activeMd === 1 ? ' active' : ''}" onclick="wmSetMd(1)">Spieltag 1</button>`;
     html += `<button class="wm-md-btn${_activeMd === 2 ? ' active' : ''}" onclick="wmSetMd(2)">Spieltag 2</button>`;
     html += `<button class="wm-md-btn${_activeMd === 3 ? ' active' : ''}" onclick="wmSetMd(3)">Spieltag 3</button>`;
@@ -358,6 +443,7 @@
         if (!_koRounds.has(r)) continue;
         html += `<button class="wm-md-btn${_activeMd === r ? ' active' : ''}" onclick="wmSetMd('${r}')">${KO_ROUND_LABELS[r]}</button>`;
       }
+    }
     }
     html += `</div>`;
 

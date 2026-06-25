@@ -1,0 +1,66 @@
+name: ⚽ Liga aktualisieren (Top 5)
+
+# 25.06.2026 (Lucas): Liga auf dem WM-Stack, PARALLEL zur WM. Eigener Workflow, fest auf
+# COCOBET_DATASET=liga + COCOBET_PROFILE=liga_default → schreibt NUR liga-data.json, rührt die
+# WM-Pipeline (wm2026-data.json, profiles.active=wm2026) NICHT an. Phase 1: Daten + Quoten + Picks
+# + Resolve + CLV (kein Poly). Takt 2×/Tag während der WM; danach hochdrehen.
+on:
+  schedule:
+    - cron: '0 6,18 * * *'   # 2×/Tag (vor/nach den meisten Liga-Anpfiffen)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-liga
+  cancel-in-progress: false
+
+env:
+  COCOBET_DATASET: liga
+  COCOBET_PROFILE: liga_default
+
+jobs:
+  update-liga:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
+      - name: 🗂️ Liga-Daten bauen (Teams + Fixtures + Ergebnisse)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python build_liga_data.py
+
+      - name: 💰 Liga-Quoten holen (1X2 + O/U + BTTS, Opening-Carry)
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python fetch_liga_odds.py
+
+      - name: 🎯 Liga-Picks generieren (Signal-Engine, liga_default)
+        run: python generate_liga_picks.py
+
+      - name: ✅ Liga-Picks resolven (WIN/LOSS/VOID)
+        run: python resolve_wm_picks.py
+
+      - name: 📉 Liga-CLV setzen (Einstieg vs Closing)
+        run: python resolve_steam_clv.py || true
+
+      - name: 💾 liga-data.json committen
+        run: |
+          git config user.name  "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add liga-data.json liga-odds-history.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve [skip ci]"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

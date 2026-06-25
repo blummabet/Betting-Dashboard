@@ -144,7 +144,11 @@ function showView(view) {
   if (view === 'polybetting')       initPolymarket();
   if (view === 'polytrading')       initPolyTrader();
   if (view === 'polywallets'  && typeof initPolyWallets === 'function') initPolyWallets();
-  if (view === 'national-tracking' && typeof initResultsV2      === 'function') initResultsV2();
+  // (25.06.2026, Lucas: Liga auf WM-Stack) National-Views laufen jetzt auf dem
+  // bewährten WM-Renderer/Tracking (liest liga-data.json) statt statischem
+  // renderer.js-Output bzw. initResultsV2.
+  if (view === 'national-cards'    && typeof initNationalCards    === 'function') initNationalCards();
+  if (view === 'national-tracking' && typeof initNationalTracking === 'function') initNationalTracking();
   if (view === 'intl-cards'        && typeof initIntlCards     === 'function') initIntlCards();
   if (view === 'intl-tracking'     && typeof initIntlTracking  === 'function') initIntlTracking();
   if (view === 'intl-wm2026'       && typeof initWm2026        === 'function') initWm2026();

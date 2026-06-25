@@ -18,10 +18,13 @@ Lauf nach den Ergebnissen (z.B. in fetch-results-Workflow nach resolve_wm_result
 """
 from __future__ import annotations
 import json
+import os
 from pathlib import Path
 
 BASE = Path(__file__).parent
-WM = BASE / "wm2026-data.json"
+# Dataset-Modus (25.06.2026, Lucas: Liga auf WM-Stack). COCOBET_DATASET=liga → CLV auf liga-data.json.
+_DATASET = (os.environ.get("COCOBET_DATASET") or "wm").lower()
+WM = BASE / ("liga-data.json" if _DATASET == "liga" else "wm2026-data.json")
 
 try:
     from resolve_wm_results import build_result_lookup, get_pinn_close_for_market
