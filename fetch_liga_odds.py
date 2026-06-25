@@ -178,9 +178,12 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str) -> dict:
 # ───────────────────────── Live-Fetch ─────────────────────────
 
 def _fetch_events(sport_key: str) -> list:
+    # WICHTIG: odds_get hängt den apiKey NICHT an — der Pfad muss ?apiKey=… enthalten (wie WM).
+    # btts/double_chance brauchen den per-Event-Endpoint (/events/{id}/odds), NICHT den Batch →
+    # im Bulk-Call nur die Featured-Markets h2h,totals (1X2 + O/U). BTTS später per-Event (Phase 2).
     import fetch_wm_odds as W
-    path = (f"/v4/sports/{sport_key}/odds/?regions=eu,uk&markets=h2h,totals,btts"
-            f"&oddsFormat=decimal")
+    path = (f"/v4/sports/{sport_key}/odds?apiKey={W.ODDS_KEY}"
+            f"&regions=eu,uk&markets=h2h,totals&oddsFormat=decimal")
     data = W.odds_get(path)
     return data if isinstance(data, list) else []
 
