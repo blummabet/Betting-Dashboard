@@ -39,6 +39,9 @@
   let _showPast       = false;   // 17.06.2026: vergangene/gespielte Spiele default ausgeblendet (weniger Scrollen)
   let _loaded         = false;
   let _lastLoadTs     = 0;       // Timestamp des letzten erfolgreichen Loads (ms)
+  let _loadedFile     = null;    // welches Dataset zuletzt geladen wurde (25.06.2026, Lucas:
+                                 // Cache-Invalidierung bei Wechsel WM↔Liga, sonst zeigt National
+                                 // die noch geladenen WM-Daten unter dem Liga-Header)
 
   // TTL für In-Memory-Cache. Tab-Wechsel innerhalb dieses Fensters → kein Re-Fetch
   // (schnell). Danach: silent re-fetch im Hintergrund mit alten Karten sichtbar,
@@ -87,7 +90,8 @@
     // Warm miss (TTL abgelaufen, aber Daten vorhanden): alte Karten weiter
     //   sichtbar lassen + im Hintergrund silent re-fetch → kein Flicker.
     // Cold (noch nie geladen): Spinner zeigen, dann fetch.
-    const isWarm    = _loaded && _wmData;
+    // Cache nur warm, wenn DASSELBE Dataset geladen ist (sonst WM-Daten im Liga-Tab, 25.06.2026).
+    const isWarm    = _loaded && _wmData && _loadedFile === _dataFile;
     const ttlValid  = (Date.now() - _lastLoadTs) < CARDS_CACHE_TTL_MS;
     if (isWarm && ttlValid) {
       _render();
@@ -182,6 +186,7 @@
       }
 
       _loaded = true;
+      _loadedFile = _dataFile;   // Dataset merken (Cache-Invalidierung bei WM↔Liga, 25.06.2026)
       _lastLoadTs = Date.now();
       _render();
 

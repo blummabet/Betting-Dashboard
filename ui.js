@@ -78,12 +78,13 @@ function showView(view) {
     if (panel) panel.style.display = '';
   }
 
-  // ── League nav: visible for National Cards + Sharp ───
+  // ── Alte statische League-Nav + Legende: komplett raus ───────────────
+  // (25.06.2026, Lucas) National nutzt den Flaggen-Gruppenfilter des WM-Renderers; für Sharp
+  // Radar braucht die alte League-Nav auch niemand → überall ausblenden (keine doppelte Navi).
   const leagueNav = document.querySelector('.league-nav');
   const legend    = document.querySelector('.legend-section');
-  const showLeague = view === 'national-cards' || view === 'sharp';
-  if (leagueNav) leagueNav.style.display = showLeague ? '' : 'none';
-  if (legend)    legend.style.display    = view === 'national-cards' ? '' : 'none';
+  if (leagueNav) leagueNav.style.display = 'none';
+  if (legend)    legend.style.display    = 'none';
 
   // ── Sub-nav: visible for National + International ────
   const subNav = document.getElementById('subNav');

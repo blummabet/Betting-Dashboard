@@ -39,6 +39,7 @@
   // ── Module state ───────────────────────────────────────
   let _data      = null;
   let _loaded    = false;
+  let _loadedFile = null;   // zuletzt geladenes Dataset (25.06.2026, Lucas: Cache-Invalidierung WM↔Liga)
   let _grpFilter = 'all';
   let _mdFilter  = 'all';    // 'all' | 1 | 2 | 3
   let _vrdFilter = 'all';    // 'all' | 'BET' | 'ABWÄGEN' | 'SKIP'
@@ -74,7 +75,7 @@
     const panel = document.getElementById(_panelId);
     if (!panel) return;
 
-    if (_loaded && _data) {
+    if (_loaded && _data && _loadedFile === _dataFile) {   // nur warm bei gleichem Dataset
       _render();
       return;
     }
@@ -98,6 +99,7 @@
         try { _validationReport = await valResp.json(); } catch (e) {}
       }
       _loaded = true;
+      _loadedFile = _dataFile;   // Dataset merken (Cache-Invalidierung WM↔Liga, 25.06.2026)
       _render();
     } catch (e) {
       const _retryFn = _mode === 'liga' ? 'window.initNationalTracking()' : 'window.initIntlTracking()';
