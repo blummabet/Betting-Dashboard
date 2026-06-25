@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-24T15:23:34Z",
-    "total_records": 89
+    "updated_at": "2026-06-25T12:11:25Z",
+    "total_records": 95
   },
   "records": [
     {
@@ -168,6 +168,47 @@
       "source": "steam",
       "convictionScore": 3,
       "lateEntry": true
+    },
+    {
+      "key": "A-3-ZAF-KOR|Auswärtssieg",
+      "matchKey": "A-3-ZAF-KOR",
+      "market": "Auswärtssieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.45
+        },
+        {
+          "name": "travel_burden",
+          "score": 1.4
+        },
+        {
+          "name": "form_trend",
+          "score": 0.8
+        },
+        {
+          "name": "apif_predictions",
+          "score": -1.73
+        },
+        {
+          "name": "weather_signal",
+          "score": -0.5
+        },
+        {
+          "name": "incentive_signal",
+          "score": -2.0
+        },
+        {
+          "name": "smart_money",
+          "score": 0.9
+        }
+      ],
+      "resolvedAt": "2026-06-25T06:13:34Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "processVerdict": "DESERVED_LOSS"
     },
     {
       "key": "B-1-CAN-BIH|AH Heim −0.5",
@@ -478,6 +519,77 @@
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true
+    },
+    {
+      "key": "B-3-BIH-QAT|AH Heim −1",
+      "matchKey": "B-3-BIH-QAT",
+      "market": "AH Heim −1",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": 1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 4.9
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.08
+        },
+        {
+          "name": "pressure_index",
+          "score": 1.5
+        }
+      ],
+      "resolvedAt": "2026-06-24T21:19:15Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "B-3-BIH-QAT|Beide Teams treffen — Ja",
+      "matchKey": "B-3-BIH-QAT",
+      "market": "Beide Teams treffen — Ja",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "xg_strength",
+          "score": -1.48
+        }
+      ],
+      "resolvedAt": "2026-06-24T21:19:15Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": true,
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "B-3-BIH-QAT|Über 2.5 Tore",
+      "matchKey": "B-3-BIH-QAT",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.5
+        },
+        {
+          "name": "lineup_signal",
+          "score": -4.04
+        },
+        {
+          "name": "incentive_signal",
+          "score": 1.2
+        }
+      ],
+      "resolvedAt": "2026-06-24T21:19:15Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": true,
+      "processVerdict": "LUCKY"
     },
     {
       "key": "C-1-BRA-MAR|AH Auswärts +0.5",
@@ -791,6 +903,56 @@
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true
+    },
+    {
+      "key": "C-3-MAR-HTI|AH Heim −1.5",
+      "matchKey": "C-3-MAR-HTI",
+      "market": "AH Heim −1.5",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 4.57
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.0
+        },
+        {
+          "name": "incentive_signal",
+          "score": 1.53
+        },
+        {
+          "name": "smart_money",
+          "score": 1.32
+        }
+      ],
+      "resolvedAt": "2026-06-25T01:40:55Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "C-3-MAR-HTI|Beide Teams treffen — Nein",
+      "matchKey": "C-3-MAR-HTI",
+      "market": "Beide Teams treffen — Nein",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.67
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.92
+        }
+      ],
+      "resolvedAt": "2026-06-25T01:40:55Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "UNLUCKY"
     },
     {
       "key": "D-1-AUS-TUR|Beide Teams treffen — Ja",
