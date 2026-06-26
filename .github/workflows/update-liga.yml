@@ -60,6 +60,9 @@ jobs:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python fetch_liga_odds.py
 
+      - name: 📡 Liga Sharp-Moves erkennen (Radar)
+        run: python detect_wm_sharp_moves.py || true
+
       # 25.06.2026 (Lucas: „Navi da, keine Cards"): Pick-/Resolve-Schritte dürfen den Commit der
       # Daten NICHT blockieren. Wenn einer crasht, liegen Teams+Fixtures+Quoten trotzdem in
       # liga-data.json → Cards erscheinen. Darum `|| true` + Commit mit `if: always()`.
@@ -94,6 +97,8 @@ jobs:
           git add liga_signal_ledger.json 2>/dev/null || true
           git add liga_signal_weights.json 2>/dev/null || true
           git add liga_status.json 2>/dev/null || true
+          git add liga_sharp_moves_log.json 2>/dev/null || true
+          git add liga_sharp_dedup.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push

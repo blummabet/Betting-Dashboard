@@ -97,6 +97,32 @@ class TestPublicConsensus(unittest.TestCase):
         self.assertEqual(e2["public_hw"], 1.5)
 
 
+class TestSnapshot(unittest.TestCase):
+    def test_appends_pinnacle_and_public(self):
+        h = {}
+        n = L.append_snapshot(h, "40-50",
+                              {"hw": 1.8, "dr": 3.6, "aw": 4.5, "public_hw": 1.7, "public_dr": 3.7, "public_aw": 5.0},
+                              "2026-08-01T00:00:00Z")
+        self.assertEqual(n, 2)
+        snaps = h["40-50"]
+        self.assertEqual([s["bk"] for s in snaps], ["pinnacle", "public"])
+
+    def test_no_dup_when_unchanged(self):
+        h = {}
+        pr = {"hw": 1.8, "dr": 3.6, "aw": 4.5}
+        L.append_snapshot(h, "40-50", pr, "2026-08-01T00:00:00Z")
+        n2 = L.append_snapshot(h, "40-50", pr, "2026-08-01T06:00:00Z")
+        self.assertEqual(n2, 0)            # unverändert → kein neuer Snap
+        self.assertEqual(len(h["40-50"]), 1)
+
+    def test_appends_on_move(self):
+        h = {}
+        L.append_snapshot(h, "40-50", {"hw": 1.8, "dr": 3.6, "aw": 4.5}, "2026-08-01T00:00:00Z")
+        n2 = L.append_snapshot(h, "40-50", {"hw": 1.6, "dr": 3.7, "aw": 5.2}, "2026-08-02T00:00:00Z")
+        self.assertEqual(n2, 1)            # Bewegung → neuer Pinnacle-Snap
+        self.assertEqual(len(h["40-50"]), 2)
+
+
 class TestExtractPrices(unittest.TestCase):
     def test_direct_mapping(self):
         p = L.extract_prices(_event_full("Liverpool", "Chelsea"), "direct", "Liverpool", "Chelsea")

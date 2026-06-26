@@ -22,6 +22,9 @@ from datetime import datetime, timezone
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 LIGA_FILE = os.path.join(BASE, "liga-data.json")
+# Zeitreihe der Pinnacle-/Public-Snapshots (für Sharp Radar + detect_wm_sharp_moves, 26.06.2026).
+# Format identisch zu wm2026-odds-history.json: {key: [{ts,bk,hw,dr,aw}...], _meta:{oddsFetchedAt}}.
+LIGA_HISTORY = os.path.join(BASE, "liga-odds-history.json")
 
 # TheOddsAPI-Sport-Keys der Top 5 (stabil etabliert).
 LEAGUE_SPORT_KEYS = {
@@ -203,6 +206,32 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str) -> dict:
     return entry
 
 
+def _snap_changed(last: dict | None, hw, dr, aw) -> bool:
+    if not last:
+        return True
+    return (last.get("hw") != hw or last.get("dr") != dr or last.get("aw") != aw)
+
+
+def append_snapshot(history: dict, key: str, prices: dict, now_iso: str) -> int:
+    """Hängt Pinnacle- + Public-Snapshot an die Zeitreihe an, wenn sich 1X2 geändert hat.
+    Gibt Anzahl neuer Snaps zurück. Rein/testbar (gleiches Format wie wm2026-odds-history)."""
+    added = 0
+    snaps = history.setdefault(key, [])
+    hw, dr, aw = prices.get("hw"), prices.get("dr"), prices.get("aw")
+    if hw and dr and aw:
+        last_pinn = next((s for s in reversed(snaps) if s.get("bk") != "public"), None)
+        if _snap_changed(last_pinn, hw, dr, aw):
+            snaps.append({"ts": now_iso, "bk": "pinnacle", "hw": hw, "dr": dr, "aw": aw})
+            added += 1
+    phw, pdr, paw = prices.get("public_hw"), prices.get("public_dr"), prices.get("public_aw")
+    if phw and pdr and paw:
+        last_pub = next((s for s in reversed(snaps) if s.get("bk") == "public"), None)
+        if _snap_changed(last_pub, phw, pdr, paw):
+            snaps.append({"ts": now_iso, "bk": "public", "hw": phw, "dr": pdr, "aw": paw})
+            added += 1
+    return added
+
+
 # ───────────────────────── Live-Fetch ─────────────────────────
 
 def _fetch_events(sport_key: str) -> list:
@@ -229,6 +258,15 @@ def main():
         wm = json.load(f)
     groups = wm.get("groups") or {}
     odds_out = wm.setdefault("odds", {})
+    # Odds-History laden (Zeitreihe für Sharp Radar / detect_wm_sharp_moves).
+    history = {}
+    if os.path.exists(LIGA_HISTORY):
+        try:
+            with open(LIGA_HISTORY, encoding="utf-8") as f:
+                history = json.load(f)
+        except Exception:
+            history = {}
+    snaps_added = 0
     total = 0
     for lk, sport_key in LEAGUE_SPORT_KEYS.items():
         gd = groups.get(lk) or {}
@@ -255,11 +293,15 @@ def main():
                 continue
             key = f"{fx['home']}-{fx['away']}"
             odds_out[key] = build_odds_entry(prices, odds_out.get(key), now_iso)
+            snaps_added += append_snapshot(history, key, prices, now_iso)
             total += 1
     wm.setdefault("_meta", {})["oddsUpdatedAt"] = now_iso
     with open(LIGA_FILE, "w", encoding="utf-8") as f:
         json.dump(wm, f, ensure_ascii=False, indent=2)
-    print(f"  ✅ {total} Liga-Spiele bepreist")
+    history.setdefault("_meta", {})["oddsFetchedAt"] = now_iso
+    with open(LIGA_HISTORY, "w", encoding="utf-8") as f:
+        json.dump(history, f, ensure_ascii=False, indent=2)
+    print(f"  ✅ {total} Liga-Spiele bepreist · {snaps_added} neue Odds-Snapshots")
 
 
 if __name__ == "__main__":

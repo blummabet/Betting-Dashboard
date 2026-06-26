@@ -1767,8 +1767,90 @@ function _renderClvAggregation() {
     </div>`;
 }
 
+// (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Modul-State: welcher Datensatz
+// wird im Sharp-Radar-Tab gezeigt. 'intl' = bestehendes WM-Verhalten (Default,
+// liest window.WM2026_DATA/_ODDS_HISTORY), 'liga' = derselbe Radar auf Liga-Daten
+// (liga-data.json + liga-odds-history.json, identisches Format).
+let _sharpDataset = 'intl';
+
+// (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Liga-Daten EINMALIG lazy laden
+// und in window.LIGA_DATA / window.LIGA_ODDS_HISTORY cachen. Danach re-render.
+// Schlägt ein Fetch fehl (Datei noch nicht da → kommt mit dem nächsten Liga-Lauf),
+// bleibt der Wert leer; renderSharpRadar zeigt dann einen freundlichen Hinweis.
+let _sharpLigaLoading = false;
+function _loadLigaSharpData() {
+  if (_sharpLigaLoading) return;
+  if (window.LIGA_DATA && window.LIGA_ODDS_HISTORY) return;  // schon geladen
+  _sharpLigaLoading = true;
+  Promise.all([
+    (window.LIGA_DATA ? Promise.resolve(window.LIGA_DATA)
+      : fetch('liga-data.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)),
+    (window.LIGA_ODDS_HISTORY ? Promise.resolve(window.LIGA_ODDS_HISTORY)
+      : fetch('liga-odds-history.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)),
+  ]).then(([ld, lh]) => {
+    window.LIGA_DATA         = ld || {};
+    window.LIGA_ODDS_HISTORY = lh || {};
+  }).catch(() => {
+    window.LIGA_DATA         = window.LIGA_DATA || {};
+    window.LIGA_ODDS_HISTORY = window.LIGA_ODDS_HISTORY || {};
+  }).finally(() => {
+    _sharpLigaLoading = false;
+    if (_sharpDataset === 'liga') renderSharpRadar();  // mit echten Daten neu zeichnen
+  });
+}
+
+// (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Toggle-Leiste „🌍 International" /
+// „⚽ Liga" als HTML-String, der oben in den Radar-Output eingehängt wird. Aktiver
+// Button hervorgehoben (Muster wie der Status-Tab-Toggle in status-checks.js).
+function _sharpRenderToggleHtml() {
+  const btn = (ds, label) => {
+    const on = _sharpDataset === ds;
+    const col = on ? 'var(--text)' : 'var(--muted)';
+    const bg  = on ? 'var(--card2, rgba(255,255,255,0.06))' : 'transparent';
+    const bd  = on ? 'var(--text)' : 'var(--border)';
+    return `<button onclick="_sharpSetDataset('${ds}')" style="background:${bg};border:1px solid ${bd};color:${col};border-radius:8px;padding:8px 16px;font-size:13px;font-weight:${on ? 700 : 600};cursor:pointer;font-family:inherit;${on ? 'box-shadow:0 0 0 1px var(--text) inset;' : ''}">${label}</button>`;
+  };
+  return `<div id="sharp_datasetToggle" style="display:flex;gap:8px;margin-bottom:16px;">${btn('intl', '🌍 International')}${btn('liga', '⚽ Liga')}</div>`;
+}
+
+// (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Klick-Handler (global, da via inline
+// onclick aufgerufen). Setzt den Datensatz, triggert ggf. den Liga-Lazy-Load und
+// rendert neu. WM/Intl-Pfad bleibt davon unberührt.
+function _sharpSetDataset(ds) {
+  if (ds === _sharpDataset) return;
+  _sharpDataset = ds;
+  if (ds === 'liga') _loadLigaSharpData();
+  renderSharpRadar();
+}
+if (typeof window !== 'undefined') window._sharpSetDataset = _sharpSetDataset;
+
 function renderSharpRadar() {
   const mc = document.getElementById('mainContent');
+
+  // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Datensatz-Aliase. Im Default
+  // ('intl') exakt das bisherige WM-Verhalten (_data=window.WM2026_DATA). Im Liga-
+  // Modus aus den separat geladenen Liga-Globals (identisches JSON-Format).
+  const _isLiga = _sharpDataset === 'liga';
+  const _data = _isLiga ? (window.LIGA_DATA || {}) : window.WM2026_DATA;
+  const _hist = _isLiga ? (window.LIGA_ODDS_HISTORY || {}) : window.WM2026_ODDS_HISTORY;
+
+  // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Liga-Daten noch nicht da/leer?
+  // Freundlicher Hinweis statt leerem/kaputtem Radar. liga-odds-history.json kommt
+  // erst mit dem nächsten Liga-Lauf; liga-data.json ohne History ergibt keine Moves.
+  if (_isLiga) {
+    const _histKeys = _hist && typeof _hist === 'object'
+      ? Object.keys(_hist).filter(k => k !== '_meta') : [];
+    if (_sharpLigaLoading) {
+      if (mc) mc.innerHTML = _sharpRenderToggleHtml() +
+        `<div style="max-width:960px;margin:0 auto;padding:40px 0;text-align:center;color:var(--muted);font-size:13px;">⚽ Liga-Sharp-Daten werden geladen …</div>`;
+      return;
+    }
+    if (!_histKeys.length) {
+      if (mc) mc.innerHTML = _sharpRenderToggleHtml() +
+        `<div style="max-width:960px;margin:0 auto;padding:40px 24px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;">⚽ Liga-Sharp-Daten kommen mit dem nächsten Liga-Lauf.<br><span style="font-size:11px;color:var(--muted);opacity:.8;">Sobald <code>liga-odds-history.json</code> Snapshots enthält, zeigt der Radar hier die Pinnacle-/Soft-Bewegungen der Ligen.</span></div>`;
+      return;
+    }
+  }
 
   // ── Helpers ───────────────────────────────────────────────────────────────
   const todayMidnight = new Date(); todayMidnight.setHours(0,0,0,0);
@@ -1819,8 +1901,11 @@ function renderSharpRadar() {
   };
 
   // ── Collect ALL fixtures within 7 days across all leagues ─────────────────
+  // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Diese Schleife zieht die alten
+  // LEAGUES-Fixtures + WM-only-Globals (window._preMatchData/findOdds). Im Liga-Modus
+  // überspringen: Liga-Moves kommen unten ausschließlich aus _hist (liga-odds-history).
   const allFixtures = [];
-  for (const [lk, L] of Object.entries(LEAGUES)) {
+  for (const [lk, L] of (_isLiga ? [] : Object.entries(LEAGUES))) {
     for (const m of (L.fixtures || [])) {
       if (!isWithin7Days(m.date)) continue;
       const pmKey        = `${m.home}|${m.away}`;
@@ -1838,9 +1923,11 @@ function renderSharpRadar() {
     }
   }
 
-  // ── WM 2026: Add fixtures from wm2026-odds-history.json ───────────────────
-  const _wmSharpData = window.WM2026_DATA;
-  const _wmOddsHist  = window.WM2026_ODDS_HISTORY;
+  // ── WM 2026 / Liga: Add fixtures from odds-history ────────────────────────
+  // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — _data/_hist statt der WM-Globals
+  // direkt; im Default ('intl') 1:1 wie bisher (window.WM2026_DATA/_ODDS_HISTORY).
+  const _wmSharpData = _data;
+  const _wmOddsHist  = _hist;
   if (_wmSharpData && _wmOddsHist) {
     // Build team lookup table
     const _wmTeams = {};
@@ -1963,7 +2050,9 @@ function renderSharpRadar() {
       : '';
 
     // ── WM-Check: ist das ein WM-Match? (→ Sparkline + Event-Page-Link) ──
-    const isWm = lk === 'wm2026' || (window.WM2026_ODDS_HISTORY && window.WM2026_ODDS_HISTORY[`${m.home}-${m.away}`]);
+    // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — _hist statt WM-Global; im
+    // Liga-Modus zeigt das die Liga-History, im Intl-Modus exakt wie bisher.
+    const isWm = lk === 'wm2026' || (_hist && _hist[`${m.home}-${m.away}`]);
 
     const rowHtml = mvRows.map(row => {
       const backed     = row.ppShift > 0;
@@ -2510,6 +2599,8 @@ function renderSharpRadar() {
   // ── Assemble ──────────────────────────────────────────────────────────────
   mc.innerHTML = `<div style="max-width:960px;margin:0 auto;padding:0 0 60px;">
 
+    ${_sharpRenderToggleHtml()}
+
     <div style="margin-bottom:22px;padding:18px 20px 14px;background:linear-gradient(135deg,rgba(0,212,161,0.07),rgba(88,166,255,0.04));border:1px solid rgba(0,212,161,0.18);border-radius:14px;">
       <div style="font-size:18px;font-weight:900;margin-bottom:5px;">📡 Sharp Money Radar</div>
       <div style="font-size:12px;color:var(--muted);line-height:1.55;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -2520,7 +2611,7 @@ function renderSharpRadar() {
           // keinen neuen Snapshot → Badge hing auf „vor 17 Std" und meldete fälschlich
           // STALE, obwohl der Manage-Zyklus alle 15-30min frisch holt. fetch_wm_odds
           // schreibt jetzt oddsFetchedAt bei JEDEM Lauf. Stale erst wenn der FETCH hängt.
-          const hist = window.WM2026_ODDS_HISTORY || {};
+          const hist = _hist || {};  // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — dataset-bewusst
           let moveTs = 0;
           for (const snaps of Object.values(hist)) {
             if (Array.isArray(snaps) && snaps.length) {
