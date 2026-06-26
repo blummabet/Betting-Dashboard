@@ -66,6 +66,37 @@ def _event_full(home, away):
         ]}]}
 
 
+def _event_with_soft(home, away):
+    # Pinnacle (sharp) + bet365 (soft) — für Public-Konsens-Extraktion.
+    return {"home_team": home, "away_team": away, "bookmakers": [
+        {"key": "pinnacle", "markets": [{"key": "h2h", "outcomes": [
+            {"name": home, "price": 1.80}, {"name": "Draw", "price": 3.6},
+            {"name": away, "price": 4.5}]}]},
+        {"key": "bet365", "markets": [{"key": "h2h", "outcomes": [
+            {"name": home, "price": 1.70}, {"name": "Draw", "price": 3.7},
+            {"name": away, "price": 5.0}]}]},
+    ]}
+
+
+class TestPublicConsensus(unittest.TestCase):
+    def test_public_from_soft_book(self):
+        p = L.extract_prices(_event_with_soft("Liverpool", "Chelsea"), "direct", "Liverpool", "Chelsea")
+        self.assertEqual(p["hw"], 1.80)          # sharp = pinnacle
+        self.assertEqual(p["public_hw"], 1.70)   # public = bet365
+        self.assertEqual(p["public_bookmaker"], "bet365")
+
+    def test_public_seeded_then_carried(self):
+        pr1 = {"hw": 1.8, "dr": 3.6, "aw": 4.5, "bookmaker": "pinnacle",
+               "public_hw": 1.7, "public_dr": 3.7, "public_aw": 5.0, "public_bookmaker": "bet365"}
+        e1 = L.build_odds_entry(pr1, None, "2026-08-01T00:00:00Z")
+        self.assertEqual(e1["public_hw_open"], 1.7)
+        # Soft-Quote bewegt sich → Opening bleibt 1.7, public_hw aktualisiert
+        pr2 = dict(pr1, public_hw=1.5)
+        e2 = L.build_odds_entry(pr2, e1, "2026-08-10T00:00:00Z")
+        self.assertEqual(e2["public_hw_open"], 1.7)
+        self.assertEqual(e2["public_hw"], 1.5)
+
+
 class TestExtractPrices(unittest.TestCase):
     def test_direct_mapping(self):
         p = L.extract_prices(_event_full("Liverpool", "Chelsea"), "direct", "Liverpool", "Chelsea")
