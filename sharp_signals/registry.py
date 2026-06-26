@@ -38,6 +38,30 @@ from sharp_signals.freshness_signal import FreshnessLegSignal
 from sharp_signals.smart_money import SmartMoneySignal
 
 
+# Pro-Profil deaktivierte Signale (25.06.2026, Lucas: Liga auf WM-Stack). Manche WM-only-Signale
+# (incentive_signal liest Standings → würde Liga-Tabellenplatz fälschlich als Gruppen-Quali deuten;
+# altitude/weather/travel/smart_money/polymarket_sharp) müssen für Liga HART aus — None-Fallback
+# reicht nicht, weil z.B. Incentive auf der vorhandenen Liga-Tabelle Unsinn feuern würde.
+# Liste kommt aus cocobet_config.json profiles.<active>.disabled_signals (env COCOBET_PROFILE).
+def _load_disabled_signals() -> set:
+    # RAW lesen (nicht cocobet_config.CONFIG): _resolve_active_profile behält nur bekannte
+    # Sektionen → die flache disabled_signals-Liste würde sonst rausgefiltert.
+    try:
+        import json
+        import os
+        from pathlib import Path
+        raw = json.loads((Path(__file__).parent.parent / "cocobet_config.json")
+                         .read_text(encoding="utf-8"))
+        profiles = raw.get("profiles", {})
+        active = os.environ.get("COCOBET_PROFILE") or profiles.get("active", "wm2026")
+        return set((profiles.get(active) or {}).get("disabled_signals") or [])
+    except Exception:
+        return set()
+
+
+_DISABLED_SIGNALS = _load_disabled_signals()
+
+
 # Liste aller aktiv evaluierten Signale.
 # Reihenfolge ist nur kosmetisch (Output-Reihenfolge auf der Card).
 ACTIVE_SIGNALS: list[Signal] = [
@@ -219,6 +243,8 @@ def evaluate_signals(pick: dict, context: dict,
     max_conf       = 0.0
 
     for signal in ACTIVE_SIGNALS:
+        if signal.name() in _DISABLED_SIGNALS:
+            continue   # pro-Profil deaktiviert (z.B. WM-only Signale im liga_default)
         try:
             result = signal.evaluate(pick, context)
         except Exception as e:
