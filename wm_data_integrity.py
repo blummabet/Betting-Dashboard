@@ -1062,6 +1062,8 @@ def check_steam_lag_no_dupes(ctx):
     (matchKey, market) nur EINEN Tracking-Eintrag haben — anderer Markt im selben Spiel ist eine
     eigene Position, aber dasselbe Match+Markt nie doppelt. Mehrfach = Dedup-Bug (vorher fand der
     Monitor nach Konvergenz den Eintrag nicht mehr → neue ID je Tag, JOR-DZA hw lag 6× im Log)."""
+    if ctx.is_liga:
+        return None   # steam_lag_log.json ist das WM-Log (Liga-Steam noch nicht separat) → kein Liga-Check
     log = _lazy("steam_lag_log.json")
     sigs = log.get("signals") if isinstance(log, dict) else None
     if not isinstance(sigs, list) or not sigs:
@@ -1477,7 +1479,10 @@ if __name__ == "__main__":
           f"({len(INTEGRITY_CHECKS)} Guards registriert) ===\n")
     for c in res:
         icon = "✅" if c["ok"] else ("🔴" if c["severity"] == "error" else "🟡")
-        print(f"{icon} [{c['severity']}] {c['label']}: {c['nFail']} Fehler")
+        # KEIN "[error]"-Literal im Output (25.06.2026, Lucas): GitHub Actions zog Zeilen mit dem
+        # Severity-Wort als „Error:"-Annotation hoch, obwohl die Checks ok waren. Severity = Icon.
+        sev = {"error": "ERR", "warn": "warn"}.get(c["severity"], c["severity"])
+        print(f"{icon} {c['label']}: {c['nFail']} Fehler ({sev})")
         for f in c["failures"][:6]:
             print(f"     · {f}")
     if _is_liga:
