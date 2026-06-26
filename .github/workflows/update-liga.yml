@@ -78,7 +78,12 @@ jobs:
       - name: 📉 Liga-CLV setzen (Einstieg vs Closing)
         run: python resolve_steam_clv.py || true
 
-      - name: 🧠 Liga Lern-Loop (Ledger + Bayesian-Gewichte)
+      - name: 📊 Liga Post-Match-xG ans Fixture (für Prozess-Verdict)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_liga_match_stats.py || true
+
+      - name: 🧠 Liga Lern-Loop (Ledger + Bayesian-Gewichte, prozess-gewichtet)
         run: |
           python build_signal_ledger.py --write || true
           python update_signal_weights.py || true
@@ -103,6 +108,7 @@ jobs:
           git add liga_sharp_moves_log.json 2>/dev/null || true
           git add liga_sharp_dedup.json 2>/dev/null || true
           git add matches/liga-index.json matches/data/liga-*.json 2>/dev/null || true
+          git add liga_match_stats_cache.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.

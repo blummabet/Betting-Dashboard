@@ -135,6 +135,7 @@ def build_groups(standings_by_league: dict, fixtures_by_league: dict,
                 "date":     (iso or "")[:10] or None,
                 "kickoff":  iso,
                 "venue":    ((fxo.get("venue") or {}).get("name")),
+                "fid":      fxo.get("id"),   # API-Fixture-ID (für Post-Match-xG, 26.06.2026)
                 "result":   result,
             })
         fixtures.sort(key=lambda f: (f.get("kickoff") or "", f.get("home") or ""))
