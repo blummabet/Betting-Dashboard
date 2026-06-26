@@ -55,10 +55,51 @@ async function _stGet(f) {
 
 let _stRunning = false;
 
+// (26.06.2026, Lucas: Status Liga/Intl-Toggle) — Modul-State: welcher Datensatz
+// wird im Status-Tab gezeigt. 'intl' = bestehendes WM/CL-Verhalten (Default),
+// 'liga' = schlanke Liga-Ops-Health aus liga_status.json + liga-data.json.
+let _stDataset = 'intl';
+
+// (26.06.2026, Lucas: Status Liga/Intl-Toggle) — Toggle-Buttons oben im
+// statusPanel per JS injizieren (idempotent), damit alles in status-checks.js
+// bleibt und season-finish-v2.html unangetastet ist.
+function _stRenderToggle() {
+  const panel = document.getElementById('statusPanel'); if (!panel) return;
+  let bar = document.getElementById('st_datasetToggle');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'st_datasetToggle';
+    bar.style.cssText = 'display:flex;gap:8px;margin-bottom:16px;';
+    panel.insertBefore(bar, panel.firstChild);  // ganz oben
+  }
+  const btn = (ds, label) => {
+    const on = _stDataset === ds;
+    const col = on ? 'var(--text)' : 'var(--muted)';
+    const bg = on ? 'var(--card2)' : 'transparent';
+    const bd = on ? 'var(--text)' : 'var(--border)';
+    return `<button data-ds="${ds}" style="background:${bg};border:1px solid ${bd};color:${col};border-radius:8px;padding:8px 16px;font-size:13px;font-weight:${on ? 700 : 600};cursor:pointer;font-family:inherit;${on ? 'box-shadow:0 0 0 1px var(--text) inset;' : ''}">${label}</button>`;
+  };
+  bar.innerHTML = btn('intl', '🌍 International') + btn('liga', '⚽ Liga');
+  bar.querySelectorAll('button').forEach(b => {
+    b.onclick = () => {
+      const ds = b.getAttribute('data-ds');
+      if (ds === _stDataset) return;
+      _stDataset = ds;
+      runStatusPage(true);
+    };
+  });
+}
+
 async function runStatusPage(force) {
   if (_stRunning) return;
   _stRunning = true;
   try {
+    _stRenderToggle();   // (26.06.2026, Lucas: Status Liga/Intl-Toggle)
+
+    // (26.06.2026, Lucas: Status Liga/Intl-Toggle) — früher Liga-Abzweig.
+    // WM/Intl-Flow darunter bleibt komplett unverändert.
+    if (_stDataset === 'liga') { await _runLigaStatus(); return; }
+
     const [data, poly, oddsHist, bal, ks, autobets, status, valRep] = await Promise.all([
       _stGet('wm2026-data.json'), _stGet('wm_poly_prices.json'), _stGet('wm2026-odds-history.json'),
       _stGet('wm_poly_balance.json'), _stGet('wm_kill_switch.json'), _stGet('wm_auto_bets_placed.json'),
@@ -164,6 +205,77 @@ async function runStatusPage(force) {
     _stRenderFeeds();   // eigene Fetches (inkl. Files die oben nicht geladen wurden)
   } finally {
     _stRunning = false;
+  }
+}
+
+// (26.06.2026, Lucas: Status Liga/Intl-Toggle) — schlanker Liga-Pfad.
+// Nutzt dieselben Render-Helfer wie WM (Verdict/Problems/Integrity), aber
+// KEINE Poly/Kill-Switch/Auto-Bet/Signal-Live-Checks (die sind WM-spezifisch).
+async function _runLigaStatus() {
+  const [ligaData, ligaStatus] = await Promise.all([
+    _stGet('liga-data.json'), _stGet('liga_status.json'),
+  ]);
+
+  // WM-only Sektionen leeren, damit kein stale WM-Inhalt unter dem Liga-Tab hängt.
+  const clear = (id, msg) => { const e = document.getElementById(id); if (e) e.innerHTML = msg || ''; };
+  clear('st_server', '<div style="color:var(--muted);text-align:center;padding:14px;">Liga-Ansicht — Server-Readiness ist WM-spezifisch.</div>');
+  clear('st_signals', '<div style="color:var(--muted);text-align:center;padding:14px;">Liga-Ansicht — Signal-Matrix ist WM-spezifisch.</div>');
+  clear('st_feeds', '<div style="color:var(--muted);text-align:center;padding:14px;">Liga-Ansicht — WM-Feeds ausgeblendet.</div>');
+  const sigCnt = document.getElementById('st_signalsCount'); if (sigCnt) sigCnt.textContent = '';
+  const srvTs = document.getElementById('st_serverTs'); if (srvTs) srvTs.textContent = '';
+
+  // Noch kein Liga-Lauf: freundlicher Hinweis statt Crash.
+  if (!ligaStatus || !Array.isArray(ligaStatus.checks)) {
+    _stRenderVerdict([], null, null);
+    const pe = document.getElementById('st_problems');
+    if (pe) pe.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-weight:600;">⚽ Liga-Status kommt mit dem nächsten Liga-Lauf.</div>';
+    const ie = document.getElementById('st_integrity');
+    if (ie) ie.innerHTML = '<div style="color:var(--muted);text-align:center;padding:14px;">liga_status.json noch nicht vorhanden.</div>';
+    const ic = document.getElementById('st_integrityCount'); if (ic) ic.textContent = '';
+    return;
+  }
+
+  // Probleme aus den nicht-ok Checks bauen.
+  const problems = [];
+  for (const c of ligaStatus.checks) {
+    if (c.ok) continue;
+    const detail = ((c.failures || []).slice(0, 4).join(' · ')) + (c.hint ? (' — ' + c.hint) : '');
+    problems.push({ sev: c.severity === 'error' ? 'error' : 'warn', title: c.label, detail });
+  }
+
+  // Feed-Frische: liga-data.json läuft 2×/Tag → >14h alt = Warnung.
+  const meta = (ligaData && ligaData._meta) || {};
+  const dataTs = _stParseTs(meta.dataUpdatedAt);
+  const dataAge = _stAgeH(dataTs);
+  if (dataAge === null) problems.push({ sev: 'warn', title: 'Liga-Daten ohne Frische-Stempel', detail: 'liga-data.json fehlt oder _meta.dataUpdatedAt nicht gesetzt — Liga-Lauf prüfen.' });
+  else if (dataAge > 14) problems.push({ sev: 'warn', title: `Liga-Daten ${dataAge.toFixed(1)}h alt`, detail: 'Liga-Pipeline sollte 2×/Tag laufen (< 14h). update-liga-Workflow beobachten.' });
+
+  // Verdict / Problems / Integrity über die bestehenden Helfer rendern.
+  _stRenderVerdict(problems, ligaStatus, null);
+  _stRenderProblems(problems, null);
+  _stRenderIntegrity(ligaStatus);
+
+  // Kompakte Liga-Zähler-/Frische-Zeile über die Integritäts-Liste setzen.
+  const ie = document.getElementById('st_integrity');
+  if (ie) {
+    const groups = ligaData && ligaData.groups ? Object.values(ligaData.groups) : [];
+    let nTeams = 0, nFx = 0;
+    for (const g of groups) {
+      nTeams += (g.teams || []).length;
+      nFx += (g.fixtures || []).length;
+    }
+    // odds/xgStats/picks liegen TOP-LEVEL in liga-data.json (nicht je Gruppe). 26.06.2026.
+    const nOdds = Object.keys((ligaData && ligaData.odds) || {}).length;
+    const nXg = Object.keys((ligaData && ligaData.xgStats) || {}).length;
+    const nPicks = Object.values((ligaData && ligaData.picks) || {})
+      .reduce((s, v) => s + (Array.isArray(v) ? v.length : 0), 0);
+    const when = _stAgo(dataTs || _stParseTs(ligaStatus.generatedAt));
+    const row = document.createElement('div');
+    row.id = 'st_ligaSummary';
+    row.style.cssText = 'background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:10px 13px;margin-bottom:6px;font-size:11.5px;color:var(--text);';
+    row.innerHTML = `${groups.length} Ligen · ${nTeams} Teams · ${nFx} Fixtures · ${nOdds} Quoten · ${nXg} xG-Teams · ${nPicks} Picks &nbsp;·&nbsp; <span style="color:var(--muted);">zuletzt aktualisiert ${when}</span>`;
+    const old = document.getElementById('st_ligaSummary'); if (old) old.remove();
+    ie.insertBefore(row, ie.firstChild);
   }
 }
 
