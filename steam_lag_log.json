@@ -818,16 +818,24 @@
           "polyPrice": 0.355,
           "pinnFair": 0.3584,
           "steamLag": true
+        },
+        {
+          "ts": "2026-06-26T04:01:56Z",
+          "edgePp": 0.9,
+          "polyPrice": 0.355,
+          "pinnFair": 0.364,
+          "steamLag": true
         }
       ],
-      "currentEdgePp": 0.3,
+      "currentEdgePp": 0.9,
       "currentPolyPrice": 0.355,
-      "convergencePct": 89.3,
+      "convergencePct": 67.9,
       "convergenceTs": "2026-05-27T20:01:25Z",
       "convergenceHours": 6.0,
       "status": "CONVERGED",
       "outcome": null,
-      "entryTier": "track"
+      "entryTier": "track",
+      "edgeVelocityPPH": 0.001
     },
     {
       "id": "BRA-HTI_dr_20260527",
@@ -12605,12 +12613,19 @@
           "polyPrice": 0.275,
           "pinnFair": 0.2915,
           "steamLag": false
+        },
+        {
+          "ts": "2026-06-26T04:01:56Z",
+          "edgePp": 1.5,
+          "polyPrice": 0.205,
+          "pinnFair": 0.2195,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 1.6,
-      "currentPolyPrice": 0.275,
-      "edgeVelocityPPH": 0.005,
-      "convergencePct": 57.9,
+      "currentEdgePp": 1.5,
+      "currentPolyPrice": 0.205,
+      "edgeVelocityPPH": -0.001,
+      "convergencePct": 60.5,
       "status": "CONVERGED",
       "outcome": null,
       "resetReason": "data_gap_26.0h_before_convergence_snapshot_2026-06-09",
@@ -16043,13 +16058,6 @@
       "entryTier": "track",
       "snapshots": [
         {
-          "ts": "2026-06-18T08:42:06Z",
-          "edgePp": 1.7,
-          "polyPrice": 0.095,
-          "pinnFair": 0.1119,
-          "steamLag": false
-        },
-        {
           "ts": "2026-06-18T08:46:37Z",
           "edgePp": 1.7,
           "polyPrice": 0.095,
@@ -16391,12 +16399,19 @@
           "polyPrice": 0.045,
           "pinnFair": 0.0622,
           "steamLag": false
+        },
+        {
+          "ts": "2026-06-26T04:01:56Z",
+          "edgePp": 1.6,
+          "polyPrice": 0.045,
+          "pinnFair": 0.0613,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 1.7,
+      "currentEdgePp": 1.6,
       "currentPolyPrice": 0.045,
-      "edgeVelocityPPH": 0.0,
-      "convergencePct": 37.0,
+      "edgeVelocityPPH": -0.012,
+      "convergencePct": 40.7,
       "convergenceTs": "2026-06-23T07:44:12Z",
       "convergenceHours": 225.7,
       "status": "CONVERGED",
@@ -18597,8 +18612,48 @@
       "convergenceHours": 0.3,
       "status": "CONVERGED",
       "outcome": null
+    },
+    {
+      "id": "ARG-JOR_dr",
+      "matchKey": "ARG-JOR",
+      "homeId": "ARG",
+      "awayId": "JOR",
+      "home": "Argentinien",
+      "away": "Jordanien",
+      "homeFlag": "🇦🇷",
+      "awayFlag": "🇯🇴",
+      "matchDate": "2026-06-27",
+      "market": "dr",
+      "marketLabel": "Unentschieden",
+      "signalTs": "2026-06-26T04:01:56Z",
+      "entryEdgePp": 2.0,
+      "entryPolyPrice": 0.105,
+      "entryPinnFair": 0.1249,
+      "entryVol": 0,
+      "steamLagAtSignal": false,
+      "pinnMoveAtSignal": 1.2,
+      "edgeTrendAtSignal": "stable",
+      "highConfidence": false,
+      "entryTier": "track",
+      "snapshots": [
+        {
+          "ts": "2026-06-26T04:01:56Z",
+          "edgePp": 2.0,
+          "polyPrice": 0.105,
+          "pinnFair": 0.1249,
+          "steamLag": false
+        }
+      ],
+      "currentEdgePp": 2.0,
+      "currentPolyPrice": 0.105,
+      "edgeVelocityPPH": null,
+      "convergencePct": 0.0,
+      "convergenceTs": null,
+      "convergenceHours": null,
+      "status": "OPEN",
+      "outcome": null
     }
   ],
-  "updatedAt": "2026-06-25T21:26:53Z",
-  "runCount": 317
+  "updatedAt": "2026-06-26T04:01:56Z",
+  "runCount": 318
 }

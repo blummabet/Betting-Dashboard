@@ -6255,6 +6255,10 @@ document.querySelectorAll('.league-btn').forEach(btn => {
   });
 });
 
+// (25.06.2026, Lucas: National auf WM-Stack) National-Menü rendert jetzt der WM-Renderer
+// (initNationalCards, liga-data.json). Dieses Flag legt die alte renderLeague-Anzeige still
+// (Boot + Async-Re-Renders), damit sie die neuen Liga-Cards nicht überschreibt. Sharp Radar bleibt.
+window.NATIONAL_USES_NEW_RENDERER = true;
 // Initial render (no odds, no xG yet)
 window._currentLeague = 'overview';
 renderLeague('overview');

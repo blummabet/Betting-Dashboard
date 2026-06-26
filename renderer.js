@@ -2602,6 +2602,11 @@ function renderSharpRadar() {
 }
 
 function renderLeague(key) {
+  // (25.06.2026, Lucas: National auf WM-Stack) Die alte Liga-/Overview-Anzeige ist abgelöst — das
+  // National-Menü rendert jetzt der WM-Renderer (initNationalCards) ins selbe Panel mainContent.
+  // Sonst überschreiben die alten Boot-/Async-Re-Renders (stats_cache, loadAllOdds) die neuen Cards
+  // → „Cards kurz da, dann weg". Sharp Radar nutzt renderLeague weiter, daher nur key≠'sharp' blocken.
+  if (window.NATIONAL_USES_NEW_RENDERER && key !== 'sharp') return;
   const mc = document.getElementById('mainContent');
   if (key === 'overview') { renderOverview(); return; }
   if (key === 'sharp')    { renderSharpRadar(); return; }
