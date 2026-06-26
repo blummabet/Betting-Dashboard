@@ -1,10 +1,26 @@
 {
-  "lastRun": "2026-06-25T18:08:33.068818+00:00",
+  "lastRun": "2026-06-25T21:26:53.033130+00:00",
   "stats": {
     "total": 161,
     "errors": 0,
-    "warnings": 0,
-    "ok": 161
+    "warnings": 1,
+    "ok": 160
   },
-  "issues": []
+  "issues": [
+    {
+      "matchKey": "E-3-GER-ECU",
+      "market": "Heimsieg",
+      "level": "warning",
+      "code": "W_NEGATIVE_CLV",
+      "message": "BET-Pick mit CLV -4.5pp — der Move hielt nicht bis zum Close (Steam ist move-/conviction-getrieben, nicht edge-getrieben)",
+      "pickSnapshot": {
+        "verdict": "BET",
+        "odds": 1.57,
+        "modelOdds": 1.598,
+        "edgePP": -6,
+        "clvPP": -4.51,
+        "dataQuality": "steam"
+      }
+    }
+  ]
 }
