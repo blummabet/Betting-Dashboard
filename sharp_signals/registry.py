@@ -36,6 +36,7 @@ from sharp_signals.chance_creation import ChanceCreationSignal
 from sharp_signals.form_rating import FormRatingSignal
 from sharp_signals.freshness_signal import FreshnessLegSignal
 from sharp_signals.smart_money import SmartMoneySignal
+from sharp_signals.league_pressure import LeaguePressureSignal
 
 
 # Pro-Profil deaktivierte Signale (25.06.2026, Lucas: Liga auf WM-Stack). Manche WM-only-Signale
@@ -84,6 +85,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     FormRatingSignal(),
     FreshnessLegSignal(),
     SmartMoneySignal(),
+    LeaguePressureSignal(),   # Liga-Pendant zu incentive (25.06.2026); no-op für WM (group_id A-L)
 ]
 
 
@@ -162,6 +164,9 @@ SIGNAL_GROUPS: dict[str, str] = {
     # = ~+5,6pp aus EINEM Fakt). Jetzt geteilte Familie → stärkstes Signal voll, das
     # zweite (die Echo-Wertung) auf 40% gedämpft. Greift nur wenn BEIDE feuern (MD3-Quali).
     "pressure_index":     "incentive",
+    # league_pressure (Liga-Pendant) in dieselbe „incentive"-Familie — gleiche Tabellen-/Anreiz-Story,
+    # Anti-Korr-Discount falls es je mit incentive/pressure_index zusammenfällt (25.06.2026).
+    "league_pressure":    "incentive",
     # weather_signal in dieselbe context-Familie wie Travel-Burden + Injury —
     # alle drei sind venue/spielort-bedingte Faktoren. Anti-Korr-Discount sinnvoll
     # damit Travel + Heat zusammen nicht doppelt zählen (Bsp: lange Reise + Hitze
