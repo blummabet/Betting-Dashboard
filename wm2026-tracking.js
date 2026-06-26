@@ -374,21 +374,32 @@
       }
       const _allMds = [..._mdSet].sort((a, b) =>
         (parseFloat(a) || 0) - (parseFloat(b) || 0) || String(a).localeCompare(String(b)));
-      let _shownMds = _allMds;
-      if (_allMds.length > 4) {
-        const _upcoming = _allMds.filter(md => {
-          for (const gData of Object.values(groups)) {
-            for (const fx of (gData.fixtures || [])) {
-              if (String(fx.matchday) === String(md) && fx.date >= todayIso) return true;
-            }
+      // (26.06.2026, Lucas) Spieltag freigeschaltet wenn Quoten da ODER innerhalb 2 Wochen
+      // (analog Renderer) — sonst Navi mit allen ~38 Runden zugemüllt.
+      const _odds = _data.odds || {};
+      const _twoWeeks = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
+      const _liveMd = (md) => {
+        for (const gData of Object.values(groups)) {
+          for (const fx of (gData.fixtures || [])) {
+            if (String(fx.matchday) !== String(md)) continue;
+            if (_odds[`${fx.home}-${fx.away}`] || (fx.date >= todayIso && fx.date <= _twoWeeks)) return true;
           }
+        }
+        return false;
+      };
+      let _shownMds = _allMds.filter(_liveMd);
+      if (!_shownMds.length) {
+        const _next = _allMds.filter(md => {
+          for (const gData of Object.values(groups))
+            for (const fx of (gData.fixtures || []))
+              if (String(fx.matchday) === String(md) && fx.date >= todayIso) return true;
           return false;
         });
-        _shownMds = (_upcoming.length ? _upcoming : _allMds).slice(0, 3);
-        if (_mdFilter !== 'all' && !_shownMds.some(md => String(md) === String(_mdFilter))
-            && _allMds.some(md => String(md) === String(_mdFilter))) {
-          _shownMds = [..._shownMds, _mdFilter];
-        }
+        _shownMds = _next.slice(0, 1);
+      }
+      if (_mdFilter !== 'all' && !_shownMds.some(md => String(md) === String(_mdFilter))
+          && _allMds.some(md => String(md) === String(_mdFilter))) {
+        _shownMds = [..._shownMds, _mdFilter];
       }
       for (const md of _shownMds) {
         const _mdStr = String(md).replace(/['"\\]/g, '');
