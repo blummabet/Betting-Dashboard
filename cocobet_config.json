@@ -332,6 +332,7 @@
     "liga_default": {
       "description": "Liga-Saison Default — moderater, ohne Pre-Tournament-Phase",
       "disabled_signals": ["incentive_signal", "altitude_signal", "weather_signal", "travel_burden", "smart_money", "polymarket_sharp", "pressure_index"],
+      "nt_xg": {"lookback_fixtures": 6, "fetch_player_stats": false, "request_delay_sec": 0.4},
       "edge": {
         "min_1x2_for_pick": 4,
         "min_ou_for_pick": 4,
