@@ -37,6 +37,15 @@ LEAGUES_TOP5 = {
 }
 
 
+def _crest(tid) -> str:
+    """Liga-Teams haben keine Länder-Flagge → API-Football-Logo als Crest (25.06.2026, Lucas).
+    Wird ins `flag`-Feld gelegt, damit es in ALLEN bestehenden flag-Stellen (Cards + Tracking)
+    automatisch greift, ohne den Renderer anzufassen."""
+    return (f'<img src="https://media.api-sports.io/football/teams/{tid}.png" '
+            f'style="width:18px;height:18px;vertical-align:middle;object-fit:contain;" '
+            f'loading="lazy" alt="">')
+
+
 def current_season(now: datetime | None = None) -> int:
     """API-Football-Saison = Startjahr. Ab Juni zählt die kommende Saison (Sommer-Fenster)."""
     now = now or datetime.now(timezone.utc)
@@ -85,7 +94,8 @@ def build_groups(standings_by_league: dict, fixtures_by_league: dict,
                     teams.append({
                         "id":   str(tid),
                         "name": t.get("name") or str(tid),
-                        "logo": t.get("logo"),
+                        "logo": t.get("logo") or f"https://media.api-sports.io/football/teams/{tid}.png",
+                        "flag": _crest(tid),
                         "elo":  elo_by_team.get(str(tid)),
                     })
         # ── Fixtures ──
@@ -114,7 +124,8 @@ def build_groups(standings_by_league: dict, fixtures_by_league: dict,
                 if _tid is not None and _tid not in seen:
                     seen.add(_tid)
                     teams.append({"id": str(_tid), "name": _t.get("name") or str(_tid),
-                                  "logo": _t.get("logo"), "elo": elo_by_team.get(str(_tid))})
+                                  "logo": _t.get("logo") or f"https://media.api-sports.io/football/teams/{_tid}.png",
+                                  "flag": _crest(_tid), "elo": elo_by_team.get(str(_tid))})
             fixtures.append({
                 "home":     str(home.get("id")),
                 "away":     str(away.get("id")),
@@ -200,6 +211,16 @@ def main():
         except Exception:
             wm = {}
     wm["groups"] = groups
+    # teamIds-Identitäts-Map (25.06.2026, Lucas): Liga-Team-id IST schon die API-Football-ID →
+    # so funktioniert der WM-Form-/H2H-Fetcher (nutzt wm["teamIds"][code]=api_id) direkt für Liga.
+    _tids = {}
+    for g in groups.values():
+        for t in g.get("teams", []):
+            try:
+                _tids[t["id"]] = int(t["id"])
+            except Exception:
+                pass
+    wm["teamIds"] = _tids
     wm.setdefault("odds", {})
     wm.setdefault("picks", {})
     wm.setdefault("_meta", {})

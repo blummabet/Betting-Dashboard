@@ -40,6 +40,11 @@ jobs:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         run: python build_liga_data.py
 
+      - name: 📊 Liga Form + H2H holen (letzte Saison als erster Inhalt)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_wm_form.py || true
+
       - name: 💰 Liga-Quoten holen (1X2 + O/U + BTTS, Opening-Carry)
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}

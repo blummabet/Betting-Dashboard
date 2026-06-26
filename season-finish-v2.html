@@ -10013,7 +10013,14 @@ function renderTgLog(log) {
 // (liest liga-data.json) rendern — der alte renderLeague('overview') füllte mainContent sonst mit
 // dem „Season Finish"-Altinhalt. Default-View ist national-cards → rendert ins sichtbare Panel.
 (function _bootNationalCards() {
-  const go = () => { if (typeof initNationalCards === 'function') initNationalCards(); };
+  // Alte statische League-Nav + Legende sofort ausblenden (sonst beim Direktaufruf sichtbar, bis
+  // ein View-Wechsel showView triggert). 25.06.2026, Lucas.
+  const _hideOldNav = () => {
+    const ln = document.querySelector('.league-nav');   if (ln) ln.style.display = 'none';
+    const lg = document.querySelector('.legend-section'); if (lg) lg.style.display = 'none';
+  };
+  const go = () => { _hideOldNav(); if (typeof initNationalCards === 'function') initNationalCards(); };
+  _hideOldNav();
   if (document.readyState === 'complete') setTimeout(go, 300);
   else window.addEventListener('load', () => setTimeout(go, 300));
 })();

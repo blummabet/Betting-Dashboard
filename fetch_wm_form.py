@@ -16,7 +16,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 BASE      = Path(__file__).parent
-WM_FILE   = BASE / "wm2026-data.json"
+# Dataset-Modus (25.06.2026, Lucas: Liga auf WM-Stack). COCOBET_DATASET=liga → Form+H2H für
+# liga-data.json. Liga-Team-id = API-Football-ID (teamIds-Identitäts-Map aus build_liga_data).
+_IS_LIGA  = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
+WM_FILE   = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
 APIF_HOST = "v3.football.api-sports.io"
 APIF_KEY  = os.environ.get("APISPORTS_KEY", "")
 DELAY     = 1.5      # seconds between requests (Pro plan: 10 req/min)
@@ -302,11 +305,23 @@ def fetch_h2h(wm: dict) -> dict:
     wm.setdefault("h2h", {})
     team_ids = wm.get("teamIds", {})
 
-    # Collect unique WM fixture pairs
-    pairs: set[tuple[str, str]] = set()
-    for gdata in wm.get("groups", {}).values():
-        for fx in gdata.get("fixtures", []):
-            pairs.add((fx["home"], fx["away"]))
+    # Collect unique fixture pairs. (25.06.2026, Lucas) Liga hat ~1000+ Fixtures (ganze Saison) →
+    # H2H nur für ANSTEHENDE Spiele holen + deckeln, sonst sprengt es die API-Quota. WM: alle.
+    if _IS_LIGA:
+        from datetime import date as _date
+        _today = _date.today().isoformat()
+        _dated = []
+        for gdata in wm.get("groups", {}).values():
+            for fx in gdata.get("fixtures", []):
+                if (fx.get("date") or "") >= _today:
+                    _dated.append((fx.get("date") or "", fx["home"], fx["away"]))
+        _dated.sort()
+        pairs = [(h, a) for _d, h, a in _dated[:60]]   # nächste ~60 Begegnungen
+    else:
+        pairs = set()
+        for gdata in wm.get("groups", {}).values():
+            for fx in gdata.get("fixtures", []):
+                pairs.add((fx["home"], fx["away"]))
 
     updated = 0
     for home, away in sorted(pairs):
