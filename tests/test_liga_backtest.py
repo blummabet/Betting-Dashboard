@@ -59,12 +59,13 @@ class TestReplay(unittest.TestCase):
         for g in ["A", "B", "C", "D", "E", "X"]:
             for _ in range(4):
                 warm.append({"home": g, "away": "Z", "hs": 1, "as_": 1, "matchday": 0})
-        led = B.replay(warm + matches, fake)
+        led, sysd = B.replay(warm + matches, fake)
         # Nach Warmup feuert fake_home auf Heimsieg → won=True (X gewinnt 1:0)
         home_calls = [e for e in led if e["signal"] == "fake_home" and e["market"] == "Heimsieg"
                       and e["score"] > 0]
         self.assertTrue(len(home_calls) >= 5)
         self.assertTrue(all(e["won"] for e in home_calls if e["market"] == "Heimsieg"))
+        self.assertTrue(len(sysd) > 0)   # System-Ledger (combined pro Markt) befüllt
 
     def test_aggregate_hitrate(self):
         ledger = [{"signal": "s", "market": "Heimsieg", "score": 1.0, "won": True},
@@ -101,6 +102,14 @@ class TestPhase2(unittest.TestCase):
         n = B.attach_odds(matches, fd)
         self.assertEqual(n, 1)
         self.assertEqual(matches[0]["odds"]["Heimsieg"], 1.8)
+
+    def test_aggregate_system_value_filter(self):
+        # combined +5pp Wette gewinnt @2.0 (+1.0); +1pp Wette unter Schwelle 2 → ignoriert
+        sysd = [{"market": "Heimsieg", "combined": 5.0, "won": True, "odds": 2.0},
+                {"market": "Heimsieg", "combined": 1.0, "won": False, "odds": 2.0}]
+        agg = B.aggregate_system(sysd, thresholds=[2.0])
+        self.assertEqual(agg[">=2.0pp"]["bets"], 1)
+        self.assertEqual(agg[">=2.0pp"]["roiPct"], 100.0)
 
     def test_aggregate_roi(self):
         # 2 positive Calls auf Heimsieg @2.0: 1 gewonnen (+1.0), 1 verloren (-1.0) → ROI 0%

@@ -234,13 +234,18 @@ def validate_pick(mk: str, p: dict, wm: dict, issues: list) -> None:
         parts = mk.split("-", 3)
         if len(parts) >= 4:
             gkey, _, home, away = parts
-            gdata = (wm.get("groups") or {}).get(gkey) or {}
-            match_exists = any(
-                fx.get("home") == home and fx.get("away") == away
-                for fx in gdata.get("fixtures", [])
-            )
+            if gkey == "KO":   # KO-Picks leben in koFixtures, nicht in groups (26.06.2026)
+                match_exists = any(kf.get("home") == home and kf.get("away") == away
+                                   for kf in (wm.get("koFixtures") or []))
+            else:
+                gdata = (wm.get("groups") or {}).get(gkey) or {}
+                match_exists = any(fx.get("home") == home and fx.get("away") == away
+                                   for fx in gdata.get("fixtures", []))
             if not match_exists:
-                _add(issues, mk, market, "error", "E_ORPHAN_MATCH",
+                # NOBET = informativer Schatten-Pick; ein verwaister NOBET (z.B. KO-Bracket hat sich
+                # umgelöst, Paarung weg) ist harmlos → Warnung statt Error (26.06.2026, Lucas).
+                lvl = "warning" if verdict_raw == "NOBET" else "error"
+                _add(issues, mk, market, lvl, "E_ORPHAN_MATCH",
                      f"{verdict_raw}-Pick existiert aber Match {home}-{away} nicht in {gkey}", p)
         return  # Light-check fertig
 

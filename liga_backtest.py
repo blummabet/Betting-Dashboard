@@ -26,7 +26,10 @@ APIF_HOST = "v3.football.api-sports.io"
 APIF_KEY = os.environ.get("APISPORTS_KEY", "")
 REPORT_FILE = os.path.join(BASE, "liga_backtest_report.json")
 
-PL_LEAGUE_ID = 39
+# Top-5-Ligen: code → (API-Football league_id, football-data CSV-Code)
+LEAGUES = {"ENG": (39, "E0"), "ESP": (140, "SP1"), "GER": (78, "D1"),
+           "ITA": (135, "I1"), "FRA": (61, "F1")}
+VALUE_THRESHOLDS = [0.0, 2.0, 4.0]   # Conviction-Schwellen (combined_score_pp) für den Value-Filter
 WARMUP_GAMES = 4          # erst werten, wenn beide Teams ≥4 Spiele Historie haben
 FORM_N = 5                # Form über die letzten N Spiele
 CANDIDATE_MARKETS = ["Heimsieg", "Auswärtssieg", "Über 2.5 Tore", "Unter 2.5 Tore"]
@@ -114,14 +117,15 @@ def aggregate(ledger: list) -> dict:
     }
 
 
-def replay(matches: list, evaluate_fn) -> list:
+def replay(matches: list, evaluate_fn, league: str = "ENG"):
     """matches = chronologisch sortierte [{home, away, hs, as_, matchday}]. evaluate_fn(pick, ctx)
-    = registry.evaluate_signals (injizierbar → testbar). Gibt das Signal-Ledger zurück."""
+    = registry.evaluate_signals (injizierbar → testbar). Gibt (ledger, system_ledger) zurück:
+    ledger = pro-Signal-Calls; system_ledger = combined_score_pp pro (Spiel,Markt) für Value-Filter."""
     team_results: dict = defaultdict(list)         # teamId → [(gf, ga)]
     team_xg: dict = defaultdict(list)              # teamId → [(xgFor, xgAgainst)]  (Phase 2)
     table: dict = defaultdict(lambda: {"points": 0, "gf": 0, "ga": 0})
     h2h: dict = defaultdict(lambda: {"games": 0, "homeWins": 0, "draws": 0, "awayWins": 0})
-    ledger = []
+    ledger, system = [], []
     for m in matches:
         h, a, hs, as_, md = m["home"], m["away"], m["hs"], m["as_"], m.get("matchday")
         m_odds = m.get("odds") or {}
@@ -129,19 +133,22 @@ def replay(matches: list, evaluate_fn) -> list:
         if len(team_results[h]) >= WARMUP_GAMES and len(team_results[a]) >= WARMUP_GAMES:
             pair = h2h[tuple(sorted((h, a)))]
             ctx = {
-                "home_id": h, "away_id": a, "group_id": "ENG", "matchday": md,
+                "home_id": h, "away_id": a, "group_id": league, "matchday": md,
                 "form": {h: form_entry(team_results[h]), a: form_entry(team_results[a])},
                 "h2h": dict(pair),
-                "standings": {"ENG": standings_rows(table)},
+                "standings": {league: standings_rows(table)},
                 # Phase 2: echtes xG point-in-time (xg_strength nutzt es statt Form-Fallback).
                 "xg_stats": {h: xg_entry(team_xg[h]), a: xg_entry(team_xg[a])},
             }
             for market in CANDIDATE_MARKETS:
                 res = evaluate_fn({"market": market, "odds": m_odds.get(market, 2.0)}, ctx)
+                won = market_won(market, hs, as_)
                 for sig in (res.get("signals") or []):
                     ledger.append({"signal": sig["name"], "market": market,
-                                   "score": sig.get("score", 0), "won": market_won(market, hs, as_),
+                                   "score": sig.get("score", 0), "won": won,
                                    "odds": m_odds.get(market)})
+                system.append({"market": market, "combined": res.get("combined_score_pp", 0),
+                               "won": won, "odds": m_odds.get(market)})
         # ── Zustand NACH dem Spiel fortschreiben ──
         team_results[h].append((hs, as_))
         team_results[a].append((as_, hs))
@@ -159,7 +166,30 @@ def replay(matches: list, evaluate_fn) -> list:
         if hs > as_:   pr["homeWins" if h < a else "awayWins"] += 1
         elif as_ > hs: pr["awayWins" if h < a else "homeWins"] += 1
         else:          pr["draws"] += 1
-    return ledger
+    return ledger, system
+
+
+def aggregate_system(system: list, thresholds=None) -> dict:
+    """Value-Filter: setze 1u auf einen Markt nur, wenn combined_score_pp ≥ Schwelle. Pro Schwelle
+    Trefferquote + ROI — zeigt, ob HÖHERE Conviction = bessere Wetten (statt jeden Favoriten)."""
+    thresholds = thresholds if thresholds is not None else VALUE_THRESHOLDS
+    out = {}
+    for thr in thresholds:
+        bets = wins = 0
+        pnl = stake = 0.0
+        for e in system:
+            if e["combined"] < thr or thr <= 0 and e["combined"] <= 0:
+                continue
+            p = _pnl(e["won"], e.get("odds"))
+            if p is None:
+                continue
+            bets += 1; wins += 1 if e["won"] else 0
+            pnl += p; stake += 1.0
+        out[f">={thr}pp"] = {"bets": bets, "wins": wins,
+                             "hitRate": round(wins / bets, 3) if bets else None,
+                             "roiPct": round(pnl / stake * 100, 1) if stake else None,
+                             "pnl": round(pnl, 2)}
+    return out
 
 
 # ───────────────────────── Live-Fetch (API-Football) ─────────────────────────
@@ -183,9 +213,9 @@ def _parse_round(s: str):
     return int(m.group(1)) if m else None
 
 
-def fetch_pl_matches(season: int) -> list:
-    """Abgeschlossene PL-Spiele der Saison → chronologische Match-Liste für replay()."""
-    data = _api_get(f"/fixtures?league={PL_LEAGUE_ID}&season={season}") or {}
+def fetch_league_matches(league_id: int, season: int) -> list:
+    """Abgeschlossene Liga-Spiele der Saison → chronologische Match-Liste für replay()."""
+    data = _api_get(f"/fixtures?league={league_id}&season={season}") or {}
     out = []
     for it in (data.get("response") or []):
         st = (((it.get("fixture") or {}).get("status") or {}).get("short")) or ""
@@ -303,58 +333,61 @@ def attach_odds(matches: list, fd_rows: list) -> int:
 
 
 def main():
+    import time
     season = int(os.environ.get("BACKTEST_SEASON") or (datetime.utcnow().year - 1))
-    print(f"=== liga_backtest.py — Premier League Saison {season} (Phase 2: xG + ROI) ===")
+    only = os.environ.get("BACKTEST_LEAGUES")          # optional "ENG,ESP" — Default alle 5
+    leagues = [c for c in (only.split(",") if only else LEAGUES) if c in LEAGUES]
+    print(f"=== liga_backtest.py — {','.join(leagues)} Saison {season} (Phase 2: xG + ROI + Value) ===")
     if not APIF_KEY:
         print("  ❌  APISPORTS_KEY nicht gesetzt — übersprungen.")
         return
-    matches = fetch_pl_matches(season)
-    print(f"  {len(matches)} abgeschlossene Spiele geladen")
-    if not matches:
-        return
 
-    # Echtes xG je Spiel (gecacht → Re-Runs billig).
     CACHE = os.path.join(BASE, "liga_backtest_cache.json")
-    cache = {}
-    if os.path.exists(CACHE):
-        try:
-            cache = json.load(open(CACHE))
-        except Exception:
-            cache = {}
-    import time
-    xg_n = 0
-    for m in matches:
-        if not m.get("fid"):
-            continue
-        stats = fetch_fixture_xg(m["fid"], cache)
-        if stats and m["home"] in stats and m["away"] in stats:
-            m["xg"] = {"home": stats[m["home"]], "away": stats[m["away"]]}
-            xg_n += 1
-        time.sleep(0.25)
-    json.dump(cache, open(CACHE, "w"), ensure_ascii=False)
-    print(f"  xG für {xg_n}/{len(matches)} Spiele")
-
-    # Historische Closing-Quoten (football-data.co.uk).
-    fd_url = f"https://www.football-data.co.uk/mmz4281/{_fd_season_code(season)}/{FD_LEAGUE['ENG']}.csv"
-    fd_text = _http_get(fd_url)
-    odds_n = 0
-    if fd_text:
-        odds_n = attach_odds(matches, parse_fd_csv(fd_text))
-    print(f"  Closing-Quoten für {odds_n}/{len(matches)} Spiele")
-
+    cache = json.load(open(CACHE)) if os.path.exists(CACHE) else {}
     import sharp_signals.registry as R
     weights = R.load_signal_weights()
-    ledger = replay(matches, lambda pick, ctx: R.evaluate_signals(pick, ctx, weights))
-    report = aggregate(ledger)
-    report["_meta"] = {"league": "ENG", "season": season, "matches": len(matches),
-                       "xgMatches": xg_n, "oddsMatches": odds_n,
-                       "ledgerEntries": len(ledger), "generatedAt": datetime.utcnow().isoformat()}
+
+    all_ledger, all_system = [], []
+    per_league_meta = {}
+    for code in leagues:
+        lid, fd_code = LEAGUES[code]
+        matches = fetch_league_matches(lid, season)
+        if not matches:
+            print(f"  {code}: 0 Spiele — übersprungen")
+            continue
+        # Echtes xG je Spiel (gecacht).
+        xg_n = 0
+        for m in matches:
+            if not m.get("fid"):
+                continue
+            stats = fetch_fixture_xg(m["fid"], cache)
+            if stats and m["home"] in stats and m["away"] in stats:
+                m["xg"] = {"home": stats[m["home"]], "away": stats[m["away"]]}
+                xg_n += 1
+            time.sleep(0.2)
+        # Historische Closing-Quoten (football-data.co.uk, pro Liga).
+        fd_text = _http_get(f"https://www.football-data.co.uk/mmz4281/{_fd_season_code(season)}/{fd_code}.csv")
+        odds_n = attach_odds(matches, parse_fd_csv(fd_text)) if fd_text else 0
+        led, sysd = replay(matches, lambda pick, ctx: R.evaluate_signals(pick, ctx, weights), league=code)
+        all_ledger += led; all_system += sysd
+        per_league_meta[code] = {"matches": len(matches), "xg": xg_n, "odds": odds_n}
+        print(f"  {code}: {len(matches)} Spiele · xG {xg_n} · Quoten {odds_n}")
+    json.dump(cache, open(CACHE, "w"), ensure_ascii=False)
+
+    report = aggregate(all_ledger)
+    report["valueFilter"] = aggregate_system(all_system)
+    report["_meta"] = {"leagues": leagues, "season": season, "perLeague": per_league_meta,
+                       "ledgerEntries": len(all_ledger), "generatedAt": datetime.utcnow().isoformat()}
     with open(REPORT_FILE, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     print(f"\n  Signal: Trefferquote | ROI (1u/Call zur Closing-Quote):")
     for sig, d in report["perSignal"].items():
         roi = f"{d['roiPct']:+.1f}%" if d.get("roiPct") is not None else "—"
         print(f"    {sig:18} {d['hitRate']}  ({d['correct']}/{d['calls']})   ROI {roi}  ({d['bets']} Wetten)")
+    print(f"\n  Value-Filter (nur Wetten ab Conviction-Schwelle, combined_score_pp):")
+    for thr, d in report["valueFilter"].items():
+        roi = f"{d['roiPct']:+.1f}%" if d.get("roiPct") is not None else "—"
+        print(f"    {thr:8} Treffer {d['hitRate']}  ROI {roi}  ({d['bets']} Wetten)")
     print(f"\n  ✅ Report → {os.path.basename(REPORT_FILE)}")
 
 
