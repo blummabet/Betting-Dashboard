@@ -192,8 +192,9 @@
 
       // Stage 2: WM-Match-Pages im Hintergrund laden (für Probability-Bar, Squad-Pills, AI-Preview)
       // Erstes Render zeigt Cards schon, zweites Render hat dann die Extra-Daten
-      // (25.06.2026, Lucas: Liga auf WM-Stack) NUR im WM-Modus — Liga hat keine match-pages.
-      if (_mode !== 'liga') _loadWmMatchPages();
+      // (26.06.2026, Lucas: Event Pages liga-tauglich) Match-Pages auch für Liga laden
+      // (liga-index.json / liga-{slug}.json). _loadWmMatchPages ist dataset-bewusst.
+      _loadWmMatchPages();
     } catch (e) {
       // (25.06.2026, Lucas: Liga auf WM-Stack) Retry ruft den modus-passenden Entry-Point.
       const _retryFn = _mode === 'liga' ? 'window.initNationalCards()' : 'window.initIntlCards()';
@@ -1178,7 +1179,8 @@
     }
 
     // ─── ACTIONS row ──────────────────────────────────
-    const slug = `wm-${fx.home.toLowerCase()}-vs-${fx.away.toLowerCase()}-${fx.date}`;
+    // (26.06.2026, Lucas) Slug dataset-bewusst: wm- bzw. liga- (Analyse-Link → matches/wm-match-v2.html).
+    const slug = `${_mode === 'liga' ? 'liga' : 'wm'}-${fx.home.toLowerCase()}-vs-${fx.away.toLowerCase()}-${fx.date}`;
     if (!isPlayed && heroPick) {
       // Fußzeile (20.06.2026): Datenqualitäts-Tier (steam/full/elo) + conf RAUS — die Engine ist
       // signal-getrieben, das Tier interessiert niemanden mehr. Stattdessen drei aussagekräftige
@@ -1881,7 +1883,9 @@
     }
     try {
       const bust = '?t=' + Date.now();
-      const idxResp = await fetch('matches/wm-index.json' + bust);
+      // (26.06.2026, Lucas) dataset-bewusst: wm-index.json bzw. liga-index.json
+      const _idxPfx = _mode === 'liga' ? 'liga' : 'wm';
+      const idxResp = await fetch(`matches/${_idxPfx}-index.json` + bust);
       if (!idxResp.ok) return;
       const idx = await idxResp.json();
       const slugs = idx.slugs || [];
@@ -1902,8 +1906,9 @@
 
   function _findMatchPage(fx) {
     if (!_wmPagesLoaded) return null;
-    // Slug-Format wie in generate_wm_match_pages.py: wm-{home_lower}-vs-{away_lower}-{date}
-    const slug = `wm-${(fx.home||'').toLowerCase()}-vs-${(fx.away||'').toLowerCase()}-${fx.date}`;
+    // Slug-Format wie in generate_wm_match_pages.py: {wm|liga}-{home_lower}-vs-{away_lower}-{date}
+    const _pfx = _mode === 'liga' ? 'liga' : 'wm';
+    const slug = `${_pfx}-${(fx.home||'').toLowerCase()}-vs-${(fx.away||'').toLowerCase()}-${fx.date}`;
     return _wmMatchPages[slug] || null;
   }
 
