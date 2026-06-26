@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-26T01:41:38Z",
-    "total_records": 105
+    "updated_at": "2026-06-26T01:56:43Z",
+    "total_records": 108
   },
   "records": [
     {
@@ -1925,6 +1925,96 @@
       "resolvedAt": "2026-06-21T06:58:00Z",
       "source": "steam",
       "convictionScore": 3,
+      "lateEntry": true,
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "F-3-JPN-SWE|Über 2.5 Tore",
+      "matchKey": "F-3-JPN-SWE",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 3.73
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.29
+        },
+        {
+          "name": "lineup_signal",
+          "score": -3.26
+        },
+        {
+          "name": "weather_signal",
+          "score": -0.75
+        }
+      ],
+      "resolvedAt": "2026-06-26T01:45:33Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "F-3-NED-TUN|AH Heim −2",
+      "matchKey": "F-3-NED-TUN",
+      "market": "AH Heim −2",
+      "result": "VOID",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": 2.0
+        },
+        {
+          "name": "form_trend",
+          "score": 6.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.96
+        },
+        {
+          "name": "incentive_signal",
+          "score": 2.0
+        },
+        {
+          "name": "smart_money",
+          "score": 1.42
+        }
+      ],
+      "resolvedAt": "2026-06-26T01:45:33Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true
+    },
+    {
+      "key": "F-3-NED-TUN|Über 2.5 Tore",
+      "matchKey": "F-3-NED-TUN",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 3.2
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.96
+        }
+      ],
+      "resolvedAt": "2026-06-26T01:45:33Z",
+      "source": "steam",
+      "convictionScore": 4,
       "lateEntry": true,
       "processVerdict": "LUCKY"
     },
