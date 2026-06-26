@@ -91,6 +91,9 @@ class IntegrityCtx:
     def __init__(self, wm, poly, schedule, venues, lineups=None, now=None,
                  auto_bets=None, history=None):
         self.wm = wm or {}
+        # Liga-Modus (25.06.2026, Lucas): einige Guards sind WM-spezifisch (venue_id gegen WM-Stadien,
+        # Kickoff-Turnier-Fenster Juni/Juli, time-Feld) → feuern auf Liga falsch. is_liga lässt sie passen.
+        self.is_liga = ((self.wm.get("_meta") or {}).get("profile") == "liga_default")
         self.poly = poly or {}
         self.schedule = schedule or {}
         self.venues = venues or {}
@@ -126,6 +129,8 @@ def integrity_check(fn):
 # ── Die Guards (je @integrity_check) ─────────────────────────────────────────
 @integrity_check
 def check_venue_resolves(ctx):
+    if ctx.is_liga:
+        return None   # WM-Venue-Map gilt nicht für Liga-Stadien
     fails = []
     for _g, fx in ctx.fixtures:
         vid = ctx.venue_id(fx.get("venue"))
@@ -212,7 +217,9 @@ def check_kickoff_present(ctx):
         try:
             dt = datetime.fromisoformat(str(ko).replace("Z", "+00:00")).astimezone(timezone.utc)
             d10 = dt.strftime("%Y-%m-%d")
-            if not (TOURNEY_START <= d10 <= TOURNEY_END):
+            # Turnier-Fenster nur WM (Juni/Juli); Liga-Saison läuft Aug–Mai → Fenster-Check skippen,
+            # aber kickoff-präsent + parsebar bleibt geprüft (25.06.2026, Lucas).
+            if not ctx.is_liga and not (TOURNEY_START <= d10 <= TOURNEY_END):
                 fails.append(f"{ctx.mk(fx)}: kickoff {d10} außerhalb Turnier-Fenster")
         except Exception:
             fails.append(f"{ctx.mk(fx)}: kickoff '{ko}' nicht parsebar")
@@ -222,6 +229,8 @@ def check_kickoff_present(ctx):
 
 @integrity_check
 def check_time_matches_kickoff(ctx):
+    if ctx.is_liga:
+        return None   # Liga-Fixtures haben kein separates time-Feld (nutzen kickoff direkt)
     fails = []
     for _g, fx in ctx.fixtures:
         ko = fx.get("kickoff")
@@ -1449,15 +1458,31 @@ def run_checks(wm, poly, schedule, venues, lineups=None, now=None,
 
 if __name__ == "__main__":
     import json
+    import os
+    from datetime import datetime, timezone
     from pathlib import Path
     B = Path(__file__).resolve().parent
     load = lambda f: json.loads((B / f).read_text(encoding="utf-8")) if (B / f).exists() else {}
-    res = run_checks(load("wm2026-data.json"), load("wm_poly_prices.json"),
-                     load("wm_venue_schedule.json"), load("wm_venues.json"))
+    # Dataset-Modus (25.06.2026, Lucas): COCOBET_DATASET=liga → Guards auf liga-data.json laufen
+    # lassen + Ergebnis nach liga_status.json schreiben (Liga-Health sichtbar). WM-/Poly-only Guards
+    # no-oppen mangels Daten. WM-Verhalten unverändert (nur Print).
+    _is_liga = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
+    if _is_liga:
+        res = run_checks(load("liga-data.json"), {}, {}, {}, lineups=load("liga_lineups.json"))
+    else:
+        res = run_checks(load("wm2026-data.json"), load("wm_poly_prices.json"),
+                         load("wm_venue_schedule.json"), load("wm_venues.json"))
     nfail = sum(1 for c in res if not c["ok"])
-    print(f"=== Daten-Integrität: {len(res)-nfail}/{len(res)} Checks ok ({len(INTEGRITY_CHECKS)} Guards registriert) ===\n")
+    print(f"=== Daten-Integrität ({'LIGA' if _is_liga else 'WM'}): {len(res)-nfail}/{len(res)} Checks ok "
+          f"({len(INTEGRITY_CHECKS)} Guards registriert) ===\n")
     for c in res:
         icon = "✅" if c["ok"] else ("🔴" if c["severity"] == "error" else "🟡")
         print(f"{icon} [{c['severity']}] {c['label']}: {c['nFail']} Fehler")
         for f in c["failures"][:6]:
             print(f"     · {f}")
+    if _is_liga:
+        (B / "liga_status.json").write_text(json.dumps(
+            {"checks": res, "nFail": nfail,
+             "generatedAt": datetime.now(timezone.utc).isoformat()},
+            ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"\n💾 liga_status.json geschrieben ({nfail} Warnungen/Fehler).")

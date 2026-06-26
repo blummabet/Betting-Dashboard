@@ -90,7 +90,13 @@ ACTIVE_SIGNALS: list[Signal] = [
 
 
 def _weights_path() -> Path:
-    return Path(__file__).parent.parent / "signal_weights.json"
+    # Dataset-Modus (25.06.2026, Lucas): Liga lernt EIGENE Gewichte (liga_signal_weights.json),
+    # getrennt von der WM — die Signale verhalten sich pro Wettbewerb anders.
+    import os
+    fname = ("liga_signal_weights.json"
+             if (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
+             else "signal_weights.json")
+    return Path(__file__).parent.parent / fname
 
 
 def load_signal_weights() -> dict:

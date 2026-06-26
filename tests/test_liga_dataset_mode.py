@@ -75,6 +75,31 @@ class TestSignalGating(unittest.TestCase):
         self.assertEqual(self._disabled(None), set())
 
 
+class TestLearningLoopDataset(unittest.TestCase):
+    """Lern-Loop nutzt eigene Liga-Dateien (25.06.2026, Lucas: getrennte Liga-Gewichte)."""
+    def _val(self, expr, dataset):
+        env = dict(os.environ)
+        env.pop("COCOBET_DATASET", None)
+        if dataset:
+            env["COCOBET_DATASET"] = dataset
+        return subprocess.check_output([sys.executable, "-c", expr], cwd=str(REPO), env=env).decode().strip()
+
+    def test_weights_path_liga(self):
+        self.assertEqual(self._val(
+            "import sharp_signals.registry as r; print(r._weights_path().name)", "liga"),
+            "liga_signal_weights.json")
+
+    def test_weights_path_wm(self):
+        self.assertEqual(self._val(
+            "import sharp_signals.registry as r; print(r._weights_path().name)", None),
+            "signal_weights.json")
+
+    def test_ledger_paths_liga(self):
+        out = self._val("import build_signal_ledger as b, update_signal_weights as u; "
+                        "print(b.LEDGER_FILE.name, u.WEIGHTS_FILE.name, u.MIN_LEARN_MATCHDAY)", "liga")
+        self.assertEqual(out, "liga_signal_ledger.json liga_signal_weights.json 1")
+
+
 class TestResolverDataset(unittest.TestCase):
     def test_resolve_picks_wm_default(self):
         self.assertEqual(_file_for("resolve_wm_picks", "WM_FILE", None), "wm2026-data.json")

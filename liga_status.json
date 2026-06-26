@@ -1,0 +1,412 @@
+{
+  "checks": [
+    {
+      "id": "closing_prematch",
+      "label": "Closing-Snapshot vor Anpfiff (kein In-Play-Leck)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "frozenAt nach Anpfiff = Live-Quoten. Resolver nullt den CLV; Write-Seite sollte Closing spätestens bei Anpfiff einfrieren."
+    },
+    {
+      "id": "kickoff_present",
+      "label": "Kickoff-Zeit real + plausibel",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "00:00-Platzhalter führten zu falschem Betting-Tab-Listing."
+    },
+    {
+      "id": "pick_safe_variant",
+      "label": "Riskanter BET hat sichere Variante",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "AH ≤ −1.5 / Quote > 3.0 als BET-Headline braucht eine sicherere Alternative (generate_wm_picks: SUBSTITUTION_MAP + _safer_alternatives + Renderer-Demotion)."
+    },
+    {
+      "id": "steam_longshot_ceiling",
+      "label": "Steam-Trigger respektiert Longshot-Ceiling",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Neue Steam-Karte aus einer Quote > Ceiling — detect_steam max_trigger_odds greift nicht (steam_engine / cocobet_config steam.max_trigger_odds)."
+    },
+    {
+      "id": "ou_pinnacle_anchored",
+      "label": "O/U + BTTS an Pinnacle geankert",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "generate_wm_picks: _devig2-Block (Z.~930). Baseline = de-viggte Pinnacle, Poisson nur Fallback. Gepostete Spiele (≤morgen) ausgenommen."
+    },
+    {
+      "id": "ou_anchor_source",
+      "label": "Tor-Anker stammt von Pinnacle",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fetch_wm_odds: _pick_total_line/_pick_bk Fallback auf Soft-Book wenn Pinnacle die Linie nicht listet. Soft-Anker = unzuverlässige Fair-Schätzung."
+    },
+    {
+      "id": "odds_sane",
+      "label": "Pinnacle-1X2 vollständig + plausibel",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Quelle für Modell-Baseline + Edge."
+    },
+    {
+      "id": "odds_freshness",
+      "label": "Pinnacle-Odds frisch (< 6h)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Auto-Trader stoppt hart erst bei max_odds_age_hours (24h) — dieser Guard warnt früh. Root-Cause: fetch_wm_odds-Workflow/Cron prüfen."
+    },
+    {
+      "id": "homeaway_consistent",
+      "label": "Home/Away nicht vertauscht (Pinn vs Poly)",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet. Bei knappen Quoten ggf. echte Markt-Uneinigkeit — Fixture-Orientierung prüfen."
+    },
+    {
+      "id": "signal_coverage",
+      "label": "Kein Signal still verstummt",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Ein Signal das die letzten Tage zuverlässig feuerte und heute slatewide 0 zeigt = Verdacht auf Daten-/Fetcher-Ausfall oder Code-Regression. Engine prüfen, nicht ignorieren. WARN, weil auch ein Spieltag ohne passende Lage sein kann."
+    },
+    {
+      "id": "trade_clv_coverage",
+      "label": "Trade-Auswertung: CLV/Closing erfasst",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "CLV (Entry vs Pinnacle-Closing) ist DER Frühindikator für +EV; ohne ihn lässt sich nicht sagen ob die Strategie Wert holt. Lücke = Closing-Snapshot wird nicht zuverlässig bei Anpfiff eingefroren (pinnClose/polyClose). Schließt an den Closing-In-Play-Guard an — die Write-Seite muss bei Anpfiff einfrieren."
+    },
+    {
+      "id": "edge_consistent",
+      "label": "Edge == fair − poly (kein Stale-Edge)",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Stale edge_aw=-1.4 vs live +7.1 hat einen echten Trade blockiert."
+    },
+    {
+      "id": "schedule_date",
+      "label": "Spielplan-Datum == Polymarket",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Seed war ~1 Tag verschoben → Picks am falschen Tag."
+    },
+    {
+      "id": "lineup_present",
+      "label": "Aufstellung da vor Anpfiff (T-90min)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
+    },
+    {
+      "id": "public_consensus",
+      "label": "Public-Konsens (Soft-Books) vorhanden",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 40,
+      "failures": [
+        "42-1346: kein public_hw",
+        "64-33: kein public_hw",
+        "45-52: kein public_hw",
+        "57-746: kein public_hw",
+        "65-63: kein public_hw",
+        "55-47: kein public_hw",
+        "50-35: kein public_hw",
+        "51-66: kein public_hw",
+        "34-40: kein public_hw",
+        "36-49: kein public_hw",
+        "1346-42: kein public_hw",
+        "33-64: kein public_hw",
+        "35-50: kein public_hw",
+        "40-34: kein public_hw",
+        "47-55: kein public_hw",
+        "49-36: kein public_hw",
+        "52-45: kein public_hw",
+        "63-65: kein public_hw",
+        "66-51: kein public_hw",
+        "746-57: kein public_hw",
+        "494-895: kein public_hw",
+        "495-492: kein public_hw",
+        "497-502: kein public_hw",
+        "499-488: kein public_hw",
+        "500-487: kein public_hw"
+      ],
+      "note": "Ohne public_* feuert public_static_bias nicht."
+    },
+    {
+      "id": "public_is_multibook",
+      "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
+    },
+    {
+      "id": "no_phantom_odds",
+      "label": "Keine Phantom-Odds-Keys (verkehrte Reihenfolge)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "84 Odds-Keys vs 72 Fixtures = 12 leere Spiegel-Einträge. Quelle prüfen."
+    },
+    {
+      "id": "result_score_final",
+      "label": "Endstand nur bei beendetem Spiel",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Live-Zwischenstand im result → wird als Endstand gerendert."
+    },
+    {
+      "id": "autobet_kickoff",
+      "label": "Offene Auto-Bets haben Anpfiffzeit",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Ohne Kickoff feuert der 2h-Close nicht → Trade rutscht ins In-Play."
+    },
+    {
+      "id": "resolved_status_propagated",
+      "label": "Beendete Spiele: Auto-Bet-Status aktualisiert",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Sonst hängt die Wette ewig in 'Offene Positionen · Live'."
+    },
+    {
+      "id": "standings_built",
+      "label": "Gruppentabellen gebaut (wenn Ergebnisse da)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "wm_standings.apply_to_wm läuft in generate_wm_picks; leer trotz Ergebnissen = Build-Ausfall."
+    },
+    {
+      "id": "safer_line_applied",
+      "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
+    },
+    {
+      "id": "reverser_demoted",
+      "label": "Reverser-Picks zurückgestuft (nicht BET)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Frisches Geld dreht gegen den Pick → Move seit Eröffnung überholt. Erwartung: generate_wm_picks stuft auf ABWÄGEN/BEOBACHTEN zurück (downgradedReason 'Reverser')."
+    },
+    {
+      "id": "bet_move_fresh",
+      "label": "BET frisch eingestiegen oder gehalten",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Neuer BET braucht frischen Move (≤ bet_entry_hurdle_h). Alter Move darf nur via Hold (betHeld) BET bleiben. Stale-BET ohne Hold = Entry-Gate-Leck."
+    },
+    {
+      "id": "freshness_learning_coupled",
+      "label": "Frische landet im Lern-Ledger",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder Signal nicht registriert."
+    },
+    {
+      "id": "smartmoney_sane",
+      "label": "Smart-Money-Daten kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner)."
+    },
+    {
+      "id": "btts_not_templated_traded",
+      "label": "BTTS-Platzhalter nicht handelbar",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Templated Pinnacle-BTTS-Linien (auf vielen Spielen identisch) sind kein echter Sharp-Preis → fair/edge müssen None sein, sonst tradet der Auto-Trader Phantom-Edges."
+    },
+    {
+      "id": "ko_bracket_consistency",
+      "label": "KO-Bracket plausibel",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Noch keine koFixtures (vor Gruppen-Abschluss normal)."
+    },
+    {
+      "id": "played_games_resolved",
+      "label": "Gespielte Spiele haben Endstand",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fetch_wm_match_results muss FT-Endstände schreiben. Fehlt's > 5h nach Anpfiff: Team-Matching (Orientierung/Team-ID) oder API-Football-Lag prüfen."
+    },
+    {
+      "id": "no_duplicate_picks",
+      "label": "Kein doppelter Pick je Spiel/Markt",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Je (Spiel, Markt) genau EINE Karte. Mehrfach → _dedup_picks_by_market greift nicht (Refresh-/Merge-Altlast)."
+    },
+    {
+      "id": "steam_lag_no_dupes",
+      "label": "Steam-Lag: 1 Position pro Wette",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 10,
+      "failures": [
+        "CPV-SAU hw: 5 Einträge (soll 1)",
+        "CRO-GHA aw: 2 Einträge (soll 1)",
+        "NZL-EGY hw: 2 Einträge (soll 1)",
+        "CIV-ECU aw: 2 Einträge (soll 1)",
+        "MAR-HTI aw: 4 Einträge (soll 1)",
+        "CZE-ZAF aw: 2 Einträge (soll 1)",
+        "JOR-DZA hw: 6 Einträge (soll 1)",
+        "PAN-CRO dr: 2 Einträge (soll 1)",
+        "DZA-AUT dr: 2 Einträge (soll 1)",
+        "JPN-SWE aw: 2 Einträge (soll 1)"
+      ],
+      "note": "Je (Match, Markt) nur EINE Tracking-Position. Mehrfach → make_signal_id/Status-Filter in steam_lag_monitor.update_log defekt (Re-Detektion legt Duplikat an)."
+    },
+    {
+      "id": "smartmoney_cluster_sane",
+      "label": "Smart-Money-Cluster kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
+    },
+    {
+      "id": "card_only_not_in_trade",
+      "label": "Card-Signale nicht im Trade-Pfad",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "freshness_leg/smart_money müssen aus signalAdjustmentPP_trade abgezogen sein (generate_wm_picks _CARD_ONLY). Sonst treibt ein Card-Signal den Auto-Trader."
+    },
+    {
+      "id": "entry_priced_at_ask",
+      "label": "Neue Entries am Ask eingebucht (nicht Mid)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Regressions-Melder ab 2026-06-18: ein neuer Entry ohne entryAsk heißt das Spread-Gate (REQUIRE_BOOK_FOR_ENTRY) wurde umgangen. Alt-Positionen davor sind bewusst stumm (bekannt, laufen aus)."
+    },
+    {
+      "id": "profit_sell_real",
+      "label": "Profit-Sell ist real (Verkauf > Einstieg)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Mid-Gewinn der beim echten Bid ein Verlust ist. Fix: Bewertung am Bid (fetch_token_book) + Profit-Sell-Veto."
+    },
+    {
+      "id": "ah_btts_position_priced",
+      "label": "AH/BTTS-Positionen bewertbar",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Preis-Cache hat noch keine AH/BTTS-Token (erster Fetch ausstehend)."
+    },
+    {
+      "id": "ah_ladder_coverage",
+      "label": "AH-Leiter bei nahen bepreisten Spielen",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "ahLadder fehlte → AH-Picks fielen durchs Raster (Mismatches ohne AH)."
+    },
+    {
+      "id": "finished_has_stats",
+      "label": "Beendete Spiele haben Match-Stats (xG)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Ohne Match-xG lernt der Bayesian-Loop nur aus Glück/Pech, nicht aus dem Prozess."
+    },
+    {
+      "id": "soft_book_history",
+      "label": "Soft-Book-Snapshots in Odds-History",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Ohne Soft-Book-Zeitreihe ist die Sharp-Money-Conviction-Familie tot."
+    },
+    {
+      "id": "ah_edge_sane",
+      "label": "AH-Handicap-Edges plausibel (kein Mirror)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fetch_wm_poly_prices: poly_ah_by_team team-ID-geschlüsselt (mirror-immun). Riesen-Edge = falsche Seite/Daten. Auto-Trader blockt via AH_MAX_EDGE_PP."
+    },
+    {
+      "id": "btts_edge_sane",
+      "label": "BTTS-Edges plausibel",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fetch_wm_poly_prices: fair_btts aus de-viggter Pinnacle-bttsY/N. Riesen-Edge = Daten kaputt. Auto-Trader blockt via BTTS_MAX_EDGE_PP."
+    }
+  ],
+  "nFail": 2,
+  "generatedAt": "2026-06-26T07:04:17.479864+00:00"
+}
