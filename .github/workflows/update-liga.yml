@@ -45,6 +45,11 @@ jobs:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         run: python fetch_wm_form.py || true
 
+      - name: 📈 Liga xG holen (echtes Klub-xG aus /fixtures/statistics)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_liga_xg.py || true
+
       - name: 💰 Liga-Quoten holen (1X2 + O/U + BTTS, Opening-Carry)
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
