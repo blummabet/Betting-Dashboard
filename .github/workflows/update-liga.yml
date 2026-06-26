@@ -50,6 +50,11 @@ jobs:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         run: python fetch_liga_xg.py || true
 
+      - name: 📋 Liga Aufstellungen holen (greift T-1h vor Anpfiff)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_wm_lineups.py --no-alerts || true
+
       - name: 💰 Liga-Quoten holen (1X2 + O/U + BTTS, Opening-Carry)
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
@@ -77,6 +82,7 @@ jobs:
           # add fehlschlagen → liga-data.json wurde nie gestaged → nie committet → Live blieb Platzhalter.
           git add liga-data.json || true
           git add liga-odds-history.json 2>/dev/null || true
+          git add liga_lineups.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push
