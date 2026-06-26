@@ -1,83 +1,180 @@
 {
   "perSignal": {
     "form_trend": {
-      "calls": 892,
-      "correct": 510,
-      "hitRate": 0.572
+      "calls": 4382,
+      "correct": 2547,
+      "hitRate": 0.581,
+      "bets": 1810,
+      "roiPct": -8.2,
+      "pnl": -149.29
     },
     "xg_strength": {
-      "calls": 672,
-      "correct": 386,
-      "hitRate": 0.574
+      "calls": 3106,
+      "correct": 1946,
+      "hitRate": 0.627,
+      "bets": 1274,
+      "roiPct": -7.7,
+      "pnl": -98.67
     },
     "league_pressure": {
-      "calls": 205,
-      "correct": 94,
-      "hitRate": 0.459
+      "calls": 868,
+      "correct": 398,
+      "hitRate": 0.459,
+      "bets": 529,
+      "roiPct": -13.9,
+      "pnl": -73.75
     }
   },
   "perSignalMarket": {
     "form_trend|Heimsieg": {
-      "calls": 271,
-      "correct": 164,
-      "hitRate": 0.605
+      "calls": 1293,
+      "correct": 806,
+      "hitRate": 0.623,
+      "bets": 501,
+      "roiPct": -7.8,
+      "pnl": -39.28
     },
     "form_trend|Auswärtssieg": {
-      "calls": 271,
-      "correct": 162,
-      "hitRate": 0.598
+      "calls": 1293,
+      "correct": 767,
+      "hitRate": 0.593,
+      "bets": 576,
+      "roiPct": -6.4,
+      "pnl": -36.75
     },
     "xg_strength|Heimsieg": {
-      "calls": 179,
-      "correct": 115,
-      "hitRate": 0.642
+      "calls": 949,
+      "correct": 640,
+      "hitRate": 0.674,
+      "bets": 360,
+      "roiPct": -5.7,
+      "pnl": -20.36
     },
     "xg_strength|Auswärtssieg": {
-      "calls": 179,
-      "correct": 113,
-      "hitRate": 0.631
+      "calls": 949,
+      "correct": 598,
+      "hitRate": 0.63,
+      "bets": 421,
+      "roiPct": -9.1,
+      "pnl": -38.2
     },
     "form_trend|Über 2.5 Tore": {
-      "calls": 175,
-      "correct": 92,
-      "hitRate": 0.526
+      "calls": 898,
+      "correct": 487,
+      "hitRate": 0.542,
+      "bets": 549,
+      "roiPct": -7.5,
+      "pnl": -41.42
     },
     "form_trend|Unter 2.5 Tore": {
-      "calls": 175,
-      "correct": 92,
-      "hitRate": 0.526
+      "calls": 898,
+      "correct": 487,
+      "hitRate": 0.542,
+      "bets": 184,
+      "roiPct": -17.3,
+      "pnl": -31.84
     },
     "xg_strength|Über 2.5 Tore": {
-      "calls": 157,
-      "correct": 79,
-      "hitRate": 0.503
+      "calls": 604,
+      "correct": 354,
+      "hitRate": 0.586,
+      "bets": 473,
+      "roiPct": -7.0,
+      "pnl": -33.06
     },
     "xg_strength|Unter 2.5 Tore": {
-      "calls": 157,
-      "correct": 79,
-      "hitRate": 0.503
+      "calls": 604,
+      "correct": 354,
+      "hitRate": 0.586,
+      "bets": 20,
+      "roiPct": -35.3,
+      "pnl": -7.05
     },
     "league_pressure|Auswärtssieg": {
-      "calls": 84,
-      "correct": 39,
-      "hitRate": 0.464
+      "calls": 353,
+      "correct": 157,
+      "hitRate": 0.445,
+      "bets": 194,
+      "roiPct": -12.2,
+      "pnl": -23.73
     },
     "league_pressure|Heimsieg": {
-      "calls": 84,
-      "correct": 38,
-      "hitRate": 0.452
+      "calls": 348,
+      "correct": 164,
+      "hitRate": 0.471,
+      "bets": 185,
+      "roiPct": -19.7,
+      "pnl": -36.46
     },
     "league_pressure|Unter 2.5 Tore": {
-      "calls": 37,
-      "correct": 17,
-      "hitRate": 0.459
+      "calls": 167,
+      "correct": 77,
+      "hitRate": 0.461,
+      "bets": 150,
+      "roiPct": -9.0,
+      "pnl": -13.56
+    }
+  },
+  "valueFilter": {
+    ">=0.0pp": {
+      "bets": 2147,
+      "wins": 1074,
+      "hitRate": 0.5,
+      "roiPct": -8.4,
+      "pnl": -181.29
+    },
+    ">=2.0pp": {
+      "bets": 1304,
+      "wins": 681,
+      "hitRate": 0.522,
+      "roiPct": -9.3,
+      "pnl": -121.61
+    },
+    ">=4.0pp": {
+      "bets": 315,
+      "wins": 184,
+      "hitRate": 0.584,
+      "roiPct": -7.9,
+      "pnl": -24.95
     }
   },
   "_meta": {
-    "league": "ENG",
+    "leagues": [
+      "ENG",
+      "ESP",
+      "GER",
+      "ITA",
+      "FRA"
+    ],
     "season": 2025,
-    "matches": 380,
-    "ledgerEntries": 1769,
-    "generatedAt": "2026-06-26T14:45:25.473564"
+    "perLeague": {
+      "ENG": {
+        "matches": 380,
+        "xg": 380,
+        "odds": 272
+      },
+      "ESP": {
+        "matches": 380,
+        "xg": 380,
+        "odds": 272
+      },
+      "GER": {
+        "matches": 308,
+        "xg": 306,
+        "odds": 272
+      },
+      "ITA": {
+        "matches": 380,
+        "xg": 380,
+        "odds": 380
+      },
+      "FRA": {
+        "matches": 309,
+        "xg": 305,
+        "odds": 271
+      }
+    },
+    "ledgerEntries": 8356,
+    "generatedAt": "2026-06-26T21:00:08.614323"
   }
 }
