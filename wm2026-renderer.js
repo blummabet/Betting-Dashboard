@@ -423,17 +423,22 @@
       }
       const _allMds = [..._mdSet].sort((a, b) =>
         (parseFloat(a) || 0) - (parseFloat(b) || 0) || String(a).localeCompare(String(b)));
-      let _shownMds = _allMds;
-      if (_allMds.length > 4) {
-        // nächste 3 anstehende Spieltage (haben mind. ein Spiel ab heute)
-        const _upcoming = _allMds.filter(md =>
+      // (26.06.2026, Lucas) Spieltag „freigeschaltet" wenn er Quoten hat ODER innerhalb der
+      // nächsten 2 Wochen liegt — Quoten kommen eh nur Tage vorher, also Navi nicht mit allen
+      // ~38 Runden zumüllen. Nichts live (z.B. 6 Wochen vor Saisonstart) → nur nächster Spieltag.
+      const _twoWeeks = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
+      const _liveMd = (md) => allFx.some(fx => String(fx.matchday) === String(md) && (
+        odds[`${fx.home}-${fx.away}`] || (fx.date >= todayIso && fx.date <= _twoWeeks)));
+      let _shownMds = _allMds.filter(_liveMd);
+      if (!_shownMds.length) {
+        const _next = _allMds.filter(md =>
           allFx.some(fx => String(fx.matchday) === String(md) && fx.date >= todayIso));
-        _shownMds = (_upcoming.length ? _upcoming : _allMds).slice(0, 3);
-        // aktiven Spieltag immer sichtbar lassen, auch wenn er nicht „anstehend" ist
-        if (_activeMd !== 'all' && !_shownMds.some(md => String(md) === String(_activeMd))
-            && _allMds.some(md => String(md) === String(_activeMd))) {
-          _shownMds = [..._shownMds, _activeMd];
-        }
+        _shownMds = _next.slice(0, 1);
+      }
+      // aktiven Spieltag immer sichtbar lassen
+      if (_activeMd !== 'all' && !_shownMds.some(md => String(md) === String(_activeMd))
+          && _allMds.some(md => String(md) === String(_activeMd))) {
+        _shownMds = [..._shownMds, _activeMd];
       }
       for (const md of _shownMds) {
         const _active = String(_activeMd) === String(md);
