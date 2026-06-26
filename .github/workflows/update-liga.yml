@@ -62,7 +62,11 @@ jobs:
         run: |
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
-          git add liga-data.json liga-odds-history.json 2>/dev/null || true
+          # EINZELN stagen (25.06.2026, Lucas: Bug „Everything up-to-date"): git add ist atomar —
+          # ein nicht-existenter Pfad (liga-odds-history.json gibt's anfangs nicht) ließ den GANZEN
+          # add fehlschlagen → liga-data.json wurde nie gestaged → nie committet → Live blieb Platzhalter.
+          git add liga-data.json || true
+          git add liga-odds-history.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push

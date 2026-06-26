@@ -10005,6 +10005,15 @@ function renderTgLog(log) {
   } catch(e) { /* silent — Sharp Radar falls back to league-only mode */ }
 })();
 
+// (25.06.2026, Lucas: Liga auf WM-Stack) National-Cards beim Laden über den NEUEN WM-Renderer
+// (liest liga-data.json) rendern — der alte renderLeague('overview') füllte mainContent sonst mit
+// dem „Season Finish"-Altinhalt. Default-View ist national-cards → rendert ins sichtbare Panel.
+(function _bootNationalCards() {
+  const go = () => { if (typeof initNationalCards === 'function') initNationalCards(); };
+  if (document.readyState === 'complete') setTimeout(go, 300);
+  else window.addEventListener('load', () => setTimeout(go, 300));
+})();
+
 // Status-Health beim Laden einmal rechnen, damit der Warn-Punkt am Status-Tab
 // sofort sichtbar ist — auch ohne den Tab zu öffnen.
 (function _bootStatusDot() {
