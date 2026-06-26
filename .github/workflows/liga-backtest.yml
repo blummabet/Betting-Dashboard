@@ -1,0 +1,46 @@
+name: 🧪 Liga Backtest (Pilot)
+
+# 26.06.2026 (Lucas): manueller Backtest der Daten-Signale gegen Liga-Historie. Default Premier
+# League, letzte abgeschlossene Saison, Trefferquote (ohne Quoten). Schreibt liga_backtest_report.json.
+on:
+  workflow_dispatch:
+    inputs:
+      season:
+        description: "Saison (Startjahr, z.B. 2025 = 2025/26). Leer = letzte Saison."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
+      - name: 🧪 Backtest laufen
+        env:
+          APISPORTS_KEY:   ${{ secrets.APISPORTS_KEY }}
+          BACKTEST_SEASON: ${{ inputs.season }}
+        run: python liga_backtest.py
+
+      - name: 💾 Report committen
+        run: |
+          git config user.name  "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add liga_backtest_report.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "liga-backtest: Report [skip ci]"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
