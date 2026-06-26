@@ -105,6 +105,8 @@ jobs:
           git add matches/liga-index.json matches/data/liga-*.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.
+          git pull --rebase origin main || true
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
