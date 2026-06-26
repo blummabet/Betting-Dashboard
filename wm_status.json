@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-25T21:26:53Z",
+  "generatedAt": "2026-06-26T07:47:01Z",
   "windowDays": 2,
-  "upcoming": 18,
+  "upcoming": 12,
   "signalsFired": [
     "lead_lag_bias",
     "public_static_bias",
@@ -21,9 +21,9 @@
     "freshness_leg",
     "smart_money"
   ],
-  "signalsTotal": 19,
+  "signalsTotal": 20,
   "perSignal": {
-    "lead_lag_bias": 10,
+    "lead_lag_bias": 9,
     "public_static_bias": 15,
     "travel_burden": 74,
     "injury": 3,
@@ -33,34 +33,36 @@
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 37,
-    "lineup_signal": 17,
+    "lineup_signal": 18,
     "apif_predictions": 10,
     "weather_signal": 17,
     "incentive_signal": 22,
     "altitude_signal": 3,
     "chance_creation": 30,
     "form_rating": 6,
-    "freshness_leg": 14,
-    "smart_money": 26
+    "freshness_leg": 5,
+    "smart_money": 26,
+    "league_pressure": 0
   },
   "verdict": "warn",
   "errors": [],
   "warns": [
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
+    "🧠 Signal 'league_pressure' feuert nicht (kontextabhängig)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
-    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
+    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 2 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
     "🛡️ Steam-Lag: 1 Position pro Wette: 10 Fehler (z.B. CPV-SAU hw: 5 Einträge (soll 1))"
   ],
   "oks": [
-    "🌡️ Weather: 18 Spiele mit Forecast",
+    "🌡️ Weather: 12 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.1h alt",
     "📊 APIF-Predictions: 59 Spiele",
-    "📋 Lineups: 26 Spiele geladen (6 imminent)",
+    "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 47 Teams",
-    "📉 Odds-History: 74 Fixtures, Ø 100.0 Snapshots",
+    "📉 Odds-History: 76 Fixtures, Ø 102.4 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $336.15",
+    "💼 Poly-Balance: $354.84",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -293,11 +295,10 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 2,
       "failures": [
         "BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet",
-        "CUW-CIV Über 2.5 Tore @1.44: sichere Linie Über 1.5 Tore @1.4 verfügbar (≥1.35), nicht abgeleitet",
-        "NED-TUN Über 3.5 Tore @1.83: sichere Linie Über 2.5 Tore @1.36 verfügbar (≥1.35), nicht abgeleitet"
+        "JPN-SWE Heimsieg @1.91: sichere Linie Doppelte Chance — 1X @1.35 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
