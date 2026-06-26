@@ -1,10 +1,26 @@
 {
-  "lastRun": "2026-06-26T14:11:52.869008+00:00",
+  "lastRun": "2026-06-26T17:32:37.579936+00:00",
   "stats": {
-    "total": 162,
-    "errors": 0,
+    "total": 163,
+    "errors": 1,
     "warnings": 0,
     "ok": 162
   },
-  "issues": []
+  "issues": [
+    {
+      "matchKey": "KO-R32-BRA-JPN",
+      "market": "Heimsieg",
+      "level": "error",
+      "code": "E_ORPHAN_MATCH",
+      "message": "Pick existiert aber Match BRA-JPN nicht in Gruppe KO fixtures",
+      "pickSnapshot": {
+        "verdict": "ABWÄGEN",
+        "odds": 1.73,
+        "modelOdds": 1.701,
+        "edgePP": -3,
+        "clvPP": 0.0,
+        "dataQuality": "steam"
+      }
+    }
+  ]
 }
