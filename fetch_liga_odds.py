@@ -32,6 +32,9 @@ LEAGUE_SPORT_KEYS = {
     "FRA": "soccer_france_ligue_one",
 }
 BOOK_PRIORITY = ["pinnacle", "betfair_ex_eu", "marathonbet", "williamhill"]
+# Soft-/Public-Buchmacher für den Konsens (public_hw/dr/aw → public_static_bias-Signal +
+# „Soft-Konsens folgte"-Bestätigung im Steam). Bewusst NICHT pinnacle (das ist der Sharp-Anker).
+SOFT_PRIORITY = ["bet365", "williamhill", "unibet", "betclic", "marathonbet", "betfair_ex_eu"]
 
 # Bekannte harte Alias-Fälle (TheOddsAPI ↔ API-Football). Erweiterbar bei Fehlmatches.
 NAME_ALIASES = {
@@ -90,10 +93,12 @@ def match_event_to_fixture(event: dict, home_name: str, away_name: str) -> str |
     return None
 
 
-def _best_book(bookmakers: list, market_key: str):
-    """Erstes Bookmaker-Market nach Prioritäten (Pinnacle zuerst). Gibt (bk_key, outcomes)."""
+def _best_book(bookmakers: list, market_key: str, priority: list | None = None):
+    """Erstes Bookmaker-Market nach Prioritäten. Gibt (bk_key, outcomes). priority=None → Sharp."""
+    prio = priority or BOOK_PRIORITY
     by_key = {b.get("key"): b for b in (bookmakers or [])}
-    order = BOOK_PRIORITY + [k for k in by_key if k not in BOOK_PRIORITY]
+    # Bei expliziter Soft-Priorität NUR diese Bücher (sonst fiele es auf Sharp/Pinnacle zurück).
+    order = prio if priority else (prio + [k for k in by_key if k not in prio])
     for bk in order:
         b = by_key.get(bk)
         if not b:
@@ -124,6 +129,21 @@ def extract_prices(event: dict, orientation: str, home_name: str, away_name: str
         # orientierungs-agnostisch, KEIN zusätzlicher swap nötig (orientation nur fürs Event-Matching).
         if hw and dr and aw:
             out.update({"hw": hw, "dr": dr, "aw": aw, "bookmaker": bk})
+    # ── Public/Soft-Konsens 1X2 (für public_static_bias + Soft-Bestätigung) ──
+    pbk, pouts = _best_book(bks, "h2h", priority=SOFT_PRIORITY)
+    if pouts:
+        phw = pdr = paw = None
+        for o in pouts:
+            nm, price = o.get("name", ""), o.get("price")
+            if (nm or "").lower() == "draw":
+                pdr = price
+            elif _names_match(nm, home_name):
+                phw = price
+            elif _names_match(nm, away_name):
+                paw = price
+        if phw and pdr and paw:
+            out.update({"public_hw": phw, "public_dr": pdr, "public_aw": paw,
+                        "public_bookmaker": pbk})
     # ── Über/Unter 2.5 ──
     _, t_outs = _best_book(bks, "totals")
     if t_outs:
@@ -163,7 +183,15 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str) -> dict:
     for k in ("o25", "u25", "bttsY", "bttsN"):
         if prices.get(k):
             entry[k] = prices[k]
-    W.carry_soft_open(existing, entry)
+    # Public/Soft-Konsens 1X2 durchreichen (public_static_bias liest public_hw/dr/aw).
+    for k in ("public_hw", "public_dr", "public_aw", "public_bookmaker"):
+        if prices.get(k) is not None:
+            entry[k] = prices[k]
+    W.carry_soft_open(existing, entry)   # trägt vorhandene public_*_open mit (Soft-Opening-Fix)
+    # Soft-Opening seeden (1×), falls nicht aus existing getragen — sonst „Opening==Jetzt".
+    for k in ("hw", "dr", "aw"):
+        if entry.get(f"public_{k}_open") is None and prices.get(f"public_{k}"):
+            entry[f"public_{k}_open"] = prices[f"public_{k}"]
     # Closing-Snapshot (pre-match laufend, nach Anpfiff eingefroren) — gleiche Mechanik wie WM.
     cur = {k: prices[k] for k in ("hw", "dr", "aw", "o25", "u25", "bttsY", "bttsN") if prices.get(k)}
     try:
