@@ -48,6 +48,33 @@ def _file_for(module, attr, dataset):
     return subprocess.check_output([sys.executable, "-c", snip], cwd=str(REPO), env=env).decode().strip()
 
 
+class TestSignalGating(unittest.TestCase):
+    """WM-only Signale müssen im liga_default-Profil deaktiviert sein (sonst feuert z.B. Incentive
+    auf der Liga-Tabelle). 25.06.2026, Lucas."""
+    def _disabled(self, profile=None):
+        env = dict(os.environ)
+        env.pop("COCOBET_PROFILE", None)
+        if profile:
+            env["COCOBET_PROFILE"] = profile
+        snip = "import sharp_signals.registry as r; print(','.join(sorted(r._DISABLED_SIGNALS)))"
+        return set(filter(None, subprocess.check_output(
+            [sys.executable, "-c", snip], cwd=str(REPO), env=env).decode().strip().split(",")))
+
+    def test_liga_disables_wm_only(self):
+        d = self._disabled("liga_default")
+        for s in ("incentive_signal", "altitude_signal", "weather_signal",
+                  "travel_burden", "smart_money", "polymarket_sharp", "pressure_index"):
+            self.assertIn(s, d)
+
+    def test_liga_keeps_generic(self):
+        d = self._disabled("liga_default")
+        for s in ("form_trend", "h2h_pattern", "xg_strength", "steam_lag", "lead_lag_bias"):
+            self.assertNotIn(s, d)
+
+    def test_wm_disables_nothing(self):
+        self.assertEqual(self._disabled(None), set())
+
+
 class TestResolverDataset(unittest.TestCase):
     def test_resolve_picks_wm_default(self):
         self.assertEqual(_file_for("resolve_wm_picks", "WM_FILE", None), "wm2026-data.json")
