@@ -11,17 +11,22 @@ Run: python3 generate_wm_match_pages.py
 
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE, "matches", "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
-WM_FILE      = os.path.join(BASE, "wm2026-data.json")
-HISTORY_FILE = os.path.join(BASE, "wm2026-odds-history.json")
-POLY_FILE    = os.path.join(BASE, "wm_poly_prices.json")
-PROPS_FILE   = os.path.join(BASE, "wm2026-player-props.json")
-SMARTMONEY_FILE = os.path.join(BASE, "wm_poly_smartmoney.json")
+# Dataset-Modus (26.06.2026, Lucas: Event Pages liga-tauglich). COCOBET_DATASET=liga → Liga-Match-
+# Pages (liga-{slug}.json + liga-index.json), gleiches Template matches/wm-match.html. WM-only
+# Quellen (poly/props/smartmoney) für Liga = nicht-existente Pfade → load_json gibt {} → leer.
+_IS_LIGA     = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
+_PFX         = "liga" if _IS_LIGA else "wm"
+WM_FILE      = os.path.join(BASE, "liga-data.json" if _IS_LIGA else "wm2026-data.json")
+HISTORY_FILE = os.path.join(BASE, "liga-odds-history.json" if _IS_LIGA else "wm2026-odds-history.json")
+POLY_FILE    = os.path.join(BASE, "liga_poly_prices.json" if _IS_LIGA else "wm_poly_prices.json")
+PROPS_FILE   = os.path.join(BASE, "liga_player_props.json" if _IS_LIGA else "wm2026-player-props.json")
+SMARTMONEY_FILE = os.path.join(BASE, "liga_poly_smartmoney.json" if _IS_LIGA else "wm_poly_smartmoney.json")
 
 CO_HOSTS = {"MEX", "USA", "CAN"}
 
@@ -331,7 +336,7 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
     away_team = team_lookup[away_id]
 
     date = fixture["date"]
-    slug = f"wm-{home_id.lower()}-vs-{away_id.lower()}-{date}"
+    slug = f"{_PFX}-{home_id.lower()}-vs-{away_id.lower()}-{date}"
     pick_key = f"{group_id}-{fixture['matchday']}-{home_id}-{away_id}"
     odds_key = f"{home_id}-{away_id}"
     h2h_key  = f"{home_id}-{away_id}"
@@ -606,12 +611,22 @@ def main():
     generated = 0
     slugs = []
 
+    # Liga: nur „live" Spiele bepagen (Quoten da ODER ≤2 Wochen) — sonst 1066 statt ~40 Seiten.
+    _odds = wm.get("odds") or {}
+    _two_weeks = (datetime.utcnow().date() + timedelta(days=14)).isoformat()
+    _today = datetime.utcnow().date().isoformat()
+
     for group_id, group_data in wm["groups"].items():
         for fixture in group_data.get("fixtures", []):
             home_id = fixture.get("home")
             away_id = fixture.get("away")
             if not home_id or not away_id:
                 continue
+            if _IS_LIGA:
+                _d = (fixture.get("date") or "")[:10]
+                _live = (f"{home_id}-{away_id}" in _odds) or (_today <= _d <= _two_weeks)
+                if not _live:
+                    continue
             if home_id not in team_lookup or away_id not in team_lookup:
                 print(f"  SKIP: unknown team {home_id} or {away_id}")
                 continue
@@ -624,8 +639,8 @@ def main():
             generated += 1
             print(f"  ✓ {payload['home']} vs {payload['away']}  [{slug}.json]")
 
-    # Write WM-specific index
-    index_path = os.path.join(BASE, "matches", "wm-index.json")
+    # Index (dataset-bewusst: wm-index.json bzw. liga-index.json)
+    index_path = os.path.join(BASE, "matches", f"{_PFX}-index.json")
     with open(index_path, "w", encoding="utf-8") as f:
         json.dump({
             "slugs": slugs,
@@ -633,8 +648,8 @@ def main():
             "count": generated,
         }, f, ensure_ascii=False, separators=(",", ":"))
 
-    print(f"\n✅ Generated {generated} WM match pages → matches/data/wm-*.json")
-    print(f"   Index: matches/wm-index.json")
+    print(f"\n✅ Generated {generated} {_PFX.upper()} match pages → matches/data/{_PFX}-*.json")
+    print(f"   Index: matches/{_PFX}-index.json")
     print(f"   Template: matches/wm-match.html")
 
 
