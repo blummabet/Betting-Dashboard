@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-26T21:13:24Z",
-    "total_records": 113
+    "updated_at": "2026-06-26T21:28:22Z",
+    "total_records": 118
   },
   "records": [
     {
@@ -2489,6 +2489,163 @@
       "convictionScore": 4,
       "lateEntry": true,
       "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "I-3-FRA-NOR|Beide Teams treffen — Ja",
+      "matchKey": "I-3-FRA-NOR",
+      "market": "Beide Teams treffen — Ja",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.33
+        },
+        {
+          "name": "xg_strength",
+          "score": 6.0
+        }
+      ],
+      "resolvedAt": "2026-06-26T21:24:32Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "I-3-FRA-NOR|Heimsieg",
+      "matchKey": "I-3-FRA-NOR",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 6.0
+        },
+        {
+          "name": "public_static_bias",
+          "score": -5.26
+        },
+        {
+          "name": "travel_burden",
+          "score": 2.0
+        },
+        {
+          "name": "form_trend",
+          "score": -2.47
+        },
+        {
+          "name": "xg_strength",
+          "score": -0.97
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.69
+        },
+        {
+          "name": "form_rating",
+          "score": 2.72
+        },
+        {
+          "name": "smart_money",
+          "score": 1.42
+        }
+      ],
+      "resolvedAt": "2026-06-26T21:24:32Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "I-3-FRA-NOR|Über 2.5 Tore",
+      "matchKey": "I-3-FRA-NOR",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "public_static_bias",
+          "score": -1.25
+        },
+        {
+          "name": "travel_burden",
+          "score": -1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 5.07
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.83
+        },
+        {
+          "name": "incentive_signal",
+          "score": -1.0
+        },
+        {
+          "name": "chance_creation",
+          "score": 5.07
+        }
+      ],
+      "resolvedAt": "2026-06-26T21:24:32Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "I-3-SEN-IRQ|AH Heim −1.5",
+      "matchKey": "I-3-SEN-IRQ",
+      "market": "AH Heim −1.5",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": 1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 4.5
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.84
+        },
+        {
+          "name": "smart_money",
+          "score": 0.97
+        }
+      ],
+      "resolvedAt": "2026-06-26T21:24:32Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "I-3-SEN-IRQ|Über 2.5 Tore",
+      "matchKey": "I-3-SEN-IRQ",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -1.5
+        },
+        {
+          "name": "lineup_signal",
+          "score": -3.8
+        },
+        {
+          "name": "incentive_signal",
+          "score": -1.0
+        }
+      ],
+      "resolvedAt": "2026-06-26T21:24:32Z",
+      "source": "steam",
+      "convictionScore": 2,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "J-1-ARG-DZA|Unter 3.5 Tore",
