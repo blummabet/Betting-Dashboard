@@ -297,6 +297,26 @@
       "note": "Je (Spiel, Markt) genau EINE Karte. Mehrfach → _dedup_picks_by_market greift nicht (Refresh-/Merge-Altlast)."
     },
     {
+      "id": "steam_lag_no_dupes",
+      "label": "Steam-Lag: 1 Position pro Wette",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 10,
+      "failures": [
+        "CPV-SAU hw: 5 Einträge (soll 1)",
+        "CRO-GHA aw: 2 Einträge (soll 1)",
+        "NZL-EGY hw: 2 Einträge (soll 1)",
+        "CIV-ECU aw: 2 Einträge (soll 1)",
+        "MAR-HTI aw: 4 Einträge (soll 1)",
+        "CZE-ZAF aw: 2 Einträge (soll 1)",
+        "JOR-DZA hw: 6 Einträge (soll 1)",
+        "PAN-CRO dr: 2 Einträge (soll 1)",
+        "DZA-AUT dr: 2 Einträge (soll 1)",
+        "JPN-SWE aw: 2 Einträge (soll 1)"
+      ],
+      "note": "Je (Match, Markt) nur EINE Tracking-Position. Mehrfach → make_signal_id/Status-Filter in steam_lag_monitor.update_log defekt (Re-Detektion legt Duplikat an)."
+    },
+    {
       "id": "smartmoney_cluster_sane",
       "label": "Smart-Money-Cluster kohärent",
       "severity": "warn",
@@ -387,6 +407,6 @@
       "note": "fetch_wm_poly_prices: fair_btts aus de-viggter Pinnacle-bttsY/N. Riesen-Edge = Daten kaputt. Auto-Trader blockt via BTTS_MAX_EDGE_PP."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-06-26T07:41:09.676193+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-06-26T07:38:49.350761+00:00"
 }
