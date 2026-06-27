@@ -120,5 +120,35 @@ class TestPhase2(unittest.TestCase):
         self.assertEqual(agg["perSignal"]["s"]["roiPct"], 0.0)
 
 
+class TestCLV(unittest.TestCase):
+    def test_clv_pct(self):
+        # Einstieg 2.20, Closing 2.00 → Linie lief zu uns → +10% CLV
+        self.assertEqual(B.clv_pct(2.20, 2.00), 10.0)
+        # Einstieg schlechter als Closing → negativer CLV
+        self.assertEqual(B.clv_pct(1.90, 2.00), -5.0)
+        self.assertIsNone(B.clv_pct(None, 2.0))
+        self.assertIsNone(B.clv_pct(2.0, 1.0))
+
+    def test_parse_fd_csv_closing(self):
+        csv = ("Date,HomeTeam,AwayTeam,AvgH,AvgD,AvgA,Avg>2.5,Avg<2.5,AvgCH,AvgCA,AvgC>2.5,AvgC<2.5\n"
+               "15/08/2025,Liverpool,Chelsea,1.80,3.60,4.50,1.95,1.90,1.70,4.80,1.90,1.95\n")
+        r = B.parse_fd_csv(csv)[0]
+        self.assertEqual((r["oddsHc"], r["oddsAc"], r["o25c"]), (1.70, 4.80, 1.90))
+
+    def test_aggregate_clv_per_signal(self):
+        # positiver Call, Einstieg 2.2 vs Closing 2.0 → +10% CLV, schlägt Closing
+        led = [{"signal": "s", "market": "Heimsieg", "score": 1.0, "won": True,
+                "odds": 2.2, "oddsClose": 2.0}]
+        row = B.aggregate(led)["perSignal"]["s"]
+        self.assertEqual(row["avgClvPct"], 10.0)
+        self.assertEqual(row["beatCloseRate"], 1.0)
+
+    def test_aggregate_system_clv(self):
+        sysd = [{"market": "Heimsieg", "combined": 5.0, "won": True, "odds": 2.2, "oddsClose": 2.0}]
+        agg = B.aggregate_system(sysd, thresholds=[2.0])[">=2.0pp"]
+        self.assertEqual(agg["avgClvPct"], 10.0)
+        self.assertEqual(agg["beatCloseRate"], 1.0)
+
+
 if __name__ == "__main__":
     unittest.main()
