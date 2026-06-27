@@ -50,8 +50,12 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 BASE          = Path(__file__).parent
-WM_FILE       = BASE / "wm2026-data.json"
-OUTPUT_FILE   = BASE / "wm_apif_predictions.json"
+# Dataset-bewusst (26.06.2026, Lucas): Liga liest/schreibt liga-* Dateien, nutzt die fid am Fixture
+# (build_liga_data) → kein WM-Fixture-Map-Umweg. Consumer (generate_wm_picks) lädt schon
+# {_FILE_PREFIX}apif_predictions.json. WM-Verhalten unverändert.
+_IS_LIGA      = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
+WM_FILE       = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
+OUTPUT_FILE   = BASE / ("liga_apif_predictions.json" if _IS_LIGA else "wm_apif_predictions.json")
 APIF_HOST     = "v3.football.api-sports.io"
 APIF_KEY      = os.environ.get("APISPORTS_KEY", "9f36726c1bdc9957b4a49f89277b80db")
 
@@ -157,7 +161,9 @@ def _load_wm_fixtures() -> tuple[list[dict], dict[str, int]]:
                         "home_id":   fx["home"],
                         "away_id":   fx["away"],
                         "date":      fx["date"],
-                        "time":      fx.get("time", "21:00"),
+                        # Liga-Fixtures haben kickoff (ISO) statt time → HH:MM ableiten.
+                        "time":      (fx.get("kickoff") or "")[11:16] or fx.get("time", "21:00"),
+                        "fid":       fx.get("fid"),   # API-Fixture-ID (Liga) → direkt, kein Lookup
                     })
         return out, wm.get("teamIds", {}) or {}
     except Exception:
@@ -305,8 +311,9 @@ def main():
     existing = _load_existing()
 
     # FIX 09.06.2026: WM-Fixture-Map einmalig laden statt pro Spiel /fixtures?date=
+    # Liga (26.06.2026): überspringen — die fid steht direkt am Fixture (build_liga_data).
     global _WM_FIXTURE_MAP
-    if upcoming and team_ids:
+    if upcoming and team_ids and not _IS_LIGA:
         _WM_FIXTURE_MAP = _build_wm_fixture_map(team_ids)
     else:
         _WM_FIXTURE_MAP = {}
@@ -332,7 +339,8 @@ def main():
         away_name = _team_name_from_id(fx["away_id"])
         print(f"🔎 {mk} ({home_name} vs {away_name}):")
 
-        fixture_id = (entry or {}).get("fixture_id")
+        # Liga: fid direkt vom Fixture (kein Lookup). WM: aus Cache/Map/Datum.
+        fixture_id = (entry or {}).get("fixture_id") or fx.get("fid")
         if not fixture_id:
             # Erst aus WM-Fixture-Map (kein Extra-Call), dann Datums-Fallback
             home_apif = team_ids.get(fx["home_id"])

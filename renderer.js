@@ -1824,6 +1824,54 @@ function _sharpSetDataset(ds) {
 }
 if (typeof window !== 'undefined') window._sharpSetDataset = _sharpSetDataset;
 
+// (26.06.2026, Lucas: „Sharp Radar soll aktuelle Liga-Linien auch OHNE Bewegung zeigen")
+// Solange keine Linie über ≥2 Snapshots wandert (6 Wochen vor Saison = statisch), gibt es keine
+// Steam-Moves zu zeigen. Statt „kommt bald" rendern wir die aktuellen Pinnacle-/Soft-1X2-Linien
+// der bepreisten, anstehenden Spiele als Tabelle. Reiner View aus data.odds + data.groups.
+function _renderLigaCurrentLinesHtml(data) {
+  const odds = (data && data.odds) || {};
+  const groups = (data && data.groups) || {};
+  const meta = {};
+  for (const g of Object.values(groups)) {
+    const names = {};
+    for (const t of (g.teams || [])) names[String(t.id)] = t.name || t.id;
+    for (const fx of (g.fixtures || [])) {
+      const played = ['FT', 'AET', 'PEN'].includes(String((fx.result || {}).status || '').toUpperCase());
+      meta[`${fx.home}-${fx.away}`] = {
+        home: names[String(fx.home)] || fx.homeName || fx.home,
+        away: names[String(fx.away)] || fx.awayName || fx.away,
+        date: fx.date, md: fx.matchday, played,
+      };
+    }
+  }
+  const rows = [];
+  for (const [k, o] of Object.entries(odds)) {
+    const m = meta[k];
+    if (!m || m.played || !o || !o.hw) continue;
+    rows.push({ ...m, o });
+  }
+  rows.sort((a, b) => String(a.date || '').localeCompare(String(b.date || '')));
+  if (!rows.length) return '';
+  const cell = (o, k) => (o[k] != null ? o[k] : '–');
+  let h = `<div style="max-width:960px;margin:0 auto;">`;
+  h += `<div style="color:var(--muted);font-size:12px;line-height:1.6;margin:6px 0 16px;text-align:center;">📡 Aktuelle Liga-Linien (Pinnacle + Soft-Konsens). Noch keine Steam-Bewegung — sobald sich Linien über mehrere Snapshots bewegen, erscheinen hier die Moves.</div>`;
+  h += `<table style="width:100%;border-collapse:collapse;font-size:12px;">`
+     + `<tr style="color:var(--muted);text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.4px;">`
+     + `<th style="padding:7px 8px;">Spiel</th><th>ST</th><th>Pinnacle 1 / X / 2</th><th>Soft 1 / X / 2</th></tr>`;
+  for (const r of rows) {
+    const p = `${cell(r.o, 'hw')} / ${cell(r.o, 'dr')} / ${cell(r.o, 'aw')}`;
+    const hasSoft = r.o.public_hw || r.o.public_dr || r.o.public_aw;
+    const s = hasSoft ? `${cell(r.o, 'public_hw')} / ${cell(r.o, 'public_dr')} / ${cell(r.o, 'public_aw')}` : '–';
+    h += `<tr style="border-top:1px solid var(--border);">`
+       + `<td style="padding:7px 8px;color:var(--text);">${r.home} – ${r.away}</td>`
+       + `<td style="color:var(--muted);">${r.md != null ? r.md : ''}</td>`
+       + `<td style="color:var(--text);">${p}</td>`
+       + `<td style="color:var(--muted);">${s}</td></tr>`;
+  }
+  h += `</table></div>`;
+  return h;
+}
+
 function renderSharpRadar() {
   const mc = document.getElementById('mainContent');
 
@@ -1845,9 +1893,13 @@ function renderSharpRadar() {
         `<div style="max-width:960px;margin:0 auto;padding:40px 0;text-align:center;color:var(--muted);font-size:13px;">⚽ Liga-Sharp-Daten werden geladen …</div>`;
       return;
     }
-    if (!_histKeys.length) {
-      if (mc) mc.innerHTML = _sharpRenderToggleHtml() +
-        `<div style="max-width:960px;margin:0 auto;padding:40px 24px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;">⚽ Liga-Sharp-Daten kommen mit dem nächsten Liga-Lauf.<br><span style="font-size:11px;color:var(--muted);opacity:.8;">Sobald <code>liga-odds-history.json</code> Snapshots enthält, zeigt der Radar hier die Pinnacle-/Soft-Bewegungen der Ligen.</span></div>`;
+    // Bewegung = irgendein Match mit ≥2 Snapshots. Solange keine da ist (auch wenn History schon
+    // Einzel-Snapshots hat), aktuelle Linien zeigen statt leerem Radar / „kommt bald".
+    const _hasMoves = _histKeys.some(k => Array.isArray(_hist[k]) && _hist[k].length >= 2);
+    if (!_hasMoves) {
+      const _cur = _renderLigaCurrentLinesHtml(_data);
+      if (mc) mc.innerHTML = _sharpRenderToggleHtml() + (_cur ||
+        `<div style="max-width:960px;margin:0 auto;padding:40px 24px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;">⚽ Liga-Linien kommen mit dem nächsten Liga-Lauf.<br><span style="font-size:11px;color:var(--muted);opacity:.8;">Sobald Quoten geholt sind, zeigt der Radar hier die aktuellen Pinnacle-/Soft-Linien und später die Bewegungen.</span></div>`);
       return;
     }
   }

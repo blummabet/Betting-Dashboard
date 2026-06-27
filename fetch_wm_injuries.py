@@ -39,7 +39,11 @@ from datetime import datetime, timezone, date
 from pathlib import Path
 
 BASE      = Path(__file__).parent
-WM_FILE   = BASE / "wm2026-data.json"
+# Dataset-bewusst (26.06.2026, Lucas): Liga liest/schreibt liga-data.json; League-Endpoint läuft
+# über die 5 Top-Ligen, /sidelined pro Team bleibt generisch (Hauptquelle pre-Saison). Consumer
+# (generate_wm_picks injury_discount) liest wm["injuries"] schon dataset-bewusst. WM unverändert.
+_IS_LIGA  = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
+WM_FILE   = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
 APIF_HOST = "v3.football.api-sports.io"
 APIF_KEY  = os.environ.get("APISPORTS_KEY", "").strip()
 DELAY     = 1.2
@@ -47,6 +51,8 @@ DELAY     = 1.2
 WM_LEAGUE  = 1       # FIFA World Cup
 WM_SEASON  = 2026
 WM_START   = date(2026, 6, 11)
+LIGA_LEAGUES = {"ENG": 39, "ESP": 140, "GER": 78, "ITA": 135, "FRA": 61}
+LIGA_SEASON  = int(os.environ.get("LIGA_SEASON") or 2025)
 
 
 def apif_get(endpoint: str, params: dict) -> list:
@@ -92,15 +98,19 @@ def get_all_team_ids(wm: dict) -> dict[str, str]:
 
 def fetch_wm_injuries_league() -> dict[str, list]:
     """
-    Holt alle Verletzungen via /injuries?league=1&season=2026.
-    Nur verfügbar ab WM-Start. Gibt {} zurück wenn keine Daten.
+    Holt Verletzungen via /injuries?league=&season=. WM: league=1/season=2026. Liga: über die 5
+    Top-Ligen (LIGA_LEAGUES/LIGA_SEASON) iteriert + gemerged. Gibt {} zurück wenn keine Daten.
     """
-    print("  📡 Fetching /injuries?league=1&season=2026…")
-    time.sleep(DELAY)
-    entries = apif_get("injuries", {"league": WM_LEAGUE, "season": WM_SEASON})
+    league_seasons = ([(lid, LIGA_SEASON) for lid in LIGA_LEAGUES.values()]
+                      if _IS_LIGA else [(WM_LEAGUE, WM_SEASON)])
+    entries = []
+    for lid, season in league_seasons:
+        print(f"  📡 Fetching /injuries?league={lid}&season={season}…")
+        time.sleep(DELAY)
+        entries.extend(apif_get("injuries", {"league": lid, "season": season}) or [])
 
     if not entries:
-        print("  ℹ️  Keine Verletzungsdaten — WM noch nicht begonnen oder API leer.")
+        print("  ℹ️  Keine Verletzungsdaten — Saison noch nicht begonnen oder API leer.")
         return {}
 
     by_team: dict[str, list] = {}
@@ -206,10 +216,11 @@ def main():
     team_ids = wm.get("teamIds", {})  # {our_id: apif_team_id}
     print(f"  📋 {len(team_map)} WM-Teams ({len(team_ids)} mit APIF-ID)")
 
-    # ── Schritt 1: WM-Verletzungen via League-Endpoint ─────────────────────────
-    # Vor WM-Start gibt dieser Endpoint typischerweise nichts zurück
-    days_until_wm = (WM_START - today).days
-    print(f"  📅 Tage bis WM-Start: {days_until_wm}")
+    # ── Schritt 1: Verletzungen via League-Endpoint ────────────────────────────
+    # Vor Saison-/Turnierstart gibt dieser Endpoint typischerweise nichts zurück → /sidelined-Fallback.
+    days_until_wm = 0 if _IS_LIGA else (WM_START - today).days
+    if not _IS_LIGA:
+        print(f"  📅 Tage bis WM-Start: {days_until_wm}")
 
     injuries_by_name = fetch_wm_injuries_league()
 
@@ -260,7 +271,7 @@ def main():
     # ── Schritt 5: Speichern ───────────────────────────────────────────────────
     wm["injuries"] = injuries_out
     WM_FILE.write_text(json.dumps(wm, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"\n✅ wm2026-data.json[\"injuries\"] geschrieben")
+    print(f"\n✅ {WM_FILE.name}[\"injuries\"] geschrieben")
     print(f"   Teams mit Daten: {teams_with_data}/{len(team_map)}")
 
 
