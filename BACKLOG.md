@@ -27,7 +27,8 @@ dataset-bewusst · LeaguePressureSignal · Post-Match-xG-Re-Learning · Backtest
 - ✅ `fixture_congestion` / Erschöpfung (Ruhetage aus Spielplan; registriert, context-Familie).
 - ✅ Spieler-Layer Spine: `squads` (Schlüsselspieler → lineup_signal) + `player_form`-Ledger
   (aus gespielten Spielen via fetch_liga_match_stats → liga_player_form.json, skaliert lineup_signal).
-- ⏳ Spieler-Layer Rest: `topscorer_momentum` (/players/topscorers) + `squad_strength` (überlappt injury/lineup).
+- ✅ `topscorer_momentum` (/players/topscorers → liga-data.json[topScorers]; form-Familie, Boost Sieg/Über).
+- ⏳ Spieler-Layer Rest: `squad_strength` (überlappt injury/lineup, niedrige Prio).
 - ⏳ `coach_change` / `transfer_shift` (Saisonstart-relevant).
 - ⏳ `referee_tendency` (zusammen mit Karten-Markt).
 - ⏳ News-Signal — nur falls Datenqualität + harter Engine-Hook (Scope-Disziplin).

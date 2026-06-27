@@ -116,12 +116,12 @@ class TestSignalRegistryActive(unittest.TestCase):
             "steam_lag", "pressure_index", "lineup_signal", "apif_predictions",
             "weather_signal", "incentive_signal", "altitude_signal",
             "chance_creation", "form_rating", "freshness_leg", "smart_money",
-            "league_pressure", "fixture_congestion",
+            "league_pressure", "fixture_congestion", "topscorer_momentum",
         }
         self.assertEqual(set(names), expected,
                          f"Signal-Set abweichend. fehlt: {expected - set(names)}, "
                          f"extra: {set(names) - expected}")
-        self.assertEqual(len(ACTIVE_SIGNALS), 21)
+        self.assertEqual(len(ACTIVE_SIGNALS), 22)
 
     def test_lineup_and_apif_are_unique(self):
         from sharp_signals.registry import SIGNAL_GROUPS

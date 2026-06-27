@@ -38,6 +38,7 @@ from sharp_signals.freshness_signal import FreshnessLegSignal
 from sharp_signals.smart_money import SmartMoneySignal
 from sharp_signals.league_pressure import LeaguePressureSignal
 from sharp_signals.fixture_congestion import FixtureCongestionSignal
+from sharp_signals.topscorer_momentum import TopscorerMomentumSignal
 
 
 # Pro-Profil deaktivierte Signale (25.06.2026, Lucas: Liga auf WM-Stack). Manche WM-only-Signale
@@ -88,6 +89,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     SmartMoneySignal(),
     LeaguePressureSignal(),   # Liga-Pendant zu incentive (25.06.2026); no-op für WM (group_id A-L)
     FixtureCongestionSignal(),  # Erschöpfung/Spielstau aus Ruhetagen (26.06.2026); Schläfer bis englische Woche
+    TopscorerMomentumSignal(),  # Top-Torjäger-Bedrohung (26.06.2026); form-Familie, früh ~neutral
 ]
 
 
@@ -162,6 +164,9 @@ SIGNAL_GROUPS: dict[str, str] = {
     # Anti-Korr-Discount (0.4) verhindert Doppelzählung des Angriffs-Edges.
     "chance_creation":    "form",
     "form_rating":        "form",
+    # topscorer_momentum: konzentrierte Angriffs-Bedrohung (Top-Torjäger) — gehört zur Angriffs-/
+    # form-Familie (Anti-Korr mit xg_strength/chance_creation/form_trend → kein Doppel-Edge).
+    "topscorer_momentum": "form",
     "public_static_bias": "public",
     "travel_burden":      "context",
     "injury":             "context",

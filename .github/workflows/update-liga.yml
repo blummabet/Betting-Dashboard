@@ -58,6 +58,11 @@ jobs:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         run: python fetch_wm_squads.py || true
 
+      - name: ⚽ Liga Top-Torjäger holen (topscorer_momentum)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_liga_topscorers.py || true
+
       - name: 🤕 Liga Verletzungen/Sperren holen (League + /sidelined)
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}

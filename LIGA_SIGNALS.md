@@ -53,8 +53,9 @@ Priorität grob von hoch nach niedrig. Jedes als eigenes modulares Signal + Fetc
    - `player_form` ✅ (26.06.) — per-Spieler-Form aus /fixtures/players-Ledger (post-match via
      fetch_liga_match_stats → liga_player_form.json), skaliert lineup_signal-Wichtung. Squads
      (Schlüsselspieler) ✅ via fetch_wm_squads → liga-data.json["squads"].
+   - `topscorer_momentum` ✅ (26.06.) → /players/topscorers → liga-data.json["topScorers"]; Team mit
+     treffsicherem Stürmer → Boost Sieg/Über (form-Familie, Anti-Korr mit xg/form).
    - `squad_strength` 🔜 / Ausfall-Wertung — überlappt stark mit injury+lineup (niedrigere Prio).
-   - `topscorer_momentum` 🔜 → /players/topscorers, /players/topassists (Hauptkreateur in Form).
 4. **`apif_predictions`** 🔜 — drittes Modell als Cross-Check (haben wir für WM, nur Liga-Fetch nötig).
 5. **`coach_change` / Neuer-Trainer-Bounce** 🔜 — Trainerwechsel → kurzfristiger Effekt. /coachs, /transfers.
 6. **`transfer_shift`** 🔜 (Saisonstart) — große Zu-/Abgänge → Qualitäts-Verschiebung. /transfers.
