@@ -12,7 +12,8 @@ REPO = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO))
 
 from sharp_signals.league_pressure import (LeaguePressureSignal, team_pressure,
-                                           _time_factor, _market_side, LEAGUE_META)  # noqa: E402
+                                           _time_factor, LEAGUE_META)  # noqa: E402
+from sharp_signals.base import market_side as _market_side  # noqa: E402  (konsolidiert in base)
 
 
 def _standings20():

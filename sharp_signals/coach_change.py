@@ -10,24 +10,10 @@ from __future__ import annotations
 
 from typing import Optional
 
-from sharp_signals.base import Signal, SignalResult
+from sharp_signals.base import Signal, SignalResult, market_side
 
 MAX_PP = 1.0
 WINDOW_DAYS = 75
-
-
-def _market_side(market: str) -> Optional[str]:
-    m = (market or "").lower()
-    if "über" in m or "uber" in m or "over" in m:
-        return "over"
-    if "unter" in m or "under" in m:
-        return "under"
-    if "heimsieg" in m or "1x" in m or "ah heim" in m or ("dnb" in m and "heim" in m):
-        return "home"
-    if ("auswärtssieg" in m or "auswartssieg" in m or "x2" in m or "ah ausw" in m
-            or ("dnb" in m and ("ausw" in m or "away" in m))):
-        return "away"
-    return None
 
 
 def bounce(entry: dict) -> float:
@@ -53,7 +39,7 @@ class CoachChangeSignal(Signal):
         if hb == 0.0 and ab == 0.0:
             return None
 
-        side = _market_side(pick.get("market", ""))
+        side = market_side(pick.get("market", ""))
         if side not in ("home", "away", "over"):
             return None
 
