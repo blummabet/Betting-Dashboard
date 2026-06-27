@@ -553,6 +553,13 @@ def main():
             for gdata in wm.get("groups", {}).values()
             for f in gdata.get("fixtures", [])
         }
+        # KO-Paarungen sind ECHTE Fixtures (nur ohne Poly-Markt) — sonst löscht das Phantom-Pruning
+        # unten ihre Pinnacle-Odds bei JEDEM Lauf → R32-Cards verlieren Quote + Pick (Bug 27.06.2026).
+        real_keys |= {
+            f"{k.get('home')}-{k.get('away')}"
+            for k in (wm.get("koFixtures") or [])
+            if k.get("bothResolved") and k.get("home") and k.get("away")
+        }
         _norm, _flipped = {}, 0
         for k, p in prices.items():
             rk = f"{p.get('awayId')}-{p.get('homeId')}"

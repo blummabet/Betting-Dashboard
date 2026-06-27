@@ -57,10 +57,11 @@ dataset-bewusst · LeaguePressureSignal · Post-Match-xG-Re-Learning · Backtest
 - ⏳ Poly Pre-Match-Close: hängt am `AUTO_SELL_ENABLED`-Secret.
 - ⏳ smart_money: Holders-Endpoint am 1. echten Live-Lauf justieren.
 - ⏳ Poly-Handicap-Trading: `ah_trade_enabled` gated AUS bis Token-Platzierung verifiziert.
-- ⏳ Pick-Kalibrierung: nach Runde 2 auswerten.
+- ✅ Pick-Kalibrierung ausgewertet (27.06.): 75 Picks, Baseline 0.585, steam Δ=+0.0 → kein Nudge nötig (kalibriert). High-Conviction 0.79 (n=5, zu klein). Nach mehr Runden erneut.
 - ⏳ Freshness-Reverser: Phase 2 (reinforcing-market).
 - ⏳ Safer-Line: Phase 2 (Quarter-Linien 3.0 / 3.25 / +0.25).
 - ⏳ Player-Props: deaktiviert (kein Engine-Hook) → aktivieren, wenn Markt + Hook stehen.
 - ⏳ Signal-Engine-Roadmap: restliche geplante Signale der 5 Tiers.
 - ⏳ Post-Match-Move-These: Dense-Capture-Daten auswerten, dann entscheiden.
-- ⏳ Daten-Lücken prüfen: apif (listet WC2026 evtl. nicht), weather (war stale).
+- ✅ Daten-Lücken geprüft (27.06.): apif liefert jetzt 59 Spiele (WC2026 gelistet, Turnier live) — keine Lücke. weather dünn (nur 4 Einträge) → Wetter-Workflow prüfen (kleinere Sache).
+- ✅ R32-Cards ohne Pick GEFIXT (27.06.): fetch_wm_poly_prices.real_keys enthielt koFixtures nicht → KO-Odds bei jedem Lauf als Phantom geprunt. real_keys |= koFixtures + Guard check_ko_odds_present.

@@ -467,6 +467,30 @@ def check_liga_leagues_populated(ctx):
 
 
 @integrity_check
+def check_ko_odds_present(ctx):
+    """NEU 27.06.2026 (Bug „R32-Cards ohne Pick"): bothResolved + ungespielte KO-Paarungen mit
+    Odds-History dürfen ihre top-level Odds NICHT verlieren. fetch_wm_poly_prices löschte KO-Keys
+    als „Phantom", weil real_keys nur Gruppen-Fixtures enthielt (nicht koFixtures) → KO-Odds bei
+    jedem Lauf weg → keine Steam-Picks. Guard fängt die Regression: History da, top-level Odds fehlen."""
+    if ctx.is_liga:
+        return None
+    fails = []
+    for kf in (ctx.wm.get("koFixtures") or []):
+        if not kf.get("bothResolved"):
+            continue
+        h, a = kf.get("home"), kf.get("away")
+        if not (h and a):
+            continue
+        if str((kf.get("result") or {}).get("status") or "").upper() in {"FT", "AET", "PEN", "AWD", "WO"}:
+            continue
+        key = f"{h}-{a}"
+        if len(ctx.history.get(key) or []) >= 2 and key not in ctx.odds:
+            fails.append(f"{key}: Odds-History vorhanden, aber keine top-level Odds — als Phantom geprunt?")
+    return _chk("ko_odds_present", "KO-Odds bleiben erhalten (nicht als Phantom geprunt)", "warn", fails,
+                "fetch_wm_poly_prices.real_keys muss bothResolved koFixtures enthalten.")
+
+
+@integrity_check
 def check_liga_odds_round_sane(ctx):
     """NEU 26.06.2026 (Bug „Spieltag 1 dann 20"): Liga-Odds dürfen nur auf den nächsten
     anstehenden Spieltagen liegen. match_event_to_fixture akzeptiert 'swapped' → ein
