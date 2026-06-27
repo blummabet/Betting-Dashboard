@@ -22,63 +22,10 @@ BASE = Path(__file__).parent.parent
 sys.path.insert(0, str(BASE))
 
 
-class TestDnbAhCrossModelConsistency(unittest.TestCase):
-    """
-    Lädt echte WM-Daten und prüft IRN-NZL als Regression-Fall.
-    Dieser Test ist robust gegen sich ändernde Quoten — solange das Spiel
-    in den Daten ist, prüfen wir das semantische Verhalten.
-    """
-
-    @classmethod
-    def setUpClass(cls):
-        sys.argv = ["test"]   # generate_wm_picks liest sys.argv beim Import
-        import generate_wm_picks
-        cls.mod = generate_wm_picks
-        cls.wm = json.loads((BASE / "wm2026-data.json").read_text(encoding="utf-8"))
-        travel_path = BASE / "wm_travel_burden.json"
-        cls.travel = json.loads(travel_path.read_text()) if travel_path.exists() else {}
-
-    def _picks(self, home: str, away: str):
-        for gkey, gdata in self.wm["groups"].items():
-            for fx in gdata.get("fixtures", []):
-                if fx.get("home") == home and fx.get("away") == away:
-                    return self.mod.generate_picks_for_fixture(
-                        fx=fx, gdata=gdata,
-                        mkt=self.wm["odds"], form=self.wm["form"],
-                        h2h_data=self.wm["h2h"],
-                        today_iso="2026-06-07",
-                        xg_stats=self.wm.get("xgStats", {}),
-                        injuries=self.wm.get("injuries", {}),
-                        travel_data=self.travel,
-                        corners_form=self.wm.get("cornersForm", {}),
-                    )
-        return None
-
-    def test_irn_nzl_no_phantom_dnb_bet(self):
-        """
-        Regression-Test 07.06.2026 (aktualisiert 13.06.2026): IRN-NZL darf KEINEN
-        DNB-Auswärts-BET als Phantom-Value zeigen.
-
-        Ursprünglich (07.06.): Elo-DNB (~58%) divergierte von Skellam-AH (~42%) →
-        Phantom „DNB Auswärts BET +13pp". Fix damals: Cross-Model-Konsistenz-
-        Downgrade auf ABWÄGEN mit Reason „Modell-Inkonsistenz".
-
-        Seit dem PINNACLE-ANKER (13.06.2026) wird die 1X2/DC/DNB-Baseline aus den
-        de-viggten Pinnacle-Quoten gebildet statt aus dem Elo-Modell → der Phantom-
-        Edge entsteht an der WURZEL nicht mehr. Folge: IRN-NZL hat gar keinen
-        DNB-Auswärts-Pick mehr (Pinnacle sieht NZL-no-loss ~47% → kein BET-Edge).
-
-        Der Test prüft daher das robuste Outcome: ENTWEDER kein DNB-Auswärts-Pick
-        (Anker hat den Phantom eliminiert) ODER — falls einer existiert — er ist
-        nicht BET. Beides erfüllt die Regressions-Absicht: kein Phantom-DNB-BET.
-        """
-        picks = self._picks("IRN", "NZL")
-        self.assertIsNotNone(picks, "IRN-NZL Fixture muss in den Daten sein")
-        dnb_a = next((p for p in picks if p.get("market") == "DNB: Auswärtsteam"), None)
-        if dnb_a is not None:
-            self.assertNotEqual(dnb_a.get("verdict"), "BET",
-                f"DNB Auswärts darf kein Phantom-BET sein. "
-                f"Aktuell: {dnb_a.get('verdict')}, Reason: {dnb_a.get('downgradedReason')}")
+# 26.06.2026 (Phase 5): Die IRN-NZL-Regression lief über den toten Elo-Pfad
+# generate_picks_for_fixture. Seit dem Pinnacle-Anker (13.06.) entsteht der Phantom-DNB-BET an der
+# WURZEL nicht mehr (Baseline = de-viggte Pinnacle-Quote, nicht Elo) → die Regression ist obsolet
+# und wurde mit dem toten Pfad entfernt. Die Konsistenz-Schwelle bleibt unten unit-getestet.
 
 
 class TestCrossModelLogicUnit(unittest.TestCase):

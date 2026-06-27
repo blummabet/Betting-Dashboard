@@ -14,13 +14,13 @@ class TestModuleImports(unittest.TestCase):
         import generate_wm_picks
         self.assertTrue(hasattr(generate_wm_picks, "EDGE_BET_1X2"))
 
-    def test_uses_pick_constants(self):
-        """Modul muss pick_constants Helper verwenden statt Inline-Map."""
+    def test_no_inline_direction_map(self):
+        """Keine Inline-Richtungs-Map — Richtungs-/Inkompatibilitäts-Logik gehört in die geteilten
+        Helfer (pick_helpers / sharp_signals.base.market_side). (26.06.2026: der pick_constants-
+        Import lag NUR im entfernten toten Elo-Pfad; Anti-Inline-Regression bleibt.)"""
         src = (Path(__file__).parent.parent / "generate_wm_picks.py").read_text(encoding="utf-8")
-        self.assertIn("from pick_constants import", src,
-            "generate_wm_picks muss pick_constants importieren")
         self.assertNotIn("DIRECTION_MAP = {", src,
-            "Inline DIRECTION_MAP darf nicht mehr existieren — pick_constants verwenden")
+            "Inline DIRECTION_MAP darf nicht existieren — geteilte Helfer verwenden")
 
     def test_uses_cocobet_config(self):
         """Magic Numbers müssen aus Config kommen."""

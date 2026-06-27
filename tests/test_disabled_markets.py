@@ -12,7 +12,7 @@ Stand 10.06.2026 (WM2026-Profil):
 
 Dieser Test stellt sicher dass:
   1. Die config-Liste eingelesen wird (Corners disabled, BTTS aktiv)
-  2. generate_picks_for_fixture die gesperrten Corner-Märkte überspringt
+  2. die ECHTEN generierten Picks keinen aktiven Corner-Markt enthalten
 """
 from __future__ import annotations
 import json
@@ -45,41 +45,23 @@ class TestDisabledMarketsRead(unittest.TestCase):
 
 
 class TestDisabledMarketsFiltered(unittest.TestCase):
-    """generate_picks_for_fixture erzeugt keine Picks für gesperrte Märkte."""
+    """Die ECHTEN generierten Picks (wm2026-data.json) enthalten keinen aktiven Corner-Pick.
+    (26.06.2026 Phase 5: testet jetzt das Produktions-Output statt des toten Elo-Pfads
+    generate_picks_for_fixture — robuster, prüft was wirklich rausgeht.)"""
 
     @classmethod
     def setUpClass(cls):
-        sys.argv = ["test"]
-        import generate_wm_picks
-        cls.mod = generate_wm_picks
         cls.wm = json.loads((BASE / "wm2026-data.json").read_text(encoding="utf-8"))
-        travel_path = BASE / "wm_travel_burden.json"
-        cls.travel = json.loads(travel_path.read_text()) if travel_path.exists() else {}
 
     def test_no_corner_picks_anywhere(self):
-        """Über alle WM-Fixtures: kein einziger aktiver Corner-Pick (BET/ABWÄGEN)."""
         corner_picks = []
-        for gkey, gdata in self.wm["groups"].items():
-            for fx in gdata.get("fixtures", []):
-                try:
-                    picks = self.mod.generate_picks_for_fixture(
-                        fx=fx, gdata=gdata,
-                        mkt=self.wm["odds"], form=self.wm["form"],
-                        h2h_data=self.wm["h2h"],
-                        today_iso="2026-06-07",
-                        xg_stats=self.wm.get("xgStats", {}),
-                        injuries=self.wm.get("injuries", {}),
-                        travel_data=self.travel,
-                        corners_form=self.wm.get("cornersForm", {}),
-                    )
-                    for p in picks:
-                        m = (p.get("market") or "")
-                        # WATCH-Platzhalter ("Pick aktiv sobald Bookies öffnen")
-                        # sind kein aktiver Markt — nur BET/ABWÄGEN zählen.
-                        if "Ecken" in m and p.get("verdict") in ("BET", "ABWÄGEN"):
-                            corner_picks.append(f"{fx['home']}-{fx['away']}: {m}")
-                except Exception:
-                    pass
+        for mk, lst in (self.wm.get("picks") or {}).items():
+            if not isinstance(lst, list):
+                continue
+            for p in lst:
+                m = (p.get("market") or "")
+                if "Ecken" in m and p.get("verdict") in ("BET", "ABWÄGEN"):
+                    corner_picks.append(f"{mk}: {m}")
         self.assertEqual(corner_picks, [],
             f"Corner-Picks gefunden obwohl deaktiviert: {corner_picks[:5]}")
 
