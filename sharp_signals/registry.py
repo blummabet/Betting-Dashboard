@@ -39,6 +39,8 @@ from sharp_signals.smart_money import SmartMoneySignal
 from sharp_signals.league_pressure import LeaguePressureSignal
 from sharp_signals.fixture_congestion import FixtureCongestionSignal
 from sharp_signals.topscorer_momentum import TopscorerMomentumSignal
+from sharp_signals.coach_change import CoachChangeSignal
+from sharp_signals.transfer_shift import TransferShiftSignal
 
 
 # Pro-Profil deaktivierte Signale (25.06.2026, Lucas: Liga auf WM-Stack). Manche WM-only-Signale
@@ -90,6 +92,8 @@ ACTIVE_SIGNALS: list[Signal] = [
     LeaguePressureSignal(),   # Liga-Pendant zu incentive (25.06.2026); no-op für WM (group_id A-L)
     FixtureCongestionSignal(),  # Erschöpfung/Spielstau aus Ruhetagen (26.06.2026); Schläfer bis englische Woche
     TopscorerMomentumSignal(),  # Top-Torjäger-Bedrohung (26.06.2026); form-Familie, früh ~neutral
+    CoachChangeSignal(),        # Neue-Trainer-Bounce (26.06.2026); context-Familie, zerfällt über 75d
+    TransferShiftSignal(),      # Schlüsselspieler-Abgang (26.06.2026); context-Familie
 ]
 
 
@@ -173,6 +177,11 @@ SIGNAL_GROUPS: dict[str, str] = {
     # fixture_congestion (Ruhetage/Erschöpfung) — auch ein Fitness-/Kontext-Faktor wie Reise/Injury.
     # Anti-Korr-Discount: müde + verletzt + lange Reise sollen nicht dreifach denselben Edge zählen.
     "fixture_congestion": "context",
+    # coach_change (situativ) + transfer_shift (dauerhafter Spielerverlust, verwandt mit injury/lineup)
+    # — beide in die context-Familie, Anti-Korr-Discount falls sie mit den anderen Kontext-Faktoren
+    # zusammenfallen (z.B. Schlüsselabgang + Verletzung gleichzeitig).
+    "coach_change":       "context",
+    "transfer_shift":     "context",
     # pressure_index in dieselbe Familie wie incentive_signal (21.06.2026, Lucas):
     # beide modellieren am Spieltag 3 dieselbe Qualifikations-Asymmetrie (muss gewinnen /
     # schon durch → Gegenseite). Vorher in „context" + incentive in eigener Familie →

@@ -29,6 +29,8 @@ dataset-bewusst · LeaguePressureSignal · Post-Match-xG-Re-Learning · Backtest
   (aus gespielten Spielen via fetch_liga_match_stats → liga_player_form.json, skaliert lineup_signal).
 - ✅ `topscorer_momentum` (/players/topscorers → liga-data.json[topScorers]; form-Familie, Boost Sieg/Über).
 - ⏳ Spieler-Layer Rest: `squad_strength` (überlappt injury/lineup, niedrige Prio).
+- ✅ `coach_change` (Neue-Trainer-Bounce, /coachs) + `transfer_shift` (Schlüsselspieler-Abgang, /transfers).
+- ⏳ `referee_tendency` (mit Karten-Markt) + `news`-Signal (niedrig).
 - ⏳ `coach_change` / `transfer_shift` (Saisonstart-relevant).
 - ⏳ `referee_tendency` (zusammen mit Karten-Markt).
 - ⏳ News-Signal — nur falls Datenqualität + harter Engine-Hook (Scope-Disziplin).

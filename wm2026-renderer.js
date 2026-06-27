@@ -1361,10 +1361,29 @@
         </div>`;
       }
     } else {
-      // Zustand 2: bothResolved, aber (noch) keine Picks/Quoten.
+      // Zustand 2: bothResolved, aber (noch) keine Picks/Quoten. Statt leerem „Quoten folgen"
+      // eine echte VORSCHAU aus vorhandenen Daten (Form/Elo/Ø-Tore) — die R32-Quoten von Pinnacle
+      // kommen oft erst nah am Anpfiff, die Card soll bis dahin nicht leer wirken (26.06.2026, Lucas).
+      const _f = _wmData.form || {};
+      const fH = _f[fx.home], fA = _f[fx.away];
+      let prev = '';
+      if (eloDiff != null && Math.abs(eloDiff) >= 15) {
+        const favName = eloDiff > 0 ? home.name : away.name;
+        prev += `<div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Elo-Favorit: <b style="color:var(--text);">${favName}</b> (${eloDiff > 0 ? '+' : ''}${eloDiff})</div>`;
+      }
+      if (fH && fH.last5 && fA && fA.last5) {
+        prev += `<div style="display:flex;justify-content:center;gap:16px;align-items:center;margin-bottom:6px;">
+          <span style="display:inline-flex;gap:3px;align-items:center;">${home.flag} ${_formDots(fH.last5)}</span>
+          <span style="display:inline-flex;gap:3px;align-items:center;">${away.flag} ${_formDots(fA.last5)}</span>
+        </div>`;
+      }
+      if (fH && fA && fH.avgGoals != null && fA.avgGoals != null) {
+        prev += `<div style="font-size:11px;color:var(--muted);">Ø Tore/Spiel: ${fH.avgGoals.toFixed(1)} · ${fA.avgGoals.toFixed(1)}</div>`;
+      }
       html += `<div class="cc-pick cc-pick-watch">
         <div class="cc-pick-label">Vorschau</div>
-        <div class="cc-pick-watch-text">⏳ Quoten folgen</div>
+        ${prev}
+        <div class="cc-pick-watch-text" style="margin-top:8px;">⏳ Quoten folgen</div>
       </div>`;
     }
 
