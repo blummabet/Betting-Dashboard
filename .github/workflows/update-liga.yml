@@ -63,6 +63,11 @@ jobs:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         run: python fetch_liga_topscorers.py || true
 
+      - name: 🔁 Liga Trainerwechsel + Schlüssel-Abgänge (coach_change + transfer_shift)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_liga_team_changes.py || true
+
       - name: 🤕 Liga Verletzungen/Sperren holen (League + /sidelined)
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}

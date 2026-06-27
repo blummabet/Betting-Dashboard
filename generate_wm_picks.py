@@ -2936,6 +2936,8 @@ def main():
                     "player_form":      player_form_data,
                     "squads":           wm.get("squads", {}),
                     "topscorers":       wm.get("topScorers", {}),   # topscorer_momentum
+                    "coach_change":     wm.get("coachChange", {}),  # coach_change
+                    "key_departures":   wm.get("keyDepartures", {}),  # transfer_shift
                     "apif_predictions": apif_predictions_data,
                     "weather":          weather_data,
                     "venue":            fx.get("venue"),
