@@ -80,23 +80,36 @@ def standings_rows(table: dict) -> list:
 
 
 def _pnl(won: bool, odds) -> float | None:
-    """1u-Einsatz auf die Pick-Seite zur (Closing-)Quote → P&L. None wenn keine Quote."""
+    """1u-Einsatz auf die Pick-Seite zur Einstiegs-Quote → P&L. None wenn keine Quote."""
     if not odds or odds <= 1.0:
         return None
     return round((odds - 1.0) if won else -1.0, 3)
 
 
+def clv_pct(entry, close) -> float | None:
+    """Closing Line Value: Einstiegs- vs Closing-Quote derselben Pick-Seite. >0 = wir haben einen
+    BESSEREN Preis bekommen als der Markt schloss (Linie lief zu uns hin → Signal lief dem Markt
+    voraus). Der wahre Steam-Test: positiver CLV = grün, auch wenn der reine ROI negativ ist."""
+    if not entry or not close or entry <= 1.0 or close <= 1.0:
+        return None
+    return round((entry / close - 1.0) * 100, 2)
+
+
 def aggregate(ledger: list) -> dict:
     """ledger = [{signal, market, score, won, odds?}] → Richtungs-Trefferquote + ROI (Phase 2) pro
     Signal/Markt. ROI: jeder positive Richtungs-Call = 1u auf den Markt zur Closing-Quote."""
-    per_sig = defaultdict(lambda: {"calls": 0, "correct": 0, "bets": 0, "pnl": 0.0, "stake": 0.0})
-    per_sig_mkt = defaultdict(lambda: {"calls": 0, "correct": 0, "bets": 0, "pnl": 0.0, "stake": 0.0})
+    def _mk():
+        return {"calls": 0, "correct": 0, "bets": 0, "pnl": 0.0, "stake": 0.0,
+                "clvSum": 0.0, "clvN": 0, "clvPos": 0}
+    per_sig = defaultdict(_mk)
+    per_sig_mkt = defaultdict(_mk)
     for e in ledger:
         if abs(e["score"]) < 0.3:        # nur echte Richtungs-Calls
             continue
         correct = (e["score"] > 0 and e["won"]) or (e["score"] < 0 and not e["won"])
-        # ROI nur bei POSITIVEM Call (= „wir würden den Markt spielen") + vorhandener Quote.
+        # ROI + CLV nur bei POSITIVEM Call (= „wir würden den Markt spielen") + vorhandener Quote.
         pnl = _pnl(e["won"], e.get("odds")) if e["score"] > 0 else None
+        clv = clv_pct(e.get("odds"), e.get("oddsClose")) if e["score"] > 0 else None
         for key, bucket in ((e["signal"], per_sig), ((e["signal"], e["market"]), per_sig_mkt)):
             b = bucket[key]
             b["calls"] += 1
@@ -105,11 +118,18 @@ def aggregate(ledger: list) -> dict:
                 b["bets"] += 1
                 b["pnl"] += pnl
                 b["stake"] += 1.0
+            if clv is not None:
+                b["clvSum"] += clv
+                b["clvN"] += 1
+                b["clvPos"] += 1 if clv > 0 else 0
     def _row(v):
         roi = round(v["pnl"] / v["stake"] * 100, 1) if v["stake"] else None
         return {"calls": v["calls"], "correct": v["correct"],
                 "hitRate": round(v["correct"] / v["calls"], 3) if v["calls"] else None,
-                "bets": v["bets"], "roiPct": roi, "pnl": round(v["pnl"], 2)}
+                "bets": v["bets"], "roiPct": roi, "pnl": round(v["pnl"], 2),
+                "avgClvPct": round(v["clvSum"] / v["clvN"], 2) if v["clvN"] else None,
+                "beatCloseRate": round(v["clvPos"] / v["clvN"], 3) if v["clvN"] else None,
+                "clvN": v["clvN"]}
     return {
         "perSignal": {k: _row(v) for k, v in sorted(per_sig.items(), key=lambda kv: -kv[1]["calls"])},
         "perSignalMarket": {f"{k[0]}|{k[1]}": _row(v)
@@ -129,6 +149,7 @@ def replay(matches: list, evaluate_fn, league: str = "ENG"):
     for m in matches:
         h, a, hs, as_, md = m["home"], m["away"], m["hs"], m["as_"], m.get("matchday")
         m_odds = m.get("odds") or {}
+        m_close = m.get("oddsClose") or {}
         # ── Pre-Match-Zustand (VOR diesem Spiel) ──
         if len(team_results[h]) >= WARMUP_GAMES and len(team_results[a]) >= WARMUP_GAMES:
             pair = h2h[tuple(sorted((h, a)))]
@@ -146,9 +167,10 @@ def replay(matches: list, evaluate_fn, league: str = "ENG"):
                 for sig in (res.get("signals") or []):
                     ledger.append({"signal": sig["name"], "market": market,
                                    "score": sig.get("score", 0), "won": won,
-                                   "odds": m_odds.get(market)})
+                                   "odds": m_odds.get(market), "oddsClose": m_close.get(market)})
                 system.append({"market": market, "combined": res.get("combined_score_pp", 0),
-                               "won": won, "odds": m_odds.get(market)})
+                               "won": won, "odds": m_odds.get(market),
+                               "oddsClose": m_close.get(market)})
         # ── Zustand NACH dem Spiel fortschreiben ──
         team_results[h].append((hs, as_))
         team_results[a].append((as_, hs))
@@ -177,9 +199,13 @@ def aggregate_system(system: list, thresholds=None) -> dict:
     for thr in thresholds:
         bets = wins = 0
         pnl = stake = 0.0
+        clv_sum = 0.0; clv_n = clv_pos = 0
         for e in system:
             if e["combined"] < thr or thr <= 0 and e["combined"] <= 0:
                 continue
+            c = clv_pct(e.get("odds"), e.get("oddsClose"))
+            if c is not None:
+                clv_sum += c; clv_n += 1; clv_pos += 1 if c > 0 else 0
             p = _pnl(e["won"], e.get("odds"))
             if p is None:
                 continue
@@ -188,7 +214,9 @@ def aggregate_system(system: list, thresholds=None) -> dict:
         out[f">={thr}pp"] = {"bets": bets, "wins": wins,
                              "hitRate": round(wins / bets, 3) if bets else None,
                              "roiPct": round(pnl / stake * 100, 1) if stake else None,
-                             "pnl": round(pnl, 2)}
+                             "pnl": round(pnl, 2),
+                             "avgClvPct": round(clv_sum / clv_n, 2) if clv_n else None,
+                             "beatCloseRate": round(clv_pos / clv_n, 3) if clv_n else None}
     return out
 
 
@@ -286,10 +314,15 @@ def parse_fd_csv(text: str) -> list[dict]:
                             pass
                 return None
             rows.append({"date": r.get("Date"), "home": home, "away": away,
+                         # Einstieg = Vor-Match-Quote (Tage vor Anpfiff).
                          "oddsH": _f("AvgH", "B365H", "PSH"), "oddsD": _f("AvgD", "B365D", "PSD"),
                          "oddsA": _f("AvgA", "B365A", "PSA"),
                          "o25": _f("Avg>2.5", "B365>2.5", "P>2.5"),
-                         "u25": _f("Avg<2.5", "B365<2.5", "P<2.5")})
+                         "u25": _f("Avg<2.5", "B365<2.5", "P<2.5"),
+                         # Closing = C-Spalten (kurz vor Anpfiff) → für CLV (26.06.2026, Lucas).
+                         "oddsHc": _f("AvgCH", "B365CH", "PSCH"), "oddsAc": _f("AvgCA", "B365CA", "PSCA"),
+                         "o25c": _f("AvgC>2.5", "B365C>2.5", "PC>2.5"),
+                         "u25c": _f("AvgC<2.5", "B365C<2.5", "PC<2.5")})
         except Exception:
             continue
     return rows
@@ -327,6 +360,8 @@ def attach_odds(matches: list, fd_rows: list) -> int:
             if _fd_date_iso(r["date"]) == md and _names_match(r["home"], hn) and _names_match(r["away"], an):
                 m["odds"] = {"Heimsieg": r["oddsH"], "Auswärtssieg": r["oddsA"],
                              "Über 2.5 Tore": r["o25"], "Unter 2.5 Tore": r["u25"]}
+                m["oddsClose"] = {"Heimsieg": r.get("oddsHc"), "Auswärtssieg": r.get("oddsAc"),
+                                  "Über 2.5 Tore": r.get("o25c"), "Unter 2.5 Tore": r.get("u25c")}
                 n += 1
                 break
     return n
@@ -380,14 +415,19 @@ def main():
                        "ledgerEntries": len(all_ledger), "generatedAt": datetime.utcnow().isoformat()}
     with open(REPORT_FILE, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
-    print(f"\n  Signal: Trefferquote | ROI (1u/Call zur Closing-Quote):")
+    print(f"\n  Signal: Trefferquote | ROI (Einstieg) | CLV (Einstieg vs Closing):")
     for sig, d in report["perSignal"].items():
         roi = f"{d['roiPct']:+.1f}%" if d.get("roiPct") is not None else "—"
-        print(f"    {sig:18} {d['hitRate']}  ({d['correct']}/{d['calls']})   ROI {roi}  ({d['bets']} Wetten)")
-    print(f"\n  Value-Filter (nur Wetten ab Conviction-Schwelle, combined_score_pp):")
+        clv = f"{d['avgClvPct']:+.2f}%" if d.get("avgClvPct") is not None else "—"
+        beat = f"{d['beatCloseRate']*100:.0f}%" if d.get("beatCloseRate") is not None else "—"
+        print(f"    {sig:18} {d['hitRate']}  ({d['correct']}/{d['calls']})   ROI {roi}   "
+              f"CLV {clv} (schlägt Closing {beat})")
+    print(f"\n  Value-Filter (ab Conviction-Schwelle, combined_score_pp):")
     for thr, d in report["valueFilter"].items():
         roi = f"{d['roiPct']:+.1f}%" if d.get("roiPct") is not None else "—"
-        print(f"    {thr:8} Treffer {d['hitRate']}  ROI {roi}  ({d['bets']} Wetten)")
+        clv = f"{d['avgClvPct']:+.2f}%" if d.get("avgClvPct") is not None else "—"
+        beat = f"{d['beatCloseRate']*100:.0f}%" if d.get("beatCloseRate") is not None else "—"
+        print(f"    {thr:8} Treffer {d['hitRate']}  ROI {roi}  CLV {clv} (schlägt Closing {beat})  ({d['bets']} Wetten)")
     print(f"\n  ✅ Report → {os.path.basename(REPORT_FILE)}")
 
 
