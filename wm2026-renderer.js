@@ -430,12 +430,15 @@
       const _twoWeeks = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
       const _liveMd = (md) => allFx.some(fx => String(fx.matchday) === String(md) && (
         odds[`${fx.home}-${fx.away}`] || (fx.date >= todayIso && fx.date <= _twoWeeks)));
-      let _shownMds = _allMds.filter(_liveMd);
-      if (!_shownMds.length) {
-        const _next = _allMds.filter(md =>
-          allFx.some(fx => String(fx.matchday) === String(md) && fx.date >= todayIso));
-        _shownMds = _next.slice(0, 1);
-      }
+      // (26.06.2026 Fix „Spieltag 1 dann 20"): nur ANSTEHENDE Spieltage ab dem nächsten zeigen und
+      // nie weiter als +4 — sonst reißen evtl. fehl-gematchte Odds verstreute Runden auf. Greift
+      // zusätzlich zum Daten-Fix in fetch_liga_odds (pick_event_for_fixture) als Sicherheitsnetz.
+      const _upcoming = _allMds.filter(md =>
+        allFx.some(fx => String(fx.matchday) === String(md) && fx.date >= todayIso));
+      const _firstUp = _upcoming.length ? parseFloat(_upcoming[0]) : null;
+      let _shownMds = _allMds.filter(md => _liveMd(md) && (_firstUp === null
+        || (parseFloat(md) >= _firstUp && parseFloat(md) - _firstUp <= 4)));
+      if (!_shownMds.length) _shownMds = _upcoming.slice(0, 1);
       // aktiven Spieltag immer sichtbar lassen
       if (_activeMd !== 'all' && !_shownMds.some(md => String(md) === String(_activeMd))
           && _allMds.some(md => String(md) === String(_activeMd))) {

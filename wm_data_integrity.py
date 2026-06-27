@@ -444,6 +444,38 @@ def check_odds_sane(ctx):
                 "Quelle für Modell-Baseline + Edge.")
 
 
+@integrity_check
+def check_liga_odds_round_sane(ctx):
+    """NEU 26.06.2026 (Bug „Spieltag 1 dann 20"): Liga-Odds dürfen nur auf den nächsten
+    anstehenden Spieltagen liegen. match_event_to_fixture akzeptiert 'swapped' → ein
+    Hinrunden-Event matchte sonst das Rückspiel-Fixture (gleiche Teams, ferne Runde) → Odds
+    auf der falschen Runde, Cards-Navi zeigte „1 dann 20". Fix in fetch_liga_odds
+    (pick_event_for_fixture, Datum-Nähe) — dieser Guard fängt eine Regression. Flaggt jeden
+    Odds-Key, dessen ungespieltes Fixture > 4 Runden hinter dem Front-Spieltag liegt."""
+    if not ctx.is_liga:
+        return None
+    md_by_key, played = {}, set()
+    for _g, fx in ctx.fixtures:
+        k = ctx.mk(fx)
+        md_by_key[k] = fx.get("matchday")
+        if (fx.get("result") or {}).get("status") in ("FT", "AET", "PEN"):
+            played.add(k)
+    odds_mds = [md_by_key[k] for k in ctx.odds
+                if k in md_by_key and k not in played and isinstance(md_by_key[k], (int, float))]
+    if not odds_mds:
+        return None   # keine ungespielten Odds → nichts zu prüfen
+    m0 = min(odds_mds)
+    fails = []
+    for k in ctx.odds:
+        if k in played:
+            continue
+        md = md_by_key.get(k)
+        if isinstance(md, (int, float)) and md - m0 > 4:
+            fails.append(f"{k}: Odds auf Spieltag {md} (Front = {m0}) — Hin/Rück-Fehlmatch?")
+    return _chk("liga_odds_round_sane", "Liga-Odds nur auf nahen Spieltagen", "warn", fails,
+                "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum.")
+
+
 # Frische-Schwelle für Pinnacle-Odds (Stunden). Der Auto-Trader stoppt erst hart
 # bei 24h (max_odds_age_hours) — dieser Guard WARNT viel früher, damit eingefrorene
 # fetch_wm_odds-Läufe im 🛡️-Panel sichtbar werden, BEVOR auf 13h alten Preisen

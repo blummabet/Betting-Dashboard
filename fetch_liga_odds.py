@@ -96,6 +96,42 @@ def match_event_to_fixture(event: dict, home_name: str, away_name: str) -> str |
     return None
 
 
+MATCH_DATE_TOL_DAYS = 4   # Event-Datum muss ±4 Tage am Fixture-Datum liegen (s. pick_event_for_fixture)
+
+
+def _event_date(ev: dict) -> str:
+    return (ev.get("commence_time") or "")[:10]
+
+
+def _days_apart(d1: str, d2: str):
+    from datetime import date
+    try:
+        return abs((date.fromisoformat(d1[:10]) - date.fromisoformat(d2[:10])).days)
+    except Exception:
+        return None
+
+
+def pick_event_for_fixture(events: list, home_name: str, away_name: str, fx_date: str,
+                           tol_days: int = MATCH_DATE_TOL_DAYS):
+    """Bestes TheOddsAPI-Event für unsere Paarung: Team-Match UND nächstes Datum (±tol_days).
+    KRITISCH für Liga (Bug 26.06.2026 „Spieltag 1 dann 20"): jede Paarung spielt zweimal
+    (Hin/Rück). match_event_to_fixture akzeptiert 'swapped' → ein Hinrunden-Event („A vs B")
+    matchte sonst auch das Rückspiel-Fixture („B-A", andere Runde, Monate später) → Odds landeten
+    auf der falschen Runde. Datum-Nähe trennt die beiden eindeutig. Reine Funktion (testbar)."""
+    best = None
+    for ev in events:
+        o = match_event_to_fixture(ev, home_name, away_name)
+        if not o:
+            continue
+        dd = _days_apart(_event_date(ev), fx_date) if fx_date else 0
+        if fx_date and (dd is None or dd > tol_days):
+            continue
+        d = dd if dd is not None else 0
+        if best is None or d < best[0]:
+            best = (d, ev, o)
+    return (best[1], best[2]) if best else None
+
+
 def _best_book(bookmakers: list, market_key: str, priority: list | None = None):
     """Erstes Bookmaker-Market nach Prioritäten. Gibt (bk_key, outcomes). priority=None → Sharp."""
     prio = priority or BOOK_PRIORITY
@@ -268,6 +304,7 @@ def main():
             history = {}
     snaps_added = 0
     total = 0
+    matched_keys = set()
     for lk, sport_key in LEAGUE_SPORT_KEYS.items():
         gd = groups.get(lk) or {}
         fixtures = gd.get("fixtures") or []
@@ -279,12 +316,8 @@ def main():
             if (fx.get("result") or {}).get("status") in ("FT", "AET", "PEN"):
                 continue   # gespielt
             hn, an = fx.get("homeName"), fx.get("awayName")
-            matched = None
-            for ev in events:
-                o = match_event_to_fixture(ev, hn, an)
-                if o:
-                    matched = (ev, o)
-                    break
+            # Datum-nächstes Event (verhindert Hin-/Rückrunden-Verwechslung, s. pick_event_for_fixture).
+            matched = pick_event_for_fixture(events, hn, an, fx.get("date") or "")
             if not matched:
                 continue
             ev, orient = matched
@@ -294,7 +327,18 @@ def main():
             key = f"{fx['home']}-{fx['away']}"
             odds_out[key] = build_odds_entry(prices, odds_out.get(key), now_iso)
             snaps_added += append_snapshot(history, key, prices, now_iso)
+            matched_keys.add(key)
             total += 1
+    # Altlasten-Pruning (Bug 26.06.2026): früher fehl-gematchte Odds (falsche Runde) aus odds_out
+    # entfernen. Behalten: diesen Lauf gematchte + gespielte Spiele (für Resolve/CLV). Nur prunen,
+    # wenn der Lauf überhaupt etwas matchte (sonst API-Ausfall → nichts löschen).
+    if total > 0:
+        played_keys = {f"{fx['home']}-{fx['away']}"
+                       for g in groups.values() for fx in (g.get("fixtures") or [])
+                       if (fx.get("result") or {}).get("status") in ("FT", "AET", "PEN")}
+        for k in list(odds_out.keys()):
+            if k not in matched_keys and k not in played_keys:
+                del odds_out[k]
     wm.setdefault("_meta", {})["oddsUpdatedAt"] = now_iso
     with open(LIGA_FILE, "w", encoding="utf-8") as f:
         json.dump(wm, f, ensure_ascii=False, indent=2)
