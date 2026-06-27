@@ -53,6 +53,11 @@ jobs:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         run: python fetch_liga_xg.py || true
 
+      - name: 👥 Liga Kader/Schlüsselspieler holen (für lineup_signal + player_form-Baselines)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_wm_squads.py || true
+
       - name: 🤕 Liga Verletzungen/Sperren holen (League + /sidelined)
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
@@ -123,6 +128,7 @@ jobs:
           git add matches/liga-index.json matches/data/liga-*.json 2>/dev/null || true
           git add liga_match_stats_cache.json 2>/dev/null || true
           git add liga_apif_predictions.json 2>/dev/null || true
+          git add liga_player_form.json liga_player_form_ledger.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.

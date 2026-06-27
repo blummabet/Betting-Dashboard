@@ -28,7 +28,12 @@ import http.client
 from pathlib import Path
 
 BASE        = Path(__file__).parent
-WM_FILE     = BASE / "wm2026-data.json"
+# Dataset-bewusst (26.06.2026, Lucas Spieler-Layer): Liga schreibt liga-data.json["squads"]. Liga-
+# Team-ID IST die API-Football-ID (Identitäts-teamIds) → kein /teams-Namens-Match nötig. Speist
+# lineup_signal (key_players) + player_form-Baselines. WM unverändert.
+_IS_LIGA    = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
+WM_FILE     = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
+LIGA_SEASON = int(os.environ.get("LIGA_SEASON") or 2025)
 APIF_HOST   = "v3.football.api-sports.io"
 APIF_KEY    = os.environ.get("APISPORTS_KEY", "9f36726c1bdc9957b4a49f89277b80db")
 APIF_DELAY  = 1.2   # seconds between calls (Pro plan: 10 req/min)
@@ -338,9 +343,10 @@ def _build_key_players(players: list, top_outfield: int = 6, min_minutes: int = 
 def fetch_all_players(apif_team_id: int) -> list:
     """
     Fetch all pages of players for a team (up to MAX_PAGES).
-    Season order: 2026 → 2025 → 2024
+    Season order: WM 2026→2025→2024; Liga LIGA_SEASON→Vorjahr.
     """
-    for season in (2026, 2025, 2024):
+    _seasons = (LIGA_SEASON, LIGA_SEASON - 1) if _IS_LIGA else (2026, 2025, 2024)
+    for season in _seasons:
         all_players = []
         for page in range(1, MAX_PAGES + 1):
             time.sleep(APIF_DELAY)
@@ -371,7 +377,7 @@ def main():
         sys.exit(1)
 
     if not WM_FILE.exists():
-        print("  ❌  wm2026-data.json not found")
+        print(f"  ❌  {WM_FILE.name} not found")
         sys.exit(1)
 
     with open(WM_FILE, encoding="utf-8") as f:
@@ -389,15 +395,19 @@ def main():
     )
     print(f"    Teams: {len(all_team_ids)}\n")
 
-    # ── Step 1: Resolve API-Football team IDs ─────────────────
-    print("  📡  Fetching WM 2026 team list from API-Football…")
-    time.sleep(APIF_DELAY)
-    apif_teams, _ = apif_get("teams", {"league": 1, "season": 2026})
-    print(f"  → {len(apif_teams)} teams returned\n")
-
-    if not apif_teams:
-        print("  ❌  No team data — API-Football may not have WM 2026 yet")
-        sys.exit(0)
+    # Liga: Team-ID = API-ID → kein /teams-Namens-Match (Step 1) nötig.
+    team_name_map = {t["id"]: t.get("name", t["id"])
+                     for g in wm.get("groups", {}).values() for t in g.get("teams", [])}
+    apif_teams = []
+    if not _IS_LIGA:
+        # ── Step 1: Resolve API-Football team IDs ─────────────────
+        print("  📡  Fetching WM 2026 team list from API-Football…")
+        time.sleep(APIF_DELAY)
+        apif_teams, _ = apif_get("teams", {"league": 1, "season": 2026})
+        print(f"  → {len(apif_teams)} teams returned\n")
+        if not apif_teams:
+            print("  ❌  No team data — API-Football may not have WM 2026 yet")
+            sys.exit(0)
 
     # ── Step 2: Per-team player fetch ─────────────────────────
     found   = 0
@@ -414,15 +424,22 @@ def main():
             skipped += 1
             continue
 
-        apif_entry = _match_team(our_id, apif_teams)
-        if not apif_entry:
-            print(f"  ⚠️  {our_id} — no API-Football match "
-                  f"(tried: '{APIF_NAME_OVERRIDE.get(our_id, our_id)}')")
-            failed.append(our_id)
-            continue
-
-        apif_id   = apif_entry["team"]["id"]
-        apif_name = apif_entry["team"]["name"]
+        if _IS_LIGA:
+            try:
+                apif_id = int(our_id)   # Liga: ID ist die API-ID
+            except (TypeError, ValueError):
+                failed.append(our_id)
+                continue
+            apif_name = team_name_map.get(our_id, our_id)
+        else:
+            apif_entry = _match_team(our_id, apif_teams)
+            if not apif_entry:
+                print(f"  ⚠️  {our_id} — no API-Football match "
+                      f"(tried: '{APIF_NAME_OVERRIDE.get(our_id, our_id)}')")
+                failed.append(our_id)
+                continue
+            apif_id   = apif_entry["team"]["id"]
+            apif_name = apif_entry["team"]["name"]
         print(f"  🔍  {our_id} → {apif_name} (ID {apif_id})")
 
         players = fetch_all_players(apif_id)

@@ -49,10 +49,12 @@ Priorität grob von hoch nach niedrig. Jedes als eigenes modulares Signal + Fetc
    (`team_schedule` im Kontext): müdes Team faden, ausgeruhten Gegner boosten, leichter Unter-Hebel,
    kein Über-Boost. Schläfer bis zur ersten englischen Woche (erstes Spiel = None). Offen für später:
    Europapokal-Reise (CL/EL-Midweek) als Verstärker — bisher nur Liga-interne Ruhetage.
-3. **Spieler-Layer** 🔜 (Lucas' #3) — tiefer als lineup_signal:
-   - `player_form` (per-Spieler-Form, Scorer-Gefahr) → /fixtures/players-Ledger (post-match).
-   - `squad_strength` / Ausfall-Wertung Schlüsselspieler → /players/squads + /injuries + /sidelined.
-   - `topscorer_momentum` → /players/topscorers, /players/topassists (ist der Hauptkreateur in Form).
+3. **Spieler-Layer** — tiefer als lineup_signal:
+   - `player_form` ✅ (26.06.) — per-Spieler-Form aus /fixtures/players-Ledger (post-match via
+     fetch_liga_match_stats → liga_player_form.json), skaliert lineup_signal-Wichtung. Squads
+     (Schlüsselspieler) ✅ via fetch_wm_squads → liga-data.json["squads"].
+   - `squad_strength` 🔜 / Ausfall-Wertung — überlappt stark mit injury+lineup (niedrigere Prio).
+   - `topscorer_momentum` 🔜 → /players/topscorers, /players/topassists (Hauptkreateur in Form).
 4. **`apif_predictions`** 🔜 — drittes Modell als Cross-Check (haben wir für WM, nur Liga-Fetch nötig).
 5. **`coach_change` / Neuer-Trainer-Bounce** 🔜 — Trainerwechsel → kurzfristiger Effekt. /coachs, /transfers.
 6. **`transfer_shift`** 🔜 (Saisonstart) — große Zu-/Abgänge → Qualitäts-Verschiebung. /transfers.

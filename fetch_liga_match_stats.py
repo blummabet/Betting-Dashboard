@@ -50,10 +50,12 @@ def main():
         print("  ❌  liga-data.json fehlt.")
         sys.exit(1)
     import fetch_wm_nt_xg as N
+    import player_form as PF   # liga-aware Pfade (COCOBET_DATASET=liga im Workflow)
     wm = json.loads(LIGA_FILE.read_text(encoding="utf-8"))
     cache = json.loads(CACHE_FILE.read_text(encoding="utf-8")) if CACHE_FILE.exists() else {}
     import time
     attached = fetched = 0
+    player_rows = []   # Per-Spieler-Match-Zeilen für den player_form-Ledger (nur bei neuen Spielen)
     for gd in (wm.get("groups") or {}).values():
         for fx in (gd.get("fixtures") or []):
             res = fx.get("result") or {}
@@ -69,6 +71,13 @@ def main():
                 stats = build_match_stats(ex, fx["home"], fx["away"]) or {}
                 cache[key] = stats
                 fetched += 1
+                # Spieler-Form: /fixtures/players GENAU EINMAL pro Spiel (Cache-Miss) → Ledger-Rohzeilen.
+                try:
+                    pdata = N._apif_get(f"/fixtures/players?fixture={fid}")
+                    if pdata and pdata.get("response"):
+                        player_rows.extend(PF.rows_from_fixture_players(int(fid), pdata["response"]))
+                except Exception:
+                    pass
                 time.sleep(0.25)
             if stats:
                 res["stats"] = stats
@@ -77,6 +86,26 @@ def main():
     LIGA_FILE.write_text(json.dumps(wm, ensure_ascii=False, indent=2), encoding="utf-8")
     CACHE_FILE.write_text(json.dumps(cache, ensure_ascii=False), encoding="utf-8")
     print(f"  ✅ Match-xG an {attached} gespielte Spiele gehängt ({fetched} neu geholt)")
+
+    # ── Per-Spieler-Form-Ledger fortschreiben + liga_player_form.json bauen ──
+    if player_rows:
+        try:
+            ledger = (json.loads(PF.LEDGER_FILE.read_text(encoding="utf-8"))
+                      if PF.LEDGER_FILE.exists() else
+                      {"_meta": {"description": "Append-only Per-Spieler-Match-Stats (Liga). "
+                                 "Quelle für player_form.py — Spieler-ID-basiert."}, "records": []})
+            added = PF.append_records(ledger, player_rows)
+            PF.LEDGER_FILE.write_text(json.dumps(ledger, ensure_ascii=False), encoding="utf-8")
+            squads = wm.get("squads") or {}
+            table = PF.build_form_table(ledger, PF.baselines_from_squads(squads),
+                                        squad_players=PF.squad_player_ids(squads))
+            PF.OUT_FILE.write_text(json.dumps(
+                {"_meta": {"players": len(table)}, "players": table},
+                ensure_ascii=False, indent=2), encoding="utf-8")
+            print(f"  📈 Spieler-Form: +{added} Ledger-Zeilen → {len(table)} Spieler "
+                  f"({PF.OUT_FILE.name})")
+        except Exception as e:
+            print(f"  ⚠️  player_form-Build fehlgeschlagen: {e}")
 
 
 if __name__ == "__main__":
