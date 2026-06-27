@@ -40,6 +40,9 @@ jobs:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         run: python build_liga_data.py
 
+      - name: 📐 Liga Club-Elo holen (Baseline/Evidenz — KEINE Pick-Quelle)
+        run: python fetch_liga_elo.py || true
+
       - name: 📊 Liga Form + H2H holen (letzte Saison als erster Inhalt)
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
