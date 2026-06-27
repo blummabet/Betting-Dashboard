@@ -658,6 +658,58 @@
     });
   }
 
+  // Icon + Display-Name je Signal — EINE Quelle (26.06.2026), genutzt von Gruppen- UND KO-Cards.
+  const _SIG_META = {
+    weather_signal:      ['🌡', 'Wetter'],
+    travel_burden:       ['✈', 'Travel'],
+    pressure_index:      ['🎯', 'Druck'],
+    form_trend:          ['📈', 'Form-Trend'],
+    xg_strength:         ['🥅', 'xG-Stärke'],
+    h2h_pattern:         ['🤝', 'H2H'],
+    injury:              ['🩹', 'Verletzungen'],
+    apif_predictions:    ['📊', 'APIF-Modell'],
+    lead_lag_bias:       ['📡', 'Sharp-Lag'],
+    public_static_bias:  ['🎲', 'Public-Bias'],
+    incentive_signal:    ['🏆', 'Anreiz'],
+    lineup_signal:       ['📋', 'Lineup T-1h'],
+    polymarket_sharp:    ['⚡', 'Poly (Trade)'],
+    steam_lag:           ['🌊', 'Steam-Lag (Trade)'],
+    chance_creation:     ['🎨', 'Chancen'],
+    form_rating:         ['⭐', 'Form-Rating'],
+    freshness_leg:       ['💨', 'Frische'],
+    smart_money:         ['🐋', 'Smart-Money'],
+    league_pressure:     ['⚡', 'Liga-Druck'],
+    fixture_congestion:  ['🥵', 'Erschöpfung'],
+    topscorer_momentum:  ['🎯', 'Top-Torjäger'],
+    coach_change:        ['🔁', 'Neuer Trainer'],
+    transfer_shift:      ['🔄', 'Transfer-Abgang'],
+  };
+
+  // Engine-Signal-Grid (pos/neg/silent Kacheln) — gemeinsamer Renderer für Gruppen- + KO-Cards.
+  function _engineSignalGridHtml(heroPick) {
+    const sigList = Array.isArray(heroPick.signals) ? heroPick.signals : [];
+    if (!sigList.length) return '';
+    const adj = heroPick.signalAdjustmentPP;
+    const adjLabel = (typeof adj === 'number' && Math.abs(adj) >= 0.5)
+      ? `<span class="cc-sig-adj ${adj > 0 ? 'pos' : 'neg'}">${adj > 0 ? '+' : ''}${adj.toFixed(1)}pp Netto</span>`
+      : '';
+    const tiles = sigList.slice(0, 6).map(s => {
+      const [ico, name] = _SIG_META[s.name] || ['•', (s.name || '').replace(/_/g, ' ')];
+      const score = s.score || 0;
+      const cls = score > 0.3 ? 'cc-sig-tile-pos' : score < -0.3 ? 'cc-sig-tile-neg' : 'cc-sig-tile-silent';
+      const val = Math.abs(score) >= 0.1 ? `${score > 0 ? '+' : ''}${score.toFixed(1)}pp` : '—';
+      return `<div class="cc-sig-tile ${cls}">
+        <div class="cc-sig-tile-head"><span class="cc-sig-tile-ico">${ico}</span><span class="cc-sig-tile-name">${name}</span></div>
+        <div class="cc-sig-tile-val">${val}</div>
+        <div class="cc-sig-tile-desc">${s.evidence || ''}</div>
+      </div>`;
+    }).join('');
+    return `<div class="cc-signals">
+      <div class="cc-signals-head">🧠 Engine-Signale ${adjLabel}</div>
+      <div class="cc-sig-grid">${tiles}</div>
+    </div>`;
+  }
+
   // ─────────────────────────────────────────────────────
   //  CARD BUILDER — Community-First Layout (Pick/Story/Confidence)
   // ─────────────────────────────────────────────────────
@@ -966,45 +1018,7 @@
       // ─── ENGINE-SIGNAL-GRID (NEU 09.06.2026) ──────────
       // Signal-Engine (sharp_signals/) hat pro Pick signals[] mit evidence
       // und signalAdjustmentPP. Grid mit pos/neg/silent Tiles statt Text-Liste.
-      const sigList = Array.isArray(heroPick.signals) ? heroPick.signals : [];
-      if (sigList.length) {
-        const adj = heroPick.signalAdjustmentPP;
-        const adjLabel = (typeof adj === 'number' && Math.abs(adj) >= 0.5)
-          ? `<span class="cc-sig-adj ${adj > 0 ? 'pos' : 'neg'}">${adj > 0 ? '+' : ''}${adj.toFixed(1)}pp Netto</span>`
-          : '';
-        // Icon + Display-Name Map für die 14 Signale
-        const SIG_META = {
-          weather_signal:       ['🌡', 'Wetter'],
-          travel_burden:        ['✈', 'Travel'],
-          pressure_index:       ['🎯', 'Druck'],
-          form_trend:           ['📈', 'Form-Trend'],
-          xg_strength:          ['🥅', 'xG-Stärke'],
-          h2h_pattern:          ['🤝', 'H2H'],
-          injury:               ['🩹', 'Verletzungen'],
-          apif_predictions:     ['📊', 'APIF-Modell'],
-          lead_lag_bias:        ['📡', 'Sharp-Lag'],
-          public_static_bias:   ['🎲', 'Public-Bias'],
-          incentive_signal:     ['🏆', 'Anreiz'],
-          lineup_signal:        ['📋', 'Lineup T-1h'],
-          polymarket_sharp:     ['⚡', 'Poly (Trade)'],
-          steam_lag:            ['🌊', 'Steam-Lag (Trade)'],
-        };
-        const tiles = sigList.slice(0, 6).map(s => {
-          const [ico, name] = SIG_META[s.name] || ['•', s.name.replace(/_/g, ' ')];
-          const score = s.score || 0;
-          const cls = score > 0.3 ? 'cc-sig-tile-pos' : score < -0.3 ? 'cc-sig-tile-neg' : 'cc-sig-tile-silent';
-          const val = Math.abs(score) >= 0.1 ? `${score > 0 ? '+' : ''}${score.toFixed(1)}pp` : '—';
-          return `<div class="cc-sig-tile ${cls}">
-            <div class="cc-sig-tile-head"><span class="cc-sig-tile-ico">${ico}</span><span class="cc-sig-tile-name">${name}</span></div>
-            <div class="cc-sig-tile-val">${val}</div>
-            <div class="cc-sig-tile-desc">${s.evidence || ''}</div>
-          </div>`;
-        }).join('');
-        html += `<div class="cc-signals">
-          <div class="cc-signals-head">🧠 Engine-Signale ${adjLabel}</div>
-          <div class="cc-sig-grid">${tiles}</div>
-        </div>`;
-      }
+      html += _engineSignalGridHtml(heroPick);
     }
 
     // ─── EVIDENCE — Form + Key Signals ────────────────
@@ -1349,6 +1363,7 @@
         <div class="cc-pick-conf">
           ${[1,2,3].map(n => `<span class="cc-star${isAbw ? ' cc-star-abw' : ''} ${n <= stars ? 'cc-star-full' : 'cc-star-empty'}">★</span>`).join('')}
         </div>
+        <button class="cc-why-btn" onclick="wmOpenWhy('${matchKey.replace(/['"\\]/g,'')}')" title="Modell-Rechnung, Insights, CLV, Risiko, Stake-Empfehlung">🔍 Warum?</button>
       </div>`;
       // Weitere Picks kompakt darunter.
       for (const p of sortedPicks.slice(1)) {
@@ -1359,6 +1374,23 @@
           <span class="cc-ko-extra-market">${p.market}</span>
           <span class="cc-ko-extra-odds">@ ${pOdds}</span>
         </div>`;
+      }
+      // Engine-Signale (gleicher Renderer wie Gruppen-Cards) + Form-Block — damit die KO-Card
+      // genauso reich ist wie eine normale Card (26.06.2026, Lucas: „steht ja viel mehr drin").
+      html += _engineSignalGridHtml(hero);
+      const _kf = _wmData.form || {};
+      const fH = _kf[fx.home], fA = _kf[fx.away];
+      if ((fH && fH.last5) || (fA && fA.last5)) {
+        html += `<div class="cc-evidence"><div class="cc-ev-block"><div class="cc-ev-label">Form letzten 5</div>`;
+        if (fH && fH.last5) {
+          html += `<div class="cc-form">${fH.last5.slice(0,5).map(r => `<div class="cc-form-dot cc-fd-${(r||'').toLowerCase()}">${r}</div>`).join('')}</div>`
+            + `<div class="cc-form-team"><span><span class="cc-flag-sm">${home.flag}</span> ${home.name}</span><span>${fH.avgScored != null ? fH.avgScored.toFixed(1)+' Tore Ø' : ''}</span></div>`;
+        }
+        if (fA && fA.last5) {
+          html += `<div class="cc-form" style="margin-top:8px;">${fA.last5.slice(0,5).map(r => `<div class="cc-form-dot cc-fd-${(r||'').toLowerCase()}">${r}</div>`).join('')}</div>`
+            + `<div class="cc-form-team"><span><span class="cc-flag-sm">${away.flag}</span> ${away.name}</span><span>${fA.avgScored != null ? fA.avgScored.toFixed(1)+' Tore Ø' : ''}</span></div>`;
+        }
+        html += `</div></div>`;
       }
     } else {
       // Zustand 2: bothResolved, aber (noch) keine Picks/Quoten. Statt leerem „Quoten folgen"
