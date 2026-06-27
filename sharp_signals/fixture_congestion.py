@@ -14,24 +14,10 @@ from __future__ import annotations
 from datetime import date
 from typing import Optional
 
-from sharp_signals.base import Signal, SignalResult
+from sharp_signals.base import Signal, SignalResult, market_side
 
 MAX_PP = 1.5
 SHORT_REST_DAYS = 3   # ≤ 3 Tage Pause = englische Woche / Stau
-
-
-def _market_side(market: str) -> Optional[str]:
-    m = (market or "").lower()
-    if "über" in m or "uber" in m or "over" in m:
-        return "over"
-    if "unter" in m or "under" in m:
-        return "under"
-    if "heimsieg" in m or "1x" in m or "ah heim" in m or ("dnb" in m and "heim" in m):
-        return "home"
-    if ("auswärtssieg" in m or "auswartssieg" in m or "x2" in m or "ah ausw" in m
-            or ("dnb" in m and ("ausw" in m or "away" in m))):
-        return "away"
-    return None
 
 
 def rest_days(schedule: list, match_date: str) -> Optional[int]:
@@ -84,7 +70,7 @@ class FixtureCongestionSignal(Signal):
         if hc == 0.0 and ac == 0.0:
             return None   # beide ausgeruht → kein Stau → Schläfer
 
-        side = _market_side(pick.get("market", ""))
+        side = market_side(pick.get("market", ""))
         if side is None:
             return None
 

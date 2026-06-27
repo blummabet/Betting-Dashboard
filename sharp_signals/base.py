@@ -15,6 +15,23 @@ from abc import ABC, abstractmethod
 from typing import Optional, Any
 
 
+def market_side(market: str) -> Optional[str]:
+    """Pick-Markt → 'home' | 'away' | 'over' | 'under' | None. EINE Quelle für alle Signale
+    (26.06.2026 Konsolidierung — vorher in jedem Signal kopiert). Kürzere Substrings ('1x'/'x2'/
+    'ah ausw') decken auch die längeren Labels ('doppelte chance — 1x', 'ah auswärts') ab."""
+    m = (market or "").lower()
+    if "über" in m or "uber" in m or "over" in m:
+        return "over"
+    if "unter" in m or "under" in m:
+        return "under"
+    if "heimsieg" in m or "1x" in m or "ah heim" in m or ("dnb" in m and "heim" in m):
+        return "home"
+    if ("auswärtssieg" in m or "auswartssieg" in m or "x2" in m or "ah ausw" in m
+            or ("dnb" in m and ("ausw" in m or "away" in m))):
+        return "away"
+    return None
+
+
 @dataclass
 class SignalResult:
     """

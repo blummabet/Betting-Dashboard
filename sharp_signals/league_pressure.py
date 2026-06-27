@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from sharp_signals.base import Signal, SignalResult
+from sharp_signals.base import Signal, SignalResult, market_side
 
 # Top-5-Liga-Meta (aus update_dashboard.LEAGUES). europe_cut = CL+EL+ECL-Plätze; rel = Abstiegszone.
 LEAGUE_META = {
@@ -27,22 +27,6 @@ LEAGUE_META = {
 }
 
 MAX_PP = 2.0   # konservativer Deckel wie incentive
-
-
-def _market_side(market: str) -> Optional[str]:
-    """Pick-Markt → 'home' | 'away' | 'over' | 'under' | None (Tabellen-Druck wirkt auf diese)."""
-    m = (market or "").lower()
-    if "über" in m or "uber" in m or "over" in m:
-        return "over"
-    if "unter" in m or "under" in m:
-        return "under"
-    if "heimsieg" in m or "doppelte chance — 1x" in m or "ah heim" in m \
-            or ("dnb" in m and "heim" in m):
-        return "home"
-    if "auswärtssieg" in m or "auswartssieg" in m or "doppelte chance — x2" in m \
-            or "ah auswärts" in m or "ah auswarts" in m or ("dnb" in m and ("ausw" in m or "away" in m)):
-        return "away"
-    return None
 
 
 def _pts_at(rows: list, pos: int):
@@ -140,7 +124,7 @@ class LeaguePressureSignal(Signal):
         hp, hm = team_pressure(hrow, standings, meta, rounds_left)
         ap, am = team_pressure(arow, standings, meta, rounds_left)
 
-        side = _market_side(pick.get("market", ""))
+        side = market_side(pick.get("market", ""))
         if side is None:
             return None
 
