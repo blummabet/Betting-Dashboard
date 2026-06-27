@@ -42,10 +42,10 @@ dataset-bewusst · LeaguePressureSignal · Post-Match-xG-Re-Learning · Backtest
 - ⏳ Player-Props + Corner-Markt + Engine-Hooks (`corner_rate`-Signal).
 - 🔒 Poly Trading / Wallets Liga — blockiert, bis Polymarket Ligen listet.
 
-### ⏳ Lern-Loop / Guards
-- ⏳ Guard-Batterie Liga voll auditieren — laufen alle relevanten Guards auf `liga_status.json`? Liga-spezifische fehlend?
-- ⏳ Lern-Loop end-to-end auf echten Liga-Picks testen (sobald erste resolved sind).
-- ⏳ Forward-CLV-Tracking der Liga-Paper-Picks (Einstieg Soft vs Pinnacle-Closing) + Dashboard — der eigentliche Steam-Beweis.
+### Lern-Loop / Guards
+- ✅ Guard-Batterie Liga auditiert (26.06.): 42/48 laufen auf Liga, 5 zurecht N/A (WM-Venue/time, Poly-Book/Steam-Lag-Dedup), 1 Lücke gefixt (`soft_opening_captured` las WM-History → `IntegrityCtx.history` dataset-bewusst). + `liga_leagues_populated` + `liga_odds_round_sane`.
+- ⏳ Lern-Loop end-to-end: Plumbing verifiziert (Trockenlauf grün, Prior greift) — volle Aussage erst mit aufgelösten Liga-Picks (datenblockiert bis Saisonstart).
+- ⏳ Forward-CLV-Tracking: Mechanik da (`resolve_steam_clv` schreibt `clvPP` auf Liga-Picks); Dashboard-Aggregat bauen, sobald erste Picks existieren (datenblockiert).
 
 ### ⏳ Liga-Switch-Ideen
 - ⏳ Halbzeit-Märkte + Signale anpassen.

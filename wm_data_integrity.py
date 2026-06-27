@@ -102,7 +102,10 @@ class IntegrityCtx:
         # Auto-Bets + Odds-History (14.06.2026): injizierbar (Tests) oder lazy von Disk.
         _ab = auto_bets if auto_bets is not None else _lazy("wm_auto_bets_placed.json")
         self.auto_bets = (_ab.get("bets") if isinstance(_ab, dict) else _ab) or []
-        self.history = (history if history is not None else _lazy("wm2026-odds-history.json")) or {}
+        # Odds-History dataset-bewusst (26.06.2026): Liga-Guards (z.B. soft_opening_captured) liefen
+        # sonst gegen die WM-History → effektiv tot. is_liga kommt aus _meta.profile (oben gesetzt).
+        _hist_default = "liga-odds-history.json" if self.is_liga else "wm2026-odds-history.json"
+        self.history = (history if history is not None else _lazy(_hist_default)) or {}
         self.fixtures = [(g, fx) for g, gd in (self.wm.get("groups") or {}).items()
                          for fx in (gd.get("fixtures") or [])]
         self.odds = self.wm.get("odds") or {}
