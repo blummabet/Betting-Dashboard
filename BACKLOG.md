@@ -32,10 +32,11 @@ dataset-bewusst · LeaguePressureSignal · Post-Match-xG-Re-Learning · Backtest
 - ✅ `topscorer_momentum` (/players/topscorers → liga-data.json[topScorers]; form-Familie, Boost Sieg/Über).
 - ⏳ Spieler-Layer Rest: `squad_strength` (überlappt injury/lineup, niedrige Prio).
 - ✅ `coach_change` (Neue-Trainer-Bounce, /coachs) + `transfer_shift` (Schlüsselspieler-Abgang, /transfers).
-- ⏳ `referee_tendency` (mit Karten-Markt) + `news`-Signal (niedrig).
-- ⏳ `coach_change` / `transfer_shift` (Saisonstart-relevant).
-- ⏳ `referee_tendency` (zusammen mit Karten-Markt).
-- ⏳ News-Signal — nur falls Datenqualität + harter Engine-Hook (Scope-Disziplin).
+- ⛔ `referee_tendency` — KEIN Quick-Signal: braucht zuerst den **Karten-Markt** (Schiri wird nicht
+  geholt — kein referee-Feld; kein fetch_wm_cards; kein Karten-Markt in der Engine). Eigener Block:
+  Schiri-Daten + Karten-Quoten + Pick/Resolve, DANN das Signal. Scope-Disziplin: ohne Markt = Lärm.
+- ⏳ News-Signal (niedrig) — erst probieren, was API-Football „News" für die 5 Ligen liefert
+  (ein Probe-Call mit Key im Workflow); nur bauen bei Datenqualität + hartem Engine-Hook.
 
 ### ⏳ Märkte
 - ⏳ Player-Props + Corner-Markt + Engine-Hooks (`corner_rate`-Signal).
