@@ -37,6 +37,7 @@ from sharp_signals.form_rating import FormRatingSignal
 from sharp_signals.freshness_signal import FreshnessLegSignal
 from sharp_signals.smart_money import SmartMoneySignal
 from sharp_signals.league_pressure import LeaguePressureSignal
+from sharp_signals.fixture_congestion import FixtureCongestionSignal
 
 
 # Pro-Profil deaktivierte Signale (25.06.2026, Lucas: Liga auf WM-Stack). Manche WM-only-Signale
@@ -86,6 +87,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     FreshnessLegSignal(),
     SmartMoneySignal(),
     LeaguePressureSignal(),   # Liga-Pendant zu incentive (25.06.2026); no-op für WM (group_id A-L)
+    FixtureCongestionSignal(),  # Erschöpfung/Spielstau aus Ruhetagen (26.06.2026); Schläfer bis englische Woche
 ]
 
 
@@ -163,6 +165,9 @@ SIGNAL_GROUPS: dict[str, str] = {
     "public_static_bias": "public",
     "travel_burden":      "context",
     "injury":             "context",
+    # fixture_congestion (Ruhetage/Erschöpfung) — auch ein Fitness-/Kontext-Faktor wie Reise/Injury.
+    # Anti-Korr-Discount: müde + verletzt + lange Reise sollen nicht dreifach denselben Edge zählen.
+    "fixture_congestion": "context",
     # pressure_index in dieselbe Familie wie incentive_signal (21.06.2026, Lucas):
     # beide modellieren am Spieltag 3 dieselbe Qualifikations-Asymmetrie (muss gewinnen /
     # schon durch → Gegenseite). Vorher in „context" + incentive in eigener Familie →

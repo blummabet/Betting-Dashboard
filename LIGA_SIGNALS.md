@@ -29,8 +29,8 @@ und wo jedes Signal angezeigt wird. Liga läuft auf dem WM-Stack (`COCOBET_DATAS
 | `xg_strength` | ✅ live | xG-Stärke (For/Against-Avg) | /fixtures/statistics (echtes Klub-xG) |
 | `chance_creation`, `form_rating` | ⚠️ teil-live | KeyPasses / Spieler-Rating als Team-Aggregat | /fixtures/players (aktuell aus, s. Perf) |
 | `lineup_signal` | ✅ saison-bereit | Schlüsselspieler-Ausfälle in der Aufstellung | /fixtures/lineups (T-1h) |
-| `injury` | 🔜 geplant | Verletzungen/Sperren | /injuries, /sidelined (pro Liga) |
-| `apif_predictions` | 🔜 geplant | API-Footballs eigenes Modell als 3. Cross-Check | /predictions (pro Liga) |
+| `injury` | ✅ live | Verletzungen/Sperren | /injuries (5 Ligen) + /sidelined pro Team |
+| `apif_predictions` | ✅ live | API-Footballs eigenes Modell als 3. Cross-Check | /predictions (fid direkt) |
 | `incentive`, `altitude`, `weather`, `travel_burden`, `smart_money`, `polymarket_sharp` | ❌ aus | WM/Poly-spezifisch | — |
 
 ## B) xG: warum Liga besser ist als WM
@@ -45,9 +45,10 @@ Priorität grob von hoch nach niedrig. Jedes als eigenes modulares Signal + Fetc
 1. **`league_pressure`** ✅ gebaut — Titel/Abstieg/Europa/Dead-Rubber aus der Tabelle. Schläfer:
    früh ~0, rampt im Endspurt. Backtest zeigt standalone schwach → nur Rückrunde gewichten / Kombi.
    Daten: /standings (haben wir).
-2. **`fixture_congestion` / Erschöpfung** 🔜 — englische Woche + Europa-Reise (Do EL → So Liga) →
-   müde/rotierte Elf → fade Favorit / Unter. Daten: /fixtures (Rest-Tage seit letztem Spiel pro Team)
-   + welche Teams in CL/EL spielen (/fixtures Europapokal). Lucas-Wunsch, hoher Liga-Edge.
+2. **`fixture_congestion` / Erschöpfung** ✅ gebaut (26.06.) — Ruhetage aus dem Liga-Spielplan
+   (`team_schedule` im Kontext): müdes Team faden, ausgeruhten Gegner boosten, leichter Unter-Hebel,
+   kein Über-Boost. Schläfer bis zur ersten englischen Woche (erstes Spiel = None). Offen für später:
+   Europapokal-Reise (CL/EL-Midweek) als Verstärker — bisher nur Liga-interne Ruhetage.
 3. **Spieler-Layer** 🔜 (Lucas' #3) — tiefer als lineup_signal:
    - `player_form` (per-Spieler-Form, Scorer-Gefahr) → /fixtures/players-Ledger (post-match).
    - `squad_strength` / Ausfall-Wertung Schlüsselspieler → /players/squads + /injuries + /sidelined.

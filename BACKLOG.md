@@ -16,15 +16,15 @@ dataset-bewusst · LeaguePressureSignal · Post-Match-xG-Re-Learning · Backtest
 - ⏳ ClubElo-Fetch im GitHub-Workflow verifizieren — Sandbox gab 403; in Actions prüfen, sonst UA/Quelle anpassen.
 
 ### ⏳ Frontend / Cards
-- ⏳ Matchday-Subnav „1 dann 20"-Bug (Frontend `_mdSet`/`_liveMd` in wm2026-renderer.js; Daten sind sauber 1..38).
-- ⏳ Sharp Radar: aktuelle Linien auch OHNE Bewegung anzeigen (statt „kommt mit nächstem Lauf").
+- ✅ Matchday-Subnav „1 dann 20"-Bug behoben (Daten-Fix pick_event_for_fixture + Frontend-Cap + Guard).
+- ✅ Sharp Radar: aktuelle Linien auch OHNE Bewegung (Tabelle Pinnacle/Soft, bis Moves da sind).
 - ⏳ Heart-Tab Liga-Integration (Top-Conviction-Ansicht + Liga-Signale; aktuell WM-verdrahtet).
 - ✅ Pick→Card-Pfad bewiesen (simulierter Drop → 2 Cards) — Cards füllen sich automatisch bei Linienbewegung.
 
 ### ⏳ Signale (laut LIGA_SIGNALS.md, modular dazubauen)
-- ⏳ `injury` Liga-Fetch (bestehendes WM-Signal dataset-bewusst machen).
-- ⏳ `apif_predictions` Liga-Fetch.
-- ⏳ `fixture_congestion` / Erschöpfung (englische Woche + Europa-Reise) — NEU, hoher Liga-Edge.
+- ✅ `injury` Liga-Fetch (Fetcher dataset-bewusst; InjurySignal liest wm[injuries]).
+- ✅ `apif_predictions` Liga-Fetch (Fetcher dataset-bewusst → liga_apif_predictions.json).
+- ✅ `fixture_congestion` / Erschöpfung (Ruhetage aus Spielplan; registriert, context-Familie).
 - ⏳ Spieler-Layer: `player_form`-Ledger, `squad_strength`, `topscorer_momentum`.
 - ⏳ `coach_change` / `transfer_shift` (Saisonstart-relevant).
 - ⏳ `referee_tendency` (zusammen mit Karten-Markt).
