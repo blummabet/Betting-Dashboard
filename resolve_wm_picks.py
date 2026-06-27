@@ -69,10 +69,9 @@ def _apply_ah_stake_factor(p: dict, hs: int, as_: int) -> None:
         p.pop("resultStakeFactor", None)
 
 BASE     = os.path.dirname(os.path.abspath(__file__))
-# Dataset-Modus (25.06.2026, Lucas: Liga auf WM-Stack). COCOBET_DATASET=liga → resolved die
-# Card-Picks in liga-data.json. Default WM unverändert.
-_DATASET = (os.environ.get("COCOBET_DATASET") or "wm").lower()
-WM_FILE  = os.path.join(BASE, "liga-data.json" if _DATASET == "liga" else "wm2026-data.json")
+import cocobet_dataset as D
+# Dataset-Modus (Single Source: cocobet_dataset): Liga → resolved die Card-Picks in liga-data.json.
+WM_FILE  = str(D.data_file())
 
 
 def parse_pick_key(pick_key: str) -> tuple[str, int, str, str] | None:

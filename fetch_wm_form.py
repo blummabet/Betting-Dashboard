@@ -15,11 +15,13 @@ import json, os, sys, time, http.client
 from datetime import datetime, timezone
 from pathlib import Path
 
+import cocobet_dataset as D
+
 BASE      = Path(__file__).parent
-# Dataset-Modus (25.06.2026, Lucas: Liga auf WM-Stack). COCOBET_DATASET=liga → Form+H2H für
-# liga-data.json. Liga-Team-id = API-Football-ID (teamIds-Identitäts-Map aus build_liga_data).
-_IS_LIGA  = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
-WM_FILE   = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
+# Dataset-Modus (Single Source: cocobet_dataset): Liga → Form+H2H für liga-data.json.
+# Liga-Team-id = API-Football-ID (teamIds-Identitäts-Map aus build_liga_data).
+_IS_LIGA  = D.is_liga()
+WM_FILE   = D.data_file()
 APIF_HOST = "v3.football.api-sports.io"
 APIF_KEY  = os.environ.get("APISPORTS_KEY", "")
 DELAY     = 1.5      # seconds between requests (Pro plan: 10 req/min)

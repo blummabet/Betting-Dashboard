@@ -30,15 +30,16 @@ import json, math, os, re, sys
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+import cocobet_dataset as D
+
 BASE    = Path(__file__).parent
-# Dataset-Modus (25.06.2026, Lucas: Liga auf WM-Stack). COCOBET_DATASET=liga → läuft auf
-# liga-data.json mit Liga-Sibling-Dateien (liga_*.json); fehlende → graceful kein-Signal (kein
-# WM-Datenleck). KO/Quali-Schritte werden für Liga gegatet. Default bleibt WM (unverändert).
-_DATASET     = (os.environ.get("COCOBET_DATASET") or "wm").lower()
-IS_LIGA      = _DATASET == "liga"
-WM_FILE      = BASE / ("liga-data.json" if IS_LIGA else "wm2026-data.json")
+# Dataset-Modus (Single Source: cocobet_dataset). COCOBET_DATASET=liga → läuft auf liga-data.json
+# mit Liga-Sibling-Dateien (liga_*.json); fehlende → graceful kein-Signal (kein WM-Datenleck).
+# KO/Quali-Schritte werden für Liga gegatet. Default bleibt WM (unverändert).
+IS_LIGA      = D.is_liga()
+WM_FILE      = D.data_file()
 _FILE_PREFIX = "liga_" if IS_LIGA else "wm_"
-_HISTORY_FILE = "liga-odds-history.json" if IS_LIGA else "wm2026-odds-history.json"
+_HISTORY_FILE = D.file("wm2026-odds-history.json", "liga-odds-history.json").name
 VERBOSE = "--verbose" in sys.argv or "-v" in sys.argv
 
 # ── Modell-Parameter ──────────────────────────────────────────────────────

@@ -49,13 +49,15 @@ import http.client
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+import cocobet_dataset as D
+
 BASE          = Path(__file__).parent
-# Dataset-bewusst (26.06.2026, Lucas): Liga liest/schreibt liga-* Dateien, nutzt die fid am Fixture
-# (build_liga_data) → kein WM-Fixture-Map-Umweg. Consumer (generate_wm_picks) lädt schon
+# Dataset-bewusst (Single Source: cocobet_dataset): Liga liest/schreibt liga-* Dateien, nutzt die fid
+# am Fixture (build_liga_data) → kein WM-Fixture-Map-Umweg. Consumer (generate_wm_picks) lädt schon
 # {_FILE_PREFIX}apif_predictions.json. WM-Verhalten unverändert.
-_IS_LIGA      = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
-WM_FILE       = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
-OUTPUT_FILE   = BASE / ("liga_apif_predictions.json" if _IS_LIGA else "wm_apif_predictions.json")
+_IS_LIGA      = D.is_liga()
+WM_FILE       = D.data_file()
+OUTPUT_FILE   = D.file("wm_apif_predictions.json", "liga_apif_predictions.json")
 APIF_HOST     = "v3.football.api-sports.io"
 APIF_KEY      = os.environ.get("APISPORTS_KEY", "9f36726c1bdc9957b4a49f89277b80db")
 

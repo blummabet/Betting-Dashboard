@@ -38,12 +38,14 @@ import time
 from datetime import datetime, timezone, date
 from pathlib import Path
 
+import cocobet_dataset as D
+
 BASE      = Path(__file__).parent
-# Dataset-bewusst (26.06.2026, Lucas): Liga liest/schreibt liga-data.json; League-Endpoint läuft
-# über die 5 Top-Ligen, /sidelined pro Team bleibt generisch (Hauptquelle pre-Saison). Consumer
-# (generate_wm_picks injury_discount) liest wm["injuries"] schon dataset-bewusst. WM unverändert.
-_IS_LIGA  = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
-WM_FILE   = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
+# Dataset-bewusst (Single Source: cocobet_dataset): Liga liest/schreibt liga-data.json; League-
+# Endpoint läuft über die 5 Top-Ligen, /sidelined pro Team bleibt generisch (Hauptquelle pre-Saison).
+# Consumer (generate_wm_picks injury_discount) liest wm["injuries"] schon dataset-bewusst.
+_IS_LIGA  = D.is_liga()
+WM_FILE   = D.data_file()
 APIF_HOST = "v3.football.api-sports.io"
 APIF_KEY  = os.environ.get("APISPORTS_KEY", "").strip()
 DELAY     = 1.2
@@ -51,8 +53,8 @@ DELAY     = 1.2
 WM_LEAGUE  = 1       # FIFA World Cup
 WM_SEASON  = 2026
 WM_START   = date(2026, 6, 11)
-LIGA_LEAGUES = {"ENG": 39, "ESP": 140, "GER": 78, "ITA": 135, "FRA": 61}
-LIGA_SEASON  = int(os.environ.get("LIGA_SEASON") or 2025)
+LIGA_LEAGUES = D.leagues()
+LIGA_SEASON  = D.season()
 
 
 def apif_get(endpoint: str, params: dict) -> list:

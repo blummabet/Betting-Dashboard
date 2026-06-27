@@ -26,12 +26,14 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+import cocobet_dataset as D
+
 BASE = Path(__file__).resolve().parent
-# Dataset-bewusst (26.06.2026, Lucas Spieler-Layer): Liga lernt eigene Spieler-Form (liga_*),
+# Dataset-bewusst (Single Source: cocobet_dataset): Liga lernt eigene Spieler-Form (liga_*),
 # Quelle = liga-data.json["squads"]. Spieler-ID-basiert → identische Logik, nur andere Dateien.
-_IS_LIGA    = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
-LEDGER_FILE = BASE / ("liga_player_form_ledger.json" if _IS_LIGA else "player_form_ledger.json")
-OUT_FILE    = BASE / ("liga_player_form.json" if _IS_LIGA else "player_form.json")
+_IS_LIGA    = D.is_liga()
+LEDGER_FILE = D.file("player_form_ledger.json", "liga_player_form_ledger.json")
+OUT_FILE    = D.file("player_form.json", "liga_player_form.json")
 
 DEFAULTS = {
     "enabled":         True,
@@ -254,7 +256,7 @@ def main() -> int:
     """Standalone: Ledger + squads (Baselines) → player_form.json."""
     cfg = load_config()
     ledger = json.loads(LEDGER_FILE.read_text(encoding="utf-8")) if LEDGER_FILE.exists() else {"records": []}
-    wm_file = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
+    wm_file = D.data_file()
     squads = {}
     if wm_file.exists():
         squads = (json.loads(wm_file.read_text(encoding="utf-8")).get("squads")) or {}

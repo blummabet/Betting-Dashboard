@@ -1515,11 +1515,11 @@ if __name__ == "__main__":
     from datetime import datetime, timezone
     from pathlib import Path
     B = Path(__file__).resolve().parent
+    import cocobet_dataset as D
     load = lambda f: json.loads((B / f).read_text(encoding="utf-8")) if (B / f).exists() else {}
-    # Dataset-Modus (25.06.2026, Lucas): COCOBET_DATASET=liga → Guards auf liga-data.json laufen
-    # lassen + Ergebnis nach liga_status.json schreiben (Liga-Health sichtbar). WM-/Poly-only Guards
-    # no-oppen mangels Daten. WM-Verhalten unverändert (nur Print).
-    _is_liga = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
+    # Dataset-Modus (Single Source: cocobet_dataset): Liga → Guards auf liga-data.json + Ergebnis
+    # nach liga_status.json (Liga-Health sichtbar). WM-/Poly-only Guards no-oppen mangels Daten.
+    _is_liga = D.is_liga()
     if _is_liga:
         res = run_checks(load("liga-data.json"), {}, {}, {}, lineups=load("liga_lineups.json"))
     else:

@@ -28,11 +28,13 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+import cocobet_dataset as D
+
 BASE        = Path(__file__).parent
-# Dataset-Modus (25.06.2026, Lucas): COCOBET_DATASET=liga → eigener Liga-Ledger.
-_IS_LIGA    = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
-WM_FILE     = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
-LEDGER_FILE = BASE / ("liga_signal_ledger.json" if _IS_LIGA else "wm_signal_ledger.json")
+# Dataset-Modus (Single Source: cocobet_dataset): Liga → eigener Liga-Ledger.
+_IS_LIGA    = D.is_liga()
+WM_FILE     = D.data_file()
+LEDGER_FILE = D.file("wm_signal_ledger.json", "liga_signal_ledger.json")
 
 LEARNABLE_RESULTS = {"WIN", "LOSS", "VOID"}   # VOID wird aufgenommen, vom Updater aber ignoriert
 

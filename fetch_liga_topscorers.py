@@ -17,12 +17,14 @@ import sys
 import time
 from pathlib import Path
 
+import cocobet_dataset as D
+
 BASE = Path(__file__).parent
-LIGA_FILE = BASE / "liga-data.json"
+LIGA_FILE = BASE / "liga-data.json"   # liga-only Script
 APIF_HOST = "v3.football.api-sports.io"
 APIF_KEY = os.environ.get("APISPORTS_KEY", "").strip()
-LIGA_LEAGUES = {"ENG": 39, "ESP": 140, "GER": 78, "ITA": 135, "FRA": 61}
-LIGA_SEASON = int(os.environ.get("LIGA_SEASON") or 2025)
+LIGA_LEAGUES = D.leagues()
+LIGA_SEASON = D.season()
 DELAY = 1.0
 
 

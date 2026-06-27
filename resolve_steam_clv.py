@@ -21,10 +21,11 @@ import json
 import os
 from pathlib import Path
 
+import cocobet_dataset as D
+
 BASE = Path(__file__).parent
-# Dataset-Modus (25.06.2026, Lucas: Liga auf WM-Stack). COCOBET_DATASET=liga → CLV auf liga-data.json.
-_DATASET = (os.environ.get("COCOBET_DATASET") or "wm").lower()
-WM = BASE / ("liga-data.json" if _DATASET == "liga" else "wm2026-data.json")
+# Dataset-Modus (Single Source: cocobet_dataset): Liga → CLV auf liga-data.json.
+WM = D.data_file()
 
 try:
     from resolve_wm_results import build_result_lookup, get_pinn_close_for_market

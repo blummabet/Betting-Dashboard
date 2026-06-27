@@ -17,16 +17,17 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE, "matches", "data")
 os.makedirs(DATA_DIR, exist_ok=True)
 
-# Dataset-Modus (26.06.2026, Lucas: Event Pages liga-tauglich). COCOBET_DATASET=liga → Liga-Match-
-# Pages (liga-{slug}.json + liga-index.json), gleiches Template matches/wm-match.html. WM-only
-# Quellen (poly/props/smartmoney) für Liga = nicht-existente Pfade → load_json gibt {} → leer.
-_IS_LIGA     = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
+# Dataset-Modus (Single Source: cocobet_dataset): Liga → Liga-Match-Pages (liga-{slug}.json +
+# liga-index.json), gleiches Template. WM-only Quellen (poly/props/smartmoney) für Liga =
+# nicht-existente Pfade → load_json gibt {} → leer.
+import cocobet_dataset as D
+_IS_LIGA     = D.is_liga()
 _PFX         = "liga" if _IS_LIGA else "wm"
-WM_FILE      = os.path.join(BASE, "liga-data.json" if _IS_LIGA else "wm2026-data.json")
-HISTORY_FILE = os.path.join(BASE, "liga-odds-history.json" if _IS_LIGA else "wm2026-odds-history.json")
-POLY_FILE    = os.path.join(BASE, "liga_poly_prices.json" if _IS_LIGA else "wm_poly_prices.json")
-PROPS_FILE   = os.path.join(BASE, "liga_player_props.json" if _IS_LIGA else "wm2026-player-props.json")
-SMARTMONEY_FILE = os.path.join(BASE, "liga_poly_smartmoney.json" if _IS_LIGA else "wm_poly_smartmoney.json")
+WM_FILE      = str(D.data_file())
+HISTORY_FILE = str(D.file("wm2026-odds-history.json", "liga-odds-history.json"))
+POLY_FILE    = str(D.file("wm_poly_prices.json", "liga_poly_prices.json"))
+PROPS_FILE   = str(D.file("wm2026-player-props.json", "liga_player_props.json"))
+SMARTMONEY_FILE = str(D.file("wm_poly_smartmoney.json", "liga_poly_smartmoney.json"))
 
 CO_HOSTS = {"MEX", "USA", "CAN"}
 

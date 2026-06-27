@@ -47,13 +47,15 @@ import http.client
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+import cocobet_dataset as D
+
 BASE          = Path(__file__).parent
-# Dataset-Modus (25.06.2026, Lucas: Liga auf WM-Stack). COCOBET_DATASET=liga → Lineups für
-# liga-data.json, Output liga_lineups.json (das generate_wm_picks im liga-Modus liest).
-_IS_LIGA      = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
-WM_FILE       = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
-OUTPUT_FILE   = BASE / ("liga_lineups.json" if _IS_LIGA else "wm_lineups.json")
-ALERT_DEDUP   = BASE / ("liga_lineup_alerts.json" if _IS_LIGA else "wm_lineup_alerts.json")
+# Dataset-Modus (Single Source: cocobet_dataset): Liga → Lineups für liga-data.json,
+# Output liga_lineups.json (das generate_wm_picks im liga-Modus liest).
+_IS_LIGA      = D.is_liga()
+WM_FILE       = D.data_file()
+OUTPUT_FILE   = D.file("wm_lineups.json", "liga_lineups.json")
+ALERT_DEDUP   = D.file("wm_lineup_alerts.json", "liga_lineup_alerts.json")
 APIF_HOST     = "v3.football.api-sports.io"
 APIF_KEY      = os.environ.get("APISPORTS_KEY", "9f36726c1bdc9957b4a49f89277b80db")
 
@@ -231,11 +233,8 @@ def _build_wc_fixmap() -> dict:
     # Liga (25.06.2026): Fixmap über die 5 Top-Ligen + aktuelle Saison statt WM-league=1.
     # Liga-Team-id = API-id → (home_id, away_id)→fixture_id-Lookup greift direkt.
     if _IS_LIGA:
-        from datetime import datetime as _dt
-        _now = _dt.utcnow()
-        _season = _now.year if _now.month >= 6 else _now.year - 1
-        _queries = [f"/fixtures?league={lid}&season={_season}"
-                    for lid in (39, 140, 78, 135, 61)]
+        _season = D.season()
+        _queries = [f"/fixtures?league={lid}&season={_season}" for lid in D.leagues().values()]
     else:
         _queries = ["/fixtures?league=1&season=2026"]
     for _q in _queries:

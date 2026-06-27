@@ -29,15 +29,17 @@ from datetime import datetime, timezone, timedelta, date
 from pathlib import Path
 
 # ── Config ────────────────────────────────────────────────────────────────────
+import cocobet_dataset as D
+
 BASE         = Path(__file__).parent
-# Dataset-Modus (26.06.2026, Lucas: Sharp Radar liga-tauglich). COCOBET_DATASET=liga → Liga-Moves.
-_IS_LIGA     = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
-HISTORY_FILE = BASE / ("liga-odds-history.json" if _IS_LIGA else "wm2026-odds-history.json")
-WM_FILE      = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
+# Dataset-Modus (Single Source: cocobet_dataset): Liga → Liga-Moves.
+_IS_LIGA     = D.is_liga()
+HISTORY_FILE = D.file("wm2026-odds-history.json", "liga-odds-history.json")
+WM_FILE      = D.data_file()
 POLY_FILE    = BASE / "wm_poly_prices.json"
 LOG_FILE     = BASE / "telegram-log.json"
-MOVES_LOG    = BASE / ("liga_sharp_moves_log.json" if _IS_LIGA else "wm_sharp_moves_log.json")
-DEDUP_FILE   = BASE / ("liga_sharp_dedup.json" if _IS_LIGA else "wm_sharp_dedup.json")
+MOVES_LOG    = D.file("wm_sharp_moves_log.json", "liga_sharp_moves_log.json")
+DEDUP_FILE   = D.file("wm_sharp_dedup.json", "liga_sharp_dedup.json")
 
 TELEGRAM_TOKEN = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
 # CHANNEL-FIX 05.06.2026: Sharp-Move-Alerts wurden vom PUBLIC CocoBet-Channel

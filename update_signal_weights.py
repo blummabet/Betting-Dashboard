@@ -37,9 +37,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 BASE = Path(__file__).parent
-# Dataset-Modus (25.06.2026, Lucas): COCOBET_DATASET=liga → eigene Liga-Gewichte/-Ledger.
-_IS_LIGA = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
 sys.path.insert(0, str(BASE))
+import cocobet_dataset as D  # noqa: E402
+# Dataset-Modus (Single Source: cocobet_dataset): Liga → eigene Liga-Gewichte/-Ledger.
+_IS_LIGA = D.is_liga()
 
 # Prior-Parameter (Beta-Binomial)
 PRIOR_ALPHA = 2.0
@@ -52,8 +53,8 @@ MIN_OBS_FOR_TRUST = 10  # davor: konservatives Update (50% weight zur Prior)
 # Liga hat keine „alte Engine in Runde 1" → ab Spieltag 1 lernen. WM bleibt bei 2.
 MIN_LEARN_MATCHDAY = 1 if _IS_LIGA else 2
 
-LEDGER_FILE  = BASE / ("liga_signal_ledger.json" if _IS_LIGA else "wm_signal_ledger.json")
-WEIGHTS_FILE = BASE / ("liga_signal_weights.json" if _IS_LIGA else "signal_weights.json")
+LEDGER_FILE  = D.file("wm_signal_ledger.json", "liga_signal_ledger.json")
+WEIGHTS_FILE = D.file("signal_weights.json", "liga_signal_weights.json")
 
 
 def _matchday_of(pick: dict) -> int | None:

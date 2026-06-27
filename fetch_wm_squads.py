@@ -27,13 +27,15 @@ import time
 import http.client
 from pathlib import Path
 
+import cocobet_dataset as D
+
 BASE        = Path(__file__).parent
-# Dataset-bewusst (26.06.2026, Lucas Spieler-Layer): Liga schreibt liga-data.json["squads"]. Liga-
+# Dataset-bewusst (Single Source: cocobet_dataset): Liga schreibt liga-data.json["squads"]. Liga-
 # Team-ID IST die API-Football-ID (Identitäts-teamIds) → kein /teams-Namens-Match nötig. Speist
 # lineup_signal (key_players) + player_form-Baselines. WM unverändert.
-_IS_LIGA    = (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
-WM_FILE     = BASE / ("liga-data.json" if _IS_LIGA else "wm2026-data.json")
-LIGA_SEASON = int(os.environ.get("LIGA_SEASON") or 2025)
+_IS_LIGA    = D.is_liga()
+WM_FILE     = D.data_file()
+LIGA_SEASON = D.season()
 APIF_HOST   = "v3.football.api-sports.io"
 APIF_KEY    = os.environ.get("APISPORTS_KEY", "9f36726c1bdc9957b4a49f89277b80db")
 APIF_DELAY  = 1.2   # seconds between calls (Pro plan: 10 req/min)
