@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-27T13:17:39Z",
+  "generatedAt": "2026-06-27T17:00:21Z",
   "windowDays": 2,
   "upcoming": 6,
   "signalsFired": [
@@ -24,12 +24,12 @@
   "signalsTotal": 24,
   "perSignal": {
     "lead_lag_bias": 12,
-    "public_static_bias": 17,
-    "travel_burden": 76,
+    "public_static_bias": 16,
+    "travel_burden": 77,
     "injury": 3,
-    "form_trend": 112,
+    "form_trend": 113,
     "h2h_pattern": 7,
-    "xg_strength": 100,
+    "xg_strength": 101,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 37,
@@ -59,15 +59,17 @@
     "🧠 Signal 'coach_change' feuert nicht (kontextabhängig)",
     "🧠 Signal 'transfer_shift' feuert nicht (kontextabhängig)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
-    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)"
+    "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 5 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
+    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
+    "🛡️ Soft-Eröffnung echt erfasst: 3 Fehler (z.B. ZAF-CAN: Soft bewegte sich 4.75→5.0, aber Opening==Jetzt (5.2) — nicht eingefroren)"
   ],
   "oks": [
     "🌡️ Weather: 6 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 78 Fixtures, Ø 109.6 Snapshots",
+    "📉 Odds-History: 78 Fixtures, Ø 110.8 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
     "💼 Poly-Balance: $356.82",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -172,6 +174,15 @@
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
+      "id": "ko_odds_present",
+      "label": "KO-Odds bleiben erhalten (nicht als Phantom geprunt)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fetch_wm_poly_prices.real_keys muss bothResolved koFixtures enthalten."
+    },
+    {
       "id": "odds_freshness",
       "label": "Pinnacle-Odds frisch (< 6h)",
       "severity": "warn",
@@ -256,9 +267,15 @@
       "id": "no_phantom_odds",
       "label": "Keine Phantom-Odds-Keys (verkehrte Reihenfolge)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 5,
+      "failures": [
+        "ZAF-CAN: kein echtes Fixture (Spiegel-Key?)",
+        "NED-MAR: kein echtes Fixture (Spiegel-Key?)",
+        "BRA-JPN: kein echtes Fixture (Spiegel-Key?)",
+        "CIV-NOR: kein echtes Fixture (Spiegel-Key?)",
+        "AUS-EGY: kein echtes Fixture (Spiegel-Key?)"
+      ],
       "note": "84 Odds-Keys vs 72 Fixtures = 12 leere Spiegel-Einträge. Quelle prüfen."
     },
     {
@@ -386,9 +403,13 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 3,
+      "failures": [
+        "ZAF-CAN: Soft bewegte sich 4.75→5.0, aber Opening==Jetzt (5.2) — nicht eingefroren",
+        "BRA-JPN: Soft bewegte sich 1.74→1.7, aber Opening==Jetzt (1.68) — nicht eingefroren",
+        "CIV-NOR: Soft bewegte sich 4.1→3.6, aber Opening==Jetzt (3.75) — nicht eingefroren"
+      ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
