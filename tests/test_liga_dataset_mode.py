@@ -68,8 +68,12 @@ class TestSignalGating(unittest.TestCase):
 
     def test_liga_keeps_generic(self):
         d = self._disabled("liga_default")
-        for s in ("form_trend", "h2h_pattern", "xg_strength", "steam_lag", "lead_lag_bias"):
+        # Generische Signale (Form/xG/H2H/Pinnacle-vs-Soft) bleiben aktiv.
+        for s in ("form_trend", "h2h_pattern", "xg_strength", "lead_lag_bias"):
             self.assertNotIn(s, d)
+        # steam_lag ist Pinn-vs-POLY (Poly-spezifisch) → für Liga deaktiviert (27.06.2026),
+        # bis Polymarket Ligen listet. Sharp Radar deckt Liga-Steam (Pinn-vs-Soft) ab.
+        self.assertIn("steam_lag", d)
 
     def test_wm_disables_nothing(self):
         self.assertEqual(self._disabled(None), set())
