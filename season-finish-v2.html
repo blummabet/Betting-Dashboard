@@ -3646,165 +3646,198 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         Backtest-als-Prior, eigener CLV. Voll auf den Saisonstart vorbereitet.
       </p>
 
-      <div class="h2-sub-label">Saisondruck-System (das Markenzeichen)</div>
+      <div class="h2-sub-label">Eine Engine, zwei Wettbewerbe</div>
       <div class="h2-feature-grid">
-        <div class="h2-feature pressure" style="border-color:rgba(248,81,73,0.30);">
-          <div class="h2-feature-head"><span class="h2-feature-icon">⚡</span><div class="h2-feature-title">pressureRatio · mustWin · canDraw</div></div>
+        <div class="h2-feature accent">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🔀</span><div class="h2-feature-title">Dataset-Profil statt Zweit-System</div></div>
           <div class="h2-feature-desc">
-            Score-Fundament aus <strong>roundsLeft × Punkteabstand × Tabellenposition</strong>.
-            Errechnet pro Spiel: muss das Team gewinnen? Kann es sich Remis leisten?
-            <strong>Direkter Multiplikator</strong> auf Pick-Score — Teams in Abstiegspanik wetten anders als Mid-Table.
+            <code>COCOBET_DATASET=liga</code> schaltet die <strong>komplette WM-Pipeline</strong> auf
+            <code>liga-data.json</code> + <code>liga_*</code>-Dateien. Dieselbe Engine, dieselben Signale,
+            derselbe Lern-Loop und dieselbe Guard-Batterie — kein paralleler Code, keine Code-Drift.
           </div>
         </div>
-        <div class="h2-feature pressure" style="border-color:rgba(248,81,73,0.30);">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🎚️</span><div class="h2-feature-title">Druck-Skala (roundsLeft)</div></div>
+        <div class="h2-feature accent">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧱</span><div class="h2-feature-title">Single Source of Truth</div></div>
           <div class="h2-feature-desc">
-            ST3 vor Saisonende: Druck-Level 8/10 → BET wird aggressiver gewichtet.
-            ST5+: niedrigerer Druck, vorsichtigerer Score-Modifier.
-            <strong>Stake-Labels</strong>: Meisterschaft, Aufstieg, Europacup, Abstiegskampf — auto-erkannt aus Tabelle.
+            <code>cocobet_dataset.py</code> löst Datei, Liga-IDs und Saison an EINER Stelle auf.
+            Anti-Drift-Tests verbieten Hardcoding. Architektur in <code>ARCHITECTURE.md</code> dokumentiert.
           </div>
         </div>
-        <div class="h2-feature pressure" style="border-color:rgba(248,81,73,0.30);">
-          <div class="h2-feature-head"><span class="h2-feature-icon">📊</span><div class="h2-feature-title">Druck × Markt-Logik</div></div>
+        <div class="h2-feature accent">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🎓</span><div class="h2-feature-title">Eigenes Liga-Lernen</div></div>
           <div class="h2-feature-desc">
-            <strong>Heimsieg-Boost</strong> wenn Heimteam mustWin + canDraw=false.
-            <strong>BTTS-Boost</strong> bei Mid-Table-Duellen (nichts zu verlieren).
-            <strong>Über 2.5-Penalty</strong> wenn beide Teams sicher + Saisonende-Müdigkeit.
-          </div>
-        </div>
-        <div class="h2-feature pressure" style="border-color:rgba(248,81,73,0.30);">
-          <div class="h2-feature-head"><span class="h2-feature-icon">⬜</span><div class="h2-feature-title">Motivations-Tracker</div></div>
-          <div class="h2-feature-desc">
-            Teams die bereits Saisonziele erreicht haben (sicher Meister, sicher gerettet)
-            bekommen <strong>Motivations-Discount</strong>. Verhindert dass wir auf "fertige" Teams setzen.
+            Eigene Gewichte (<code>liga_signal_weights.json</code>) + eigener Ledger, getrennt von der WM —
+            die Signale verhalten sich pro Wettbewerb anders, also lernt jeder Wettbewerb für sich.
           </div>
         </div>
       </div>
 
-      <div class="h2-sub-label">3-Pool-Pick-Architektur</div>
+      <div class="h2-sub-label">Liga-Signale (24 modulare Signale)</div>
       <div class="h2-feature-grid">
         <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🎯</span><div class="h2-feature-title">PICK 1 — Ergebnis</div></div>
-          <div class="h2-feature-desc">Heimsieg / Auswärtssieg / Draw / DC / DNB — Säule jeder Karte. Score gewichtet Elo + Form + Druck.</div>
-        </div>
-        <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">⚽</span><div class="h2-feature-title">PICK 2 — Tore / Tempo</div></div>
-          <div class="h2-feature-desc">Über/Unter 2.5/3.5, BTTS, AH-Tore. Speist sich aus xG + Form-Trend + Konzentration auf Pace.</div>
-        </div>
-        <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🔬</span><div class="h2-feature-title">PICK 3 — Spezialist</div></div>
-          <div class="h2-feature-desc">Über/Unter Ecken/Karten, AH-Spreads, exotische Märkte. Aus echten Match-Stats + Schiedsrichter-DB.</div>
-        </div>
-      </div>
-
-      <div class="h2-sub-label">Tactical-Layer (selten beachtet, deshalb Edge)</div>
-      <div class="h2-feature-grid">
-        <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🟨</span><div class="h2-feature-title">Tactical-Booking-Signals</div></div>
+          <div class="h2-feature-head"><span class="h2-feature-icon">♻️</span><div class="h2-feature-title">Vom WM-Stack geerbt</div></div>
           <div class="h2-feature-desc">
-            <code>getTacticalBookingSignals()</code> erkennt Spieler die <strong>"one yellow from ban"</strong> sind UND vergleicht Gegner-Qualität nächstes vs übernächstes Spiel.
-            Wenn q2 > q1 + 2.5 Elo-Stufen → <strong>taktische Sperre</strong> macht Sinn → Karten-Wahrscheinlichkeit steigt.
-            Bookies bepreisen das nicht.
+            Steam (Lead-Lag, Frische, Public-vs-Sharp), Form-Trend, xG-Stärke, H2H, Aufstellung (T-1h),
+            Verletzungen/Sperren, Chancen-Kreation und API-Football-Predictions laufen 1:1 auch für Liga.
+          </div>
+        </div>
+        <div class="h2-feature pressure" style="border-color:rgba(248,81,73,0.30);">
+          <div class="h2-feature-head"><span class="h2-feature-icon">⚡</span><div class="h2-feature-title">League-Pressure</div></div>
+          <div class="h2-feature-desc">
+            Titelrennen, Europa-Plätze, Abstiegskampf und Dead-Rubber aus der Tabelle. Schläfer:
+            früh ~0, rampt zum Saison-Endspurt auf vollen Hebel. Das Liga-Pendant zum WM-Anreiz-Signal.
           </div>
         </div>
         <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🚨</span><div class="h2-feature-title">Do-or-Die-Detection</div></div>
+          <div class="h2-feature-head"><span class="h2-feature-icon">🥵</span><div class="h2-feature-title">Erschöpfung / Spielstau</div></div>
           <div class="h2-feature-desc">
-            <code>isDoOrDie()</code> erkennt finale Saisonphasen: <strong>roundsLeft ≤ 4 + mustWin + Label-Color</strong>.
-            5 Klassen: 🔴 Abstieg · 🟡 Playoff · 🟠 Europa League · 🔵 UCL · 🟡 Titelkampf. Eigene Section in der UI.
+            Ruhetage aus dem Spielplan (englische Woche / Europapokal-Reise) → müde, rotierte Elf wird
+            gefadet, der ausgeruhte Gegner geboostet. Rein aus dem Plan, kein API-Call.
           </div>
         </div>
         <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🏥</span><div class="h2-feature-title">Injury-Impact-Score (0-6)</div></div>
+          <div class="h2-feature-head"><span class="h2-feature-icon">🎯</span><div class="h2-feature-title">Top-Torjäger-Momentum</div></div>
           <div class="h2-feature-desc">
-            <code>computeInjuryImpact()</code> mit Position-Weights: <strong>GK 1.1</strong> · <strong>Striker 0.95</strong> + Compound 0.7 bei 3+ · CB 0.6 · MF 0.3 · 2nd GK fehlt = Crisis +1.0.
-            Direkter Modifier auf xG.
+            Team mit treffsicherem Top-Torjäger (Tore/Spiel) trägt eine konzentrierte Angriffs-Bedrohung,
+            die Team-xG manchmal unterschätzt → Boost auf Sieg/Über.
           </div>
         </div>
         <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">📈</span><div class="h2-feature-title">computeRemainingDifficulty</div></div>
+          <div class="h2-feature-head"><span class="h2-feature-icon">🔁</span><div class="h2-feature-title">Trainer & Transfers</div></div>
           <div class="h2-feature-desc">
-            Bewertet Schwierigkeit der <strong>verbleibenden Spieltage pro Team</strong> (Elo-Summe gewichtet).
-            Fließt in Druck-Berechnung — Team mit 4 Spielen gegen Top-6 hat anderen Verzweiflungsgrad als gegen Mid-Table.
+            Frischer Trainer → Neue-Trainer-Bounce (zerfällt über ~75 Tage). Schlüsselspieler-Abgang →
+            Team real geschwächt, was der Markt früh in der Saison oft zu langsam einpreist.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧮</span><div class="h2-feature-title">Anti-Korrelation</div></div>
+          <div class="h2-feature-desc">
+            Signale sind in Familien gruppiert (Sharp-Money, Form, Kontext). Feuern mehrere aus einer
+            Familie, zählt nur das stärkste voll — kein doppeltes Zählen desselben Edges.
           </div>
         </div>
       </div>
 
-      <div class="h2-sub-label">Datentiefe (das was Vergleichs-Portale nicht haben)</div>
+      <div class="h2-sub-label">Echtes Klub-xG — stärker als bei der WM</div>
       <div class="h2-feature-grid">
-        <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">👨‍⚖️</span><div class="h2-feature-title">Referee-DB mit Karten-Schnitt</div></div>
+        <div class="h2-feature accent">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📐</span><div class="h2-feature-title">Volle xG-Abdeckung</div></div>
           <div class="h2-feature-desc">
-            <code>fetchRefereeStats()</code> cached pro Schiedsrichter über 7 Tage: <strong>avgCards/avgYellow</strong> aus letzten 5 Spielen.
-            Pflegt <code>referee-cache.json</code>. Direkt für Karten-Picks (Über 4.5/5.5 Gelbe).
+            Im Klub-Fußball hat <strong>jedes</strong> Spiel echtes <code>expected_goals</code> (Understat +
+            API-Football). Anders als bei der WM (Friendlies-Lücken, NT-xG-Fallback) ist xG hier ein
+            <strong>Kern-Signal</strong>, kein Lückenfüller — im Backtest der stärkste Prädiktor.
           </div>
         </div>
         <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🃏</span><div class="h2-feature-title">Team-Card-Profile</div></div>
+          <div class="h2-feature-head"><span class="h2-feature-icon">⚓</span><div class="h2-feature-title">Pinnacle als Anker</div></div>
           <div class="h2-feature-desc">
-            <code>fetchTeamCardProfile()</code> aggregiert Karten pro Team über Saison (Sumi aus Zeit-Intervallen).
-            <strong>avgYellow + avgRed</strong> separat. Cached in <code>team-cards-cache.json</code>. Karten-Markt-Picks aus echten Daten.
+            Baseline für 1X2/O-U/BTTS ist die <strong>de-viggte Pinnacle-Quote</strong> (schärfster Markt).
+            Die Signale sind Modifikatoren darauf — kein abweichendes Gegenmodell, keine Phantom-Edges.
           </div>
         </div>
         <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">📐</span><div class="h2-feature-title">Understat xG (Big-5)</div></div>
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧩</span><div class="h2-feature-title">Spieler-Layer</div></div>
           <div class="h2-feature-desc">
-            <code>refresh_stats.py</code> fetcht echte xG/xGA pro Team von Understat. Ersetzt formelhafte Tor-Schätzung.
-            "📐 X.X xG (Understat)" als Quelle im UI sichtbar.
-          </div>
-        </div>
-        <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">⚖️</span><div class="h2-feature-title">Pinnacle 2× Konsens-Devig</div></div>
-          <div class="h2-feature-desc">
-            Pinnacle (margin &lt; 2.5%) bekommt <strong>2× Gewicht</strong>, andere 1×.
-            Averaging mehrerer devigged Quellen entfernt Bookie-Bias. Fair-Value für 1X2/O25 robust.
-          </div>
-        </div>
-        <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">📊</span><div class="h2-feature-title">H2H mit Recency-Gewichtung</div></div>
-          <div class="h2-feature-desc">
-            H2H-Tore werden <strong>zeit-gewichtet</strong> (neuere Begegnungen stärker). Spielt direkt in BTTS/O25-Picks.
-            5-Saisons-Fenster verhindert dass 10 Jahre alte Begegnungen Picks verzerren.
-          </div>
-        </div>
-        <div class="h2-feature">
-          <div class="h2-feature-head"><span class="h2-feature-icon">🛡️</span><div class="h2-feature-title">Mindestquoten + Value-Tiers</div></div>
-          <div class="h2-feature-desc">
-            Quoten &gt; 12 raus (keine Liquidität), &lt; 1.30 raus (Edge zu klein). Auto-Tier 🔥 / 💰 / 🏥 im UI.
-            <strong>Hard Gate für Über 2.5</strong> wenn Konsens-Devig &gt; Modell.
+            Kader/Schlüsselspieler (API-Football) speisen das Aufstellungs-Signal; nach jedem Spiel
+            fließt die echte Per-Spieler-Form (<code>liga_player_form.json</code>) zurück in die Gewichtung.
           </div>
         </div>
       </div>
 
-      <div class="h2-sub-label">Live: Top 5 · weitere Ligen als Roadmap</div>
+      <div class="h2-sub-label">Validierung: Backtest + Closing-Line-Value</div>
+      <div class="h2-feature-grid">
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧪</span><div class="h2-feature-title">5-Ligen-Backtest</div></div>
+          <div class="h2-feature-desc">
+            Jedes vergangene Spiel der letzten Saison wird durch die echte Signal-Engine geschickt.
+            Befund über ~5.000 Wetten: die Daten-Signale <strong>treffen</strong> (xG-Stärke ~63 %), aber an
+            der Closing-Quote ist der ROI negativ — gute Sieger-Vorhersage allein ≠ Geld.
+          </div>
+        </div>
+        <div class="h2-feature accent">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📈</span><div class="h2-feature-title">Edge = Timing, nicht Vorhersage</div></div>
+          <div class="h2-feature-desc">
+            Daraus die klare These: Profit kommt aus dem <strong>Steam-Following</strong> (früh rein, bevor
+            die Linie sich bewegt) + Value gegen langsamere Soft-Bücher — nicht daraus, Pinnacle zu schlagen.
+            Die Daten-Signale sind <strong>Bestätigung + Conviction</strong>, nicht die Wett-Quelle.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🌱</span><div class="h2-feature-title">Backtest-als-Prior</div></div>
+          <div class="h2-feature-desc">
+            Die Trefferquoten je Signal werden als gedeckelte Pseudo-Beobachtungen in die Liga-Gewichte
+            geschrieben → die Engine startet <strong>informiert</strong> statt bei neutral, der Prior verblasst
+            mit echten Live-Picks.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📉</span><div class="h2-feature-title">CLV — der echte Steam-Beweis</div></div>
+          <div class="h2-feature-desc">
+            Pro Pick wird der <strong>Closing-Line-Value</strong> gemessen (Einstieg vs Pinnacle-Closing).
+            Positiver CLV = die Linie lief zu uns hin = die Signale liefen dem Markt voraus — die Zahl,
+            die zählt, sobald die ersten Liga-Spieltage durch sind.
+          </div>
+        </div>
+      </div>
+
+      <div class="h2-sub-label">Lern-Loop + Guard-Batterie</div>
+      <div class="h2-feature-grid">
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🔄</span><div class="h2-feature-title">Post-Match-Lernen</div></div>
+          <div class="h2-feature-desc">
+            Nach jedem Spiel wird das echte Match-xG geholt und der Pick als <strong>verdient / Pech /
+            glücklich</strong> bewertet → prozess-gewichtetes Bayesian-Update. So trennt das System Können
+            von Varianz und wird von Spieltag zu Spieltag schärfer.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🛡️</span><div class="h2-feature-title">Guard-Batterie</div></div>
+          <div class="h2-feature-desc">
+            Rund 48 Integritäts-Guards prüfen jeden Lauf (Quoten-Plausibilität, Soft-Opening,
+            Spielplan-Konsistenz …) und schreiben in den Status. Arbeitsregel: jeder stille Daten-Bug
+            wird zu einem Guard, jeder Logik-Bug zu einem Test.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">⚖️</span><div class="h2-feature-title">Robuster Fair-Value</div></div>
+          <div class="h2-feature-desc">
+            De-viggte Pinnacle-Baseline (schärfster Markt) für 1X2 / O-U / BTTS. Mindestquoten-Filter
+            (zu kurze und illiquide Quoten raus), Cross-Market-Konsistenz (kein „Heim &amp; Auswärts").
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">✅</span><div class="h2-feature-title">Voll getestet + CI</div></div>
+          <div class="h2-feature-desc">
+            Über 1.100 Unit-Tests grün, Anti-Drift-Tests gegen Code-Duplikation, jeder neue Baustein mit
+            eigenen Tests. Dieselbe Test-Suite deckt WM und Liga ab.
+          </div>
+        </div>
+      </div>
+
+      <div class="h2-sub-label">Stand &amp; Abdeckung</div>
       <div class="h2-num-grid">
-        <div class="h2-num"><div class="h2-num-val acc">T1</div><div class="h2-num-lbl">Top-5 + ENG2 + EREDIV</div></div>
-        <div class="h2-num"><div class="h2-num-val">T2</div><div class="h2-num-lbl">2. Ligen + Belgien + Portugal</div></div>
-        <div class="h2-num"><div class="h2-num-val">T3</div><div class="h2-num-lbl">Türkei + Skandinavien</div></div>
-        <div class="h2-num"><div class="h2-num-val">~14k</div><div class="h2-num-lbl">resolved Picks Saison 25/26</div></div>
+        <div class="h2-num"><div class="h2-num-val acc">5</div><div class="h2-num-lbl">Top-Ligen live (EPL · La Liga · Bundesliga · Serie A · Ligue 1)</div></div>
+        <div class="h2-num"><div class="h2-num-val">24</div><div class="h2-num-lbl">modulare Signale</div></div>
+        <div class="h2-num"><div class="h2-num-val">1.100+</div><div class="h2-num-lbl">Unit-Tests grün</div></div>
+        <div class="h2-num"><div class="h2-num-val purple">CL</div><div class="h2-num-lbl">Champions League später auf demselben Stack</div></div>
       </div>
 
-      <div class="h2-sub-label">Was nach der WM neu kommt</div>
+      <div class="h2-sub-label">Nächster Ausbau</div>
       <p style="font-size:11.5px;color:rgba(255,255,255,0.78);line-height:1.7;margin-bottom:10px;">
-        Während der WM haben wir Features gebaut die für National bisher nicht existieren — diese portieren wir nach August zurück:
+        Das Fundament steht. Als nächster, bewusst separater Block kommen — Markt für Markt, jeder mit
+        eigenem Engine-Hook (Scope-Disziplin: kein Markt ohne Modell):
       </p>
       <ul style="font-size:12px;color:rgba(255,255,255,0.85);line-height:1.8;padding-left:20px;">
-        <li>🔍 <strong>"Warum?"-Modal für Liga-Cards</strong> — mit Saisondruck als 4. Insight-Block (mustWin/canDraw als wm-tag-data) und Tactical-Booking als Insight-Tag</li>
-        <li>📊 <strong>Pick-Confidence-Backtest</strong> — wie <code>compute_pick_confidence.py</code>, aber pro Liga + pro Pick-Pool (PICK 1/2/3) getrennt</li>
-        <li>🔄 <strong>Pick-Changes-Banner + 14:00-Digest</strong> — Snapshot-Diff für Liga-Picks, gleicher Pattern wie WM</li>
-        <li>✅ <strong>Validator</strong> — <code>validate_picks.py</code> aus WM-Pattern: Sanity-Checks für Liga-Picks (Verdict ohne Edge, Underdog-Leak, dataQuality-Overstated)</li>
-        <li>📈 <strong>Track-Record-Card pro Liga</strong> — Equity-Curve + ROI für Bundesliga / PL / Serie A separat</li>
-        <li>✈️ <strong>Travel-Burden für UCL/EL</strong> — Auswärtsspiele mit Reise (Champions League, Europa League), genauso wie WM</li>
-        <li>🎯 <strong>Player-Props für Liga-Spiele</strong> — TheOddsAPI Top-Scorer-Markets für Bundesliga / Premier League ab Saisonstart</li>
-        <li>⚖️ <strong>Public-vs-Sharp-Bias in Liga-Story</strong> — bet365 vs Pinnacle Devigging (haben wir aktuell nur für WM gebaut)</li>
-        <li>🟣 <strong>Polymarket-Liga-Coverage beobachten</strong> — sobald Polymarket Premier League / La Liga ernsthaft listet, gleicher Auto-Trader-Stack</li>
-        <li>📊 <strong>Daily Killer-Stat-Cards für Liga</strong> — wie WM-Pipeline, rotierende Strategien (best_attack, top_form, zero_loss etc.)</li>
-        <li>📐 <strong>Liga-Erweiterung Tier 2</strong>: ES2 (La Liga 2), ITA2 (Serie B), FR2 (Ligue 2) — Codebase ist schon vorbereitet</li>
+        <li>🎯 <strong>Player-Props</strong> — Top-Scorer-/Assist-Märkte pro Liga-Spiel</li>
+        <li>🚩 <strong>Corner-Markt</strong> — Über/Unter Ecken mit eigenem Corner-Rate-Signal</li>
+        <li>🟨 <strong>Karten-Markt + Schiri-Tendenz</strong> — Schiedsrichter-Daten + Team-Karten-Profile</li>
+        <li>🟣 <strong>Polymarket-Liga</strong> — derselbe Auto-Trader-Stack, sobald Polymarket die Ligen ernsthaft listet</li>
+        <li>⚡ <strong>Odds-Takt hochdrehen</strong> — von 2×/Tag auf WM-Niveau (~alle 2h, dichter nahe Spieltagen), scharfgestellt zum Saisonstart</li>
       </ul>
 
       <p style="font-size:11px;color:var(--muted);margin-top:14px;line-height:1.6;font-style:italic;">
-        Die Bilanz aus zwei Saisons (Saisondruck, Tactical-Bookings, Referee-DB, Card-Profile, Konsens-Devig)
-        bleibt der Kern. Die WM-Features sind <strong style="color:var(--text);">obere Schicht</strong>, die ab August zusätzlich verfügbar wird.
+        Eine Engine, zwei Wettbewerbe, eine Quelle pro Sache — die WM ist die Werkbank, die Ligen sind
+        der eigentliche Start, und derselbe Stack trägt später die Champions League.
       </p>
 
     </div>
@@ -4017,7 +4050,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <li>📲 Receipt-Cards (✅ GETROFFEN-Stempel) als zusätzliches Format</li>
       </ul>
 
-      <div class="h2-sub-label">Nach WM (ab August 2026)</div>
+      <div class="h2-sub-label">Zur Liga-Saison (ab August 2026)</div>
       <ul style="font-size:12px;color:rgba(255,255,255,0.78);line-height:1.8;padding-left:20px;">
         <li style="background:rgba(248,81,73,0.06);border-left:3px solid #f85149;padding:6px 10px;margin-bottom:6px;border-radius:4px;">
           <strong style="color:#f85149;">🔴 PRIORITÄT 1 — Score-Probability-Matrix-Refactor</strong><br>
