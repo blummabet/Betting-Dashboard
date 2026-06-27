@@ -102,6 +102,22 @@ def _load_weights() -> dict:
         return {"_meta": {}}
 
 
+PRIORS_FILE = BASE / "liga_signal_priors.json"
+
+
+def _load_priors() -> dict:
+    """Backtest-als-Prior (nur Liga): {sig: {nPrior, winsPrior}}. Pseudo-Beobachtungen aus
+    prime_liga_priors.py, die zu den Live-Counts addiert werden → informierter Start, verblasst mit
+    wachsender Live-Stichprobe. Bei WM oder fehlender Datei leer (Verhalten unverändert)."""
+    if not _IS_LIGA or not PRIORS_FILE.exists():
+        return {}
+    try:
+        d = json.loads(PRIORS_FILE.read_text(encoding="utf-8"))
+        return {k: v for k, v in d.items() if not k.startswith("_")}
+    except Exception:
+        return {}
+
+
 def _save_weights(weights: dict) -> None:
     tmp = WEIGHTS_FILE.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(weights, indent=2, ensure_ascii=False), encoding="utf-8")
@@ -168,11 +184,23 @@ def update_weights() -> dict:
             predicted_win = score > 0
             counts[name]["predicted_correctly"] += o if predicted_win else (1.0 - o)
 
+    # Backtest-Prior (nur Liga): Pseudo-Beobachtungen, die zu den Live-Counts addiert werden.
+    # Signale ganz ohne Live-Trigger bekommen trotzdem ihren Prior-Vorsprung.
+    priors = _load_priors()
+    for sig_name, p in priors.items():
+        counts.setdefault(sig_name, {"n": 0, "predicted_correctly": 0.0})
+
     # Update jeder Signal-Entry
     now_iso = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     for sig_name, c in counts.items():
-        n           = c["n"]
-        wins        = c["predicted_correctly"]
+        n_live      = c["n"]
+        wins_live   = c["predicted_correctly"]
+        pr          = priors.get(sig_name) or {}
+        n_prior     = float(pr.get("nPrior") or 0.0)
+        wins_prior  = float(pr.get("winsPrior") or 0.0)
+        # Prior + Live verschmolzen (Prior verblasst mit wachsendem n_live).
+        n           = n_live + n_prior
+        wins        = wins_live + wins_prior
         losses      = n - wins
         # Posterior Mean mit Prior
         post_mean   = (PRIOR_ALPHA + wins) / (PRIOR_ALPHA + PRIOR_BETA + n)
@@ -183,7 +211,8 @@ def update_weights() -> dict:
         # System nie komplett dominiert oder neutralisiert
         clamped_weight = max(0.3, min(1.7, raw_weight))
 
-        # Smoothing: bei wenig Daten näher zum Prior bleiben
+        # Smoothing: bei wenig Daten näher zum neutralen 1.0. Der Backtest-Prior zählt mit (n),
+        # ein geprimtes Signal wird also von Anfang an vertraut.
         if n < MIN_OBS_FOR_TRUST:
             blend = n / MIN_OBS_FOR_TRUST   # 0..1
             clamped_weight = 1.0 * (1.0 - blend) + clamped_weight * blend
@@ -191,8 +220,9 @@ def update_weights() -> dict:
         prev = weights.get(sig_name) or {}
         weights[sig_name] = {
             "weight":              round(clamped_weight, 3),
-            "n_observations":      n,
-            "wins_when_triggered": round(wins, 2),       # fraktional (prozess-justiert)
+            "n_observations":      round(n_live, 2),     # ECHTE Live-Beobachtungen
+            "n_prior":             round(n_prior, 2),    # Backtest-Pseudo-Obs (verblassen)
+            "wins_when_triggered": round(wins, 2),       # fraktional (Live + Prior)
             "losses_when_triggered": round(losses, 2),
             "posterior_mean":      round(post_mean, 3),
             "last_updated":        now_iso,

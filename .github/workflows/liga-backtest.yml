@@ -34,13 +34,17 @@ jobs:
           BACKTEST_SEASON: ${{ inputs.season }}
         run: python liga_backtest.py
 
+      - name: 🌱 Backtest-als-Prior bauen (Liga-Signal-Gewichte vorwärmen)
+        run: python prime_liga_priors.py || true
+
       - name: 💾 Report committen
         run: |
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
           git add liga_backtest_report.json 2>/dev/null || true
           git add liga_backtest_cache.json 2>/dev/null || true
-          git diff --staged --quiet || git commit -m "liga-backtest: Report + xG-Cache [skip ci]"
+          git add liga_signal_priors.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "liga-backtest: Report + Prior + xG-Cache [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.
           git pull --rebase origin main || true
