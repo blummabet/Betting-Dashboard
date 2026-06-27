@@ -12,7 +12,9 @@ dataset-bewusst · LeaguePressureSignal · Post-Match-xG-Re-Learning · Backtest
 
 ### ⏳ Daten / Pipeline
 - ⏳ Odds-Takt nahe Spieltage hochdrehen (~2 Wochen vor Saisonstart) — sonst werden Intraday-Steam-Drops verpasst (= genau die Picks). Jetzt sinnlos (keine Bewegung).
-- ⏳ ESP/GER live verifizieren — in lokaler Kopie waren Fixtures/Standings leer; prüfen ob live korrekt kommen.
+- ✅ ESP/GER verifiziert: live leer (La Liga/Bundesliga-Spielplan noch nicht bei API-Football,
+  upstream-Timing — kein Bug). Guard `check_liga_leagues_populated` (warn) macht's sichtbar; füllt
+  sich auto, wenn die Spielpläne kommen. Falls kurz vor Saisonstart noch leer → nachgehen.
 - ⏳ ClubElo-Fetch im GitHub-Workflow verifizieren — Sandbox gab 403; in Actions prüfen, sonst UA/Quelle anpassen.
 
 ### ⏳ Frontend / Cards

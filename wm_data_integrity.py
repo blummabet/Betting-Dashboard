@@ -445,6 +445,25 @@ def check_odds_sane(ctx):
 
 
 @integrity_check
+def check_liga_leagues_populated(ctx):
+    """NEU 26.06.2026 (Lucas): jede der 5 Top-Ligen muss Teams + Fixtures haben. La Liga/Bundesliga
+    veröffentlichen ihren Spielplan oft später als EPL/Serie A/Ligue 1 → bis dahin liefert
+    API-Football leer (kein Bug bei uns, upstream-Timing). Dieser Guard macht eine leere Liga im
+    Status SICHTBAR — bleibt sie kurz vor Saisonstart leer, ist es ein echtes Problem zum Nachgehen."""
+    if not ctx.is_liga:
+        return None
+    fails = []
+    for gkey, gd in (ctx.wm.get("groups") or {}).items():
+        n_tm = len(gd.get("teams") or [])
+        n_fx = len(gd.get("fixtures") or [])
+        if n_fx == 0 or n_tm == 0:
+            fails.append(f"{gkey}: {n_tm} Teams / {n_fx} Fixtures — Spielplan noch nicht veröffentlicht?")
+    return _chk("liga_leagues_populated", "Alle Liga-Gruppen haben Teams + Fixtures", "warn", fails,
+                "Leer = API-Football hat den Spielplan noch nicht (La Liga/Bundesliga spät). "
+                "Kurz vor Saisonstart = echtes Problem.")
+
+
+@integrity_check
 def check_liga_odds_round_sane(ctx):
     """NEU 26.06.2026 (Bug „Spieltag 1 dann 20"): Liga-Odds dürfen nur auf den nächsten
     anstehenden Spieltagen liegen. match_event_to_fixture akzeptiert 'swapped' → ein
