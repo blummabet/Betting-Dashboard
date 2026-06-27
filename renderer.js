@@ -1640,8 +1640,16 @@ function _renderSharpWatchlist() {
 
 // Block B — Bayesian-Weights aus signal_weights.json
 function _renderBayesianWeights() {
-  const weights = window.SIGNAL_WEIGHTS || {};
-  const signalNames = [
+  // Dataset-bewusst (26.06.2026, Lucas): im Liga-Tab die LIGA-Gewichte + nur die liga-aktiven
+  // Signale zeigen — sonst standen WM-Signale (Travel/Wetter/Anreiz) fälschlich im Liga-Panel.
+  const _isLiga = (typeof _sharpDataset !== 'undefined') && _sharpDataset === 'liga';
+  const weights = (_isLiga ? window.LIGA_SIGNAL_WEIGHTS : window.SIGNAL_WEIGHTS) || {};
+  const signalNames = _isLiga ? [
+    "lead_lag_bias", "public_static_bias", "injury", "form_trend", "h2h_pattern",
+    "xg_strength", "chance_creation", "form_rating", "freshness_leg", "lineup_signal",
+    "apif_predictions", "league_pressure", "fixture_congestion", "topscorer_momentum",
+    "coach_change", "transfer_shift",
+  ] : [
     "lead_lag_bias", "public_static_bias", "travel_burden", "injury",
     "form_trend", "h2h_pattern", "xg_strength", "polymarket_sharp",
     "steam_lag", "pressure_index", "lineup_signal", "apif_predictions",
@@ -1662,6 +1670,14 @@ function _renderBayesianWeights() {
     apif_predictions: "APIF Predictions",
     weather_signal: "Weather/Hitze",
     incentive_signal: "Anreiz-Signal",
+    chance_creation: "Chancen-Kreation",
+    form_rating: "Form-Rating",
+    freshness_leg: "Frische (Pulse)",
+    league_pressure: "Liga-Druck",
+    fixture_congestion: "Erschöpfung/Spielstau",
+    topscorer_momentum: "Top-Torjäger",
+    coach_change: "Neuer Trainer",
+    transfer_shift: "Schlüssel-Abgang",
   };
   const rows = signalNames.map(name => {
     const w = weights[name] || {};
@@ -1682,9 +1698,12 @@ function _renderBayesianWeights() {
     </tr>`;
   }).join('');
   const totalN = signalNames.reduce((sum, name) => sum + ((weights[name] || {}).n_observations || 0), 0);
+  const waitMsg = _isLiga
+    ? `⏳ Liga-Lern-Loop startet mit Backtest-Prior (Vorsaison) — die Gewichte sind schon vorgewärmt und verschieben sich mit den ersten aufgelösten Liga-Picks.`
+    : `⏳ Lern-Loop wartet auf erste resolved WM-Picks. Erst nach ~30 Beobachtungen verschieben sich die Weights spürbar.`;
   const learnState = totalN < 10
-    ? `<div style="padding:10px 14px;background:rgba(245,194,90,0.06);border-left:3px solid #f5c25a;font-size:12px;color:#f5c25a;">⏳ Lern-Loop wartet auf erste resolved WM-Picks. Erst nach ~30 Beobachtungen verschieben sich die Weights spürbar. WM-Start: 11. Juni.</div>`
-    : `<div style="padding:10px 14px;background:rgba(0,212,161,0.06);border-left:3px solid #00d4a1;font-size:12px;color:#00d4a1;">✓ Lern-Loop aktiv · ${totalN} Beobachtungen verteilt über alle Signale</div>`;
+    ? `<div style="padding:10px 14px;background:rgba(245,194,90,0.06);border-left:3px solid #f5c25a;font-size:12px;color:#f5c25a;">${waitMsg}</div>`
+    : `<div style="padding:10px 14px;background:rgba(0,212,161,0.06);border-left:3px solid #00d4a1;font-size:12px;color:#00d4a1;">✓ Lern-Loop aktiv · ${totalN} Beobachtungen verteilt über alle Signale${_isLiga ? ' (Liga)' : ''}</div>`;
   return `<div class="section-label" style="margin-bottom:10px;">🧠 Bayesian-Lern-Status · was das System gelernt hat</div>
     <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px;">
       ${learnState}
@@ -1787,9 +1806,12 @@ function _loadLigaSharpData() {
       : fetch('liga-data.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)),
     (window.LIGA_ODDS_HISTORY ? Promise.resolve(window.LIGA_ODDS_HISTORY)
       : fetch('liga-odds-history.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)),
-  ]).then(([ld, lh]) => {
-    window.LIGA_DATA         = ld || {};
-    window.LIGA_ODDS_HISTORY = lh || {};
+    (window.LIGA_SIGNAL_WEIGHTS ? Promise.resolve(window.LIGA_SIGNAL_WEIGHTS)
+      : fetch('liga_signal_weights.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)),
+  ]).then(([ld, lh, lw]) => {
+    window.LIGA_DATA           = ld || {};
+    window.LIGA_ODDS_HISTORY   = lh || {};
+    window.LIGA_SIGNAL_WEIGHTS = lw || {};
   }).catch(() => {
     window.LIGA_DATA         = window.LIGA_DATA || {};
     window.LIGA_ODDS_HISTORY = window.LIGA_ODDS_HISTORY || {};
