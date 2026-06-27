@@ -58,10 +58,34 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
+      "ok": false,
+      "nFail": 2,
+      "failures": [
+        "499-488: Margin 1.876 unplausibel",
+        "503-489: Margin 1.600 unplausibel"
+      ],
+      "note": "Quelle für Modell-Baseline + Edge."
+    },
+    {
+      "id": "liga_leagues_populated",
+      "label": "Alle Liga-Gruppen haben Teams + Fixtures",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 2,
+      "failures": [
+        "ESP: 0 Teams / 0 Fixtures — Spielplan noch nicht veröffentlicht?",
+        "GER: 0 Teams / 0 Fixtures — Spielplan noch nicht veröffentlicht?"
+      ],
+      "note": "Leer = API-Football hat den Spielplan noch nicht (La Liga/Bundesliga spät). Kurz vor Saisonstart = echtes Problem."
+    },
+    {
+      "id": "liga_odds_round_sane",
+      "label": "Liga-Odds nur auf nahen Spieltagen",
+      "severity": "warn",
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Quelle für Modell-Baseline + Edge."
+      "note": "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum."
     },
     {
       "id": "odds_freshness",
@@ -131,20 +155,10 @@
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
       "ok": false,
-      "nFail": 12,
+      "nFail": 2,
       "failures": [
         "497-502: kein public_hw",
-        "499-488: kein public_hw",
-        "500-487: kein public_hw",
-        "503-489: kein public_hw",
-        "512-496: kein public_hw",
-        "517-867: kein public_hw",
-        "487-500: kein public_hw",
-        "489-503: kein public_hw",
-        "488-499: kein public_hw",
-        "502-497: kein public_hw",
-        "496-512: kein public_hw",
-        "867-517: kein public_hw"
+        "500-487: kein public_hw"
       ],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
@@ -153,7 +167,7 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 28,
+      "nFail": 18,
       "failures": [
         "42-1346: public aus Einzel-Book 'williamhill' statt Konsens",
         "64-33: public aus Einzel-Book 'williamhill' statt Konsens",
@@ -165,21 +179,14 @@
         "51-66: public aus Einzel-Book 'williamhill' statt Konsens",
         "34-40: public aus Einzel-Book 'williamhill' statt Konsens",
         "36-49: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1346-42: public aus Einzel-Book 'williamhill' statt Konsens",
-        "33-64: public aus Einzel-Book 'williamhill' statt Konsens",
-        "35-50: public aus Einzel-Book 'williamhill' statt Konsens",
-        "40-34: public aus Einzel-Book 'williamhill' statt Konsens",
-        "47-55: public aus Einzel-Book 'williamhill' statt Konsens",
-        "49-36: public aus Einzel-Book 'williamhill' statt Konsens",
-        "52-45: public aus Einzel-Book 'williamhill' statt Konsens",
-        "63-65: public aus Einzel-Book 'williamhill' statt Konsens",
-        "66-51: public aus Einzel-Book 'williamhill' statt Konsens",
-        "746-57: public aus Einzel-Book 'williamhill' statt Konsens",
         "494-895: public aus Einzel-Book 'marathonbet' statt Konsens",
         "495-492: public aus Einzel-Book 'marathonbet' statt Konsens",
+        "499-488: public aus Einzel-Book 'marathonbet' statt Konsens",
+        "503-489: public aus Einzel-Book 'marathonbet' statt Konsens",
         "505-1579: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "523-490: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "490-523: public aus Einzel-Book 'marathonbet' statt Konsens"
+        "512-496: public aus Einzel-Book 'marathonbet' statt Konsens",
+        "517-867: public aus Einzel-Book 'marathonbet' statt Konsens",
+        "523-490: public aus Einzel-Book 'marathonbet' statt Konsens"
       ],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
@@ -400,6 +407,6 @@
       "note": "fetch_wm_poly_prices: fair_btts aus de-viggter Pinnacle-bttsY/N. Riesen-Edge = Daten kaputt. Auto-Trader blockt via BTTS_MAX_EDGE_PP."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-06-27T08:32:14.428723+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-06-27T19:13:24.665023+00:00"
 }
