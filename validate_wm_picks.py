@@ -302,14 +302,23 @@ def validate_pick(mk: str, p: dict, wm: dict, issues: list) -> None:
     parts = mk.split("-", 3)
     if len(parts) >= 4:
         gkey, md, home, away = parts
-        gdata = (wm.get("groups") or {}).get(gkey) or {}
-        match_exists = any(
-            fx.get("home") == home and fx.get("away") == away
-            for fx in gdata.get("fixtures", [])
-        )
+        if gkey == "KO":
+            # KO-Picks leben in koFixtures, nicht in groups (26.06.2026). Ein veröffentlichter
+            # KO-Pick, dessen Paarung sich durch Bracket-Auflösung verschoben hat, ist KEIN
+            # Generator-Bug (Picks immutable) → Warnung, nicht Error.
+            match_exists = any(kf.get("home") == home and kf.get("away") == away
+                               for kf in (wm.get("koFixtures") or []))
+            lvl, where = "warning", "koFixtures"
+        else:
+            gdata = (wm.get("groups") or {}).get(gkey) or {}
+            match_exists = any(
+                fx.get("home") == home and fx.get("away") == away
+                for fx in gdata.get("fixtures", [])
+            )
+            lvl, where = "error", f"Gruppe {gkey} fixtures"
         if not match_exists:
-            _add(issues, mk, market, "error", "E_ORPHAN_MATCH",
-                 f"Pick existiert aber Match {home}-{away} nicht in Gruppe {gkey} fixtures", p)
+            _add(issues, mk, market, lvl, "E_ORPHAN_MATCH",
+                 f"Pick existiert aber Match {home}-{away} nicht in {where}", p)
 
     # ── W_UNDERDOG_LEAK ────────────────────────────────────
     # Heimsieg / Auswärtssieg / DNB-Picks: schwächeres Team mit Elo-Gap >200?

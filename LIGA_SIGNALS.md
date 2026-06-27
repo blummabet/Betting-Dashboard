@@ -57,8 +57,10 @@ Priorität grob von hoch nach niedrig. Jedes als eigenes modulares Signal + Fetc
      treffsicherem Stürmer → Boost Sieg/Über (form-Familie, Anti-Korr mit xg/form).
    - `squad_strength` 🔜 / Ausfall-Wertung — überlappt stark mit injury+lineup (niedrigere Prio).
 4. **`apif_predictions`** 🔜 — drittes Modell als Cross-Check (haben wir für WM, nur Liga-Fetch nötig).
-5. **`coach_change` / Neuer-Trainer-Bounce** 🔜 — Trainerwechsel → kurzfristiger Effekt. /coachs, /transfers.
-6. **`transfer_shift`** 🔜 (Saisonstart) — große Zu-/Abgänge → Qualitäts-Verschiebung. /transfers.
+5. **`coach_change` / Neuer-Trainer-Bounce** ✅ (26.06.) — frischer Trainer (≤75d, /coachs) → Bounce
+   auf Sieg/Über, linear zerfallend. liga-data.json["coachChange"]. context-Familie.
+6. **`transfer_shift`** ✅ (26.06.) — Schlüsselspieler-Abgang (/transfers, gefiltert auf squads/
+   topScorers) → geschwächtes Team dämpfen. liga-data.json["keyDepartures"]. context-Familie.
 7. **`referee_tendency`** 🔜 (später, mit Karten/Elfer-Märkten) — Schiri-Karten/Elfer-Quote. /fixtures (referee).
 8. **News-Signal** ❓ — API-Football hat einen **News**-Bereich (im Doku-Menü). Potenziell für
    Last-Minute-Infos (Verletzung/Rotation). ABER: News = NLP/Rausch-Risiko → niedrige Prio,
