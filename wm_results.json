@@ -48,7 +48,7 @@
       "slug": "",
       "source": "auto",
       "placedAt": "2026-06-09T20:03:35.681644+00:00",
-      "resolvedAt": "2026-06-27T17:15:30.657160+00:00",
+      "resolvedAt": "2026-06-27T17:56:34.538348+00:00",
       "sellPrice": null,
       "sellReason": null,
       "processVerdict": "UNLUCKY",
@@ -339,7 +339,7 @@
       "slug": "",
       "source": "auto",
       "placedAt": "2026-06-17T17:22:22.438452+00:00",
-      "resolvedAt": "2026-06-27T17:15:30.657160+00:00",
+      "resolvedAt": "2026-06-27T17:56:34.538348+00:00",
       "sellPrice": null,
       "sellReason": null,
       "processVerdict": "DESERVED_LOSS",
@@ -448,7 +448,7 @@
       "slug": "",
       "source": "auto",
       "placedAt": "2026-06-17T22:22:50.026132+00:00",
-      "resolvedAt": "2026-06-27T17:15:30.657160+00:00",
+      "resolvedAt": "2026-06-27T17:56:34.538348+00:00",
       "sellPrice": null,
       "sellReason": null,
       "processVerdict": "DESERVED_LOSS",
@@ -756,8 +756,8 @@
       "pinnFair": 0.4242,
       "pinnClose": 0.3218,
       "clvPP": -5.82,
-      "polyClose": 0.265,
-      "polyClvPP": -11.5,
+      "polyClose": 0.275,
+      "polyClvPP": -10.5,
       "isSteamLag": true,
       "result": "SOLD",
       "pnl": -1.01,
@@ -780,8 +780,8 @@
       "polyPrice": 0.47,
       "polyOdds": 2.128,
       "pinnFair": 0.5148,
-      "pinnClose": 0.4477,
-      "clvPP": -2.23,
+      "pinnClose": 0.4594,
+      "clvPP": -1.06,
       "polyClose": null,
       "polyClvPP": null,
       "isSteamLag": false,
@@ -806,20 +806,20 @@
       "polyPrice": 0.33,
       "polyOdds": 3.03,
       "pinnFair": 0.3913,
-      "pinnClose": 0.3111,
-      "clvPP": -1.89,
-      "polyClose": 0.315,
-      "polyClvPP": -1.5,
+      "pinnClose": 0.3006,
+      "clvPP": -2.94,
+      "polyClose": 0.295,
+      "polyClvPP": -3.5,
       "isSteamLag": false,
-      "result": "PENDING",
-      "pnl": 0.0,
+      "result": "SOLD",
+      "pnl": -0.67,
       "score": null,
       "slug": "",
       "source": "auto",
       "placedAt": "2026-06-24T02:22:11.718216+00:00",
-      "resolvedAt": null,
-      "sellPrice": null,
-      "sellReason": null
+      "resolvedAt": "2026-06-27T18:12:37.662094+00:00",
+      "sellPrice": 0.29,
+      "sellReason": "Age-Loss: Position 88h alt, -12.1% im Minus, noch 2.8h bis KO — Spread frisst Buchwert"
     },
     {
       "betKey": "COD-UZB-Under 2.5 Tore",
@@ -834,8 +834,8 @@
       "pinnFair": 0.5417,
       "pinnClose": 0.5231,
       "clvPP": 2.31,
-      "polyClose": 0.565,
-      "polyClvPP": 6.5,
+      "polyClose": 0.575,
+      "polyClvPP": 7.5,
       "isSteamLag": false,
       "result": "SOLD",
       "pnl": 0.44,
@@ -876,23 +876,23 @@
   ],
   "summary": {
     "totalBets": 33,
-    "resolved": 31,
-    "pending": 2,
-    "sold": 28,
+    "resolved": 32,
+    "pending": 1,
+    "sold": 29,
     "wins": 14,
-    "losses": 14,
+    "losses": 15,
     "voids": 0,
-    "winRate": 50.0,
+    "winRate": 48.3,
     "totalStaked": 181.5,
-    "totalPnl": -12.33,
-    "roi": -6.79,
-    "avgCLV": -1.3,
-    "sharpeEst": -0.21,
+    "totalPnl": -13.0,
+    "roi": -7.16,
+    "avgCLV": -1.37,
+    "sharpeEst": -0.22,
     "postmortem": {
-      "closedN": 31,
-      "realizedPnl": -12.33,
-      "avgClv": -1.3,
-      "clvCoverage": "24/31",
+      "closedN": 32,
+      "realizedPnl": -13.0,
+      "avgClv": -1.37,
+      "clvCoverage": "25/32",
       "byMarket": {
         "AH": {
           "n": 9,
@@ -907,10 +907,10 @@
           "clvCoverage": "9/9"
         },
         "O/U": {
-          "n": 13,
-          "pnl": -8.12,
+          "n": 14,
+          "pnl": -8.79,
           "avgClv": -2.96,
-          "clvCoverage": "12/13"
+          "clvCoverage": "13/14"
         }
       },
       "byExit": {
@@ -921,10 +921,10 @@
           "clvCoverage": "0/1"
         },
         "Age-Loss": {
-          "n": 6,
-          "pnl": -4.61,
-          "avgClv": -7.32,
-          "clvCoverage": "5/6"
+          "n": 7,
+          "pnl": -5.28,
+          "avgClv": -6.59,
+          "clvCoverage": "6/7"
         },
         "KO-Close": {
           "n": 6,
@@ -958,12 +958,12 @@
         }
       },
       "heldToClose": {
-        "n": 5,
+        "n": 6,
         "exitBetter": 4,
-        "holdBetter": 1,
-        "avgDeltaEur": 0.44
+        "holdBetter": 2,
+        "avgDeltaEur": 0.31
       }
     }
   },
-  "updatedAt": "2026-06-27T17:30:08.435290+00:00"
+  "updatedAt": "2026-06-27T18:15:03.924678+00:00"
 }
