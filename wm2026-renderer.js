@@ -36,6 +36,7 @@
   let _activeGroup    = 'all';
   let _activeMd       = 'all';   // matchday filter: 'all' | 1 | 2 | 3
   let _activeSort     = 'date';  // 'date' | 'conviction' | 'signals'
+  let _curatedExpanded = false;  // 28.06.2026 (Lucas): in der kuratierten Liga-Ansicht „mehr" aufgeklappt?
   let _showPast       = false;   // 17.06.2026: vergangene/gespielte Spiele default ausgeblendet (weniger Scrollen)
   let _loaded         = false;
   let _lastLoadTs     = 0;       // Timestamp des letzten erfolgreichen Loads (ms)
@@ -211,14 +212,20 @@
   // ── Group / Matchday filters (called from inline onclick) ─
   window.wmSetGroup = function (gKey) {
     _activeGroup = gKey;
+    _curatedExpanded = false;   // 28.06.2026: Liga-Wechsel → kuratierte Liste wieder eingeklappt
     _render();
   };
   window.wmSetMd = function (md) {
     _activeMd = md;
+    _curatedExpanded = false;
     _render();
   };
   window.wmSetSort = function (s) {
     _activeSort = s;
+    _render();
+  };
+  window.wmToggleCurated = function () {   // 28.06.2026: „mehr/weniger" in der Beste-der-Liga-Ansicht
+    _curatedExpanded = !_curatedExpanded;
     _render();
   };
   window.wmTogglePast = function () {
@@ -464,6 +471,10 @@
     html += `</div>`;
 
     // ─── Sort control ────────────────────────────────
+    // (28.06.2026, Lucas) In der kuratierten Liga-Ansicht (Alle Spieltage) ist die Reihenfolge
+    // fix „beste zuerst" → Sort-Bar nur in der Voll-Liste (konkreter Spieltag / WM) zeigen.
+    const _curated = _isLiga && _activeMd === 'all';
+    if (!_curated) {
     html += `
     <div class="wm-sort-bar">
       <span class="wm-sort-lbl">Sortierung:</span>
@@ -471,6 +482,7 @@
       <button class="wm-sort-btn${_activeSort==='conviction'?' active':''}" onclick="wmSetSort('conviction')" title="Höchste Conviction (x/10) zuerst">🏅 Conviction</button>
       <button class="wm-sort-btn${_activeSort==='signals'?' active':''}" onclick="wmSetSort('signals')" title="Meiste feuernde Signale zuerst">🧠 Signale</button>
     </div>`;
+    }
 
     // ── Vergangene Spiele ausblenden (17.06.2026) ─────
     // Default: gespielte Spiele (Datum < heute ODER Endstatus) raus → weniger Scrollen.
@@ -520,14 +532,95 @@
       });
     }
 
+    // ─── Card-Builder (gekapselt, von allen Render-Pfaden genutzt) ──────────
+    // (25.06.2026, Lucas) Pro-Fixture gekapselt: eine fehlerhafte (z.B. Liga-)Card darf nicht
+    // die GESAMTE Liste blanken — fehlerhafte überspringen, Rest rendert.
+    const _cardHtml = (fx) => {
+      const fxOdds   = odds[`${fx.home}-${fx.away}`]    || null;
+      const fxPicks  = picks[`${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}`]       || [];
+      const fxPPicks = playerPicks[`${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}`] || [];
+      const fxStand  = standings[fx.groupKey]  || null;
+      const gData    = fx.groupData;
+      const teams    = gData.teams || [];
+      const homeTeam = teams.find(t => t.id === fx.home) || { id: fx.home, name: fx.home, flag: '🏳', elo: null };
+      const awayTeam = teams.find(t => t.id === fx.away) || { id: fx.away, name: fx.away, flag: '🏳', elo: null };
+      const homeSquad = squads[fx.home] || null;
+      const awaySquad = squads[fx.away] || null;
+      const homeForm  = form[fx.home]   || null;
+      const awayForm  = form[fx.away]   || null;
+      const polyFix   = _polyLookup[`${fx.home}-${fx.away}`] || null;
+      try {
+        return fx.isKO
+          ? _buildKoCard(fx, homeTeam, awayTeam, fxOdds, fxPicks, polyFix, todayIso)
+          : _buildCard(fx, gData, homeTeam, awayTeam, fxOdds, fxPicks, fxPPicks, fxStand, homeSquad, awaySquad, homeForm, awayForm, polyFix, todayIso);
+      } catch (err) {
+        console.warn('Card-Build fehlgeschlagen', fx && (fx.home + '-' + fx.away), err);
+        return '';
+      }
+    };
+
+    // Pick-Qualität eines Fixtures (best-first): BET > ABWÄGEN > kein Pick, dann Conviction, dann Steam.
+    // (28.06.2026, Lucas) Treibt die kuratierte „Beste zuerst"-Ansicht. Ohne Pick → 0 (sortiert hinter
+    // alle Picks, fällt aber als Füller für die Top-3 zurück, damit jede Liga sichtbar bleibt).
+    const _fixtureRank = (fx) => {
+      const lp = _livePicks(fx);
+      if (!lp.length) return 0;
+      const hasBet   = lp.some(p => p.verdict === 'BET');
+      const bestConv = Math.max(0, ...lp.map(p => p.convictionScore || 0));
+      const steam    = lp.some(p => p.steamActive || p.sharpMoveActive);
+      return (hasBet ? 1000 : 100) + bestConv * 10 + (steam ? 5 : 0);
+    };
+
     // ─── Cards ───────────────────────────────────────
     if (!filtered.length) {
       html += `<div style="text-align:center;padding:48px 16px;color:var(--muted);">Keine Spiele gefunden.</div>`;
+    } else if (_curated && _activeGroup === 'all') {
+      // (A) Alle Ligen + Alle Spieltage → pro Liga die Top 3 (best-first). Liga-Mini-Header,
+      //     anklickbar → ganze Liga. So bleibt keine Liga „verschüttet" und kein Endlos-Scroll.
+      const byLeague = {};
+      for (const fx of filtered) (byLeague[fx.groupKey] = byLeague[fx.groupKey] || []).push(fx);
+      const leaguesOrdered = Object.keys(byLeague).sort((a, b) => {
+        const ra = Math.max(0, ...byLeague[a].map(_fixtureRank));
+        const rb = Math.max(0, ...byLeague[b].map(_fixtureRank));
+        return rb - ra || groupKeys.indexOf(a) - groupKeys.indexOf(b);
+      });
+      html += `<div style="font-size:11px;color:var(--muted);text-align:center;margin:2px 0 10px;">🏅 Beste Picks pro Liga · Liga antippen für die ganze Liste</div>`;
+      html += `<div class="wm-cards-wrap">`;
+      for (const gKey of leaguesOrdered) {
+        const top3 = [...byLeague[gKey]]
+          .sort((a, b) => _fixtureRank(b) - _fixtureRank(a) || _kickoffSortMs(a) - _kickoffSortMs(b))
+          .slice(0, 3);
+        if (!top3.length) continue;
+        const gName = groups[gKey].name || gKey;
+        const gFlag = groups[gKey].flag ? groups[gKey].flag + ' ' : '';
+        html += `<div onclick="wmSetGroup('${gKey}')" style="display:flex;align-items:center;gap:8px;cursor:pointer;margin:18px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border);">
+          <span style="font-size:14px;font-weight:800;">${gFlag}${gName}</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--accent);font-weight:700;">alle ${byLeague[gKey].length} Spiele →</span>
+        </div>`;
+        for (const fx of top3) html += _cardHtml(fx);
+      }
+      html += `</div>`;
+    } else if (_curated) {
+      // (B) Einzelne Liga + Alle Spieltage → beste dieser Liga zuerst, gekappt + „mehr".
+      const ranked = [...filtered].sort((a, b) =>
+        _fixtureRank(b) - _fixtureRank(a) || _kickoffSortMs(a) - _kickoffSortMs(b));
+      const CAP  = 12;
+      const show = _curatedExpanded ? ranked : ranked.slice(0, CAP);
+      html += `<div style="font-size:11px;color:var(--muted);text-align:center;margin:2px 0 10px;">🏅 Beste zuerst · oben einen Spieltag wählen für die komplette Runde</div>`;
+      html += `<div class="wm-cards-wrap">`;
+      for (const fx of show) html += _cardHtml(fx);
+      html += `</div>`;
+      if (ranked.length > CAP) {
+        html += `<div style="display:flex;justify-content:center;margin:12px 0;">
+          <button class="wm-sort-btn" onclick="wmToggleCurated()" style="font-size:12px;">
+            ${_curatedExpanded ? `🙈 Weniger anzeigen` : `▾ Alle ${ranked.length} Spiele dieser Liga`}
+          </button></div>`;
+      }
     } else {
+      // (C) Konkreter Spieltag (oder WM) → volle Liste nach Datum, mit Datums-Trennern.
       let lastDate = null;
       html += `<div class="wm-cards-wrap">`;
       for (const fx of filtered) {
-        // Date divider
         if (fx.date !== lastDate) {
           const isFuture  = fx.date > todayIso;
           const isToday   = fx.date === todayIso;
@@ -545,35 +638,7 @@
           </div>`;
           lastDate = fx.date;
         }
-
-        const fxOdds   = odds[`${fx.home}-${fx.away}`]    || null;
-        const fxPicks  = picks[`${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}`]       || [];
-        const fxPPicks = playerPicks[`${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}`] || [];
-        const fxStand  = standings[fx.groupKey]  || null;
-        const gData    = fx.groupData;
-        const teams    = gData.teams || [];
-        const homeTeam = teams.find(t => t.id === fx.home) || { id: fx.home, name: fx.home, flag: '🏳', elo: null };
-        const awayTeam = teams.find(t => t.id === fx.away) || { id: fx.away, name: fx.away, flag: '🏳', elo: null };
-        const homeSquad = squads[fx.home] || null;
-        const awaySquad = squads[fx.away] || null;
-        const homeForm  = form[fx.home]   || null;
-        const awayForm  = form[fx.away]   || null;
-        const polyFix   = _polyLookup[`${fx.home}-${fx.away}`] || null;
-
-        // (25.06.2026, Lucas: KO-Runden) KO-Fixtures bekommen eine eigene, kompakte
-        // Card (keine Gruppen-Standings/Quali-Logik → kein Crash). Gruppenspiele
-        // unverändert über _buildCard.
-        // (25.06.2026, Lucas) Pro-Fixture gekapselt: eine fehlerhafte (z.B. Liga-)Card darf nicht
-        // die GESAMTE Liste blanken — fehlerhafte überspringen, Rest rendert.
-        try {
-          if (fx.isKO) {
-            html += _buildKoCard(fx, homeTeam, awayTeam, fxOdds, fxPicks, polyFix, todayIso);
-          } else {
-            html += _buildCard(fx, gData, homeTeam, awayTeam, fxOdds, fxPicks, fxPPicks, fxStand, homeSquad, awaySquad, homeForm, awayForm, polyFix, todayIso);
-          }
-        } catch (err) {
-          console.warn('Card-Build fehlgeschlagen', fx && (fx.home + '-' + fx.away), err);
-        }
+        html += _cardHtml(fx);
       }
       html += `</div>`;
     }
