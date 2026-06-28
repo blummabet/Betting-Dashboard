@@ -3507,4 +3507,14 @@
     return `in ${Math.ceil(diff / 7)} Wo.`;
   }
 
+  // Test-Hook (27.06.2026): Card-Renderer für den jsdom-Render-Harness zugänglich machen.
+  // Reines Test-Interface — die Produktion nutzt die internen Aufrufe; ändert kein Verhalten.
+  if (typeof window !== 'undefined') {
+    window.__wmCardTest = {
+      engineSignalGridHtml: _engineSignalGridHtml,
+      buildKoCard: _buildKoCard,
+      setWmData: (d) => { _wmData = d; },
+    };
+  }
+
 })();
