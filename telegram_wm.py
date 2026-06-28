@@ -203,7 +203,11 @@ def _norm_result(r):
 
 
 def _pick_stake(p) -> float:
-    """BET = €10, ABWÄGEN (+ Rest) = €5. Conviction-gewichtet."""
+    """Edge-Staking (28.06.2026): primär pick['stake'] (fraktionales Kelly, pick_staking.py).
+    Fallback auf altes Flat (BET €10 / ABWÄGEN €5) nur für Alt-Picks ohne stake."""
+    s = (p or {}).get("stake")
+    if isinstance(s, (int, float)) and s > 0:
+        return float(s)
     return 10.0 if (p or {}).get("verdict") == "BET" else 5.0
 
 

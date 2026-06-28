@@ -79,6 +79,18 @@ DEFAULT_FALLBACK = {
     "tiktok": {
         "dedup_window_days": 7,
     },
+    "staking": {
+        # Edge-Staking (28.06.2026, Lucas): fraktionales Kelly statt flach. assumedEdge wird aus der
+        # Conviction abgeleitet (Steam-Cards haben keinen Preis-Edge → Conviction ist unser Proxy),
+        # Kelly macht das odds-bewusst (Longshots → kleinerer Stake). Konservativ + hart gedeckelt.
+        "bankroll": 1000.0,               # Referenz-Bankroll für die Sizing-Mathematik
+        "kelly_fraction": 0.25,           # Viertel-Kelly (Varianz-schonend)
+        "edge_per_conviction_pt": 0.006,  # je Conviction-Punkt über neutral: +0,6pp angenommener Edge
+        "conviction_neutral": 5.0,        # ab hier aufwärts steigt der Stake
+        "abwaegen_factor": 0.6,           # ABWÄGEN vorsichtiger als BET
+        "min_stake": 2.0,
+        "max_stake": 25.0,
+    },
     "dedup_hours": {
         "sell_alert": 6, "edge_alert": 12,
         "sharp_move": 24, "position_health": 6, "spotlight_per_day": 2,

@@ -130,14 +130,19 @@ test('Bepicktes KO-Spiel läuft 1:1 durch _buildCard (Runden-Header, kein „ST"
   const gData = fx.groupData;
   const home = gData.teams[0], away = gData.teams[1];
   const odds = { hw: 2.40, dr: 3.20, aw: 3.00 };
-  const picks = [{ market: 'Doppelte Chance — 1X', verdict: 'BET', odds: 1.45, convictionScore: 7,
-                   signalAdjustmentPP: 1.0, signals: [{ name: 'form_trend', score: 0.6, evidence: 'Heimform' }] }];
+  const picks = [
+    { market: 'Doppelte Chance — 1X', verdict: 'BET', odds: 1.45, convictionScore: 7, stake: 6,
+      signalAdjustmentPP: 1.0, signals: [{ name: 'form_trend', score: 0.6, evidence: 'Heimform' }] },
+    { market: 'Über 2.5 Tore', verdict: 'ABWÄGEN', odds: 1.90, convictionScore: 4, stake: 2.5, edgePP: 1 },
+  ];
   // standing = null (KO hat keine Tabelle) → darf NICHT crashen
   const html = t.buildCard(fx, gData, home, away, odds, picks, null, null, null, null,
     gData.teams[0] && { last5:['W'] }, null, null, '2026-06-27');
   assert.match(html, /Sechzehntelfinale/, 'KO-Runden-Label im Header');
   assert.ok(!/· ST R32/.test(html), 'Kein „ST R32" mehr (KO hat keinen Spieltag)');
   assert.match(html, /Doppelte Chance/, 'Pick-Markt sichtbar (volle Card)');
+  assert.match(html, /Einsatz €6/, 'Stake am Hero-Pick sichtbar');
+  assert.match(html, /€2\.5/, 'Stake auch am weiteren (ABWÄGEN) Pick sichtbar');
   assert.match(html, /Elfenbeinküste/);
 });
 
