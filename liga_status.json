@@ -124,6 +124,15 @@
       "note": "CLV (Entry vs Pinnacle-Closing) ist DER Frühindikator für +EV; ohne ihn lässt sich nicht sagen ob die Strategie Wert holt. Lücke = Closing-Snapshot wird nicht zuverlässig bei Anpfiff eingefroren (pinnClose/polyClose). Schließt an den Closing-In-Play-Guard an — die Write-Seite muss bei Anpfiff einfrieren."
     },
     {
+      "id": "clv_card_coverage",
+      "label": "CLV: Closing-Abdeckung der Steam-Card-Picks",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "resolve_steam_clv + Closing-Capture prüfen (closing_is_prematch / Anpfiff-Snapshot). Ohne Closing-Linie kann compute_clv_summary den Pick nicht werten."
+    },
+    {
       "id": "edge_consistent",
       "label": "Edge == fair − poly (kein Stale-Edge)",
       "severity": "error",
@@ -390,5 +399,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-06-28T08:49:18.409581+00:00"
+  "generatedAt": "2026-06-28T19:07:04.233424+00:00"
 }
