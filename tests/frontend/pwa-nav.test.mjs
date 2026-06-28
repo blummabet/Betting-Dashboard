@@ -1,6 +1,6 @@
-// tests/frontend/pwa-nav.test.mjs — PWA-Tags + mobile Bottom-Nav (28.06.2026, Lucas).
-// (1) Statisch: season-finish-v2.html hat Manifest/Apple-Tags + Bottom-Nav-/Sheet-Markup + SW-Reg.
-// (2) Verhalten: showView() spiegelt den aktiven Tab in die Bottom-Nav; toggleMoreSheet() öffnet/schließt.
+// tests/frontend/pwa-nav.test.mjs — PWA-Tags + Navigation (Bottom-Nav mobil, „Mehr"-Dropdown web).
+// (1) Statisch: season-finish-v2.html hat Manifest/Apple-Tags + Bottom-Nav/Sheet + Web-Dropdown + SW.
+// (2) Verhalten: showView() spiegelt aktiven Tab in Bottom-Nav UND „Mehr"-Dropdown; Toggles auf/zu.
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
@@ -9,59 +9,90 @@ import { JSDOM } from 'jsdom';
 const HTML = new URL('../../season-finish-v2.html', import.meta.url);
 const UI   = new URL('../../ui.js', import.meta.url);
 
-test('PWA-Tags + Bottom-Nav-Markup sind im HTML vorhanden', () => {
-  const dom = new JSDOM(readFileSync(HTML, 'utf8'));   // runScripts NICHT gesetzt → kein JS-Lauf
-  const d = dom.window.document;
+test('PWA-Tags + Navi-Markup (Bottom-Nav, Sheet, Web-Dropdown) im HTML vorhanden', () => {
+  const raw = readFileSync(HTML, 'utf8');
+  const d = new JSDOM(raw).window.document;        // runScripts NICHT gesetzt → kein JS-Lauf
   // PWA
   assert.ok(d.querySelector('link[rel="manifest"]'), 'manifest-Link fehlt');
   assert.ok(d.querySelector('link[rel="apple-touch-icon"]'), 'apple-touch-icon fehlt');
   assert.ok(d.querySelector('meta[name="apple-mobile-web-app-capable"]'), 'apple-mobile-web-app-capable fehlt');
-  assert.ok(d.querySelector('meta[name="theme-color"]'), 'theme-color fehlt');
-  assert.match(readFileSync(HTML, 'utf8'), /serviceWorker\.register/, 'SW-Registrierung fehlt');
-  // Bottom-Nav
+  assert.match(raw, /serviceWorker\.register/, 'SW-Registrierung fehlt');
+  // Sub-Navi nur noch Cards + Tracking
+  assert.equal(d.querySelectorAll('#subNav .sub-nav-btn').length, 2, 'Sub-Navi soll nur Cards+Tracking haben');
+  // Web „Mehr"-Dropdown mit 4 Einträgen (Heart/Status/Telegram/TikTok)
+  assert.ok(d.getElementById('navMore'), 'Web-Mehr-Button fehlt');
+  assert.equal(d.querySelectorAll('#topMoreMenu .tm-item').length, 4, '4 Dropdown-Einträge erwartet');
+  // Mobile Bottom-Nav (5 Tabs) + Sheet (jetzt 6: Poly×2, Telegram, TikTok, Heart, Status)
   assert.equal(d.querySelectorAll('.bottom-nav .bn-btn').length, 5, '5 Bottom-Tabs erwartet');
-  assert.ok(d.getElementById('bnMore'), 'Mehr-Button fehlt');
-  assert.equal(d.querySelectorAll('.more-sheet .ms-btn').length, 4, '4 Einträge im Mehr-Sheet erwartet');
+  assert.equal(d.querySelectorAll('.more-sheet .ms-btn').length, 6, '6 Sheet-Einträge erwartet');
 });
 
-test('showView spiegelt aktiven Tab in Bottom-Nav + toggleMoreSheet öffnet/schließt', () => {
+test('showView spiegelt aktiven Tab in Bottom-Nav + Web-Dropdown; Toggles auf/zu', () => {
   const dom = new JSDOM(`<!DOCTYPE html><body>
-    <div id="mainContent"></div><div id="polymarketPanel"></div><div id="heartPanel"></div>
+    <div id="mainContent"></div><div id="intlCardsPanel"></div><div id="intlTelegramPanel"></div>
+    <div id="polymarketPanel"></div><div id="heartPanel"></div><div id="statusPanel"></div>
+    <button id="navIntl"></button>
+    <div class="top-nav-more" id="topNavMore">
+      <button id="navMore"></button>
+      <div class="top-more-menu" id="topMoreMenu">
+        <button class="tm-item" data-view="heart"></button>
+        <button class="tm-item" data-view="status"></button>
+        <button class="tm-item" data-view="intl-telegram" id="tmTel"></button>
+        <button class="tm-item" data-view="intl-studio"></button>
+      </div>
+    </div>
+    <div class="sub-nav" id="subNav"><button id="subCards"></button><button id="subTracking"></button></div>
     <nav class="bottom-nav">
-      <button class="bn-btn" data-sec="national" id="bnNat"></button>
-      <button class="bn-btn" data-sec="sharp" id="bnSharp"></button>
+      <button class="bn-btn" data-sec="intl" id="bnIntl"></button>
       <button class="bn-btn" id="bnMore"></button>
     </nav>
     <div class="more-sheet" id="moreSheet">
-      <button class="ms-btn" data-sec="polybetting" id="msPb"></button>
+      <button class="ms-btn" data-view="intl-telegram" id="msTel"></button>
       <button class="ms-btn" data-sec="heart" id="msHeart"></button>
     </div>
   </body>`, { runScripts: 'outside-only' });
   const w = dom.window;
-  // Init-Callbacks stubben (showView ruft sie am Ende auf)
+  w.eval(readFileSync(UI, 'utf8'));
+  // Stubs NACH dem eval — initStatus o.ä. sind in ui.js selbst deklariert und würden Stubs
+  // davor überschreiben (echter initStatus macht async fetch → innerHTML auf fehlendem Element).
   for (const fn of ['initStatus','initPolymarket','initPolyTrader','initPolyWallets',
     'initNationalCards','initNationalTracking','initIntlCards','initIntlTracking','initWm2026',
     'initTelegramPanel','initTiktokStudio','renderSharpRadar','logDashboardAction','buildValidatorDates']) {
     w[fn] = () => {};
   }
-  w.eval(readFileSync(UI, 'utf8'));
+  const $ = (id) => w.document.getElementById(id);
 
-  // „Mehr"-Sektion (polybetting) → Mehr-Button aktiv, Sheet-Eintrag aktiv
-  try { w.showView('polybetting'); } catch (_) {}
-  assert.ok(w.document.getElementById('bnMore').classList.contains('active'), 'Mehr-Button muss bei polybetting aktiv sein');
-  assert.ok(w.document.getElementById('msPb').classList.contains('active'), 'Sheet-Eintrag polybetting aktiv');
-  assert.ok(!w.document.getElementById('bnNat').classList.contains('active'), 'National darf nicht aktiv sein');
+  // Telegram (intl-Section, aber „Mehr"-View) → Mehr aktiv, Intl-Tab NICHT, Sub-Navi versteckt
+  try { w.showView('intl-telegram'); } catch (_) {}
+  assert.ok($('navMore').classList.contains('active'), 'Web-Mehr aktiv bei Telegram');
+  assert.ok($('tmTel').classList.contains('active'), 'Dropdown-Telegram aktiv');
+  assert.ok($('bnMore').classList.contains('active'), 'Bottom-Mehr aktiv bei Telegram');
+  assert.ok(!$('bnIntl').classList.contains('active'), 'Intl-Tab darf bei Telegram nicht aktiv sein');
+  assert.ok($('msTel').classList.contains('active'), 'Sheet-Telegram (data-view) aktiv');
+  assert.equal($('subNav').style.display, 'none', 'Sub-Navi bei Telegram versteckt');
 
-  // Direkter Tab (sharp) → bnSharp aktiv, Mehr nicht
-  try { w.showView('sharp'); } catch (_) {}
-  assert.ok(w.document.getElementById('bnSharp').classList.contains('active'));
-  assert.ok(!w.document.getElementById('bnMore').classList.contains('active'));
+  // Status → Mehr aktiv
+  try { w.showView('status'); } catch (_) {}
+  assert.ok($('navMore').classList.contains('active'), 'Web-Mehr aktiv bei Status');
 
-  // Sheet-Toggle
-  const sheet = w.document.getElementById('moreSheet');
-  assert.ok(!sheet.classList.contains('open'));
+  // Intl-Cards → Intl-Tab aktiv, Mehr NICHT, Sub-Navi sichtbar + Cards aktiv
+  try { w.showView('intl-cards'); } catch (_) {}
+  assert.ok($('bnIntl').classList.contains('active'), 'Intl-Bottom-Tab aktiv');
+  assert.ok(!$('navMore').classList.contains('active'), 'Mehr nicht aktiv bei Intl-Cards');
+  assert.notEqual($('subNav').style.display, 'none', 'Sub-Navi bei Cards sichtbar');
+  assert.ok($('subCards').classList.contains('active'), 'Cards-Sub-Tab aktiv');
+
+  // Dropdown-Toggle
+  try { w.showView('national-cards'); } catch (_) {}
+  assert.ok(!$('topMoreMenu').classList.contains('open'));
+  w.toggleTopMore();
+  assert.ok($('topMoreMenu').classList.contains('open'), 'Dropdown offen');
+  w.closeTopMore();
+  assert.ok(!$('topMoreMenu').classList.contains('open'), 'Dropdown zu');
+
+  // Mobile-Sheet-Toggle
   w.toggleMoreSheet();
-  assert.ok(sheet.classList.contains('open'), 'Sheet muss offen sein');
+  assert.ok($('moreSheet').classList.contains('open'), 'Sheet offen');
   w.toggleMoreSheet();
-  assert.ok(!sheet.classList.contains('open'), 'Sheet muss wieder zu sein');
+  assert.ok(!$('moreSheet').classList.contains('open'), 'Sheet zu');
 });

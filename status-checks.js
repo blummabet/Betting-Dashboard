@@ -306,8 +306,10 @@ function _stRenderVerdict(problems, status, valRep) {
     badge(errs + srvErr + valErr, 'error') + badge(warns + srvWarn, 'warn');
 
   // Roter/gelber Punkt am Status-Tab in der Hauptnavi — sichtbar ohne reinzuklicken
-  const dot = document.getElementById('navStatusDot');
-  if (dot) {
+  // navStatusDot sitzt im „Mehr"-Dropdown (Status-Eintrag); navMoreDot spiegelt ihn auf den
+  // „Mehr ▾"-Button, damit ein Alarm auch ohne Aufklappen sichtbar ist (28.06.2026).
+  [document.getElementById('navStatusDot'), document.getElementById('navMoreDot')].forEach(dot => {
+    if (!dot) return;
     if (sev === 'ok') { dot.style.display = 'none'; }
     else {
       dot.style.display = 'inline-block';
@@ -315,7 +317,7 @@ function _stRenderVerdict(problems, status, valRep) {
       dot.style.boxShadow = `0 0 6px ${m.col}`;
       dot.title = title;
     }
-  }
+  });
 }
 
 function _stRenderProblems(problems, valRep) {
