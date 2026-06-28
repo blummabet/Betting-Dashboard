@@ -48,6 +48,9 @@ jobs:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         run: python fetch_wm_form.py || true
 
+      - name: 🔥 Liga-Serien berechnen (Streak-Content)
+        run: python compute_streaks.py || true
+
       - name: 📈 Liga xG holen (echtes Klub-xG aus /fixtures/statistics)
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
@@ -136,6 +139,7 @@ jobs:
           git add liga_signal_ledger.json 2>/dev/null || true
           git add liga_signal_weights.json 2>/dev/null || true
           git add liga_clv_summary.json 2>/dev/null || true
+          git add liga_streaks.json 2>/dev/null || true
           git add liga_status.json 2>/dev/null || true
           git add liga_sharp_moves_log.json 2>/dev/null || true
           git add liga_sharp_dedup.json 2>/dev/null || true

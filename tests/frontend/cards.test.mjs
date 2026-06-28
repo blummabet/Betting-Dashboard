@@ -62,6 +62,34 @@ test('Signal-Grid rendert neue Liga-Signale mit Label + Begründung', () => {
   assert.match(html, /Engine-Signale/);
 });
 
+test('_streakRowHtml: Team + Markt + Länge + Continuation', () => {
+  const t = loadCards().__wmCardTest;
+  const h = t.streakRowHtml({ teamId: '50', team: 'City', leagueName: 'PL', type: 'bttsNo',
+    market: 'Beide treffen — Nein', length: 4, continuation: { state: 'wackelt', label: 'x' } });
+  assert.match(h, /City/);
+  assert.match(h, /Beide treffen/);
+  assert.match(h, /4 in Folge/);
+  assert.match(h, /wackelt/);
+});
+
+test('Serien-Tab: initStreaks rendert Serien aus liga_streaks.json', async () => {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="streaksPanel"></div></body>', {
+    url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  const streaks = { streaks: [
+    { teamId: '42', team: 'Arsenal', league: 'ENG', leagueName: 'Premier League', type: 'over25',
+      market: 'Über 2,5 Tore', length: 6, strong: true, continuation: { state: 'intakt', label: 'Grundrate dafür 72%' } },
+  ] };
+  w.fetch = (url) => Promise.resolve({ ok: true, json: () => Promise.resolve(String(url).includes('liga_streaks') ? streaks : {}) });
+  w.eval(readFileSync(WM_RENDERER, 'utf8'));
+  await w.initStreaks('national');
+  const html = w.document.getElementById('streaksPanel').innerHTML;
+  assert.match(html, /🔥 Serien/);
+  assert.match(html, /Arsenal/);
+  assert.match(html, /6 in Folge/);
+  assert.match(html, /Serie intakt/);
+});
+
 test('Sharp-Konsens: Pinnacle vs Betfair (einig / uneinig / weicht ab / fehlt)', () => {
   const t = loadCards().__wmCardTest;
   // einig: gleicher Favorit (Heim), kleine Differenz

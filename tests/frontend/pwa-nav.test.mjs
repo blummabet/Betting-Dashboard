@@ -17,8 +17,9 @@ test('PWA-Tags + Navi-Markup (Bottom-Nav, Sheet, Web-Dropdown) im HTML vorhanden
   assert.ok(d.querySelector('link[rel="apple-touch-icon"]'), 'apple-touch-icon fehlt');
   assert.ok(d.querySelector('meta[name="apple-mobile-web-app-capable"]'), 'apple-mobile-web-app-capable fehlt');
   assert.match(raw, /serviceWorker\.register/, 'SW-Registrierung fehlt');
-  // Sub-Navi nur noch Cards + Tracking
-  assert.equal(d.querySelectorAll('#subNav .sub-nav-btn').length, 2, 'Sub-Navi soll nur Cards+Tracking haben');
+  // Sub-Navi: Cards + Serien + Tracking (Serien zwischen Cards und Tracking, 28.06.2026)
+  assert.equal(d.querySelectorAll('#subNav .sub-nav-btn').length, 3, 'Sub-Navi: Cards, Serien, Tracking');
+  assert.ok(d.getElementById('subStreaks'), 'Serien-Sub-Tab fehlt');
   // Web „Mehr"-Dropdown mit 3 Einträgen (Heart/Status/TikTok) — Telegram wanderte in den Status
   assert.ok(d.getElementById('navMore'), 'Web-Mehr-Button fehlt');
   assert.equal(d.querySelectorAll('#topMoreMenu .tm-item').length, 3, '3 Dropdown-Einträge erwartet');

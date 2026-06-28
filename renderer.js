@@ -1515,10 +1515,17 @@ function _findBestConvictionForMatch(homeId, awayId) {
   return best;
 }
 
+// (28.06.2026) Pre-Match-gefilterte History, von renderSharpRadar gesetzt. Sparkline + „letzte
+// Bewegung" lesen daraus → kein In-Play-Cliff. Fallback auf das Roh-Global wenn (noch) nicht gesetzt.
+let _sharpActiveHist = null;
+function _sharpHistFor(key) {
+  return (_sharpActiveHist && _sharpActiveHist[key]) || window.WM2026_ODDS_HISTORY?.[key];
+}
+
 // Mini-Sparkline aus odds-history für ein WM-Match-Markt (Pinnacle).
 // Returns SVG-String oder ''. width/height konfigurierbar.
 function _wmMiniSparkline(homeId, awayId, marketKey, w = 70, h = 18) {
-  const hist = window.WM2026_ODDS_HISTORY?.[`${homeId}-${awayId}`];
+  const hist = _sharpHistFor(`${homeId}-${awayId}`);
   if (!Array.isArray(hist) || hist.length < 2) return '';
   const series = hist.map(s => s[marketKey]).filter(v => typeof v === 'number' && v > 1);
   if (series.length < 2) return '';
@@ -1533,7 +1540,7 @@ function _wmMiniSparkline(homeId, awayId, marketKey, w = 70, h = 18) {
 
 // "Letzte Bewegung" aus History — wann hat sich der Wert zuletzt geändert?
 function _lastChangeAgo(homeId, awayId, marketKey) {
-  const hist = window.WM2026_ODDS_HISTORY?.[`${homeId}-${awayId}`];
+  const hist = _sharpHistFor(`${homeId}-${awayId}`);
   if (!Array.isArray(hist) || hist.length < 2) return null;
   // Find most recent change going from end backwards
   let lastVal = hist[hist.length - 1]?.[marketKey];
@@ -2093,7 +2100,30 @@ function renderSharpRadar() {
   // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — _data/_hist statt der WM-Globals
   // direkt; im Default ('intl') 1:1 wie bisher (window.WM2026_DATA/_ODDS_HISTORY).
   const _wmSharpData = _data;
-  const _wmOddsHist  = _hist;
+  // (28.06.2026, Lucas: „riesige Drops, die es so nicht gab") — In-Play-Snapshots wurden in die
+  // History geschrieben (Tor → Quote schießt Richtung Spielstand) und verfälschten als „Closing"
+  // ALLE Sharp-Radar-Sektionen (Mover/Heatmap/KPI/Verlauf/Gesamtbewegung). ZENTRAL filtern: pro
+  // Match nur Snapshots bis zum Anpfiff. Fallback: alle (falls kickoff fehlt/alle post-ko).
+  const _hist0 = _hist || {};
+  const _koByKey = {};
+  for (const grp of Object.values((_wmSharpData && _wmSharpData.groups) || {})) {
+    for (const fx of (grp.fixtures || [])) {
+      if (fx.kickoff) _koByKey[`${fx.home}-${fx.away}`] = new Date(String(fx.kickoff).replace('Z', '+00:00')).getTime();
+    }
+  }
+  for (const kf of ((_wmSharpData && _wmSharpData.koFixtures) || [])) {
+    if (kf.kickoff && kf.home && kf.away) _koByKey[`${kf.home}-${kf.away}`] = new Date(String(kf.kickoff).replace('Z', '+00:00')).getTime();
+  }
+  const _preHist = {};
+  for (const [k, snaps] of Object.entries(_hist0)) {
+    if (k === '_meta' || !Array.isArray(snaps)) { _preHist[k] = snaps; continue; }
+    const ko = _koByKey[k];
+    if (!ko) { _preHist[k] = snaps; continue; }
+    const pre = snaps.filter(s => s && s.ts && new Date(s.ts).getTime() <= ko);
+    _preHist[k] = pre.length ? pre : snaps;   // Fallback: nie leer machen
+  }
+  _sharpActiveHist = _preHist;   // Mini-Sparkline + Letzte-Bewegung lesen daraus
+  const _wmOddsHist  = _preHist;
   if (_wmSharpData && _wmOddsHist) {
     // Build team lookup table
     const _wmTeams = {};
@@ -2110,8 +2140,8 @@ function renderSharpRadar() {
         // Date filter: -7 days to +60 days (covers full tournament)
         const fxDate = new Date(`${fx.date}T00:00:00`);
         if (fxDate < new Date(now - 7 * 86400000) || fxDate > new Date(now + WM_WINDOW_MS)) continue;
-        const oddsOpen    = snapshots[0];
-        const oddsCurrent = snapshots[snapshots.length - 1];
+        const oddsOpen    = snapshots[0];                          // _wmOddsHist ist bereits pre-match-gefiltert
+        const oddsCurrent = snapshots[snapshots.length - 1];       // (zentral, s. _preHist oben) → kein In-Play
         const openTs      = snapshots[0].ts;
         // Convert ISO date (YYYY-MM-DD) → DD.MM.YYYY for existing helpers
         const [yr, mo, dy] = fx.date.split('-');

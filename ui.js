@@ -36,7 +36,7 @@ let _activeView = 'national-cards';
 const _ALL_PANELS = [
   'mainContent', 'trackingV2Panel', 'resultsPanel',
   'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
-  'tiktokStudioPanel',
+  'tiktokStudioPanel', 'streaksPanel',
   'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel',
   'heartPanel', 'statusPanel',
 ];
@@ -64,6 +64,8 @@ function showView(view) {
   const panelMap = {
     'national-cards':    'mainContent',
     'national-tracking': 'trackingV2Panel',
+    'national-streaks':  'streaksPanel',
+    'intl-streaks':      'streaksPanel',
     'intl-cards':        'intlCardsPanel',
     'intl-tracking':     'intlTrackingPanel',
     'intl-wm2026':       'intlWm2026Panel',
@@ -93,16 +95,20 @@ function showView(view) {
   const subNav = document.getElementById('subNav');
   // (28.06.2026, Lucas) Sub-Navi nur noch für die Daten-Ansichten Cards/Tracking.
   // Telegram + TikTok Studio sind in das „Mehr"-Menü gewandert (Desktop-Dropdown + Mobile-Sheet).
-  const hasSubNav = ['national-cards', 'national-tracking', 'intl-cards', 'intl-tracking'].includes(view);
+  const hasSubNav = ['national-cards', 'national-tracking', 'national-streaks',
+                     'intl-cards', 'intl-tracking', 'intl-streaks'].includes(view);
   if (subNav) subNav.style.display = hasSubNav ? '' : 'none';
 
   // Sub-nav active buttons
   const isCards    = view.endsWith('-cards');
   const isTracking = view.endsWith('-tracking');
+  const isStreaks  = view.endsWith('-streaks');
   const subCards    = document.getElementById('subCards');
   const subTracking = document.getElementById('subTracking');
+  const subStreaks  = document.getElementById('subStreaks');
   if (subCards)    subCards.classList.toggle('active',    isCards);
   if (subTracking) subTracking.classList.toggle('active', isTracking);
+  if (subStreaks)  subStreaks.classList.toggle('active',  isStreaks);
 
   // ── Top-nav active state ─────────────────────────────
   _TOP_NAV_IDS.forEach(id => {
@@ -168,6 +174,7 @@ function showView(view) {
   // (25.06.2026, Lucas: Liga auf WM-Stack) National-Views laufen jetzt auf dem
   // bewährten WM-Renderer/Tracking (liest liga-data.json) statt statischem
   // renderer.js-Output bzw. initResultsV2.
+  if ((view === 'national-streaks' || view === 'intl-streaks') && typeof initStreaks === 'function') initStreaks(_activeSection);
   if (view === 'national-cards'    && typeof initNationalCards    === 'function') initNationalCards();
   if (view === 'national-tracking' && typeof initNationalTracking === 'function') initNationalTracking();
   if (view === 'intl-cards'        && typeof initIntlCards     === 'function') initIntlCards();

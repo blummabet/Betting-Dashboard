@@ -212,6 +212,10 @@ def _parse_results(fixtures: list, team_api_id: int) -> dict | None:
         "avgGoals":      round(sum(r["total"]    for r in rows) / n, 3),
         "over25Rate":    round(sum(r["o25"]       for r in rows) / n, 3),
         "bttsRate":      round(sum(r["btts"]      for r in rows) / n, 3),
+        # Pro-Spiel-Sequenzen (most-recent-first) für compute_streaks.py (28.06.2026, Lucas: Serien).
+        # Roh-Daten lagen schon in rows, wurden bisher zu Raten verdichtet + verworfen.
+        "o25Seq":        [bool(r["o25"])  for r in rows[:15]],
+        "bttsSeq":       [bool(r["btts"]) for r in rows[:15]],
         "games":         n,
         "updatedAt":     now_iso(),
     }

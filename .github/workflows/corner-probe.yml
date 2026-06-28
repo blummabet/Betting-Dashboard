@@ -1,0 +1,36 @@
+name: 🔍 Corner/HT Coverage Probe
+
+# Manuell auslösen (Actions → diesen Workflow → Run). Prüft, welche Bücher Corner- + Halbzeit-
+# Märkte für die 5 Ligen liefern (v.a. ob Pinnacle/Betfair dabei = Steam möglich, oder reiner
+# Modell-Markt). Kein Pipeline-Teil. Schreibt corner_probe.json zum Ansehen.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: 📦 Dependencies
+        run: pip install -r requirements.txt
+      - name: 🔍 Probe Corner + HT Märkte
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python probe_corner_markets.py
+      - name: 💾 corner_probe.json committen
+        run: |
+          git config user.name "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add corner_probe.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Kein Ergebnis (keine Events?) — nichts zu committen."
+          else
+            git commit -m "🔍 Corner/HT Coverage-Probe $(date +'%d.%m.%Y') "
+            git push || true
+          fi

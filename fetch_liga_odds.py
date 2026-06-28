@@ -253,9 +253,26 @@ def _snap_changed(last: dict | None, hw, dr, aw) -> bool:
     return (last.get("hw") != hw or last.get("dr") != dr or last.get("aw") != aw)
 
 
-def append_snapshot(history: dict, key: str, prices: dict, now_iso: str) -> int:
+def _kickoff_passed(kickoff_iso) -> bool:
+    """Anpfiff vorbei? (28.06.2026, Lucas: Anpfiff-Freeze für die History — keine In-Play-Snaps.)"""
+    if not kickoff_iso:
+        return False
+    from datetime import datetime, timezone
+    try:
+        kt = datetime.fromisoformat(str(kickoff_iso).replace("Z", "+00:00"))
+        if kt.tzinfo is None:
+            kt = kt.replace(tzinfo=timezone.utc)
+        return datetime.now(timezone.utc) >= kt
+    except Exception:
+        return False
+
+
+def append_snapshot(history: dict, key: str, prices: dict, now_iso: str, post_ko: bool = False) -> int:
     """Hängt Pinnacle- + Public-Snapshot an die Zeitreihe an, wenn sich 1X2 geändert hat.
-    Gibt Anzahl neuer Snaps zurück. Rein/testbar (gleiches Format wie wm2026-odds-history)."""
+    Gibt Anzahl neuer Snaps zurück. Rein/testbar (gleiches Format wie wm2026-odds-history).
+    post_ko=True (Anpfiff vorbei) → KEIN Snapshot mehr (In-Play würde den Sharp Radar verfälschen)."""
+    if post_ko:
+        return 0
     added = 0
     snaps = history.setdefault(key, [])
     hw, dr, aw = prices.get("hw"), prices.get("dr"), prices.get("aw")
@@ -331,7 +348,7 @@ def main():
                 continue
             key = f"{fx['home']}-{fx['away']}"
             odds_out[key] = build_odds_entry(prices, odds_out.get(key), now_iso)
-            snaps_added += append_snapshot(history, key, prices, now_iso)
+            snaps_added += append_snapshot(history, key, prices, now_iso, post_ko=_kickoff_passed(fx.get("kickoff")))
             matched_keys.add(key)
             total += 1
     # Altlasten-Pruning (Bug 26.06.2026): früher fehl-gematchte Odds (falsche Runde) aus odds_out

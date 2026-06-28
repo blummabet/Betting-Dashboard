@@ -1169,13 +1169,17 @@ def main():
         updated += 1
 
         # ── Odds History Snapshot ─────────────────────────────
+        # (28.06.2026, Lucas) Anpfiff-Freeze: KEINE History-Snapshots nach Anpfiff anhängen.
+        # Sonst landen In-Play-Linien (Tor → Quote schießt Richtung Spielstand) in der Zeitreihe
+        # und verfälschen den Sharp Radar. odds_closing wird oben separat sauber (pre-match) gefroren.
+        _post_ko = (_hours_to_ko is not None and _hours_to_ko <= 0)
         snaps = history.setdefault(key, [])
         # FIX 13.06.2026: letzten PINNACLE-Snap suchen (nicht irgendeinen) — seit wir
         # auch Public-Snaps in dieselbe Liste schreiben, wäre snaps[-1] sonst evtl. ein
         # Public-Eintrag und der _snap_changed-Vergleich falsch.
         last_snap = next((s for s in reversed(snaps) if s.get("bk") != "public"), None)
         pinn_changed = _snap_changed(last_snap, h2h["hw"], h2h["dr"], h2h["aw"])
-        if pinn_changed:
+        if pinn_changed and not _post_ko:
             snap_entry = {
                 "ts":  now_iso,
                 "hw":  h2h["hw"],
@@ -1202,7 +1206,7 @@ def main():
         ph = h2h.get("public_hw")
         pd = h2h.get("public_dr")
         pa = h2h.get("public_aw")
-        if ph and pa:
+        if ph and pa and not _post_ko:
             last_pub = next((s for s in reversed(snaps) if s.get("bk") == "public"), None)
             if pinn_changed or _snap_changed(last_pub, ph, pd, pa):
                 pub_entry = {

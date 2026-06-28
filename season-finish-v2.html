@@ -2159,6 +2159,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
      in Community-Cards (Cards-Tab) integriert. -->
 <div class="sub-nav" id="subNav">
   <button class="sub-nav-btn active" id="subCards" onclick="showSubView('cards')">🃏 Cards</button>
+  <button class="sub-nav-btn" id="subStreaks" onclick="showSubView('streaks')">🔥 Serien</button>
   <button class="sub-nav-btn" id="subTracking" onclick="showSubView('tracking')">📈 Tracking</button>
 </div>
 
@@ -2180,6 +2181,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 </div>
 
 <div class="container" id="mainContent"></div>
+
+<!-- Serien/Streaks (28.06.2026) — Content-Sektion, dataset-aware (Liga/WM), keine Quoten -->
+<div id="streaksPanel" style="display:none;max-width:1100px;margin:0 auto;padding:0 16px 80px;"></div>
 
 <!-- ── Mobile Bottom-Nav (28.06.2026) — nur ≤768px sichtbar; spiegelt showView() ── -->
 <nav class="bottom-nav" id="bottomNav">

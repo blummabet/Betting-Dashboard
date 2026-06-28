@@ -151,6 +151,10 @@ jobs:
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
 
+      - name: 🔥 WM-Serien berechnen (Streak-Content)
+        run: python compute_streaks.py
+        continue-on-error: true
+
       # ── Corner Stats (API-Football, täglich, max 10 Spiele pro Team) ────
       - name: 📐 WM Corner Stats fetchen
         run: python fetch_wm_corners.py
@@ -411,6 +415,7 @@ jobs:
           # wm_status.json (Status-Seite Single Source of Truth) explizit — neu/untracked,
           # wird von git add -u nicht erfasst.
           git add wm_status.json 2>/dev/null || true
+          git add wm_streaks.json 2>/dev/null || true   # Streak-Content (neu/untracked, 28.06.2026)
           # Diagnose: was ist staged? (im Log sichtbar, kein stilles Versagen mehr)
           echo "📋 Staged für Commit:"; git diff --staged --name-only | sed 's/^/   /' || true
           if git diff --staged --quiet; then

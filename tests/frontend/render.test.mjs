@@ -63,6 +63,29 @@ test('Bayesian-Panel (Liga): nur Liga-Signale, KEINE WM-only-Signale', () => {
   assert.ok(!/Weather\/Hitze/.test(html), 'Liga-Panel darf KEIN WM-Wetter zeigen');
 });
 
+test('Sharp Radar: In-Play-Snapshots (nach Anpfiff) verfälschen die Mover NICHT', () => {
+  const w = loadFull();
+  w.LEAGUES = {};
+  const today = new Date().toISOString().slice(0, 10);
+  const ko = new Date(Date.now() - 2 * 3600000);                     // Anpfiff vor 2h (gespielt)
+  const iso = (ms) => new Date(ms).toISOString();
+  w.WM2026_DATA = { groups: { A: {
+    teams: [{ id: 'ger', name: 'Deutschland', flag: '🇩🇪' }, { id: 'ecu', name: 'Ecuador', flag: '🇪🇨' }],
+    fixtures: [{ home: 'ger', away: 'ecu', date: today, time: '17:00',
+                 kickoff: ko.toISOString(), matchday: 1, result: { status: 'FT' } }],
+  } } };
+  w.WM2026_ODDS_HISTORY = { 'ger-ecu': [
+    { ts: iso(ko.getTime() - 4 * 3600000), hw: 1.80, dr: 3.80, aw: 4.50 },   // pre-match
+    { ts: iso(ko.getTime() - 3 * 3600000), hw: 1.62, dr: 4.00, aw: 5.20 },   // pre-match Steam (~5pp)
+    { ts: iso(ko.getTime() + 1 * 3600000), hw: 30.0, dr: 12.0, aw: 1.02 },   // IN-PLAY: Ecuador führt
+  ] };
+  w.renderSharpRadar();
+  const html = w.document.getElementById('mainContent').innerHTML;
+  assert.match(html, /Deutschland/, 'Spiel erscheint (pre-match Mover ~5pp)');
+  assert.ok(!/[1-9]\d+(\.\d+)?pp/.test(html), 'KEIN zweistelliger pp-Drop (In-Play gefiltert)');
+  assert.ok(!/9\d(\.\d)?%/.test(html), 'Keine In-Play-98%-Wahrscheinlichkeit');
+});
+
 test('CLV-Scoreboard: Ø CLV + %beat + Abdeckung + Markt-Tabelle', () => {
   const w = loadRenderer();
   w.WM_CLV_SUMMARY = {

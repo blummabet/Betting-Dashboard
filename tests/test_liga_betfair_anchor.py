@@ -42,5 +42,26 @@ class TestBetfairAnchor(unittest.TestCase):
         self.assertEqual((entry["bf_hw"], entry["bf_dr"], entry["bf_aw"]), (1.55, 4.3, 6.2))
 
 
+class TestKickoffFreeze(unittest.TestCase):
+    def test_append_snapshot_normal(self):
+        hist = {}
+        n = F.append_snapshot(hist, "a-b", {"hw": 1.5, "dr": 4.0, "aw": 6.0}, "2026-08-20T10:00:00Z")
+        self.assertEqual(n, 1)
+        self.assertEqual(len(hist["a-b"]), 1)
+
+    def test_append_snapshot_post_kickoff_skipped(self):
+        # Anpfiff vorbei → KEIN Snapshot (In-Play würde Sharp Radar verfälschen)
+        hist = {}
+        n = F.append_snapshot(hist, "a-b", {"hw": 30.0, "dr": 12.0, "aw": 1.02},
+                              "2026-08-20T22:00:00Z", post_ko=True)
+        self.assertEqual(n, 0)
+        self.assertNotIn("a-b", hist)
+
+    def test_kickoff_passed(self):
+        self.assertTrue(F._kickoff_passed("2000-01-01T00:00:00Z"))   # lange vorbei
+        self.assertFalse(F._kickoff_passed("2099-01-01T00:00:00Z"))  # Zukunft
+        self.assertFalse(F._kickoff_passed(None))
+
+
 if __name__ == "__main__":
     unittest.main()

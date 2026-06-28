@@ -82,6 +82,91 @@
     return _loadCards();
   };
 
+  // ─────────────────────────────────────────────────────
+  //  SERIEN / STREAKS (28.06.2026, Lucas) — Content-Schicht, KEINE Quoten/€ (TikTok-safe).
+  //  Liest {wm_,liga_}streaks.json (compute_streaks.py). Eigener Tab + Top-Sektion in den Cards.
+  // ─────────────────────────────────────────────────────
+  const _streaksCache   = {};   // 'liga'|'wm' → data
+  const _streaksLoading = {};
+  function _loadStreaks(isLiga) {
+    const ds = isLiga ? 'liga' : 'wm';
+    if (_streaksCache[ds]) return Promise.resolve(_streaksCache[ds]);
+    const f = isLiga ? 'liga_streaks.json' : 'wm_streaks.json';
+    return fetch(f + '?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
+      .then(j => { _streaksCache[ds] = j || { streaks: [] }; return _streaksCache[ds]; });
+  }
+  // Beim Cards-Render einmalig nachladen, dann genau einmal neu zeichnen (Top-Serien-Sektion).
+  function _ensureStreaks(isLiga, rerender) {
+    const ds = isLiga ? 'liga' : 'wm';
+    if (_streaksCache[ds] || _streaksLoading[ds]) return;
+    _streaksLoading[ds] = true;
+    _loadStreaks(isLiga).finally(() => { _streaksLoading[ds] = false; if (rerender) rerender(); });
+  }
+
+  const _STREAK_ICON = { over25: '⚽', under25: '🧱', bttsYes: '🤝', bttsNo: '🚫' };
+  const _STREAK_CONT = {
+    intakt:  { col: '#3fb950', label: 'Serie intakt' },
+    neutral: { col: '#8b949e', label: 'offen' },
+    wackelt: { col: '#e3b341', label: 'wackelt' },
+  };
+  function _streakRowHtml(s) {
+    const ic = _STREAK_ICON[s.type] || '🔥';
+    const flames = '🔥'.repeat(Math.min(5, s.length || 0));
+    const c = _STREAK_CONT[(s.continuation || {}).state] || _STREAK_CONT.neutral;
+    const logo = s.teamId ? `https://media.api-sports.io/football/teams/${s.teamId}.png` : '';
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--border);">
+      ${logo ? `<img src="${logo}" style="width:22px;height:22px;object-fit:contain;flex-shrink:0;" loading="lazy" alt="">` : ''}
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.team} <span style="font-size:10px;color:var(--muted);font-weight:600;">${s.leagueName || s.league || ''}</span></div>
+        <div style="font-size:11px;color:var(--muted);">${ic} ${s.market} · <strong style="color:var(--text)">${s.length} in Folge</strong></div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;">
+        <div style="font-size:13px;line-height:1.1;">${flames}</div>
+        <div style="font-size:10px;font-weight:700;color:${c.col};" title="${(s.continuation || {}).label || ''}">${c.label}</div>
+      </div>
+    </div>`;
+  }
+
+  // Voller Serien-Tab. section: 'national'→Liga, sonst WM.
+  window.initStreaks = async function (section) {
+    const isLiga = section === 'national';
+    const panel = document.getElementById('streaksPanel');
+    if (!panel) return;
+    panel.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);">🔥 Serien werden geladen…</div>`;
+    const data = await _loadStreaks(isLiga);
+    const all = (data && data.streaks) || [];
+    let html = `<div style="max-width:900px;margin:0 auto;">
+      <div class="wm-header"><div class="wm-header-left">
+        <div class="wm-title">🔥 Serien</div>
+        <div class="wm-subtitle">Aktive Team-Serien — Über/Unter 2,5 &amp; Beide treffen. Wo läuft gerade eine Strähne?</div>
+      </div></div>`;
+    if (!all.length) {
+      html += `<div style="text-align:center;padding:40px 16px;color:var(--muted);font-size:13px;line-height:1.6;">Noch keine aktiven Serien (ab 3 in Folge). Füllt sich, sobald genug Spiele gelaufen sind.</div></div>`;
+      panel.innerHTML = html; return;
+    }
+    html += `<div style="font-size:11px;color:var(--muted);margin:0 2px 12px;line-height:1.5;">🟢 „Serie intakt" = die Grundrate stützt die Strähne · 🟡 „wackelt" = läuft gegen die Grundrate (eher Zufall). Reiner Content — keine Wett-Garantie.</div>`;
+    html += `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px 14px;">`;
+    for (const s of all) html += _streakRowHtml(s);
+    html += `</div></div>`;
+    panel.innerHTML = html;
+  };
+
+  // Kompakte Top-Serien-Sektion für die Cards (nur starke Serien, max 4).
+  function _strongStreaksSectionHtml(isLiga) {
+    const data = _streaksCache[isLiga ? 'liga' : 'wm'];
+    if (!data) return '';
+    const strong = (data.streaks || []).filter(s => s.strong).slice(0, 4);
+    if (!strong.length) return '';
+    let h = `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <span style="font-size:13px;font-weight:900;">🔥 Starke Serien</span>
+        <span onclick="showSubView('streaks')" style="font-size:11px;color:var(--accent);font-weight:700;cursor:pointer;">alle Serien →</span>
+      </div>`;
+    for (const s of strong) h += _streakRowHtml(s);
+    h += `</div>`;
+    return h;
+  }
+
   async function _loadCards() {
     const panel = document.getElementById(_cardsPanelId);
     if (!panel) return;
@@ -396,6 +481,10 @@
 
     // ─── Pick-Changes Banner (last 24h, only relevant ones) ──
     html += _buildChangesBanner();
+
+    // ─── Starke Serien (28.06.2026, Lucas) — kompakte Content-Sektion bei starken Streaks ──
+    _ensureStreaks(_isLiga, _render);
+    html += _strongStreaksSectionHtml(_isLiga);
 
     // ─── Group Filter ─────────────────────────────────
     html += `<div class="wm-group-filter">`;
@@ -3633,6 +3722,7 @@
       buildKoCard: _buildKoCard,
       buildCard: _buildCard,
       sharpConsensus: _sharpConsensus,
+      streakRowHtml: _streakRowHtml,
       fxIsPast: _fxIsPast,
       setWmData: (d) => { _wmData = d; },
     };
