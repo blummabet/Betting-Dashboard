@@ -106,6 +106,9 @@ jobs:
       - name: 📉 Liga-CLV setzen (Einstieg vs Closing)
         run: python resolve_steam_clv.py || true
 
+      - name: 🎯 Liga-CLV-Bilanz aggregieren (Scoreboard)
+        run: python compute_clv_summary.py || true
+
       - name: 📊 Liga Post-Match-xG ans Fixture (für Prozess-Verdict)
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
@@ -132,6 +135,7 @@ jobs:
           git add liga_lineups.json 2>/dev/null || true
           git add liga_signal_ledger.json 2>/dev/null || true
           git add liga_signal_weights.json 2>/dev/null || true
+          git add liga_clv_summary.json 2>/dev/null || true
           git add liga_status.json 2>/dev/null || true
           git add liga_sharp_moves_log.json 2>/dev/null || true
           git add liga_sharp_dedup.json 2>/dev/null || true

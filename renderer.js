@@ -1719,6 +1719,82 @@ function _renderBayesianWeights() {
     </div>`;
 }
 
+// ── CLV-Bilanz (28.06.2026, Lucas: „CLV als Nordstern") ──────────────────────
+// Lädt {wm_,liga_}clv_summary.json (compute_clv_summary.py) lazy, dataset-aware, re-rendert.
+let _clvLoading = { intl: false, liga: false };
+function _loadClvSummary() {
+  const isLiga = _sharpDataset === 'liga';
+  const gkey = isLiga ? 'LIGA_CLV_SUMMARY' : 'WM_CLV_SUMMARY';
+  if (window[gkey] !== undefined) return;            // schon geladen (auch {} zählt)
+  const lk = isLiga ? 'liga' : 'intl';
+  if (_clvLoading[lk]) return;
+  _clvLoading[lk] = true;
+  const f = isLiga ? 'liga_clv_summary.json' : 'wm_clv_summary.json';
+  fetch(f + '?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
+    .then(j => { window[gkey] = j || {}; })
+    .finally(() => { _clvLoading[lk] = false; renderSharpRadar(); });
+}
+
+// Scoreboard: Ø CLV + % schlägt Schluss + Abdeckung, dann Schnitt nach Markt/Liga/Zeit.
+function _renderClvScoreboard() {
+  const isLiga = _sharpDataset === 'liga';
+  const s = (isLiga ? window.LIGA_CLV_SUMMARY : window.WM_CLV_SUMMARY) || null;
+  const head = `<div class="section-label" style="margin-bottom:10px;">🎯 CLV-Bilanz · schlagen wir die Closing-Linie?</div>`;
+  const wrap = (inner) => head + `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:24px;">${inner}</div>`;
+
+  if (!s || !s.overall) {
+    return wrap(`<div style="color:var(--muted);font-size:12px;text-align:center;">CLV-Bilanz wird geladen …</div>`);
+  }
+  const ov = s.overall;
+  const cov = ov.coverage || {};
+  if (!ov.n) {
+    const hint = cov.resolved
+      ? `${cov.resolved} Spiele aufgelöst, aber noch keine Closing-Linie erfasst — Closing-Capture prüfen.`
+      : `Noch keine aufgelösten Steam-Picks. Die Bilanz füllt sich, sobald Spiele gelaufen sind.`;
+    return wrap(`<div style="color:var(--muted);font-size:12px;text-align:center;line-height:1.6;">${hint}</div>`);
+  }
+
+  const clvCol = (v) => v == null ? 'var(--muted)' : v >= 1 ? '#3fb950' : v >= 0 ? '#a8d48a' : '#f85149';
+  const beatCol = (v) => v == null ? 'var(--muted)' : v >= 52 ? '#3fb950' : v >= 48 ? '#e3b341' : '#f85149';
+  const covCol = (v) => v == null ? 'var(--muted)' : v >= 80 ? '#3fb950' : v >= 50 ? '#e3b341' : '#f85149';
+  const pp = (v) => v == null ? '—' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}pp`;
+  const pct = (v) => v == null ? '—' : `${v.toFixed(0)}%`;
+
+  const tile = (lbl, val, col, sub) => `<div style="flex:1;min-width:120px;background:var(--bg);border:1px solid var(--border);border-left:3px solid ${col};border-radius:10px;padding:12px 14px;">
+    <div style="font-size:20px;font-weight:900;color:${col};line-height:1.1;">${val}</div>
+    <div style="font-size:10px;color:var(--muted);margin-top:5px;text-transform:uppercase;letter-spacing:.4px;">${lbl}</div>
+    ${sub ? `<div style="font-size:10px;color:var(--muted);margin-top:3px;">${sub}</div>` : ''}</div>`;
+
+  let html = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:6px;">
+    ${tile('Ø CLV', pp(ov.avgClvPP), clvCol(ov.avgClvPP), 'pro Pick vs Schluss')}
+    ${tile('schlägt Schluss', pct(ov.pctBeatClose), beatCol(ov.pctBeatClose), `${ov.n} Picks`)}
+    ${tile('Closing-Abdeckung', pct(cov.pct), covCol(cov.pct), `${cov.withClosing}/${cov.resolved}`)}
+  </div>`;
+  html += `<div style="font-size:10.5px;color:var(--muted);margin:8px 2px 14px;line-height:1.5;">Positiver Ø CLV = die Linie lief nach unserem Einstieg weiter in Pick-Richtung → wir schlagen den Schluss (zahlt langfristig, unabhängig vom Einzel-Ergebnis).</div>`;
+
+  // Mini-Tabelle pro Schnitt
+  const miniTable = (title, entries) => {
+    if (!entries.length) return '';
+    const rows = entries.map(([k, a]) => `<tr style="border-top:1px solid var(--border);">
+      <td style="padding:6px 10px;font-size:12px;">${k}</td>
+      <td style="padding:6px 10px;text-align:right;font-family:ui-monospace,monospace;font-weight:700;color:${clvCol(a.avgClvPP)};">${pp(a.avgClvPP)}</td>
+      <td style="padding:6px 10px;text-align:right;font-weight:700;color:${beatCol(a.pctBeatClose)};">${pct(a.pctBeatClose)}</td>
+      <td style="padding:6px 10px;text-align:right;color:var(--muted);font-size:11px;">${a.n}</td>
+    </tr>`).join('');
+    return `<div style="margin-top:14px;">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">${title}</div>
+      <table style="width:100%;border-collapse:collapse;">
+        <tr style="font-size:9px;color:var(--muted);text-transform:uppercase;"><td style="padding:2px 10px;"></td><td style="padding:2px 10px;text-align:right;">Ø CLV</td><td style="padding:2px 10px;text-align:right;">schlägt Schluss</td><td style="padding:2px 10px;text-align:right;">n</td></tr>
+        ${rows}
+      </table></div>`;
+  };
+  html += miniTable('Nach Markt', Object.entries(s.byMarket || {}).sort((a, b) => (b[1].n || 0) - (a[1].n || 0)));
+  html += miniTable(isLiga ? 'Nach Liga' : 'Nach Gruppe', Object.entries(s.byLeague || {}).sort((a, b) => (b[1].n || 0) - (a[1].n || 0)));
+  html += miniTable('Nach Spieltag', (s.byTime || []).map(b => [b.bucket, b]));
+
+  return wrap(html);
+}
+
 // Block C — CLV-Aggregation pro Signal-Familie aus wm_results.json
 function _renderClvAggregation() {
   const results = window.WM_RESULTS_DATA || null;
@@ -2750,6 +2826,7 @@ function renderSharpRadar() {
   }
 
   // ── Assemble ──────────────────────────────────────────────────────────────
+  _loadClvSummary();   // 28.06.2026: CLV-Bilanz lazy laden (dataset-aware), re-rendert wenn da
   mc.innerHTML = `<div style="max-width:960px;margin:0 auto;padding:0 0 60px;">
 
     ${_sharpRenderToggleHtml()}
@@ -2801,6 +2878,7 @@ function renderSharpRadar() {
     ${moversHeroHtml}
 
     ${_renderSharpWatchlist()}
+    ${_renderClvScoreboard()}
     ${_renderBayesianWeights()}
     ${_renderClvAggregation()}
 

@@ -63,6 +63,29 @@ test('Bayesian-Panel (Liga): nur Liga-Signale, KEINE WM-only-Signale', () => {
   assert.ok(!/Weather\/Hitze/.test(html), 'Liga-Panel darf KEIN WM-Wetter zeigen');
 });
 
+test('CLV-Scoreboard: Ø CLV + %beat + Abdeckung + Markt-Tabelle', () => {
+  const w = loadRenderer();
+  w.WM_CLV_SUMMARY = {
+    overall: { n: 10, avgClvPP: 1.5, pctBeatClose: 60, coverage: { withClosing: 10, resolved: 12, pct: 83.3 } },
+    byMarket: { '1X2/DNB': { n: 6, avgClvPP: 2.0, pctBeatClose: 66.7 }, 'Über/Unter': { n: 4, avgClvPP: 0.5, pctBeatClose: 50 } },
+    byLeague: { A: { n: 10, avgClvPP: 1.5, pctBeatClose: 60 } },
+    byTime: [{ bucket: '1', n: 5, avgClvPP: 1.0, pctBeatClose: 60 }],
+  };
+  const html = w._renderClvScoreboard();
+  assert.match(html, /CLV-Bilanz/, 'Überschrift');
+  assert.match(html, /\+1\.5pp/, 'Ø CLV-Kachel');
+  assert.match(html, /83%/, 'Closing-Abdeckung %');
+  assert.match(html, /Nach Markt/, 'Markt-Tabelle');
+  assert.match(html, /Über\/Unter/, 'Markt-Zeile');
+});
+
+test('CLV-Scoreboard: keine aufgelösten Picks → freundlicher Hinweis', () => {
+  const w = loadRenderer();
+  w.WM_CLV_SUMMARY = { overall: { n: 0, coverage: { resolved: 0, withClosing: 0, pct: null } }, byMarket: {}, byLeague: {}, byTime: [] };
+  const html = w._renderClvScoreboard();
+  assert.match(html, /Noch keine aufgelösten Steam-Picks/);
+});
+
 test('Sharp Radar: Mover-Hero (Top-5) + Snapshot-KPI rendern (abgeschaut bei SteamWatch)', () => {
   const w = loadFull();
   w.LEAGUES = {};                                  // Legacy-Liga-Loop leer halten
