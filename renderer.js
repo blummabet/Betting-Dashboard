@@ -2214,7 +2214,12 @@ function renderSharpRadar() {
   // ── Hero: „Größte Mover" Top-5 (28.06.2026, abgeschaut bei SteamWatch) ────
   // Scanbare Headline ganz oben: gebackte Seite + Quoten-Move % + Open→Jetzt. Rein nach
   // Magnitude (keine Conviction-Sortierung) — der schnelle Überblick vor der Detail-Liste.
-  const _shortName = (s) => String(s || '').replace(/^\S+\s/, '').trim();   // "🇨🇮 Elfenbeinküste" → "Elfenbeinküste"
+  // Sauberer Teamname: <img>-Logos (Liga) UND führende Flag-Emojis (WM) raus → reiner Name.
+  // (28.06.2026 Fix: Liga-Namen sind "<img src=...> Chelsea" → alte Variante zerlegte das HTML.)
+  const _cleanName = (s) => String(s || '')
+    .replace(/<[^>]*>/g, '')                                                    // HTML (Logo-img) raus
+    .replace(/^(?:[\u{1F1E6}-\u{1F1FF}\u{2600}-\u{27BF}\u{1F000}-\u{1FAFF}️‍\s]+)/u, '')  // führende Flag/Emoji
+    .trim();
   const _sideLabel = (lbl, hn, an) => {
     if (lbl === '1') return hn;
     if (lbl === '2') return an;
@@ -2235,7 +2240,7 @@ function renderSharpRadar() {
         <span style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">gebackte Seite · Quoten-Move · Open→Jetzt</span>
       </div>
       ${heroMovers.map((f, i) => {
-        const hn = _shortName(f.m.home), an = _shortName(f.m.away);
+        const hn = _cleanName(f.m.home), an = _cleanName(f.m.away);
         const head = [...f.mvRows].sort((x, y) => y.ppShift - x.ppShift)[0];  // stärkste positive Bewegung = gebackt
         const side = _sideLabel(head.label, hn, an);
         const oddPct = head.oddOpen > 1 ? ((head.oddCurr - head.oddOpen) / head.oddOpen * 100) : 0;
@@ -2243,18 +2248,14 @@ function renderSharpRadar() {
         const col = dropped ? '#3fb950' : '#f85149';
         const arrow = dropped ? '↓' : '↑';
         const isT = _isToday(f.m.date);
-        const isWmH = f.lk === 'wm2026' || f.lk === 'WM2026' || (_hist && _hist[`${f.m.home}-${f.m.away}`]);
         const dateChip = isT ? '📅 Heute' : (f.kicked ? '🔒 ' : '') + _fmtDate(f.m.date);
-        const inner = `<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;${i < heroMovers.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
+        return `<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;${i < heroMovers.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
             <span style="font-size:11px;font-weight:900;color:var(--muted);width:18px;flex-shrink:0;">${i + 1}</span>
             <span style="flex:1;min-width:0;font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${hn} <span style="color:var(--muted);font-weight:400;">vs</span> ${an}</span>
             <span style="font-size:11px;font-weight:800;color:${col};background:rgba(255,255,255,0.04);border:1px solid ${col}40;border-radius:6px;padding:2px 8px;white-space:nowrap;">${side} ${arrow}${Math.abs(oddPct).toFixed(1)}%</span>
             <span style="font-size:11px;color:var(--muted);white-space:nowrap;font-family:ui-monospace,monospace;">${head.oddOpen.toFixed(2)}→<span style="color:${col};font-weight:700;">${head.oddCurr.toFixed(2)}</span></span>
             <span style="font-size:9px;color:${isT ? '#00d4a1' : 'var(--muted)'};white-space:nowrap;min-width:54px;text-align:right;">${dateChip}</span>
           </div>`;
-        return isWmH
-          ? `<a href="matches/wm-match-v2.html?m=wm-${f.m.home.toLowerCase()}-vs-${f.m.away.toLowerCase()}-${f.m.date.split('.').reverse().join('-')}" style="display:block;text-decoration:none;color:inherit;">${inner}</a>`
-          : inner;
       }).join('')}
     </div>` : '';
 

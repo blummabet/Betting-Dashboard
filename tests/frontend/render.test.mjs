@@ -87,6 +87,30 @@ test('Sharp Radar: Mover-Hero (Top-5) + Snapshot-KPI rendern (abgeschaut bei Ste
   assert.match(html, /heute · live/, 'Snapshot-KPI muss heutige Snapshots als live markieren');
 });
 
+test('Mover-Hero: Liga-Logos (<img>) werden sauber gestrippt, kein kaputter Link/Attr', () => {
+  const w = loadFull();
+  w.LEAGUES = {};
+  const near = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10);
+  const tsOld = new Date(Date.now() - 2 * 86400000).toISOString();
+  const tsNow = new Date().toISOString();
+  // Liga rendert Teamnamen als "<img src=...> Name" (Logo statt Flag) + Mehrwort-Name
+  const logo = '<img src="https://media.api-sports.io/football/teams/49.png" style="width:18px">';
+  w.WM2026_DATA = { groups: { A: {
+    teams: [{ id: 'che', name: 'Chelsea', flag: logo },
+            { id: 'cry', name: 'Crystal Palace', flag: logo }],
+    fixtures: [{ home: 'che', away: 'cry', date: near, time: '17:00', matchday: 1, result: null }],
+  } } };
+  w.WM2026_ODDS_HISTORY = { 'che-cry': [
+    { ts: tsOld, hw: 2.23, dr: 3.40, aw: 3.10 },
+    { ts: tsNow, hw: 2.00, dr: 3.40, aw: 3.50 },
+  ] };
+  w.renderSharpRadar();
+  const html = w.document.getElementById('mainContent').innerHTML;
+  assert.match(html, /Chelsea <span[^>]*>vs<\/span> Crystal Palace/, 'Saubere Namen ohne Logo-HTML/Mehrwort-Verstümmelung');
+  assert.ok(!/href="[^"]*<img/.test(html), 'KEIN <img> darf in ein href-Attribut lecken');
+  assert.ok(!/wm-<img/.test(html), 'Kein kaputter Event-Page-Link aus Logo-HTML');
+});
+
 test('Liga-Linien: nur nächste ~3 Wochen, ferne Spiele (2027) gefiltert', () => {
   const w = loadRenderer();
   const near = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10);
