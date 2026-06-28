@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-27T17:56:54Z",
+  "generatedAt": "2026-06-27T20:53:52Z",
   "windowDays": 2,
   "upcoming": 6,
   "signalsFired": [
@@ -25,7 +25,7 @@
   "signalsTotal": 24,
   "perSignal": {
     "lead_lag_bias": 12,
-    "public_static_bias": 16,
+    "public_static_bias": 18,
     "travel_burden": 77,
     "injury": 3,
     "form_trend": 114,
@@ -34,7 +34,7 @@
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 37,
-    "lineup_signal": 20,
+    "lineup_signal": 21,
     "apif_predictions": 10,
     "weather_signal": 17,
     "incentive_signal": 24,
@@ -59,9 +59,10 @@
     "🧠 Signal 'coach_change' feuert nicht (kontextabhängig)",
     "🧠 Signal 'transfer_shift' feuert nicht (kontextabhängig)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
+    "🛡️ Aufstellung da vor Anpfiff (T-90min): 1 Fehler (z.B. ENG-PAN: Anpfiff in 6min, KEINE Aufstellung)",
     "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 5 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
     "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 4 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
-    "🛡️ Soft-Eröffnung echt erfasst: 3 Fehler (z.B. ZAF-CAN: Soft bewegte sich 4.75→5.0, aber Opening==Jetzt (5.2) — nicht eingefroren)"
+    "🛡️ Soft-Eröffnung echt erfasst: 4 Fehler (z.B. ZAF-CAN: Soft bewegte sich 4.75→5.0, aber Opening==Jetzt (5.2) — nicht eingefroren)"
   ],
   "oks": [
     "🌡️ Weather: 6 Spiele mit Forecast",
@@ -69,9 +70,9 @@
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 78 Fixtures, Ø 111.2 Snapshots",
+    "📉 Odds-History: 78 Fixtures, Ø 112.2 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $356.82",
+    "💼 Poly-Balance: $366.84",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -240,9 +241,11 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "ENG-PAN: Anpfiff in 6min, KEINE Aufstellung"
+      ],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -324,7 +327,7 @@
         "BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet",
         "JPN-SWE Heimsieg @1.91: sichere Linie Doppelte Chance — 1X @1.35 verfügbar (≥1.35), nicht abgeleitet",
         "DZA-AUT Unter 1.5 Tore @2.06: sichere Linie Unter 2.5 Tore @1.38 verfügbar (≥1.35), nicht abgeleitet",
-        "POR-COL Unter 2.5 Tore @1.91: sichere Linie Unter 3.5 Tore @1.42 verfügbar (≥1.35), nicht abgeleitet"
+        "POR-COL Unter 2.5 Tore @1.91: sichere Linie Unter 3.5 Tore @1.46 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -405,11 +408,12 @@
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 4,
       "failures": [
         "ZAF-CAN: Soft bewegte sich 4.75→5.0, aber Opening==Jetzt (5.2) — nicht eingefroren",
+        "NED-MAR: Soft bewegte sich 2.07→2.1, aber Opening==Jetzt (2.11) — nicht eingefroren",
         "BRA-JPN: Soft bewegte sich 1.74→1.7, aber Opening==Jetzt (1.68) — nicht eingefroren",
-        "CIV-NOR: Soft bewegte sich 4.1→3.6, aber Opening==Jetzt (3.75) — nicht eingefroren"
+        "CIV-NOR: Soft bewegte sich 4.1→3.4, aber Opening==Jetzt (3.75) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
