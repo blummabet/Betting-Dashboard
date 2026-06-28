@@ -42,6 +42,20 @@ test('Signal-Grid rendert neue Liga-Signale mit Label + Begründung', () => {
   assert.match(html, /Engine-Signale/);
 });
 
+test('_fxIsPast: kickoff entscheidet, nicht das Spieltag-Datum (Nach-Mitternacht-Fix)', () => {
+  const t = loadCards().__wmCardTest;
+  const today = new Date().toISOString().slice(0, 10);
+  const future = new Date(Date.now() + 86400000).toISOString().replace(/\.\d+Z$/, 'Z');
+  const past = new Date(Date.now() - 86400000).toISOString().replace(/\.\d+Z$/, 'Z');
+  // Spät-Anpfiff: Spieltag-Datum gestern, aber Anpfiff erst in der Zukunft → NICHT gespielt
+  assert.equal(t.fxIsPast({ date: '2000-01-01', kickoff: future, result: null }, today), false,
+    'Spiel mit zukünftigem Anpfiff darf nicht „gespielt" sein, auch wenn date < heute');
+  // Anpfiff vorbei → gespielt
+  assert.equal(t.fxIsPast({ date: '2000-01-01', kickoff: past, result: null }, today), true);
+  // Endstatus zählt immer als gespielt
+  assert.equal(t.fxIsPast({ date: '2999-01-01', kickoff: future, result: { status: 'FT' } }, today), true);
+});
+
 test('KO-Card ist reich: Pick + Conviction + Signal-Grid + Form', () => {
   const w = loadCards();
   const t = w.__wmCardTest;

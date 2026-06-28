@@ -475,9 +475,7 @@
     // ── Vergangene Spiele ausblenden (17.06.2026) ─────
     // Default: gespielte Spiele (Datum < heute ODER Endstatus) raus → weniger Scrollen.
     // Toggle-Button blendet sie bei Bedarf wieder ein.
-    const _FINAL = ['FT', 'AET', 'PEN', 'AWD', 'WO'];
-    const _isPlayed = (fx) =>
-      fx.date < todayIso || _FINAL.includes(String((fx.result || {}).status || '').toUpperCase());
+    const _isPlayed = (fx) => _fxIsPast(fx, todayIso);   // kickoff-basiert (27.06.2026)
     const _pastCount = filtered.filter(_isPlayed).length;
     if (!_showPast && _pastCount > 0) {
       filtered = filtered.filter(fx => !_isPlayed(fx));
@@ -710,6 +708,19 @@
     </div>`;
   }
 
+  // Spiel „vergangen/gespielt"? — IMMER über den Anpfiff (kickoff) entscheiden, nicht über das
+  // Spieltag-Datum (27.06.2026, Lucas). Spät-Anpfiff-Spiele (z.B. 04:00 Wien = nächster UTC-Tag)
+  // haben date=Vortag, kickoff=Folgetag → `date < heute` markierte sie fälschlich „GESPIELT",
+  // obwohl noch nicht angepfiffen. Endstatus (FT/AET/…) zählt immer als gespielt.
+  const _PAST_FINAL = ['FT', 'AET', 'PEN', 'AWD', 'WO'];
+  function _fxIsPast(fx, todayIso) {
+    const status = String((fx.result || {}).status || '').toUpperCase();
+    if (_PAST_FINAL.includes(status)) return true;
+    const ko = fx && fx.kickoff ? new Date(String(fx.kickoff).replace('Z', '+00:00')) : null;
+    if (ko && !isNaN(ko.getTime())) return ko.getTime() <= Date.now();
+    return (fx && fx.date || '') < todayIso;   // Fallback ohne kickoff
+  }
+
   // ─────────────────────────────────────────────────────
   //  CARD BUILDER — Community-First Layout (Pick/Story/Confidence)
   // ─────────────────────────────────────────────────────
@@ -720,7 +731,7 @@
     // sonst rendert die Card sie weiter als offenen Pick statt als Endstand (Lucas).
     const _finalStatus = ['FT', 'AET', 'PEN', 'AWD', 'WO'].includes(
       ((fx.result && fx.result.status) || '').toUpperCase());
-    const isPlayed  = fx.date < todayIso || _finalStatus;
+    const isPlayed  = _fxIsPast(fx, todayIso);   // kickoff-basiert (27.06.2026)
     const isToday   = fx.date === todayIso;
 
     // Pick selection: pick BET/ABWÄGEN with highest edge as hero
@@ -1278,7 +1289,7 @@
 
     const _finalStatus = ['FT', 'AET', 'PEN', 'AWD', 'WO'].includes(
       ((fx.result && fx.result.status) || '').toUpperCase());
-    const isPlayed = fx.date < todayIso || _finalStatus;
+    const isPlayed = _fxIsPast(fx, todayIso);   // kickoff-basiert (27.06.2026)
     const isToday  = fx.date === todayIso;
 
     // Live-Picks (BET/ABWÄGEN, ohne ausgeschlossene/redundante AH-Linien) —
@@ -3513,6 +3524,7 @@
     window.__wmCardTest = {
       engineSignalGridHtml: _engineSignalGridHtml,
       buildKoCard: _buildKoCard,
+      fxIsPast: _fxIsPast,
       setWmData: (d) => { _wmData = d; },
     };
   }
