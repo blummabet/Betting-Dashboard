@@ -550,9 +550,14 @@
       const awayForm  = form[fx.away]   || null;
       const polyFix   = _polyLookup[`${fx.home}-${fx.away}`] || null;
       try {
-        return fx.isKO
-          ? _buildKoCard(fx, homeTeam, awayTeam, fxOdds, fxPicks, polyFix, todayIso)
-          : _buildCard(fx, gData, homeTeam, awayTeam, fxOdds, fxPicks, fxPPicks, fxStand, homeSquad, awaySquad, homeForm, awayForm, polyFix, todayIso);
+        // (28.06.2026, Lucas) Ausgeloste + bepickte KO-Spiele laufen 1:1 durch den vollen
+        // _buildCard (Quoten-Stripes, Polymarket-Box, Story — wie Gruppenspiele). Nur offene
+        // Paarungen / noch quotenlose KO-Spiele behalten die schlanke Vorschau-Card.
+        const _koRich = fx.isKO && fx.koData && fx.koData.bothResolved && _wmLivePicks(fxPicks).length > 0;
+        if (fx.isKO && !_koRich) {
+          return _buildKoCard(fx, homeTeam, awayTeam, fxOdds, fxPicks, polyFix, todayIso);
+        }
+        return _buildCard(fx, gData, homeTeam, awayTeam, fxOdds, fxPicks, fxPPicks, fxStand, homeSquad, awaySquad, homeForm, awayForm, polyFix, todayIso);
       } catch (err) {
         console.warn('Card-Build fehlgeschlagen', fx && (fx.home + '-' + fx.away), err);
         return '';
@@ -929,11 +934,16 @@
       <div class="cc-vs">VS</div>
       <div class="cc-team"><span class="cc-flag">${away.flag}</span>${away.name}</div>
     </div>`;
-    const groupLabel = (gData.name || ('Gruppe ' + fx.groupKey));
+    // (28.06.2026, Lucas) KO-Spiele laufen jetzt durch den vollen _buildCard → Header KO-bewusst:
+    // Runden-Label statt „Gruppe X · ST Y" (KO hat keine Gruppe/Spieltag-Nummer).
+    const _ko = fx.isKO ? (fx.koData || {}) : null;
+    const groupLabel = _ko
+      ? `🏆 ${_ko.roundLabel || KO_ROUND_LABELS[_ko.round] || 'K.O.-Runde'}${_ko.matchNo ? ` · Spiel ${_ko.matchNo}` : ''}`
+      : `${gData.name || ('Gruppe ' + fx.groupKey)} · ST ${fx.matchday}`;
     const dateMain   = _fmtKickoffMain(fx);          // "So, 14. Jun · 00:00 Uhr" (Wien, aus kickoff)
     const localTime  = _venueLocalFromKickoff(fx);   // " · 18:00 NY" (Venue-Local, aus kickoff)
     html += `<div class="cc-meta">
-      <span>${groupLabel} · ST ${fx.matchday}</span>
+      <span>${groupLabel}</span>
       <span class="cc-dot"></span>
       <span>${dateMain}${localTime ? `<span class="cc-local-tz">${localTime}</span>` : ''}</span>
       ${fx.venue ? `<span class="cc-dot"></span><span class="cc-venue">📍 ${fx.venue}</span>` : ''}
@@ -3589,6 +3599,7 @@
     window.__wmCardTest = {
       engineSignalGridHtml: _engineSignalGridHtml,
       buildKoCard: _buildKoCard,
+      buildCard: _buildCard,
       fxIsPast: _fxIsPast,
       setWmData: (d) => { _wmData = d; },
     };

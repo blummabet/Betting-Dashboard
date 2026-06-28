@@ -117,6 +117,30 @@ test('Liga-Cards kuratiert: Alle→Pro-Liga-Top-3, Liga-Klick→beste, Spieltag�
   assert.match(html, /wm-date-divider/, 'Vollansicht zeigt Datums-Trenner');
 });
 
+test('Bepicktes KO-Spiel läuft 1:1 durch _buildCard (Runden-Header, kein „ST", kein Crash)', () => {
+  const w = loadCards();
+  const t = w.__wmCardTest;
+  t.setWmData({ form: { CIV: { last5: ['W','W','D','W','L'], avgScored: 1.8 }, NOR: { last5: ['L','W','W','D','W'], avgScored: 1.5 } } });
+  const fx = {
+    home: 'CIV', away: 'NOR', date: '2026-06-30', time: '17:00', kickoff: '2026-06-30T15:00:00Z',
+    matchday: 'R32', groupKey: 'KO', isKO: true, result: null,
+    koData: { round: 'R32', roundLabel: 'Sechzehntelfinale', matchNo: 78, bothResolved: true, home: 'CIV', away: 'NOR' },
+    groupData: { name: 'K.O.-Runde', teams: [{ id:'CIV', name:'Elfenbeinküste', flag:'🇨🇮', elo:1700 }, { id:'NOR', name:'Norwegen', flag:'🇳🇴', elo:1720 }] },
+  };
+  const gData = fx.groupData;
+  const home = gData.teams[0], away = gData.teams[1];
+  const odds = { hw: 2.40, dr: 3.20, aw: 3.00 };
+  const picks = [{ market: 'Doppelte Chance — 1X', verdict: 'BET', odds: 1.45, convictionScore: 7,
+                   signalAdjustmentPP: 1.0, signals: [{ name: 'form_trend', score: 0.6, evidence: 'Heimform' }] }];
+  // standing = null (KO hat keine Tabelle) → darf NICHT crashen
+  const html = t.buildCard(fx, gData, home, away, odds, picks, null, null, null, null,
+    gData.teams[0] && { last5:['W'] }, null, null, '2026-06-27');
+  assert.match(html, /Sechzehntelfinale/, 'KO-Runden-Label im Header');
+  assert.ok(!/· ST R32/.test(html), 'Kein „ST R32" mehr (KO hat keinen Spieltag)');
+  assert.match(html, /Doppelte Chance/, 'Pick-Markt sichtbar (volle Card)');
+  assert.match(html, /Elfenbeinküste/);
+});
+
 test('KO-Card ist reich: Pick + Conviction + Signal-Grid + Form', () => {
   const w = loadCards();
   const t = w.__wmCardTest;
