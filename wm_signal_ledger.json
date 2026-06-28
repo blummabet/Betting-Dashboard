@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-28T06:16:08Z",
-    "total_records": 132
+    "updated_at": "2026-06-28T06:31:11Z",
+    "total_records": 135
   },
   "records": [
     {
@@ -2950,6 +2950,73 @@
       "convictionScore": 5,
       "lateEntry": true,
       "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "J-3-ARG-JOR|Beide Teams treffen — Nein",
+      "matchKey": "J-3-ARG-JOR",
+      "market": "Beide Teams treffen — Nein",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.39
+        }
+      ],
+      "resolvedAt": "2026-06-28T06:24:44Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "J-3-DZA-AUT|Beide Teams treffen — Nein",
+      "matchKey": "J-3-DZA-AUT",
+      "market": "Beide Teams treffen — Nein",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.66
+        },
+        {
+          "name": "xg_strength",
+          "score": -6.0
+        }
+      ],
+      "resolvedAt": "2026-06-28T06:24:44Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "J-3-DZA-AUT|Unter 2.5 Tore",
+      "matchKey": "J-3-DZA-AUT",
+      "market": "Unter 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": 1.0
+        },
+        {
+          "name": "form_trend",
+          "score": -1.47
+        },
+        {
+          "name": "xg_strength",
+          "score": -0.9
+        }
+      ],
+      "resolvedAt": "2026-06-28T06:24:44Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": true,
+      "processVerdict": "UNLUCKY"
     },
     {
       "key": "K-1-POR-COD|Unter 3.5 Tore",
