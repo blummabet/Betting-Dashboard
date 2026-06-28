@@ -35,8 +35,9 @@ dataset-bewusst · LeaguePressureSignal · Post-Match-xG-Re-Learning · Backtest
 - ⛔ `referee_tendency` — KEIN Quick-Signal: braucht zuerst den **Karten-Markt** (Schiri wird nicht
   geholt — kein referee-Feld; kein fetch_wm_cards; kein Karten-Markt in der Engine). Eigener Block:
   Schiri-Daten + Karten-Quoten + Pick/Resolve, DANN das Signal. Scope-Disziplin: ohne Markt = Lärm.
-- ⏳ News-Signal (niedrig) — erst probieren, was API-Football „News" für die 5 Ligen liefert
-  (ein Probe-Call mit Key im Workflow); nur bauen bei Datenqualität + hartem Engine-Hook.
+- ❌ News-Signal — VERWORFEN (27.06.2026). Probe (fetch_liga_news_probe.py) ergab: API-Football hat
+  KEINEN /news-Endpoint ("The News endpoint does not exist.", results=0 bei allen Varianten). Über
+  diese API nicht machbar. Probe + news-probe.yml entfernt; Evidenz in liga_news_probe.json + LIGA_SIGNALS.md C8.
 
 ### ⏳ Märkte
 - ⏳ Player-Props + Corner-Markt + Engine-Hooks (`corner_rate`-Signal).
