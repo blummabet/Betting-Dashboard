@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-28T10:24:28Z",
+  "generatedAt": "2026-06-28T17:03:04Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -25,12 +25,12 @@
   "signalsTotal": 24,
   "perSignal": {
     "lead_lag_bias": 13,
-    "public_static_bias": 19,
+    "public_static_bias": 18,
     "travel_burden": 77,
     "injury": 3,
-    "form_trend": 118,
+    "form_trend": 121,
     "h2h_pattern": 7,
-    "xg_strength": 107,
+    "xg_strength": 111,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 37,
@@ -39,9 +39,9 @@
     "weather_signal": 17,
     "incentive_signal": 24,
     "altitude_signal": 3,
-    "chance_creation": 33,
+    "chance_creation": 37,
     "form_rating": 9,
-    "freshness_leg": 7,
+    "freshness_leg": 9,
     "smart_money": 31,
     "league_pressure": 0,
     "fixture_congestion": 1,
@@ -62,14 +62,15 @@
     "🧠 Signal 'transfer_shift' feuert nicht (kontextabhängig)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
     "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 8 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
-    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)"
+    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
+    "🛡️ Soft-Eröffnung echt erfasst: 2 Fehler (z.B. BRA-JPN: Soft bewegte sich 1.74→1.67, aber Opening==Jetzt (1.68) — nicht eingefroren)"
   ],
   "oks": [
     "🎲 Pinnacle-Odds: frischeste 0.1h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 81 Fixtures, Ø 111.2 Snapshots",
+    "📉 Odds-History: 81 Fixtures, Ø 112.4 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
     "💼 Poly-Balance: $378.31",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -217,6 +218,15 @@
       "nFail": 0,
       "failures": [],
       "note": "CLV (Entry vs Pinnacle-Closing) ist DER Frühindikator für +EV; ohne ihn lässt sich nicht sagen ob die Strategie Wert holt. Lücke = Closing-Snapshot wird nicht zuverlässig bei Anpfiff eingefroren (pinnClose/polyClose). Schließt an den Closing-In-Play-Guard an — die Write-Seite muss bei Anpfiff einfrieren."
+    },
+    {
+      "id": "clv_card_coverage",
+      "label": "CLV: Closing-Abdeckung der Steam-Card-Picks",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "resolve_steam_clv + Closing-Capture prüfen (closing_is_prematch / Anpfiff-Snapshot). Ohne Closing-Linie kann compute_clv_summary den Pick nicht werten."
     },
     {
       "id": "edge_consistent",
@@ -397,9 +407,12 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 2,
+      "failures": [
+        "BRA-JPN: Soft bewegte sich 1.74→1.67, aber Opening==Jetzt (1.68) — nicht eingefroren",
+        "AUS-EGY: Soft bewegte sich 3.75→3.1, aber Opening==Jetzt (3.25) — nicht eingefroren"
+      ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
