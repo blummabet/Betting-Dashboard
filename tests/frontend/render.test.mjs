@@ -7,6 +7,7 @@ import { readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 
 const RENDERER = new URL('../../renderer.js', import.meta.url);
+const PICK_ENGINE = new URL('../../pick-engine.js', import.meta.url);
 
 function loadRenderer() {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="mainContent"></div></body>', {
@@ -14,6 +15,19 @@ function loadRenderer() {
   });
   const { window } = dom;
   window.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  window.eval(readFileSync(RENDERER, 'utf8'));
+  return window;
+}
+
+// Voller Loader: pick-engine.js (computeLineMovement, parseGermanDate …) + renderer.js.
+// Nötig für den kompletten renderSharpRadar-Durchlauf (Hero + KPIs).
+function loadFull() {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="mainContent"></div></body>', {
+    url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true,
+  });
+  const { window } = dom;
+  window.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  window.eval(readFileSync(PICK_ENGINE, 'utf8'));
   window.eval(readFileSync(RENDERER, 'utf8'));
   return window;
 }
@@ -47,6 +61,30 @@ test('Bayesian-Panel (Liga): nur Liga-Signale, KEINE WM-only-Signale', () => {
   assert.match(html, /Liga-Druck/, 'Liga-Panel muss league_pressure (Liga-Druck) zeigen');
   assert.ok(!/Travel-Burden/.test(html), 'Liga-Panel darf KEIN WM-Travel-Burden zeigen');
   assert.ok(!/Weather\/Hitze/.test(html), 'Liga-Panel darf KEIN WM-Wetter zeigen');
+});
+
+test('Sharp Radar: Mover-Hero (Top-5) + Snapshot-KPI rendern (abgeschaut bei SteamWatch)', () => {
+  const w = loadFull();
+  w.LEAGUES = {};                                  // Legacy-Liga-Loop leer halten
+  const near = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10);
+  const tsOld = new Date(Date.now() - 2 * 86400000).toISOString();
+  const tsNow = new Date().toISOString();          // Snapshot „heute" → live-Zähler
+  w.WM2026_DATA = { groups: { A: {
+    teams: [{ id: 'civ', name: 'Elfenbeinküste', flag: '🇨🇮' },
+            { id: 'nor', name: 'Norwegen', flag: '🇳🇴' }],
+    fixtures: [{ home: 'civ', away: 'nor', date: near, time: '17:00', matchday: 1, result: null }],
+  } } };
+  w.WM2026_ODDS_HISTORY = { 'civ-nor': [
+    { ts: tsOld, hw: 4.31, dr: 3.50, aw: 1.90 },
+    { ts: tsNow, hw: 3.67, dr: 3.50, aw: 2.08 },   // Heim-Quote fällt → Heim gebackt
+  ] };
+  w.renderSharpRadar();
+  const html = w.document.getElementById('mainContent').innerHTML;
+  assert.match(html, /Größte Mover · Top/, 'Mover-Hero-Strip muss erscheinen');
+  assert.match(html, /Elfenbeinküste/, 'Hero muss das Top-Mover-Spiel zeigen');
+  assert.match(html, /4\.31→/, 'Hero muss Open→Jetzt zeigen');
+  assert.match(html, /📸/, 'Snapshot-KPI muss erscheinen');
+  assert.match(html, /heute · live/, 'Snapshot-KPI muss heutige Snapshots als live markieren');
 });
 
 test('Liga-Linien: nur nächste ~3 Wochen, ferne Spiele (2027) gefiltert', () => {

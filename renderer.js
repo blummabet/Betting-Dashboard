@@ -2049,7 +2049,8 @@ function renderSharpRadar() {
         allFixtures.push({
           m: mFake, lk: 'WM2026', L: { name: '🌍 WM 2026', flag: '🌍' },
           pm: null, oddsOpen, oddsClosing: null, oddsCurrent,
-          oddsRef: oddsCurrent, openTs, kicked, mvRows, maxMov
+          oddsRef: oddsCurrent, openTs, kicked, mvRows, maxMov,
+          snaps: snapshots   // (28.06.2026) für Snapshot-Dichte-KPI (Datenfrische sichtbar machen)
         });
       }
     }
@@ -2070,6 +2071,19 @@ function renderSharpRadar() {
     }
   }
   const avgVig = vigCount ? (vigSum / vigCount).toFixed(1) : '—';
+
+  // Snapshot-Dichte (28.06.2026, abgeschaut bei SteamWatch): wie viele Pinnacle-Snapshots haben
+  // wir erfasst? Macht sichtbar, dass die 15-min-Erfassung wirklich live ist. Heute + Fenster gesamt.
+  let snapTotal = 0, snapToday = 0;
+  const _todayStr = new Date().toISOString().slice(0, 10);
+  for (const f of allFixtures) {
+    if (!Array.isArray(f.snaps)) continue;
+    snapTotal += f.snaps.length;
+    for (const s of f.snaps) {
+      if (s && typeof s.ts === 'string' && s.ts.slice(0, 10) === _todayStr) snapToday++;
+    }
+  }
+
   const bigMoverLabel = biggestMover && biggestMover.maxMov > 0
     ? `${biggestMover.m.home.split(' ').slice(-1)[0]} – ${biggestMover.m.away.split(' ').slice(-1)[0]}: ${biggestMover.maxMov}pp`
     : '—';
@@ -2085,6 +2099,7 @@ function renderSharpRadar() {
     { ic: '📡', lbl: 'Mit Linienbeweg.', val: withMovement.length + ' Spiele',  col: mvRateCol, sub: mvRate.toFixed(1) + '% aller Spiele' },
     { ic: '🔒', lbl: 'Closing-Daten',    val: closedWithMv.length + ' gespielt',col: '#484f58', sub: '' },
     { ic: '⚡', lbl: 'Größter Mover',    val: bigMoverLabel,                     col: bigMoverCol, sub: bigMoverPP >= 4 ? '→ ACT' : bigMoverPP >= 2 ? '→ WATCH' : '' },
+    { ic: '📸', lbl: 'Snapshots',        val: snapTotal.toLocaleString('de-AT'), col: snapToday > 0 ? '#3fb950' : '#484f58', sub: snapToday > 0 ? snapToday.toLocaleString('de-AT') + ' heute · live' : 'Erfassung alle 15 Min' },
   ];
   const kpiHtml = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px;">
     ${kpiCards.map(({ic, lbl, val, col, sub}) => `<div style="background:var(--card);border:1px solid var(--border);border-left:3px solid ${col};border-radius:10px;padding:13px 15px;">
@@ -2195,6 +2210,53 @@ function renderSharpRadar() {
       <div style="display:flex;gap:5px;flex-wrap:wrap;">${rowHtml}</div>
     ${wrapEnd}`;
   }).join('') : `<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Noch keine signifikante Linienbewegung diese Woche (≥3pp) — Opening-Snapshots werden täglich geladen.</div>`;
+
+  // ── Hero: „Größte Mover" Top-5 (28.06.2026, abgeschaut bei SteamWatch) ────
+  // Scanbare Headline ganz oben: gebackte Seite + Quoten-Move % + Open→Jetzt. Rein nach
+  // Magnitude (keine Conviction-Sortierung) — der schnelle Überblick vor der Detail-Liste.
+  const _shortName = (s) => String(s || '').replace(/^\S+\s/, '').trim();   // "🇨🇮 Elfenbeinküste" → "Elfenbeinküste"
+  const _sideLabel = (lbl, hn, an) => {
+    if (lbl === '1') return hn;
+    if (lbl === '2') return an;
+    if (lbl === 'X') return 'Remis';
+    const num = String(lbl).replace(/\D/g, '').replace('25', '2.5').replace('35', '3.5').replace('15', '1.5');
+    if (/^o/i.test(lbl)) return 'Über ' + num;
+    if (/^u/i.test(lbl)) return 'Unter ' + num;
+    return lbl;
+  };
+  const heroMovers = allFixtures
+    .filter(f => f.mvRows && f.maxMov >= 3 && _radarRelevant(f.m))
+    .sort((a, b) => b.maxMov - a.maxMov)
+    .slice(0, 5);
+  const moversHeroHtml = heroMovers.length ? `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:22px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+        <span style="font-size:13px;font-weight:900;color:var(--text);">🔥 Größte Mover · Top ${heroMovers.length}</span>
+        <span style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">gebackte Seite · Quoten-Move · Open→Jetzt</span>
+      </div>
+      ${heroMovers.map((f, i) => {
+        const hn = _shortName(f.m.home), an = _shortName(f.m.away);
+        const head = [...f.mvRows].sort((x, y) => y.ppShift - x.ppShift)[0];  // stärkste positive Bewegung = gebackt
+        const side = _sideLabel(head.label, hn, an);
+        const oddPct = head.oddOpen > 1 ? ((head.oddCurr - head.oddOpen) / head.oddOpen * 100) : 0;
+        const dropped = head.oddCurr < head.oddOpen;            // Quote gefallen = Geld auf diese Seite
+        const col = dropped ? '#3fb950' : '#f85149';
+        const arrow = dropped ? '↓' : '↑';
+        const isT = _isToday(f.m.date);
+        const isWmH = f.lk === 'wm2026' || f.lk === 'WM2026' || (_hist && _hist[`${f.m.home}-${f.m.away}`]);
+        const dateChip = isT ? '📅 Heute' : (f.kicked ? '🔒 ' : '') + _fmtDate(f.m.date);
+        const inner = `<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;${i < heroMovers.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
+            <span style="font-size:11px;font-weight:900;color:var(--muted);width:18px;flex-shrink:0;">${i + 1}</span>
+            <span style="flex:1;min-width:0;font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${hn} <span style="color:var(--muted);font-weight:400;">vs</span> ${an}</span>
+            <span style="font-size:11px;font-weight:800;color:${col};background:rgba(255,255,255,0.04);border:1px solid ${col}40;border-radius:6px;padding:2px 8px;white-space:nowrap;">${side} ${arrow}${Math.abs(oddPct).toFixed(1)}%</span>
+            <span style="font-size:11px;color:var(--muted);white-space:nowrap;font-family:ui-monospace,monospace;">${head.oddOpen.toFixed(2)}→<span style="color:${col};font-weight:700;">${head.oddCurr.toFixed(2)}</span></span>
+            <span style="font-size:9px;color:${isT ? '#00d4a1' : 'var(--muted)'};white-space:nowrap;min-width:54px;text-align:right;">${dateChip}</span>
+          </div>`;
+        return isWmH
+          ? `<a href="matches/wm-match-v2.html?m=wm-${f.m.home.toLowerCase()}-vs-${f.m.away.toLowerCase()}-${f.m.date.split('.').reverse().join('-')}" style="display:block;text-decoration:none;color:inherit;">${inner}</a>`
+          : inner;
+      }).join('')}
+    </div>` : '';
 
   // ── Section 3: Our Picks in Sharp Context (today's picks) ─────────────────
   const bufEntries = window._v2PickBuffer ? Object.values(window._v2PickBuffer) : [];
@@ -2734,6 +2796,8 @@ function renderSharpRadar() {
         })()}
       </div>
     </div>
+
+    ${moversHeroHtml}
 
     ${_renderSharpWatchlist()}
     ${_renderBayesianWeights()}
