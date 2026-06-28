@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-28T01:30:44Z",
-    "total_records": 125
+    "updated_at": "2026-06-28T01:45:44Z",
+    "total_records": 132
   },
   "records": [
     {
@@ -3056,6 +3056,97 @@
       "processVerdict": "JUSTIFIED"
     },
     {
+      "key": "K-3-COD-UZB|Heimsieg",
+      "matchKey": "K-3-COD-UZB",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.51
+        },
+        {
+          "name": "travel_burden",
+          "score": -2.0
+        },
+        {
+          "name": "pressure_index",
+          "score": 1.5
+        },
+        {
+          "name": "apif_predictions",
+          "score": -1.92
+        },
+        {
+          "name": "incentive_signal",
+          "score": 2.0
+        },
+        {
+          "name": "smart_money",
+          "score": 1.5
+        }
+      ],
+      "resolvedAt": "2026-06-28T01:42:23Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "K-3-POR-COL|Beide Teams treffen — Ja",
+      "matchKey": "K-3-POR-COL",
+      "market": "Beide Teams treffen — Ja",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "public_static_bias",
+          "score": -1.51
+        },
+        {
+          "name": "xg_strength",
+          "score": 4.6
+        }
+      ],
+      "resolvedAt": "2026-06-28T01:42:23Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "K-3-POR-COL|Über 2.5 Tore",
+      "matchKey": "K-3-POR-COL",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "public_static_bias",
+          "score": -1.32
+        },
+        {
+          "name": "travel_burden",
+          "score": -1.8
+        },
+        {
+          "name": "form_trend",
+          "score": 2.53
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.55
+        },
+        {
+          "name": "incentive_signal",
+          "score": -1.0
+        }
+      ],
+      "resolvedAt": "2026-06-28T01:42:23Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "UNLUCKY"
+    },
+    {
       "key": "L-1-GHA-PAN|Doppelte Chance — X2",
       "matchKey": "L-1-GHA-PAN",
       "market": "Doppelte Chance — X2",
@@ -3216,6 +3307,117 @@
       "convictionScore": 4,
       "lateEntry": true,
       "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "L-3-CRO-GHA|Unter 2.5 Tore",
+      "matchKey": "L-3-CRO-GHA",
+      "market": "Unter 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": 0.5
+        },
+        {
+          "name": "form_trend",
+          "score": -1.6
+        },
+        {
+          "name": "xg_strength",
+          "score": -0.98
+        },
+        {
+          "name": "lineup_signal",
+          "score": 2.2
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.27
+        }
+      ],
+      "resolvedAt": "2026-06-28T01:42:23Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "L-3-ENG-PAN|AH Heim −2",
+      "matchKey": "L-3-ENG-PAN",
+      "market": "AH Heim −2",
+      "result": "VOID",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -2.0
+        },
+        {
+          "name": "form_trend",
+          "score": 4.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.0
+        },
+        {
+          "name": "chance_creation",
+          "score": 4.81
+        },
+        {
+          "name": "form_rating",
+          "score": 4.56
+        },
+        {
+          "name": "smart_money",
+          "score": 1.35
+        }
+      ],
+      "resolvedAt": "2026-06-28T01:42:23Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true
+    },
+    {
+      "key": "L-3-ENG-PAN|Beide Teams treffen — Ja",
+      "matchKey": "L-3-ENG-PAN",
+      "market": "Beide Teams treffen — Ja",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.32
+        }
+      ],
+      "resolvedAt": "2026-06-28T01:42:23Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "L-3-ENG-PAN|Über 2.5 Tore",
+      "matchKey": "L-3-ENG-PAN",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "travel_burden",
+          "score": -2.0
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.18
+        }
+      ],
+      "resolvedAt": "2026-06-28T01:42:23Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "processVerdict": "UNLUCKY"
     }
   ]
 }
