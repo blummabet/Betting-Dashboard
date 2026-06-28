@@ -67,7 +67,6 @@ function showView(view) {
     'intl-cards':        'intlCardsPanel',
     'intl-tracking':     'intlTrackingPanel',
     'intl-wm2026':       'intlWm2026Panel',
-    'intl-telegram':     'intlTelegramPanel',
     'intl-studio':       'tiktokStudioPanel',
     'sharp':             'mainContent',
     'polytrading':       'polyTraderPanel',
@@ -128,7 +127,7 @@ function showView(view) {
   // Desktop = Dropdown (#navMore + .top-more-menu), Mobile = Bottom-Sheet (.more-sheet).
   // Telegram/TikTok haben Section 'intl' → über die volle View (_activeView) matchen.
   const MORE_SECS  = ['polybetting', 'polywallets', 'heart', 'status'];
-  const MORE_VIEWS = ['intl-telegram', 'intl-studio'];
+  const MORE_VIEWS = ['intl-studio'];   // Telegram lebt jetzt im Status-Tab (28.06.2026)
   const isMore = MORE_SECS.includes(_activeSection) || MORE_VIEWS.includes(_activeView);
 
   // Desktop: „Mehr"-Button aktiv nur für seine eigenen Einträge (Poly bleibt eigene Top-Buttons).
@@ -162,7 +161,7 @@ function showView(view) {
   }
 
   // ── Callbacks ────────────────────────────────────────
-  if (view === 'status')            { initStatus(); }
+  if (view === 'status')            { initStatus(); if (typeof initTelegramPanel === 'function') initTelegramPanel(); }
   if (view === 'polybetting')       initPolymarket();
   if (view === 'polytrading')       initPolyTrader();
   if (view === 'polywallets'  && typeof initPolyWallets === 'function') initPolyWallets();
@@ -174,7 +173,6 @@ function showView(view) {
   if (view === 'intl-cards'        && typeof initIntlCards     === 'function') initIntlCards();
   if (view === 'intl-tracking'     && typeof initIntlTracking  === 'function') initIntlTracking();
   if (view === 'intl-wm2026'       && typeof initWm2026        === 'function') initWm2026();
-  if (view === 'intl-telegram'     && typeof initTelegramPanel === 'function') initTelegramPanel();
   if (view === 'intl-studio'       && typeof initTiktokStudio  === 'function') initTiktokStudio();
 }
 

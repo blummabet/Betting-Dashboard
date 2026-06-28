@@ -19,17 +19,20 @@ test('PWA-Tags + Navi-Markup (Bottom-Nav, Sheet, Web-Dropdown) im HTML vorhanden
   assert.match(raw, /serviceWorker\.register/, 'SW-Registrierung fehlt');
   // Sub-Navi nur noch Cards + Tracking
   assert.equal(d.querySelectorAll('#subNav .sub-nav-btn').length, 2, 'Sub-Navi soll nur Cards+Tracking haben');
-  // Web „Mehr"-Dropdown mit 4 Einträgen (Heart/Status/Telegram/TikTok)
+  // Web „Mehr"-Dropdown mit 3 Einträgen (Heart/Status/TikTok) — Telegram wanderte in den Status
   assert.ok(d.getElementById('navMore'), 'Web-Mehr-Button fehlt');
-  assert.equal(d.querySelectorAll('#topMoreMenu .tm-item').length, 4, '4 Dropdown-Einträge erwartet');
-  // Mobile Bottom-Nav (5 Tabs) + Sheet (jetzt 6: Poly×2, Telegram, TikTok, Heart, Status)
+  assert.equal(d.querySelectorAll('#topMoreMenu .tm-item').length, 3, '3 Dropdown-Einträge erwartet');
+  // Mobile Bottom-Nav (5 Tabs) + Sheet (jetzt 5: Poly×2, TikTok, Heart, Status)
   assert.equal(d.querySelectorAll('.bottom-nav .bn-btn').length, 5, '5 Bottom-Tabs erwartet');
-  assert.equal(d.querySelectorAll('.more-sheet .ms-btn').length, 6, '6 Sheet-Einträge erwartet');
+  assert.equal(d.querySelectorAll('.more-sheet .ms-btn').length, 5, '5 Sheet-Einträge erwartet');
+  // Telegram Control liegt jetzt als ausklappbarer Abschnitt im Status-Tab, nicht mehr im Menü
+  assert.ok(d.getElementById('st_telegram'), 'Telegram-Details im Status-Tab fehlt');
+  assert.equal(d.querySelectorAll('[data-view="intl-telegram"]').length, 0, 'Kein Telegram-Menüeintrag mehr');
 });
 
 test('showView spiegelt aktiven Tab in Bottom-Nav + Web-Dropdown; Toggles auf/zu', () => {
   const dom = new JSDOM(`<!DOCTYPE html><body>
-    <div id="mainContent"></div><div id="intlCardsPanel"></div><div id="intlTelegramPanel"></div>
+    <div id="mainContent"></div><div id="intlCardsPanel"></div><div id="tiktokStudioPanel"></div>
     <div id="polymarketPanel"></div><div id="heartPanel"></div><div id="statusPanel"></div>
     <button id="navIntl"></button>
     <div class="top-nav-more" id="topNavMore">
@@ -37,8 +40,7 @@ test('showView spiegelt aktiven Tab in Bottom-Nav + Web-Dropdown; Toggles auf/zu
       <div class="top-more-menu" id="topMoreMenu">
         <button class="tm-item" data-view="heart"></button>
         <button class="tm-item" data-view="status"></button>
-        <button class="tm-item" data-view="intl-telegram" id="tmTel"></button>
-        <button class="tm-item" data-view="intl-studio"></button>
+        <button class="tm-item" data-view="intl-studio" id="tmTik"></button>
       </div>
     </div>
     <div class="sub-nav" id="subNav"><button id="subCards"></button><button id="subTracking"></button></div>
@@ -47,7 +49,7 @@ test('showView spiegelt aktiven Tab in Bottom-Nav + Web-Dropdown; Toggles auf/zu
       <button class="bn-btn" id="bnMore"></button>
     </nav>
     <div class="more-sheet" id="moreSheet">
-      <button class="ms-btn" data-view="intl-telegram" id="msTel"></button>
+      <button class="ms-btn" data-view="intl-studio" id="msTik"></button>
       <button class="ms-btn" data-sec="heart" id="msHeart"></button>
     </div>
   </body>`, { runScripts: 'outside-only' });
@@ -62,14 +64,14 @@ test('showView spiegelt aktiven Tab in Bottom-Nav + Web-Dropdown; Toggles auf/zu
   }
   const $ = (id) => w.document.getElementById(id);
 
-  // Telegram (intl-Section, aber „Mehr"-View) → Mehr aktiv, Intl-Tab NICHT, Sub-Navi versteckt
-  try { w.showView('intl-telegram'); } catch (_) {}
-  assert.ok($('navMore').classList.contains('active'), 'Web-Mehr aktiv bei Telegram');
-  assert.ok($('tmTel').classList.contains('active'), 'Dropdown-Telegram aktiv');
-  assert.ok($('bnMore').classList.contains('active'), 'Bottom-Mehr aktiv bei Telegram');
-  assert.ok(!$('bnIntl').classList.contains('active'), 'Intl-Tab darf bei Telegram nicht aktiv sein');
-  assert.ok($('msTel').classList.contains('active'), 'Sheet-Telegram (data-view) aktiv');
-  assert.equal($('subNav').style.display, 'none', 'Sub-Navi bei Telegram versteckt');
+  // TikTok Studio (intl-Section, aber „Mehr"-View) → Mehr aktiv, Intl-Tab NICHT, Sub-Navi versteckt
+  try { w.showView('intl-studio'); } catch (_) {}
+  assert.ok($('navMore').classList.contains('active'), 'Web-Mehr aktiv bei TikTok');
+  assert.ok($('tmTik').classList.contains('active'), 'Dropdown-TikTok aktiv');
+  assert.ok($('bnMore').classList.contains('active'), 'Bottom-Mehr aktiv bei TikTok');
+  assert.ok(!$('bnIntl').classList.contains('active'), 'Intl-Tab darf bei TikTok nicht aktiv sein');
+  assert.ok($('msTik').classList.contains('active'), 'Sheet-TikTok (data-view) aktiv');
+  assert.equal($('subNav').style.display, 'none', 'Sub-Navi bei TikTok versteckt');
 
   // Status → Mehr aktiv
   try { w.showView('status'); } catch (_) {}
