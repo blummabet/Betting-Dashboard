@@ -313,12 +313,29 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .sub-nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
 .sub-nav-badge{font-size:10px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:1px 6px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:600;}
 
+/* ── „Mehr ▾"-Dropdown in der Top-Nav (Desktop, 28.06.2026) ── */
+.top-nav-more{position:relative; display:flex; align-items:stretch;}
+.tnm-caret{font-size:9px; opacity:.7; margin-left:4px;}
+.top-more-menu{
+  display:none; position:absolute; right:0; top:100%; min-width:200px;
+  background:var(--card); border:1px solid var(--border); border-radius:10px;
+  box-shadow:0 8px 26px rgba(0,0,0,.45); padding:6px; z-index:250;
+}
+.top-more-menu.open{display:block;}
+.top-more-menu .tm-item{
+  display:block; width:100%; text-align:left; background:none; border:none; cursor:pointer;
+  color:var(--text); font-size:13px; font-weight:600; padding:9px 12px; border-radius:7px;
+}
+.top-more-menu .tm-item:hover{background:var(--card2);}
+.top-more-menu .tm-item.active{color:var(--accent);}
+
 /* ── Mobile Bottom-Nav + „Mehr"-Sheet (28.06.2026, Lucas: Header oben mobil mühsam) ── */
 .bottom-nav{display:none;}
 .more-sheet{display:none;}
 @media(max-width:768px){
   /* Section-Buttons oben raus → Navigation wandert nach unten. Logo-Bar bleibt als App-Header. */
   .top-nav-btn{display:none;}
+  .top-nav-more{display:none;}   /* „Mehr"-Dropdown nur Desktop; mobil übernimmt das Bottom-Sheet */
   .top-nav{padding:0 14px;}
   body{padding-bottom:calc(60px + env(safe-area-inset-bottom));}  /* Platz für die fixe Bar */
 
@@ -2126,10 +2143,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="top-nav-btn" id="navPolyTrader" onclick="showView('polytrading')" style="color:#00d4a1">📈 Polymarket Trading</button>
   <button class="top-nav-btn" id="navPolymarket" onclick="showView('polybetting')" style="color:#a78bfa">🟣 Polymarket Betting</button>
   <button class="top-nav-btn" id="navPolyWallets" onclick="showView('polywallets')" style="color:#5eead4">🐋 Polymarket Wallets</button>
-  <button class="top-nav-btn" id="navHeart" onclick="showView('heart')">❤️ Heart</button>
-  <button class="top-nav-btn" id="navStatus" onclick="showView('status')">🔧 Status<span id="navStatusDot" style="display:none;width:8px;height:8px;border-radius:50%;background:#f85149;margin-left:6px;vertical-align:middle;box-shadow:0 0 6px rgba(248,81,73,.8);"></span></button>
-  <!-- "Picks speichern" entfernt 11.06.2026 — Altlast aus dem manuellen Liga-Workflow
-       (localStorage). Tracking/Resolution läuft heute automatisch über die Pipeline. -->
+  <!-- „Mehr ▾"-Dropdown (28.06.2026, Lucas): Nebensektionen + Content-Tools gebündelt -->
+  <div class="top-nav-more" id="topNavMore">
+    <button class="top-nav-btn" id="navMore" onclick="toggleTopMore(event)">⋯ Mehr<span class="tnm-caret">▾</span><span id="navMoreDot" style="display:none;width:8px;height:8px;border-radius:50%;background:#f85149;margin-left:6px;vertical-align:middle;box-shadow:0 0 6px rgba(248,81,73,.8);"></span></button>
+    <div class="top-more-menu" id="topMoreMenu">
+      <button class="tm-item" data-view="heart"         onclick="showView('heart');closeTopMore()">❤️ Heart</button>
+      <button class="tm-item" data-view="status"        onclick="showView('status');closeTopMore()">🔧 Status<span id="navStatusDot" style="display:none;width:8px;height:8px;border-radius:50%;background:#f85149;margin-left:6px;vertical-align:middle;box-shadow:0 0 6px rgba(248,81,73,.8);"></span></button>
+      <button class="tm-item" data-view="intl-telegram" onclick="showView('intl-telegram');closeTopMore()">📱 Telegram</button>
+      <button class="tm-item" data-view="intl-studio"   onclick="showView('intl-studio');closeTopMore()">🎬 TikTok Studio</button>
+    </div>
+  </div>
 </div>
 
 <!-- SUB NAV (Cards / Tracking / Telegram / TikTok Studio)
@@ -2138,8 +2161,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div class="sub-nav" id="subNav">
   <button class="sub-nav-btn active" id="subCards" onclick="showSubView('cards')">🃏 Cards</button>
   <button class="sub-nav-btn" id="subTracking" onclick="showSubView('tracking')">📈 Tracking</button>
-  <button class="sub-nav-btn" id="subTelegram" onclick="showSubView('telegram')" style="display:none">📱 Telegram</button>
-  <button class="sub-nav-btn" id="subStudio" onclick="showSubView('studio')">🎬 TikTok Studio</button>
 </div>
 
 <!-- LEAGUE NAV -->
@@ -2172,10 +2193,12 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div class="more-sheet" id="moreSheet" onclick="if(event.target===this)toggleMoreSheet()">
   <div class="more-sheet-panel">
     <div class="more-sheet-grip"></div>
-    <button class="ms-btn" data-sec="polybetting" onclick="showView('polybetting');toggleMoreSheet()">🟣 Polymarket Betting</button>
-    <button class="ms-btn" data-sec="polywallets" onclick="showView('polywallets');toggleMoreSheet()">🐋 Polymarket Wallets</button>
-    <button class="ms-btn" data-sec="heart"       onclick="showView('heart');toggleMoreSheet()">❤️ Heart</button>
-    <button class="ms-btn" data-sec="status"      onclick="showView('status');toggleMoreSheet()">🔧 Status</button>
+    <button class="ms-btn" data-sec="polybetting"  onclick="showView('polybetting');toggleMoreSheet()">🟣 Polymarket Betting</button>
+    <button class="ms-btn" data-sec="polywallets"  onclick="showView('polywallets');toggleMoreSheet()">🐋 Polymarket Wallets</button>
+    <button class="ms-btn" data-view="intl-telegram" onclick="showView('intl-telegram');toggleMoreSheet()">📱 Telegram</button>
+    <button class="ms-btn" data-view="intl-studio"   onclick="showView('intl-studio');toggleMoreSheet()">🎬 TikTok Studio</button>
+    <button class="ms-btn" data-sec="heart"        onclick="showView('heart');toggleMoreSheet()">❤️ Heart</button>
+    <button class="ms-btn" data-sec="status"       onclick="showView('status');toggleMoreSheet()">🔧 Status</button>
   </div>
 </div>
 

@@ -28,6 +28,9 @@
 
 // Track current top-level section so showSubView() knows where to navigate
 let _activeSection = 'national';
+// Track the full active view (28.06.2026) — nötig fürs „Mehr"-Menü (Heart/Status/Telegram/TikTok),
+// weil intl-telegram/intl-studio dieselbe Section 'intl' haben.
+let _activeView = 'national-cards';
 
 // All panel IDs — hidden when switching views
 const _ALL_PANELS = [
@@ -38,14 +41,15 @@ const _ALL_PANELS = [
   'heartPanel', 'statusPanel',
 ];
 
-// Top-nav button IDs
+// Top-nav button IDs (Heart/Status seit 28.06.2026 im „Mehr"-Dropdown, nicht mehr hier)
 const _TOP_NAV_IDS = [
   'navNational', 'navIntl', 'navSharp',
-  'navPolyTrader', 'navPolymarket', 'navPolyWallets', 'navHeart', 'navStatus',
+  'navPolyTrader', 'navPolymarket', 'navPolyWallets',
 ];
 
 function showView(view) {
   // ── Determine section ────────────────────────────────
+  _activeView = view;
   _activeSection = view.startsWith('national') ? 'national'
                  : view.startsWith('intl')     ? 'intl'
                  : view;  // sharp | polytrading | polybetting | heart | status
@@ -88,27 +92,18 @@ function showView(view) {
 
   // ── Sub-nav: visible for National + International ────
   const subNav = document.getElementById('subNav');
-  const hasSubNav = _activeSection === 'national' || _activeSection === 'intl';
+  // (28.06.2026, Lucas) Sub-Navi nur noch für die Daten-Ansichten Cards/Tracking.
+  // Telegram + TikTok Studio sind in das „Mehr"-Menü gewandert (Desktop-Dropdown + Mobile-Sheet).
+  const hasSubNav = ['national-cards', 'national-tracking', 'intl-cards', 'intl-tracking'].includes(view);
   if (subNav) subNav.style.display = hasSubNav ? '' : 'none';
 
   // Sub-nav active buttons
-  // (WM2026-Tab entfernt 03.06.2026 — Inhalt jetzt direkt in Community-Cards)
   const isCards    = view.endsWith('-cards');
   const isTracking = view.endsWith('-tracking');
-  const isTelegram = view === 'intl-telegram';
-  const isStudio   = view === 'intl-studio';
   const subCards    = document.getElementById('subCards');
   const subTracking = document.getElementById('subTracking');
-  const subTelegram = document.getElementById('subTelegram');
-  const subStudio   = document.getElementById('subStudio');
   if (subCards)    subCards.classList.toggle('active',    isCards);
   if (subTracking) subTracking.classList.toggle('active', isTracking);
-  if (subTelegram) subTelegram.classList.toggle('active', isTelegram);
-  if (subStudio)   subStudio.classList.toggle('active',   isStudio);
-  // Telegram + Studio sub-nav only visible under International
-  const intlOnly = _activeSection === 'intl';
-  if (subTelegram) subTelegram.style.display  = intlOnly ? '' : 'none';
-  if (subStudio)   subStudio.style.display    = intlOnly ? '' : 'none';
 
   // ── Top-nav active state ─────────────────────────────
   _TOP_NAV_IDS.forEach(id => {
@@ -122,8 +117,6 @@ function showView(view) {
     'polytrading': 'navPolyTrader',
     'polybetting': 'navPolymarket',
     'polywallets': 'navPolyWallets',
-    'heart':       'navHeart',
-    'status':      'navStatus',
   };
   const activeNavId = topNavMap[_activeSection];
   if (activeNavId) {
@@ -131,18 +124,32 @@ function showView(view) {
     if (el) el.classList.add('active');
   }
 
-  // ── Bottom-Nav (mobil) Aktiv-Status (28.06.2026, Lucas) ──────────────
-  // Spiegelt die 5 Bottom-Tabs. Sektionen, die nur im „Mehr"-Sheet liegen,
-  // markieren stattdessen den „Mehr"-Button.
-  const MORE_SECS = ['polybetting', 'polywallets', 'heart', 'status'];
+  // ── „Mehr"-Menü (28.06.2026, Lucas): Heart/Status/Telegram/TikTok gebündelt ──
+  // Desktop = Dropdown (#navMore + .top-more-menu), Mobile = Bottom-Sheet (.more-sheet).
+  // Telegram/TikTok haben Section 'intl' → über die volle View (_activeView) matchen.
+  const MORE_SECS  = ['polybetting', 'polywallets', 'heart', 'status'];
+  const MORE_VIEWS = ['intl-telegram', 'intl-studio'];
+  const isMore = MORE_SECS.includes(_activeSection) || MORE_VIEWS.includes(_activeView);
+
+  // Desktop: „Mehr"-Button aktiv nur für seine eigenen Einträge (Poly bleibt eigene Top-Buttons).
+  const navMore = document.getElementById('navMore');
+  if (navMore) navMore.classList.toggle('active',
+    ['heart', 'status'].includes(_activeView) || MORE_VIEWS.includes(_activeView));
+  document.querySelectorAll('.top-more-menu .tm-item').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-view') === _activeView);
+  });
+
+  // Mobile: Bottom-Tabs — „Mehr" aktiv bei jeder „more"-View, sonst die passende Section.
   document.querySelectorAll('.bottom-nav .bn-btn').forEach(b => {
     const on = b.id === 'bnMore'
-      ? MORE_SECS.includes(_activeSection)
-      : b.getAttribute('data-sec') === _activeSection;
+      ? isMore
+      : (!isMore && b.getAttribute('data-sec') === _activeSection);
     b.classList.toggle('active', on);
   });
+  // Sheet-Einträge per data-sec ODER data-view markieren.
   document.querySelectorAll('.more-sheet .ms-btn').forEach(b => {
-    b.classList.toggle('active', b.getAttribute('data-sec') === _activeSection);
+    const sec = b.getAttribute('data-sec'), vw = b.getAttribute('data-view');
+    b.classList.toggle('active', (!!sec && sec === _activeSection) || (!!vw && vw === _activeView));
   });
 
   // ── Sharp Radar: activate sharp league button ────────
@@ -180,6 +187,27 @@ function showSubView(sub) {
 function toggleMoreSheet() {
   const s = document.getElementById('moreSheet');
   if (s) s.classList.toggle('open');
+}
+
+// Desktop „Mehr ▾"-Dropdown auf/zu (28.06.2026, Lucas)
+function toggleTopMore(ev) {
+  if (ev) ev.stopPropagation();
+  const m = document.getElementById('topMoreMenu');
+  if (m) m.classList.toggle('open');
+}
+function closeTopMore() {
+  const m = document.getElementById('topMoreMenu');
+  if (m) m.classList.remove('open');
+}
+// Klick außerhalb schließt das Dropdown
+if (typeof document !== 'undefined') {
+  document.addEventListener('click', function (e) {
+    const wrap = document.getElementById('topNavMore');
+    const menu = document.getElementById('topMoreMenu');
+    if (menu && menu.classList.contains('open') && wrap && !wrap.contains(e.target)) {
+      menu.classList.remove('open');
+    }
+  });
 }
 
 // Backward compat (called from some league-btn click handlers)
