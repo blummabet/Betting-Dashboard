@@ -1,0 +1,90 @@
+/* CocoBet Service Worker (28.06.2026) — installierbare PWA + Offline.
+ *
+ * Strategie (wichtig: KEINE veralteten Picks):
+ *   - Daten (*.json)        → network-first, Cache nur als Offline-Fallback.
+ *   - Navigation (HTML)     → network-first, Cache-Fallback (season-finish-v2.html).
+ *   - App-Hülle (JS/CSS/IMG)→ stale-while-revalidate (schnell + selbstheilend).
+ *   - Fremd-Origin (CDN)    → unangetastet durchlassen.
+ *
+ * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
+ */
+const VERSION = 'cocobet-v1';
+
+// App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
+// weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
+const SHELL = [
+  './season-finish-v2.html',
+  './pick-engine.js', './pick-verdict.js', './_pick_helpers.js', './validator.js',
+  './renderer.js', './share.js', './ui.js', './status-checks.js', './polymarket-tab.js',
+  './poly-wallets.js', './results-v2.js', './wm2026-renderer.js', './wm2026-tracking.js',
+  './tiktok-studio.js', './tiktok-studio.css',
+  './cocobet-logo.png',
+  './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-512-maskable.png',
+];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(VERSION)
+      .then((c) => Promise.allSettled(SHELL.map((u) => c.add(u))))  // einzelne Fehler nicht fatal
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', (e) => {
+  const req = e.request;
+  if (req.method !== 'GET') return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;   // CDN etc. normal lassen
+
+  // Daten: network-first (frische Picks online), Cache-Fallback offline.
+  if (url.pathname.endsWith('.json')) {
+    e.respondWith(
+      fetch(req)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(VERSION).then((c) => c.put(req, copy));
+          return res;
+        })
+        .catch(() => caches.match(req, { ignoreSearch: true }))
+    );
+    return;
+  }
+
+  // Navigation: frische Seite online, Hülle offline.
+  if (req.mode === 'navigate') {
+    e.respondWith(
+      fetch(req)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(VERSION).then((c) => c.put('./season-finish-v2.html', copy));
+          return res;
+        })
+        .catch(() => caches.match('./season-finish-v2.html', { ignoreSearch: true }))
+    );
+    return;
+  }
+
+  // App-Hülle (JS/CSS/Bilder): stale-while-revalidate.
+  e.respondWith(
+    caches.match(req, { ignoreSearch: true }).then((cached) => {
+      const fromNet = fetch(req)
+        .then((res) => {
+          if (res && res.status === 200) {
+            const copy = res.clone();
+            caches.open(VERSION).then((c) => c.put(req, copy));
+          }
+          return res;
+        })
+        .catch(() => cached);
+      return cached || fromNet;
+    })
+  );
+});

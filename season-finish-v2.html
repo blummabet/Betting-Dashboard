@@ -2,8 +2,17 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>CocoBet – Season Finish</title>
+<!-- PWA: installierbar am iPhone-Homescreen (Safari → Teilen → „Zum Home-Bildschirm") + Offline -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CocoBet">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
 <style>
 :root {
   --bg:#0d1117; --card:#161b22; --card2:#1c2128; --border:#30363d;
@@ -303,6 +312,49 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .sub-nav-btn:hover{color:var(--text);}
 .sub-nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
 .sub-nav-badge{font-size:10px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:1px 6px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:600;}
+
+/* ── Mobile Bottom-Nav + „Mehr"-Sheet (28.06.2026, Lucas: Header oben mobil mühsam) ── */
+.bottom-nav{display:none;}
+.more-sheet{display:none;}
+@media(max-width:768px){
+  /* Section-Buttons oben raus → Navigation wandert nach unten. Logo-Bar bleibt als App-Header. */
+  .top-nav-btn{display:none;}
+  .top-nav{padding:0 14px;}
+  body{padding-bottom:calc(60px + env(safe-area-inset-bottom));}  /* Platz für die fixe Bar */
+
+  .bottom-nav{
+    display:flex; position:fixed; left:0; right:0; bottom:0; z-index:300;
+    background:var(--card); border-top:1px solid var(--border);
+    padding-bottom:env(safe-area-inset-bottom);
+    box-shadow:0 -2px 14px rgba(0,0,0,.35);
+  }
+  .bn-btn{
+    flex:1 1 0; background:none; border:none; color:var(--muted); cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    padding:7px 2px 6px; font-size:10px; font-weight:600; letter-spacing:.01em;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .bn-btn .bn-ic{font-size:20px; line-height:1;}
+  .bn-btn.active{color:var(--accent);}
+  .bn-btn.active .bn-ic{transform:translateY(-1px);}
+
+  .more-sheet.open{display:block; position:fixed; inset:0; z-index:310; background:rgba(0,0,0,.55);}
+  .more-sheet-panel{
+    position:absolute; left:0; right:0; bottom:0; background:var(--card);
+    border-top:1px solid var(--border); border-radius:18px 18px 0 0;
+    padding:8px 16px calc(16px + env(safe-area-inset-bottom));
+    animation:msUp .18s ease-out;
+  }
+  @keyframes msUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+  .more-sheet-grip{width:40px; height:4px; border-radius:2px; background:var(--border); margin:8px auto 10px;}
+  .ms-btn{
+    display:block; width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    color:var(--text); font-size:15px; font-weight:600; padding:14px 6px;
+    border-bottom:1px solid var(--border);
+  }
+  .ms-btn:last-child{border-bottom:none;}
+  .ms-btn.active{color:var(--accent);}
+}
 
 /* WM 2026 PANEL */
 .wm26-gf{background:var(--card2);border:1px solid var(--border);border-radius:7px;padding:4px 11px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:.15s;}
@@ -2108,6 +2160,24 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 </div>
 
 <div class="container" id="mainContent"></div>
+
+<!-- ── Mobile Bottom-Nav (28.06.2026) — nur ≤768px sichtbar; spiegelt showView() ── -->
+<nav class="bottom-nav" id="bottomNav">
+  <button class="bn-btn" data-sec="national"    onclick="showView('national-cards')"><span class="bn-ic">🇪🇺</span><span class="bn-lbl">National</span></button>
+  <button class="bn-btn" data-sec="intl"        onclick="showView('intl-cards')"><span class="bn-ic">🌍</span><span class="bn-lbl">Intl</span></button>
+  <button class="bn-btn" data-sec="sharp"       onclick="showView('sharp')"><span class="bn-ic">📡</span><span class="bn-lbl">Sharp</span></button>
+  <button class="bn-btn" data-sec="polytrading" onclick="showView('polytrading')"><span class="bn-ic">📈</span><span class="bn-lbl">Trading</span></button>
+  <button class="bn-btn" id="bnMore"            onclick="toggleMoreSheet()"><span class="bn-ic">⋯</span><span class="bn-lbl">Mehr</span></button>
+</nav>
+<div class="more-sheet" id="moreSheet" onclick="if(event.target===this)toggleMoreSheet()">
+  <div class="more-sheet-panel">
+    <div class="more-sheet-grip"></div>
+    <button class="ms-btn" data-sec="polybetting" onclick="showView('polybetting');toggleMoreSheet()">🟣 Polymarket Betting</button>
+    <button class="ms-btn" data-sec="polywallets" onclick="showView('polywallets');toggleMoreSheet()">🐋 Polymarket Wallets</button>
+    <button class="ms-btn" data-sec="heart"       onclick="showView('heart');toggleMoreSheet()">❤️ Heart</button>
+    <button class="ms-btn" data-sec="status"      onclick="showView('status');toggleMoreSheet()">🔧 Status</button>
+  </div>
+</div>
 
 <!-- HEART PANEL -->
 <div id="heartPanel" style="display:none;">
@@ -10070,6 +10140,14 @@ function renderTgLog(log) {
   else window.addEventListener('load', () => setTimeout(go, 1200));
 })();
 
+</script>
+<!-- PWA: Service Worker registrieren (Offline + installierbar). Relativer Pfad wg. Pages-Unterpfad. -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function (e) { console.warn('SW-Registrierung fehlgeschlagen', e); });
+  });
+}
 </script>
 </body>
 </html>

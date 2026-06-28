@@ -131,6 +131,20 @@ function showView(view) {
     if (el) el.classList.add('active');
   }
 
+  // ── Bottom-Nav (mobil) Aktiv-Status (28.06.2026, Lucas) ──────────────
+  // Spiegelt die 5 Bottom-Tabs. Sektionen, die nur im „Mehr"-Sheet liegen,
+  // markieren stattdessen den „Mehr"-Button.
+  const MORE_SECS = ['polybetting', 'polywallets', 'heart', 'status'];
+  document.querySelectorAll('.bottom-nav .bn-btn').forEach(b => {
+    const on = b.id === 'bnMore'
+      ? MORE_SECS.includes(_activeSection)
+      : b.getAttribute('data-sec') === _activeSection;
+    b.classList.toggle('active', on);
+  });
+  document.querySelectorAll('.more-sheet .ms-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-sec') === _activeSection);
+  });
+
   // ── Sharp Radar: activate sharp league button ────────
   if (view === 'sharp') {
     document.querySelectorAll('.league-btn').forEach(b => b.classList.remove('active'));
@@ -160,6 +174,12 @@ function showView(view) {
 // Sub-nav click: navigate within current section
 function showSubView(sub) {
   showView(_activeSection + '-' + sub);
+}
+
+// Mobile „Mehr"-Sheet auf/zu (28.06.2026, Lucas: Bottom-Nav)
+function toggleMoreSheet() {
+  const s = document.getElementById('moreSheet');
+  if (s) s.classList.toggle('open');
 }
 
 // Backward compat (called from some league-btn click handlers)
