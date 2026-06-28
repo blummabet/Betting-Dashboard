@@ -838,6 +838,10 @@
     });
     let heroPick   = sortedPicks[0] || null;
     let otherPicks = sortedPicks.slice(1);
+    // Einsatz pro Pick (28.06.2026, Lucas: „in den Cards muss klar sein welcher Stake — egal welches Label").
+    // Quelle: pick.stake (pick_staking.py, Edge-Staking). Fallback null → nichts anzeigen.
+    const _stakeStr = (p) => (p && typeof p.stake === 'number')
+      ? (p.stake % 1 === 0 ? String(p.stake) : p.stake.toFixed(1)) : null;
     let watchReason = null;   // warum ein Spiel zur Beobachtung demotet wurde (für Text)
 
     // ── UI-Convention-Fix 05.06.2026 ──────────────────────────────────────
@@ -987,6 +991,7 @@
         <div class="cc-pick-label">${isAbw ? 'Vorsichtiger Pick' : 'Unser Pick'}</div>
         <div class="cc-pick-market">${heroPick.market}</div>
         <div class="cc-pick-odds"><span class="cc-at">@</span><span class="cc-num">${oddsStr}</span></div>
+        ${_stakeStr(heroPick) ? `<div class="cc-pick-stake" style="font-size:12.5px;font-weight:800;color:#5eead4;margin-top:3px;">💶 Einsatz €${_stakeStr(heroPick)}</div>` : ''}
         <div class="cc-pick-conf">
           ${[1,2,3].map(n => `<span class="cc-star${isAbw ? ' cc-star-abw' : ''} ${n <= stars ? 'cc-star-full' : 'cc-star-empty'}">★</span>`).join('')}
         </div>
@@ -1178,10 +1183,11 @@
         const oddsStr = op.odds != null ? op.odds.toFixed(2) : '—';
         const epp = op.edgePP != null ? ` <span class="cc-op-edge">${op.edgePP > 0 ? '+' : ''}${op.edgePP}pp</span>` : '';
         const synthBadge = op.synthetic ? ' <span class="cc-op-synth">🛡</span>' : '';
+        const opStake = _stakeStr(op) ? ` <span class="cc-op-stake" style="color:#5eead4;font-weight:700;">💶 €${_stakeStr(op)}</span>` : '';
         html += `<div class="cc-op-row ${cls}">
           <span class="cc-op-verdict">${op.verdict}</span>
           <span class="cc-op-market">${op.market}${synthBadge}</span>
-          <span class="cc-op-odds">@${oddsStr}</span>${epp}
+          <span class="cc-op-odds">@${oddsStr}</span>${epp}${opStake}
         </div>`;
       }
       html += `</div>`;

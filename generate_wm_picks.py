@@ -2248,6 +2248,15 @@ def main():
                 p["trackingExcluded"] = True
                 p["demotedRiskyGame"] = True
 
+    # Edge-Staking (28.06.2026, Lucas): pick["stake"] nach Conviction×Odds (fraktionales Kelly).
+    # NACH der trackingExcluded-Logik, damit ausgeschlossene Picks keinen Stake bekommen.
+    try:
+        import pick_staking
+        _ns = pick_staking.apply(wm)
+        print(f"  💶 Edge-Stake gesetzt für {_ns} Pick(s).")
+    except Exception as _e:
+        print(f"  ⚠️  Edge-Staking übersprungen: {_e}")
+
     wm["_meta"] = wm.get("_meta", {})
     wm["_meta"]["picksUpdatedAt"] = datetime.now(timezone.utc).isoformat()
 

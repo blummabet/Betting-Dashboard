@@ -22,8 +22,12 @@
   // Conviction-gewichteter Stake (12.06.2026): BET höher als ABWÄGEN, weil BET =
   // Edge + Signal-Bestätigung (höhere Konfidenz). Flat würde die ~vielen ABWÄGEN
   // gleich gewichten → Bilanz weniger repräsentativ. Poly-Auto-Trading bleibt flat.
-  const STAKE_BET = 10, STAKE_ABW = 5; // € per pick
-  const _stakeOf = (p) => (p && p.verdict === 'BET') ? STAKE_BET : STAKE_ABW;
+  // 28.06.2026 (Lucas: Edge-Staking): primär pick.stake (fraktionales Kelly, pick_staking.py).
+  // Fallback auf das alte getierte Flat nur für Alt-Picks ohne stake (Freeze-geschützte/historische).
+  const STAKE_BET = 10, STAKE_ABW = 5; // €, Fallback
+  const _stakeOf = (p) => (p && typeof p.stake === 'number')
+    ? p.stake
+    : ((p && p.verdict === 'BET') ? STAKE_BET : STAKE_ABW);
 
   // (25.06.2026, Lucas: KO-Runden) Reihenfolge + deutsche Labels der K.O.-Phase.
   const KO_ROUND_ORDER  = ['R32', 'R16', 'QF', 'SF'];
