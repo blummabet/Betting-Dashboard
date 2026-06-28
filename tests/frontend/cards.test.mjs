@@ -62,6 +62,21 @@ test('Signal-Grid rendert neue Liga-Signale mit Label + Begründung', () => {
   assert.match(html, /Engine-Signale/);
 });
 
+test('Sharp-Konsens: Pinnacle vs Betfair (einig / uneinig / weicht ab / fehlt)', () => {
+  const t = loadCards().__wmCardTest;
+  // einig: gleicher Favorit (Heim), kleine Differenz
+  let c = t.sharpConsensus({ hw: 1.5, dr: 4.2, aw: 6.5, bf_hw: 1.55, bf_dr: 4.3, bf_aw: 6.2 });
+  assert.ok(c && /Konsens/.test(c.label), 'sollte Konsens melden');
+  // unterschiedliche Favoriten → uneinig
+  c = t.sharpConsensus({ hw: 1.5, dr: 4.2, aw: 6.5, bf_hw: 6.0, bf_dr: 4.0, bf_aw: 1.5 });
+  assert.ok(c && /uneinig/.test(c.label), 'sollte uneinig melden');
+  // gleicher Favorit, aber Betfair weicht spürbar ab
+  c = t.sharpConsensus({ hw: 1.5, dr: 4.2, aw: 6.5, bf_hw: 1.9, bf_dr: 4.3, bf_aw: 6.2 });
+  assert.ok(c && /weicht/.test(c.label), 'sollte Abweichung melden');
+  // kein Betfair → null
+  assert.equal(t.sharpConsensus({ hw: 1.5, dr: 4.2, aw: 6.5 }), null);
+});
+
 test('_fxIsPast: kickoff entscheidet, nicht das Spieltag-Datum (Nach-Mitternacht-Fix)', () => {
   const t = loadCards().__wmCardTest;
   const today = new Date().toISOString().slice(0, 10);

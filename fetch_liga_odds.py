@@ -148,41 +148,42 @@ def _best_book(bookmakers: list, market_key: str, priority: list | None = None):
     return None, None
 
 
+def _map_1x2(outs: list, home_name: str, away_name: str):
+    """h2h-Outcomes → (hw, dr, aw), per Name zugeordnet (orientierungs-agnostisch).
+    Einmal definiert, von Sharp/Public/Betfair genutzt (28.06.2026: Entdopplung)."""
+    hw = dr = aw = None
+    for o in (outs or []):
+        nm, price = o.get("name", ""), o.get("price")
+        if (nm or "").lower() == "draw":
+            dr = price
+        elif _names_match(nm, home_name):
+            hw = price
+        elif _names_match(nm, away_name):
+            aw = price
+    return hw, dr, aw
+
+
 def extract_prices(event: dict, orientation: str, home_name: str, away_name: str) -> dict:
     """1X2 + O/U 2.5 + BTTS aus einem Event ziehen, Heim/Auswärts korrekt zugeordnet."""
     out = {}
     bks = event.get("bookmakers") or []
-    # ── 1X2 (h2h) ──
+    # ── 1X2 (h2h) — Sharp-Anker ──
     bk, outs = _best_book(bks, "h2h")
-    if outs:
-        hw = dr = aw = None
-        for o in outs:
-            nm, price = o.get("name", ""), o.get("price")
-            if (nm or "").lower() == "draw":
-                dr = price
-            elif _names_match(nm, home_name):
-                hw = price
-            elif _names_match(nm, away_name):
-                aw = price
-        # Hinweis: h2h-Outcomes werden direkt per Name unserem Heim/Auswärts zugeordnet →
-        # orientierungs-agnostisch, KEIN zusätzlicher swap nötig (orientation nur fürs Event-Matching).
-        if hw and dr and aw:
-            out.update({"hw": hw, "dr": dr, "aw": aw, "bookmaker": bk})
+    hw, dr, aw = _map_1x2(outs, home_name, away_name)
+    if hw and dr and aw:
+        out.update({"hw": hw, "dr": dr, "aw": aw, "bookmaker": bk})
     # ── Public/Soft-Konsens 1X2 (für public_static_bias + Soft-Bestätigung) ──
     pbk, pouts = _best_book(bks, "h2h", priority=SOFT_PRIORITY)
-    if pouts:
-        phw = pdr = paw = None
-        for o in pouts:
-            nm, price = o.get("name", ""), o.get("price")
-            if (nm or "").lower() == "draw":
-                pdr = price
-            elif _names_match(nm, home_name):
-                phw = price
-            elif _names_match(nm, away_name):
-                paw = price
-        if phw and pdr and paw:
-            out.update({"public_hw": phw, "public_dr": pdr, "public_aw": paw,
-                        "public_bookmaker": pbk})
+    phw, pdr, paw = _map_1x2(pouts, home_name, away_name)
+    if phw and pdr and paw:
+        out.update({"public_hw": phw, "public_dr": pdr, "public_aw": paw,
+                    "public_bookmaker": pbk})
+    # ── Betfair Exchange = 2. Sharp-Anker (Preis-Cross-Check, 28.06.2026, Lucas) ──
+    # Eigenständig gezogen (NICHT nur als Fallback in BOOK_PRIORITY), um Pinnacle gegenzuchecken.
+    _, bfouts = _best_book(bks, "h2h", priority=["betfair_ex_eu"])
+    bhw, bdr, baw = _map_1x2(bfouts, home_name, away_name)
+    if bhw and bdr and baw:
+        out.update({"bf_hw": bhw, "bf_dr": bdr, "bf_aw": baw})
     # ── Über/Unter 2.5 ──
     _, t_outs = _best_book(bks, "totals")
     if t_outs:
@@ -224,6 +225,10 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str) -> dict:
             entry[k] = prices[k]
     # Public/Soft-Konsens 1X2 durchreichen (public_static_bias liest public_hw/dr/aw).
     for k in ("public_hw", "public_dr", "public_aw", "public_bookmaker"):
+        if prices.get(k) is not None:
+            entry[k] = prices[k]
+    # Betfair-Exchange-Anker 1X2 durchreichen (Sharp-Konsens-Cross-Check im Radar).
+    for k in ("bf_hw", "bf_dr", "bf_aw"):
         if prices.get(k) is not None:
             entry[k] = prices[k]
     W.carry_soft_open(existing, entry)   # trägt vorhandene public_*_open mit (Soft-Opening-Fix)

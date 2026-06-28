@@ -791,6 +791,29 @@
     return (fx && fx.date || '') < todayIso;   // Fallback ohne kickoff
   }
 
+  // Sharp-Konsens (28.06.2026, Lucas): Pinnacle vs Betfair Exchange als 2. Sharp-Anker.
+  // De-viggt beide 1X2 und vergleicht den Favoriten. Nur Cross-Check/Confidence — NICHT in der
+  // Pick-Engine. Liefert null wenn Betfair (bf_*) fehlt (z.B. WM / keine Börsen-Abdeckung).
+  function _sharpConsensus(o) {
+    if (!o || !(o.hw > 1 && o.dr > 1 && o.aw > 1) || !(o.bf_hw > 1 && o.bf_dr > 1 && o.bf_aw > 1)) return null;
+    const devig = (a, b, c) => { const ia = 1 / a, ib = 1 / b, ic = 1 / c, t = ia + ib + ic; return [ia / t, ib / t, ic / t]; };
+    const [ph, pd, pa] = devig(o.hw, o.dr, o.aw);
+    const [bh, bd, ba] = devig(o.bf_hw, o.bf_dr, o.bf_aw);
+    const pinn = [['Heim', ph], ['Remis', pd], ['Auswärts', pa]].sort((x, y) => y[1] - x[1]);
+    const bf = { Heim: bh, Remis: bd, 'Auswärts': ba };
+    const fav = pinn[0][0];
+    const bfFav = [['Heim', bh], ['Remis', bd], ['Auswärts', ba]].sort((x, y) => y[1] - x[1])[0][0];
+    const diffPP = Math.abs(pinn[0][1] - bf[fav]) * 100;
+    if (bfFav !== fav) return { label: `⚠ Sharp uneinig · Pinnacle ${fav} / Betfair ${bfFav}`, col: '#f85149' };
+    if (diffPP <= 2) return { label: '🤝 Sharp-Konsens · Pinnacle & Betfair einig', col: '#3fb950' };
+    if (diffPP >= 4) return { label: `⚠ Betfair weicht ${diffPP.toFixed(0)}pp ab`, col: '#e3b341' };
+    return null;
+  }
+  function _sharpConsensusChip(o) {
+    const c = _sharpConsensus(o);
+    return c ? `<div class="cc-sharp-consensus" style="font-size:11px;font-weight:700;color:${c.col};margin:6px 0 2px;">${c.label}</div>` : '';
+  }
+
   // ─────────────────────────────────────────────────────
   //  CARD BUILDER — Community-First Layout (Pick/Story/Confidence)
   // ─────────────────────────────────────────────────────
@@ -999,6 +1022,9 @@
           🔍 Warum?
         </button>
       </div>`;
+
+      // Sharp-Konsens (Pinnacle vs Betfair Exchange) — nur Liga (bf_* vorhanden), reiner Cross-Check.
+      html += _sharpConsensusChip(fxOdds);
 
       // Odds-Verlauf zwischen Pick und Story. Steam-Picks: eigener Move-Graph (geht für
       // ALLE Märkte inkl. AH, nutzt steamOpen/steamCur direkt). Sonst der klassische
@@ -3606,6 +3632,7 @@
       engineSignalGridHtml: _engineSignalGridHtml,
       buildKoCard: _buildKoCard,
       buildCard: _buildCard,
+      sharpConsensus: _sharpConsensus,
       fxIsPast: _fxIsPast,
       setWmData: (d) => { _wmData = d; },
     };
