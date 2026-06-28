@@ -62,15 +62,19 @@ Priorität grob von hoch nach niedrig. Jedes als eigenes modulares Signal + Fetc
 6. **`transfer_shift`** ✅ (26.06.) — Schlüsselspieler-Abgang (/transfers, gefiltert auf squads/
    topScorers) → geschwächtes Team dämpfen. liga-data.json["keyDepartures"]. context-Familie.
 7. **`referee_tendency`** 🔜 (später, mit Karten/Elfer-Märkten) — Schiri-Karten/Elfer-Quote. /fixtures (referee).
-8. **News-Signal** ❓ — API-Football hat einen **News**-Bereich (im Doku-Menü). Potenziell für
-   Last-Minute-Infos (Verletzung/Rotation). ABER: News = NLP/Rausch-Risiko → niedrige Prio,
-   nur mit hartem Engine-Hook (Scope-Disziplin). Erst Endpunkt-Datenqualität prüfen.
+8. **News-Signal** ❌ **verworfen (27.06.2026)** — Probe (`fetch_liga_news_probe.py`) zeigt: API-Football
+   hat **keinen** `/news`-Endpoint. Alle Varianten (`/news`, `?league=`, `?team=`, `?search=`) liefern
+   HTTP 200 mit `errors={"endpoint":"The News endpoint does not exist."}`, results=0. Der „News"-Eintrag
+   im Doku-Menü ist Schaufenster, kein v3-Endpoint (auf unserem Plan). → Über diese API nicht machbar.
+   Falls je gewünscht: externe Quelle (RSS/anderer Anbieter) — aber NLP/Rausch-Risiko + Scope-Disziplin
+   sprechen klar dagegen. **Abgehakt.**
 
 ## D) Zusätzliche Liga-Daten, die wir holen können (API-Football v3)
 Reichlich verfügbar, jeweils pro Liga/Saison/Team: **players, players/topscorers, players/topassists,
 players/squads, statistics (teams), fixtures/statistics, fixtures/players, fixtures/events, lineups,
-injuries, sidelined, coachs, transfers, trophies, predictions, odds, standings, headtohead** — und
-laut Doku-Menü auch **News**. Klub-Daten sind durchgängiger als NT-Daten der WM (mehr Spiele/Saison,
+injuries, sidelined, coachs, transfers, trophies, predictions, odds, standings, headtohead**.
+(Das Doku-Menü listet auch „News", aber der Endpoint existiert nicht — s. C8.) Klub-Daten sind
+durchgängiger als NT-Daten der WM (mehr Spiele/Saison,
 volle xG-Abdeckung) → mehr Signal-Substanz + schnellere Lern-Konvergenz.
 
 ## E) Wo wird was angezeigt
@@ -95,7 +99,7 @@ umgesetzt; für Liga wird der Prozess-Verdict gerade verdrahtet.)
 5. Corner-Markt + `corner_rate`-Signal.
 6. `coach_change` / `transfer_shift` (Saisonstart-relevant).
 7. Backtest-als-Signal (gelernter Prior je Markt/Liga aus der Backtest-Trefferquote).
-8. News-Signal nur falls Datenqualität + Engine-Hook überzeugen.
+8. ~~News-Signal~~ ❌ verworfen — API-Football hat keinen /news-Endpoint (Probe 27.06., s. C8).
 
 Verwandt: project_liga_on_wm_stack (Memory), project_signal_engine_roadmap, feedback_scope_discipline,
 feedback_new_features_rule.
