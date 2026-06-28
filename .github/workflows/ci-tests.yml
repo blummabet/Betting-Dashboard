@@ -1,0 +1,38 @@
+name: ✅ CI — Tests (Backend + Frontend)
+
+# 27.06.2026 (Lucas: „professionell"): Backend (pytest) UND Frontend (jsdom-Render-Tests) bei jedem
+# Push/PR. Bisher liefen die Tests nur lokal. Frontend-Render-Tests fangen Dataset-Awareness-
+# Regressionen (Liga vs WM) auf echter Render-Ebene, nicht nur per grep.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: 📦 Dependencies
+        run: pip install -r requirements.txt
+      - name: 🧪 pytest
+        run: python -m pytest tests/ -q
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: 📦 jsdom installieren
+        run: npm install --no-audit --no-fund
+      - name: 🖥️ Frontend-Render-Tests (jsdom)
+        run: npm test

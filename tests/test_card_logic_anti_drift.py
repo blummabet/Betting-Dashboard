@@ -220,6 +220,39 @@ class TestH2hMinSampleSize(unittest.TestCase):
 
 
 # ──────────────────────────────────────────────────────────────────────────
+#  FRONTEND-BUG (27.06.2026): Sharp-Radar-Panels müssen dataset-bewusst sein
+# ──────────────────────────────────────────────────────────────────────────
+class TestSharpRadarDatasetAware(unittest.TestCase):
+    """
+    Original-Bug: das Bayesian-Lern-Panel im Liga-Tab zeigte WM-Gewichte
+    (window.SIGNAL_WEIGHTS + WM-Signal-Liste mit Travel/Wetter), weil es nicht
+    dataset-bewusst war. Fix: liga → window.LIGA_SIGNAL_WEIGHTS + liga-Signal-Liste.
+    Diese Tests verhindern den Rückfall.
+    """
+
+    def setUp(self):
+        self.src = (REPO / "renderer.js").read_text(encoding="utf-8")
+
+    def test_bayesian_panel_is_dataset_aware(self):
+        m = re.search(r'function _renderBayesianWeights\(\)\s*\{(.*?)\n\}', self.src, re.DOTALL)
+        self.assertIsNotNone(m, "_renderBayesianWeights nicht gefunden")
+        body = m.group(1)
+        self.assertIn("_sharpDataset", body,
+            "_renderBayesianWeights muss _sharpDataset prüfen (Liga vs WM)")
+        self.assertIn("LIGA_SIGNAL_WEIGHTS", body,
+            "_renderBayesianWeights muss im Liga-Modus LIGA_SIGNAL_WEIGHTS lesen, nicht nur WM")
+        # Liga-Signal darf in der Signal-Liste auftauchen (kein reines WM-Set mehr)
+        self.assertIn("league_pressure", body,
+            "Liga-Signal-Liste (league_pressure) muss im Panel vorkommen")
+
+    def test_liga_loader_fetches_weights(self):
+        m = re.search(r'function _loadLigaSharpData\(\)\s*\{(.*?)\n\}', self.src, re.DOTALL)
+        self.assertIsNotNone(m, "_loadLigaSharpData nicht gefunden")
+        self.assertIn("liga_signal_weights.json", m.group(1),
+            "_loadLigaSharpData muss liga_signal_weights.json laden (für das Liga-Bayesian-Panel)")
+
+
+# ──────────────────────────────────────────────────────────────────────────
 #  Smoketest: alle Module laden noch
 # ──────────────────────────────────────────────────────────────────────────
 class TestModulesStillLoad(unittest.TestCase):
