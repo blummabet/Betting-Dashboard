@@ -701,6 +701,37 @@ def check_trade_clv_coverage(ctx):
 
 
 @integrity_check
+def check_clv_card_coverage(ctx):
+    """NEU 28.06.2026 (Lucas: „CLV als Nordstern"): aufgelöste Steam-CARD-Picks müssen eine
+    Closing-Linie (clvPP) haben, sonst ist die CLV-Bilanz (compute_clv_summary) blind. Anders als
+    check_trade_clv_coverage (PLATZIERTE Polymarket-Trades) zielt das auf die Card-Picks selbst.
+    Erst ab MIN_N aufgelösten Picks bewertet (vorher zu wenig Signal)."""
+    MIN_N = 10
+    picks = ctx.wm.get("picks") or {}
+    resolved = with_clv = 0
+    for plist in picks.values():
+        if not isinstance(plist, list):
+            continue
+        for p in plist:
+            if not isinstance(p, dict) or p.get("source") != "steam" or p.get("trackingExcluded"):
+                continue
+            if str(p.get("result") or "").upper() not in ("WIN", "LOSS", "VOID"):
+                continue
+            resolved += 1
+            if p.get("clvResolved") and p.get("clvPP") is not None:
+                with_clv += 1
+    fails = []
+    if resolved >= MIN_N:
+        pct = with_clv / resolved * 100
+        if pct < 70:
+            fails.append(f"Nur {with_clv}/{resolved} aufgelöste Steam-Picks haben eine Closing-Linie "
+                         f"({pct:.0f}%) — CLV-Bilanz unvollständig.")
+    return _chk("clv_card_coverage", "CLV: Closing-Abdeckung der Steam-Card-Picks", "warn", fails,
+                "resolve_steam_clv + Closing-Capture prüfen (closing_is_prematch / Anpfiff-Snapshot). "
+                "Ohne Closing-Linie kann compute_clv_summary den Pick nicht werten.")
+
+
+@integrity_check
 def check_edge_consistent(ctx):
     fails = []
     for fx in ctx.poly_all:
