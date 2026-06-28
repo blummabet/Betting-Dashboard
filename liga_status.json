@@ -272,15 +272,6 @@
       "note": "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder Signal nicht registriert."
     },
     {
-      "id": "smartmoney_sane",
-      "label": "Smart-Money-Daten kohärent",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner)."
-    },
-    {
       "id": "btts_not_templated_traded",
       "label": "BTTS-Platzhalter nicht handelbar",
       "severity": "warn",
@@ -315,15 +306,6 @@
       "nFail": 0,
       "failures": [],
       "note": "Je (Spiel, Markt) genau EINE Karte. Mehrfach → _dedup_picks_by_market greift nicht (Refresh-/Merge-Altlast)."
-    },
-    {
-      "id": "smartmoney_cluster_sane",
-      "label": "Smart-Money-Cluster kohärent",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
     },
     {
       "id": "card_only_not_in_trade",
@@ -408,5 +390,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-06-27T19:13:24.665023+00:00"
+  "generatedAt": "2026-06-28T08:49:18.409581+00:00"
 }
