@@ -10,7 +10,7 @@
     "updatedAt": null,
     "oddsUpdatedAt": "2026-06-27T22:56:03.175455+00:00",
     "formUpdatedAt": "2026-06-27T20:53:00.000280+00:00",
-    "picksUpdatedAt": "2026-06-27T20:53:25.125369+00:00",
+    "picksUpdatedAt": "2026-06-28T01:53:43.219079+00:00",
     "resultsUpdatedAt": "2026-06-28T01:42:21.800361+00:00",
     "cornersUpdatedAt": "2026-06-27T20:53:00.128537+00:00",
     "xgUpdatedAt": "2026-06-27T20:53:00.128546+00:00"
@@ -4191,11 +4191,11 @@
     "K": [
       {
         "team": "COL",
-        "played": 2,
+        "played": 3,
         "won": 2,
-        "draw": 0,
+        "draw": 1,
         "lost": 0,
-        "points": 6,
+        "points": 7,
         "gf": 4,
         "ga": 1,
         "gd": 3,
@@ -4203,11 +4203,11 @@
       },
       {
         "team": "POR",
-        "played": 2,
+        "played": 3,
         "won": 1,
-        "draw": 1,
+        "draw": 2,
         "lost": 0,
-        "points": 4,
+        "points": 5,
         "gf": 6,
         "ga": 1,
         "gd": 5,
@@ -4215,76 +4215,76 @@
       },
       {
         "team": "COD",
-        "played": 2,
-        "won": 0,
+        "played": 3,
+        "won": 1,
         "draw": 1,
         "lost": 1,
-        "points": 1,
-        "gf": 1,
-        "ga": 2,
-        "gd": -1,
+        "points": 4,
+        "gf": 4,
+        "ga": 3,
+        "gd": 1,
         "pos": 3
       },
       {
         "team": "UZB",
-        "played": 2,
+        "played": 3,
         "won": 0,
         "draw": 0,
-        "lost": 2,
+        "lost": 3,
         "points": 0,
-        "gf": 1,
-        "ga": 8,
-        "gd": -7,
+        "gf": 2,
+        "ga": 11,
+        "gd": -9,
         "pos": 4
       }
     ],
     "L": [
       {
         "team": "ENG",
-        "played": 2,
-        "won": 1,
+        "played": 3,
+        "won": 2,
         "draw": 1,
         "lost": 0,
-        "points": 4,
-        "gf": 4,
+        "points": 7,
+        "gf": 6,
         "ga": 2,
-        "gd": 2,
+        "gd": 4,
         "pos": 1
       },
       {
-        "team": "GHA",
-        "played": 2,
-        "won": 1,
-        "draw": 1,
-        "lost": 0,
-        "points": 4,
-        "gf": 1,
-        "ga": 0,
-        "gd": 1,
+        "team": "CRO",
+        "played": 3,
+        "won": 2,
+        "draw": 0,
+        "lost": 1,
+        "points": 6,
+        "gf": 5,
+        "ga": 5,
+        "gd": 0,
         "pos": 2
       },
       {
-        "team": "CRO",
-        "played": 2,
+        "team": "GHA",
+        "played": 3,
         "won": 1,
-        "draw": 0,
+        "draw": 1,
         "lost": 1,
-        "points": 3,
-        "gf": 3,
-        "ga": 4,
-        "gd": -1,
+        "points": 4,
+        "gf": 2,
+        "ga": 2,
+        "gd": 0,
         "pos": 3
       },
       {
         "team": "PAN",
-        "played": 2,
+        "played": 3,
         "won": 0,
         "draw": 0,
-        "lost": 2,
+        "lost": 3,
         "points": 0,
         "gf": 0,
-        "ga": 2,
-        "gd": -2,
+        "ga": 4,
+        "gd": -4,
         "pos": 4
       }
     ]
@@ -27267,7 +27267,7 @@
         "odds": 1.79,
         "modelOdds": 1.786,
         "conf": "medium",
-        "verdict": "ABWÄGEN",
+        "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
@@ -27401,7 +27401,11 @@
         "openingMovement": {
           "in_pick_direction": true,
           "move_pp": 6.21
-        }
+        },
+        "origVerdict": "ABWÄGEN",
+        "origOdds": 1.79,
+        "nobetSince": "2026-06-28T01:53:43.059151+00:00",
+        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.79→3.64)"
       }
     ],
     "KO-R32-AUS-EGY": [
@@ -27496,7 +27500,8 @@
         "nobetSince": "2026-06-27T13:17:10.455158+00:00",
         "nobetReason": "Kein Value mehr — Move ausgelaufen / Konsens konvergiert"
       }
-    ]
+    ],
+    "KO-R32-POR-CRO": []
   },
   "playerPicks": {},
   "squads": {
@@ -45859,7 +45864,8 @@
     "KO-R32-NED-MAR": 6,
     "KO-R32-BRA-JPN": 4,
     "KO-R32-CIV-NOR": 7,
-    "KO-R32-AUS-EGY": 9
+    "KO-R32-AUS-EGY": 9,
+    "KO-R32-POR-CRO": 6
   },
   "cornersForm": {
     "ARG": {
@@ -47369,12 +47375,21 @@
   },
   "thirdRanking": [
     {
+      "team": "COD",
+      "group": "K",
+      "points": 4,
+      "gd": 1,
+      "gf": 4,
+      "rank": 1,
+      "qualifies": true
+    },
+    {
       "team": "SWE",
       "group": "F",
       "points": 4,
       "gd": 0,
       "gf": 7,
-      "rank": 1,
+      "rank": 2,
       "qualifies": true
     },
     {
@@ -47383,7 +47398,16 @@
       "points": 4,
       "gd": 0,
       "gf": 2,
-      "rank": 2,
+      "rank": 3,
+      "qualifies": true
+    },
+    {
+      "team": "GHA",
+      "group": "L",
+      "points": 4,
+      "gd": 0,
+      "gf": 2,
+      "rank": 4,
       "qualifies": true
     },
     {
@@ -47392,7 +47416,7 @@
       "points": 4,
       "gd": -1,
       "gf": 5,
-      "rank": 3,
+      "rank": 5,
       "qualifies": true
     },
     {
@@ -47401,7 +47425,7 @@
       "points": 4,
       "gd": -2,
       "gf": 2,
-      "rank": 4,
+      "rank": 6,
       "qualifies": true
     },
     {
@@ -47410,7 +47434,7 @@
       "points": 3,
       "gd": 2,
       "gf": 8,
-      "rank": 5,
+      "rank": 7,
       "qualifies": true
     },
     {
@@ -47419,16 +47443,7 @@
       "points": 3,
       "gd": 0,
       "gf": 3,
-      "rank": 6,
-      "qualifies": true
-    },
-    {
-      "team": "CRO",
-      "group": "L",
-      "points": 3,
-      "gd": -1,
-      "gf": 3,
-      "rank": 7,
+      "rank": 8,
       "qualifies": true
     },
     {
@@ -47437,8 +47452,8 @@
       "points": 3,
       "gd": -1,
       "gf": 2,
-      "rank": 8,
-      "qualifies": true
+      "rank": 9,
+      "qualifies": false
     },
     {
       "team": "DZA",
@@ -47446,7 +47461,7 @@
       "points": 3,
       "gd": -2,
       "gf": 2,
-      "rank": 9,
+      "rank": 10,
       "qualifies": false
     },
     {
@@ -47455,7 +47470,7 @@
       "points": 3,
       "gd": -3,
       "gf": 1,
-      "rank": 10,
+      "rank": 11,
       "qualifies": false
     },
     {
@@ -47464,15 +47479,6 @@
       "points": 2,
       "gd": -1,
       "gf": 3,
-      "rank": 11,
-      "qualifies": false
-    },
-    {
-      "team": "COD",
-      "group": "K",
-      "points": 1,
-      "gd": -1,
-      "gf": 1,
       "rank": 12,
       "qualifies": false
     }
@@ -47616,11 +47622,11 @@
       "round": "R32",
       "roundLabel": "Sechzehntelfinale",
       "matchNo": 80,
-      "home": null,
+      "home": "ENG",
       "away": null,
       "homeRef": "Sieger Gruppe L",
       "awayRef": "Bester Dritter (E/H/I/J/K)",
-      "homeResolved": false,
+      "homeResolved": true,
       "awayResolved": false,
       "bothResolved": false,
       "kickoff": "2026-07-01T16:00:00Z",
@@ -47673,13 +47679,13 @@
       "round": "R32",
       "roundLabel": "Sechzehntelfinale",
       "matchNo": 83,
-      "home": null,
-      "away": null,
+      "home": "POR",
+      "away": "CRO",
       "homeRef": "2. Gruppe K",
       "awayRef": "2. Gruppe L",
-      "homeResolved": false,
-      "awayResolved": false,
-      "bothResolved": false,
+      "homeResolved": true,
+      "awayResolved": true,
+      "bothResolved": true,
       "kickoff": "2026-07-02T23:00:00Z",
       "date": "2026-07-02",
       "venue": "Toronto",
@@ -47749,11 +47755,11 @@
       "round": "R32",
       "roundLabel": "Sechzehntelfinale",
       "matchNo": 87,
-      "home": null,
+      "home": "COL",
       "away": null,
       "homeRef": "Sieger Gruppe K",
       "awayRef": "Bester Dritter (D/E/I/J/L)",
-      "homeResolved": false,
+      "homeResolved": true,
       "awayResolved": false,
       "bothResolved": false,
       "kickoff": "2026-07-04T01:30:00Z",
