@@ -1,14 +1,16 @@
 /* CocoBet Service Worker (28.06.2026) — installierbare PWA + Offline.
  *
- * Strategie (wichtig: KEINE veralteten Picks):
+ * Strategie (wichtig: KEINE veralteten Picks/Code):
  *   - Daten (*.json)        → network-first, Cache nur als Offline-Fallback.
  *   - Navigation (HTML)     → network-first, Cache-Fallback (season-finish-v2.html).
- *   - App-Hülle (JS/CSS/IMG)→ stale-while-revalidate (schnell + selbstheilend).
+ *   - App-Code (JS/CSS)     → network-first (29.06.2026 Fix: SWR lieferte dauerhaft die ALTE
+ *                             Version → „seit gestern keine Änderungen". Jetzt frisch online,
+ *                             Cache nur offline). Bilder bleiben stale-while-revalidate.
  *   - Fremd-Origin (CDN)    → unangetastet durchlassen.
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v1';
+const VERSION = 'cocobet-v2';
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
@@ -72,7 +74,23 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // App-Hülle (JS/CSS/Bilder): stale-while-revalidate.
+  // App-Code (JS/CSS): network-first → online IMMER der frische Code, Cache nur als Offline-Fallback.
+  if (url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
+    e.respondWith(
+      fetch(req)
+        .then((res) => {
+          if (res && res.status === 200) {
+            const copy = res.clone();
+            caches.open(VERSION).then((c) => c.put(req, copy));
+          }
+          return res;
+        })
+        .catch(() => caches.match(req, { ignoreSearch: true }))
+    );
+    return;
+  }
+
+  // Bilder/sonstige Hülle: stale-while-revalidate (ändern sich selten, dürfen schnell sein).
   e.respondWith(
     caches.match(req, { ignoreSearch: true }).then((cached) => {
       const fromNet = fetch(req)

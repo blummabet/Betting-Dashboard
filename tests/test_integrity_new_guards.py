@@ -320,5 +320,34 @@ class TestTradeClvCoverageGuard(unittest.TestCase):
         self.assertTrue(c["ok"])
 
 
+class TestStreaksGuardAndMlsCtx(unittest.TestCase):
+    """29.06.2026: Streaks-Frische-Guard + is_liga gilt auch für mls_default."""
+
+    def _streaks_check(self, streaks):
+        checks = run_checks({"groups": {}}, {}, {}, {}, now=NOW, history={}, streaks=streaks)
+        return _result(checks, "streaks_fresh")
+
+    def test_streaks_missing_flagged(self):
+        self.assertFalse(self._streaks_check({})["ok"])
+
+    def test_streaks_old_schema_flagged(self):
+        # Serien ohne ratePct = Alt-Schema → WARN (genau Lucas' Bug).
+        old = {"_meta": {"generatedAt": NOW.isoformat()},
+               "streaks": [{"team": "X", "type": "over25", "length": 5}]}
+        self.assertFalse(self._streaks_check(old)["ok"])
+
+    def test_streaks_current_schema_ok(self):
+        fresh = {"_meta": {"generatedAt": NOW.isoformat()},
+                 "streaks": [{"team": "X", "type": "over25", "length": 5, "ratePct": 72}]}
+        self.assertTrue(self._streaks_check(fresh)["ok"])
+
+    def test_mls_profile_counts_as_club_mode(self):
+        from wm_data_integrity import IntegrityCtx
+        ctx_mls = IntegrityCtx({"_meta": {"profile": "mls_default"}, "groups": {}}, {}, {}, {})
+        ctx_wm = IntegrityCtx({"_meta": {"profile": "wm2026"}, "groups": {}}, {}, {}, {})
+        self.assertTrue(ctx_mls.is_liga)    # MLS → WM-spezifische Guards passen
+        self.assertFalse(ctx_wm.is_liga)
+
+
 if __name__ == "__main__":
     unittest.main()

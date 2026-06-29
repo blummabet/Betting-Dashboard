@@ -37,6 +37,8 @@ import re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path as _Path
 
+import cocobet_dataset as D   # 29.06.2026: dataset-aware (mls neben wm/liga)
+
 _BASE = _Path(__file__).resolve().parent
 
 
@@ -89,11 +91,13 @@ def _chk(cid, label, severity, failures, note=""):
 class IntegrityCtx:
     """Geteilter Kontext für alle Checks — einmal gebaut, an jeden Guard gereicht."""
     def __init__(self, wm, poly, schedule, venues, lineups=None, now=None,
-                 auto_bets=None, history=None):
+                 auto_bets=None, history=None, streaks=None):
         self.wm = wm or {}
-        # Liga-Modus (25.06.2026, Lucas): einige Guards sind WM-spezifisch (venue_id gegen WM-Stadien,
-        # Kickoff-Turnier-Fenster Juni/Juli, time-Feld) → feuern auf Liga falsch. is_liga lässt sie passen.
-        self.is_liga = ((self.wm.get("_meta") or {}).get("profile") == "liga_default")
+        # Klub-Modus (25.06.2026, Lucas): einige Guards sind WM-spezifisch (venue_id gegen WM-Stadien,
+        # Kickoff-Turnier-Fenster Juni/Juli, time-Feld) → feuern auf Liga/MLS falsch. is_liga lässt sie
+        # passen. 29.06.2026: gilt jetzt für JEDES Nicht-WM-Profil (liga_default UND mls_default), sonst
+        # tripten alle WM-Stadion-/Kickoff-Guards die MLS-Daten.
+        self.is_liga = ((self.wm.get("_meta") or {}).get("profile", "wm2026") != "wm2026")
         self.poly = poly or {}
         self.schedule = schedule or {}
         self.venues = venues or {}
@@ -104,8 +108,12 @@ class IntegrityCtx:
         self.auto_bets = (_ab.get("bets") if isinstance(_ab, dict) else _ab) or []
         # Odds-History dataset-bewusst (26.06.2026): Liga-Guards (z.B. soft_opening_captured) liefen
         # sonst gegen die WM-History → effektiv tot. is_liga kommt aus _meta.profile (oben gesetzt).
-        _hist_default = "liga-odds-history.json" if self.is_liga else "wm2026-odds-history.json"
+        # dataset-aware (29.06.2026): wm2026-/liga-/mls-odds-history.json je COCOBET_DATASET.
+        _hist_default = D.file("wm2026-odds-history.json", "liga-odds-history.json").name
         self.history = (history if history is not None else _lazy(_hist_default)) or {}
+        # Serien-File dataset-aware (29.06.2026): {wm_,liga_,mls_}streaks.json. Injizierbar (Tests).
+        _streaks_default = D.file("wm_streaks.json", "liga_streaks.json").name
+        self.streaks = (streaks if streaks is not None else _lazy(_streaks_default)) or {}
         self.fixtures = [(g, fx) for g, gd in (self.wm.get("groups") or {}).items()
                          for fx in (gd.get("fixtures") or [])]
         self.odds = self.wm.get("odds") or {}
@@ -1549,12 +1557,45 @@ def check_btts_edge_sane(ctx):
                 "Riesen-Edge = Daten kaputt. Auto-Trader blockt via BTTS_MAX_EDGE_PP.")
 
 
+STREAKS_STALE_H = 30.0
+
+@integrity_check
+def check_streaks_fresh(ctx):
+    """NEU 29.06.2026 (Lucas: „seit gestern keine Serien-Änderungen"): Das Serien-File muss frisch
+    sein UND das aktuelle Schema tragen (ratePct aus compute_streaks). Alt-Schema oder stale =
+    compute_streaks lief nicht / die Fetcher haben die neuen Sequenzen nicht geschrieben. Genau der
+    Fall, der die Serien-Seite veraltet aussehen liess. Content-Feature → WARN. Dataset-aware."""
+    data = ctx.streaks or {}
+    if not data:
+        return _chk("streaks_fresh", "Serien frisch + aktuelles Schema", "warn",
+                    ["Serien-File fehlt/leer — compute_streaks lief nicht?"],
+                    "compute_streaks.py nach fetch_wm_form/_corners laufen lassen.")
+    fails = []
+    gen = (data.get("_meta") or {}).get("generatedAt")
+    if gen:
+        try:
+            t = datetime.fromisoformat(str(gen).replace("Z", "+00:00"))
+            if t.tzinfo is None:
+                t = t.replace(tzinfo=timezone.utc)
+            age_h = (ctx.now - t).total_seconds() / 3600
+            if age_h > STREAKS_STALE_H:
+                fails.append(f"Serien {age_h:.0f}h alt (> {STREAKS_STALE_H:.0f}h) — compute_streaks-Lauf prüfen.")
+        except Exception:
+            pass
+    streaks = data.get("streaks") or []
+    if streaks and not any(isinstance(s, dict) and "ratePct" in s for s in streaks):
+        fails.append("Serien im ALT-Schema (kein ratePct/Matchup) — fetch_wm_form/_corners + "
+                     "compute_streaks neu laufen lassen (Schema-stale erzwingt den Re-Fetch).")
+    return _chk("streaks_fresh", "Serien frisch + aktuelles Schema", "warn", fails,
+                "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo.")
+
+
 # ── Runner ───────────────────────────────────────────────────────────────────
 def run_checks(wm, poly, schedule, venues, lineups=None, now=None,
-               auto_bets=None, history=None):
+               auto_bets=None, history=None, streaks=None):
     """Führt die ganze Registry aus. Pure. Ein crashender Check killt den Rest nicht."""
     ctx = IntegrityCtx(wm, poly, schedule, venues, lineups=lineups, now=now,
-                       auto_bets=auto_bets, history=history)
+                       auto_bets=auto_bets, history=history, streaks=streaks)
     out = []
     for fn in INTEGRITY_CHECKS:
         try:
