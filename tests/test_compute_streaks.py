@@ -99,6 +99,30 @@ class TestStreaks(unittest.TestCase):
         self.assertEqual(over["next"]["atHome"], True)
         self.assertEqual(over["next"]["oppRatePct"], 66)
 
+    def test_matchup_downgrades_status_when_opponent_hurts(self):
+        # Eigentendenz stark (80% → allein „intakt"), aber nächster Gegner geht kaum über (20%)
+        # → kombiniert 0.6*0.8 + 0.4*0.2 = 0.56 → „neutral" (lebendiger Status, 29.06.2026).
+        from datetime import date, timedelta
+        fut = (date.today() + timedelta(days=2)).isoformat()
+        wm = _wm({"42": {"o25Seq": [True, True, True, True], "over25Rate": 0.8, "bttsRate": 0.4},
+                  "50": {"over25Rate": 0.20}})
+        wm["groups"]["ENG"]["fixtures"] = [{"home": "42", "away": "50", "date": fut,
+                                            "kickoff": fut + "T15:00:00Z"}]
+        out = S.build_streaks(wm)
+        over = next(s for s in out["streaks"] if s["type"] == "over25" and s["venue"] == "all")
+        self.assertEqual(over["ratePct"], 80)                 # Eigentendenz unverändert
+        self.assertEqual(over["oppSupportPct"], 20)           # Gegner stützt nur 20%
+        self.assertEqual(over["matchupPct"], 56)              # kombiniert
+        self.assertEqual(over["continuation"]["state"], "neutral")   # von intakt → offen gedämpft
+
+    def test_matchup_only_own_when_no_opponent(self):
+        # Ohne nächstes Spiel bleibt der Status reine Eigentendenz (Fallback).
+        wm = _wm({"42": {"o25Seq": [True, True, True, True], "over25Rate": 0.8, "bttsRate": 0.4}})
+        out = S.build_streaks(wm)
+        over = next(s for s in out["streaks"] if s["type"] == "over25")
+        self.assertEqual(over["continuation"]["state"], "intakt")
+        self.assertNotIn("oppSupportPct", over)
+
     def test_sorted_by_length_desc(self):
         wm = _wm({"42": {"o25Seq": [True, True, True], "over25Rate": 0.6, "bttsRate": 0.5},
                   "50": {"o25Seq": [True] * 6, "over25Rate": 0.8, "bttsRate": 0.5}})

@@ -128,34 +128,67 @@
     const p = String(iso).slice(0, 10).split('-');
     return p.length === 3 ? `${p[2]}.${p[1]}.` : '';
   }
-  // Nächstes-Spiel-Zeile (adamchoi-Paarung): Gegner + Datum + komplementäre Gegner-Rate.
+  // Nächstes-Spiel-Block (adamchoi-Paarung): Gegner prominent (Wappen + Name) + Datum + Gegner-Rate-Chip.
   function _streakNextHtml(s) {
     const nx = s.next;
     if (!nx) return '';
     const vs = nx.atHome ? 'vs' : '@';
     const opp = nx.oppName || nx.oppId || '?';
     const dt = _streakShortDate(nx.date);
-    let oppTxt = '';
-    if (nx.oppRatePct != null) oppTxt = ` · Gegner ${nx.oppRatePct}% ${_OPP_METRIC[s.type] || ''}`.trimEnd();
-    return `<div style="font-size:10px;color:var(--muted);margin-top:2px;">⏭ nächstes: ${vs} ${opp}${dt ? ' · ' + dt : ''}${oppTxt}</div>`;
+    const crest = nx.oppId ? `https://media.api-sports.io/football/teams/${nx.oppId}.png` : '';
+    let oppChip = '';
+    if (nx.oppRatePct != null) {
+      oppChip = `<span style="display:inline-block;background:var(--border);color:var(--muted);border-radius:6px;padding:1px 7px;font-size:10px;font-weight:700;white-space:nowrap;">Gegner ${nx.oppRatePct}% ${_OPP_METRIC[s.type] || ''}</span>`;
+    }
+    return `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:7px;padding-top:7px;border-top:1px dashed var(--border);">
+      <span style="font-size:11px;color:var(--muted);font-weight:600;">⏭ Nächstes ${vs}</span>
+      ${crest ? `<img src="${crest}" style="width:18px;height:18px;object-fit:contain;" loading="lazy" alt="">` : ''}
+      <span style="font-size:13.5px;font-weight:800;color:var(--text);">${opp}</span>
+      ${dt ? `<span style="font-size:11px;color:var(--muted);">· ${dt}</span>` : ''}
+      ${oppChip}
+    </div>`;
+  }
+  // Farbe nach Stütz-Stärke (gleiche Schwellen wie der Status): ≥60 grün, ≤45 amber, sonst grau.
+  function _rateColor(pct) {
+    if (pct == null) return _STREAK_CONT.neutral.col;
+    if (pct >= 60) return _STREAK_CONT.intakt.col;
+    if (pct <= 45) return _STREAK_CONT.wackelt.col;
+    return _STREAK_CONT.neutral.col;
+  }
+  // Beschrifteter Mini-%-Balken (Eigentendenz bzw. Gegner).
+  function _miniBar(label, pct, col) {
+    return `<div style="margin-bottom:7px;">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:10px;line-height:1;">
+        <span style="color:var(--muted);">${label}</span>
+        <span style="font-weight:800;color:${col};">${pct}%</span>
+      </div>
+      <div style="height:5px;background:var(--border);border-radius:99px;margin-top:3px;overflow:hidden;">
+        <div style="height:100%;width:${Math.max(0, Math.min(100, pct))}%;background:${col};border-radius:99px;"></div>
+      </div>
+    </div>`;
   }
   function _streakRowHtml(s) {
     const ic = _STREAK_ICON[s.type] || '🔥';
-    const flames = '🔥'.repeat(Math.min(5, s.length || 0));
     const c = _STREAK_CONT[(s.continuation || {}).state] || _STREAK_CONT.neutral;
     const logo = s.teamId ? `https://media.api-sports.io/football/teams/${s.teamId}.png` : '';
-    const venue = _VENUE_LABEL[s.venue] ? ` <span style="color:var(--accent);font-weight:700;">${_VENUE_LABEL[s.venue]}</span>` : '';
-    const rate = (s.ratePct != null) ? ` · <span style="color:var(--muted);">Grundrate ${s.ratePct}%</span>` : '';
-    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--border);">
-      ${logo ? `<img src="${logo}" style="width:22px;height:22px;object-fit:contain;flex-shrink:0;" loading="lazy" alt="">` : ''}
+    const venue = _VENUE_LABEL[s.venue] ? ` · <span style="color:var(--accent);font-weight:700;">${_VENUE_LABEL[s.venue]}</span>` : '';
+    // Zwei getrennte Balken: Eigentendenz + nächster Gegner (29.06.2026, Lucas: lebendige Serien).
+    const ownPct = (s.ratePct != null) ? s.ratePct : null;
+    const oppPct = (s.next && s.next.oppRatePct != null) ? s.next.oppRatePct : null;
+    const oppSup = (s.oppSupportPct != null) ? s.oppSupportPct : oppPct;   // färbt nach Stütze FÜR die Serie
+    let bars = '';
+    if (ownPct != null) bars += _miniBar('Eigen', ownPct, _rateColor(ownPct));
+    if (oppPct != null) bars += _miniBar('Gegner', oppPct, _rateColor(oppSup));
+    return `<div style="display:flex;align-items:flex-start;gap:11px;padding:14px 6px;border-bottom:1px solid var(--border);">
+      ${logo ? `<img src="${logo}" style="width:30px;height:30px;object-fit:contain;flex-shrink:0;margin-top:2px;" loading="lazy" alt="">` : ''}
       <div style="flex:1;min-width:0;">
-        <div style="font-size:13px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.team} <span style="font-size:10px;color:var(--muted);font-weight:600;">${s.leagueName || s.league || ''}</span></div>
-        <div style="font-size:11px;color:var(--muted);">${ic} ${s.market}${venue} · <strong style="color:var(--text)">${s.length} in Folge</strong>${rate}</div>
+        <div style="font-size:15px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.team} <span style="font-size:11px;color:var(--muted);font-weight:600;">${s.leagueName || s.league || ''}</span></div>
+        <div style="font-size:12.5px;color:var(--text);margin-top:3px;">${ic} ${s.market}${venue} · <strong style="color:${c.col};">${s.length} in Folge</strong></div>
         ${_streakNextHtml(s)}
       </div>
-      <div style="text-align:right;flex-shrink:0;">
-        <div style="font-size:13px;line-height:1.1;">${flames}</div>
-        <div style="font-size:10px;font-weight:700;color:${c.col};" title="${(s.continuation || {}).label || ''}">${c.label}</div>
+      <div style="flex-shrink:0;width:110px;" title="${(s.continuation || {}).label || ''}">
+        ${bars}
+        <div style="font-size:10px;font-weight:800;color:${c.col};text-align:right;text-transform:uppercase;letter-spacing:.4px;">${c.label}</div>
       </div>
     </div>`;
   }

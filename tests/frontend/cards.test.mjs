@@ -116,8 +116,8 @@ test('_streakRowHtml: Grundrate + nächstes Spiel + Gegner-Rate', () => {
     market: 'Über 2,5 Tore', length: 5, venue: 'H', ratePct: 72, continuation: { state: 'intakt', label: 'x' },
     next: { oppName: 'City', date: '2026-08-24', atHome: true, oppRatePct: 66 } });
   assert.match(h, /Heim/);                 // Venue-Label
-  assert.match(h, /Grundrate 72%/);        // Rate als Kontext
-  assert.match(h, /nächstes/);
+  assert.match(h, /72%/);                  // Rate als %-Balken (ersetzt Flammen)
+  assert.match(h, /Nächstes/);
   assert.match(h, /City/);
   assert.match(h, /66% Über/);             // komplementäre Gegner-Rate
   assert.match(h, /24\.08\./);

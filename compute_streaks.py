@@ -47,19 +47,45 @@ def _lead_run(seq: list, target: bool) -> int:
     return n
 
 
+# Matchup-Gewichtung (29.06.2026, Lucas: „lebendige" Serien): Status aus Eigentendenz UND
+# nächstem Gegner. Eigene Serie ist die Basis (höheres Gewicht), Gegner moduliert.
+MATCHUP_OWN_W = 0.6
+MATCHUP_OPP_W = 0.4
+
+
+def _state(underlying: float, length: int) -> str:
+    """Status-Schwellen für eine Stütz-Rate (0..1)."""
+    if underlying >= 0.60:
+        return "intakt"
+    if underlying <= 0.45 or (length >= 8 and underlying < 0.55):
+        return "wackelt"
+    return "neutral"
+
+
 def _continuation(rate, target_is_false: bool, length: int) -> dict:
-    """Stützt die Grundrate die Serie? rate = Roh-Rate des Marktes (z.B. over25Rate)."""
+    """Eigentendenz: Stützt die eigene Grundrate die Serie? rate = Roh-Rate (z.B. over25Rate)."""
     if rate is None:
         return {"state": "neutral", "ratePct": None, "label": "zu wenig Daten"}
     underlying = (1.0 - rate) if target_is_false else rate   # Rate FÜR die Serien-Richtung
     pct = round(underlying * 100)
-    if underlying >= 0.60:
-        state = "intakt"
-    elif underlying <= 0.45 or (length >= 8 and underlying < 0.55):
-        state = "wackelt"
-    else:
-        state = "neutral"
-    return {"state": state, "ratePct": pct, "label": f"Grundrate dafür {pct}%"}
+    return {"state": _state(underlying, length), "ratePct": pct, "label": f"Eigentendenz {pct}%"}
+
+
+def _matchup_continuation(cont: dict, opp_pct, target_is_false: bool, length: int) -> tuple:
+    """Status aus Eigentendenz + Gegner-Stütze. opp_pct = Roh-Gegnermetrik (%, aus _opp_rate_pct).
+    Gibt (continuation_dict, oppSupportPct, matchupPct) zurück. Ohne Gegnerdaten = Eigentendenz pur."""
+    own = cont.get("ratePct")
+    if own is None or opp_pct is None:
+        return cont, None, None
+    own_f = own / 100.0
+    # Gegner-Stütze FÜR die Serien-Richtung: bei Under/Nein-Serien (target_false) zählt das Gegenteil.
+    opp_support = (1.0 - opp_pct / 100.0) if target_is_false else (opp_pct / 100.0)
+    combined = MATCHUP_OWN_W * own_f + MATCHUP_OPP_W * opp_support
+    state = _state(combined, length)
+    opp_support_pct = round(opp_support * 100)
+    matchup_pct = round(combined * 100)
+    label = f"Eigen {own}% + Gegner {opp_support_pct}% → {matchup_pct}%"
+    return ({"state": state, "ratePct": own, "label": label}, opp_support_pct, matchup_pct)
 
 
 def _filter_venue(seq, venue_seq, venue):
@@ -150,7 +176,14 @@ def build_streaks(wm: dict) -> dict:
             }
             nf = next_fx.get(str(tid))
             if nf:
-                s["next"] = {**nf, "oppRatePct": _opp_rate_pct(key, nf["oppId"], form, cf)}
+                opp_pct = _opp_rate_pct(key, nf["oppId"], form, cf)
+                s["next"] = {**nf, "oppRatePct": opp_pct}
+                # Lebendiger Status: Eigentendenz × nächster Gegner (29.06.2026, Lucas).
+                mcont, opp_support_pct, matchup_pct = _matchup_continuation(cont, opp_pct, target_false, length)
+                s["continuation"] = mcont
+                if opp_support_pct is not None:
+                    s["oppSupportPct"] = opp_support_pct   # Gegner-Stütze FÜR die Richtung (für 2. Balken-Farbe)
+                    s["matchupPct"] = matchup_pct
             streaks.append(s)
 
     # Tor-/BTTS-/Team-Märkte (form, venueSeq)
