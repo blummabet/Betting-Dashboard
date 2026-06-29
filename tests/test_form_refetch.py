@@ -16,15 +16,20 @@ OLD = (datetime.now(timezone.utc) - timedelta(hours=48)).isoformat()
 
 
 class TestRefetch(unittest.TestCase):
-    def test_missing_o25seq_forces_refetch_even_if_fresh(self):
-        # frisch, aber ohne o25Seq → trotzdem neu holen (der eigentliche Bug)
+    def test_missing_seq_forces_refetch_even_if_fresh(self):
+        # frisch, aber ohne Streak-Felder → trotzdem neu holen (der eigentliche Bug)
         self.assertTrue(F.form_needs_refetch({"updatedAt": NOW, "over25Rate": 0.5}))
 
-    def test_has_o25seq_and_fresh_skips(self):
-        self.assertFalse(F.form_needs_refetch({"updatedAt": NOW, "o25Seq": [True, False]}))
+    def test_missing_venueseq_forces_refetch(self):
+        # alter Eintrag MIT o25Seq, aber OHNE venueSeq (Heim/Auswärts-Split) → neu holen
+        self.assertTrue(F.form_needs_refetch({"updatedAt": NOW, "o25Seq": [True, False]}))
 
-    def test_has_o25seq_but_old_refetches(self):
-        self.assertTrue(F.form_needs_refetch({"updatedAt": OLD, "o25Seq": [True]}))
+    def test_full_schema_and_fresh_skips(self):
+        self.assertFalse(F.form_needs_refetch({"updatedAt": NOW, "o25Seq": [True, False],
+                                               "venueSeq": ["H", "A"]}))
+
+    def test_full_schema_but_old_refetches(self):
+        self.assertTrue(F.form_needs_refetch({"updatedAt": OLD, "o25Seq": [True], "venueSeq": ["H"]}))
 
     def test_empty_refetches(self):
         self.assertTrue(F.form_needs_refetch({}))

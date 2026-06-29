@@ -93,7 +93,7 @@ def form_needs_refetch(existing: dict) -> bool:
     """Form-Eintrag neu holen? (28.06.2026, Lucas: Serien blieben leer.)
     Zeit-stale ODER schema-stale: fehlt das o25Seq-Feld (neu für Streaks), MUSS neu geholt werden —
     sonst überspringt der 24h-Cache einen „frischen" Eintrag und schreibt die Streak-Sequenzen nie."""
-    if "o25Seq" not in (existing or {}):
+    if "venueSeq" not in (existing or {}):   # neuestes Streak-Feld → erzwingt Voll-Re-Fetch
         return True
     return is_stale((existing or {}).get("updatedAt"), FORM_STALE_H)
 
@@ -205,6 +205,7 @@ def _parse_results(fixtures: list, team_api_id: int) -> dict | None:
         rows.append({
             "r": result, "scored": scored, "conceded": conceded,
             "total": total, "o25": total > 2, "btts": scored > 0 and conceded > 0,
+            "h": bool(is_home), "sc": scored > 0, "cs": conceded == 0,
         })
 
     if not rows:
@@ -221,10 +222,16 @@ def _parse_results(fixtures: list, team_api_id: int) -> dict | None:
         "avgGoals":      round(sum(r["total"]    for r in rows) / n, 3),
         "over25Rate":    round(sum(r["o25"]       for r in rows) / n, 3),
         "bttsRate":      round(sum(r["btts"]      for r in rows) / n, 3),
+        "scoredRate":    round(sum(r["sc"]        for r in rows) / n, 3),
+        "cleanSheetRate": round(sum(r["cs"]       for r in rows) / n, 3),
         # Pro-Spiel-Sequenzen (most-recent-first) für compute_streaks.py (28.06.2026, Lucas: Serien).
         # Roh-Daten lagen schon in rows, wurden bisher zu Raten verdichtet + verworfen.
+        # venueSeq ('H'/'A') parallel → Heim/Auswärts-Split (adamchoi-Stil). sc/cs = trifft/zu null.
         "o25Seq":        [bool(r["o25"])  for r in rows[:15]],
         "bttsSeq":       [bool(r["btts"]) for r in rows[:15]],
+        "scoredSeq":     [bool(r["sc"])   for r in rows[:15]],
+        "csSeq":         [bool(r["cs"])   for r in rows[:15]],
+        "venueSeq":      ["H" if r["h"] else "A" for r in rows[:15]],
         "games":         n,
         "updatedAt":     now_iso(),
     }

@@ -29,6 +29,7 @@ import cocobet_dataset as D   # dataset-aware (28.06.2026): Liga füllt cornersF
 BASE         = Path(__file__).parent
 WM_FILE      = D.data_file()   # wm2026-data.json (WM) bzw. liga-data.json (Liga)
 CORNER_LINE  = 9.5             # Gesamt-Ecken-Linie für die Ecken-Serie (Streak-Content)
+CARD_LINE    = 3.5             # Gesamt-Karten-Linie für die Karten-Serie
 APIF_HOST    = "v3.football.api-sports.io"
 APIF_KEY     = os.environ.get("APISPORTS_KEY", "")
 DELAY        = 1.5       # seconds between requests (Pro plan: 10 req/min)
@@ -133,15 +134,23 @@ def fetch_fixture_stats(fixture_id: int, team_api_id: int) -> dict:
     resp = apif_get("fixtures/statistics", {"fixture": fixture_id})
     time.sleep(DELAY)
 
-    result = {"c_for": None, "c_against": None, "xg_for": None, "xg_against": None}
+    result = {"c_for": None, "c_against": None, "xg_for": None, "xg_against": None,
+              "cards_total": None}
 
     if not resp:
         return result
 
     # resp: [{"team": {"id": ...}, "statistics": [{"type": "...", "value": ...}, ...]}, ...]
     corners: dict[int, int]   = {}
+    cards:   dict[int, int]   = {}   # Gelb + Rot pro Team (28.06.2026: Karten-Serie)
     xg:      dict[int, float] = {}
     team_ids: list[int]       = []
+
+    def _as_int(v):
+        try:
+            return int(v) if v is not None else 0
+        except (ValueError, TypeError):
+            return 0
 
     for team_stats in resp:
         t_id = team_stats.get("team", {}).get("id")
@@ -154,10 +163,10 @@ def fetch_fixture_stats(fixture_id: int, team_api_id: int) -> dict:
             val   = stat.get("value")
 
             if stype == "Corner Kicks":
-                try:
-                    corners[t_id] = int(val) if val is not None else 0
-                except (ValueError, TypeError):
-                    corners[t_id] = 0
+                corners[t_id] = _as_int(val)
+
+            elif stype in ("Yellow Cards", "Red Cards"):
+                cards[t_id] = cards.get(t_id, 0) + _as_int(val)
 
             elif stype == "expected_goals":
                 # API-Football returns e.g. "1.42" or null
@@ -172,6 +181,10 @@ def fetch_fixture_stats(fixture_id: int, team_api_id: int) -> dict:
             if opp_id != team_api_id and opp_id in corners:
                 result["c_against"] = corners[opp_id]
                 break
+
+    # Karten gesamt (beide Teams) — nur wenn für beide Seiten vorhanden
+    if len(team_ids) >= 2 and all(t in cards for t in team_ids[:2]):
+        result["cards_total"] = cards[team_ids[0]] + cards[team_ids[1]]
 
     # xG for our team
     if team_api_id in xg:
@@ -203,7 +216,8 @@ def compute_stats_for_team(tid: str, api_id: int) -> tuple[dict | None, dict | N
 
     c_for_list:    list[int]   = []
     c_against_list: list[int]  = []
-    c_total_dated: list[tuple]  = []   # (fixture_date, gesamt_ecken) für die Streak-Sequenz
+    c_total_dated: list[tuple]  = []   # (date, gesamt_ecken, venue) für die Ecken-Serie
+    card_dated:    list[tuple]  = []   # (date, gesamt_karten, venue) für die Karten-Serie
     xg_for_list:   list[float] = []
     xg_against_list: list[float] = []
 
@@ -213,13 +227,18 @@ def compute_stats_for_team(tid: str, api_id: int) -> tuple[dict | None, dict | N
             continue
 
         stats = fetch_fixture_stats(fx_id, api_id)
+        _fxd = fx.get("fixture", {}).get("date", "")
+        _venue = "H" if fx.get("teams", {}).get("home", {}).get("id") == api_id else "A"
 
         # Corners (both sides must be present)
         if stats["c_for"] is not None and stats["c_against"] is not None:
             c_for_list.append(stats["c_for"])
             c_against_list.append(stats["c_against"])
-            c_total_dated.append((fx.get("fixture", {}).get("date", ""),
-                                  stats["c_for"] + stats["c_against"]))
+            c_total_dated.append((_fxd, stats["c_for"] + stats["c_against"], _venue))
+
+        # Karten gesamt (beide Teams)
+        if stats.get("cards_total") is not None:
+            card_dated.append((_fxd, stats["cards_total"], _venue))
 
         # xG (both sides must be present)
         if stats["xg_for"] is not None and stats["xg_against"] is not None:
@@ -233,7 +252,8 @@ def compute_stats_for_team(tid: str, api_id: int) -> tuple[dict | None, dict | N
         # Ecken-Serie (28.06.2026, Lucas): Gesamt-Ecken pro Spiel > Linie, most-recent-first (nach
         # Fixture-Datum sortiert). overLineRate = Grundrate dafür (Continuation im Streak).
         _seq_src = sorted(c_total_dated, key=lambda x: x[0], reverse=True)[:15]
-        corner_over_seq = [bool(tot > CORNER_LINE) for (_d, tot) in _seq_src]
+        corner_over_seq = [bool(tot > CORNER_LINE) for (_d, tot, _v) in _seq_src]
+        corner_venue    = [v for (_d, _t, v) in _seq_src]
         over_rate = round(sum(corner_over_seq) / len(corner_over_seq), 3) if corner_over_seq else None
         corners_result = {
             "forAvg":     round(sum(c_for_list)     / c_games, 2),
@@ -241,9 +261,18 @@ def compute_stats_for_team(tid: str, api_id: int) -> tuple[dict | None, dict | N
             "games":      c_games,
             "cornerLine":     CORNER_LINE,
             "cornerOverSeq":  corner_over_seq,
+            "cornerVenueSeq": corner_venue,
             "overLineRate":   over_rate,
             "updatedAt":  now_iso(),
         }
+        # Karten-Serie (28.06.2026): Gesamt-Karten pro Spiel > CARD_LINE, most-recent-first.
+        if card_dated:
+            _cs = sorted(card_dated, key=lambda x: x[0], reverse=True)[:15]
+            card_over_seq = [bool(tot > CARD_LINE) for (_d, tot, _v) in _cs]
+            corners_result["cardLine"]      = CARD_LINE
+            corners_result["cardOverSeq"]   = card_over_seq
+            corners_result["cardVenueSeq"]  = [v for (_d, _t, v) in _cs]
+            corners_result["cardOverRate"]  = round(sum(card_over_seq) / len(card_over_seq), 3) if card_over_seq else None
 
     # ── Build xgStats ─────────────────────────────────────────────────────
     xg_result = None
@@ -297,7 +326,7 @@ def main():
         # Schema-stale (28.06.2026): fehlt die neue cornerOverSeq, trotz Zeit-Frische neu holen —
         # sonst schreibt der Cache die Ecken-Serie nie (wie beim Form-o25Seq-Fix).
         _c_entry = corners_form.get(tid, {})
-        c_stale = is_stale(_c_entry.get("updatedAt"), STALE_H) or ("cornerOverSeq" not in _c_entry)
+        c_stale = is_stale(_c_entry.get("updatedAt"), STALE_H) or ("cornerVenueSeq" not in _c_entry)
         x_stale = is_stale(xg_stats.get(tid,     {}).get("updatedAt"), STALE_H)
 
         if not c_stale and not x_stale:

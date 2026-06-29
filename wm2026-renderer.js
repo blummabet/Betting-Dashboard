@@ -103,22 +103,47 @@
     _loadStreaks(isLiga).finally(() => { _streaksLoading[ds] = false; if (rerender) rerender(); });
   }
 
-  const _STREAK_ICON = { over25: '⚽', under25: '🧱', bttsYes: '🤝', bttsNo: '🚫', cornersOver: '🚩', cornersUnder: '🚩' };
+  const _STREAK_ICON = { over25: '⚽', under25: '🧱', bttsYes: '🤝', bttsNo: '🚫',
+                         cornersOver: '🚩', cornersUnder: '🚩', scored: '🎯', cleanSheet: '🛡️', cards: '🟨' };
   const _STREAK_CONT = {
     intakt:  { col: '#3fb950', label: 'Serie intakt' },
     neutral: { col: '#8b949e', label: 'offen' },
     wackelt: { col: '#e3b341', label: 'wackelt' },
   };
+  // venue-Suffix + komplementäre Gegner-Metrik (für nächstes Spiel).
+  const _VENUE_LABEL = { H: 'Heim', A: 'Auswärts' };
+  const _OPP_METRIC = { over25: 'Über', under25: 'Über', bttsYes: 'BTTS', bttsNo: 'BTTS',
+                        cornersOver: 'Ecken', cornersUnder: 'Ecken', cards: 'Karten',
+                        scored: 'kassiert', cleanSheet: 'trifft' };
+  function _streakShortDate(iso) {
+    if (!iso) return '';
+    const p = String(iso).slice(0, 10).split('-');
+    return p.length === 3 ? `${p[2]}.${p[1]}.` : '';
+  }
+  // Nächstes-Spiel-Zeile (adamchoi-Paarung): Gegner + Datum + komplementäre Gegner-Rate.
+  function _streakNextHtml(s) {
+    const nx = s.next;
+    if (!nx) return '';
+    const vs = nx.atHome ? 'vs' : '@';
+    const opp = nx.oppName || nx.oppId || '?';
+    const dt = _streakShortDate(nx.date);
+    let oppTxt = '';
+    if (nx.oppRatePct != null) oppTxt = ` · Gegner ${nx.oppRatePct}% ${_OPP_METRIC[s.type] || ''}`.trimEnd();
+    return `<div style="font-size:10px;color:var(--muted);margin-top:2px;">⏭ nächstes: ${vs} ${opp}${dt ? ' · ' + dt : ''}${oppTxt}</div>`;
+  }
   function _streakRowHtml(s) {
     const ic = _STREAK_ICON[s.type] || '🔥';
     const flames = '🔥'.repeat(Math.min(5, s.length || 0));
     const c = _STREAK_CONT[(s.continuation || {}).state] || _STREAK_CONT.neutral;
     const logo = s.teamId ? `https://media.api-sports.io/football/teams/${s.teamId}.png` : '';
+    const venue = _VENUE_LABEL[s.venue] ? ` <span style="color:var(--accent);font-weight:700;">${_VENUE_LABEL[s.venue]}</span>` : '';
+    const rate = (s.ratePct != null) ? ` · <span style="color:var(--muted);">Grundrate ${s.ratePct}%</span>` : '';
     return `<div style="display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid var(--border);">
       ${logo ? `<img src="${logo}" style="width:22px;height:22px;object-fit:contain;flex-shrink:0;" loading="lazy" alt="">` : ''}
       <div style="flex:1;min-width:0;">
         <div style="font-size:13px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.team} <span style="font-size:10px;color:var(--muted);font-weight:600;">${s.leagueName || s.league || ''}</span></div>
-        <div style="font-size:11px;color:var(--muted);">${ic} ${s.market} · <strong style="color:var(--text)">${s.length} in Folge</strong></div>
+        <div style="font-size:11px;color:var(--muted);">${ic} ${s.market}${venue} · <strong style="color:var(--text)">${s.length} in Folge</strong>${rate}</div>
+        ${_streakNextHtml(s)}
       </div>
       <div style="text-align:right;flex-shrink:0;">
         <div style="font-size:13px;line-height:1.1;">${flames}</div>
@@ -129,14 +154,19 @@
 
   // Streak-Typ → Filter-Gruppe (28.06.2026, Lucas: nach Streak-Art filtern).
   const _STREAK_GROUP = { over25: 'tore', under25: 'tore', bttsYes: 'btts', bttsNo: 'btts',
-                          cornersOver: 'ecken', cornersUnder: 'ecken' };
-  const _STREAK_GROUP_LABEL = { tore: '⚽ Tore O/U', btts: '🤝 BTTS', ecken: '🚩 Ecken' };
+                          cornersOver: 'ecken', cornersUnder: 'ecken',
+                          scored: 'team', cleanSheet: 'team', cards: 'karten' };
+  const _STREAK_GROUP_LABEL = { tore: '⚽ Tore O/U', btts: '🤝 BTTS', ecken: '🚩 Ecken',
+                                team: '🎯 Team (trifft/zu null)', karten: '🟨 Karten' };
   const _streakGroup = (t) => _STREAK_GROUP[t] || 'sonst';
+  const _VENUE_FILTERS = [['all', 'Gesamt'], ['H', '🏠 Heim'], ['A', '✈️ Auswärts']];
   let _streakSection = 'national';   // welcher Datensatz im Tab
   let _streakLeagueF = 'all';
   let _streakTypeF   = 'all';
+  let _streakVenueF  = 'all';        // Gesamt / Heim / Auswärts (adamchoi-Split)
   window.wmSetStreakLeague = (l) => { _streakLeagueF = l; _renderStreaksInto(); };
   window.wmSetStreakType   = (t) => { _streakTypeF = t; _renderStreaksInto(); };
+  window.wmSetStreakVenue  = (v) => { _streakVenueF = v; _renderStreaksInto(); };
 
   // Voller Serien-Tab. section: 'national'→Liga, sonst WM.
   window.initStreaks = async function (section) {
@@ -158,14 +188,15 @@
     let html = `<div style="max-width:900px;margin:0 auto;">
       <div class="wm-header"><div class="wm-header-left">
         <div class="wm-title">🔥 Serien</div>
-        <div class="wm-subtitle">Aktive Team-Serien — Tore Über/Unter, Beide treffen &amp; Ecken. Wo läuft gerade eine Strähne?</div>
+        <div class="wm-subtitle">Aktive Team-Serien — Tore Über/Unter, Beide treffen, Ecken, Karten &amp; Team (trifft/zu null). Mit Heim/Auswärts-Split und nächstem Spiel.</div>
       </div></div>`;
     if (!full.length) {
       html += `<div style="text-align:center;padding:40px 16px;color:var(--muted);font-size:13px;line-height:1.6;">Noch keine aktiven Serien (ab 3 in Folge). Füllt sich, sobald genug Spiele gelaufen sind.</div></div>`;
       panel.innerHTML = html; return;
     }
-    // Filter anwenden
+    // Filter anwenden — venue: 'all' zeigt nur Gesamt-Serien (keine H/A-Duplikate)
     let list = full.slice();
+    list = list.filter(s => (s.venue || 'all') === _streakVenueF);
     if (_streakLeagueF !== 'all') list = list.filter(s => s.league === _streakLeagueF);
     if (_streakTypeF !== 'all') list = list.filter(s => _streakGroup(s.type) === _streakTypeF);
 
@@ -173,6 +204,12 @@
     const _fbtn = (active, label, fn) => `<button onclick="${fn}" style="background:${active ? 'var(--accent)' : 'transparent'};color:${active ? '#000' : 'var(--muted)'};border:1px solid ${active ? 'var(--accent)' : 'var(--border)'};border-radius:8px;padding:5px 11px;font-size:12px;font-weight:700;cursor:pointer;margin:0 4px 6px 0;">${label}</button>`;
     const leagues = [...new Set(full.map(s => s.league))].sort();
     const groups = [...new Set(full.map(s => _streakGroup(s.type)))].filter(g => _STREAK_GROUP_LABEL[g]);
+    // Heim/Auswärts-Split (nur zeigen, wenn überhaupt venue-getaggte Serien da sind)
+    const hasVenue = full.some(s => s.venue === 'H' || s.venue === 'A');
+    if (hasVenue) {
+      html += `<div style="margin-bottom:4px;">` + _VENUE_FILTERS.map(([v, lab]) =>
+        _fbtn(_streakVenueF === v, lab, `wmSetStreakVenue('${v}')`)).join('') + `</div>`;
+    }
     if (leagues.length > 1) {
       html += `<div style="margin-bottom:4px;">` + _fbtn(_streakLeagueF === 'all', 'Alle Ligen', "wmSetStreakLeague('all')")
         + leagues.map(l => _fbtn(_streakLeagueF === l, l, `wmSetStreakLeague('${l}')`)).join('') + `</div>`;
@@ -195,7 +232,7 @@
   function _strongStreaksSectionHtml(isLiga) {
     const data = _streaksCache[isLiga ? 'liga' : 'wm'];
     if (!data) return '';
-    const strong = (data.streaks || []).filter(s => s.strong).slice(0, 4);
+    const strong = (data.streaks || []).filter(s => s.strong && (s.venue || 'all') === 'all').slice(0, 4);
     if (!strong.length) return '';
     let h = `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:16px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
@@ -208,11 +245,24 @@
   }
 
   // Per-Match-Serien-Box für eine Card (28.06.2026, Lucas): Serien von Heim/Auswärts dieses Spiels.
+  // Pro (Team,Markt) genau EINE Serie wählen: bevorzugt die venue-passende (Heim-Serie fürs
+  // Heimteam, Auswärts fürs Auswärtsteam), sonst die Gesamt-Serie. Verhindert H/A/Gesamt-Duplikate.
+  function _streaksForTeam(list, teamId, prefVenue) {
+    const byType = {};
+    const score = (v) => (v === prefVenue ? 2 : v === 'all' ? 1 : 0);
+    for (const s of list) {
+      if (s.teamId !== String(teamId)) continue;
+      const cur = byType[s.type];
+      if (!cur || score(s.venue) > score(cur.venue)) byType[s.type] = s;
+    }
+    return Object.values(byType);
+  }
   function _matchStreaksHtml(homeId, awayId) {
     const data = _streaksCache[_mode === 'liga' ? 'liga' : 'wm'];
     if (!data) return '';
-    const ms = (data.streaks || [])
-      .filter(s => s.teamId === String(homeId) || s.teamId === String(awayId))
+    const all = data.streaks || [];
+    const ms = _streaksForTeam(all, homeId, 'H')
+      .concat(_streaksForTeam(all, awayId, 'A'))
       .sort((a, b) => b.length - a.length);
     if (!ms.length) return '';
     let h = `<div style="background:linear-gradient(135deg,rgba(240,136,62,0.10),rgba(240,136,62,0.03));border:1px solid rgba(240,136,62,0.25);border-radius:10px;padding:10px 12px;margin:10px 0;">
@@ -220,8 +270,9 @@
     for (const s of ms.slice(0, 4)) {
       const ic = _STREAK_ICON[s.type] || '🔥';
       const c = _STREAK_CONT[(s.continuation || {}).state] || _STREAK_CONT.neutral;
+      const venue = _VENUE_LABEL[s.venue] ? ` <span style="color:#f0883e;font-weight:700;">${_VENUE_LABEL[s.venue]}</span>` : '';
       h += `<div style="display:flex;align-items:center;gap:6px;font-size:12px;margin:4px 0;">
-        <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><strong>${s.team}</strong> · ${ic} ${s.market}</span>
+        <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><strong>${s.team}</strong> · ${ic} ${s.market}${venue}</span>
         <span style="font-weight:800;white-space:nowrap;">${s.length}×</span>
         <span style="font-size:10px;font-weight:700;color:${c.col};white-space:nowrap;">${c.label}</span>
       </div>`;
