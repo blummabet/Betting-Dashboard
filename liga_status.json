@@ -163,12 +163,9 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": false,
-      "nFail": 2,
-      "failures": [
-        "497-502: kein public_hw",
-        "500-487: kein public_hw"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
@@ -176,7 +173,7 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 18,
+      "nFail": 20,
       "failures": [
         "42-1346: public aus Einzel-Book 'williamhill' statt Konsens",
         "64-33: public aus Einzel-Book 'williamhill' statt Konsens",
@@ -190,7 +187,9 @@
         "36-49: public aus Einzel-Book 'williamhill' statt Konsens",
         "494-895: public aus Einzel-Book 'marathonbet' statt Konsens",
         "495-492: public aus Einzel-Book 'marathonbet' statt Konsens",
+        "497-502: public aus Einzel-Book 'marathonbet' statt Konsens",
         "499-488: public aus Einzel-Book 'marathonbet' statt Konsens",
+        "500-487: public aus Einzel-Book 'marathonbet' statt Konsens",
         "503-489: public aus Einzel-Book 'marathonbet' statt Konsens",
         "505-1579: public aus Einzel-Book 'marathonbet' statt Konsens",
         "512-496: public aus Einzel-Book 'marathonbet' statt Konsens",
@@ -396,8 +395,17 @@
       "nFail": 0,
       "failures": [],
       "note": "fetch_wm_poly_prices: fair_btts aus de-viggter Pinnacle-bttsY/N. Riesen-Edge = Daten kaputt. Auto-Trader blockt via BTTS_MAX_EDGE_PP."
+    },
+    {
+      "id": "streaks_fresh",
+      "label": "Serien frisch + aktuelles Schema",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-06-29T10:25:52.059905+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-06-29T19:46:56.291786+00:00"
 }
