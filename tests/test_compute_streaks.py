@@ -61,6 +61,44 @@ class TestStreaks(unittest.TestCase):
         self.assertEqual(co[0]["continuation"]["state"], "intakt")   # 70% stützt
         self.assertEqual([s for s in out["streaks"] if s["type"] == "cornersUnder"], [])
 
+    def test_venue_split_home_streak(self):
+        wm = _wm({"42": {"o25Seq": [True, True, True, True], "venueSeq": ["H", "A", "H", "H"],
+                         "over25Rate": 0.7, "bttsRate": 0.4}})
+        out = S.build_streaks(wm)
+        over = {s["venue"]: s["length"] for s in out["streaks"] if s["type"] == "over25"}
+        self.assertEqual(over.get("all"), 4)
+        self.assertEqual(over.get("H"), 3)        # Heimspiele (Index 0,2,3) alle Über
+        self.assertNotIn("A", over)               # nur 1 Auswärts → < MIN_LEN
+
+    def test_scored_and_cleansheet_markets(self):
+        wm = _wm({"42": {"scoredSeq": [True, True, True], "scoredRate": 0.9,
+                         "csSeq": [True, True, True], "cleanSheetRate": 0.5}})
+        out = S.build_streaks(wm)
+        self.assertTrue(any(s["type"] == "scored" and s["market"] == "Team trifft" for s in out["streaks"]))
+        self.assertTrue(any(s["type"] == "cleanSheet" for s in out["streaks"]))
+
+    def test_card_streak_from_cornersform(self):
+        wm = _wm({})
+        wm["cornersForm"] = {"42": {"cardLine": 3.5, "cardOverRate": 0.6,
+                                    "cardOverSeq": [True, True, True]}}
+        out = S.build_streaks(wm)
+        cards = [s for s in out["streaks"] if s["type"] == "cards"]
+        self.assertEqual(len(cards), 1)
+        self.assertIn("3,5 Karten", cards[0]["market"])
+
+    def test_next_fixture_with_opponent_rate(self):
+        from datetime import date, timedelta
+        fut = (date.today() + timedelta(days=3)).isoformat()
+        wm = _wm({"42": {"o25Seq": [True, True, True], "over25Rate": 0.7, "bttsRate": 0.4},
+                  "50": {"over25Rate": 0.66}})
+        wm["groups"]["ENG"]["fixtures"] = [{"home": "42", "away": "50", "date": fut,
+                                            "kickoff": fut + "T15:00:00Z"}]
+        out = S.build_streaks(wm)
+        over = next(s for s in out["streaks"] if s["type"] == "over25" and s["venue"] == "all")
+        self.assertEqual(over["next"]["oppName"], "City")
+        self.assertEqual(over["next"]["atHome"], True)
+        self.assertEqual(over["next"]["oppRatePct"], 66)
+
     def test_sorted_by_length_desc(self):
         wm = _wm({"42": {"o25Seq": [True, True, True], "over25Rate": 0.6, "bttsRate": 0.5},
                   "50": {"o25Seq": [True] * 6, "over25Rate": 0.8, "bttsRate": 0.5}})

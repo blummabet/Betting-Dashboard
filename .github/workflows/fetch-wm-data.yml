@@ -46,59 +46,9 @@ jobs:
       - name: 📦 Dependencies installieren
         run: pip install -r requirements.txt
 
-      # ── Pre-Season Content (D-11 bis D-1, einmal täglich beim ersten Run) ──
-      # Läuft direkt nach Setup — bevor andere Steps Zeit brauchen.
-      # Dedup via wm_preseason_sent.json + telegram-log.json (Defense-in-Depth).
-      - name: 📣 WM Pre-Season Telegram Post
-        run: python telegram_wm_preseason.py
-        continue-on-error: true
-        env:
-          TELEGRAM_TOKEN:    ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID:  ${{ secrets.TELEGRAM_CHAT_ID }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-
-      # ── Pre-Season State SOFORT committen ─────────────────────────────────
-      # Bug 07.06.2026: Pre-Season-Post kam 3× weil State erst am Workflow-Ende
-      # committed wurde. Wenn der Late-Commit-Step fehlschlägt/abbricht (bei
-      # ~10 Min Laufzeit jede Menge Möglichkeiten), kommt der nächste Cron mit
-      # altem State → sendet erneut. → Sofort persistieren, bevor irgendwas
-      # anderes laufen kann. Idempotent (no-op wenn nichts zu committen).
-      - name: 💾 Pre-Season State SOFORT persistieren
-        if: always()
-        continue-on-error: true
-        run: |
-          git config user.name "Dashboard Bot"
-          git config user.email "actions@github.com"
-          git add wm_preseason_sent.json telegram-log.json 2>/dev/null || true
-          if git diff --staged --quiet; then
-            echo "ℹ️ Kein Pre-Season-State zu committen."
-            exit 0
-          fi
-          TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          git commit -m "📣 Pre-Season State (sofort) ${TIMESTAMP}"
-          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          # Retry mit pull -X ours bei Race
-          for attempt in 1 2 3 4 5; do
-            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
-            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
-            if [ -n "$CONFLICTS" ]; then
-              echo "$CONFLICTS" | while read f; do
-                git checkout --ours -- "$f"
-                git add "$f"
-              done
-              git diff --staged --quiet || git commit -m "🔧 auto-resolve preseason state conflicts"
-            fi
-            if git push 2>&1; then
-              echo "✅ Pre-Season State Push erfolgreich (Versuch $attempt)"
-              exit 0
-            fi
-            echo "⚠️ Push $attempt fehlgeschlagen — retry in $((attempt * 3))s"
-            sleep $((attempt * 3))
-          done
-          echo "❌ Pre-Season State Push nach 5 Versuchen fehlgeschlagen"
-          exit 1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # 29.06.2026 (Lucas, Telegram-Ausmisten): Pre-Season-Content (telegram_wm_preseason.py,
+      # Kalender D-11…D-1) entfernt — die WM läuft seit 11.06., der Step war eine Leiche
+      # (nur noch datumsgeschützt). Mitsamt dem dedizierten „State SOFORT persistieren"-Commit.
 
       # ── Squad Spotlight (API-Football, läuft die ganze Tournier-Phase) ──
       # force_squads=true (manueller Dispatch) → --force, sonst skippt das Script

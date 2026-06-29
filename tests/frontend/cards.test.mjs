@@ -110,6 +110,56 @@ test('_matchStreaksHtml: Serien der beiden Match-Teams in der Card', () => {
   assert.ok(!/Andere/.test(h), 'fremdes Team darf nicht erscheinen');
 });
 
+test('_streakRowHtml: Grundrate + nächstes Spiel + Gegner-Rate', () => {
+  const t = loadCards().__wmCardTest;
+  const h = t.streakRowHtml({ teamId: '42', team: 'Arsenal', leagueName: 'PL', type: 'over25',
+    market: 'Über 2,5 Tore', length: 5, venue: 'H', ratePct: 72, continuation: { state: 'intakt', label: 'x' },
+    next: { oppName: 'City', date: '2026-08-24', atHome: true, oppRatePct: 66 } });
+  assert.match(h, /Heim/);                 // Venue-Label
+  assert.match(h, /Grundrate 72%/);        // Rate als Kontext
+  assert.match(h, /nächstes/);
+  assert.match(h, /City/);
+  assert.match(h, /66% Über/);             // komplementäre Gegner-Rate
+  assert.match(h, /24\.08\./);
+});
+
+test('Serien-Tab: Venue-Filter zeigt Gesamt vs Heim/Auswärts', async () => {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="streaksPanel"></div></body>', {
+    url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  const streaks = { streaks: [
+    { teamId: '42', team: 'Arsenal', league: 'ENG', leagueName: 'PL', type: 'over25', venue: 'all',
+      market: 'Über 2,5 Tore', length: 6, strong: true, continuation: { state: 'intakt', label: 'x' } },
+    { teamId: '42', team: 'Arsenal', league: 'ENG', leagueName: 'PL', type: 'over25', venue: 'H',
+      market: 'Über 2,5 Tore', length: 4, strong: false, continuation: { state: 'intakt', label: 'x' } },
+    { teamId: '99', team: 'Spurs', league: 'ENG', leagueName: 'PL', type: 'cards', venue: 'A',
+      market: 'Über 3,5 Karten', length: 5, strong: false, continuation: { state: 'neutral' } },
+  ] };
+  w.fetch = (url) => Promise.resolve({ ok: true, json: () => Promise.resolve(String(url).includes('liga_streaks') ? streaks : {}) });
+  w.eval(readFileSync(WM_RENDERER, 'utf8'));
+  await w.initStreaks('national');
+  const panel = () => w.document.getElementById('streaksPanel').innerHTML;
+  // Default Gesamt: nur die venue='all'-Serie (Länge 6), nicht die Heim-Variante
+  assert.match(panel(), /6 in Folge/);
+  assert.ok(!/4 in Folge/.test(panel()), 'Heim-Duplikat nicht im Gesamt-View');
+  assert.match(panel(), /Heim/);          // Venue-Filterleiste vorhanden
+  // Auswärts: Karten-Serie von Spurs
+  w.wmSetStreakVenue('A');
+  assert.ok(/Spurs/.test(panel()) && /Karten/.test(panel()), 'Auswärts-View zeigt A-Serien');
+});
+
+test('_matchStreaksHtml: Heim-Team zeigt Heim-Serie (Venue-Dedup, keine Duplikate)', () => {
+  const t = loadCards().__wmCardTest;
+  t.setStreaksCache('wm', { streaks: [
+    { teamId: 'ZAF', team: 'Südafrika', type: 'over25', market: 'Über 2,5 Tore', venue: 'all', length: 5, continuation: { state: 'intakt', label: 'x' } },
+    { teamId: 'ZAF', team: 'Südafrika', type: 'over25', market: 'Über 2,5 Tore', venue: 'H', length: 6, continuation: { state: 'intakt', label: 'x' } },
+  ] });
+  const h = t.matchStreaksHtml('ZAF', 'CAN');
+  assert.match(h, /Heim/);                       // venue-passende Variante gewählt
+  assert.equal((h.match(/Über 2,5 Tore/g) || []).length, 1, 'nur EINE Serie pro Markt (kein all+H-Duplikat)');
+  assert.match(h, /6×/);                          // die Heim-Serie (Länge 6), nicht die Gesamt (5)
+});
+
 test('Sharp-Konsens: Pinnacle vs Betfair (einig / uneinig / weicht ab / fehlt)', () => {
   const t = loadCards().__wmCardTest;
   // einig: gleicher Favorit (Heim), kleine Differenz

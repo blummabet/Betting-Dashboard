@@ -7,14 +7,11 @@ on:
     workflows: ["Fetch Pre-Match Data"]
     types: [completed]
 
-  # Tägliche Telegram-Runs (Wien Sommer CEST = UTC+2):
-  #   07:00 UTC = 09:00 Wien → 🎯 Picks
-  #   09:00 UTC = 11:00 Wien → 📊 Recap vom Vortag
-  #   11:00 UTC = 13:00 Wien → 👀 Jetzt oder Nie
-  schedule:
-    - cron: '0 7 * * *'    # 07:00 UTC = 09:00 Wien → Picks
-    - cron: '0 9 * * *'    # 09:00 UTC = 11:00 Wien → Recap
-    - cron: '0 11 * * *'   # 11:00 UTC = 13:00 Wien → IM BLICK
+  # 29.06.2026 (Lucas, Telegram-Ausmisten): Die 3 täglichen Crons (7/9/11 UTC) dienten NUR
+  # dem alten Vor-WM-Telegram (telegram_bot.py picks/recap/IM BLICK aus picks_output.json).
+  # Das kollidierte mit der WM-Recap (telegram_wm.py, 09 UTC) und postete veraltete Inhalte
+  # in den Public-Channel. Crons + Telegram-Steps entfernt. Workflow läuft nur noch via
+  # workflow_run (Dashboard-Regen nach fetch-prematch) + manuell.
 
   # Manuell: jederzeit per Knopfdruck auf GitHub ausführbar
   workflow_dispatch:
@@ -125,35 +122,9 @@ jobs:
         run: python resolve_picks.py
         continue-on-error: true
 
-      # 8b. Telegram: Picks posten (09:00 Wien = 07:00 UTC ODER manueller Trigger)
-      - name: 📤 Telegram Picks
-        if: github.event.schedule == '0 7 * * *' || github.event_name == 'workflow_dispatch'
-        run: python telegram_bot.py
-        continue-on-error: true
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TG_MODE: 'picks'
-
-      # 8c. Telegram: Recap vom Vortag (11:00 Wien = 09:00 UTC)
-      - name: 📊 Telegram Recap
-        if: github.event.schedule == '0 9 * * *'
-        run: python telegram_bot.py
-        continue-on-error: true
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TG_MODE: 'recap'
-
-      # 8d. Telegram: IM BLICK posten (13:00 Wien = 11:00 UTC)
-      - name: 👀 Telegram IM BLICK
-        if: github.event.schedule == '0 11 * * *'
-        run: python telegram_bot.py
-        continue-on-error: true
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TG_MODE: 'watch'
+      # 29.06.2026 (Lucas): Alte Telegram-Sends (telegram_bot.py picks/recap/IM BLICK) entfernt —
+      # das war das Vor-WM-Domestic-System und doppelte/störte den Public-Channel. Telegram läuft
+      # jetzt ausschließlich über telegram_wm.py (WM/Liga: Morning + Recap + Spotlight).
 
       # 9. Geänderte Dateien zurück ins Repo committen und pushen
       - name: 💾 Änderungen speichern & pushen
