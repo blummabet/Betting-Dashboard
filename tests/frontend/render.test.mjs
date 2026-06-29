@@ -90,6 +90,8 @@ test('CLV-Scoreboard: Ø CLV + %beat + Abdeckung + Markt-Tabelle', () => {
   const w = loadRenderer();
   w.WM_CLV_SUMMARY = {
     overall: { n: 10, avgClvPP: 1.5, pctBeatClose: 60, coverage: { withClosing: 10, resolved: 12, pct: 83.3 } },
+    byVerdict: { BET: { n: 6, avgClvPP: 2.5, pctBeatClose: 70 }, 'ABWÄGEN': { n: 4, avgClvPP: -0.5, pctBeatClose: 45 } },
+    betRate: { overall: 25.0, byLeague: { A: 25.0 }, counts: { BET: 6, 'ABWÄGEN': 18 } },
     byMarket: { '1X2/DNB': { n: 6, avgClvPP: 2.0, pctBeatClose: 66.7 }, 'Über/Unter': { n: 4, avgClvPP: 0.5, pctBeatClose: 50 } },
     byLeague: { A: { n: 10, avgClvPP: 1.5, pctBeatClose: 60 } },
     byTime: [{ bucket: '1', n: 5, avgClvPP: 1.0, pctBeatClose: 60 }],
@@ -98,6 +100,8 @@ test('CLV-Scoreboard: Ø CLV + %beat + Abdeckung + Markt-Tabelle', () => {
   assert.match(html, /CLV-Bilanz/, 'Überschrift');
   assert.match(html, /\+1\.5pp/, 'Ø CLV-Kachel');
   assert.match(html, /83%/, 'Closing-Abdeckung %');
+  assert.match(html, /BET-Quote/, 'BET-Quote-Kachel');
+  assert.match(html, /Nach Pick-Typ/, 'Pick-Typ-Tabelle');
   assert.match(html, /Nach Markt/, 'Markt-Tabelle');
   assert.match(html, /Über\/Unter/, 'Markt-Zeile');
 });

@@ -1764,8 +1764,11 @@ function _renderClvScoreboard() {
   const clvCol = (v) => v == null ? 'var(--muted)' : v >= 1 ? '#3fb950' : v >= 0 ? '#a8d48a' : '#f85149';
   const beatCol = (v) => v == null ? 'var(--muted)' : v >= 52 ? '#3fb950' : v >= 48 ? '#e3b341' : '#f85149';
   const covCol = (v) => v == null ? 'var(--muted)' : v >= 80 ? '#3fb950' : v >= 50 ? '#e3b341' : '#f85149';
+  // BET-Quote: niedrig = scharf selektiert (gut), hoch = zu viele BET (Verwässerungs-Risiko).
+  const betCol = (v) => v == null ? 'var(--muted)' : v <= 20 ? '#3fb950' : v <= 35 ? '#e3b341' : '#f85149';
   const pp = (v) => v == null ? '—' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}pp`;
   const pct = (v) => v == null ? '—' : `${v.toFixed(0)}%`;
+  const br = s.betRate || {};
 
   const tile = (lbl, val, col, sub) => `<div style="flex:1;min-width:120px;background:var(--bg);border:1px solid var(--border);border-left:3px solid ${col};border-radius:10px;padding:12px 14px;">
     <div style="font-size:20px;font-weight:900;color:${col};line-height:1.1;">${val}</div>
@@ -1776,6 +1779,7 @@ function _renderClvScoreboard() {
     ${tile('Ø CLV', pp(ov.avgClvPP), clvCol(ov.avgClvPP), 'pro Pick vs Schluss')}
     ${tile('schlägt Schluss', pct(ov.pctBeatClose), beatCol(ov.pctBeatClose), `${ov.n} Picks`)}
     ${tile('Closing-Abdeckung', pct(cov.pct), covCol(cov.pct), `${cov.withClosing}/${cov.resolved}`)}
+    ${br.overall != null ? tile('BET-Quote', pct(br.overall), betCol(br.overall), br.counts ? `${br.counts.BET}/${(br.counts.BET + br.counts['ABWÄGEN'])} Picks` : 'Anteil BET') : ''}
   </div>`;
   html += `<div style="font-size:10.5px;color:var(--muted);margin:8px 2px 14px;line-height:1.5;">Positiver Ø CLV = die Linie lief nach unserem Einstieg weiter in Pick-Richtung → wir schlagen den Schluss (zahlt langfristig, unabhängig vom Einzel-Ergebnis).</div>`;
 
@@ -1795,9 +1799,23 @@ function _renderClvScoreboard() {
         ${rows}
       </table></div>`;
   };
+  // Pick-Typ-Split (28.06.2026, Lucas): zeigt, dass der Edge im BET-Tier sitzt (ABWÄGEN verwässert).
+  const _vOrder = { BET: 0, 'ABWÄGEN': 1 };
+  html += miniTable('Nach Pick-Typ', Object.entries(s.byVerdict || {})
+    .sort((a, b) => (_vOrder[a[0]] ?? 9) - (_vOrder[b[0]] ?? 9)));
   html += miniTable('Nach Markt', Object.entries(s.byMarket || {}).sort((a, b) => (b[1].n || 0) - (a[1].n || 0)));
   html += miniTable(isLiga ? 'Nach Liga' : 'Nach Gruppe', Object.entries(s.byLeague || {}).sort((a, b) => (b[1].n || 0) - (a[1].n || 0)));
   html += miniTable('Nach Spieltag', (s.byTime || []).map(b => [b.bucket, b]));
+
+  // BET-Quote pro Liga (Steuerungs-Hebel: nicht zu viele BET bei ~50 Spielen/Runde).
+  const _brl = br.byLeague || {};
+  const _brEntries = Object.entries(_brl).filter(([, v]) => v != null).sort((a, b) => b[1] - a[1]);
+  if (_brEntries.length) {
+    html += `<div style="margin-top:14px;font-size:11px;color:var(--muted);">
+      <span style="font-weight:700;text-transform:uppercase;letter-spacing:.4px;">BET-Quote pro Liga</span>&nbsp;&nbsp;`
+      + _brEntries.map(([k, v]) => `<span style="color:${betCol(v)};font-weight:700;">${k} ${v.toFixed(0)}%</span>`).join(' · ')
+      + `</div>`;
+  }
 
   return wrap(html);
 }

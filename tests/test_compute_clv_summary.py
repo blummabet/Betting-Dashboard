@@ -10,8 +10,8 @@ sys.path.insert(0, str(REPO))
 import compute_clv_summary as C  # noqa: E402
 
 
-def _pick(source="steam", result="WIN", clv=None, market="Heimsieg", excluded=False):
-    p = {"source": source, "result": result, "market": market}
+def _pick(source="steam", result="WIN", clv=None, market="Heimsieg", excluded=False, verdict="BET"):
+    p = {"source": source, "result": result, "market": market, "verdict": verdict}
     if excluded:
         p["trackingExcluded"] = True
     if clv is not None:
@@ -60,6 +60,22 @@ class TestSummary(unittest.TestCase):
         self.assertEqual(s["byLeague"]["ESP"]["n"], 1)
         buckets = [b["bucket"] for b in s["byTime"]]
         self.assertEqual(buckets, ["1", "3"])   # nach Spieltag sortiert
+
+    def test_by_verdict_and_bet_rate(self):
+        wm = {"picks": {
+            "ENG-1-a-b": [_pick(clv=2.0, verdict="BET")],
+            "ENG-1-c-d": [_pick(clv=-1.0, verdict="ABWÄGEN")],
+            "ENG-1-e-f": [_pick(clv=4.0, verdict="ABWÄGEN")],
+            "ESP-1-g-h": [_pick(clv=None, result="", verdict="BET")],   # ungespielt, zählt in BET-Quote
+        }}
+        s = C.build_summary(wm)
+        # CLV-Split nur über aufgelöste-mit-Closing
+        self.assertEqual(s["byVerdict"]["BET"]["n"], 1)
+        self.assertEqual(s["byVerdict"]["ABWÄGEN"]["n"], 2)
+        # BET-Quote über ALLE Picks (auch ungespielt): ENG 1 BET / 3 = 33.3%, ESP 1/1 = 100%
+        self.assertEqual(s["betRate"]["byLeague"]["ENG"], 33.3)
+        self.assertEqual(s["betRate"]["byLeague"]["ESP"], 100.0)
+        self.assertEqual(s["betRate"]["overall"], 50.0)   # 2 BET / 4 gesamt
 
     def test_market_category(self):
         self.assertEqual(C.market_category("Über 2.5 Tore"), "Über/Unter")

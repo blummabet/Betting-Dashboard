@@ -62,6 +62,9 @@ def build_summary(wm: dict) -> dict:
     picks_map = wm.get("picks") or {}
     n_resolved = 0          # aufgelöste Steam-Picks (haben ein Ergebnis)
     rows = []               # davon mit Closing-Linie (clvPP gesetzt)
+    # BET-Quote (28.06.2026, Lucas: bei ~50 Spielen/Runde dürfen nicht zu viele BET werden) —
+    # über ALLE Steam-BET/ABWÄGEN-Picks (auch ungespielte), pro Liga + gesamt.
+    vcount = {}             # league → {"BET": n, "ABWÄGEN": n}
     for key, plist in picks_map.items():
         if not isinstance(plist, list):
             continue
@@ -73,6 +76,9 @@ def build_summary(wm: dict) -> dict:
                 continue
             if p.get("source") != "steam" or p.get("trackingExcluded"):
                 continue
+            verdict = p.get("verdict")
+            if verdict in ("BET", "ABWÄGEN"):
+                vcount.setdefault(league, {"BET": 0, "ABWÄGEN": 0})[verdict] += 1
             if str(p.get("result") or "").upper() not in _RESOLVED:
                 continue   # noch nicht gespielt
             n_resolved += 1
@@ -80,13 +86,23 @@ def build_summary(wm: dict) -> dict:
             if clv is None or not p.get("clvResolved"):
                 continue   # kein Closing erfasst → zählt nur in die Abdeckung
             rows.append({"clvPP": float(clv), "market": market_category(p.get("market", "")),
-                         "league": league, "matchday": matchday})
+                         "league": league, "matchday": matchday, "verdict": verdict})
 
-    by_market, by_league, by_time = {}, {}, {}
+    by_market, by_league, by_time, by_verdict = {}, {}, {}, {}
     for r in rows:
         by_market.setdefault(r["market"], []).append(r["clvPP"])
         by_league.setdefault(r["league"], []).append(r["clvPP"])
         by_time.setdefault(r["matchday"], []).append(r["clvPP"])
+        if r["verdict"]:
+            by_verdict.setdefault(r["verdict"], []).append(r["clvPP"])
+
+    def _bet_rate(c):
+        tot = (c.get("BET", 0) + c.get("ABWÄGEN", 0))
+        return round(c.get("BET", 0) / tot * 100, 1) if tot else None
+
+    overall_v = {"BET": 0, "ABWÄGEN": 0}
+    for c in vcount.values():
+        overall_v["BET"] += c["BET"]; overall_v["ABWÄGEN"] += c["ABWÄGEN"]
 
     cov = len(rows)
     overall = _agg([r["clvPP"] for r in rows])
@@ -98,6 +114,10 @@ def build_summary(wm: dict) -> dict:
         "_meta": {"dataset": D.active_dataset(),
                   "generatedAt": datetime.now(timezone.utc).isoformat()},
         "overall": overall,
+        "byVerdict": {k: _agg(v) for k, v in by_verdict.items()},
+        "betRate": {"overall": _bet_rate(overall_v),
+                    "byLeague": {k: _bet_rate(c) for k, c in sorted(vcount.items())},
+                    "counts": overall_v},
         "byMarket": {k: _agg(v) for k, v in sorted(by_market.items())},
         "byLeague": {k: _agg(v) for k, v in sorted(by_league.items())},
         "byTime": [{"bucket": k, **_agg(v)} for k, v in
