@@ -89,6 +89,15 @@ def is_stale(updated_at: str | None, hours: int) -> bool:
         return True
 
 
+def form_needs_refetch(existing: dict) -> bool:
+    """Form-Eintrag neu holen? (28.06.2026, Lucas: Serien blieben leer.)
+    Zeit-stale ODER schema-stale: fehlt das o25Seq-Feld (neu für Streaks), MUSS neu geholt werden —
+    sonst überspringt der 24h-Cache einen „frischen" Eintrag und schreibt die Streak-Sequenzen nie."""
+    if "o25Seq" not in (existing or {}):
+        return True
+    return is_stale((existing or {}).get("updatedAt"), FORM_STALE_H)
+
+
 def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -233,7 +242,7 @@ def fetch_team_form(wm: dict) -> dict:
     updated = 0
     for tid in sorted(all_tids):
         existing = wm["form"].get(tid, {})
-        if not is_stale(existing.get("updatedAt"), FORM_STALE_H):
+        if not form_needs_refetch(existing):
             continue
 
         api_id = team_ids.get(tid)
