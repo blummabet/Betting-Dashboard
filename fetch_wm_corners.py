@@ -24,8 +24,11 @@ import json, os, sys, time, http.client
 from datetime import datetime, timezone
 from pathlib import Path
 
+import cocobet_dataset as D   # dataset-aware (28.06.2026): Liga füllt cornersForm/Ecken-Serien
+
 BASE         = Path(__file__).parent
-WM_FILE      = BASE / "wm2026-data.json"
+WM_FILE      = D.data_file()   # wm2026-data.json (WM) bzw. liga-data.json (Liga)
+CORNER_LINE  = 9.5             # Gesamt-Ecken-Linie für die Ecken-Serie (Streak-Content)
 APIF_HOST    = "v3.football.api-sports.io"
 APIF_KEY     = os.environ.get("APISPORTS_KEY", "")
 DELAY        = 1.5       # seconds between requests (Pro plan: 10 req/min)
@@ -200,6 +203,7 @@ def compute_stats_for_team(tid: str, api_id: int) -> tuple[dict | None, dict | N
 
     c_for_list:    list[int]   = []
     c_against_list: list[int]  = []
+    c_total_dated: list[tuple]  = []   # (fixture_date, gesamt_ecken) für die Streak-Sequenz
     xg_for_list:   list[float] = []
     xg_against_list: list[float] = []
 
@@ -214,6 +218,8 @@ def compute_stats_for_team(tid: str, api_id: int) -> tuple[dict | None, dict | N
         if stats["c_for"] is not None and stats["c_against"] is not None:
             c_for_list.append(stats["c_for"])
             c_against_list.append(stats["c_against"])
+            c_total_dated.append((fx.get("fixture", {}).get("date", ""),
+                                  stats["c_for"] + stats["c_against"]))
 
         # xG (both sides must be present)
         if stats["xg_for"] is not None and stats["xg_against"] is not None:
@@ -224,10 +230,18 @@ def compute_stats_for_team(tid: str, api_id: int) -> tuple[dict | None, dict | N
     corners_result = None
     c_games = len(c_for_list)
     if c_games > 0:
+        # Ecken-Serie (28.06.2026, Lucas): Gesamt-Ecken pro Spiel > Linie, most-recent-first (nach
+        # Fixture-Datum sortiert). overLineRate = Grundrate dafür (Continuation im Streak).
+        _seq_src = sorted(c_total_dated, key=lambda x: x[0], reverse=True)[:15]
+        corner_over_seq = [bool(tot > CORNER_LINE) for (_d, tot) in _seq_src]
+        over_rate = round(sum(corner_over_seq) / len(corner_over_seq), 3) if corner_over_seq else None
         corners_result = {
             "forAvg":     round(sum(c_for_list)     / c_games, 2),
             "againstAvg": round(sum(c_against_list) / c_games, 2),
             "games":      c_games,
+            "cornerLine":     CORNER_LINE,
+            "cornerOverSeq":  corner_over_seq,
+            "overLineRate":   over_rate,
             "updatedAt":  now_iso(),
         }
 
@@ -279,8 +293,11 @@ def main():
     for tid in sorted(team_ids.keys()):
         api_id = team_ids[tid]
 
-        # Skip if both corners AND xG are fresh
-        c_stale = is_stale(corners_form.get(tid, {}).get("updatedAt"), STALE_H)
+        # Skip if both corners AND xG are fresh.
+        # Schema-stale (28.06.2026): fehlt die neue cornerOverSeq, trotz Zeit-Frische neu holen —
+        # sonst schreibt der Cache die Ecken-Serie nie (wie beim Form-o25Seq-Fix).
+        _c_entry = corners_form.get(tid, {})
+        c_stale = is_stale(_c_entry.get("updatedAt"), STALE_H) or ("cornerOverSeq" not in _c_entry)
         x_stale = is_stale(xg_stats.get(tid,     {}).get("updatedAt"), STALE_H)
 
         if not c_stale and not x_stale:

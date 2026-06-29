@@ -103,7 +103,7 @@
     _loadStreaks(isLiga).finally(() => { _streaksLoading[ds] = false; if (rerender) rerender(); });
   }
 
-  const _STREAK_ICON = { over25: '⚽', under25: '🧱', bttsYes: '🤝', bttsNo: '🚫' };
+  const _STREAK_ICON = { over25: '⚽', under25: '🧱', bttsYes: '🤝', bttsNo: '🚫', cornersOver: '🚩', cornersUnder: '🚩' };
   const _STREAK_CONT = {
     intakt:  { col: '#3fb950', label: 'Serie intakt' },
     neutral: { col: '#8b949e', label: 'offen' },

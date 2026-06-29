@@ -85,6 +85,33 @@ def build_streaks(wm: dict) -> dict:
                 "type": key, "market": market, "length": length,
                 "strong": length >= STRONG_LEN, "continuation": cont,
             })
+
+    # ── Ecken-Serien (28.06.2026, Lucas) — aus cornersForm.cornerOverSeq (Gesamt-Ecken > Linie) ──
+    for tid, c in (wm.get("cornersForm") or {}).items():
+        if not isinstance(c, dict):
+            continue
+        seq = c.get("cornerOverSeq")
+        if not seq:
+            continue
+        line = c.get("cornerLine", 9.5)
+        rate = c.get("overLineRate")
+        line_s = str(line).replace(".", ",")
+        meta = lookup.get(str(tid)) or {"team": str(tid), "league": "?", "leagueName": "?"}
+        for target, key, label, target_false in (
+            (True,  "cornersOver",  f"Über {line_s} Ecken",  False),
+            (False, "cornersUnder", f"Unter {line_s} Ecken", True),
+        ):
+            length = _lead_run(seq, target)
+            if length < MIN_LEN:
+                continue
+            cont = _continuation(rate, target_false, length)
+            streaks.append({
+                "teamId": str(tid), "team": meta["team"],
+                "league": meta["league"], "leagueName": meta["leagueName"],
+                "type": key, "market": label, "length": length,
+                "strong": length >= STRONG_LEN, "continuation": cont,
+            })
+
     # längste zuerst; bei Gleichstand „intakt" vor dem Rest
     _order = {"intakt": 0, "neutral": 1, "wackelt": 2}
     streaks.sort(key=lambda s: (-s["length"], _order.get(s["continuation"]["state"], 1)))

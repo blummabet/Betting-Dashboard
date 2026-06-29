@@ -48,6 +48,19 @@ class TestStreaks(unittest.TestCase):
         self.assertEqual(len(bn), 1)
         self.assertEqual(bn[0]["continuation"]["state"], "wackelt")
 
+    def test_corner_streak_from_cornersform(self):
+        wm = _wm({})
+        wm["cornersForm"] = {"42": {"cornerLine": 9.5, "overLineRate": 0.7,
+                                    "cornerOverSeq": [True, True, True, True, False]}}
+        out = S.build_streaks(wm)
+        co = [s for s in out["streaks"] if s["type"] == "cornersOver"]
+        self.assertEqual(len(co), 1)
+        self.assertEqual(co[0]["length"], 4)
+        self.assertEqual(co[0]["team"], "Arsenal")
+        self.assertIn("9,5 Ecken", co[0]["market"])
+        self.assertEqual(co[0]["continuation"]["state"], "intakt")   # 70% stützt
+        self.assertEqual([s for s in out["streaks"] if s["type"] == "cornersUnder"], [])
+
     def test_sorted_by_length_desc(self):
         wm = _wm({"42": {"o25Seq": [True, True, True], "over25Rate": 0.6, "bttsRate": 0.5},
                   "50": {"o25Seq": [True] * 6, "over25Rate": 0.8, "bttsRate": 0.5}})

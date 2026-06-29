@@ -48,6 +48,11 @@ jobs:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
         run: python fetch_wm_form.py || true
 
+      - name: 🚩 Liga Ecken-Statistik (für Ecken-Serien)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_wm_corners.py || true
+
       - name: 🔥 Liga-Serien berechnen (Streak-Content)
         run: python compute_streaks.py || true
 
