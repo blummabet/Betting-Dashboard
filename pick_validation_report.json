@@ -1,10 +1,26 @@
 {
-  "lastRun": "2026-06-29T15:56:30.107600+00:00",
+  "lastRun": "2026-06-29T18:06:36.258055+00:00",
   "stats": {
     "total": 183,
-    "errors": 0,
+    "errors": 1,
     "warnings": 0,
-    "ok": 183
+    "ok": 182
   },
-  "issues": []
+  "issues": [
+    {
+      "matchKey": "BRA-JPN",
+      "market": "1X2",
+      "level": "error",
+      "code": "E_HOMEAWAY_SWAP",
+      "message": "1X2 hw/aw 2.04/4.5 → Heim-Favorit, aber DC sieht Auswärts-Favorit — Heim/Auswärts-Quoten vermutlich vertauscht",
+      "pickSnapshot": {
+        "verdict": null,
+        "odds": null,
+        "modelOdds": null,
+        "edgePP": null,
+        "clvPP": null,
+        "dataQuality": null
+      }
+    }
+  ]
 }
