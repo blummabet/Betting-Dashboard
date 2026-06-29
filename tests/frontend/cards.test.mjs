@@ -72,22 +72,42 @@ test('_streakRowHtml: Team + Markt + Länge + Continuation', () => {
   assert.match(h, /wackelt/);
 });
 
-test('Serien-Tab: initStreaks rendert Serien aus liga_streaks.json', async () => {
+test('Serien-Tab: initStreaks rendert + filtert nach Liga und Streak-Art', async () => {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="streaksPanel"></div></body>', {
     url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
   const w = dom.window;
   const streaks = { streaks: [
     { teamId: '42', team: 'Arsenal', league: 'ENG', leagueName: 'Premier League', type: 'over25',
-      market: 'Über 2,5 Tore', length: 6, strong: true, continuation: { state: 'intakt', label: 'Grundrate dafür 72%' } },
+      market: 'Über 2,5 Tore', length: 6, strong: true, continuation: { state: 'intakt', label: 'x' } },
+    { teamId: '50', team: 'Real', league: 'ESP', leagueName: 'La Liga', type: 'cornersOver',
+      market: 'Über 9,5 Ecken', length: 4, strong: false, continuation: { state: 'wackelt', label: 'y' } },
   ] };
   w.fetch = (url) => Promise.resolve({ ok: true, json: () => Promise.resolve(String(url).includes('liga_streaks') ? streaks : {}) });
   w.eval(readFileSync(WM_RENDERER, 'utf8'));
   await w.initStreaks('national');
-  const html = w.document.getElementById('streaksPanel').innerHTML;
-  assert.match(html, /🔥 Serien/);
-  assert.match(html, /Arsenal/);
-  assert.match(html, /6 in Folge/);
-  assert.match(html, /Serie intakt/);
+  const panel = () => w.document.getElementById('streaksPanel').innerHTML;
+  assert.match(panel(), /Arsenal/);
+  assert.match(panel(), /Real/);
+  assert.match(panel(), /Alle Ligen/);   // Liga-Filterleiste (2 Ligen)
+  // Filter: nur Ecken → Real bleibt, Arsenal weg
+  w.wmSetStreakType('ecken');
+  assert.ok(/Real/.test(panel()) && !/Arsenal/.test(panel()), 'Typ-Filter Ecken');
+  // Filter: nur ENG → Arsenal bleibt (Typ zurücksetzen)
+  w.wmSetStreakType('all');
+  w.wmSetStreakLeague('ENG');
+  assert.ok(/Arsenal/.test(panel()) && !/Real/.test(panel()), 'Liga-Filter ENG');
+});
+
+test('_matchStreaksHtml: Serien der beiden Match-Teams in der Card', () => {
+  const t = loadCards().__wmCardTest;
+  t.setStreaksCache('wm', { streaks: [
+    { teamId: 'ZAF', team: 'Südafrika', league: 'A', type: 'over25', market: 'Über 2,5 Tore', length: 5, continuation: { state: 'intakt', label: 'x' } },
+    { teamId: 'XXX', team: 'Andere', league: 'A', type: 'bttsYes', market: 'BTTS', length: 4, continuation: { state: 'neutral' } },
+  ] });
+  const h = t.matchStreaksHtml('ZAF', 'CAN');
+  assert.match(h, /Serien in diesem Spiel/);
+  assert.match(h, /Südafrika/);
+  assert.ok(!/Andere/.test(h), 'fremdes Team darf nicht erscheinen');
 });
 
 test('Sharp-Konsens: Pinnacle vs Betfair (einig / uneinig / weicht ab / fehlt)', () => {

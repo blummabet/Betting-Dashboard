@@ -127,29 +127,69 @@
     </div>`;
   }
 
+  // Streak-Typ → Filter-Gruppe (28.06.2026, Lucas: nach Streak-Art filtern).
+  const _STREAK_GROUP = { over25: 'tore', under25: 'tore', bttsYes: 'btts', bttsNo: 'btts',
+                          cornersOver: 'ecken', cornersUnder: 'ecken' };
+  const _STREAK_GROUP_LABEL = { tore: '⚽ Tore O/U', btts: '🤝 BTTS', ecken: '🚩 Ecken' };
+  const _streakGroup = (t) => _STREAK_GROUP[t] || 'sonst';
+  let _streakSection = 'national';   // welcher Datensatz im Tab
+  let _streakLeagueF = 'all';
+  let _streakTypeF   = 'all';
+  window.wmSetStreakLeague = (l) => { _streakLeagueF = l; _renderStreaksInto(); };
+  window.wmSetStreakType   = (t) => { _streakTypeF = t; _renderStreaksInto(); };
+
   // Voller Serien-Tab. section: 'national'→Liga, sonst WM.
   window.initStreaks = async function (section) {
-    const isLiga = section === 'national';
+    _streakSection = section;
     const panel = document.getElementById('streaksPanel');
     if (!panel) return;
     panel.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);">🔥 Serien werden geladen…</div>`;
-    const data = await _loadStreaks(isLiga);
-    const all = (data && data.streaks) || [];
+    await _loadStreaks(section === 'national');
+    _renderStreaksInto();
+  };
+
+  // Rendert den Serien-Tab aus dem Cache + wendet Liga-/Typ-Filter an (kein Re-Fetch).
+  function _renderStreaksInto() {
+    const isLiga = _streakSection === 'national';
+    const panel = document.getElementById('streaksPanel');
+    if (!panel) return;
+    const data = _streaksCache[isLiga ? 'liga' : 'wm'];
+    const full = (data && data.streaks) || [];
     let html = `<div style="max-width:900px;margin:0 auto;">
       <div class="wm-header"><div class="wm-header-left">
         <div class="wm-title">🔥 Serien</div>
-        <div class="wm-subtitle">Aktive Team-Serien — Über/Unter 2,5 &amp; Beide treffen. Wo läuft gerade eine Strähne?</div>
+        <div class="wm-subtitle">Aktive Team-Serien — Tore Über/Unter, Beide treffen &amp; Ecken. Wo läuft gerade eine Strähne?</div>
       </div></div>`;
-    if (!all.length) {
+    if (!full.length) {
       html += `<div style="text-align:center;padding:40px 16px;color:var(--muted);font-size:13px;line-height:1.6;">Noch keine aktiven Serien (ab 3 in Folge). Füllt sich, sobald genug Spiele gelaufen sind.</div></div>`;
       panel.innerHTML = html; return;
     }
+    // Filter anwenden
+    let list = full.slice();
+    if (_streakLeagueF !== 'all') list = list.filter(s => s.league === _streakLeagueF);
+    if (_streakTypeF !== 'all') list = list.filter(s => _streakGroup(s.type) === _streakTypeF);
+
+    // Filter-Leisten (Optionen aus dem vollen Satz)
+    const _fbtn = (active, label, fn) => `<button onclick="${fn}" style="background:${active ? 'var(--accent)' : 'transparent'};color:${active ? '#000' : 'var(--muted)'};border:1px solid ${active ? 'var(--accent)' : 'var(--border)'};border-radius:8px;padding:5px 11px;font-size:12px;font-weight:700;cursor:pointer;margin:0 4px 6px 0;">${label}</button>`;
+    const leagues = [...new Set(full.map(s => s.league))].sort();
+    const groups = [...new Set(full.map(s => _streakGroup(s.type)))].filter(g => _STREAK_GROUP_LABEL[g]);
+    if (leagues.length > 1) {
+      html += `<div style="margin-bottom:4px;">` + _fbtn(_streakLeagueF === 'all', 'Alle Ligen', "wmSetStreakLeague('all')")
+        + leagues.map(l => _fbtn(_streakLeagueF === l, l, `wmSetStreakLeague('${l}')`)).join('') + `</div>`;
+    }
+    html += `<div style="margin-bottom:10px;">` + _fbtn(_streakTypeF === 'all', 'Alle Arten', "wmSetStreakType('all')")
+      + groups.map(g => _fbtn(_streakTypeF === g, _STREAK_GROUP_LABEL[g], `wmSetStreakType('${g}')`)).join('') + `</div>`;
+
     html += `<div style="font-size:11px;color:var(--muted);margin:0 2px 12px;line-height:1.5;">🟢 „Serie intakt" = die Grundrate stützt die Strähne · 🟡 „wackelt" = läuft gegen die Grundrate (eher Zufall). Reiner Content — keine Wett-Garantie.</div>`;
+    if (!list.length) {
+      html += `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px;">Keine Serien für diesen Filter.</div></div>`;
+      panel.innerHTML = html; return;
+    }
     html += `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px 14px;">`;
-    for (const s of all) html += _streakRowHtml(s);
+    for (const s of list) html += _streakRowHtml(s);
     html += `</div></div>`;
     panel.innerHTML = html;
-  };
+  }
 
   // Kompakte Top-Serien-Sektion für die Cards (nur starke Serien, max 4).
   function _strongStreaksSectionHtml(isLiga) {
@@ -163,6 +203,29 @@
         <span onclick="showSubView('streaks')" style="font-size:11px;color:var(--accent);font-weight:700;cursor:pointer;">alle Serien →</span>
       </div>`;
     for (const s of strong) h += _streakRowHtml(s);
+    h += `</div>`;
+    return h;
+  }
+
+  // Per-Match-Serien-Box für eine Card (28.06.2026, Lucas): Serien von Heim/Auswärts dieses Spiels.
+  function _matchStreaksHtml(homeId, awayId) {
+    const data = _streaksCache[_mode === 'liga' ? 'liga' : 'wm'];
+    if (!data) return '';
+    const ms = (data.streaks || [])
+      .filter(s => s.teamId === String(homeId) || s.teamId === String(awayId))
+      .sort((a, b) => b.length - a.length);
+    if (!ms.length) return '';
+    let h = `<div style="background:linear-gradient(135deg,rgba(240,136,62,0.10),rgba(240,136,62,0.03));border:1px solid rgba(240,136,62,0.25);border-radius:10px;padding:10px 12px;margin:10px 0;">
+      <div style="font-size:11px;font-weight:800;color:#f0883e;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">🔥 Serien in diesem Spiel</div>`;
+    for (const s of ms.slice(0, 4)) {
+      const ic = _STREAK_ICON[s.type] || '🔥';
+      const c = _STREAK_CONT[(s.continuation || {}).state] || _STREAK_CONT.neutral;
+      h += `<div style="display:flex;align-items:center;gap:6px;font-size:12px;margin:4px 0;">
+        <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><strong>${s.team}</strong> · ${ic} ${s.market}</span>
+        <span style="font-weight:800;white-space:nowrap;">${s.length}×</span>
+        <span style="font-size:10px;font-weight:700;color:${c.col};white-space:nowrap;">${c.label}</span>
+      </div>`;
+    }
     h += `</div>`;
     return h;
   }
@@ -1401,6 +1464,9 @@
         html += `</div>`;
       }
     }
+
+    // ─── Serien in diesem Spiel (28.06.2026, Lucas) — wenn Heim/Auswärts eine aktive Serie hat ──
+    html += _matchStreaksHtml(fx.home, fx.away);
 
     // ─── ACTIONS row ──────────────────────────────────
     // (26.06.2026, Lucas) Slug dataset-bewusst: wm- bzw. liga- (Analyse-Link → matches/wm-match-v2.html).
@@ -3723,6 +3789,8 @@
       buildCard: _buildCard,
       sharpConsensus: _sharpConsensus,
       streakRowHtml: _streakRowHtml,
+      matchStreaksHtml: _matchStreaksHtml,
+      setStreaksCache: (ds, d) => { _streaksCache[ds] = d; },
       fxIsPast: _fxIsPast,
       setWmData: (d) => { _wmData = d; },
     };
