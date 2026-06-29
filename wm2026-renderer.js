@@ -92,8 +92,16 @@
     const ds = isLiga ? 'liga' : 'wm';
     if (_streaksCache[ds]) return Promise.resolve(_streaksCache[ds]);
     const f = isLiga ? 'liga_streaks.json' : 'wm_streaks.json';
-    return fetch(f + '?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
-      .then(j => { _streaksCache[ds] = j || { streaks: [] }; return _streaksCache[ds]; });
+    const main = fetch(f + '?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null);
+    // 29.06.2026 (Lucas: MLS): im National-Modus MLS-Serien mit-laden + zusammenführen.
+    const extra = isLiga
+      ? fetch('mls_streaks.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
+      : Promise.resolve(null);
+    return Promise.all([main, extra]).then(([j, m]) => {
+      const streaks = ((j && j.streaks) || []).concat((m && m.streaks) || []);
+      _streaksCache[ds] = { streaks };
+      return _streaksCache[ds];
+    });
   }
   // Beim Cards-Render einmalig nachladen, dann genau einmal neu zeichnen (Top-Serien-Sektion).
   function _ensureStreaks(isLiga, rerender) {
@@ -321,6 +329,24 @@
       ]);
       if (!wmResp.ok) throw new Error('HTTP ' + wmResp.status);
       _wmData = await wmResp.json();
+      // 29.06.2026 (Lucas: MLS „wie die anderen Ligen"): im National-Modus zusätzlich den
+      // MLS-Datensatz (eigenes File + Profil + Lernen) laden und für die Anzeige mergen. Keys
+      // kollidieren nicht (Gruppe „MLS", Picks „MLS-…", Odds nach Fixture-Key) → MLS taucht
+      // automatisch als weitere Liga in der kuratierten Cards-Ansicht auf.
+      if (_isLiga) {
+        try {
+          const mlsResp = await fetch('mls-data.json?t=' + Date.now());
+          if (mlsResp && mlsResp.ok) {
+            const mls = await mlsResp.json();
+            if (mls && mls.groups) {
+              _wmData.groups  = Object.assign({}, _wmData.groups  || {}, mls.groups);
+              _wmData.picks   = Object.assign({}, _wmData.picks   || {}, mls.picks   || {});
+              _wmData.odds    = Object.assign({}, _wmData.odds    || {}, mls.odds    || {});
+              _wmData.teamIds = Object.assign({}, _wmData.teamIds || {}, mls.teamIds || {});
+            }
+          }
+        } catch (e) { /* MLS optional — National läuft auch ohne */ }
+      }
       // (25.06.2026, Lucas: Liga auf WM-Stack) WM2026_DATA NUR im WM-Modus exposen —
       // sonst würde der Liga-Tab die WM-Daten für Sharp Radar überschreiben.
       if (_mode !== 'liga') window.WM2026_DATA = _wmData;   // expose for Sharp Radar + other modules

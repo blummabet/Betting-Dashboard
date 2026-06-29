@@ -22,12 +22,16 @@ import re
 import sys
 from datetime import datetime, timezone
 
+import cocobet_dataset as D
+
 APIF_HOST = "v3.football.api-sports.io"
 APIF_KEY = os.environ.get("APISPORTS_KEY", "")
 BASE = os.path.dirname(os.path.abspath(__file__))
-OUT_FILE = os.path.join(BASE, "liga-data.json")
+# 29.06.2026 (Lucas: MLS): dataset-aware — schreibt liga-data.json ODER mls-data.json je
+# COCOBET_DATASET. Vorher hart liga-data.json.
+OUT_FILE = str(D.data_file())
 
-# Top-5-Ligen (API-Football league_id). Bewusst nur die 5 mit bester xG/Daten-Abdeckung (Understat).
+# Liga-Maps je Datensatz (API-Football league_id). Top-5: beste xG/Understat-Abdeckung.
 LEAGUES_TOP5 = {
     "ENG": {"apif_id": 39,  "name": "Premier League", "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"},
     "ESP": {"apif_id": 140, "name": "La Liga",        "flag": "🇪🇸"},
@@ -35,6 +39,17 @@ LEAGUES_TOP5 = {
     "ITA": {"apif_id": 135, "name": "Serie A",        "flag": "🇮🇹"},
     "FRA": {"apif_id": 61,  "name": "Ligue 1",        "flag": "🇫🇷"},
 }
+# MLS (Brücken-Liga nach der WM). league_id 253 — beim 1. Lauf prüfen: 0 Fixtures ⇒ ID korrigieren.
+LEAGUES_MLS = {
+    "MLS": {"apif_id": 253, "name": "Major League Soccer", "flag": "🇺🇸"},
+}
+
+# Datensatz → Liga-Definitionen (mit Anzeige-Metadaten). 'liga' = Top-5, 'mls' = MLS.
+_DATASET_LEAGUE_DEFS = {"liga": LEAGUES_TOP5, "mls": LEAGUES_MLS}
+
+
+def _active_league_defs() -> dict:
+    return _DATASET_LEAGUE_DEFS.get(D.active_dataset(), LEAGUES_TOP5)
 
 
 def _crest(tid) -> str:
@@ -69,15 +84,18 @@ def _status_map(short: str) -> str:
 
 
 def build_groups(standings_by_league: dict, fixtures_by_league: dict,
-                 elo_by_team: dict | None = None) -> dict:
+                 elo_by_team: dict | None = None, league_defs: dict | None = None) -> dict:
     """REINER Transformer: API-Responses → groups-Struktur im WM-Format.
     standings_by_league: {league_key: <API /standings response>}
     fixtures_by_league:  {league_key: <API /fixtures response>}
     elo_by_team:         optional {team_id_str: elo}
+    league_defs:         optional {code: {apif_id,name,flag}} — default = aktiver Datensatz
+                         (Top-5 oder MLS). Explizit übergebbar für Tests.
     """
     elo_by_team = elo_by_team or {}
+    league_defs = league_defs or _active_league_defs()
     groups = {}
-    for lk, cfg in LEAGUES_TOP5.items():
+    for lk, cfg in league_defs.items():
         # ── Teams aus Standings ──
         teams = []
         seen = set()
@@ -171,13 +189,17 @@ def main():
         print("  ❌  APISPORTS_KEY nicht gesetzt — übersprungen (läuft nur im Workflow).")
         sys.exit(0)
 
+    league_defs = _active_league_defs()
+    print(f"  Datensatz: {D.active_dataset()} · Ligen: {list(league_defs)}")
     standings_by_league, fixtures_by_league = {}, {}
-    for lk, cfg in LEAGUES_TOP5.items():
+    for lk, cfg in league_defs.items():
         lid = cfg["apif_id"]
         standings_by_league[lk] = _api_get(f"/standings?league={lid}&season={season}") or {}
         fixtures_by_league[lk]  = _api_get(f"/fixtures?league={lid}&season={season}") or {}
         nfx = len((fixtures_by_league[lk].get("response") or []))
         print(f"  {lk}: {nfx} Fixtures geladen")
+        if nfx == 0:
+            print(f"  ⚠️  {lk}: 0 Fixtures — league_id {lid} oder Saison {season} prüfen!")
 
     # Elo aus vorhandenem Cache (optional), Schlüssel = team_id-String
     elo = {}
@@ -201,7 +223,7 @@ def main():
             except Exception:
                 pass
 
-    groups = build_groups(standings_by_league, fixtures_by_league, elo)
+    groups = build_groups(standings_by_league, fixtures_by_league, elo, league_defs)
 
     # Bestehende liga-data.json mergen (odds/picks/Opening NICHT überschreiben)
     wm = {}
@@ -225,7 +247,7 @@ def main():
     wm.setdefault("odds", {})
     wm.setdefault("picks", {})
     wm.setdefault("_meta", {})
-    wm["_meta"]["profile"] = "liga_default"
+    wm["_meta"]["profile"] = D.active_profile()
     wm["_meta"]["season"] = season
     wm["_meta"]["dataUpdatedAt"] = datetime.now(timezone.utc).isoformat()
 

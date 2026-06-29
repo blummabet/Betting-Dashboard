@@ -94,5 +94,30 @@ class TestBuildGroups(unittest.TestCase):
         self.assertEqual(g["ESP"]["fixtures"], [])
 
 
+class TestMlsDataset(unittest.TestCase):
+    """29.06.2026 (Lucas): MLS als Brücken-Liga — eigene Liga-Map + dataset-aware Auswahl."""
+
+    def test_mls_league_id(self):
+        self.assertEqual(B.LEAGUES_MLS["MLS"]["apif_id"], 253)
+
+    def test_build_groups_with_mls_defs(self):
+        st = {"MLS": _standings([(1, "Inter Miami"), (2, "LA Galaxy")])}
+        fx = {"MLS": _fixtures([(1, "Inter Miami", 2, "LA Galaxy",
+                                "2026-08-15T23:00:00+00:00", "Regular Season - 25", "NS", None, None)])}
+        g = B.build_groups(st, fx, league_defs=B.LEAGUES_MLS)
+        self.assertEqual(set(g.keys()), {"MLS"})
+        self.assertEqual(g["MLS"]["name"], "Major League Soccer")
+        self.assertEqual(len(g["MLS"]["teams"]), 2)
+
+    def test_active_defs_switch_with_env(self):
+        import os
+        os.environ["COCOBET_DATASET"] = "mls"
+        try:
+            self.assertEqual(B._active_league_defs(), B.LEAGUES_MLS)
+        finally:
+            os.environ.pop("COCOBET_DATASET", None)
+        self.assertEqual(B._active_league_defs(), B.LEAGUES_TOP5)   # zurück auf Default
+
+
 if __name__ == "__main__":
     unittest.main()

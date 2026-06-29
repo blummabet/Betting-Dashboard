@@ -1,0 +1,159 @@
+name: ⚽ MLS aktualisieren (Brücken-Liga)
+
+# 29.06.2026 (Lucas): MLS als Brücken-Liga nach der WM (MLS-Restart 16.07., MLS Cup 18.12.).
+# Eigener Datensatz auf dem WM/Liga-Stack: COCOBET_DATASET=mls + COCOBET_PROFILE=mls_default →
+# schreibt NUR mls-data.json + mls_*-Sibling-Dateien, rührt WM (wm2026-data.json) und Liga
+# (liga-data.json) NICHT an. Phase 1: Daten + Quoten + Picks + Resolve + CLV + Serien + Lernen.
+# Reise/Höhe/Wetter (Phase 2) folgen mit MLS-Venue-Geodaten. Kein Poly/Trading.
+# Takt an US-Anpfiffe: 19:00 UTC (Pre-Match für Abendspiele ET) + 07:00 UTC (Ergebnisse über Nacht).
+on:
+  schedule:
+    - cron: '0 7,19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-mls
+  cancel-in-progress: false
+
+env:
+  COCOBET_DATASET: mls
+  COCOBET_PROFILE: mls_default
+
+jobs:
+  update-mls:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
+      - name: 🗂️ MLS-Daten bauen (Teams + Fixtures + Ergebnisse)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python build_liga_data.py
+
+      - name: 📐 MLS Club-Elo holen (Baseline/Evidenz — KEINE Pick-Quelle)
+        run: python fetch_liga_elo.py || true
+
+      - name: 📊 MLS Form + H2H holen
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_wm_form.py || true
+
+      - name: 🚩 MLS Ecken- + Karten-Statistik (für Serien)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_wm_corners.py || true
+
+      - name: 🔥 MLS-Serien berechnen (Streak-Content)
+        run: python compute_streaks.py || true
+
+      - name: 📈 MLS xG holen (echtes Klub-xG aus /fixtures/statistics)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_liga_xg.py || true
+
+      - name: 👥 MLS Kader/Schlüsselspieler holen (lineup_signal + player_form-Baselines)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_wm_squads.py || true
+
+      - name: ⚽ MLS Top-Torjäger holen (topscorer_momentum)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_liga_topscorers.py || true
+
+      - name: 🔁 MLS Trainerwechsel + Schlüssel-Abgänge (coach_change + transfer_shift)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_liga_team_changes.py || true
+
+      - name: 🤕 MLS Verletzungen/Sperren holen (League + /sidelined)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_wm_injuries.py || true
+
+      - name: 🔮 MLS API-Football-Predictions holen (3. Modell, Cross-Check)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_wm_apifootball_predictions.py || true
+
+      - name: 📋 MLS Aufstellungen holen (greift T-1h vor Anpfiff)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_wm_lineups.py --no-alerts || true
+
+      - name: 💰 MLS-Quoten holen (1X2 + O/U + BTTS, Pinnacle+Betfair-Anker, Opening-Carry)
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python fetch_liga_odds.py
+
+      - name: 📡 MLS Sharp-Moves erkennen (Radar)
+        run: python detect_wm_sharp_moves.py || true
+
+      # Pick-/Resolve-Schritte dürfen den Daten-Commit NICHT blockieren (|| true + commit if: always()).
+      - name: 🎯 MLS-Picks generieren (Signal-Engine, mls_default)
+        run: python generate_mls_picks.py || true
+
+      - name: 📄 MLS Event-Pages generieren (live Spiele)
+        run: python generate_wm_match_pages.py || true
+
+      - name: ✅ MLS-Picks resolven (WIN/LOSS/VOID)
+        run: python resolve_wm_picks.py || true
+
+      - name: 📉 MLS-CLV setzen (Einstieg vs Closing)
+        run: python resolve_steam_clv.py || true
+
+      - name: 🎯 MLS-CLV-Bilanz aggregieren (Scoreboard)
+        run: python compute_clv_summary.py || true
+
+      - name: 📊 MLS Post-Match-xG ans Fixture (für Prozess-Verdict)
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+        run: python fetch_liga_match_stats.py || true
+
+      - name: 🧠 MLS Lern-Loop (Ledger + Bayesian-Gewichte, prozess-gewichtet)
+        run: |
+          python build_signal_ledger.py --write || true
+          python update_signal_weights.py || true
+
+      - name: 🛡️ MLS Guard-Batterie (mls_status.json)
+        run: python wm_data_integrity.py || true
+
+      - name: 💾 mls-data.json committen
+        if: always()
+        run: |
+          git config user.name  "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          # EINZELN stagen (atomar — nicht-existente Pfade dürfen den add nicht killen).
+          git add mls-data.json || true
+          git add mls-odds-history.json 2>/dev/null || true
+          git add mls_lineups.json 2>/dev/null || true
+          git add mls_signal_ledger.json 2>/dev/null || true
+          git add mls_signal_weights.json 2>/dev/null || true
+          git add mls_clv_summary.json 2>/dev/null || true
+          git add mls_streaks.json 2>/dev/null || true
+          git add mls_status.json 2>/dev/null || true
+          git add mls_sharp_moves_log.json 2>/dev/null || true
+          git add mls_sharp_dedup.json 2>/dev/null || true
+          git add matches/mls-index.json matches/data/mls-*.json 2>/dev/null || true
+          git add mls_match_stats_cache.json 2>/dev/null || true
+          git add mls_apif_predictions.json 2>/dev/null || true
+          git add mls_player_form.json mls_player_form_ledger.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "mls: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.
+          git pull --rebase origin main || true
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

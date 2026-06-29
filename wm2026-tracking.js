@@ -99,6 +99,20 @@
       ]);
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       _data   = await resp.json();
+      // 29.06.2026 (Lucas: MLS „wie die anderen Ligen"): MLS-Datensatz mit-laden + mergen
+      // (Gruppe „MLS"/Picks „MLS-…" kollisionsfrei) → MLS-Picks erscheinen im Tracking.
+      if (_isLiga) {
+        try {
+          const mlsResp = await fetch('mls-data.json?t=' + Date.now());
+          if (mlsResp && mlsResp.ok) {
+            const mls = await mlsResp.json();
+            if (mls && mls.groups) {
+              _data.groups = Object.assign({}, _data.groups || {}, mls.groups);
+              _data.picks  = Object.assign({}, _data.picks  || {}, mls.picks  || {});
+            }
+          }
+        } catch (e) { /* MLS optional */ }
+      }
       if (valResp && valResp.ok) {
         try { _validationReport = await valResp.json(); } catch (e) {}
       }

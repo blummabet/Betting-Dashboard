@@ -24,7 +24,8 @@ from datetime import date
 from pathlib import Path
 
 BASE = Path(__file__).parent
-LIGA_FILE = BASE / "liga-data.json"
+import cocobet_dataset as D  # 29.06.2026: dataset-aware (MLS)
+LIGA_FILE = D.data_file()   # 29.06.2026: liga-data.json ODER mls-data.json je COCOBET_DATASET
 
 # Liga-Gruppe → ClubElo-Ländercode (Kandidaten je Land einschränken → weniger Fehlmatches).
 GROUP_COUNTRY = {"ENG": "ENG", "ESP": "ESP", "GER": "GER", "ITA": "ITA", "FRA": "FRA"}

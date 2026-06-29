@@ -26,13 +26,14 @@ LIGA_FILE = os.path.join(BASE, "liga-data.json")
 # Format identisch zu wm2026-odds-history.json: {key: [{ts,bk,hw,dr,aw}...], _meta:{oddsFetchedAt}}.
 LIGA_HISTORY = os.path.join(BASE, "liga-odds-history.json")
 
-# TheOddsAPI-Sport-Keys der Top 5 (stabil etabliert).
+# TheOddsAPI-Sport-Keys der Top 5 (stabil etabliert) + MLS (Brücken-Liga nach WM, 29.06.2026).
 LEAGUE_SPORT_KEYS = {
     "ENG": "soccer_epl",
     "ESP": "soccer_spain_la_liga",
     "GER": "soccer_germany_bundesliga",
     "ITA": "soccer_italy_serie_a",
     "FRA": "soccer_france_ligue_one",
+    "MLS": "soccer_usa_mls",
 }
 BOOK_PRIORITY = ["pinnacle", "betfair_ex_eu", "marathonbet", "williamhill"]
 # Soft-/Public-Buchmacher für den Konsens (public_hw/dr/aw → public_static_bias-Signal +

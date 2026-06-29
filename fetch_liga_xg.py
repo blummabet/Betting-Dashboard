@@ -23,7 +23,8 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 BASE = Path(__file__).parent
-LIGA_FILE = BASE / "liga-data.json"
+import cocobet_dataset as D  # 29.06.2026: dataset-aware (MLS)
+LIGA_FILE = D.data_file()   # 29.06.2026: liga-data.json ODER mls-data.json je COCOBET_DATASET
 STALE_H = 24
 
 

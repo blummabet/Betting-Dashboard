@@ -1909,10 +1909,19 @@ function _loadLigaSharpData() {
       : fetch('liga-odds-history.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)),
     (window.LIGA_SIGNAL_WEIGHTS ? Promise.resolve(window.LIGA_SIGNAL_WEIGHTS)
       : fetch('liga_signal_weights.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)),
-  ]).then(([ld, lh, lw]) => {
+    // 29.06.2026 (Lucas: MLS „wie die anderen Ligen") — MLS-Moves in den Liga-Radar mit-mergen.
+    fetch('mls-data.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch('mls-odds-history.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+  ]).then(([ld, lh, lw, md, mh]) => {
     window.LIGA_DATA           = ld || {};
     window.LIGA_ODDS_HISTORY   = lh || {};
     window.LIGA_SIGNAL_WEIGHTS = lw || {};
+    // MLS-Gruppen/Odds dazumischen (kollisionsfrei: Gruppe „MLS", Fixture-Keys „MLS-…").
+    if (md && md.groups) {
+      window.LIGA_DATA.groups = Object.assign({}, window.LIGA_DATA.groups || {}, md.groups);
+      if (md.odds) window.LIGA_DATA.odds = Object.assign({}, window.LIGA_DATA.odds || {}, md.odds);
+    }
+    if (mh) window.LIGA_ODDS_HISTORY = Object.assign({}, window.LIGA_ODDS_HISTORY || {}, mh);
   }).catch(() => {
     window.LIGA_DATA         = window.LIGA_DATA || {};
     window.LIGA_ODDS_HISTORY = window.LIGA_ODDS_HISTORY || {};

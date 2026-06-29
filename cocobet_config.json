@@ -331,8 +331,234 @@
     },
     "liga_default": {
       "description": "Liga-Saison Default — moderater, ohne Pre-Tournament-Phase",
-      "disabled_signals": ["incentive_signal", "altitude_signal", "weather_signal", "travel_burden", "smart_money", "polymarket_sharp", "pressure_index", "steam_lag"],
-      "nt_xg": {"lookback_fixtures": 6, "fetch_player_stats": false, "request_delay_sec": 0.4},
+      "disabled_signals": [
+        "incentive_signal",
+        "altitude_signal",
+        "weather_signal",
+        "travel_burden",
+        "smart_money",
+        "polymarket_sharp",
+        "pressure_index",
+        "steam_lag"
+      ],
+      "nt_xg": {
+        "lookback_fixtures": 6,
+        "fetch_player_stats": false,
+        "request_delay_sec": 0.4
+      },
+      "edge": {
+        "min_1x2_for_pick": 4,
+        "min_ou_for_pick": 4,
+        "min_dnb_for_pick": 5,
+        "min_dc_for_pick": 4,
+        "min_ah_for_pick": 4,
+        "bet_threshold_1x2": 6,
+        "bet_threshold_ou": 5,
+        "huge_edge_warn": 15,
+        "max_edge_sane": 15,
+        "ou_bet_max": 8,
+        "ah_bet_max": 10,
+        "reverser_threshold_pp": 3.0,
+        "reverser_flip_pp": 5.0,
+        "confirm_threshold_pp": 3.0,
+        "leg_noise_pp": 0.4,
+        "stale_after_h": 72,
+        "min_leg_snaps": 4,
+        "max_leg_gap_h": 24,
+        "min_flip_snaps": 5,
+        "bet_entry_hurdle_h": 36
+      },
+      "odds": {
+        "max_for_pick": 7.0,
+        "max_for_bet": 5.0,
+        "max_for_bet_ou": 3.5,
+        "max_for_bet_dnb": 4.5
+      },
+      "underdog": {
+        "elo_soft_threshold": 120,
+        "elo_hard_threshold": 220
+      },
+      "trade": {
+        "auto_trigger_edge_pp": 3.5,
+        "auto_trigger_edge_elo_only": 7.0,
+        "steam_lag_edge_pp": 2.5,
+        "pre_tournament_edge_pp": 0,
+        "pre_tournament_days": 0,
+        "pre_match_close_hours": 1,
+        "daily_bet_cap": 12,
+        "daily_stake_cap_usdc": 80.0,
+        "min_balance_buffer": 2.0,
+        "stake_usdc_flat": 5.5,
+        "min_vol_usdc": 5000,
+        "min_days_until_game": 0,
+        "min_hours_before_match": 2,
+        "min_entry_price": 0.12,
+        "max_entry_price": 0.88,
+        "max_positions_per_match": 3,
+        "max_open_exposure_usdc": 120.0,
+        "adaptive_daily_fraction": 0.5,
+        "require_book_for_entry": true,
+        "min_ask_edge_pp": 3.0,
+        "ah_min_entry_price": 0.2,
+        "post_only_retry_max_s": 120
+      },
+      "sell": {
+        "profit_target": 0.08,
+        "pinn_gap_pp": 1.5,
+        "min_profit_pp": 0.03,
+        "age_decay_hours": 36,
+        "age_decay_profit_target": 0.04,
+        "sharp_against_gap_pp": 6.0,
+        "loss_deep_pct": 0.35,
+        "loss_deep_hours_ahead": 10.0,
+        "age_loss_hours": 30.0,
+        "age_loss_threshold_pct": 0.1,
+        "age_loss_max_hours_left": 48.0,
+        "no_inplay_loss_sell": true
+      },
+      "monitor": {
+        "score_ok": 75,
+        "score_watch": 55,
+        "score_warning": 35,
+        "score_critical": 0,
+        "w_edge": 30,
+        "w_pinn": 20,
+        "w_clv": 15,
+        "w_time": 5
+      },
+      "steam": {
+        "sell_velocity_pp_h": 0.3,
+        "sell_edge_threshold": 1.5,
+        "sell_min_entry_edge": 2.0,
+        "high_conf_edge_min": 2.5,
+        "min_edge_pp": 1.2,
+        "signal_edge_pp": 1.8,
+        "converged_edge_pp": 1.0,
+        "trade_tier_edge_pp": 4.0,
+        "max_snapshots": 50,
+        "signal_ttl_days": 30,
+        "max_trigger_odds": 6.0
+      },
+      "tiktok": {
+        "dedup_window_days": 5
+      },
+      "dedup_hours": {
+        "sell_alert": 6,
+        "edge_alert": 8,
+        "sharp_move": 18,
+        "position_health": 4,
+        "spotlight_per_day": 2
+      },
+      "telegram": {
+        "max_log_entries": 500,
+        "max_alerts_per_run": 6,
+        "max_sharp_alerts_per_run": 8,
+        "alert_edge_min_pp": 4,
+        "alert_cumul_pp": 6,
+        "alert_steam_pp": 8,
+        "snap_window_days": 14,
+        "min_bet_edge_pp": 3,
+        "min_abw_edge_pp": 3,
+        "min_abw_conviction": 5
+      },
+      "incentive_signal": {
+        "_description": "Liga-Profil: nur Komponente A aktiv (Qualifikations-Math). Bracket/Venue/Rotation N/A.",
+        "must_win_pp": 1.5,
+        "dead_rubber_under_pp": 0.8,
+        "stake_asymmetry_pp": 1.0,
+        "bracket_elo_threshold": 50.0,
+        "bracket_elo_max_pp": 0.0,
+        "bracket_elo_scale": 150.0,
+        "venue_dist_threshold_km": 1000.0,
+        "venue_dist_max_pp": 0.0,
+        "venue_dist_scale_km": 3000.0,
+        "venue_altitude_penalty_pp": 0.0,
+        "rotation_short_rest_days": 3,
+        "rotation_pp": 0.0,
+        "min_signal_pp": 0.4,
+        "confidence_md2": 0.55,
+        "confidence_md3": 0.7,
+        "confidence_ko": 0.65
+      },
+      "conviction_score": {
+        "_description": "Liga-Profil: gleiche Logik wie WM, aber moderatere Schwellen weil Liga-Quoten oft enger sind",
+        "sharp_move": {
+          "min_pinn_move_pp": 4.0,
+          "min_soft_lag_pp": 2.5,
+          "min_hours_since_open": 12
+        },
+        "verdict_thresholds": {
+          "top": 8,
+          "abwaegen": 6,
+          "skip": 4
+        },
+        "family_caps": {
+          "sharp_money": 3,
+          "model_stack": 3,
+          "context": 3,
+          "market": 1
+        },
+        "opening_movement": {
+          "enabled": true,
+          "min_pp_in_pick_direction": 2.5
+        },
+        "signal_weights_init": 1.0,
+        "card_quote_display": {
+          "show_soft_book_quote": true,
+          "show_pinn_in_modal": true,
+          "show_movement_in_modal": true
+        },
+        "steam_bet_threshold": 8,
+        "max_steam_picks_per_card": 3,
+        "_meta_steam": "Steam-Modell: BET ab Conviction ≥8 (Liga strenger), max 3 Picks/Card"
+      },
+      "freshness_leg": {
+        "score_scale": 0.5,
+        "max_signal_pp": 4.0,
+        "drift_score_pp": 0.0,
+        "base_conf": 0.5,
+        "conf_per_snap": 0.04,
+        "max_conf": 0.85
+      },
+      "smart_money": {
+        "scale": 6.0,
+        "max_signal_pp": 1.5,
+        "min_volume_usd": 100000,
+        "min_top_share": 0.1,
+        "base_conf": 0.4,
+        "max_conf": 0.6,
+        "cluster_window_h": 12,
+        "cluster_min_wallets": 3,
+        "cluster_boost": 1.25,
+        "exit_window_h": 24,
+        "exit_min_usd": 2000,
+        "exit_penalty": 1.0
+      },
+      "pick_calibration": {
+        "enabled": true,
+        "min_picks": 40,
+        "min_segment_n": 25,
+        "scale": 8.0,
+        "max_nudge": 1.5
+      }
+    },
+    "mls_default": {
+      "description": "MLS-Saison (Brücken-Liga nach WM) — Klon von liga_default. Reise/Höhe/Wetter folgen in Phase 2 (Geo-Daten).",
+      "disabled_signals": [
+        "incentive_signal",
+        "altitude_signal",
+        "weather_signal",
+        "travel_burden",
+        "smart_money",
+        "polymarket_sharp",
+        "pressure_index",
+        "steam_lag"
+      ],
+      "nt_xg": {
+        "lookback_fixtures": 6,
+        "fetch_player_stats": false,
+        "request_delay_sec": 0.4
+      },
       "edge": {
         "min_1x2_for_pick": 4,
         "min_ou_for_pick": 4,

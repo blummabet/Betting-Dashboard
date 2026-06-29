@@ -86,6 +86,30 @@ test('Sharp Radar: In-Play-Snapshots (nach Anpfiff) verfälschen die Mover NICHT
   assert.ok(!/9\d(\.\d)?%/.test(html), 'Keine In-Play-98%-Wahrscheinlichkeit');
 });
 
+test('Sharp Radar (Liga): MLS wird im Liga-Toggle gemerged (erscheint als Mover)', () => {
+  const w = loadFull();
+  w.LEAGUES = {};
+  const now = Date.now();
+  const ko = new Date(now + 6 * 3600000);   // Anpfiff in 6h → pre-match
+  const iso = (ms) => new Date(ms).toISOString();
+  const today = new Date().toISOString().slice(0, 10);
+  // LIGA_DATA + LIGA_ODDS_HISTORY vorab setzen → _loadLigaSharpData kehrt früh zurück (kein Fetch-Overwrite).
+  // Simuliert das Ergebnis des MLS-Merges (Gruppe „MLS" steckt in LIGA_DATA.groups).
+  w.LIGA_DATA = { groups: { MLS: {
+    teams: [{ id: 'mia', name: 'Inter Miami', flag: '🇺🇸' }, { id: 'rsl', name: 'Real Salt Lake', flag: '🇺🇸' }],
+    fixtures: [{ home: 'mia', away: 'rsl', date: today, time: '23:00',
+                 kickoff: ko.toISOString(), matchday: 25, result: null }],
+  } } };
+  w.LIGA_ODDS_HISTORY = { 'mia-rsl': [
+    { ts: iso(now - 5 * 3600000), hw: 2.10, dr: 3.40, aw: 3.30 },
+    { ts: iso(now - 1 * 3600000), hw: 1.85, dr: 3.60, aw: 3.90 },   // Steam Heim (~6pp)
+  ] };
+  w._sharpSetDataset('liga');
+  w.renderSharpRadar();
+  const html = w.document.getElementById('mainContent').innerHTML;
+  assert.match(html, /Inter Miami/, 'MLS-Fixture erscheint im Liga-Sharp-Radar');
+});
+
 test('CLV-Scoreboard: Ø CLV + %beat + Abdeckung + Markt-Tabelle', () => {
   const w = loadRenderer();
   w.WM_CLV_SUMMARY = {

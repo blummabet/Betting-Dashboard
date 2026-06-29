@@ -46,6 +46,21 @@ class TestDataset(unittest.TestCase):
         D = _reload("liga")
         self.assertEqual(D.leagues(), {"ENG": 39, "ESP": 140, "GER": 78, "ITA": 135, "FRA": 61})
 
+    def test_mls_dataset(self):
+        # 29.06.2026 (Lucas): MLS als 3. Datensatz. Name aus liga-Schema abgeleitet (liga→mls).
+        D = _reload("mls")
+        self.assertTrue(D.is_liga())                       # non-WM → Klub-Pfade greifen
+        self.assertEqual(D.active_dataset(), "mls")
+        self.assertEqual(D.data_file().name, "mls-data.json")
+        self.assertEqual(D.prefix(), "mls_")
+        self.assertEqual(D.active_profile(), "mls_default")
+        self.assertEqual(D.leagues(), {"MLS": 253})
+        self.assertEqual(D.file("wm_streaks.json", "liga_streaks.json").name, "mls_streaks.json")
+
+    def test_mls_profile_env_override(self):
+        D = _reload("mls", "custom_profile")
+        self.assertEqual(D.active_profile(), "custom_profile")
+
     def test_current_season(self):
         D = _reload(None)
         self.assertEqual(D.current_season(datetime(2026, 7, 1, tzinfo=timezone.utc)), 2026)

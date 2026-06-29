@@ -20,7 +20,7 @@ from pathlib import Path
 import cocobet_dataset as D
 
 BASE = Path(__file__).parent
-LIGA_FILE = BASE / "liga-data.json"   # liga-only Script
+LIGA_FILE = D.data_file()   # 29.06.2026: liga-data.json ODER mls-data.json je COCOBET_DATASET
 APIF_HOST = "v3.football.api-sports.io"
 APIF_KEY = os.environ.get("APISPORTS_KEY", "").strip()
 LIGA_LEAGUES = D.leagues()

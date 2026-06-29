@@ -230,6 +230,56 @@ test('Liga-Cards kuratiert: Alle→Pro-Liga-Top-3, Liga-Klick→beste, Spieltag�
   assert.match(html, /wm-date-divider/, 'Vollansicht zeigt Datums-Trenner');
 });
 
+// 29.06.2026 (Lucas): MLS „wie die anderen Ligen" — National merged liga-data.json + mls-data.json,
+// MLS erscheint als weitere Liga in der kuratierten Ansicht.
+test('National-Cards: MLS-Datensatz wird mitgemerged (erscheint als weitere Liga)', async () => {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="mainContent"></div></body>', {
+    url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  const liga = { _meta: { profile: 'liga_default' },
+    groups: { ENG: { name: 'Premier League', flag: '🏴',
+      teams: [{ id: 'che', name: 'Chelsea' }, { id: 'ars', name: 'Arsenal' }],
+      fixtures: [_ligaFixture('che', 'ars', 1, 2)] } },
+    picks: {}, odds: {} };
+  const mls = { _meta: { profile: 'mls_default' },
+    groups: { MLS: { name: 'Major League Soccer', flag: '🇺🇸',
+      teams: [{ id: 'mia', name: 'Inter Miami' }, { id: 'lag', name: 'LA Galaxy' }],
+      fixtures: [_ligaFixture('mia', 'lag', 25, 3)] } },
+    picks: { 'MLS-25-mia-lag': [{ market: 'Heimsieg', verdict: 'BET', convictionScore: 7, odds: 1.9, signals: [] }] },
+    odds: {} };
+  w.fetch = (url) => {
+    const u = String(url);
+    const body = u.includes('mls-data.json') ? mls : u.includes('liga-data.json') ? liga : {};
+    return Promise.resolve({ ok: true, json: () => Promise.resolve(body) });
+  };
+  w.eval(readFileSync(WM_RENDERER, 'utf8'));
+  await w.initNationalCards();
+  const html = w.document.getElementById('mainContent').innerHTML;
+  assert.match(html, /Premier League/, 'Top-5-Liga sichtbar');
+  assert.match(html, /Major League Soccer/, 'MLS als weitere Liga gemerged');
+  assert.match(html, /Inter Miami/, 'MLS-Team gerendert');
+});
+
+test('National-Serien: MLS-Streaks werden mitgemerged', async () => {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="streaksPanel"></div></body>', {
+    url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  const ligaS = { streaks: [{ teamId: '42', team: 'Arsenal', league: 'ENG', leagueName: 'PL',
+    type: 'over25', venue: 'all', market: 'Über 2,5 Tore', length: 5, strong: true, continuation: { state: 'intakt' } }] };
+  const mlsS  = { streaks: [{ teamId: 'mia', team: 'Inter Miami', league: 'MLS', leagueName: 'Major League Soccer',
+    type: 'cornersOver', venue: 'all', market: 'Über 9,5 Ecken', length: 4, strong: false, continuation: { state: 'neutral' } }] };
+  w.fetch = (url) => {
+    const u = String(url);
+    const body = u.includes('mls_streaks') ? mlsS : u.includes('liga_streaks') ? ligaS : {};
+    return Promise.resolve({ ok: true, json: () => Promise.resolve(body) });
+  };
+  w.eval(readFileSync(WM_RENDERER, 'utf8'));
+  await w.initStreaks('national');
+  const html = w.document.getElementById('streaksPanel').innerHTML;
+  assert.match(html, /Arsenal/, 'Liga-Serie sichtbar');
+  assert.match(html, /Inter Miami/, 'MLS-Serie mitgemerged');
+});
+
 test('Bepicktes KO-Spiel läuft 1:1 durch _buildCard (Runden-Header, kein „ST", kein Crash)', () => {
   const w = loadCards();
   const t = w.__wmCardTest;
