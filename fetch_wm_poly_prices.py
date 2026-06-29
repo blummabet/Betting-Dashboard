@@ -57,11 +57,14 @@ def _kickoff_passed(fx):
         return False
 
 
+import cocobet_dataset as D   # 29.06.2026: dataset-aware (WM / Liga / MLS-Poly-Dry-Run)
+
 BASE         = os.path.dirname(os.path.abspath(__file__))
-OUT_FILE     = os.path.join(BASE, "wm_poly_prices.json")
-WM_FILE      = os.path.join(BASE, "wm2026-data.json")
-POLY_HIST    = os.path.join(BASE, "wm2026-poly-history.json")  # Poly price snapshots over time
-ODDS_HIST    = os.path.join(BASE, "wm2026-odds-history.json")  # Pinnacle odds snapshots
+# Dataset-aware: wm_* | liga_* | mls_* je COCOBET_DATASET. WM-Verhalten unverändert.
+OUT_FILE     = str(D.file("wm_poly_prices.json",      "liga_poly_prices.json"))
+WM_FILE      = str(D.data_file())
+POLY_HIST    = str(D.file("wm2026-poly-history.json", "liga-poly-history.json"))  # Poly price snapshots
+ODDS_HIST    = str(D.file("wm2026-odds-history.json", "liga-odds-history.json"))  # Pinnacle odds snapshots
 
 # ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
 try:
@@ -82,9 +85,12 @@ DELTA_WINDOW_H = 24
 # Edge-Alerts: Minimum Edge für Telegram-Notification
 ALERT_EDGE_MIN_PP = float(_cfg("telegram", "alert_edge_min_pp", 5.0))
 
+# Polymarket-Serie pro Datensatz (29.06.2026): WM=soccer-fifwc, MLS=soccer-mls (am 1. Live-Lauf
+# am self-hosted Runner verifizieren — Gamma ist geoblockt, aus der Sandbox nicht prüfbar).
+POLY_SERIES_SLUG = _cfg("poly", "series_slug", "soccer-fifwc")
 GAMMA_URL = (
     "https://gamma-api.polymarket.com/events"
-    "?series_slug=soccer-fifwc&limit=100&active=true"
+    f"?series_slug={POLY_SERIES_SLUG}&limit=100&active=true"
 )
 GAMMA_SLUG_URL = "https://gamma-api.polymarket.com/events?slug={slug}&markets=true"
 CLOB_URL = "https://clob.polymarket.com/books?token_id={token_id}"
@@ -205,21 +211,36 @@ def fetch_clob_depth(token_id: str) -> dict | None:
         return None
 
 
+def _build_name_map_from_data() -> dict:
+    """Non-WM (Liga/MLS): Name→ID-Map aus den Team-Namen des Datensatzes (Polymarket nennt Klubs,
+    nicht Länder → die hartkodierte WM-Ländermap greift nicht). 29.06.2026."""
+    m = {}
+    try:
+        with open(WM_FILE, encoding="utf-8") as f:
+            wm = json.load(f)
+        for g in (wm.get("groups") or {}).values():
+            for t in (g.get("teams") or []):
+                nm, tid = t.get("name"), t.get("id")
+                if nm and tid:
+                    m[str(nm)] = str(tid)
+    except Exception:
+        pass
+    return m
+
+# Aktive Name→ID-Map: WM = hartkodierte Ländermap, sonst dynamisch aus dem Datensatz.
+_ACTIVE_NAME_MAP = _build_name_map_from_data() if D.is_liga() else POLY_NAME_TO_ID
+
+
 def resolve_team_id(name: str) -> str | None:
-    """Map Polymarket team name → our WM team ID. Tries exact then stripped."""
-    tid = POLY_NAME_TO_ID.get(name)
+    """Map Polymarket team name → our team ID. Exakt, dann getrimmt, dann Teilstring."""
+    nm_map = _ACTIVE_NAME_MAP
+    tid = nm_map.get(name) or nm_map.get(name.strip())
     if tid:
         return tid
-    # Try stripping diacritics / trailing whitespace
-    stripped = name.strip()
-    tid = POLY_NAME_TO_ID.get(stripped)
-    if tid:
-        return tid
-    # Partial match (last resort)
     name_lower = name.lower()
-    for poly_name, wm_id in POLY_NAME_TO_ID.items():
+    for poly_name, team_id in nm_map.items():
         if poly_name.lower() in name_lower or name_lower in poly_name.lower():
-            return wm_id
+            return team_id
     return None
 
 
@@ -1118,7 +1139,7 @@ def main():
         # mit UnboundLocalError ein paar 100 Zeilen FRÜHER. Resultat: wm_poly_prices.json
         # seit 2+ Tagen nicht geschrieben → Steam-Lag-Monitor las stale Daten.
         # Fix: timedelta global oben importiert, lokaler Import entfernt.
-        EDGE_ALERT_DEDUP_FILE = os.path.join(BASE, "wm_edge_alert_dedup.json")
+        EDGE_ALERT_DEDUP_FILE = str(D.file("wm_edge_alert_dedup.json", "liga_edge_alert_dedup.json"))
         EDGE_DEDUP_HOURS = _cfg("dedup_hours", "edge_alert", 12)
         dedup_state = {}
         if os.path.exists(EDGE_ALERT_DEDUP_FILE):

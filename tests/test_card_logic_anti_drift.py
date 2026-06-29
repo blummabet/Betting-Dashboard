@@ -140,6 +140,10 @@ class TestNoPhantomVenues(unittest.TestCase):
             # Skip irrelevant dirs
             if any(skip in str(fpath) for skip in ("actions-runner", ".git/", "node_modules")):
                 continue
+            # 29.06.2026: Die Blacklist ist WM-spezifisch (waren KEINE WM-2026-Host-Stadien).
+            # Für MLS/Liga sind „Empower Field" (Colorado) bzw. Orlando ECHTE Venues → ausnehmen.
+            if fpath.name.startswith(("mls", "liga")):
+                continue
             try:
                 content = fpath.read_text(encoding="utf-8")
             except Exception:

@@ -28,10 +28,13 @@ from datetime import datetime, timezone, date
 
 from telegram_trades import is_auto_source  # Single Source: auto vs manual (deckt auto_steam)
 
+import cocobet_dataset as D   # 29.06.2026: dataset-aware (MLS-Poly-Dry-Run)
+
 BASE           = os.path.dirname(os.path.abspath(__file__))
-POSITIONS_FILE = os.path.join(BASE, "wm_poly_positions.json")
-AUTO_BETS_FILE = os.path.join(BASE, "wm_auto_bets_placed.json")
-PRICES_FILE    = os.path.join(BASE, "wm_poly_prices.json")
+# Dataset-aware: wm_* | liga_* | mls_* je COCOBET_DATASET. WM unverändert.
+POSITIONS_FILE = str(D.file("wm_poly_positions.json",  "liga_poly_positions.json"))
+AUTO_BETS_FILE = str(D.file("wm_auto_bets_placed.json", "liga_auto_bets_placed.json"))
+PRICES_FILE    = str(D.file("wm_poly_prices.json",      "liga_poly_prices.json"))
 
 # Auto-Bet market label → Gamma API price key
 MARKET_TO_PRICE_KEY = {
@@ -180,7 +183,7 @@ def _http_get(url: str) -> dict | list | None:
 # check_book_fetch_healthy schlägt Alarm wenn Versuche>0 aber 0 echte Bücher (= Endpoint/
 # Netz tot, genau der stille Totalausfall der das Trading vom 17.→19.06 abgewürgt hat).
 _BOOK_HEALTH = {"attempts": 0, "transport_fail": 0, "empty_or_crossed": 0, "ok": 0}
-BOOK_HEALTH_FILE = os.path.join(BASE, "wm_book_health.json")
+BOOK_HEALTH_FILE = str(D.file("wm_book_health.json", "liga_book_health.json"))
 
 
 def write_book_health(path: str = None) -> None:
@@ -794,7 +797,7 @@ def main():
     # HOME-AWAY ziehen und matchDate damit überschreiben — wirkt für check_position
     # (in_play) UND den Pre-Match-Close. Deckt bestehende offene Bets + künftige ab.
     try:
-        _wm = json.load(open(os.path.join(BASE, "wm2026-data.json"), encoding="utf-8"))
+        _wm = json.load(open(str(D.data_file()), encoding="utf-8"))
         _ko_map = {}
         for _g in (_wm.get("groups") or {}).values():
             for _fx in (_g.get("fixtures") or []):

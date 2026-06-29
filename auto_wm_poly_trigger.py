@@ -137,12 +137,15 @@ ENGINE_HI_CONF_BONUS_PP = _cfg("trade", "engine_hi_conf_bonus_pp", 1.0)
 # Bei $200 → $50 Cap. Bei $40 Balance → $16 Cap. Verhindert Restbankroll-Burn.
 ADAPTIVE_DAILY_FRACTION = _cfg("trade", "adaptive_daily_fraction", 0.40)
 
+import cocobet_dataset as D   # 29.06.2026: dataset-aware (MLS-Poly-Dry-Run)
+
 BASE_DIR              = os.path.dirname(os.path.abspath(__file__))
-PRICES_FILE           = os.path.join(BASE_DIR, "wm_poly_prices.json")
-PLACED_FILE           = os.path.join(BASE_DIR, "wm_auto_bets_placed.json")
-BALANCE_FILE          = os.path.join(BASE_DIR, "wm_poly_balance.json")
-KILL_SWITCH_FILE      = os.path.join(BASE_DIR, "wm_kill_switch.json")
-WM_DATA_FILE          = os.path.join(BASE_DIR, "wm2026-data.json")
+# Dataset-aware: wm_* | liga_* | mls_* je COCOBET_DATASET. WM unverändert.
+PRICES_FILE           = str(D.file("wm_poly_prices.json",      "liga_poly_prices.json"))
+PLACED_FILE           = str(D.file("wm_auto_bets_placed.json", "liga_auto_bets_placed.json"))
+BALANCE_FILE          = str(D.file("wm_poly_balance.json",     "liga_poly_balance.json"))
+KILL_SWITCH_FILE      = str(D.file("wm_kill_switch.json",      "liga_kill_switch.json"))
+WM_DATA_FILE          = str(D.data_file())
 
 # Stale-Odds-Circuit-Breaker (11.06.2026): Der Edge = Pinnacle-Fair vs Live-Poly.
 # Sind die Pinnacle-Odds eingefroren (fetch_wm_odds tot), wird Edge gegen alte

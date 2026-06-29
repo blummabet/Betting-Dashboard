@@ -49,9 +49,10 @@ GAMMA_API    = "https://gamma-api.polymarket.com"
 CLOB_HOST    = "https://clob.polymarket.com"
 CHAIN_ID     = 137        # Polygon — Netzwerk-Konstante, bleibt hardcoded
 STAKE_USDC   = _cfg("trade", "stake_usdc_flat", 5.5)  # €5 ≈ $5.50 USDC flat per bet
+import cocobet_dataset as D   # 29.06.2026: dataset-aware (MLS-Poly-Dry-Run)
 HISTORY_FILE = os.path.join(os.path.dirname(__file__), "picks_history.json")
-BALANCE_FILE = os.path.join(os.path.dirname(__file__), "wm_poly_balance.json")
-PLACED_FILE  = os.path.join(os.path.dirname(__file__), "wm_auto_bets_placed.json")
+BALANCE_FILE = str(D.file("wm_poly_balance.json",     "liga_poly_balance.json"))
+PLACED_FILE  = str(D.file("wm_auto_bets_placed.json", "liga_auto_bets_placed.json"))
 
 # Bankroll-Schutz — gleiche Limits wie in auto_wm_poly_trigger.py.
 # Schützt sowohl manuelle ("Jetzt platzieren") als auch Auto-Bets.

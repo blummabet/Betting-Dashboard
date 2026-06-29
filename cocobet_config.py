@@ -102,6 +102,10 @@ DEFAULT_FALLBACK = {
         "snap_window_days": 14,
         "min_bet_edge_pp": 4, "min_abw_edge_pp": 4,
     },
+    # 29.06.2026: Polymarket-Serie je Profil (WM=soccer-fifwc, MLS=soccer-mls).
+    "poly": {
+        "series_slug": "soccer-fifwc",
+    },
 }
 
 
