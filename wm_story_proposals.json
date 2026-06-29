@@ -1,49 +1,49 @@
 {
-  "today": "2026-06-28T02:28:22.715504+00:00",
+  "today": "2026-06-29T04:22:08.417439+00:00",
   "chosen": {
-    "angle_id": "killerStat",
-    "entity_key": "avgScored:BEL",
-    "theme": "killer_stat",
-    "score": 0.78,
+    "angle_id": "underdogRecap",
+    "entity_key": "recap:K-POR-COL",
+    "theme": "hidden_gem",
+    "score": 0.7730657036393245,
     "hook_slots": {
       "big_number": {
-        "value": "3.2",
-        "source": "form.BEL.avgScored",
-        "source_file": "wm2026-data.json",
+        "value": "25%",
+        "source": "",
+        "source_file": "",
         "derived": false,
-        "raw": 3.2
+        "raw": null
       },
       "sub_title": {
-        "value": "Tore pro Spiel · Belgien",
+        "value": "so wahrscheinlich war dieser Sieg",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_1": {
-        "value": "<span class=\"acc\">Belgien</span> 🇧🇪 trifft",
+        "value": "Portugal/Kolumbien 🤝",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_2": {
-        "value": "<span class=\"yellow\">jeden Gegner.</span>",
+        "value": "schockt <span class=\"acc\"></span>",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "mystery_question": {
-        "value": "Wer stoppt diese Maschine?",
+        "value": "Wer hatte das auf dem Schirm?",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "highlight_fact": {
-        "value": "Ø 3.2 Tore in 15 Spielen — Gegen Ø 0.8",
-        "source": "form.BEL.avgScored + form.BEL.games + form.BEL.avgConceded",
+        "value": "Nur 25% Chance laut den Daten — und doch passiert",
+        "source": "form.POR.games",
         "source_file": "wm2026-data.json",
         "derived": true,
         "raw": null
@@ -51,84 +51,84 @@
     },
     "info_slots": {
       "flag": {
-        "value": "🇧🇪",
+        "value": "🤝",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "name": {
-        "value": "Belgien",
+        "value": "Portugal/Kolumbien 0:0",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "role_line": {
-        "value": "Ø 3.2 Tore/Spiel · 15 Spiele Datenbasis",
+        "value": "Kaum jemand hatte diesen Ausgang auf dem Schirm",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat1_val": {
-        "value": "3.2",
-        "source": "form.BEL.avgScored",
-        "source_file": "wm2026-data.json",
+        "value": "0:0",
+        "source": "",
+        "source_file": "",
         "derived": false,
-        "raw": 3.2
+        "raw": null
       },
       "stat1_lbl": {
-        "value": "Tore Ø",
+        "value": "Endstand",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat2_val": {
-        "value": "0.8",
-        "source": "form.BEL.avgConceded",
-        "source_file": "wm2026-data.json",
+        "value": "✓",
+        "source": "",
+        "source_file": "",
         "derived": false,
-        "raw": 0.8
+        "raw": null
       },
       "stat2_lbl": {
-        "value": "Gegen Ø",
+        "value": "Außenseiter-Sieg",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat3_val": {
-        "value": "15",
-        "source": "form.BEL.games",
-        "source_file": "wm2026-data.json",
+        "value": "25%",
+        "source": "",
+        "source_file": "",
         "derived": false,
-        "raw": 15
+        "raw": null
       },
       "stat3_lbl": {
-        "value": "Spiele",
+        "value": "Chance laut Daten",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "closing_line": {
-        "value": "<strong>Höchster Tor-Schnitt</strong> aller 48 qualifizierten WM-Teams. Form-Datenbasis: 15 Spiele.",
+        "value": "<strong>Die Daten gaben dem Ergebnis nur 25% Chance.</strong> Es passierte trotzdem.",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "quote_line": {
-        "value": "Tor-Maschine ohne <span class=\"acc\">Stopper</span> in Sicht. ⚽",
+        "value": "Außenseiter schreiben <span class=\"acc\">Geschichte.</span> 🎯",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "data_source": {
-        "value": "Daten: WM-Quali + Tests 2024/25",
+        "value": "Daten: Prognose-Modell + Endergebnis",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -136,18 +136,18 @@
       }
     },
     "series_tag": "",
-    "reason": "avgScored=3.2 (15 games) — höchster aller 48 Teams"
+    "reason": "surprise=0.75 (Unentschieden) fair_prob=0.25 → 4.0x"
   },
   "verifier": {
-    "angle_id": "killerStat",
-    "entity": "avgScored:BEL",
+    "angle_id": "underdogRecap",
+    "entity": "recap:K-POR-COL",
     "ok": true,
     "failures": [],
     "details": [
       [
         "big_number",
         true,
-        "ok (0.0% drift, threshold 5.0%)"
+        "static"
       ],
       [
         "sub_title",
@@ -192,7 +192,7 @@
       [
         "stat1_val",
         true,
-        "ok (0.0% drift, threshold 5.0%)"
+        "static"
       ],
       [
         "stat1_lbl",
@@ -202,7 +202,7 @@
       [
         "stat2_val",
         true,
-        "ok (0.0% drift, threshold 5.0%)"
+        "static"
       ],
       [
         "stat2_lbl",
@@ -212,7 +212,7 @@
       [
         "stat3_val",
         true,
-        "ok (0.0% drift, threshold 5.0%)"
+        "static"
       ],
       [
         "stat3_lbl",
@@ -518,14 +518,14 @@
       "angle_id": "killerStat",
       "entity_key": "defensiveWall:ARG",
       "theme": "killer_stat",
-      "score": 0.733,
+      "score": 0.667,
       "hook_slots": {
         "big_number": {
           "value": "0.3",
           "source": "form.ARG.avgConceded",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 0.267
+          "raw": 0.333
         },
         "sub_title": {
           "value": "Gegentore pro Spiel · Argentinien",
@@ -556,7 +556,7 @@
           "raw": null
         },
         "highlight_fact": {
-          "value": "0.3 Tore/Spiel kassiert — Ø 2.4 eigene",
+          "value": "0.3 Tore/Spiel kassiert — Ø 2.5 eigene",
           "source": "form.ARG.avgConceded + form.ARG.avgScored",
           "source_file": "wm2026-data.json",
           "derived": true,
@@ -590,7 +590,7 @@
           "source": "form.ARG.avgConceded",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 0.267
+          "raw": 0.333
         },
         "stat1_lbl": {
           "value": "Gegen Ø",
@@ -600,11 +600,11 @@
           "raw": null
         },
         "stat2_val": {
-          "value": "2.4",
+          "value": "2.5",
           "source": "form.ARG.avgScored",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 2.4
+          "raw": 2.533
         },
         "stat2_lbl": {
           "value": "Tore Ø",
@@ -614,11 +614,11 @@
           "raw": null
         },
         "stat3_val": {
-          "value": "47%",
+          "value": "53%",
           "source": "form.ARG.over25Rate",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 0.467
+          "raw": 0.533
         },
         "stat3_lbl": {
           "value": "3+ Tore",
@@ -651,282 +651,6 @@
       },
       "series_tag": "",
       "reason": "avgConceded=0.3 (15 games) — niedrigster aller Teams"
-    },
-    {
-      "angle_id": "travelAlarm",
-      "entity_key": "trip:AUT-2300",
-      "theme": "hidden_factor",
-      "score": 0.6528533077671776,
-      "hook_slots": {
-        "big_number": {
-          "value": "2.300 km",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "sub_title": {
-          "value": "Anreise · Österreich",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_1": {
-          "value": "<span class=\"acc\">Österreich</span> 🇦🇹 reist",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_2": {
-          "value": "quer durch den <span class=\"yellow\">Kontinent.</span>",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "mystery_question": {
-          "value": "Wie viel Energie kostet so eine Reise?",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "highlight_fact": {
-          "value": "Rund 2.300 km von Santa Barbara, CA zum Spielort Kansas City — mehr als von Wien nach New York.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "info_slots": {
-        "flag": {
-          "value": "🇦🇹",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "name": {
-          "value": "Österreich",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "role_line": {
-          "value": "Trainingslager Santa Barbara, CA → Spielort Kansas City",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_val": {
-          "value": "2.300",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_lbl": {
-          "value": "Kilometer",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_val": {
-          "value": "✈️",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_lbl": {
-          "value": "vor dem Spiel",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_val": {
-          "value": "⚡",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_lbl": {
-          "value": "Energie",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "closing_line": {
-          "value": "<strong>Reise zehrt.</strong> Jeder Kilometer im Flieger kostet Frische — und Frische entscheidet die engen Spiele.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "quote_line": {
-          "value": "Die Reise spielt <span class=\"acc\">immer mit.</span> ✈️",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "data_source": {
-          "value": "Daten: Reise-Analyse (Trainingslager → Spielort)",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "series_tag": "",
-      "reason": "trip=2300km AUT"
-    },
-    {
-      "angle_id": "travelAlarm",
-      "entity_key": "heat:J-ARG-JOR",
-      "theme": "hidden_factor",
-      "score": 0.6020000000000001,
-      "hook_slots": {
-        "big_number": {
-          "value": "31°C",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "sub_title": {
-          "value": "Hitze zum Anpfiff",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_1": {
-          "value": "<span class=\"acc\">Argentinien</span> 🇦🇷 vs Jordanien 🇯🇴",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_2": {
-          "value": "heute spielt die <span class=\"yellow\">Sonne mit.</span>",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "mystery_question": {
-          "value": "Wer schmilzt in der Schlussphase?",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "highlight_fact": {
-          "value": "31°C zum Anpfiff — bei der Hitze wird jeder Sprint teuer.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "info_slots": {
-        "flag": {
-          "value": "🇦🇷 vs 🇯🇴",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "name": {
-          "value": "Argentinien vs Jordanien",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "role_line": {
-          "value": "31°C zum Anpfiff",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_val": {
-          "value": "31°C",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_lbl": {
-          "value": "Temperatur",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_val": {
-          "value": "☀️",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_lbl": {
-          "value": "volle Sonne",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_val": {
-          "value": "💦",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_lbl": {
-          "value": "Kräfteverschleiß",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "closing_line": {
-          "value": "<strong>Hitze ist ein Gegner ohne Trikot.</strong> Bei 31°C zählt am Ende, wer noch laufen kann.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "quote_line": {
-          "value": "Die Sonne spielt <span class=\"acc\">immer mit.</span> ☀️",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "data_source": {
-          "value": "Daten: Wetter-Vorhersage zum Anpfiff",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "series_tag": "",
-      "reason": "heat=31.3°C ARG-JOR"
     }
   ]
 }

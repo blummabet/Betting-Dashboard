@@ -335,6 +335,34 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                     "aiSnippet":  ai_previews.get(pick_key, {}).get("tgSnippet"),
                 })
 
+    # KO-Fixtures (28.06.2026, Lucas: KO-Picks wurden NIE in Telegram gepostet — nur Gruppen).
+    # Gleiche Slate-Logik (_in_slate). Teams aus allen Gruppen sammeln (KO-Fixtures haben nur IDs).
+    _all_teams = {}
+    for gdata in groups.values():
+        for t in gdata.get("teams", []):
+            _all_teams[t["id"]] = t
+    _KO_LABELS = {"R32": "Sechzehntelfinale", "R16": "Achtelfinale", "QF": "Viertelfinale",
+                  "SF": "Halbfinale", "F": "Finale", "3P": "Spiel um Platz 3"}
+    for kf in (wm.get("koFixtures") or []):
+        if not kf.get("bothResolved") or not _in_slate(kf):
+            continue
+        rnd = kf.get("round")
+        pick_key = f"KO-{rnd}-{kf['home']}-{kf['away']}"
+        home_t = _all_teams.get(kf["home"], {})
+        away_t = _all_teams.get(kf["away"], {})
+        matches_today.append({
+            "group": "KO", "matchday": rnd, "isKO": True,
+            "roundLabel": kf.get("roundLabel") or _KO_LABELS.get(rnd, "K.O.-Runde"),
+            "time": kf.get("time", ""), "kickoff": kf.get("kickoff", ""),
+            "venue": kf.get("venue", ""), "home": kf["home"], "away": kf["away"],
+            "homeName": home_t.get("name", kf["home"]), "awayName": away_t.get("name", kf["away"]),
+            "homeFlag": home_t.get("flag", "🏳"), "awayFlag": away_t.get("flag", "🏳"),
+            "homeElo": home_t.get("elo"), "awayElo": away_t.get("elo"),
+            "picks": all_picks.get(pick_key, []), "pick_key": pick_key,
+            "upsetScore": upset_scores.get(pick_key, 0),
+            "aiSnippet": ai_previews.get(pick_key, {}).get("tgSnippet"),
+        })
+
     if not matches_today:
         return None  # Keine Spiele heute
 
@@ -394,7 +422,10 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
 
         # Spiel-Block
         us = m["upsetScore"]
-        lines.append(f"━━ Gruppe {m['group']} · Spieltag {m['matchday']} ━━")
+        if m.get("isKO"):
+            lines.append(f"━━ 🏆 {m.get('roundLabel', 'K.O.-Runde')} ━━")
+        else:
+            lines.append(f"━━ Gruppe {m['group']} · Spieltag {m['matchday']} ━━")
 
         if us >= 6:
             lines.append(f"{upset_label(us)}")   # ohne Elo-Gap-Zahl (21.06.2026, Lucas)
@@ -572,6 +603,23 @@ def build_recap_card(wm: dict, target_date: str) -> str | None:
                     "group":    gkey,
                     "matchday": fx["matchday"],
                 }
+
+    # KO-Fixtures auch im Recap (28.06.2026, Lucas: KO wurde nie gepostet). Teams aus allen Gruppen.
+    _all_teams = {}
+    for gdata in groups.values():
+        for t in gdata.get("teams", []):
+            _all_teams[t["id"]] = t
+    for kf in (wm.get("koFixtures") or []):
+        if not kf.get("bothResolved") or kf.get("date") != target_date:
+            continue
+        pk = f"KO-{kf.get('round')}-{kf['home']}-{kf['away']}"
+        home_t = _all_teams.get(kf["home"], {})
+        away_t = _all_teams.get(kf["away"], {})
+        fix_lookup[pk] = {
+            "homeName": home_t.get("name", kf["home"]), "awayName": away_t.get("name", kf["away"]),
+            "homeFlag": home_t.get("flag", "🏳"), "awayFlag": away_t.get("flag", "🏳"),
+            "group": "KO", "matchday": kf.get("round"),
+        }
 
     if not fix_lookup:
         return None
