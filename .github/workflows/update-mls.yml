@@ -153,7 +153,10 @@ jobs:
           git diff --staged --quiet || git commit -m "mls: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.
-          git pull --rebase origin main || true
+          # --autostash: Pipeline-Scripts fassen auch geteilte tracked-Dateien an (z.B. telegram-log.json),
+          # die NICHT in der kuratierten Stage-Liste stehen → ohne autostash bricht der Rebase mit
+          # „cannot pull with rebase: You have unstaged changes" ab (Bug 29.06.2026, 1. MLS-Lauf).
+          git pull --rebase --autostash origin main || true
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
