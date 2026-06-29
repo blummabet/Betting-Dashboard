@@ -167,6 +167,25 @@
       </div>
     </div>`;
   }
+  // Signal-Indikator fürs nächste Spiel (Stufe 2): zeigt, ob die Engine-Signale die Serie
+  // bestätigen oder ihr widersprechen (29.06.2026, Lucas: „sehen ob wirklich was feuert").
+  function _streakSignalHtml(s) {
+    const si = s.signalInfo;
+    if (!si) return '';
+    const confirm = si.state === 'confirm';
+    const col = confirm ? _STREAK_CONT.intakt.col : _STREAK_CONT.wackelt.col;
+    const ic = confirm ? '📡' : '⚠️';
+    const verb = confirm ? 'bestätigen' : 'dagegen';
+    const meta = (typeof _SIG_META !== 'undefined') ? _SIG_META : {};
+    const chips = (si.names || []).slice(0, 4).map(n => {
+      const m = meta[n] || ['•', n];
+      return `<span style="font-size:10px;color:var(--muted);white-space:nowrap;">${m[0]} ${m[1]}</span>`;
+    }).join(' ');
+    return `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-top:6px;">
+      <span style="background:${col}1f;color:${col};border:1px solid ${col}66;border-radius:6px;padding:1px 7px;font-size:10px;font-weight:800;white-space:nowrap;">${ic} ${si.count} Signal${si.count === 1 ? '' : 'e'} ${verb}</span>
+      ${chips}
+    </div>`;
+  }
   function _streakRowHtml(s) {
     const ic = _STREAK_ICON[s.type] || '🔥';
     const c = _STREAK_CONT[(s.continuation || {}).state] || _STREAK_CONT.neutral;
@@ -185,6 +204,7 @@
         <div style="font-size:15px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.team} <span style="font-size:11px;color:var(--muted);font-weight:600;">${s.leagueName || s.league || ''}</span></div>
         <div style="font-size:12.5px;color:var(--text);margin-top:3px;">${ic} ${s.market}${venue} · <strong style="color:${c.col};">${s.length} in Folge</strong></div>
         ${_streakNextHtml(s)}
+        ${_streakSignalHtml(s)}
       </div>
       <div style="flex-shrink:0;width:110px;" title="${(s.continuation || {}).label || ''}">
         ${bars}

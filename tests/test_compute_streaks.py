@@ -123,6 +123,40 @@ class TestStreaks(unittest.TestCase):
         self.assertEqual(over["continuation"]["state"], "intakt")
         self.assertNotIn("oppSupportPct", over)
 
+    def test_signal_overlay_confirms_status(self):
+        # Stufe 2: Pick des nächsten Spiels in Serien-Richtung mit ≥2 Signalen → Status auf „intakt".
+        from datetime import date, timedelta
+        fut = (date.today() + timedelta(days=2)).isoformat()
+        wm = _wm({"42": {"o25Seq": [True, True, True], "over25Rate": 0.5, "bttsRate": 0.4},
+                  "50": {"over25Rate": 0.5}})
+        wm["groups"]["ENG"]["fixtures"] = [{"home": "42", "away": "50", "matchday": 7,
+                                            "date": fut, "kickoff": fut + "T15:00:00Z"}]
+        wm["picks"] = {"ENG-7-42-50": [{"market": "Über 2.5 Tore", "verdict": "BET",
+                                        "signalCountPos": 3, "convictionScore": 7,
+                                        "signals": [{"name": "form_trend", "weighted_score": -2.0},
+                                                    {"name": "h2h_goals", "weighted_score": 1.0}]}]}
+        out = S.build_streaks(wm)
+        over = next(s for s in out["streaks"] if s["type"] == "over25" and s["venue"] == "all")
+        self.assertEqual(over["signalInfo"]["state"], "confirm")
+        self.assertEqual(over["signalInfo"]["count"], 3)
+        self.assertIn("form_trend", over["signalInfo"]["names"])
+        self.assertEqual(over["continuation"]["state"], "intakt")   # Signale heben den Status
+
+    def test_signal_overlay_contradicts_status(self):
+        # Engine pickt die GEGENrichtung (Unter) → Über-Serie wird trotz starker Tendenz „wackelt".
+        from datetime import date, timedelta
+        fut = (date.today() + timedelta(days=2)).isoformat()
+        wm = _wm({"42": {"o25Seq": [True, True, True, True], "over25Rate": 0.8, "bttsRate": 0.4},
+                  "50": {"over25Rate": 0.7}})
+        wm["groups"]["ENG"]["fixtures"] = [{"home": "42", "away": "50", "matchday": 7,
+                                            "date": fut, "kickoff": fut + "T15:00:00Z"}]
+        wm["picks"] = {"ENG-7-42-50": [{"market": "Unter 2.5 Tore", "verdict": "BET",
+                                        "signalCountPos": 3, "convictionScore": 6, "signals": []}]}
+        out = S.build_streaks(wm)
+        over = next(s for s in out["streaks"] if s["type"] == "over25" and s["venue"] == "all")
+        self.assertEqual(over["signalInfo"]["state"], "contradict")
+        self.assertEqual(over["continuation"]["state"], "wackelt")
+
     def test_sorted_by_length_desc(self):
         wm = _wm({"42": {"o25Seq": [True, True, True], "over25Rate": 0.6, "bttsRate": 0.5},
                   "50": {"o25Seq": [True] * 6, "over25Rate": 0.8, "bttsRate": 0.5}})

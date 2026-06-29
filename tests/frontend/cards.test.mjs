@@ -123,6 +123,19 @@ test('_streakRowHtml: Grundrate + nächstes Spiel + Gegner-Rate', () => {
   assert.match(h, /24\.08\./);
 });
 
+test('_streakRowHtml: Signal-Indikator (Stufe 2) bestätigt/widerspricht', () => {
+  const t = loadCards().__wmCardTest;
+  const confirm = t.streakRowHtml({ teamId: '42', team: 'Arsenal', leagueName: 'PL', type: 'over25',
+    market: 'Über 2,5 Tore', length: 5, ratePct: 70, continuation: { state: 'intakt' },
+    signalInfo: { state: 'confirm', count: 3, names: ['form_trend', 'h2h_pattern'] } });
+  assert.match(confirm, /3 Signale bestätigen/);
+  assert.match(confirm, /Form-Trend/);          // _SIG_META-Label
+  const against = t.streakRowHtml({ teamId: '42', team: 'Arsenal', leagueName: 'PL', type: 'over25',
+    market: 'Über 2,5 Tore', length: 5, ratePct: 70, continuation: { state: 'wackelt' },
+    signalInfo: { state: 'contradict', count: 2, names: [] } });
+  assert.match(against, /2 Signale dagegen/);
+});
+
 test('Serien-Tab: Venue-Filter zeigt Gesamt vs Heim/Auswärts', async () => {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="streaksPanel"></div></body>', {
     url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });

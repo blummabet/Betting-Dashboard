@@ -105,20 +105,23 @@ def _next_fixtures(wm):
         for t in (g.get("teams") or []):
             teams[str(t.get("id"))] = t.get("name") or str(t.get("id"))
     nf = {}
-    for g in (wm.get("groups") or {}).values():
+    for gkey, g in (wm.get("groups") or {}).items():
         for fx in (g.get("fixtures") or []):
             d = fx.get("date") or ""
             if not d or d < today:
                 continue
             ko = fx.get("kickoff") or (d + "T00:00:00Z")
-            for tid, opp, at_home in ((fx.get("home"), fx.get("away"), True),
-                                      (fx.get("away"), fx.get("home"), False)):
+            md = fx.get("matchday")
+            home, away = fx.get("home"), fx.get("away")
+            # Pick-Key wie in wm["picks"]: "GROUP-MD-HOME-AWAY" (Stufe 2: Signale des Spiels).
+            pkey = f"{gkey}-{md}-{home}-{away}" if md is not None else None
+            for tid, opp, at_home in ((home, away, True), (away, home, False)):
                 if not tid:
                     continue
                 prev = nf.get(str(tid))
                 if not prev or ko < prev["_ko"]:
                     nf[str(tid)] = {"oppId": str(opp), "oppName": teams.get(str(opp), str(opp)),
-                                    "atHome": at_home, "date": d, "_ko": ko}
+                                    "atHome": at_home, "date": d, "_ko": ko, "pickKey": pkey}
     for v in nf.values():
         v.pop("_ko", None)
     return nf
@@ -145,6 +148,49 @@ def _opp_rate_pct(key, opp_id, form, cf):
     return round(r * 100) if r is not None else None
 
 
+# ── Stufe 2 (29.06.2026, Lucas): Signale/Linie des NÄCHSTEN Spiels → Status lebt mit ──────────
+# Bepickt sind nur O/U-2,5 + BTTS → nur diese Streak-Märkte koppeln an die Engine. Der Pick des
+# nächsten Spiels bestätigt die Serie (gleiche Richtung) oder widerspricht ihr (Gegenrichtung).
+_STREAK_PICK_FAMILY = {"over25": "ou", "under25": "ou", "bttsYes": "btts", "bttsNo": "btts"}
+_STREAK_PICK_DIR    = {"over25": "over", "under25": "under", "bttsYes": "yes", "bttsNo": "no"}
+SIGNAL_MIN_FIRE = 2   # so viele bestätigende Signale → Status-Overlay
+
+
+def _pick_family_dir(market_label):
+    """Pick-Markt-Label → (Familie, Richtung). Nur O/U + BTTS."""
+    m = (market_label or "").lower()
+    if "über" in m or "unter" in m or "over" in m or "under" in m:
+        return ("ou", "under" if ("unter" in m or "under" in m) else "over")
+    if "beide" in m or "btts" in m or "both teams" in m:
+        return ("btts", "no" if ("nein" in m or " no" in m or m.endswith("no")) else "yes")
+    return (None, None)
+
+
+def _next_match_signal(picks, pick_key, streak_type):
+    """Im nächsten Spiel den Pick zur Streak-Markt-Familie finden: BESTÄTIGT die Serie (gleiche
+    Richtung) oder WIDERSPRICHT (Gegenrichtung)? Returns dict {state,count,conviction,names,market} | None."""
+    fam = _STREAK_PICK_FAMILY.get(streak_type)
+    if not fam or not pick_key:
+        return None
+    want = _STREAK_PICK_DIR.get(streak_type)
+    for p in (picks.get(pick_key) or []):
+        if not isinstance(p, dict) or p.get("verdict") not in ("BET", "ABWÄGEN"):
+            continue
+        pf, pd = _pick_family_dir(p.get("market"))
+        if pf != fam:
+            continue
+        names = [s.get("name") for s in (p.get("signals") or [])
+                 if isinstance(s, dict) and s.get("name") and (s.get("weighted_score") or 0)]
+        return {
+            "state": "confirm" if pd == want else "contradict",
+            "count": int(p.get("signalCountPos") or 0),
+            "conviction": p.get("convictionScore"),
+            "names": names[:6],
+            "market": p.get("market"),
+        }
+    return None
+
+
 def build_streaks(wm: dict) -> dict:
     form = wm.get("form") or {}
     cf = wm.get("cornersForm") or {}
@@ -155,6 +201,7 @@ def build_streaks(wm: dict) -> dict:
             lookup[str(t.get("id"))] = {"team": t.get("name") or str(t.get("id")),
                                         "league": gkey, "leagueName": gname}
     next_fx = _next_fixtures(wm)
+    picks = wm.get("picks") or {}   # Stufe 2: Signale/Linie des nächsten Spiels
     streaks = []
 
     def _emit(tid, seq, venue_seq, target, market, rate, target_false, key):
@@ -177,13 +224,26 @@ def build_streaks(wm: dict) -> dict:
             nf = next_fx.get(str(tid))
             if nf:
                 opp_pct = _opp_rate_pct(key, nf["oppId"], form, cf)
-                s["next"] = {**nf, "oppRatePct": opp_pct}
-                # Lebendiger Status: Eigentendenz × nächster Gegner (29.06.2026, Lucas).
+                s["next"] = {"oppId": nf["oppId"], "oppName": nf["oppName"], "atHome": nf["atHome"],
+                             "date": nf["date"], "oppRatePct": opp_pct}
+                # Stufe 1 — lebendiger Status: Eigentendenz × nächster Gegner (29.06.2026, Lucas).
                 mcont, opp_support_pct, matchup_pct = _matchup_continuation(cont, opp_pct, target_false, length)
                 s["continuation"] = mcont
                 if opp_support_pct is not None:
                     s["oppSupportPct"] = opp_support_pct   # Gegner-Stütze FÜR die Richtung (für 2. Balken-Farbe)
                     s["matchupPct"] = matchup_pct
+                # Stufe 2 — Signale/Linie des nächsten Spiels überschreiben den Status, wenn sie
+                # deutlich (≥SIGNAL_MIN_FIRE) bestätigen oder widersprechen.
+                sig = _next_match_signal(picks, nf.get("pickKey"), key)
+                if sig:
+                    s["signalInfo"] = sig
+                    if sig["count"] >= SIGNAL_MIN_FIRE:
+                        if sig["state"] == "confirm":
+                            s["continuation"]["state"] = "intakt"
+                            s["continuation"]["label"] += " · Signale bestätigen"
+                        elif sig["state"] == "contradict":
+                            s["continuation"]["state"] = "wackelt"
+                            s["continuation"]["label"] += " · Linie/Signale dagegen"
             streaks.append(s)
 
     # Tor-/BTTS-/Team-Märkte (form, venueSeq)
