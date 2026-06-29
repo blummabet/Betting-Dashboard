@@ -277,6 +277,7 @@ svg.arc{width:100%;display:block}
   <a href="#c-markt">Märkte</a>
   <a href="#c-story">Story</a>
   <a href="#c-form">Form</a>
+  <a href="#c-serien">Serien</a>
   <a href="#c-tape">Vergleich</a>
   <a href="#c-lineup">Aufstellung</a>
   <a href="#c-duell">Duell</a>
@@ -309,6 +310,12 @@ svg.arc{width:100%;display:block}
   <div class="chap-h"><span class="ct disp">Wer kommt in Fahrt?</span></div>
   <div class="chap-h"><span class="cs">Die letzten 10 Spiele — Balken nach oben ist gut, nach unten nicht.</span></div>
   <div class="viz-card"><div id="form-box"></div></div>
+</section>
+
+<section class="chap" id="c-serien">
+  <div class="chap-h"><span class="ct disp">Serien im Spiel</span></div>
+  <div class="chap-h"><span class="cs">Aktive Strähnen beider Teams — die Balken zeigen Eigentendenz und nächsten Gegner, die Punkte den Verlauf. „Intakt/wackelt" lebt mit Gegner und Engine-Signalen.</span></div>
+  <div class="viz-card"><div id="serien-box"></div></div>
 </section>
 
 <section class="chap" id="c-tape">
@@ -420,6 +427,7 @@ function render(P){
   renderVerdict(P,p);
   renderPulse(p); renderSignalBoard(p); renderConviction(p);
   renderOdds(P); renderPoly(P); renderStory(P); renderForm(P);
+  renderStreaks(P);
   renderTape(P,p); renderLineup(P,p);
   renderDuell(P); renderGruppe(P);
   scrollspy();
@@ -433,6 +441,42 @@ function render(P){
       standTxt=`<span style="color:#e0a829;font-weight:600">⚠ Stand ${P.generatedAtHuman||''} (${Math.round(ageH)}h alt — wird automatisch neu gebaut)</span>`;
   }
   $('foot').innerHTML=`CocoBet Engine · 19 Signale · Bayesian-Lernen · Pinnacle-Anker · Polymarket<br>${standTxt} · Keine Wettberatung · 18+`;
+}
+
+function renderStreaks(P){
+  const sec=$('c-serien'), box=$('serien-box');
+  const list=(P.streaks||[]);
+  if(!list.length){ sec.style.display='none'; return; }
+  const ICON={over25:'⚽',under25:'🧱',bttsYes:'🤝',bttsNo:'🚫',cornersOver:'🚩',cornersUnder:'🚩',scored:'🎯',cleanSheet:'🛡️',cards:'🟨'};
+  const VEN={H:'Heim',A:'Auswärts'};
+  const SIG={weather_signal:'Wetter',travel_burden:'Travel',pressure_index:'Druck',form_trend:'Form',xg_strength:'xG',h2h_pattern:'H2H',injury:'Verletzung',apif_predictions:'Zweitmodell',lead_lag_bias:'Sharp-Lag',public_static_bias:'Public',incentive_signal:'Anreiz',lineup_signal:'Aufstellung',chance_creation:'Chancen',form_rating:'Rating'};
+  const stCol=s=>{const st=(s.continuation||{}).state;return st==='intakt'?'var(--pos)':st==='wackelt'?'#e3b341':'var(--sub)';};
+  const stLbl=s=>{const st=(s.continuation||{}).state;return st==='intakt'?'intakt':st==='wackelt'?'wackelt':'offen';};
+  const rateCol=p=>p==null?'var(--sub)':p>=60?'var(--pos)':p<=45?'#e3b341':'var(--sub)';
+  const dots=(seq,col)=>(seq&&seq.length)?'<span style="font-size:9px;letter-spacing:1.5px">'+seq.slice().reverse().map(h=>`<span style="color:${h?col:'var(--line2)'}">●</span>`).join('')+'</span>':'';
+  const bar=(lbl,pct,col)=>pct==null?'':`<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;font-size:9px;color:var(--sub)"><span>${lbl}</span><span style="color:${col};font-weight:700">${pct}%</span></div><div style="height:4px;background:var(--line);border-radius:99px;margin-top:2px;overflow:hidden"><div style="height:100%;width:${Math.max(0,Math.min(100,pct))}%;background:${col}"></div></div></div>`;
+  let h='';
+  for(const s of list){
+    const col=stCol(s), ic=ICON[s.type]||'🔥';
+    const ven=VEN[s.venue]?` · <b style="color:var(--gold)">${VEN[s.venue]}</b>`:'';
+    const opp=(s.next&&s.next.oppRatePct!=null)?s.next.oppRatePct:null;
+    const sig=s.signalInfo; let sigHtml='';
+    if(sig){const sc=sig.state==='confirm'?'var(--pos)':'#e3b341';const verb=sig.state==='confirm'?'bestätigen':'dagegen';const nm=(sig.names||[]).slice(0,3).map(n=>SIG[n]||n).join(' · ');
+      sigHtml=`<div style="margin-top:5px;font-size:10px"><span style="color:${sc};font-weight:800">${sig.state==='confirm'?'📡':'⚠️'} ${sig.count} Signal${sig.count===1?'':'e'} ${verb}</span> <span style="color:var(--sub)">${nm}</span></div>`;}
+    h+=`<div style="display:flex;align-items:flex-start;gap:12px;padding:13px 2px;border-bottom:1px solid var(--line)">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:14px;color:var(--text)">${s.team}</div>
+        <div style="font-size:12px;color:var(--text);margin-top:2px">${ic} ${s.market}${ven} · <b style="color:${col}">${s.length} in Folge</b> ${dots(s.seq,col)}</div>
+        ${sigHtml}
+      </div>
+      <div style="flex-shrink:0;width:120px">
+        ${bar('Eigen',s.ratePct,rateCol(s.ratePct))}
+        ${bar('Gegner',opp,rateCol(s.oppSupportPct!=null?s.oppSupportPct:opp))}
+        <div style="text-align:right;font-size:9px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:${col}">${stLbl(s)}</div>
+      </div>
+    </div>`;
+  }
+  box.innerHTML=h;
 }
 
 function renderVerdict(P,p){

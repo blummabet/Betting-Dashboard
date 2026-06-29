@@ -330,6 +330,40 @@ def _lineup_for(home_id, away_id):
     return {"home": h, "away": a, "kickoff": lu.get("kickoff")}
 
 
+# ── Serien (compute_streaks) fürs Match-Payload (29.06.2026, Lucas: Serien auf die Event-Page) ──
+def _streaks_index(_cache={}):
+    """{wm_,liga_,mls_}streaks.json einmal laden + nach teamId indizieren (dataset-aware)."""
+    if "d" not in _cache:
+        data = load_json(str(D.file("wm_streaks.json", "liga_streaks.json"))) or {}
+        idx = {}
+        for s in (data.get("streaks") or []):
+            idx.setdefault(str(s.get("teamId")), []).append(s)
+        _cache["d"] = idx
+    return _cache["d"]
+
+
+def _streaks_for_match(home_id, away_id):
+    """Heim-Team bevorzugt Heim-Serie, Auswärts-Team Auswärts-Serie, sonst Gesamt (Venue-Dedup wie
+    die Card). Schlankes Payload für die Event-Page. None wenn keine Serien."""
+    def _pick(team_id, pref):
+        by_type, score = {}, (lambda v: 2 if v == pref else (1 if v == "all" else 0))
+        for s in _streaks_index().get(str(team_id), []):
+            cur = by_type.get(s.get("type"))
+            if cur is None or score(s.get("venue")) > score(cur.get("venue")):
+                by_type[s.get("type")] = s
+        return list(by_type.values())
+    ms = _pick(home_id, "H") + _pick(away_id, "A")
+    ms.sort(key=lambda s: -(s.get("length") or 0))
+    out = [{
+        "team": s.get("team"), "teamId": s.get("teamId"), "type": s.get("type"),
+        "market": s.get("market"), "length": s.get("length"), "venue": s.get("venue"),
+        "ratePct": s.get("ratePct"), "oppSupportPct": s.get("oppSupportPct"),
+        "seq": s.get("seq"), "continuation": s.get("continuation"),
+        "next": s.get("next"), "signalInfo": s.get("signalInfo"),
+    } for s in ms[:6]]
+    return out or None
+
+
 def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, ai_previews=None, poly_lookup=None):
     home_id = fixture["home"]
     away_id = fixture["away"]
@@ -551,6 +585,8 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         "playerSpotlights": _match_player_spotlights(wm, home_id, away_id),
         # Aufstellung (wm_lineups.json, ~T-1h) — Formation/Trainer/Start-XI/Bank
         "lineups": _lineup_for(home_id, away_id),
+        # Serien (compute_streaks) — Heim/Auswärts-passend, lebendig (Matchup + Signale + seqViz)
+        "streaks": _streaks_for_match(home_id, away_id),
         # Squad key players (with extended stats: shots, cards, rating, etc.)
         "squads": {
             home_id: wm.get("squads", {}).get(home_id),

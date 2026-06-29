@@ -167,6 +167,14 @@
       </div>
     </div>`;
   }
+  // Sequenz-Punkte: macht den Lauf sichtbar (●●●●○ = Treffer/kein Treffer). seq ist most-recent-first;
+  // wir zeigen chronologisch (alt→neu, links→rechts), damit die aktuelle Serie rechts „andockt".
+  function _streakDotsHtml(seq, col) {
+    if (!seq || !seq.length) return '';
+    const dots = seq.slice().reverse().map(hit =>
+      `<span style="color:${hit ? col : 'var(--border)'};">●</span>`).join('');
+    return `<span style="font-size:9px;letter-spacing:1.5px;white-space:nowrap;vertical-align:middle;">${dots}</span>`;
+  }
   // Signal-Indikator fürs nächste Spiel (Stufe 2): zeigt, ob die Engine-Signale die Serie
   // bestätigen oder ihr widersprechen (29.06.2026, Lucas: „sehen ob wirklich was feuert").
   function _streakSignalHtml(s) {
@@ -202,7 +210,7 @@
       ${logo ? `<img src="${logo}" style="width:30px;height:30px;object-fit:contain;flex-shrink:0;margin-top:2px;" loading="lazy" alt="">` : ''}
       <div style="flex:1;min-width:0;">
         <div style="font-size:15px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.team} <span style="font-size:11px;color:var(--muted);font-weight:600;">${s.leagueName || s.league || ''}</span></div>
-        <div style="font-size:12.5px;color:var(--text);margin-top:3px;">${ic} ${s.market}${venue} · <strong style="color:${c.col};">${s.length} in Folge</strong></div>
+        <div style="font-size:12.5px;color:var(--text);margin-top:3px;">${ic} ${s.market}${venue} · <strong style="color:${c.col};">${s.length} in Folge</strong> ${_streakDotsHtml(s.seq, c.col)}</div>
         ${_streakNextHtml(s)}
         ${_streakSignalHtml(s)}
       </div>
@@ -334,6 +342,7 @@
       const venue = _VENUE_LABEL[s.venue] ? ` <span style="color:#f0883e;font-weight:700;">${_VENUE_LABEL[s.venue]}</span>` : '';
       h += `<div style="display:flex;align-items:center;gap:6px;font-size:12px;margin:4px 0;">
         <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><strong>${s.team}</strong> · ${ic} ${s.market}${venue}</span>
+        ${_streakDotsHtml(s.seq, c.col)}
         <span style="font-weight:800;white-space:nowrap;">${s.length}×</span>
         <span style="font-size:10px;font-weight:700;color:${c.col};white-space:nowrap;">${c.label}</span>
       </div>`;
