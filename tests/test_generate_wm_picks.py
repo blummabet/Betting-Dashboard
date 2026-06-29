@@ -185,16 +185,23 @@ class TestFixturePickState(unittest.TestCase):
         self.assertEqual(state, "refresh")
 
     def test_today_post_cutover_rebuilds_even_with_pick(self):
-        # DER FIX: heutiges Spiel, Anpfiff abends (> cutover, > now), Pick existiert
-        # → früher 'refresh' (eingefroren), jetzt 'rebuild' (frei mit Steam).
-        self.assertEqual(self._state("2026-06-15", "2026-06-15T19:00:00Z", True), "rebuild")
+        # 28.06.2026 (Lucas, ersetzt die 15.06-Regel): heutiges Spiel + Pick existiert → 'refresh'
+        # (Markt-Lock). Ein (quasi) gepostete Pick darf pre-match NICHT mehr das Marktziel wechseln
+        # (KO ZAF-CAN kippte Auswärtssieg→Unter spät pre-match → unehrlicher Track-Record).
+        # fx_date<=tomorrow = Immutability-Fenster. (Vorher absichtlich 'rebuild' = Ursache des Bugs.)
+        self.assertEqual(self._state("2026-06-15", "2026-06-15T19:00:00Z", True), "refresh")
 
     def test_future_fixture_rebuilds(self):
         self.assertEqual(self._state("2026-06-16", "2026-06-16T18:00:00Z", False), "rebuild")
 
-    def test_missing_kickoff_treated_as_upcoming(self):
-        # Fehlender Anpfiff → nicht versehentlich freezen → rebuild
-        self.assertEqual(self._state("2026-06-15", None, True), "rebuild")
+    def test_missing_kickoff_today_with_pick_locked(self):
+        # 28.06.2026: heute + Pick existiert → Posted-Fenster greift (refresh), auch ohne kickoff.
+        # (Ohne Pick bliebe es 'rebuild' — s. test_post_cutover_without_pick_rebuilds.)
+        self.assertEqual(self._state("2026-06-15", None, True), "refresh")
+
+    def test_missing_kickoff_future_without_pick_rebuilds(self):
+        # Künftiges Spiel ohne Pick + ohne kickoff → rebuild (nicht versehentlich freezen)
+        self.assertEqual(self._state("2026-06-20", None, False), "rebuild")
 
     def test_post_cutover_without_pick_rebuilds(self):
         self.assertEqual(self._state("2026-06-15", "2026-06-15T19:00:00Z", False), "rebuild")

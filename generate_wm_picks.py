@@ -1226,6 +1226,20 @@ def fixture_pick_state(fx, has_pick, today, now_dt, cutover_dt):
     ko = _parse_kickoff(fx.get("kickoff"))
     if ko is not None and now_dt is not None and ko <= now_dt:
         return "kickoff_passed"
+    # Rollendes Posted-Fenster (28.06.2026, Lucas): ein BEREITS existierender Pick, dessen Anpfiff
+    # heute/morgen ist, wird NICHT mehr umgebaut → Markt-Lock (nur Signale/Conviction refreshen).
+    # Sonst durfte ein Pick spät pre-match das Marktziel wechseln (KO ZAF-CAN: Auswärtssieg→Unter,
+    # der gewinnende Markt wurde nachträglich „der Pick" → unehrlicher Track-Record). fx_date<=tomorrow
+    # ist exakt das Immutability-Fenster aus [[feedback_posted_picks_immutable]].
+    if has_pick and fx_date and today:
+        try:
+            from datetime import date as _date, timedelta as _td
+            _tomorrow = (_date.fromisoformat(today) + _td(days=1)).isoformat()
+            if fx_date <= _tomorrow:
+                return "refresh"
+        except Exception:
+            pass
+    # Launch-Schutz (15.06-Cutover): vor dem Cutover gepostete Spiele bleiben refresh (Fallback).
     if has_pick and cutover_dt is not None and ko is not None and ko <= cutover_dt:
         return "refresh"
     return "rebuild"
