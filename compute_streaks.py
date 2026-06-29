@@ -210,16 +210,20 @@ def build_streaks(wm: dict) -> dict:
         for venue in ("all", "H", "A"):
             if venue != "all" and not _has_venue:
                 continue   # ohne venueSeq keine Heim/Auswärts-Duplikate
-            length = _lead_run(_filter_venue(seq, venue_seq, venue), target)
+            fseq = _filter_venue(seq, venue_seq, venue)
+            length = _lead_run(fseq, target)
             if length < MIN_LEN:
                 continue
             cont = _continuation(rate, target_false, length)
+            # seqViz: letzte ~8 Spiele dieser Richtung als Punkte (True=Treffer), most-recent-first.
+            # Führende True = die aktuelle Serie, das erste False zeigt, wo sie begann.
+            seq_viz = [bool(x) == target for x in fseq[:8]]
             s = {
                 "teamId": str(tid), "team": meta["team"],
                 "league": meta["league"], "leagueName": meta["leagueName"],
                 "type": key, "market": market, "length": length, "venue": venue,
                 "strong": length >= STRONG_LEN, "continuation": cont,
-                "ratePct": cont["ratePct"],
+                "ratePct": cont["ratePct"], "seq": seq_viz,
             }
             nf = next_fx.get(str(tid))
             if nf:

@@ -123,6 +123,14 @@ test('_streakRowHtml: Grundrate + nächstes Spiel + Gegner-Rate', () => {
   assert.match(h, /24\.08\./);
 });
 
+test('_streakRowHtml: Sequenz-Punkte (seqViz) werden gerendert', () => {
+  const t = loadCards().__wmCardTest;
+  const h = t.streakRowHtml({ teamId: '42', team: 'Arsenal', leagueName: 'PL', type: 'over25',
+    market: 'Über 2,5 Tore', length: 4, ratePct: 70, continuation: { state: 'intakt' },
+    seq: [true, true, true, true, false] });
+  assert.equal((h.match(/●/g) || []).length, 5, '5 Punkte für 5 Sequenz-Einträge');
+});
+
 test('_streakRowHtml: Signal-Indikator (Stufe 2) bestätigt/widerspricht', () => {
   const t = loadCards().__wmCardTest;
   const confirm = t.streakRowHtml({ teamId: '42', team: 'Arsenal', leagueName: 'PL', type: 'over25',
