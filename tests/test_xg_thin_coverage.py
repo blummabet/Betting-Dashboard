@@ -49,12 +49,23 @@ class TestThinXgCoverage(unittest.TestCase):
         covered = self.sig.evaluate({"market": "Beide Teams treffen — Ja"}, _ctx(4, "apif_real"))
         self.assertNotIn("dünne xG-Abdeckung", covered.evidence)
 
-    def test_real_xg_games_fallback_for_understat(self):
-        # Understat-Team ohne xgGames-Feld, aber echtes xgForAvg → gilt als abgedeckt
+    def test_real_xg_games_counts_real_xg(self):
+        # Understat-Team ohne xgGames-Feld, aber echtes xgForAvg → abgedeckt
         e = {"xgForAvg": 1.5, "xgAgainstAvg": 1.0, "games": 12, "source": "understat"}
         self.assertEqual(XGStrengthSignal._real_xg_games(e), 12)
-        # Proxy-Team ohne Quelle → 0 echte xG-Spiele
-        self.assertEqual(XGStrengthSignal._real_xg_games({"xgForAvg": 1.0, "games": 5}), 0)
+        # FIX 29.06.2026: Rich-Schema (fetch_wm_nt_xg) — echtes xgForAvg, ABER kein source/xgGames
+        # (genau die WM/Liga-Realität). Muss als echtes xG zählen, nicht als Proxy.
+        rich = {"xgForAvg": 1.986, "xgAgainstAvg": 1.2, "games": 9, "xgSimForAvg": 1.01}
+        self.assertEqual(XGStrengthSignal._real_xg_games(rich), 9)
+        # Proxy-only-Team: KEIN echtes xG (xgForAvg None, nur xGsim) → 0
+        self.assertEqual(XGStrengthSignal._real_xg_games(
+            {"xgForAvg": None, "xgSimForAvg": 1.0, "games": 5}), 0)
+        # explizit xgGames=0 (lean Aggregator, kein echtes xG) → 0
+        self.assertEqual(XGStrengthSignal._real_xg_games(
+            {"xgForAvg": None, "games": 5, "xgGames": 0}), 0)
+        # shot_proxy: xgForAvg = xGsim-Fallback, source-getaggt → KEIN echtes xG → 0
+        self.assertEqual(XGStrengthSignal._real_xg_games(
+            {"xgForAvg": 1.1, "xgSimForAvg": 1.1, "games": 6, "source": "shot_proxy"}), 0)
 
 
 if __name__ == "__main__":

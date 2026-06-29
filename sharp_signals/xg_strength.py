@@ -105,11 +105,21 @@ class XGStrengthSignal(Signal):
     @staticmethod
     def _real_xg_games(entry: dict) -> int:
         """Echte xG-Spiele eines Teams (nicht Schuss-/Form-Proxy). 0 = gar keine
-        echte xG-Abdeckung (Kap Verde & viele CONMEBOL/AFC/Afrika-Teams)."""
+        echte xG-Abdeckung (Kap Verde & viele CONMEBOL/AFC/Afrika-Teams).
+
+        FIX 29.06.2026 (Lucas): Der Rich-Aggregator (fetch_wm_nt_xg) schreibt echtes xG nach
+        `xgForAvg` (= None wenn keins, separat vom xGsim), setzt aber WEDER `xgGames` NOCH
+        `source in (understat,apif_real)`. Die alte Prüfung las das als 0 → thin_cov war auf
+        JEDEM Spiel True → xg_strength dauerhaft gedämpft + „dünne Abdeckung" fälschlich gelabelt.
+        Jetzt: echtes xG = `xgForAvg` vorhanden (egal welcher source-Tag)."""
+        # shot_proxy: generate_wm_picks setzt bei FEHLENDEM echtem xG xgForAvg = xgSimForAvg und
+        # taggt source="shot_proxy" → das ist KEIN echtes xG (sonst zählten wir Proxy als echt).
+        if entry.get("source") == "shot_proxy":
+            return 0
         g = entry.get("xgGames")
         if g is not None:
             return g
-        if entry.get("xgForAvg") is not None and entry.get("source") in ("understat", "apif_real"):
+        if entry.get("xgForAvg") is not None:   # echtes API-xG steckt in xgForAvg (None = nur Proxy)
             return entry.get("games", 0) or 0
         return 0
 
