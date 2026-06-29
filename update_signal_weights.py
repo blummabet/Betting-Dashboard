@@ -103,7 +103,7 @@ def _load_weights() -> dict:
         return {"_meta": {}}
 
 
-PRIORS_FILE = BASE / "liga_signal_priors.json"
+PRIORS_FILE = D.file("signal_priors.json", "liga_signal_priors.json")  # dataset-aware (29.06.2026): mls liest mls_signal_priors statt liga (keine Kontamination)
 
 
 def _load_priors() -> dict:

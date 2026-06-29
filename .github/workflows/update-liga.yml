@@ -155,7 +155,9 @@ jobs:
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.
-          git pull --rebase origin main || true
+          # --autostash: geteilte tracked-Dateien (z.B. telegram-log.json) außerhalb der Stage-Liste
+          # dürfen den Rebase nicht mit „unstaged changes" blockieren (Fix 29.06.2026, s. update-mls).
+          git pull --rebase --autostash origin main || true
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
