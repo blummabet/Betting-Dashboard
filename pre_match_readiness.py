@@ -78,6 +78,14 @@ def _mtime_age_h(path: Path) -> float | None:
         return None
 
 
+def weather_is_blocker(has_upcoming: bool) -> bool:
+    """Wetter-Lücke (forecastAvailable=False / Datei leer) ist nur eine ECHTE Lücke (failt den
+    Workflow), wenn tatsächlich Spiele im Fenster anstehen — weather_signal ist ein Kickoff-
+    Temperatur-Modifier und braucht ein anstehendes Spiel zum Gewichten. 30.06.2026 (Lucas: WM-Update-
+    Action failte zwischen R32 und R16 bei 0 anstehenden Spielen). Universell, nicht fixture-spezifisch."""
+    return bool(has_upcoming)
+
+
 def main() -> int:
     if not WM_FILE.exists():
         print("❌ wm2026-data.json fehlt — Abbruch")
@@ -114,19 +122,26 @@ def main() -> int:
     oks:    list[str] = []
 
     # ── 1) FEED-FRISCHE ──────────────────────────────────────────────────
-    # Weather: muss für anstehende Spiele Temperaturen haben
+    # Weather: muss für anstehende Spiele Temperaturen haben. 30.06.2026 (Lucas: „WM-Action
+    # fehlgeschlagen"): weather_signal ist ein Kickoff-Temperatur-Modifier → ohne anstehende Spiele
+    # gibt es nichts zu gewichten. Eine fehlende/leere Wetterdatei ist dann nur ein Hinweis, KEINE
+    # echte Lücke (sonst failt der WM-Update-Workflow zwischen den KO-Runden grundlos). Universell:
+    # Wetter-Lücke ist nur Error, wenn tatsächlich Spiele im Fenster anstehen.
+    _w_sink = errors if weather_is_blocker(bool(upcoming)) else warns
     wfile = BASE / "wm_weather.json"
     wdata = _load(wfile) or {}
     wmatches = wdata.get("matches", {}) if isinstance(wdata, dict) else {}
     if not wmatches:
-        errors.append("🌡️ Weather: wm_weather.json fehlt/leer → weather_signal kann nicht feuern")
+        _w_sink.append("🌡️ Weather: wm_weather.json fehlt/leer → weather_signal kann nicht feuern"
+                       + ("" if upcoming else " (keine Spiele im Fenster — kein Blocker)"))
     else:
         with_temp = sum(1 for v in wmatches.values()
                         if v.get("forecastAvailable") and v.get("tempMax") is not None)
         age = _mtime_age_h(wfile)
         if with_temp == 0:
-            errors.append("🌡️ Weather: 0 Spiele mit Temperatur (forecastAvailable=False überall) "
-                          "→ Fetch prüfen (WEATHERAPI_KEY / Actions-Log)")
+            _w_sink.append("🌡️ Weather: 0 Spiele mit Temperatur (forecastAvailable=False überall) "
+                           "→ Fetch prüfen (WEATHERAPI_KEY / Actions-Log)"
+                           + ("" if upcoming else " (keine Spiele im Fenster — kein Blocker)"))
         elif age is not None and age > STALE_HOURS:
             warns.append(f"🌡️ Weather: {with_temp} Spiele mit Forecast, aber Datei ~{age:.0f}h alt")
         else:
