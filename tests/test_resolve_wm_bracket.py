@@ -121,6 +121,23 @@ class TestResolution(unittest.TestCase):
         self.assertIs(ko, wm["koFixtures"])
         self.assertTrue(any(f["bothResolved"] for f in ko))
 
+    def test_apply_to_wm_preserves_api_filled_opponent(self):
+        # 29.06.2026 (Lucas: GER-PRY/FRA-Cards verschwanden): M74-Gegner ist best_third (Bracket → None),
+        # wurde aber von fetch_wm_match_results aus der echten API-Paarung gefüllt + Endstand geschrieben.
+        # apply_to_wm darf das beim Neubau NICHT überbügeln.
+        m74_key = next(f for f in R.build_ko_fixtures(BRACKET, {"A": _complete_group("A")},
+                       {"A": [{"team": f"A{i}"} for i in range(1, 5)]}, VENUES, {})
+                       if f["matchNo"] == 74)["matchKey"]
+        wm = {"groups": {"A": _complete_group("A")},
+              "standings": {"A": [{"team": f"A{i}"} for i in range(1, 5)]},
+              "koFixtures": [{"matchKey": m74_key, "matchNo": 74, "home": "A1", "away": "PRY",
+                              "result": {"status": "FT", "home_score": 2, "away_score": 0, "winner": "A1"}}]}
+        ko = R.apply_to_wm(wm, bracket=BRACKET, venues=VENUES)
+        m74 = next(f for f in ko if f["matchNo"] == 74)
+        self.assertEqual(m74["away"], "PRY")                  # API-Gegner erhalten
+        self.assertTrue(m74["bothResolved"])
+        self.assertEqual(m74["result"]["home_score"], 2)     # Endstand erhalten
+
 
 if __name__ == "__main__":
     unittest.main()

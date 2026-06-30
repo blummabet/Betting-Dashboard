@@ -162,6 +162,24 @@ def apply_to_wm(wm: dict, bracket: dict | None = None, venues: dict | None = Non
             ko_winners[str(f["matchNo"])] = w
     ko = build_ko_fixtures(bracket, wm.get("groups") or {}, wm.get("standings") or {},
                            venues, ko_winners)
+    # API-aufgelöste Gegner + Ergebnisse ERHALTEN (29.06.2026, Lucas: GER-PRY/FRA-Cards verschwanden,
+    # weil apply_to_wm koFixtures komplett neu baute → die fetch_wm_match_results-Gegnerfüllung
+    # (Best-Dritter aus echten API-Paarungen) + geschriebene Endstände wurden überbügelt). Nur Slots
+    # füllen, die der Bracket-Build selbst NICHT auflösen konnte (None) — bracket bleibt autoritativ.
+    _prev = {f["matchKey"]: f for f in (wm.get("koFixtures") or []) if f.get("matchKey")}
+    for f in ko:
+        old = _prev.get(f.get("matchKey"))
+        if not old:
+            continue
+        if f.get("home") is None and old.get("home"):
+            f["home"] = old["home"]
+        if f.get("away") is None and old.get("away"):
+            f["away"] = old["away"]
+        if old.get("result") and not f.get("result"):
+            f["result"] = old["result"]
+        f["homeResolved"] = f.get("home") is not None
+        f["awayResolved"] = f.get("away") is not None
+        f["bothResolved"] = f["homeResolved"] and f["awayResolved"]
     wm["koFixtures"] = ko
     return ko
 
