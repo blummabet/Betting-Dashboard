@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-30T10:50:48Z",
+  "generatedAt": "2026-06-30T12:41:32Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -64,9 +64,8 @@
     "🧠 Signal 'streak_momentum' feuert nicht (kontextabhängig)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
-    "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 8 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
-    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
-    "🛡️ Gespielte Spiele haben Endstand: 3 Fehler (z.B. ZAF-CAN: Anpfiff 2026-06-28T19:00 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?)"
+    "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 16 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
+    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)"
   ],
   "oks": [
     "🎲 Pinnacle-Odds: frischeste 0.0h alt",
@@ -283,7 +282,7 @@
       "label": "Keine Phantom-Odds-Keys (verkehrte Reihenfolge)",
       "severity": "warn",
       "ok": false,
-      "nFail": 8,
+      "nFail": 16,
       "failures": [
         "ZAF-CAN: kein echtes Fixture (Spiegel-Key?)",
         "NED-MAR: kein echtes Fixture (Spiegel-Key?)",
@@ -292,7 +291,15 @@
         "AUS-EGY: kein echtes Fixture (Spiegel-Key?)",
         "POR-CRO: kein echtes Fixture (Spiegel-Key?)",
         "ESP-AUT: kein echtes Fixture (Spiegel-Key?)",
-        "ARG-CPV: kein echtes Fixture (Spiegel-Key?)"
+        "ARG-CPV: kein echtes Fixture (Spiegel-Key?)",
+        "GER-PRY: kein echtes Fixture (Spiegel-Key?)",
+        "USA-BIH: kein echtes Fixture (Spiegel-Key?)",
+        "FRA-SWE: kein echtes Fixture (Spiegel-Key?)",
+        "MEX-ECU: kein echtes Fixture (Spiegel-Key?)",
+        "ENG-COD: kein echtes Fixture (Spiegel-Key?)",
+        "BEL-SEN: kein echtes Fixture (Spiegel-Key?)",
+        "COL-GHA: kein echtes Fixture (Spiegel-Key?)",
+        "SUI-DZA: kein echtes Fixture (Spiegel-Key?)"
       ],
       "note": "84 Odds-Keys vs 72 Fixtures = 12 leere Spiegel-Einträge. Quelle prüfen."
     },
@@ -394,13 +401,9 @@
       "id": "played_games_resolved",
       "label": "Gespielte Spiele haben Endstand",
       "severity": "warn",
-      "ok": false,
-      "nFail": 3,
-      "failures": [
-        "ZAF-CAN: Anpfiff 2026-06-28T19:00 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?",
-        "NED-MAR: Anpfiff 2026-06-30T01:00 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?",
-        "BRA-JPN: Anpfiff 2026-06-29T17:00 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "fetch_wm_match_results muss FT-Endstände schreiben. Fehlt's > 5h nach Anpfiff: Team-Matching (Orientierung/Team-ID) oder API-Football-Lag prüfen."
     },
     {
