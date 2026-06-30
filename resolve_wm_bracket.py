@@ -158,7 +158,11 @@ def apply_to_wm(wm: dict, bracket: dict | None = None, venues: dict | None = Non
     for f in (wm.get("koFixtures") or []):
         res = f.get("result") or {}
         w = res.get("winner")
-        if w and f.get("matchNo") is not None:
+        # 30.06.2026 (Lucas: „Kanada vs draw" in R16): ein KO-Spiel kann nie remis enden — bei
+        # Gleichstand entscheidet das Elfmeterschießen. Ein winner=="draw" ist ein unvollständiges
+        # Ergebnis (Penalty-Sieger noch nicht bestimmt) → NICHT als Team in die nächste Runde
+        # propagieren, sonst steht „draw" als Gegner. Slot bleibt TBD bis der echte Sieger da ist.
+        if w and w != "draw" and f.get("matchNo") is not None:
             ko_winners[str(f["matchNo"])] = w
     ko = build_ko_fixtures(bracket, wm.get("groups") or {}, wm.get("standings") or {},
                            venues, ko_winners)
@@ -171,9 +175,11 @@ def apply_to_wm(wm: dict, bracket: dict | None = None, venues: dict | None = Non
         old = _prev.get(f.get("matchKey"))
         if not old:
             continue
-        if f.get("home") is None and old.get("home"):
+        # „draw" ist kein gültiger Gegner (s.o.) → nie aus alten Daten zurückschreiben, sonst bleiben
+        # die verseuchten R16-Slots („Kanada vs draw") für immer stehen. Slot bleibt TBD bis Sieger da.
+        if f.get("home") is None and old.get("home") and old.get("home") != "draw":
             f["home"] = old["home"]
-        if f.get("away") is None and old.get("away"):
+        if f.get("away") is None and old.get("away") and old.get("away") != "draw":
             f["away"] = old["away"]
         if old.get("result") and not f.get("result"):
             f["result"] = old["result"]

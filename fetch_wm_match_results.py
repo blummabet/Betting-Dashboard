@@ -87,6 +87,28 @@ def fetch_all_fixtures(league_id: int) -> list:
     return data.get("response", [])
 
 
+def _winner_from_tiebreak(api_match: dict, home_id: str, away_id: str, orientation: str) -> str:
+    """Sieger bei Gleichstand nach regulärer Zeit/Verlängerung (30.06.2026, Lucas: „Kanada vs draw").
+    KO-Spiele entscheidet das Elfmeterschießen → reiner Tor-Vergleich liefert fälschlich „draw".
+    Reihenfolge: Elfmeter-Score → API-Sieger-Flag → „draw" (nur echtes Gruppen-Remis). Orientation
+    „swapped" dreht Heim/Auswärts wie beim Score-Mapping."""
+    pen = (api_match.get("score") or {}).get("penalty") or {}
+    ph, pa = pen.get("home"), pen.get("away")
+    tm = api_match.get("teams") or {}
+    if orientation == "swapped":
+        ph, pa = pa, ph
+        th, ta = tm.get("away") or {}, tm.get("home") or {}
+    else:
+        th, ta = tm.get("home") or {}, tm.get("away") or {}
+    if ph is not None and pa is not None and ph != pa:
+        return home_id if ph > pa else away_id      # Elfmeterschießen
+    if th.get("winner") is True:
+        return home_id                               # API-Sieger-Flag (AET/PEN)
+    if ta.get("winner") is True:
+        return away_id
+    return "draw"                                    # echtes Remis (nur Gruppenphase)
+
+
 def _num(v):
     """Tolerantes Zahlen-Parsing (entfernt %, behandelt None/Strings)."""
     try:
@@ -343,7 +365,10 @@ def main():
         else:
             home_score, away_score = goals.get("home"), goals.get("away")
 
-        # Winner bestimmen
+        # Winner bestimmen. 30.06.2026 (Lucas: „Kanada vs draw" in R16): KO-Spiele können nach
+        # regulärer Zeit/Verlängerung remis stehen → dann entscheidet das Elfmeterschießen. Der reine
+        # Tor-Vergleich liefert dann „draw", was fälschlich als Sieger in die nächste Runde wandert.
+        # Reihenfolge: Tore → bei Gleichstand Elfmeter-Score → API-Sieger-Flag → echtes Remis (Gruppe).
         winner = None
         if status_short in FINISHED_STATUSES and home_score is not None and away_score is not None:
             if home_score > away_score:
@@ -351,7 +376,7 @@ def main():
             elif away_score > home_score:
                 winner = away_id
             else:
-                winner = "draw"
+                winner = _winner_from_tiebreak(api_match, home_id, away_id, orientation)
 
         # FIX 13.06.2026: Scores NUR persistieren wenn das Spiel beendet ist.
         # Vorher wurde ein Live-Zwischenstand (z.B. USA-PRY 1H 2:0) ins result

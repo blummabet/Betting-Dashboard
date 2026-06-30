@@ -139,5 +139,37 @@ class TestResolution(unittest.TestCase):
         self.assertEqual(m74["result"]["home_score"], 2)     # Endstand erhalten
 
 
+class TestDrawHandling(unittest.TestCase):
+    """30.06.2026 (Lucas: „Kanada vs draw" in R16): ein KO-Sieger „draw" darf nie als Team in die
+    nächste Runde wandern und nie aus alten Daten erhalten bleiben."""
+    def _wm(self, ko_result):
+        return {"groups": {"A": _complete_group("A"), "B": _complete_group("B")},
+                "standings": {"A": [{"team": f"A{i}"} for i in range(1, 5)],
+                              "B": [{"team": f"B{i}"} for i in range(1, 5)]},
+                "koFixtures": [dict(matchKey="R32-M73", matchNo=73, home="A2", away="B2",
+                                    result=ko_result)]}
+
+    def test_draw_winner_not_propagated(self):
+        wm = self._wm({"status": "PEN", "home_score": 1, "away_score": 1, "winner": "draw"})
+        ko = R.apply_to_wm(wm, bracket=BRACKET, venues=VENUES)
+        m90 = next(f for f in ko if f["matchNo"] == 90)   # refs W73
+        self.assertIsNone(m90["home"])                    # NICHT aus „draw" gefüllt
+
+    def test_real_winner_propagated(self):
+        wm = self._wm({"status": "PEN", "home_score": 1, "away_score": 1, "winner": "A2"})
+        ko = R.apply_to_wm(wm, bracket=BRACKET, venues=VENUES)
+        m90 = next(f for f in ko if f["matchNo"] == 90)
+        self.assertEqual(m90["home"], "A2")               # echter Sieger wandert weiter
+
+    def test_draw_slot_not_preserved(self):
+        # alter koFixtures-Slot trägt „draw" als Gegner → darf beim Neubau NICHT erhalten werden
+        wm = {"groups": {"A": _complete_group("A")},
+              "standings": {"A": [{"team": f"A{i}"} for i in range(1, 5)]},
+              "koFixtures": [{"matchKey": "R16-M89", "matchNo": 89, "home": "CAN", "away": "draw"}]}
+        ko = R.apply_to_wm(wm, bracket=BRACKET, venues=VENUES)
+        bad = [f for f in ko if f.get("home") == "draw" or f.get("away") == "draw"]
+        self.assertEqual(bad, [])
+
+
 if __name__ == "__main__":
     unittest.main()

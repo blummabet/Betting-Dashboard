@@ -20,6 +20,26 @@ def _af(home_id, away_id, home_name="Mexico", away_name="South Africa"):
                       "away": {"id": away_id, "name": away_name}}}
 
 
+class TestWinnerTiebreak(unittest.TestCase):
+    """30.06.2026 (Lucas: „Kanada vs draw" in R16): KO-Spiel bei Gleichstand → Elfmeter entscheidet,
+    nicht „draw"."""
+    def test_penalty_winner(self):
+        m = {"score": {"penalty": {"home": 4, "away": 3}}, "teams": {}}
+        self.assertEqual(fmr._winner_from_tiebreak(m, "CAN", "BEL", "normal"), "CAN")
+
+    def test_penalty_swapped(self):
+        m = {"score": {"penalty": {"home": 4, "away": 3}}, "teams": {}}
+        self.assertEqual(fmr._winner_from_tiebreak(m, "CAN", "BEL", "swapped"), "BEL")
+
+    def test_winner_flag_fallback(self):
+        m = {"score": {}, "teams": {"home": {"winner": True}, "away": {"winner": False}}}
+        self.assertEqual(fmr._winner_from_tiebreak(m, "CAN", "BEL", "normal"), "CAN")
+
+    def test_true_draw(self):
+        m = {"score": {}, "teams": {"home": {"winner": None}, "away": {"winner": None}}}
+        self.assertEqual(fmr._winner_from_tiebreak(m, "CAN", "BEL", "normal"), "draw")
+
+
 class TestApiId(unittest.TestCase):
     def test_flat_int(self):
         self.assertEqual(fmr._api_id({"MEX": 16}, "MEX"), "16")

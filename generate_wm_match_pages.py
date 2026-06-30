@@ -372,7 +372,9 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
 
     date = fixture["date"]
     slug = f"{_PFX}-{home_id.lower()}-vs-{away_id.lower()}-{date}"
-    pick_key = f"{group_id}-{fixture['matchday']}-{home_id}-{away_id}"
+    # KO-Spiele haben 'round' (R32/R16/…) statt 'matchday' → pick_key "KO-R32-…" wie generate_wm_picks.
+    _md = fixture.get("matchday") or fixture.get("round") or "KO"
+    pick_key = f"{group_id}-{_md}-{home_id}-{away_id}"
     odds_key = f"{home_id}-{away_id}"
     h2h_key  = f"{home_id}-{away_id}"
 
@@ -558,7 +560,9 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         "venue":      fixture.get("venue", ""),
         "group":      group_id,
         "groupName":  group_data.get("name", f"Gruppe {group_id}"),
-        "matchday":   fixture["matchday"],
+        "matchday":   _md,
+        "round":      fixture.get("round"),
+        "roundLabel": fixture.get("roundLabel"),
         "pickKey":    pick_key,
         "homeElo":    home_elo,
         "awayElo":    away_elo,
@@ -675,6 +679,27 @@ def main():
             slugs.append(slug)
             generated += 1
             print(f"  ✓ {payload['home']} vs {payload['away']}  [{slug}.json]")
+
+    # KO-Spiele (30.06.2026, Lucas: „Event-Pages komplett leer in der KO-Phase"): liegen in koFixtures,
+    # nicht groups → wurden nie bepaged. Synthetische „KO"-Gruppe mit globaler Team-Union; der Slug
+    # (wm-{h}-vs-{a}-{date}) matcht exakt den [↗ Analyse]-Link der KO-Card. Nur bothResolved Paarungen.
+    if not _IS_LIGA:
+        _ko_group = {"name": "K.-o.-Runde", "teams": list(team_lookup.values()), "fixtures": []}
+        for fixture in (wm.get("koFixtures") or []):
+            home_id, away_id = fixture.get("home"), fixture.get("away")
+            if not home_id or not away_id:
+                continue
+            if home_id not in team_lookup or away_id not in team_lookup:
+                print(f"  SKIP KO: unknown team {home_id} or {away_id}")
+                continue
+            slug, payload = build_payload("KO", _ko_group, fixture, team_lookup, wm,
+                                          history, ai_previews, poly_lookup)
+            out_path = os.path.join(DATA_DIR, f"{slug}.json")
+            with open(out_path, "w", encoding="utf-8") as f:
+                json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
+            slugs.append(slug)
+            generated += 1
+            print(f"  ✓ {payload['home']} vs {payload['away']}  [KO {slug}.json]")
 
     # Index (dataset-bewusst: wm-index.json bzw. liga-index.json)
     index_path = os.path.join(BASE, "matches", f"{_PFX}-index.json")
