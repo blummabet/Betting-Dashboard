@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-06-30T21:21:46Z",
-    "total_records": 139
+    "updated_at": "2026-06-30T21:36:45Z",
+    "total_records": 142
   },
   "records": [
     {
@@ -3231,6 +3231,82 @@
       "resolvedAt": "2026-06-30T06:18:08Z",
       "source": "steam",
       "convictionScore": 3,
+      "lateEntry": false
+    },
+    {
+      "key": "KO-R32-CIV-NOR|Beide Teams treffen — Ja",
+      "matchKey": "KO-R32-CIV-NOR",
+      "market": "Beide Teams treffen — Ja",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "xg_strength",
+          "score": 2.73
+        }
+      ],
+      "resolvedAt": "2026-06-30T21:24:19Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": false
+    },
+    {
+      "key": "KO-R32-CIV-NOR|Doppelte Chance — 1X",
+      "matchKey": "KO-R32-CIV-NOR",
+      "market": "Doppelte Chance — 1X",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -2.17
+        },
+        {
+          "name": "xg_strength",
+          "score": -0.8
+        },
+        {
+          "name": "form_rating",
+          "score": 0.96
+        },
+        {
+          "name": "freshness_leg",
+          "score": 2.0
+        },
+        {
+          "name": "fixture_congestion",
+          "score": 0.38
+        }
+      ],
+      "resolvedAt": "2026-06-30T21:24:19Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false
+    },
+    {
+      "key": "KO-R32-CIV-NOR|Über 2.5 Tore",
+      "matchKey": "KO-R32-CIV-NOR",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.8
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.72
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.41
+        },
+        {
+          "name": "freshness_leg",
+          "score": 1.55
+        }
+      ],
+      "resolvedAt": "2026-06-30T21:24:19Z",
+      "source": "steam",
+      "convictionScore": 4,
       "lateEntry": false
     },
     {
