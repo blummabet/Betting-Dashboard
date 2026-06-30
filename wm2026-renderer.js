@@ -233,9 +233,45 @@
   let _streakLeagueF = 'all';
   let _streakTypeF   = 'all';
   let _streakVenueF  = 'all';        // Gesamt / Heim / Auswärts (adamchoi-Split)
+  let _streakHotOnly = false;        // nur „heiße" Serien (intakt + Signale bestätigen)
   window.wmSetStreakLeague = (l) => { _streakLeagueF = l; _renderStreaksInto(); };
   window.wmSetStreakType   = (t) => { _streakTypeF = t; _renderStreaksInto(); };
   window.wmSetStreakVenue  = (v) => { _streakVenueF = v; _renderStreaksInto(); };
+  window.wmSetStreakHot    = () => { _streakHotOnly = !_streakHotOnly; _renderStreaksInto(); };
+
+  // Heat-Score: Länge + Status (intakt/wackelt) + Signal-Bestätigung. Treibt Hero + „Heiß"-Filter.
+  function _streakHeat(s) {
+    let h = s.length || 0;
+    const st = (s.continuation || {}).state;
+    if (st === 'intakt') h += 2; else if (st === 'wackelt') h -= 3;
+    const si = s.signalInfo;
+    if (si) h += (si.state === 'confirm' ? (si.count || 0) : -(si.count || 0));
+    return h;
+  }
+  const _streakIsHot = (s) => (s.continuation || {}).state === 'intakt' && _streakHeat(s) >= 6;
+
+  // Große Hero-Kachel für eine Top-Serie.
+  function _streakHeroHtml(s) {
+    const c = _STREAK_CONT[(s.continuation || {}).state] || _STREAK_CONT.neutral;
+    const ic = _STREAK_ICON[s.type] || '🔥';
+    const logo = s.teamId ? `https://media.api-sports.io/football/teams/${s.teamId}.png` : '';
+    const venue = _VENUE_LABEL[s.venue] ? ` · ${_VENUE_LABEL[s.venue]}` : '';
+    const si = s.signalInfo;
+    const sigBadge = si ? `<div style="margin-top:6px;font-size:10px;font-weight:800;color:${si.state === 'confirm' ? _STREAK_CONT.intakt.col : _STREAK_CONT.wackelt.col};">${si.state === 'confirm' ? '📡 ' + si.count + ' Signale dafür' : '⚠️ ' + si.count + ' dagegen'}</div>` : '';
+    return `<div style="flex:1 1 200px;min-width:0;background:linear-gradient(135deg,${c.col}22,transparent);border:1px solid ${c.col}55;border-radius:12px;padding:12px 14px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        ${logo ? `<img src="${logo}" style="width:26px;height:26px;object-fit:contain;flex-shrink:0;" loading="lazy" alt="">` : ''}
+        <div style="font-size:14px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.team}</div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-top:8px;">
+        <span style="font-size:32px;font-weight:900;color:${c.col};line-height:1;">${s.length}</span>
+        <span style="font-size:12px;color:var(--muted);">${ic} ${s.market}${venue}</span>
+      </div>
+      <div style="margin-top:8px;">${_streakDotsHtml(s.seq, c.col)}</div>
+      <div style="margin-top:6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:${c.col};">${c.label}</div>
+      ${sigBadge}
+    </div>`;
+  }
 
   // Voller Serien-Tab. section: 'national'→Liga, sonst WM.
   window.initStreaks = async function (section) {
@@ -268,6 +304,12 @@
     list = list.filter(s => (s.venue || 'all') === _streakVenueF);
     if (_streakLeagueF !== 'all') list = list.filter(s => s.league === _streakLeagueF);
     if (_streakTypeF !== 'all') list = list.filter(s => _streakGroup(s.type) === _streakTypeF);
+    // Hero: die heißesten 3 (vor dem Heiß-Filter, als Spotlight). Liste schließt sie aus (kein Doppel).
+    const _hk = s => `${s.teamId}|${s.type}|${s.venue}`;
+    const hero = list.slice().sort((a, b) => _streakHeat(b) - _streakHeat(a)).filter(s => _streakHeat(s) >= 5).slice(0, 3);
+    const heroKeys = new Set(hero.map(_hk));
+    if (_streakHotOnly) list = list.filter(_streakIsHot);
+    const listRows = list.filter(s => !heroKeys.has(_hk(s)));
 
     // Filter-Leisten (Optionen aus dem vollen Satz)
     const _fbtn = (active, label, fn) => `<button onclick="${fn}" style="background:${active ? 'var(--accent)' : 'transparent'};color:${active ? '#000' : 'var(--muted)'};border:1px solid ${active ? 'var(--accent)' : 'var(--border)'};border-radius:8px;padding:5px 11px;font-size:12px;font-weight:700;cursor:pointer;margin:0 4px 6px 0;">${label}</button>`;
@@ -283,17 +325,27 @@
       html += `<div style="margin-bottom:4px;">` + _fbtn(_streakLeagueF === 'all', 'Alle Ligen', "wmSetStreakLeague('all')")
         + leagues.map(l => _fbtn(_streakLeagueF === l, l, `wmSetStreakLeague('${l}')`)).join('') + `</div>`;
     }
-    html += `<div style="margin-bottom:10px;">` + _fbtn(_streakTypeF === 'all', 'Alle Arten', "wmSetStreakType('all')")
-      + groups.map(g => _fbtn(_streakTypeF === g, _STREAK_GROUP_LABEL[g], `wmSetStreakType('${g}')`)).join('') + `</div>`;
+    html += `<div style="margin-bottom:6px;">` + _fbtn(_streakTypeF === 'all', 'Alle Arten', "wmSetStreakType('all')")
+      + groups.map(g => _fbtn(_streakTypeF === g, _STREAK_GROUP_LABEL[g], `wmSetStreakType('${g}')`)).join('')
+      + `<button onclick="wmSetStreakHot()" style="background:${_streakHotOnly ? '#f0883e' : 'transparent'};color:${_streakHotOnly ? '#000' : '#f0883e'};border:1px solid #f0883e;border-radius:8px;padding:5px 11px;font-size:12px;font-weight:800;cursor:pointer;margin:0 4px 6px 0;">🔥 Nur heiße</button></div>`;
 
-    html += `<div style="font-size:11px;color:var(--muted);margin:0 2px 12px;line-height:1.5;">🟢 „Serie intakt" = die Grundrate stützt die Strähne · 🟡 „wackelt" = läuft gegen die Grundrate (eher Zufall). Reiner Content — keine Wett-Garantie.</div>`;
-    if (!list.length) {
+    html += `<div style="font-size:11px;color:var(--muted);margin:0 2px 12px;line-height:1.5;">🟢 „Serie intakt" = Tendenz + Gegner + Signale stützen die Strähne · 🟡 „wackelt" = läuft gegen die Stütze (eher Zufall). Reiner Content — keine Wett-Garantie.</div>`;
+
+    // Hero-Spotlight: die heißesten Serien groß oben.
+    if (hero.length) {
+      html += `<div style="font-size:12px;font-weight:900;margin:0 2px 8px;color:#f0883e;">🔥 Heißeste Serien</div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;">${hero.map(_streakHeroHtml).join('')}</div>`;
+    }
+    if (!hero.length && !listRows.length) {
       html += `<div style="text-align:center;padding:24px;color:var(--muted);font-size:12px;">Keine Serien für diesen Filter.</div></div>`;
       panel.innerHTML = html; return;
     }
-    html += `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px 14px;">`;
-    for (const s of list) html += _streakRowHtml(s);
-    html += `</div></div>`;
+    if (listRows.length) {
+      html += `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:4px 14px;">`;
+      for (const s of listRows) html += _streakRowHtml(s);
+      html += `</div>`;
+    }
+    html += `</div>`;
     panel.innerHTML = html;
   }
 
@@ -1108,6 +1160,17 @@
   // ─────────────────────────────────────────────────────
   //  CARD BUILDER — Community-First Layout (Pick/Story/Confidence)
   // ─────────────────────────────────────────────────────
+  // Mini-🔥-Badge im Card-Header: zeigt beim Scrollen, dass das Match heiße/starke Serien hat.
+  function _matchHotBadge(homeId, awayId) {
+    const data = _streaksCache[_mode === 'liga' ? 'liga' : 'wm'];
+    if (!data) return '';
+    const all = data.streaks || [];
+    const ms = _streaksForTeam(all, homeId, 'H').concat(_streaksForTeam(all, awayId, 'A'));
+    const hot = ms.filter(s => _streakIsHot(s) || s.strong);
+    if (!hot.length) return '';
+    const max = Math.max(...hot.map(s => s.length || 0));
+    return `<span class="cc-dot"></span><span style="color:#f0883e;font-weight:800;font-size:11px;white-space:nowrap;">🔥 ${hot.length} Serie${hot.length === 1 ? '' : 'n'}${max ? ` · bis ${max}×` : ''}</span>`;
+  }
   function _buildCard(fx, gData, home, away, fxOdds, fxPicks, fxPPicks, standing, homeSquad, awaySquad, homeForm, awayForm, polyFix, todayIso) {
     const eloDiff   = (home.elo && away.elo) ? (home.elo - away.elo) : null;
     // FIX 14.06.2026: nicht nur Datum < heute — auch HEUTE bereits beendete Spiele
@@ -1267,6 +1330,7 @@
       ${fx.venue ? `<span class="cc-dot"></span><span class="cc-venue">📍 ${fx.venue}</span>` : ''}
       ${_venueEnvPill(fx.venue)}
       ${_weatherPill(fx)}
+      ${_matchHotBadge(fx.home, fx.away)}
     </div></div>`;
 
     // ── Lade Match-Page (für Probability-Bar, Squad-Pills, AI-Preview) ──

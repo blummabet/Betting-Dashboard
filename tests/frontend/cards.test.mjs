@@ -144,6 +144,30 @@ test('_streakRowHtml: Signal-Indikator (Stufe 2) bestätigt/widerspricht', () =>
   assert.match(against, /2 Signale dagegen/);
 });
 
+test('Serien-Tab: Heiß-Hero + „Nur heiße"-Filter', async () => {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="streaksPanel"></div></body>', {
+    url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  const streaks = { streaks: [
+    { teamId: '42', team: 'HeissTeam', league: 'ENG', leagueName: 'PL', type: 'over25', venue: 'all',
+      market: 'Über 2,5 Tore', length: 7, ratePct: 78, continuation: { state: 'intakt', label: 'x' },
+      signalInfo: { state: 'confirm', count: 3, names: ['form_trend'] } },
+    { teamId: '99', team: 'KaltTeam', league: 'ENG', leagueName: 'PL', type: 'under25', venue: 'all',
+      market: 'Unter 2,5 Tore', length: 3, ratePct: 40, continuation: { state: 'wackelt', label: 'y' } },
+  ] };
+  w.fetch = (url) => Promise.resolve({ ok: true, json: () => Promise.resolve(String(url).includes('liga_streaks') ? streaks : {}) });
+  w.eval(readFileSync(WM_RENDERER, 'utf8'));
+  await w.initStreaks('national');
+  const panel = () => w.document.getElementById('streaksPanel').innerHTML;
+  assert.match(panel(), /Heißeste Serien/, 'Hero-Spotlight da');
+  assert.match(panel(), /HeissTeam/);
+  assert.match(panel(), /Nur heiße/, 'Heiß-Toggle da');
+  // „Nur heiße" → KaltTeam (wackelt) verschwindet, HeissTeam bleibt (im Hero)
+  w.wmSetStreakHot();
+  assert.match(panel(), /HeissTeam/);
+  assert.ok(!/KaltTeam/.test(panel()), 'wackelnde Serie im Heiß-Filter raus');
+});
+
 test('Serien-Tab: Venue-Filter zeigt Gesamt vs Heim/Auswärts', async () => {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="streaksPanel"></div></body>', {
     url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
@@ -160,8 +184,9 @@ test('Serien-Tab: Venue-Filter zeigt Gesamt vs Heim/Auswärts', async () => {
   w.eval(readFileSync(WM_RENDERER, 'utf8'));
   await w.initStreaks('national');
   const panel = () => w.document.getElementById('streaksPanel').innerHTML;
-  // Default Gesamt: nur die venue='all'-Serie (Länge 6), nicht die Heim-Variante
-  assert.match(panel(), /6 in Folge/);
+  // Default Gesamt: die venue='all'-Serie (Arsenal, Länge 6) erscheint (im Hero-Spotlight als „6"),
+  // nicht die Heim-Variante (Länge 4, durch Venue-Filter raus).
+  assert.match(panel(), /Arsenal/);
   assert.ok(!/4 in Folge/.test(panel()), 'Heim-Duplikat nicht im Gesamt-View');
   assert.match(panel(), /Heim/);          // Venue-Filterleiste vorhanden
   // Auswärts: Karten-Serie von Spurs
