@@ -1130,7 +1130,11 @@ def check_played_games_resolved(ctx):
     geschrieben (z.B. Heim/Auswärts-Orientierung ≠ API-Football → Match scheitert). 5h-Puffer deckt
     den 4×/Tag-Abruf-Zeitplan ab, ohne frisch-fertige Spiele fälschlich zu flaggen."""
     fails = []
-    for _g, fx in ctx.fixtures:
+    # 28.06.2026 (Lucas: KO-Tracking offen): auch koFixtures prüfen — die liegen in wm['koFixtures'],
+    # nicht in groups → der Guard meldete „sauber", obwohl gespielte KO-Spiele ohne Ergebnis blieben.
+    _all = list(ctx.fixtures) + [(None, fx) for fx in (ctx.wm.get("koFixtures") or [])
+                                 if fx.get("home") and fx.get("away")]
+    for _g, fx in _all:
         ko = fx.get("kickoff")
         if not ko:
             continue

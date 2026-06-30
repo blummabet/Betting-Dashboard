@@ -7,6 +7,33 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 
+class TestKoResolution(unittest.TestCase):
+    """KO-Picks (28.06.2026 Fix, Lucas): Key 'KO-R32-…' + Fixture in wm['koFixtures']."""
+
+    def setUp(self):
+        import resolve_wm_picks
+        self.R = resolve_wm_picks
+
+    def test_ko_pick_key_parses(self):
+        self.assertEqual(self.R.parse_pick_key("KO-R32-ZAF-CAN"), ("KO", "R32", "ZAF", "CAN"))
+
+    def test_group_pick_key_still_int(self):
+        self.assertEqual(self.R.parse_pick_key("C-1-BRA-MAR"), ("C", 1, "BRA", "MAR"))
+
+    def test_find_ko_fixture_in_kofixtures(self):
+        wm = {"groups": {}, "koFixtures": [
+            {"home": "ZAF", "away": "CAN", "round": "R32",
+             "result": {"status": "FT", "home_score": 1, "away_score": 0}}]}
+        fx = self.R.find_fixture(wm, "KO", "R32", "ZAF", "CAN")
+        self.assertIsNotNone(fx)
+        self.assertTrue(self.R.is_finished(fx))
+        self.assertEqual(self.R.evaluate_pick("Unter 2.5 Tore",
+                                              fx["result"]["home_score"], fx["result"]["away_score"]), "WIN")
+
+    def test_find_ko_fixture_missing(self):
+        self.assertIsNone(self.R.find_fixture({"koFixtures": []}, "KO", "R32", "ZAF", "CAN"))
+
+
 class TestDNBEvaluation(unittest.TestCase):
     """DNB (Draw No Bet): Remis = VOID (Cashback), nicht LOSS. Bug 13.06.2026."""
 

@@ -74,23 +74,28 @@ import cocobet_dataset as D
 WM_FILE  = str(D.data_file())
 
 
-def parse_pick_key(pick_key: str) -> tuple[str, int, str, str] | None:
-    """'C-1-BRA-MAR' → ('C', 1, 'BRA', 'MAR')"""
+def parse_pick_key(pick_key: str):
+    """'C-1-BRA-MAR' → ('C', 1, 'BRA', 'MAR'). KO: 'KO-R32-ZAF-CAN' → ('KO', 'R32', 'ZAF', 'CAN')
+    (28.06.2026 Fix: KO-Keys haben einen Runden-Token statt Spieltag-Nummer → md bleibt String)."""
     parts = pick_key.split("-")
     if len(parts) < 4:
         return None
+    gkey, home, away = parts[0], parts[2], parts[3]
     try:
-        gkey = parts[0]
-        md   = int(parts[1])
-        home = parts[2]
-        away = parts[3]
-        return gkey, md, home, away
+        md = int(parts[1])
     except (ValueError, IndexError):
+        md = parts[1]   # KO-Runden-Token (z.B. "R32") — kein Spieltag
+    return gkey, md, home, away
+
+
+def find_fixture(wm: dict, gkey: str, md, home: str, away: str) -> dict | None:
+    """Findet Fixture-Objekt im wm2026-data.json-Schema. KO-Fixtures liegen in wm['koFixtures']
+    (eigene Struktur ohne Gruppe/Spieltag) → über Team-Paar matchen (28.06.2026 Fix)."""
+    if gkey == "KO":
+        for fx in (wm.get("koFixtures") or []):
+            if fx.get("home") == home and fx.get("away") == away:
+                return fx
         return None
-
-
-def find_fixture(wm: dict, gkey: str, md: int, home: str, away: str) -> dict | None:
-    """Findet Fixture-Objekt im wm2026-data.json-Schema."""
     g = (wm.get("groups") or {}).get(gkey, {})
     for fx in g.get("fixtures", []):
         if fx.get("home") == home and fx.get("away") == away and fx.get("matchday") == md:

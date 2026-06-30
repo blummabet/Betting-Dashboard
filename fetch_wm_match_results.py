@@ -229,6 +229,11 @@ def main():
     for gkey, gdata in groups.items():
         for fx in gdata.get("fixtures", []):
             all_fixtures.append({"gkey": gkey, **fx})
+    # KO-Fixtures (28.06.2026 Fix, Lucas „KO-Tracking klappt nicht"): liegen in wm["koFixtures"],
+    # NICHT in groups → wurden nie gegen API-Ergebnisse gematcht → blieben ewig ohne result.
+    for fx in (wm.get("koFixtures") or []):
+        if fx.get("home") and fx.get("away"):
+            all_fixtures.append({"gkey": None, "_ko": True, **fx})
 
     print(f"  Fixtures gesamt: {len(all_fixtures)}")
 
@@ -329,9 +334,10 @@ def main():
         elif venue_city:
             venue_str = venue_city
 
-        # In wm2026-data.json schreiben
-        for fx in wm["groups"][gkey]["fixtures"]:
-            if fx["home"] == home_id and fx["away"] == away_id:
+        # In wm2026-data.json schreiben — KO ins koFixtures-Array, sonst in die Gruppe.
+        _target = (wm.get("koFixtures") or []) if our_fx.get("_ko") else wm["groups"][gkey]["fixtures"]
+        for fx in _target:
+            if fx.get("home") == home_id and fx.get("away") == away_id:
                 # Stale-Downgrade-Schutz (12.06.2026): ein bereits FINALES Ergebnis
                 # NICHT mit einem NS/Scheduled-Re-Fetch plätten. API-Football (und
                 # auch ESPN) liefern WC2026-Spiele teils noch als "Not Started",
