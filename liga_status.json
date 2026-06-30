@@ -118,9 +118,11 @@
       "id": "trade_clv_coverage",
       "label": "Trade-Auswertung: CLV/Closing erfasst",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst)"
+      ],
       "note": "CLV (Entry vs Pinnacle-Closing) ist DER Frühindikator für +EV; ohne ihn lässt sich nicht sagen ob die Strategie Wert holt. Lücke = Closing-Snapshot wird nicht zuverlässig bei Anpfiff eingefroren (pinnClose/polyClose). Schließt an den Closing-In-Play-Guard an — die Write-Seite muss bei Anpfiff einfrieren."
     },
     {
@@ -406,6 +408,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-06-29T19:46:56.291786+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-06-30T09:00:19.821998+00:00"
 }
