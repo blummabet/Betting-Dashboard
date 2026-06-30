@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-29T21:19:26Z",
+  "generatedAt": "2026-06-30T07:46:04Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -22,15 +22,15 @@
     "smart_money",
     "fixture_congestion"
   ],
-  "signalsTotal": 24,
+  "signalsTotal": 25,
   "perSignal": {
     "lead_lag_bias": 13,
     "public_static_bias": 18,
     "travel_burden": 77,
     "injury": 3,
-    "form_trend": 123,
+    "form_trend": 125,
     "h2h_pattern": 7,
-    "xg_strength": 113,
+    "xg_strength": 115,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 37,
@@ -39,15 +39,16 @@
     "weather_signal": 17,
     "incentive_signal": 24,
     "altitude_signal": 3,
-    "chance_creation": 40,
+    "chance_creation": 42,
     "form_rating": 12,
-    "freshness_leg": 10,
+    "freshness_leg": 13,
     "smart_money": 31,
     "league_pressure": 0,
     "fixture_congestion": 3,
     "topscorer_momentum": 0,
     "coach_change": 0,
-    "transfer_shift": 0
+    "transfer_shift": 0,
+    "streak_momentum": 0
   },
   "verdict": "error",
   "errors": [
@@ -60,19 +61,21 @@
     "🧠 Signal 'topscorer_momentum' feuert nicht (kontextabhängig)",
     "🧠 Signal 'coach_change' feuert nicht (kontextabhängig)",
     "🧠 Signal 'transfer_shift' feuert nicht (kontextabhängig)",
+    "🧠 Signal 'streak_momentum' feuert nicht (kontextabhängig)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
+    "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
     "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 8 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
-    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 4 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
-    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. AUS-EGY: Soft bewegte sich 3.75→3.2, aber Opening==Jetzt (3.25) — nicht eingefroren)"
+    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
+    "🛡️ Gespielte Spiele haben Endstand: 3 Fehler (z.B. ZAF-CAN: Anpfiff 2026-06-28T19:00 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?)"
   ],
   "oks": [
-    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 81 Fixtures, Ø 115.4 Snapshots",
+    "📉 Odds-History: 81 Fixtures, Ø 116.0 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $349.81",
+    "💼 Poly-Balance: $413.46",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -214,9 +217,11 @@
       "id": "trade_clv_coverage",
       "label": "Trade-Auswertung: CLV/Closing erfasst",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst)"
+      ],
       "note": "CLV (Entry vs Pinnacle-Closing) ist DER Frühindikator für +EV; ohne ihn lässt sich nicht sagen ob die Strategie Wert holt. Lücke = Closing-Snapshot wird nicht zuverlässig bei Anpfiff eingefroren (pinnClose/polyClose). Schließt an den Closing-In-Play-Guard an — die Write-Seite muss bei Anpfiff einfrieren."
     },
     {
@@ -332,12 +337,11 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 3,
       "failures": [
         "BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet",
         "JPN-SWE Heimsieg @1.91: sichere Linie Doppelte Chance — 1X @1.35 verfügbar (≥1.35), nicht abgeleitet",
-        "POR-COL Unter 2.5 Tore @1.91: sichere Linie Unter 3.5 Tore @1.5 verfügbar (≥1.35), nicht abgeleitet",
-        "BRA-JPN Heimsieg @1.73: sichere Linie Doppelte Chance — 1X @1.55 verfügbar (≥1.35), nicht abgeleitet"
+        "POR-COL Unter 2.5 Tore @1.91: sichere Linie Unter 3.5 Tore @1.5 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -390,9 +394,13 @@
       "id": "played_games_resolved",
       "label": "Gespielte Spiele haben Endstand",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 3,
+      "failures": [
+        "ZAF-CAN: Anpfiff 2026-06-28T19:00 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?",
+        "NED-MAR: Anpfiff 2026-06-30T01:00 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?",
+        "BRA-JPN: Anpfiff 2026-06-29T17:00 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?"
+      ],
       "note": "fetch_wm_match_results muss FT-Endstände schreiben. Fehlt's > 5h nach Anpfiff: Team-Matching (Orientierung/Team-ID) oder API-Football-Lag prüfen."
     },
     {
@@ -408,11 +416,9 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "AUS-EGY: Soft bewegte sich 3.75→3.2, aber Opening==Jetzt (3.25) — nicht eingefroren"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
