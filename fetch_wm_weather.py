@@ -169,6 +169,21 @@ def fetch_venue_weather(lat: float, lon: float) -> dict | None:
 
 
 # ── Hauptlogik ────────────────────────────────────────────────────────────────
+def _group_fixtures(wm: dict):
+    """Alle Gruppenspiel-Fixtures."""
+    for g in (wm.get("groups") or {}).values():
+        for fx in (g.get("fixtures") or []):
+            yield fx
+
+
+def _ko_fixtures(wm: dict):
+    """bothResolved KO-Spiele (home+away gesetzt) — fürs Wetter genauso relevant wie Gruppenspiele.
+    Offene Paarungen (TBD) haben kein Venue-relevantes Spiel → übersprungen."""
+    for fx in (wm.get("koFixtures") or []):
+        if fx.get("home") and fx.get("away"):
+            yield fx
+
+
 def main():
     print("=== fetch_wm_weather.py (WeatherAPI) ===")
     if not WEATHERAPI_KEY:
@@ -191,24 +206,29 @@ def main():
     matches_info = []
     venue_coords: dict[str, tuple] = {}   # korrigierter Venue-String → (lat,lon)
     venues_needed = set()
-    for g in (wm.get("groups") or {}).values():
-        for fx in (g.get("fixtures") or []):
-            h, a = fx.get("home"), fx.get("away")
-            venue = (fx.get("venue") or "").strip()
-            mdate = (fx.get("date") or "")[:10]
-            if not (h and a and venue and mdate):
-                continue
-            slug = f"wm-{h.lower()}-vs-{a.lower()}-{mdate}"
-            matches_info.append({"slug": slug, "venue": venue, "date": mdate,
-                                 "kickoff": fx.get("kickoff")})
-            coords = _resolve_coords(venue)
-            if coords:
-                venue_coords[venue] = coords
-                venues_needed.add(venue)
-            else:
-                print(f"  ⚠️  Keine Coords für Venue: {venue!r}")
 
-    print(f"  📋 {len(matches_info)} Fixtures aus wm2026-data | 🏟️  {len(venues_needed)} Venues mit Coords")
+    # Gruppenspiele + KO-Spiele (30.06.2026, Lucas: „Wetter fehlt"): in der KO-Phase liegen die Spiele
+    # in koFixtures, nicht groups → der Fetcher holte NIE Wetter für R32+ (Datei enthielt nur die längst
+    # gespielten Gruppenspiele → forecastAvailable überall False). KO-Venue ist nur die Stadt
+    # („Monterrey", „Los Angeles (Inglewood)") → _resolve_coords' City-Fallback löst alle 15 auf.
+    _fixtures = list(_group_fixtures(wm)) + list(_ko_fixtures(wm))
+    for fx in _fixtures:
+        h, a = fx.get("home"), fx.get("away")
+        venue = (fx.get("venue") or "").strip()
+        mdate = (fx.get("date") or "")[:10]
+        if not (h and a and venue and mdate):
+            continue
+        slug = f"wm-{h.lower()}-vs-{a.lower()}-{mdate}"
+        matches_info.append({"slug": slug, "venue": venue, "date": mdate,
+                             "kickoff": fx.get("kickoff")})
+        coords = _resolve_coords(venue)
+        if coords:
+            venue_coords[venue] = coords
+            venues_needed.add(venue)
+        else:
+            print(f"  ⚠️  Keine Coords für Venue: {venue!r}")
+
+    print(f"  📋 {len(matches_info)} Fixtures (Gruppen + KO) | 🏟️  {len(venues_needed)} Venues mit Coords")
 
     # 2. Wetter pro Venue fetchen
     venue_weather: dict[str, dict] = {}
