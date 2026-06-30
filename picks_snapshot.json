@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-06-30T17:50:08.143421+00:00",
+  "savedAt": "2026-06-30T21:24:19.408742+00:00",
   "picks": {
     "A-1-KOR-CZE": [
       {
@@ -20668,6 +20668,8 @@
         "resolvedAt": "2026-06-28T01:42:23Z"
       }
     ],
+    "KO-R16-BRA-NOR": [],
+    "KO-R16-CAN-MAR": [],
     "KO-R16-CAN-draw": [],
     "KO-R32-ARG-CPV": [
       {
@@ -20830,19 +20832,19 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.46,
+            "score": 0.5,
             "confidence": 0.65,
             "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
             "weight": 1.167,
-            "weighted_score": 0.35,
+            "weighted_score": 0.38,
             "metadata": {
-              "temp_max": 33.4,
-              "tempAtKickoff": 32.3,
-              "effective_temp": 32.3,
+              "temp_max": 33.3,
+              "tempAtKickoff": 32.5,
+              "effective_temp": 32.5,
               "kickoff_mod": 1.0,
               "home_climate": "temperate",
               "away_climate": "hot",
-              "heat_intensity": 0.46,
+              "heat_intensity": 0.5,
               "climate_controlled": false,
               "side": "under"
             }
@@ -20860,13 +20862,13 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.94,
+        "signalAdjustmentPP": 1.95,
         "signalCountPos": 4,
         "signalCountNeg": 0,
         "signalAdjustmentPP_trade": 1.9,
         "signalCountPos_trade": 4,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -5.1,
+        "effectiveEdgePP": -5.0,
         "effectiveEdgePP_trade": -5.1,
         "convictionScore": 6,
         "convictionVerdict": "abwaegen",
@@ -20985,7 +20987,7 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.44,
         "nobetSince": "2026-06-29T09:15:16.815028+00:00",
-        "nobetReason": "Quote zu kurz geworden (1.44→1.42) — kein Value mehr"
+        "nobetReason": "Quote zu kurz geworden (1.44→1.41) — kein Value mehr"
       }
     ],
     "KO-R32-BEL-SEN": [],
@@ -21610,7 +21612,7 @@
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -4,
-        "info": "📉 Pinnacle 2.35→2.15 (Sharp-Money-Drop +4.0pp) · ✅ Soft-Konsens folgte +5.8pp (bestätigt)",
+        "info": "📉 Pinnacle 2.35→2.15 (Sharp-Money-Drop +4.2pp) · ✅ Soft-Konsens folgte +5.8pp (bestätigt)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -21619,7 +21621,7 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 4.0,
+        "steamMovePP": 4.2,
         "steamOpen": 2.35,
         "steamCur": 2.15,
         "softOpen": 2.52,
@@ -22096,7 +22098,7 @@
         "odds": 1.77,
         "modelOdds": 1.771,
         "conf": "medium",
-        "verdict": "ABWÄGEN",
+        "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
@@ -22225,7 +22227,11 @@
           "in_pick_direction": true,
           "move_pp": 11.27
         },
-        "stake": 2.0
+        "stake": 2.0,
+        "origVerdict": "ABWÄGEN",
+        "origOdds": 1.77,
+        "nobetSince": "2026-06-30T21:24:19.196179+00:00",
+        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.77→1.81)"
       },
       {
         "market": "Über 1.5 Tore",
@@ -22357,11 +22363,11 @@
         "softConfirmed": true,
         "softFollowPP": 2.5,
         "ahLine": null,
-        "recentMovePP": 1.9,
+        "recentMovePP": 1.7,
         "freshnessState": "drift",
-        "legHours": 34.3,
-        "legSnaps": 17,
-        "lastMoveH": 10.5,
+        "legHours": 57.3,
+        "legSnaps": 20,
+        "lastMoveH": 33.6,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "signals": [
@@ -22396,25 +22402,6 @@
             "correlation_discount_applied": 0.4
           },
           {
-            "name": "weather_signal",
-            "score": -0.44,
-            "confidence": 0.65,
-            "evidence": "🌡 Bei 31°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — POR temperate · CRO temperate",
-            "weight": 1.167,
-            "weighted_score": -0.33,
-            "metadata": {
-              "temp_max": 33.0,
-              "tempAtKickoff": 31.1,
-              "effective_temp": 31.1,
-              "kickoff_mod": 1.0,
-              "home_climate": "temperate",
-              "away_climate": "temperate",
-              "heat_intensity": 0.22,
-              "climate_controlled": false,
-              "side": "over"
-            }
-          },
-          {
             "name": "chance_creation",
             "score": 2.94,
             "confidence": 0.57,
@@ -22430,26 +22417,26 @@
             "name": "freshness_leg",
             "score": 0.0,
             "confidence": 0.5,
-            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +1.9pp) — kein frisches Geld",
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +1.7pp) — kein frisches Geld",
             "weight": 1.0,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
-              "recentMovePP": 1.9,
-              "legSnaps": 17,
-              "legHours": 34.3,
+              "recentMovePP": 1.7,
+              "legSnaps": 20,
+              "legHours": 57.3,
               "flipReady": false
             }
           }
         ],
-        "signalAdjustmentPP": 1.48,
+        "signalAdjustmentPP": 2.18,
         "signalCountPos": 3,
-        "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": 1.5,
+        "signalCountNeg": 0,
+        "signalAdjustmentPP_trade": 2.2,
         "signalCountPos_trade": 3,
-        "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -2.5,
-        "effectiveEdgePP_trade": -2.5,
+        "signalCountNeg_trade": 0,
+        "effectiveEdgePP": -1.8,
+        "effectiveEdgePP_trade": -1.8,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
