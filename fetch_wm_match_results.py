@@ -205,6 +205,55 @@ def match_fixture(api_fixture: dict, home_id: str, away_id: str,
     return None
 
 
+_KO_ROUND_HINT = {"R32": "32", "R16": "16", "QF": "quarter", "SF": "semi", "F": "final"}
+
+
+def fill_ko_opponents_from_api(wm: dict, api_fixtures: list, team_ids: dict) -> int:
+    """Füllt offene KO-Gegner-Slots (eine Seite None, z.B. „Bester Dritter") aus den ECHTEN
+    Paarungen von API-Football — umgeht die FIFA-Best-Dritter-Zuordnung, der Quell-Bracket ist
+    maßgeblich. 29.06.2026 (Lucas: GER-PRY hatte keine Card, weil der Gegner-Slot nie zugewiesen
+    wurde). Reiner Transformer (testbar). Returns Anzahl gefüllter Slots."""
+    if not api_fixtures:
+        return 0
+    api_to_code = {}
+    for code, aid in (team_ids or {}).items():
+        try:
+            api_to_code[int(aid)] = code
+        except Exception:
+            pass
+    filled = 0
+    for fx in (wm.get("koFixtures") or []):
+        h, a = fx.get("home"), fx.get("away")
+        if (h and a) or not (h or a):
+            continue   # komplett ODER beide offen → nichts zu tun
+        known = h or a
+        known_api = (team_ids or {}).get(known)
+        if known_api is None:
+            continue
+        hint = _KO_ROUND_HINT.get(fx.get("round"), "")
+        for af in api_fixtures:
+            rnd = str((af.get("league") or {}).get("round") or "").lower()
+            if hint and hint not in rnd:
+                continue   # nur dieselbe KO-Runde
+            teams = af.get("teams") or {}
+            ah = (teams.get("home") or {}).get("id")
+            aa = (teams.get("away") or {}).get("id")
+            if int(known_api) not in (ah or -1, aa or -1):
+                continue
+            opp_api = aa if ah == int(known_api) else ah
+            opp_code = api_to_code.get(opp_api)
+            if not opp_code:
+                continue
+            if h:
+                fx["away"], fx["awayResolved"] = opp_code, True
+            else:
+                fx["home"], fx["homeResolved"] = opp_code, True
+            fx["bothResolved"] = bool(fx.get("home") and fx.get("away"))
+            filled += 1
+            break
+    return filled
+
+
 def main():
     now_iso = datetime.now(timezone.utc).isoformat()
     print(f"⚽  fetch_wm_match_results.py — WM 2026 Ergebnisse")
@@ -224,20 +273,7 @@ def main():
     groups   = wm.get("groups", {})
     team_ids = wm.get("teamIds", {})  # FLACH: {"MEX": 16, ...} (siehe _api_id)
 
-    # Alle Fixtures sammeln
-    all_fixtures: list[dict] = []
-    for gkey, gdata in groups.items():
-        for fx in gdata.get("fixtures", []):
-            all_fixtures.append({"gkey": gkey, **fx})
-    # KO-Fixtures (28.06.2026 Fix, Lucas „KO-Tracking klappt nicht"): liegen in wm["koFixtures"],
-    # NICHT in groups → wurden nie gegen API-Ergebnisse gematcht → blieben ewig ohne result.
-    for fx in (wm.get("koFixtures") or []):
-        if fx.get("home") and fx.get("away"):
-            all_fixtures.append({"gkey": None, "_ko": True, **fx})
-
-    print(f"  Fixtures gesamt: {len(all_fixtures)}")
-
-    # WM League-ID finden
+    # WM League-ID + API-Fixtures ZUERST — wir brauchen sie, um offene KO-Gegner zu füllen.
     league_id = WM_LEAGUE_ID or find_wm_league_id()
     if not league_id:
         print("  ❌  WM League-ID konnte nicht bestimmt werden")
@@ -248,8 +284,26 @@ def main():
     if not api_fixtures:
         print("  ⚠️  Keine Fixtures von API-Football — WM möglicherweise noch nicht gelistet")
         sys.exit(0)
-
     print(f"  → {len(api_fixtures)} Fixtures von API-Football")
+
+    # Offene KO-Gegner-Slots (Best-Dritter etc.) aus den echten API-Paarungen füllen (29.06.2026,
+    # Lucas: GER-PRY ohne Card, weil Gegner nie zugewiesen). Erst danach hat das KO-Fixture beide
+    # Teams → kommt in all_fixtures + kriegt Ergebnis + wird bepickt/resolved.
+    _kf = fill_ko_opponents_from_api(wm, api_fixtures, team_ids)
+    if _kf:
+        print(f"  🔗 {_kf} offene KO-Gegner aus API-Football zugewiesen")
+
+    # Alle Fixtures sammeln (Gruppen + jetzt-vollständige KO-Fixtures).
+    all_fixtures: list[dict] = []
+    for gkey, gdata in groups.items():
+        for fx in gdata.get("fixtures", []):
+            all_fixtures.append({"gkey": gkey, **fx})
+    # KO-Fixtures (28.06.2026): liegen in wm["koFixtures"], NICHT in groups → sonst nie aufgelöst.
+    for fx in (wm.get("koFixtures") or []):
+        if fx.get("home") and fx.get("away"):
+            all_fixtures.append({"gkey": None, "_ko": True, **fx})
+
+    print(f"  Fixtures gesamt: {len(all_fixtures)}")
 
     # Map: date+teams → API result
     updated = 0

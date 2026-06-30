@@ -109,6 +109,15 @@ CLOSING_CAPTURE_WINDOW_H = 9.0
 CLOSING_FALLBACK_INPLAY_TOL_MIN = 15.0
 
 
+def dc_contradicts_1x2(hw, aw, dc1X, dcX2) -> bool:
+    """True wenn die Doppelte Chance dem 1X2-Favoriten widerspricht (dc1X/dcX2 verdreht).
+    1X2-Favorit = kleinere Quote; DC-Favorit-Seite = kleinere DC. Stimmen die Seiten nicht überein,
+    ist die DC-Orientierung kaputt (29.06.2026, Lucas: BRA-JPN E_HOMEAWAY_SWAP). Anker = 1X2."""
+    if not all(isinstance(x, (int, float)) for x in (hw, aw, dc1X, dcX2)):
+        return False
+    return (aw < hw) != (dcX2 < dc1X)
+
+
 def merge_closing_lines(existing: dict, odds_out: dict) -> dict:
     """Phase 3 (16.06.2026): spiegelt die odds_closing aus wm2026-data in die persistente
     wm_closing_lines.json. Regel: ein bereits FINALES Closing nie überschreiben/downgraden;
@@ -1041,6 +1050,16 @@ def main():
                 h2h["hw"], h2h["aw"] = h2h["aw"], h2h["hw"]
                 print(f"  ⚠️  Elo-Sanity[mild]: {home_id}-{away_id} hw/aw korrigiert "
                       f"(Elo Δ={elo_diff:.0f}, {hw_raw}→{h2h['hw']} / {aw_raw}→{h2h['aw']})")
+
+        # DC-Orientierungs-Selbstheilung (29.06.2026, Lucas: BRA-JPN E_HOMEAWAY_SWAP). Das 1X2 ist
+        # der verlässliche Anker. Widerspricht die Doppelte Chance dem 1X2-Favoriten (dc1X/dcX2
+        # verdreht — egal warum: DC-Outcome-Name-Matching, API-Orientierung), gleichen wir sie ans
+        # 1X2 an. dc12 (Heim-oder-Auswärts) ist symmetrisch → unberührt. War 2/78 Fixtures (KO).
+        if dc_contradicts_1x2(h2h.get("hw"), h2h.get("aw"), tb.get("dc1X"), tb.get("dcX2")):
+            _d1, _d2 = tb.get("dc1X"), tb.get("dcX2")
+            tb["dc1X"], tb["dcX2"] = _d2, _d1
+            print(f"  ⚠️  DC-Orientierung {home_id}-{away_id}: dc1X/dcX2 ans 1X2 angeglichen "
+                  f"({_d1}/{_d2} → {_d2}/{_d1})")
 
         existing = odds_out.get(key, {})
 

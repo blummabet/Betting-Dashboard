@@ -19,6 +19,22 @@ CUR = {"hw": 2.0, "dr": 3.3, "aw": 3.8}
 INPLAY = {"hw": 1.2, "dr": 5.0, "aw": 12.0}   # In-Play würde so aussehen
 
 
+class TestDcOrientation(unittest.TestCase):
+    """29.06.2026 (Lucas: BRA-JPN E_HOMEAWAY_SWAP): DC-Selbstheilung am 1X2-Anker."""
+
+    def test_swapped_dc_detected(self):
+        self.assertTrue(f.dc_contradicts_1x2(2.04, 4.5, 1.55, 1.24))   # BRA-JPN: Heim-Fav, aber dc1X>dcX2
+
+    def test_consistent_dc_ok(self):
+        self.assertFalse(f.dc_contradicts_1x2(2.04, 4.5, 1.24, 1.55))  # Heim-Fav + dc1X<dcX2
+
+    def test_away_favorite_consistent(self):
+        self.assertFalse(f.dc_contradicts_1x2(4.5, 2.04, 1.55, 1.24))  # Auswärts-Fav + dcX2<dc1X
+
+    def test_missing_values_no_false_positive(self):
+        self.assertFalse(f.dc_contradicts_1x2(2.0, 4.0, None, 1.3))
+
+
 class TestComputeClosing(unittest.TestCase):
     def test_prematch_in_window_writes_provisional(self):
         c = f.compute_closing(None, CUR, hours_to_ko=2.0, now_iso="T1")

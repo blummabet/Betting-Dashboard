@@ -31,6 +31,36 @@ class TestApiId(unittest.TestCase):
         self.assertEqual(fmr._api_id({}, "MEX"), "")
 
 
+class TestFillKoOpponents(unittest.TestCase):
+    """29.06.2026 (Lucas: GER-PRY ohne Card): offene KO-Gegner-Slots aus echten API-Paarungen füllen."""
+
+    def _af_round(self, hid, aid, rnd):
+        return {"league": {"round": rnd}, "teams": {"home": {"id": hid}, "away": {"id": aid}}}
+
+    def test_fills_best_third_opponent(self):
+        wm = {"koFixtures": [{"round": "R32", "home": "GER", "away": None,
+                              "homeResolved": True, "awayResolved": False, "bothResolved": False}]}
+        api = [self._af_round(10, 20, "Round of 32")]
+        n = fmr.fill_ko_opponents_from_api(wm, api, {"GER": 10, "PRY": 20})
+        self.assertEqual(n, 1)
+        self.assertEqual(wm["koFixtures"][0]["away"], "PRY")
+        self.assertTrue(wm["koFixtures"][0]["bothResolved"])
+
+    def test_ignores_group_stage_pairing(self):
+        wm = {"koFixtures": [{"round": "R32", "home": "GER", "away": None}]}
+        api = [self._af_round(10, 99, "Group Stage - 3")]
+        self.assertEqual(fmr.fill_ko_opponents_from_api(wm, api, {"GER": 10, "X": 99}), 0)
+        self.assertIsNone(wm["koFixtures"][0]["away"])
+
+    def test_complete_or_both_open_skipped(self):
+        wm = {"koFixtures": [
+            {"round": "R32", "home": "GER", "away": "PRY"},   # komplett
+            {"round": "R32", "home": None, "away": None},      # beide offen
+        ]}
+        api = [self._af_round(10, 20, "Round of 32")]
+        self.assertEqual(fmr.fill_ko_opponents_from_api(wm, api, {"GER": 10, "PRY": 20}), 0)
+
+
 class TestMatchFixture(unittest.TestCase):
     def test_match_flat_teamids(self):
         # Echte Struktur: flach. Muss matchen (vorher crashte es → False/Skip).
