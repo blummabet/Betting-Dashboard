@@ -1896,6 +1896,19 @@
       </div>`;
     }
 
+    // ── Serien + Analyse-Link auch ohne Pick (30.06.2026, Lucas: „Vorschau-Cards zeigen fast nichts —
+    //    Serien + Event-Page könnte man zeigen"). Nur wenn beide Teams feststehen — Serien brauchen
+    //    echte Teams, und die Event-Page existiert erst dann. Bei TBD bleibt die Card schlank.
+    if (kf.bothResolved && fx.home && fx.away) {
+      html += _matchStreaksHtml(fx.home, fx.away);
+      const _slug = `${_mode === 'liga' ? 'liga' : 'wm'}-${fx.home.toLowerCase()}-vs-${fx.away.toLowerCase()}-${fx.date}`;
+      html += `<div class="cc-actions">
+        <div class="cc-data-tier"><span class="cc-tier-pill">${isPlayed ? 'gespielt' : 'beobachten'}</span></div>
+        <a class="cc-detail-btn" href="matches/wm-match-v2.html?m=${_slug}" target="_blank">↗ Analyse</a>
+        <span></span>
+      </div>`;
+    }
+
     html += `</div>`; // cc-card
     return html;
   }
