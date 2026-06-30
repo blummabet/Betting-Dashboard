@@ -330,8 +330,12 @@ test('Bepicktes KO-Spiel läuft 1:1 durch _buildCard (Runden-Header, kein „ST"
   const w = loadCards();
   const t = w.__wmCardTest;
   t.setWmData({ form: { CIV: { last5: ['W','W','D','W','L'], avgScored: 1.8 }, NOR: { last5: ['L','W','W','D','W'], avgScored: 1.5 } } });
+  // Anpfiff dynamisch 7 Tage in der Zukunft → _fxIsPast (Date.now-basiert) liefert nie „gespielt",
+  // Test bleibt deterministisch unabhängig vom echten Datum (30.06.2026: vorher kippte er, sobald die
+  // reale Zeit den fixen 2026-06-30-Anpfiff überholte → Card wurde cc-played statt Pick-Card).
+  const _futureKo = new Date(Date.now() + 7 * 86400000).toISOString();
   const fx = {
-    home: 'CIV', away: 'NOR', date: '2026-06-30', time: '17:00', kickoff: '2026-06-30T15:00:00Z',
+    home: 'CIV', away: 'NOR', date: _futureKo.slice(0, 10), time: '17:00', kickoff: _futureKo,
     matchday: 'R32', groupKey: 'KO', isKO: true, result: null,
     koData: { round: 'R32', roundLabel: 'Sechzehntelfinale', matchNo: 78, bothResolved: true, home: 'CIV', away: 'NOR' },
     groupData: { name: 'K.O.-Runde', teams: [{ id:'CIV', name:'Elfenbeinküste', flag:'🇨🇮', elo:1700 }, { id:'NOR', name:'Norwegen', flag:'🇳🇴', elo:1720 }] },
@@ -353,6 +357,40 @@ test('Bepicktes KO-Spiel läuft 1:1 durch _buildCard (Runden-Header, kein „ST"
   assert.match(html, /Einsatz €6/, 'Stake am Hero-Pick sichtbar');
   assert.match(html, /€2\.5/, 'Stake auch am weiteren (ABWÄGEN) Pick sichtbar');
   assert.match(html, /Elfenbeinküste/);
+});
+
+test('KO-Vorschau ohne Pick zeigt Serien + Analyse-Link (30.06.2026, Lucas)', () => {
+  const w = loadCards();
+  const t = w.__wmCardTest;
+  t.setWmData({ form: { CIV: { last5: ['W','W','D'], avgGoals: 2.4 }, NOR: { last5: ['L','W','W'], avgGoals: 2.1 } } });
+  t.setStreaksCache('wm', { streaks: [
+    { teamId: 'CIV', team: 'Elfenbeinküste', league: 'KO', type: 'over25', market: 'Über 2,5 Tore', length: 5, continuation: { state: 'intakt', label: 'intakt' } },
+  ] });
+  const _futureKo = new Date(Date.now() + 7 * 86400000).toISOString();
+  const fx = {
+    home: 'CIV', away: 'NOR', date: _futureKo.slice(0, 10), time: '17:00', kickoff: _futureKo, result: null,
+    koData: { round: 'R32', roundLabel: 'Sechzehntelfinale', matchNo: 78, bothResolved: true, home: 'CIV', away: 'NOR' },
+  };
+  const home = { id: 'CIV', name: 'Elfenbeinküste', flag: '🇨🇮', elo: 1700 };
+  const away = { id: 'NOR', name: 'Norwegen', flag: '🇳🇴', elo: 1720 };
+  // KEINE Picks → Zustand 2 (Vorschau)
+  const html = t.buildKoCard(fx, home, away, {}, [], null, '2026-06-27');
+  assert.match(html, /Quoten folgen/, 'ist die Vorschau (kein Pick)');
+  assert.match(html, /Serien in diesem Spiel/, 'Serien werden gezeigt');
+  assert.match(html, /wm-civ-vs-nor-/, 'Analyse-Link auf die Event-Page');
+  assert.match(html, /↗ Analyse/);
+});
+
+test('KO-Vorschau bei TBD (Teams offen) bleibt schlank — kein Analyse-Link', () => {
+  const w = loadCards();
+  const t = w.__wmCardTest;
+  t.setWmData({ form: {} });
+  const fx = { home: null, away: null, date: '2026-07-10', kickoff: '2026-07-10T19:00:00Z', result: null,
+    koData: { round: 'R16', roundLabel: 'Achtelfinale', matchNo: 89, bothResolved: false,
+      homeRef: 'Sieger Spiel 73', awayRef: 'Sieger Spiel 74' } };
+  const html = t.buildKoCard(fx, {}, {}, {}, [], null, '2026-06-27');
+  assert.match(html, /Teams stehen noch nicht fest/);
+  assert.ok(!/↗ Analyse/.test(html), 'kein Analyse-Link für offene Paarung');
 });
 
 test('KO-Card ist reich: Pick + Conviction + Signal-Grid + Form', () => {
