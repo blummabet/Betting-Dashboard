@@ -199,13 +199,14 @@ def build_streaks(wm: dict) -> dict:
         gname = g.get("name") or gkey
         for t in (g.get("teams") or []):
             lookup[str(t.get("id"))] = {"team": t.get("name") or str(t.get("id")),
-                                        "league": gkey, "leagueName": gname}
+                                        "league": gkey, "leagueName": gname,
+                                        "flag": t.get("flag") or ""}
     next_fx = _next_fixtures(wm)
     picks = wm.get("picks") or {}   # Stufe 2: Signale/Linie des nächsten Spiels
     streaks = []
 
     def _emit(tid, seq, venue_seq, target, market, rate, target_false, key):
-        meta = lookup.get(str(tid)) or {"team": str(tid), "league": "?", "leagueName": "?"}
+        meta = lookup.get(str(tid)) or {"team": str(tid), "league": "?", "leagueName": "?", "flag": ""}
         _has_venue = bool(venue_seq) and len(venue_seq) == len(seq)
         for venue in ("all", "H", "A"):
             if venue != "all" and not _has_venue:
@@ -219,7 +220,7 @@ def build_streaks(wm: dict) -> dict:
             # Führende True = die aktuelle Serie, das erste False zeigt, wo sie begann.
             seq_viz = [bool(x) == target for x in fseq[:8]]
             s = {
-                "teamId": str(tid), "team": meta["team"],
+                "teamId": str(tid), "team": meta["team"], "flag": meta.get("flag", ""),
                 "league": meta["league"], "leagueName": meta["leagueName"],
                 "type": key, "market": market, "length": length, "venue": venue,
                 "strong": length >= STRONG_LEN, "continuation": cont,

@@ -406,13 +406,25 @@ def main():
 
     total = generated = skipped = errors = 0
 
-    for gkey, gdata in groups.items():
-        teams_map = {t["id"]: t for t in gdata.get("teams", [])}
+    # 29.06.2026 (Lucas: „keine Preview in der KO-Phase"): KO-Spiele liegen in koFixtures, nicht groups
+    # → bisher nie bepreviewt. Iteration vereinheitlicht: Gruppen + bothResolved KO (globale Team-Union,
+    # gkey="KO", matchday=Runden-Code → pick_key "KO-R32-…" wie generate_wm_picks).
+    iter_units = [(gk, {t["id"]: t for t in gd.get("teams", [])}, gd.get("fixtures", []))
+                  for gk, gd in groups.items()]
+    _all_teams = {}
+    for gd in groups.values():
+        for t in gd.get("teams", []):
+            _all_teams[t["id"]] = t
+    _ko = [f for f in (wm.get("koFixtures") or []) if f.get("home") and f.get("away")]
+    if _ko:
+        iter_units.append(("KO", _all_teams, _ko))
 
-        for fx in gdata.get("fixtures", []):
+    for gkey, teams_map, fixtures in iter_units:
+        for fx in fixtures:
             home_id  = fx["home"]
             away_id  = fx["away"]
-            pick_key = f"{gkey}-{fx['matchday']}-{home_id}-{away_id}"
+            md       = fx.get("matchday") or fx.get("round") or "KO"
+            pick_key = f"{gkey}-{md}-{home_id}-{away_id}"
             odds_key = f"{home_id}-{away_id}"
 
             # Datum prüfen
@@ -445,7 +457,7 @@ def main():
                 "away":         away_t.get("name", away_id),
                 "date":         fx["date"],
                 "group":        gkey,
-                "matchday":     fx["matchday"],
+                "matchday":     md,
                 "homeElo":      home_t.get("elo", 1500),
                 "awayElo":      away_t.get("elo", 1500),
                 "upsetScore":   upset_scores.get(pick_key, 2),

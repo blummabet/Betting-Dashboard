@@ -29,7 +29,7 @@ import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card, daily_picks_card, match_preview_card, match_review_card
+from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card, daily_picks_card, match_preview_card, match_review_card, streak_card
 from tiktok_story_plan import get_story_for_date
 from bizarre_quote_picker import get_daily_bizarre_card
 from player_pick_picker import get_daily_player_pick, save_dedup as save_player_dedup, _load_dedup as _load_player_dedup
@@ -172,6 +172,10 @@ SKIP_TELEGRAM    = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
 SEND_DAILY_PICKS = os.environ.get("SEND_DAILY_PICKS", "").lower() == "true"
 SEND_PREVIEWS    = os.environ.get("SEND_PREVIEWS", "true").lower() == "true"
 SEND_REVIEWS     = os.environ.get("SEND_REVIEWS", "true").lower() == "true"   # Vortags-Nachbericht
+SEND_STREAKS     = os.environ.get("SEND_STREAKS", "true").lower() == "true"   # Serien-Spotlight (gegated)
+# 30.06.2026 (Lucas: „Killer-Stat brauchen wir nicht, ist komisch"): Default AUS. Reviews/Previews +
+# Serien sind der Content; Killer-Stat nur noch opt-in via SEND_KILLER_STAT=true.
+SEND_KILLER_STAT = os.environ.get("SEND_KILLER_STAT", "").lower() == "true"
 # 16.06.2026 (Lucas): Bizarre-Quote-Card PAUSIERT — fad geworden + zeigt Quote/Chance
 # (Quoten-Leak). Default AUS. Wieder an via SEND_BIZARRE=true, falls reaktiviert.
 SEND_BIZARRE     = os.environ.get("SEND_BIZARRE", "").lower() == "true"
@@ -707,8 +711,114 @@ def _preview_facts(fx, flag_h, name_h, flag_a, name_a,
     return out
 
 
+STREAK_MILESTONES = [6, 8, 10, 12, 15]
+
+
+def _streak_heat(s: dict) -> int:
+    h = s.get("length", 0) or 0
+    st = (s.get("continuation") or {}).get("state")
+    if st == "intakt":
+        h += 2
+    elif st == "wackelt":
+        h -= 3
+    si = s.get("signalInfo") or {}
+    if si.get("state") == "confirm":
+        h += si.get("count", 0) or 0
+    return h
+
+
+def _streak_milestone(length: int):
+    ms = [m for m in STREAK_MILESTONES if (length or 0) >= m]
+    return ms[-1] if ms else None
+
+
+def _streak_short_date(iso):
+    p = str(iso or "")[:10].split("-")
+    return f"{p[2]}.{p[1]}." if len(p) == 3 else ""
+
+
+def pick_streak_for_card(streaks: list, posted_keys: set):
+    """Reiner Selektor (testbar): heißeste Serie wählen, die (a) Gesamt-Serie, (b) intakt, (c) einen
+    Meilenstein erreicht und (d) für diesen Meilenstein noch NICHT gepostet wurde. Returns (s,key)|None."""
+    cands = []
+    for s in (streaks or []):
+        if (s.get("venue") or "all") != "all":
+            continue   # nur Gesamt-Serien (keine H/A-Duplikate)
+        if (s.get("continuation") or {}).get("state") != "intakt":
+            continue   # nur heiße Serien
+        ms = _streak_milestone(s.get("length", 0))
+        if ms is None:
+            continue
+        key = f"streak:{s.get('teamId')}:{s.get('type')}:{ms}"
+        if key in (posted_keys or set()):
+            continue   # diesen Meilenstein schon gepostet
+        cands.append((s, key))
+    if not cands:
+        return None
+    return max(cands, key=lambda c: _streak_heat(c[0]))
+
+
+def build_streak_cards(today_iso: str, dedup: dict) -> list:
+    """Bis zu 1 Serien-Spotlight/Tag — NUR wenn eine Serie heiß ist (intakt) UND einen neuen
+    Meilenstein (6/8/10/12/15×) erreicht (Meilenstein-Dedup → nie täglich dieselbe Serie). An starken
+    Tagen near-daily, an ruhigen weniger — aber nie eine schwache Pflicht-Card. TikTok-safe (29.06.2026,
+    Lucas). Liest wm_streaks.json (compute_streaks). Returns [(label, png, caption)] oder []."""
+    try:
+        data = json.loads((BASE / "wm_streaks.json").read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    posted = {h.get("streakKey") for h in (dedup.get("history") or []) if h.get("streakKey")}
+    chosen = pick_streak_for_card(data.get("streaks") or [], posted)
+    if not chosen:
+        return []
+    s, key = chosen
+    si = s.get("signalInfo") or {}
+    nx = s.get("next") or {}
+    opp = nx.get("oppName")
+    hook = f"Hält die Serie{(' gegen ' + opp) if opp else ''}?"
+    html = streak_card(
+        team=s.get("team", ""), team_id=s.get("teamId"), market=s.get("market", ""),
+        length=s.get("length", 0), seq=s.get("seq"),
+        state=(s.get("continuation") or {}).get("state", "neutral"),
+        signal_confirm=(si.get("state") == "confirm"),
+        next_opp=opp, next_date=_streak_short_date(nx.get("date")),
+        hook=hook, league_name=s.get("leagueName", ""), flag=s.get("flag", ""),
+    )
+    path = OUTPUT_DIR / f"{today_iso}_streak_{s.get('teamId')}_{s.get('type')}.html"
+    path.write_text(html, encoding="utf-8")
+    png = render_to_png(path)
+    if not png:
+        return []
+    caption = (f"🔥 <b>Serie · {s.get('team')}</b> — {s.get('length')}× in Folge "
+               f"{s.get('market')}. {hook}")
+    dedup.setdefault("history", []).append({"date": today_iso, "streakKey": key})
+    return [(f"streak_{s.get('teamId')}_{s.get('type')}", png, caption)]
+
+
+def _iter_match_contexts(wm: dict):
+    """Yields (fx, teams, group_label, pkey) über Gruppenspiele + bothResolved KO-Spiele.
+    29.06.2026 (Lucas: „keine Review/Preview, aber Killer-Stat"): in der KO-Phase liegen die Spiele in
+    koFixtures statt groups → Preview/Review fanden nichts → Killer-Stat-Fallback feuerte. KO: globale
+    Team-Union (KO-Fixtures haben nur IDs), roundLabel statt Gruppe, pkey wie generate_wm_picks (KO-…)."""
+    for gkey, gdata in (wm.get("groups") or {}).items():
+        teams = {t["id"]: t for t in gdata.get("teams", [])}
+        for fx in gdata.get("fixtures", []):
+            yield fx, teams, f"Gruppe {gkey} · ST {fx.get('matchday')}", \
+                f"{gkey}-{fx.get('matchday')}-{fx['home']}-{fx['away']}"
+    all_teams = {}
+    for gd in (wm.get("groups") or {}).values():
+        for t in gd.get("teams", []):
+            all_teams[t["id"]] = t
+    for fx in (wm.get("koFixtures") or []):
+        if not (fx.get("home") and fx.get("away")):
+            continue   # offene Paarung (TBD) → keine Card
+        rnd = fx.get("round") or "KO"
+        yield fx, all_teams, f"🏆 {fx.get('roundLabel') or rnd}", \
+            f"KO-{rnd}-{fx['home']}-{fx['away']}"
+
+
 def build_match_preview_cards(wm: dict, today_iso: str) -> list:
-    """Baut pro heutigem Match eine Preview-Card → Liste (label, png_path, caption)."""
+    """Baut pro heutigem Match eine Preview-Card → Liste (label, png_path, caption). Inkl. KO-Spiele."""
     produced = []
     forms = wm.get("form") or {}
     xgs = wm.get("xgStats") or {}
@@ -721,14 +831,11 @@ def build_match_preview_cards(wm: dict, today_iso: str) -> list:
     except Exception:
         date_label = today_iso
 
-    for gkey, gdata in (wm.get("groups") or {}).items():
-        teams = {t["id"]: t for t in gdata.get("teams", [])}
-        for fx in gdata.get("fixtures", []):
+    for fx, teams, group_label, pkey in _iter_match_contexts(wm):
             if fx.get("date") != today_iso:
                 continue
             hid, aid = fx["home"], fx["away"]
             h, a = teams.get(hid, {}), teams.get(aid, {})
-            pkey = f"{gkey}-{fx['matchday']}-{hid}-{aid}"
             prev = previews.get(pkey) or {}
             story = (prev.get("tgSnippet") or "").strip()
             if not story:
@@ -746,7 +853,7 @@ def build_match_preview_cards(wm: dict, today_iso: str) -> list:
             html = match_preview_card(
                 date_label=date_label, flag_h=flag_h, name_h=name_h,
                 flag_a=flag_a, name_a=name_a, kickoff_label=kickoff_label,
-                venue=venue, group_label=f"Gruppe {gkey} · ST {fx['matchday']}",
+                venue=venue, group_label=group_label,
                 angle_label=angle_label, accent=accent, accent_rgb=rgb,
                 story_text=story, facts=facts,
             )
@@ -852,9 +959,7 @@ def build_match_review_cards(wm: dict, today_iso: str) -> list:
     except Exception:
         return produced
 
-    for gkey, gdata in (wm.get("groups") or {}).items():
-        teams = {t["id"]: t for t in gdata.get("teams", [])}
-        for fx in gdata.get("fixtures", []):
+    for fx, teams, group_label, _pkey in _iter_match_contexts(wm):
             if fx.get("date") != yest:
                 continue
             r = fx.get("result") or {}
@@ -876,7 +981,7 @@ def build_match_review_cards(wm: dict, today_iso: str) -> list:
             html = match_review_card(
                 date_label=date_label, flag_h=flag_h, name_h=name_h, score_h=sh,
                 flag_a=flag_a, name_a=name_a, score_a=sa,
-                group_label=f"Gruppe {gkey} · ST {fx['matchday']}",
+                group_label=group_label,
                 angle_label=angle_label, accent=accent, accent_rgb=rgb,
                 recap_text=recap, facts=facts,
             )
@@ -940,13 +1045,16 @@ def main():
         print(f"📖 Story für heute: {story.get('series_tag','?')}" if story
               else "📖 Keine Story für heute geplant")
         print(f"🚫 Ausgeschlossen (manuell + letzte {DEDUP_WINDOW_DAYS} Tage): {sorted(excluded)}")
-        if wm:
+        if wm and SEND_KILLER_STAT:
             try:
                 fact = pick_daily_killer_stat(wm, today_iso, exclude_team_ids=excluded)
             except Exception as e:
                 print(f"⚠️  Killer-Stat fehlgeschlagen: {e}")
-        print(f"⚡ Daily Killer-Stat: {fact['info']['name']}" if fact
-              else "⚡ Kein Killer-Stat heute")
+        if not SEND_KILLER_STAT:
+            print("⚡ Killer-Stat aus (SEND_KILLER_STAT=false) — Lucas: brauchen wir nicht")
+        else:
+            print(f"⚡ Daily Killer-Stat: {fact['info']['name']}" if fact
+                  else "⚡ Kein Killer-Stat heute")
 
     if not story and not fact and not reviews:
         print("\nNichts zu posten. Ende.")
@@ -1018,6 +1126,16 @@ def main():
             print(f"🎬 Match-Preview-Cards: {len(preview_cards)} Spiel(e)")
         except Exception as e:
             print(f"⚠️  Match-Preview-Cards fehlgeschlagen: {e}")
+
+    # ── 3c. Serien-Spotlight (29.06.2026, Lucas) — heiß + neuer Meilenstein, sonst nichts ──
+    if SEND_STREAKS:
+        try:
+            streak_cards = build_streak_cards(today_iso, dedup)
+            produced.extend(streak_cards)
+            print(f"🔥 Serien-Spotlight: {len(streak_cards)} Card"
+                  if streak_cards else "🔥 Keine qualifizierende Serie heute (gegated)")
+        except Exception as e:
+            print(f"⚠️  Serien-Card fehlgeschlagen: {e}")
 
     # ── 4. Daily-Picks-Card (Top-Pick + bis zu 3 weitere) ──
     # Sammelt alle Picks für today_iso aus wm2026-data.json und rendert

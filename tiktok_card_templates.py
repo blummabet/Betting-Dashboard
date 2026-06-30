@@ -1522,3 +1522,99 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
 </body></html>"""
 
 
+def streak_card(
+    team: str,
+    team_id: str | None,
+    market: str,
+    length: int,
+    seq: list | None = None,
+    state: str = "neutral",
+    signal_confirm: bool = False,
+    next_opp: str | None = None,
+    next_date: str | None = None,
+    hook: str = "Hält die Serie?",
+    league_name: str = "",
+    verb: str = "in Folge",
+    flag: str = "",
+) -> str:
+    """Serien-Spotlight im TikTok-Hochformat (29.06.2026, Lucas: Streaks als Content). 360×640,
+    Dark/Orange, Crest + Riesen-Zahl + Verlaufs-Punkte + „Engine bestätigt"-Badge + nächster Gegner
+    + Hook. TikTok-safe (KEINE Quoten/€).
+
+    Crest-Logik: numerische team_id (Vereine Liga/MLS) → API-Football-Logo; WM-Nationalteams (Code wie
+    „FRA") haben keine numerische ID → Flagge; sonst Initialen."""
+    accent, rgb = "#f0883e", "240,136,62"
+    if team_id is not None and str(team_id).isdigit():
+        crest = (f'<img src="https://media.api-sports.io/football/teams/{team_id}.png" '
+                 f'style="width:64px;height:64px;object-fit:contain;" alt="">')
+    elif flag:
+        crest = f'<div style="font-size:46px;line-height:1;">{flag}</div>'
+    else:
+        crest = (f'<div style="font-size:24px;font-weight:800;color:{accent};">'
+                 f'{(team or "?")[:3].upper()}</div>')
+    dots = "".join(
+        f'<span style="color:{accent if h else "rgba(255,255,255,.16)"}">●</span>'
+        for h in list(seq or [])[::-1][-9:]
+    )
+    state_col = {"intakt": "#2dd47e", "wackelt": "#e3b341"}.get(state, "#8b949e")
+    state_lbl = {"intakt": "Serie intakt", "wackelt": "wackelt"}.get(state, "offen")
+    sig_html = (f'<span style="background:rgba(45,212,126,.12);color:#2dd47e;border-radius:6px;'
+                f'padding:3px 9px;font-size:11px;font-weight:800;">Engine bestätigt</span>') if signal_confirm else (
+                f'<span style="color:{state_col};font-size:11px;font-weight:800;">{state_lbl}</span>')
+    next_html = ""
+    if next_opp:
+        _at = "@" if (next_date and False) else "vs"
+        next_html = (
+            f'<div style="margin-top:20px;background:rgba(255,255,255,.04);border:1px solid '
+            f'rgba(255,255,255,.06);border-radius:12px;padding:11px 14px;">'
+            f'<div style="display:flex;justify-content:space-between;align-items:center;">'
+            f'<span style="font-size:11px;color:#76819c;">Nächster Test</span>'
+            f'<span style="font-size:13px;font-weight:700;color:#f2f5ff;">{next_opp}'
+            f'{(" · " + next_date) if next_date else ""}</span></div>'
+            f'<div style="margin-top:8px;">{sig_html}</div></div>'
+        )
+    return f"""<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><style>
+* {{ margin:0; padding:0; box-sizing:border-box; }}
+body {{ background:#0a0e18; display:flex; align-items:center; justify-content:center; min-height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }}
+.card {{ width:360px; height:640px; position:relative; overflow:hidden; padding:30px 26px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba({rgb},0.12) 0%, transparent 46%),
+    linear-gradient(180deg,#0a0e18 0%,#080d18 100%); }}
+.grid {{ position:absolute; inset:0;
+  background-image:linear-gradient(rgba(255,255,255,0.014) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.014) 1px,transparent 1px);
+  background-size:24px 24px; }}
+.in {{ position:relative; }}
+.top {{ display:flex; align-items:center; justify-content:space-between; }}
+.eyebrow {{ font-size:10px; font-weight:800; letter-spacing:2px; color:{accent}; }}
+.badge {{ font-size:9px; font-weight:900; letter-spacing:1px; background:#f5c518; color:#000;
+  border-radius:5px; padding:3px 7px; }}
+.crestwrap {{ display:flex; flex-direction:column; align-items:center; margin-top:30px; }}
+.cb {{ width:74px; height:74px; border-radius:50%; background:rgba({rgb},.10); border:2px solid {accent};
+  display:flex; align-items:center; justify-content:center; }}
+.team {{ font-size:21px; font-weight:800; color:#f2f5ff; margin-top:13px; }}
+.league {{ font-size:11px; color:#76819c; margin-top:2px; }}
+.numwrap {{ text-align:center; margin-top:24px; }}
+.num {{ font-size:80px; font-weight:900; color:{accent}; line-height:1; }}
+.num span {{ font-size:36px; }}
+.mkt {{ font-size:16px; font-weight:600; color:#f2f5ff; margin-top:4px; }}
+.mkt b {{ color:{accent}; }}
+.dots {{ margin-top:15px; font-size:15px; letter-spacing:5px; }}
+.hook {{ text-align:center; margin-top:24px; font-size:18px; font-weight:800; color:#f2f5ff; }}
+.brand {{ position:absolute; bottom:20px; left:0; right:0; text-align:center; font-size:10px;
+  font-weight:700; letter-spacing:4px; color:rgba(255,255,255,.22); text-transform:uppercase; }}
+</style></head><body>
+<div class="card"><div class="grid"></div><div class="in">
+  <div class="top"><div class="eyebrow">🔥 SERIE</div><div class="badge">COCOBET</div></div>
+  <div class="crestwrap"><div class="cb">{crest}</div>
+    <div class="team">{team}</div>{f'<div class="league">{league_name}</div>' if league_name else ''}</div>
+  <div class="numwrap"><div class="num">{length}<span>×</span></div>
+    <div class="mkt">{verb} <b>{market}</b></div>
+    <div class="dots">{dots}</div></div>
+  {next_html}
+  <div class="hook">{hook}</div>
+</div><div class="brand">cocobet</div></div>
+</body></html>"""
+
+
