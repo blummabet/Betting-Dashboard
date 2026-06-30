@@ -449,7 +449,7 @@ function renderStreaks(P){
   if(!list.length){ sec.style.display='none'; return; }
   const ICON={over25:'⚽',under25:'🧱',bttsYes:'🤝',bttsNo:'🚫',cornersOver:'🚩',cornersUnder:'🚩',scored:'🎯',cleanSheet:'🛡️',cards:'🟨'};
   const VEN={H:'Heim',A:'Auswärts'};
-  const SIG={weather_signal:'Wetter',travel_burden:'Travel',pressure_index:'Druck',form_trend:'Form',xg_strength:'xG',h2h_pattern:'H2H',injury:'Verletzung',apif_predictions:'Zweitmodell',lead_lag_bias:'Sharp-Lag',public_static_bias:'Public',incentive_signal:'Anreiz',lineup_signal:'Aufstellung',chance_creation:'Chancen',form_rating:'Rating'};
+  const SIG={weather_signal:'Wetter',travel_burden:'Travel',pressure_index:'Druck',form_trend:'Form',xg_strength:'xG',h2h_pattern:'H2H',injury:'Verletzung',apif_predictions:'Zweitmodell',lead_lag_bias:'Sharp-Lag',public_static_bias:'Public',incentive_signal:'Anreiz',lineup_signal:'Aufstellung',chance_creation:'Chancen',form_rating:'Rating',streak_momentum:'Serien'};
   const stCol=s=>{const st=(s.continuation||{}).state;return st==='intakt'?'var(--pos)':st==='wackelt'?'#e3b341':'var(--sub)';};
   const stLbl=s=>{const st=(s.continuation||{}).state;return st==='intakt'?'intakt':st==='wackelt'?'wackelt':'offen';};
   const rateCol=p=>p==null?'var(--sub)':p>=60?'var(--pos)':p<=45?'#e3b341':'var(--sub)';

@@ -1089,6 +1089,7 @@
     form_rating:         ['⭐', 'Form-Rating'],
     freshness_leg:       ['💨', 'Frische'],
     smart_money:         ['🐋', 'Smart-Money'],
+    streak_momentum:     ['🔥', 'Serien-Momentum'],
     league_pressure:     ['⚡', 'Liga-Druck'],
     fixture_congestion:  ['🥵', 'Erschöpfung'],
     topscorer_momentum:  ['🎯', 'Top-Torjäger'],

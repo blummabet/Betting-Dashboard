@@ -1,49 +1,49 @@
 {
-  "today": "2026-06-29T04:22:08.417439+00:00",
+  "today": "2026-06-30T04:07:29.328829+00:00",
   "chosen": {
-    "angle_id": "underdogRecap",
-    "entity_key": "recap:K-POR-COL",
-    "theme": "hidden_gem",
-    "score": 0.7730657036393245,
+    "angle_id": "killerStat",
+    "entity_key": "defensiveWall:ARG",
+    "theme": "killer_stat",
+    "score": 0.667,
     "hook_slots": {
       "big_number": {
-        "value": "25%",
-        "source": "",
-        "source_file": "",
+        "value": "0.3",
+        "source": "form.ARG.avgConceded",
+        "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": null
+        "raw": 0.333
       },
       "sub_title": {
-        "value": "so wahrscheinlich war dieser Sieg",
+        "value": "Gegentore pro Spiel · Argentinien",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_1": {
-        "value": "Portugal/Kolumbien 🤝",
+        "value": "<span class=\"acc\">Argentinien</span> 🇦🇷 kassiert",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_2": {
-        "value": "schockt <span class=\"acc\"></span>",
+        "value": "<span class=\"yellow\">fast keine Tore.</span>",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "mystery_question": {
-        "value": "Wer hatte das auf dem Schirm?",
+        "value": "Wer durchbricht die Mauer?",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "highlight_fact": {
-        "value": "Nur 25% Chance laut den Daten — und doch passiert",
-        "source": "form.POR.games",
+        "value": "0.3 Tore/Spiel kassiert — Ø 2.5 eigene",
+        "source": "form.ARG.avgConceded + form.ARG.avgScored",
         "source_file": "wm2026-data.json",
         "derived": true,
         "raw": null
@@ -51,84 +51,84 @@
     },
     "info_slots": {
       "flag": {
-        "value": "🤝",
+        "value": "🇦🇷",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "name": {
-        "value": "Portugal/Kolumbien 0:0",
+        "value": "Argentinien",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "role_line": {
-        "value": "Kaum jemand hatte diesen Ausgang auf dem Schirm",
+        "value": "Bestes Defensivteam laut Form · 15 Spiele Datenbasis",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat1_val": {
-        "value": "0:0",
-        "source": "",
-        "source_file": "",
+        "value": "0.3",
+        "source": "form.ARG.avgConceded",
+        "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": null
+        "raw": 0.333
       },
       "stat1_lbl": {
-        "value": "Endstand",
+        "value": "Gegen Ø",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat2_val": {
-        "value": "✓",
-        "source": "",
-        "source_file": "",
+        "value": "2.5",
+        "source": "form.ARG.avgScored",
+        "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": null
+        "raw": 2.533
       },
       "stat2_lbl": {
-        "value": "Außenseiter-Sieg",
+        "value": "Tore Ø",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat3_val": {
-        "value": "25%",
-        "source": "",
-        "source_file": "",
+        "value": "53%",
+        "source": "form.ARG.over25Rate",
+        "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": null
+        "raw": 0.533
       },
       "stat3_lbl": {
-        "value": "Chance laut Daten",
+        "value": "3+ Tore",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "closing_line": {
-        "value": "<strong>Die Daten gaben dem Ergebnis nur 25% Chance.</strong> Es passierte trotzdem.",
+        "value": "<strong>Beste Defensive</strong> aller 48 qualifizierten Teams. Ø 0.3 Tore über 15 Spiele.",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "quote_line": {
-        "value": "Außenseiter schreiben <span class=\"acc\">Geschichte.</span> 🎯",
+        "value": "Wer hier <span class=\"acc\">zwei Tore</span> macht, gewinnt. 🛡️",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "data_source": {
-        "value": "Daten: Prognose-Modell + Endergebnis",
+        "value": "Daten: WM-Quali + Tests 2024/25",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -136,18 +136,18 @@
       }
     },
     "series_tag": "",
-    "reason": "surprise=0.75 (Unentschieden) fair_prob=0.25 → 4.0x"
+    "reason": "avgConceded=0.3 (15 games) — niedrigster aller Teams"
   },
   "verifier": {
-    "angle_id": "underdogRecap",
-    "entity": "recap:K-POR-COL",
+    "angle_id": "killerStat",
+    "entity": "defensiveWall:ARG",
     "ok": true,
     "failures": [],
     "details": [
       [
         "big_number",
         true,
-        "static"
+        "ok (0.0% drift, threshold 5.0%)"
       ],
       [
         "sub_title",
@@ -192,7 +192,7 @@
       [
         "stat1_val",
         true,
-        "static"
+        "ok (0.0% drift, threshold 5.0%)"
       ],
       [
         "stat1_lbl",
@@ -202,7 +202,7 @@
       [
         "stat2_val",
         true,
-        "static"
+        "ok (0.0% drift, threshold 5.0%)"
       ],
       [
         "stat2_lbl",
@@ -212,7 +212,7 @@
       [
         "stat3_val",
         true,
-        "static"
+        "ok (0.0% drift, threshold 5.0%)"
       ],
       [
         "stat3_lbl",
@@ -375,144 +375,6 @@
       },
       "series_tag": "",
       "reason": "avgScored=3.2 (15 games) — höchster aller 48 Teams"
-    },
-    {
-      "angle_id": "underdogRecap",
-      "entity_key": "recap:K-POR-COL",
-      "theme": "hidden_gem",
-      "score": 0.7730657036393245,
-      "hook_slots": {
-        "big_number": {
-          "value": "25%",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "sub_title": {
-          "value": "so wahrscheinlich war dieser Sieg",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_1": {
-          "value": "Portugal/Kolumbien 🤝",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "hook_line_2": {
-          "value": "schockt <span class=\"acc\"></span>",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "mystery_question": {
-          "value": "Wer hatte das auf dem Schirm?",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "highlight_fact": {
-          "value": "Nur 25% Chance laut den Daten — und doch passiert",
-          "source": "form.POR.games",
-          "source_file": "wm2026-data.json",
-          "derived": true,
-          "raw": null
-        }
-      },
-      "info_slots": {
-        "flag": {
-          "value": "🤝",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "name": {
-          "value": "Portugal/Kolumbien 0:0",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "role_line": {
-          "value": "Kaum jemand hatte diesen Ausgang auf dem Schirm",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_val": {
-          "value": "0:0",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat1_lbl": {
-          "value": "Endstand",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_val": {
-          "value": "✓",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat2_lbl": {
-          "value": "Außenseiter-Sieg",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_val": {
-          "value": "25%",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "stat3_lbl": {
-          "value": "Chance laut Daten",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "closing_line": {
-          "value": "<strong>Die Daten gaben dem Ergebnis nur 25% Chance.</strong> Es passierte trotzdem.",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "quote_line": {
-          "value": "Außenseiter schreiben <span class=\"acc\">Geschichte.</span> 🎯",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        },
-        "data_source": {
-          "value": "Daten: Prognose-Modell + Endergebnis",
-          "source": "",
-          "source_file": "",
-          "derived": false,
-          "raw": null
-        }
-      },
-      "series_tag": "",
-      "reason": "surprise=0.75 (Unentschieden) fair_prob=0.25 → 4.0x"
     },
     {
       "angle_id": "killerStat",

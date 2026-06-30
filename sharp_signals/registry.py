@@ -41,6 +41,7 @@ from sharp_signals.fixture_congestion import FixtureCongestionSignal
 from sharp_signals.topscorer_momentum import TopscorerMomentumSignal
 from sharp_signals.coach_change import CoachChangeSignal
 from sharp_signals.transfer_shift import TransferShiftSignal
+from sharp_signals.streak_momentum import StreakMomentumSignal
 
 
 # Pro-Profil deaktivierte Signale (25.06.2026, Lucas: Liga auf WM-Stack). Manche WM-only-Signale
@@ -94,17 +95,16 @@ ACTIVE_SIGNALS: list[Signal] = [
     TopscorerMomentumSignal(),  # Top-Torjäger-Bedrohung (26.06.2026); form-Familie, früh ~neutral
     CoachChangeSignal(),        # Neue-Trainer-Bounce (26.06.2026); context-Familie, zerfällt über 75d
     TransferShiftSignal(),      # Schlüsselspieler-Abgang (26.06.2026); context-Familie
+    StreakMomentumSignal(),     # Serien als Pick-Signal (29.06.2026, Lucas); form-Familie, klein+gelernt
 ]
 
 
 def _weights_path() -> Path:
-    # Dataset-Modus (25.06.2026, Lucas): Liga lernt EIGENE Gewichte (liga_signal_weights.json),
-    # getrennt von der WM — die Signale verhalten sich pro Wettbewerb anders.
-    import os
-    fname = ("liga_signal_weights.json"
-             if (os.environ.get("COCOBET_DATASET") or "wm").lower() == "liga"
-             else "signal_weights.json")
-    return Path(__file__).parent.parent / fname
+    # Dataset-Modus: jeder Datensatz lernt EIGENE Gewichte — WM signal_weights.json, Liga
+    # liga_signal_weights.json, MLS mls_signal_weights.json. 29.06.2026: dataset-aware via
+    # cocobet_dataset (vorher binär == "liga" → MLS hätte die WM-Gewichte kontaminiert).
+    import cocobet_dataset as D
+    return D.file("signal_weights.json", "liga_signal_weights.json")
 
 
 def load_signal_weights() -> dict:
@@ -171,6 +171,9 @@ SIGNAL_GROUPS: dict[str, str] = {
     # topscorer_momentum: konzentrierte Angriffs-Bedrohung (Top-Torjäger) — gehört zur Angriffs-/
     # form-Familie (Anti-Korr mit xg_strength/chance_creation/form_trend → kein Doppel-Edge).
     "topscorer_momentum": "form",
+    # streak_momentum: lange gestützte Serien = Vergangenheits-Form → form-Familie. Anti-Korr-Discount
+    # gegen form_trend/xg/h2h verhindert, dass dieselbe Form-Info doppelt in die Conviction zählt.
+    "streak_momentum":    "form",
     "public_static_bias": "public",
     "travel_burden":      "context",
     "injury":             "context",

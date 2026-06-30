@@ -1465,6 +1465,18 @@ def main():
     h2h_data     = wm.get("h2h",         {})
     xg_stats     = wm.get("xgStats",     {})   # Understat xG (Europa-Teams)
 
+    # Serien (compute_streaks) als Pick-Signal-Input (29.06.2026, Lucas: streak_momentum).
+    # Aus dem separaten {wm_,liga_,mls_}streaks.json, nach teamId indiziert. Fehlt es → {} (Signal no-op).
+    streaks_idx: dict = {}
+    try:
+        import cocobet_dataset as _D
+        _sf = _D.file("wm_streaks.json", "liga_streaks.json")
+        if _sf.exists():
+            for _s in (json.loads(_sf.read_text(encoding="utf-8")).get("streaks") or []):
+                streaks_idx.setdefault(str(_s.get("teamId")), []).append(_s)
+    except Exception:
+        streaks_idx = {}
+
     # ── NT-xG aus API-Football als Fallback für fehlende Teams (08.06.2026) ──
     # Understat hat nur ~15 von 48 Teams (Europa-fokussiert). wm_nt_xg.json
     # liefert NT-xG aus den letzten Nationalmannschafts-Spielen für die
@@ -1915,6 +1927,8 @@ def main():
                     "form":         form,
                     "h2h":          h2h_data.get(ha_key, {}),
                     "xg_stats":         xg_stats,
+                    "streaks":          streaks_idx,   # streak_momentum-Signal
+
                     "lineups":          lineups_data,
                     "player_form":      player_form_data,
                     "squads":           wm.get("squads", {}),
