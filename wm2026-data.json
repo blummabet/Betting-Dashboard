@@ -28236,15 +28236,15 @@
     "KO-R32-POR-CRO": [
       {
         "market": "Heimsieg",
-        "odds": 1.76,
-        "modelOdds": 1.77,
+        "odds": 1.77,
+        "modelOdds": 1.771,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -4,
-        "info": "📉 Pinnacle 1.85→1.78 (Sharp-Money-Drop +3.5pp) · ✅ Soft-Konsens folgte +2.8pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
+        "info": "📉 Pinnacle 1.85→1.78 (Sharp-Money-Drop +3.5pp) · ✅ Soft-Konsens folgte +2.4pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -28257,13 +28257,13 @@
         "steamOpen": 1.85,
         "steamCur": 1.78,
         "softOpen": 1.85,
-        "softNow": 1.76,
+        "softNow": 1.77,
         "entryBook": "soft",
-        "entryOdd": 1.76,
+        "entryOdd": 1.77,
         "lateEntry": true,
         "steamDerived": false,
         "softConfirmed": true,
-        "softFollowPP": 2.8,
+        "softFollowPP": 2.4,
         "ahLine": null,
         "recentMovePP": -0.6,
         "freshnessState": "drift",
@@ -28358,11 +28358,11 @@
           "pinn_move_pp": 11.27,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 60.2,
+          "hours_since_open": 64.1,
           "open_pinn_odds": 2.18,
           "current_pinn_odds": 1.75,
           "move_age_decay": 1.0,
-          "move_age_days": 2.5
+          "move_age_days": 2.7
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -28440,6 +28440,25 @@
             "correlation_discount_applied": 0.4
           },
           {
+            "name": "weather_signal",
+            "score": -0.44,
+            "confidence": 0.65,
+            "evidence": "🌡 Bei 31°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — POR temperate · CRO temperate",
+            "weight": 1.167,
+            "weighted_score": -0.33,
+            "metadata": {
+              "temp_max": 33.0,
+              "tempAtKickoff": 31.1,
+              "effective_temp": 31.1,
+              "kickoff_mod": 1.0,
+              "home_climate": "temperate",
+              "away_climate": "temperate",
+              "heat_intensity": 0.22,
+              "climate_controlled": false,
+              "side": "over"
+            }
+          },
+          {
             "name": "chance_creation",
             "score": 2.94,
             "confidence": 0.57,
@@ -28467,14 +28486,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 2.18,
+        "signalAdjustmentPP": 1.48,
         "signalCountPos": 3,
-        "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": 2.2,
+        "signalCountNeg": 1,
+        "signalAdjustmentPP_trade": 1.5,
         "signalCountPos_trade": 3,
-        "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -1.8,
-        "effectiveEdgePP_trade": -1.8,
+        "signalCountNeg_trade": 1,
+        "effectiveEdgePP": -2.5,
+        "effectiveEdgePP_trade": -2.5,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -29024,15 +29043,15 @@
     "KO-R32-ARG-CPV": [
       {
         "market": "Unter 3.5 Tore",
-        "odds": 1.4,
-        "modelOdds": 1.449,
+        "odds": 1.41,
+        "modelOdds": 1.452,
         "conf": "high",
-        "verdict": "ABWÄGEN",
+        "verdict": "BET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -7,
-        "info": "📉 Pinnacle 2.32→2.12 (Sharp-Money-Drop +5.1pp) · Soft-Konsens hinkt +1.7pp (Value, noch nicht bestätigt) · ✅ Sichere Linie abgeleitet: Unter 3.5 Tore @1.4 (These: Unter 2.5 Tore @2.2)",
+        "info": "📉 Pinnacle 2.32→2.12 (Sharp-Money-Drop +5.2pp) · Soft-Konsens hinkt +1.7pp (Value, noch nicht bestätigt) · ✅ Sichere Linie abgeleitet: Unter 3.5 Tore @1.41 (These: Unter 2.5 Tore @2.2)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -29041,13 +29060,13 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 5.1,
+        "steamMovePP": 5.2,
         "steamOpen": 2.32,
         "steamCur": 2.12,
         "softOpen": 2.26,
         "softNow": 2.2,
         "entryBook": "soft",
-        "entryOdd": 1.4,
+        "entryOdd": 1.41,
         "lateEntry": false,
         "steamDerived": false,
         "softConfirmed": false,
@@ -29089,6 +29108,25 @@
             "correlation_discount_applied": 0.4
           },
           {
+            "name": "weather_signal",
+            "score": 0.46,
+            "confidence": 0.65,
+            "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
+            "weight": 1.167,
+            "weighted_score": 0.35,
+            "metadata": {
+              "temp_max": 33.4,
+              "tempAtKickoff": 32.3,
+              "effective_temp": 32.3,
+              "kickoff_mod": 1.0,
+              "home_climate": "temperate",
+              "away_climate": "hot",
+              "heat_intensity": 0.46,
+              "climate_controlled": false,
+              "side": "under"
+            }
+          },
+          {
             "name": "chance_creation",
             "score": 2.05,
             "confidence": 0.52,
@@ -29101,24 +29139,26 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 2.68,
-        "signalCountPos": 3,
+        "signalAdjustmentPP": 1.94,
+        "signalCountPos": 4,
         "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": 2.7,
-        "signalCountPos_trade": 3,
+        "signalAdjustmentPP_trade": 1.9,
+        "signalCountPos_trade": 4,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -4.3,
-        "effectiveEdgePP_trade": -4.3,
-        "convictionScore": 5,
-        "convictionVerdict": "watch",
-        "convictionLabel": "👁 Beobachten",
+        "effectiveEdgePP": -5.1,
+        "effectiveEdgePP_trade": -5.1,
+        "convictionScore": 6,
+        "convictionVerdict": "abwaegen",
+        "convictionLabel": "⭐ Gute Wette",
         "convictionFamilies": {
           "sharp_money": 2,
           "model_stack": 3,
-          "context": 0,
+          "context": 1,
           "market": 0
         },
-        "stake": 2.0
+        "pickTriggerReason": "Conviction 6/10 (≥6) — frischer Move + Signale bestätigen den Pick",
+        "firstBetAt": "2026-06-30T17:50:07.926770+00:00",
+        "stake": 3.7
       },
       {
         "market": "Unter 2.5 Tore",
@@ -44997,9 +45037,9 @@
       "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "CIV-NOR": {
-      "hw": 3.66,
-      "dr": 3.42,
-      "aw": 2.19,
+      "hw": 3.3,
+      "dr": 2.67,
+      "aw": 2.73,
       "bookmaker": "pinnacle",
       "odds_open": {
         "hw": 3.83,
@@ -45061,11 +45101,11 @@
         "ahH_n200": 17.0,
         "ahA_p200": 1.01
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
-      "public_hw": 3.4,
-      "public_dr": 3.3,
-      "public_aw": 2.15,
-      "public_bookmaker": "williamhill",
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
+      "public_hw": 3.55,
+      "public_dr": 3.4,
+      "public_aw": 2.12,
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 3.75,
       "public_dr_open": 3.5,
       "public_aw_open": 2.0,
@@ -45073,138 +45113,33 @@
       "public_u25_open": 1.9,
       "public_bttsY_open": 1.73,
       "public_bttsN_open": 2.0,
-      "o15": 1.26,
-      "u15": 3.6,
-      "o25": 1.89,
-      "u25": 1.85,
-      "o35": 3.2,
-      "u35": 1.32,
-      "bttsY": 1.67,
-      "bttsN": 2.08,
-      "dc1X": 1.7,
-      "dc12": 1.32,
-      "dcX2": 1.27,
-      "ahH_n050": 3.5,
-      "ahA_p050": 1.3,
-      "ahH_n075": 4.5,
-      "ahA_p075": 1.2,
-      "ahH_n100": 6.75,
-      "ahA_p100": 1.1,
-      "ahH_n150": 8.0,
-      "ahA_p150": 1.08,
-      "ahH_n200": 16.5,
-      "ahA_p200": 1.01,
-      "ahLadder": {
-        "-1.5": [
-          8.0,
-          1.08
-        ],
-        "-1.25": [
-          7.5,
-          1.09
-        ],
-        "-1.0": [
-          6.75,
-          1.1
-        ],
-        "-0.75": [
-          4.5,
-          1.2
-        ],
-        "-0.5": [
-          3.5,
-          1.3
-        ],
-        "-0.25": [
-          3.0,
-          1.38
-        ],
-        "0.25": [
-          2.0,
-          1.81
-        ],
-        "0.5": [
-          1.74,
-          2.1
-        ],
-        "0.75": [
-          1.55,
-          2.45
-        ],
-        "1.0": [
-          1.35,
-          3.2
-        ],
-        "1.25": [
-          1.29,
-          3.6
-        ],
-        "1.5": [
-          1.24,
-          4.0
-        ]
-      },
+      "o15": 1.18,
+      "u15": 4.5,
+      "o25": 1.83,
+      "u25": 1.88,
+      "o35": 3.7,
+      "u35": 1.25,
+      "bttsY": 1.52,
+      "bttsN": 2.23,
+      "dc1X": 2.43,
+      "dc12": 1.24,
+      "dcX2": 1.04,
       "odds_closing": {
-        "hw": 3.66,
-        "dr": 3.42,
-        "aw": 2.19,
-        "o25": 1.89,
-        "u25": 1.85,
-        "bttsY": 1.67,
-        "bttsN": 2.08,
-        "ahLadder": {
-          "-1.5": [
-            8.0,
-            1.08
-          ],
-          "-1.25": [
-            7.5,
-            1.09
-          ],
-          "-1.0": [
-            6.75,
-            1.1
-          ],
-          "-0.75": [
-            4.5,
-            1.2
-          ],
-          "-0.5": [
-            3.5,
-            1.3
-          ],
-          "-0.25": [
-            3.0,
-            1.38
-          ],
-          "0.25": [
-            2.0,
-            1.81
-          ],
-          "0.5": [
-            1.74,
-            2.1
-          ],
-          "0.75": [
-            1.55,
-            2.45
-          ],
-          "1.0": [
-            1.35,
-            3.2
-          ],
-          "1.25": [
-            1.29,
-            3.6
-          ],
-          "1.5": [
-            1.24,
-            4.0
-          ]
-        },
-        "frozenAt": "2026-06-30T16:17:20.121762+00:00",
+        "hw": 3.3,
+        "dr": 2.67,
+        "aw": 2.73,
+        "o25": 1.83,
+        "u25": 1.88,
+        "bttsY": 1.52,
+        "bttsN": 2.23,
+        "frozenAt": "2026-06-30T17:47:08.438239+00:00",
         "provisional": true
-      }
+      },
+      "public_o25": 1.91,
+      "public_u25": 1.91,
+      "public_bttsY": 1.7,
+      "public_bttsN": 2.05,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "AUS-EGY": {
       "hw": 3.44,
@@ -45263,11 +45198,11 @@
         "ahH_n050": 3.3,
         "ahA_p050": 1.33
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
-      "public_hw": 3.2,
-      "public_dr": 2.8,
-      "public_aw": 2.4,
-      "public_bookmaker": "williamhill",
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
+      "public_hw": 3.3,
+      "public_dr": 2.91,
+      "public_aw": 2.47,
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 3.25,
       "public_dr_open": 2.92,
       "public_aw_open": 2.5,
@@ -45283,9 +45218,9 @@
       "u35": 1.13,
       "bttsY": 2.1,
       "bttsN": 1.66,
-      "dc1X": 1.54,
+      "dc1X": 1.52,
       "dc12": 1.43,
-      "dcX2": 1.28,
+      "dcX2": 1.3,
       "ahH_n050": 3.3,
       "ahA_p050": 1.33,
       "ahH_n100": 6.75,
@@ -45321,7 +45256,12 @@
           1.02,
           13.0
         ]
-      }
+      },
+      "public_o25": 2.775,
+      "public_u25": 1.445,
+      "public_bttsY": 2.15,
+      "public_bttsN": 1.62,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "POR-CRO": {
       "hw": 1.78,
@@ -45388,11 +45328,11 @@
         "ahH_n050": 1.82,
         "ahA_p050": 1.93
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
-      "public_hw": 1.75,
-      "public_dr": 3.4,
-      "public_aw": 4.8,
-      "public_bookmaker": "williamhill",
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
+      "public_hw": 1.77,
+      "public_dr": 3.5,
+      "public_aw": 5.0,
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 1.85,
       "public_dr_open": 3.35,
       "public_aw_open": 4.5,
@@ -45456,7 +45396,12 @@
           1.04,
           11.5
         ]
-      }
+      },
+      "public_o25": 2.1,
+      "public_u25": 1.75,
+      "public_bttsY": 1.91,
+      "public_bttsN": 1.8,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "ESP-AUT": {
       "hw": 1.33,
@@ -45523,11 +45468,11 @@
           ]
         }
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
       "public_hw": 1.33,
-      "public_dr": 4.8,
-      "public_aw": 9.0,
-      "public_bookmaker": "williamhill",
+      "public_dr": 5.1,
+      "public_aw": 10.25,
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 1.29,
       "public_dr_open": 5.1,
       "public_aw_open": 12.875,
@@ -45537,7 +45482,7 @@
       "public_bttsN_open": 1.46,
       "o15": 1.24,
       "u15": 3.5,
-      "o25": 1.74,
+      "o25": 1.73,
       "u25": 1.95,
       "o35": 2.85,
       "u35": 1.35,
@@ -45589,7 +45534,12 @@
           1.06,
           6.75
         ]
-      }
+      },
+      "public_o25": 1.83,
+      "public_u25": 2.0,
+      "public_bttsY": 2.2,
+      "public_bttsN": 1.6,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "ARG-CPV": {
       "hw": 1.17,
@@ -45668,11 +45618,11 @@
         "ahH_n075": 1.16,
         "ahA_p075": 5.25
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
       "public_hw": 1.17,
-      "public_dr": 7.0,
-      "public_aw": 15.0,
-      "public_bookmaker": "williamhill",
+      "public_dr": 7.3,
+      "public_aw": 18.0,
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 1.15,
       "public_dr_open": 7.5,
       "public_aw_open": 20.0,
@@ -45734,7 +45684,12 @@
           1.02,
           14.5
         ]
-      }
+      },
+      "public_o25": 1.67,
+      "public_u25": 2.2,
+      "public_bttsY": 2.69,
+      "public_bttsN": 1.41,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "GER-PRY": {
       "public_hw": 1.34,
@@ -45755,9 +45710,9 @@
       "public_bttsN_open": 1.78
     },
     "USA-BIH": {
-      "hw": 1.37,
-      "dr": 4.94,
-      "aw": 9.27,
+      "hw": 1.38,
+      "dr": 4.92,
+      "aw": 9.19,
       "bookmaker": "pinnacle",
       "odds_open": {
         "hw": 1.38,
@@ -45821,11 +45776,11 @@
           ]
         }
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
-      "public_hw": 1.36,
-      "public_dr": 4.6,
-      "public_aw": 8.0,
-      "public_bookmaker": "williamhill",
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
+      "public_hw": 1.37,
+      "public_dr": 4.8,
+      "public_aw": 8.6,
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 1.36,
       "public_dr_open": 5.0,
       "public_aw_open": 8.6,
@@ -45839,17 +45794,17 @@
       "u25": 1.91,
       "o35": 3.2,
       "u35": 1.3,
-      "bttsY": 2.1,
-      "bttsN": 1.65,
+      "bttsY": 2.2,
+      "bttsN": 1.6,
       "dc1X": 1.05,
       "dc12": 1.14,
-      "dcX2": 3.1,
+      "dcX2": 3.0,
       "ahH_n050": 1.38,
       "ahA_p050": 3.02,
       "ahH_n100": 1.59,
       "ahA_p100": 2.4,
-      "ahH_n150": 2.12,
-      "ahA_p150": 1.77,
+      "ahH_n150": 2.13,
+      "ahA_p150": 1.76,
       "ahH_n200": 2.95,
       "ahA_p200": 1.34,
       "ahLadder": {
@@ -45866,7 +45821,7 @@
           1.03
         ],
         "-3.0": [
-          6.6,
+          6.65,
           1.05
         ],
         "-2.5": [
@@ -45878,8 +45833,8 @@
           1.34
         ],
         "-1.5": [
-          2.12,
-          1.77
+          2.13,
+          1.76
         ],
         "-1.0": [
           1.59,
@@ -45889,7 +45844,12 @@
           1.08,
           6.65
         ]
-      }
+      },
+      "public_o25": 1.83,
+      "public_u25": 2.0,
+      "public_bttsY": 2.1,
+      "public_bttsN": 1.67,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "FRA-SWE": {
       "hw": 1.29,
@@ -45976,11 +45936,11 @@
           ]
         }
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
-      "public_hw": 1.29,
-      "public_dr": 5.5,
-      "public_aw": 9.5,
-      "public_bookmaker": "williamhill",
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
+      "public_hw": 1.27,
+      "public_dr": 6.0,
+      "public_aw": 10.0,
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 1.29,
       "public_dr_open": 5.7,
       "public_aw_open": 10.0,
@@ -45989,13 +45949,13 @@
       "public_bttsY_open": 1.75,
       "public_bttsN_open": 2.0,
       "o15": 1.07,
-      "u15": 6.1,
-      "o25": 1.39,
-      "u25": 2.84,
-      "o35": 2.04,
-      "u35": 1.75,
-      "bttsY": 1.77,
-      "bttsN": 1.94,
+      "u15": 6.2,
+      "o25": 1.38,
+      "u25": 2.89,
+      "o35": 1.94,
+      "u35": 1.82,
+      "bttsY": 1.7,
+      "bttsN": 2.04,
       "dc1X": 1.03,
       "dc12": 1.12,
       "dcX2": 3.75,
@@ -46004,55 +45964,55 @@
       "ahH_n075": 1.3,
       "ahA_p075": 3.5,
       "ahH_n100": 1.36,
-      "ahA_p100": 3.1,
-      "ahH_n150": 1.71,
-      "ahA_p150": 2.12,
-      "ahH_n200": 2.17,
+      "ahA_p100": 3.15,
+      "ahH_n150": 1.7,
+      "ahA_p150": 2.15,
+      "ahH_n200": 2.15,
       "ahA_p200": 1.68,
       "ahLadder": {
         "-3.5": [
           4.9,
-          1.17
+          1.18
         ],
         "-3.25": [
-          4.6,
+          4.5,
           1.2
         ],
         "-3.0": [
           4.2,
-          1.22
+          1.23
         ],
         "-2.75": [
           3.25,
           1.34
         ],
         "-2.5": [
-          2.75,
+          2.7,
           1.46
         ],
         "-2.25": [
-          2.45,
+          2.43,
           1.55
         ],
         "-2.0": [
-          2.17,
+          2.15,
           1.68
         ],
         "-1.75": [
-          1.89,
-          1.91
+          1.87,
+          1.93
         ],
         "-1.5": [
-          1.71,
-          2.12
+          1.7,
+          2.15
         ],
         "-1.25": [
-          1.54,
-          2.48
+          1.53,
+          2.5
         ],
         "-1.0": [
           1.36,
-          3.1
+          3.15
         ],
         "-0.75": [
           1.3,
@@ -46067,54 +46027,54 @@
         "hw": 1.29,
         "dr": 6.1,
         "aw": 12.0,
-        "o25": 1.39,
-        "u25": 2.84,
-        "bttsY": 1.77,
-        "bttsN": 1.94,
+        "o25": 1.38,
+        "u25": 2.89,
+        "bttsY": 1.7,
+        "bttsN": 2.04,
         "ahLadder": {
           "-3.5": [
             4.9,
-            1.17
+            1.18
           ],
           "-3.25": [
-            4.6,
+            4.5,
             1.2
           ],
           "-3.0": [
             4.2,
-            1.22
+            1.23
           ],
           "-2.75": [
             3.25,
             1.34
           ],
           "-2.5": [
-            2.75,
+            2.7,
             1.46
           ],
           "-2.25": [
-            2.45,
+            2.43,
             1.55
           ],
           "-2.0": [
-            2.17,
+            2.15,
             1.68
           ],
           "-1.75": [
-            1.89,
-            1.91
+            1.87,
+            1.93
           ],
           "-1.5": [
-            1.71,
-            2.12
+            1.7,
+            2.15
           ],
           "-1.25": [
-            1.54,
-            2.48
+            1.53,
+            2.5
           ],
           "-1.0": [
             1.36,
-            3.1
+            3.15
           ],
           "-0.75": [
             1.3,
@@ -46125,9 +46085,14 @@
             3.9
           ]
         },
-        "frozenAt": "2026-06-30T16:17:20.121762+00:00",
+        "frozenAt": "2026-06-30T17:47:08.438239+00:00",
         "provisional": true
-      }
+      },
+      "public_o25": 1.4,
+      "public_u25": 2.8,
+      "public_bttsY": 1.75,
+      "public_bttsN": 2.0,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "MEX-ECU": {
       "hw": 2.27,
@@ -46188,11 +46153,11 @@
           ]
         }
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
-      "public_hw": 2.2,
-      "public_dr": 2.8,
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
+      "public_hw": 2.25,
+      "public_dr": 2.86,
       "public_aw": 3.9,
-      "public_bookmaker": "williamhill",
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 2.21,
       "public_dr_open": 2.9,
       "public_aw_open": 3.9,
@@ -46208,9 +46173,9 @@
       "u35": 1.1,
       "bttsY": 2.25,
       "bttsN": 1.57,
-      "dc1X": 1.24,
+      "dc1X": 1.23,
       "dc12": 1.42,
-      "dcX2": 1.62,
+      "dcX2": 1.63,
       "ahH_n075": 2.83,
       "ahA_p075": 1.47,
       "ahH_n100": 3.6,
@@ -46287,9 +46252,14 @@
             10.2
           ]
         },
-        "frozenAt": "2026-06-30T16:17:20.121762+00:00",
+        "frozenAt": "2026-06-30T17:47:08.438239+00:00",
         "provisional": true
-      }
+      },
+      "public_o25": 2.95,
+      "public_u25": 1.41,
+      "public_bttsY": 2.25,
+      "public_bttsN": 1.57,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "ENG-COD": {
       "hw": 1.29,
@@ -46376,11 +46346,11 @@
           ]
         }
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
-      "public_hw": 1.25,
-      "public_dr": 5.0,
-      "public_aw": 12.0,
-      "public_bookmaker": "williamhill",
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
+      "public_hw": 1.28,
+      "public_dr": 5.25,
+      "public_aw": 13.0,
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 1.27,
       "public_dr_open": 5.5,
       "public_aw_open": 13.0,
@@ -46389,80 +46359,85 @@
       "public_bttsY_open": 2.63,
       "public_bttsN_open": 1.44,
       "o15": 1.26,
-      "u15": 3.55,
-      "o25": 1.85,
-      "u25": 1.82,
+      "u15": 3.6,
+      "o25": 1.87,
+      "u25": 1.81,
       "o35": 3.3,
       "u35": 1.3,
-      "bttsY": 2.63,
-      "bttsN": 1.43,
+      "bttsY": 2.6,
+      "bttsN": 1.44,
       "dc1X": 1.01,
       "dc12": 1.15,
-      "dcX2": 3.75,
+      "dcX2": 3.7,
       "ahH_n050": 1.26,
       "ahA_p050": 3.85,
-      "ahH_n075": 1.3,
-      "ahA_p075": 3.45,
-      "ahH_n100": 1.38,
-      "ahA_p100": 3.0,
-      "ahH_n150": 1.83,
-      "ahA_p150": 1.98,
-      "ahH_n200": 2.5,
-      "ahA_p200": 1.52,
+      "ahH_n075": 1.32,
+      "ahA_p075": 3.4,
+      "ahH_n100": 1.4,
+      "ahA_p100": 2.95,
+      "ahH_n150": 1.84,
+      "ahA_p150": 1.96,
+      "ahH_n200": 2.55,
+      "ahA_p200": 1.5,
       "ahLadder": {
         "-3.5": [
           6.5,
           1.11
         ],
         "-3.25": [
-          6.1,
+          6.25,
           1.12
         ],
         "-3.0": [
-          5.75,
+          5.8,
           1.14
         ],
         "-2.75": [
-          4.0,
-          1.24
+          4.1,
+          1.23
         ],
         "-2.5": [
-          3.25,
-          1.34
+          3.3,
+          1.33
         ],
         "-2.25": [
-          2.88,
-          1.41
+          2.95,
+          1.4
         ],
         "-2.0": [
-          2.5,
-          1.52
+          2.55,
+          1.5
         ],
         "-1.75": [
-          2.07,
-          1.75
+          2.08,
+          1.74
         ],
         "-1.5": [
-          1.83,
-          1.98
+          1.84,
+          1.96
         ],
         "-1.25": [
-          1.61,
+          1.62,
           2.3
         ],
         "-1.0": [
-          1.38,
-          3.0
+          1.4,
+          2.95
         ],
         "-0.75": [
-          1.3,
-          3.45
+          1.32,
+          3.4
         ],
         "-0.5": [
           1.26,
           3.85
         ]
-      }
+      },
+      "public_o25": 1.98,
+      "public_u25": 1.83,
+      "public_bttsY": 2.7,
+      "public_bttsN": 1.42,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "BEL-SEN": {
       "hw": 2.23,
@@ -46523,11 +46498,11 @@
           ]
         }
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
-      "public_hw": 2.15,
-      "public_dr": 3.1,
-      "public_aw": 3.3,
-      "public_bookmaker": "williamhill",
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
+      "public_hw": 2.2,
+      "public_dr": 3.2,
+      "public_aw": 3.54,
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 2.2,
       "public_dr_open": 3.2,
       "public_aw_open": 3.52,
@@ -46583,7 +46558,12 @@
           1.03,
           8.1
         ]
-      }
+      },
+      "public_o25": 2.12,
+      "public_u25": 1.73,
+      "public_bttsY": 1.83,
+      "public_bttsN": 1.9,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "COL-GHA": {
       "hw": 1.53,
@@ -46648,11 +46628,11 @@
           ]
         }
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
-      "public_hw": 1.5,
-      "public_dr": 3.75,
-      "public_aw": 7.0,
-      "public_bookmaker": "williamhill",
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
+      "public_hw": 1.52,
+      "public_dr": 3.9,
+      "public_aw": 7.5,
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 1.53,
       "public_dr_open": 3.9,
       "public_aw_open": 7.3,
@@ -46712,7 +46692,12 @@
           1.01,
           17.0
         ]
-      }
+      },
+      "public_o25": 2.2,
+      "public_u25": 1.65,
+      "public_bttsY": 2.25,
+      "public_bttsN": 1.57,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     },
     "SUI-DZA": {
       "hw": 2.09,
@@ -46773,11 +46758,11 @@
           ]
         }
       },
-      "updatedAt": "2026-06-30T16:17:20.121762+00:00",
+      "updatedAt": "2026-06-30T17:47:08.438239+00:00",
       "public_hw": 2.05,
-      "public_dr": 3.1,
-      "public_aw": 3.75,
-      "public_bookmaker": "williamhill",
+      "public_dr": 3.3,
+      "public_aw": 3.97,
+      "public_bookmaker": "Konsens (11 Books)",
       "public_hw_open": 2.05,
       "public_dr_open": 3.31,
       "public_aw_open": 3.98,
@@ -46791,8 +46776,8 @@
       "u25": 1.68,
       "o35": 3.75,
       "u35": 1.25,
-      "bttsY": 1.8,
-      "bttsN": 1.9,
+      "bttsY": 1.81,
+      "bttsN": 1.89,
       "dc1X": 1.21,
       "dc12": 1.35,
       "dcX2": 1.78,
@@ -46833,7 +46818,12 @@
           1.02,
           7.8
         ]
-      }
+      },
+      "public_o25": 2.14,
+      "public_u25": 1.7,
+      "public_bttsY": 1.83,
+      "public_bttsN": 1.9,
+      "public_ou_bookmaker": "Konsens (11 Books)"
     }
   },
   "teamIds": {
@@ -47000,7 +46990,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:11.817906+00:00"
+      "updatedAt": "2026-06-30T17:48:34.097003+00:00"
     },
     "AUS": {
       "last5": [
@@ -47115,7 +47105,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:13.464473+00:00"
+      "updatedAt": "2026-06-30T17:48:35.786183+00:00"
     },
     "AUT": {
       "last5": [
@@ -47230,7 +47220,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:15.107250+00:00"
+      "updatedAt": "2026-06-30T17:48:37.478288+00:00"
     },
     "BEL": {
       "last5": [
@@ -47345,17 +47335,18 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:16.804441+00:00"
+      "updatedAt": "2026-06-30T17:48:39.175375+00:00"
     },
     "BRA": {
       "last5": [
         "W",
         "W",
-        "D",
         "W",
+        "D",
         "W"
       ],
       "last10": [
+        "W",
         "W",
         "W",
         "D",
@@ -47364,45 +47355,44 @@
         "W",
         "L",
         "D",
-        "W",
-        "L"
+        "W"
       ],
-      "avgScored": 2.2,
-      "avgConceded": 0.8,
-      "avgGoals": 3.0,
-      "over25Rate": 0.6,
-      "bttsRate": 0.467,
-      "scoredRate": 0.867,
-      "cleanSheetRate": 0.467,
+      "avgScored": 2.333,
+      "avgConceded": 0.867,
+      "avgGoals": 3.2,
+      "over25Rate": 0.667,
+      "bttsRate": 0.533,
+      "scoredRate": 0.933,
+      "cleanSheetRate": 0.4,
       "o25Seq": [
         true,
         true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
         true,
         false,
         true,
+        true,
+        true,
+        true,
         false,
+        false,
+        true,
+        true,
+        false,
+        true,
         false
       ],
       "bttsSeq": [
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
         true,
         false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
         true,
         false,
+        true,
         false,
         false,
         false,
@@ -47420,47 +47410,47 @@
         true,
         true,
         true,
+        true,
         false,
         true,
-        true,
-        false
+        true
       ],
       "csSeq": [
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
         false,
         true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
         false,
         true,
         false,
         true,
+        false,
         true,
         true
       ],
       "venueSeq": [
-        "A",
-        "H",
-        "H",
-        "H",
-        "H",
-        "H",
-        "H",
-        "H",
         "H",
         "A",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H",
+        "A",
         "A",
         "A",
         "H",
-        "H",
-        "A"
+        "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:20.105252+00:00"
+      "updatedAt": "2026-06-30T17:48:42.553458+00:00"
     },
     "CAN": {
       "last5": [
@@ -47575,7 +47565,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:21.751004+00:00"
+      "updatedAt": "2026-06-30T17:48:44.238598+00:00"
     },
     "CIV": {
       "last5": [
@@ -47690,7 +47680,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:23.389522+00:00"
+      "updatedAt": "2026-06-30T17:48:45.926116+00:00"
     },
     "COD": {
       "last5": [
@@ -47805,7 +47795,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:25.034014+00:00"
+      "updatedAt": "2026-06-30T17:48:47.606722+00:00"
     },
     "COL": {
       "last5": [
@@ -47920,7 +47910,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:26.669698+00:00"
+      "updatedAt": "2026-06-30T17:48:49.291810+00:00"
     },
     "CRO": {
       "last5": [
@@ -48035,7 +48025,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:30.084661+00:00"
+      "updatedAt": "2026-06-30T17:48:52.664333+00:00"
     },
     "CUW": {
       "last5": [
@@ -48150,7 +48140,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:31.746060+00:00"
+      "updatedAt": "2026-06-30T17:48:54.346483+00:00"
     },
     "CZE": {
       "last5": [
@@ -48265,7 +48255,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:33.389026+00:00"
+      "updatedAt": "2026-06-30T17:48:56.031397+00:00"
     },
     "DZA": {
       "last5": [
@@ -48380,7 +48370,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:35.033825+00:00"
+      "updatedAt": "2026-06-30T17:48:57.716252+00:00"
     },
     "ECU": {
       "last5": [
@@ -48495,7 +48485,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:36.683941+00:00"
+      "updatedAt": "2026-06-30T17:48:59.401839+00:00"
     },
     "EGY": {
       "last5": [
@@ -48610,7 +48600,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:38.326544+00:00"
+      "updatedAt": "2026-06-30T17:49:01.083809+00:00"
     },
     "ENG": {
       "last5": [
@@ -48725,7 +48715,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:39.966326+00:00"
+      "updatedAt": "2026-06-30T17:49:02.805211+00:00"
     },
     "ESP": {
       "last5": [
@@ -48840,7 +48830,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:41.620986+00:00"
+      "updatedAt": "2026-06-30T17:49:04.560049+00:00"
     },
     "FRA": {
       "last5": [
@@ -48955,7 +48945,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:43.271052+00:00"
+      "updatedAt": "2026-06-30T17:49:06.244699+00:00"
     },
     "GER": {
       "last5": [
@@ -49070,7 +49060,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:44.920481+00:00"
+      "updatedAt": "2026-06-30T17:49:07.927783+00:00"
     },
     "GHA": {
       "last5": [
@@ -49185,7 +49175,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:46.558476+00:00"
+      "updatedAt": "2026-06-30T17:49:09.614904+00:00"
     },
     "HTI": {
       "last5": [
@@ -49300,7 +49290,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:48.200879+00:00"
+      "updatedAt": "2026-06-30T17:49:11.317163+00:00"
     },
     "IRN": {
       "last5": [
@@ -49415,7 +49405,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:49.843298+00:00"
+      "updatedAt": "2026-06-30T17:49:13.002135+00:00"
     },
     "IRQ": {
       "last5": [
@@ -49530,7 +49520,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:51.484668+00:00"
+      "updatedAt": "2026-06-30T17:49:14.686552+00:00"
     },
     "JOR": {
       "last5": [
@@ -49645,17 +49635,18 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:53.130093+00:00"
+      "updatedAt": "2026-06-30T17:49:16.371085+00:00"
     },
     "JPN": {
       "last5": [
+        "L",
         "D",
         "W",
         "D",
-        "W",
         "W"
       ],
       "last10": [
+        "L",
         "D",
         "W",
         "D",
@@ -49664,23 +49655,16 @@
         "W",
         "W",
         "W",
-        "W",
-        "D"
+        "W"
       ],
-      "avgScored": 1.933,
-      "avgConceded": 0.667,
-      "avgGoals": 2.6,
+      "avgScored": 1.6,
+      "avgConceded": 0.733,
+      "avgGoals": 2.333,
       "over25Rate": 0.4,
       "bttsRate": 0.333,
       "scoredRate": 0.867,
       "cleanSheetRate": 0.6,
       "o25Seq": [
-        false,
-        true,
-        true,
-        false,
-        false,
-        false,
         true,
         false,
         true,
@@ -49688,11 +49672,18 @@
         false,
         false,
         false,
+        true,
         false,
-        true
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
       ],
       "bttsSeq": [
         true,
+        true,
         false,
         true,
         false,
@@ -49705,8 +49696,7 @@
         false,
         false,
         false,
-        false,
-        true
+        false
       ],
       "scoredSeq": [
         true,
@@ -49719,48 +49709,48 @@
         true,
         true,
         true,
+        true,
+        false,
+        false,
+        true,
+        true
+      ],
+      "csSeq": [
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
         false,
         false,
         true,
         true,
         true
       ],
-      "csSeq": [
-        false,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        false
-      ],
       "venueSeq": [
-        "H",
-        "A",
         "A",
         "H",
         "A",
         "A",
         "H",
+        "A",
+        "A",
+        "H",
         "H",
         "H",
         "H",
         "A",
         "A",
         "A",
-        "H",
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:54.769554+00:00"
+      "updatedAt": "2026-06-30T17:49:18.065806+00:00"
     },
     "KOR": {
       "last5": [
@@ -49875,7 +49865,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:56.415803+00:00"
+      "updatedAt": "2026-06-30T17:49:19.759670+00:00"
     },
     "MAR": {
       "last5": [
@@ -49990,7 +49980,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:58.062029+00:00"
+      "updatedAt": "2026-06-30T17:49:21.441075+00:00"
     },
     "MEX": {
       "last5": [
@@ -50105,7 +50095,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:59.704892+00:00"
+      "updatedAt": "2026-06-30T17:49:23.140275+00:00"
     },
     "NED": {
       "last5": [
@@ -50220,7 +50210,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:01.345418+00:00"
+      "updatedAt": "2026-06-30T17:49:24.842083+00:00"
     },
     "NOR": {
       "last5": [
@@ -50335,7 +50325,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:02.996973+00:00"
+      "updatedAt": "2026-06-30T17:49:26.529850+00:00"
     },
     "NZL": {
       "last5": [
@@ -50450,7 +50440,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:04.642973+00:00"
+      "updatedAt": "2026-06-30T17:49:28.219108+00:00"
     },
     "PAN": {
       "last5": [
@@ -50565,7 +50555,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:06.285107+00:00"
+      "updatedAt": "2026-06-30T17:49:29.905849+00:00"
     },
     "POR": {
       "last5": [
@@ -50680,7 +50670,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:07.935371+00:00"
+      "updatedAt": "2026-06-30T17:49:31.594485+00:00"
     },
     "PRY": {
       "last5": [
@@ -50795,7 +50785,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:09.634318+00:00"
+      "updatedAt": "2026-06-30T17:49:33.277856+00:00"
     },
     "QAT": {
       "last5": [
@@ -50910,7 +50900,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:11.279189+00:00"
+      "updatedAt": "2026-06-30T17:49:34.963818+00:00"
     },
     "SAU": {
       "last5": [
@@ -51025,7 +51015,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:12.932661+00:00"
+      "updatedAt": "2026-06-30T17:49:36.661236+00:00"
     },
     "SCO": {
       "last5": [
@@ -51140,7 +51130,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:14.583531+00:00"
+      "updatedAt": "2026-06-30T17:49:38.348865+00:00"
     },
     "SEN": {
       "last5": [
@@ -51255,7 +51245,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:16.222310+00:00"
+      "updatedAt": "2026-06-30T17:49:40.036166+00:00"
     },
     "SUI": {
       "last5": [
@@ -51370,7 +51360,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:17.871329+00:00"
+      "updatedAt": "2026-06-30T17:49:41.726644+00:00"
     },
     "SWE": {
       "last5": [
@@ -51485,7 +51475,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:19.508569+00:00"
+      "updatedAt": "2026-06-30T17:49:43.408001+00:00"
     },
     "TUN": {
       "last5": [
@@ -51600,7 +51590,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:21.152232+00:00"
+      "updatedAt": "2026-06-30T17:49:45.092513+00:00"
     },
     "URU": {
       "last5": [
@@ -51715,7 +51705,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:24.476900+00:00"
+      "updatedAt": "2026-06-30T17:49:48.479023+00:00"
     },
     "UZB": {
       "last5": [
@@ -51830,7 +51820,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:27.751798+00:00"
+      "updatedAt": "2026-06-30T17:49:51.858753+00:00"
     },
     "ZAF": {
       "last5": [
@@ -51945,7 +51935,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:29.395122+00:00"
+      "updatedAt": "2026-06-30T17:49:53.546745+00:00"
     },
     "CPV": {
       "last5": [
@@ -52060,7 +52050,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:28.445092+00:00"
+      "updatedAt": "2026-06-30T17:48:50.983735+00:00"
     },
     "TUR": {
       "last5": [
@@ -52175,7 +52165,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:22.833253+00:00"
+      "updatedAt": "2026-06-30T17:49:46.782269+00:00"
     },
     "USA": {
       "last5": [
@@ -52290,7 +52280,7 @@
         "H"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:34:26.113294+00:00"
+      "updatedAt": "2026-06-30T17:49:50.175528+00:00"
     },
     "BIH": {
       "last5": [
@@ -52405,7 +52395,7 @@
         "A"
       ],
       "games": 15,
-      "updatedAt": "2026-06-29T15:33:18.454497+00:00"
+      "updatedAt": "2026-06-30T17:48:40.870945+00:00"
     }
   },
   "h2h": {
@@ -53126,435 +53116,435 @@
   },
   "aiPreviews": {
     "A-1-MEX-ZAF": {
-      "text": "Mexiko geht als haushoher Favorit in diese Partie. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Spannend wird Unter 2.5 Tore @1.74, wo unser Modell eine Chance erkennt.",
-      "tgSnippet": "Mexiko geht als haushoher Favorit in diese Partie. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Mexiko ist auf dem Papier klar überlegen. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Spannend wird Unter 2.5 Tore @1.74, wo unser Modell eine Chance erkennt.",
+      "tgSnippet": "Mexiko ist auf dem Papier klar überlegen. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "A-1-KOR-CZE": {
-      "text": "Auf dem Papier ein offenes Duell. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Klarer Fall für uns — Heimsieg @2.73 — der Markt unterschätzt das um 8pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Tschechien hat das Zeug dazu.",
-      "tgSnippet": "Auf dem Papier ein offenes Duell. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Schwer auszurechnen: hier ist alles drin. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Wir setzen auf Heimsieg @2.73 — der Markt unterschätzt das um 8pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Tschechien hat das Zeug dazu.",
+      "tgSnippet": "Schwer auszurechnen: hier ist alles drin. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "A-2-MEX-KOR": {
-      "text": "Auf dem Papier ein offenes Duell. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im Direktvergleich (4 Spiele) hat Mexiko die Nase klar vorne (3S-1U-0N). Auf der Beobachtungsliste: Beide Teams treffen — Ja @1.95. Ein Überraschungsergebnis ist nicht ausgeschlossen — Südkorea hat das Zeug dazu.",
-      "tgSnippet": "Auf dem Papier ein offenes Duell. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im Direktvergleich (4 Spiele) hat Mexiko die Nase klar vorne (3S-1U-0N).",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Schwer auszurechnen: hier ist alles drin. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im Direktvergleich (4 Spiele) hat Mexiko die Nase klar vorne (3S-1U-0N). Einen genaueren Blick wert: Beide Teams treffen — Ja @1.95 — hier sieht das Modell Value. Ein Überraschungsergebnis ist nicht ausgeschlossen — Südkorea hat das Zeug dazu.",
+      "tgSnippet": "Schwer auszurechnen: hier ist alles drin. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im Direktvergleich (4 Spiele) hat Mexiko die Nase klar vorne (3S-1U-0N).",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "A-2-CZE-ZAF": {
-      "text": "Die Rollen sind verteilt: Tschechien ist vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Heimsieg @1.83.",
+      "text": "Die Rollen sind verteilt: Tschechien ist vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Heimsieg @1.83 — hier sieht das Modell Value.",
       "tgSnippet": "Die Rollen sind verteilt: Tschechien ist vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "A-3-MEX-CZE": {
-      "text": "Mexiko geht als leichter Favorit ins Rennen. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel. Spannend wird Doppelte Chance — X2 @1.83, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Tschechien hat das Zeug dazu.",
-      "tgSnippet": "Mexiko geht als leichter Favorit ins Rennen. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Ein hauchdünner Vorteil für Mexiko. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel. Spannend wird Doppelte Chance — X2 @1.83, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Tschechien hat das Zeug dazu.",
+      "tgSnippet": "Ein hauchdünner Vorteil für Mexiko. Mexiko genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "A-3-ZAF-KOR": {
-      "text": "Südkorea ist der klare Favorit in diesem Duell. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Klarer Fall für uns — Auswärtssieg @1.61.",
-      "tgSnippet": "Südkorea ist der klare Favorit in diesem Duell. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Südkorea geht mit der Favoritenrolle ins Spiel. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Klarer Fall für uns — Auswärtssieg @1.61.",
+      "tgSnippet": "Südkorea geht mit der Favoritenrolle ins Spiel. Im entscheidenden Spieltag 3 der Gruppe A steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "B-1-CAN-BIH": {
-      "text": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Doppelte Chance — X2 @1.98. Vorsicht trotz Papierform: Bosnien-H. ist brandgefährlich — ein Upset ist absolut realistisch.",
-      "tgSnippet": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Auf dem Papier ein offenes Duell. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Doppelte Chance — X2 @1.98, wo unser Modell eine Chance erkennt. Vorsicht trotz Papierform: Bosnien-H. ist brandgefährlich — ein Upset ist absolut realistisch.",
+      "tgSnippet": "Auf dem Papier ein offenes Duell. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "B-1-QAT-SUI": {
-      "text": "Die Rollen sind verteilt: Schweiz ist vorne. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Unser stärkstes Signal heute: Über 2.5 Tore @1.63 — der Markt unterschätzt das um 8pp.",
-      "tgSnippet": "Die Rollen sind verteilt: Schweiz ist vorne. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Schweiz ist der klare Favorit in diesem Duell. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Wir setzen auf Über 2.5 Tore @1.63 — der Markt unterschätzt das um 8pp.",
+      "tgSnippet": "Schweiz ist der klare Favorit in diesem Duell. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "B-2-CAN-QAT": {
-      "text": "Kanada geht als leichter Favorit ins Rennen. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Wir setzen auf AH Heim −1.5 @1.91. Ein Überraschungsergebnis ist nicht ausgeschlossen — Katar hat das Zeug dazu.",
+      "text": "Kanada geht als leichter Favorit ins Rennen. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Klarer Fall für uns — AH Heim −1.5 @1.91. Ein Überraschungsergebnis ist nicht ausgeschlossen — Katar hat das Zeug dazu.",
       "tgSnippet": "Kanada geht als leichter Favorit ins Rennen. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "B-2-SUI-BIH": {
-      "text": "Ein hauchdünner Vorteil für Schweiz. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Über 2.5 Tore @1.79. Ein Überraschungsergebnis ist nicht ausgeschlossen — Bosnien-H. hat das Zeug dazu.",
-      "tgSnippet": "Ein hauchdünner Vorteil für Schweiz. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Schweiz geht als leichter Favorit ins Rennen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Über 2.5 Tore @1.79. Ein Überraschungsergebnis ist nicht ausgeschlossen — Bosnien-H. hat das Zeug dazu.",
+      "tgSnippet": "Schweiz geht als leichter Favorit ins Rennen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "B-3-CAN-SUI": {
-      "text": "Ein hauchdünner Vorteil für Schweiz. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im entscheidenden Spieltag 3 der Gruppe B steht für beide Teams viel auf dem Spiel. Auf der Beobachtungsliste: Doppelte Chance — 1X @1.56. Ein Überraschungsergebnis ist nicht ausgeschlossen — Kanada hat das Zeug dazu.",
-      "tgSnippet": "Ein hauchdünner Vorteil für Schweiz. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im entscheidenden Spieltag 3 der Gruppe B steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Schweiz hat einen kleinen Qualitätsvorteil. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im entscheidenden Spieltag 3 der Gruppe B steht für beide Teams viel auf dem Spiel. Spannend wird Doppelte Chance — 1X @1.56, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Kanada hat das Zeug dazu.",
+      "tgSnippet": "Schweiz hat einen kleinen Qualitätsvorteil. Kanada genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im entscheidenden Spieltag 3 der Gruppe B steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "B-3-BIH-QAT": {
-      "text": "Bosnien-H. hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe B steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Klarer Fall für uns — AH Heim −1 @1.5. Ein Überraschungsergebnis ist nicht ausgeschlossen — Katar hat das Zeug dazu.",
-      "tgSnippet": "Bosnien-H. hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe B steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Bosnien-H. geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe B steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Klarer Fall für uns — AH Heim −1 @1.5. Ein Überraschungsergebnis ist nicht ausgeschlossen — Katar hat das Zeug dazu.",
+      "tgSnippet": "Bosnien-H. geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe B steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "C-1-BRA-MAR": {
-      "text": "Brasilien ist der klare Favorit in diesem Duell. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend. Einen genaueren Blick wert: Unter 2.5 Tore @1.77 — hier sieht das Modell Value.",
-      "tgSnippet": "Brasilien ist der klare Favorit in diesem Duell. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Die Rollen sind verteilt: Brasilien ist vorne. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen. Auf der Beobachtungsliste: Unter 2.5 Tore @1.77.",
+      "tgSnippet": "Die Rollen sind verteilt: Brasilien ist vorne. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "C-1-HTI-SCO": {
-      "text": "Schottland hat einen kleinen Qualitätsvorteil. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Über 1.5 Tore @1.29 — hier sieht das Modell Value. Ein Überraschungsergebnis ist nicht ausgeschlossen — Haiti hat das Zeug dazu.",
+      "text": "Schottland hat einen kleinen Qualitätsvorteil. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Über 1.5 Tore @1.29. Ein Überraschungsergebnis ist nicht ausgeschlossen — Haiti hat das Zeug dazu.",
       "tgSnippet": "Schottland hat einen kleinen Qualitätsvorteil. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "C-2-BRA-HTI": {
-      "text": "Alles andere als ein Sieg von Brasilien wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Beide Teams treffen — Ja @2.3.",
+      "text": "Alles andere als ein Sieg von Brasilien wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Beide Teams treffen — Ja @2.3 — hier sieht das Modell Value.",
       "tgSnippet": "Alles andere als ein Sieg von Brasilien wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "C-2-SCO-MAR": {
-      "text": "Marokko hat einen kleinen Qualitätsvorteil. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Unser stärkstes Signal heute: Auswärtssieg @1.67. Ein Überraschungsergebnis ist nicht ausgeschlossen — Schottland hat das Zeug dazu.",
+      "text": "Marokko hat einen kleinen Qualitätsvorteil. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Klarer Fall für uns — Auswärtssieg @1.67. Ein Überraschungsergebnis ist nicht ausgeschlossen — Schottland hat das Zeug dazu.",
       "tgSnippet": "Marokko hat einen kleinen Qualitätsvorteil. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "D-1-USA-PRY": {
       "text": "USA geht mit der Favoritenrolle ins Spiel. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im Direktvergleich (4 Spiele) hat USA die Nase klar vorne (4S-0U-0N). Unser stärkstes Signal heute: Über 1.5 Tore @1.43 — der Markt unterschätzt das um 10pp.",
       "tgSnippet": "USA geht mit der Favoritenrolle ins Spiel. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im Direktvergleich (4 Spiele) hat USA die Nase klar vorne (4S-0U-0N).",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "D-1-AUS-TUR": {
-      "text": "Ein hauchdünner Vorteil für Australien. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Über 1.5 Tore @1.37. Ein Überraschungsergebnis ist nicht ausgeschlossen — Türkei hat das Zeug dazu.",
+      "text": "Ein hauchdünner Vorteil für Australien. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Über 1.5 Tore @1.37, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Türkei hat das Zeug dazu.",
       "tgSnippet": "Ein hauchdünner Vorteil für Australien. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "D-2-USA-AUS": {
-      "text": "Ein hauchdünner Vorteil für USA. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Auf der Beobachtungsliste: Beide Teams treffen — Ja @1.9. Ein Überraschungsergebnis ist nicht ausgeschlossen — Australien hat das Zeug dazu.",
+      "text": "Ein hauchdünner Vorteil für USA. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Spannend wird Beide Teams treffen — Ja @1.9, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Australien hat das Zeug dazu.",
       "tgSnippet": "Ein hauchdünner Vorteil für USA. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "D-2-TUR-PRY": {
-      "text": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Beide Teams treffen — Ja @1.83 — hier sieht das Modell Value. Vorsicht trotz Papierform: Türkei ist brandgefährlich — ein Upset ist absolut realistisch.",
-      "tgSnippet": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Schwer auszurechnen: hier ist alles drin. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Beide Teams treffen — Ja @1.83 — hier sieht das Modell Value. Vorsicht trotz Papierform: Türkei ist brandgefährlich — ein Upset ist absolut realistisch.",
+      "tgSnippet": "Schwer auszurechnen: hier ist alles drin. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "E-1-GER-CUW": {
-      "text": "Deutschland geht als haushoher Favorit in diese Partie. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend. Unser stärkstes Signal heute: Unter 3.5 Tore @2.5 — der Markt unterschätzt das um 7pp.",
-      "tgSnippet": "Deutschland geht als haushoher Favorit in diese Partie. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Alles andere als ein Sieg von Deutschland wäre eine Überraschung. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend. Klarer Fall für uns — Unter 3.5 Tore @2.5 — der Markt unterschätzt das um 7pp.",
+      "tgSnippet": "Alles andere als ein Sieg von Deutschland wäre eine Überraschung. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "E-1-CIV-ECU": {
-      "text": "Ecuador geht als leichter Favorit ins Rennen. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Diesmal halten wir uns zurück: kein ausreichender Vorteil. Ein Überraschungsergebnis ist nicht ausgeschlossen — Elfenbeinküste hat das Zeug dazu.",
-      "tgSnippet": "Ecuador geht als leichter Favorit ins Rennen. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Ein hauchdünner Vorteil für Ecuador. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Diesmal halten wir uns zurück: kein ausreichender Vorteil. Ein Überraschungsergebnis ist nicht ausgeschlossen — Elfenbeinküste hat das Zeug dazu.",
+      "tgSnippet": "Ein hauchdünner Vorteil für Ecuador. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "E-2-GER-CIV": {
-      "text": "Alles andere als ein Sieg von Deutschland wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Heimsieg @1.48, wo unser Modell eine Chance erkennt.",
+      "text": "Alles andere als ein Sieg von Deutschland wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Heimsieg @1.48.",
       "tgSnippet": "Alles andere als ein Sieg von Deutschland wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "E-2-ECU-CUW": {
       "text": "Ecuador geht mit der Favoritenrolle ins Spiel. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird AH Heim −1.5 @1.5, wo unser Modell eine Chance erkennt.",
       "tgSnippet": "Ecuador geht mit der Favoritenrolle ins Spiel. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "F-1-NED-JPN": {
-      "text": "Niederlande geht als leichter Favorit ins Rennen. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen. Unser stärkstes Signal heute: Unter 2.5 Tore @1.91 — der Markt unterschätzt das um 8pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Japan hat das Zeug dazu.",
-      "tgSnippet": "Niederlande geht als leichter Favorit ins Rennen. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Ein hauchdünner Vorteil für Niederlande. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen. Wir setzen auf Unter 2.5 Tore @1.91 — der Markt unterschätzt das um 8pp. Ein Überraschungsergebnis ist nicht ausgeschlossen — Japan hat das Zeug dazu.",
+      "tgSnippet": "Ein hauchdünner Vorteil für Niederlande. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "F-1-SWE-TUN": {
-      "text": "Schwer auszurechnen: hier ist alles drin. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Heute kein klarer Markt-Vorteil — wir warten auf den besseren Moment. Vorsicht trotz Papierform: Tunesien ist brandgefährlich — ein Upset ist absolut realistisch.",
+      "text": "Schwer auszurechnen: hier ist alles drin. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Das Modell sieht hier keine Fehlbewertung — kein Pick. Vorsicht trotz Papierform: Tunesien ist brandgefährlich — ein Upset ist absolut realistisch.",
       "tgSnippet": "Schwer auszurechnen: hier ist alles drin. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "F-2-NED-SWE": {
-      "text": "Niederlande ist der klare Favorit in diesem Duell. Im Direktvergleich (3 Spiele) hat Niederlande die Nase klar vorne (2S-1U-0N). In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Auf der Beobachtungsliste: Über 2.5 Tore @1.63.",
-      "tgSnippet": "Niederlande ist der klare Favorit in diesem Duell. Im Direktvergleich (3 Spiele) hat Niederlande die Nase klar vorne (2S-1U-0N). In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Die Rollen sind verteilt: Niederlande ist vorne. Im Direktvergleich (3 Spiele) hat Niederlande die Nase klar vorne (2S-1U-0N). In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Auf der Beobachtungsliste: Über 2.5 Tore @1.63.",
+      "tgSnippet": "Die Rollen sind verteilt: Niederlande ist vorne. Im Direktvergleich (3 Spiele) hat Niederlande die Nase klar vorne (2S-1U-0N). In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "F-2-TUN-JPN": {
-      "text": "Japan hat einen kleinen Qualitätsvorteil. Japan dominiert den Direktvergleich (2S-0U-1N aus 3 Spielen). In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Klarer Fall für uns — Auswärtssieg @1.55. Ein Überraschungsergebnis ist nicht ausgeschlossen — Tunesien hat das Zeug dazu.",
+      "text": "Japan hat einen kleinen Qualitätsvorteil. Japan dominiert den Direktvergleich (2S-0U-1N aus 3 Spielen). In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Unser stärkstes Signal heute: Auswärtssieg @1.55. Ein Überraschungsergebnis ist nicht ausgeschlossen — Tunesien hat das Zeug dazu.",
       "tgSnippet": "Japan hat einen kleinen Qualitätsvorteil. Japan dominiert den Direktvergleich (2S-0U-1N aus 3 Spielen). In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "G-1-BEL-EGY": {
-      "text": "Belgien geht mit der Favoritenrolle ins Spiel. Historisch oft Unentschieden zwischen diesen Teams (1 von 3 Spielen). Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Das Modell sieht hier keine Fehlbewertung — kein Pick.",
-      "tgSnippet": "Belgien geht mit der Favoritenrolle ins Spiel. Historisch oft Unentschieden zwischen diesen Teams (1 von 3 Spielen). Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Belgien ist der klare Favorit in diesem Duell. Historisch oft Unentschieden zwischen diesen Teams (1 von 3 Spielen). Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Das Modell sieht hier keine Fehlbewertung — kein Pick.",
+      "tgSnippet": "Belgien ist der klare Favorit in diesem Duell. Historisch oft Unentschieden zwischen diesen Teams (1 von 3 Spielen). Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "G-1-IRN-NZL": {
-      "text": "Schwer auszurechnen: hier ist alles drin. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen. Spannend wird Unter 2.5 Tore @1.57, wo unser Modell eine Chance erkennt. Vorsicht trotz Papierform: Neuseeland ist brandgefährlich — ein Upset ist absolut realistisch.",
-      "tgSnippet": "Schwer auszurechnen: hier ist alles drin. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Auf dem Papier ein offenes Duell. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend. Einen genaueren Blick wert: Unter 2.5 Tore @1.57 — hier sieht das Modell Value. Vorsicht trotz Papierform: Neuseeland ist brandgefährlich — ein Upset ist absolut realistisch.",
+      "tgSnippet": "Auf dem Papier ein offenes Duell. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "G-2-BEL-IRN": {
-      "text": "Belgien ist auf dem Papier klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Das Modell sieht hier keine Fehlbewertung — kein Pick.",
-      "tgSnippet": "Belgien ist auf dem Papier klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Alles andere als ein Sieg von Belgien wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Das Modell sieht hier keine Fehlbewertung — kein Pick.",
+      "tgSnippet": "Alles andere als ein Sieg von Belgien wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "G-2-NZL-EGY": {
-      "text": "Ägypten hat einen kleinen Qualitätsvorteil. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Auswärtssieg @1.57. Ein Überraschungsergebnis ist nicht ausgeschlossen — Neuseeland hat das Zeug dazu.",
-      "tgSnippet": "Ägypten hat einen kleinen Qualitätsvorteil. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Ägypten geht als leichter Favorit ins Rennen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Auswärtssieg @1.57, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Neuseeland hat das Zeug dazu.",
+      "tgSnippet": "Ägypten geht als leichter Favorit ins Rennen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "H-1-ESP-CPV": {
-      "text": "Alles andere als ein Sieg von Spanien wäre eine Überraschung. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Über 3.5 Tore @1.77, wo unser Modell eine Chance erkennt.",
-      "tgSnippet": "Alles andere als ein Sieg von Spanien wäre eine Überraschung. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Spanien ist auf dem Papier klar überlegen. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Über 3.5 Tore @1.77, wo unser Modell eine Chance erkennt.",
+      "tgSnippet": "Spanien ist auf dem Papier klar überlegen. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "H-1-SAU-URU": {
-      "text": "Die Rollen sind verteilt: Uruguay ist vorne. Beide Teams wollen früh ein Zeichen setzen. Spannend wird Auswärtssieg @1.42, wo unser Modell eine Chance erkennt.",
-      "tgSnippet": "Die Rollen sind verteilt: Uruguay ist vorne. Beide Teams wollen früh ein Zeichen setzen.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Uruguay ist der klare Favorit in diesem Duell. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen. Spannend wird Auswärtssieg @1.42, wo unser Modell eine Chance erkennt.",
+      "tgSnippet": "Uruguay ist der klare Favorit in diesem Duell. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "H-2-ESP-SAU": {
-      "text": "Spanien ist auf dem Papier klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Beide Teams treffen — Ja @2.63 — hier sieht das Modell Value.",
+      "text": "Spanien ist auf dem Papier klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Beide Teams treffen — Ja @2.63.",
       "tgSnippet": "Spanien ist auf dem Papier klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "H-2-URU-CPV": {
-      "text": "Uruguay ist auf dem Papier klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Unser stärkstes Signal heute: Unter 2.5 Tore @1.64.",
-      "tgSnippet": "Uruguay ist auf dem Papier klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Alles andere als ein Sieg von Uruguay wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Wir setzen auf Unter 2.5 Tore @1.64.",
+      "tgSnippet": "Alles andere als ein Sieg von Uruguay wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "I-1-FRA-SEN": {
-      "text": "Frankreich geht mit der Favoritenrolle ins Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Beide Teams treffen — Ja @1.88 — hier sieht das Modell Value.",
-      "tgSnippet": "Frankreich geht mit der Favoritenrolle ins Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Frankreich ist der klare Favorit in diesem Duell. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Beide Teams treffen — Ja @1.88.",
+      "tgSnippet": "Frankreich ist der klare Favorit in diesem Duell. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "I-1-IRQ-NOR": {
-      "text": "Norwegen geht als leichter Favorit ins Rennen. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Diesmal halten wir uns zurück: kein ausreichender Vorteil. Ein Überraschungsergebnis ist nicht ausgeschlossen — Irak hat das Zeug dazu.",
-      "tgSnippet": "Norwegen geht als leichter Favorit ins Rennen. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Norwegen hat einen kleinen Qualitätsvorteil. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Heute kein klarer Markt-Vorteil — wir warten auf den besseren Moment. Ein Überraschungsergebnis ist nicht ausgeschlossen — Irak hat das Zeug dazu.",
+      "tgSnippet": "Norwegen hat einen kleinen Qualitätsvorteil. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "J-1-ARG-DZA": {
-      "text": "Argentinien ist auf dem Papier klar überlegen. Beide Teams wollen früh ein Zeichen setzen. Auf der Beobachtungsliste: Unter 3.5 Tore @1.29.",
-      "tgSnippet": "Argentinien ist auf dem Papier klar überlegen. Beide Teams wollen früh ein Zeichen setzen.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Argentinien geht als haushoher Favorit in diese Partie. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend. Einen genaueren Blick wert: Unter 3.5 Tore @1.29 — hier sieht das Modell Value.",
+      "tgSnippet": "Argentinien geht als haushoher Favorit in diese Partie. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "J-1-AUT-JOR": {
-      "text": "Österreich hat einen kleinen Qualitätsvorteil. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen. Einen genaueren Blick wert: Unter 2.5 Tore @2.01 — hier sieht das Modell Value. Ein Überraschungsergebnis ist nicht ausgeschlossen — Jordanien hat das Zeug dazu.",
-      "tgSnippet": "Österreich hat einen kleinen Qualitätsvorteil. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Österreich geht als leichter Favorit ins Rennen. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend. Auf der Beobachtungsliste: Unter 2.5 Tore @2.01. Ein Überraschungsergebnis ist nicht ausgeschlossen — Jordanien hat das Zeug dazu.",
+      "tgSnippet": "Österreich geht als leichter Favorit ins Rennen. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "K-1-POR-COD": {
       "text": "Alles andere als ein Sieg von Portugal wäre eine Überraschung. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend. Klarer Fall für uns — Unter 3.5 Tore @1.36.",
       "tgSnippet": "Alles andere als ein Sieg von Portugal wäre eine Überraschung. Der Auftakt in die Gruppe ist für beide Mannschaften richtungsweisend.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "K-1-UZB-COL": {
-      "text": "Kolumbien geht mit der Favoritenrolle ins Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Das Modell sieht hier keine Fehlbewertung — kein Pick.",
-      "tgSnippet": "Kolumbien geht mit der Favoritenrolle ins Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Die Rollen sind verteilt: Kolumbien ist vorne. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Das Modell sieht hier keine Fehlbewertung — kein Pick.",
+      "tgSnippet": "Die Rollen sind verteilt: Kolumbien ist vorne. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "L-1-ENG-CRO": {
-      "text": "England ist der klare Favorit in diesem Duell. Im Direktvergleich (4 Spiele) hat England die Nase klar vorne (3S-1U-0N). Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Diesmal halten wir uns zurück: kein ausreichender Vorteil.",
+      "text": "England ist der klare Favorit in diesem Duell. Im Direktvergleich (4 Spiele) hat England die Nase klar vorne (3S-1U-0N). Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Das Modell sieht hier keine Fehlbewertung — kein Pick.",
       "tgSnippet": "England ist der klare Favorit in diesem Duell. Im Direktvergleich (4 Spiele) hat England die Nase klar vorne (3S-1U-0N). Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "L-1-GHA-PAN": {
-      "text": "Auf dem Papier ein offenes Duell. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen. Einen genaueren Blick wert: Unter 2.5 Tore @1.59 — hier sieht das Modell Value. Ein Überraschungsergebnis ist nicht ausgeschlossen — Panama hat das Zeug dazu.",
-      "tgSnippet": "Auf dem Papier ein offenes Duell. Auf der großen WM-Bühne will keiner als Verlierer vom Platz gehen.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. Beide Teams wollen früh ein Zeichen setzen. Einen genaueren Blick wert: Unter 2.5 Tore @1.59 — hier sieht das Modell Value. Ein Überraschungsergebnis ist nicht ausgeschlossen — Panama hat das Zeug dazu.",
+      "tgSnippet": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. Beide Teams wollen früh ein Zeichen setzen.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "C-3-BRA-SCO": {
       "text": "Alles andere als ein Sieg von Brasilien wäre eine Überraschung. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel. Wir setzen auf Unter 3.5 Tore @1.36.",
       "tgSnippet": "Alles andere als ein Sieg von Brasilien wäre eine Überraschung. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "C-3-MAR-HTI": {
-      "text": "Marokko geht mit der Favoritenrolle ins Spiel. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel. Klarer Fall für uns — AH Heim −1.5 @1.73.",
-      "tgSnippet": "Marokko geht mit der Favoritenrolle ins Spiel. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Marokko ist der klare Favorit in diesem Duell. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel. Wir setzen auf AH Heim −1.5 @1.73.",
+      "tgSnippet": "Marokko ist der klare Favorit in diesem Duell. Im entscheidenden Spieltag 3 der Gruppe C steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "D-3-USA-TUR": {
       "text": "Die Rollen sind verteilt: USA ist vorne. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im entscheidenden Spieltag 3 der Gruppe D steht für beide Teams viel auf dem Spiel. Einen genaueren Blick wert: Über 2.5 Tore @1.62 — hier sieht das Modell Value.",
       "tgSnippet": "Die Rollen sind verteilt: USA ist vorne. USA genießt als Co-Gastgeber den Heimvorteil vor eigenem Publikum. Im entscheidenden Spieltag 3 der Gruppe D steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "D-3-PRY-AUS": {
-      "text": "Australien hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe D steht für beide Teams viel auf dem Spiel. Spannend wird Beide Teams treffen — Nein @1.63, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Paraguay hat das Zeug dazu.",
-      "tgSnippet": "Australien hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe D steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Australien geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe D steht für beide Teams viel auf dem Spiel. Einen genaueren Blick wert: Beide Teams treffen — Nein @1.63 — hier sieht das Modell Value. Ein Überraschungsergebnis ist nicht ausgeschlossen — Paraguay hat das Zeug dazu.",
+      "tgSnippet": "Australien geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe D steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "E-3-GER-ECU": {
-      "text": "Deutschland ist der klare Favorit in diesem Duell. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Unser stärkstes Signal heute: Heimsieg @1.57.",
-      "tgSnippet": "Deutschland ist der klare Favorit in diesem Duell. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Die Rollen sind verteilt: Deutschland ist vorne. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Wir setzen auf Heimsieg @1.57.",
+      "tgSnippet": "Die Rollen sind verteilt: Deutschland ist vorne. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "E-3-CUW-CIV": {
-      "text": "Ein hauchdünner Vorteil für Elfenbeinküste. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Unser stärkstes Signal heute: Über 2.5 Tore @1.44. Ein Überraschungsergebnis ist nicht ausgeschlossen — Curaçao hat das Zeug dazu.",
-      "tgSnippet": "Ein hauchdünner Vorteil für Elfenbeinküste. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Elfenbeinküste hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Klarer Fall für uns — Über 2.5 Tore @1.44. Ein Überraschungsergebnis ist nicht ausgeschlossen — Curaçao hat das Zeug dazu.",
+      "tgSnippet": "Elfenbeinküste hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe E steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "F-3-NED-TUN": {
-      "text": "Niederlande geht mit der Favoritenrolle ins Spiel. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Unser stärkstes Signal heute: AH Heim −2 @1.52.",
-      "tgSnippet": "Niederlande geht mit der Favoritenrolle ins Spiel. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Die Rollen sind verteilt: Niederlande ist vorne. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Klarer Fall für uns — AH Heim −2 @1.52.",
+      "tgSnippet": "Die Rollen sind verteilt: Niederlande ist vorne. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "F-3-JPN-SWE": {
-      "text": "Japan geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Über 2.5 Tore @1.95. Ein Überraschungsergebnis ist nicht ausgeschlossen — Schweden hat das Zeug dazu.",
-      "tgSnippet": "Japan geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Japan hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Über 2.5 Tore @1.95. Ein Überraschungsergebnis ist nicht ausgeschlossen — Schweden hat das Zeug dazu.",
+      "tgSnippet": "Japan hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe F steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "G-3-BEL-NZL": {
-      "text": "Belgien ist auf dem Papier klar überlegen. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Klarer Fall für uns — AH Heim −2 @1.72.",
-      "tgSnippet": "Belgien ist auf dem Papier klar überlegen. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Alles andere als ein Sieg von Belgien wäre eine Überraschung. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Wir setzen auf AH Heim −2 @1.72.",
+      "tgSnippet": "Alles andere als ein Sieg von Belgien wäre eine Überraschung. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "G-3-EGY-IRN": {
-      "text": "Ägypten geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel. Spannend wird Unter 2.5 Tore @1.47, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Iran hat das Zeug dazu.",
-      "tgSnippet": "Ägypten geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Ein hauchdünner Vorteil für Ägypten. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel. Auf der Beobachtungsliste: Unter 2.5 Tore @1.47. Ein Überraschungsergebnis ist nicht ausgeschlossen — Iran hat das Zeug dazu.",
+      "tgSnippet": "Ein hauchdünner Vorteil für Ägypten. Im entscheidenden Spieltag 3 der Gruppe G steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "H-3-ESP-URU": {
-      "text": "Ein hauchdünner Vorteil für Spanien. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel. Einen genaueren Blick wert: Unter 2.5 Tore @1.8 — hier sieht das Modell Value. Ein Überraschungsergebnis ist nicht ausgeschlossen — Uruguay hat das Zeug dazu.",
-      "tgSnippet": "Ein hauchdünner Vorteil für Spanien. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Spanien hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel. Spannend wird Unter 2.5 Tore @1.8, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Uruguay hat das Zeug dazu.",
+      "tgSnippet": "Spanien hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "H-3-CPV-SAU": {
-      "text": "Schwer auszurechnen: hier ist alles drin. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Wir setzen auf Doppelte Chance — 1X @1.54. Ein Überraschungsergebnis ist nicht ausgeschlossen — Kap Verde hat das Zeug dazu.",
-      "tgSnippet": "Schwer auszurechnen: hier ist alles drin. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Unser stärkstes Signal heute: Doppelte Chance — 1X @1.54. Ein Überraschungsergebnis ist nicht ausgeschlossen — Kap Verde hat das Zeug dazu.",
+      "tgSnippet": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. Im entscheidenden Spieltag 3 der Gruppe H steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "I-2-FRA-IRQ": {
-      "text": "Frankreich ist auf dem Papier klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Beide Teams treffen — Ja @2.55, wo unser Modell eine Chance erkennt.",
+      "text": "Frankreich ist auf dem Papier klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Beide Teams treffen — Ja @2.55.",
       "tgSnippet": "Frankreich ist auf dem Papier klar überlegen. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "I-2-NOR-SEN": {
-      "text": "Auf dem Papier ein offenes Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Doppelte Chance — X2 @1.64, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Norwegen hat das Zeug dazu.",
-      "tgSnippet": "Auf dem Papier ein offenes Duell. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Doppelte Chance — X2 @1.64, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Norwegen hat das Zeug dazu.",
+      "tgSnippet": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "I-3-FRA-NOR": {
-      "text": "Frankreich geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Wir setzen auf Heimsieg @1.6 — der Markt unterschätzt das um 6pp.",
-      "tgSnippet": "Frankreich geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Alles andere als ein Sieg von Frankreich wäre eine Überraschung. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Klarer Fall für uns — Heimsieg @1.6 — der Markt unterschätzt das um 6pp.",
+      "tgSnippet": "Alles andere als ein Sieg von Frankreich wäre eine Überraschung. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "I-3-SEN-IRQ": {
-      "text": "Die Rollen sind verteilt: Senegal ist vorne. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Klarer Fall für uns — AH Heim −1.5 @1.61.",
-      "tgSnippet": "Die Rollen sind verteilt: Senegal ist vorne. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Senegal ist der klare Favorit in diesem Duell. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Klarer Fall für uns — AH Heim −1.5 @1.61.",
+      "tgSnippet": "Senegal ist der klare Favorit in diesem Duell. Im entscheidenden Spieltag 3 der Gruppe I steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "J-2-ARG-AUT": {
-      "text": "Die Rollen sind verteilt: Argentinien ist vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Klarer Fall für uns — Heimsieg @1.46.",
-      "tgSnippet": "Die Rollen sind verteilt: Argentinien ist vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Argentinien geht mit der Favoritenrolle ins Spiel. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Unser stärkstes Signal heute: Heimsieg @1.46.",
+      "tgSnippet": "Argentinien geht mit der Favoritenrolle ins Spiel. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "J-2-JOR-DZA": {
-      "text": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Auswärtssieg @1.53, wo unser Modell eine Chance erkennt. Vorsicht trotz Papierform: Jordanien ist brandgefährlich — ein Upset ist absolut realistisch.",
-      "tgSnippet": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Schwer auszurechnen: hier ist alles drin. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Auswärtssieg @1.53 — hier sieht das Modell Value. Vorsicht trotz Papierform: Jordanien ist brandgefährlich — ein Upset ist absolut realistisch.",
+      "tgSnippet": "Schwer auszurechnen: hier ist alles drin. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "J-3-ARG-JOR": {
-      "text": "Alles andere als ein Sieg von Argentinien wäre eine Überraschung. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel. Einen genaueren Blick wert: Beide Teams treffen — Nein @1.44 — hier sieht das Modell Value.",
-      "tgSnippet": "Alles andere als ein Sieg von Argentinien wäre eine Überraschung. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Argentinien geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel. Auf der Beobachtungsliste: Beide Teams treffen — Nein @1.44.",
+      "tgSnippet": "Argentinien geht als haushoher Favorit in diese Partie. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "J-3-DZA-AUT": {
-      "text": "Österreich geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel. Spannend wird Unter 2.5 Tore @1.38, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Algerien hat das Zeug dazu.",
-      "tgSnippet": "Österreich geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Ein hauchdünner Vorteil für Österreich. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel. Spannend wird Unter 2.5 Tore @1.38, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Algerien hat das Zeug dazu.",
+      "tgSnippet": "Ein hauchdünner Vorteil für Österreich. Im entscheidenden Spieltag 3 der Gruppe J steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "K-2-POR-UZB": {
-      "text": "Portugal geht als haushoher Favorit in diese Partie. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Über 2.5 Tore @1.49 — hier sieht das Modell Value.",
+      "text": "Portugal geht als haushoher Favorit in diese Partie. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Über 2.5 Tore @1.49.",
       "tgSnippet": "Portugal geht als haushoher Favorit in diese Partie. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "K-2-COL-COD": {
       "text": "Die Rollen sind verteilt: Kolumbien ist vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Auf der Beobachtungsliste: Unter 2.5 Tore @1.73.",
       "tgSnippet": "Die Rollen sind verteilt: Kolumbien ist vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "K-3-POR-COL": {
-      "text": "Portugal hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Über 2.5 Tore @1.68, wo unser Modell eine Chance erkennt. Ein Überraschungsergebnis ist nicht ausgeschlossen — Kolumbien hat das Zeug dazu.",
-      "tgSnippet": "Portugal hat einen kleinen Qualitätsvorteil. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Portugal geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Über 2.5 Tore @1.68 — hier sieht das Modell Value. Ein Überraschungsergebnis ist nicht ausgeschlossen — Kolumbien hat das Zeug dazu.",
+      "tgSnippet": "Portugal geht als leichter Favorit ins Rennen. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "K-3-COD-UZB": {
-      "text": "Schwer auszurechnen: hier ist alles drin. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel. Unser stärkstes Signal heute: Heimsieg @1.7. Vorsicht trotz Papierform: Usbekistan ist brandgefährlich — ein Upset ist absolut realistisch.",
-      "tgSnippet": "Schwer auszurechnen: hier ist alles drin. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel. Klarer Fall für uns — Heimsieg @1.7. Vorsicht trotz Papierform: Usbekistan ist brandgefährlich — ein Upset ist absolut realistisch.",
+      "tgSnippet": "Ein ausgeglichenes Spiel — beide Seiten haben ihre Chance. Im entscheidenden Spieltag 3 der Gruppe K steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "L-2-ENG-GHA": {
-      "text": "England geht als haushoher Favorit in diese Partie. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Über 2.5 Tore @1.55 — hier sieht das Modell Value.",
-      "tgSnippet": "England geht als haushoher Favorit in diese Partie. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Alles andere als ein Sieg von England wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Spannend wird Über 2.5 Tore @1.55, wo unser Modell eine Chance erkennt.",
+      "tgSnippet": "Alles andere als ein Sieg von England wäre eine Überraschung. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "L-2-PAN-CRO": {
       "text": "Die Rollen sind verteilt: Kroatien ist vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Unser stärkstes Signal heute: Auswärtssieg @1.46.",
       "tgSnippet": "Die Rollen sind verteilt: Kroatien ist vorne. In Spieltag 2 wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "L-3-ENG-PAN": {
-      "text": "Alles andere als ein Sieg von England wäre eine Überraschung. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Einen genaueren Blick wert: Über 2.5 Tore @1.36 — hier sieht das Modell Value.",
-      "tgSnippet": "Alles andere als ein Sieg von England wäre eine Überraschung. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "England ist auf dem Papier klar überlegen. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin. Auf der Beobachtungsliste: Über 2.5 Tore @1.36.",
+      "tgSnippet": "England ist auf dem Papier klar überlegen. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel. Beide Teams trafen zuletzt regelmäßig — ein torreiches Spiel ist drin.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     },
     "L-3-CRO-GHA": {
-      "text": "Kroatien ist der klare Favorit in diesem Duell. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel. Einen genaueren Blick wert: Unter 2.5 Tore @1.63 — hier sieht das Modell Value.",
-      "tgSnippet": "Kroatien ist der klare Favorit in diesem Duell. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel.",
-      "generatedAt": "2026-06-30T13:59:34.267447+00:00",
+      "text": "Die Rollen sind verteilt: Kroatien ist vorne. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel. Einen genaueren Blick wert: Unter 2.5 Tore @1.63 — hier sieht das Modell Value.",
+      "tgSnippet": "Die Rollen sind verteilt: Kroatien ist vorne. Im entscheidenden Spieltag 3 der Gruppe L steht für beide Teams viel auf dem Spiel.",
+      "generatedAt": "2026-06-30T17:50:38.522570+00:00",
       "hash": "rule-based"
     }
   },
@@ -57679,7 +57669,7 @@
   },
   "injuries": {
     "_meta": {
-      "updatedAt": "2026-06-30T13:57:49.565533+00:00",
+      "updatedAt": "2026-06-30T17:47:23.697320+00:00",
       "daysUntilWM": -19,
       "status": "live",
       "teamsWithData": 21
@@ -57705,7 +57695,7 @@
       ]
     },
     "USA": {
-      "updatedAt": "2026-06-30T13:57:49.565533+00:00",
+      "updatedAt": "2026-06-30T17:47:23.697320+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -57732,7 +57722,7 @@
       ]
     },
     "PRY": {
-      "updatedAt": "2026-06-30T13:57:49.565533+00:00",
+      "updatedAt": "2026-06-30T17:47:23.697320+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -57759,7 +57749,7 @@
       ]
     },
     "JPN": {
-      "updatedAt": "2026-06-30T13:57:49.565533+00:00",
+      "updatedAt": "2026-06-30T17:47:23.697320+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -57786,7 +57776,7 @@
       ]
     },
     "URU": {
-      "updatedAt": "2026-06-30T13:57:49.565533+00:00",
+      "updatedAt": "2026-06-30T17:47:23.697320+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -57972,7 +57962,7 @@
       ]
     },
     "SEN": {
-      "updatedAt": "2026-06-30T13:57:49.565533+00:00",
+      "updatedAt": "2026-06-30T17:47:23.697320+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -58064,7 +58054,7 @@
       ]
     },
     "ENG": {
-      "updatedAt": "2026-06-30T13:57:49.565533+00:00",
+      "updatedAt": "2026-06-30T17:47:23.697320+00:00",
       "source": "wm_league",
       "players": [
         {
