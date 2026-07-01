@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-30T21:24:39Z",
+  "generatedAt": "2026-07-01T08:05:55Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -36,7 +36,7 @@
     "pressure_index": 37,
     "lineup_signal": 21,
     "apif_predictions": 10,
-    "weather_signal": 18,
+    "weather_signal": 20,
     "incentive_signal": 24,
     "altitude_signal": 3,
     "chance_creation": 42,
@@ -62,9 +62,8 @@
     "🧠 Signal 'streak_momentum' feuert nicht (kontextabhängig)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
-    "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 17 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
-    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
-    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. FRA-SWE: Soft bewegte sich 1.29→1.25, aber Opening==Jetzt (1.29) — nicht eingefroren)"
+    "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 19 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
+    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)"
   ],
   "oks": [
     "🌡️ Weather: 12 Spiele mit Forecast",
@@ -72,7 +71,7 @@
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 88 Fixtures, Ø 108.0 Snapshots",
+    "📉 Odds-History: 91 Fixtures, Ø 105.6 Snapshots",
     "💹 Poly-Preise: 69 Fixtures",
     "💼 Poly-Balance: $413.46",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -282,7 +281,7 @@
       "label": "Keine Phantom-Odds-Keys (verkehrte Reihenfolge)",
       "severity": "warn",
       "ok": false,
-      "nFail": 17,
+      "nFail": 19,
       "failures": [
         "ZAF-CAN: kein echtes Fixture (Spiegel-Key?)",
         "NED-MAR: kein echtes Fixture (Spiegel-Key?)",
@@ -300,7 +299,9 @@
         "BEL-SEN: kein echtes Fixture (Spiegel-Key?)",
         "COL-GHA: kein echtes Fixture (Spiegel-Key?)",
         "SUI-DZA: kein echtes Fixture (Spiegel-Key?)",
-        "CAN-MAR: kein echtes Fixture (Spiegel-Key?)"
+        "CAN-MAR: kein echtes Fixture (Spiegel-Key?)",
+        "BRA-NOR: kein echtes Fixture (Spiegel-Key?)",
+        "PRY-FRA: kein echtes Fixture (Spiegel-Key?)"
       ],
       "note": "84 Odds-Keys vs 72 Fixtures = 12 leere Spiegel-Einträge. Quelle prüfen."
     },
@@ -420,11 +421,9 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "FRA-SWE: Soft bewegte sich 1.29→1.25, aber Opening==Jetzt (1.29) — nicht eingefroren"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
