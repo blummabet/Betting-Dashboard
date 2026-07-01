@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-01T17:48:26Z",
+  "generatedAt": "2026-07-01T21:22:51Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -40,9 +40,9 @@
     "weather_signal": 19,
     "incentive_signal": 24,
     "altitude_signal": 3,
-    "chance_creation": 44,
+    "chance_creation": 45,
     "form_rating": 12,
-    "freshness_leg": 14,
+    "freshness_leg": 15,
     "smart_money": 31,
     "league_pressure": 0,
     "fixture_congestion": 3,
@@ -62,18 +62,18 @@
     "🧠 Signal 'transfer_shift' feuert nicht (kontextabhängig)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
-    "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 19 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
-    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 4 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)"
+    "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 20 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
+    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)"
   ],
   "oks": [
-    "🌡️ Weather: 12 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
+    "🌡️ Weather: 13 Spiele mit Forecast",
+    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 91 Fixtures, Ø 106.9 Snapshots",
-    "💹 Poly-Preise: 69 Fixtures",
-    "💼 Poly-Balance: $362.81",
+    "📉 Odds-History: 92 Fixtures, Ø 106.2 Snapshots",
+    "💹 Poly-Preise: 10 Fixtures",
+    "💼 Poly-Balance: $363.55",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -281,7 +281,7 @@
       "label": "Keine Phantom-Odds-Keys (verkehrte Reihenfolge)",
       "severity": "warn",
       "ok": false,
-      "nFail": 19,
+      "nFail": 20,
       "failures": [
         "ZAF-CAN: kein echtes Fixture (Spiegel-Key?)",
         "NED-MAR: kein echtes Fixture (Spiegel-Key?)",
@@ -301,7 +301,8 @@
         "SUI-DZA: kein echtes Fixture (Spiegel-Key?)",
         "CAN-MAR: kein echtes Fixture (Spiegel-Key?)",
         "BRA-NOR: kein echtes Fixture (Spiegel-Key?)",
-        "PRY-FRA: kein echtes Fixture (Spiegel-Key?)"
+        "PRY-FRA: kein echtes Fixture (Spiegel-Key?)",
+        "MEX-ENG: kein echtes Fixture (Spiegel-Key?)"
       ],
       "note": "84 Odds-Keys vs 72 Fixtures = 12 leere Spiegel-Einträge. Quelle prüfen."
     },
@@ -346,12 +347,11 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 3,
       "failures": [
         "BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet",
         "JPN-SWE Heimsieg @1.91: sichere Linie Doppelte Chance — 1X @1.35 verfügbar (≥1.35), nicht abgeleitet",
-        "POR-COL Unter 2.5 Tore @1.91: sichere Linie Unter 3.5 Tore @1.5 verfügbar (≥1.35), nicht abgeleitet",
-        "POR-CRO Über 2.5 Tore @2.1: sichere Linie Über 1.5 Tore @1.35 verfügbar (≥1.35), nicht abgeleitet"
+        "POR-COL Unter 2.5 Tore @1.91: sichere Linie Unter 3.5 Tore @1.5 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -381,6 +381,15 @@
       "nFail": 0,
       "failures": [],
       "note": "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder Signal nicht registriert."
+    },
+    {
+      "id": "smartmoney_sane",
+      "label": "Smart-Money-Daten kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner)."
     },
     {
       "id": "btts_not_templated_traded",
@@ -426,6 +435,15 @@
       "nFail": 0,
       "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
+    },
+    {
+      "id": "smartmoney_cluster_sane",
+      "label": "Smart-Money-Cluster kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
     },
     {
       "id": "card_only_not_in_trade",
