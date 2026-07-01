@@ -14,8 +14,17 @@ import json
 import os
 import sys
 import collections
+import re
 import urllib.request
 import urllib.error
+
+# 01.07.2026 (Lucas: „Poly-Odds die's nie gab" — z.B. Argentinien-Sieg @1.45): der GAMMA_URL-Fix
+# (closed=false) holt jetzt auch KIND-/Spezialmärkte pro Spiel rein (…-first-to-score,
+# …-second-half-result, …-first-half-result …). Die alte Blockliste kennt diese Suffixe nicht → sie
+# wurden als Vollzeit-Moneyline gelabelt → Phantom-Edges. Robuste Allowlist statt endloser Blockliste:
+# ein Basis-Moneyline-Event endet auf das Datum (…-YYYY-MM-DD). Kommt NACH dem Datum noch ein Suffix,
+# ist es ein Kind-/Spezialmarkt → raus. (Slugs ohne Datum bleiben unangetastet → MLS-formatsicher.)
+_DERIVED_SLUG_RE = re.compile(r"-\d{4}-\d{2}-\d{2}-")
 from datetime import datetime, timezone, timedelta
 
 
@@ -512,6 +521,11 @@ def main():
 
     for ev in events:
         slug_raw = ev.get("slug", "")
+        # Kind-/Spezialmarkt (Suffix nach dem Datum) → nie als Moneyline verarbeiten (s. _DERIVED_SLUG_RE)
+        if _DERIVED_SLUG_RE.search(slug_raw):
+            print(f"  SKIP Kind-/Spezialmarkt (Suffix nach Datum): {slug_raw}")
+            skip += 1
+            continue
         if any(slug_raw.endswith(sfx) for sfx in SLUG_SUFFIXES_TO_SKIP):
             print(f"  SKIP non-moneyline event: {slug_raw}")
             skip += 1
