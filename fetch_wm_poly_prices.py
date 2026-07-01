@@ -88,9 +88,17 @@ ALERT_EDGE_MIN_PP = float(_cfg("telegram", "alert_edge_min_pp", 5.0))
 # Polymarket-Serie pro Datensatz (29.06.2026): WM=soccer-fifwc, MLS=soccer-mls (am 1. Live-Lauf
 # am self-hosted Runner verifizieren — Gamma ist geoblockt, aus der Sandbox nicht prüfbar).
 POLY_SERIES_SLUG = _cfg("poly", "series_slug", "soccer-fifwc")
+# 01.07.2026 (Lucas: „ich wette den KO-Modus seit Tagen auf Polymarket, natürlich haben sie die Spiele"):
+# Die KO-Events FEHLTEN in unseren Daten (endeten am letzten Gruppenspieltag). Ursache war NICHT
+# Polymarket — die R32-Events sind live+handelbar (verifiziert via /events?slug=fifwc-esp-aut-…) und
+# unser parse_event verarbeitet sie sauber (teams-Array befüllt, Namen in POLY_NAME_TO_ID). Sie kamen
+# nur nie im BATCH an: series_slug=…&limit=100&active=true ohne `closed=false`/Sortierung liefert bei
+# 100+ Events (die Serie läuft seit März) die ÄLTESTEN 100 (Gruppenphase) → die neuesten KO-Events
+# werden abgeschnitten. Fix: closed=false (nur offene Spiele) + newest-first + mehr Headroom.
 GAMMA_URL = (
     "https://gamma-api.polymarket.com/events"
-    f"?series_slug={POLY_SERIES_SLUG}&limit=100&active=true"
+    f"?series_slug={POLY_SERIES_SLUG}&limit=300&active=true&closed=false"
+    "&order=startDate&ascending=false"
 )
 GAMMA_SLUG_URL = "https://gamma-api.polymarket.com/events?slug={slug}&markets=true"
 CLOB_URL = "https://clob.polymarket.com/books?token_id={token_id}"
@@ -483,6 +491,12 @@ def main():
         sys.exit(1)
 
     print(f"  {len(events)} events received from Gamma API")
+    # Diagnose (01.07.2026): Datumsspanne der empfangenen Events — zeigt sofort, ob KO-Spiele (nach dem
+    # letzten Gruppenspieltag) durchkommen. Wenn hier nur ≤ Gruppenphase steht, greift der Batch-Filter
+    # nicht wie gewollt.
+    _dates = sorted(e.get("eventDate", "") for e in events if e.get("eventDate"))
+    if _dates:
+        print(f"  📅 Event-Datumsspanne: {_dates[0]} … {_dates[-1]}  ({len(_dates)} datiert)")
 
     prices: dict[str, dict] = {}
     ok = 0

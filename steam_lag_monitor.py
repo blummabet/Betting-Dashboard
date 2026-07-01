@@ -94,9 +94,13 @@ def _classify_entry_tier(entry_edge: float, steam_lag: bool) -> str:
     return "sub_threshold"
 
 # Gamma API (kein API-Key, public)
+# 01.07.2026 (Lucas): KO-Events fehlten — limit=100 ohne closed-Filter/Sortierung schnitt die neuesten
+# (KO) ab, weil die Serie 100+ Events seit März hat. Siehe fetch_wm_poly_prices.GAMMA_URL. Fix:
+# closed=false (nur offene Spiele) + newest-first + Headroom.
 GAMMA_URL = (
     "https://gamma-api.polymarket.com/events"
-    "?series_slug=soccer-fifwc&limit=100&active=true"
+    "?series_slug=soccer-fifwc&limit=300&active=true&closed=false"
+    "&order=startDate&ascending=false"
 )
 SLUG_SUFFIXES_TO_SKIP = (
     "-exact-score", "-halftime-result", "-more-markets",
