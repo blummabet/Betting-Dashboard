@@ -171,5 +171,61 @@ class TestDrawHandling(unittest.TestCase):
         self.assertEqual(bad, [])
 
 
+class TestFinalAndThirdPlace(unittest.TestCase):
+    """01.07.2026 (Audit „KO endet eine Runde zu früh"): Finale (W-Refs) + Spiel um Platz 3
+    (L-Refs = Halbfinal-Verlierer) müssen aus den SF-Ergebnissen aufgelöst werden."""
+    BR = {"final": {"M104": {"matchNo": 104, "date": "2026-07-19", "kickoff_local": "15:00",
+                             "venue_id": "nyc", "side_a": "W101", "side_b": "W102"}},
+          "third_place": {"M103": {"matchNo": 103, "date": "2026-07-18", "kickoff_local": "15:00",
+                                   "venue_id": "mia", "side_a": "L101", "side_b": "L102"}}}
+    VEN = {"nyc": {"city": "NY", "tz_offset_h_utc": -4}, "mia": {"city": "Miami", "tz_offset_h_utc": -4}}
+
+    def _wm(self):
+        return {"groups": {}, "standings": {}, "koFixtures": [
+            {"matchKey": "SF-M101", "matchNo": 101, "home": "ESP", "away": "FRA",
+             "result": {"status": "FT", "home_score": 2, "away_score": 1, "winner": "ESP"}},
+            {"matchKey": "SF-M102", "matchNo": 102, "home": "BRA", "away": "ARG",
+             "result": {"status": "FT", "home_score": 0, "away_score": 1, "winner": "ARG"}}]}
+
+    def test_final_from_winners(self):
+        ko = R.apply_to_wm(self._wm(), bracket=self.BR, venues=self.VEN)
+        f = next(x for x in ko if x["matchNo"] == 104)
+        self.assertEqual((f["home"], f["away"]), ("ESP", "ARG"))
+        self.assertTrue(f["bothResolved"])
+        self.assertEqual(f["roundLabel"], "Finale")
+
+    def test_third_place_from_losers(self):
+        ko = R.apply_to_wm(self._wm(), bracket=self.BR, venues=self.VEN)
+        t = next(x for x in ko if x["matchNo"] == 103)
+        self.assertEqual((t["home"], t["away"]), ("FRA", "BRA"))   # die beiden SF-Verlierer
+        self.assertTrue(t["bothResolved"])
+        self.assertEqual(t["roundLabel"], "Spiel um Platz 3")
+
+    def test_loser_ref_tbd_before_sf_result(self):
+        # Ohne SF-Ergebnis bleiben Finale + Platz 3 TBD (keine Sieger/Verlierer bekannt)
+        wm = {"groups": {}, "standings": {}, "koFixtures": []}
+        ko = R.apply_to_wm(wm, bracket=self.BR, venues=self.VEN)
+        for mno in (103, 104):
+            m = next(x for x in ko if x["matchNo"] == mno)
+            self.assertFalse(m["bothResolved"])
+
+    def test_real_bracket_has_final_and_third(self):
+        import json
+        b = json.loads((REPO / "wm_bracket.json").read_text(encoding="utf-8"))
+        self.assertIn("final", b)
+        self.assertIn("third_place", b)
+        self.assertEqual(b["final"]["M104"]["side_a"], "W101")
+        self.assertEqual(b["third_place"]["M103"]["side_a"], "L101")
+
+
+class TestResultsJobPropagates(unittest.TestCase):
+    """01.07.2026 (Audit): fetch_wm_match_results muss den Bracket am Ende propagieren (importiert
+    resolve_wm_bracket), sonst füllt sich der nächste Gegner erst beim nächsten picks/odds-Lauf."""
+    def test_results_script_imports_bracket(self):
+        src = (REPO / "fetch_wm_match_results.py").read_text(encoding="utf-8")
+        self.assertIn("import resolve_wm_bracket", src)
+        self.assertIn("resolve_wm_bracket.apply_to_wm", src)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -30,8 +30,8 @@
     : ((p && p.verdict === 'BET') ? STAKE_BET : STAKE_ABW);
 
   // (25.06.2026, Lucas: KO-Runden) Reihenfolge + deutsche Labels der K.O.-Phase.
-  const KO_ROUND_ORDER  = ['R32', 'R16', 'QF', 'SF'];
-  const KO_ROUND_LABELS = { R32: 'Sechzehntelfinale', R16: 'Achtelfinale', QF: 'Viertelfinale', SF: 'Halbfinale' };
+  const KO_ROUND_ORDER  = ['R32', 'R16', 'QF', 'SF', '3RD', 'F'];
+  const KO_ROUND_LABELS = { R32: 'Sechzehntelfinale', R16: 'Achtelfinale', QF: 'Viertelfinale', SF: 'Halbfinale', '3RD': 'Spiel um Platz 3', F: 'Finale' };
 
   // ── Modus-Parametrisierung (25.06.2026, Lucas: Liga auf WM-Stack) ──────
   // Gleiches Tracking bedient WM (intlTrackingPanel/wm2026-data.json) UND Liga

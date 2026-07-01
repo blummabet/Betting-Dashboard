@@ -65,13 +65,17 @@ def _kickoff_utc(date_str: str, local_hhmm: str, venue_id: str, venues: dict) ->
     return utc.replace(tzinfo=timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def _resolve_side(side, groups: dict, standings: dict, ko_winners: dict) -> tuple:
+def _resolve_side(side, groups: dict, standings: dict, ko_winners: dict, ko_losers: dict | None = None) -> tuple:
     """Eine Bracket-Seite auflösen. Gibt (team_id_or_None, human_ref_label) zurück."""
-    # Sieger-Referenz: "W74"
+    ko_losers = ko_losers or {}
+    # Sieger-Referenz „W74" bzw. Verlierer-Referenz „L101" (Spiel um Platz 3 = Halbfinal-Verlierer).
     if isinstance(side, str):
         if side.startswith("W"):
             mno = side[1:]
             return ko_winners.get(mno), f"Sieger Spiel {mno}"
+        if side.startswith("L"):
+            mno = side[1:]
+            return ko_losers.get(mno), f"Verlierer Spiel {mno}"
         return None, str(side)
 
     if not isinstance(side, dict):
@@ -102,9 +106,11 @@ def _resolve_side(side, groups: dict, standings: dict, ko_winners: dict) -> tupl
 
 
 def build_ko_fixtures(bracket: dict, groups: dict, standings: dict,
-                      venues: dict, ko_winners: dict | None = None) -> list[dict]:
+                      venues: dict, ko_winners: dict | None = None,
+                      ko_losers: dict | None = None) -> list[dict]:
     """Bracket-Raster → Liste aufgelöster (oder TBD-) KO-Fixtures, chronologisch."""
     ko_winners = ko_winners or {}
+    ko_losers = ko_losers or {}
     out = []
     for section, matches in (bracket or {}).items():
         if section.startswith("_") or not isinstance(matches, dict):
@@ -113,8 +119,8 @@ def build_ko_fixtures(bracket: dict, groups: dict, standings: dict,
         for mkey, m in matches.items():
             if not isinstance(m, dict):
                 continue
-            home, home_ref = _resolve_side(m.get("side_a"), groups, standings, ko_winners)
-            away, away_ref = _resolve_side(m.get("side_b"), groups, standings, ko_winners)
+            home, home_ref = _resolve_side(m.get("side_a"), groups, standings, ko_winners, ko_losers)
+            away, away_ref = _resolve_side(m.get("side_b"), groups, standings, ko_winners, ko_losers)
             vid = m.get("venue_id")
             venue_name = ((venues or {}).get(vid) or {}).get("city") or vid
             out.append({
@@ -153,8 +159,9 @@ def apply_to_wm(wm: dict, bracket: dict | None = None, venues: dict | None = Non
             venues = _vraw.get("venues") if isinstance(_vraw, dict) and "venues" in _vraw else _vraw
         except Exception:
             venues = {}
-    # Sieger bereits gespielter KO-Spiele (für W-Refs) aus evtl. vorhandenen koFixtures-Ergebnissen
-    ko_winners = {}
+    # Sieger UND Verlierer bereits gespielter KO-Spiele aus evtl. vorhandenen koFixtures-Ergebnissen.
+    # Sieger → W-Refs (nächste Runde). Verlierer → L-Refs (Spiel um Platz 3: Halbfinal-Verlierer).
+    ko_winners, ko_losers = {}, {}
     for f in (wm.get("koFixtures") or []):
         res = f.get("result") or {}
         w = res.get("winner")
@@ -163,9 +170,13 @@ def apply_to_wm(wm: dict, bracket: dict | None = None, venues: dict | None = Non
         # Ergebnis (Penalty-Sieger noch nicht bestimmt) → NICHT als Team in die nächste Runde
         # propagieren, sonst steht „draw" als Gegner. Slot bleibt TBD bis der echte Sieger da ist.
         if w and w != "draw" and f.get("matchNo") is not None:
-            ko_winners[str(f["matchNo"])] = w
+            mno = str(f["matchNo"])
+            ko_winners[mno] = w
+            h, a = f.get("home"), f.get("away")
+            if h and a and w in (h, a):
+                ko_losers[mno] = a if w == h else h   # Verlierer = das andere Team
     ko = build_ko_fixtures(bracket, wm.get("groups") or {}, wm.get("standings") or {},
-                           venues, ko_winners)
+                           venues, ko_winners, ko_losers)
     # API-aufgelöste Gegner + Ergebnisse ERHALTEN (29.06.2026, Lucas: GER-PRY/FRA-Cards verschwanden,
     # weil apply_to_wm koFixtures komplett neu baute → die fetch_wm_match_results-Gegnerfüllung
     # (Best-Dritter aus echten API-Paarungen) + geschriebene Endstände wurden überbügelt). Nur Slots

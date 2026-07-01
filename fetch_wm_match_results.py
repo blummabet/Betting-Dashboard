@@ -457,6 +457,16 @@ def main():
         print(f"  ✅  {home_id} vs {away_id}: {score_str} [{status_short}]")
         updated += 1
 
+    # Sieger/Verlierer sofort in den Bracket propagieren (01.07.2026, Audit-Fix): ohne das füllte sich
+    # der nächste Runden-Gegner (bzw. der Halbfinal-Verlierer für Platz 3) erst beim nächsten
+    # generate_wm_picks/fetch_wm_odds-Lauf → kurzes Card/Quoten-Loch nach jedem KO-Ergebnis. apply_to_wm
+    # nutzt die frisch geschriebenen koFixtures-Ergebnisse + erhält bereits gefüllte Gegner.
+    try:
+        import resolve_wm_bracket
+        resolve_wm_bracket.apply_to_wm(wm)
+    except Exception as e:
+        print(f"  ⚠️  Bracket-Propagation übersprungen: {e}")
+
     # Schreiben
     wm["_meta"]["resultsUpdatedAt"] = now_iso
     with open(WM_FILE, "w", encoding="utf-8") as f:
