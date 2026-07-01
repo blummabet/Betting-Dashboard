@@ -268,31 +268,47 @@ def pick_market_to_field(market: str) -> str | None:
     return None
 
 
-def team_info(wm: dict, home_id: str, away_id: str) -> tuple[str, str, str, str]:
+def _all_teams(wm: dict) -> dict:
+    """Globale Team-Map über ALLE Gruppen. 30.06.2026 (Lucas: „🏳 CIV vs 🏳 NOR"-Alert): team_info
+    verlangte beide Teams in DERSELBEN Gruppe → KO-Gegner stehen aber in verschiedenen Gruppen → 🏳."""
+    t = {}
     for gdata in wm.get("groups", {}).values():
-        teams = {t["id"]: t for t in gdata.get("teams", [])}
-        if home_id in teams and away_id in teams:
-            h = teams[home_id]
-            a = teams[away_id]
-            return h.get("flag", "🏳"), h.get("name", home_id), a.get("flag", "🏳"), a.get("name", away_id)
+        for tm in gdata.get("teams", []):
+            t[tm["id"]] = tm
+    return t
+
+
+def _find_fixture(wm: dict, home_id: str, away_id: str):
+    """Fixture über Gruppen + KO-Runde. 30.06.2026 (Lucas: Steam-Alert für beendetes KO-Spiel): KO-Spiele
+    liegen in koFixtures, nicht groups → match_kickoff fand nichts → der Anpfiff-Filter griff nicht →
+    In-Play-Bewegung wurde als Steam-Move gepostet."""
+    for gdata in wm.get("groups", {}).values():
+        for fx in gdata.get("fixtures", []):
+            if fx.get("home") == home_id and fx.get("away") == away_id:
+                return fx
+    for fx in (wm.get("koFixtures") or []):
+        if fx.get("home") == home_id and fx.get("away") == away_id:
+            return fx
+    return None
+
+
+def team_info(wm: dict, home_id: str, away_id: str) -> tuple[str, str, str, str]:
+    teams = _all_teams(wm)
+    h, a = teams.get(home_id), teams.get(away_id)
+    if h and a:
+        return h.get("flag", "🏳"), h.get("name", home_id), a.get("flag", "🏳"), a.get("name", away_id)
     return "🏳", home_id, "🏳", away_id
 
 
 def match_date(wm: dict, home_id: str, away_id: str) -> str:
-    for gdata in wm.get("groups", {}).values():
-        for fx in gdata.get("fixtures", []):
-            if fx["home"] == home_id and fx["away"] == away_id:
-                return fx.get("date", "")
-    return ""
+    fx = _find_fixture(wm, home_id, away_id)
+    return fx.get("date", "") if fx else ""
 
 
 def match_kickoff(wm: dict, home_id: str, away_id: str) -> str:
-    """Echte UTC-Kickoff-Zeit (fx.kickoff) für ein Match, falls vorhanden."""
-    for gdata in wm.get("groups", {}).values():
-        for fx in gdata.get("fixtures", []):
-            if fx["home"] == home_id and fx["away"] == away_id:
-                return fx.get("kickoff") or ""
-    return ""
+    """Echte UTC-Kickoff-Zeit (fx.kickoff) für ein Match (Gruppen + KO), falls vorhanden."""
+    fx = _find_fixture(wm, home_id, away_id)
+    return (fx.get("kickoff") or "") if fx else ""
 
 
 def _load_poly_edges() -> dict:

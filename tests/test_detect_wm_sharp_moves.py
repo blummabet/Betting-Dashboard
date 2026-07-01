@@ -180,5 +180,55 @@ class TestRadarPinnacleStreamOnly(unittest.TestCase):
         self.assertEqual(m["prev"].get("bk"), "pinnacle")
 
 
+class TestKoGamesHandled(unittest.TestCase):
+    """30.06.2026 (Lucas: „🏳 CIV vs 🏳 NOR"-Steam-Alert für ein beendetes KO-Spiel): team_info/
+    match_kickoff lasen nur groups → KO-Gegner (verschiedene Gruppen) → 🏳 + kein Anpfiff gefunden →
+    der „ab Anpfiff kein Alert"-Filter griff nicht → In-Play-Bewegung wurde als Steam-Move gepostet."""
+
+    def setUp(self):
+        import detect_wm_sharp_moves as D
+        importlib.reload(D)
+        self.D = D
+        from datetime import datetime, timezone, timedelta
+        now = datetime.now(timezone.utc)
+        self.ts = [(now - timedelta(days=d)).isoformat() for d in (3, 2, 1)]
+
+    def _wm_ko(self, kickoff_iso):
+        # CIV in Gruppe A, NOR in Gruppe B (verschiedene Gruppen!), Spiel in koFixtures
+        return {"groups": {
+                    "A": {"teams": [{"id": "CIV", "name": "Elfenbeinküste", "flag": "🇨🇮"}], "fixtures": []},
+                    "B": {"teams": [{"id": "NOR", "name": "Norwegen", "flag": "🇳🇴"}], "fixtures": []}},
+                "koFixtures": [{"home": "CIV", "away": "NOR", "round": "R32",
+                                "kickoff": kickoff_iso, "date": kickoff_iso[:10]}],
+                "picks": {}}
+
+    def _hist_real_move(self):
+        snaps = [{"ts": t, "hw": 2.0, "dr": dr, "aw": 4.0, "bk": "pinnacle"}
+                 for t, dr in zip(self.ts, [3.19, 2.60, 2.30])]
+        return {"CIV-NOR": snaps}
+
+    def test_flags_resolve_cross_group(self):
+        flags = self.D.team_info(self._wm_ko("2026-06-30T15:00:00Z"), "CIV", "NOR")
+        self.assertEqual(flags, ("🇨🇮", "Elfenbeinküste", "🇳🇴", "Norwegen"))
+
+    def test_kickoff_found_for_ko(self):
+        self.assertEqual(self.D.match_kickoff(self._wm_ko("2026-06-30T15:00:00Z"), "CIV", "NOR"),
+                         "2026-06-30T15:00:00Z")
+
+    def test_past_ko_game_no_alert(self):
+        from datetime import datetime, timezone, timedelta
+        past_ko = (datetime.now(timezone.utc) - timedelta(hours=2)).isoformat()
+        moves = self.D.analyze_moves(self._hist_real_move(), self._wm_ko(past_ko), {})
+        self.assertEqual([m for m in moves if m["key"] == "CIV-NOR"], [],
+                         "angepfiffenes/beendetes KO-Spiel darf keinen Steam-Alert auslösen")
+
+    def test_future_ko_game_still_alerts(self):
+        from datetime import datetime, timezone, timedelta
+        future_ko = (datetime.now(timezone.utc) + timedelta(days=2)).isoformat()
+        moves = self.D.analyze_moves(self._hist_real_move(), self._wm_ko(future_ko), {})
+        self.assertIsNotNone(next((m for m in moves if m["key"] == "CIV-NOR"), None),
+                             "echter Pre-Match-Pinnacle-Move auf ein KO-Spiel muss weiter feuern")
+
+
 if __name__ == "__main__":
     unittest.main()
