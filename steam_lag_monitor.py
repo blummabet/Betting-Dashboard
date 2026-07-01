@@ -19,8 +19,15 @@ Keine echten Bets — reine Datensimulation.
 import json
 import os
 import math
+import re
 import urllib.request
 import urllib.error
+
+# 01.07.2026 (Lucas: „Poly-Odds die's nie gab"): der GAMMA_URL-Fix (closed=false) holt jetzt auch
+# Kind-/Spezialmärkte pro Spiel rein (…-first-to-score, …-second-half-result …), die als Moneyline
+# gelabelt Phantom-Edge-Alerts erzeugten. Robuste Allowlist: Basis-Moneyline endet auf …-YYYY-MM-DD;
+# Suffix nach dem Datum = Kind-Markt → raus. (Slugs ohne Datum bleiben unberührt → formatsicher.)
+_DERIVED_SLUG_RE = re.compile(r"-\d{4}-\d{2}-\d{2}-")
 from datetime import datetime, timezone, date
 from pathlib import Path
 
@@ -181,6 +188,8 @@ def fetch_fresh_poly() -> dict:
     result = {}
     for ev in events:
         slug = ev.get("slug", "")
+        if _DERIVED_SLUG_RE.search(slug):
+            continue   # Kind-/Spezialmarkt (Suffix nach dem Datum) — nie als Moneyline behandeln
         if any(slug.endswith(sfx) for sfx in SLUG_SUFFIXES_TO_SKIP):
             continue
         # negRisk=False = separate Binary-Markets (kein Neg-Risk-Pool).
