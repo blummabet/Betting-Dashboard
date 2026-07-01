@@ -374,6 +374,22 @@ def build_tg_snippet(full_text: str) -> str:
     return ". ".join(sentences[:2]) + "."
 
 
+def _fixture_is_upcoming(fx: dict, now: datetime) -> bool:
+    """True, solange das Spiel noch nicht angepfiffen ist — Vorschau nur für anstehende Spiele
+    (01.07.2026, Lucas: sonst fressen die längst gespielten Gruppenspiele den Lauf, die KO-Spiele am
+    Ende bekommen nie eine Vorschau). Kickoff-basiert, Fallback auf Datum."""
+    ko = fx.get("kickoff")
+    if ko:
+        try:
+            return datetime.fromisoformat(str(ko).replace("Z", "+00:00")) > now
+        except Exception:
+            return True   # unparsebar → nicht rausfiltern
+    try:
+        return datetime.strptime(str(fx.get("date", "")), "%Y-%m-%d").date() >= now.date()
+    except Exception:
+        return True
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     print("=== generate_wm_ai_preview.py ===")
@@ -435,6 +451,13 @@ def main():
 
             if not FORCE_ALL and fx_date > cutoff:
                 continue   # Zu weit in der Zukunft
+
+            # Nur ANSTEHENDE Spiele bepreviewen (01.07.2026, Lucas „heute keine Previews, nur Reviews"):
+            # Es fehlte die untere Grenze → der Generator verarbeitete alle längst GESPIELTEN Gruppen-
+            # spiele (72 Stück) zuerst und erreichte die anstehenden KO-Spiele (ans Ende der iter_units
+            # gehängt) budget-/zeitbedingt nicht mehr. Ein beendetes Spiel braucht keine Vorschau.
+            if not FORCE_ALL and not _fixture_is_upcoming(fx, now):
+                continue
 
             total += 1
             home_t = teams_map.get(home_id, {})
