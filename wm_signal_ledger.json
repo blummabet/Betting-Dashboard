@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-01T04:07:15Z",
-    "total_records": 142
+    "updated_at": "2026-07-01T12:26:38Z",
+    "total_records": 144
   },
   "records": [
     {
@@ -3307,6 +3307,50 @@
       "resolvedAt": "2026-06-30T21:24:19Z",
       "source": "steam",
       "convictionScore": 4,
+      "lateEntry": false
+    },
+    {
+      "key": "KO-R32-ESP-AUT|Beide Teams treffen — Nein",
+      "matchKey": "KO-R32-ESP-AUT",
+      "market": "Beide Teams treffen — Nein",
+      "result": "VOID",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.33
+        },
+        {
+          "name": "xg_strength",
+          "score": -5.78
+        }
+      ],
+      "resolvedAt": "2026-07-01T12:26:38Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true
+    },
+    {
+      "key": "KO-R32-ESP-AUT|Unter 2.5 Tore",
+      "matchKey": "KO-R32-ESP-AUT",
+      "market": "Unter 2.5 Tore",
+      "result": "VOID",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -3.07
+        },
+        {
+          "name": "xg_strength",
+          "score": -2.32
+        },
+        {
+          "name": "chance_creation",
+          "score": -1.8
+        }
+      ],
+      "resolvedAt": "2026-07-01T12:26:38Z",
+      "source": "steam",
+      "convictionScore": 2,
       "lateEntry": false
     },
     {
