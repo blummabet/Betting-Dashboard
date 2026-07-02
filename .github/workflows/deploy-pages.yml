@@ -65,6 +65,18 @@ jobs:
       - name: 🔧 Pages einrichten
         uses: actions/configure-pages@v5
 
+      - name: 🧹 Ballast raus (Deploy-Speed)
+        # 01.07.2026 (Lucas: „Deploy failt die ganze Zeit"): path:'.' lud das GANZE Repo als Pages-
+        # Artefakt hoch — u.a. daily-tiktok (68 MB generierte TikTok-PNGs), die die Live-Seite nie
+        # fetcht. Deploy dauerte 10–18 Min statt Sekunden → wurde vom nächsten Trigger überholt →
+        # „Error: Deployment cancelled". Fix: alles rauswerfen, was die STATISCHE Seite nicht braucht
+        # (nur im ephemeren Runner-Checkout — das Repo bleibt unberührt). BEHALTEN: *.html/js/css, alle
+        # Wurzel-*.json (Daten), matches/ (Event-Pages), icons/, manifest.json, sw.js.
+        run: |
+          rm -rf daily-tiktok wm_live_story_outputs studio_templates outputs \
+                 archive tests sharp_signals wm_story_angles || true
+          du -sh . || true
+
       - name: 📦 Seiten hochladen
         uses: actions/upload-pages-artifact@v3
         with:
