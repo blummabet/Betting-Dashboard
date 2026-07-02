@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-07-01T17:48:08.759800+00:00",
+  "savedAt": "2026-07-02T13:41:12.071598+00:00",
   "picks": {
     "A-1-KOR-CZE": [
       {
@@ -20670,16 +20670,16 @@
     ],
     "KO-R16-BRA-NOR": [
       {
-        "market": "Über 2.5 Tore",
-        "odds": 1.91,
-        "modelOdds": 1.832,
+        "market": "Beide Teams treffen — Ja",
+        "odds": 1.65,
+        "modelOdds": 1.716,
         "conf": "high",
         "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": -2,
-        "info": "📉 Pinnacle 1.93→1.79 (Sharp-Money-Drop +4.1pp) · Soft-Konsens hinkt +3.5pp (Value, noch nicht bestätigt)",
+        "edgePP": -6,
+        "info": "📉 Pinnacle 1.79→1.67 (Sharp-Money-Drop +4.6pp) · ✅ Soft-Konsens folgte +4.1pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -20688,41 +20688,166 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 4.1,
-        "steamOpen": 1.93,
-        "steamCur": 1.79,
-        "softOpen": 1.93,
-        "softNow": 1.91,
+        "steamMovePP": 4.6,
+        "steamOpen": 1.79,
+        "steamCur": 1.67,
+        "softOpen": 1.77,
+        "softNow": 1.65,
         "entryBook": "soft",
-        "entryOdd": 1.91,
-        "lateEntry": false,
+        "entryOdd": 1.65,
+        "lateEntry": true,
         "steamDerived": false,
-        "softConfirmed": false,
-        "softFollowPP": 0.5,
+        "softConfirmed": true,
+        "softFollowPP": 4.1,
         "ahLine": null,
-        "recentMovePP": 2.3,
+        "recentMovePP": 2.7,
         "freshnessState": "drift",
-        "legHours": 14.0,
-        "legSnaps": 5,
-        "lastMoveH": 12.0,
+        "legHours": 26.0,
+        "legSnaps": 11,
+        "lastMoveH": 11.0,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "signals": [
           {
-            "name": "public_static_bias",
-            "score": -1.59,
-            "confidence": 0.51,
-            "evidence": "Die breite Masse (Konsens (11 Books)) lässt Über 2.5 um 2.8pp links liegen (vs Pinnacle) — kein Publikums-Hebel hier.",
-            "weight": 0.9,
-            "weighted_score": -0.73,
+            "name": "form_trend",
+            "score": 1.33,
+            "confidence": 0.75,
+            "evidence": "📈 In der Form treffen beide Teams zu ~63% (Heim 2.3:0.9, Auswärts 2.8:1.1) — passt zu „Beide treffen Ja\".",
+            "weight": 1.255,
+            "weighted_score": 0.5,
             "metadata": {
-              "market_key": "o25",
-              "diff_pp": -2.79,
-              "sharp_p": 0.5239,
-              "public_p": 0.496,
-              "public_bk": "Konsens (11 Books)"
+              "avg_btts_rate": 0.633,
+              "pick_side": "BTTS-Ja"
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "xg_strength",
+            "score": 3.74,
+            "confidence": 0.65,
+            "evidence": "⚡ Form-xG (Proxy): Heims Angriff (2.33) trifft auf Auswärts' Abwehr (1.07), umgekehrt 2.80 gegen 0.87 — spricht für „Beide treffen Ja\".",
+            "weight": 1.185,
+            "weighted_score": 2.88,
+            "metadata": {
+              "h_score_strength": 2.19,
+              "a_score_strength": 3.23,
+              "is_proxy": true,
+              "pick_side": "BTTS-Ja"
             }
           },
+          {
+            "name": "freshness_leg",
+            "score": 0.0,
+            "confidence": 0.5,
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +2.7pp) — kein frisches Geld",
+            "weight": 1.0,
+            "weighted_score": 0.0,
+            "metadata": {
+              "state": "drift",
+              "recentMovePP": 2.7,
+              "legSnaps": 11,
+              "legHours": 26.0,
+              "flipReady": false
+            }
+          },
+          {
+            "name": "streak_momentum",
+            "score": 0.35,
+            "confidence": 0.4,
+            "evidence": "🔥 Serien stützen: Norwegen 5× Beide Teams treffen",
+            "weight": 1.0,
+            "weighted_score": 0.06,
+            "metadata": {
+              "family": "btts",
+              "direction": 1,
+              "n_supporting": 1
+            },
+            "correlation_discount_applied": 0.4
+          }
+        ],
+        "signalAdjustmentPP": 1.9,
+        "signalCountPos": 3,
+        "signalCountNeg": 0,
+        "signalAdjustmentPP_trade": 1.9,
+        "signalCountPos_trade": 3,
+        "signalCountNeg_trade": 0,
+        "effectiveEdgePP": -4.1,
+        "effectiveEdgePP_trade": -4.1,
+        "convictionScore": 4,
+        "convictionVerdict": "watch",
+        "convictionLabel": "👁 Beobachten",
+        "convictionFamilies": {
+          "sharp_money": 1,
+          "model_stack": 3,
+          "context": 0,
+          "market": 0
+        },
+        "smartMoney": {
+          "totalUsd": 127177.0,
+          "topTraders": 9,
+          "hoursToKickoff": 81.5,
+          "outcomes": {
+            "home": {
+              "usd": 78754.0,
+              "topHolderShare": 0.85,
+              "holders": 200,
+              "share": 0.619
+            },
+            "draw": {
+              "usd": 3859.0,
+              "topHolderShare": 0.751,
+              "holders": 153,
+              "share": 0.03
+            },
+            "away": {
+              "usd": 44564.0,
+              "topHolderShare": 0.762,
+              "holders": 200,
+              "share": 0.35
+            }
+          }
+        },
+        "stake": 2.0
+      },
+      {
+        "market": "Über 2.5 Tore",
+        "odds": 1.79,
+        "modelOdds": 1.762,
+        "conf": "high",
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": -3,
+        "info": "📉 Pinnacle 1.93→1.73 (Sharp-Money-Drop +6.0pp) · ✅ Soft-Konsens folgte +4.1pp (bestätigt)",
+        "icon": "🔥",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "steam",
+        "lamH": null,
+        "lamA": null,
+        "lamTotal": null,
+        "source": "steam",
+        "steamMovePP": 6.0,
+        "steamOpen": 1.93,
+        "steamCur": 1.73,
+        "softOpen": 1.93,
+        "softNow": 1.79,
+        "entryBook": "soft",
+        "entryOdd": 1.79,
+        "lateEntry": false,
+        "steamDerived": false,
+        "softConfirmed": true,
+        "softFollowPP": 4.1,
+        "ahLine": null,
+        "recentMovePP": 6.6,
+        "freshnessState": "confirm",
+        "legHours": 40.1,
+        "legSnaps": 15,
+        "lastMoveH": 3.3,
+        "flipReady": false,
+        "baseVerdict": "ABWÄGEN",
+        "signals": [
           {
             "name": "form_trend",
             "score": 4.13,
@@ -20770,25 +20895,6 @@
             }
           },
           {
-            "name": "weather_signal",
-            "score": -1.0,
-            "confidence": 0.65,
-            "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — NOR cold",
-            "weight": 1.167,
-            "weighted_score": -0.76,
-            "metadata": {
-              "temp_max": 35.4,
-              "tempAtKickoff": 32.0,
-              "effective_temp": 32.0,
-              "kickoff_mod": 1.0,
-              "home_climate": "hot",
-              "away_climate": "cold",
-              "heat_intensity": 0.4,
-              "climate_controlled": false,
-              "side": "over"
-            }
-          },
-          {
             "name": "chance_creation",
             "score": 3.62,
             "confidence": 0.6,
@@ -20802,54 +20908,79 @@
           },
           {
             "name": "freshness_leg",
-            "score": 0.0,
-            "confidence": 0.5,
-            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +2.3pp) — kein frisches Geld",
+            "score": 3.3,
+            "confidence": 0.85,
+            "evidence": "✅ Frisch bestätigt: Pinnacle +6.6pp im letzten Abschnitt (für den Pick)",
             "weight": 1.0,
-            "weighted_score": 0.0,
+            "weighted_score": 2.8,
             "metadata": {
-              "state": "drift",
-              "recentMovePP": 2.3,
-              "legSnaps": 5,
-              "legHours": 14.0,
+              "state": "confirm",
+              "recentMovePP": 6.6,
+              "legSnaps": 15,
+              "legHours": 40.1,
               "flipReady": false
             }
           }
         ],
-        "signalAdjustmentPP": 0.88,
-        "signalCountPos": 3,
-        "signalCountNeg": 3,
-        "signalAdjustmentPP_trade": 0.9,
+        "signalAdjustmentPP": 2.41,
+        "signalCountPos": 4,
+        "signalCountNeg": 1,
+        "signalAdjustmentPP_trade": -0.9,
         "signalCountPos_trade": 3,
-        "signalCountNeg_trade": 3,
-        "effectiveEdgePP": -1.1,
-        "effectiveEdgePP_trade": -1.1,
-        "convictionScore": 4,
+        "signalCountNeg_trade": 1,
+        "effectiveEdgePP": -0.6,
+        "effectiveEdgePP_trade": -3.9,
+        "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
         "convictionFamilies": {
-          "sharp_money": 1,
+          "sharp_money": 2,
           "model_stack": 3,
           "context": 0,
           "market": 0
+        },
+        "smartMoney": {
+          "totalUsd": 127177.0,
+          "topTraders": 9,
+          "hoursToKickoff": 81.5,
+          "outcomes": {
+            "home": {
+              "usd": 78754.0,
+              "topHolderShare": 0.85,
+              "holders": 200,
+              "share": 0.619
+            },
+            "draw": {
+              "usd": 3859.0,
+              "topHolderShare": 0.751,
+              "holders": 153,
+              "share": 0.03
+            },
+            "away": {
+              "usd": 44564.0,
+              "topHolderShare": 0.762,
+              "holders": 200,
+              "share": 0.35
+            }
+          }
         },
         "stake": 2.0
       }
     ],
     "KO-R16-CAN-MAR": [],
     "KO-R16-CAN-draw": [],
-    "KO-R16-PRY-FRA": [
+    "KO-R16-MEX-ENG": [
       {
-        "market": "Unter 3.5 Tore",
-        "odds": 1.53,
-        "modelOdds": 1.56,
-        "conf": "high",
-        "verdict": "BET",
+        "market": "Doppelte Chance — 1X",
+        "odds": 1.58,
+        "modelOdds": 1.603,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": -6,
-        "info": "📉 Pinnacle 2.5→2.25 (Sharp-Money-Drop +5.7pp) · Soft-Konsens hinkt +0.8pp (Value, noch nicht bestätigt) · ✅ Sichere Linie abgeleitet: Unter 3.5 Tore @1.53 (These: Unter 2.5 Tore @2.29)",
+        "edgePP": -5,
+        "info": "📉 Pinnacle 3.58→3.26 (Sharp-Money-Drop +3.7pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — 1X @1.58 (These: Heimsieg @2.99)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -20858,48 +20989,199 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 5.7,
-        "steamOpen": 2.5,
-        "steamCur": 2.25,
-        "softOpen": 2.305,
-        "softNow": 2.29,
+        "steamMovePP": 3.7,
+        "steamOpen": 3.58,
+        "steamCur": 3.26,
+        "softOpen": 2.99,
+        "softNow": 2.99,
         "entryBook": "soft",
-        "entryOdd": 1.53,
-        "lateEntry": false,
+        "entryOdd": 1.58,
+        "lateEntry": true,
         "steamDerived": false,
         "softConfirmed": false,
-        "softFollowPP": 0.3,
+        "softFollowPP": 0.0,
+        "ahLine": null,
+        "safeThesisMarket": "Heimsieg",
+        "safeThesisOdds": 2.99,
+        "safeDerived": true,
+        "recentMovePP": -2.4,
+        "freshnessState": "drift",
+        "legHours": 9.5,
+        "legSnaps": 8,
+        "lastMoveH": 2.0,
+        "flipReady": false,
+        "baseVerdict": "ABWÄGEN",
+        "signals": [
+          {
+            "name": "injury",
+            "score": 1.2,
+            "confidence": 0.57,
+            "evidence": "🩹 Auswärts 1.2pp (R. James (?), R. James (?))",
+            "weight": 0.994,
+            "weighted_score": 0.27,
+            "metadata": {
+              "home_impact_pp": 0.0,
+              "away_impact_pp": 1.2,
+              "pick_side": "home",
+              "home_players": [],
+              "away_players": [
+                "R. James (?)",
+                "R. James (?)",
+                "J. Quansah (?)"
+              ]
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "form_trend",
+            "score": -1.1,
+            "confidence": 0.85,
+            "evidence": "📈 Letzte 15 Spiele: Heim trifft 1.7 pro Partie und kassiert 0.3, Auswärts 2.2 und 0.5.",
+            "weight": 1.255,
+            "weighted_score": -0.47,
+            "metadata": {
+              "home_scored": 1.67,
+              "home_conceded": 0.33,
+              "away_scored": 2.2,
+              "away_conceded": 0.53,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "home"
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "altitude_signal",
+            "score": 2.12,
+            "confidence": 0.7,
+            "evidence": "🏔 Gespielt wird auf 2240m (Nachmittag-Anpfiff): Heim (MEX) ist aus 2240m die Höhe gewohnt, Auswärts (ENG) kommt aus dem Flachland (24m) — die dünne Luft macht den Unterschied.",
+            "weight": 1.02,
+            "weighted_score": 1.51,
+            "metadata": {
+              "venue_altitude_m": 2240,
+              "home_altitude_m": 2240,
+              "away_altitude_m": 24,
+              "intensity_raw": 1.0,
+              "intensity_effective": 0.85,
+              "kickoff_mod": 0.85,
+              "side": "home"
+            }
+          },
+          {
+            "name": "chance_creation",
+            "score": -2.52,
+            "confidence": 0.72,
+            "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 14.2, Auswärts bei 19.8 (Schlüsselpässe + Abschlüsse) — Vorsprung -5.6.",
+            "weight": 1.208,
+            "weighted_score": -2.19,
+            "metadata": {
+              "home_threat": 14.2,
+              "away_threat": 19.8,
+              "relative": -5.6
+            }
+          },
+          {
+            "name": "freshness_leg",
+            "score": 0.0,
+            "confidence": 0.5,
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt -2.4pp) — kein frisches Geld",
+            "weight": 1.0,
+            "weighted_score": 0.0,
+            "metadata": {
+              "state": "drift",
+              "recentMovePP": -2.4,
+              "legSnaps": 8,
+              "legHours": 9.5,
+              "flipReady": false
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.32,
+        "signalCountPos": 2,
+        "signalCountNeg": 2,
+        "signalAdjustmentPP_trade": -0.3,
+        "signalCountPos_trade": 2,
+        "signalCountNeg_trade": 2,
+        "effectiveEdgePP": -5.3,
+        "effectiveEdgePP_trade": -5.3,
+        "convictionScore": 4,
+        "convictionVerdict": "watch",
+        "convictionLabel": "👁 Beobachten",
+        "convictionFamilies": {
+          "sharp_money": 1,
+          "model_stack": 2,
+          "context": 1,
+          "market": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": true,
+          "move_pp": 4.68
+        },
+        "stake": 2.0
+      }
+    ],
+    "KO-R16-PRY-FRA": [
+      {
+        "market": "Unter 3.5 Tore",
+        "odds": 1.5,
+        "modelOdds": 1.536,
+        "conf": "high",
+        "verdict": "BET",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": -6,
+        "info": "📉 Pinnacle 2.5→2.33 (Sharp-Money-Drop +4.2pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Unter 3.5 Tore @1.5 (These: Unter 2.5 Tore @2.3)",
+        "icon": "🔥",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "steam",
+        "lamH": null,
+        "lamA": null,
+        "lamTotal": null,
+        "source": "steam",
+        "steamMovePP": 4.2,
+        "steamOpen": 2.5,
+        "steamCur": 2.33,
+        "softOpen": 2.305,
+        "softNow": 2.3,
+        "entryBook": "soft",
+        "entryOdd": 1.5,
+        "lateEntry": true,
+        "steamDerived": false,
+        "softConfirmed": false,
+        "softFollowPP": 0.1,
         "ahLine": null,
         "safeThesisMarket": "Unter 2.5 Tore",
-        "safeThesisOdds": 2.29,
+        "safeThesisOdds": 2.3,
         "safeDerived": true,
         "baseVerdict": "ABWÄGEN",
         "signals": [
           {
             "name": "form_trend",
-            "score": 1.87,
+            "score": 2.67,
             "confidence": 0.8,
-            "evidence": "📈 Nach der Form fallen ~3.0 Tore pro Spiel, die Linie liegt bei 3.5 — spricht für Unter (-0.5 ggü. Linie).",
+            "evidence": "📈 Nach der Form fallen ~2.8 Tore pro Spiel, die Linie liegt bei 3.5 — spricht für Unter (-0.7 ggü. Linie).",
             "weight": 1.255,
-            "weighted_score": 1.88,
+            "weighted_score": 2.68,
             "metadata": {
-              "expected_total": 3.03,
+              "expected_total": 2.83,
               "ou_line": 3.5,
-              "diff_to_line": -0.47,
+              "diff_to_line": -0.67,
               "pick_side": "Unter 3.5"
             }
           },
           {
             "name": "xg_strength",
-            "score": 1.14,
+            "score": 1.63,
             "confidence": 0.65,
-            "evidence": "⚡ Die xG-Werte deuten auf ~3.03 Tore pro Spiel hin, die Linie steht bei 3.5 — Tendenz Unter (-0.47).",
+            "evidence": "⚡ Die xG-Werte deuten auf ~2.83 Tore pro Spiel hin, die Linie steht bei 3.5 — Tendenz Unter (-0.67).",
             "weight": 1.185,
-            "weighted_score": 0.35,
+            "weighted_score": 0.5,
             "metadata": {
-              "expected_total": 3.03,
+              "expected_total": 2.83,
               "ou_line": 3.5,
-              "diff_to_line": -0.47,
+              "diff_to_line": -0.67,
               "is_proxy": true,
               "pick_side": "Unter 3.5"
             },
@@ -20925,13 +21207,13 @@
             "name": "weather_signal",
             "score": 1.0,
             "confidence": 0.65,
-            "evidence": "🌡 Bei 37°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate",
+            "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate",
             "weight": 1.167,
             "weighted_score": 0.76,
             "metadata": {
-              "temp_max": 37.7,
-              "tempAtKickoff": 37.2,
-              "effective_temp": 37.2,
+              "temp_max": 38.0,
+              "tempAtKickoff": 36.1,
+              "effective_temp": 36.1,
               "kickoff_mod": 1.0,
               "home_climate": "hot",
               "away_climate": "temperate",
@@ -20967,14 +21249,14 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 0.99,
+        "signalAdjustmentPP": 1.28,
         "signalCountPos": 4,
         "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": 1.0,
+        "signalAdjustmentPP_trade": 1.3,
         "signalCountPos_trade": 4,
         "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -5.0,
-        "effectiveEdgePP_trade": -5.0,
+        "effectiveEdgePP": -4.7,
+        "effectiveEdgePP_trade": -4.7,
         "convictionScore": 7,
         "convictionVerdict": "abwaegen",
         "convictionLabel": "⭐ Gute Wette",
@@ -20986,16 +21268,42 @@
         },
         "pickTriggerReason": "Conviction 7/10 (≥6) — frischer Move + Signale bestätigen den Pick",
         "firstBetAt": "2026-07-01T14:29:27.528042+00:00",
-        "stake": 5.7
+        "smartMoney": {
+          "totalUsd": 246912.0,
+          "topTraders": 21,
+          "hoursToKickoff": 58.5,
+          "outcomes": {
+            "home": {
+              "usd": 3171.0,
+              "topHolderShare": 0.665,
+              "holders": 191,
+              "share": 0.013
+            },
+            "draw": {
+              "usd": 2047.0,
+              "topHolderShare": 0.675,
+              "holders": 124,
+              "share": 0.008
+            },
+            "away": {
+              "usd": 241694.0,
+              "topHolderShare": 0.748,
+              "holders": 200,
+              "share": 0.979
+            }
+          }
+        },
+        "stake": 6.0
       }
     ],
+    "KO-R16-USA-BEL": [],
     "KO-R32-ARG-CPV": [
       {
         "market": "Unter 2.5 Tore",
         "odds": 2.12,
         "modelOdds": 2.193,
         "conf": "medium",
-        "verdict": "NOBET",
+        "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
@@ -21033,12 +21341,31 @@
         "baseVerdict": "ABWÄGEN",
         "signals": [
           {
+            "name": "weather_signal",
+            "score": 0.4,
+            "confidence": 0.65,
+            "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
+            "weight": 1.167,
+            "weighted_score": 0.3,
+            "metadata": {
+              "temp_max": 33.6,
+              "tempAtKickoff": 32.0,
+              "effective_temp": 32.0,
+              "kickoff_mod": 1.0,
+              "home_climate": "temperate",
+              "away_climate": "hot",
+              "heat_intensity": 0.4,
+              "climate_controlled": false,
+              "side": "under"
+            }
+          },
+          {
             "name": "chance_creation",
             "score": 2.05,
             "confidence": 0.52,
             "evidence": "🎨 Zusammen kreieren beide eher wenig Chancen (16.9 aus Schlüsselpässen + Abschlüssen) — spricht für Under.",
-            "weight": 1.133,
-            "weighted_score": 1.21,
+            "weight": 1.208,
+            "weighted_score": 1.29,
             "metadata": {
               "total_threat": 16.88
             }
@@ -21059,35 +21386,64 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.11,
-        "signalCountPos": 1,
+        "signalAdjustmentPP": 0.84,
+        "signalCountPos": 2,
         "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": 1.1,
-        "signalCountPos_trade": 1,
+        "signalAdjustmentPP_trade": 0.8,
+        "signalCountPos_trade": 2,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -3.9,
-        "effectiveEdgePP_trade": -3.9,
-        "convictionScore": 3,
-        "convictionVerdict": "skip",
-        "convictionLabel": null,
+        "effectiveEdgePP": -4.2,
+        "effectiveEdgePP_trade": -4.2,
+        "convictionScore": 4,
+        "convictionVerdict": "watch",
+        "convictionLabel": "👁 Beobachten",
         "convictionFamilies": {
           "sharp_money": 1,
           "model_stack": 2,
-          "context": 0,
+          "context": 1,
           "market": 0
         },
         "stake": 2.0,
         "origVerdict": "ABWÄGEN",
         "origOdds": 2.12,
         "nobetSince": "2026-06-30T13:59:09.195846+00:00",
-        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (2.12→2.23)"
+        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (2.12→2.23)",
+        "smartMoney": {
+          "totalUsd": 401397.0,
+          "topTraders": 46,
+          "hoursToKickoff": 35.5,
+          "outcomes": {
+            "home": {
+              "usd": 360271.0,
+              "topHolderShare": 0.532,
+              "holders": 200,
+              "share": 0.898,
+              "cluster": 1,
+              "buyUsd": 3000.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 3000.0
+            },
+            "draw": {
+              "usd": 23277.0,
+              "topHolderShare": 0.767,
+              "holders": 200,
+              "share": 0.058
+            },
+            "away": {
+              "usd": 17849.0,
+              "topHolderShare": 0.522,
+              "holders": 200,
+              "share": 0.044
+            }
+          }
+        }
       },
       {
         "market": "Unter 3.5 Tore",
         "odds": 1.47,
-        "modelOdds": 1.493,
+        "modelOdds": 1.503,
         "conf": "high",
-        "verdict": "BET",
+        "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
@@ -21146,6 +21502,25 @@
             "correlation_discount_applied": 0.4
           },
           {
+            "name": "weather_signal",
+            "score": 0.4,
+            "confidence": 0.65,
+            "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
+            "weight": 1.167,
+            "weighted_score": 0.3,
+            "metadata": {
+              "temp_max": 33.6,
+              "tempAtKickoff": 32.0,
+              "effective_temp": 32.0,
+              "kickoff_mod": 1.0,
+              "home_climate": "temperate",
+              "away_climate": "hot",
+              "heat_intensity": 0.4,
+              "climate_controlled": false,
+              "side": "under"
+            }
+          },
+          {
             "name": "chance_creation",
             "score": 2.05,
             "confidence": 0.52,
@@ -21158,27 +21533,55 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 2.67,
-        "signalCountPos": 3,
+        "signalAdjustmentPP": 1.93,
+        "signalCountPos": 4,
         "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": 2.7,
-        "signalCountPos_trade": 3,
+        "signalAdjustmentPP_trade": 1.9,
+        "signalCountPos_trade": 4,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -3.3,
-        "effectiveEdgePP_trade": -3.3,
-        "convictionScore": 4,
+        "effectiveEdgePP": -4.1,
+        "effectiveEdgePP_trade": -4.1,
+        "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
         "convictionFamilies": {
           "sharp_money": 1,
           "model_stack": 3,
-          "context": 0,
+          "context": 1,
           "market": 0
         },
         "betHeld": true,
         "firstBetAt": "2026-06-30T17:50:07.926770+00:00",
-        "pickTriggerReason": "Hält BET: war bestätigt, Move ruht — aber kein Reverser dagegen (bleibt bis frisches Gegen-Geld kommt)",
-        "stake": 2.0
+        "stake": 2.0,
+        "smartMoney": {
+          "totalUsd": 401397.0,
+          "topTraders": 46,
+          "hoursToKickoff": 35.5,
+          "outcomes": {
+            "home": {
+              "usd": 360271.0,
+              "topHolderShare": 0.532,
+              "holders": 200,
+              "share": 0.898,
+              "cluster": 1,
+              "buyUsd": 3000.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 3000.0
+            },
+            "draw": {
+              "usd": 23277.0,
+              "topHolderShare": 0.767,
+              "holders": 200,
+              "share": 0.058
+            },
+            "away": {
+              "usd": 17849.0,
+              "topHolderShare": 0.522,
+              "holders": 200,
+              "share": 0.044
+            }
+          }
+        }
       }
     ],
     "KO-R32-AUS-EGY": [
@@ -21187,7 +21590,7 @@
         "odds": 1.44,
         "modelOdds": 1.449,
         "conf": "medium",
-        "verdict": "NOBET",
+        "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
@@ -21226,8 +21629,8 @@
             "score": 1.33,
             "confidence": 0.8,
             "evidence": "📈 Nach der Form fallen ~2.2 Tore pro Spiel, die Linie liegt bei 2.5 — spricht für Unter (-0.3 ggü. Linie).",
-            "weight": 1.238,
-            "weighted_score": 0.53,
+            "weight": 1.255,
+            "weighted_score": 0.54,
             "metadata": {
               "expected_total": 2.17,
               "ou_line": 2.5,
@@ -21237,12 +21640,31 @@
             "correlation_discount_applied": 0.4
           },
           {
+            "name": "weather_signal",
+            "score": 1.0,
+            "confidence": 0.65,
+            "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — AUS temperate",
+            "weight": 1.167,
+            "weighted_score": 0.76,
+            "metadata": {
+              "temp_max": 36.5,
+              "tempAtKickoff": 36.5,
+              "effective_temp": 36.5,
+              "kickoff_mod": 1.0,
+              "home_climate": "temperate",
+              "away_climate": "hot",
+              "heat_intensity": 1.0,
+              "climate_controlled": false,
+              "side": "under"
+            }
+          },
+          {
             "name": "chance_creation",
             "score": 2.43,
             "confidence": 0.54,
             "evidence": "🎨 Zusammen kreieren beide eher wenig Chancen (15.9 aus Schlüsselpässen + Abschlüssen) — spricht für Under.",
-            "weight": 1.12,
-            "weighted_score": 1.47,
+            "weight": 1.208,
+            "weighted_score": 1.59,
             "metadata": {
               "total_threat": 15.93
             }
@@ -21261,30 +21683,73 @@
               "legHours": 25.0,
               "flipReady": false
             }
+          },
+          {
+            "name": "streak_momentum",
+            "score": 0.26,
+            "confidence": 0.4,
+            "evidence": "🔥 Serien stützen: Australien 5× Unter 2,5 Tore",
+            "weight": 1.0,
+            "weighted_score": 0.04,
+            "metadata": {
+              "family": "ou",
+              "direction": -1,
+              "n_supporting": 1
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.33,
-        "signalCountPos": 2,
+        "signalAdjustmentPP": 1.19,
+        "signalCountPos": 4,
         "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": 1.3,
-        "signalCountPos_trade": 2,
+        "signalAdjustmentPP_trade": 1.2,
+        "signalCountPos_trade": 4,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -3.7,
-        "effectiveEdgePP_trade": -3.7,
-        "convictionScore": 4,
+        "effectiveEdgePP": -3.8,
+        "effectiveEdgePP_trade": -3.8,
+        "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
         "convictionFamilies": {
           "sharp_money": 1,
           "model_stack": 3,
-          "context": 0,
+          "context": 1,
           "market": 0
         },
         "stake": 2.0,
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.44,
         "nobetSince": "2026-06-29T09:15:16.815028+00:00",
-        "nobetReason": "Quote zu kurz geworden (1.44→1.42) — kein Value mehr"
+        "nobetReason": "Quote zu kurz geworden (1.44→1.42) — kein Value mehr",
+        "smartMoney": {
+          "totalUsd": 58668.0,
+          "topTraders": 8,
+          "hoursToKickoff": 31.5,
+          "outcomes": {
+            "home": {
+              "usd": 13579.0,
+              "topHolderShare": 0.593,
+              "holders": 200,
+              "share": 0.231,
+              "cluster": 1,
+              "buyUsd": 7214.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 7214.0
+            },
+            "draw": {
+              "usd": 16418.0,
+              "topHolderShare": 0.694,
+              "holders": 200,
+              "share": 0.28
+            },
+            "away": {
+              "usd": 28671.0,
+              "topHolderShare": 0.476,
+              "holders": 200,
+              "share": 0.489
+            }
+          }
+        }
       }
     ],
     "KO-R32-BEL-SEN": [],
@@ -21777,7 +22242,118 @@
         "resolvedAt": "2026-06-30T21:24:19Z"
       }
     ],
-    "KO-R32-COL-GHA": [],
+    "KO-R32-COL-GHA": [
+      {
+        "market": "Unter 2.5 Tore",
+        "odds": 1.65,
+        "modelOdds": 1.634,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": -4,
+        "info": "📉 Pinnacle 1.65→1.6 (Sharp-Money-Drop +3.0pp) · Soft-Konsens hinkt +1.9pp (Value, noch nicht bestätigt)",
+        "icon": "🔥",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "steam",
+        "lamH": null,
+        "lamA": null,
+        "lamTotal": null,
+        "source": "steam",
+        "steamMovePP": 3.0,
+        "steamOpen": 1.65,
+        "steamCur": 1.6,
+        "softOpen": 1.65,
+        "softNow": 1.65,
+        "entryBook": "soft",
+        "entryOdd": 1.65,
+        "lateEntry": false,
+        "steamDerived": false,
+        "softConfirmed": false,
+        "softFollowPP": 0.0,
+        "ahLine": null,
+        "recentMovePP": 1.8,
+        "freshnessState": "drift",
+        "legHours": 31.0,
+        "legSnaps": 3,
+        "lastMoveH": 0.0,
+        "flipReady": false,
+        "baseVerdict": "ABWÄGEN",
+        "signals": [
+          {
+            "name": "chance_creation",
+            "score": 1.28,
+            "confidence": 0.48,
+            "evidence": "🎨 Zusammen kreieren beide eher wenig Chancen (18.8 aus Schlüsselpässen + Abschlüssen) — spricht für Under.",
+            "weight": 1.208,
+            "weighted_score": 0.74,
+            "metadata": {
+              "total_threat": 18.8
+            }
+          },
+          {
+            "name": "freshness_leg",
+            "score": 0.0,
+            "confidence": 0.5,
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +1.8pp) — kein frisches Geld",
+            "weight": 1.0,
+            "weighted_score": 0.0,
+            "metadata": {
+              "state": "drift",
+              "recentMovePP": 1.8,
+              "legSnaps": 3,
+              "legHours": 31.0,
+              "flipReady": false
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.69,
+        "signalCountPos": 1,
+        "signalCountNeg": 0,
+        "signalAdjustmentPP_trade": 0.7,
+        "signalCountPos_trade": 1,
+        "signalCountNeg_trade": 0,
+        "effectiveEdgePP": -3.3,
+        "effectiveEdgePP_trade": -3.3,
+        "convictionScore": 3,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 1,
+          "model_stack": 2,
+          "context": 0,
+          "market": 0
+        },
+        "stake": 2.0,
+        "smartMoney": {
+          "totalUsd": 112514.0,
+          "topTraders": 10,
+          "hoursToKickoff": 39.0,
+          "outcomes": {
+            "home": {
+              "usd": 101726.0,
+              "topHolderShare": 0.767,
+              "holders": 200,
+              "share": 0.904
+            },
+            "draw": {
+              "usd": 5316.0,
+              "topHolderShare": 0.504,
+              "holders": 200,
+              "share": 0.047
+            },
+            "away": {
+              "usd": 5472.0,
+              "topHolderShare": 0.531,
+              "holders": 200,
+              "share": 0.049
+            }
+          }
+        }
+      }
+    ],
     "KO-R32-ENG-COD": [],
     "KO-R32-ESP-AUT": [
       {
@@ -21876,16 +22452,38 @@
               "defense_diff": -0.48
             },
             "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "smart_money",
+            "score": 1.34,
+            "confidence": 0.44,
+            "evidence": "💰 Auf Polymarket liegen 93% des Geldes auf Heim — mehr als der faire Preis hergibt (53%), und es sind echte Wale dahinter (Top-Wallets 56%).",
+            "weight": 1.256,
+            "weighted_score": 0.74,
+            "metadata": {
+              "outcome": "home",
+              "share": 0.929,
+              "topHolderShare": 0.555,
+              "fairShare": 0.526,
+              "excessPP": 40.3,
+              "totalUsd": 771950.0,
+              "topTraders": 96,
+              "cluster": 0,
+              "clustered": false,
+              "netFlowUsd": null,
+              "hoursToKickoff": 8.5,
+              "exitFlag": false
+            }
           }
         ],
-        "signalAdjustmentPP": 3.59,
-        "signalCountPos": 4,
+        "signalAdjustmentPP": 3.11,
+        "signalCountPos": 5,
         "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": 3.6,
+        "signalAdjustmentPP_trade": 1.8,
         "signalCountPos_trade": 4,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -0.4,
-        "effectiveEdgePP_trade": -0.4,
+        "effectiveEdgePP": -0.9,
+        "effectiveEdgePP_trade": -2.2,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -21897,13 +22495,46 @@
         },
         "openingMovement": {
           "in_pick_direction": false,
-          "move_pp": -1.74
+          "move_pp": 0.6
         },
         "stake": 2.0,
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.9,
         "nobetSince": "2026-06-28T13:40:45.621050+00:00",
-        "nobetReason": "Quote zu kurz geworden (1.9→1.33) — kein Value mehr"
+        "nobetReason": "Quote zu kurz geworden (1.9→1.33) — kein Value mehr",
+        "smartMoney": {
+          "totalUsd": 771950.0,
+          "topTraders": 96,
+          "hoursToKickoff": 8.5,
+          "outcomes": {
+            "home": {
+              "usd": 716846.0,
+              "topHolderShare": 0.555,
+              "holders": 200,
+              "share": 0.929
+            },
+            "draw": {
+              "usd": 19744.0,
+              "topHolderShare": 0.477,
+              "holders": 200,
+              "share": 0.026,
+              "cluster": 1,
+              "buyUsd": 3138.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 3138.0
+            },
+            "away": {
+              "usd": 35360.0,
+              "topHolderShare": 0.716,
+              "holders": 200,
+              "share": 0.046,
+              "cluster": 2,
+              "buyUsd": 16380.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 16380.0
+            }
+          }
+        }
       },
       {
         "market": "Beide Teams treffen — Ja",
@@ -22004,7 +22635,40 @@
           "context": 0,
           "market": 0
         },
-        "stake": 2.0
+        "stake": 2.0,
+        "smartMoney": {
+          "totalUsd": 771950.0,
+          "topTraders": 96,
+          "hoursToKickoff": 8.5,
+          "outcomes": {
+            "home": {
+              "usd": 716846.0,
+              "topHolderShare": 0.555,
+              "holders": 200,
+              "share": 0.929
+            },
+            "draw": {
+              "usd": 19744.0,
+              "topHolderShare": 0.477,
+              "holders": 200,
+              "share": 0.026,
+              "cluster": 1,
+              "buyUsd": 3138.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 3138.0
+            },
+            "away": {
+              "usd": 35360.0,
+              "topHolderShare": 0.716,
+              "holders": 200,
+              "share": 0.046,
+              "cluster": 2,
+              "buyUsd": 16380.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 16380.0
+            }
+          }
+        }
       },
       {
         "market": "Beide Teams treffen — Nein",
@@ -22090,7 +22754,40 @@
         "nobetSince": "2026-06-28T20:56:30.395182+00:00",
         "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.45→1.62)",
         "voidReason": "Cross-Market-Konflikt mit Top-Pick 'Beide Teams treffen — Ja' (over vs under) — wird nicht real gewettet, daher nicht getrackt",
-        "trackingExcluded": true
+        "trackingExcluded": true,
+        "smartMoney": {
+          "totalUsd": 771950.0,
+          "topTraders": 96,
+          "hoursToKickoff": 8.5,
+          "outcomes": {
+            "home": {
+              "usd": 716846.0,
+              "topHolderShare": 0.555,
+              "holders": 200,
+              "share": 0.929
+            },
+            "draw": {
+              "usd": 19744.0,
+              "topHolderShare": 0.477,
+              "holders": 200,
+              "share": 0.026,
+              "cluster": 1,
+              "buyUsd": 3138.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 3138.0
+            },
+            "away": {
+              "usd": 35360.0,
+              "topHolderShare": 0.716,
+              "holders": 200,
+              "share": 0.046,
+              "cluster": 2,
+              "buyUsd": 16380.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 16380.0
+            }
+          }
+        }
       },
       {
         "market": "Unter 2.5 Tore",
@@ -22215,7 +22912,40 @@
         "nobetSince": "2026-06-30T07:45:35.483545+00:00",
         "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.93→1.95)",
         "voidReason": "Cross-Market-Konflikt mit Top-Pick 'Beide Teams treffen — Ja' (over vs under) — wird nicht real gewettet, daher nicht getrackt",
-        "trackingExcluded": true
+        "trackingExcluded": true,
+        "smartMoney": {
+          "totalUsd": 771950.0,
+          "topTraders": 96,
+          "hoursToKickoff": 8.5,
+          "outcomes": {
+            "home": {
+              "usd": 716846.0,
+              "topHolderShare": 0.555,
+              "holders": 200,
+              "share": 0.929
+            },
+            "draw": {
+              "usd": 19744.0,
+              "topHolderShare": 0.477,
+              "holders": 200,
+              "share": 0.026,
+              "cluster": 1,
+              "buyUsd": 3138.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 3138.0
+            },
+            "away": {
+              "usd": 35360.0,
+              "topHolderShare": 0.716,
+              "holders": 200,
+              "share": 0.046,
+              "cluster": 2,
+              "buyUsd": 16380.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 16380.0
+            }
+          }
+        }
       }
     ],
     "KO-R32-FRA-SWE": [],
@@ -22440,6 +23170,25 @@
         "baseVerdict": "ABWÄGEN",
         "signals": [
           {
+            "name": "lead_lag_bias",
+            "score": 3.65,
+            "confidence": 0.7,
+            "evidence": "Pinnacle hat Heim um +2.7pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+            "weight": 1.236,
+            "weighted_score": 3.16,
+            "metadata": {
+              "stage": "confirmed",
+              "pinn_move_pp": 2.74,
+              "soft_moves": [
+                {
+                  "bk": "public",
+                  "move_pp": 1.58
+                }
+              ],
+              "outcome": "hw"
+            }
+          },
+          {
             "name": "xg_strength",
             "score": 1.68,
             "confidence": 0.85,
@@ -22499,16 +23248,38 @@
               "legHours": 1.3,
               "flipReady": false
             }
+          },
+          {
+            "name": "smart_money",
+            "score": 1.5,
+            "confidence": 0.44,
+            "evidence": "💰 Auf Polymarket liegen 81% des Geldes auf Heim — mehr als der faire Preis hergibt (56%), und es sind echte Wale dahinter (Top-Wallets 82%). 3 große Wallets sammeln gerade unabhängig dieselbe Seite ein.",
+            "weight": 1.256,
+            "weighted_score": 0.83,
+            "metadata": {
+              "outcome": "home",
+              "share": 0.811,
+              "topHolderShare": 0.824,
+              "fairShare": 0.565,
+              "excessPP": 24.6,
+              "totalUsd": 753395.0,
+              "topTraders": 56,
+              "cluster": 3,
+              "clustered": true,
+              "netFlowUsd": 11902.0,
+              "hoursToKickoff": 12.5,
+              "exitFlag": false
+            }
           }
         ],
-        "signalAdjustmentPP": 1.09,
-        "signalCountPos": 3,
+        "signalAdjustmentPP": 1.8,
+        "signalCountPos": 5,
         "signalCountNeg": 0,
-        "signalAdjustmentPP_trade": 1.1,
-        "signalCountPos_trade": 3,
+        "signalAdjustmentPP_trade": 0.3,
+        "signalCountPos_trade": 4,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -2.9,
-        "effectiveEdgePP_trade": -2.9,
+        "effectiveEdgePP": -2.2,
+        "effectiveEdgePP_trade": -3.7,
         "convictionScore": 4,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -22521,24 +23292,53 @@
         "sharpMoveActive": true,
         "sharpMoveDetails": {
           "triggered": true,
-          "pinn_move_pp": 11.27,
+          "pinn_move_pp": 12.95,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 88.0,
+          "hours_since_open": 107.9,
           "open_pinn_odds": 2.18,
-          "current_pinn_odds": 1.75,
+          "current_pinn_odds": 1.7,
           "move_age_decay": 1.0,
-          "move_age_days": 3.7
+          "move_age_days": 4.5
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 11.27
+          "move_pp": 12.95
         },
         "stake": 2.0,
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.77,
         "nobetSince": "2026-06-30T21:24:19.196179+00:00",
-        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.77→1.81)"
+        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.77→1.81)",
+        "smartMoney": {
+          "totalUsd": 753395.0,
+          "topTraders": 56,
+          "hoursToKickoff": 12.5,
+          "outcomes": {
+            "home": {
+              "usd": 610842.0,
+              "topHolderShare": 0.824,
+              "holders": 200,
+              "share": 0.811,
+              "cluster": 3,
+              "buyUsd": 11902.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 11902.0
+            },
+            "draw": {
+              "usd": 86702.0,
+              "topHolderShare": 0.766,
+              "holders": 200,
+              "share": 0.115
+            },
+            "away": {
+              "usd": 55851.0,
+              "topHolderShare": 0.558,
+              "holders": 200,
+              "share": 0.074
+            }
+          }
+        }
       },
       {
         "market": "Über 1.5 Tore",
@@ -22637,7 +23437,36 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.37,
         "nobetSince": "2026-06-30T07:45:35.483545+00:00",
-        "nobetReason": "Quote zu kurz geworden (1.37→1.32) — kein Value mehr"
+        "nobetReason": "Quote zu kurz geworden (1.37→1.32) — kein Value mehr",
+        "smartMoney": {
+          "totalUsd": 753395.0,
+          "topTraders": 56,
+          "hoursToKickoff": 12.5,
+          "outcomes": {
+            "home": {
+              "usd": 610842.0,
+              "topHolderShare": 0.824,
+              "holders": 200,
+              "share": 0.811,
+              "cluster": 3,
+              "buyUsd": 11902.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 11902.0
+            },
+            "draw": {
+              "usd": 86702.0,
+              "topHolderShare": 0.766,
+              "holders": 200,
+              "share": 0.115
+            },
+            "away": {
+              "usd": 55851.0,
+              "topHolderShare": 0.558,
+              "holders": 200,
+              "share": 0.074
+            }
+          }
+        }
       },
       {
         "market": "Über 2.5 Tore",
@@ -22753,7 +23582,36 @@
           "context": 0,
           "market": 0
         },
-        "stake": 2.0
+        "stake": 2.0,
+        "smartMoney": {
+          "totalUsd": 753395.0,
+          "topTraders": 56,
+          "hoursToKickoff": 12.5,
+          "outcomes": {
+            "home": {
+              "usd": 610842.0,
+              "topHolderShare": 0.824,
+              "holders": 200,
+              "share": 0.811,
+              "cluster": 3,
+              "buyUsd": 11902.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 11902.0
+            },
+            "draw": {
+              "usd": 86702.0,
+              "topHolderShare": 0.766,
+              "holders": 200,
+              "share": 0.115
+            },
+            "away": {
+              "usd": 55851.0,
+              "topHolderShare": 0.558,
+              "holders": 200,
+              "share": 0.074
+            }
+          }
+        }
       }
     ],
     "KO-R32-SUI-DZA": [],
