@@ -59,10 +59,12 @@
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 4,
       "failures": [
         "499-488: Margin 1.876 unplausibel",
-        "503-489: Margin 1.600 unplausibel"
+        "503-489: Margin 1.600 unplausibel",
+        "530-535: Margin 1.941 unplausibel",
+        "540-539: Margin 1.722 unplausibel"
       ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
@@ -174,7 +176,7 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 20,
+      "nFail": 28,
       "failures": [
         "42-1346: public aus Einzel-Book 'williamhill' statt Konsens",
         "64-33: public aus Einzel-Book 'williamhill' statt Konsens",
@@ -195,7 +197,12 @@
         "505-1579: public aus Einzel-Book 'marathonbet' statt Konsens",
         "512-496: public aus Einzel-Book 'marathonbet' statt Konsens",
         "517-867: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "523-490: public aus Einzel-Book 'marathonbet' statt Konsens"
+        "523-490: public aus Einzel-Book 'marathonbet' statt Konsens",
+        "529-531: public aus Einzel-Book 'betfair_ex_eu' statt Konsens",
+        "530-535: public aus Einzel-Book 'betfair_ex_eu' statt Konsens",
+        "532-543: public aus Einzel-Book 'betfair_ex_eu' statt Konsens",
+        "536-728: public aus Einzel-Book 'betfair_ex_eu' statt Konsens",
+        "538-727: public aus Einzel-Book 'betfair_ex_eu' statt Konsens"
       ],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
@@ -281,6 +288,15 @@
       "note": "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder Signal nicht registriert."
     },
     {
+      "id": "smartmoney_sane",
+      "label": "Smart-Money-Daten kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner)."
+    },
+    {
       "id": "btts_not_templated_traded",
       "label": "BTTS-Platzhalter nicht handelbar",
       "severity": "warn",
@@ -315,6 +331,15 @@
       "nFail": 0,
       "failures": [],
       "note": "Je (Spiel, Markt) genau EINE Karte. Mehrfach → _dedup_picks_by_market greift nicht (Refresh-/Merge-Altlast)."
+    },
+    {
+      "id": "smartmoney_cluster_sane",
+      "label": "Smart-Money-Cluster kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
     },
     {
       "id": "card_only_not_in_trade",
@@ -408,5 +433,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-07-01T19:34:17.843859+00:00"
+  "generatedAt": "2026-07-02T08:51:20.878135+00:00"
 }
