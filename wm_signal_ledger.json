@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-02T21:55:52Z",
-    "total_records": 144
+    "updated_at": "2026-07-02T22:10:54Z",
+    "total_records": 146
   },
   "records": [
     {
@@ -3310,6 +3310,62 @@
       "lateEntry": false
     },
     {
+      "key": "KO-R32-ESP-AUT|AH Heim −1.5",
+      "matchKey": "KO-R32-ESP-AUT",
+      "market": "AH Heim −1.5",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.5
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.16
+        },
+        {
+          "name": "chance_creation",
+          "score": 4.64
+        },
+        {
+          "name": "form_rating",
+          "score": 3.81
+        },
+        {
+          "name": "smart_money",
+          "score": 1.35
+        }
+      ],
+      "resolvedAt": "2026-07-02T22:10:12Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": false
+    },
+    {
+      "key": "KO-R32-ESP-AUT|Beide Teams treffen — Ja",
+      "matchKey": "KO-R32-ESP-AUT",
+      "market": "Beide Teams treffen — Ja",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -1.33
+        },
+        {
+          "name": "xg_strength",
+          "score": 5.78
+        },
+        {
+          "name": "freshness_leg",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-07-02T22:10:12Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false
+    },
+    {
       "key": "KO-R32-ESP-AUT|Beide Teams treffen — Nein",
       "matchKey": "KO-R32-ESP-AUT",
       "market": "Beide Teams treffen — Nein",
@@ -3324,7 +3380,7 @@
           "score": -5.78
         }
       ],
-      "resolvedAt": "2026-07-02T21:55:52Z",
+      "resolvedAt": "2026-07-02T22:10:54Z",
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true
@@ -3348,7 +3404,7 @@
           "score": -1.8
         }
       ],
-      "resolvedAt": "2026-07-02T21:55:52Z",
+      "resolvedAt": "2026-07-02T22:10:54Z",
       "source": "steam",
       "convictionScore": 2,
       "lateEntry": false
