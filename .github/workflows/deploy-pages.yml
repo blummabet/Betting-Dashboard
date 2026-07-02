@@ -22,21 +22,14 @@ on:
   schedule:
     - cron: '*/15 * * * *'
 
-  # Sofort-Deploy direkt nach Abschluss eines Daten-Workflows.
-  # FIX 13.06.2026: Der */15-Schedule läuft bei GitHub oft 15-30 Min verspätet →
-  # FT-Ergebnisse/Resolves (z.B. USA-PRY 4:1) landeten erst spät live, obwohl main
-  # längst korrekt war. workflow_run feuert WORKFLOW-basiert (nicht commit-basiert)
-  # → umgeht die GITHUB_TOKEN-Rekursionssperre und deployt sofort nach jedem
-  # Bot-Daten-Update. Schedule bleibt als Sicherheitsnetz.
-  workflow_run:
-    workflows:
-      - "🌍 WM 2026 Daten aktualisieren"
-      - "📊 Ergebnisse holen"
-      - "💹 WM Poly Positionen überwachen"
-      - "⚽ Liga aktualisieren (Top 5)"   # 25.06.2026 (Lucas): Bot-Commit von liga-data.json sofort deployen
-    types: [completed]
+  # 01.07.2026 (Lucas: „Deploy failt die ganze Zeit"): der workflow_run-Trigger (nach JEDEM Daten-
+  # Workflow, v.a. dem alle paar Minuten laufenden „Poly Positionen überwachen") feuerte so viele
+  # Deploys, dass sie sich schneller überholten als sie fertig wurden → jeder neue „cancelte" den
+  # vorigen (Thundering Herd), sichtbar als „Error: Deployment cancelled". Entfernt. Der */15-Schedule
+  # (+ menschliche Pushes) republisht main zuverlässig und überschneidet sich praktisch nie. Damit
+  # landen Bot-Daten-Updates spätestens ~15 Min nach dem Commit live — reicht fürs Dashboard.
 
-  # Manuell jederzeit ausführbar
+  # Manuell jederzeit ausführbar (für sofortigen Deploy nach wichtigen Updates)
   workflow_dispatch:
 
 permissions:
