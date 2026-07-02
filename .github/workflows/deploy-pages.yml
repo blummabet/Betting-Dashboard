@@ -44,10 +44,13 @@ permissions:
   pages: write
   id-token: write
 
-# Nur ein Deploy gleichzeitig — laufenden Deploy abbrechen statt queuen
+# Nur ein Deploy gleichzeitig. 01.07.2026 (Lucas: „deploy github pages failt ständig — Error:
+# Deployment cancelled"): cancel-in-progress:true brach bei den vielen Triggern (Push + */15-Schedule
+# + 4× workflow_run) laufende Deploys ab → die abgebrochenen Läufe failten. Offizielle Pages-Empfehlung:
+# laufenden Deploy FERTIGLAUFEN lassen, nur dazwischen wartende Läufe überspringen → cancel-in-progress:false.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
