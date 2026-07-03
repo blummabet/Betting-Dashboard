@@ -100,6 +100,12 @@ STEAM_CONFIRM_PP = _cfg("edge", "steam_confirm_pp",      5.0)
 # WM lockerer als Liga (weniger Spiele) — Liga-Profil setzt steam_bet_threshold höher.
 MAX_STEAM_PICKS_PER_CARD = _cfg("conviction_score", "max_steam_picks_per_card", 3)
 STEAM_BET_THRESHOLD      = _cfg("conviction_score", "steam_bet_threshold",      6)
+# Season-Opener-Dämpfung (01.07.2026, Lucas): die ersten Liga-Spieltage laufen auf cross-season Form/
+# H2H/xG. Die bleiben VOLL gewichtet (tragen echtes Signal) — aber die Gesamt-Conviction bekommt eine
+# kleine Vorsicht (−1), solange die Datenbasis dünn ist. Nur Liga/MLS (is_liga), nur MD ≤ N. Verhindert
+# v.a. voreilige ABWÄGEN→BET-Upgrades in verrauschter Anfangsphase. Tunebar pro Profil.
+EARLY_SEASON_MATCHDAYS          = _cfg("conviction_score", "early_season_matchdays", 3)
+EARLY_SEASON_CONVICTION_PENALTY = _cfg("conviction_score", "early_season_conviction_penalty", 1.0)
 # Variante A (20.06.2026): Quote der gesteamten Seite über diesem Wert = Longshot → kein Trigger
 # (z.B. Haiti 51→22 gg. Brasilien → keine X2-Nonsens-Karte). Mainline-Steam bleibt unberührt.
 STEAM_MAX_TRIGGER_ODDS   = _cfg("steam", "max_trigger_odds", 6.0)
@@ -1159,6 +1165,21 @@ def _derive_reverser_counter(parent, snap, move_pp):
     }
 
 
+def _early_season_penalty(fx: dict) -> float:
+    """Kleine Conviction-Vorsicht für die ersten Liga-Spieltage einer Saison (01.07.2026, Lucas):
+    Form/H2H/xG sind da noch cross-season — bleiben voll gewichtet (Signal ist echt), aber die
+    Datenbasis ist dünn → Gesamt-Conviction leicht dämpfen. Nur Liga/MLS (is_liga), nur MD ≤ N."""
+    if not D.is_liga():
+        return 0.0
+    try:
+        md = int(fx.get("matchday") or 0)
+    except (TypeError, ValueError):
+        return 0.0
+    if 1 <= md <= EARLY_SEASON_MATCHDAYS:
+        return EARLY_SEASON_CONVICTION_PENALTY
+    return 0.0
+
+
 def generate_steam_picks_for_fixture(fx, snap, today_iso, drift=None):
     """Bis zu MAX_STEAM_PICKS_PER_CARD Steam-Picks je Spiel im Card-Format (oder []).
     Mehrere, wenn verschiedene Kategorien droppen (z.B. Home-HC + Over). Die Signal/
@@ -2063,10 +2084,13 @@ def main():
                         # erst ab CAL_MIN_PICKS). Raw + Nudge transparent festhalten.
                         _cal_nudge = _calibration_nudge(p)
                         _conv_raw = conv["score"]
-                        p["convictionScore"]   = max(0, min(10, int(round(_conv_raw + _cal_nudge))))
+                        _early_pen = _early_season_penalty(fx)   # 0 außer Liga-MD ≤ 3
+                        p["convictionScore"]   = max(0, min(10, int(round(_conv_raw + _cal_nudge - _early_pen))))
                         if _cal_nudge:
                             p["convictionRaw"]    = _conv_raw
                             p["calibrationNudge"] = _cal_nudge
+                        if _early_pen:
+                            p["earlySeasonPenalty"] = _early_pen
                         p["convictionVerdict"] = conv["verdict"]
                         p["convictionLabel"]   = conv["label"]
                         p["convictionFamilies"] = conv["family_scores"]
@@ -2089,7 +2113,7 @@ def main():
                         _lmh = p.get("lastMoveH")
                         _move_fresh = (_lmh is None) or (_lmh <= BET_ENTRY_HURDLE_H)
                         if (p.get("verdict") == "ABWÄGEN"
-                                and conv["score"] >= _conv_threshold
+                                and (conv["score"] - _early_pen) >= _conv_threshold
                                 and not p.get("downgradedReason")
                                 and _move_fresh):
                             p["verdict"] = "BET"
