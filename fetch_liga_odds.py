@@ -21,10 +21,16 @@ import unicodedata
 from datetime import datetime, timezone
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-LIGA_FILE = os.path.join(BASE, "liga-data.json")
+# 01.07.2026 (Lucas: „holen wir MLS-Odds für Sharp Radar/Steam/CLV?"): DATASET-AWARE. Bei der
+# Dataset-Migration wurde AUSGERECHNET fetch_liga_odds übersehen — LIGA_FILE/LIGA_HISTORY waren hart
+# auf liga-*.json → der MLS-Lauf (COCOBET_DATASET=mls) las liga-data.json + schrieb liga-odds-history
+# statt mls-*. Folge: die MLS-Konsumenten (detect_wm_sharp_moves + CLV lesen mls-odds-history.json via
+# D.file) hätten NIE Odds gesehen. Jetzt: D.data_file() (mls-data.json) + D.file(…) (mls-odds-history).
+import cocobet_dataset as D  # noqa: E402
+LIGA_FILE = str(D.data_file())
 # Zeitreihe der Pinnacle-/Public-Snapshots (für Sharp Radar + detect_wm_sharp_moves, 26.06.2026).
 # Format identisch zu wm2026-odds-history.json: {key: [{ts,bk,hw,dr,aw}...], _meta:{oddsFetchedAt}}.
-LIGA_HISTORY = os.path.join(BASE, "liga-odds-history.json")
+LIGA_HISTORY = str(D.file("wm2026-odds-history.json", "liga-odds-history.json"))
 
 # TheOddsAPI-Sport-Keys der Top 5 (stabil etabliert) + MLS (Brücken-Liga nach WM, 29.06.2026).
 LEAGUE_SPORT_KEYS = {
@@ -311,7 +317,7 @@ def main():
         print("  ❌  ODDS_API_KEY nicht gesetzt — übersprungen (läuft nur im Workflow).")
         sys.exit(0)
     if not os.path.exists(LIGA_FILE):
-        print("  ❌  liga-data.json fehlt — erst build_liga_data.py laufen lassen.")
+        print(f"  ❌  {os.path.basename(LIGA_FILE)} fehlt — erst build_liga_data.py laufen lassen.")
         sys.exit(1)
     with open(LIGA_FILE, encoding="utf-8") as f:
         wm = json.load(f)
