@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-03T01:12:01Z",
-    "total_records": 146
+    "updated_at": "2026-07-03T01:26:08Z",
+    "total_records": 149
   },
   "records": [
     {
@@ -3380,7 +3380,7 @@
           "score": -5.78
         }
       ],
-      "resolvedAt": "2026-07-03T01:12:01Z",
+      "resolvedAt": "2026-07-03T01:26:08Z",
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true
@@ -3404,7 +3404,7 @@
           "score": -1.8
         }
       ],
-      "resolvedAt": "2026-07-03T01:12:01Z",
+      "resolvedAt": "2026-07-03T01:26:08Z",
       "source": "steam",
       "convictionScore": 2,
       "lateEntry": false
@@ -3447,6 +3447,94 @@
       "resolvedAt": "2026-06-30T06:18:08Z",
       "source": "steam",
       "convictionScore": 3,
+      "lateEntry": true
+    },
+    {
+      "key": "KO-R32-POR-CRO|Heimsieg",
+      "matchKey": "KO-R32-POR-CRO",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.67
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.71
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.14
+        },
+        {
+          "name": "form_rating",
+          "score": 0.81
+        },
+        {
+          "name": "smart_money",
+          "score": 0.86
+        }
+      ],
+      "resolvedAt": "2026-07-03T01:19:28Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true
+    },
+    {
+      "key": "KO-R32-POR-CRO|Über 1.5 Tore",
+      "matchKey": "KO-R32-POR-CRO",
+      "market": "Über 1.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 6.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 5.8
+        },
+        {
+          "name": "weather_signal",
+          "score": -1.76
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.94
+        }
+      ],
+      "resolvedAt": "2026-07-03T01:19:28Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false
+    },
+    {
+      "key": "KO-R32-POR-CRO|Über 2.5 Tore",
+      "matchKey": "KO-R32-POR-CRO",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 3.07
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.3
+        },
+        {
+          "name": "weather_signal",
+          "score": -1.76
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.94
+        }
+      ],
+      "resolvedAt": "2026-07-03T01:19:28Z",
+      "source": "steam",
+      "convictionScore": 4,
       "lateEntry": true
     },
     {
