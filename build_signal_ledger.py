@@ -47,13 +47,22 @@ except Exception:
 
 
 def _build_stats_lookup(wm: dict) -> dict:
-    """{matchKey 'G-MD-HOME-AWAY' → result.stats} aus den gespielten Fixtures."""
+    """{matchKey → result.stats} aus den gespielten Fixtures (Gruppe UND K.-o.)."""
     out = {}
     for g, gd in (wm.get("groups") or {}).items():
         for fx in (gd.get("fixtures") or []):
             stats = (fx.get("result") or {}).get("stats")
             if stats:
                 out[f"{g}-{fx.get('matchday')}-{fx.get('home')}-{fx.get('away')}"] = stats
+    # 04.07.2026 (Lucas: „wurden die 1/16-Picks nachträglich als lucky/unlucky bewertet?"):
+    # KO-Spiele liegen in koFixtures mit Key „KO-{round}-{home}-{away}" (wie der Pick-Key in
+    # generate_wm_picks). Ohne sie fand _build_stats_lookup nie die KO-xG → das Prozess-Verdict
+    # (verdient/Pech) blieb für ALLE K.-o.-Picks leer → verlorene-aber-verdiente KO-Picks wurden
+    # voll bestraft statt milder. Jetzt xG-Coverage auch für die K.-o.-Runden.
+    for kf in (wm.get("koFixtures") or []):
+        stats = (kf.get("result") or {}).get("stats")
+        if stats and kf.get("home") and kf.get("away"):
+            out[f"KO-{kf.get('round')}-{kf['home']}-{kf['away']}"] = stats
     return out
 
 

@@ -145,6 +145,27 @@ def _load_wm_fixtures() -> list[dict]:
                         "group":     grp_id,
                         "matchday":  fx.get("matchday"),
                     })
+        # 04.07.2026 (Lucas: „seit KO-Modus feuert der Aufstellungs-Check nie"): KO-Spiele liegen
+        # in koFixtures, NICHT in groups. Ohne sie holte der Fetcher nie KO-Aufstellungen →
+        # wm_lineups.json hatte keine KO-Einträge → lineup_signal konnte in der K.-o.-Phase nie
+        # feuern. date fehlt manchen KO-Fixtures → aus kickoff ableiten. Nur beidseitig aufgelöste.
+        for kf in (wm.get("koFixtures") or []):
+            if not (kf.get("home") and kf.get("away")):
+                continue
+            _ko = kf.get("kickoff") or ""
+            _date = kf.get("date") or (_ko[:10] if len(_ko) >= 10 else None)
+            if not _date:
+                continue
+            out.append({
+                "match_key": f"{kf['home']}-{kf['away']}",
+                "home_id":   kf["home"],
+                "away_id":   kf["away"],
+                "date":      _date,
+                "time":      kf.get("time", "21:00"),
+                "kickoff":   kf.get("kickoff"),
+                "group":     "KO",
+                "matchday":  kf.get("round"),
+            })
         return out
     except Exception as e:
         print(f"⚠️  Fehler beim Laden {WM_FILE.name}: {e}")

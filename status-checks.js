@@ -90,6 +90,110 @@ function _stRenderToggle() {
   });
 }
 
+// ── LERN-STATUS (04.07.2026, Lucas: „merk nirgends ob der Loop klappt") ──────
+// Drei Stufen sichtbar: (1) xG nach dem Spiel geholt? (2) Picks als verdient/Glück/Pech
+// bewertet? (3) Signal-Gewichte nachjustiert? — live aus Ledger + Gewichten + Daten.
+const _PV_META = {
+  JUSTIFIED:     { lbl: 'verdient',            col: '#3fb950' },
+  LUCKY:         { lbl: 'Glück',               col: '#58a6ff' },
+  UNLUCKY:       { lbl: 'Pech',                col: '#e3b341' },
+  DESERVED_LOSS: { lbl: 'verdiente Niederlage', col: '#f85149' },
+};
+
+function _stRenderLearning(data, ledger, weights) {
+  const el = document.getElementById('st_learning');
+  if (!el) return;
+
+  // ── Stufe 1: xG-Abdeckung fertiger Spiele (Gruppe + KO) ──
+  let finished = 0, withXg = 0;
+  const _scan = fx => {
+    const r = (fx && fx.result) || {};
+    const fin = ['FT', 'AET', 'PEN'].includes(String(r.status || '').toUpperCase());
+    if (!fin) return;
+    finished++;
+    if (r.stats && typeof r.stats.homeXg === 'number') withXg++;
+  };
+  if (data && data.groups) for (const g of Object.values(data.groups)) for (const fx of (g.fixtures || [])) _scan(fx);
+  if (data && Array.isArray(data.koFixtures)) for (const fx of data.koFixtures) _scan(fx);
+
+  // ── Stufe 2: Prozess-Verdict-Abdeckung im Ledger ──
+  const recs = (ledger && Array.isArray(ledger.records)) ? ledger.records : [];
+  const pvCounts = {};
+  let judged = 0;
+  for (const r of recs) {
+    const pv = r.processVerdict;
+    if (pv && _PV_META[pv]) { pvCounts[pv] = (pvCounts[pv] || 0) + 1; judged++; }
+  }
+
+  // ── Stufe 3: Gewichte — jüngstes last_updated + stärkste Bewegungen ──
+  let newestW = null, movers = [];
+  if (weights && typeof weights === 'object') {
+    for (const [name, w] of Object.entries(weights)) {
+      if (name === '_meta' || !w || typeof w.weight !== 'number') continue;
+      const t = _stParseTs(w.last_updated);
+      if (t && (!newestW || t > newestW)) newestW = t;
+      movers.push({ name, weight: w.weight, n: w.n_observations || 0, drift: Math.abs(w.weight - 1) });
+    }
+    movers.sort((a, b) => b.drift - a.drift);
+  }
+
+  const tsEl = document.getElementById('st_learnTs');
+  if (tsEl) tsEl.textContent = newestW ? 'Gewichte: ' + _stAgo(newestW) : '';
+
+  // Stufen-Pills (grün wenn Stufe greift)
+  const pill = (ok, icon, label, sub) => {
+    const col = ok ? '#3fb950' : '#e3b341';
+    return `<div style="flex:1;min-width:150px;background:${col}14;border:1px solid ${col}44;border-radius:10px;padding:11px 13px;">
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.5px;">${icon} ${label}</div>
+      <div style="font-size:15px;font-weight:800;color:${col};margin-top:3px;">${sub}</div></div>`;
+  };
+  const xgPct = finished ? Math.round(withXg / finished * 100) : 0;
+  const jPct  = recs.length ? Math.round(judged / recs.length * 100) : 0;
+  const pills = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+    ${pill(finished && withXg === finished, '📊', 'xG nach Spiel geholt', finished ? `${withXg}/${finished} Spiele` : '—')}
+    ${pill(judged > 0, '⚖️', 'Picks bewertet', recs.length ? `${judged}/${recs.length} (${jPct}%)` : '—')}
+    ${pill(!!newestW, '🎚️', 'Gewichte justiert', newestW ? _stAgo(newestW) : 'nie')}</div>`;
+
+  // Verdict-Verteilung als Balken
+  let bar = '';
+  if (judged > 0) {
+    const seg = Object.entries(_PV_META).map(([k, m]) => {
+      const n = pvCounts[k] || 0; if (!n) return '';
+      const p = Math.round(n / judged * 100);
+      return `<div style="flex:${n};background:${m.col};min-width:2px;" title="${m.lbl}: ${n} (${p}%)"></div>`;
+    }).join('');
+    const legend = Object.entries(_PV_META).map(([k, m]) => {
+      const n = pvCounts[k] || 0; if (!n) return '';
+      return `<span style="white-space:nowrap;"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:${m.col};margin-right:4px;"></span>${m.lbl} ${n}</span>`;
+    }).filter(Boolean).join('<span style="color:var(--muted);margin:0 4px;">·</span>');
+    bar = `<div style="font-size:11px;color:var(--muted);margin-bottom:5px;">Rückblick-Urteil pro Pick (aus echtem Match-xG) — verlorene-aber-verdiente Picks werden milder gelernt:</div>
+      <div style="display:flex;height:14px;border-radius:7px;overflow:hidden;margin-bottom:7px;">${seg}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px 4px;font-size:11px;">${legend}</div>`;
+  }
+
+  // Top-Gewichts-Bewegungen
+  let mv = '';
+  const top = movers.filter(m => m.drift >= 0.03).slice(0, 5);
+  if (top.length) {
+    mv = `<div style="margin-top:14px;font-size:11px;color:var(--muted);margin-bottom:5px;">Signale, die der Loop am stärksten nachjustiert hat (1.00 = neutral):</div>
+      <div style="display:flex;flex-direction:column;gap:5px;">` + top.map(m => {
+      const up = m.weight >= 1;
+      const col = up ? '#3fb950' : '#f85149';
+      return `<div style="display:flex;align-items:center;gap:8px;font-size:12px;">
+        <span style="color:${col};font-weight:800;width:14px;">${up ? '↑' : '↓'}</span>
+        <span style="flex:1;">${m.name}</span>
+        <span style="color:var(--muted);font-size:10.5px;">n=${m.n}</span>
+        <span style="color:${col};font-weight:800;font-variant-numeric:tabular-nums;">${m.weight.toFixed(2)}</span></div>`;
+    }).join('') + `</div>`;
+  }
+
+  if (!recs.length && !finished) {
+    el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:14px;">Noch keine aufgelösten Picks — Lern-Status füllt sich nach den ersten Ergebnissen.</div>';
+    return;
+  }
+  el.innerHTML = pills + bar + mv;
+}
+
 async function runStatusPage(force) {
   if (_stRunning) return;
   _stRunning = true;
@@ -100,10 +204,11 @@ async function runStatusPage(force) {
     // WM/Intl-Flow darunter bleibt komplett unverändert.
     if (_stDataset === 'liga') { await _runLigaStatus(); return; }
 
-    const [data, poly, oddsHist, bal, ks, autobets, status, valRep] = await Promise.all([
+    const [data, poly, oddsHist, bal, ks, autobets, status, valRep, ledger, weights] = await Promise.all([
       _stGet('wm2026-data.json'), _stGet('wm_poly_prices.json'), _stGet('wm2026-odds-history.json'),
       _stGet('wm_poly_balance.json'), _stGet('wm_kill_switch.json'), _stGet('wm_auto_bets_placed.json'),
       _stGet('wm_status.json'), _stGet('pick_validation_report.json'),
+      _stGet('wm_signal_ledger.json'), _stGet('signal_weights.json'),
     ]);
 
     const problems = [];
@@ -200,6 +305,7 @@ async function runStatusPage(force) {
     _stRenderProblems(problems, valRep);
     _stRenderIntegrity(status);
     _stRenderServer(status);
+    _stRenderLearning(data, ledger, weights);
     _stRenderSignals(data, status);
     _stRenderVerdict(problems, status, valRep);
     _stRenderFeeds();   // eigene Fetches (inkl. Files die oben nicht geladen wurden)
@@ -212,9 +318,12 @@ async function runStatusPage(force) {
 // Nutzt dieselben Render-Helfer wie WM (Verdict/Problems/Integrity), aber
 // KEINE Poly/Kill-Switch/Auto-Bet/Signal-Live-Checks (die sind WM-spezifisch).
 async function _runLigaStatus() {
-  const [ligaData, ligaStatus] = await Promise.all([
+  const [ligaData, ligaStatus, ligaLedger, ligaWeights] = await Promise.all([
     _stGet('liga-data.json'), _stGet('liga_status.json'),
+    _stGet('liga_signal_ledger.json'), _stGet('liga_signal_weights.json'),
   ]);
+  // Lern-Status auch im Liga-Tab (dataset-eigene Dateien) — greift der Loop dort?
+  _stRenderLearning(ligaData, ligaLedger, ligaWeights);
 
   // WM-only Sektionen leeren, damit kein stale WM-Inhalt unter dem Liga-Tab hängt.
   const clear = (id, msg) => { const e = document.getElementById(id); if (e) e.innerHTML = msg || ''; };
