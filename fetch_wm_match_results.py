@@ -87,6 +87,18 @@ def fetch_all_fixtures(league_id: int) -> list:
     return data.get("response", [])
 
 
+def _ninety_min_score(api_match: dict, orientation: str) -> tuple:
+    """Settlement-Score = 90 Minuten (reguläre Zeit + Nachspielzeit), NICHT inkl. Verlängerung
+    (03.07.2026, Lucas: ARG-CPV 1:1 nach 90 → Verlängerung 3:2 → „Unter 2.5/3.5" fälschlich verloren).
+    score.fulltime = 90-Min-Stand; goals enthält bei AET/PEN die Verlängerungstore. orientation
+    'swapped' dreht Heim/Auswärts. Gibt (home, away) zurück."""
+    goals = api_match.get("goals") or {}
+    ft = (api_match.get("score") or {}).get("fulltime") or {}
+    h = ft.get("home") if ft.get("home") is not None else goals.get("home")
+    a = ft.get("away") if ft.get("away") is not None else goals.get("away")
+    return (a, h) if orientation == "swapped" else (h, a)
+
+
 def _winner_from_tiebreak(api_match: dict, home_id: str, away_id: str, orientation: str) -> str:
     """Sieger bei Gleichstand nach regulärer Zeit/Verlängerung (30.06.2026, Lucas: „Kanada vs draw").
     KO-Spiele entscheidet das Elfmeterschießen → reiner Tor-Vergleich liefert fälschlich „draw".
@@ -357,13 +369,18 @@ def main():
         status_long  = status_obj.get("long",  "Not Started")
         elapsed      = status_obj.get("elapsed")
 
+        # 03.07.2026 (Lucas: ARG-CPV 1:1 nach 90, in der Verlängerung 3:2 → „Unter 2.5/3.5" fälschlich
+        # verloren; ERSTES AET-Spiel der WM, daher bisher unbemerkt): UNSERE Märkte (1X2/DC/DNB/AH/
+        # Über-Unter/BTTS) settlen auf 90 MINUTEN (reguläre Zeit + Nachspielzeit). Verlängerung + Elf-
+        # meter zählen NUR für den Aufstieg (winner), NIE fürs Pick-Settlement. Deshalb: Settlement-Score
+        # = score.fulltime (90 Min). `goals` enthält bei AET/PEN die Verlängerungstore → nur für Anzeige.
         goals = api_match.get("goals", {})
-        # Score nach Team-ID mappen: bei 'swapped' liefert API Heim/Auswärts vertauscht →
-        # sonst würde unser home_score den falschen Endstand bekommen (25.06.2026).
+        home_score, away_score = _ninety_min_score(api_match, orientation)   # Settlement = 90 Min
+        # bei 'swapped' liefert API Heim/Auswärts vertauscht → sonst falscher Stand (25.06.2026).
         if orientation == "swapped":
-            home_score, away_score = goals.get("away"), goals.get("home")
+            agg_home, agg_away = goals.get("away"), goals.get("home")
         else:
-            home_score, away_score = goals.get("home"), goals.get("away")
+            agg_home, agg_away = goals.get("home"), goals.get("away")
 
         # Winner bestimmen. 30.06.2026 (Lucas: „Kanada vs draw" in R16): KO-Spiele können nach
         # regulärer Zeit/Verlängerung remis stehen → dann entscheidet das Elfmeterschießen. Der reine
@@ -387,9 +404,13 @@ def main():
         result_entry = {
             "status":      status_short,
             "statusLong":  status_long,
-            "home_score":  home_score if _finished else None,
+            "home_score":  home_score if _finished else None,   # 90-Min-Stand = Settlement-Basis
             "away_score":  away_score if _finished else None,
         }
+        # Verlängerungs-/Gesamtstand (inkl. Verlängerung) nur zur Anzeige — settlet NICHTS. Nur wenn
+        # er vom 90-Min-Stand abweicht (AET/PEN gespielt).
+        if _finished and agg_home is not None and (agg_home, agg_away) != (home_score, away_score):
+            result_entry["aggregateScore"] = {"home": agg_home, "away": agg_away}
         if winner is not None:
             result_entry["winner"] = winner
         if elapsed is not None:

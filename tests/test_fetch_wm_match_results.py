@@ -40,6 +40,34 @@ class TestWinnerTiebreak(unittest.TestCase):
         self.assertEqual(fmr._winner_from_tiebreak(m, "CAN", "BEL", "normal"), "draw")
 
 
+class TestNinetyMinuteSettlement(unittest.TestCase):
+    """03.07.2026 (Lucas: ARG-CPV 1:1 nach 90, Verlängerung 3:2 → „Unter 2.5/3.5" fälschlich verloren):
+    Settlement-Score = 90 Min (score.fulltime), NICHT inkl. Verlängerung. Erstes AET-Spiel der WM."""
+    AET = {"goals": {"home": 3, "away": 2},
+           "score": {"fulltime": {"home": 1, "away": 1}, "penalty": {}},
+           "teams": {"home": {"winner": True}, "away": {"winner": False}}}
+
+    def test_uses_fulltime_not_goals(self):
+        self.assertEqual(fmr._ninety_min_score(self.AET, "normal"), (1, 1))
+
+    def test_swapped(self):
+        self.assertEqual(fmr._ninety_min_score(self.AET, "swapped"), (1, 1))   # 1:1 symmetrisch
+        asym = {"goals": {"home": 3, "away": 1}, "score": {"fulltime": {"home": 2, "away": 0}}}
+        self.assertEqual(fmr._ninety_min_score(asym, "swapped"), (0, 2))
+
+    def test_regular_ft_unchanged(self):
+        m = {"goals": {"home": 2, "away": 1}, "score": {"fulltime": {"home": 2, "away": 1}}}
+        self.assertEqual(fmr._ninety_min_score(m, "normal"), (2, 1))
+
+    def test_missing_fulltime_falls_back_to_goals(self):
+        m = {"goals": {"home": 2, "away": 0}, "score": {}}
+        self.assertEqual(fmr._ninety_min_score(m, "normal"), (2, 0))
+
+    def test_aet_winner_still_correct(self):
+        # 90 Min remis → Aufstieg via API-Sieger-Flag (AET) bzw. Elfmeter
+        self.assertEqual(fmr._winner_from_tiebreak(self.AET, "ARG", "CPV", "normal"), "ARG")
+
+
 class TestApiId(unittest.TestCase):
     def test_flat_int(self):
         self.assertEqual(fmr._api_id({"MEX": 16}, "MEX"), "16")
