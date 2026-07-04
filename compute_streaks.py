@@ -152,6 +152,16 @@ def _next_fixtures(wm):
         for t in (g.get("teams") or []):
             teams[str(t.get("id"))] = t.get("name") or str(t.get("id"))
     nf = {}
+
+    def _consider(home, away, d, ko, pkey):
+        for tid, opp, at_home in ((home, away, True), (away, home, False)):
+            if not tid:
+                continue
+            prev = nf.get(str(tid))
+            if not prev or ko < prev["_ko"]:
+                nf[str(tid)] = {"oppId": str(opp), "oppName": teams.get(str(opp), str(opp)),
+                                "atHome": at_home, "date": d, "_ko": ko, "pickKey": pkey}
+
     for gkey, g in (wm.get("groups") or {}).items():
         for fx in (g.get("fixtures") or []):
             d = fx.get("date") or ""
@@ -162,13 +172,23 @@ def _next_fixtures(wm):
             home, away = fx.get("home"), fx.get("away")
             # Pick-Key wie in wm["picks"]: "GROUP-MD-HOME-AWAY" (Stufe 2: Signale des Spiels).
             pkey = f"{gkey}-{md}-{home}-{away}" if md is not None else None
-            for tid, opp, at_home in ((home, away, True), (away, home, False)):
-                if not tid:
-                    continue
-                prev = nf.get(str(tid))
-                if not prev or ko < prev["_ko"]:
-                    nf[str(tid)] = {"oppId": str(opp), "oppName": teams.get(str(opp), str(opp)),
-                                    "atHome": at_home, "date": d, "_ko": ko, "pickKey": pkey}
+            _consider(home, away, d, ko, pkey)
+
+    # 04.07.2026 (Lucas: „Streak-Card kommt immer nach dem Spiel"): K.-o.-Spiele liegen in
+    # koFixtures, nicht in groups. Ohne sie fand in der K.-o.-Phase KEIN Team ein „nächstes Spiel"
+    # → jede Serien-Card verlor Gegner + Datum → las sich wie ein Nachbericht statt Vorschau.
+    for kf in (wm.get("koFixtures") or []):
+        home, away = kf.get("home"), kf.get("away")
+        if not (home and away):
+            continue   # unaufgelöstes Bracket-Spiel
+        _ko = kf.get("kickoff") or ""
+        d = kf.get("date") or (_ko[:10] if _ko else "")
+        if not d or d < today:
+            continue
+        rnd = kf.get("round")
+        pkey = f"KO-{rnd}-{home}-{away}"
+        _consider(home, away, d, _ko or (d + "T00:00:00Z"), pkey)
+
     for v in nf.values():
         v.pop("_ko", None)
     return nf

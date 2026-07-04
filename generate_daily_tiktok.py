@@ -758,7 +758,13 @@ def pick_streak_for_card(streaks: list, posted_keys: set):
         cands.append((s, key))
     if not cands:
         return None
-    return max(cands, key=lambda c: _streak_heat(c[0]))
+    # 04.07.2026 (Lucas: „Card kommt immer nach dem Spiel"): forward-looking bevorzugen — eine
+    # Serie MIT anstehendem Spiel (next.date, aus _next_fixtures inkl. KO) wird zur Vorschau
+    # „Hält die Serie gegen X?". Ausgeschiedene Teams (kein next) nur als Evergreen-Fallback,
+    # wenn es an einem ruhigen Tag keine forward-looking Serie gibt.
+    forward = [c for c in cands if (c[0].get("next") or {}).get("date")]
+    pool = forward or cands
+    return max(pool, key=lambda c: _streak_heat(c[0]))
 
 
 def build_streak_cards(today_iso: str, dedup: dict) -> list:

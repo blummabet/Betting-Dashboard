@@ -22,6 +22,39 @@ def _s(team, tid, stype, length, state="intakt", venue="all", confirm=False, opp
     return d
 
 
+class TestStreakCardTiming(unittest.TestCase):
+    """04.07.2026 (Lucas: „Card kommt immer nach dem Spiel"): forward-looking bevorzugen +
+    _next_fixtures muss KO-Spiele kennen (sonst kein nächstes Spiel in der K.-o.-Phase)."""
+
+    def test_next_fixtures_kennt_ko(self):
+        import compute_streaks as C
+        wm = {
+            "groups": {"A": {"teams": [{"id": "FRA", "name": "Frankreich"},
+                                       {"id": "PRY", "name": "Paraguay"}], "fixtures": []}},
+            "koFixtures": [{"home": "FRA", "away": "PRY", "round": "R16",
+                            "date": "2099-01-01", "kickoff": "2099-01-01T20:00:00Z"}],
+        }
+        nf = C._next_fixtures(wm)
+        self.assertIn("FRA", nf)
+        self.assertEqual(nf["FRA"]["oppName"], "Paraguay")
+        self.assertEqual(nf["FRA"]["pickKey"], "KO-R16-FRA-PRY")
+
+    def test_forward_looking_bevorzugt(self):
+        # zwei intakt-Meilenstein-Serien: eine mit nächstem Spiel, eine ohne (ausgeschieden).
+        # Die forward-looking gewinnt, auch wenn die andere „heißer" (länger) ist.
+        eliminated = _s("Eliminated", "99", "over25", 12)         # kein next
+        upcoming = _s("Upcoming", "42", "over25", 6, opp="Gegner")
+        upcoming["next"]["date"] = "2099-01-01"
+        chosen = G.pick_streak_for_card([eliminated, upcoming], set())
+        self.assertEqual(chosen[0]["team"], "Upcoming")
+
+    def test_evergreen_fallback(self):
+        # keine forward-looking Serie → Evergreen-Fallback greift (ausgeschiedenes Team postet)
+        eliminated = _s("Eliminated", "99", "over25", 12)
+        chosen = G.pick_streak_for_card([eliminated], set())
+        self.assertIsNotNone(chosen)
+
+
 class TestTiktokStreakPick(unittest.TestCase):
     def test_hot_milestone_picked(self):
         chosen = G.pick_streak_for_card([_s("Arsenal", "42", "over25", 6)], set())

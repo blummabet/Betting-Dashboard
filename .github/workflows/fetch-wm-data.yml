@@ -355,6 +355,18 @@ jobs:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
+      # Serien-Watch (pre-match) + Serie gehalten/gerissen (post-match) — 04.07.2026, Lucas.
+      # Beide Modi je Lauf, dedup-sicher über streak_watch.json (watch merkt sich, recap löst auf).
+      - name: 🔥 WM Serien-Watch + Recap
+        if: always()
+        run: |
+          TG_STREAK_MODE=watch python telegram_streak_watch.py || true
+          TG_STREAK_MODE=recap python telegram_streak_watch.py || true
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
       # ── Commit wm2026-data.json + match pages wenn geändert ──────────────
       # if: always() (11.06.2026) — Commit MUSS laufen, auch wenn ein Schritt
       # davor hart abbricht. Sonst bleiben frisch gefetchte Odds im Runner und
@@ -378,6 +390,7 @@ jobs:
           git add wm_status.json 2>/dev/null || true
           git add wm_streaks.json 2>/dev/null || true   # Streak-Content (neu/untracked, 28.06.2026)
           git add pick_announce_state.json 2>/dev/null || true   # Neuer-Pick-Noti-Basis (03.07.2026)
+          git add streak_watch.json 2>/dev/null || true          # Serien-Watch-State (04.07.2026)
           # Diagnose: was ist staged? (im Log sichtbar, kein stilles Versagen mehr)
           echo "📋 Staged für Commit:"; git diff --staged --name-only | sed 's/^/   /' || true
           if git diff --staged --quiet; then
