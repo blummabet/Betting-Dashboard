@@ -407,9 +407,10 @@ def main():
             "home_score":  home_score if _finished else None,   # 90-Min-Stand = Settlement-Basis
             "away_score":  away_score if _finished else None,
         }
-        # Verlängerungs-/Gesamtstand (inkl. Verlängerung) nur zur Anzeige — settlet NICHTS. Nur wenn
-        # er vom 90-Min-Stand abweicht (AET/PEN gespielt).
-        if _finished and agg_home is not None and (agg_home, agg_away) != (home_score, away_score):
+        # Verlängerungs-/Gesamtstand (inkl. Verlängerung) nur zur Anzeige — settlet NICHTS. Bei AET/PEN
+        # IMMER speichern (auch wenn == 90-Min), damit der Guard check_ko_settlement_ninety_min eine
+        # verlässliche ET-Referenz hat (sonst blind bei einem Revert des _ninety_min_score-Fix).
+        if _finished and status_short in ("AET", "PEN") and agg_home is not None:
             result_entry["aggregateScore"] = {"home": agg_home, "away": agg_away}
         if winner is not None:
             result_entry["winner"] = winner

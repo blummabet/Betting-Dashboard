@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-04T06:41:34.344461+00:00",
+    "generatedAt": "2026-07-04T07:08:11.003785+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -2220,30 +2220,6 @@
       ]
     },
     {
-      "teamId": "GHA",
-      "team": "Ghana",
-      "flag": "🇬🇭",
-      "league": "L",
-      "leagueName": "Gruppe L",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigentendenz 73%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ]
-    },
-    {
       "teamId": "JOR",
       "team": "Jordanien",
       "flag": "🇯🇴",
@@ -3027,6 +3003,62 @@
       ]
     },
     {
+      "teamId": "COL",
+      "team": "Kolumbien",
+      "flag": "🇨🇴",
+      "league": "K",
+      "leagueName": "Gruppe K",
+      "type": "bttsNo",
+      "market": "Beide treffen — Nein",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 53,
+        "label": "Eigentendenz 53%"
+      },
+      "ratePct": 53,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true
+      ]
+    },
+    {
+      "teamId": "COL",
+      "team": "Kolumbien",
+      "flag": "🇨🇴",
+      "league": "K",
+      "leagueName": "Gruppe K",
+      "type": "cleanSheet",
+      "market": "Zu null",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 53,
+        "label": "Eigentendenz 53%"
+      },
+      "ratePct": 53,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true
+      ]
+    },
+    {
       "teamId": "EGY",
       "team": "Ägypten",
       "flag": "🇪🇬",
@@ -3131,6 +3163,34 @@
         true,
         true,
         true
+      ]
+    },
+    {
+      "teamId": "COL",
+      "team": "Kolumbien",
+      "flag": "🇨🇴",
+      "league": "K",
+      "leagueName": "Gruppe K",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 40,
+        "label": "Eigentendenz 40%"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
       ]
     },
     {
@@ -3440,15 +3500,14 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigentendenz 60%"
+        "ratePct": 67,
+        "label": "Eigentendenz 67%"
       },
-      "ratePct": 60,
+      "ratePct": 67,
       "seq": [
         true,
         true,
-        true,
-        false
+        true
       ]
     },
     {
@@ -3464,15 +3523,37 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigentendenz 60%"
+        "ratePct": 67,
+        "label": "Eigentendenz 67%"
       },
-      "ratePct": 60,
+      "ratePct": 67,
       "seq": [
         true,
         true,
+        true
+      ]
+    },
+    {
+      "teamId": "GHA",
+      "team": "Ghana",
+      "flag": "🇬🇭",
+      "league": "L",
+      "leagueName": "Gruppe L",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigentendenz 67%"
+      },
+      "ratePct": 67,
+      "seq": [
         true,
-        false
+        true,
+        true
       ]
     },
     {
@@ -4644,7 +4725,7 @@
       "type": "bttsNo",
       "market": "Beide treffen — Nein",
       "length": 3,
-      "venue": "H",
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "neutral",
@@ -4657,9 +4738,9 @@
         true,
         true,
         false,
-        false,
-        false,
         true,
+        false,
+        false,
         false
       ]
     },
@@ -4672,7 +4753,7 @@
       "type": "cleanSheet",
       "market": "Zu null",
       "length": 3,
-      "venue": "H",
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "neutral",
@@ -4685,9 +4766,9 @@
         true,
         true,
         false,
-        false,
-        false,
         true,
+        false,
+        false,
         false
       ]
     },
@@ -5022,7 +5103,7 @@
       "type": "under25",
       "market": "Unter 2,5 Tore",
       "length": 3,
-      "venue": "H",
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "wackelt",
@@ -5035,7 +5116,7 @@
         true,
         true,
         false,
-        false,
+        true,
         false,
         false,
         false
@@ -5061,8 +5142,7 @@
       "seq": [
         true,
         true,
-        true,
-        false
+        true
       ]
     },
     {

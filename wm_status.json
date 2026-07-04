@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-04T06:42:09Z",
+  "generatedAt": "2026-07-04T07:08:35Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -72,7 +72,7 @@
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 96 Fixtures, Ø 108.8 Snapshots",
+    "📉 Odds-History: 96 Fixtures, Ø 108.9 Snapshots",
     "💹 Poly-Preise: 6 Fixtures",
     "💼 Poly-Balance: $413.00",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -184,6 +184,15 @@
       "nFail": 0,
       "failures": [],
       "note": "fetch_wm_poly_prices.real_keys muss bothResolved koFixtures enthalten."
+    },
+    {
+      "id": "ko_settlement_ninety_min",
+      "label": "KO-Settlement auf 90-Min-Stand (nicht inkl. Verlängerung)",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fetch_wm_match_results._ninety_min_score muss score.fulltime nutzen (score.fulltime)."
     },
     {
       "id": "odds_freshness",
