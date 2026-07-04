@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-04T01:13:03Z",
-    "total_records": 150
+    "updated_at": "2026-07-04T01:28:03Z",
+    "total_records": 152
   },
   "records": [
     {
@@ -3214,6 +3214,46 @@
       "processVerdict": "UNLUCKY"
     },
     {
+      "key": "KO-R32-ARG-CPV|Unter 2.5 Tore",
+      "matchKey": "KO-R32-ARG-CPV",
+      "market": "Unter 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "chance_creation",
+          "score": 2.05
+        }
+      ],
+      "resolvedAt": "2026-07-04T01:17:36Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": false
+    },
+    {
+      "key": "KO-R32-ARG-CPV|Unter 3.5 Tore",
+      "matchKey": "KO-R32-ARG-CPV",
+      "market": "Unter 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 3.07
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.88
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.05
+        }
+      ],
+      "resolvedAt": "2026-07-04T01:17:36Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false
+    },
+    {
       "key": "KO-R32-AUS-EGY|Unter 2.5 Tore",
       "matchKey": "KO-R32-AUS-EGY",
       "market": "Unter 2.5 Tore",
@@ -3408,7 +3448,7 @@
           "score": -5.78
         }
       ],
-      "resolvedAt": "2026-07-04T01:13:03Z",
+      "resolvedAt": "2026-07-04T01:28:03Z",
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true
@@ -3432,7 +3472,7 @@
           "score": -1.8
         }
       ],
-      "resolvedAt": "2026-07-04T01:13:03Z",
+      "resolvedAt": "2026-07-04T01:28:03Z",
       "source": "steam",
       "convictionScore": 2,
       "lateEntry": false
