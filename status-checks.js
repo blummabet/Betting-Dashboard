@@ -100,6 +100,21 @@ const _PV_META = {
   DESERVED_LOSS: { lbl: 'verdiente Niederlage', col: '#f85149' },
 };
 
+// Signal-Klartext-Namen (identisch zur Sharp-Radar-Nomenklatur) für die Lern-Tabelle.
+const _SIG_LABEL = {
+  form_trend: 'Form-Trend', xg_strength: 'xG-Stärke', travel_burden: 'Reise-Last',
+  smart_money: 'Smart Money', chance_creation: 'Chancen-Qualität', incentive_signal: 'Anreiz',
+  public_static_bias: 'Public-Bias', lineup_signal: 'Aufstellung (T-1h)',
+  lead_lag_bias: 'Sharp-Move (Pinn vs Soft)', weather_signal: 'Wetter/Hitze',
+  pressure_index: 'Druck-Index', form_rating: 'Form-Rating', h2h_pattern: 'H2H-Muster',
+  apif_predictions: 'APIF-Prognose', freshness_leg: 'Frische', fixture_congestion: 'Terminstress',
+  altitude_signal: 'Höhe', injury: 'Verletzungen', streak_momentum: 'Serien-Momentum',
+  polymarket_sharp: 'Polymarket-Sharp', steam_lag: 'Steam-Lag',
+};
+// Nur im Trade-Pfad — feuern per Design NIE auf Cards → lernen hier nicht (kein Fehler).
+const _SIG_TRADE_ONLY = new Set(['polymarket_sharp', 'steam_lag']);
+const _SIG_MIN_LEARN = 10;   // ab so vielen Beobachtungen gilt ein Signal als „gelernt"
+
 function _stRenderLearning(data, ledger, weights) {
   const el = document.getElementById('st_learning');
   if (!el) return;
@@ -171,27 +186,70 @@ function _stRenderLearning(data, ledger, weights) {
       <div style="display:flex;flex-wrap:wrap;gap:6px 4px;font-size:11px;">${legend}</div>`;
   }
 
-  // Top-Gewichts-Bewegungen
-  let mv = '';
-  const top = movers.filter(m => m.drift >= 0.03).slice(0, 5);
-  if (top.length) {
-    mv = `<div style="margin-top:14px;font-size:11px;color:var(--muted);margin-bottom:5px;">Signale, die der Loop am stärksten nachjustiert hat (1.00 = neutral):</div>
-      <div style="display:flex;flex-direction:column;gap:5px;">` + top.map(m => {
-      const up = m.weight >= 1;
-      const col = up ? '#3fb950' : '#f85149';
-      return `<div style="display:flex;align-items:center;gap:8px;font-size:12px;">
-        <span style="color:${col};font-weight:800;width:14px;">${up ? '↑' : '↓'}</span>
-        <span style="flex:1;">${m.name}</span>
-        <span style="color:var(--muted);font-size:10.5px;">n=${m.n}</span>
-        <span style="color:${col};font-weight:800;font-variant-numeric:tabular-nums;">${m.weight.toFixed(2)}</span></div>`;
-    }).join('') + `</div>`;
+  // ── Signal-Lerntabelle: was hat jedes Signal gelernt? ──
+  const sigRows = [];
+  if (weights && typeof weights === 'object') {
+    for (const [name, w] of Object.entries(weights)) {
+      if (name === '_meta' || !w || typeof w.weight !== 'number') continue;
+      const wins = +w.wins_when_triggered || 0, loss = +w.losses_when_triggered || 0;
+      const dec = wins + loss;
+      sigRows.push({
+        name, label: _SIG_LABEL[name] || name, weight: w.weight,
+        n: w.n_observations || 0, hit: dec > 0 ? Math.round(wins / dec * 100) : null,
+        tradeOnly: _SIG_TRADE_ONLY.has(name),
+      });
+    }
   }
+  sigRows.sort((a, b) => b.n - a.n);
+  const learned  = sigRows.filter(s => !s.tradeOnly && s.n >= _SIG_MIN_LEARN);
+  const thin     = sigRows.filter(s => !s.tradeOnly && s.n < _SIG_MIN_LEARN);
+  const tradeSig = sigRows.filter(s => s.tradeOnly);
+
+  const sigRow = s => {
+    const up = s.weight > 1.02, dn = s.weight < 0.98;
+    const col = up ? '#3fb950' : (dn ? '#f85149' : 'var(--muted)');
+    const arr = up ? '↑' : (dn ? '↓' : '–');
+    // Diverging-Bar: Mitte = 1.00, Ausschlag nach Vertrauen (skala 0.6–1.5)
+    const dev = Math.max(-0.4, Math.min(0.5, s.weight - 1));
+    const pctW = Math.abs(dev) / 0.5 * 50;
+    const barFill = dev >= 0
+      ? `<div style="position:absolute;left:50%;width:${pctW}%;height:100%;background:#3fb950;"></div>`
+      : `<div style="position:absolute;right:50%;width:${pctW}%;height:100%;background:#f85149;"></div>`;
+    const hit = s.hit === null ? '<span style="color:var(--muted);">—</span>'
+      : `<span style="color:${s.hit >= 55 ? '#3fb950' : (s.hit <= 45 ? '#e3b341' : 'var(--fg)')};">${s.hit}%</span>`;
+    return `<div style="display:flex;align-items:center;gap:9px;font-size:12px;padding:3px 0;">
+      <span style="flex:1;min-width:110px;">${s.label}</span>
+      <span style="width:38px;text-align:right;color:var(--muted);font-size:10.5px;font-variant-numeric:tabular-nums;">n=${s.n}</span>
+      <span style="width:34px;text-align:right;font-variant-numeric:tabular-nums;">${hit}</span>
+      <span style="position:relative;width:56px;height:7px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;flex-shrink:0;"><span style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.25);"></span>${barFill}</span>
+      <span style="width:44px;text-align:right;font-weight:800;color:${col};font-variant-numeric:tabular-nums;">${arr} ${s.weight.toFixed(2)}</span></div>`;
+  };
+
+  const subHead = t => `<div style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin:12px 0 4px;">${t}</div>`;
+  let tbl = subHead(`Gelernt · genug Masse (n ≥ ${_SIG_MIN_LEARN})`) + learned.map(sigRow).join('');
+  if (thin.length)     tbl += subHead('Lernt noch · dünne Stichprobe') + thin.map(sigRow).join('');
+  if (tradeSig.length) tbl += subHead('Nur Trading · feuert nicht auf Cards') +
+    tradeSig.map(s => `<div style="display:flex;align-items:center;gap:9px;font-size:12px;padding:3px 0;opacity:.55;">
+      <span style="flex:1;">${s.label}</span><span style="color:var(--muted);font-size:10.5px;">lernt hier nicht (Trade-Pfad)</span></div>`).join('');
+
+  // Health-Verdict-Kopf
+  const loopOk = judged > 0 && !!newestW;
+  const vcol = loopOk ? '#3fb950' : '#e3b341';
+  const verdict = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:9px 12px;background:${vcol}12;border:1px solid ${vcol}40;border-radius:10px;">
+    <span style="font-size:16px;">${loopOk ? '✓' : '⏳'}</span>
+    <span style="font-size:12.5px;font-weight:700;color:${vcol};">${loopOk
+      ? `Lern-Loop aktiv · ${judged} Picks bewertet · ${learned.length} Signale mit Masse`
+      : 'Lern-Loop wartet auf erste Ergebnisse'}</span></div>`;
 
   if (!recs.length && !finished) {
     el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:14px;">Noch keine aufgelösten Picks — Lern-Status füllt sich nach den ersten Ergebnissen.</div>';
     return;
   }
-  el.innerHTML = pills + bar + mv;
+  el.innerHTML = verdict + pills + bar +
+    `<div style="margin-top:16px;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Was jedes Signal gelernt hat · <b style="color:var(--fg);">n</b>=bewertete Picks · <b style="color:var(--fg);">Hit</b>=Trefferquote wenn's feuerte · <b style="color:var(--fg);">Gewicht</b> 1.00=neutral, ↑ vertrauenswürdiger</div>
+      ${tbl}
+    </div>`;
 }
 
 async function runStatusPage(force) {

@@ -434,7 +434,15 @@ def check_ou_anchor_source(ctx):
 
 
 def _real_match_keys(ctx):
-    return {ctx.mk(fx) for _g, fx in ctx.fixtures}
+    # 04.07.2026 (Lucas: „24 Phantom-Odds-Keys"): ctx.fixtures kennt nur groups. KO-Spiele
+    # liegen in koFixtures → ihre Odds-Keys (BRA-JPN …) galten fälschlich als leere Spiegel-
+    # Einträge. KO-Match-Keys mitzählen → alle 4 Guards, die _real_match_keys nutzen, sehen
+    # KO-Spiele jetzt als echte Fixtures.
+    keys = {ctx.mk(fx) for _g, fx in ctx.fixtures}
+    for kf in (ctx.wm.get("koFixtures") or []):
+        if kf.get("home") and kf.get("away"):
+            keys.add(ctx.mk(kf))
+    return keys
 
 
 @integrity_check
