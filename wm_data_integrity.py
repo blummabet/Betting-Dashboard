@@ -499,6 +499,42 @@ def check_ko_odds_present(ctx):
 
 
 @integrity_check
+def check_ko_settlement_ninety_min(ctx):
+    """NEU 03.07.2026 (Lucas: ARG-CPV 1:1 nach 90 → Verlängerung 3:2 → „Unter 2.5/3.5" fälschlich
+    verloren; BEL-SEN hatte denselben Bug latent, nur ohne Tor-Pick). UNSERE Märkte settlen auf 90
+    MINUTEN, NICHT inkl. Verlängerung — Verlängerung/Elfmeter zählen nur für den Aufstieg. `result.
+    aggregateScore` hält den ET-inkl. Endstand (nur gesetzt, wenn Verlängerungstore fielen). Invariante:
+    Settlement-Total (home_score+away_score = 90 Min) MUSS KLEINER sein als das aggregate-Total (die
+    Verlängerung fügt nur Tore hinzu). Ist es das nicht, settlet der Resolver auf den falschen (ET-inkl.)
+    Stand → Regression des _ninety_min_score-Fix. Stiller Geld-Bug → Guard."""
+    if ctx.is_liga:
+        return None
+    fails = []
+    for kf in (ctx.wm.get("koFixtures") or []):
+        r = kf.get("result") or {}
+        status = str(r.get("status") or "").upper()
+        agg = r.get("aggregateScore")
+        if status not in ("AET", "PEN") or not isinstance(agg, dict):
+            continue
+        h, a   = r.get("home_score"), r.get("away_score")
+        ah, aa = agg.get("home"), agg.get("away")
+        if None in (h, a, ah, aa):
+            continue
+        st, at = h + a, ah + aa
+        # Settlement (90 Min) kann NIE mehr Tore haben als der Gesamtstand (Verlängerung fügt nur hinzu).
+        if st > at:
+            fails.append(f"{kf.get('home')}-{kf.get('away')}: Settlement {h}:{a} ({st}) > Gesamt {ah}:{aa} ({at})")
+        # AET = in der Verlängerung entschieden → dort fielen Tore → 90-Min-Total MUSS strikt kleiner sein.
+        # Gleichheit = die Verlängerungstore sind fälschlich im Settlement gelandet (der ARG-CPV-Bug).
+        elif status == "AET" and st >= at:
+            fails.append(f"{kf.get('home')}-{kf.get('away')}: AET, aber Settlement {h}:{a} ({st}) "
+                         f"nicht < Gesamt {ah}:{aa} ({at}) — Verlängerungstore im 90-Min-Stand?")
+    return _chk("ko_settlement_ninety_min",
+                "KO-Settlement auf 90-Min-Stand (nicht inkl. Verlängerung)", "error", fails,
+                "fetch_wm_match_results._ninety_min_score muss score.fulltime nutzen (score.fulltime).")
+
+
+@integrity_check
 def check_liga_odds_round_sane(ctx):
     """NEU 26.06.2026 (Bug „Spieltag 1 dann 20"): Liga-Odds dürfen nur auf den nächsten
     anstehenden Spieltagen liegen. match_event_to_fixture akzeptiert 'swapped' → ein
