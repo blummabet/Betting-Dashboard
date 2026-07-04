@@ -818,41 +818,71 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
 
 
 def track_record_card(
-    roi_pct: float,             # z.B. +14.2  (negativ → rote Variante)
-    hit_rate_pct: int,          # z.B. 58
-    total_picks: int,           # z.B. 47
-    resolved_picks: int,        # z.B. 27
+    roi_pct: float,             # (Legacy, ungenutzt — Card ist TikTok-safe ohne €/ROI)
+    hit_rate_pct: int,          # Gesamt-Genauigkeit, z.B. 54
+    total_picks: int,           # z.B. 195
+    resolved_picks: int,        # z.B. 158
     won: int,
     lost: int,
     push: int,
-    pnl_eur: float,             # z.B. +127.50
-    avg_clv_pp: float | None,   # z.B. +3.2  (None wenn nicht verfügbar)
+    pnl_eur: float,             # (Legacy, ungenutzt)
+    avg_clv_pp: float | None,   # (Legacy, ungenutzt — CLV ist Public-Jargon, raus)
     stake_eur: int = 10,
-    equity_curve_points: list[float] | None = None,   # kumulativer P&L pro Pick
-    period_label: str = "WM 2026 Gruppenphase",
+    equity_curve_points: list[float] | None = None,   # kumulativer Netto-Treffer (+1/−1)
+    period_label: str = "WM 2026 · Gruppenphase",
     stand_label: str = "",      # "Stand: 16.06.26 · 18:00"
+    round_stats: dict | None = None,     # {"Sechzehntelfinale": {"won":14,"lost":2,"decided":16,"hit_rate":88}, ...}
+    highlight_round: str | None = None,  # Runde, die farblich hervorgehoben wird (jüngste starke Runde)
+    recent: list | None = None,          # letzte N entschiedene: 1=richtig, 0=daneben
+    recent_won: int = 0,
 ) -> str:
     """
-    Screenshot-taugliche Track-Record-Card für TikTok-Teilen.
-    360×640 vertical. Hero-ROI dominiert, Equity-Curve unten,
-    Stats-Strip rechts (Hit-Rate, n=Picks, CLV).
+    Screenshot-taugliche Track-Record-Card für TikTok/Telegram (360×640).
+    04.07.2026 (Lucas: „geiles Stats-Summary, Gesamt zuerst"): Hero = Gesamt-Genauigkeit +
+    Bilanz (X richtig / Y daneben). Darunter Runden-Aufschlüsselung (jüngste starke Runde
+    farbig hervorgehoben) + jüngste Form (letzte 10 als Punkte) + Netto-Treffer-Verlauf.
+    TikTok-safe: KEINE Quoten/€/ROI/CLV — nur Prognose-Genauigkeit.
     """
-    is_pos = roi_pct >= 0
+    is_pos = hit_rate_pct >= 50
     t = THEMES["track_record" if is_pos else "track_record_neg"]
     accent = t["accent"]
     rgb = t["accentRgb"]
 
-    roi_sign = "+" if roi_pct >= 0 else "−"
-    pnl_sign = "+" if pnl_eur >= 0 else "−"
-    clv_str = "—"
-    if avg_clv_pp is not None:
-        clv_sign = "+" if avg_clv_pp >= 0 else ""
-        clv_str = f"{clv_sign}{avg_clv_pp:.1f}pp"
+    # ── Runden-Aufschlüsselung (in fester Turnier-Reihenfolge, nur gespielte Runden) ──
+    _order = ["Gruppenphase", "Sechzehntelfinale", "Achtelfinale", "Viertelfinale",
+              "Halbfinale", "Spiel um Platz 3", "Finale"]
+    rows_html = ""
+    rs = round_stats or {}
+    for rname in _order:
+        d = rs.get(rname)
+        if not d or d.get("decided", 0) < 1:
+            continue
+        hr = d.get("hit_rate", 0)
+        is_hi = (rname == highlight_round)
+        bar_col = accent if is_hi else "rgba(255,255,255,0.28)"
+        name_col = accent if is_hi else "rgba(255,255,255,0.78)"
+        pct_col = accent if is_hi else "#fff"
+        flame = " 🔥" if is_hi else ""
+        rows_html += f"""
+      <div class="rrow">
+        <div class="rname" style="color:{name_col};">{rname}{flame}</div>
+        <div class="rbar"><div class="rbar-fill" style="width:{max(4,min(100,hr))}%;background:{bar_col};"></div></div>
+        <div class="rrec">{d.get('won',0)}-{d.get('lost',0)}</div>
+        <div class="rpct" style="color:{pct_col};">{hr}%</div>
+      </div>"""
 
-    # Mini Equity-Curve SVG
+    # ── Jüngste Form: letzte 10 als Punkte (grün richtig / rot daneben) ──
+    dots_html = ""
+    rec = list(recent or [])[-10:]
+    for v in rec:
+        c = accent if v == 1 else "rgba(255,90,95,0.85)"
+        dots_html += f'<span class="dot" style="background:{c};"></span>'
+    form_line = f"{recent_won} von {len(rec)} richtig" if rec else "Form folgt"
+
+    # ── Netto-Treffer-Verlauf (SVG) ──
     curve_svg = ""
     if equity_curve_points and len(equity_curve_points) >= 2:
-        W, H = 312, 80
+        W, H = 312, 58
         pts = [0.0] + list(equity_curve_points)
         min_v = min(min(pts), 0.0)
         max_v = max(max(pts), 0.0)
@@ -880,7 +910,7 @@ def track_record_card(
     else:
         curve_svg = (
             f'<div style="text-align:center;font-size:10px;color:rgba(255,255,255,.35);'
-            f'padding:20px 0;letter-spacing:1px;">Genauigkeits-Verlauf folgt mit ersten Prognosen</div>'
+            f'padding:14px 0;letter-spacing:1px;">Verlauf folgt mit ersten Prognosen</div>'
         )
 
     return f"""<!DOCTYPE html>
@@ -893,53 +923,57 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
 .card {{
   width:360px; height:640px;
   background:
-    radial-gradient(circle at 50% 32%, rgba({rgb},0.14) 0%, transparent 55%),
+    radial-gradient(circle at 50% 26%, rgba({rgb},0.14) 0%, transparent 55%),
     linear-gradient(180deg, #0a0e18 0%, #080d18 100%);
   background-image:
-    radial-gradient(circle at 50% 32%, rgba({rgb},0.14) 0%, transparent 55%),
+    radial-gradient(circle at 50% 26%, rgba({rgb},0.14) 0%, transparent 55%),
     linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
   background-size: auto, 24px 24px, 24px 24px;
-  border-radius:24px; padding:24px 22px 20px;
+  border-radius:24px; padding:22px 22px 18px;
   position:relative; overflow:hidden;
   display:flex; flex-direction:column;
   border:1px solid rgba(255,255,255,0.04);
 }}
-.top {{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }}
+.top {{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }}
 .brand-top {{ font-size:11px; font-weight:800; letter-spacing:3px; color:#f5c518; }}
 .badge-top {{ font-size:10px; font-weight:700; letter-spacing:1px; color:{accent};
   background:{t["badgeBg"]}; border:1px solid {t["badgeBorder"]}; border-radius:18px; padding:5px 12px; }}
 
 .period {{ font-size:10px; color:rgba(255,255,255,.40); text-align:center;
-  letter-spacing:1.8px; text-transform:uppercase; font-weight:700; margin-bottom:18px; }}
+  letter-spacing:1.8px; text-transform:uppercase; font-weight:700; margin-bottom:10px; }}
 
-.hero {{ text-align:center; margin-bottom:18px; }}
+.hero {{ text-align:center; margin-bottom:14px; }}
 .hero-label {{ font-size:10px; color:rgba(255,255,255,.45); letter-spacing:2.2px;
-  text-transform:uppercase; font-weight:800; margin-bottom:6px; }}
-.hero-num {{ font-size:84px; font-weight:900; color:{accent}; line-height:1;
+  text-transform:uppercase; font-weight:800; margin-bottom:2px; }}
+.hero-num {{ font-size:76px; font-weight:900; color:{accent}; line-height:1;
   letter-spacing:-3.5px; text-shadow: 0 0 38px rgba({rgb},0.50); }}
-.hero-num .unit {{ font-size:36px; font-weight:700; vertical-align:top; margin-left:3px; }}
-.hero-sub {{ font-size:11px; color:rgba(255,255,255,.55); margin-top:7px;
-  letter-spacing:.3px; font-weight:600; }}
+.hero-num .unit {{ font-size:32px; font-weight:700; vertical-align:top; margin-left:3px; }}
+.hero-sub {{ font-size:13px; color:#fff; margin-top:6px; letter-spacing:.3px; font-weight:800; }}
+.hero-sub .g {{ color:{accent}; }}
+.hero-sub2 {{ font-size:10px; color:rgba(255,255,255,.45); margin-top:3px; letter-spacing:.4px; }}
 
-.stats-row {{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;
-  margin-bottom:16px; padding:14px 4px;
-  border-top:1px solid rgba(255,255,255,0.05);
-  border-bottom:1px solid rgba(255,255,255,0.05); }}
-.stat {{ text-align:center; }}
-.stat-num {{ font-size:18px; font-weight:900; color:#fff; line-height:1;
-  letter-spacing:-.5px; }}
-.stat-num.acc {{ color:{accent}; }}
-.stat-lbl {{ font-size:8.5px; color:rgba(255,255,255,.42); letter-spacing:1.3px;
-  text-transform:uppercase; font-weight:700; margin-top:4px; }}
+.section-lbl {{ font-size:9px; color:rgba(255,255,255,.45); letter-spacing:1.6px;
+  text-transform:uppercase; font-weight:800; margin:0 2px 7px; }}
+.rounds {{ padding:13px 4px 5px; border-top:1px solid rgba(255,255,255,0.06); }}
+.rrow {{ display:grid; grid-template-columns:96px 1fr 34px 38px; align-items:center;
+  gap:8px; margin-bottom:9px; }}
+.rname {{ font-size:11px; font-weight:700; letter-spacing:.2px; white-space:nowrap; }}
+.rbar {{ height:6px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }}
+.rbar-fill {{ height:100%; border-radius:4px; }}
+.rrec {{ font-size:10px; color:rgba(255,255,255,.50); text-align:right; font-weight:600; }}
+.rpct {{ font-size:14px; font-weight:900; text-align:right; letter-spacing:-.5px; }}
 
-.curve-wrap {{ background:rgba(255,255,255,0.02); border-radius:10px;
-  padding:10px 8px 4px; margin-bottom:auto; }}
-.curve-label {{ font-size:9px; color:rgba(255,255,255,.45); letter-spacing:1.5px;
-  text-transform:uppercase; font-weight:800; margin-bottom:4px; padding:0 6px; }}
+.form {{ margin-top:auto; padding:12px 4px 4px; border-top:1px solid rgba(255,255,255,0.06); }}
+.form-head {{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }}
+.form-val {{ font-size:11px; font-weight:800; color:{accent}; letter-spacing:.3px; }}
+.dots {{ display:flex; gap:5px; margin-bottom:12px; }}
+.dot {{ width:20px; height:6px; border-radius:3px; }}
+.curve-label {{ font-size:9px; color:rgba(255,255,255,.42); letter-spacing:1.5px;
+  text-transform:uppercase; font-weight:800; margin-bottom:3px; padding:0 2px; }}
 
 .footer {{ display:flex; justify-content:space-between; align-items:center;
-  border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; margin-top:14px; }}
+  border-top:1px solid rgba(255,255,255,0.05); padding-top:9px; margin-top:10px; }}
 .footer .ft {{ font-size:9px; color:rgba(255,255,255,.30); letter-spacing:.5px; }}
 .footer .ft-stand {{ color:rgba(255,255,255,.55); font-weight:700; }}
 </style></head>
@@ -955,26 +989,22 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
   <div class="hero">
     <div class="hero-label">Prognose-Genauigkeit</div>
     <div class="hero-num">{hit_rate_pct}<span class="unit">%</span></div>
-    <div class="hero-sub">{resolved_picks} von {total_picks} Prognosen ausgewertet</div>
+    <div class="hero-sub"><span class="g">{won} richtig</span> · {lost} daneben</div>
+    <div class="hero-sub2">{resolved_picks} von {total_picks} Prognosen ausgewertet</div>
   </div>
 
-  <div class="stats-row">
-    <div class="stat">
-      <div class="stat-num acc">{resolved_picks}</div>
-      <div class="stat-lbl">ausgewertet</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">{total_picks}</div>
-      <div class="stat-lbl">Prognosen gesamt</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num acc">{clv_str}</div>
-      <div class="stat-lbl">Ø Vorhersage-Wert</div>
-    </div>
+  <div class="rounds">
+    <div class="section-lbl">Genauigkeit pro Runde</div>
+    {rows_html}
   </div>
 
-  <div class="curve-wrap">
-    <div class="curve-label">Genauigkeits-Verlauf</div>
+  <div class="form">
+    <div class="form-head">
+      <div class="section-lbl" style="margin:0;">Aktuelle Form · letzte {len(rec)}</div>
+      <div class="form-val">{form_line}</div>
+    </div>
+    <div class="dots">{dots_html}</div>
+    <div class="curve-label">Netto-Treffer-Verlauf</div>
     {curve_svg}
   </div>
 

@@ -42,6 +42,15 @@ SKIP_TELEGRAM          = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip()
 TRADES_CHAT_ID = os.environ.get("TELEGRAM_TRADES_CHAT_ID", "").strip()
 
+# KO-Runden-Codes (round-Feld in koFixtures) → menschenlesbares Label für den Runden-Highlight.
+_KO_ROUND_LABELS = {
+    "R32": "Sechzehntelfinale", "R16": "Achtelfinale", "QF": "Viertelfinale",
+    "SF": "Halbfinale", "3P": "Spiel um Platz 3", "TP": "Spiel um Platz 3",
+    "F": "Finale", "FINAL": "Finale",
+    "Sechzehntelfinale": "Sechzehntelfinale", "Achtelfinale": "Achtelfinale",
+    "Viertelfinale": "Viertelfinale", "Halbfinale": "Halbfinale", "Finale": "Finale",
+}
+
 
 def _load(path: Path, default):
     if not path.exists():
@@ -56,31 +65,65 @@ def _save(path: Path, data):
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+# 04.07.2026 (Lucas: „0% ist wertlos hoch 10"): resolve_wm_picks schreibt result als
+# WIN/LOSS/VOID (Großschrift), compute_kpis filterte aber auf "won"/"lost"/"push" → 0 Treffer
+# gezählt → Karte zeigte 0% Genauigkeit trotz 83 Treffern. Ein zentraler Normalisierer mappt
+# jede Schreibweise (WIN/win/won → won, LOSS/loss/lost → lost, VOID/push/void → push).
+def _norm_result(r) -> str | None:
+    """WIN/LOSS/VOID (Resolver) + won/lost/push (Alt) → einheitlich won|lost|push|None."""
+    if not r:
+        return None
+    s = str(r).strip().lower()
+    if s in ("win", "won", "w"):
+        return "won"
+    if s in ("loss", "lost", "l"):
+        return "lost"
+    if s in ("void", "push", "cashback", "refund"):
+        return "push"
+    return None
+
+
 def compute_kpis(wm: dict) -> dict:
     """Berechnet KPIs aus wm2026-data.json picks."""
     all_picks = []
+    # Fixtures aus Gruppen UND KO-Runden für Datum/Runde (KO liegt in koFixtures, nicht groups).
+    _ko_by_pair = {}
+    for f in (wm.get("koFixtures") or []):
+        if f.get("home") and f.get("away"):
+            _ko_by_pair[(f["home"], f["away"])] = f
     for mk, plist in (wm.get("picks") or {}).items():
         for p in plist:
             parts = mk.split("-", 3)
             if len(parts) < 4:
                 continue
             gkey, md, home, away = parts
-            # Fixture-Datum für Sortierung der Equity-Kurve
+            # Fixture-Datum + Runde für Sortierung/Runden-Highlight
             fxd = None
             fxt = None
+            rnd = None
             for fx in (wm.get("groups", {}).get(gkey, {}).get("fixtures") or []):
                 if fx["home"] == home and fx["away"] == away:
                     fxd = fx.get("date")
                     fxt = fx.get("time", "23:59")
+                    rnd = "Gruppenphase"
                     break
-            all_picks.append({**p, "_date": fxd, "_time": fxt})
+            if fxd is None:
+                _kf = _ko_by_pair.get((home, away))
+                if _kf:
+                    _ko_ts = _kf.get("kickoff") or ""
+                    fxd = _kf.get("date") or (_ko_ts[:10] if _ko_ts else None)
+                    fxt = (_ko_ts[11:16] if len(_ko_ts) >= 16 else None) or "23:59"
+                    rnd = _KO_ROUND_LABELS.get(str(_kf.get("round") or md), "K.-o.-Runde")
+            all_picks.append({**p, "_date": fxd, "_time": fxt, "_round": rnd,
+                              "_res": _norm_result(p.get("result")),
+                              "_home": home, "_away": away})
 
     total    = len(all_picks)
     bet_n    = sum(1 for p in all_picks if p.get("verdict") == "BET")
-    resolved = [p for p in all_picks if p.get("result") is not None]
-    won      = [p for p in resolved if p.get("result") == "won"]
-    lost     = [p for p in resolved if p.get("result") == "lost"]
-    push     = [p for p in resolved if p.get("result") == "push"]
+    resolved = [p for p in all_picks if p.get("_res") is not None]
+    won      = [p for p in resolved if p["_res"] == "won"]
+    lost     = [p for p in resolved if p["_res"] == "lost"]
+    push     = [p for p in resolved if p["_res"] == "push"]
 
     decided  = len(resolved) - len(push)
     hit_rate = round(len(won) / decided * 100) if decided > 0 else 0
@@ -99,11 +142,35 @@ def compute_kpis(wm: dict) -> dict:
     cum = 0
     equity = []
     for p in sortable:
-        if p["result"] == "won":
+        if p["_res"] == "won":
             cum += 1
-        elif p["result"] == "lost":
+        elif p["_res"] == "lost":
             cum -= 1
         equity.append(cum)
+
+    # ── Runden-Aufschlüsselung (04.07.2026, Lucas: „im Achtelfinale top performt") ──
+    # Highlight = die beste zuletzt komplett gespielte Runde (won/decided). Nur Runden mit
+    # ≥3 entschiedenen Prognosen zählen, damit ein 1/1 nicht die „54% overall" überstrahlt.
+    _round_order = ["Gruppenphase", "Sechzehntelfinale", "Achtelfinale", "Viertelfinale",
+                    "Halbfinale", "Spiel um Platz 3", "Finale"]
+    round_stats = {}
+    for p in resolved:
+        r = p.get("_round") or "K.-o.-Runde"
+        d = round_stats.setdefault(r, {"won": 0, "lost": 0, "push": 0})
+        d[p["_res"]] += 1
+    for r, d in round_stats.items():
+        dec = d["won"] + d["lost"]
+        d["decided"] = dec
+        d["hit_rate"] = round(d["won"] / dec * 100) if dec else 0
+    # Jüngste Runde mit genug Substanz für ein Highlight
+    _played_rounds = [r for r in _round_order
+                      if round_stats.get(r, {}).get("decided", 0) >= 3]
+    highlight_round = _played_rounds[-1] if _played_rounds else None
+
+    # ── Jüngste Form (letzte 10 entschiedene Prognosen, chronologisch) ──
+    _decided_sorted = [p for p in sortable if p["_res"] in ("won", "lost")]
+    recent = [1 if p["_res"] == "won" else 0 for p in _decided_sorted[-10:]]
+    recent_won = sum(recent)
 
     return {
         "total":     total,
@@ -117,6 +184,10 @@ def compute_kpis(wm: dict) -> dict:
         "roi_pct":   round(roi_pct, 1),
         "avg_clv":   round(avg_clv, 1) if avg_clv is not None else None,
         "equity":    equity,
+        "round_stats":     round_stats,
+        "highlight_round": highlight_round,
+        "recent":          recent,        # letzte 10: 1=richtig, 0=daneben
+        "recent_won":      recent_won,
     }
 
 
@@ -193,6 +264,9 @@ def main():
     now_local = datetime.now(timezone(timedelta(hours=2)))   # Wien-Zeit grob
     stand = f"Stand: {now_local.strftime('%d.%m.%y · %H:%M')}"
 
+    # Period-Label = jüngste gespielte Runde (statt hart „Gruppenphase")
+    period = f"WM 2026 · {k['highlight_round']}" if k.get("highlight_round") else "WM 2026"
+
     from tiktok_card_templates import track_record_card
     html = track_record_card(
         roi_pct        = k["roi_pct"],
@@ -206,8 +280,12 @@ def main():
         avg_clv_pp     = k["avg_clv"],
         stake_eur      = STAKE_EUR,
         equity_curve_points = k["equity"],
-        period_label   = "WM 2026 · Gruppenphase",
+        period_label   = period,
         stand_label    = stand,
+        round_stats    = k["round_stats"],
+        highlight_round = k["highlight_round"],
+        recent         = k["recent"],
+        recent_won     = k["recent_won"],
     )
 
     ts = now_local.strftime("%Y%m%d_%H%M")
@@ -217,12 +295,16 @@ def main():
 
     png_path = render_png(html_path)
     if png_path:
-        # TikTok-safe (15.06.2026): keine €/ROI/P&L — Prognose-Genauigkeit statt Geld.
+        # TikTok-safe (15.06.2026): keine €/ROI/P&L/CLV — nur Prognose-Genauigkeit.
+        # 04.07.2026: Runden-Highlight in die Caption (Social-Hook), CLV raus (Public-Jargon).
         caption = (
-            f"📊 <b>CocoBet Prognose-Genauigkeit</b>\n"
-            f"{k['hit_rate']}% richtig · {k['resolved']}/{k['total']} Prognosen ausgewertet"
-            + (f" · Ø Vorhersage-Wert {k['avg_clv']:+.1f}pp" if k['avg_clv'] is not None else "")
+            f"📊 <b>CocoBet Track-Record</b>\n"
+            f"{k['hit_rate']}% richtig · {k['won']}-{k['lost']} · {k['resolved']} von {k['total']} ausgewertet"
         )
+        _hr = k.get("highlight_round")
+        _hd = (k.get("round_stats") or {}).get(_hr or "")
+        if _hd and _hd.get("decided", 0) >= 3:
+            caption += f"\n🔥 {_hr}: {_hd['hit_rate']}% ({_hd['won']}-{_hd['lost']})"
         ok = tg_send_photo(png_path, caption)
         if ok:
             print(f"✅ Telegram gesendet")
