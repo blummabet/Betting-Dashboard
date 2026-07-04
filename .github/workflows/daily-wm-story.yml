@@ -1,9 +1,12 @@
 name: 🎬 WM Live-Story Engine
 
 on:
-  # 06:00 UTC = 08:00 Wien — vor Lucas am Schreibtisch sitzt
-  schedule:
-    - cron: '0 6 * * *'
+  # 03.07.2026 (Lucas: „ich kann auf WM verzichten"): WM Live-Story PAUSIERT. Der Hook kam
+  # strukturell 1 Tag zu spät (Argentinien 10h nach Anpfiff) → für Live-Content unbrauchbar.
+  # Cron auskommentiert → läuft nur noch manuell (workflow_dispatch). MLS/Liga-Content läuft
+  # stattdessen dataset-aware über update-mls.yml / update-liga.yml.
+  # schedule:
+  #   - cron: '0 6 * * *'   # 06:00 UTC = 08:00 Wien
 
   workflow_dispatch:
     inputs:

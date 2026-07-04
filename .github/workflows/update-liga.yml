@@ -6,7 +6,9 @@ name: ⚽ Liga aktualisieren (Top 5)
 # + Resolve + CLV (kein Poly). Takt 2×/Tag während der WM; danach hochdrehen.
 on:
   schedule:
-    - cron: '0 6,18 * * *'   # 2×/Tag (vor/nach den meisten Liga-Anpfiffen)
+    # GETRENNT (nicht '0 6,18') — nur so unterscheidet github.event.schedule PRE- vs POST-Match:
+    - cron: '0 6 * * *'    # PRE-Match: Morgens CET, vor den Nachmittags-Anpfiffen (Digest + Previews)
+    - cron: '0 18 * * *'   # POST-Match: Abends CET (Recap + Reviews decken den Vortag ab)
   workflow_dispatch:
 
 permissions:
@@ -130,6 +132,49 @@ jobs:
       - name: 🛡️ Liga Guard-Batterie (liga_status.json)
         run: python wm_data_integrity.py || true
 
+      # ── Content-Ausspielung (01.07.2026 Phase B, Lucas): dataset-aware Telegram + TikTok für Liga ──
+      # 06:00-Lauf = PRE-Match (Digest + Previews vor den Nachmittagsspielen), 18:00-Lauf = POST-Match
+      # (Recap + Reviews; decken den Vortag ab). Manueller Dispatch = PRE-Match.
+      - name: 🤖 Liga AI-Previews generieren (Basis für Preview-Cards)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python generate_wm_ai_preview.py || true
+
+      - name: 📣 Liga Pick-Digest → Public (PRE-Match)
+        if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TG_WM_MODE:       morning
+        run: python telegram_wm.py || true
+
+      - name: 🎬 Liga TikTok Preview-Cards (PRE-Match)
+        if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          ANTHROPIC_API_KEY:       ${{ secrets.ANTHROPIC_API_KEY }}
+          SEND_PREVIEWS: "true"
+          SEND_REVIEWS:  "false"
+        run: python generate_daily_tiktok.py || true
+
+      - name: 📊 Liga Recap → Public (POST-Match)
+        if: github.event.schedule == '0 18 * * *'
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TG_WM_MODE:       recap
+        run: python telegram_wm.py || true
+
+      - name: 🎬 Liga TikTok Review-Cards (POST-Match)
+        if: github.event.schedule == '0 18 * * *'
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          SEND_PREVIEWS: "false"
+          SEND_REVIEWS:  "true"
+        run: python generate_daily_tiktok.py || true
+
       - name: 💾 liga-data.json committen
         if: always()
         run: |
@@ -152,6 +197,7 @@ jobs:
           git add liga_match_stats_cache.json 2>/dev/null || true
           git add liga_apif_predictions.json 2>/dev/null || true
           git add liga_player_form.json liga_player_form_ledger.json 2>/dev/null || true
+          git add liga_tiktok_sent.json liga-telegram-log.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.

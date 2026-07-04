@@ -74,9 +74,12 @@ def _pick_hook_config(hero: dict) -> dict:
 
 
 BASE       = Path(__file__).parent
-WM_FILE    = BASE / "wm2026-data.json"
-OUTPUT_DIR = BASE / "daily-tiktok"
-DEDUP_FILE = BASE / "tiktok_sent.json"   # Tracking was schon gepostet wurde
+# 01.07.2026 (Lucas: „Content für MLS/Liga"): dataset-aware. WM_FILE = aktives Daten-File; OUTPUT/DEDUP
+# per Dataset-Prefix (WM = kein Prefix → unverändert, mls/liga eigene Dateien → keine Kreuz-Kontamination).
+import cocobet_dataset as D  # noqa: E402
+WM_FILE    = D.data_file()
+OUTPUT_DIR = BASE / f"{D.prefix()}daily-tiktok"
+DEDUP_FILE = BASE / f"{D.prefix()}tiktok_sent.json"   # Tracking was schon gepostet wurde
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 # ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
@@ -764,7 +767,7 @@ def build_streak_cards(today_iso: str, dedup: dict) -> list:
     Tagen near-daily, an ruhigen weniger — aber nie eine schwache Pflicht-Card. TikTok-safe (29.06.2026,
     Lucas). Liest wm_streaks.json (compute_streaks). Returns [(label, png, caption)] oder []."""
     try:
-        data = json.loads((BASE / "wm_streaks.json").read_text(encoding="utf-8"))
+        data = json.loads(D.file("wm_streaks.json", "liga_streaks.json").read_text(encoding="utf-8"))
     except Exception:
         return []
     posted = {h.get("streakKey") for h in (dedup.get("history") or []) if h.get("streakKey")}

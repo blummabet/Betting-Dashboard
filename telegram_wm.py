@@ -31,8 +31,11 @@ TELEGRAM_TOKEN = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
 CHAT_ID        = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()
 TG_WM_MODE     = os.environ.get("TG_WM_MODE", "morning")
 
-WM_FILE        = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wm2026-data.json")
-LOG_FILE       = os.path.join(os.path.dirname(os.path.abspath(__file__)), "telegram-log.json")
+# 01.07.2026 (Lucas: „Content für MLS/Liga"): dataset-aware. WM_FILE = aktives Daten-File; LOG_FILE
+# per Dataset (WM = telegram-log.json unverändert, mls/liga eigenes Log → keine Kreuz-Kontamination).
+import cocobet_dataset as D  # noqa: E402
+WM_FILE        = str(D.data_file())
+LOG_FILE       = str(D.file("telegram-log.json", "liga-telegram-log.json"))
 
 # ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
 try:

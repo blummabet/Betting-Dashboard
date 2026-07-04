@@ -37,7 +37,10 @@ from pathlib import Path
 
 # ── Config ────────────────────────────────────────────────────────────────────
 BASE     = Path(__file__).parent
-WM_FILE  = BASE / "wm2026-data.json"
+# 01.07.2026 (Lucas: „Content für MLS/Liga"): dataset-aware. Liest/schreibt das aktive Daten-File
+# (wm2026-data.json / liga-data.json / mls-data.json) → erzeugt Previews für den aktiven Datensatz.
+import cocobet_dataset as D  # noqa: E402
+WM_FILE  = D.data_file()
 
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 FORCE_ALL         = os.environ.get("FORCE_ALL", "").lower() == "true"
