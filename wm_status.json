@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-03T06:57:42Z",
+  "generatedAt": "2026-07-03T20:55:03Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -25,25 +25,25 @@
   ],
   "signalsTotal": 25,
   "perSignal": {
-    "lead_lag_bias": 14,
-    "public_static_bias": 18,
+    "lead_lag_bias": 15,
+    "public_static_bias": 19,
     "travel_burden": 77,
     "injury": 4,
-    "form_trend": 130,
+    "form_trend": 132,
     "h2h_pattern": 7,
-    "xg_strength": 120,
+    "xg_strength": 121,
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 40,
     "lineup_signal": 21,
     "apif_predictions": 10,
-    "weather_signal": 22,
+    "weather_signal": 24,
     "incentive_signal": 24,
     "altitude_signal": 4,
-    "chance_creation": 47,
-    "form_rating": 13,
-    "freshness_leg": 18,
-    "smart_money": 34,
+    "chance_creation": 49,
+    "form_rating": 15,
+    "freshness_leg": 20,
+    "smart_money": 37,
     "league_pressure": 0,
     "fixture_congestion": 3,
     "topscorer_momentum": 0,
@@ -64,16 +64,16 @@
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
     "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 22 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
     "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
-    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. CAN-MAR: Soft bewegte sich 4.5→4.8, aber Opening==Jetzt (5.0) — nicht eingefroren)"
+    "🛡️ Soft-Eröffnung echt erfasst: 2 Fehler (z.B. CAN-MAR: Soft bewegte sich 4.5→4.4, aber Opening==Jetzt (5.0) — nicht eingefroren)"
   ],
   "oks": [
-    "🌡️ Weather: 11 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
+    "🌡️ Weather: 9 Spiele mit Forecast",
+    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 94 Fixtures, Ø 108.3 Snapshots",
-    "💹 Poly-Preise: 8 Fixtures",
+    "📉 Odds-History: 94 Fixtures, Ø 110.1 Snapshots",
+    "💹 Poly-Preise: 9 Fixtures",
     "💼 Poly-Balance: $413.00",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
@@ -435,9 +435,10 @@
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
       "ok": false,
-      "nFail": 1,
+      "nFail": 2,
       "failures": [
-        "CAN-MAR: Soft bewegte sich 4.5→4.8, aber Opening==Jetzt (5.0) — nicht eingefroren"
+        "CAN-MAR: Soft bewegte sich 4.5→4.4, aber Opening==Jetzt (5.0) — nicht eingefroren",
+        "POR-ESP: Soft bewegte sich 4.33→3.9, aber Opening==Jetzt (4.0) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
