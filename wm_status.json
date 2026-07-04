@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-04T13:03:26Z",
+  "generatedAt": "2026-07-04T17:15:41Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -25,7 +25,7 @@
   ],
   "signalsTotal": 25,
   "perSignal": {
-    "lead_lag_bias": 15,
+    "lead_lag_bias": 14,
     "public_static_bias": 19,
     "travel_burden": 77,
     "injury": 5,
@@ -35,7 +35,7 @@
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 40,
-    "lineup_signal": 21,
+    "lineup_signal": 22,
     "apif_predictions": 10,
     "weather_signal": 22,
     "incentive_signal": 24,
@@ -43,7 +43,7 @@
     "chance_creation": 50,
     "form_rating": 16,
     "freshness_leg": 21,
-    "smart_money": 38,
+    "smart_money": 37,
     "league_pressure": 0,
     "fixture_congestion": 3,
     "topscorer_momentum": 0,
@@ -61,20 +61,20 @@
     "🧠 Signal 'coach_change' feuert nicht (kontextabhängig)",
     "🧠 Signal 'transfer_shift' feuert nicht (kontextabhängig)",
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
+    "🛡️ Pinnacle-1X2 vollständig + plausibel: 1 Fehler (z.B. GER-PRY: 1X2 unvollständig hw=None dr=None aw=None)",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
-    "🛡️ Keine Phantom-Odds-Keys (verkehrte Reihenfolge): 24 Fehler (z.B. ZAF-CAN: kein echtes Fixture (Spiegel-Key?))",
     "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
-    "🛡️ Soft-Eröffnung echt erfasst: 3 Fehler (z.B. PRY-FRA: Soft bewegte sich 13.0→15.0, aber Opening==Jetzt (16.0) — nicht eingefroren)"
+    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. SUI-COL: Soft bewegte sich 3.4→3.3, aber Opening==Jetzt (3.4) — nicht eingefroren)"
   ],
   "oks": [
     "🌡️ Weather: 8 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.3h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 96 Fixtures, Ø 109.3 Snapshots",
+    "📉 Odds-History: 96 Fixtures, Ø 109.9 Snapshots",
     "💹 Poly-Preise: 8 Fixtures",
-    "💼 Poly-Balance: $413.00",
+    "💼 Poly-Balance: $362.29",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -171,9 +171,11 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "GER-PRY: 1X2 unvollständig hw=None dr=None aw=None"
+      ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -290,34 +292,9 @@
       "id": "no_phantom_odds",
       "label": "Keine Phantom-Odds-Keys (verkehrte Reihenfolge)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 24,
-      "failures": [
-        "ZAF-CAN: kein echtes Fixture (Spiegel-Key?)",
-        "NED-MAR: kein echtes Fixture (Spiegel-Key?)",
-        "BRA-JPN: kein echtes Fixture (Spiegel-Key?)",
-        "CIV-NOR: kein echtes Fixture (Spiegel-Key?)",
-        "AUS-EGY: kein echtes Fixture (Spiegel-Key?)",
-        "POR-CRO: kein echtes Fixture (Spiegel-Key?)",
-        "ESP-AUT: kein echtes Fixture (Spiegel-Key?)",
-        "ARG-CPV: kein echtes Fixture (Spiegel-Key?)",
-        "GER-PRY: kein echtes Fixture (Spiegel-Key?)",
-        "USA-BIH: kein echtes Fixture (Spiegel-Key?)",
-        "FRA-SWE: kein echtes Fixture (Spiegel-Key?)",
-        "MEX-ECU: kein echtes Fixture (Spiegel-Key?)",
-        "ENG-COD: kein echtes Fixture (Spiegel-Key?)",
-        "BEL-SEN: kein echtes Fixture (Spiegel-Key?)",
-        "COL-GHA: kein echtes Fixture (Spiegel-Key?)",
-        "SUI-DZA: kein echtes Fixture (Spiegel-Key?)",
-        "CAN-MAR: kein echtes Fixture (Spiegel-Key?)",
-        "BRA-NOR: kein echtes Fixture (Spiegel-Key?)",
-        "PRY-FRA: kein echtes Fixture (Spiegel-Key?)",
-        "MEX-ENG: kein echtes Fixture (Spiegel-Key?)",
-        "USA-BEL: kein echtes Fixture (Spiegel-Key?)",
-        "POR-ESP: kein echtes Fixture (Spiegel-Key?)",
-        "ARG-EGY: kein echtes Fixture (Spiegel-Key?)",
-        "SUI-COL: kein echtes Fixture (Spiegel-Key?)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "84 Odds-Keys vs 72 Fixtures = 12 leere Spiegel-Einträge. Quelle prüfen."
     },
     {
@@ -446,10 +423,8 @@
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 1,
       "failures": [
-        "PRY-FRA: Soft bewegte sich 13.0→15.0, aber Opening==Jetzt (16.0) — nicht eingefroren",
-        "POR-ESP: Soft bewegte sich 4.33→3.8, aber Opening==Jetzt (4.0) — nicht eingefroren",
         "SUI-COL: Soft bewegte sich 3.4→3.3, aber Opening==Jetzt (3.4) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
