@@ -7,7 +7,9 @@ from pathlib import Path
 REPO = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO))
 
-from sharp_signals.streak_momentum import StreakMomentumSignal, MAX_PP
+from sharp_signals.streak_momentum import StreakMomentumSignal, DEFAULTS
+
+MAX_PP = DEFAULTS["max_pp"]
 
 
 def _streak(team, stype, length, rate, venue="all"):
@@ -44,8 +46,10 @@ class TestStreakMomentum(unittest.TestCase):
         self.assertLessEqual(r.score, MAX_PP)
 
     def test_btts_market(self):
+        # 04.07.2026: BTTS ist jetzt persistenz-gedämpft (0.45, Backtest negativ) → eine EINZELNE
+        # Serie reicht oft nicht mehr; beide Teams stapeln über die Schwelle.
         r = self.sig.evaluate({"market": "Beide Teams treffen"},
-                              _ctx([_streak("42", "bttsYes", 6, 72)]))
+                              _ctx([_streak("42", "bttsYes", 6, 78)], [_streak("50", "bttsYes", 6, 78)]))
         self.assertIsNotNone(r)
         self.assertGreater(r.score, 0)
 

@@ -25,6 +25,53 @@ OUT = D.file("wm_streaks.json", "liga_streaks.json")
 MIN_LEN = 3     # ab dieser Länge zeigen
 STRONG_LEN = 5  # ab hier „starke" Serie (für die Cards-Sektion)
 
+# 04.07.2026 (Lucas: „Streaks zu starken Zahlen machen"): xG-Deckung. Eine Über-Serie, deren
+# letzte Spiele auch per xG über der Linie lagen, ist echtes Team-Profil; eine aus Glückstoren
+# (xG unter der Linie) ist ein Regressions-Kandidat. xgBacked fließt ins streak_momentum-Signal
+# (ungedeckte Serien werden dort stark gedämpft). Nur für Tor-Total-Serien (over25/under25).
+_OU_TOTAL_LINE = 2.5
+
+
+def _team_xg_totals(wm: dict) -> dict:
+    """{teamId: [xgTotal, ...] most-recent-first} aus gespielten Fixtures (Gruppe + K.-o.).
+    xgTotal = home+away xG des Spiels (result.stats.xgTotal, real oder xgSim-Fallback)."""
+    games = []  # (date, teamId, xgTotal)
+    def _scan(fx):
+        r = (fx or {}).get("result") or {}
+        st = r.get("stats") or {}
+        xt = st.get("xgTotal")
+        if xt is None:
+            hx, ax = st.get("homeXg"), st.get("awayXg")
+            xt = (hx + ax) if isinstance(hx, (int, float)) and isinstance(ax, (int, float)) else None
+        if xt is None:
+            return
+        d = fx.get("date") or (fx.get("kickoff") or "")[:10] or ""
+        for tid in (fx.get("home"), fx.get("away")):
+            if tid:
+                games.append((d, str(tid), float(xt)))
+    for g in (wm.get("groups") or {}).values():
+        for fx in (g.get("fixtures") or []):
+            _scan(fx)
+    for fx in (wm.get("koFixtures") or []):
+        _scan(fx)
+    out: dict = {}
+    for d, tid, xt in sorted(games, key=lambda x: x[0], reverse=True):
+        out.setdefault(tid, []).append(xt)
+    return out
+
+
+def _xg_backed(streak_type: str, xg_window: list) -> bool | None:
+    """Ist die Serie von xG gedeckt? True/False für over25/under25, sonst None (n/a)."""
+    if not xg_window:
+        return None
+    if streak_type == "over25":
+        over = sum(1 for x in xg_window if x > _OU_TOTAL_LINE)
+        return over / len(xg_window) >= 0.5
+    if streak_type == "under25":
+        under = sum(1 for x in xg_window if x < _OU_TOTAL_LINE)
+        return under / len(xg_window) >= 0.5
+    return None
+
 # Tor-/BTTS-/Team-Märkte aus form (mit venueSeq). (key, seq-Feld, Ziel, Markt, Grundrate, target_false)
 FORM_MARKETS = [
     ("over25",     "o25Seq",    True,  "Über 2,5 Tore",        "over25Rate",     False),
@@ -203,6 +250,7 @@ def build_streaks(wm: dict) -> dict:
                                         "flag": t.get("flag") or ""}
     next_fx = _next_fixtures(wm)
     picks = wm.get("picks") or {}   # Stufe 2: Signale/Linie des nächsten Spiels
+    xg_totals = _team_xg_totals(wm)  # 04.07.2026: xG-Deckung pro Team (most-recent-first)
     streaks = []
 
     def _emit(tid, seq, venue_seq, target, market, rate, target_false, key):
@@ -219,12 +267,14 @@ def build_streaks(wm: dict) -> dict:
             # seqViz: letzte ~8 Spiele dieser Richtung als Punkte (True=Treffer), most-recent-first.
             # Führende True = die aktuelle Serie, das erste False zeigt, wo sie begann.
             seq_viz = [bool(x) == target for x in fseq[:8]]
+            # xG-Deckung nur für Tor-Total-Serien (over25/under25); Fenster = die aktive Serie.
+            xgb = _xg_backed(key, (xg_totals.get(str(tid)) or [])[:length])
             s = {
                 "teamId": str(tid), "team": meta["team"], "flag": meta.get("flag", ""),
                 "league": meta["league"], "leagueName": meta["leagueName"],
                 "type": key, "market": market, "length": length, "venue": venue,
                 "strong": length >= STRONG_LEN, "continuation": cont,
-                "ratePct": cont["ratePct"], "seq": seq_viz,
+                "ratePct": cont["ratePct"], "seq": seq_viz, "xgBacked": xgb,
             }
             nf = next_fx.get(str(tid))
             if nf:

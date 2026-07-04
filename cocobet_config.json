@@ -330,6 +330,25 @@
       },
       "poly": {
         "series_slug": "soccer-fifwc"
+      },
+      "streak_momentum": {
+        "_comment": "Streak-Signal (04.07.2026): Markt-Persistenz + xG-Deckung + Gegner-Kontext. Defaults im Code (sharp_signals/streak_momentum.py), hier überschreibbar.",
+        "min_length": 3,
+        "min_rate_pct": 55,
+        "per_streak": 0.15,
+        "max_pp": 2.5,
+        "backed_factor": 1.15,
+        "unbacked_factor": 0.35,
+        "opp_scale_min": 0.8,
+        "opp_scale_max": 1.25,
+        "market_persistence": {
+          "over25": 0.5,
+          "under25": 0.5,
+          "bttsYes": 0.45,
+          "bttsNo": 0.4,
+          "cornersOver": 1.0,
+          "cornersUnder": 0.4
+        }
       }
     },
     "liga_default": {
@@ -543,6 +562,25 @@
         "min_segment_n": 25,
         "scale": 8.0,
         "max_nudge": 1.5
+      },
+      "streak_momentum": {
+        "_comment": "Streak-Signal (04.07.2026): Markt-Persistenz + xG-Deckung + Gegner-Kontext. Defaults im Code (sharp_signals/streak_momentum.py), hier überschreibbar.",
+        "min_length": 3,
+        "min_rate_pct": 55,
+        "per_streak": 0.15,
+        "max_pp": 2.5,
+        "backed_factor": 1.15,
+        "unbacked_factor": 0.35,
+        "opp_scale_min": 0.8,
+        "opp_scale_max": 1.25,
+        "market_persistence": {
+          "over25": 0.5,
+          "under25": 0.5,
+          "bttsYes": 0.45,
+          "bttsNo": 0.4,
+          "cornersOver": 1.0,
+          "cornersUnder": 0.4
+        }
       }
     },
     "mls_default": {
@@ -759,6 +797,25 @@
       },
       "poly": {
         "series_slug": "soccer-mls"
+      },
+      "streak_momentum": {
+        "_comment": "Streak-Signal (04.07.2026): Markt-Persistenz + xG-Deckung + Gegner-Kontext. Defaults im Code (sharp_signals/streak_momentum.py), hier überschreibbar.",
+        "min_length": 3,
+        "min_rate_pct": 55,
+        "per_streak": 0.15,
+        "max_pp": 2.5,
+        "backed_factor": 1.15,
+        "unbacked_factor": 0.35,
+        "opp_scale_min": 0.8,
+        "opp_scale_max": 1.25,
+        "market_persistence": {
+          "over25": 0.5,
+          "under25": 0.5,
+          "bttsYes": 0.45,
+          "bttsNo": 0.4,
+          "cornersOver": 1.0,
+          "cornersUnder": 0.4
+        }
       }
     }
   }

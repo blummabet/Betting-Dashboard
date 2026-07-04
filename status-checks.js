@@ -106,7 +106,7 @@ const _SIG_LABEL = {
   smart_money: 'Smart Money', chance_creation: 'Chancen-Qualität', incentive_signal: 'Anreiz',
   public_static_bias: 'Public-Bias', lineup_signal: 'Aufstellung (T-1h)',
   lead_lag_bias: 'Sharp-Move (Pinn vs Soft)', weather_signal: 'Wetter/Hitze',
-  pressure_index: 'Druck-Index', form_rating: 'Form-Rating', h2h_pattern: 'H2H-Muster',
+  pressure_index: 'Druck-Index', league_pressure: 'Liga-Druck', form_rating: 'Form-Rating', h2h_pattern: 'H2H-Muster',
   apif_predictions: 'APIF-Prognose', freshness_leg: 'Frische', fixture_congestion: 'Terminstress',
   altitude_signal: 'Höhe', injury: 'Verletzungen', streak_momentum: 'Serien-Momentum',
   polymarket_sharp: 'Polymarket-Sharp', steam_lag: 'Steam-Lag',
