@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-04T20:46:21Z",
-    "total_records": 153
+    "updated_at": "2026-07-04T20:59:31Z",
+    "total_records": 154
   },
   "records": [
     {
@@ -3214,6 +3214,47 @@
       "processVerdict": "UNLUCKY"
     },
     {
+      "key": "KO-R16-CAN-MAR|Auswärtssieg",
+      "matchKey": "KO-R16-CAN-MAR",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "public_static_bias",
+          "score": -1.47
+        },
+        {
+          "name": "form_trend",
+          "score": 2.2
+        },
+        {
+          "name": "xg_strength",
+          "score": 0.88
+        },
+        {
+          "name": "lineup_signal",
+          "score": -0.5
+        },
+        {
+          "name": "weather_signal",
+          "score": 1.0
+        },
+        {
+          "name": "form_rating",
+          "score": -1.82
+        },
+        {
+          "name": "smart_money",
+          "score": 1.27
+        }
+      ],
+      "resolvedAt": "2026-07-04T20:45:33Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": false,
+      "processVerdict": "LUCKY"
+    },
+    {
       "key": "KO-R32-ARG-CPV|Unter 2.5 Tore",
       "matchKey": "KO-R32-ARG-CPV",
       "market": "Unter 2.5 Tore",
@@ -3474,7 +3515,7 @@
           "score": -5.78
         }
       ],
-      "resolvedAt": "2026-07-04T20:46:21Z",
+      "resolvedAt": "2026-07-04T20:59:31Z",
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true
@@ -3498,7 +3539,7 @@
           "score": -1.8
         }
       ],
-      "resolvedAt": "2026-07-04T20:46:21Z",
+      "resolvedAt": "2026-07-04T20:59:31Z",
       "source": "steam",
       "convictionScore": 2,
       "lateEntry": false
