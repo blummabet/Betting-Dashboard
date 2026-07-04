@@ -175,6 +175,13 @@ jobs:
           SEND_REVIEWS:  "true"
         run: python generate_daily_tiktok.py || true
 
+      # Intraday-„Neuer Pick"-Noti (03.07.2026): meldet Nachzügler seit dem heutigen Digest.
+      - name: 🆕 MLS Neuer-Pick-Noti (Intraday)
+        env:
+          TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python notify_new_picks.py || true
+
       - name: 💾 mls-data.json committen
         if: always()
         run: |
@@ -196,6 +203,7 @@ jobs:
           git add mls_apif_predictions.json 2>/dev/null || true
           git add mls_player_form.json mls_player_form_ledger.json 2>/dev/null || true
           git add mls_tiktok_sent.json mls-telegram-log.json 2>/dev/null || true
+          git add mls_pick_announce_state.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "mls: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.

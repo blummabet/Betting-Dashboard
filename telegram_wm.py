@@ -698,6 +698,18 @@ def main():
                 if ok:
                     _log_send("morning_card", card.split("\n")[0], {"date": today, "mode": mode})
                     _mark_sent("morning_card", today)
+                    # Basis für die Intraday-„Neuer Pick"-Noti setzen (03.07.2026, Lucas):
+                    # der Digest ist Erst-Ankündiger → alles Bekannte als announced markieren,
+                    # lastDigestDate=heute. notify_new_picks meldet danach nur Nachzügler.
+                    try:
+                        import pick_announce_state as _S
+                        _st = _S.load()
+                        _S.mark(_st, _S.current_pick_ids(wm))
+                        _st["lastDigestDate"] = today
+                        _st["seeded"] = True
+                        _S.save(_st)
+                    except Exception as _e:
+                        print(f"  ⚠️  Pick-Announce-Basis nicht gesetzt: {_e}")
             else:
                 print(f"  ○ Keine WM-Spiele am {today}")
 

@@ -118,6 +118,20 @@ class TestHomeawaySwapFinishedSkip(unittest.TestCase):
         wm = self._wm(finished=False, poly=(0.20, 0.20, 0.60))
         self.assertEqual(len(self._run(wm)), 1)
 
+    def test_finished_ko_fixture_no_swap_alarm(self):
+        # 04.07.2026 (Lucas: „E_HOMEAWAY_SWAP-Push für BRA-JPN"): fertiges KO-Spiel liegt in
+        # koFixtures (nicht groups). Ohne KO im Fixture-Index fand _fx_for_key nichts → fertiges
+        # Spiel wurde nicht ausgenommen → Swap-Alarm auf veraltetem Post-Match-DC-Snapshot.
+        wm = {
+            "groups": {},
+            "koFixtures": [{"home": "BRA", "away": "JPN", "round": "R32",
+                            "kickoff": "2026-06-29T17:00:00Z",
+                            "result": {"status": "FT", "winner": "BRA"}}],
+            # 1X2 Heim-Favorit, aber DC spiegelverkehrt (dc1X>dcX2) → würde ohne Fix feuern
+            "odds": {"BRA-JPN": {"hw": 2.04, "aw": 4.5, "dc1X": 1.55, "dcX2": 1.24}},
+        }
+        self.assertEqual(self._run(wm), [])
+
 
 class TestNegativeClvFinishedAndSteam(unittest.TestCase):
     """W_NEGATIVE_CLV: nicht auf fertigen Spielen; Steam-Wording (22.06.2026)."""

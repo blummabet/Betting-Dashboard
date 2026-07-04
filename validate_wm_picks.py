@@ -68,6 +68,14 @@ def _build_fixture_index(wm: dict) -> dict:
             h, a = fx.get("home"), fx.get("away")
             if h and a:
                 idx[f"{h}-{a}"] = fx
+    # 04.07.2026 (Lucas: „E_HOMEAWAY_SWAP-Push für BRA-JPN"): KO-Spiele leben in koFixtures,
+    # nicht in groups. Ohne sie im Index gab _fx_for_key für jedes KO-Spiel None zurück →
+    # _is_finished/_kickoff_passed sahen None → fertige KO-Spiele wurden NICHT ausgenommen →
+    # der Swap-Check feuerte auf ein gespieltes Spiel mit veraltetem Post-Match-DC-Snapshot.
+    for fx in (wm.get("koFixtures") or []):
+        h, a = fx.get("home"), fx.get("away")
+        if h and a:
+            idx.setdefault(f"{h}-{a}", fx)
     return idx
 
 
