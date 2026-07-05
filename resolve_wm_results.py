@@ -244,7 +244,14 @@ def build_result_lookup(wm: dict) -> dict:
     except Exception:
         closing_lines = {}
 
-    for gdata in wm.get("groups", {}).values():
+    # 04.07.2026 (Lucas/Fable-Audit: „KO-CLV tot — 0/16 positiv"): K.-o.-Spiele liegen in
+    # koFixtures, nicht in groups → build_result_lookup fand sie nie → resolve_steam_clv setzte
+    # clvPP nie (blieb 0) → im performenden Segment (R32) lief der Lern-Loop auf totem CLV-Sensor.
+    # KO als synthetische „Gruppe" anhängen (kein Re-Indent). Liga/MLS haben keine koFixtures → No-Op.
+    _groups_and_ko = list(wm.get("groups", {}).values()) + [
+        {"fixtures": [f for f in (wm.get("koFixtures") or []) if f.get("home") and f.get("away")]}
+    ]
+    for gdata in _groups_and_ko:
         for fx in gdata.get("fixtures", []):
             home_id = fx["home"]
             away_id = fx["away"]
