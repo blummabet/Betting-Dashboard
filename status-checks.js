@@ -186,47 +186,67 @@ function _stRenderLearning(data, ledger, weights) {
       <div style="display:flex;flex-wrap:wrap;gap:6px 4px;font-size:11px;">${legend}</div>`;
   }
 
-  // ── Signal-Lerntabelle: was hat jedes Signal gelernt? ──
+  // ── Feuer-Häufigkeit je Signal auf der AKTUELLEN Slate (für den Netto-Einfluss) ──
+  const fireCount = {};
+  if (data && data.picks) {
+    for (const plist of Object.values(data.picks)) {
+      if (!Array.isArray(plist)) continue;
+      for (const p of plist) {
+        for (const sg of (p.signals || [])) {
+          if (sg && sg.name && sg.score !== 0 && sg.score != null) {
+            fireCount[sg.name] = (fireCount[sg.name] || 0) + 1;
+          }
+        }
+      }
+    }
+  }
+
+  // ── Signal-Lerntabelle: gelernt + Netto-Einfluss (Feuer × Vertrauens-Abweichung) ──
   const sigRows = [];
   if (weights && typeof weights === 'object') {
     for (const [name, w] of Object.entries(weights)) {
       if (name === '_meta' || !w || typeof w.weight !== 'number') continue;
       const wins = +w.wins_when_triggered || 0, loss = +w.losses_when_triggered || 0;
       const dec = wins + loss;
+      const fire = fireCount[name] || 0;
       sigRows.push({
         name, label: _SIG_LABEL[name] || name, weight: w.weight,
         n: w.n_observations || 0, hit: dec > 0 ? Math.round(wins / dec * 100) : null,
+        fire, infl: Math.round((w.weight - 1) * fire * 10) / 10,   // Vol × Δ = Netto-Einfluss
         tradeOnly: _SIG_TRADE_ONLY.has(name),
       });
     }
   }
-  sigRows.sort((a, b) => b.n - a.n);
-  const learned  = sigRows.filter(s => !s.tradeOnly && s.n >= _SIG_MIN_LEARN);
-  const thin     = sigRows.filter(s => !s.tradeOnly && s.n < _SIG_MIN_LEARN);
+  // Träger oben, Drags unten (nach Netto-Einfluss); dünne nach n.
+  const learned  = sigRows.filter(s => !s.tradeOnly && s.n >= _SIG_MIN_LEARN).sort((a, b) => b.infl - a.infl);
+  const thin     = sigRows.filter(s => !s.tradeOnly && s.n < _SIG_MIN_LEARN).sort((a, b) => b.n - a.n);
   const tradeSig = sigRows.filter(s => s.tradeOnly);
+  const maxInfl  = Math.max(1, ...sigRows.map(s => Math.abs(s.infl)));
 
   const sigRow = s => {
     const up = s.weight > 1.02, dn = s.weight < 0.98;
     const col = up ? '#3fb950' : (dn ? '#f85149' : 'var(--muted)');
     const arr = up ? '↑' : (dn ? '↓' : '–');
-    // Diverging-Bar: Mitte = 1.00, Ausschlag nach Vertrauen (skala 0.6–1.5)
-    const dev = Math.max(-0.4, Math.min(0.5, s.weight - 1));
-    const pctW = Math.abs(dev) / 0.5 * 50;
-    const barFill = dev >= 0
-      ? `<div style="position:absolute;left:50%;width:${pctW}%;height:100%;background:#3fb950;"></div>`
-      : `<div style="position:absolute;right:50%;width:${pctW}%;height:100%;background:#f85149;"></div>`;
     const hit = s.hit === null ? '<span style="color:var(--muted);">—</span>'
       : `<span style="color:${s.hit >= 55 ? '#3fb950' : (s.hit <= 45 ? '#e3b341' : 'var(--fg)')};">${s.hit}%</span>`;
+    // Netto-Einfluss als signierte, farbige Zahl + diverging Balken (Mitte = 0).
+    const icol = s.infl > 0.5 ? '#3fb950' : (s.infl < -0.5 ? '#f85149' : 'var(--muted)');
+    const iw = Math.abs(s.infl) / maxInfl * 50;
+    const ibar = s.infl >= 0
+      ? `<span style="position:absolute;left:50%;width:${iw}%;height:100%;background:#3fb950;"></span>`
+      : `<span style="position:absolute;right:50%;width:${iw}%;height:100%;background:#f85149;"></span>`;
+    const isign = s.infl > 0 ? '+' : '';
     return `<div style="display:flex;align-items:center;gap:9px;font-size:12px;padding:3px 0;">
-      <span style="flex:1;min-width:110px;">${s.label}</span>
-      <span style="width:38px;text-align:right;color:var(--muted);font-size:10.5px;font-variant-numeric:tabular-nums;">n=${s.n}</span>
-      <span style="width:34px;text-align:right;font-variant-numeric:tabular-nums;">${hit}</span>
-      <span style="position:relative;width:56px;height:7px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;flex-shrink:0;"><span style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.25);"></span>${barFill}</span>
-      <span style="width:44px;text-align:right;font-weight:800;color:${col};font-variant-numeric:tabular-nums;">${arr} ${s.weight.toFixed(2)}</span></div>`;
+      <span style="flex:1;min-width:104px;">${s.label}</span>
+      <span style="width:40px;text-align:right;color:var(--muted);font-size:10.5px;font-variant-numeric:tabular-nums;">${s.fire}×</span>
+      <span style="width:30px;text-align:right;font-variant-numeric:tabular-nums;">${hit}</span>
+      <span style="width:42px;text-align:right;font-weight:800;color:${col};font-variant-numeric:tabular-nums;">${arr}${s.weight.toFixed(2)}</span>
+      <span style="position:relative;width:54px;height:7px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;flex-shrink:0;"><span style="position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(255,255,255,.25);"></span>${ibar}</span>
+      <span style="width:42px;text-align:right;font-weight:800;color:${icol};font-variant-numeric:tabular-nums;">${isign}${s.infl}</span></div>`;
   };
 
   const subHead = t => `<div style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin:12px 0 4px;">${t}</div>`;
-  let tbl = subHead(`Gelernt · genug Masse (n ≥ ${_SIG_MIN_LEARN})`) + learned.map(sigRow).join('');
+  let tbl = subHead(`Gelernt · genug Masse (n ≥ ${_SIG_MIN_LEARN}) · nach Netto-Einfluss`) + learned.map(sigRow).join('');
   if (thin.length)     tbl += subHead('Lernt noch · dünne Stichprobe') + thin.map(sigRow).join('');
   if (tradeSig.length) tbl += subHead('Nur Trading · feuert nicht auf Cards') +
     tradeSig.map(s => `<div style="display:flex;align-items:center;gap:9px;font-size:12px;padding:3px 0;opacity:.55;">
@@ -247,7 +267,7 @@ function _stRenderLearning(data, ledger, weights) {
   }
   el.innerHTML = verdict + pills + bar +
     `<div style="margin-top:16px;">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:2px;">Was jedes Signal gelernt hat · <b style="color:var(--fg);">n</b>=bewertete Picks · <b style="color:var(--fg);">Hit</b>=Trefferquote wenn's feuerte · <b style="color:var(--fg);">Gewicht</b> 1.00=neutral, ↑ vertrauenswürdiger</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:2px;"><b style="color:var(--fg);">Feuer</b>=wie oft auf der aktuellen Slate · <b style="color:var(--fg);">Hit</b>=Trefferquote · <b style="color:var(--fg);">Gewicht</b> 1.00=neutral · <b style="color:var(--fg);">Einfluss</b>=Feuer×(Gewicht−1): <span style="color:#3fb950;">grün trägt</span>, <span style="color:#f85149;">rot zieht runter</span></div>
       ${tbl}
     </div>`;
 }
