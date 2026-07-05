@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-07-04T20:12:00.363353+00:00",
+    "generatedAt": "2026-07-05T09:44:14.638968+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -653,6 +653,43 @@
       "matchupPct": 77
     },
     {
+      "teamId": "1596",
+      "team": "San Jose Earthquakes",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1596.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 7,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 93,
+        "label": "Eigen 93% + Gegner 93% → 93%"
+      },
+      "ratePct": 93,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "1598",
+        "oppName": "Orlando City SC",
+        "atHome": true,
+        "date": "2026-07-23",
+        "oppRatePct": 93
+      },
+      "oppSupportPct": 93,
+      "matchupPct": 93
+    },
+    {
       "teamId": "1613",
       "team": "Columbus Crew",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -801,43 +838,6 @@
       },
       "oppSupportPct": 77,
       "matchupPct": 63
-    },
-    {
-      "teamId": "1596",
-      "team": "San Jose Earthquakes",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1596.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 93% → 89%"
-      },
-      "ratePct": 87,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "1598",
-        "oppName": "Orlando City SC",
-        "atHome": true,
-        "date": "2026-07-23",
-        "oppRatePct": 93
-      },
-      "oppSupportPct": 93,
-      "matchupPct": 89
     },
     {
       "teamId": "1597",
@@ -1251,6 +1251,43 @@
       },
       "oppSupportPct": 53,
       "matchupPct": 60
+    },
+    {
+      "teamId": "1596",
+      "team": "San Jose Earthquakes",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1596.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 67% → 71%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "1598",
+        "oppName": "Orlando City SC",
+        "atHome": true,
+        "date": "2026-07-23",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 71
     },
     {
       "teamId": "1597",
@@ -2069,43 +2106,6 @@
       "matchupPct": 54
     },
     {
-      "teamId": "1596",
-      "team": "San Jose Earthquakes",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1596.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "1598",
-        "oppName": "Orlando City SC",
-        "atHome": true,
-        "date": "2026-07-23",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 67
-    },
-    {
       "teamId": "1597",
       "team": "FC Dallas",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -2195,7 +2195,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
+        "label": "Eigen 67% + Gegner 73% → 69%"
       },
       "ratePct": 67,
       "seq": [
@@ -2214,10 +2214,10 @@
         "oppName": "San Jose Earthquakes",
         "atHome": false,
         "date": "2026-07-23",
-        "oppRatePct": 67
+        "oppRatePct": 73
       },
-      "oppSupportPct": 67,
-      "matchupPct": 67
+      "oppSupportPct": 73,
+      "matchupPct": 69
     },
     {
       "teamId": "1598",
@@ -2233,7 +2233,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
+        "label": "Eigen 67% + Gegner 73% → 69%"
       },
       "ratePct": 67,
       "seq": [
@@ -2250,10 +2250,10 @@
         "oppName": "San Jose Earthquakes",
         "atHome": false,
         "date": "2026-07-23",
-        "oppRatePct": 67
+        "oppRatePct": 73
       },
-      "oppSupportPct": 67,
-      "matchupPct": 67
+      "oppSupportPct": 73,
+      "matchupPct": 69
     },
     {
       "teamId": "1598",
@@ -2823,42 +2823,6 @@
       "matchupPct": 83
     },
     {
-      "teamId": "16489",
-      "team": "Austin",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/16489.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 67% → 75%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "1595",
-        "oppName": "Seattle Sounders",
-        "atHome": true,
-        "date": "2026-07-23",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 75
-    },
-    {
       "teamId": "20787",
       "team": "St. Louis City",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/20787.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -3347,44 +3311,6 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 51
-    },
-    {
-      "teamId": "16489",
-      "team": "Austin",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/16489.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 40% → 60%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "1595",
-        "oppName": "Seattle Sounders",
-        "atHome": true,
-        "date": "2026-07-23",
-        "oppRatePct": 40
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 60
     },
     {
       "teamId": "9569",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-05T07:01:53Z",
+  "generatedAt": "2026-07-05T13:11:30Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -37,7 +37,7 @@
     "pressure_index": 41,
     "lineup_signal": 23,
     "apif_predictions": 10,
-    "weather_signal": 22,
+    "weather_signal": 24,
     "incentive_signal": 24,
     "altitude_signal": 4,
     "chance_creation": 51,
@@ -72,8 +72,8 @@
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 97 Fixtures, Ø 110.1 Snapshots",
-    "💹 Poly-Preise: 6 Fixtures",
+    "📉 Odds-History: 97 Fixtures, Ø 110.9 Snapshots",
+    "💹 Poly-Preise: 7 Fixtures",
     "💼 Poly-Balance: $395.96",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
@@ -419,6 +419,15 @@
       "nFail": 0,
       "failures": [],
       "note": "Je (Spiel, Markt) genau EINE Karte. Mehrfach → _dedup_picks_by_market greift nicht (Refresh-/Merge-Altlast)."
+    },
+    {
+      "id": "steam_lag_no_dupes",
+      "label": "Steam-Lag: 1 Position pro Wette",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Je (Match, Markt) nur EINE Tracking-Position. Mehrfach → make_signal_id/Status-Filter in steam_lag_monitor.update_log defekt (Re-Detektion legt Duplikat an)."
     },
     {
       "id": "soft_opening_captured",
