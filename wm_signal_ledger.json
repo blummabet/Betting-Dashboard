@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-04T18:14:26Z",
-    "total_records": 153
+    "updated_at": "2026-07-05T06:30:15Z",
+    "total_records": 155
   },
   "records": [
     {
@@ -3214,6 +3214,88 @@
       "processVerdict": "UNLUCKY"
     },
     {
+      "key": "KO-R16-CAN-MAR|Auswärtssieg",
+      "matchKey": "KO-R16-CAN-MAR",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "public_static_bias",
+          "score": -1.47
+        },
+        {
+          "name": "form_trend",
+          "score": 2.2
+        },
+        {
+          "name": "xg_strength",
+          "score": 0.88
+        },
+        {
+          "name": "lineup_signal",
+          "score": -0.5
+        },
+        {
+          "name": "weather_signal",
+          "score": 1.0
+        },
+        {
+          "name": "form_rating",
+          "score": -1.82
+        },
+        {
+          "name": "smart_money",
+          "score": 1.27
+        }
+      ],
+      "resolvedAt": "2026-07-04T20:45:33Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": false,
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "KO-R16-PRY-FRA|Unter 3.5 Tore",
+      "matchKey": "KO-R16-PRY-FRA",
+      "market": "Unter 3.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.67
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.63
+        },
+        {
+          "name": "pressure_index",
+          "score": 1.0
+        },
+        {
+          "name": "lineup_signal",
+          "score": -0.87
+        },
+        {
+          "name": "weather_signal",
+          "score": 1.0
+        },
+        {
+          "name": "chance_creation",
+          "score": -1.95
+        },
+        {
+          "name": "streak_momentum",
+          "score": -0.32
+        }
+      ],
+      "resolvedAt": "2026-07-05T01:23:49Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
       "key": "KO-R32-ARG-CPV|Unter 2.5 Tore",
       "matchKey": "KO-R32-ARG-CPV",
       "market": "Unter 2.5 Tore",
@@ -3474,7 +3556,7 @@
           "score": -5.78
         }
       ],
-      "resolvedAt": "2026-07-04T18:14:26Z",
+      "resolvedAt": "2026-07-05T06:30:15Z",
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true
@@ -3498,7 +3580,7 @@
           "score": -1.8
         }
       ],
-      "resolvedAt": "2026-07-04T18:14:26Z",
+      "resolvedAt": "2026-07-05T06:30:15Z",
       "source": "steam",
       "convictionScore": 2,
       "lateEntry": false
