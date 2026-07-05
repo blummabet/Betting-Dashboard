@@ -82,15 +82,29 @@ def _load_results() -> list[dict]:
     except Exception as e:
         print(f"⚠️  wm_signal_ledger.json laden fehlgeschlagen: {e}")
         return []
-    kept, skipped = [], 0
+    # Version-aware (04.07.2026, Lucas): nur auf der AKTUELLEN Engine-Version lernen. Records mit
+    # engineVersion != aktuell (von einer alten Engine) fallen raus — so vergiftet ein Fix den
+    # Ledger nicht. Legacy-Records OHNE Stempel fallen auf das Matchday-Gate zurück (alte WM-Logik).
+    current_ev = D.engine_version()
+    kept, skipped_md, skipped_ver = [], 0, 0
     for r in recs:
+        ev = r.get("engineVersion")
+        if ev is not None:
+            if ev != current_ev:
+                skipped_ver += 1
+                continue
+            kept.append(r)   # aktuelle Version → lernen (Matchday-Gate greift NICHT mehr)
+            continue
+        # Legacy ohne Stempel → Matchday-Fallback (Elo-Ära ausschließen)
         md = _matchday_of(r)
         if md is not None and md < MIN_LEARN_MATCHDAY:
-            skipped += 1
+            skipped_md += 1
             continue
         kept.append(r)
-    if skipped:
-        print(f"  ⏭️  {skipped} Records aus Runde < MD{MIN_LEARN_MATCHDAY} (alte Engine) übersprungen")
+    if skipped_ver:
+        print(f"  ⏭️  {skipped_ver} Records aus alter Engine-Version (≠ {current_ev}) übersprungen")
+    if skipped_md:
+        print(f"  ⏭️  {skipped_md} Legacy-Records aus Runde < MD{MIN_LEARN_MATCHDAY} übersprungen")
     return kept
 
 

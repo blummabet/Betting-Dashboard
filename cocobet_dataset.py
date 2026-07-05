@@ -26,6 +26,7 @@ den Dateinamen automatisch aus dem liga-Schema ab (liga→<dataset>). wm/liga-Ve
 """
 from __future__ import annotations
 
+import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
@@ -52,6 +53,18 @@ def is_liga() -> bool:
 
 def active_profile() -> str:
     return os.environ.get("COCOBET_PROFILE") or _DATASET_PROFILE.get(active_dataset(), "wm2026")
+
+
+def engine_version() -> str:
+    """Aktuelle Engine-Version des aktiven Profils (04.07.2026, Lucas). Jeder Pick wird damit
+    gestempelt → der Lern-Loop lernt NUR auf der aktuellen Version. Bei jeder breaking Engine-
+    Änderung in cocobet_config.json → profiles.<profil>.engine_version hochzählen (v2 → v3 …).
+    So vergiftet ein künftiger Fix den Ledger nicht mehr (Blend aus alter+neuer Logik). Fallback 'v1'."""
+    try:
+        raw = json.loads((BASE / "cocobet_config.json").read_text(encoding="utf-8"))
+        return str(raw.get("profiles", {}).get(active_profile(), {}).get("engine_version") or "v1")
+    except Exception:
+        return "v1"
 
 
 def file(wm: str, liga: str) -> Path:

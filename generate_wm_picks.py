@@ -2309,8 +2309,24 @@ def main():
     except Exception as _e:
         print(f"  ⚠️  Edge-Staking übersprungen: {_e}")
 
+    # engineVersion-Stempel (04.07.2026, Lucas): jeder Pick OHNE Stempel bekommt die aktuelle
+    # Engine-Version des Profils. NIE überschreiben → immutabilitäts-sicher (gepostete Picks
+    # behalten ihren Stand, [[feedback_posted_picks_immutable]]). Der Lern-Loop lernt nur auf der
+    # aktuellen Version → künftige Engine-Änderungen (Version hochzählen) vergiften den Ledger nicht.
+    _ev = D.engine_version()
+    _stamped = 0
+    for _plist in (wm.get("picks") or {}).values():
+        if not isinstance(_plist, list):
+            continue
+        for _p in _plist:
+            if not _p.get("engineVersion"):
+                _p["engineVersion"] = _ev
+                _stamped += 1
+    if _stamped:
+        print(f"  🏷️  engineVersion={_ev} gestempelt auf {_stamped} neue(n) Pick(s).")
     wm["_meta"] = wm.get("_meta", {})
     wm["_meta"]["picksUpdatedAt"] = datetime.now(timezone.utc).isoformat()
+    wm["_meta"]["engineVersion"] = _ev   # aktuelle Version des Datensatzes (für Guard/Anzeige)
 
     with open(WM_FILE, "w", encoding="utf-8") as f:
         json.dump(wm, f, ensure_ascii=False, indent=2)

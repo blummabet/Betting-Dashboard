@@ -125,6 +125,9 @@ def collect_observations(wm: dict) -> list[dict]:
                 "source":           p.get("source") or "model",
                 "convictionScore":  p.get("convictionScore"),
                 "lateEntry":        bool(p.get("lateEntry")),
+                # 04.07.2026 (Lucas): Engine-Version mitschreiben → der Loop lernt nur auf der
+                # aktuellen Version. Legacy-Picks ohne Stempel → None (Matchday-Fallback greift).
+                "engineVersion":    p.get("engineVersion"),
             }
             if _process_verdict:
                 pv = _process_verdict(market, result, stats_lookup.get(match_key))

@@ -12,6 +12,7 @@
   "profiles": {
     "active": "wm2026",
     "wm2026": {
+      "engine_version": "v2",
       "description": "WM 2026 — Pre-Tournament restriktiver, Auto-Trade scharfgeschaltet",
       "edge": {
         "min_1x2_for_pick": 5,
@@ -369,6 +370,7 @@
       }
     },
     "liga_default": {
+      "engine_version": "v1",
       "description": "Liga-Saison Default — moderater, ohne Pre-Tournament-Phase",
       "disabled_signals": [
         "incentive_signal",
@@ -618,6 +620,7 @@
       }
     },
     "mls_default": {
+      "engine_version": "v1",
       "description": "MLS-Saison (Brücken-Liga nach WM) — Klon von liga_default. Reise/Höhe/Wetter folgen in Phase 2 (Geo-Daten).",
       "disabled_signals": [
         "incentive_signal",

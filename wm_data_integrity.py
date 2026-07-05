@@ -877,6 +877,25 @@ def check_no_phantom_odds(ctx):
 
 
 @integrity_check
+def check_engine_version_stamped(ctx):
+    """04.07.2026 (Lucas): jeder BET/ABWÄGEN-Pick soll eine engineVersion tragen — sonst lernt der
+    Loop ihn nur über das Matchday-Fallback statt version-sauber. generate_*_picks stempelt bei
+    JEDEM Lauf (set-if-absent). Ungestempelte actionable Picks = Stempel-Regression (oder Legacy von
+    vor dem Feature — heilt beim nächsten Pipeline-Lauf). WARN, weil selbstheilend."""
+    fails = []
+    for mk, plist in (ctx.wm.get("picks") or {}).items():
+        if not isinstance(plist, list):
+            continue
+        for p in plist:
+            if p.get("verdict") in ("BET", "ABWÄGEN") and not p.get("engineVersion"):
+                fails.append(f"{mk}: {p.get('market')} ohne engineVersion")
+    return _chk("engine_version_stamped", "Picks tragen engineVersion (version-aware Lernen)",
+                "warn", fails,
+                "generate_*_picks stempelt bei jedem Lauf; ungestempelt = Regression oder Legacy "
+                "(heilt beim nächsten Lauf). Version pro Profil in cocobet_config.engine_version.")
+
+
+@integrity_check
 def check_result_score_final(ctx):
     """result.home_score darf NUR gesetzt sein, wenn das Spiel beendet ist
     (FT/AET/PEN). Sonst ist ein Live-Zwischenstand gespeichert, den das
