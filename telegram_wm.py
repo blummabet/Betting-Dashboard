@@ -22,6 +22,7 @@ Umgebungsvariablen:
 
 import json
 import os
+import re
 import urllib.request
 import urllib.error
 from datetime import datetime, timezone, timedelta
@@ -34,6 +35,10 @@ TG_WM_MODE     = os.environ.get("TG_WM_MODE", "morning")
 # 01.07.2026 (Lucas: „Content für MLS/Liga"): dataset-aware. WM_FILE = aktives Daten-File; LOG_FILE
 # per Dataset (WM = telegram-log.json unverändert, mls/liga eigenes Log → keine Kreuz-Kontamination).
 import cocobet_dataset as D  # noqa: E402
+import telegram_i18n as I18N  # noqa: E402  (04.07.2026, Lucas: DE+EN Public-Picks)
+
+# Public-Sprachen: erst DE, dann EN (beide in denselben Channel). Via env override-bar.
+TG_LANGS = [s.strip() for s in os.environ.get("TG_LANGS", "de,en").split(",") if s.strip()]
 WM_FILE        = str(D.data_file())
 LOG_FILE       = str(D.file("telegram-log.json", "liga-telegram-log.json"))
 
@@ -178,11 +183,8 @@ def model_pct(model_odds: float | None) -> str:
         return "?"
     return f"{round(100 / model_odds)}%"
 
-def upset_label(score: int) -> str:
-    if score >= 8: return "🔥🔥 GROSSER UPSET MÖGLICH"
-    if score >= 6: return "🔥 UPSET ALERT"
-    if score >= 4: return "⚠️ Ausgeglichenes Spiel"
-    return ""
+def upset_label(score: int, lang: str = "de") -> str:
+    return I18N.upset_label(score, lang)
 
 def short_venue(venue: str) -> str:
     """Kürzt Venue auf max 35 Zeichen."""
@@ -214,7 +216,7 @@ def _pick_stake(p) -> float:
     return 10.0 if (p or {}).get("verdict") == "BET" else 5.0
 
 
-def bilanz_footer(wm: dict) -> str:
+def bilanz_footer(wm: dict, lang: str = "de") -> str:
     """Berechnet WM P&L aus recorded results (conviction-gewichtet, case-robust)."""
     picks_all = wm.get("picks", {})
     w = l = push = 0
@@ -240,11 +242,13 @@ def bilanz_footer(wm: dict) -> str:
                 staked += stake
     total = w + l + push
     if total == 0:
-        return "📈 WM-Bilanz: Picks ab dem ersten Spieltag"
+        return "📈 WM-Bilanz: Picks ab dem ersten Spieltag" if lang == "de" \
+            else "📈 WC record: from matchday one"
     roi = (pnl / staked * 100) if staked > 0 else 0
     pnl_str = f"+€{pnl:.2f}" if pnl >= 0 else f"-€{abs(pnl):.2f}"
     roi_str = f"+{roi:.1f}%" if roi >= 0 else f"{roi:.1f}%"
-    return f"📈 WM-Bilanz: {w}W-{l}L-{push}P | ROI: {roi_str} | P&L: {pnl_str}"
+    # EN lässt das €-P&L weg (Währung passt für internationales Publikum nicht — ROI reicht).
+    return I18N.L[lang]["record"].format(w=w, l=l, p=push, roi=roi_str, pnl=pnl_str)
 
 
 # ── Morning Card ───────────────────────────────────────────────────────────────
@@ -280,8 +284,9 @@ def _pick_intro(hero: dict | None, home_name: str, away_name: str, fav: str | No
     return None
 
 
-def build_morning_card(wm: dict, target_date: str) -> str | None:
-    """Baut die Morning-Card für alle WM-Spiele am target_date."""
+def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | None:
+    """Baut die Morning-Card für alle WM-Spiele am target_date. lang='de' unverändert, 'en' übersetzt."""
+    T = I18N.L[lang]
 
     groups      = wm.get("groups", {})
     all_picks   = wm.get("picks", {})
@@ -405,13 +410,12 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
         for p in m["picks"] if p.get("verdict") == "BET"
         and not p.get("trackingExcluded")
     )
-    lines = [
-        f"🌍 <b>WM 2026 — Heute · {len(matches_today)} Spiel{'e' if len(matches_today) != 1 else ''}</b>",
-    ]
+    _np = T["morning_n_plural"] if len(matches_today) != 1 else ""
+    lines = [T["morning_head"].format(n=len(matches_today), p=_np)]
     if bet_count > 0:
-        lines.append(f"🟢 <b>{bet_count} BET{'s' if bet_count != 1 else ''}</b> — Engine und Signale überzeugt\n")
+        lines.append(T["bets_line"].format(n=bet_count, p=("s" if bet_count != 1 else "")))
     else:
-        lines.append("👀 Heute kein BET — die Engine wartet auf den richtigen Moment\n")
+        lines.append(T["no_bet"])
 
     for m in matches_today:
         # FIX 11.06.2026: trackingExcluded raus (Cross-Market-Konflikte). Der Dashboard-
@@ -426,18 +430,19 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
         # Spiel-Block
         us = m["upsetScore"]
         if m.get("isKO"):
-            lines.append(f"━━ 🏆 {m.get('roundLabel', 'K.O.-Runde')} ━━")
+            lines.append(f"━━ 🏆 {I18N.round_label(m.get('roundLabel', 'K.O.-Runde'), lang)} ━━")
         else:
-            lines.append(f"━━ Gruppe {m['group']} · Spieltag {m['matchday']} ━━")
+            lines.append(T["group_head"].format(g=m['group'], md=m['matchday']))
 
         if us >= 6:
-            lines.append(f"{upset_label(us)}")   # ohne Elo-Gap-Zahl (21.06.2026, Lucas)
+            lines.append(f"{upset_label(us, lang)}")   # ohne Elo-Gap-Zahl (21.06.2026, Lucas)
 
-        lines.append(
-            f"{m['homeFlag']} <b>{m['homeName']}</b> vs {m['awayFlag']} <b>{m['awayName']}</b>"
-        )
+        _hn = I18N.team_name(m.get("home"), m["homeName"], lang)
+        _an = I18N.team_name(m.get("away"), m["awayName"], lang)
+        lines.append(f"{m['homeFlag']} <b>{_hn}</b> vs {m['awayFlag']} <b>{_an}</b>")
         venue_str = short_venue(m["venue"])
-        lines.append(f"📅 {m['dispTime']} Uhr{' · ' + venue_str if venue_str else ''}")
+        _uhr = " Uhr" if lang == "de" else ""
+        lines.append(f"📅 {m['dispTime']}{_uhr}{' · ' + venue_str if venue_str else ''}")
 
         # KEIN roher Elo-Block mehr (21.06.2026, Lucas: „das ganze Elo-Ding ist nicht
         # notwendig"). Der Favorit fließt nur intern in die pick-konsistente Einleitung.
@@ -449,20 +454,32 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
         # Content (21.06.2026, reicher): ZWEI Zeilen — erst das Elo-freie Szene-Snippet
         # (Kontext/Stimmung), dann die pick-KONSISTENTE Pick-Zeile. Das Snippet macht keine
         # Richtungs-Wette mehr (Generator pick-aware) → kein Widerspruch zur Pick-Zeile.
-        _scene = m.get("aiSnippet")
-        _intro = _pick_intro(_hero, m["homeName"], m["awayName"], _fav)
-        _first = True
-        if _scene:
-            lines.append(f"\n✦ <i>{_scene}</i>")
-            _first = False
-        if _intro:
-            lines.append((f"\n✦ <i>{_intro}</i>" if _first else f"✦ <i>{_intro}</i>"))
+        # DE: AI-Szene-Snippet (deutsch) + pick-konsistentes Intro. EN: Szene weglassen (deutscher
+        # AI-Text), nur das übersetzte Intro (Szene-Snippet-Übersetzung ist Phase 2).
+        _fav_disp = I18N.team_name(m.get("home") if _fav == m["homeName"] else m.get("away"),
+                                   _fav, lang) if _fav else None
+        if lang == "de":
+            _scene = m.get("aiSnippet")
+            _intro = _pick_intro(_hero, m["homeName"], m["awayName"], _fav)
+            _first = True
+            if _scene:
+                lines.append(f"\n✦ <i>{_scene}</i>")
+                _first = False
+            if _intro:
+                lines.append((f"\n✦ <i>{_intro}</i>" if _first else f"✦ <i>{_intro}</i>"))
+        else:
+            _intro = I18N.pick_intro_en(
+                (_hero or {}).get("market", ""),
+                I18N.market_label((_hero or {}).get("market", ""), lang),
+                _hn, _an, _fav_disp) if _hero else None
+            if _intro:
+                lines.append(f"\n✦ <i>{_intro}</i>")
 
         if not bet_picks and not abw_picks:
-            lines.append("🔇 Kein Pick mit ausreichend Edge")
+            lines.append(T["no_edge"])
         else:
             # Narrative Engine-Signal-Beschreibungen (kein "+1.4pp"-Geblubber)
-            SIG_NARRATIVE = {
+            SIG_NARRATIVE = I18N.sig_narrative(lang) or {
                 "weather_signal":    "🌡 Wetter stützt",
                 "travel_burden":     "✈ Reise belastet Gegner" ,
                 "pressure_index":    "🎯 Tabellen-Druck",
@@ -487,9 +504,12 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                     name = s.get("name", "")
                     if name not in SIG_NARRATIVE: continue
                     label = SIG_NARRATIVE[name]
-                    # Bei Gegen-Signalen Negativ-Markierung
+                    # Bei Gegen-Signalen Negativ-Markierung (sprachabhängig)
                     if sc < 0:
-                        label = label.replace(" stützt", " gegen Pick").replace(" passt", " gegen Pick")
+                        if lang == "en":
+                            label = re.sub(r" (helps|fits|backs it|confirms|agrees)$", " vs pick", label)
+                        else:
+                            label = label.replace(" stützt", " gegen Pick").replace(" passt", " gegen Pick")
                     out.append(label)
                 return out
 
@@ -508,12 +528,13 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                 conv_badge = ""
                 if isinstance(conv_score, int):
                     if conv_score >= 8:
-                        conv_badge = f" · 🎯 <b>Top-Pick</b>"
+                        conv_badge = f" · <b>{T['top_pick']}</b>"
                     elif conv_score >= 6:
-                        conv_badge = f" · ⭐ Main-Pick"
+                        conv_badge = f" · {T['main_pick']}"
 
+                _mkt = I18N.market_label(p['market'], lang)
                 lines.append(
-                    f"🟢 <b>BET: {p['market']} @{p.get('odds', '?')}</b>{conv_badge}"
+                    f"🟢 <b>{T['bet']}: {_mkt} @{p.get('odds', '?')}</b>{conv_badge}"
                 )
                 # Signal-Bestätigung NUR wenn welche stützen. KEIN fixer Nenner mehr
                 # (21.06.2026, Lucas: „/14" war veraltet — wir haben 19 Signale, und nicht
@@ -521,8 +542,8 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                 n_pos = p.get("signalCountPos") or 0
                 n_neg = p.get("signalCountNeg") or 0
                 if n_pos > 0:
-                    _neg = f", {n_neg} dagegen" if n_neg else ""
-                    lines.append(f"   💡 {n_pos} Signale dafür{_neg}")
+                    _neg = T["signals_neg"].format(n=n_neg) if n_neg else ""
+                    lines.append(T["signals_for"].format(n=n_pos, neg=_neg))
 
                 # Sharp-Move als eigene Zeile mit narrativem Text
                 if p.get("sharpMoveActive"):
@@ -530,13 +551,13 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                     mv = sm.get("pinn_move_pp", 0)
                     days = sm.get("move_age_days")
                     if isinstance(mv, (int, float)) and abs(mv) >= 1:
-                        direction = "stützt Pick" if mv > 0 else "gegen Pick"
+                        direction = T["pinn_for"] if mv > 0 else T["pinn_against"]
                         age_note = ""
                         if days and days <= 3:
-                            age_note = " (frisch)"
+                            age_note = T["pinn_fresh"]
                         elif days and days > 14:
-                            age_note = " (älter)"
-                        lines.append(f"   🔥 Pinnacle {direction}{age_note}")
+                            age_note = T["pinn_old"]
+                        lines.append(T["pinn_line"].format(dir=direction, age=age_note))
 
                 # Top-2 narrative Engine-Signale (kein pp-Zahlen-Salat)
                 top_sigs = _top_signals_narrative(p, n=2)
@@ -546,9 +567,9 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                 # Sicherere Alternative wenn vorhanden — knapp formuliert
                 bold_alt = p.get("boldAlt")
                 if bold_alt:
-                    lines.append(
-                        f"   🛡 Sicherer: {bold_alt.get('market')} @{bold_alt.get('odds')}"
-                    )
+                    lines.append(T["safer"].format(
+                        market=I18N.market_label(bold_alt.get('market'), lang),
+                        odds=bold_alt.get('odds')))
 
             # ABWÄGEN-Picks — minimalistisch
             for p in abw_picks:
@@ -559,33 +580,33 @@ def build_morning_card(wm: dict, target_date: str) -> str | None:
                 badges = []
                 if isinstance(conv_score, int):
                     if conv_score >= 8:
-                        badges.append("🎯 Top-Pick")
+                        badges.append(T["top_pick"])
                     elif conv_score >= 6:
-                        badges.append("⭐ Main-Pick")
+                        badges.append(T["main_pick"])
                 if n_pos > 0:
-                    badges.append(f"{n_pos} Signale dafür")
+                    badges.append(f"{n_pos} {T['signals_short']}")
                 if p.get("sharpMoveActive"):
                     badges.append("🔥")
                 if p.get("synthetic"):
-                    badges.append("🛡 Insurance")
+                    badges.append(T["insurance"])
                 badge_str = "  " + " · ".join(badges) if badges else ""
                 lines.append(
-                    f"🟡 <b>Abwägen:</b> {p['market']} @{p.get('odds', '?')}{badge_str}"
+                    f"🟡 <b>{T['lean']}</b> {I18N.market_label(p['market'], lang)} @{p.get('odds', '?')}{badge_str}"
                 )
 
         lines.append("")  # Leerzeile zwischen Spielen
 
     # Footer
-    lines.append(bilanz_footer(wm))
-    lines.append("\n🤖 CocoBet · datengetriebenes Pick-Modell mit 19 Signalen")
+    lines.append(bilanz_footer(wm, lang))
+    lines.append(T["footer"])
 
     return "\n".join(lines)
 
 
 # ── Recap Card (nach Spieltag) ─────────────────────────────────────────────────
-def build_recap_card(wm: dict, target_date: str) -> str | None:
-    """Baut eine Recap-Card für Picks des gestrigen/angegebenen Datums."""
-
+def build_recap_card(wm: dict, target_date: str, lang: str = "de") -> str | None:
+    """Baut eine Recap-Card für Picks des gestrigen/angegebenen Datums. lang='de'|'en'."""
+    T = I18N.L[lang]
     all_picks = wm.get("picks", {})
     groups    = wm.get("groups", {})
 
@@ -627,7 +648,7 @@ def build_recap_card(wm: dict, target_date: str) -> str | None:
     if not fix_lookup:
         return None
 
-    lines = [f"📊 <b>WM 2026 Recap — {target_date}</b>\n"]
+    lines = [T["recap_head"].format(date=target_date)]
     day_pnl = 0.0
     had_any = False
 
@@ -639,31 +660,33 @@ def build_recap_card(wm: dict, target_date: str) -> str | None:
         if not pick_results:
             continue
         had_any = True
-        lines.append(
-            f"{fix_info['homeFlag']} {fix_info['homeName']} vs "
-            f"{fix_info['awayFlag']} {fix_info['awayName']}"
-        )
+        _pp = pick_key.split("-")
+        _hid, _aid = (_pp[-2], _pp[-1]) if len(_pp) >= 2 else ("", "")
+        _hn = I18N.team_name(_hid, fix_info['homeName'], lang)
+        _an = I18N.team_name(_aid, fix_info['awayName'], lang)
+        lines.append(f"{fix_info['homeFlag']} {_hn} vs {fix_info['awayFlag']} {_an}")
         for p, result in pick_results:
             stake = _pick_stake(p)   # BET €10 / ABWÄGEN €5
             fac = p.get("resultStakeFactor", 1.0)  # 0.5 bei AH-Viertel-Halb-Ergebnis
+            _mkt = I18N.market_label(p['market'], lang)
             if result == "won":
                 profit = (p.get("odds", 1) - 1) * stake * fac
                 day_pnl += profit
-                lines.append(f"  ✅ {p['market']} @{p.get('odds','?')} → +€{profit:.2f}")
+                lines.append(f"  ✅ {_mkt} @{p.get('odds','?')} → +€{profit:.2f}")
             elif result == "lost":
                 day_pnl -= stake * fac
-                lines.append(f"  ❌ {p['market']} @{p.get('odds','?')} → -€{stake * fac:.2f}")
+                lines.append(f"  ❌ {_mkt} @{p.get('odds','?')} → -€{stake * fac:.2f}")
             elif result == "push":
-                lines.append(f"  🔄 {p['market']} @{p.get('odds','?')} → Push")
+                lines.append(f"  🔄 {_mkt} @{p.get('odds','?')} → {T['recap_push']}")
         lines.append("")
 
     if not had_any:
         return None
 
     pnl_str = f"+€{day_pnl:.2f}" if day_pnl >= 0 else f"-€{abs(day_pnl):.2f}"
-    lines.append(f"💰 Heutiger Tag: {pnl_str}")
-    lines.append(bilanz_footer(wm))
-    lines.append("\n🤖 CocoBet WM 2026")
+    lines.append(T["recap_today"].format(pnl=pnl_str))
+    lines.append(bilanz_footer(wm, lang))
+    lines.append(T["recap_footer"])
 
     return "\n".join(lines)
 
@@ -690,13 +713,20 @@ def main():
         if _already_sent_today("morning_card", today):
             print(f"\n⛔ Morning Card für {today} heute schon gesendet — geskippt")
         else:
-            print(f"\n📅 Morning Card für {today}…")
-            card = build_morning_card(wm, today)
-            if card:
-                ok = tg_send(card)
-                print(f"  {'✅ Gesendet' if ok else '❌ Fehler'}")
-                if ok:
-                    _log_send("morning_card", card.split("\n")[0], {"date": today, "mode": mode})
+            print(f"\n📅 Morning Card für {today} ({', '.join(TG_LANGS)})…")
+            # DE zuerst, dann EN (beide in denselben Public-Channel — 04.07.2026, Lucas).
+            any_ok = False
+            first_card = None
+            for _lang in TG_LANGS:
+                card = build_morning_card(wm, today, _lang)
+                if not card:
+                    continue
+                first_card = first_card or card
+                _ok = tg_send(card)
+                any_ok = any_ok or _ok
+                print(f"  [{_lang}] {'✅ Gesendet' if _ok else '❌ Fehler'}")
+            if any_ok:
+                    _log_send("morning_card", (first_card or "").split("\n")[0], {"date": today, "mode": mode})
                     _mark_sent("morning_card", today)
                     # Basis für die Intraday-„Neuer Pick"-Noti setzen (03.07.2026, Lucas):
                     # der Digest ist Erst-Ankündiger → alles Bekannte als announced markieren,
@@ -718,14 +748,20 @@ def main():
         if _already_sent_today("recap", yesterday):
             print(f"\n⛔ Recap für {yesterday} heute schon gesendet — geskippt")
         else:
-            print(f"\n📊 Recap für {yesterday}…")
-            card = build_recap_card(wm, yesterday)
-            if card:
-                ok = tg_send(card)
-                print(f"  {'✅ Gesendet' if ok else '❌ Fehler'}")
-                if ok:
-                    _log_send("recap", card.split("\n")[0], {"date": yesterday, "mode": mode})
-                    _mark_sent("recap", yesterday)
+            print(f"\n📊 Recap für {yesterday} ({', '.join(TG_LANGS)})…")
+            any_ok = False
+            first_card = None
+            for _lang in TG_LANGS:
+                card = build_recap_card(wm, yesterday, _lang)
+                if not card:
+                    continue
+                first_card = first_card or card
+                _ok = tg_send(card)
+                any_ok = any_ok or _ok
+                print(f"  [{_lang}] {'✅ Gesendet' if _ok else '❌ Fehler'}")
+            if any_ok:
+                _log_send("recap", (first_card or "").split("\n")[0], {"date": yesterday, "mode": mode})
+                _mark_sent("recap", yesterday)
             else:
                 print(f"  ○ Keine Picks mit Ergebnissen am {yesterday}")
 
