@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-05T10:07:15Z",
+  "generatedAt": "2026-07-05T13:11:30Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -26,7 +26,7 @@
   "signalsTotal": 25,
   "perSignal": {
     "lead_lag_bias": 14,
-    "public_static_bias": 20,
+    "public_static_bias": 19,
     "travel_burden": 77,
     "injury": 5,
     "form_trend": 134,
@@ -51,10 +51,8 @@
     "transfer_shift": 0,
     "streak_momentum": 2
   },
-  "verdict": "error",
-  "errors": [
-    "🛡️ Home/Away nicht vertauscht (Pinn vs Poly): 1 Fehler (z.B. FRA-MAR: Pinnacle-Fav Heim (hw 1.57/aw 6.68) ≠ Poly-Fav Ausw (Swap-Verdacht))"
-  ],
+  "verdict": "warn",
+  "errors": [],
   "warns": [
     "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
     "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
@@ -70,11 +68,11 @@
   ],
   "oks": [
     "🌡️ Weather: 7 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 97 Fixtures, Ø 110.5 Snapshots",
+    "📉 Odds-History: 97 Fixtures, Ø 110.9 Snapshots",
     "💹 Poly-Preise: 7 Fixtures",
     "💼 Poly-Balance: $395.96",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -211,12 +209,10 @@
       "id": "homeaway_consistent",
       "label": "Home/Away nicht vertauscht (Pinn vs Poly)",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "FRA-MAR: Pinnacle-Fav Heim (hw 1.57/aw 6.68) ≠ Poly-Fav Ausw (Swap-Verdacht)"
-      ],
-      "note": "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet. Bei knappen Quoten ggf. echte Markt-Uneinigkeit — Fixture-Orientierung prüfen. · Verlauf: 3× an 3 Tag(en) (zuletzt FRA-MAR am 07-05) — erst bei Muster fixen."
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet. Bei knappen Quoten ggf. echte Markt-Uneinigkeit — Fixture-Orientierung prüfen."
     },
     {
       "id": "signal_coverage",
