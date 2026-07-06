@@ -80,10 +80,17 @@ def _context_phrase(home: str, away: str, info: dict) -> str:
         else:
             parts.append(f"Enger Direktvergleich: {hw}S-{dr}U-{aw}N aus {g} Spielen")
 
-    if matchday >= 3:
-        parts.append(f"Im entscheidenden Spieltag {matchday} der Gruppe {group} steht für beide Teams viel auf dem Spiel")
-    elif matchday == 2:
-        parts.append(f"In Spieltag {matchday} wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln")
+    # KO-fest (06.07.2026): in der KO-Phase ist matchday ein Runden-Code ("R16"/"QF"…), kein int
+    # → die Gruppen-Spieltag-Logik (int-Vergleich) crasht sonst (TypeError) und killt den KO-Preview.
+    if isinstance(matchday, int):
+        if matchday >= 3:
+            parts.append(f"Im entscheidenden Spieltag {matchday} der Gruppe {group} steht für beide Teams viel auf dem Spiel")
+        elif matchday == 2:
+            parts.append(f"In Spieltag {matchday} wollen beide Teams wichtige Punkte für die Achtelfinal-Qualifikation sammeln")
+    else:
+        _ko_lbl = {"R16": "Achtelfinale", "R32": "Sechzehntelfinale", "QF": "Viertelfinale",
+                   "SF": "Halbfinale", "F": "Finale", "3P": "Spiel um Platz 3"}.get(str(matchday), "der K.-o.-Runde")
+        parts.append(f"Im {_ko_lbl} gilt: wer verliert, fliegt raus — beide Teams müssen alles investieren")
 
     # Form-Kontext als ZUSÄTZLICHE Farbe (richer) — aber PICK-SICHER (21.06.2026): die
     # Tor-Richtungs-Behauptung darf dem Haupt-Pick NICHT widersprechen (kein „torreich" über
@@ -220,13 +227,27 @@ def main():
 
     generated = skipped = 0
 
-    for gkey, gdata in groups.items():
-        teams_map = {t["id"]: t for t in gdata.get("teams", [])}
+    # 06.07.2026 (Lucas: „keine Previews für anstehende KO-Spiele"): der Fallback iterierte NUR
+    # groups → KO-Spiele (koFixtures) bekamen NIE eine Regel-Preview, selbst wenn der Haiku-Lauf
+    # (generate_wm_ai_preview) für sie nichts erzeugte. Jetzt Gruppen + bothResolved KO (globale
+    # Team-Union, gkey="KO", md=Runden-Code → pick_key "KO-R16-…" wie generate_wm_ai_preview /
+    # _iter_match_contexts). Siehe wiederkehrende KO-Datenpfad-Regel. (groups vs koFixtures)
+    iter_units = [(gk, {t["id"]: t for t in gd.get("teams", [])}, gd.get("fixtures", []))
+                  for gk, gd in groups.items()]
+    _all_teams = {}
+    for gd in groups.values():
+        for t in gd.get("teams", []):
+            _all_teams[t["id"]] = t
+    _ko = [f for f in (wm.get("koFixtures") or []) if f.get("home") and f.get("away")]
+    if _ko:
+        iter_units.append(("KO", _all_teams, _ko))
 
-        for fx in gdata.get("fixtures", []):
+    for gkey, teams_map, fixtures in iter_units:
+        for fx in fixtures:
             home_id  = fx["home"]
             away_id  = fx["away"]
-            pick_key = f"{gkey}-{fx['matchday']}-{home_id}-{away_id}"
+            md       = fx.get("matchday") or fx.get("round") or "KO"
+            pick_key = f"{gkey}-{md}-{home_id}-{away_id}"
 
             try:
                 fx_date = datetime.strptime(fx["date"], "%Y-%m-%d").date()
@@ -234,6 +255,12 @@ def main():
                 continue
 
             if fx_date > cutoff:
+                continue
+
+            # FALLBACK-Semantik: nur LÜCKEN füllen — eine bestehende (AI-)Preview mit tgSnippet
+            # NICHT mit der schwächeren Regel-Version überschreiben.
+            if (previews.get(pick_key) or {}).get("tgSnippet"):
+                skipped += 1
                 continue
 
             home_t = teams_map.get(home_id, {})
@@ -244,7 +271,7 @@ def main():
                 "away":       away_t.get("name", away_id),
                 "date":       fx["date"],
                 "group":      gkey,
-                "matchday":   fx["matchday"],
+                "matchday":   md,
                 "homeElo":    home_t.get("elo", 1500),
                 "awayElo":    away_t.get("elo", 1500),
                 "upsetScore": upset_scores.get(pick_key, 2),
