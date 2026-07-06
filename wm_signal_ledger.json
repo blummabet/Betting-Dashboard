@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-06T01:16:46Z",
-    "total_records": 155
+    "updated_at": "2026-07-06T01:31:46Z",
+    "total_records": 158
   },
   "records": [
     {
@@ -3339,6 +3339,108 @@
       "engineVersion": "v2"
     },
     {
+      "key": "KO-R16-BRA-NOR|Beide Teams treffen — Ja",
+      "matchKey": "KO-R16-BRA-NOR",
+      "market": "Beide Teams treffen — Ja",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.33
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.74
+        },
+        {
+          "name": "freshness_leg",
+          "score": 1.75
+        }
+      ],
+      "resolvedAt": "2026-07-06T01:24:38Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v2",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "KO-R16-BRA-NOR|Heimsieg",
+      "matchKey": "KO-R16-BRA-NOR",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -0.9
+        },
+        {
+          "name": "lineup_signal",
+          "score": -2.43
+        },
+        {
+          "name": "weather_signal",
+          "score": 1.65
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.97
+        },
+        {
+          "name": "form_rating",
+          "score": 2.44
+        },
+        {
+          "name": "smart_money",
+          "score": 0.61
+        }
+      ],
+      "resolvedAt": "2026-07-06T01:24:38Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v2",
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "KO-R16-BRA-NOR|Über 2.5 Tore",
+      "matchKey": "KO-R16-BRA-NOR",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 4.13
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.53
+        },
+        {
+          "name": "pressure_index",
+          "score": -1.0
+        },
+        {
+          "name": "lineup_signal",
+          "score": -4.41
+        },
+        {
+          "name": "weather_signal",
+          "score": -1.65
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.62
+        }
+      ],
+      "resolvedAt": "2026-07-06T01:24:38Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v2",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
       "key": "KO-R16-CAN-MAR|Auswärtssieg",
       "matchKey": "KO-R16-CAN-MAR",
       "market": "Auswärtssieg",
@@ -3693,7 +3795,7 @@
           "score": -5.78
         }
       ],
-      "resolvedAt": "2026-07-06T01:16:46Z",
+      "resolvedAt": "2026-07-06T01:31:46Z",
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true,
@@ -3718,7 +3820,7 @@
           "score": -1.8
         }
       ],
-      "resolvedAt": "2026-07-06T01:16:46Z",
+      "resolvedAt": "2026-07-06T01:31:46Z",
       "source": "steam",
       "convictionScore": 2,
       "lateEntry": false,
