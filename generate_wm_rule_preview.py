@@ -60,6 +60,7 @@ def _context_phrase(home: str, away: str, info: dict) -> str:
     home_elo = info.get("homeElo", 1500)
     away_elo = info.get("awayElo", 1500)
     fav = home if home_elo >= away_elo else away
+    gap_local = abs(home_elo - away_elo)
 
     parts = []
 
@@ -90,7 +91,32 @@ def _context_phrase(home: str, away: str, info: dict) -> str:
     else:
         _ko_lbl = {"R16": "Achtelfinale", "R32": "Sechzehntelfinale", "QF": "Viertelfinale",
                    "SF": "Halbfinale", "F": "Finale", "3P": "Spiel um Platz 3"}.get(str(matchday), "der K.-o.-Runde")
-        parts.append(f"Im {_ko_lbl} gilt: wer verliert, fliegt raus — beide Teams müssen alles investieren")
+        underdog = away if fav == home else home
+        # Runden-spezifische Dramaturgie statt eines Einheitssatzes.
+        if str(matchday) == "F":
+            ko_intros = ["Das Finale — 90 Minuten (oder mehr) trennen ein Team vom WM-Titel",
+                         "Um den größten Pokal im Fußball: hier fällt die Entscheidung",
+                         "Endspiel. Alles, worauf ein ganzes Turnier hinausläuft, steckt in diesem einen Spiel"]
+        elif str(matchday) == "SF":
+            ko_intros = [f"Halbfinale — ein Sieg trennt {home} und {away} vom Endspiel",
+                         "So nah am Finale: im Halbfinale wird jeder Fehler sofort bestraft",
+                         "Nur noch ein Schritt bis zum Finale — die Nerven spielen mit"]
+        else:
+            ko_intros = [f"Jetzt zählt's: im {_ko_lbl} gibt es kein Zurück — ein Spiel, eine Entscheidung",
+                         f"K.-o.-Modus im {_ko_lbl}: der Verlierer packt die Koffer",
+                         f"Im {_ko_lbl} geht's um alles — notfalls in Verlängerung und Elfmeterschießen"]
+        parts.append(random.choice(ko_intros))
+        # Zweiter KO-Teil: Favorit/Underdog-Spannung (greift, wenn keine H2H-Zeile den Slot füllt).
+        if gap_local >= 150:
+            ud = [f"für {underdog} die große Chance, im Turnier für die Sensation zu sorgen",
+                  f"{underdog} kann befreit aufspielen — der Druck liegt ganz bei {fav}",
+                  f"{fav} ist gewarnt: im K.-o.-Spiel wurde schon so mancher Favorit gestürzt"]
+            parts.append(random.choice(ud))
+        elif gap_local < 75:
+            ev = ["ein echtes Endspiel auf Augenhöhe — hier entscheiden Nuancen und Nervenstärke",
+                  "kaum etwas trennt diese beiden Teams — Kleinigkeiten geben den Ausschlag",
+                  "ein offener Schlagabtausch, in dem jedes Detail über das Weiterkommen entscheidet"]
+            parts.append(random.choice(ev))
 
     # Form-Kontext als ZUSÄTZLICHE Farbe (richer) — aber PICK-SICHER (21.06.2026): die
     # Tor-Richtungs-Behauptung darf dem Haupt-Pick NICHT widersprechen (kein „torreich" über
