@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-06T06:32:11Z",
-    "total_records": 158
+    "updated_at": "2026-07-06T06:47:11Z",
+    "total_records": 159
   },
   "records": [
     {
@@ -3483,6 +3483,48 @@
       "engineVersion": "v2"
     },
     {
+      "key": "KO-R16-MEX-ENG|Doppelte Chance — 1X",
+      "matchKey": "KO-R16-MEX-ENG",
+      "market": "Doppelte Chance — 1X",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 1.2
+        },
+        {
+          "name": "form_trend",
+          "score": -1.1
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.84
+        },
+        {
+          "name": "lineup_signal",
+          "score": -1.42
+        },
+        {
+          "name": "altitude_signal",
+          "score": 2.12
+        },
+        {
+          "name": "chance_creation",
+          "score": -2.38
+        },
+        {
+          "name": "smart_money",
+          "score": -0.61
+        }
+      ],
+      "resolvedAt": "2026-07-06T06:34:04Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v2",
+      "processVerdict": "UNLUCKY"
+    },
+    {
       "key": "KO-R16-PRY-FRA|Unter 3.5 Tore",
       "matchKey": "KO-R16-PRY-FRA",
       "market": "Unter 3.5 Tore",
@@ -3795,7 +3837,7 @@
           "score": -5.78
         }
       ],
-      "resolvedAt": "2026-07-06T06:32:11Z",
+      "resolvedAt": "2026-07-06T06:47:11Z",
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true,
@@ -3820,7 +3862,7 @@
           "score": -1.8
         }
       ],
-      "resolvedAt": "2026-07-06T06:32:11Z",
+      "resolvedAt": "2026-07-06T06:47:11Z",
       "source": "steam",
       "convictionScore": 2,
       "lateEntry": false,
