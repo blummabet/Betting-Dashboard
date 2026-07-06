@@ -216,6 +216,14 @@ def _pick_stake(p) -> float:
     return 10.0 if (p or {}).get("verdict") == "BET" else 5.0
 
 
+def _stake_str(p) -> str:
+    """Einsatz-Chip für Card-Zeilen (07.07.2026, Lucas): der Recap zeigt €-Beträge, die
+    Picks bisher nicht → Inkonsistenz. Zeigt den Edge-Stake (fraktionales Kelly, pick_staking).
+    Sprach-agnostisch (€X gleich in DE/EN). Ganze € ohne Nachkomma, sonst 1 Stelle."""
+    v = _pick_stake(p)
+    return f" · 💶 €{v:.0f}" if float(v).is_integer() else f" · 💶 €{v:.1f}"
+
+
 def bilanz_footer(wm: dict, lang: str = "de") -> str:
     """Berechnet WM P&L aus recorded results (conviction-gewichtet, case-robust)."""
     picks_all = wm.get("picks", {})
@@ -534,7 +542,7 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
 
                 _mkt = I18N.market_label(p['market'], lang)
                 lines.append(
-                    f"🟢 <b>{T['bet']}: {_mkt} @{p.get('odds', '?')}</b>{conv_badge}"
+                    f"🟢 <b>{T['bet']}: {_mkt} @{p.get('odds', '?')}</b>{conv_badge}{_stake_str(p)}"
                 )
                 # Signal-Bestätigung NUR wenn welche stützen. KEIN fixer Nenner mehr
                 # (21.06.2026, Lucas: „/14" war veraltet — wir haben 19 Signale, und nicht
@@ -591,7 +599,7 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
                     badges.append(T["insurance"])
                 badge_str = "  " + " · ".join(badges) if badges else ""
                 lines.append(
-                    f"🟡 <b>{T['lean']}</b> {I18N.market_label(p['market'], lang)} @{p.get('odds', '?')}{badge_str}"
+                    f"🟡 <b>{T['lean']}</b> {I18N.market_label(p['market'], lang)} @{p.get('odds', '?')}{badge_str}{_stake_str(p)}"
                 )
 
         lines.append("")  # Leerzeile zwischen Spielen
