@@ -29,7 +29,7 @@ import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card, daily_picks_card, match_preview_card, match_review_card, streak_card
+from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card, daily_picks_card, match_preview_card, match_review_card, streak_card, player_streak_card
 from tiktok_story_plan import get_story_for_date
 from bizarre_quote_picker import get_daily_bizarre_card
 from player_pick_picker import get_daily_player_pick, save_dedup as save_player_dedup, _load_dedup as _load_player_dedup
@@ -767,6 +767,67 @@ def pick_streak_for_card(streaks: list, posted_keys: set):
     return max(pool, key=lambda c: _streak_heat(c[0]))
 
 
+PLAYER_STREAK_MILESTONES = [2, 3, 4, 5, 6, 8, 10]
+_PLAYER_VERB = {"goals": "in Folge getroffen", "involvement": "mit Torbeteiligung in Folge",
+                "cleanSheet": "Spiele zu Null in Folge"}
+
+
+def _player_streak_milestone(length: int):
+    ms = [m for m in PLAYER_STREAK_MILESTONES if (length or 0) >= m]
+    return ms[-1] if ms else None
+
+
+def pick_player_streak_for_card(players: list, posted_keys: set):
+    """Reiner Selektor (testbar): stärkste Spieler-Serie mit (a) anstehendem Spiel (next), (b) neuem
+    Meilenstein, (c) noch nicht gepostet. Längste zuerst. Returns (p,key)|None."""
+    cands = []
+    for p in (players or []):
+        if not (p.get("next") or {}).get("oppName"):
+            continue   # nur Spieler von Teams, die noch spielen
+        ms = _player_streak_milestone(p.get("length", 0))
+        if ms is None:
+            continue
+        key = f"pstreak:{p.get('playerId')}:{p.get('type')}:{ms}"
+        if key in (posted_keys or set()):
+            continue
+        cands.append((p, key))
+    if not cands:
+        return None
+    return max(cands, key=lambda c: c[0].get("length") or 0)
+
+
+def build_player_streak_cards(today_iso: str, dedup: dict) -> list:
+    """Bis zu 1 Spieler-Serien-Spotlight/Tag — heißeste Serie mit neuem Meilenstein (Dedup pro
+    Spieler:Typ:Meilenstein). Liest {prefix}player_streaks.json (compute_player_streaks). TikTok-safe.
+    Returns [(label, png, caption)] oder []."""
+    try:
+        data = json.loads((BASE / f"{D.prefix()}player_streaks.json").read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    posted = {h.get("pstreakKey") for h in (dedup.get("history") or []) if h.get("pstreakKey")}
+    chosen = pick_player_streak_for_card(data.get("players") or [], posted)
+    if not chosen:
+        return []
+    p, key = chosen
+    nx = p.get("next") or {}
+    opp = nx.get("oppName")
+    hook = f"Hält die Serie{(' gegen ' + opp) if opp else ''}?"
+    verb = _PLAYER_VERB.get(p.get("type"), "in Folge")
+    html = player_streak_card(
+        player=p.get("name", ""), player_id=p.get("playerId"), team=p.get("team", ""),
+        market=p.get("market", ""), length=p.get("length", 0), verb=verb, seq=p.get("seq"),
+        next_opp=opp, next_date=_streak_short_date(nx.get("date")), hook=hook, flag=p.get("flag", ""),
+    )
+    path = OUTPUT_DIR / f"{today_iso}_pstreak_{p.get('playerId')}_{p.get('type')}.html"
+    path.write_text(html, encoding="utf-8")
+    png = render_to_png(path)
+    if not png:
+        return []
+    caption = (f"🔥 <b>{p.get('name')}</b> ({p.get('team')}) — {p.get('length')}× {verb}. {hook}")
+    dedup.setdefault("history", []).append({"date": today_iso, "pstreakKey": key})
+    return [(f"pstreak_{p.get('playerId')}_{p.get('type')}", png, caption)]
+
+
 def build_streak_cards(today_iso: str, dedup: dict) -> list:
     """Bis zu 1 Serien-Spotlight/Tag — NUR wenn eine Serie heiß ist (intakt) UND einen neuen
     Meilenstein (6/8/10/12/15×) erreicht (Meilenstein-Dedup → nie täglich dieselbe Serie). An starken
@@ -1145,6 +1206,16 @@ def main():
                   if streak_cards else "🔥 Keine qualifizierende Serie heute (gegated)")
         except Exception as e:
             print(f"⚠️  Serien-Card fehlgeschlagen: {e}")
+
+    # ── 3d. Spieler-Serien-Spotlight (06.07.2026, Lucas) — heißer Spieler + neuer Meilenstein ──
+    if SEND_STREAKS:
+        try:
+            pstreak_cards = build_player_streak_cards(today_iso, dedup)
+            produced.extend(pstreak_cards)
+            print(f"🔥 Spieler-Serien-Spotlight: {len(pstreak_cards)} Card"
+                  if pstreak_cards else "🔥 Keine qualifizierende Spieler-Serie heute (gegated)")
+        except Exception as e:
+            print(f"⚠️  Spieler-Serien-Card fehlgeschlagen: {e}")
 
     # ── 4. Daily-Picks-Card (Top-Pick + bis zu 3 weitere) ──
     # Sammelt alle Picks für today_iso aus wm2026-data.json und rendert

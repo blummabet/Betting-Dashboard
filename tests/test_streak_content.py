@@ -87,7 +87,7 @@ class TestTiktokStreakPick(unittest.TestCase):
 class TestTelegramDigest(unittest.TestCase):
     def test_digest_lists_hot_streaks(self):
         streaks = [_s("Arsenal", "42", "over25", 7, opp="City"),
-                   _s("Bayern", "50", "bttsYes", 6)]
+                   _s("Bayern", "50", "bttsYes", 6, opp="Dortmund")]
         msg = TS.build_streaks_digest(streaks)
         self.assertIn("Serien der Woche", msg)
         self.assertIn("Arsenal", msg)
@@ -100,7 +100,8 @@ class TestTelegramDigest(unittest.TestCase):
         self.assertIsNone(TS.build_streaks_digest([_s("X", "9", "over25", 8, state="wackelt")]))
 
     def test_distinct_teams(self):
-        streaks = [_s("Arsenal", "42", "over25", 8), _s("Arsenal", "42", "bttsYes", 6)]
+        streaks = [_s("Arsenal", "42", "over25", 8, opp="City"),
+                   _s("Arsenal", "42", "bttsYes", 6, opp="City")]
         msg = TS.build_streaks_digest(streaks)
         self.assertEqual(msg.count("Arsenal"), 1)   # je Team nur die stärkste
 

@@ -138,6 +138,13 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # ── Spieler-Serien (Content) — braucht player_form_ledger + Lineups + wm_streaks ──
+      # 06.07.2026 (Lucas): Torserie/Torbeteiligung/Zu-Null als quotenloses Content-Produkt.
+      # Nach compute_streaks + fetch_wm_lineups. Nur Spieler von Teams, die noch spielen.
+      - name: 🎯 WM Spieler-Serien berechnen
+        run: python compute_player_streaks.py
+        continue-on-error: true
+
       # ── API-Football Predictions (externes Cross-Model) ───────────────
       # Drittes Modell unabhängig von Skellam+Elo und Pinnacle. apif_predictions
       # Signal vergleicht pro 1X2/DNB-Pick gegen Pinnacle implied. Cache 24h
@@ -389,6 +396,7 @@ jobs:
           # wird von git add -u nicht erfasst.
           git add wm_status.json 2>/dev/null || true
           git add wm_streaks.json 2>/dev/null || true   # Streak-Content (neu/untracked, 28.06.2026)
+          git add player_streaks.json 2>/dev/null || true   # Spieler-Serien-Content (06.07.2026)
           git add pick_announce_state.json 2>/dev/null || true   # Neuer-Pick-Noti-Basis (03.07.2026)
           git add streak_watch.json 2>/dev/null || true          # Serien-Watch-State (04.07.2026)
           # Diagnose: was ist staged? (im Log sichtbar, kein stilles Versagen mehr)
