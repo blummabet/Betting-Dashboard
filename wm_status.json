@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T08:12:22Z",
+  "generatedAt": "2026-07-06T15:04:24Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -25,10 +25,10 @@
   ],
   "signalsTotal": 25,
   "perSignal": {
-    "lead_lag_bias": 14,
-    "public_static_bias": 19,
+    "lead_lag_bias": 15,
+    "public_static_bias": 20,
     "travel_burden": 77,
-    "injury": 5,
+    "injury": 6,
     "form_trend": 134,
     "h2h_pattern": 7,
     "xg_strength": 123,
@@ -37,12 +37,12 @@
     "pressure_index": 41,
     "lineup_signal": 26,
     "apif_predictions": 10,
-    "weather_signal": 24,
+    "weather_signal": 25,
     "incentive_signal": 24,
     "altitude_signal": 4,
-    "chance_creation": 51,
-    "form_rating": 16,
-    "freshness_leg": 22,
+    "chance_creation": 52,
+    "form_rating": 17,
+    "freshness_leg": 23,
     "smart_money": 38,
     "league_pressure": 0,
     "fixture_congestion": 3,
@@ -65,17 +65,17 @@
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
     "🛡️ Public = Multi-Book-Konsens (nicht Einzel-Book): 1 Fehler (z.B. NOR-ENG: public aus Einzel-Book 'williamhill' statt Konsens)",
     "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
-    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. POR-ESP: Soft bewegte sich 4.33→3.9, aber Opening==Jetzt (4.0) — nicht eingefroren)"
+    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. SUI-COL: Soft bewegte sich 3.4→3.3, aber Opening==Jetzt (3.4) — nicht eingefroren)"
   ],
   "oks": [
     "🌡️ Weather: 6 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 98 Fixtures, Ø 111.2 Snapshots",
-    "💹 Poly-Preise: 5 Fixtures",
-    "💼 Poly-Balance: $405.48",
+    "📉 Odds-History: 98 Fixtures, Ø 112.1 Snapshots",
+    "💹 Poly-Preise: 6 Fixtures",
+    "💼 Poly-Balance: $354.98",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -446,7 +446,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "POR-ESP: Soft bewegte sich 4.33→3.9, aber Opening==Jetzt (4.0) — nicht eingefroren"
+        "SUI-COL: Soft bewegte sich 3.4→3.3, aber Opening==Jetzt (3.4) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
