@@ -138,9 +138,19 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # ── Spieler-Match-Stats-Backfill (Ledger frisch halten für Spieler-Serien) ──
+      # 06.07.2026 (Lucas): sonst schreibt nur fetch_wm_nt_xg das Ledger fort (3-Tage-Cache) →
+      # neueste KO-Spiele fehlen. Holt gezielt nur die beendeten Fixtures aus wm_lineups.json,
+      # die noch nicht im Ledger sind (heute 2-4 Spiele, gedeckelt). MUSS vor compute_player_streaks.
+      - name: 🧾 WM Spieler-Match-Stats nachladen (Ledger-Backfill)
+        run: python fetch_wm_player_stats.py
+        continue-on-error: true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
       # ── Spieler-Serien (Content) — braucht player_form_ledger + Lineups + wm_streaks ──
       # 06.07.2026 (Lucas): Torserie/Torbeteiligung/Zu-Null als quotenloses Content-Produkt.
-      # Nach compute_streaks + fetch_wm_lineups. Nur Spieler von Teams, die noch spielen.
+      # Nach compute_streaks + fetch_wm_lineups + Ledger-Backfill. Nur Spieler von Teams im Turnier.
       - name: 🎯 WM Spieler-Serien berechnen
         run: python compute_player_streaks.py
         continue-on-error: true

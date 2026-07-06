@@ -8,6 +8,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 import compute_player_streaks as P
 import telegram_streaks as TS
+import fetch_wm_player_stats as FPS
+from datetime import datetime, timezone
 
 
 def _row(pid, tid, ts, goals=0, assists=0, minutes=90, name="X"):
@@ -106,6 +108,31 @@ class TestDigestElimination(unittest.TestCase):
         msg = TS.build_streaks_digest([], players=players)
         self.assertIn("Spieler in Form", msg)
         self.assertIn("Haaland", msg)
+
+
+class TestLedgerBackfill(unittest.TestCase):
+    """Nur beendete, noch nicht im Ledger stehende Fixtures werden nachgeladen (06.07.2026)."""
+
+    def _now(self):
+        return datetime(2026, 7, 6, 12, 0, tzinfo=timezone.utc)
+
+    def _lineups(self):
+        return {"A": {"fixture_id": 111, "kickoff": "2026-07-04T21:00:00+00:00"},  # beendet, fehlt
+                "B": {"fixture_id": 222, "kickoff": "2026-07-05T21:00:00+00:00"},  # beendet, fehlt
+                "C": {"fixture_id": 333, "kickoff": "2026-07-06T20:00:00+00:00"},  # heute, noch nicht vorbei
+                "D": {"fixture_id": 444, "kickoff": "2026-07-01T21:00:00+00:00"}}  # beendet, aber schon im Ledger
+
+    def _ledger(self):
+        return {"records": [{"playerId": 9, "fixtureId": 444, "goals": 1}]}
+
+    def test_nur_beendete_und_fehlende(self):
+        todo = FPS.missing_finished_fixtures(self._lineups(), self._ledger(), self._now())
+        ids = [fid for fid, _ in todo]
+        self.assertEqual(ids, [111, 222])   # chronologisch, ohne 333 (nicht vorbei) + 444 (im Ledger)
+
+    def test_leeres_ledger_nimmt_alle_beendeten(self):
+        todo = FPS.missing_finished_fixtures(self._lineups(), {"records": []}, self._now())
+        self.assertEqual([fid for fid, _ in todo], [444, 111, 222])   # chronologisch
 
 
 if __name__ == "__main__":
