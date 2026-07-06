@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-05T16:58:44Z",
+  "generatedAt": "2026-07-06T08:12:22Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -35,7 +35,7 @@
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 41,
-    "lineup_signal": 23,
+    "lineup_signal": 26,
     "apif_predictions": 10,
     "weather_signal": 24,
     "incentive_signal": 24,
@@ -63,17 +63,19 @@
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
     "🛡️ Pinnacle-1X2 vollständig + plausibel: 1 Fehler (z.B. GER-PRY: 1X2 unvollständig hw=None dr=None aw=None)",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
-    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)"
+    "🛡️ Public = Multi-Book-Konsens (nicht Einzel-Book): 1 Fehler (z.B. NOR-ENG: public aus Einzel-Book 'williamhill' statt Konsens)",
+    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)",
+    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. POR-ESP: Soft bewegte sich 4.33→3.9, aber Opening==Jetzt (4.0) — nicht eingefroren)"
   ],
   "oks": [
-    "🌡️ Weather: 7 Spiele mit Forecast",
+    "🌡️ Weather: 6 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.0h alt",
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 97 Fixtures, Ø 111.2 Snapshots",
-    "💹 Poly-Preise: 7 Fixtures",
-    "💼 Poly-Balance: $395.96",
+    "📉 Odds-History: 98 Fixtures, Ø 111.2 Snapshots",
+    "💹 Poly-Preise: 5 Fixtures",
+    "💼 Poly-Balance: $405.48",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -282,9 +284,11 @@
       "id": "public_is_multibook",
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "NOR-ENG: public aus Einzel-Book 'williamhill' statt Konsens"
+      ],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
     {
@@ -295,6 +299,15 @@
       "nFail": 0,
       "failures": [],
       "note": "84 Odds-Keys vs 72 Fixtures = 12 leere Spiegel-Einträge. Quelle prüfen."
+    },
+    {
+      "id": "engine_version_stamped",
+      "label": "Picks tragen engineVersion (version-aware Lernen)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "generate_*_picks stempelt bei jedem Lauf; ungestempelt = Regression oder Legacy (heilt beim nächsten Lauf). Version pro Profil in cocobet_config.engine_version."
     },
     {
       "id": "result_score_final",
@@ -430,9 +443,11 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "POR-ESP: Soft bewegte sich 4.33→3.9, aber Opening==Jetzt (4.0) — nicht eingefroren"
+      ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
