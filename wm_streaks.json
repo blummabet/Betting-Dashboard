@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-06T08:11:39.399096+00:00",
+    "generatedAt": "2026-07-06T15:02:50.907682+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -119,7 +119,7 @@
       "leagueName": "Gruppe C",
       "type": "scored",
       "market": "Team trifft",
-      "length": 12,
+      "length": 13,
       "venue": "all",
       "strong": true,
       "continuation": {
@@ -429,6 +429,35 @@
       "xgBacked": true
     },
     {
+      "teamId": "MEX",
+      "team": "Mexiko",
+      "flag": "🇲🇽",
+      "league": "A",
+      "leagueName": "Gruppe A",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 9,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 87,
+        "label": "Eigentendenz 87%"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null
+    },
+    {
       "teamId": "SUI",
       "team": "Schweiz",
       "flag": "🇨🇭",
@@ -714,7 +743,7 @@
       "type": "scored",
       "market": "Team trifft",
       "length": 8,
-      "venue": "all",
+      "venue": "H",
       "strong": true,
       "continuation": {
         "state": "intakt",
@@ -963,22 +992,22 @@
       "xgBacked": null
     },
     {
-      "teamId": "MEX",
-      "team": "Mexiko",
-      "flag": "🇲🇽",
-      "league": "A",
-      "leagueName": "Gruppe A",
+      "teamId": "NOR",
+      "team": "Norwegen",
+      "flag": "🇳🇴",
+      "league": "I",
+      "leagueName": "Gruppe I",
       "type": "scored",
       "market": "Team trifft",
       "length": 7,
-      "venue": "H",
+      "venue": "all",
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigentendenz 87%"
+        "ratePct": 93,
+        "label": "Eigen 93% + Gegner 33% → 69%"
       },
-      "ratePct": 87,
+      "ratePct": 93,
       "seq": [
         true,
         true,
@@ -989,7 +1018,16 @@
         true,
         false
       ],
-      "xgBacked": null
+      "xgBacked": null,
+      "next": {
+        "oppId": "ENG",
+        "oppName": "England",
+        "atHome": true,
+        "date": "2026-07-11",
+        "oppRatePct": 33
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 69
     },
     {
       "teamId": "ARG",
@@ -1173,6 +1211,44 @@
       "xgBacked": null
     },
     {
+      "teamId": "NOR",
+      "team": "Norwegen",
+      "flag": "🇳🇴",
+      "league": "I",
+      "leagueName": "Gruppe I",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 7,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 27% → 59%"
+      },
+      "ratePct": 80,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "ENG",
+        "oppName": "England",
+        "atHome": true,
+        "date": "2026-07-11",
+        "oppRatePct": 27
+      },
+      "oppSupportPct": 27,
+      "matchupPct": 59
+    },
+    {
       "teamId": "CRO",
       "team": "Kroatien",
       "flag": "🇭🇷",
@@ -1228,44 +1304,6 @@
         false
       ],
       "xgBacked": null
-    },
-    {
-      "teamId": "NOR",
-      "team": "Norwegen",
-      "flag": "🇳🇴",
-      "league": "I",
-      "leagueName": "Gruppe I",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 93,
-        "label": "Eigen 93% + Gegner 33% → 69%"
-      },
-      "ratePct": 93,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "ENG",
-        "oppName": "England",
-        "atHome": true,
-        "date": "2026-07-11",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 69
     },
     {
       "teamId": "NOR",
@@ -1631,22 +1669,20 @@
       "type": "bttsYes",
       "market": "Beide Teams treffen",
       "length": 6,
-      "venue": "all",
+      "venue": "A",
       "strong": true,
       "continuation": {
         "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 27% → 55%"
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 27% → 59%"
       },
-      "ratePct": 73,
+      "ratePct": 80,
       "seq": [
         true,
         true,
         true,
         true,
         true,
-        true,
-        false,
         true
       ],
       "xgBacked": null,
@@ -1658,7 +1694,7 @@
         "oppRatePct": 27
       },
       "oppSupportPct": 27,
-      "matchupPct": 55
+      "matchupPct": 59
     },
     {
       "teamId": "ARG",
@@ -1835,6 +1871,41 @@
       "xgBacked": null
     },
     {
+      "teamId": "ENG",
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "league": "L",
+      "leagueName": "Gruppe L",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 5,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 80% → 84%"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "NOR",
+        "oppName": "Norwegen",
+        "atHome": false,
+        "date": "2026-07-11",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 84
+    },
+    {
       "teamId": "ESP",
       "team": "Spanien",
       "flag": "🇪🇸",
@@ -1985,6 +2056,44 @@
         true
       ],
       "xgBacked": null
+    },
+    {
+      "teamId": "NOR",
+      "team": "Norwegen",
+      "flag": "🇳🇴",
+      "league": "I",
+      "leagueName": "Gruppe I",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 5,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 47% → 63%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": true,
+      "next": {
+        "oppId": "ENG",
+        "oppName": "England",
+        "atHome": true,
+        "date": "2026-07-11",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 63
     },
     {
       "teamId": "PRY",
@@ -2252,42 +2361,6 @@
       "matchupPct": 57
     },
     {
-      "teamId": "NOR",
-      "team": "Norwegen",
-      "flag": "🇳🇴",
-      "league": "I",
-      "leagueName": "Gruppe I",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 5,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 27% → 55%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "ENG",
-        "oppName": "England",
-        "atHome": true,
-        "date": "2026-07-11",
-        "oppRatePct": 27
-      },
-      "oppSupportPct": 27,
-      "matchupPct": 55
-    },
-    {
       "teamId": "SUI",
       "team": "Schweiz",
       "flag": "🇨🇭",
@@ -2401,38 +2474,33 @@
       "xgBacked": true
     },
     {
-      "teamId": "ENG",
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "league": "L",
-      "leagueName": "Gruppe L",
-      "type": "scored",
-      "market": "Team trifft",
+      "teamId": "BRA",
+      "team": "Brasilien",
+      "flag": "🇧🇷",
+      "league": "C",
+      "leagueName": "Gruppe C",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
       "length": 4,
-      "venue": "A",
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 73% → 81%"
+        "ratePct": 73,
+        "label": "Eigentendenz 73%"
       },
-      "ratePct": 87,
+      "ratePct": 73,
       "seq": [
         true,
         true,
         true,
+        true,
+        false,
+        true,
+        true,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "NOR",
-        "oppName": "Norwegen",
-        "atHome": false,
-        "date": "2026-07-11",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 81
+      "xgBacked": true
     },
     {
       "teamId": "ESP",
@@ -2523,64 +2591,6 @@
         true,
         true,
         false,
-        true,
-        false
-      ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "MEX",
-      "team": "Mexiko",
-      "flag": "🇲🇽",
-      "league": "A",
-      "leagueName": "Gruppe A",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigentendenz 73%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "MEX",
-      "team": "Mexiko",
-      "flag": "🇲🇽",
-      "league": "A",
-      "leagueName": "Gruppe A",
-      "type": "cleanSheet",
-      "market": "Zu null",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigentendenz 73%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
         true,
         false
       ],
@@ -3141,40 +3151,6 @@
       "matchupPct": 51
     },
     {
-      "teamId": "ENG",
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "league": "L",
-      "leagueName": "Gruppe L",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 27% → 55%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "NOR",
-        "oppName": "Norwegen",
-        "atHome": false,
-        "date": "2026-07-11",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 27,
-      "matchupPct": 55
-    },
-    {
       "teamId": "ESP",
       "team": "Spanien",
       "flag": "🇪🇸",
@@ -3240,44 +3216,6 @@
         false
       ],
       "xgBacked": null
-    },
-    {
-      "teamId": "NOR",
-      "team": "Norwegen",
-      "flag": "🇳🇴",
-      "league": "I",
-      "leagueName": "Gruppe I",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 47% → 59%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": true,
-      "next": {
-        "oppId": "ENG",
-        "oppName": "England",
-        "atHome": true,
-        "date": "2026-07-11",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 59
     },
     {
       "teamId": "POR",
@@ -3443,40 +3381,6 @@
       "matchupPct": 43
     },
     {
-      "teamId": "ENG",
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "league": "L",
-      "leagueName": "Gruppe L",
-      "type": "cleanSheet",
-      "market": "Zu null",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 7% → 43%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "NOR",
-        "oppName": "Norwegen",
-        "atHome": false,
-        "date": "2026-07-11",
-        "oppRatePct": 7
-      },
-      "oppSupportPct": 7,
-      "matchupPct": 43
-    },
-    {
       "teamId": "POR",
       "team": "Portugal",
       "flag": "🇵🇹",
@@ -3586,14 +3490,14 @@
       "type": "over25",
       "market": "Über 2,5 Tore",
       "length": 3,
-      "venue": "all",
+      "venue": "H",
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigentendenz 67%"
+        "ratePct": 73,
+        "label": "Eigentendenz 73%"
       },
-      "ratePct": 67,
+      "ratePct": 73,
       "seq": [
         true,
         true,
@@ -3619,10 +3523,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigentendenz 67%"
+        "ratePct": 73,
+        "label": "Eigentendenz 73%"
       },
-      "ratePct": 67,
+      "ratePct": 73,
       "seq": [
         true,
         true,
@@ -3679,6 +3583,44 @@
         true
       ],
       "xgBacked": null
+    },
+    {
+      "teamId": "ENG",
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "league": "L",
+      "leagueName": "Gruppe L",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 80% → 84%"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "NOR",
+        "oppName": "Norwegen",
+        "atHome": false,
+        "date": "2026-07-11",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 84
     },
     {
       "teamId": "ESP",
@@ -4031,64 +3973,6 @@
       "flag": "🇲🇽",
       "league": "A",
       "leagueName": "Gruppe A",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigentendenz 73%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": true
-    },
-    {
-      "teamId": "MEX",
-      "team": "Mexiko",
-      "flag": "🇲🇽",
-      "league": "A",
-      "leagueName": "Gruppe A",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigentendenz 73%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "MEX",
-      "team": "Mexiko",
-      "flag": "🇲🇽",
-      "league": "A",
-      "leagueName": "Gruppe A",
       "type": "bttsNo",
       "market": "Beide treffen — Nein",
       "length": 3,
@@ -4127,35 +4011,6 @@
       "seq": [
         true,
         true,
-        true
-      ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "MEX",
-      "team": "Mexiko",
-      "flag": "🇲🇽",
-      "league": "A",
-      "leagueName": "Gruppe A",
-      "type": "cleanSheet",
-      "market": "Zu null",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigentendenz 73%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
         true
       ],
       "xgBacked": null
@@ -4270,6 +4125,80 @@
         true
       ],
       "xgBacked": null
+    },
+    {
+      "teamId": "NOR",
+      "team": "Norwegen",
+      "flag": "🇳🇴",
+      "league": "I",
+      "leagueName": "Gruppe I",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 47% → 63%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": true,
+      "next": {
+        "oppId": "ENG",
+        "oppName": "England",
+        "atHome": true,
+        "date": "2026-07-11",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 63
+    },
+    {
+      "teamId": "NOR",
+      "team": "Norwegen",
+      "flag": "🇳🇴",
+      "league": "I",
+      "leagueName": "Gruppe I",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 47% → 63%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": true,
+      "next": {
+        "oppId": "ENG",
+        "oppName": "England",
+        "atHome": true,
+        "date": "2026-07-11",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 63
     },
     {
       "teamId": "NOR",
@@ -5273,44 +5202,6 @@
       "flag": "🇳🇴",
       "league": "I",
       "leagueName": "Gruppe I",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 47% → 59%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": true,
-      "next": {
-        "oppId": "ENG",
-        "oppName": "England",
-        "atHome": true,
-        "date": "2026-07-11",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 59
-    },
-    {
-      "teamId": "NOR",
-      "team": "Norwegen",
-      "flag": "🇳🇴",
-      "league": "I",
-      "leagueName": "Gruppe I",
       "type": "bttsYes",
       "market": "Beide Teams treffen",
       "length": 3,
@@ -5318,10 +5209,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 27% → 55%"
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 27% → 59%"
       },
-      "ratePct": 73,
+      "ratePct": 80,
       "seq": [
         true,
         true,
@@ -5341,7 +5232,7 @@
         "oppRatePct": 27
       },
       "oppSupportPct": 27,
-      "matchupPct": 55
+      "matchupPct": 59
     },
     {
       "teamId": "NZL",
