@@ -714,7 +714,7 @@ def _preview_facts(fx, flag_h, name_h, flag_a, name_a,
     return out
 
 
-STREAK_MILESTONES = [6, 8, 10, 12, 15]
+MIN_TEAM_STREAK_CARD = 6   # ab dieser Länge Team-Cards
 
 
 def _streak_heat(s: dict) -> int:
@@ -731,8 +731,10 @@ def _streak_heat(s: dict) -> int:
 
 
 def _streak_milestone(length: int):
-    ms = [m for m in STREAK_MILESTONES if (length or 0) >= m]
-    return ms[-1] if ms else None
+    """06.07.2026 (Lucas): jeder Schritt +1 statt fixe Meilensteine. Der Dedup-Key nutzt den
+    Rückgabewert → jede NEUE Länge feuert genau einmal (nie dieselbe Zahl doppelt), aber ab
+    MIN_TEAM_STREAK_CARD. Wächst 6→7→8 → drei Cards; bleibt die Länge gleich → keine."""
+    return length if (length or 0) >= MIN_TEAM_STREAK_CARD else None
 
 
 def _streak_short_date(iso):
@@ -767,14 +769,15 @@ def pick_streak_for_card(streaks: list, posted_keys: set):
     return max(pool, key=lambda c: _streak_heat(c[0]))
 
 
-PLAYER_STREAK_MILESTONES = [2, 3, 4, 5, 6, 8, 10]
+MIN_PLAYER_STREAK_CARD = 2   # ab dieser Länge Spieler-Cards
 _PLAYER_VERB = {"goals": "in Folge getroffen", "involvement": "mit Torbeteiligung in Folge",
                 "cleanSheet": "Spiele zu Null in Folge"}
 
 
 def _player_streak_milestone(length: int):
-    ms = [m for m in PLAYER_STREAK_MILESTONES if (length or 0) >= m]
-    return ms[-1] if ms else None
+    """06.07.2026 (Lucas): jeder Schritt +1 (wie bei den Teams). Dedup-Key = Länge → jede neue
+    Länge feuert einmal, nie dieselbe Zahl doppelt, ab MIN_PLAYER_STREAK_CARD."""
+    return length if (length or 0) >= MIN_PLAYER_STREAK_CARD else None
 
 
 def pick_player_streak_for_card(players: list, posted_keys: set):
