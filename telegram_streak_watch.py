@@ -30,7 +30,10 @@ WM_FILE = D.data_file()
 STATE_FILE = BASE / f"{D.prefix()}streak_watch.json"
 
 TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip()
-CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+# `or`-Fallback + echter Public-Default (nicht ""): ein leeres TELEGRAM_CHAT_ID-Secret
+# injiziert einen leeren String, der .get(key,"") NICHT durch den Default ersetzt → Send
+# scheiterte still. Wie telegram_wm.py. (06.07.2026, Lucas)
+CHAT_ID = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()
 MODE = (os.environ.get("TG_STREAK_MODE") or "watch").lower()
 SKIP_TELEGRAM = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
 

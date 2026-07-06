@@ -17,7 +17,11 @@ from pathlib import Path
 import cocobet_dataset as D
 
 TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip()
-CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID", "-1003819239615").strip()
+# `or`-Fallback statt .get(key, default): ein GESETZTER-aber-LEERER Env-Wert (Secret
+# TELEGRAM_CHAT_ID nicht gesetzt → Workflow injiziert "") überschreibt sonst den Default
+# und der Guard feuert „CHAT_ID fehlt". telegram_wm.py macht es genauso → morning/recap
+# überleben ein leeres Secret, der Digest tat es nicht. (06.07.2026, Lucas)
+CHAT_ID = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()
 TOP_N = 5
 MIN_LEN = 5
 
