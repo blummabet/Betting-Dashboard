@@ -59,28 +59,10 @@
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
       "ok": false,
-      "nFail": 20,
+      "nFail": 2,
       "failures": [
         "499-488: Margin 1.876 unplausibel",
-        "503-489: Margin 1.600 unplausibel",
-        "540-539: Margin 1.722 unplausibel",
-        "160-162: Margin 2.473 unplausibel",
-        "164-185: Margin 2.590 unplausibel",
-        "165-175: Margin 2.608 unplausibel",
-        "1660-168: Margin 2.532 unplausibel",
-        "170-174: Margin 2.529 unplausibel",
-        "173-163: Margin 2.485 unplausibel",
-        "182-169: Margin 2.451 unplausibel",
-        "192-167: Margin 2.496 unplausibel",
-        "110-114: Margin 2.961 unplausibel",
-        "111-91: Margin 2.941 unplausibel",
-        "116-108: Margin 2.941 unplausibel",
-        "1298-106: Margin 2.675 unplausibel",
-        "77-79: Margin 2.941 unplausibel",
-        "81-95: Margin 2.941 unplausibel",
-        "84-97: Margin 2.661 unplausibel",
-        "85-94: Margin 2.941 unplausibel",
-        "96-80: Margin 2.941 unplausibel"
+        "503-489: Margin 1.600 unplausibel"
       ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
@@ -228,6 +210,15 @@
       "nFail": 0,
       "failures": [],
       "note": "84 Odds-Keys vs 72 Fixtures = 12 leere Spiegel-Einträge. Quelle prüfen."
+    },
+    {
+      "id": "engine_version_stamped",
+      "label": "Picks tragen engineVersion (version-aware Lernen)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "generate_*_picks stempelt bei jedem Lauf; ungestempelt = Regression oder Legacy (heilt beim nächsten Lauf). Version pro Profil in cocobet_config.engine_version."
     },
     {
       "id": "result_score_final",
@@ -456,5 +447,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-07-05T19:03:06.895370+00:00"
+  "generatedAt": "2026-07-06T11:04:38.693633+00:00"
 }
