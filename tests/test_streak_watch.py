@@ -112,5 +112,29 @@ class TestRecap(unittest.TestCase):
         self.assertEqual(msgs, [])   # kein Endstand → beim nächsten Lauf erneut
 
 
+class TestSendGuard(unittest.TestCase):
+    """06.07.2026 (Lucas): tg_send lieferte `not (TOKEN and CHAT_ID)` → True bei FEHLENDEM
+    Token → main() setzte den Dedup-Marker ohne echten Send → Serie still verschluckt, nie
+    nachgesendet. Fehlender Token in einem echten Lauf muss False sein; nur SKIP_TELEGRAM True."""
+
+    def setUp(self):
+        self._orig = (W.SKIP_TELEGRAM, W.TOKEN, W.CHAT_ID)
+
+    def tearDown(self):
+        W.SKIP_TELEGRAM, W.TOKEN, W.CHAT_ID = self._orig
+
+    def test_fehlender_token_liefert_false(self):
+        W.SKIP_TELEGRAM, W.TOKEN, W.CHAT_ID = False, "", "123"
+        self.assertFalse(W.tg_send("x"))   # echter Fehler → NICHT als bewacht markieren
+
+    def test_fehlende_chat_id_liefert_false(self):
+        W.SKIP_TELEGRAM, W.TOKEN, W.CHAT_ID = False, "tok", ""
+        self.assertFalse(W.tg_send("x"))
+
+    def test_skip_telegram_liefert_true(self):
+        W.SKIP_TELEGRAM, W.TOKEN, W.CHAT_ID = True, "", ""
+        self.assertTrue(W.tg_send("x"))    # expliziter Dry-Run → Flow fortsetzen
+
+
 if __name__ == "__main__":
     unittest.main()

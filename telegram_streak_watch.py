@@ -48,9 +48,16 @@ _ICON = {"over25": "⚽", "under25": "🧱", "bttsYes": "🤝", "bttsNo": "🚫"
 
 
 def tg_send(text: str) -> bool:
-    if SKIP_TELEGRAM or not (TOKEN and CHAT_ID):
-        print("ℹ️  Telegram-Send geskippt — Vorschau:\n" + text)
-        return not (TOKEN and CHAT_ID)
+    # SKIP_TELEGRAM = expliziter lokaler Dry-Run → True, damit main() den Flow (State) durchläuft.
+    if SKIP_TELEGRAM:
+        print("ℹ️  Telegram-Send geskippt (SKIP_TELEGRAM) — Vorschau:\n" + text)
+        return True
+    # Fehlender Token/Chat in einem ECHTEN Lauf ist ein FEHLER, kein Skip: False zurückgeben,
+    # sonst markiert main() die Serie fälschlich als „bewacht" (Phantom-Dedup) und sendet nie nach.
+    # (06.07.2026, Lucas: Serien-Watch schrieb Marker ohne echten Send → still verschluckt.)
+    if not (TOKEN and CHAT_ID):
+        print("⚠️  TELEGRAM_TOKEN/CHAT_ID fehlt — kein Send (nicht als bewacht markiert)")
+        return False
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
     body = json.dumps({"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML",
                        "disable_web_page_preview": True}).encode("utf-8")
