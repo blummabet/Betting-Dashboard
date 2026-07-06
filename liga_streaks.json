@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-07-06T10:59:09.303799+00:00",
+    "generatedAt": "2026-07-06T19:27:27.989801+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -4986,7 +4986,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 73% → 73%"
+        "label": "Eigen 73% + Gegner 73% → 73% · Signale bestätigen"
       },
       "ratePct": 73,
       "seq": [
@@ -5008,7 +5008,17 @@
         "oppRatePct": 27
       },
       "oppSupportPct": 73,
-      "matchupPct": 73
+      "matchupPct": 73,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 2,
+        "conviction": 3,
+        "names": [
+          "form_trend",
+          "h2h_pattern"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "895",
@@ -11826,7 +11836,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 73% → 73%"
+        "label": "Eigen 73% + Gegner 73% → 73% · Signale bestätigen"
       },
       "ratePct": 73,
       "seq": [
@@ -11848,7 +11858,17 @@
         "oppRatePct": 27
       },
       "oppSupportPct": 73,
-      "matchupPct": 73
+      "matchupPct": 73,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 2,
+        "conviction": 3,
+        "names": [
+          "form_trend",
+          "h2h_pattern"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "79",
@@ -11969,6 +11989,54 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 53% → 45% · Signale bestätigen"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "535",
+        "oppName": "Malaga",
+        "atHome": true,
+        "date": "2026-08-16",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 45,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 2,
+        "conviction": 3,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
+      "teamId": "530",
+      "team": "Atletico Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
       "type": "scored",
       "market": "Team trifft",
       "length": 3,
@@ -12076,6 +12144,55 @@
       },
       "oppSupportPct": 80,
       "matchupPct": 80
+    },
+    {
+      "teamId": "535",
+      "team": "Malaga",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 53,
+        "label": "Eigen 53% + Gegner 40% → 48% · Signale bestätigen"
+      },
+      "ratePct": 53,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "530",
+        "oppName": "Atletico Madrid",
+        "atHome": false,
+        "date": "2026-08-16",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 48,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 2,
+        "conviction": 3,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "538",
@@ -12225,16 +12342,7 @@
         "oppRatePct": 40
       },
       "oppSupportPct": 60,
-      "matchupPct": 64,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 0,
-        "conviction": 1,
-        "names": [
-          "h2h_pattern"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 64
     },
     {
       "teamId": "160",
@@ -14312,42 +14420,6 @@
       "matchupPct": 57
     },
     {
-      "teamId": "530",
-      "team": "Atletico Madrid",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 53% → 45%"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
-        "atHome": true,
-        "date": "2026-08-16",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 45
-    },
-    {
       "teamId": "531",
       "team": "Athletic Club",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/531.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -14383,43 +14455,6 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 51
-    },
-    {
-      "teamId": "535",
-      "team": "Malaga",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 53,
-        "label": "Eigen 53% + Gegner 40% → 48%"
-      },
-      "ratePct": 53,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "530",
-        "oppName": "Atletico Madrid",
-        "atHome": false,
-        "date": "2026-08-16",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 48
     },
     {
       "teamId": "539",
