@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-07T10:47:34.506075+00:00",
+    "generatedAt": "2026-07-07T14:10:00.790417+00:00",
     "games": 99,
     "markets": [
       "Heimsieg",
@@ -47483,7 +47483,7 @@
             {
               "name": "lead_lag_bias",
               "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um -1.9pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "evidence": "Pinnacle hat Auswärts um -1.7pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
               "dir": "contradict"
             },
             {
@@ -48381,9 +48381,15 @@
       "markets": {
         "Heimsieg": {
           "tip": "Argentinien (Heimsieg)",
-          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Argentinien (Heimsieg)“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Argentinien (Heimsieg)“ mehrheitlich — am deutlichsten die Pinnacle-Bewegung, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Heim um +1.7pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "dir": "confirm"
+            },
             {
               "name": "form_trend",
               "label": "die Formkurve",
@@ -48407,16 +48413,12 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
               "dir": "contradict"
             }
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -48499,10 +48501,10 @@
             }
           ],
           "score": {
-            "confirm": 3,
+            "confirm": 4,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Auswärtssieg": {
@@ -48513,7 +48515,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
               "dir": "confirm"
             }
           ],
@@ -48521,7 +48523,7 @@
             {
               "name": "lead_lag_bias",
               "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um -1.6pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "evidence": "Pinnacle hat Auswärts um -1.8pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
               "dir": "contradict"
             },
             {
@@ -48648,7 +48650,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
               "dir": "contradict"
             }
           ],
@@ -48768,7 +48770,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
               "dir": "confirm"
             }
           ],
@@ -49405,8 +49407,8 @@
       "markets": {
         "Heimsieg": {
           "tip": "Frankreich (Heimsieg)",
-          "headline": "2 von 2 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten die Chancenqualität.",
+          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten die Chancenqualität, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "chance_creation",
@@ -49421,7 +49423,14 @@
               "dir": "confirm"
             }
           ],
-          "contradict": [],
+          "contradict": [
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim FRA (temperate) leidet",
+              "dir": "contradict"
+            }
+          ],
           "neutral": [],
           "silent": [
             {
@@ -49473,10 +49482,6 @@
               "label": "das externe Prognosemodell"
             },
             {
-              "name": "weather_signal",
-              "label": "das Wetter"
-            },
-            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -49519,16 +49524,23 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 0,
+            "contradict": 1,
             "neutral": 0,
-            "decisive": 2
+            "decisive": 3
           }
         },
         "Auswärtssieg": {
           "tip": "Marokko (Auswärtssieg)",
-          "headline": "0 von 2 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Marokko (Auswärtssieg)“ kritisch — vor allem die Chancenqualität spricht dagegen.",
-          "confirm": [],
+          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Marokko (Auswärtssieg)“ kritisch — vor allem die Chancenqualität spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "confirm": [
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim FRA (temperate) leidet",
+              "dir": "confirm"
+            }
+          ],
           "contradict": [
             {
               "name": "chance_creation",
@@ -49594,10 +49606,6 @@
               "label": "das externe Prognosemodell"
             },
             {
-              "name": "weather_signal",
-              "label": "das Wetter"
-            },
-            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -49639,10 +49647,10 @@
             }
           ],
           "score": {
-            "confirm": 0,
+            "confirm": 1,
             "contradict": 2,
             "neutral": 0,
-            "decisive": 2
+            "decisive": 3
           }
         },
         "Über 2.5 Tore": {
@@ -50187,7 +50195,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 31°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ESP temperate · BEL temperate",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ESP temperate · BEL temperate",
               "dir": "contradict"
             }
           ],
@@ -50295,7 +50303,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 31°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ESP temperate · BEL temperate",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ESP temperate · BEL temperate",
               "dir": "confirm"
             }
           ],
