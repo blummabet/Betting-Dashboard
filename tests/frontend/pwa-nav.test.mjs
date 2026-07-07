@@ -20,12 +20,12 @@ test('PWA-Tags + Navi-Markup (Bottom-Nav, Sheet, Web-Dropdown) im HTML vorhanden
   // Sub-Navi: Cards + Serien + Tracking (Serien zwischen Cards und Tracking, 28.06.2026)
   assert.equal(d.querySelectorAll('#subNav .sub-nav-btn').length, 3, 'Sub-Navi: Cards, Serien, Tracking');
   assert.ok(d.getElementById('subStreaks'), 'Serien-Sub-Tab fehlt');
-  // Web „Mehr"-Dropdown mit 3 Einträgen (Heart/Status/TikTok) — Telegram wanderte in den Status
+  // Web „Mehr"-Dropdown mit 4 Einträgen (Heart/Status/TikTok/Analyse) — Analyse=Signal-Check-Tab (06.07.2026)
   assert.ok(d.getElementById('navMore'), 'Web-Mehr-Button fehlt');
-  assert.equal(d.querySelectorAll('#topMoreMenu .tm-item').length, 3, '3 Dropdown-Einträge erwartet');
-  // Mobile Bottom-Nav (5 Tabs) + Sheet (jetzt 5: Poly×2, TikTok, Heart, Status)
+  assert.equal(d.querySelectorAll('#topMoreMenu .tm-item').length, 4, '4 Dropdown-Einträge erwartet');
+  // Mobile Bottom-Nav (5 Tabs) + Sheet (jetzt 6: Poly×2, TikTok, Heart, Status, Analyse)
   assert.equal(d.querySelectorAll('.bottom-nav .bn-btn').length, 5, '5 Bottom-Tabs erwartet');
-  assert.equal(d.querySelectorAll('.more-sheet .ms-btn').length, 5, '5 Sheet-Einträge erwartet');
+  assert.equal(d.querySelectorAll('.more-sheet .ms-btn').length, 6, '6 Sheet-Einträge erwartet');
   // Telegram Control liegt jetzt als ausklappbarer Abschnitt im Status-Tab, nicht mehr im Menü
   assert.ok(d.getElementById('st_telegram'), 'Telegram-Details im Status-Tab fehlt');
   assert.equal(d.querySelectorAll('[data-view="intl-telegram"]').length, 0, 'Kein Telegram-Menüeintrag mehr');

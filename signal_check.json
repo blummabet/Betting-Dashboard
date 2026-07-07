@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-06T21:51:37.781507+00:00",
+    "generatedAt": "2026-07-07T05:09:39.077836+00:00",
     "games": 98,
     "markets": [
       "Heimsieg",
@@ -47483,7 +47483,7 @@
             {
               "name": "lead_lag_bias",
               "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um -2.2pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "evidence": "Pinnacle hat Auswärts um -2.4pp bewegt, public hängen noch hinterher (1) — wir sind früh dran.",
               "dir": "contradict"
             },
             {
@@ -47619,7 +47619,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 38°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — POR temperate · ESP temperate",
+              "evidence": "🌡 Bei 40°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — POR temperate · ESP temperate",
               "dir": "contradict"
             }
           ],
@@ -47729,7 +47729,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 38°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — POR temperate · ESP temperate",
+              "evidence": "🌡 Bei 40°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — POR temperate · ESP temperate",
               "dir": "confirm"
             }
           ],
@@ -47859,9 +47859,9 @@
           "reason": "Unsere Signale sehen „USA (Heimsieg)“ kritisch — vor allem injury spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Heim um +1.5pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Auswärts sitzt nur auf der Bank J. Doku (MID) · bei Auswärts sitzt nur auf der Bank K. De Bruyne (MID) · bei Auswärts sitzt nur auf der Bank T. Meunier (DEF)",
               "dir": "confirm"
             }
           ],
@@ -47900,6 +47900,10 @@
           "neutral": [],
           "silent": [
             {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
+            {
               "name": "public_static_bias",
               "label": "der Public-Bias"
             },
@@ -47922,10 +47926,6 @@
             {
               "name": "pressure_index",
               "label": "der Tabellendruck"
-            },
-            {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
             },
             {
               "name": "apif_predictions",
@@ -48021,14 +48021,18 @@
           ],
           "contradict": [
             {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um -1.7pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Auswärts sitzt nur auf der Bank J. Doku (MID) · bei Auswärts sitzt nur auf der Bank K. De Bruyne (MID) · bei Auswärts sitzt nur auf der Bank T. Meunier (DEF)",
               "dir": "contradict"
             }
           ],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -48052,10 +48056,6 @@
             {
               "name": "pressure_index",
               "label": "der Tabellendruck"
-            },
-            {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
             },
             {
               "name": "apif_predictions",
@@ -48115,8 +48115,8 @@
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -48142,6 +48142,12 @@
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (gegen Über)",
+              "dir": "contradict"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Auswärts sitzt nur auf der Bank J. Doku (MID) · bei Auswärts sitzt nur auf der Bank K. De Bruyne (MID) · bei Auswärts sitzt nur auf der Bank T. Meunier (DEF)",
               "dir": "contradict"
             }
           ],
@@ -48174,10 +48180,6 @@
             {
               "name": "steam_lag",
               "label": "der Steam-Move"
-            },
-            {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
             },
             {
               "name": "apif_predictions",
@@ -48234,20 +48236,26 @@
           ],
           "score": {
             "confirm": 3,
-            "contradict": 1,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "2 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher)",
+              "dir": "confirm"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Auswärts sitzt nur auf der Bank J. Doku (MID) · bei Auswärts sitzt nur auf der Bank K. De Bruyne (MID) · bei Auswärts sitzt nur auf der Bank T. Meunier (DEF)",
               "dir": "confirm"
             }
           ],
@@ -48300,10 +48308,6 @@
             {
               "name": "steam_lag",
               "label": "der Steam-Move"
-            },
-            {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
             },
             {
               "name": "apif_predictions",
@@ -48359,10 +48363,10 @@
             }
           ],
           "score": {
-            "confirm": 1,
+            "confirm": 2,
             "contradict": 3,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         }
       }
@@ -48381,9 +48385,15 @@
       "markets": {
         "Heimsieg": {
           "tip": "Argentinien (Heimsieg)",
-          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Argentinien (Heimsieg)“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Argentinien (Heimsieg)“ mehrheitlich — am deutlichsten die Pinnacle-Bewegung, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Heim um +1.6pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "dir": "confirm"
+            },
             {
               "name": "form_trend",
               "label": "die Formkurve",
@@ -48407,16 +48417,12 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
+              "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
               "dir": "contradict"
             }
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -48499,10 +48505,10 @@
             }
           ],
           "score": {
-            "confirm": 3,
+            "confirm": 4,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Auswärtssieg": {
@@ -48513,7 +48519,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
+              "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
               "dir": "confirm"
             }
           ],
@@ -48646,7 +48652,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
+              "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
               "dir": "contradict"
             }
           ],
@@ -48766,7 +48772,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
+              "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
               "dir": "confirm"
             }
           ],
@@ -49925,7 +49931,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim NOR (cold) leidet",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim NOR (cold) leidet",
               "dir": "contradict"
             },
             {
@@ -50049,7 +50055,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim NOR (cold) leidet",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim NOR (cold) leidet",
               "dir": "confirm"
             },
             {
@@ -50197,7 +50203,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — NOR cold · ENG temperate",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — NOR cold · ENG temperate",
               "dir": "contradict"
             }
           ],
@@ -50305,7 +50311,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — NOR cold · ENG temperate",
+              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — NOR cold · ENG temperate",
               "dir": "confirm"
             }
           ],
