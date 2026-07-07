@@ -154,19 +154,26 @@ def _load_wm_fixtures() -> tuple[list[dict], dict[str, int]]:
     try:
         with WM_FILE.open(encoding="utf-8") as f:
             wm = json.load(f)
+        def _mk(fx):
+            return {
+                "match_key": f"{fx['home']}-{fx['away']}",
+                "home_id":   fx["home"],
+                "away_id":   fx["away"],
+                "date":      fx["date"],
+                # Liga-Fixtures haben kickoff (ISO) statt time → HH:MM ableiten.
+                "time":      (fx.get("kickoff") or "")[11:16] or fx.get("time", "21:00"),
+                "fid":       fx.get("fid"),   # API-Fixture-ID (Liga) → direkt, kein Lookup
+            }
         out = []
         for grp in wm.get("groups", {}).values():
             for fx in grp.get("fixtures", []):
                 if fx.get("date") and fx.get("home") and fx.get("away"):
-                    out.append({
-                        "match_key": f"{fx['home']}-{fx['away']}",
-                        "home_id":   fx["home"],
-                        "away_id":   fx["away"],
-                        "date":      fx["date"],
-                        # Liga-Fixtures haben kickoff (ISO) statt time → HH:MM ableiten.
-                        "time":      (fx.get("kickoff") or "")[11:16] or fx.get("time", "21:00"),
-                        "fid":       fx.get("fid"),   # API-Fixture-ID (Liga) → direkt, kein Lookup
-                    })
+                    out.append(_mk(fx))
+        # KO-Spiele liegen in koFixtures, nicht groups (06.07.2026, Lucas: wiederkehrender
+        # KO-Datenpfad-Bug → apif-Prognose fehlte für Achtel-/Viertelfinale). Nur bothResolved.
+        for fx in wm.get("koFixtures", []):
+            if fx.get("date") and fx.get("home") and fx.get("away"):
+                out.append(_mk(fx))
         return out, wm.get("teamIds", {}) or {}
     except Exception:
         return [], {}

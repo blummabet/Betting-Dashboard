@@ -507,6 +507,42 @@ def check_ko_odds_present(ctx):
 
 
 @integrity_check
+def check_ko_apif_coverage(ctx):
+    """06.07.2026 (Lucas: „nicht wieder KO-Bugs einzeln finden"). Safety-Net gegen die WIEDERKEHRENDE
+    KO-Datenpfad-Bug-Klasse bei SEPARAT gefetchten Daten: fetch_wm_apifootball_predictions iterierte
+    nur `groups` → apif-Prognose fehlte für anstehende Achtel-/Viertelfinals (Signal apif_predictions
+    + KO-Previews tot). Gefixt via koFixtures. Dieser Guard fängt eine Regression: WARNT, wenn ein
+    anstehendes bothResolved-KO-Spiel (Anpfiff < 72h) keine apif-Prognose hat. So muss die Lücke nie
+    wieder von Hand gesucht werden. Siehe feedback_ko_datapath."""
+    if ctx.is_liga:
+        return None   # Liga/MLS haben keine koFixtures → No-Op
+    import json as _j
+    try:
+        apif = _j.loads((_BASE / "wm_apif_predictions.json").read_text(encoding="utf-8"))
+    except Exception:
+        return None   # File fehlt → anderer Guard/Job zuständig, kein False-Positive
+    now = datetime.now(timezone.utc)
+    fails = []
+    for kf in (ctx.wm.get("koFixtures") or []):
+        h, a = kf.get("home"), kf.get("away")
+        if not (kf.get("bothResolved") and h and a):
+            continue
+        if str((kf.get("result") or {}).get("status") or "").upper() in {"FT", "AET", "PEN", "AWD", "WO"}:
+            continue
+        try:
+            dt = datetime.fromisoformat(str(kf.get("kickoff")).replace("Z", "+00:00"))
+        except Exception:
+            continue
+        hrs = (dt - now).total_seconds() / 3600.0
+        if hrs < 0 or hrs > 72:
+            continue   # nur anstehende < 3 Tage — weiter entfernte holt apif erst später (kein False-Positive)
+        if f"{h}-{a}" not in apif:
+            fails.append(f"{h}-{a}: anstehendes KO-Spiel ({hrs:.0f}h) ohne apif-Prognose")
+    return _chk("ko_apif_coverage", "Anstehende KO-Spiele haben apif-Prognose", "warn", fails,
+                "fetch_wm_apifootball_predictions._load_wm_fixtures muss koFixtures iterieren (KO-Datenpfad).")
+
+
+@integrity_check
 def check_ko_settlement_ninety_min(ctx):
     """NEU 03.07.2026 (Lucas: ARG-CPV 1:1 nach 90 → Verlängerung 3:2 → „Unter 2.5/3.5" fälschlich
     verloren; BEL-SEN hatte denselben Bug latent, nur ohne Tor-Pick). UNSERE Märkte settlen auf 90
