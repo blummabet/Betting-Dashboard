@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-07T18:13:53.454663+00:00",
+    "generatedAt": "2026-07-07T21:16:55.158823+00:00",
     "games": 99,
     "markets": [
       "Heimsieg",
@@ -48377,7 +48377,7 @@
             {
               "name": "lead_lag_bias",
               "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Heim um -39.0pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "evidence": "Pinnacle hat Heim um -39.0pp bewegt, public hängen noch hinterher (1) — wir sind früh dran.",
               "dir": "contradict"
             },
             {
@@ -48859,8 +48859,8 @@
       "markets": {
         "Heimsieg": {
           "tip": "Schweiz (Heimsieg)",
-          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
+          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Schweiz (Heimsieg)“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -48869,9 +48869,15 @@
               "dir": "confirm"
             },
             {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Heim fehlt J. Manzambi (MID) · bei Auswärts fehlt J. Durán (ATT) · bei Auswärts sitzt nur auf der Bank J. Córdoba (ATT) · bei Auswärts fehlt R. Borré (ATT)",
+              "dir": "confirm"
+            },
+            {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Heim um 8.6pp höher ein als Pinnacle — Rückendeckung für den Pick.",
+              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Heim um 7.8pp höher ein als Pinnacle — Rückendeckung für den Pick.",
               "dir": "confirm"
             }
           ],
@@ -48928,10 +48934,6 @@
               "label": "der Tabellendruck"
             },
             {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
-            },
-            {
               "name": "weather_signal",
               "label": "das Wetter"
             },
@@ -48977,16 +48979,16 @@
             }
           ],
           "score": {
-            "confirm": 2,
+            "confirm": 3,
             "contradict": 2,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Auswärtssieg": {
           "tip": "Kolumbien (Auswärtssieg)",
-          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
+          "headline": "2 von 6 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Kolumbien (Auswärtssieg)“ kritisch — vor allem die Pinnacle-Bewegung spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "chance_creation",
@@ -49003,24 +49005,32 @@
           ],
           "contradict": [
             {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Auswärts um -2.0pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "dir": "contradict"
+            },
+            {
               "name": "form_trend",
               "label": "die Formkurve",
               "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.3 pro Partie und kassiert 0.7, Auswärts 2.1 und 0.8.",
               "dir": "contradict"
             },
             {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Heim fehlt J. Manzambi (MID) · bei Auswärts fehlt J. Durán (ATT) · bei Auswärts sitzt nur auf der Bank J. Córdoba (ATT) · bei Auswärts fehlt R. Borré (ATT)",
+              "dir": "contradict"
+            },
+            {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 12.0pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 11.0pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             }
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -49052,10 +49062,6 @@
             {
               "name": "pressure_index",
               "label": "der Tabellendruck"
-            },
-            {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
             },
             {
               "name": "weather_signal",
@@ -49104,15 +49110,15 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 2,
+            "contradict": 4,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 6
           }
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -49139,6 +49145,12 @@
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (gegen Über)",
               "dir": "contradict"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Heim fehlt J. Manzambi (MID) · bei Auswärts fehlt J. Durán (ATT) · bei Auswärts sitzt nur auf der Bank J. Córdoba (ATT) · bei Auswärts fehlt R. Borré (ATT)",
+              "dir": "contradict"
             }
           ],
           "neutral": [],
@@ -49170,10 +49182,6 @@
             {
               "name": "steam_lag",
               "label": "der Steam-Move"
-            },
-            {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
             },
             {
               "name": "apif_predictions",
@@ -49230,20 +49238,26 @@
           ],
           "score": {
             "confirm": 3,
-            "contradict": 1,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "2 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher)",
+              "dir": "confirm"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Heim fehlt J. Manzambi (MID) · bei Auswärts fehlt J. Durán (ATT) · bei Auswärts sitzt nur auf der Bank J. Córdoba (ATT) · bei Auswärts fehlt R. Borré (ATT)",
               "dir": "confirm"
             }
           ],
@@ -49296,10 +49310,6 @@
             {
               "name": "steam_lag",
               "label": "der Steam-Move"
-            },
-            {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
             },
             {
               "name": "apif_predictions",
@@ -49355,10 +49365,10 @@
             }
           ],
           "score": {
-            "confirm": 1,
+            "confirm": 2,
             "contradict": 3,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         }
       }
@@ -49377,8 +49387,8 @@
       "markets": {
         "Heimsieg": {
           "tip": "Frankreich (Heimsieg)",
-          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
+          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten die Chancenqualität, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "chance_creation",
@@ -49397,13 +49407,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 16.3pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
-              "dir": "contradict"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim FRA (temperate) leidet",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 16.0pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             }
           ],
@@ -49454,6 +49458,10 @@
               "label": "die Aufstellung"
             },
             {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -49496,23 +49504,16 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 2,
+            "contradict": 1,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 3
           }
         },
         "Auswärtssieg": {
           "tip": "Marokko (Auswärtssieg)",
-          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Marokko (Auswärtssieg)“ kritisch — vor allem die Chancenqualität spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
-          "confirm": [
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim FRA (temperate) leidet",
-              "dir": "confirm"
-            }
-          ],
+          "headline": "0 von 2 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Marokko (Auswärtssieg)“ kritisch — vor allem die Chancenqualität spricht dagegen.",
+          "confirm": [],
           "contradict": [
             {
               "name": "chance_creation",
@@ -49578,6 +49579,10 @@
               "label": "das externe Prognosemodell"
             },
             {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -49619,10 +49624,10 @@
             }
           ],
           "score": {
-            "confirm": 1,
+            "confirm": 0,
             "contradict": 2,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 2
           }
         },
         "Über 2.5 Tore": {
@@ -50575,7 +50580,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 6.4pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 6.7pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             }
           ],
